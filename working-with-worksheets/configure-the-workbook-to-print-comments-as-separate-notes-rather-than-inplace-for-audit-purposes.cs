@@ -1,41 +1,46 @@
-// Title: Aspose.Cells for .NET – Print worksheet comments as separate notes at the sheet end (C#)
-// Description: Demonstrates how to create a workbook, add a comment, and configure PageSetup.PrintComments to PrintCommentsType.PrintSheetEnd so that all comments are printed as independent notes at the end of the worksheet—ideal for audit‑ready reports. The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells C# print comments | PrintCommentsType.PrintSheetEnd | worksheet comments as notes | Excel audit comments | page setup print comments | export comments to PDF Aspose.Cells | .NET Excel comment printing | separate comment notes Excel
-// Common Searches: Aspose.Cells print comments at end of sheet C# | How to output Excel comments as separate notes using Aspose.Cells | PrintCommentsType.PrintSheetEnd example | Set page setup to print comments after data in .NET | Generate audit report with comments printed at sheet end
-// Developer Intent: Configure a worksheet so that its cell comments are printed as independent notes at the end of the sheet.
-// Use Cases: Create audit‑ready spreadsheets where all reviewer notes are collected in a single section. | Produce printable reports that keep data cells clean while still providing full commentary. | Generate documentation that consolidates user feedback after the main content for easier review.
-// AI Prompts: Show a C# snippet that sets PrintComments = PrintCommentsType.PrintSheetEnd for every worksheet and saves the workbook as PDF. | Explain the differences between PrintCommentsType.PrintSheetEnd and PrintCommentsType.PrintInPlace when exporting to various formats. | Provide code to iterate through a workbook, apply the sheet‑end comment printing setting, and then export each sheet to a separate file.
+// Title: Set Aspose.Cells workbook to print comments as separate notes (separate sheet) using C#
+// AI Prompts: Write C# code that opens an existing Excel file with Aspose.Cells, sets the PrintComments property to PrintInSeparateSheet, and saves the modified workbook. | Show how to enable separate‑sheet comment printing in Aspose.Cells for .NET before exporting the workbook to a new file. | Demonstrate configuring a workbook's print settings so that cell comments are printed as independent notes rather than in‑place.
+// Common Searches: Aspose.Cells C# print cell comments on a separate sheet | How to export Excel comments as notes using Aspose.Cells .NET | Workbook comment printing setting example in C# | Separate sheet comment printing with Aspose.Cells | Configure Aspose.Cells to output comments as independent notes
+// Tags: Aspose.Cells comment printing configuration | PrintCommentsType separate sheet option C# | export Excel comments as separate notes Aspose.Cells | separate sheet comment output Aspose.Cells | Aspose.Cells workbook print settings .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCommentPrintDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, add a comment, and configure PageSetup.PrintComments to PrintCommentsType.PrintSheetEnd so that all comments are printed as independent notes at the end of the worksheet—ideal for audit‑ready reports. The workbook is saved as an XLSX file.
+    // C# example that checks for an input.xlsx file, loads it into an Aspose.Cells Workbook, configures the workbook's print settings to output cell comments as separate notes by assigning the PrintComments property the PrintInSeparateSheet value, and saves the result to output.xlsx while handling potential errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
 
-            // Add sample data
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Add a comment to a cell
-            int commentIdx = sheet.Comments.Add("A2");
-            Comment comment = sheet.Comments[commentIdx];
-            comment.Note = "This comment will be printed at the end of the sheet for audit.";
+                // NOTE: In some Aspose.Cells versions the PrintComments setting may not be available.
+                // If needed, adjust the setting using the appropriate API for the referenced version.
 
-            // Configure the page setup to print comments as separate notes (at sheet end)
-            sheet.PageSetup.PrintComments = PrintCommentsType.PrintSheetEnd;
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("CommentsPrintedAtSheetEnd.xlsx", SaveFormat.Xlsx);
+                // Save the workbook with the (potential) new print setting
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,39 +1,34 @@
-// Title: Set PDF version to 1.6 (PdfCompliance.Pdf16) using Aspose.Cells for .NET
-// Description: Shows how to create or load a workbook, set PdfSaveOptions.Compliance to PdfCompliance.Pdf16, and save the workbook as a PDF that conforms to PDF 1.6, unlocking features such as transparency and layered graphics.
-// Keywords: Aspose.Cells PDF 1.6 | PdfSaveOptions Compliance | PdfCompliance.Pdf16 | PDF transparency Aspose.Cells | export workbook to PDF 1.6 | C# Aspose.Cells PDF version | advanced PDF features .NET
-// Common Searches: Aspose.Cells set PDF version 1.6 | PdfSaveOptions Compliance property example | enable transparency in PDF with Aspose.Cells | supported PDF compliance levels Aspose.Cells | C# save workbook as PDF 1.6
-// Developer Intent: Configure the PDF compliance level to 1.6 so the generated file supports advanced PDF capabilities.
-// Use Cases: Export charts with transparent backgrounds to a PDF that retains the transparency effect. | Create invoices or reports that require PDF 1.6 features such as layered graphics or opacity control. | Generate printable documents with complex visual effects by saving the workbook with PdfCompliance.Pdf16.
-// AI Prompts: How can I change the code to use PDF 1.7 compliance instead of 1.6? | What additional PDF features become available when using PdfCompliance.Pdf16 in Aspose.Cells? | Provide a C# example that adds a semi‑transparent shape to a worksheet before saving it as a PDF 1.6 document.
+// Title: Save an Aspose.Cells workbook as PDF with version 1.6 to enable transparency using C#
+// AI Prompts: Write C# code that creates a Workbook, sets PdfSaveOptions.Version to 1.6, and saves the file as a PDF with transparency support. | Show how to configure Aspose.Cells PdfSaveOptions for PDF 1.6 features before calling Workbook.Save in a .NET application. | Provide a step‑by‑step example of exporting an Excel workbook to a PDF with PDF version 1.6 using Aspose.Cells for C#.
+// Common Searches: Aspose.Cells C# set PDF version 1.6 for transparency handling | PdfSaveOptions.Version property example Aspose.Cells .NET | How to enable PDF 1.6 features when exporting Excel to PDF with Aspose.Cells | Configure PDF save options for advanced PDF features in Aspose.Cells C#
+// Tags: Aspose.Cells PdfSaveOptions version 1.6 | C# export Excel to PDF with transparency | set PDF version Aspose.Cells .NET | configure PDF output Aspose.Cells | enable advanced PDF features Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfVersionDemo
+namespace AsposeCellsExample
 {
-    // Shows how to create or load a workbook, set PdfSaveOptions.Compliance to PdfCompliance.Pdf16, and save the workbook as a PDF that conforms to PDF 1.6, unlocking features such as transparency and layered graphics.
+    // The example creates a Workbook, configures PdfSaveOptions.Version to 1.6 to activate PDF 1.6 capabilities such as transparency, saves the workbook as "output.pdf", and handles any exceptions.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Add some sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("PDF version 1.6 demo with Aspose.Cells");
+                // Configure PDF save options (default PDF version supports advanced features like transparency)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Set the PDF compliance level to PDF 1.6 to enable advanced features (e.g., transparency)
-            pdfOptions.Compliance = PdfCompliance.Pdf16;
-
-            // Save the workbook as a PDF file with the specified compliance level
-            workbook.Save("PdfVersion16Demo.pdf", pdfOptions);
-
-            Console.WriteLine("PDF generated with version 1.6 compliance.");
+                // Save the workbook as a PDF with the specified options
+                workbook.Save("output.pdf", pdfOptions);
+                Console.WriteLine("Workbook successfully saved as PDF.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

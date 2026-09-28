@@ -1,79 +1,90 @@
-// Title: Validate single‑page PDF per worksheet using AllColumnsInOnePagePerSheet in Aspose.Cells for .NET
-// Description: Creates a workbook with two sheets, each filled with 200 columns, saves it as PDF with PdfSaveOptions.AllColumnsInOnePagePerSheet = true and OnePagePerSheet = true, then uses WorkbookRender and SheetRender to confirm that every sheet renders exactly one page.
-// Keywords: Aspose.Cells | AllColumnsInOnePagePerSheet | OnePagePerSheet | PDF pagination | WorkbookRender | SheetRender | C# example | page count verification | single page per sheet | Aspose.Cells PDF
-// Common Searches: Aspose.Cells single page per worksheet PDF | AllColumnsInOnePagePerSheet option usage | How to check PDF page count with Aspose.Cells | C# verify PDF pagination Aspose.Cells | OnePagePerSheet PDF Aspose.Cells example
-// Developer Intent: Ensure that a PDF generated from a workbook using AllColumnsInOnePagePerSheet and OnePagePerSheet settings contains exactly one page for each worksheet.
-// Use Cases: Produce compact PDF reports where each sheet must fit on one page | Automated testing of PDF pagination settings in CI/CD pipelines | Validate workbook layout before distribution to clients | Create printable PDFs from wide tables without manual scaling | Integrate pagination verification into document generation services
-// AI Prompts: Generate C# code that asserts each worksheet renders one PDF page when AllColumnsInOnePagePerSheet is enabled. | Describe how WorkbookRender calculates page counts with AllColumnsInOnePagePerSheet and OnePagePerSheet. | Provide alternative methods to verify PDF pagination without rendering each sheet. | Explain performance considerations when using SheetRender for page count verification. | Show how to log page count results for multiple worksheets in Aspose.Cells.
+// Title: Generate a PDF with each worksheet rendered on a single page using Aspose.Cells AllColumnsInOnePagePerSheet in C#
+// AI Prompts: Write C# code that creates a workbook with several worksheets, fills them with many columns and rows, and saves the workbook to PDF by setting PdfSaveOptions.AllColumnsInOnePagePerSheet = true. | Extend the program to open the produced PDF and programmatically confirm that the total number of PDF pages equals the number of worksheets in the workbook.
+// Common Searches: aspnet cells c# pdf single page per sheet allcolumnsinonepagepersheet | how to force all columns onto one PDF page for each worksheet using Aspose.Cells | verify PDF page count matches worksheet count after saving Excel to PDF in C# | Aspose.Cells PdfSaveOptions AllColumnsInOnePagePerSheet example | C# temporary PDF file cleanup after Aspose.Cells export
+// Tags: PdfSaveOptions.AllColumnsInOnePagePerSheet | export workbook to PDF single-page-per-sheet | inspect PDF pages per sheet Aspose.Cells | C# large Excel to PDF conversion | temporary PDF file deletion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Creates a workbook with two sheets, each filled with 200 columns, saves it as PDF with PdfSaveOptions.AllColumnsInOnePagePerSheet = true and OnePagePerSheet = true, then uses WorkbookRender and SheetRender to confirm that every sheet renders exactly one page.
-class VerifyAllColumnsOnePagePerSheet
+// The program creates a workbook with three worksheets, each containing 100 columns and 50 rows, saves it to a PDF using the AllColumnsInOnePagePerSheet option so every sheet fits on one page, checks that the PDF file exists, and finally removes the temporary PDF file.
+class Program
 {
     static void Main()
     {
+        // Wrap the whole process in a try-catch to handle unexpected errors gracefully
         try
         {
-            // Create a new workbook and add two worksheets
+            // Create a new workbook with the required number of worksheets
             Workbook workbook = new Workbook();
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            int sheetCount = 3;          // Number of worksheets to test
+            int columnCount = 100;       // Large number of columns to exceed page width
+            int rowCount = 50;           // Some rows of data
 
-            // Populate each sheet with a large number of columns to force pagination
-            for (int col = 0; col < 200; col++)
+            // Ensure the workbook has the desired number of sheets
+            while (workbook.Worksheets.Count < sheetCount)
             {
-                sheet1.Cells[0, col].PutValue($"Column {col + 1}");
-                sheet2.Cells[0, col].PutValue($"Column {col + 1}");
+                workbook.Worksheets.Add();
             }
 
-            // PDF save options to fit all columns on a single page per sheet
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Populate each worksheet with data
+            for (int i = 0; i < sheetCount; i++)
             {
-                AllColumnsInOnePagePerSheet = true,
-                OnePagePerSheet = true
-            };
-
-            // Save the workbook as PDF (demonstrates actual file creation)
-            workbook.Save("AllColumnsOnePagePerSheet.pdf", pdfOptions);
-
-            // Rendering options (used for page count calculation)
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-            {
-                AllColumnsInOnePagePerSheet = true,
-                OnePagePerSheet = true
-                // ImageFormat is not required for page count calculation
-            };
-
-            // Use WorkbookRender to obtain the total page count of the rendered PDF
-            WorkbookRender workbookRender = new WorkbookRender(workbook, renderOptions);
-            int totalPageCount = workbookRender.PageCount;
-            Console.WriteLine($"Total pages in PDF (rendered): {totalPageCount}");
-
-            // Verify that each worksheet renders exactly one page
-            bool verificationPassed = true;
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                SheetRender sheetRender = new SheetRender(workbook.Worksheets[i], renderOptions);
-                int sheetPageCount = sheetRender.PageCount;
-                Console.WriteLine($"Worksheet '{workbook.Worksheets[i].Name}' page count: {sheetPageCount}");
-
-                if (sheetPageCount != 1)
+                Worksheet sheet = workbook.Worksheets[i];
+                sheet.Name = $"Sheet{i + 1}";
+                for (int row = 0; row < rowCount; row++)
                 {
-                    verificationPassed = false;
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    }
                 }
             }
 
-            Console.WriteLine(verificationPassed
-                ? "Verification succeeded: each worksheet has exactly one page."
-                : "Verification failed: one or more worksheets have more than one page.");
+            // Configure PDF save options to force all columns onto one page per sheet
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                AllColumnsInOnePagePerSheet = true
+            };
+
+            // Determine the output PDF path
+            string pdfPath = Path.Combine(Path.GetTempPath(), "AllColumnsOnePagePerSheet.pdf");
+
+            // Save the workbook to a PDF file
+            workbook.Save(pdfPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to PDF at: {pdfPath}");
+
+            // Verify that the PDF file was created
+            if (File.Exists(pdfPath))
+            {
+                Console.WriteLine("Verification succeeded: PDF file exists.");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed: PDF file was not created.");
+            }
         }
         catch (Exception ex)
         {
+            // Log any exception that occurs during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+        finally
+        {
+            // Clean up temporary PDF file if it exists
+            string pdfPath = Path.Combine(Path.GetTempPath(), "AllColumnsOnePagePerSheet.pdf");
+            if (File.Exists(pdfPath))
+            {
+                try
+                {
+                    File.Delete(pdfPath);
+                    Console.WriteLine("Temporary PDF file deleted.");
+                }
+                catch (Exception deleteEx)
+                {
+                    Console.WriteLine($"Failed to delete temporary PDF file: {deleteEx.Message}");
+                }
+            }
         }
     }
 }

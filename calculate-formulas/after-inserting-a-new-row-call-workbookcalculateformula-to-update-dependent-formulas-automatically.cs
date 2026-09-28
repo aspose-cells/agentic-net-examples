@@ -1,49 +1,40 @@
-// Title: Insert a Row and Auto‑Recalculate Formulas with Aspose.Cells for .NET (C#)
-// Description: This example demonstrates how to create a workbook, add values and formulas, insert a new row at a specific index, and then invoke Workbook.CalculateFormula to refresh all dependent calculations before saving the file as XLSX.
-// Keywords: Aspose.Cells | C# | InsertRow | Workbook.CalculateFormula | recalculate Excel formulas | update dependent cells | row insertion automation | SUM formula refresh | XLSX export | sample code
-// Common Searches: Aspose.Cells insert row and recalculate formulas | C# Workbook.CalculateFormula usage | How to refresh formulas after adding a row in Aspose.Cells | Update SUM range after row insertion .NET | Excel automation recalculate after structural change
-// Developer Intent: Refresh every formula in a workbook after a row is inserted so that all dependent calculations reflect the new data.
-// Use Cases: Add a data row between existing entries and automatically adjust SUM or AVERAGE formulas that reference the shifted range. | Programmatically insert rows in a financial report and ensure all linked calculations stay accurate without manual edits. | Perform bulk row insertions in a large spreadsheet and trigger a single recalculation step to maintain performance.
-// AI Prompts: Show me C# code that inserts a row at index 1 using Aspose.Cells and then calls Workbook.CalculateFormula. | Explain how Workbook.CalculateFormula updates dependent cells after a row insertion in an Excel workbook. | Provide a step‑by‑step guide to refresh all formulas after inserting multiple rows with Aspose.Cells for .NET.
+// Title: Insert a row in an Aspose.Cells worksheet and automatically recalculate dependent formulas using Workbook.CalculateFormula (C#)
+// AI Prompts: Insert a new row at a specific index in an Aspose.Cells worksheet, add data to the inserted cells, and invoke Workbook.CalculateFormula to refresh all formulas. | Show how to update a SUM formula after shifting rows by inserting a row and calling the calculation engine in C#. | Provide complete C# code that inserts a row, modifies cell values, recalculates formulas, and saves the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# insert row and recalculate formulas example | How to refresh SUM formula after adding a row with Aspose.Cells | Workbook.CalculateFormula after row insertion in .NET | Update dependent formulas automatically when inserting rows using Aspose.Cells | C# code to insert row and trigger formula recalculation in Excel file
+// Tags: add new row Aspose.Cells C# | Workbook.CalculateFormula recalculate | refresh dependent formulas Aspose.Cells | update SUM after row insertion | save workbook after calculation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsInsertRowAndRecalculate
+// The sample creates a workbook, fills cells A1‑A3, sets B1 to =SUM(A1:A3), inserts a row at index 1, adds a value to the new A2, calls Workbook.CalculateFormula to update the SUM, prints the refreshed B1 value, and saves the file as InsertedRow.xlsx.
+class InsertRowAndRecalculate
 {
-    // This example demonstrates how to create a workbook, add values and formulas, insert a new row at a specific index, and then invoke Workbook.CalculateFormula to refresh all dependent calculations before saving the file as XLSX.
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook (creation rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Initial data
+        cells["A1"].PutValue(10);
+        cells["A2"].PutValue(20);
+        cells["A3"].PutValue(30);
+        // Formula that sums the three values
+        cells["B1"].Formula = "=SUM(A1:A3)";
 
-            // Populate some sample data and formulas before inserting a row
-            // A1 = 10, A2 = 20, B1 = =A1*2, B2 = =A2*2, C1 = =SUM(B1:B2)
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["B1"].Formula = "=A1*2";
-            cells["B2"].Formula = "=A2*2";
-            cells["C1"].Formula = "=SUM(B1:B2)";
+        // Insert a new row at index 1 (between A1 and A2)
+        cells.InsertRow(1);
+        // Add a value to the newly inserted row
+        cells["A2"].PutValue(15); // original A2 and A3 shift down
 
-            // Insert a new row at index 1 (between the two data rows)
-            // This will shift the original row 1 (A2, B2) down to row 2
-            cells.InsertRow(1);
+        // Recalculate formulas after the insertion
+        workbook.CalculateFormula();
 
-            // Optionally put new data into the inserted row
-            cells["A1"].PutValue(5); // New value in the inserted row
-            cells["B1"].Formula = "=A1*2";
+        // Display the updated result of the formula
+        Console.WriteLine("B1 after recalculation: " + cells["B1"].Value);
 
-            // Recalculate all formulas so that dependent cells (e.g., C1) reflect the changes
-            workbook.CalculateFormula();
-
-            // Save the workbook (save rule)
-            workbook.Save("InsertedRowAndRecalculated.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook (optional)
+        workbook.Save("InsertedRow.xlsx");
     }
 }

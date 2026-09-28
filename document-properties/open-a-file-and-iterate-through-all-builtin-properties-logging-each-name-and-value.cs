@@ -1,38 +1,42 @@
-// Title: C# – List All Built‑In Document Properties of an Excel Workbook with Aspose.Cells
-// Description: Loads an Excel file using Aspose.Cells for .NET, accesses the BuiltInDocumentPropertyCollection, iterates through each property, safely handles null values, and writes the property name and value to the console.
-// Keywords: Aspose.Cells C# | read built‑in document properties | Excel metadata extraction | list workbook properties | document property collection .NET | handle null property values
-// Common Searches: Aspose.Cells get built‑in properties C# | list Excel file metadata with Aspose | iterate workbook document properties .NET | C# code to display Excel built‑in properties | how to read Excel workbook properties using Aspose
-// Developer Intent: Open an Excel workbook and output every built‑in document property (name and value) to the console.
-// Use Cases: Create an audit log of workbook metadata for compliance checks. | Export property information to a report or CSV for documentation. | Verify required metadata such as Author, Title, or Company before processing the file.
-// AI Prompts: Show how to write the built‑in properties to a CSV file instead of the console. | Provide code that skips properties with null values and logs only populated entries. | Explain how to combine custom and built‑in document properties in a single enumeration using Aspose.Cells.
+// Title: Read and list all built‑in document properties of an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that checks for an .xlsx file, loads it with Aspose.Cells, and prints each built‑in document property (name and value) to the console. | Create a method that opens a workbook with Aspose.Cells, iterates over its BuiltInDocumentProperties collection, and logs the property details while handling missing‑file and load exceptions.
+// Common Searches: C# Aspose.Cells list built‑in document properties of an Excel workbook | sample code to read Excel file metadata using Aspose.Cells .NET | how to handle missing Excel file when loading with Aspose.Cells in C# | Aspose.Cells example for iterating workbook metadata properties | retrieve author, title, and other built‑in properties from .xlsx with Aspose.Cells
+// Tags: Aspose.Cells enumerate workbook metadata | C# read Excel workbook properties with Aspose.Cells | log property name and value Aspose.Cells | validate Excel file existence before loading | exception handling for Aspose.Cells workbook load
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsBuiltInPropertiesDemo
+// The program checks that the specified Excel file exists, loads it into an Aspose.Cells Workbook, iterates through the BuiltInDocumentProperties collection, and writes each property's name and value to the console, with error handling for missing files and load failures.
+class Program
 {
-    // Loads an Excel file using Aspose.Cells for .NET, accesses the BuiltInDocumentPropertyCollection, iterates through each property, safely handles null values, and writes the property name and value to the console.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the Excel file to be opened
-            string filePath = "input.xlsx";
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(filePath);
+        try
+        {
+            // Load the Excel workbook
+            var workbook = new Workbook(inputPath);
 
-            // Retrieve the collection of built‑in document properties
-            BuiltInDocumentPropertyCollection builtInProps = workbook.BuiltInDocumentProperties;
-
-            // Iterate through each property and log its name and value
-            foreach (DocumentProperty prop in builtInProps)
+            // Iterate through all built‑in document properties
+            foreach (var prop in workbook.BuiltInDocumentProperties)
             {
-                // Some built‑in properties may have null values; handle gracefully
-                string value = prop.Value != null ? prop.Value.ToString() : "null";
-                Console.WriteLine($"{prop.Name}: {value}");
+                // Output property name and its value
+                Console.WriteLine($"{prop.Name}: {prop.Value}");
             }
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

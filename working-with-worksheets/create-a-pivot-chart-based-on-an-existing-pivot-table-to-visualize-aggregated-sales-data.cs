@@ -1,102 +1,67 @@
-// Title: Create a PivotChart from a PivotTable with Aspose.Cells for .NET (C#)
-// Description: C# code that builds a workbook, inserts sample sales rows, creates a PivotTable (Region rows, Product columns, Sum of Sales), adds a linked column PivotChart, enables interactive drop‑zone controls, refreshes the chart data, and saves the file as PivotChartDemo.xlsx using Aspose.Cells.
-// Keywords: Aspose.Cells pivot chart C# | create pivot chart Aspose.Cells | link pivot chart to pivot table .NET | pivot chart drop zones | refresh pivot chart Aspose | C# Excel pivot table example | sales data pivot chart | Aspose.Cells chart types | Excel automation Aspose.Cells
-// Common Searches: Aspose.Cells how to add a PivotChart to a workbook | C# create PivotTable and PivotChart with Aspose.Cells | Enable drop zone controls on PivotChart Aspose | Refresh PivotChart after changing PivotTable data Aspose.Cells | Example of sales data pivot chart using Aspose.Cells .NET
-// Developer Intent: Generate a column PivotChart that automatically reflects the aggregated sales values defined in a PivotTable.
-// Use Cases: Produce an executive‑ready column chart showing regional product sales derived from a PivotTable. | Create an interactive Excel file where users can modify categories, series, and filters directly on the chart via drop‑zone controls. | Export a single workbook containing both a PivotTable and its linked chart for distribution to stakeholders.
-// AI Prompts: Write C# code with Aspose.Cells to add a PivotChart linked to an existing PivotTable and enable all drop‑zone options. | Show how to refresh a PivotChart after updating the underlying PivotTable data using Aspose.Cells for .NET. | Explain how to change the chart type and customize PivotOptions for a PivotChart created from sales data.
+// Title: Generate a column pivot chart from an existing pivot table in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx file, finds the first pivot table, adds a column chart linked to that pivot table on the same worksheet, sets the chart title to "Aggregated Sales", enables the legend, and saves the workbook. | Show how to create a pivot chart in Aspose.Cells by calling PivotTable.NSeries.Add, customize its type, title, and legend, then persist the changes to a new file. | Adapt the example to place the pivot chart on a separate worksheet and switch the chart type to a line chart while keeping the data source linked to the original pivot table.
+// Common Searches: Aspose.Cells C# add pivot chart to existing worksheet from pivot table | How to link a column chart to a pivot table using Aspose.Cells for .NET | C# example for creating a pivot chart with title and legend in an Excel file | Save workbook with new pivot chart using Aspose.Cells API | Change pivot chart type to line chart on a new sheet Aspose.Cells C#
+// Tags: add pivot chart Aspose.Cells | column chart from PivotTable C# | chart title legend Aspose.Cells | save workbook with chart C# | pivot chart on new worksheet Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Pivot;
 
-namespace PivotChartDemo
+// Loads an existing workbook, retrieves the first pivot table, adds a column chart linked to that pivot table on the same sheet, sets a title and legend, and saves the workbook as a new file.
+class PivotChartExample
 {
-    // C# code that builds a workbook, inserts sample sales rows, creates a PivotTable (Region rows, Product columns, Sum of Sales), adds a linked column PivotChart, enables interactive drop‑zone controls, refreshes the chart data, and saves the file as PivotChartDemo.xlsx using Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // -------------------------------------------------
-            // 1. Add sample sales data to the first worksheet
-            // -------------------------------------------------
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "SalesData";
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Header row
-            dataSheet.Cells["A1"].PutValue("Region");
-            dataSheet.Cells["B1"].PutValue("Product");
-            dataSheet.Cells["C1"].PutValue("Sales");
+            // Load the workbook that already contains a pivot table with aggregated sales data
+            Workbook workbook = new Workbook(inputPath);
 
-            // Sample rows
-            dataSheet.Cells["A2"].PutValue("North");
-            dataSheet.Cells["B2"].PutValue("Laptop");
-            dataSheet.Cells["C2"].PutValue(1200);
+            // Assume the pivot table is on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            dataSheet.Cells["A3"].PutValue("North");
-            dataSheet.Cells["B3"].PutValue("Phone");
-            dataSheet.Cells["C3"].PutValue(800);
+            // Retrieve the first pivot table (adjust index if needed)
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("Error: No pivot tables found on the first worksheet.");
+                return;
+            }
+            PivotTable pivot = sheet.PivotTables[0];
 
-            dataSheet.Cells["A4"].PutValue("South");
-            dataSheet.Cells["B4"].PutValue("Laptop");
-            dataSheet.Cells["C4"].PutValue(1500);
+            // Add a new chart to the same worksheet (position and size can be adjusted)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            dataSheet.Cells["A5"].PutValue("South");
-            dataSheet.Cells["B5"].PutValue("Phone");
-            dataSheet.Cells["C5"].PutValue(900);
+            // Set chart title
+            chart.Title.Text = "Aggregated Sales";
 
-            // -------------------------------------------------
-            // 2. Create a PivotTable on a new worksheet
-            // -------------------------------------------------
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // Use the pivot table as the source for the chart series
+            // The second parameter (true) indicates that the series are plotted by categories
+            chart.NSeries.Add(pivot.Name, true);
 
-            // Define the source data range (including headers)
-            string sourceData = "=SalesData!A1:C5";
+            // Optional: display legend
+            chart.ShowLegend = true;
 
-            // Add the pivot table; top‑left corner at cell A3
-            int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A3", "SalesPivot");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-            // Configure the pivot fields:
-            // Row axis -> Region
-            // Column axis -> Product
-            // Data area -> Sum of Sales
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Optional: calculate the pivot data now
-            pivotTable.CalculateData();
-
-            // -------------------------------------------------
-            // 3. Add a PivotChart linked to the PivotTable
-            // -------------------------------------------------
-            // Add a column chart positioned on the same pivot sheet
-            int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 15, 0, 30, 15);
-            Chart chart = pivotSheet.Charts[chartIndex];
-
-            // Link the chart to the pivot table
-            chart.PivotSource = "PivotTable!SalesPivot";
-
-            // Refresh the chart so it pulls data from the pivot table
-            chart.RefreshPivotData();
-
-            // Optional: enable pivot controls on the chart
-            PivotOptions pivotOptions = chart.PivotOptions;
-            pivotOptions.DropZonesVisible = true;
-            pivotOptions.DropZoneFilter = true;
-            pivotOptions.DropZoneCategories = true;
-            pivotOptions.DropZoneSeries = true;
-            pivotOptions.DropZoneData = true;
-
-            // -------------------------------------------------
-            // 4. Save the workbook
-            // -------------------------------------------------
-            workbook.Save("PivotChartDemo.xlsx");
+            // Save the workbook with the new pivot chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

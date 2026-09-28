@@ -1,45 +1,44 @@
-// Title: Aspose.Cells C# – Convert Workbook to PDF with Fast Web View Disabled (Linear PDF)
-// Description: Demonstrates how to create or load an Aspose.Cells Workbook, set PdfSaveOptions.FastWebView to false, and save the workbook as a single‑stream PDF. The resulting file is linear, improving sequential reading and compatibility with older PDF viewers.
-// Keywords: Aspose.Cells | PDF conversion | FastWebView | PdfSaveOptions | C# | linear PDF | disable fast web view | continuous PDF stream | Excel to PDF | .NET
-// Common Searches: Aspose.Cells disable FastWebView PDF | C# save workbook as PDF without fast web view | PdfSaveOptions FastWebView false example | generate linear PDF from Excel using Aspose.Cells | Aspose.Cells PDF single stream output
-// Developer Intent: Produce a PDF from an Excel workbook while turning off Fast Web View to obtain a single continuous stream.
-// Use Cases: Provide downloadable PDF reports from web applications where fast web view must be off for legacy viewer support. | Stream large Excel‑derived PDFs efficiently in low‑bandwidth environments. | Batch‑convert multiple workbooks to linear PDFs to reduce file size and simplify sequential processing.
-// AI Prompts: Show C# code that sets PdfSaveOptions.FastWebView = false in Aspose.Cells and saves a workbook as PDF. | Explain why disabling Fast Web View creates a linear PDF and how it affects file size and compatibility. | Generate a step‑by‑step guide for converting an existing Excel file to a single‑stream PDF using Aspose.Cells .NET.
+// Title: Convert an Excel workbook to a continuous PDF stream with Fast Web View disabled using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.FastWebView to false, and saves it as a single‑stream PDF. | Show how to use Aspose.Cells PdfSaveOptions in a .NET console app to export an Excel workbook to a non‑linearized PDF.
+// Common Searches: Aspose.Cells how to turn off Fast Web View when saving PDF in C# | C# export Excel to PDF as one continuous stream using Aspose.Cells | PdfSaveOptions FastWebView false example Aspose.Cells | Generate non‑linearized PDF from workbook with Aspose.Cells .NET
+// Tags: Aspose.Cells PdfSaveOptions FastWebView | C# Excel to PDF continuous stream | disable fast web view Aspose PDF export | non-linearized PDF generation Aspose.Cells | single-stream PDF output from workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPdfExample
+// The program checks for the input.xlsx file, loads it with Aspose.Cells, creates a PdfSaveOptions object with FastWebView disabled, and saves the workbook as output.pdf, producing a single continuous PDF stream.
+class Program
 {
-    // Demonstrates how to create or load an Aspose.Cells Workbook, set PdfSaveOptions.FastWebView to false, and save the workbook as a single‑stream PDF. The resulting file is linear, improving sequential reading and compatibility with older PDF viewers.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // Add some sample data
-                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data for PDF conversion");
-
-                // Initialize PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Disable Fast Web View if the property exists (commented out for compatibility with older versions)
-                // pdfOptions.FastWebView = false;
-
-                // Save the workbook as PDF using the specified options
-                string outputPath = "output.pdf";
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (Fast Web View is disabled by default in many versions)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

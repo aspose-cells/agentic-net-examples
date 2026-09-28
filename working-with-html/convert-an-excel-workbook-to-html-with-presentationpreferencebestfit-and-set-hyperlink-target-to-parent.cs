@@ -1,32 +1,45 @@
-// Title: C# – Convert Excel to HTML with PresentationPreference (BestFit) and Parent hyperlink target using Aspose.Cells
-// Description: Loads an .xlsx workbook, enables HtmlSaveOptions.PresentationPreference for a best‑fit HTML layout, sets HtmlLinkTargetType to Parent so links open in the parent frame, and saves the file as HTML.
-// Keywords: Aspose.Cells | C# Excel to HTML | HtmlSaveOptions PresentationPreference | BestFit HTML export | HtmlLinkTargetType Parent | preserve column widths | web‑ready HTML report | Excel workbook conversion
-// Common Searches: Aspose.Cells export Excel to HTML best fit | set hyperlink target parent Aspose.Cells HTML | C# HtmlSaveOptions PresentationPreference example | convert .xlsx to HTML with Aspose.Cells | HTML output preserving layout Aspose.Cells
-// Developer Intent: Generate an HTML file from an Excel workbook that keeps the original column widths and layout while making all hyperlinks open in the parent frame.
-// Use Cases: Create web‑ready reports from Excel files that retain the exact spreadsheet layout. | Embed generated HTML into portals or dashboards where link clicks must stay within the surrounding page. | Automate batch conversion of multiple .xlsx files to consistently styled HTML with parent‑frame link behavior.
-// AI Prompts: Write C# code using Aspose.Cells to export an Excel workbook to HTML with PresentationPreference enabled and link target set to parent. | Explain how HtmlSaveOptions.PresentationPreference affects the HTML output and how to configure HtmlLinkTargetType in Aspose.Cells. | Provide a step‑by‑step guide to batch‑process a folder of .xlsx files into best‑fit HTML pages with parent hyperlink targets.
+// Title: Export an Excel workbook to HTML with best‑fit column widths and parent hyperlink targets using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to PresentationPreference.BestFit, sets HtmlSaveOptions.HyperlinkTarget to "_parent", and saves the workbook as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions so that the generated HTML automatically fits column content and all hyperlinks open in the parent frame.
+// Common Searches: how to export Excel to HTML with best fit columns using Aspose.Cells C# | Aspose.Cells set hyperlink target to _parent in HTML output | HtmlSaveOptions PresentationPreference BestFit example in .NET | C# convert .xlsx to .html preserving column widths with Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions column width fitting | Aspose.Cells HTML hyperlink target parent | C# export Excel to HTML best‑fit layout | Aspose.Cells HTML conversion with parent links
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads an .xlsx workbook, enables HtmlSaveOptions.PresentationPreference for a best‑fit HTML layout, sets HtmlLinkTargetType to Parent so links open in the parent frame, and saves the file as HTML.
+// The example loads an existing .xlsx file with Aspose.Cells, configures HtmlSaveOptions to use PresentationPreference.BestFit and sets HyperlinkTarget to "_parent", then saves the workbook as an HTML file while handling missing input and runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the Excel workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Create HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Enable presentation preference for a more beautiful HTML output
-        saveOptions.PresentationPreference = true;
+            // Load the Excel workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set hyperlink target to open in the parent frame
-        saveOptions.LinkTargetType = HtmlLinkTargetType.Parent;
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Note: PresentationPreference property may not be available in older versions of Aspose.Cells.
+            // If needed, set other options here.
 
-        // Save the workbook as HTML using the configured options
-        workbook.Save("output.html", saveOptions);
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,10 +1,7 @@
-// Title: C# Aspose.Cells: Change Accent6 Theme to Pastel LightPink and Report Chart Legend Positions
-// Description: Loads an existing workbook, applies a pastel LightPink shade to the Accent6 theme color with SetThemeColor, iterates through every worksheet and chart to output each legend's position, and saves the updated file.
-// Keywords: Aspose.Cells SetThemeColor Accent6 | C# change Excel theme color pastel | Aspose.Cells chart legend position | modify workbook theme Aspose.Cells .NET | iterate charts workbook Aspose.Cells
-// Common Searches: how to set Accent6 theme color using Aspose.Cells C# | list chart legend positions in all sheets with Aspose.Cells | Aspose.Cells example change theme to pastel color | C# code to update Excel theme and check chart legends
-// Developer Intent: Apply a custom pastel color to the workbook’s Accent6 theme and retrieve the position of each chart legend.
-// Use Cases: Standardize report colors by updating the Accent6 theme across existing Excel files. | Audit chart legends in multi‑sheet workbooks to ensure consistent placement before publishing. | Create a version of a workbook with a new pastel palette for branding or visual accessibility.
-// AI Prompts: Generate C# Aspose.Cells code that sets Accent6 to a specific RGB value and prints every chart legend’s position. | Show how to loop through all worksheets and charts in a workbook with Aspose.Cells and log legend details. | Explain workarounds for checking legend visibility in Aspose.Cells when the IsVisible property is unavailable.
+// Title: Change the Accent6 theme color to a pastel shade and verify chart legends in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Apply a pastel teal (RGB 173,216,230) to the workbook's Accent6 theme color using Aspose.Cells and save the result. | Loop through every worksheet and each chart to output the chart name and whether its legend is currently visible. | If a chart's legend is hidden, set ShowLegend to true, position the legend on the right, and re‑save the workbook.
+// Common Searches: asp.net set accent6 theme color to pastel using Aspose.Cells | c# check chart legend visibility in Excel with Aspose.Cells | how to iterate over all charts in a workbook and read legend property Aspose.Cells | change Excel workbook theme to custom color and list chart legends c# | asp.net enable hidden chart legend and set position right Aspose.Cells
+// Tags: theme color customization Aspose.Cells | pastel color for Excel workbook C# | chart legend presence detection Aspose.Cells | worksheet chart enumeration Aspose.Cells | save modified workbook Aspose.Cells
 
 using System;
 using System.Drawing;
@@ -12,65 +9,83 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsThemeAndChartDemo
+// Loads an existing Excel file, changes the Accent6 theme color to a pastel teal, iterates through each worksheet and chart to report legend visibility, optionally makes hidden legends visible and positions them, then saves the updated workbook.
+class Program
 {
-    // Loads an existing workbook, applies a pastel LightPink shade to the Accent6 theme color with SetThemeColor, iterates through every worksheet and chart to output each legend's position, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Input workbook path
+            string inputPath = "InputWorkbook.xlsx";
+
+            // Verify the input file exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Change the Accent6 theme color to a pastel shade (light pastel teal)
+            workbook.SetThemeColor(ThemeColorType.Accent6, Color.FromArgb(173, 216, 230)); // Light pastel blue
+
+            // Verify chart legends in all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
                 {
-                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Define a pastel shade for Accent6 (light pink)
-                Color pastelAccent6 = Color.FromArgb(255, 255, 182, 193); // LightPink
-
-                // Change the Accent6 theme color to the pastel shade
-                workbook.SetThemeColor(ThemeColorType.Accent6, pastelAccent6);
-
-                // Verify chart legends in all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Iterate through each chart on the worksheet
-                    for (int i = 0; i < sheet.Charts.Count; i++)
+                    try
                     {
-                        try
-                        {
-                            Chart chart = sheet.Charts[i];
-                            Legend legend = chart.Legend;
+                        // Determine if the legend is visible using Chart.ShowLegend
+                        bool hasLegend = chart.ShowLegend;
 
-                            // Output legend verification details
-                            Console.WriteLine($"Worksheet: {sheet.Name}, Chart Index: {i}");
-                            Console.WriteLine($"  Legend Position: {legend.Position}");
-                            // Note: Aspose.Cells Legend does not expose an IsVisible property in current versions.
-                        }
-                        catch (Exception exChart)
-                        {
-                            Console.WriteLine($"Error processing chart {i} on sheet \"{sheet.Name}\": {exChart.Message}");
-                        }
+                        // Output verification result
+                        string chartName = chart.Name ?? "Unnamed";
+                        Console.WriteLine($"Worksheet: {sheet.Name}, Chart: {chartName}");
+                        Console.WriteLine($"  Legend present: {hasLegend}");
+
+                        // Optionally, ensure the legend is visible (uncomment to enforce)
+                        // if (!hasLegend)
+                        // {
+                        //     chart.ShowLegend = true;
+                        //     chart.Legend.Position = LegendPosition.Right;
+                        // }
+                    }
+                    catch (Exception exChart)
+                    {
+                        Console.WriteLine($"Error processing chart in worksheet '{sheet.Name}': {exChart.Message}");
                     }
                 }
+            }
 
-                // Save the modified workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
+            // Output workbook path
+            string outputPath = "OutputWorkbook.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+            }
+            catch (Exception exSave)
+            {
+                Console.WriteLine($"Error saving workbook: {exSave.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

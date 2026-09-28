@@ -1,55 +1,47 @@
-// Title: Aspose.Cells C# – Turn Off Chart Data Label Text Wrapping (DataLabels.IsTextWrapped = false)
-// Description: Creates a workbook, adds a column chart with sales data, shows values on the first series' data labels, and disables label text wrapping by setting DataLabels.IsTextWrapped to false before saving as ChartDataLabels_NoWrap.xlsx.
-// Keywords: Aspose.Cells chart data labels | DataLabels.IsTextWrapped | C# disable label wrap | Excel chart label formatting .NET | Aspose.Cells column chart example | prevent text wrap in chart labels | Aspose.Cells API DataLabels
-// Common Searches: Aspose.Cells set DataLabels.IsTextWrapped false | C# chart label no wrap Aspose | how to stop text wrapping on Excel chart labels using Aspose.Cells | disable data label wrap in column chart .NET | Aspose.Cells chart label formatting options
-// Developer Intent: Disable automatic line‑breaks in chart data label text.
-// Use Cases: Generate reports where chart labels must stay on a single line for readability. | Create Excel files with long numeric or textual values in labels without disturbing layout. | Prepare spreadsheets for presentation where wrapped labels would cause misalignment.
-// AI Prompts: Provide C# code using Aspose.Cells to add a bar chart and set DataLabels.IsTextWrapped = false for all series. | Explain how DataLabels.IsTextWrapped interacts with ShowValue and other label properties in Aspose.Cells charts. | Show how to programmatically ensure chart data labels never wrap, regardless of label length, in a .NET workbook.
+// Title: How to disable text wrapping for data labels in an Aspose.Cells column chart using C#
+// AI Prompts: Write C# code that creates a column chart with Aspose.Cells, shows data label values, and sets DataLabels.IsTextWrapped to false. | Demonstrate how to access a chart series' DataLabels object and turn off text wrapping in Aspose.Cells for .NET. | Provide a complete example that saves the workbook after disabling data label text wrapping in an Excel chart.
+// Common Searches: Aspose.Cells C# chart data label wrap off | Set DataLabels.IsTextWrapped false in Aspose.Cells column chart | Disable text wrapping for Excel chart data labels using Aspose.Cells .NET | How to prevent data label text from wrapping in Aspose.Cells charts | C# Aspose.Cells example for chart data label formatting
+// Tags: Aspose.Cells chart data label no wrap | C# DataLabels.IsTextWrapped usage | column chart data label formatting Aspose.Cells | Excel chart data label text wrap control | Aspose.Cells disable data label wrapping
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartDataLabelWrapDemo
+// The example creates a workbook, adds sample data, inserts a column chart, enables data labels, disables their text wrapping with DataLabels.IsTextWrapped = false, and saves the file as ChartDataLabels_NoWrap.xlsx.
+class Program
 {
-    // Creates a workbook, adds a column chart with sales data, shows values on the first series' data labels, and disables label text wrapping by setting DataLabels.IsTextWrapped to false before saving as ChartDataLabels_NoWrap.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["A4"].PutValue("Banana");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["B2"].PutValue(120);
-            worksheet.Cells["B3"].PutValue(85);
-            worksheet.Cells["B4"].PutValue(65);
+        // Add sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
+        // Insert a column chart
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+        Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+        // Define the data range for the chart
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-            // Access the data labels of the first series
-            DataLabels dataLabels = chart.NSeries[0].DataLabels;
+        // Access the data labels of the first series and enable them
+        DataLabels dataLabels = chart.NSeries[0].DataLabels;
+        dataLabels.ShowValue = true;
 
-            // Show the values on the data labels
-            dataLabels.ShowValue = true;
+        // Disable text wrapping for the data labels
+        dataLabels.IsTextWrapped = false;
 
-            // Disable text wrapping for the data labels
-            dataLabels.IsTextWrapped = false;
-
-            // Save the workbook to a file
-            workbook.Save("ChartDataLabels_NoWrap.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("ChartDataLabels_NoWrap.xlsx");
     }
 }

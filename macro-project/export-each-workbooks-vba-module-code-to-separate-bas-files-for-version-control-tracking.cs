@@ -1,76 +1,105 @@
-// Title: Export VBA Modules to .bas Files from .xlsm Workbooks with Aspose.Cells (C#)
-// Description: C# utility that scans a directory for .xlsm files, loads each workbook with Aspose.Cells, detects VBA projects, creates a workbook‑named subfolder, and writes every VBA module to a sanitized .bas file for easy version‑control tracking.
-// Keywords: Aspose.Cells VBA export | C# extract VBA modules | save VBA code .bas | batch export .xlsm macros | .NET VBA project extraction | version control Excel macros | export VBA to files | Aspose.Cells macro handling
-// Common Searches: export VBA modules from xlsm using Aspose.Cells C# | save each VBA module as .bas file | batch extract Excel macros for source control | C# code to write VBA project to files | Aspose.Cells export macro code
-// Developer Intent: Generate separate .bas files for every VBA module in each macro‑enabled workbook to enable source‑control of macro code.
-// Use Cases: Automated nightly extraction of all VBA modules from a repository of .xlsm files. | Creating a per‑workbook folder structure that isolates macro code for Git tracking. | Integrating the export routine into CI/CD pipelines to capture macro changes alongside source code.
-// AI Prompts: Write a C# program that uses Aspose.Cells to iterate over .xlsm files in a folder and export each VBA module to a .bas file, handling invalid filename characters. | Refactor ExportVbaModules to return a list of exported file paths and allow the caller to specify a custom file extension. | Create a PowerShell script that calls the compiled .NET assembly, logs successes and failures, and uploads the exported .bas files to a Git repository.
+// Title: Batch export VBA modules from .xlsm workbooks to individual .bas files using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that accepts a collection of .xlsm file paths and an output folder, loads each workbook with Aspose.Cells, and saves every VBA module as a separate .bas file named "<Workbook>_<Module>.bas". | Enhance the export routine to prepend a comment header to each .bas file that records the source workbook name and module name, and ensure any illegal filename characters are replaced. | Add comprehensive error handling and logging to the VBA extraction process: record missing workbook files, workbooks without a VBA project, and any file‑write exceptions in a log file.
+// Common Searches: how to programmatically extract VBA code from .xlsm files using Aspose.Cells in C# | C# batch export of VBA modules to .bas files from multiple Excel workbooks | save each VBA module from an Excel macro‑enabled workbook as a separate file with Aspose.Cells | automate VBA project extraction for version control using Aspose.Cells .NET | Aspose.Cells example for exporting VBA modules to text files
+// Tags: extract VBA code to .bas files using Aspose.Cells | batch process .xlsm workbooks for VBA module extraction C# | sanitize VBA module filenames for file system compatibility | log missing VBA projects during workbook processing Aspose.Cells | manage VBA project version control with Aspose.Cells .NET
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
 namespace VbaExportExample
 {
-    // C# utility that scans a directory for .xlsm files, loads each workbook with Aspose.Cells, detects VBA projects, creates a workbook‑named subfolder, and writes every VBA module to a sanitized .bas file for easy version‑control tracking.
+    // The sample program iterates over a list of .xlsm workbook paths, creates the target directory if needed, loads each workbook with Aspose.Cells, checks for a VBA project, and writes the source code of each VBA module to a uniquely named .bas file (WorkbookName_ModuleName.bas). It handles missing files, load failures, absent VBA projects, and write errors, reporting status via console output.
     class Program
     {
         static void Main(string[] args)
         {
-            // Example usage: export VBA modules from all .xlsm files in a folder
-            string sourceFolder = @"C:\Workbooks";
-            string outputFolder = @"C:\VbaExports";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Process each macro-enabled workbook in the source folder
-            foreach (string workbookPath in Directory.GetFiles(sourceFolder, "*.xlsm"))
+            // Example usage: provide a list of workbook file paths and an output directory.
+            List<string> workbookPaths = new List<string>
             {
-                ExportVbaModules(workbookPath, outputFolder);
-            }
+                @"C:\Workbooks\Sample1.xlsm",
+                @"C:\Workbooks\Sample2.xlsm"
+                // Add more workbook paths as needed.
+            };
 
-            Console.WriteLine("Export completed.");
+            string outputDirectory = @"C:\VbaExports";
+
+            try
+            {
+                ExportVbaModules(workbookPaths, outputDirectory);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
 
-        /// <param name="workbookPath">Full path to the macro-enabled workbook.</param>
-        /// <param name="outputFolder">Folder where .bas files will be saved.</param>
-        static void ExportVbaModules(string workbookPath, string outputFolder)
+        /// <param name="workbookPaths">List of full paths to the workbooks.</param>
+        /// <param name="outputDir">Directory where .bas files will be saved.</param>
+        static void ExportVbaModules(IEnumerable<string> workbookPaths, string outputDir)
         {
-            // Load the workbook (macro-enabled format)
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Access the VBA project; if none exists, skip this workbook
-            VbaProject vbaProject = workbook.VbaProject;
-            if (vbaProject == null || vbaProject.Modules.Count == 0)
+            // Ensure the output directory exists.
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine($"No VBA project found in '{Path.GetFileName(workbookPath)}'.");
-                return;
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Create a subfolder named after the workbook (without extension) to hold its modules
-            string workbookName = Path.GetFileNameWithoutExtension(workbookPath);
-            string workbookExportFolder = Path.Combine(outputFolder, workbookName);
-            Directory.CreateDirectory(workbookExportFolder);
-
-            // Iterate through all modules in the VBA project
-            for (int i = 0; i < vbaProject.Modules.Count; i++)
+            foreach (string wbPath in workbookPaths)
             {
-                VbaModule module = vbaProject.Modules[i];
-
-                // Determine a safe file name for the module
-                string moduleFileName = $"{module.Name}.bas";
-                foreach (char invalid in Path.GetInvalidFileNameChars())
+                // Verify the workbook file exists before attempting to load.
+                if (!File.Exists(wbPath))
                 {
-                    moduleFileName = moduleFileName.Replace(invalid, '_');
+                    Console.WriteLine($"Workbook file not found: {wbPath}");
+                    continue;
                 }
 
-                string moduleFilePath = Path.Combine(workbookExportFolder, moduleFileName);
+                Workbook workbook;
+                try
+                {
+                    // Load the workbook.
+                    workbook = new Workbook(wbPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load workbook '{wbPath}': {ex.Message}");
+                    continue;
+                }
 
-                // Write the module's code to the .bas file
-                File.WriteAllText(moduleFilePath, module.Codes ?? string.Empty);
-                Console.WriteLine($"Exported module '{module.Name}' to '{moduleFilePath}'.");
+                // Check if the workbook contains a VBA project.
+                if (workbook.VbaProject == null || workbook.VbaProject.Modules == null)
+                {
+                    Console.WriteLine($"No VBA project found in workbook: {wbPath}");
+                    continue;
+                }
+
+                // Iterate through each VBA module.
+                foreach (var module in workbook.VbaProject.Modules)
+                {
+                    // Build a safe file name: WorkbookName_ModuleName.bas
+                    string workbookName = Path.GetFileNameWithoutExtension(wbPath);
+                    string moduleName = module.Name;
+
+                    // Replace any invalid filename characters.
+                    foreach (char invalidChar in Path.GetInvalidFileNameChars())
+                    {
+                        moduleName = moduleName.Replace(invalidChar, '_');
+                    }
+
+                    string basFileName = $"{workbookName}_{moduleName}.bas";
+                    string basFilePath = Path.Combine(outputDir, basFileName);
+
+                    try
+                    {
+                        // Write the module's code to the .bas file.
+                        File.WriteAllText(basFilePath, module.Codes ?? string.Empty);
+                        Console.WriteLine($"Exported module '{moduleName}' from '{workbookName}' to '{basFilePath}'.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to write module '{moduleName}' to file: {ex.Message}");
+                    }
+                }
             }
         }
     }

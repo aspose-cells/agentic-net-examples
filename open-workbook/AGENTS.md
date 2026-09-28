@@ -7,7 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: Open Excel and other spreadsheet formats from files or streams with controlled loading behavior in C#
 primary_apis: [Workbook, LoadOptions, TxtLoadOptions, HtmlLoadOptions, LoadFilter, LightCellsDataHandler, FileFormatUtil]
 search_intents: [open Excel file in C#, load XLSX stream, read large Excel file, detect spreadsheet format]

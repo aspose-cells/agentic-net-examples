@@ -1,63 +1,47 @@
-// Title: Export Gantt Chart from Excel to PDF with Layout Preservation using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, verifies that the first worksheet contains a chart, and uses Aspose.Cells' Chart.ToPdf method to export the Gantt chart to a PDF. The export applies a standard Letter page size and centers the chart both horizontally and vertically, with graceful handling of missing files or charts.
-// Keywords: Aspose.Cells | C# | .NET | export chart to PDF | Gantt chart PDF | Chart.ToPdf | preserve chart layout | page size alignment | Excel to PDF conversion | Aspose.Cells chart export
-// Common Searches: Aspose.Cells export Gantt chart to PDF C# | Chart.ToPdf page size alignment example | How to keep chart layout when converting Excel to PDF | Export specific Excel chart as PDF using Aspose.Cells | C# code to export Excel chart with custom dimensions
-// Developer Intent: Export a Gantt chart from an Excel workbook to a PDF while retaining its original layout and alignment.
-// Use Cases: Generate a PDF report of a project schedule by exporting the Gantt chart from a template workbook. | Automate batch processing of multiple workbooks, converting each Gantt chart to a separate PDF with consistent page settings. | Create a custom PDF export routine that adjusts page width, height, and alignment for different chart types to ensure visual fidelity.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a selected chart from an Excel file to a PDF with custom page dimensions and centered alignment. | Provide error‑handling best practices for chart‑to‑PDF conversion with Aspose.Cells, including file existence and chart count checks. | Show how to loop through all worksheets in a workbook and save each chart as an individual PDF while preserving layout.
+// Title: Export an Excel workbook with a Gantt chart to PDF while preserving the chart layout using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a workbook containing a Gantt chart and saves it as a PDF with the original chart layout using Aspose.Cells. | Show how to configure PdfSaveOptions in Aspose.Cells to disable scaling and keep charts unchanged during PDF export.
+// Common Searches: Aspose.Cells export Gantt chart to PDF without changing size | C# save Excel workbook as PDF preserving chart layout Aspose.Cells | PdfSaveOptions AllColumnsInOnePagePerSheet false for chart export | How to keep Excel chart appearance when converting to PDF with Aspose.Cells | Export Excel Gantt chart to PDF using .NET SDK Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions chart layout preservation | C# export Excel Gantt chart to PDF | Workbook.Save PDF with chart integrity Aspose.Cells | Excel to PDF conversion maintaining charts .NET | Aspose.Cells PDF export settings for Gantt diagrams
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace GanttChartExport
+namespace AsposeCellsExample
 {
-    // Loads an Excel workbook, verifies that the first worksheet contains a chart, and uses Aspose.Cells' Chart.ToPdf method to export the Gantt chart to a PDF. The export applies a standard Letter page size and centers the chart both horizontally and vertically, with graceful handling of missing files or charts.
+    // The example loads a GanttChart.xlsx workbook, configures PdfSaveOptions with AllColumnsInOnePagePerSheet and OnePagePerSheet set to false to avoid scaling, and saves the workbook as GanttChart.pdf, ensuring the Gantt chart retains its original layout.
     class Program
     {
         static void Main()
         {
             try
             {
-                const string inputPath = "GanttChart.xlsx";
-                const string outputPath = "GanttChart.pdf";
+                const string inputFile = "GanttChart.xlsx";
+                const string outputFile = "GanttChart.pdf";
 
-                // Verify that the source workbook exists to avoid FileNotFoundException.
-                if (!File.Exists(inputPath))
+                // Ensure the source workbook exists
+                if (!File.Exists(inputFile))
                 {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    Console.WriteLine($"Source file not found: {inputFile}");
                     return;
                 }
 
-                // Load the workbook that already contains the Gantt chart.
-                Workbook workbook = new Workbook(inputPath);
+                // Load the workbook containing the Gantt chart
+                Workbook workbook = new Workbook(inputFile);
 
-                // Assume the Gantt chart is the first chart on the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
-                if (worksheet.Charts.Count == 0)
+                // Configure PDF save options to preserve layout
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
-                    Console.WriteLine("No charts found in the workbook.");
-                    return;
-                }
+                    AllColumnsInOnePagePerSheet = false,
+                    OnePagePerSheet = false
+                };
 
-                Chart ganttChart = worksheet.Charts[0];
-
-                // Export the chart to PDF while preserving its layout.
-                // Page size set to standard Letter (8.5 x 11 inches) and centered on the page.
-                ganttChart.ToPdf(
-                    outputPath,
-                    8.5f,                     // desired page width in inches
-                    11f,                      // desired page height in inches
-                    PageLayoutAlignmentType.Center, // horizontal alignment
-                    PageLayoutAlignmentType.Center  // vertical alignment
-                );
-
-                Console.WriteLine($"Gantt chart exported to PDF successfully: {Path.GetFullPath(outputPath)}");
+                // Export the workbook to PDF using the configured options
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"PDF generated successfully: {outputFile}");
             }
             catch (Exception ex)
             {
-                // Log unexpected errors.
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

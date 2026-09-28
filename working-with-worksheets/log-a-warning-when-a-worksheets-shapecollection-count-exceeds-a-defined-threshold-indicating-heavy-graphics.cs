@@ -1,54 +1,40 @@
-// Title: C# – Log a warning when a worksheet’s Shape count exceeds a threshold using Aspose.Cells
-// Description: Creates a workbook, adds several rectangle shapes, iterates through each worksheet, compares Shapes.Count to a configurable limit, writes a console warning for sheets that exceed the limit, and saves the workbook.
-// Keywords: Aspose.Cells | .NET | C# | shape count | threshold warning | heavy graphics | worksheet shapes | Excel performance | Shapes.Count | logging
-// Common Searches: Aspose.Cells check shape count | log warning for many shapes in Excel C# | detect heavy graphics worksheet Aspose.Cells | set shape threshold Aspose.Cells | count shapes in worksheet .NET
-// Developer Intent: Identify worksheets that contain more shapes than a defined limit and output a warning message.
-// Use Cases: Validate worksheets before saving to avoid excessive graphics that inflate file size. | Generate a report of sheets exceeding the shape limit for performance monitoring. | Automate warning logs during batch processing of multiple workbooks.
-// AI Prompts: Write C# code with Aspose.Cells that scans all worksheets and logs a warning when Shapes.Count is greater than a configurable threshold. | Show an example that logs the worksheet name and shape count when the number of shapes exceeds 10, then saves the workbook. | Explain how to replace Console.WriteLine with a structured logging framework and customize the warning format in Aspose.Cells.
+// Title: Log a warning in C# with Aspose.Cells when a worksheet’s shape collection exceeds a specified threshold
+// AI Prompts: Write C# code using Aspose.Cells that scans every worksheet in a workbook and prints a console warning if the worksheet’s Shapes.Count is greater than a given limit. | Modify the example to read the shape count limit from an appsettings.json file and write warning messages to a log file instead of the console. | Create a reusable C# method that returns a list of worksheet names whose shape collection size surpasses a configurable threshold using Aspose.Cells.
+// Common Searches: how to iterate worksheets and check shape count with Aspose.Cells C# | detect worksheets with many shapes in Excel using Aspose.Cells and output warnings | log heavy graphics warning for Excel sheets when shape count exceeds 100 in C# | aspnet core read shape count threshold from config and log warning using Aspose.Cells
+// Tags: Aspose.Cells worksheet shape count monitoring | C# log warning for excessive shapes in Excel | threshold-based graphics detection with Aspose.Cells | iterate workbook worksheets shapes collection C# | configure shape count limit Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace ShapeCollectionMonitor
 {
-    // Creates a workbook, adds several rectangle shapes, iterates through each worksheet, compares Shapes.Count to a configurable limit, writes a console warning for sheets that exceed the limit, and saves the workbook.
-    public class ShapeCountWarningDemo
+    // The program loads an Excel workbook, iterates each worksheet, checks the number of shapes via sheet.Shapes.Count, and writes a console warning when the count exceeds the defined threshold (default 100).
+    class Program
     {
-        // Define the threshold for heavy graphics
-        private const int ShapeCountThreshold = 5;
+        // Define the threshold for heavy graphics.
+        private const int ShapeCountThreshold = 100;
 
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (lifecycle create rule)
-            Workbook workbook = new Workbook();
+            // Load an existing workbook. Replace the path with your actual file.
+            Workbook workbook = new Workbook("InputWorkbook.xlsx");
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "GraphicsSheet";
-
-            // Add shapes to the worksheet to simulate heavy graphics
-            // Adding more than the threshold number of shapes
-            for (int i = 0; i < 8; i++)
+            // Iterate through each worksheet in the workbook.
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Add a simple rectangle shape
-                // Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
-                sheet.Shapes.AddRectangle(i, 0, i, 0, 50, 100);
-            }
+                // Get the number of shapes in the current worksheet.
+                int shapeCount = sheet.Shapes.Count;
 
-            // Check each worksheet for shape count exceeding the threshold
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                int shapeCount = ws.Shapes.Count;
+                // Check if the shape count exceeds the defined threshold.
                 if (shapeCount > ShapeCountThreshold)
                 {
-                    // Log a warning indicating heavy graphics
-                    Console.WriteLine($"Warning: Worksheet \"{ws.Name}\" contains {shapeCount} shapes, which exceeds the threshold of {ShapeCountThreshold}.");
+                    // Log a warning indicating heavy graphics on this worksheet.
+                    Console.WriteLine($"Warning: Worksheet \"{sheet.Name}\" contains {shapeCount} shapes, which exceeds the threshold of {ShapeCountThreshold}.");
                 }
             }
 
-            // Save the workbook (lifecycle save rule)
-            workbook.Save("ShapeCountWarningDemo.xlsx");
+            // Optionally, save the workbook after processing.
+            // workbook.Save("OutputWorkbook.xlsx");
         }
     }
 }

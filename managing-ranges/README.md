@@ -4,7 +4,8 @@ description: C# examples for creating, copying, merging, naming, styling, search
 product: Aspose.Cells for .NET
 category: managing-ranges
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Manage Excel Cell Ranges in C# with Aspose.Cells for .NET

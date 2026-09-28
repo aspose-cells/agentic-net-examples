@@ -1,45 +1,55 @@
-// Title: C# – Export a Non‑Encrypted Excel Workbook to CSV with Aspose.Cells
-// Description: Loads an Excel file, verifies that Workbook.Settings.IsEncrypted is false, then uses TxtSaveOptions (SaveFormat.Csv, ExportAllSheets = true) to save the workbook as a CSV file and releases resources.
-// Keywords: Aspose.Cells CSV export C# | check workbook encryption Aspose | TxtSaveOptions SaveFormat.Csv | ExportAllSheets CSV | Workbook.Settings.IsEncrypted
-// Common Searches: Aspose.Cells export to CSV after encryption check | C# convert Excel to CSV only if not encrypted | Save all worksheets as one CSV using Aspose.Cells | How to detect encrypted workbook with Aspose.Cells
-// Developer Intent: Convert an Excel workbook to CSV only when the file is not password‑protected.
-// Use Cases: Batch‑process a folder of .xlsx files, skipping encrypted ones, and generate a single CSV per workbook. | Create CSV reports from template workbooks that must remain unprotected. | Automate data pipelines that require CSV output but need to avoid decryption errors.
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, checks Workbook.Settings.IsEncrypted, and saves it as CSV using TxtSaveOptions. | Explain error handling strategies for encrypted workbooks when converting to CSV with Aspose.Cells. | Show how to modify the example to produce separate CSV files for each worksheet while still checking encryption status.
+// Title: Export a non‑encrypted Excel workbook to CSV using Aspose.Cells for .NET
+// AI Prompts: Create a C# console program that loads an .xlsx file with Aspose.Cells, verifies the workbook is not encrypted, and saves it as a CSV file, providing clear messages for success or encryption errors. | Write code that catches CellsException when an Excel workbook is password‑protected, logs a user‑friendly warning, and only proceeds with the CSV export if the workbook is unencrypted.
+// Common Searches: Aspose.Cells C# export XLSX to CSV while handling password‑protected workbooks | How to check if an Excel workbook is encrypted before saving as CSV with Aspose.Cells | C# catch CellsException for encrypted workbook when converting to CSV using Aspose.Cells | Save non‑encrypted Excel file as CSV with Aspose.Cells and display custom error messages
+// Tags: export workbook to csv Aspose.Cells | detect encrypted workbook Aspose.Cells | handle CellsException encryption C# | save xlsx as csv Aspose.Cells | check workbook encryption before export
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel file, verifies that Workbook.Settings.IsEncrypted is false, then uses TxtSaveOptions (SaveFormat.Csv, ExportAllSheets = true) to save the workbook as a CSV file and releases resources.
-class ExportWorkbookToCsv
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing XLSX file, verifies the file exists, attempts to save it as a CSV using Aspose.Cells, and catches CellsException to identify encrypted workbooks, outputting appropriate console messages for success, encryption issues, or other errors.
+    class Program
     {
-        // Paths for input workbook and output CSV file
-        string inputPath = "input.xlsx";
-        string outputPath = "output.csv";
-
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(inputPath);
-
-        // Verify that the workbook is not encrypted before exporting
-        if (workbook.Settings.IsEncrypted)
+        static void Main()
         {
-            Console.WriteLine("The workbook is encrypted and cannot be exported to CSV.");
-        }
-        else
-        {
-            // Create CSV save options; ExportAllSheets = true exports every worksheet
-            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
+
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                ExportAllSheets = true
-            };
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Save the workbook as CSV using the Save(string, SaveOptions) rule
-            workbook.Save(outputPath, csvOptions);
-            Console.WriteLine($"Workbook successfully exported to CSV at: {outputPath}");
+            try
+            {
+                // Load the workbook from the input file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Save the workbook as CSV
+                workbook.Save(outputPath, SaveFormat.Csv);
+                Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+            }
+            catch (CellsException ex)
+            {
+                // Handle encrypted workbook scenario based on exception message
+                if (ex.Message != null && ex.Message.IndexOf("encrypted", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine("The workbook is encrypted and cannot be exported.");
+                }
+                else
+                {
+                    Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // General exception handling for unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Clean up resources
-        workbook.Dispose();
     }
 }

@@ -1,47 +1,55 @@
-// Title: Aspose.Cells for .NET – Add a Rectangle Shape, Send It Behind Gridlines with Negative Z‑Order, and Verify Position
-// Description: Demonstrates how to create a workbook, insert a rectangle shape, move the shape to the back of the Z‑order using a negative value so it sits beneath gridlines, read the read‑only ZOrderPosition to confirm placement, and save the file as an .xlsx document.
-// Keywords: Aspose.Cells shape ZOrder | C# send shape behind gridlines | Aspose.Cells ToFrontOrBack negative | verify shape ZOrderPosition | add rectangle shape Aspose.Cells .NET | Excel shape layering Aspose
-// Common Searches: Aspose.Cells move shape behind gridlines | C# set shape Z‑order negative Aspose.Cells | How to check ZOrderPosition of a shape in Aspose.Cells | Send shape to back of worksheet objects Aspose.Cells | Place rectangle behind cells using Aspose.Cells
-// Developer Intent: Place a shape behind worksheet gridlines by applying a negative Z‑order value and confirm its position programmatically.
-// Use Cases: Create a background watermark that does not obscure cell data. | Add decorative elements that stay under gridlines and content. | Ensure programmatically that shapes never cover important worksheet information.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle, sends it behind gridlines using ToFrontOrBack(-1), and logs the ZOrderPosition. | Explain the effect of negative values in the ToFrontOrBack method and how to validate the shape’s Z‑order. | Provide a sample that adds multiple shapes, orders them, and guarantees a specific shape remains behind all others and the gridlines.
+// Title: Add a rectangle shape to an Excel worksheet with Aspose.Cells for .NET and set a negative Z‑order to position it behind gridlines
+// AI Prompts: Generate C# code that inserts a rectangle shape at a specific cell using Aspose.Cells, sets ZOrderPosition = -1, prints the Z-order value, and saves the workbook. | Demonstrate how to confirm that a shape’s ZOrderPosition places it beneath the worksheet gridlines in an Aspose.Cells .NET workbook.
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition negative to hide behind gridlines | how to place a rectangle shape under Excel gridlines using Aspose.Cells for .NET | C# example of moving a shape behind worksheet cells with Aspose.Cells | check if a shape is rendered below gridlines in an Aspose.Cells workbook | Aspose.Cells shape layering order documentation for .NET
+// Tags: Aspose.Cells add rectangle shape | Aspose.Cells ZOrderPosition usage | shape behind gridlines Aspose.Cells | C# Excel shape Z-order | validate shape layering Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsZOrderDemo
+// The sample creates a new workbook, adds a rectangle shape at row 2 column 2, assigns ZOrderPosition = -1 to place the shape behind the gridlines, outputs the Z-order value for verification, and saves the file as ShapeBehindGridlines.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, insert a rectangle shape, move the shape to the back of the Z‑order using a negative value so it sits beneath gridlines, read the read‑only ZOrderPosition to confirm placement, and save the file as an .xlsx document.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: upper left row, upper left column, top offset, left offset, height, width
-                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Send the shape to the back of the Z-order (behind other objects, including gridlines)
-                shape.ToFrontOrBack(-1);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, row offset, column offset, height, width
+            Shape shape = worksheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,   // upper left row
+                2,   // upper left column
+                0,   // row offset (in pixels)
+                0,   // column offset (in pixels)
+                100, // height (in points)
+                50   // width (in points)
+            );
 
-                // Verify the Z-order position (read‑only property)
-                Console.WriteLine("Shape ZOrderPosition: " + shape.ZOrderPosition);
+            // Set Z-order to a negative value to place it behind other objects (including gridlines)
+            shape.ZOrderPosition = -1;
 
-                // Save the workbook to a file
-                string outputPath = "ShapeBehindGridlines.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Output shape property for verification
+            Console.WriteLine($"Shape ZOrderPosition: {shape.ZOrderPosition}");
+
+            // Define output file path
+            string outputPath = "ShapeBehindGridlines.xlsx";
+
+            // Save the workbook (optional visual verification)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

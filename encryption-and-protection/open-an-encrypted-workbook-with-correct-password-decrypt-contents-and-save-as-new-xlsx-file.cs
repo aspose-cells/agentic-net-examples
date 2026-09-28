@@ -1,61 +1,59 @@
-// Title: Decrypt a password‑protected Excel workbook using Aspose.Cells for .NET
-// Description: Demonstrates how to open an encrypted XLSX file with a known password via LoadOptions, remove the workbook's protection by clearing the Settings.Password property, and save the result as an unencrypted file. Includes file‑existence validation and basic exception handling.
-// Keywords: Aspose.Cells decrypt Excel | remove workbook password .NET | load password‑protected XLSX | save unencrypted workbook | C# Excel decryption example | Aspose.Cells LoadOptions password
-// Common Searches: open encrypted xlsx with Aspose.Cells C# | how to remove password from Excel file programmatically | Aspose.Cells decrypt workbook example | save protected Excel as plain file using .NET | batch decrypt Excel files Aspose
-// Developer Intent: Load a password‑protected workbook, strip its protection, and write it out as a plain XLSX file.
-// Use Cases: Automate decryption of incoming Excel reports before data ingestion. | Prepare password‑locked spreadsheets for archival in an unprotected format. | Enable downstream analytics tools to read Excel files without manual password entry.
-// AI Prompts: Generate C# code with Aspose.Cells that opens an encrypted .xlsx using a supplied password, removes the protection, and saves a new unprotected file. | Show robust error handling for workbook decryption in a console app using Aspose.Cells. | Create a script that iterates over a folder of password‑protected Excel files, decrypts each with Aspose.Cells, and stores the results in a target directory.
+// Title: How to open a password‑protected XLSX workbook with Aspose.Cells for .NET, remove its password, and save a decrypted copy
+// AI Prompts: Load an encrypted .xlsx workbook using Aspose.Cells LoadOptions with a supplied password, clear the workbook's password property, and save the result as a new unprotected file. | Write C# code that opens a password‑protected Excel file via Aspose.Cells, removes the protection programmatically, and writes the decrypted workbook to disk.
+// Common Searches: asp.net how to open encrypted Excel file with password using Aspose.Cells | c# remove password from xlsx using Aspose.Cells LoadOptions | decrypt password protected workbook programmatically Aspose.Cells | save unprotected copy of password protected Excel with Aspose.Cells .NET
+// Tags: Aspose.Cells LoadOptions password decryption | clear workbook protection Aspose.Cells C# | save unencrypted XLSX Aspose.Cells | open encrypted Excel file .NET Aspose.Cells | programmatic Excel decryption .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example shows how to verify the encrypted XLSX file exists, configure LoadOptions with the correct password, load the workbook using Aspose.Cells, clear the workbook's password setting, and save the workbook as an unencrypted XLSX file, with handling for Aspose.Cells‑specific and general exceptions.
+class Program
 {
-    // Demonstrates how to open an encrypted XLSX file with a known password via LoadOptions, remove the workbook's protection by clearing the Settings.Password property, and save the result as an unencrypted file. Includes file‑existence validation and basic exception handling.
-    public class DecryptWorkbookDemo
+    static void Main()
     {
-        public static void Run()
+        // Path to the encrypted workbook
+        string inputPath = "encrypted.xlsx";
+
+        // Password used to encrypt the workbook
+        string password = "myPassword";
+
+        // Path for the decrypted output workbook
+        string outputPath = "decrypted.xlsx";
+
+        try
         {
-            // Path to the encrypted workbook
-            string encryptedFile = "encrypted.xlsx";
-
-            // Desired path for the decrypted workbook
-            string decryptedFile = "decrypted.xlsx";
-
-            // Password used to protect the original workbook
-            string password = "myPassword";
-
-            // Verify that the encrypted file exists
-            if (!File.Exists(encryptedFile))
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Encrypted file '{encryptedFile}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Configure load options with the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                // Load the password‑protected workbook
-                LoadOptions loadOptions = new LoadOptions { Password = password };
-                Workbook workbook = new Workbook(encryptedFile, loadOptions);
+                Password = password
+            };
 
-                // Remove password protection
-                workbook.Settings.Password = null;
+            // Load the encrypted workbook
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-                // Save the workbook as a new unencrypted XLSX file
-                workbook.Save(decryptedFile);
-                Console.WriteLine($"Decrypted workbook saved to '{decryptedFile}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Remove password protection
+            workbook.Settings.Password = null;
+
+            // Save the workbook without encryption
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Decrypted workbook saved to: {outputPath}");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (CellsException ex)
         {
-            Run();
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

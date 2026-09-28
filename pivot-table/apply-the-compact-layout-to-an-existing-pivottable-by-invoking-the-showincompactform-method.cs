@@ -1,47 +1,69 @@
-// Title: C# – Apply Compact Layout to a PivotTable with Aspose.Cells ShowInCompactForm
-// Description: Loads an existing workbook, selects the first worksheet and its first PivotTable, switches the table to Compact layout using ShowInCompactForm, refreshes and recalculates the data, then saves the result as a new file.
-// Keywords: Aspose.Cells ShowInCompactForm | compact layout pivot table C# | Aspose.Cells pivot table layout change | refresh pivot data Aspose.Cells | save workbook after pivot modification
-// Common Searches: Aspose.Cells set pivot table to compact layout | ShowInCompactForm example C# | refresh pivot table after layout change Aspose.Cells | how to save workbook after modifying pivot table
-// Developer Intent: Change a PivotTable to Compact layout and update its data programmatically using Aspose.Cells for .NET.
-// Use Cases: Convert a standard PivotTable to Compact form before exporting reports. | Automate pivot layout adjustments in a batch workbook‑processing pipeline. | Ensure pivot calculations stay current after layout changes in generated spreadsheets.
-// AI Prompts: Write C# code that opens a workbook, applies ShowInCompactForm to the first PivotTable, refreshes the data, and saves the file using Aspose.Cells. | Explain the impact of ShowInCompactForm on field arrangement and why RefreshData and CalculateData are required afterward. | Create robust error handling for scenarios where a worksheet contains no PivotTables when applying Compact layout.
+// Title: Apply Compact Layout to the First PivotTable in an Existing Excel Workbook Using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing XLSX file with Aspose.Cells, locates the first PivotTable on the first worksheet, and switches its layout to Compact using the ShowInCompactForm method. | Demonstrate how to verify the presence of PivotTables, apply the Compact layout, and save the modified workbook to a new file with Aspose.Cells. | Create a .NET example that handles missing input files, creates the output directory if needed, updates a PivotTable's layout to Compact, and then saves the workbook.
+// Common Searches: Aspose.Cells C# how to set pivot table to compact layout | ShowInCompactForm method example for existing workbook | Change pivot table layout to compact using Aspose.Cells .NET | Update first pivot table layout in Excel file with Aspose.Cells | C# code to apply compact form to pivot table and save workbook
+// Tags: apply compact layout pivot table Aspose.Cells C# | ShowInCompactForm method usage | modify pivot table layout in existing workbook | load and save workbook after pivot table changes Aspose.Cells | first worksheet pivot table compact form
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCompactLayout
+namespace AsposeCellsExample
 {
-    // Loads an existing workbook, selects the first worksheet and its first PivotTable, switches the table to Compact layout using ShowInCompactForm, refreshes and recalculates the data, then saves the result as a new file.
+    // The example loads an existing XLSX file, checks for a PivotTable on the first worksheet, applies the Compact layout via ShowInCompactForm, and saves the updated workbook to a new file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load an existing workbook that contains a pivot table
-            Workbook workbook = new Workbook("input.xlsx");
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Assume the pivot table is on the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Access the first pivot table in the worksheet
-            if (sheet.PivotTables.Count > 0)
+            try
             {
-                PivotTable pivotTable = sheet.PivotTables[0];
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Apply the Compact layout to the pivot table
-                pivotTable.ShowInCompactForm();
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Refresh and recalculate the pivot table data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Get the collection of pivot tables on the worksheet
+                PivotTableCollection pivotTables = worksheet.PivotTables;
+
+                if (pivotTables != null && pivotTables.Count > 0)
+                {
+                    // Select the first pivot table
+                    PivotTable pivotTable = pivotTables[0];
+
+                    // Apply Compact layout using the correct API method (parameterless)
+                    pivotTable.ShowInCompactForm();
+                }
+                else
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook with the updated pivot table layout
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No pivot tables found in the worksheet.");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
         }
     }
 }

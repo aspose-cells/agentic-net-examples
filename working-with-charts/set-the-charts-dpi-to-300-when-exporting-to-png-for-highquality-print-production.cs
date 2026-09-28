@@ -1,62 +1,65 @@
-// Title: Export Aspose.Cells Chart to 300 DPI PNG in C# for Print‑Ready Output
-// Description: This example creates a workbook, adds sample sales data, builds a column chart, and uses ImageOrPrintOptions with ImageType.Png, HorizontalResolution = 300 and VerticalResolution = 300 to generate a print‑quality PNG image of the chart. The workbook can also be saved for further processing.
-// Keywords: Aspose.Cells | C# chart export | 300 DPI PNG | ImageOrPrintOptions | high resolution chart image | print ready graphics | chart ToImage method | horizontalresolution | verticalresolution
-// Common Searches: Aspose.Cells export chart 300 DPI PNG C# | set chart image resolution Aspose.Cells | how to increase DPI of chart PNG in .NET | ImageOrPrintOptions HorizontalResolution VerticalResolution usage | print quality chart export Aspose.Cells
-// Developer Intent: Generate a PNG image of a workbook chart at 300 DPI so it meets print‑production quality standards.
-// Use Cases: Produce crisp sales charts for marketing brochures and flyers. | Create high‑resolution graphics for inclusion in PDF or InDesign layouts. | Export chart assets for product catalogs, posters, or large‑format prints.
-// AI Prompts: Show how to export an Aspose.Cells chart to a 600 DPI PNG using ImageOrPrintOptions. | Explain the impact of HorizontalResolution and VerticalResolution on file size and visual quality. | Provide code to batch‑export all charts in a workbook, assigning a custom DPI to each.
+// Title: Export a chart to a 300 DPI PNG image with Aspose.Cells in C# for print‑quality output
+// AI Prompts: Write C# code that creates a column chart using Aspose.Cells and saves it as a 300 DPI PNG by configuring ImageOrPrintOptions. | Show how to set ImageOrPrintOptions.HorizontalResolution and VerticalResolution to 300 for high‑resolution chart rendering in Aspose.Cells. | Provide a complete example that builds sample data, adds a chart, and exports it to a print‑ready PNG file at 300 DPI.
+// Common Searches: how to export Aspose.Cells chart as 300 DPI PNG in C# | Aspose.Cells ImageOrPrintOptions set resolution for chart image | C# generate print‑ready chart PNG with 300 DPI using Aspose.Cells | set chart image DPI when saving to PNG with Aspose.Cells .NET | high resolution chart export Aspose.Cells example C#
+// Tags: Aspose.Cells chart export PNG 300 DPI | ImageOrPrintOptions set resolution for chart | C# high‑resolution chart image generation | column chart PNG export Aspose.Cells | print‑ready chart image Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;   // For ImageType enum
 
-// This example creates a workbook, adds sample sales data, builds a column chart, and uses ImageOrPrintOptions with ImageType.Png, HorizontalResolution = 300 and VerticalResolution = 300 to generate a print‑quality PNG image of the chart. The workbook can also be saved for further processing.
-class ExportChartHighDpi
+// The program creates a workbook, adds sample data, inserts a column chart, configures ImageOrPrintOptions with 300 DPI horizontal and vertical resolution, and exports the chart to a PNG file named Chart300DPI.png.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet and name it
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Populate sample data for the chart
+            // Fill sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Product A");
-            sheet.Cells["A3"].PutValue("Product B");
-            sheet.Cells["A4"].PutValue("Product C");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["B4"].PutValue(150);
+            // Add a column chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIdx];
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            // Set the data range for the series and categories
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Configure image options for high‑resolution PNG (300 DPI)
+            // Configure image export options with 300 DPI (default format is PNG)
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                ImageType = ImageType.Png,
-                HorizontalResolution = 300, // 300 DPI horizontally
-                VerticalResolution = 300    // 300 DPI vertically
+                HorizontalResolution = 300, // DPI horizontally
+                VerticalResolution = 300    // DPI vertically
             };
 
-            // Export the chart to PNG using the high‑DPI settings
-            chart.ToImage("Chart_300dpi.png", imgOptions);
+            // Export the chart to a PNG file using the high‑resolution settings
+            using (MemoryStream ms = new MemoryStream())
+            {
+                chart.ToImage(ms, imgOptions);
+                File.WriteAllBytes("Chart300DPI.png", ms.ToArray());
+            }
 
-            // Optionally, save the workbook if further processing is needed
-            workbook.Save("Workbook_With_Chart.xlsx");
+            Console.WriteLine("Chart exported successfully to Chart300DPI.png");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

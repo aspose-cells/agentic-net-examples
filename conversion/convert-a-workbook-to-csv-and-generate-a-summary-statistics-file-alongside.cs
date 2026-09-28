@@ -1,116 +1,93 @@
-// Title: Convert Excel Workbook to CSV and Generate Row/Column Summary with Aspose.Cells for .NET (C#)
-// Description: This C# example uses Aspose.Cells to load an .xlsx workbook, asynchronously converts it to CSV via ConversionUtility, then scans the CSV to count rows and columns and writes those statistics to a plain‑text summary file. Includes basic error handling and async I/O.
-// Keywords: Aspose.Cells CSV conversion C# | Excel to CSV .NET | ConversionUtility Aspose.Cells | generate CSV summary statistics | async workbook conversion | row count column count CSV | C# Excel export | Aspose.Cells example
-// Common Searches: convert xlsx to csv using Aspose.Cells C# | Aspose.Cells generate CSV summary file | async Excel to CSV conversion .NET | count rows and columns in exported CSV | Aspose.Cells ConversionUtility example
-// Developer Intent: The developer needs to transform an Excel workbook into a CSV file and produce a simple text file that reports the total number of rows and columns in the generated CSV.
-// Use Cases: Export large Excel reports to CSV for downstream analytics while capturing dimension metadata for validation. | Automate a data‑pipeline step that creates CSV outputs and logs row/column counts for audit trails. | Schedule nightly jobs that convert workbooks to CSV and generate a quick summary to monitor data consistency.
-// AI Prompts: Write a C# async method that uses Aspose.Cells ConversionUtility to convert an .xlsx file to CSV and returns the CSV path. | Create C# code that reads a CSV line by line, counts rows and columns, and writes a summary text file, optimized for large files. | Enhance the error handling and logging in the async conversion and summary generation workflow using Aspose.Cells.
+// Title: Convert an Excel workbook to individual UTF-8 CSV files per worksheet and create a summary statistics text file with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, iterates through all worksheets, and saves each one as a UTF-8 encoded CSV file. | Add logic to compute total worksheets, used rows, used columns, and total used cells, then write these metrics to a text summary file in the same output directory.
+// Common Searches: Aspose.Cells C# export each sheet of an Excel file to separate CSV files | How to generate a workbook summary (total rows, columns, cells) with Aspose.Cells .NET | Save Excel worksheets as UTF-8 CSV using TxtSaveOptions in C# | Create a text report of used range statistics after converting Excel to CSV with Aspose.Cells | Batch convert multi-sheet workbook to CSV and get summary statistics in .NET
+// Tags: Aspose.Cells export worksheet to CSV | TxtSaveOptions UTF8 CSV Aspose.Cells | calculate used range rows columns cells Aspose.Cells | workbook summary statistics text file .NET | batch convert Excel workbook to multiple CSV files
 
 using System;
 using System.IO;
-using System.Threading.Tasks;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsConversionAndSummary
+// The example loads an .xlsx workbook with Aspose.Cells, saves each worksheet as a UTF-8 CSV file using TxtSaveOptions, computes total worksheets, used rows, columns, and cells across all sheets, and writes these metrics to a WorkbookSummary.txt file in the output folder.
+class WorkbookToCsvWithSummary
 {
-    // This C# example uses Aspose.Cells to load an .xlsx workbook, asynchronously converts it to CSV via ConversionUtility, then scans the CSV to count rows and columns and writes those statistics to a plain‑text summary file. Includes basic error handling and async I/O.
-    class Program
+    static void Main(string[] args)
     {
-        // Entry point
-        static async Task Main(string[] args)
-        {
-            // Example file paths (replace with actual paths as needed)
-            string sourceWorkbookPath = "input.xlsx";
-            string csvOutputPath = "output.csv";
-            string summaryOutputPath = "summary.txt";
+        // Input Excel file path
+        string inputPath = "input.xlsx";
 
-            try
-            {
-                await ConvertWorkbookToCsvAndGenerateSummaryAsync(sourceWorkbookPath, csvOutputPath, summaryOutputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
+            return;
         }
 
-        /// <param name="workbookPath">Path to the source Excel workbook.</param>
-        /// <param name="csvPath">Path where the CSV file will be saved.</param>
-        /// <param name="summaryPath">Path where the summary text file will be saved.</param>
-        /// <returns>A task representing the asynchronous operation.</returns>
-        private static async Task ConvertWorkbookToCsvAndGenerateSummaryAsync(string workbookPath, string csvPath, string summaryPath)
+        // Output folder for CSV files and summary
+        string outputFolder = "output";
+        Directory.CreateDirectory(outputFolder);
+
+        try
         {
-            // Verify input workbook exists
-            if (!File.Exists(workbookPath))
-            {
-                Console.Error.WriteLine($"Input workbook not found: {workbookPath}");
-                return;
-            }
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            try
+            // Prepare summary data
+            int worksheetCount = workbook.Worksheets.Count;
+            int totalRows = 0;
+            int totalColumns = 0;
+            long totalCells = 0;
+
+            // Iterate through each worksheet
+            for (int i = 0; i < worksheetCount; i++)
             {
-                // Load the workbook (lifecycle rule)
-                using (Workbook workbook = new Workbook(workbookPath))
+                Worksheet sheet = workbook.Worksheets[i];
+                string sheetName = sheet.Name;
+
+                // Determine the used range (fully qualified to avoid ambiguity)
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                int rows = usedRange?.RowCount ?? 0;
+                int columns = usedRange?.ColumnCount ?? 0;
+
+                totalRows += rows;
+                totalColumns += columns;
+                totalCells += (long)rows * columns;
+
+                // Define CSV save options
+                TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
                 {
-                    // Convert the workbook to CSV (feature rule)
-                    // ConversionUtility handles loading and saving internally.
-                    ConversionUtility.Convert(workbookPath, csvPath);
-                }
+                    Encoding = Encoding.UTF8,
+                    Separator = ','
+                };
 
-                // Generate a simple summary (placeholder for AI functionality)
-                await GenerateSimpleSummaryAsync(csvPath, summaryPath);
+                // Build CSV file path (sanitize file name)
+                string safeSheetName = string.Join("_", sheetName.Split(Path.GetInvalidFileNameChars()));
+                string csvPath = Path.Combine(outputFolder, $"{safeSheetName}.csv");
 
-                Console.WriteLine($"Conversion completed. CSV saved to: {csvPath}");
-                Console.WriteLine($"Summary generated at: {summaryPath}");
+                // Save only the current worksheet as CSV by setting it as active
+                workbook.Worksheets.ActiveSheetIndex = i;
+                workbook.Save(csvPath, csvOptions);
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error during conversion or summary generation: {ex.Message}");
-            }
+
+            // Build summary content
+            string summary = $"Workbook Summary Statistics{Environment.NewLine}" +
+                             $"--------------------------------{Environment.NewLine}" +
+                             $"Total Worksheets: {worksheetCount}{Environment.NewLine}" +
+                             $"Total Used Rows (across all sheets): {totalRows}{Environment.NewLine}" +
+                             $"Total Used Columns (across all sheets): {totalColumns}{Environment.NewLine}" +
+                             $"Total Cells (used): {totalCells}{Environment.NewLine}" +
+                             $"Generated on: {DateTime.Now}{Environment.NewLine}";
+
+            // Write summary to a text file alongside CSV files
+            string summaryPath = Path.Combine(outputFolder, "WorkbookSummary.txt");
+            File.WriteAllText(summaryPath, summary);
+
+            Console.WriteLine("Conversion to CSV completed. Summary file created at:");
+            Console.WriteLine(summaryPath);
         }
-
-        /// <summary>
-        /// Creates a basic summary of the CSV file (row count, column count).
-        /// </summary>
-        private static async Task GenerateSimpleSummaryAsync(string csvPath, string summaryPath)
+        catch (Exception ex)
         {
-            if (!File.Exists(csvPath))
-            {
-                Console.Error.WriteLine($"CSV file not found for summary generation: {csvPath}");
-                return;
-            }
-
-            try
-            {
-                int rowCount = 0;
-                int columnCount = 0;
-
-                using (var reader = new StreamReader(csvPath))
-                {
-                    string line;
-                    while ((line = await reader.ReadLineAsync()) != null)
-                    {
-                        rowCount++;
-                        if (rowCount == 1)
-                        {
-                            // Determine column count from header line
-                            columnCount = line.Split(',').Length;
-                        }
-                    }
-                }
-
-                using (var writer = new StreamWriter(summaryPath, false))
-                {
-                    await writer.WriteLineAsync("CSV Summary");
-                    await writer.WriteLineAsync($"Rows: {rowCount}");
-                    await writer.WriteLineAsync($"Columns: {columnCount}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error while generating summary: {ex.Message}");
-            }
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

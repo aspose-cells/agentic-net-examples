@@ -1,10 +1,7 @@
-// Title: Lock an Excel chart (prevent move & resize) using Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, adds a column chart, retrieves its ChartShape, sets IsLocked and ShapeLockType.Move/Resize to true, then protects the worksheet so the chart cannot be moved or resized in Excel. Saves as LockedChartDemo.xlsx.
-// Keywords: Aspose.Cells chart lock | C# lock Excel chart | prevent chart move | disable chart resize | worksheet protection Aspose | ChartShape IsLocked | ShapeLockType Move Resize | programmatic chart security | Excel UI chart lock
-// Common Searches: how to lock a chart in Excel with Aspose.Cells C# | prevent chart resizing using Aspose.Cells for .NET | Aspose.Cells protect worksheet chart shape | disable moving of Excel chart programmatically | C# lock chart object Aspose.Cells
-// Developer Intent: Secure a chart so end‑users cannot move or resize it in the Excel interface.
-// Use Cases: Fixed‑position charts in financial reports shared across teams. | Template workbooks where chart layout must stay consistent. | Collaborative dashboards that require chart positions to remain unchanged.
-// AI Prompts: Generate C# code that locks multiple chart objects and applies different ShapeLockType settings with Aspose.Cells. | Explain how worksheet protection interacts with ChartShape.IsLocked and ShapeLockType in Aspose.Cells for .NET. | Show an example of unlocking a chart after protection is removed using Aspose.Cells.
+// Title: How to lock a chart shape in Aspose.Cells C# so it cannot be moved or resized in Excel
+// AI Prompts: Write C# code with Aspose.Cells that adds a chart, sets ChartShape.IsLocked to true, applies ShapeLockType for Move and Resize, and then protects the worksheet. | Show a step‑by‑step example of preventing users from moving or resizing a chart in an Excel file by configuring chart shape locking and worksheet protection using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# lock chart position and size in Excel workbook | prevent users from moving a chart in Excel using Aspose.Cells API | set chart shape IsLocked and ShapeLockType in Aspose.Cells .NET | how to protect worksheet to enforce chart lock with Aspose.Cells | C# example for disabling chart resizing in generated Excel file
+// Tags: chart shape lock Aspose.Cells C# | disable chart move resize Aspose.Cells | worksheet protection chart lock Aspose.Cells | set ShapeLockType Move Resize Aspose.Cells | lock chart object Excel Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -13,10 +10,10 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartLockDemo
 {
-    // C# example that creates a workbook, adds a column chart, retrieves its ChartShape, sets IsLocked and ShapeLockType.Move/Resize to true, then protects the worksheet so the chart cannot be moved or resized in Excel. Saves as LockedChartDemo.xlsx.
-    public class Program
+    // The sample creates a workbook, adds sample data, inserts a column chart, obtains its ChartShape, sets IsLocked to true, locks move and resize via ShapeLockType, protects the worksheet, and saves the file as LockedChartDemo.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();

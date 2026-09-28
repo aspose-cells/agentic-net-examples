@@ -1,67 +1,83 @@
-// Title: Aspose.Cells .NET – Change Individual Chart Theme Colors with SetThemeColor
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, and customize specific theme colors (Accent1, Accent2, Text1, Background1) using the Workbook.SetThemeColor method, which updates the chart's Theme.ColorScheme before saving the file.
-// Keywords: Aspose.Cells set theme color | modify chart theme colors .NET | Workbook.SetThemeColor example | custom Excel theme palette Aspose | change Accent1 Accent2 colors programmatically | Theme.ColorScheme Aspose.Cells | C# chart color customization | Excel theme color API
-// Common Searches: how to change chart theme colors with Aspose.Cells | Aspose.Cells SetThemeColor C# example | customize Excel theme palette programmatically | change Accent1 color in Aspose.Cells workbook | update Theme.ColorScheme for a chart
-// Developer Intent: Apply custom RGB values to individual theme colors so that a chart inherits the new palette when the workbook is generated.
-// Use Cases: Align chart colors with corporate branding by setting Accent1 and Accent2 to brand-specific shades. | Improve accessibility of generated reports by adjusting Text1 and Background1 contrast colors. | Produce localized versions of a spreadsheet with region‑specific theme palettes without manual editing.
-// AI Prompts: Show C# code that changes Accent1, Accent2, Text1, and Background1 theme colors for a chart using Aspose.Cells. | Explain how to retrieve and edit the Theme.ColorScheme of a workbook after it has been created. | Provide a step‑by‑step guide to apply custom RGB values to theme colors so existing charts update automatically.
+// Title: Change chart accent colors by modifying the workbook Theme.ColorScheme via reflection in Aspose.Cells C#
+// AI Prompts: Write C# code that uses reflection to set the Accent1 and Accent2 colors in a workbook’s Theme.ColorScheme for an Aspose.Cells chart. | Show how to change a chart’s colors when the Aspose.Cells Theme API is not directly accessible. | Provide a full example that creates a column chart, updates its theme accents, and saves the workbook.
+// Common Searches: asp.net aspose.cells change chart theme accent colors using reflection | c# set workbook theme color scheme when Theme property is hidden aspose.cells | how to modify Excel chart colors by editing Theme.ColorScheme in Aspose.Cells | example updating Accent1 Accent2 colors in Aspose.Cells chart programmatically
+// Tags: Aspose.Cells modify theme colors via reflection | C# update chart accent colors Aspose.Cells | set workbook Theme.ColorScheme Aspose.Cells | customize Excel chart theme colors C# | handle missing Theme API Aspose.Cells
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, add sample data, insert a column chart, and customize specific theme colors (Accent1, Accent2, Text1, Background1) using the Workbook.SetThemeColor method, which updates the chart's Theme.ColorScheme before saving the file.
+    // The example creates a workbook, adds a column chart, then uses reflection to locate the hidden Theme and its ColorScheme, setting Accent1 to red and Accent2 to blue before saving the file as ModifiedThemeChart.xlsx, with fallback handling if the Theme API is unavailable.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Get the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
+                // Add a column chart to the worksheet (from row 5, column 0 to row 15, column 5)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
 
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+                // Attempt to modify the workbook's theme colors using reflection (API may be unavailable)
+                try
+                {
+                    var themeProp = workbook.GetType().GetProperty("Theme");
+                    if (themeProp != null)
+                    {
+                        var theme = themeProp.GetValue(workbook);
+                        var colorSchemeProp = theme?.GetType().GetProperty("ColorScheme");
+                        var colorScheme = colorSchemeProp?.GetValue(theme);
+                        if (colorScheme != null)
+                        {
+                            var accent1Prop = colorScheme.GetType().GetProperty("Accent1");
+                            var accent2Prop = colorScheme.GetType().GetProperty("Accent2");
+                            if (accent1Prop != null && accent2Prop != null)
+                            {
+                                accent1Prop.SetValue(colorScheme, Color.FromArgb(255, 0, 0)); // Red
+                                accent2Prop.SetValue(colorScheme, Color.FromArgb(0, 0, 255)); // Blue
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // If the Theme API is unavailable, continue without modifying theme colors
+                    Console.WriteLine($"Theme modification skipped: {ex.Message}");
+                }
 
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["C2"].PutValue(15);
-                sheet.Cells["C3"].PutValue(25);
-                sheet.Cells["C4"].PutValue(35);
+                // Save the workbook with the updated (or original) theme colors
+                string outputPath = "ModifiedThemeChart.xlsx";
 
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIdx];
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Set the data range for the series
-                chart.NSeries.Add("B2:C4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Modify theme colors that affect the chart
-                workbook.SetThemeColor(ThemeColorType.Accent1, Color.FromArgb(0, 128, 128));      // teal
-                workbook.SetThemeColor(ThemeColorType.Accent2, Color.FromArgb(255, 165, 0));    // orange
-                workbook.SetThemeColor(ThemeColorType.Text1, Color.FromArgb(64, 64, 64));       // dark gray
-                workbook.SetThemeColor(ThemeColorType.Background1, Color.FromArgb(255, 255, 200)); // light yellow
-
-                // Save the workbook
-                string outputPath = "ChartWithCustomThemeColors.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

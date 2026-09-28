@@ -1,46 +1,28 @@
-// Title: Detect Excel Workbook Format and Encryption from a Stream with Aspose.Cells for .NET
-// Description: A C# example that opens an Excel file as a read‑only stream, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to obtain a FileFormatInfo object, and writes the detected FileFormatType and encryption flag to the console without loading the workbook.
-// Keywords: Aspose.Cells | C# | DetectFileFormat | FileFormatUtil | FileFormatInfo | Excel format detection | encrypted workbook | stream processing | read‑only FileStream | Excel file validation
-// Common Searches: Aspose.Cells detect Excel format from stream | How to check if an Excel file is encrypted using Aspose.Cells .NET | FileFormatUtil DetectFileFormat example C# | Get workbook file type without opening it Aspose.Cells | Identify Excel file format and encryption status programmatically
-// Developer Intent: Determine the workbook’s file format and whether it is encrypted directly from a stream.
-// Use Cases: Validate uploaded files are supported Excel formats before further processing. | Log workbook format and encryption status for compliance or audit trails. | Skip or route encrypted workbooks by checking the IsEncrypted flag early in a pipeline.
-// AI Prompts: Write C# code that uses Aspose.Cells to detect the format of an Excel file from a MemoryStream and returns the FileFormatType. | Show how to handle encrypted Excel workbooks after detecting them with FileFormatUtil in Aspose.Cells. | Create an ASP.NET Core controller action that validates an uploaded Excel file's format and encryption status using Aspose.Cells.
+// Title: Detect Excel workbook format from a Stream using Aspose.Cells for .NET and log it to console
+// AI Prompts: Write C# code that reads an Excel file from a Stream, uses Aspose.Cells to auto‑detect its format, and prints the FileFormatType to the console. | Show how to load a workbook from a MemoryStream with Aspose.Cells and retrieve the detected file format without specifying the extension. | Create a snippet that opens a workbook from a FileStream, accesses the Workbook.FileFormat property, and logs the format name for debugging.
+// Common Searches: asp.net core detect excel file format from a stream using Aspose.Cells | c# Aspose.Cells get workbook file type after loading from FileStream | how to print detected workbook format with Aspose.Cells .NET library | auto detect xls vs xlsx from input stream Aspose.Cells example
+// Tags: auto-detect workbook format Aspose.Cells | Workbook.FileFormat property usage | load workbook from stream C# Aspose.Cells | log detected Excel format console | identify XLSX vs XLS with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// // Opens an Excel file via a Stream, lets Aspose.Cells automatically determine the workbook format, reads the Workbook.FileFormat property, and writes the detected format (e.g., XLS, XLSX) to the console.
+class Program
 {
-    // A C# example that opens an Excel file as a read‑only stream, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to obtain a FileFormatInfo object, and writes the detected FileFormatType and encryption flag to the console without loading the workbook.
-    public class DetectWorkbookFormatFromStream
+    static void Main()
     {
-        // Detects the workbook format from a stream and logs the result
-        public static void Run(string filePath)
+        // Obtain the input stream (replace with your actual source)
+        using (FileStream inputStream = new FileStream("input.xlsx", FileMode.Open, FileAccess.Read))
         {
-            // Open the file as a read‑only stream
-            using (FileStream stream = File.OpenRead(filePath))
-            {
-                // Use Aspose.Cells utility to detect the format
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(stream);
+            // Load the workbook from the stream; Aspose.Cells auto‑detects the format
+            Workbook workbook = new Workbook(inputStream);
 
-                // Output detected format type and encryption status
-                Console.WriteLine($"Detected File Format Type: {formatInfo.FileFormatType}");
-                Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
-            }
-        }
+            // Retrieve the detected file format
+            FileFormatType detectedFormat = workbook.FileFormat;
 
-        // Simple console entry point for demonstration
-        public static void Main(string[] args)
-        {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Usage: DetectWorkbookFormatFromStream <path-to-excel-file>");
-                return;
-            }
-
-            string path = args[0];
-            Run(path);
+            // Log the identified format
+            Console.WriteLine($"Detected workbook format: {detectedFormat}");
         }
     }
 }

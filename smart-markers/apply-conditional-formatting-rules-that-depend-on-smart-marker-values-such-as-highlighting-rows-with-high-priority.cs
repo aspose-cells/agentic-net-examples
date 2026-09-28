@@ -1,81 +1,98 @@
-// Title: Highlight High‑Priority Rows with Conditional Formatting after Smart Marker Expansion – Aspose.Cells C# Example
-// Description: Demonstrates how to load a template workbook containing smart markers, bind a DataTable with Task and Priority fields, process the markers, and apply a ContainsText conditional format that colors cells with "High" priority in light coral with bold white text. The workbook is then saved with the formatting applied.
-// Keywords: Aspose.Cells | C# | .NET | smart markers | conditional formatting | ContainsText condition | highlight high priority | Excel export | data‑driven styling | template workbook
-// Common Searches: Aspose.Cells conditional formatting after smart markers | C# highlight rows with high priority in Excel | How to use ContainsText in Aspose.Cells | Apply formatting to smart marker generated rows | Excel template with smart markers and conditional colors
-// Developer Intent: Add a conditional formatting rule that colors rows marked as "High" priority after smart marker processing.
-// Use Cases: Automatically color‑code task lists generated from a database, emphasizing urgent items. | Create reporting templates where smart markers fill data and critical rows stand out visually. | Export Excel sheets from .NET applications with built‑in styling for status‑based values.
-// AI Prompts: Modify the example to also format rows where Priority equals "Medium" with a yellow background. | Generate C# code that applies a ContainsText conditional format to multiple columns after smart marker expansion. | Explain how to replace the ContainsText rule with a formula‑based condition that highlights rows where Priority = "High".
+// Title: How to apply conditional formatting to smart‑marker‑generated rows based on Priority values using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook with smart markers for a task list, processes the markers with WorkbookDesigner, and adds an expression‑based conditional formatting rule that colors rows yellow when the Priority column contains "High". | Modify the conditional formatting to target rows where Priority equals "Low" and set the background color to LightGray, ensuring the rule automatically adapts to the data range produced by the smart markers. | Demonstrate adding two separate expression conditions to the same smart‑marker range—one for "High" priority (yellow) and another for "Medium" priority (orange)—and configure StopIfTrue for each rule.
+// Common Searches: asp.net apply conditional formatting to smart marker rows based on priority Aspose.Cells | c# Aspose.Cells conditional formatting expression for dynamic range after WorkbookDesigner.Process | highlight high priority tasks in Excel using smart markers and conditional formatting | how to set background color for rows where column B equals 'High' with Aspose.Cells C#
+// Tags: Aspose.Cells conditional formatting with smart markers | C# expression‑based conditional formatting for Excel | highlight rows by priority column using Aspose.Cells | dynamic range handling after WorkbookDesigner processing | set background color for high priority tasks in .xlsx
 
 using System;
-using System.Data;
-using Aspose.Cells;
+using System.Collections.Generic;
 using System.Drawing;
+using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingSmartMarkers
+// Alias to avoid ambiguity with System.Range.
+using CellsRange = Aspose.Cells.Range;
+
+namespace AsposeCellsSmartMarkerConditionalFormatting
 {
-    // Demonstrates how to load a template workbook containing smart markers, bind a DataTable with Task and Priority fields, process the markers, and apply a ContainsText conditional format that colors cells with "High" priority in light coral with bold white text. The workbook is then saved with the formatting applied.
-    class Program
+    // Simple data class representing a task with a priority.
+    // // Creates a workbook, inserts smart markers for a task list, processes them with WorkbookDesigner, and applies an expression‑based conditional formatting rule that fills rows yellow when the Priority column equals "High".
+    public class TaskItem
     {
-        static void Main()
+        public string TaskName { get; set; } = null!;
+        public string Priority { get; set; } = null!;
+    }
+
+    public class Program
+    {
+        public static void Main()
         {
-            // Load the template workbook that contains smart markers (e.g., &amp;=Tasks.Task, &amp;=Tasks.Priority)
-            Workbook workbook = new Workbook("Template.xlsx");
-
-            // Initialize the WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // Prepare a data source with a Priority column
-            DataTable tasksTable = new DataTable("Tasks");
-            tasksTable.Columns.Add("Task", typeof(string));
-            tasksTable.Columns.Add("Priority", typeof(string));
-
-            // Sample data rows
-            tasksTable.Rows.Add("Prepare report", "High");
-            tasksTable.Rows.Add("Team meeting", "Medium");
-            tasksTable.Rows.Add("Code review", "Low");
-            tasksTable.Rows.Add("Client call", "High");
-            tasksTable.Rows.Add("Documentation", "Medium");
-
-            // Set the data source for the smart markers
-            designer.SetDataSource(tasksTable);
-
-            // Process the smart markers – this expands the rows based on the data source
-            designer.Process();
-
-            // After processing, apply conditional formatting to highlight rows with high priority
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Determine the range that contains the populated data (excluding header row)
-            int firstDataRow = 1; // assuming row 0 is header
-            int lastDataRow = sheet.Cells.MaxDataRow;
-            int priorityColumnIndex = 1; // column B (0‑based index)
-
-            // Add a new conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the area to which the condition will be applied (entire Priority column)
-            CellArea priorityArea = new CellArea
+            try
             {
-                StartRow = firstDataRow,
-                EndRow = lastDataRow,
-                StartColumn = priorityColumnIndex,
-                EndColumn = priorityColumnIndex
-            };
-            fcs.AddArea(priorityArea);
+                // Create a new workbook and get the first worksheet.
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a condition that looks for the text "High" in the Priority column
-            int conditionIndex = fcs.AddCondition(FormatConditionType.ContainsText);
-            FormatCondition condition = fcs[conditionIndex];
-            condition.Text = "High";
+                // Add header cells.
+                sheet.Cells["A1"].PutValue("Task");
+                sheet.Cells["B1"].PutValue("Priority");
 
-            // Set the visual style for rows that meet the condition (e.g., light red background)
-            condition.Style.BackgroundColor = Color.LightCoral;
-            condition.Style.Font.Color = Color.White;
-            condition.Style.Font.IsBold = true;
+                // Insert smart markers for the data rows.
+                sheet.Cells["A2"].PutValue("&=Tasks.TaskName");
+                sheet.Cells["B2"].PutValue("&=Tasks.Priority");
 
-            // Save the resulting workbook
-            workbook.Save("Output_WithConditionalFormatting.xlsx");
+                // Define the smart marker range (required for processing).
+                CellsRange smRange = sheet.Cells.CreateRange("A2:B2");
+                smRange.Name = "_CellsSmartMarkers";
+
+                // Prepare sample data.
+                List<TaskItem> tasks = new List<TaskItem>
+                {
+                    new TaskItem { TaskName = "Design UI", Priority = "High" },
+                    new TaskItem { TaskName = "Write Docs", Priority = "Low" },
+                    new TaskItem { TaskName = "Implement Feature", Priority = "Medium" },
+                    new TaskItem { TaskName = "Code Review", Priority = "High" }
+                };
+
+                // Set up the designer, bind the data source, and process the smart markers.
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                designer.SetDataSource("Tasks", tasks);
+                designer.Process();
+
+                // Determine the data range after processing.
+                int lastDataRow = sheet.Cells.MaxDataRow; // includes header row.
+
+                // Apply conditional formatting to highlight rows where Priority = "High".
+                int cfIndex = sheet.ConditionalFormattings.Add();
+                FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
+
+                // Define the area covering the data rows (excluding header).
+                CellArea dataArea = new CellArea
+                {
+                    StartRow = 1,               // Row 2 in Excel (zero‑based index)
+                    EndRow = lastDataRow,
+                    StartColumn = 0,
+                    EndColumn = 1               // Columns A and B
+                };
+                fcs.AddArea(dataArea);
+
+                // Add an expression condition: =$B2="High"
+                int condIdx = fcs.AddCondition(FormatConditionType.Expression);
+                FormatCondition fc = fcs[condIdx];
+                fc.Formula1 = "=$B2=\"High\"";
+                fc.Style.BackgroundColor = Color.Yellow;
+                fc.StopIfTrue = true; // Prevent lower‑priority rules from overriding.
+
+                // Save the resulting workbook.
+                string outputPath = "SmartMarkerConditionalFormatting.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

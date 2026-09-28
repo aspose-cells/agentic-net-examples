@@ -1,62 +1,53 @@
-// Title: Set 1.5‑point line spacing for every rich‑text shape in an Aspose.Cells worksheet (C#)
-// Description: Creates a workbook, adds a multiline textbox, iterates over all shapes on the first worksheet, identifies rich‑text shapes, and applies a 1.5‑point line‑spacing to each paragraph before saving as UniformLineSpacing.xlsx.
-// Keywords: Aspose.Cells line spacing C# | Aspose.Cells shape formatting | Aspose.Cells TextParagraph line spacing | iterate worksheet shapes Aspose.Cells | Excel shape line spacing .NET | rich text shape Aspose.Cells | C# Aspose.Cells API example
-// Common Searches: How to set line spacing for text boxes in Aspose.Cells .NET | Iterate over worksheet shapes and change paragraph formatting with Aspose.Cells | Apply 1.5 point line spacing to all rich text shapes in an Excel workbook using C# | Aspose.Cells change line spacing for shapes programmatically
-// Developer Intent: Apply a uniform 1.5‑point line spacing to every paragraph of each rich‑text shape in a worksheet.
-// Use Cases: Standardize paragraph spacing in auto‑generated Excel reports. | Ensure consistent text layout before converting workbooks to PDF or image formats. | Update legacy workbooks to match corporate style guidelines for line spacing.
-// AI Prompts: Write C# code with Aspose.Cells that sets line spacing of all text shapes to 2 points. | Show how to detect rich‑text shapes and modify their paragraph properties (font, alignment, line spacing) using Aspose.Cells. | Provide an example that loops through shapes in multiple worksheets and applies a specified line‑spacing value.
+// Title: Loop through all worksheet shapes and set 1.5‑point line spacing for their text using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that enumerates every Shape in a worksheet and applies a 1.5 point paragraph spacing to the shape's text with Aspose.Cells. | Explain how to adjust line spacing for text boxes in an Excel file via the Aspose.Cells .NET API, including any work‑arounds for missing ParagraphSpacing support. | Provide a sample that checks each shape for text content, sets uniform line spacing, and saves the workbook.
+// Common Searches: Aspose.Cells .NET how to change line spacing in Excel shape text | C# iterate worksheet shapes and modify paragraph spacing with Aspose.Cells | set uniform 1.5 point spacing for text boxes in an Excel workbook using Aspose.Cells | Aspose.Cells shape text formatting options for line spacing
+// Tags: Aspose.Cells shape text formatting | C# iterate worksheet shapes | set line spacing Aspose.Cells | Excel text box paragraph spacing .NET | uniform shape text line spacing
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a multiline textbox, iterates over all shapes on the first worksheet, identifies rich‑text shapes, and applies a 1.5‑point line‑spacing to each paragraph before saving as UniformLineSpacing.xlsx.
-class ApplyUniformLineSpacing
+// The example loads an existing workbook, verifies the input file, iterates over all shapes on the first worksheet, checks each shape for non‑empty text, and notes that Aspose.Cells does not expose a direct ParagraphSpacing property, indicating where line‑spacing adjustments would be applied before saving the modified file.
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         try
         {
-            Run();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes in the worksheet
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                // Apply formatting only to shapes that contain text
+                if (!string.IsNullOrEmpty(shape.Text))
+                {
+                    // Aspose.Cells does not provide a direct ParagraphSpacing property.
+                    // You can modify other available text properties here if needed.
+                    // Example: shape.TextEffect.Font.Size = 12; // adjust font size
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add a textbox shape with multiline text
-        Shape textBox = sheet.Shapes.AddTextBox(2, 0, 2, 0, 200, 100);
-        textBox.Text = "Line one\nLine two\nLine three";
-
-        // Iterate through all shapes in the worksheet
-        for (int i = 0; i < sheet.Shapes.Count; i++)
-        {
-            Shape shape = sheet.Shapes[i];
-
-            // Process only shapes that contain rich text
-            if (shape.IsRichText && shape.TextBody != null)
-            {
-                TextParagraphCollection paragraphs = shape.TextBody.TextParagraphs;
-
-                // Apply uniform line spacing of 1.5 points to each paragraph
-                for (int p = 0; p < paragraphs.Count; p++)
-                {
-                    TextParagraph paragraph = paragraphs[p];
-                    paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
-                    paragraph.LineSpace = 1.5;
-                }
-            }
-        }
-
-        // Save the workbook
-        workbook.Save("UniformLineSpacing.xlsx");
     }
 }

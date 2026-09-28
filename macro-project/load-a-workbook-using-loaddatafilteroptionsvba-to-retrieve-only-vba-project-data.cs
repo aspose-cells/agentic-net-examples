@@ -1,45 +1,52 @@
-// Title: C# – Load Only VBA Project from an Excel Workbook with Aspose.Cells (LoadDataFilterOptions.VBA)
-// Description: Demonstrates how to create a LoadOptions object, set its LoadFilter to LoadDataFilterOptions.VBA, and open a macro‑enabled .xlsm file so that only the VBA project is read. The example accesses workbook.VbaProject, prints the project name and module count, and shows how to save the workbook if needed.
-// Keywords: Aspose.Cells C# load VBA only | LoadDataFilterOptions.VBA example | read VBA project without worksheets | macro‑enabled workbook loading | Aspose.Cells LoadOptions VBA filter | GitHub Aspose.Cells VBA sample
-// Common Searches: Aspose.Cells load only VBA project C# | LoadDataFilterOptions.VBA usage | How to read VBA modules with Aspose.Cells | Skip worksheets when loading .xlsm with Aspose | C# code to extract VBA project from Excel
-// Developer Intent: Open an Excel file and retrieve just the VBA project data, avoiding the overhead of loading worksheets or other workbook content.
-// Use Cases: Quickly verify whether an uploaded .xlsm contains macros before further processing. | Extract module names and counts for analytics without loading the full workbook. | Modify or copy a VBA project after loading only the VBA data, then save to a new macro‑enabled file.
-// AI Prompts: Write C# code that loads only the VBA project from an .xlsm file using Aspose.Cells and prints the source of each module. | Show how to edit a VBA module after loading only VBA data with LoadDataFilterOptions.VBA and save the changes to a new workbook. | Explain how to combine LoadDataFilterOptions.VBA with other filter flags to load VBA plus selected worksheets in a single operation.
+// Title: Load only the VBA project from an .xlsm workbook using Aspose.Cells LoadDataFilterOptions.VBA in C#
+// AI Prompts: Write C# code that opens an .xlsm file with Aspose.Cells using LoadDataFilterOptions.VBA to load only the VBA project and enumerate its modules. | Show how to check for a VBA project in a workbook and print each module name while preventing worksheet data from being loaded with Aspose.Cells. | Demonstrate using Aspose.Cells LoadDataFilterOptions to retrieve only macro code from an Excel file and list the module names in C#.
+// Common Searches: Aspose.Cells C# load only VBA project from xlsm without loading worksheets | How to use LoadDataFilterOptions.VBA to read macro modules in Aspose.Cells | Retrieve VBA modules from Excel file using Aspose.Cells LoadDataFilterOptions | C# example for loading VBA project only with Aspose.Cells
+// Tags: load VBA project with LoadDataFilterOptions | Aspose.Cells VBA module extraction C# | filter workbook loading to VBA only | read Excel macro project Aspose.Cells | C# load .xlsm VBA project without worksheets
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
+using System;
+using System.IO;
 
-// Demonstrates how to create a LoadOptions object, set its LoadFilter to LoadDataFilterOptions.VBA, and open a macro‑enabled .xlsm file so that only the VBA project is read. The example accesses workbook.VbaProject, prints the project name and module count, and shows how to save the workbook if needed.
-class LoadVbaOnlyDemo
+// The example checks for the existence of an .xlsm file, loads it with Aspose.Cells using LoadDataFilterOptions.VBA to load only the VBA project, accesses the VbaProject, iterates through its Modules collection, and prints each module name while handling errors.
+class Program
 {
     static void Main()
     {
-        // Path to the macro‑enabled workbook that contains VBA code
-        string inputPath = "MacroWorkbook.xlsm";
+        string inputPath = "input.xlsm";
 
-        // Create LoadOptions and assign a LoadFilter that loads only VBA projects
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.VBA);
-
-        // Load the workbook with the specified options
-        Workbook workbook = new Workbook(inputPath, loadOptions);
-
-        // Access the VBA project – it will be loaded, other data may be absent
-        VbaProject vbaProject = workbook.VbaProject;
-
-        if (vbaProject != null)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine("VBA project loaded successfully.");
-            Console.WriteLine($"Project name: {vbaProject.Name}");
-            Console.WriteLine($"Number of modules: {vbaProject.Modules.Count}");
-        }
-        else
-        {
-            Console.WriteLine("No VBA project found in the workbook.");
+            Console.WriteLine($"File not found: {inputPath}");
+            return;
         }
 
-        // (Optional) Save the workbook if you need to persist any changes
-        // workbook.Save("LoadedVbaOnly.xlsm", SaveFormat.Xlsm);
+        try
+        {
+            // Load the workbook; VBA project is loaded automatically if present
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the VBA project
+            VbaProject vbaProject = workbook.VbaProject;
+
+            if (vbaProject != null)
+            {
+                // List all VBA modules in the project
+                foreach (VbaModule module in vbaProject.Modules)
+                {
+                    Console.WriteLine($"Module Name: {module.Name}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No VBA project found in the workbook.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,45 +1,50 @@
-// Title: C# – Export Excel to CSV with numbers rounded to 2 decimals using Aspose.Cells
-// Description: Loads an XLSX workbook, rounds every numeric cell to two decimal places (MidpointRounding.AwayFromZero), and saves the result as a CSV file—ideal for precise financial reporting.
-// Keywords: Aspose.Cells CSV export C# | round numbers to two decimals | financial reporting Excel to CSV | C# round numeric cells Aspose | Save workbook as CSV | US accounting data export | midpoint rounding away from zero
-// Common Searches: C# Aspose.Cells round values before CSV export | export Excel to CSV with two‑decimal precision | how to round all numbers in a workbook using Aspose | financial CSV export Aspose.Cells .NET | midpoint rounding for accounting data
-// Developer Intent: Apply two‑decimal rounding to every numeric cell in a workbook and generate a CSV file.
-// Use Cases: Produce CSV statements for US GAAP‑compliant financial reports. | Create data feeds for accounting software that require fixed‑point monetary values. | Automate monthly ledger exports with uniform two‑decimal rounding.
-// AI Prompts: Generate C# code that uses Aspose.Cells to round all numeric cells to two decimal places and save the workbook as CSV. | Explain why MidpointRounding.AwayFromZero is preferred for financial rounding in CSV exports. | Suggest a method to format numbers to two decimals during CSV export without altering the original worksheet values.
+// Title: Export an Excel workbook to CSV with all numeric values rounded to two decimal places using Aspose.Cells for .NET
+// AI Prompts: Iterate through each worksheet, round every numeric cell to two decimals, and save each sheet as a separate CSV file with Aspose.Cells. | Create a helper method that takes input and output file paths, applies Math.Round(…,2) to numeric cells, and exports the workbook to a single CSV file. | Adjust the code to keep original cell formatting while rounding numbers before calling Workbook.Save with SaveFormat.Csv.
+// Common Searches: how to round numeric cells to two decimal places before exporting to CSV using Aspose.Cells .NET | Aspose.Cells export all worksheets to individual CSV files in C# | C# save Excel workbook as CSV with two-decimal rounding for financial reports | Aspose.Cells round numbers in cells programmatically prior to CSV conversion
+// Tags: round numeric cells two decimals Aspose.Cells | export worksheet to CSV Aspose.Cells .NET | save each sheet as separate CSV Aspose.Cells | financial reporting CSV export Aspose.Cells | apply Math.Round to cell values Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads an XLSX workbook, rounds every numeric cell to two decimal places (MidpointRounding.AwayFromZero), and saves the result as a CSV file—ideal for precise financial reporting.
-class ExportWorkbookToCsvRounded
+namespace FinancialCsvExport
 {
-    static void Main()
+    // The example loads an Excel workbook, rounds every numeric cell to two decimal places, and saves the first worksheet as a CSV file using Aspose.Cells for .NET (with guidance on exporting each worksheet separately).
+    class Program
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Determine the used range of the worksheet
-        int maxRow = cells.MaxDataRow;
-        int maxCol = cells.MaxDataColumn;
-
-        // Round all numeric cells to two decimal places
-        for (int row = 0; row <= maxRow; row++)
+        static void Main(string[] args)
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Load the source workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Cell cell = cells[row, col];
-                if (cell.Type == CellValueType.IsNumeric)
+                // Determine the used range to limit iteration
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
+
+                // Loop through all used cells
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    double roundedValue = Math.Round(cell.DoubleValue, 2, MidpointRounding.AwayFromZero);
-                    cell.PutValue(roundedValue);
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Check if the cell contains a numeric value
+                        if (cell.Type == CellValueType.IsNumeric)
+                        {
+                            // Round the numeric value to two decimal places
+                            double rounded = Math.Round(cell.DoubleValue, 2);
+                            cell.PutValue(rounded);
+                        }
+                    }
                 }
             }
-        }
 
-        // Export the workbook to CSV format
-        workbook.Save("output.csv", SaveFormat.Csv);
+            // Save the workbook as CSV.
+            // By default Aspose.Cells saves only the first worksheet to CSV.
+            // If you need all sheets, loop and save each separately.
+            workbook.Save("output.csv", SaveFormat.Csv);
+        }
     }
 }

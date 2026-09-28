@@ -1,16 +1,14 @@
-// Title: Link a Label Shape to a Percentage‑Formatted Cell with Aspose.Cells for .NET
-// Description: Creates a new workbook, writes 0.25 to cell B2, applies the built‑in percent format (index 10) which sets IsPercent = true, adds a label shape at row 2 column 2 (100 × 50 pt), links the shape to B2 using SetLinkedCell, refreshes the displayed value, prints the label text, and saves the file as ShapeLinkedPercent.xlsx.
-// Keywords: Aspose.Cells label shape | link shape to cell | percentage number format | IsPercent property | SetLinkedCell C# | Excel shape binding | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells link label to cell percentage | How to bind a shape to a cell in C# | Check IsPercent after applying number format Aspose.Cells | Add label shape and display cell value Aspose.Cells | Set linked cell for a shape Aspose.Cells .NET
-// Developer Intent: Add a label shape, bind it to a cell formatted as a percent, and verify the displayed text.
-// Use Cases: Dynamic dashboards where shapes reflect live percentage calculations. | Automated report generation with shapes that automatically show formatted values. | Testing that a cell’s number format is recognized as percent before linking to a shape.
-// AI Prompts: Generate C# code that adds a rectangle shape linked to cell C5 formatted as currency and confirms the format. | Show how to link multiple shapes to different cells, each using a custom number format, and output their texts. | Explain the parameters of SetLinkedCell, how they affect linking behavior, and how to refresh shape content after the source cell changes.
+// Title: Add a rectangle shape linked to a cell and display its value as a percentage using the TEXT function in Aspose.Cells for .NET
+// AI Prompts: Insert a rectangle shape on a worksheet, assign its Text property to =TEXT(A1,"0.00%"), and recalculate formulas with Aspose.Cells. | Bind a shape to cell A1 and show the cell's numeric value formatted as a percentage inside the shape using C#. | Save the workbook after the shape displays the formatted percentage and verify the output.
+// Common Searches: Aspose.Cells how to show cell value inside a shape as percentage | C# set shape text to formula using TEXT function Aspose.Cells | link rectangle shape to cell and format with custom number format Aspose.Cells | calculate shape text after adding formula in Aspose.Cells .NET
+// Tags: add rectangle shape Aspose.Cells | shape text formula TEXT function | percentage custom number format shape | calculate formulas for shape content | save workbook with shape text Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, writes 0.25 to cell B2, applies the built‑in percent format (index 10) which sets IsPercent = true, adds a label shape at row 2 column 2 (100 × 50 pt), links the shape to B2 using SetLinkedCell, refreshes the displayed value, prints the label text, and saves the file as ShapeLinkedPercent.xlsx.
+// // Creates a workbook, writes 0.1234 to A1, adds a rectangle shape, sets its Text to =TEXT(A1,"0.00%"), recalculates formulas so the shape shows 12.34%, prints the result, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
@@ -19,40 +17,53 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a numeric value (0.25) into cell B2 (represents 25%)
-            Cell cell = worksheet.Cells["B2"];
-            cell.PutValue(0.25);
+            // Place a numeric value in cell A1 (e.g., 0.1234)
+            sheet.Cells["A1"].PutValue(0.1234);
 
-            // Apply a built‑in percentage number format (index 10) which sets IsPercent = true
-            Style style = cell.GetStyle();
-            style.Number = 10; // Built‑in percent format
-            cell.SetStyle(style);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape;
+            try
+            {
+                shape = sheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle,
+                    1, 0, 1, 0, 100, 30);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to add shape: {ex.Message}");
+                return;
+            }
 
-            // Verify that the style reports IsPercent = true
-            Console.WriteLine("IsPercent after applying format: " + style.IsPercent);
+            // Set the shape's text to a formula that formats the cell value as a percentage
+            shape.Text = "=TEXT(A1,\"0.00%\")";
 
-            // Add a label shape at row 2, column 2 with size 100x50 points
-            // AddLabel overload requires six integer parameters in this API version:
-            // upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, height, width
-            Shape shape = worksheet.Shapes.AddLabel(2, 2, 2, 2, 100, 50);
-            Label label = (Label)shape;
+            // Calculate all formulas in the workbook so the shape text is evaluated
+            workbook.CalculateFormula();
 
-            // Link the label to cell B2 so it displays the cell's value
-            label.SetLinkedCell("$B$2", false, true);
-            label.UpdateSelectedValue(); // Refresh the displayed value
+            // Retrieve the displayed text from the shape after calculation
+            string displayedText = shape.Text;
 
-            // Retrieve and display the text shown by the shape
-            string displayedText = label.Text; // Use the Text property for label content
-            Console.WriteLine("Label displays: " + displayedText);
+            // Verify the result by printing it to the console (expected output: 12.34%)
+            Console.WriteLine("Shape text: " + displayedText);
 
-            // Save the workbook
-            workbook.Save("ShapeLinkedPercent.xlsx");
+            // Optional: save the workbook to a file
+            string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

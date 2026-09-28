@@ -1,10 +1,7 @@
-// Title: C# – Download Excel from URL (with fallback) and convert to PDF using Aspose.Cells
-// Description: Downloads an Excel workbook from a specified URL, falls back to a local template if the request fails, loads the file with Aspose.Cells, saves it as a PDF to a temporary location, and cleans up temporary files while handling HTTP, file‑system, and general errors.
-// Keywords: Aspose.Cells | C# | download Excel from URL | Excel to PDF conversion | fallback template | temporary file handling | SaveFormat.Pdf | HttpClient | file cleanup
-// Common Searches: Aspose.Cells download Excel from web and convert to PDF | C# convert remote Excel file to PDF using Aspose | How to use a local fallback when downloading Excel for PDF conversion | Save Aspose.Cells workbook as PDF to temp folder | Error handling for Excel download before PDF conversion .NET
-// Developer Intent: Retrieve an Excel workbook from a remote address (or a local fallback) and generate a PDF with Aspose.Cells in C#.
-// Use Cases: Automated report pipelines that pull Excel templates from a service and deliver PDFs to users. | Batch jobs that archive server‑hosted spreadsheets as PDF documents. | Graceful degradation when a network download fails, using a pre‑packaged template for conversion. | Generating PDF attachments for emails directly from downloaded Excel files. | Integrating Excel‑to‑PDF conversion into Azure Functions or other serverless workflows.
-// AI Prompts: Write C# code that downloads an Excel file from a URL, uses Aspose.Cells to convert it to PDF, and includes robust error handling and temporary file cleanup. | Show how to modify the sample to process multiple Excel URLs in parallel and save each as a PDF with Aspose.Cells. | Suggest best practices for logging, retry policies, and secure temporary file management in the Excel‑to‑PDF conversion routine. | Explain how to adapt the example for use in an ASP.NET Core Web API endpoint that returns the PDF as a response. | Provide guidance on deploying this conversion logic to an Azure Function with minimal cold‑start latency.
+// Title: Convert an Excel workbook downloaded from a URL to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that retrieves an .xlsx file from a remote URL with HttpClient, loads it into an Aspose.Cells Workbook via a MemoryStream, and exports it as a PDF. | Add error‑handling that falls back to a local .xlsx file when the HTTP download fails, then performs the same PDF conversion. | Modify the program to accept the source URL and destination PDF path as command‑line arguments while keeping the download‑fallback logic.
+// Common Searches: aspnet convert excel from http url to pdf using aspose.cells | c# download xlsx to memory stream and save as pdf with aspose | fallback to local excel file if remote download fails aspose.cells example | load workbook from stream and export to pdf in .net core | aspose.cells remote file conversion to pdf command line
+// Tags: remote Excel to PDF conversion Aspose.Cells | stream-based workbook loading C# | fallback mechanism for file download Aspose.Cells | save workbook as PDF Aspose.Cells | download Excel via HttpClient MemoryStream
 
 using System;
 using System.IO;
@@ -12,85 +9,79 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Downloads an Excel workbook from a specified URL, falls back to a local template if the request fails, loads the file with Aspose.Cells, saves it as a PDF to a temporary location, and cleans up temporary files while handling HTTP, file‑system, and general errors.
-class Program
+// Downloads an Excel file from a specified URL (with a local fallback), loads it into an Aspose.Cells Workbook, and saves the workbook as a PDF document.
+public class UrlToPdfConverter
 {
     // Entry point
-    static async Task Main()
+    public static async Task Main()
     {
-        // URL of the Excel file to be processed
-        string fileUrl = "https://example.com/sample.xlsx";
+        // URL of the Excel file to be converted
+        string excelUrl = "https://example.com/sample.xlsx";
 
-        // Temporary local paths
-        string tempExcelPath = Path.Combine(Path.GetTempPath(), "temp_downloaded.xlsx");
-        string outputPdfPath = Path.Combine(Path.GetTempPath(), "converted.pdf");
+        // Local fallback path for the Excel file (if download fails)
+        string localExcelPath = "sample.xlsx";
+
+        // Local path for the resulting PDF
+        string pdfPath = "output.pdf";
 
         try
         {
-            // Attempt to download the Excel file from the URL
-            using (HttpClient client = new HttpClient())
+            // Attempt to download the Excel file into a memory stream
+            using (MemoryStream excelStream = await DownloadFileAsync(excelUrl))
             {
-                HttpResponseMessage response = await client.GetAsync(fileUrl);
-                if (response.IsSuccessStatusCode)
+                Workbook workbook;
+
+                if (excelStream != null && excelStream.Length > 0)
                 {
-                    // Save the downloaded content to a temporary file
-                    await using (FileStream fs = new FileStream(tempExcelPath, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        await response.Content.CopyToAsync(fs);
-                    }
+                    // Load the workbook from the downloaded stream
+                    workbook = new Workbook(excelStream);
+                }
+                else if (File.Exists(localExcelPath))
+                {
+                    // Fallback: load workbook from a local file
+                    workbook = new Workbook(localExcelPath);
                 }
                 else
                 {
-                    // If download fails, try to use a local fallback file
-                    Console.WriteLine($"Warning: Unable to download file (status {(int)response.StatusCode}). Attempting to use a local template.");
-                    string localTemplate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sample.xlsx");
-                    if (File.Exists(localTemplate))
-                    {
-                        File.Copy(localTemplate, tempExcelPath, overwrite: true);
-                    }
-                    else
-                    {
-                        throw new FileNotFoundException("Neither the remote file nor a local template could be found.", localTemplate);
-                    }
+                    throw new FileNotFoundException("Neither the remote Excel file could be downloaded nor the local fallback file was found.");
                 }
+
+                // Save the workbook as PDF
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+                Console.WriteLine($"Conversion completed: {pdfPath}");
             }
-
-            // Verify that the Excel file exists before conversion
-            if (!File.Exists(tempExcelPath))
-                throw new FileNotFoundException("The Excel file to convert was not found.", tempExcelPath);
-
-            // Load workbook and save as PDF using Aspose.Cells API
-            Workbook workbook = new Workbook(tempExcelPath);
-            workbook.Save(outputPdfPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"Conversion completed. PDF saved to: {outputPdfPath}");
-        }
-        catch (HttpRequestException httpEx)
-        {
-            Console.WriteLine($"HTTP error while downloading the file: {httpEx.Message}");
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.WriteLine($"File error: {fnfEx.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Error during conversion: {ex.Message}");
         }
-        finally
+    }
+
+    // Helper method to download a file into a MemoryStream
+    private static async Task<MemoryStream> DownloadFileAsync(string url)
+    {
+        try
         {
-            // Clean up the temporary Excel file
-            if (File.Exists(tempExcelPath))
+            using (HttpClient client = new HttpClient())
             {
-                try
-                {
-                    File.Delete(tempExcelPath);
-                }
-                catch (Exception delEx)
-                {
-                    Console.WriteLine($"Failed to delete temporary file: {delEx.Message}");
-                }
+                byte[] data = await client.GetByteArrayAsync(url);
+                var stream = new MemoryStream(data);
+                // Ensure the stream position is at the beginning
+                stream.Position = 0;
+                return stream;
             }
+        }
+        catch (HttpRequestException httpEx)
+        {
+            // Log the HTTP error and return null to trigger fallback logic
+            Console.WriteLine($"Failed to download file from URL: {httpEx.Message}");
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // Log any other errors and return null
+            Console.WriteLine($"Unexpected error during download: {ex.Message}");
+            return null;
         }
     }
 }

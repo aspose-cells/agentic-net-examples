@@ -1,10 +1,7 @@
-// Title: Export Excel External Connection Names to Text with Aspose.Cells for .NET
-// Description: Load an Excel workbook using Aspose.Cells, read its DataConnections collection, and write each external connection name to a plain‑text file (one per line). Includes checks for missing files and robust error handling.
-// Keywords: Aspose.Cells | C# | .NET | DataConnections | external connection names | export to text file | Excel workbook | sample code | API example | list connections
-// Common Searches: Aspose.Cells list external connections | C# export Excel data connection names to txt | how to get connection names from workbook using Aspose.Cells | save Excel data connections as plain text .NET | extract external data source names from Excel with Aspose
-// Developer Intent: Retrieve all external connection names from an Excel workbook and write them to a plain‑text file.
-// Use Cases: Audit all external data sources referenced in a workbook before migration. | Create an inventory file for scripts that need to validate or rename connections. | Generate a quick reference list for documentation or compliance reviews.
-// AI Prompts: Generate C# code with Aspose.Cells that writes each external connection name from a workbook to a CSV file. | Show how to handle a workbook that contains no external connections when exporting names using Aspose.Cells. | Provide an example that logs the index and name of each exported connection while writing to a text file.
+// Title: Export all external data connection names from an Excel workbook to a text file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# console program that opens an .xlsx file with Aspose.Cells, iterates over workbook.DataConnections, and writes each connection's Name to a .txt file. | Generate C# code that verifies the source workbook exists, creates the output folder if necessary, and saves the list of external connection names to a plain‑text file while handling exceptions. | Provide a C# snippet using Aspose.Cells to retrieve the Name property of every DataConnection in a workbook and export those names to a text document.
+// Common Searches: how to list external data connections in an Excel file using Aspose.Cells C# | C# Aspose.Cells export workbook DataConnections names to txt | save Excel external connection names to a text file with Aspose.Cells | retrieve DataConnection.Name collection Aspose.Cells .NET example
+// Tags: export DataConnections names to text file Aspose.Cells | Aspose.Cells list external connections C# | write Excel connection names plain text .NET | enumerate workbook DataConnections Aspose.Cells | save external connection list txt Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,51 +9,64 @@ using Aspose.Cells;
 
 namespace AsposeCellsExternalConnectionsExport
 {
-    // Load an Excel workbook using Aspose.Cells, read its DataConnections collection, and write each external connection name to a plain‑text file (one per line). Includes checks for missing files and robust error handling.
+    // The C# console application loads a specified .xlsx workbook with Aspose.Cells, checks for the file's existence, creates the output directory if needed, iterates through the workbook's DataConnections collection, writes each connection's Name to a plain‑text file, and reports the number of exported connections while handling errors.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the source Excel workbook
-            string workbookPath = "InputWorkbook.xlsx";
+            // Path to the source workbook
+            string workbookPath = "input.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
-            {
-                Console.WriteLine($"Input file not found: {workbookPath}");
-                return;
-            }
+            // Path to the output text file
+            string outputPath = "ExternalConnectionNames.txt";
 
             try
             {
+                // Verify that the input workbook exists
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Input file '{workbookPath}' not found.");
+                    return;
+                }
+
                 // Load the workbook
                 Workbook workbook = new Workbook(workbookPath);
 
-                // Get the collection of external connections from the workbook
-                var connections = workbook.DataConnections;
+                // Use dynamic to avoid compile‑time dependency on DataConnection types
+                dynamic connections = workbook.DataConnections;
 
-                // Path for the output plain text file
-                string outputPath = "ExternalConnectionNames.txt";
-
-                // Write each connection name to the text file, one per line
-                using (StreamWriter writer = new StreamWriter(outputPath))
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    for (int i = 0; i < connections.Count; i++)
-                    {
-                        // Retrieve the name of the current external connection
-                        string connectionName = connections[i].Name;
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                        // Write the name to the file
-                        writer.WriteLine(connectionName);
+                int exportedCount = 0;
+
+                // Write each connection name to the text file
+                using (StreamWriter writer = new StreamWriter(outputPath, false))
+                {
+                    foreach (var connObj in connections)
+                    {
+                        try
+                        {
+                            dynamic conn = connObj;
+                            writer.WriteLine(conn.Name);
+                            exportedCount++;
+                        }
+                        catch (Exception innerEx)
+                        {
+                            Console.WriteLine($"Failed to process a connection: {innerEx.Message}");
+                        }
                     }
                 }
 
-                // Inform the user that the operation completed
-                Console.WriteLine($"Exported {connections.Count} external connection name(s) to '{outputPath}'.");
+                Console.WriteLine($"Exported {exportedCount} connection name(s) to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                // Handle any runtime errors gracefully
+                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

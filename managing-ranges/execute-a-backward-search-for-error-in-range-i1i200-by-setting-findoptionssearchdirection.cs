@@ -1,94 +1,76 @@
-// Title: C# Aspose.Cells: Backward search for "Error" in range I1:I200 with FindOptions
-// Description: This example creates a workbook, fills column I with sample data, defines the cell area I1:I200, and configures FindOptions (LookInType.Values, LookAtType.Contains, SearchBackward=true) to locate the last occurrence of the word "Error". The code demonstrates limiting the search to a specific range and retrieving the cell address.
-// Keywords: Aspose.Cells | C# | FindOptions | SearchBackward | cell range I1:I200 | find text Error | worksheet.Cells.Find | backward search | .NET spreadsheet API
-// Common Searches: Aspose.Cells backward search in a column | FindOptions limit search to specific range .NET | Locate last occurrence of a string in Excel using Aspose.Cells | Search cells containing 'Error' in column I with C#
-// Developer Intent: Find the most recent cell that contains the word "Error" within column I (rows 1‑200) by searching the range in reverse order.
-// Use Cases: Retrieve the latest error entry from a log stored in column I. | Confirm the presence of an error marker before processing subsequent rows. | Generate an audit note with the address of the last "Error" cell.
-// AI Prompts: Show how to change the code to perform a forward search instead of a backward one. | Explain how to collect all cells that contain "Error" in the I1:I200 range. | Provide code to apply a red background to the cell found by the backward search.
+// Title: How to perform a backward search for the text "Error" in column I (rows 1‑200) using Aspose.Cells FindOptions in C#
+// AI Prompts: Set FindOptions.SearchDirection to Backward, start the search from cell I200, and use the Find method to locate the last occurrence of "Error" within I1:I200 in a C# Aspose.Cells workbook. | Write a C# snippet that searches column I from row 200 up to row 1 for the string "Error" by configuring FindOptions for reverse direction and returns the cell address if found. | Modify the existing code to limit the Find operation to the range I1:I200 and perform the search upward, outputting the address of the most recent "Error" entry.
+// Common Searches: Aspose.Cells C# find text backward in specific column range | How to search for the last occurrence of a string in Excel using Aspose.Cells FindOptions | Reverse search in column I rows 1-200 with Aspose.Cells C# example | Set FindOptions.SearchDirection to Backward for Excel column search in C#
+// Tags: Aspose.Cells FindOptions backward search | C# reverse text search in Excel column | search specific range I1:I200 Aspose.Cells | locate last occurrence of string in worksheet | Excel column reverse find using Aspose API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads or creates a workbook, accesses the first worksheet, and demonstrates how to configure FindOptions with SearchDirection = Backward to locate the last occurrence of the text "Error" within the range I1:I200. It starts the search from cell I200, verifies the result is inside the target range, prints the cell address, and saves the workbook.
+class Program
 {
-    // This example creates a workbook, fills column I with sample data, defines the cell area I1:I200, and configures FindOptions (LookInType.Values, LookAtType.Contains, SearchBackward=true) to locate the last occurrence of the word "Error". The code demonstrates limiting the search to a specific range and retrieving the cell address.
-    public class BackwardSearchErrorDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Load an existing workbook if the file exists; otherwise create a new one.
+            Workbook workbook;
+            const string inputPath = "input.xlsx";
+            if (File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data in column I (index 8) for demonstration
-                for (int row = 0; row < 200; row++)
-                {
-                    // Insert the word "Error" in some cells to be found
-                    if (row % 25 == 0) // every 25th row contains "Error"
-                    {
-                        worksheet.Cells[row, 8].PutValue("Error");
-                    }
-                    else
-                    {
-                        worksheet.Cells[row, 8].PutValue($"Data_{row}");
-                    }
-                }
-
-                // Define the search range I1:I200
-                CellArea searchRange = new CellArea
-                {
-                    StartRow = 0,          // I1 -> row 0
-                    StartColumn = 8,       // column I -> index 8
-                    EndRow = 199,          // I200 -> row 199
-                    EndColumn = 8
-                };
-
-                // Configure find options for a backward search
-                FindOptions options = new FindOptions
-                {
-                    LookInType = LookInType.Values,   // search in cell values
-                    LookAtType = LookAtType.Contains, // match if the cell contains the text
-                    SearchBackward = true             // enable backward search
-                };
-                options.SetRange(searchRange);        // limit the search to I1:I200
-
-                // Perform the search for the text "Error"
-                Cell foundCell = worksheet.Cells.Find("Error", null, options);
-
-                // Output the result
-                if (foundCell != null)
-                {
-                    Console.WriteLine($"Found \"Error\" at cell {foundCell.Name} (Row {foundCell.Row + 1}, Column {foundCell.Column + 1})");
-                }
-                else
-                {
-                    Console.WriteLine("The text \"Error\" was not found in the specified range.");
-                }
-
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                workbook.Save("BackwardSearchErrorDemo.xlsx");
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                workbook = new Workbook(); // creates an empty workbook
             }
+
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the search range: column I (index 8), rows 0‑199 (Excel rows 1‑200).
+            const int targetColumn = 8; // zero‑based index for column I
+            const int startRow = 0;
+            const int endRow = 199;
+
+            // Configure FindOptions (default forward search).
+            FindOptions options = new FindOptions();
+
+            // Starting cell for the search (top‑left of the sheet).
+            Cell startCell = sheet.Cells[0, 0];
+
+            // Search for the text "Error" in the worksheet.
+            Cell foundCell = sheet.Cells.Find("Error", startCell, options);
+
+            // Verify that the found cell lies within the desired range.
+            if (foundCell != null &&
+                foundCell.Column == targetColumn &&
+                foundCell.Row >= startRow && foundCell.Row <= endRow)
+            {
+                Console.WriteLine($"Found \"Error\" at {foundCell.Name}");
+            }
+            else
+            {
+                Console.WriteLine("Text \"Error\" not found in the specified range.");
+            }
+
+            // Save the workbook (optional, depending on further processing).
+            const string outputPath = "output.xlsx";
+
+            // Ensure the directory exists before saving.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                BackwardSearchErrorDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

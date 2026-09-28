@@ -1,61 +1,100 @@
-// Title: C# – Convert HTML to Excel and apply scientific notation formatting with Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells Workbook, converts parsable strings to numeric values, iterates the used range, and assigns a custom scientific notation format (0.00E+00) to every numeric cell before saving as XLSX.
-// Keywords: Aspose.Cells HTML to Excel | C# convert HTML workbook | custom number format scientific notation | Convert string to numeric Aspose.Cells | Load HTML workbook .NET | Apply custom format Excel C# | Aspose.Cells number formatting
-// Common Searches: how to load html into aspocells workbook c# | set scientific notation format for cells aspocells | convert string numbers to numeric values aspocells | html table to excel with custom number format | aspocells custom number format example
-// Developer Intent: Import an HTML document, turn numeric strings into true numbers, and display those numbers in scientific notation in the resulting Excel file.
-// Use Cases: Generate Excel reports from HTML tables where large values must appear in scientific notation. | Automate batch conversion of HTML files to Excel while preserving numeric data types and applying a uniform format. | Build a data‑processing pipeline that normalizes HTML‑derived numbers and formats them for downstream analytics.
-// AI Prompts: Write C# code using Aspose.Cells to load an HTML file, convert numeric strings to numbers, apply the custom format "0.00E+00" to all numeric cells, and save as XLSX. | Explain how to traverse the used range of a worksheet in Aspose.Cells and set a scientific notation style on cells of type IsNumeric. | Provide a step‑by‑step guide for batch‑processing a folder of HTML files, converting each to Excel with numeric conversion and scientific notation formatting using Aspose.Cells.
+// Title: Convert HTML to XLSX and apply custom scientific notation (0.00E+00) to numeric cells using Aspose.Cells for .NET
+// AI Prompts: Load an HTML file into an Aspose.Cells Workbook and save the workbook as an XLSX file. | Iterate over the worksheet's used range, convert any string that represents a number to a double, and set the custom format "0.00E+00" for cells whose absolute value is below 0.001 or above 1,000,000. | Create the output directory if it does not exist before writing the formatted workbook.
+// Common Searches: how to import HTML into Excel with Aspose.Cells and keep scientific notation | C# Aspose.Cells format numbers as scientific notation after loading HTML | convert numeric strings to numbers when converting HTML to XLSX using Aspose.Cells | apply scientific notation to cells when converting HTML to Excel | Aspose.Cells load HTML and automatically format very large or very small values
+// Tags: HTML to XLSX conversion Aspose.Cells | custom scientific notation format Aspose.Cells | numeric string to double conversion C# | apply custom number format to used range | save workbook as Xlsx with formatting
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
+using CellsRange = Aspose.Cells.Range;
 
-namespace HtmlToExcelConversion
+// The example loads an HTML file into an Aspose.Cells Workbook, scans the used cell range, converts string values that represent numbers into numeric cells, applies the custom scientific notation format "0.00E+00" to values that are very small or very large, and saves the result as an XLSX workbook.
+class Program
 {
-    // Loads an HTML file into an Aspose.Cells Workbook, converts parsable strings to numeric values, iterates the used range, and assigns a custom scientific notation format (0.00E+00) to every numeric cell before saving as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Paths for source HTML and destination Excel files
-            string htmlFile = "input.html";
-            string excelFile = "output.xlsx";
+            const string inputPath = "input.html";
+            const string outputPath = "output.xlsx";
 
-            // Load the HTML file into a workbook
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-            Workbook workbook = new Workbook(htmlFile, loadOptions);
-
-            // Get the first worksheet's cells collection
-            Cells cells = workbook.Worksheets[0].Cells;
-
-            // Convert any string that can be interpreted as a number to a numeric value
-            cells.ConvertStringToNumericValue();
-
-            // Apply a custom scientific notation format to all numeric cells
-            // Define the format pattern (e.g., two decimal places in scientific notation)
-            string scientificFormat = "0.00E+00";
-
-            // Iterate through the used range of cells
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input HTML file exists
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the HTML file into a new Workbook using HtmlLoadOptions
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Get the first worksheet (HTML is usually loaded into the first sheet)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Define a custom number format for scientific notation
+            const string scientificFormat = "0.00E+00";
+
+            // Determine the used range of the worksheet
+            CellsRange usedRange = cells.MaxDisplayRange;
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            // Iterate through all cells in the used range
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
                 {
                     Cell cell = cells[row, col];
+
+                    // If the cell already contains a numeric value
                     if (cell.Type == CellValueType.IsNumeric)
                     {
-                        // Retrieve the existing style, modify the custom format, and reapply
-                        Style style = cell.GetStyle();
-                        style.Custom = scientificFormat;
-                        cell.SetStyle(style);
+                        double value = cell.DoubleValue;
+
+                        // Apply scientific format for very small or very large numbers
+                        if (value != 0 && (Math.Abs(value) < 0.001 || Math.Abs(value) > 1_000_000))
+                        {
+                            Style style = cell.GetStyle();
+                            style.Custom = scientificFormat;
+                            cell.SetStyle(style);
+                        }
+                    }
+                    // If the cell contains a string that can be parsed as a number
+                    else if (cell.Type == CellValueType.IsString)
+                    {
+                        if (double.TryParse(cell.StringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsed))
+                        {
+                            // Replace the string with the numeric value
+                            cell.PutValue(parsed);
+
+                            // Apply the scientific format
+                            Style style = cell.GetStyle();
+                            style.Custom = scientificFormat;
+                            cell.SetStyle(style);
+                        }
                     }
                 }
             }
 
-            // Save the workbook as an Excel file
-            workbook.Save(excelFile, SaveFormat.Xlsx);
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            Console.WriteLine("HTML has been converted to Excel with scientific notation formatting.");
+            // Save the workbook as an Excel file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

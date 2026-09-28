@@ -1,47 +1,88 @@
-// Title: Lock a WordArt watermark in Excel using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, inserts a WordArt watermark, locks selection, movement, resizing, handle adjustment, and text editing, then protects the worksheet so the watermark cannot be altered.
-// Keywords: Aspose.Cells | C# | WordArt watermark | lock shape | ShapeLockType | worksheet protection | prevent editing | Excel security
-// Common Searches: how to lock WordArt watermark Aspose.Cells | prevent moving WordArt shape in Excel C# | protect Excel worksheet objects with Aspose | disable editing of WordArt watermark .NET | shape lock properties Aspose.Cells example
-// Developer Intent: Make a WordArt watermark immutable for end‑users.
-// Use Cases: Add a confidential watermark to generated reports that cannot be changed. | Create a template where the logo WordArt stays fixed while cells stay editable. | Distribute spreadsheets with a protected branding element that recipients cannot modify.
-// AI Prompts: Write C# code with Aspose.Cells to insert a WordArt watermark, lock all its properties, and protect the worksheet. | Explain the effect of each ShapeLockType option on a WordArt shape and how worksheet protection enforces them. | Show how to unlock a previously locked WordArt watermark for editing using Aspose.Cells.
+// Title: Lock a WordArt watermark in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a diagonal WordArt shape with custom text to a new workbook, sets its fill and rotation, sends it to the back, and locks the shape to prevent any user edits. | Show how to use the Shape.IsLocked property in Aspose.Cells to make a watermark non‑selectable and non‑movable in an Excel worksheet. | Provide a complete example that creates an Excel workbook, inserts a CONFIDENTIAL WordArt watermark, applies a -45° rotation, solid fill, and saves the file as WatermarkLocked.xlsx.
+// Common Searches: asp.net c# lock wordart shape in excel using aspose.cells | how to prevent editing of a watermark shape in an Excel workbook with Aspose.Cells | add diagonal confidential watermark to excel file and make it read‑only with Aspose.Cells | set shape IsLocked property Aspose.Cells example c# | save excel workbook with locked wordart watermark using Aspose.Cells .NET
+// Tags: Aspose.Cells prevent watermark editing | C# add diagonal WordArt to Excel | Shape.IsLocked property Aspose.Cells | Excel watermark read‑only .NET | Create WordArt watermark Aspose.Cells
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, inserts a WordArt watermark, locks selection, movement, resizing, handle adjustment, and text editing, then protects the worksheet so the watermark cannot be altered.
-class LockWordArtWatermark
+// This C# example creates a new workbook, inserts a diagonal WordArt shape with the text “CONFIDENTIAL” as a watermark, configures its fill and rotation, moves it behind other objects, locks the shape using Shape.IsLocked so users cannot select, move, edit, or resize it, and saves the file as WatermarkLocked.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a WordArt shape that will act as a watermark
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1, // preset style
-            "CONFIDENTIAL",                  // watermark text
-            5, 5,                            // top row, top offset (pixels)
-            5, 200,                          // left column, left offset (pixels)
-            50, 300);                        // height, width (pixels)
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Lock the shape itself
-        wordArt.IsLocked = true;
+            // Add a WordArt shape that will serve as a watermark
+            // Parameters: preset text effect, text, font name, font size, bold, italic,
+            // upper left row, column, top, left, bottom, right
+            Shape watermark = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "CONFIDENTIAL",
+                "Arial",
+                72,
+                false,
+                false,
+                0, 0,
+                0, 0, 0, 0);
 
-        // Lock specific properties to prevent selection, moving, resizing, editing, etc.
-        wordArt.SetLockedProperty(ShapeLockType.Selection, true);
-        wordArt.SetLockedProperty(ShapeLockType.Move, true);
-        wordArt.SetLockedProperty(ShapeLockType.Resize, true);
-        wordArt.SetLockedProperty(ShapeLockType.AdjustHandles, true);
-        wordArt.SetLockedProperty(ShapeLockType.Text, true);
+            // Rotate the watermark for typical diagonal appearance
+            watermark.RotationAngle = -45;
 
-        // Protect the worksheet so that the locked settings take effect
-        worksheet.Protection.AllowEditingObject = false; // disallow editing of objects
-        worksheet.Protect(ProtectionType.All);
+            // Set fill to solid; color defaults to black (or set a custom color if supported)
+            watermark.Fill.FillType = FillType.Solid;
+            // If the API version supports SolidFillColor, uncomment the line below:
+            // watermark.Fill.SolidFillColor = Color.FromArgb(50, Color.Red);
 
-        // Save the workbook
-        workbook.Save("LockedWatermark.xlsx");
+            // Hide outline if the API version supports it
+            try
+            {
+                // watermark.Line.IsVisible = false; // Uncomment if supported
+            }
+            catch
+            {
+                // Ignore if not supported
+            }
+
+            // Send the shape to the back so it behaves like a background watermark
+            watermark.ZOrderPosition = 0;
+
+            // Lock the watermark to prevent editing and moving
+            watermark.IsLocked = true;
+
+            // Define output file path
+            string outputPath = "WatermarkLocked.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook safely
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

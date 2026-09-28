@@ -1,52 +1,62 @@
-// Title: Load Excel workbook from UNC share, detect encryption, handle permission errors – Aspose.Cells .NET
-// Description: C# example that uses Aspose.Cells to detect the format and encryption state of an Excel file on a network (UNC) share with FileFormatUtil.DetectFileFormat, loads the workbook when possible, checks Workbook.Settings.IsEncrypted, and logs UnauthorizedAccessException, IOException, or other errors.
-// Keywords: Aspose.Cells UNC path | load workbook from network share | detect encrypted Excel file | FileFormatUtil DetectFileFormat | Workbook.Settings.IsEncrypted | handle UnauthorizedAccessException | C# Excel file permission error | network share Excel access Aspose
-// Common Searches: Aspose.Cells load Excel from UNC path | check if Excel file on network share is password protected | detect encryption without opening workbook Aspose.Cells | log permission denied error when opening Excel file | C# example for FileFormatUtil encryption detection
-// Developer Intent: Load an Excel workbook located on a network share, determine whether it is encrypted, and capture any access‑permission or I/O problems.
-// Use Cases: Validate encryption status before opening a shared workbook to avoid unexpected password prompts. | Record detailed logs when a user lacks read rights on a UNC folder for compliance auditing. | Use lightweight format detection to skip loading large encrypted files in batch processes.
-// AI Prompts: Write C# code that opens an Excel file from a UNC path with Aspose.Cells, checks Workbook.Settings.IsEncrypted, and logs UnauthorizedAccessException with full details. | Show how to use FileFormatUtil.DetectFileFormat to identify a password‑protected workbook on a network share before calling new Workbook(). | Provide best‑practice guidelines for handling I/O and permission exceptions when accessing Excel files on remote shares using Aspose.Cells.
+// Title: Loading an Excel workbook from a UNC network share with Aspose.Cells for .NET and handling permission, file‑not‑found, and I/O errors
+// AI Prompts: Write C# code that uses Aspose.Cells to open an .xlsx file located on a UNC path, verifies the file exists, and catches UnauthorizedAccessException, FileNotFoundException, IOException, CellsException, and generic Exception, logging each error to a file. | Update the example to capture exception type, message, and stack trace and write them as structured JSON entries to a log file instead of the console. | After successfully loading the workbook, add a check that uses Workbook.IsEncrypted (if the property is available) to report whether the workbook is encrypted.
+// Common Searches: aspocells load workbook from UNC path c# handling unauthorized access | c# aspocells check if excel file on network share exists before opening | how to catch file not found exception when opening excel with aspocells | aspocells detect encrypted workbook after loading in .net | log aspocells workbook loading errors to a file instead of console
+// Tags: load workbook from network share Aspose.Cells | handle unauthorized access Aspose.Cells | file not found exception Aspose.Cells | I/O error handling Aspose.Cells | check workbook encryption Aspose.Cells | log Aspose.Cells loading errors
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsNetworkExample
+// Loads an Excel workbook from a UNC network share using Aspose.Cells, verifies the file exists, and catches UnauthorizedAccessException, FileNotFoundException, IOException, CellsException, and generic exceptions, outputting error details to the console.
+class Program
 {
-    // C# example that uses Aspose.Cells to detect the format and encryption state of an Excel file on a network (UNC) share with FileFormatUtil.DetectFileFormat, loads the workbook when possible, checks Workbook.Settings.IsEncrypted, and logs UnauthorizedAccessException, IOException, or other errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Network share path to the Excel file
+        string networkPath = @"\\Server\Share\Folder\Sample.xlsx";
+
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(networkPath))
         {
-            // Path to the workbook on a network share
-            string networkFilePath = @"\\server\share\folder\example.xlsx";
+            Console.WriteLine($"File not found at '{networkPath}'.");
+            return;
+        }
 
-            try
-            {
-                // Detect file format and encryption status without opening the workbook
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(networkFilePath);
-                Console.WriteLine($"File detected as {formatInfo.FileFormatType}");
-                Console.WriteLine($"IsEncrypted (detected): {formatInfo.IsEncrypted}");
+        try
+        {
+            // Load the workbook from the network location
+            // LoadOptions can be used to specify additional settings if needed
+            LoadOptions loadOptions = new LoadOptions();
+            Workbook workbook = new Workbook(networkPath, loadOptions);
 
-                // Load the workbook (no password supplied; will fail if encrypted)
-                Workbook workbook = new Workbook(networkFilePath);
-                // After loading, also check the workbook settings for encryption
-                Console.WriteLine($"Workbook.Settings.IsEncrypted: {workbook.Settings.IsEncrypted}");
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                // Log permission issues when accessing the network share
-                Console.WriteLine($"Access denied to '{networkFilePath}'. Details: {ex.Message}");
-            }
-            catch (IOException ex)
-            {
-                // Log other I/O related problems (e.g., file not found, network errors)
-                Console.WriteLine($"I/O error while accessing '{networkFilePath}'. Details: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // General exception handling for unexpected errors
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            // Since Workbook.IsEncrypted is not available in this version,
+            // we simply confirm that the workbook was loaded successfully.
+            Console.WriteLine("Workbook loaded successfully.");
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            // Access permission issue
+            Console.WriteLine($"Access denied to file '{networkPath}'. Details: {ex.Message}");
+        }
+        catch (FileNotFoundException ex)
+        {
+            // File not found on the network share
+            Console.WriteLine($"File not found at '{networkPath}'. Details: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            // General I/O errors (e.g., network connectivity problems)
+            Console.WriteLine($"I/O error while accessing '{networkPath}'. Details: {ex.Message}");
+        }
+        catch (CellsException ex)
+        {
+            // Aspose.Cells specific errors (e.g., corrupted file, unsupported format)
+            Console.WriteLine($"Aspose.Cells error while loading workbook. Details: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

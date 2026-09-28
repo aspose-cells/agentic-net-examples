@@ -1,32 +1,26 @@
-// Title: Refresh All PivotTables in an XLSX Workbook with Aspose.Cells for .NET
-// Description: Loads an existing XLSX file, programmatically refreshes every PivotTable using Aspose.Cells, and saves the updated workbook to a new location.
-// Keywords: Aspose.Cells | .NET | C# | refresh pivot tables | Workbook.RefreshPivotTables | programmatic Excel pivot update | pivot cache refresh
-// Common Searches: how to refresh pivot tables in Excel using Aspose.Cells C# | Aspose.Cells refresh all PivotTables in a workbook | C# code to update pivot cache programmatically | refresh Excel pivot tables on server side | Aspose.Cells RefreshPivotTables method example
-// Developer Intent: Update all PivotTables in an existing XLSX workbook and write the refreshed file.
-// Use Cases: Automatically refresh pivot reports after nightly data imports before distribution. | Integrate pivot table refresh into a web service that generates Excel analytics on demand. | Maintain up‑to‑date PivotTables in batch‑processed workbooks for regulatory reporting.
-// AI Prompts: Write C# code that refreshes only specific PivotTables in a workbook using Aspose.Cells. | Explain the differences between RefreshPivotTables() and manual cache refresh for large data sets. | Suggest performance tips for refreshing PivotTables when the source range contains millions of rows.
+// Title: How to refresh all pivot tables in an XLSX workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing .xlsx file, calls Workbook.Worksheets.RefreshPivotTables(), and saves the result to a new file. | Show a step‑by‑step example of using Aspose.Cells to programmatically refresh every pivot table in a workbook and write the updated workbook to disk. | Provide a minimal console application that demonstrates loading a workbook, refreshing its pivot tables, and persisting the changes with Aspose.Cells.
+// Common Searches: aspnet refresh all pivot tables in existing excel file using aspose.cells | c# code to refresh pivot tables in an xlsx workbook with aspose.cells library | how to programmatically update pivot cache after data change using aspose.cells | example of RefreshPivotTables method in Aspose.Cells for .NET | refresh pivot tables in workbook and save as new file using C# Aspose.Cells
+// Tags: Aspose.Cells pivot table refresh API | C# load XLSX and refresh pivot caches | programmatic Excel pivot refresh .NET | save workbook after pivot update Aspose.Cells | update all pivot tables in workbook
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing XLSX file, programmatically refreshes every PivotTable using Aspose.Cells, and saves the updated workbook to a new location.
-class Program
+namespace AsposeCellsPivotRefresh
 {
-    static void Main()
+    // // This program loads an existing XLSX workbook, refreshes all pivot tables using the RefreshPivotTables method, and saves the refreshed workbook to a new file.
+    public class Program
     {
-        // Path to the source workbook that contains a pivot table
-        string inputPath = "input.xlsx";
+        public static void Main()
+        {
+            // Load the existing workbook that contains a pivot table
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Path where the refreshed workbook will be saved
-        string outputPath = "output.xlsx";
+            // Refresh all pivot tables in the workbook
+            workbook.Worksheets.RefreshPivotTables();
 
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(inputPath);
-
-        // Refresh all PivotTables in the workbook
-        workbook.Worksheets.RefreshPivotTables();
-
-        // Save the updated workbook
-        workbook.Save(outputPath);
+            // Save the workbook after refreshing the pivot tables
+            workbook.Save("output.xlsx");
+        }
     }
 }

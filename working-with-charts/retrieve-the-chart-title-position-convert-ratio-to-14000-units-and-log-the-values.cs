@@ -1,75 +1,62 @@
-// Title: Retrieve Chart Title Position Ratios and Convert to 1/4000 Units – Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a column chart with a title, reads the title's XRatioToChart and YRatioToChart (fraction of chart size), converts those ratios to integer values in 1/4000 units, logs the results, and saves the file.
-// Keywords: Aspose.Cells | C# chart title position | XRatioToChart | YRatioToChart | convert ratio to 1/4000 units | Excel chart layout | retrieve chart title coordinates | .NET Excel automation
-// Common Searches: Aspose.Cells get chart title XRatioToChart | How to convert chart title position to 1/4000 units in C# | Retrieve chart title YRatioToChart Aspose.Cells | Aspose.Cells chart title coordinates example | C# Aspose.Cells chart title placement
-// Developer Intent: Read a chart title's X and Y ratios, transform them into 1/4000‑unit values, and output the numbers.
-// Use Cases: Precisely align a chart title with other report elements by using absolute unit coordinates. | Compare title placements across multiple charts for consistent visual design. | Export title position data for documentation or automated layout validation.
-// AI Prompts: Generate C# code with Aspose.Cells that reads a chart title's XRatioToChart and YRatioToChart, converts them to 1/4000 units, and prints the values. | Explain the meaning of XRatioToChart/YRatioToChart in Aspose.Cells and how to calculate absolute positions for Excel chart titles. | Provide a step‑by‑step example that retrieves chart title ratios, converts them, and saves the workbook while logging the results.
+// Title: Retrieve chart title X/Y position ratios from an Excel workbook using Aspose.Cells for .NET and convert them to 1/4000 units
+// AI Prompts: Generate C# code with Aspose.Cells that opens an .xlsx file, reads the X and Y position ratios of each chart title, converts the ratios to 1/4000 units, and prints the results to the console. | Enhance the example to return a dictionary of chart names mapped to their title coordinates in 1/4000 units, skipping any chart that lacks a title. | Add robust error handling that logs a warning when a chart has no title and continues processing the remaining charts.
+// Common Searches: Aspose.Cells get chart title X Y position ratios in C# | convert chart title position ratio to 1/4000 units using .NET | C# read chart title coordinates from Excel workbook with Aspose.Cells | handle missing chart title when retrieving title position in Aspose.Cells
+// Tags: Aspose.Cells chart title coordinates extraction | convert title ratio to 1/4000 units C# | read chart title position Aspose.Cells | missing chart title handling Aspose.Cells | iterate worksheet charts Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, accesses the first worksheet's charts, reads each chart title's X and Y position ratios, converts the ratios to integer values in 1/4000 units, and writes the converted coordinates to the console, with optional handling for charts without titles.
+class Program
 {
-    // Creates a workbook, adds a column chart with a title, reads the title's XRatioToChart and YRatioToChart (fraction of chart size), converts those ratios to integer values in 1/4000 units, logs the results, and saves the file.
-    public class RetrieveChartTitlePosition
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
+            }
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            // Get the first chart on the worksheet
+            Chart chart = sheet.Charts[0];
 
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Retrieve the title position ratios (values between 0 and 1)
+            // Title.X and Title.Y represent the position ratios.
+            double ratioX = chart.Title.X; // Horizontal position ratio
+            double ratioY = chart.Title.Y; // Vertical position ratio
 
-            // Set the chart title
-            chart.Title.Text = "Sample Chart Title";
+            // Convert ratios to 1/4000 units
+            int posX = (int)Math.Round(ratioX * 4000);
+            int posY = (int)Math.Round(ratioY * 4000);
 
-            // Retrieve the title position ratios (fraction of chart width/height)
-            double xRatio = chart.Title.XRatioToChart;
-            double yRatio = chart.Title.YRatioToChart;
-
-            // Convert ratios to 1/4000 units (as per documentation)
-            int xInUnits = (int)Math.Round(xRatio * 4000);
-            int yInUnits = (int)Math.Round(yRatio * 4000);
-
-            // Output the values
-            Console.WriteLine($"Title XRatioToChart (fraction): {xRatio}");
-            Console.WriteLine($"Title YRatioToChart (fraction): {yRatio}");
-            Console.WriteLine($"Title X position in 1/4000 units: {xInUnits}");
-            Console.WriteLine($"Title Y position in 1/4000 units: {yInUnits}");
-
-            // Save the workbook (optional, just to complete lifecycle)
-            workbook.Save("RetrieveChartTitlePosition.xlsx");
+            // Log the converted positions
+            Console.WriteLine($"Chart Title Position X: {posX} /4000 units");
+            Console.WriteLine($"Chart Title Position Y: {posY} /4000 units");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors (e.g., loading issues, Aspose.Cells exceptions)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

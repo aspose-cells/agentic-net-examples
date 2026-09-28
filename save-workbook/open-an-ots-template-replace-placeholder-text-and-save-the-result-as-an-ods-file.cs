@@ -1,56 +1,34 @@
-// Title: C# – Convert OTS Template to ODS with Placeholder Replacement using Aspose.Cells
-// Description: Shows how to load (or create) an OTS template, replace a {Name} placeholder, configure OdsSaveOptions for LibreOffice compatibility, and save the workbook as an ODS file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | OTS template | ODS output | C# | .NET | placeholder replacement | OdsSaveOptions | LibreOffice generator | workbook conversion | template processing
-// Common Searches: Aspose.Cells replace text in OTS and save as ODS C# | convert OTS file to ODS using .NET | C# example for OdsSaveOptions LibreOffice | how to create OTS template programmatically Aspose.Cells | batch replace placeholders in OTS and export ODS
-// Developer Intent: Replace placeholder values in an OTS workbook and export the modified file as ODS.
-// Use Cases: Generate personalized ODS reports by loading a reusable OTS template, inserting user‑specific data, and saving the result for LibreOffice consumption. | Automate bulk conversion of multiple OTS files, each with distinct placeholder values, into ODS documents with consistent generator settings. | Integrate OTS‑to‑ODS transformation into a .NET service that prepares data‑driven spreadsheets for downstream open‑source office workflows.
-// AI Prompts: Write C# code that opens an OTS file, replaces several placeholders (e.g., {Name}, {Date}), and saves the workbook as ODS using Aspose.Cells with custom OdsSaveOptions. | Provide a step‑by‑step tutorial for programmatically creating an OTS template, adding placeholders, handling missing files, and converting it to ODS in a .NET application. | Explain how to configure OdsSaveOptions to emulate LibreOffice output and apply those settings when saving a workbook after placeholder substitution.
+// Title: Load an OTS template, replace {Name} placeholder, and save as ODS using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an OTS file with Aspose.Cells, substitutes the token {Name} with a real value, and writes the workbook out as an ODS document. | Illustrate setting the OdsSaveOptions.GeneratorType property to LibreOffice while saving a modified workbook to ODS format. | Explain the steps to programmatically edit an OTS template and generate an ODS spreadsheet using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# replace token in OTS spreadsheet template | save modified OTS workbook as ODS with LibreOffice generator | example of OdsSaveOptions usage in .NET for ODS export | programmatically convert OTS to ODS using Aspose.Cells library
+// Tags: replace token in OTS template Aspose.Cells | save workbook as ODS with OdsSaveOptions | C# ODS export using LibreOffice generator | load OTS file Aspose.Cells .NET | programmatic OTS to ODS conversion
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Shows how to load (or create) an OTS template, replace a {Name} placeholder, configure OdsSaveOptions for LibreOffice compatibility, and save the workbook as an ODS file with Aspose.Cells for .NET.
-class OtsToOdsConverter
+// The example loads an OTS template into a Workbook, replaces the {Name} placeholder with "John Doe", configures OdsSaveOptions to use the LibreOffice generator, and saves the updated workbook as an ODS file.
+class Program
 {
     static void Main()
     {
-        // Paths for the template and output files
+        // Path to the OTS template file
         string templatePath = "template.ots";
+
+        // Load the OTS template into a Workbook instance
+        Workbook workbook = new Workbook(templatePath);
+
+        // Replace placeholder text (e.g., {Name}) with actual value
+        workbook.Replace("{Name}", "John Doe");
+
+        // Configure ODS save options (optional: set generator type)
+        OdsSaveOptions saveOptions = new OdsSaveOptions
+        {
+            GeneratorType = OdsGeneratorType.LibreOffice
+        };
+
+        // Save the modified workbook as an ODS file
         string outputPath = "result.ods";
-
-        try
-        {
-            // Ensure the template file exists; create a simple one if missing
-            if (!File.Exists(templatePath))
-            {
-                var tempWorkbook = new Workbook();
-                // Insert a placeholder that will be replaced later
-                tempWorkbook.Worksheets[0].Cells["A1"].PutValue("{Name}");
-                tempWorkbook.Save(templatePath);
-            }
-
-            // Load the OTS template into a Workbook
-            var workbook = new Workbook(templatePath);
-
-            // Replace placeholder text with actual value
-            workbook.Replace("{Name}", "John Doe");
-
-            // Configure ODS save options (optional: set generator type)
-            var saveOptions = new OdsSaveOptions
-            {
-                GeneratorType = OdsGeneratorType.LibreOffice
-            };
-
-            // Save the modified workbook as an ODS file
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Conversion completed successfully. Output saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        workbook.Save(outputPath, saveOptions);
     }
 }

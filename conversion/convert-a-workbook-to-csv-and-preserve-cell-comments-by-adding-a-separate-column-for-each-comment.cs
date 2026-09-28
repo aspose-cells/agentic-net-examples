@@ -1,97 +1,89 @@
-// Title: C# – Convert Excel to CSV with Aspose.Cells while preserving cell comments as separate columns
-// Description: Loads an Excel workbook, adds a dedicated column for each cell comment (headered with the cell address), copies the comment text into that column, and saves every worksheet as an individual CSV file using Aspose.Cells TxtSaveOptions. The solution works for multiple sheets and creates an output folder for the generated CSVs.
-// Keywords: Aspose.Cells CSV export | C# Excel to CSV conversion | preserve Excel comments | comment columns in CSV | Aspose.Cells workbook to CSV | export cell notes to CSV | .NET Excel comment handling
-// Common Searches: Aspose.Cells export comments to CSV C# | include Excel cell notes when saving as CSV | add comment column during CSV conversion Aspose | C# convert workbook to CSV with comments | preserve Excel comments in CSV output
-// Developer Intent: Export each worksheet of an Excel file to CSV while keeping the original cell comments in separate columns.
-// Use Cases: Auditable CSV reports that retain reviewer notes. | Data pipelines that require comment context alongside values. | Batch processing of workbooks where comments must travel with the extracted data.
-// AI Prompts: Show a C# Aspose.Cells example that reads an Excel file, creates comment columns, and saves each sheet as CSV. | Explain how to optimize the code for workbooks containing thousands of comments. | Suggest ways to customize comment column headers to include sheet name, comment author, or timestamp.
+// Title: Convert each Excel worksheet to a separate CSV file while preserving cell comments by adding comment columns with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook using Aspose.Cells, iterates through all worksheets, creates a new column for every cell comment (header shows the original cell address), copies the sheet into a temporary workbook, and saves it as a CSV file. | Adapt an existing Aspose.Cells .NET conversion routine to insert comment columns before exporting so that each generated CSV includes the comment text alongside the original data for every worksheet.
+// Common Searches: Aspose.Cells .NET export worksheet to CSV and keep comments | How to add comment columns when converting Excel to CSV using C# | Save each sheet of an Excel file as separate CSV files with cell notes using Aspose.Cells | Preserve Excel cell comments in CSV output with Aspose.Cells for .NET | C# generate CSV per worksheet and include comment text as separate columns
+// Tags: worksheet to CSV conversion Aspose.Cells | preserve cell comments Aspose.Cells | insert comment columns Excel C# | export separate CSV per sheet .NET | comment extraction to CSV using Aspose API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCommentToCsv
+// The program loads input.xlsx, iterates each worksheet, inserts a new column for every cell comment (header contains the original cell address), copies the modified sheet into a temporary workbook, and saves each sheet as an individual CSV file using Aspose.Cells.
+class WorkbookToCsvWithComments
 {
-    // Loads an Excel workbook, adds a dedicated column for each cell comment (headered with the cell address), copies the comment text into that column, and saves every worksheet as an individual CSV file using Aspose.Cells TxtSaveOptions. The solution works for multiple sheets and creates an output folder for the generated CSVs.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Process each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Input Excel workbook path
-                string inputPath = "input.xlsx";
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
+                try
                 {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    return;
-                }
-
-                // Folder to store generated CSV files
-                string outputFolder = "CsvOutput";
-                Directory.CreateDirectory(outputFolder);
-
-                // Load the workbook (lifecycle rule: use Workbook constructor)
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through each worksheet in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Process comments: add a separate column for each comment
+                    // Get all comments in the current worksheet
                     CommentCollection comments = sheet.Comments;
                     int commentCount = comments.Count;
 
                     if (commentCount > 0)
                     {
-                        // Determine the last used column index in the sheet
-                        int lastUsedColumn = sheet.Cells.MaxColumn;
+                        // Determine the index of the first new column (after the last used column)
+                        int firstNewColumnIndex = sheet.Cells.MaxColumn + 1;
 
-                        // Add a column for each comment
+                        // Insert enough columns to hold all comments
+                        sheet.Cells.InsertColumns(firstNewColumnIndex, commentCount);
+
+                        // Populate each new column with the comment text
                         for (int i = 0; i < commentCount; i++)
                         {
                             Comment comment = comments[i];
 
-                            // Determine column for this comment (after existing data)
-                            int commentColumnIndex = lastUsedColumn + 1 + i;
+                            // Column that will store this comment
+                            int commentColumn = firstNewColumnIndex + i;
 
-                            // Header for the comment column (e.g., "Comment_A1")
-                            string cellAddress = sheet.Cells[comment.Row, comment.Column].Name;
-                            string header = $"Comment_{cellAddress}";
-                            sheet.Cells[0, commentColumnIndex].PutValue(header);
+                            // Header showing the original cell address (e.g., "A1")
+                            string cellAddress = CellsHelper.CellIndexToName(comment.Row, comment.Column);
+                            sheet.Cells[0, commentColumn].PutValue($"Comment_{cellAddress}");
 
-                            // Place the comment text in the same row as the commented cell
-                            sheet.Cells[comment.Row, commentColumnIndex].PutValue(comment.Note);
+                            // Place the comment text in the same row as the original cell
+                            sheet.Cells[comment.Row, commentColumn].PutValue(comment.Note);
                         }
                     }
 
-                    // Create a temporary workbook that contains only the processed sheet
-                    Workbook tempWorkbook = new Workbook();
-                    tempWorkbook.Worksheets.Clear();
+                    // Export the processed worksheet to a CSV file (one CSV per worksheet)
+                    string csvFileName = $"{sheet.Name}.csv";
 
-                    // Add a copy of the current sheet to the temporary workbook
-                    tempWorkbook.Worksheets.AddCopy(sheet.Name);
+                    // Create a temporary workbook containing only the current sheet
+                    Workbook tempWb = new Workbook();
+                    tempWb.Worksheets.Clear();
 
-                    // Prepare CSV save options (TxtSaveOptions with ExportAllSheets = true)
-                    TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
-                    {
-                        ExportAllSheets = true
-                    };
+                    // Add a copy of the current sheet by name (AddCopy overload expects a string)
+                    tempWb.Worksheets.AddCopy(sheet.Name);
+                    tempWb.Worksheets[0].PageSetup.PrintArea = ""; // Ensure entire sheet is exported
 
-                    // Build CSV file path
-                    string csvPath = Path.Combine(outputFolder, $"{sheet.Name}.csv");
-
-                    // Save the temporary workbook as CSV (lifecycle rule: use Save with SaveOptions)
-                    tempWorkbook.Save(csvPath, csvOptions);
+                    // Save as CSV
+                    tempWb.Save(csvFileName, SaveFormat.Csv);
                 }
-
-                Console.WriteLine("Conversion completed. CSV files are located in: " + Path.GetFullPath(outputFolder));
+                catch (Exception exSheet)
+                {
+                    Console.WriteLine($"Error processing sheet \"{sheet.Name}\": {exSheet.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

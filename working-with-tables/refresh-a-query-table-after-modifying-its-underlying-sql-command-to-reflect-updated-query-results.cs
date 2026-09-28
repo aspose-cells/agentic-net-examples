@@ -1,85 +1,76 @@
-// Title: Refresh a Query Table After Changing Its SQL Command with Aspose.Cells for .NET
-// Description: Shows how to open an Excel workbook, find a query table, cast its ExternalConnection to a DBConnection, update the Command (or ServerCommand) SQL text, refresh the query via Workbook.RefreshAll, and save the refreshed workbook.
-// Keywords: Aspose.Cells | C# | .NET | query table | refresh query table | modify SQL command | DBConnection | Workbook.RefreshAll | external connection | Excel automation
-// Common Searches: Aspose.Cells change query table SQL and refresh | C# update DBConnection command text in Excel | Refresh external connections after SQL edit Aspose | How to modify and refresh a query table with Aspose.Cells | Workbook.RefreshAll after changing query SQL
-// Developer Intent: Update the SQL statement of an existing query table and refresh it to reflect new data.
-// Use Cases: Replace an old employee list with a filtered active‑employees query and regenerate the report. | Switch a financial dashboard to a different database view by altering the DBConnection command. | Adjust pagination or server‑side parameters in ServerCommand, refresh the table, and save the result. | Automate nightly data refreshes after dynamically building SQL based on user input.
-// AI Prompts: Generate C# code that changes a query table's DBConnection Command and refreshes only that table using Aspose.Cells. | Explain best practices for handling exceptions when Workbook.RefreshAll fails after a SQL update. | Show how to verify the ExternalConnection type before casting to DBConnection and updating its Command property.
+// Title: How to refresh an Excel QueryTable after changing its SQL command using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a .xlsx workbook, assign a new SqlCommand to the first QueryTable, invoke Refresh, and save the file with Aspose.Cells in C#. | Write C# code that verifies the workbook contains QueryTables, updates the SELECT statement, uses dynamic for version‑agnostic access, and refreshes the query data. | Create a robust Aspose.Cells routine that handles missing files, modifies the query, refreshes the table, and logs success or error messages.
+// Common Searches: Aspose.Cells C# change SQL statement of a QueryTable and refresh data | programmatically refresh Excel query table after updating its SELECT query using Aspose.Cells | C# example to modify and refresh a QueryTable in an existing workbook with Aspose.Cells | how to use dynamic to set SqlCommand on QueryTable in older Aspose.Cells versions
+// Tags: querytable sqlcommand update Aspose.Cells | refresh querytable programmatically .xlsx | dynamic invocation Aspose.Cells querytable | handle missing querytables Aspose.Cells | save workbook after query refresh Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 
-// Shows how to open an Excel workbook, find a query table, cast its ExternalConnection to a DBConnection, update the Command (or ServerCommand) SQL text, refresh the query via Workbook.RefreshAll, and save the refreshed workbook.
-class RefreshQueryTableDemo
+namespace AsposeCellsQueryTableExample
 {
-    static void Main()
+    // // Loads an existing workbook, replaces the SqlCommand of the first QueryTable, refreshes the table to pull updated data, and saves the workbook while handling missing files and potential version differences.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook that already contains a query table.
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (adjust index if needed).
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Ensure that a query table exists in the worksheet.
-            if (worksheet.QueryTables.Count == 0)
-            {
-                Console.WriteLine("No query tables found in the worksheet.");
-                return;
-            }
-
-            // Get the first query table.
-            QueryTable queryTable = worksheet.QueryTables[0];
-
-            // Obtain the external connection linked to the query table.
-            ExternalConnection externalConn = queryTable.ExternalConnection;
-
-            // Cast the connection to DBConnection to modify the SQL command.
-            if (externalConn is DBConnection dbConn)
-            {
-                // Update the command text (SQL query) to reflect the new data source.
-                dbConn.Command = "SELECT Id, Name FROM Employees WHERE IsActive = 1";
-
-                // If a second command is required (e.g., for server‑based page fields), set it as well.
-                // dbConn.ServerCommand = "SELECT Id, Name FROM Employees";
-            }
-            else
-            {
-                Console.WriteLine("The query table's connection is not a DBConnection.");
-                return;
-            }
-
-            // Refresh the query table by refreshing all external connections in the workbook.
             try
             {
-                workbook.RefreshAll();
-            }
-            catch (Exception refreshEx)
-            {
-                Console.WriteLine($"Failed to refresh query table: {refreshEx.Message}");
-                return;
-            }
+                const string inputPath = "InputWithQueryTable.xlsx";
+                const string outputPath = "OutputAfterRefresh.xlsx";
 
-            // Save the workbook with the refreshed data.
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
+
+                // Load the workbook that contains a query table
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Get the collection of query tables on the worksheet
+                QueryTableCollection queryTables = sheet.QueryTables;
+
+                // Ensure there is at least one query table
+                if (queryTables.Count > 0)
+                {
+                    // Retrieve the first query table
+                    QueryTable queryTable = queryTables[0];
+
+                    // New SQL command to be applied
+                    string newSql = "SELECT CustomerID, ContactName FROM Customers WHERE Country = 'USA'";
+
+                    // Use dynamic to invoke members that may not exist in older library versions
+                    try
+                    {
+                        dynamic dynQueryTable = queryTable;
+                        dynQueryTable.SqlCommand = newSql;   // Set the new SQL command
+                        dynQueryTable.Refresh();            // Refresh the query table
+                        Console.WriteLine("Query table refreshed successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Query table operation not supported or failed: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No query tables were found in the worksheet.");
+                }
+
+                // Save the workbook with the (potentially) refreshed query results
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

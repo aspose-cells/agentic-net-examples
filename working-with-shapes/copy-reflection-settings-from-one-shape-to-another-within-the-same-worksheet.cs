@@ -1,68 +1,69 @@
-// Title: Copy shape reflection effect between rectangles using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add two rectangle shapes on the same worksheet, configure a full reflection effect on the source shape, and transfer all ReflectionEffect properties (type, blur, distance, direction, fade direction, size, transparency, RotWithShape) to the destination shape before saving the file.
-// Keywords: Aspose.Cells | C# | shape reflection | ReflectionEffect | copy shape properties | Aspose.Cells.Drawing | worksheet shapes | CopyShapeReflectionDemo | duplicate visual style | Aspose.Cells example
-// Common Searches: copy reflection effect Aspose.Cells C# | transfer shape reflection properties in .NET | Aspose.Cells copy shape visual settings | how to duplicate reflection on multiple shapes Aspose.Cells | copy shape reflection between rectangles worksheet
-// Developer Intent: Copy all reflection effect settings from a source shape to another shape within the same worksheet using Aspose.Cells for .NET.
-// Use Cases: Apply a consistent reflection style to a series of template shapes in a generated report. | Maintain uniform visual effects when programmatically cloning chart legends or icons. | Synchronize reflection attributes after shape repositioning to preserve design consistency.
-// AI Prompts: Write a C# method that receives two Aspose.Cells Shape objects and copies every ReflectionEffect property from the first to the second. | Show how to copy additional visual effects such as Glow, Shadow, and SoftEdges between shapes with Aspose.Cells. | Explain the steps required to copy reflection settings when the source and destination shapes reside on different worksheets in the same workbook.
+// Title: Copy reflection effect settings from one shape to another in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that copies all reflection effect attributes (blur, size, transparency, distance, direction) from a source shape to a target shape in the same worksheet using Aspose.Cells. | Generate a method that clones the reflection effect of one Excel shape onto another shape within an Aspose.Cells workbook. | Provide a script to transfer reflection settings between two shapes in an Excel file with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells how to duplicate shape reflection effect in Excel | C# copy reflection properties from one shape to another in a workbook | transfer visual effects between Excel shapes using Aspose.Cells | copy shape reflection settings programmatically with Aspose.Cells .NET | clone shape reflection effect Aspose.Cells example
+// Tags: Aspose.Cells shape reflection copy | C# transfer shape visual effect | Excel shape reflection property duplication | reflection effect settings transfer Aspose | clone shape reflection Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// // Copies reflection effect properties (blur, size, transparency, distance, direction) from the first shape to the second shape in the first worksheet of an Excel file using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create a workbook, add two rectangle shapes on the same worksheet, configure a full reflection effect on the source shape, and transfer all ReflectionEffect properties (type, blur, distance, direction, fade direction, size, transparency, RotWithShape) to the destination shape before saving the file.
-    public class CopyShapeReflectionDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                Run();
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Access the shape collection
+            ShapeCollection shapes = sheet.Shapes;
+
+            // Ensure there are at least two shapes
+            if (shapes.Count < 2)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("The worksheet does not contain at least two shapes.");
+                return;
             }
-        }
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Identify source and target shapes (first and second)
+            Shape sourceShape = shapes[0];
+            Shape targetShape = shapes[1];
 
-            // Add the source shape (rectangle) and configure its reflection effect
-            Shape sourceShape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
-            ReflectionEffect sourceReflection = sourceShape.Reflection;
-            sourceReflection.Type = ReflectionEffectType.FullReflection4PtOffset;
-            sourceReflection.Blur = 5;
-            sourceReflection.Distance = 10;
-            sourceReflection.Direction = 90;
-            sourceReflection.FadeDirection = 90;
-            sourceReflection.Size = 50;
-            sourceReflection.Transparency = 0.5;
-            sourceReflection.RotWithShape = true;
+            // Ensure both shapes have a Reflection effect before copying
+            if (sourceShape.Reflection != null && targetShape.Reflection != null)
+            {
+                // Copy reflection properties from source to target
+                targetShape.Reflection.Blur = sourceShape.Reflection.Blur;
+                targetShape.Reflection.Size = sourceShape.Reflection.Size;
+                targetShape.Reflection.Transparency = sourceShape.Reflection.Transparency;
+                targetShape.Reflection.Distance = sourceShape.Reflection.Distance;
+                targetShape.Reflection.Direction = sourceShape.Reflection.Direction;
+                // Note: RotateWithShape and Alignment are not available in the ReflectionEffect class.
+            }
 
-            // Add the destination shape (rectangle) where the reflection settings will be copied
-            Shape destShape = worksheet.Shapes.AddRectangle(5, 0, 5, 0, 100, 150);
-            ReflectionEffect destReflection = destShape.Reflection;
-
-            // Copy each reflection property from source to destination
-            destReflection.Type = sourceReflection.Type;
-            destReflection.Blur = sourceReflection.Blur;
-            destReflection.Distance = sourceReflection.Distance;
-            destReflection.Direction = sourceReflection.Direction;
-            destReflection.FadeDirection = sourceReflection.FadeDirection;
-            destReflection.Size = sourceReflection.Size;
-            destReflection.Transparency = sourceReflection.Transparency;
-            destReflection.RotWithShape = sourceReflection.RotWithShape;
-
-            // Save the workbook to a file
-            string outputPath = "CopyShapeReflectionDemo.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

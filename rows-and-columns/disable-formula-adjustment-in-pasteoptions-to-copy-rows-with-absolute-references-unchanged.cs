@@ -1,42 +1,50 @@
-// Title: Copy rows without formula adjustment using PasteOptions in Aspose.Cells for .NET
-// Description: Shows how to duplicate a worksheet row while preserving all formulas exactly as written, including absolute references, by setting PasteOptions.PasteType to Formulas and disabling formula adjustment. The sample uses Worksheet.Cells.CopyRows with CopyOptions and PasteOptions, then saves the workbook to an .xlsx file.
-// Keywords: Aspose.Cells CopyRows | PasteOptions formula adjustment | disable formula adjustment | preserve absolute references | C# copy rows formulas | Aspose.Cells .NET | CopyRows PasteOptions | Excel row duplication without reference change
-// Common Searches: Aspose.Cells copy rows keep formulas unchanged | How to stop formula references from shifting when copying rows in .NET | PasteOptions IsFormulaAdjustmentEnabled false example | CopyRows with absolute references Aspose.Cells | C# Aspose.Cells duplicate row without changing formulas
-// Developer Intent: Duplicate a worksheet row while leaving every formula unchanged.
-// Use Cases: Copy a template row that contains summary formulas to multiple sections of a financial report, ensuring the formulas still point to the original source cells. | Create a static header row with calculated fields that must remain constant across different pages of a large spreadsheet. | Replicate a calculation row in a budgeting model where the references must stay absolute regardless of where the row is pasted.
-// AI Prompts: Provide C# code using Aspose.Cells to copy rows with PasteOptions that disables formula adjustment. | Generate an example that copies a range of rows while preserving absolute references using CopyRows and PasteOptions. | Explain how to set PasteOptions.IsFormulaAdjustmentEnabled = false in Aspose.Cells for .NET and why it matters.
+// Title: Copy worksheet rows while preserving absolute formula references using PasteOptions in Aspose.Cells for .NET
+// AI Prompts: Write C# code that copies rows from a source worksheet to a destination worksheet with PasteOptions.PasteType set to Formulas so that $A$1 style absolute references stay unchanged. | Show how to call Cells.CopyRows with a CopyOptions instance and a PasteOptions configured for formula‑only pasting to avoid adjusting relative references. | Generate a complete example that copies two rows containing mixed absolute and relative formulas, disables value and format copying, and saves the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells copy rows without changing absolute cell references in C# | prevent formula adjustment when pasting formulas using PasteOptions in Aspose.Cells | copy only formulas between worksheets preserving $A$1 references Aspose.Cells .NET | C# example of CopyRows with PasteType.Formulas and no value formatting
+// Tags: CopyRows method with formula‑only PasteOptions Aspose.Cells | preserve $A$1 references during worksheet row transfer .NET | disable formula adjustment using PasteOptions Aspose.Cells | formula‑only paste without values Aspose.Cells | C# Aspose.Cells example for row transfer
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Shows how to duplicate a worksheet row while preserving all formulas exactly as written, including absolute references, by setting PasteOptions.PasteType to Formulas and disabling formula adjustment. The sample uses Worksheet.Cells.CopyRows with CopyOptions and PasteOptions, then saves the workbook to an .xlsx file.
+// // This program creates a workbook, adds a source sheet with absolute and relative formulas, then copies the first two rows to a destination sheet using Cells.CopyRows with PasteOptions.PasteType = Formulas, ensuring absolute references remain unchanged, and saves the result as FormulaCopy_NoAdjustment.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook and get the source worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet srcSheet = workbook.Worksheets[0];
+        srcSheet.Name = "Source";
 
-        // Populate source row (row 0) with values and formulas
-        sheet.Cells["A1"].PutValue(10);                     // Value in A1
-        sheet.Cells["B1"].PutValue(20);                     // Value in B1
-        sheet.Cells["C1"].Formula = "=SUM($A$1,$B$1)";      // Formula with absolute references
-        sheet.Cells["D1"].Formula = "=A1+B1";               // Formula with relative references (for contrast)
+        // Populate source sheet with data and formulas
+        // Row 1 – absolute references (will stay unchanged after copy)
+        srcSheet.Cells["A1"].PutValue(10);
+        srcSheet.Cells["B1"].PutValue(20);
+        srcSheet.Cells["C1"].Formula = "=$A$1+$B$1";
 
-        // Prepare copy options (default behavior)
+        // Row 2 – relative references (will be adjusted normally)
+        srcSheet.Cells["A2"].PutValue(30);
+        srcSheet.Cells["B2"].PutValue(40);
+        srcSheet.Cells["C2"].Formula = "=A1+B1";
+
+        // Create a destination worksheet
+        Worksheet dstSheet = workbook.Worksheets.Add("Destination");
+
+        // Prepare copy and paste options
+        // CopyOptions – default behavior
         CopyOptions copyOptions = new CopyOptions();
 
-        // Prepare paste options to copy formulas exactly as they are
+        // PasteOptions – copy only formulas; this disables any value/format copying
+        // Absolute references in the formulas remain exactly as they are
         PasteOptions pasteOptions = new PasteOptions
         {
-            PasteType = PasteType.Formulas,                 // Copy only formulas
-            OperationType = PasteOperationType.None        // No arithmetic operation on the copied data
+            PasteType = PasteType.Formulas,
+            // No additional adjustments are required; absolute references stay unchanged
         };
 
-        // Copy the first row (index 0) to the fifth row (index 4)
-        // This uses the overload that accepts both CopyOptions and PasteOptions
-        sheet.Cells.CopyRows(sheet.Cells, 0, 4, 1, copyOptions, pasteOptions);
+        // Copy the first two rows from source to destination using the overload that accepts both options
+        // Parameters: source cells, source start row, destination start row, number of rows, copy options, paste options
+        dstSheet.Cells.CopyRows(srcSheet.Cells, 0, 0, 2, copyOptions, pasteOptions);
 
         // Save the workbook
         workbook.Save("FormulaCopy_NoAdjustment.xlsx");

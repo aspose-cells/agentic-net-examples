@@ -1,43 +1,69 @@
-// Title: Convert Excel to CSV without Headers using Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx workbook, deletes the first row of the first worksheet (assumed header), sets TxtSaveOptions.ExportAllSheets = true, and saves all sheets to a single CSV file that contains only raw data.
-// Keywords: Aspose.Cells CSV export C# | remove header row Aspose.Cells | ExportAllSheets CSV Aspose | Excel to raw CSV .NET | Aspose.Cells TxtSaveOptions | C# convert Excel to CSV without headers | save multiple worksheets to one CSV
-// Common Searches: Aspose.Cells export Excel to CSV without header row | C# save all worksheets as one CSV using Aspose.Cells | how to delete first row before CSV export Aspose.Cells | convert workbook to raw CSV Aspose.Cells .NET | export Excel data without column titles C#
-// Developer Intent: Create a CSV file that contains only the data rows from an Excel workbook by removing column headings before export.
-// Use Cases: Import raw data into a database where column titles are not required. | Combine data from several worksheets into a single CSV for batch processing. | Automate nightly ETL jobs that need header‑free CSV files.
-// AI Prompts: Show C# code with Aspose.Cells that deletes the first row of each worksheet and exports the workbook to a single CSV file. | Explain how to use TxtSaveOptions.ExportAllSheets to write all Excel sheets to one CSV without headers. | Provide a modification to keep headers in selected sheets while removing them from others during CSV export.
+// Title: Convert an Excel workbook to UTF-8 CSV files per worksheet while skipping the header row using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file, iterates through each worksheet, and saves each sheet as a separate UTF-8 encoded CSV file, excluding the first row (column headers) from the output. | Show how to configure TxtSaveOptions in Aspose.Cells to export raw data without header rows and apply it when saving multiple worksheets to CSV. | Create a reusable method that accepts a workbook path and an optional flag to omit headers, then generates one CSV per sheet using Aspose.Cells and returns the list of generated file names.
+// Common Searches: aspocells c# export each sheet to csv without header row | how to save excel worksheets as separate csv files raw data asp.net | convert workbook to multiple utf-8 csv files using Aspose.Cells and skip first row | c# Aspose.Cells TxtSaveOptions hide column names when saving to csv | generate raw csv files from excel workbook for data import asp.net
+// Tags: aspocells export worksheet to csv without headers | utf-8 csv generation aspocells c# | multiple csv files per excel sheet aspocells | txtsaveoptions raw data csv aspocells | c# convert workbook to csv raw import | skip first row csv export aspocells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Text;
 
-// Loads an .xlsx workbook, deletes the first row of the first worksheet (assumed header), sets TxtSaveOptions.ExportAllSheets = true, and saves all sheets to a single CSV file that contains only raw data.
+// The example loads an Excel workbook, iterates over every worksheet, creates a temporary workbook for each sheet, and saves it as a UTF-8 encoded CSV file named after the worksheet while omitting the first row to produce raw data suitable for import.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel workbook
-        string sourcePath = "input.xlsx";
-
-        // Path for the resulting CSV file (raw data without headers)
-        string csvPath = "output.csv";
-
-        // Load the workbook from the source file
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Remove the first row (assumed to contain column headers) from the first worksheet.
-        // If you need to remove headers from all worksheets, iterate over workbook.Worksheets.
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells.DeleteRow(0);
-
-        // Prepare CSV save options.
-        // ExportAllSheets = true ensures that all worksheets are written to the CSV file.
-        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+        try
         {
-            ExportAllSheets = true
-        };
+            // Path to the source Excel workbook
+            string sourcePath = "input.xlsx";
 
-        // Save the workbook as CSV using the specified options.
-        workbook.Save(csvPath, saveOptions);
+            // Verify that the source file exists
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-        Console.WriteLine($"Workbook converted to CSV without headers: {csvPath}");
+            // Load the workbook from the file system
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Loop through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
+                {
+                    // Create a temporary workbook containing only the current worksheet
+                    Workbook sheetWb = new Workbook();
+                    sheetWb.Worksheets.Clear(); // Remove the default sheet
+
+                    // Copy the current sheet into the temporary workbook
+                    // Use the overload that accepts arrays of worksheets and names
+                    sheetWb.Worksheets.AddCopy(new Worksheet[] { sheet }, new string[] { sheet.Name });
+
+                    // Configure CSV save options using TxtSaveOptions
+                    TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+                    {
+                        Encoding = Encoding.UTF8 // Use UTF-8 encoding for the CSV file
+                    };
+
+                    // Build the output CSV file name (one file per worksheet)
+                    string csvFileName = $"{sheet.Name}.csv";
+
+                    // Save the worksheet as a CSV file using the specified options
+                    sheetWb.Save(csvFileName, csvOptions);
+                    Console.WriteLine($"Worksheet '{sheet.Name}' saved as '{csvFileName}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save worksheet '{sheet.Name}': {ex.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

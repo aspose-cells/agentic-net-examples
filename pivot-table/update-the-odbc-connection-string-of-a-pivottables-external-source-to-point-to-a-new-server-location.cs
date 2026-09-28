@@ -1,84 +1,109 @@
-// Title: Change PivotTable ODBC Connection String with Aspose.Cells for .NET
-// Description: Loads a workbook, loops through its worksheets and PivotTables, finds external DBConnection objects, replaces their ODBC ConnectionString with a new server address, and saves the updated file.
-// Keywords: Aspose.Cells | C# | PivotTable | ODBC connection string | external data source | DBConnection | Excel workbook | update server name | programmatic data connection | modify pivot source
-// Common Searches: Aspose.Cells change PivotTable ODBC connection | C# update external data source for Excel PivotTable | set new server in PivotTable DBConnection string | programmatically modify PivotTable connection string .NET | batch update ODBC connections in Excel workbooks
-// Developer Intent: Replace the ODBC connection string of a PivotTable’s external source so it points to a different database server.
-// Use Cases: Repoint all PivotTables after migrating the database to a new host. | Automate workbook preparation for deployment by updating data source credentials. | Process a collection of reports to ensure they reference the correct server before distribution.
-// AI Prompts: Generate C# code using Aspose.Cells that iterates through every PivotTable in a workbook and updates its ODBC ConnectionString to a specified server. | Show how to detect DBConnection objects within PivotTable source connections and safely assign a new connection string. | Explain best practices for error handling when saving a workbook after modifying external connections with Aspose.Cells.
+// Title: How to programmatically update the ODBC connection string of Excel PivotTables using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that opens an existing .xlsx workbook, enumerates all PivotTables, detects ODBC data sources, and replaces the Server and Database parameters in each PivotTable’s DataSource connection string. | Write a C# helper method that updates a specific keyword in a connection string and applies it to every PivotTable in a workbook before saving the file.
+// Common Searches: aspnet change ODBC server name in Excel pivot table programmatically | c# update pivot table external data source connection string using Aspose.Cells | modify Excel pivot table data source to new database with Aspose.Cells .NET | iterate through worksheets and pivot tables to edit ODBC connection string in C# | Aspose.Cells replace Server and Database values in PivotTable DataSource
+// Tags: Aspose.Cells modify PivotTable ODBC connection | C# update Excel pivot data source connection string | programmatic server name replacement in pivot ODBC | iterate pivot tables Aspose.Cells .NET | replace database keyword in ODBC connection string C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+// The example loads an existing workbook, loops through each worksheet and its PivotTables, identifies ODBC data sources, replaces the Server/Data Source and Database/Initial Catalog keywords with new values, assigns the revised connection string back to the PivotTable, and saves the updated workbook.
+class Program
 {
-    // Loads a workbook, loops through its worksheets and PivotTables, finds external DBConnection objects, replaces their ODBC ConnectionString with a new server address, and saves the updated file.
-    public class UpdatePivotTableOdbcConnection
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+            string inputPath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
 
-        public static void Run()
-        {
-            // Path to the workbook that contains the pivot table with an ODBC connection
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // New ODBC connection string pointing to the new server location
-            string newConnectionString = "Driver={SQL Server};Server=NewServerName;Database=MyDatabase;Trusted_Connection=Yes;";
-
-            // Load the workbook (lifecycle rule: load)
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets
+            // New ODBC server and database names
+            string newServer = "NewServerName";
+            string newDatabase = "NewDatabaseName";
+
+            // Iterate through worksheets and their pivot tables
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all pivot tables in the worksheet
                 foreach (PivotTable pivot in sheet.PivotTables)
                 {
-                    // Get external data connections used by the pivot table
-                    ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-                    // Update each DBConnection's ConnectionString
-                    foreach (ExternalConnection conn in connections)
+                    try
                     {
-                        if (conn is DBConnection dbConn)
+                        // PivotTable.DataSource is a string[] in some Aspose.Cells versions.
+                        // Use the first element if available.
+                        string connStr = (pivot.DataSource != null && pivot.DataSource.Length > 0)
+                            ? pivot.DataSource[0]
+                            : string.Empty;
+
+                        // Process only ODBC data sources by checking the connection string
+                        if (connStr.IndexOf("ODBC", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                            connStr.IndexOf("Provider=MSDASQL", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            dbConn.ConnectionString = newConnectionString;
+                            // Update Server / Data Source
+                            if (connStr.IndexOf("Server=", StringComparison.OrdinalIgnoreCase) >= 0)
+                                connStr = ReplaceKeyword(connStr, "Server", newServer);
+                            else if (connStr.IndexOf("Data Source=", StringComparison.OrdinalIgnoreCase) >= 0)
+                                connStr = ReplaceKeyword(connStr, "Data Source", newServer);
+
+                            // Update Database / Initial Catalog
+                            if (connStr.IndexOf("Database=", StringComparison.OrdinalIgnoreCase) >= 0)
+                                connStr = ReplaceKeyword(connStr, "Database", newDatabase);
+                            else if (connStr.IndexOf("Initial Catalog=", StringComparison.OrdinalIgnoreCase) >= 0)
+                                connStr = ReplaceKeyword(connStr, "Initial Catalog", newDatabase);
+
+                            // Assign the modified connection string back to the pivot table
+                            // DataSource expects a string[]; wrap the updated string.
+                            pivot.DataSource = new[] { connStr };
                         }
+                    }
+                    catch (Exception exPivot)
+                    {
+                        Console.WriteLine($"Failed to update pivot '{pivot.Name}' on sheet '{sheet.Name}': {exPivot.Message}");
                     }
                 }
             }
 
-            // Save the modified workbook (lifecycle rule: save)
-            string outputPath = "output.xlsx";
+            // Save the updated workbook
             try
             {
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-            catch (Exception ex)
+            catch (Exception exSave)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {exSave.Message}");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper method to replace a keyword's value in a connection string
+    private static string ReplaceKeyword(string connectionString, string keyword, string newValue)
+    {
+        // Split into parts separated by ';'
+        string[] parts = connectionString.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < parts.Length; i++)
+        {
+            string[] kv = parts[i].Split(new[] { '=' }, 2);
+            if (kv.Length == 2 && kv[0].Trim().Equals(keyword, StringComparison.OrdinalIgnoreCase))
+            {
+                parts[i] = $"{kv[0]}={newValue}";
+                break;
+            }
+        }
+        return string.Join(";", parts) + ";";
     }
 }

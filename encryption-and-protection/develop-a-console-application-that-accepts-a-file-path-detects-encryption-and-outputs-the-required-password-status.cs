@@ -1,53 +1,59 @@
-// Title: C# .NET Console App to Detect Excel Workbook Encryption with Aspose.Cells
-// Description: A simple console program that receives an Excel file path, verifies the file's existence, uses Aspose.Cells FileFormatUtil.DetectFileFormat to obtain FileFormatInfo, checks the IsEncrypted flag, and prints whether the workbook is password‑protected along with a clear user message.
-// Keywords: Aspose.Cells encryption detection | C# check Excel password protection | FileFormatUtil IsEncrypted example | detect encrypted workbook .NET | console app Excel encryption status
-// Common Searches: How to find out if an Excel file is password protected using Aspose.Cells C# | C# console program to read encryption flag of a workbook | Aspose.Cells FileFormatUtil detect encrypted workbook | Check Excel file encryption status in .NET
-// Developer Intent: Identify whether a supplied Excel file is encrypted and inform the user if a password is required.
-// Use Cases: Screen user‑uploaded spreadsheets before processing to reject password‑protected files. | Run a nightly batch job that flags encrypted workbooks for manual review. | Add a pre‑deployment validation step that ensures only unencrypted Excel assets are included in a release.
-// AI Prompts: Generate a C# method that takes a file path and returns true if the workbook is encrypted using Aspose.Cells. | Create comprehensive error handling for missing files, unsupported formats, and permission issues when checking encryption. | Write unit tests that mock encrypted and unencrypted Excel files to verify the detection logic.
+// Title: C# console program to detect if an Excel workbook (.xls/.xlsx) is password‑protected using Aspose.Cells
+// AI Prompts: Write a C# console application that accepts a file path argument, loads the workbook with Aspose.Cells LoadOptions (no password), and prints whether the file is encrypted. | Refactor the code to expose a method that returns a boolean indicating encryption status instead of writing messages directly to the console. | Extend the solution to handle both .xls and .xlsx formats, capture non‑password loading errors, and report them separately.
+// Common Searches: how to programmatically determine if an Excel file is password protected using Aspose.Cells in .NET | C# detect encrypted .xlsx workbook without providing password | Aspose.Cells LoadOptions exception handling for password‑protected Excel files | console app to check Excel file encryption status and handle load errors | detect password protection for .xls files with Aspose.Cells C#
+// Tags: detect encrypted workbook Aspose.Cells | check Excel password protection C# | load workbook without password Aspose.Cells | handle CellsException password required | support xls xlsx encryption detection Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDetector
+// The console app receives an Excel file path, attempts to load the workbook with Aspose.Cells using default LoadOptions, and determines encryption by catching a CellsException that contains a password‑related message, then outputs the appropriate status.
+class Program
 {
-    // A simple console program that receives an Excel file path, verifies the file's existence, uses Aspose.Cells FileFormatUtil.DetectFileFormat to obtain FileFormatInfo, checks the IsEncrypted flag, and prints whether the workbook is password‑protected along with a clear user message.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Verify that a file path argument was supplied
+        if (args.Length == 0)
         {
-            // Ensure a file path argument is provided
-            if (args.Length == 0)
+            Console.WriteLine("Please provide the Excel file path as a command‑line argument.");
+            return;
+        }
+
+        string filePath = args[0];
+
+        // Ensure the file exists before attempting to load it
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
+
+        try
+        {
+            // Attempt to load the workbook without a password
+            LoadOptions loadOptions = new LoadOptions(); // no password supplied
+            Workbook workbook = new Workbook(filePath, loadOptions);
+
+            // If loading succeeds, the file is not encrypted
+            Console.WriteLine("The file is not encrypted.");
+        }
+        catch (CellsException ex)
+        {
+            // Aspose.Cells throws a CellsException when a password is required
+            // Check the exception message for password‑related text
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                Console.WriteLine("Usage: AsposeCellsEncryptionDetector <excel-file-path>");
-                return;
-            }
-
-            string filePath = args[0];
-
-            // Verify that the file exists
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            // Detect the file format and retrieve encryption information
-            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
-
-            // Output encryption status
-            Console.WriteLine($"Is file encrypted? {fileInfo.IsEncrypted}");
-
-            // Provide a clear password requirement message
-            if (fileInfo.IsEncrypted)
-            {
-                Console.WriteLine("A password is required to open this workbook.");
+                Console.WriteLine("The file is encrypted. Password is required to open it.");
             }
             else
             {
-                Console.WriteLine("No password is required to open this workbook.");
+                Console.WriteLine($"Error loading file: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            // Handle any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

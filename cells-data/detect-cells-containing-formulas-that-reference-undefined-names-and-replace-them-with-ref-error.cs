@@ -1,16 +1,13 @@
-// Title: C# Aspose.Cells: Detect undefined‑name formulas and replace them with #REF! error
-// Description: Loads an Excel workbook, runs CalculateFormula to expose #NAME? errors, scans each worksheet’s used range, finds formula cells that evaluate to an error, and substitutes the formula with a "#REF!" placeholder before saving the file.
-// Keywords: Aspose.Cells C# replace formula error | detect undefined name Excel | convert #NAME? to #REF! | iterate cells Aspose.Cells | C# Excel error handling | batch fix formula errors
-// Common Searches: how to replace #NAME? with #REF! using Aspose.Cells | C# scan workbook for error formulas Aspose.Cells | Aspose.Cells change formula errors to #REF! | detect undefined names in Excel C#
-// Developer Intent: Identify formula cells that reference undefined names and replace them with a #REF! error value.
-// Use Cases: Sanitize workbooks before distribution by converting all undefined‑name errors to a uniform #REF! marker. | Prepare Excel files for data import pipelines that cannot handle #NAME? errors. | Automate batch processing of multiple spreadsheets to ensure no missing‑name references remain.
-// AI Prompts: Generate C# code that opens a workbook with Aspose.Cells, runs CalculateFormula, finds cells where IsFormula is true and Type equals IsError, and sets the cell value to "#REF!". | Provide a C# snippet that logs the addresses (e.g., A1, B2) of every formula cell changed to "#REF!" while processing a workbook with Aspose.Cells.
+// Title: Replace #NAME? formula errors with #REF! in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, recalculates all formulas, locates cells whose evaluated value is "#NAME?", and changes those values to "#REF!" before saving the file. | Create a reusable method `FixUndefinedNameErrors(Workbook workbook)` that scans every worksheet, replaces any "#NAME?" results with "#REF!", and returns a list of the affected cell addresses. | Update the sample program to log each cell address where a "#NAME?" error is converted to "#REF!" and display the log on the console prior to saving the workbook.
+// Common Searches: Aspose.Cells C# replace #NAME? error with #REF! in Excel file | detect undefined name formula errors using Aspose.Cells .NET | iterate over used range cells to change #NAME? to #REF! in a workbook | how to programmatically convert #NAME? to #REF! with Aspose.Cells
+// Tags: replace #NAME? with #REF! Aspose.Cells | detect undefined name formula errors .NET | iterate worksheet cells Aspose.Cells | recalculate formulas before error handling C# | save modified Excel workbook Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, runs CalculateFormula to expose #NAME? errors, scans each worksheet’s used range, finds formula cells that evaluate to an error, and substitutes the formula with a "#REF!" placeholder before saving the file.
+// The example loads an Excel workbook, forces a full formula calculation, walks through each worksheet's used range, identifies cells whose formula result is the "#NAME?" error, replaces that result with the "#REF!" error string, and saves the updated workbook, while handling file I/O and cell‑level exceptions.
 class Program
 {
     static void Main()
@@ -20,49 +17,74 @@ class Program
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            Workbook workbook;
+            try
+            {
+                // Load the workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-            // Calculate all formulas so that errors (e.g., #NAME?) are evaluated
+            // Calculate all formulas so that error values are up‑to‑date
             workbook.CalculateFormula();
 
-            // Iterate through each worksheet
+            // Process each worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Cells cells = sheet.Cells;
+                // Limit iteration to the used range of the sheet
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-                // Determine the used range of the sheet
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                // Scan every cell in the used range
-                for (int row = 0; row <= maxRow; row++)
+                foreach (Cell cell in usedRange)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    try
                     {
-                        Cell cell = cells[row, col];
+                        // Only examine cells that contain a formula
+                        if (!cell.IsFormula)
+                            continue;
 
-                        // Process only formula cells that resulted in an error after calculation
-                        if (cell.IsFormula && cell.Type == CellValueType.IsError)
+                        // After calculation, error values appear as strings like "#NAME?"
+                        if (cell.Value is string val && val.Equals("#NAME?", StringComparison.OrdinalIgnoreCase))
                         {
-                            // Replace the erroneous formula with a #REF! error representation
-                            // Using a string value to avoid reliance on PutErrorValue API variations
+                            // Replace #NAME? with #REF! error representation
                             cell.PutValue("#REF!");
                         }
+                    }
+                    catch (Exception exCell)
+                    {
+                        // Log cell‑level issues but continue processing
+                        Console.WriteLine($"Error processing cell {cell.Name}: {exCell.Message}");
                     }
                 }
             }
 
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
             // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {

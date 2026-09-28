@@ -1,34 +1,48 @@
-// Title: C# – Convert Excel Workbook to PDF without Scaling using Aspose.Cells
-// Description: Load an .xlsx file with Aspose.Cells, set the worksheet PageSetup to percent scaling with Zoom = 100 % (no scaling), configure PdfSaveOptions (OnePagePerSheet = false), and save as a PDF that retains the exact original dimensions.
-// Keywords: Aspose.Cells | C# | .NET | Excel to PDF conversion | disable page scaling | PageSetup Zoom 100 | PdfSaveOptions | preserve layout | OnePagePerSheet false
-// Common Searches: Aspose.Cells export Excel to PDF without scaling | C# set page zoom 100% for PDF conversion | how to keep original size when converting workbook to PDF | PdfSaveOptions OnePagePerSheet false example | convert .xlsx to PDF preserving layout Aspose
-// Developer Intent: Generate a PDF from an Excel workbook that matches the worksheet’s original size, with no automatic scaling applied.
-// Use Cases: Produce printable PDFs of financial statements where the layout must be identical to the Excel source. | Batch‑convert marketing dashboards to PDF while retaining exact column widths and graphics. | Export engineering calculation sheets to PDF for documentation, ensuring dimensions remain unchanged.
-// AI Prompts: Write C# code using Aspose.Cells to convert an .xlsx file to PDF with no scaling (IsPercentScale = true, Zoom = 100). | Create a reusable C# method that accepts input and output paths, disables page scaling, sets OnePagePerSheet to false, and saves the workbook as a PDF preserving original dimensions.
+// Title: Convert an Excel workbook to PDF with exact dimensions by disabling page scaling in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, configures the first worksheet's PageSetup to 100 % zoom (IsPercentScale = true, Zoom = 100), and saves the workbook as a PDF. | Demonstrate how to export an Excel workbook to PDF with Aspose.Cells while preserving the original page size by turning off percent scaling in the export options.
+// Common Searches: asp.net aspocells export excel to pdf without changing page size | c# set worksheet page setup zoom 100 before pdf conversion aspocells | how to keep original dimensions when converting xlsx to pdf using aspocells | pdfsaveoptions default scaling aspocells c# example
+// Tags: Aspose.Cells workbook to PDF without scaling | disable percent scaling in PageSetup | Worksheet zoom 100 export PDF | PdfSaveOptions default scaling Aspose.Cells | maintain page size during Excel to PDF conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an .xlsx file with Aspose.Cells, set the worksheet PageSetup to percent scaling with Zoom = 100 % (no scaling), configure PdfSaveOptions (OnePagePerSheet = false), and save as a PDF that retains the exact original dimensions.
-class ConvertWorkbookToPdf
+// The sample verifies the input Excel file, loads it into an Aspose.Cells Workbook, sets the first worksheet's PageSetup to use a 100 % zoom (IsPercentScale = true, Zoom = 100) to prevent any scaling, creates default PdfSaveOptions, and saves the workbook as a PDF while handling potential exceptions.
+class WorkbookToPdf
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        string outputPath = "output.pdf";
 
-        // Access the first worksheet's page setup
-        PageSetup pageSetup = workbook.Worksheets[0].PageSetup;
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Disable automatic scaling and set zoom to 100% to keep original dimensions
-        pageSetup.IsPercentScale = true;   // Use percent scaling mode
-        pageSetup.Zoom = 100;              // 100% zoom (no scaling)
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create PDF save options (optional, ensures default behavior)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = false; // Do not force one page per sheet
+            // Set 100% zoom (no scaling) for the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.PageSetup.IsPercentScale = true;
+            sheet.PageSetup.Zoom = 100;
 
-        // Save the workbook as a PDF file
-        workbook.Save("output.pdf", pdfOptions);
+            // Use default PDF save options (preserve original size)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

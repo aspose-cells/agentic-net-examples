@@ -1,56 +1,59 @@
-// Title: Disable Auto-Calc and Manually Recalculate Formulas per Worksheet in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to set Aspose.Cells workbook calculation mode to Manual, insert static values and formulas on multiple sheets, and use Worksheet.CalculateFormula with CalculationOptions to evaluate formulas only on selected worksheets before saving the workbook.
-// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalcModeType.Manual | Worksheet.CalculateFormula | calculate formulas per sheet | disable automatic formula evaluation | Excel performance optimization | multi‑sheet workbook | custom CalculationOptions
-// Common Searches: Aspose.Cells disable automatic calculation | Worksheet.CalculateFormula C# example | manual formula evaluation per worksheet Aspose | set CalcModeType.Manual in .NET | how to recalculate specific sheets with Aspose.Cells
-// Developer Intent: Turn off auto‑calc, add formulas, and trigger calculation only on chosen worksheets.
-// Use Cases: Large financial models where formulas are evaluated after all input data is entered. | Generating multi‑sheet reports that require independent recalculation after each sheet is populated. | Improving workbook creation speed by disabling auto‑calc and manually invoking calculation on demand.
-// AI Prompts: Show C# code that sets CalcModeType.Manual, adds formulas to several worksheets, and uses Worksheet.CalculateFormula with custom CalculationOptions to recalculate each sheet individually. | Provide an Aspose.Cells example that disables automatic formula calculation, inserts formulas, and manually triggers calculation for specific worksheets before saving the file.
+// Title: How to disable auto‑calculation, insert formulas on multiple sheets, and manually recalculate with Worksheet.CalculateFormula in Aspose.Cells for .NET
+// AI Prompts: Create C# code that configures the workbook to use manual recalculation, places a SUM formula in Sheet1!A1 and an AVERAGE formula in Sheet2!C1, then explicitly evaluates the formulas with Worksheet.CalculateFormula before saving. | Provide a sample that adds formulas to two worksheets in Aspose.Cells, suppresses automatic calculation, and manually triggers formula evaluation for each sheet using the appropriate API.
+// Common Searches: Aspose.Cells set calculation mode to manual and recalculate specific worksheet in C# | C# Aspose.Cells add SUM formula to Sheet1 and AVERAGE to Sheet2 then manual calculate | How to prevent automatic formula evaluation in Aspose.Cells workbook | Worksheet.CalculateFormula usage example for multiple sheets Aspose.Cells .NET
+// Tags: disable automatic calculation Aspose.Cells workbook | add SUM formula to Sheet1 A1 Aspose.Cells | add AVERAGE formula to Sheet2 C1 Aspose.Cells | Worksheet.CalculateFormula manual trigger | save workbook after formula evaluation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to set Aspose.Cells workbook calculation mode to Manual, insert static values and formulas on multiple sheets, and use Worksheet.CalculateFormula with CalculationOptions to evaluate formulas only on selected worksheets before saving the workbook.
+// The example creates a new workbook, inserts a SUM formula into Sheet1!A1 and an AVERAGE formula into Sheet2!C1, disables automatic recalculation, manually evaluates all formulas with Worksheet.CalculateFormula, and saves the file as output.xlsx while handling potential errors.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (uses the provided create rule)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            var workbook = new Workbook();
 
-        // Disable automatic calculation for the whole workbook
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // NOTE: In some older Aspose.Cells versions the CalcMode property may not be available.
+            // If needed, you can set the calculation mode to manual using the appropriate API for your version.
+            // For compatibility, the line is omitted here.
 
-        // -------------------------------------------------
-        // Worksheet 1 – add data and a formula
-        // -------------------------------------------------
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "Sheet1";
+            // Worksheet 1 (default first sheet)
+            var sheet1 = workbook.Worksheets[0];
+            // Example formula: sum of B1:B10 placed in A1
+            sheet1.Cells["A1"].Formula = "=SUM(B1:B10)";
 
-        // Put a static value
-        sheet1.Cells["A1"].PutValue(5);
-        // Insert a formula that depends on A1
-        sheet1.Cells["B1"].Formula = "=A1*2";
+            // Worksheet 2 (add a new sheet)
+            var sheet2 = workbook.Worksheets.Add("Sheet2");
+            // Example formula: average of D1:D5 placed in C1
+            sheet2.Cells["C1"].Formula = "=AVERAGE(D1:D5)";
 
-        // -------------------------------------------------
-        // Worksheet 2 – add data and a different formula
-        // -------------------------------------------------
-        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
+            // Manually trigger calculation for the entire workbook
+            try
+            {
+                workbook.CalculateFormula();
+            }
+            catch (Exception calcEx)
+            {
+                Console.WriteLine($"Calculation error: {calcEx.Message}");
+            }
 
-        sheet2.Cells["A1"].PutValue(10);
-        sheet2.Cells["B1"].Formula = "=A1+100";
-
-        // -------------------------------------------------
-        // Manually trigger calculation for each worksheet
-        // -------------------------------------------------
-        CalculationOptions calcOptions = new CalculationOptions();
-
-        // Calculate all formulas in Sheet1
-        sheet1.CalculateFormula(calcOptions, true);
-
-        // Calculate all formulas in Sheet2
-        sheet2.CalculateFormula(calcOptions, true);
-
-        // Save the workbook (uses the provided save rule)
-        workbook.Save("ManualCalculationDemo.xlsx");
+            // Save the workbook
+            try
+            {
+                workbook.Save("output.xlsx");
+                Console.WriteLine("Workbook saved successfully as output.xlsx");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Save error: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

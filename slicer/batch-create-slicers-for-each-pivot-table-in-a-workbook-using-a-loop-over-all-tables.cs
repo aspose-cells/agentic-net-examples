@@ -1,55 +1,75 @@
-// Title: C# – Batch create slicers for all PivotTables in an Excel workbook with Aspose.Cells
-// Description: Loads a workbook, loops through every worksheet and its PivotTables, adds a slicer for each table using the first base field, positions slicers with column offsets, sets a custom caption, and saves the file.
-// Keywords: Aspose.Cells | C# | Excel slicer | PivotTable slicer | batch slicer creation | add slicer programmatically | multiple pivot tables | slicer placement | custom slicer caption | .NET Excel automation
-// Common Searches: add slicer to every pivot table using Aspose.Cells C# | loop through worksheets and create slicers for pivot tables | programmatic slicer placement in Excel with Aspose | set custom caption for slicers in Aspose.Cells | batch generate slicers for Excel pivot tables .NET
-// Developer Intent: Automatically generate a slicer for each PivotTable in a workbook.
-// Use Cases: Add interactive filters to all PivotTables in a financial reporting workbook. | Standardize slicer layout across dashboard sheets that contain multiple PivotTables. | Export data with pre‑configured slicers and custom captions for end‑user analysis.
-// AI Prompts: Generate C# code that uses Aspose.Cells to add slicers to every PivotTable in a workbook, arranging them side‑by‑side with unique captions. | Explain how to calculate dynamic slicer positions to avoid overlap when a worksheet has many PivotTables. | Show how to select a specific base field (instead of the first) for each slicer when creating them in a loop.
+// Title: How to programmatically add a slicer to every pivot table in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that iterates through all worksheets in a Workbook and adds a slicer for the first base field of each PivotTable using Aspose.Cells, positioning each slicer in column A with a 5‑row offset. | Demonstrate how to set a custom caption and apply a light style to each slicer created in a loop over pivot tables with Aspose.Cells.
+// Common Searches: C# Aspose.Cells add slicer to each pivot table in a workbook | loop through worksheets and create slicers for pivot tables using Aspose.Cells .NET | position slicer in specific cell with row offset when generating Excel file programmatically | set slicer style and caption in Aspose.Cells C# example
+// Tags: Aspose.Cells add slicer to pivot table | C# loop worksheets create slicers | Excel slicer placement column A Aspose.Cells | slicer style caption Aspose.Cells | batch slicer generation Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-// Loads a workbook, loops through every worksheet and its PivotTables, adds a slicer for each table using the first base field, positions slicers with column offsets, sets a custom caption, and saves the file.
-class BatchSlicerCreator
+namespace AsposeCellsSlicerBatchDemo
 {
-    static void Main()
+    // The example creates a workbook, adds sample data and a pivot table, then loops through every worksheet and each pivot table to insert a slicer for the first base field. Each slicer is placed in column A with a 5‑row gap, given a custom caption, styled with a light theme, and the workbook is saved as BatchSlicersDemo.xlsx.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Get the collection of pivot tables on the current worksheet
-            PivotTableCollection pivots = sheet.PivotTables;
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            // Loop over each pivot table
-            for (int p = 0; p < pivots.Count; p++)
+            // Example data for demonstration – create a worksheet with a pivot table
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
+            dataSheet.Cells["A1"].Value = "Category";
+            dataSheet.Cells["B1"].Value = "Value";
+            dataSheet.Cells["A2"].Value = "A";
+            dataSheet.Cells["B2"].Value = 10;
+            dataSheet.Cells["A3"].Value = "B";
+            dataSheet.Cells["B3"].Value = 20;
+            dataSheet.Cells["A4"].Value = "A";
+            dataSheet.Cells["B4"].Value = 30;
+
+            // Add a pivot table to the same sheet (for demo purposes)
+            int pivotIdx = dataSheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+            PivotTable pivot = dataSheet.PivotTables[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
+            pivot.RefreshData();
+            pivot.CalculateData();
+
+            // Loop through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                PivotTable pivot = pivots[p];
+                // Loop through each pivot table in the current worksheet
+                foreach (PivotTable pt in sheet.PivotTables)
+                {
+                    // Ensure the pivot table has at least one base field to use for the slicer
+                    if (pt.BaseFields.Count == 0)
+                        continue;
 
-                // Ensure the pivot table has at least one base field to create a slicer for
-                if (pivot.BaseFields.Count == 0)
-                    continue;
+                    // Use the first base field name as the slicer field
+                    string baseFieldName = pt.BaseFields[0].Name;
 
-                // Determine a placement for the slicer (row and column indices)
-                // Here we place slicers in the first rows, offsetting columns for each pivot table
-                int slicerRow = 0;
-                int slicerColumn = p * 5; // simple offset to avoid overlap
+                    // Determine a destination cell for the slicer.
+                    // Here we place each slicer starting from column A and offset rows to avoid overlap.
+                    // The offset is based on the current count of slicers already on the sheet.
+                    int slicerCount = sheet.Slicers.Count;
+                    int startRow = slicerCount * 5; // 5 rows gap between slicers
+                    string destCell = CellsHelper.CellIndexToName(startRow, 0); // column A
 
-                // Add a slicer using the first base field of the pivot table
-                // Using the overload: Add(PivotTable pivot, int row, int column, PivotField baseField)
-                int slicerIndex = sheet.Slicers.Add(pivot, slicerRow, slicerColumn, pivot.BaseFields[0]);
+                    // Add the slicer using the (PivotTable, destCellName, baseFieldName) overload
+                    int slicerIndex = sheet.Slicers.Add(pt, destCell, baseFieldName);
+                    Slicer slicer = sheet.Slicers[slicerIndex];
 
-                // Optional: customize the slicer (e.g., set caption)
-                Slicer slicer = sheet.Slicers[slicerIndex];
-                slicer.Caption = $"Slicer_{pivot.Name}";
+                    // Optional: set a friendly caption and style
+                    slicer.Caption = $"{pt.Name} - {baseFieldName}";
+                    slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
+                }
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Save the workbook with the created slicers
+            workbook.Save("BatchSlicersDemo.xlsx");
+        }
     }
 }

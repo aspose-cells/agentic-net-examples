@@ -1,83 +1,75 @@
-// Title: C# – Convert Aspose.Cells ListObject (Table) to a Range while Keeping Formulas
-// Description: Demonstrates how to use Aspose.Cells' ConvertToRange method to change a ListObject back to a normal cell range, preserving all formulas and recalculating them before saving the workbook.
-// Keywords: Aspose.Cells ConvertToRange | C# ListObject to range | preserve formulas Aspose.Cells | Excel table to range conversion | Aspose.Cells table conversion example
-// Common Searches: Aspose.Cells convert table to range C# | keep formulas when converting ListObject | ConvertToRange method example | how to change Excel table back to range using Aspose | C# code to preserve formulas after table conversion
-// Developer Intent: Transform a ListObject into a standard cell range without losing any embedded formulas.
-// Use Cases: Convert a data table to a range before exporting to ensure formulas remain functional in downstream tools. | Apply custom formatting that tables do not support while retaining calculated values. | Maintain compatibility with older Excel versions that do not recognize tables, preserving all calculations.
-// AI Prompts: Write C# code with Aspose.Cells that converts a ListObject to a range and verifies that formulas stay intact. | Explain the steps of the ConvertToRange method and why a workbook.CalculateFormula call is needed afterward. | Create a unit test in C# that asserts formula results are unchanged after converting an Aspose.Cells table to a range.
+// Title: Convert an Aspose.Cells ListObject (Excel table) back to a regular range while preserving formulas in C#
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, locates a ListObject, converts it back to a normal range, and verifies that formulas stay intact. | Provide a complete C# example that creates an Excel table, sets a formula in a column, transforms the table into a regular cell range, and saves the workbook.
+// Common Searches: Aspose.Cells C# convert Excel table to range without losing formulas | ListObject ConvertToRange keep formulas Aspose.Cells example | how to remove a table in Aspose.Cells while retaining cell formulas | C# Aspose.Cells preserve formulas when converting ListObject to range
+// Tags: Aspose.Cells ListObject to range conversion | preserve cell formulas during Excel table removal | C# delete Excel table while keeping formulas | convert Excel ListObject back to regular cells | save workbook after converting table to range C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// The sample loads or creates a workbook, optionally adds a ListObject with a formula, uses the ListObject conversion method to turn the table back into a normal cell range while keeping formulas unchanged, and then saves the result to output.xlsx.
+class Program
 {
-    // Demonstrates how to use Aspose.Cells' ConvertToRange method to change a ListObject back to a normal cell range, preserving all formulas and recalculating them before saving the workbook.
-    public class ListObjectToRangeDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            Workbook workbook;
+
+            // Load existing workbook if present; otherwise create a new one.
+            if (File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+            }
 
-                // Populate sample data with a header row
-                sheet.Cells["A1"].PutValue("Item");
-                sheet.Cells["B1"].PutValue("Quantity");
-                sheet.Cells["C1"].PutValue("Price");
-                sheet.Cells["D1"].PutValue("Total"); // Column for formula
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add some rows of data
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["C2"].PutValue(0.5);
+            // If a ListObject (table) exists, convert it back to a range.
+            if (sheet.ListObjects.Count > 0)
+            {
+                ListObject listObject = sheet.ListObjects[0];
+                listObject.ConvertToRange(); // preserves formulas
+            }
+            else
+            {
+                // Create a sample table to demonstrate conversion when none exists.
+                sheet.Cells["A1"].PutValue("Header1");
+                sheet.Cells["B1"].PutValue("Header2");
+                sheet.Cells["C1"].PutValue("Header3");
+                sheet.Cells["A2"].PutValue(1);
+                // Set formula for B2 cell.
+                sheet.Cells["B2"].Formula = "=A2*2";
+                sheet.Cells["C2"].PutValue(3);
 
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["B3"].PutValue(5);
-                sheet.Cells["C3"].PutValue(0.3);
-
-                // Insert a formula that calculates Total = Quantity * Price
-                sheet.Cells["D2"].Formula = "=B2*C2";
-                sheet.Cells["D3"].Formula = "=B3*C3";
-
-                // Create a ListObject (table) that includes the data and the formula column
-                int tableIndex = sheet.ListObjects.Add("A1", "D3", true);
+                // Add a ListObject (table) over the range A1:C2.
+                int tableIndex = sheet.ListObjects.Add(0, 0, 2, 2, true);
                 ListObject table = sheet.ListObjects[tableIndex];
 
-                // Optional: set a table style (not required for conversion)
-                table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-                // Convert the ListObject back to a regular range.
-                // This operation preserves the existing formulas in the cells.
+                // Convert the newly created table back to a regular range.
                 table.ConvertToRange();
-
-                // Recalculate formulas to ensure they are evaluated after conversion
-                workbook.CalculateFormula();
-
-                // Output the calculated totals to the console for verification
-                Console.WriteLine("Total for Apple: " + sheet.Cells["D2"].Value);
-                Console.WriteLine("Total for Banana: " + sheet.Cells["D3"].Value);
-
-                // Save the workbook
-                string outputPath = "ListObjectConvertedToRange.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Directory.CreateDirectory(outputDir);
             }
-        }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
         {
-            ListObjectToRangeDemo.Run();
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

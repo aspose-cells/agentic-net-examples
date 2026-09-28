@@ -1,69 +1,71 @@
-// Title: Benchmark opening time of an encrypted Excel workbook using Aspose.Cells for .NET
-// Description: This C# console example checks for a password‑protected .xlsx file, sets the password in LoadOptions, measures the load duration with Stopwatch, prints the elapsed milliseconds and the workbook’s IsEncrypted flag, and then disposes the Workbook object.
-// Keywords: Aspose.Cells | C# encrypted workbook | Excel password protection | load performance | benchmark workbook opening | Stopwatch timing | LoadOptions password | measure decryption time | Aspose.Cells performance testing | encrypted .xlsx loading .NET
-// Common Searches: How to benchmark encrypted Excel file load time with Aspose.Cells | Measure opening latency of password protected workbook in C# | Aspose.Cells performance test for encrypted .xlsx | Timing decryption of Excel using Aspose.Cells .NET | Log load time of protected workbook Aspose.Cells
-// Developer Intent: Determine the duration required for Aspose.Cells to open a password‑protected Excel file and capture that metric.
-// Use Cases: Assess decryption overhead for large encrypted workbooks in a high‑throughput application | Integrate load‑time logging into monitoring dashboards for secure Excel processing | Compare opening speeds of workbooks encrypted with different algorithms or password complexities | Validate that encryption does not exceed SLA latency requirements
-// AI Prompts: Generate C# code that records the time to open an encrypted Excel workbook with Aspose.Cells and writes the result to a log file. | Show how to run the opening test multiple times and compute average, min, and max load times. | Explain how to export the timing data to CSV or JSON for further analysis. | Provide guidance on handling CellsException for incorrect passwords while still measuring elapsed time.
+// Title: Measure and log the time required to open a password‑protected Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an encrypted .xlsx file with Aspose.Cells, starts a Stopwatch, and prints the elapsed milliseconds and formatted TimeSpan after the workbook is opened. | Show how to set LoadOptions with a password, catch CellsException for an invalid password, and still report the time elapsed before the exception was thrown. | Demonstrate logging of both successful and failed workbook opening attempts, including performance metrics, using Console output in a .NET console application.
+// Common Searches: how to benchmark opening speed of a password protected Excel file using Aspose.Cells in C# | c# measure time to load encrypted .xlsx with Aspose.Cells LoadOptions | catch invalid password error when loading protected workbook with Aspose.Cells and get elapsed time | performance logging for Aspose.Cells workbook load operation
+// Tags: Aspose.Cells load encrypted workbook timing | C# Stopwatch Aspose.Cells performance | LoadOptions password Aspose.Cells | CellsException invalid password handling | benchmark workbook opening latency Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceDemo
+// The example verifies the encrypted Excel file exists, configures LoadOptions with the workbook password, and starts a Stopwatch. It then attempts to load the workbook using Aspose.Cells. On success, the timer stops and the elapsed time is printed in milliseconds and as a formatted TimeSpan. If a CellsException occurs, the code checks for an "Invalid password" message, reports the specific error, and logs the time elapsed before the failure. Any other exceptions are caught, the timer is stopped, and the error is displayed.
+class Program
 {
-    // This C# console example checks for a password‑protected .xlsx file, sets the password in LoadOptions, measures the load duration with Stopwatch, prints the elapsed milliseconds and the workbook’s IsEncrypted flag, and then disposes the Workbook object.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the encrypted workbook and its password
+        string filePath = "encrypted.xlsx";
+        string password = "yourPassword";
+
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            // Path to the encrypted workbook file
-            string filePath = "encrypted.xlsx";
+            Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+            return;
+        }
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Error: File \"{filePath}\" not found.");
-                return;
-            }
+        // Prepare load options with the password
+        LoadOptions loadOptions = new LoadOptions
+        {
+            Password = password
+        };
 
-            // Password required to open the workbook
-            string password = "password";
+        // Start measuring time
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
-            // Prepare load options with the password
-            LoadOptions loadOptions = new LoadOptions
-            {
-                Password = password
-            };
+        try
+        {
+            // Load the encrypted workbook
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            Workbook workbook = null;
-            Stopwatch sw = Stopwatch.StartNew();
-
-            try
-            {
-                // Load the encrypted workbook
-                workbook = new Workbook(filePath, loadOptions);
-            }
-            catch (CellsException ex)
-            {
-                // Handle invalid password or other loading issues
-                Console.WriteLine($"Failed to open workbook: {ex.Message}");
-                return;
-            }
-            finally
-            {
-                sw.Stop();
-            }
+            // Stop measuring time after successful load
+            stopwatch.Stop();
 
             // Log performance metrics
-            Console.WriteLine($"Time taken to open encrypted workbook: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine("Workbook opened successfully.");
+            Console.WriteLine($"Time taken to open encrypted workbook: {stopwatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Time taken (hh:mm:ss.fff): {stopwatch.Elapsed}");
+        }
+        catch (CellsException ex)
+        {
+            stopwatch.Stop();
 
-            // Verify that the workbook reports it is encrypted
-            Console.WriteLine($"Workbook.IsEncrypted: {workbook.Settings.IsEncrypted}");
+            // Check if the exception is due to an invalid password
+            if (ex.Message != null && ex.Message.IndexOf("Invalid password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                Console.WriteLine("Error: Invalid password provided for the encrypted workbook.");
+            }
+            else
+            {
+                Console.WriteLine($"CellsException occurred: {ex.Message}");
+            }
 
-            // Dispose the workbook when done
-            workbook.Dispose();
+            Console.WriteLine($"Elapsed time before failure: {stopwatch.ElapsedMilliseconds} ms");
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

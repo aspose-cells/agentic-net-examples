@@ -1,66 +1,56 @@
-// Title: C# – Generate a Monthly Calendar in Excel with Aspose.Cells Using a Start Date Variable
-// Description: Creates a new Workbook, computes the first visible Sunday before the month’s first day, and fills a 6‑row × 7‑column grid with sequential dates. Dates outside the target month are shown in gray, weekday headers are added, and the file is saved as Calendar.xlsx.
-// Keywords: Aspose.Cells calendar example | C# generate Excel calendar | populate Excel dates programmatically | gray out‑of‑month dates Aspose | Excel weekday headers C# | dynamic month start date Aspose.Cells | Excel date formatting built‑in 14
-// Common Searches: Aspose.Cells create monthly calendar C# | how to fill Excel calendar dates with Aspose.Cells | C# code to generate calendar grid in Excel | dim dates not in current month Aspose.Cells | add weekday headers to Excel calendar using C#
-// Developer Intent: Build an Excel workbook that displays a month‑long calendar grid based on a configurable start date.
-// Use Cases: Produce printable monthly calendars for reports or newsletters. | Create dynamic scheduling sheets that adapt to user‑selected months. | Generate calendar templates with out‑of‑month dates visually dimmed for dashboards.
-// AI Prompts: Write C# code with Aspose.Cells to generate a 6×7 calendar grid starting on Sunday for any month, graying out dates outside the month. | Update the sample to highlight today's date with a custom background color. | Explain how to modify the logic to start weeks on Monday while preserving the 6‑week layout.
+// Title: Create a 6‑week Excel calendar with a configurable start date using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate an Aspose.Cells workbook that builds a 6‑week calendar grid beginning from a supplied DateTime and saves it as an .xlsx file. | Insert bold Sun‑Sat column headers in the first row and apply a built‑in date number format so each cell shows only the day component. | Automatically resize all columns after the calendar data is written to improve the worksheet layout.
+// Common Searches: Aspose.Cells C# create calendar template with start date parameter | populate Excel sheet with sequential dates for six weeks using Aspose.Cells | format Aspose.Cells cells to display only the day number in a calendar view | auto‑fit columns after writing data with Aspose.Cells .NET | programmatically generate monthly calendar view in C# Excel library
+// Tags: Aspose.Cells create calendar worksheet | C# fill Excel cells with sequential dates | Aspose.Cells apply date number format | Aspose.Cells set bold header row | Aspose.Cells auto‑fit columns
 
 using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, computes the first visible Sunday before the month’s first day, and fills a 6‑row × 7‑column grid with sequential dates. Dates outside the target month are shown in gray, weekday headers are added, and the file is saved as Calendar.xlsx.
-class CalendarGenerator
+// The example creates a new workbook, adds bold Sun‑Sat headers, fills a 6‑week (42‑day) grid with dates starting from a configurable start date, formats each cell to show only the day number, auto‑fits the columns, and saves the file as Calendar.xlsx.
+class CalendarTemplate
 {
     static void Main()
     {
-        // Initialize a new workbook (create)
+        // Initialize a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Define the start date (first day of the month to display)
-        DateTime monthStart = new DateTime(2023, 9, 1); // Example: September 2023
+        // Define the start date for the calendar (can be changed as needed)
+        DateTime startDate = new DateTime(2023, 9, 1);
 
-        // Determine the first day to display in the calendar (start on Sunday)
-        // Aspose.Cells uses zero‑based indices for rows and columns
-        DayOfWeek firstDayOfWeek = DayOfWeek.Sunday;
-        int offset = ((int)monthStart.DayOfWeek - (int)firstDayOfWeek + 7) % 7;
-        DateTime calendarStart = monthStart.AddDays(-offset);
-
-        // Fill a 6‑week (6 rows) by 7‑day (7 columns) calendar grid
-        int rows = 6;
-        int cols = 7;
-        for (int r = 0; r < rows; r++)
+        // Add day-of-week headers (Sunday to Saturday) in the first row
+        string[] dayHeaders = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        for (int c = 0; c < dayHeaders.Length; c++)
         {
-            for (int c = 0; c < cols; c++)
-            {
-                DateTime current = calendarStart.AddDays(r * cols + c);
-                Cell cell = sheet.Cells[r, c];
-                cell.PutValue(current);
-                // Apply a date format (e.g., "d")
-                Style style = cell.GetStyle();
-                style.Number = 14; // Built‑in date format
-                // Dim dates that are not in the target month
-                if (current.Month != monthStart.Month)
-                {
-                    style.Font.Color = System.Drawing.Color.Gray;
-                }
-                cell.SetStyle(style);
-            }
+            sheet.Cells[0, c].PutValue(dayHeaders[c]);
+            // Optional: make header bold
+            Style headerStyle = sheet.Cells[0, c].GetStyle();
+            headerStyle.Font.IsBold = true;
+            sheet.Cells[0, c].SetStyle(headerStyle);
         }
 
-        // Optionally add weekday headers in the first row above the dates
-        string[] weekDays = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-        for (int c = 0; c < cols; c++)
+        // Fill a 6‑week (42‑day) calendar grid starting from the startDate
+        const int weeks = 6;
+        const int daysInWeek = 7;
+        for (int i = 0; i < weeks * daysInWeek; i++)
         {
-            Cell header = sheet.Cells[rows, c]; // Row after the date grid
-            header.PutValue(weekDays[c]);
-            Style hdrStyle = header.GetStyle();
-            hdrStyle.Font.IsBold = true;
-            header.SetStyle(hdrStyle);
+            DateTime currentDate = startDate.AddDays(i);
+            int row = 1 + i / daysInWeek;      // Row index (starts at 1 because row 0 holds headers)
+            int col = i % daysInWeek;          // Column index (0‑6)
+
+            // Put the date value into the cell
+            sheet.Cells[row, col].PutValue(currentDate);
+
+            // Apply a date format to display only the day number
+            Style dateStyle = sheet.Cells[row, col].GetStyle();
+            dateStyle.Number = 14; // Built‑in date format (e.g., "m/d/yyyy")
+            sheet.Cells[row, col].SetStyle(dateStyle);
         }
 
-        // Save the workbook (save)
+        // Auto‑fit columns for better appearance
+        sheet.AutoFitColumns();
+
+        // Save the generated calendar workbook
         workbook.Save("Calendar.xlsx");
     }
 }

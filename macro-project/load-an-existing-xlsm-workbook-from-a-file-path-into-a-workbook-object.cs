@@ -1,45 +1,40 @@
-// Title: C# – Load a macro‑enabled XLSM workbook with Aspose.Cells and read the first worksheet
-// Description: The example checks whether a specified .xlsm file exists, creates a minimal placeholder workbook if needed, loads the macro‑enabled workbook using Aspose.Cells, retrieves the first worksheet, prints its name, and handles any exceptions.
-// Keywords: Aspose.Cells | C# | load XLSM | macro-enabled workbook | open Excel file | read first worksheet | create placeholder workbook | SaveFormat.Xlsm | exception handling | file path
-// Common Searches: How to open an .xlsm file using Aspose.Cells C# | Aspose.Cells create placeholder XLSM if file missing | Get first worksheet name after loading workbook Aspose.Cells | Load macro-enabled workbook from path Aspose.Cells | C# example for reading XLSM with Aspose
-// Developer Intent: Load an existing macro‑enabled XLSM file from a given path and retrieve the name of its first worksheet, optionally creating a placeholder file when the target does not exist.
-// Use Cases: Open a macro‑enabled workbook to extract data or metadata. | Automatically generate a minimal .xlsm file when the expected file is absent. | Integrate workbook loading into automated scripts with robust error handling. | Display or log the name of the first worksheet for verification.
-// AI Prompts: Generate C# code using Aspose.Cells to open an .xlsm file from a path, create a minimal placeholder workbook if the file does not exist, and print the first worksheet name with proper exception handling. | Show an example that checks for a macro‑enabled Excel file, creates a placeholder using SaveFormat.Xlsm when missing, loads it with Aspose.Cells, and outputs the name of the first sheet.
+// Title: Load a macro‑enabled XLSM workbook from a file path into an Aspose.Cells Workbook using C#
+// AI Prompts: Generate C# code that verifies a .xlsm file exists and creates an Aspose.Cells Workbook from the given path with proper exception handling. | Show how to instantiate an Aspose.Cells Workbook for a macro‑enabled Excel file and output a success or error message. | Provide a C# example that opens an existing .xlsm workbook with Aspose.Cells, validates the file, and logs the loading result.
+// Common Searches: c# aspocells open existing macro enabled workbook from disk | how to read .xlsm file with Aspose.Cells in .NET | load xlsm workbook using Aspose.Cells C# example with file existence check | Aspose.Cells Workbook constructor path parameter for macro enabled Excel | exception handling when loading .xlsm with Aspose.Cells C#
+// Tags: xlsm workbook loading Aspose.Cells C# | macro-enabled Excel import Aspose.Cells | Workbook constructor with file path Aspose.Cells | pre‑load file existence check C# | catch exceptions during Aspose.Cells workbook creation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example checks whether a specified .xlsm file exists, creates a minimal placeholder workbook if needed, loads the macro‑enabled workbook using Aspose.Cells, retrieves the first worksheet, prints its name, and handles any exceptions.
-class Program
+namespace Example
 {
-    static void Main()
+    // The sample checks that a specified .xlsm file exists, then creates an Aspose.Cells Workbook from that path, printing a success message or catching and displaying any loading exceptions.
+    class Program
     {
-        // Path to the macro-enabled workbook
-        string filePath = @"C:\Data\MyMacroEnabledWorkbook.xlsm";
-
-        try
+        static void Main(string[] args)
         {
-            // Ensure the file exists; create a minimal workbook if it does not
+            // Path to the existing XLSM workbook (modify as needed)
+            string filePath = @"C:\Path\To\YourWorkbook.xlsm";
+
+            // Ensure the file exists before attempting to load it
             if (!File.Exists(filePath))
             {
                 Console.WriteLine($"File not found: {filePath}");
-                Workbook placeholder = new Workbook();
-                placeholder.Worksheets[0].Name = "Sheet1";
-                placeholder.Save(filePath, SaveFormat.Xlsm);
-                Console.WriteLine($"Created placeholder workbook at: {filePath}");
+                return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(filePath);
-
-            // Access the first worksheet
-            Worksheet firstSheet = workbook.Worksheets[0];
-            Console.WriteLine($"Loaded workbook. First worksheet name: {firstSheet.Name}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            try
+            {
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(filePath);
+                Console.WriteLine("Workbook loaded successfully.");
+                // Additional processing can be performed here
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+            }
         }
     }
 }

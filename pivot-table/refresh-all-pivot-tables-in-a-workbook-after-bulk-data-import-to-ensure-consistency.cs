@@ -1,62 +1,58 @@
-// Title: C# – Refresh All Pivot Tables in an Aspose.Cells Workbook After Bulk Data Import
-// Description: Loads an existing workbook, simulates bulk data import by updating a range of cells, calls Workbook.Worksheets.RefreshPivotTables() to recalculate every pivot table, and saves the result. Demonstrates error handling and performance‑friendly random data generation.
-// Keywords: Aspose.Cells | C# | RefreshPivotTables | pivot table refresh | bulk data import | Workbook.Worksheets.RefreshPivotTables | programmatic pivot update | Excel automation | data‑driven reporting
-// Common Searches: how to refresh all pivot tables with Aspose.Cells C# | RefreshPivotTables method example | update pivot tables after bulk import Aspose | Aspose.Cells refresh pivot tables programmatically | C# code to recalculate pivot tables in Excel file
-// Developer Intent: Recalculate every pivot table in a workbook so it reflects newly imported data before saving.
-// Use Cases: Automated reporting pipelines that modify source data and need up‑to‑date pivot summaries. | Template‑based workbooks where large data sets are injected and pivot‑driven dashboards must stay accurate. | Scheduled jobs that ingest sales figures, update cells, and refresh all pivot tables to generate fresh reports.
-// AI Prompts: Write C# code that updates a range of cells in an Aspose.Cells workbook and then refreshes all pivot tables. | Show how to handle exceptions when calling RefreshPivotTables after a bulk data import. | Explain how to refresh pivot tables in selected worksheets only using Aspose.Cells.
+// Title: Refresh every PivotTable in an Excel workbook after bulk data import using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing Excel file or create a new workbook, populate a large range of cells, call workbook.Worksheets.RefreshPivotTables(), and save the updated file with Aspose.Cells. | Insert thousands of rows into a worksheet, invoke the RefreshPivotTables method on all worksheets to synchronize pivot tables, then export the workbook in C#. | Show how to keep pivot tables consistent after bulk data updates by using Aspose.Cells' RefreshPivotTables API and writing the result to a new .xlsx file.
+// Common Searches: Aspose.Cells C# refresh all pivot tables after updating worksheet data | How to programmatically refresh pivot tables in an Excel file using .NET | Bulk data import then refresh pivot tables with Aspose.Cells example | Using RefreshPivotTables method for multiple worksheets in C#
+// Tags: aspocells refreshpivottables method | c# bulk data import excel | excel pivot tables programmatic refresh | aspocells workbook save after pivot refresh | c# update worksheet cells and refresh pivots
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPivotRefreshDemo
+// The example loads an existing workbook or creates a new one, fills rows 2‑1000 with sample data, calls workbook.Worksheets.RefreshPivotTables() to update all pivot tables across worksheets, and saves the result to OutputData.xlsx.
+public class RefreshAllPivotTablesAfterImport
 {
-    // Loads an existing workbook, simulates bulk data import by updating a range of cells, calls Workbook.Worksheets.RefreshPivotTables() to recalculate every pivot table, and saves the result. Demonstrates error handling and performance‑friendly random data generation.
-    public class RefreshAllPivotTables
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the existing workbook that contains pivot tables
-                Workbook workbook = new Workbook(inputPath);
-
-                // Assume bulk data import modifies a range of cells in the first worksheet
-                Worksheet dataSheet = workbook.Worksheets[0];
-                Cells cells = dataSheet.Cells;
-
-                // Use a single Random instance for better performance
-                Random rnd = new Random();
-
-                // Example bulk import: update sales values for rows 2 to 101 (zero‑based index)
-                for (int row = 1; row <= 100; row++) // row 1 = Excel row 2
-                {
-                    // Update column B (index 1) with a new random sales figure
-                    cells[row, 1].PutValue(rnd.Next(1000, 5000));
-                }
-
-                // After data changes, refresh all pivot tables in the workbook
-                workbook.Worksheets.RefreshPivotTables();
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Run();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
+    {
+        const string inputPath = "InputData.xlsx";
+        const string outputPath = "OutputData.xlsx";
+
+        Workbook workbook;
+
+        // Load existing workbook if it exists; otherwise create a new one.
+        if (File.Exists(inputPath))
+        {
+            workbook = new Workbook(inputPath);
+        }
+        else
+        {
+            workbook = new Workbook();
+            workbook.Worksheets[0].Name = "Data";
+        }
+
+        // Example of bulk data import – modify many cells as needed
+        Worksheet dataSheet = workbook.Worksheets[0];
+        for (int row = 2; row <= 1000; row++)
+        {
+            dataSheet.Cells[$"A{row}"].PutValue($"Item{row}");
+            dataSheet.Cells[$"B{row}"].PutValue(row * 10);
+        }
+
+        // Refresh every PivotTable in every worksheet to reflect the new data
+        workbook.Worksheets.RefreshPivotTables();
+
+        // Save the workbook with refreshed pivot tables
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to '{outputPath}'.");
     }
 }

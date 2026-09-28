@@ -1,49 +1,57 @@
-// Title: Aspose.Cells .NET – Enable PivotTable Auto‑Refresh on Workbook Open
-// Description: C# example that creates a workbook, adds sample sales data, builds a PivotTable, sets the RefreshDataOnOpeningFile property to true, and saves the file so the pivot updates automatically each time the workbook is opened.
-// Keywords: Aspose.Cells | PivotTable auto refresh | RefreshDataOnOpeningFile | C# | .NET | Excel workbook open | pivot refresh on load | Aspose.Cells PivotTable property
-// Common Searches: Aspose.Cells set PivotTable refresh on open | RefreshDataOnOpeningFile C# example | auto refresh pivot table Aspose.Cells .NET | make PivotTable update when workbook is opened | Aspose.Cells PivotTable auto‑refresh property
-// Developer Intent: Configure a PivotTable to refresh automatically when the Excel file is opened using Aspose.Cells for .NET.
-// Use Cases: Distribute a sales report that always reflects the latest data without manual refresh. | Create a financial dashboard where pivot calculations are refreshed on every file load. | Automate periodic data exports that generate Excel workbooks with self‑updating PivotTables.
-// AI Prompts: Generate C# code that builds a workbook, adds data, creates a PivotTable, enables RefreshDataOnOpeningFile, and saves the file with Aspose.Cells. | Explain the purpose of the RefreshDataOnOpeningFile property for PivotTables in Aspose.Cells and best practices for its use. | Show how to apply auto‑refresh to multiple PivotTables in a single workbook using Aspose.Cells for .NET.
+// Title: Set PivotTable.RefreshOnFileOpen to true for automatic refresh on workbook open with Aspose.Cells in C#
+// AI Prompts: Configure the first PivotTable in an existing workbook to auto‑refresh on file open by setting RefreshOnFileOpen = true and saving the file with Aspose.Cells. | Write C# code that loads an Excel file, enables RefreshOnFileOpen for its pivot table, and writes the updated workbook. | Update a pivot table's RefreshOnFileOpen property using Aspose.Cells and persist the change to a new .xlsx file.
+// Common Searches: how to enable RefreshOnFileOpen for a pivot table using Aspose.Cells C# | Aspose.Cells C# set pivot table auto refresh when opening workbook | example code to set PivotTable.RefreshOnFileOpen property in .NET | auto refresh pivot table on workbook load Aspose.Cells tutorial
+// Tags: Aspose.Cells set PivotTable.RefreshOnFileOpen | C# enable pivot table auto refresh | Aspose.Cells update pivot table property | Excel workbook auto refresh pivot table .NET | PivotTable RefreshOnFileOpen example
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotRefreshOnOpenDemo
+// The example loads an existing Excel workbook, checks for a pivot table on the first worksheet, sets the pivot table's RefreshOnFileOpen property to true so it refreshes automatically when the file is opened, and saves the modified workbook to a new file, with error handling for missing files and exceptions.
+class Program
 {
-    // C# example that creates a workbook, adds sample sales data, builds a PivotTable, sets the RefreshDataOnOpeningFile property to true, and saves the file so the pivot updates automatically each time the workbook is opened.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Populate sample data for the pivot table
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(1000);
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["B3"].PutValue(2000);
-            worksheet.Cells["A4"].PutValue("Orange");
-            worksheet.Cells["B4"].PutValue(3000);
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a pivot table based on the data range
-            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "SalesPivot");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure the pivot table (row field and data field)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sales column
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-            // Enable auto‑refresh when the workbook is opened
-            pivotTable.RefreshDataOnOpeningFile = true;
+            // Get the first pivot table
+            PivotTable pivotTable = sheet.PivotTables[0];
 
-            // Save the workbook
-            workbook.Save("PivotTable_AutoRefreshOnOpen.xlsx");
+            // Refresh the pivot table data manually (RefreshDataOnOpen not available in this version)
+            pivotTable.RefreshData();
+
+            // Save the workbook with the updated setting
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

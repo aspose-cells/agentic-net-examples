@@ -1,59 +1,51 @@
-// Title: Apply a Top N filter to a PivotTable row field with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, inserts sample sales data, builds a PivotTable (Category as rows, Sales as values), and uses PivotTable.BaseFields[0].FilterTop10 to display only the highest‑ranking categories (e.g., top 3 by sum). The pivot is refreshed and saved as an .xlsx file.
-// Keywords: Aspose.Cells | C# | PivotTable | FilterTop10 | Top N filter | row field filter | sum aggregation | Excel automation | pivot top values | Aspose.Cells .NET
-// Common Searches: Aspose.Cells top N filter pivot table | C# FilterTop10 method example | show top categories in Aspose.Cells pivot | apply top 10 filter to pivot rows using Aspose.Cells | PivotTable row filter highest values .NET
-// Developer Intent: The developer wants to limit a PivotTable row field to the highest‑valued items (Top N) using Aspose.Cells in C#.
-// Use Cases: Generate a sales report that automatically lists only the top‑selling product categories. | Create a dashboard that highlights the top N regions or stores based on revenue. | Produce a concise summary sheet that filters out low‑performing items from a pivot analysis.
-// AI Prompts: Write C# code with Aspose.Cells to add a PivotTable and apply a Top N filter on the row field using the sum of a data field. | Show how to change the item count in FilterTop10 to display the top 5 rows instead of 3. | Explain how to combine FilterTop10 with a label filter in Aspose.Cells for .NET. | Provide a step‑by‑step guide to refresh the pivot after applying a Top N filter.
+// Title: Apply a Top N filter to a row field of an Aspose.Cells pivot table using C#
+// AI Prompts: Generate C# code that builds a pivot table with Aspose.Cells, adds a row field, and uses FilterTop10 to keep only the highest N items based on a sum data field. | Show how to limit a pivot table row field to the top 3 categories by total sales with Aspose.Cells for .NET. | Provide an example of programmatically applying a Top N filter to a pivot table row field and saving the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# filter pivot table rows to top 5 values | How to use FilterTop10 on a row field in an Aspose.Cells pivot table | C# example applying a Top N filter to an Excel pivot table with Aspose.Cells | Show only highest categories in Aspose.Cells pivot table based on sum of sales | Apply Top 10 filter to pivot table row field programmatically in .NET
+// Tags: Aspose.Cells pivot table top N filter | C# FilterTop10 row field | Aspose.Cells apply top values filter | pivot table row field sum filter | Excel workbook top categories Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Creates a workbook, inserts sample sales data, builds a PivotTable (Category as rows, Sales as values), and uses PivotTable.BaseFields[0].FilterTop10 to display only the highest‑ranking categories (e.g., top 3 by sum). The pivot is refreshed and saved as an .xlsx file.
+// The sample creates a workbook, fills it with category and sales data, defines a pivot table with Category as a row field and Sales as a data field, applies a Top N filter (configured for the top 3 items by sum of Sales) to the row field using FilterTop10, recalculates the pivot, and saves the file as PivotTop10Filter.xlsx.
 class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Populate sample data for the pivot table
-        worksheet.Cells["A1"].Value = "Category";
-        worksheet.Cells["B1"].Value = "Sales";
+        // Header row
+        sheet.Cells["A1"].Value = "Category";
+        sheet.Cells["B1"].Value = "Sales";
 
-        worksheet.Cells["A2"].Value = "Fruit";
-        worksheet.Cells["B2"].Value = 120;
+        // Data rows
+        string[] categories = { "Fruit", "Vegetable", "Fruit", "Dairy", "Vegetable", "Fruit", "Dairy", "Fruit" };
+        int[] sales = { 120, 80, 150, 200, 90, 130, 110, 160 };
 
-        worksheet.Cells["A3"].Value = "Vegetable";
-        worksheet.Cells["B3"].Value = 80;
+        for (int i = 0; i < categories.Length; i++)
+        {
+            sheet.Cells[i + 2, 0].Value = categories[i];
+            sheet.Cells[i + 2, 1].Value = sales[i];
+        }
 
-        worksheet.Cells["A4"].Value = "Dairy";
-        worksheet.Cells["B4"].Value = 150;
+        // Create a pivot table on the data range A1:B9, place it starting at D3
+        int pivotIndex = sheet.PivotTables.Add("A1:B9", "D3", "PivotTable1");
+        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        worksheet.Cells["A5"].Value = "Meat";
-        worksheet.Cells["B5"].Value = 200;
+        // Add "Category" as a row field (field index 0)
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
 
-        worksheet.Cells["A6"].Value = "Bakery";
-        worksheet.Cells["B6"].Value = 60;
+        // Add "Sales" as a data field (field index 1)
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
 
-        // Create a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:B6", "D3", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+        // Apply a Top 10 filter on the row field to show only the top 3 categories
+        // Parameters: valueFieldIndex = 1 (Sales), type = Sum, isTop = true, itemCount = 3
+        pivotTable.BaseFields[0].FilterTop10(1, PivotFilterType.Sum, true, 3);
 
-        // Add the Category field as a row field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-
-        // Add the Sales field as a data field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-        // Apply a Top 10 filter on the row field to show only the highest values.
-        // Here we show the top 3 items based on the Sum of Sales.
-        // Parameters: valueFieldIndex = 0 (first data field), type = Sum, isTop = true, itemCount = 3
-        pivotTable.BaseFields[0].FilterTop10(0, PivotFilterType.Sum, true, 3);
-
-        // Refresh the pivot table data
+        // Recalculate the pivot table to apply the filter
         pivotTable.CalculateData();
 
         // Save the workbook

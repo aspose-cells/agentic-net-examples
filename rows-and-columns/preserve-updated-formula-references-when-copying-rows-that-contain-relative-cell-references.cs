@@ -1,16 +1,13 @@
-// Title: Copy Rows with Relative Formulas Preserved Using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, fill column A with numbers, assign a relative formula (=A2) to B1, copy the first row to a new position with Cells.CopyRow, and verify that the copied formula in B3 automatically updates to =A4. The example also calculates the formulas and saves the file.
-// Keywords: Aspose.Cells | CopyRow | relative formula | preserve formula when copying rows | C# | .NET | Excel automation | adjust formula offsets | worksheet row duplication | formula reference shift
-// Common Searches: Aspose.Cells copy row preserve formula | CopyRow method relative reference .NET | how to keep Excel formulas when duplicating rows with Aspose | C# example copy row with formulas | adjust formula offsets after row copy Aspose.Cells
-// Developer Intent: Duplicate a worksheet row while ensuring that any relative formulas automatically adjust to reference the correct cells in the new location.
-// Use Cases: Replicate a calculation row in a financial model so each copy references its own data row. | Programmatically copy template rows that contain formulas, preserving the offset to adjacent columns. | Generate repeated report sections where formulas must adapt to new row positions without manual editing.
-// AI Prompts: Generate C# code using Aspose.Cells to copy a row that contains a relative formula and display the updated formula after copying. | Explain how Cells.CopyRow updates relative cell references and how to retrieve the new formula string. | Provide an example that copies multiple rows with formulas, recalculates the workbook, and prints the resulting values.
+// Title: Copy rows and retain relative SUM formula references with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that copies a block of rows using Aspose.Cells and automatically updates any relative formulas in the copied rows. | Show how to confirm that a SUM formula shifts from A1:A5 to A6:A10 after invoking Cells.CopyRows in Aspose.Cells. | Provide an example that saves the workbook after copying rows while preserving formula behavior.
+// Common Searches: Aspose.Cells copy rows keep relative formulas adjusted C# example | How does Cells.CopyRows handle formula references in .NET | C# copy Excel rows with SUM formula updating automatically using Aspose | Preserve relative cell references when duplicating rows in Aspose.Cells | CopyRows method formula range shift Aspose.Cells tutorial
+// Tags: Aspose.Cells Cells.CopyRows formula adjustment | C# copy rows with relative formulas | Excel row duplication preserving SUM references | Aspose.Cells workbook save after row copy | relative cell reference handling in .NET Excel automation
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Demonstrates how to create a workbook, fill column A with numbers, assign a relative formula (=A2) to B1, copy the first row to a new position with Cells.CopyRow, and verify that the copied formula in B3 automatically updates to =A4. The example also calculates the formulas and saves the file.
-class PreserveFormulaCopyRows
+// The example creates a workbook, fills column A with values, adds a relative SUM formula in B1, copies the first five rows to start at row 6 using Cells.CopyRows (which updates the formula to reference A6:A10), prints both original and copied formulas, and saves the file as PreserveFormulaCopyRows.xlsx.
+class PreserveFormulaReferences
 {
     static void Main()
     {
@@ -19,28 +16,22 @@ class PreserveFormulaCopyRows
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
-        // Populate column A with sample numbers (A1:A10)
-        for (int i = 0; i < 10; i++)
+        // Populate column A with sample values (A1:A5)
+        for (int i = 0; i < 5; i++)
         {
-            cells[i, 0].PutValue(i + 1);
+            cells[i, 0].PutValue(i + 1); // A1 = 1, A2 = 2, ...
         }
 
-        // Set a relative formula in B1 that refers to the cell directly below in column A
-        // When this row is copied, the reference should shift accordingly (e.g., B3 -> A4)
-        cells["B1"].Formula = "=A2";
+        // Set a relative formula in B1 that sums the values in column A
+        cells["B1"].Formula = "=SUM(A1:A5)";
 
-        // Copy the first row (index 0) to the third row (index 2)
-        // The formula reference will be automatically adjusted to maintain its relative offset
-        cells.CopyRow(cells, 0, 2);
+        // Copy the first five rows (0‑based index) to rows starting at index 5 (row 6)
+        // This operation automatically updates relative references in the copied formulas
+        cells.CopyRows(cells, 0, 5, 5);
 
-        // Display the original and copied formulas to verify the adjustment
-        Console.WriteLine("Original formula in B1: " + cells["B1"].Formula); // Expected: =A2
-        Console.WriteLine("Copied formula in B3: " + cells["B3"].Formula);   // Expected: =A4
-
-        // Calculate formulas to obtain resulting values
-        workbook.CalculateFormula();
-        Console.WriteLine("Value in B1: " + cells["B1"].Value); // Should be 2
-        Console.WriteLine("Value in B3: " + cells["B3"].Value); // Should be 4
+        // Display the original and the copied formulas to verify reference adjustment
+        Console.WriteLine("Original formula in B1: " + cells["B1"].Formula);
+        Console.WriteLine("Copied formula in B6: " + cells["B6"].Formula);
 
         // Save the workbook
         workbook.Save("PreserveFormulaCopyRows.xlsx");

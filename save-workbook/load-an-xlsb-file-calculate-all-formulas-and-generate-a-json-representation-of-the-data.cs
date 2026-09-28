@@ -1,43 +1,33 @@
-// Title: Load XLSB, Recalculate All Formulas, and Export to JSON with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to open an XLSB workbook using Aspose.Cells LoadOptions, force a full formula recalculation with CalculateFormula, and save the result as JSON via SaveFormat.Json into a MemoryStream for further processing.
-// Keywords: Aspose.Cells XLSB load C# | recalculate formulas Aspose.Cells | export workbook to JSON | SaveFormat.Json Aspose.Cells | convert binary Excel to JSON | .NET Excel to JSON conversion | memory stream JSON Aspose
-// Common Searches: Aspose.Cells read XLSB and output JSON | C# calculate formulas before exporting Excel to JSON | How to convert XLSB to JSON with Aspose.Cells | Save Excel workbook as JSON in .NET | Recalculate all formulas in XLSB using Aspose
-// Developer Intent: Produce a JSON representation of an XLSB workbook after evaluating every formula.
-// Use Cases: Transform an XLSB financial model into JSON for a web API after all calculations are up‑to‑date. | Batch‑process multiple XLSB reports, recalculate values, and feed the JSON output into a data‑analytics pipeline. | Expose spreadsheet data to a JavaScript front‑end by converting the fully evaluated workbook to JSON.
-// AI Prompts: Show how to limit the JSON export to a single worksheet. | Provide code to stream the JSON directly to a file instead of printing to the console. | Suggest performance‑optimizing techniques for converting large XLSB files to JSON with Aspose.Cells.
+// Title: Load an XLSB workbook, evaluate all formulas, and save the result as JSON using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens a binary Excel (XLSB) file with Aspose.Cells, forces full formula recalculation, and writes the workbook contents to a JSON file. | Show how to configure LoadOptions for XLSB, call Workbook.CalculateFormula, and use SaveFormat.Json to export the data. | Demonstrate converting an XLSB workbook to JSON after evaluating formulas, including sample file paths and console output.
+// Common Searches: Aspose.Cells C# load XLSB file and export to JSON after calculating formulas | How to recalculate formulas in an XLSB workbook using Aspose.Cells before saving as JSON | C# example for converting binary Excel (XLSB) to JSON with formula evaluation using Aspose.Cells | SaveFormat.Json usage with XLSB workbook in Aspose.Cells .NET
+// Tags: load XLSB workbook Aspose.Cells | calculate workbook formulas Aspose.Cells | export workbook to JSON Aspose.Cells | SaveFormat.Json with XLSB data | C# binary Excel to JSON conversion
 
 using System;
-using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-// Demonstrates how to open an XLSB workbook using Aspose.Cells LoadOptions, force a full formula recalculation with CalculateFormula, and save the result as JSON via SaveFormat.Json into a MemoryStream for further processing.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Loads an XLSB workbook using LoadOptions, recalculates all formulas with CalculateFormula, and saves the workbook data as a JSON file via SaveFormat.Json.
+    class Program
     {
-        // Path to the source XLSB file
-        string xlsbPath = "input.xlsb";
-
-        // Load the XLSB workbook with appropriate load options
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsb);
-        Workbook workbook = new Workbook(xlsbPath, loadOptions);
-
-        // Calculate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // Save the workbook to a memory stream in JSON format
-        using (MemoryStream jsonStream = new MemoryStream())
+        static void Main()
         {
-            workbook.Save(jsonStream, SaveFormat.Json);
-            jsonStream.Seek(0, SeekOrigin.Begin);
-            string jsonResult = Encoding.UTF8.GetString(jsonStream.ToArray());
+            // Path to the source XLSB file
+            string xlsbPath = "input.xlsb";
 
-            // Output the JSON representation
-            Console.WriteLine(jsonResult);
+            // Load the XLSB workbook with appropriate load options
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsb);
+            Workbook workbook = new Workbook(xlsbPath, loadOptions);
+
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Save the workbook data as JSON
+            string jsonOutputPath = "output.json";
+            workbook.Save(jsonOutputPath, SaveFormat.Json);
+
+            Console.WriteLine($"Workbook formulas calculated and saved as JSON to '{jsonOutputPath}'.");
         }
-
-        // Clean up
-        workbook.Dispose();
     }
 }

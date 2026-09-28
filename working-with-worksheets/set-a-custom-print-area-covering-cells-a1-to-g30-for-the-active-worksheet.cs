@@ -1,34 +1,25 @@
-// Title: Define Print Area A1:G30 on the Active Worksheet with Aspose.Cells for .NET (C#)
-// Description: This C# snippet creates a new Workbook, selects the first worksheet, assigns the PageSetup.PrintArea to the range A1:G30, and saves the file as PrintAreaDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# print area | Worksheet PageSetup | PrintArea property | A1:G30 range | save workbook | Aspose.Cells .NET API
-// Common Searches: Aspose.Cells set print area C# | How to define printable range A1:G30 in Aspose.Cells | PageSetup.PrintArea example .NET | Set worksheet print area programmatically Aspose | C# Aspose.Cells print area before saving
-// Developer Intent: Programmatically set the printable range of the active worksheet to cells A1 through G30.
-// Use Cases: Generate a report where only the first 30 rows and 7 columns are printed. | Create a template that forces a fixed page layout for consistent printing across users. | Limit the printed output of a large workbook to a specific data block before distribution. | Prepare a spreadsheet for batch printing with a predefined area to reduce paper waste.
-// AI Prompts: Write C# code that sets the print area to the used range of a worksheet with Aspose.Cells. | Show how to remove an existing PrintArea and assign a new range in Aspose.Cells for .NET. | Provide an example that configures margins, orientation, and a custom print area together using Aspose.Cells.
+// Title: Set a custom print area A1:G30 on the active worksheet with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to set the PageSetup.PrintArea of the first worksheet to A1:G30 and then saves the workbook. | Show how to programmatically define a print range for a worksheet in Aspose.Cells and persist the changes to a .xlsx file.
+// Common Searches: Aspose.Cells C# set print area for specific cells | How to define a print range A1:G30 in a .NET spreadsheet | Programmatically set worksheet print area using Aspose.Cells PageSetup | Saving a workbook after configuring print area with Aspose.Cells | C# example for custom print area in Aspose.Cells workbook
+// Tags: Aspose.Cells PageSetup PrintArea property | C# set worksheet print range | custom print area A1:G30 Aspose.Cells | save workbook after print area configuration | active worksheet print area .NET
 
-using System;
 using Aspose.Cells;
 
-namespace PrintAreaExample
+// Creates a new Workbook, accesses the first worksheet, sets PageSetup.PrintArea to "A1:G30", and saves the file as PrintAreaDemo.xlsx.
+class Program
 {
-    // This C# snippet creates a new Workbook, selects the first worksheet, assigns the PageSetup.PrintArea to the range A1:G30, and saves the file as PrintAreaDemo.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (using the provided create rule)
+        Workbook workbook = new Workbook();
 
-            // Access the first (active) worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the active worksheet (first worksheet by default)
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the custom print area to cover cells A1:G30
-            worksheet.PageSetup.PrintArea = "A1:G30";
+        // Set a custom print area covering cells A1 to G30
+        sheet.PageSetup.PrintArea = "A1:G30";
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("PrintAreaDemo.xlsx");
-
-            Console.WriteLine("Print area set to A1:G30 and workbook saved successfully.");
-        }
+        // Save the workbook (using the provided save rule)
+        workbook.Save("PrintAreaDemo.xlsx");
     }
 }

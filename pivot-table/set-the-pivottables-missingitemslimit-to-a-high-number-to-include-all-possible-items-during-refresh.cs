@@ -1,49 +1,61 @@
-// Title: C# Aspose.Cells: Preserve All Pivot Items by Using Max MissingItemsLimit
-// Description: Shows how to build a workbook, insert sample rows, create a pivot table, assign fields, set the MissingItemsLimit property to the maximum enumeration value so the pivot cache keeps every possible entry after a refresh, then refreshes, calculates, and writes the file.
-// Keywords: Aspose.Cells C# | PivotTable MissingItemsLimit | PivotMissingItemLimitType.Max | keep all pivot items | full item list refresh | Aspose.Cells pivot example
-// Common Searches: Aspose.Cells missing items limit max | C# pivot table retain all categories after refresh | How to keep hidden rows in Aspose.Cells pivot | Set pivot cache to include all items
-// Developer Intent: Configure a pivot table to retain the complete set of dimension values when the source data changes.
-// Use Cases: Automatically display newly added categories without rebuilding the pivot. | Maintain rows with zero or missing values for consistent reporting layouts. | Create dashboards that always show the full set of dimension values regardless of data presence.
-// AI Prompts: Write a C# code snippet that sets MissingItemsLimit to Max on an existing Aspose.Cells pivot table and updates it. | Describe how PivotMissingItemLimitType.Max influences pivot cache behavior and when to use it. | Show how to limit MissingItemsLimit to a specific number instead of Max in Aspose.Cells.
+// Title: Set a high MissingItemsLimit on an Aspose.Cells PivotTable in C# to include all items during refresh
+// AI Prompts: Assign a large integer to PivotTable.MissingItemsLimit before invoking RefreshData with Aspose.Cells for .NET. | Update the C# sample to set MissingItemsLimit to Int32.MaxValue so the refreshed PivotTable retains every possible item.
+// Common Searches: Aspose.Cells C# how to keep all items when refreshing a PivotTable | set MissingItemsLimit property to max value in Aspose.Cells PivotTable | include hidden items in PivotTable refresh using Aspose.Cells .NET | C# Aspose.Cells PivotTable missing items limit example | increase MissingItemsLimit to avoid item truncation in Aspose.Cells
+// Tags: Aspose.Cells PivotTable MissingItemsLimit | C# set PivotTable MissingItemsLimit | Aspose.Cells refresh PivotTable all items | PivotTable include hidden items Aspose.Cells | Aspose.Cells .NET PivotTable data refresh configuration
 
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-// Shows how to build a workbook, insert sample rows, create a pivot table, assign fields, set the MissingItemsLimit property to the maximum enumeration value so the pivot cache keeps every possible entry after a refresh, then refreshes, calculates, and writes the file.
+// The example loads an Excel workbook, accesses the first PivotTable, sets its MissingItemsLimit to a high value to ensure all items are retained, refreshes the PivotTable data, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].Value = "Category";
-        sheet.Cells["B1"].Value = "Value";
-        sheet.Cells["A2"].Value = "A";
-        sheet.Cells["B2"].Value = 10;
-        sheet.Cells["A3"].Value = "B";
-        sheet.Cells["B3"].Value = 20;
-        sheet.Cells["A4"].Value = "C";
-        sheet.Cells["B4"].Value = 30;
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a pivot table to the worksheet
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Load the workbook containing the PivotTable
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Value as data field
+            // Ensure the worksheet contains at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTables found in the worksheet.");
+                return;
+            }
 
-        // Set MissingItemsLimit to Max to retain all possible items during refresh
-        pivotTable.MissingItemsLimit = PivotMissingItemLimitType.Max;
+            // Access the first PivotTable on the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-        // Refresh the pivot cache and calculate the pivot data
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Refresh the PivotTable data using the correct API
+            pivotTable.RefreshData();
 
-        // Save the workbook
-        workbook.Save("PivotMissingItemsLimitDemo.xlsx");
+            // Ensure output directory exists (if any)
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

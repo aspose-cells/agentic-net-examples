@@ -1,42 +1,29 @@
-// Title: C# – Merge A1:F2 into a Title Block with Aspose.Cells
-// Description: Demonstrates how to create a new workbook, merge the range A1:F2, insert a centered bold title, and save the file as TitleBlock.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# merge cells | Excel title block Aspose | merge A1 F2 Aspose.Cells | centered bold title Excel | Aspose.Cells styling merged range | C# Excel workbook example
-// Common Searches: how to merge A1 to F2 with Aspose.Cells | set title in merged cells C# Aspose | center bold text in merged Excel range | Aspose.Cells example for title block | C# code to merge multiple rows and columns in Excel
-// Developer Intent: Create a merged title block spanning A1‑F2, apply centered bold formatting, and export the workbook.
-// Use Cases: Report header that covers the first two rows and six columns | Invoice or statement header spanning the top of a worksheet | Dashboard title area across the sheet’s upper rows
-// AI Prompts: Provide C# code that merges cells A1:F2, adds "Report Title", centers the text, makes it bold, and saves the workbook with Aspose.Cells. | Show an Aspose.Cells .NET example for creating a multi‑row, multi‑column title block with styling. | How can I generate a merged title block covering A1 to F2 and export it as an Excel file using Aspose.Cells?
+// Title: Merge cells A1:F2 into a title block using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to merge the range A1:F2 on the first worksheet and write a title string into the merged cell. | Create a title block that spans rows 1‑2 and columns A‑F, then save the workbook as an .xlsx file with Aspose.Cells. | Programmatically merge multiple rows and columns into a single cell region and assign a value using the Aspose.Cells C# API.
+// Common Searches: aspnet c# merge cells A1 to F2 Aspose.Cells example | how to create a title block in Excel using Aspose.Cells for .NET | Aspose.Cells merge range across rows and columns C# | set value in merged Excel cells with Aspose.Cells C# | save workbook after merging cells Aspose.Cells .NET
+// Tags: Aspose.Cells merge cell range C# | Excel title block Aspose.Cells | set merged cell value Aspose.Cells | save workbook Aspose.Cells .xlsx | merge multiple rows columns Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-namespace MergeTitleBlockDemo
+// Creates a new workbook, merges cells A1 through F2 into a single range, writes "Report Title" into the merged cell, and saves the file as TitleBlock.xlsx.
+class Program
 {
-    // Demonstrates how to create a new workbook, merge the range A1:F2, insert a centered bold title, and save the file as TitleBlock.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Merge cells from A1 (row 0, column 0) to F2 (row 1, column 5)
-            // totalRows = 2 (rows 0 and 1), totalColumns = 6 (columns A to F)
-            cells.Merge(0, 0, 2, 6);
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the title text in the merged cell (upper‑left cell of the range)
-            cells[0, 0].PutValue("Report Title");
+        // Merge cells from A1 to F2 (rows 0-1, columns 0-5)
+        // Parameters: firstRow, firstColumn, totalRows, totalColumns
+        sheet.Cells.Merge(0, 0, 2, 6);
 
-            // Apply basic styling: center alignment and bold font
-            Style style = cells[0, 0].GetStyle();
-            style.HorizontalAlignment = TextAlignmentType.Center;
-            style.VerticalAlignment = TextAlignmentType.Center;
-            style.Font.IsBold = true;
-            cells[0, 0].SetStyle(style);
+        // Optional: set a title in the merged region
+        sheet.Cells["A1"].PutValue("Report Title");
 
-            // Save the workbook to a file
-            workbook.Save("TitleBlock.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("TitleBlock.xlsx");
     }
 }

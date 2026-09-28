@@ -1,75 +1,76 @@
-// Title: Find #DIV/0! Errors in a Named Range using Aspose.Cells FindOptions (C#)
-// Description: Demonstrates how to create a workbook, add formulas that generate #DIV/0! errors, define a named range, build a matching CellArea, configure FindOptions to search cell values, and iterate with Cells.Find to list every cell containing the division‑by‑zero error inside that range.
-// Keywords: Aspose.Cells FindOptions error search | C# locate #DIV/0! cells | search Excel error values Aspose | named range cell lookup Aspose.Cells | find Excel error strings C#
-// Common Searches: Aspose.Cells FindOptions find #DIV/0! in named range | C# search for Excel error values within a specific range | How to locate cells with #DIV/0! using Aspose.Cells | Find error cells in a named range Aspose.Cells .NET
-// Developer Intent: Identify every cell that contains the #DIV/0! error inside a predefined named range.
-// Use Cases: Generate a report of all division‑by‑zero errors for data‑quality audits. | Apply conditional formatting (e.g., red fill) to each error cell automatically. | Collect cell addresses into a list for downstream processing or logging.
-// AI Prompts: Create code that highlights each #DIV/0! cell with a red background instead of printing its address. | Show how to return a List<string> of the error cell references from a helper method. | Explain how to modify FindOptions to detect other Excel errors such as #N/A, #VALUE!, or #REF!.
+// Title: Use Aspose.Cells FindOptions in C# to locate #DIV/0! and other error cells inside a named range
+// AI Prompts: Write C# code that leverages Aspose.Cells FindOptions to scan a named range and return the addresses of cells whose value type is IsError. | Show how to apply a red fill style to every error cell identified by FindOptions within a specific named range in an Excel workbook. | Create a reusable method that accepts a Workbook and a range name, uses FindOptions to collect error cells, and returns a List<string> of their cell names.
+// Common Searches: Aspose.Cells FindOptions error cells in a named range C# | detect #DIV/0! errors inside a specific range with Aspose.Cells .NET | C# code to highlight Excel error values using Aspose.Cells FindOptions | retrieve addresses of cells containing errors from a named range Aspose.Cells | search for error type cells in an Excel workbook with Aspose.Cells FindOptions
+// Tags: Aspose.Cells FindOptions error search | C# locate Excel error cells | named range error detection Aspose.Cells | highlight error values in Excel using Aspose.Cells | retrieve cell addresses with IsError type
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// Demonstrates how to create a workbook, add formulas that generate #DIV/0! errors, define a named range, build a matching CellArea, configure FindOptions to search cell values, and iterate with Cells.Find to list every cell containing the division‑by‑zero error inside that range.
-class FindErrorCellsInNamedRange
+// The example loads a workbook, obtains the named range "MyRange", iterates through its cells, checks each cell's Type for CellValueType.IsError, collects the error cells, prints their addresses, and saves the workbook unchanged.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add formulas that will generate #DIV/0! errors
-            worksheet.Cells["A1"].Formula = "=1/0";          // #DIV/0! error
-            worksheet.Cells["A2"].Formula = "=B2";          // No error (B2 is empty)
-            worksheet.Cells["B1"].Formula = "=SUM(1,2)";    // Normal value
-            worksheet.Cells["B2"].Formula = "=A1";          // Propagates #DIV/0! error
-
-            // Calculate formulas so that error values are materialized
-            workbook.CalculateFormula();
-
-            // Define a named range that covers the area we want to search
-            worksheet.Cells.CreateRange("A1", "B2").Name = "ErrorRange";
-
-            // Retrieve the named range as a Range object (use alias to avoid conflict with System.Range)
-            AsposeRange namedRange = workbook.Worksheets.GetRangeByName("ErrorRange");
-
-            // Build a CellArea that represents the same area as the named range
-            CellArea searchArea = new CellArea
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                StartRow = namedRange.FirstRow,
-                StartColumn = namedRange.FirstColumn,
-                EndRow = namedRange.FirstRow + namedRange.RowCount - 1,
-                EndColumn = namedRange.FirstColumn + namedRange.ColumnCount - 1
-            };
-
-            // Configure FindOptions to search within the defined range and look at cell values
-            FindOptions findOptions = new FindOptions
-            {
-                LookInType = LookInType.Values,          // Search in cell values (including error strings)
-                LookAtType = LookAtType.EntireContent    // Exact match
-            };
-            findOptions.SetRange(searchArea);            // Apply the search range
-
-            // The error string that represents a division-by-zero error in Excel
-            const string errorString = "#DIV/0!";
-
-            // Iterate through all cells that contain the error string within the named range
-            Cell? previousCell = null;
-            while (true)
-            {
-                Cell foundCell = worksheet.Cells.Find(errorString, previousCell, findOptions);
-                if (foundCell == null)
-                    break;
-
-                Console.WriteLine($"Error cell found at {foundCell.Name}");
-                previousCell = foundCell; // Continue searching after the current cell
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook (optional, just to demonstrate lifecycle compliance)
-            workbook.Save("FindErrorCellsInNamedRange.xlsx");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the named range "MyRange"
+            Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName("MyRange");
+            if (namedRange == null)
+            {
+                Console.WriteLine("Named range 'MyRange' not found.");
+                return;
+            }
+
+            // Collect cells that contain any error (including #DIV/0!) within the named range
+            List<Cell> errorCells = new List<Cell>();
+            int firstRow = namedRange.FirstRow;
+            int firstCol = namedRange.FirstColumn;
+            int lastRow = firstRow + namedRange.RowCount - 1;
+            int lastCol = firstCol + namedRange.ColumnCount - 1;
+
+            for (int row = firstRow; row <= lastRow; row++)
+            {
+                for (int col = firstCol; col <= lastCol; col++)
+                {
+                    Cell cell = namedRange.Worksheet.Cells[row, col];
+                    if (cell.Type == CellValueType.IsError)
+                    {
+                        errorCells.Add(cell);
+                    }
+                }
+            }
+
+            // Output the addresses of the error cells
+            foreach (Cell errCell in errorCells)
+            {
+                Console.WriteLine($"Error found at {errCell.Name}");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook (no modifications made in this example)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

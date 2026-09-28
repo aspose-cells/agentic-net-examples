@@ -1,95 +1,47 @@
-// Title: Log conversion time for each workbook in Aspose.Cells batch Excel‑to‑HTML conversion (C#)
-// Description: C# sample that scans a folder, converts supported Excel files to HTML with Aspose.Cells, measures each workbook’s conversion duration using Stopwatch, and writes the elapsed seconds to the console while handling missing files and errors.
-// Keywords: Aspose.Cells | C# | batch conversion | Excel to HTML | conversion timing | Stopwatch | performance logging | console output | HtmlSaveOptions | workbook processing | .NET
-// Common Searches: Aspose.Cells log conversion time per workbook | measure Excel to HTML conversion speed C# | batch convert Excel files to HTML with timing | how to track performance of Aspose.Cells conversion | C# Stopwatch batch HTML export Aspose
-// Developer Intent: Add performance measurement to a batch Excel‑to‑HTML conversion using Aspose.Cells and output the duration for each workbook.
-// Use Cases: Identify individual workbooks that take unusually long to convert. | Create a simple performance report by aggregating conversion times after the batch run. | Provide diagnostic timing information when a conversion fails. | Integrate conversion timing into CI/CD pipelines for regression monitoring. | Log durations to external monitoring tools or log management systems.
-// AI Prompts: Write C# code that wraps workbook.Save with a Stopwatch and writes workbook name and elapsed milliseconds to a CSV file. | Modify the program to accumulate total batch time and display a summary of average, fastest, and slowest conversions. | Create a custom IPageSavingCallback that records page‑level timing when HtmlSaveOptions supports page callbacks. | Generate a PowerShell script that runs the compiled exe, captures console output, and stores it in a structured log file.
+// Title: Log the time taken to convert each Excel workbook to HTML in a batch process using Aspose.Cells for .NET
+// AI Prompts: Wrap the workbook.Save call with a Stopwatch and write the elapsed seconds to the console for every file in the loop. | Create a helper method that accepts an Excel file path, converts it to HTML with Aspose.Cells, returns the conversion duration, and logs the result. | Add try‑catch around each conversion so that the elapsed time is logged even when a workbook fails to save.
+// Common Searches: how to measure per‑file conversion time when using Aspose.Cells to save Excel as HTML in C# | C# batch convert .xlsx to .html and log duration for each workbook | Aspose.Cells performance logging for multiple workbook HTML exports | record elapsed time for each workbook.Save operation in a .NET console app
+// Tags: batch workbook to HTML conversion timing with Aspose.Cells | C# Stopwatch logging for Aspose.Cells save operation | measure per‑file conversion duration .NET | Aspose.Cells HTML export performance tracking
 
 using System;
-using System.Diagnostics;
 using System.IO;
+using System.Diagnostics;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace BatchHtmlConversion
+// The program iterates through all .xlsx files in a folder, loads each workbook with Aspose.Cells, converts it to HTML, measures the conversion time using Stopwatch, and writes the elapsed seconds to the console for every workbook.
+class Program
 {
-    // Optional logger implementing IPageSavingCallback (kept for reference)
-    // C# sample that scans a folder, converts supported Excel files to HTML with Aspose.Cells, measures each workbook’s conversion duration using Stopwatch, and writes the elapsed seconds to the console while handling missing files and errors.
-    class PageSavingLogger : IPageSavingCallback
+    static void Main(string[] args)
     {
-        public void PageStartSaving(PageStartSavingArgs args)
+        // Define input and output directories
+        string inputDir = @"C:\InputWorkbooks";
+        string outputDir = @"C:\OutputHtml";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputDir);
+
+        // Retrieve all Excel files from the input directory
+        string[] excelFiles = Directory.GetFiles(inputDir, "*.xlsx");
+
+        foreach (string excelPath in excelFiles)
         {
-            Console.WriteLine($"Start saving page {args.PageIndex + 1} of {args.PageCount}");
-        }
+            // Load the workbook (create/load rule)
+            Workbook workbook = new Workbook(excelPath);
 
-        public void PageEndSaving(PageEndSavingArgs args)
-        {
-            Console.WriteLine($"Finished saving page {args.PageIndex + 1}");
-        }
-    }
+            // Start timing the conversion
+            Stopwatch timer = Stopwatch.StartNew();
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // Folder containing source Excel files
-            string sourceFolder = @"C:\InputExcel";
-            // Folder where HTML files will be saved
-            string outputFolder = @"C:\OutputHtml";
+            // Define the output HTML file path
+            string htmlPath = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(excelPath) + ".html");
 
-            // Ensure output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
+            // Save the workbook as HTML (save rule)
+            workbook.Save(htmlPath, SaveFormat.Html);
 
-            // Get all files in the source folder
-            string[] files = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
+            // Stop timing
+            timer.Stop();
 
-            foreach (string filePath in files)
-            {
-                // Filter supported Excel formats
-                string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm" && ext != ".xlsb")
-                    continue;
-
-                // Verify the file still exists before processing
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                Stopwatch sw = Stopwatch.StartNew();
-
-                try
-                {
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Prepare HTML save options
-                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-                    // NOTE: HtmlSaveOptions does not expose a PageSavingCallback in older versions.
-                    // The logger class is retained for reference if a newer version supports it.
-
-                    // Determine output HTML file name
-                    string outputFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
-                    string outputPath = Path.Combine(outputFolder, outputFileName);
-
-                    // Save as HTML
-                    workbook.Save(outputPath, htmlOptions);
-
-                    sw.Stop();
-                    Console.WriteLine($"Converted '{Path.GetFileName(filePath)}' to HTML in {sw.Elapsed.TotalSeconds:F2} seconds.");
-                }
-                catch (Exception ex)
-                {
-                    sw.Stop();
-                    Console.WriteLine($"Error converting '{Path.GetFileName(filePath)}': {ex.Message}");
-                }
-            }
-
-            Console.WriteLine("Batch conversion completed.");
+            // Log the conversion duration
+            Console.WriteLine($"Converted '{Path.GetFileName(excelPath)}' to HTML in {timer.Elapsed.TotalSeconds:F2} seconds.");
         }
     }
 }

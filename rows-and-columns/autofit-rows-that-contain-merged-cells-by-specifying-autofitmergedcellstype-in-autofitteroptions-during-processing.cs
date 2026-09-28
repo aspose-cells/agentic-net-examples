@@ -1,67 +1,47 @@
-// Title: C# Example: Auto‑fit Rows with Merged Cells Using AutoFitterOptions in Aspose.Cells for .NET
-// Description: Demonstrates how to merge cells, enable text wrapping, configure AutoFitterOptions (AutoFitMergedCellsType.EachLine and AutoFitWrappedTextType.Paragraph), and call worksheet.AutoFitRows(options) so the row height automatically adapts to wrapped text inside merged ranges before saving the workbook.
-// Keywords: Aspose.Cells AutoFitRows C# | AutoFitterOptions merged cells | AutoFitMergedCellsType EachLine | AutoFitWrappedTextType Paragraph | .NET Excel row height auto fit | wrap text merged cells Aspose | Excel row auto‑adjust C# | GitHub Aspose.Cells sample
-// Common Searches: auto fit rows with merged cells Aspose.Cells .NET | AutoFitMergedCellsType each line example | how to include wrapped text when auto‑fitting rows Aspose | C# code for AutoFitRows using AutoFitterOptions | Aspose.Cells merge cells and adjust row height
-// Developer Intent: Automatically adjust row heights to display all wrapped text inside merged cells by using AutoFitterOptions with appropriate settings.
-// Use Cases: Create a multi‑column title that spans rows and automatically expands to fit long wrapped headings. | Design invoice or report templates where header cells are merged and description fields vary in length. | Export data sets containing multi‑line comments in merged cells, ensuring rows resize without manual intervention.
-// AI Prompts: Show a C# snippet that merges A1:B3, enables text wrap, sets AutoFitMergedCellsType.EachLine and AutoFitWrappedTextType.Paragraph, then auto‑fits rows with Aspose.Cells. | Explain how AutoFitMergedCellsType.EachLine differs from AutoFitMergedCellsType.AllLines when auto‑fitting rows in merged cells. | Provide step‑by‑step instructions for using AutoFitterOptions to auto‑fit rows containing wrapped text in merged cells.
+// Title: How to auto‑fit rows with merged cells using AutoFitMergedCellsType in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that merges a cell range, enables text wrapping, and calls AutoFitRows with AutoFitterOptions set to AutoFitMergedCellsType.EachLine and AutoFitWrappedTextType.Paragraph. | Show an example of configuring AutoFitterOptions to expand each row in a merged area while preserving paragraph wrapping in Aspose.Cells. | Create a workbook that demonstrates adjusting row height for a merged A1:B3 range using AutoFitRows and the appropriate AutoFitMergedCellsType.
+// Common Searches: Aspose.Cells C# auto fit rows for merged cells each line option | How to adjust row height of merged cells with text wrap in Aspose.Cells | Example of auto‑fitting rows containing merged cells in an Excel workbook using Aspose.Cells | C# code to auto‑fit rows when cells are merged and text is wrapped in Aspose.Cells | Set options to expand merged cell rows in Aspose.Cells .NET
+// Tags: auto-fit rows for merged cells Aspose.Cells | AutoFitterOptions merged cells option C# | row height adjustment wrapped text Aspose.Cells | Excel merged range auto-fit .NET | configure auto-fit merged cells Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AutoFitMergedCellsDemo
 {
-    // Demonstrates how to merge cells, enable text wrapping, configure AutoFitterOptions (AutoFitMergedCellsType.EachLine and AutoFitWrappedTextType.Paragraph), and call worksheet.AutoFitRows(options) so the row height automatically adapts to wrapped text inside merged ranges before saving the workbook.
-    public class AutoFitRowsWithMergedCellsDemo
+    // The example creates a new workbook, merges cells A1:B3, enables text wrapping on the merged cell, configures AutoFitterOptions with AutoFitMergedCellsType.EachLine and AutoFitWrappedTextType.Paragraph, then calls sheet.AutoFitRows(options) to automatically adjust the height of each row in the merged area before saving the file as AutoFitMergedCellsDemo.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Put a long text into the top‑left cell
+            sheet.Cells["A1"].PutValue("This is a sample text for merged cells auto‑fit demonstration. " +
+                                       "It is intentionally long to require row height adjustment when the cells are merged.");
+
+            // Merge a range of cells (A1:B3)
+            sheet.Cells.Merge(0, 0, 3, 2); // rows 0‑2, columns 0‑1
+
+            // Enable text wrapping so the content can span multiple lines
+            Style style = sheet.Cells["A1"].GetStyle();
+            style.IsTextWrapped = true;
+            sheet.Cells["A1"].SetStyle(style);
+
+            // Configure AutoFitterOptions to auto‑fit merged cells.
+            // AutoFitMergedCellsType.EachLine expands the height of every row in the merged area.
+            AutoFitterOptions options = new AutoFitterOptions
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                AutoFitMergedCellsType = AutoFitMergedCellsType.EachLine,
+                AutoFitWrappedTextType = AutoFitWrappedTextType.Paragraph
+            };
 
-                // Put a long text into a cell
-                worksheet.Cells["A1"].PutValue(
-                    "This is a sample text for merged cells auto‑fit demonstration. It should wrap and cause the row height to adjust based on the merged cell settings.");
+            // Auto‑fit all rows in the worksheet using the specified options
+            sheet.AutoFitRows(options);
 
-                // Merge a range of cells (A1:B3)
-                worksheet.Cells.Merge(0, 0, 3, 2);
-
-                // Enable text wrapping for the merged cell
-                Style style = worksheet.Cells["A1"].GetStyle();
-                style.IsTextWrapped = true;
-                worksheet.Cells["A1"].SetStyle(style);
-
-                // Configure AutoFitterOptions to consider merged cells (each line) and wrapped text (paragraph)
-                AutoFitterOptions options = new AutoFitterOptions
-                {
-                    AutoFitMergedCellsType = AutoFitMergedCellsType.EachLine,
-                    AutoFitWrappedTextType = AutoFitWrappedTextType.Paragraph
-                };
-
-                // Auto‑fit rows using the specified options (feature rule: AutoFitRows(AutoFitterOptions))
-                worksheet.AutoFitRows(options);
-
-                // Save the workbook (lifecycle rule: save)
-                string outputPath = "AutoFitRowsWithMergedCellsDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AutoFitRowsWithMergedCellsDemo.Run();
+            // Save the workbook to a file
+            workbook.Save("AutoFitMergedCellsDemo.xlsx");
         }
     }
 }

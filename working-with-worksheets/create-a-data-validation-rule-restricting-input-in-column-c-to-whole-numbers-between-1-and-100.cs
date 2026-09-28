@@ -1,45 +1,56 @@
-// Title: C# – Add Whole‑Number (1‑100) Data Validation to Column C with Aspose.Cells
-// Description: Creates a new workbook, defines a CellArea for column C, adds a validation of type WholeNumber with Operator Between, sets the lower and upper bounds to 1 and 100, configures optional input and error messages, and saves the file as ColumnCWholeNumberValidation.xlsx.
-// Keywords: Aspose.Cells | C# data validation | Excel whole number validation | column C validation | range 1-100 | CellArea | ValidationType.WholeNumber | OperatorType.Between | input message | error message | .NET example
-// Common Searches: Aspose.Cells set data validation column C | C# restrict Excel cell to whole numbers 1‑100 | add input and error messages Aspose.Cells | Excel validation example Aspose.Cells .NET | how to apply whole‑number validation with Aspose.Cells
-// Developer Intent: Add a validation rule that permits only whole numbers between 1 and 100 in column C of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Ensure quantity fields in generated reports contain only valid whole numbers. | Prevent downstream processing errors by blocking out‑of‑range entries in a template. | Guide end‑users with clear input prompts and error alerts while filling a data‑entry sheet.
-// AI Prompts: Generate C# code that applies a whole‑number (1‑100) validation to column C with custom input and error messages using Aspose.Cells. | Show how to define a dynamic CellArea for column C and attach a Between validation in Aspose.Cells. | Explain how to modify the validation range, bounds, or messages after the workbook has been created.
+// Title: Add whole-number (1‑100) data validation to the entire column C using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that applies a whole‑number validation between 1 and 100 to every cell in column C of a worksheet. | Show how to create a CellArea covering column C and configure a Validation object with Type=WholeNumber and Operator=Between in Aspose.Cells. | Demonstrate setting a custom error title and message for a numeric range validation on column C using Aspose.Cells in C#.
+// Common Searches: aspnet aspose.cells column C numeric range validation 1 to 100 | c# restrict Excel column values to a number between 1 and 100 with Aspose.Cells | how to apply a Between operator validation to an entire column using Aspose.Cells .NET | set custom error title and message for data validation in Aspose.Cells worksheet | aspose.cells example for numeric validation in C#
+// Tags: Aspose.Cells numeric range validation C# | column C validation Aspose.Cells | Validation Type WholeNumber Aspose.Cells | Operator Between Aspose.Cells | custom error title Aspose.Cells validation
 
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, defines a CellArea for column C, adds a validation of type WholeNumber with Operator Between, sets the lower and upper bounds to 1 and 100, configures optional input and error messages, and saves the file as ColumnCWholeNumberValidation.xlsx.
+// The sample creates a new workbook, defines a CellArea that spans the whole of column C, adds a whole‑number validation with a Between operator limited to 1‑100, configures optional error title and message, and saves the file as DataValidation.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define the validation area for column C (zero‑based column index 2)
-        // Here we apply the rule to rows 0 through 1000; adjust as needed
-        CellArea area = CellArea.CreateCellArea(0, 2, 1000, 2);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a new validation to the worksheet for the defined area
-        int validationIndex = worksheet.Validations.Add(area);
-        Validation validation = worksheet.Validations[validationIndex];
+            // Define the range for the entire column C (C1:C1048576)
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                EndRow = 1048575, // last possible row (zero‑based index)
+                StartColumn = 2, // column C (zero‑based index)
+                EndColumn = 2
+            };
 
-        // Configure the validation: whole numbers between 1 and 100
-        validation.Type = ValidationType.WholeNumber;
-        validation.Operator = OperatorType.Between;
-        validation.Formula1 = "1";
-        validation.Formula2 = "100";
+            // Add a validation rule to the defined area
+            int validationIndex = sheet.Validations.Add(area);
+            Validation validation = sheet.Validations[validationIndex];
 
-        // Optional user messages
-        validation.InputTitle = "Whole Number Required";
-        validation.InputMessage = "Please enter a whole number between 1 and 100.";
-        validation.ErrorTitle = "Invalid Input";
-        validation.ErrorMessage = "The value must be a whole number between 1 and 100.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
+            // Restrict to whole numbers between 1 and 100
+            validation.Type = ValidationType.WholeNumber;
+            validation.Operator = OperatorType.Between;
+            validation.Formula1 = "1";
+            validation.Formula2 = "100";
 
-        // Save the workbook with the validation rule applied
-        workbook.Save("ColumnCWholeNumberValidation.xlsx");
+            // Optional UI settings
+            validation.IgnoreBlank = true;
+            validation.InCellDropDown = false;
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Input";
+            validation.ErrorMessage = "Please enter a whole number between 1 and 100.";
+
+            // Save the workbook
+            workbook.Save("DataValidation.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

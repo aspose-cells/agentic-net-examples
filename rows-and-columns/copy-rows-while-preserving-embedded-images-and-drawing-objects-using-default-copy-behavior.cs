@@ -1,44 +1,65 @@
-// Title: Copy rows with images and drawing objects using Aspose.Cells for .NET (C#)
-// Description: Shows how to transfer all used rows from a source worksheet to a destination worksheet with Aspose.Cells for .NET, keeping cell data, formatting, embedded pictures, charts, and other drawing objects via the default Worksheet.Cells.CopyRows method.
-// Keywords: Aspose.Cells copy rows C# | preserve images when copying rows | copy worksheet rows with drawing objects | Worksheet.Cells.CopyRows default behavior | duplicate rows including pictures Aspose
-// Common Searches: Aspose.Cells copy rows with pictures | how to keep images when copying rows .NET | copy rows between workbooks preserving shapes | default CopyRows method Aspose.Cells | C# copy worksheet rows including charts
-// Developer Intent: Transfer rows from one worksheet to another while automatically retaining embedded visual elements.
-// Use Cases: Generate a report that reuses a template’s rows, logos, and charts without manual image handling. | Create a summary workbook that mirrors detailed data plus its associated graphics. | Archive a worksheet’s content with all visual cues intact for compliance or audit purposes.
-// AI Prompts: Write C# code that copies a specific row range between worksheets using Aspose.Cells and ensures all pictures and shapes are kept. | Explain the default handling of embedded drawing objects in Worksheet.Cells.CopyRows and list any optional CopyOptions. | Provide a checklist for troubleshooting missing images after using CopyRows in Aspose.Cells.
+// Title: Copy rows with embedded images and free‑floating shapes using Aspose.Cells Cells.CopyRows in C#
+// AI Prompts: Use Aspose.Cells Cells.CopyRows to duplicate rows 0‑2 from a source worksheet to another worksheet while keeping any pictures and rectangle shapes intact. | Transfer a range of rows that contain embedded pictures and drawing objects to a different workbook using the default copy behavior of Aspose.Cells in C#. | Copy rows with free‑floating shapes and images from one worksheet to a new workbook without manually handling the drawing objects, leveraging Aspose.Cells CopyRows method.
+// Common Searches: aspnet copy rows with pictures using Aspose.Cells Cells.CopyRows | how to preserve shapes when copying rows between worksheets in C# Aspose.Cells | copy rows including embedded images to another workbook Aspose.Cells .NET | default CopyRows behavior retains drawing objects Aspose.Cells example | C# Aspose.Cells copy rows 0-2 to row 5 with images and shapes
+// Tags: copy rows preserving images Aspose.Cells | retain drawing objects when copying rows .NET | default Cells.CopyRows includes shapes | move rows between workbooks C# Aspose.Cells | duplicate rows with embedded pictures Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsRowCopyExample
+namespace AsposeCellsRowCopyWithImages
 {
-    // Shows how to transfer all used rows from a source worksheet to a destination worksheet with Aspose.Cells for .NET, keeping cell data, formatting, embedded pictures, charts, and other drawing objects via the default Worksheet.Cells.CopyRows method.
+    // The example creates a source workbook, adds text, an optional image, and a rectangle shape, then copies rows 0‑2 to row 5 of a new workbook using Cells.CopyRows. The default copy behavior automatically preserves the embedded picture and free‑floating shape, and the destination workbook is saved as DestinationWithCopiedRows.xlsx.
     class Program
     {
         static void Main()
         {
-            // Load the source workbook that contains data, images and other drawing objects
-            Workbook sourceWorkbook = new Workbook("SourceWorkbook.xlsx");
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0]; // first worksheet
+            try
+            {
+                // Create source workbook and add sample data, image and shape
+                Workbook sourceWorkbook = new Workbook();
+                Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
 
-            // Create a new workbook that will receive the copied rows
-            Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0]; // first worksheet
+                // Fill some data in rows 0-2
+                sourceSheet.Cells["A1"].PutValue("Row 1");
+                sourceSheet.Cells["A2"].PutValue("Row 2");
+                sourceSheet.Cells["A3"].PutValue("Row 3");
 
-            // Define the range of rows to copy
-            int sourceStartRow = 0;               // first row in source (zero‑based)
-            int destinationStartRow = 0;          // where to paste in destination
-            int rowsToCopy = sourceSheet.Cells.MaxDisplayRange.RowCount; // copy all used rows
+                // Add an image if the file exists
+                string imagePath = "sample_image.png";
+                if (File.Exists(imagePath))
+                {
+                    // The picture will be anchored to cell B2 (row index 1, column index 1)
+                    int pictureIndex = sourceSheet.Pictures.Add(1, 1, imagePath);
+                    Picture picture = sourceSheet.Pictures[pictureIndex];
+                }
+                else
+                {
+                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture addition.");
+                }
 
-            // Perform the copy using the default CopyRows method (no CopyOptions)
-            // This copies cell data, formats, and also embedded images/drawing objects.
-            destinationSheet.Cells.CopyRows(
-                sourceSheet.Cells,
-                sourceStartRow,
-                destinationStartRow,
-                rowsToCopy);
+                // Add a simple rectangle shape anchored to cell C1
+                ShapeCollection shapes = sourceSheet.Shapes;
+                RectangleShape rect = shapes.AddRectangle(0, 0, 0, 0, 100, 50);
+                rect.Placement = PlacementType.FreeFloating;
 
-            // Save the result
-            destinationWorkbook.Save("DestinationWorkbook.xlsx");
+                // Create destination workbook (empty)
+                Workbook destWorkbook = new Workbook();
+                Worksheet destSheet = destWorkbook.Worksheets[0];
+
+                // Copy rows 0-2 from source to destination starting at row 5
+                // This uses the default copy behavior which also copies drawing objects
+                destSheet.Cells.CopyRows(sourceSheet.Cells, 0, 5, 3);
+
+                // Save the destination workbook to verify that rows, images and shapes are copied
+                destWorkbook.Save("DestinationWithCopiedRows.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

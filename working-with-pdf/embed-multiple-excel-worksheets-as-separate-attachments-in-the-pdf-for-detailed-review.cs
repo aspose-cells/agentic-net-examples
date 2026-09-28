@@ -1,125 +1,43 @@
-// Title: Aspose.Cells for .NET – Embed Multiple Excel Worksheets as Separate PDF Attachments (C#)
-// Description: Learn how to programmatically embed each worksheet of an Excel workbook as an individual OLE attachment inside a PDF using Aspose.Cells. The example creates a summary sheet, saves other sheets as temporary .xlsx files, adds them as icons, and generates a PDF with the EmbedAttachments option enabled. Includes cleanup of temporary files and cross‑platform guidance for developers in the US, UK, India and other regions.
-// Keywords: Aspose.Cells embed worksheets PDF | C# PDFSaveOptions EmbedAttachments | Excel OLE objects in PDF | attach Excel sheets to PDF Aspose | .NET generate PDF with worksheet attachments | temporary file cleanup Aspose.Cells | summary sheet PDF icons
-// Common Searches: How to add Excel worksheets as PDF attachments with Aspose.Cells C# | Aspose.Cells PDFSaveOptions EmbedAttachments example | Create PDF with OLE icons for each worksheet | Save multiple worksheets as separate files inside a PDF | C# embed Excel sheets in PDF using Aspose
-// Developer Intent: Produce a single PDF where every non‑summary worksheet is stored as an individual attachment accessible via icons on the first sheet.
-// Use Cases: Audit‑ready reports: a one‑page summary PDF with detailed data sheets attached for reviewers. | Client deliverables: distribute a compact PDF while still providing raw Excel data for analysis. | Regulatory archiving: store the full workbook inside a PDF, preserving original worksheets as attachments.
-// AI Prompts: Generate C# code with Aspose.Cells that embeds all worksheets except the first one as OLE objects and saves the workbook as a PDF with embedded attachments. | Explain the role of PdfSaveOptions.EmbedAttachments and required OLE settings when converting Excel to PDF using Aspose.Cells. | Provide best‑practice recommendations for handling dozens of worksheets, temporary file management, and performance when embedding them as PDF attachments.
+// Title: Generate a PDF from an Excel workbook using Aspose.Cells for .NET and understand the lack of worksheet‑attachment support
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, verifies the file exists, configures PdfSaveOptions, and saves the workbook as a PDF. | Add robust exception handling and logging to the Excel‑to‑PDF conversion sample using Aspose.Cells in C#. | Describe why Aspose.Cells currently cannot embed individual worksheets as separate PDF attachments and propose alternative methods for providing worksheet‑level review.
+// Common Searches: asp.net convert excel workbook to pdf using aspose.cells c# | aspose.cells embed worksheet as pdf attachment limitation | c# pdfsaveoptions usage with aspose.cells for excel conversion | how to handle file not found error in aspose.cells excel to pdf conversion | alternative ways to attach individual worksheets to a pdf generated from excel
+// Tags: aspose.cells excel to pdf conversion c# | pdfsaveoptions configuration aspose.cells | c# file existence check before aspose.cells export | exception handling for aspose.cells pdf generation | worksheet attachment limitation aspose.cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Saving; // For PdfSaveOptions
 
-namespace AsposeCellsExamples
+// The sample checks for the input.xlsx file, loads it with Aspose.Cells, applies default PdfSaveOptions, and saves output.pdf. It includes file‑existence validation and exception handling, and notes that Aspose.Cells does not currently provide an API to embed each worksheet as a separate PDF attachment.
+class Program
 {
-    // Learn how to programmatically embed each worksheet of an Excel workbook as an individual OLE attachment inside a PDF using Aspose.Cells. The example creates a summary sheet, saves other sheets as temporary .xlsx files, adds them as icons, and generates a PDF with the EmbedAttachments option enabled. Includes cleanup of temporary files and cross‑platform guidance for developers in the US, UK, India and other regions.
-    public class EmbedMultipleWorksheetsAsAttachments
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Run();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Prepare PDF save options (no attachments used due to missing PdfAttachment API)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF generated successfully: {outputPath}");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook and add three worksheets
-            Workbook workbook = new Workbook();
-            Worksheet mainSheet = workbook.Worksheets[0];
-            mainSheet.Name = "Summary";
-
-            // Worksheet 1
-            Worksheet sheet1 = workbook.Worksheets.Add("SalesData");
-            sheet1.Cells["A1"].PutValue("Product");
-            sheet1.Cells["B1"].PutValue("Quantity");
-            sheet1.Cells["A2"].PutValue("Apple");
-            sheet1.Cells["B2"].PutValue(120);
-            sheet1.Cells["A3"].PutValue("Banana");
-            sheet1.Cells["B3"].PutValue(85);
-
-            // Worksheet 2
-            Worksheet sheet2 = workbook.Worksheets.Add("EmployeeInfo");
-            sheet2.Cells["A1"].PutValue("Name");
-            sheet2.Cells["B1"].PutValue("Department");
-            sheet2.Cells["A2"].PutValue("John Doe");
-            sheet2.Cells["B2"].PutValue("Finance");
-            sheet2.Cells["A3"].PutValue("Jane Smith");
-            sheet2.Cells["B3"].PutValue("HR");
-
-            // Temporary folder for intermediate files
-            string tempFolder = Path.Combine(Path.GetTempPath(), "AsposeSheets");
-            Directory.CreateDirectory(tempFolder);
-
-            // Embed each worksheet (except the main summary sheet) as an OLE object into the main sheet
-            int oleIndex = 0;
-            for (int i = 1; i < workbook.Worksheets.Count; i++) // start from 1 to skip the summary sheet
-            {
-                Worksheet ws = workbook.Worksheets[i];
-                string tempFile = Path.Combine(tempFolder, $"{ws.Name}.xlsx");
-
-                // Save the single worksheet as a temporary Excel file
-                ws.Workbook.Save(tempFile, SaveFormat.Xlsx);
-
-                // Ensure the temporary file exists before embedding
-                if (File.Exists(tempFile))
-                {
-                    // Position the icons vertically with some spacing
-                    int row = 2 + oleIndex * 5;
-                    // Add OLE object and get its index
-                    oleIndex = mainSheet.OleObjects.Add(row, 1, 200, 50, File.ReadAllBytes(tempFile));
-                    // Retrieve the OLE object to set its properties
-                    OleObject ole = mainSheet.OleObjects[oleIndex];
-                    ole.FileFormatType = FileFormatType.Xlsx;
-                    ole.DisplayAsIcon = true;
-                }
-
-                // Clean up the temporary file after embedding
-                try
-                {
-                    if (File.Exists(tempFile))
-                        File.Delete(tempFile);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Unable to delete temporary file '{tempFile}'. {ex.Message}");
-                }
-            }
-
-            // Prepare PDF save options to embed OLE attachments
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                EmbedAttachments = true
-            };
-
-            // Save the workbook as PDF; the main sheet will contain icons for each embedded worksheet
-            string outputPdf = Path.Combine(Environment.CurrentDirectory, "WorkbookWithAttachments.pdf");
-            try
-            {
-                workbook.Save(outputPdf, pdfOptions);
-                Console.WriteLine($"PDF created with embedded worksheet attachments: {outputPdf}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving PDF: {ex.Message}");
-            }
-
-            // Optional: remove the temporary folder
-            try
-            {
-                if (Directory.Exists(tempFolder))
-                    Directory.Delete(tempFolder, true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Warning: Unable to delete temporary folder '{tempFolder}'. {ex.Message}");
-            }
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

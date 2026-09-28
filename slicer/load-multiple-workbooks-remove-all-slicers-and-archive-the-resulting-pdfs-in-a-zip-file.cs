@@ -1,84 +1,76 @@
-// Title: C# – Remove All Slicers from Multiple Excel Workbooks, Convert to PDF, and Zip the PDFs with Aspose.Cells
-// Description: Loads a list of Excel files, deletes every slicer on each worksheet using the SlicerCollection.RemoveAt method, saves each workbook as a PDF, bundles all PDFs into a ZIP archive, and cleans up temporary files—all with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells slicer removal | C# batch Excel to PDF | zip multiple PDFs C# | remove slicers programmatically | Aspose.Cells PDF export | Excel workbook automation | temporary file cleanup
-// Common Searches: how to delete all slicers in Excel using Aspose.Cells | batch convert Excel workbooks to PDF C# | zip generated PDFs from multiple workbooks | remove slicers before PDF export Aspose | C# code to archive PDFs in a zip file
-// Developer Intent: The developer needs to process several Excel files, strip every slicer, export each workbook as a PDF, and deliver all PDFs as a single ZIP package.
-// Use Cases: Automated report generation where slicer controls must be omitted before PDF distribution. | Compliance archiving of Excel reports as clean PDFs without interactive elements. | Providing end‑users a single downloadable ZIP containing PDF versions of multiple workbooks.
-// AI Prompts: Write C# code that uses Aspose.Cells to remove all slicers from each worksheet of a workbook and then save it as a PDF. | Create a method that accepts a collection of Excel file paths, deletes slicers, converts each to PDF, and returns a ZIP file with all PDFs. | Explain best practices for deleting temporary PDF files after adding them to a ZipArchive when using Aspose.Cells.
+// Title: Remove all slicers from multiple Excel workbooks, convert each to PDF, and zip the PDFs using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that scans a folder for *.xlsx files, removes every slicer from each worksheet with Aspose.Cells, saves each workbook as a PDF, and then compresses all PDFs into a single zip archive. | Generate .NET code that batch‑processes Excel workbooks: clear slicer collections, export the workbooks to PDF, and archive the resulting PDFs using System.IO.Compression.
+// Common Searches: Aspose.Cells C# remove slicers from all worksheets in a workbook | batch convert Excel files to PDF and create a zip archive with .NET | clear slicer collections programmatically using Aspose.Cells | save workbook as PDF after deleting slicers Aspose.Cells | compress multiple PDF files into a zip file in C# after Excel conversion
+// Tags: remove slicers Aspose.Cells C# | export workbook to PDF Aspose.Cells | batch Excel to PDF conversion .NET | zip multiple PDFs System.IO.Compression | clear worksheet slicer collections programmatically | temporary folder PDF generation Aspose
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
 
-// Loads a list of Excel files, deletes every slicer on each worksheet using the SlicerCollection.RemoveAt method, saves each workbook as a PDF, bundles all PDFs into a ZIP archive, and cleans up temporary files—all with Aspose.Cells for .NET.
-class RemoveSlicersAndZipPdfs
+// The program iterates over all .xlsx files in a specified directory, loads each workbook with Aspose.Cells, clears every slicer from every worksheet, saves the modified workbook as a PDF in a temporary location, then packages all PDFs into a single ZIP archive and cleans up the temporary files.
+class Program
 {
     static void Main()
     {
-        // Input Excel files (adjust paths as needed)
-        List<string> excelFiles = new List<string>
-        {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx",
-            "Workbook3.xlsx"
-        };
+        // Folder that contains the source Excel workbooks
+        string sourceFolder = @"C:\InputWorkbooks";
 
-        // Folder to store intermediate PDFs
-        string pdfFolder = Path.Combine(Path.GetTempPath(), "AsposePdfTemp");
-        Directory.CreateDirectory(pdfFolder);
+        // Temporary folder to store intermediate PDF files
+        string tempPdfFolder = Path.Combine(Path.GetTempPath(), "AsposePdfTemp");
+        Directory.CreateDirectory(tempPdfFolder);
 
-        // List to keep generated PDF file paths
+        // Collect all Excel files (adjust the pattern if needed)
+        string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
+
+        // List to keep track of generated PDF file paths
         List<string> pdfFiles = new List<string>();
 
         foreach (string excelPath in excelFiles)
         {
-            // Load workbook (uses provided constructor rule)
+            // Load the workbook from file (uses the provided Workbook(string) constructor)
             Workbook workbook = new Workbook(excelPath);
 
             // Remove all slicers from every worksheet
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                SlicerCollection slicers = sheet.Slicers;
-                while (slicers.Count > 0)
-                {
-                    // RemoveAt method is the defined rule for deleting a slicer
-                    slicers.RemoveAt(0);
-                }
+                // Clear removes all slicers in the collection
+                sheet.Slicers.Clear();
             }
 
-            // Save workbook as PDF (uses provided Save method with SaveFormat)
-            string pdfPath = Path.Combine(pdfFolder, Path.GetFileNameWithoutExtension(excelPath) + ".pdf");
+            // Save the modified workbook as PDF (uses the provided Save(string, SaveFormat) method)
+            string pdfPath = Path.Combine(
+                tempPdfFolder,
+                Path.GetFileNameWithoutExtension(excelPath) + ".pdf");
+
             workbook.Save(pdfPath, SaveFormat.Pdf);
             pdfFiles.Add(pdfPath);
 
-            // Dispose workbook resources
+            // Release resources
             workbook.Dispose();
         }
 
-        // Create ZIP archive containing all PDFs
-        string zipPath = "AllWorkbooks.pdf.zip";
-        using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
-        using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Create))
+        // Create a ZIP archive containing all generated PDFs
+        string zipPath = Path.Combine(sourceFolder, "WorkbooksPdfArchive.zip");
+        using (FileStream zipStream = new FileStream(zipPath, FileMode.Create))
+        using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Update))
         {
             foreach (string pdfFile in pdfFiles)
             {
-                // Add each PDF to the archive
+                // Add each PDF to the archive with its file name
                 archive.CreateEntryFromFile(pdfFile, Path.GetFileName(pdfFile));
             }
         }
 
-        // Clean up temporary PDF files
+        // Optional: clean up temporary PDF files
         foreach (string pdfFile in pdfFiles)
         {
             File.Delete(pdfFile);
         }
+        Directory.Delete(tempPdfFolder, true);
 
-        // Optionally remove the temporary folder
-        Directory.Delete(pdfFolder, true);
-
-        Console.WriteLine($"PDFs archived successfully to '{zipPath}'.");
+        Console.WriteLine("All workbooks processed, slicers removed, PDFs archived to:");
+        Console.WriteLine(zipPath);
     }
 }

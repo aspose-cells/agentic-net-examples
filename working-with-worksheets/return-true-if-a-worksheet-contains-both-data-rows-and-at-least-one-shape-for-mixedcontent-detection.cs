@@ -1,93 +1,61 @@
-// Title: Aspose.Cells C# – Detect Worksheet with Data Rows and Shapes (Mixed Content)
-// Description: C# example that uses Aspose.Cells to determine whether a worksheet contains at least one non‑blank row (via MaxDisplayRange) and at least one shape (Shapes collection). Returns true only when both data and drawing objects are present.
-// Keywords: Aspose.Cells | C# | worksheet data rows | worksheet shapes | mixed content detection | MaxDisplayRange | Shapes.Count | non‑blank row | Excel automation | Aspose.Cells API
-// Common Searches: How to check if an Excel sheet has both data and shapes using Aspose.Cells | Aspose.Cells C# detect non‑blank rows and shapes | Get last used row and shape count in Aspose.Cells | Mixed content worksheet validation Aspose.Cells | C# method to verify worksheet contains data rows and drawings
-// Developer Intent: Verify that a worksheet includes at least one data row and one shape.
-// Use Cases: Skip empty or graphics‑only sheets during batch export | Validate worksheets before publishing to ensure they contain both data and visual elements | Conditionally apply processing only to sheets with mixed content | Generate reports that require both tables and embedded diagrams | Automated quality checks for Excel templates
-// AI Prompts: Generate a C# function using Aspose.Cells that returns true when a worksheet has any non‑blank rows and at least one shape. | Rewrite the mixed‑content check to use LINQ for row evaluation while keeping the same logic. | Provide NUnit unit tests for HasDataRowsAndShapes covering empty sheet, data‑only, shape‑only, and both scenarios. | Explain how MaxDisplayRange works in Aspose.Cells and its role in detecting used rows. | Show how to extend the method to also detect charts and pictures.
+// Title: Check if an Excel worksheet has any data rows and at least one shape with Aspose.Cells for .NET
+// AI Prompts: Write a C# method that returns true only when a Worksheet contains at least one populated row and at least one drawing object, using Aspose.Cells. | Show how to load an Excel workbook with Aspose.Cells and iterate through its worksheets to flag those that have both data rows and shapes. | Generate code that evaluates Worksheet.Cells.MaxDataRow and Worksheet.Shapes.Count to determine mixed‑content presence in a sheet.
+// Common Searches: Aspose.Cells C# check worksheet for both data rows and shapes | how to detect mixed content (data and drawings) in an Excel sheet using Aspose.Cells | C# find worksheets that contain at least one non‑empty row and a shape with Aspose.Cells | determine if Excel worksheet has any shapes and data rows using Aspose.Cells .NET
+// Tags: worksheet data row detection Aspose.Cells | worksheet shape count Aspose.Cells | mixed content check Excel Aspose.Cells | maxdatarow shape presence C# | detect drawings in Excel worksheet Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsMixedContentDemo
+// The example defines a static C# method that returns true when a given Worksheet has at least one data row (MaxDataRow >= 0) and at least one shape (Shapes.Count > 0). The program loads a workbook, selects the first worksheet, calls the method, and prints the result.
+public static class WorksheetAnalyzer
 {
-    // C# example that uses Aspose.Cells to determine whether a worksheet contains at least one non‑blank row (via MaxDisplayRange) and at least one shape (Shapes collection). Returns true only when both data and drawing objects are present.
-    public class MixedContentChecker
+    /// <param name="worksheet">The worksheet to inspect.</param>
+    /// <returns>True if both data rows and shapes are present; otherwise, false.</returns>
+    public static bool HasDataRowsAndShape(Worksheet worksheet)
     {
-        // Returns true if the worksheet has at least one non‑blank row and at least one shape.
-        public static bool HasDataRowsAndShapes(Worksheet worksheet)
-        {
-            // Determine the last used row using MaxDisplayRange (returns a Range).
-            AsposeRange displayRange = worksheet.Cells.MaxDisplayRange;
-            int maxRow = -1;
+        // Check for data rows: MaxDataRow returns the zero‑based index of the last row that contains data.
+        // If no data is present, MaxDataRow will be -1.
+        bool hasDataRows = worksheet.Cells.MaxDataRow >= 0;
 
-            if (displayRange != null && displayRange.RowCount > 0)
-            {
-                // End row = first row + (row count - 1)
-                maxRow = displayRange.FirstRow + displayRange.RowCount - 1;
-            }
+        // Check for shapes: the Shapes collection holds all drawing objects on the sheet.
+        bool hasShapes = worksheet.Shapes.Count > 0;
 
-            // If no cells are used, there is nothing to check.
-            if (maxRow < 0)
-                return false;
-
-            // Scan rows up to the last used row for a non‑blank row.
-            bool hasDataRow = false;
-            for (int i = 0; i <= maxRow; i++)
-            {
-                Row row = worksheet.Cells.Rows[i];
-                if (row != null && !row.IsBlank)
-                {
-                    hasDataRow = true;
-                    break;
-                }
-            }
-
-            // Check for at least one shape in the worksheet.
-            bool hasShape = worksheet.Shapes.Count > 0;
-
-            // Return true only when both conditions are satisfied.
-            return hasDataRow && hasShape;
-        }
-
-        // Demonstration of the mixed‑content detection.
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add some data to the worksheet (creates a non‑blank row).
-                sheet.Cells["A1"].PutValue("Sample Text");
-                sheet.Cells["B2"].PutValue(123);
-
-                // Add a shape to the worksheet.
-                Shape shape = sheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 50);
-                shape.Name = "DemoRectangle";
-
-                // Perform the mixed‑content check.
-                bool result = HasDataRowsAndShapes(sheet);
-                Console.WriteLine("Worksheet contains both data rows and shapes: " + result);
-
-                // Save the workbook (optional, demonstrates lifecycle usage).
-                workbook.Save("MixedContentDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Return true only when both conditions are satisfied.
+        return hasDataRows && hasShapes;
     }
+}
 
-    class Program
+public class Program
+{
+    public static void Main(string[] args)
     {
-        static void Main()
+        // Determine workbook path: use first argument or default sample file.
+        string workbookPath = args.Length > 0 ? args[0] : "Sample.xlsx";
+
+        if (!File.Exists(workbookPath))
         {
-            MixedContentChecker.Run();
+            Console.WriteLine($"File not found: {workbookPath}");
+            return;
+        }
+
+        try
+        {
+            // Load workbook.
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Get the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Analyze worksheet.
+            bool result = WorksheetAnalyzer.HasDataRowsAndShape(sheet);
+
+            Console.WriteLine($"Worksheet \"{sheet.Name}\" has data rows and shapes: {result}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors.
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
         }
     }
 }

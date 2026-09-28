@@ -1,55 +1,41 @@
-// Title: Aspose.Cells C# Benchmark: Save Speed and File Size with OoxmlCompressionLevel1 vs Level9
-// Description: C# sample that loads an Excel workbook with Aspose.Cells, saves it twice using OoxmlSaveOptions (CompressionType Level1 and Level9), measures each operation with Stopwatch, and reports the elapsed time and resulting file sizes.
-// Keywords: Aspose.Cells C# compression benchmark | OoxmlCompressionType Level1 | OoxmlCompressionType Level9 | Excel save performance .NET | file size reduction Aspose.Cells | OoxmlSaveOptions example | measure workbook save time
-// Common Searches: Aspose.Cells compare Level1 and Level9 compression speed | how to benchmark Excel save time with Aspose.Cells | C# code to measure file size after Ooxml compression | fast vs maximum compression in Aspose.Cells | save workbook with OoxmlSaveOptions compression type
-// Developer Intent: Determine which OoxmlCompressionType (Level1 or Level9) offers the best trade‑off between save speed and output file size for a given workbook.
-// Use Cases: Select an optimal compression level for large‑scale report generation. | Create minimal‑size Excel files for distribution by using Level9 compression. | Implement a rapid‑save mode for temporary files where speed outweighs size, using Level1 compression.
-// AI Prompts: Generate C# code that logs both elapsed time and memory usage when saving a workbook with OoxmlCompressionType.Level1 and Level9. | Explain how to analyze the benchmark results to choose the appropriate compression level for production workloads. | Provide a script that runs the compression benchmark on multiple workbooks in parallel and aggregates timing and size statistics.
+// Title: Benchmark Aspose.Cells workbook save speed with OoxmlCompressionLevel 1 (fast) vs Level 9 (maximum) in C#
+// AI Prompts: Write a C# console program that loads an Excel file with Aspose.Cells, saves it using OoxmlSaveOptions with CompressionType set to Level1, records the elapsed time with Stopwatch, then repeats the save with CompressionType Level9 and prints both durations. | Create a performance test script for Aspose.Cells that compares the execution time of workbook.Save when using fast (Level1) and maximum (Level9) OOXML compression, outputting the results to the console. | Generate C# code that demonstrates how to configure OoxmlSaveOptions for different compression levels, measure each save operation, and log the timing information for analysis.
+// Common Searches: how long does Aspose.Cells take to save an .xlsx with Level1 compression compared to Level9 | C# benchmark Aspose.Cells OoxmlSaveOptions compression performance | measure save time for different OOXML compression levels using Aspose.Cells | compare fast and best compression options in Aspose.Cells .NET
+// Tags: Aspose.Cells OoxmlSaveOptions compression performance | C# benchmark workbook save time | OOXML compression level comparison Aspose | measure Aspose.Cells save duration | Level1 vs Level9 Excel compression .NET
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace CompressionPerformanceDemo
+// The example loads an Excel workbook, saves it twice with OoxmlSaveOptions using CompressionType Level1 and Level9, measures each save with Stopwatch, and writes the elapsed milliseconds for both compression levels to the console.
+class CompressionPerformanceDemo
 {
-    // C# sample that loads an Excel workbook with Aspose.Cells, saves it twice using OoxmlSaveOptions (CompressionType Level1 and Level9), measures each operation with Stopwatch, and reports the elapsed time and resulting file sizes.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the source workbook (replace with an actual file path)
-            string sourcePath = "input.xlsx";
+        // Path to the source workbook
+        string inputPath = "input.xlsx";
 
-            // Load the workbook using the string constructor (rule: Workbook(string))
-            Workbook workbook = new Workbook(sourcePath);
+        // Load the workbook from file
+        Workbook workbook = new Workbook(inputPath);
 
-            // Measure saving with fast compression (Level1)
-            OoxmlSaveOptions fastOptions = new OoxmlSaveOptions(); // rule: OoxmlSaveOptions()
-            fastOptions.CompressionType = OoxmlCompressionType.Level1; // rule: set CompressionType
+        // -------------------- Save with Level1 compression (fast) --------------------
+        OoxmlSaveOptions level1Options = new OoxmlSaveOptions();
+        level1Options.CompressionType = OoxmlCompressionType.Level1; // fastest, least compression
 
-            Stopwatch swFast = Stopwatch.StartNew();
-            // Save using Save(string, SaveOptions) (rule)
-            workbook.Save("output_Level1.xlsx", fastOptions);
-            swFast.Stop();
+        Stopwatch swLevel1 = Stopwatch.StartNew();
+        workbook.Save("output_Level1.xlsx", level1Options);
+        swLevel1.Stop();
 
-            Console.WriteLine($"Saving with OoxmlCompressionType.Level1 took {swFast.ElapsedMilliseconds} ms.");
+        // -------------------- Save with Level9 compression (best) --------------------
+        OoxmlSaveOptions level9Options = new OoxmlSaveOptions();
+        level9Options.CompressionType = OoxmlCompressionType.Level9; // best compression, slowest
 
-            // Measure saving with maximum compression (Level9)
-            OoxmlSaveOptions maxOptions = new OoxmlSaveOptions();
-            maxOptions.CompressionType = OoxmlCompressionType.Level9;
+        Stopwatch swLevel9 = Stopwatch.StartNew();
+        workbook.Save("output_Level9.xlsx", level9Options);
+        swLevel9.Stop();
 
-            Stopwatch swMax = Stopwatch.StartNew();
-            workbook.Save("output_Level9.xlsx", maxOptions);
-            swMax.Stop();
-
-            Console.WriteLine($"Saving with OoxmlCompressionType.Level9 took {swMax.ElapsedMilliseconds} ms.");
-
-            // Optional: compare file sizes
-            long sizeLevel1 = new System.IO.FileInfo("output_Level1.xlsx").Length;
-            long sizeLevel9 = new System.IO.FileInfo("output_Level9.xlsx").Length;
-
-            Console.WriteLine($"File size with Level1 compression: {sizeLevel1} bytes.");
-            Console.WriteLine($"File size with Level9 compression: {sizeLevel9} bytes.");
-        }
+        // Output the timing results
+        Console.WriteLine($"Level1 save time: {swLevel1.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Level9 save time: {swLevel9.ElapsedMilliseconds} ms");
     }
 }

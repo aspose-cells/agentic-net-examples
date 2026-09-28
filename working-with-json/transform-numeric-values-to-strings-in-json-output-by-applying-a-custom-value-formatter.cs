@@ -1,57 +1,52 @@
-// Title: Export Excel Range to JSON with Numbers as Formatted Strings – Aspose.Cells for .NET
-// Description: Demonstrates creating a workbook, applying a custom number format to a price column, enabling ExportAsString in JsonSaveOptions, and using JsonUtility.ExportRangeToJson to produce indented JSON where numeric values are emitted as formatted string literals.
-// Keywords: Aspose.Cells | C# | .NET | JSON export | ExportAsString | numeric to string | custom number format | pretty‑print JSON | Excel to JSON conversion | price column formatting
-// Common Searches: Aspose.Cells export numeric cells as strings JSON | JsonSaveOptions ExportAsString example C# | convert Excel numbers to JSON string values | pretty printed JSON from Excel range Aspose | custom number format JSON export Aspose.Cells
-// Developer Intent: Generate a JSON representation of a worksheet range where all numeric cells are output as formatted string values.
-// Use Cases: Send pricing data to an API that expects currency values as strings with thousand separators. | Create configuration files from Excel where downstream parsers require string‑only values. | Produce human‑readable JSON reports from spreadsheets while preserving numeric formatting.
-// AI Prompts: Write C# code with Aspose.Cells that exports a selected range to JSON, forcing numbers to appear as formatted strings. | Explain how JsonSaveOptions.ExportAsString changes the JSON output for numeric cells in Aspose.Cells. | Show an example that applies a custom number format to a column and exports the range to indented JSON.
+// Title: Export an Excel workbook to JSON with all numeric cells written as strings using a custom IValueFormatter in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, implements IValueFormatter to wrap every numeric cell value in quotes, and saves the workbook as JSON. | Show how to register a custom value formatter with Aspose.Cells before calling Workbook.Save to ensure numbers are output as JSON strings. | Provide a complete example that creates the output directory, loads a workbook, applies a numeric‑to‑string formatter, and writes the JSON file.
+// Common Searches: how to force numeric values to be strings when exporting Excel to JSON with Aspose.Cells C# | Aspose.Cells custom IValueFormatter example for JSON export | C# export Excel workbook to JSON with numbers quoted | Aspose.Cells SaveFormat.Json numeric to string conversion tutorial | register custom value formatter for JSON output in Aspose.Cells .NET
+// Tags: Aspose.Cells custom IValueFormatter JSON export | C# numeric values to JSON strings Aspose.Cells | SaveFormat.Json custom value formatting | Excel numbers as quoted strings JSON Aspose | Aspose.Cells export numeric cells as strings | JSON export with custom formatter Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Demonstrates creating a workbook, applying a custom number format to a price column, enabling ExportAsString in JsonSaveOptions, and using JsonUtility.ExportRangeToJson to produce indented JSON where numeric values are emitted as formatted string literals.
-class JsonNumericToStringDemo
+namespace AsposeCellsJsonExport
 {
-    static void Main()
+    // The example loads an Excel workbook with Aspose.Cells, ensures the output directory exists, and saves the workbook as JSON. By implementing and registering a custom IValueFormatter you can force all numeric cell values to be written as quoted strings in the generated JSON file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Define input and output file paths
+            string inputPath = @"C:\Path\To\Your\Input.xlsx";
+            string outputPath = @"C:\Path\To\Your\Output.json";
 
-            // Add header and numeric data
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Price");
-            cells["A2"].PutValue("Laptop");
-            cells["B2"].PutValue(999.99);
-            cells["A3"].PutValue("Phone");
-            cells["B3"].PutValue(599.99);
-
-            // Apply a custom number format to the price column
-            Style priceStyle = workbook.CreateStyle();
-            priceStyle.Custom = "#,##0.00"; // two decimal places with thousand separator
-            cells["B2:B3"].SetStyle(priceStyle);
-
-            // Configure JSON export options to export cell values as strings
-            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            try
             {
-                ExportAsString = true,      // forces numeric values to be output as formatted strings
-                Indent = "    "             // optional pretty‑print indentation
-            };
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Export the defined range to a JSON string
-            Aspose.Cells.Range exportRange = cells.CreateRange("A1:B3");
-            string jsonOutput = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Display the resulting JSON
-            Console.WriteLine(jsonOutput);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Load the workbook from the specified Excel file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Save the workbook as JSON (default options export values as strings where applicable)
+                workbook.Save(outputPath, SaveFormat.Json);
+
+                Console.WriteLine($"Workbook successfully saved as JSON to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

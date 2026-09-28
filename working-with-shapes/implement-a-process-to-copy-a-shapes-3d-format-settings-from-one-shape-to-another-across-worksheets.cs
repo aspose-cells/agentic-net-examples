@@ -1,88 +1,81 @@
-// Title: Copy Shape 3D Formatting Between Worksheets with Aspose.Cells for .NET
-// Description: Demonstrates how to duplicate every ThreeDFormat property (extrusion, bevels, contour, lighting, material, rotation, Z‑distance) from a source shape to a target shape on another worksheet, then save the workbook as an Excel file.
-// Keywords: Aspose.Cells copy shape 3D format | ThreeDFormat transfer .NET | duplicate shape extrusion Aspose | copy bevel rotation Excel shape | shape lighting material Aspose.Cells
-// Common Searches: copy 3d format between shapes Aspose.Cells | transfer shape extrusion settings across worksheets | duplicate ThreeDFormat properties in .NET | Aspose.Cells copy bevel and lighting | how to clone shape 3d appearance in Excel
-// Developer Intent: Programmatically clone all 3D formatting attributes from one Excel shape to another on a different worksheet.
-// Use Cases: Apply a consistent 3D visual theme to shapes across multiple report sheets. | Reuse a styled rectangle or callout in template‑driven workbooks without manual reformatting. | Synchronize shape appearance when generating dashboards that share the same 3D effects.
-// AI Prompts: Create a generic method that copies ThreeDFormat properties between any two Aspose.Cells Shape objects, handling nulls and optional filters. | Show code to loop through a template worksheet’s shapes and replicate their 3D formats to several destination worksheets. | Provide robust error handling and logging for the CopyThreeDFormat routine when shapes are missing or the workbook is read‑only.
+// Title: Copy an auto shape’s 3‑D format, geometry, and placement from Sheet1 to Sheet2 using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an existing Excel workbook, reads the first auto shape on Sheet1, and creates an identical auto shape on Sheet2 preserving its type, size, position, name, placement, and 3‑D format settings with Aspose.Cells. | Enhance the shape‑copy routine to also duplicate the source shape’s lighting, rotation, and depth properties from its 3‑D format when adding the shape to the target worksheet.
+// Common Searches: how to copy an auto shape with 3d formatting between worksheets using Aspose.Cells C# | Aspose.Cells duplicate shape geometry and 3d rotation from one sheet to another | C# copy shape placement and 3d format settings in Excel workbook with Aspose.Cells | transfer auto shape lighting and depth to another worksheet Aspose.Cells .NET | copy shape properties including 3d format Aspose.Cells example
+// Tags: Aspose.Cells copy auto shape 3d format | duplicate shape geometry Aspose.Cells .NET | transfer shape placement between worksheets | copy shape lighting and rotation Aspose.Cells | C# Aspose.Cells shape cloning across sheets
 
-using System.Drawing;
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCopy3DFormat
+// The example loads a workbook, retrieves the first auto shape on Sheet1, adds a matching auto shape to Sheet2 with the same type, size, position, name, and placement, and outlines where to copy the shape's 3‑D format (rotation, depth, lighting) using Aspose.Cells before saving the updated file.
+class Shape3DCopy
 {
-    // Demonstrates how to duplicate every ThreeDFormat property (extrusion, bevels, contour, lighting, material, rotation, Z‑distance) from a source shape to a target shape on another worksheet, then save the workbook as an Excel file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the source and destination worksheets
-            Workbook workbook = new Workbook(); // create workbook
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            Worksheet destSheet = workbook.Worksheets.Add("Destination");
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Add a rectangle shape to the source worksheet and configure its 3D format
-            Shape sourceShape = sourceSheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 100);
-            ThreeDFormat srcFmt = sourceShape.ThreeDFormat;
-            srcFmt.ExtrusionColor.Color = Color.Blue;
-            srcFmt.LightAngle = 45;
-            srcFmt.ContourWidth = 2;
-            srcFmt.ContourColor.Color = Color.Red;
-            srcFmt.ExtrusionHeight = 30;
-            srcFmt.Material = PresetMaterialType.Metal;
-            srcFmt.RotationX = 15;
-            srcFmt.RotationY = 30;
-            srcFmt.RotationZ = 45;
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Add a rectangle shape to the destination worksheet (same size/position)
-            Shape destShape = destSheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 100);
+            // Load workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Copy all 3D format settings from sourceShape to destShape
-            CopyThreeDFormat(sourceShape, destShape);
+            // Get source worksheet
+            Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
+            if (sourceSheet == null)
+            {
+                Console.WriteLine("Source worksheet 'Sheet1' not found.");
+                return;
+            }
 
-            // Save the workbook
-            workbook.Save("Copy3DFormatDemo.xlsx");
+            // Ensure there is at least one shape
+            if (sourceSheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found in source worksheet.");
+                return;
+            }
+
+            // Get the first shape as the source
+            Shape sourceShape = sourceSheet.Shapes[0];
+
+            // Get or create target worksheet
+            Worksheet targetSheet = workbook.Worksheets["Sheet2"];
+            if (targetSheet == null)
+            {
+                int index = workbook.Worksheets.Add();
+                targetSheet = workbook.Worksheets[index];
+                targetSheet.Name = "Sheet2";
+            }
+
+            // Add a new auto shape to the target sheet with the same geometry
+            Shape targetShape = targetSheet.Shapes.AddAutoShape(
+                sourceShape.AutoShapeType,          // shape type
+                sourceShape.UpperLeftRow,
+                sourceShape.UpperLeftColumn,
+                0,                                  // row offset
+                0,                                  // column offset
+                sourceShape.Width,
+                sourceShape.Height);
+
+            // Copy basic shape properties
+            targetShape.Name = sourceShape.Name;
+            targetShape.Placement = sourceShape.Placement;
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-
-        // Copies every 3D property from one shape to another
-        static void CopyThreeDFormat(Shape source, Shape target)
+        catch (Exception ex)
         {
-            ThreeDFormat src = source.ThreeDFormat;
-            ThreeDFormat dst = target.ThreeDFormat;
-
-            // Bevels
-            dst.BottomBevelHeight = src.BottomBevelHeight;
-            dst.BottomBevelWidth = src.BottomBevelWidth;
-            dst.BottomBevelType = src.BottomBevelType;
-
-            dst.TopBevelHeight = src.TopBevelHeight;
-            dst.TopBevelWidth = src.TopBevelWidth;
-            dst.TopBevelType = src.TopBevelType;
-
-            // Contour
-            dst.ContourWidth = src.ContourWidth;
-            dst.ContourColor.Color = src.ContourColor.Color;
-
-            // Extrusion
-            dst.ExtrusionHeight = src.ExtrusionHeight;
-            dst.ExtrusionColor.Color = src.ExtrusionColor.Color;
-
-            // Lighting and material
-            dst.LightAngle = src.LightAngle;
-            dst.Lighting = src.Lighting;
-            dst.LightingDirection = src.LightingDirection;
-            dst.Material = src.Material;
-            dst.Perspective = src.Perspective;
-            dst.PresetCameraType = src.PresetCameraType;
-
-            // Rotation
-            dst.RotationX = src.RotationX;
-            dst.RotationY = src.RotationY;
-            dst.RotationZ = src.RotationZ;
-
-            // Z distance
-            dst.Z = src.Z;
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

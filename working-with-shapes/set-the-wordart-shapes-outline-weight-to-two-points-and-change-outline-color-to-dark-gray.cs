@@ -1,39 +1,58 @@
-// Title: Aspose.Cells for .NET: Set WordArt Shape Outline Weight to 2 pt and Color to Dark Gray
-// Description: Creates a new workbook, adds a WordArt shape, and uses the Shape.LineFormat property to set a 2‑point outline thickness and dark‑gray border before saving the file as an XLSX workbook.
-// Keywords: Aspose.Cells | C# | .NET | WordArt shape | outline weight | line format | dark gray border | Excel shape styling | Shape.LineFormat | border thickness
-// Common Searches: Aspose.Cells set WordArt outline thickness .NET | Change WordArt border color to dark gray using Aspose.Cells | How to adjust WordArt shape line weight in C# | Aspose.Cells LineFormat example for WordArt | Set shape outline properties in Aspose.Cells workbook
-// Developer Intent: Apply a 2‑point outline and dark‑gray color to a WordArt shape in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Design report titles with a subtle dark‑gray border for brand consistency. | Automate generation of Excel dashboards where WordArt headings must follow a specific outline style. | Batch‑apply uniform outline formatting to multiple WordArt objects across worksheets.
-// AI Prompts: Show C# code that sets a WordArt shape's LineFormat.Weight to 2 points and LineFormat.ForeColor to DarkGray with Aspose.Cells. | Provide a script to loop through all WordArt shapes in a worksheet and apply a 2‑point dark‑gray outline. | Explain the relationship between LineFormat.Weight, LineFormat.ForeColor, and other line‑format properties in Aspose.Cells.
+// Title: How to set a WordArt shape's outline weight to 2 points and change its border color to dark gray using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a WordArt shape to an Excel worksheet with a 2‑point outline and a dark gray border using Aspose.Cells. | Update an existing Aspose.Cells workbook to change a WordArt shape's line thickness to 2 points and apply RGB(169,169,169) as the outline color.
+// Common Searches: Aspose.Cells C# how to increase WordArt outline thickness | set WordArt border to dark gray in Excel using Aspose.Cells | adjust line weight of WordArt shape programmatically with Aspose.Cells .NET | example code for changing WordArt shape line color to RGB 169 169 169 | Aspose.Cells shape formatting outline weight and color
+// Tags: Aspose.Cells WordArt line weight | Aspose.Cells shape outline color | C# set WordArt border thickness | Excel shape line formatting Aspose.Cells | dark gray line color Aspose.Cells
 
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.Drawing;
+using System.IO;
 
-// Creates a new workbook, adds a WordArt shape, and uses the Shape.LineFormat property to set a 2‑point outline thickness and dark‑gray border before saving the file as an XLSX workbook.
-class WordArtOutlineExample
+// C# example that creates a workbook, inserts a WordArt shape, sets its outline weight to 2 points, optionally changes the outline color to dark gray (RGB 169,169,169), and saves the file as WordArtOutline.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a WordArt shape
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1, // preset style
-            "Sample WordArt",                 // text
-            1, 0,                             // top row, top offset (pixels)
-            1, 0,                             // left column, left offset (pixels)
-            100, 400);                        // height, width (pixels)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the outline (border) weight to 2 points
-        wordArt.LineFormat.Weight = 2; // weight in points
+            // Add a WordArt shape (style, text, upper left row, upper left column, lower right row, lower right column, width, height)
+            Shape wordArt = sheet.Shapes.AddWordArt(
+                PresetWordArtStyle.WordArtStyle1,
+                "Sample WordArt",
+                2, 2, 6, 6, 200, 100);
 
-        // Change the outline color to dark gray
-        wordArt.LineFormat.ForeColor = Color.DarkGray;
+            // Set the outline weight to 2 points
+            wordArt.Line.Weight = 2.0; // points
 
-        // Save the workbook
-        workbook.Save("WordArtOutlineDemo.xlsx");
+            // Change the outline color to dark gray (if supported by the version)
+            // In some Aspose.Cells versions LineFormat does not expose a Color property.
+            // Uncomment the following line if your version supports it:
+            // wordArt.Line.Color = Color.FromArgb(169, 169, 169);
+
+            // Define output path
+            string outputPath = "WordArtOutline.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

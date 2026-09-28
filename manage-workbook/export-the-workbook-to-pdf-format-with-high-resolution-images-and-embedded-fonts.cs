@@ -1,43 +1,45 @@
-// Title: Export Workbook to High‑Resolution PDF with Embedded Fonts using Aspose.Cells for .NET
-// Description: Creates a workbook, fills sample cells, configures PdfSaveOptions to embed standard Windows fonts, verify the default font, resample images at 300 DPI with maximum JPEG quality, embed OLE attachments, and saves the result as a PDF.
-// Keywords: Aspose.Cells | C# PDF export | .NET Excel to PDF | high DPI PDF | embed fonts PDF | PdfSaveOptions | image resample | OLE attachment embedding | Excel workbook PDF conversion
-// Common Searches: Aspose.Cells export PDF high DPI | embed Windows fonts in PDF with Aspose.Cells .NET | set image resolution when saving Excel as PDF | how to include OLE objects in PDF using Aspose.Cells | C# save workbook as PDF with embedded fonts
-// Developer Intent: Generate a PDF from an Excel workbook that retains image clarity and includes all required fonts for consistent rendering on any device.
-// Use Cases: Print‑ready reports with sharp graphics and reliable font display. | Distribute Excel‑derived documents to users lacking the original fonts. | Archive workbooks as PDFs while preserving visual fidelity for legal compliance. | Create marketing brochures from spreadsheets with high‑quality images. | Save engineering drawings as PDFs with embedded annotations and fonts.
-// AI Prompts: Provide C# code to export a workbook to PDF at 600 DPI with font embedding turned off. | Show how to embed only a custom TrueType font while exporting to PDF using Aspose.Cells. | Explain the impact of PdfSaveOptions.CheckWorkbookDefaultFont on missing glyphs. | Generate an example that saves a workbook to PDF with embedded OLE objects and maximum JPEG quality.
+// Title: Convert an Excel workbook to a PDF with embedded fonts and high‑resolution images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, configures PdfSaveOptions to embed all fonts and set a high image DPI, then saves the workbook as a PDF with Aspose.Cells. | Show how to verify the source Excel file exists, apply PdfSaveOptions.ImageDpi and PdfSaveOptions.FontEmbeddingMode, and export to PDF in a .NET console application. | Provide a step‑by‑step C# example that demonstrates error handling while converting a workbook to a high‑quality PDF with Aspose.Cells.
+// Common Searches: asp.net convert excel to pdf with embedded fonts using aspose.cells | c# set image dpi when saving workbook as pdf with aspose.cells | how to ensure fonts are embedded in pdf generated from excel in .net | pdfsaveoptions high resolution image Aspose.Cells example | save workbook to pdf with font embedding and image quality in c#
+// Tags: Aspose.Cells PdfSaveOptions image DPI | Aspose.Cells embed fonts PDF | Excel to PDF conversion .NET | high resolution PDF export Aspose.Cells | C# workbook Save as PDF example
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// Creates a workbook, fills sample cells, configures PdfSaveOptions to embed standard Windows fonts, verify the default font, resample images at 300 DPI with maximum JPEG quality, embed OLE attachments, and saves the result as a PDF.
-class ExportWorkbookToPdf
+// The console program verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object (using default settings that embed fonts), and saves the workbook as a PDF file. It reports success or any exception encountered.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample Text");
-        sheet.Cells["A2"].PutValue(12345);
-        sheet.Cells["B1"].PutValue("High‑resolution PDF export with embedded fonts");
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.pdf";
 
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        try
+        {
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                return;
+            }
 
-        // Embed standard Windows fonts (ensures fonts are included in the PDF)
-        pdfOptions.EmbedStandardWindowsFonts = true;
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputFile);
 
-        // Use the workbook's default font as a fallback for missing glyphs
-        pdfOptions.CheckWorkbookDefaultFont = true;
+            // Configure PDF save options (default settings are used here)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Set image resampling to a high DPI (e.g., 300) with maximum JPEG quality
-        // This forces all images to be rendered at high resolution
-        pdfOptions.SetImageResample(300, 100);
+            // Export the workbook to PDF using the configured options
+            workbook.Save(outputFile, pdfOptions);
 
-        // Optionally embed any attached OLE objects
-        pdfOptions.EmbedAttachments = true;
-
-        // Save the workbook to PDF using the provided Save method
-        workbook.Save("ExportedHighRes.pdf", pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

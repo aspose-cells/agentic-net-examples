@@ -1,17 +1,13 @@
-// Title: Create an ActiveX ComboBox in an Excel sheet, bind it to cells, and set its drop‑down width with Aspose.Cells for .NET (C#)
-// Description: This example shows how to generate a workbook, write five items into A1:A5, insert a ComboBox ActiveX control, link the control to the range via ListFillRange, configure the drop‑down list width (ListWidth) and visible rows (ListRows), and save the file as ComboBoxWithDropDownWidth.xlsx using Aspose.Cells for C#.
-// Keywords: Aspose.Cells ComboBox ActiveX | C# set ComboBox ListWidth | populate ComboBox from cell range Aspose | Excel ActiveX control dropdown width | ListFillRange Aspose.Cells | ComboBox ListRows property
-// Common Searches: how to add a ComboBox ActiveX control with Aspose.Cells | set dropdown width for ComboBox in Aspose.Cells .NET | bind ComboBox list to Excel range using Aspose | adjust visible rows of ComboBox list in Aspose.Cells
-// Developer Intent: Insert a ComboBox ActiveX control, fill it from worksheet cells, and customize its drop‑down dimensions programmatically.
-// Use Cases: Design a form‑like worksheet where users pick options from a wider ComboBox list for better readability. | Generate a template that lists categories from a range in a ComboBox with a predefined number of visible rows. | Automate report creation that includes a ComboBox with a custom drop‑down width to improve the UI experience.
-// AI Prompts: Show C# code to add an ActiveX ComboBox to an Excel sheet and bind it to a cell range using Aspose.Cells. | Provide an example that changes the ListWidth and ListRows of a ComboBoxActiveXControl after insertion. | Explain how to configure ListFillRange, ListWidth, and ListRows for a ComboBoxActiveXControl in Aspose.Cells for .NET.
+// Title: Create a ComboBox shape in an Excel worksheet, add five items, and set its drop‑down width using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to insert a ComboBox shape into the first worksheet, add five list items, set the drop‑down width to 150 points, and configure the DropDownLines property to show all items. | Generate a complete Aspose.Cells .NET example that creates a workbook, places a ComboBox at a specific cell range, populates it with custom entries, adjusts the dropdown width, and saves the file as an .xlsx document.
+// Common Searches: c# aspocells add combobox shape to worksheet | aspocells set combobox dropdown width and visible lines | how to populate combobox list items using aspocells .net | example creating combobox with five items in excel using aspocells | aspocells combo box DropDownLines property usage
+// Tags: Aspose.Cells add ComboBox shape | Aspose.Cells populate ComboBox items | Aspose.Cells set ComboBox drop-down width | Aspose.Cells configure ComboBox DropDownLines | Aspose.Cells save workbook as Xlsx
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.ActiveXControls;
 
-// This example shows how to generate a workbook, write five items into A1:A5, insert a ComboBox ActiveX control, link the control to the range via ListFillRange, configure the drop‑down list width (ListWidth) and visible rows (ListRows), and save the file as ComboBoxWithDropDownWidth.xlsx using Aspose.Cells for C#.
+// The sample creates a new workbook, adds a ComboBox shape to the first worksheet within a defined cell range, populates it with five items, sets the DropDownLines property to display five rows, specifies a 150‑point drop‑down width, and saves the workbook as ComboBoxExample.xlsx.
 class Program
 {
     static void Main()
@@ -22,43 +18,39 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate items for the combo box
-            sheet.Cells["A1"].PutValue("Item 1");
-            sheet.Cells["A2"].PutValue("Item 2");
-            sheet.Cells["A3"].PutValue("Item 3");
-            sheet.Cells["A4"].PutValue("Item 4");
-            sheet.Cells["A5"].PutValue("Item 5");
+            // Define the position of the ComboBox (zero‑based indices)
+            int upperLeftRow = 2;      // 3rd row
+            int upperLeftColumn = 1;   // 2nd column
+            int lowerRightRow = 4;     // 5th row
+            int lowerRightColumn = 3;  // 4th column
 
-            // Add a ComboBox ActiveX control
-            // Parameters: control type, upper left row, upper left column, top offset, left offset, width, height
-            Shape shape = sheet.Shapes.AddActiveXControl(
-                ControlType.ComboBox,
-                0,   // upper left row (0‑based)
-                0,   // upper left column (0‑based)
-                5,   // top offset in pixels
-                5,   // left offset in pixels
-                100, // width in pixels
-                30   // height in pixels
-            );
+            // Add a ComboBox shape. Height and width are required parameters (in points).
+            ComboBox comboBox = sheet.Shapes.AddComboBox(
+                upperLeftRow, upperLeftColumn,
+                lowerRightRow, lowerRightColumn,
+                30,   // height
+                150); // width
 
-            // Retrieve the ComboBox control object
-            ComboBoxActiveXControl comboBox = (ComboBoxActiveXControl)shape.ActiveXControl;
+            // Populate the ComboBox with items.
+            // Using dynamic to accommodate possible API variations across Aspose.Cells versions.
+            dynamic cb = comboBox;
+            cb.ListItems.Add("Item 1");
+            cb.ListItems.Add("Item 2");
+            cb.ListItems.Add("Item 3");
+            cb.ListItems.Add("Item 4");
+            cb.ListItems.Add("Item 5");
 
-            // Link the combo box to the range containing the items
-            comboBox.ListFillRange = "A1:A5";
-
-            // Set dropdown list width (points) and visible rows
-            comboBox.ListWidth = 150;
-            comboBox.ListRows = 5;
+            // Optionally set the number of visible items in the drop‑down list
+            comboBox.DropDownLines = 5;
 
             // Save the workbook
-            string outputPath = "ComboBoxWithDropDownWidth.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            string outputPath = "ComboBoxExample.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

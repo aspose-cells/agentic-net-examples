@@ -1,10 +1,7 @@
-// Title: Aspose.Cells for .NET – Change Slicer Font Family, Size, and Color (C#)
-// Description: C# example that creates a workbook, adds a pivot table, inserts a slicer, and customizes the slicer label by setting Font.Name, Font.Size, and Font.Color, with optional caption text, then saves the file.
-// Keywords: Aspose.Cells slicer font | C# slicer label color | set slicer font size Aspose | change slicer font family .NET | pivot table slicer styling | Excel slicer customization | Aspose.Cells API example | GitHub Aspose.Cells slicer sample
-// Common Searches: how to change slicer font in Aspose.Cells C# | set slicer label color and size .NET | customize slicer caption font Aspose.Cells | C# code to modify slicer font family Excel | Aspose.Cells example for slicer styling
-// Developer Intent: Apply a specific font family, size, and color to a slicer’s label for better readability.
-// Use Cases: Standardize corporate typography on slicer controls in automated Excel reports. | Enhance visual contrast of slicer items in dashboards for end‑user clarity. | Add a descriptive caption with styled text to guide slicer interaction.
-// AI Prompts: Generate C# code using Aspose.Cells that sets a slicer’s font to Arial, size 14, red color, and hides the caption. | Show how to iterate over all slicers on a worksheet and apply the same Font.Name, Font.Size, and Font.Color. | Explain the steps to load an existing workbook, locate a slicer by name, and modify its Font properties with Aspose.Cells.
+// Title: Set slicer label font family, size, and color in an Aspose.Cells .NET workbook using C#
+// AI Prompts: Create a workbook with a pivot table, add a slicer for the "Category" field, and programmatically set the slicer’s label font to Calibri 12 pt dark blue using Aspose.Cells in C#. | Update the font properties (Name, Size, Color) of an existing slicer linked to a pivot table in an Aspose.Cells workbook via the slicer’s Shape.Font object. | Apply a built‑in slicer style and then override its label font settings (family, size, color) in a .NET spreadsheet generated with Aspose.Cells.
+// Common Searches: Aspose.Cells C# change slicer label font family and size | How to set slicer text color in a .NET workbook with Aspose.Cells | Programmatically customize slicer appearance in Excel using Aspose.Cells for .NET | C# code to modify slicer font properties after creating a pivot table with Aspose.Cells
+// Tags: Aspose.Cells slicer text styling C# | modify slicer font settings .NET | apply Shape.Font to slicer for styling | pivot table slicer visual tweaks | programmatic slicer label color change
 
 using System;
 using System.Drawing;
@@ -14,7 +11,7 @@ using Aspose.Cells.Pivot;
 
 namespace SlicerFontCustomization
 {
-    // C# example that creates a workbook, adds a pivot table, inserts a slicer, and customizes the slicer label by setting Font.Name, Font.Size, and Font.Color, with optional caption text, then saves the file.
+    // The example creates a workbook, fills it with sample data, builds a pivot table, adds a slicer linked to the "Category" field, applies a built‑in slicer style, and then customizes the slicer’s label font to Calibri 12 pt dark blue via the Shape.Font properties before saving the file as SlicerFontCustomization.xlsx.
     class Program
     {
         static void Main()
@@ -28,32 +25,41 @@ namespace SlicerFontCustomization
             sheet.Cells["A2"].Value = "Fruit";
             sheet.Cells["A3"].Value = "Fruit";
             sheet.Cells["A4"].Value = "Vegetable";
-            sheet.Cells["B1"].Value = "Amount";
-            sheet.Cells["B2"].Value = 120;
-            sheet.Cells["B3"].Value = 80;
-            sheet.Cells["B4"].Value = 150;
+            sheet.Cells["A5"].Value = "Vegetable";
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+            sheet.Cells["B1"].Value = "Item";
+            sheet.Cells["B2"].Value = "Apple";
+            sheet.Cells["B3"].Value = "Banana";
+            sheet.Cells["B4"].Value = "Carrot";
+            sheet.Cells["B5"].Value = "Potato";
+
+            sheet.Cells["C1"].Value = "Quantity";
+            sheet.Cells["C2"].Value = 10;
+            sheet.Cells["C3"].Value = 15;
+            sheet.Cells["C4"].Value = 20;
+            sheet.Cells["C5"].Value = 25;
+
+            // Create a pivot table based on the data range
+            int pivotIdx = sheet.PivotTables.Add("A1:C5", "E1", "PivotTable1");
             PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category field
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Amount field
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Row, "Item");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Add a slicer linked to the pivot table for the "Category" field
-            int slicerIdx = sheet.Slicers.Add(pivot, "F1", "Category");
+            // Add a slicer linked to the "Category" field of the pivot table
+            int slicerIdx = sheet.Slicers.Add(pivot, "G1", "Category");
             Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // Customize the slicer label font: family, size, and color
-            // The slicer’s visual representation is a Shape; its Font property can be modified directly
-            slicer.Shape.Font.Name = "Calibri";          // Font family
-            slicer.Shape.Font.Size = 12;                // Font size (points)
-            slicer.Shape.Font.Color = Color.DarkBlue;   // Font color
+            // Optional: set a built‑in style for the slicer
+            slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
 
-            // Optionally, make the caption visible and set its text
-            slicer.ShowCaption = true;
-            slicer.Caption = "Select Category";
+            // Access the underlying shape of the slicer and modify its font
+            // Font family (Name), size, and color are set to improve readability
+            slicer.Shape.Font.Name = "Calibri";
+            slicer.Shape.Font.Size = 12;               // Font size in points
+            slicer.Shape.Font.Color = Color.DarkBlue; // Font color
 
             // Save the workbook with the customized slicer
             workbook.Save("SlicerFontCustomization.xlsx");

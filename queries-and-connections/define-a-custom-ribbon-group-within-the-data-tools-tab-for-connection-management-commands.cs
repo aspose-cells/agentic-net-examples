@@ -1,43 +1,41 @@
-// Title: Add a custom "Connection Management" ribbon group to the Data tab using Aspose.Cells for .NET
-// Description: C# example that uses Aspose.Cells to inject RibbonXml into a workbook, creating a new "Connection Management" group on the built‑in Data tab (idMso="TabData"). The group contains large Refresh and Edit Connection buttons with onAction callbacks, and the workbook is saved as a macro‑enabled .xlsm to preserve the custom UI.
-// Keywords: Aspose.Cells RibbonXml | custom ribbon group | Data tab Excel | connection management buttons | C# Aspose.Cells example | macro enabled workbook | Excel custom UI | add ribbon button programmatically
-// Common Searches: Aspose.Cells add custom ribbon group to Data tab | how to create RibbonXml with connection buttons in C# | save custom ribbon in .xlsm using Aspose.Cells | Excel custom UI for connection refresh button | programmatically extend Excel Data Tools ribbon
-// Developer Intent: Generate a workbook that embeds a custom ribbon group on the Data tab, providing Refresh and Edit Connection commands via Aspose.Cells.
-// Use Cases: Distribute workbooks that let end‑users manage data connections directly from the ribbon. | Enhance existing Excel templates with connection‑related shortcuts without manual UI editing. | Create macro‑enabled files that retain custom UI for corporate reporting tools.
-// AI Prompts: Write C# code with Aspose.Cells to add a third "Delete Connection" button to the custom ribbon group and implement its onAction handler. | Explain how to load an existing .xlsm file, modify its RibbonXml to include a new group, and save the changes with Aspose.Cells. | Provide a step‑by‑step guide to test the custom ribbon in Excel, covering macro security settings and button callback verification.
+// Title: Add a custom 'Connection Management' ribbon group with Refresh and Edit buttons to the Data Tools tab using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook, assigns custom RibbonXml to insert a 'Connection Management' group with large Refresh and Edit buttons into the built‑in TabDataTools, and saves the file as XLSX. | Show how to embed custom ribbon XML in an Aspose.Cells workbook and keep the custom UI after saving.
+// Common Searches: aspnet add custom ribbon group to Data Tools tab with Aspose.Cells | c# inject RibbonXml for connection management buttons in Excel workbook | how to preserve custom ribbon UI when saving Aspose.Cells workbook as xlsx | custom UI XML for Excel ribbon using Aspose.Cells .NET example | Aspose.Cells create custom ribbon group for Refresh Connections button
+// Tags: set RibbonXml property Aspose.Cells | custom ribbon group Data Tools tab | add connection management buttons Excel ribbon | save workbook with custom UI XLSX | inject custom UI XML Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// C# example that uses Aspose.Cells to inject RibbonXml into a workbook, creating a new "Connection Management" group on the built‑in Data tab (idMso="TabData"). The group contains large Refresh and Edit Connection buttons with onAction callbacks, and the workbook is saved as a macro‑enabled .xlsm to preserve the custom UI.
+// Creates a new Workbook, defines custom Ribbon XML that adds a 'Connection Management' group with large Refresh and Edit buttons to the built‑in Data Tools tab, assigns the XML to Workbook.RibbonXml, and saves the workbook as an XLSX file preserving the custom ribbon UI.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (empty workbook)
+        // Create a new workbook (lifecycle rule: create)
         Workbook workbook = new Workbook();
 
         // Define custom Ribbon XML.
-        // The XML adds a new group called "Connection Management" inside the built‑in "Data" tab (idMso="TabData").
-        // Two sample buttons are added: Refresh and Edit Connection.
-        string ribbonXml =
-            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-            "  <ribbon>" +
-            "    <tabs>" +
-            "      <tab idMso=\"TabData\">" +                     // Existing Data Tools tab
-            "        <group id=\"connectionGroup\" label=\"Connection Management\">" +
-            "          <button id=\"refreshBtn\" label=\"Refresh\" size=\"large\" onAction=\"RefreshConnections\" />" +
-            "          <button id=\"editBtn\"   label=\"Edit Connection\" size=\"large\" onAction=\"EditConnection\" />" +
-            "        </group>" +
-            "      </tab>" +
-            "    </tabs>" +
-            "  </ribbon>" +
-            "</customUI>";
+        // The tab with idMso "TabDataTools" corresponds to the built‑in "Data Tools" tab.
+        // Inside it we add a new group "Connection Management" with two command buttons.
+        string ribbonXml = @"
+<customUI xmlns=""http://schemas.microsoft.com/office/2006/01/customui"">
+  <ribbon>
+    <tabs>
+      <tab idMso=""TabDataTools"">
+        <group id=""CustomConnGroup"" label=""Connection Management"">
+          <button id=""RefreshConn"" label=""Refresh Connections"" size=""large"" onAction=""RefreshConnections"" />
+          <button id=""EditConn""   label=""Edit Connections""    size=""large"" onAction=""EditConnections"" />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>";
 
-        // Assign the custom UI to the workbook.
+        // Assign the XML to the workbook's RibbonXml property (feature rule)
         workbook.RibbonXml = ribbonXml;
 
-        // Save the workbook as a macro‑enabled file (required for custom UI to be retained).
-        workbook.Save("ConnectionRibbon.xlsm");
+        // Save the workbook (lifecycle rule: save)
+        // Xlsx format retains the custom ribbon UI.
+        workbook.Save("CustomRibbon.xlsx", SaveFormat.Xlsx);
     }
 }

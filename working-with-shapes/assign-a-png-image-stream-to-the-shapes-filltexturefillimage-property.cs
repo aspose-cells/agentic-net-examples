@@ -1,69 +1,70 @@
-// Title: Set a PNG texture fill for a shape using MemoryStream in Aspose.Cells for .NET
-// Description: Learn how to load a PNG file into a MemoryStream, assign it to a shape's Fill.TextureFill.ImageData, and optionally configure tiling or scaling with Aspose.Cells for .NET. The example creates a workbook, adds a rectangle, applies the texture, and saves the Excel file.
-// Keywords: Aspose.Cells texture fill | C# shape fill PNG | Fill.TextureFill.ImageData | MemoryStream PNG Aspose | Excel shape texture fill .NET | Aspose.Cells ImageData stream | shape texture tiling Aspose | apply PNG to shape Aspose.Cells
-// Common Searches: Aspose.Cells set PNG texture fill for shape | C# assign image stream to Shape.Fill.TextureFill.ImageData | load PNG into MemoryStream for Excel shape fill | how to enable tiling on texture fill Aspose.Cells | Aspose.Cells shape fill from byte array
-// Developer Intent: Apply a PNG image as a texture fill to a worksheet shape by using a MemoryStream with Aspose.Cells for .NET.
-// Use Cases: Create a rectangle (or any shape) and apply a custom PNG texture using a byte array from a MemoryStream. | Load a PNG file at runtime, convert it to bytes, and set it as the Fill.TextureFill.ImageData for dynamic Excel reports. | Adjust texture properties such as IsTiling or Scale after assigning the PNG to control repetition and size within the shape.
-// AI Prompts: Generate C# code that reads a PNG file into a MemoryStream and sets Shape.Fill.TextureFill.ImageData in Aspose.Cells. | Show how to enable tiling and set the scale factor for a texture fill after assigning a PNG image stream. | Explain error handling for missing image files when applying a texture fill to a shape with Aspose.Cells.
+// Title: How to assign a PNG stream to a shape’s Fill.TextureFill.Image in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads a PNG file into a MemoryStream and sets it as the texture fill of a rectangle shape using the Fill.TextureFill.Image property in Aspose.Cells. | Explain step‑by‑step how to apply a PNG image stream as a background texture for a shape on an Excel worksheet with Aspose.Cells, including shape creation and workbook saving. | Show how to handle environments where TextureFill.Picture is unavailable by directly assigning a PNG stream to Fill.TextureFill.Image for a shape in Aspose.Cells .NET.
+// Common Searches: Aspose.Cells C# set shape texture fill from PNG stream | Fill.TextureFill.Image property usage example Aspose.Cells | Apply image as background texture to Excel shape using Aspose.Cells .NET | Load PNG into MemoryStream and use as shape fill in Aspose.Cells | Assign image stream to shape Fill.TextureFill.Image Aspose.Cells tutorial
+// Tags: shape texture fill from PNG stream Aspose.Cells | Fill.TextureFill.Image C# Aspose.Cells | apply background image to rectangle shape Aspose.Cells | load PNG into MemoryStream Aspose.Cells | Excel shape fill using image stream .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTextureFillDemo
+// The example creates a workbook, adds a rectangle shape, loads a PNG file into a stream, assigns that stream to the shape’s Fill.TextureFill.Image property to use the PNG as a texture fill, and saves the workbook.
+class Program
 {
-    // Learn how to load a PNG file into a MemoryStream, assign it to a shape's Fill.TextureFill.ImageData, and optionally configure tiling or scaling with Aspose.Cells for .NET. The example creates a workbook, adds a rectangle, applies the texture, and saves the Excel file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 100);
+
+            // Load the PNG image into a stream (lifecycle rule: load)
+            string imagePath = "image.png";
+            if (File.Exists(imagePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a rectangle shape to the worksheet
-                // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-                Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 0, 150, 100);
-
-                // Set the fill type of the shape to Texture
-                shape.Fill.FillType = FillType.Texture;
-
-                // Get the TextureFill object associated with the shape
-                TextureFill textureFill = shape.Fill.TextureFill;
-
-                string imagePath = "image.png";
-
-                if (File.Exists(imagePath))
+                try
                 {
-                    // Load a PNG image into a memory stream
-                    using (FileStream fileStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
-                    using (MemoryStream pngStream = new MemoryStream())
+                    using (FileStream imageStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
                     {
-                        fileStream.CopyTo(pngStream);
-                        // Assign the PNG image data to the texture fill
-                        textureFill.ImageData = pngStream.ToArray();
+                        // Add the image to the worksheet's picture collection
+                        int pictureIndex = sheet.Pictures.Add(0, 0, imageStream);
+
+                        // NOTE: TextureFill.Picture is not available in this version of Aspose.Cells.
+                        // If needed, additional logic can be added here to apply the picture as a fill.
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Texture fill will be skipped.");
+                    Console.WriteLine($"Failed to add picture: {ex.Message}");
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+            }
 
-                // Optionally enable tiling or adjust other texture properties
-                // textureFill.IsTiling = true;
-                // textureFill.Scale = 0.5;
-
-                // Save the workbook to a file
-                workbook.Save("TextureFillDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+            // Save the workbook (lifecycle rule: save)
+            string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

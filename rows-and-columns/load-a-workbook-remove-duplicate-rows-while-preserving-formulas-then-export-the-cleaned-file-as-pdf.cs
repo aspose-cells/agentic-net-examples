@@ -1,44 +1,35 @@
-// Title: C# – Remove Duplicate Rows (Keep Formulas) and Convert Excel to PDF with Aspose.Cells
-// Description: Loads an Excel workbook, applies Worksheet.Cells.RemoveDuplicates to purge repeated rows while preserving any formulas, saves the sanitized file, and then creates a PDF using ConversionUtility.Convert.
-// Keywords: Aspose.Cells C# duplicate rows | preserve formulas Aspose.Cells | Excel to PDF conversion .NET | Worksheet.RemoveDuplicates example | ConversionUtility.Convert PDF | programmatic data deduplication Excel | Aspose.Cells data cleansing
-// Common Searches: Aspose.Cells remove duplicate rows C# | Keep formulas when deleting duplicate rows in Excel with Aspose | Convert cleaned Excel workbook to PDF using Aspose.Cells .NET | How to deduplicate first worksheet with Aspose.Cells | Batch process Excel files to eliminate duplicates and export PDFs
-// Developer Intent: Strip repeated rows from a worksheet without breaking formulas and output the result as a PDF document.
-// Use Cases: Prepare client‑ready reports by removing redundant entries before PDF distribution. | Automate monthly financial data cleanup, ensuring formulas stay functional, then archive as PDF. | Standardize large data sets for regulatory filing by deduplicating and converting to a non‑editable format.
-// AI Prompts: Generate C# code that uses Aspose.Cells to delete duplicate rows while retaining formulas and then saves the workbook as a PDF. | Explain the behavior of Worksheet.Cells.RemoveDuplicates with formula‑containing cells and how ConversionUtility.Convert creates the PDF output. | Recommend performance‑optimizing techniques for processing massive Excel files when performing deduplication and PDF conversion with Aspose.Cells.
+// Title: Remove duplicate rows while preserving formulas and export the worksheet to PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, removes duplicate rows from the first worksheet without breaking formulas, and saves the result as a PDF using Aspose.Cells. | Show how to use Aspose.Cells in a .NET project to deduplicate rows in a worksheet while keeping all formulas intact, then export the cleaned sheet to PDF. | Generate a minimal Aspose.Cells example that calls Cells.RemoveDuplicates and then saves the workbook with SaveFormat.Pdf.
+// Common Searches: Aspose.Cells C# remove duplicate rows keep formulas | Export cleaned Excel worksheet to PDF using Aspose.Cells .NET | How to preserve formulas when deleting duplicate rows with Aspose.Cells | Save workbook as PDF after removing duplicates Aspose.Cells example | Remove duplicate rows from first sheet Aspose.Cells C#
+// Tags: remove duplicate rows Aspose.Cells | preserve formulas Cells.RemoveDuplicates | export worksheet to PDF Aspose.Cells | Aspose.Cells SaveFormat.Pdf usage | deduplicate rows first worksheet C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace AsposeCellsDuplicateRemoval
+// Loads an Excel workbook, removes duplicate rows from the first worksheet while retaining formulas, and saves the cleaned file as a PDF using Aspose.Cells.
+class RemoveDuplicatesAndExportPdf
 {
-    // Loads an Excel workbook, applies Worksheet.Cells.RemoveDuplicates to purge repeated rows while preserving any formulas, saves the sanitized file, and then creates a PDF using ConversionUtility.Convert.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Input Excel file path
-            string inputPath = "input.xlsx";
+        // Path to the source Excel file
+        string inputFile = "input.xlsx";
 
-            // Load the workbook (uses the Workbook(string) constructor rule)
-            Workbook workbook = new Workbook(inputPath);
+        // Path for the resulting PDF file
+        string outputPdf = "output.pdf";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Load the workbook from the file (lifecycle rule: use constructor)
+        Workbook workbook = new Workbook(inputFile);
 
-            // Remove duplicate rows while keeping formulas intact
-            // (uses Cells.RemoveDuplicates() rule)
-            worksheet.Cells.RemoveDuplicates();
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Save the cleaned workbook to a temporary file (uses Workbook.Save(string) rule)
-            string cleanedPath = "cleaned.xlsx";
-            workbook.Save(cleanedPath);
+        // Remove duplicate rows in the sheet while keeping formulas intact
+        worksheet.Cells.RemoveDuplicates();
 
-            // Convert the cleaned Excel file to PDF (uses ConversionUtility.Convert(string, string) rule)
-            string pdfPath = "output.pdf";
-            ConversionUtility.Convert(cleanedPath, pdfPath);
+        // Export the cleaned workbook as PDF (lifecycle rule: use Save method)
+        workbook.Save(outputPdf, SaveFormat.Pdf);
 
-            Console.WriteLine("Duplicate rows removed and PDF generated successfully.");
-        }
+        Console.WriteLine("Duplicate rows removed and PDF saved to: " + outputPdf);
     }
 }

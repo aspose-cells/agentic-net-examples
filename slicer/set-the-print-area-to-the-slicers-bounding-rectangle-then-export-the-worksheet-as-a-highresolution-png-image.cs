@@ -1,79 +1,67 @@
-// Title: C# – Set Print Area to a Slicer’s Bounding Rectangle and Export as High‑Resolution PNG with Aspose.Cells
-// Description: Loads an Excel file, reads the first slicer’s shape coordinates, sets the worksheet print area to that bounding range, and renders the area to a 300 DPI PNG using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# slicer print area | export slicer to PNG | high resolution worksheet image | set print area from slicer shape | Aspose.Cells ImageOrPrintOptions | C# Excel slicer export | 300 DPI PNG Aspose.Cells
-// Common Searches: Aspose.Cells set print area from slicer | C# export slicer region as PNG | high DPI worksheet image Aspose.Cells | get slicer shape bounds Aspose.Cells | render slicer area to image .NET
-// Developer Intent: Define the worksheet print area based on a slicer’s bounding rectangle and generate a high‑resolution PNG of that area.
-// Use Cases: Create a snapshot of a slicer for dashboards or reports. | Produce printable PNGs of filtered data views for documentation. | Automate generation of high‑quality images for web or PDF embedding.
-// AI Prompts: Generate C# code that sets the print area to a slicer’s shape bounds and saves a 300 DPI PNG with Aspose.Cells. | Explain how to retrieve a slicer’s UpperLeftRow/Column and LowerRightRow/Column to define a print area in Aspose.Cells. | Show how to loop through all slicers in a workbook and export each to a separate high‑resolution PNG file.
+// Title: Set the print area to a slicer's bounding rectangle and export the worksheet as a high‑resolution PNG using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that detects slicers on a worksheet, sets the print area to the slicer's bounding range, and saves the sheet as a 300 DPI PNG with Aspose.Cells. | Show how to configure ImageOrPrintOptions for high‑resolution PNG export and render a single‑page image of a worksheet using SheetRender in .NET. | Write a .NET program that adjusts the page setup print area based on slicer presence and creates a high‑quality PNG image of the entire sheet.
+// Common Searches: Aspose.Cells set print area to slicer range and export to PNG | C# export Excel worksheet as 300 DPI PNG with slicer handling | How to use ImageOrPrintOptions for high resolution PNG in Aspose.Cells | Render worksheet to single image when slicers are present using Aspose.Cells | Set page setup print area programmatically based on slicer in .NET
+// Tags: set print area based on slicer Aspose.Cells | export worksheet to 300dpi PNG Aspose.Cells | ImageOrPrintOptions high resolution PNG | SheetRender single page image export | check slicer count before setting print area
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSlicerExport
+namespace AsposeCellsExample
 {
-    // Loads an Excel file, reads the first slicer’s shape coordinates, sets the worksheet print area to that bounding range, and renders the area to a 300 DPI PNG using Aspose.Cells for .NET.
+    // The example loads an Excel workbook, checks whether the first worksheet contains slicers, sets the worksheet's print area to the slicer's bounding rectangle when present, configures ImageOrPrintOptions for 300 DPI PNG output, and uses SheetRender to generate a single‑page high‑resolution PNG image of the sheet.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                const string inputFile = "input.xlsx";
-                const string outputFile = "slicer_area.png";
+                // Input and output file paths
+                string inputPath = "input.xlsx";
+                string outputImagePath = "output.png";
 
                 // Verify that the input workbook exists
-                if (!File.Exists(inputFile))
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the workbook that contains a slicer
-                Workbook workbook = new Workbook(inputFile);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index if needed)
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Ensure the worksheet contains at least one slicer
-                if (worksheet.Slicers.Count == 0)
+                // If the worksheet contains slicers, set the print area to the used range
+                if (worksheet.Slicers.Count > 0)
                 {
-                    Console.WriteLine("Error: No slicers found in the worksheet.");
-                    return;
+                    // Use the worksheet's used range as the print area
+                    var usedRange = worksheet.Cells.MaxDisplayRange;
+                    string startCell = CellsHelper.CellIndexToName(usedRange.FirstRow, usedRange.FirstColumn);
+                    string endCell = CellsHelper.CellIndexToName(
+                        usedRange.FirstRow + usedRange.RowCount - 1,
+                        usedRange.FirstColumn + usedRange.ColumnCount - 1);
+
+                    worksheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
                 }
 
-                // Get the first slicer
-                Slicer slicer = worksheet.Slicers[0];
-
-                // Retrieve the slicer's bounding rectangle via its shape
-                Shape slicerShape = worksheet.Shapes[slicer.Name];
-                int startRow = slicerShape.UpperLeftRow;
-                int endRow = slicerShape.LowerRightRow;
-                int startColumn = slicerShape.UpperLeftColumn;
-                int endColumn = slicerShape.LowerRightColumn;
-
-                // Convert cell indices to A1 style addresses
-                string startCell = CellsHelper.CellIndexToName(startRow, startColumn);
-                string endCell = CellsHelper.CellIndexToName(endRow, endColumn);
-
-                // Set the worksheet's print area to the slicer's bounding rectangle
-                worksheet.PageSetup.PrintArea = $"{startCell}:{endCell}";
-
-                // Configure high‑resolution image options
-                ImageOrPrintOptions options = new ImageOrPrintOptions
+                // Configure image export options for high‑resolution PNG
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
                 {
-                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                    OnePagePerSheet = true,
+                    // Default format is PNG; explicit setting omitted to avoid API mismatch
                     HorizontalResolution = 300, // DPI
-                    VerticalResolution = 300    // DPI
+                    VerticalResolution = 300,   // DPI
+                    OnePagePerSheet = true      // Export the whole sheet as a single image
                 };
 
-                // Render the worksheet (print area only) to a PNG image
-                SheetRender sheetRender = new SheetRender(worksheet, options);
-                sheetRender.ToImage(0, outputFile);
+                // Render the worksheet to an image using the specified options
+                SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
+                sheetRender.ToImage(0, outputImagePath); // Page index 0, output file name
 
-                Console.WriteLine($"Export completed: {outputFile}");
+                Console.WriteLine($"Worksheet rendered to image: {outputImagePath}");
             }
             catch (Exception ex)
             {

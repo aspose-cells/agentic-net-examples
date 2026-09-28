@@ -1,63 +1,79 @@
-// Title: Aspose.Cells C# – Apply Conditional Formatting Using a Dynamic Threshold Formula
-// Description: Creates a workbook, fills A1:A10 with numbers, sets B1 to AVERAGE(A1:A10)+5, adds a conditional formatting rule that colors cells in A1:A10 yellow when their value exceeds the dynamic threshold in B1, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | conditional formatting | dynamic threshold | formula reference | cell value condition | FormatCondition | OperatorType.GreaterThan | Excel automation | highlight cells | average plus offset
-// Common Searches: Aspose.Cells conditional formatting with formula reference | C# apply conditional formatting based on another cell | dynamic threshold conditional formatting .NET | highlight cells greater than average using Aspose.Cells | how to use cell B1 as threshold in Aspose.Cells
-// Developer Intent: Create a conditional formatting rule that highlights cells when their value is greater than a threshold calculated by a formula in another cell.
-// Use Cases: Mark outliers in a data column that exceed the column average plus a safety margin. | Flag expense entries higher than the average expense plus a configurable buffer. | Visualize sensor readings that surpass a dynamically computed safety limit.
-// AI Prompts: Generate C# code with Aspose.Cells to conditionally format column D based on a formula in cell E1. | Show how to set a dynamic threshold using AVERAGE and an offset for conditional formatting across multiple ranges in Aspose.Cells. | Provide an example of referencing $B$1 in a conditional formatting rule to compare cell values in Aspose.Cells.
+// Title: Use Aspose.Cells for .NET to apply conditional formatting that highlights cells exceeding a threshold stored in another cell
+// AI Prompts: Write C# code with Aspose.Cells that creates a conditional formatting rule to color cells in a range when their value is greater than the value in cell B1. | Generate a snippet that sets a solid light‑coral background style for cells whose computed result surpasses a dynamic threshold defined in a worksheet cell.
+// Common Searches: aspnet aspose.cells conditional formatting cell value greater than reference cell B1 | c# apply conditional formatting based on another cell's value using Aspose.Cells | how to set dynamic threshold for conditional formatting in Excel with Aspose.Cells .NET | example of conditional formatting rule with cell reference in Aspose.Cells C# | color cells exceeding threshold stored in B1 using Aspose.Cells API
+// Tags: conditional formatting cell value reference Aspose.Cells | apply style based on dynamic threshold .NET Excel | format condition greater than cell Aspose.Cells | solid background color rule Aspose.Cells | Excel workbook conditional formatting C#
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-namespace ConditionalFormattingDemo
+namespace ConditionalFormattingExample
 {
-    // Creates a workbook, fills A1:A10 with numbers, sets B1 to AVERAGE(A1:A10)+5, adds a conditional formatting rule that colors cells in A1:A10 yellow when their value exceeds the dynamic threshold in B1, and saves the file.
+    // Demonstrates creating a workbook, populating column A, storing a threshold in B1, and adding a conditional formatting rule that colors cells A2:A10 light coral when their values exceed the dynamic threshold.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data in column A (rows 1-10)
-            for (int i = 0; i < 10; i++)
+            try
             {
-                worksheet.Cells[i, 0].PutValue(i * 10 + 5); // Example values: 5,15,25,...
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data in column A (A2:A10)
+                for (int i = 1; i <= 9; i++) // rows are zero‑based; row 1 = A2
+                {
+                    sheet.Cells[i, 0].PutValue(10 * i); // 10,20,...,90
+                }
+
+                // Set a dynamic threshold value in cell B1
+                double threshold = 45.0;
+                sheet.Cells["B1"].PutValue(threshold);
+
+                // Define the range for conditional formatting (A2:A10)
+                CellArea formatArea = new CellArea
+                {
+                    StartRow = 1,   // A2
+                    StartColumn = 0,
+                    EndRow = 9,     // A10
+                    EndColumn = 0
+                };
+
+                // Get the conditional formatting collection
+                var cfCollection = sheet.ConditionalFormattings;
+
+                // Add a new conditional formatting rule
+                int cfIndex = cfCollection.Add();
+                var cf = cfCollection[cfIndex];
+
+                // Apply the rule to the defined range
+                cf.AddArea(formatArea);
+
+                // Add a condition: cell value > $B$1
+                int conditionIndex = cf.AddCondition(
+                    FormatConditionType.CellValue,
+                    OperatorType.GreaterThan,
+                    "=$B$1",
+                    string.Empty);
+
+                // Retrieve the created condition
+                FormatCondition condition = cf[conditionIndex];
+
+                // Define the style to apply when the condition is true
+                Style style = workbook.CreateStyle();
+                style.ForegroundColor = Color.LightCoral;
+                style.Pattern = BackgroundType.Solid;
+                condition.Style = style;
+
+                // Save the workbook
+                workbook.Save("ConditionalFormattingDemo.xlsx");
             }
-
-            // Define a dynamic threshold in cell B1 using a formula (e.g., average + 5)
-            worksheet.Cells["B1"].Formula = "AVERAGE(A1:A10)+5";
-
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = worksheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
-
-            // Set the range to which the conditional formatting will be applied (A1:A10)
-            CellArea area = new CellArea
+            catch (Exception ex)
             {
-                StartRow = 0,
-                EndRow = 9,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            fcs.AddArea(area);
-
-            // Add a CellValue condition: highlight cells where value > threshold (B1)
-            // Use the AddCondition method with parameters (type, operator, formula1, formula2)
-            int conditionIndex = fcs.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "=B$1",   // Formula1 refers to the dynamic threshold cell
-                null);    // No second formula needed for GreaterThan
-
-            // Retrieve the created condition and set its formatting style
-            FormatCondition fc = fcs[conditionIndex];
-            fc.Style.BackgroundColor = Color.Yellow;
-
-            // Save the workbook
-            workbook.Save("ConditionalFormattingDynamicThreshold.xlsx");
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

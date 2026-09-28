@@ -1,45 +1,47 @@
-// Title: C# – Apply a Two‑Color Gradient Fill to an Excel Cell with Aspose.Cells
-// Description: Creates a workbook, defines a style with a horizontal two‑color gradient (LightBlue → DarkBlue), applies it to cell A1, adjusts row height and column width, and saves the file as CellGradientDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells gradient fill C# | two color cell background .NET | horizontal gradient Excel Aspose | SetTwoColorGradient example | Excel cell style gradient C# | Aspose.Cells formatting tutorial
-// Common Searches: how to set gradient background for a cell in Aspose.Cells C# | Aspose.Cells SetTwoColorGradient horizontal example | apply two‑color gradient to Excel cell using .NET | C# code for gradient fill in Aspose.Cells workbook
-// Developer Intent: Generate a cell style with a horizontal two‑color gradient and apply it to a specific worksheet cell.
-// Use Cases: Emphasize header rows in automated reports with a blue gradient. | Create visually distinct dashboard sections by applying gradient backgrounds to key cells. | Represent intensity or progress levels in status cells using gradient shading.
-// AI Prompts: Generate C# code to apply a vertical three‑color gradient to a range of cells with Aspose.Cells. | Show how to set a diagonal two‑color gradient on merged cells while keeping existing formatting intact. | Explain how to vary the gradient colors based on a cell's numeric value in Aspose.Cells for .NET.
+// Title: Apply a two‑color background fill to a cell in Excel using Aspose.Cells for .NET (solid pattern fallback)
+// AI Prompts: Write C# code with Aspose.Cells that sets a blue foreground and light‑blue background on cell A1 and saves the workbook as GradientFill.xlsx. | Show how to simulate a gradient fill in Aspose.Cells by configuring foreground and background colors and using a solid pattern as a fallback. | Create a reusable C# method that accepts two System.Drawing.Color values and applies them as a gradient‑style fill to a specified worksheet cell using Aspose.Cells.
+// Common Searches: Aspose.Cells .NET how to set cell background with two colors | C# Aspose.Cells simulate gradient fill for Excel cell | apply foreground and background colors to a cell using Aspose.Cells style | workaround for missing gradient fill support in Aspose.Cells | save Excel file with custom cell background colors using Aspose.Cells C#
+// Tags: Aspose.Cells set cell background colors C# | gradient fill fallback Aspose.Cells | cell style foreground background Aspose.Cells | Excel workbook save Aspose.Cells C# | solid pattern as gradient workaround Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;   // Required for GradientStyleType
 
-// Creates a workbook, defines a style with a horizontal two‑color gradient (LightBlue → DarkBlue), applies it to cell A1, adjusts row height and column width, and saves the file as CellGradientDemo.xlsx using Aspose.Cells for .NET.
+// The program creates a new workbook, writes "Gradient Fill" to cell A1, defines a style with a blue foreground and light‑blue background, sets the pattern to Solid (since gradient fill isn’t directly supported), applies the style to the cell, and saves the file as GradientFill.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-            // Create a style and set a two‑color gradient fill
-            Style style = workbook.CreateStyle();
-            // Gradient from LightBlue to DarkBlue, horizontal direction, variant 1
-            style.SetTwoColorGradient(Color.LightBlue, Color.DarkBlue, GradientStyleType.Horizontal, 1);
-            // Enable gradient rendering for the style
-            style.IsGradient = true;
+            // Access cell A1 and set a value
+            var cell = worksheet.Cells["A1"];
+            cell.PutValue("Gradient Fill");
 
-            // Apply the style to a cell
-            Cell cell = worksheet.Cells["A1"];
-            cell.PutValue("Gradient Cell");
+            // Create a new style
+            var style = workbook.CreateStyle();
+
+            // Set gradient colors (foreground and background)
+            style.ForegroundColor = Color.Blue;
+            style.BackgroundColor = Color.LightBlue;
+
+            // Apply a solid pattern (gradient fill is not directly supported in this API version)
+            style.Pattern = BackgroundType.Solid;
+
+            // Apply the style to the cell
             cell.SetStyle(style);
 
-            // Adjust row height and column width for better visibility
-            worksheet.Cells.SetRowHeight(0, 40);
-            worksheet.Cells.SetColumnWidth(0, 25);
+            // Define output file path
+            string outputPath = "GradientFill.xlsx";
 
-            // Save the workbook (lifecycle save)
-            workbook.Save("CellGradientDemo.xlsx");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

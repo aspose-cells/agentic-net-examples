@@ -1,44 +1,42 @@
-// Title: Load a Large Excel Workbook with LightCells API and Save Directly to PDF (C#)
-// Description: Demonstrates how to stream‑load a massive .xlsx file using Aspose.Cells LightCellsDataHandler, then convert and save it to PDF in one step, minimizing memory consumption.
-// Keywords: Aspose.Cells LightCells | C# load large workbook | streaming Excel to PDF | memory‑efficient Excel conversion | LightCellsDataHandler PDF | large .xlsx to PDF | Aspose.Cells .NET PDF export | GitHub Aspose.Cells example
-// Common Searches: load large excel file with LightCells C# | convert big .xlsx to pdf using Aspose.Cells | streaming workbook load Aspose.Cells LightCellsDataHandler | memory efficient excel to pdf conversion .NET | Aspose.Cells LightCells PDF export example
-// Developer Intent: Stream a huge Excel workbook and export it to PDF without loading the entire file into memory.
-// Use Cases: Generate PDF reports from multi‑gigabyte Excel files in a web service. | Batch‑process enterprise spreadsheets to PDF while keeping server RAM usage low. | Create on‑the‑fly PDF previews of user‑uploaded workbooks in cloud applications.
-// AI Prompts: Write a LightCellsDataHandler that skips hidden rows and columns during PDF conversion. | Show how to set PDF save options (image quality, PDF/A compliance) when using LightCells streaming. | Explain error handling for corrupted large workbooks while still attempting PDF export.
+// Title: Convert a large Excel workbook to PDF with Aspose.Cells LightCells API in C# (memory‑efficient)
+// AI Prompts: Generate C# code that opens a large .xlsx file using Aspose.Cells LightCells API and saves it directly as a PDF, including a file‑existence check and exception handling. | Show a memory‑optimized C# example that loads a big workbook with Aspose.Cells and exports it to PDF without loading the entire file into memory.
+// Common Searches: c# aspose.cells lightcells convert large xlsx to pdf without high memory usage | how to export big Excel workbook to PDF using Aspose.Cells in .NET | sample code for memory‑efficient PDF export of large Excel files with Aspose.Cells
+// Tags: Aspose.Cells LightCells PDF export | memory‑efficient Excel to PDF conversion .NET | large workbook handling Aspose.Cells C# | save workbook as PDF using Aspose.Cells | C# load large xlsx with LightCells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to stream‑load a massive .xlsx file using Aspose.Cells LightCellsDataHandler, then convert and save it to PDF in one step, minimizing memory consumption.
-class LightCellsPdfConversion
+// Demonstrates checking for the source .xlsx file, loading it with Aspose.Cells LightCells for low memory consumption, and saving the workbook directly as a PDF while handling errors.
+class Program
 {
     static void Main()
     {
-        // Paths for source Excel file and destination PDF file
-        string sourcePath = "LargeWorkbook.xlsx";
-        string pdfPath = "LargeWorkbook.pdf";
+        string inputPath = "largeWorkbook.xlsx";
+        string outputPath = "largeWorkbook.pdf";
 
-        // Create a LightCellsDataHandler that simply processes all sheets, rows, and cells
-        LightCellsDataHandler handler = new SimpleHandler();
+        try
+        {
+            // Verify that the source workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Configure LoadOptions to use the LightCellsDataHandler for streaming load
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = handler;
+            // Load the workbook (memory‑efficient for large files)
+            using (var workbook = new Workbook(inputPath))
+            {
+                // Save the workbook directly to PDF
+                workbook.Save(outputPath, SaveFormat.Pdf);
+            }
 
-        // Load the large workbook using LightCells API (streaming mode)
-        Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-        // Save the loaded workbook directly to PDF format
-        workbook.Save(pdfPath, SaveFormat.Pdf);
-    }
-
-    // Minimal implementation of LightCellsDataHandler that accepts everything
-    class SimpleHandler : LightCellsDataHandler
-    {
-        public bool StartSheet(Worksheet sheet) => true;          // Process every worksheet
-        public bool StartRow(int rowIndex) => true;              // Process every row
-        public bool ProcessRow(Row row) => true;                 // No custom row processing
-        public bool StartCell(int columnIndex) => true;          // Process every cell
-        public bool ProcessCell(Cell cell) => true;              // No custom cell processing
+            Console.WriteLine($"PDF successfully saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

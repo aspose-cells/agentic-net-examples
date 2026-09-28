@@ -1,10 +1,7 @@
-// Title: Recursively Refresh Nested Pivot Tables in Excel Using Aspose.Cells for .NET (C#)
-// Description: This C# sample shows how to load an Excel workbook with Aspose.Cells, walk through each worksheet and its pivot tables, and update the pivot cache and calculated values for a pivot table and any linked child tables. It leverages RefreshData, CalculateData, and GetDependentPivotTables, includes file‑existence checks and exception handling, and writes the changes back to a new file.
-// Keywords: Aspose.Cells | C# | refresh pivot tables | nested pivot tables | recursive pivot refresh | GetDependentPivotTables | RefreshData | CalculateData | Excel workbook .NET | pivot cache update
-// Common Searches: Aspose.Cells refresh nested pivot tables | C# recursive pivot table refresh example | How to update child pivot tables in Excel with Aspose | GetDependentPivotTables usage .NET | RefreshData and CalculateData Aspose.Cells
-// Developer Intent: Update every pivot table and its dependent tables so they reflect the latest source data.
-// Use Cases: Automate pivot table updates after source data changes before distributing a report. | Process workbooks that contain multiple levels of linked pivot tables in a reporting pipeline. | Ensure data consistency when source ranges are modified in large Excel files. | Integrate a pivot‑refresh routine into existing Aspose.Cells automation scripts. | Handle missing input files gracefully while performing bulk workbook transformations.
-// AI Prompts: Write C# code using Aspose.Cells that walks through all worksheets and recursively refreshes each pivot table and its dependent tables, with proper error handling. | Show how to use GetDependentPivotTables to locate child pivot tables and refresh them after calling RefreshData and CalculateData. | Explain how to embed a recursive pivot‑refresh function into a larger Aspose.Cells workflow that processes multiple Excel files.
+// Title: How to recursively refresh nested pivot tables in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that accepts an Aspose.Cells PivotTable object and recursively refreshes its data cache and all dependent child pivot tables. | Demonstrate how to loop through every worksheet in a Workbook, call the recursive refresh for each pivot table hierarchy, and then save the updated workbook. | Provide error‑handled code that checks for the source file, loads the workbook, refreshes nested pivots, and writes the result to a new Excel file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# refresh nested pivot tables in all worksheets | recursive refresh of dependent pivot tables using Aspose.Cells .NET | how to update pivot cache for child pivots programmatically with Aspose.Cells | C# code to refresh pivot table hierarchy in an Excel file
+// Tags: Aspose.Cells recursive pivot refresh | refresh dependent pivot tables .NET | nested pivot tables Excel Aspose.Cells | pivot cache update C# Aspose.Cells | calculate pivot data programmatically
 
 using System;
 using System.IO;
@@ -13,10 +10,10 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // This C# sample shows how to load an Excel workbook with Aspose.Cells, walk through each worksheet and its pivot tables, and update the pivot cache and calculated values for a pivot table and any linked child tables. It leverages RefreshData, CalculateData, and GetDependentPivotTables, includes file‑existence checks and exception handling, and writes the changes back to a new file.
-    public class RefreshNestedPivotTables
+    // The example loads an Excel workbook, recursively refreshes each pivot table and its dependent child pivots by calling RefreshData and CalculateData, iterates through all worksheets to apply the refresh, and saves the updated workbook.
+    public class RefreshNestedPivotTablesDemo
     {
-        // Recursively refresh a pivot table and all its dependent (child) pivot tables
+        // Recursively refresh a pivot table and all its dependent (child) pivots
         private static void RefreshPivotAndChildren(PivotTable pivotTable)
         {
             try
@@ -24,7 +21,7 @@ namespace AsposeCellsExamples
                 // Refresh the pivot cache from the source data
                 pivotTable.RefreshData();
 
-                // Recalculate the pivot table values
+                // Recalculate the pivot table values in the worksheet
                 pivotTable.CalculateData();
 
                 // Get dependent pivot tables that use this pivot as a data source
@@ -42,35 +39,41 @@ namespace AsposeCellsExamples
             }
         }
 
+        // Refresh all pivot tables in a worksheet, including nested ones
+        private static void RefreshAllPivotTablesInWorksheet(Worksheet worksheet)
+        {
+            foreach (PivotTable pivotTable in worksheet.PivotTables)
+            {
+                RefreshPivotAndChildren(pivotTable);
+            }
+        }
+
         public static void Run()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            const string inputPath = "InputWithNestedPivots.xlsx";
+            const string outputPath = "OutputWithRefreshedNestedPivots.xlsx";
 
             try
             {
                 // Ensure the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the workbook that contains the pivot tables
+                // Load the workbook that contains the source data and pivot tables
                 Workbook workbook = new Workbook(inputPath);
 
-                // Iterate through all worksheets and their pivot tables
+                // Refresh nested pivot tables for every worksheet in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    foreach (PivotTable pivot in sheet.PivotTables)
-                    {
-                        RefreshPivotAndChildren(pivot);
-                    }
+                    RefreshAllPivotTablesInWorksheet(sheet);
                 }
 
                 // Save the updated workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
@@ -79,7 +82,7 @@ namespace AsposeCellsExamples
             }
         }
 
-        // Entry point required for the application
+        // Entry point required for compilation
         public static void Main(string[] args)
         {
             Run();

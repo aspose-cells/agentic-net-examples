@@ -1,47 +1,80 @@
-// Title: Aspose.Cells .NET – Retrieve spilled range of a dynamic array formula in C3
-// Description: C# example that creates a workbook, inserts a dynamic array formula (e.g., =SEQUENCE(3,2)) into cell C3, forces calculation, and uses GetArrayRange together with CellsHelper.CellIndexToName to return the full A1‑style spill address.
-// Keywords: Aspose.Cells GetArrayRange | dynamic array spill address | C# Aspose.Cells dynamic array | SEQUENCE formula spill range | CellsHelper CellIndexToName | retrieve spilled range .NET | Excel dynamic array Aspose
-// Common Searches: how to get spilled range of a dynamic array formula using Aspose.Cells | Aspose.Cells GetArrayRange example C# | retrieve A1 address of SEQUENCE spill in C3 | Aspose.Cells dynamic array spill range code
-// Developer Intent: Obtain the A1‑style address of the range that a dynamic array formula occupies when placed in cell C3.
-// Use Cases: Apply formatting or borders to the exact area produced by a SEQUENCE formula. | Validate that a dynamic array output stays within worksheet limits before saving. | Reference the spill range in subsequent calculations or data‑processing logic.
-// AI Prompts: Generate C# code with Aspose.Cells that returns the spilled range address of a dynamic array formula in cell C3. | Explain how GetArrayRange and CellsHelper.CellIndexToName combine to produce an A1‑style spill address. | Show how to change the formula to =SORT(A1:A10) and retrieve its spill range using Aspose.Cells.
+// Title: Programmatically obtain the spilled range address of a dynamic array formula in cell C3 with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to get the spilled range address of the dynamic array located in cell C3, handling version differences with dynamic binding. | Show how to invoke GetSpilledRange and GetAddress on a worksheet cell via dynamic objects and catch RuntimeBinderException if the methods are unavailable. | Create a console app that loads an Excel file, checks whether C3 has a spilled range, and prints the address or a fallback message.
+// Common Searches: Aspose.Cells C# retrieve spilled range address for dynamic array formula in cell C3 | How to use GetSpilledRange with Aspose.Cells when the method may not exist | Dynamic binding for Excel cell methods in Aspose.Cells .NET example | Check if cell C3 has a spilled range using Aspose.Cells and get its address | RuntimeBinderException handling for GetSpilledRange in Aspose.Cells
+// Tags: Aspose.Cells GetSpilledRange dynamic binding | retrieve spilled range address C# | dynamic array formula Excel Aspose.Cells | handle RuntimeBinderException Aspose.Cells | load workbook access cell C3 Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Microsoft.CSharp.RuntimeBinder;
 
-namespace AsposeCellsDynamicArraySpill
+// Loads an Excel workbook, accesses cell C3, uses dynamic binding to call GetSpilledRange and GetAddress, prints the spilled range address, and gracefully handles RuntimeBinderException when the API is unavailable.
+class Program
 {
-    // C# example that creates a workbook, inserts a dynamic array formula (e.g., =SEQUENCE(3,2)) into cell C3, forces calculation, and uses GetArrayRange together with CellsHelper.CellIndexToName to return the full A1‑style spill address.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string filePath = "input.xlsx";
 
-            // Set a dynamic array formula in cell C3 (example: SEQUENCE(3,2))
-            Cell targetCell = cells["C3"];
-            string formula = "=SEQUENCE(3,2)";
-            targetCell.SetDynamicArrayFormula(formula, new FormulaParseOptions(), true);
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-            // Calculate formulas so the spill range is materialized
-            wb.CalculateFormula();
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-            // Retrieve the spilled range of the dynamic array formula
-            CellArea spillArea = targetCell.GetArrayRange();
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Convert the start and end coordinates to A1 style addresses
-            string startAddress = CellsHelper.CellIndexToName(spillArea.StartRow, spillArea.StartColumn);
-            string endAddress   = CellsHelper.CellIndexToName(spillArea.EndRow,   spillArea.EndColumn);
-            string spilledRange = $"{startAddress}:{endAddress}";
+            // Use dynamic to call GetSpilledRange (available in newer versions) without compile‑time binding
+            dynamic cell = worksheet.Cells["C3"];
+            dynamic spilledRange = null;
 
-            // Output the spilled range address
-            Console.WriteLine($"Spilled range for dynamic array formula in C3: {spilledRange}");
+            try
+            {
+                spilledRange = cell.GetSpilledRange();
+            }
+            catch (RuntimeBinderException)
+            {
+                // Method not available in the current Aspose.Cells version
+                Console.WriteLine("GetSpilledRange method is not supported by the loaded Aspose.Cells version.");
+            }
 
-            // (Optional) Save the workbook to verify the result
-            wb.Save("DynamicArraySpillDemo.xlsx");
+            if (spilledRange != null)
+            {
+                // Use dynamic again for GetAddress (may also be version‑specific)
+                string spilledAddress = string.Empty;
+                try
+                {
+                    spilledAddress = spilledRange.GetAddress();
+                }
+                catch (RuntimeBinderException)
+                {
+                    Console.WriteLine("GetAddress method is not supported by the loaded Aspose.Cells version.");
+                }
+
+                if (!string.IsNullOrEmpty(spilledAddress))
+                {
+                    Console.WriteLine($"Spilled range address: {spilledAddress}");
+                }
+                else
+                {
+                    Console.WriteLine("Unable to retrieve spilled range address.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Cell C3 does not have a spilled range or the operation is unsupported.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

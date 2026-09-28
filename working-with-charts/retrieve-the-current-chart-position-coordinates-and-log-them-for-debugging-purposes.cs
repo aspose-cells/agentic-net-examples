@@ -1,18 +1,16 @@
-// Title: Get Chart Point Coordinates (Pixel & Relative) with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a column chart, runs chart.Calculate() and reads the first point's ShapeXPx, ShapeYPx, ShapeX and ShapeY values, then logs them for debugging before saving the file.
-// Keywords: Aspose.Cells chart point coordinates | ChartPoint ShapeXPx ShapeYPx | Aspose.Cells chart.Calculate | C# retrieve chart shape position | Aspose.Cells debugging chart layout | relative chart point units 1/4000 | Aspose.Cells get pixel location
-// Common Searches: how to read pixel position of a chart point in Aspose.Cells | Aspose.Cells chart.Calculate to obtain shape coordinates | retrieve ShapeX and ShapeY values from a chart series C# | log chart point location for debugging Aspose.Cells | convert chart point relative units to percentage Aspose.Cells
-// Developer Intent: Extract X/Y coordinates of a chart point and output them for troubleshooting.
-// Use Cases: Verify exact placement of data points when programmatically adjusting chart size. | Compare relative ShapeX/ShapeY values to align custom graphics over a chart. | Capture point coordinates for export to external reporting tools.
-// AI Prompts: Show C# code that uses Aspose.Cells to read ShapeXPx and ShapeYPx of the first point after calling chart.Calculate(). | Explain how to translate ShapeX and ShapeY (1/4000 of chart size) into percentage values of the chart area. | Suggest ways to write chart point coordinates to a log file instead of the console in a .NET application.
+// Title: How to retrieve and log an Aspose.Cells chart’s cell position, pixel size, and data point coordinates in C#
+// AI Prompts: Write C# code that uses Aspose.Cells to read a chart’s UpperLeftRow, UpperLeftColumn, Width, and Height properties and output them to the console. | Show how to invoke Chart.Calculate() and then extract the ShapeXPx, ShapeYPx, ShapeX, and ShapeY values of a specific ChartPoint for debugging. | Demonstrate saving the workbook after logging chart placement and point coordinate information with Aspose.Cells.
+// Common Searches: Aspose.Cells C# get chart upper left cell row and column | How to read pixel coordinates of a chart point using Aspose.Cells .NET | Debugging chart position and size in an Excel file with Aspose.Cells | Retrieve chart shape X Y ratio values Aspose.Cells C# example
+// Tags: retrieve chart cell position Aspose.Cells | log chart pixel dimensions C# | calculate chart shape coordinates Aspose.Cells | debug excel chart placement Aspose.Cells | read chart point shape values .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsChartDebug
 {
-    // Creates a workbook, adds a column chart, runs chart.Calculate() and reads the first point's ShapeXPx, ShapeYPx, ShapeX and ShapeY values, then logs them for debugging before saving the file.
+    // The example creates a workbook, adds sample data and a column chart, calls Chart.Calculate() to populate shape metrics, then logs the chart object's UpperLeftRow/UpperLeftColumn, pixel Width/Height, and the first series point's pixel (ShapeXPx/ShapeYPx) and ratio (ShapeX/ShapeY) coordinates before saving the file.
     public class RetrieveChartPosition
     {
         public static void Run()
@@ -33,39 +31,54 @@ namespace AsposeCellsChartDebug
                 worksheet.Cells["B3"].PutValue(20);
                 worksheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart to the worksheet
+                // Add a column chart (rows 5‑20, columns 0‑8)
                 int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
                 Chart chart = worksheet.Charts[chartIndex];
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Calculate the chart so that shape position properties are populated
+                // Calculate the chart so that shape positions are populated
                 chart.Calculate();
 
                 // Retrieve the first point of the first series
                 ChartPoint point = chart.NSeries[0].Points[0];
 
-                // Log the current X and Y coordinates in pixels
-                Console.WriteLine("Chart Point Position (pixels):");
-                Console.WriteLine($"  ShapeXPx = {point.ShapeXPx}");
-                Console.WriteLine($"  ShapeYPx = {point.ShapeYPx}");
+                // Log chart object's upper‑left cell position
+                Console.WriteLine("Chart upper‑left cell: Row = " + chart.ChartObject.UpperLeftRow +
+                                  ", Column = " + chart.ChartObject.UpperLeftColumn);
 
-                // Also log the relative coordinates (1/4000 of chart size)
-                Console.WriteLine("Chart Point Position (relative units):");
-                Console.WriteLine($"  ShapeX = {point.ShapeX}");
-                Console.WriteLine($"  ShapeY = {point.ShapeY}");
+                // Log chart object's pixel size (optional, useful for debugging)
+                Console.WriteLine("Chart size (pixels): Width = " + chart.ChartObject.Width +
+                                  ", Height = " + chart.ChartObject.Height);
 
-                // Save the workbook (optional, just to keep the example complete)
-                workbook.Save("ChartPositionDebug.xlsx");
+                // Log the point's position in pixels
+                Console.WriteLine("Chart point position (pixels): X = " + point.ShapeXPx +
+                                  ", Y = " + point.ShapeYPx);
+
+                // Log the point's position in 1/4000 of chart width/height
+                Console.WriteLine("Chart point position (ratio units): X = " + point.ShapeX +
+                                  " (1/4000 of width), Y = " + point.ShapeY + " (1/4000 of height)");
+
+                // Determine output file path and ensure directory exists
+                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "ChartPositionDebug.xlsx");
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook (debug file)
+                workbook.Save(outputFile);
+                Console.WriteLine("Workbook saved to: " + outputFile);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }
 
-    // Entry point for the console application
+    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

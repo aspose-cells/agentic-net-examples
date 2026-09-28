@@ -1,29 +1,51 @@
-// Title: C# – Retrieve Worksheet by Name, Show Formulas, and Save Workbook with Aspose.Cells
-// Description: Loads an existing Excel file, accesses a worksheet using its name, enables the ShowFormulas flag so formulas appear instead of calculated values, and saves the workbook to a new file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# Excel manipulation | worksheet by name | ShowFormulas property | display formulas | save workbook | load Excel file | toggle formula view | Excel sheet debugging
-// Common Searches: Aspose.Cells show formulas C# | retrieve worksheet by name Aspose.Cells | how to enable ShowFormulas for a sheet | save workbook after changing formula display | display formulas instead of values Aspose.Cells .NET
-// Developer Intent: Open a workbook, locate a specific sheet via its name, turn on formula display for that sheet, and write the updated file back to disk.
-// Use Cases: Auditor needs a copy of a financial model that reveals all underlying formulas. | Developer creates a debugging version of a spreadsheet to trace calculation errors. | Technical writer generates documentation that prints formulas rather than results. | QA team validates that cell references are correct by viewing formulas directly.
-// AI Prompts: Generate C# code with Aspose.Cells that opens an Excel file, selects a worksheet by its name, sets ShowFormulas = true, and saves to a new file. | Explain the impact of the ShowFormulas property on worksheet rendering and how to apply it to multiple sheets in a workbook. | Provide a C# try‑catch example that handles a missing worksheet name when using Aspose.Cells. | Show how to toggle ShowFormulas for all worksheets in a workbook using a loop.
+// Title: Retrieve a worksheet by name, display its formulas, and save the workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing Excel file using Aspose.Cells, selects a worksheet by its name (or the first sheet if the name is missing), sets ShowFormulas = true, and saves the result to a new file. | Generate a try‑catch block that checks whether the input Excel file exists, loads the workbook, toggles the ShowFormulas property on a specific worksheet, and handles any exceptions while saving the workbook. | Create a reusable C# method that accepts inputPath, outputPath, and sheetName, loads the workbook with Aspose.Cells, ensures the worksheet is present, enables formula view, and writes the modified workbook to the output path.
+// Common Searches: Aspose.Cells C# show formulas for a specific worksheet and save workbook | How to get worksheet by name with fallback to first sheet using Aspose.Cells .NET | Set ShowFormulas property in Aspose.Cells and export to a new Excel file | C# verify Excel file exists before loading with Aspose.Cells | Display formulas instead of values in an Aspose.Cells workbook
+// Tags: get worksheet by name Aspose.Cells | enable ShowFormulas property C# | fallback to first worksheet Aspose.Cells | save modified workbook Aspose.Cells | verify input Excel file existence C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an existing Excel file, accesses a worksheet using its name, enables the ShowFormulas flag so formulas appear instead of calculated values, and saves the workbook to a new file using Aspose.Cells for .NET.
+// // Loads input.xlsx, obtains the worksheet named "MySheet" (or the first sheet if not found), enables ShowFormulas to display formulas instead of calculated values, and saves the modified workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook from disk
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string sheetName = "MySheet";
 
-        // Retrieve the worksheet by its name (replace "Sheet1" with the actual sheet name)
-        Worksheet worksheet = workbook.Worksheets["Sheet1"];
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Set the worksheet to display formulas instead of calculated values
-        worksheet.ShowFormulas = true;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Retrieve the worksheet by name; fallback to the first worksheet if not found
+            Worksheet sheet = workbook.Worksheets[sheetName];
+            if (sheet == null)
+            {
+                Console.WriteLine($"Worksheet \"{sheetName}\" not found. Using the first worksheet.");
+                sheet = workbook.Worksheets[0];
+            }
+
+            // Display formulas instead of calculated values
+            sheet.ShowFormulas = true;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

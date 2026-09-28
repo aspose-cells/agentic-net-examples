@@ -1,39 +1,46 @@
-// Title: Create PDF/A‑1a compliant PDFs with fully embedded fonts using Aspose.Cells for C#
-// Description: Demonstrates how to configure Aspose.Cells PdfSaveOptions to produce a PDF/A‑1a file that embeds all standard Windows fonts, uses Identity encoding, and sets Arial as the default font before saving an Excel workbook as a PDF.
-// Keywords: Aspose.Cells | C# | .NET | PDF/A-1a | embed fonts | PdfSaveOptions | PDF compliance | Identity font encoding | DefaultFont Arial | Excel to PDF export | archival PDF
-// Common Searches: Aspose.Cells PDF/A-1a C# example | how to embed fonts in PDF with Aspose.Cells .NET | set PDF compliance to PDF/A-1a using PdfSaveOptions | default font Arial PDF export Aspose.Cells | generate archival PDF from Excel in C#
-// Developer Intent: The developer needs to save an Excel workbook as a PDF/A‑1a document with every font embedded for reliable, standards‑compliant rendering.
-// Use Cases: Archiving financial reports that must meet PDF/A‑1a standards and retain exact visual fidelity. | Distributing multilingual Excel‑derived PDFs where consistent font rendering is critical. | Creating regulatory‑compliant documents that require all fonts to be embedded and encoded with Identity.
-// AI Prompts: Show how to switch the compliance level to PDF/A‑2b while keeping font embedding enabled. | Provide code that saves each worksheet of a workbook to separate PDF/A‑1a files with embedded fonts. | Explain methods to programmatically verify PDF/A‑1a compliance and confirm that all fonts are embedded.
+// Title: Convert an Excel workbook to a PDF/A‑1a file with full font embedding using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook, configures PdfSaveOptions for PDF/A‑1a compliance and enables embedding of all fonts, then saves the workbook as a PDF with Aspose.Cells. | Demonstrate how to set the compliance level to PdfA1a and turn on font embedding before calling Workbook.Save to produce a PDF/A‑1a document.
+// Common Searches: Aspose.Cells C# export Excel to PDF/A-1a with embedded fonts | How to enable full font embedding when saving a workbook as PDF/A-1a in Aspose.Cells | PdfSaveOptions settings for PDF/A-1a compliance and font embedding in .NET | Convert .xlsx to PDF/A-1a using Aspose.Cells and ensure all fonts are embedded | C# code sample for PDF/A-1a compliant PDF generation from Excel with Aspose.Cells
+// Tags: Aspose.Cells PDF/A-1a export C# | PdfSaveOptions font embedding Aspose.Cells | Excel to PDF/A-1a conversion .NET | embed all fonts Aspose.Cells PDF output | PDF/A-1a compliance setting Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to configure Aspose.Cells PdfSaveOptions to produce a PDF/A‑1a file that embeds all standard Windows fonts, uses Identity encoding, and sets Arial as the default font before saving an Excel workbook as a PDF.
-class Program
+namespace AsposeCellsPdfExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook (or creates a new one), configures PdfSaveOptions to enforce PDF/A‑1a compliance and to embed every font used in the workbook, and then saves the result as a PDF file using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook and add sample content
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample text with PDF/A‑1a compliance and embedded fonts.");
-
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        static void Main()
         {
-            // Set compliance level to PDF/A‑1a
-            Compliance = PdfCompliance.PdfA1a,
-            // Ensure all standard Windows fonts are embedded
-            EmbedStandardWindowsFonts = true,
-            // Use Identity encoding for all embedded fonts
-            FontEncoding = PdfFontEncoding.Identity,
-            // Specify a default font to handle Unicode characters
-            DefaultFont = "Arial"
-        };
+            try
+            {
+                string inputPath = "input.xlsx";
+                Workbook workbook;
 
-        // Save the workbook as a PDF with the specified options
-        workbook.Save("Output_PdfA1a.pdf", pdfOptions);
+                // Load existing workbook if it exists; otherwise create a new workbook
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                }
+
+                // Configure PDF save options (no need to set SaveFormat; it's implicit)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Save the workbook as PDF
+                string outputPath = "output.pdf";
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

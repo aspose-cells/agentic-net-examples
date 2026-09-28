@@ -1,19 +1,15 @@
-// Title: Export Aspose.Cells Chart to PDF (A4 portrait) with centered alignment in C#
-// Description: Creates a workbook, adds a column chart, sets the chart's page setup to A4 portrait, and uses Chart.ToPdf to generate a centered PDF (8.27 × 11.69 in) named ChartA4Portrait.pdf.
-// Keywords: Aspose.Cells chart to PDF | C# export chart PDF | A4 portrait PDF Aspose.Cells | Chart.ToPdf alignment | set paper size Aspose.Cells
-// Common Searches: Aspose.Cells export chart to PDF A4 portrait C# | How to set page size for chart PDF in Aspose.Cells | C# chart ToPdf with custom width and height | center chart on PDF using Aspose.Cells | Aspose.Cells chart page setup orientation
-// Developer Intent: Generate a PDF file from an Aspose.Cells chart using A4 portrait dimensions and center the chart on the page.
-// Use Cases: Produce printable sales charts for reports that must fit an A4 page. | Automate batch conversion of workbook charts to A4 portrait PDFs for archival. | Create PDF handouts of dashboards where each chart needs consistent page size and alignment.
-// AI Prompts: Write C# code with Aspose.Cells to export a chart to an A4 portrait PDF and center it. | Show how to configure PaperSize and Orientation for a chart before calling ToPdf. | Explain the width and height parameters of Chart.ToPdf for different page formats.
+// Title: Export an Aspose.Cells column chart to a PDF file with A4 portrait page size using C#
+// AI Prompts: Write C# code that builds a workbook, adds a column chart, sets the chart's PageSetup to PaperSizeType.PaperA4 and PageOrientationType.Portrait, and saves the chart as a PDF with Aspose.Cells. | Demonstrate how to configure a chart's page dimensions and orientation before calling ToPdf in Aspose.Cells for .NET.
+// Common Searches: asp.net aspose.cells export chart to pdf a4 portrait orientation | c# set chart page size to A4 before PDF export using Aspose.Cells | how to change chart orientation to portrait in Aspose.Cells and generate PDF | Aspose.Cells chart ToPdf with specific paper size and orientation C#
+// Tags: Aspose.Cells chart export to PDF | chart PageSetup A4 portrait | PaperSizeType.PaperA4 chart configuration | PageOrientationType.Portrait Aspose.Cells | column chart PDF generation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsChartPdfExport
+namespace AsposeCellsChartExport
 {
-    // Creates a workbook, adds a column chart, sets the chart's page setup to A4 portrait, and uses Chart.ToPdf to generate a centered PDF (8.27 × 11.69 in) named ChartA4Portrait.pdf.
+    // The sample creates a workbook, inserts sample data, adds a column chart, configures the chart's PageSetup to A4 portrait, and exports the chart to a PDF file named Chart_A4_Portrait.pdf using Aspose.Cells for .NET.
     public class ExportChartToPdfA4Portrait
     {
         public static void Run()
@@ -42,20 +38,14 @@ namespace AsposeCellsChartPdfExport
                 chart.NSeries.Add("B2:B3", true);
                 chart.NSeries.CategoryData = "A2:A3";
 
-                // Configure page setup for A4 portrait
+                // Configure page setup for A4 size and portrait orientation
                 chart.PageSetup.PaperSize = PaperSizeType.PaperA4;
                 chart.PageSetup.Orientation = PageOrientationType.Portrait;
 
-                // Export the chart to PDF with A4 size (8.27 x 11.69 inches) and centered alignment
-                chart.ToPdf(
-                    "ChartA4Portrait.pdf",
-                    8.27f,               // page width in inches (A4 width)
-                    11.69f,              // page height in inches (A4 height)
-                    PageLayoutAlignmentType.Center, // horizontal alignment
-                    PageLayoutAlignmentType.Center  // vertical alignment
-                );
+                // Export the chart to a PDF file
+                chart.ToPdf("Chart_A4_Portrait.pdf");
 
-                Console.WriteLine("Chart exported to PDF with A4 portrait orientation successfully.");
+                Console.WriteLine("Chart exported to PDF with A4 portrait layout successfully.");
             }
             catch (Exception ex)
             {
@@ -64,7 +54,6 @@ namespace AsposeCellsChartPdfExport
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

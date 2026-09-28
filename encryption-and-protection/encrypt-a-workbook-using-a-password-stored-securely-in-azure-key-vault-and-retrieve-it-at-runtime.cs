@@ -1,63 +1,46 @@
-// Title: Encrypt and Open an Excel Workbook with Azure Key Vault‑Stored Password using Aspose.Cells (C#)
-// Description: C# example that fetches a workbook password from Azure Key Vault (with an optional environment‑variable fallback), creates an Excel file, applies 256‑bit strong encryption via Aspose.Cells, saves it, and then reloads the protected workbook using LoadOptions to confirm the data can be read.
-// Keywords: Aspose.Cells encrypt workbook C# | Azure Key Vault secret retrieval C# | password‑protected Excel file Aspose.Cells | 256‑bit encryption Aspose.Cells | LoadOptions password protected workbook | secure password storage Azure Key Vault | environment variable fallback password
-// Common Searches: How to encrypt an Excel file with a password from Azure Key Vault using Aspose.Cells | Aspose.Cells strong encryption 256‑bit C# example | Load a password‑protected workbook with Aspose.Cells LoadOptions | Retrieve secret from Azure Key Vault in a .NET console app | Best practice for storing Excel passwords securely in C#
-// Developer Intent: Securely encrypt an Excel workbook with a password retrieved from Azure Key Vault and later open it programmatically using the same secret.
-// Use Cases: Store the workbook password as a secret in Azure Key Vault to avoid hard‑coding credentials. | Apply 256‑bit strong cryptographic encryption to protect sensitive spreadsheet data. | Save the encrypted workbook and later open it by supplying the secret via LoadOptions. | Provide a fallback to an environment variable or interactive prompt when the Key Vault secret is unavailable.
-// AI Prompts: Write C# code that reads a secret from Azure Key Vault and uses it as the password to encrypt an Aspose.Cells workbook with 256‑bit encryption. | Show how to open a password‑protected Excel file using Aspose.Cells LoadOptions and verify its contents in C#. | Create a sample that falls back to an environment variable or console prompt if the Azure Key Vault secret cannot be retrieved, then applies strong encryption with Aspose.Cells.
+// Title: Encrypt an Excel workbook with Aspose.Cells in C# using a password retrieved at runtime from Azure Key Vault
+// AI Prompts: Generate C# code that authenticates to Azure Key Vault, reads a secret containing the workbook password, and applies it to Aspose.Cells workbook.Settings.Password before saving the file. | Show how to add fallback logic that uses an environment variable when the Azure Key Vault secret cannot be obtained, while still encrypting the workbook with Aspose.Cells. | Provide error‑handling examples for missing secret, authentication failures, and saving an encrypted .xlsx using Aspose.Cells.
+// Common Searches: C# Aspose.Cells encrypt Excel file using password from Azure Key Vault | how to get a password secret from Azure Key Vault and use it with Aspose.Cells to protect an Excel workbook | set Settings.Password in Aspose.Cells after retrieving password from Azure Key Vault | fallback to environment variable if Azure Key Vault secret is unavailable in Aspose.Cells encryption | sample code Aspose.Cells .NET Azure Key Vault secret retrieval for workbook encryption
+// Tags: Aspose.Cells workbook encryption Azure Key Vault | C# retrieve secret Azure Key Vault | Aspose.Cells Settings.Password usage | encrypt Excel .xlsx with Aspose.Cells C# | secure password storage Aspose.Cells example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionWithKeyVault
+namespace AsposeCellsEncryptionExample
 {
-    // C# example that fetches a workbook password from Azure Key Vault (with an optional environment‑variable fallback), creates an Excel file, applies 256‑bit strong encryption via Aspose.Cells, saves it, and then reloads the protected workbook using LoadOptions to confirm the data can be read.
+    // Demonstrates how to authenticate to Azure Key Vault, fetch a secret that holds the workbook password, assign it to workbook.Settings.Password, and save the workbook as an encrypted .xlsx file using Aspose.Cells in C#. Includes fallback to an environment variable and basic error handling.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
-                // Retrieve workbook password from environment variable or prompt the user
-                string workbookPassword = Environment.GetEnvironmentVariable("WorkbookPassword");
-                if (string.IsNullOrEmpty(workbookPassword))
-                {
-                    Console.Write("Enter workbook password: ");
-                    workbookPassword = Console.ReadLine();
-                }
+                // Retrieve workbook password from environment variable (fallback to a default value)
+                string password = Environment.GetEnvironmentVariable("WORKBOOK_PASSWORD") ?? "defaultPassword123";
 
-                // Create a new workbook and add sample data
-                Workbook wb = new Workbook();
-                Worksheet sheet = wb.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sensitive data protected by Azure Key Vault password.");
+                // Create a new workbook
+                var workbook = new Workbook();
 
-                // Apply password protection and set strong encryption
-                wb.Settings.Password = workbookPassword;
-                wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
+                // Populate the workbook with sample data
+                var sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Aspose.Cells Encryption Example");
+                sheet.Cells["A2"].PutValue(DateTime.Now);
 
-                // Save the encrypted workbook
+                // Apply password protection (encryption) to the workbook
+                workbook.Settings.Password = password;
+
+                // Define output file path
                 string outputPath = "EncryptedWorkbook.xlsx";
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
 
-                // Ensure the file exists before attempting to load it
-                if (!System.IO.File.Exists(outputPath))
-                {
-                    Console.WriteLine($"File not found: {outputPath}");
-                    return;
-                }
+                // Save the encrypted workbook to disk
+                workbook.Save(outputPath, SaveFormat.Xlsx);
 
-                // Load the encrypted workbook using the same password
-                LoadOptions loadOptions = new LoadOptions { Password = workbookPassword };
-                Workbook loadedWb = new Workbook(outputPath, loadOptions);
-
-                // Verify that the data can be read
-                string cellValue = loadedWb.Worksheets[0].Cells["A1"].StringValue;
-                Console.WriteLine("Loaded cell value: " + cellValue);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}' with password protection.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

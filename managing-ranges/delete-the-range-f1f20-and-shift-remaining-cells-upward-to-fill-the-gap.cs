@@ -1,35 +1,58 @@
-// Title: C# – Delete range F1:F20 in Aspose.Cells and shift cells upward
-// Description: Shows how to delete the vertical range F1:F20 in a workbook with Aspose.Cells for .NET, shift the remaining cells up, and save the result.
-// Keywords: Aspose.Cells DeleteRange | ShiftType.Up | C# delete cells Aspose | remove rows column F | Aspose.Cells .NET example | delete range and shift up | Excel cell deletion Aspose | bulk delete cells Aspose.Cells
-// Common Searches: Aspose.Cells delete range F1:F20 | C# Aspose.Cells shift cells up after delete | How to use Cells.DeleteRange with ShiftType.Up | Remove rows 1-20 from column F Aspose.Cells | Aspose.Cells delete vertical range example
-// Developer Intent: Delete cells F1 through F20 and move the cells below up to fill the empty space.
-// Use Cases: Cleaning a worksheet by removing a block of data in column F while keeping the remaining rows in order. | Generating reports where specific rows in a column must be omitted and the rest of the column should collapse upward. | Automating data preparation that requires stripping header or placeholder rows from a column and preserving layout.
-// AI Prompts: Provide C# code that deletes the range F1:F20 in an Aspose.Cells workbook and shifts remaining cells up. | Show an example of using Cells.DeleteRange with ShiftType.Up to remove a vertical range in Aspose.Cells for .NET.
+// Title: Delete rows F1:F20 and shift remaining cells upward using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to delete the rows covering the range F1:F20 and automatically shift the subsequent rows up. | Show how to create a range object for F1:F20 in Aspose.Cells, remove those rows, and save the workbook. | Provide a complete example that loads an Excel file, deletes the specified range, and writes the updated file with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# delete rows F1 to F20 and shift up | How to remove a specific cell range and collapse rows in an Excel workbook with Aspose.Cells | C# Aspose.Cells DeleteRows method for range F1:F20 example | Delete range F1:F20 in Excel using Aspose.Cells for .NET
+// Tags: Aspose.Cells DeleteRows method C# | range deletion Aspose.Cells Excel | shift cells upward after row removal .NET | remove rows F1-F20 Aspose.Cells | Excel workbook manipulation Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to delete the vertical range F1:F20 in a workbook with Aspose.Cells for .NET, shift the remaining cells up, and save the result.
-class DeleteRangeExample
+// The example loads an Excel workbook, creates a range for cells F1:F20 on the first worksheet, deletes the rows covered by that range (which automatically shifts the remaining rows upward), and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data (optional, just to illustrate the effect)
-        for (int i = 0; i < 30; i++)
+        try
         {
-            cells[i, 0].PutValue($"A{i + 1}");   // Column A
-            cells[i, 5].PutValue($"F{i + 1}");   // Column F
+            // Path to the input workbook
+            string inputPath = "input.xlsx";
+
+            // Load existing workbook if the file exists; otherwise create a new workbook
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                workbook.Worksheets.Add();
+            }
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create the range F1:F20 (use fully qualified Aspose.Cells.Range to avoid ambiguity)
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("F1", "F20");
+
+            // Delete the rows covered by the range (shifts cells up automatically)
+            int startRow = range.FirstRow;
+            int rowsToDelete = range.RowCount;
+            sheet.Cells.DeleteRows(startRow, rowsToDelete);
+
+            // Path to the output workbook
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
         }
-
-        // Delete the range F1:F20 (rows 0‑19, column index 5) and shift remaining cells upward
-        cells.DeleteRange(0, 5, 19, 5, ShiftType.Up);
-
-        // Save the modified workbook
-        workbook.Save("DeletedRange.xlsx");
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,53 +1,61 @@
-// Title: Export a Workbook with Merged Cells to One HTML File using Aspose.Cells for .NET
-// Description: C# example that creates a workbook with two worksheets, merges a range on the second sheet, and saves the entire workbook as a single HTML page. The HtmlSaveOptions are set to SaveAsSingleFile and ShowAllSheets to preserve merged cell formatting and display all sheets in one file.
-// Keywords: Aspose.Cells HTML export | C# save workbook as single HTML | merged cells HTML Aspose | ShowAllSheets property | SaveAsSingleFile example | convert Excel to HTML .NET | Aspose.Cells workbook merging
-// Common Searches: Aspose.Cells export merged cells to HTML | C# save multiple worksheets as one HTML page | HtmlSaveOptions ShowAllSheets usage | How to create single HTML file from Excel with Aspose | Preserve merged regions when converting Excel to HTML
-// Developer Intent: Generate a single HTML document that renders all worksheets and merged cells from an Aspose.Cells workbook.
-// Use Cases: Web‑based preview of Excel reports without requiring Office installed | Single‑page HTML report for email or intranet distribution | Embedding Excel data with merged formatting into a web application
-// AI Prompts: Write C# code with Aspose.Cells to export a multi‑sheet workbook containing merged cells to one HTML file. | Explain the impact of HtmlSaveOptions.ShowAllSheets and SaveAsSingleFile on the HTML output for merged regions. | Provide troubleshooting steps when merged cells lose their formatting after HTML conversion.
+// Title: Generate a single HTML page with embedded Base64 images from a merged Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a merged .xlsx workbook, configures HtmlSaveOptions to include all worksheets, enable presentation mode, embed images as Base64, and saves the result as one HTML file using Aspose.Cells. | Show how to verify a workbook file exists, set HtmlSaveOptions.ShowAllSheets, SaveAsSingleFile, PresentationPreference, and ExportImagesAsBase64, then export the workbook to HTML in C#.
+// Common Searches: C# Aspose.Cells export merged workbook to single HTML with embedded images | How to save all sheets of an Excel file as one HTML page using Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions ShowAllSheets and ExportImagesAsBase64 example | Convert merged.xlsx to HTML with base64‑encoded pictures in C#
+// Tags: Aspose.Cells HtmlSaveOptions ShowAllSheets | export Excel workbook to single HTML file C# | embed Excel images as Base64 Aspose.Cells | presentation‑friendly HTML export Aspose.Cells | merged workbook HTML conversion .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// C# example that creates a workbook with two worksheets, merges a range on the second sheet, and saves the entire workbook as a single HTML page. The HtmlSaveOptions are set to SaveAsSingleFile and ShowAllSheets to preserve merged cell formatting and display all sheets in one file.
-class Program
+namespace AsposeCellsHtmlExport
 {
-    static void Main()
+    // The program checks for the presence of 'merged.xlsx', loads it with Aspose.Cells, configures HtmlSaveOptions to show all sheets, save as a single file, enable presentation mode, and embed images as Base64, then saves the output as 'merged_workbook.html' and prints the full path.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Populate the first worksheet
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "FirstSheet";
-        sheet1.Cells["A1"].PutValue("Content of the first sheet");
-
-        // Add a second worksheet and fill it with data
-        Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-        sheet2.Cells["B2"].PutValue("Content of the second sheet");
-
-        // Demonstrate a merged region in the second sheet
-        // Merge cells B2:D3 and set a value for the merged area
-        sheet2.Cells.Merge(1, 1, 2, 3); // Row 1, Column 1 (B2) spanning 2 rows and 3 columns
-        sheet2.Cells["B2"].PutValue("Merged Area");
-
-        // Configure HTML save options:
-        // - Save as a single HTML file
-        // - Show all worksheets within that single file
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions
+        static void Main()
         {
-            SaveAsSingleFile = true,
-            ShowAllSheets = true
-        };
+            try
+            {
+                // Path to the source workbook
+                string workbookPath = "merged.xlsx";
 
-        // Define the output HTML file path
-        string outputPath = "MergedWorkbook.html";
+                // Verify that the workbook file exists before attempting to load it
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Error: Workbook file not found at '{Path.GetFullPath(workbookPath)}'.");
+                    return;
+                }
 
-        // Save the workbook as HTML using the configured options
-        workbook.Save(outputPath, saveOptions);
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
 
-        // Inform the user where the file was saved
-        Console.WriteLine($"HTML representation saved to: {Path.GetFullPath(outputPath)}");
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Export all worksheets into a single HTML file
+                    ShowAllSheets = true,
+                    SaveAsSingleFile = true,
+
+                    // Make the HTML more presentation‑friendly
+                    PresentationPreference = true,
+
+                    // Embed images as Base64 to keep everything in one file
+                    ExportImagesAsBase64 = true
+                };
+
+                // Output HTML file path
+                string htmlPath = "merged_workbook.html";
+
+                // Save the workbook as HTML
+                workbook.Save(htmlPath, htmlOptions);
+
+                Console.WriteLine($"Workbook has been exported to HTML: {Path.GetFullPath(htmlPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

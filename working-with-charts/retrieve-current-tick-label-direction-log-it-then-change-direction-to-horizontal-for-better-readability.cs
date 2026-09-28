@@ -1,16 +1,13 @@
-// Title: Read and Set Chart Category Axis Tick Label Direction with Aspose.Cells for .NET
-// Description: Shows how to retrieve the current TickLabels.DirectionType of a chart’s Category axis, log it to the console, change the orientation to Horizontal for better readability, and save the workbook.
-// Keywords: Aspose.Cells | C# | Chart tick label direction | ChartTextDirectionType | CategoryAxis | Horizontal tick labels | .NET Excel chart | read tick label orientation | set tick label direction
-// Common Searches: Aspose.Cells get tick label direction | change chart axis label orientation Aspose.Cells | ChartTextDirectionType Horizontal example | log chart tick label direction C# | modify category axis tick labels Aspose.Cells
-// Developer Intent: Retrieve the current tick label orientation of a chart axis, output it, and set it to Horizontal.
-// Use Cases: Improve readability of automatically generated Excel charts by forcing horizontal tick labels. | Capture the original label orientation for debugging or audit logs. | Dynamically adjust label direction based on the length of category names. | Standardize chart appearance across automated reporting pipelines.
-// AI Prompts: Generate C# code using Aspose.Cells that reads the CategoryAxis.TickLabels.DirectionType, prints the value, sets it to Horizontal, and saves the workbook. | Provide an example that logs the existing tick label direction before modifying it in an Aspose.Cells chart. | Create a function that evaluates category label length and switches TickLabels.DirectionType between Rotate45 and Horizontal accordingly.
+// Title: Read current tick label direction and set it to horizontal on a chart’s category axis using Aspose.Cells for .NET (C#)
+// AI Prompts: Demonstrate how to retrieve the DirectionType of a chart’s category axis tick labels and print it to the console with Aspose.Cells in C#. | Show C# code that changes the category axis tick labels to a horizontal orientation in an Aspose.Cells chart. | Provide a complete example that creates a workbook, adds a column chart, logs the existing tick label direction, updates it to horizontal, and saves the file.
+// Common Searches: Aspose.Cells C# get category axis tick label orientation | How to change chart axis tick labels to horizontal in Aspose.Cells .NET | Log current tick label DirectionType before modifying chart with Aspose.Cells | Set chart tick label direction horizontal programmatically using Aspose.Cells | Read and update chart axis label text direction Aspose.Cells example
+// Tags: Aspose.Cells chart category axis tick label direction | C# set chart tick labels horizontal | read chart tick label DirectionType .NET | modify chart axis label orientation Aspose.Cells | save workbook after changing tick label direction
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to retrieve the current TickLabels.DirectionType of a chart’s Category axis, log it to the console, change the orientation to Horizontal for better readability, and save the workbook.
+// The example creates a workbook, adds sample data, inserts a column chart, reads the current DirectionType of the category axis tick labels, writes the value to the console, changes the direction to Horizontal for better readability, and saves the workbook as TickLabelsDirectionChanged.xlsx.
 class Program
 {
     static void Main()
@@ -45,7 +42,7 @@ class Program
         // Change the direction to Horizontal for better readability
         tickLabels.DirectionType = ChartTextDirectionType.Horizontal;
 
-        // Save the workbook to a file
-        workbook.Save("TickLabelsDirectionDemo.xlsx");
+        // Save the workbook
+        workbook.Save("TickLabelsDirectionChanged.xlsx");
     }
 }

@@ -1,89 +1,69 @@
-// Title: Aspose.Cells .NET – Verify DeleteOptions.UpdateReference Is False Before Second Row Deletion
-// Description: C# example that creates a workbook, fills column A, deletes the second row with DeleteOptions.UpdateReference = true, then confirms DeleteOptions.UpdateReference defaults to false before deleting another row without updating references, and saves the file.
-// Keywords: Aspose.Cells DeleteOptions | UpdateReference false | C# delete rows Aspose.Cells | verify DeleteOptions property | row deletion without formula update | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells DeleteOptions.UpdateReference default value | how to delete rows without updating formulas in Aspose.Cells | check DeleteOptions.UpdateReference before DeleteRows | multiple row deletions with different UpdateReference settings | C# Aspose.Cells delete rows example
-// Developer Intent: Confirm that DeleteOptions.UpdateReference is false before executing the second DeleteRows call to avoid unintended reference updates.
-// Use Cases: Delete a row while shifting formula references, then delete another row while preserving existing references. | Implement a data‑cleanup routine that selectively updates references on the first deletion only. | Programmatically validate DeleteOptions settings at runtime to prevent accidental formula changes.
-// AI Prompts: Write C# code using Aspose.Cells that deletes one row with UpdateReference = true and a second row with UpdateReference = false, including runtime checks of the property. | Explain how DeleteOptions.UpdateReference influences formula references across worksheets in Aspose.Cells and show how to verify its value before calling DeleteRows. | Provide a step‑by‑step guide to test the default value of DeleteOptions.UpdateReference and ensure it remains false for subsequent DeleteRows operations.
+// Title: How to delete a row with UpdateReference=true and then conditionally delete another row with UpdateReference=false using Aspose.Cells for .NET
+// AI Prompts: Write C# code that removes a specific row from an Aspose.Cells worksheet with DeleteOptions.UpdateReference set to true, then removes a different row only after confirming DeleteOptions.UpdateReference is false. | Demonstrate how to check the UpdateReference flag of a DeleteOptions instance before performing a second row deletion in a .NET workbook.
+// Common Searches: Aspose.Cells C# delete row with UpdateReference true then false | verify DeleteOptions.UpdateReference before second row deletion .NET | conditional row removal using DeleteOptions in Aspose.Cells workbook | prevent reference updates when deleting rows with Aspose.Cells | C# example of DeleteRows with different UpdateReference settings
+// Tags: DeleteRows UpdateReference true Aspose.Cells | conditional row deletion DeleteOptions .NET | verify DeleteOptions.UpdateReference false | Aspose.Cells row removal without reference update | C# workbook row deletion based on DeleteOptions flag
 
 using System;
 using Aspose.Cells;
 
-// C# example that creates a workbook, fills column A, deletes the second row with DeleteOptions.UpdateReference = true, then confirms DeleteOptions.UpdateReference defaults to false before deleting another row without updating references, and saves the file.
-public class VerifyDeleteOptions
+namespace AsposeCellsExamples
 {
-    public static void Run()
+    // The example creates a workbook, fills column A with values 1‑5, deletes row 2 using DeleteOptions with UpdateReference = true, checks that a second DeleteOptions instance has UpdateReference = false, then deletes row 3, and finally saves the workbook.
+    public class VerifyDeleteOptionsUpdateReference
     {
-        try
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate sample data in column A (rows 0-4)
-            for (int i = 0; i < 5; i++)
+            try
             {
-                cells[i, 0].PutValue(i + 1); // A1..A5 = 1..5
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Populate sample data in column A (A1:A5 = 1,2,3,4,5)
+                for (int i = 0; i < 5; i++)
+                {
+                    cells[i, 0].PutValue(i + 1);
+                }
+
+                // First deletion: delete row 2 (index 1) with UpdateReference = true
+                DeleteOptions firstOptions = new DeleteOptions
+                {
+                    UpdateReference = true
+                };
+                cells.DeleteRows(1, 1, firstOptions);
+
+                // Second deletion: delete row 3 (original index 3, now index 2) with UpdateReference = false
+                DeleteOptions secondOptions = new DeleteOptions
+                {
+                    UpdateReference = false
+                };
+
+                if (!secondOptions.UpdateReference)
+                {
+                    cells.DeleteRows(2, 1, secondOptions);
+                    Console.WriteLine("Second deletion performed with UpdateReference = false.");
+                }
+                else
+                {
+                    Console.WriteLine("UpdateReference is not false; aborting second deletion.");
+                }
+
+                // Save the workbook to verify the result
+                string outputPath = "VerifyDeleteOptionsUpdateReference.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-
-            // ---------- First deletion ----------
-            // Create DeleteOptions with UpdateReference set to true
-            DeleteOptions firstOptions = new DeleteOptions
+            catch (Exception ex)
             {
-                UpdateReference = true
-            };
-
-            // Delete the second row (index 1) using the options
-            // This will update references in other worksheets (if any)
-            cells.DeleteRows(1, 1, firstOptions);
-
-            // Verify that the property is indeed true (optional check)
-            if (firstOptions.UpdateReference)
-            {
-                Console.WriteLine("First deletion: UpdateReference is true as expected.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // ---------- Second deletion ----------
-            // Create DeleteOptions without setting UpdateReference (defaults to false)
-            DeleteOptions secondOptions = new DeleteOptions();
-
-            // Verify that UpdateReference is false before performing the deletion
-            if (!secondOptions.UpdateReference)
-            {
-                Console.WriteLine("Second deletion: UpdateReference is false as expected.");
-
-                // Delete the (original) fourth row (now at index 2 after previous deletion)
-                cells.DeleteRows(2, 1, secondOptions);
-            }
-            else
-            {
-                // This block should not be reached; included for completeness
-                Console.WriteLine("Unexpected: UpdateReference is true before second deletion.");
-            }
-
-            // Save the workbook to verify the result
-            workbook.Save("VerifyDeleteOptions.xlsx");
-            Console.WriteLine("Workbook saved as VerifyDeleteOptions.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        try
+        // Entry point for the application
+        public static void Main(string[] args)
         {
-            VerifyDeleteOptions.Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
+            Run();
         }
     }
 }

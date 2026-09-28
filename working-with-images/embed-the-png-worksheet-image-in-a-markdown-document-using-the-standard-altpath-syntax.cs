@@ -1,56 +1,68 @@
-// Title: Render an Excel worksheet to PNG and embed it in Markdown using Aspose.Cells for .NET
-// Description: A C# example that creates a workbook, adds sample data, saves it, renders the first worksheet as a PNG image with Aspose.Cells, and generates a Markdown file that embeds the image using the standard `![alt](path)` syntax.
-// Keywords: Aspose.Cells PNG export | C# render worksheet to image | embed Excel image in Markdown | generate Markdown screenshot from Excel | Aspose.Cells markdown documentation | Excel to PNG conversion .NET | automated README image generation
-// Common Searches: export Excel sheet as PNG with Aspose.Cells | C# code to embed worksheet image in README.md | how to create markdown image link from Excel screenshot | Aspose.Cells render worksheet to image and write markdown | automate markdown documentation with Excel screenshots
-// Developer Intent: Produce a PNG snapshot of an Excel worksheet and automatically insert it into a Markdown file via the `![alt](path)` syntax.
-// Use Cases: Generate up‑to‑date documentation that includes visual snapshots of Excel data. | Add worksheet images to GitHub README or other markdown‑based project pages. | Create CI/CD pipelines that output markdown reports with embedded Excel screenshots. | Build static‑site content where Excel tables are displayed as images for consistent styling.
-// AI Prompts: Write C# code using Aspose.Cells to convert the first worksheet of a workbook to a PNG file and create a Markdown file that embeds the image with `![Worksheet Image](filename)`. | Explain how to configure ImageOrPrintOptions (resolution, scaling, margins) for high‑quality PNG output suitable for markdown documentation. | Provide a step‑by‑step guide to loop through all worksheets in an Excel file, render each to PNG, and generate a markdown file that includes all images with appropriate captions.
+// Title: Render an Excel worksheet to a PNG file and embed it in a Markdown document using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, saves the first worksheet as a PNG image with Aspose.Cells, and writes a Markdown file containing an ![alt](path) link to the image. | Write C# that iterates over all worksheets in a workbook, exports each to a separate PNG file using Aspose.Cells, and builds a single Markdown document that lists the images sequentially. | Provide a C# example that adds robust try‑catch logging, ensures output directories exist, and produces both PNG images of worksheets and a Markdown file with embedded image links via Aspose.Cells.
+// Common Searches: Aspose.Cells C# export worksheet as PNG and create markdown link | how to save Excel sheet as image and embed in markdown using .NET | C# code to generate markdown file with worksheet screenshot from Aspose.Cells | render multiple Excel worksheets to PNG and combine into one markdown document in C#
+// Tags: Aspose.Cells render worksheet to PNG | C# export Excel sheet as image | generate markdown with embedded image C# | SheetRender PNG export Aspose.Cells | markdown image link from Excel worksheet
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// A C# example that creates a workbook, adds sample data, saves it, renders the first worksheet as a PNG image with Aspose.Cells, and generates a Markdown file that embeds the image using the standard `![alt](path)` syntax.
+// The sample creates a new workbook, renders the first worksheet to a PNG file using Aspose.Cells, and writes a Markdown file that embeds the PNG image with the standard ![alt](path) syntax.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (creation rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some sample data
-        worksheet.Cells["A1"].PutValue("Hello");
-        worksheet.Cells["B1"].PutValue("World");
-
-        // Optional: add a picture to the worksheet
-        // int picIdx = worksheet.Pictures.Add(1, 1, "sample.png");
-
-        // Save the workbook (save rule) – not strictly required for the markdown, but follows lifecycle
-        string outputDir = "output";
-        Directory.CreateDirectory(outputDir);
-        string workbookPath = Path.Combine(outputDir, "workbook.xlsx");
-        workbook.Save(workbookPath);
-
-        // Render the worksheet to a PNG image file
-        string imagePath = Path.Combine(outputDir, "worksheet.png");
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+        try
         {
-            ImageType = Aspose.Cells.Drawing.ImageType.Png,
-            OnePagePerSheet = true
-        };
-        SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
-        // Render the first (and only) page to the PNG file
-        sheetRender.ToImage(0, imagePath);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sample";
 
-        // Create a Markdown file that embeds the PNG using the standard syntax
-        string markdownPath = Path.Combine(outputDir, "worksheet.md");
-        string markdownContent = $"![Worksheet Image]({Path.GetFileName(imagePath)})";
-        File.WriteAllText(markdownPath, markdownContent);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Hello");
+            sheet.Cells["B1"].PutValue("World");
 
-        Console.WriteLine($"Workbook saved to: {workbookPath}");
-        Console.WriteLine($"Worksheet image saved to: {imagePath}");
-        Console.WriteLine($"Markdown file created at: {markdownPath}");
+            // Define the PNG file path where the worksheet image will be saved
+            string pngPath = "WorksheetImage.png";
+
+            // Ensure the directory for the PNG exists
+            string pngDir = Path.GetDirectoryName(pngPath);
+            if (!string.IsNullOrEmpty(pngDir) && !Directory.Exists(pngDir))
+            {
+                Directory.CreateDirectory(pngDir);
+            }
+
+            // Set image export options (one page per sheet). PNG is the default format.
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                OnePagePerSheet = true
+            };
+
+            // Render the worksheet to an image and save it as PNG
+            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+            sheetRender.ToImage(0, pngPath); // 0 = first page of the sheet
+
+            // Build the markdown string that embeds the PNG image
+            string markdownContent = $"![Worksheet Image]({pngPath})";
+
+            // Define the markdown file path
+            string mdPath = "WorksheetImage.md";
+
+            // Ensure the directory for the markdown file exists
+            string mdDir = Path.GetDirectoryName(mdPath);
+            if (!string.IsNullOrEmpty(mdDir) && !Directory.Exists(mdDir))
+            {
+                Directory.CreateDirectory(mdDir);
+            }
+
+            // Save the markdown content to a .md file
+            File.WriteAllText(mdPath, markdownContent);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

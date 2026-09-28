@@ -1,38 +1,43 @@
-// Title: Convert Excel Workbook to HTML with Cell Comments using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a comment to a cell, enable comment export via HtmlSaveOptions, and save the file as HTML with default settings, preserving the comments in the output.
-// Keywords: Aspose.Cells | C# HTML conversion | export Excel comments | HtmlSaveOptions IsExportComments | Excel to HTML .NET | cell comment rendering | default save options | workbook.Save HTML | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells export comments to HTML C# | HtmlSaveOptions IsExportComments example | Convert Excel file to HTML with comments | Save workbook as HTML preserving comments | C# code for Excel to HTML conversion Aspose
-// Developer Intent: Generate an HTML version of an Excel sheet that includes all cell comments.
-// Use Cases: Publish spreadsheet data on a website while keeping reviewer notes visible as tooltips. | Create printable HTML reports that retain the original worksheet comments for audit trails. | Automate batch conversion of multiple Excel files to web‑ready HTML with comment preservation.
-// AI Prompts: Write C# code with Aspose.Cells to convert an existing workbook to HTML and include every cell comment. | Show how to modify HtmlSaveOptions to customize the appearance of exported comments in the HTML output. | Explain a method for processing a folder of Excel files into HTML files that keep all comments using Aspose.Cells.
+// Title: Convert an Excel workbook to HTML with default options while preserving cell comments using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a .xlsx file, verifies the file exists, and saves it as an .html file with Aspose.Cells using the built‑in HtmlSaveOptions so that cell comments are exported. | Show how to wrap the Excel‑to‑HTML conversion in a try‑catch block and log success or error messages to the console.
+// Common Searches: c# aspocells convert xlsx to html preserving comments | how to export Excel workbook to HTML with default settings using Aspose.Cells .NET | save workbook as html including cell notes Aspose.Cells example | Aspose.Cells HtmlSaveOptions default export comments | console application Excel to HTML conversion file existence check
+// Tags: Aspose.Cells HTML export default settings | export Excel to HTML with comments C# | C# workbook to HTML conversion Aspose.Cells | cell comments preservation Aspose.Cells HTML | file existence validation before Aspose.Cells conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add a comment to a cell, enable comment export via HtmlSaveOptions, and save the file as HTML with default settings, preserving the comments in the output.
+// The sample verifies that 'input.xlsx' exists, loads it into an Aspose.Cells Workbook, creates a default HtmlSaveOptions instance, and saves the workbook as 'output.html', automatically including cell comments, with basic error handling and console output.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add some sample data
-        worksheet.Cells["A1"].PutValue("Hello World");
-
-        // Add a comment to cell A1
-        int commentIndex = worksheet.Comments.Add("A1");
-        Comment comment = worksheet.Comments[commentIndex];
-        comment.Note = "This is a sample comment";
-
-        // Configure HTML save options to export comments (default options otherwise)
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        try
         {
-            IsExportComments = true // Enable exporting of cell comments
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Save the workbook as an HTML file with the specified options
-        workbook.Save("output.html", htmlOptions);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the Excel workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options (default options are sufficient for basic export)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Save the workbook as an HTML file with the specified options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,50 +1,47 @@
-// Title: Hide Chart Legend in an Aspose.Cells .NET Dashboard Worksheet
-// Description: Demonstrates how to create a dashboard sheet with a column chart in Aspose.Cells for .NET, assign data ranges, and remove the legend (chart.ShowLegend = false) to maximize the chart's display area before saving the workbook.
-// Keywords: Aspose.Cells hide legend | C# chart legend removal | Aspose.Cells dashboard chart | chart.ShowLegend false | maximize chart area .NET | Aspose.Cells chart formatting | Excel dashboard Aspose.Cells
-// Common Searches: how to hide chart legend using Aspose.Cells C# | remove legend from Aspose.Cells chart on dashboard sheet | Aspose.Cells .NET increase chart size by hiding legend | Aspose.Cells chart.ShowLegend property example | C# hide legend in Excel chart programmatically
-// Developer Intent: Programmatically hide a chart legend on a dashboard worksheet to free up visual space.
-// Use Cases: Design a sales dashboard where the legend is omitted to give the chart more room. | Generate KPI reports with multiple charts and suppress legends to reduce visual clutter. | Prepare workbooks for PDF export by disabling legends on all charts to improve layout.
-// AI Prompts: Provide C# code that adds a line chart with Aspose.Cells and hides its legend. | Show how to loop through every chart in a worksheet and set ShowLegend = false. | Explain how to conditionally hide a chart legend based on the number of series in Aspose.Cells.
+// Title: How to hide a chart legend on a dashboard worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart on a worksheet named "Dashboard" and disables its legend. | Show the steps to set the ShowLegend property to false for a chart placed in a dashboard sheet with Aspose.Cells. | Provide a complete example that adds sample data, inserts a column chart, hides the legend, and saves the workbook as an .xlsx file.
+// Common Searches: asp.net hide legend column chart Aspose.Cells dashboard sheet | Aspose.Cells C# remove chart legend to increase plot area | set ShowLegend false for chart in Aspose.Cells workbook example | how to maximize chart area by hiding legend in Aspose.Cells .NET | sample code Aspose.Cells create dashboard worksheet with chart without legend
+// Tags: Aspose.Cells chart ShowLegend property | C# hide chart legend Aspose.Cells | dashboard worksheet column chart Aspose.Cells | increase chart plot area Aspose.Cells | save workbook without legend Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDashboard
+// The example creates a new workbook, adds sample data, inserts a column chart on a worksheet named "Dashboard", hides the chart legend by setting ShowLegend to false, and saves the file as DashboardChart_NoLegend.xlsx.
+class HideChartLegendDashboard
 {
-    // Demonstrates how to create a dashboard sheet with a column chart in Aspose.Cells for .NET, assign data ranges, and remove the legend (chart.ShowLegend = false) to maximize the chart's display area before saving the workbook.
-    class HideChartLegend
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (dashboard sheet)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Dashboard";
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(15000);
-            sheet.Cells["B3"].PutValue(23000);
-            sheet.Cells["B4"].PutValue(18000);
+        // Access the first worksheet (used as a dashboard sheet) and give it a name
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Dashboard";
 
-            // Add a column chart to the dashboard sheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+        // Add a column chart to the dashboard sheet
+        // Parameters: chart type, upper-left row, upper-left column, lower-right row, lower-right column
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+        Chart chart = sheet.Charts[chartIndex];
 
-            // Hide the legend to maximize the chart display area
-            chart.ShowLegend = false;
+        // Define the data range for the chart
+        chart.NSeries.Add("B2:B4", true);          // Values
+        chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-            // Save the workbook
-            workbook.Save("DashboardWithHiddenLegend.xlsx");
-        }
+        // Hide the legend to maximize the available display area
+        chart.ShowLegend = false;
+
+        // Save the workbook with the chart that has no legend
+        workbook.Save("DashboardChart_NoLegend.xlsx");
     }
 }

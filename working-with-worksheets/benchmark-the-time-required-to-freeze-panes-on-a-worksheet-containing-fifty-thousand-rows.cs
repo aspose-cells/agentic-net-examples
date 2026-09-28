@@ -1,50 +1,53 @@
-// Title: C# Benchmark: FreezePanes Execution Time on a 50,000‑Row Worksheet with Aspose.Cells
-// Description: Creates a workbook, fills column A with 50,000 rows, measures the time to apply FreezePanes at C3 (2 rows × 2 columns), prints the elapsed milliseconds, and saves the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | FreezePanes | benchmark | performance testing | .NET | C# | large worksheet | 50,000 rows | execution time | measure latency
-// Common Searches: Aspose.Cells FreezePanes performance test | how long does FreezePanes take on 50k rows C# | benchmarking FreezePanes execution time .NET | measure FreezePanes latency Aspose.Cells
-// Developer Intent: Find out how many milliseconds the FreezePanes method needs on a worksheet with fifty thousand rows.
-// Use Cases: Assess the impact of FreezePanes on report generation speed for massive data sets. | Compare freezing performance across different worksheet sizes to set optimal thresholds. | Validate that pane freezing meets latency requirements in automated Excel creation pipelines.
-// AI Prompts: Provide a C# example that benchmarks FreezePanes on a worksheet with 100,000 rows using Aspose.Cells. | Suggest ways to reduce FreezePanes overhead when working with very large Excel files in .NET. | Explain how to capture detailed timing, including GC pauses, for the FreezePanes call in a performance test.
+// Title: Measure the time taken by Worksheet.FreezePanes on a 50,000‑row worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that fills a worksheet with 50,000 rows of data and uses Stopwatch to record the milliseconds required for Worksheet.FreezePanes to lock the first row. | Create a console program that initializes an Aspose.Cells workbook, populates column A with 50,000 numeric values, applies FreezePanes(1,0,1,0), and prints the elapsed time. | Write a C# example that measures both the FreezePanes operation and the total execution time for a large worksheet using Aspose.Cells and System.Diagnostics.Stopwatch.
+// Common Searches: how long does Worksheet.FreezePanes take on a sheet with 50000 rows in Aspose.Cells | Aspose.Cells performance test for freezing top row in large Excel file | C# benchmark FreezePanes method with 50k rows using Stopwatch | measure freeze panes execution time Aspose.Cells .NET large worksheet | profiling Worksheet.FreezePanes performance in Aspose.Cells
+// Tags: Aspose.Cells FreezePanes timing | C# large worksheet freeze operation | Excel row freeze performance .NET | Worksheet.FreezePanes latency measurement | Aspose.Cells workbook speed test
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace FreezePanesBenchmark
+// Creates a new workbook, fills column A with 50,000 numbers, applies Worksheet.FreezePanes to lock the first row, and uses Stopwatch to output the milliseconds required for the freeze operation and the total execution time.
+class FreezePanesBenchmark
 {
-    // Creates a workbook, fills column A with 50,000 rows, measures the time to apply FreezePanes at C3 (2 rows × 2 columns), prints the elapsed milliseconds, and saves the file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule)
+            // Measure total execution time (optional)
+            Stopwatch totalStopwatch = Stopwatch.StartNew();
+
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate 50,000 rows with sample data
-            // This ensures the worksheet has the required number of rows
+            // Populate 50,000 rows with sample data (column A)
             for (int row = 0; row < 50000; row++)
             {
-                // Fill column A with the row number (as string)
-                worksheet.Cells[row, 0].PutValue($"Row {row + 1}");
+                sheet.Cells[row, 0].PutValue(row + 1);
             }
 
             // Benchmark the FreezePanes operation
-            Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch freezeStopwatch = Stopwatch.StartNew();
 
-            // Freeze panes at cell C3 (row index 2, column index 2) with 2 frozen rows and 2 frozen columns
-            // Using the FreezePanes(int, int, int, int) overload (rule)
-            worksheet.FreezePanes(2, 2, 2, 2);
+            // Freeze the top row (row index 1) and no columns.
+            // Parameters: firstRow (first unfrozen row), firstColumn (first unfrozen column),
+            // totalRows (rows to freeze), totalColumns (columns to freeze)
+            sheet.FreezePanes(1, 0, 1, 0);
 
-            sw.Stop();
+            freezeStopwatch.Stop();
 
-            // Output the elapsed time in milliseconds
-            Console.WriteLine($"FreezePanes execution time: {sw.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Time to freeze panes on a sheet with 50,000 rows: {freezeStopwatch.Elapsed.TotalMilliseconds} ms");
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("FreezePanesBenchmark.xlsx");
+            // Optional: Save the workbook to verify the freeze (not required for benchmarking)
+            // workbook.Save("FreezePanesResult.xlsx");
+
+            totalStopwatch.Stop();
+            Console.WriteLine($"Total execution time: {totalStopwatch.Elapsed.TotalMilliseconds} ms");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

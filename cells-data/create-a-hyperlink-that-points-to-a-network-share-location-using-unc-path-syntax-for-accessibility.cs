@@ -1,14 +1,11 @@
-// Title: Add a UNC Network Share Hyperlink to an Excel Workbook with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, insert a hyperlink in cell A1 that points to a UNC path (\\Server\Share\Folder\File.txt), set custom display text, and save the file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells | C# UNC hyperlink | Excel network share link | Hyperlinks.Add | UNC path | Aspose.Cells example | Excel hyperlink .NET | network share Excel
-// Common Searches: Aspose.Cells add hyperlink to UNC path | C# create Excel link to network share | How to use Hyperlinks.Add for file server paths | Excel workbook with clickable network file link | Aspose.Cells UNC network share example
-// Developer Intent: Insert a clickable link in an Excel worksheet that opens a file located on a network share using Aspose.Cells for .NET.
-// Use Cases: Provide one‑click access to shared documents from a generated report. | Build a dashboard where cells open server‑based data files when selected. | Create a template that links to a central policy document stored on a shared drive.
-// AI Prompts: Generate C# code with Aspose.Cells to add a UNC hyperlink and customize its display text. | Explain the Hyperlinks.Add method for linking to network shares and discuss any security considerations. | Show how to add multiple UNC hyperlinks to different cells in the same workbook using Aspose.Cells.
+// Title: Insert a UNC network share hyperlink into an Excel cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that adds a hyperlink to cell A1 pointing to a UNC path like \\Server\Share\Folder\File.txt and sets a custom display text. | Show how to create and save an Excel workbook that contains a network‑share hyperlink using Aspose.Cells, including configuring the hyperlink address and visible caption.
+// Common Searches: how to add a UNC path hyperlink to an Excel cell using Aspose.Cells C# | Aspose.Cells C# create hyperlink to network share and set display text | C# Aspose.Cells save workbook with hyperlink to \\Server\Share | example of adding a file share hyperlink in Excel with Aspose.Cells .NET | Aspose.Cells hyperlink to network location in .xlsx file
+// Tags: Aspose.Cells create UNC link | C# Excel hyperlink to network share | Aspose.Cells set hyperlink caption | save workbook with external file link | hyperlink address specification Aspose.Cells
 
 using Aspose.Cells;
 
-// Shows how to create a workbook, insert a hyperlink in cell A1 that points to a UNC path (\\Server\Share\Folder\File.txt), set custom display text, and save the file using Aspose.Cells in C#.
+// The example creates a new workbook, adds a hyperlink in cell A1 that points to the UNC network share "\\Server\Share\Folder\File.txt", sets the cell's display text to "Open Network File", and saves the workbook as "NetworkHyperlink.xlsx".
 class Program
 {
     static void Main()

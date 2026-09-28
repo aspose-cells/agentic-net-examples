@@ -1,48 +1,64 @@
-// Title: C# – Build a case‑insensitive dictionary of worksheet names to SheetId (TabId) with Aspose.Cells
-// Description: This example creates a Workbook, assigns custom TabId values to three worksheets, and populates a case‑insensitive Dictionary<string,int> where each key is the worksheet name and each value is the corresponding SheetId. It demonstrates fast lookup, prints the mapping, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet TabId | SheetId lookup | case‑insensitive dictionary | fast worksheet ID retrieval | sample code | GitHub example
-// Common Searches: Aspose.Cells map worksheet name to TabId | C# dictionary worksheet name SheetId | quick lookup worksheet ID Aspose.Cells | case insensitive worksheet ID dictionary .NET | how to get worksheet TabId without looping
-// Developer Intent: Create a dictionary that maps each worksheet’s name to its TabId (SheetId) for instant retrieval in C#.
-// Use Cases: Retrieve a worksheet’s TabId in O(1) time for conditional processing. | Synchronize workbook identifiers with external systems that reference worksheets by name. | Validate worksheet existence before applying formatting, formulas, or data updates.
-// AI Prompts: Generate C# code using Aspose.Cells that builds a case‑insensitive dictionary of worksheet names to TabId values and shows how to query it. | Show how to keep the name‑to‑TabId dictionary up‑to‑date when worksheets are added or removed at runtime in an Aspose.Cells workbook. | Provide a GitHub‑style README snippet explaining the purpose and performance benefits of the dictionary lookup.
+// Title: Build a case‑insensitive dictionary that maps worksheet names to their SheetId (zero‑based index) using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and creates a Dictionary<string,int> where each key is the worksheet name (case‑insensitive) and each value is the worksheet's Index. | Show how to retrieve a worksheet's Index from the dictionary by name and handle the situation when the name does not exist. | Add comprehensive error handling for missing input file, workbook load failures, and unexpected exceptions while populating the name‑to‑index map.
+// Common Searches: aspnet c# create dictionary of worksheet names to sheet indexes using Aspose.Cells | case insensitive lookup of Excel sheet index by name Aspose.Cells | how to map worksheet Name to Index in Aspose.Cells workbook | retrieve sheet Id from worksheet name Aspose.Cells .NET example | error handling when loading workbook and building sheet name dictionary Aspose.Cells
+// Tags: worksheet name to index dictionary Aspose.Cells | case‑insensitive sheet lookup C# | Aspose.Cells workbook sheet mapping | Excel sheet index retrieval Aspose.Cells | robust workbook load error handling Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
+using System.IO;
 
-// This example creates a Workbook, assigns custom TabId values to three worksheets, and populates a case‑insensitive Dictionary<string,int> where each key is the worksheet name and each value is the corresponding SheetId. It demonstrates fast lookup, prints the mapping, and saves the file.
+// // Loads an Excel file with Aspose.Cells, iterates through all worksheets, and builds a case‑insensitive Dictionary<string,int> that maps each worksheet's Name to its zero‑based Index. Demonstrates safe retrieval of a sheet's Index and includes error handling for missing files and load failures.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
 
-        // Add sample worksheets and assign TabId values (SheetId)
-        workbook.Worksheets[0].Name = "First";
-        workbook.Worksheets[0].TabId = 101;
-
-        Worksheet sheet2 = workbook.Worksheets.Add("Second");
-        sheet2.TabId = 202;
-
-        Worksheet sheet3 = workbook.Worksheets.Add("Third");
-        sheet3.TabId = 303;
-
-        // Build a dictionary keyed by worksheet name with TabId as the value
-        Dictionary<string, int> sheetIdLookup = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        foreach (Worksheet ws in workbook.Worksheets)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            sheetIdLookup[ws.Name] = ws.TabId;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Demonstrate quick lookup
-        Console.WriteLine("Worksheet TabId lookup:");
-        foreach (var kvp in sheetIdLookup)
+        Workbook workbook;
+        try
         {
-            Console.WriteLine($"Name: {kvp.Key}, TabId: {kvp.Value}");
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        // Save the workbook (optional)
-        workbook.Save("SheetIdLookup.xlsx");
+        // Map worksheet name to its index (zero‑based)
+        var sheetIdByName = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        try
+        {
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Worksheet.Index uniquely identifies the sheet within the workbook
+                sheetIdByName[sheet.Name] = sheet.Index;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while processing worksheets: {ex.Message}");
+            return;
+        }
+
+        // Example: retrieve index for a given worksheet name
+        if (sheetIdByName.TryGetValue("Sheet1", out int sheetId))
+        {
+            Console.WriteLine($"Sheet1 has Index = {sheetId}");
+        }
+        else
+        {
+            Console.WriteLine("Sheet1 not found.");
+        }
     }
 }

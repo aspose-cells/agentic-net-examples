@@ -1,10 +1,7 @@
-// Title: Hide the Values Row in an Aspose.Cells PivotTable (C#) – Set ShowValuesRow = false
-// Description: Demonstrates how to create a workbook, add sample data, build a PivotTable on range A1:B4, assign "Fruit" to rows and "Quantity" to data, and hide the extra aggregated values row by setting pivotTable.ShowValuesRow to false before saving the file.
-// Keywords: Aspose.Cells PivotTable ShowValuesRow | C# hide values row Aspose.Cells | remove aggregated row PivotTable Aspose | Aspose.Cells pivot table formatting | Excel PivotTable hide total row C#
-// Common Searches: Aspose.Cells hide values row C# example | ShowValuesRow false PivotTable Aspose | how to remove total row from Aspose.Cells pivot table | C# code to hide aggregated row in Excel pivot using Aspose | Aspose.Cells PivotTable formatting options
-// Developer Intent: Set the PivotTable's ShowValuesRow property to false to suppress the aggregated values row.
-// Use Cases: Generate a sales report where the pivot table should not display the values row for a cleaner layout. | Apply client‑specified formatting by programmatically removing the total row from a PivotTable before exporting. | Update an existing workbook's pivot table to hide the aggregated row as part of an automated Excel generation pipeline.
-// AI Prompts: Write C# code with Aspose.Cells that creates a PivotTable from range A1:B10 and hides the values row using ShowValuesRow = false. | Explain the impact of the ShowValuesRow property on an Aspose.Cells PivotTable and show how to toggle it on and off. | Provide a step‑by‑step guide to hide the aggregated values row in an existing workbook's PivotTable using Aspose.Cells for .NET.
+// Title: How to hide the aggregated values row in an Aspose.Cells PivotTable using C#
+// AI Prompts: Create a new workbook, add sample data, build a PivotTable on range A1:B5, set the ShowValuesRow property to false, and save the file as XLSX with Aspose.Cells for .NET. | Programmatically configure row and data fields for a PivotTable and disable the extra values row in C# using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# hide values row in pivot table | Set ShowValuesRow false example Aspose.Cells .NET | Remove aggregated values row from Excel pivot using Aspose.Cells | How to disable the values row in a PivotTable with C# Aspose.Cells | C# code to hide extra totals row in Aspose.Cells pivot table
+// Tags: Aspose.Cells PivotTable ShowValuesRow | C# hide pivot values row | Aspose.Cells disable aggregated row | Excel pivot hide values row .NET | Aspose.Cells set ShowValuesRow false
 
 using System;
 using Aspose.Cells;
@@ -12,15 +9,15 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add sample data, build a PivotTable on range A1:B4, assign "Fruit" to rows and "Quantity" to data, and hide the extra aggregated values row by setting pivotTable.ShowValuesRow to false before saving the file.
-    public class PivotTableHideValuesRowDemo
+    // The example creates a workbook, fills it with sample data, adds a PivotTable on A1:B5, assigns Category as rows and Amount as data, sets ShowValuesRow to false to hide the additional aggregated values row, and saves the workbook as PivotTableShowValuesRowDemo.xlsx.
+    public class PivotTableShowValuesRowDemo
     {
         public static void Main(string[] args)
         {
             try
             {
                 Run();
-                Console.WriteLine("Pivot table created and saved successfully.");
+                Console.WriteLine("Pivot table created successfully.");
             }
             catch (Exception ex)
             {
@@ -30,34 +27,36 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
             Cells cells = sheet.Cells;
-            cells["A1"].Value = "Fruit";
-            cells["B1"].Value = "Quantity";
-            cells["A2"].Value = "Apple";
-            cells["B2"].Value = 10;
-            cells["A3"].Value = "Orange";
-            cells["B3"].Value = 15;
-            cells["A4"].Value = "Banana";
-            cells["B4"].Value = 20;
+            cells["A1"].Value = "Category";
+            cells["B1"].Value = "Amount";
+            cells["A2"].Value = "Food";
+            cells["B2"].Value = 120;
+            cells["A3"].Value = "Food";
+            cells["B3"].Value = 80;
+            cells["A4"].Value = "Beverage";
+            cells["B4"].Value = 150;
+            cells["A5"].Value = "Beverage";
+            cells["B5"].Value = 70;
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
+            // Add a pivot table (range A1:B5, destination C3)
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "C3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Configure the pivot table (Fruit as row, Quantity as data)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+            // Configure the pivot table: Category as row, Amount as data
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Column 0 -> Category
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Column 1 -> Amount
 
             // Hide the additional aggregated values row
             pivotTable.ShowValuesRow = false;
 
-            // Save the workbook to a file
-            workbook.Save("PivotTableHideValuesRowDemo.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            workbook.Save("PivotTableShowValuesRowDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

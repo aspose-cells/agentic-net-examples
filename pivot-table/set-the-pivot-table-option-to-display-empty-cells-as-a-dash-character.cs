@@ -1,19 +1,17 @@
-// Title: Aspose.Cells .NET – Display a dash for empty PivotTable cells
-// Description: Creates a workbook, adds sample data with blanks, builds a PivotTable, enables custom null‑value display (DisplayNullString = true, NullString = "-"), refreshes the cache, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells PivotTable dash for empty cells | DisplayNullString property | NullString Aspose.Cells | C# replace null values in PivotTable | custom null string .NET Excel | Aspose.Cells empty cell placeholder
-// Common Searches: Aspose.Cells show dash for null pivot values | C# set PivotTable empty cell text Aspose | DisplayNullString Aspose.Cells example | how to replace blank pivot cells with '-' in .NET | Aspose.Cells custom null string for PivotTable
-// Developer Intent: Configure a PivotTable so that any null or empty cell is rendered as a dash (“-”).
-// Use Cases: Financial reports where missing amounts must be clearly marked. | Dashboard exports that need a visible placeholder for absent data. | Reusable utility that adds a PivotTable and automatically formats empty values with a custom symbol.
-// AI Prompts: Generate C# code using Aspose.Cells to create a PivotTable that displays "-" for empty cells. | Explain how DisplayNullString and NullString affect PivotTable rendering in Aspose.Cells. | Provide a step‑by‑step tutorial for setting a custom null string in an Aspose.Cells PivotTable for .NET.
+// Title: Configure Aspose.Cells PivotTable in C# to display a dash for empty cells
+// AI Prompts: Generate a workbook, populate it with sample data containing null entries, add a pivot table, enable DisplayNullString, assign '-' to NullString, refresh and calculate the pivot, then save the workbook. | Configure a PivotTable in Aspose.Cells C# to show '-' for empty values by setting DisplayNullString = true and NullString = '-'.
+// Common Searches: Aspose.Cells C# pivot table replace blank cells with dash | Set custom null string for pivot table values using Aspose.Cells API | Display '-' for empty data in Aspose.Cells pivot table C# example | How to show placeholder for null cells in Aspose.Cells pivot table
+// Tags: Aspose.Cells PivotTable DisplayNullString usage | C# set NullString dash for empty pivot cells | Aspose.Cells custom empty cell placeholder in pivot tables | PivotTable empty value formatting Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds sample data with blanks, builds a PivotTable, enables custom null‑value display (DisplayNullString = true, NullString = "-"), refreshes the cache, and saves the file as an XLSX document.
-    public class PivotTableDisplayDashForEmptyCells
+    // The example creates a workbook, adds sample data with null entries, inserts a pivot table, enables DisplayNullString, sets NullString to '-', refreshes and calculates the pivot, and saves the result as an .xlsx file.
+    public class PivotTableDisplayEmptyAsDash
     {
         public static void Run()
         {
@@ -21,52 +19,58 @@ namespace AsposeCellsExamples
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data (including some empty cells)
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("");   // Empty category cell
-                sheet.Cells["B4"].PutValue(30);
-                sheet.Cells["A5"].PutValue("C");
-                sheet.Cells["B5"].PutValue(null); // Empty value cell
+                // Populate sample data (including some null/empty cells)
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["A4"].PutValue(null); // Empty category cell
+                worksheet.Cells["B4"].PutValue(null); // Empty value cell
 
                 // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
                 // Configure the pivot table fields
                 pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Value as data field
+                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-                // Set the pivot table to display a custom string for null/empty cells
-                pivotTable.DisplayNullString = true;   // Enable custom null string display
-                pivotTable.NullString = "-";           // Use dash character for empty cells
+                // Set the pivot table to display a custom string for empty (null) cells
+                pivotTable.DisplayNullString = true; // Enable custom null string display
+                pivotTable.NullString = "-";         // Use dash character for empty cells
 
-                // Refresh pivot data and calculate results
-                pivotTable.RefreshData();   // Correct API to refresh pivot cache
+                // Refresh the pivot cache and calculate the pivot table to apply changes
+                pivotTable.RefreshData();   // Correct API to refresh data source
                 pivotTable.CalculateData();
 
-                // Save the workbook
-                workbook.Save("PivotTableWithDashForEmptyCells.xlsx");
+                // Save the workbook with the configured pivot table
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "PivotTableEmptyAsDash.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred in Run(): {ex.Message}");
             }
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            PivotTableDisplayDashForEmptyCells.Run();
+            try
+            {
+                PivotTableDisplayEmptyAsDash.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

@@ -1,41 +1,47 @@
-// Title: Aspose.Cells .NET – Set Workbook to Manual Calculation Mode and Recalculate On Demand
-// Description: Demonstrates how to switch a workbook to manual calculation using CalcModeType.Manual, disable automatic formula evaluation on save, save the file unchanged, then explicitly invoke CalculateFormula and save the updated results. Includes code for populating cells, applying a SUM formula, and managing calculation flow in C#.
-// Keywords: Aspose.Cells manual calculation | CalcModeType.Manual C# | disable automatic formula calculation | CalculateFormula example | Aspose.Cells workbook save without calculation | on‑demand formula evaluation | C# Aspose.Cells performance optimization
-// Common Searches: Aspose.Cells set manual calculation mode | How to prevent formula calculation on save Aspose.Cells | Trigger CalculateFormula after manual mode .NET | Aspose.Cells disable automatic recalculation | Manual formula evaluation with Aspose.Cells C#
-// Developer Intent: Configure a workbook to use manual calculation and run formulas only when explicitly requested.
-// Use Cases: Create large spreadsheets where intermediate saves must not incur heavy formula processing, then calculate once before final export. | Generate template files with placeholder formulas that downstream systems will evaluate at a later stage. | Programmatically modify cell values and refresh dependent formulas only when the report is ready for publishing.
-// AI Prompts: Show how to set manual calculation mode in Aspose.Cells for .NET and call CalculateFormula later. | Provide a C# example that disables automatic calculation on save, saves the workbook before and after manual recalculation, and explains the behavior. | Explain how to toggle between manual and automatic calculation modes using Aspose.Cells API.
+// Title: Set worksheet calculation mode to Manual and recalculate formulas on demand using Aspose.Cells for .NET
+// AI Prompts: Write C# code that configures a workbook’s calculation mode to Manual with Aspose.Cells and then triggers CalculateFormula only after modifying specific cells. | Show how to change a cell value in a manually‑calculated worksheet and invoke on‑demand formula evaluation without affecting other sheets. | Demonstrate saving a workbook after performing selective recalculation in Aspose.Cells while handling missing input files.
+// Common Searches: Aspose.Cells how to set workbook calculation mode to manual in C# | C# recalculate formulas only after cell update using Aspose.Cells | disable automatic calculation Aspose.Cells .NET and trigger manual calculation | manual calc mode example with Aspose.Cells workbook save after recalculation
+// Tags: Aspose.Cells manual CalcMode configuration | selective formula recalculation Aspose.Cells .NET | update cell and invoke CalculateFormula Aspose.Cells | turn off auto calculation Aspose.Cells | C# workbook save after manual recalculation
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Demonstrates how to switch a workbook to manual calculation using CalcModeType.Manual, disable automatic formula evaluation on save, save the file unchanged, then explicitly invoke CalculateFormula and save the updated results. Includes code for populating cells, applying a SUM formula, and managing calculation flow in C#.
-class ManualCalculationExample
+// The program loads an existing workbook, modifies cell A1, explicitly calls CalculateFormula to recompute formulas, and saves the workbook, illustrating how to perform on‑demand recalculation when the workbook is configured for manual calculation.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Populate some cells with values and a formula
-        worksheet.Cells["A1"].PutValue(10);
-        worksheet.Cells["A2"].PutValue(20);
-        worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Set the calculation mode to Manual
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Prevent automatic calculation on save while in manual mode
-        workbook.Settings.FormulaSettings.CalculateOnSave = false;
+            // Example modification that would require recalculation
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10); // change a cell value
 
-        // Save the workbook without calculating the formula
-        workbook.Save("ManualMode_NoCalculation.xlsx");
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // When recalculation is required, invoke it explicitly
-        workbook.CalculateFormula();
-
-        // Save the workbook after manual calculation
-        workbook.Save("ManualMode_WithCalculation.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

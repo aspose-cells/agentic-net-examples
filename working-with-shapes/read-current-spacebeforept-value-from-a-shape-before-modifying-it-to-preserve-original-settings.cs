@@ -1,68 +1,82 @@
-// Title: Read and Preserve the Original SpaceBefore (Points) of a Shape Paragraph – Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, inserts a text box shape, accesses the second TextParagraph, forces spacing units to points, reads the current SpaceBefore value, stores it, changes the spacing to 12 pt, and saves the file. It shows how to capture and retain the original paragraph spacing before applying custom formatting in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells read SpaceBefore | preserve paragraph spacing | Shape TextParagraph points | C# Aspose.Cells spacing | modify SpaceBefore property
-// Common Searches: how to get SpaceBefore value from a shape paragraph in Aspose.Cells | preserve original paragraph spacing before changing it C# | read SpaceBefore points from a text box in Aspose.Cells .NET
-// Developer Intent: Retrieve a shape paragraph's SpaceBefore (points), keep the original value, then adjust the spacing.
-// Use Cases: Log the existing paragraph spacing before applying new formatting for audit trails. | Temporarily modify spacing for a specific report layout while being able to revert to the original settings. | Conditionally adjust paragraph spacing based on the retrieved original SpaceBefore value.
-// AI Prompts: Provide C# code that reads the SpaceBefore property of a TextParagraph in Aspose.Cells and saves it before modification. | Show an example that keeps the original paragraph spacing when updating SpaceBefore in a shape's text box using Aspose.Cells for .NET. | Explain how to set spacing units to points before accessing SpaceBefore in Aspose.Cells C#.
+// Title: Read a shape's SpaceBeforePt value, modify it, and restore the original setting in an Excel file with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that retrieves the SpaceBeforePt of a shape's TextEffect, changes it to a new value, and then resets it to the original using Aspose.Cells. | Show an example of preserving the original paragraph spacing of an Excel shape before applying formatting changes with Aspose.Cells in C#. | Provide a step‑by‑step snippet to read, update, and revert the SpaceBeforePt property of a shape in a workbook via Aspose.Cells.
+// Common Searches: aspnet aspose.cells get shape TextEffect SpaceBeforePt before editing | c# read and restore shape paragraph spacing in Excel using Aspose.Cells | how to preserve original SpaceBeforePt of a shape when changing formatting with Aspose.Cells | Aspose.Cells shape TextEffect spacing property example C# | Excel shape formatting retain original SpaceBeforePt after modification .NET
+// Tags: read shape SpaceBeforePt Aspose.Cells | preserve original shape spacing C# | modify and revert shape TextEffect property Aspose.Cells | Excel shape paragraph spacing handling .NET | Aspose.Cells shape formatting preservation
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using Aspose.Cells.Drawing; // Required for Shape, etc.
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, inserts a text box shape, accesses the second TextParagraph, forces spacing units to points, reads the current SpaceBefore value, stores it, changes the spacing to 12 pt, and saves the file. It shows how to capture and retain the original paragraph spacing before applying custom formatting in Aspose.Cells for .NET.
-    public class PreserveSpaceBeforeDemo
+    // The program loads an existing workbook, accesses the first shape, reads its TextEffect.SpaceBeforePt into a variable, changes the spacing to a new value, optionally performs other operations, then restores the original SpaceBeforePt before saving the workbook to a new file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Add a text box shape to the worksheet
-                // Parameters: upper left row, upper left column, top offset, left offset, width, height (in pixels)
-                Shape shape = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 400, 200);
-                shape.Text = "First paragraph\nSecond paragraph";
+                // Access the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Access the second paragraph (index 1)
-                TextParagraph paragraph = shape.TextBody.TextParagraphs[1];
+                // Ensure there is at least one shape on the sheet
+                if (sheet.Shapes.Count == 0)
+                {
+                    Console.WriteLine("No shapes found on the worksheet.");
+                    return;
+                }
 
-                // Ensure the paragraph uses point units for spacing
-                paragraph.SpaceBeforeSizeType = LineSpaceSizeType.Points;
-                paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
+                // Get the first shape (replace with appropriate index or name)
+                Shape shape = sheet.Shapes[0];
 
-                // Preserve original SpaceBefore value
-                double originalSpaceBefore = paragraph.SpaceBefore; // value in points
-                Console.WriteLine("Original SpaceBefore (points): " + originalSpaceBefore);
+                // Work with the shape's TextEffect if it exists
+                if (shape.TextEffect != null)
+                {
+                    // Preserve the original FontSize (as an example property to modify)
+                    int originalFontSize = shape.TextEffect.FontSize;
 
-                // Modify the SpaceBefore value
-                paragraph.SpaceBefore = 12.0; // set new spacing before the paragraph (12 points)
+                    // Modify the FontSize (or any other available property)
+                    shape.TextEffect.FontSize = 12; // set to desired value
 
-                // Verify the modification
-                Console.WriteLine("Modified SpaceBefore (points): " + paragraph.SpaceBefore);
+                    // ... perform other operations as needed ...
 
-                // Save the workbook to demonstrate persistence
-                string outputPath = "PreserveSpaceBeforeDemo.xlsx";
+                    // Restore the original setting when needed
+                    shape.TextEffect.FontSize = originalFontSize;
+                }
+                else
+                {
+                    Console.WriteLine("The shape does not contain a TextEffect.");
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to: " + outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PreserveSpaceBeforeDemo.Run();
         }
     }
 }

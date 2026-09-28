@@ -1,55 +1,75 @@
-// Title: C# Batch Convert Excel Workbooks to HTML Including Hidden Sheets – Aspose.Cells Example
-// Description: A C# .NET script that scans a folder, loads each .xls/.xlsx/.xlsm file with Aspose.Cells, sets HtmlSaveOptions.ExportHiddenWorksheet = true, and saves the workbooks as HTML files, preserving hidden worksheet data.
-// Keywords: Aspose.Cells batch HTML conversion | ExportHiddenWorksheet C# | convert Excel to HTML .NET | hidden worksheets to HTML | C# folder Excel to HTML example | Aspose.Cells HtmlSaveOptions | batch Excel to HTML code | Aspose.Cells hidden sheet export
-// Common Searches: how to batch convert Excel files to HTML with hidden sheets using Aspose.Cells | Aspose.Cells ExportHiddenWorksheet example C# | convert multiple xls xlsx files to HTML preserving hidden worksheets | C# code to export hidden worksheets to HTML with Aspose.Cells | Aspose.Cells HTML export hidden worksheets batch processing
-// Developer Intent: Automatically convert every Excel workbook in a directory to HTML while including the content of hidden worksheets.
-// Use Cases: Publish a collection of Excel reports to an intranet, ensuring hidden calculation sheets are visible in the HTML view. | Create archival HTML snapshots of spreadsheets for compliance, capturing all hidden data. | Generate web‑ready documentation from batch‑processed Excel files without manually opening each workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to batch convert all Excel files in a folder to HTML with ExportHiddenWorksheet enabled. | Show an Aspose.Cells .NET example that scans a directory, loads .xls/.xlsx/.xlsm files, and saves each as a single HTML file while preserving hidden worksheets. | Provide a step‑by‑step guide for configuring HtmlSaveOptions in Aspose.Cells to include hidden worksheets during bulk HTML export.
+// Title: Batch convert Excel .xlsx workbooks to HTML with hidden worksheets included using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that scans a folder for .xlsx files and saves each workbook as an HTML file, configuring Aspose.Cells to export hidden worksheets. | Demonstrate how to set HtmlSaveOptions.ExportHiddenWorksheet = true and ExportActiveWorksheetOnly = false for converting multiple Excel workbooks to HTML in a batch process.
+// Common Searches: asp.net batch convert xlsx files to html including hidden sheets | c# Aspose.Cells export all worksheets to html | how to save hidden Excel worksheets as html with Aspose.Cells | process multiple Excel workbooks to html using Aspose.Cells SaveOptions | convert a folder of .xlsx files to html programmatically c#
+// Tags: batch xlsx to html conversion Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet | export hidden worksheets to html c# | process multiple workbooks Aspose.Cells | convert Excel workbooks to html programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# .NET script that scans a folder, loads each .xls/.xlsx/.xlsm file with Aspose.Cells, sets HtmlSaveOptions.ExportHiddenWorksheet = true, and saves the workbooks as HTML files, preserving hidden worksheet data.
-class BatchExcelToHtml
+namespace BatchExcelToHtml
 {
-    static void Main()
+    // The example scans a specified input directory for .xlsx files, loads each workbook with Aspose.Cells, configures HtmlSaveOptions to include hidden worksheets and all sheets, and saves each workbook as an HTML file in an output directory, handling missing files and runtime errors.
+    class Program
     {
-        // Folder containing the source Excel files
-        string inputFolder = @"C:\InputExcel";
-
-        // Folder where the HTML files will be saved
-        string outputFolder = @"C:\OutputHtml";
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Retrieve all Excel files (xls, xlsx, xlsm) from the input folder
-        string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-        foreach (string filePath in excelFiles)
+        static void Main(string[] args)
         {
-            string ext = Path.GetExtension(filePath).ToLowerInvariant();
-            if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm")
-                continue; // Skip non‑Excel files
+            // Folder containing the Excel files to convert
+            string inputFolder = @"C:\InputExcelFiles";
+            // Folder where the HTML files will be saved
+            string outputFolder = @"C:\OutputHtmlFiles";
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(filePath);
-
-            // Set HTML save options to include hidden worksheets
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Verify input folder exists
+            if (!Directory.Exists(inputFolder))
             {
-                ExportHiddenWorksheet = true // Export content of hidden sheets
-            };
+                Console.WriteLine($"Input folder not found: '{inputFolder}'.");
+                return;
+            }
 
-            // Determine the output HTML file path (same name, .html extension)
-            string outputFile = Path.Combine(outputFolder, Path.GetFileNameWithoutExtension(filePath) + ".html");
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputFolder))
+                Directory.CreateDirectory(outputFolder);
 
-            // Save the workbook as HTML using the configured options
-            workbook.Save(outputFile, htmlOptions);
+            // Get all Excel files in the input folder (top level only)
+            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            Console.WriteLine($"Converted '{Path.GetFileName(filePath)}' to HTML.");
+            foreach (string excelPath in excelFiles)
+            {
+                try
+                {
+                    // Verify the file still exists before loading
+                    if (!File.Exists(excelPath))
+                    {
+                        Console.WriteLine($"File not found: '{excelPath}'. Skipping.");
+                        continue;
+                    }
+
+                    // Load the workbook
+                    Workbook workbook = new Workbook(excelPath);
+
+                    // Configure HTML save options to export hidden worksheets
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                    {
+                        ExportHiddenWorksheet = true,          // Include hidden sheets in the output
+                        ExportActiveWorksheetOnly = false      // Export all worksheets (including hidden)
+                    };
+
+                    // Determine output HTML file name
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
+                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+                    // Save the workbook as HTML with the specified options
+                    workbook.Save(htmlPath, saveOptions);
+
+                    Console.WriteLine($"Converted '{excelPath}' to '{htmlPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("Batch conversion completed.");
         }
-
-        Console.WriteLine("Batch conversion completed.");
     }
 }

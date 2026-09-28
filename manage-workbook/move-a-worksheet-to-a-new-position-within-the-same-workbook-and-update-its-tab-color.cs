@@ -1,54 +1,65 @@
-// Title: C# – Move Worksheet and Set Tab Color with Aspose.Cells
-// Description: Creates a workbook, adds several sheets, moves a specific worksheet to a chosen index using the MoveTo method, applies a green TabColor, and saves the file as MovedSheetWithTabColor.xlsx.
-// Keywords: Aspose.Cells MoveTo | Aspose.Cells TabColor | C# reorder worksheet | change worksheet tab color | move sheet index | Aspose.Cells workbook manipulation | set worksheet tab color programmatically | Aspose.Cells example .NET | C# Excel sheet ordering | Aspose.Cells MoveTo method
-// Common Searches: Aspose.Cells move worksheet to specific index | How to set worksheet tab color in C# using Aspose.Cells | Reorder Excel sheets with Aspose.Cells .NET | Change Excel tab color programmatically Aspose | Move and color worksheet tabs Aspose.Cells example
-// Developer Intent: Reorder a sheet within a workbook and apply a custom tab color using Aspose.Cells for .NET.
-// Use Cases: Highlight a summary sheet by moving it to the second tab and coloring it green for quick navigation. | Automate report generation where each section sheet is positioned and colored to reflect its status. | Prepare a template workbook that programmatically arranges and styles tabs before distribution.
-// AI Prompts: Generate C# code that moves a worksheet named 'Data' to the third position and sets its tab color to red using Aspose.Cells. | Write a reusable method that accepts a worksheet name, target index, and System.Drawing.Color, then moves the sheet and updates its TabColor. | Explain the interaction between the MoveTo method and the TabColor property for managing worksheet order and appearance in Aspose.Cells for .NET.
+// Title: Move a worksheet to the first tab and set its tab color to LightBlue using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that locates a worksheet by name (with a fallback to index), moves it to the first tab, changes its TabColor to LightBlue, and saves the workbook. | Generate a .NET example that loads an existing .xlsx file, reorders a specific sheet to index 0, applies a LightBlue tab color, and writes the updated file using Aspose.Cells. | Create a C# program that checks for a sheet named "Sheet2", moves it to the leftmost tab, sets the tab background to LightBlue, and handles missing files gracefully with Aspose.Cells.
+// Common Searches: how to move a worksheet to the first tab with Aspose.Cells in C# | Aspose.Cells set Excel sheet tab color programmatically .NET | reorder Excel sheets and change tab color using Aspose.Cells library | fallback to worksheet index when name not found Aspose.Cells example | save modified workbook after changing sheet order Aspose.Cells C#
+// Tags: move worksheet to specific tab Aspose.Cells | set worksheet tab color LightBlue .NET | load and save Excel workbook Aspose.Cells | fallback worksheet selection by name or index Aspose | reorder sheets in .xlsx using Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
+using System.IO;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook, adds several sheets, moves a specific worksheet to a chosen index using the MoveTo method, applies a green TabColor, and saves the file as MovedSheetWithTabColor.xlsx.
-    public class MoveWorksheetAndSetTabColor
+    // The example loads 'input.xlsx', searches for a worksheet named 'Sheet2' (or uses the second sheet as a fallback), moves that worksheet to the first tab position, changes its tab color to LightBlue, and saves the modified workbook as 'output.xlsx', with error handling for missing files.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // Add some worksheets to have multiple sheets
-                workbook.Worksheets.Add("Sheet1");
-                workbook.Worksheets.Add("Sheet2");
-                workbook.Worksheets.Add("Sheet3");
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Add a new worksheet that we will move
-                Worksheet movedSheet = workbook.Worksheets.Add("MovedSheet");
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Move the worksheet to the desired position (index 1, i.e., second tab)
-                movedSheet.MoveTo(1);
+                // Attempt to get the worksheet by name; fallback to index if not found
+                string targetSheetName = "Sheet2";
+                Worksheet sheet = workbook.Worksheets[targetSheetName];
 
-                // Set the tab color of the moved worksheet (e.g., green)
-                movedSheet.TabColor = Color.Green;
+                if (sheet == null && workbook.Worksheets.Count > 1)
+                {
+                    // Use the second worksheet (index 1) as a fallback
+                    sheet = workbook.Worksheets[1];
+                }
 
-                // Save the workbook to a file
-                workbook.Save("MovedSheetWithTabColor.xlsx");
+                if (sheet == null)
+                {
+                    Console.WriteLine("Target worksheet not found.");
+                    return;
+                }
+
+                // Move the worksheet to the first tab position
+                sheet.MoveTo(0);
+
+                // Set a new tab color for the worksheet
+                sheet.TabColor = Color.LightBlue;
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

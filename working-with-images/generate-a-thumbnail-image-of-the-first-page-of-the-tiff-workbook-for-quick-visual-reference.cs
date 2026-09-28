@@ -1,38 +1,63 @@
-// Title: Generate a PNG thumbnail of the first worksheet page with Aspose.Cells for .NET (C#)
-// Description: This C# example loads an Excel workbook, configures ImageOrPrintOptions for a 96 dpi PNG, creates a WorkbookRender instance, and saves the first sheet (page index 0) as a compact thumbnail for quick visual reference.
-// Keywords: Aspose.Cells | C# thumbnail generation | WorkbookRender | Excel to PNG | low DPI image | first worksheet preview | image rendering API | Aspose.Cells .NET | Excel preview thumbnail | render workbook page
-// Common Searches: Aspose.Cells create thumbnail of first Excel sheet | C# render worksheet to PNG using Aspose.Cells | How to generate low‑resolution preview of an Excel workbook | WorkbookRender ToImage example C# | Create file‑browser icons from Excel files
-// Developer Intent: Produce a small PNG preview of the workbook’s first page using Aspose.Cells.
-// Use Cases: Show document previews in a web portal or intranet | Display icons for Excel files in a desktop file manager | Include page snapshots in automated test logs | Speed up content indexing by storing lightweight images
-// AI Prompts: Modify the code to create thumbnails for every worksheet in the workbook. | Change the output format to JPEG and adjust the resolution dynamically. | Add robust error handling for missing files, unsupported formats, and permission issues.
+// Title: Create a PNG thumbnail of the first page of a multi‑page TIFF workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a multi‑page TIFF workbook with Aspose.Cells, configures ImageOrPrintOptions for a low‑resolution PNG, and renders only the first worksheet to a thumbnail file. | Show how to verify the input TIFF exists, use SheetRender to export the first sheet as a PNG image, and handle exceptions in a .NET console application.
+// Common Searches: asp.net how to export first sheet of a tiff workbook to png thumbnail using Aspose.Cells | c# create low‑resolution preview image of first page in a multi‑page tiff Excel file | sample code for rendering first worksheet of a tiff workbook to a png file with Aspose.Cells | generate thumbnail from tiff workbook page with Aspose.Cells ImageOrPrintOptions | convert first page of tiff workbook to png using sheetrender c#
+// Tags: Aspose.Cells render first worksheet to PNG | C# ImageOrPrintOptions thumbnail generation | SheetRender export TIFF workbook page | multi-page TIFF workbook preview Aspose.Cells | low-resolution PNG thumbnail Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// This C# example loads an Excel workbook, configures ImageOrPrintOptions for a 96 dpi PNG, creates a WorkbookRender instance, and saves the first sheet (page index 0) as a compact thumbnail for quick visual reference.
-class ThumbnailGenerator
+namespace ThumbnailGenerator
 {
-    static void Main()
+    // // Loads a TIFF workbook, checks that it contains worksheets, sets 96 DPI ImageOrPrintOptions, uses SheetRender to render the first worksheet as a PNG thumbnail, saves the image to the specified path, and handles errors gracefully.
+    class Program
     {
-        // Load the source workbook (replace with your actual file path)
-        string workbookPath = "input.xlsx";
-        Workbook workbook = new Workbook(workbookPath);
+        static void Main(string[] args)
+        {
+            // Paths for input TIFF workbook and output thumbnail image
+            string inputPath = "input.tif";
+            string outputPath = "thumbnail.png";
 
-        // Configure rendering options for a small thumbnail image
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Png;               // Output format
-        options.HorizontalResolution = 96;               // Lower DPI for thumbnail
-        options.VerticalResolution = 96;
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Create a renderer for the workbook
-        WorkbookRender renderer = new WorkbookRender(workbook, options);
+                // Load the TIFF workbook (first page corresponds to the first worksheet)
+                Workbook workbook = new Workbook(inputPath);
 
-        // Render the first page (index 0) to a thumbnail file
-        string thumbnailPath = "thumbnail_page0.png";
-        renderer.ToImage(0, thumbnailPath);               // Uses WorkbookRender.ToImage(int, string)
+                // Ensure there is at least one worksheet to render
+                if (workbook.Worksheets.Count == 0)
+                {
+                    Console.WriteLine("The workbook contains no worksheets.");
+                    return;
+                }
 
-        Console.WriteLine($"Thumbnail of first page saved to: {thumbnailPath}");
+                // Configure image options for a PNG thumbnail
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    // Horizontal and vertical resolution (DPI) for the thumbnail
+                    HorizontalResolution = 96,
+                    VerticalResolution = 96,
+                    OnePagePerSheet = true // Ensure one page per sheet
+                };
+
+                // Render only the first worksheet (first page) to an image
+                SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
+                sheetRender.ToImage(0, outputPath);
+
+                Console.WriteLine($"Thumbnail saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

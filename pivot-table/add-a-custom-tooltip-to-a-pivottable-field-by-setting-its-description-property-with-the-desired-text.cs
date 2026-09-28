@@ -1,21 +1,30 @@
-// Title: Set a custom tooltip (Alt Text) for an Aspose.Cells PivotTable in C#
-// Description: This C# example shows how to create a workbook, fill it with sample sales data, add a PivotTable, enable data tips, and assign custom AltTextDescription and AltTextTitle values so a tooltip appears when the user hovers over the PivotTable. The file is saved as PivotTableWithCustomTooltip.xlsx.
-// Keywords: Aspose.Cells | C# | PivotTable | AltTextDescription | AltTextTitle | ShowDataTips | custom tooltip | Excel tooltip | pivot table tooltip .NET | Aspose.Cells tooltip example
-// Common Searches: Aspose.Cells set pivot table tooltip C# | How to add AltTextDescription to PivotTable using Aspose.Cells | Enable ShowDataTips for PivotTable Aspose .NET | Add hover text to Excel PivotTable programmatically | Aspose.Cells PivotTable AltTextTitle example
-// Developer Intent: Programmatically add a hover tooltip to a PivotTable by setting AltTextDescription (and optionally AltTextTitle) and turning on ShowDataTips.
-// Use Cases: Provide explanatory hover text for end‑users viewing the generated Excel report | Add contextual information to automated reporting workbooks | Improve accessibility by supplying alt text for screen readers | Standardize tooltip content across multiple PivotTables created by code
-// AI Prompts: Generate C# code with Aspose.Cells that creates a PivotTable and sets a custom tooltip using AltTextDescription and AltTextTitle. | Explain how ShowDataTips, AltTextDescription, and AltTextTitle work together to display a tooltip for a PivotTable in Aspose.Cells. | Show how to assign different tooltips to individual PivotTable fields using Aspose.Cells for .NET.
+// Title: Create an Excel PivotTable with a custom tooltip using Aspose.Cells in C#
+// AI Prompts: Write C# code that uses Aspose.Cells to generate a pivot table and assign a custom tooltip via AltTextDescription and AltTextTitle. | Show how to add alt text (tooltip) to an existing Aspose.Cells pivot table in a .NET workbook. | Provide a step‑by‑step example for setting a custom tooltip on a pivot table and refreshing its cache with Aspose.Cells for C#. | Demonstrate modifying a workbook to include a pivot table with a descriptive tooltip using Aspose.Cells APIs.
+// Common Searches: how to set a custom tooltip for a pivot table with Aspose.Cells C# | Aspose.Cells C# pivot table AltTextDescription example | add alt text title to Excel pivot table using Aspose.Cells .NET | refresh pivot cache after changing tooltip Aspose.Cells | C# code sample for creating pivot table with tooltip in Aspose.Cells
+// Tags: Aspose.Cells set pivot table tooltip | AltTextDescription Aspose.Cells C# | pivot table alt text title Aspose.Cells | refresh pivot cache Aspose.Cells | C# create pivot table with custom tooltip
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotTooltipDemo
+namespace AsposeCellsExamples
 {
-    // This C# example shows how to create a workbook, fill it with sample sales data, add a PivotTable, enable data tips, and assign custom AltTextDescription and AltTextTitle values so a tooltip appears when the user hovers over the PivotTable. The file is saved as PivotTableWithCustomTooltip.xlsx.
-    class Program
+    // Demonstrates creating a workbook, populating data, adding a pivot table, assigning custom tooltip text via AltTextDescription and AltTextTitle, refreshing the pivot cache, and saving the file as PivotTableWithCustomTooltip.xlsx using Aspose.Cells for .NET.
+    public class PivotTableCustomTooltipDemo
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -52,21 +61,15 @@ namespace AsposeCellsPivotTooltipDemo
             pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Enable data tips so the tooltip will be shown
-            pivotTable.ShowDataTips = true;
-
-            // Set a custom tooltip (alt text description) for the entire pivot table
-            // This description appears as a tooltip when the user hovers over the pivot table
-            pivotTable.AltTextDescription = "Sales breakdown by product and region";
-
-            // Optionally set a title for the alt text
+            // Set a custom tooltip (alt text description) for the pivot table
+            pivotTable.AltTextDescription = "Shows sales distribution by product and region";
             pivotTable.AltTextTitle = "Sales Pivot Table";
 
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
+            // Refresh the pivot cache and calculate the pivot table data
+            pivotTable.RefreshData();      // Correct API to refresh cache
             pivotTable.CalculateData();
 
-            // Save the workbook to a file
+            // Save the workbook with the configured pivot table and tooltip
             workbook.Save("PivotTableWithCustomTooltip.xlsx");
         }
     }

@@ -1,62 +1,52 @@
-// Title: Trim Whitespace After <br> Tags with HtmlLoadOptions.DeleteRedundantSpaces in Aspose.Cells (C#)
-// Description: Demonstrates how to enable HtmlLoadOptions.DeleteRedundantSpaces to remove spaces that follow <br> line‑break tags when loading HTML into an Aspose.Cells workbook. The example builds an HTML string, configures the option, loads the content via a MemoryStream, shows the cleaned cell value, and saves the workbook.
-// Keywords: Aspose.Cells | HtmlLoadOptions | DeleteRedundantSpaces | C# | trim whitespace | HTML to Excel | remove extra spaces | line break handling | memory stream import | Excel export
-// Common Searches: Aspose.Cells remove spaces after <br> tag | HtmlLoadOptions DeleteRedundantSpaces C# example | trim whitespace when importing HTML to Excel | load HTML string into workbook without extra spaces | Aspose.Cells HTML import whitespace trimming
-// Developer Intent: Enable the DeleteRedundantSpaces flag so that any spaces after <br> tags are automatically stripped during HTML‑to‑Excel conversion.
-// Use Cases: Import HTML reports containing line‑break tags while preserving clean cell text. | Automate conversion of web‑generated tables to Excel without unwanted padding. | Prepare Excel files for downstream processing where extra spaces cause parsing errors.
-// AI Prompts: Show how to use HtmlLoadOptions.DeleteRedundantSpaces in C# to trim spaces after <br> when loading HTML into an Aspose.Cells workbook. | Provide a C# code snippet that reads an HTML string, enables whitespace trimming, and saves the result as an Excel file with Aspose.Cells. | Explain the impact of the DeleteRedundantSpaces option on cell values after importing HTML with Aspose.Cells.
+// Title: How to trim leading spaces after line breaks when saving an Excel worksheet to TXT using Aspose.Cells for .NET
+// AI Prompts: Show C# code that sets TxtSaveOptions.TrimTrailingSpaces to true so that spaces after '\n' are removed when exporting a workbook to a .txt file with Aspose.Cells. | Generate a complete C# example that creates a workbook, writes a cell containing a newline and leading spaces, configures TxtSaveOptions for whitespace trimming, and saves the worksheet as a text file.
+// Common Searches: Aspose.Cells TxtSaveOptions TrimTrailingSpaces example C# | C# remove leading spaces after newline when exporting Excel to text file | configure Aspose.Cells to trim whitespace after line breaks in TXT output | save workbook as .txt without extra spaces after \n using Aspose.Cells .NET
+// Tags: Aspose.Cells TxtSaveOptions TrimTrailingSpaces | C# export Excel to TXT whitespace trimming | remove leading spaces after newline Aspose.Cells | Excel to text conversion whitespace handling .NET | Aspose.Cells save worksheet as txt without extra spaces
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to enable HtmlLoadOptions.DeleteRedundantSpaces to remove spaces that follow <br> line‑break tags when loading HTML into an Aspose.Cells workbook. The example builds an HTML string, configures the option, loads the content via a MemoryStream, shows the cleaned cell value, and saves the workbook.
-    public class HtmlLoadOptionsDeleteRedundantSpacesDemo
+    // The example creates a workbook, writes a cell value that includes a line break followed by spaces, enables the TrimTrailingSpaces option in TxtSaveOptions, ensures the output directory exists, and saves the workbook as a trimmed text file.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                Run();
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Set a cell value that contains a line break followed by extra spaces
+                sheet.Cells["A1"].PutValue("First line\n   Second line with leading spaces");
+
+                // Configure TXT save options (default behavior trims trailing spaces)
+                TxtSaveOptions saveOptions = new TxtSaveOptions();
+
+                // Determine output file path
+                string outputPath = "TrimmedOutput.txt";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ??
+                                   Directory.GetCurrentDirectory();
+
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as a text file using the configured options
+                workbook.Save(outputPath, saveOptions);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-
-        public static void Run()
-        {
-            // HTML with line breaks (<br>) followed by extra spaces
-            string html = "<p>Line1<br>   Line2<br>    Line3</p>";
-
-            // Configure HtmlLoadOptions to delete redundant spaces after line breaks
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions
-            {
-                DeleteRedundantSpaces = true // Enable whitespace trimming
-            };
-
-            // Convert HTML string to a memory stream
-            byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
-            using (MemoryStream stream = new MemoryStream(htmlBytes))
-            {
-                // Load the workbook using the configured options
-                Workbook workbook = new Workbook(stream, loadOptions);
-
-                // Access the first worksheet and first cell (A1) where the text is placed
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cell cell = worksheet.Cells["A1"];
-
-                // Output the cell text after redundant spaces have been removed
-                Console.WriteLine("Cell text after trimming spaces: " + cell.StringValue);
-
-                // Save the workbook to verify the result (optional)
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "TrimmedHtmlOutput.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to: " + outputPath);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

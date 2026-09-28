@@ -1,29 +1,32 @@
-// Title: C# – Delete Column Q and Export Worksheet as PDF using Aspose.Cells
-// Description: Load an Excel file with Aspose.Cells, remove column Q (index 16) from the first worksheet, and save the updated sheet directly as a PDF document.
-// Keywords: Aspose.Cells delete column C# | remove column Q Excel | Excel to PDF conversion .NET | Aspose.Cells column removal | C# export worksheet PDF
-// Common Searches: how to delete a specific column with Aspose.Cells | convert modified Excel sheet to PDF in C# | Aspose.Cells remove column by index | C# export worksheet after column deletion
-// Developer Intent: Eliminate column Q from an Excel workbook and generate a PDF of the cleaned worksheet.
-// Use Cases: Hide confidential data before publishing a report as PDF. | Automate template cleanup by stripping unwanted columns and creating distribution‑ready PDFs. | Process a batch of workbooks to remove a designated column and output each as a PDF file.
-// AI Prompts: Generate C# code that uses Aspose.Cells to delete column Q (index 16) from the first sheet and save the result as a PDF. | Show an Aspose.Cells example that removes a column by name and exports the worksheet to PDF with default page settings. | Create a reusable method that accepts input and output paths, deletes column Q from the first worksheet, and returns the PDF as a byte array.
+// Title: How to delete column Q from an Excel worksheet and save the result as a PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Delete column Q (zero‑based index 16) from a workbook, update any dependent formulas, and export the first worksheet to PDF with Aspose.Cells in C#. | Remove a specific column from an Excel file and convert the modified sheet to PDF using the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# delete column by index and keep formula references before PDF export | C# code to remove column Q from an Excel file and generate a PDF with Aspose.Cells | How to delete a column in an Excel workbook using Aspose.Cells and then save as PDF | Update formulas after deleting a column in Aspose.Cells before converting to PDF | Convert modified worksheet to PDF after column removal using Aspose.Cells .NET
+// Tags: delete column Aspose.Cells C# | formula update after column deletion Aspose.Cells | save worksheet as PDF Aspose.Cells .NET | remove column Q by index Aspose.Cells | convert modified Excel workbook to PDF using Aspose
 
 using System;
 using Aspose.Cells;
 
-// Load an Excel file with Aspose.Cells, remove column Q (index 16) from the first worksheet, and save the updated sheet directly as a PDF document.
+// The example loads an Excel workbook with Aspose.Cells, deletes column Q (index 16) while updating formulas, and then saves the resulting worksheet directly as a PDF file.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the source Excel file
+        string inputPath = "input.xlsx";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the workbook from the file (uses Workbook(string) constructor)
+        Workbook workbook = new Workbook(inputPath);
 
-        // Delete column Q (zero‑based index 16)
-        sheet.Cells.DeleteColumn(16);
+        // Get the first worksheet (you can change the index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the modified workbook as a PDF document
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+        // Delete column Q.
+        // Column indices are zero‑based, so column Q is index 16 (A=0, B=1, ..., Q=16).
+        // The second parameter 'true' updates any formulas that reference the deleted column.
+        worksheet.Cells.DeleteColumn(16, true);
+
+        // Save the modified workbook as a PDF file (uses Workbook.Save(string, SaveFormat))
+        string outputPath = "output.pdf";
+        workbook.Save(outputPath, SaveFormat.Pdf);
     }
 }

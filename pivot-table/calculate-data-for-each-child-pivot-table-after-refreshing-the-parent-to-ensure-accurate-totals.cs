@@ -1,76 +1,86 @@
-// Title: Refresh Parent Pivot Table and Recalculate Dependent Child Pivots with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, refreshes the first (parent) pivot table, uses GetDependentPivotTables to locate all child pivots, refreshes and recalculates each child, then saves the updated file. Demonstrates correct total propagation after source data changes.
-// Keywords: Aspose.Cells refresh pivot | parent pivot table refresh .NET | GetDependentPivotTables example | recalculate child pivots | Excel pivot table automation | C# Aspose.Cells pivot update | refresh all pivots in workbook
-// Common Searches: how to refresh a parent pivot and its child pivots using Aspose.Cells | Aspose.Cells GetDependentPivotTables C# | refresh and calculate all pivot tables in an Excel file | update dependent pivot tables after data change .NET | Aspose.Cells refresh data for multiple pivots
-// Developer Intent: Programmatically refresh a parent pivot table and then refresh and recalculate every child pivot that depends on it.
-// Use Cases: After modifying source data via code, ensure the master pivot and all drill‑down pivots display accurate totals before exporting. | Automate nightly reporting where a primary pivot drives several linked child pivots; the routine keeps the entire report consistent. | Integrate into a data‑processing pipeline that validates pivot calculations by refreshing the parent and each dependent child pivot prior to saving.
-// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, refreshes the first pivot table, retrieves its dependent child pivots using GetDependentPivotTables, refreshes each child, and saves the file. | Explain the role of GetDependentPivotTables in Aspose.Cells and how to handle cases where no dependent pivots are returned. | Provide performance tips for refreshing and recalculating many pivot tables in a large workbook with Aspose.Cells for .NET.
+// Title: Refresh parent pivot table before child pivot table to keep totals accurate using Aspose.Cells for .NET (C#)
+// AI Prompts: Update the source cells, then invoke parentPivot.RefreshData() and parentPivot.CalculateData() before calling childPivot.RefreshData() and childPivot.CalculateData() to synchronize totals. | After modifying data, programmatically recalculate a dependent child pivot by refreshing the parent pivot first with Aspose.Cells in C#. | Create two pivot tables that share the same range and ensure correct aggregation by refreshing and calculating the parent pivot prior to the child pivot.
+// Common Searches: Aspose.Cells how to refresh parent pivot before child pivot in C# | C# calculate data for dependent pivot tables after source change using Aspose.Cells | sequence of RefreshData and CalculateData for multiple pivot tables Aspose.Cells .NET | ensure child pivot totals are correct after updating source data Aspose.Cells
+// Tags: refresh order for dependent pivots Aspose.Cells | recompute totals for linked pivot after source change | C# linked pivot tables synchronization | Aspose.Cells multiple pivot tables operation sequence | accurate pivot totals after data modification
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotExample
 {
-    // Loads an Excel workbook, refreshes the first (parent) pivot table, uses GetDependentPivotTables to locate all child pivots, refreshes and recalculates each child, then saves the updated file. Demonstrates correct total propagation after source data changes.
-    public class RefreshParentAndChildrenPivotTables
+    // The example creates a workbook with a parent and a child pivot table based on the same data range, modifies source values, refreshes and calculates the parent pivot first, then refreshes and calculates the child pivot to maintain correct totals, and finally saves the workbook as PivotParentChildRefresh.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            const string inputFile = "ParentPivotWorkbook.xlsx";
-            const string outputFile = "ParentPivotWorkbook_Updated.xlsx";
-
             try
             {
-                // Verify that the input workbook exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Error: Input file '{inputFile}' not found.");
-                    return;
-                }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the workbook containing the parent pivot table and its children
-                Workbook workbook = new Workbook(inputFile);
+                // Populate sample data for the pivot tables
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Amount");
+                sheet.Cells["A2"].PutValue("Food");
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["A3"].PutValue("Drink");
+                sheet.Cells["B3"].PutValue(80);
+                sheet.Cells["A4"].PutValue("Food");
+                sheet.Cells["B4"].PutValue(150);
+                sheet.Cells["A5"].PutValue("Drink");
+                sheet.Cells["B5"].PutValue(70);
 
-                // Assume the parent pivot table is the first one on the first worksheet
-                Worksheet parentSheet = workbook.Worksheets[0];
-                if (parentSheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("Error: No pivot tables found on the first worksheet.");
-                    return;
-                }
+                // -------------------------------------------------
+                // Create the parent pivot table
+                // -------------------------------------------------
+                int parentIndex = sheet.PivotTables.Add("A1:B5", "D1", "ParentPivot");
+                PivotTable parentPivot = sheet.PivotTables[parentIndex];
+                parentPivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category
+                parentPivot.AddFieldToArea(PivotFieldType.Data, 1);  // Amount
 
-                PivotTable parentPivot = parentSheet.PivotTables[0];
+                // -------------------------------------------------
+                // Create a child pivot table that uses the same data source
+                // -------------------------------------------------
+                int childIndex = sheet.PivotTables.Add("A1:B5", "D10", "ChildPivot");
+                PivotTable childPivot = sheet.PivotTables[childIndex];
+                childPivot.AddFieldToArea(PivotFieldType.Row, 0);
+                childPivot.AddFieldToArea(PivotFieldType.Data, 1);
 
-                // Refresh the parent pivot table data and recalculate
+                // Initial calculation so both pivots have data
+                parentPivot.RefreshData();
+                parentPivot.CalculateData();
+                childPivot.RefreshData();
+                childPivot.CalculateData();
+
+                // -------------------------------------------------
+                // Simulate a change in the source data
+                // -------------------------------------------------
+                sheet.Cells["B2"].PutValue(200); // Change Food amount for first row
+                sheet.Cells["B4"].PutValue(250); // Change Food amount for second row
+
+                // -------------------------------------------------
+                // Refresh the parent pivot table first
+                // -------------------------------------------------
                 parentPivot.RefreshData();
                 parentPivot.CalculateData();
 
-                // Retrieve all child pivot tables that depend on the parent pivot table
-                PivotTable[] childPivots = parentPivot.GetDependentPivotTables();
+                // -------------------------------------------------
+                // Then refresh the child pivot table to ensure totals are accurate
+                // -------------------------------------------------
+                childPivot.RefreshData();
+                childPivot.CalculateData();
 
-                // Refresh each child pivot table's data and recalculate
-                foreach (PivotTable childPivot in childPivots)
-                {
-                    childPivot.RefreshData();
-                    childPivot.CalculateData();
-                }
-
-                // Save the updated workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully as '{outputFile}'.");
+                // -------------------------------------------------
+                // Save the workbook
+                // -------------------------------------------------
+                workbook.Save("PivotParentChildRefresh.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

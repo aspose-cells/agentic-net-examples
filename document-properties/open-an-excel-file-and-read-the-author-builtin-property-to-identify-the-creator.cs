@@ -1,29 +1,44 @@
-// Title: Read Excel Workbook Author Property with Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx file using Aspose.Cells, reads the BuiltInDocumentProperties.Author field, and prints the author name to the console.
-// Keywords: Aspose.Cells | C# | read author property | built‑in document properties | Excel metadata | Workbook.Author | retrieve creator name | document properties .NET
-// Common Searches: Aspose.Cells read author C# | Get Excel file author using Aspose | How to access built‑in document properties in .NET | C# retrieve workbook creator name | Aspose.Cells built‑in properties example
-// Developer Intent: Extract the Author built‑in document property from an Excel workbook.
-// Use Cases: Show the spreadsheet creator in a console tool for quick verification. | Log the author of uploaded Excel files to support audit trails in backend services. | Validate that a workbook originates from a specific user before initiating data processing. | Display author information in a UI dashboard that aggregates document metadata.
-// AI Prompts: Generate C# code with Aspose.Cells that reads all built‑in document properties from an Excel file. | Show how to change the Author property of a workbook and save the file using Aspose.Cells. | Explain strategies for handling missing or empty Author values when reading Excel metadata with Aspose.Cells.
+// Title: Read the Author built‑in document property from an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, checks if the file exists, and returns the value of the built‑in Author property. | Show a complete example that loads a workbook, accesses BuiltInDocumentProperties, extracts the creator name, and includes exception handling. | Provide a snippet that prints the Author metadata of an Excel file using Aspose.Cells, handling missing‑file scenarios.
+// Common Searches: aspnet read author property from excel using Aspose.Cells | C# Aspose.Cells get built‑in document properties Author | how to retrieve creator name from .xlsx with Aspose.Cells library | example code for checking file existence before reading Excel metadata Aspose.Cells | Aspose.Cells built‑in properties read Author value C#
+// Tags: Aspose.Cells read built-in document properties | C# retrieve Excel Author metadata | load workbook and access BuiltInDocumentProperties | handle missing file with Aspose.Cells | extract creator name from .xlsx
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an .xlsx file using Aspose.Cells, reads the BuiltInDocumentProperties.Author field, and prints the author name to the console.
-class ReadAuthorProperty
+// // This C# program verifies that input.xlsx exists, loads it with Aspose.Cells, accesses the workbook's BuiltInDocumentProperties, reads the "Author" property (the creator), prints the author name, and catches any exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the Excel file to be opened
-        string filePath = "input.xlsx";
+        const string inputPath = "input.xlsx";
 
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(filePath);
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Access the built‑in Author property of the workbook
-        string author = workbook.BuiltInDocumentProperties.Author;
+        try
+        {
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Display the author name
-        Console.WriteLine("Author: " + author);
+            // Access built‑in document properties
+            var builtInProps = workbook.BuiltInDocumentProperties;
+
+            // Retrieve the Author property (creator of the file)
+            string author = builtInProps["Author"]?.ToString();
+
+            // Display the author name
+            Console.WriteLine("Author: " + author);
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

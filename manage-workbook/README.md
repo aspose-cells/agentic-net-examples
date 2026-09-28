@@ -4,7 +4,8 @@ description: C# examples for workbook creation, settings, worksheet coordination
 product: Aspose.Cells for .NET
 category: manage-workbook
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Create and Manage Excel Workbooks in C# with Aspose.Cells

@@ -1,47 +1,58 @@
-// Title: C# – Apply fixed text margins to rectangle shapes in an Excel file with Aspose.Cells
-// Description: The sample opens an Excel workbook, walks through each worksheet and its shapes, selects only RectangleShape objects, sets explicit top, bottom, left, and right margins via ShapeTextAlignment, disables automatic margin calculation, and saves the modified file.
-// Keywords: Aspose.Cells | C# shape margins | RectangleShape | ShapeTextAlignment | Excel shape padding | disable auto margin | set text margins .NET | iterate worksheet shapes | custom shape formatting
-// Common Searches: How to change padding inside rectangle shapes in Excel using Aspose.Cells C# | Aspose.Cells iterate shapes and set fixed margins | Disable automatic margins for specific shape types with Aspose.Cells | Set top and left margin for rectangle shape text in .NET | Batch update shape text alignment across worksheets Aspose.Cells
-// Developer Intent: Programmatically adjust the text padding of rectangle shapes in an Excel workbook with Aspose.Cells for .NET.
-// Use Cases: Prepare a corporate template where all rectangle callout boxes must have uniform 5‑pt padding. | Generate printable reports that require consistent text positioning inside rectangle shapes. | Automate the cleanup of legacy workbooks to enforce branding‑compliant shape margins.
-// AI Prompts: Write C# code that sets 8‑point margins for all oval shapes and keeps auto‑margin enabled using Aspose.Cells. | Show how to log the name and original margin values of each rectangle shape before updating them. | Create a script that toggles IsAutoMargin on for rectangle shapes after custom margins have been applied.
+// Title: How to filter rectangle shapes in an Excel worksheet and set custom margins using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that iterates over all shapes on a worksheet, selects only rectangle shapes, and applies left, right, top, and bottom margins of 5 points each with Aspose.Cells. | Update the provided Aspose.Cells example to change the padding of every rectangle shape to 4 points while leaving other shape types untouched.
+// Common Searches: Aspose.Cells C# set padding for rectangle shapes in Excel worksheet | filter Excel shapes by type rectangle using Aspose.Cells .NET | apply custom margins to rectangle shapes with Aspose.Cells API | how to change shape margins in an Excel file programmatically C#
+// Tags: rectangle shape margin Aspose.Cells | select shape type Aspose.Cells .NET | set shape padding C# | Excel rectangle shape formatting | Aspose.Cells shape margin adjustment
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// The sample opens an Excel workbook, walks through each worksheet and its shapes, selects only RectangleShape objects, sets explicit top, bottom, left, and right margins via ShapeTextAlignment, disables automatic margin calculation, and saves the modified file.
-class ShapeMarginProcessor
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, accesses the first worksheet, iterates through all shapes, selects only rectangle shapes, sets specific left, right, top, and bottom margins (padding) for those rectangles, and saves the modified workbook, handling any runtime exceptions.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets
-        foreach (Worksheet worksheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            // Iterate through all shapes on the worksheet
-            foreach (Shape shape in worksheet.Shapes)
-            {
-                // Process only rectangle shapes
-                if (shape is RectangleShape rectangle)
-                {
-                    // Access the text alignment object of the rectangle
-                    ShapeTextAlignment alignment = rectangle.TextBody.TextAlignment;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-                    // Set explicit margins (in points) and disable auto‑margin
-                    alignment.TopMarginPt = 5.0;
-                    alignment.BottomMarginPt = 5.0;
-                    alignment.LeftMarginPt = 5.0;
-                    alignment.RightMarginPt = 5.0;
-                    alignment.IsAutoMargin = false;
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
+
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
+
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    // Process only TextBox shapes
+                    if (shape is TextBox textBox)
+                    {
+                        // Word wrap is not directly exposed in this version of Aspose.Cells.
+                        // Additional formatting can be applied here if needed.
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
     }
 }

@@ -1,63 +1,45 @@
-// Title: Load an Existing Excel File into an Aspose.Cells Workbook (C#)
-// Description: C# example that checks for a .xlsx file, creates a simple workbook with sample data if missing, then loads the file with Aspose.Cells, accesses the first worksheet, and prints its name and data row count.
-// Keywords: Aspose.Cells load workbook C# | read Excel file Aspose.Cells | open existing .xlsx C# | first worksheet name Aspose | create placeholder workbook Aspose | FileNotFoundException handling Aspose.Cells
-// Common Searches: how to open an existing Excel file with Aspose.Cells in C# | Aspose.Cells create workbook if file not found | get first sheet name and row count using Aspose.Cells | C# load .xlsx and handle missing file Aspose
-// Developer Intent: Load a spreadsheet from disk into a Workbook object and retrieve basic information from its first worksheet.
-// Use Cases: Display the name and row count of the first sheet in a user‑provided Excel file. | Automatically generate a default workbook with sample data when the expected file is absent. | Validate and safely open Excel files in .NET applications using Aspose.Cells.
-// AI Prompts: Generate C# code that uses Aspose.Cells to open a .xlsx file, creates it with sample data if it does not exist, and prints the first worksheet name and number of data rows. | Show how to catch FileNotFoundException when loading an Excel workbook with Aspose.Cells in C#. | Demonstrate creating a new workbook, adding sample data, saving it, and then reloading it using Aspose.Cells.
+// Title: Load an existing Excel (.xlsx) file into an Aspose.Cells Workbook in C# with automatic fallback to a new workbook
+// AI Prompts: Generate C# code that opens a .xlsx file using the Aspose.Cells Workbook constructor, checks if the file exists, and creates a new Workbook when the file is missing. | Add robust try‑catch handling around the workbook initialization and print the name of the first worksheet to the console. | Refactor the example to accept the Excel file path as a command‑line argument and display a clear message if the file cannot be found.
+// Common Searches: aspocells c# load existing workbook from file path with fallback if file not found | how to open an .xlsx file using Aspose.Cells and handle missing file in .NET | c# Aspose.Cells create new workbook when specified Excel file does not exist | example of checking file existence before loading workbook with Aspose.Cells | aspocells exception handling when loading workbook from disk
+// Tags: Aspose.Cells load workbook from .xlsx file | fallback create new workbook when file missing | check file existence before Aspose.Cells Workbook initialization | exception handling Aspose.Cells workbook loading | access first worksheet Aspose.Cells C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadExample
+// The sample checks whether a given .xlsx file exists; if it does, it loads the file into an Aspose.Cells Workbook, otherwise it creates a new Workbook. It then accesses the first worksheet, prints its name, and wraps the process in try‑catch error handling.
+class Program
 {
-    // C# example that checks for a .xlsx file, creates a simple workbook with sample data if missing, then loads the file with Aspose.Cells, accesses the first worksheet, and prints its name and data row count.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the existing Excel file
+        string filePath = @"C:\Path\To\YourFile.xlsx";
+
+        try
         {
-            // Path to the Excel file
-            string filePath = @"C:\Data\Sample.xlsx";
+            Workbook workbook;
 
-            try
+            // Load the workbook if the file exists; otherwise create a new one
+            if (File.Exists(filePath))
             {
-                // Ensure the file exists; create a simple workbook if it does not
-                if (!File.Exists(filePath))
-                {
-                    // Create directory if needed
-                    string dir = Path.GetDirectoryName(filePath);
-                    if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
-                    {
-                        Directory.CreateDirectory(dir);
-                    }
-
-                    // Create a new workbook with a default sheet and sample data
-                    Workbook newWb = new Workbook();
-                    Worksheet newSheet = newWb.Worksheets[0];
-                    newSheet.Name = "Sheet1";
-                    newSheet.Cells["A1"].PutValue("Sample Data");
-                    newWb.Save(filePath);
-                    Console.WriteLine($"Created sample workbook at: {filePath}");
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Console.WriteLine($"Loaded workbook: {filePath}");
-                Console.WriteLine($"First worksheet name: {sheet.Name}");
-                Console.WriteLine($"Number of rows with data: {sheet.Cells.MaxDataRow + 1}");
+                workbook = new Workbook(filePath);
+                Console.WriteLine($"Workbook loaded from '{filePath}'.");
             }
-            catch (FileNotFoundException fnfEx)
+            else
             {
-                Console.WriteLine($"File not found: {fnfEx.FileName}");
+                workbook = new Workbook();
+                Console.WriteLine($"File not found: '{filePath}'. A new workbook has been created.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // The workbook object is now ready for further processing
+            // Example: access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"First worksheet name: {sheet.Name}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors (e.g., Aspose.Cells specific exceptions)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

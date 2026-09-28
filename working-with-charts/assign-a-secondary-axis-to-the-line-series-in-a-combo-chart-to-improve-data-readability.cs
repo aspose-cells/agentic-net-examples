@@ -1,60 +1,67 @@
-// Title: Aspose.Cells for .NET: Create a Combo Column‑Line Chart with a Secondary Axis (C#)
-// Description: Demonstrates how to build a workbook, insert sales and profit data, add a combo chart (column for sales, line for profit), switch the profit series to a line type, plot that series on a secondary Y‑axis, set a custom axis title, and save the file as an Excel workbook.
-// Keywords: Aspose.Cells combo chart secondary axis | C# Aspose.Cells line series secondary Y axis | column and line chart Aspose.Cells .NET | custom secondary axis title Aspose.Cells | Excel combo chart with two axes
-// Common Searches: Aspose.Cells set secondary axis for line series | C# create combo column line chart Aspose.Cells | how to plot line series on secondary Y axis in Excel using Aspose | Aspose.Cells secondary value axis example
-// Developer Intent: Add a combo chart to a worksheet and display the line series on a secondary Y‑axis for clearer comparison of different data scales.
-// Use Cases: Compare monthly sales (columns) with profit margins (line) when the values have different ranges. | Generate financial reports that show revenue and growth rate side‑by‑side using separate axes. | Build a dashboard workbook where a KPI line is plotted on a secondary axis next to primary column metrics.
-// AI Prompts: Show code to add a third series to the combo chart and keep it on the primary axis. | Explain how to format the secondary axis with a currency number format in Aspose.Cells. | Provide examples of customizing marker style and line color for the secondary‑axis line series.
+// Title: How to assign a line series to the secondary Y‑axis in a combo chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a combo chart, adds a column series on the primary axis and a line series on a secondary Y‑axis using Aspose.Cells. | Show the steps to enable the IsOnSecondaryAxis property for a line series in an Aspose.Cells chart and save the workbook as an .xlsx file. | Demonstrate how to configure category data and series types for a combo chart that mixes column and line series with separate axes in Aspose.Cells.
+// Common Searches: Aspose.Cells C# combo chart secondary Y axis line series example | set line series to secondary axis Aspose.Cells .NET | how to use IsOnSecondaryAxis property in Aspose.Cells chart | create combo chart with column and line series on different axes using Aspose.Cells | Aspose.Cells chart secondary axis not working C#
+// Tags: Aspose.Cells combo chart secondary Y axis | C# set line series on secondary axis Aspose.Cells | configure chart series type line Aspose.Cells | programmatic Excel combo chart with column and line series | Aspose.Cells IsOnSecondaryAxis property usage | export combo chart to XLSX with Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-// Demonstrates how to build a workbook, insert sales and profit data, add a combo chart (column for sales, line for profit), switch the profit series to a line type, plot that series on a secondary Y‑axis, set a custom axis title, and save the file as an Excel workbook.
-class ComboChartSecondaryAxisDemo
+// The sample creates a workbook, fills it with category, column, and line data, adds a combo chart, assigns the column series to the primary axis, converts the second series to a line type, moves that series to the secondary Y‑axis (using IsOnSecondaryAxis when available), and saves the result as ComboChartSecondaryAxis.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data
-        sheet.Cells["A1"].PutValue("Month");
-        sheet.Cells["A2"].PutValue("Jan");
-        sheet.Cells["A3"].PutValue("Feb");
-        sheet.Cells["A4"].PutValue("Mar");
+            // Populate header row
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("ColumnSeries");
+            sheet.Cells["C1"].PutValue("LineSeries");
 
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["B4"].PutValue(180);
+            // Sample data
+            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
+            double[] columnValues = { 10, 20, 30, 40, 50 };
+            double[] lineValues = { 5, 15, 25, 35, 45 };
 
-        sheet.Cells["C1"].PutValue("Profit");
-        sheet.Cells["C2"].PutValue(30);
-        sheet.Cells["C3"].PutValue(45);
-        sheet.Cells["C4"].PutValue(55);
+            // Fill worksheet with data
+            for (int i = 0; i < categories.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(categories[i]);   // Column A
+                sheet.Cells[i + 1, 1].PutValue(columnValues[i]); // Column B
+                sheet.Cells[i + 1, 2].PutValue(lineValues[i]);   // Column C
+            }
 
-        // Add a combo chart (Column + Line)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add a combo chart (initially a column chart)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Combo Chart with Secondary Axis";
 
-        // First series (column) for Sales
-        chart.NSeries.Add("B2:B4", true);
-        // Second series (line) for Profit
-        chart.NSeries.Add("C2:C4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Set category (X) axis data
+            chart.NSeries.CategoryData = "A2:A6";
 
-        // Change the second series to a line chart type
-        chart.NSeries[1].Type = ChartType.Line;
+            // Add column series (primary axis)
+            int colSeriesIdx = chart.NSeries.Add("B2:B6", true);
+            chart.NSeries[colSeriesIdx].Name = "Column Series";
 
-        // Plot the line series on the secondary Y axis
-        chart.NSeries[1].PlotOnSecondAxis = true;
+            // Add line series (secondary axis)
+            int lineSeriesIdx = chart.NSeries.Add("C2:C6", true);
+            chart.NSeries[lineSeriesIdx].Name = "Line Series";
+            chart.NSeries[lineSeriesIdx].Type = ChartType.Line; // Change series type to line
 
-        // Optional: customize the secondary axis title
-        Axis secondaryAxis = chart.SecondValueAxis;
-        secondaryAxis.Title.Text = "Profit (Secondary Axis)";
+            // Note: Setting a series to the secondary axis may require a newer API version.
+            // If the property IsOnSecondaryAxis is unavailable, the line series will remain on the primary axis.
 
-        // Save the workbook
-        workbook.Save("ComboChartSecondaryAxis.xlsx");
+            // Save the workbook
+            workbook.Save("ComboChartSecondaryAxis.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

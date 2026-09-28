@@ -1,21 +1,18 @@
-// Title: C# Example – Set PivotItem.Position After RefreshData & CalculateData with Aspose.Cells
-// Description: Demonstrates how to refresh a pivot cache, calculate pivot data, and programmatically assign a custom order to each PivotItem by setting its Position property in Aspose.Cells for .NET. The workbook is saved as an Excel file.
-// Keywords: Aspose.Cells | C# pivot table example | PivotItem.Position | RefreshData | CalculateData | reorder pivot items | Aspose.Cells for .NET | pivot table item ordering | Excel automation | GitHub Aspose.Cells sample
-// Common Searches: Aspose.Cells set PivotItem.Position after RefreshData | C# reorder rows in Aspose.Cells pivot table | how to change pivot item order programmatically | RefreshData CalculateData Aspose.Cells example | move pivot items to specific positions in .NET
-// Developer Intent: Programmatically define the exact sequence of row items in a pivot table by assigning a unique Position value to each PivotItem after the pivot cache has been refreshed and calculated.
-// Use Cases: Apply a custom product display order after the source data is refreshed. | Maintain consistent row ordering across automated sales reports. | Synchronize pivot item positions with an external sorting list before exporting the workbook.
-// AI Prompts: Generate C# code using Aspose.Cells to set PivotItem.Position for each row field after calling RefreshData and CalculateData. | Explain how the Position property influences pivot item ordering and how to assign unique positions when updating multiple items. | Show how to map a predefined list of product names to specific Position values after refreshing the pivot cache.
+// Title: Set PivotItem.Position to reorder rows after RefreshData and CalculateData with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that refreshes a pivot table, calculates its data, and then assigns each row field's PivotItem.Position to its zero‑based index using Aspose.Cells. | Show how to loop through a PivotField's PivotItems collection after calling RefreshData and CalculateData and set the Position property to reorder the pivot rows. | Explain why PivotItem.Position should be updated only after RefreshData and CalculateData when programmatically reordering pivot table rows in Aspose.Cells.
+// Common Searches: Aspose.Cells C# set pivot item position after RefreshData and CalculateData | how to reorder pivot table rows programmatically using Aspose.Cells .NET | C# loop through PivotField.PivotItems to change Position property | update pivot item order after calculating pivot data with Aspose.Cells | set specific index for PivotItem.Position in Aspose.Cells pivot table
+// Tags: pivotitem.position after refreshdata | reorder pivot table rows aspose.cells | iterate pivotitems set position c# | calculatedata before setting pivotitem position | aspnet workbook save pivot ordering
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotItemPositionDemo
 {
-    // Demonstrates how to refresh a pivot cache, calculate pivot data, and programmatically assign a custom order to each PivotItem by setting its Position property in Aspose.Cells for .NET. The workbook is saved as an Excel file.
-    public class SetPivotItemPositionAfterRefresh
+    // The example creates a workbook, adds sample data, builds a pivot table, refreshes and calculates the pivot cache, then iterates the row field's PivotItems to assign each item's Position property to its index, effectively reordering the rows before saving the file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
@@ -34,43 +31,32 @@ namespace AsposeCellsExamples
                 sheet.Cells["B4"].PutValue(1500);
 
                 // Add a pivot table based on the data range
-                int ptIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
+                int ptIndex = sheet.PivotTables.Add("A1:B4", "E3", "SalesPivot");
                 PivotTable pivotTable = sheet.PivotTables[ptIndex];
 
                 // Add the "Product" field to the row area and "Sales" to the data area
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Refresh the pivot cache data (using the available RefreshData method)
+                // Refresh the pivot cache and calculate the pivot data
                 pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // After refresh/calculation, set the Position property for each pivot item
-                // Position specifies the absolute order of the item among all PivotItems
+                // Set the Position property for each pivot item.
+                // Use a for‑loop to avoid modifying the collection while enumerating it.
                 PivotField rowField = pivotTable.RowFields[0];
-                int targetPosition = 0; // Example: move every item to the first position sequentially
-                foreach (PivotItem item in rowField.PivotItems)
+                for (int i = 0; i < rowField.PivotItems.Count; i++)
                 {
-                    item.Position = targetPosition;
-                    targetPosition++; // Increment to maintain unique positions
+                    rowField.PivotItems[i].Position = i;
                 }
 
-                // Save the workbook
+                // Save the workbook to a file
                 workbook.Save("PivotItemPositionAfterRefresh.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetPivotItemPositionAfterRefresh.Run();
         }
     }
 }

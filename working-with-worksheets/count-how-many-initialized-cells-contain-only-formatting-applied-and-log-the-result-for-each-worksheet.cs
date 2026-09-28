@@ -1,106 +1,104 @@
-// Title: Count Formatting‑Only Initialized Cells per Worksheet with Aspose.Cells for .NET
-// Description: A C# example that creates a workbook, adds cells with value only, style only, and both, then walks through every worksheet, enumerates only instantiated cells, detects non‑default formatting without a value, logs the count per sheet, and saves the file. Ideal for developers needing to audit or clean up styling in large Excel files.
-// Keywords: Aspose.Cells count formatting only cells | initialized cells enumeration .NET | detect non‑default style Aspose.Cells | worksheet formatting audit C# | Excel cell style only detection | Aspose.Cells workbook analysis | C# Excel formatting only cells
-// Common Searches: how to count cells with only formatting using Aspose.Cells | Aspose.Cells enumerate instantiated cells for style check | C# find cells that have style but no value in Excel | log formatting‑only cells per worksheet Aspose | detect non‑default cell formatting Aspose.Cells .NET
-// Developer Intent: Identify and tally cells that contain styling but no data in each worksheet of an Aspose.Cells workbook.
-// Use Cases: Generate a report of styling‑only cells to streamline workbook size before distribution. | Audit multiple sheets for orphaned formats that may affect performance or visual consistency. | Exclude formatting‑only cells from data export pipelines to improve processing speed.
-// AI Prompts: Create a function that returns a dictionary of worksheet names and formatting‑only cell counts using Aspose.Cells. | Rewrite the counting loop with LINQ to improve readability and performance. | Add logic to highlight every formatting‑only cell in yellow after the count is logged.
+// Title: Count cells that have only formatting (no data) in each worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet, identifies cells that contain a style but no value, and prints the count for each sheet. | Create a reusable method that determines whether a Cell's style differs from the default and use it to aggregate formatting‑only cells across a workbook.
+// Common Searches: Aspose.Cells count empty cells with formatting applied in C# | C# iterate worksheets and find cells that have style but no data using Aspose.Cells | detect cells that contain only formatting in an Excel workbook with Aspose.Cells .NET | how to tally formatted‑only cells per sheet using Aspose.Cells | Aspose.Cells example to log number of styled empty cells in each worksheet
+// Tags: count formatted‑only cells Aspose.Cells | detect non‑default cell style .NET | worksheet iteration Aspose.Cells | cell style detection C# | log formatting cell count per worksheet
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel file, iterates each worksheet, determines the used range, and counts cells that have no value but possess any formatting (font, fill, alignment, borders, etc.) via a HasFormatting helper method. It logs the count per worksheet and optionally saves the workbook.
+class Program
 {
-    // A C# example that creates a workbook, adds cells with value only, style only, and both, then walks through every worksheet, enumerates only instantiated cells, detects non‑default formatting without a value, logs the count per sheet, and saves the file. Ideal for developers needing to audit or clean up styling in large Excel files.
-    class CountFormattingOnlyCells
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Sample data: cell with value only
-                cells["A1"].PutValue("Data");
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                int formattedOnlyCount = 0;
 
-                // Sample data: cell with formatting only (no value)
-                Style fmtOnly = workbook.CreateStyle();
-                fmtOnly.Font.Color = Color.Red;
-                fmtOnly.Font.IsBold = true;
-                cells["B2"].SetStyle(fmtOnly);
+                // Determine the range that may contain initialized cells
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
 
-                // Sample data: cell with both value and formatting (should not be counted)
-                Style fmtBoth = workbook.CreateStyle();
-                fmtBoth.Font.Color = Color.Blue;
-                cells["C3"].PutValue(123);
-                cells["C3"].SetStyle(fmtBoth);
-
-                // Iterate through each worksheet in the workbook
-                foreach (Worksheet ws in workbook.Worksheets)
+                // Scan all cells within the determined range
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    Cells wsCells = ws.Cells;
-                    int formattingOnlyCount = 0;
-
-                    // Enumerate only instantiated cells (initialized cells)
-                    foreach (Cell cell in wsCells)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        // Determine if the cell has no value
-                        bool hasNoValue = cell.Value == null || string.IsNullOrEmpty(cell.StringValue);
+                        Cell cell = sheet.Cells[row, col];
 
-                        // Determine if the cell has any non‑default formatting
-                        Style cellStyle = cell.GetStyle();
-                        bool hasFormatting = HasNonDefaultFormatting(cellStyle);
-
-                        // Count cells that have formatting but no value
-                        if (hasNoValue && hasFormatting)
+                        // Count cells that have no value but have any formatting applied
+                        if (cell != null && cell.Value == null && HasFormatting(cell))
                         {
-                            formattingOnlyCount++;
+                            formattedOnlyCount++;
                         }
                     }
-
-                    // Log the result for the current worksheet
-                    Console.WriteLine($"Worksheet \"{ws.Name}\": Cells with only formatting = {formattingOnlyCount}");
                 }
 
-                // Save the workbook (lifecycle rule: save)
-                string outputPath = "FormattedOnlyCellsCount.xlsx";
+                // Log the count for the current worksheet
+                Console.WriteLine($"Worksheet \"{sheet.Name}\": {formattedOnlyCount} cells contain only formatting.");
+            }
+
+            // Save the workbook (optional, only if modifications are needed)
+            try
+            {
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
             }
         }
-
-        // Checks whether a style contains any formatting different from the default style
-        private static bool HasNonDefaultFormatting(Style style)
+        catch (Exception ex)
         {
-            // Font checks
-            if (style.Font.Color != Color.Empty) return true;
-            if (style.Font.IsBold) return true;
-            if (style.Font.IsItalic) return true;
-            if (style.Font.Underline != FontUnderlineType.None) return true;
-            if (style.Font.Size != 0) return true;
-
-            // Background checks
-            if (style.BackgroundColor != Color.Empty) return true;
-            if (style.Pattern != BackgroundType.None) return true;
-
-            // Border checks (any border style set)
-            if (style.Borders[BorderType.LeftBorder].LineStyle != CellBorderType.None) return true;
-            if (style.Borders[BorderType.RightBorder].LineStyle != CellBorderType.None) return true;
-            if (style.Borders[BorderType.TopBorder].LineStyle != CellBorderType.None) return true;
-            if (style.Borders[BorderType.BottomBorder].LineStyle != CellBorderType.None) return true;
-
-            // If none of the above, consider it default (no formatting)
-            return false;
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Determines whether a cell has any formatting different from the default style
+    private static bool HasFormatting(Cell cell)
+    {
+        Style style = cell.GetStyle();
+
+        // Check common formatting properties
+        if (style.Font.IsBold ||
+            style.Font.IsItalic ||
+            style.Font.Color != Color.Empty ||
+            style.Font.Size != 0 ||
+            style.ForegroundColor != Color.Empty ||
+            style.BackgroundColor != Color.Empty ||
+            style.HorizontalAlignment != TextAlignmentType.General ||
+            style.VerticalAlignment != TextAlignmentType.Bottom ||
+            style.IsTextWrapped)
+        {
+            return true;
+        }
+
+        // Check if any border is applied
+        foreach (BorderType bt in Enum.GetValues(typeof(BorderType)))
+        {
+            if (style.Borders[bt].LineStyle != CellBorderType.None)
+                return true;
+        }
+
+        return false;
     }
 }

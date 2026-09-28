@@ -1,92 +1,99 @@
-// Title: Clone an Aspose.Cells chart, remove legend fill, and compare PNG renders (C#)
-// Description: Creates a workbook with sample data, adds a column chart, clones it, disables the legend entry fill on the clone using IsTextNoFill, renders both charts to PNG via MemoryStream, counts byte‑wise differences, and saves the workbook and images for visual inspection.
-// Keywords: Aspose.Cells chart cloning C# | legend entry no fill Aspose.Cells | export chart to PNG memory stream | byte‑wise PNG comparison | Chart.Clone method | chart regression testing | C# Excel chart rendering | Aspose.Cells image options
-// Common Searches: how to clone a chart in Aspose.Cells C# | remove legend fill from Aspose.Cells chart | compare two chart PNG files programmatically | export Aspose.Cells chart without writing to disk | Aspose.Cells Chart.Clone example
-// Developer Intent: Copy an existing chart, make its legend transparent, render both original and cloned charts as PNG images, and quantify visual differences.
-// Use Cases: Validate styling changes by generating before‑and‑after chart images. | Create a variant of a chart with a transparent legend for presentations while keeping the original unchanged. | Automate regression tests for chart rendering by comparing exported PNG byte arrays.
-// AI Prompts: Generate C# code that clones an Aspose.Cells chart and sets the cloned chart's legend entry IsTextNoFill property to true. | Explain an efficient way to compare two PNG byte arrays produced by Aspose.Cells chart rendering and report the number of differing bytes. | Show alternative cloning techniques (e.g., Chart.Clone) in Aspose.Cells and discuss their impact on legend formatting.
+// Title: Clone an Excel chart, modify the first legend entry’s font color, and programmatically compare legend colors with Aspose.Cells for .NET
+// AI Prompts: Duplicate the first chart on a worksheet, set the first legend entry’s font color to black, and save the workbook using Aspose.Cells in C#. | Write C# code that reads the font colors of the first legend entries from the original and cloned charts and outputs whether they are identical. | Create a new chart area (rows 20‑30, columns 0‑10) by cloning an existing chart and copy its data range with Aspose.Cells.
+// Common Searches: Aspose.Cells C# clone chart and change legend entry font color | How to compare legend entry colors of two Excel charts using Aspose.Cells | Programmatically duplicate a chart and edit its legend in .NET | Detect visual differences between original and cloned charts with Aspose.Cells | Set legend entry font color in an Aspose.Cells chart example
+// Tags: chart cloning with Aspose.Cells .NET | set legend entry font color Aspose.Cells C# | compare legend colors Aspose.Cells chart | duplicate Excel chart programmatically | visual difference detection in Excel charts Aspose
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-// Creates a workbook with sample data, adds a column chart, clones it, disables the legend entry fill on the clone using IsTextNoFill, renders both charts to PNG via MemoryStream, counts byte‑wise differences, and saves the workbook and images for visual inspection.
+// The example loads an Excel workbook, clones the first chart to a new location, copies its data range, changes the first legend entry’s font color in the cloned chart, compares the font colors of the first legend entries between the original and cloned charts, reports any differences, and saves the modified workbook.
 class ChartCloneAndCompare
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook containing the original chart
+            Workbook workbook = new Workbook(inputPath);
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(200);
-
-            // Add the original chart
-            int originalChartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart originalChart = sheet.Charts[originalChartIdx];
-            originalChart.NSeries.Add("B2:B3", true);
-            originalChart.NSeries.CategoryData = "A2:A3";
-
-            // Clone the original chart by creating a new chart with the same data
-            int clonedChartIdx = sheet.Charts.Add(ChartType.Column, 20, 0, 30, 5);
-            Chart clonedChart = sheet.Charts[clonedChartIdx];
-            clonedChart.NSeries.Add("B2:B3", true);
-            clonedChart.NSeries.CategoryData = "A2:A3";
-
-            // Change the legend entry fill of the cloned chart to "no fill"
-            if (clonedChart.NSeries.Count > 0)
+            // Ensure there is at least one chart on the worksheet
+            if (sheet.Charts.Count == 0)
             {
-                LegendEntry clonedLegendEntry = clonedChart.NSeries[0].LegendEntry;
-                clonedLegendEntry.IsTextNoFill = true;
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
             }
 
-            // Export both charts to PNG images using MemoryStream
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions(); // default format is PNG
+            Chart originalChart = sheet.Charts[0];
 
-            using (MemoryStream originalImgStream = new MemoryStream())
+            // Clone the chart to a new position (rows 20‑30, columns 0‑10)
+            int clonedChartIndex = sheet.Charts.Add(originalChart.Type, 20, 0, 30, 10);
+            Chart clonedChart = sheet.Charts[clonedChartIndex];
+
+            // Copy the data range from the original chart to the cloned chart
+            string dataRange = originalChart.GetChartDataRange();
+            if (!string.IsNullOrEmpty(dataRange))
             {
-                originalChart.ToImage(originalImgStream, imgOptions);
-                byte[] originalBytes = originalImgStream.ToArray();
+                // The second argument indicates whether the data is plotted vertically.
+                clonedChart.SetChartDataRange(dataRange, true);
+            }
 
-                using (MemoryStream clonedImgStream = new MemoryStream())
+            // Change the font color of the first legend entry of the cloned chart
+            if (clonedChart.Legend != null && clonedChart.Legend.LegendEntries.Count > 0)
+            {
+                LegendEntry legendEntry = clonedChart.Legend.LegendEntries[0];
+                legendEntry.Font.Color = Color.Black; // Example modification
+            }
+
+            // Simple comparison: check if the first legend entry font colors are identical
+            bool areIdentical = true;
+            int diffCount = 0;
+
+            if (originalChart.Legend != null && originalChart.Legend.LegendEntries.Count > 0 &&
+                clonedChart.Legend != null && clonedChart.Legend.LegendEntries.Count > 0)
+            {
+                Color originalColor = originalChart.Legend.LegendEntries[0].Font.Color;
+                Color clonedColor = clonedChart.Legend.LegendEntries[0].Font.Color;
+
+                if (originalColor.ToArgb() != clonedColor.ToArgb())
                 {
-                    clonedChart.ToImage(clonedImgStream, imgOptions);
-                    byte[] clonedBytes = clonedImgStream.ToArray();
-
-                    // Simple byte‑by‑byte comparison to count differing bytes
-                    int diffCount = 0;
-                    int minLength = Math.Min(originalBytes.Length, clonedBytes.Length);
-                    for (int i = 0; i < minLength; i++)
-                    {
-                        if (originalBytes[i] != clonedBytes[i])
-                            diffCount++;
-                    }
-                    diffCount += Math.Abs(originalBytes.Length - clonedBytes.Length); // account for length difference
-
-                    Console.WriteLine($"Number of differing bytes between original and cloned chart: {diffCount}");
-
-                    // Save the workbook (contains both charts) and the two images for visual inspection
-                    string workbookPath = "ChartCloneComparison.xlsx";
-                    workbook.Save(workbookPath);
-
-                    File.WriteAllBytes("OriginalChart.png", originalBytes);
-                    File.WriteAllBytes("ClonedChart_NoFill.png", clonedBytes);
+                    areIdentical = false;
+                    diffCount = 1;
                 }
             }
+
+            // Output the comparison result
+            Console.WriteLine(areIdentical
+                ? "The charts are visually identical (based on legend font color)."
+                : $"The charts differ in {diffCount} property(ies).");
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the cloned chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

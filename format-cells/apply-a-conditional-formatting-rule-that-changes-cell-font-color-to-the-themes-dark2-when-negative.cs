@@ -1,72 +1,80 @@
-// Title: C# – Aspose.Cells: Conditional Formatting to Apply Dark2 Theme Font Color for Negative Values
-// Description: Creates a workbook, fills cells A1:A4 with mixed numbers, adds a conditional formatting rule for the range, triggers when the cell value is less than zero, retrieves the workbook's Dark2 (Accent2) theme color, applies it to the font style, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# conditional formatting | negative values font color | Dark2 theme color | Accent2 Excel theme | .NET Excel styling | GetThemeColor | FormatCondition | Excel conditional formatting API | programmatic Excel formatting
-// Common Searches: Aspose.Cells set font color for negative numbers | C# apply Dark2 theme color with conditional formatting | How to use GetThemeColor in Aspose.Cells | Conditional formatting rule less than zero Aspose.Cells | Change font color based on cell value in .NET Excel
-// Developer Intent: Add a conditional formatting rule that colors the font of cells with negative values using the workbook’s Dark2 (Accent2) theme color.
-// Use Cases: Highlight financial losses in reports with a consistent Dark2 accent. | Visually separate negative KPI metrics from positive ones in dashboards. | Apply uniform theme‑based negative‑value styling across multiple worksheets in a single workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that formats negative numbers using the Dark2 theme font color. | Show how to retrieve the Dark2 (Accent2) theme color from a workbook and apply it in a conditional formatting rule. | Provide an Aspose.Cells example that creates a workbook, adds a less‑than‑zero rule, sets the font color to Dark2, and saves the file, ensuring the output directory exists.
+// Title: How to use Aspose.Cells for .NET to apply conditional formatting that colors negative numbers red in an Excel column
+// AI Prompts: Generate C# code with Aspose.Cells that creates a workbook, inserts sample data, adds a CellValue < 0 conditional formatting rule for range A1:A3, and applies a red font style. | Write a C# snippet using Aspose.Cells to define a style with a red font, attach it to a less‑than‑zero condition on a cell range, and save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# conditional formatting font color for values less than zero | How to highlight negative numbers in Excel using Aspose.Cells .NET | C# example adding CellValue less than 0 conditional formatting with Aspose | Saving an Excel file with conditional formatting rules using Aspose.Cells | Apply red font style to a range of cells based on value in Aspose.Cells C#
+// Tags: Aspose.Cells conditional formatting negative values | Aspose.Cells set font color red | Aspose.Cells CellValue less than zero rule | Aspose.Cells create style for conditional formatting | Aspose.Cells save workbook with formatting
 
-using Aspose.Cells;
 using System;
-using System.Drawing;
 using System.IO;
+using System.Drawing;
+using Aspose.Cells;
 
-// Creates a workbook, fills cells A1:A4 with mixed numbers, adds a conditional formatting rule for the range, triggers when the cell value is less than zero, retrieves the workbook's Dark2 (Accent2) theme color, applies it to the font style, and saves the file as an Excel workbook.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The program creates a new workbook, adds sample numbers, defines a conditional formatting rule for cells A1:A3 that changes the font color to red when the cell value is less than zero, and saves the file as ConditionalFormatting.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data with positive and negative values
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(-5);
-            sheet.Cells["A3"].PutValue(20);
-            sheet.Cells["A4"].PutValue(-15);
-
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the range for conditional formatting (A1:A4)
-            CellArea area = new CellArea
+            try
             {
-                StartRow = 0,
-                EndRow = 3,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            fcs.AddArea(area);
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Add a condition for cells with values less than 0 (negative values)
-            int condIdx = fcs.AddCondition(FormatConditionType.CellValue, OperatorType.LessThan, "0", string.Empty);
-            FormatCondition fc = fcs[condIdx];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the font color for negative values to a theme color (using Accent1 as an example)
-            Color themeColor = workbook.GetThemeColor(ThemeColorType.Accent1);
-            fc.Style.Font.Color = themeColor;
+                // Sample data (can be removed if workbook already contains data)
+                sheet.Cells["A1"].PutValue(12);
+                sheet.Cells["A2"].PutValue(-7);
+                sheet.Cells["A3"].PutValue(3);
 
-            // Define output file path
-            string outputPath = "NegativeFontColor.xlsx";
+                // Add conditional formatting to range A1:A3
+                int cfIndex = sheet.ConditionalFormattings.Add();
+                var cf = sheet.ConditionalFormattings[cfIndex];
 
-            // Ensure the directory exists (if a directory part is present)
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
+                // Define the area (A1:A3) for the conditional formatting
+                CellArea area = new CellArea
+                {
+                    StartRow = 0,   // Row 1 (zero‑based)
+                    StartColumn = 0, // Column A (zero‑based)
+                    EndRow = 2,     // Row 3
+                    EndColumn = 0   // Column A
+                };
+                cf.AddArea(area);
+
+                // Condition: cell value less than 0 (negative numbers)
+                int conditionIdx = cf.AddCondition(
+                    FormatConditionType.CellValue,
+                    OperatorType.LessThan,
+                    "0",    // formula1
+                    null    // formula2 (not required for this operator)
+                );
+
+                // Create a style for the condition (red font)
+                Style negativeStyle = workbook.CreateStyle();
+                negativeStyle.Font.Color = Color.Red;
+
+                // Apply the style to the condition
+                cf[conditionIdx].Style = negativeStyle;
+
+                // Define output file path
+                string outputPath = "ConditionalFormatting.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
             }
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

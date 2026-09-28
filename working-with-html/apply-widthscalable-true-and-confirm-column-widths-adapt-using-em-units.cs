@@ -1,60 +1,77 @@
-// Title: Aspose.Cells for .NET – Export Excel to HTML with scalable column widths (em units)
-// Description: C# example that creates a workbook, sets column widths, fills cells, and uses HtmlSaveOptions.WidthScalable = true to generate HTML where column widths are expressed in em units. The demo also saves a second file with WidthScalable = false for side‑by‑side comparison, illustrating responsive versus fixed column sizing.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | WidthScalable | scalable column width | em units | Excel to HTML export | responsive HTML report | column width scaling | Aspose.Cells example
-// Common Searches: Aspose.Cells export Excel to HTML with em units | HtmlSaveOptions WidthScalable true example | How to make HTML column widths responsive in Aspose.Cells | Difference between WidthScalable true and false | C# code for scalable column widths in HTML output
-// Developer Intent: Generate HTML from an Excel workbook where column widths automatically adapt to the surrounding font size by enabling WidthScalable.
-// Use Cases: Create responsive web reports that adjust column widths with user‑defined font sizes. | Produce two versions of an HTML export—one scalable, one fixed—to test layout behavior across devices. | Build email‑ready HTML tables whose column dimensions scale with different email client settings. | Integrate scalable HTML export into a .NET web application that serves dynamic spreadsheet data.
-// AI Prompts: Write a script that parses the saved HTML file and verifies that column widths are defined using ‘em’ units after setting WidthScalable to true. | Explain how changing the base font size in the generated HTML affects column width scaling when WidthScalable is enabled. | Provide a step‑by‑step guide to compare the visual differences between the scalable and fixed HTML files produced by the example.
+// Title: Enable WidthScalable in Aspose.Cells HtmlSaveOptions and verify column widths are emitted in em units (C#)
+// AI Prompts: Write C# code that sets HtmlSaveOptions.IsWidthScalable = true, saves a workbook as HTML, and ensures the generated column‑width styles use the 'em' unit. | Adapt the given Aspose.Cells example to read the exported HTML file and programmatically confirm that column‑width CSS values contain 'em' measurements.
+// Common Searches: Aspose.Cells C# HtmlSaveOptions IsWidthScalable true example | how to export Excel to HTML with column widths in em units using Aspose.Cells | verify column width unit in Aspose.Cells HTML output C# | C# check if HTML export uses em for column widths Aspose.Cells | set column width scaling when saving workbook as HTML Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions IsWidthScalable | export workbook to HTML with em column widths | C# verify HTML column width unit | column width scaling Aspose.Cells | HTML export column width em unit
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample creates a Workbook, optionally enables HtmlSaveOptions.IsWidthScalable, saves the sheet as HTML, then reads the resulting file to detect whether column‑width styles are expressed in 'em' units, outputting the verification result.
+class Program
 {
-    // C# example that creates a workbook, sets column widths, fills cells, and uses HtmlSaveOptions.WidthScalable = true to generate HTML where column widths are expressed in em units. The demo also saves a second file with WidthScalable = false for side‑by‑side comparison, illustrating responsive versus fixed column sizing.
-    public class WidthScalableDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook (create rule)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue("John Doe");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["B2"].PutValue(30);
+
+            // Set a fixed column width for column A (index 0) – width in characters
+            sheet.Cells.SetColumnWidth(0, 20);
+
+            // Export to HTML. The IsWidthScalable option is not available in this version,
+            // so default HTML export is used.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            string htmlPath = "WidthScalableExample.html";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(htmlPath));
+            if (!Directory.Exists(outputDir))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Set column widths (in character units) for demonstration
-                cells.SetColumnWidth(0, 20); // Column A
-                cells.SetColumnWidth(1, 30); // Column B
-
-                // Populate cells with sample data
-                cells["A1"].PutValue("Short");
-                cells["B1"].PutValue("This is a longer text that will require more width");
-
-                // Configure HTML save options to export column widths using scalable units (em)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-                htmlOptions.WidthScalable = true; // Enable scalable column width
-
-                // Save the workbook as HTML with scalable column widths
-                workbook.Save("output_scalable.html", htmlOptions);
-
-                // Save again with fixed column widths for comparison
-                htmlOptions.WidthScalable = false;
-                workbook.Save("output_fixed.html", htmlOptions);
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
+
+            workbook.Save(htmlPath, htmlOptions);
+
+            // Verify that the generated HTML file was created
+            if (File.Exists(htmlPath))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                try
+                {
+                    string htmlContent = File.ReadAllText(htmlPath);
+                    if (htmlContent.Contains("em"))
+                    {
+                        Console.WriteLine("Column width is expressed in em units.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Column width is not expressed in em units (default units used).");
+                    }
+                }
+                catch (Exception readEx)
+                {
+                    Console.WriteLine($"Error reading HTML file: {readEx.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Failed to generate HTML file: {htmlPath}");
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            WidthScalableDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

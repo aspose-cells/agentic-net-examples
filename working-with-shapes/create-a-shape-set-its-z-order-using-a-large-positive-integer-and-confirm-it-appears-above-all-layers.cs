@@ -1,35 +1,68 @@
-// Title: Set a Shape’s Z‑Order to the Top in Aspose.Cells for .NET
-// Description: Shows how to create a workbook, insert a rectangle shape, assign a very large ZOrderPosition (or call ToFrontOrBack) so the shape renders above every other worksheet object, and save the result.
-// Keywords: Aspose.Cells | C# | shape Z-order | ZOrderPosition | bring shape to front | ToFrontOrBack | rectangle shape | layering | worksheet objects | Excel shape ordering
-// Common Searches: Aspose.Cells set shape Z order | how to bring a shape to front in Aspose.Cells | maximum ZOrderPosition value | C# shape layering in Excel workbook | order shapes programmatically Aspose.Cells
-// Developer Intent: Add a shape and force it to appear on the topmost layer of the worksheet.
-// Use Cases: Overlay a watermark that must cover all data, charts, and tables. | Display a callout or annotation that should never be hidden behind other objects. | Reorder multiple shapes so a specific one always stays in the foreground. | Create a template where a logo shape is guaranteed to be on top of dynamic content.
-// AI Prompts: Write C# code with Aspose.Cells that adds several shapes and sets their ZOrderPosition so one designated shape is on top. | Explain the difference between directly setting ZOrderPosition and using ToFrontOrBack, including when each method is preferred. | Provide a function that reads the Z-order of all shapes in a worksheet and rearranges them to achieve a custom stacking order.
+// Title: Add a rectangle shape in Aspose.Cells, assign a very high ZOrderPosition, and verify it is the topmost shape
+// AI Prompts: Create a rectangle shape on a worksheet and set its ZOrderPosition to 1,000,000 so it appears above all other shapes. | Iterate over the worksheet's Shapes collection to determine the maximum ZOrderPosition and compare it with the rectangle's value. | Save the workbook and print a message indicating whether the rectangle shape is the topmost layer.
+// Common Searches: Aspose.Cells C# set shape ZOrderPosition to a large value | How to bring a shape to the front in an Excel file using Aspose.Cells .NET | Determine which shape has the highest Z-order in an Aspose.Cells worksheet | Example of verifying topmost shape after adding multiple shapes with Aspose.Cells
+// Tags: Aspose.Cells set shape ZOrderPosition | Aspose.Cells frontmost shape handling | Aspose.Cells iterate shape collection Z-order | Aspose.Cells save workbook with modified shapes | Aspose.Cells rectangle shape addition
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, insert a rectangle shape, assign a very large ZOrderPosition (or call ToFrontOrBack) so the shape renders above every other worksheet object, and save the result.
-class ShapeZOrderDemo
+// The example creates a new workbook, adds a rectangle shape with ZOrderPosition set to 1,000,000, adds a second shape with default ordering, scans all shapes to find the highest Z-order, confirms the rectangle is on top, and saves the file as ShapeZOrderDemo.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left pixel offset X, upper left pixel offset Y, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(5, 5, 0, 0, 150, 100);
+            // Add a rectangle shape to the worksheet (returns a Shape object)
+            Shape rectangle = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1, 1,                     // upper left row, column
+                0, 0,                     // row offset, column offset
+                100, 100);                // height, width
 
-        // Set a very large Z-order position to ensure the shape is on top of all other objects
-        shape.ZOrderPosition = 1000000;
+            // Set a very large Z-order value so the shape appears above all others
+            rectangle.ZOrderPosition = 1_000_000;
 
-        // Alternatively, bring the shape to the front using ToFrontOrBack with a positive value
-        // shape.ToFrontOrBack(10);
+            // Add another rectangle shape with default Z-order for comparison
+            Shape otherShape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                5, 5,
+                0, 0,
+                80, 80);
 
-        // Save the workbook to verify the shape appears above all layers
-        workbook.Save("ShapeZOrderTop.xlsx");
+            // Verify that the first rectangle has the highest Z-order among all shapes
+            int maxZOrder = int.MinValue;
+            foreach (Shape shape in sheet.Shapes)
+            {
+                if (shape.ZOrderPosition > maxZOrder)
+                    maxZOrder = shape.ZOrderPosition;
+            }
+
+            if (rectangle.ZOrderPosition == maxZOrder)
+                Console.WriteLine("The rectangle shape is on top of all layers.");
+            else
+                Console.WriteLine("The rectangle shape is NOT on top.");
+
+            // Save the workbook to a file
+            string outputPath = "ShapeZOrderDemo.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

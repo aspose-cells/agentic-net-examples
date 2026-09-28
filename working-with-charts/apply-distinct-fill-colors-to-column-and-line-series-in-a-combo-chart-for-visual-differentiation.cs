@@ -1,79 +1,78 @@
-// Title: Set Different Fill Colors for Column and Line Series in a Combo Chart – Aspose.Cells for .NET (C#)
-// Description: Creates a workbook with sales and profit data, adds a combo chart (column + line), converts the second series to a line type, applies a blue fill to the column series and a red border to the line series, then saves the file as ComboChartDistinctColors.xlsx.
-// Keywords: Aspose.Cells | C# combo chart | column series fill color | line series border color | chart series color formatting | Excel chart styling .NET | Aspose.Cells ChartType.Column | Aspose.Cells ChartType.Line | custom chart colors | Excel export styling
-// Common Searches: Aspose.Cells set column series color | change line series color in combo chart Aspose.Cells | C# Aspose.Cells combo chart color | how to format chart series colors Aspose.Cells | customize combo chart colors .NET
-// Developer Intent: Apply distinct colors to the column and line series of a combo chart using Aspose.Cells.
-// Use Cases: Sales vs. profit report where sales columns use a brand‑specific blue and profit line is highlighted in red for quick visual comparison. | Financial dashboard that meets accessibility contrast guidelines by assigning separate colors to each chart series. | Automated Excel export that consistently styles column series with a predefined fill and line series with a contrasting border.
-// AI Prompts: Generate C# code with Aspose.Cells to create a combo chart, set the first series as a column with a custom fill color, and the second series as a line with a specific border color. | Explain how to use the Area.ForegroundColor and Border.Color properties to style column and line series in an Aspose.Cells chart. | Provide step‑by‑step instructions for applying brand colors to mixed chart types (column and line) in an Aspose.Cells workbook.
+// Title: Set different fill colors for column and line series in an Aspose.Cells combo chart using C#
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column‑line combo chart and applies a custom fill color to the column series. | Show how to assign a border color to the line series of an Aspose.Cells combo chart and place the line on a secondary axis. | Provide an example of configuring series types and distinct colors for a mixed chart in Aspose.Cells for .NET.
+// Common Searches: how to set a custom fill color for a column series in an Aspose.Cells combo chart (C#) | changing the line series border color in a mixed chart with Aspose.Cells | placing a line series on a secondary axis in an Aspose.Cells combo chart using C# | example of column and line series with distinct colors in Aspose.Cells | Aspose.Cells C# tutorial for styling series in a combo chart
+// Tags: Aspose.Cells column series fill | Aspose.Cells line series border | Aspose.Cells combo chart secondary axis | Aspose.Cells mixed chart styling | Aspose.Cells C# series formatting
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsComboChartDemo
+namespace AsposeCellsComboChartExample
 {
-    // Creates a workbook with sales and profit data, adds a combo chart (column + line), converts the second series to a line type, applies a blue fill to the column series and a red border to the line series, then saves the file as ComboChartDistinctColors.xlsx.
+    // The sample creates a workbook, adds month, sales, and profit data, builds a column‑line combo chart, sets a custom fill color for the column (sales) series, applies a border color to the line (profit) series, plots the line on a secondary axis, and saves the file as ComboChartWithDistinctColors.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                // Column A: Categories
+                // Populate sample data for the chart
                 sheet.Cells["A1"].PutValue("Month");
-                sheet.Cells["A2"].PutValue("Jan");
-                sheet.Cells["A3"].PutValue("Feb");
-                sheet.Cells["A4"].PutValue("Mar");
-                sheet.Cells["A5"].PutValue("Apr");
-
-                // Column B: Column series values
                 sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["B3"].PutValue(150);
-                sheet.Cells["B4"].PutValue(180);
-                sheet.Cells["B5"].PutValue(200);
-
-                // Column C: Line series values
                 sheet.Cells["C1"].PutValue("Profit");
-                sheet.Cells["C2"].PutValue(30);
-                sheet.Cells["C3"].PutValue(45);
-                sheet.Cells["C4"].PutValue(60);
-                sheet.Cells["C5"].PutValue(80);
 
-                // Add a combo chart (initially a column chart)
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
+                string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+                double[] sales = { 12000, 15000, 13000, 17000, 16000 };
+                double[] profit = { 3000, 4000, 3500, 4500, 4200 };
+
+                for (int i = 0; i < months.Length; i++)
+                {
+                    sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A: Month
+                    sheet.Cells[i + 1, 1].PutValue(sales[i]);   // Column B: Sales (Column series)
+                    sheet.Cells[i + 1, 2].PutValue(profit[i]);  // Column C: Profit (Line series)
+                }
+
+                // Add a combo chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Add the column series (first series)
-                chart.NSeries.Add("B2:B5", true);
-                // Add the line series (second series)
-                chart.NSeries.Add("C2:C5", true);
+                // Set chart title
+                chart.Title.Text = "Monthly Sales and Profit";
 
-                // Set category (X‑axis) data
-                chart.NSeries.CategoryData = "A2:A5";
+                // Add the column series (Sales)
+                int colSeriesIndex = chart.NSeries.Add("B2:B6", true);
+                Series colSeries = chart.NSeries[colSeriesIndex];
+                colSeries.Name = "Sales";
+                colSeries.Type = ChartType.Column; // Ensure column display
+                colSeries.Area.ForegroundColor = Color.CornflowerBlue; // Column fill color
 
-                // Convert the second series to a line chart
-                chart.NSeries[1].Type = ChartType.Line;
+                // Add the line series (Profit)
+                int lineSeriesIndex = chart.NSeries.Add("C2:C6", true);
+                Series lineSeries = chart.NSeries[lineSeriesIndex];
+                lineSeries.Name = "Profit";
+                lineSeries.Type = ChartType.Line; // Set series type to Line
+                // Use border color to define line color
+                lineSeries.Border.Color = Color.OrangeRed;
 
-                // Apply distinct fill color to the column series
-                chart.NSeries[0].Area.ForegroundColor = Color.FromArgb(79, 129, 189); // blue shade
-
-                // Apply distinct line color to the line series (use Border for line color)
-                chart.NSeries[1].Border.Color = Color.FromArgb(192, 80, 77); // red shade
-                chart.NSeries[1].Border.IsVisible = true;
+                // Optional: Plot the line series on a secondary axis if supported
+                // This property exists in recent versions; if unavailable, the line will plot on the primary axis.
+                lineSeries.PlotOnSecondAxis = true;
 
                 // Save the workbook
-                workbook.Save("ComboChartDistinctColors.xlsx");
+                string outputPath = "ComboChartWithDistinctColors.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

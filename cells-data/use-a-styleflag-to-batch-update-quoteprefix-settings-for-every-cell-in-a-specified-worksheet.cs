@@ -1,50 +1,42 @@
-// Title: Apply QuotePrefix to Every Cell in a Worksheet with Aspose.Cells .NET using StyleFlag
-// Description: Demonstrates how to create a style with QuotePrefix enabled, configure a StyleFlag to target only that property, and batch‑apply the style to all cells of a worksheet in a single call. The example preserves existing formatting, verifies the setting, and saves the workbook.
-// Keywords: Aspose.Cells | .NET | C# | StyleFlag | QuotePrefix | ApplyStyle | batch update cell style | single quote prefix | Excel worksheet | preserve leading apostrophe
-// Common Searches: Aspose.Cells set QuotePrefix for whole sheet | StyleFlag apply only QuotePrefix .NET | batch apply QuotePrefix to all cells | preserve leading single quote in Excel using Aspose | ApplyStyle with StyleFlag example
-// Developer Intent: Enable the QuotePrefix flag on every cell of a worksheet in one operation while leaving other style attributes untouched.
-// Use Cases: Import CSV files where values start with a single quote and must remain text in Excel. | Generate reports that require all cells to display literal strings without automatic number conversion. | Prepare workbooks for export where each cell’s original text representation must be retained.
-// AI Prompts: Write C# code that uses Aspose.Cells to set QuotePrefix for an entire worksheet with StyleFlag. | Explain how StyleFlag works with ApplyStyle to modify only the QuotePrefix property. | Show how to load an existing workbook and batch update QuotePrefix for all cells while keeping existing formatting.
+// Title: Batch enable QuotePrefix for every cell in a worksheet with StyleFlag in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a style with QuotePrefix set to true, configures a StyleFlag to affect only QuotePrefix, and applies the style to all cells of a worksheet using Aspose.Cells. | Show how to use Cells.ApplyStyle together with a StyleFlag to add the leading apostrophe to an entire sheet without altering other cell formatting. | Demonstrate saving the workbook after batch updating QuotePrefix to verify the changes.
+// Common Searches: asp.net aspose.cells batch set QuotePrefix for whole worksheet | c# apply leading apostrophe to all cells using StyleFlag | how to use ApplyStyle with StyleFlag to change only QuotePrefix in Aspose.Cells | bulk update cell style property QuotePrefix Aspose.Cells .NET | set quote prefix for every cell programmatically Aspose.Cells C#
+// Tags: Aspose.Cells ApplyStyle QuotePrefix | StyleFlag selective formatting C# | batch cell style update Aspose.Cells | leading apostrophe worksheet .NET | bulk QuotePrefix change Aspose.Cells | cells.ApplyStyle with StyleFlag
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsQuotePrefixBatchUpdate
 {
-    // Demonstrates how to create a style with QuotePrefix enabled, configure a StyleFlag to target only that property, and batch‑apply the style to all cells of a worksheet in a single call. The example preserves existing formatting, verifies the setting, and saves the workbook.
+    // The example creates a workbook, adds sample data, defines a style with QuotePrefix enabled, sets a StyleFlag to apply only the QuotePrefix property, and uses Cells.ApplyStyle to batch‑apply this style to every cell in the first worksheet. The workbook is then saved as QuotePrefixBatchUpdated.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // new workbook with one default worksheet
-
-            // Get reference to the first worksheet (you can change the index or name as needed)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate some sample data that includes values starting with a single quote
-            sheet.Cells["A1"].PutValue("'TextWithQuote");
-            sheet.Cells["B2"].PutValue("'12345");
-            sheet.Cells["C3"].PutValue("NormalText");
+            // Populate some sample data (including values that start with a single quote)
+            cells["A1"].PutValue("'TextWithQuote");
+            cells["A2"].PutValue("NormalText");
+            cells["B1"].PutValue("'12345");
+            cells["B2"].PutValue(9876);
 
             // Create a style and enable the QuotePrefix property
             Style quoteStyle = workbook.CreateStyle();
-            quoteStyle.QuotePrefix = true; // this indicates that the cell's value starts with a single quote
+            quoteStyle.QuotePrefix = true; // This indicates the cell should have QuotePrefix applied
 
-            // Create a StyleFlag and enable only the QuotePrefix flag
+            // Create a StyleFlag and enable the QuotePrefix flag
             StyleFlag flag = new StyleFlag();
-            flag.QuotePrefix = true; // apply only the QuotePrefix setting
+            flag.QuotePrefix = true; // Only the QuotePrefix setting will be applied
 
-            // Apply the style to all cells in the worksheet using the flag
-            // This batches the update, so every cell will have QuotePrefix set to true
-            sheet.Cells.ApplyStyle(quoteStyle, flag);
+            // Apply the style to the entire worksheet using the flag
+            // This batches the QuotePrefix update for every cell in the sheet
+            cells.ApplyStyle(quoteStyle, flag);
 
-            // Verify the result for a few cells
-            Console.WriteLine("A1 QuotePrefix: " + sheet.Cells["A1"].GetStyle().QuotePrefix);
-            Console.WriteLine("B2 QuotePrefix: " + sheet.Cells["B2"].GetStyle().QuotePrefix);
-            Console.WriteLine("C3 QuotePrefix: " + sheet.Cells["C3"].GetStyle().QuotePrefix);
-
-            // Save the workbook to a file
+            // Save the workbook to verify the changes
             workbook.Save("QuotePrefixBatchUpdated.xlsx");
         }
     }

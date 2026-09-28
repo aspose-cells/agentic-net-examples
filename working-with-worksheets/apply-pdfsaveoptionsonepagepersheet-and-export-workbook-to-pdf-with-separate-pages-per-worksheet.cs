@@ -1,44 +1,17 @@
-// Title: Export Workbook to PDF with One Page per Worksheet using Aspose.Cells (C#)
-// Description: Shows how to build a workbook with multiple sheets, fill them with data, enable PdfSaveOptions.OnePagePerSheet, and save the file as a single PDF where each worksheet appears on a separate page.
-// Keywords: Aspose.Cells | PdfSaveOptions | OnePagePerSheet | C# PDF export | worksheet to PDF | single PDF per sheet | Aspose.Cells PDF options | export multiple sheets
-// Common Searches: Aspose.Cells export each worksheet to separate PDF page | PdfSaveOptions OnePagePerSheet C# example | save workbook as PDF one page per sheet | C# Aspose.Cells PDF per sheet | how to generate PDF with one page per worksheet Aspose
-// Developer Intent: Create a PDF where every worksheet is rendered on its own page.
-// Use Cases: Produce a printable report that consolidates several worksheets into a single PDF, with one page per sheet. | Generate a batch of invoices where each worksheet represents an invoice and the final PDF contains one page per invoice. | Share data‑analysis workbooks with stakeholders, preserving a clear one‑page‑per‑sheet layout for quick review.
-// AI Prompts: Provide C# code that uses Aspose.Cells to export a multi‑sheet workbook to a PDF with OnePagePerSheet enabled. | Explain the impact of setting PdfSaveOptions.OnePagePerSheet to true versus false in Aspose.Cells. | Show an example that creates three worksheets, adds sample data, and saves them as a single PDF with each sheet on a separate page.
+// Title: Generate a PDF from an Aspose.Cells workbook with one PDF page per worksheet using C#
+// AI Prompts: Provide C# code that loads an existing Excel file and saves it as a PDF where each worksheet appears on its own page using Aspose.Cells PdfSaveOptions. | Demonstrate how to configure Aspose.Cells PdfSaveOptions.OnePagePerSheet in C# before calling Workbook.Save. | Show how to export a newly created workbook to PDF with separate pages per sheet using Aspose.Cells in .NET.
+// Common Searches: Aspose.Cells C# how to export each worksheet to a separate PDF page | PdfSaveOptions OnePagePerSheet property usage example .NET | Save Excel workbook as PDF with one page per sheet using Aspose.Cells library | C# code sample for PDF export with one page per worksheet in Aspose.Cells | Aspose.Cells PDF save options to generate individual pages per sheet
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# export workbook to PDF per worksheet | PDF save options separate sheet pages Aspose | .NET generate PDF with one page per Excel sheet | Aspose.Cells PDF export per sheet
 
-using System;
-using Aspose.Cells;
+// Create a new workbook (or load an existing one)
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook(); // create rule
 
-// Shows how to build a workbook with multiple sheets, fill them with data, enable PdfSaveOptions.OnePagePerSheet, and save the file as a single PDF where each worksheet appears on a separate page.
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook (default workbook contains one worksheet)
-        Workbook workbook = new Workbook();
+// If you need to load an existing workbook, uncomment the line below and provide the path
+// workbook = new Aspose.Cells.Workbook("input.xlsx"); // load rule
 
-        // Reference the first worksheet and give it a name
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "Sheet1";
+// Configure PDF save options to generate one PDF page per worksheet
+Aspose.Cells.PdfSaveOptions pdfOptions = new Aspose.Cells.PdfSaveOptions();
+pdfOptions.OnePagePerSheet = true; // set the required option
 
-        // Add a second worksheet
-        Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-
-        // Fill both worksheets with sample data
-        for (int i = 0; i < 20; i++)
-        {
-            sheet1.Cells[i, 0].PutValue($"Sheet1 Row {i + 1}");
-            sheet2.Cells[i, 0].PutValue($"Sheet2 Row {i + 1}");
-        }
-
-        // Create PDF save options and enable OnePagePerSheet
-        // This forces each worksheet to be rendered on a single PDF page
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            OnePagePerSheet = true
-        };
-
-        // Save the workbook to a PDF file using the configured options
-        workbook.Save("output.pdf", pdfOptions);
-    }
-}
+// Save the workbook to PDF using the configured options
+workbook.Save("output.pdf", pdfOptions); // save rule

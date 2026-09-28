@@ -1,43 +1,48 @@
-// Title: Import XML and Recalculate Formulas with Aspose.Cells in C#
-// Description: Demonstrates how to create an empty Workbook, import XML data into the first worksheet using Workbook.ImportXml, force a full recalculation of all formulas with Workbook.CalculateFormula, read a result cell, and save the workbook as an XLSX file.
-// Keywords: Aspose.Cells | ImportXml | CalculateFormula | C# | XML to Excel | recalculate formulas | Workbook.Save | XLSX export | data integration | Excel automation
-// Common Searches: Aspose.Cells import XML C# example | How to recalculate all formulas after ImportXml | Workbook.CalculateFormula after XML import | Save workbook as XLSX after importing XML | C# code for XML mapping with Aspose.Cells
-// Developer Intent: Load XML data into a worksheet, update every dependent formula, and save the refreshed workbook.
-// Use Cases: Refresh a financial model by importing XML‑based market data and recomputing all calculations before reporting. | Automate nightly sales data integration: import XML feeds, recalculate summary formulas, and generate an updated XLSX dashboard. | Populate a template with XML configuration values, trigger full formula evaluation, and export the result for downstream processing.
-// AI Prompts: Write C# code that uses Aspose.Cells to import an XML file into a specific worksheet and then runs Workbook.CalculateFormula on the entire workbook. | Provide a robust example that maps XML nodes to cells, forces formula recalculation, and saves the workbook with error handling. | Explain optional parameters of Workbook.CalculateFormula and how they affect performance after an ImportXml operation.
+// Title: Recalculate all workbook formulas after loading XML data with Aspose.Cells and save as XLSX in C#
+// AI Prompts: Load an XML file into an Aspose.Cells Workbook, invoke CalculateFormula to refresh all dependent calculations, and write the result to an XLSX file using C#. | Write C# code that verifies the XML source exists, imports it with LoadOptions(LoadFormat.Xml), triggers a full formula recalculation, and saves the workbook as output.xlsx. | Generate a C# example showing how to import XML data, recalculate all formulas, and export the workbook to Excel format with Aspose.Cells.
+// Common Searches: how to force formula recalculation after importing XML with Aspose.Cells .NET | Aspose.Cells C# load XML and update dependent formulas before saving | C# example for CalculateFormula after loading XML data into workbook | save workbook as XLSX after XML import and formula refresh using Aspose.Cells | recalculate all formulas programmatically in Aspose.Cells after XML map load
+// Tags: import XML data with Aspose.Cells | recalculate formulas programmatically | export workbook to XLSX C# | Aspose.Cells LoadOptions XML usage | C# formula refresh after XML load
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlImportAndRecalc
+// The C# program checks for the presence of data.xml, loads it into an Aspose.Cells Workbook using LoadFormat.Xml, calls CalculateFormula to update all dependent calculations, and saves the refreshed workbook as output.xlsx.
+class Program
 {
-    // Demonstrates how to create an empty Workbook, import XML data into the first worksheet using Workbook.ImportXml, force a full recalculation of all formulas with Workbook.CalculateFormula, read a result cell, and save the workbook as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (empty)
-            Workbook workbook = new Workbook();
-
-            // Path to the XML file to be imported
+            // Path to the XML source file
             string xmlPath = "data.xml";
 
-            // Import XML data into the first worksheet starting at cell A1 (row 0, column 0)
-            // This uses the provided ImportXml method (Workbook.ImportXml)
-            workbook.ImportXml(xmlPath, "Sheet1", 0, 0);
+            // Verify that the XML file exists to avoid FileNotFoundException
+            if (!File.Exists(xmlPath))
+            {
+                Console.WriteLine($"Error: The file '{xmlPath}' was not found.");
+                return;
+            }
 
-            // After importing, recalculate all formulas in the workbook
-            // This uses the provided CalculateFormula method (Workbook.CalculateFormula)
+            // Load XML data into a new workbook using LoadOptions
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xml);
+            Workbook workbook = new Workbook(xmlPath, loadOptions);
+
+            // Recalculate all formulas so that dependent calculations reflect the new data
             workbook.CalculateFormula();
 
-            // Example: display the value of a cell that may contain a formula result
-            // Adjust the cell reference as needed based on your XML data
-            Console.WriteLine("Result in C2: " + workbook.Worksheets[0].Cells["C2"].StringValue);
+            // Path for the output Excel file
+            string outputPath = "output.xlsx";
 
-            // Save the updated workbook
-            // This follows the lifecycle rule for saving a document
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the updated workbook to an Excel file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

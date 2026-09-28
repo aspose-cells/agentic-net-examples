@@ -1,17 +1,15 @@
-// Title: Check Excel Workbook Encryption with Aspose.Cells for .NET
-// Description: C# example that uses Aspose.Cells' FileFormatUtil.DetectFileFormat to determine whether an Excel file is encrypted, unencrypted, or unknown, returning the result as an EncryptionStatus enum.
-// Keywords: Aspose.Cells | .NET | C# | Excel encryption detection | FileFormatUtil | IsEncrypted | WorkbookEncryptionHelper | EncryptionStatus enum | detect password‑protected workbook | check Excel file protection
-// Common Searches: Aspose.Cells check if Excel file is password protected | C# detect encrypted workbook without opening | Get encryption status of .xlsx using Aspose | FileFormatUtil DetectFileFormat encryption | How to handle missing Excel file when checking encryption
-// Developer Intent: Implement a method that returns an enumeration (Encrypted, Unencrypted, Unknown) indicating the encryption state of a workbook.
-// Use Cases: Filter out password‑protected files before bulk import | Display encryption status in a document‑management dashboard | Log files that cannot be read due to unknown format or missing path | Validate workbook security policy in automated pipelines
-// AI Prompts: Generate a C# function using Aspose.Cells that returns EncryptionStatus (Encrypted, Unencrypted, Unknown) for a given file path, with exception handling. | Show how to loop through multiple Excel files, call GetEncryptionStatus, and write results to a CSV log. | Explain the role of FileFormatUtil.DetectFileFormat and its IsEncrypted property in determining workbook protection without loading the file.
+// Title: Determine Excel workbook encryption status (Encrypted, Unencrypted, Unknown) with Aspose.Cells in C#
+// AI Prompts: Implement a C# method that uses Aspose.Cells LoadOptions to open an Excel file and returns an EncryptionStatus enum based on whether a password‑required exception occurs. | Create NUnit tests for EncryptionHelper.GetEncryptionStatus covering encrypted, unencrypted, missing, and corrupted workbook scenarios. | Add logging to GetEncryptionStatus to capture the cause of an Unknown result while preserving the existing enum return values.
+// Common Searches: Aspose.Cells C# check if an .xlsx file is password protected without providing a password | How to programmatically detect encrypted Excel workbook using Aspose.Cells LoadOptions | C# get encryption state of Excel file (encrypted, unencrypted, unknown) with Aspose.Cells | Determine if an Excel workbook requires a password before opening in .NET
+// Tags: Aspose.Cells detect workbook encryption | C# load Excel file without password | EncryptionStatus enum Aspose.Cells | LoadOptions Auto format password exception handling | CellsException password error detection
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionStatus
+namespace WorkbookEncryptionChecker
 {
-    // Enumeration representing possible encryption states of a workbook
+    // Enumeration representing the encryption status of a workbook
     public enum EncryptionStatus
     {
         Encrypted,
@@ -19,38 +17,59 @@ namespace AsposeCellsEncryptionStatus
         Unknown
     }
 
-    // C# example that uses Aspose.Cells' FileFormatUtil.DetectFileFormat to determine whether an Excel file is encrypted, unencrypted, or unknown, returning the result as an EncryptionStatus enum.
-    public static class WorkbookEncryptionHelper
+    // Provides an EncryptionStatus enum and a static EncryptionHelper.GetEncryptionStatus method that attempts to load an Excel workbook with Aspose.Cells. A successful load returns Unencrypted, a password‑related CellsException returns Encrypted, and any other failure returns Unknown.
+    public static class EncryptionHelper
     {
         /// <param name="filePath">Full path to the workbook file.</param>
-        /// <returns>EncryptionStatus indicating whether the workbook is encrypted, unencrypted, or unknown.</returns>
+        /// <returns>EncryptionStatus value indicating Encrypted, Unencrypted, or Unknown.</returns>
         public static EncryptionStatus GetEncryptionStatus(string filePath)
         {
+            // Verify that the file exists before attempting to load it
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+                return EncryptionStatus.Unknown;
+
             try
             {
-                // Detect the file format and retrieve encryption information without loading the workbook
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+                // Load the workbook without providing a password.
+                // If the file is encrypted and a password is required, an exception will be thrown.
+                var loadOptions = new LoadOptions(LoadFormat.Auto);
+                var workbook = new Workbook(filePath, loadOptions);
 
-                // If the format detection succeeded, use the IsEncrypted property
-                return formatInfo.IsEncrypted ? EncryptionStatus.Encrypted : EncryptionStatus.Unencrypted;
+                // If loading succeeded, the workbook is not password‑protected.
+                // Aspose.Cells versions prior to 23.9 do not expose an IsEncrypted property,
+                // so we treat a successful load as unencrypted.
+                return EncryptionStatus.Unencrypted;
+            }
+            catch (CellsException ex)
+            {
+                // Detect password‑required errors via the exception message.
+                if (!string.IsNullOrEmpty(ex.Message) &&
+                    ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    return EncryptionStatus.Encrypted;
+                }
+
+                // Any other CellsException means the status cannot be determined reliably.
+                return EncryptionStatus.Unknown;
             }
             catch (Exception)
             {
-                // Any exception (e.g., file not found, unsupported format) results in an unknown status
+                // Non‑Aspose.Cells exceptions (e.g., I/O errors) result in an Unknown status.
                 return EncryptionStatus.Unknown;
             }
         }
     }
 
-    // Example usage
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            string path = "example.xlsx";
+            // Example usage: provide the workbook path as a command‑line argument or use a default.
+            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
 
-            EncryptionStatus status = WorkbookEncryptionHelper.GetEncryptionStatus(path);
-            Console.WriteLine($"Encryption status of '{path}': {status}");
+            EncryptionStatus status = EncryptionHelper.GetEncryptionStatus(filePath);
+            Console.WriteLine($"File: {filePath}");
+            Console.WriteLine($"Encryption status: {status}");
         }
     }
 }

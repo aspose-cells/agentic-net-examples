@@ -1,40 +1,31 @@
-// Title: Aspose.Cells for .NET: Set Landscape Orientation, Fit to One Page Wide, Export to XPS
-// Description: Loads an Excel workbook, changes every worksheet to landscape mode, configures the page setup to fit the content to one page width (height auto‑scaled), optionally forces one page per sheet, and saves the result as an XPS document using XpsSaveOptions.
-// Keywords: Aspose.Cells | C# | .NET | landscape orientation | fit to one page wide | XPS export | page setup | OnePagePerSheet | Excel to XPS
-// Common Searches: Aspose.Cells set worksheet orientation to landscape | fit Excel sheet to one page width before XPS export | save workbook as XPS with Aspose.Cells .NET | force one page per sheet XPS using Aspose.Cells | C# code to export Excel to XPS with page scaling
-// Developer Intent: Apply landscape layout, fit each sheet to a single page width, and generate an XPS file from an Excel workbook.
-// Use Cases: Create printable XPS reports that maintain a consistent landscape layout across multiple sheets. | Produce single‑page XPS files per worksheet for easy distribution or archiving. | Generate XPS documents that automatically scale to page width, eliminating manual print adjustments.
-// AI Prompts: Generate C# code with Aspose.Cells to set all worksheets to portrait orientation, fit to one page tall, and export to PDF. | Show how to export a workbook to XPS with custom margins and without the OnePagePerSheet option using Aspose.Cells. | Explain the steps to adjust scaling, orientation, and page setup in Aspose.Cells before saving a workbook as XPS.
+// Title: Set all worksheets to landscape, fit each to one page wide, and export the workbook as XPS using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that loads an Excel file, changes every worksheet's PageSetup to landscape orientation, sets FitToPagesWide to 1, and saves the result as an XPS document. | Show how to iterate through a Workbook's worksheets, apply page orientation and fit‑to‑page settings, and export the workbook to XPS format with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set page orientation landscape for all sheets and fit to one page width before saving as XPS | How to export an Excel workbook to XPS with landscape layout using Aspose.Cells .NET | Fit worksheet to single page width programmatically with Aspose.Cells and save as XPS
+// Tags: Aspose.Cells set worksheet orientation landscape | FitToPagesWide page setup Aspose.Cells | export workbook to XPS Aspose.Cells | apply page settings to all worksheets .NET | Aspose.Cells SaveFormat.Xps usage
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Loads an Excel workbook, changes every worksheet to landscape mode, configures the page setup to fit the content to one page width (height auto‑scaled), optionally forces one page per sheet, and saves the result as an XPS document using XpsSaveOptions.
+// The example loads 'input.xlsx', iterates through each worksheet to set the PageSetup orientation to landscape, configures FitToPagesWide = 1 (FitToPagesTall = 0) so the content fits one page wide, and then saves the workbook as 'output.xps' using the XPS save format.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (replace with your actual file path)
+        // Load the existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Configure each worksheet's page setup
+        // Configure page settings for each worksheet
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Set orientation to Landscape
-            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
-
-            // Fit the worksheet to one page wide; height will adjust automatically
-            sheet.PageSetup.FitToPagesWide = 1;
-            sheet.PageSetup.FitToPagesTall = 0;
+            PageSetup pageSetup = sheet.PageSetup;
+            // Set orientation to landscape
+            pageSetup.Orientation = PageOrientationType.Landscape;
+            // Fit the sheet to one page wide; height will adjust automatically
+            pageSetup.FitToPagesWide = 1;
+            pageSetup.FitToPagesTall = 0;
         }
 
-        // Create XPS save options (using the provided constructor rule)
-        XpsSaveOptions saveOptions = new XpsSaveOptions();
-
-        // Optional: force each sheet to be rendered on a single page
-        saveOptions.OnePagePerSheet = true;
-
-        // Save the workbook as XPS with the configured options
-        workbook.Save("output.xps", saveOptions);
+        // Save the workbook as XPS
+        workbook.Save("output.xps", SaveFormat.Xps);
     }
 }

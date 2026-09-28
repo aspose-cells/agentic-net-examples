@@ -1,49 +1,34 @@
-// Title: Format Cells as Currency (Two Decimals) with Aspose.Cells for .NET
-// Description: Creates a workbook, inserts numeric values into A1‑A3, applies the built‑in currency format (Number = 7, "$#,##0.00_);($#,##0.00)") to the range, and saves the file as CurrencyNumberFormatDemo.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | currency number format | built‑in format 7 | two decimal places | Excel export | apply style to range | format cells as money
-// Common Searches: Aspose.Cells format cells as currency | C# apply built‑in number format 7 | how to set two‑decimal currency format in Aspose.Cells | apply number format to a range in .NET Excel | save workbook after currency formatting Aspose.Cells
-// Developer Intent: Apply a built‑in currency format with two decimal places to a cell range and persist the workbook.
-// Use Cases: Generate financial reports where all monetary columns display a consistent $‑style format. | Prepare data for pivot tables that require uniform currency representation. | Export application data to Excel while ensuring monetary values are correctly formatted.
-// AI Prompts: Provide C# code that formats column B as currency with the local symbol and two decimal places using Aspose.Cells. | Show how to combine a custom currency format with conditional formatting for negative values in Aspose.Cells for .NET. | Generate a snippet that applies the built‑in currency style to multiple non‑contiguous ranges and saves the workbook.
+// Title: How to format a worksheet cell as currency with two decimal places using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that sets a cell's style to the built‑in currency format (Number = 7) and saves the workbook with Aspose.Cells. | Show an example of applying a currency style with two decimal places to a range of cells in an Excel file using Aspose.Cells for .NET. | Generate a snippet that retrieves a cell's current style, changes its number format to display currency, and writes the result to a .xlsx file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set cell to display as currency with two decimal places | How to format Excel values as USD currency using Aspose.Cells API | C# example for applying a currency number format to an entire column in a workbook | Programmatically change numeric cell style to show currency in Aspose.Cells | Saving an Excel file with currency‑formatted cells using Aspose.Cells for .NET
+// Tags: Aspose.Cells built‑in number format usage | apply currency cell style .NET | precision two decimals numeric formatting Aspose | adjust cell style numeric format C# | export workbook with currency formatting Aspose
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsNumberFormattingDemo
+// // Demonstrates using Aspose.Cells for .NET to apply the built‑in currency number format (Number = 7) with two decimal places to a cell and save the workbook.
+class CurrencyFormatDemo
 {
-    // Creates a workbook, inserts numeric values into A1‑A3, applies the built‑in currency format (Number = 7, "$#,##0.00_);($#,##0.00)") to the range, and saves the file as CurrencyNumberFormatDemo.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Put some numeric values in cells
-                sheet.Cells["A1"].PutValue(1234.5);
-                sheet.Cells["A2"].PutValue(5678.9);
-                sheet.Cells["A3"].PutValue(9012.34);
+        // Place a numeric value in cell A1
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue(1234.567);
 
-                // Create a style and set the built‑in number format for currency with two decimals
-                // Number = 7 corresponds to "$#,##0.00_);($#,##0.00)"
-                Style currencyStyle = workbook.CreateStyle();
-                currencyStyle.Number = 7;
+        // Retrieve the current style of the cell
+        Style style = cell.GetStyle();
 
-                // Apply the style to the range containing the values
-                Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:A3");
-                range.ApplyStyle(currencyStyle, new StyleFlag { NumberFormat = true });
+        // Apply built‑in currency format with two decimal places (Number = 7)
+        style.Number = 7;
 
-                // Save the workbook
-                workbook.Save("CurrencyNumberFormatDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Set the modified style back to the cell
+        cell.SetStyle(style);
+
+        // Save the workbook to a file
+        workbook.Save("CurrencyFormatDemo.xlsx");
     }
 }

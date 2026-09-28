@@ -1,39 +1,44 @@
-// Title: Export Cell Comments to HTML using Aspose.Cells for .NET
-// Description: Shows how to add a comment to a worksheet cell, turn on the IsExportComments flag in HtmlSaveOptions, and save the workbook as an HTML file so the comment is rendered in the web page.
-// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | IsExportComments | export comments to HTML | cell comment HTML | Excel to HTML conversion | Aspose.Cells example | GitHub snippet
-// Common Searches: Aspose.Cells export cell comments to HTML | How to enable IsExportComments in HtmlSaveOptions | C# save Excel as HTML with comments | Include Excel comments in HTML output Aspose | Aspose.Cells HTML conversion example | GitHub Aspose.Cells comment export sample
-// Developer Intent: Include worksheet cell comments in the generated HTML file.
-// Use Cases: Create web‑ready reports that retain Excel note annotations. | Build documentation portals where reviewers see original comments alongside data. | Automate batch conversion of spreadsheets to HTML while preserving comment metadata for compliance audits. | Integrate comment‑aware HTML export into ASP.NET web applications.
-// AI Prompts: Generate a C# code snippet that saves a workbook to HTML with comments using Aspose.Cells. | Explain the effect of HtmlSaveOptions.IsExportComments on the resulting HTML file. | Show how to customize comment appearance (font, color) when exporting to HTML with Aspose.Cells. | Provide steps to retrieve comment author and text after loading an HTML file back into Aspose.Cells.
+// Title: Include worksheet cell comments when saving as HTML with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a comment to a specific cell and saves the workbook as HTML, ensuring the comment appears in the output using Aspose.Cells. | Show how to set HtmlSaveOptions.ExportComments in Aspose.Cells so that cell comments are rendered in the generated HTML file. | Provide a complete C# example that creates a workbook, adds multiple cell comments, and exports the sheet to HTML with all comments preserved.
+// Common Searches: Aspose.Cells C# export worksheet to HTML with comments visible | How to keep Excel cell comments when converting to HTML using Aspose.Cells .NET | Save workbook as HTML and include comments Aspose.Cells example | HtmlSaveOptions ExportComments true Aspose.Cells C# | Render Excel comments in HTML output with Aspose.Cells for .NET
+// Tags: Aspose.Cells HtmlSaveOptions ExportComments | C# export cell comments to HTML | Aspose.Cells render worksheet comments in HTML | save workbook as HTML with comments Aspose.Cells | Aspose.Cells HTML conversion preserving comments
 
 using System;
 using Aspose.Cells;
 
-// Shows how to add a comment to a worksheet cell, turn on the IsExportComments flag in HtmlSaveOptions, and save the workbook as an HTML file so the comment is rendered in the web page.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program creates a new workbook, adds a comment to cell A1, configures HtmlSaveOptions (which export comments by default), and saves the workbook as an HTML file where the comment is rendered in the generated HTML.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add some data to a cell
-        sheet.Cells["A1"].PutValue("Sample Data");
-
-        // Add a comment to the same cell
-        int commentIndex = sheet.Comments.Add("A1");
-        Comment comment = sheet.Comments[commentIndex];
-        comment.Note = "This is a test comment";
-        comment.Author = "Aspose";
-
-        // Configure HTML save options to export comments
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        static void Main(string[] args)
         {
-            IsExportComments = true   // Enable exporting of comments
-        };
+            try
+            {
+                // Create a new workbook
+                var workbook = new Workbook();
 
-        // Save the workbook as HTML with comments included
-        workbook.Save("output_with_comments.html", htmlOptions);
+                // Access the first worksheet
+                var sheet = workbook.Worksheets[0];
+
+                // Add a comment to cell A1
+                int commentIndex = sheet.Comments.Add("A1");
+                var comment = sheet.Comments[commentIndex];
+                comment.Note = "This is a sample comment displayed in HTML.";
+
+                // Configure HTML save options (comments are exported by default)
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+                // Save the workbook as HTML with comments
+                string outputPath = "WorkbookWithComments.html";
+                workbook.Save(outputPath, htmlOptions);
+
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

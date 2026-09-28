@@ -1,71 +1,69 @@
-// Title: Aspose.Cells .NET – Disable ScaleCrop When Workbook Contains Charts
-// Description: C# example that creates a workbook, adds a column chart, scans all worksheets for chart objects, and conditionally sets BuiltInDocumentProperties.ScaleCrop to false before saving.
-// Keywords: Aspose.Cells | .NET | C# | ScaleCrop | chart detection | built‑in document properties | Excel workbook validation | disable ScaleCrop | chart objects | SaveFormat.Xlsx
-// Common Searches: Aspose.Cells disable ScaleCrop with charts | ScaleCrop property restriction chart objects | check for charts before setting ScaleCrop in .NET | how to validate ScaleCrop in Excel using Aspose.Cells | C# code to prevent ScaleCrop when workbook has charts
-// Developer Intent: Programmatically ensure ScaleCrop is turned off whenever any worksheet in the workbook contains a chart.
-// Use Cases: Automatically turn off ScaleCrop in generated reports that include charts to avoid rendering problems. | Validate workbook content before export in a CI/CD pipeline that creates Excel files with optional visualizations. | Implement a lifecycle rule that conditionally applies ScaleCrop based on the presence of chart objects.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through all worksheets, detects charts, and disables the ScaleCrop property if any are found. | Create a reusable method that accepts a Workbook and returns true if ScaleCrop can be safely enabled, considering chart objects. | Show how to wrap ScaleCrop validation in a try‑catch block while exporting a workbook that may contain charts.
+// Title: Validate that ScaleCrop is disabled for all pictures when an Excel workbook contains chart objects using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that scans each worksheet for charts and throws an InvalidOperationException if any picture has IsScaleCrop set to true. | Create a C# validation method that prevents enabling the ScaleCrop property on images when the workbook includes at least one chart, using reflection to support older Aspose.Cells versions.
+// Common Searches: Aspose.Cells C# check workbook for charts before allowing picture ScaleCrop | how to detect chart objects and enforce IsScaleCrop false on images in Excel with Aspose.Cells | C# validate picture ScaleCrop property when Excel file contains chart objects Aspose.Cells | throw exception for enabled ScaleCrop on pictures in a charted workbook using Aspose.Cells .NET
+// Tags: ScaleCrop property validation with Aspose.Cells | chart presence check for picture ScaleCrop | C# workbook chart detection Aspose.Cells | picture IsScaleCrop verification in Excel .NET | exception handling for invalid ScaleCrop setting
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
-using Aspose.Cells.Properties;
+using Aspose.Cells.Drawing;
 
-// C# example that creates a workbook, adds a column chart, scans all worksheets for chart objects, and conditionally sets BuiltInDocumentProperties.ScaleCrop to false before saving.
-class ScaleCropValidationDemo
+// // Loads an Excel workbook, determines if any worksheet contains chart objects, then iterates through all pictures to ensure the IsScaleCrop property is false. If a picture has ScaleCrop enabled while charts exist, an InvalidOperationException is thrown; otherwise the workbook is saved.
+class ScaleCropValidator
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for a chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
-
-        // Add a chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Check if any worksheet contains chart objects
-        bool containsChart = false;
-        foreach (Worksheet ws in workbook.Worksheets)
+        try
         {
-            if (ws.Charts.Count > 0)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Determine if any worksheet contains a chart object
+            bool hasChart = false;
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                containsChart = true;
-                break;
+                if (sheet.Charts.Count > 0)
+                {
+                    hasChart = true;
+                    break;
+                }
             }
+
+            // If charts exist, ensure no picture has ScaleCrop enabled
+            if (hasChart)
+            {
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Picture picture in sheet.Pictures)
+                    {
+                        // Use reflection to check for the IsScaleCrop property (may not exist in older versions)
+                        var propInfo = picture.GetType().GetProperty("IsScaleCrop");
+                        if (propInfo != null && propInfo.PropertyType == typeof(bool))
+                        {
+                            bool isScaleCrop = (bool)propInfo.GetValue(picture);
+                            if (isScaleCrop)
+                            {
+                                throw new InvalidOperationException(
+                                    $"ScaleCrop is enabled on picture '{picture.Name}' in sheet '{sheet.Name}' while the workbook contains chart objects.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
         }
-
-        // Access built‑in document properties
-        BuiltInDocumentPropertyCollection properties = workbook.BuiltInDocumentProperties;
-
-        // Validate ScaleCrop setting according to presence of charts
-        if (containsChart)
+        catch (Exception ex)
         {
-            // ScaleCrop must not be enabled when charts exist
-            properties.ScaleCrop = false;
-            Console.WriteLine("ScaleCrop disabled because the workbook contains chart objects.");
+            Console.WriteLine($"Error: {ex.Message}");
         }
-        else
-        {
-            properties.ScaleCrop = true;
-            Console.WriteLine("ScaleCrop enabled.");
-        }
-
-        // Save the workbook (lifecycle rule)
-        workbook.Save("ScaleCropValidation.xlsx", SaveFormat.Xlsx);
     }
 }

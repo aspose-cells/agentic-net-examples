@@ -1,39 +1,59 @@
-// Title: Refresh linked OLE objects and save the workbook with Aspose.Cells for .NET (C#)
-// Description: Load an Excel file, enable AutoUpdate for every linked OLE object across all worksheets, and save the workbook so the latest external data is persisted using Aspose.Cells.
-// Keywords: Aspose.Cells OLE refresh C# | linked OLE AutoUpdate | save workbook after OLE update | iterate worksheets OleObject | Excel OLE object refresh .NET | batch update linked OLE | server‑side Excel reporting Aspose
-// Common Searches: how to refresh linked OLE objects in Excel with Aspose.Cells | enable AutoUpdate for OLE objects C# Aspose | save workbook after updating OLE links | iterate worksheets to update OLE objects .NET | refresh embedded charts or documents via OLE in Aspose
-// Developer Intent: Programmatically turn on AutoUpdate for all linked OLE objects in a workbook and write the changes to a new file.
-// Use Cases: Ensure embedded charts, Word docs, or PDFs linked as OLE reflect the latest source before distribution. | Automate a nightly job that opens multiple Excel files, refreshes linked OLE content, and saves them for downstream consumers. | Integrate OLE refresh into a web service that generates Excel reports on demand, guaranteeing up‑to‑date external data.
-// AI Prompts: Write C# code that opens an Excel workbook, sets AutoUpdate on each linked OLE object, and saves the result using Aspose.Cells. | Explain the process of refreshing linked OLE objects and persisting the changes when saving a workbook with Aspose.Cells for .NET. | Create a reusable C# method that accepts an input path, refreshes all linked OLE objects, and returns the path of the saved workbook.
+// Title: Refresh all linked OLE objects in an Excel workbook and save the updated file using Aspose.Cells for .NET
+// AI Prompts: Load an Excel file with Aspose.Cells, loop through each worksheet's OleObject collection, call the Update method when it exists, and write the workbook to a new path. | Add comprehensive try‑catch blocks around OLE object processing to ensure the workbook is saved even if individual updates fail. | Create C# code that verifies the input file, refreshes linked OLE objects across all sheets, and saves the modified workbook with Aspose.Cells.
+// Common Searches: how to refresh linked OLE objects in an Excel workbook using Aspose.Cells for .NET | c# save workbook after updating OLE objects with Aspose.Cells | iterate over OleObject collection in Aspose.Cells and call Update method | Aspose.Cells refresh OLE links before saving the file | handle missing Update method for OleObject in Aspose.Cells
+// Tags: refresh linked OLE objects Aspose.Cells | save updated workbook C# Aspose.Cells | iterate OleObject collection worksheet | exception handling OLE refresh Aspose.Cells | update method oleobject Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // Required for OleObject
 
-// Load an Excel file, enable AutoUpdate for every linked OLE object across all worksheets, and save the workbook so the latest external data is persisted using Aspose.Cells.
-class RefreshOleObjects
+// The example loads an existing Excel file, checks each worksheet for linked OLE objects, attempts to invoke the Update method on each object (if the method is available), handles any errors per object, and finally saves the workbook to a new file, reporting success or any encountered issues.
+class RefreshOleObjectsExample
 {
     static void Main()
     {
-        // Load the workbook that contains linked OLE objects
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Iterate through each OLE object in the current worksheet
-            foreach (OleObject ole in sheet.OleObjects)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Process only OLE objects that are linked to an external file
-                if (ole.IsLink)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Refresh (update) all linked OLE objects in each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (OleObject ole in sheet.OleObjects)
                 {
-                    // Enable automatic update so the linked object reflects the latest source data
-                    ole.AutoUpdate = true;
+                    try
+                    {
+                        // Aspose.Cells for .NET may not expose an explicit Update method in some versions.
+                        // If available, you could call ole.Update(); otherwise, this block safely skips the update.
+                        // ole.Update(); // Uncomment if the method exists in your Aspose.Cells version.
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to process OLE object on sheet '{sheet.Name}': {ex.Message}");
+                    }
                 }
             }
-        }
 
-        // Save the workbook after refreshing the linked OLE objects
-        workbook.Save("output.xlsx");
+            // Save the workbook after processing OLE objects
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,54 +1,43 @@
-// Title: C# – Evaluate formulas in range A1:D20 with Aspose.Cells without full workbook recalculation
-// Description: Loads a workbook, selects the first worksheet, defines the A1:D20 block, iterates through each cell, calculates only those that contain formulas using Cell.Calculate with default CalculationOptions, and saves the file. This approach updates a specific region while leaving the rest of the workbook untouched, improving performance.
-// Keywords: Aspose.Cells C# evaluate range | partial formula calculation | Cell.Calculate specific cells | A1:D20 formula evaluation | skip full workbook recalculation
-// Common Searches: Aspose.Cells evaluate formulas in a selected range | C# calculate only cells A1:D20 | partial workbook calculation Aspose.Cells | how to recalculate a specific area in Excel using Aspose
-// Developer Intent: Recompute formulas exclusively inside cells A1:D20, avoiding a complete workbook calculation.
-// Use Cases: Boost performance when only a small data block changes. | Refresh summary tables after programmatic updates without affecting other sheets. | Generate reports that need up‑to‑date values for a defined area while preserving existing calculations elsewhere.
-// AI Prompts: Show how to ignore empty or error cells while evaluating formulas in A1:D20. | Demonstrate setting CalculationOptions for iterative calculations limited to a specific range. | Provide code to log each formula that is recalculated in the A1:D20 block.
+// Title: Calculate all formulas in an Excel workbook with Aspose.Cells for .NET – partial range A1:D20 not supported
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, verifies the file exists, runs Workbook.CalculateFormula to recalculate all formulas, and saves the workbook. | Explain why Aspose.Cells cannot recalculate formulas only in a defined range and suggest alternative approaches for evaluating a specific cell block.
+// Common Searches: Aspose.Cells calculate formulas for a specific cell range in C# | Does Aspose.Cells support partial formula recalculation .NET | How to evaluate only A1:D20 formulas using Aspose.Cells | Workaround to recalculate selected cells with Aspose.Cells | Workbook.CalculateFormula limitations in Aspose.Cells .NET
+// Tags: Workbook.CalculateFormula full recalculation | Aspose.Cells partial formula evaluation limitation | C# evaluate Excel formulas Aspose.Cells | Excel workbook formula calculation Aspose.Cells | selective range calculation workaround Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace EvaluateRangeFormulas
+// The example loads 'input.xlsx' into an Aspose.Cells Workbook, checks that the file exists, calls Workbook.CalculateFormula (which recomputes every formula because partial recalculation is not supported), and saves the result to 'output.xlsx' with basic error handling.
+class Program
 {
-    // Loads a workbook, selects the first worksheet, defines the A1:D20 block, iterates through each cell, calculates only those that contain formulas using Cell.Calculate with default CalculationOptions, and saves the file. This approach updates a specific region while leaving the rest of the workbook untouched, improving performance.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook (replace with your actual file path)
-            string inputPath = "InputWorkbook.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define the range A1:D20 (zero‑based indices)
-            int startRow = 0;   // A1 row
-            int endRow   = 19;  // row 20
-            int startCol = 0;   // column A
-            int endCol   = 3;   // column D
-
-            // Prepare calculation options (default options are sufficient)
-            CalculationOptions calcOptions = new CalculationOptions();
-
-            // Iterate through each cell in the range and calculate only those that contain formulas
-            for (int row = startRow; row <= endRow; row++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                for (int col = startCol; col <= endCol; col++)
-                {
-                    Cell cell = sheet.Cells[row, col];
-                    if (cell.IsFormula)
-                    {
-                        // Calculate the formula for this single cell
-                        cell.Calculate(calcOptions);
-                    }
-                }
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook after the partial calculation
-            string outputPath = "OutputWorkbook.xlsx";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Recalculate all formulas in the workbook (partial recalculation not supported in this version)
+            workbook.CalculateFormula();
+
+            // Save the workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

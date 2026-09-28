@@ -1,50 +1,25 @@
-// Title: Set rows 1‑3 as repeating print titles in an Excel worksheet with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, select the first worksheet, assign rows 1‑3 to repeat on every printed page via PageSetup.PrintTitleRows, and save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | PrintTitleRows | repeat rows on printed page | Excel header rows | worksheet PageSetup | programmatic Excel printing | repeat print titles | Aspose.Cells example
-// Common Searches: Aspose.Cells repeat header rows C# | How to set PrintTitleRows in Aspose.Cells .NET | Rows 1 to 3 repeat on each printed page Excel Aspose | PageSetup.PrintTitleRows example | Set repeating rows in Excel using Aspose.Cells
-// Developer Intent: Configure rows 1‑3 to act as print titles that appear on every printed page of the selected worksheet.
-// Use Cases: Generate multi‑page reports where the first three rows contain column headings that stay visible when printed. | Create printable invoice or statement templates with static header rows across all pages. | Automate Excel workbook creation for dashboards that require repeated header rows in hard‑copy output.
-// AI Prompts: Write C# code with Aspose.Cells to set rows 2‑5 as repeating print titles and save the file. | Explain the effect of the PrintTitleRows property and how to remove previously set titles. | Provide a sample that configures both PrintTitleRows and PrintTitleColumns for a worksheet.
+// Title: Set rows 1‑3 to repeat as print titles on each printed page of the selected worksheet with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, uses Aspose.Cells to make rows 1 through 3 repeat as print titles on every printed page of the active worksheet, and saves the workbook. | Show how to configure the PageSetup.PrintTitleRows property in Aspose.Cells so specific rows are repeated when printing an Excel sheet. | Demonstrate applying a repeat‑rows page‑setup setting to the currently selected worksheet and exporting the result with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# set rows 1 to 3 as print titles for active worksheet | repeat header rows on each printed page using Aspose.Cells .NET | how to use PageSetup.PrintTitleRows in Aspose.Cells for Excel printing | C# Aspose.Cells configure rows to repeat on every printed page
+// Tags: Aspose.Cells PageSetup.PrintTitleRows | repeat rows on printed pages .NET | set print title rows Excel Aspose.Cells | active worksheet page setup Aspose.Cells | C# Excel repeat header rows Aspose
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, accesses the active worksheet, assigns rows 1‑3 to the PrintTitleRows property so they repeat on every printed page, and saves the modified file.
+class Program
 {
-    // Shows how to create a workbook, select the first worksheet, assign rows 1‑3 to repeat on every printed page via PageSetup.PrintTitleRows, and save the workbook.
-    public class RepeatRowsDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Load the workbook (replace with your file path)
+        var workbook = new Workbook("input.xlsx");
 
-                // Access the first worksheet (selected sheet)
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Get the currently selected worksheet
+        var sheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
 
-                // Configure rows 1 to 3 to repeat on every printed page
-                worksheet.PageSetup.PrintTitleRows = "$1:$3";
+        // Configure rows 1 to 3 to repeat on every printed page
+        sheet.PageSetup.PrintTitleRows = "$1:$3";
 
-                // Save the workbook
-                string outputPath = "RepeatRowsDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            RepeatRowsDemo.Run();
-        }
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

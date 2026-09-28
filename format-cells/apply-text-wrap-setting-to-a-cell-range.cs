@@ -1,56 +1,23 @@
-// Title: Apply Text Wrap to a Cell Range with Aspose.Cells for .NET
-// Description: Creates a workbook, fills a 3×3 range with long text, defines a style with IsTextWrapped = true, uses a StyleFlag to apply only the wrap‑text attribute, applies the style to range A1:C3, auto‑fits rows, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells wrap text C# | apply text wrap range Aspose.Cells | StyleFlag wrap text .NET | auto fit rows after wrap Aspose | IsTextWrapped property example
-// Common Searches: how to enable text wrap for a range in Aspose.Cells .NET | apply wrap text style to multiple cells using StyleFlag | auto fit rows after wrapping text Aspose.Cells | set IsTextWrapped for a cell range C#
-// Developer Intent: Enable text wrapping for a specific cell range and adjust row heights automatically.
-// Use Cases: Display lengthy product descriptions in invoice tables without expanding column width. | Format multi‑line headers in dashboard worksheets for clearer presentation. | Generate reports where comments or notes need to wrap within a defined block of cells.
-// AI Prompts: Show C# code to apply text wrap to a dynamic range based on content length using Aspose.Cells. | Provide an example that toggles wrap text on or off for a selected range and refreshes row heights. | Explain how StyleFlag limits style changes to only the WrapText property in Aspose.Cells.
+// Title: How to enable text wrapping for a specific cell range in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a style with IsTextWrapped = true and applies it to the range A1:C3 using Aspose.Cells. | Show how to use Aspose.Cells StyleFlag to apply a text‑wrap style to an entire cell range and then save the workbook. | Explain the steps to define a cell range, enable text wrapping, and export the file as WrappedText.xlsx with Aspose.Cells for .NET.
+// Common Searches: asp.net aspose.cells set wrap text for range A1:C3 c# | c# aspose.cells apply text wrapping to multiple cells | how to use StyleFlag to enable text wrap in an Aspose.Cells workbook | save Excel file with wrapped text using Aspose.Cells .NET
+// Tags: apply text wrap style Aspose.Cells | Aspose.Cells StyleFlag text wrapping | C# set IsTextWrapped property | wrap text for cell range Excel Aspose | save workbook with wrapped cells Aspose.Cells
 
-using System;
-using Aspose.Cells;
+// Create a new workbook
+var workbook = new Aspose.Cells.Workbook();
 
-// Creates a workbook, fills a 3×3 range with long text, defines a style with IsTextWrapped = true, uses a StyleFlag to apply only the wrap‑text attribute, applies the style to range A1:C3, auto‑fits rows, and saves the file as an XLSX document.
-class ApplyWrapTextToRange
-{
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+// Access the first worksheet
+var worksheet = workbook.Worksheets[0];
 
-            // Populate a 3x3 range with long text that needs wrapping
-            for (int row = 0; row < 3; row++)
-            {
-                for (int col = 0; col < 3; col++)
-                {
-                    cells[row, col].PutValue("This is a long text that should wrap inside the cell.");
-                }
-            }
+// Define the cell range to apply text wrap (e.g., A1:C3)
+var range = worksheet.Cells.CreateRange("A1:C3");
 
-            // Create a style with text wrapping enabled
-            Style wrapStyle = workbook.CreateStyle();
-            wrapStyle.IsTextWrapped = true;
+// Create a style object and enable text wrapping
+var style = workbook.CreateStyle();
+style.IsTextWrapped = true;
 
-            // Create a style flag to apply only the WrapText property
-            StyleFlag flag = new StyleFlag();
-            flag.WrapText = true;
+// Apply the style to the defined range
+range.ApplyStyle(style, new Aspose.Cells.StyleFlag() { All = true });
 
-            // Define the range A1:C3 and apply the wrap style using the flag
-            Aspose.Cells.Range range = cells.CreateRange(0, 0, 3, 3);
-            range.ApplyStyle(wrapStyle, flag);
-
-            // Auto‑fit rows so the wrapped text becomes visible
-            sheet.AutoFitRows();
-
-            // Save the workbook
-            workbook.Save("WrapTextRangeDemo.xlsx", SaveFormat.Xlsx);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
+// Save the workbook to a file
+workbook.Save("WrappedText.xlsx");

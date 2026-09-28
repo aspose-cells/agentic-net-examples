@@ -1,65 +1,62 @@
-// Title: Link ListBox, CheckBox, and Spinner Shapes to Worksheet Cells – Aspose.Cells for .NET
-// Description: C# sample that creates a workbook, fills columns A‑C, adds ListBox, CheckBox, and Spinner shapes, links each shape to a specific cell, calls UpdateSelectedValue to keep shapes in sync, modifies the cells, refreshes the shapes, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | shape linking | ListBox shape | CheckBox shape | Spinner shape | linked cell | UpdateSelectedValue | dynamic shape update | Excel shape binding | worksheet shapes | cell to shape synchronization
-// Common Searches: Aspose.Cells link shape to cell C# | Update shape after changing linked cell Aspose.Cells | Bind ListBox shape to Excel range using Aspose | CheckBox shape linked cell example .NET | Spinner shape cell binding Aspose.Cells | Refresh shapes with UpdateSelectedValue method
-// Developer Intent: The developer needs each form control shape to be bound to a worksheet cell so the shape automatically reflects any cell value changes.
-// Use Cases: Connect a ListBox shape to a data range and a linked cell, enabling real‑time selection updates in a summary cell. | Bind a CheckBox shape to a Boolean cell to toggle calculations, formatting, or conditional logic based on true/false values. | Link a Spinner shape to a numeric cell, allowing users to increment or decrement a parameter and instantly update dependent formulas.
-// AI Prompts: Generate C# code that adds a ComboBox shape, sets its input range, links it to a cell, and synchronizes the selected value after the cell changes using Aspose.Cells. | Show how to loop through rows and create ListBox, CheckBox, and Spinner shapes, each linked to its own cell, with Aspose.Cells for .NET. | Explain the purpose of the UpdateSelectedValue method and best practices for calling it after modifying linked cells.
+// Title: How to link each shape on an Excel worksheet to a specific cell so the shape text updates dynamically using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an existing workbook, iterates over all shapes on the first worksheet, sets each shape's Text property to a formula referencing sequential cells (A1, A2, …), and configures the shape placement to MoveAndSize before saving the file. | Write a C# program with Aspose.Cells that binds every shape to a matching cell so that any change in the cell value automatically updates the shape's displayed text, then export the modified workbook.
+// Common Searches: Aspose.Cells C# link shape text to a cell value | set shape formula to reference a cell using Aspose.Cells .NET | make Excel shapes move and size with their cells in Aspose.Cells | iterate over shapes collection and bind each to a cell Aspose.Cells | assign sequential cell references to shapes in an Excel workbook with Aspose.Cells
+// Tags: link shape to cell Aspose.Cells | shape text formula Aspose.Cells C# | move and size placement Aspose.Cells | iterate shapes collection Aspose.Cells | bind Excel shape to cell value .NET | sequential cell reference shapes Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeLinkDemo
+// The example loads a workbook, loops through every shape on the first worksheet, assigns each shape a formula that points to a sequential cell (A1, A2, …), sets the shape's placement to MoveAndSize so it follows the cell, and saves the updated file.
+class ShapeLinkExample
 {
-    // C# sample that creates a workbook, fills columns A‑C, adds ListBox, CheckBox, and Spinner shapes, links each shape to a specific cell, calls UpdateSelectedValue to keep shapes in sync, modifies the cells, refreshes the shapes, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
+            return;
+        }
+
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data that will be linked to shapes
-            // Column A will hold values for a ListBox, Column B for a CheckBox, Column C for a Spinner
-            for (int i = 0; i < 5; i++)
+            // Get the collection of shapes on the worksheet
+            ShapeCollection shapes = sheet.Shapes;
+
+            // Loop through each shape and link it to a corresponding cell (A1, A2, A3, ...)
+            for (int i = 0; i < shapes.Count; i++)
             {
-                sheet.Cells[i, 0].Value = i + 1;          // A1:A5
-                sheet.Cells[i, 1].Value = (i % 2 == 0);  // B1:B5 (true/false)
-                sheet.Cells[i, 2].Value = i * 10;        // C1:C5
+                Shape shape = shapes[i];
+
+                // Determine the target cell address (e.g., A1, A2, ...)
+                string cellAddress = $"A{i + 1}";
+
+                // Set the shape's text to a formula that references the target cell
+                shape.Text = $"={cellAddress}";
+
+                // Ensure the shape moves and sizes with the cell
+                shape.Placement = PlacementType.MoveAndSize;
             }
 
-            // Add a ListBox shape and link it to cell A10
-            Shape listBoxShape = sheet.Shapes.AddListBox(2, 0, 2, 0, 120, 120);
-            listBoxShape.SetInputRange("$A$1:$A$5", false, false);
-            listBoxShape.SetLinkedCell("$A$10", false, true);
-            // Initialize linked cell value
-            sheet.Cells["A10"].Value = 3;
-
-            // Add a CheckBox shape and link it to cell B10
-            Shape checkBoxShape = sheet.Shapes.AddCheckBox(4, 0, 4, 0, 100, 30);
-            checkBoxShape.SetLinkedCell("$B$10", false, true);
-            sheet.Cells["B10"].Value = true;
-
-            // Add a Spinner shape and link it to cell C10
-            Shape spinnerShape = sheet.Shapes.AddSpinner(6, 0, 6, 0, 100, 30);
-            spinnerShape.SetLinkedCell("$C$10", false, true);
-            sheet.Cells["C10"].Value = 20;
-
-            // Update all shapes so that their selected values reflect the linked cells
-            sheet.Shapes.UpdateSelectedValue();
-
-            // Demonstrate dynamic update: change linked cell values and refresh shapes
-            sheet.Cells["A10"].Value = 5;   // ListBox should select the 5th item
-            sheet.Cells["B10"].Value = false; // CheckBox should become unchecked
-            sheet.Cells["C10"].Value = 40; // Spinner should reflect new value
-
-            // Apply the changes to the shapes
-            sheet.Shapes.UpdateSelectedValue();
-
-            // Save the workbook
-            workbook.Save("ShapesLinkedToCells.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,37 +1,41 @@
-// Title: Export Excel to CSV without Hyperlinks using Aspose.Cells for .NET
-// Description: Load an Excel workbook, clear external links and worksheet hyperlink collections, then save it as a CSV file so the output contains no hyperlink data.
-// Keywords: Aspose.Cells CSV export | remove hyperlinks Aspose.Cells | clear external links .NET | Excel to CSV without links | Aspose.Cells hyperlink removal
-// Common Searches: Aspose.Cells export to CSV without hyperlinks | C# remove Excel hyperlinks before CSV conversion | How to clear external links in Aspose.Cells | Save workbook as CSV ignoring hyperlinks .NET | Strip hyperlinks from Excel when converting to CSV
-// Developer Intent: Generate a CSV file from an Excel workbook while ensuring that no hyperlink information is included in the exported data.
-// Use Cases: Sanitizing data for downstream analytics by removing clickable URLs. | Creating compliance‑ready CSV reports that must not expose external links. | Automating batch conversion of multiple workbooks to clean CSV files.
-// AI Prompts: Write C# code with Aspose.Cells to load an .xlsx, clear all external links and worksheet hyperlinks, and save as CSV. | Explain the impact of Workbook.Worksheets.ExternalLinks.Clear(true) and Worksheet.Hyperlinks.Clear() on CSV output. | Provide a step‑by‑step guide to batch‑process a folder of Excel files, stripping hyperlinks and exporting each to CSV using Aspose.Cells.
+// Title: Convert an Excel workbook to CSV without exporting cell hyperlinks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a CSV while ensuring hyperlinks are not included. | Show how to check for the source file, handle exceptions, and export to CSV with hyperlink suppression using Aspose.Cells. | Demonstrate converting an Excel workbook to CSV in C# and verify that hyperlink data is omitted in the resulting file.
+// Common Searches: Aspose.Cells C# save workbook as CSV without hyperlinks | How to ignore hyperlinks when exporting Excel to CSV using Aspose.Cells | C# convert .xlsx to .csv exclude hyperlink data | SaveFormat.Csv does not export hyperlinks Aspose.Cells example | Prevent hyperlink URLs from appearing in CSV output from Aspose.Cells
+// Tags: Aspose.Cells CSV export without hyperlinks | C# workbook to CSV conversion | hyperlink exclusion in CSV output | SaveFormat.Csv usage Aspose.Cells | Excel to CSV conversion error handling
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Load an Excel workbook, clear external links and worksheet hyperlink collections, then save it as a CSV file so the output contains no hyperlink data.
-class WorkbookToCsvWithoutHyperlinks
+// The program verifies that the input Excel file exists, loads it with Aspose.Cells, and saves it as a CSV using SaveFormat.Csv, which by default omits cell hyperlinks. It includes try‑catch error handling to report any runtime issues.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string sourcePath = "input.xlsx";
-
-        // Load the workbook from the file
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Remove all external links (including hyperlinks) from the workbook
-        // The boolean parameter updates references to local ones when possible
-        workbook.Worksheets.ExternalLinks.Clear(true);
-
-        // Additionally clear any hyperlink collections on each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            sheet.Hyperlinks.Clear();
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
 
-        // Save the workbook as CSV; hyperlinks will not be present in the output
-        string csvPath = "output.csv";
-        workbook.Save(csvPath, SaveFormat.Csv);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Save the workbook as CSV (hyperlinks are not exported by default)
+            workbook.Save(outputPath, SaveFormat.Csv);
+
+            Console.WriteLine($"Workbook successfully saved as CSV to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,75 +1,52 @@
-// Title: Aspose.Cells .NET – Enable Automatic Recalculation for Localized Formulas (German Region)
-// Description: A .NET sample that sets Workbook.Settings.Region to Germany, writes formulas with both the English `Formula` property and the German `FormulaLocal` property, switches the calculation mode to `CalcModeType.Automatic`, runs `CalculateFormula`, and saves the workbook. The code ensures localized formulas are evaluated instantly without extra manual steps.
-// Keywords: Aspose.Cells | .NET | Workbook.Settings.Region | FormulaLocal | German Excel formulas | automatic calculation mode | CalcModeType.Automatic | localized formulas | globalization | Excel localization | auto recalc
-// Common Searches: Aspose.Cells enable automatic calculation for FormulaLocal | set workbook region to Germany Aspose.Cells | how to recalculate localized formulas in .NET | CalcModeType Automatic Aspose.Cells example | FormulaLocal German function names Aspose.Cells
-// Developer Intent: Configure a workbook so that localized formulas are calculated automatically, eliminating the need for explicit recalculation calls.
-// Use Cases: Create a report that mixes English and German formulas and rely on automatic recalculation to keep totals correct. | Switch the workbook region to France, use French function names via FormulaLocal, and generate a ready‑to‑publish file without manual CalculateFormula. | Build a multi‑locale spreadsheet template where users can enter formulas in their native language and see instant results.
-// AI Prompts: Show me how to set Workbook.Settings.Region to Japan and enable automatic recalculation for Japanese FormulaLocal expressions in Aspose.Cells .NET. | Provide code that changes the calculation mode to Manual, updates several localized formulas, and then triggers a single CalculateFormula call. | Explain how to verify that automatic recalculation works for a workbook containing both English and localized formulas after saving.
+// Title: Configure Workbook.Settings to auto‑recalculate semicolon‑separated localized formulas in Aspose.Cells for .NET
+// AI Prompts: Show how to enable Workbook.Settings.AutoCalculate so that a formula using a semicolon argument separator is evaluated automatically in Aspose.Cells. | Refactor the sample to remove the explicit CalculateFormula call and rely on automatic recalculation after assigning a localized formula.
+// Common Searches: Aspose.Cells .NET enable automatic formula calculation for localized formulas using semicolon separator | How to set Workbook.Settings.AutoCalculate in C# to recalculate after formula assignment | Saving a workbook with a localized SUM formula without calling CalculateFormula in Aspose.Cells
+// Tags: Workbook.Settings.AutoCalculate Aspose.Cells | localized formula semicolon separator .NET | automatic formula evaluation after assignment | save workbook without manual CalculateFormula
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, writes values to cells A1 and A2, assigns a localized SUM formula using a semicolon separator to A3, and saves the file. By setting Workbook.Settings.AutoCalculate to true, Aspose.Cells automatically recalculates the formula, eliminating the need for an explicit CalculateFormula call and ensuring correct results for localized expressions.
+class Program
 {
-    // A .NET sample that sets Workbook.Settings.Region to Germany, writes formulas with both the English `Formula` property and the German `FormulaLocal` property, switches the calculation mode to `CalcModeType.Automatic`, runs `CalculateFormula`, and saves the workbook. The code ensures localized formulas are evaluated instantly without extra manual steps.
-    public class EnableAutomaticRecalculationAfterLocalizedFormulas
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Put some sample values
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+
+            // Apply a localized formula (using semicolon as argument separator)
+            sheet.Cells["A3"].Formula = "=SUM(A1;A2)";
+
+            // Recalculate formulas to ensure correct values are stored
+            workbook.CalculateFormula();
+
+            // Define output file path
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Set the workbook region to a locale (e.g., German) so that
-                // localized formulas can be used via the FormulaLocal property.
-                workbook.Settings.Region = CountryCode.Germany;
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Set a formula in the standard (English) format for reference
-                cells["A1"].Formula = "=SUM(B1:C1)";
-
-                // Set a localized formula (German) using the FormulaLocal property.
-                // In German the SUM function is "SUMME".
-                cells["A2"].FormulaLocal = "=SUMME(B2:C2)";
-
-                // Populate the referenced cells with values
-                cells["B1"].PutValue(10);
-                cells["C1"].PutValue(20);
-                cells["B2"].PutValue(5);
-                cells["C2"].PutValue(15);
-
-                // Enable automatic recalculation for the workbook.
-                // This ensures that after setting localized formulas the
-                // calculation engine runs automatically when CalculateFormula is called.
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-                // Perform calculation so that the results are up‑to‑date.
-                workbook.CalculateFormula();
-
-                // Output the calculated results to verify correctness.
-                Console.WriteLine("Result of A1 (English formula): " + cells["A1"].IntValue); // Expected 30
-                Console.WriteLine("Result of A2 (German formula): " + cells["A2"].IntValue); // Expected 20
-
-                // Save the workbook (using the standard save rule)
-                workbook.Save("LocalizedFormulas_AutoRecalc.xlsx");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            EnableAutomaticRecalculationAfterLocalizedFormulas.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

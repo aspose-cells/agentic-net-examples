@@ -1,119 +1,94 @@
-// Title: Aspose.Cells for .NET – Retrieve a 2‑D array from a custom function and access its argument range
-// Description: Demonstrates how to implement a custom calculation engine (MyArrayFunctionEngine) that returns a 2 × 2 object[,] array for the MYFUNC function, evaluate the formula with CalculationOptions, read the array via cell.Value, and use GetPrecedents and ReferredArea.GetValues to obtain the values of the passed range (A1:B2).
-// Keywords: Aspose.Cells | C# | custom function | AbstractCalculationEngine | 2D array result | CalculateFormula | cell.Value | GetPrecedents | ReferredArea | Excel custom engine | matrix return
-// Common Searches: Aspose.Cells custom function return array | how to get 2d array from custom function Aspose.Cells | GetPrecedents example C# | retrieve argument range values Aspose.Cells | custom calculation engine Aspose.Cells .NET
-// Developer Intent: Extract the multi‑dimensional array produced by a custom Excel function and read the values of the range supplied as its argument.
-// Use Cases: Create a custom calculation engine that returns a matrix and read the matrix after workbook calculation. | Identify the range passed to a custom function using GetPrecedents and extract its cell values with ReferredArea.GetValues. | Display both the function's result array and the source range data for debugging or reporting.
-// AI Prompts: Generate C# code with Aspose.Cells that defines a custom function returning a 3 × 3 array and prints the array from the formula cell. | Show how to use ReferredAreaCollection and ReferredArea.GetValues to fetch the values of a range supplied to a custom function in Aspose.Cells.
+// Title: How to retrieve and iterate a Range object returned by a custom Excel function using Aspose.Cells in C#
+// AI Prompts: Provide C# code that runs workbook.CalculateFormula with a custom engine and then casts the user‑defined function result to Aspose.Cells.Range. | Show how to loop through each cell of an Aspose.Cells.Range returned by a custom function and output the cell address and value. | Explain how to access the Address property of a Range object supplied by a custom calculation engine in Aspose.Cells.
+// Common Searches: aspnet aspose.cells retrieve range from user defined function after CalculateFormula | c# get Aspose.Cells.Range object returned by custom Excel function | how to iterate cells of a range returned by a custom calculation engine in Aspose.Cells | example of custom calculation engine returning A1:B2 range in Aspose.Cells C# | extract address and values from range returned by MYRANGE function using Aspose.Cells
+// Tags: custom calculation engine returning Aspose.Cells.Range | cast custom function result to Aspose.Cells.Range C# | iterate cells in Aspose.Cells.Range | retrieve range address Aspose.Cells | user-defined Excel function range output Aspose.Cells
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsCustomFunctionDemo
+namespace CustomFunctionRangeDemo
 {
-    // Custom engine that returns a 2‑D array as the result of MYFUNC
-    // Demonstrates how to implement a custom calculation engine (MyArrayFunctionEngine) that returns a 2 × 2 object[,] array for the MYFUNC function, evaluate the formula with CalculationOptions, read the array via cell.Value, and use GetPrecedents and ReferredArea.GetValues to obtain the values of the passed range (A1:B2).
-    class MyArrayFunctionEngine : AbstractCalculationEngine
-    {
-        public override void Calculate(CalculationData data)
-        {
-            // Ensure we handle only the expected custom function
-            if (data.FunctionName != null &&
-                data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
-            {
-                // Example: return a 2x2 array with incremental numbers
-                object[,] result = new object[2, 2];
-                result[0, 0] = 1;
-                result[0, 1] = 2;
-                result[1, 0] = 3;
-                result[1, 1] = 4;
-
-                // Assign the array to the CalculatedValue property
-                data.CalculatedValue = result;
-            }
-        }
-    }
-
+    // The example creates a workbook, fills cells A1:B2 with numbers, assigns the formula =MYRANGE() to C1, and uses a custom calculation engine (MyRangeEngine) that returns the range A1:B2 as the function result. After calling workbook.CalculateFormula, the code retrieves the result, casts it to Aspose.Cells.Range, prints the range address and each cell's name and value, and saves the workbook.
     class Program
     {
         static void Main()
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate some dummy data (not used by the custom function but required for a valid sheet)
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["B1"].PutValue(30);
-            cells["B2"].PutValue(40);
-
-            // Set a formula that calls the custom function
-            // The function does not need parameters for this demo, but we include a range to illustrate GetPrecedents
-            Cell formulaCell = cells["C1"];
-            formulaCell.Formula = "=MYFUNC(A1:B2)";
-
-            // ---------- Configure calculation options with the custom engine ----------
-            CalculationOptions options = new CalculationOptions();
-            options.CustomEngine = new MyArrayFunctionEngine();
-
-            // Perform calculation – the custom engine will be invoked
-            workbook.CalculateFormula(options);
-
-            // ---------- Retrieve the range of values returned by the custom function ----------
-            // Get the precedents of the formula cell; the first ReferredArea corresponds to the argument range (A1:B2)
-            ReferredAreaCollection precedents = formulaCell.GetPrecedents();
-
-            if (precedents != null && precedents.Count > 0)
+            try
             {
-                // The custom function itself returns an array, not the argument range.
-                // To obtain the array result, we use the cell's Value directly (it holds the array object).
-                object result = formulaCell.Value;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // The result can be a single value, a 1‑D array, or a 2‑D array.
-                // In this example we expect a 2‑D array.
-                if (result is object[,] multiArray)
+                // Populate sample data that will be returned by the custom function
+                cells["A1"].PutValue(10);
+                cells["A2"].PutValue(20);
+                cells["B1"].PutValue(30);
+                cells["B2"].PutValue(40);
+
+                // Set a formula that calls the custom function MYRANGE()
+                Cell resultCell = cells["C1"];
+                resultCell.Formula = "=MYRANGE()";
+
+                // Configure calculation options to use a custom engine
+                CalculationOptions options = new CalculationOptions
                 {
-                    Console.WriteLine("Custom function returned a 2‑D array:");
-                    for (int r = 0; r < multiArray.GetLength(0); r++)
+                    CustomEngine = new MyRangeEngine()
+                };
+
+                // Perform calculation – the custom engine will supply a Range as the result
+                workbook.CalculateFormula(options);
+
+                // Retrieve the value returned by the custom function
+                object value = resultCell.Value;
+
+                // The custom function returns a Range object, so cast accordingly
+                if (value is AsposeRange returnedRange)
+                {
+                    Console.WriteLine("Custom function returned a range:");
+                    Console.WriteLine($"Address: {returnedRange.Address}");
+                    Console.WriteLine("Values in the range:");
+
+                    // Iterate through the cells in the returned range and display their values
+                    foreach (Cell cell in returnedRange)
                     {
-                        for (int c = 0; c < multiArray.GetLength(1); c++)
-                        {
-                            Console.Write(multiArray[r, c] + "\t");
-                        }
-                        Console.WriteLine();
+                        Console.WriteLine($"{cell.Name}: {cell.Value}");
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Custom function returned: " + result);
+                    Console.WriteLine("Custom function did not return a range. Value: " + value);
                 }
 
-                // Additionally, demonstrate retrieving values from the argument range using ReferredArea.GetValues()
-                ReferredArea argArea = precedents[0];
-                object argValues = argArea.GetValues(true); // calculate formulas inside the range if any
-
-                if (argValues is object[,] argArray)
-                {
-                    Console.WriteLine("\nValues of the argument range (A1:B2):");
-                    for (int r = 0; r < argArray.GetLength(0); r++)
-                    {
-                        for (int c = 0; c < argArray.GetLength(1); c++)
-                        {
-                            Console.Write(argArray[r, c] + "\t");
-                        }
-                        Console.WriteLine();
-                    }
-                }
+                // Save the workbook (optional, demonstrates lifecycle usage)
+                workbook.Save("CustomFunctionRangeDemo.xlsx");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("No precedents found for the formula cell.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
 
-            // ---------- Save the workbook (optional) ----------
-            workbook.Save("CustomFunctionResult.xlsx");
+        // Custom calculation engine that returns a Range object for the function MYRANGE
+        private class MyRangeEngine : AbstractCalculationEngine
+        {
+            public override void Calculate(CalculationData data)
+            {
+                // Ensure we are handling the expected custom function
+                if (!string.IsNullOrEmpty(data.FunctionName) &&
+                    data.FunctionName.Equals("MYRANGE", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Obtain the worksheet where the function is being evaluated
+                    Worksheet ws = data.Worksheet;
+
+                    // Create a range that we want the function to return (A1:B2 in this example)
+                    AsposeRange rangeToReturn = ws.Cells.CreateRange("A1:B2");
+
+                    // Assign the range to the CalculatedValue property
+                    data.CalculatedValue = rangeToReturn;
+                }
+            }
         }
     }
 }

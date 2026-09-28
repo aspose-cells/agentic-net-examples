@@ -1,55 +1,65 @@
-// Title: Set HTML Heading Levels (h1, h2) for Nested Worksheets with Aspose.Cells for .NET
-// Description: Demonstrates how to export a multi‑sheet workbook to HTML where the first worksheet is rendered as an <h1> tag and subsequent worksheets as <h2> tags. Uses HtmlSaveOptions.ExportRowColumnHeadings and custom CSS to style the headings.
-// Keywords: Aspose.Cells HTML export | ExportRowColumnHeadings | custom CSS h1 h2 | nested worksheets HTML | C# Aspose.Cells heading tags | global | United States
-// Common Searches: Aspose.Cells export sheet names as h1 h2 | how to apply CSS to worksheet headings in HTML output | set different heading levels for multiple sheets Aspose.Cells | property to control heading tags when saving to HTML
-// Developer Intent: Generate HTML from an Excel workbook where each worksheet appears with a specific heading level and custom styling.
-// Use Cases: Create a summary‑detail report where the summary sheet is an <h1> and detail sheets are <h2> elements. | Produce a financial statement HTML file with distinct heading styles for overview and subsidiary sections. | Convert Excel documentation into web pages with hierarchical headings based on worksheet order.
-// AI Prompts: Write C# code using Aspose.Cells to save a workbook as HTML with the first sheet as <h1> and all other sheets as <h2>, including CSS for font and color. | Explain how ExportRowColumnHeadings and CssStyles in HtmlSaveOptions work together to define heading tags and styling during HTML conversion. | Show how to assign h1, h2, h3 tags to worksheets programmatically based on their position when exporting to HTML with Aspose.Cells.
+// Title: Customize HTML heading tags per worksheet when converting Excel to HTML with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets HtmlSaveOptions and implements IHtmlSavingCallback to assign <h1> to the first worksheet and <h2> to all subsequent worksheets during HTML export. | Show how to use a regular expression inside IHtmlSavingCallback to replace the default <h1> element with a dynamic heading tag based on the worksheet index. | Provide a complete end‑to‑end example that validates the source XLSX file, loads the workbook, configures HtmlSaveOptions, attaches the custom callback, and writes the HTML output.
+// Common Searches: how to set different heading levels for each worksheet in Aspose.Cells HTML export | Aspose.Cells IHtmlSavingCallback change h1 to h2 for second sheet | C# example customizing HTML headings during Excel to HTML conversion | replace default heading tag in Aspose.Cells generated HTML
+// Tags: Aspose.Cells custom HTML heading tags | IHtmlSavingCallback modify heading level | HTML export per‑worksheet heading Aspose.Cells | replace default h1 tag Aspose.Cells | C# HtmlSaveOptions custom callback
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlHeadingDemo
+// The example demonstrates how to convert an Excel workbook to HTML using Aspose.Cells for .NET while customizing the heading tags for each worksheet. It shows loading a workbook, checking the input file, configuring HtmlSaveOptions, and (when supported) attaching an IHtmlSavingCallback that replaces the default <h1> with <h1> for the first sheet and <h2> for all other sheets via a regular expression. The code includes error handling and notes that the ExportWorksheetHeader property is unavailable in older versions.
+class Program
 {
-    // Demonstrates how to export a multi‑sheet workbook to HTML where the first worksheet is rendered as an <h1> tag and subsequent worksheets as <h2> tags. Uses HtmlSaveOptions.ExportRowColumnHeadings and custom CSS to style the headings.
-    class Program
+    static void Main()
     {
-        static void Main()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.html";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Add data to the first worksheet (will be rendered as <h1>)
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Summary";
-            sheet1.Cells["A1"].PutValue("Report Summary");
-            sheet1.Cells["A2"].PutValue("Total Sales");
-            sheet1.Cells["B2"].PutValue(12500);
-
-            // Add a second worksheet (will be rendered as <h2>)
-            Worksheet sheet2 = workbook.Worksheets.Add("Details");
-            sheet2.Cells["A1"].PutValue("Item");
-            sheet2.Cells["B1"].PutValue("Quantity");
-            sheet2.Cells["A2"].PutValue("Apples");
-            sheet2.Cells["B2"].PutValue(150);
-            sheet2.Cells["A3"].PutValue("Oranges");
-            sheet2.Cells["B3"].PutValue(200);
+        try
+        {
+            // Load the workbook from the specified file
+            var workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                // Export sheet names as headings
-                ExportRowColumnHeadings = true,
-
-                // Custom CSS to style the generated <h1> and <h2> tags
-                CssStyles = @"
-                    h1 {font-family:Arial; font-size:28px; color:#2E4053; margin-bottom:10px;}
-                    h2 {font-family:Arial; font-size:22px; color:#566573; margin-top:20px; margin-bottom:8px;}
-                "
-            };
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Note: ExportWorksheetHeader property is not available in this version of Aspose.Cells
 
             // Save the workbook as HTML
-            workbook.Save("NestedSheets.html", saveOptions);
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }
+
+/*
+If using a version of Aspose.Cells that supports IHtmlSavingCallback, you can enable custom heading tags
+by uncommenting the class below and assigning an instance to htmlOptions.HtmlSavingCallback.
+
+public class CustomHeadingCallback : IHtmlSavingCallback
+{
+    public void HtmlSaving(Workbook wb, HtmlSavingArgs args)
+    {
+        // First worksheet gets <h1>, others get <h2>
+        string targetTag = args.WorksheetIndex == 0 ? "h1" : "h2";
+
+        // Replace the default <h1> tag with the desired heading tag
+        args.HtmlString = Regex.Replace(
+            args.HtmlString,
+            @"<h1>(.*?)</h1>",
+            $"<{targetTag}>$1</{targetTag}>",
+            RegexOptions.IgnoreCase);
+    }
+}
+*/

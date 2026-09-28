@@ -1,44 +1,40 @@
-// Title: C# – Set Chart Data Range with Chart.SetChartDataRange in Aspose.Cells
-// Description: Creates a workbook, populates cells A1:B4, adds a column chart, and links the chart to that range using Chart.SetChartDataRange(true) before saving as ChartDataRangeDemo.xlsx.
-// Keywords: Aspose.Cells | Chart.SetChartDataRange | C# chart data source | bind chart to range | column chart Aspose | vertical series flag | Excel chart programmatic | set chart data range .NET | Aspose.Cells example
-// Common Searches: Aspose.Cells set chart data range C# | Chart.SetChartDataRange usage example | how to bind a chart to cells with Aspose | vertical series parameter Aspose.Cells | programmatically set Excel chart source range
-// Developer Intent: Programmatically bind a chart to a specific cell range.
-// Use Cases: Generate a column chart that updates automatically when values in A1:B4 change. | Re‑assign a chart’s data source after inserting new rows or columns. | Create Excel reports with multiple charts, each linked to its own data table.
-// AI Prompts: Provide C# code that sets a line chart’s data range to "C1:D10" with horizontal series using Aspose.Cells. | Explain how to change the data source of an existing chart after adding rows to the worksheet in Aspose.Cells for .NET. | Show an example of using Chart.SetChartDataRange with the isVerticalSeries flag set to false.
+// Title: Set a column chart’s data source to a populated cell range using Chart.SetChartDataRange in Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, fill cells A1:B4 with categories and values, add a column chart, and bind it to that range with series plotted by column via Chart.SetChartDataRange. | Modify an existing Aspose.Cells chart to reference a different cell block as its data source and specify whether series are plotted by rows or columns. | Generate an Excel file where the chart automatically reflects changes in the underlying A1:B4 data range using SetChartDataRange.
+// Common Searches: Aspose.Cells how to bind chart to specific cell range in C# | C# example using Chart.SetChartDataRange for column chart | set series orientation when assigning data range to Aspose.Cells chart | programmatically update chart data source range in Aspose.Cells workbook | using SetChartDataRange to link worksheet data to a chart in .NET
+// Tags: chart set data range Aspose.Cells .NET | Chart.SetChartDataRange column chart | populate worksheet cells for chart source Aspose | bind worksheet data to chart Aspose.Cells | series orientation column chart Aspose
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, populates cells A1:B4, adds a column chart, and links the chart to that range using Chart.SetChartDataRange(true) before saving as ChartDataRangeDemo.xlsx.
+// The sample creates a workbook, populates cells A1 through B4 with category labels and numeric values, adds a column chart, and binds the chart to that range using Chart.SetChartDataRange with the series‑plotted‑by‑column flag set to true, then saves the file as ChartDataRangeDemo.xlsx.
 class SetChartDataRangeDemo
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Series1");
-        worksheet.Cells["A2"].PutValue("Cat1");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("Cat2");
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["A4"].PutValue("Cat3");
-        worksheet.Cells["B4"].PutValue(30);
+        // Populate cells with sample data
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Series1");
+        sheet.Cells["A2"].PutValue("Cat1");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["A3"].PutValue("Cat2");
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["A4"].PutValue("Cat3");
+        sheet.Cells["B4"].PutValue(30);
 
         // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        Chart chart = sheet.Charts[chartIndex];
 
-        // Set the chart's data source range (vertical series)
+        // Set the chart's data source range using SetChartDataRange
+        // The second argument (true) indicates that data series are plotted by column
         chart.SetChartDataRange("A1:B4", true);
 
-        // Save the workbook with the chart
+        // Save the workbook to a file
         workbook.Save("ChartDataRangeDemo.xlsx");
     }
 }

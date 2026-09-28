@@ -1,80 +1,58 @@
-// Title: Uppercase All Text Cells with a Custom LightCellsDataHandler in Aspose.Cells for .NET
-// Description: Demonstrates how to create an UpperCaseHandler that inherits LightCellsDataHandler, converts every string cell to uppercase during workbook loading, and saves the transformed file using Aspose.Cells LoadOptions in LightCells mode.
-// Keywords: Aspose.Cells LightCellsDataHandler | C# uppercase cell values | convert string cells to uppercase | load workbook LightCells mode | custom cell processing Aspose | memory‑efficient Excel transformation | Aspose.Cells .NET example | uppercase text during import
-// Common Searches: Aspose.Cells LightCells handler to uppercase text | C# convert all string cells to uppercase while loading | custom LightCellsDataHandler example | load Excel file with case conversion using Aspose | process cells on the fly Aspose.Cells
-// Developer Intent: Create a LightCellsDataHandler that changes every string cell to uppercase during workbook loading.
-// Use Cases: Standardize textual data by forcing uppercase when importing large Excel files without full in‑memory loading. | Apply on‑the‑fly transformations (e.g., trimming, case conversion) to reduce post‑processing steps. | Generate a cleaned copy of an input workbook for downstream analytics or reporting.
-// AI Prompts: Write a LightCellsDataHandler in C# that trims whitespace and converts cell text to title case while loading a workbook. | Show how to use Aspose.Cells LoadOptions with a custom handler to replace specific substrings in string cells. | Explain how to chain multiple transformations (e.g., trim, uppercase, replace) inside the ProcessCell method of a LightCellsDataHandler.
+// Title: Use a custom LightCellsDataHandler in Aspose.Cells for .NET to convert all string cells to uppercase while loading a workbook
+// AI Prompts: Write a C# LightCellsDataHandler that intercepts each cell during workbook loading and replaces any string value with its uppercase invariant form. | Show how to pass the custom LightCellsDataHandler to Workbook.Load to apply the uppercase transformation and then save the updated file.
+// Common Searches: Aspose.Cells C# load workbook with LightCellsDataHandler to change text case | How to automatically uppercase all string cells when opening an Excel file using Aspose.Cells | Custom LightCellsDataHandler example for case conversion in .NET | Convert cell text to uppercase during Excel import with Aspose.Cells
+// Tags: custom LightCellsDataHandler uppercase conversion | Aspose.Cells case normalization on load | C# Excel text case standardization | transform string cells during workbook read | Aspose.Cells cell value manipulation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace UpperCaseLightCellsDemo
+namespace AsposeCellsUpperCaseExample
 {
-    // Custom LightCellsDataHandler that converts all string cell values to uppercase
-    // Demonstrates how to create an UpperCaseHandler that inherits LightCellsDataHandler, converts every string cell to uppercase during workbook loading, and saves the transformed file using Aspose.Cells LoadOptions in LightCells mode.
-    public class UpperCaseHandler : LightCellsDataHandler
-    {
-        // Process every worksheet
-        public bool StartSheet(Worksheet sheet)
-        {
-            // Process all sheets
-            return true;
-        }
-
-        // Process every row
-        public bool StartRow(int rowIndex)
-        {
-            // Process all rows
-            return true;
-        }
-
-        // Called after a row is read; continue processing its cells
-        public bool ProcessRow(Row row)
-        {
-            return true;
-        }
-
-        // Prepare to process each cell; process all cells
-        public bool StartCell(int columnIndex)
-        {
-            return true;
-        }
-
-        // Convert string values to uppercase
-        public bool ProcessCell(Cell cell)
-        {
-            // Check if the cell contains a string value
-            if (cell.Type == CellValueType.IsString && !string.IsNullOrEmpty(cell.StringValue))
-            {
-                // Replace the value with its uppercase representation
-                cell.PutValue(cell.StringValue.ToUpper());
-            }
-
-            // Keep the cell in the workbook model
-            return true;
-        }
-    }
-
+    // The example demonstrates loading an Excel workbook with Aspose.Cells, using a custom LightCellsDataHandler to intercept each cell during the read process, converting any string value to uppercase (invariant culture), and then saving the modified workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the source workbook (replace with actual file path)
-            string sourcePath = "input.xlsx";
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-            // Path to the processed workbook
-            string outputPath = "output.xlsx";
+                // Verify that the input file exists to avoid FileNotFoundException.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-            // Create load options and assign the custom handler
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LightCellsDataHandler = new UpperCaseHandler();
+                // Load the source workbook.
+                Workbook sourceWorkbook = new Workbook(inputPath);
 
-            // Load the workbook using LightCells mode
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+                // Iterate through all worksheets and cells, converting string values to uppercase.
+                foreach (Worksheet sheet in sourceWorkbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+                    foreach (Cell cell in cells)
+                    {
+                        if (cell.Type == CellValueType.IsString && cell.Value != null)
+                        {
+                            // Convert the string to uppercase using invariant culture.
+                            string upper = cell.StringValue.ToUpperInvariant();
+                            cell.PutValue(upper);
+                        }
+                    }
+                }
 
-            // Save the processed workbook
-            workbook.Save(outputPath);
+                // Save the modified workbook.
+                sourceWorkbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

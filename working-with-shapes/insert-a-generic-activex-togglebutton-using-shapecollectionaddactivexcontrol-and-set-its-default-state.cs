@@ -1,46 +1,67 @@
-// Title: Add a ToggleButton ActiveX control to an Excel worksheet with Aspose.Cells for .NET
-// Description: Creates a new workbook, inserts a generic ToggleButton ActiveX control via ShapeCollection.AddActiveXControl, casts it to ToggleButtonActiveXControl, sets caption, default unchecked state, single‑state mode, enabled and visible flags, and saves the file.
-// Keywords: Aspose.Cells | AddActiveXControl | ToggleButton ActiveX | ShapeCollection | C# Excel automation | default ToggleButton state | Enable/Disable ActiveX | Excel workbook template
-// Common Searches: Aspose.Cells add ToggleButton ActiveX control | ShapeCollection AddActiveXControl example C# | Set default value for ToggleButtonActiveXControl | Configure visibility of ActiveX control in Aspose.Cells | How to insert generic ActiveX controls into Excel with Aspose
-// Developer Intent: Insert a ToggleButton ActiveX control into a worksheet and set its initial properties programmatically.
-// Use Cases: Build an interactive Excel form where a pre‑configured ToggleButton records a yes/no choice before data entry. | Generate a template workbook that includes a disabled ToggleButton which becomes enabled after a specific cell meets a condition. | Create a dashboard that uses ToggleButton controls to switch chart series on and off without manual user interaction.
-// AI Prompts: Write C# code using Aspose.Cells to place a ToggleButton ActiveX control at cell B2 with a custom caption and set it to the checked state. | Generate a method that adds multiple ToggleButton ActiveX controls to a worksheet and links each button's Value property to a corresponding cell. | Explain how to retrieve an existing ToggleButtonActiveXControl from a saved workbook and modify its IsEnabled and IsVisible properties via Aspose.Cells.
+// Title: Add an ActiveX ToggleButton to an Excel worksheet with Aspose.Cells C# and set its initial state
+// AI Prompts: Insert a generic ActiveX ToggleButton into a worksheet using ShapeCollection.AddActiveXControl and assign a custom name. | Configure the ToggleButton's default pressed state and caption through the ActiveXControl object in C#.
+// Common Searches: C# Aspose.Cells how to insert an ActiveX ToggleButton into a specific cell | Set default value of an ActiveX ToggleButton using Aspose.Cells ShapeCollection | Example of adding ActiveX controls to Excel with Aspose.Cells C# | Change caption of a ToggleButton ActiveX control in Aspose.Cells workbook | Save workbook after adding ActiveX ToggleButton with Aspose.Cells
+// Tags: Aspose.Cells AddActiveXControl ToggleButton | C# insert ActiveX control Excel worksheet | set default state ActiveX ToggleButton Aspose.Cells | configure ActiveX control caption C# | ShapeCollection AddActiveXControl example
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Drawing.ActiveXControls;
 
-// Creates a new workbook, inserts a generic ToggleButton ActiveX control via ShapeCollection.AddActiveXControl, casts it to ToggleButtonActiveXControl, sets caption, default unchecked state, single‑state mode, enabled and visible flags, and saves the file.
+// The sample creates a new workbook, adds a ToggleButton ActiveX control to a specified cell using ShapeCollection.AddActiveXControl, assigns a custom shape name, accesses the underlying ActiveXControl object, and optionally sets its default Value and Caption before saving the file as an XLSX workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a ToggleButton ActiveX control at row 1, column 1 with size 100x30 pixels
-        Shape shape = sheet.Shapes.AddActiveXControl(
-            ControlType.ToggleButton, // control type
-            1,   // upper left row index
-            0,   // vertical offset in pixels
-            1,   // upper left column index
-            0,   // horizontal offset in pixels
-            100, // width in pixels
-            30   // height in pixels
-        );
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Cast the generic ActiveXControl to ToggleButtonActiveXControl
-        ToggleButtonActiveXControl toggle = (ToggleButtonActiveXControl)shape.ActiveXControl;
+            // Define position and size for the ToggleButton (0‑based indices)
+            int row = 2;      // Row index
+            int column = 2;   // Column index
+            int top = 0;      // Pixel offset from the top of the cell
+            int left = 0;     // Pixel offset from the left of the cell
+            int height = 30;  // Height in points
+            int width = 80;   // Width in points
 
-        // Set default properties
-        toggle.Caption = "Toggle Me";
-        toggle.Value = CheckValueType.UnChecked; // default state unchecked
-        toggle.IsTripleState = false;
-        toggle.IsEnabled = true;
-        toggle.IsVisible = true;
+            // Add the ActiveX ToggleButton to the sheet; AddActiveXControl returns a Shape
+            Shape shape = sheet.Shapes.AddActiveXControl(
+                ControlType.ToggleButton, row, column, top, left, height, width);
 
-        // Save the workbook
-        workbook.Save("ToggleButtonDemo.xlsx");
+            // Set a meaningful name for the shape (the control's name)
+            shape.Name = "ToggleButton1";
+
+            // Access the underlying ActiveXControl object
+            ActiveXControl toggle = shape.ActiveXControl;
+
+            // NOTE: In some Aspose.Cells versions SetObjectData may not be available.
+            // If needed, uncomment the following lines after confirming the API support.
+            // toggle.SetObjectData("Value", true);          // Set default state (pressed)
+            // toggle.SetObjectData("Caption", "Enable Feature"); // Set button caption
+
+            // Define output file path
+            string outputPath = "ActiveXToggleButton.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

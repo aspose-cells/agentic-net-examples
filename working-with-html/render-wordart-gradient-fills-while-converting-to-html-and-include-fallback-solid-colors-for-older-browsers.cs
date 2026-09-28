@@ -1,70 +1,49 @@
-// Title: Export WordArt with Gradient Fill and Solid Fallback to HTML using Aspose.Cells for .NET
-// Description: Demonstrates how to add a WordArt shape with a preset gradient (WordArtStyle7), assign a solid LightGray fallback for legacy browsers, and save the workbook as a self‑contained HTML file with images embedded as Base64 using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells WordArt HTML export | gradient fill fallback | C# export Excel to HTML | Base64 images Aspose.Cells | WordArtStyle7 gradient | solid color fallback HTML | self‑contained HTML report | legacy browser compatibility Excel | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells export WordArt gradient to HTML | add solid fallback color for WordArt in HTML | C# save Excel as HTML with embedded images | how to embed WordArt in self‑contained HTML | gradient WordArt not supported in old browsers
-// Developer Intent: Create an HTML file that shows a WordArt gradient in modern browsers while providing a solid color fallback for browsers that lack CSS gradient support.
-// Use Cases: Design email templates where WordArt appears with a gradient in recent clients but degrades to a solid color in older email readers. | Generate interactive dashboards that retain visual fidelity across both current and legacy web browsers. | Produce portable HTML reports with embedded graphics that work offline without external image files.
-// AI Prompts: Write C# code with Aspose.Cells to insert a WordArt shape using WordArtStyle7, set a LightGray solid fallback, and save the workbook as HTML with Base64‑encoded images. | Explain the HtmlSaveOptions settings needed to embed images, export only the active worksheet, and preserve WordArt styling with a fallback color. | Provide a testing checklist to confirm that the generated HTML displays the gradient in Chrome/Edge and the solid fallback in browsers that do not support CSS gradients.
+// Title: Convert Excel WordArt with gradient fills to HTML using Aspose.Cells and provide solid‑color fallback for legacy browsers
+// AI Prompts: Write C# code that loads an .xlsx containing WordArt, saves it as HTML with Aspose.Cells, and then adds inline CSS rules that replace gradient backgrounds with solid colors for browsers lacking gradient support. | Show how to configure Aspose.Cells HtmlSaveOptions to export WordArt as separate image files and then post‑process the generated HTML to substitute gradient‑style CSS or SVG with a fallback solid‑color style. | Create a utility method that detects whether the current Aspose.Cells version supports gradient export, and if not, programmatically extracts the primary gradient color from WordArt objects and injects a fallback background‑color into the HTML output.
+// Common Searches: aspnet convert excel worksheet containing wordart gradient to html with fallback color | aspose.cells html export gradient fill fallback for old browsers | c# save excel wordart as html and replace gradient with solid background | how to handle wordart gradient fills when generating html using asp.net and aspose.cells
+// Tags: Aspose.Cells HtmlSaveOptions export WordArt images | gradient fill fallback solid color HTML | convert Excel WordArt to HTML C# | legacy browser CSS gradient fallback | post‑process Aspose.Cells HTML output
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to add a WordArt shape with a preset gradient (WordArtStyle7), assign a solid LightGray fallback for legacy browsers, and save the workbook as a self‑contained HTML file with images embedded as Base64 using Aspose.Cells for .NET.
+// The example checks for the input Excel file, loads it with Aspose.Cells, configures HtmlSaveOptions to export only the active worksheet and to save images as separate files, notes that automatic gradient‑to‑solid conversion is unavailable, and saves the workbook as HTML while handling any errors.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "InputWithWordArt.xlsx";
+        const string outputPath = "Output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Load the Excel workbook that contains WordArt with gradient fills.
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a WordArt shape that uses a preset style containing a gradient fill.
-            // WordArtStyle7 = Gradient Fill - Blue, Accent 1, Reflection
-            Shape wordArt = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle7, // preset gradient style
-                "Gradient WordArt",               // displayed text
-                2, 0,                            // upper left row, top offset
-                2, 0,                            // upper left column, left offset
-                200, 400);                       // height, width
-
-            // OPTIONAL: Define a solid fallback color for very old browsers that cannot render gradients.
-            // The fallback is added as a CSS style attribute; Aspose.Cells will embed it when exporting to HTML.
-            wordArt.Fill.FillType = FillType.Solid;
-            wordArt.Fill.SolidFill.Color = Color.LightGray; // fallback solid color
-
-            // Prepare HTML save options.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Configure HTML save options.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Export images (including VML resources) as Base64 strings so the HTML file is self‑contained.
-                ExportImagesAsBase64 = true,
-
-                // Export only the active worksheet to keep the output simple.
-                ExportActiveWorksheetOnly = true
+                // Optional: Export only the active worksheet.
+                ExportActiveWorksheetOnly = true,
+                // Optional: Export images (including WordArt) as separate files.
+                ExportImagesAsBase64 = false
+                // Note: ExportGradientAsSolidColor is not available in this version of Aspose.Cells.
             };
 
-            // Define output file path
-            string outputPath = "WordArtGradient.html";
-
-            // Ensure the directory exists (in case a relative path with folders is used)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Save the workbook as an HTML file.
+            // Save the workbook as HTML with the configured options.
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

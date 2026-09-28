@@ -1,62 +1,53 @@
-// Title: C# Sample: Enable 1904 Date System in Aspose.Cells Workbook and Verify Date‑Serial Conversions
-// Description: Demonstrates how to switch a workbook to the 1904 date system using Aspose.Cells for .NET, write DateTime values, format them, convert dates to Excel serial numbers (and back) with CellsHelper, output verification results, and save the file. Ideal for Mac‑compatible Excel files and date‑calculation testing.
-// Keywords: Aspose.Cells 1904 date system | C# Excel date serial number | CellsHelper GetDoubleFromDateTime | Excel 1904 epoch .NET | date to serial conversion Aspose | verify Excel date calculations | Mac Excel compatibility | Aspose.Cells workbook settings | date round‑trip test | C# Excel automation
-// Common Searches: how to set 1904 date system in Aspose.Cells | convert DateTime to Excel serial number C# Aspose | Aspose.Cells round‑trip date conversion example | 1904 epoch Excel date handling .NET | Aspose.Cells date format built‑in style | verify 1904 date system after saving workbook
-// Developer Intent: Show how to activate the 1904 date system in an Aspose.Cells workbook and confirm accurate date‑to‑serial and serial‑to‑date conversions.
-// Use Cases: Create workbooks compatible with older Mac Excel versions that require the 1904 epoch. | Store and retrieve dates as serial numbers while preserving correct values under the 1904 system. | Run a quick round‑trip test to ensure date calculations remain consistent before publishing a spreadsheet.
-// AI Prompts: Provide C# code to enable the 1904 date system in an Aspose.Cells workbook and apply a built‑in date format. | Show how to convert a .NET DateTime to an Excel serial number and back using CellsHelper with the 1904 flag. | Explain steps to verify that the 1904 date system is correctly applied after saving the workbook.
+// Title: Configure Aspose.Cells workbook to use the 1904 (Mac) date system and validate day differences with an Excel formula
+// AI Prompts: Enable the 1904 date system by setting workbook.Settings.Date1904 = true, write two DateTime values into cells A1 and A2, assign the formula =A2-A1 to cell A3, force formula calculation, and retrieve the Excel-computed day count. | After switching to the Mac style date system, compare the Excel formula result for the date difference with the .NET TotalDays calculation and output both values.
+// Common Searches: Aspose.Cells how to switch workbook to 1904 date system in C# | compare Excel date subtraction result with .NET TotalDays using Aspose.Cells | verify date calculations after enabling Mac style date system in Aspose.Cells | sample code for setting Settings.Date1904 and calculating days between dates | difference between dates in Excel formula vs .NET when using 1904 date system
+// Tags: set workbook Settings.Date1904 Aspose.Cells | calculate date difference with Excel formula C# | verify 1904 date system calculation .NET | write DateTime values to cells Aspose.Cells | force formula evaluation Aspose.Cells workbook
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to switch a workbook to the 1904 date system using Aspose.Cells for .NET, write DateTime values, format them, convert dates to Excel serial numbers (and back) with CellsHelper, output verification results, and save the file. Ideal for Mac‑compatible Excel files and date‑calculation testing.
-class DateSystem1904Demo
+// The example creates a new Workbook, activates the 1904 (Mac) date system via Settings.Date1904, writes two DateTime values to cells A1 and A2, places the formula =A2-A1 in A3, forces formula calculation, retrieves the Excel-computed day difference, compares it with the .NET TotalDays result, prints both values, and saves the file as DateSystem1904.xlsx.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
-        Workbook wb = new Workbook();
+        Workbook workbook = new Workbook();
 
-        // Enable the 1904 date system
-        wb.Settings.Date1904 = true;
+        // Set the workbook's date system to 1904 (Mac style)
+        workbook.Settings.Date1904 = true;
 
-        // Access the first worksheet and its cells
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Sample dates to test
-        DateTime baseDate = new DateTime(1904, 1, 1);          // Excel's 1904 epoch
-        DateTime sampleDate = new DateTime(2023, 12, 31);     // Arbitrary later date
+        // Sample dates for verification
+        DateTime date1 = new DateTime(2020, 1, 1);
+        DateTime date2 = new DateTime(2020, 12, 31);
 
-        // Put the DateTime values directly into cells
-        cells["A1"].PutValue(baseDate);
-        cells["A2"].PutValue(sampleDate);
+        // Write the sample dates into cells
+        sheet.Cells["A1"].PutValue(date1);
+        sheet.Cells["A2"].PutValue(date2);
 
-        // Apply a built‑in date format so the values display as dates
-        Style dateStyle = wb.CreateStyle();
-        dateStyle.Number = 14; // Built‑in date format (e.g., mm/dd/yyyy)
-        cells["A1"].SetStyle(dateStyle);
-        cells["A2"].SetStyle(dateStyle);
+        // Use an Excel formula to calculate the difference in days
+        sheet.Cells["A3"].Formula = "=A2-A1";
 
-        // Convert the same dates to Excel serial numbers using the 1904 system
-        double serialBase = CellsHelper.GetDoubleFromDateTime(baseDate, true);
-        double serialSample = CellsHelper.GetDoubleFromDateTime(sampleDate, true);
+        // Force calculation of formulas
+        workbook.CalculateFormula();
 
-        // Store the serial numbers in column B and format them as dates
-        cells["B1"].PutValue(serialBase);
-        cells["B2"].PutValue(serialSample);
-        cells["B1"].SetStyle(dateStyle);
-        cells["B2"].SetStyle(dateStyle);
+        // Retrieve the result calculated by Excel
+        double excelDifference = sheet.Cells["A3"].DoubleValue;
 
-        // Convert the serial numbers back to DateTime to verify correctness
-        DateTime backBase = CellsHelper.GetDateTimeFromDouble(serialBase, true);
-        DateTime backSample = CellsHelper.GetDateTimeFromDouble(serialSample, true);
+        // Verify the calculation using .NET
+        double dotNetDifference = (date2 - date1).TotalDays;
 
-        // Output verification results to the console
-        Console.WriteLine($"Original {baseDate:yyyy-MM-dd} -> Serial {serialBase} -> Back {backBase:yyyy-MM-dd}");
-        Console.WriteLine($"Original {sampleDate:yyyy-MM-dd} -> Serial {serialSample} -> Back {backSample:yyyy-MM-dd}");
+        // Output verification results
+        Console.WriteLine($"Date system set to 1904: {workbook.Settings.Date1904}");
+        Console.WriteLine($"Date1 (A1): {date1:d}");
+        Console.WriteLine($"Date2 (A2): {date2:d}");
+        Console.WriteLine($"Excel calculated difference (A3): {excelDifference} days");
+        Console.WriteLine($".NET calculated difference: {dotNetDifference} days");
 
-        // Save the workbook
-        wb.Save("DateSystem1904Demo.xlsx");
+        // Save the workbook (optional)
+        workbook.Save("DateSystem1904.xlsx");
     }
 }

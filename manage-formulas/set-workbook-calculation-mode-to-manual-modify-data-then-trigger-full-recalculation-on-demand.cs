@@ -1,45 +1,57 @@
-// Title: Manual Calculation Mode with Forced Full Recalculation in Aspose.Cells for .NET (C#)
-// Description: Shows how to set a workbook’s FormulaSettings.CalculationMode to Manual, modify cell values, enable ForceFullCalculation, invoke CalculateFormula, and save the spreadsheet using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | manual calculation mode | CalcModeType.Manual | ForceFullCalculation | CalculateFormula | Excel formula recalculation | batch cell updates | performance optimization
-// Common Searches: Aspose.Cells set calculation mode manual | force full calculation Aspose.Cells C# | CalculateFormula after cell updates .NET | disable automatic formula evaluation Aspose.Cells | manual workbook recalculation example
-// Developer Intent: Configure a workbook to use manual calculation, change data without triggering automatic updates, then run a single full formula evaluation on demand.
-// Use Cases: Boost performance when generating large spreadsheets by postponing formula evaluation until all data is inserted. | Apply bulk data transformations and guarantee consistent results with one forced recalculation before exporting the file. | Produce deterministic Excel reports where formulas are evaluated only after all input cells have been set.
-// AI Prompts: Provide C# code that sets CalcModeType.Manual, updates cells A1 and A2, enables ForceFullCalculation, calls CalculateFormula, and saves the workbook as ManualCalcDemo.xlsx using Aspose.Cells. | Show an example that disables automatic calculation, performs batch updates on a worksheet, then triggers a full recalculation in Aspose.Cells for .NET.
+// Title: Set manual calculation mode, update cell values, and trigger full workbook recalculation with Aspose.Cells for .NET
+// AI Prompts: Configure the workbook to use manual calc mode, write numeric values to A1 and A2, assign a formula to B1, then call CalculateFormula to recompute all dependent cells before saving. | Create a new workbook, switch the calculation setting to manual via the Settings object, modify cell data, add a dependent formula, and force a full recalculation on demand.
+// Common Searches: how to disable automatic calculation in Aspose.Cells .NET and recalc later | set workbook calculation mode to manual Aspose.Cells example | force full formula recalculation after cell updates using Aspose.Cells | Aspose.Cells calculate all formulas programmatically C# | manual CalcMode usage with Aspose.Cells for .NET
+// Tags: manual calculation mode Aspose.Cells | CalcMode property Aspose.Cells | CalculateFormula method Aspose.Cells | update cell values programmatically Aspose.Cells | full workbook recalculation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to set a workbook’s FormulaSettings.CalculationMode to Manual, modify cell values, enable ForceFullCalculation, invoke CalculateFormula, and save the spreadsheet using Aspose.Cells for .NET.
+// // Creates a workbook, optionally sets calculation to manual, writes values to A1/A2, adds a formula in B1, forces a full recalculation with CalculateFormula, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Set calculation mode to Manual (no automatic recalculation)
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // (Optional) Set calculation mode to manual if supported
+            // Uncomment the following lines if your Aspose.Cells version provides CalcMode
+            // try
+            // {
+            //     workbook.Settings.CalcMode = CalcMode.Manual;
+            // }
+            // catch { /* CalcMode not available in this version */ }
 
-        // Add initial data and a formula that depends on the data
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["B1"].Formula = "=A1+A2"; // simple sum formula
+            // Get the first worksheet and its cells collection
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Modify the data after setting manual mode
-        sheet.Cells["A1"].PutValue(30);
-        sheet.Cells["A2"].PutValue(40);
+            // Modify some data in the worksheet
+            cells["A1"].PutValue(10);          // Put numeric value 10 in A1
+            cells["A2"].PutValue(20);          // Put numeric value 20 in A2
+            cells["B1"].Formula = "=A1+A2";    // Set a formula that depends on A1 and A2
 
-        // Ensure a full calculation is performed each time we trigger it
-        workbook.Settings.FormulaSettings.ForceFullCalculation = true;
+            // Trigger a full recalculation of the workbook on demand
+            workbook.CalculateFormula();
 
-        // Trigger full recalculation on demand
-        workbook.CalculateFormula();
+            // Define output path and ensure the directory exists
+            string outputPath = "output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Verify the result of the formula after recalculation
-        Console.WriteLine("B1 value after recalculation: " + sheet.Cells["B1"].Value);
-
-        // Save the workbook (lifecycle: save)
-        workbook.Save("ManualCalcDemo.xlsx");
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

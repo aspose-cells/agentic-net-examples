@@ -1,47 +1,138 @@
-// Title: C# – Convert HTML (including nested tables) to Excel with Aspose.Cells – Separate worksheets per table
-// Description: Loads an HTML file that may contain nested <table> elements using Aspose.Cells HtmlLoadOptions, imports each table as an individual worksheet, renames the sheets to reflect their hierarchy (Table_Level_1, Table_Level_2, …), and saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells HTML to Excel C# | nested HTML tables conversion | HtmlLoadOptions separate worksheets | TableLoadOptions mapping | rename worksheets by level | convert input.html to output.xlsx
-// Common Searches: Aspose.Cells load each HTML table into its own worksheet | C# convert nested HTML tables to separate Excel sheets | how to rename Excel worksheets based on HTML table hierarchy | map HTML table index to worksheet index Aspose.Cells
-// Developer Intent: Generate an Excel workbook where every HTML table, including nested ones, is placed on a distinct worksheet named according to its hierarchy level.
-// Use Cases: Transform a complex HTML report with multiple nested tables into an Excel file where each table resides on a separate sheet for easier data analysis. | Export HTML email templates to Excel while preserving the original table structure across individual worksheets. | Create an automated data‑extraction pipeline that reads web pages and outputs level‑based worksheets for downstream processing.
-// AI Prompts: Write C# code with Aspose.Cells that converts an HTML document containing nested tables into an XLSX workbook, placing each table on a separate worksheet named Table_Level_1, Table_Level_2, etc. | Explain how HtmlLoadOptions.TableLoadOptions can map specific HTML table indexes to particular worksheet positions when loading HTML into a Workbook.
+// Title: Convert an HTML file with nested tables into separate worksheets in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an HTML file, locates every <table> element regardless of nesting, and creates a dedicated worksheet for each table with Aspose.Cells. | Write a C# routine that names each worksheet using its nesting depth and a sequential counter while importing the table data into the sheet. | Provide C# logic to ignore tables that contain no rows and output the processing hierarchy of tables to the console.
+// Common Searches: asp.net convert html file with nested tables to excel workbook using aspose.cells | c# parse html tables recursively and write each to its own worksheet | how to export each html table level to a separate worksheet in .net | aspose.cells generate multiple worksheets from html based on table hierarchy | c# read html and create excel sheets for every table element
+// Tags: Aspose.Cells HTML to Excel worksheet conversion | nested HTML table extraction with XDocument | recursive table processing for Excel export | C# create worksheet per HTML table level | Aspose.Cells import two‑dimensional array from HTML
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Loads an HTML file that may contain nested <table> elements using Aspose.Cells HtmlLoadOptions, imports each table as an individual worksheet, renames the sheets to reflect their hierarchy (Table_Level_1, Table_Level_2, …), and saves the workbook as an XLSX file.
-class HtmlToExcelConverter
+namespace HtmlToExcelNestedTables
 {
-    static void Main()
+    // The example reads an HTML file, wraps it in a root element, and parses it with XDocument. It identifies top‑level tables and recursively processes each table and any nested tables. For every table a uniquely named worksheet is added to an Aspose.Cells workbook, the cell text is extracted, and the data is imported via a two‑dimensional array. After all tables are handled, the workbook is saved as output.xlsx.
+    class Program
     {
-        // Input HTML file that may contain nested tables
-        string htmlPath = "input.html";
-
-        // Desired output Excel file
-        string excelPath = "output.xlsx";
-
-        // Load options for HTML – each <table> element will be imported as a separate worksheet.
-        HtmlLoadOptions loadOptions = new HtmlLoadOptions();
-
-        // (Optional) Explicitly map table indexes to worksheet indexes.
-        // For example, map the first three tables to worksheets 0, 1, and 2.
-        // loadOptions.TableLoadOptions.Add(0, 0);
-        // loadOptions.TableLoadOptions.Add(1, 1);
-        // loadOptions.TableLoadOptions.Add(2, 2);
-
-        // Load the HTML document into a Workbook using the load options.
-        Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-        // Rename worksheets to indicate their hierarchical level (Level 1, Level 2, ...).
-        // This helps identify which worksheet originated from which table.
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        static void Main(string[] args)
         {
-            Worksheet ws = workbook.Worksheets[i];
-            ws.Name = $"Table_Level_{i + 1}";
+            try
+            {
+                // Path to the source HTML file
+                string htmlPath = "input.html";
+
+                // Verify that the input file exists
+                if (!File.Exists(htmlPath))
+                {
+                    Console.WriteLine($"Error: File '{htmlPath}' not found.");
+                    return;
+                }
+
+                // Load the HTML content
+                string htmlContent = File.ReadAllText(htmlPath);
+
+                // Wrap the HTML with a root element to make it well‑formed XML
+                string wrappedHtml = $"<root>{htmlContent}</root>";
+                XDocument xDoc = XDocument.Parse(wrappedHtml);
+
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Counter for unique worksheet names
+                int sheetCounter = 1;
+
+                // Process top‑level tables (those directly under the body)
+                var topTables = xDoc.Descendants("body")
+                                    .Descendants("table")
+                                    .Where(t => t.Ancestors("table").Count() == 0); // only top‑level
+
+                foreach (var tableElem in topTables)
+                {
+                    ProcessTable(tableElem, workbook, "Table", 1, ref sheetCounter);
+                }
+
+                // Save the workbook
+                workbook.Save("output.xlsx");
+                Console.WriteLine("Workbook saved as 'output.xlsx'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
 
-        // Save the workbook as an Excel file.
-        workbook.Save(excelPath, SaveFormat.Xlsx);
+        /// <param name="tableElem">The XML element representing the HTML table.</param>
+        /// <param name="workbook">The Aspose.Cells workbook.</param>
+        /// <param name="baseName">Base name for worksheets.</param>
+        /// <param name="level">Current nesting level (1 = top level).</param>
+        /// <param name="sheetCounter">Reference counter to ensure unique sheet names.</param>
+        private static void ProcessTable(XElement tableElem, Workbook workbook, string baseName, int level, ref int sheetCounter)
+        {
+            try
+            {
+                // Create a new worksheet for this table
+                string sheetName = $"{baseName}_L{level}_{sheetCounter}";
+                Worksheet sheet = workbook.Worksheets.Add(sheetName);
+                sheetCounter++;
+
+                // Extract rows (tr) from the table, handling optional tbody/thead/tfoot wrappers
+                var rowElements = tableElem.Elements()
+                                           .Where(e => e.Name == "tr" ||
+                                                       e.Name == "tbody" ||
+                                                       e.Name == "thead" ||
+                                                       e.Name == "tfoot")
+                                           .SelectMany(e => e.Name == "tr" ? new[] { e } : e.Elements("tr"))
+                                           .ToList();
+
+                // Collect cell values
+                List<List<string>> rowsData = new List<List<string>>();
+                foreach (var row in rowElements)
+                {
+                    List<string> cellValues = new List<string>();
+                    var cells = row.Elements().Where(c => c.Name == "th" || c.Name == "td");
+                    foreach (var cell in cells)
+                    {
+                        string cellText = (cell.Value ?? string.Empty).Trim()
+                                             .Replace("\r", " ")
+                                             .Replace("\n", " ");
+                        cellValues.Add(cellText);
+                    }
+                    rowsData.Add(cellValues);
+                }
+
+                // Determine the maximum column count
+                int maxCols = rowsData.Any() ? rowsData.Max(r => r.Count) : 0;
+
+                // Build a rectangular array for import
+                object[,] dataArray = new object[rowsData.Count, maxCols];
+                for (int i = 0; i < rowsData.Count; i++)
+                {
+                    for (int j = 0; j < rowsData[i].Count; j++)
+                    {
+                        dataArray[i, j] = rowsData[i][j];
+                    }
+                }
+
+                // Import the data into the worksheet starting at cell A1
+                if (rowsData.Count > 0 && maxCols > 0)
+                {
+                    sheet.Cells.ImportTwoDimensionArray(dataArray, 0, 0);
+                }
+
+                // Find nested tables within the current table (excluding the current table itself)
+                var nestedTables = tableElem.Descendants("table")
+                                            .Where(t => t != tableElem);
+                foreach (var nestedTable in nestedTables)
+                {
+                    // Recursively process the nested table at the next level
+                    ProcessTable(nestedTable, workbook, baseName, level + 1, ref sheetCounter);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing table at level {level}: {ex.Message}");
+            }
+        }
     }
 }

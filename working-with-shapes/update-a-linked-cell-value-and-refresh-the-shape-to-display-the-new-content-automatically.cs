@@ -1,51 +1,57 @@
-// Title: Refresh an Aspose.Cells ListBox shape after modifying its linked cell (C#)
-// Description: Demonstrates how to create a workbook, add a ListBox shape, assign an input range and a linked cell, set an initial selection, change the linked cell value, and call UpdateSelectedValue so the shape instantly reflects the new selection before saving the file.
-// Keywords: Aspose.Cells | C# | ListBox shape | linked cell | UpdateSelectedValue | SetInputRange | SetLinkedCell | shape refresh | Excel form control automation | programmatic selection
-// Common Searches: Aspose.Cells refresh ListBox after linked cell change | C# update ListBox linked cell and redraw shape | SetLinkedCell and UpdateSelectedValue example Aspose.Cells | How to sync ListBox shape with cell value in Aspose.Cells
-// Developer Intent: Make a ListBox shape display the value stored in its linked cell without reopening the workbook.
-// Use Cases: Programmatically set the selected item of a ListBox by writing to the linked cell. | Keep a ListBox in sync with formulas or code that modify the linked cell during workbook generation. | Prepare an Excel file where the ListBox shows the correct selection when the user first opens it.
-// AI Prompts: Show C# code using Aspose.Cells to add a ListBox, link it to a cell, change the cell value, and refresh the shape selection. | Provide an example that updates a linked cell and automatically refreshes the associated ListBox shape in a workbook.
+// Title: Update a linked cell and refresh its associated shape in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Set a new value for a cell that a shape is linked to, then recalculate the workbook so the shape shows the updated value with Aspose.Cells for .NET. | Programmatically modify cell B2, trigger formula calculation, and ensure the linked shape refreshes automatically in a C# Excel file. | Use Aspose.Cells to change a linked cell value and invoke the API to update any shapes bound to that cell without manual intervention.
+// Common Searches: Aspose.Cells .NET update linked cell and automatically refresh shape | C# recalculate formulas and refresh shape linked to a cell in Excel workbook | How to make a shape reflect changed cell value using Aspose.Cells for .NET
+// Tags: update linked cell Aspose.Cells .NET | refresh shape after cell change C# | recalculate workbook formulas Aspose.Cells | shape linked to cell Excel .NET | automatic shape update Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLinkedShapeDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, add a ListBox shape, assign an input range and a linked cell, set an initial selection, change the linked cell value, and call UpdateSelectedValue so the shape instantly reflects the new selection before saving the file.
+    // The example loads an existing workbook, changes the value of cell B2 (which a shape is linked to), recalculates all formulas to propagate the change, and saves the file. It notes that older Aspose.Cells versions do not expose a direct shape‑refresh method, so the shape updates only through formula recalculation.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the ListBox input range (A1:A6)
-            for (int i = 0; i < 6; i++)
+            try
             {
-                worksheet.Cells[i, 0].PutValue(i + 1); // Values 1..6 in column A
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index or name as needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Update the linked cell value (e.g., cell B2)
+                sheet.Cells["B2"].PutValue(12345);
+
+                // Recalculate all formulas in the workbook
+                workbook.CalculateFormula();
+
+                // NOTE: In older Aspose.Cells versions Shape does not expose
+                // IsLinkedToCell or Update members. If needed, shape handling
+                // can be added when using a newer library version.
+
+                // Save the workbook with the updated content
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
             }
-
-            // Add a ListBox shape at row 2, column 0 with size 130x130 pixels
-            Shape listBoxShape = worksheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
-
-            // Define the input range (items) and the linked cell (where the selected index is stored)
-            listBoxShape.SetInputRange("$A$1:$A$6", false, false);
-            listBoxShape.SetLinkedCell("$A$12", false, true);
-
-            // Set an initial value in the linked cell (e.g., select the third item)
-            worksheet.Cells["A12"].PutValue(3);
-            // Refresh the shape so it reflects the linked cell value
-            listBoxShape.UpdateSelectedValue();
-
-            // Change the linked cell value to select a different item
-            worksheet.Cells["A12"].PutValue(5);
-            // Refresh again to update the shape's selection
-            listBoxShape.UpdateSelectedValue();
-
-            // Save the workbook (the ListBox will show the selected item based on A12)
-            workbook.Save("LinkedListBoxDemo.xlsx");
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

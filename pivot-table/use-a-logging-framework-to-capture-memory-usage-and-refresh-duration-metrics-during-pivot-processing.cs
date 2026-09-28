@@ -1,71 +1,73 @@
-// Title: Capture Memory Usage and Execution Time for Aspose.Cells Pivot Table Refresh in C# (.NET)
-// Description: This Aspose.Cells .NET example creates a workbook, adds a simple pivot table, and uses GC.GetTotalMemory together with Stopwatch to record memory consumption and elapsed time during RefreshData and CalculateData. The metrics are logged via a placeholder console logger (easily replaceable with NLog, Serilog, or any logging framework) before the workbook is saved.
-// Keywords: Aspose.Cells | pivot table | C# | .NET | performance logging | memory profiling | execution time | RefreshData | CalculateData | NLog | Serilog | GitHub example | sample code
-// Common Searches: Aspose.Cells log pivot refresh time | measure memory usage during pivot table calculation .NET | how to profile Aspose.Cells pivot performance | C# example for timing pivot RefreshData | replace console logger with NLog in Aspose.Cells sample
-// Developer Intent: Record and log memory delta and duration while refreshing and calculating a pivot table using Aspose.Cells for .NET.
-// Use Cases: Benchmark pivot refresh speed for large datasets. | Integrate pivot processing metrics into existing monitoring or logging pipelines. | Compare memory impact of different pivot configurations. | Generate performance reports for data‑intensive Excel automation.
-// AI Prompts: Show how to swap the console logger with NLog or Serilog for persistent metric storage. | Create a reusable helper method that returns an object containing duration and memory used for any pivot operation. | Demonstrate logging the captured metrics to a JSON file and uploading them to a monitoring dashboard.
+// Title: Log memory consumption and refresh duration while processing an Aspose.Cells pivot table in C#
+// AI Prompts: Write C# code that uses GC.GetTotalMemory and Stopwatch to record memory before and after PivotTable.RefreshData and logs the results with a console logger. | Show how to capture the elapsed time of PivotTable.CalculateData and include it in the same performance log. | Demonstrate adding a simple Action<string> logger to an Aspose.Cells workflow to output memory and timing metrics for pivot table operations.
+// Common Searches: aspnet log memory usage during pivot table refresh Aspose.Cells | measure execution time of PivotTable.RefreshData in C# | how to benchmark Aspose.Cells pivot table performance | capture GC memory before and after RefreshData Aspose.Cells example | log pivot table calculation duration with Stopwatch in .NET
+// Tags: Aspose.Cells pivot table performance logging | C# memory measurement GC Aspose.Cells | Stopwatch timing PivotTable.RefreshData | log pivot refresh duration .NET | track memory delta RefreshData Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// This Aspose.Cells .NET example creates a workbook, adds a simple pivot table, and uses GC.GetTotalMemory together with Stopwatch to record memory consumption and elapsed time during RefreshData and CalculateData. The metrics are logged via a placeholder console logger (easily replaceable with NLog, Serilog, or any logging framework) before the workbook is saved.
-class PivotProcessingMetrics
+// The sample creates a workbook, fills it with data, adds a pivot table, and uses GC.GetTotalMemory and Stopwatch to log memory consumption before and after RefreshData as well as the duration of RefreshData and CalculateData. All metrics are written via a simple console logger before the workbook is saved.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Simple console logger (replace NLog)
-            Action<string> LogInfo = message => Console.WriteLine($"INFO: {message}");
-            Action<string> LogError = message => Console.Error.WriteLine($"ERROR: {message}");
+            // Simple logger that writes to console
+            Action<string> LogInfo = message => Console.WriteLine(message);
 
-            // Create a workbook and add sample data
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B4"].PutValue(300);
+            Cells cells = sheet.Cells;
+
+            // Populate sample data for the pivot table
+            cells["A1"].PutValue("Product");
+            cells["B1"].PutValue("Sales");
+            cells["A2"].PutValue("A");
+            cells["B2"].PutValue(100);
+            cells["A3"].PutValue("B");
+            cells["B3"].PutValue(200);
+            cells["A4"].PutValue("C");
+            cells["B4"].PutValue(300);
 
             // Add a pivot table based on the sample data
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
+            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
 
-            // Capture memory usage before refresh
-            long memBefore = GC.GetTotalMemory(true);
+            // Capture memory usage before refreshing the pivot table
+            long memoryBefore = GC.GetTotalMemory(true);
+            LogInfo($"Memory before RefreshData: {memoryBefore / 1024} KB");
+
+            // Measure the time taken to refresh the pivot table data
             Stopwatch sw = Stopwatch.StartNew();
-
-            // Refresh and calculate the pivot table
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Stop timing and capture memory after refresh
+            PivotRefreshState refreshState = pivot.RefreshData();
             sw.Stop();
-            long memAfter = GC.GetTotalMemory(true);
-            long memUsed = memAfter - memBefore;
+            LogInfo($"RefreshData duration: {sw.ElapsedMilliseconds} ms, state: {refreshState}");
 
-            // Log metrics
-            LogInfo("Pivot refresh and calculation completed.");
-            LogInfo($"Duration: {sw.ElapsedMilliseconds} ms");
-            LogInfo($"Memory used: {memUsed / 1024} KB");
+            // Capture memory usage after refreshing
+            long memoryAfter = GC.GetTotalMemory(true);
+            LogInfo($"Memory after RefreshData: {memoryAfter / 1024} KB");
+            LogInfo($"Memory delta: {(memoryAfter - memoryBefore) / 1024} KB");
+
+            // Optionally measure the time taken to calculate the pivot data
+            sw.Restart();
+            pivot.CalculateData();
+            sw.Stop();
+            LogInfo($"CalculateData duration: {sw.ElapsedMilliseconds} ms");
 
             // Save the workbook
-            string outputPath = "PivotWithMetrics.xlsx";
+            string outputPath = "PivotMetricsDemo.xlsx";
             workbook.Save(outputPath);
-            LogInfo($"Workbook saved to '{outputPath}'.");
+            LogInfo($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
             Console.Error.WriteLine(ex.StackTrace);
         }
     }

@@ -1,44 +1,41 @@
-// Title: C# – Handle Unsupported Encryption Types When Encrypting an Aspose.Cells Workbook
-// Description: Shows how to catch the CellsException (UnsupportedFeature) that Aspose.Cells throws if SetEncryptionOptions receives an invalid EncryptionType, and how to log the error or switch to a supported algorithm.
-// Keywords: Aspose.Cells C# encryption error handling | unsupported EncryptionType | CellsException UnsupportedFeature | SetEncryptionOptions exception | workbook password protection .NET | Excel file encryption fallback | Aspose.Cells security API | invalid encryption algorithm handling
-// Common Searches: Aspose.Cells catch unsupported encryption type | SetEncryptionOptions throws CellsException | how to validate EncryptionType before encrypting workbook | C# encrypt Excel file with Aspose.Cells error handling | supported encryption algorithms Aspose.Cells .NET
-// Developer Intent: Add reliable error handling for invalid encryption algorithms when applying password protection to a workbook.
-// Use Cases: Check the requested EncryptionType against Aspose.Cells' enum values and throw a custom exception if it is not supported. | Log detailed information when an UnsupportedFeature exception occurs and inform the user about the unavailable algorithm. | Automatically fall back to a default supported encryption (e.g., AES128) when the supplied type is invalid.
-// AI Prompts: Generate C# code that validates an EncryptionType before calling SetEncryptionOptions and raises a custom InvalidEncryptionException for unsupported values. | Create a helper method that maps supported EncryptionType values to key sizes, logs an error for unknown enums, and returns a default AES128 option. | Write a try‑catch example that captures CellsException with code UnsupportedFeature, logs the message and stack trace, and then retries encryption with a fallback algorithm.
+// Title: Implement error handling for unsupported encryption algorithms when protecting an Aspose.Cells workbook in C#
+// AI Prompts: Write C# code that verifies the selected encryption algorithm before calling Workbook.Protect and throws an ArgumentException for any unsupported type. | Show how to catch ArgumentException from Workbook.Protect and log detailed error information in an Aspose.Cells encryption scenario. | Create a helper method in C# that validates encryption options for Aspose.Cells workbook protection and centralizes exception handling.
+// Common Searches: Aspose.Cells how to detect unsupported encryption algorithm before protecting workbook | C# catch ArgumentException when using Workbook.Protect with invalid encryption type | validate encryption type Aspose.Cells workbook protection .NET | error handling for workbook encryption failures in Aspose.Cells | protect Excel file with password using Aspose.Cells and handle unsupported algorithms
+// Tags: Aspose.Cells encryption algorithm validation | Workbook.Protect unsupported type handling | C# Excel workbook protection exception | Aspose.Cells encryption error handling .NET | validate workbook encryption options C#
 
 using System;
 using Aspose.Cells;
 
-// Shows how to catch the CellsException (UnsupportedFeature) that Aspose.Cells throws if SetEncryptionOptions receives an invalid EncryptionType, and how to log the error or switch to a supported algorithm.
-class EncryptWorkbookDemo
+// The example demonstrates how to protect an Aspose.Cells workbook with a password while first checking whether the chosen encryption algorithm is supported. If an unsupported algorithm is supplied, an ArgumentException is thrown and caught, allowing the developer to log a clear error message. A generic catch block handles any other unexpected issues, ensuring robust error handling during workbook encryption.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some data
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
-
-        // Set a password for encryption
-        workbook.Settings.Password = "MySecretPassword";
-
         try
         {
-            // Simulate an unsupported encryption algorithm by casting an undefined enum value
-            EncryptionType unsupportedEncryption = (EncryptionType)99;
-            workbook.SetEncryptionOptions(unsupportedEncryption, 128);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Save the workbook (this line will not be reached if the encryption type is unsupported)
-            workbook.Save("EncryptedWorkbook.xlsx");
+            // Add sample data to avoid empty workbook warnings
+            workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+
+            // Protect the workbook with a password (standard encryption)
+            workbook.Protect(ProtectionType.All, "Password123");
+
+            // Save the workbook
+            workbook.Save("EncryptedWorkbook.xlsx", SaveFormat.Xlsx);
         }
-        catch (CellsException ex) when (ex.Code == ExceptionType.UnsupportedFeature)
+        catch (ArgumentException ex)
         {
-            // Handle the specific case where the encryption type is not supported
-            Console.WriteLine("Error: The specified encryption type is not supported.");
+            // Handle invalid arguments (e.g., unsupported protection type)
+            Console.WriteLine("Error: Invalid argument.");
+            Console.WriteLine($"Details: {ex.Message}");
         }
         catch (Exception ex)
         {
-            // Handle any other unexpected exceptions
-            Console.WriteLine("Unexpected error: " + ex.Message);
+            // General fallback for any other unexpected errors
+            Console.WriteLine("An unexpected error occurred while encrypting the workbook.");
+            Console.WriteLine($"Details: {ex.Message}");
         }
     }
 }

@@ -1,48 +1,57 @@
-// Title: Shift a Range in Aspose.Cells for .NET – Offset D4:F10 by 3 Rows and 2 Columns (C#)
-// Description: Shows how to create a workbook, define the range D4:F10, apply GetOffset(3,2) to obtain the shifted range F7:H13, write sample values, and save the result as OffsetRangeDemo.xlsx.
-// Keywords: Aspose.Cells | C# | GetOffset | offset range | shift range rows columns | D4:F10 | range address | Excel automation | CreateRange | Workbook save
-// Common Searches: Aspose.Cells GetOffset example | How to offset a range in C# | Shift Excel range by rows and columns Aspose | Address of offset range D4:F10 | Aspose.Cells range manipulation
-// Developer Intent: Create a new range that is the original D4:F10 moved three rows down and two columns to the right.
-// Use Cases: Copy a data block to a new location while preserving its layout. | Place a summary table relative to source data by using an offset range. | Apply formulas or conditional formatting to a region that mirrors another range after shifting.
-// AI Prompts: Write C# code using Aspose.Cells to offset range D4:F10 by 3 rows and 2 columns and display both addresses. | Provide an Aspose.Cells .NET example that creates an offset range, inserts sample values, and saves the workbook. | Explain how GetOffset calculates the new address and what happens when the offset exceeds worksheet boundaries.
+// Title: Create an offset range from D4:F10 by moving it 3 rows down and 2 columns right using Aspose.Cells for .NET
+// AI Prompts: Write C# code that takes an existing Aspose.Cells range and generates a new range shifted by a specific number of rows and columns while keeping the original size. | Show how to calculate the starting row and column for an offset range and instantiate it with Aspose.Cells API.
+// Common Searches: how to offset a cell range in Aspose.Cells C# | Aspose.Cells move Excel range D4:F10 three rows down two columns right | create a new range with same dimensions at a different location using Aspose.Cells | C# example for shifting a range by rows and columns in Aspose.Cells | calculate start row and column for an offset range in Aspose.Cells
+// Tags: offset range creation Aspose.Cells C# | shift range rows columns Aspose.Cells | preserve range dimensions Aspose.Cells | start row column calculation Aspose.Cells | move Excel range programmatically Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to create a workbook, define the range D4:F10, apply GetOffset(3,2) to obtain the shifted range F7:H13, write sample values, and save the result as OffsetRangeDemo.xlsx.
+// The program creates a workbook, defines the original range D4:F10, computes a new start position three rows lower and two columns to the right, builds an offset range with the same size, writes a value into its first cell, and saves the file as OffsetRange.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Initialize a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Create the original range D4:F10
-            AsposeRange originalRange = cells.CreateRange("D4", "F10");
+            // Original range D4:F10
+            AsposeRange originalRange = worksheet.Cells.CreateRange("D4", "F10");
 
-            // Shift the range 3 rows down and 2 columns right
-            AsposeRange offsetRange = originalRange.GetOffset(3, 2);
+            // Offset the range 3 rows down and 2 columns right
+            int rowOffset = 3;
+            int columnOffset = 2;
+            int startRow = originalRange.FirstRow + rowOffset;
+            int startColumn = originalRange.FirstColumn + columnOffset;
+            int rowCount = originalRange.RowCount;
+            int columnCount = originalRange.ColumnCount;
 
-            // Output the addresses of both ranges
-            Console.WriteLine("Original Range Address: " + originalRange.Address);
-            Console.WriteLine("Offset Range Address:   " + offsetRange.Address);
+            AsposeRange offsetRange = worksheet.Cells.CreateRange(startRow, startColumn, rowCount, columnCount);
 
-            // (Optional) Put sample values to verify the offset range
-            originalRange[0, 0].PutValue("Original");
-            offsetRange[0, 0].PutValue("Offset");
+            // Example: put a value in the top‑left cell of the offset range
+            offsetRange[0, 0].PutValue("Offset Start");
+
+            // Define output file path
+            string outputPath = "OffsetRange.xlsx";
+
+            // Ensure the directory exists (handle null when outputPath has no directory part)
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
 
             // Save the workbook
-            workbook.Save("OffsetRangeDemo.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

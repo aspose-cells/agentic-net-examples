@@ -1,50 +1,54 @@
-// Title: Get the Address of a Dynamic Named Range (SalesData) with Aspose.Cells for .NET
-// Description: Creates a workbook, defines a dynamic named range "SalesData" using an OFFSET‑COUNTA formula, forces recalculation, retrieves the resolved range with GetRange(true), and logs its address to the console. The file can then be saved if needed.
-// Keywords: Aspose.Cells dynamic named range address | C# GetRange true Aspose.Cells | OFFSET COUNTA named range .NET | retrieve named range address Aspose | log Excel range address C#
-// Common Searches: how to get address of a dynamic named range in Aspose.Cells | Aspose.Cells GetRange true example | C# retrieve OFFSET defined name address | Aspose.Cells dynamic range formula calculation | log named range address in .NET
-// Developer Intent: Obtain and display the cell address of the dynamic named range "SalesData".
-// Use Cases: Verify that a dynamic range captures the correct rows before exporting data. | Debug Excel report generation by logging the resolved range address. | Use the address to apply formatting, borders, or additional calculations programmatically.
-// AI Prompts: Write C# code with Aspose.Cells that creates a dynamic named range using OFFSET and then prints its address. | Explain how GetRange(true) resolves a named range defined by OFFSET‑COUNTA and how to handle an empty source column. | Show how to log a named range address and subsequently apply a border style to that range using Aspose.Cells.
+// Title: How to retrieve and log the address of a dynamic named range "SalesData" with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that opens an Excel workbook, fetches the dynamic named range "SalesData", obtains its address, and prints it to the console. | Show C# error‑handling patterns for when the file "input.xlsx" or the named range "SalesData" cannot be found while using Aspose.Cells. | Adapt the sample to write the resolved range address to a log file instead of the console, employing standard .NET logging facilities.
+// Common Searches: Aspose.Cells C# get address of a dynamic named range from workbook | C# example for reading named range SalesData address using Aspose.Cells | How to handle missing named range when using Aspose.Cells in .NET | Log Excel named range address to a file with Aspose.Cells C#
+// Tags: Aspose.Cells retrieve named range location | C# resolve named range to Range object | Excel workbook named range extraction .NET | Aspose.Cells missing named range handling | log range location using .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Creates a workbook, defines a dynamic named range "SalesData" using an OFFSET‑COUNTA formula, forces recalculation, retrieves the resolved range with GetRange(true), and logs its address to the console. The file can then be saved if needed.
+// // Loads 'input.xlsx', accesses the workbook's Names collection to locate the dynamic named range 'SalesData', resolves it to a Range object, reads its address (e.g., "A2:C15"), and outputs the address to the console while gracefully handling missing files or missing named ranges.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Populate some sample data in column A (this will be the source for the dynamic range)
-            for (int i = 0; i < 10; i++)
+            // Retrieve the dynamic named range "SalesData"
+            // Named ranges are stored in the Names collection of the worksheet collection
+            Name salesDataName = workbook.Worksheets.Names["SalesData"];
+            if (salesDataName == null)
             {
-                sheet.Cells[i, 0].PutValue($"Item{i + 1}");
+                Console.WriteLine("Named range 'SalesData' not found.");
+                return;
             }
 
-            // Define a dynamic named range "SalesData" using OFFSET and COUNTA
-            int nameIndex = workbook.Worksheets.Names.Add("SalesData");
-            Name salesName = workbook.Worksheets.Names[nameIndex];
-            salesName.RefersTo = $"=OFFSET({sheet.Name}!$A$1,0,0,COUNTA({sheet.Name}!$A:$A),1)";
+            // Resolve the named range to an actual Range object based on current data
+            AsposeRange salesDataRange = salesDataName.GetRange();
 
-            // Recalculate formulas so the dynamic range resolves
-            workbook.CalculateFormula();
+            // Get the address of the resolved range (e.g., "A2:C15")
+            string address = salesDataRange.Address;
 
-            // Retrieve the range that the name refers to and output its address
-            Aspose.Cells.Range salesRange = salesName.GetRange(true);
-            Console.WriteLine($"SalesData address: {salesRange.Address}");
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("DynamicNamedRange.xlsx");
+            // Log the result
+            Console.WriteLine($"SalesData address: {address}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

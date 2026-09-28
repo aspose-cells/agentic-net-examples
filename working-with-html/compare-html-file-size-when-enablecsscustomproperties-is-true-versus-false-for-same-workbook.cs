@@ -1,89 +1,65 @@
-// Title: Aspose.Cells .NET: Compare HTML size with EnableCssCustomProperties true vs false
-// Description: Creates a workbook with styled text and optional images, saves it twice as HTML—once with HtmlSaveOptions.EnableCssCustomProperties enabled and once disabled—then reports the byte size of each file and the difference.
-// Keywords: Aspose.Cells HTML size | EnableCssCustomProperties | HtmlSaveOptions performance | C# HTML export size comparison | Aspose.Cells CSS custom properties impact
-// Common Searches: Aspose.Cells EnableCssCustomProperties file size | HTML export size difference Aspose.Cells .NET | Does CSS custom properties increase HTML output size | Measure Aspose.Cells HTML size with and without custom properties
-// Developer Intent: Find out how toggling EnableCssCustomProperties influences the generated HTML file size.
-// Use Cases: Assess storage or bandwidth savings by disabling CSS custom properties for web‑served spreadsheets. | Choose optimal HtmlSaveOptions for performance‑critical applications that embed images and styled cells. | Create automated reports that log HTML export sizes for different configuration settings.
-// AI Prompts: Generate a C# program that saves a workbook to HTML with EnableCssCustomProperties set to true and false, then prints both file sizes. | Explain why enabling CSS custom properties can enlarge the HTML output in Aspose.Cells and suggest techniques to minimize the size. | Write a PowerShell script that executes the compiled C# app, captures the size metrics, and appends them to a CSV log.
+// Title: Compare Aspose.Cells HTML export size with EnableCssCustomProperties true vs false in C#
+// AI Prompts: Generate a C# console program that creates a workbook, fills it with sample data, saves it to HTML twice—once with HtmlSaveOptions.EnableCssCustomProperties = true and once with it set to false—and prints the byte size of each file. | Write a .NET script that measures the impact of the EnableCssCustomProperties flag on the generated HTML by outputting a size comparison and a brief interpretation of the result.
+// Common Searches: Aspose.Cells HTML export size difference when EnableCssCustomProperties is enabled | C# how to measure HTML file size with and without CSS custom properties using Aspose.Cells | Does setting EnableCssCustomProperties to true increase the size of generated HTML in Aspose.Cells? | Compare HTML output sizes for Aspose.Cells SaveOptions with CSS custom properties toggled | Performance impact of HtmlSaveOptions.EnableCssCustomProperties on HTML file size
+// Tags: Aspose.Cells HtmlSaveOptions EnableCssCustomProperties comparison | C# measure HTML output size Aspose.Cells | HTML export size impact CSS custom properties Aspose.Cells | Aspose.Cells workbook to HTML file size analysis | EnableCssCustomProperties file size effect .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // Required for Picture class
 
-namespace AsposeCellsHtmlSizeComparison
+// The example creates a workbook with sample data, saves it to two HTML files—one with EnableCssCustomProperties set to true and another with it set to false—retrieves each file's byte length, and prints a comparison indicating whether the CSS custom properties setting increases, decreases, or leaves unchanged the HTML file size.
+class HtmlCssCustomPropertiesComparison
 {
-    // Creates a workbook with styled text and optional images, saves it twice as HTML—once with HtmlSaveOptions.EnableCssCustomProperties enabled and once disabled—then reports the byte size of each file and the difference.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and add some sample data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Populate the worksheet with sample data
+        for (int row = 0; row < 100; row++)
         {
-            try
+            for (int col = 0; col < 10; col++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add some sample data with formatting
-                var cellA1 = sheet.Cells["A1"];
-                cellA1.PutValue("Sample Text");
-                var style = cellA1.GetStyle();
-                style.Font.IsBold = true;
-                style.Font.Color = System.Drawing.Color.Red;
-                cellA1.SetStyle(style);
-
-                // Path to the image file
-                string imagePath = "logo.png";
-
-                // Add image if it exists; otherwise skip image insertion
-                if (File.Exists(imagePath))
-                {
-                    // Add the image the first time
-                    int imgIndex1 = sheet.Pictures.Add(1, 1, imagePath);
-                    Picture pic1 = sheet.Pictures[imgIndex1];
-                    pic1.Width = 100;
-                    pic1.Height = 100;
-
-                    // Add the same image again in another cell
-                    int imgIndex2 = sheet.Pictures.Add(5, 3, imagePath);
-                    Picture pic2 = sheet.Pictures[imgIndex2];
-                    pic2.Width = 100;
-                    pic2.Height = 100;
-                }
-                else
-                {
-                    Console.WriteLine($"Image file \"{imagePath}\" not found. Skipping image insertion.");
-                }
-
-                // Prepare HTML save options for the first file (EnableCssCustomProperties = true)
-                HtmlSaveOptions optionsWithCssCustom = new HtmlSaveOptions
-                {
-                    EnableCssCustomProperties = true
-                };
-                string fileWithCssCustom = "Html_WithCssCustomProperties.html";
-                workbook.Save(fileWithCssCustom, optionsWithCssCustom);
-
-                // Prepare HTML save options for the second file (EnableCssCustomProperties = false)
-                HtmlSaveOptions optionsWithoutCssCustom = new HtmlSaveOptions
-                {
-                    EnableCssCustomProperties = false
-                };
-                string fileWithoutCssCustom = "Html_WithoutCssCustomProperties.html";
-                workbook.Save(fileWithoutCssCustom, optionsWithoutCssCustom);
-
-                // Get file sizes
-                long sizeWith = new FileInfo(fileWithCssCustom).Length;
-                long sizeWithout = new FileInfo(fileWithoutCssCustom).Length;
-
-                // Output the comparison results
-                Console.WriteLine($"File size with EnableCssCustomProperties=true : {sizeWith} bytes");
-                Console.WriteLine($"File size with EnableCssCustomProperties=false: {sizeWithout} bytes");
-                Console.WriteLine($"Size difference: {Math.Abs(sizeWith - sizeWithout)} bytes");
+                cells[row, col].PutValue($"R{row + 1}C{col + 1}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+
+        // Define output file names
+        string htmlWithCustomProps = "Workbook_WithCustomProperties.html";
+        string htmlWithoutCustomProps = "Workbook_WithoutCustomProperties.html";
+
+        // Save HTML with EnableCssCustomProperties = true
+        HtmlSaveOptions optionsWith = new HtmlSaveOptions();
+        optionsWith.EnableCssCustomProperties = true;
+        workbook.Save(htmlWithCustomProps, optionsWith);
+
+        // Save HTML with EnableCssCustomProperties = false
+        HtmlSaveOptions optionsWithout = new HtmlSaveOptions();
+        optionsWithout.EnableCssCustomProperties = false;
+        workbook.Save(htmlWithoutCustomProps, optionsWithout);
+
+        // Get file sizes
+        long sizeWith = new FileInfo(htmlWithCustomProps).Length;
+        long sizeWithout = new FileInfo(htmlWithoutCustomProps).Length;
+
+        // Output the comparison results
+        Console.WriteLine($"HTML size with EnableCssCustomProperties = true : {sizeWith} bytes");
+        Console.WriteLine($"HTML size with EnableCssCustomProperties = false: {sizeWithout} bytes");
+
+        // Simple comparison
+        if (sizeWith > sizeWithout)
+        {
+            Console.WriteLine("Enabling CSS custom properties increases the HTML file size.");
+        }
+        else if (sizeWith < sizeWithout)
+        {
+            Console.WriteLine("Enabling CSS custom properties decreases the HTML file size.");
+        }
+        else
+        {
+            Console.WriteLine("Both settings produce HTML files of the same size.");
         }
     }
 }

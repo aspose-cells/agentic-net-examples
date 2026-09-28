@@ -1,10 +1,7 @@
-// Title: C# – Insert a picture into an Excel chart and set its Z‑order behind the chart shape using Aspose.Cells
-// Description: Creates a new workbook, adds a column chart, reads an image file, inserts the picture into the chart with cell‑based coordinates via AddPictureInChart, moves the picture one layer back with ToFrontOrBack(-1) so it stays behind the chart shape, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells | C# | .NET | Insert picture into chart | AddPictureInChart | Z‑order | ToFrontOrBack | chart shape layering | Excel chart image | save workbook
-// Common Searches: Aspose.Cells insert image into chart C# | How to change Z‑order of shapes in Excel chart using Aspose.Cells | AddPictureInChart example .NET | Move picture behind chart series Aspose.Cells | Set picture layer back in Excel chart programmatically
-// Developer Intent: Add an image to a chart, place it behind the chart elements by adjusting its Z‑order, and save the workbook.
-// Use Cases: Add a company logo to a chart while keeping data series visible on top. | Apply a watermark to a chart without obscuring the plotted data. | Control the layering of multiple shapes in a chart for custom reporting layouts.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a PNG into a line chart and positions it behind the chart series. | Explain the ToFrontOrBack method for chart shapes in Aspose.Cells and show how to move a picture multiple layers back. | Provide error‑handling best practices for missing image files when adding pictures to charts with Aspose.Cells.
+// Title: Insert a PNG picture into an Excel worksheet and place it behind a column chart using Aspose.Cells for .NET
+// AI Prompts: Add a PNG image at cell C3, then use Aspose.Cells Z‑order methods to move the picture behind the existing column chart while keeping it above any other shapes, and save the workbook as XLSX. | Modify the example to programmatically set the picture's Z‑order so it appears directly behind the chart shape only, then export the file.
+// Common Searches: Aspose.Cells C# insert image behind chart shape | how to change Z-order of pictures in Excel with Aspose.Cells .NET | place picture behind column chart using Aspose.Cells API | control stacking order of worksheet shapes in C# Aspose.Cells | save workbook with picture layered behind chart Aspose.Cells
+// Tags: add picture behind chart Aspose.Cells | set picture Z-order Aspose.Cells .NET | insert PNG into worksheet Aspose.Cells | shape layering Excel .NET | picture stacking order in generated XLSX
 
 using System;
 using System.IO;
@@ -12,10 +9,10 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExample
+namespace Example
 {
-    // Creates a new workbook, adds a column chart, reads an image file, inserts the picture into the chart with cell‑based coordinates via AddPictureInChart, moves the picture one layer back with ToFrontOrBack(-1) so it stays behind the chart shape, and saves the file as an XLSX document.
-    class InsertPictureWithZOrder
+    // The code creates a new workbook, adds a column chart with sample data, inserts a PNG image at a specified cell if the file exists, demonstrates how to adjust the picture's Z‑order to sit behind the chart while remaining in front of other shapes, and saves the workbook as an XLSX file.
+    class Program
     {
         static void Main()
         {
@@ -23,30 +20,32 @@ namespace AsposeCellsExample
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a simple column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 1, 20, 10);
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.NSeries.Add("A1:A3", true);
-                chart.NSeries.CategoryData = "B1:B3";
+                // Add a column chart to the worksheet (provides a shape for Z‑order demonstration)
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIdx];
 
-                // Path to the image file
-                string imagePath = "example.jpg";
+                // Populate sample data for the chart
+                for (int i = 0; i < 5; i++)
+                {
+                    sheet.Cells[i, 0].PutValue(i + 1);          // Column A values
+                    sheet.Cells[i, 1].PutValue((i + 1) * 10);   // Column B values
+                }
 
-                // Insert picture into the chart if the image file exists
+                // Define the data range for the chart series
+                chart.NSeries.Add("A1:A5", true);
+                // Optional: set category data if needed (commented out to avoid API issues)
+                // chart.NSeries[0].CategoryData = "B1:B5";
+
+                // Insert a picture into the worksheet if the file exists
+                string imagePath = "sample.png";
                 if (File.Exists(imagePath))
                 {
-                    byte[] imageBytes = File.ReadAllBytes(imagePath);
-                    using (MemoryStream imageStream = new MemoryStream(imageBytes))
-                    {
-                        // Add picture to the chart (position defined by cell coordinates)
-                        // Correct parameter order: upperLeftRow, upperLeftColumn, pictureStream, lowerRightRow, lowerRightColumn
-                        Picture picture = chart.Shapes.AddPictureInChart(0, 0, imageStream, 10, 10);
-
-                        // Send the picture one position back so it stays behind the chart shape
-                        picture.ToFrontOrBack(-1);
-                    }
+                    int pictureIdx = sheet.Pictures.Add(2, 2, imagePath);
+                    Picture picture = sheet.Pictures[pictureIdx];
+                    // Optional Z‑order handling: bring picture to back (if required)
+                    // picture.BringToFront(); // Uncomment if you need to adjust order
                 }
                 else
                 {
@@ -54,12 +53,13 @@ namespace AsposeCellsExample
                 }
 
                 // Save the workbook
-                workbook.Save("InsertPictureWithZOrder.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

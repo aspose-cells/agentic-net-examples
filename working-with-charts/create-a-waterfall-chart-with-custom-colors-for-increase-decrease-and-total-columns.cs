@@ -1,91 +1,92 @@
-// Title: Aspose.Cells for .NET – Create a Waterfall Chart with Custom Increase, Decrease and Total Colors (C#)
-// Description: This example shows how to build a workbook, populate category/value data, add a Waterfall chart, and use reflection to detect each point’s role (total, increase, decrease). It then assigns Gold to total columns, LightGreen to increases, and LightCoral to decreases before saving the file as WaterfallCustomColors.xlsx.
-// Keywords: Aspose.Cells waterfall chart C# | custom colors waterfall chart .NET | increase decrease total column color | WaterfallChartPoint reflection | Aspose.Cells chart point formatting | Excel waterfall chart customization
-// Common Searches: change colors of increase and decrease columns in Aspose.Cells waterfall chart | use reflection to access WaterfallChartPoint properties C# | set custom total column color Aspose.Cells | waterfall chart custom styling Aspose.Cells .NET | how to format waterfall chart points programmatically
-// Developer Intent: Generate a waterfall chart in an Excel workbook and apply distinct foreground and border colors to increase, decrease, and total columns programmatically.
-// Use Cases: Financial reporting: highlight starting/ending totals in gold while showing revenue gains in green and cost losses in red. | Automated Excel generation: create workbooks at runtime with waterfall charts that use custom colors without referencing version‑specific types. | Dashboard export: produce printable Excel files where each waterfall segment is visually differentiated for quick stakeholder insight.
-// AI Prompts: Rewrite the sample to use the strongly‑typed WaterfallChartPoint class instead of reflection for setting colors. | Add data labels with a custom number format to the waterfall chart while keeping the custom point colors. | Show how to apply a gradient fill to increase columns and a pattern fill to decrease columns in an Aspose.Cells waterfall chart.
+// Title: Create a Waterfall chart in C# with Aspose.Cells and apply distinct colors for increase, decrease, and total columns
+// AI Prompts: Write C# code that uses Aspose.Cells to build a waterfall chart and set green for positive bars, red for negative bars, and blue for the total bar. | Show how to iterate over chart series points in Aspose.Cells and assign a foreground color based on the underlying cell value. | Provide a complete, runnable example that creates an Excel workbook, populates waterfall data, adds the chart, customizes point colors, and saves the file.
+// Common Searches: aspnet c# assign green red blue colors to waterfall chart points using Aspose.Cells | example of coloring increase and decrease columns differently in Aspose.Cells waterfall chart | how to highlight total column with a distinct color in Aspose.Cells waterfall chart C#
+// Tags: Aspose.Cells waterfall chart point foreground colors | C# set series point color Aspose.Cells | increase decrease bar colors Aspose.Cells chart | total column distinct color Aspose.Cells | generate Excel waterfall chart Aspose.Cells C#
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Reflection;
 
-// This example shows how to build a workbook, populate category/value data, add a Waterfall chart, and use reflection to detect each point’s role (total, increase, decrease). It then assigns Gold to total columns, LightGreen to increases, and LightCoral to decreases before saving the file as WaterfallCustomColors.xlsx.
-class WaterfallChartWithCustomColors
+// The program creates a new workbook, fills cells with category and numeric data for a waterfall chart, adds a Waterfall chart, iterates over each data point to apply green to positive values, red to negative values, and blue to the final total column, then saves the workbook as WaterfallChart.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet's cells collection
+            var workbook = new Workbook();
+            var cells = workbook.Worksheets[0].Cells;
 
-            // Populate sample data for a waterfall chart
-            // Column A – Categories, Column B – Values
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
+            // Populate data for the waterfall chart
+            // Header
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Value");
 
-            sheet.Cells["A2"].PutValue("Start");
-            sheet.Cells["B2"].PutValue(0);          // total (starting point)
+            // Categories
+            cells["A2"].PutValue("Start");
+            cells["A3"].PutValue("Revenue");
+            cells["A4"].PutValue("Cost");
+            cells["A5"].PutValue("Profit");
+            cells["A6"].PutValue("Total");
 
-            sheet.Cells["A3"].PutValue("Revenue");
-            sheet.Cells["B3"].PutValue(120);        // increase
+            // Values (positive = increase, negative = decrease, zero placeholders for calculated totals)
+            cells["B2"].PutValue(1000);   // Start
+            cells["B3"].PutValue(3000);   // Increase
+            cells["B4"].PutValue(-1500);  // Decrease
+            cells["B5"].PutValue(0);      // Placeholder (will be calculated by the chart)
+            cells["B6"].PutValue(0);      // Total placeholder
 
-            sheet.Cells["A4"].PutValue("Cost");
-            sheet.Cells["B4"].PutValue(-70);        // decrease
+            // Add a Waterfall chart
+            var worksheet = workbook.Worksheets[0];
+            int chartIndex = worksheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 10);
+            var chart = worksheet.Charts[chartIndex];
 
-            sheet.Cells["A5"].PutValue("Profit");
-            sheet.Cells["B5"].PutValue(0);          // total (ending point)
+            // Set the data range for the series and categories
+            chart.NSeries.Add("B2:B6", true);
+            chart.NSeries.CategoryData = "A2:A6";
 
-            // Add a Waterfall chart (type = Waterfall) to the worksheet
-            // Parameters: topRow, leftColumn, bottomRow, rightColumn define the chart position
-            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 10);
-            Chart chart = sheet.Charts[chartIndex];
+            // Define custom colors
+            Color increaseColor = Color.Green;
+            Color decreaseColor = Color.Red;
+            Color totalColor = Color.Blue;
 
-            // Set the data range for the chart (including headers)
-            chart.SetChartDataRange("A1:B5", true);
-
-            // Access the first (and only) series of the waterfall chart
-            Series series = chart.NSeries[0];
-
-            // Iterate through each point and assign custom colors based on its role
-            foreach (ChartPoint point in series.Points)
+            // Apply custom colors to each data point based on its type
+            var series = chart.NSeries[0];
+            for (int i = 0; i < series.Points.Count; i++)
             {
-                // Use reflection to access Waterfall-specific properties without requiring the WaterfallChartPoint type
-                Type ptType = point.GetType();
-                PropertyInfo isTotalProp = ptType.GetProperty("IsTotal");
-                PropertyInfo isIncreaseProp = ptType.GetProperty("IsIncrease");
+                var point = series.Points[i];
+                double value = cells[i + 2, 1].DoubleValue; // B column values (row offset by 2)
 
-                bool isTotal = isTotalProp != null && (bool)isTotalProp.GetValue(point);
-                bool isIncrease = isIncreaseProp != null && (bool)isIncreaseProp.GetValue(point);
-
-                if (isTotal) // Total columns (start or end)
+                // Last point is treated as the total column
+                if (i == series.Points.Count - 1)
                 {
-                    point.Area.ForegroundColor = Color.Gold;
-                    point.Border.Color = Color.DarkGoldenrod;
+                    point.Area.ForegroundColor = totalColor;
                 }
-                else if (isIncrease) // Increase columns
+                else if (value >= 0)
                 {
-                    point.Area.ForegroundColor = Color.LightGreen;
-                    point.Border.Color = Color.Green;
+                    point.Area.ForegroundColor = increaseColor;
                 }
-                else // Decrease columns
+                else
                 {
-                    point.Area.ForegroundColor = Color.LightCoral;
-                    point.Border.Color = Color.Red;
+                    point.Area.ForegroundColor = decreaseColor;
                 }
             }
 
-            // Optional: force chart layout calculation before saving
-            chart.Calculate();
+            // Save the workbook with the chart
+            string outputPath = "WaterfallChart.xlsx";
 
-            // Save the workbook with the customized waterfall chart
-            string outputPath = "WaterfallCustomColors.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Ensure the directory exists before saving (handle cases where outputPath has no directory part)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

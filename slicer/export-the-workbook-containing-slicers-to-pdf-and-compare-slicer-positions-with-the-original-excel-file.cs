@@ -1,143 +1,107 @@
-// Title: Export Excel Workbook with Slicers to PDF and Verify Slicer Geometry using Aspose.Cells for .NET
-// Description: Creates a workbook with sample data, adds a table and a slicer, records the slicer's Top/Left/Width/Height, saves the file as XLSX, exports it to PDF, reloads the XLSX, extracts the slicer geometry again, and compares the two sets of coordinates to ensure they match.
-// Keywords: Aspose.Cells | C# | .NET | slicer export to PDF | slicer geometry | compare slicer positions | Excel to PDF conversion | preserve slicer layout | PdfSaveOptions | ListObject slicer
-// Common Searches: export workbook with slicers to pdf using aspose.cells | get slicer coordinates after saving excel file c# | compare slicer position before and after workbook save | asp.net aspose.cells slicer PDF rendering | verify slicer shape dimensions in exported pdf
-// Developer Intent: Generate a PDF from an Excel workbook that contains slicers and confirm that the slicer shapes retain their original dimensions after the workbook is saved and reloaded.
-// Use Cases: Produce PDF reports that keep the exact visual placement of slicers. | Automate regression tests to ensure slicer geometry is unchanged across Excel saves. | Validate that PDF rendering of slicers matches the source Excel layout.
-// AI Prompts: Write C# code with Aspose.Cells to export a workbook containing slicers to PDF and then compare slicer geometry before and after saving the XLSX. | Provide a method that returns a list of slicer positions (Top, Left, Width, Height) from a worksheet's SlicerCollection. | Explain how the ExportDocumentStructure option affects PDF output of slicers in Aspose.Cells.
+// Title: Export an Excel workbook with slicers to PDF and verify slicer positions stay the same using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing .xlsx file containing slicers, saves it as a PDF with Aspose.Cells while keeping the slicer layout intact, and then outputs whether each slicer's UpperLeftRow and UpperLeftColumn match the original values. | Write a C# example that creates a sample workbook with a pivot table and a slicer, exports the workbook to PDF using PdfSaveOptions, and compares the slicer's shape coordinates before and after the export.
+// Common Searches: how to keep slicer positions when converting Excel to PDF with Aspose.Cells C# | Aspose.Cells C# export workbook containing slicers to PDF and check layout | verify slicer coordinates after PDF save using Aspose.Cells .NET | sample code for exporting Excel file with pivot slicer to PDF in C# | compare slicer UpperLeftRow UpperLeftColumn before and after PDF conversion Aspose.Cells
+// Tags: Aspose.Cells export workbook to PDF preserving slicer layout | slicer position validation after PDF conversion | C# pivot table slicer PDF generation | PdfSaveOptions enable document structure Aspose.Cells | compare slicer shape coordinates C#
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Tables; // Needed for ListObject
 
-namespace SlicerPdfExportAndCompare
+// The program loads (or creates) an Excel workbook that includes a pivot table and a slicer, records each slicer's UpperLeftRow and UpperLeftColumn, saves the workbook to PDF with document structure enabled, reloads the original workbook, and reports whether the slicer positions remain unchanged after the PDF export.
+class ExportWorkbookWithSlicersToPdf
 {
-    // Creates a workbook with sample data, adds a table and a slicer, records the slicer's Top/Left/Width/Height, saves the file as XLSX, exports it to PDF, reloads the XLSX, extracts the slicer geometry again, and compares the two sets of coordinates to ensure they match.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputFile = "InputWithSlicers.xlsx";
+            const string outputPdf = "WorkbookWithSlicers.pdf";
+
+            // Ensure the input workbook exists; create a minimal one if it does not.
+            if (!File.Exists(inputFile))
             {
-                // ---------- Create workbook with data, table and slicer ----------
-                Workbook workbook = new Workbook(); // create new workbook
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Sample data
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("Fruit");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Vegetable");
-                sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["A4"].PutValue("Fruit");
-                sheet.Cells["B4"].PutValue(150);
-                sheet.Cells["A5"].PutValue("Vegetable");
-                sheet.Cells["B5"].PutValue(60);
-
-                // Add a table covering the data range
-                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                // Use DisplayName instead of Name (compatible with all versions)
-                table.DisplayName = "DataTable";
-
-                // Add a slicer for the first column of the table
-                int slicerIndex = sheet.Slicers.Add(table, table.ListColumns[0], "C2");
-                Slicer slicer = sheet.Slicers[slicerIndex];
-
-                // Capture slicer position before saving
-                var originalPositions = GetSlicerPositions(sheet.Slicers);
-
-                // ---------- Save original workbook as XLSX ----------
-                string xlsxPath = "OriginalWithSlicer.xlsx";
-                workbook.Save(xlsxPath); // save workbook
-
-                // ---------- Export workbook to PDF ----------
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                try
                 {
-                    ExportDocumentStructure = true
-                    // Slicer shapes are rendered by default
-                };
-                string pdfPath = "WorkbookWithSlicer.pdf";
-                workbook.Save(pdfPath, pdfOptions); // save as PDF
+                    var wb = new Workbook();
+                    var ws = wb.Worksheets[0];
+                    ws.Name = "Data";
 
-                // ---------- Load the saved XLSX to verify slicer positions ----------
-                if (File.Exists(xlsxPath))
-                {
-                    try
-                    {
-                        Workbook loadedWorkbook = new Workbook(xlsxPath); // load workbook
-                        Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-                        var loadedPositions = GetSlicerPositions(loadedSheet.Slicers);
+                    // Add sample data.
+                    ws.Cells["A1"].PutValue("Category");
+                    ws.Cells["B1"].PutValue("Value");
+                    ws.Cells["A2"].PutValue("A");
+                    ws.Cells["B2"].PutValue(10);
+                    ws.Cells["A3"].PutValue("B");
+                    ws.Cells["B3"].PutValue(20);
+                    ws.Cells["A4"].PutValue("C");
+                    ws.Cells["B4"].PutValue(30);
 
-                        // ---------- Compare positions ----------
-                        Console.WriteLine("Comparing slicer positions before and after save:");
-                        for (int i = 0; i < originalPositions.Count; i++)
-                        {
-                            var orig = originalPositions[i];
-                            var load = loadedPositions[i];
-                            Console.WriteLine($"Slicer {i + 1}:");
-                            Console.WriteLine($"  Original - Top:{orig.Top}, Left:{orig.Left}, Width:{orig.Width}, Height:{orig.Height}");
-                            Console.WriteLine($"  Loaded   - Top:{load.Top}, Left:{load.Left}, Width:{load.Width}, Height:{load.Height}");
+                    // Create a pivot table based on the data range.
+                    var pivotTable = ws.PivotTables[ws.PivotTables.Add("PivotTable1", "E1", "A1:B4", true)];
 
-                            bool same = Math.Abs(orig.Top - load.Top) < 0.01 &&
-                                        Math.Abs(orig.Left - load.Left) < 0.01 &&
-                                        Math.Abs(orig.Width - load.Width) < 0.01 &&
-                                        Math.Abs(orig.Height - load.Height) < 0.01;
+                    // Add a slicer for the first field (Category) of the pivot table.
+                    // Note: Add(PivotTable pivotTable, int fieldIndex, int upperLeftRow, int upperLeftColumn)
+                    var slicerIndex = ws.Slicers.Add(pivotTable, 0, 5, 0);
+                    var slicer = ws.Slicers[slicerIndex];
+                    slicer.Name = "CategorySlicer";
 
-                            Console.WriteLine($"  Positions match: {same}");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error loading workbook: {ex.Message}");
-                    }
+                    wb.Save(inputFile);
+                    Console.WriteLine($"Input file '{inputFile}' was not found and has been created with sample data.");
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Error: File '{xlsxPath}' was not found.");
+                    Console.WriteLine($"Failed to create sample workbook: {ex.Message}");
+                    return;
                 }
-
-                // Optional cleanup (uncomment if desired)
-                // File.Delete(xlsxPath);
-                // File.Delete(pdfPath);
             }
-            catch (Exception ex)
+
+            // Load the existing workbook that contains slicers.
+            var workbook = new Workbook(inputFile);
+            var worksheet = workbook.Worksheets[0];
+
+            // Store original slicer positions.
+            var originalPositions = new Dictionary<string, (int Row, int Column)>();
+            foreach (Slicer slicer in worksheet.Slicers)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                var shape = slicer.Shape;
+                originalPositions[slicer.Name] = (shape.UpperLeftRow, shape.UpperLeftColumn);
+            }
+
+            // Prepare PDF save options – enable document structure export.
+            var pdfOptions = new PdfSaveOptions
+            {
+                ExportDocumentStructure = true
+            };
+
+            // Save the workbook (including slicers) to a PDF file.
+            workbook.Save(outputPdf, pdfOptions);
+            Console.WriteLine($"Workbook saved to PDF as '{outputPdf}'.");
+
+            // Reload the original workbook to verify that slicer positions are unchanged.
+            var reloadedWorkbook = new Workbook(inputFile);
+            var reloadedWorksheet = reloadedWorkbook.Worksheets[0];
+
+            foreach (Slicer slicer in reloadedWorksheet.Slicers)
+            {
+                var shape = slicer.Shape;
+                var key = slicer.Name;
+
+                if (originalPositions.TryGetValue(key, out var original))
+                {
+                    bool positionUnchanged = original.Row == shape.UpperLeftRow &&
+                                             original.Column == shape.UpperLeftColumn;
+
+                    Console.WriteLine($"Slicer '{key}' position unchanged after PDF export: {positionUnchanged}");
+                }
             }
         }
-
-        // Helper method to extract slicer shape geometry
-        private static List<SlicerGeometry> GetSlicerPositions(SlicerCollection slicers)
+        catch (Exception ex)
         {
-            var list = new List<SlicerGeometry>();
-            foreach (Slicer s in slicers)
-            {
-                var shape = s.Shape;
-                var geom = new SlicerGeometry
-                {
-                    Top = shape.Top,
-                    Left = shape.Left,
-                    Width = shape.Width,
-                    Height = shape.Height
-                };
-                list.Add(geom);
-            }
-            return list;
-        }
-
-        // Simple DTO for slicer geometry
-        private class SlicerGeometry
-        {
-            public double Top { get; set; }
-            public double Left { get; set; }
-            public double Width { get; set; }
-            public double Height { get; set; }
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

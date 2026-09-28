@@ -1,63 +1,48 @@
-// Title: C# Example: Add Standard Deviation Y‑Error Bars to a Line Chart with Aspose.Cells
-// Description: Learn how to create a workbook, populate categories and values, insert a line chart, and configure Y‑error bars to show standard deviation (both plus and minus) with custom color and weight using Aspose.Cells for .NET. The sample saves the result as LineChartWithStdDevErrorBar.xlsx.
-// Keywords: Aspose.Cells C# error bars | standard deviation error bar line chart | YErrorBar StDev Aspose.Cells | customize chart error bars .NET | Aspose.Cells line chart example | Excel chart error bars C# | GitHub Aspose.Cells samples
-// Common Searches: Aspose.Cells add Y error bar standard deviation | C# line chart error bars Aspose | How to set error bar type StDev in Aspose.Cells | Customize error bar color and weight Aspose.Cells | Example of error bars in Aspose.Cells chart
-// Developer Intent: The developer needs a ready‑to‑run C# snippet that adds a line chart to an Excel workbook and displays standard‑deviation Y‑error bars (both positive and negative) with optional styling using Aspose.Cells.
-// Use Cases: Show quarterly sales trends with variability by adding StDev error bars to each point. | Visualize scientific measurement uncertainty on a line plot, highlighting confidence intervals. | Create a financial performance dashboard where error‑bar styling matches corporate branding.
-// AI Prompts: Generate C# code that creates a line chart with standard deviation Y‑error bars and custom styling using Aspose.Cells. | Explain how to compute custom error‑bar values and apply them to an Aspose.Cells chart series in .NET. | Provide step‑by‑step instructions to modify an existing Aspose.Cells chart to display both plus and minus error bars and change their color to red.
+// Title: Create a line chart with standard deviation Y‑error bars using Aspose.Cells for .NET
+// AI Prompts: Generate a line chart from worksheet data and attach Y‑error bars that use the series' standard deviation as the error amount with Aspose.Cells. | Set the series YErrorBar.Type to StDev and configure the DisplayType to show both positive and negative error bars. | Save the workbook as an .xlsx file after adding the error bars.
+// Common Searches: how to show error bars based on standard deviation in an Aspose.Cells line chart C# | setting YErrorBar type to StDev for a series using Aspose.Cells .NET | displaying both positive and negative error bars in a chart created with Aspose.Cells | adding error bars to a line chart and saving as XLSX with Aspose.Cells
+// Tags: Aspose.Cells line chart YErrorBar StDev | C# Aspose.Cells chart series error bars | add error bars to line chart .NET | save workbook with chart error bars | configure error bar display both directions
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsErrorBarExample
+// Demonstrates creating a workbook, populating X/Y data, adding a line chart, applying standard deviation Y‑error bars (both directions) to the series, and saving the file as LineChartWithStdDevErrorBar.xlsx.
+class LineChartWithStdDevErrorBar
 {
-    // Learn how to create a workbook, populate categories and values, insert a line chart, and configure Y‑error bars to show standard deviation (both plus and minus) with custom color and weight using Aspose.Cells for .NET. The sample saves the result as LineChartWithStdDevErrorBar.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook (lifecycle: create)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the line chart
-            // Column A: X values (categories)
-            // Column B: Y values (data series)
-            cells["A1"].PutValue("Category");
-            cells["A2"].PutValue("Q1");
-            cells["A3"].PutValue("Q2");
-            cells["A4"].PutValue("Q3");
-            cells["A5"].PutValue("Q4");
+        // Populate sample data for X (categories) and Y (values)
+        sheet.Cells["A1"].PutValue("X");
+        sheet.Cells["A2"].PutValue(1);
+        sheet.Cells["A3"].PutValue(2);
+        sheet.Cells["A4"].PutValue(3);
+        sheet.Cells["A5"].PutValue(4);
 
-            cells["B1"].PutValue("Series 1");
-            cells["B2"].PutValue(10);
-            cells["B3"].PutValue(15);
-            cells["B4"].PutValue(20);
-            cells["B5"].PutValue(25);
+        sheet.Cells["B1"].PutValue("Y");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
+        sheet.Cells["B5"].PutValue(40);
 
-            // Add a line chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 7, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIndex];
+        // Add a line chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Line, 6, 0, 20, 12);
+        Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B5", true);          // Y values
-            chart.NSeries.CategoryData = "A2:A5";      // X categories
+        // Add a series: Y values are taken from column B, X categories from column A
+        chart.NSeries.Add("B2:B5", true);
+        chart.NSeries.CategoryData = "A2:A5";
 
-            // Configure the Y error bar to display standard deviation
-            Series series = chart.NSeries[0];
-            series.YErrorBar.Type = ErrorBarType.StDev;               // Use standard deviation
-            series.YErrorBar.DisplayType = ErrorBarDisplayType.Both; // Show both plus and minus bars
+        // Configure the Y‑direction error bar to display standard deviation
+        Series series = chart.NSeries[0];
+        series.YErrorBar.Type = ErrorBarType.StDev;               // Use standard deviation as error amount
+        series.YErrorBar.DisplayType = ErrorBarDisplayType.Both; // Show both plus and minus error bars
+        // When Type is StDev, the Amount property is not required
 
-            // Optionally customize appearance of the error bars
-            series.YErrorBar.Color = System.Drawing.Color.Blue;
-            series.YErrorBar.Weight = WeightType.SingleLine;
-            series.YErrorBar.IsVisible = true;
-
-            // Save the workbook to an XLSX file
-            workbook.Save("LineChartWithStdDevErrorBar.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook (lifecycle: save)
+        workbook.Save("LineChartWithStdDevErrorBar.xlsx");
     }
 }

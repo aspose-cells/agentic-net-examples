@@ -1,18 +1,15 @@
-// Title: Measure Aspose.Cells Chart Calculation and Rendering Time After Disabling Data Label Text Wrap (C#)
-// Description: Creates a workbook with sample data, adds a column chart, enables data labels, turns off label text wrapping, and uses Stopwatch to record the duration of chart.Calculate() (layout) and Workbook.Save() (rendering). The output shows the elapsed milliseconds for each operation, helping assess the performance impact of disabling text wrap.
-// Keywords: Aspose.Cells chart performance | disable data label text wrap | chart.Calculate timing | Workbook.Save benchmark | C# Aspose.Cells rendering speed | chart layout measurement | performance testing Aspose.Cells
-// Common Searches: Aspose.Cells measure chart rendering time C# | How to benchmark chart.Calculate performance | Effect of DataLabels.IsTextWrapped on chart speed | Chart rendering latency Aspose.Cells .NET | Timing workbook save with charts
-// Developer Intent: The developer wants to benchmark how disabling data label text wrapping influences the time required to calculate a chart layout and to save a workbook containing that chart.
-// Use Cases: Compare chart generation speed with and without data label text wrapping to choose the optimal setting. | Profile chart calculation and workbook save times in high‑volume reporting scenarios. | Validate performance gains before deploying large workbooks that contain many charts.
-// AI Prompts: Generate C# code that measures chart.Calculate() and Workbook.Save() times for different DataLabels.IsTextWrapped values using Aspose.Cells. | Explain how to analyze the timing results and recommend further optimizations for Aspose.Cells chart rendering. | Create a unit test that asserts chart rendering completes within a defined threshold when text wrapping is disabled.
+// Title: Benchmark Aspose.Cells chart layout and file save time after turning off data label text wrapping in C#
+// AI Prompts: Write C# code that creates a column chart with Aspose.Cells, disables DataLabels.IsTextWrapped, and measures the execution time of Chart.Calculate and Workbook.Save using Stopwatch. | Show how to profile the performance impact of turning off data label text wrapping on an Aspose.Cells chart by timing the layout calculation and workbook export.
+// Common Searches: how to measure Aspose.Cells chart.Calculate execution time in .NET | benchmark workbook.save performance after modifying chart data labels in C# | does disabling DataLabels.IsTextWrapped improve chart rendering speed in Aspose.Cells | C# example for timing chart layout calculation with Aspose.Cells
+// Tags: Aspose.Cells chart layout timing | Aspose.Cells DataLabels.IsTextWrapped impact | C# benchmark workbook.Save latency | Aspose.Cells chart rendering speed measurement | disable data label wrapping Aspose chart
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook with sample data, adds a column chart, enables data labels, turns off label text wrapping, and uses Stopwatch to record the duration of chart.Calculate() (layout) and Workbook.Save() (rendering). The output shows the elapsed milliseconds for each operation, helping assess the performance impact of disabling text wrap.
-class ChartRenderingTimeMeasurement
+// // Demonstrates creating a workbook with a column chart, turning off data label text wrapping, and using Stopwatch to time Chart.Calculate and Workbook.Save operations for performance analysis.
+class ChartRenderingTimeDemo
 {
     static void Main()
     {
@@ -22,37 +19,36 @@ class ChartRenderingTimeMeasurement
 
         // Populate sample data for the chart
         sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["A4"].PutValue("Banana");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(85);
-        sheet.Cells["B4"].PutValue(65);
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+        // Add a column chart to the worksheet
+        int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIdx];
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Enable data labels and disable text wrapping for performance test
+        // Enable data labels and disable text wrapping (performance tweak)
         DataLabels labels = chart.NSeries[0].DataLabels;
         labels.ShowValue = true;
-        labels.IsTextWrapped = false;   // Disable wrapping
+        labels.IsTextWrapped = false; // using DataLabels.IsTextWrapped property
 
         // Measure time taken to calculate the chart layout
-        Stopwatch calcTimer = Stopwatch.StartNew();
-        chart.Calculate();               // Forces layout calculation
-        calcTimer.Stop();
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
+        chart.Calculate(); // using Chart.Calculate()
+        sw.Stop();
+        Console.WriteLine($"Chart.Calculate() elapsed time: {sw.ElapsedMilliseconds} ms");
 
-        // Measure time taken to render (save) the workbook containing the chart
-        Stopwatch renderTimer = Stopwatch.StartNew();
-        workbook.Save("ChartRenderingTime.xlsx", SaveFormat.Xlsx);
-        renderTimer.Stop();
-
-        // Output the measured times
-        Console.WriteLine($"Chart.Calculate() time: {calcTimer.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Workbook.Save() (render) time: {renderTimer.ElapsedMilliseconds} ms");
+        // Measure time taken to save the workbook (rendering)
+        sw.Restart();
+        workbook.Save("ChartRenderingTime.xlsx");
+        sw.Stop();
+        Console.WriteLine($"Workbook.Save() elapsed time: {sw.ElapsedMilliseconds} ms");
     }
 }

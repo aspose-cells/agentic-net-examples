@@ -1,60 +1,69 @@
-// Title: Error Handling for Missing Named Ranges in Aspose.Cells (.NET)
-// Description: Demonstrates how to safely retrieve a named range with GetRangeByName, detect a null result, throw and catch an InvalidOperationException, log the error, and protect workbook.Save with a second try‑catch block.
-// Keywords: Aspose.Cells | C# | .NET | named range | GetRangeByName | exception handling | error logging | try‑catch | workbook save failure
-// Common Searches: Aspose.Cells check if named range exists | catch exception for missing named range C# | log error when GetRangeByName returns null | protect workbook.Save with try catch Aspose.Cells
-// Developer Intent: The developer needs a reliable pattern to verify a named range's existence, raise a meaningful exception when it is absent, and record the failure without crashing the application.
-// Use Cases: Validate user‑supplied range names before calculations to prevent runtime errors. | Continue automated report generation when a required range has been renamed or deleted, while capturing the issue in logs. | Handle file‑system or permission problems during workbook.Save and log detailed diagnostics.
-// AI Prompts: Write a reusable method GetNamedRangeOrThrow that returns a Range or throws a custom MissingRangeException. | Generate code to log exception details (message, stack trace, timestamp) to a file or monitoring system when GetRangeByName fails. | Provide an example of a global error handler that captures both named‑range lookup failures and workbook save errors in an Aspose.Cells application.
+// Title: Handle missing named range in Aspose.Cells for .NET with try‑catch and console logging
+// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells, attempts to retrieve a specific named range, verifies the result is not null, and logs a descriptive error message when the range is absent, wrapping the operation in a try‑catch block for unexpected exceptions. | Demonstrate how to surround workbook.Save with exception handling while also capturing and logging any errors that occur while accessing a named range in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells C# how to check if a named range exists before using it | C# try-catch example for missing named range in Aspose.Cells workbook | log error when named range not found using Aspose.Cells for .NET | handling null named range Aspose.Cells C# example
+// Tags: named range existence check Aspose.Cells | exception handling Aspose.Cells workbook | console logging Aspose.Cells errors | C# Aspose.Cells load workbook safely | Aspose.Cells save workbook with error handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to safely retrieve a named range with GetRangeByName, detect a null result, throw and catch an InvalidOperationException, log the error, and protect workbook.Save with a second try‑catch block.
-class NamedRangeErrorHandling
+// // Loads an Excel file with Aspose.Cells, safely attempts to retrieve a named range called 'MyMissingRange' using a null check and try‑catch, logs appropriate messages to the console for missing or error conditions, and finally saves the workbook with error handling.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Sheet1";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Add some sample data
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
+        Workbook workbook = null;
 
-        // Create a valid named range for demonstration
-        sheet.Cells.CreateRange("A1:A2").Name = "ValidRange";
-
-        // Attempt to access a non‑existent named range and handle the error
+        // Load workbook safely
         try
         {
-            // GetRangeByName returns null if the named range does not exist
-            Aspose.Cells.Range missingRange = workbook.Worksheets.GetRangeByName("MissingRange");
-            if (missingRange == null)
+            if (!File.Exists(inputPath))
             {
-                // Throw an exception to be caught below
-                throw new InvalidOperationException("Named range 'MissingRange' does not exist.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // If the range existed, you could work with it here
-            Console.WriteLine("Range address: " + missingRange.Address);
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            // Log the exception details
-            Console.WriteLine("Error accessing named range: " + ex.Message);
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        // Save the workbook (lifecycle rule) with safety handling
         try
         {
-            workbook.Save("NamedRangeErrorDemo.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
+            // Retrieve the named range; may be null if it doesn't exist
+            Name namedRange = workbook.Worksheets.Names["MyMissingRange"];
+
+            if (namedRange != null)
+            {
+                // Output the reference of the named range
+                Console.WriteLine($"Named range found: refers to {namedRange.RefersTo}");
+            }
+            else
+            {
+                Console.WriteLine("Named range 'MyMissingRange' does not exist.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error saving workbook: " + ex.Message);
+            // Log any unexpected errors while accessing the named range
+            Console.WriteLine($"Error accessing named range: {ex.Message}");
+        }
+
+        // Save the workbook (optional)
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

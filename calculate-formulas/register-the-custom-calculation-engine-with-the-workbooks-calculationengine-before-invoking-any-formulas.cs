@@ -1,64 +1,69 @@
-// Title: C# – Register a Custom Calculation Engine in Aspose.Cells Before Formula Evaluation
-// Description: Shows how to build a workbook, insert values, set a formula that calls a custom function (MYADD), implement a custom engine by extending AbstractCalculationEngine, register it through CalculationOptions.CustomEngine, run wb.CalculateFormula, and save the workbook.
-// Keywords: Aspose.Cells | C# | custom calculation engine | CalculationOptions.CustomEngine | AbstractCalculationEngine | custom function | MYADD | CalculateFormula | Excel automation | spreadsheet custom functions
-// Common Searches: register custom calculation engine Aspose.Cells .NET | use custom functions with Aspose.Cells CalculateFormula | extend AbstractCalculationEngine example | set CalculationOptions.CustomEngine before wb.CalculateFormula | Aspose.Cells custom formula engine tutorial
-// Developer Intent: Learn how to plug a user‑defined calculation engine into an Aspose.Cells workbook so that formulas containing custom functions are evaluated correctly.
-// Use Cases: Add domain‑specific functions (e.g., MYADD) to Excel calculations. | Replace the default engine to handle proprietary business logic. | Calculate and persist results of workbooks that rely on custom formulas.
-// AI Prompts: Generate C# code that registers a custom calculation engine in Aspose.Cells and evaluates a workbook. | Explain step‑by‑step how to implement and debug a custom function using AbstractCalculationEngine. | Show how to use CalculationOptions.CustomEngine to run formulas with user‑defined functions.
+// Title: How to register a custom calculation engine in Aspose.Cells (C#) to evaluate a user‑defined function
+// AI Prompts: Create a class inheriting from AbstractCalculationEngine that implements MYFUNC logic and assign it to CalculationOptions.CustomEngine. | Configure CalculationOptions with the custom engine and call Workbook.CalculateFormula to compute cells containing the MYFUNC formula. | Write the workbook to an .xlsx file after the custom engine calculation to persist the computed result.
+// Common Searches: Aspose.Cells C# example for adding a user‑defined function with a custom engine | How to use CalculationOptions.CustomEngine to run custom formulas in Aspose.Cells | Registering and invoking a custom AbstractCalculationEngine before workbook.CalculateFormula in .NET
+// Tags: custom calculation engine registration Aspose.Cells C# | user-defined function AbstractCalculationEngine | assign CalculationOptions.CustomEngine workbook | formula evaluation using custom calculation engine | persist custom function result Excel file
 
 using System;
 using Aspose.Cells;
 
-namespace CustomEngineDemo
+namespace CustomCalculationEngineDemo
 {
-    // Shows how to build a workbook, insert values, set a formula that calls a custom function (MYADD), implement a custom engine by extending AbstractCalculationEngine, register it through CalculationOptions.CustomEngine, run wb.CalculateFormula, and save the workbook.
+    // Custom engine that implements a user‑defined function MYFUNC
+    // The sample defines MyCustomEngine derived from AbstractCalculationEngine to handle a custom function MYFUNC, registers it via CalculationOptions.CustomEngine, calculates the formula '=MYFUNC(A1, A2)' with Workbook.CalculateFormula, outputs the result, and saves the workbook as an .xlsx file.
+    public class MyCustomEngine : AbstractCalculationEngine
+    {
+        // Override Calculate to handle the custom function
+        public override void Calculate(CalculationData data)
+        {
+            // Check if the function being evaluated is MYFUNC (case‑insensitive)
+            if (string.Equals(data.FunctionName, "MYFUNC", StringComparison.OrdinalIgnoreCase))
+            {
+                // Retrieve the first two parameters passed to the function
+                object param0 = data.GetParamValue(0);
+                object param1 = data.GetParamValue(1);
+
+                // Convert parameters to double (they may be numeric or ReferredArea objects)
+                double val0 = Convert.ToDouble(param0);
+                double val1 = Convert.ToDouble(param1);
+
+                // Simple custom logic: return the sum of the two parameters multiplied by 10
+                data.CalculatedValue = (val0 + val1) * 10;
+            }
+        }
+
+        // No special handling for shared formulas; default behavior is sufficient
+        public override bool ForceRecalculate(string functionName) => false;
+    }
+
     class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells with sample data
-            ws.Cells["A1"].PutValue(5);
-            ws.Cells["A2"].PutValue(7);
+            // Populate cells that will be used as arguments for the custom function
+            sheet.Cells["A1"].PutValue(5);
+            sheet.Cells["A2"].PutValue(7);
 
-            // Set a formula that uses a custom function "MYADD"
-            ws.Cells["A3"].Formula = "=MYADD(A1,A2)";
+            // Set a formula that calls the custom function MYFUNC
+            sheet.Cells["B1"].Formula = "=MYFUNC(A1, A2)";
 
-            // Create calculation options and register the custom engine
+            // Create calculation options and assign the custom engine
             CalculationOptions options = new CalculationOptions
             {
                 CustomEngine = new MyCustomEngine()
             };
 
-            // Calculate formulas using the custom engine
-            wb.CalculateFormula(options);
+            // Perform calculation using the options (custom engine will be invoked)
+            workbook.CalculateFormula(options);
 
-            // Display the result of the custom function
-            Console.WriteLine("Result of MYADD: " + ws.Cells["A3"].Value);
+            // Output the result of the custom function
+            Console.WriteLine("Result of MYFUNC(A1, A2): " + sheet.Cells["B1"].Value);
 
-            // Save the workbook
-            wb.Save("CustomEngineResult.xlsx");
-        }
-    }
-
-    // Custom calculation engine extending the default engine
-    public class MyCustomEngine : AbstractCalculationEngine
-    {
-        public override void Calculate(CalculationData data)
-        {
-            // Handle the custom function "MYADD"
-            if (data.FunctionName.Equals("MYADD", StringComparison.OrdinalIgnoreCase))
-            {
-                // Retrieve parameter values
-                double v1 = Convert.ToDouble(data.GetParamValue(0));
-                double v2 = Convert.ToDouble(data.GetParamValue(1));
-
-                // Set the calculated result (simple addition)
-                data.CalculatedValue = v1 + v2;
-            }
+            // Save the workbook (optional, demonstrates that the result is persisted)
+            workbook.Save("CustomEngineResult.xlsx");
         }
     }
 }

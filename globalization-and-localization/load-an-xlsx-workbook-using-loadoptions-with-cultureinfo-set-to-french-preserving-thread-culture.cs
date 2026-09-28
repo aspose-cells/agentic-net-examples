@@ -1,35 +1,38 @@
-// Title: Load an XLSX workbook with French (fr-FR) CultureInfo using Aspose.Cells LoadOptions in C#
-// Description: Shows how to apply a French CultureInfo to a LoadOptions object, load an XLSX file with Aspose.Cells, read a cell value, and then restore the original thread culture so the rest of the application remains unaffected.
-// Keywords: Aspose.Cells LoadOptions CultureInfo | C# load Excel French locale | preserve thread culture | globalization Aspose.Cells | fr-FR Excel parsing | Aspose.Cells localization example | Excel date format France | LoadOptions example C#
-// Common Searches: Aspose.Cells load workbook with French culture | Set CultureInfo for Excel load in .NET | Keep original thread culture when using LoadOptions | C# Aspose.Cells LoadOptions CultureInfo sample | Parse French formatted dates in Excel with Aspose.Cells
-// Developer Intent: Load an XLSX file using a French locale while leaving the application's thread culture unchanged.
-// Use Cases: Read French‑formatted dates and numbers from an Excel sheet without altering UI culture. | Generate localized reports from French workbooks on a server that must retain its default culture for other tasks. | Process multiple workbooks in parallel, each with its own CultureInfo, by resetting the thread culture after each load.
-// AI Prompts: Provide C# code to load an Excel workbook with German (de-DE) CultureInfo using Aspose.Cells LoadOptions and restore the original thread culture. | Explain how LoadOptions.CultureInfo affects number, date, and currency parsing in Aspose.Cells and the best practice for safely reverting thread culture. | Show a pattern for loading several workbooks concurrently, assigning a distinct CultureInfo to each LoadOptions instance.
+// Title: Load an XLSX workbook with French (fr-FR) CultureInfo using Aspose.Cells LoadOptions while preserving original thread cultures in C#
+// AI Prompts: Use Aspose.Cells LoadOptions to load a .xlsx file with the French locale (fr-FR) in C#, then restore the thread's original CultureInfo settings. | Show how to temporarily set Thread.CurrentThread culture to French for workbook loading with Aspose.Cells and revert to the saved cultures after the load.
+// Common Searches: C# Aspose.Cells load xlsx with French CultureInfo without affecting global thread culture | How to set LoadOptions.CultureInfo to fr-FR when opening an Excel file in Aspose.Cells | Preserve original thread culture while changing CultureInfo for Aspose.Cells workbook loading | Aspose.Cells LoadOptions French locale example for .xlsx files in .NET
+// Tags: Aspose.Cells LoadOptions CultureInfo French | C# load XLSX with specific locale | preserve thread culture Aspose.Cells | globalization Excel parsing Aspose.Cells | temporary thread culture change .NET
 
 using System;
 using System.Globalization;
 using System.Threading;
 using Aspose.Cells;
 
-// Shows how to apply a French CultureInfo to a LoadOptions object, load an XLSX file with Aspose.Cells, read a cell value, and then restore the original thread culture so the rest of the application remains unaffected.
+// The program saves the current thread's CultureInfo, switches the thread to French (fr-FR), creates LoadOptions with that CultureInfo, loads an XLSX workbook using those options, and finally restores the original thread cultures.
 class Program
 {
     static void Main()
     {
-        // Preserve the original thread culture
+        // Preserve the original thread cultures
         CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
+        CultureInfo originalUICulture = Thread.CurrentThread.CurrentUICulture;
 
-        // Create LoadOptions and set the culture to French (France)
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.CultureInfo = new CultureInfo("fr-FR");
+        // Set thread culture to French (France) for loading
+        CultureInfo frenchCulture = new CultureInfo("fr-FR");
+        Thread.CurrentThread.CurrentCulture = frenchCulture;
+        Thread.CurrentThread.CurrentUICulture = frenchCulture;
 
-        // Load the workbook using the constructor that accepts LoadOptions
-        Workbook workbook = new Workbook("sample.xlsx", loadOptions);
+        // Create LoadOptions and assign the French culture
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+        loadOptions.CultureInfo = frenchCulture; // ensures parsing respects French locale
 
-        // Example operation: output the value of cell A1
-        Console.WriteLine("A1 value: " + workbook.Worksheets[0].Cells["A1"].StringValue);
+        // Load the workbook using the specified LoadOptions
+        Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        // Restore the original thread culture
+        // TODO: work with the workbook as needed
+
+        // Restore the original thread cultures
         Thread.CurrentThread.CurrentCulture = originalCulture;
+        Thread.CurrentThread.CurrentUICulture = originalUICulture;
     }
 }

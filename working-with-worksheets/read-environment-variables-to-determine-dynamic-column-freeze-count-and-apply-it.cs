@@ -1,52 +1,49 @@
-// Title: Dynamic column freeze in Aspose.Cells via environment variable (C#)
-// Description: Creates a new Workbook, reads the FREEZE_COLUMNS environment variable, validates it as a non‑negative integer, and freezes that many columns (no rows) on every worksheet using FreezePanes. If the variable is missing, zero, or invalid, panes are left unfrozen before the file is saved.
-// Keywords: Aspose.Cells | FreezePanes | C# | .NET | environment variable | dynamic column freeze | unfreeze panes | Excel automation | read env variable C#
-// Common Searches: Aspose.Cells freeze columns from environment variable | C# set FreezePanes using env var | How to unfreeze panes in Aspose.Cells | Apply FreezePanes to all worksheets Aspose.Cells | Dynamic column freeze Aspose.Cells .NET
-// Developer Intent: Read an environment variable and use its value to freeze that many columns in every worksheet of an Aspose.Cells workbook.
-// Use Cases: Configure column freezing per deployment environment without code changes | Disable freezing by leaving FREEZE_COLUMNS unset or setting it to 0 | Apply identical freeze settings across all worksheets in a newly created workbook | Toggle freeze behavior in CI/CD pipelines via environment configuration
-// AI Prompts: Generate C# code that reads an environment variable named FREEZE_COLUMNS and applies FreezePanes to each worksheet in an Aspose.Cells workbook, handling invalid values gracefully. | Show how to extend the example to also freeze rows based on a separate environment variable. | Explain how to unit‑test the dynamic column‑freeze logic with Aspose.Cells in a .NET test project. | Provide a PowerShell script that sets the FREEZE_COLUMNS variable before running the C# application.
+// Title: How to freeze a variable number of columns in an Excel sheet with Aspose.Cells for .NET using an environment variable
+// AI Prompts: Generate C# code that reads a FREEZE_COLUMNS environment variable, validates it as a positive integer, and uses Aspose.Cells FreezePanes to freeze that many columns while leaving rows unfrozen. | Create a C# example that defaults to no column freeze when the environment variable is missing, empty, or not a positive integer, then saves the workbook as output.xlsx. | Extend the snippet to also read a FREEZE_ROWS environment variable and apply both row and column freezing with Aspose.Cells FreezePanes.
+// Common Searches: aspnet read environment variable to set column freeze in Aspose.Cells workbook | c# Aspose.Cells FreezePanes column count from config value | how to dynamically freeze columns in Excel using Aspose.Cells and env variable | set freeze panes based on environment variable in .NET Excel generation
+// Tags: Aspose.Cells FreezePanes column freeze | environment variable driven Excel pane freezing .NET | dynamic column freeze in Aspose.Cells | C# FreezePanes based on config value | programmatic Excel pane freezing with Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace FreezeColumnsFromEnv
+// The program reads the FREEZE_COLUMNS environment variable, parses it as a positive integer, creates a Workbook, accesses the first worksheet, and if the value is greater than zero calls FreezePanes(0, count, 0, count) to freeze that many columns (no rows frozen). The workbook is saved as output.xlsx, and missing or invalid values result in no frozen panes.
+class Program
 {
-    // Creates a new Workbook, reads the FREEZE_COLUMNS environment variable, validates it as a non‑negative integer, and freezes that many columns (no rows) on every worksheet using FreezePanes. If the variable is missing, zero, or invalid, panes are left unfrozen before the file is saved.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (empty)
+            // Read the environment variable that specifies how many columns to freeze.
+            // If the variable is missing or invalid, default to 0 (no freeze).
+            int freezeColumnCount = 0;
+            string envValue = Environment.GetEnvironmentVariable("FREEZE_COLUMNS");
+            if (!string.IsNullOrEmpty(envValue) && int.TryParse(envValue, out int parsed) && parsed > 0)
+            {
+                freezeColumnCount = parsed;
+            }
+
+            // Create a new workbook.
             Workbook workbook = new Workbook();
 
-            // Read the environment variable that specifies how many columns to freeze.
-            // If the variable is not set or is invalid, default to 0 (no freezing).
-            string envValue = Environment.GetEnvironmentVariable("FREEZE_COLUMNS");
-            int freezeColumns = 0;
-            if (!string.IsNullOrEmpty(envValue) && int.TryParse(envValue, out int parsed))
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Apply column freeze based on the environment variable.
+            // Freeze rows = 0 (no row freeze), columns = freezeColumnCount.
+            if (freezeColumnCount > 0)
             {
-                // Ensure the value is non‑negative.
-                freezeColumns = Math.Max(0, parsed);
+                // FreezePanes(row, column, totalRows, totalColumns)
+                // row = 0 (no rows frozen), column = freezeColumnCount (first scrollable column),
+                // totalRows = 0, totalColumns = freezeColumnCount (freeze the specified columns).
+                sheet.FreezePanes(0, freezeColumnCount, 0, freezeColumnCount);
             }
 
-            // Apply the freeze setting to each worksheet in the workbook.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                if (freezeColumns > 0)
-                {
-                    // Freeze panes at row index 0 and the specified column index.
-                    // freezedRows = 0 (no frozen rows), freezedColumns = freezeColumns.
-                    sheet.FreezePanes(0, freezeColumns, 0, freezeColumns);
-                }
-                else
-                {
-                    // Ensure panes are not frozen when the count is zero.
-                    sheet.UnFreezePanes();
-                }
-            }
-
-            // Save the workbook to a file.
-            workbook.Save("FreezeColumnsResult.xlsx");
+            // Save the workbook.
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

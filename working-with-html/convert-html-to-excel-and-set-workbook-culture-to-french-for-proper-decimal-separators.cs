@@ -1,35 +1,36 @@
-// Title: Convert HTML to Excel with French Locale (fr-FR) using Aspose.Cells for .NET
-// Description: Loads an HTML document into an Aspose.Cells Workbook with LoadOptions.CultureInfo set to fr-FR, applies the same locale to workbook settings, and saves the result as an XLSX file so numbers use a comma as the decimal separator.
-// Keywords: Aspose.Cells | HTML to Excel | French locale | fr-FR | CultureInfo | .NET | comma decimal separator | LoadOptions | SaveFormat.Xlsx
-// Common Searches: Aspose.Cells load HTML with French culture | C# convert HTML table to Excel using fr-FR | set comma decimal separator when converting HTML to XLSX | LoadOptions CultureInfo example Aspose.Cells | preserve French number formatting in Excel export
-// Developer Intent: Load an HTML file into a workbook with French regional settings and export it as an XLSX workbook.
-// Use Cases: Transform financial HTML reports that use commas for decimals into Excel files for French‑speaking analysts. | Generate Excel worksheets from web pages for a French audience while maintaining correct numeric formatting. | Batch‑process multiple HTML tables into XLSX files with French locale to meet regulatory reporting requirements.
-// AI Prompts: Write C# code that uses Aspose.Cells to load an HTML file with CultureInfo set to fr-FR and save it as an XLSX workbook. | Explain how LoadOptions.CultureInfo influences number parsing during HTML‑to‑Excel conversion in Aspose.Cells. | Provide a step‑by‑step guide for batch converting HTML files to Excel while applying French decimal formatting.
+// Title: Convert an HTML file to an Excel workbook using French (fr-FR) locale in C# with Aspose.Cells
+// AI Prompts: Generate C# code that loads an HTML document into an Aspose.Cells Workbook, applies a French (fr-FR) CultureInfo to HtmlLoadOptions and Workbook settings, and saves the result as an XLSX file. | Show how to configure Aspose.Cells so that decimal separators are interpreted according to the French locale when converting HTML to Excel in .NET.
+// Common Searches: aspocells html to xlsx using fr-FR cultureinfo | c# convert html table to excel with French decimal format | configure HtmlLoadOptions for French number formatting in Aspose.Cells | load html into workbook with French regional settings .NET | excel export from html respecting French number separators Aspose.Cells
+// Tags: html to xlsx conversion respecting regional settings | Aspose.Cells load HTML with fr-FR culture | configure Workbook.Settings culture in C# | decimal separator handling Aspose.Cells | C# HtmlLoadOptions culture setup
 
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-// Loads an HTML document into an Aspose.Cells Workbook with LoadOptions.CultureInfo set to fr-FR, applies the same locale to workbook settings, and saves the result as an XLSX file so numbers use a comma as the decimal separator.
-class HtmlToExcelFrenchCulture
+// // Loads an HTML file into an Aspose.Cells Workbook with French (fr-FR) locale, sets the workbook's culture, and saves it as an XLSX file.
+class Program
 {
     static void Main()
     {
-        // Source HTML file and target Excel file paths
-        string htmlPath = "input.html";
-        string excelPath = "output.xlsx";
+        // Input HTML file path
+        string htmlFile = "input.html";
 
-        // Create load options for HTML format and set French culture (uses comma as decimal separator)
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-        loadOptions.CultureInfo = new CultureInfo("fr-FR");
+        // Output Excel file path
+        string excelFile = "output.xlsx";
 
-        // Load the HTML file into a workbook using the specified culture
-        Workbook workbook = new Workbook(htmlPath, loadOptions);
+        // Create load options and set French culture (France) for proper decimal handling
+        HtmlLoadOptions loadOptions = new HtmlLoadOptions
+        {
+            CultureInfo = new CultureInfo("fr-FR")
+        };
 
-        // Ensure workbook settings also use French culture (optional but reinforces the setting)
+        // Load the HTML content into a new workbook using the specified culture
+        Workbook workbook = new Workbook(htmlFile, loadOptions);
+
+        // Ensure the workbook's culture is also set to French (affects further operations)
         workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-        // Save the workbook as an Excel file (XLSX)
-        workbook.Save(excelPath, SaveFormat.Xlsx);
+        // Save the workbook as an Excel file
+        workbook.Save(excelFile, SaveFormat.Xlsx);
     }
 }

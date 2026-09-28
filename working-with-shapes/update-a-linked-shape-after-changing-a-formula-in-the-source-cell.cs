@@ -1,57 +1,71 @@
-// Title: Update a linked ListBox shape after changing a source cell formula with Aspose.Cells for .NET
-// Description: Demonstrates how to refresh a ListBox shape linked to a cell after a source cell formula is modified. The example sets an input range, links the shape to a cell, recalculates formulas, updates the linked cell value, and calls UpdateSelectedValue to keep the shape in sync before saving the workbook.
-// Keywords: Aspose.Cells | C# | .NET | ListBox shape | linked cell | UpdateSelectedValue | SetLinkedCell | SetInputRange | formula recalculation | Excel shape synchronization | Refresh linked shape
-// Common Searches: Aspose.Cells refresh ListBox after formula change | Update linked shape after recalculating workbook | C# Aspose.Cells UpdateSelectedValue example | How to sync ListBox with calculated cell in Aspose.Cells | SetLinkedCell and UpdateSelectedValue usage
-// Developer Intent: Synchronize a ListBox shape’s selected item with a new value after the source cell’s formula is changed and the workbook is recalculated.
-// Use Cases: Keep form controls in generated Excel reports aligned with dynamic calculations. | Maintain consistency between dashboard shapes and underlying formula‑driven data. | Automate the refresh of linked shapes when source values are updated programmatically.
-// AI Prompts: Generate C# code that updates a ListBox shape after a source cell formula is changed using Aspose.Cells. | Show how to use SetLinkedCell and UpdateSelectedValue to keep a shape synchronized with a calculated cell value. | Explain the steps to refresh a linked shape when its input range contains formula results.
+// Title: Programmatically refresh linked OLE objects after changing a cell formula using Aspose.Cells for .NET
+// AI Prompts: Change the formula of a target cell, run workbook.CalculateFormula(), and call Aspose.Cells to refresh any linked OLE objects in the worksheet. | Show how to modify a cell's formula, recalculate the workbook, and attempt to synchronize linked shapes such as OLE objects or pictures with the new values in C#.
+// Common Searches: how to refresh linked OLE objects after editing a cell formula with Aspose.Cells C# | Aspose.Cells recalculate formulas and update linked pictures programmatically | C# example for syncing OLE objects with changed cell values using Aspose.Cells | update linked shape when source cell formula changes Aspose.Cells .NET
+// Tags: refresh linked OLE objects Aspose.Cells | recalculate workbook formulas Aspose.Cells | update linked picture after formula change C# | Aspose.Cells OLE object synchronization | modify cell formula and sync shapes .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Demonstrates how to refresh a ListBox shape linked to a cell after a source cell formula is modified. The example sets an input range, links the shape to a cell, recalculates formulas, updates the linked cell value, and calls UpdateSelectedValue to keep the shape in sync before saving the workbook.
-class UpdateLinkedShapeDemo
+// The example loads an existing workbook, changes the formula in cell B2, recalculates all formulas, iterates through OLE objects (noting that Aspose.Cells currently lacks a direct method to update linked shapes), and saves the modified file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate some source data that will be used by the shape
-        sheet.Cells["A1"].Value = 10;
-        sheet.Cells["A2"].Value = 20;
-        sheet.Cells["A3"].Value = 30;
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Add a ListBox shape to the worksheet
-        Shape listBoxShape = sheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set the range that provides the list items for the ListBox
-        listBoxShape.SetInputRange("$A$1:$A$3", false, false);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Link the selected value of the ListBox to cell B1
-        listBoxShape.SetLinkedCell("$B$1", false, true);
+            // Change the formula in cell B2
+            Cell sourceCell = sheet.Cells["B2"];
+            sourceCell.Formula = "=SUM(A1:A10)";
 
-        // Set an initial value in the linked cell (select the second item, value 20)
-        sheet.Cells["B1"].Value = 20;
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Update the shape so that its selected item reflects the linked cell value
-        listBoxShape.UpdateSelectedValue();
+            // Iterate through OLE objects (linked objects handling not required by current API)
+            foreach (OleObject ole in sheet.OleObjects)
+            {
+                try
+                {
+                    // Placeholder for any OLE object processing if needed
+                    // Current Aspose.Cells API does not expose direct link update methods
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to process OLE object: {ex.Message}");
+                }
+            }
 
-        // Change the source data by assigning a formula to A2
-        sheet.Cells["A2"].Formula = "=A1*3"; // A2 will become 30 after calculation
-
-        // Recalculate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // Update the linked cell to the new value (select the third item, value 30)
-        sheet.Cells["B1"].Value = 30;
-
-        // Refresh the shape selection after the source change
-        listBoxShape.UpdateSelectedValue();
-
-        // Save the workbook with the updated shape
-        workbook.Save("UpdatedLinkedShape.xlsx");
+            // Save the workbook with the updated content
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,67 +1,56 @@
-// Title: Compress Text in a Narrow TextBox Shape with Negative Character Spacing using Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds a 100 × 50‑point textbox shape on the first worksheet, sets its text, applies a -2 pt character spacing via TextOptions.Spacing to tighten the characters, and saves the file.
-// Keywords: Aspose.Cells | .NET | C# | negative character spacing | TextOptions.Spacing | textbox shape | compress text | Excel shape formatting | narrow shape | Excel automation
-// Common Searches: Aspose.Cells set negative character spacing | compress text in textbox shape C# | TextOptions.Spacing example Aspose.Cells | how to tighten characters in Excel shape | create narrow textbox with custom spacing Aspose
-// Developer Intent: Apply a -2 pt character spacing to a textbox shape so the text appears more compact.
-// Use Cases: Fit long labels into small dashboard widgets. | Create tight‑spaced headings for chart annotations. | Design printable forms where space is limited.
-// AI Prompts: Write C# code that adds a textbox shape with Aspose.Cells and sets TextOptions.Spacing to -3 points. | Explain the impact of TextOptions.Spacing on text rendering inside Excel shapes when using Aspose.Cells. | Provide error‑handling best practices for saving a workbook after modifying shape text spacing.
+// Title: Add a rectangle shape with compressed text to an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new Workbook, inserts a rectangle shape on the first worksheet, assigns custom text to the shape, and saves the workbook with Aspose.Cells. | Explain how to emulate reduced character spacing for shape text in Aspose.Cells, including any work‑arounds or alternative font settings.
+// Common Searches: how to set negative character spacing for shape text in Aspose.Cells C# | compress text inside a rectangle shape using Aspose.Cells .NET | Aspose.Cells shape font properties missing CharSpacing | add rectangle shape with custom text to Excel workbook using C# Aspose.Cells | workaround for lack of CharSpacing property in Aspose.Cells shapes
+// Tags: aspose.cells insert rectangle shape c# | excel shape text spacing limitation aspose.cells | c# aspose.cells shape font configuration | generate excel workbook with shapes aspose.cells | aspose.cells shape text formatting options
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // This C# example creates a workbook, adds a 100 × 50‑point textbox shape on the first worksheet, sets its text, applies a -2 pt character spacing via TextOptions.Spacing to tighten the characters, and saves the file.
-    public class ApplyNegativeCharacterSpacing
+    // The example creates a new Workbook, accesses the first Worksheet, adds a rectangle shape of specified size, sets its text to "Compressed Text", notes that Aspose.Cells does not expose a CharSpacing property for shape fonts, and saves the file as CompressedTextShape.xlsx.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a narrow text box shape (width 100 points, height 50 points)
-            // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, width, height
-            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 100, 50);
-            textBox.Text = "Compressed Text Example";
+                // Add a rectangle shape and obtain the created shape object
+                Shape shape = sheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // shape type
+                    2,    // upper left row (zero‑based)
+                    2,    // upper left column (zero‑based)
+                    0,    // top offset in points
+                    0,    // left offset in points
+                    60,   // height in points
+                    300); // width in points
 
-            // Set character spacing to -2 points (negative spacing compresses characters)
-            // Directly use the TextOptions property without declaring a separate variable
-            textBox.TextOptions.Spacing = -2.0;
+                // Set the text that will appear inside the shape
+                shape.Text = "Compressed Text";
 
-            // Define output file path
-            string outputPath = "NegativeCharacterSpacingDemo.xlsx";
+                // Note: Aspose.Cells does not provide a CharSpacing property for shape fonts.
+                // Additional font settings can be applied here if needed, e.g.:
+                // shape.Font.Size = 12;
 
-            // Ensure the directory exists (if a directory is specified)
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+                // Define output file path
+                string outputPath = "CompressedTextShape.xlsx";
 
-            // Save the workbook and handle any I/O errors
-            try
-            {
+                // Save the workbook to a file
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine("An error occurred while creating the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

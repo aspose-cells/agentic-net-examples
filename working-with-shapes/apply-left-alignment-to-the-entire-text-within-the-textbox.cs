@@ -1,63 +1,76 @@
-// Title: Left‑align all paragraphs in a textbox shape using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a textbox shape, inserts multiline text, iterates through the TextParagraphCollection, sets each paragraph's AlignmentType to TextAlignmentType.Left, and saves the file as an .xlsx document.
-// Keywords: Aspose.Cells C# textbox alignment | set left alignment Aspose.Cells | TextParagraph AlignmentType Left | Excel shape text formatting .NET | Aspose.Cells TextBox example
-// Common Searches: Aspose.Cells left align textbox text C# | How to set paragraph alignment in an Excel shape using Aspose.Cells | C# code to left‑justify text in a textbox shape | Change textbox paragraph alignment Aspose.Cells .NET
-// Developer Intent: The developer needs to left‑align every paragraph inside a textbox shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Design reports where textbox captions must be left‑justified for readability. | Build invoice templates with left‑aligned notes inside multiline textboxes. | Automate worksheet templates that require consistent left alignment of textbox content.
-// AI Prompts: Show how to left‑align all paragraphs in a textbox shape with Aspose.Cells for .NET (C#). | Provide a C# snippet to change a textbox's text alignment to right or center using Aspose.Cells. | Explain how to access and modify TextParagraph objects in a shape's TextBody with Aspose.Cells.
+// Title: Apply left horizontal alignment to a textbox shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to set a textbox's horizontal alignment to left within an Excel worksheet. | Locate a shape named "TextBox 1" (or the first shape) and change its text alignment to left using the Aspose.Cells API. | Update an existing Excel file so that the text inside a specific textbox shape is left‑aligned with Aspose.Cells for .NET.
+// Common Searches: C# Aspose.Cells left align text inside a textbox shape | how to set TextHorizontalAlignment for a shape in Aspose.Cells .NET | find textbox by name and change alignment in Excel using Aspose.Cells | apply left horizontal alignment to Excel shape text with Aspose.Cells example
+// Tags: Aspose.Cells textbox left alignment C# | TextHorizontalAlignment left Aspose.Cells | Excel shape text alignment .NET | retrieve shape by name Aspose.Cells | modify textbox shape alignment C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook, adds a textbox shape, inserts multiline text, iterates through the TextParagraphCollection, sets each paragraph's AlignmentType to TextAlignmentType.Left, and saves the file as an .xlsx document.
-    public class TextBoxLeftAlignmentDemo
+    // The example loads an Excel file, finds a textbox shape (by name "TextBox 1" or the first shape), sets its horizontal text alignment to left via the TextHorizontalAlignment property, and saves the updated workbook.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                Run();
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Retrieve the textbox shape by name or fallback to the first shape
+                Shape textBox = null;
+
+                // Search for a shape named "TextBox 1"
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape.Name.Equals("TextBox 1", StringComparison.OrdinalIgnoreCase))
+                    {
+                        textBox = shape;
+                        break;
+                    }
+                }
+
+                // If not found, use the first shape if any
+                if (textBox == null && worksheet.Shapes.Count > 0)
+                {
+                    textBox = worksheet.Shapes[0];
+                }
+
+                if (textBox == null)
+                {
+                    Console.WriteLine("No textbox shape found in the worksheet.");
+                }
+                else
+                {
+                    // Apply left horizontal alignment to the text inside the textbox
+                    textBox.TextHorizontalAlignment = TextAlignmentType.Left;
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
+                // Catch any runtime exceptions and display the message
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add a text box shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offset (pixels),
-            // lower right row, lower right column, lower right offset (pixels)
-            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 300, 200, 100);
-
-            // Set multiline text inside the text box
-            textBox.Text = "First Line\nSecond Line\nThird Line";
-
-            // Retrieve all paragraphs of the text box
-            TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
-
-            // Apply left alignment to each paragraph
-            foreach (TextParagraph paragraph in paragraphs)
-            {
-                paragraph.AlignmentType = TextAlignmentType.Left;
-            }
-
-            // Save the workbook
-            string outputPath = "TextBoxLeftAlignmentDemo.xlsx";
-            workbook.Save(outputPath);
-
-            Console.WriteLine($"Text box with left-aligned text saved successfully to '{outputPath}'.");
         }
     }
 }

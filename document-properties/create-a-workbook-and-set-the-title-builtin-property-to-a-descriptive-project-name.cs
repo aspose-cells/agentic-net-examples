@@ -1,26 +1,23 @@
-// Title: How to set the Title built‑in document property in an Aspose.Cells workbook (C#)
-// Description: This C# example shows how to create a new Workbook with Aspose.Cells, assign a descriptive project name to the built‑in Title property, and save the workbook as an XLSX file. Embedding the Title metadata improves document management, searchability, and compliance.
-// Keywords: Aspose.Cells C# set Title property | Excel built‑in document properties | Workbook metadata Aspose | set workbook title Aspose.Cells | C# Excel file metadata | Aspose.Cells document properties example
-// Common Searches: Aspose.Cells C# set workbook Title property | How to add Title metadata to Excel file using Aspose.Cells | C# code to set built‑in document properties in Excel | Set Excel file Title with Aspose.Cells .NET | Update Excel document Title programmatically
-// Developer Intent: Assign a descriptive Title to a new workbook’s built‑in document property and save the file.
-// Use Cases: Insert a project name as the Title before distributing quarterly reports. | Add Title metadata to improve search results in document management systems. | Automate generation of multiple workbooks with consistent Title information.
-// AI Prompts: Generate C# code using Aspose.Cells to set several built‑in document properties (Title, Author, Subject) and save the workbook. | Provide an example that reads the Title property from an existing Excel file with Aspose.Cells. | Explain how to update the Title property of a workbook without modifying its worksheets.
+// Title: Create an Excel workbook and assign a custom Title built-in document property using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a new workbook, sets the Title built-in document property to a specific project name, and saves the file. | Show how to open an existing Excel file with Aspose.Cells and update its Title property without affecting other data. | Provide a concise example that sets multiple built-in properties such as Title and Author in a workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set workbook Title built-in property example | how to change Excel file title metadata programmatically with Aspose.Cells | C# code to add custom Title to Excel document using Aspose.Cells library | setting built-in document properties in a new workbook with Aspose.Cells for .NET | save Excel workbook after updating Title property using Aspose.Cells
+// Tags: Aspose.Cells set workbook Title property | C# built-in document properties Excel | create workbook assign metadata Aspose | save Excel file after modifying built-in properties | Excel metadata Title Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// This C# example shows how to create a new Workbook with Aspose.Cells, assign a descriptive project name to the built‑in Title property, and save the workbook as an XLSX file. Embedding the Title metadata improves document management, searchability, and compliance.
+// // Creates a new Excel workbook, assigns a descriptive Title built-in document property (e.g., "Project Alpha – Financial Forecast"), and saves the file as ProjectAlpha.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook instance
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Set the Title built‑in document property to a descriptive project name
-        workbook.BuiltInDocumentProperties.Title = "Project XYZ – Quarterly Report";
+        // Set the Title built‑in property to a descriptive project name
+        workbook.BuiltInDocumentProperties.Title = "Project Alpha – Financial Forecast";
 
-        // Save the workbook to a file (XLSX format)
-        workbook.Save("ProjectWorkbook.xlsx", SaveFormat.Xlsx);
+        // Save the workbook to a file (optional)
+        workbook.Save("ProjectAlpha.xlsx");
     }
 }

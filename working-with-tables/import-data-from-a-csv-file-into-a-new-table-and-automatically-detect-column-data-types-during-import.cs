@@ -1,62 +1,54 @@
-// Title: Import CSV into an Excel Table with Auto‑Detected Data Types using Aspose.Cells for .NET
-// Description: C# example that validates a CSV file, creates a new Workbook, imports the CSV starting at A1 with automatic numeric conversion, determines the used range, builds a ListObject (Excel table) with headers, and saves the result as an XLSX file.
-// Keywords: Aspose.Cells ImportCSV | CSV to Excel conversion .NET | automatic column type detection | create ListObject from CSV | Excel table generation C# | save workbook as XLSX | Aspose.Cells data import | autoConvert parameter | C# Excel automation | Aspose.Cells table example
-// Common Searches: Aspose.Cells import CSV with auto data type detection | How to create an Excel table from a CSV using Aspose.Cells | C# ImportCSV autoConvert true example | Convert CSV to XLSX and add ListObject Aspose.Cells | Detect numeric columns when importing CSV in .NET
-// Developer Intent: Read a CSV file, let Aspose.Cells infer column data types, wrap the imported range in an Excel table, and export the workbook as an XLSX file.
-// Use Cases: Transform daily sales CSV files into structured Excel tables for pivot‑table analysis. | Build a configuration‑report generator that ingests CSV settings, preserves numeric formats, and outputs a formatted workbook. | Create a reusable utility that accepts any CSV, automatically types columns, adds a table with headers, and saves it for downstream processing.
-// AI Prompts: Generate C# code with Aspose.Cells to import a CSV, enable autoConvert for data types, create a ListObject covering the data, and save as XLSX. | Explain how the ImportCSV method's autoConvert flag determines column types and how to retrieve the used range for table creation. | Suggest best‑practice error handling when loading a CSV and building an Excel table with Aspose.Cells for .NET.
+// Title: Import a CSV file into an Excel workbook as a ListObject table with automatic column type detection using Aspose.Cells for .NET
+// AI Prompts: Load a CSV file into a Workbook with LoadOptions(LoadFormat.Csv) so Aspose.Cells infers column data types, then obtain the worksheet's used range. | Create a ListObject on the first worksheet covering the used range, mark the first row as headers, assign a display name, and save the workbook as an .xlsx file.
+// Common Searches: how to import csv into excel as a table with Aspose.Cells C# | Aspose.Cells automatically detect column types when loading CSV | create ListObject from CSV data in Aspose.Cells .NET | save imported CSV as Excel table with headers using Aspose.Cells | C# load CSV to workbook and convert to Excel table with type inference
+// Tags: load csv with automatic type detection Aspose.Cells | create ListObject table from worksheet range C# | save workbook as xlsx after csv import Aspose.Cells | detect column data types during csv load Aspose.Cells | add table with headers from csv using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// C# example that validates a CSV file, creates a new Workbook, imports the CSV starting at A1 with automatic numeric conversion, determines the used range, builds a ListObject (Excel table) with headers, and saves the result as an XLSX file.
+// The example checks for the CSV file, loads it into an Aspose.Cells Workbook using LoadOptions so column data types are auto‑detected, creates a ListObject that spans the used range with the first row as headers, names the table "ImportedTable", and saves the result as an .xlsx workbook.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the CSV file to be imported
+            // Path to the source CSV file
             string csvPath = "data.csv";
 
-            // Verify that the CSV file exists to avoid FileNotFoundException
+            // Ensure the CSV file exists to avoid FileNotFoundException
             if (!File.Exists(csvPath))
             {
-                Console.WriteLine($"CSV file not found: {csvPath}");
+                Console.WriteLine($"Error: The file '{csvPath}' was not found.");
                 return;
             }
 
-            // Create a new workbook (lifecycle create rule)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Load the CSV file into a new workbook.
+            // Aspose.Cells automatically detects column data types while loading CSV.
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(csvPath, loadOptions);
 
-            // Import CSV data starting at cell A1 (row 0, column 0)
-            // Use comma as delimiter and enable automatic conversion of numeric strings
-            cells.ImportCSV(csvPath, ",", true, 0, 0); // ImportCSV rule
+            // The CSV data is placed in the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the used range after import
-            int firstRow = 0;
-            int firstColumn = 0;
-            int totalRows = cells.MaxDataRow + 1;      // MaxDataRow is zero‑based
-            int totalColumns = cells.MaxDataColumn + 1;
+            // Determine the used range of the worksheet.
+            int firstRow = sheet.Cells.MinRow;
+            int firstColumn = sheet.Cells.MinColumn;
+            int lastRow = sheet.Cells.MaxDataRow;
+            int lastColumn = sheet.Cells.MaxDataColumn;
 
-            // Add an Excel table (ListObject) over the imported range
-            // hasHeaders = true assumes the first row contains column names
-            int tableIndex = worksheet.ListObjects.Add(
-                firstRow,
-                firstColumn,
-                firstRow + totalRows - 1,
-                firstColumn + totalColumns - 1,
-                true);
-            ListObject table = worksheet.ListObjects[tableIndex];
-            table.DisplayName = "ImportedCsvTable";
+            // Create a table (ListObject) that covers the used range.
+            // The 'true' argument indicates that the first row contains column headers.
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "ImportedTable";
 
-            // Save the workbook (lifecycle save rule)
-            workbook.Save("ImportedTable.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved as ImportedTable.xlsx");
+            // Save the workbook with the new table to an Excel file.
+            string outputPath = "ImportedTable.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

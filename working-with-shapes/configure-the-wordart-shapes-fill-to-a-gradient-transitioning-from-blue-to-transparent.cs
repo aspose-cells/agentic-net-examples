@@ -1,49 +1,53 @@
-// Title: Aspose.Cells for .NET – Apply a Blue‑to‑Transparent Gradient Fill to WordArt (C#)
-// Description: This example creates a workbook, inserts a WordArt shape, switches its Fill.FillType to Gradient, configures a GradientFill with SetTwoColorGradient so the color changes from solid blue to fully transparent, and saves the result as an .xlsx file.
-// Keywords: Aspose.Cells | C# | WordArt gradient | blue transparent fill | GradientFill | SetTwoColorGradient | horizontal gradient
-// Common Searches: Aspose.Cells set gradient fill for WordArt C# | blue to transparent WordArt example Aspose.Cells | how to create fading WordArt in .NET spreadsheet
-// Developer Intent: Insert a WordArt object and give it a horizontal gradient that fades from opaque blue to transparent.
-// Use Cases: Design a report header where the title text gradually blends into the worksheet background. | Create a visual separator in dashboards that uses a subtle blue fade to draw attention. | Generate marketing spreadsheets with gradient‑filled WordArt to highlight key sections.
-// AI Prompts: Show how to change the gradient direction to vertical for the same WordArt shape. | Provide code for a three‑color gradient (blue, white, transparent) on WordArt using Aspose.Cells. | Explain how to modify the gradient variant index to produce a diagonal fade on WordArt.
+// Title: How to apply a blue-to-transparent linear gradient fill to a WordArt shape in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a WordArt shape, clears any existing gradient stops, and adds a solid‑blue start stop and a fully transparent end stop. | Show the steps to set a shape's FillType to Gradient and configure its GradientFill object for a blue‑to‑transparent linear gradient in an Excel file. | Provide a complete example that adds a WordArt shape, defines a linear gradient from solid blue to 100% transparency, and saves the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# example for setting a gradient fill on a WordArt shape with transparent end color | how to create a blue to transparent gradient for WordArt in an Excel file using Aspose.Cells | C# Aspose.Cells linear gradient fill on shape with custom gradient stops
+// Tags: Aspose.Cells WordArt gradient fill C# | linear gradient fill shape Aspose.Cells | transparent gradient stop Aspose.Cells | configure WordArt fill Aspose.Cells | C# Excel shape gradient Aspose.Cells
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// This example creates a workbook, inserts a WordArt shape, switches its Fill.FillType to Gradient, configures a GradientFill with SetTwoColorGradient so the color changes from solid blue to fully transparent, and saves the result as an .xlsx file.
-class ConfigureWordArtGradient
+// // Creates a workbook, adds a WordArt shape, applies a blue‑to‑transparent linear gradient fill, and saves the file as WordArtGradient.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape (any preset style works)
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1, // preset style
-            "Gradient WordArt",                // text
-            1, 0,                             // upper left row, top
-            1, 0,                             // upper left column, left
-            300, 100);                        // height, width
+            // Add a WordArt shape to the worksheet
+            // Parameters: style, text, upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, rowOffset, columnOffset
+            Shape wordArt = sheet.Shapes.AddWordArt(
+                PresetWordArtStyle.WordArtStyle1,
+                "WordArt Example",
+                0, 0, 5, 5, 0, 0);
 
-        // Set the fill type to gradient to access gradient fill properties
-        wordArt.Fill.FillType = FillType.Gradient;
+            // Adjust size (optional)
+            wordArt.Width = 400;
+            wordArt.Height = 100;
 
-        // Obtain the GradientFill object from the shape's fill
-        GradientFill gradientFill = wordArt.Fill.GradientFill;
+            // Configure the fill to be a linear gradient from blue to transparent
+            wordArt.Fill.FillType = FillType.Gradient;
 
-        // Configure a two‑color gradient: opaque blue to fully transparent blue
-        gradientFill.SetTwoColorGradient(
-            Color.Blue,   // first color (opaque)
-            0.0,          // transparency for first color (0 = opaque)
-            Color.Blue,   // second color (will be transparent)
-            1.0,          // transparency for second color (1 = fully transparent)
-            GradientStyleType.Horizontal, // gradient direction
-            1);           // variant
+            // Access the GradientFill object
+            GradientFill gradient = wordArt.Fill.GradientFill;
 
-        // Save the workbook with the configured WordArt
-        workbook.Save("WordArtGradient.xlsx");
+            // Define gradient stops (position, color, transparency)
+            gradient.GradientStops.Clear();
+            // Position is an integer (0‑100), transparency is also an integer (0‑100)
+            gradient.GradientStops.Add(0, Color.FromArgb(255, 0, 0, 255), 0);     // Start: solid blue
+            gradient.GradientStops.Add(100, Color.FromArgb(255, 0, 0, 255), 100); // End: fully transparent
+
+            // Save the workbook to a file
+            workbook.Save("WordArtGradient.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

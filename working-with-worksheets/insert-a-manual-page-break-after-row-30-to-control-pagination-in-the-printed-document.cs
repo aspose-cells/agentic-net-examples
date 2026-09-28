@@ -1,37 +1,48 @@
-// Title: Aspose.Cells for .NET – Insert a Manual Horizontal Page Break After Row 30
-// Description: Creates a new workbook, fills column A with 60 rows, adds a manual horizontal page break at zero‑based index 30 (Excel row 31) to control printed pagination, and saves the file as ManualPageBreakAfterRow30.xlsx.
-// Keywords: Aspose.Cells page break .NET | C# horizontal page break Excel | manual page break after row 30 | Excel pagination Aspose | worksheet.HorizontalPageBreaks.Add
-// Common Searches: add manual page break Aspose.Cells C# | horizontal page break after specific row .NET | control Excel print pagination with Aspose | Aspose.Cells insert page break row 30 example
-// Developer Intent: Add a manual horizontal page break after row 30 to manage printed page layout.
-// Use Cases: Produce multi‑page reports where each page starts after a fixed number of rows. | Generate printable invoices that begin on a new sheet page at a defined row. | Export large data sets with consistent page breaks for accurate printing.
-// AI Prompts: Show how to add horizontal page breaks at rows 20, 40, and 60 using Aspose.Cells for .NET. | Explain the steps to delete a specific horizontal page break from a worksheet. | Provide code that combines vertical page breaks with print options and horizontal breaks.
+// Title: How to insert a manual horizontal page break after row 30 in an Excel worksheet with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing .xlsx file, adds a manual horizontal page break after row 30 on the first worksheet using Aspose.Cells, and saves the workbook. | Write a .NET console application that uses Aspose.Cells to place a page break before row 31 (zero‑based index 30) and verifies the break is added. | Create a snippet that demonstrates adding a horizontal page break to a worksheet at row 30 with Aspose.Cells and outputs the modified file path.
+// Common Searches: Aspose.Cells add horizontal page break after row 30 C# example | C# set manual page break in Excel worksheet using Aspose.Cells | How to control pagination in an Excel file with Aspose.Cells .NET | Insert page break before row 31 Aspose.Cells API usage
+// Tags: Aspose.Cells horizontal page break API | C# insert manual page break Excel worksheet | Excel pagination after specific row Aspose.Cells | Worksheet page break manipulation .NET | Aspose.Cells add page break to workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPageBreakDemo
+// Loads an existing workbook, inserts a manual horizontal page break after row 30 on the first worksheet using Aspose.Cells, and saves the updated file.
+class Program
 {
-    // Creates a new workbook, fills column A with 60 rows, adds a manual horizontal page break at zero‑based index 30 (Excel row 31) to control printed pagination, and saves the file as ManualPageBreakAfterRow30.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate some sample data (optional, just to visualize the break)
-            for (int i = 0; i < 60; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
 
-            // Insert a manual horizontal page break after row 30.
-            // Row index is zero‑based, so row 30 corresponds to Excel row 31.
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index or name as needed)
+            var worksheet = workbook.Worksheets[0];
+
+            // Insert a manual horizontal page break after row 30
+            // HorizontalPageBreaks.Add adds a break before the specified row (zero‑based index)
+            // Adding a break before row 31 (index 30) creates a break after row 30
             worksheet.HorizontalPageBreaks.Add(30);
 
-            // Save the workbook to an XLSX file
-            workbook.Save("ManualPageBreakAfterRow30.xlsx");
+            // Save the workbook with the new page break
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log or display the exception details for debugging
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

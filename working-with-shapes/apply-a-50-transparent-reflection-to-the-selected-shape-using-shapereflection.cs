@@ -1,45 +1,54 @@
-// Title: Apply 50% Transparent Custom Reflection to a Shape with Aspose.Cells for .NET
-// Description: Creates a new workbook, adds a rectangle shape, accesses its Reflection property, sets ReflectionEffect.Type to Custom, configures Transparency (0.5), Size (55), Blur (0.5) and Distance (0), then saves the file as ShapeWithReflection.xlsx.
-// Keywords: Aspose.Cells shape reflection | C# ReflectionEffect | custom shape reflection .NET | shape transparency Aspose.Cells | reflection blur size distance
-// Common Searches: Aspose.Cells add transparent reflection to shape | C# set custom reflection properties on worksheet shape | how to use Shape.Reflection in Aspose.Cells | save workbook with reflected rectangle shape
-// Developer Intent: Add a 50% transparent custom reflection to a rectangle shape and persist the workbook.
-// Use Cases: Highlight key totals in financial dashboards with reflective rectangles. | Generate marketing PDFs where shapes have a subtle semi‑transparent shine. | Apply a uniform reflection style to multiple shapes across automated reports.
-// AI Prompts: Show C# code to change the reflection size and blur of an existing shape in Aspose.Cells. | Generate a script that applies a 50% transparent custom reflection to every shape in a workbook. | Explain how each ReflectionEffect property (Type, Transparency, Size, Blur, Distance) influences the visual output.
+// Title: Apply a 50% transparent reflection to a shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the Reflection.Transparency property of a worksheet shape to 0.5 with Aspose.Cells in C#. | Create a rectangle shape when none exist and apply a 50% transparent reflection using Shape.Reflection in Aspose.Cells. | Update an existing Excel shape's reflection effect to half‑transparent and save the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to make shape reflection 50% transparent | set reflection transparency on Excel shape using Aspose.Cells .NET | add rectangle shape and apply reflection effect in Aspose.Cells workbook | modify shape reflection property in C# Aspose.Cells example | Excel shape reflection settings Aspose.Cells API
+// Tags: Aspose.Cells shape.Reflection.Transparency | C# add rectangle shape Aspose.Cells | apply half transparent reflection Aspose.Cells | modify existing shape properties Excel .NET | reflection effect on worksheet shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, adds a rectangle shape, accesses its Reflection property, sets ReflectionEffect.Type to Custom, configures Transparency (0.5), Size (55), Blur (0.5) and Distance (0), then saves the file as ShapeWithReflection.xlsx.
-class ApplyReflection
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads or creates a workbook, accesses the first worksheet, retrieves the first shape or adds a rectangle if none exist, sets its Reflection.Transparency to 0.5 (50% transparent), and saves the modified file as output.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-            // Add a rectangle shape to the worksheet
-            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
+                // Load existing workbook if it exists; otherwise create a new one
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-            // Obtain the reflection effect from the shape
-            ReflectionEffect reflection = shape.Reflection;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set custom reflection type and its properties
-            reflection.Type = ReflectionEffectType.Custom;
-            reflection.Transparency = 0.5;   // 50% transparency
-            reflection.Size = 55;           // end alpha position (percentage)
-            reflection.Blur = 0.5;          // blur radius
-            reflection.Distance = 0;       // distance from the shape
+                // Get the first shape or add a placeholder rectangle if none exist
+                Shape shape;
+                if (worksheet.Shapes.Count > 0)
+                {
+                    shape = worksheet.Shapes[0];
+                }
+                else
+                {
+                    // Add a rectangle shape as a placeholder
+                    shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
+                }
 
-            // Save the workbook with the applied reflection effect
-            workbook.Save("ShapeWithReflection.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Apply a reflection effect (type defaults to Reflection)
+                shape.Reflection.Transparency = 0.5; // 50% transparent reflection
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

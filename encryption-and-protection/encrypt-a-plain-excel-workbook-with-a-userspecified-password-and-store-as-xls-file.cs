@@ -1,52 +1,32 @@
-// Title: C# – Password‑Protect and Encrypt an Excel Workbook, Save as XLS with Aspose.Cells
-// Description: Loads a plain .xlsx file (creates a sample if missing), sets a user‑defined password, applies 128‑bit strong encryption, and saves the workbook in Excel 97‑2003 (XLS) format using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | encrypt Excel workbook | password protect XLS | 128-bit encryption | Workbook.Settings.Password | SetEncryptionOptions | save as XLS | Excel 97-2003 | secure Excel file | convert xlsx to xls
-// Common Searches: Aspose.Cells encrypt workbook C# | How to password protect an XLS file using Aspose.Cells | Set 128‑bit encryption for Excel 97‑2003 with Aspose | Convert .xlsx to .xls with password protection .NET | C# code to save encrypted XLS with Aspose.Cells
-// Developer Intent: Apply a user‑specified password and strong encryption to an existing workbook and output it as a protected XLS file.
-// Use Cases: Securely distribute a financial report by delivering a password‑protected XLS version. | Meet compliance rules that require 128‑bit encryption when converting confidential .xlsx files to the legacy XLS format. | Automate batch processing that reads plain workbooks, encrypts each with a unique password, and stores them as protected XLS files.
-// AI Prompts: Show C# code that loads an .xlsx file, sets a user‑provided password, configures 128‑bit strong encryption, and saves the workbook as an XLS file using Aspose.Cells. | Provide an Aspose.Cells example with error handling that encrypts a workbook with a password and saves it in Excel 97‑2003 format.
+// Title: Encrypt an Excel workbook with a custom password and save it as an XLS file using Aspose.Cells for .NET
+// AI Prompts: Load a workbook, set Workbook.Settings.Password to a user‑provided string, and save it as an Excel97To2003 (.xls) file with Aspose.Cells. | Modify the example to read the password from console input, apply it to the workbook, and generate an encrypted XLS output. | Demonstrate how to programmatically protect an existing .xlsx file with a password and export the protected version as a legacy .xls using Aspose.Cells.
+// Common Searches: Aspose.Cells .NET how to password protect an Excel file and export to .xls format | C# encrypt workbook with user defined password using Aspose.Cells SaveFormat.Excel97To2003 | Set password on Workbook.Settings and save as encrypted XLS with Aspose.Cells example
+// Tags: Workbook.Settings.Password encryption | encrypted XLS export using Aspose.Cells | Excel97To2003 password protection C# | protect workbook programmatically Aspose.Cells | export encrypted Excel 97-2003 file
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Loads a plain .xlsx file (creates a sample if missing), sets a user‑defined password, applies 128‑bit strong encryption, and saves the workbook in Excel 97‑2003 (XLS) format using Aspose.Cells for .NET.
-class EncryptWorkbookToXls
+// // Loads a workbook, assigns a password via Workbook.Settings.Password, and saves it as an encrypted Excel 97‑2003 (.xls) file.
+class Program
 {
     static void Main()
     {
-        string inputPath = "plain.xlsx";
-        string outputPath = "encrypted.xls";
-        string password = "mySecretPassword";
+        // Path to the source workbook (can be any supported format)
+        string sourcePath = "source.xlsx";
 
-        try
-        {
-            // Ensure the source workbook exists; create a simple one if it doesn't.
-            if (!File.Exists(inputPath))
-            {
-                Workbook tempWb = new Workbook();
-                Worksheet sheet = tempWb.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sample Data");
-                tempWb.Save(inputPath, SaveFormat.Xlsx);
-            }
+        // Path for the encrypted XLS file to be created
+        string encryptedPath = "encrypted.xls";
 
-            // Load the existing workbook.
-            Workbook workbook = new Workbook(inputPath);
+        // User‑specified password for encryption
+        string password = "YourPasswordHere";
 
-            // Set password to protect the workbook.
-            workbook.Settings.Password = password;
+        // Load the existing workbook
+        Workbook workbook = new Workbook(sourcePath);
 
-            // Apply strong encryption (128‑bit key) for XLS format.
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+        // Apply password protection (encryption) to the workbook
+        workbook.Settings.Password = password;
 
-            // Save as Excel 97‑2003 format (XLS).
-            workbook.Save(outputPath, SaveFormat.Excel97To2003);
-
-            Console.WriteLine($"Workbook encrypted and saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the workbook as an Excel 97‑2003 file (XLS) with encryption
+        workbook.Save(encryptedPath, SaveFormat.Excel97To2003);
     }
 }

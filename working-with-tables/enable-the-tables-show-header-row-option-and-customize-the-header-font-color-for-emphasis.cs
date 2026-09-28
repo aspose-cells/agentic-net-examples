@@ -1,62 +1,74 @@
-// Title: Show Table Header Row and Apply Red Bold Font with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds sample data, defines a ListObject that includes the header row, enables ShowHeaderRow, builds a custom TableStyle that sets the header font to red and bold, applies the style to the table, and saves the file as TableHeaderDemo.xlsx.
-// Keywords: Aspose.Cells | C# | ShowHeaderRow | ListObject header | custom TableStyle | HeaderRow font color | red bold header | Excel table styling | .NET spreadsheet API
-// Common Searches: Aspose.Cells show header row C# | How to style table header in Aspose.Cells | Custom TableStyle for header row Aspose.Cells .NET | Set header font color red Aspose.Cells | Enable ListObject header row programmatically
-// Developer Intent: Display the table's header row and emphasize column titles with a red bold font using a custom TableStyle in Aspose.Cells for .NET.
-// Use Cases: Activate the header row for a newly created ListObject and highlight it with a red bold font. | Create a reusable TableStyle that consistently formats header rows across multiple tables in a workbook. | Toggle the ShowHeaderRow property at runtime while preserving custom header styling for user‑controlled view options.
-// AI Prompts: Generate C# code that creates a ListObject with ShowHeaderRow enabled and applies a custom TableStyle that sets the header font to blue and italic using Aspose.Cells. | Provide an example of updating an existing table's header style to a green background with white bold text in Aspose.Cells for .NET. | Show how to copy a custom header style from one worksheet to another table within the same workbook using Aspose.Cells.
+// Title: How to display a table header row and apply a red font color to the header using Aspose.Cells for .NET
+// AI Prompts: Create an Excel workbook, add a ListObject table, enable its ShowHeaderRow property, and set the header row font color to red with Aspose.Cells in C#. | Write C# code that defines a red‑font style, applies it to the first row of a ListObject table, and saves the workbook using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# show table header row and change header text color | set ListObject ShowHeaderRow true and style header text red | apply custom font color to Excel table header using Aspose.Cells .NET | how to style table header row in Aspose.Cells workbook | C# Aspose.Cells change header row text color to red
+// Tags: Aspose.Cells ListObject header visibility | Aspose.Cells header font color styling | C# style Excel table header Aspose.Cells | Apply style to table header Aspose.Cells | Excel table header customization Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.Drawing;
+using System.IO;
 
-namespace AsposeCellsTableHeaderDemo
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The example creates a new workbook, adds a ListObject table with a visible header row, defines a style with a red font, applies this style to the header range, and saves the file as output.xlsx.
+class Program
 {
-    // Creates a workbook, adds sample data, defines a ListObject that includes the header row, enables ShowHeaderRow, builds a custom TableStyle that sets the header font to red and bold, applies the style to the table, and saves the file as TableHeaderDemo.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data with a header row
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Price");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(1.5);
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["B3"].PutValue(0.75);
+            // Populate sample data (including header row)
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("John");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("Jane");
+            sheet.Cells["B3"].PutValue(25);
 
-            // Add a table (ListObject) that includes the header row
-            int tableIndex = worksheet.ListObjects.Add("A1", "B3", true);
-            ListObject table = worksheet.ListObjects[tableIndex];
+            // Define the range for the table (including header)
+            int firstRow = 0;          // zero‑based index for row 1
+            int firstColumn = 0;       // zero‑based index for column A
+            int totalRows = 3;         // header + 2 data rows
+            int totalColumns = 2;      // two columns: Name and Age
 
-            // Ensure the header row is visible
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+
+            // Ensure the header row is displayed
             table.ShowHeaderRow = true;
 
-            // Create a style for the header row (red, bold font)
+            // Create a style for the header row and set the font color
             Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.Color = Color.Red;
-            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Color = Color.Red; // Emphasize header with red font
 
-            // Create a custom table style and set the header row element style
-            TableStyleCollection tableStyles = workbook.Worksheets.TableStyles;
-            string customStyleName = "CustomHeaderStyle";
-            int styleIdx = tableStyles.AddTableStyle(customStyleName);
-            TableStyle customStyle = tableStyles[styleIdx];
+            // Apply the style to the header row of the table
+            AsposeRange headerRange = sheet.Cells.CreateRange(firstRow, firstColumn, 1, totalColumns);
+            headerRange.SetStyle(headerStyle);
 
-            // Add HeaderRow element and apply the header style
-            int elementIdx = customStyle.TableStyleElements.Add(TableStyleElementType.HeaderRow);
-            customStyle.TableStyleElements[elementIdx].SetElementStyle(headerStyle);
+            // Define output file path
+            string outputPath = "output.xlsx";
 
-            // Apply the custom style to the table
-            table.TableStyleName = customStyleName;
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook
-            workbook.Save("TableHeaderDemo.xlsx");
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

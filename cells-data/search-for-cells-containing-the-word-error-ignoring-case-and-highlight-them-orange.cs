@@ -1,62 +1,51 @@
-// Title: C# AspNet Cells – Search for “error” (case‑insensitive) and apply orange highlight
-// Description: Opens or creates an Excel workbook, sets up FindOptions to locate cells whose text contains the word “error” irrespective of case, assigns a solid orange fill to each match, and writes the updated file to HighlightedErrorCells.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | FindOptions | text search Excel | highlight cells orange | cell formatting | workbook automation | Excel styling | case insensitive search
-// Common Searches: Aspose.Cells find text ignoring case | apply orange background to cells containing a keyword | C# loop through all matches in a worksheet | save workbook after conditional formatting with Aspose
-// Developer Intent: Identify every cell that includes the word “error” regardless of letter case and color it orange.
-// Use Cases: Automatically flag error messages in generated reports for quick visual review. | Run a validation routine on imported spreadsheets that highlights any occurrence of the word “error”. | Process a batch of workbooks, marking all error cells before archiving or sending to stakeholders.
-// AI Prompts: Generate C# code using Aspose.Cells to locate all cells containing the substring “error” without case sensitivity and set their background to orange. | Show how to configure FindOptions with LookInType.Values and LookAtType.Contains for a case‑agnostic text search in Aspose.Cells. | Explain an efficient way to style each found cell only once, avoiding repeated style creation, in a .NET Excel automation script.
+// Title: Highlight cells containing the word “error” (case‑insensitive) with an orange background using Aspose.Cells for .NET (C#)
+// AI Prompts: Find all cells whose value contains the substring "error" without case sensitivity and set an orange solid fill style using Aspose.Cells in C#. | Configure FindOptions for a case‑insensitive, contains search and apply a custom orange Style to each matching cell in a worksheet.
+// Common Searches: aspocells c# find cells containing text case insensitive | how to highlight cells with specific word in Excel using Aspose.Cells | apply orange background to cells that contain 'error' in C# Aspose.Cells | using FindOptions LookAt Contains to style matching cells in Aspose.Cells
+// Tags: Aspose.Cells case-insensitive FindOptions | orange cell background style Aspose.Cells | highlight cells containing substring Aspose.Cells | C# Excel cell search and style Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsHighlightError
+// Creates or loads a workbook, configures a case‑insensitive FindOptions with LookAt.Contains, iterates through all cells that contain the word "error", applies an orange solid fill style, and saves the result as HighlightedErrors.xlsx.
+class HighlightErrorCells
 {
-    // Opens or creates an Excel workbook, sets up FindOptions to locate cells whose text contains the word “error” irrespective of case, assigns a solid orange fill to each match, and writes the updated file to HighlightedErrorCells.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Sample data – this section can be removed when using a real workbook
+        worksheet.Cells["A1"].PutValue("No error here");
+        worksheet.Cells["A2"].PutValue("Error occurred");
+        worksheet.Cells["A3"].PutValue("Another ERROR found");
+        worksheet.Cells["A4"].PutValue("All good");
+
+        // Configure find options: case‑insensitive, search cell values, match if contains the text
+        FindOptions findOptions = new FindOptions
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // Replace with new Workbook("input.xlsx") to load
-            Worksheet worksheet = workbook.Worksheets[0];
+            CaseSensitive = false,
+            LookInType = LookInType.Values,
+            LookAtType = LookAtType.Contains
+        };
 
-            // ------------------------------------------------------------
-            // Set up find options: case‑insensitive, search in cell values,
-            // and look for cells that contain the word "error".
-            // ------------------------------------------------------------
-            FindOptions findOptions = new FindOptions
-            {
-                CaseSensitive = false,                 // ignore case
-                LookInType = LookInType.Values,        // search cell values
-                LookAtType = LookAtType.Contains        // match if the value contains the key
-            };
+        // Create a style with orange background
+        Style orangeStyle = workbook.CreateStyle();
+        orangeStyle.ForegroundColor = Color.Orange;
+        orangeStyle.Pattern = BackgroundType.Solid;
 
-            // ------------------------------------------------------------
-            // Loop through all cells that match the criteria.
-            // The previousCell parameter is used to continue the search.
-            // ------------------------------------------------------------
-            Cell previousCell = null;
-            Cell foundCell;
-
-            while ((foundCell = worksheet.Cells.Find("error", previousCell, findOptions)) != null)
-            {
-                // Create a style with orange background
-                Style orangeStyle = workbook.CreateStyle();
-                orangeStyle.ForegroundColor = Color.Orange;
-                orangeStyle.Pattern = BackgroundType.Solid;
-
-                // Apply the style to the found cell
-                foundCell.SetStyle(orangeStyle);
-
-                // Update previousCell to continue searching from the next cell
-                previousCell = foundCell;
-            }
-
-            // ------------------------------------------------------------
-            // Save the workbook with the highlighted cells
-            // ------------------------------------------------------------
-            workbook.Save("HighlightedErrorCells.xlsx");
+        // Iterate through all cells that contain the word "error" (ignoring case) and apply the style
+        Cell previousCell = null;
+        Cell foundCell = worksheet.Cells.Find("error", previousCell, findOptions);
+        while (foundCell != null)
+        {
+            foundCell.SetStyle(orangeStyle);
+            previousCell = foundCell;
+            foundCell = worksheet.Cells.Find("error", previousCell, findOptions);
         }
+
+        // Save the modified workbook
+        workbook.Save("HighlightedErrors.xlsx");
     }
 }

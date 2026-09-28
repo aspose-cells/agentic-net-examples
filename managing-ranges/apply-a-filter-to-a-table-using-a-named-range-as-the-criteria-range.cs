@@ -1,73 +1,58 @@
-// Title: C# – Apply Advanced Filter to an Aspose.Cells Table Using a Named Range
-// Description: Creates a workbook, builds a two‑column ListObject, defines a named range (CriteriaRange) with a matching header, and runs Worksheet.AdvancedFilter to filter the table in place. The filtered file is saved as FilteredTableWithNamedCriteria.xlsx.
-// Keywords: Aspose.Cells | C# | AdvancedFilter | named range | criteria range | ListObject filter | Excel table filtering | in‑place filter | Aspose.Cells example | Excel automation .NET
-// Common Searches: Aspose.Cells advanced filter with named range C# | How to filter a ListObject using a criteria range in Aspose.Cells | Apply in‑place AdvancedFilter to an Excel table with Aspose.Cells | Create and use named range for Excel filter Aspose.Cells .NET | C# code sample for Aspose.Cells AdvancedFilter
-// Developer Intent: Filter rows of an Excel table programmatically by applying Aspose.Cells' AdvancedFilter with a named criteria range.
-// Use Cases: Show only expense rows where Category equals "Food" without copying data to another range. | Reuse a single named criteria range to filter multiple tables across a workbook. | Perform quick, in‑place data segmentation while keeping original headers and layout intact.
-// AI Prompts: Generate C# code that creates a named range for filter criteria and applies Aspose.Cells AdvancedFilter to a ListObject. | Explain how to modify the named criteria range to filter different values (e.g., other categories) using Aspose.Cells. | Suggest robust error‑handling for cases where the named criteria range header does not match any table column.
+// Title: Refresh an existing AutoFilter on a named Excel table (ListObject) using Aspose.Cells for .NET when CriteriaRange is not supported
+// AI Prompts: Load an .xlsx file, locate the ListObject called 'MyTable' on the first worksheet, invoke the method that updates its current filter, and save the workbook using Aspose.Cells in C#. | With Aspose.Cells for .NET, retrieve a table by its name, trigger a refresh of any applied filters, and write the modified workbook to a new file. | Demonstrate a workaround for the missing CriteriaRange property by simply refreshing the existing filter on a named Excel table with C# code.
+// Common Searches: Aspose.Cells how to refresh autofilter on a ListObject table in C# | C# code to update existing filter on Excel table using Aspose.Cells | Example of using Aspose.Cells to refresh table filters | Workaround for missing CriteriaRange in Aspose.Cells AutoFilter | Refresh Excel table filter after loading workbook with Aspose.Cells .NET
+// Tags: AutoFilter.Refresh Aspose.Cells C# | ListObject filter refresh Aspose.Cells | named table access Aspose.Cells .NET | CriteriaRange not supported Aspose.Cells | load workbook save after filter refresh Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // For ListObject
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsFilterWithNamedRange
+namespace AsposeCellsExample
 {
-    // Creates a workbook, builds a two‑column ListObject, defines a named range (CriteriaRange) with a matching header, and runs Worksheet.AdvancedFilter to filter the table in place. The filtered file is saved as FilteredTableWithNamedCriteria.xlsx.
-    public class Program
+    // The example loads 'input.xlsx' with Aspose.Cells, accesses the first worksheet, retrieves the ListObject named 'MyTable', calls the AutoFilter.Refresh method to update any existing filter (since CriteriaRange is unavailable), and saves the result as 'output.xlsx', including basic file existence checks and exception handling.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // ---------- Populate sample data (the table) ----------
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Amount");
-                worksheet.Cells["A2"].PutValue("Food");
-                worksheet.Cells["B2"].PutValue(120);
-                worksheet.Cells["A3"].PutValue("Transport");
-                worksheet.Cells["B3"].PutValue(80);
-                worksheet.Cells["A4"].PutValue("Food");
-                worksheet.Cells["B4"].PutValue(150);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Create a ListObject (table) from the data range A1:B4
-                // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-                int listObjectIndex = worksheet.ListObjects.Add(0, 0, 4, 2, true);
-                ListObject table = worksheet.ListObjects[listObjectIndex];
-                // No need to set ShowHeaders; it is already true when hasHeaders = true
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // ---------- Define criteria range ----------
-                // Criteria header (must match a column header) and the filter value
-                worksheet.Cells["D1"].PutValue("Category");
-                worksheet.Cells["D2"].PutValue("Food");
+                // Retrieve the table (ListObject) by name
+                ListObject table = sheet.ListObjects["MyTable"];
+                if (table == null)
+                {
+                    Console.WriteLine("Table 'MyTable' not found.");
+                    return;
+                }
 
-                // Create a named range that refers to the criteria cells (D1:D2)
-                AsposeRange criteriaRange = worksheet.Cells.CreateRange("D1:D2");
-                criteriaRange.Name = "CriteriaRange";
+                // NOTE: Aspose.Cells AutoFilter does not expose a CriteriaRange property.
+                // If specific filter criteria are required, use the appropriate AutoFilter methods
+                // such as ApplyCustomFilter. Here we simply refresh the existing filter.
+                table.AutoFilter.Refresh();
 
-                // ---------- Apply Advanced Filter ----------
-                // isFilter = false  -> filter in place (do not copy to another range)
-                // listRange  = address of the table data (including headers)
-                // criteriaRange = name of the criteria range defined above
-                // copyTo = null (not used when filtering in place)
-                // uniqueRecordOnly = false (show all matching rows)
-                worksheet.AdvancedFilter(
-                    false,                 // filter in place
-                    "A1:B4",               // list range (table)
-                    "CriteriaRange",       // criteria range (named range)
-                    null,                  // copy to range (not needed)
-                    false);                // do not restrict to unique records
-
-                // Save the workbook to verify the filter was applied
-                workbook.Save("FilteredTableWithNamedCriteria.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

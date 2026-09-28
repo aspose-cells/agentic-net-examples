@@ -1,47 +1,42 @@
-// Title: Reusable FreezePanes Extension Method for Aspose.Cells (C#)
-// Description: Provides a static Worksheet extension method FreezeAt that wraps Aspose.Cells' FreezePanes call. The method accepts zero‑based row and column indices, uses them as both the freeze line and the count of rows/columns to lock, and is demonstrated by freezing the first three rows and two columns before saving the workbook.
-// Keywords: Aspose.Cells | C# extension method | FreezePanes | worksheet freeze panes | reusable utility | Excel header freeze | zero‑based indices | FreezeAt method | Excel export helper | Aspose.Cells API
-// Common Searches: Aspose.Cells how to freeze panes with a helper method | C# extension to lock rows and columns in Excel | Reusable FreezePanes code sample Aspose | Freeze first rows and columns using Aspose.Cells C# | Worksheet FreezeAt utility example
-// Developer Intent: Create a single, reusable method that freezes rows and columns based on supplied indices, eliminating repetitive FreezePanes calls.
-// Use Cases: Standardize header row and column freezing across all generated worksheets. | Simplify Excel report generation by calling sheet.FreezeAt(row, col) instead of raw FreezePanes parameters. | Encapsulate pane‑freezing logic in a shared library for multiple .NET projects using Aspose.Cells.
-// AI Prompts: Generate a C# extension method named FreezeAt for Aspose.Cells Worksheet that takes zero‑based row and column indices and internally calls FreezePanes with matching frozen rows and columns, including XML documentation. | Show example code that uses FreezeAt to lock the first 5 rows and 3 columns of a worksheet and then saves the file as Report.xlsx. | Explain how to integrate the FreezeAt helper into an existing Aspose.Cells solution and apply it automatically to every worksheet in a workbook.
+// Title: Create a reusable C# method to freeze panes at a specific row and column using Aspose.Cells
+// AI Prompts: Write a C# helper that accepts a Worksheet, row index, and column index and calls Worksheet.FreezePanes to lock the designated rows and columns. | Refactor existing Aspose.Cells code by extracting the freeze‑pane call into a parameterized function that can be reused across multiple worksheets. | Generate sample code that demonstrates invoking the reusable FreezePane method and then saving the workbook as an Excel file.
+// Common Searches: how to use Aspose.Cells FreezePanes with custom row and column in C# | C# method to encapsulate worksheet freeze panes in Aspose.Cells | parameterized freeze panes example Aspose.Cells .NET | freeze rows and columns programmatically using Aspose.Cells C# | reuse freeze pane logic across multiple worksheets Aspose.Cells
+// Tags: Aspose.Cells FreezePanes method | custom worksheet freeze panes utility | zero‑based indexing Aspose.Cells | freeze panes Excel generation C# | reusable worksheet freeze logic
 
 using System;
 using Aspose.Cells;
 
-namespace FreezePanesUtility
+// The example creates a new Workbook, accesses the first Worksheet, and calls a custom FreezePane method with row 5 and column 3. The FreezePane method encapsulates the Aspose.Cells FreezePanes call, using zero‑based indexes, and the workbook is saved as output.xlsx.
+class Program
 {
-    // Provides a static Worksheet extension method FreezeAt that wraps Aspose.Cells' FreezePanes call. The method accepts zero‑based row and column indices, uses them as both the freeze line and the count of rows/columns to lock, and is demonstrated by freezing the first three rows and two columns before saving the workbook.
-    public static class PaneHelper
+    static void Main()
     {
-        /// <param name="worksheet">Target worksheet.</param>
-        /// <param name="row">Zero‑based row index where the freeze line starts.</param>
-        /// <param name="column">Zero‑based column index where the freeze line starts.</param>
-        public static void FreezeAt(this Worksheet worksheet, int row, int column)
+        try
         {
-            // FreezePanes(row, column, freezedRows, freezedColumns)
-            // Here we freeze the same number of rows and columns as the position,
-            // which is the most common scenario.
-            worksheet.FreezePanes(row, column, row, column);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Freeze panes at row 5, column 3 using the reusable method
+            FreezePane(sheet, 5, 3);
+
+            // Save the workbook
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    class Program
+    // Reusable method that freezes panes at the specified row and column
+    static void FreezePane(Worksheet sheet, int row, int column)
     {
-        static void Main()
-        {
-            // Create a new workbook (using the standard creation rule)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Example: freeze panes at row 3, column 2 (zero‑based indices)
-            // This will freeze the first three rows and first two columns.
-            sheet.FreezeAt(3, 2);
-
-            // Save the workbook (using the standard save rule)
-            workbook.Save("FreezePanesResult.xlsx");
-        }
+        // Aspose.Cells uses zero‑based indexes for rows and columns.
+        // The FreezePanes method requires the split row/column and the number of rows/columns to freeze.
+        // Here we freeze rows above 'row' and columns left of 'column'.
+        sheet.FreezePanes(row, column, row, column);
     }
 }

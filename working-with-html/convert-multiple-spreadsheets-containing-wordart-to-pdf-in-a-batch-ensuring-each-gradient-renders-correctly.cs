@@ -1,52 +1,59 @@
-// Title: Batch Convert Excel Files with WordArt Gradients to PDF using Aspose.Cells in C#
-// Description: A C# console utility that scans a source directory for .xlsx workbooks, creates an output folder, and uses Aspose.Cells.Utility.ConversionUtility to convert each file to PDF while preserving WordArt gradient fills. The script logs successes and failures and works for any number of spreadsheets in a single run.
-// Keywords: Aspose.Cells | C# batch Excel to PDF | WordArt gradient conversion | ConversionUtility example | folder based PDF export | preserve graphics in PDF | console app Excel conversion | automated spreadsheet PDF generation
-// Common Searches: batch convert Excel to PDF with WordArt using Aspose.Cells | C# code to preserve WordArt gradients when exporting Excel as PDF | Aspose.Cells ConversionUtility convert multiple workbooks | how to process a folder of .xlsx files to PDF in .NET | automate Excel PDF conversion preserving graphics
-// Developer Intent: Convert every Excel workbook in a directory to PDF while keeping WordArt gradient rendering intact.
-// Use Cases: Nightly job that archives report workbooks containing WordArt as PDF files. | Generating client‑ready PDFs from Excel templates without losing gradient colors. | Command‑line tool for bulk conversion of design‑heavy spreadsheets before distribution.
-// AI Prompts: Write C# code that uses Aspose.Cells to batch convert Excel files to PDF and records any conversion errors. | Explain how to configure Aspose.Cells ConversionUtility to retain WordArt gradient fills in the PDF output. | Show how to extend the sample to walk subfolders recursively and convert all found .xlsx files to PDF.
+// Title: Batch convert Excel .xlsx files with WordArt to PDF using Aspose.Cells while preserving gradient fills (C#)
+// AI Prompts: Write a C# console application that scans a directory for .xlsx workbooks, loads each with Aspose.Cells, and saves them as PDF files using PdfSaveOptions so that WordArt shapes retain their gradient fills. | Generate C# code that iterates over multiple Excel files, creates a Workbook for each, and exports to PDF with Aspose.Cells, ensuring shape rendering (including WordArt gradients) is maintained.
+// Common Searches: asp.net batch convert excel files to pdf preserving wordart gradients | c# aspose.cells convert multiple .xlsx to pdf keep shape formatting | how to export excel workbooks with wordart to pdf using aspose.cells | pdfsaveoptions preserve gradient fills aspose.cells c# | process a folder of excel files and generate pdfs programmatically
+// Tags: batch excel-to-pdf conversion using Aspose.Cells | wordart gradient preservation in PDF export | c# PdfSaveOptions shape rendering | iterate over xlsx files programmatically | export workbooks with embedded WordArt
 
 using System;
 using System.IO;
-using Aspose.Cells.Utility; // Provides ConversionUtility
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// A C# console utility that scans a source directory for .xlsx workbooks, creates an output folder, and uses Aspose.Cells.Utility.ConversionUtility to convert each file to PDF while preserving WordArt gradient fills. The script logs successes and failures and works for any number of spreadsheets in a single run.
-class Program
+// The sample program enumerates all .xlsx files in a given source folder, loads each workbook with Aspose.Cells inside a using block, and saves it as a PDF using PdfSaveOptions. The conversion runs in a batch, writing PDFs to an output directory while ensuring that WordArt objects, including their gradient fills, are rendered correctly in the resulting PDF files.
+class BatchWordArtToPdf
 {
     static void Main()
     {
-        // Folder containing the source Excel files with WordArt
-        string sourceFolder = @"C:\Spreadsheets\Input";
-
+        // Folder containing the source Excel files
+        string sourceFolder = @"C:\Spreadsheets";
         // Folder where the resulting PDFs will be saved
-        string outputFolder = @"C:\Spreadsheets\Output";
-
-        // Verify source folder exists
-        if (!Directory.Exists(sourceFolder))
-        {
-            Console.WriteLine($"Source folder not found: {sourceFolder}");
-            return;
-        }
+        string outputFolder = @"C:\PdfOutput";
 
         // Ensure the output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Process each .xlsx file in the source folder
-        foreach (string excelPath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+        // Get all Excel files in the source folder
+        string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string excelPath in excelFiles)
         {
-            // Build the PDF file name based on the Excel file name
-            string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
-            string pdfPath = Path.Combine(outputFolder, pdfFileName);
+            // Verify the file exists before attempting to load
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"File not found: {excelPath}");
+                continue;
+            }
 
             try
             {
-                // Convert the Excel workbook (including WordArt gradients) to PDF
-                ConversionUtility.Convert(excelPath, pdfPath);
-                Console.WriteLine($"Converted: {excelPath} -> {pdfPath}");
+                // Load the workbook inside a using block for automatic disposal
+                using (Workbook wb = new Workbook(excelPath))
+                {
+                    // Configure PDF save options (no need to set SaveFormat; it's inherent to PdfSaveOptions)
+                    PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                    // Build the output PDF file name
+                    string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
+                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
+
+                    // Save the workbook as PDF
+                    wb.Save(pdfPath, pdfOptions);
+                }
+
+                Console.WriteLine($"Converted '{excelPath}' to PDF successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to convert '{excelPath}': {ex.Message}");
+                Console.WriteLine($"Error converting '{excelPath}': {ex.Message}");
             }
         }
 

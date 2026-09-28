@@ -1,35 +1,31 @@
-// Title: Delete a Column and Recalculate Formulas with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to remove a worksheet column, update formula references, and force a full recalculation using Workbook.CalculateFormula in Aspose.Cells for .NET. The example prints the adjusted values and saves the workbook.
-// Keywords: Aspose.Cells delete column C# | Workbook.CalculateFormula .NET | update formula references after column removal | recalculate Excel formulas programmatically | Aspose.Cells column deletion example
-// Common Searches: how to delete a column and refresh formulas Aspose.Cells | Aspose.Cells recalculate after column removal | C# delete worksheet column and update formulas | Workbook.CalculateFormula usage after deleting column
-// Developer Intent: Remove a specific column from a spreadsheet and ensure all dependent formulas are automatically updated and recalculated.
-// Use Cases: Cleaning up generated reports by dropping unused columns while keeping totals accurate. | Adjusting financial models after removing a data series, with sums and averages updated instantly. | Automating spreadsheet maintenance tasks that require column deletions without breaking formula logic.
-// AI Prompts: Provide C# code that deletes column B in an Aspose.Cells workbook and runs Workbook.CalculateFormula to refresh all formulas. | Explain why the updateReference flag is needed when calling Cells.DeleteColumn and how CalculateFormula completes the update. | Show an end‑to‑end example that deletes a column, recalculates dependent formulas, and saves the updated Excel file using Aspose.Cells.
+// Title: Delete a column and recalculate dependent formulas in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to remove column B from a worksheet and automatically adjust any formulas that reference the removed column. | After removing a column, invoke the method that recomputes all workbook formulas and then save the updated .xlsx file. | Show how to shift cells left when deleting a column and ensure formulas like =A1+B1 update correctly with Aspose.Cells.
+// Common Searches: Aspose.Cells C# delete a column and update formulas automatically | How to recalculate Excel formulas after column removal with Aspose.Cells .NET | Workbook.CalculateFormula usage after structural changes in Aspose.Cells | Shift cells left and refresh dependent formulas using Aspose.Cells C# | Delete column B and keep =A1+B1 correct in Aspose.Cells
+// Tags: delete column Aspose.Cells recalculate formulas | recalculate workbook formulas after column removal C# | adjust formula references Aspose.Cells delete column | Workbook.CalculateFormula after structural change .NET | shift cells left delete column Aspose.Cells | update dependent formulas C# Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to remove a worksheet column, update formula references, and force a full recalculation using Workbook.CalculateFormula in Aspose.Cells for .NET. The example prints the adjusted values and saves the workbook.
+    // The example creates a new workbook, writes values to A1 and B1, sets C1 to =A1+B1, deletes column B while shifting cells left, calls Workbook.CalculateFormula to recompute the formula, and saves the file as DeleteColumnRecalcDemo.xlsx.
     public class DeleteColumnAndRecalculateDemo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Fill sample data in columns A, B, C
+                // Add sample data and a formula that references columns A and B
                 cells["A1"].PutValue(10);
                 cells["B1"].PutValue(20);
-                cells["C1"].PutValue(30);
-
-                // Add a formula that sums the three columns
-                cells["D1"].Formula = "=SUM(A1:C1)";
+                cells["C1"].Formula = "=A1+B1";
 
                 // Delete column B (index 1) and update references in formulas
                 cells.DeleteColumn(1, true);
@@ -37,26 +33,18 @@ namespace AsposeCellsExamples
                 // Recalculate all formulas after the column deletion
                 workbook.CalculateFormula();
 
-                // Display the updated values and formula
-                Console.WriteLine("After deleting column B and recalculating:");
-                Console.WriteLine($"A1 value: {cells["A1"].Value}");
-                Console.WriteLine($"B1 value (original C1): {cells["B1"].Value}");
-                Console.WriteLine($"D1 formula: {cells["D1"].Formula}");
-                Console.WriteLine($"D1 value: {cells["D1"].Value}");
-
                 // Save the modified workbook
                 string outputPath = "DeleteColumnRecalcDemo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

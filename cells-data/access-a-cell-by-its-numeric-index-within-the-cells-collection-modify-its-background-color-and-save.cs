@@ -1,36 +1,40 @@
-// Title: Set a cell's background color using numeric row/column indexes with Aspose.Cells for .NET
-// Description: Creates a workbook, accesses a cell via zero‑based row and column indexes (cells[2,3]), assigns a value, applies a solid yellow background style, and saves the file as ModifiedCellBackground.xlsx.
-// Keywords: Aspose.Cells C# background color | access cell by index Aspose.Cells | apply solid fill style .NET | save workbook after styling | numeric row column cell reference
-// Common Searches: Aspose.Cells set cell color by row and column numbers | C# change background of a specific cell using Aspose.Cells | how to style a cell with solid fill in Aspose.Cells .NET | save workbook after applying cell style Aspose
-// Developer Intent: Apply a solid background color to a cell identified by its numeric row and column indexes and persist the workbook.
-// Use Cases: Highlight header rows in generated reports by coloring cells via index positions. | Mark error cells in automated spreadsheets with a red background using row/column coordinates. | Prepare template placeholders with distinct colors before distributing the workbook.
-// AI Prompts: Write C# code that uses Aspose.Cells to set a blue background on the cell at row 5, column 2 and save as Report.xlsx. | Show how to loop through rows 0‑9 and columns 0‑4, applying a light gray solid fill to each cell with Aspose.Cells for .NET. | Explain how to create a reusable Style object for a green background and apply it to multiple cells accessed by numeric indexes.
+// Title: Apply a solid yellow background to a cell using numeric row/column indexes with Aspose.Cells for .NET and save as XLSX
+// AI Prompts: Create a yellow solid fill style, assign it to the cell at row index 2 and column index 3 in a worksheet, and save the workbook to 'ModifiedCellBackground.xlsx' using Aspose.Cells for C#. | Retrieve a cell from the Cells collection by its zero‑based row and column numbers, set its value, apply a background color style, and export the workbook with Aspose.Cells .NET.
+// Common Searches: Aspose.Cells C# set background color of a cell using row and column indexes | How to style a specific cell by numeric indexes in Aspose.Cells .NET | Saving a workbook after applying a solid fill style to a cell with Aspose.Cells | Zero‑based cell indexing example Aspose.Cells C# background color
+// Tags: background color style Aspose.Cells C# | numeric cell indexing Aspose.Cells | apply solid fill Aspose.Cells | export workbook xlsx Aspose.Cells | zero‑based cell access Aspose.Cells
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Creates a workbook, accesses a cell via zero‑based row and column indexes (cells[2,3]), assigns a value, applies a solid yellow background style, and saves the file as ModifiedCellBackground.xlsx.
+// The program creates a new workbook, accesses cell D3 via zero‑based row and column indexes, sets a value, applies a solid yellow background style, and saves the file as ModifiedCellBackground.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (lifecycle rule)
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
+
+        // Get the Cells collection
         Cells cells = worksheet.Cells;
 
         // Access a cell by numeric row and column indexes (zero‑based)
         // Example: row 2, column 3 corresponds to cell D3 in Excel notation
         Cell targetCell = cells[2, 3];
-        targetCell.PutValue("Background Demo");
+        targetCell.PutValue("Demo");
 
-        // Create a style, set its background color, and apply it to the cell
+        // Create a style and set its background color
         Style bgStyle = workbook.CreateStyle();
         bgStyle.BackgroundColor = Color.Yellow;      // Desired background color
         bgStyle.Pattern = BackgroundType.Solid;      // Ensure the color is visible
+
+        // Apply the style to the selected cell
         targetCell.SetStyle(bgStyle);
 
-        // Save the workbook to a file
+        // Save the workbook (lifecycle rule)
         workbook.Save("ModifiedCellBackground.xlsx");
     }
 }

@@ -1,68 +1,78 @@
-// Title: ASP.NET Core Web API that returns an Excel range as HTML using Aspose.Cells
-// Description: Shows how to create a Workbook, populate cells A1:J25, configure HtmlSaveOptions for HTML5 with Base64‑encoded images, convert the selected range to HTML via range.ToHtml, and send the resulting HTML string directly from a Web API action without writing a file.
-// Keywords: Aspose.Cells | C# | ASP.NET Core | Web API | Excel to HTML | range.ToHtml | HtmlSaveOptions | HTML5 | Base64 images | return HTML string
-// Common Searches: ASP.NET Core return Excel range as HTML | Aspose.Cells convert worksheet to HTML5 in Web API | range.ToHtml example ASP.NET | How to send Excel HTML preview from API | Aspose.Cells Web API endpoint returning HTML string
-// Developer Intent: Expose a Web API endpoint that generates HTML from a specified Excel range and returns the HTML markup as the response body.
-// Use Cases: Provide a GET endpoint for client‑side preview of spreadsheet data as HTML5. | Create a service that accepts an uploaded workbook, converts a user‑defined range to HTML with embedded images, and returns the markup for email or reporting. | Build a microservice that on‑demand transforms large Excel reports into HTML without persisting temporary files.
-// AI Prompts: Generate an ASP.NET Core controller action that builds a Workbook, fills A1:J25, uses HtmlSaveOptions (HTML5, ExportImagesAsBase64 = true), converts the range to HTML with range.ToHtml, and returns the HTML string in an OkResult. | Write code for a POST Web API method that receives an Excel file, selects a range based on query parameters, converts that range to HTML using Aspose.Cells, and streams the HTML string back to the caller. | Provide minimal Program.cs/Startup.cs configuration for ASP.NET Core to register required services and map a route to the HTML‑returning endpoint.
+// Title: Implement an ASP.NET Core Web API action that returns Excel-to-HTML conversion as a string using Aspose.Cells
+// AI Prompts: Write an ASP.NET Core controller method that loads an uploaded Excel file with Aspose.Cells, configures HtmlSaveOptions to export only the first worksheet and embed images as Base64, then returns the generated HTML string in the HTTP response. | Refactor the console example into a Web API endpoint that accepts a file path parameter, converts the workbook to HTML via a MemoryStream, and sends the HTML content back without creating a physical file. | Demonstrate how to set HtmlSaveOptions (ExportActiveWorksheetOnly, ExportImagesAsBase64) and use Workbook.Save to a MemoryStream for returning HTML from a .NET Web API.
+// Common Searches: asp.net core web api convert excel file to html string using aspose.cells | return html from excel workbook in asp.net core controller | aspose.cells htmlsaveoptions export active worksheet only base64 images | memorystream excel to html conversion asp.net core endpoint | how to send excel to html conversion result as response body in .net api
+// Tags: aspnet core aspose.cells html conversion endpoint | export active worksheet to html memory stream | embed excel images as base64 in html output | return html string from workbook in web api | htmlsaveoptions exportactiveworksheetonly aspose.cells
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace MyApp
+namespace MyExcelApp
 {
-    // Shows how to create a Workbook, populate cells A1:J25, configure HtmlSaveOptions for HTML5 with Base64‑encoded images, convert the selected range to HTML via range.ToHtml, and send the resulting HTML string directly from a Web API action without writing a file.
+    // Loads an Excel workbook, configures HtmlSaveOptions to export only the first worksheet and embed images as Base64, saves to a MemoryStream, reads the stream into a string, and returns the HTML string from a Web API action.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Expect the first argument to be the Excel file path.
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Usage: MyExcelApp <excelFilePath> [outputHtmlPath]");
+                return;
+            }
+
+            string excelPath = args[0];
+
+            // Verify the Excel file exists.
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"Error: File not found - {excelPath}");
+                return;
+            }
+
+            // Determine output HTML path.
+            string outputPath = args.Length > 1 ? args[1] : Path.ChangeExtension(excelPath, ".html");
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Load the workbook.
+                var workbook = new Workbook(excelPath);
 
-                // Fill sample data into cells A1:J25
-                for (int i = 0; i < 25; i++)
+                // Configure HTML save options.
+                var htmlOptions = new HtmlSaveOptions
                 {
-                    for (int j = 0; j < 10; j++)
+                    ExportActiveWorksheetOnly = true,   // Export only the first worksheet.
+                    ExportImagesAsBase64 = true         // Embed images directly.
+                    // Default chart image format is PNG; other options are not required.
+                };
+
+                // Save the workbook to a memory stream in HTML format.
+                string htmlContent;
+                using (var memoryStream = new MemoryStream())
+                {
+                    workbook.Save(memoryStream, htmlOptions);
+                    memoryStream.Position = 0;
+                    using (var reader = new StreamReader(memoryStream))
                     {
-                        worksheet.Cells[i, j].Value = $"Cell {i + 1},{j + 1}";
+                        htmlContent = reader.ReadToEnd();
                     }
                 }
 
-                // Create the range to be exported (use fully qualified type to avoid ambiguity)
-                Aspose.Cells.Range range = worksheet.Cells.CreateRange("A1:J25");
-
-                // Set HTML save options
-                HtmlSaveOptions options = new HtmlSaveOptions
-                {
-                    HtmlVersion = HtmlVersion.Html5,      // Use HTML5
-                    ExportImagesAsBase64 = true          // Embed images as Base64
-                };
-
-                // Convert the range to HTML (returns a byte array)
-                byte[] htmlBytes = range.ToHtml(options);
-                string htmlContent = Encoding.UTF8.GetString(htmlBytes);
-
-                // Determine output path and ensure the directory exists
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output.html");
+                // Ensure the output directory exists.
                 string outputDir = Path.GetDirectoryName(outputPath);
-                if (!Directory.Exists(outputDir))
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
-                // Write HTML content to file
-                File.WriteAllText(outputPath, htmlContent, Encoding.UTF8);
-                Console.WriteLine($"HTML file generated at: {outputPath}");
+                // Write the HTML content to the output file.
+                File.WriteAllText(outputPath, htmlContent);
+                Console.WriteLine($"HTML saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                // Handle any errors that occur during processing.
+                Console.WriteLine($"Error processing file: {ex.Message}");
             }
         }
     }

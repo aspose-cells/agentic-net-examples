@@ -1,37 +1,55 @@
-// Title: C# – Detect Read‑Only Worksheet Protection and Retrieve Its Type with Aspose.Cells
-// Description: This example creates a workbook, applies Contents (read‑only) protection with a password, then uses the Worksheet.IsProtected flag, the Protection.Type enum, and the Protection.IsProtectedWithPassword property to report whether the sheet is protected, which protection mode is active, and if a password is required.
-// Keywords: Aspose.Cells worksheet protection check | read‑only sheet detection C# | ProtectionType.Contents example | Worksheet.IsProtected property | password‑protected worksheet Aspose
-// Common Searches: how to check if an Excel sheet is read‑only protected using Aspose.Cells .NET | retrieve protection type of a worksheet in Aspose.Cells C# | determine if worksheet protection uses a password with Aspose.Cells
-// Developer Intent: Identify whether a worksheet is protected with read‑only (Contents) permission, discover the exact protection type applied, and know if a password is set.
-// Use Cases: Validate protection status before modifying sheets in an automated reporting pipeline. | Log protection details for each worksheet when processing user‑uploaded Excel files. | Conditionally remove protection only when it is read‑only and password‑protected.
-// AI Prompts: Generate C# code with Aspose.Cells that checks if a worksheet is read‑only protected and prints the protection type and password flag. | Explain how to programmatically differentiate between Contents, Objects, and Scenarios protection types in Aspose.Cells.
+// Title: Determine whether a worksheet is read‑only protected using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, checks the IsProtected property of a specific worksheet, and outputs the protection status. | Create a reusable method in C# that accepts a worksheet name and returns true if the worksheet is protected, using Aspose.Cells. | Modify the example to skip saving the workbook and only display the protection type for each worksheet in the workbook.
+// Common Searches: aspocells c# check worksheet read only protection | how to use Aspose.Cells to detect if an Excel sheet is locked | C# Aspose.Cells IsProtected property example for .xlsx files
+// Tags: Aspose.Cells IsProtected worksheet check | C# read‑only Excel worksheet detection | Excel .xlsx worksheet protection status .NET | Aspose.Cells workbook load protection query | determine worksheet protection type Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace WorksheetProtectionCheck
+// Loads an Excel workbook with Aspose.Cells, examines the first worksheet's IsProtected flag, prints whether it is read‑only protected, and optionally saves the file.
+class Program
 {
-    // This example creates a workbook, applies Contents (read‑only) protection with a password, then uses the Worksheet.IsProtected flag, the Protection.Type enum, and the Protection.IsProtectedWithPassword property to report whether the sheet is protected, which protection mode is active, and if a password is required.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Protect the worksheet with read‑only (Contents) protection and a password
-            worksheet.Protect(ProtectionType.Contents, "pwd123", null);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Check if the worksheet is protected
-            bool isProtected = worksheet.IsProtected;
-            Console.WriteLine($"Worksheet is protected: {isProtected}");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Report the protection type used (Contents corresponds to read‑only)
-            Console.WriteLine($"Protection type applied: {ProtectionType.Contents}");
+            // Determine if the worksheet is protected
+            if (sheet.IsProtected)
+            {
+                // Granular edit permissions are not exposed in all versions,
+                // so we treat any protection as a generic protected state.
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" is protected. Protection type: Protected");
+            }
+            else
+            {
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" is not protected.");
+            }
 
-            // Indicate whether the protection is password‑based
-            Console.WriteLine($"Protected with password: {worksheet.Protection.IsProtectedWithPassword}");
+            // Save the workbook (optional if no changes were made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

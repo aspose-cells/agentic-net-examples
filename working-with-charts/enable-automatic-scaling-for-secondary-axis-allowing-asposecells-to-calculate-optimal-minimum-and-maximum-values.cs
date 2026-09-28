@@ -1,10 +1,7 @@
-// Title: Aspose.Cells C# – Auto‑Scale Secondary Axis in a Column Chart
-// Description: Demonstrates how to create a workbook, add primary and secondary series, plot a column chart, and enable automatic minimum and maximum calculation for the secondary value axis using IsAutomaticMinValue and IsAutomaticMaxValue.
-// Keywords: Aspose.Cells secondary axis auto scaling | C# chart automatic min max | IsAutomaticMinValue Aspose.Cells | IsAutomaticMaxValue Aspose.Cells | secondary value axis C# | Aspose.Cells column chart example | auto scale secondary axis .NET
-// Common Searches: Aspose.Cells enable auto scaling for secondary axis C# | set secondary value axis automatic min max Aspose.Cells | C# chart secondary axis auto range Aspose.Cells | how to auto scale secondary axis in Aspose.Cells chart | Aspose.Cells secondary axis IsAutomaticMinValue example
-// Developer Intent: Configure a chart’s secondary value axis to calculate its minimum and maximum limits automatically.
-// Use Cases: Display sales volume and profit margin together, letting the margin axis auto‑scale to keep both series readable. | Generate financial dashboards where percentages and absolute values share a chart without manual axis adjustments. | Create reports that combine large‑scale data (e.g., units sold) with small‑scale metrics (e.g., growth rate) using automatic secondary axis scaling.
-// AI Prompts: Write C# code with Aspose.Cells that adds a column chart and enables automatic scaling for the secondary axis. | Explain the effect of IsAutomaticMinValue and IsAutomaticMaxValue on a secondary axis and show how to set a custom axis title. | Provide a step‑by‑step tutorial for building a dual‑axis chart in Aspose.Cells .NET where the secondary axis auto‑determines its range.
+// Title: Enable automatic min/max scaling for the secondary value axis in an Aspose.Cells column chart using C#
+// AI Prompts: Generate C# code that creates a column chart with primary and secondary series, plots the secondary series on the secondary axis, and enables the axis to compute its own minimum and maximum values using Aspose.Cells. | Show how to activate the IsAutomaticMinValue and IsAutomaticMaxValue flags for a chart’s secondary value axis in a .NET workbook.
+// Common Searches: Aspose.Cells C# set secondary axis auto range for column chart | How to turn on auto range for secondary value axis in Aspose.Cells | C# chart secondary axis min max auto calculation Aspose.Cells example | Enable auto min and max values on secondary axis using Aspose.Cells .NET | Aspose.Cells column chart with secondary axis auto range tutorial
+// Tags: secondary value axis auto scaling Aspose.Cells | C# column chart secondary axis Aspose.Cells | IsAutomaticMinValue property Aspose.Cells | IsAutomaticMaxValue property Aspose.Cells | Aspose.Cells chart axis auto range
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add primary and secondary series, plot a column chart, and enable automatic minimum and maximum calculation for the secondary value axis using IsAutomaticMinValue and IsAutomaticMaxValue.
+    // The example creates a workbook, adds sample data, builds a column chart with primary and secondary series, assigns the second series to the secondary value axis, turns on automatic minimum and maximum calculation for that axis, optionally sets a title, and saves the workbook as an XLSX file.
     public class SecondaryAxisAutoScalingDemo
     {
         public static void Run()
@@ -24,29 +21,30 @@ namespace AsposeCellsExamples
                 Worksheet worksheet = workbook.Worksheets[0];
 
                 // Populate sample data
-                // Primary series values
                 worksheet.Cells["A1"].PutValue("Category");
                 worksheet.Cells["A2"].PutValue("A");
                 worksheet.Cells["A3"].PutValue("B");
                 worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Series 1");
-                worksheet.Cells["B2"].PutValue(100);
-                worksheet.Cells["B3"].PutValue(200);
-                worksheet.Cells["B4"].PutValue(300);
 
-                // Secondary series values (different magnitude)
+                // Primary series values (smaller range)
+                worksheet.Cells["B1"].PutValue("Series 1");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["B4"].PutValue(30);
+
+                // Secondary series values (larger range)
                 worksheet.Cells["C1"].PutValue("Series 2");
                 worksheet.Cells["C2"].PutValue(5000);
                 worksheet.Cells["C3"].PutValue(3000);
                 worksheet.Cells["C4"].PutValue(1000);
 
                 // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
                 Chart chart = worksheet.Charts[chartIndex];
 
-                // Add the two series
-                chart.NSeries.Add("B2:B4", true); // primary series
-                chart.NSeries.Add("C2:C4", true); // secondary series
+                // Add the two series to the chart
+                chart.NSeries.Add("B2:B4", true); // Series 1
+                chart.NSeries.Add("C2:C4", true); // Series 2
                 chart.NSeries.CategoryData = "A2:A4";
 
                 // Plot the second series on the secondary value axis
@@ -55,12 +53,12 @@ namespace AsposeCellsExamples
                 // Access the secondary value axis
                 Axis secondaryAxis = chart.SecondValueAxis;
 
-                // Enable automatic calculation of minimum and maximum values
+                // Enable automatic calculation of min and max values
                 secondaryAxis.IsAutomaticMinValue = true;
                 secondaryAxis.IsAutomaticMaxValue = true;
 
-                // (Optional) Set a title to identify the secondary axis
-                secondaryAxis.Title.Text = "Secondary Axis";
+                // (Optional) Set a title for clarity
+                secondaryAxis.Title.Text = "Secondary Axis (Auto-Scaled)";
 
                 // Save the workbook
                 string outputPath = "SecondaryAxisAutoScalingDemo.xlsx";
@@ -72,14 +70,11 @@ namespace AsposeCellsExamples
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
+        // Entry point for the application
         public static void Main(string[] args)
         {
-            SecondaryAxisAutoScalingDemo.Run();
+            Run();
         }
     }
 }

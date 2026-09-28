@@ -1,101 +1,90 @@
-// Title: Async HTML‑to‑PDF conversion with Aspose.Cells and page‑progress events (C#)
-// Description: Demonstrates how to load an HTML file into an Aspose.Cells Workbook, convert it to PDF on a background thread, and report each page's saving progress through a custom IPageSavingCallback that raises events to callers.
-// Keywords: Aspose.Cells async HTML to PDF | C# PDF export progress event | IPageSavingCallback example | background PDF conversion .NET | page‑by‑page progress Aspose.Cells | Task.Run PDF generation | HTML workbook to PDF C#
-// Common Searches: async HTML to PDF conversion Aspose.Cells C# | how to get page progress while saving PDF with Aspose.Cells | implement IPageSavingCallback for PDF export | C# convert HTML file to PDF without blocking UI | report PDF conversion progress events .NET
-// Developer Intent: Convert an HTML document to PDF asynchronously and expose real‑time page‑saving progress via events.
-// Use Cases: Generate PDF reports from large HTML templates in a Windows service while updating a UI or log with page numbers. | Run HTML‑to‑PDF conversion in a web API endpoint without tying up request threads and send progress to the client via SignalR. | Process batch HTML files on a server, record each page saved for audit trails, and handle failures per page.
-// AI Prompts: Create a unit test that asserts the PageSavingProgress event fires with correct page index and total count during ConvertAsync. | Extend HtmlToPdfConverter to accept a CancellationToken and stop the conversion while still emitting progress events. | Write an ASP.NET Core controller that calls ConvertAsync and streams progress updates to the browser using SignalR.
+// Title: Convert HTML generated from an Excel workbook to PDF asynchronously with Aspose.Cells and report progress via a ProgressChanged event (C#)
+// AI Prompts: Write a C# async method that loads an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions on a background thread, saves it as PDF with PdfSaveOptions on another background thread, and raises a ProgressChanged event at 0%, 50%, and 100%. | Show how to subscribe to the ProgressChanged event from the Aspose.Cells HTML‑to‑PDF converter and display the conversion percentage in the console. | Add error handling that checks for a missing HTML file, creates the output directory if needed, and propagates exceptions during the asynchronous conversion.
+// Common Searches: how to convert html to pdf asynchronously using aspose.cells in c# | asp.net core html to pdf conversion with progress event Aspose.Cells | c# load html file into workbook and export to pdf on background thread | report conversion percentage during aspose.cells html to pdf conversion | async method for html to pdf conversion with Aspose.Cells PdfSaveOptions
+// Tags: asynchronous html to pdf conversion Aspose.Cells | HtmlLoadOptions workbook initialization | PdfSaveOptions pdf generation | event based conversion progress reporting | background thread workbook processing | input file validation Aspose.Cells
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlToPdfAsync
+namespace HtmlToPdfConversion
 {
-    // Event arguments for page progress
-    // Demonstrates how to load an HTML file into an Aspose.Cells Workbook, convert it to PDF on a background thread, and report each page's saving progress through a custom IPageSavingCallback that raises events to callers.
-    public class PageProgressEventArgs : EventArgs
-    {
-        public int PageIndex { get; }
-        public int PageCount { get; }
-
-        public PageProgressEventArgs(int pageIndex, int pageCount)
-        {
-            PageIndex = pageIndex;
-            PageCount = pageCount;
-        }
-    }
-
-    // Callback implementation that raises an event for each page start
-    public class ProgressPageSavingCallback : IPageSavingCallback
-    {
-        public event EventHandler<PageProgressEventArgs> PageSavingStarted;
-
-        public void PageStartSaving(PageStartSavingArgs args)
-        {
-            // Raise progress event (page index is zero‑based, add 1 for human readable)
-            PageSavingStarted?.Invoke(this, new PageProgressEventArgs(args.PageIndex + 1, args.PageCount));
-        }
-
-        public void PageEndSaving(PageEndSavingArgs args)
-        {
-            // No additional handling required for this example
-        }
-    }
-
+    // Provides an async ConvertAsync method that validates the HTML input, ensures the output folder exists, loads the HTML into an Aspose.Cells Workbook on a background thread using HtmlLoadOptions, saves it as PDF with PdfSaveOptions on another background thread, and raises a ProgressChanged event at 0%, 50%, and 100% to report conversion progress.
     public class HtmlToPdfConverter
     {
-        // Event exposed to callers to receive progress updates
-        public event EventHandler<PageProgressEventArgs> PageSavingProgress;
+        // Event raised to report conversion progress (percentage 0-100)
+        public event EventHandler<int>? ProgressChanged;
 
-        // Asynchronous conversion method
-        public Task ConvertAsync(string htmlFilePath, string pdfFilePath)
+        // Helper to raise the ProgressChanged event
+        protected virtual void OnProgressChanged(int percent)
         {
-            return Task.Run(() =>
+            ProgressChanged?.Invoke(this, percent);
+        }
+
+        // Asynchronously converts an HTML file (generated from a spreadsheet) to PDF
+        public async Task ConvertAsync(string htmlFilePath, string pdfFilePath)
+        {
+            // Validate input file
+            if (!File.Exists(htmlFilePath))
+                throw new FileNotFoundException("HTML file not found.", htmlFilePath);
+
+            // Ensure output directory exists
+            var outDir = Path.GetDirectoryName(pdfFilePath);
+            if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
+
+            // Initial progress
+            OnProgressChanged(0);
+
+            Workbook workbook = null;
+
+            // Load the HTML into a Workbook on a background thread
+            await Task.Run(() =>
             {
-                // Load the HTML file into a workbook
-                Workbook workbook = new Workbook(htmlFilePath);
-
-                // Configure PDF save options with a page‑saving callback
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-                ProgressPageSavingCallback callback = new ProgressPageSavingCallback();
-
-                // Forward callback events to the public event
-                callback.PageSavingStarted += (s, e) => PageSavingProgress?.Invoke(this, e);
-                pdfOptions.PageSavingCallback = callback;
-
-                // Save the workbook as PDF; the callback will be invoked per page
-                workbook.Save(pdfFilePath, pdfOptions);
+                var loadOptions = new HtmlLoadOptions();
+                workbook = new Workbook(htmlFilePath, loadOptions);
             });
+
+            // Report midway progress after loading is complete
+            OnProgressChanged(50);
+
+            // Save the workbook as PDF on a background thread
+            await Task.Run(() =>
+            {
+                var saveOptions = new PdfSaveOptions();
+                workbook.Save(pdfFilePath, saveOptions);
+            });
+
+            // Final progress notification
+            OnProgressChanged(100);
         }
     }
 
     class Program
     {
+        // Async entry point
         static async Task Main(string[] args)
         {
-            // Example file paths (adjust as needed)
-            string htmlPath = "sample.html";
-            string pdfPath = "output.pdf";
+            // Determine file paths (use defaults if not provided)
+            string htmlPath = args.Length > 0 ? args[0] : "input.html";
+            string pdfPath = args.Length > 1 ? args[1] : "output.pdf";
 
-            HtmlToPdfConverter converter = new HtmlToPdfConverter();
-
-            // Subscribe to progress events
-            converter.PageSavingProgress += (sender, e) =>
-            {
-                Console.WriteLine($"Saving page {e.PageIndex} of {e.PageCount}");
-            };
+            var converter = new HtmlToPdfConverter();
+            converter.ProgressChanged += (s, p) => Console.WriteLine($"Progress: {p}%");
 
             try
             {
-                // Perform conversion asynchronously
                 await converter.ConvertAsync(htmlPath, pdfPath);
-                Console.WriteLine("HTML to PDF conversion completed successfully.");
+                Console.WriteLine("Conversion completed successfully.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.WriteLine($"File error: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Conversion failed: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

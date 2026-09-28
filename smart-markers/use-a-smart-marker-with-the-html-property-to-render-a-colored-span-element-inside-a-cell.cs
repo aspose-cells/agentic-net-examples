@@ -1,21 +1,19 @@
-// Title: Color Text with an HTML <span> Smart Marker in Aspose.Cells for .NET
-// Description: Demonstrates how to set a cell's HtmlString to an HTML <span> that contains a smart marker, apply an inline red color style, bind a DataTable as the data source, process the marker with WorkbookDesigner, and save the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | smart marker | HtmlString | HTML span | inline CSS | colored text in Excel | WorkbookDesigner | DataTable binding | Excel report styling
-// Common Searches: Aspose.Cells smart marker inside HTML span | set cell HtmlString with smart marker C# | apply inline CSS to smart marker Aspose.Cells | color text using smart markers in .NET | WorkbookDesigner process HTML smart markers
-// Developer Intent: Generate an Excel workbook where a smart marker embedded in an HTML <span> renders data with red-colored text.
-// Use Cases: Create reports that highlight dynamic values (e.g., employee names) in a specific color without using Excel conditional formatting. | Produce templated Excel files where HTML styling is applied directly through smart markers. | Integrate data‑driven styling in automated spreadsheet generation pipelines.
-// AI Prompts: Show how to embed a smart marker inside an HTML <span> with a custom text color using Aspose.Cells for .NET. | Provide a C# example that uses WorkbookDesigner to process HTML smart markers containing inline CSS. | Explain the steps to bind a DataTable to a smart marker placed in a cell's HtmlString and render colored text in the output workbook.
+// Title: Insert a red HTML <span> into an Excel cell using Aspose.Cells smart markers in C#
+// AI Prompts: Write C# code that creates a workbook, sets a cell's HtmlString to a red <span> containing a smart marker, binds a DataTable as the data source, processes the smart markers with WorkbookDesigner, and saves the file as XLSX. | Show how to use Aspose.Cells WorkbookDesigner to replace a smart marker inside an HTML span while preserving the span's color styling. | Demonstrate binding a DataTable to a smart marker, applying HTML formatting to a cell, and exporting the result with Aspose.Cells .NET. | Provide a step‑by‑step example of rendering colored text via an HTML span inside a cell using Aspose.Cells smart markers.
+// Common Searches: aspnet aspose.cells how to embed html span with smart marker in a cell | c# set cell HtmlString with colored text using smart markers | bind datatable to workbookdesigner and process html smart markers | render red text in Excel cell via smart marker Aspose.Cells .NET | save workbook with styled html content from smart markers c#
+// Tags: Aspose.Cells smart marker HTML span | WorkbookDesigner process smart markers C# | set cell HtmlString Aspose.Cells | bind DataTable to WorkbookDesigner | export workbook to XLSX with styled HTML | colored text in Excel using Aspose.Cells
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerHtml
+namespace AsposeCellsSmartMarkerHtmlDemo
 {
-    // Demonstrates how to set a cell's HtmlString to an HTML <span> that contains a smart marker, apply an inline red color style, bind a DataTable as the data source, process the marker with WorkbookDesigner, and save the workbook as an Excel file.
+    // Creates a workbook, inserts a red-colored HTML <span> with a smart marker (&=Data.Name&) into cell A1 via the HtmlString property, binds a DataTable as the data source, processes the marker using WorkbookDesigner, and saves the result as an XLSX file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -23,29 +21,40 @@ namespace AsposeCellsSmartMarkerHtml
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Set a smart marker inside an HTML span element.
-                // The smart marker &=Employees.Name& will be replaced with the value from the data source.
-                // The span uses an inline style to set the text color to red.
-                sheet.Cells["A1"].HtmlString = "<span style='color:#FF0000'>&=Employees.Name&</span>";
+                // Define a smart marker inside an HTML span.
+                // The smart marker &=Data.Name& will be replaced with the value from the data source.
+                // The span is styled with a red color.
+                sheet.Cells["A1"].HtmlString = "<span style='color:#FF0000'>&=Data.Name&</span>";
 
-                // Prepare a data source (DataTable) that matches the smart marker name.
-                DataTable dt = new DataTable("Employees");
+                // Prepare a simple data source (DataTable) with a column "Name"
+                DataTable dt = new DataTable("Data");
                 dt.Columns.Add("Name", typeof(string));
-                dt.Rows.Add("John Doe");
-                dt.Rows.Add("Jane Smith");
+                dt.Rows.Add("Aspose");
+                dt.Rows.Add("Cells");
+                dt.Rows.Add("SmartMarker");
 
-                // Process the smart markers using WorkbookDesigner.
+                // Process the smart markers using WorkbookDesigner (the correct API)
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
                 designer.SetDataSource(dt);
                 designer.Process();
 
-                // Save the workbook.
-                workbook.Save("SmartMarkerHtmlSpan.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                // Define output file path
+                string outputPath = "SmartMarkerHtmlDemo.xlsx";
+
+                // Ensure the directory for the output file exists (if any)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

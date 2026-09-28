@@ -1,44 +1,66 @@
-// Title: C# – Generate CSV Report of Worksheet Names, TabIds, and Empty Status with Aspose.Cells
-// Description: Loads an Excel workbook using Aspose.Cells for .NET, iterates all worksheets, flags a sheet as empty when MaxDataRow and MaxDataColumn are zero, and writes a CSV file containing the worksheet name, its TabId, and a Boolean IsEmpty column.
-// Keywords: Aspose.Cells CSV export | list worksheets Aspose.Cells | worksheet TabId C# | detect empty worksheet Aspose.Cells | C# Excel workbook report | Aspose.Cells MaxDataRow | Aspose.Cells MaxDataColumn
-// Common Searches: how to export worksheet list to CSV with Aspose.Cells | C# get worksheet TabId using Aspose.Cells | check if a worksheet is empty Aspose.Cells | generate Excel worksheet summary report C# | Aspose.Cells create CSV of sheet metadata
-// Developer Intent: Produce a CSV file that enumerates each worksheet’s name, TabId, and whether it contains any data.
-// Use Cases: Audit a workbook to locate and document empty sheets before cleanup. | Create a concise summary for stakeholders showing sheet identifiers and data presence. | Automate preprocessing that flags empty worksheets for removal or further handling.
-// AI Prompts: Write C# code with Aspose.Cells that outputs a CSV of worksheet names, TabIds, and an IsEmpty flag based on MaxDataRow and MaxDataColumn. | Extend the sample to also include the total number of used cells for each worksheet in the CSV report. | Explain the role of MaxDataRow and MaxDataColumn in determining worksheet emptiness when using Aspose.Cells.
+// Title: Create a CSV report listing each worksheet’s name, TabId, and empty‑sheet status with Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# console program that loads an Excel file using Aspose.Cells, iterates all worksheets, and writes a CSV file containing the worksheet name, its TabId, and a true/false flag indicating whether the sheet is empty. | Add a utility method that correctly escapes commas, double quotes, and line breaks in worksheet names when generating CSV rows. | Modify the example to return the CSV data as a MemoryStream or string instead of saving it directly to disk, enabling further processing.
+// Common Searches: Aspose.Cells C# export worksheet names and TabId to CSV | How to check if a worksheet is empty using Aspose.Cells .NET | Generate Excel worksheet metadata report with Aspose.Cells and save as CSV | C# code to list all sheet TabIds in an Excel workbook using Aspose.Cells | CSV escaping rules for worksheet names when using Aspose.Cells
+// Tags: Aspose.Cells export worksheet metadata to CSV | C# retrieve worksheet TabId Aspose.Cells | detect empty worksheet Aspose.Cells .NET | CSV field escaping for Excel sheet names C# | generate worksheet report Aspose.Cells workbook
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-// Loads an Excel workbook using Aspose.Cells for .NET, iterates all worksheets, flags a sheet as empty when MaxDataRow and MaxDataColumn are zero, and writes a CSV file containing the worksheet name, its TabId, and a Boolean IsEmpty column.
+// Generates a CSV file that lists each worksheet’s name, its TabId, and a boolean flag indicating if the sheet contains no data (MaxDataRow == -1), with proper CSV escaping for special characters in sheet names.
 class WorksheetReportGenerator
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Load an existing workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath); // using the provided load constructor
+        // Input Excel file path (change as needed)
+        string excelFilePath = "input.xlsx";
 
-        // Prepare CSV content
+        // Output CSV file path
+        string csvReportPath = "WorksheetReport.csv";
+
+        // Load the workbook
+        Workbook workbook = new Workbook(excelFilePath);
+
+        // Prepare a StringBuilder for CSV content
         StringBuilder csvBuilder = new StringBuilder();
+
+        // Write CSV header
         csvBuilder.AppendLine("WorksheetName,TabId,IsEmpty");
 
-        // Iterate through all worksheets
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Determine if the sheet is empty.
-            // A sheet is considered empty when it has no data rows and no data columns.
-            bool isEmpty = sheet.Cells.MaxDataRow == 0 && sheet.Cells.MaxDataColumn == 0;
+            // Get worksheet name
+            string sheetName = sheet.Name;
 
-            // Append a line with the worksheet name, TabId, and emptiness flag
-            csvBuilder.AppendLine($"{sheet.Name},{sheet.TabId},{isEmpty}");
+            // Get TabId (unique identifier for the worksheet tab)
+            int tabId = sheet.TabId;
+
+            // Determine if the worksheet is empty.
+            // MaxDataRow returns -1 when there are no cells with data.
+            bool isEmpty = sheet.Cells.MaxDataRow == -1;
+
+            // Build CSV line (escaping commas if necessary)
+            string csvLine = $"{EscapeCsv(sheetName)},{tabId},{isEmpty}";
+            csvBuilder.AppendLine(csvLine);
         }
 
-        // Write the CSV report to disk
-        string outputPath = "WorksheetReport.csv";
-        File.WriteAllText(outputPath, csvBuilder.ToString());
+        // Write the CSV content to file
+        File.WriteAllText(csvReportPath, csvBuilder.ToString(), Encoding.UTF8);
 
-        Console.WriteLine($"CSV report generated at: {Path.GetFullPath(outputPath)}");
+        Console.WriteLine($"CSV report generated at: {csvReportPath}");
+    }
+
+    // Helper method to escape CSV fields that may contain commas or quotes
+    private static string EscapeCsv(string field)
+    {
+        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+        {
+            // Escape double quotes by doubling them
+            string escaped = field.Replace("\"", "\"\"");
+            return $"\"{escaped}\"";
+        }
+        return field;
     }
 }

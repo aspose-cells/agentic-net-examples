@@ -1,61 +1,50 @@
-// Title: C# – Set Aspose.Cells chart top‑left corner to row 5, column 3 using Chart.Position
-// Description: Creates a workbook, adds sample data, inserts a column chart, and moves the chart so its top‑left corner aligns with row 5 and column 3 while preserving the original size, then saves the file as an .xlsx document.
-// Keywords: Aspose.Cells chart position C# | set chart top left cell Aspose.Cells | Chart.Position Aspose.Cells .NET | move chart without resizing Aspose | Aspose.Cells example chart placement
-// Common Searches: Aspose.Cells set chart location row 5 column 3 | C# chart.Position property Aspose.Cells | how to move Aspose.Cells chart to specific cell | Aspose.Cells chart placement example
-// Developer Intent: Place a chart’s top‑left corner at row 5, column 3 while keeping its dimensions unchanged.
-// Use Cases: Align a sales chart with a header that starts at cell C5 in a financial report. | Build a dashboard where each chart is anchored to precise row/column coordinates. | Re‑position charts after inserting rows so they stay attached to a designated section.
-// AI Prompts: Show C# code that uses Chart.Position to set a chart’s top‑left corner to row 5, column 3 in Aspose.Cells. | Give an example of moving an Aspose.Cells chart without changing its size. | Explain the difference between Chart.Move and Chart.Position for positioning charts in Aspose.Cells.
+// Title: Move an Aspose.Cells column chart to start at row 5, column 3 while keeping its size (C#)
+// AI Prompts: Use the Chart.Move method to relocate a column chart so its upper‑left corner is at row 5, column 3 without altering its height or width. | Set the UpperLeftRow and UpperLeftColumn of a chart's Position in C# to row 5 and column 3 while preserving the original chart dimensions.
+// Common Searches: Aspose.Cells C# move chart to specific cell coordinates row 5 column 3 | how to set chart upper left cell in an Aspose.Cells workbook | preserve chart size when repositioning a chart with Aspose.Cells | Chart.Move method parameters explanation Aspose.Cells C# | set chart location by row and column using Aspose.Cells API
+// Tags: Aspose.Cells Chart.Move method C# | chart upper-left cell positioning Aspose.Cells | preserve chart size Aspose.Cells | Excel chart relocation using Aspose.Cells | C# set chart position by row and column
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsChartPositionDemo
 {
-    // Creates a workbook, adds sample data, inserts a column chart, and moves the chart so its top‑left corner aligns with row 5 and column 3 while preserving the original size, then saves the file as an .xlsx document.
-    class Program
+    // The example creates a workbook, adds sample data, inserts a column chart, then moves the chart so its top‑left corner is at row 5, column 3 while retaining its original size, and finally saves the file as ChartPositionDemo.xlsx.
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add some sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Fruits");
-                worksheet.Cells["A3"].PutValue("Vegetables");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(50);
-                worksheet.Cells["B3"].PutValue(30);
+            // Add some sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Fruits");
+            worksheet.Cells["A3"].PutValue("Vegetables");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(50);
+            worksheet.Cells["B3"].PutValue(30);
 
-                // Add a column chart. Initial position is rows 10‑20, columns 2‑8
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 10, 2, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
+            // Add a column chart. Initial position: rows 5‑15, columns 0‑5
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
 
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B3", true);
-                chart.NSeries.CategoryData = "A2:A3";
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
 
-                // Move the chart so that its top‑left corner is at row 5, column 3
-                // BottomRow and RightColumn are kept the same as the original size (rows 20, column 8)
-                chart.Move(5, 3, 20, 8);
+            // Move the chart so that its top‑left corner is at row 5, column 3
+            // Keep the same size (rows 5‑15, columns 3‑8)
+            chart.Move(5, 3, 15, 8);
 
-                // Determine output file path
-                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "ChartTopLeftAtRow5Col3.xlsx");
+            // Optional: display the new position in the console
+            Console.WriteLine($"Chart new top row: {chart.ChartObject.UpperLeftRow}");
+            Console.WriteLine($"Chart new left column: {chart.ChartObject.UpperLeftColumn}");
 
-                // Save the workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to: {outputFile}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred while creating the chart workbook:");
-                Console.WriteLine(ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("ChartPositionDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

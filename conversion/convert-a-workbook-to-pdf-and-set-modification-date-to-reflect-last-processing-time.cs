@@ -1,32 +1,28 @@
-// Title: Convert an Aspose.Cells Workbook to PDF and set the PDF creation date (CreatedTime) in C#
-// Description: Creates or loads a Workbook, writes a sample value, configures PdfSaveOptions.CreatedTime with DateTime.Now, and saves the workbook as a PDF file that records the generation timestamp.
-// Keywords: Aspose.Cells PDF conversion | PdfSaveOptions CreatedTime | C# export Excel to PDF | set PDF creation date | Aspose.Cells metadata | Excel to PDF timestamp | .NET PDF export
-// Common Searches: Aspose.Cells set PDF creation time C# | PdfSaveOptions CreatedTime example | Export Excel workbook to PDF with timestamp | How to add generation date to PDF using Aspose.Cells | C# Aspose.Cells PDF metadata settings
-// Developer Intent: Export an Excel workbook to PDF while embedding the current processing time as the PDF’s creation date.
-// Use Cases: Generate daily reports where each PDF shows the exact generation time for audit purposes. | Automate a web service that returns Excel data as a PDF with a timestamp for compliance tracking. | Create archival PDFs from workbooks that need a reliable creation date embedded in the file metadata.
-// AI Prompts: Show how to also set the PDF ModifiedTime property to the current time using Aspose.Cells. | Provide a sample that loads an existing .xlsx file, converts it to PDF, and sets both CreatedTime and Author metadata. | Explain how to convert the DateTime to a specific timezone before assigning it to PdfSaveOptions.CreatedTime.
+// Title: Convert an Excel workbook to PDF and set the PDF creation timestamp using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook and saves it as a PDF while assigning DateTime.Now to the PDF's CreatedTime via PdfSaveOptions. | Show how to configure Aspose.Cells PdfSaveOptions to embed a custom creation date into the exported PDF. | Provide a C# example that creates a workbook, adds data, and saves it as a PDF with the current processing time recorded in the PDF metadata.
+// Common Searches: how to set PDF creation date when exporting Excel to PDF with Aspose.Cells C# | Aspose.Cells PdfSaveOptions CreatedTime property usage example | C# convert workbook to PDF and include processing timestamp in metadata | set custom PDF metadata during Excel to PDF conversion Aspose.Cells | save Excel as PDF with current timestamp using Aspose.Cells .NET
+// Tags: Aspose.Cells PdfSaveOptions creation timestamp | C# Excel to PDF conversion with metadata | set PDF CreatedTime Aspose.Cells | export workbook as PDF with custom timestamp | Aspose.Cells PDF metadata customization
 
 using System;
 using Aspose.Cells;
 
-// Creates or loads a Workbook, writes a sample value, configures PdfSaveOptions.CreatedTime with DateTime.Now, and saves the workbook as a PDF file that records the generation timestamp.
-class WorkbookToPdf
+// The example creates a workbook, writes a value to cell A1, configures PdfSaveOptions with CreatedTime set to DateTime.Now, and saves the workbook as ConvertedDocument.pdf, embedding the current processing time as the PDF's creation date.
+class Program
 {
     static void Main()
     {
         // Create a new workbook (or load an existing one)
         Workbook workbook = new Workbook();
-        // Add some data to demonstrate the conversion
+        // Example data
         workbook.Worksheets[0].Cells["A1"].PutValue("Converted to PDF");
 
-        // Configure PDF save options
+        // Set PDF save options; CreatedTime reflects the processing time
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Set the creation time of the PDF to the current processing time
             CreatedTime = DateTime.Now
         };
 
-        // Save the workbook as a PDF using the specified options
+        // Save the workbook as PDF using the options
         workbook.Save("ConvertedDocument.pdf", pdfOptions);
     }
 }

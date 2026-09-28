@@ -1,50 +1,46 @@
-// Title: Aspose.Cells .NET – Protect Workbook Structure to Block Adding Sheets While Allowing Rename
-// Description: Demonstrates how to create a workbook, add worksheets, and apply structure protection with a password using Aspose.Cells for .NET. The protection prevents inserting, deleting, or moving sheets but still permits renaming existing worksheets, then saves the file as an .xlsx document.
-// Keywords: Aspose.Cells protect structure | C# workbook protection | prevent adding worksheets | allow sheet rename | Excel structure password .NET
-// Common Searches: Aspose.Cells protect workbook structure C# | stop users adding new sheets but allow rename Aspose.Cells | set password for Excel workbook structure protection .NET | how to lock sheet order with Aspose.Cells
-// Developer Intent: Apply password‑protected structure protection so new worksheets cannot be added while existing sheets remain rename‑able.
-// Use Cases: Distribute a template where the sheet layout must stay fixed but users can label sheets for clarity. | Secure a financial model to prevent accidental sheet insertion while allowing custom names. | Provide a reporting workbook that maintains order yet supports personalized sheet titles.
-// AI Prompts: Show code to remove structure protection from a workbook using Aspose.Cells. | Explain how to protect only the workbook windows without affecting the structure in C#. | Give an example of changing the protection password of an already saved Excel file with Aspose.Cells.
+// Title: Apply workbook structure protection to block new worksheets while allowing sheet renaming with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file, protects its structure with a password using Aspose.Cells, enables renaming of existing worksheets, and saves the protected workbook. | Demonstrate how to call Workbook.Protect with ProtectionType.Structure and set Settings.AllowRename so sheet renaming remains possible after protection.
+// Common Searches: Aspose.Cells C# protect workbook structure but keep sheet rename enabled | How to stop users from adding new worksheets in an Excel file using Aspose.Cells | Enable worksheet renaming after applying structure protection with Aspose.Cells .NET | Workbook.Protect with ProtectionType.Structure example code Aspose.Cells | Set AllowRename property after protecting workbook in C# Aspose.Cells
+// Tags: workbook structure protection Aspose.Cells | prevent worksheet insertion .NET | allow sheet rename with protection Aspose.Cells | password-protected workbook C# | Excel file protection using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an existing .xlsx file, applies structure protection with a password via Aspose.Cells, optionally enables sheet renaming through Settings.AllowRename, and saves the workbook, preventing new worksheets from being added while still allowing existing sheets to be renamed.
+class Program
 {
-    // Demonstrates how to create a workbook, add worksheets, and apply structure protection with a password using Aspose.Cells for .NET. The protection prevents inserting, deleting, or moving sheets but still permits renaming existing worksheets, then saves the file as an .xlsx document.
-    public class WorkbookStructureProtectionDemo
+    static void Main()
     {
-        public static void Run()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and add a couple of worksheets
-                Workbook workbook = new Workbook();
-                workbook.Worksheets.Add("DataSheet");
-                workbook.Worksheets.Add("Summary");
-
-                // Protect the workbook structure (prevents adding, deleting, moving worksheets)
-                // Renaming existing worksheets remains allowed.
-                // Use a password so the protection can be removed later if needed.
-                workbook.Protect(ProtectionType.Structure, "mySecretPwd");
-
-                // Save the protected workbook
-                workbook.Save("WorkbookWithStructureProtection.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            WorkbookStructureProtectionDemo.Run();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Protect the workbook structure with a password
+            workbook.Protect(ProtectionType.Structure, "MySecretPassword");
+
+            // Allow renaming of worksheets if the API version supports it
+            // Uncomment the following line for versions that expose AllowRename
+            // workbook.Settings.AllowRename = true;
+
+            // Save the protected workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

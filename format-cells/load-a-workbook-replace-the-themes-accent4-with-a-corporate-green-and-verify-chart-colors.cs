@@ -1,59 +1,92 @@
-// Title: C# – Change Excel Theme Accent4 to Corporate Green and Verify Chart Colors with Aspose.Cells
-// Description: Loads an Excel workbook, replaces the theme's Accent4 color with a corporate green (RGB 0,128,0), applies the updated theme to chart series, prints verification details for each chart, and saves the workbook.
-// Keywords: Aspose.Cells C# set theme color | Excel Accent4 change programmatically | apply corporate green to chart series | verify chart theme color Aspose.Cells | Workbook.SetThemeColor example | ThemeColorType Accent4 | update Excel theme with Aspose | chart series color verification | .NET Excel theme customization
-// Common Searches: how to change Accent4 theme color in Excel using Aspose.Cells C# | replace Excel theme color with corporate branding programmatically | verify chart series color after theme update Aspose.Cells | set custom RGB color for Excel theme Accent4 .NET | iterate charts and read applied theme color Aspose.Cells
-// Developer Intent: Replace the workbook's Accent4 theme color with a corporate green and confirm that chart series reflect the new color.
-// Use Cases: Enforce corporate branding by updating the Accent4 theme across all worksheets and charts. | Automate quality checks that ensure chart series use the intended brand color before publishing reports. | Log theme‑color details for each chart to aid troubleshooting of visual inconsistencies.
-// AI Prompts: Generate C# code using Aspose.Cells to set the Accent4 theme color to a specific RGB value and apply it to every chart series in a workbook. | Create a method that iterates through all charts in an Excel file, prints the ThemeColor type, tint, and verification status for each series. | Explain how to revert an Accent4 theme color change back to its original value with Aspose.Cells.
+// Title: How to replace the Accent4 theme color with a corporate green in an Excel workbook and verify chart series colors using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing .xlsx file, changes the workbook's Accent4 theme color to RGB #00A651 with Aspose.Cells, and saves the modified file. | Write a C# loop that enumerates every chart in a workbook and prints each series' fill or border color after the theme update. | Create a C# snippet that checks for the input file, creates the output directory if it does not exist, and handles exceptions while applying the theme change.
+// Common Searches: Aspose.Cells change workbook theme Accent4 to custom RGB color in C# | C# iterate over Excel charts and read series fill color using Aspose.Cells | verify chart series colors after modifying Excel theme with Aspose.Cells .NET | ensure output folder exists when saving a modified workbook with Aspose.Cells
+// Tags: set theme accent4 color Aspose.Cells | custom corporate green Excel theme .NET | read chart series fill color Aspose.Cells | validate workbook file existence C# | save workbook with updated theme Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using System;
+using System.Drawing;
+using System.IO;
 
-// Loads an Excel workbook, replaces the theme's Accent4 color with a corporate green (RGB 0,128,0), applies the updated theme to chart series, prints verification details for each chart, and saves the workbook.
+// The example loads an existing Excel workbook, updates the Accent4 theme color to a corporate green (RGB #00A651), iterates through all worksheets and charts to output each series' fill or border color, ensures the output directory exists, and saves the workbook with the new theme.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Define the corporate green color
-        Color corporateGreen = Color.FromArgb(0, 128, 0); // Dark green
-
-        // Replace the theme's Accent4 color with the corporate green
-        workbook.SetThemeColor(ThemeColorType.Accent4, corporateGreen);
-
-        // Iterate through all worksheets and their charts
-        foreach (Worksheet ws in workbook.Worksheets)
+        try
         {
-            foreach (Chart chart in ws.Charts)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Ensure the chart has at least one series
-                if (chart.NSeries.Count > 0)
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define the corporate green color (hex #00A651)
+            Color corporateGreen = Color.FromArgb(0, 166, 81);
+
+            // Change the theme's Accent4 color if the workbook supports themes
+            try
+            {
+                workbook.SetThemeColor(ThemeColorType.Accent4, corporateGreen);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unable to modify theme color: {ex.Message}");
+            }
+
+            // Verify chart colors after the theme change
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
                 {
-                    // Apply the Accent4 theme color to the first series (for demonstration)
-                    // This makes the series use the updated theme color
-                    chart.NSeries[0].Area.FillFormat.SolidFill.CellsColor.ThemeColor =
-                        new ThemeColor(ThemeColorType.Accent4, 0);
+                    Console.WriteLine($"Chart \"{chart.Name}\" in worksheet \"{sheet.Name}\":");
 
-                    // Retrieve the theme color applied to the series
-                    CellsColor seriesColor = chart.NSeries[0].Area.FillFormat.SolidFill.CellsColor;
-                    ThemeColor appliedTheme = seriesColor.ThemeColor;
+                    int seriesIndex = 0;
+                    foreach (Series series in chart.NSeries)
+                    {
+                        // Attempt to retrieve the series fill color
+                        Color? seriesColor = null;
 
-                    // Output verification information
-                    Console.WriteLine($"Worksheet: {ws.Name}, Chart: {chart.Name}");
-                    Console.WriteLine($"Applied Theme Color Type: {appliedTheme.ColorType}");
-                    Console.WriteLine($"Is Accent4: {appliedTheme.ColorType == ThemeColorType.Accent4}");
-                    Console.WriteLine($"Tint: {appliedTheme.Tint}");
-                    Console.WriteLine();
+                        // Most chart types store fill color in the Area's ForegroundColor
+                        if (series.Area != null && series.Area.ForegroundColor != Color.Empty)
+                        {
+                            seriesColor = series.Area.ForegroundColor;
+                        }
+                        // Fallback to border color if area color is not set
+                        else if (series.Border != null && series.Border.Color != Color.Empty)
+                        {
+                            seriesColor = series.Border.Color;
+                        }
+
+                        string colorInfo = seriesColor.HasValue ? seriesColor.Value.Name : "Not set";
+                        Console.WriteLine($"  Series {seriesIndex} color: {colorInfo}");
+                        seriesIndex++;
+                    }
                 }
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

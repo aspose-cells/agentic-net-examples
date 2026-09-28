@@ -1,64 +1,32 @@
-// Title: Disable PivotTable Auto‑Refresh on Workbook Open with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file, iterates all worksheets, sets each PivotTable's RefreshDataOnOpeningFile property to false, and saves the workbook, preventing automatic refresh and speeding up load time.
-// Keywords: Aspose.Cells | C# | PivotTable | RefreshDataOnOpeningFile | disable auto refresh | Excel load performance | prevent pivot refresh | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells disable pivot auto refresh | C# set RefreshDataOnOpeningFile false | prevent pivot tables from refreshing on open | improve Excel load time Aspose.Cells | how to turn off pivot refresh in .NET
-// Developer Intent: Turn off automatic refresh for every PivotTable when the workbook is opened.
-// Use Cases: Open a large workbook with many PivotTables without the overhead of data refresh. | Create a template that keeps PivotTable data static until the user manually refreshes it. | Batch‑process multiple files to ensure none of their PivotTables auto‑refresh on load.
-// AI Prompts: Generate C# code using Aspose.Cells that disables RefreshDataOnOpeningFile for all PivotTables in a workbook and saves the file. | Show how to safely handle missing input files while iterating worksheets and setting the auto‑refresh flag to false. | Explain how to modify the sample to disable auto‑refresh only for PivotTables whose names match a given pattern.
+// Title: Disable automatic refresh for every PivotTable in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write a C# program with Aspose.Cells that opens an existing .xlsx file, loops through all worksheets and their PivotTables, sets each PivotTable's RefreshDataOnOpeningFile property to false, and saves the modified workbook. | Generate a C# snippet that prevents all PivotTables in a workbook from refreshing when the file is opened, using the Aspose.Cells API to adjust the RefreshDataOnOpeningFile setting.
+// Common Searches: Aspose.Cells C# disable pivot table refresh on workbook open | set RefreshDataOnOpeningFile false for all pivot tables in a workbook | how to stop pivot tables from auto‑refreshing when opening an Excel file with Aspose.Cells | improve Excel load speed by turning off pivot table auto refresh using Aspose.Cells .NET | iterate through worksheets to change pivot table settings with Aspose.Cells
+// Tags: disable pivot table auto refresh Aspose.Cells | RefreshDataOnOpeningFile property C# | iterate worksheets pivot tables Aspose.Cells | optimize workbook load performance Aspose.Cells | pivot table settings Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The code opens an Excel workbook, iterates over each worksheet and its PivotTables, sets RefreshDataOnOpeningFile to false to stop automatic refresh on opening, and saves the updated file.
+class DisablePivotAutoRefresh
 {
-    // Loads an Excel file, iterates all worksheets, sets each PivotTable's RefreshDataOnOpeningFile property to false, and saves the workbook, preventing automatic refresh and speeding up load time.
-    public class DisablePivotAutoRefresh
+    static void Main()
     {
-        public static void Run()
+        // Load the workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Loop through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Loop through each PivotTable in the worksheet
+            foreach (PivotTable pivotTable in sheet.PivotTables)
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets and their pivot tables
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    foreach (PivotTable pivot in sheet.PivotTables)
-                    {
-                        // Disable automatic refresh when the workbook is opened
-                        pivot.RefreshDataOnOpeningFile = false;
-                    }
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Disable automatic refresh when the file is opened
+                pivotTable.RefreshDataOnOpeningFile = false;
             }
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            DisablePivotAutoRefresh.Run();
-        }
+        // Save the workbook with the changes
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,74 +1,73 @@
-// Title: Aspose.Cells .NET – Conditional Formatting with Accent2 Theme Color for Values Over a Threshold
-// Description: Shows how to create a workbook, populate column A with sample numbers, add a conditional formatting rule for A1:A10 that highlights cells greater than 50 using the Accent2 theme color (RGB 0,176,240) and bold text, and save the result as an .xlsx file.
-// Keywords: Aspose.Cells | .NET | C# | conditional formatting | Accent2 theme color | highlight cells above threshold | Excel solid fill | cell style formatting | threshold based coloring
-// Common Searches: Aspose.Cells conditional formatting Accent2 C# | how to highlight cells greater than a value using Aspose.Cells | apply theme accent color to conditional format .NET | set solid background for conditional rule in Aspose.Cells | C# example conditional formatting threshold Excel
-// Developer Intent: Create a conditional formatting rule that colors cells with values exceeding a given threshold using the workbook’s Accent2 theme color.
-// Use Cases: Flag sales figures that surpass a target amount in a financial dashboard. | Mark temperature readings above safety limits in an engineering log. | Highlight overdue task counts that exceed a defined threshold in a project tracker.
-// AI Prompts: Write C# code with Aspose.Cells to apply Accent2 theme color conditional formatting for cells greater than a specified number. | Modify the example to use a different theme accent (e.g., Accent3) and a custom threshold value. | Extend the solution to apply the same Accent2 conditional formatting to multiple columns or a whole table.
+// Title: Add a greater‑than conditional formatting rule with the theme Accent2 solid fill to a range in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a conditional formatting rule using a solid fill that matches the workbook's Accent2 theme when cell values exceed a threshold. | Write a C# snippet that applies a solid Accent2 background to cells in range A2:A11 via Aspose.Cells conditional formatting for values greater than 60.
+// Common Searches: Aspose.Cells C# apply Excel Accent2 theme color in conditional formatting | C# Aspose.Cells conditional formatting greater than threshold with solid fill | set conditional formatting fill to Excel theme Accent2 using Aspose.Cells .NET
+// Tags: aspocells conditional formatting accent2 fill | c# conditional formatting greater than rule | excel theme color conditional format aspocells | apply conditional formatting to range a2:a11 c#
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing; // Retained for potential future use
 
-// Shows how to create a workbook, populate column A with sample numbers, add a conditional formatting rule for A1:A10 that highlights cells greater than 50 using the Accent2 theme color (RGB 0,176,240) and bold text, and save the result as an .xlsx file.
-class ConditionalFormattingAccent2
+// The example creates a workbook, fills column A with sample numbers, defines the range A2:A11, adds a conditional formatting rule that highlights cells with values above 60 using a solid fill approximating the theme's Accent2 color, and saves the file as ConditionalFormatting_Accent2.xlsx.
+class ConditionalFormattingExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data in column A (rows 1-10)
+            // Populate sample data in column A (rows 2 to 11)
             for (int i = 0; i < 10; i++)
             {
-                sheet.Cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
+                // Example values ranging from 30 to 80
+                sheet.Cells[i + 1, 0].PutValue(30 + i * 5);
             }
 
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-            // Define the range to which the formatting will be applied (A1:A10)
+            // Define the range to which the conditional formatting will be applied (A2:A11)
             CellArea area = new CellArea
             {
-                StartRow = 0,
-                EndRow = 9,
+                StartRow = 1,   // zero‑based index (row 2)
+                EndRow = 10,    // row 11
                 StartColumn = 0,
                 EndColumn = 0
             };
-            fcc.AddArea(area);
 
-            // Add a CellValue condition: highlight cells greater than the threshold (e.g., 50)
-            int conditionIndex = fcc.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "50",   // Formula1 – the threshold value
-                null); // Formula2 – not used for GreaterThan
+            // Add a conditional formatting collection to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
 
-            // Retrieve the created condition
-            FormatCondition condition = fcc[conditionIndex];
+            // Use dynamic to avoid compile‑time dependency on ConditionalFormatting type
+            dynamic cf = sheet.ConditionalFormattings[cfIndex];
 
-            // Apply a solid fill using a color that matches the typical Accent2 theme color
-            condition.Style.BackgroundColor = System.Drawing.Color.FromArgb(0, 176, 240);
-            condition.Style.Pattern = BackgroundType.Solid;
+            // Associate the defined range with this conditional formatting
+            cf.AddArea(area);
 
-            // Optionally, make the text bold for better visibility
-            condition.Style.Font.IsBold = true;
+            // Add a condition: highlight cells with values greater than the threshold (e.g., 60)
+            double threshold = 60.0;
+            int conditionIndex = cf.AddCondition(
+                FormatConditionType.CellValue,   // condition type
+                OperatorType.GreaterThan,        // operator
+                threshold.ToString(),            // first formula (threshold)
+                null);                           // second formula (not used)
 
-            // Define output file name
-            string outputPath = "ConditionalFormatting_Accent2.xlsx";
+            // Create a style that uses a solid fill (simulating theme Accent2 color)
+            Style accentStyle = workbook.CreateStyle();
+            accentStyle.ForegroundColor = Color.FromArgb(0, 176, 240); // Approximate Accent2
+            accentStyle.Pattern = BackgroundType.Solid;               // solid fill
+
+            // Assign the style to the condition
+            FormatCondition condition = cf[conditionIndex];
+            condition.Style = accentStyle;
 
             // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            workbook.Save("ConditionalFormatting_Accent2.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

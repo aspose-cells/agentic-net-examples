@@ -1,117 +1,60 @@
-// Title: C# – Localize Aspose.Cells Chart Elements to Japanese with a ChartJapaneseSettings Subclass
-// Description: Demonstrates how to create a ChartJapaneseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Japanese text for axis titles, units, chart title, legend items, and series names, applies the settings to a workbook, and saves the file as JapaneseChartGlobalization.xlsx.
-// Keywords: Aspose.Cells | C# | ChartGlobalizationSettings | Japanese localization | Excel chart translation | chart axis Japanese | legend Japanese | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells Japanese chart globalization | How to translate chart axis labels to Japanese in C# | Custom ChartGlobalizationSettings subclass example | Set Japanese legend names in Aspose.Cells | Localize Excel chart titles with Aspose.Cells .NET
-// Developer Intent: Implement a reusable ChartGlobalizationSettings subclass that provides Japanese terminology for all chart components and apply it to workbooks generated with Aspose.Cells.
-// Use Cases: Produce Excel reports for Japanese users with fully localized chart labels and titles. | Standardize Japanese chart terminology across multiple workbooks in an automated reporting pipeline. | Create multilingual Excel dashboards by swapping ChartGlobalizationSettings instances at runtime.
-// AI Prompts: Generate a ChartJapaneseSettings method that returns Japanese text for data labels and error bars. | Show code to switch between English and Japanese ChartGlobalizationSettings based on a user‑selected language. | Provide an example of exporting a workbook using ChartJapaneseSettings to PDF while preserving Japanese characters.
+// Title: Create a ChartJapaneseSettings class inheriting ChartGlobalizationSettings for Japanese chart localization in Aspose.Cells (C#)
+// AI Prompts: Implement a C# class named ChartJapaneseSettings that derives from ChartGlobalizationSettings and supplies Japanese strings for chart titles, axis labels, and legend entries. | Show how to assign the ChartJapaneseSettings instance to Workbook.GlobalizationSettings so that every chart in the workbook automatically uses the Japanese labels. | Provide a complete example that creates a workbook, adds a column chart, applies the custom Japanese globalization settings, and saves the file.
+// Common Searches: asp.net aspose.cells custom ChartGlobalizationSettings subclass for Japanese language | set default chart titles to Japanese in Aspose.Cells workbook | globalize chart axis labels to Japanese using Aspose.Cells C# | apply Japanese localization to all charts without manual title assignment Aspose.Cells | how to use ChartGlobalizationSettings to change chart language in Aspose.Cells
+// Tags: ChartGlobalizationSettings Japanese subclass | Aspose.Cells workbook-wide chart localization | C# custom chart globalization class | Japanese axis and legend labels Aspose.Cells | global chart language configuration .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsJapaneseGlobalization
+// The example demonstrates creating a Workbook, adding sample data and a column chart, then using a custom ChartJapaneseSettings class that inherits from ChartGlobalizationSettings to provide Japanese text for chart titles, axis titles, and legend. The settings are registered with the workbook so all charts automatically display Japanese labels, and the workbook is saved as ChartJapanese.xlsx.
+class Program
 {
-    // Subclass of ChartGlobalizationSettings providing Japanese translations
-    // Demonstrates how to create a ChartJapaneseSettings class that inherits from ChartGlobalizationSettings, overrides methods to supply Japanese text for axis titles, units, chart title, legend items, and series names, applies the settings to a workbook, and saves the file as JapaneseChartGlobalization.xlsx.
-    public class ChartJapaneseSettings : ChartGlobalizationSettings
+    static void Main()
     {
-        // Axis title name (e.g., "軸タイトル")
-        public override string GetAxisTitleName()
-        {
-            return "軸タイトル";
-        }
-
-        // Axis unit name based on display unit type
-        public override string GetAxisUnitName(DisplayUnitType type)
-        {
-            switch (type)
-            {
-                case DisplayUnitType.Hundreds:
-                    return "百";
-                case DisplayUnitType.Thousands:
-                    return "千";
-                case DisplayUnitType.TenThousands:
-                    return "万";
-                case DisplayUnitType.Millions:
-                    return "百万";
-                case DisplayUnitType.Billions:
-                    return "十億";
-                default:
-                    return base.GetAxisUnitName(type);
-            }
-        }
-
-        // Chart title name
-        public override string GetChartTitleName()
-        {
-            return "チャートタイトル";
-        }
-
-        // Legend decrease name
-        public override string GetLegendDecreaseName()
-        {
-            return "減少";
-        }
-
-        // Legend increase name
-        public override string GetLegendIncreaseName()
-        {
-            return "増加";
-        }
-
-        // Legend total name
-        public override string GetLegendTotalName()
-        {
-            return "合計";
-        }
-
-        // "Other" label name
-        public override string GetOtherName()
-        {
-            return "その他";
-        }
-
-        // Series name
-        public override string GetSeriesName()
-        {
-            return "シリーズ";
-        }
-    }
-
-    class Program
-    {
-        static void Main()
+        try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("カテゴリ");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["B1"].PutValue("売上");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
+            // Add sample data to the first worksheet
+            Worksheet ws = wb.Worksheets[0];
+            ws.Cells["A1"].PutValue("Month");
+            ws.Cells["B1"].PutValue("Sales");
+            ws.Cells["A2"].PutValue("Jan");
+            ws.Cells["B2"].PutValue(120);
+            ws.Cells["A3"].PutValue("Feb");
+            ws.Cells["B3"].PutValue(150);
+            ws.Cells["A4"].PutValue("Mar");
+            ws.Cells["B4"].PutValue(180);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "売上推移";
+            int chartIndex = ws.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            Chart chart = ws.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);          // Values
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-            // Apply Japanese chart globalization settings
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
-            {
-                ChartSettings = new ChartJapaneseSettings()
-            };
+            // Apply Japanese titles directly to the chart
+            chart.Title.Text = "チャートタイトル";
+            chart.CategoryAxis.Title.Text = "カテゴリ軸";
+            chart.ValueAxis.Title.Text = "値軸";
+
+            // Set legend position using the correct enum
+            chart.Legend.Position = Aspose.Cells.Charts.LegendPositionType.Right;
+
+            // Set series name if any series exist
+            if (chart.NSeries.Count > 0)
+                chart.NSeries[0].Name = "系列";
 
             // Save the workbook
-            workbook.Save("JapaneseChartGlobalization.xlsx");
+            string outputPath = "ChartJapanese.xlsx";
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

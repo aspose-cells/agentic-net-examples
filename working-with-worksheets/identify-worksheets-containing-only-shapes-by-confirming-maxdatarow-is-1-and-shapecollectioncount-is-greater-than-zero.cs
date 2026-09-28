@@ -1,76 +1,62 @@
-// Title: Find Shape‑Only Worksheets in Aspose.Cells for .NET (MaxDataRow = -1, Shapes.Count > 0)
-// Description: This C# example creates a workbook with a sheet that contains only a rectangle shape and another sheet with regular cell data. It then scans all worksheets, using Cells.MaxDataRow to detect the absence of cell content (‑1) and Shapes.Count to verify the presence of drawings, and outputs the names of sheets that meet both criteria before saving the file.
-// Keywords: Aspose.Cells shape only worksheet | MaxDataRow -1 detection | Shapes.Count Aspose | identify drawing‑only sheets | .NET Excel shape detection
-// Common Searches: how to list worksheets that contain only shapes using Aspose.Cells | detect Excel sheets with no data but with drawings in C# | Aspose.Cells find sheets with MaxDataRow -1 and shapes | filter shape‑only worksheets in a workbook | C# code to check for worksheets that have only drawings
-// Developer Intent: Locate worksheets that have drawing objects but no cell data in an Aspose.Cells workbook.
-// Use Cases: Generate a report of all shape‑only sheets for auditing. | Skip processing of non‑data worksheets to improve performance. | Separate drawing‑only tabs before exporting data to other formats.
-// AI Prompts: Write C# code with Aspose.Cells that returns the names of worksheets where Cells.MaxDataRow is -1 and Shapes.Count > 0. | Create a method to remove shape‑only worksheets from a workbook and save the remaining sheets to a new file. | Show how to log each worksheet that contains only shapes in an Aspose.Cells workbook.
+// Title: Find Excel worksheets that contain only shapes (no cell data) using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that returns a collection of worksheet names where Cells.MaxDataRow is -1 and the Shapes collection is not empty. | Create a function in a .NET console app that scans an Excel file and prints the names of sheets that have no cell entries but contain at least one drawing object using Aspose.Cells. | Generate a C# example that loads a workbook, checks each worksheet for the absence of data and the presence of shapes, and outputs the matching sheet titles.
+// Common Searches: Aspose.Cells C# find worksheets that have only drawings and no data | How to list Excel sheets with MaxDataRow -1 and shapes count greater than zero using Aspose.Cells | Identify empty worksheets containing shapes in a .xlsx file with Aspose.Cells .NET | C# code example to detect sheets with no cell values but with shape objects in Aspose.Cells
+// Tags: filter worksheets by MaxDataRow Aspose.Cells | detect shape-only sheets Aspose.Cells | worksheet shapes count check C# | list empty worksheets with drawings Aspose.Cells | identify worksheets without cell data Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeOnlyWorksheetDemo
+// Loads a workbook, iterates through each worksheet, and collects the names of sheets where MaxDataRow equals -1 and the Shapes collection has at least one item, then prints those worksheet names.
+class IdentifyShapeOnlyWorksheets
 {
-    // This C# example creates a workbook with a sheet that contains only a rectangle shape and another sheet with regular cell data. It then scans all worksheets, using Cells.MaxDataRow to detect the absence of cell content (‑1) and Shapes.Count to verify the presence of drawings, and outputs the names of sheets that meet both criteria before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-                // -------------------------------------------------
-                // Worksheet 0: contains only shapes, no cell data
-                // -------------------------------------------------
-                Worksheet shapeOnlySheet = workbook.Worksheets[0];
-                shapeOnlySheet.Name = "ShapesOnly";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
-                shapeOnlySheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
+            // List to hold names of worksheets that contain only shapes
+            List<string> shapeOnlySheets = new List<string>();
 
-                // -------------------------------------------------
-                // Worksheet 1: contains regular cell data
-                // -------------------------------------------------
-                int dataSheetIndex = workbook.Worksheets.Add();
-                Worksheet dataSheet = workbook.Worksheets[dataSheetIndex];
-                dataSheet.Name = "DataSheet";
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // MaxDataRow returns -1 when there is no data in the sheet
+                bool hasNoData = sheet.Cells.MaxDataRow == -1;
 
-                // Populate some cells with data
-                dataSheet.Cells["A1"].PutValue("Header");
-                dataSheet.Cells["A2"].PutValue(123);
+                // ShapeCollection.Count gives the number of shapes on the sheet
+                bool hasShapes = sheet.Shapes.Count > 0;
 
-                // -------------------------------------------------
-                // Identify worksheets that contain ONLY shapes
-                // Criteria:
-                //   - No data rows (MaxDataRow == -1)
-                //   - At least one shape (Shapes.Count > 0)
-                // -------------------------------------------------
-                Console.WriteLine("Worksheets containing only shapes:");
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Identify sheets that have no data but contain at least one shape
+                if (hasNoData && hasShapes)
                 {
-                    // MaxDataRow returns -1 when there is no data in any cell of the sheet
-                    bool hasNoData = sheet.Cells.MaxDataRow == -1;
-
-                    // Shapes.Count gives the number of drawing objects on the sheet
-                    bool hasShapes = sheet.Shapes.Count > 0;
-
-                    if (hasNoData && hasShapes)
-                    {
-                        Console.WriteLine($"- {sheet.Name}");
-                    }
+                    shapeOnlySheets.Add(sheet.Name);
                 }
+            }
 
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save("ShapeOnlyWorksheetsDemo.xlsx");
-            }
-            catch (Exception ex)
+            // Output the result
+            Console.WriteLine("Worksheets containing only shapes:");
+            foreach (string name in shapeOnlySheets)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("- " + name);
             }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

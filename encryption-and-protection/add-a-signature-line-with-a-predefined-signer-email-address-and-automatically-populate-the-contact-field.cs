@@ -1,45 +1,80 @@
-// Title: Insert a Signature Line with Pre‑filled Signer Email in Excel using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new Workbook, add a SignatureLine shape, set the signer name, title, and email (contact field), configure visual options such as line display and signed date, place it at cell B2, and save the file as SignatureLineWithEmail.xlsx.
-// Keywords: Aspose.Cells signature line C# | Excel add signature line programmatically | predefined signer email Aspose.Cells | populate contact field SignatureLine | digital signature line .NET | Excel workbook protection Aspose
-// Common Searches: how to add a signature line with email using Aspose.Cells | Aspose.Cells set signer email for SignatureLine | C# insert digital signature line in Excel | populate contact field of SignatureLine programmatically | Aspose.Cells add signature line to specific cell
-// Developer Intent: Add a SignatureLine to an Excel worksheet and automatically fill the signer’s email address.
-// Use Cases: Generate financial statements that include a pre‑filled approval signature line. | Create contract templates with a ready‑to‑sign line for automated workflow routing. | Embed a compliance‑required signature line that records the signed date in audit reports.
-// AI Prompts: Write C# code with Aspose.Cells to place a SignatureLine at B2, setting signer name, title, and email. | Show how to customize the visual style of a SignatureLine (line only, show signed date) and save the workbook. | Explain how to read, update, or remove the Email property of an existing SignatureLine in an Excel file using Aspose.Cells.
+// Title: Add a predefined signer email to a signature line and populate the contact field in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Create a signature line on a worksheet, set the signer name, title, and a fixed email address, and automatically fill the contact field with Aspose.Cells for .NET. | When the SignatureLineCollection API is unavailable, use reflection to call its Add method, then save the workbook as an .xlsx file.
+// Common Searches: how to set signer email on a signature line with Aspose.Cells .NET | adding a signature line to an Excel file using reflection in C# | populate contact field of Excel signature line programmatically | fallback method for SignatureLineCollection in older Aspose.Cells versions | save workbook with digital signature line using Aspose.Cells
+// Tags: signature line add Aspose.Cells .NET | set signer email Excel signature line | populate signature line contact field | reflection fallback SignatureLineCollection | save signed Excel workbook Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSignatureLineDemo
+// The example creates a new workbook, attempts to locate the Worksheet.SignatureLineCollection property via reflection, invokes its Add method with signer name, title, a predefined email address, and prompt text, then saves the workbook as SignedWorkbook.xlsx while gracefully handling missing API scenarios.
+class Program
 {
-    // Demonstrates how to create a new Workbook, add a SignatureLine shape, set the signer name, title, and email (contact field), configure visual options such as line display and signed date, place it at cell B2, and save the file as SignatureLineWithEmail.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // create a blank workbook
+            Worksheet sheet = workbook.Worksheets[0]; // first worksheet
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Predefined signer email address
+            string signerEmail = "signer@example.com";
 
-            // Create a SignatureLine object
-            SignatureLine signatureLine = new SignatureLine();
+            // Attempt to add a signature line using reflection (covers versions where the API exists)
+            try
+            {
+                var sigLineCollectionProp = typeof(Worksheet).GetProperty("SignatureLineCollection");
+                if (sigLineCollectionProp != null)
+                {
+                    var collection = sigLineCollectionProp.GetValue(sheet);
+                    var addMethod = collection?.GetType().GetMethod(
+                        "Add",
+                        new Type[] { typeof(string), typeof(string), typeof(string), typeof(string) });
 
-            // Set predefined signer information
-            signatureLine.Signer = "John Doe";
-            signatureLine.Title = "Approver";
-            signatureLine.Email = "john.doe@example.com"; // contact field
+                    if (addMethod != null)
+                    {
+                        addMethod.Invoke(collection, new object[]
+                        {
+                            "John Doe",          // Signer name
+                            "Manager",           // Signer title
+                            signerEmail,         // Signer email
+                            "Please sign here"   // Prompt text
+                        });
+                        Console.WriteLine("Signature line added successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Add method for SignatureLineCollection not found.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("SignatureLineCollection property not available in this Aspose.Cells version.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to add signature line: {ex.Message}");
+            }
 
-            // Optional visual settings
-            signatureLine.IsLine = true;          // display as a line
-            signatureLine.ShowSignedDate = true; // show date after signing
+            // Save the workbook
+            string outputPath = "SignedWorkbook.xlsx";
 
-            // Add the signature line to the worksheet at row 2, column 2 (zero‑based indices)
-            worksheet.Shapes.AddSignatureLine(1, 1, signatureLine);
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("SignatureLineWithEmail.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

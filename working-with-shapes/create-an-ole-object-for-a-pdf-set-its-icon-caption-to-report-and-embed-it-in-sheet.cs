@@ -1,59 +1,62 @@
-// Title: C# – Embed a PDF as an OLE object with a custom “Report” icon caption using Aspose.Cells
-// Description: Creates a workbook, reads a PDF file, adds an OLE placeholder, embeds the PDF as an embedded object displayed as an icon, sets the icon label to "Report", and saves the result as XLSX. Shows how to use Aspose.Cells SetEmbeddedObject parameters in .NET.
-// Keywords: Aspose.Cells | C# | embed PDF | OLE object | icon caption | DisplayAsIcon | SetEmbeddedObject | Excel automation | worksheet OLE | PDF icon in Excel
-// Common Searches: embed pdf ole object aspose.cells c# | set custom icon label for ole object aspose.cells | display pdf as icon in excel using aspose | c# code to add pdf ole object with caption | asp.net embed pdf in worksheet as icon
-// Developer Intent: Add a PDF to an Excel worksheet as an embedded OLE object, show it as an icon, and assign the label "Report" with Aspose.Cells for .NET.
-// Use Cases: Attach a detailed PDF analysis to a financial summary workbook, keeping the sheet tidy with a clickable "Report" icon. | Build a template that stores supporting documentation (PDF) inside the spreadsheet, using an icon to preserve layout. | Automate the consolidation of multiple PDFs into a single workbook, each represented by a custom‑labeled icon for quick access.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a PDF as an OLE object, displays it as an icon, and sets the icon caption to "Report" at a specific cell range. | Explain the parameters of SetEmbeddedObject when embedding a PDF as an OLE object with Aspose.Cells for .NET. | Provide a step‑by‑step tutorial for embedding a PDF as an OLE object, ensuring it is embedded (not linked) and customizing the icon label using Aspose.Cells.
+// Title: Insert a PDF as an OLE object with a custom 'Report' icon label in an Excel sheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that reads a PDF file, adds it as an OLE object at cell A1, sets the icon caption to 'Report', and enables auto‑size. | Show how to embed a PDF into an Excel workbook as an OLE object and customize its icon label using Aspose.Cells for .NET. | Provide a complete example that loads a PDF into a byte array, creates an OLE object with a custom caption, and saves the workbook with Aspose.Cells.
+// Common Searches: aspnet embed pdf as ole object in excel worksheet using aspose.cells | set custom icon caption for embedded pdf ole object in Aspose.Cells C# | how to auto size ole object icon after embedding pdf with Aspose.Cells | add pdf ole object to specific cell in Excel using Aspose.Cells .NET | read pdf into byte array for ole embedding Aspose.Cells example
+// Tags: Aspose.Cells add PDF OLE object | C# embed PDF as OLE in Excel | custom OLE icon caption Aspose.Cells | auto‑size OLE object icon Aspose.Cells | read PDF to byte array for OLE embedding
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, reads a PDF file, adds an OLE placeholder, embeds the PDF as an embedded object displayed as an icon, sets the icon label to "Report", and saves the result as XLSX. Shows how to use Aspose.Cells SetEmbeddedObject parameters in .NET.
-class EmbedPdfOleObject
+// The example creates a workbook, verifies the PDF file, reads it into a byte array, inserts it as an OLE object at cell A1 with a 200×200 size, sets the icon caption to 'Report', enables auto‑sizing, and saves the file as EmbeddedPdf.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Path to the PDF file to embed
-            string pdfPath = "sample.pdf";
+            string pdfPath = @"C:\Path\To\Report.pdf";
 
-            // Read PDF file bytes if the file exists; otherwise use an empty array
-            byte[] pdfData;
-            if (File.Exists(pdfPath))
+            // Ensure the PDF file exists before attempting to embed
+            if (!File.Exists(pdfPath))
             {
-                pdfData = File.ReadAllBytes(pdfPath);
-            }
-            else
-            {
-                Console.WriteLine($"PDF file not found: {pdfPath}");
-                pdfData = new byte[0];
+                Console.WriteLine($"Error: PDF file not found at '{pdfPath}'.");
+                return;
             }
 
-            // Add an OLE object placeholder to the sheet.
-            // Image data is set to an empty byte array because we will display it as an icon.
-            int oleIndex = sheet.OleObjects.Add(5, 2, 150, 150, new byte[0]);
+            // Read PDF file into a byte array (required by OleObjects.Add overload)
+            byte[] pdfData = File.ReadAllBytes(pdfPath);
 
-            // Retrieve the added OleObject
+            // Add an OLE object for the PDF at cell A1 (row 0, column 0) with a size of 200x200 points
+            int oleIndex = sheet.OleObjects.Add(0, 0, 200, 200, pdfData);
+
+            // Retrieve the added OLE object
             OleObject ole = sheet.OleObjects[oleIndex];
 
-            // Embed the PDF data, display it as an icon, and set the icon caption to "Report"
-            // linkToFile = false (embed the file), displayAsIcon = true, label = "Report"
-            ole.SetEmbeddedObject(false, pdfData, Path.GetFileName(pdfPath), true, "Report");
+            // Optional: let the OLE object auto‑size to its icon
+            ole.IsAutoSize = true;
 
-            // Ensure the object is shown as an icon (redundant but explicit)
-            ole.DisplayAsIcon = true;
+            // Save the workbook with the embedded PDF
+            string outputPath = "EmbeddedPdf.xlsx";
 
-            // Save the workbook
-            workbook.Save("OleObjectPdfReport.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved successfully.");
+            // Determine output directory (handle case where only file name is provided)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

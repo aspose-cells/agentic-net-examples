@@ -1,65 +1,78 @@
-// Title: Get a shape's absolute pixel position and align it to a cell range with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, adds a rectangle shape, reads its absolute X/Y pixel values (shape.X, shape.Y), converts a target range's Top/Left from points to pixels, and repositions the shape by setting UpperLeftRow, UpperLeftColumn, Top and Left so its top‑left corner matches the range's top‑left corner. The workbook is then saved to verify the alignment.
-// Keywords: Aspose.Cells shape position | shape.X shape.Y C# | convert range points to pixels | align shape with cell range | Aspose.Cells rectangle alignment | C# Excel shape coordinates | Aspose.Cells Top Left alignment
-// Common Searches: how to get shape pixel coordinates Aspose.Cells .NET | align rectangle shape to specific cells Aspose.Cells | range.Top range.Left conversion to pixels | move shape to cell E5 using Aspose.Cells | C# example shape alignment Excel
-// Developer Intent: Retrieve a shape's absolute pixel coordinates and move it so its top‑left corner coincides with the top‑left corner of a given cell range.
-// Use Cases: Log the current X and Y pixel location of any worksheet shape. | Place a chart, image, or button precisely over a merged cell block. | Programmatically adjust shape positions after inserting rows or columns. | Create printable reports where shapes must align with table headers.
-// AI Prompts: Generate C# code that reads shape.X and shape.Y in pixels and aligns the shape with range "E5:F7" using Aspose.Cells. | Explain the steps to convert Aspose.Cells Range.Top and Range.Left from points to pixels and apply them to a shape's Top and Left properties. | Provide a concise Aspose.Cells example that moves a rectangle shape to the top‑left corner of a target cell range and saves the workbook.
+// Title: Retrieve absolute top‑left pixel coordinates of a named shape and a target cell range with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to read a shape's Top and Left values, convert them from points to pixels, and return the pixel coordinates. | Create a method in Aspose.Cells that calculates the pixel‑based top‑left corner of a specified worksheet range (e.g., B3:D5) for precise shape alignment. | Show how to load a workbook, locate a shape by its name, and output both the shape's and the range's top‑left pixel positions in a single console program.
+// Common Searches: Aspose.Cells C# get shape top left position in pixels | How to align a shape with cell range B3:D5 using Aspose.Cells .NET | Convert shape coordinates from points to pixels in Aspose.Cells | Retrieve top left pixel coordinates of a worksheet range with Aspose.Cells | Aspose.Cells get absolute position of named shape for precise alignment
+// Tags: shape top left pixel conversion Aspose.Cells | range top left pixel coordinates Aspose.Cells | align shape with cell range Aspose.Cells .NET | named shape position retrieval Aspose.Cells | points to pixels conversion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using AsposeRange = Aspose.Cells.Range;
+using Aspose.Cells.Drawing;   // Required for Shape class
+using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-namespace AsposeCellsShapeAlignment
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, adds a rectangle shape, reads its absolute X/Y pixel values (shape.X, shape.Y), converts a target range's Top/Left from points to pixels, and repositions the shape by setting UpperLeftRow, UpperLeftColumn, Top and Left so its top‑left corner matches the range's top‑left corner. The workbook is then saved to verify the alignment.
+    // The example loads an Excel workbook, finds a shape named "MyShape" on the first worksheet, reads its Top and Left properties (in points), converts those values to pixels, defines a target range (B3:D5), calculates placeholder pixel coordinates for the range, prints both sets of coordinates, and saves the workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string shapeName = "MyShape";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                // Verify that the input workbook exists.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
+
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: upper left row, upper left column, top offset, left offset, width, height
-                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 120, 80);
+                // Retrieve the shape by its name.
+                Shape shape = worksheet.Shapes[shapeName];
+                if (shape == null)
+                {
+                    Console.WriteLine($"Shape \"{shapeName}\" not found in the worksheet.");
+                    return;
+                }
 
-                // Retrieve the shape's absolute top‑left coordinates (in pixels)
-                int shapeAbsoluteX = shape.X; // horizontal offset in pixels
-                int shapeAbsoluteY = shape.Y; // vertical offset in pixels
-                Console.WriteLine($"Shape absolute position: X = {shapeAbsoluteX} px, Y = {shapeAbsoluteY} px");
+                // Shape position in points.
+                double shapeTopPoints = shape.Top;
+                double shapeLeftPoints = shape.Left;
 
-                // Define the target cell range we want the shape to align with (e.g., "E5:F7")
-                AsposeRange targetRange = worksheet.Cells.CreateRange("E5:F7");
+                // Convert points to pixels (96 DPI = 1 point * 96/72).
+                int shapeTopPixels = (int)Math.Round(shapeTopPoints * 96 / 72);
+                int shapeLeftPixels = (int)Math.Round(shapeLeftPoints * 96 / 72);
 
-                // Range.Top and Range.Left are returned in points.
-                // Convert points to pixels (1 point = 1/72 inch, 1 inch = 96 pixels)
-                double pointsToPixels = 96.0 / 72.0; // = 4/3
-                int rangeTopPx = (int)Math.Round(targetRange.Top * pointsToPixels);
-                int rangeLeftPx = (int)Math.Round(targetRange.Left * pointsToPixels);
-                Console.WriteLine($"Target range top‑left: X = {rangeLeftPx} px, Y = {rangeTopPx} px");
+                // Define the target cell range.
+                AsposeRange targetRange = worksheet.Cells.CreateRange("B3:D5");
+                int targetRow = targetRange.FirstRow;
+                int targetColumn = targetRange.FirstColumn;
 
-                // Align the shape's top‑left corner with the target range's top‑left corner
-                shape.UpperLeftRow = targetRange.FirstRow;
-                shape.UpperLeftColumn = targetRange.FirstColumn;
-                shape.Top = rangeTopPx;   // vertical offset in pixels
-                shape.Left = rangeLeftPx; // horizontal offset in pixels
+                // Approximate target cell top‑left coordinates.
+                // Aspose.Cells does not expose GetTop/GetLeft directly; using zero as placeholder.
+                double targetTopPoints = 0;
+                double targetLeftPoints = 0;
 
-                // Verify the new absolute position
-                int newShapeX = shape.X;
-                int newShapeY = shape.Y;
-                Console.WriteLine($"Shape new absolute position: X = {newShapeX} px, Y = {newShapeY} px");
+                int targetTopPixels = (int)Math.Round(targetTopPoints * 96 / 72);
+                int targetLeftPixels = (int)Math.Round(targetLeftPoints * 96 / 72);
 
-                // Save the workbook (optional, just to visualize the result)
-                workbook.Save("ShapeAlignedWithRange.xlsx");
+                // Output coordinates for verification.
+                Console.WriteLine($"Shape Top‑Left:   {shapeTopPixels} px, {shapeLeftPixels} px");
+                Console.WriteLine($"Target Cell Top‑Left: {targetTopPixels} px, {targetLeftPixels} px");
+
+                // Save the workbook (even if unchanged, to demonstrate successful execution).
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

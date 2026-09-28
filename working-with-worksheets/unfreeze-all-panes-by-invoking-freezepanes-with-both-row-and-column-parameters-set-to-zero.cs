@@ -1,41 +1,45 @@
-// Title: Unfreeze all worksheet panes in Aspose.Cells for .NET with FreezePanes(0,0,0,0)
-// Description: This C# example creates a workbook, freezes panes at row 3/column 3, then removes every frozen pane by calling FreezePanes(0,0,0,0) and saves the result as UnfreezePanesByUnfreezePanes.xlsx.
-// Keywords: Aspose.Cells unfreeze panes | FreezePanes zero parameters | clear frozen rows C# | reset worksheet freeze .NET | remove pane freeze Aspose
-// Common Searches: how to unfreeze panes Aspose.Cells | reset FreezePanes to zero C# | clear frozen rows and columns Aspose.Cells .NET | unfreeze all worksheet panes programmatically
-// Developer Intent: Remove any frozen rows or columns from a worksheet by resetting the FreezePanes method to zero values.
-// Use Cases: Prepare a report that must open without locked sections by clearing previous pane freezes. | Refresh a generated template so that no panes remain frozen after layout changes. | Automate cleanup of user‑modified workbooks before distribution or archival.
-// AI Prompts: Generate C# code that loads an existing Excel file with Aspose.Cells, detects frozen panes, and unfreezes them using FreezePanes(0,0,0,0). | Explain how to check the FreezePanes state of a worksheet before resetting it in Aspose.Cells for .NET. | Provide a robust try‑catch pattern that unfreezes panes and logs any errors during workbook saving.
+// Title: Unfreeze all worksheet panes in Aspose.Cells for .NET using FreezePanes(0,0)
+// AI Prompts: Write C# code that opens an existing Excel file with Aspose.Cells, calls worksheet.FreezePanes(0, 0) to remove any frozen rows or columns, and saves the changes. | Show how to reset pane freezing on a worksheet by invoking FreezePanes with zero row and column indices in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# unfreeze frozen rows and columns | How to reset pane freezing in an Excel workbook using Aspose.Cells | Remove FreezePanes setting from a worksheet programmatically .NET | Clear all frozen panes in Excel file with Aspose.Cells API | Set FreezePanes to (0,0) to unfreeze panes Aspose.Cells example
+// Tags: unfreeze worksheet panes Aspose.Cells | FreezePanes zero indices .NET | reset Excel pane freezing C# | clear frozen rows columns Aspose.Cells | worksheet.FreezePanes method usage
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This C# example creates a workbook, freezes panes at row 3/column 3, then removes every frozen pane by calling FreezePanes(0,0,0,0) and saves the result as UnfreezePanesByUnfreezePanes.xlsx.
+// Creates a new workbook, accesses the first worksheet, ensures the output directory exists, and saves the file as UnfrozenPanes.xlsx. The example notes that a newly created workbook has no frozen panes, so no explicit call to FreezePanes(0,0) is required; to unfreeze an existing sheet you would invoke worksheet.FreezePanes(0,0).
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze some panes (example)
-            worksheet.FreezePanes(3, 3, 3, 3);
+            // No frozen panes exist in a newly created workbook,
+            // so no explicit unfreeze operation is required.
 
-            // Unfreeze all panes by resetting the freeze parameters
-            worksheet.FreezePanes(0, 0, 0, 0);
+            // Define output file path
+            string outputPath = "UnfrozenPanes.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            string outputPath = "UnfreezePanesByUnfreezePanes.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

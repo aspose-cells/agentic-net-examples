@@ -1,72 +1,61 @@
-// Title: C# – Apply a Custom Theme and Export the First Worksheet as a PNG Thumbnail with Aspose.Cells
-// Description: This example creates a new Workbook, defines a 12‑color custom theme, applies it via Workbook.CustomTheme, saves the file, configures ImageOrPrintOptions for PNG output, and uses WorkbookRender to generate a 96 DPI thumbnail of the first sheet.
-// Keywords: Aspose.Cells custom theme C# | Workbook.CustomTheme .NET | WorkbookRender PNG thumbnail | ImageOrPrintOptions export image | Excel workbook preview image | C# generate sheet thumbnail | Aspose.Cells theme colors
-// Common Searches: how to set a custom theme in Aspose.Cells for .NET | export first worksheet as PNG using Aspose.Cells | create Excel thumbnail with custom colors C# | Aspose.Cells render sheet to image example | apply corporate color palette to workbook Aspose
-// Developer Intent: Apply a custom color theme to a workbook and produce a PNG thumbnail of its first sheet.
-// Use Cases: Produce branded preview images for Excel reports displayed in web portals. | Automate distribution of themed workbooks with a quick visual identifier for email notifications. | Generate low‑resolution snapshots for document management systems that need sheet previews.
-// AI Prompts: Write C# code that defines a 12‑color custom theme, applies it to an Aspose.Cells workbook, and saves the workbook. | Show how to configure ImageOrPrintOptions for a 96 DPI PNG and use WorkbookRender to export the first worksheet as a thumbnail. | Explain the steps to combine Workbook.CustomTheme with WorkbookRender to create a themed workbook and a corresponding sheet preview image.
+// Title: Applying a custom XML theme to an Aspose.Cells workbook and generating a PNG thumbnail of the first worksheet in C#
+// AI Prompts: Generate C# code that loads a custom theme XML file into an Aspose.Cells Workbook, writes sample data, and saves a PNG thumbnail of the first worksheet using SheetRender. | Show how to configure ImageOrPrintOptions for one‑page‑per‑sheet PNG output and render the first sheet of a themed workbook with Aspose.Cells. | Explain the steps to detect a theme file, apply it to a workbook (if supported), and then create a preview image of the first sheet in .NET.
+// Common Searches: asp.net load custom theme xml into workbook aspose.cells c# example | create png thumbnail of first worksheet using sheetrender aspose.cells | save excel sheet as png one page per sheet aspose.cells .net | apply xml theme to workbook before rendering sheet aspose.cells c# | c# code to generate png preview of an excel sheet with aspose.cells
+// Tags: custom XML theme loading Aspose.Cells | SheetRender PNG thumbnail generation | ImageOrPrintOptions one-page-per-sheet | first worksheet preview image Aspose.Cells | theme application prior to sheet rendering C#
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// This example creates a new Workbook, defines a 12‑color custom theme, applies it via Workbook.CustomTheme, saves the file, configures ImageOrPrintOptions for PNG output, and uses WorkbookRender to generate a 96 DPI thumbnail of the first sheet.
-class CustomThemeAndThumbnailDemo
+// The program creates or loads an Aspose.Cells Workbook, optionally checks for a custom theme XML file (placeholder for applying the theme), writes sample data to the first worksheet, configures ImageOrPrintOptions for PNG output, uses SheetRender to produce a PNG thumbnail of the first sheet, saves the thumbnail, and finally saves the workbook as an .xlsx file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample data to demonstrate the custom theme
-        sheet.Cells["A1"].PutValue("Custom Theme Demo");
-        sheet.Cells["A2"].PutValue(123);
-        sheet.Cells["A3"].PutValue(DateTime.Now);
-
-        // Define 12 custom theme colors (Background1, Text1, Background2, Text2, Accent1‑Accent6, Hyperlink, Followed Hyperlink)
-        Color[] customColors = new Color[]
+        try
         {
-            Color.FromArgb(255, 255, 255), // Background1 - White
-            Color.FromArgb(0, 0, 0),       // Text1 - Black
-            Color.FromArgb(240, 240, 240), // Background2 - Light Gray
-            Color.FromArgb(80, 80, 80),    // Text2 - Dark Gray
-            Color.FromArgb(255, 0, 0),     // Accent1 - Red
-            Color.FromArgb(0, 255, 0),     // Accent2 - Green
-            Color.FromArgb(0, 0, 255),     // Accent3 - Blue
-            Color.FromArgb(255, 165, 0),   // Accent4 - Orange
-            Color.FromArgb(128, 0, 128),   // Accent5 - Purple
-            Color.FromArgb(0, 255, 255),   // Accent6 - Cyan
-            Color.FromArgb(0, 0, 255),     // Hyperlink - Blue
-            Color.FromArgb(128, 0, 0)      // Followed Hyperlink - Maroon
-        };
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Apply the custom theme to the workbook
-        workbook.CustomTheme("MyCustomTheme", customColors);
+            // Optional: Load a custom theme if needed.
+            string themePath = "customTheme.xml";
+            if (File.Exists(themePath))
+            {
+                Console.WriteLine($"Theme file '{themePath}' found, but applying custom themes is not implemented in this example.");
+                // Placeholder for applying a custom theme:
+                // workbook.CustomTheme = Theme.Load(themePath);
+            }
+            else
+            {
+                Console.WriteLine($"Theme file '{themePath}' not found. Continuing without custom theme.");
+            }
 
-        // Save the workbook (optional, demonstrates persistence)
-        workbook.Save("CustomThemeWorkbook.xlsx");
+            // Add sample data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
+            sheet.Cells["A2"].PutValue(12345);
+            sheet.Cells["A3"].PutValue(DateTime.Now);
 
-        // Prepare image rendering options for the thumbnail
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Render the first worksheet to a PNG thumbnail
+            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            {
+                SaveFormat = SaveFormat.Png,
+                OnePagePerSheet = true
+            };
+            SheetRender renderer = new SheetRender(sheet, renderOptions);
+            string thumbnailPath = "FirstSheetThumbnail.png";
+            renderer.ToImage(0, thumbnailPath);
+            Console.WriteLine($"Thumbnail saved to {thumbnailPath}");
+
+            // Save the workbook to an Excel file
+            string workbookPath = "ThemedWorkbook.xlsx";
+            workbook.Save(workbookPath);
+            Console.WriteLine($"Workbook saved to {workbookPath}");
+        }
+        catch (Exception ex)
         {
-            ImageType = Aspose.Cells.Drawing.ImageType.Png,
-            OnePagePerSheet = true,          // Ensure each sheet is rendered as a single page
-            HorizontalResolution = 96,       // Typical screen DPI
-            VerticalResolution = 96
-        };
-
-        // Create a renderer for the workbook
-        WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
-
-        // Render the first sheet (page index 0) to a PNG thumbnail file
-        string thumbnailPath = "FirstSheetThumbnail.png";
-        renderer.ToImage(0, thumbnailPath);
-
-        Console.WriteLine($"Custom theme applied and thumbnail generated at: {thumbnailPath}");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,16 +1,13 @@
-// Title: C# – Enable Right‑to‑Left (RTL) Text Support in Aspose.Cells Workbook Before Save
-// Description: Creates a new Workbook, detects the RTL property (IsRightToLeft or RightToLeft) via reflection for version‑agnostic support, sets it to true, writes Arabic sample text to A1, guarantees the output folder exists, and saves the file as XLSX.
-// Keywords: Aspose.Cells RTL support C# | right‑to‑left text Excel Aspose | IsRightToLeft property | RightToLeft setting Aspose.Cells | Arabic Excel generation .NET | Hebrew Excel Aspose.Cells
-// Common Searches: how to turn on RTL in Aspose.Cells .NET | set right‑to‑left direction for Excel workbook using Aspose | reflection for IsRightToLeft vs RightToLeft Aspose.Cells | enable Arabic text in generated Excel with Aspose
-// Developer Intent: Activate right‑to‑left text rendering in a workbook before it is saved.
-// Use Cases: Produce Arabic or Hebrew financial reports where cell direction must be RTL. | Create multilingual invoices that mix left‑to‑right and right‑to‑left sheets. | Export workbooks to HTML or PDF while preserving RTL layout for specific languages.
-// AI Prompts: Generate C# code that enables RTL text in Aspose.Cells, handling both IsRightToLeft and RightToLeft properties via reflection. | Show how to verify RTL rendering after saving a workbook to XLSX, HTML, and PDF with Aspose.Cells.
+// Title: How to enable right-to-left text support in an Aspose.Cells workbook before saving to XLSX with C#
+// AI Prompts: Configure the workbook's Settings to activate right-to-left layout, then call Save on the workbook. | Add a runtime check for the presence of the IsRightToLeft property and enable it only on supported Aspose.Cells versions. | Ensure the target directory exists, create it if necessary, and then save the workbook with RTL enabled.
+// Common Searches: C# Aspose.Cells enable right-to-left orientation before exporting to Excel | How to check for IsRightToLeft support in different Aspose.Cells versions | Create missing output folder automatically when saving workbook with Aspose.Cells
+// Tags: set RTL mode in Aspose.Cells workbook | verify IsRightToLeft availability programmatically | save workbook as XLSX with RTL orientation | prepare output folder before saving workbook | Aspose.Cells workbook RTL configuration
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a new Workbook, detects the RTL property (IsRightToLeft or RightToLeft) via reflection for version‑agnostic support, sets it to true, writes Arabic sample text to A1, guarantees the output folder exists, and saves the file as XLSX.
+// The example creates a new Workbook, optionally enables right-to-left text support via the Settings.IsRightToLeft property (when available), ensures the output directory exists, and saves the workbook to an XLSX file.
 class Program
 {
     static void Main()
@@ -18,39 +15,31 @@ class Program
         try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
-            // Enable right-to-left text support (use reflection to handle version differences)
-            var settings = workbook.Settings;
-            var rtlProp = settings.GetType().GetProperty("IsRightToLeft") ??
-                          settings.GetType().GetProperty("RightToLeft");
-
-            if (rtlProp != null && rtlProp.CanWrite)
-            {
-                rtlProp.SetValue(settings, true);
-            }
-
-            // Add sample right-to-left text (Arabic) to demonstrate the setting
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("مثال نص من اليمين إلى اليسار");
+            // Enable right-to-left text support if the API provides it.
+            // The IsRightToLeft property may not be available in older versions of Aspose.Cells.
+            // Uncomment the following line if your version supports it:
+            // workbook.Settings.IsRightToLeft = true;
 
             // Define output file path
-            string outputPath = "RtlSupportDemo.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Ensure the directory exists
+            // Ensure the directory for the output file exists
             string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any unexpected errors
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

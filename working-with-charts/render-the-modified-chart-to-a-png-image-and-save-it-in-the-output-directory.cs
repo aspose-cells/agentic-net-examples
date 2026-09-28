@@ -1,10 +1,7 @@
-// Title: Export Aspose.Cells Chart to PNG in C# and Save to an Output Folder
-// Description: C# example that creates a workbook, adds sample data, builds a column chart, sets a title, creates an "output" directory, renders the chart to a PNG file with Chart.ToImage, and saves both the image and the workbook in that folder.
-// Keywords: Aspose.Cells chart export C# | Chart.ToImage PNG Aspose.Cells | save chart image to folder | export Excel chart as PNG | .NET chart to image example | Aspose.Cells render chart PNG | C# Aspose.Cells image export
-// Common Searches: How to export an Aspose.Cells chart to PNG using C# | Aspose.Cells Chart.ToImage example code | Save chart image to specific directory Aspose.Cells | Render Excel column chart as PNG in .NET | Aspose.Cells export chart image tutorial
-// Developer Intent: Render a modified Aspose.Cells chart as a PNG file and store it in a designated output directory.
-// Use Cases: Generate PNG snapshots of Excel charts for automated reporting pipelines. | Create image assets of charts for embedding in web pages, emails, or mobile apps without sharing the workbook. | Batch‑export multiple charts from a workbook to PNG files for archival or publishing purposes.
-// AI Prompts: Show how to export an Aspose.Cells chart to JPEG instead of PNG in C#. | Provide code that iterates through all charts in a workbook and saves each as a separate PNG file. | Explain how to adjust image resolution or DPI when using Chart.ToImage in Aspose.Cells.
+// Title: How to render an Aspose.Cells column chart as a PNG image and save it using C#
+// AI Prompts: Write C# code that creates a workbook, adds a column chart, sets its data range and title, then uses Chart.ToImage to generate a PNG file in a specified folder. | Show the complete steps to export an Aspose.Cells chart to a PNG image while also persisting the workbook to disk in a .NET application. | Provide a concise C# example that demonstrates using the Aspose.Cells Chart.ToImage method to render a chart as a PNG file.
+// Common Searches: C# Aspose.Cells export chart to PNG file example | How to save an Aspose.Cells chart as an image in .NET | Aspose.Cells ToImage method usage for column charts | Render Excel chart to PNG with Aspose.Cells C# | Save chart image and workbook to output directory using Aspose.Cells
+// Tags: Aspose.Cells export chart to PNG | C# Aspose.Cells column chart rendering | Aspose.Cells Chart.ToImage usage | save Aspose.Cells chart as image file | output directory handling Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,44 +9,51 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// C# example that creates a workbook, adds sample data, builds a column chart, sets a title, creates an "output" directory, renders the chart to a PNG file with Chart.ToImage, and saves both the image and the workbook in that folder.
-class Program
+// The program creates a workbook, fills it with sample data, adds a column chart with a title, renders the chart to a PNG image saved in an output folder, and also saves the workbook as an .xlsx file.
+class RenderChartToPng
 {
     static void Main()
     {
+        // Define output folder and ensure it exists
+        string outputDir = Path.Combine(Directory.GetCurrentDirectory(), "output");
+        Directory.CreateDirectory(outputDir);
+
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B1"].PutValue("Sales");
-        worksheet.Cells["B2"].PutValue(1200);
-        worksheet.Cells["B3"].PutValue(800);
-        worksheet.Cells["B4"].PutValue(1500);
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["A3"].PutValue("Orange");
+        sheet.Cells["A4"].PutValue("Banana");
+
+        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["B2"].PutValue(1200);
+        sheet.Cells["B3"].PutValue(800);
+        sheet.Cells["B4"].PutValue(1500);
 
         // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
 
         // Set the data range for the chart
         chart.SetChartDataRange("A1:B4", true);
 
-        // Modify the chart (e.g., set a title)
+        // Optional: modify chart appearance (e.g., title)
         chart.Title.Text = "Fruit Sales";
 
-        // Ensure the output directory exists
-        string outputDir = Path.Combine(Environment.CurrentDirectory, "output");
-        Directory.CreateDirectory(outputDir);
-
-        // Render the chart to a PNG image and save it using the ToImage(string, ImageType) overload
+        // Build the full file path for the PNG image
         string imagePath = Path.Combine(outputDir, "FruitSalesChart.png");
+
+        // Render the chart to a PNG image file
         chart.ToImage(imagePath, ImageType.Png);
 
-        // Optionally save the workbook that contains the chart
-        workbook.Save(Path.Combine(outputDir, "WorkbookWithChart.xlsx"));
+        // Optionally, save the workbook for reference
+        string workbookPath = Path.Combine(outputDir, "FruitSalesWorkbook.xlsx");
+        workbook.Save(workbookPath);
+
+        Console.WriteLine($"Chart image saved to: {imagePath}");
+        Console.WriteLine($"Workbook saved to: {workbookPath}");
     }
 }

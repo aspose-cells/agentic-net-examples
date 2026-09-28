@@ -4,7 +4,8 @@ description: C# examples for adding, editing, copying, auditing, and validating 
 product: Aspose.Cells for .NET
 category: manage-formulas
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Create and Manage Excel Formulas in C# with Aspose.Cells

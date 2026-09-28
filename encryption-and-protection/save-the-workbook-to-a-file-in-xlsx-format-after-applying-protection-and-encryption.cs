@@ -1,35 +1,42 @@
-// Title: C# – Save Aspose.Cells Workbook as XLSX with Structure Protection and Password Encryption
-// Description: Creates a new Workbook, applies structure protection, sets an opening password, optionally configures 128‑bit strong encryption, and saves the file in XLSX format using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# protect workbook structure | Aspose.Cells set opening password | Aspose.Cells encrypt Excel file | Aspose.Cells SaveFormat.Xlsx | Aspose.Cells SetEncryptionOptions
-// Common Searches: Aspose.Cells protect workbook structure and encrypt file | C# save Excel with password using Aspose.Cells | How to set opening password for XLSX in Aspose.Cells | Strong encryption options for Aspose.Cells workbook | Save protected workbook as XLSX with Aspose.Cells .NET
-// Developer Intent: Generate an XLSX workbook that is both structure‑protected and encrypted with a password, using Aspose.Cells in C#.
-// Use Cases: Secure financial reports so users cannot add, delete, or rename sheets without a password. | Distribute Excel templates that allow data entry but block structural changes, while keeping the file confidential. | Automate creation of confidential spreadsheets in a web service, ensuring they are saved with strong encryption before delivery.
-// AI Prompts: Write C# code with Aspose.Cells to protect workbook structure (password: protectPwd), set an opening password (openPwd), enable 128‑bit strong encryption, and save as ProtectedEncryptedWorkbook.xlsx. | Show how to modify the example to use AES‑256 encryption instead of 128‑bit in Aspose.Cells. | Provide steps to programmatically verify that a saved XLSX file requires the opening password and that structure protection is active.
+// Title: Save an XLSX workbook with worksheet protection and open password using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, protect the first worksheet with a password, assign an open password to the workbook, and save it as an encrypted .xlsx file with Aspose.Cells in C#. | Apply full sheet protection and workbook-level encryption, then export the workbook to an .xlsx file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set worksheet password and workbook open password before saving | how to encrypt an Excel file with both sheet and workbook passwords using Aspose.Cells .NET | save protected workbook as .xlsx with Aspose.Cells example in C#
+// Tags: worksheet protection password Aspose.Cells C# | workbook open password encryption Aspose.Cells .NET | save encrypted XLSX Aspose.Cells C# | ProtectionType.All usage Aspose.Cells | Workbook.Settings.Password Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsProtectionExample
+namespace AsposeCellsExample
 {
-    // Creates a new Workbook, applies structure protection, sets an opening password, optionally configures 128‑bit strong encryption, and saves the file in XLSX format using Aspose.Cells for .NET.
+    // The example creates a new workbook, writes "Hello" and "World" to cells A1 and B1, protects the first worksheet with a password using ProtectionType.All, sets an open password for the workbook, and saves the result as ProtectedEncrypted.xlsx in XLSX format.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (uses the standard creation rule)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Apply structure protection with a password
-            workbook.Protect(ProtectionType.Structure, "protectPwd");
+                // Get the first worksheet and add sample data
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello");
+                sheet.Cells["B1"].PutValue("World");
 
-            // Set a password required to open the workbook (encryption)
-            workbook.Settings.Password = "openPwd";
+                // Protect the worksheet with a password (all protection types)
+                // The third parameter (oldPassword) is not needed here, so pass null
+                sheet.Protect(ProtectionType.All, "SheetPassword", null);
 
-            // Optionally set stronger encryption (uses SetEncryptionOptions rule)
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+                // Apply workbook-level protection (open password)
+                workbook.Settings.Password = "OpenPassword";
 
-            // Save the protected and encrypted workbook in XLSX format (uses the standard save rule)
-            workbook.Save("ProtectedEncryptedWorkbook.xlsx", SaveFormat.Xlsx);
+                // Save the workbook as an XLSX file
+                workbook.Save("ProtectedEncrypted.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

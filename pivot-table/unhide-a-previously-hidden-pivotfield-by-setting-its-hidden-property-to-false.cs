@@ -1,70 +1,71 @@
-// Title: Unhide a PivotField Item in Aspose.Cells for .NET Pivot Tables (HideItem false)
-// Description: Demonstrates how to create a workbook, add a pivot table, hide a row‑field item with HideItem("Vegetable", true), then reveal the same item by calling HideItem("Vegetable", false) followed by RefreshData and CalculateData, and finally save the file.
-// Keywords: Aspose.Cells | .NET | C# | PivotTable | HideItem | unhide pivot item | show hidden pivot field | RefreshData | CalculateData | programmatic pivot filter
-// Common Searches: Aspose.Cells unhide pivot field item | HideItem false example C# | how to show hidden row field in Aspose pivot table | refresh pivot after unhiding item Aspose.Cells | C# code to toggle pivot item visibility
-// Developer Intent: Reveal a previously hidden pivot field item by setting its hidden flag to false and updating the pivot table.
-// Use Cases: Allow users to hide categories during data loading and automatically display them once processing completes. | Implement a toggle button that switches a pivot table row item on or off without rebuilding the table. | Reset a filtered report by programmatically unhiding all hidden pivot items before exporting.
-// AI Prompts: Write C# code using Aspose.Cells to unhide the pivot field item "Vegetable" and explain why RefreshData and CalculateData are required. | Compare HideItem(string, true) and HideItem(string, false) in Aspose.Cells and describe their impact on pivot table rendering. | Provide a step‑by‑step guide to hide multiple pivot field items and later unhide them using Aspose.Cells for .NET.
+// Title: How to unhide all items of a hidden row field in an Excel pivot table using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, accesses the first pivot table's first row field, and makes every hidden item visible before saving the file. | Provide a C# example that loops through a PivotField's items, calls HideItem(index, false) for each, refreshes the pivot table, and writes the updated workbook to disk. | Show how to programmatically change a PivotField's visibility to false for all items using Aspose.Cells and ensure the pivot table recalculates.
+// Common Searches: Aspose.Cells C# unhide pivot table row field items programmatically | How to make hidden items visible in an Excel pivot table with Aspose.Cells .NET | Refresh pivot table after changing field visibility using Aspose.Cells C#
+// Tags: Aspose.Cells hideitem false | C# pivot table row field visibility | refresh pivot table after modification | load workbook modify pivot field Aspose.Cells | iterate pivotfield items C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotUnhideDemo
+// The sample loads PivotTableHiddenField.xlsx, retrieves the first pivot table's first row field, iterates over all its items calling HideItem(i, false) to unhide them, refreshes and recalculates the pivot table, and saves the result as PivotTableUnhiddenField.xlsx.
+class UnhidePivotField
 {
-    // Demonstrates how to create a workbook, add a pivot table, hide a row‑field item with HideItem("Vegetable", true), then reveal the same item by calling HideItem("Vegetable", false) followed by RefreshData and CalculateData, and finally save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "PivotTableHiddenField.xlsx";
+        const string outputPath = "PivotTableUnhiddenField.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook containing the hidden pivot items
+            Workbook workbook = new Workbook(inputPath);
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["A3"].PutValue("Fruit");
-            sheet.Cells["A4"].PutValue("Vegetable");
-            sheet.Cells["A5"].PutValue("Vegetable");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(15);
-            sheet.Cells["B4"].PutValue(20);
-            sheet.Cells["B5"].PutValue(25);
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Access the first pivot table
+            PivotTable pivotTable = sheet.PivotTables[0];
 
-            // Add the "Category" field to the row area and "Quantity" to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
+            // Ensure the pivot table has at least one row field
+            if (pivotTable.RowFields.Count == 0)
+            {
+                Console.WriteLine("Pivot table has no row fields.");
+                return;
+            }
 
-            // Get the row field (the one we will hide/unhide)
-            PivotField rowField = pivotTable.RowFields[0];
+            // Choose the first row field to unhide its items
+            PivotField pivotField = pivotTable.RowFields[0];
 
-            // -------------------------------------------------
-            // Hide the item "Vegetable" using HideItem(string, true)
-            // -------------------------------------------------
-            rowField.HideItem("Vegetable", true);
+            // Unhide all items in the selected field
+            for (int i = 0; i < pivotField.ItemCount; i++)
+            {
+                pivotField.HideItem(i, false);
+            }
 
-            // Refresh and calculate to apply the hide operation
+            // Refresh and recalculate the pivot table to apply changes
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // -------------------------------------------------
-            // Unhide the previously hidden item "Vegetable"
-            // by setting its hidden flag to false via HideItem(string, false)
-            // -------------------------------------------------
-            rowField.HideItem("Vegetable", false);
-
-            // Refresh and calculate again to reflect the unhide operation
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook with the updated pivot table
-            workbook.Save("PivotField_UnhideDemo.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

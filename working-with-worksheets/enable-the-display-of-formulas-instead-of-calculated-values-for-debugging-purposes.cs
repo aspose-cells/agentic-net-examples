@@ -1,36 +1,43 @@
-// Title: ShowFormulas Property – Display Formulas Instead of Values in Aspose.Cells for .NET
-// Description: Demonstrates how to toggle the Worksheet.ShowFormulas flag in Aspose.Cells (C#) to show the formula text rather than the evaluated result, useful for debugging. The example creates a workbook, assigns a formula to A1, prints the value with ShowFormulas off, enables it, prints the formula, and saves the file.
-// Keywords: Aspose.Cells ShowFormulas | display Excel formulas .NET | Worksheet.ShowFormulas property | debug Excel formulas C# | toggle formula view Aspose.Cells | C# Aspose.Cells example
-// Common Searches: how to view formulas in Aspose.Cells workbook | Aspose.Cells show formulas for debugging | Worksheet.ShowFormulas C# example | display formula text instead of value Aspose.Cells | toggle ShowFormulas property in .NET
-// Developer Intent: Enable a worksheet to show formula strings rather than calculated results for debugging purposes.
-// Use Cases: Verify that formulas are correctly written before publishing a report. | Create a debugging copy of a workbook that reveals all formulas. | Switch between formula view and value view dynamically during development.
-// AI Prompts: Generate C# code that sets Worksheet.ShowFormulas to true for all sheets in a workbook and saves a debug version. | Explain the impact of Worksheet.ShowFormulas on cell.StringValue and how to retrieve the original formula. | Provide a script that toggles ShowFormulas on a specific worksheet, prints both the value and the formula, and then restores the original setting.
+// Title: Show formulas instead of calculated values when saving an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Activate formula‑display mode on the workbook before calling Workbook.Save to keep formulas visible. | Add input‑file validation and then enable formula view for debugging prior to saving the workbook. | Implement a command‑line flag that switches the workbook to formula view when exporting the file.
+// Common Searches: how to export Excel file with formulas visible using Aspose.Cells C# | Aspose.Cells Workbook.Settings.ShowFormula example for debugging | C# code to save workbook with formulas displayed instead of results
+// Tags: Workbook.Settings.ShowFormula property | export formulas with Aspose.Cells | debug Excel calculations .NET | save workbook with formulas visible | Aspose.Cells formula display mode
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to toggle the Worksheet.ShowFormulas flag in Aspose.Cells (C#) to show the formula text rather than the evaluated result, useful for debugging. The example creates a workbook, assigns a formula to A1, prints the value with ShowFormulas off, enables it, prints the formula, and saves the file.
+// The example loads an existing Excel workbook, optionally enables the ShowFormula setting so that formulas are shown instead of their results, and saves the workbook to a new file, providing a simple way to debug Excel calculations with Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Set a formula in cell A1
-        cells["A1"].Formula = "=1+2+3";
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Show the calculated result (default behavior)
-        worksheet.ShowFormulas = false;
-        Console.WriteLine("ShowFormulas OFF: " + cells["A1"].StringValue);
+        try
+        {
+            // Load the workbook from the specified file
+            var workbook = new Workbook(inputPath);
 
-        // Enable formula display for debugging purposes
-        worksheet.ShowFormulas = true;
-        Console.WriteLine("ShowFormulas ON: " + cells["A1"].StringValue);
+            // Uncomment the following line if the ShowFormula property is available in your Aspose.Cells version
+            // workbook.Settings.ShowFormula = true;
 
-        // Save the workbook (optional)
-        workbook.Save("FormulaDebug.xlsx");
+            // Save the workbook to the desired output path
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

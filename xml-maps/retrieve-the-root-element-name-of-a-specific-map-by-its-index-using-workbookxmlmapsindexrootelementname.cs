@@ -1,62 +1,64 @@
-// Title: Aspose.Cells .NET – Get XML Map Root Element Name by Index
-// Description: Shows how to add an XML schema to a workbook, capture the map index, and read the map’s RootElementName using workbook.Worksheets.XmlMaps[index].RootElementName, with optional saving of the workbook.
-// Keywords: Aspose.Cells | .NET | C# | XmlMaps | RootElementName | XML map index | retrieve root element | Aspose.Cells XML mapping | get schema root name | Workbook XmlMaps
-// Common Searches: Aspose.Cells get XML map root element name by index | C# retrieve RootElementName from XmlMaps collection | How to read XML map schema root in Aspose.Cells | XmlMaps index access example Aspose.Cells | Get root element of XML map in .NET workbook
-// Developer Intent: Obtain the root element name of a specific XML map using its numeric index.
-// Use Cases: Confirm that an imported XML map matches the expected schema before data import. | Log or display root element names of all XML maps in a workbook for debugging. | Drive conditional processing when multiple XML maps are present by checking each map’s RootElementName.
-// AI Prompts: Write C# code that iterates through all XmlMaps in a workbook and prints each RootElementName. | Create a method that returns the RootElementName for a given XmlMap index and includes error handling for invalid indexes. | Provide an example that adds several XML schemas to a workbook and retrieves the root element name of each map.
+// Title: Get the root element name of an XML map by index using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, verifies XML map support, and prints the RootElementName of the map at a specified zero‑based position. | Show how to safely obtain the XmlMapCollection from a Workbook object and catch RuntimeBinderException when the Aspose.Cells version does not include XML map functionality. | Demonstrate validating the requested index against workbook.XmlMaps.Count before accessing the selected XmlMap's RootElementName.
+// Common Searches: aspocells c# retrieve xml map root element name by index | how to check if a workbook supports xml maps in Aspose.Cells | c# validate xml map index before getting RootElementName with Aspose.Cells | aspocells get xml map collection count in C# | c# handle missing xml map feature in older Aspose.Cells versions
+// Tags: aspocells xmlmap rootelementname extraction | c# workbook xmlmaps index bounds check | aspocells xmlmap collection version check | c# handle missing xmlmap support in Aspose.Cells | aspocells retrieve xml map root element by position
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example checks that the input Excel file exists, loads it into an Aspose.Cells Workbook, attempts to access the XmlMaps collection while handling versions that lack XML map support, validates the provided map index against the collection count, retrieves the RootElementName of the XML map at that index, and prints the result; any errors are caught and reported.
+class Program
 {
-    // Shows how to add an XML schema to a workbook, capture the map index, and read the map’s RootElementName using workbook.Worksheets.XmlMaps[index].RootElementName, with optional saving of the workbook.
-    public class RetrieveXmlMapRootElementDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
+            const string filePath = "input.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            // Load the workbook using dynamic to safely access members that may not exist in older versions
+            dynamic workbook = new Workbook(filePath);
+
+            // Attempt to retrieve the XmlMapCollection; if not supported, handle gracefully
+            dynamic xmlMaps = null;
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                xmlMaps = workbook.XmlMaps;
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                Console.WriteLine("The loaded Aspose.Cells version does not support XML maps.");
+                return;
+            }
 
-                // Sample XML schema (XSD) defining a root element named "Data"
-                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                        <xs:element name='Data'>
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name='Item' type='xs:string' />
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                     </xs:schema>";
+            // Index of the XML map to retrieve (adjust as needed)
+            int mapIndex = 0;
 
-                // Add the XML map to the workbook
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
-
-                // Retrieve the root element name of the added map by its index
-                string rootElementName = workbook.Worksheets.XmlMaps[mapIndex].RootElementName;
+            // Validate the index against the collection count
+            if (mapIndex >= 0 && mapIndex < (int)xmlMaps.Count)
+            {
+                // Get the root element name of the selected XML map
+                string rootElementName = xmlMaps[mapIndex].RootElementName;
 
                 // Display the result
-                Console.WriteLine($"Root Element Name of map at index {mapIndex}: {rootElementName}");
-
-                // Save the workbook (optional, just to demonstrate lifecycle compliance)
-                workbook.Save("RetrieveXmlMapRootElementDemo.xlsx");
+                Console.WriteLine($"Root element name of XML map at index {mapIndex}: {rootElementName}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("Invalid XML map index.");
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RetrieveXmlMapRootElementDemo.Run();
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

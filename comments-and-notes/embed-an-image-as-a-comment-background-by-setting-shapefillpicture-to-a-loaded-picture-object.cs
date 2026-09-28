@@ -1,18 +1,15 @@
-// Title: Set an Image as the Background of a Cell Comment using Aspose.Cells for .NET (C#)
-// Description: The sample creates a new workbook, adds a comment to cell C3, loads a PNG file (background.png) into a byte array, assigns the image to the comment's shape fill as a texture, and saves the workbook as CommentWithImage.xlsx.
-// Keywords: Aspose.Cells comment background image | C# comment shape fill texture | Excel comment image fill Aspose | load PNG for comment background .NET | set comment shape picture Aspose.Cells | embed picture in Excel comment C# | Aspose.Cells FillType.Texture | comment shape Fill.ImageData
-// Common Searches: How to add a picture to an Excel comment using Aspose.Cells C# | Aspose.Cells set comment background image | C# load image and apply to comment shape | Aspose.Cells Fill.ImageData example | Excel comment with image background .NET
-// Developer Intent: Apply a PNG or JPEG as the background of a worksheet comment.
-// Use Cases: Brand a comment with a company logo for internal documentation. | Show product thumbnail inside a comment to aid sales reports. | Provide a visual watermark in comments for data validation. | Create instructional notes with a diagram background for training materials. | Add a map snapshot as a comment background for location‑based data.
-// AI Prompts: Generate C# code that sets a JPEG file as the background of a cell comment using Aspose.Cells. | Explain how to use a memory stream to assign a base64‑encoded image to a comment's fill in Aspose.Cells. | Show how to adjust the opacity of a comment background image with Aspose.Cells for .NET. | Provide steps to replace an existing comment background with a new picture programmatically. | Demonstrate how to retrieve and modify the Fill.Type of a comment shape in Aspose.Cells.
+// Title: Set a PNG image as the background of an Excel comment using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a PNG file into a byte array and assigns it to the comment shape's fill image using Aspose.Cells. | Show how to resize the comment shape after applying an image background and then save the workbook as an .xlsx file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set image background for a cell comment | how to use CommentShape.Fill.ImageData to embed a picture in an Excel comment | load PNG bytes and apply as comment fill in Aspose.Cells .NET | resize Excel comment shape after adding image background with Aspose.Cells | save workbook with image‑filled comment using Aspose.Cells C#
+// Tags: comment shape image fill Aspose.Cells | png background for Excel comment .NET | resize comment shape dimensions C# | load image bytes for comment fill Aspose.Cells | save workbook with image comment Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample creates a new workbook, adds a comment to cell C3, loads a PNG file (background.png) into a byte array, assigns the image to the comment's shape fill as a texture, and saves the workbook as CommentWithImage.xlsx.
-class Program
+// The example creates a new workbook, adds a comment to cell C3, reads a PNG file into a byte array, assigns the image data to the comment's shape fill, optionally resizes the comment shape, and saves the workbook as CommentWithImage.xlsx.
+class EmbedImageInComment
 {
     static void Main()
     {
@@ -20,31 +17,34 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Add a comment to cell C3 (row index 2, column index 2)
-            int commentIdx = worksheet.Comments.Add(2, 2);
-            Comment comment = worksheet.Comments[commentIdx];
+            int commentIdx = sheet.Comments.Add(2, 2);
+            Comment comment = sheet.Comments[commentIdx];
             comment.Note = "Comment with image background";
 
-            // Load the image file if it exists
-            string imagePath = "background.png";
+            // Load the image file into a byte array if it exists
+            string imagePath = "background.png"; // replace with your image file
             if (File.Exists(imagePath))
             {
                 byte[] imageData = File.ReadAllBytes(imagePath);
-                // Set the comment shape's fill to use the loaded image as a texture
-                comment.CommentShape.Fill.Type = FillType.Texture;
+                // Set the comment shape's fill to use the loaded image
                 comment.CommentShape.Fill.ImageData = imageData;
             }
             else
             {
-                Console.WriteLine($"Image file '{imagePath}' not found. The comment will be saved without background image.");
+                Console.WriteLine($"Image file not found: {imagePath}. Skipping image background.");
             }
+
+            // Optionally resize the comment shape
+            comment.CommentShape.Width = 250;
+            comment.CommentShape.Height = 150;
 
             // Save the workbook
             string outputPath = "CommentWithImage.xlsx";
             workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

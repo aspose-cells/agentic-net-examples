@@ -1,102 +1,142 @@
-// Title: C# Aspose.Cells Example – Extract Excel Theme Accent Colors and Create a Visual Palette Workbook
-// Description: This C# sample uses Aspose.Cells for .NET to load an Excel workbook, read the six theme accent colors via GetThemeColor, and generate a new workbook that displays each accent label alongside a solid‑filled cell. The palette is saved as AccentPalette.xlsx and the RGB hex values are printed to the console. The code can be extended to apply the same colors to a PowerPoint slide master using Aspose.Slides.
-// Keywords: Aspose.Cells | C# | .NET | Excel theme colors | GetThemeColor | Accent palette | Generate color palette workbook | PowerPoint slide colors | Aspose.Slides integration | GitHub example | open source code
-// Common Searches: How to read Excel theme accent colors with Aspose.Cells C# | Create a color palette workbook from Excel theme using .NET | Aspose.Cells GetThemeColor example | Export Excel theme colors to PowerPoint slide master | C# code to display Excel theme colors in cells | GitHub Aspose.Cells theme color sample
-// Developer Intent: Read the six accent colors defined in an Excel workbook’s theme and produce a new workbook that visualizes those colors for design reference or further use.
-// Use Cases: Designers can quickly generate a reference palette that matches Excel theme colors for PowerPoint presentations. | Automated branding pipelines can extract theme colors and store them in a readable Excel file. | Quality‑control scripts can verify that a workbook uses the expected theme by comparing extracted hex values. | Developers can extend the sample to sync Excel theme colors with PowerPoint slide masters via Aspose.Slides.
-// AI Prompts: Generate C# code using Aspose.Cells to retrieve ThemeColorType.Accent1‑Accent6 from a workbook and output their RGB hex values. | Modify the example to create a matching PowerPoint slide master palette with Aspose.Slides. | Add error handling that falls back to a default theme when the source file is missing or has no custom theme. | Provide a GitHub‑ready README that explains how to run the sample and integrate it into CI pipelines.
+// Title: Generate an Excel palette worksheet that visualizes a workbook’s six theme accent colors with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# method using Aspose.Cells that opens an .xlsx file, accesses the workbook’s ThemeColorScheme, and returns the six Accent colors as a List<Color>. | Write C# code that adds a new worksheet named "Accent Palette" to an existing workbook, fills separate cells with each accent color as a solid background, labels them "Accent 1"‑"Accent 6", and saves the file as Xlsx.
+// Common Searches: aspnet how to extract theme accent colors from an Excel file using Aspose.Cells | c# create a color palette sheet from Excel theme with Aspose.Cells | aspose.cells retrieve six accent colors and display them in a new worksheet | generate visual theme palette in Excel programmatically with Aspose.Cells C# | save workbook with added accent color palette using Aspose.Cells .NET
+// Tags: extract workbook theme accent colors Aspose.Cells | add palette worksheet Aspose.Cells C# | solid background fill cell Aspose.Cells | save workbook as Xlsx Aspose.Cells | dynamic theme access Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-namespace ThemeToPowerPoint
+namespace ThemePaletteUtility
 {
-    // This C# sample uses Aspose.Cells for .NET to load an Excel workbook, read the six theme accent colors via GetThemeColor, and generate a new workbook that displays each accent label alongside a solid‑filled cell. The palette is saved as AccentPalette.xlsx and the RGB hex values are printed to the console. The code can be extended to apply the same colors to a PowerPoint slide master using Aspose.Slides.
-    class Program
+    // The PaletteGenerator class uses Aspose.Cells to load an Excel workbook, dynamically accesses its ThemeColorScheme to collect the six accent colors, adds a new worksheet named "Accent Palette", configures column widths and row heights, applies each accent as a solid background fill to individual cells, labels the cells with "Accent 1" through "Accent 6", ensures the output directory exists, and saves the modified workbook as an Xlsx file.
+    public class PaletteGenerator
     {
-        static void Main(string[] args)
+        /// <param name="workbookPath">Full path to the Excel file.</param>
+        /// <returns>List of accent colors (Accent1‑Accent6).</returns>
+        public List<Color> GetAccentColors(string workbookPath)
         {
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook not found: {workbookPath}");
+
             try
             {
-                // Path to the source Excel file that contains the theme.
-                string excelPath = "SourceWithTheme.xlsx";
+                // Load the workbook
+                var wb = new Workbook(workbookPath);
 
-                // Load the workbook (create if file does not exist).
-                Workbook sourceWorkbook;
-                if (File.Exists(excelPath))
+                // Use dynamic to access theme information (avoids compile‑time dependency on Theme classes)
+                dynamic theme = wb.Theme;
+                if (theme == null)
+                    throw new InvalidOperationException("The workbook does not contain a theme.");
+
+                dynamic scheme = theme.ThemeColorScheme;
+                if (scheme == null)
+                    throw new InvalidOperationException("Theme color scheme is unavailable.");
+
+                // Collect the six accent colors
+                return new List<Color>
                 {
-                    sourceWorkbook = new Workbook(excelPath);
-                }
-                else
-                {
-                    sourceWorkbook = new Workbook(); // default theme
-                }
-
-                // Retrieve the six accent colors from the workbook's theme.
-                Color[] accentColors = new Color[6];
-                accentColors[0] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent1);
-                accentColors[1] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent2);
-                accentColors[2] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent3);
-                accentColors[3] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent4);
-                accentColors[4] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent5);
-                accentColors[5] = sourceWorkbook.GetThemeColor(ThemeColorType.Accent6);
-
-                // Create a new workbook to display the accent palette.
-                Workbook paletteWorkbook = new Workbook();
-                Worksheet sheet = paletteWorkbook.Worksheets[0];
-                sheet.Name = "Accent Palette";
-
-                // Define layout parameters.
-                const int startRow = 0;
-                const int startColumn = 0;
-                const int cellWidth = 20; // Approximate column width
-                const int cellHeight = 30; // Approximate row height
-
-                // Populate cells with accent colors and labels.
-                for (int i = 0; i < accentColors.Length; i++)
-                {
-                    int row = startRow + i * 2; // Leave a blank row between entries
-
-                    // Label cell.
-                    Cell labelCell = sheet.Cells[row, startColumn];
-                    labelCell.PutValue($"Accent{i + 1}");
-                    // Optional: make label bold.
-                    Style labelStyle = labelCell.GetStyle();
-                    labelStyle.Font.IsBold = true;
-                    labelCell.SetStyle(labelStyle);
-
-                    // Color cell.
-                    Cell colorCell = sheet.Cells[row + 1, startColumn];
-                    // Apply background fill with the accent color.
-                    Style style = colorCell.GetStyle();
-                    style.ForegroundColor = accentColors[i];
-                    style.Pattern = BackgroundType.Solid;
-                    colorCell.SetStyle(style);
-                    // Set a placeholder value to make the cell visible.
-                    colorCell.PutValue(" ");
-
-                    // Adjust column width and row height for better visibility.
-                    sheet.Cells.SetColumnWidth(startColumn, cellWidth);
-                    sheet.Cells.SetRowHeight(row, cellHeight);
-                    sheet.Cells.SetRowHeight(row + 1, cellHeight);
-                }
-
-                // Save the generated Excel file.
-                string palettePath = "AccentPalette.xlsx";
-                paletteWorkbook.Save(palettePath, SaveFormat.Xlsx);
-
-                Console.WriteLine("Accent colors extracted from Excel theme and saved to a palette workbook:");
-                for (int i = 0; i < accentColors.Length; i++)
-                {
-                    Console.WriteLine($"Accent{i + 1}: #{accentColors[i].R:X2}{accentColors[i].G:X2}{accentColors[i].B:X2}");
-                }
-                Console.WriteLine($"Palette workbook saved to: {palettePath}");
+                    (Color)scheme.Accent1,
+                    (Color)scheme.Accent2,
+                    (Color)scheme.Accent3,
+                    (Color)scheme.Accent4,
+                    (Color)scheme.Accent5,
+                    (Color)scheme.Accent6
+                };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                throw new InvalidOperationException("Failed to retrieve accent colors.", ex);
+            }
+        }
+
+        /// <param name="sourcePath">Path to the source workbook.</param>
+        /// <param name="outputPath">Path where the new workbook will be saved.</param>
+        public void CreatePaletteSheet(string sourcePath, string outputPath)
+        {
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"Source workbook not found: {sourcePath}");
+
+            try
+            {
+                // Load the source workbook
+                var wb = new Workbook(sourcePath);
+
+                // Retrieve accent colors
+                List<Color> accents = GetAccentColors(sourcePath);
+
+                // Add a new worksheet for the palette
+                int sheetIndex = wb.Worksheets.Add();
+                Worksheet paletteSheet = wb.Worksheets[sheetIndex];
+                paletteSheet.Name = "Accent Palette";
+
+                // Layout parameters
+                const int startRow = 0;
+                const int startColumn = 0;
+                const int boxWidth = 15;   // column width in characters
+                const int boxHeight = 30;  // row height in points (adjusted for visibility)
+
+                // Create a cell for each accent color
+                for (int i = 0; i < accents.Count; i++)
+                {
+                    int col = startColumn + i * 2; // leave a column gap between boxes
+
+                    // Set column width and row height for the color box
+                    paletteSheet.Cells.SetColumnWidth(col, boxWidth);
+                    paletteSheet.Cells.SetRowHeight(startRow, boxHeight);
+
+                    // Apply background color to the cell
+                    Style style = wb.CreateStyle();
+                    style.ForegroundColor = accents[i];
+                    style.Pattern = BackgroundType.Solid;
+                    paletteSheet.Cells[startRow, col].SetStyle(style);
+
+                    // Add label below the color box
+                    int labelRow = startRow + 1;
+                    paletteSheet.Cells.SetRowHeight(labelRow, 12);
+                    paletteSheet.Cells[labelRow, col].PutValue($"Accent {i + 1}");
+                    Style labelStyle = wb.CreateStyle();
+                    labelStyle.HorizontalAlignment = TextAlignmentType.Center;
+                    paletteSheet.Cells[labelRow, col].SetStyle(labelStyle);
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                wb.Save(outputPath, SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to create palette sheet.", ex);
+            }
+        }
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main()
+        {
+            try
+            {
+                string sourceXlsx = @"C:\Docs\SourceWorkbook.xlsx";
+                string outputXlsx = @"C:\Docs\PaletteWorkbook.xlsx";
+
+                var generator = new PaletteGenerator();
+                generator.CreatePaletteSheet(sourceXlsx, outputXlsx);
+
+                Console.WriteLine("Palette worksheet created successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

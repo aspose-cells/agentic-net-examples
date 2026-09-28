@@ -4,7 +4,8 @@ description: C# examples for culture-aware Excel dates, numbers, formulas, calen
 product: Aspose.Cells for .NET
 category: globalization-and-localization
 language: C#
-last_reviewed: 2026-06-29
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Localize Excel Workbooks in C# with Aspose.Cells for .NET

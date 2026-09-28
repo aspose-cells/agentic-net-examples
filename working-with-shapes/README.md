@@ -4,7 +4,8 @@ description: Add, format, position, link, group, and remove Excel shapes, text b
 product: Aspose.Cells for .NET
 category: working-with-shapes
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Create and Manage Excel Shapes in C# with Aspose.Cells

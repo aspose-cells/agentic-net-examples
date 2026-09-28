@@ -1,78 +1,111 @@
-// Title: C# – Validate Excel Formulas and Create an Error Report with Aspose.Cells
-// Description: Load a workbook, calculate all formulas while ignoring errors, scan every used cell for error values, record the worksheet name, cell address, and error text on a new "FormulaErrors" sheet, and save the updated file. This example shows how to use Aspose.Cells CalculationOptions, CellValueType.IsError, and worksheet iteration to produce a comprehensive formula‑error summary.
-// Keywords: Aspose.Cells formula validation | C# Excel error report | detect #DIV/0! Aspose | calculate formulas ignore errors | list error cells Aspose.Cells | Excel workbook diagnostics .NET | generate formula error sheet | Aspose.Cells CalculationOptions
-// Common Searches: Aspose.Cells how to find cells with errors | C# generate Excel formula error summary | calculate formulas without throwing exceptions Aspose | iterate through workbook cells to detect #N/A | create error report worksheet using Aspose.Cells
-// Developer Intent: Find every cell that returns an error after formula calculation and compile a consolidated report worksheet.
-// Use Cases: Create a diagnostic tab that lists all #DIV/0!, #N/A, #VALUE! and similar errors before sharing the workbook. | Automate pre‑release validation of financial models to ensure no error values remain. | Integrate formula‑error detection into CI/CD pipelines that generate or modify Excel files.
-// AI Prompts: Generate C# code with Aspose.Cells that scans a workbook for cells of type IsError and writes the sheet name, address, and error message to a new sheet called "FormulaErrors". | Explain how CalculationOptions.IgnoreError allows safe formula evaluation while collecting error information in Aspose.Cells. | Provide step‑by‑step guidance for building a summary worksheet of formula errors and saving the workbook.
+// Title: Detect and report Excel formula errors across all worksheets using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, forces full formula calculation, scans every worksheet for cells where the result type is error, and outputs a plain‑text report listing sheet name, cell address, and the error value. | Adapt the formula‑validation routine to generate a CSV file instead of plain text, including the specific Excel error codes (e.g., #DIV/0!, #VALUE!) for each problematic cell. | Create a reusable C# method `ValidateFormulas(string workbookPath, string reportPath, bool csv = false)` that returns a list of objects containing worksheet, address, and error, and writes the chosen report format.
+// Common Searches: how to programmatically find #DIV/0 errors in an Excel workbook using Aspose.Cells C# | Aspose.Cells C# example to generate a list of cells with formula errors | C# iterate through all worksheets and detect formula calculation errors with Aspose.Cells | export formula error details from an .xlsx file to a text or CSV report using Aspose.Cells
+// Tags: Aspose.Cells formula error detection | C# iterate worksheets used range | export formula error report to text | calculate workbook formulas Aspose.Cells | list error cells Excel .xlsx C#
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaValidation
+namespace FormulaValidation
 {
-    // Load a workbook, calculate all formulas while ignoring errors, scan every used cell for error values, record the worksheet name, cell address, and error text on a new "FormulaErrors" sheet, and save the updated file. This example shows how to use Aspose.Cells CalculationOptions, CellValueType.IsError, and worksheet iteration to produce a comprehensive formula‑error summary.
+    // Loads an Excel workbook with Aspose.Cells, forces formula calculation, walks through each worksheet's used range, captures cells whose formula result is an error, and writes a plain‑text report containing worksheet name, cell address, and error value.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // ---------- Create / Load ----------
-            // Load an existing workbook (replace with actual path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            // Input and output paths (adjust as needed)
+            string inputFile = "input.xlsx";
+            string reportFile = "FormulaValidationReport.txt";
 
-            // ---------- Calculate all formulas ----------
-            // Use calculation options that ignore errors so the calculation does not throw
-            CalculationOptions calcOptions = new CalculationOptions { IgnoreError = true };
-            workbook.CalculateFormula(calcOptions);
-
-            // ---------- Validate formulas ----------
-            // Create a new worksheet to hold the error report
-            Worksheet reportSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-            reportSheet.Name = "FormulaErrors";
-
-            // Write header row
-            Cells reportCells = reportSheet.Cells;
-            reportCells[0, 0].PutValue("Worksheet");
-            reportCells[0, 1].PutValue("Cell");
-            reportCells[0, 2].PutValue("Error");
-
-            int reportRow = 1; // start after header
-
-            // Iterate through all worksheets and their used cells
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                // Skip the report sheet itself
-                if (ws.Name == reportSheet.Name) continue;
+                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                return;
+            }
 
-                Cells cells = ws.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
 
-                for (int row = 0; row <= maxRow; row++)
+                // Ensure all formulas are calculated so errors can be detected
+                workbook.CalculateFormula();
+
+                // List to hold information about cells with formula errors
+                List<string> errorCells = new List<string>();
+
+                // Iterate through each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    // Get the used range of the worksheet
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+                    // Determine the bounds of the used range
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startColumn = usedRange.FirstColumn;
+                    int endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                    // Iterate through each cell in the used range
+                    for (int row = startRow; row <= endRow; row++)
                     {
-                        Cell cell = cells[row, col];
-                        // Check if the cell contains an error value
-                        if (cell != null && cell.Type == CellValueType.IsError)
+                        for (int col = startColumn; col <= endColumn; col++)
                         {
-                            // Record the problematic cell
-                            reportCells[reportRow, 0].PutValue(ws.Name);
-                            reportCells[reportRow, 1].PutValue(cell.Name);
-                            reportCells[reportRow, 2].PutValue(cell.StringValue); // e.g., "#DIV/0!"
-                            reportRow++;
+                            Cell cell = sheet.Cells[row, col];
+
+                            // Process only cells that contain a formula
+                            if (cell.IsFormula)
+                            {
+                                // If the formula result is an error, record details
+                                if (cell.Type == CellValueType.IsError)
+                                {
+                                    string cellAddress = cell.Name; // e.g., "A1"
+                                    string sheetName = sheet.Name;
+                                    string errorInfo = $"{sheetName}!{cellAddress} - Error: {cell.Value}";
+                                    errorCells.Add(errorInfo);
+                                }
+                            }
                         }
                     }
                 }
+
+                // Generate the report
+                try
+                {
+                    using (StreamWriter writer = new StreamWriter(reportFile))
+                    {
+                        writer.WriteLine("Formula Validation Report");
+                        writer.WriteLine($"Generated on: {DateTime.Now}");
+                        writer.WriteLine();
+
+                        if (errorCells.Count == 0)
+                        {
+                            writer.WriteLine("No formula errors were detected.");
+                        }
+                        else
+                        {
+                            writer.WriteLine("Problematic cells with formula errors:");
+                            foreach (string line in errorCells)
+                            {
+                                writer.WriteLine(line);
+                            }
+                        }
+                    }
+
+                    Console.WriteLine($"Validation complete. Report saved to '{reportFile}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to write report file: {ex.Message}");
+                }
             }
-
-            // ---------- Save ----------
-            // Save the workbook with the error report (replace with desired output path)
-            string outputPath = "output_with_errors_report.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine("Formula validation completed. Report saved to: " + outputPath);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during processing: {ex.Message}");
+            }
         }
     }
 }

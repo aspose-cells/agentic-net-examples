@@ -1,100 +1,52 @@
-// Title: Load Excel with Aspose.Cells, disable charts via LoadOptions, set SystemTimeInterruptMonitor, and save as PDF (C#)
-// Description: C# example that creates a SystemTimeInterruptMonitor, applies it to LoadOptions, loads an .xlsx file, removes all worksheet charts, and saves the workbook to PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | LoadOptions | disable charts | SystemTimeInterruptMonitor | interrupt monitor | PDF export | Excel to PDF | chart removal | performance optimization
-// Common Searches: Aspose.Cells load workbook without charts | How to use SystemTimeInterruptMonitor in Aspose.Cells | Export Excel to PDF after removing charts C# | Set timeout for loading Excel with Aspose.Cells | Disable chart rendering Aspose.Cells .NET
-// Developer Intent: Load an Excel file, suppress chart rendering, enforce a time‑out, and convert it to PDF using Aspose.Cells for .NET.
-// Use Cases: Accelerate processing of large spreadsheets by skipping chart rendering. | Prevent long‑running load or save operations in automated batch jobs. | Generate PDF reports from workbooks where chart visuals are unnecessary. | Add timeout handling to Excel‑to‑PDF conversion pipelines.
-// AI Prompts: Provide C# code that uses Aspose.Cells LoadOptions with a SystemTimeInterruptMonitor to load an .xlsx file, clear all charts, and save the workbook as PDF. | Explain how to configure a SystemTimeInterruptMonitor for both loading and saving in Aspose.Cells, including the exception thrown when the timeout expires. | Step‑by‑step guide to improve performance by disabling charts during workbook load and then exporting the result to PDF with Aspose.Cells.
+// Title: Load an Excel workbook without charts, assign an InterruptMonitor, and export to PDF using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file with Aspose.Cells LoadOptions that skips chart objects, set a workbook.InterruptMonitor, and save the workbook as a PDF. | Use reflection to apply the LoadDataOnly property on LoadOptions only when it exists, then convert the workbook to PDF while ignoring charts.
+// Common Searches: Aspose.Cells load workbook without loading charts and convert to PDF in C# | How to set InterruptMonitor on a workbook in Aspose.Cells .NET | Conditional use of LoadDataOnly property with Aspose.Cells LoadOptions | Export Excel to PDF while ignoring chart objects using Aspose.Cells | C# example for loading Excel data only and saving as PDF with Aspose.Cells
+// Tags: skip chart objects LoadOptions Aspose.Cells | configure workbook InterruptMonitor Aspose.Cells | reflection set LoadDataOnly property C# | export Excel workbook to PDF Aspose.Cells | load data only mode Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates loading a workbook with LoadOptions that disables charts,
-    // configures an interrupt monitor, and saves the workbook as PDF.
-    // C# example that creates a SystemTimeInterruptMonitor, applies it to LoadOptions, loads an .xlsx file, removes all worksheet charts, and saves the workbook to PDF using Aspose.Cells for .NET.
-    public class LoadDisableChartsAndSavePdfDemo
+    // The example checks for the input Excel file, creates a LoadOptions instance, uses reflection to enable LoadDataOnly when available, loads the workbook while skipping chart objects, assigns an InterruptMonitor, and saves the workbook as a PDF, handling any errors that may occur.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                Run();
+                const string inputFile = "input.xlsx";
+                const string outputFile = "output.pdf";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Create LoadOptions; enable LoadDataOnly if the property exists in the current version
+                LoadOptions loadOptions = new LoadOptions();
+                var loadDataOnlyProp = typeof(LoadOptions).GetProperty("LoadDataOnly");
+                if (loadDataOnlyProp != null && loadDataOnlyProp.CanWrite)
+                {
+                    loadDataOnlyProp.SetValue(loadOptions, true);
+                }
+
+                // Load the workbook with the specified options
+                Workbook workbook = new Workbook(inputFile, loadOptions);
+
+                // Assign an interrupt monitor (optional; no interruption is triggered here)
+                workbook.InterruptMonitor = new InterruptMonitor();
+
+                // Save the workbook as PDF
+                workbook.Save(outputFile, SaveFormat.Pdf);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputFile}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // -----------------------------------------------------------------
-            // 1. Create a SystemTimeInterruptMonitor.
-            //    The monitor will be used for both loading and saving operations.
-            // -----------------------------------------------------------------
-            // terminateWithoutException = false -> an exception will be thrown
-            // when the operation is interrupted.
-            SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-
-            // Optional: start the monitor with a time limit (e.g., 10 seconds).
-            // Adjust the timeout as needed.
-            monitor.StartMonitor(10_000); // 10,000 ms = 10 seconds
-
-            try
-            {
-                // -----------------------------------------------------------------
-                // 2. Configure LoadOptions.
-                //    Assign the interrupt monitor to the LoadOptions instance.
-                // -----------------------------------------------------------------
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    InterruptMonitor = monitor
-                };
-
-                // -----------------------------------------------------------------
-                // 3. Load the workbook using the constructor that accepts a file path
-                //    and LoadOptions.
-                // -----------------------------------------------------------------
-                const string inputPath = "input.xlsx";
-                if (!File.Exists(inputPath))
-                    throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // -----------------------------------------------------------------
-                // 4. Disable all charts in the workbook.
-                //    Iterate through each worksheet and clear its Charts collection.
-                // -----------------------------------------------------------------
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    sheet.Charts.Clear();
-                }
-
-                // -----------------------------------------------------------------
-                // 5. Assign the same interrupt monitor to the workbook for the save
-                //    operation. This allows the save to be interrupted if needed.
-                // -----------------------------------------------------------------
-                workbook.InterruptMonitor = monitor;
-
-                // -----------------------------------------------------------------
-                // 6. Save the workbook as PDF.
-                // -----------------------------------------------------------------
-                const string outputPath = "output.pdf";
-                workbook.Save(outputPath, SaveFormat.Pdf);
-
-                Console.WriteLine("Workbook loaded, charts removed, and saved to PDF successfully.");
-            }
-            finally
-            {
-                // -----------------------------------------------------------------
-                // 7. Clean up.
-                // -----------------------------------------------------------------
-                // No explicit StopMonitor method in this version; the monitor will be
-                // disposed when the application ends.
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

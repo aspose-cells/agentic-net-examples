@@ -1,100 +1,106 @@
-// Title: Create Column, Pie, and Line Charts on a Single Worksheet with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to build a new workbook, fill three metric tables (task completion, budget, risk), place a column chart, a pie chart, and a line chart on the same sheet using Aspose.Cells, and save the result as ProjectMetricsCharts.xlsx.
-// Keywords: Aspose.Cells multiple charts C# | add column chart Aspose.Cells | pie chart Aspose.Cells example | line chart on same worksheet Aspose.Cells | chart positioning Aspose.Cells | set chart series data Aspose.Cells | save workbook with charts Aspose.Cells | C# Excel chart automation
-// Common Searches: how to add several chart types to one worksheet using Aspose.Cells | Aspose.Cells chart location and size C# | assign category and value ranges for Aspose.Cells charts | Aspose.Cells create column, pie, line charts together | C# generate Excel file with multiple charts Aspose
-// Developer Intent: Generate a single Excel worksheet that contains separate column, pie, and line charts for different project metrics and export it as an XLSX file.
-// Use Cases: Show task‑completion percentages per phase with a column chart positioned in rows 7‑22, columns A‑G. | Visualize budget allocation across phases with a pie chart placed in rows 7‑22, columns H‑O. | Track risk‑level trends over phases using a line chart located in rows 24‑38, columns A‑G.
-// AI Prompts: Write C# code with Aspose.Cells to add a stacked bar chart to an existing worksheet, using categories in C2:C6 and values in D2:D6, and place it at a custom position. | Explain how to customize titles, legends, and data labels for multiple charts on the same worksheet in Aspose.Cells. | Provide an example of exporting a workbook that contains several different chart types to PDF using Aspose.Cells.
+// Title: Generate column, line, and pie charts on the same worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart for tasks completed per month, a line chart for budget planned vs spent, and a pie chart for issue type distribution on one worksheet using Aspose.Cells in C#. | Specify start and end cell coordinates to position each chart when adding them to the worksheet with Aspose.Cells. | Add a stacked bar chart for task data while keeping the existing column, line, and pie charts on the same sheet using Aspose.Cells.
+// Common Searches: aspnet how to place multiple chart types on a single Excel sheet with Aspose.Cells | c# Aspose.Cells add column chart and line chart together on one worksheet | example code for creating a pie chart and line chart on the same sheet using Aspose.Cells for .NET | Aspose.Cells set chart location using cell range in C# | generate project metrics dashboard with several charts in one worksheet Aspose.Cells
+// Tags: Aspose.Cells create column chart C# | Aspose.Cells line chart budget comparison | Aspose.Cells pie chart issue distribution | Aspose.Cells multiple charts same worksheet | Aspose.Cells set chart position by cell range
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace MultipleChartsDemo
+// Demonstrates building a workbook, populating three metric tables, and adding a column chart, a line chart, and a pie chart to the same worksheet with Aspose.Cells for .NET, then saving the file as ProjectMetrics.xlsx.
+class Program
 {
-    // Demonstrates how to build a new workbook, fill three metric tables (task completion, budget, risk), place a column chart, a pie chart, and a line chart on the same sheet using Aspose.Cells, and save the result as ProjectMetricsCharts.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
             sheet.Name = "ProjectMetrics";
 
-            // ------------------------------------------------------------
-            // Populate sample data for three different metrics
-            // ------------------------------------------------------------
-            // Metric 1: Task Completion (%)
-            sheet.Cells["A1"].PutValue("Phase");
-            sheet.Cells["B1"].PutValue("Completion");
-            sheet.Cells["A2"].PutValue("Planning");
-            sheet.Cells["A3"].PutValue("Design");
-            sheet.Cells["A4"].PutValue("Implementation");
-            sheet.Cells["A5"].PutValue("Testing");
-            sheet.Cells["B2"].PutValue(80);
-            sheet.Cells["B3"].PutValue(60);
-            sheet.Cells["B4"].PutValue(40);
-            sheet.Cells["B5"].PutValue(20);
+            // -------------------- Fill sample data --------------------
+            // Metric 1: Tasks Completed per Month
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Tasks Completed");
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+            int[] tasks = { 20, 35, 30, 45, 50 };
+            for (int i = 0; i < months.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(months[i]); // Column A
+                sheet.Cells[i + 1, 1].PutValue(tasks[i]); // Column B
+            }
 
-            // Metric 2: Budget (in thousands)
-            sheet.Cells["D1"].PutValue("Phase");
-            sheet.Cells["E1"].PutValue("Budget");
-            sheet.Cells["D2"].PutValue("Planning");
-            sheet.Cells["D3"].PutValue("Design");
-            sheet.Cells["D4"].PutValue("Implementation");
-            sheet.Cells["D5"].PutValue("Testing");
-            sheet.Cells["E2"].PutValue(120);
-            sheet.Cells["E3"].PutValue(250);
-            sheet.Cells["E4"].PutValue(400);
-            sheet.Cells["E5"].PutValue(150);
+            // Metric 2: Budget Planned vs Spent
+            sheet.Cells["D1"].PutValue("Month");
+            sheet.Cells["E1"].PutValue("Planned");
+            sheet.Cells["F1"].PutValue("Spent");
+            int[] planned = { 100, 120, 130, 150, 170 };
+            int[] spent = { 90, 110, 140, 160, 180 };
+            for (int i = 0; i < months.Length; i++)
+            {
+                sheet.Cells[i + 1, 3].PutValue(months[i]); // Column D
+                sheet.Cells[i + 1, 4].PutValue(planned[i]); // Column E
+                sheet.Cells[i + 1, 5].PutValue(spent[i]); // Column F
+            }
 
-            // Metric 3: Risk Level (1-5)
-            sheet.Cells["G1"].PutValue("Phase");
-            sheet.Cells["H1"].PutValue("Risk");
-            sheet.Cells["G2"].PutValue("Planning");
-            sheet.Cells["G3"].PutValue("Design");
-            sheet.Cells["G4"].PutValue("Implementation");
-            sheet.Cells["G5"].PutValue("Testing");
-            sheet.Cells["H2"].PutValue(2);
-            sheet.Cells["H3"].PutValue(3);
-            sheet.Cells["H4"].PutValue(4);
-            sheet.Cells["H5"].PutValue(2);
+            // Metric 3: Issue Types Distribution
+            sheet.Cells["H1"].PutValue("Issue Type");
+            sheet.Cells["I1"].PutValue("Count");
+            string[] issueTypes = { "Bug", "Feature", "Improvement" };
+            int[] counts = { 15, 8, 12 };
+            for (int i = 0; i < issueTypes.Length; i++)
+            {
+                sheet.Cells[i + 1, 7].PutValue(issueTypes[i]); // Column H
+                sheet.Cells[i + 1, 8].PutValue(counts[i]); // Column I
+            }
 
-            // ------------------------------------------------------------
-            // Add a Column chart for Task Completion
-            // ------------------------------------------------------------
-            // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-            int colChartIdx = sheet.Charts.Add(ChartType.Column, 7, 0, 22, 7);
-            Chart colChart = sheet.Charts[colChartIdx];
-            colChart.Title.Text = "Task Completion by Phase";
-            // Data range includes category (A2:A5) and values (B2:B5)
-            colChart.NSeries.Add("B2:B5", true);
-            colChart.NSeries.CategoryData = "A2:A5";
+            // -------------------- Create charts --------------------
+            // Column chart for Tasks Completed
+            int chartIndex1 = sheet.Charts.Add(ChartType.Column, 7, 0, 22, 7);
+            Chart chart1 = sheet.Charts[chartIndex1];
+            chart1.Title.Text = "Tasks Completed per Month";
+            chart1.NSeries.Add("B2:B6", true);               // Y values
+            chart1.NSeries.CategoryData = "A2:A6";           // X categories
 
-            // ------------------------------------------------------------
-            // Add a Pie chart for Budget distribution
-            // ------------------------------------------------------------
-            int pieChartIdx = sheet.Charts.Add(ChartType.Pie, 7, 8, 22, 15);
-            Chart pieChart = sheet.Charts[pieChartIdx];
-            pieChart.Title.Text = "Budget Allocation";
-            // Pie charts use a single series; categories are in D2:D5, values in E2:E5
-            pieChart.NSeries.Add("E2:E5", true);
-            pieChart.NSeries.CategoryData = "D2:D5";
+            // Line chart for Budget Planned vs Spent
+            int chartIndex2 = sheet.Charts.Add(ChartType.Line, 7, 8, 22, 15);
+            Chart chart2 = sheet.Charts[chartIndex2];
+            chart2.Title.Text = "Budget: Planned vs Spent";
+            chart2.NSeries.Add("E2:E6", true);               // Planned series
+            chart2.NSeries.Add("F2:F6", true);               // Spent series
+            chart2.NSeries.CategoryData = "D2:D6";           // X categories (Month)
 
-            // ------------------------------------------------------------
-            // Add a Line chart for Risk Level over phases
-            // ------------------------------------------------------------
-            int lineChartIdx = sheet.Charts.Add(ChartType.Line, 24, 0, 38, 7);
-            Chart lineChart = sheet.Charts[lineChartIdx];
-            lineChart.Title.Text = "Risk Trend";
-            lineChart.NSeries.Add("H2:H5", true);
-            lineChart.NSeries.CategoryData = "G2:G5";
+            // Pie chart for Issue Types Distribution
+            int chartIndex3 = sheet.Charts.Add(ChartType.Pie, 24, 0, 38, 7);
+            Chart chart3 = sheet.Charts[chartIndex3];
+            chart3.Title.Text = "Issue Types Distribution";
+            chart3.NSeries.Add("I2:I4", true);               // Values
+            chart3.NSeries.CategoryData = "H2:H4";           // Labels
 
-            // ------------------------------------------------------------
-            // Save the workbook to an XLSX file
-            // ------------------------------------------------------------
-            workbook.Save("ProjectMetricsCharts.xlsx", SaveFormat.Xlsx);
+            // -------------------- Save workbook --------------------
+            string outputPath = "ProjectMetrics.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

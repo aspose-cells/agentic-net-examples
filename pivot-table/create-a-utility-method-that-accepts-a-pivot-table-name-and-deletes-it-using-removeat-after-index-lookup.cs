@@ -1,94 +1,92 @@
-// Title: C# – Delete a Pivot Table by Name Using Aspose.Cells RemoveAt
-// Description: A concise C# helper that validates inputs, finds a pivot table by its Name property, retrieves its index, and removes it from the worksheet’s PivotTableCollection with RemoveAt. Includes a demo that loads a workbook, deletes "PivotTable1" from the first sheet, and saves the result.
-// Keywords: Aspose.Cells delete pivot table C# | remove pivot table by name .NET | PivotTableCollection RemoveAt | C# find pivot table index | Aspose.Cells PivotTable helper | delete specific pivot table worksheet | Aspose.Cells example GitHub | automated workbook cleanup
-// Common Searches: how to delete a pivot table by name in Aspose.Cells | remove pivot table using RemoveAt Aspose.Cells .NET | find pivot table index and delete it C# | Aspose.Cells delete specific pivot table example | C# code to remove pivot table from worksheet
-// Developer Intent: Remove a specific pivot table identified by its name from an Excel worksheet.
-// Use Cases: Erase an obsolete pivot table before recreating it with refreshed data. | Clean up generated reports by programmatically deleting unused pivot tables. | Run a batch job that scans multiple sheets and removes pivot tables matching a naming convention.
-// AI Prompts: Write a C# method that deletes a pivot table by name using Aspose.Cells and throws a custom exception when the table is missing. | Show how to modify DeletePivotTableByName to log to a file instead of the console. | Provide code that iterates through all worksheets in a workbook and calls DeletePivotTableByName for every pivot table named "SalesPivot".
+// Title: C# utility method to delete a named pivot table from an Excel workbook using Aspose.Cells
+// AI Prompts: Write a C# function that receives an input Excel file path, a pivot table name, and an output path, then removes the matching pivot table from every worksheet with Aspose.Cells and saves the workbook. | Update the deletion routine to return a boolean value indicating whether the specified pivot table was found and successfully removed. | Create an overload that accepts a list of pivot table names and deletes all matching tables from the workbook in one pass.
+// Common Searches: how to remove a specific pivot table by its name using Aspose.Cells in C# | Aspose.Cells C# delete pivot table from all worksheets example | programmatically delete pivot table from Excel file with Aspose.Cells .NET | C# code to find pivot table index and call RemoveAt in Aspose.Cells | remove multiple pivot tables by name Aspose.Cells C#
+// Tags: Aspose.Cells PivotTableCollection.RemoveAt example | delete named pivot table C# Aspose.Cells | remove pivot table by index Excel .NET | Excel workbook pivot table deletion using Aspose.Cells | C# utility to purge specific pivot tables
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsUtilities
+// Provides a C# method that locates a pivot table by its name across all worksheets in an Excel workbook, removes it using PivotTableCollection.RemoveAt, and saves the modified file to a specified output path.
+public static class PivotTableUtility
 {
-    // A concise C# helper that validates inputs, finds a pivot table by its Name property, retrieves its index, and removes it from the worksheet’s PivotTableCollection with RemoveAt. Includes a demo that loads a workbook, deletes "PivotTable1" from the first sheet, and saves the result.
-    public static class PivotTableHelper
+    /// <param name="inputFilePath">Path to the source Excel file.</param>
+    /// <param name="pivotTableName">Name of the pivot table to delete.</param>
+    /// <param name="outputFilePath">Path where the modified workbook will be saved.</param>
+    public static void DeletePivotTableByName(string inputFilePath, string pivotTableName, string outputFilePath)
     {
-        /// <param name="worksheet">The worksheet containing the pivot table.</param>
-        /// <param name="pivotTableName">The name of the pivot table to delete.</param>
-        public static void DeletePivotTableByName(Worksheet worksheet, string pivotTableName)
+        try
         {
-            if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
-            if (string.IsNullOrEmpty(pivotTableName)) throw new ArgumentException("Pivot table name cannot be null or empty.", nameof(pivotTableName));
+            // Verify that the input file exists.
+            if (!File.Exists(inputFilePath))
+                throw new FileNotFoundException($"Input file not found: {inputFilePath}");
 
-            PivotTableCollection pivots = worksheet.PivotTables;
-            int targetIndex = -1;
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(inputFilePath);
 
-            // Locate the pivot table index by matching its Name property
-            for (int i = 0; i < pivots.Count; i++)
+            // Iterate through each worksheet in the workbook.
+            foreach (Worksheet worksheet in workbook.Worksheets)
             {
-                if (pivots[i].Name.Equals(pivotTableName, StringComparison.OrdinalIgnoreCase))
+                // Get the collection of pivot tables on the current worksheet.
+                PivotTableCollection pivotTables = worksheet.PivotTables;
+
+                // Search for the pivot table by name.
+                for (int i = 0; i < pivotTables.Count; i++)
                 {
-                    targetIndex = i;
-                    break;
+                    PivotTable pt = pivotTables[i];
+                    if (string.Equals(pt.Name, pivotTableName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Remove the pivot table at the found index.
+                        pivotTables.RemoveAt(i);
+                        // Exit the loop after removal; pivot table names are unique per worksheet.
+                        break;
+                    }
                 }
             }
 
-            // If found, remove it using RemoveAt
-            if (targetIndex >= 0)
-            {
-                pivots.RemoveAt(targetIndex);
-            }
-            else
-            {
-                // Optionally handle the case where the pivot table does not exist
-                Console.WriteLine($"Pivot table \"{pivotTableName}\" not found in worksheet \"{worksheet.Name}\".");
-            }
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputFilePath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the modified workbook to the output path.
+            workbook.Save(outputFilePath);
         }
-
-        // Example usage
-        public static void Demo()
+        catch (Exception ex)
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
-
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Load an existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Assume the pivot table resides in the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Delete the pivot table named "PivotTable1"
-            DeletePivotTableByName(sheet, "PivotTable1");
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.Error.WriteLine($"Error deleting pivot table: {ex.Message}");
+            throw;
         }
     }
+}
 
-    // Entry point for the application
-    public static class Program
+public class Program
+{
+    /// <summary>
+    /// Entry point for the console application.
+    /// Usage: <executable> <inputFilePath> <pivotTableName> <outputFilePath>
+    /// </summary>
+    public static void Main(string[] args)
     {
-        public static void Main()
+        if (args.Length != 3)
         {
-            try
-            {
-                PivotTableHelper.Demo();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("Usage: <executable> <inputFilePath> <pivotTableName> <outputFilePath>");
+            return;
+        }
+
+        string inputFilePath = args[0];
+        string pivotTableName = args[1];
+        string outputFilePath = args[2];
+
+        try
+        {
+            PivotTableUtility.DeletePivotTableByName(inputFilePath, pivotTableName, outputFilePath);
+            Console.WriteLine($"Pivot table \"{pivotTableName}\" deleted successfully. Output saved to \"{outputFilePath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Operation failed: {ex.Message}");
         }
     }
 }

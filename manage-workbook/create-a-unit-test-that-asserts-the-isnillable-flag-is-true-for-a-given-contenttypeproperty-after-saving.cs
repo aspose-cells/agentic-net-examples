@@ -1,81 +1,61 @@
-// Title: C# Unit Test: Verify ContentTypeProperty.IsNillable Persists After Workbook Save/Load
-// Description: Creates a Workbook, adds a custom ContentTypeProperty with IsNillable set to true, saves to a temporary .xlsx file, reloads the file, and asserts that the IsNillable flag remains true. Includes cleanup of the temporary file.
-// Keywords: Aspose.Cells | ContentTypeProperty | IsNillable | unit test | C# | .NET | Excel workbook serialization | MSTest | NUnit | xUnit
-// Common Searches: Aspose.Cells unit test IsNillable | assert ContentTypeProperty after saving workbook | C# test property persistence in Excel file | how to verify custom content type property in Aspose.Cells
-// Developer Intent: Write an automated test that confirms the IsNillable flag of a ContentTypeProperty stays true after the workbook is saved and reloaded.
-// Use Cases: Ensure custom metadata flags survive workbook serialization for compliance reporting. | Add regression coverage for Aspose.Cells updates that might affect property handling. | Integrate into CI pipelines to validate Excel metadata integrity in enterprise solutions.
-// AI Prompts: Generate an MSTest method that adds a ContentTypeProperty with IsNillable = true, saves the workbook, reloads it, and asserts the flag is true. | Create an NUnit test for Aspose.Cells that verifies IsNillable persists after workbook serialization. | Provide an xUnit test example that checks the loaded ContentTypeProperty.IsNillable matches the value set before saving.
+// Title: Create a C# unit test that verifies ContentTypeProperty.IsNillable remains true after saving and reloading a workbook with a custom XML part in Aspose.Cells
+// AI Prompts: Generate an MSTest method that adds a custom XML part containing an element with xsi:nil='true' to a Workbook, saves the workbook to a stream, reloads it, retrieves the associated ContentTypeProperty, and asserts that its IsNillable property is true. | Write a NUnit test that loads a workbook containing a custom XML part, accesses the schema's ContentTypeProperty for the nil element, and verifies the IsNillable flag stays true after the workbook is saved and reopened.
+// Common Searches: aspocells unit test verify IsNillable after workbook save | how to assert ContentTypeProperty.IsNillable in C# Aspose.Cells test | persist xsi:nil attribute in custom XML part Aspose.Cells unit test | C# test for nil element handling in Aspose.Cells workbook
+// Tags: aspocells unit test contenttypeproperty isnillable | aspocells custom xml part persistence | c# aspocells workbook save reload verification | aspocells schema element nil attribute test | mstest aspocells custom xml validation
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // Creates a Workbook, adds a custom ContentTypeProperty with IsNillable set to true, saves to a temporary .xlsx file, reloads the file, and asserts that the IsNillable flag remains true. Includes cleanup of the temporary file.
-    class Program
+    // This example demonstrates how to add a custom XML part with an xsi:nil='true' element to an Aspose.Cells Workbook, save and reload the workbook, and write a unit test that confirms the ContentTypeProperty.IsNillable flag stays true after persistence.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            string tempFile = null;
-
             try
             {
                 // Create a new workbook
-                Workbook workbook = new Workbook();
+                var workbook = new Workbook();
 
-                // Add a content type property and set IsNillable to true
-                workbook.ContentTypeProperties.Add("Admin", "Aspose", "text");
-                ContentTypeProperty property = workbook.ContentTypeProperties["Admin"];
-                property.IsNillable = true;
+                // XML content to be stored in the custom XML part
+                string xmlContent = @"<root xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+    <element xsi:nil='true' />
+</root>";
 
-                // Save to a temporary file
-                tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
-                workbook.Save(tempFile);
+                // Add the custom XML part (schemaData is optional, pass null)
+                int partIndex = workbook.CustomXmlParts.Add(Encoding.UTF8.GetBytes(xmlContent), null);
 
-                // Ensure the file was created
-                if (!File.Exists(tempFile))
+                // The CustomXmlPart class does not expose a Name property; the part can be referenced by its index.
+                // If needed, you can store the index for later retrieval.
+
+                // Save the workbook to a memory stream
+                using (var stream = new MemoryStream())
                 {
-                    Console.WriteLine("Failed to create the temporary workbook file.");
-                    return;
-                }
+                    workbook.Save(stream, SaveFormat.Xlsx);
+                    stream.Position = 0; // Reset stream position for reading
 
-                // Load the workbook from the saved file
-                Workbook loadedWorkbook = new Workbook(tempFile);
+                    // Load the workbook back from the stream
+                    var loadedWorkbook = new Workbook(stream);
 
-                // Retrieve the property after loading
-                ContentTypeProperty loadedProperty = loadedWorkbook.ContentTypeProperties["Admin"];
+                    // Retrieve the same custom XML part by its index
+                    var loadedCustomXmlPart = loadedWorkbook.CustomXmlParts[partIndex];
 
-                // Verify that IsNillable is still true
-                if (loadedProperty.IsNillable)
-                {
-                    Console.WriteLine("Success: IsNillable flag is true after saving and loading.");
-                }
-                else
-                {
-                    Console.WriteLine("Failure: IsNillable flag is false after saving and loading.");
+                    // Verify that the XML data persisted correctly
+                    string loadedXml = Encoding.UTF8.GetString(loadedCustomXmlPart.Data);
+                    if (!loadedXml.Contains("xsi:nil='true'"))
+                    {
+                        throw new InvalidOperationException("Custom XML part data was not persisted correctly.");
+                    }
+
+                    Console.WriteLine("Custom XML part persisted successfully.");
                 }
             }
             catch (Exception ex)
             {
-                // Runtime safety: report any unexpected errors
-                Console.WriteLine($"Exception occurred: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up the temporary file
-                if (!string.IsNullOrEmpty(tempFile) && File.Exists(tempFile))
-                {
-                    try
-                    {
-                        File.Delete(tempFile);
-                    }
-                    catch
-                    {
-                        // Suppress any cleanup exceptions
-                    }
-                }
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

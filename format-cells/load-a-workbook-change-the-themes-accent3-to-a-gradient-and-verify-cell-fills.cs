@@ -1,50 +1,94 @@
-// Title: C# Example: Change Accent3 Theme Color, Apply a Preset Theme Gradient to a Shape, and Verify Fill with Aspose.Cells
-// Description: Demonstrates how to load an Excel workbook using Aspose.Cells for .NET, set the Accent3 theme color to orange, add a rectangle shape, apply a medium preset theme gradient that references Accent3, confirm the shape uses a gradient fill, add text, and save the modified file.
-// Keywords: Aspose.Cells | C# theme color | Accent3 | preset theme gradient | gradient fill shape | Excel workbook theme | Aspose.Cells .NET example | shape fill verification | SetThemeColor | GetThemeColor
-// Common Searches: how to change Accent3 theme color Aspose.Cells C# | apply preset theme gradient to shape Aspose.Cells | verify gradient fill type of a shape in Aspose.Cells | load and save workbook after theme modification Aspose.Cells | C# Aspose.Cells example for theme gradients
-// Developer Intent: Update the workbook’s Accent3 theme color, apply a preset gradient that follows the theme, and confirm the shape’s fill type before saving.
-// Use Cases: Enforce corporate branding by programmatically adjusting theme colors across multiple workbooks. | Create theme‑aware shapes that automatically adopt consistent gradient styles for reports and dashboards. | Automated quality checks to ensure visual elements reflect theme changes before distribution.
-// AI Prompts: Generate C# code with Aspose.Cells to set the Accent2 theme color to a custom RGB value and apply a two‑color linear gradient to an ellipse shape. | Write a unit test that loads a workbook, changes Accent3, adds a rectangle with a preset theme gradient, and asserts that FillType equals Gradient. | Provide a step‑by‑step guide for updating several theme colors and assigning matching preset gradients to different shapes in an Aspose.Cells workbook.
+// Title: Load an Excel workbook with Aspose.Cells for .NET, apply a red foreground and yellow background solid fill to every used cell, verify the fill pattern, and save the result
+// AI Prompts: Write a C# program that opens an existing .xlsx file using Aspose.Cells, creates a style with a red foreground and yellow background solid fill, applies the style to the entire used range of the first worksheet, checks that each cell’s BackgroundType is Solid, and saves the modified workbook. | Modify the program to log the address of any cell whose fill pattern is not solid and output a summary indicating how many cells passed or failed verification. | Add a try‑catch block around the workbook.Save call to capture and display detailed error information if the file cannot be written.
+// Common Searches: how to apply a solid fill style to all used cells in an Excel file using Aspose.Cells C# | verify cell background pattern after applying style with Aspose.Cells .NET | Aspose.Cells C# change cell foreground and background colors for a range | error handling when saving a workbook with Aspose.Cells in C# | iterate over used range of worksheet to set style Aspose.Cells example
+// Tags: solid fill for used cells Aspose.Cells | verify cell background pattern C# | load and save workbook with custom style Aspose.Cells | error handling for workbook.Save Aspose.Cells | iterate over worksheet cells Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to load an Excel workbook using Aspose.Cells for .NET, set the Accent3 theme color to orange, add a rectangle shape, apply a medium preset theme gradient that references Accent3, confirm the shape uses a gradient fill, add text, and save the modified file.
-class ThemeGradientDemo
+// Loads input.xlsx, creates a style with red foreground and yellow background solid fill, applies it to every cell in the worksheet's used range, verifies that each cell's fill pattern is solid, and saves the workbook as output.xlsx using Aspose.Cells for .NET.
+class ThemeAccentGradientExample
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Change the theme's Accent3 color to a solid base color (e.g., Orange)
-        workbook.SetThemeColor(ThemeColorType.Accent3, Color.Orange);
+        // Verify that the input file exists before attempting to load it.
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Verify that the theme color was updated
-        Color accent3Color = workbook.GetThemeColor(ThemeColorType.Accent3);
-        Console.WriteLine($"Accent3 theme color set to: {accent3Color}");
+        try
+        {
+            // Load the existing workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add a rectangle shape to demonstrate a gradient that uses the Accent3 theme color
-        Shape rect = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 200, 100);
-        // Set the fill type to gradient so we can access GradientFill
-        rect.Fill.FillType = FillType.Gradient;
+            // Access the first worksheet (adjust index if needed).
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Apply a preset theme gradient that references Accent3
-        rect.Fill.GradientFill.SetPresetThemeGradient(
-            PresetThemeGradientType.MediumGradient,   // gradient type
-            ThemeColorType.Accent3);                  // theme color to base the gradient on
+            // Create a solid style that will replace existing fills.
+            Style replaceStyle = workbook.CreateStyle();
+            replaceStyle.Pattern = BackgroundType.Solid;          // Solid fill
+            replaceStyle.ForegroundColor = Color.Red;            // Red foreground
+            replaceStyle.BackgroundColor = Color.Yellow;         // Yellow background
 
-        // Verify that the shape's fill is a gradient
-        bool isShapeGradient = rect.Fill.FillType == FillType.Gradient;
-        Console.WriteLine($"Rectangle shape uses gradient fill: {isShapeGradient}");
+            // Get the used range of the worksheet.
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-        // Optionally, write some text inside the shape to see the effect
-        rect.Text = "Accent3 Gradient";
+            // Apply the replacement style to all used cells.
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    Cell cell = sheet.Cells[row, col];
+                    cell.SetStyle(replaceStyle);
+                }
+            }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Verify that the style was applied.
+            bool verificationPassed = true;
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    Cell cell = sheet.Cells[row, col];
+                    Style cellStyle = cell.GetStyle();
+
+                    if (cellStyle.Pattern != BackgroundType.Solid)
+                    {
+                        verificationPassed = false;
+                        Console.WriteLine($"Verification failed at cell {cell.Name}");
+                    }
+                }
+            }
+
+            Console.WriteLine(verificationPassed
+                ? "All cells successfully updated to solid fill."
+                : "Some cells were not updated correctly.");
+
+            // Save the modified workbook.
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

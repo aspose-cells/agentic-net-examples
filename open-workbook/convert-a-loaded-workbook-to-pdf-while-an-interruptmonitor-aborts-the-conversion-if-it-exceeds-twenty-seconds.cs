@@ -1,46 +1,34 @@
-// Title: C# – Convert Excel to PDF with a 20‑second timeout using Aspose.Cells InterruptMonitor
-// Description: Loads an XLSX file, attaches a SystemTimeInterruptMonitor via LoadOptions, starts a 20 000 ms timer, and saves the workbook as PDF. If the export exceeds the limit, a CellsException with the Interrupted code is thrown and handled.
-// Keywords: Aspose.Cells | C# Excel to PDF | InterruptMonitor | SystemTimeInterruptMonitor | timeout PDF conversion | abort long export | Workbook.Save timeout | SaveFormat.Pdf | performance safeguard | large Excel files
-// Common Searches: Aspose.Cells set timeout for PDF export C# | How to abort Excel to PDF conversion after 20 seconds | SystemTimeInterruptMonitor example for workbook.Save | C# limit Aspose.Cells PDF generation time | Catch CellsException.Interrupted during save
-// Developer Intent: Create a PDF conversion that automatically stops when processing exceeds twenty seconds.
-// Use Cases: Prevent web‑service requests from hanging while converting large spreadsheets to PDF. | Add a safety guard in batch jobs that generate PDFs to avoid server timeouts. | Provide immediate feedback to users when a conversion is terminated due to time constraints.
-// AI Prompts: Write C# code that uses Aspose.Cells and SystemTimeInterruptMonitor to export an Excel workbook to PDF with a 15‑second limit. | Explain how to detect and handle the CellsException.Interrupted error during a workbook.Save operation. | Show how to reuse a single InterruptMonitor for both loading and saving in Aspose.Cells.
+// Title: C# example: Convert an Excel workbook to PDF with Aspose.Cells and abort the operation after 20 seconds using a timeout task
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, saves it as PDF, and stops the conversion when it exceeds a 20‑second limit by running workbook.Save inside a Task and applying a timeout. | Show how to wrap workbook.Save(Pdf) in a background Task and use Task.Wait with a TimeSpan to enforce a maximum conversion duration without blocking the main thread. | Provide a pattern for monitoring a long‑running Aspose.Cells PDF export and logging a timeout message when the operation runs longer than the allowed time.
+// Common Searches: how to set a 20‑second timeout for Aspose.Cells PDF export in C# | run Aspose.Cells workbook.Save to PDF in background task with cancellation support | limit Aspose.Cells Excel to PDF conversion time using .NET Task.Wait | example of aborting Aspose.Cells SaveFormat.Pdf after a time limit | C# timeout handling for long‑running Aspose.Cells conversions
+// Tags: Aspose.Cells PDF export timeout | C# task wrapper for workbook.Save | Excel to PDF conversion time limit | background conversion with Aspose.Cells | monitoring long‑running Aspose.Cells operation
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Threading;
+using System.Threading.Tasks;
 
-// Loads an XLSX file, attaches a SystemTimeInterruptMonitor via LoadOptions, starts a 20 000 ms timer, and saves the workbook as PDF. If the export exceeds the limit, a CellsException with the Interrupted code is thrown and handled.
+// Loads "input.xlsx" with Aspose.Cells, starts workbook.Save to "output.pdf" inside a Task, and uses Task.Wait with a 20‑second TimeSpan to abort the conversion if it exceeds the allowed duration, logging an appropriate timeout message.
 class Program
 {
     static void Main()
     {
-        // Input workbook file (replace with actual path)
-        string inputPath = "input.xlsx";
-        // Output PDF file
-        string outputPath = "output.pdf";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
         // Verify that the input file exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
             return;
         }
 
-        // Create a SystemTimeInterruptMonitor that throws an exception when interrupted
-        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-
-        // Attach the monitor to load options so it is active during loading
-        LoadOptions loadOptions = new LoadOptions
-        {
-            InterruptMonitor = monitor
-        };
-
-        Workbook workbook;
+        Workbook workbook = null;
         try
         {
-            // Load the workbook with the interrupt monitor attached
-            workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
@@ -48,29 +36,26 @@ class Program
             return;
         }
 
-        // Assign the monitor to the workbook to monitor the save operation
-        workbook.InterruptMonitor = monitor;
+        // Run the PDF conversion in a separate task so we can enforce a timeout
+        var conversionTask = Task.Run(() =>
+        {
+            try
+            {
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"PDF conversion error: {ex.Message}");
+            }
+        });
 
-        // Start the monitor with a 20‑second (20000 ms) limit before saving
-        monitor.StartMonitor(20000);
-
-        try
+        // Wait up to 20 seconds for the conversion to finish
+        if (!conversionTask.Wait(TimeSpan.FromSeconds(20)))
         {
-            // Save the workbook as PDF; will be aborted if it exceeds 20 seconds
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine("Workbook successfully saved to PDF.");
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-        {
-            Console.WriteLine("Save operation was interrupted after exceeding the time limit.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error during save: {ex.Message}");
-        }
-        finally
-        {
-            // No explicit StopMonitor method; monitor will be disposed automatically when out of scope
+            Console.WriteLine("PDF conversion aborted: operation exceeded 20 seconds.");
+            // Note: Aspose.Cells does not provide a direct way to cancel an ongoing Save operation.
+            // The task will continue in the background; you may choose to ignore its result.
         }
     }
 }

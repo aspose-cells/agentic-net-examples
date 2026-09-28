@@ -7,7 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: C# examples for line, column, and win-loss sparklines, source ranges, groups, axes, markers, colors, visibility, copying, and removal
 primary_apis: [Worksheet.SparklineGroups, SparklineGroupCollection.Add, SparklineGroup, SparklineCollection, SparklineType]
 search_intents: [create Excel sparkline in C#, add column sparkline, format sparkline markers, remove Excel sparklines]

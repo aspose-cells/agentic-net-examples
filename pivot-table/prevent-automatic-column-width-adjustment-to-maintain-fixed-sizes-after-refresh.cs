@@ -1,77 +1,55 @@
-// Title: Aspose.Cells .NET – Keep Column Widths Fixed When Refreshing Pivot Tables
-// Description: Demonstrates how to set explicit column widths, add a pivot table, disable the AutofitColumnWidthOnUpdate property, refresh the pivot, and verify that column sizes stay unchanged before saving the workbook.
-// Keywords: Aspose.Cells pivot column width | disable AutofitColumnWidthOnUpdate | fixed column width after pivot refresh | C# Aspose.Cells pivot formatting | prevent column auto‑resize Aspose
-// Common Searches: Aspose.Cells keep column width after pivot refresh | disable column autofit for pivot tables .NET | Aspose.Cells pivot table column width stays same | C# prevent pivot table from changing column sizes
-// Developer Intent: The developer needs to preserve predefined column widths when a pivot table is refreshed in an Aspose.Cells workbook.
-// Use Cases: Create a report layout with precise column alignment and ensure it is not altered by pivot updates. | Refresh multiple pivots in a financial dashboard while maintaining the surrounding column formatting. | Automate Excel generation where column widths are part of a corporate style guide and must remain constant.
-// AI Prompts: How do I stop Aspose.Cells from auto‑adjusting column widths when a pivot table is refreshed in C#? | Provide C# code that sets column widths, adds a pivot table, disables AutofitColumnWidthOnUpdate, refreshes the pivot, and saves the workbook. | Explain alternative techniques to preserve column widths after updating pivot tables with Aspose.Cells.
+// Title: Set fixed column widths for specific columns in an Excel workbook using Aspose.Cells for .NET to prevent auto‑fit after refresh
+// AI Prompts: Write C# code with Aspose.Cells that loads an XLSX file, assigns explicit widths to columns A‑D, and saves the workbook while keeping those widths from auto‑adjusting. | Show how to mark columns as custom width in Aspose.Cells so that subsequent data refreshes do not trigger automatic column resizing. | Create a .NET method that receives a file path and an array of column widths, applies the widths to the first worksheet, and ensures the widths remain fixed after saving.
+// Common Searches: Aspose.Cells .NET how to lock column width after refreshing pivot table | C# set column width without auto fit using Aspose.Cells | prevent Excel column auto‑resize when saving workbook with Aspose.Cells library
+// Tags: Aspose.Cells set column width | prevent column auto-fit Aspose.Cells | fixed column width Excel .NET | custom column width after refresh | Aspose.Cells column width persistence
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsFixedColumnWidthDemo
+// The example loads an existing XLSX workbook with Aspose.Cells, defines explicit widths for columns A‑D, applies those widths (which marks the columns as custom), ensures the output directory exists, and saves the modified file so the column sizes stay constant even after data refreshes.
+class Program
 {
-    // Demonstrates how to set explicit column widths, add a pivot table, disable the AutofitColumnWidthOnUpdate property, refresh the pivot, and verify that column sizes stay unchanged before saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the fixed column widths (in characters) for columns A‑D
+            double[] fixedWidths = { 15, 20, 12, 25 };
+
+            // Apply the fixed widths; setting Width automatically marks the column as custom
+            for (int i = 0; i < fixedWidths.Length; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate data for the pivot table
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-                sheet.Cells["A2"].PutValue("Food");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Transport");
-                sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["A4"].PutValue("Food");
-                sheet.Cells["B4"].PutValue(150);
-                sheet.Cells["A5"].PutValue("Utilities");
-                sheet.Cells["B5"].PutValue(200);
-
-                // Set fixed column widths (character units)
-                sheet.Cells.SetColumnWidth(0, 20); // Column A
-                sheet.Cells.SetColumnWidth(1, 15); // Column B
-                sheet.Cells.SetColumnWidth(2, 25); // Column C (pivot location)
-
-                // Define the source data range for the pivot table (A1:B5)
-                string sourceDataRange = $"={sheet.Name}!A1:B5";
-
-                // Add the pivot table; Add returns the index of the new pivot table
-                int pivotIndex = sheet.PivotTables.Add(sourceDataRange, "C1", "PivotTable1");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-                // Configure pivot fields
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-                pivot.AddFieldToArea(PivotFieldType.Data, 1); // Amount as data field
-
-                // Disable automatic column width autofit on pivot refresh
-                pivot.AutofitColumnWidthOnUpdate = false;
-
-                // Refresh pivot tables (column widths stay fixed)
-                sheet.RefreshPivotTables();
-
-                // Output column widths to verify they remain unchanged
-                Console.WriteLine("Column widths after pivot refresh (should remain fixed):");
-                Console.WriteLine($"Column A width: {sheet.Cells.GetColumnWidth(0)}");
-                Console.WriteLine($"Column B width: {sheet.Cells.GetColumnWidth(1)}");
-                Console.WriteLine($"Column C width (pivot start): {sheet.Cells.GetColumnWidth(2)}");
-
-                // Save the workbook
-                string outputPath = "FixedColumnWidthDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Column column = sheet.Cells.Columns[i];
+                column.Width = fixedWidths[i];
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

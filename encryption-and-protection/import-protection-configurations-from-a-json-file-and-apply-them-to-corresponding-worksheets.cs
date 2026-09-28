@@ -1,120 +1,116 @@
-// Title: C# – Apply Worksheet Protection from JSON with Aspose.Cells
-// Description: Demonstrates how to read a JSON file that defines sheet names, passwords, and protection types, locate or create the corresponding worksheets in an Aspose.Cells workbook, apply the specified protection, and save the result as an XLSX file.
-// Keywords: Aspose.Cells protect worksheet C# | JSON worksheet protection Aspose | apply protection type enum Aspose.Cells | load protection settings from JSON | C# Excel sheet security Aspose | dynamic worksheet creation Aspose.Cells | protect multiple sheets programmatically
-// Common Searches: Aspose.Cells protect worksheets using JSON | C# read JSON and apply Excel sheet protection | set protection type for Excel sheets Aspose | create missing worksheets and protect them C# | load protection configuration file Aspose.Cells
-// Developer Intent: Read a JSON configuration and programmatically protect the matching worksheets in an Aspose.Cells workbook.
-// Use Cases: Bulk‑apply passwords and protection levels to many sheets based on a JSON manifest. | Automatically generate a new worksheet when the specified name is absent and enforce the defined security settings. | Fallback to full protection when the JSON entry lacks a valid ProtectionType value.
-// AI Prompts: Write C# code that loads a JSON file with worksheet protection rules and applies them using Aspose.Cells, handling missing sheets and invalid enum values. | Show how to modify the sample to open an existing workbook instead of creating a new one while still using JSON‑driven protection settings. | Provide robust error‑handling suggestions for JSON deserialization and ProtectionType parsing in the Aspose.Cells protection workflow.
+// Title: Import worksheet protection settings from a JSON file and apply them to an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Read a JSON array of ProtectionConfig objects and protect each matching worksheet in an Aspose.Cells Workbook, using the specified password and protection options. | Extend the code to also set AllowEditRanges and AllowDeleteRows on worksheets based on additional fields in the JSON configuration. | Add detailed logging that records which worksheets were protected, which were unprotected, and any missing sheets while processing the JSON file.
+// Common Searches: how to use Aspose.Cells to protect Excel worksheets based on a JSON configuration in C# | apply password and edit permissions to specific sheets in an Excel file using Aspose.Cells .NET | load worksheet protection options from external JSON and set AllowEditObjects in Aspose.Cells | unprotect Excel worksheets programmatically with Aspose.Cells when a flag is false in config file | C# example for batch protecting multiple worksheets using Aspose.Cells and JSON settings
+// Tags: batch worksheet protection Aspose.Cells JSON | set worksheet password Aspose.Cells .NET | configure AllowEditObjects Aspose.Cells | unprotect Excel sheets via Aspose.Cells config | load protection settings from JSON C#
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Model representing protection settings for a worksheet
+// The example loads an existing Excel workbook, reads a JSON file containing a list of ProtectionConfig objects, and iterates through each entry. For each matching worksheet it either protects the sheet with an optional password and attempts to set AllowEditObjects and AllowEditScenarios via reflection, or removes protection when the Protect flag is false. The modified workbook is saved to a new file, with error handling for missing files, invalid configurations, and save failures.
+public class ProtectionConfig
 {
-    // Model representing each protection rule from JSON
-    // Demonstrates how to read a JSON file that defines sheet names, passwords, and protection types, locate or create the corresponding worksheets in an Aspose.Cells workbook, apply the specified protection, and save the result as an XLSX file.
-    public class ProtectionConfig
-    {
-        public string? SheetName { get; set; }
-        public string? Password { get; set; }
-        public string? Type { get; set; }
-    }
+    public string SheetName { get; set; } = string.Empty;   // Target worksheet name
+    public bool Protect { get; set; }                       // Whether to protect the sheet
+    public string? Password { get; set; }                  // Password for protection (optional)
+    public bool AllowEditObjects { get; set; }              // Allow editing objects
+    public bool AllowEditScenarios { get; set; }            // Allow editing scenarios
+    // Additional protection options can be added as needed
+}
 
-    public static class ApplyProtectionFromJson
+class Program
+{
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            const string jsonFilePath = "protectionConfig.json";
+            const string inputPath = "input.xlsx";
+            const string jsonPath = "protectionConfig.json";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the JSON configuration file exists
-            if (!File.Exists(jsonFilePath))
+            // Verify required files exist
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Configuration file not found: {jsonFilePath}");
+                Console.WriteLine($"Input workbook '{inputPath}' not found.");
+                return;
+            }
+            if (!File.Exists(jsonPath))
+            {
+                Console.WriteLine($"Configuration file '{jsonPath}' not found.");
                 return;
             }
 
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Read protection configurations from JSON file
+            string json = File.ReadAllText(jsonPath);
+            List<ProtectionConfig>? configs = JsonSerializer.Deserialize<List<ProtectionConfig>>(json);
+            if (configs == null)
+            {
+                Console.WriteLine("No protection configurations found.");
+                return;
+            }
+
+            // Apply each configuration to its corresponding worksheet
+            foreach (ProtectionConfig cfg in configs)
+            {
+                if (string.IsNullOrEmpty(cfg.SheetName))
+                    continue; // Skip invalid entries
+
+                Worksheet? sheet = workbook.Worksheets[cfg.SheetName];
+                if (sheet == null)
+                    continue; // Skip if worksheet not found
+
+                if (cfg.Protect)
+                {
+                    // Protect the worksheet with optional password (oldPassword not required)
+                    if (!string.IsNullOrEmpty(cfg.Password))
+                        sheet.Protect(ProtectionType.All, cfg.Password, string.Empty);
+                    else
+                        sheet.Protect(ProtectionType.All, string.Empty, string.Empty);
+
+                    // Attempt to set additional protection options via reflection (if supported)
+                    try
+                    {
+                        var protection = sheet.Protection;
+                        var propObj = protection.GetType().GetProperty("AllowEditObject");
+                        if (propObj != null && propObj.CanWrite)
+                            propObj.SetValue(protection, cfg.AllowEditObjects);
+
+                        var propScen = protection.GetType().GetProperty("AllowEditScenario");
+                        if (propScen != null && propScen.CanWrite)
+                            propScen.SetValue(protection, cfg.AllowEditScenarios);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Unable to set detailed options for sheet '{cfg.SheetName}'. {ex.Message}");
+                    }
+                }
+                else
+                {
+                    // Remove protection if Protect flag is false
+                    sheet.Unprotect();
+                }
+            }
+
+            // Save the modified workbook
             try
             {
-                // Read and deserialize the JSON content
-                string jsonContent = File.ReadAllText(jsonFilePath);
-                List<ProtectionConfig>? configs = JsonSerializer.Deserialize<List<ProtectionConfig>>(jsonContent);
-
-                if (configs == null || configs.Count == 0)
-                {
-                    Console.WriteLine("No protection configurations found in the JSON file.");
-                    return;
-                }
-
-                // Create a new workbook (or load an existing one if needed)
-                Workbook workbook = new Workbook();
-
-                // Ensure at least one worksheet exists
-                if (workbook.Worksheets.Count == 0)
-                {
-                    workbook.Worksheets.Add();
-                }
-
-                // Apply each protection rule
-                foreach (ProtectionConfig cfg in configs)
-                {
-                    if (string.IsNullOrWhiteSpace(cfg.SheetName))
-                    {
-                        Console.WriteLine("Skipping entry with missing SheetName.");
-                        continue;
-                    }
-
-                    // Find existing worksheet or create a new one
-                    Worksheet? sheet = null;
-                    foreach (Worksheet ws in workbook.Worksheets)
-                    {
-                        if (ws.Name.Equals(cfg.SheetName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            sheet = ws;
-                            break;
-                        }
-                    }
-
-                    if (sheet == null)
-                    {
-                        int newIndex = workbook.Worksheets.Add();
-                        sheet = workbook.Worksheets[newIndex];
-                        sheet.Name = cfg.SheetName;
-                    }
-
-                    // Determine the protection type (default to All)
-                    ProtectionType protectionType = ProtectionType.All;
-                    if (!string.IsNullOrWhiteSpace(cfg.Type))
-                    {
-                        if (!Enum.TryParse<ProtectionType>(cfg.Type, true, out protectionType))
-                        {
-                            protectionType = ProtectionType.All;
-                        }
-                    }
-
-                    // Apply protection to the worksheet
-                    sheet.Protect(protectionType, cfg.Password ?? string.Empty, null);
-                }
-
-                // Save the protected workbook
-                const string outputPath = "ProtectedWorkbook.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
         }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
+        catch (Exception ex)
         {
-            ApplyProtectionFromJson.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

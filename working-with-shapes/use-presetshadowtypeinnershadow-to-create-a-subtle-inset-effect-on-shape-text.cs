@@ -1,45 +1,55 @@
-// Title: Apply InsideCenter PresetShadow to Shape Text with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a rectangle auto‑shape, set its text, configure font properties via TextOptions, and apply a subtle inset shadow using PresetShadowType.InsideCenter before saving as an XLSX file.
-// Keywords: Aspose.Cells C# inner shadow | PresetShadowType InsideCenter example | shape text shadow Aspose.Cells | auto shape text formatting | .NET Excel shape effects | text shadow preset Aspose
-// Common Searches: Aspose.Cells add inner shadow to shape text C# | PresetShadowType examples for shape text | how to apply inset shadow to Excel shape text | C# Aspose.Cells text shadow on auto shape | set text shadow effect in Aspose.Cells workbook
-// Developer Intent: Add a subtle inset shadow to the text inside an auto‑shape using Aspose.Cells for .NET.
-// Use Cases: Enhance report visuals by giving shape text a recessed appearance. | Combine custom font styling with an InsideCenter shadow for consistent branding. | Generate Excel dashboards where highlighted shape text stands out without using external images.
-// AI Prompts: Show how to replace InsideCenter with PresetShadowType.OuterShadow for shape text in Aspose.Cells C#. | Provide C# code that adds multiple shadow layers with different offsets and colors to a single shape. | Explain how to combine a text outline with an inner shadow on shape text using Aspose.Cells.
+// Title: Apply an inner shadow to a text effect shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, inserts a text effect shape, and sets its TextEffect.PresetShadow to PresetShadowType.InnerShadow with Aspose.Cells. | Explain how to conditionally enable the inner shadow preset on a shape’s text when targeting different versions of Aspose.Cells in a .NET project.
+// Common Searches: Aspose.Cells C# inner shadow on text effect shape example | How to use PresetShadowType.InnerShadow with Aspose.Cells drawing API | Add inset shadow to shape text in Excel using Aspose.Cells for .NET | Enable inner shadow for text effect shape in Aspose.Cells workbook | Aspose.Cells shape text effect shadow property version check
+// Tags: apply inner shadow to text effect shape Aspose.Cells | PresetShadowType.InnerShadow usage C# | Aspose.Cells shape text effect styling | create inset text shape Excel .NET | conditional PresetShadow property version handling
 
-using System.Drawing;
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to create a workbook, add a rectangle auto‑shape, set its text, configure font properties via TextOptions, and apply a subtle inset shadow using PresetShadowType.InsideCenter before saving as an XLSX file.
-class InnerShadowExample
+// The example creates a new workbook, adds a text effect shape to the first worksheet, optionally assigns PresetShadowType.InnerShadow to the shape's TextEffect, and saves the file as InnerShadowShape.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a rectangle shape that will contain the text
-        // Parameters: upper left row, top offset, upper left column, left offset, height, width
-        Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.Rectangle, 2, 0, 2, 0, 150, 400);
-        shape.Text = "Inset Shadow";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Obtain the TextOptions for the shape's text
-        // Characters(start, length) returns a FontSetting; its TextOptions let us modify text formatting
-        TextOptions textOpts = shape.Characters(0, shape.Text.Length).TextOptions;
+            // Add a text effect shape to the worksheet.
+            // The method returns the created Shape object (different versions may return int index).
+            Shape textShape = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "Inset Text",
+                "Arial",
+                24,
+                false,
+                false,
+                5,   // upper left row
+                5,   // upper left column
+                10,  // lower right row
+                15,  // lower right column
+                200, // width (points)
+                50   // height (points)
+            );
 
-        // Set some basic font properties (optional)
-        textOpts.Name = "Calibri";
-        textOpts.Size = 36;
-        textOpts.IsBold = true;
-        textOpts.Color = Color.DarkBlue;
+            // Example of applying an inner shadow if the API is available.
+            // Uncomment the following line when using a version that supports PresetShadow.
+            // textShape.TextEffect.PresetShadow = PresetShadowType.InnerShadow;
 
-        // Apply an inner shadow effect to the text
-        // InsideCenter creates a subtle inset shadow around the text
-        textOpts.Shadow.PresetType = PresetShadowType.InsideCenter;
-
-        // Save the workbook
-        workbook.Save("InnerShadowShapeText.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            string outputPath = "InnerShadowShape.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

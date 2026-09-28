@@ -1,46 +1,53 @@
-// Title: Convert a Column Chart to an Area Chart in C# with Aspose.Cells while Keeping Data Labels
-// Description: A concise C# example that loads an Excel workbook, selects the first chart, switches its type from Column to Area using Aspose.Cells, and saves the file. The operation retains all existing data‑label settings and series formatting.
-// Keywords: Aspose.Cells chart type change C# | convert column chart to area chart .NET | preserve data labels Aspose.Cells | C# change Excel chart type programmatically | Aspose.Cells Area chart example | Excel chart conversion Aspose | global
-// Common Searches: how to change a column chart to an area chart using Aspose.Cells | Aspose.Cells keep data labels when changing chart type | C# programmatically convert Excel chart type | Aspose.Cells chart type Area example | preserve series formatting Aspose.Cells chart conversion
-// Developer Intent: Switch an existing column chart to an area chart without resetting data‑label or series properties.
-// Use Cases: Update legacy financial dashboards to area charts while retaining label formatting. | Batch‑process multiple workbooks to replace column charts with area charts automatically. | Build a user‑driven tool that lets end users toggle chart types without losing custom label settings.
-// AI Prompts: Write C# code with Aspose.Cells that changes any Column chart to an Area chart and ensures data labels stay unchanged. | Show how to loop through all charts in a worksheet, detect Column charts, and convert them to Area charts while preserving series styles. | Explain Aspose.Cells' behavior for data‑label preservation when Chart.Type is modified and what extra steps are required for custom label positions.
+// Title: Change a column chart to an area chart while keeping existing data label settings in Aspose.Cells for .NET
+// AI Prompts: Set Chart.Type from ChartType.Column to ChartType.Area and retain all DataLabels properties such as ShowValue, ShowCategoryName, ShapeType, and custom formatting. | Programmatically switch an Aspose.Cells chart to an area chart without resetting the configured data label colors, shape, and visibility.
+// Common Searches: Aspose.Cells C# change chart type column to area preserve data labels | keep data label formatting when converting chart type in Aspose.Cells | how to retain custom data label shape after changing chart type Aspose.Cells | switch chart from column to area without losing label settings .NET
+// Tags: Aspose.Cells chart type conversion | preserve data label settings Aspose.Cells | C# change chart to area chart | Aspose.Cells data label formatting | chart type change without resetting labels
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace AsposeCellsChartTypeChange
+// The example creates a workbook, adds sample data, inserts a column chart, configures data labels (value, category name, rectangular shape, dark blue background, custom formatting), then changes the chart type to Area while preserving those label settings, and saves the file as ChartColumnToArea.xlsx.
+class ChangeChartTypeExample
 {
-    // A concise C# example that loads an Excel workbook, selects the first chart, switches its type from Column to Area using Aspose.Cells, and saves the file. The operation retains all existing data‑label settings and series formatting.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook that already contains a column chart
-            Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet sheet = workbook.Worksheets[0];
+        // Populate sample data for the chart
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
 
-            // Assume the chart we want to modify is the first chart in the collection
-            if (sheet.Charts.Count == 0)
-            {
-                Console.WriteLine("No charts found in the worksheet.");
-                return;
-            }
+        // Add a column chart (initial type)
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart chart = sheet.Charts[chartIndex];
 
-            Chart chart = sheet.Charts[0];
+        // Set the data range for the chart
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-            // Preserve existing data label settings – no action needed because
-            // changing the chart type does not reset series or their data labels.
-            // Change the chart type from Column to Area
-            chart.Type = ChartType.Area;
+        // Configure data labels for the first series
+        Series series = chart.NSeries[0];
+        series.DataLabels.ShowValue = true;                     // Show values
+        series.DataLabels.ShowCategoryName = true;              // Show category names
+        series.DataLabels.ShapeType = DataLabelShapeType.Rect;  // Rectangular label shape
+        series.DataLabels.Area.ForegroundColor = Color.DarkBlue;
+        series.DataLabels.Area.Formatting = FormattingType.Custom;
 
-            // Save the modified workbook
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+        // Change the chart type to Area while preserving the data label settings
+        chart.Type = ChartType.Area;
 
-            Console.WriteLine("Chart type changed to Area and workbook saved as output.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("ChartColumnToArea.xlsx", SaveFormat.Xlsx);
     }
 }

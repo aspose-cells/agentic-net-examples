@@ -1,10 +1,7 @@
-// Title: Aspose.Cells C# – Select Slicer Items from CSV and Refresh Pivot
-// Description: Creates a workbook with fruit sales, adds a pivot table and slicer, reads fruit names from a CSV, selects matching slicer items, refreshes the slicer (updating the pivot), and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | slicer | SlicerCacheItem | CSV | pivot table | programmatic selection | refresh slicer | Excel automation
-// Common Searches: Aspose.Cells select slicer items from CSV | C# set slicer selections programmatically | Refresh pivot after slicer update Aspose.Cells | Load filter list CSV into slicer .NET | How to use SlicerCacheItem.Selected Aspose.Cells
-// Developer Intent: Programmatically set slicer selections based on CSV data and refresh the linked pivot table using Aspose.Cells for .NET.
-// Use Cases: Apply a dynamic filter to a pivot table by loading category names from a CSV and marking the corresponding slicer items as selected. | Synchronize slicer selections across multiple reports by exporting chosen items to CSV and re‑applying them in another workbook. | Automate report generation where filter criteria are supplied externally in a CSV file, ensuring the pivot reflects those selections.
-// AI Prompts: Generate C# code with Aspose.Cells that reads a CSV of product names, selects matching slicer items, refreshes the slicer, and saves the workbook. | Show how to deselect all slicer items except those listed in an external text file, then refresh the linked pivot table using Aspose.Cells. | Explain case‑insensitive matching when updating SlicerCacheItem.Selected from CSV values in Aspose.Cells for .NET.
+// Title: Programmatically select Excel slicer items from a CSV file and refresh the linked pivot table using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a list of values from a CSV file and set the matching SlicerCacheItem.Selected flags in an Aspose.Cells workbook. | Apply external CSV data to an Excel slicer, then call slicer.Refresh to update the connected pivot table. | Create a pivot table with a slicer, read filter criteria from a CSV, programmatically select the corresponding slicer items, and save the workbook.
+// Common Searches: Aspose.Cells C# select slicer items using values from a CSV file | How to refresh an Excel slicer after changing SlicerCacheItem.Selected in .NET | Programmatic Excel slicer filtering with external CSV data using Aspose.Cells | C# example linking a slicer to a pivot table and applying CSV‑based filters
+// Tags: Aspose.Cells slicer cache item selection from CSV | C# programmatic slicer filtering in Excel | refresh slicer linked pivot table Aspose.Cells | load external filter values into Excel slicer | pivot table slicer automation with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -15,70 +12,73 @@ using Aspose.Cells.Slicers;
 
 namespace AsposeCellsSlicerCsvDemo
 {
-    // Creates a workbook with fruit sales, adds a pivot table and slicer, reads fruit names from a CSV, selects matching slicer items, refreshes the slicer (updating the pivot), and saves the file.
+    // // Demonstrates creating a workbook, adding a pivot table and slicer, loading filter values from a CSV file, selecting matching slicer cache items, refreshing the slicer (and linked pivot), and saving the workbook.
     class Program
     {
         static void Main()
         {
-            // ---------- Create a workbook and sample data ----------
-            Workbook workbook = new Workbook(); // create
+            // ---------- Create a new workbook ----------
+            Workbook workbook = new Workbook();
             Worksheet dataSheet = workbook.Worksheets[0];
-            Cells cells = dataSheet.Cells;
 
-            // Sample data for pivot table (Fruit, Sales)
-            cells["A1"].PutValue("Fruit");
-            cells["B1"].PutValue("Sales");
-            string[] fruits = { "Apple", "Banana", "Orange", "Grape", "Kiwi" };
-            int[] sales = { 120, 80, 150, 60, 90 };
-            for (int i = 0; i < fruits.Length; i++)
-            {
-                cells[i + 1, 0].PutValue(fruits[i]);   // Column A
-                cells[i + 1, 1].PutValue(sales[i]);   // Column B
-            }
+            // Populate sample data for the pivot table
+            dataSheet.Cells["A1"].Value = "Fruit";
+            dataSheet.Cells["A2"].Value = "Apple";
+            dataSheet.Cells["A3"].Value = "Orange";
+            dataSheet.Cells["A4"].Value = "Banana";
+            dataSheet.Cells["A5"].Value = "Apple";
+            dataSheet.Cells["A6"].Value = "Banana";
+
+            dataSheet.Cells["B1"].Value = "Sales";
+            dataSheet.Cells["B2"].Value = 120;
+            dataSheet.Cells["B3"].Value = 150;
+            dataSheet.Cells["B4"].Value = 200;
+            dataSheet.Cells["B5"].Value = 130;
+            dataSheet.Cells["B6"].Value = 210;
 
             // ---------- Create a pivot table ----------
-            int pivotIndex = dataSheet.PivotTables.Add("A1:B6", "D3", "FruitPivot");
-            PivotTable pivot = dataSheet.PivotTables[pivotIndex];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Fruit column
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Sales column
+            int pivotIdx = dataSheet.PivotTables.Add("A1:B6", "D2", "FruitPivot");
+            PivotTable pivot = dataSheet.PivotTables[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // ---------- Add a slicer linked to the pivot table ----------
-            int slicerIndex = dataSheet.Slicers.Add(pivot, "F3", "Fruit");
-            Slicer slicer = dataSheet.Slicers[slicerIndex];
+            // ---------- Add a slicer linked to the pivot ----------
+            int slicerIdx = dataSheet.Slicers.Add(pivot, "F2", "Fruit");
+            Slicer slicer = dataSheet.Slicers[slicerIdx];
             slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
 
-            // ---------- Load external CSV containing items to select ----------
-            // CSV format: one column with fruit names to be selected, e.g.:
+            // ---------- Load external CSV containing values to be selected ----------
+            // CSV format: each line contains a fruit name to select, e.g.
             // Apple
-            // Orange
+            // Banana
             string csvPath = "filter.csv";
-            HashSet<string> itemsToSelect = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> valuesToSelect = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             if (File.Exists(csvPath))
             {
                 foreach (string line in File.ReadAllLines(csvPath))
                 {
                     string trimmed = line.Trim();
                     if (!string.IsNullOrEmpty(trimmed))
-                        itemsToSelect.Add(trimmed);
+                        valuesToSelect.Add(trimmed);
                 }
             }
 
-            // ---------- Set slicer cache items based on CSV ----------
+            // ---------- Set slicer cache items selection based on CSV ----------
             SlicerCacheItemCollection cacheItems = slicer.SlicerCache.SlicerCacheItems;
             for (int i = 0; i < cacheItems.Count; i++)
             {
                 SlicerCacheItem item = cacheItems[i];
-                // Select the item if its value exists in the CSV list; otherwise deselect
-                item.Selected = itemsToSelect.Contains(item.Value);
+                // Select the item if its value exists in the CSV list
+                item.Selected = valuesToSelect.Contains(item.Value);
             }
 
-            // ---------- Refresh the slicer (also refreshes the pivot table) ----------
+            // ---------- Refresh the slicer (also refreshes the linked pivot table) ----------
             slicer.Refresh();
 
             // ---------- Save the workbook ----------
-            workbook.Save("SlicerCsvDemo.xlsx"); // save
+            workbook.Save("SlicerCsvDemo.xlsx");
         }
     }
 }

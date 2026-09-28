@@ -1,70 +1,67 @@
-// Title: Find cells containing "Total" in range A1:C30 using Aspose.Cells FindOptions (C#)
-// Description: Creates a workbook, optionally fills sample data, defines a CellArea for A1:C30, configures FindOptions to search cell values with a Contains match, and uses Worksheet.Cells.Find to locate the first occurrence of "Total" within the specified range, then outputs the address and saves the file.
-// Keywords: Aspose.Cells | FindOptions | C# | search range | find text | Excel worksheet | CellArea | Find method | contains match | Total label
-// Common Searches: Aspose.Cells find text in specific range C# | How to use FindOptions to locate "Total" in Excel | Search cells A1 to C30 for a substring with Aspose.Cells | C# code to find first occurrence of a word in a worksheet area
-// Developer Intent: Locate the first cell that contains the word "Total" inside the A1:C30 range of a worksheet using Aspose.Cells for .NET.
-// Use Cases: Validate that a generated report includes a "Total" label within the expected rows before export. | Retrieve the row and column of the "Total" cell to drive subsequent calculations or data aggregation. | Apply conditional formatting or data validation to any cell that contains the word "Total" after it is found.
-// AI Prompts: Generate C# code with Aspose.Cells that returns all cell addresses containing "Total" in the range A1:C30. | Explain how to modify FindOptions for a case‑insensitive search of "total" across an entire worksheet. | Show how to iterate through multiple matches of "Total" using FindNext with the same FindOptions configuration.
+// Title: Find the text "Total" in cells A1:C30 using Aspose.Cells FindOptions in C#
+// AI Prompts: Use FindOptions to locate the cell that contains the word "Total" within the range A1:C30 and return its address. | Modify the code to search for a different keyword (e.g., "Subtotal") while keeping the search limited to the same A1:C30 range. | Change LookInType to LookInType.Formulas to search for "Total" inside formulas in the defined range.
+// Common Searches: Aspose.Cells C# find specific text inside a defined range with FindOptions | how to limit Aspose.Cells Find search to cells A1:C30 | validate that a cell found by Find is inside a given range using Aspose.Cells | search for a string in Excel worksheet range using Aspose.Cells FindOptions C# | Aspose.Cells LookInType values vs formulas example
+// Tags: Aspose.Cells FindOptions search within range | C# locate text in Excel cells using Aspose.Cells | validate found cell inside specified range Aspose.Cells | Aspose.Cells LookInType values search | Excel cell address retrieval Aspose.Cells C#
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsFindTotalDemo
+namespace AsposeCellsExample
 {
-    // Creates a workbook, optionally fills sample data, defines a CellArea for A1:C30, configures FindOptions to search cell values with a Contains match, and uses Worksheet.Cells.Find to locate the first occurrence of "Total" within the specified range, then outputs the address and saves the file.
+    // The example creates a workbook, defines the range A1:C30, configures FindOptions to look in cell values, searches for the text "Total" starting from the top‑left cell of the range, verifies that the found cell lies within the defined range, and outputs the cell address or a not‑found message.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // (Optional) Populate some data for demonstration
-            worksheet.Cells["A1"].PutValue("Item");
-            worksheet.Cells["B1"].PutValue("Quantity");
-            worksheet.Cells["C1"].PutValue("Price");
-            worksheet.Cells["A2"].PutValue("Total");
-            worksheet.Cells["B2"].PutValue(150);
-            worksheet.Cells["C2"].PutValue(12.5);
-            worksheet.Cells["A10"].PutValue("Grand Total");
-            worksheet.Cells["B10"].PutValue(300);
-            worksheet.Cells["C10"].PutValue(25.0);
-
-            // Configure find options
-            FindOptions findOptions = new FindOptions
+            try
             {
-                LookInType = LookInType.Values,      // Search in cell values
-                LookAtType = LookAtType.Contains,    // Match if the cell contains the search text
-                SearchBackward = false,              // Search forward
-                SearchOrderByRows = true             // Row‑wise search
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the search range A1:C30 (zero‑based indices)
-            CellArea searchArea = new CellArea
-            {
-                StartRow = 0,    // Row 1
-                StartColumn = 0, // Column A
-                EndRow = 29,     // Row 30
-                EndColumn = 2    // Column C
-            };
-            findOptions.SetRange(searchArea);
+                // Define the search range A1:C30
+                AsposeRange searchRange = worksheet.Cells.CreateRange("A1:C30");
 
-            // Perform the search for the text "Total"
-            Cell foundCell = worksheet.Cells.Find("Total", null, findOptions);
+                // Starting cell for the search (top‑left cell of the range)
+                Cell startCell = worksheet.Cells[searchRange.FirstRow, searchRange.FirstColumn];
 
-            // Output the result
-            if (foundCell != null)
-            {
-                Console.WriteLine($"Found \"Total\" at cell {foundCell.Name} (Row {foundCell.Row + 1}, Column {foundCell.Column + 1})");
+                // Set up FindOptions to search within cell values
+                FindOptions findOptions = new FindOptions
+                {
+                    LookInType = LookInType.Values
+                };
+
+                // Perform the search for the text "Total"
+                Cell foundCell = worksheet.Cells.Find("Total", startCell, findOptions);
+
+                // Verify that the found cell lies within the defined range
+                bool withinRange = false;
+                if (foundCell != null)
+                {
+                    int lastRow = searchRange.FirstRow + searchRange.RowCount - 1;
+                    int lastColumn = searchRange.FirstColumn + searchRange.ColumnCount - 1;
+                    withinRange = foundCell.Row >= searchRange.FirstRow && foundCell.Row <= lastRow &&
+                                  foundCell.Column >= searchRange.FirstColumn && foundCell.Column <= lastColumn;
+                }
+
+                // Output the result
+                if (foundCell != null && withinRange)
+                {
+                    Console.WriteLine($"Found \"Total\" at cell: {foundCell.Name}");
+                }
+                else
+                {
+                    Console.WriteLine("The text \"Total\" was not found in the specified range.");
+                }
+
+                // (Optional) Save the workbook if needed
+                // workbook.Save("Output.xlsx");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("The text \"Total\" was not found within the specified range.");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook (optional, demonstrates lifecycle compliance)
-            workbook.Save("FindTotalDemo.xlsx");
         }
     }
 }

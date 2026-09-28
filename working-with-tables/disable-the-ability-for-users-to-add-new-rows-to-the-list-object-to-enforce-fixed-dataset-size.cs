@@ -1,60 +1,61 @@
-// Title: Aspose.Cells .NET – Disable Row Insertion in a ListObject (Table) via Worksheet Protection
-// Description: Creates an Excel workbook, defines a ListObject over a range, and locks the table size by setting worksheet protection AllowInsertingRow to false with a password. The resulting file is a fixed‑size table that end‑users cannot expand.
-// Keywords: Aspose.Cells disable row insertion | ListObject protection .NET | prevent adding rows Aspose.Cells | AllowInsertingRow false | Excel table lock Aspose | worksheet protection Aspose.Cells
-// Common Searches: how to stop users adding rows to a ListObject in Aspose.Cells | Aspose.Cells set AllowInsertingRow false | protect worksheet to block row insertion .NET | fixed size table Aspose.Cells example | disable table row addition programmatically
-// Developer Intent: The developer needs to prevent end‑users from inserting new rows into an Excel ListObject while keeping the rest of the worksheet editable.
-// Use Cases: Distribute a template where the data range must remain unchanged. | Enforce data integrity by locking table size in a shared workbook. | Create a reporting sheet that allows edits but forbids row expansion.
-// AI Prompts: Show how to lock a ListObject size in Aspose.Cells for .NET without disabling other edits. | Provide code that protects a worksheet and sets AllowInsertingRow to false for a specific table. | Explain how to create a fixed‑size Excel table using Aspose.Cells and prevent row insertion.
+// Title: How to lock an Excel table (ListObject) to prevent users from adding rows with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to protect a worksheet and disable row insertion for a specific ListObject. | Show how to apply worksheet protection that blocks adding rows to an Excel table while still allowing other edits. | Generate an example that saves a workbook after preventing expansion of a ListObject in C#. | Provide a snippet that sets a password‑protected worksheet protection to enforce a fixed table size with Aspose.Cells.
+// Common Searches: Aspose.Cells C# prevent users from adding rows to an Excel table | How to disable row insertion in a ListObject with Aspose.Cells .NET | Lock Excel table size using worksheet protection in Aspose.Cells | C# code to stop expanding a ListObject after loading a workbook with Aspose.Cells | Set worksheet protection to block table row addition in Aspose.Cells for .NET
+// Tags: Aspose.Cells disable ListObject row addition | C# enforce fixed Excel table size | apply sheet lock to stop table growth | Aspose.Cells lock table expansion | prevent table row insertion .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables; // Required for ListObject
 
-namespace AsposeCellsExamples
+// The example loads an existing workbook, locates the first ListObject (Excel table), applies full worksheet protection to block row insertion (including table expansion), optionally sets a password, and saves the protected workbook to a new file.
+class DisableListObjectRowAddition
 {
-    // Creates an Excel workbook, defines a ListObject over a range, and locks the table size by setting worksheet protection AllowInsertingRow to false with a password. The resulting file is a fixed‑size table that end‑users cannot expand.
-    public class DisableListObjectRowInsertion
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one ListObject (Excel Table)
+            if (sheet.ListObjects.Count == 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Warning: No tables (ListObjects) were found on the first worksheet.");
             }
+            else
+            {
+                // Retrieve the first ListObject (Excel Table) on the worksheet
+                ListObject table = sheet.ListObjects[0];
+                // Additional table-specific logic could be placed here if needed
+            }
+
+            // Protect the worksheet to prevent row insertion and other modifications
+            sheet.Protect(ProtectionType.All);
+            // Optionally, set a password for the protection
+            // sheet.Protection.SetPassword("yourPassword");
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the list object (table)
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Name");
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue("Alice");
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue("Bob");
-
-            // Add a ListObject (table) covering the data range A1:B3, with headers
-            int listIndex = worksheet.ListObjects.Add("A1", "B3", true);
-            ListObject table = worksheet.ListObjects[listIndex];
-
-            // Protect the worksheet and disallow row insertion while protected
-            Protection protection = worksheet.Protection;
-            protection.AllowInsertingRow = false; // Disable adding new rows
-            protection.Password = "securePassword";
-            worksheet.Protect(ProtectionType.All);
-
-            // Save the workbook
-            workbook.Save("FixedSizeListObject.xlsx", SaveFormat.Xlsx);
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

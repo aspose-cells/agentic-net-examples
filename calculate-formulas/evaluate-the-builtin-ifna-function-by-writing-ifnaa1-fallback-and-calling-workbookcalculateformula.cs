@@ -1,55 +1,37 @@
-// Title: Aspose.Cells C# Example: IFNA Formula with Workbook.CalculateFormula
-// Description: Demonstrates how to set an IFNA formula in cell B1, clear or populate cell A1, recalculate the workbook with Workbook.CalculateFormula, and read the fallback string or numeric result using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | IFNA function | C# | .NET | Workbook.CalculateFormula | formula evaluation | fallback value | Excel automation | clear cell content | unit test example
-// Common Searches: Aspose.Cells IFNA example C# | how to use Workbook.CalculateFormula | IFNA fallback string Aspose.Cells | recalculate workbook after changing cell value | read formula result Aspose.Cells C#
-// Developer Intent: Show how IFNA returns a default value when the referenced cell is empty and returns the cell's actual value when it contains data, using Aspose.Cells formula calculation.
-// Use Cases: Validate IFNA handling of missing or numeric data in generated Excel reports. | Replace empty cells with a default string while programmatically building workbooks. | Create automated tests that modify a source cell, invoke CalculateFormula, and verify the IFNA result.
-// AI Prompts: Generate a C# snippet that inserts an IFNA formula with Aspose.Cells, runs Workbook.CalculateFormula, and prints the result. | Explain how to clear a cell's contents in Aspose.Cells before recalculating an IFNA formula. | Provide a unit‑test code sample that asserts IFNA returns the fallback string and then the actual value after updating the source cell.
+// Title: How to evaluate the IFNA function in Aspose.Cells for .NET using Workbook.CalculateFormula
+// AI Prompts: Create a C# example that places a numeric value in A1 and an #N/A error in A2, assigns IFNA formulas to B1 and B2, runs Workbook.CalculateFormula, and prints the resulting values. | Generate code that demonstrates IFNA fallback handling in Aspose.Cells by setting cell formulas, invoking the calculation engine, and retrieving the evaluated results.
+// Common Searches: aspocells c# IFNA formula example with CalculateFormula | how to handle #N/A errors using IFNA in Aspose.Cells .NET | C# workbook.CalculateFormula fallback value for NA error
+// Tags: IFNA formula evaluation Aspose.Cells | Workbook.CalculateFormula with conditional fallback | fallback handling #N/A error C# | set cell formula IFNA Aspose.Cells | evaluate conditional formulas .NET
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsIFNADemo
 {
-    // Demonstrates how to set an IFNA formula in cell B1, clear or populate cell A1, recalculate the workbook with Workbook.CalculateFormula, and read the fallback string or numeric result using Aspose.Cells for .NET.
-    public class Program
+    // The program creates a new workbook, puts a numeric value in A1 and an #N/A error in A2, assigns IFNA formulas to B1 and B2 (returning the original value or a fallback text), calls Workbook.CalculateFormula to evaluate all formulas, and prints the results (42 and "fallback").
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Scenario 1: A1 is empty, IFNA should return the fallback string
-                // Clear A1 by putting an empty string (Aspose.Cells has no ClearContents method)
-                cells["A1"].PutValue(string.Empty);
-                cells["B1"].Formula = "=IFNA(A1, \"fallback\")";
+            // Example 1: A1 contains a valid value, IFNA should return that value
+            cells["A1"].PutValue(42);
+            cells["B1"].Formula = "=IFNA(A1, \"fallback\")";
 
-                // Calculate all formulas in the workbook
-                workbook.CalculateFormula();
+            // Example 2: A2 contains an #N/A error, IFNA should return the fallback text
+            cells["A2"].Formula = "=NA()";               // Generates #N/A error
+            cells["B2"].Formula = "=IFNA(A2, \"fallback\")";
 
-                // Display the result of IFNA when A1 is empty
-                Console.WriteLine("B1 (A1 empty) = " + cells["B1"].StringValue); // Expected: fallback
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-                // Scenario 2: A1 contains a numeric value, IFNA should return that value
-                cells["A1"].PutValue(42);
-
-                // Recalculate after changing the input value
-                workbook.CalculateFormula();
-
-                // Display the result of IFNA when A1 has a value
-                Console.WriteLine("B1 (A1 = 42) = " + cells["B1"].StringValue); // Expected: 42
-
-                // (Optional) Save the workbook to verify the formula and results in Excel
-                // workbook.Save("IFNADemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Output the results
+            Console.WriteLine("B1 (A1 is valid): " + cells["B1"].Value);      // Expected: 42
+            Console.WriteLine("B2 (A2 is #N/A): " + cells["B2"].Value);      // Expected: fallback
         }
     }
 }

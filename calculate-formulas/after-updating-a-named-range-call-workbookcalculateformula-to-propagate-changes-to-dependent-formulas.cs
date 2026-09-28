@@ -1,17 +1,14 @@
-// Title: Aspose.Cells .NET: Update a Named Range and Recalculate Dependent Formulas with Workbook.CalculateFormula
-// Description: Demonstrates how to create a workbook, define a named range, use it in a SUM formula, expand the range, modify the Name.RefersTo property, invoke Workbook.CalculateFormula to refresh all dependent calculations, and finally save the file.
-// Keywords: Aspose.Cells | C# named range update | Workbook.CalculateFormula | recalculate formulas after name change | expand named range sum | Aspose.Cells .NET example | Name.RefersTo property
-// Common Searches: Aspose.Cells recalculate after named range modification | How to refresh formulas when Name.RefersTo changes | C# update named range and recalc with Aspose.Cells | Workbook.CalculateFormula usage example | Expand named range in Aspose.Cells .NET
-// Developer Intent: Refresh all formulas that reference a named range after the range definition has been altered.
-// Use Cases: Add new cells to an existing named range and automatically update SUM or other formulas that use the name. | Programmatically change the RefersTo expression of a Name object and ensure calculation results stay current. | Create, modify, and persist a workbook where formula results depend on dynamic named ranges.
-// AI Prompts: Write C# code that changes a Name.RefersTo value in an Aspose.Cells workbook and calls Workbook.CalculateFormula to update dependent cells. | Show an example of expanding a named range from A1:A3 to A1:A4 and recalculating a SUM formula using Aspose.Cells for .NET. | Explain the effect of Workbook.CalculateFormula after modifying a named range in Aspose.Cells and how it impacts cached formula results.
+// Title: Update a named range and recalculate dependent formulas with Aspose.Cells for .NET (C#)
+// AI Prompts: Provide C# code that changes a Name object's RefersTo property to a new range and then invokes Workbook.CalculateFormula to refresh all dependent formulas. | Create a complete Aspose.Cells example that defines a named range, uses it in a formula, updates the range, recalculates the workbook, and saves the file. | Explain the steps required to propagate changes from an updated named range to formulas using Workbook.CalculateFormula in a .NET application.
+// Common Searches: Aspose.Cells recalculate formulas after updating a named range in C# | C# Workbook.CalculateFormula after changing Name.RefersTo | How to refresh dependent cells when a named range is modified using Aspose.Cells | Example of updating an Excel named range and recalculating SUM formula with Aspose.Cells .NET
+// Tags: modify named range Aspose.Cells C# | Workbook.CalculateFormula usage | refresh dependent formulas after name change | Aspose.Cells update Name.RefersTo | save workbook after recalculation .NET
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsNamedRangeUpdateDemo
 {
-    // Demonstrates how to create a workbook, define a named range, use it in a SUM formula, expand the range, modify the Name.RefersTo property, invoke Workbook.CalculateFormula to refresh all dependent calculations, and finally save the file.
+    // // Example that creates a workbook, defines a named range, uses it in a SUM formula, updates the range reference, calls Workbook.CalculateFormula to recalculate dependent cells, and saves the result.
     class Program
     {
         static void Main()
@@ -21,33 +18,35 @@ namespace AsposeCellsNamedRangeUpdateDemo
 
             // Access the first worksheet
             Worksheet sheet = wb.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate some sample data that will be referenced by a named range
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].PutValue(30);
+            // Populate some sample data that will be referenced by the named range
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["A3"].PutValue(30);
+            cells["A4"].PutValue(40);
+            cells["A5"].PutValue(50);
 
-            // Create a named range "MyRange" that refers to A1:A3
+            // Add a named range that initially refers to A1:A3
             int nameIndex = wb.Worksheets.Names.Add("MyRange");
             Name myRange = wb.Worksheets.Names[nameIndex];
             myRange.RefersTo = "=Sheet1!$A$1:$A$3";
 
-            // Use the named range in a formula (e.g., sum of the range)
-            sheet.Cells["B1"].Formula = "=SUM(MyRange)";
+            // Use the named range in a formula (sum of the range)
+            cells["B1"].Formula = "=SUM(MyRange)";
 
-            // Calculate formulas so that B1 reflects the initial sum (30)
-            wb.CalculateFormula();
+            // Calculate formulas before the named range change
+            wb.CalculateFormula(); // lifecycle rule: calculate
+            Console.WriteLine("Sum before range update: " + cells["B1"].Value); // Expected 60 (10+20+30)
 
-            Console.WriteLine("Initial sum (B1): " + sheet.Cells["B1"].Value); // Expected: 60
-
-            // Update the named range to include an additional cell (A4)
-            sheet.Cells["A4"].PutValue(40);               // Add new data
-            myRange.RefersTo = "=Sheet1!$A$1:$A$4";       // Change the RefersTo formula
+            // Update the named range to refer to A1:A5
+            myRange.RefersTo = "=Sheet1!$A$1:$A$5";
 
             // Propagate the change by recalculating formulas (required after named range update)
-            wb.CalculateFormula();
+            wb.CalculateFormula(); // lifecycle rule: calculate
 
-            Console.WriteLine("Updated sum (B1) after expanding named range: " + sheet.Cells["B1"].Value); // Expected: 100
+            // Output the new result
+            Console.WriteLine("Sum after range update: " + cells["B1"].Value); // Expected 150 (10+20+30+40+50)
 
             // Save the workbook (lifecycle rule: save)
             wb.Save("NamedRangeUpdateResult.xlsx");

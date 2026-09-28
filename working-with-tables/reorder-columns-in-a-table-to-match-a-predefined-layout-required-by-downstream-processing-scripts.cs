@@ -1,86 +1,133 @@
-// Title: Reorder Excel worksheet columns and keep ListObject intact with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, creates a new sheet, copies columns to a custom order using Cells.CopyColumns, replicates any existing ListObject (Excel table) with updated headers, removes the original sheet, renames the reordered sheet, and saves the result.
-// Keywords: Aspose.Cells C# reorder columns | copy columns Excel Aspose.Cells | preserve ListObject after column reorder | Excel table column order Aspose | worksheet rename Aspose.Cells | copy rows and columns Aspose.Cells | custom column index array Aspose | Excel automation .NET
-// Common Searches: Aspose.Cells reorder worksheet columns C# | how to keep Excel table when reordering columns with Aspose | copy columns to new sheet Aspose.Cells .NET | rename sheet after column rearrangement Aspose | preserve ListObject after column copy Aspose.Cells
-// Developer Intent: Rearrange specific columns in a worksheet, maintain any embedded Excel table, and replace the original sheet with the reordered version.
-// Use Cases: Reorder columns C, A, D, B in a source workbook and export the reordered file. | Move an existing ListObject to a new sheet while changing column order, keeping the table name and headers correct. | Prepare data files for downstream processes that require a fixed column layout, removing the old sheet and renaming the new one.
-// AI Prompts: Write C# code with Aspose.Cells that reorders worksheet columns based on an integer array and preserves any ListObject on the sheet. | Show how to copy a table range to a new worksheet, update its column names after reordering, and delete the original worksheet using Aspose.Cells. | Explain how to handle multiple ListObjects on a sheet when reordering columns with Aspose.Cells for .NET.
+// Title: Reorder Excel ListObject columns to a specific header sequence using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx workbook, extract the first ListObject into a DataTable, rearrange its columns according to a predefined header array, and write the reordered data back with Aspose.Cells in C#. | Clear the original table range, insert headers in a new order, populate rows from the reordered DataTable, and resize the ListObject to fit the updated layout using Aspose.Cells. | Create a C# routine that checks for required column names, changes the column order of an Excel table, and saves the modified workbook to a new file with Aspose.Cells.
+// Common Searches: C# Aspose.Cells reorder columns in an Excel table based on custom header list | How to change column order of a ListObject in an .xlsx file using Aspose.Cells .NET | Resize Excel ListObject after modifying its data with Aspose.Cells | Move Excel table columns to match a predefined layout programmatically in C# | Validate column names before reordering an Excel table using Aspose.Cells
+// Tags: Aspose.Cells rearrange ListObject column order | Excel table column ordering C# | DataTable column mapping Aspose.Cells | Resize ListObject after data rewrite | Validate Excel table headers with Aspose.Cells
 
 using System;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsColumnReorder
+// The example loads an .xlsx workbook, accesses the first worksheet's ListObject, extracts its data into a DataTable, rearranges columns to match a predefined header sequence (ID, Name, Date, Amount), clears the original range, writes the reordered headers and rows back, resizes the table to the new layout, and saves the workbook.
+class ReorderTableColumns
 {
-    // Loads a workbook, creates a new sheet, copies columns to a custom order using Cells.CopyColumns, replicates any existing ListObject (Excel table) with updated headers, removes the original sheet, renames the reordered sheet, and saves the result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define file paths
+        string inputPath = @"C:\Data\InputWorkbook.xlsx";
+        string outputPath = @"C:\Data\OutputWorkbook.xlsx";
+
+        // Verify input file exists
+        if (!File.Exists(inputPath))
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("SourceData.xlsx");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Assume the data to be reordered is on the first worksheet
-            Worksheet sourceSheet = workbook.Worksheets[0];
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Create a new worksheet that will hold the columns in the required order
-            Worksheet reorderedSheet = workbook.Worksheets.Add("Reordered");
+            // Access the first worksheet (adjust as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the desired column order (0‑based indexes of the source columns)
-            // Example: new order = Column C, Column A, Column D, Column B
-            int[] desiredOrder = new int[] { 2, 0, 3, 1 };
-
-            // Copy each column from the source sheet to the new sheet according to the desired order
-            for (int destCol = 0; destCol < desiredOrder.Length; destCol++)
+            // Ensure the worksheet contains at least one table (ListObject)
+            if (sheet.ListObjects.Count == 0)
             {
-                int srcCol = desiredOrder[destCol];
-                // Copy a single column (columnNumber = 1) from source to destination
-                reorderedSheet.Cells.CopyColumns(
-                    sourceSheet.Cells,   // source cells
-                    srcCol,              // source column index
-                    destCol,             // destination column index
-                    1);                  // number of columns to copy
+                Console.WriteLine("No tables found on the worksheet.");
+                return;
             }
 
-            // If the source sheet contains a ListObject (table), copy it to the new sheet
-            // and update its column names so they match the header cells.
-            if (sourceSheet.ListObjects.Count > 0)
+            // Use the first table as the target
+            ListObject table = sheet.ListObjects[0];
+
+            // Desired column order (must match column names in the table header)
+            string[] desiredOrder = { "ID", "Name", "Date", "Amount" };
+
+            // Determine table boundaries
+            int firstRow = table.StartRow;          // Header row index
+            int firstCol = table.StartColumn;
+
+            // DataRange includes only data rows (no header)
+            int dataRows = table.DataRange.RowCount;
+            int totalRows = dataRows + 1;           // Include header row
+            int totalCols = table.DataRange.ColumnCount;
+
+            // Load the table data into a DataTable
+            DataTable sourceTable = new DataTable();
+
+            // Add columns using header values
+            for (int c = 0; c < totalCols; c++)
             {
-                // Copy the entire table range (including headers) to the new sheet
-                ListObject sourceTable = sourceSheet.ListObjects[0];
-                int firstRow = sourceTable.StartRow;
-                int firstCol = sourceTable.StartColumn;
-                int totalRows = sourceTable.EndRow - firstRow + 1;
-                int totalCols = sourceTable.EndColumn - firstCol + 1;
-
-                // Copy the range that contains the table
-                reorderedSheet.Cells.CopyRows(
-                    sourceSheet.Cells,
-                    firstRow,
-                    firstRow,
-                    totalRows);
-
-                // Re‑create the table on the reordered sheet (same size, with headers)
-                int newTableIndex = reorderedSheet.ListObjects.Add(
-                    firstRow,
-                    0,                     // destination column is now 0 after reordering
-                    firstRow + totalRows - 1,
-                    desiredOrder.Length - 1,
-                    true);
-                ListObject newTable = reorderedSheet.ListObjects[newTableIndex];
-                newTable.DisplayName = sourceTable.DisplayName;
-
-                // Ensure column names reflect the header cells after reordering
-                newTable.UpdateColumnName();
+                string header = sheet.Cells[firstRow, firstCol + c].StringValue;
+                sourceTable.Columns.Add(header);
             }
 
-            // Remove the original sheet and rename the reordered sheet to the original name
-            int sourceIndex = sourceSheet.Index;
-            workbook.Worksheets.RemoveAt(sourceIndex);
-            reorderedSheet.Name = "Sheet1";
+            // Add rows (skip header)
+            for (int r = 1; r < totalRows; r++)
+            {
+                DataRow row = sourceTable.NewRow();
+                for (int c = 0; c < totalCols; c++)
+                {
+                    row[c] = sheet.Cells[firstRow + r, firstCol + c].Value;
+                }
+                sourceTable.Rows.Add(row);
+            }
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("ReorderedData.xlsx");
+            // Create a new DataTable with columns in the desired order
+            DataTable reorderedTable = new DataTable();
+
+            foreach (string colName in desiredOrder)
+            {
+                if (!sourceTable.Columns.Contains(colName))
+                {
+                    Console.WriteLine($"Column '{colName}' not found in source table.");
+                    return;
+                }
+                reorderedTable.Columns.Add(colName, sourceTable.Columns[colName].DataType);
+            }
+
+            // Populate rows according to the new column order
+            foreach (DataRow srcRow in sourceTable.Rows)
+            {
+                DataRow newRow = reorderedTable.NewRow();
+                foreach (string colName in desiredOrder)
+                {
+                    newRow[colName] = srcRow[colName];
+                }
+                reorderedTable.Rows.Add(newRow);
+            }
+
+            // Clear the original table range (including header)
+            sheet.Cells.CreateRange(firstRow, firstCol, totalRows, totalCols).ClearContents();
+
+            // Write the reordered data back to the worksheet (headers first)
+            for (int c = 0; c < desiredOrder.Length; c++)
+            {
+                sheet.Cells[firstRow, firstCol + c].PutValue(desiredOrder[c]);
+            }
+
+            // Then write data rows
+            for (int r = 0; r < reorderedTable.Rows.Count; r++)
+            {
+                for (int c = 0; c < desiredOrder.Length; c++)
+                {
+                    sheet.Cells[firstRow + 1 + r, firstCol + c].PutValue(reorderedTable.Rows[r][c]);
+                }
+            }
+
+            // Resize the table to match the new layout (hasHeaders = true)
+            table.Resize(firstRow, firstCol, totalRows, totalCols, true);
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine("Columns reordered and workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

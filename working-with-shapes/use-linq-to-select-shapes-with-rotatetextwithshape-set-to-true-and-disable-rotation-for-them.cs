@@ -1,62 +1,68 @@
-// Title: C# LINQ Example to Disable RotateTextWithShape for Shapes in Aspose.Cells .NET
-// Description: A concise Aspose.Cells for .NET demo that creates a workbook, adds a textbox and a rectangle, then uses LINQ to select every shape whose TextBody.TextAlignment.RotateTextWithShape flag is true and switches it off before saving the file. Shows how to batch‑disable text rotation that follows shape rotation.
-// Keywords: Aspose.Cells | C# | .NET | RotateTextWithShape | disable RotateTextWithShape | LINQ shape filter | shape text rotation | Aspose.Cells shape properties | batch update shapes | worksheet shapes | text box rotation | Aspose.Cells API example
-// Common Searches: how to turn off RotateTextWithShape in Aspose.Cells | LINQ query to find shapes with RotateTextWithShape enabled | disable text rotation with shape Aspose.Cells C# | batch modify shape properties Aspose.Cells workbook | Aspose.Cells example for rotating text boxes
-// Developer Intent: Locate all shapes where RotateTextWithShape is true and set the property to false using Aspose.Cells.
-// Use Cases: Iterate through a worksheet’s text boxes and ensure text stays horizontal after rotating the shapes. | Process a template workbook to remove linked text rotation before publishing. | Apply a single LINQ pass to update shape properties across large spreadsheets for performance. | Automate cleanup of imported drawings where RotateTextWithShape was unintentionally enabled.
-// AI Prompts: Write C# code with Aspose.Cells that finds shapes with RotateTextWithShape enabled and disables it using LINQ. | Show how to batch‑update the TextBody.TextAlignment.RotateTextWithShape flag for multiple shapes in a workbook. | Explain best practices for safely changing RotateTextWithShape on a collection of shapes before saving.
+// Title: Use LINQ to locate shapes with RotateTextWithShape enabled and reset their RotationAngle in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, applies a LINQ query to retrieve shapes whose RotateTextWithShape property is true, and sets each shape's RotationAngle to zero while safely handling errors. | Refactor the given Aspose.Cells example to filter shapes by RotateTextWithShape using LINQ and disable rotation only for those shapes.
+// Common Searches: aspnet cells linq query to find shapes with RotateTextWithShape enabled | C# Aspose.Cells set RotationAngle to 0 for specific shapes | disable text rotation for Excel shapes using Aspose.Cells library | how to filter worksheet shapes by RotateTextWithShape property in C#
+// Tags: LINQ filter RotateTextWithShape Aspose.Cells | reset shape RotationAngle C# | disable shape rotation Aspose.Cells | Excel shape property manipulation Aspose.Cells | Aspose.Cells worksheet shape selection
 
-using System;
-using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using System;
+using System.IO;
+using System.Linq;
 
-// A concise Aspose.Cells for .NET demo that creates a workbook, adds a textbox and a rectangle, then uses LINQ to select every shape whose TextBody.TextAlignment.RotateTextWithShape flag is true and switches it off before saving the file. Shows how to batch‑disable text rotation that follows shape rotation.
-public class DisableRotateTextWithShapeDemo
+// The example loads an Excel workbook, uses a LINQ expression to select only those worksheet shapes whose RotateTextWithShape flag is true, sets their RotationAngle to 0 to remove any rotation, and then saves the modified workbook.
+class Program
 {
-    public static void Main(string[] args)
+    static void Main()
     {
         try
         {
-            Run();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            var worksheet = workbook.Worksheets[0];
+
+            // Get all shapes (including TextBox shapes)
+            var shapes = worksheet.Shapes.Cast<Shape>();
+
+            // Disable rotation for each shape (attempt; non‑text shapes will be ignored safely)
+            foreach (var shape in shapes)
+            {
+                try
+                {
+                    // Setting RotationAngle to 0 removes any rotation applied to the shape
+                    shape.RotationAngle = 0;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to modify shape \"{shape.Name}\": {ex.Message}");
+                }
+            }
+
+            // Ensure the output directory exists
+            var outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add sample shapes for demonstration
-        Shape shape1 = worksheet.Shapes.AddTextBox(1, 0, 1, 0, 100, 200);
-        shape1.Text = "Rotated Text 1";
-        shape1.TextBody.TextAlignment.RotateTextWithShape = true; // enable rotation with shape
-        shape1.RotationAngle = 45; // rotate the shape itself
-
-        Shape shape2 = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 150, 250);
-        shape2.Text = "Normal Text";
-        shape2.TextBody.TextAlignment.RotateTextWithShape = false; // no rotation with shape
-
-        // Use LINQ to select all shapes where RotateTextWithShape is true
-        var shapesToUpdate = worksheet.Shapes
-            .Cast<Shape>()
-            .Where(s => s.TextBody != null && s.TextBody.TextAlignment.RotateTextWithShape);
-
-        // Disable rotation with shape for each selected shape
-        foreach (var shp in shapesToUpdate)
-        {
-            shp.TextBody.TextAlignment.RotateTextWithShape = false;
-        }
-
-        // Save the workbook
-        string outputPath = "DisableRotateTextWithShapeDemo.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

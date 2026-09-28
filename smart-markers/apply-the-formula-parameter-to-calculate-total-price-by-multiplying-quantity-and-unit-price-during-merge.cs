@@ -1,65 +1,67 @@
-// Title: Apply a Formula to Calculate Total Price with Smart Markers during Data Merge in Aspose.Cells for .NET (C#)
-// Description: C# example that builds a workbook template with smart markers for Quantity and UnitPrice, sets the Total column formula (=A2*B2), merges a DataTable using WorkbookDesigner, enables RepeatFormulasWithSubtotal so the formula repeats for each generated row, recalculates all formulas, and saves the result as MergedWithTotal.xlsx.
-// Keywords: Aspose.Cells | C# | Smart Markers | Excel formula repeat | RepeatFormulasWithSubtotal | WorkbookDesigner | Data merge | Calculate total price | DataTable to Excel | Invoice automation | Excel automation | Total column formula
-// Common Searches: Aspose.Cells repeat formulas after smart marker merge | How to calculate total column with smart markers .NET | WorkbookDesigner RepeatFormulasWithSubtotal example | C# merge DataTable into Excel with formula | Apply formula to each row during smart marker merge
-// Developer Intent: Add a multiplication formula that computes total price for each merged row and evaluate the results automatically.
-// Use Cases: Generate an invoice workbook where each line‑item total is calculated on the fly during data merge. | Create a sales report that lists quantities, unit prices, and automatically derives row‑level totals without manual copying. | Build an order‑summary sheet that repeats pricing formulas for every record imported from a database or CSV file.
-// AI Prompts: Show how to format the Total column as currency after the formulas are calculated. | Provide an example of using multiple smart‑marker tables in one workbook while repeating formulas for each table. | Explain the purpose of RepeatFormulasWithSubtotal and how to achieve the same outcome with manual formula replication.
+// Title: Apply a structured reference formula to compute total price after merging a DataTable with smart markers using Aspose.Cells for .NET
+// AI Prompts: Write C# code that merges a DataTable into an Excel worksheet with smart markers and then adds a Total column that multiplies Quantity and UnitPrice using a structured reference formula. | Show how to assign a formula to a ListObject column after WorkbookDesigner.Process() so each row calculates its total price in Aspose.Cells. | Demonstrate recalculating all formulas and saving the workbook after inserting a calculated Total column into a smart‑marker generated table.
+// Common Searches: asp.net calculate total column with smart markers after workbookdesigner merge | how to set ListColumn.Formula for a listobject created by smart markers in Aspose.Cells | add calculated total field to Excel table generated from a DataTable using Aspose.Cells C# | apply structured reference formula to expanded smart‑marker table in .NET | merge datatable into Excel and compute row total with Aspose.Cells workbookdesigner
+// Tags: smart markers listobject column formula | structured reference total calculation Aspose.Cells | WorkbookDesigner merge datatable with calculated column | C# Aspose.Cells set ListColumn formula | excel total price calculation using Aspose.Cells
 
 using System;
 using System.Data;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsFormulaMergeDemo
+// The example creates a DataTable of products, defines a worksheet template with smart markers, merges the data via WorkbookDesigner, assigns a structured reference formula ([@Quantity]*[@UnitPrice]) to the Total column of the resulting ListObject, recalculates all formulas, and saves the workbook as MergedWithTotal.xlsx.
+class Program
 {
-    // C# example that builds a workbook template with smart markers for Quantity and UnitPrice, sets the Total column formula (=A2*B2), merges a DataTable using WorkbookDesigner, enables RepeatFormulasWithSubtotal so the formula repeats for each generated row, recalculates all formulas, and saves the result as MergedWithTotal.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // 1. Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // 2. Set up the template with smart markers for data merge
-            // Header row
-            sheet.Cells["A1"].PutValue("Quantity");
-            sheet.Cells["B1"].PutValue("UnitPrice");
-            sheet.Cells["C1"].PutValue("Total");
-
-            // Data row with smart markers
-            sheet.Cells["A2"].PutValue("&=$Quantity");      // will be replaced by Quantity column
-            sheet.Cells["B2"].PutValue("&=$UnitPrice");    // will be replaced by UnitPrice column
-
-            // Formula cell – multiply the two columns of the same row
-            // The formula uses relative references; it will be repeated for each merged row
-            sheet.Cells["C2"].Formula = "=A2*B2";
-
-            // 3. Create a DataTable that will be merged into the template
+            // ---------- Create data source ----------
             DataTable dt = new DataTable("Products");
+            dt.Columns.Add("Product", typeof(string));
             dt.Columns.Add("Quantity", typeof(int));
             dt.Columns.Add("UnitPrice", typeof(double));
 
-            dt.Rows.Add(2, 15.5);
-            dt.Rows.Add(5, 9.99);
-            dt.Rows.Add(1, 120.0);
+            dt.Rows.Add("Apple", 5, 1.2);
+            dt.Rows.Add("Banana", 3, 0.8);
+            dt.Rows.Add("Cherry", 10, 0.5);
 
-            // 4. Use WorkbookDesigner to merge the data
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // ---------- Create a workbook template ----------
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+
+            // Smart markers for merging data
+            ws.Cells["A1"].PutValue("&=$Product");
+            ws.Cells["B1"].PutValue("&=$Quantity");
+            ws.Cells["C1"].PutValue("&=$UnitPrice");
+            ws.Cells["D1"].PutValue("Total"); // header for total column
+
+            // Define a table that will expand when data is merged
+            int tableIdx = ws.ListObjects.Add("A1", "D1", true);
+            ListObject table = ws.ListObjects[tableIdx];
+            // Header row is shown by default; explicit setting not required
+
+            // ---------- Merge data using WorkbookDesigner ----------
+            WorkbookDesigner designer = new WorkbookDesigner(wb);
             designer.SetDataSource(dt);
-
-            // Enable repeating of the formula for each generated row
-            designer.RepeatFormulasWithSubtotal = true;
-
-            // Process the template (merge data and repeat formulas)
             designer.Process();
 
-            // 5. Calculate all formulas so that the Total column contains the computed values
-            workbook.CalculateFormula();
+            // ---------- Apply formula to calculate total price ----------
+            // The Total column is the fourth column (index 3) in the table
+            ListColumn totalColumn = table.ListColumns[3];
+            // Structured reference formula: multiply Quantity and UnitPrice for each row
+            totalColumn.Formula = "=[@Quantity]*[@UnitPrice]";
 
-            // 6. Save the resulting workbook (lifecycle rule)
-            workbook.Save("MergedWithTotal.xlsx");
+            // ---------- Calculate all formulas ----------
+            wb.CalculateFormula();
+
+            // ---------- Save the workbook ----------
+            string outputPath = "MergedWithTotal.xlsx";
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

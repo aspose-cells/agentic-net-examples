@@ -1,71 +1,77 @@
-// Title: C# – Custom ISmartMarkerCallBack in Aspose.Cells to Alter Cell Values After Smart‑Marker Merge
-// Description: Shows how to implement ISmartMarkerCallBack for Aspose.Cells (.NET), attach it to WorkbookDesigner, and modify each cell (e.g., prepend a prefix) right after smart‑marker processing and before the workbook is saved.
-// Keywords: Aspose.Cells | C# | ISmartMarkerCallBack | smart marker callback | modify cell after merge | WorkbookDesigner | custom callback | data merge | Excel automation | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells custom smart marker callback C# | How to change cell value after smart marker processing | ISmartMarkerCallBack example | Modify smart marker output before saving workbook | Aspose.Cells .NET data merge callback
-// Developer Intent: Create a callback that receives sheet, row, column indices and table/column names during smart‑marker processing and updates the cell content prior to saving the workbook.
-// Use Cases: Add an audit prefix to every merged value. | Apply conditional text or formatting based on source column data. | Insert status flags or timestamps after data merge. | Replace placeholders with localized strings during export.
-// AI Prompts: Write C# code that implements ISmartMarkerCallBack to prepend "Modified_" to each smart‑marker result and integrates it with WorkbookDesigner. | Provide a step‑by‑step guide for setting up and registering a custom smart‑marker callback in Aspose.Cells for .NET, including data source binding and workbook saving. | Show how to access sheet, row, and column indices inside the Process method to change cell value and apply formatting after smart‑marker processing.
+// Title: Implement ISmartMarkerCallBack in Aspose.Cells for .NET to modify cell values after smart marker processing
+// AI Prompts: Write a C# ISmartMarkerCallBack that prefixes string cells with "Modified-" and multiplies numeric cells by 10 during smart marker processing. | Show how to assign the callback to WorkbookDesigner, bind a DataTable, invoke Process(), and save the workbook with the transformed values.
+// Common Searches: how to apply a custom callback to change smart marker output in Aspose.Cells C# | example of scaling numeric values in smart marker callback Aspose.Cells .NET | prefix text to string cells using ISmartMarkerCallBack after processing | registering ISmartMarkerCallBack with WorkbookDesigner for data table | modify smart marker generated cells before saving workbook Aspose.Cells
+// Tags: ISmartMarkerCallBack cell value transformation Aspose.Cells | prepend string in smart marker callback C# | multiply numeric cells in smart marker processing | register callback with WorkbookDesigner .NET | smart marker post‑processing modification example | Aspose.Cells callback for DataTable binding
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-// Shows how to implement ISmartMarkerCallBack for Aspose.Cells (.NET), attach it to WorkbookDesigner, and modify each cell (e.g., prepend a prefix) right after smart‑marker processing and before the workbook is saved.
-public class MySmartMarkerCallback : ISmartMarkerCallBack
+// The example defines a SmartMarkerCallbackDemo that implements ISmartMarkerCallBack. During the Process() call, each populated smart‑marker cell is accessed via a static workbook context; string cells are prefixed with "Modified-" and numeric cells are multiplied by 10. The callback is attached to WorkbookDesigner, a DataTable is bound, processing is executed, and the resulting workbook is saved.
+public class SmartMarkerCallbackDemo : ISmartMarkerCallBack
 {
-    private readonly Workbook _workbook;
-
-    public MySmartMarkerCallback(Workbook workbook)
-    {
-        _workbook = workbook;
-    }
-
-    // This method is called for each smart marker after it has been processed.
-    // Here we change the cell value to indicate that the callback was executed.
+    // This method is called for each smart marker cell after it has been populated.
     public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
     {
-        Worksheet sheet = _workbook.Worksheets[sheetIndex];
-        Cell cell = sheet.Cells[rowIndex, colIndex];
-        cell.PutValue($"Modified_{tableName}_{columnName}");
+        // Retrieve the workbook that is being processed.
+        Workbook wb = CallbackContext.CurrentWorkbook;
+        if (wb == null) return;
+
+        Worksheet ws = wb.Worksheets[sheetIndex];
+        Cell cell = ws.Cells[rowIndex, colIndex];
+
+        // Example modification:
+        // - If the cell contains a string, prepend "Modified-".
+        // - If the cell contains a numeric value, multiply it by 10.
+        if (cell.Type == CellValueType.IsString)
+        {
+            cell.PutValue("Modified-" + cell.StringValue);
+        }
+        else if (cell.Type == CellValueType.IsNumeric)
+        {
+            cell.PutValue(cell.DoubleValue * 10);
+        }
     }
 }
 
-public class SmartMarkerCallbackDemo
+// Simple static holder to give the callback access to the workbook instance.
+public static class CallbackContext
 {
-    public static void Run()
+    public static Workbook CurrentWorkbook { get; set; }
+}
+
+public class Program
+{
+    public static void Main()
     {
-        // Create a new workbook and place a smart marker in cell A1.
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        ws.Cells["A1"].PutValue("&=Table1.Column1"); // Smart marker syntax
+        // 1. Create a workbook with smart markers.
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("&=$Table.Column1"); // String column
+        sheet.Cells["B1"].PutValue("&=$Table.Column2"); // Numeric column
 
-        // Prepare a simple data source.
-        DataTable dt = new DataTable("Table1");
+        // 2. Prepare a data source.
+        DataTable dt = new DataTable("Table");
         dt.Columns.Add("Column1", typeof(string));
-        dt.Rows.Add("OriginalValue");
+        dt.Columns.Add("Column2", typeof(double));
+        dt.Rows.Add("Item1", 5);
+        dt.Rows.Add("Item2", 10);
 
-        // Set up the WorkbookDesigner, assign the data source and the callback.
+        // 3. Store the workbook reference for the callback.
+        CallbackContext.CurrentWorkbook = workbook;
+
+        // 4. Set up the WorkbookDesigner with the callback.
         WorkbookDesigner designer = new WorkbookDesigner
         {
-            Workbook = wb,
-            CallBack = new MySmartMarkerCallback(wb)
+            Workbook = workbook,
+            CallBack = new SmartMarkerCallbackDemo()
         };
+
+        // 5. Bind the data source and process smart markers.
         designer.SetDataSource(dt);
+        designer.Process(); // Callback runs during this call.
 
-        // Process the smart markers. The callback will modify the cell value.
-        designer.Process(true);
-
-        // Save the resulting workbook.
-        wb.Save("SmartMarkerCallbackResult.xlsx");
-    }
-}
-
-// Entry point for demonstration.
-class Program
-{
-    static void Main()
-    {
-        SmartMarkerCallbackDemo.Run();
-        Console.WriteLine("Workbook saved as SmartMarkerCallbackResult.xlsx");
+        // 6. Save the workbook after processing and callback modifications.
+        workbook.Save("SmartMarkerCallbackResult.xlsx");
     }
 }

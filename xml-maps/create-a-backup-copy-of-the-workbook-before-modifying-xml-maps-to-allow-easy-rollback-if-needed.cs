@@ -1,85 +1,66 @@
-// Title: C# – Backup an Excel workbook with Aspose.Cells before modifying XML maps
-// Description: Demonstrates how to verify an existing .xlsx file, create a full backup copy using Aspose.Cells, add an XML map from a temporary XSD schema, clean up temporary files, and save both the backup and the modified workbook. Includes error handling for safe rollback.
-// Keywords: Aspose.Cells backup workbook | C# copy Excel file | XML map Aspose.Cells | save workbook before changes | .NET Excel rollback | temporary XSD file | Excel XML schema mapping
-// Common Searches: Aspose.Cells create backup before adding XML map | C# copy Excel workbook to new file | How to add XML map to Excel with Aspose.Cells | Save Excel backup .NET Aspose | Rollback Excel changes after XML map error
-// Developer Intent: Generate a reliable backup of an existing workbook, then safely add or update XML maps so the original file can be restored if needed.
-// Use Cases: Preserve the original data before applying a new XML schema to an Excel workbook. | Compare original and updated workbooks after XML map changes for quality assurance. | Automatically revert to the backup when an exception occurs while adding an XML map.
-// AI Prompts: Write C# code using Aspose.Cells that creates a timestamped backup of a workbook, adds an XML map from a temporary XSD, and saves both files. | Provide a reusable method to backup an Excel file and safely manage temporary schema files when modifying XML maps. | Explain step‑by‑step how to restore a backup workbook if adding an XML map fails with Aspose.Cells.
+// Title: Create a backup of an Excel workbook before adding an XML map and setting the worksheet XmlMapIndex with Aspose.Cells for .NET
+// AI Prompts: Write C# code that copies an existing .xlsx file to a backup, loads it with Aspose.Cells, adds an XML map from a specified XML file, assigns the map to the first worksheet using the XmlMapIndex property (using reflection if the property is not directly accessible), and saves the modified workbook. | Demonstrate a safe workflow in C# for modifying Excel XML maps with Aspose.Cells: verify source files, create a backup copy, add the XML map, set the worksheet's XmlMapIndex via reflection, and handle any errors gracefully.
+// Common Searches: how to backup an Excel file before modifying XML maps using Aspose.Cells C# | c# add xml map to workbook and set worksheet XmlMapIndex with Aspose.Cells | asp.net create copy of .xlsx then associate xml map via reflection | aspose.cells save backup workbook then add xml map example
+// Tags: backup workbook before xml map addition Aspose.Cells | add xml map to worksheet Aspose.Cells C# | set worksheet XmlMapIndex via reflection | save modified workbook after xml map Aspose.Cells | validate file existence Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Reflection;
 
-namespace AsposeCellsBackupExample
+// The example checks that the original Excel workbook and XML file exist, creates a backup copy of the workbook, loads it with Aspose.Cells, adds an XML map from the XML file, attempts to assign the map to the first worksheet using the XmlMapIndex property via reflection, and finally saves the modified workbook while handling potential errors.
+class Program
 {
-    // Demonstrates how to verify an existing .xlsx file, create a full backup copy using Aspose.Cells, add an XML map from a temporary XSD schema, clean up temporary files, and save both the backup and the modified workbook. Includes error handling for safe rollback.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string originalPath = "original.xlsx";
+            const string backupPath = "original_backup.xlsx";
+            const string modifiedPath = "original_modified.xlsx";
+            const string xmlFilePath = "data.xml";
+
+            // Verify required files exist
+            if (!File.Exists(originalPath))
+                throw new FileNotFoundException($"Workbook file not found: {originalPath}");
+            if (!File.Exists(xmlFilePath))
+                throw new FileNotFoundException($"XML file not found: {xmlFilePath}");
+
+            // Load the original workbook
+            Workbook workbook = new Workbook(originalPath);
+
+            // Save a backup before modifications
+            workbook.Save(backupPath);
+
+            // Add a new XML map from the XML file
+            XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
+            int mapIndex = xmlMaps.Add(xmlFilePath);
+
+            // Attempt to associate the first worksheet with the new XML map using reflection
+            if (workbook.Worksheets.Count > 0)
             {
-                // Path to the original workbook
-                string originalPath = "OriginalWorkbook.xlsx";
-
-                // Verify that the original workbook exists
-                if (!File.Exists(originalPath))
+                try
                 {
-                    Console.WriteLine($"Error: File '{originalPath}' not found.");
-                    return;
+                    Worksheet ws = workbook.Worksheets[0];
+                    PropertyInfo prop = ws.GetType().GetProperty("XmlMapIndex", BindingFlags.Public | BindingFlags.Instance);
+                    if (prop != null && prop.CanWrite)
+                    {
+                        prop.SetValue(ws, mapIndex);
+                    }
                 }
-
-                // Load the original workbook
-                Workbook originalWorkbook = new Workbook(originalPath);
-
-                // ---------- Create a backup copy ----------
-                // Create an empty workbook that will hold the backup
-                Workbook backupWorkbook = new Workbook();
-
-                // Copy all contents from the original workbook to the backup workbook
-                backupWorkbook.Copy(originalWorkbook);
-
-                // Save the backup workbook to a separate file
-                string backupPath = "OriginalWorkbook_Backup.xlsx";
-                backupWorkbook.Save(backupPath);
-                Console.WriteLine($"Backup saved to '{backupPath}'.");
-
-                // ---------- Modify XML maps in the original workbook ----------
-                // Example XML schema (replace with your actual schema or file path)
-                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                        <xs:element name='Root'>
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name='Item' type='xs:string'/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:schema>";
-
-                // Write the schema to a temporary file because XmlMaps.Add expects a file path
-                string tempSchemaPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xsd");
-                File.WriteAllText(tempSchemaPath, xmlSchema);
-
-                // Add the XML map to the original workbook
-                int mapIndex = originalWorkbook.Worksheets.XmlMaps.Add(tempSchemaPath);
-                XmlMap addedMap = originalWorkbook.Worksheets.XmlMaps[mapIndex];
-                addedMap.Name = "MyBackupDemoMap";
-
-                // Clean up the temporary schema file
-                if (File.Exists(tempSchemaPath))
+                catch (Exception ex)
                 {
-                    File.Delete(tempSchemaPath);
+                    // If association fails, continue without it
+                    Console.WriteLine($"Warning: Unable to set XmlMapIndex - {ex.Message}");
                 }
+            }
 
-                // Save the modified original workbook
-                string modifiedPath = "OriginalWorkbook_Modified.xlsx";
-                originalWorkbook.Save(modifiedPath);
-                Console.WriteLine($"Modified workbook saved to '{modifiedPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(modifiedPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

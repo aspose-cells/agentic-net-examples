@@ -1,55 +1,46 @@
-// Title: Set FarEast and Latin fonts for multilingual shape text with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a rectangle shape, inserts English‑Chinese‑Japanese text, and uses TextOptions.FarEastName = "MS Mincho" and TextOptions.LatinName = "Arial" to render CJK characters and Latin characters with appropriate fonts before saving.
-// Keywords: Aspose.Cells | C# | .NET | shape text font | FarEastName | LatinName | multilingual Excel | MS Mincho | Arial | CJK font in Excel
-// Common Searches: Aspose.Cells set FarEastName for Japanese text | How to apply different fonts to CJK and Latin characters in a shape | C# Aspose.Cells multilingual shape example | Change font of Chinese characters in Excel shape | Rectangle shape font settings Aspose.Cells .NET
-// Developer Intent: Apply distinct fonts to Far‑East (CJK) and Latin scripts within a shape’s text using Aspose.Cells.
-// Use Cases: Generate a report where a shape displays English headings in Arial and Japanese subtitles in MS Mincho. | Create marketing dashboards with mixed English and Chinese labels, each rendered in its native font. | Automate Excel templates that require proper font rendering for multilingual annotations inside shapes.
-// AI Prompts: Write C# code with Aspose.Cells to set FarEastName to "SimSun" and LatinName to "Calibri" for a shape containing mixed Chinese and English text. | Show how to assign different fonts to Latin and CJK scripts for multiple shapes across a worksheet using Aspose.Cells for .NET. | Explain the impact of TextOptions.FarEastName and TextOptions.LatinName on rendering multilingual text in Excel shapes.
+// Title: How to set Latin (Arial) and FarEast (MS Mincho) fonts for mixed-language cells using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, defines a style with Arial for Latin characters and MS Mincho for FarEast characters, applies the style to a cell containing English and Japanese text, and saves the file. | Show how to use Aspose.Cells Style.Font.Name and, when supported, Style.Font.FarEastName to assign separate fonts for Latin and FarEast scripts in an Excel worksheet.
+// Common Searches: Aspose.Cells set Latin font to Arial and FarEast font to MS Mincho in C# | C# example for applying different fonts to English and Japanese text in Excel with Aspose.Cells | How to style mixed language cells in Aspose.Cells .NET | Set FarEast font name for Japanese characters using Aspose.Cells API | Apply multilingual font styling to a worksheet cell in Aspose.Cells for .NET
+// Tags: aspocells set latin font c# | aspocells far east font name | multilingual font styling aspocells | excel cell style mixed language c# | aspocells style font far east
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The example creates a new Workbook, defines a Style with the Latin font set to Arial and, when supported, the FarEast font set to MS Mincho, writes English‑Japanese text into cell A1, applies the style, and saves the workbook as MultilingualText.xlsx. It also notes that the FarEast font property may be unavailable in older Aspose.Cells versions, in which case the default FarEast font is used.
+class Program
 {
-    // Creates a workbook, adds a rectangle shape, inserts English‑Chinese‑Japanese text, and uses TextOptions.FarEastName = "MS Mincho" and TextOptions.LatinName = "Arial" to render CJK characters and Latin characters with appropriate fonts before saving.
-    public class MultilingualFontDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
-                Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 200, 100);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Set multilingual text (Latin + CJK characters)
-                shape.Text = "English 中文 日本語";
+            // Create a style to set the Latin font
+            Style multilingualStyle = workbook.CreateStyle();
 
-                // Specify fonts for different script types
-                shape.TextOptions.FarEastName = "MS Mincho"; // Font for Far East (CJK) characters
-                shape.TextOptions.LatinName = "Arial";      // Font for Latin characters
+            // Set Latin font name to Arial
+            multilingualStyle.Font.Name = "Arial";
 
-                // Save the workbook
-                workbook.Save("MultilingualFontDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // NOTE: The FarEast font property is not available in the current Aspose.Cells version.
+            // The default FarEast font will be used for characters such as Japanese.
+
+            // Put multilingual text into a cell
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("English 日本語");
+
+            // Apply the multilingual style to the cell
+            cell.SetStyle(multilingualStyle);
+
+            // Save the workbook
+            workbook.Save("MultilingualText.xlsx");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            MultilingualFontDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,45 +1,40 @@
-// Title: C# – Create a Worksheet‑Scoped Named Range in a New XLSX Workbook with Aspose.Cells
-// Description: Demonstrates how to instantiate a Workbook, rename the first worksheet, define a range covering A1:B3, assign a worksheet‑scoped name using the "SheetName!RangeName" syntax, and save the file as an XLSX document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# example | worksheet scoped named range | create range A1:B3 | save workbook as XLSX | SheetName!RangeName syntax | Excel automation .NET | Aspose.Cells named range tutorial | C# Excel library
-// Common Searches: how to add a worksheet scoped named range with Aspose.Cells | Aspose.Cells create named range and save as xlsx | C# code for worksheet‑specific named range in Excel | Aspose.Cells range naming conventions | save workbook with named range using Aspose.Cells .NET
-// Developer Intent: Generate an XLSX workbook, define a worksheet‑specific named range, and persist the file.
-// Use Cases: Reference a data block on a single sheet without affecting similarly named ranges on other sheets. | Automate report templates where each worksheet contains its own scoped range for downstream processing. | Provide end‑users with pre‑named areas for data entry, ensuring consistent formula references across multiple sheets.
-// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds a worksheet‑scoped named range covering C5:D10, and saves it as XLSX. | Explain the "SheetName!RangeName" format in Aspose.Cells and show how to retrieve a worksheet‑scoped range later in C#. | Give a step‑by‑step guide to create several worksheet‑scoped named ranges in one workbook and use them in formulas with Aspose.Cells for .NET.
+// Title: Create a new workbook, define a worksheet‑scoped named range (A1:C5), and save it as an XLSX file with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that initializes a workbook, creates a range A1:C5 on the first worksheet, assigns it a worksheet‑only name, and writes the file in XLSX format. | Show how to add a worksheet‑level named range in a fresh workbook and persist the workbook as an .xlsx file using the Aspose.Cells API.
+// Common Searches: Aspose.Cells how to add a worksheet scoped named range in C# | C# Aspose.Cells save new workbook with named range to xlsx | define A1:C5 range with worksheet level scope using Aspose.Cells .NET | create workbook and set worksheet‑only named range Aspose.Cells example | Aspose.Cells .NET export workbook after naming a range on a single sheet
+// Tags: worksheet‑level named range Aspose.Cells | new workbook generation Aspose.Cells | export workbook to XLSX Aspose.Cells | range A1:C5 definition Aspose.Cells | named range per worksheet Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNamedRangeDemo
+// // This program creates a new workbook, defines a worksheet‑scoped named range covering cells A1:C5, assigns it the name "MyWorksheetRange", and saves the workbook as "WorksheetScopedNamedRange.xlsx" in XLSX format.
+class Program
 {
-    // Demonstrates how to instantiate a Workbook, rename the first worksheet, define a range covering A1:B3, assign a worksheet‑scoped name using the "SheetName!RangeName" syntax, and save the file as an XLSX document using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook (default format is XLSX)
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet and rename it
-                Worksheet worksheet = workbook.Worksheets[0];
-                worksheet.Name = "DataSheet";
+            // Get the first worksheet (default worksheet)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Create a range on the worksheet (cells A1 to B3)
-                AsposeRange range = worksheet.Cells.CreateRange("A1:B3");
+            // Define the range (e.g., A1:C5)
+            int firstRow = 0;          // Row index starts at 0 (A1)
+            int firstColumn = 0;       // Column index starts at 0 (A)
+            int totalRows = 5;         // Number of rows in the range
+            int totalColumns = 3;      // Number of columns in the range
 
-                // Assign a worksheet‑scoped name to the range.
-                // The "SheetName!RangeName" format makes the name scoped to this worksheet.
-                range.Name = $"{worksheet.Name}!MyWorksheetRange";
+            // Create a worksheet‑scoped named range
+            Aspose.Cells.Range namedRange = worksheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
+            namedRange.Name = "MyWorksheetRange"; // This name is scoped to the worksheet
 
-                // Save the workbook in XLSX format
-                workbook.Save("WorksheetScopedNamedRange.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook in XLSX format
+            workbook.Save("WorksheetScopedNamedRange.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,24 +1,22 @@
-// Title: Aspose.Cells for .NET – Position Chart Legend at Bottom and Show Border
-// Description: Creates a workbook, adds a column chart, moves the legend to the bottom, makes the legend border visible, and saves the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | chart legend position | legend border visibility | LegendPositionType.Bottom | Excel chart styling | Aspose.Cells chart API
-// Common Searches: Aspose.Cells set legend bottom | show legend border C# | chart legend position .NET | enable legend border Aspose.Cells | Aspose.Cells legend formatting
-// Developer Intent: Move the chart legend to the bottom of the chart and enable its border using Aspose.Cells for .NET.
-// Use Cases: Standardize Excel reports where the legend must appear below the chart for a clean layout. | Generate dashboards that require a visible legend outline to improve data readability. | Apply corporate style guidelines that dictate legend placement and border styling across multiple charts.
-// AI Prompts: Provide C# code with Aspose.Cells that positions a chart legend at the bottom and turns on its border. | Show how to configure legend placement, border visibility, and basic styling for any chart type in Aspose.Cells. | Explain the steps to adjust legend position and enable its border in an Aspose.Cells workbook using .NET.
+// Title: How to position a chart legend at the bottom and display its border using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, add sample data, generate a column chart, set the legend position to Bottom, and make the legend border visible with a black color using Aspose.Cells in C#. | Modify an existing Aspose.Cells chart to move the legend to the bottom of the chart area and enable the border visibility. | Write C# code that configures a chart's Legend.Position = LegendPositionType.Bottom and sets Legend.Border.IsVisible = true with a specified color.
+// Common Searches: Aspose.Cells C# set chart legend to bottom and show border | How to enable legend border visibility in Aspose.Cells chart using .NET | C# Aspose.Cells move chart legend to bottom and change border color | Aspose.Cells chart legend positioning and border styling example | Set Legend.Position = Bottom and Legend.Border.IsVisible in Aspose.Cells
+// Tags: chart legend position bottom Aspose.Cells | legend border visibility Aspose.Cells C# | column chart legend styling Aspose.Cells | Aspose.Cells set legend border color | Aspose.Cells chart formatting legend bottom
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using System.Drawing;
 
 namespace AsposeCellsLegendDemo
 {
-    // Creates a workbook, adds a column chart, moves the legend to the bottom, makes the legend border visible, and saves the file using Aspose.Cells for .NET.
+    // The example creates a workbook, adds sample data, inserts a column chart, positions the legend at the bottom, makes the legend border visible with a black color, and saves the file as ChartLegendBottomWithBorder.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -43,11 +41,12 @@ namespace AsposeCellsLegendDemo
             // Position the legend at the bottom of the chart
             chart.Legend.Position = LegendPositionType.Bottom;
 
-            // Make the legend border visible
+            // Enable the legend border visibility (optional: set color for clarity)
             chart.Legend.Border.IsVisible = true;
+            chart.Legend.Border.Color = Color.Black; // make the border visible
 
             // Save the workbook
-            workbook.Save("ChartWithBottomLegendAndBorder.xlsx");
+            workbook.Save("ChartLegendBottomWithBorder.xlsx");
         }
     }
 }

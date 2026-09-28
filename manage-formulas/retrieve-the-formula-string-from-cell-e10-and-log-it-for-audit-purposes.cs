@@ -1,30 +1,29 @@
-// Title: Extract and Log Cell E10 Formula (A1 Notation) with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses cell E10 on the first worksheet, retrieves its formula in standard A1 notation using GetFormula(false, false), and writes the formula string to the console for auditing.
-// Keywords: Aspose.Cells GetFormula | C# read Excel formula | extract cell formula .NET | audit Excel calculations | non‑localized A1 notation | log Excel formula | retrieve formula from cell E10
-// Common Searches: Aspose.Cells read formula from specific cell C# | Get non‑localized formula using Aspose.Cells | How to log Excel cell formula for audit | Retrieve formula of E10 with Aspose.Cells .NET | Extract Excel formulas programmatically
-// Developer Intent: Obtain the formula from cell E10 and output it for auditing.
-// Use Cases: Verify that critical cells contain expected formulas before data processing. | Create an audit trail of spreadsheet logic by logging formulas from key cells. | Document worksheet calculations by extracting and storing formulas programmatically.
-// AI Prompts: Generate C# code with Aspose.Cells that reads the formula from cell E10 and writes it to a log file. | Show how to loop through a range of cells, retrieve each formula, and save them in a dictionary using Aspose.Cells. | Explain the GetFormula parameters for obtaining localized versus non‑localized formulas in Aspose.Cells.
+// Title: How to retrieve and log the formula from cell E10 in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, reads the Formula property of cell E10, and writes the result to the console. | Show a snippet that extracts the formula string from a specific worksheet cell and logs it for audit tracking using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# get formula text from a specific cell for audit logging | How to read the formula of cell E10 in an Excel file using Aspose.Cells .NET | Example code to output Excel cell formula to console with Aspose.Cells | Retrieve and print formula string from worksheet cell using Aspose.Cells library
+// Tags: Aspose.Cells read cell formula .NET | extract formula string from Excel cell | audit Excel formulas with Aspose.Cells | log cell formula to console C# | retrieve Formula property Aspose.Cells
 
 using Aspose.Cells;
 using System;
 
-// Loads an Excel workbook, accesses cell E10 on the first worksheet, retrieves its formula in standard A1 notation using GetFormula(false, false), and writes the formula string to the console for auditing.
-class RetrieveFormula
+// Loads an .xlsx workbook, accesses cell E10 on the first worksheet, reads its Formula property, and writes the formula string to the console for auditing.
+class Program
 {
     static void Main()
     {
-        // Load the workbook containing the target cell
-        string filePath = "input.xlsx"; // TODO: replace with actual file path
-        Workbook workbook = new Workbook(filePath);
+        // Load the workbook (replace with actual file path)
+        var workbook = new Workbook("input.xlsx");
 
-        // Access cell E10 on the first worksheet
-        Cell cell = workbook.Worksheets[0].Cells["E10"];
+        // Access the first worksheet (or specify the worksheet name)
+        var worksheet = workbook.Worksheets[0];
 
-        // Retrieve the formula in standard A1 notation (non‑localized)
-        string formula = cell.GetFormula(false, false);
+        // Retrieve cell E10
+        var cell = worksheet.Cells["E10"];
 
-        // Log the retrieved formula for audit purposes
+        // Get the formula string from the cell
+        string formula = cell.Formula;
+
+        // Log the formula for audit purposes
         Console.WriteLine($"Formula in E10: {formula}");
     }
 }

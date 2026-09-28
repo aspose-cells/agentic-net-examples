@@ -4,7 +4,8 @@ description: Render Excel worksheets, workbooks, and charts to PNG, JPEG, SVG, B
 product: Aspose.Cells for .NET
 category: working-with-images
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Convert Excel to Images in C# with Aspose.Cells for .NET

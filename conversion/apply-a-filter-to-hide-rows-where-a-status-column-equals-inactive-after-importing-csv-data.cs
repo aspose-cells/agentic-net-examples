@@ -1,94 +1,84 @@
-// Title: C# – Hide rows with Status = 'Inactive' using Aspose.Cells AutoFilter after CSV import
-// Description: Loads a CSV into an Aspose.Cells Workbook, determines the data range, applies an AutoFilter to the whole sheet, and uses a custom NotEqual filter on the Status column (column C) to hide rows marked as "Inactive" before saving the result as an XLSX file.
-// Keywords: Aspose.Cells C# AutoFilter | hide rows by column value | filter CSV data Aspose.Cells | NotEqual custom filter | Excel hide inactive rows programmatically | load CSV to workbook Aspose | C# Excel data cleaning
-// Common Searches: Aspose.Cells hide rows where column equals value | C# AutoFilter CSV Aspose.Cells example | filter out inactive records in Excel using code | apply NotEqual filter with Aspose.Cells | remove rows with status inactive after CSV import
-// Developer Intent: Programmatically conceal rows whose Status column contains "Inactive" after importing a CSV file.
-// Use Cases: Generate a clean employee roster by loading a CSV and automatically hiding former staff marked as Inactive. | Prepare a product inventory report that excludes discontinued items by filtering the Status field before export. | Create a reusable data‑pre‑processing routine that removes inactive records from any CSV source using Aspose.Cells.
-// AI Prompts: Show how to extend the code to filter out multiple status values such as "Inactive" and "Closed". | Demonstrate applying a custom filter to a different column index after loading a CSV with Aspose.Cells. | Explain how to clear the AutoFilter at runtime to reveal all hidden rows again.
+// Title: Hide rows with 'Inactive' status after loading a CSV into an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads a CSV file with Aspose.Cells, detects the column named 'Status', and sets Row.IsHidden = true for every row where the cell value equals 'Inactive'. | Show how to apply a row‑level hide filter in an Aspose.Cells workbook after converting CSV data, including handling a missing 'Status' header and saving the result as XLSX.
+// Common Searches: Aspose.Cells C# hide rows where Status column equals Inactive after CSV import | How to programmatically hide rows based on a column value in a workbook created from CSV using Aspose.Cells | C# Aspose.Cells hide rows with specific cell text before saving to XLSX | Filter out inactive records in Excel by hiding rows with Aspose.Cells .NET
+// Tags: Row.IsHidden Aspose.Cells example | LoadOptions CSV Aspose.Cells .NET | status column detection Aspose.Cells | hide rows based on cell value C# | convert CSV to XLSX Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads a CSV into an Aspose.Cells Workbook, determines the data range, applies an AutoFilter to the whole sheet, and uses a custom NotEqual filter on the Status column (column C) to hide rows marked as "Inactive" before saving the result as an XLSX file.
+// // Loads a CSV file into a workbook, locates the 'Status' column, and hides rows where the cell value equals 'Inactive' before saving the result as an XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "data.csv";
-            const string outputPath = "filtered_output.xlsx";
+            const string inputPath = "input.csv";
+            const string outputPath = "output.xlsx";
 
-            // Verify that the input CSV file exists
+            // Verify input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the CSV file (first row is assumed to contain column headers)
+            // Load CSV data into a new workbook using appropriate LoadOptions
             var loadOptions = new LoadOptions(LoadFormat.Csv);
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            var workbook = new Workbook(inputPath, loadOptions);
 
-            // Access the first worksheet where the CSV data resides
-            Worksheet sheet = workbook.Worksheets[0];
+            // Reference the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Determine the used range of the worksheet
-            int maxColumn = sheet.Cells.MaxDataColumn; // zero‑based index of the last column with data
-            int maxRow = sheet.Cells.MaxDataRow;       // zero‑based index of the last row with data
-
-            // Ensure there is data to process
-            if (maxColumn < 0 || maxRow < 0)
+            // Find the column index that contains the "Status" header
+            int statusCol = -1;
+            for (int c = 0; c <= sheet.Cells.MaxColumn; c++)
             {
-                Console.WriteLine("The worksheet does not contain any data.");
-                return;
+                if (sheet.Cells[0, c].StringValue.Equals("Status", StringComparison.OrdinalIgnoreCase))
+                {
+                    statusCol = c;
+                    break;
+                }
+            }
+            // Default to column B (index 1) if header not found
+            if (statusCol == -1) statusCol = 1;
+
+            // Hide rows where the status equals "Inactive"
+            int firstDataRow = 1; // assuming row 0 is the header
+            int lastDataRow = sheet.Cells.MaxDataRow;
+            for (int r = firstDataRow; r <= lastDataRow; r++)
+            {
+                try
+                {
+                    string cellValue = sheet.Cells[r, statusCol].StringValue;
+                    if (cellValue.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Hide the entire row using RowCollection
+                        var row = sheet.Cells.Rows[r];
+                        row.IsHidden = true; // Correct property to hide a row
+                    }
+                }
+                catch (Exception exRow)
+                {
+                    Console.WriteLine($"Error processing row {r}: {exRow.Message}");
+                }
             }
 
-            // Build the address of the bottom‑right cell (e.g., "D10")
-            string bottomRight = CellIndexToName(maxColumn, maxRow);
-
-            // Apply AutoFilter to the whole data range (including the header row)
-            sheet.AutoFilter.Range = $"A1:{bottomRight}";
-
-            // Index of the Status column (zero‑based). Adjust if the column is elsewhere.
-            int statusColumnIndex = 2; // Column C
-
-            // Verify that the status column exists within the data range
-            if (statusColumnIndex <= maxColumn)
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Hide rows where Status = "Inactive" by filtering for NOT equal to "Inactive"
-                sheet.AutoFilter.Custom(statusColumnIndex, FilterOperatorType.NotEqual, "Inactive");
-                // Apply the filter – rows not matching the criteria become hidden
-                sheet.AutoFilter.Refresh();
-            }
-            else
-            {
-                Console.WriteLine($"Status column index {statusColumnIndex} is outside the data range.");
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the filtered workbook
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Filtered workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Helper: converts zero‑based column/row indexes to an Excel cell address (e.g., 2,5 -> "C6")
-    static string CellIndexToName(int columnIndex, int rowIndex)
-    {
-        string columnName = "";
-        int dividend = columnIndex + 1;
-        while (dividend > 0)
-        {
-            int modulo = (dividend - 1) % 26;
-            columnName = Convert.ToChar('A' + modulo) + columnName;
-            dividend = (dividend - modulo) / 26;
-        }
-        // Row index is zero‑based; add 1 for the Excel row number
-        return $"{columnName}{rowIndex + 1}";
     }
 }

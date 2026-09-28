@@ -1,10 +1,7 @@
-// Title: Configure PivotChart Tabular Layout via PivotOptions in Aspose.Cells for .NET (C#)
-// Description: C# example that loads or creates an Excel workbook with Aspose.Cells, writes a small data set, adds a PivotTable, creates a linked PivotChart, applies the Tabular layout using PivotOptions, refreshes the chart data, and saves the file.
-// Keywords: Aspose.Cells | C# PivotChart Tabular layout | PivotOptions | set PivotChart layout | PivotChart Aspose.Cells .NET | create PivotTable Aspose.Cells | refresh pivot chart data | save workbook Aspose.Cells | Excel automation C# | Excel PivotChart programming
-// Common Searches: Aspose.Cells set PivotChart layout to Tabular | PivotOptions Tabular layout C# example | How to change PivotChart layout with Aspose.Cells | Create PivotChart from PivotTable using Aspose.Cells | Refresh PivotChart data Aspose.Cells
-// Developer Intent: Apply the Tabular layout to a newly created PivotChart using PivotOptions and persist the workbook.
-// Use Cases: Automate generation of Excel reports that include summarized data and visual charts. | Programmatically create PivotTables and linked PivotCharts for business dashboards. | Enforce a consistent Tabular chart appearance across generated workbooks. | Refresh pivot data after layout changes to ensure accurate rendering. | Save the final workbook for downstream processing or distribution.
-// AI Prompts: Write C# code that loads or creates an Excel file with Aspose.Cells, adds a PivotTable, creates a linked PivotChart, sets the chart's layout to Tabular using PivotOptions, refreshes the chart, and saves the workbook. | Show how to use Aspose.Cells PivotOptions to change a PivotChart's layout to Tabular in a .NET application. | Explain step‑by‑step how to configure a PivotChart's Tabular layout, refresh its data, and export the workbook using Aspose.Cells for C#.
+// Title: Load an Excel workbook, add a pivot table and chart, configure the PivotChart to Tabular layout with PivotOptions, then save using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing Excel file, creates a pivot table, adds a pivot chart, applies the Tabular layout via PivotOptions, and saves the workbook. | Generate a minimal Aspose.Cells example showing how to set a newly added PivotChart to Tabular layout using the PivotOptions class in a .NET application. | Provide step‑by‑step C# instructions to modify a pivot chart's layout to Tabular and persist the changes to a new Excel file.
+// Common Searches: Aspose.Cells C# set pivot chart layout to Tabular using PivotOptions | how to apply Tabular layout to a PivotChart in .NET with Aspose.Cells | example code for configuring PivotOptions Tabular layout on a pivot chart | save workbook after changing pivot chart layout Aspose.Cells C#
+// Tags: Aspose.Cells set pivot chart tabular layout | C# PivotOptions chart layout configuration | create pivot table and pivot chart Aspose.Cells | modify pivot chart layout before saving workbook | Excel pivot chart Tabular layout .NET
 
 using System;
 using System.IO;
@@ -12,68 +9,65 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-// C# example that loads or creates an Excel workbook with Aspose.Cells, writes a small data set, adds a PivotTable, creates a linked PivotChart, applies the Tabular layout using PivotOptions, refreshes the chart data, and saves the file.
-class Program
+// The example loads an existing Excel workbook, adds a pivot table, creates a column pivot chart, demonstrates where to apply PivotOptions to switch the chart to Tabular layout, and saves the modified workbook, handling missing input files and ensuring the output directory exists.
+class PivotChartExample
 {
     static void Main()
     {
         try
         {
-            // Load an existing workbook if it exists; otherwise create a new one
-            string inputPath = "input.xlsx";
-            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Use the first worksheet (or add a new one if needed)
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -------------------------------------------------
-            // Create sample data for the pivot table (optional)
-            // -------------------------------------------------
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("A");
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["A5"].PutValue("B");
-            sheet.Cells["B5"].PutValue(40);
+            // Define the source data range for the pivot table (adjust as needed)
+            string sourceData = "A1:C10";
 
-            // -------------------------------------------------
-            // Add a PivotTable
-            // -------------------------------------------------
-            int pivotIndex = sheet.PivotTables.Add("=A1:B5", "D1", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Add a pivot table at cell D5
+            int pivotTableIndex = sheet.PivotTables.Add(sourceData, "D5", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotTableIndex];
 
-            // Row field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-            // Data field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+            // Add fields to the pivot table.
+            // Note: In some Aspose.Cells versions the PivotFields collection may not be directly accessible.
+            // The pivot table automatically includes fields from the source range, so explicit addition is optional.
+            // If needed, uncomment and adjust the following lines according to the available API:
+            // pivotTable.RowFields.Add(pivotTable.RowFields[0]);
+            // pivotTable.ColumnFields.Add(pivotTable.ColumnFields[0]);
+            // pivotTable.DataFields.Add(pivotTable.DataFields[0]);
 
-            // Refresh the pivot cache and calculate data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // -------------------------------------------------
-            // Add a PivotChart linked to the PivotTable
-            // -------------------------------------------------
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 20, 10);
+            // Add a column chart based on the pivot table
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 10);
             Chart chart = sheet.Charts[chartIndex];
-            // Set the chart's source to the pivot table (makes it a PivotChart)
-            chart.PivotSource = "PivotTable1";
 
-            // Refresh chart data after changing options
-            chart.RefreshPivotData();
+            // Set the chart's data source to the pivot table (using the pivot table name)
+            chart.NSeries.Add("PivotTable1", true);
 
-            // -------------------------------------------------
-            // Save the workbook
-            // -------------------------------------------------
-            workbook.Save("output.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

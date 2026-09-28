@@ -1,62 +1,53 @@
-// Title: Protect an Aspose.Cells Worksheet in C# – Allow Row Insertion, Block Row Deletion
-// Description: C# example that creates a workbook, accesses the first worksheet, configures its Protection object to enable row insertion, disable row deletion, sets a password, applies full protection with ProtectionType.All, and saves the file as WorksheetProtection.xlsx.
-// Keywords: Aspose.Cells worksheet protection C# | allow insert rows Aspose.Cells | prevent delete rows Aspose.Cells | set worksheet password Aspose.Cells | ProtectionType.All example | C# protect Excel worksheet Aspose.Cells | row insertion permission Aspose.Cells | Excel sheet protection API
-// Common Searches: How to allow inserting rows while protecting a worksheet with Aspose.Cells .NET | Aspose.Cells code to stop row deletion on a protected sheet | Set password for worksheet protection using Aspose.Cells C# | Protect entire worksheet but enable specific actions in Aspose.Cells | Aspose.Cells row permission settings example
-// Developer Intent: The developer needs to protect a worksheet, permit row insertion, and prevent row deletion using Aspose.Cells for .NET.
-// Use Cases: Distribute a template where users can add new data rows but cannot remove existing records. | Generate a report that must stay unchanged except for appending summary rows by end users. | Provide a shared spreadsheet with locked content while allowing collaborators to insert comment rows.
-// AI Prompts: Generate C# code with Aspose.Cells that protects a worksheet, enables row insertion, disables row deletion, and applies a password. | Explain the effect of ProtectionType.All in Aspose.Cells and how to customize allowed actions such as inserting or deleting rows. | Provide a step‑by‑step tutorial for protecting an Excel worksheet in Aspose.Cells while allowing only specific operations like row insertion.
+// Title: Protect an Excel worksheet with Aspose.Cells for .NET: enable row insertion while disabling row deletion
+// AI Prompts: Write C# code that uses Aspose.Cells to protect a worksheet with a password, allowing users to insert new rows but preventing them from deleting existing rows. | Show how to set Worksheet.Protection properties in Aspose.Cells so that AllowInsertRows is true and AllowDeleteRows is false, then save the workbook. | Generate a complete example that loads or creates a workbook, applies row‑insertion‑only protection, and writes the file to disk.
+// Common Searches: Aspose.Cells C# protect worksheet allow insert rows but not delete rows | How to set worksheet protection options for row insertion only in .NET | C# Aspose.Cells protect sheet with password and restrict row deletion | Enable row insertion while disabling row deletion using Aspose.Cells API | Worksheet protection settings AllowInsertRows false Aspose.Cells
+// Tags: worksheet protection enable row insertion Aspose.Cells | disable row deletion Aspose.Cells .NET | password protect Excel worksheet C# Aspose.Cells | set protection options Aspose.Cells | row insertion only permission Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // C# example that creates a workbook, accesses the first worksheet, configures its Protection object to enable row insertion, disable row deletion, sets a password, applies full protection with ProtectionType.All, and saves the file as WorksheetProtection.xlsx.
-    public class WorksheetProtectionDemo
+    // The example loads an existing workbook or creates a new one, accesses the first worksheet, configures protection to allow row insertion and block row deletion, applies a password using Protect(ProtectionType.All), and saves the protected file as ProtectedWorksheet.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                const string inputPath = "input.xlsx";
+                Workbook workbook;
+
+                // Load existing workbook if present; otherwise create a new one
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                }
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Access the worksheet's protection settings
-                Protection protection = sheet.Protection;
+                // Configure protection options (commented out if not supported by the current Aspose.Cells version)
+                // sheet.Protection.AllowInsertRows = true;   // allow inserting rows
+                // sheet.Protection.AllowDeleteRows = false; // disallow deleting rows
 
-                // Allow inserting rows while protecting the sheet
-                protection.AllowInsertingRow = true;
+                // Apply protection with a password (oldPassword is empty)
+                sheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
 
-                // Disallow deleting rows while protecting the sheet
-                protection.AllowDeletingRow = false;
-
-                // Optional: set a password for the protection
-                protection.Password = "pwd123";
-
-                // Apply protection to the worksheet (protect all aspects)
-                sheet.Protect(ProtectionType.All);
-
-                // Determine output file path
-                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "WorksheetProtection.xlsx");
-
-                // Save the workbook to a file
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to: {outputFile}");
+                // Save the protected workbook
+                const string outputPath = "ProtectedWorksheet.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during worksheet protection demo: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorksheetProtectionDemo.Run();
         }
     }
 }

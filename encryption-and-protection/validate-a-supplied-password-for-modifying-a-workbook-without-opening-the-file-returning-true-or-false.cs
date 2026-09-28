@@ -1,38 +1,69 @@
-// Title: C# – Validate an Excel Workbook’s Write‑Protection Password via Stream Using Aspose.Cells
-// Description: Shows how to open an Excel file as a read‑only stream and call Aspose.Cells.FileFormatUtil.VerifyPassword to determine whether a supplied password matches the workbook’s write‑protection password, returning true or false without fully loading the workbook.
-// Keywords: Aspose.Cells | C# | .NET | Excel password verification | write‑protected workbook | FileFormatUtil.VerifyPassword | validate workbook password | stream‑based password check | no full load | Excel security | global
-// Common Searches: Aspose.Cells verify write‑protected Excel password without opening file | C# check Excel workbook password from stream | FileFormatUtil.VerifyPassword example | how to validate Excel file protection programmatically | validate Excel workbook password .NET
-// Developer Intent: Check if a given password unlocks the write‑protection of an Excel workbook without loading the entire file into memory.
-// Use Cases: Pre‑validate passwords in batch jobs before attempting to modify protected workbooks. | Expose an API that confirms edit rights for a supplied Excel file and password. | Filter a repository of Excel files to identify those that can be edited with a known password.
-// AI Prompts: Generate C# code that uses Aspose.Cells to verify a workbook’s write‑protection password from a file stream and includes error handling. | Explain the difference in behavior of FileFormatUtil.VerifyPassword for encrypted versus write‑protected Excel files. | Provide a sample service that iterates over multiple Excel files, validates each password, and logs the results.
+// Title: Validate an Excel workbook password without fully loading the file using Aspose.Cells for .NET
+// AI Prompts: Generate a C# method that uses Aspose.Cells LoadOptions with a supplied password to attempt opening an .xlsx file and returns true only when the password unlocks the workbook. | Write code that loads a protected workbook via Aspose.Cells, catches CellsException, and provides a boolean indicating whether the given password is correct.
+// Common Searches: how to check if an Excel .xlsx password is correct in C# using Aspose.Cells without opening the workbook | Aspose.Cells C# verify workbook protection programmatically | C# method to test Excel file password validity with LoadOptions | determine if Excel file is password‑protected using Aspose.Cells .NET | validate protected workbook password without reading its content in C#
+// Tags: Aspose.Cells LoadOptions password verification | C# validate protected .xlsx workbook | Excel password check using CellsException | verify workbook encryption without full load | password validation for Aspose.Cells protected files
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to open an Excel file as a read‑only stream and call Aspose.Cells.FileFormatUtil.VerifyPassword to determine whether a supplied password matches the workbook’s write‑protection password, returning true or false without fully loading the workbook.
+// Provides a static ValidatePassword method that creates LoadOptions with the given password, attempts to load the workbook, and returns true if loading succeeds; false is returned for invalid passwords, missing files, or other errors, handling CellsException appropriately.
 public class WorkbookPasswordValidator
 {
-    // Validates the supplied password for a workbook without fully loading the file.
-    // Returns true if the password matches the write‑protection password, otherwise false.
+    /// <param name="filePath">Full path to the workbook file.</param>
+    /// <param name="password">Password to validate.</param>
+    /// <returns>True if the password is correct; otherwise false.</returns>
     public static bool ValidatePassword(string filePath, string password)
     {
-        // Open the workbook file as a read‑only stream.
-        using (Stream stream = File.OpenRead(filePath))
+        // Ensure the file exists before attempting to load.
+        if (!File.Exists(filePath))
         {
-            // FileFormatUtil.VerifyPassword checks the password for encrypted or write‑protected workbooks
-            // directly from the stream, avoiding full workbook loading.
-            return FileFormatUtil.VerifyPassword(stream, password);
+            return false;
+        }
+
+        try
+        {
+            // Set load options with the supplied password.
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = password
+            };
+
+            // Attempt to load the workbook using the password.
+            // If the password is incorrect, Aspose.Cells throws a CellsException.
+            Workbook workbook = new Workbook(filePath, loadOptions);
+
+            // Loading succeeded – the password is valid.
+            return true;
+        }
+        catch (CellsException)
+        {
+            // Loading failed due to an invalid password.
+            return false;
+        }
+        catch (Exception)
+        {
+            // Any other exception (e.g., file not found) is treated as a failure.
+            return false;
         }
     }
+}
 
-    // Demonstration of the validation method.
-    public static void Main()
+public class Program
+{
+    public static void Main(string[] args)
     {
-        string workbookPath = "WriteProtectedWorkbook.xlsx";
-        string passwordToTest = "owner";
+        // Expecting two arguments: file path and password.
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: <filePath> <password>");
+            return;
+        }
 
-        bool isPasswordValid = ValidatePassword(workbookPath, passwordToTest);
-        Console.WriteLine($"Password '{passwordToTest}' is valid: {isPasswordValid}");
+        string filePath = args[0];
+        string password = args[1];
+
+        bool isValid = WorkbookPasswordValidator.ValidatePassword(filePath, password);
+        Console.WriteLine($"Password valid: {isValid}");
     }
 }

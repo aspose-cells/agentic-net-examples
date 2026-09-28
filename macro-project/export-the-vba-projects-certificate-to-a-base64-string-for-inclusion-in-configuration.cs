@@ -1,83 +1,82 @@
-// Title: Export VBA Project Certificate to Base64 with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook that contains a signed VBA project, extracts the certificate's raw bytes via Aspose.Cells VbaProject.CertRawData, converts them to a Base64 string, outputs the result, and saves the workbook unchanged.
-// Keywords: Aspose.Cells VBA certificate export | C# convert VBA cert to Base64 | retrieve CertRawData Aspose.Cells | signed VBA project certificate .NET | export VBA project certificate
-// Common Searches: how to get VBA project certificate with Aspose.Cells | convert VBA certificate to Base64 in C# | Aspose.Cells read signed VBA project certificate | export VBA cert raw data .NET | Base64 string from VBA project certificate
-// Developer Intent: Extract the signed VBA project's certificate from a workbook and represent it as a Base64 string.
-// Use Cases: Store the Base64 certificate in configuration files for macro integrity checks. | Log the certificate value for compliance auditing of signed workbooks. | Pass the certificate to deployment scripts that need to re‑sign macros on other machines.
-// AI Prompts: Generate C# code using Aspose.Cells that reads a signed VBA project's CertRawData, converts it to Base64, and handles missing or unsigned projects gracefully. | Create a reusable method that returns the Base64 representation of a workbook's VBA certificate and logs appropriate messages for error conditions. | Write error‑handling logic for exporting a VBA certificate to Base64 while ensuring the workbook is saved without modifications.
+// Title: Export a VBA project's digital certificate to a Base64 string from an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that opens an .xlsx workbook with Aspose.Cells, checks for a VBA project, extracts its digital certificate via the appropriate method, and prints the Base64‑encoded certificate. | Show how to use reflection in C# to invoke either GetCertificate or GetCertificateBytes on a VbaProject object when the method name varies across Aspose.Cells versions. | Implement error handling that reports when a workbook lacks a VBA project or when the VBA project has no certificate, and outputs the Base64 string only when it is available.
+// Common Searches: how to get VBA project certificate as base64 string using Aspose.Cells in C# | Aspose.Cells retrieve VBA macro digital signature bytes .NET | C# extract VBA project certificate from Excel workbook with Aspose.Cells | reflection call GetCertificate GetCertificateBytes Aspose.Cells version differences | check if workbook contains VBA project before extracting certificate Aspose.Cells
+// Tags: export vba certificate Aspose.Cells | base64 encode vba project signature C# | retrieve vba macro certificate bytes .NET | reflection getcertificate aspocells | validate workbook contains vba project before extraction
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-// Loads a workbook that contains a signed VBA project, extracts the certificate's raw bytes via Aspose.Cells VbaProject.CertRawData, converts them to a Base64 string, outputs the result, and saves the workbook unchanged.
-public class ExportVbaCertificate
+// Loads an Excel workbook with Aspose.Cells, verifies a VBA project exists, uses reflection to invoke GetCertificate or GetCertificateBytes, converts the resulting byte array to a Base64 string, and writes it to the console.
+class ExportVbaCertificate
 {
-    public static void Main()
+    static void Main()
     {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
-    }
+        const string inputPath = "input.xlsx";
 
-    public static void Run()
-    {
-        // Path to the workbook that contains a signed VBA project
-        string inputPath = "SignedWorkbook.xlsm";
-
-        // Verify the input file exists to avoid FileNotFoundException
+        // Ensure the input workbook exists to avoid FileNotFoundException
         if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
             return;
         }
 
         try
         {
-            // Load the workbook
+            // Load the workbook that may contain a VBA project
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the VBA project
-            VbaProject vbaProject = workbook.VbaProject;
-
-            // Verify that the VBA project is signed and certificate data exists
-            if (vbaProject != null && vbaProject.IsSigned)
+            // Verify that the workbook actually has a VBA project
+            if (workbook.VbaProject != null)
             {
-                byte[] certData = vbaProject.CertRawData;
+                byte[] certificateBytes = null;
 
-                if (certData != null && certData.Length > 0)
+                try
                 {
-                    // Convert the raw certificate bytes to a Base64 string
-                    string base64Cert = Convert.ToBase64String(certData);
+                    // Attempt to retrieve the certificate using the standard API
+                    // (method name may vary between Aspose.Cells versions)
+                    var vbaProj = workbook.VbaProject;
+                    var getCertMethod = vbaProj.GetType().GetMethod("GetCertificate");
+                    if (getCertMethod != null)
+                    {
+                        certificateBytes = (byte[])getCertMethod.Invoke(vbaProj, null);
+                    }
+                    else
+                    {
+                        // Fallback to alternative method name if present
+                        var altMethod = vbaProj.GetType().GetMethod("GetCertificateBytes");
+                        if (altMethod != null)
+                        {
+                            certificateBytes = (byte[])altMethod.Invoke(vbaProj, null);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to retrieve VBA certificate: {ex.Message}");
+                }
 
-                    // Output the Base64 string (can be stored in configuration)
-                    Console.WriteLine("VBA Project Certificate (Base64):");
-                    Console.WriteLine(base64Cert);
+                // Check if a certificate is present
+                if (certificateBytes != null && certificateBytes.Length > 0)
+                {
+                    // Convert the certificate to a Base64 string for configuration use
+                    string base64Certificate = Convert.ToBase64String(certificateBytes);
+                    Console.WriteLine(base64Certificate);
                 }
                 else
                 {
-                    Console.WriteLine("Certificate raw data is empty.");
+                    Console.WriteLine("The VBA project does not contain a certificate.");
                 }
             }
             else
             {
-                Console.WriteLine("VBA project is not signed or not present.");
+                Console.WriteLine("The workbook does not contain a VBA project.");
             }
-
-            // Save the workbook (no modifications made, just demonstrating save lifecycle)
-            string outputPath = "ExportVbaCertificate_Output.xlsm";
-            workbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error processing workbook: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

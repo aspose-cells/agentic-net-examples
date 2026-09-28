@@ -1,48 +1,37 @@
-// Title: Measure Excel‑to‑PDF conversion time with Aspose.Cells and C# Stopwatch
-// Description: A concise C# example that loads an Excel workbook with Aspose.Cells, uses System.Diagnostics.Stopwatch to time the Save operation to PDF, and writes the elapsed milliseconds and formatted TimeSpan to the console for performance monitoring.
-// Keywords: Aspose.Cells conversion timing | C# Stopwatch performance | Excel to PDF benchmark | measure workbook.Save latency | .NET export speed analysis | global performance testing | US developers performance tools
-// Common Searches: how to time Aspose.Cells PDF export in C# | measure Excel conversion duration with Stopwatch | benchmark Aspose.Cells save performance | log conversion time for Excel to PDF | performance testing Aspose.Cells workbook.Save
-// Developer Intent: The developer needs to capture and log the duration of an Excel‑to‑PDF conversion performed by Aspose.Cells.
-// Use Cases: Compare conversion speeds of different SaveFormat options (PDF, XPS, HTML). | Record batch conversion times in logs or monitoring dashboards. | Detect performance regressions after upgrading Aspose.Cells by tracking elapsed time.
-// AI Prompts: Create a reusable C# method that accepts a source file path and target format, measures the conversion with Stopwatch, and returns the elapsed TimeSpan. | Show how to write conversion timings to a CSV or JSON log instead of the console. | Explain how to run parallel conversions of multiple workbooks while preserving individual Stopwatch measurements for each task.
+// Title: How to measure Excel to PDF conversion time with Aspose.Cells and Stopwatch in C#
+// AI Prompts: Write C# code that uses System.Diagnostics.Stopwatch to time the Aspose.Cells workbook.Save call when exporting an .xlsx file to PDF and prints the elapsed milliseconds. | Show a performance benchmark for the PDF export operation of Aspose.Cells, including start/stop of Stopwatch around workbook.Save. | Create a snippet that loads an Excel workbook, converts it to PDF, and logs the conversion duration using Stopwatch.
+// Common Searches: measure Aspose.Cells Excel to PDF conversion duration in C# | C# Stopwatch logging for Aspose.Cells PDF export performance | benchmark workbook.Save time when converting .xlsx to PDF with Aspose.Cells
+// Tags: Aspose.Cells PDF export timing | Stopwatch workbook.Save performance | Excel to PDF conversion benchmark | measure Aspose.Cells conversion latency | C# performance logging Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceDemo
+// // Loads an Excel workbook with Aspose.Cells, converts it to PDF, measures the conversion time using System.Diagnostics.Stopwatch, and writes the elapsed milliseconds to the console.
+class ConversionPerformance
 {
-    // A concise C# example that loads an Excel workbook with Aspose.Cells, uses System.Diagnostics.Stopwatch to time the Save operation to PDF, and writes the elapsed milliseconds and formatted TimeSpan to the console for performance monitoring.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the source Excel file
-            string sourcePath = "SourceWorkbook.xlsx";
+        // Path to the source Excel file and the output PDF file
+        string sourcePath = "input.xlsx";
+        string outputPath = "output.pdf";
 
-            // Path to the converted output file (e.g., PDF)
-            string outputPath = "ConvertedWorkbook.pdf";
+        // Initialize a Stopwatch to measure the conversion duration
+        Stopwatch stopwatch = new Stopwatch();
 
-            // Load the workbook (this is the operation we want to measure)
-            Workbook workbook = new Workbook(sourcePath);
+        // Load the workbook (Aspose.Cells create/load rule is not provided, so using standard API)
+        Workbook workbook = new Workbook(sourcePath);
 
-            // Create a Stopwatch instance to measure the conversion duration
-            Stopwatch stopwatch = new Stopwatch();
+        // Start timing the conversion process
+        stopwatch.Start();
 
-            // Start timing before the conversion begins
-            stopwatch.Start();
+        // Convert the workbook to PDF and save the result
+        workbook.Save(outputPath, SaveFormat.Pdf);
 
-            // Perform the conversion (saving to PDF in this example)
-            workbook.Save(outputPath, SaveFormat.Pdf);
+        // Stop timing after the conversion is complete
+        stopwatch.Stop();
 
-            // Stop timing after the conversion completes
-            stopwatch.Stop();
-
-            // Log the elapsed time in milliseconds
-            Console.WriteLine($"Conversion completed in {stopwatch.ElapsedMilliseconds} ms.");
-
-            // Optionally, also display the elapsed time in a more readable format
-            Console.WriteLine($"Elapsed time: {stopwatch.Elapsed}");
-        }
+        // Log the elapsed time
+        Console.WriteLine($"Conversion completed in {stopwatch.Elapsed.TotalMilliseconds} ms.");
     }
 }

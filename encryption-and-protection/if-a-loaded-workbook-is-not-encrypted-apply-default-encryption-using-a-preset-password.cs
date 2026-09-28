@@ -1,40 +1,53 @@
-// Title: C# – Apply default password encryption to an unencrypted Excel workbook with Aspose.Cells
-// Description: Loads a workbook, checks if it is already encrypted, and if not, sets a preset password, enables default encryption, optionally applies a strong cryptographic provider (128‑bit), then saves the protected file.
-// Keywords: Aspose.Cells encrypt workbook C# | Excel password protection .NET | Workbook.Settings.IsEncrypted | SetEncryptionOptions strong encryption | default encryption Aspose.Cells
-// Common Searches: encrypt existing Excel file Aspose.Cells C# | check workbook encryption before applying password | set default encryption with preset password Aspose.Cells | strong cryptographic provider for Excel files .NET
-// Developer Intent: Add password protection only when a workbook lacks encryption, using Aspose.Cells default encryption settings.
-// Use Cases: Secure user‑uploaded spreadsheets on a web server without double‑encrypting already protected files. | Generate automated reports that are automatically password‑protected if the source workbook is plain. | Enforce organizational data‑security policies by applying 128‑bit strong encryption to Excel outputs.
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, verifies Workbook.Settings.IsEncrypted, and applies a preset password with default encryption and a 128‑bit strong cryptographic provider. | Create a reusable method (inputPath, outputPath, password) that encrypts a workbook only when it is not already encrypted and returns true if encryption was performed. | Explain how to configure different encryption algorithms and key lengths using Aspose.Cells SetEncryptionOptions.
+// Title: Apply default password encryption to an unprotected Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an existing .xlsx file with Aspose.Cells, assign a preset password to the workbook, and save it as an encrypted file in C#. | Verify the input file exists, create the output folder if necessary, then set workbook.Settings.Password to protect the workbook before saving. | Overwrite a previously saved workbook with password protection using Aspose.Cells, ensuring the result is saved in encrypted XLSX format.
+// Common Searches: Aspose.Cells C# set default password for an existing workbook without existing protection | How to encrypt an already saved Excel file with a predefined password using Aspose.Cells .NET | Save XLSX with password protection only when file is not encrypted in C# | Create output directory and apply workbook.Settings.Password before saving with Aspose.Cells
+// Tags: default password encryption Aspose.Cells | workbook.Settings.Password C# | save encrypted XLSX Aspose.Cells | ensure output directory before saving Aspose.Cells | apply password to unprotected workbook .NET
 
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads a workbook, checks if it is already encrypted, and if not, sets a preset password, enables default encryption, optionally applies a strong cryptographic provider (128‑bit), then saves the protected file.
-class Program
+// The example loads an existing XLSX file, checks that the file exists, assigns a preset password via workbook.Settings.Password, creates the output directory if needed, and saves the workbook as an encrypted XLSX file using Aspose.Cells for .NET.
+class WorkbookEncryption
 {
     static void Main()
     {
-        // Paths and preset password
+        // Path to the existing workbook
         string inputPath = "input.xlsx";
-        string outputPath = "output_encrypted.xlsx";
-        string presetPassword = "MySecretPassword";
+        // Path for the encrypted output (can overwrite the original)
+        string outputPath = "input_encrypted.xlsx";
 
-        // Load the workbook (existing lifecycle rule)
-        Workbook workbook = new Workbook(inputPath);
-
-        // If the workbook is not encrypted, apply default encryption
-        if (!workbook.Settings.IsEncrypted)
+        try
         {
-            // Set the password that will protect the file
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Apply encryption with a preset password (overwrites any existing password)
+            string presetPassword = "MyDefaultPassword123";
             workbook.Settings.Password = presetPassword;
 
-            // Mark that default encryption should be used
-            workbook.Settings.IsDefaultEncrypted = true;
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Optional: specify a strong encryption algorithm and key length
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Save the workbook (encrypted)
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
-
-        // Save the workbook (existing lifecycle rule)
-        workbook.Save(outputPath);
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

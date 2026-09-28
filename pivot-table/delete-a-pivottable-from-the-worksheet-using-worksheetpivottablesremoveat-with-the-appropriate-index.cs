@@ -1,56 +1,28 @@
-// Title: Remove a PivotTable by Index in Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, adds three pivot tables to the first worksheet, deletes the second table using sheet.PivotTables.RemoveAt(1), and saves the result as DeletedPivotTable.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | PivotTable RemoveAt | delete pivot table | remove pivot table by index | Aspose.Cells PivotTables.RemoveAt | programmatic pivot table removal | C# workbook pivot table | Aspose.Cells worksheet pivot tables
-// Common Searches: Aspose.Cells remove pivot table by index | C# PivotTables.RemoveAt example | delete specific pivot table Aspose.Cells | how to delete a pivot table in .NET | remove second pivot table Aspose.Cells
-// Developer Intent: The developer needs to programmatically delete a particular pivot table from a worksheet using its zero‑based index with Aspose.Cells for .NET.
-// Use Cases: Eliminate unwanted pivot tables after generating multiple reports on the same sheet. | Reduce workbook size by removing temporary pivot tables before saving. | Implement user‑driven or rule‑based cleanup of pivot tables in automated reporting pipelines.
-// AI Prompts: List all pivot tables in a worksheet and delete the one with a given name using Aspose.Cells for .NET. | Provide a C# snippet that checks whether a pivot table exists at a specific index before calling RemoveAt to prevent exceptions. | Explain how to safely remove multiple pivot tables in a loop with PivotTables.RemoveAt, handling index shifts correctly.
+// Title: Delete a specific PivotTable from an Excel worksheet by index using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that checks for existing PivotTables in a worksheet and removes the one at a given index using Aspose.Cells. | Show how to call worksheet.PivotTables.RemoveAt to delete a particular PivotTable and then save the workbook. | Provide a robust example that validates the PivotTable collection before invoking RemoveAt to avoid runtime errors.
+// Common Searches: asp.net aspose.cells how to remove a pivot table at index 0 | c# code sample for deleting a pivot table from an Excel file using Aspose.Cells | remove specific pivot table from worksheet without affecting other data aspose.cells | check pivot table count before calling RemoveAt in Aspose.Cells C# | save changes after deleting pivot table with Aspose.Cells
+// Tags: Aspose.Cells PivotTables.RemoveAt method | C# delete Excel pivot table programmatically | delete pivot table at given index | validate pivot table count before removal | save workbook after pivot table deletion
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-// This example creates a workbook, adds three pivot tables to the first worksheet, deletes the second table using sheet.PivotTables.RemoveAt(1), and saves the result as DeletedPivotTable.xlsx.
-class DeletePivotTableDemo
+// The example loads 'input.xlsx', verifies that the first worksheet contains at least one PivotTable, removes the PivotTable at index 0 using worksheet.PivotTables.RemoveAt, and saves the updated workbook as 'output.xlsx'.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
-        try
+        // Load the workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Get the target worksheet (e.g., the first one)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Delete the PivotTable at the desired index (e.g., index 0)
+        if (worksheet.PivotTables.Count > 0)
         {
-            Run();
+            worksheet.PivotTables.RemoveAt(0);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
 
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the pivot tables
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["B3"].PutValue(200);
-        sheet.Cells["B4"].PutValue(300);
-
-        // Add three pivot tables to the worksheet
-        sheet.PivotTables.Add("A1:B4", "D1",  "PivotTable1");
-        sheet.PivotTables.Add("A1:B4", "D10", "PivotTable2");
-        sheet.PivotTables.Add("A1:B4", "D20", "PivotTable3");
-
-        // Remove the second pivot table (index 1) using RemoveAt
-        sheet.PivotTables.RemoveAt(1);
-
-        // Save the workbook to a file
-        workbook.Save("DeletedPivotTable.xlsx");
-        Console.WriteLine("Workbook saved as DeletedPivotTable.xlsx");
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,33 +1,46 @@
-// Title: Make a Shared Content Type Property Nillable in Aspose.Cells (C#)
-// Description: Demonstrates how to mark a workbook as shared, add a custom content‑type property, set its IsNillable flag to true so the metadata becomes optional, and save the file as an .xlsx document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells IsNillable | shared content type property | optional workbook metadata | C# Excel custom property | set IsNillable true
-// Common Searches: Aspose.Cells make content type property optional | C# set IsNillable for shared property | how to enable nillable metadata in Excel with Aspose | add shared property to workbook Aspose.Cells
-// Developer Intent: Enable a shared custom property to be optional (nillable) across all generated workbooks.
-// Use Cases: Create Excel files where a shared custom property can be omitted without breaking XML schema validation. | Generate multiple workbooks that reuse the same property but allow it to remain empty when not needed. | Export data with optional custom metadata for downstream processing or compliance.
-// AI Prompts: Show a C# example that sets IsNillable = true for a shared content type property in Aspose.Cells. | Explain how to make a custom workbook property optional using the IsNillable flag. | Provide steps to apply the IsNillable setting to existing Aspose.Cells workbooks without recreating them.
+// Title: Set a shared custom document property to null (make it nillable) in an Aspose.Cells workbook using C#
+// AI Prompts: Generate C# code with Aspose.Cells that opens a workbook, finds a shared custom document property, assigns it a null value to make it optional, and saves the file. | Write a script that creates or loads an Excel workbook, checks for a specific custom property across the workbook, sets its value to null (nillable), and persists the changes with Aspose.Cells.
+// Common Searches: Aspose.Cells C# make custom document property optional by setting it to null | how to clear a shared custom property value in an Excel workbook using Aspose.Cells .NET | set shared custom document property to null across multiple workbooks with Aspose.Cells
+// Tags: Aspose.Cells set custom document property null | C# make shared workbook metadata optional | clear custom document property value Aspose.Cells | modify Excel custom properties programmatically | optional custom document property .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Demonstrates how to mark a workbook as shared, add a custom content‑type property, set its IsNillable flag to true so the metadata becomes optional, and save the file as an .xlsx document using Aspose.Cells for .NET.
-class SetIsNillableSharedProperty
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a Workbook, accesses the custom document property named "SharedProperty", sets its Value to null (making the property nillable) if it exists, and saves the workbook as ModifiedWorkbook.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook.
+                var workbook = new Workbook();
 
-        // Mark the workbook as shared
-        workbook.Settings.Shared = true;
+                // Access the custom document property named "SharedProperty".
+                // Replace "SharedProperty" with the actual property name you want to modify.
+                var sharedProperty = workbook.CustomDocumentProperties["SharedProperty"];
 
-        // Add a content type property named "Shared"
-        int index = workbook.ContentTypeProperties.Add("Shared", "Aspose", "text");
+                // If the property exists, set its value to null (making it effectively nillable).
+                if (sharedProperty != null)
+                {
+                    sharedProperty.Value = null;
+                }
 
-        // Set IsNillable to true for the shared property
-        workbook.ContentTypeProperties[index].IsNillable = true;
+                // Define the output file path.
+                string outputPath = "ModifiedWorkbook.xlsx";
 
-        // Save the workbook
-        workbook.Save("SharedPropertyIsNillable.xlsx");
+                // Save the workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,42 +1,43 @@
-// Title: C# – Convert HTML to PDF with Aspose.Cells while retaining CSS ::before and ::after
-// Description: Load an HTML file (including CSS ::before/::after pseudo‑elements) into an Aspose.Cells Workbook and export it to PDF using PdfSaveOptions, preserving the original visual layout.
-// Keywords: Aspose.Cells HTML to PDF | C# convert HTML PDF | preserve CSS pseudo‑elements | PdfSaveOptions | Aspose.Cells workbook load HTML
-// Common Searches: Aspose.Cells convert HTML to PDF with pseudo elements | C# keep ::before ::after when exporting HTML to PDF | How to render CSS pseudo‑elements in PDF using Aspose.Cells | Save HTML workbook as PDF Aspose.Cells C#
-// Developer Intent: Create a PDF from an HTML document that contains CSS ::before and ::after pseudo‑elements using Aspose.Cells for .NET.
-// Use Cases: Archive marketing emails that use icon fonts via ::before into printable PDFs. | Generate printable reports from HTML templates that rely on ::after footnote markers. | Batch‑convert a collection of web pages to PDFs while maintaining all CSS visual effects.
-// AI Prompts: Show how to set OnePagePerSheet = true in PdfSaveOptions without losing CSS pseudo‑elements. | Demonstrate adding a custom web font so text in ::before and ::after renders correctly in the PDF. | Explain how to reference external CSS files when loading HTML into an Aspose.Cells Workbook for PDF export.
+// Title: Convert an HTML file with CSS ::before and ::after pseudo‑elements to PDF using Aspose.Cells in C#
+// AI Prompts: Generate C# code that reads an HTML document, loads it into an Aspose.Cells Workbook, and saves it as a PDF while retaining ::before and ::after CSS pseudo‑elements. | Add robust file‑existence validation and exception handling to the HTML‑to‑PDF conversion using Aspose.Cells. | Show how to embed custom fonts in the PDF output when converting HTML that contains CSS pseudo‑elements with Aspose.Cells.
+// Common Searches: asp.net convert html with ::before pseudo element to pdf using Aspose.Cells | c# preserve CSS ::after content during html to pdf export with Aspose.Cells | load html and css pseudo‑elements into Aspose.Cells workbook for pdf generation
+// Tags: Aspose.Cells HTML to PDF conversion | CSS pseudo‑element support in PDF output | C# Workbook.Load HTML with CSS | Workbook.Save PDF preserving styles | embed custom fonts Aspose.Cells PDF
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Load an HTML file (including CSS ::before/::after pseudo‑elements) into an Aspose.Cells Workbook and export it to PDF using PdfSaveOptions, preserving the original visual layout.
+// The example verifies that the input HTML file exists, loads it into an Aspose.Cells Workbook (which parses the HTML and associated CSS, including ::before and ::after pseudo‑elements), and saves the workbook as a PDF, with error handling for any conversion issues.
 class HtmlToPdfConverter
 {
     static void Main()
     {
-        // Input HTML file that may contain CSS pseudo‑elements (::before, ::after)
+        // Path to the source HTML file (must contain CSS with ::before / ::after)
         string htmlFile = "input.html";
 
-        // Output PDF file
+        // Desired output PDF file path
         string pdfFile = "output.pdf";
 
-        // Load the HTML document into a Workbook.
-        // Aspose.Cells automatically parses the HTML and creates the corresponding worksheet.
-        Workbook workbook = new Workbook(htmlFile);
-
-        // Configure PDF save options.
-        // The default rendering preserves the visual appearance of the HTML,
-        // including CSS pseudo‑elements, as they are interpreted during the load phase.
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            // Example: keep each worksheet on its own page (optional)
-            OnePagePerSheet = false
-        };
+            // Verify that the input HTML file exists
+            if (!File.Exists(htmlFile))
+            {
+                Console.WriteLine($"Error: The file '{htmlFile}' was not found.");
+                return;
+            }
 
-        // Save the workbook as a PDF file.
-        workbook.Save(pdfFile, pdfOptions);
+            // Load the HTML document into a Workbook – Aspose.Cells parses HTML and CSS
+            var workbook = new Workbook(htmlFile);
 
-        Console.WriteLine($"HTML file \"{htmlFile}\" has been converted to PDF \"{pdfFile}\".");
+            // Save the workbook as PDF
+            workbook.Save(pdfFile, SaveFormat.Pdf);
+
+            Console.WriteLine($"Conversion completed. PDF saved to: {pdfFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+        }
     }
 }

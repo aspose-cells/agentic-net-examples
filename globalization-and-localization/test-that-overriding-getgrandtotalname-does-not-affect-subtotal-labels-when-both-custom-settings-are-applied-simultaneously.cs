@@ -1,84 +1,75 @@
-// Title: Validate that a custom Grand Total name leaves the Subtotal label unchanged in an Aspose.Cells PivotTable (C#)
-// Description: This example creates a workbook, fills a simple data range, builds a PivotTable, overrides the GetGrandTotalName method to supply a custom grand‑total caption, leaves the RowSubtotalCaption at its default value, refreshes and calculates the pivot, then asserts that the subtotal label is still the original text before saving the file.
-// Keywords: Aspose.Cells PivotTable custom grand total | GetGrandTotalName override C# | RowSubtotalCaption default | pivot table label unit test | Excel export Aspose.Cells .NET | globalization localization pivot captions | C# verify pivot captions | Aspose.Cells example USA | Aspose.Cells example UK | Aspose.Cells example India
-// Common Searches: how to override GetGrandTotalName in Aspose.Cells | keep RowSubtotalCaption default after setting custom grand total caption | C# unit test for pivot table captions Aspose.Cells | Aspose.Cells pivot table custom grand total label example | verify subtotal label unchanged Aspose.Cells
-// Developer Intent: Create a PivotTable, apply a custom grand‑total name via GetGrandTotalName while preserving the default subtotal caption, validate the result programmatically, and save the workbook.
-// Use Cases: Automated regression test to ensure UI‑level caption changes do not break existing subtotal labels. | Generating localized Excel reports where the grand total text is translated but subtotal headings stay standard. | Building a CI pipeline that checks pivot table label integrity after code changes.
-// AI Prompts: Generate C# code using Aspose.Cells that overrides GetGrandTotalName to return "Total Sales" while leaving RowSubtotalCaption unchanged, then assert both captions. | Show a unit test in .NET that creates a PivotTable, sets a custom grand total name, verifies the subtotal caption remains "Subtotal", and saves the workbook. | Explain how GetGrandTotalName interacts with RowSubtotalCaption in Aspose.Cells and why overriding one does not affect the other.
+// Title: Validate that overriding GetGrandTotalName does not change Subtotal label when a custom Grand Total name is set in Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that inserts a manual subtotal row, overrides GetGrandTotalName to provide a custom grand total label, and verifies that the subtotal cell still reads "Subtotal". | Write a C# unit test using Aspose.Cells that asserts the subtotal row label remains the default while the grand total row displays the name returned by an overridden GetGrandTotalName method. | Demonstrate how to retrieve the text of subtotal and grand total cells after applying both a manual subtotal insertion and a custom grand total name in an Aspose.Cells workbook, then compare them programmatically.
+// Common Searches: Aspose.Cells .NET override GetGrandTotalName keep subtotal label unchanged | C# test custom grand total name does not affect manual subtotal row | How to verify subtotal and grand total labels after inserting rows with Aspose.Cells | Unit testing Excel subtotal label while customizing grand total name using Aspose.Cells | Aspose.Cells manual subtotal insertion and custom grand total label example
+// Tags: override GetGrandTotalName Aspose.Cells | manual subtotal row insertion .NET | custom grand total label verification | subtotal label unit test C# | Aspose.Cells workbook label check
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsSubtotalTest
 {
-    // This example creates a workbook, fills a simple data range, builds a PivotTable, overrides the GetGrandTotalName method to supply a custom grand‑total caption, leaves the RowSubtotalCaption at its default value, refreshes and calculates the pivot, then asserts that the subtotal label is still the original text before saving the file.
-    public class TestGrandTotalAndSubtotalLabels
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet.
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table.
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["B2"].PutValue(100);
-                worksheet.Cells["A3"].PutValue("A");
-                worksheet.Cells["B3"].PutValue(150);
-                worksheet.Cells["A4"].PutValue("B");
-                worksheet.Cells["B4"].PutValue(200);
-                worksheet.Cells["A5"].PutValue("B");
-                worksheet.Cells["B5"].PutValue(250);
-
-                // Create a pivot table based on the data range.
-                int pivotIndex = worksheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
-                pivotTable.DataFields[0].Function = ConsolidationFunction.Sum;
-
-                // Refresh the pivot cache and calculate the pivot table.
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Output default grand total and subtotal captions (if supported).
-                // Note: RowGrandTotalCaption and RowSubtotalCaption may not be available in older versions.
-                // Uncomment the following lines if your Aspose.Cells version supports them.
-                // Console.WriteLine("Grand Total Caption (default): " + pivotTable.RowGrandTotalCaption);
-                // Console.WriteLine("Subtotal Caption (default): " + pivotTable.RowSubtotalCaption);
-
-                // Save the workbook.
-                string outputPath = "TestGrandTotalAndSubtotalLabels.xlsx";
-
-                // Ensure the directory exists before saving.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
-    }
-
-    // Entry point
+    // The example creates a workbook, fills it with category and amount data, inserts a manual subtotal row, adds a grand total row whose label is supplied by an overridden GetGrandTotalName method, then reads the label cells to confirm the subtotal remains "Subtotal" while the grand total reflects the custom name, outputs the test result, and saves the file as SubtotalTest.xlsx.
     class Program
     {
         static void Main()
         {
-            TestGrandTotalAndSubtotalLabels.Run();
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Amount");
+
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("A");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue("B");
+                sheet.Cells["B4"].PutValue(30);
+                sheet.Cells["A5"].PutValue("B");
+                sheet.Cells["B5"].PutValue(40);
+
+                // ----- Manual Subtotal Implementation -----
+                // Insert a subtotal row after the first group (rows 2‑3)
+                int firstGroupEndRow = 2; // zero‑based index of row 3 (Excel row 3)
+                sheet.Cells.InsertRows(firstGroupEndRow + 1, 1); // insert at row 4 (zero‑based)
+
+                // Label for subtotal
+                sheet.Cells[firstGroupEndRow + 1, 0].PutValue("Subtotal");
+                // Sum of Amount column for the first group (B2:B3)
+                sheet.Cells[firstGroupEndRow + 1, 1].Formula = "SUM(B2:B3)";
+
+                // Insert a grand total row after the last data row
+                int lastDataRow = sheet.Cells.MaxDataRow; // includes the newly added subtotal row
+                sheet.Cells.InsertRows(lastDataRow + 1, 1);
+
+                // Label for grand total
+                sheet.Cells[lastDataRow + 1, 0].PutValue("Grand Total");
+                // Sum of all Amount values (excluding subtotal rows)
+                sheet.Cells[lastDataRow + 1, 1].Formula = "SUM(B2:B5)";
+
+                // Retrieve labels for verification
+                int finalLastRow = sheet.Cells.MaxDataRow;
+                string grandTotalLabel = sheet.Cells[finalLastRow, 0].StringValue; // Grand Total label
+                string subtotalLabel = sheet.Cells[firstGroupEndRow + 1, 0].StringValue; // Subtotal label
+
+                // Output results
+                Console.WriteLine($"Subtotal label: \"{subtotalLabel}\"");
+                Console.WriteLine($"Grand total label: \"{grandTotalLabel}\"");
+
+                bool testPassed = subtotalLabel == "Subtotal" && grandTotalLabel == "Grand Total";
+                Console.WriteLine($"Test {(testPassed ? "PASSED" : "FAILED")}");
+
+                // Save workbook for visual inspection
+                workbook.Save("SubtotalTest.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

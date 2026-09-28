@@ -1,52 +1,56 @@
-// Title: Convert HTML with Hyperlinks to Clickable Excel (XLSX) using Aspose.Cells for .NET
-// Description: Load a local HTML file that contains anchor tags into an Aspose.Cells Workbook, automatically preserve each hyperlink, and save the workbook as an XLSX file where the links remain active. Includes optional code to enumerate and log imported hyperlinks and basic error handling for missing files.
-// Keywords: Aspose.Cells HTML to Excel | preserve hyperlinks C# | convert HTML to XLSX .NET | load HTML workbook Aspose | hyperlink collection Aspose.Cells | clickable links Excel export
-// Common Searches: Aspose.Cells keep hyperlinks when converting HTML to Excel | C# convert HTML file to XLSX with active links | load HTML into Workbook and export clickable hyperlinks | iterate over imported hyperlinks Aspose.Cells | error handling missing HTML file Aspose.Cells
-// Developer Intent: Import an HTML document with anchor tags into a Workbook and export it as an Excel file that retains functional hyperlinks.
-// Use Cases: Validate the existence of the source HTML file before conversion to prevent runtime errors. | Load the HTML file into a Workbook; Aspose.Cells automatically creates Hyperlink objects for each <a> tag. | Save the Workbook as XLSX so the hyperlinks are clickable in Excel. | Optionally iterate through Worksheet.Hyperlinks to log, audit, or modify link addresses before saving.
-// AI Prompts: Write C# code that uses Aspose.Cells to convert an HTML file with embedded <a> tags into an XLSX workbook, ensuring all links stay clickable. | Explain how to access the Hyperlink collection after loading HTML, and show how to log or update hyperlink URLs. | Provide best‑practice error handling for missing HTML input and verification that hyperlinks were imported correctly.
+// Title: Convert an HTML file to an Excel workbook with clickable hyperlinks using Aspose.Cells for .NET
+// AI Prompts: Load an HTML document into an Aspose.Cells Workbook while preserving <a> tag hyperlinks. | Iterate through each worksheet's Hyperlink collection to log the address of every link before saving. | Save the workbook as an XLSX file ensuring that all hyperlinks remain active in Excel. | Create the output folder if it does not exist and handle missing input file errors gracefully.
+// Common Searches: Aspose.Cells C# convert HTML to XLSX with hyperlinks intact | how to keep anchor tags clickable when exporting HTML to Excel using Aspose | load HTML into workbook preserving hyperlinks Aspose.Cells .NET | C# example for converting HTML file to Excel while retaining links | Aspose.Cells hyperlink extraction from HTML before saving to XLSX
+// Tags: HTML to XLSX conversion preserving hyperlinks Aspose.Cells | load HTML workbook with active links C# | enumerate worksheet hyperlinks Aspose.Cells | save workbook as XLSX clickable links | load options HTML format Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Load a local HTML file that contains anchor tags into an Aspose.Cells Workbook, automatically preserve each hyperlink, and save the workbook as an XLSX file where the links remain active. Includes optional code to enumerate and log imported hyperlinks and basic error handling for missing files.
-class HtmlToExcel
+// Demonstrates loading an HTML file into an Aspose.Cells Workbook using LoadOptions for HTML, iterating the Hyperlinks collection to verify addresses, and saving the workbook as an XLSX file so that all original <a> tags become clickable links in Excel.
+class Program
 {
     static void Main()
     {
-        // Input HTML file containing hyperlinks
-        string htmlPath = "sample.html";
+        // Path to the source HTML file
+        string htmlFilePath = "input.html";
 
-        // Output Excel file where hyperlinks will be clickable
-        string excelPath = "output.xlsx";
+        // Path where the resulting Excel file will be saved
+        string excelFilePath = "output.xlsx";
 
-        // Verify that the input HTML file exists to avoid FileNotFoundException
-        if (!File.Exists(htmlPath))
+        // Verify that the input HTML file exists
+        if (!File.Exists(htmlFilePath))
         {
-            Console.WriteLine($"Error: The HTML file \"{htmlPath}\" was not found.");
+            Console.WriteLine($"Input file not found: {htmlFilePath}");
             return;
         }
 
         try
         {
-            // Load the HTML file into a workbook (hyperlinks are preserved automatically)
-            Workbook workbook = new Workbook(htmlPath);
+            // Load the HTML file into a Workbook while preserving hyperlinks
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(htmlFilePath, loadOptions);
 
-            // Optional: iterate through hyperlinks to verify they were imported
+            // Iterate through hyperlinks to confirm they are loaded correctly
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 foreach (Hyperlink link in sheet.Hyperlinks)
                 {
-                    // Display hyperlink address (row/column properties may not be available in all versions)
-                    Console.WriteLine($"Hyperlink -> {link.Address}");
+                    // Display the hyperlink address; cell position properties are not required for core functionality
+                    Console.WriteLine($"Hyperlink found: Address = {link.Address}");
                 }
             }
 
-            // Save the workbook as an Excel file (XLSX)
-            workbook.Save(excelPath, SaveFormat.Xlsx);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(excelFilePath) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            Console.WriteLine("HTML successfully converted to Excel with clickable hyperlinks.");
+            // Save the workbook as an XLSX file; hyperlinks remain clickable in the workbook
+            workbook.Save(excelFilePath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {excelFilePath}");
         }
         catch (Exception ex)
         {

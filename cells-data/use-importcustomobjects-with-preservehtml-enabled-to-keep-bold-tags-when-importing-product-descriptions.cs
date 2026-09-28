@@ -1,30 +1,26 @@
-// Title: Preserve HTML Tags When Importing Custom Objects with Aspose.Cells ImportCustomObjects (C#)
-// Description: Shows how to import a List<Product> into an Excel worksheet using Aspose.Cells for .NET while retaining HTML formatting (e.g., <b>, <i>, <u>) by setting IsHtmlString in ImportTableOptions and saving the result as ProductsWithHtml.xlsx.
-// Keywords: Aspose.Cells ImportCustomObjects | Preserve HTML tags in Excel | IsHtmlString true example | C# import custom objects with HTML | ImportTableOptions HTML preservation | Export product catalog to Excel | .NET Excel rich text import | Aspose.Cells keep bold italic | Excel cell HTML formatting | Aspose.Cells ImportCustomObjects C#
-// Common Searches: Aspose.Cells keep HTML tags when importing | ImportCustomObjects preserve bold tags C# | IsHtmlString option Aspose.Cells | How to import list of objects with HTML formatting | Export HTML‑styled data to Excel using Aspose
-// Developer Intent: Import a collection of objects into an Excel sheet while preserving embedded HTML markup such as bold, italic, and underline tags.
-// Use Cases: Create a product catalog Excel file where descriptions contain rich‑text HTML from a database. | Generate price lists with styled text directly from C# models without post‑processing. | Transfer API‑returned HTML snippets into Excel for reporting while maintaining visual emphasis.
-// AI Prompts: Write C# code that uses Aspose.Cells ImportCustomObjects with IsHtmlString enabled to keep HTML tags in cell values. | Explain how ImportTableOptions.IsHtmlString influences HTML preservation during custom object import. | Provide a step‑by‑step tutorial for importing a list of objects with <b>, <i>, and <u> tags into an Excel workbook using Aspose.Cells for .NET.
+// Title: Import a List of objects into an Excel worksheet while preserving <b> HTML tags using Aspose.Cells ImportCustomObjects in C#
+// AI Prompts: Generate C# code that uses Aspose.Cells ImportCustomObjects to load a List<Product> into a worksheet and keep HTML tags such as <b> intact in the cells. | Show how to set HtmlSaveOptions so that the workbook is saved to HTML without parsing the HTML tags stored in cells. | Demonstrate configuring ImportTableOptions to add a header row and enable automatic numeric conversion when importing custom objects.
+// Common Searches: Aspose.Cells C# import custom objects preserve HTML formatting in cells | ImportCustomObjects keep bold tags when exporting to HTML | disable HTML tag parsing in Aspose.Cells HTML export | example of ImportTableOptions IsHtmlString true with List<T>
+// Tags: ImportCustomObjects with IsHtmlString option | preserve HTML tags in Excel cells Aspose.Cells | HtmlSaveOptions ParseHtmlTagInCell false | import List<T> to worksheet C# Aspose.Cells | export workbook to HTML without tag parsing
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlImportDemo
+namespace AsposeCellsImportHtmlDemo
 {
-    // Custom object representing a product with an HTML‑formatted description
-    // Shows how to import a List<Product> into an Excel worksheet using Aspose.Cells for .NET while retaining HTML formatting (e.g., <b>, <i>, <u>) by setting IsHtmlString in ImportTableOptions and saving the result as ProductsWithHtml.xlsx.
+    // Simple product class with an HTML‑formatted description
+    // Demonstrates importing a List<Product> into a worksheet using ImportCustomObjects with IsHtmlString enabled to retain <b> tags, then saving the workbook as XLSX and as HTML with ParseHtmlTagInCell set to false to keep the tags unchanged.
     public class Product
     {
-        public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;   // May contain <b>, <i>, etc.
+        public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
@@ -32,47 +28,41 @@ namespace AsposeCellsHtmlImportDemo
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Sample data – description contains bold HTML tags
+                // Sample data – the description contains <b> tags
                 List<Product> products = new List<Product>
                 {
-                    new Product
-                    {
-                        Name = "Apple",
-                        Description = "<b>Fresh</b> and <i>crisp</i> apples",
-                        Price = 2.99m
-                    },
-                    new Product
-                    {
-                        Name = "Orange",
-                        Description = "<b>Juicy</b> oranges with <u>vitamin C</u>",
-                        Price = 1.99m
-                    }
+                    new Product { Description = "<b>Apple</b> – Fresh fruit", Price = 2.99m },
+                    new Product { Description = "<b>Orange</b> – Citrus delight", Price = 1.79m }
                 };
 
-                // Configure import options:
-                // - IsHtmlString = true tells Aspose.Cells that the string values may contain HTML.
-                // - IsFieldNameShown = true writes the property names in the first row.
-                // - InsertRows = true adds rows if needed.
-                // - TotalRows = number of objects to import.
+                // Configure import options to treat cell values as HTML strings
                 ImportTableOptions options = new ImportTableOptions
                 {
-                    IsHtmlString = true,
-                    IsFieldNameShown = true,
-                    InsertRows = true,
-                    TotalRows = products.Count,
-                    ConvertNumericData = true,
-                    DateFormat = "yyyy-MM-dd"
+                    IsFieldNameShown = true,      // import property names as header row
+                    IsHtmlString = true,          // preserve HTML tags (e.g., <b>)
+                    TotalRows = products.Count,   // number of rows to import
+                    InsertRows = true,            // insert rows if needed
+                    ConvertNumericData = true,    // convert numeric values automatically
+                    DateFormat = "yyyy-MM-dd"     // required by the class, not used here
                 };
 
-                // Import the list of custom objects starting at cell A1 (row 0, column 0)
+                // Import the collection into the worksheet starting at cell A1 (row 0, column 0)
                 sheet.Cells.ImportCustomObjects((ICollection)products, 0, 0, options);
 
-                // Save the workbook (Excel format) – the HTML tags are preserved in the cells.
-                workbook.Save("ProductsWithHtml.xlsx");
+                // Save as Excel file (HTML tags are stored in the cell)
+                workbook.Save("Products.xlsx", SaveFormat.Xlsx);
+
+                // When exporting to HTML we want the tags to remain unchanged,
+                // so disable parsing of HTML tags in cells.
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    ParseHtmlTagInCell = false
+                };
+                workbook.Save("Products.html", htmlOptions);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

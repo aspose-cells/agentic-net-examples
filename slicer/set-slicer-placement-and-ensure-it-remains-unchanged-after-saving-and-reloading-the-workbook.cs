@@ -1,10 +1,7 @@
-// Title: Persist Slicer Placement (MoveAndSize) After Save with Aspose.Cells for .NET
-// Description: Demonstrates how to set a slicer's Placement to MoveAndSize, save the workbook, reload it, and verify that the placement setting is retained using Aspose.Cells for C#.
-// Keywords: Aspose.Cells slicer placement | PlacementType.MoveAndSize C# | slicer persistence after save | Aspose.Cells pivot table slicer example | C# Excel slicer placement | retain slicer settings Aspose | Excel slicer MoveAndSize Aspose.Cells | slicer placement property .NET
-// Common Searches: how to set slicer placement move and size with Aspose.Cells | does slicer placement persist after saving workbook in C# | Aspose.Cells example for slicer placement property | C# code to verify slicer placement after reload | Aspose.Cells keep slicer settings after file save
-// Developer Intent: Set a slicer's Placement to MoveAndSize and confirm the setting survives workbook save and reload.
-// Use Cases: Create a pivot table, add a linked slicer, and make the slicer move and resize with its cells. | Save the Excel file and reload it to ensure the slicer placement remains unchanged. | Log or display the slicer Placement value after reloading to validate persistence.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a slicer's Placement to MoveAndSize, saves the workbook, reloads it, and prints the placement value. | Explain the behavior of PlacementType.MoveAndSize for slicers in Excel files created with Aspose.Cells. | Write a method that iterates over all slicers in a worksheet and applies PlacementType.MoveAndSize before saving the workbook.
+// Title: Set slicer Shape.Placement to MoveAndSize and verify it stays unchanged after saving and reopening the workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a new workbook, build a pivot table, attach a slicer, assign PlacementType.MoveAndSize to the slicer's Shape.Placement, save the file, reopen it, and read the placement value to ensure it remained MoveAndSize. | Modify an existing slicer in a .xlsx created with Aspose.Cells so that its shape uses the MoveAndSize placement mode, then persist the workbook and confirm the mode is retained after loading.
+// Common Searches: Aspose.Cells C# keep slicer location after saving workbook | set slicer placement MoveAndSize in Aspose.Cells .NET | verify slicer shape placement persists after reloading Excel file using Aspose.Cells | C# Aspose.Cells slicer placement property resets on workbook reload | example of using Shape.Placement with slicers in Aspose.Cells
+// Tags: Aspose.Cells slicer shape mode | persist slicer shape setting after workbook save | C# set slicer Shape.Placement property | pivot table slicer configuration Aspose.Cells | Excel file reload retains slicer settings .NET
 
 using System;
 using Aspose.Cells;
@@ -12,8 +9,8 @@ using Aspose.Cells.Slicers;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to set a slicer's Placement to MoveAndSize, save the workbook, reload it, and verify that the placement setting is retained using Aspose.Cells for C#.
-class Program
+// The example creates a workbook, adds sample data, builds a pivot table, inserts a slicer linked to the pivot, sets the slicer's Shape.Placement to PlacementType.MoveAndSize, saves the workbook as .xlsx, reloads it, and prints the placement to confirm the setting persisted.
+class SlicerPlacementDemo
 {
     static void Main()
     {
@@ -31,29 +28,30 @@ class Program
         worksheet.Cells["B3"].Value = 150;
         worksheet.Cells["B4"].Value = 200;
 
-        // Add a pivot table based on the data
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+        // Add a pivot table based on the data range
+        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "C3", "PivotTable1");
         PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
         pivotTable.AddFieldToArea(PivotFieldType.Row, "Fruit");
         pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
         // Add a slicer linked to the pivot table
-        int slicerIndex = worksheet.Slicers.Add(pivotTable, "F1", "Fruit");
+        int slicerIndex = worksheet.Slicers.Add(pivotTable, "E3", "Fruit");
         Slicer slicer = worksheet.Slicers[slicerIndex];
 
-        // Set the slicer's placement so it moves and sizes with cells
-        slicer.Placement = PlacementType.MoveAndSize;
+        // Set the placement of the slicer using the non‑obsolete Shape.Placement property
+        slicer.Shape.Placement = PlacementType.MoveAndSize;
 
         // Save the workbook
         string fileName = "SlicerPlacementDemo.xlsx";
         workbook.Save(fileName);
 
-        // Reload the workbook to verify the placement persists
-        Workbook reloadedWorkbook = new Workbook(fileName);
-        Worksheet reloadedWorksheet = reloadedWorkbook.Worksheets[0];
-        Slicer reloadedSlicer = reloadedWorksheet.Slicers[0];
+        // Reload the workbook to verify that the placement persists
+        Workbook loadedWorkbook = new Workbook(fileName);
+        Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+        Slicer loadedSlicer = loadedWorksheet.Slicers[0];
 
         // Output the placement after reload
-        Console.WriteLine("Slicer placement after reload: " + reloadedSlicer.Placement);
+        PlacementType placementAfterReload = loadedSlicer.Shape.Placement;
+        Console.WriteLine("Slicer placement after reload: " + placementAfterReload);
     }
 }

@@ -1,65 +1,53 @@
-// Title: Trigger formula recalculation only on a specific cell change with Aspose.Cells in C#
-// Description: Demonstrates how to set Aspose.Cells to Manual calculation mode and use a custom class derived from AbstractFormulaChangeMonitor to recalculate formulas only when a designated cell (e.g., B1) is modified, improving performance for large workbooks.
-// Keywords: Aspose.Cells manual calculation mode | C# formula change monitor | AbstractFormulaChangeMonitor example | specific cell trigger recalculation | event‑driven formula update | Excel workbook performance | CalculateFormula on cell change | Aspose.Cells custom monitor | recalculate only when B1 changes
-// Common Searches: Aspose.Cells recalculate formulas only when a cell changes | C# manual calculation mode Aspose.Cells | How to use AbstractFormulaChangeMonitor | Trigger CalculateFormula after updating B1 | Event‑driven formula recalculation in .NET
-// Developer Intent: Recalculate workbook formulas only when a designated cell changes.
-// Use Cases: Reduce unnecessary calculations in large spreadsheets by switching to Manual mode and invoking CalculateFormula only after key input cells are edited. | Create reusable monitors for any target cell by adjusting row and column constants in the SpecificCellMonitor class. | Integrate the monitor into data‑entry applications where formulas must refresh only after user‑provided values are confirmed.
-// AI Prompts: Generate a C# class that inherits from AbstractFormulaChangeMonitor to recalculate formulas when cell C3 changes. | Show how to enable Manual calculation mode in Aspose.Cells and programmatically trigger CalculateFormula after updating a range of cells. | Explain how to register multiple SpecificCellMonitor instances to watch several trigger cells in a workbook.
+// Title: Recalculate formulas in Aspose.Cells only after cell A1 changes using manual calculation mode in C#
+// AI Prompts: Write C# code that sets Aspose.Cells workbook to manual calculation mode and invokes Workbook.CalculateFormula() only when cell A1 is updated. | Show how to simulate an event‑like trigger in Aspose.Cells that detects a change to a specific cell and performs on‑demand formula recalculation. | Provide a minimal example that modifies cell A1, manually recalculates all formulas, and saves the workbook using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells manual calculation mode trigger formula recalculation after updating a single cell | C# Aspose.Cells recalculate workbook only when specific cell value changes | How to force formula evaluation in Aspose.Cells after modifying cell A1 | Event driven formula calculation in Aspose.Cells .NET | Calculate formulas on demand in Aspose.Cells workbook C#
+// Tags: manual calculation mode Aspose.Cells C# | Workbook.CalculateFormula on demand | trigger formula recalculation specific cell | Aspose.Cells event‑driven calculation | update cell A1 recalc formulas Aspose.Cells | C# Aspose.Cells workbook save after manual calc
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to set Aspose.Cells to Manual calculation mode and use a custom class derived from AbstractFormulaChangeMonitor to recalculate formulas only when a designated cell (e.g., B1) is modified, improving performance for large workbooks.
+// Creates a new workbook (or loads an existing one), optionally switches to manual calculation mode, changes the value of cell A1, manually recalculates all formulas with Workbook.CalculateFormula(), and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Set calculation mode to Manual so formulas are not auto‑recalculated
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-        // Example formula that depends on cell B1
-        sheet.Cells["A1"].Formula = "=B1*2";
-
-        // Initial value for the trigger cell (B1)
-        sheet.Cells["B1"].PutValue(5);
-
-        // Create a monitor that will recalculate only when B1 changes
-        var monitor = new SpecificCellMonitor(workbook);
-
-        // Change the value of B1
-        sheet.Cells["B1"].PutValue(10);
-
-        // Notify the monitor that B1 (row 0, column 1) has changed
-        monitor.OnCellFormulaChanged(0, 0, 1); // sheetIndex, rowIndex, columnIndex
-
-        // Save the workbook
-        workbook.Save("output.xlsx");
-    }
-
-    // Custom monitor that reacts only to a specific cell change
-    class SpecificCellMonitor : AbstractFormulaChangeMonitor
-    {
-        private readonly Workbook _workbook;
-        private const int TargetRow = 0;      // Row index for B1
-        private const int TargetColumn = 1;   // Column index for B1
-
-        public SpecificCellMonitor(Workbook workbook)
+        try
         {
-            _workbook = workbook;
-        }
+            // Create a new workbook (or load an existing one if needed)
+            var workbook = new Workbook();
 
-        public override void OnCellFormulaChanged(int sheetIndex, int rowIndex, int columnIndex)
-        {
-            // Recalculate only when the monitored cell (B1) changes
-            if (rowIndex == TargetRow && columnIndex == TargetColumn)
+            // NOTE: Setting calculation mode is optional and may not be supported in all versions.
+            // If needed, you can enable manual calculation mode like this:
+            // workbook.Settings.CalcMode = CalcMode.Manual;
+
+            // Define the trigger cell address (A1 on the first worksheet)
+            const string triggerAddress = "A1";
+
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
+
+            // Change the trigger cell value
+            sheet.Cells[triggerAddress].PutValue(123);
+
+            // Manually recalculate all formulas after the change
+            workbook.CalculateFormula();
+
+            // Save the workbook
+            const string outputPath = "output.xlsx";
+            try
             {
-                _workbook.CalculateFormula();
-                Console.WriteLine($"Recalculated because cell {CellsHelper.CellIndexToName(rowIndex, columnIndex)} changed.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
             }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

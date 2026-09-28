@@ -1,33 +1,27 @@
-// Title: C# – Apply A4 Paper Size to Every Worksheet in an Aspose.Cells Workbook Using a foreach Loop
-// Description: Creates or loads a workbook, adds sample sheets, iterates through all worksheets with a foreach loop, sets each sheet's PageSetup.PaperSize to PaperA4, and saves the file.
-// Keywords: Aspose.Cells | C# | set paper size | A4 | foreach loop | worksheet page setup | Workbook PageSetup | multiple sheets | print layout | PDF conversion
-// Common Searches: Aspose.Cells set A4 paper size for all worksheets | C# foreach loop change page setup in Aspose.Cells | apply same paper size to every sheet in a workbook | Aspose.Cells C# set page size for multiple worksheets | batch update worksheet page settings Aspose.Cells
-// Developer Intent: Programmatically set the paper size of every worksheet in a workbook to A4.
-// Use Cases: Standardize print layout for multi‑sheet reports before exporting to PDF or XPS. | Ensure consistent page dimensions when generating batch‑printed workbooks. | Prepare a workbook with uniform A4 pages for automated document workflows.
-// AI Prompts: Generate C# code that changes the orientation to landscape for all worksheets in an Aspose.Cells workbook using a foreach loop. | Show how to set custom margins, header, and footer on every sheet of an Aspose.Cells workbook with C#. | Provide an example that applies the same page scaling factor to each worksheet in a workbook using Aspose.Cells.
+// Title: How to set A4 paper size for every worksheet in an Aspose.Cells workbook using C#
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, iterates over workbook.Worksheets, and assigns PaperSizeType.PaperA4 to each sheet's PageSetup. | Create a C# script that opens a workbook, uses a foreach loop to apply A4 paper size to all worksheets, and saves the updated file with Aspose.Cells.
+// Common Searches: C# Aspose.Cells set A4 paper size for all worksheets in a workbook | How to change page setup paper size for every sheet using Aspose.Cells | Loop through worksheets and set print paper size to A4 with Aspose.Cells | Batch update Excel worksheet print settings to A4 in C# | Apply same page layout to multiple worksheets programmatically Aspose.Cells
+// Tags: worksheet page setup A4 Aspose.Cells | foreach loop update print settings Aspose.Cells | batch modify Excel paper size C# | apply uniform page layout workbook Aspose.Cells | set paper size for all sheets Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Creates or loads a workbook, adds sample sheets, iterates through all worksheets with a foreach loop, sets each sheet's PageSetup.PaperSize to PaperA4, and saves the file.
-class SetPaperSizeForAllSheets
+// Loads an existing workbook, iterates over each worksheet with a foreach loop, sets each sheet's PageSetup.PaperSize to PaperA4, and saves the modified workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Add additional worksheets for demonstration purposes
-        workbook.Worksheets.Add("Sheet2");
-        workbook.Worksheets.Add("Sheet3");
-
-        // Apply A4 paper size to every worksheet in the workbook
+        // Apply A4 paper size to every worksheet using a foreach loop
         foreach (Worksheet sheet in workbook.Worksheets)
         {
+            // Set the paper size to A4
             sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
         }
 
-        // Save the workbook with the updated settings
-        workbook.Save("AllSheetsA4.xlsx", SaveFormat.Xlsx);
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

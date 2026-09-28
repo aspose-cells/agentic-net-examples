@@ -1,56 +1,86 @@
-// Title: Export a Line Chart to SVG using Aspose.Cells for .NET (C#)
-// Description: The sample creates a workbook, fills cells A1:B4 with month and sales values, adds a line chart, sets SvgImageOptions (FitToViewPort, custom CSS prefix, WOFF font embedding, ImageType.Svg) and renders the chart to QuarterlySales.svg while also saving the workbook as QuarterlySales.xlsx.
-// Keywords: Aspose.Cells SVG export | C# line chart to SVG | SvgImageOptions FitToViewPort | custom CSS prefix SVG | WOFF font embedding Aspose.Cells | ImageType.Svg .NET | scalable vector chart C# | Aspose.Cells chart rendering
-// Common Searches: how to save Aspose.Cells chart as SVG in C# | SvgImageOptions settings for line charts Aspose.Cells | embed custom CSS prefix in SVG output Aspose.Cells | export Excel chart to scalable vector graphics .NET
-// Developer Intent: Generate an SVG file from a worksheet chart using Aspose.Cells in a C# application.
-// Use Cases: Display high‑resolution charts on web dashboards that scale without pixelation. | Prevent style conflicts by applying a unique CSS prefix to each exported SVG. | Ensure consistent typography across browsers by embedding a WOFF font directly in the SVG.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a bar chart to SVG with specific width and height. | Show how to configure SvgImageOptions to embed a TrueType font instead of WOFF. | Provide a loop that iterates through all charts in a workbook and saves each as an individual SVG file.
+// Title: Export a column chart from an Aspose.Cells workbook to an SVG file with a transparent background using C#
+// AI Prompts: Write C# code that builds a column chart from a worksheet range, sets a chart title and legend, and saves the chart as an SVG file with transparency using Aspose.Cells. | Adapt the example to create a line chart, move the legend to the bottom, specify custom image dimensions, and render the chart to SVG in .NET. | Add data labels to each series, adjust the chart size, and export the updated chart to an SVG file with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# render Excel chart as SVG with transparent background | How to export a column chart to SVG using Aspose.Cells ImageOrPrintOptions | Save Aspose.Cells chart as scalable vector graphic instead of PNG in .NET | C# example for converting worksheet chart to SVG with Aspose.Cells | Aspose.Cells chart ToImage SVG output tutorial
+// Tags: Aspose.Cells chart to SVG conversion | C# column chart rendering with Aspose.Cells | ImageOrPrintOptions SVG transparency | Aspose.Cells ToImage method for chart export | Aspose.Cells chart legend placement
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// The sample creates a workbook, fills cells A1:B4 with month and sales values, adds a line chart, sets SvgImageOptions (FitToViewPort, custom CSS prefix, WOFF font embedding, ImageType.Svg) and renders the chart to QuarterlySales.svg while also saving the workbook as QuarterlySales.xlsx.
-class SvgChartGenerator
+namespace AsposeCellsSvgChartExample
 {
-    static void Main()
+    // The sample creates a workbook, fills cells with category and series data, adds a column chart referencing those ranges, configures the title, series names, category axis, and legend position, then uses ImageOrPrintOptions to render the chart directly to a transparent‑background SVG file named 'ChartOutput.svg' via Aspose.Cells' ToImage method.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Month");
-        worksheet.Cells["B1"].PutValue("Sales");
-        worksheet.Cells["A2"].PutValue("Jan");
-        worksheet.Cells["B2"].PutValue(12000);
-        worksheet.Cells["A3"].PutValue("Feb");
-        worksheet.Cells["B3"].PutValue(15000);
-        worksheet.Cells["A4"].PutValue("Mar");
-        worksheet.Cells["B4"].PutValue(18000);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a line chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+                // Populate sample data for the chart
+                // A1:A5 – Categories
+                // B1:B5 – Series 1 values
+                // C1:C5 – Series 2 values
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Series 1");
+                sheet.Cells["C1"].PutValue("Series 2");
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
-        chart.Title.Text = "Quarterly Sales";
+                string[] categories = { "Jan", "Feb", "Mar", "Apr", "May" };
+                double[] series1 = { 10, 20, 30, 25, 15 };
+                double[] series2 = { 15, 25, 20, 30, 10 };
 
-        // Configure SVG rendering options
-        SvgImageOptions svgOptions = new SvgImageOptions();
-        svgOptions.FitToViewPort = true;                 // Fit SVG to viewport
-        svgOptions.CssPrefix = "mychart-";               // Custom CSS prefix
-        svgOptions.EmbeddedFontType = SvgEmbeddedFontType.Woff; // Embed WOFF font
-        svgOptions.ImageType = ImageType.Svg;            // Ensure SVG output
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    sheet.Cells[i + 1, 0].PutValue(categories[i]);   // Column A
+                    sheet.Cells[i + 1, 1].PutValue(series1[i]);    // Column B
+                    sheet.Cells[i + 1, 2].PutValue(series2[i]);    // Column C
+                }
 
-        // Render the chart to an SVG file
-        chart.ToImage("QuarterlySales.svg", svgOptions);
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-        // Optional: Save the workbook for reference
-        workbook.Save("QuarterlySales.xlsx");
+                // Set chart title
+                chart.Title.Text = "Sample Column Chart";
+
+                // Add first series (Series 1)
+                int series1Index = chart.NSeries.Add("B2:B6", true);
+                chart.NSeries[series1Index].Name = "Series 1";
+
+                // Add second series (Series 2)
+                int series2Index = chart.NSeries.Add("C2:C6", true);
+                chart.NSeries[series2Index].Name = "Series 2";
+
+                // Set category axis data (X‑axis)
+                chart.NSeries.CategoryData = "A2:A6";
+
+                // Optional: format the chart (e.g., legend position)
+                chart.Legend.Position = LegendPositionType.Right;
+
+                // Prepare image options for SVG output
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                {
+                    // Define a transparent background (optional)
+                    Transparent = true
+                };
+
+                // Render the chart directly to an SVG file
+                chart.ToImage("ChartOutput.svg", imgOptions);
+
+                // Optionally save the entire workbook
+                // workbook.Save("WorkbookWithChart.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

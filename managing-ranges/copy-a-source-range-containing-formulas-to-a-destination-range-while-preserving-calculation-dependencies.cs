@@ -1,49 +1,58 @@
-// Title: Copy a range with formulas while preserving dependencies using Aspose.Cells for .NET
-// Description: Creates a workbook, fills column A with numbers, adds formulas in column B that reference column A, defines source (A1:B5) and destination (A7:B11) ranges, copies the range with formulas intact, recalculates all formulas, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells copy range formulas .NET | preserve formula references Aspose.Cells | range.Copy method Aspose.Cells | recalculate workbook after copy | C# Excel automation Aspose | US developers Aspose.Cells | European .NET Excel library
-// Common Searches: how to copy a range with formulas in Aspose.Cells C# | preserve relative cell references when copying cells Aspose.Cells | recalculate formulas after copying a range Aspose.Cells | Aspose.Cells copy range example with formulas | copy Excel block with calculations using Aspose.Cells
-// Developer Intent: Duplicate a block of cells that contains formulas, ensuring the copied formulas reference the new cells correctly and the workbook is recalculated.
-// Use Cases: Create a scenario analysis by replicating a calculated data block to a new area of the sheet. | Generate multiple report sections from a template that includes formulas. | Refresh a summary table after copying a pre‑calculated range to a different location.
-// AI Prompts: Provide C# code that copies a range with formulas using Aspose.Cells and keeps the references relative to the new location. | Show how to force a workbook recalculation after copying a formula‑rich range with Aspose.Cells for .NET. | Explain the steps and required methods to preserve formula dependencies when copying ranges in Aspose.Cells.
+// Title: Copy a range of cells containing formulas to a new location while preserving calculation dependencies with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to copy a source range that includes formulas to a destination range and have the library automatically adjust the cell references. | Load or create a workbook, define source and target ranges, and call the Range.Copy method to duplicate formulas while keeping their calculation relationships intact.
+// Common Searches: Aspose.Cells copy range with formulas and keep relative references in C# | How to duplicate a cell block containing formulas to another area using Aspose.Cells for .NET | Preserve formula dependencies when moving a range in an Excel workbook with Aspose.Cells | C# Aspose.Cells Range.Copy updates cell references automatically
+// Tags: Aspose.Cells range copy with formulas | preserve formula references Aspose.Cells C# | copy cell block maintaining dependencies .NET | Range.Copy method Aspose.Cells example
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Creates a workbook, fills column A with numbers, adds formulas in column B that reference column A, defines source (A1:B5) and destination (A7:B11) ranges, copies the range with formulas intact, recalculates all formulas, and saves the file as an XLSX document.
-class CopyRangeWithFormulas
+// The example loads an existing workbook or creates a new one with sample data and formulas in A1:C5, defines a source range (A1:C5) and a destination range (E1:G5), copies the source range using Range.Copy which preserves the formulas and automatically updates cell references, and saves the result as result.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string sourcePath = "source.xlsx";
+            const string resultPath = "result.xlsx";
+
+            // Ensure the source file exists; if not, create a new workbook with sample data.
+            Workbook workbook;
+            if (File.Exists(sourcePath))
+            {
+                workbook = new Workbook(sourcePath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                // Populate sample data and formulas in A1:C5
+                ws.Cells["A1"].PutValue(1);
+                ws.Cells["B1"].PutValue(2);
+                ws.Cells["C1"].Formula = "=A1+B1";
+                ws.Cells["A2"].PutValue(3);
+                ws.Cells["B2"].PutValue(4);
+                ws.Cells["C2"].Formula = "=A2+B2";
+                // Extend as needed...
+                workbook.Save(sourcePath);
+            }
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate source range A1:A5 with numeric values
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[i, 0].PutValue(i + 1); // A1..A5 = 1,2,3,4,5
-            }
+            // Define the source range that contains formulas
+            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange("A1:C5");
 
-            // Populate source range B1:B5 with formulas that depend on column A
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[i, 1].Formula = $"A{i + 1}*2"; // B1 = A1*2, etc.
-            }
+            // Define the destination range where the formulas will be copied
+            Aspose.Cells.Range destinationRange = sheet.Cells.CreateRange("E1:G5");
 
-            // Define source range (A1:B5) and destination range (A7:B11)
-            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange(0, 0, 5, 2);      // rows 0-4, cols 0-1
-            Aspose.Cells.Range destinationRange = sheet.Cells.CreateRange(6, 0, 5, 2); // rows 6-10, cols 0-1
+            // Copy the source range to the destination.
+            // This preserves formulas and automatically updates cell references.
+            sourceRange.Copy(destinationRange);
 
-            // Copy the source range to the destination range, preserving formulas and dependencies
-            destinationRange.Copy(sourceRange);
-
-            // Recalculate formulas so that dependent cells reflect the copied data
-            workbook.CalculateFormula();
-
-            // Save the workbook
-            workbook.Save("CopyRangeWithFormulas.xlsx");
+            // Save the workbook with the updated data
+            workbook.Save(resultPath);
         }
         catch (Exception ex)
         {

@@ -1,51 +1,62 @@
-// Title: Batch load Excel workbooks with a shared LoadOptions and custom LoadFilter using Aspose.Cells for .NET
-// Description: Demonstrates how to create a single LoadOptions object that contains a CustomLoadFilter, then reuse it to open multiple workbooks in a loop. The filter loads full cell data only for worksheets whose names start with "Data" and loads just the structure for all other sheets, reducing memory usage and speeding up batch processing.
-// Keywords: Aspose.Cells batch loading | shared LoadOptions | custom LoadFilter .NET | selective worksheet loading | load worksheet structure only | C# Excel performance | multiple workbook processing
-// Common Searches: reuse LoadOptions for several workbooks Aspose.Cells | load only specific sheets data in batch with Aspose.Cells | apply custom LoadFilter to multiple Excel files .NET | how to improve performance when opening many workbooks Aspose.Cells
-// Developer Intent: Open many Excel files with one LoadOptions instance that contains a custom LoadFilter, controlling per‑sheet data loading to optimize speed and memory consumption.
-// Use Cases: Extract summary information from dozens of report files while skipping heavy data in non‑report sheets. | Build an ETL pipeline that reads a batch of workbooks, modifies only the "Data*" sheets, and writes the files back. | Generate a quick inventory of worksheet counts across a folder of workbooks without loading full cell contents.
-// AI Prompts: Show how to extend CustomLoadFilter to also ignore charts and images on non‑Data worksheets. | Provide a Parallel.ForEach example that loads workbooks concurrently while sharing the same LoadOptions. | Create logging code that records which sheets were loaded with full data versus structure only during batch processing.
+// Title: Load multiple Excel workbooks with a shared LoadOptions configuration and keep only worksheets that start with a specific prefix using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates over a list of .xlsx file paths, loads each workbook with a common LoadOptions object, and removes every worksheet whose name does not begin with a given prefix. | Generate a method that receives a collection of workbook paths and a worksheet prefix, opens each file with a shared LoadOptions instance, filters out sheets that don't match the prefix, and returns the count of retained sheets per workbook.
+// Common Searches: asp.net load several Excel files with the same LoadOptions and filter sheets by name prefix | c# batch open workbooks using Aspose.Cells and keep only sheets starting with 'Data' | how to apply identical LoadOptions to multiple workbooks in Aspose.Cells | remove worksheets that don't match a naming pattern when loading Excel files in C#
+// Tags: batch workbook loading with shared LoadOptions Aspose.Cells | prefix‑based worksheet filtering C# | remove non‑matching sheets during Aspose.Cells import | iterate over multiple .xlsx files using Aspose.Cells | consistent sheet filtering across workbooks C#
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a single LoadOptions object that contains a CustomLoadFilter, then reuse it to open multiple workbooks in a loop. The filter loads full cell data only for worksheets whose names start with "Data" and loads just the structure for all other sheets, reducing memory usage and speeding up batch processing.
-class CustomLoadFilter : LoadFilter
-{
-    // Adjust loading options per worksheet
-    public override void StartSheet(Worksheet sheet)
-    {
-        // Load full data for sheets whose name starts with "Data"
-        // Otherwise load only the worksheet structure
-        if (sheet.Name.StartsWith("Data", StringComparison.OrdinalIgnoreCase))
-            LoadDataFilterOptions = LoadDataFilterOptions.All;
-        else
-            LoadDataFilterOptions = LoadDataFilterOptions.Structure;
-    }
-}
-
+// The example iterates through a list of Excel file paths, loads each workbook using a common LoadOptions for Xlsx format, deletes any worksheet whose name does not start with the defined prefix, and outputs the number of retained worksheets while handling missing files and load errors.
 class Program
 {
     static void Main()
     {
-        // Create a single LoadOptions instance and assign the custom filter
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new CustomLoadFilter();
+        // List of workbook file paths to be loaded
+        List<string> workbookFiles = new List<string>
+        {
+            "Book1.xlsx",
+            "Book2.xlsx",
+            "Book3.xlsx"
+        };
 
-        // Paths of workbooks to be loaded in batch
-        string[] workbookFiles = { "Book1.xlsx", "Book2.xlsx", "Book3.xlsx" };
+        // Prefix used to filter worksheets after loading
+        const string worksheetPrefix = "Data";
 
+        // Load each workbook safely
         foreach (string filePath in workbookFiles)
         {
-            // Load each workbook using the shared LoadOptions configuration
-            Workbook workbook = new Workbook(filePath, loadOptions);
+            try
+            {
+                // Ensure the file exists before attempting to load
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
 
-            // Example: display the number of worksheets loaded
-            Console.WriteLine($"'{filePath}' loaded with {workbook.Worksheets.Count} worksheets.");
+                // Load the workbook (full load)
+                Workbook workbook = new Workbook(filePath, new LoadOptions(LoadFormat.Xlsx));
 
-            // Save the workbook to verify successful loading (optional)
-            string outputPath = System.IO.Path.GetFileNameWithoutExtension(filePath) + "_processed.xlsx";
-            workbook.Save(outputPath);
+                // Remove worksheets that do not start with the specified prefix
+                for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+                {
+                    Worksheet sheet = workbook.Worksheets[i];
+                    if (!sheet.Name.StartsWith(worksheetPrefix, StringComparison.OrdinalIgnoreCase))
+                    {
+                        workbook.Worksheets.RemoveAt(i);
+                    }
+                }
+
+                // Example usage: display the number of worksheets actually retained
+                Console.WriteLine($"Loaded '{filePath}' with {workbook.Worksheets.Count} worksheet(s) matching prefix \"{worksheetPrefix}\".");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors and continue processing other files
+                Console.WriteLine($"Error loading '{filePath}': {ex.Message}");
+            }
         }
     }
 }

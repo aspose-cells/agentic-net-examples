@@ -1,19 +1,16 @@
-// Title: Read raw scientific‑notation text from an Excel cell with GetStringValue (CellValueFormatStrategy.None) and convert to double – Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, writes the string "1.23E+05" to cell A1, extracts the exact cell content without any formatting using GetStringValue with CellValueFormatStrategy.None, and parses the scientific‑notation string to a double with invariant‑culture parsing.
-// Keywords: Aspose.Cells GetStringValue | CellValueFormatStrategy.None | scientific notation Excel C# | unformatted cell text | convert string to double Aspose.Cells | read raw Excel value .NET | Excel scientific notation parsing
-// Common Searches: GetStringValue raw text Aspose.Cells | retrieve scientific notation string from Excel cell C# | CellValueFormatStrategy.None example | convert Excel scientific notation to double | Aspose.Cells read unformatted cell value
-// Developer Intent: Extract the exact scientific‑notation string from a worksheet cell without formatting and transform it into a numeric double.
-// Use Cases: Importing data where numbers are stored as scientific‑notation strings and need precise numeric conversion. | Validating Excel exports that automatically display scientific notation but require the original text for calculations. | Cleaning and normalizing large spreadsheets by reading raw cell values before applying custom parsing logic.
-// AI Prompts: Show how to use Aspose.Cells GetStringValue with CellValueFormatStrategy.None to read a scientific‑notation string from a cell and parse it to double in C#. | Provide a C# snippet that extracts unformatted text containing scientific notation from an Excel worksheet using Aspose.Cells and safely converts it to a numeric type. | Explain the effect of CellValueFormatStrategy.None on GetStringValue output and demonstrate its use for accurate numeric conversion of Excel scientific‑notation values.
+// Title: Extract raw scientific notation strings from Excel cells using GetStringValue with CellValueFormatStrategy.None and convert to double in Aspose.Cells for .NET
+// AI Prompts: Call GetStringValue(CellValueFormatStrategy.None) on a cell to obtain the exact text entered, preserving scientific‑notation formatting. | Parse the retrieved string to a double using double.Parse with NumberStyles.Float and CultureInfo.InvariantCulture. | Insert the parsed double into another worksheet cell and save the workbook to persist the numeric values.
+// Common Searches: Aspose.Cells C# get raw cell text without formatting for scientific notation | Parse Excel scientific notation string to double using GetStringValue | CellValueFormatStrategy.None example for unformatted values in .NET | Convert Excel scientific notation to numeric value with Aspose.Cells | Read and write double values after extracting raw strings in Aspose.Cells workbook
+// Tags: GetStringValue raw text Aspose.Cells | CellValueFormatStrategy.None unformatted cell value | parse scientific notation double C# | convert Excel string to numeric Aspose | write double to worksheet Aspose.Cells
 
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsScientificNotationDemo
+namespace AsposeCellsExamples
 {
-    // This example creates a workbook, writes the string "1.23E+05" to cell A1, extracts the exact cell content without any formatting using GetStringValue with CellValueFormatStrategy.None, and parses the scientific‑notation string to a double with invariant‑culture parsing.
-    class Program
+    // Demonstrates inserting scientific‑notation strings into cells, retrieving the exact text with GetStringValue(CellValueFormatStrategy.None), parsing the strings to double values using invariant culture, writing the numeric results back to other cells, and saving the workbook.
+    class GetScientificNotationStringDemo
     {
         static void Main()
         {
@@ -24,25 +21,32 @@ namespace AsposeCellsScientificNotationDemo
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Put a scientific notation string into a cell
-            // This simulates a value that appears in scientific format in Excel
-            cells["A1"].PutValue("1.23E+05");
+            // Insert scientific notation values as strings
+            cells["A1"].PutValue("1.23E+04");   // 12300
+            cells["A2"].PutValue("-5.67e-03"); // -0.00567
+            cells["A3"].PutValue("9.0E0");     // 9
 
-            // Retrieve the raw string without any formatting using GetStringValue with CellValueFormatStrategy.None
-            string rawString = cells["A1"].GetStringValue(CellValueFormatStrategy.None);
-            Console.WriteLine("Raw string from cell (no formatting): " + rawString);
+            // Retrieve the raw string without any formatting using CellValueFormatStrategy.None
+            string rawA1 = cells["A1"].GetStringValue(CellValueFormatStrategy.None);
+            string rawA2 = cells["A2"].GetStringValue(CellValueFormatStrategy.None);
+            string rawA3 = cells["A3"].GetStringValue(CellValueFormatStrategy.None);
 
-            // Convert the scientific notation string to a numeric double
-            if (double.TryParse(rawString, NumberStyles.Float | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out double numericValue))
-            {
-                Console.WriteLine("Converted numeric value: " + numericValue);
-            }
-            else
-            {
-                Console.WriteLine("Failed to convert the string to a numeric value.");
-            }
+            // Convert the scientific notation strings to numeric values
+            double valA1 = double.Parse(rawA1, NumberStyles.Float, CultureInfo.InvariantCulture);
+            double valA2 = double.Parse(rawA2, NumberStyles.Float, CultureInfo.InvariantCulture);
+            double valA3 = double.Parse(rawA3, NumberStyles.Float, CultureInfo.InvariantCulture);
 
-            // Save the workbook (optional, just to demonstrate lifecycle handling)
+            // Display the results
+            Console.WriteLine($"Cell A1 raw string: {rawA1} => numeric: {valA1}");
+            Console.WriteLine($"Cell A2 raw string: {rawA2} => numeric: {valA2}");
+            Console.WriteLine($"Cell A3 raw string: {rawA3} => numeric: {valA3}");
+
+            // Optionally, write the numeric results back to other cells
+            cells["B1"].PutValue(valA1);
+            cells["B2"].PutValue(valA2);
+            cells["B3"].PutValue(valA3);
+
+            // Save the workbook
             workbook.Save("ScientificNotationDemo.xlsx");
         }
     }

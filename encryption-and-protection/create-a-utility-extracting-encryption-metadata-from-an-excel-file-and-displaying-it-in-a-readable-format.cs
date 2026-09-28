@@ -1,74 +1,61 @@
-// Title: C# Utility to Extract Excel Encryption Metadata with Aspose.Cells
-// Description: A console‑based C# example that uses Aspose.Cells' FileFormatUtil to detect an Excel file's format, report encryption flags (IsEncrypted, IsProtectedByRMS), and optionally load the workbook with LoadOptions while handling missing or incorrect passwords. Ideal for quick audits of password‑protected or RMS‑protected spreadsheets.
-// Keywords: Aspose.Cells encryption metadata | C# detect Excel password protection | FileFormatUtil IsEncrypted | IsProtectedByRMS Aspose | LoadOptions encrypted workbook | Excel file security audit .NET | console utility Aspose.Cells | read Excel file protection status
-// Common Searches: how to check if an Excel file is encrypted using Aspose.Cells | C# code to read encryption flags from XLSX | display IsEncrypted and IsProtectedByRMS properties | load encrypted workbook with password Aspose.Cells | detect RMS protection in Excel with .NET
-// Developer Intent: Identify and display encryption‑related properties of an Excel workbook and optionally attempt to open it with a password.
-// Use Cases: Validate incoming Excel files for password protection before processing. | Log encryption and RMS status for compliance or security audits. | Programmatically attempt to open a protected workbook when the password is known. | Integrate a quick‑look utility into CI pipelines to flag encrypted spreadsheets.
-// AI Prompts: Write C# code that uses Aspose.Cells to detect encryption and RMS protection in an Excel file. | Show how to load an encrypted workbook with a password using LoadOptions in Aspose.Cells. | Explain error handling for missing or incorrect passwords when opening encrypted Excel files with Aspose.Cells.
+// Title: C# console utility to detect whether an Excel workbook is encrypted and display the result using Aspose.Cells
+// AI Prompts: Write a C# console program that accepts an Excel file path, loads it with Aspose.Cells, and prints "Encrypted" or "Not encrypted" based on the load outcome. | Enhance the program to distinguish between a missing file, an unsupported format, and a password‑required exception, providing clear console messages for each case. | Add an optional password argument; when supplied, use LoadOptions.Password to open the workbook and confirm successful decryption.
+// Common Searches: aspocells c# check if xlsx file is password protected without opening it | how to catch CellsException for encrypted Excel workbook in a .NET console app | detect encryption status of an Excel workbook using Aspose.Cells LoadOptions | c# console tool to report whether an Excel file requires a password | handle missing file and unsupported format errors when loading Excel with Aspose.Cells
+// Tags: aspocells detect encrypted workbook | c# loadoptions password exception handling | excel encryption status check .net | aspocells workbook loading error classification | c# console utility aspocells encryption detection
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionMetadataUtility
+// The example builds a C# console application that receives an Excel file path, verifies its existence, and attempts to load it with Aspose.Cells using default LoadOptions. If loading succeeds, the file is reported as not encrypted; if a CellsException containing the word "password" is thrown, the program reports the file as encrypted. Additional error handling differentiates missing files, unsupported formats, and other load failures, and an optional password argument can be used to open protected workbooks.
+class EncryptionMetadataExtractor
 {
-    // Utility class to extract and display encryption related metadata from an Excel file
-    // A console‑based C# example that uses Aspose.Cells' FileFormatUtil to detect an Excel file's format, report encryption flags (IsEncrypted, IsProtectedByRMS), and optionally load the workbook with LoadOptions while handling missing or incorrect passwords. Ideal for quick audits of password‑protected or RMS‑protected spreadsheets.
-    public static class EncryptionMetadataUtility
+    static void Main(string[] args)
     {
-        // Displays encryption metadata for the specified Excel file
-        public static void DisplayEncryptionMetadata(string filePath)
+        // Verify that a file path was provided.
+        if (args.Length == 0)
         {
-            // Detect file format and retrieve metadata information
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
+            Console.WriteLine("Usage: EncryptionMetadataExtractor <excel-file-path>");
+            return;
+        }
 
-            // Output basic format information
-            Console.WriteLine("=== Encryption Metadata ===");
-            Console.WriteLine($"File Path               : {filePath}");
-            Console.WriteLine($"Detected Load Format    : {formatInfo.LoadFormat}");
-            Console.WriteLine($"Detected File Format    : {formatInfo.FileFormatType}");
-            Console.WriteLine($"Is Encrypted            : {formatInfo.IsEncrypted}");
-            Console.WriteLine($"Is Protected By RMS     : {formatInfo.IsProtectedByRMS}");
-            Console.WriteLine();
+        string filePath = args[0];
 
-            // If the file is encrypted, attempt to load it with a password (if known)
-            if (formatInfo.IsEncrypted)
+        // Ensure the file exists before attempting to load it.
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"Error: File not found - {filePath}");
+            return;
+        }
+
+        // Prepare load options without a password – we only need metadata.
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+
+        try
+        {
+            // Attempt to load the workbook. If the file is not encrypted this will succeed.
+            Workbook workbook = new Workbook(filePath, loadOptions);
+            Console.WriteLine("The file is not encrypted.");
+        }
+        catch (CellsException ex)
+        {
+            // If the exception message indicates a password is required, treat it as encrypted.
+            if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                // Example: you can set a password here if you have it.
-                // For demonstration, we will try without a password to show the exception handling.
-                try
-                {
-                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
-                    // Uncomment and set the password if you have it:
-                    // loadOptions.Password = "your_password";
-
-                    Workbook workbook = new Workbook(filePath, loadOptions);
-                    // After successful load, we can check the workbook settings
-                    Console.WriteLine("Workbook loaded successfully.");
-                    Console.WriteLine($"Workbook Settings.IsEncrypted : {workbook.Settings.IsEncrypted}");
-                }
-                catch (Exception ex)
-                {
-                    // Expected when password is missing or incorrect
-                    Console.WriteLine("Unable to load the encrypted workbook without a valid password.");
-                    Console.WriteLine($"Error: {ex.Message}");
-                }
+                Console.WriteLine("The file is encrypted.");
+                // Encryption metadata extraction is not supported without providing a password.
+                // If needed, additional Aspose.Cells APIs can be used here to retrieve such info.
             }
             else
             {
-                Console.WriteLine("The file is not encrypted.");
+                // Other CellsException errors.
+                Console.WriteLine($"CellsException: {ex.Message}");
             }
         }
-    }
-
-    // Example usage
-    class Program
-    {
-        static void Main()
+        catch (Exception e)
         {
-            // Replace with the path to your Excel file
-            string excelFilePath = "sample.xlsx";
-
-            EncryptionMetadataUtility.DisplayEncryptionMetadata(excelFilePath);
+            // Any other error (e.g., unsupported format) is reported here.
+            Console.WriteLine($"Error: {e.Message}");
         }
     }
 }

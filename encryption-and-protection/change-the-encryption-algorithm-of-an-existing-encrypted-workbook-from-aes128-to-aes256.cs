@@ -1,56 +1,51 @@
-// Title: Convert an AES‑128 protected Excel workbook to AES‑256 with Aspose.Cells for .NET (C#)
-// Description: This example demonstrates how to open a password‑protected workbook encrypted with AES‑128, re‑apply the same password, switch the encryption to the StrongCryptographicProvider (AES‑256, 256‑bit key), and save the file under a new name. It includes file‑existence checks and exception handling for robust execution.
-// Keywords: Aspose.Cells AES-128 to AES-256 | C# re‑encrypt Excel workbook | StrongCryptographicProvider 256 bit | change Excel encryption Aspose | upgrade Excel file security .NET | password protected workbook encryption
-// Common Searches: how to change Excel encryption from AES-128 to AES-256 using Aspose.Cells | Aspose.Cells .NET re‑encrypt workbook with stronger algorithm | convert password protected Excel file to AES-256 C# | set StrongCryptographicProvider encryption in Aspose.Cells | upgrade legacy encrypted Excel files to AES-256
-// Developer Intent: Re‑encrypt an existing workbook with AES‑256 while keeping the original password.
-// Use Cases: Meet PCI‑DSS or GDPR requirements by upgrading legacy AES‑128 reports to AES‑256. | Batch‑process a folder of protected Excel files to strengthen encryption without altering user credentials. | Prepare encrypted workbooks for distribution through a secure corporate portal that mandates AES‑256.
-// AI Prompts: Write C# code that loads an AES‑128 encrypted Excel file with Aspose.Cells, changes the encryption to AES‑256, and saves it using the same password. | Create a reusable method (sourcePath, destPath, password) that re‑encrypts any workbook to AES‑256 with Aspose.Cells and returns success status. | Explain how to verify the encryption algorithm after saving and how to handle common errors when converting Excel encryption levels in Aspose.Cells.
+// Title: Re‑encrypt an AES‑128 protected Excel workbook to AES‑256 with Aspose.Cells for .NET
+// AI Prompts: Load an AES‑128 encrypted .xlsx file using a password, change its encryption setting to AES‑256, and save it as a new file with Aspose.Cells in C#. | Open a password‑protected workbook, upgrade the encryption algorithm to AES‑256, and write the updated workbook to a different path using the Aspose.Cells API. | Programmatically replace AES‑128 encryption with AES‑256 for an existing Excel file while preserving the original password in C#.
+// Common Searches: aspnet change Excel file encryption from AES-128 to AES-256 using Aspose.Cells | how to upgrade password protected XLSX encryption to AES-256 in C# | Aspose.Cells re‑encrypt workbook with stronger AES algorithm | convert AES-128 encrypted workbook to AES-256 programmatically | C# load encrypted XLSX and save with AES-256 Aspose.Cells
+// Tags: Aspose.Cells AES-256 re-encryption | C# upgrade Excel encryption algorithm Aspose.Cells | load password protected XLSX Aspose.Cells | save workbook with stronger encryption Aspose.Cells | change workbook encryption from AES-128 to AES-256
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// This example demonstrates how to open a password‑protected workbook encrypted with AES‑128, re‑apply the same password, switch the encryption to the StrongCryptographicProvider (AES‑256, 256‑bit key), and save the file under a new name. It includes file‑existence checks and exception handling for robust execution.
-class ChangeEncryption
+namespace AsposeCellsEncryptionDemo
 {
-    static void Main()
+    // // Loads an AES‑128 encrypted Excel workbook, sets the same password (defaulting to AES‑256 encryption), and saves the workbook as a new file with the stronger AES‑256 protection.
+    class Program
     {
-        // Path to the existing AES‑128 encrypted workbook
-        string sourcePath = "EncryptedAES128.xlsx";
-
-        // Password used to open the encrypted workbook
-        string password = "myPassword";
-
-        // Verify that the source file exists to avoid FileNotFoundException
-        if (!File.Exists(sourcePath))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Source file not found: {sourcePath}");
-            return;
-        }
+            const string inputFile = "EncryptedWorkbook_AES128.xlsx";
+            const string outputFile = "EncryptedWorkbook_AES256.xlsx";
+            const string password = "yourPassword";
 
-        try
-        {
-            // Load the workbook with the password
-            LoadOptions loadOptions = new LoadOptions
+            try
             {
-                Password = password
-            };
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+                // Verify that the source workbook exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+                    return;
+                }
 
-            // Preserve the same password after re‑encryption
-            workbook.Settings.Password = password;
+                // Load the existing encrypted workbook (AES‑128) using its password
+                var loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    Password = password
+                };
+                var workbook = new Workbook(inputFile, loadOptions);
 
-            // Change encryption to AES‑256 (StrongCryptographicProvider with 256‑bit key)
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
+                // Set the password for the new workbook (default encryption is AES‑256)
+                workbook.Settings.Password = password;
 
-            // Save the workbook with the new encryption algorithm
-            string destPath = "EncryptedAES256.xlsx";
-            workbook.Save(destPath);
-            Console.WriteLine($"Workbook re‑encrypted and saved to: {destPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Save the workbook with the new encryption
+                workbook.Save(outputFile, SaveFormat.Xlsx);
+
+                Console.WriteLine($"Workbook successfully re‑encrypted and saved as \"{outputFile}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

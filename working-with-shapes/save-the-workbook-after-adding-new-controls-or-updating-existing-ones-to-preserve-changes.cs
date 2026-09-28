@@ -1,58 +1,54 @@
-// Title: Add, Update, and Save a CheckBox ActiveX Control in Excel with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, insert a CheckBox ActiveX control, set its properties, save the file, reload it, modify the control's caption, and save the changes again using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# ActiveX control | add CheckBox ActiveX Excel | update ActiveX caption | save workbook after modifying shapes | .NET Excel ActiveX example | preserve ActiveX controls Aspose
-// Common Searches: How to add a CheckBox ActiveX control with Aspose.Cells C# | Update ActiveX control properties and save workbook in .NET | Saving changes to Excel ActiveX controls using Aspose.Cells | Load Excel file, modify ActiveX control, and resave with C# | Aspose.Cells example for editing shapes
-// Developer Intent: Insert a CheckBox ActiveX control into a new workbook, change its caption later, and ensure all modifications are persisted when the file is saved.
-// Use Cases: Generate Excel templates that include interactive CheckBox controls for user input. | Programmatically adjust control captions based on dynamic business data before distribution. | Automate report creation with embedded ActiveX controls that remain functional after saving.
-// AI Prompts: Write C# code with Aspose.Cells to add a RadioButton ActiveX control, set its properties, and save the workbook. | Provide a step‑by‑step guide to locate a specific ActiveX control by name in an existing Excel file, change its value, and save the changes using Aspose.Cells. | Explain how to iterate over all ActiveX controls on a worksheet and modify a common attribute (e.g., Enabled) with Aspose.Cells for .NET.
+// Title: Add or update a button shape in an Excel worksheet and save the workbook with Aspose.Cells for .NET
+// AI Prompts: Create a new Button shape at cell B2 in an existing workbook, set its caption, and persist the file using Aspose.Cells. | Find the first Button shape on a worksheet, change its text, and save the modified workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# add button shape to existing Excel file and save | how to modify button text in an Excel worksheet using Aspose.Cells .NET | saving changes to shapes in an Excel workbook with Aspose.Cells | update or insert form control button in Excel via Aspose.Cells C# example | preserve Excel button controls after editing with Aspose.Cells
+// Tags: add button shape Aspose.Cells | update button caption worksheet Aspose.Cells | save workbook after shape modification Aspose.Cells | Aspose.Cells button control example | Excel shape editing C# Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.ActiveXControls;
+using System;
+using System.IO;
 
-namespace AsposeCellsControlSaveDemo
+// The program loads an existing Excel file, adds a new button shape at cell B2, updates the caption of the first button if present, and saves the workbook to a new file, demonstrating how to persist shape changes with Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create a workbook, insert a CheckBox ActiveX control, set its properties, save the file, reload it, modify the control's caption, and save the changes again using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook and add an ActiveX control
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();                     // create a new workbook
-            Worksheet sheet = workbook.Worksheets[0];               // get the first worksheet
+            string inputPath = "input.xlsx";
 
-            // Add a CheckBox ActiveX control to the worksheet
-            Shape shape = sheet.Shapes.AddActiveXControl(
-                ControlType.CheckBox,   // type of control
-                1, 0, 1, 0,             // upper left row, column, lower right row, column
-                120, 30);               // width and height in points
-
-            // Cast to the specific control type to set its properties
-            CheckBoxActiveXControl checkBox = (CheckBoxActiveXControl)shape.ActiveXControl;
-            checkBox.Caption = "Demo CheckBox";
-            checkBox.IsAutoSize = true;
-
-            // Save the workbook to preserve the newly added control
-            workbook.Save("WorkbookWithControl.xlsx"); // uses Save(string) overload
-
-            // -------------------------------------------------
-            // 2. Load the saved workbook, modify the control, and save again
-            // -------------------------------------------------
-            Workbook loadedWorkbook = new Workbook("WorkbookWithControl.xlsx"); // load existing file
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-            // Retrieve the first shape (our CheckBox) and change its caption
-            Shape loadedShape = loadedSheet.Shapes[0];
-            if (loadedShape.ActiveXControl is CheckBoxActiveXControl loadedCheckBox)
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                loadedCheckBox.Caption = "Updated CheckBox Caption";
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
 
-            // Save the changes back to disk
-            loadedWorkbook.Save("WorkbookWithControl_Updated.xlsx"); // preserve updates
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a new button at cell B2 (row 1, column 1) with width 100 and height 30
+            // Parameters: upperLeftRow, upperLeftColumn, top, left, height, width
+            Button button = sheet.Shapes.AddButton(1, 1, 1, 1, 30, 100);
+            button.Text = "Click Me";
+
+            // Update the first button if it exists
+            if (sheet.Shapes.Count > 0 && sheet.Shapes[0] is Button existingButton)
+            {
+                existingButton.Text = "Updated";
+            }
+
+            // Save the workbook with the added/updated controls
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

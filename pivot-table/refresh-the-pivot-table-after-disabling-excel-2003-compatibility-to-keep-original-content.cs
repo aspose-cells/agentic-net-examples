@@ -1,37 +1,44 @@
-// Title: Aspose.Cells C# – Disable Excel 2003 Compatibility and Refresh Pivot Tables
-// Description: Loads a workbook, turns off the Excel 2003 compatibility flag for every pivot table, refreshes all pivots, and saves the updated file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells disable Excel 2003 compatibility | refresh pivot tables C# | IsExcel2003Compatible false | Aspose.Cells pivot table update | batch pivot refresh .NET
-// Common Searches: how to turn off Excel 2003 mode for pivot tables with Aspose.Cells | refresh all pivots after changing compatibility in C# | Aspose.Cells disable 2003 compatibility batch | C# code to refresh workbook pivot tables
-// Developer Intent: Turn off Excel 2003 compatibility for each pivot table and refresh them so the workbook reflects the new settings.
-// Use Cases: Modernize legacy Excel files by removing 2003‑mode constraints before distribution. | Automate a reporting pipeline that updates dozens of workbooks in one run. | Ensure pivot calculations are current after programmatically changing compatibility settings.
-// AI Prompts: Generate C# code with Aspose.Cells that disables Excel 2003 compatibility for all pivot tables in a workbook and then refreshes them. | Explain the effect of workbook.Worksheets.RefreshPivotTables() after setting IsExcel2003Compatible to false. | Show how to apply the compatibility change and refresh only the pivot tables on a selected worksheet.
+// Title: Disable Excel 2003 compatibility and refresh every PivotTable in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a workbook, disables Excel 2003 compatibility for each PivotTable, refreshes them, and saves the result using Aspose.Cells. | Demonstrate iterating through all worksheets to turn off PivotTable.IsExcel2003Compatible and then invoke the appropriate refresh method in Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to turn off Excel2003 compatibility for pivot tables and refresh data | refresh all pivot tables in a workbook after disabling Excel 2003 mode using Aspose.Cells | programmatic way to update pivot tables when compatibility flag is changed in .NET | example code to set PivotTable.IsExcel2003Compatible false and refresh workbook with Aspose.Cells | C# Aspose.Cells refresh pivot tables across all worksheets
+// Tags: PivotTable.IsExcel2003Compatible property Aspose.Cells | RefreshPivotTables API C# | iterate worksheets refresh pivot tables Aspose.Cells | disable Excel2003 compatibility for pivot tables .NET | update pivot tables after compatibility change Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads a workbook, turns off the Excel 2003 compatibility flag for every pivot table, refreshes all pivots, and saves the updated file using Aspose.Cells for .NET.
-class RefreshPivotExample
+namespace AsposeCellsPivotRefreshExample
 {
-    static void Main()
+    // Loads an existing XLSX file, disables Excel 2003 compatibility for every PivotTable on each worksheet, refreshes all pivot tables, and saves the updated workbook using Aspose.Cells for .NET.
+    class Program
     {
-        // Load the existing workbook that contains pivot tables
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets (or target a specific one)
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main()
         {
-            // Disable Excel 2003 compatibility for each pivot table in the worksheet
-            foreach (PivotTable pivot in sheet.PivotTables)
+            // Load an existing workbook that contains one or more PivotTables
+            Workbook workbook = new Workbook("input.xlsx");
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                pivot.IsExcel2003Compatible = false;
+                // Check if the worksheet contains any PivotTables
+                if (sheet.PivotTables.Count > 0)
+                {
+                    // Disable Excel 2003 compatibility for each PivotTable
+                    foreach (PivotTable pt in sheet.PivotTables)
+                    {
+                        pt.IsExcel2003Compatible = false;
+                    }
+
+                    // Refresh all PivotTables in the current worksheet
+                    sheet.RefreshPivotTables();
+                }
             }
+
+            // Alternatively, refresh all PivotTables in the entire workbook at once
+            // workbook.Worksheets.RefreshPivotTables();
+
+            // Save the updated workbook
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
-
-        // Refresh all pivot tables in the workbook after changing the compatibility setting
-        workbook.Worksheets.RefreshPivotTables();
-
-        // Save the workbook with refreshed pivot tables
-        workbook.Save("output.xlsx");
     }
 }

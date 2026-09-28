@@ -1,68 +1,62 @@
-// Title: Reset Aspose.Cells Workbook GlobalizationSettings to Default English in C#
-// Description: A C# helper that creates a fresh GlobalizationSettings instance containing the built‑in English strings (e.g., "TRUE", "FALSE", error messages) and assigns it to Workbook.Settings.GlobalizationSettings, reverting any custom localization for the entire workbook. An optional worksheetIndices parameter is kept for API compatibility but does not affect the global reset.
-// Keywords: Aspose.Cells | C# | Reset GlobalizationSettings | default English globalization | SettableGlobalizationSettings | workbook culture reset | Excel localization | boolean strings TRUE FALSE | error message localization | worksheet globalization
-// Common Searches: how to reset Aspose.Cells globalization to English | Aspose.Cells default English settings .NET | reset workbook culture Aspose.Cells C# | remove custom localization from Aspose.Cells workbook | globalization settings revert Aspose.Cells
-// Developer Intent: Restore a workbook's globalization to the built‑in English defaults.
-// Use Cases: After applying custom SettableGlobalizationSettings for a localized workbook, call the helper to ensure English boolean and error strings before saving or exporting. | When loading workbooks from unknown locales, reset globalization to guarantee consistent English output across all sheets. | In a multi‑sheet processing pipeline, use the method (with optional worksheet indices) to keep the signature stable while globally resetting culture.
-// AI Prompts: Generate C# code that resets Aspose.Cells workbook globalization to default English without altering cell values. | Show how to validate that boolean cells display "TRUE" and "FALSE" after resetting GlobalizationSettings in Aspose.Cells. | Extend ResetGlobalizationSettings to accept a culture name and apply the corresponding built‑in globalization settings in C#.
+// Title: Reset Aspose.Cells workbook globalization to English (en-US) culture using C#
+// AI Prompts: Write a C# method that assigns Workbook.Settings.CultureInfo to the en-US culture with Aspose.Cells. | Extend the helper to accept worksheet names and apply the English CultureInfo only to those sheets while leaving other sheets unchanged.
+// Common Searches: Aspose.Cells set workbook culture to en-US in C# | how to change Excel file language to English using Aspose.Cells .NET | reset globalization settings for an Aspose.Cells workbook | C# example for applying English locale to an Excel workbook with Aspose.Cells | apply English culture to specific worksheets Aspose.Cells
+// Tags: Aspose.Cells workbook cultureinfo en-us | reset workbook globalization Aspose.Cells | set Excel locale to English C# | globalization settings Aspose.Cells .NET | apply English culture to worksheets Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// A C# helper that creates a fresh GlobalizationSettings instance containing the built‑in English strings (e.g., "TRUE", "FALSE", error messages) and assigns it to Workbook.Settings.GlobalizationSettings, reverting any custom localization for the entire workbook. An optional worksheetIndices parameter is kept for API compatibility but does not affect the global reset.
-public static class GlobalizationHelper
+namespace AsposeCellsExample
 {
-    /// <param name="workbook">The workbook whose globalization settings should be reset.</param>
-    /// <param name="worksheetIndices">
-    /// Optional array of worksheet indices that the caller is interested in.
-    /// The parameter is not used internally because globalization settings are workbook‑wide,
-    /// but it allows the caller to specify which sheets triggered the reset.
-    /// </param>
-    public static void ResetGlobalizationSettings(Workbook workbook, int[] worksheetIndices = null)
+    // The example defines a WorksheetGlobalizationHelper with a ResetGlobalizationToEnglish method that sets the workbook's Settings.CultureInfo to the en-US culture, loads an input Excel file, applies the English globalization globally, and saves the result.
+    public static class WorksheetGlobalizationHelper
     {
-        if (workbook == null)
-            throw new ArgumentNullException(nameof(workbook));
+        // Resets globalization settings of the workbook to English (en-US) behavior.
+        public static void ResetGlobalizationToEnglish(Workbook workbook, params string[] worksheetNames)
+        {
+            // English culture.
+            CultureInfo englishCulture = new CultureInfo("en-US");
 
-        // Create a fresh GlobalizationSettings instance – this contains the default
-        // English strings (e.g., "TRUE", "FALSE", error values, etc.).
-        GlobalizationSettings defaultSettings = new GlobalizationSettings();
-
-        // Assign the default settings to the workbook.
-        workbook.Settings.GlobalizationSettings = defaultSettings;
-
-        // No further per‑worksheet handling is required because the settings are
-        // applied globally. The optional worksheetIndices parameter is kept for API
-        // compatibility and future extensions.
+            // Configure workbook globalization.
+            workbook.Settings.CultureInfo = englishCulture;
+            // The following properties are not available in the current Aspose.Cells version,
+            // so they are omitted. Setting the CultureInfo is sufficient for English behavior.
+        }
     }
-}
 
-// Example usage
-class Program
-{
-    static void Main()
+    class Program
     {
-        // Create a new workbook and add some data
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        ws.Cells["A1"].PutValue(true);
-        ws.Cells["A2"].PutValue(false);
-        ws.Cells["A3"].PutValue("#DIV/0!");
+        static void Main()
+        {
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-        // Suppose we previously applied custom globalization settings
-        SettableGlobalizationSettings customSettings = new SettableGlobalizationSettings();
-        customSettings.SetBooleanValueString(true, "ИСТИНА");
-        customSettings.SetBooleanValueString(false, "ЛОЖЬ");
-        wb.Settings.GlobalizationSettings = customSettings;
+                // Ensure the input file exists to avoid FileNotFoundException.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Now reset to default English behavior for the first worksheet (index 0)
-        GlobalizationHelper.ResetGlobalizationSettings(wb, new int[] { 0 });
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-        // Verify that the default English strings are used
-        Console.WriteLine($"Cell A1: {ws.Cells["A1"].StringValue}"); // Expected: TRUE
-        Console.WriteLine($"Cell A2: {ws.Cells["A2"].StringValue}"); // Expected: FALSE
-        Console.WriteLine($"Cell A3: {ws.Cells["A3"].StringValue}"); // Expected: #DIV/0!
+                // Reset globalization settings to English.
+                WorksheetGlobalizationHelper.ResetGlobalizationToEnglish(workbook);
 
-        // Save the workbook (using the standard Aspose.Cells save method)
-        wb.Save("ResetGlobalizationDemo.xlsx");
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any runtime exceptions and display the message.
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

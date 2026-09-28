@@ -1,58 +1,69 @@
-// Title: Add bold 12‑point X and Y axis titles to an Aspose.Cells chart (C#)
-// Description: Create a workbook, insert sample data, add a column chart, and set visible bold 12‑point titles for both the Category (X) and Value (Y) axes using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# chart axis title | bold axis title | 12 point font | CategoryAxis | ValueAxis | set axis title visibility | Aspose.Cells chart formatting | Excel chart axis styling | Aspose.Cells .NET
-// Common Searches: Aspose.Cells set axis title bold | C# add X axis title to chart | How to make chart axis title 12 pt in Aspose.Cells | Aspose.Cells chart title formatting example | Add Y axis label in Aspose.Cells C#
-// Developer Intent: Add visible, bold, 12‑point titles to both X (category) and Y (value) axes of a chart.
-// Use Cases: Automated financial dashboards that require clear, bold axis labels. | Generating Excel reports with presentation‑ready charts that follow corporate typography. | Batch‑processing workbooks to enforce consistent axis styling across multiple charts.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart and applies bold 12‑point titles to the CategoryAxis and ValueAxis. | Show how to enable axis titles, set their text, make them bold, and set font size to 12 points in Aspose.Cells for .NET. | Explain how to modify an existing Aspose.Cells chart to update axis title font style and size programmatically.
+// Title: Add bold 12‑point X‑axis and Y‑axis titles to an existing Excel chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to set the CategoryAxis.Title text, make it bold, and set the font size to 12 points for a chart in a workbook. | Update the first chart on the first worksheet to add formatted X and Y axis titles (bold, 12‑pt) and save the workbook with Aspose.Cells for .NET.
+// Common Searches: how to set bold 12 point font for chart axis titles in Aspose.Cells C# | Aspose.Cells C# add X axis title to existing chart | change value axis title font size Aspose.Cells .NET | programmatically format Excel chart axis titles using Aspose.Cells | C# Aspose.Cells set category axis title text and style
+// Tags: Aspose.Cells chart axis title formatting | set category axis title font Aspose.Cells | apply bold font to Excel chart axis Aspose.Cells | modify chart axis titles .NET | C# Aspose.Cells update existing chart
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AxisTitleExample
+// The example loads an existing Excel workbook, accesses the first chart, assigns custom text to the X (category) and Y (value) axes, applies bold 12‑point formatting to both titles, and saves the modified file.
+class Program
 {
-    // Create a workbook, insert sample data, add a column chart, and set visible bold 12‑point titles for both the Category (X) and Value (Y) axes using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B4"].PutValue(30);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Configure X‑axis (CategoryAxis) title
-            chart.CategoryAxis.Title.Text = "Categories";
-            chart.CategoryAxis.Title.IsVisible = true;
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
+            }
+
+            Chart chart = sheet.Charts[0];
+
+            // ----- X Axis (Category Axis) Title -----
+            chart.CategoryAxis.Title.Text = "X Axis Title";
             chart.CategoryAxis.Title.Font.IsBold = true;
             chart.CategoryAxis.Title.Font.Size = 12;
 
-            // Configure Y‑axis (ValueAxis) title
-            chart.ValueAxis.Title.Text = "Values";
-            chart.ValueAxis.Title.IsVisible = true;
+            // ----- Y Axis (Value Axis) Title -----
+            chart.ValueAxis.Title.Text = "Y Axis Title";
             chart.ValueAxis.Title.Font.IsBold = true;
             chart.ValueAxis.Title.Font.Size = 12;
 
-            // Save the workbook to a file
-            workbook.Save("AxisTitles_Output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

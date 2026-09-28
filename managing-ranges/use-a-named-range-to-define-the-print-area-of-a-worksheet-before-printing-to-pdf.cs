@@ -1,44 +1,58 @@
-// Title: Set Print Area from a Named Range and Export to PDF with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a named range, assign its address to Worksheet.PageSetup.PrintArea, and save the workbook as a PDF so that only the defined range is printed using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# print area | named range PDF export | Worksheet.PageSetup.PrintArea | Aspose.Cells set print area | Excel to PDF Aspose.Cells | C# Aspose.Cells named range | PrintArea from named range | Aspose.Cells PDF conversion | Workbook.Save PDF | Aspose.Cells example
-// Common Searches: Aspose.Cells set print area from named range C# | Export specific range to PDF using Aspose.Cells | How to use named range as print area in Aspose.Cells | C# Aspose.Cells print only selected cells to PDF | PageSetup.PrintArea named range example
-// Developer Intent: Define a worksheet's print area using a named range and generate a PDF that contains only that area.
-// Use Cases: Create a reusable named range to control which cells are printed when exporting to PDF. | Dynamically change the RefersTo address of a named range to adjust the printed region without modifying code. | Apply the same named‑range‑based print area across multiple worksheets for batch PDF generation.
-// AI Prompts: Write C# code with Aspose.Cells that defines a named range, sets Worksheet.PageSetup.PrintArea to that range, and saves the workbook as a PDF. | Explain how to update an existing named range's RefersTo property and refresh the PrintArea for PDF export in Aspose.Cells. | Provide step‑by‑step instructions for using a named range as a print area, including handling the leading '=' in the RefersTo string.
+// Title: Define a worksheet print area and save as PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to assign a cell range as the worksheet's print area and then generate a PDF file. | Show how to configure portrait orientation, fit‑to‑page dimensions, and create the target folder before saving a workbook as PDF with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set worksheet print area for PDF export | define print area without named range Aspose.Cells .NET | export specific range to PDF using Aspose.Cells in C# | page setup fit to page and orientation Aspose.Cells PDF | create output directory automatically when saving PDF Aspose.Cells
+// Tags: Aspose.Cells set print region C# | Aspose.Cells export PDF from worksheet | Aspose.Cells page setup fit to page | Aspose.Cells portrait orientation PDF | Aspose.Cells create output folder
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a named range, assign its address to Worksheet.PageSetup.PrintArea, and save the workbook as a PDF so that only the defined range is printed using Aspose.Cells for .NET.
-class PrintAreaFromNamedRange
+// Creates a new workbook, fills cells A1‑B2, assigns the print area via PageSetup.PrintArea, sets portrait orientation and fit‑to‑page options, ensures the destination folder exists, and saves the worksheet as a PDF file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate some sample data
-        worksheet.Cells["A1"].PutValue("Header1");
-        worksheet.Cells["B1"].PutValue("Header2");
-        worksheet.Cells["A2"].PutValue("Item1");
-        worksheet.Cells["B2"].PutValue(100);
-        worksheet.Cells["A3"].PutValue("Item2");
-        worksheet.Cells["B3"].PutValue(200);
-        worksheet.Cells["A4"].PutValue("Item3");
-        worksheet.Cells["B4"].PutValue(300);
+            // Access the first worksheet and set its name
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-        // Create a named range that will be used as the print area (A1:B3)
-        int nameIdx = workbook.Worksheets.Names.Add("PrintRange");
-        Name namedRange = workbook.Worksheets.Names[nameIdx];
-        // RefersTo must start with '=' and include the sheet name
-        namedRange.RefersTo = $"={worksheet.Name}!A1:B3";
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["B2"].PutValue(456);
 
-        // Set the worksheet's print area to the address of the named range
-        // Remove the leading '=' from RefersTo as PrintArea expects a plain address
-        worksheet.PageSetup.PrintArea = namedRange.RefersTo.Substring(1);
+            // Define the print area directly (no need for a named range)
+            string printAreaAddress = "'Sheet1'!$A$1:$B$2";
+            sheet.PageSetup.PrintArea = printAreaAddress;
 
-        // Save the workbook to PDF; only the defined print area will be exported
-        workbook.Save("PrintAreaFromNamedRange.pdf");
+            // Optional page setup adjustments
+            sheet.PageSetup.Orientation = PageOrientationType.Portrait;
+            sheet.PageSetup.FitToPagesWide = 1;
+            sheet.PageSetup.FitToPagesTall = 1;
+
+            // Define output file path
+            string outputPath = "PrintedSheet.pdf";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

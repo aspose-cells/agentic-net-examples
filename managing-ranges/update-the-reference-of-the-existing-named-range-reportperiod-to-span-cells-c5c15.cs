@@ -1,59 +1,57 @@
-// Title: Aspose.Cells for .NET – Update the "ReportPeriod" named range to cells C5:C15
-// Description: Loads an existing workbook, finds the named range "ReportPeriod", sets its RefersTo property to =$SheetName!$C$5:$C$15, and saves the updated file. Includes checks for missing files and absent ranges.
-// Keywords: Aspose.Cells | C# | .NET | named range | update RefersTo | ReportPeriod | C5:C15 | Excel automation | modify named range | Aspose.Cells example
-// Common Searches: Aspose.Cells change named range reference C# | Update existing named range in Excel using Aspose.Cells | .NET set RefersTo property for a named range | How to modify named range ReportPeriod Aspose.Cells | Set named range to C5:C15 with Aspose.Cells
-// Developer Intent: Change the RefersTo address of the existing ReportPeriod named range so it covers cells C5 through C15 on its worksheet.
-// Use Cases: Adjust a reporting period range after inserting or deleting rows in the source data. | Align a template's named range with a newly calculated data block before exporting to downstream systems. | Standardize a fixed column segment for batch processing or chart data sources. | Correct a mis‑defined range in a legacy workbook without manual Excel editing.
-// AI Prompts: Show code that verifies the ReportPeriod named range now points to C5:C15 after saving. | Generate a fallback routine that creates ReportPeriod if it does not exist, then sets its reference to C5:C15. | Explain how to update a named range located on a different worksheet using Aspose.Cells for .NET.
+// Title: Update the 'ReportPeriod' named range to reference cells C5:C15 using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, finds the named range 'ReportPeriod', and changes its RefersTo address to C5:C15 on the same worksheet. | Show a .NET example that verifies the input .xlsx file exists, updates an existing named range's address, and saves the modified workbook to a new file. | Demonstrate how to parse the sheet name from a named range's RefersTo string and programmatically assign a new range reference using Aspose.Cells.
+// Common Searches: Aspose.Cells C# update RefersTo for named range in .xlsx | Programmatically set named range to C5:C15 with Aspose.Cells | C# example to modify existing named range sheet reference using Aspose | Changing Excel named range address using Aspose.Cells .NET library
+// Tags: Aspose.Cells modify named range address | C# update RefersTo property Aspose | Aspose.Cells set named range C5:C15 | Excel named range manipulation Aspose.Cells | Aspose.Cells workbook save after range change
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace UpdateNamedRangeApp
+// The sample loads input.xlsx, locates the named range 'ReportPeriod', extracts its worksheet name from the current RefersTo string, updates the range to C5:C15 on that sheet, and saves the workbook as output.xlsx while handling missing files and exceptions.
+class UpdateNamedRange
 {
-    // Loads an existing workbook, finds the named range "ReportPeriod", sets its RefersTo property to =$SheetName!$C$5:$C$15, and saves the updated file. Includes checks for missing files and absent ranges.
-    class UpdateNamedRange
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet (assumes the named range is on this sheet)
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Retrieve the existing named range "ReportPeriod"
-                Name reportPeriod = workbook.Worksheets.Names["ReportPeriod"];
-                if (reportPeriod == null)
-                {
-                    Console.WriteLine("Named range 'ReportPeriod' not found.");
-                    return;
-                }
-
-                // Update the reference to span cells C5:C15 on the same worksheet
-                reportPeriod.RefersTo = $"={sheet.Name}!$C$5:$C$15";
-
-                // Save the workbook with the updated named range
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
+
+            // Access the named range "ReportPeriod"
+            var namedRange = workbook.Worksheets.Names["ReportPeriod"];
+            if (namedRange != null)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Extract the original worksheet name from the existing RefersTo string
+                // RefersTo format: SheetName!A1:B2
+                string originalRef = namedRange.RefersTo ?? string.Empty;
+                string sheetName = originalRef.Split('!')[0];
+
+                // Update the range to refer to cells C5:C15 on the same worksheet
+                namedRange.RefersTo = $"{sheetName}!C5:C15";
             }
+            else
+            {
+                Console.WriteLine("Named range 'ReportPeriod' not found.");
+            }
+
+            // Save the workbook with the updated named range
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

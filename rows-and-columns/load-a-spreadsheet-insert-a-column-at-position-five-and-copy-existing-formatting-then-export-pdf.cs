@@ -1,43 +1,42 @@
-// Title: C# – Insert Column at Index 5, Preserve Formatting, Export to PDF with Aspose.Cells
-// Description: Loads an Excel workbook, inserts a new column at zero‑based index 4, copies the original column's formatting to the new column using PasteOptions (PasteType.Formats), saves the changes, and converts the result to PDF via ConversionUtility.
-// Keywords: Aspose.Cells insert column C# | copy column formatting Aspose.Cells | Excel to PDF conversion Aspose.Cells | PasteOptions PasteType.Formats | ConversionUtility PDF | C# Excel column manipulation
-// Common Searches: how to insert a column at a specific position with Aspose.Cells | copy formatting after inserting a column in C# Excel library | convert modified Excel workbook to PDF using Aspose.Cells | Aspose.Cells PasteOptions format only copy
-// Developer Intent: Add a column at position 5, duplicate the original column's style, and generate a PDF from the updated sheet.
-// Use Cases: Add a placeholder column in a financial model while keeping the existing style. | Reorder columns in a reporting template, retain formatting, and produce a client‑ready PDF. | Automate invoice generation: insert a notes column, copy its formatting, and export the final document as PDF.
-// AI Prompts: Generate C# code that uses Aspose.Cells to insert a column at index 5, copy the adjacent column's formatting, and save the workbook as a PDF. | Explain the role of PasteOptions with PasteType.Formats when copying column formatting in Aspose.Cells. | Provide alternative ways to convert an edited Excel workbook to PDF without using ConversionUtility.
+// Title: Insert a column at index 5, copy left column formatting, and export the sheet to PDF using Aspose.Cells for .NET
+// AI Prompts: Insert a new column at zero‑based index 4 in the first worksheet, duplicate the formatting from column D to the new column, and generate a PDF file with Aspose.Cells. | Add a column after the fourth column, copy only the style attributes from the preceding column, then convert the modified workbook to PDF using the Aspose.Cells ConversionUtility.
+// Common Searches: how to insert a column at a specific position and copy its format using Aspose.Cells C# | Aspose.Cells C# copy column formatting without values before PDF conversion | insert column index 4 and preserve styles then export to PDF with Aspose.Cells | C# Aspose.Cells convert modified Excel workbook to PDF after column insertion
+// Tags: insert column Aspose.Cells C# | copy column style Aspose.Cells | excel to pdf conversion Aspose.Cells .NET | preserve cell styles Aspose.Cells | column insertion index zero based Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Loads an Excel workbook, inserts a new column at zero‑based index 4, copies the original column's formatting to the new column using PasteOptions (PasteType.Formats), saves the changes, and converts the result to PDF via ConversionUtility.
+// The example loads an existing Excel file, inserts a new column at zero‑based index 4, copies only the formatting from the adjacent column, saves the updated workbook, and then converts it to a PDF using Aspose.Cells' ConversionUtility.
 class Program
 {
     static void Main()
     {
-        // Paths for the original file, the intermediate modified file, and the final PDF
-        string inputPath = "input.xlsx";
-        string tempPath = "modified.xlsx";
-        string pdfPath = "output.pdf";
+        // Paths – adjust as needed
+        string inputFile = "input.xlsx";          // existing spreadsheet
+        string modifiedFile = "modified.xlsx";    // temporary file after column insertion
+        string outputPdf = "output.pdf";          // final PDF file
 
-        // Load the existing spreadsheet
-        Workbook workbook = new Workbook(inputPath);
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Load the existing workbook
+        Workbook workbook = new Workbook(inputFile);
+
+        // Work with the first worksheet (index 0)
+        Worksheet sheet = workbook.Worksheets[0];
 
         // Insert a new column at position five (zero‑based index 4)
-        cells.InsertColumn(4, true);
+        sheet.Cells.InsertColumn(4);
 
-        // After insertion, the original column that was at index 4 moves to index 5.
-        // Copy its formatting to the newly inserted column (index 4).
-        PasteOptions pasteOptions = new PasteOptions();
-        pasteOptions.PasteType = PasteType.Formats;
-        cells.CopyColumns(cells, 5, 4, 1, pasteOptions);
+        // Copy formatting from the column to the left (index 3) to the newly inserted column (index 4)
+        PasteOptions pasteOptions = new PasteOptions
+        {
+            PasteType = PasteType.Formats   // copy only formats, not values
+        };
+        sheet.Cells.CopyColumns(sheet.Cells, 3, 4, 1, pasteOptions);
 
-        // Save the modified workbook to a temporary Excel file
-        workbook.Save(tempPath);
+        // Save the modified workbook to a temporary file
+        workbook.Save(modifiedFile);
 
-        // Convert the modified Excel file to PDF using the provided conversion utility
-        ConversionUtility.Convert(tempPath, pdfPath);
+        // Convert the modified workbook to PDF using the provided conversion utility
+        ConversionUtility.Convert(modifiedFile, outputPdf);
     }
 }

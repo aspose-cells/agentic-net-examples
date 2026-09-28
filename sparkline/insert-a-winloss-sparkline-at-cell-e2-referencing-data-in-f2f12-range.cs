@@ -1,58 +1,43 @@
-// Title: C# – Insert a Win/Loss Sparkline in cell E2 using Aspose.Cells for .NET
-// Description: Creates a new workbook, populates F2:F12 with sample values, places a stacked win/loss sparkline in E2, and saves the file as WinLossSparkline.xlsx.
-// Keywords: Aspose.Cells win loss sparkline C# | add sparkline to Excel .NET | stacked sparkline group Aspose | sparkline cell E2 example | populate sparkline data range F2:F12
-// Common Searches: how to add a win/loss sparkline with Aspose.Cells | C# code for sparkline in cell E2 from range F2:F12 | Aspose.Cells example stacked sparkline
-// Developer Intent: Generate a win/loss (stacked) sparkline in E2 that visualizes the numeric series in F2:F12.
-// Use Cases: Show daily profit/loss trends in a compact financial report. | Add visual indicators to a KPI dashboard for each product row. | Automate sparkline creation across multiple rows in a budgeting worksheet.
-// AI Prompts: Generate C# Aspose.Cells code to place a win/loss sparkline in D5 based on data in G2:G15. | Explain how to enable positive/negative markers for a stacked sparkline group in Aspose.Cells. | Write a method that loops rows 2‑10 and inserts a win/loss sparkline in column E for each corresponding column F range.
+// Title: Insert a Win/Loss sparkline in cell E2 from data range F2:F12 using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, fills F2:F12 with alternating 1 and -1 values, and adds a Win/Loss sparkline to cell E2. | Show how to adjust the line weight of a Win/Loss sparkline group after it has been added to a worksheet in Aspose.Cells for .NET. | Demonstrate creating a SparklineGroup that references a specific range and places the sparkline at a single-cell location using Aspose.Cells.
+// Common Searches: Aspose.Cells C# add win loss sparkline to a single cell | how to set sparkline source range F2:F12 in Aspose.Cells | customize win loss sparkline line weight Aspose.Cells .NET example | populate alternating positive and negative values for sparkline using Aspose.Cells | save workbook with sparkline as xlsx using Aspose.Cells
+// Tags: win loss sparkline insertion Aspose.Cells | sparkline data range F2:F12 Aspose.Cells | set sparkline line weight .NET | populate alternating values for sparkline Aspose.Cells | save workbook with sparkline xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-// Creates a new workbook, populates F2:F12 with sample values, places a stacked win/loss sparkline in E2, and saves the file as WinLossSparkline.xlsx.
-class InsertWinLossSparkline
+// Creates a workbook, fills F2:F12 with 1/-1 values, adds a Win/Loss sparkline at E2, sets its line weight, and saves the file as WinLossSparkline.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the sparkline (F2:F12)
-            // Positive values represent gains, negative values represent losses
-            double[] sampleData = { 10, -5, 8, -3, 12, -7, 4, -2, 6, -1, 9 };
-            for (int i = 0; i < sampleData.Length; i++)
+            // Populate sample data for the win/loss sparkline (optional)
+            // F2:F12 will contain alternating positive and negative values
+            for (int i = 0; i < 11; i++)
             {
-                // Row index starts at 1 for the second row (F2)
-                sheet.Cells[i + 1, 5].PutValue(sampleData[i]); // Column index 5 = column F
+                // Row index 1 = row 2, column index 5 = column F
+                sheet.Cells[1 + i, 5].PutValue((i % 2 == 0) ? 1 : -1);
             }
 
-            // Define the location where the sparkline will be placed (cell E2)
-            CellArea location = new CellArea
-            {
-                StartColumn = 4, // Column E
-                EndColumn = 4,
-                StartRow = 1,    // Row 2 (zero‑based index)
-                EndRow = 1
-            };
+            // Define the location cell (E2) where the sparkline will be placed
+            CellArea location = CellArea.CreateCellArea("E2", "E2");
 
-            // Add a Win/Loss (Stacked) sparkline group.
-            // Data range is F2:F12, plotted by column (isVertical = false)
-            int groupIndex = sheet.SparklineGroups.Add(
-                SparklineType.Stacked,   // Win/Loss sparkline type
-                "F2:F12",                // Data range
-                false,                   // Plot by column
-                location);               // Location range (E2)
+            // Add a Win/Loss sparkline group with the data range F2:F12
+            int groupIndex = sheet.SparklineGroups.Add(SparklineType.WinLoss, "F2:F12", false, location);
+            SparklineGroup group = sheet.SparklineGroups[groupIndex];
+
+            // Optional: customize the sparkline appearance
+            group.LineWeight = 1.0;
 
             // Save the workbook
-            string outputPath = "WinLossSparkline.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            workbook.Save("WinLossSparkline.xlsx", SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {

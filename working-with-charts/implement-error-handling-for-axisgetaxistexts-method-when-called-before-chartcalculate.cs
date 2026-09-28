@@ -1,10 +1,7 @@
-// Title: Handle Axis.GetAxisTexts Exception When Chart.Calculate Is Missing – Aspose.Cells for .NET
-// Description: A C# example that creates a workbook, adds a column chart, deliberately calls chart.ValueAxis.GetAxisTexts() before chart.Calculate(), catches the expected exception, then runs Calculate() and successfully retrieves the axis labels. The demo shows proper try‑catch handling and safe chart‑axis text extraction before saving the file.
-// Keywords: Aspose.Cells | .NET | C# | Axis.GetAxisTexts | Chart.Calculate | exception handling | chart axis labels | retrieve axis texts | Aspose.Cells chart example | GetAxisTexts before Calculate
-// Common Searches: Axis.GetAxisTexts throws exception Aspose.Cells | why need Chart.Calculate before GetAxisTexts | Aspose.Cells chart axis error handling C# | how to get axis labels after chart calculation | C# example GetAxisTexts without Calculate
-// Developer Intent: Show developers how to ensure a chart is calculated before accessing its axis texts and how to gracefully handle the exception when this prerequisite is missed.
-// Use Cases: Prevent runtime errors in automated report generators that extract chart axis labels. | Provide clear user feedback when GetAxisTexts is called prematurely. | Integrate safe axis‑label retrieval into existing Aspose.Cells workflows.
-// AI Prompts: Write C# code that checks if a chart has been calculated; if not, call Chart.Calculate and then retrieve Axis.GetAxisTexts with proper exception handling. | Create a reusable Aspose.Cells method that returns axis labels or a friendly error message when the chart is not yet calculated. | Generate an example demonstrating the exception thrown by Axis.GetAxisTexts before Chart.Calculate and the correct sequence to obtain labels after calculation.
+// Title: Catch and handle the exception from Axis.GetAxisTexts when called before Chart.Calculate in Aspose.Cells for .NET
+// AI Prompts: Write C# code that checks whether a chart has been calculated before invoking chart.ValueAxis.GetAxisTexts, and logs a friendly message if not. | Show how to wrap chart.ValueAxis.GetAxisTexts in a try‑catch block to gracefully handle the exception thrown when Chart.Calculate hasn't been executed. | Generate a complete Aspose.Cells example that demonstrates retrieving axis labels after Chart.Calculate and handling the pre‑calculation error.
+// Common Searches: Aspose.Cells Axis.GetAxisTexts throws InvalidOperationException if chart not calculated | how to prevent exception when calling GetAxisTexts on a chart before Calculate in C# | example of error handling for chart axis text retrieval in Aspose.Cells .NET | retrieving value axis labels after chart.Calculate Aspose.Cells | C# Aspose.Cells chart.Calculate required for GetAxisTexts method
+// Tags: exception handling for Axis.GetAxisTexts Aspose.Cells | chart.Calculate prerequisite for GetAxisTexts | value axis label retrieval error handling C# | Aspose.Cells column chart axis text extraction | try‑catch around GetAxisTexts Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // A C# example that creates a workbook, adds a column chart, deliberately calls chart.ValueAxis.GetAxisTexts() before chart.Calculate(), catches the expected exception, then runs Calculate() and successfully retrieves the axis labels. The demo shows proper try‑catch handling and safe chart‑axis text extraction before saving the file.
+    // The example creates a workbook, adds sample data and a column chart, then attempts to call chart.ValueAxis.GetAxisTexts before calling chart.Calculate. The expected exception is caught and logged. After invoking chart.Calculate, the axis labels are retrieved successfully and printed. The workbook is saved, and all operations are wrapped in try‑catch blocks to demonstrate robust error handling for Axis.GetAxisTexts.
     public class AxisGetAxisTextsErrorHandlingDemo
     {
         // Entry point required for console application
@@ -52,45 +49,43 @@ namespace AsposeCellsExamples
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // -----------------------------------------------------------------
-            // Attempt to get axis labels BEFORE calling Chart.Calculate()
-            // This should raise an exception because the axis texts are not yet generated.
-            // -----------------------------------------------------------------
+            // Attempt to get axis labels before calling Calculate()
             try
             {
-                string[] labelsBeforeCalc = chart.ValueAxis.GetAxisTexts();
-                Console.WriteLine("Axis labels retrieved without calculation (unexpected):");
-                foreach (string label in labelsBeforeCalc)
+                // This call is expected to throw because the chart has not been calculated yet
+                string[] preCalcLabels = chart.ValueAxis.GetAxisTexts();
+                Console.WriteLine("Axis labels retrieved before calculation (unexpected):");
+                foreach (string label in preCalcLabels)
                 {
                     Console.WriteLine(label);
                 }
             }
             catch (Exception ex)
             {
-                // Expected path: inform the user that Calculate() must be called first
+                // Handle the expected exception gracefully
                 Console.WriteLine("Error retrieving axis texts before calculation: " + ex.Message);
             }
 
             // Now calculate the chart to generate axis labels
             chart.Calculate();
 
-            // Retrieve axis labels after calculation – this should succeed
+            // Retrieve axis labels after calculation
             try
             {
-                string[] labelsAfterCalc = chart.ValueAxis.GetAxisTexts();
-                Console.WriteLine("Axis labels after Chart.Calculate():");
-                foreach (string label in labelsAfterCalc)
+                string[] labels = chart.ValueAxis.GetAxisTexts();
+                Console.WriteLine("Value Axis Labels after calculation:");
+                foreach (string label in labels)
                 {
                     Console.WriteLine(label);
                 }
             }
             catch (Exception ex)
             {
-                // Any unexpected error will be reported here
-                Console.WriteLine("Unexpected error after calculation: " + ex.Message);
+                // Any unexpected errors will be reported here
+                Console.WriteLine("Error retrieving axis texts after calculation: " + ex.Message);
             }
 
-            // Save the workbook
+            // Save the workbook (optional, demonstrates lifecycle rule usage)
             try
             {
                 workbook.Save("AxisGetAxisTextsErrorHandlingDemo.xlsx");

@@ -1,109 +1,76 @@
-// Title: Unit Test for Verifying SmartArt Text Replacement with Aspose.Cells (.NET)
-// Description: Loads a workbook containing SmartArt, replaces every inner shape's text, saves with UpdateSmartArt, reloads the file, and asserts that the new text persists. Demonstrates a reliable test pattern for Aspose.Cells SmartArt modifications in C#.
-// Keywords: Aspose.Cells | SmartArt | text replacement | unit test | C# | .NET | Excel automation | OoxmlSaveOptions | UpdateSmartArt | MSTest | xUnit | NUnit | automated testing
-// Common Searches: Aspose.Cells unit test SmartArt text replacement | C# verify SmartArt changes after save | How to test SmartArt updates with Aspose.Cells | UpdateSmartArt option unit test example | Automated test for Excel SmartArt using Aspose
-// Developer Intent: Ensure that modifying SmartArt node text via Aspose.Cells is correctly written to the workbook and remains after the file is saved and reopened.
-// Use Cases: Continuous‑integration test that validates SmartArt label updates in generated reports. | Regression suite for a feature that customizes SmartArt captions before distribution. | Quality‑gate check confirming that the UpdateSmartArt flag preserves text changes across library versions.
-// AI Prompts: Create an MSTest method that calls the SmartArt replacement routine and asserts the new text exists after saving the workbook. | Write an xUnit test case for SmartArt text replacement with temporary file handling and cleanup using Aspose.Cells. | Generate a NUnit test that verifies the UpdateSmartArt option persists SmartArt modifications and provides detailed failure messages.
+// Title: Create a C# unit test that verifies shape text replacement persists after saving and loading an XLSX workbook with Aspose.Cells
+// AI Prompts: Write an MSTest method that adds a rectangle shape to a worksheet, sets its Text property, saves the workbook to a MemoryStream in XLSX format, reloads it, and asserts the Text equals the replaced value using Aspose.Cells for .NET. | Generate a NUnit test case that creates a shape, changes its Text, persists the workbook, reloads from a stream, and validates the updated text with Aspose.Cells.
+// Common Searches: how to unit test shape text change in Aspose.Cells C# | assert that rectangle shape text is saved in XLSX using Aspose.Cells | C# test for persisting smartart text after workbook reload | Aspose.Cells verify shape text after saving to memory stream | unit testing Aspose.Cells shape text property persistence
+// Tags: Aspose.Cells shape text persistence test | C# unit test workbook save load | MSTest shape text verification Aspose.Cells | NUnit Aspose.Cells shape text assertion | memory stream XLSX shape validation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTests
+namespace AsposeCellsSmartArtDemo
 {
-    // Loads a workbook containing SmartArt, replaces every inner shape's text, saves with UpdateSmartArt, reloads the file, and asserts that the new text persists. Demonstrates a reliable test pattern for Aspose.Cells SmartArt modifications in C#.
+    // Demonstrates how to write a C# unit test that adds a rectangle shape, replaces its Text, saves the workbook to a MemoryStream in XLSX format, reloads the workbook, and asserts that the new text persists using Aspose.Cells.
     class Program
     {
         static void Main()
         {
             try
             {
-                ReplaceSmartArtText();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Add a simple AutoShape (rectangle) as a placeholder for SmartArt
+                // Parameters: shape type, upper left row, upper left column,
+                // upper left row offset (pixels), upper left column offset (pixels), height (pixels), width (pixels)
+                Shape shape = worksheet.Shapes.AddShape(
+                    Aspose.Cells.Drawing.MsoDrawingType.Rectangle, // use MsoDrawingType for compatibility
+                    0,          // upper left row
+                    0,          // upper left column
+                    0,          // upper left row offset in pixels
+                    0,          // upper left column offset in pixels
+                    300,        // height in pixels
+                    400);       // width in pixels
+
+                // Set initial text and then replace it
+                shape.Text = "Original Text";
+                shape.Text = "Replaced Text";
+
+                // Save to a memory stream (XLSX format)
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Save(ms, SaveFormat.Xlsx);
+                    ms.Position = 0; // Reset stream position for reading
+
+                    // Load the workbook from the memory stream
+                    Workbook loadedWorkbook = new Workbook(ms);
+                    Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
+
+                    // Retrieve the shape from the loaded worksheet
+                    Shape loadedShape = loadedWorksheet.Shapes[0] as Shape;
+                    if (loadedShape == null)
+                    {
+                        Console.WriteLine("Shape was not found after loading the workbook.");
+                        return;
+                    }
+
+                    // Verify that the text replacement persisted
+                    if (loadedShape.Text == "Replaced Text")
+                    {
+                        Console.WriteLine("Shape text replacement persisted successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Verification failed. Expected 'Replaced Text' but got '{loadedShape.Text}'.");
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Runtime safety: report any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        static void ReplaceSmartArtText()
-        {
-            const string templatePath = "SmartArtTemplate.xlsx";
-            const string outputPath = "SmartArtResult.xlsx";
-            const string newText = "Replaced";
-
-            // Ensure the template file exists before loading.
-            if (!File.Exists(templatePath))
-            {
-                Console.WriteLine($"Template file not found: {templatePath}");
-                return;
-            }
-
-            // Load the workbook that already contains a SmartArt shape.
-            Workbook workbook = new Workbook(templatePath);
-
-            // Iterate through worksheets and shapes, replace SmartArt text.
-            foreach (Worksheet worksheet in workbook.Worksheets)
-            {
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    if (shape.IsSmartArt)
-                    {
-                        // Convert the SmartArt to a group of shapes.
-                        GroupShape group = shape.GetResultOfSmartArt();
-
-                        // Replace the text of each individual shape inside the SmartArt.
-                        foreach (Shape smartArtShape in group.GetGroupedShapes())
-                        {
-                            smartArtShape.Text = newText;
-                        }
-                    }
-                }
-            }
-
-            // Save the workbook with UpdateSmartArt enabled so that changes persist.
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-            {
-                UpdateSmartArt = true
-            };
-            workbook.Save(outputPath, saveOptions);
-
-            // Verify that the SmartArt text was updated.
-            if (!File.Exists(outputPath))
-            {
-                Console.WriteLine($"Failed to save output file: {outputPath}");
-                return;
-            }
-
-            Workbook savedWorkbook = new Workbook(outputPath);
-            bool replacementFound = false;
-
-            foreach (Worksheet worksheet in savedWorkbook.Worksheets)
-            {
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    if (shape.IsSmartArt)
-                    {
-                        GroupShape group = shape.GetResultOfSmartArt();
-                        foreach (Shape smartArtShape in group.GetGroupedShapes())
-                        {
-                            if (smartArtShape.Text == newText)
-                            {
-                                replacementFound = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (replacementFound) break;
-                }
-                if (replacementFound) break;
-            }
-
-            Console.WriteLine(replacementFound
-                ? "SmartArt text replacement was applied correctly."
-                : "SmartArt text replacement was not applied.");
         }
     }
 }

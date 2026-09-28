@@ -1,45 +1,42 @@
-// Title: Aspose.Cells .NET: Add Thick Bottom Border & Light Yellow Fill to a Cell
-// Description: Shows how to create a workbook, define a style with a solid light‑yellow background and a thick bottom border, apply the style to cell A1, and save the file as StyledCell.xlsx using C#.
-// Keywords: Aspose.Cells C# style example | Excel cell border thickness | light yellow cell fill | solid background Aspose.Cells | GitHub Aspose.Cells sample | cell formatting .NET
-// Common Searches: Aspose.Cells set thick bottom border | C# change cell fill color to yellow | how to style a single cell in Aspose.Cells | apply custom border and background in Excel with Aspose | example code for cell style Aspose.Cells .NET
-// Developer Intent: Create a reusable style that adds a thick bottom edge and a light‑yellow background to a cell, then apply it in a workbook.
-// Use Cases: Highlight header rows in automated reports with a bold bottom line and yellow shading. | Emphasize key totals in financial sheets by giving them a distinct border and fill. | Design a title cell for exported Excel files that stands out visually.
-// AI Prompts: Generate C# code using Aspose.Cells to apply a thick bottom border and light yellow fill to the range B2:D2. | Show how to define a reusable Style with a thick bottom border and yellow background and apply it to multiple cells in an Aspose.Cells workbook. | Explain how to change the border color while keeping the thick bottom border and solid fill using Aspose.Cells for .NET.
+// Title: How to add a thick bottom border and light‑yellow solid fill to a cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a Style in Aspose.Cells, sets the BottomBorder line style to Thick, assigns a light‑yellow solid fill, applies the style to cell A1, and saves the workbook. | Show the steps to configure a cell’s border and background color in Aspose.Cells for .NET, including setting BorderType.BottomBorder, CellBorderType.Thick, and a light‑yellow ForegroundColor.
+// Common Searches: Aspose.Cells C# set thick bottom border for a specific cell | How to fill a cell with light yellow color using Aspose.Cells .NET | C# example applying border and background style to a cell in Aspose.Cells | Aspose.Cells style object bottom border line style Thick | Create a styled cell with solid fill and border in Aspose.Cells for .NET
+// Tags: Aspose.Cells configure bottom border style | Aspose.Cells set cell fill color yellow | C# Aspose.Cells create cell style | Aspose.Cells border and background formatting | Aspose.Cells workbook cell styling example
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsStyleExample
+// Demonstrates creating a workbook in C#, defining a Style with a thick bottom border and a light‑yellow solid fill, applying the style to cell A1, and saving the file as StyledCell.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Shows how to create a workbook, define a style with a solid light‑yellow background and a thick bottom border, apply the style to cell A1, and save the file as StyledCell.xlsx using C#.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Create a style object
-            Style style = workbook.CreateStyle();
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a solid fill with light yellow background
-            style.Pattern = BackgroundType.Solid;
-            style.ForegroundColor = Color.LightYellow;
+        // Get the target cell (e.g., A1)
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue("Sample");
 
-            // Configure the bottom border to be thick and black (or any color you prefer)
-            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
-            style.Borders[BorderType.BottomBorder].Color = Color.Black;
+        // Create a new style object
+        Style style = workbook.CreateStyle();
 
-            // Apply the style to a specific cell (e.g., A1)
-            Cell cell = cells["A1"];
-            cell.PutValue("Styled Cell");
-            cell.SetStyle(style);
+        // Apply a thick bottom border
+        style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
+        style.Borders[BorderType.BottomBorder].Color = Color.Black; // optional color
 
-            // Save the workbook (lifecycle save)
-            workbook.Save("StyledCell.xlsx");
-        }
+        // Set a light yellow fill color
+        style.ForegroundColor = Color.FromArgb(255, 255, 204); // light yellow
+        style.Pattern = BackgroundType.Solid;
+
+        // Assign the style to the cell
+        cell.SetStyle(style);
+
+        // Save the workbook to a file
+        workbook.Save("StyledCell.xlsx");
     }
 }

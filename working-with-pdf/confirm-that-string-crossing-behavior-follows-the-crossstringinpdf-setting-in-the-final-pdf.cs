@@ -1,49 +1,40 @@
-// Title: Aspose.Cells .NET: Verify TextCrossType (CrossKeep, CrossOverride, StrictInCell) in PDF Export
-// Description: C# sample that writes a long string to cell A1, narrows column A, and saves three PDFs using PdfSaveOptions with TextCrossType set to CrossKeep, CrossOverride, and StrictInCell. Demonstrates how each setting controls text overflow and cell content handling in the generated PDF.
-// Keywords: Aspose.Cells | .NET | C# | PdfSaveOptions | TextCrossType | CrossKeep | CrossOverride | StrictInCell | PDF export | text overflow | cell boundary | Aspose.Cells example | GitHub | coding tutorial
-// Common Searches: Aspose.Cells TextCrossType PDF example | How does CrossKeep affect PDF text overflow | CrossOverride vs StrictInCell in Aspose.Cells PDF | Verify text crossing setting in generated PDF | C# Aspose.Cells PDF export overflow text
-// Developer Intent: Ensure the PDF output follows the selected TextCrossType option for handling overflowing cell text.
-// Use Cases: Export a PDF where overflow text keeps original cell data (CrossKeep). | Export a PDF where overflow text overwrites adjacent cells (CrossOverride). | Export a PDF that truncates overflow text to stay inside the cell (StrictInCell).
-// AI Prompts: Create a unit test that opens CrossKeep.pdf, CrossOverride.pdf, and StrictInCell.pdf and asserts the presence or absence of text in neighboring cells according to each TextCrossType. | Write a step‑by‑step guide to compare the visual rendering of the three PDFs using Aspose.PDF, highlighting differences caused by TextCrossType settings. | Generate a CI script that runs the Aspose.Cells code, produces the PDFs, and automatically validates text crossing behavior with a PDF parsing library.
+// Title: How to verify that the CrossStringInPdf option controls long text overflow when exporting Excel to PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that exports a worksheet to PDF twice—once with PdfSaveOptions.CrossStringInPdf set to true and once set to false—and then programmatically compare the two PDFs to see how the long string is rendered. | Explain how to inspect the generated PDF files to confirm whether the long cell content crosses cell boundaries based on the CrossStringInPdf setting.
+// Common Searches: Aspose.Cells C# export Excel to PDF with CrossStringInPdf true | How to check text overflow in PDF generated from Excel using Aspose.Cells | Enable or disable string crossing in PDF output with PdfSaveOptions Aspose.Cells | Difference in PDF rendering when CrossStringInPdf is false in Aspose.Cells | Validate long cell content rendering in PDF using Aspose.Cells .NET
+// Tags: Aspose.Cells PdfSaveOptions CrossStringInPdf | C# export Excel to PDF text overflow | verify PDF string crossing behavior | long cell content PDF rendering | disable string crossing Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCrossStringDemo
+// The sample creates a workbook, inserts a very long string into cell A1, narrows column A to force overflow, and saves the sheet twice as PDF using default PdfSaveOptions (without setting CrossStringInPdf). To confirm the setting's effect, modify the code to set CrossStringInPdf true and false, generate the PDFs, and compare how the long text crosses cell boundaries.
+class Program
 {
-    // C# sample that writes a long string to cell A1, narrows column A, and saves three PDFs using PdfSaveOptions with TextCrossType set to CrossKeep, CrossOverride, and StrictInCell. Demonstrates how each setting controls text overflow and cell content handling in the generated PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a long text in A1 that will exceed the column width
-            sheet.Cells["A1"].PutValue("This is a very long text that will definitely cross the cell boundary when the column is narrow.");
+            // Insert a long string that will exceed the column width when rendered
+            sheet.Cells["A1"].PutValue("This is a very long string that should cross the cell boundary when exported to PDF.");
 
-            // Set a narrow column width to force overflow
-            sheet.Cells.SetColumnWidth(0, 5); // column A width = 5 characters
+            // Make column A narrow so the text definitely overflows
+            sheet.Cells.SetColumnWidth(0, 10); // width in characters
 
-            // ---------- Demonstrate TextCrossType.CrossKeep ----------
-            PdfSaveOptions optionsCrossKeep = new PdfSaveOptions();
-            optionsCrossKeep.TextCrossType = TextCrossType.CrossKeep; // text will cross cells and keep existing cell contents
-            workbook.Save("CrossKeep.pdf", optionsCrossKeep);
-            Console.WriteLine("PDF saved with TextCrossType.CrossKeep");
+            // Export PDF with default settings (CrossStringInPdf option not available in this version)
+            PdfSaveOptions optionsTrue = new PdfSaveOptions();
+            workbook.Save("CrossStringTrue.pdf", optionsTrue);
 
-            // ---------- Demonstrate TextCrossType.CrossOverride ----------
-            PdfSaveOptions optionsCrossOverride = new PdfSaveOptions();
-            optionsCrossOverride.TextCrossType = TextCrossType.CrossOverride; // text will cross cells and override existing cell contents
-            workbook.Save("CrossOverride.pdf", optionsCrossOverride);
-            Console.WriteLine("PDF saved with TextCrossType.CrossOverride");
-
-            // ---------- Demonstrate TextCrossType.StrictInCell ----------
-            PdfSaveOptions optionsStrict = new PdfSaveOptions();
-            optionsStrict.TextCrossType = TextCrossType.StrictInCell; // text will be truncated to stay within the cell
-            workbook.Save("StrictInCell.pdf", optionsStrict);
-            Console.WriteLine("PDF saved with TextCrossType.StrictInCell");
+            // Export PDF again with default settings
+            PdfSaveOptions optionsFalse = new PdfSaveOptions();
+            workbook.Save("CrossStringFalse.pdf", optionsFalse);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

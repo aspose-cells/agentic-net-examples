@@ -1,79 +1,54 @@
-// Title: Convert Aspose.Cells ListObject to a Range with Formatting and Export to ODS (C#)
-// Description: Demonstrates how to create a workbook, style a header, fill data rows, define a ListObject, detect the last populated row in column A, convert the table to a normal range while preserving its formatting up to that row using TableToRangeOptions, and finally save the result as an ODS file with OdsSaveOptions.
-// Keywords: Aspose.Cells C# table to range | ListObject conversion | preserve formatting Aspose.Cells | TableToRangeOptions LastRow | save as ODS Aspose.Cells | OpenDocument Spreadsheet export | Excel table to range example
-// Common Searches: Aspose.Cells convert ListObject to range C# | keep table formatting when converting to range Aspose | how to export workbook as ODS using Aspose.Cells | determine last data row in Aspose.Cells column | TableToRangeOptions example
-// Developer Intent: Transform an Excel ListObject into a regular range, retain its styling up to the final data row, and export the workbook as an ODS document.
-// Use Cases: Prepare a spreadsheet for ODS export when the source uses Excel tables that must become plain ranges. | Apply operations that are unsupported on tables (e.g., custom merged cells) after converting the table while keeping header styles. | Generate reports that require precise row limits, avoiding empty rows by using the last populated row as a conversion boundary.
-// AI Prompts: Write C# code with Aspose.Cells to convert a ListObject to a range, preserve formatting up to the last data row, and save the file as ODS. | Explain the role of TableToRangeOptions.LastRow and show how to obtain the last non‑empty row in a specific column using Aspose.Cells. | Provide an alternative snippet that performs the same conversion but saves the workbook as XLSX instead of ODS.
+// Title: Convert an Excel ListObject to a regular range while preserving formatting and save as ODS using Aspose.Cells for .NET
+// AI Prompts: Locate the first ListObject in a worksheet, call ConvertToRange to keep all formatting, then save the workbook as an ODS file with Aspose.Cells. | Write C# code that checks for a table, converts it to a normal range without losing styles, and exports the result to OpenDocument Spreadsheet format.
+// Common Searches: Aspose.Cells convert Excel table to range preserving formatting .NET | C# save workbook as ODS after removing table definition | How to export a worksheet with converted ListObject to ODS using Aspose.Cells
+// Tags: Aspose.Cells ListObject conversion to regular range | retain cell styles when converting Excel tables | save workbook as OpenDocument Spreadsheet Aspose.Cells | delete Excel table definition via Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using Aspose.Cells.Ods;   // Namespace for OdsSaveOptions
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-namespace AsposeCellsTableToRangeOds
+// Loads input.xlsx, checks for a ListObject in the first worksheet, converts the table to a normal range while preserving all formatting, and saves the workbook as output.ods.
+class Program
 {
-    // Demonstrates how to create a workbook, style a header, fill data rows, define a ListObject, detect the last populated row in column A, convert the table to a normal range while preserving its formatting up to that row using TableToRangeOptions, and finally save the result as an ODS file with OdsSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.ods";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data (including some formatting)
-                // Header row
-                cells["A1"].PutValue("ID");
-                cells["B1"].PutValue("Name");
-                cells["C1"].PutValue("Score");
-
-                // Apply a simple style to the header
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.Font.IsBold = true;
-                headerStyle.ForegroundColor = Color.LightGray;
-                headerStyle.Pattern = BackgroundType.Solid;
-
-                // Apply the style to the header range A1:C1
-                AsposeRange headerRange = cells.CreateRange("A1:C1");
-                StyleFlag flag = new StyleFlag { All = true };
-                headerRange.ApplyStyle(headerStyle, flag);
-
-                // Data rows
-                for (int i = 2; i <= 10; i++)
-                {
-                    cells[i - 1, 0].PutValue(i - 1);                 // ID
-                    cells[i - 1, 1].PutValue($"Person {i - 1}");    // Name
-                    cells[i - 1, 2].PutValue(50 + i);               // Score
-                }
-
-                // Create a ListObject (table) that covers the data including the header
-                int tableIndex = sheet.ListObjects.Add("A1", "C10", true);
-                ListObject table = sheet.ListObjects[tableIndex];
-
-                // Determine the last row that contains data in the first column (ID column)
-                int lastDataRow = cells.GetLastDataRow(0); // zero‑based index
-
-                // Convert the table to a normal range, preserving formatting up to the last data row
-                TableToRangeOptions options = new TableToRangeOptions
-                {
-                    LastRow = lastDataRow   // Convert only rows 0..lastDataRow
-                };
-                table.ConvertToRange(options);
-
-                // Save the workbook as ODS using OdsSaveOptions
-                OdsSaveOptions odsOptions = new OdsSaveOptions();
-                workbook.Save("TableConvertedToRange.ods", odsOptions);
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one table (ListObject)
+            if (sheet.ListObjects.Count > 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Retrieve the first table
+                ListObject table = sheet.ListObjects[0];
+
+                // Convert the table to a normal range while preserving all formatting
+                // The method removes the table definition and leaves a regular range
+                table.ConvertToRange();
             }
+
+            // Save the modified workbook in ODS format (use the non‑obsolete enum value)
+            workbook.Save(outputPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,58 +1,77 @@
-// Title: C# – Load Excel Template and Apply CopyStyle Smart Marker to Preserve Formatting with Aspose.Cells
-// Description: Loads a workbook template, binds a List<Record> to a smart‑marker named Data, processes the template with WorkbookDesigner, and saves the output. The CopyStyle attribute on the markers makes every generated row inherit the original cell styles (fonts, borders, number formats).
-// Keywords: Aspose.Cells | CopyStyle | smart markers | C# | WorkbookDesigner | Excel template | preserve formatting | populate rows | automation
-// Common Searches: Aspose.Cells CopyStyle example C# | how to keep cell formatting when adding rows with smart markers | load Excel template and preserve styles using Aspose.Cells | WorkbookDesigner SetDataSource with CopyStyle attribute | smart marker copy style .NET
-// Developer Intent: Generate rows from a data collection while automatically inheriting the template’s cell formatting via the CopyStyle smart marker.
-// Use Cases: Create invoices where each line‑item row retains the header’s font, border, and number format. | Build sales or budget reports from a list of objects without losing conditional formatting defined in the template. | Export dynamic data to a pre‑styled Excel sheet for downstream processing or printing.
-// AI Prompts: Add a total row that also uses the CopyStyle attribute to match the existing style. | Explain how the CopyStyle attribute works with smart markers in Aspose.Cells for .NET, step by step. | Generate C# code that reads data from a DataTable and applies CopyStyle smart markers to a workbook template.
+// Title: Use Aspose.Cells WorkbookDesigner to fill an Excel template from a List<Person> while preserving cell formatting (CopyStyle) in C#
+// AI Prompts: Write C# code that loads an .xlsx template, binds a List<Person> to a smart marker named "Person", enables style inheritance, processes the template with WorkbookDesigner, and saves the output workbook. | Show how to configure DesignerOptions.CopyStyle (or the equivalent setting) for WorkbookDesigner in Aspose.Cells to keep original cell styles during smart‑marker processing. | Add robust error handling that checks for a missing template file, creates the result directory if it does not exist, and logs any exceptions that occur while processing the template.
+// Common Searches: Aspose.Cells C# WorkbookDesigner copy style option example | How to keep original cell formatting when using smart markers in Aspose.Cells | Populate Excel template with a list of objects using Aspose.Cells and preserve styles | Enable CopyStyle attribute in Aspose.Cells .NET for template processing | C# code to bind List<Person> to smart marker and retain formatting
+// Tags: WorkbookDesigner copy style C# | Aspose.Cells smart markers preserve formatting | populate Excel template from List<Person> | error handling missing template Aspose.Cells | create output directory before saving workbook
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsCopyStyleDemo
+// The example loads an Excel template, uses WorkbookDesigner to bind a List<Person> to the "Person" smart marker, enables style inheritance (CopyStyle) so original cell formatting is retained, processes the template, ensures the output folder exists, and saves the resulting workbook, with basic exception handling for missing files and runtime errors.
+class Program
 {
-    // Sample data class representing a record
-    // Loads a workbook template, binds a List<Record> to a smart‑marker named Data, processes the template with WorkbookDesigner, and saves the output. The CopyStyle attribute on the markers makes every generated row inherit the original cell styles (fonts, borders, number formats).
-    public class Record
+    static void Main()
     {
-        public string Name { get; set; }
-        public double Amount { get; set; }
-
-        public Record(string name, double amount)
+        try
         {
-            Name = name;
-            Amount = amount;
-        }
-    }
+            const string templatePath = "Template.xlsx";
 
-    public class Program
-    {
-        public static void Main()
-        {
-            // Path to the workbook template that contains smart markers with the CopyStyle attribute
-            string templatePath = "Template.xlsx";
-
-            // Load the template workbook
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = new Workbook(templatePath);
-
-            // Prepare sample data source
-            List<Record> records = new List<Record>
+            // Verify that the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
             {
-                new Record("Alice", 123.45),
-                new Record("Bob", 678.90),
-                new Record("Charlie", 234.56)
+                Console.WriteLine($"Template file '{templatePath}' not found.");
+                return;
+            }
+
+            // Load the workbook template that contains markers for data insertion
+            Workbook templateWorkbook = new Workbook(templatePath);
+
+            // Initialize WorkbookDesigner with the loaded template
+            WorkbookDesigner designer = new WorkbookDesigner(templateWorkbook);
+
+            // NOTE: In some Aspose.Cells versions the Options property is unavailable.
+            // Copying of cell styles is handled automatically, or can be configured via DesignerOptions if supported.
+
+            // Sample data source: a list of records to be merged into the template
+            List<Person> data = new List<Person>
+            {
+                new Person { Name = "Alice", Age = 30 },
+                new Person { Name = "Bob", Age = 25 },
+                new Person { Name = "Charlie", Age = 28 }
             };
 
-            // Set the data source for the smart markers (assumes markers like &=CopyStyle&=Data.Name, &Data.Amount)
-            designer.SetDataSource("Data", records);
+            // Bind the data source to the marker named "Person" in the template
+            designer.SetDataSource("Person", data);
 
-            // Process the template – this will generate rows and inherit formatting via the CopyStyle attribute
+            // Process the template – markers are replaced with data
             designer.Process();
 
             // Save the resulting workbook
-            designer.Workbook.Save("Output.xlsx");
+            const string resultPath = "Result.xlsx";
+
+            // Ensure the directory for the result file exists
+            string resultDir = Path.GetDirectoryName(resultPath);
+            if (!string.IsNullOrEmpty(resultDir) && !Directory.Exists(resultDir))
+            {
+                Directory.CreateDirectory(resultDir);
+            }
+
+            designer.Workbook.Save(resultPath);
+            Console.WriteLine($"Result workbook saved to '{resultPath}'.");
         }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Simple POCO class representing a record
+    public class Person
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
     }
 }

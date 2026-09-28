@@ -1,74 +1,73 @@
-// Title: Export Formula Dependent Cells to CSV Using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, calculates all formulas, identifies every cell that directly or indirectly depends on a specified address with GetDependents, and writes each dependent's address and formula to a CSV file with proper escaping. An optional save of the workbook is also demonstrated.
-// Keywords: Aspose.Cells | C# | .NET | GetDependents | dependent cells | Excel formula tracing | export to CSV | cell dependency report | Excel automation | Aspose.Cells example
-// Common Searches: Aspose.Cells export dependent cells to CSV | C# list cells that depend on A1 using Aspose.Cells | Get indirect dependents of a formula in .NET | Trace formula dependencies and save as CSV | How to write dependent cell addresses to a file with Aspose.Cells
-// Developer Intent: Retrieve all cells that rely on a given formula cell and generate a CSV file containing their addresses and formulas.
-// Use Cases: Produce a dependency matrix for a budgeting model by exporting all cells linked to a key input. | Assess the impact of changing a parameter by analyzing its downstream formulas in an external analytics tool. | Feed dependent‑cell information into a custom validation pipeline that operates outside of Excel.
-// AI Prompts: Write C# code that uses Aspose.Cells to collect all dependent cells of a target address and export their names and formulas to a CSV file. | Show how to filter the dependent list so only cells containing formulas are written to the CSV. | Explain how to extend the export to include separate columns for worksheet name, cell address, and formula.
+// Title: Export dependent (precedent) cells of a specific Excel formula to a CSV file with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook, identifies all precedent cells of a given formula cell, and writes each cell's address and displayed value to a CSV file using Aspose.Cells. | Modify the example to accept the worksheet name, formula address, and output CSV path as command‑line arguments, then export the dependent cells accordingly. | Create a reusable C# method that returns a collection of cell addresses and values for any formula cell in an Aspose.Cells workbook, and demonstrate writing that collection to a CSV file.
+// Common Searches: how to list cells referenced by a formula and save to csv using Aspose.Cells in C# | Aspose.Cells GetPrecedents export to csv example | C# extract precedent cells of A1 and write to csv file | save dependent cells of an Excel formula as csv with Aspose.Cells .NET | retrieve formula precedents and export values to csv programmatically
+// Tags: export precedent cells to CSV Aspose.Cells | Aspose.Cells GetPrecedents to CSV | C# extract formula dependent cells | write Excel cell addresses and values to CSV | Aspose.Cells dependent cells extraction
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsDependentExport
+// The program loads an Excel workbook, obtains the precedent cells of a specified formula (e.g., A1) on a worksheet, and writes each cell's address and displayed value to a CSV file named dependent_cells.csv using Aspose.Cells for .NET.
+class ExportDependentCells
 {
-    // Loads an Excel workbook, calculates all formulas, identifies every cell that directly or indirectly depends on a specified address with GetDependents, and writes each dependent's address and formula to a CSV file with proper escaping. An optional save of the workbook is also demonstrated.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Input Excel file, output CSV file and the cell to analyze (e.g., "A1")
-            string excelPath = "InputWorkbook.xlsx";
-            string csvPath = "Dependents.csv";
-            string targetCellAddress = "A1";
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "dependent_cells.csv";
 
-            // ---------- Create / Load ----------
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(excelPath);
-            // Access the first worksheet (adjust if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Ensure all formulas are calculated before tracing dependents
-            workbook.CalculateFormula();
-
-            // Convert the target cell address to zero‑based row and column indices
-            int targetRow, targetColumn;
-            CellsHelper.CellNameToIndex(targetCellAddress, out targetRow, out targetColumn);
-
-            // ---------- Get Dependents ----------
-            // Retrieve all cells that depend on the target cell (including indirect dependents)
-            Cell[] dependents = cells.GetDependents(true, targetRow, targetColumn);
-
-            // ---------- Export to CSV ----------
-            using (StreamWriter writer = new StreamWriter(csvPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Write header
-                writer.WriteLine("DependentCellName,Formula");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Write each dependent cell's name and its formula (if any)
-                foreach (Cell dep in dependents)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Specify the cell that contains the formula (e.g., "A1")
+            Cell formulaCell = worksheet.Cells["A1"];
+
+            // Get the precedents (cells referenced by the formula)
+            ReferredAreaCollection precedentAreas = formulaCell.GetPrecedents();
+
+            // Prepare CSV content
+            StringBuilder csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("Address,Value"); // Header
+
+            // Iterate through each referenced area and each cell within the area
+            foreach (ReferredArea area in precedentAreas)
+            {
+                for (int row = area.StartRow; row <= area.EndRow; row++)
                 {
-                    string formula = dep.IsFormula ? dep.Formula : string.Empty;
-                    writer.WriteLine($"{dep.Name},{EscapeCsv(formula)}");
+                    for (int col = area.StartColumn; col <= area.EndColumn; col++)
+                    {
+                        Cell cell = worksheet.Cells[row, col];
+                        string address = CellsHelper.CellIndexToName(row, col);
+                        string value = cell.StringValue ?? string.Empty; // Get displayed value
+
+                        // Escape double quotes for CSV
+                        string escapedValue = value.Replace("\"", "\"\"");
+                        csvBuilder.AppendLine($"{address},\"{escapedValue}\"");
+                    }
                 }
             }
 
-            // ---------- Save ----------
-            // (Optional) Save the workbook if any modifications were made
-            workbook.Save("ModifiedWorkbook.xlsx");
-        }
+            // Write the CSV to the output file
+            File.WriteAllText(outputPath, csvBuilder.ToString());
 
-        // Helper to escape commas and quotes in CSV fields
-        private static string EscapeCsv(string field)
+            Console.WriteLine($"Dependent cells exported to \"{outputPath}\"");
+        }
+        catch (Exception ex)
         {
-            if (field == null) return string.Empty;
-            if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
-            {
-                field = field.Replace("\"", "\"\"");
-                return $"\"{field}\"";
-            }
-            return field;
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

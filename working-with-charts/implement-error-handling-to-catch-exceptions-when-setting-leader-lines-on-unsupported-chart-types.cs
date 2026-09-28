@@ -1,91 +1,73 @@
-// Title: C# Aspose.Cells – Safely Set Leader Lines on Charts with Exception Handling
-// Description: Demonstrates how to add a column chart in Aspose.Cells, attempt to enable leader lines, and gracefully catch the CellsException thrown for unsupported chart types. The sample wraps leader‑line configuration and workbook saving in try‑catch blocks, logs errors, and shows how to continue processing without a crash.
-// Keywords: Aspose.Cells | C# | leader lines | chart exception handling | unsupported chart type | CellsException | column chart | Excel chart API | error handling | Aspose.Cells chart | leader line properties | try catch
-// Common Searches: Aspose.Cells catch exception for leader lines | which chart types support leader lines in Aspose.Cells | C# example handling unsupported chart features Aspose.Cells | error handling when setting leader lines on a column chart | Aspose.Cells leader lines not supported column chart
-// Developer Intent: Add robust try‑catch logic around leader‑line settings to prevent runtime failures on chart types that do not support them.
-// Use Cases: Prevent application crashes by catching CellsException when configuring leader lines on incompatible charts. | Log detailed error messages and optionally switch to a chart type that supports leader lines. | Ensure the workbook is saved even if chart configuration fails, using separate error handling for the save operation.
-// AI Prompts: Generate C# code that checks a chart's type before enabling HasLeaderLines in Aspose.Cells. | Show how to catch Aspose.Cells.CellsException when setting leader line properties on a series. | Provide a fallback routine that replaces a column chart with a line chart if leader line configuration throws an exception.
+// Title: Implement try‑catch error handling for leader line settings on unsupported chart types in Aspose.Cells for .NET
+// AI Prompts: Write C# code that attempts to set HasLeaderLines and related leader line properties on a chart, and wraps the assignments in a try‑catch block to handle the exception thrown for unsupported chart types using Aspose.Cells. | Create a sample that first checks a chart’s ChartType, applies leader line styling only to supported types (e.g., pie chart), and logs a descriptive message when the operation is invalid for the current chart.
+// Common Searches: Aspose.Cells catch exception when enabling leader lines on column chart C# | how to handle unsupported chart type error for leader lines in Aspose.Cells | C# Aspose.Cells check chart type before setting HasLeaderLines | leader line properties cause exception on non‑pie charts Aspose.Cells | safe way to configure leader lines for charts using Aspose.Cells .NET
+// Tags: Aspose.Cells chart leader lines exception handling | Aspose.Cells set leader lines on pie chart | Aspose.Cells unsupported chart type error handling | C# Aspose.Cells chart series leader line configuration | Aspose.Cells try-catch leader line properties | Aspose.Cells chart type validation for leader lines
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing; // For drawing related enums and classes
+using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, adds a column chart (which does not support leader lines) and attempts to configure leader line properties inside a try‑catch block to capture the unsupported‑type exception. It then adds a pie chart (which supports leader lines) and applies custom leader line styling before saving the file as LeaderLinesExceptionDemo.xlsx.
+class LeaderLinesExceptionDemo
 {
-    // Demonstrates how to add a column chart in Aspose.Cells, attempt to enable leader lines, and gracefully catch the CellsException thrown for unsupported chart types. The sample wraps leader‑line configuration and workbook saving in try‑catch blocks, logs errors, and shows how to continue processing without a crash.
-    public class LeaderLinesErrorHandlingDemo
+    static void Main()
     {
-        // Entry point required for compilation
-        public static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data for the charts
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
+
+        // ------------------------------------------------------------
+        // Example 1: Column chart (does NOT support leader lines)
+        // ------------------------------------------------------------
+        int columnChartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+        Chart columnChart = sheet.Charts[columnChartIdx];
+        columnChart.NSeries.Add("B2:B4", true);
+        columnChart.NSeries.CategoryData = "A2:A4";
+
+        // Attempt to configure leader lines and catch any exception
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            Series columnSeries = columnChart.NSeries[0];
+            columnSeries.HasLeaderLines = true;               // May throw for unsupported chart type
+            columnSeries.LeaderLines.IsAuto = false;
+            columnSeries.LeaderLines.Style = LineType.Dot;
+            columnSeries.LeaderLines.WeightPt = 1.0;
+            columnSeries.LeaderLines.Color = Color.Red;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Leader lines are not supported for Column chart: " + ex.Message);
         }
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // ------------------------------------------------------------
+        // Example 2: Pie chart (supports leader lines)
+        // ------------------------------------------------------------
+        int pieChartIdx = sheet.Charts.Add(ChartType.Pie, 25, 0, 40, 8);
+        Chart pieChart = sheet.Charts[pieChartIdx];
+        pieChart.NSeries.Add("B2:B4", true);
+        pieChart.NSeries.CategoryData = "A2:A4";
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
+        // Configure leader lines on a supported chart type
+        Series pieSeries = pieChart.NSeries[0];
+        pieSeries.HasLeaderLines = true;
+        pieSeries.LeaderLines.IsAuto = false;
+        pieSeries.LeaderLines.Style = LineType.Dot;
+        pieSeries.LeaderLines.WeightPt = 1.5;
+        pieSeries.LeaderLines.Color = Color.Blue;
 
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart (leader lines are not supported for column charts)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Attempt to configure leader lines – this will throw on unsupported chart types
-            try
-            {
-                Series series = chart.NSeries[0];
-                series.HasLeaderLines = true;               // Enable leader lines
-                series.LeaderLines.IsAuto = false;          // Disable automatic formatting
-                // The Style property may not be available in some versions; omit if not supported
-                // series.LeaderLines.Style = Aspose.Cells.Drawing.LineStyle.Dot;
-                series.LeaderLines.WeightPt = 1.5;          // Set line weight
-                series.LeaderLines.Color = Color.Blue;      // Set line color
-
-                Console.WriteLine("Leader lines configured successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception – typically Aspose.Cells.CellsException
-                Console.WriteLine($"Error configuring leader lines: {ex.Message}");
-                // Optionally, fallback to a supported chart type or skip configuration
-            }
-
-            // Save the workbook with safety check
-            try
-            {
-                string outputPath = "LeaderLinesErrorHandlingDemo_out.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("LeaderLinesExceptionDemo.xlsx");
     }
 }

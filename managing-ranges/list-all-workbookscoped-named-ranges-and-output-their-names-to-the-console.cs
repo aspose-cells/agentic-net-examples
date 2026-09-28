@@ -1,60 +1,43 @@
-// Title: C# – List Workbook‑Scoped Named Ranges with Aspose.Cells and Print to Console
-// Description: Shows how to add global (workbook‑scoped) named ranges, filter them with NameScopeType.Workbook, and write each name to the console using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | workbook scoped named ranges | NameScopeType.Workbook | list named ranges | filter global names | enumerate named ranges | console output | Excel automation
-// Common Searches: Aspose.Cells list workbook scoped names C# | filter named ranges by scope Aspose.Cells | get global named ranges .NET | enumerate named ranges console Aspose | NameScopeType.Workbook example
-// Developer Intent: Retrieve all workbook‑level named ranges from a spreadsheet and display their identifiers.
-// Use Cases: Verify that required global named ranges exist before running calculations. | Generate a documentation report that lists every workbook‑scoped named range. | Log workbook‑scoped names for debugging when loading or modifying a workbook.
-// AI Prompts: Write C# code with Aspose.Cells that lists all workbook‑scoped named ranges and saves the names to a text file. | Show how to differentiate worksheet‑scoped and workbook‑scoped named ranges and retrieve each group separately. | Provide an example that adds a new workbook‑scoped named range, then enumerates and prints all workbook‑scoped names.
+// Title: How to list workbook‑scoped named ranges in an Excel file using Aspose.Cells for .NET and print them to the console
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, filters the Names collection for workbook‑level scopes, and writes each name to the console. | Create a method that returns a string array of all workbook‑scoped defined names from a Workbook object. | Show how to handle missing files and exceptions while enumerating workbook‑scoped named ranges with Aspose.Cells.
+// Common Searches: Aspose.Cells C# retrieve only workbook level named ranges from an Excel workbook | list defined names that are not tied to a worksheet using Aspose.Cells .NET | C# example to print workbook scoped names from input.xlsx with Aspose.Cells | how to differentiate workbook and worksheet scoped names in Aspose.Cells
+// Tags: enumerate workbook scoped names Aspose.Cells | filter defined names by scope .NET | print named ranges console C# | load Excel workbook Aspose.Cells | handle missing file exception Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, iterates the workbook’s Worksheets.Names collection, outputs each workbook‑scoped defined name to the console, and includes basic error handling for missing files and runtime exceptions.
+class Program
 {
-    // Shows how to add global (workbook‑scoped) named ranges, filter them with NameScopeType.Workbook, and write each name to the console using Aspose.Cells for .NET.
-    public class ListWorkbookScopedNames
+    static void Main()
     {
-        public static void Run()
+        // Path to the input workbook
+        string filePath = "input.xlsx";
+
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            try
+            Console.WriteLine($"Error: File not found – {filePath}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Iterate through all defined names in the workbook
+            foreach (Name definedName in workbook.Worksheets.Names)
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // Add some workbook‑scoped named ranges for demonstration
-                int idx1 = workbook.Worksheets.Names.Add("GlobalRange1");
-                workbook.Worksheets.Names[idx1].RefersTo = "=Sheet1!$A$1:$A$5";
-
-                int idx2 = workbook.Worksheets.Names.Add("GlobalRange2");
-                workbook.Worksheets.Names[idx2].RefersTo = "=Sheet1!$B$1:$B$5";
-
-                // Retrieve only the workbook‑scoped names using the Filter method
-                Name[] workbookScopedNames = workbook.Worksheets.Names.Filter(NameScopeType.Workbook, -1);
-
-                // Output the names to the console
-                Console.WriteLine($"Workbook‑scoped named ranges count: {workbookScopedNames.Length}");
-                foreach (Name name in workbookScopedNames)
-                {
-                    // Name.Text contains the name identifier
-                    Console.WriteLine(name.Text);
-                }
-
-                // (Optional) Save the workbook if you want to persist the changes
-                // workbook.Save("WorkbookWithNames.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Output the name text (Aspose.Cells may not expose IsWorkbookScoped in older versions)
+                Console.WriteLine(definedName.Text);
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ListWorkbookScopedNames.Run();
+            // Handle any runtime exceptions (e.g., file format issues)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

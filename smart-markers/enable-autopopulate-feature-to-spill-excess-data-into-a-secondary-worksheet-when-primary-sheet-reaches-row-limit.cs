@@ -1,75 +1,50 @@
-// Title: Auto‑populate overflow rows to a new worksheet with Aspose.Cells for .NET
-// Description: Demonstrates how to set TxtLoadOptions.ExtendToNextSheet = true so that a CSV larger than Excel's 1,048,576‑row limit automatically continues on a second worksheet, then saves the workbook as XLSX.
-// Keywords: Aspose.Cells | ExtendToNextSheet | auto populate next sheet | large CSV import | Excel row limit | spill over rows | C# Aspose.Cells example
-// Common Searches: Aspose.Cells auto populate next sheet C# | ExtendToNextSheet option usage | Import CSV with more than 1 million rows | Split large CSV across worksheets Aspose | How to handle Excel row limit in .NET
-// Developer Intent: Enable automatic spill‑over of rows to a new worksheet when loading a CSV that exceeds the maximum rows per sheet.
-// Use Cases: Loading massive data exports (>1 048 576 rows) into Excel without manual splitting. | Generating multi‑sheet reports from log files or sensor data that exceed a single sheet's capacity. | Automating data migration where source files are larger than Excel's row limit.
-// AI Prompts: Show C# code that uses Aspose.Cells TxtLoadOptions to continue CSV import on a new worksheet after the row limit is reached. | Explain the effect of ExtendToNextSheet and how to verify the created worksheets. | Provide a step‑by‑step guide to import a 1.05 million‑row CSV into an XLSX file using Aspose.Cells.
+// Title: Automatically create a second worksheet for CSV rows that exceed Excel's row limit using Aspose.Cells TxtLoadOptions in C#
+// AI Prompts: Generate C# code that loads a CSV with Aspose.Cells and uses TxtLoadOptions.ExtendToNextSheet to automatically spill rows beyond the Excel row limit into a new worksheet. | Show how to retrieve the worksheet count and row counts after loading a large CSV with auto‑populate enabled in Aspose.Cells. | Write an example that saves the workbook after overflow rows have been moved to a secondary sheet using TxtLoadOptions.
+// Common Searches: Aspose.Cells C# load CSV and split into multiple worksheets when row count exceeds Excel limit | How to use TxtLoadOptions ExtendToNextSheet property in .NET | C# example for handling Excel maximum rows with Aspose.Cells | Auto‑populate overflow rows to next sheet using Aspose.Cells TxtLoadOptions | Saving overflow CSV data to separate worksheets with Aspose.Cells
+// Tags: Aspose.Cells TxtLoadOptions ExtendToNextSheet | auto‑populate overflow rows to new worksheet | load CSV into workbook with sheet overflow | C# split large CSV across Excel worksheets | handling Excel row limit with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AutoPopulateExample
+// Demonstrates using TxtLoadOptions.ExtendToNextSheet to load a CSV that exceeds Excel's maximum row count, automatically creating a second worksheet for overflow rows and saving the result as an XLSX file.
+class AutoPopulateExample
 {
-    // Demonstrates how to set TxtLoadOptions.ExtendToNextSheet = true so that a CSV larger than Excel's 1,048,576‑row limit automatically continues on a second worksheet, then saves the workbook as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Generate CSV data that exceeds Excel's maximum row limit (1,048,576 rows)
+        int totalRows = 1_048_580; // 4 rows will overflow to the next sheet
+        using (MemoryStream csvStream = new MemoryStream())
+        using (StreamWriter writer = new StreamWriter(csvStream))
         {
-            // ------------------------------------------------------------
-            // 1. Prepare a CSV data source that has more rows than a single
-            //    worksheet can hold (Excel limit = 1,048,576 rows).
-            //    For demonstration we generate a small CSV, but the same
-            //    logic works with a huge file that exceeds the limit.
-            // ------------------------------------------------------------
-            var sb = new System.Text.StringBuilder();
+            // Write header
+            writer.WriteLine("ID,Value");
 
-            // Header row
-            sb.AppendLine("Id,Value");
-
-            // Generate rows – in a real scenario this would be > 1,048,576
-            for (int i = 1; i <= 1_050_000; i++)
+            // Write data rows
+            for (int i = 1; i <= totalRows; i++)
             {
-                sb.AppendLine($"{i},Data_{i}");
+                writer.WriteLine($"{i},Data{i}");
             }
 
-            // Convert the CSV string to a memory stream
-            using var csvStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(sb.ToString()));
+            writer.Flush();
+            csvStream.Position = 0; // Reset stream position for reading
 
-            // ------------------------------------------------------------
-            // 2. Enable the auto‑populate (spill‑over) feature.
-            //    TxtLoadOptions.ExtendToNextSheet = true tells Aspose.Cells
-            //    to continue importing data into a new worksheet when the
-            //    current one reaches its row limit.
-            // ------------------------------------------------------------
-            var loadOptions = new TxtLoadOptions
+            // Load the CSV into a workbook with auto‑populate enabled
+            TxtLoadOptions loadOptions = new TxtLoadOptions
             {
-                ExtendToNextSheet = true   // <-- key setting
+                ExtendToNextSheet = true // Spill excess rows to a new worksheet
             };
 
-            // ------------------------------------------------------------
-            // 3. Load the CSV into a Workbook using the options above.
-            //    The constructor (Workbook(Stream, TxtLoadOptions)) follows
-            //    the required lifecycle rule for creation/loading.
-            // ------------------------------------------------------------
-            var workbook = new Workbook(csvStream, loadOptions);
+            // Create workbook from the CSV stream using the load options
+            Workbook workbook = new Workbook(csvStream, loadOptions);
 
-            // ------------------------------------------------------------
-            // 4. Verify that a second worksheet was created.
-            // ------------------------------------------------------------
-            Console.WriteLine($"Worksheets count: {workbook.Worksheets.Count}");
-            Console.WriteLine($"Rows in first sheet: {workbook.Worksheets[0].Cells.MaxDataRow + 1}");
-            Console.WriteLine($"Rows in second sheet: {workbook.Worksheets[1].Cells.MaxDataRow + 1}");
+            // Output information about the resulting workbook
+            Console.WriteLine("Number of worksheets: " + workbook.Worksheets.Count);
+            Console.WriteLine("Rows in first worksheet: " + (workbook.Worksheets[0].Cells.MaxDataRow + 1));
+            Console.WriteLine("Rows in second worksheet: " + (workbook.Worksheets[1].Cells.MaxDataRow + 1));
 
-            // ------------------------------------------------------------
-            // 5. Save the workbook.
-            //    The Save method complies with the lifecycle rule for persistence.
-            // ------------------------------------------------------------
-            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "SpillOverDemo.xlsx");
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved to: {outputPath}");
+            // Save the workbook to a file
+            workbook.Save("AutoPopulated.xlsx");
         }
     }
 }

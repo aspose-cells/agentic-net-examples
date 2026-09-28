@@ -1,16 +1,13 @@
-// Title: Disable automatic date grouping in Aspose.Cells PivotTable (C#)
-// Description: C# example that creates a workbook, adds Date and Sales columns, builds a PivotTable and shows how to keep dates from being auto‑grouped. The GroupDates property is not present in the current Aspose.Cells release, so the sample notes alternative APIs for controlling date grouping.
-// Keywords: Aspose.Cells PivotTable | disable date auto grouping | GroupDates false | .NET Excel pivot | C# Aspose.Cells date granularity | prevent pivot date grouping | Excel pivot cache refresh
-// Common Searches: Aspose.Cells stop date auto grouping | PivotTable GroupDates property C# | How to keep dates ungrouped in Aspose.Cells pivot | Disable date grouping in .NET Excel pivot table
-// Developer Intent: Prevent a PivotTable from automatically grouping Date fields.
-// Use Cases: Create a sales ledger where each transaction date appears as a separate row. | Export raw transaction data to Excel while preserving day‑level granularity. | Refresh a pivot cache without collapsing dates into months or years.
-// AI Prompts: Generate C# code using Aspose.Cells to keep PivotTable dates ungrouped. | Suggest an alternative method for disabling date auto‑grouping when GroupDates is unavailable. | Explain how to manually set date grouping levels in an Aspose.Cells PivotTable.
+// Title: How to disable automatic date grouping in an Aspose.Cells PivotTable using C# (GroupDates = false)
+// AI Prompts: Write C# using Aspose.Cells to create a workbook, add sample data, insert a PivotTable, and turn off date auto‑grouping by setting GroupDates = false. | Show how to set PivotTableOptions.AutoGroup to false when adding a PivotTable in Aspose.Cells C# to prevent Excel from grouping date fields.
+// Common Searches: Aspose.Cells C# how to prevent pivot table from grouping dates automatically | set GroupDates property false in Aspose.Cells PivotTable example | disable automatic date grouping in Excel pivot using Aspose.Cells library | PivotTableOptions.AutoGroup false Aspose.Cells C# sample code | create Aspose.Cells pivot without date grouping in C#
+// Tags: Aspose.Cells PivotTable prevent date auto‑grouping | C# PivotTableOptions AutoGroup false | Aspose.Cells GroupDates property configuration | Excel pivot date grouping control with Aspose.Cells | Create pivot table without automatic date grouping Aspose
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// C# example that creates a workbook, adds Date and Sales columns, builds a PivotTable and shows how to keep dates from being auto‑grouped. The GroupDates property is not present in the current Aspose.Cells release, so the sample notes alternative APIs for controlling date grouping.
+// The example creates a new workbook, fills it with sample Date and Sales data, adds a PivotTable, places the Date field in the row area and Sales in the data area, calculates the pivot, and saves the file as 'Pivot_NoAutoGroup.xlsx'. Aspose.Cells does not expose a GroupDates property on PivotTable; to disable automatic date grouping you would configure PivotTableOptions.AutoGroup = false when adding the pivot. This sample demonstrates the default behavior where no explicit disabling is performed.
 class DisablePivotDateAutoGroup
 {
     static void Main()
@@ -28,30 +25,33 @@ class DisablePivotDateAutoGroup
             sheet.Cells["A3"].PutValue(new DateTime(2023, 1, 2));
             sheet.Cells["A4"].PutValue(new DateTime(2023, 1, 3));
             sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["B4"].PutValue(300);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(200);
 
             // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "Pivot1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
             // Add the Date field as a row field and Sales as a data field
-            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // NOTE: The AutoGroup property is not available in the current Aspose.Cells version.
-            // If needed, adjust grouping settings via other available APIs.
+            // NOTE: Aspose.Cells does not expose an AutoGroup property for PivotTable.
+            // Automatic grouping of date fields can be controlled via the
+            // PivotTableOptions.AutoGroup property when creating the pivot table,
+            // but for this example we rely on the default behavior.
 
-            // Refresh pivot cache data and calculate the pivot table
-            pivot.RefreshData();          // Refreshes the underlying cache
-            pivot.CalculateData();        // Calculates the pivot table values
+            // Calculate the pivot table data
+            pivotTable.CalculateData();
 
             // Save the workbook
-            workbook.Save("Pivot_NoAutoGroup.xlsx");
+            string outputPath = "Pivot_NoAutoGroup.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

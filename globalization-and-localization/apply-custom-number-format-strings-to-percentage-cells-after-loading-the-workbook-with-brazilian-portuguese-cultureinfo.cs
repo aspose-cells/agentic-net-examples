@@ -1,95 +1,47 @@
-// Title: Apply Brazilian Portuguese Custom Percentage Format to Excel Cells with Aspose.Cells (.NET)
-// Description: C# example that loads an XLSX workbook using CultureInfo "pt-BR", scans all worksheets, identifies cells with a percent style, and replaces the built‑in format with the localized custom format "#.##0,00%" before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | custom percentage format | pt-BR CultureInfo | Brazilian Portuguese number format | Style.IsPercent | Excel localization | LoadOptions.CultureInfo | custom number format string
-// Common Searches: Aspose.Cells apply Brazilian percent format | C# set custom percentage format pt-BR | How to use CultureInfo with Aspose.Cells | Replace built‑in percent style in Excel using Aspose | Localized number formatting in .NET Excel library
-// Developer Intent: Replace every built‑in percent style in a workbook with the Brazilian Portuguese custom format "#.##0,00%" using Aspose.Cells.
-// Use Cases: Create a sample workbook, apply the default percent style, and test the conversion to a localized format. | Load an existing Excel file with LoadOptions.CultureInfo set to "pt-BR", detect cells where Style.IsPercent is true, and assign the custom format "#.##0,00%". | Save the updated workbook while preserving Brazilian Portuguese numeric conventions for downstream processing or reporting.
-// AI Prompts: Generate C# code that opens an XLSX file with Aspose.Cells using pt-BR CultureInfo and changes all percent‑styled cells to the custom format "#.##0,00%". | Explain the purpose of Style.IsPercent in Aspose.Cells and show how to apply a locale‑specific custom number format for percentages. | Provide a step‑by‑step guide to localize number formats in Excel workbooks with Aspose.Cells for Brazilian Portuguese.
+// Title: Apply Brazilian Portuguese custom percentage format (0,00%) to all percent cells using Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook with Aspose.Cells, set workbook.Settings.CultureInfo to "pt-BR", and replace every cell where style.IsPercent is true with the custom format string "0,00%". | Create a reusable method that takes a Workbook and a format string, then applies that format to all percentage‑styled cells while keeping the pt‑BR culture settings. | Write a snippet that iterates only the used range of each worksheet, updates percentage cells to a locale‑aware format, and saves the modified workbook to a new file.
+// Common Searches: how to set Brazilian Portuguese culture for an Aspose.Cells workbook in C# | change percentage number format to use comma decimal separator with Aspose.Cells | apply custom number format to all percent cells in an Excel file using Aspose.Cells .NET | iterate through used range and modify style.IsPercent cells in Aspose.Cells | save workbook after applying locale‑specific percentage format Aspose.Cells
+// Tags: set workbook culture pt-BR Aspose.Cells | custom percentage format 0,00% Aspose.Cells | iterate cells and modify style.IsPercent C# | locale-aware number formatting Excel Aspose.Cells | apply custom number format to percent cells .NET
 
-using System;
 using System.Globalization;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads input.xlsx, assigns the Brazilian Portuguese (pt-BR) CultureInfo to the workbook, scans every cell, and for cells flagged as percentages replaces their style with the custom format "0,00%" before saving to output.xlsx.
+class Program
 {
-    // C# example that loads an XLSX workbook using CultureInfo "pt-BR", scans all worksheets, identifies cells with a percent style, and replaces the built‑in format with the localized custom format "#.##0,00%" before saving the file.
-    public class ApplyCustomPercentageFormat
+    static void Main()
     {
-        public static void Main()
+        // Load the workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Apply Brazilian Portuguese culture (pt-BR) to the workbook settings
+        workbook.Settings.CultureInfo = new CultureInfo("pt-BR");
+
+        // Iterate through all worksheets and cells
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            Cells cells = sheet.Cells;
+
+            // Loop through each cell in the used range
+            foreach (Cell cell in cells)
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+                // Get the current style of the cell
+                Style style = cell.GetStyle();
 
-        public static void Run()
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Ensure the input file exists; create a sample workbook if missing
-            if (!File.Exists(inputPath))
-            {
-                var sampleWb = new Workbook();
-                var sheet = sampleWb.Worksheets[0];
-                var cell = sheet.Cells["A1"];
-                cell.PutValue(0.1234); // 12.34%
-
-                // Apply a built‑in percent format (index 10) to the sample cell
-                var style = cell.GetStyle();
-                style.Number = 10; // Built‑in percent format
-                cell.SetStyle(style);
-
-                sampleWb.Save(inputPath, SaveFormat.Xlsx);
-            }
-
-            // Load the workbook with Brazilian Portuguese culture
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx)
-            {
-                CultureInfo = new CultureInfo("pt-BR")
-            };
-            var workbook = new Workbook(inputPath, loadOptions);
-
-            // Custom percentage format for pt-BR (decimal separator ',' and group separator '.')
-            const string customPercentageFormat = "#.##0,00%";
-
-            // Apply the custom format to all percentage cells
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
+                // Check if the cell is formatted as a percentage
+                if (style.IsPercent)
                 {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = cells[row, col];
-                        if (cell == null || cell.Type == CellValueType.IsNull)
-                            continue;
+                    // Apply a custom number format string for percentages
+                    // Using comma as decimal separator according to pt-BR culture
+                    style.Custom = "0,00%";
 
-                        Style style = cell.GetStyle();
-
-                        // Check if the cell already uses a percent format
-                        if (style.IsPercent)
-                        {
-                            // Apply the custom percentage format
-                            style.Custom = customPercentageFormat;
-                            cell.SetStyle(style);
-                        }
-                    }
+                    // Assign the modified style back to the cell
+                    cell.SetStyle(style);
                 }
             }
-
-            // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

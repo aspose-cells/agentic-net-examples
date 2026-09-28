@@ -1,42 +1,49 @@
-// Title: Async Load Excel Workbook and Apply Freeze Panes with Aspose.Cells for .NET
-// Description: Shows how to load an Excel file on a background thread using Aspose.Cells, set freeze panes at cell C3 (3 rows × 3 columns), and save the workbook within an async C# method.
-// Keywords: Aspose.Cells async loading | C# freeze panes | Excel workbook Task.Run | non‑blocking Excel processing | apply FreezePanes C3 | asynchronous Excel manipulation .NET | background thread workbook load | Aspose.Cells .NET example | freeze panes Excel C# | async Excel save
-// Common Searches: aspacells load workbook asynchronously | c# async freeze panes aspocells | how to use FreezePanes after async load | aspocells async example for large Excel files | non blocking excel processing aspocells
-// Developer Intent: Load an Excel workbook without blocking, apply freeze panes at C3, and persist the changes.
-// Use Cases: Web API endpoints that generate Excel reports while keeping request threads responsive. | Desktop utilities that process large spreadsheets in the UI thread without freezing the interface. | Background services that prepare Excel files for downstream systems, needing frozen header rows/columns.
-// AI Prompts: Create an async Aspose.Cells routine that loads a workbook, freezes panes at D5 with 2 rows and 2 columns, and returns the workbook object. | Add comprehensive error handling and cancellation support to an async method that loads a workbook and applies FreezePanes using Aspose.Cells. | Show how to chain multiple asynchronous Aspose.Cells operations—load, set FreezePanes, format cells, and save—while preserving thread safety.
+// Title: Load an Excel workbook asynchronously with Aspose.Cells for .NET and freeze the first row and column
+// AI Prompts: Open an existing .xlsx file on a background thread using Aspose.Cells, then call Worksheet.FreezePanes(1,1,1,1) to lock the top row and left column. | When the input file is absent, instantiate a new Workbook, rename the default sheet, apply FreezePanes, and save both the template and the modified workbook. | Adjust the FreezePanes parameters after the async load to freeze a custom range of rows and columns (e.g., rows 0‑4 and columns 0‑2).
+// Common Searches: asp.net async load excel file using aspose.cells and freeze panes | c# how to freeze top row and first column after loading workbook asynchronously | aspose.cells create workbook when file does not exist then apply freeze panes | await Task.Run new Workbook example with freeze panes in C# | freeze panes parameters explanation zero based Aspose.Cells
+// Tags: asynchronous workbook loading Aspose.Cells .NET | worksheet FreezePanes method C# | create workbook if file missing Aspose.Cells | freeze top row and first column Excel Aspose.Cells | zero‑based indices in FreezePanes Aspose.Cells
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Shows how to load an Excel file on a background thread using Aspose.Cells, set freeze panes at cell C3 (3 rows × 3 columns), and save the workbook within an async C# method.
+// Loads an existing Excel file asynchronously (or creates a new one if missing), applies Worksheet.FreezePanes to lock the first row and column of the first sheet, and saves the updated workbook.
 class Program
 {
-    // Asynchronously loads a workbook, applies FreezePanes, and saves it.
-    static async Task ApplyFreezePanesAsync(string inputFile, string outputFile)
-    {
-        // Load the workbook on a background thread to avoid blocking.
-        Workbook workbook = await Task.Run(() => new Workbook(inputFile));
-
-        // Access the first worksheet.
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Freeze panes at cell C3 with 3 frozen rows and 3 frozen columns.
-        sheet.FreezePanes("C3", 3, 3);
-
-        // Save the modified workbook.
-        workbook.Save(outputFile);
-    }
-
     static async Task Main(string[] args)
     {
-        // Example usage: provide input and output file paths.
         string inputPath = "input.xlsx";
         string outputPath = "output.xlsx";
 
-        await ApplyFreezePanesAsync(inputPath, outputPath);
+        try
+        {
+            Workbook workbook;
 
-        Console.WriteLine("Workbook processed and saved to " + outputPath);
+            // Load existing workbook or create a new one if the file is missing
+            if (File.Exists(inputPath))
+            {
+                workbook = await Task.Run(() => new Workbook(inputPath));
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Save(inputPath); // optional: persist the new template
+            }
+
+            // Freeze first row and first column in the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            // row, column specify the top‑left cell of the scrollable area (zero‑based)
+            // totalRows, totalColumns specify how many rows/columns to freeze
+            sheet.FreezePanes(1, 1, 1, 1); // freezes row 0 and column 0
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

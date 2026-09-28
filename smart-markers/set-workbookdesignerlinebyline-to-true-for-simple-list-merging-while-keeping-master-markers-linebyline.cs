@@ -1,10 +1,7 @@
-// Title: Aspose.Cells for .NET: Use WorkbookDesigner.LineByLine to merge a list with smart markers (C#)
-// Description: Demonstrates enabling WorkbookDesigner.LineByLine in C# so each smart‑marker row is processed individually, binding a List<Employee> to markers and generating an Excel file with one row per employee.
-// Keywords: Aspose.Cells | WorkbookDesigner | LineByLine | smart markers | C# example | list merging | Excel export | Aspose.Cells for .NET | populate rows from collection | template processing
-// Common Searches: WorkbookDesigner LineByLine example C# | Aspose.Cells smart markers list merging | How to bind List<T> to smart markers Aspose.Cells | Generate Excel rows from collection using Aspose.Cells | LineByLine property usage Aspose.Cells .NET
-// Developer Intent: Enable line‑by‑line processing to merge each item of a collection into separate rows using smart markers.
-// Use Cases: Create an employee directory where each employee occupies its own row. | Produce a sales ledger that lists each transaction from a List<Sale>. | Generate invoices with line‑item details from a List<Product> while keeping header rows intact. | Export project task lists from a List<Task> into Excel for reporting.
-// AI Prompts: Write C# code that adds a formatted header above the smart‑marker rows while keeping LineByLine true. | Show how to bind multiple collections (e.g., Employees and Departments) to the same worksheet using WorkbookDesigner with LineByLine enabled. | Compare the output of LineByLine true versus false for master‑detail smart markers and advise when to use each mode. | Provide a step‑by‑step guide to debug smart‑marker processing when LineByLine is set.
+// Title: Use WorkbookDesigner.LineByLine to merge a simple list with smart markers in Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# console application that creates a Workbook, places smart markers for employee Name, Age, and Department, binds a List<Employee> to the marker "Employees", enables line‑by‑line mode, and saves the file as an .xlsx document. | Show how setting WorkbookDesigner.LineByLine = true causes each item in a collection to be written to a separate row when processing smart markers with Aspose.Cells. | Provide code that binds a custom object collection to a smart marker and generates an Excel sheet using line‑by‑line smart marker expansion via WorkbookDesigner.
+// Common Searches: asp.net aspose.cells workbookdesigner linebyline example c# | how to export a List<Employee> to Excel using smart markers line by line | set linebyline true for master smart markers in Aspose.Cells | merge simple list into Excel template with line‑by‑line smart markers c#
+// Tags: WorkbookDesigner line-by-line mode | Aspose.Cells smart markers list binding | C# export object collection to Excel | Excel generation with smart markers | line-by-line smart marker expansion
 
 using System;
 using System.Collections.Generic;
@@ -12,8 +9,8 @@ using Aspose.Cells;
 
 namespace AsposeCellsLineByLineDemo
 {
-    // Simple data class for demonstration
-    // Demonstrates enabling WorkbookDesigner.LineByLine in C# so each smart‑marker row is processed individually, binding a List<Employee> to markers and generating an Excel file with one row per employee.
+    // Simple data class representing an employee
+    // The sample creates a new workbook, inserts smart markers for employee Name, Age, and Department, binds a List<Employee> to the "Employees" marker, enables WorkbookDesigner.LineByLine for line‑by‑line processing, processes the markers, and saves the populated worksheet as LineByLineOutput.xlsx.
     public class Employee
     {
         public string Name { get; set; }
@@ -25,16 +22,17 @@ namespace AsposeCellsLineByLineDemo
     {
         static void Main()
         {
-            // 1. Create a new workbook and add smart markers for a simple list
+            // Create a new workbook (template) and access the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Smart markers placed line by line (each row will be repeated for each list item)
+            // Insert smart markers for a simple list (master markers)
+            // These markers will be processed line by line
             sheet.Cells["A1"].PutValue("&Employees.Name");
             sheet.Cells["B1"].PutValue("&Employees.Age");
             sheet.Cells["C1"].PutValue("&Employees.Department");
 
-            // 2. Prepare sample data source (a list of Employee objects)
+            // Prepare sample data source (a list of employees)
             List<Employee> employees = new List<Employee>
             {
                 new Employee { Name = "John Doe", Age = 35, Department = "Sales" },
@@ -42,19 +40,20 @@ namespace AsposeCellsLineByLineDemo
                 new Employee { Name = "Bob Johnson", Age = 42, Department = "HR" }
             };
 
-            // 3. Initialize WorkbookDesigner, assign the workbook, and enable line‑by‑line processing
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = workbook;
-            designer.LineByLine = true; // Ensures each smart marker line is processed individually
+            // Initialize the WorkbookDesigner with the workbook
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-            // 4. Bind the data source to the marker name used in the template
+            // Set LineByLine to true to ensure processing line by line
+            designer.LineByLine = true;
+
+            // Bind the data source to the smart marker name "Employees"
             designer.SetDataSource("Employees", employees);
 
-            // 5. Process the smart markers to populate the worksheet
+            // Process the smart markers and populate the worksheet
             designer.Process();
 
-            // 6. Save the resulting workbook
-            workbook.Save("Employees_LineByLine.xlsx", SaveFormat.Xlsx);
+            // Save the resulting workbook
+            workbook.Save("LineByLineOutput.xlsx", SaveFormat.Xlsx);
         }
     }
 }

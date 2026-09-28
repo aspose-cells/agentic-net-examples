@@ -1,46 +1,74 @@
-// Title: Render the First Worksheet to PNG with Aspose.Cells for .NET (default DPI)
-// Description: Loads an Excel workbook, configures ImageOrPrintOptions for PNG using the library's default resolution, and uses SheetRender to export the first worksheet as a single‑page PNG file (first_worksheet_preview.png).
-// Keywords: Aspose.Cells | C# | SheetRender | PNG preview | default DPI | export worksheet as image | ImageOrPrintOptions | Excel to PNG | quick preview
-// Common Searches: Aspose.Cells render first sheet to PNG | C# export Excel worksheet as PNG default resolution | How to create worksheet thumbnail with Aspose.Cells | Generate PNG preview of Excel file using .NET | SheetRender PNG output example
-// Developer Intent: Create a PNG snapshot of the first worksheet using Aspose.Cells' default DPI for a fast visual preview.
-// Use Cases: Display thumbnail previews of uploaded Excel files in a web portal. | Generate a snapshot for email or PDF reports without altering the original workbook. | Provide an instant visual preview in a desktop application that reads Excel data. | Create image assets for documentation or training materials.
-// AI Prompts: Show how to set a custom DPI (e.g., 300) when rendering the first worksheet to PNG. | Explain how to batch‑convert all worksheets in a workbook to separate PNG files. | Provide code for robust error handling when the input file is missing or the worksheet index is out of range. | Demonstrate rendering a specific cell range to PNG instead of the whole sheet. | Show how to write the PNG image to a memory stream for further processing.
+// Title: Create a PNG preview of the first worksheet in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file, verifies its existence, and uses Aspose.Cells SheetRender with default ImageOrPrintOptions to save the first worksheet as a PNG image. | Show how to handle a missing input workbook and ensure the output directory is created while converting the first sheet to a PNG preview with Aspose.Cells. | Demonstrate rendering a single worksheet to PNG at the default resolution using the Aspose.Cells Rendering API in a .NET console application.
+// Common Searches: Aspose.Cells C# export first worksheet to PNG without specifying resolution | How to generate a quick PNG preview of an Excel sheet using Aspose.Cells .NET | C# sample for converting the first sheet of an .xlsx file to a PNG image with default settings | Render Excel worksheet to image with Aspose.Cells handling missing file errors | SheetRender ToImage example for single worksheet PNG output in .NET
+// Tags: Aspose.Cells SheetRender export worksheet to PNG | C# default image rendering options Aspose.Cells | convert first Excel sheet to PNG preview | handle missing workbook file Aspose.Cells | create output directory before saving image Aspose.Cells | ImageOrPrintOptions default resolution PNG
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPreview
+// The example checks that the source Excel file exists, loads it with Aspose.Cells, retrieves the first worksheet, applies default ImageOrPrintOptions (PNG format, default resolution), renders the sheet using SheetRender, and saves the result as a PNG file while handling directory creation and potential errors.
+class WorksheetToPng
 {
-    // Loads an Excel workbook, configures ImageOrPrintOptions for PNG using the library's default resolution, and uses SheetRender to export the first worksheet as a single‑page PNG file (first_worksheet_preview.png).
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source workbook
+        string inputFile = "input.xlsx";
+
+        // Path for the output PNG image
+        string outputFile = "sheet1.png";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
         {
-            // Load the source workbook (replace with your actual file path)
-            string sourcePath = "input.xlsx";
-            Workbook workbook = new Workbook(sourcePath);
+            Console.WriteLine($"Input file '{inputFile}' not found.");
+            return;
+        }
 
-            // Configure image rendering options for PNG output.
-            // No resolution is set, so default resolution will be used.
-            ImageOrPrintOptions options = new ImageOrPrintOptions
+        try
+        {
+            // Load the workbook (lifecycle rule: load)
+            Workbook workbook = new Workbook(inputFile);
+
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
             {
-                ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                // OnePagePerSheet ensures the whole worksheet is rendered to a single image.
-                OnePagePerSheet = true
-            };
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
 
-            // Create a SheetRender for the first worksheet.
-            SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], options);
+            // Get the first worksheet (index 0)
+            Worksheet firstSheet = workbook.Worksheets[0];
 
-            // Render the first page (index 0) of the worksheet to a PNG file.
-            string outputPath = "first_worksheet_preview.png";
-            sheetRender.ToImage(0, outputPath);
+            // Set up image rendering options (default resolution, PNG format)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+            // The default ImageFormat is PNG, so no explicit setting is required.
 
-            // Clean up resources.
-            sheetRender.Dispose();
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputFile);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                try
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+                catch (Exception dirEx)
+                {
+                    Console.WriteLine($"Failed to create output directory: {dirEx.Message}");
+                    return;
+                }
+            }
 
-            Console.WriteLine($"First worksheet rendered to PNG at: {outputPath}");
+            // Render the worksheet to an image (lifecycle rule: create/save handled by Aspose)
+            SheetRender renderer = new SheetRender(firstSheet, imgOptions);
+            renderer.ToImage(0, outputFile); // Render page 0 (the only page) to PNG
+
+            Console.WriteLine("Worksheet converted to PNG successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during conversion: {ex.Message}");
         }
     }
 }

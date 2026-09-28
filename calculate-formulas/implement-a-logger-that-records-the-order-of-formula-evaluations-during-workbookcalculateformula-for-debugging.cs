@@ -1,40 +1,37 @@
-// Title: Log Formula Evaluation Order with a Custom AbstractCalculationMonitor in Aspose.Cells for .NET
-// Description: Demonstrates how to subclass AbstractCalculationMonitor to capture before‑ and after‑calculate events for each cell during Workbook.CalculateFormula, storing sheet, row, column, original and calculated values for debugging complex formula dependencies.
-// Keywords: Aspose.Cells | .NET | AbstractCalculationMonitor | CalculationMonitor | formula evaluation logging | Workbook.CalculateFormula | debug formulas | custom calculation monitor | cell calculation events | evaluation order
-// Common Searches: Aspose.Cells log formula evaluation order | How to use AbstractCalculationMonitor in C# | Record before and after cell values during calculation | Debug formula dependencies Aspose.Cells | Custom calculation monitor example .NET
-// Developer Intent: Create a calculation monitor that records each cell's before‑ and after‑evaluation details during Workbook.CalculateFormula for debugging purposes.
-// Use Cases: Trace the exact sequence in which formulas are calculated to diagnose dependency issues. | Identify volatile functions (e.g., NOW, TODAY) and see when they are evaluated. | Compare logged evaluation order with expected precedence to verify calculation chain correctness. | Generate a change‑log of cells whose values were altered during a calculation run.
-// AI Prompts: Write a C# class that extends AbstractCalculationMonitor, logs sheet, row, column, original and calculated values before and after each cell calculation, and attach it to CalculationOptions for Workbook.CalculateFormula. | Show how to filter the EvaluationLogger output to list only cells whose values changed during the calculation. | Explain how to enable the calculation chain in Aspose.Cells settings and why it matters when using a custom calculation monitor.
+// Title: How to create a custom AbstractCalculationMonitor in Aspose.Cells for .NET to log the order of formula evaluations during Workbook.CalculateFormula
+// AI Prompts: Implement a C# class that inherits from Aspose.Cells.AbstractCalculationMonitor and records the cell address before each calculation and the original and new values after each calculation. | Set up CalculationOptions to assign the custom monitor, then call Workbook.CalculateFormula so the evaluation sequence is captured automatically. | After the workbook is calculated, retrieve the logged entries from the monitor and output them to the console or write them to a log file.
+// Common Searches: aspnet log formula evaluation order using Aspose.Cells AbstractCalculationMonitor | debug Workbook.CalculateFormula sequence Aspose.Cells .NET example | track cell calculation dependencies with custom calculation monitor in Aspose.Cells | capture before and after values of formulas during calculation in Aspose.Cells
+// Tags: Aspose.Cells custom calculation monitor | formula evaluation logging .NET | track cell calculation order Aspose.Cells | Workbook.CalculateFormula monitoring | log before after cell values Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace FormulaEvaluationLogger
+namespace AsposeCellsFormulaEvaluationLogger
 {
     // Custom monitor that records the order of formula evaluations
-    // Demonstrates how to subclass AbstractCalculationMonitor to capture before‑ and after‑calculate events for each cell during Workbook.CalculateFormula, storing sheet, row, column, original and calculated values for debugging complex formula dependencies.
+    // Demonstrates how to subclass AbstractCalculationMonitor to record before/after events for each cell, attach the monitor via CalculationOptions, run Workbook.CalculateFormula, and then retrieve and display the evaluation log along with final cell values.
     public class EvaluationLogger : AbstractCalculationMonitor
     {
-        // Stores log entries in the order they occur
+        // Stores log entries
         private readonly List<string> _log = new List<string>();
 
         // Called before a cell is calculated
         public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            _log.Add($"Before: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
+            string cellName = CellsHelper.CellIndexToName(rowIndex, columnIndex);
+            _log.Add($"Before: Sheet{sheetIndex} {cellName}");
         }
 
         // Called after a cell is calculated
         public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            // Use properties from AbstractCalculationMonitor to get details
-            string entry = $"After: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}, " +
-                           $"Original={OriginalValue}, Calculated={CalculatedValue}, Changed={ValueChanged}";
-            _log.Add(entry);
+            string cellName = CellsHelper.CellIndexToName(rowIndex, columnIndex);
+            _log.Add($"After: Sheet{sheetIndex} {cellName} | " +
+                     $"Original: {OriginalValue}, New: {CalculatedValue}, Changed: {ValueChanged}");
         }
 
-        // Expose the collected log
+        // Exposes the collected log
         public IEnumerable<string> GetLog()
         {
             return _log;
@@ -48,36 +45,45 @@ namespace FormulaEvaluationLogger
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Set up sample formulas with dependencies
-            sheet.Cells["A1"].Formula = "=1+2";          // Simple formula
-            sheet.Cells["A2"].Formula = "=A1*3";        // Depends on A1
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";  // Depends on A1 and A2
-            sheet.Cells["B1"].Formula = "=NOW()";      // Volatile function
+            // Sample data and formulas
+            cells["A1"].PutValue(5);                 // Constant value
+            cells["A2"].Formula = "=A1*2";           // Depends on A1
+            cells["A3"].Formula = "=A2+10";          // Depends on A2
+            cells["B1"].Formula = "=SUM(A1:A3)";     // Depends on A1, A2, A3
+            cells["C1"].Formula = "=NOW()";          // Volatile function
 
-            // Create the custom calculation monitor
+            // Set up calculation options with the custom logger
             EvaluationLogger logger = new EvaluationLogger();
-
-            // Configure calculation options to use the monitor
             CalculationOptions options = new CalculationOptions
             {
                 CalculationMonitor = logger,
                 // Enable calculation chain to ensure proper dependency tracking (optional)
-                // This can be set via workbook settings if needed:
-                // workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+                // This can be omitted if not needed
+                // Recursive = true,
+                // IgnoreError = false
             };
 
-            // Perform formula calculation with monitoring
+            // Perform calculation with monitoring
             workbook.CalculateFormula(options);
 
             // Output the evaluation order
-            Console.WriteLine("Formula Evaluation Log:");
-            foreach (string entry in logger.GetLog())
+            Console.WriteLine("Formula evaluation order:");
+            foreach (var entry in logger.GetLog())
             {
                 Console.WriteLine(entry);
             }
 
-            // Save the workbook (optional, demonstrates lifecycle compliance)
+            // Optionally, display final cell values
+            Console.WriteLine("\nFinal cell values:");
+            Console.WriteLine($"A1 = {cells["A1"].Value}");
+            Console.WriteLine($"A2 = {cells["A2"].Value}");
+            Console.WriteLine($"A3 = {cells["A3"].Value}");
+            Console.WriteLine($"B1 = {cells["B1"].Value}");
+            Console.WriteLine($"C1 = {cells["C1"].Value}");
+
+            // Save the workbook (demonstrates usage of save rule)
             workbook.Save("FormulaEvaluationLog.xlsx");
         }
     }

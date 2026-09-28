@@ -1,97 +1,99 @@
-// Title: Add a Cover Sheet with Logo and Title, then Export Workbook to PDF/A‑1b using Aspose.Cells for .NET (C#)
-// Description: Shows how to create or load an Excel workbook, insert a cover worksheet as the first sheet, embed a PNG logo, add a centered bold title, adjust column width and page setup, add a data sheet, configure PdfSaveOptions for PDF/A‑1b compliance and default‑font checking, and save the file as a PDF where the cover page appears first.
-// Keywords: Aspose.Cells C# PDF conversion | cover page Excel Aspose | embed image Excel worksheet | PDF/A-1b Aspose.Cells | PdfSaveOptions OnePagePerSheet | add logo to Excel | export workbook to PDF | custom cover sheet PDF | Aspose.Cells page setup | C# Excel to PDF with logo
-// Common Searches: Aspose.Cells add cover page before PDF export | C# embed logo in Excel and save as PDF/A | How to create PDF/A‑1b from Excel with Aspose.Cells | Set first worksheet as cover sheet in Aspose.Cells | Configure PdfSaveOptions for PDF/A compliance in .NET | Insert image into Excel cell using Aspose.Cells C#
-// Developer Intent: Create a workbook with a branded cover sheet and export it as a PDF/A‑1b document.
-// Use Cases: Branding corporate reports with a logo‑filled cover page | Generating compliant PDF/A‑1b archives of financial spreadsheets | Automating multi‑sheet PDF creation where the first page is a custom title page | Producing printable reports that require a separate cover sheet layout
-// AI Prompts: Generate C# code that uses Aspose.Cells to insert a PNG logo into the first worksheet, add a centered bold title, and save the workbook as a PDF/A‑1b file. | Show how to set PdfSaveOptions such as Compliance = PdfA1b, CheckWorkbookDefaultFont = true, and OnePagePerSheet = false when converting Excel to PDF with Aspose.Cells. | Provide a complete example that creates a cover sheet, adds sample data, handles a missing logo file, and exports the workbook to PDF with proper page setup.
+// Title: Create a PDF from an Aspose.Cells workbook with a custom logo cover page in C#
+// AI Prompts: Write C# code that builds an Excel workbook, inserts a logo image on the first worksheet as a cover page, styles a title cell, and saves the workbook as a PDF using Aspose.Cells. | Show how to add a picture to a worksheet, apply cell formatting, and configure PdfSaveOptions before exporting the workbook to PDF with Aspose.Cells for .NET.
+// Common Searches: C# Aspose.Cells add logo to first sheet and export as PDF with cover page | Aspose.Cells PDF export with custom cover image and title in .NET | Saving an Excel workbook to PDF while embedding a header logo using Aspose.Cells
+// Tags: Aspose.Cells add picture to worksheet | Aspose.Cells export workbook to PDF | Aspose.Cells embed logo cover page | Aspose.Cells PdfSaveOptions configuration | C# generate PDF with cover sheet using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-// Shows how to create or load an Excel workbook, insert a cover worksheet as the first sheet, embed a PNG logo, add a centered bold title, adjust column width and page setup, add a data sheet, configure PdfSaveOptions for PDF/A‑1b compliance and default‑font checking, and save the file as a PDF where the cover page appears first.
-class Program
+namespace AsposeCellsPdfWithCover
 {
-    static void Main()
+    // The program creates a new workbook, adds a cover worksheet with a logo image and styled title, populates a second worksheet with sample data, configures PDF save options, and saves the workbook as a PDF file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // 1. Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-
-            // 2. Add a cover sheet as the first worksheet
-            // Insert a new empty worksheet at index 0 (first position)
-            workbook.Worksheets.Insert(0, SheetType.Worksheet); // Correct overload
-            Worksheet coverSheet = workbook.Worksheets[0];
-            coverSheet.Name = "Cover";
-
-            // 3. Insert a custom logo image into the cover sheet
-            string logoPath = "logo.png";
-            if (!File.Exists(logoPath))
+            try
             {
-                Console.WriteLine($"Logo file not found: {logoPath}");
-                return;
+                // Create a new workbook (contains a default worksheet)
+                Workbook workbook = new Workbook();
+
+                // -------------------------------------------------
+                // 1. Prepare the cover page (first worksheet) with a logo
+                // -------------------------------------------------
+                Worksheet coverSheet = workbook.Worksheets[0];
+                coverSheet.Name = "Cover";
+
+                // Load the logo image if it exists
+                string logoPath = "logo.png";
+                if (File.Exists(logoPath))
+                {
+                    try
+                    {
+                        byte[] logoBytes = File.ReadAllBytes(logoPath);
+                        using (MemoryStream ms = new MemoryStream(logoBytes))
+                        {
+                            // Add the logo picture to the cover sheet
+                            // Parameters: upper left row, upper left column, lower right row, lower right column, image stream
+                            int pictureIndex = coverSheet.Pictures.Add(1, 1, 10, 5, ms);
+                            coverSheet.Pictures[pictureIndex].IsLocked = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Failed to insert logo. {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: Logo file not found at '{logoPath}'. Skipping logo insertion.");
+                }
+
+                // Add a title below the logo
+                var titleCell = coverSheet.Cells["A7"];
+                titleCell.PutValue("Report Title");
+                var titleStyle = titleCell.GetStyle();
+                titleStyle.Font.IsBold = true;
+                titleStyle.Font.Size = 24;
+                titleCell.SetStyle(titleStyle);
+
+                // -------------------------------------------------
+                // 2. Add sample data to a second worksheet
+                // -------------------------------------------------
+                Worksheet dataSheet = workbook.Worksheets[workbook.Worksheets.Add()];
+                dataSheet.Name = "Data";
+                dataSheet.Cells["A1"].PutValue("Category");
+                dataSheet.Cells["B1"].PutValue("Value");
+                dataSheet.Cells["A2"].PutValue("Apples");
+                dataSheet.Cells["B2"].PutValue(120);
+                dataSheet.Cells["A3"].PutValue("Bananas");
+                dataSheet.Cells["B3"].PutValue(85);
+                dataSheet.Cells["A4"].PutValue("Cherries");
+                dataSheet.Cells["B4"].PutValue(60);
+
+                // -------------------------------------------------
+                // 3. Configure PDF save options
+                // -------------------------------------------------
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    ExportDocumentStructure = true,
+                    CalculateFormula = true
+                };
+
+                // -------------------------------------------------
+                // 4. Save the workbook as PDF
+                // -------------------------------------------------
+                string outputPdf = "WorkbookWithCover.pdf";
+                workbook.Save(outputPdf, pdfOptions);
+
+                Console.WriteLine($"Workbook successfully saved to PDF: {outputPdf}");
             }
-
-            // Load the image into a stream and add it to cell A1
-            using (FileStream logoStream = File.OpenRead(logoPath))
+            catch (Exception ex)
             {
-                coverSheet.Pictures.Add(0, 0, logoStream);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // 4. Add title text (or any other cover page content)
-            Cell titleCell = coverSheet.Cells["A5"];
-            titleCell.PutValue("Annual Report");
-
-            // Apply style to the title cell
-            Style titleStyle = titleCell.GetStyle();
-            titleStyle.Font.IsBold = true;
-            titleStyle.Font.Size = 24;
-            titleStyle.HorizontalAlignment = TextAlignmentType.Center;
-            titleCell.SetStyle(titleStyle);
-
-            // Widen column A for better appearance
-            coverSheet.Cells.SetColumnWidth(0, 30);
-
-            // 5. (Optional) Configure page setup for the cover sheet
-            coverSheet.PageSetup.FitToPagesWide = 1;
-            coverSheet.PageSetup.FitToPagesTall = 1;
-
-            // 6. Add a regular data worksheet (example content)
-            Worksheet dataSheet = workbook.Worksheets[1];
-            dataSheet.Name = "Data";
-            dataSheet.Cells["A1"].PutValue("Item");
-            dataSheet.Cells["B1"].PutValue("Quantity");
-            dataSheet.Cells["A2"].PutValue("Apples");
-            dataSheet.Cells["B2"].PutValue(150);
-            dataSheet.Cells["A3"].PutValue("Oranges");
-            dataSheet.Cells["B3"].PutValue(200);
-
-            // 7. Set PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Keep each worksheet on its own page(s)
-                OnePagePerSheet = false,
-
-                // Ensure default font handling for Unicode characters
-                CheckWorkbookDefaultFont = true,
-
-                // Produce PDF/A‑1b compliant file
-                Compliance = PdfCompliance.PdfA1b
-            };
-
-            // 8. Save the workbook as a PDF file; the cover sheet will be the first page(s)
-            string outputPdf = "ReportWithCover.pdf";
-            workbook.Save(outputPdf, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully converted to PDF: {outputPdf}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

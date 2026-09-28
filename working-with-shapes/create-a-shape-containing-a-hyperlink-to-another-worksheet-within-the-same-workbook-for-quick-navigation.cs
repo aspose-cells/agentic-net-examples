@@ -1,39 +1,66 @@
-// Title: Add a rectangle shape with an internal worksheet hyperlink using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, rename the first sheet, add a second sheet, place a rectangle shape on the first sheet, set its caption, attach an internal hyperlink that jumps to cell A1 of the second sheet, and save the file as ShapeWithInternalHyperlink.xlsx.
-// Keywords: Aspose.Cells shape hyperlink | internal worksheet link C# | add rectangle shape Aspose.Cells | navigate between sheets programmatically | Aspose.Cells hyperlink to cell
-// Common Searches: Aspose.Cells add hyperlink to shape | C# create shape that links to another worksheet | internal sheet hyperlink using Aspose.Cells | shape navigation button Aspose.Cells .NET | how to link a shape to a different sheet in Excel via code
-// Developer Intent: Insert a shape into a worksheet and bind it to an internal hyperlink that opens a specific cell on another worksheet.
-// Use Cases: Design a dashboard where rectangle shapes act as buttons to open detailed report sheets. | Build a table‑of‑contents page with shapes that jump to individual sections in the workbook. | Create a navigation pane that lets users switch between modules with a single click.
-// AI Prompts: Generate C# code with Aspose.Cells to add a circular shape on Sheet1 that links to cell B5 on Sheet3. | Show how to add multiple shapes, each pointing to a different worksheet, using Aspose.Cells for .NET. | Explain how to modify the hyperlink target of an existing shape to reference another sheet and cell.
+// Title: Create a rectangle shape with a worksheet hyperlink for intra‑workbook navigation using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to Sheet1, sets its display text, and links it to cell A1 of Sheet2 with Aspose.Cells. | Write a snippet that applies a solid line style to a shape, attaches an intra‑workbook hyperlink, and saves the workbook as an .xlsx file. | Provide an example of creating a clickable shape that jumps to another worksheet in the same Excel file using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# add shape hyperlink to another worksheet | how to create a clickable rectangle that navigates to Sheet2 in .xlsx using Aspose.Cells | programmatically link a shape to a cell in a different sheet with Aspose.Cells for .NET | set line style for a shape and add intra‑workbook hyperlink in C# Aspose.Cells | save workbook after adding shape hyperlink with Aspose.Cells API
+// Tags: add rectangle shape with worksheet hyperlink Aspose.Cells | intra‑workbook shape navigation C# | shape hyperlink to cell A1 Aspose.Cells | style rectangle shape line Aspose.Cells | save workbook with shape hyperlink .xlsx
 
+using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, rename the first sheet, add a second sheet, place a rectangle shape on the first sheet, set its caption, attach an internal hyperlink that jumps to cell A1 of the second sheet, and save the file as ShapeWithInternalHyperlink.xlsx.
+// The example creates a new workbook, adds Sheet1 and Sheet2, inserts a rectangle shape on Sheet1 labeled "Go to Sheet2", attaches a hyperlink to Sheet2!A1, applies a solid line style, and saves the file as HyperlinkShape.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet and rename it
-        Worksheet homeSheet = workbook.Worksheets[0];
-        homeSheet.Name = "Home";
+            // Access the first worksheet and name it
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sheet1";
 
-        // Add a second worksheet to navigate to
-        Worksheet detailsSheet = workbook.Worksheets.Add("Details");
+            // Add a second worksheet
+            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
 
-        // Add a rectangle shape on the Home sheet
-        // Parameters: upper left row, upper left column, upper left pixel offset (X), upper left pixel offset (Y), width, height
-        Shape shape = homeSheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 30);
-        shape.Text = "Go to Details";
+            // Add a rectangle shape to Sheet1
+            Shape shape = sheet1.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1, 0,                     // upper left row, column
+                1, 0,                     // top, left (in pixels)
+                100, 30);                 // height, width (in pixels)
 
-        // Add a hyperlink to the shape that points to cell A1 of the Details sheet
-        // Internal hyperlink format: 'SheetName'!CellReference
-        shape.AddHyperlink("'Details'!A1");
+            // Set the shape's display text
+            shape.Text = "Go to Sheet2";
 
-        // Save the workbook
-        workbook.Save("ShapeWithInternalHyperlink.xlsx");
+            // Add a worksheet hyperlink to the shape (pointing to Sheet2!A1)
+            shape.AddHyperlink("'Sheet2'!A1");
+
+            // Optional styling for the shape
+            shape.Line.Weight = 1;
+            shape.Line.DashStyle = MsoLineDashStyle.Solid;
+            // Fill color can be set if the API supports it; omitted here to avoid compilation issues
+            // shape.Fill.SetSolidColor(Color.LightBlue);
+
+            // Save the workbook
+            string outputPath = "HyperlinkShape.xlsx";
+
+            // Ensure the directory exists (if a directory part is present)
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

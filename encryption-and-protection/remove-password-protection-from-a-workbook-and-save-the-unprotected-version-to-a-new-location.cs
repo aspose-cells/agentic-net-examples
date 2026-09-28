@@ -1,57 +1,54 @@
-// Title: Remove Excel Workbook Password with Aspose.Cells for .NET and Save an Unprotected Copy
-// Description: Demonstrates how to open a password‑protected XLSX file using Aspose.Cells LoadOptions.Password in C#, then save it to a new location without encryption, producing an unprotected workbook.
-// Keywords: Aspose.Cells | remove workbook password | C# load encrypted Excel | LoadOptions.Password | save unencrypted workbook | Excel decryption .NET | Aspose.Cells example
-// Common Searches: aspocells open encrypted xlsx with password | remove password from Excel file using C# | save workbook without encryption aspocells | loadoptions.password example aspocells | how to decrypt protected Excel programmatically
-// Developer Intent: Open a protected Excel file and create a new version that has no password.
-// Use Cases: Automate bulk removal of passwords from Excel reports before feeding them into data pipelines. | Prepare workbooks for cloud storage services that reject encrypted files. | Validate file accessibility after stripping protection to ensure downstream processing can proceed.
-// AI Prompts: Write C# code that uses Aspose.Cells to open an encrypted .xlsx with a known password and saves it without any protection. | Explain best practices for handling FileNotFoundException and CellsException when removing workbook encryption. | Provide a script that iterates over a directory of password‑protected Excel files, removes each password, and writes the unprotected files to a target folder.
+// Title: Remove password protection from an encrypted Excel workbook and save it as a new file using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a password‑protected .xlsx file with Aspose.Cells, call Workbook.Unprotect, and write the workbook to a new location without any password. | Generate C# code that opens an encrypted Excel workbook using LoadOptions.Password, removes protection, and saves an unprotected copy.
+// Common Searches: aspnet remove password from encrypted Excel file using Aspose.Cells | c# Aspose.Cells load workbook with password and save without protection | how to unprotect a password‑protected .xlsx programmatically in .NET | save unprotected copy of a protected Excel workbook using Aspose.Cells C#
+// Tags: Aspose.Cells unprotect workbook C# | load encrypted Excel with password Aspose.Cells | save unprotected .xlsx Aspose.Cells | Workbook.Unprotect method example | C# remove Excel file password Aspose
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Demonstrates how to open a password‑protected XLSX file using Aspose.Cells LoadOptions.Password in C#, then save it to a new location without encryption, producing an unprotected workbook.
-class RemoveWorkbookPassword
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example checks for the protected workbook, loads it with LoadOptions.Password, calls Workbook.Unprotect to clear protection, and then saves the workbook to a new path as an unprotected .xlsx file.
+    class Program
     {
-        // Path to the password‑protected workbook
-        string inputPath = "protected_workbook.xlsx";
-
-        // Path where the unprotected workbook will be saved
-        string outputPath = "unprotected_workbook.xlsx";
-
-        // The password that protects the workbook (file encryption password)
-        string password = "mySecretPwd";
-
-        try
+        static void Main()
         {
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
-
-            // Load the workbook using LoadOptions with the password
-            LoadOptions loadOptions = new LoadOptions
+            try
             {
-                Password = password
-            };
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+                // Path to the original protected workbook
+                string protectedPath = @"C:\Path\To\ProtectedWorkbook.xlsx";
 
-            // Save the workbook without a password (no encryption)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved without password to: {outputPath}");
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"File error: {ex.Message}");
-        }
-        catch (CellsException ex)
-        {
-            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+                if (!File.Exists(protectedPath))
+                {
+                    Console.WriteLine($"Protected workbook not found: {protectedPath}");
+                    return;
+                }
+
+                // Load options with the password for encrypted workbook
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    Password = "YourCurrentPassword"
+                };
+
+                // Load the workbook using the password
+                Workbook workbook = new Workbook(protectedPath, loadOptions);
+
+                // If the workbook has a protection password (not encryption), unprotect it
+                workbook.Unprotect("YourCurrentPassword");
+
+                // Path for the new unprotected workbook
+                string unprotectedPath = @"C:\Path\To\UnprotectedWorkbook.xlsx";
+
+                // Save the workbook without any password protection
+                workbook.Save(unprotectedPath, SaveFormat.Xlsx);
+
+                Console.WriteLine($"Workbook saved without protection to: {unprotectedPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

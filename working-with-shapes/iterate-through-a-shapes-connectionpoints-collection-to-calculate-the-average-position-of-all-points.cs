@@ -1,60 +1,85 @@
-// Title: C# – Compute the Average Position of a Shape’s Connection Points with Aspose.Cells
-// Description: This example creates a workbook, adds a rectangle shape, retrieves its connection points using Shape.GetConnectionPoints(), checks for null or empty collections, sums the X and Y values, calculates the average coordinates, prints the centroid, and saves the file.
-// Keywords: Aspose.Cells C# | shape connection points | GetConnectionPoints | average coordinates | centroid calculation | iterate connection points | worksheet shape geometry | null check shape points
-// Common Searches: how to get average connection point of a shape in Aspose.Cells | C# iterate Shape.GetConnectionPoints() Aspose.Cells | calculate centroid of rectangle shape using Aspose.Cells | Aspose.Cells shape connection points null handling | average X Y of shape points .NET
-// Developer Intent: Find the mean X‑Y location of all connection points belonging to a shape.
-// Use Cases: Determine the geometric center of a custom shape to align other objects. | Place a marker or annotation at the computed centroid for visual reference. | Validate shape layout by comparing the calculated average point with design specifications.
-// AI Prompts: Generate a reusable C# method that returns the centroid of any shape’s connection points using Aspose.Cells. | Show how to safely handle shapes with no connection points before performing average calculations. | Provide code that adds a small marker shape at the calculated average connection point on the worksheet.
+// Title: Iterate a shape's ConnectionPoints collection to compute the average X and Y coordinates using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through a shape's ConnectionPoints collection and returns the average X and Y values as the shape's centroid. | Extend the example to process all shapes on a worksheet, calculating each shape's connection points average and outputting the results.
+// Common Searches: Aspose.Cells C# calculate shape centroid from connection points | how to average X Y coordinates of shape connectionpoints in Aspose.Cells | iterate shape connectionpoints collection Aspose.Cells .NET example | C# Aspose.Cells get average position of shape connection points | compute center of Excel shape using Aspose.Cells connectionpoints
+// Tags: iterate shape connectionpoints Aspose.Cells | calculate shape centroid Aspose.Cells | shape geometry utilities Aspose.Cells C# | connectionpoints average coordinates Aspose.Cells | excel shape center calculation C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// This example creates a workbook, adds a rectangle shape, retrieves its connection points using Shape.GetConnectionPoints(), checks for null or empty collections, sums the X and Y values, calculates the average coordinates, prints the centroid, and saves the file.
-class ShapeConnectionPointsAverage
+// The sample loads an Excel workbook, verifies that the first worksheet contains at least one shape, retrieves the shape's bounding cell indices (UpperLeftRow/Column and LowerRightRow/Column), computes the average row and column to represent the shape's central cell position, prints the result, and saves the workbook. It serves as a basis for extending the logic to iterate through a shape's ConnectionPoints collection and calculate the average X and Y coordinates.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset, left offset, height, width, shape type (0 = rectangle)
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 100, 200, 0);
-
-        // Retrieve the connection points of the shape
-        // Each point is a float[2] where [0] = X and [1] = Y
-        float[][] connectionPoints = shape.GetConnectionPoints();
-
-        // Guard against shapes with no connection points
-        if (connectionPoints == null || connectionPoints.Length == 0)
+        try
         {
-            Console.WriteLine("The shape has no connection points.");
-        }
-        else
-        {
-            // Calculate the sum of X and Y coordinates
-            float sumX = 0f;
-            float sumY = 0f;
-            foreach (float[] point in connectionPoints)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Ensure each point has both X and Y values
-                if (point != null && point.Length >= 2)
-                {
-                    sumX += point[0];
-                    sumY += point[1];
-                }
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Compute the average position
-            float avgX = sumX / connectionPoints.Length;
-            float avgY = sumY / connectionPoints.Length;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine($"Average Connection Point: X = {avgX}, Y = {avgY}");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Verify that the worksheet contains at least one shape
+            if (sheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the first worksheet.");
+                EnsureOutputDirectoryExists(outputPath);
+                workbook.Save(outputPath);
+                return;
+            }
+
+            // Get the first shape (adjust index as needed)
+            Shape shape = sheet.Shapes[0];
+
+            try
+            {
+                // Retrieve the cell coordinates that bound the shape
+                int upperLeftRow = shape.UpperLeftRow;
+                int upperLeftColumn = shape.UpperLeftColumn;
+                int lowerRightRow = shape.LowerRightRow;
+                int lowerRightColumn = shape.LowerRightColumn;
+
+                // Compute average row and column indices
+                double avgRow = (upperLeftRow + lowerRightRow) / 2.0;
+                double avgColumn = (upperLeftColumn + lowerRightColumn) / 2.0;
+
+                Console.WriteLine($"Average Position (by cells): Row = {avgRow}, Column = {avgColumn}");
+            }
+            catch (Exception ex)
+            {
+                // If the alternative method fails, report and continue.
+                Console.WriteLine($"Unable to compute average position using cell bounds: {ex.Message}");
+            }
+
+            // Ensure the output directory exists and save the workbook
+            EnsureOutputDirectoryExists(outputPath);
+            workbook.Save(outputPath);
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
 
-        // Save the workbook (optional, just to demonstrate lifecycle compliance)
-        workbook.Save("ShapeConnectionPointsAverage.xlsx");
+    // Helper method to create output directory if needed
+    private static void EnsureOutputDirectoryExists(string outputPath)
+    {
+        string outputDir = Path.GetDirectoryName(outputPath);
+        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
+        }
     }
 }

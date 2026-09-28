@@ -1,62 +1,53 @@
-// Title: Aspose.Cells .NET – AutomaticExceptTable mode, add a ListObject, and calculate a SUM formula
-// Description: Create a workbook, set FormulaSettings.CalculationMode to AutomaticExceptTable, populate data, add a ListObject table, insert a SUM formula that references the table column, manually run CalculateFormula, and save the file.
-// Keywords: Aspose.Cells AutomaticExceptTable | CalcModeType.AutomaticExceptTable | Add ListObject table C# | Aspose.Cells CalculateFormula | SUM formula table column | manual formula recalculation Aspose.Cells | .NET Excel table example | Workbook calculation mode Aspose
-// Common Searches: Aspose.Cells set AutomaticExceptTable mode | how to add ListObject table with Aspose.Cells .NET | calculate formulas manually after adding a table Aspose | SUM formula referencing table column in Aspose.Cells | why AutomaticExceptTable requires CalculateFormula
-// Developer Intent: Enable AutomaticExceptTable calculation mode, create an Excel table (ListObject), add a SUM formula that uses the table column, and trigger manual calculation to obtain the result.
-// Use Cases: Generate reports where large tables are excluded from automatic recalculation until explicitly invoked. | Build financial models that add structured tables and compute totals only after data entry is complete. | Validate formula outcomes in automated tests by manually invoking CalculateFormula when AutomaticExceptTable is active.
-// AI Prompts: Write C# code that sets CalcModeType.AutomaticExceptTable, adds a ListObject over a data range, inserts a SUM formula referencing the table column, and calls workbook.CalculateFormula(). | Explain why Aspose.Cells does not auto‑recalculate formulas in AutomaticExceptTable mode and how to retrieve the computed value. | Show how to access the result of a SUM formula that references a ListObject after calling CalculateFormula in Aspose.Cells.
+// Title: Demonstrate AutomaticExceptTables calculation mode with a ListObject table and verify external formula behavior in Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, set workbook.CalculationOptions.CalculationMode to AutomaticExceptTables, fill cells A1‑B2 with numbers, place a SUM formula in C1, insert a ListObject covering A1:B2, modify a cell inside the table, and print the value of C1 before and after the change. | Using Aspose.Cells for .NET, show how enabling AutomaticExceptTables prevents a formula outside a table from recalculating automatically after the table data is edited, then save the workbook as output.xlsx.
+// Common Searches: Aspose.Cells C# set calculation mode to AutomaticExceptTables and check formula update | How to stop automatic recalculation of formulas outside tables in Aspose.Cells .NET | Example of adding a ListObject table and testing calculation mode in Aspose.Cells | C# Aspose.Cells workbook calculation options after inserting a table | AutomaticExceptTables behavior with SUM formula in Aspose.Cells example
+// Tags: Aspose.Cells AutomaticExceptTables setting | ListObject table creation Aspose.Cells C# | disable auto‑recalc for external formulas .NET | save workbook as XLSX using Aspose.Cells | formula recalculation behavior with tables Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // Required for ListObject
+using Aspose.Cells.Tables;
 
-// Create a workbook, set FormulaSettings.CalculationMode to AutomaticExceptTable, populate data, add a ListObject table, insert a SUM formula that references the table column, manually run CalculateFormula, and save the file.
+// The sample creates a workbook, populates A1‑B2 with values, adds a SUM formula in C1, forces an initial calculation, sets the calculation mode to AutomaticExceptTables, inserts a ListObject over the data range, changes a cell inside the table, prints the formula result before and after the change to demonstrate that the external formula does not recalculate automatically, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Set calculation mode to AutomaticExceptTable.
-            // Excel will recalculate automatically except for tables,
-            // but Aspose.Cells does not perform automatic calculation,
-            // so we will invoke CalculateFormula manually.
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
-
-            // Access the first worksheet and its cells
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data (including header row)
-            cells["A1"].PutValue("Item");
-            cells["B1"].PutValue("Value");
-            cells["A2"].PutValue("A");
-            cells["A3"].PutValue("B");
-            cells["A4"].PutValue("C");
-            cells["B2"].PutValue(10);
-            cells["B3"].PutValue(20);
-            cells["B4"].PutValue(30);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["B1"].PutValue(5);
+            sheet.Cells["B2"].PutValue(15);
 
-            // Add an Excel table (ListObject) over the range A1:B4
-            // Older Aspose.Cells versions return the index of the added table.
-            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.DisplayName = "SalesTable";
+            // Add a formula outside the future table range
+            sheet.Cells["C1"].Formula = "=SUM(A1:A2)";
 
-            // Insert a formula that sums the "Value" column of the table
-            cells["C2"].Formula = "=SUM(SalesTable[Value])";
-
-            // Manually calculate formulas (Aspose.Cells does not auto‑calculate)
+            // Force an initial calculation so we can see the starting value
             workbook.CalculateFormula();
+            Console.WriteLine("Initial sum (C1): " + sheet.Cells["C1"].Value);
 
-            // Observe the recalculated result
-            Console.WriteLine("Sum of Value column: " + cells["C2"].Value);
+            // Add a table (ListObject) covering A1:B2
+            int tableIndex = sheet.ListObjects.Add(0, 0, 2, 2, false);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "MyTable";                     // Set table name (DisplayName works across versions)
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
 
-            // Save the workbook
-            workbook.Save("CalculationModeDemo.xlsx");
+            // Change a value inside the table
+            sheet.Cells["A1"].PutValue(30);
+
+            // Formulas outside tables (like C1) recalculate automatically in default Automatic mode
+            Console.WriteLine("After changing A1 inside table, sum (C1): " + sheet.Cells["C1"].Value);
+
+            // Save the workbook to observe the results
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

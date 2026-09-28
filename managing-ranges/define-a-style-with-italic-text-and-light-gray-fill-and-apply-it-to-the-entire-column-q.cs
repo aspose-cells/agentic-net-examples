@@ -1,40 +1,40 @@
-// Title: Apply Italic Text with Light Gray Fill to Column Q Using Aspose.Cells for .NET
-// Description: Learn how to create a custom style with italic font and a light‑gray background in Aspose.Cells, configure a StyleFlag, and apply the style to the entire column Q (index 16) of a worksheet in C#.
-// Keywords: Aspose.Cells style column Q | italic font light gray fill .NET | StyleFlag apply formatting | C# apply style to entire column | custom cell style Aspose.Cells
-// Common Searches: Aspose.Cells apply italic style to column | how to set gray background for column Q in C# | StyleFlag usage for column formatting Aspose.Cells | apply custom style to whole column Aspose.Cells .NET | set font italic and cell shading in Aspose.Cells
-// Developer Intent: Create a style with italic text and a light‑gray fill, then apply it to column Q of a worksheet using Aspose.Cells for .NET.
-// Use Cases: Standardize the appearance of column Q in financial reports. | Highlight a data column across all rows for better visual scanning. | Build a spreadsheet template where column Q always displays italic text on a light‑gray background.
-// AI Prompts: Generate C# code with Aspose.Cells that applies a bold font and yellow fill to column D. | Show how to apply an underline style with a blue background to multiple columns using StyleFlag. | Explain how to define a reusable style and apply it to several worksheets in the same workbook.
+// Title: How to style column Q with italic text and light gray fill using Aspose.Cells for .NET
+// AI Prompts: Create a Style with IsItalic = true and a solid LightGray background, then apply it to column Q via Worksheet.Cells.Columns[16].ApplyStyle. | Configure a StyleFlag with All = true and use it to apply the defined style to the entire column Q in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells C# apply italic font and gray background to a whole column | set style for column Q in Excel using Aspose.Cells .NET API | apply style to column by index in Aspose.Cells workbook C# example | how to use StyleFlag to format an entire column with Aspose.Cells
+// Tags: apply style to column Aspose.Cells | italic font with solid gray fill C# | StyleFlag all attributes Aspose.Cells | column Q formatting Aspose.Cells .NET
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-// Learn how to create a custom style with italic font and a light‑gray background in Aspose.Cells, configure a StyleFlag, and apply the style to the entire column Q (index 16) of a worksheet in C#.
-class ApplyItalicGrayStyleToColumnQ
+// Creates a new workbook, defines a style with italic font and a solid light‑gray fill, prepares a StyleFlag that applies all style attributes, applies the style to the entire column Q (index 16), and saves the workbook as StyledColumnQ.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (or load an existing one)
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
 
-        // Create a style with italic font and light gray background
-        Style style = workbook.CreateStyle();
-        style.Font.IsItalic = true;                     // italic text
-        style.ForegroundColor = Color.LightGray;        // light gray fill
-        style.Pattern = BackgroundType.Solid;           // apply fill pattern
+        // Get the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Specify which style attributes should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.FontItalic = true;   // apply italic setting
-        flag.CellShading = true;  // apply background fill
+        // Define a new style
+        Style italicGrayStyle = workbook.CreateStyle();
+        italicGrayStyle.Font.IsItalic = true;                 // Italic text
+        italicGrayStyle.ForegroundColor = Color.LightGray;   // Light gray fill
+        italicGrayStyle.Pattern = BackgroundType.Solid;      // Apply solid fill
 
-        // Apply the style to the entire column Q (zero‑based index 16)
-        cells.Columns[16].ApplyStyle(style, flag);
+        // Prepare a StyleFlag to apply all style attributes
+        StyleFlag styleFlag = new StyleFlag();
+        styleFlag.All = true;
+
+        // Column Q is the 17th column (zero‑based index 16)
+        int columnIndex = 16;
+
+        // Apply the style to the entire column Q
+        worksheet.Cells.Columns[columnIndex].ApplyStyle(italicGrayStyle, styleFlag);
 
         // Save the workbook
-        workbook.Save("ColumnQ_ItalicGray.xlsx");
+        workbook.Save("StyledColumnQ.xlsx");
     }
 }

@@ -1,44 +1,41 @@
-// Title: Bind JSON to WorkbookDesigner and Process Smart Markers in Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook template, insert smart markers that reference an "Employee" JSON data source, assign the workbook to a WorkbookDesigner, bind a JSON string, process the markers, and save the populated Excel file (EmployeeReport.xlsx).
-// Keywords: Aspose.Cells | C# | WorkbookDesigner | JSON data source | smart markers | populate Excel | Excel report generation | Aspose.Cells for .NET
-// Common Searches: Aspose.Cells bind JSON to WorkbookDesigner | C# smart markers from JSON | populate Excel from JSON Aspose.Cells | WorkbookDesigner SetJsonDataSource example | process smart markers C#
-// Developer Intent: Bind a JSON string to a WorkbookDesigner, process smart markers, and generate a fully populated Excel workbook.
-// Use Cases: Create an employee report by mapping JSON fields (Name, Age, City) to smart markers in a template workbook. | Generate a sales summary sheet where each sale record from a JSON array populates rows via smart markers. | Build a product catalog Excel file by assigning a JSON array of product details to WorkbookDesigner and expanding smart markers.
-// AI Prompts: Show me how to bind a JSON array to WorkbookDesigner and expand smart markers into multiple rows. | Explain how to handle nested JSON objects with smart markers in Aspose.Cells. | Provide code for error handling when required JSON fields are missing during WorkbookDesigner.Process().
+// Title: Use Aspose.Cells WorkbookDesigner to bind a JSON string and populate smart markers in a C# Excel report
+// AI Prompts: Generate C# code that creates a Workbook, adds smart markers referencing JSON fields, assigns the workbook to a WorkbookDesigner, sets a JSON data source with SetJsonDataSource, processes the markers, and saves the file. | Show how to bind a JSON string as a named data source to WorkbookDesigner and fill an Excel template using smart markers in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# WorkbookDesigner SetJsonDataSource example with smart markers | populate Excel template from JSON string using Aspose.Cells smart markers | how to bind JSON data to smart markers in Aspose.Cells for .NET | C# generate Excel report from JSON using WorkbookDesigner
+// Tags: SetJsonDataSource JSON binding | Aspose.Cells smart markers Excel population | C# create Excel file from JSON data | process smart markers with WorkbookDesigner | Aspose.Cells JSON-driven Excel report generation
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a workbook template, insert smart markers that reference an "Employee" JSON data source, assign the workbook to a WorkbookDesigner, bind a JSON string, process the markers, and save the populated Excel file (EmployeeReport.xlsx).
+// The example creates a new Workbook, inserts smart markers that reference Employee fields, assigns the workbook to a WorkbookDesigner, sets a JSON string as the "Employee" data source via SetJsonDataSource, processes the smart markers to fill the cells, and saves the populated workbook as EmployeeReport.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (template)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Get the first worksheet where smart markers will be placed
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Insert smart markers that reference fields from the JSON data source
+        // Add smart markers that map to JSON fields
         sheet.Cells["A1"].PutValue("&=$Employee.Name");
         sheet.Cells["B1"].PutValue("&=$Employee.Age");
         sheet.Cells["C1"].PutValue("&=$Employee.City");
 
-        // Initialize the WorkbookDesigner and assign the workbook to it
+        // Initialize WorkbookDesigner and assign the workbook
         WorkbookDesigner designer = new WorkbookDesigner();
         designer.Workbook = workbook;
 
-        // JSON string that will serve as the data source
+        // JSON string representing the data source
         string json = "{\"Name\":\"John Doe\",\"Age\":30,\"City\":\"New York\"}";
 
-        // Bind the JSON string to the data source name used in the smart markers
+        // Set the JSON data source; the first parameter is the data source name
         designer.SetJsonDataSource("Employee", json);
 
-        // Process the smart markers and populate the worksheet with JSON data
+        // Process the smart markers to populate the worksheet
         designer.Process();
 
-        // Save the resulting workbook
+        // Save the populated workbook
         workbook.Save("EmployeeReport.xlsx");
     }
 }

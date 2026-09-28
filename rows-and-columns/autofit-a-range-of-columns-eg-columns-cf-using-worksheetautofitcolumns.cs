@@ -1,17 +1,14 @@
-// Title: Auto‑fit columns C‑F in Excel with Aspose.Cells for .NET (C#)
-// Description: The example builds a workbook, populates cells C1‑F1 with sample text, and calls Worksheet.AutoFitColumns(2,5) to adjust the width of the selected columns before saving the file.
-// Keywords: Aspose.Cells | AutoFitColumns | C# | .NET Excel automation | column width adjustment | specific column range | Worksheet.AutoFitColumns example | C to F columns
-// Common Searches: Aspose.Cells auto fit specific columns C to F | Worksheet.AutoFitColumns usage with start and end indexes | C# code to auto size columns in Excel using Aspose.Cells | How to adjust column width by index in Aspose.Cells .NET | Excel column auto‑fit range Aspose.Cells
-// Developer Intent: Resize columns C‑F so their contents fit without manual width settings.
-// Use Cases: Generating financial reports where only columns C‑F need optimal width after data insertion. | Creating Excel templates that automatically size selected columns based on dynamic text lengths. | Building server‑side .NET services that export data and ensure proper column sizing for readability. | Designing dashboards where columns C‑F contain variable‑length strings and must be auto‑adjusted.
-// AI Prompts: Provide a C# snippet that auto‑fits columns D‑H in an existing worksheet using Aspose.Cells. | Show how to auto‑fit columns by their letter names (e.g., "A" to "E") instead of numeric indexes with Aspose.Cells for .NET. | Explain the difference between Worksheet.AutoFitColumns() and Worksheet.AutoFitRows() in Aspose.Cells. | Create a reusable method that accepts start and end column letters and calls AutoFitColumns accordingly.
+// Title: How to auto‑fit columns C to F in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, writes values to cells C1‑F1, and calls Worksheet.AutoFitColumns(2,5) to auto‑size those columns with Aspose.Cells. | Provide a step‑by‑step example of using Aspose.Cells to adjust column widths for a specific index range and then save the workbook.
+// Common Searches: Aspose.Cells C# auto fit specific columns by index | Worksheet.AutoFitColumns example for columns C through F | How to programmatically adjust column width range in Excel using Aspose.Cells .NET | Auto‑size selected columns in an Excel file with Aspose.Cells C# code
+// Tags: auto‑fit column range Aspose.Cells | adjust Excel column width by index | auto‑size selected columns C‑F | column width optimization .NET | Excel column auto‑sizing with Aspose
 
 using System;
 using Aspose.Cells;
 
 namespace AutoFitColumnsExample
 {
-    // The example builds a workbook, populates cells C1‑F1 with sample text, and calls Worksheet.AutoFitColumns(2,5) to adjust the width of the selected columns before saving the file.
+    // // Creates a new workbook, writes sample text into cells C1‑F1, auto‑fits columns C‑F using the AutoFitColumns method with index range 2‑5, and saves the file as AutoFitColumns_C_F.xlsx.
     class Program
     {
         static void Main()
@@ -22,17 +19,17 @@ namespace AutoFitColumnsExample
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data in columns C to F (indices 2 to 5)
+            // Add sample data to columns C (index 2) through F (index 5)
             worksheet.Cells["C1"].PutValue("Short");
             worksheet.Cells["D1"].PutValue("Medium length text");
-            worksheet.Cells["E1"].PutValue("This is a considerably longer piece of text that should cause the column to expand");
-            worksheet.Cells["F1"].PutValue("Another long text example for column F");
+            worksheet.Cells["E1"].PutValue("Very very long text that needs column autofit");
+            worksheet.Cells["F1"].PutValue("Another example with different length");
 
-            // Auto‑fit columns C (index 2) through F (index 5)
+            // Auto‑fit columns C‑F (indices 2 to 5)
             worksheet.AutoFitColumns(2, 5);
 
             // Save the workbook
-            workbook.Save("AutoFitColumns_C_to_F.xlsx");
+            workbook.Save("AutoFitColumns_C_F.xlsx");
         }
     }
 }

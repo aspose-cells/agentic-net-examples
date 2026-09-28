@@ -1,57 +1,68 @@
-// Title: Apply a Custom Euro Currency Number Format to a Named Range with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, defines a named range "FinData" (A2:A3), builds a custom Euro accounting style, applies only the number‑format part to the range using StyleFlag, reads back the Custom format from a cell to confirm the change, and saves the file as FinancialDataFormatted.xlsx.
-// Keywords: Aspose.Cells | custom number format | Euro currency format | named range | StyleFlag | ApplyStyle | C# | .NET | verify cell format | financial data formatting
-// Common Searches: Aspose.Cells set custom currency format for named range | How to use StyleFlag to apply only number format in Aspose.Cells | Read back custom number format after ApplyStyle Aspose.Cells | C# apply Euro accounting format to a range | Verify number format applied to cells Aspose.Cells
-// Developer Intent: Apply a custom Euro accounting number format to a predefined named range and programmatically confirm that the format was applied correctly.
-// Use Cases: Standardize Euro accounting display for all cells referenced by a named range without affecting other styling attributes. | Update only the number‑format of an existing range while preserving fonts, borders, and alignment. | Programmatically validate that a custom format string is set before exporting the workbook.
-// AI Prompts: Generate C# code that creates a named range in Aspose.Cells, applies a custom Euro currency number format using StyleFlag, and verifies the format on a sample cell. | Explain the role of StyleFlag when applying a style to a range with Aspose.Cells and how it isolates the number‑format attribute. | Write a unit test in C# that asserts the Custom number format of a cell matches the expected Euro accounting pattern after applying a style.
+// Title: Apply a custom accounting number format to a named range of financial data and verify the displayed values with Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, populate cells A1:A5 with financial numbers, define a named range called FinancialData, apply the custom format "$#,##0.00;[Red]($#,##0.00)" to that range, and save the workbook. | Read each cell in the FinancialData range after formatting and output its displayed text to the console to confirm the custom format is applied correctly.
+// Common Searches: asp.net apply custom accounting format to named range using Aspose.Cells | how to display negative currency values in red parentheses with Aspose.Cells C# | retrieve formatted cell text after applying style in Aspose.Cells | save workbook after applying custom number format to range Aspose.Cells | verify cell display after applying accounting style format in .NET
+// Tags: accounting style number format Aspose.Cells | named range style application C# | StyleFlag All attribute usage Aspose.Cells | negative currency red parentheses formatting | read formatted cell text for verification
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-// This C# example creates a workbook, defines a named range "FinData" (A2:A3), builds a custom Euro accounting style, applies only the number‑format part to the range using StyleFlag, reads back the Custom format from a cell to confirm the change, and saves the file as FinancialDataFormatted.xlsx.
+// The example creates a workbook, fills A1:A5 with financial values, defines a named range "FinancialData", applies an accounting-style custom number format ($#,##0.00;[Red]($#,##0.00)) to the range using a Style and StyleFlag, saves the file as FinancialData.xlsx, and prints each cell's formatted display text to verify the formatting.
 class ApplyCustomNumberFormat
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample financial data
-            worksheet.Cells["A1"].PutValue("Amount");
-            worksheet.Cells["A2"].PutValue(1234.56);   // Positive value
-            worksheet.Cells["A3"].PutValue(-789.01);   // Negative value
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define a named range "FinData" that refers to the financial values
-            int nameIndex = workbook.Worksheets.Names.Add("FinData");
-            Name financialName = workbook.Worksheets.Names[nameIndex];
-            financialName.RefersTo = "=Sheet1!$A$2:$A$3";
+            // Populate financial data in cells A1:A5
+            double[] financialValues = { 1234.56, -789.01, 3456.78, -123.45, 0 };
+            for (int i = 0; i < financialValues.Length; i++)
+            {
+                Cell cell = sheet.Cells[i, 0]; // Column A (index 0)
+                cell.PutValue(financialValues[i]);
+            }
 
-            // Create a style with a custom currency number format
+            // Define a named range "FinancialData" that refers to A1:A5
+            string rangeAddress = $"A1:A{financialValues.Length}";
+            int nameIndex = workbook.Worksheets.Names.Add("FinancialData");
+            Name namedRange = workbook.Worksheets.Names[nameIndex];
+            namedRange.RefersTo = $"='{sheet.Name}'!{rangeAddress}";
+
+            // Apply a custom number format to the range
+            // Format: $#,##0.00;[Red]($#,##0.00)  (positive; negative in red with parentheses)
             Style customStyle = workbook.CreateStyle();
-            customStyle.Custom = "_-€ * #,##0.00_-;_-€ * -#,##0.00_-;_-€ * \"-\"??_-;_-@_-";
+            customStyle.Custom = "$#,##0.00;[Red]($#,##0.00)";
 
-            // Use a StyleFlag to apply only the number format part of the style
-            StyleFlag flag = new StyleFlag();
-            flag.NumberFormat = true;
+            // Use StyleFlag to indicate which style attributes to apply (apply all)
+            StyleFlag styleFlag = new StyleFlag { All = true };
 
-            // Retrieve the range represented by the named range and apply the style
-            Aspose.Cells.Range financialRange = financialName.GetRange();
-            financialRange.ApplyStyle(customStyle, flag);
-
-            // Verify that the custom format was applied to a cell in the range
-            string appliedFormat = worksheet.Cells["A2"].GetStyle().Custom;
-            Console.WriteLine("Applied custom format: " + appliedFormat);
+            // Get the range object and apply the style
+            AsposeRange range = sheet.Cells.CreateRange(rangeAddress);
+            range.ApplyStyle(customStyle, styleFlag);
 
             // Save the workbook
-            workbook.Save("FinancialDataFormatted.xlsx");
+            string outputPath = "FinancialData.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+
+            // Verify display correctness by printing the formatted strings to console
+            Console.WriteLine("Formatted values in the named range \"FinancialData\":");
+            for (int row = 0; row < financialValues.Length; row++)
+            {
+                Cell cell = sheet.Cells[row, 0];
+                // StringValue returns the cell's displayed text after applying formatting
+                Console.WriteLine($"Cell {cell.Name}: {cell.StringValue}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

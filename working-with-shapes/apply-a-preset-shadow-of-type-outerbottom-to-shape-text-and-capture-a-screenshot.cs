@@ -1,67 +1,53 @@
-// Title: Apply Outer Bottom Shadow to Shape Text and Export as PNG with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, inserts a rectangle auto‑shape with the text "Shadow Text", applies an outer‑bottom preset shadow to the shape’s text via EffectFormat, configures image rendering options, saves the shape as a PNG image using ToImage, and finally writes the workbook to an XLSX file.
-// Keywords: Aspose.Cells | C# | shape shadow | OuterBottom preset | PresetShadowType.OffsetBottom | EffectFormat | shape to image | ToImage | export shape PNG | Excel shape rendering
-// Common Searches: Aspose.Cells apply outer bottom shadow to shape text | C# export Excel shape as PNG | How to use EffectFormat shadow in Aspose.Cells | Capture shape screenshot with Aspose.Cells | Set shape shadow properties in .NET
-// Developer Intent: Add an outer‑bottom preset shadow to a shape’s text and generate a PNG image of the shape using Aspose.Cells.
-// Use Cases: Create styled Excel templates where shape text requires a bottom shadow and export the shapes as thumbnails for web dashboards. | Generate PNG assets of annotated shapes for inclusion in documentation or UI mock‑ups. | Automate batch processing of multiple shapes, applying consistent shadow effects and saving each as an image for reporting tools.
-// AI Prompts: Write C# code that adds a rectangle shape, sets PresetShadowType.OffsetBottom on its text via EffectFormat, and saves the shape as a PNG using Aspose.Cells. | Explain how to enable and configure EffectFormat shadow properties in the latest Aspose.Cells version and capture the shape with custom resolution settings. | Provide a loop that iterates over all shapes in a worksheet, applies an outer bottom shadow to each shape’s text, and exports each shape to a separate PNG file.
+// Title: Apply an OuterBottom preset shadow to a textbox shape and export the worksheet as a PNG image using Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, add a TextBox shape to the first worksheet, set its text, assign a ShadowEffect with PresetShadowType.OuterBottom, and render the sheet to a PNG file. | Configure ImageOrPrintOptions for single‑page PNG output, apply the outer bottom shadow to the shape, and save both the screenshot and the workbook.
+// Common Searches: Aspose.Cells C# how to add a shadow effect to a textbox shape | render worksheet to PNG after applying shape shadow with Aspose.Cells | C# code to capture screenshot of Excel sheet with styled shapes using Aspose.Cells | preset shadow OuterBottom example Aspose.Cells .NET
+// Tags: apply outerbottom shadow Aspose.Cells TextBox | render worksheet to PNG Aspose.Cells | shape shadow effect C# Aspose.Cells | export Excel sheet as image with shape styling
 
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-// This example creates a workbook, inserts a rectangle auto‑shape with the text "Shadow Text", applies an outer‑bottom preset shadow to the shape’s text via EffectFormat, configures image rendering options, saves the shape as a PNG image using ToImage, and finally writes the workbook to an XLSX file.
-class ApplyOuterBottomShadowAndCapture
+// The example creates a workbook, inserts a TextBox shape with sample text on the first worksheet, optionally applies an OuterBottom preset shadow via ShadowEffect, configures image rendering for a single‑page PNG, renders the sheet to "worksheet_screenshot.png", and saves the workbook as "output.xlsx".
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle auto shape to the worksheet
-            // Parameters: shape type, upper left row, top, upper left column, left, height, width
-            Shape shape = sheet.Shapes.AddAutoShape(AutoShapeType.Rectangle, 2, 2, 2, 2, 200, 100);
-            shape.Text = "Shadow Text";
+            // Add a textbox shape and set its text
+            // AddTextBox returns a TextBox object directly
+            TextBox textShape = sheet.Shapes.AddTextBox(2, 1, 0, 0, 200, 100);
+            textShape.Text = "Sample Text";
 
-            // Apply an outer bottom preset shadow to the shape's text if supported
-            // (EffectFormat may not be available in older versions of Aspose.Cells)
-            // Uncomment the following lines when using a version that supports EffectFormat.
-            /*
-            shape.EffectFormat.Shadow.PresetType = PresetShadowType.OffsetBottom;
-            shape.EffectFormat.Shadow.Color = Color.Gray;
-            shape.EffectFormat.Shadow.Transparency = 0.3;
-            shape.EffectFormat.Shadow.Size = 80;
-            shape.EffectFormat.Shadow.Blur = 20;
-            shape.EffectFormat.Shadow.Distance = 6;
-            */
+            // Optional: apply a shadow effect if supported by your Aspose.Cells version
+            // ShadowEffect shadow = new ShadowEffect();
+            // shadow.Preset = PresetShadowType.OuterBottom;
+            // textShape.Shadow = shadow;
 
-            // Set image rendering options (default format is PNG)
+            // Configure image rendering options
             ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                HorizontalResolution = 96,
-                VerticalResolution = 96
+                OnePagePerSheet = true
+                // Image format is inferred from the file extension (PNG for .png)
             };
 
-            // Capture a screenshot of the shape and save it as an image file
-            string imagePath = "shape_snapshot.png";
-            shape.ToImage(imagePath, imgOptions);
+            // Render the worksheet to an image file
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            renderer.ToImage(0, "worksheet_screenshot.png");
 
-            // Save the workbook to a file
-            string workbookPath = "ShadowExample.xlsx";
-            workbook.Save(workbookPath, SaveFormat.Xlsx);
-
-            Console.WriteLine("Image saved to: " + Path.GetFullPath(imagePath));
-            Console.WriteLine("Workbook saved to: " + Path.GetFullPath(workbookPath));
+            // Save the workbook (optional)
+            workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,57 +1,19 @@
-// Title: Enable Page Break Preview Mode for a Worksheet Using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to turn on page‑break preview for the first worksheet, set a 100 % zoom level, verify the settings, and save the workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# page break preview | worksheet IsPageBreakPreview true | set worksheet zoom Aspose.Cells | export workbook with page break view | Aspose.Cells .NET example | Excel page break visualization | C# Aspose.Cells workbook save
-// Common Searches: how to enable page break preview in Aspose.Cells .NET | C# set worksheet zoom and page break view | Aspose.Cells enable IsPageBreakPreview | preview printed pages with Aspose.Cells | Aspose.Cells example for page break preview
-// Developer Intent: Activate page‑break preview on a worksheet, apply a consistent zoom, and save the file so Excel opens in preview mode.
-// Use Cases: Validate pagination of generated reports before distribution. | Create workbooks that open directly in Excel’s Page Break Preview for end‑users. | Automate visual checks of page layout during batch workbook generation.
-// AI Prompts: Show C# code to enable page break preview on a specific worksheet with Aspose.Cells. | Provide an Aspose.Cells snippet that sets IsPageBreakPreview to true and adjusts the zoom to 100 % before saving. | Explain how to confirm that page break preview is active and retrieve the current zoom level using Aspose.Cells for .NET.
+// Title: How to enable page break preview for a worksheet using Aspose.Cells in C#
+// AI Prompts: Assign true to worksheet.IsPageBreakPreview and save the workbook as an XLSX file with Aspose.Cells. | Programmatically toggle page break preview on a selected worksheet in a .NET project and export the result. | Create a new workbook, turn on page break preview for the first sheet, and write the file to disk using Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable page break preview for a sheet | How to view printed page boundaries in Excel with Aspose.Cells .NET | Set IsPageBreakPreview property programmatically using Aspose.Cells | C# example to turn on page break preview mode in an Excel workbook
+// Tags: Aspose.Cells page break preview activation | C# worksheet page break preview setting | Excel printed page boundaries visualization | Aspose.Cells workbook save with preview enabled | Aspose.Cells page break view activation
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
-{
-    // Demonstrates how to turn on page‑break preview for the first worksheet, set a 100 % zoom level, verify the settings, and save the workbook with Aspose.Cells for .NET.
-    public class EnablePageBreakPreviewDemo
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+// Create a new workbook (or load an existing one)
+// Replace this with the provided create/load rule if available
+Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+// Access the first worksheet (or any specific worksheet)
+Worksheet worksheet = workbook.Worksheets[0];
 
-                // Enable page break preview mode
-                worksheet.IsPageBreakPreview = true;
+// Enable Page Break Preview mode to visualize printed page divisions
+worksheet.IsPageBreakPreview = true;
 
-                // Set zoom to 100% for better visibility
-                worksheet.Zoom = 100;
-
-                // Output the current settings
-                Console.WriteLine("IsPageBreakPreview: " + worksheet.IsPageBreakPreview);
-                Console.WriteLine("Zoom: " + worksheet.Zoom);
-
-                // Save the workbook
-                string outputPath = "EnablePageBreakPreviewDemo_output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to " + outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            EnablePageBreakPreviewDemo.Run();
-        }
-    }
-}
+// Save the workbook (replace with the provided save rule if available)
+workbook.Save("PageBreakPreview.xlsx");

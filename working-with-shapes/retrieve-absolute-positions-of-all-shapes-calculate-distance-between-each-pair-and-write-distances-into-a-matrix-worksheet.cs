@@ -1,84 +1,167 @@
-// Title: Compute shape‑center distances and generate a matrix worksheet with Aspose.Cells for .NET
-// Description: A C# example that reads all shapes in a worksheet, determines each shape's absolute X/Y position and size, calculates the centre point, computes the Euclidean distance between every pair of centres, and writes the results into a new "DistanceMatrix" sheet.
-// Keywords: Aspose.Cells shape coordinates | shape centre distance C# | Excel distance matrix Aspose | retrieve absolute shape position .NET | calculate Euclidean distance between shapes
-// Common Searches: how to get shape position Aspose.Cells | distance matrix of shapes in Excel using C# | calculate Euclidean distance between shape centres | write shape distance values to a new worksheet
-// Developer Intent: Extract absolute positions of all worksheet shapes, compute pairwise Euclidean distances between their centres, and store the values in a matrix on a separate sheet.
-// Use Cases: Validate layout spacing of diagram elements in automated reports | Detect potential shape collisions before exporting a workbook | Create a proximity heat‑map for design‑analysis dashboards
-// AI Prompts: Generate C# code with Aspose.Cells that lists each shape's X, Y, Width, Height and centre coordinates. | Provide a method that accepts a ShapeCollection and returns a two‑dimensional array of Euclidean distances, then writes it to a new worksheet. | Explain how to add header labels and round distance values to two decimal places in the matrix sheet.
+// Title: Generate a Euclidean distance matrix for all shapes in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Extract the absolute pixel coordinates (X, Y) of every shape on each worksheet with Aspose.Cells and store them in a C# collection. | Compute the Euclidean distance between each pair of shape coordinates and assemble a symmetric distance matrix in C#. | Create a new worksheet named "DistanceMatrix", write shape names as headers and the distance values into the cells, auto‑fit the columns, and save the workbook.
+// Common Searches: how to get absolute position of shapes in Excel using Aspose.Cells C# | create distance matrix of Excel shapes with Aspose.Cells .NET | compute Euclidean distance between shapes across worksheets Aspose.Cells | add a new sheet with shape distance calculations in Aspose.Cells | Aspose.Cells shape coordinates pixel offset example
+// Tags: retrieve shape pixel positions Aspose.Cells | build symmetric distance matrix C# | populate distance matrix sheet Aspose.Cells | aggregate shape coordinates across worksheets | auto‑fit columns Aspose.Cells matrix
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace ShapeDistanceMatrix
 {
-    // A C# example that reads all shapes in a worksheet, determines each shape's absolute X/Y position and size, calculates the centre point, computes the Euclidean distance between every pair of centres, and writes the results into a new "DistanceMatrix" sheet.
+    // The example loads an Excel workbook, gathers the absolute pixel X/Y coordinates of every shape from all worksheets, calculates Euclidean distances between each pair to form a symmetric matrix, creates a new worksheet called "DistanceMatrix" with shape names as row and column headers, writes the distance values, auto‑fits the columns for readability, and saves the updated file.
     class Program
     {
-        static void Main()
+        // Simple container for shape position data
+        class ShapeInfo
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            public string Name { get; set; } = string.Empty;
+            public double X { get; set; } // absolute X in pixels
+            public double Y { get; set; } // absolute Y in pixels
+        }
 
-            // Access the first worksheet (contains shapes)
-            Worksheet sourceSheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add sample shapes to demonstrate (optional – remove if workbook already has shapes)
-            ShapeCollection shapes = sourceSheet.Shapes;
-            shapes.AddRectangle(2, 0, 2, 0, 80, 120);   // Shape 0
-            shapes.AddOval(5, 0, 5, 0, 60, 60);        // Shape 1
-            shapes.AddLine(8, 0, 8, 0, 150, 0);        // Shape 2
-
-            // Retrieve absolute positions (top‑left corner) and sizes of all shapes
-            int shapeCount = shapes.Count;
-            double[] centerX = new double[shapeCount];
-            double[] centerY = new double[shapeCount];
-
-            for (int i = 0; i < shapeCount; i++)
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Shape shape = shapes[i];
-
-                // X and Y are the offsets from the worksheet's left/top border in pixels
-                double x = shape.X;
-                double y = shape.Y;
-
-                // Width and Height are also in pixels
-                double w = shape.Width;
-                double h = shape.Height;
-
-                // Compute shape centre coordinates
-                centerX[i] = x + w / 2.0;
-                centerY[i] = y + h / 2.0;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Create a new worksheet to hold the distance matrix
-            int matrixSheetIndex = workbook.Worksheets.Add();
-            Worksheet matrixSheet = workbook.Worksheets[matrixSheetIndex];
-            matrixSheet.Name = "DistanceMatrix";
-
-            // Fill the matrix: distance between each pair of shapes
-            for (int i = 0; i < shapeCount; i++)
+            try
             {
-                // Optional: label rows and columns with shape indices
-                matrixSheet.Cells[i + 1, 0].PutValue($"Shape {i}");
-                matrixSheet.Cells[0, i + 1].PutValue($"Shape {i}");
+                // Load the workbook that contains the shapes
+                Workbook workbook = new Workbook(inputPath);
 
-                for (int j = 0; j < shapeCount; j++)
+                // Collect all shapes from every worksheet
+                List<ShapeInfo> shapes = new List<ShapeInfo>();
+
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    double distance = 0.0;
-                    if (i != j)
+                    // Pre‑calculate cumulative column widths and row heights for speed
+                    int maxColumn = sheet.Cells.MaxColumn + 1;
+                    int maxRow = sheet.Cells.MaxRow + 1;
+
+                    double[] cumColumnWidths = new double[maxColumn + 1];
+                    for (int col = 0; col < maxColumn; col++)
                     {
-                        double dx = centerX[i] - centerX[j];
-                        double dy = centerY[i] - centerY[j];
-                        distance = Math.Sqrt(dx * dx + dy * dy);
+                        cumColumnWidths[col + 1] = cumColumnWidths[col] + sheet.Cells.GetColumnWidthPixel(col);
                     }
-                    // Write distance value (rounded to 2 decimal places for readability)
-                    matrixSheet.Cells[i + 1, j + 1].PutValue(Math.Round(distance, 2));
+
+                    double[] cumRowHeights = new double[maxRow + 1];
+                    for (int row = 0; row < maxRow; row++)
+                    {
+                        cumRowHeights[row + 1] = cumRowHeights[row] + sheet.Cells.GetRowHeightPixel(row);
+                    }
+
+                    foreach (Shape shape in sheet.Shapes)
+                    {
+                        // Upper‑left cell indices
+                        int rowIdx = shape.UpperLeftRow;
+                        int colIdx = shape.UpperLeftColumn;
+
+                        // Offsets inside the cell (if available, otherwise 0)
+                        int rowOffset = 0;
+                        int colOffset = 0;
+
+                        // Some Aspose.Cells versions expose offset properties; use reflection to retrieve them safely
+                        try
+                        {
+                            var rowOffsetProp = shape.GetType().GetProperty("UpperLeftRowOffset");
+                            var colOffsetProp = shape.GetType().GetProperty("UpperLeftColumnOffset");
+                            if (rowOffsetProp != null && colOffsetProp != null)
+                            {
+                                rowOffset = (int)rowOffsetProp.GetValue(shape);
+                                colOffset = (int)colOffsetProp.GetValue(shape);
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore if properties are not present
+                        }
+
+                        // Absolute pixel coordinates
+                        double absoluteX = cumColumnWidths[colIdx] + colOffset;
+                        double absoluteY = cumRowHeights[rowIdx] + rowOffset;
+
+                        shapes.Add(new ShapeInfo
+                        {
+                            Name = string.IsNullOrEmpty(shape.Name) ? $"Shape_{shapes.Count}" : shape.Name,
+                            X = absoluteX,
+                            Y = absoluteY
+                        });
+                    }
+                }
+
+                int shapeCount = shapes.Count;
+                if (shapeCount == 0)
+                {
+                    Console.WriteLine("No shapes found in the workbook.");
+                    return;
+                }
+
+                // Compute Euclidean distances between each pair of shapes
+                double[,] distanceMatrix = new double[shapeCount, shapeCount];
+                for (int i = 0; i < shapeCount; i++)
+                {
+                    for (int j = i; j < shapeCount; j++)
+                    {
+                        double dx = shapes[i].X - shapes[j].X;
+                        double dy = shapes[i].Y - shapes[j].Y;
+                        double distance = Math.Sqrt(dx * dx + dy * dy);
+                        distanceMatrix[i, j] = distance;
+                        distanceMatrix[j, i] = distance; // symmetric
+                    }
+                }
+
+                // Add a new worksheet to hold the distance matrix
+                int matrixSheetIndex = workbook.Worksheets.Add();
+                Worksheet matrixSheet = workbook.Worksheets[matrixSheetIndex];
+                matrixSheet.Name = "DistanceMatrix";
+
+                // Write header row (shape names)
+                for (int col = 0; col < shapeCount; col++)
+                {
+                    matrixSheet.Cells[0, col + 1].PutValue(shapes[col].Name);
+                }
+
+                // Write header column (shape names) and matrix values
+                for (int row = 0; row < shapeCount; row++)
+                {
+                    // Header column
+                    matrixSheet.Cells[row + 1, 0].PutValue(shapes[row].Name);
+
+                    // Distance values
+                    for (int col = 0; col < shapeCount; col++)
+                    {
+                        matrixSheet.Cells[row + 1, col + 1].PutValue(distanceMatrix[row, col]);
+                    }
+                }
+
+                // Auto‑fit columns for better readability
+                matrixSheet.AutoFitColumns();
+
+                // Save the workbook with the new matrix worksheet
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Distance matrix saved to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
                 }
             }
-
-            // Save the workbook
-            workbook.Save("ShapeDistanceMatrix.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

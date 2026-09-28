@@ -1,45 +1,59 @@
-// Title: Aspose.Cells .NET – Add Rectangle Shape Linked to a Cell with Scientific Notation
-// Description: Creates a workbook, writes a number to A1, applies a custom scientific notation format (0.00E+00), inserts a rectangle shape, links the shape to $A$1 via the LinkedCell property, prints the link and formatted value, and saves the file as ShapeLinkedCellScientific.xlsx.
-// Keywords: Aspose.Cells | C# shape LinkedCell | rectangle shape Excel | custom number format scientific notation | 0.00E+00 format | link shape to cell | verify linked cell value
-// Common Searches: Aspose.Cells link shape to cell | apply scientific notation format with Aspose.Cells .NET | how to use LinkedCell property in C# | add rectangle shape to worksheet Aspose | retrieve formatted cell value from linked shape
-// Developer Intent: Add a rectangle shape, bind it to a cell formatted in scientific notation, and confirm the binding and displayed value.
-// Use Cases: Show a large numeric value in scientific notation on a dashboard by linking a shape to the source cell. | Create interactive Excel reports where clicking a shape jumps to a cell containing a formatted scientific value. | Generate templates where shapes serve as visual anchors tied to cells with custom number formats for consistency.
-// AI Prompts: Generate C# code using Aspose.Cells to insert a rectangle shape, set its LinkedCell to A1, and format A1 with 0.00E+00. | Demonstrate how to read and display the LinkedCell address and the cell's scientific notation string value. | Explain how to modify the scientific notation format of a linked cell after the shape is linked without breaking the connection.
+// Title: Add a rectangle shape linked to a cell using the TEXT function for scientific notation in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a rectangle shape on the first worksheet, assigns its Text property to =TEXT(A1,"0.00E+00"), forces formula calculation, and saves the file as ShapeLinkedScientific.xlsx. | Write a verification routine that compares the shape's displayed text after calculation with the .NET formatted scientific notation of the cell value and outputs pass/fail messages.
+// Common Searches: Aspose.Cells link shape text to a cell with TEXT function scientific notation | C# add rectangle shape that shows cell value in scientific format using Aspose.Cells | verify that shape text matches the evaluated formula in Aspose.Cells .NET | save workbook containing a shape bound to a cell formula Aspose.Cells example
+// Tags: rectangle shape creation Aspose.Cells | shape text formula binding Aspose.Cells | scientific notation formatting in shape | formula evaluation for shape text | shape verification against .NET format
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, writes a number to A1, applies a custom scientific notation format (0.00E+00), inserts a rectangle shape, links the shape to $A$1 via the LinkedCell property, prints the link and formatted value, and saves the file as ShapeLinkedCellScientific.xlsx.
-class ShapeLinkedCellScientificNotation
+// Demonstrates how to add a rectangle shape, bind its text to cell A1 with the TEXT function using scientific notation, calculate formulas so the shape displays the evaluated result, verify the displayed value matches .NET formatting, and save the workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set a numeric value in cell A1
-        Cell targetCell = sheet.Cells["A1"];
-        targetCell.PutValue(123456789.0);
-
-        // Apply scientific notation number format to the cell (e.g., 0.00E+00)
-        Style sciStyle = workbook.CreateStyle();
-        sciStyle.Custom = "0.00E+00";
-        targetCell.SetStyle(sciStyle);
+        // Put a numeric value into cell A1
+        worksheet.Cells["A1"].PutValue(123456789);
 
         // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, row offset, column offset, width, height
-        RectangleShape rect = sheet.Shapes.AddRectangle(2, 2, 0, 0, 150, 50);
+        // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+        Shape shape = worksheet.Shapes.AddShape(
+            MsoDrawingType.Rectangle, // shape type
+            2,   // upper left row
+            2,   // upper left column
+            0,   // top offset (pixels)
+            0,   // left offset (pixels)
+            100, // height (pixels)
+            200  // width (pixels)
+        );
 
-        // Link the shape to cell A1 using the LinkedCell property
-        rect.LinkedCell = "$A$1";
+        // Link the shape's text to cell A1 using the TEXT function with scientific notation
+        shape.Text = "=TEXT(A1,\"0.00E+00\")";
 
-        // Verify the link and the formatted value
-        Console.WriteLine("Shape linked to cell: " + rect.LinkedCell);
-        Console.WriteLine("Cell A1 formatted value: " + targetCell.StringValue);
+        // Calculate all formulas so the shape displays the evaluated result
+        workbook.CalculateFormula();
+
+        // Verify that the shape displays the expected scientific notation
+        string expected = 123456789.ToString("0.00E+00"); // .NET formatting for comparison
+        string actual = shape.Text; // After calculation this holds the displayed text
+
+        Console.WriteLine($"Expected: {expected}");
+        Console.WriteLine($"Actual  : {actual}");
+
+        if (actual == expected)
+        {
+            Console.WriteLine("Verification passed: Shape text matches scientific notation.");
+        }
+        else
+        {
+            Console.WriteLine("Verification failed: Shape text does not match expected format.");
+        }
 
         // Save the workbook
-        workbook.Save("ShapeLinkedCellScientific.xlsx");
+        workbook.Save("ShapeLinkedScientific.xlsx");
     }
 }

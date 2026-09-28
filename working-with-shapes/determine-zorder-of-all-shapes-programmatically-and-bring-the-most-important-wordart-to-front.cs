@@ -1,64 +1,87 @@
-// Title: Read and Change Shape Z‑Order, Bring WordArt to Front with Aspose.Cells for .NET (C#)
-// Description: This example loads an Excel file, enumerates every shape on the first worksheet, prints each shape's ZOrderPosition, identifies the first WordArt shape by name, moves it to the top layer using the ZOrderPosition property or ToFrontOrBack method, and saves the updated workbook.
-// Keywords: Aspose.Cells C# shape Z-order | move WordArt to front Aspose.Cells | Worksheet.Shapes enumeration | ZOrderPosition property | ToFrontOrBack method | Excel shape layering .NET | Aspose.Cells Drawing API
-// Common Searches: how to get shape Z-order in Aspose.Cells | bring WordArt to front programmatically C# | set ZOrderPosition of a shape Aspose.Cells | list all shapes on a worksheet Aspose.Cells | change shape layering in Excel using .NET
-// Developer Intent: Read the Z‑order of every shape in a worksheet and promote the most important WordArt shape to the front layer.
-// Use Cases: Debug visual stacking by printing each shape's ZOrderPosition. | Select a WordArt shape based on its name and elevate it for emphasis. | Persist the new visual hierarchy by saving the workbook after reordering shapes.
-// AI Prompts: Write C# code with Aspose.Cells that lists all worksheet shapes and their ZOrderPosition, then moves a shape whose name contains "WordArt" to the front. | Show how to use the ToFrontOrBack method instead of setting ZOrderPosition directly to bring a shape forward. | Explain how to sort shapes by ZOrderPosition and assign a specific shape as the topmost layer in an Excel file.
+// Title: Programmatically determine shape Z‑order and bring the longest WordArt to front in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that iterates over every shape on a worksheet, finds the WordArt shape with the most characters, and sets its ZOrderPosition to move it to the front. | Show how to list all worksheet shapes, filter for WordArt, adjust the layering order via ZOrderPosition, and save the updated workbook using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# get ZOrderPosition of shapes in an Excel worksheet | How to move a specific WordArt shape to the front with Aspose.Cells .NET | Enumerate all shapes and locate the longest WordArt text using Aspose.Cells | Set shape layering order programmatically in an Excel file with Aspose.Cells C# | Bring WordArt to top of stack in Excel via Aspose.Cells API
+// Tags: Aspose.Cells shape ZOrderPosition manipulation | C# enumerate worksheet shapes Aspose.Cells | WordArt longest text detection Aspose.Cells | Excel shape layering Aspose.Cells .NET | move WordArt to front Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsZOrderDemo
+// The example loads an Excel workbook, prints each shape's basic info, identifies the WordArt shape containing the longest text, sets its ZOrderPosition to 0 to bring it to the front, and saves the modified file.
+class Program
 {
-    // This example loads an Excel file, enumerates every shape on the first worksheet, prints each shape's ZOrderPosition, identifies the first WordArt shape by name, moves it to the top layer using the ZOrderPosition property or ToFrontOrBack method, and saves the updated workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("Input.xlsx");
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Iterate through all shapes to display their Z‑order positions
-            Console.WriteLine("Current Z‑order of shapes:");
-            foreach (Shape shape in sheet.Shapes)
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one.
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine($"Shape Name: {shape.Name}, ZOrderPosition: {shape.ZOrderPosition}");
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a workbook with a default worksheet
             }
 
-            // Find the most important WordArt shape.
-            // Here we assume WordArt shapes have "WordArt" in their name.
-            Shape mostImportantWordArt = null;
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Output basic info of all shapes on the worksheet.
             foreach (Shape shape in sheet.Shapes)
             {
-                if (shape.Name != null && shape.Name.IndexOf("WordArt", StringComparison.OrdinalIgnoreCase) >= 0)
+                Console.WriteLine($"Shape Name: {shape.Name}, Type: {shape.Type}");
+            }
+
+            // Find the WordArt shape with the longest text.
+            Shape importantWordArt = null;
+            int maxTextLength = -1;
+
+            foreach (Shape shape in sheet.Shapes)
+            {
+                // Detect WordArt by checking the type name (avoids direct enum dependency).
+                if (shape.Type.ToString().Contains("WordArt", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Choose the first WordArt found as the most important.
-                    // You can replace this logic with your own importance criteria.
-                    mostImportantWordArt = shape;
-                    break;
+                    string text = shape.Text;
+                    if (!string.IsNullOrEmpty(text) && text.Length > maxTextLength)
+                    {
+                        maxTextLength = text.Length;
+                        importantWordArt = shape;
+                    }
                 }
             }
 
-            if (mostImportantWordArt != null)
+            // Bring the selected WordArt to the front using ZOrderPosition.
+            if (importantWordArt != null)
             {
-                // Bring the selected WordArt to the front.
-                // Setting ZOrderPosition to 0 makes it the frontmost shape.
-                mostImportantWordArt.ZOrderPosition = 0;
-
-                // Alternatively, you can use ToFrontOrBack with a positive value.
-                // mostImportantWordArt.ToFrontOrBack(1);
-                Console.WriteLine($"WordArt '{mostImportantWordArt.Name}' moved to front.");
+                // Setting ZOrderPosition to 0 brings the shape to the front.
+                importantWordArt.ZOrderPosition = 0;
+                Console.WriteLine($"WordArt '{importantWordArt.Name}' brought to front.");
             }
             else
             {
                 Console.WriteLine("No WordArt shape found in the worksheet.");
             }
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("Output.xlsx");
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

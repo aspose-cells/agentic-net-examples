@@ -1,41 +1,48 @@
-// Title: Display screen gridlines while suppressing print gridlines using Aspose.Cells for .NET (C#)
-// Description: This C# example creates a new workbook, turns on worksheet gridlines for on‑screen viewing (Worksheet.IsGridlinesVisible = true) and disables them for printed output (Worksheet.PageSetup.PrintGridlines = false). Sample text is added and the workbook is saved as GridlinesScreenOnly.xlsx.
-// Keywords: Aspose.Cells C# gridlines | Worksheet.IsGridlinesVisible | PageSetup.PrintGridlines | hide gridlines in print | show gridlines on screen | Excel gridline visibility .NET | Aspose.Cells print settings | gridlines only on screen
-// Common Searches: Aspose.Cells show gridlines on screen only | hide gridlines when printing Excel with Aspose.Cells | Worksheet.IsGridlinesVisible property example | PageSetup.PrintGridlines false C# | C# Aspose.Cells gridline visibility tutorial
-// Developer Intent: Enable gridlines for workbook display while ensuring they are omitted from printed output.
-// Use Cases: Interactive Excel reports where gridlines aid data entry but printed copies need a clean layout. | Templates for internal users that show cell boundaries on screen, yet produce professional PDFs without gridlines. | Dashboards that rely on visual gridlines for navigation in the application but require a polished look in hard‑copy distribution.
-// AI Prompts: Generate C# code with Aspose.Cells that shows gridlines on screen and hides them when printing, then saves the file as .xlsx. | Explain the interaction between Worksheet.IsGridlinesVisible and PageSetup.PrintGridlines for controlling screen versus print gridline visibility in Aspose.Cells. | Provide a step‑by‑step guide to toggle gridline visibility for on‑screen view and print output in an Aspose.Cells workbook.
+// Title: Enable on-screen gridlines but suppress them in printed output with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that sets Worksheet.IsGridlinesVisible to true and PageSetup.PrintGridlines to false, then saves the workbook as XLSX. | Update an existing Aspose.Cells workbook so that gridlines appear in the Excel UI while they are omitted from the printed page, preserving all other worksheet data.
+// Common Searches: aspocells C# show gridlines in Excel view but not when printing | how to hide gridlines in printed Excel file using Aspose.Cells | set Worksheet.IsGridlinesVisible and PageSetup.PrintGridlines properties in .NET | save workbook with screen gridlines only Aspose.Cells example
+// Tags: gridlines visibility on screen Aspose.Cells | suppress printed gridlines Aspose.Cells | Worksheet gridlines visibility C# example | disable print gridlines Aspose.Cells | save workbook with custom gridline settings Aspose.Cells | Excel UI gridlines vs print gridlines Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsGridlinesDemo
+// The sample creates a workbook, makes gridlines visible in the Excel UI via Worksheet.IsGridlinesVisible, disables gridlines for printed output using PageSetup.PrintGridlines, and saves the file as GridlinesDemo.xlsx.
+class Program
 {
-    // This C# example creates a new workbook, turns on worksheet gridlines for on‑screen viewing (Worksheet.IsGridlinesVisible = true) and disables them for printed output (Worksheet.PageSetup.PrintGridlines = false). Sample text is added and the workbook is saved as GridlinesScreenOnly.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (using the create rule)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Show gridlines on screen
-            worksheet.IsGridlinesVisible = true;
+            sheet.IsGridlinesVisible = true;
 
             // Hide gridlines when printing
-            worksheet.PageSetup.PrintGridlines = false;
+            sheet.PageSetup.PrintGridlines = false;
 
-            // Add some sample data to visualize the gridlines
-            worksheet.Cells["A1"].PutValue("Gridlines visible on screen");
-            worksheet.Cells["A2"].PutValue("but not printed.");
+            // Define output file path
+            string outputPath = "GridlinesDemo.xlsx";
 
-            // Save the workbook
-            workbook.Save("GridlinesScreenOnly.xlsx");
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            Console.WriteLine("Workbook saved with screen gridlines visible and print gridlines hidden.");
+            // Save the workbook (using the save rule)
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

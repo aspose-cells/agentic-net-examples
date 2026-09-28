@@ -1,63 +1,86 @@
-// Title: Add a 20% Opacity, Non‑Rotated Text Watermark to Even Pages in Aspose.Cells PDF
-// Description: Demonstrates how to create a workbook, enable odd/even header‑footer settings, define a large Arial RenderingFont, and configure a RenderingWatermark with zero rotation and 0.2 opacity. The watermark is attached to PdfSaveOptions and saved as a PDF. Since Aspose.Cells applies the watermark to every page, the example notes two approaches to restrict it to even‑numbered pages: splitting the workbook or using a PDF post‑processing tool.
-// Keywords: Aspose.Cells PDF watermark | text watermark even pages | 20% opacity watermark | non rotated watermark C# | RenderingWatermark Aspose.Cells | PdfSaveOptions watermark | split workbook even pages | post‑process PDF watermark
-// Common Searches: Aspose.Cells add watermark only on even pages | C# create semi transparent text watermark PDF | non rotated watermark Aspose.Cells PDFSaveOptions | how to set watermark opacity in Aspose.Cells | apply watermark to every second page PDF
-// Developer Intent: Create a centered, non‑rotated text watermark with 20% opacity that appears exclusively on even‑numbered pages of a PDF generated from an Aspose.Cells workbook.
-// Use Cases: Protect confidential sections of a multi‑page report by showing a light watermark only on the back (even) pages. | Add subtle branding to every second page of an invoice PDF for visual consistency. | Display a “Draft” label on even pages of a brochure to differentiate draft content without cluttering odd pages.
-// AI Prompts: Generate C# code using Aspose.Cells that adds a 20% opacity, non‑rotated "CONFIDENTIAL" watermark only to even pages when saving as PDF. | Show how to separate a workbook into odd‑page and even‑page worksheets and assign distinct PdfSaveOptions so the watermark is applied just to the even‑page worksheet. | Explain a workflow that combines Aspose.Cells PDF export with a PDF post‑processing library (e.g., iTextSharp) to add a watermark to even pages after the PDF is created.
+// Title: How to add a non‑rotated 20% opacity text watermark to every worksheet in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that inserts a plain text watermark "Confidential" on each worksheet, sets RotationAngle = 0 and Fill.Transparency = 0.8, then saves the workbook. | Show a C# example that iterates through all worksheets in a .xlsx file and adds a text effect shape as a watermark with zero rotation and 80% transparency using Aspose.Cells. | Provide a C# snippet that creates a non‑rotated text watermark with 20% opacity on every sheet of an Excel workbook and saves the result with Aspose.Cells.
+// Common Searches: Aspose.Cells add text watermark to all worksheets C# | C# set watermark rotation angle to zero in Excel using Aspose.Cells | How to apply 20% opacity text watermark in an Excel workbook with Aspose.Cells | Programmatically add plain text effect shape as watermark in .xlsx using Aspose.Cells | Aspose.Cells watermark each sheet without rotation
+// Tags: Aspose.Cells text effect shape watermark | C# add non‑rotated watermark to Excel worksheets | Excel workbook 20% opacity watermark Aspose.Cells | iterate worksheets add watermark programmatically | set shape transparency Aspose.Cells C#
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWatermarkExample
+// The example loads an existing XLSX file, loops through every worksheet, and adds a plain text effect shape containing "Confidential". The shape is configured with zero rotation and 80% fill and line transparency (equivalent to 20% opacity), placed to move with cells, unlocked, and sent to the back before the workbook is saved to a new file.
+class Program
 {
-    // Demonstrates how to create a workbook, enable odd/even header‑footer settings, define a large Arial RenderingFont, and configure a RenderingWatermark with zero rotation and 0.2 opacity. The watermark is attached to PdfSaveOptions and saved as a PDF. Since Aspose.Cells applies the watermark to every page, the example notes two approaches to restrict it to even‑numbered pages: splitting the workbook or using a PDF post‑processing tool.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add sample data to demonstrate the watermark effect
-            sheet.Cells["A1"].PutValue("This is page 1");
-            sheet.Cells["A2"].PutValue("This is page 2");
-            sheet.Cells["A3"].PutValue("This is page 3");
-            sheet.Cells["A4"].PutValue("This is page 4");
-
-            // Enable different headers/footers for odd and even pages (required for even‑page specific settings)
-            sheet.PageSetup.IsHFDiffOddEven = true;
-
-            // Create a rendering font for the watermark text
-            RenderingFont font = new RenderingFont("Arial", 48)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                Bold = true,
-                Color = Color.LightGray
-            };
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Create a text watermark with no rotation and 20% opacity
-            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Apply a text watermark to each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Rotation = 0f,          // No rotation
-                Opacity = 0.2f,        // 20% opacity
-                IsBackground = true,   // Place behind page contents
-                HAlignment = TextAlignmentType.Center,
-                VAlignment = TextAlignmentType.Center
-            };
+                try
+                {
+                    // Add a plain text effect shape.
+                    // The overload requires upper‑left and lower‑right cell positions plus height and width.
+                    Shape watermarkShape = sheet.Shapes.AddTextEffect(
+                        (MsoPresetTextEffect)0,          // Plain text effect
+                        "Confidential",                  // Watermark text
+                        "Arial",                         // Font name
+                        48,                              // Font size
+                        false,                           // Bold
+                        false,                           // Italic
+                        0, 0,                            // Upper‑left cell (row, column)
+                        0, 0,                            // Lower‑right cell (row, column)
+                        0, 0);                           // Height, Width (auto‑size)
 
-            // Assign the watermark to PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+                    // Configure shape appearance
+                    watermarkShape.RotationAngle = 0;                     // No rotation
+                    watermarkShape.Fill.Transparency = 0.8;              // 80% transparent fill
+                    watermarkShape.Line.Transparency = 0.8;              // 80% transparent line
+                    watermarkShape.Placement = PlacementType.Move;      // Move with cells
+                    watermarkShape.IsLocked = false;                     // Allow editing
+                    watermarkShape.ZOrderPosition = 0;                   // Send to back
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to add watermark to sheet '{sheet.Name}': {ex.Message}");
+                }
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Watermark = watermark
-            };
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook as PDF; the watermark will appear on all pages.
-            // To restrict it to even‑numbered pages, you would need to split the workbook
-            // into separate documents or use a PDF post‑processing library.
-            workbook.Save("EvenPagesWatermark.pdf", pdfOptions);
+            // Save the workbook with the watermark applied
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved with watermark to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

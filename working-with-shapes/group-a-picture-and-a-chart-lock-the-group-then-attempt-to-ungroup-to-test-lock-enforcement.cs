@@ -1,10 +1,7 @@
-// Title: Aspose.Cells for .NET – Group a Picture and Chart, Lock the Group, Protect Worksheet, and Test Ungroup Blocking (C#)
-// Description: Demonstrates how to add an image and a column chart to a worksheet, group them, apply a ShapeLockType.Ungroup lock, protect the sheet, attempt to ungroup, and verify that the lock is enforced before saving the workbook.
-// Keywords: Aspose.Cells group shapes C# | lock grouped objects Aspose.Cells | ShapeLockType.Ungroup example | worksheet protection Aspose.Cells .NET | prevent ungrouping Excel C# | group picture and chart Aspose | Aspose.Cells shape locking tutorial | C# Excel shape group lock
-// Common Searches: how to lock a grouped shape in Aspose.Cells .NET | prevent ungrouping of chart and image with Aspose.Cells | Aspose.Cells worksheet protection and shape locks | C# code to group picture and chart and lock them | test ShapeLockType.Ungroup enforcement
-// Developer Intent: Create a grouped picture‑chart object, lock it against ungrouping, protect the worksheet, and confirm that the lock prevents the ungroup operation.
-// Use Cases: Design a locked dashboard where a logo and its chart stay together for end‑users. | Distribute an Excel template that preserves layout by preventing shape separation. | Validate that ShapeLockType.Ungroup works correctly when worksheet protection is active.
-// AI Prompts: Generate C# code using Aspose.Cells to group a picture and a chart, lock the group from ungrouping, protect the worksheet, and verify the lock. | Explain how ShapeLockType.Ungroup interacts with worksheet protection in Aspose.Cells for .NET. | Provide step‑by‑step instructions to test whether a locked group can be ungrouped and how to handle the exception.
+// Title: Lock a grouped picture and chart in Aspose.Cells for .NET and confirm that ungrouping is blocked
+// AI Prompts: Write C# code with Aspose.Cells that inserts a PNG image and a column chart, groups them into a GroupShape, sets the group's IsLocked property to true, then attempts to ungroup and captures the resulting exception. | Show how to test lock enforcement on a GroupShape containing a picture and a chart by calling Ungroup and handling the expected error in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# lock grouped shapes to prevent ungrouping | how to enforce IsLocked on a GroupShape in Aspose.Cells .NET | example of grouping a picture and a chart and testing lock in Aspose.Cells | Ungroup throws exception when GroupShape IsLocked is true Aspose.Cells | C# Aspose.Cells group shapes and verify lock enforcement
+// Tags: group shapes with Aspose.Cells | lock GroupShape in Aspose.Cells | prevent ungrouping Aspose.Cells .NET | picture and chart grouping Aspose.Cells | IsLocked property Aspose.Cells | handle Ungroup exception Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,89 +9,87 @@ using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsGroupLockDemo
+// Creates a workbook, adds a PNG picture and a column chart, groups them, locks the GroupShape, attempts to ungroup to verify the lock, and saves the file as GroupedLocked.xlsx.
+class Program
 {
-    // Demonstrates how to add an image and a column chart to a worksheet, group them, apply a ShapeLockType.Ungroup lock, protect the sheet, attempt to ungroup, and verify that the lock is enforced before saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a picture to the worksheet if the file exists
+            Shape? pictureShape = null;
+            string imagePath = "sample.png";
+            if (File.Exists(imagePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a picture to the worksheet if the file exists
-                Picture picture = null;
-                string imagePath = "example.jpg";
-                if (File.Exists(imagePath))
-                {
-                    int pictureIndex = worksheet.Pictures.Add(2, 2, imagePath);
-                    picture = worksheet.Pictures[pictureIndex];
-                }
-                else
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture addition.");
-                }
-
-                // Add a chart to the worksheet (order of parameters may vary by Aspose.Cells version)
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 10, 2, 15, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Retrieve the shape that represents the chart
-                Shape chartShape = worksheet.Shapes[chartIndex];
-
-                // Group the picture and the chart shape (if picture was added)
-                GroupShape group = null;
                 try
                 {
-                    if (picture != null)
-                    {
-                        group = worksheet.Shapes.Group(new Shape[] { picture, chartShape });
-                    }
-                    else
-                    {
-                        group = worksheet.Shapes.Group(new Shape[] { chartShape });
-                    }
+                    // Add returns the index of the picture; retrieve the Picture object
+                    int picIdx = sheet.Pictures.Add(1, 1, imagePath);
+                    pictureShape = sheet.Pictures[picIdx];
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to add picture: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
+            }
 
-                    // Lock the group against ungrouping
-                    group.SetLockedProperty(ShapeLockType.Ungroup, true);
+            // Add a chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 1, 15, 10);
+            Chart chart = sheet.Charts[chartIdx];
+            // The chart itself is a shape; obtain its ChartObject (inherits from Shape)
+            Shape chartShape = chart.ChartObject;
+
+            // Populate some data for the chart
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["B1"].PutValue(30);
+            sheet.Cells["B2"].PutValue(40);
+            chart.NSeries.Add("A1:B2", true);
+
+            // Group the picture and the chart together (only if picture was added)
+            if (pictureShape != null)
+            {
+                try
+                {
+                    Shape[] shapesToGroup = new Shape[] { pictureShape, chartShape };
+                    GroupShape group = sheet.Shapes.Group(shapesToGroup);
+
+                    // Lock the group to prevent modifications
+                    group.IsLocked = true;
+
+                    // Attempt to ungroup the locked group to test lock enforcement
+                    try
+                    {
+                        sheet.Shapes.Ungroup(group);
+                        Console.WriteLine("Ungroup succeeded (lock not enforced).");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Ungroup failed as expected: " + ex.Message);
+                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error during grouping: {ex.Message}");
-                    return;
                 }
-
-                // Protect the worksheet so that locked properties are enforced
-                worksheet.Protection.AllowEditingObject = false; // disallow object editing
-                worksheet.Protect(ProtectionType.All);
-
-                // Attempt to ungroup the locked group
-                try
-                {
-                    group.Ungroup();
-                    Console.WriteLine("Ungroup operation completed.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error during ungrouping: {ex.Message}");
-                }
-
-                // Verify whether the shapes are still in the group
-                Console.WriteLine($"Picture IsInGroup: {(picture != null ? picture.IsInGroup.ToString() : "N/A")}");
-                Console.WriteLine($"ChartShape IsInGroup: {chartShape.IsInGroup}");
-
-                // Save the workbook
-                string outputPath = "GroupLockTest.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+
+            // Save the workbook
+            string outputPath = "GroupedLocked.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

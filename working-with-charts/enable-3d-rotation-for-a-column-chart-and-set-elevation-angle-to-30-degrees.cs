@@ -1,33 +1,18 @@
-// Title: Aspose.Cells for .NET – Enable 3‑D Rotation & Set Elevation (30°) on a Column Chart (C#)
-// Description: Creates a new workbook, adds sample data, inserts a 3‑D column chart, and configures its perspective by applying a 45° rotation and a 30° elevation before saving the file.
-// Keywords: Aspose.Cells 3D chart rotation C# | Chart.Elevation property Aspose.Cells | Column3D chart Aspose.Cells example | set RotationAngle Aspose.Cells .NET | 3‑D column chart visualization | Aspose.Cells chart view angles
-// Common Searches: how to rotate a 3‑D column chart using Aspose.Cells | set elevation angle for 3‑D chart Aspose.Cells .NET | Aspose.Cells Chart.RotationAngle C# example | adjust 3‑D view angles in Excel with Aspose.Cells | C# code for 3‑D column chart rotation and elevation
-// Developer Intent: Add a 3‑D column chart to a workbook and programmatically set its rotation and elevation angles.
-// Use Cases: Produce a sales dashboard where the 3‑D column chart is tilted for clearer data comparison. | Generate presentation‑ready Excel reports with a consistent 45° rotation and 30° elevation across all charts. | Automate bulk styling of existing 3‑D charts in multiple workbooks by updating their view angles via code.
-// AI Prompts: Write C# code with Aspose.Cells that creates a 3‑D column chart, sets RotationAngle to 45 degrees, Elevation to 30 degrees, and saves the workbook. | Explain the impact of RotationAngle and Elevation on the visual rendering of a 3‑D chart in Aspose.Cells. | Provide step‑by‑step instructions to modify an existing column chart's 3‑D rotation and elevation using Aspose.Cells for .NET.
+// Title: Enable 3‑D rotation and set a 30° elevation for a column chart using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds sample data, inserts a 3‑D column chart, and sets RotationAngle to 45° and Elevation to 30°. | Show how to modify the 3‑D view of a column chart by configuring its RotationAngle and Elevation properties in Aspose.Cells for .NET. | Provide a complete example that saves an XLSX file containing a 3‑D column chart with custom rotation and elevation settings.
+// Common Searches: Aspose.Cells C# set rotation angle for 3D column chart | How to change elevation of a 3D chart using Aspose.Cells .NET | C# example configuring 3D view of column chart with Aspose.Cells | Set 3D rotation and elevation for column chart in Aspose.Cells | Aspose.Cells 3D column chart customization tutorial
+// Tags: Aspose.Cells set 3D chart rotation angle | Aspose.Cells column chart elevation property | Aspose.Cells configure 3D view .NET | Aspose.Cells create 3D column chart C# | Aspose.Cells save workbook with 3D chart
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCells3DRotationDemo
 {
-    // Creates a new workbook, adds sample data, inserts a 3‑D column chart, and configures its perspective by applying a 45° rotation and a 30° elevation before saving the file.
-    public class Enable3DRotationAndSetElevation
+    // Demonstrates creating a workbook, adding data, inserting a 3‑D column chart, setting RotationAngle to 45° and Elevation to 30°, and saving the file as an XLSX using Aspose.Cells for .NET.
+    class Program
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        static void Main(string[] args)
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -52,17 +37,16 @@ namespace AsposeCellsExamples
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Enable 3‑D rotation by setting the RotationAngle property
-            chart.RotationAngle = 45; // rotation around the Z‑axis in degrees
+            // Enable 3‑D rotation by setting the RotationAngle (0‑360 degrees)
+            chart.RotationAngle = 45; // example rotation
 
             // Set the elevation angle to 30 degrees
-            chart.Elevation = 30; // view height angle in degrees
+            chart.Elevation = 30;
 
-            // Save the workbook to a file
-            string outputPath = "3DRotation_Elevation.xlsx";
-            workbook.Save(outputPath);
+            // Save the workbook
+            workbook.Save("3DRotationColumnChart.xlsx");
 
-            Console.WriteLine($"3‑D column chart created with rotation and elevation set. Saved to '{outputPath}'.");
+            Console.WriteLine("3‑D column chart created with rotation and elevation set.");
         }
     }
 }

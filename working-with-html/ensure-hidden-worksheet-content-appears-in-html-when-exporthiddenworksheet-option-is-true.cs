@@ -1,45 +1,23 @@
-// Title: Export Hidden Worksheets to HTML with Aspose.Cells for .NET (ExportHiddenWorksheet = true)
-// Description: Demonstrates how to create a workbook with visible and hidden sheets, configure HtmlSaveOptions to include hidden worksheets, and save the entire workbook as an HTML file so that hidden data appears in the output.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ExportHiddenWorksheet | hidden worksheet HTML export | ExportActiveWorksheetOnly | save workbook as HTML | include hidden sheets | Aspose.Cells .NET | HTML conversion
-// Common Searches: Aspose.Cells export hidden sheet to HTML | HtmlSaveOptions ExportHiddenWorksheet example C# | How to include hidden worksheets when saving as HTML | ExportActiveWorksheetOnly false hidden sheets | HTML output missing hidden worksheet Aspose.Cells
-// Developer Intent: Generate an HTML representation of a workbook that contains data from both visible and hidden worksheets.
-// Use Cases: Publish a complete web report that shows supplemental data stored in hidden sheets. | Archive a workbook in HTML format while preserving every sheet for compliance review. | Email an HTML snapshot of a workbook where hidden sheets hold critical information that must be visible to recipients.
-// AI Prompts: Show how to export only selected hidden worksheets to HTML using Aspose.Cells. | Provide a C# snippet that sets ExportHiddenWorksheet true and customizes the output folder and file name. | Explain the interaction between ExportHiddenWorksheet and ExportActiveWorksheetOnly when saving to HTML.
+// Title: How to export hidden worksheets to HTML with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx workbook, sets HtmlSaveOptions.ExportHiddenWorksheet to true, and saves it as an .html file using Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions so that hidden Excel sheets are included when converting a workbook to HTML in C#. | Update an existing Aspose.Cells HTML export routine to ensure hidden worksheets appear in the generated HTML output.
+// Common Searches: Aspose.Cells C# export hidden worksheet to HTML example | How to include hidden Excel sheets in HTML output using Aspose.Cells .NET | HtmlSaveOptions ExportHiddenWorksheet property usage in C# | Save workbook as HTML with hidden sheets visible Aspose.Cells | Convert Excel to HTML preserving hidden worksheets Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet | C# export hidden worksheets to HTML | Aspose.Cells include hidden sheets in HTML conversion | HTML export of hidden Excel worksheets using Aspose.Cells | Aspose.Cells workbook to HTML with hidden sheets
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHiddenWorksheetHtmlDemo
+// The sample loads an Excel workbook, enables HtmlSaveOptions.ExportHiddenWorksheet to include hidden sheets, and saves the workbook as an HTML file, ensuring hidden worksheets are rendered in the output.
+class Program
 {
-    // Demonstrates how to create a workbook with visible and hidden sheets, configure HtmlSaveOptions to include hidden worksheets, and save the entire workbook as an HTML file so that hidden data appears in the output.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // First worksheet – visible
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-            visibleSheet.Cells["A1"].PutValue("Data in visible sheet");
+        // Configure HTML save options to include hidden worksheets
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportHiddenWorksheet = true; // Ensure hidden sheets are exported
 
-            // Second worksheet – hidden
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-            hiddenSheet.Cells["A1"].PutValue("Data in hidden sheet");
-            hiddenSheet.IsVisible = false; // Mark the sheet as hidden
-
-            // Configure HTML save options to export hidden worksheets
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                ExportHiddenWorksheet = true,   // Ensure hidden sheets are included
-                ExportActiveWorksheetOnly = false // Export the whole workbook
-            };
-
-            // Save the workbook to HTML; hidden sheet content will appear in the output
-            workbook.Save("Workbook_WithHiddenSheet.html", htmlOptions);
-
-            Console.WriteLine("HTML file generated with hidden worksheet content included.");
-        }
+        // Save the workbook as HTML using the configured options
+        workbook.Save("output.html", htmlOptions);
     }
 }

@@ -1,76 +1,84 @@
-// Title: Convert HTML with Embedded SVG to Excel Vector Shapes using Aspose.Cells C#
-// Description: A C# example that reads an HTML file, extracts each <svg> element, converts the markup to a UTF‑8 byte array, and inserts the graphics into an Excel worksheet as scalable vector shapes via Aspose.Cells' AddSvg method. Non‑SVG content is placed in a cell and the workbook is saved as .xlsx.
-// Keywords: Aspose.Cells AddSvg | HTML to Excel SVG conversion | C# extract SVG from HTML | embed vector graphics in Excel | convert SVG to Excel shape | .NET Aspose.Cells example
-// Common Searches: how to import SVG from HTML into Excel using Aspose.Cells | C# extract <svg> tags and add as vector shapes in Excel | Aspose.Cells AddSvg multiple SVGs example | preserve SVG quality when converting HTML to XLSX | convert web page charts (SVG) to Excel workbook
-// Developer Intent: Transform an HTML document containing embedded SVG graphics into an Excel workbook while keeping each SVG as a scalable vector shape.
-// Use Cases: Generate Excel reports from web dashboards that use SVG charts, retaining crisp vector rendering. | Create product catalogs that import SVG icons from HTML into Excel for high‑resolution printing. | Migrate HTML‑based data visualizations to offline Excel files without losing vector quality.
-// AI Prompts: Show a C# code snippet that reads an HTML file, extracts all <svg> elements, and adds them to an Aspose.Cells worksheet as vector shapes with automatic sizing. | Explain how to adjust position, offset, and scaling of SVG shapes inserted with the AddSvg method in Aspose.Cells. | Suggest ways to preserve inline CSS styles of SVG elements when converting them to Excel vector shapes.
+// Title: Convert an HTML string with inline SVG to an Excel .xlsx file while keeping SVG graphics as scalable vector shapes using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an HTML string containing <svg> elements into an Aspose.Cells Workbook with HtmlLoadOptions and inserts each SVG as a vector picture using Worksheets.Pictures.Add. | Show how to extract SVG markup from the HTML using Regex, wrap it in a MemoryStream, place each SVG at successive rows on a worksheet, and save the workbook to a specified folder while creating the folder if it does not exist.
+// Common Searches: how to keep SVG images vector when converting HTML to Excel with Aspose.Cells | Aspose.Cells C# load HTML string and embed inline SVG as pictures | convert HTML containing <svg> tags to .xlsx preserving vector quality | add multiple SVG graphics from HTML to Excel worksheet using Aspose.Cells | save Excel file to a new folder after converting HTML with SVG in C#
+// Tags: html to xlsx conversion with svg preservation | aspocells add svg picture from stream | load html into workbook using HtmlLoadOptions | c# regex extract inline svg | worksheet pictures add vector graphics
 
 using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsHtmlToExcel
+// The example reads an HTML string that includes inline <svg> elements, loads it into a Workbook via HtmlLoadOptions, uses a regular expression to locate each SVG, converts the markup to a MemoryStream, adds the SVGs as vector pictures to the first worksheet with Pictures.Add, and saves the workbook as an .xlsx file, creating the output directory if necessary.
+class HtmlToExcelWithSvg
 {
-    // A C# example that reads an HTML file, extracts each <svg> element, converts the markup to a UTF‑8 byte array, and inserts the graphics into an Excel worksheet as scalable vector shapes via Aspose.Cells' AddSvg method. Non‑SVG content is placed in a cell and the workbook is saved as .xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source HTML file containing embedded SVG graphics
-            string htmlPath = "input.html";
+            // Sample HTML input containing SVG graphics
+            string htmlContent = @"
+                <html>
+                    <body>
+                        <h1>Report</h1>
+                        <p>Data overview:</p>
+                        <svg width='100' height='100' xmlns='http://www.w3.org/2000/svg'>
+                            <circle cx='50' cy='50' r='40' stroke='green' stroke-width='4' fill='yellow' />
+                        </svg>
+                        <p>End of report.</p>
+                    </body>
+                </html>";
 
-            // Path for the generated Excel workbook
-            string excelPath = "output.xlsx";
-
-            // Read the entire HTML content
-            string htmlContent = File.ReadAllText(htmlPath, Encoding.UTF8);
-
-            // Create a new workbook (empty)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            ShapeCollection shapes = sheet.Shapes;
-
-            // Regular expression to capture <svg ...>...</svg> blocks (including attributes)
-            string svgPattern = @"<svg[\s\S]*?<\/svg>";
-            MatchCollection matches = Regex.Matches(htmlContent, svgPattern, RegexOptions.IgnoreCase);
-
-            // Starting cell for placing SVGs (A1)
-            int startRow = 0;
-            int startCol = 0;
-
-            // Iterate over each found SVG and add it as a scalable vector shape
-            foreach (Match match in matches)
+            // Convert HTML string to a memory stream
+            byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
+            using (var htmlStream = new MemoryStream(htmlBytes))
             {
-                // Convert the SVG markup to UTF-8 byte array
-                byte[] svgBytes = Encoding.UTF8.GetBytes(match.Value);
+                // Load HTML into a new workbook using HtmlLoadOptions
+                var loadOptions = new HtmlLoadOptions();
+                var workbook = new Workbook(htmlStream, loadOptions);
 
-                // Add the SVG to the worksheet.
-                // Height and width are set to -1 to let Excel auto‑size the shape.
-                // Offsets (top, left) are set to 0 for simplicity.
-                shapes.AddSvg(startRow, 0, startCol, 0, -1, -1, svgBytes, null);
-
-                // Move to the next column for the next SVG (you can adjust layout as needed)
-                startCol++;
-                if (startCol >= 5) // after 5 columns, move to next row
+                // Extract SVG elements and add them as pictures
+                var worksheet = workbook.Worksheets[0];
+                var svgMatches = Regex.Matches(htmlContent, @"<svg[\s\S]*?<\/svg>", RegexOptions.IgnoreCase);
+                if (svgMatches.Count > 0)
                 {
-                    startCol = 0;
-                    startRow++;
+                    int startRow = 0;
+                    foreach (Match match in svgMatches)
+                    {
+                        string svgMarkup = match.Value;
+                        byte[] svgBytes = Encoding.UTF8.GetBytes(svgMarkup);
+                        using (var svgStream = new MemoryStream(svgBytes))
+                        {
+                            // Add SVG picture at the specified cell
+                            worksheet.Pictures.Add(startRow, 0, svgStream);
+                        }
+                        startRow += 15; // offset for next SVG
+                    }
+                }
+
+                // Save workbook
+                string outputPath = "OutputWithSvg.xlsx";
+                try
+                {
+                    // Ensure the directory exists
+                    string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    workbook.Save(outputPath, SaveFormat.Xlsx);
+                    Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
                 }
             }
-
-            // Optionally, you can also import the plain text part of the HTML into cells.
-            // Here we simply place the raw HTML (without SVG tags) into cell A1.
-            string htmlWithoutSvg = Regex.Replace(htmlContent, svgPattern, string.Empty, RegexOptions.IgnoreCase);
-            sheet.Cells["A1"].PutValue(htmlWithoutSvg.Trim());
-
-            // Save the workbook as an Excel file
-            workbook.Save(excelPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"HTML converted to Excel with {matches.Count} SVG shape(s) saved at '{excelPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

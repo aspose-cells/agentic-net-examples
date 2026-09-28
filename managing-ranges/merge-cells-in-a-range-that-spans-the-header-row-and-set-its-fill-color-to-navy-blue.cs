@@ -1,45 +1,40 @@
-// Title: C# – Merge Header Row (A1:D1) and Apply Navy Blue Fill with Aspose.Cells
-// Description: Creates a new workbook, merges cells A1:D1, sets a solid navy background, optionally adds header text, and saves the file as MergedHeader.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | merge cells | header row | navy fill | solid background | Excel styling | range merge | Workbook | Worksheet
-// Common Searches: Aspose.Cells merge header row C# | C# set cell background color navy Aspose.Cells | How to merge A1:D1 with Aspose.Cells | Apply solid fill to merged cells Aspose.Cells .NET
-// Developer Intent: Combine the first‑row cells across multiple columns and style them with a navy blue background in an Excel workbook.
-// Use Cases: Add a colored title bar to financial or sales reports. | Create a template where the top row serves as a branded section heading. | Generate dashboards with a navy‑blue header that spans several columns.
-// AI Prompts: Generate C# Aspose.Cells code that merges A1:D1 and fills it with navy color. | Show how to create a solid navy style and apply it to a merged header range in a workbook using Aspose.Cells.
+// Title: Merge header row A1:D1 and apply navy blue fill using Aspose.Cells for .NET (C#)
+// AI Prompts: Merge cells A1 through D1 on the first worksheet and set a solid navy background with Aspose.Cells in C#. | Create a navy‑filled style and apply it to a merged header range in a new workbook using the Aspose.Cells API. | Generate an XLSX file, merge the top row cells, apply navy fill, and save it as MergedHeader.xlsx with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# merge cells A1:D1 and set background color | how to apply navy fill to a merged header row using Aspose.Cells for .NET | C# example for merging first row cells and styling them with solid color in Aspose.Cells | set style for merged cells in an Aspose.Cells workbook
+// Tags: merge cells range Aspose.Cells C# | solid navy fill style Aspose.Cells | header row formatting Aspose.Cells | create style with foreground color Aspose.Cells | save workbook as xlsx Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-// Creates a new workbook, merges cells A1:D1, sets a solid navy background, optionally adds header text, and saves the file as MergedHeader.xlsx using Aspose.Cells for .NET.
-class MergeHeaderExample
+// Creates a new workbook, merges cells A1:D1 on the first worksheet, applies a solid navy background style to the merged header, and saves the file as MergedHeader.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Define a range that spans the header row (row 0) across columns A to D (0‑based indices 0‑3)
-        // Parameters: firstRow, firstColumn, totalRows, totalColumns
-        int firstRow = 0;
-        int firstColumn = 0;
-        int totalRows = 1;      // only the header row
-        int totalColumns = 4;   // columns A, B, C, D
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Merge the defined range
-        cells.Merge(firstRow, firstColumn, totalRows, totalColumns);
+        // Define the header range (e.g., A1:D1)
+        int startRow = 0;      // Row 1 (zero‑based)
+        int startColumn = 0;   // Column A
+        int totalRows = 1;     // Only the header row
+        int totalColumns = 4;  // Columns A to D
+
+        // Merge the cells in the header range
+        sheet.Cells.Merge(startRow, startColumn, totalRows, totalColumns);
 
         // Create a style with navy blue fill
         Style style = workbook.CreateStyle();
-        style.Pattern = BackgroundType.Solid;
         style.ForegroundColor = Color.Navy;
+        style.Pattern = BackgroundType.Solid;
 
-        // Apply the style to the merged cell (top‑left cell of the range)
-        cells[firstRow, firstColumn].SetStyle(style);
-
-        // Optionally set a header value
-        cells[firstRow, firstColumn].PutValue("Header");
+        // Apply the style to the merged cells (apply to the first cell of the range)
+        StyleFlag flag = new StyleFlag();
+        flag.All = true;
+        sheet.Cells[startRow, startColumn].SetStyle(style, flag);
 
         // Save the workbook
         workbook.Save("MergedHeader.xlsx");

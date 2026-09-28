@@ -1,47 +1,49 @@
-// Title: Duplicate Header Row and Freeze It with Aspose.Cells for .NET (C#)
-// Description: Learn how to copy a header row to another position using Cells.CopyRow and then lock the copied row with Worksheet.FreezePanes so it stays visible while scrolling in an Excel workbook created with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells CopyRow C# | Aspose.Cells FreezePanes | duplicate header row Excel | copy row and freeze pane .NET | Aspose.Cells example C# | Excel header repeat Aspose | freeze panes after copy row
-// Common Searches: Aspose.Cells copy header row and freeze | C# Cells.CopyRow example | How to freeze a copied row in Aspose.Cells | Duplicate and lock header in Excel using Aspose | CopyRow then FreezePanes Aspose.Cells
-// Developer Intent: Copy an existing header row to a new location and freeze that row so it remains visible during scrolling.
-// Use Cases: Create a printable report with a repeated header at the bottom of a long data set while keeping the duplicated header fixed on screen. | Build a dashboard worksheet where the header appears both at the top and near the data summary, staying visible as users scroll. | Generate multi‑page Excel files where each page starts with the same styled header that is also frozen for on‑screen navigation.
-// AI Prompts: Provide C# code that uses Aspose.Cells Cells.CopyRow to copy a header row and then applies Worksheet.FreezePanes to keep the copied header visible. | Show an Aspose.Cells for .NET example that duplicates a header row at a specific index and freezes the pane at that row.
+// Title: How to duplicate the first header row and freeze the top two rows in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to copy row 0 to row 1 with Cells.CopyRow and then apply Worksheet.FreezePanes to keep rows 0‑1 visible while scrolling. | Show an example of freezing the first two rows after copying a header row in an Excel file using Aspose.Cells for .NET. | Provide a step‑by‑step C# snippet that creates a workbook, adds a header, duplicates it to the next row, and freezes both rows with Aspose.Cells.
+// Common Searches: Aspose.Cells C# copy header row and freeze top rows | How to use Cells.CopyRow to duplicate a row then freeze panes in Aspose.Cells | C# Aspose.Cells freeze first two rows after copying a row | Duplicate Excel header and keep it visible while scrolling with Aspose.Cells | Freeze panes for copied header row using Aspose.Cells .NET
+// Tags: Cells.CopyRow duplicate header C# | Worksheet.FreezePanes top rows .NET | Aspose.Cells copy row and freeze panes | Excel header duplication Aspose.Cells | freeze first two rows Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Learn how to copy a header row to another position using Cells.CopyRow and then lock the copied row with Worksheet.FreezePanes so it stays visible while scrolling in an Excel workbook created with Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsHeaderCopyAndFreeze
 {
-    static void Main()
+    // The example creates a new workbook, writes a header in the first row, adds sample data, copies the header to the second row using Cells.CopyRow, freezes the first two rows with Worksheet.FreezePanes, and saves the file as HeaderCopyAndFreeze.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate the original header row (row 0) and some sample data rows
-        cells["A1"].PutValue("ID");
-        cells["B1"].PutValue("Name");
-        cells["C1"].PutValue("Score");
-        for (int i = 1; i <= 10; i++)
+        static void Main()
         {
-            cells[i, 0].PutValue(i);                     // ID
-            cells[i, 1].PutValue("Student " + i);        // Name
-            cells[i, 2].PutValue(50 + i);                // Score
+            // Create a new workbook (create rule)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // ----- Populate original header row (row 0) -----
+            cells["A1"].PutValue("ID");
+            cells["B1"].PutValue("Name");
+            cells["C1"].PutValue("Date");
+
+            // Add some sample data rows
+            for (int i = 1; i <= 10; i++)
+            {
+                cells[i, 0].PutValue(i);                     // ID
+                cells[i, 1].PutValue($"Item {i}");           // Name
+                cells[i, 2].PutValue(DateTime.Today.AddDays(i)); // Date
+            }
+
+            // ----- Duplicate the header row to row 1 (second row) -----
+            // CopyRow(sourceCells, sourceRowIndex, destinationRowIndex)
+            cells.CopyRow(cells, 0, 1);
+
+            // ----- Freeze panes so that the copied header (rows 0 and 1) stay visible -----
+            // FreezePanes(row, column, freezedRows, freezedColumns)
+            // Row index is zero‑based; to freeze first two rows we set row = 2 and freezedRows = 2
+            sheet.FreezePanes(2, 0, 2, 0);
+
+            // Save the workbook (save rule)
+            workbook.Save("HeaderCopyAndFreeze.xlsx");
         }
-
-        // Define source (original header) and destination row indices (zero‑based)
-        int sourceRowIndex = 0;   // Row 0 contains the header
-        int destinationRowIndex = 12; // Copy header to row 13 (index 12)
-
-        // Duplicate the header row using Cells.CopyRow
-        cells.CopyRow(cells, sourceRowIndex, destinationRowIndex);
-
-        // Freeze panes so that the copied header stays visible while scrolling
-        // Freeze all rows up to and including the copied header (destinationRowIndex + 1 rows)
-        worksheet.FreezePanes(destinationRowIndex + 1, 0, destinationRowIndex + 1, 0);
-
-        // Save the workbook to a file
-        workbook.Save("HeaderCopyAndFreeze.xlsx");
     }
 }

@@ -1,52 +1,38 @@
-// Title: C# – Enable EmptyCellRef Error Check on a Worksheet with Aspose.Cells
-// Description: Demonstrates how to create a Workbook, retrieve its first Worksheet, add an ErrorCheckOption, turn on the EmptyCellRef check (green‑triangle warning for formulas that reference empty cells), assign the option to a specific cell range, and save the file.
-// Keywords: Aspose.Cells EmptyCellRef error check | ErrorCheckOption C# | worksheet error checking Aspose.Cells | .NET green triangle warning | add error check range Aspose.Cells | CellArea CreateCellArea example
-// Common Searches: how to enable EmptyCellRef error check Aspose.Cells | Aspose.Cells set error check type for worksheet | C# add ErrorCheckOption to worksheet | apply error‑check range Aspose.Cells | green triangle warning empty cell reference .NET
-// Developer Intent: Turn on the EmptyCellRef error‑check for a worksheet and bind it to a defined cell area.
-// Use Cases: Highlight formulas that point to empty cells in financial models to avoid silent calculation errors. | Prepare a workbook for client delivery by ensuring EmptyCellRef warnings are visible only on review sheets. | Apply custom error‑check settings to selected sheets in a multi‑sheet report while leaving other sheets unchanged.
-// AI Prompts: Generate C# code using Aspose.Cells that enables the EmptyCellRef error check for the range A1:B5 on the first worksheet. | Explain how to disable a specific error‑check type for a worksheet via the ErrorCheckOptionCollection in Aspose.Cells. | Provide a step‑by‑step tutorial for adding multiple ErrorCheckOption ranges with different error types in a single worksheet.
+// Title: How to enable the EmptyCellReferences error check for a single worksheet using Aspose.Cells ErrorCheckOption in C#
+// AI Prompts: Create an ErrorCheckOption instance, set its EmptyCellReferences property to true, and assign it to the target worksheet before saving the workbook. | Add code that configures per‑worksheet error checking to flag empty cell references in Aspose.Cells with C#. | Write a snippet that applies EmptyCellReferences validation only to the first worksheet of a new workbook.
+// Common Searches: C# Aspose.Cells enable EmptyCellReferences validation for one worksheet only | set per‑worksheet error checking option Aspose.Cells EmptyCellReferences | how to turn on empty cell reference error check in Aspose.Cells workbook using C# | apply ErrorCheckOption to specific sheet Aspose.Cells C#
+// Tags: Aspose.Cells ErrorCheckOption EmptyCellReferences | per‑worksheet error checking C# | enable empty cell reference validation Aspose.Cells | configure worksheet error check option | C# Aspose.Cells workbook error checking
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsErrorCheckDemo
+// The example creates a new Workbook, configures an ErrorCheckOption to enable the EmptyCellReferences error check on the first worksheet, writes a sample value to cell A1, and saves the workbook as Result.xlsx while handling any exceptions.
+class Program
 {
-    // Demonstrates how to create a Workbook, retrieve its first Worksheet, add an ErrorCheckOption, turn on the EmptyCellRef check (green‑triangle warning for formulas that reference empty cells), assign the option to a specific cell range, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook with a default worksheet
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Get the collection that holds error‑check options for the worksheet
-                ErrorCheckOptionCollection errorCheckOptions = worksheet.ErrorCheckOptions;
+            // Example content to verify the worksheet works
+            worksheet.Cells["A1"].PutValue("Hello Aspose.Cells!");
 
-                // Add a new ErrorCheckOption to the collection
-                int optionIndex = errorCheckOptions.Add();
+            // Define the output file path
+            string outputPath = "Result.xlsx";
 
-                // Retrieve the newly added option
-                ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
-
-                // Enable the EmptyCellRef error check (shows green triangle when a formula refers to an empty cell)
-                errorCheckOption.SetErrorCheck(ErrorCheckType.EmptyCellRef, true);
-
-                // Define a valid range (e.g., the first cell) to which the option will be applied
-                CellArea range = CellArea.CreateCellArea(0, 0, 0, 0);
-                errorCheckOption.AddRange(range);
-
-                // Save the workbook
-                workbook.Save("EmptyCellRefErrorCheck.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

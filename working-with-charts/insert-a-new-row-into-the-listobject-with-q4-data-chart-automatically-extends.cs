@@ -1,71 +1,49 @@
-// Title: C# – Insert a Row into an Aspose.Cells ListObject and Auto‑Expand the Linked Column Chart
-// Description: Demonstrates how to create a workbook with a ListObject (SalesTable), bind a column chart to the table using structured references, add a new quarter row programmatically, and have the chart automatically include the new data when the file is saved.
-// Keywords: Aspose.Cells ListObject add row C# | Aspose.Cells chart auto expand | structured reference chart Aspose.Cells | C# insert data into table Aspose.Cells | dynamic chart range Aspose.Cells
-// Common Searches: how to add a row to a ListObject in Aspose.Cells and update the chart | Aspose.Cells C# chart expands when table grows | using structured references for dynamic charts in Aspose.Cells | append quarterly data to Aspose.Cells table and refresh chart
-// Developer Intent: Programmatically append a new data row to a ListObject so the existing column chart updates automatically without manual range changes.
-// Use Cases: Quarterly sales reporting where each new quarter is added to a table and the chart reflects it instantly. | Financial dashboards that keep tables and associated charts synchronized as data rows are appended. | Automated data‑entry pipelines that maintain up‑to‑date visualizations in Excel workbooks generated with Aspose.Cells.
-// AI Prompts: Generate C# code to add multiple rows to an Aspose.Cells ListObject and ensure all linked charts expand accordingly. | Show how to bind a chart to a ListObject with structured references in Aspose.Cells, then insert a new data row programmatically. | Explain how to verify the series range of a chart after extending a ListObject in Aspose.Cells.
+// Title: Add a Q4 row to a ListObject table and have the linked column chart expand automatically using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a new data row into an existing ListObject and let the associated column chart resize itself with Aspose.Cells in C#. | Use PutCellValue to add Q4 sales to a table and automatically refresh the chart that references the table. | Programmatically extend a structured table and have a column chart reflect the added row using the Aspose.Cells API.
+// Common Searches: Aspose.Cells how to add a row to a ListObject and automatically update a linked chart in C# | C# insert data into table and extend column chart using structured references Aspose.Cells | extend chart range after inserting table row Aspose.Cells .NET example
+// Tags: ListObject row insertion with chart auto‑extension | Aspose.Cells column chart dynamic data range | C# PutCellValue table update | structured reference chart source Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;   // For ListObject
-using Aspose.Cells.Charts;   // For Chart and ChartType
+using Aspose.Cells.Tables;
+using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// // Demonstrates creating a workbook, defining a ListObject with Q1‑Q3 data, linking a column chart via structured references, inserting a Q4 row using PutCellValue, and saving the file where the chart automatically reflects the new data.
+class InsertRowIntoListObject
 {
-    // Demonstrates how to create a workbook with a ListObject (SalesTable), bind a column chart to the table using structured references, add a new quarter row programmatically, and have the chart automatically include the new data when the file is saved.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
 
-                // Populate initial data for the table (Quarter vs Sales)
-                sheet.Cells["A1"].PutValue("Quarter");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("Q1");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["A3"].PutValue("Q2");
-                sheet.Cells["B3"].PutValue(150);
-                sheet.Cells["A4"].PutValue("Q3");
-                sheet.Cells["B4"].PutValue(200);
+        // Populate initial data for Q1‑Q3
+        ws.Cells["A1"].PutValue("Quarter");
+        ws.Cells["B1"].PutValue("Sales");
+        ws.Cells["A2"].PutValue("Q1");
+        ws.Cells["B2"].PutValue(150);
+        ws.Cells["A3"].PutValue("Q2");
+        ws.Cells["B3"].PutValue(200);
+        ws.Cells["A4"].PutValue("Q3");
+        ws.Cells["B4"].PutValue(250);
 
-                // Add a ListObject (table) that covers the data range A1:B4
-                int tableIndex = sheet.ListObjects.Add("A1", "B4", true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                // Set a recognizable name for the table (use DisplayName property)
-                table.DisplayName = "SalesTable";
+        // Add a ListObject (table) that includes the data range
+        int tableIdx = ws.ListObjects.Add("A1", "B4", true);
+        ListObject table = ws.ListObjects[tableIdx];
 
-                // Add a column chart that uses the table as its data source
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 5);
-                Chart chart = sheet.Charts[chartIndex];
+        // Create a column chart that uses the table as its data source
+        int chartIdx = ws.Charts.Add(ChartType.Column, 6, 0, 20, 5);
+        Chart chart = ws.Charts[chartIdx];
+        // Use structured references to the table columns
+        chart.NSeries.Add($"={ws.Name}!{table.DisplayName}[Sales]", true);
+        chart.NSeries.CategoryData = $"={ws.Name}!{table.DisplayName}[Quarter]";
 
-                // Use structured references so the chart will grow automatically when the table expands
-                chart.NSeries.Add("=Sheet1!SalesTable[Sales]", true);
-                chart.NSeries.CategoryData = "=Sheet1!SalesTable[Quarter]";
+        // Insert a new row for Q4 using PutCellValue.
+        // Row offset is the current number of data rows (EndRow - StartRow)
+        int newRowOffset = table.EndRow - table.StartRow;
+        table.PutCellValue(newRowOffset, 0, "Q4");
+        table.PutCellValue(newRowOffset, 1, 300);
 
-                // Insert a new row into the ListObject with Q4 data
-                // Row offset is relative to the table start (0 = header row). Existing data rows are offsets 1‑3.
-                // Offset 4 adds the next row after the current data.
-                table.PutCellValue(4, 0, "Q4");   // Quarter column
-                table.PutCellValue(4, 1, 250);   // Sales column
-
-                // Define output file path
-                string outputPath = "QuarterlySales.xlsx";
-
-                // Save the workbook (the chart will automatically include the new Q4 row)
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // Save the workbook; the chart automatically reflects the added row
+        wb.Save("ListObjectChartExtended.xlsx", SaveFormat.Xlsx);
     }
 }

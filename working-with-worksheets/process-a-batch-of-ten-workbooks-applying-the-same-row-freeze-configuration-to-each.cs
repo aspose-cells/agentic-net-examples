@@ -1,62 +1,69 @@
-// Title: Batch freeze panes in multiple Excel workbooks with Aspose.Cells for .NET (C#)
-// Description: A C# console app that loads ten Excel files, applies the same FreezePanes setting (cell C3, 3 rows × 3 columns) to the first worksheet of each workbook, and saves the updated files to a "ProcessedWorkbooks" directory. Ideal for automating consistent view layouts across many spreadsheets.
-// Keywords: Aspose.Cells | C# | .NET | freeze panes | batch processing | multiple workbooks | Excel automation | FreezePanes method | C3 cell | rows and columns | programmatic Excel
-// Common Searches: Aspose.Cells batch freeze panes C# | How to apply same freeze pane to many Excel files | Freeze rows and columns in multiple workbooks using .NET | Programmatic FreezePanes for a list of Excel files | Automate Excel view settings with Aspose.Cells
-// Developer Intent: Programmatically set an identical freeze‑pane configuration on a collection of Excel workbooks in a single run.
-// Use Cases: Standardize header visibility for a series of monthly reports before distribution. | Prepare template workbooks with frozen panes so end users get a consistent navigation experience. | Pre‑process uploaded Excel files on a server to enforce a uniform layout for downstream analytics.
-// AI Prompts: Create C# code using Aspose.Cells that freezes the first 4 rows and 2 columns in every worksheet of all Excel files in a specified folder. | Write a script that iterates over a list of workbook paths, applies a freeze pane at cell B2, and saves the modified files to a separate output directory. | Show an example of batch processing Excel workbooks to set a freeze pane at D5 while preserving existing formatting, using Aspose.Cells for .NET.
+// Title: Freeze the first row in all worksheets of multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a collection of .xlsx file paths, iterates through each worksheet, and applies FreezePanes to lock the top row with Aspose.Cells. | Create a reusable function that accepts workbook paths and customizable frozen‑row/column counts, then applies the same FreezePanes settings to every sheet in each workbook. | Add robust logging and error handling to a batch‑processing script so it skips missing files, continues with the remaining workbooks, and saves changes in place.
+// Common Searches: Aspose.Cells C# batch freeze first row across multiple Excel files | How to apply FreezePanes to every worksheet in a set of workbooks using .NET | C# loop through list of .xlsx files and set identical freeze pane configuration with Aspose.Cells | Programmatically lock top row in all sheets of several Excel workbooks in C# | Error handling for missing Excel files when using Aspose.Cells FreezePanes in a batch script
+// Tags: batch freeze panes Aspose.Cells C# | freeze top row multiple workbooks .NET | apply FreezePanes to all worksheets programmatically | iterate workbook collection Aspose.Cells | skip missing Excel files error handling
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console app that loads ten Excel files, applies the same FreezePanes setting (cell C3, 3 rows × 3 columns) to the first worksheet of each workbook, and saves the updated files to a "ProcessedWorkbooks" directory. Ideal for automating consistent view layouts across many spreadsheets.
-class BatchFreezePanes
+// The C# program iterates over a list of Excel workbook paths, loads each file with Aspose.Cells, applies FreezePanes to lock the first row on every worksheet, saves the changes back to the original files, and logs success while gracefully handling missing files.
+class BatchFreezeRows
 {
     static void Main()
     {
-        // Define the list of workbook file paths to process (10 files)
-        string[] inputFiles = new string[]
+        // List of workbook file paths to process (adjust paths as needed)
+        List<string> workbookPaths = new List<string>
         {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx",
-            "Workbook3.xlsx",
-            "Workbook4.xlsx",
-            "Workbook5.xlsx",
-            "Workbook6.xlsx",
-            "Workbook7.xlsx",
-            "Workbook8.xlsx",
-            "Workbook9.xlsx",
-            "Workbook10.xlsx"
+            @"C:\Workbooks\Book1.xlsx",
+            @"C:\Workbooks\Book2.xlsx",
+            @"C:\Workbooks\Book3.xlsx",
+            @"C:\Workbooks\Book4.xlsx",
+            @"C:\Workbooks\Book5.xlsx",
+            @"C:\Workbooks\Book6.xlsx",
+            @"C:\Workbooks\Book7.xlsx",
+            @"C:\Workbooks\Book8.xlsx",
+            @"C:\Workbooks\Book9.xlsx",
+            @"C:\Workbooks\Book10.xlsx"
         };
 
-        // Ensure the output directory exists
-        string outputDir = "ProcessedWorkbooks";
-        Directory.CreateDirectory(outputDir);
+        // Define the row and column indices to start freezing (0‑based).
+        // To freeze the first row, set freezeRow = 1 and freezeColumn = 0.
+        int freezeRow = 1;
+        int freezeColumn = 0;
+        // Number of rows and columns to keep frozen (1 row, 0 columns in this case)
+        int frozenRows = 1;
+        int frozenColumns = 0;
 
-        // Freeze configuration: freeze at cell C3 with 3 rows and 3 columns frozen
-        string freezeCell = "C3";
-        int frozenRows = 3;
-        int frozenColumns = 3;
-
-        foreach (string inputPath in inputFiles)
+        foreach (string path in workbookPaths)
         {
-            // Load the workbook from file
-            Workbook workbook = new Workbook(inputPath);
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine($"File not found: {path}");
+                    continue;
+                }
 
-            // Access the first worksheet (adjust if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Load the workbook from file
+                Workbook workbook = new Workbook(path);
 
-            // Apply the freeze panes setting
-            worksheet.FreezePanes(freezeCell, frozenRows, frozenColumns);
+                // Apply the same freeze configuration to every worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // FreezePanes(row, column, totalRows, totalColumns)
+                    sheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
+                }
 
-            // Build the output file path
-            string outputPath = Path.Combine(outputDir, Path.GetFileName(inputPath));
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
+                // Save the workbook back to the same file (overwrites original)
+                workbook.Save(path, SaveFormat.Xlsx);
+                Console.WriteLine($"Processed: {path}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{path}': {ex.Message}");
+            }
         }
-
-        Console.WriteLine("Batch processing completed. Modified workbooks are saved in '" + outputDir + "'.");
     }
 }

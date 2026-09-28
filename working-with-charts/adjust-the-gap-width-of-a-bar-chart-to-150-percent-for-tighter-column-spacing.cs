@@ -1,70 +1,61 @@
-// Title: Adjust Bar Chart Gap Width to 150 % with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add sample data, insert a column chart, set its GapWidth property to 150 % for tighter column spacing, and save the result as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# chart gap width | column chart spacing | GapWidth property | 150 percent bar chart | Excel chart formatting .NET | tight column spacing | chart customization Aspose | programmatic Excel chart
-// Common Searches: Aspose.Cells set chart gap width | C# change column chart spacing | GapWidth 150 Aspose.Cells example | how to tighten bar chart columns in Excel code | chart.GapWidth valid range Aspose
-// Developer Intent: Set the GapWidth of a column (bar) chart to 150 % to make columns appear closer together.
-// Use Cases: Design a sales dashboard where dense column charts improve readability. | Generate financial reports that follow corporate style guidelines for chart spacing. | Create automated Excel exports with uniformly tightened bar charts across multiple worksheets.
-// AI Prompts: Write C# code with Aspose.Cells that sets a column chart's GapWidth to 150 % and saves the workbook. | Explain the GapWidth property, its effect on column/bar charts, and the permissible value range in Aspose.Cells. | Provide a sample that creates several charts and assigns different GapWidth values to each for visual comparison.
+// Title: How to set a 2‑D clustered bar chart gap width to 150 % using Aspose.Cells for .NET
+// AI Prompts: Provide C# code that creates a workbook, adds sample data, inserts a clustered bar chart, and sets its GapWidth property to 150 percent with Aspose.Cells. | Show an example of tightening column spacing in an Excel bar chart by configuring the GapWidth value to 150 in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set bar chart gap width to 150 percent | change column spacing of clustered bar chart in .NET using Aspose.Cells | adjust gap width property for Excel bar chart programmatically | tighten bar chart columns Aspose.Cells example | modify bar chart gap width in a generated XLSX file with C#
+// Tags: Aspose.Cells GapWidth property for bar charts | C# set bar chart column spacing | clustered bar chart gap width adjustment | Excel chart formatting with Aspose.Cells | generate bar chart with custom spacing .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to create a workbook, add sample data, insert a column chart, set its GapWidth property to 150 % for tighter column spacing, and save the result as an XLSX file using Aspose.Cells for .NET.
-public class AdjustBarChartGapWidth
+namespace AsposeCellsExamples
 {
-    public static void Main(string[] args)
+    // The example creates a new workbook, fills it with sample data, adds a 2‑D clustered bar chart, assigns the series and categories, sets the chart's GapWidth to 150 % for tighter column spacing, and saves the file as BarChartWithAdjustedGapWidth.xlsx.
+    public class AdjustBarChartGapWidth
     {
-        try
+        // Entry point for the example
+        public static void Main()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
-
-        // Insert a column (bar) chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Define the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Set the gap width to 150% for tighter column spacing (valid range 0‑500)
-        chart.GapWidth = 150;
-
-        // Determine output file path
-        string outputPath = "BarChartGapWidthAdjusted.xlsx";
-
-        // Ensure the directory exists
-        string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Save the workbook to a file
-        workbook.Save(outputPath, SaveFormat.Xlsx);
-        Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the bar chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a 2‑D bar chart (clustered)
+            int chartIndex = sheet.Charts.Add(ChartType.Bar, 5, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);          // Values
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
+
+            // Adjust the gap width to 150 % (tighter column spacing)
+            chart.GapWidth = 150;   // Valid range: 0‑500
+
+            // Save the workbook to a file
+            string outputPath = "BarChartWithAdjustedGapWidth.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
     }
 }

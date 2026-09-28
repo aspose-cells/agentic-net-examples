@@ -1,15 +1,12 @@
-// Title: Import File Path Array and Create Adjacent Hyperlinks with Aspose.Cells (C#)
-// Description: Shows how to import a string array of file paths into column A, add a hyperlink in column B that opens each file, display only the file name, and save the workbook as FileLinks.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# import string array | Excel hyperlink | CellsHelper.CellIndexToName | Hyperlinks.Add | .NET file links | generate Excel index | file path list
-// Common Searches: Aspose.Cells import string array C# | Add hyperlink to Excel cell using Aspose.Cells | Create file links in Excel with Aspose.Cells .NET | How to generate clickable file paths in Excel programmatically | Aspose.Cells CellsHelper example
-// Developer Intent: Create an Excel worksheet that lists file paths and provides a clickable link for each entry.
-// Use Cases: Document catalog where each row shows a path and a direct‑open link. | Server‑based PDF index sheet displaying only file names as hyperlinks. | Automated report that converts a dynamic list of locations into clickable Excel links.
-// AI Prompts: Write C# code with Aspose.Cells to import a string array of file paths into column A and add hyperlinks in column B that display the file names. | Show how to use CellsHelper.CellIndexToName and Hyperlinks.Add to generate file hyperlinks for each array element. | Provide an example that saves the workbook after adding hyperlinks to file paths, using Aspose.Cells for .NET.
+// Title: Import a string array of file paths into column A and generate "Open" hyperlinks in column B using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that reads a list of file paths, writes them to column A, and inserts a clickable "Open" hyperlink in column B for each row. | Show how to use Worksheet.Hyperlinks.Add to create file‑path hyperlinks next to values imported into an Excel worksheet with Aspose.Cells.
+// Common Searches: aspnet load file path list into Excel and add hyperlinks with Aspose.Cells | c# Aspose.Cells create "Open" link in adjacent column for each file path | how to use Worksheet.Hyperlinks.Add after ImportArray in Aspose.Cells | generate Excel workbook containing file paths and open links using Aspose.Cells for .NET | add clickable link next to data column in Aspose.Cells workbook
+// Tags: populate worksheet with file paths Aspose.Cells | add adjacent cell hyperlink Aspose.Cells | Worksheet.Hyperlinks.Add C# example | file path hyperlink column generation | hyperlink column creation Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Shows how to import a string array of file paths into column A, add a hyperlink in column B that opens each file, display only the file name, and save the workbook as FileLinks.xlsx using Aspose.Cells for .NET.
+// The example creates a new workbook, loads a string[] of file paths into column A, adds an "Open" hyperlink in column B for each path using Worksheet.Hyperlinks.Add, and saves the file as HyperlinksFromArray.xlsx.
 class Program
 {
     static void Main()
@@ -24,27 +21,26 @@ class Program
 
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Import the file paths vertically starting at cell A1
-        // Parameters: (stringArray, firstRow, firstColumn, isVertical)
-        sheet.Cells.ImportArray(filePaths, 0, 0, true);
+        // Import the file paths vertically starting at cell A1 (row 0, column 0)
+        cells.ImportArray(filePaths, 0, 0, true);
 
-        // Add a hyperlink in the adjacent column (B) for each file path
+        // For each imported path, add a hyperlink in the adjacent column (B)
         for (int i = 0; i < filePaths.Length; i++)
         {
-            // Convert row/column indices to an Excel cell name (e.g., B1, B2, ...)
-            string hyperlinkCell = CellsHelper.CellIndexToName(i, 1); // column index 1 = B
+            // Convert row/column index to cell name (e.g., B1, B2, ...)
+            string hyperlinkCell = CellsHelper.CellIndexToName(i, 1);
 
             // Add the hyperlink pointing to the file path
-            // Parameters: (cellName, totalRows, totalColumns, address)
-            sheet.Hyperlinks.Add(hyperlinkCell, 1, 1, filePaths[i]);
+            worksheet.Hyperlinks.Add(hyperlinkCell, 1, 1, filePaths[i]);
 
-            // Optionally set the display text of the hyperlink to the file name
-            sheet.Cells[hyperlinkCell].PutValue(System.IO.Path.GetFileName(filePaths[i]));
+            // Set display text for the hyperlink cell
+            worksheet.Cells[hyperlinkCell].PutValue("Open");
         }
 
-        // Save the workbook to a file
-        workbook.Save("FileLinks.xlsx");
+        // Save the workbook
+        workbook.Save("HyperlinksFromArray.xlsx");
     }
 }

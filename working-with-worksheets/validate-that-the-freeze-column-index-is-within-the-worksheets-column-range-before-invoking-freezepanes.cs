@@ -1,55 +1,51 @@
-// Title: Validate Freeze Column Index Before Using FreezePanes in Aspose.Cells for .NET
-// Description: Demonstrates how to retrieve the workbook's maximum column (Workbook.Settings.MaxColumn), verify that a requested freezeColumn is within that range, adjust it if necessary, ensure frozenColumns does not exceed the split point, and then apply Worksheet.FreezePanes safely before saving the file.
-// Keywords: Aspose.Cells FreezePanes validation | C# max column limit | worksheet freeze column range | adjust freezeColumn Aspose | prevent FreezePanes error
-// Common Searches: Aspose.Cells check freeze column against MaxColumn | C# validate FreezePanes indices | how to avoid column overflow when freezing panes | adjust frozen columns to split point Aspose.Cells | freeze panes beyond Excel column limit
-// Developer Intent: Make sure the column index supplied to Worksheet.FreezePanes does not exceed the worksheet's allowed column range.
-// Use Cases: Clamp a user‑provided freezeColumn to Workbook.Settings.MaxColumn to prevent runtime exceptions. | Synchronize frozenColumns with the validated freezeColumn so the left pane remains consistent. | Apply the corrected indices in FreezePanes and generate a compliant Excel file.
-// AI Prompts: Create a reusable C# method that checks freezeRow, freezeColumn, frozenRows, and frozenColumns against workbook limits and returns safe values for Worksheet.FreezePanes. | Generate code that logs a warning and automatically reduces freezeColumn when it is greater than Workbook.Settings.MaxColumn in Aspose.Cells. | Show an example handling different Excel version column limits (e.g., 255 vs 16383) while freezing panes with Aspose.Cells for .NET.
+// Title: How to validate a freeze column index against a worksheet’s column range before using Worksheet.FreezePanes in Aspose.Cells for .NET
+// AI Prompts: Verify that a zero‑based column index is less than the worksheet’s used column count before calling Worksheet.FreezePanes. | Add conditional logic to skip FreezePanes when the specified column index exceeds the maximum column in the sheet. | Implement error handling that logs a message if the freeze column index is out of range and prevents an exception.
+// Common Searches: Aspose.Cells C# check column index bounds before FreezePanes | prevent out of range error when freezing panes in Aspose.Cells workbook | how to get used column count in Aspose.Cells and validate freeze column | C# example for validating freeze column index with Worksheet.FreezePanes
+// Tags: freeze panes column index validation Aspose.Cells | worksheet used column count C# | prevent out of range FreezePanes exception | dynamic total rows columns Aspose.Cells | error handling for FreezePanes bounds
 
 using System;
 using Aspose.Cells;
 
-namespace FreezePanesValidationDemo
+// // Demonstrates checking that a zero‑based freeze column index lies within the worksheet's used column count before invoking Worksheet.FreezePanes, with fallback handling for out‑of‑range values.
+class Program
 {
-    // Demonstrates how to retrieve the workbook's maximum column (Workbook.Settings.MaxColumn), verify that a requested freezeColumn is within that range, adjust it if necessary, ensure frozenColumns does not exceed the split point, and then apply Worksheet.FreezePanes safely before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Desired freeze position (zero‑based indices)
-            int freezeRow = 5;      // row index where the pane will be split
-            int freezeColumn = 300; // column index to validate
-            int frozenRows = 5;     // number of rows to keep visible in the top pane
-            int frozenColumns = 5;  // number of columns to keep visible in the left pane
+            // Desired freeze column index (zero‑based)
+            int freezeColumnIndex = 5;
 
-            // Get the maximum column index allowed by the workbook settings
-            int maxColumn = workbook.Settings.MaxColumn; // zero‑based, e.g., 255 for Excel97‑2003
+            // Determine the number of columns that contain data
+            int usedColumnCount = sheet.Cells.MaxColumn + 1; // MaxColumn is zero‑based
 
-            // Validate the column index before calling FreezePanes
-            if (freezeColumn > maxColumn)
+            // Validate the index is within the worksheet's column range
+            if (freezeColumnIndex >= 0 && freezeColumnIndex < usedColumnCount)
             {
-                Console.WriteLine($"Requested column index {freezeColumn} exceeds the maximum column {maxColumn}. Adjusting to {maxColumn}.");
-                freezeColumn = maxColumn;
+                // Freeze panes at row 0 and the specified column.
+                // The overload requires total rows and columns for the scrollable area.
+                int totalRows = sheet.Cells.MaxRow + 1;
+                int totalColumns = sheet.Cells.MaxColumn + 1;
+                sheet.FreezePanes(0, freezeColumnIndex, totalRows, totalColumns);
+            }
+            else
+            {
+                // Index out of range – handle as needed
+                Console.WriteLine("Freeze column index is out of the worksheet's column range.");
             }
 
-            // Ensure that the number of frozen columns does not exceed the freeze column index
-            if (frozenColumns > freezeColumn)
-            {
-                Console.WriteLine($"Requested frozen columns {frozenColumns} exceed the freeze column index {freezeColumn}. Adjusting to {freezeColumn}.");
-                frozenColumns = freezeColumn;
-            }
-
-            // Freeze panes using the validated indices
-            worksheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("FreezePanesValidated.xlsx");
+            // Save the workbook
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

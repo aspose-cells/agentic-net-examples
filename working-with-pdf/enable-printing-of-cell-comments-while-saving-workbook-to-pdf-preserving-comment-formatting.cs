@@ -1,36 +1,48 @@
-// Title: Print Cell Comments with Original Formatting to PDF using Aspose.Cells (C#)
-// Description: Demonstrates how to add a comment to a worksheet, configure PageSetup to print comments in place, and save the workbook as a PDF with the comment rendered exactly as it appears in Excel. Uses default PdfSaveOptions for a quick conversion.
-// Keywords: Aspose.Cells PDF comments | C# print cell comments to PDF | PrintCommentsType.PrintInPlace example | save workbook with comments Aspose.Cells | preserve comment appearance PDF
-// Common Searches: include cell comments when exporting Aspose.Cells workbook to PDF C# | Aspose.Cells keep comment formatting in PDF output | how to print comments in place with Aspose.Cells | export Excel comments to PDF using Aspose.Cells
-// Developer Intent: Generate a PDF from an Aspose.Cells workbook that displays cell comments with their original styling.
-// Use Cases: Create printable reports that show reviewer notes stored as cell comments. | Distribute audit‑trail spreadsheets as PDFs while retaining comment visuals. | Produce documentation where inline comments appear alongside data cells.
-// AI Prompts: Show how to limit printed comments to the first page of the PDF with Aspose.Cells. | Give an example of changing a comment's background color before saving to PDF. | Explain how to set page orientation in PdfSaveOptions while keeping comments printed.
+// Title: How to export an Excel workbook to PDF with cell comments printed using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file, configures PdfSaveOptions to retain cell comments, and saves the workbook as a PDF with Aspose.Cells. | Show how to verify the source Excel file exists and implement robust exception handling while exporting to PDF with comments using Aspose.Cells. | Explain the steps required to preserve cell comment formatting when converting an Excel workbook to PDF in a .NET application.
+// Common Searches: Aspose.Cells C# export Excel to PDF including cell comments | How to keep Excel comment formatting when saving as PDF with Aspose.Cells | PdfSaveOptions comment visibility Aspose.Cells .NET example | C# code to print cell comments in PDF generated from workbook | Enable comment rendering in PDF output using Aspose.Cells for .NET
+// Tags: aspocells pdfsaveoptions include-cell-comments | c# export excel to pdf with comments | preserve comment formatting aspocells | excel to pdf conversion with annotations .net | load workbook and save as pdf aspocells | exception handling excel pdf export c#
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving; // Required for PdfSaveOptions
 
-// Demonstrates how to add a comment to a worksheet, configure PageSetup to print comments in place, and save the workbook as a PDF with the comment rendered exactly as it appears in Excel. Uses default PdfSaveOptions for a quick conversion.
+// The program checks for the presence of an input .xlsx file, loads it with Aspose.Cells, creates a PdfSaveOptions object (comments are included by default), and saves the workbook as a PDF while handling any runtime exceptions.
 class PrintCommentsToPdf
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.pdf";
 
-        // Add a comment to cell A1
-        int commentIndex = sheet.Comments.Add("A1");
-        Comment comment = sheet.Comments[commentIndex];
-        comment.Note = "This is a test comment";
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file not found at '{inputPath}'.");
+            return;
+        }
 
-        // Set the page setup to print comments as they appear on the sheet
-        // This preserves the comment formatting in the PDF output
-        sheet.PageSetup.PrintComments = PrintCommentsType.PrintInPlace;
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create PDF save options (default options are sufficient for comments)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Save the workbook to PDF with comments printed
-        workbook.Save("CommentsPrinted.pdf", pdfOptions);
+            // Note: In recent Aspose.Cells versions, cell comments are included by default
+            // when saving to PDF. If a specific option is required in future versions,
+            // it can be set here.
+
+            // Save the workbook as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

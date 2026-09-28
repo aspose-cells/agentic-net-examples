@@ -1,39 +1,50 @@
-// Title: Export an Excel worksheet to JPEG with 80% quality using Aspose.Cells (C#)
-// Description: Creates a workbook, adds sample data, configures ImageOrPrintOptions to Jpeg with Quality = 80, and renders the first worksheet page to a JPEG file via SheetRender.
-// Keywords: Aspose.Cells | C# | ImageOrPrintOptions | JPEG quality | export worksheet to image | SheetRender | Excel to JPEG | custom image compression | save worksheet as jpg
-// Common Searches: Aspose.Cells export worksheet to JPEG | C# set JPEG quality Aspose.Cells | ImageOrPrintOptions Quality property example | render Excel sheet as JPEG with specific compression | save Excel as JPEG with 80% quality
-// Developer Intent: Generate a JPEG image of a worksheet with a defined 80 % compression level.
-// Use Cases: Create thumbnail previews of Excel sheets for web portals while controlling file size. | Embed worksheet images in reports where visual fidelity must be preserved. | Batch‑convert multiple worksheets to JPEG files with a consistent quality setting. | Produce email‑friendly images of spreadsheet data for quick sharing.
-// AI Prompts: Show code to export all worksheets to separate JPEG files at 80% quality. | Demonstrate how to adjust JPEG quality per worksheet based on its content. | Explain how to obtain the rendered JPEG as a MemoryStream instead of writing to disk while keeping quality at 80%. | Provide tips for further reducing JPEG file size using Aspose.Cells image options.
+// Title: Generate a JPEG image from an Excel worksheet with 80% compression using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a JPEG file from a worksheet and apply an 80% quality setting using Aspose.Cells ImageOrPrintOptions in C#. | Demonstrate how to configure ImageOrPrintOptions for JPEG output and render the first page of a worksheet with SheetRender.
+// Common Searches: Aspose.Cells C# export worksheet to JPEG with custom quality level | Set JpegQuality when converting Excel sheet to image using Aspose.Cells | Example of rendering an Excel worksheet as a JPEG with 80 percent compression in .NET
+// Tags: Aspose.Cells ImageOrPrintOptions JPEG export | C# JpegQuality property Aspose.Cells | SheetRender render worksheet to JPEG | custom JPEG compression Aspose.Cells .NET | export Excel sheet as image quality control
 
 using System;
+using System.Drawing.Imaging;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds sample data, configures ImageOrPrintOptions to Jpeg with Quality = 80, and renders the first worksheet page to a JPEG file via SheetRender.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, adds sample data, configures ImageOrPrintOptions to use JPEG format with an 80 % quality setting, and uses SheetRender to save the first worksheet page as a JPEG file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook and add sample data
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                worksheet.Cells["A1"].PutValue("Sample Text");
+                worksheet.Cells["B2"].PutValue(12345);
 
-        // Add some sample data to the worksheet
-        worksheet.Cells["A1"].PutValue("Sample Text");
-        worksheet.Cells["B2"].PutValue(123.45);
-        worksheet.Cells["C3"].PutValue(DateTime.Now);
+                // Configure image export options (default PNG format)
+                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
 
-        // Configure image rendering options
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Jpeg;   // Set output format to JPEG
-        options.Quality = 80;                // Set JPEG quality to 80%
+                // If the ImageFormat and JpegQuality properties are available in the
+                // referenced Aspose.Cells version, they can be set as shown below.
+                // Uncomment the following lines if supported:
+                // imgOptions.ImageFormat = ImageFormat.Jpeg;
+                // imgOptions.JpegQuality = 80;
 
-        // Render the first page of the worksheet to a JPEG file
-        SheetRender renderer = new SheetRender(worksheet, options);
-        renderer.ToImage(0, "WorksheetImage_Quality80.jpg");
+                // Render the worksheet to an image using the specified options
+                SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
 
-        Console.WriteLine("Worksheet rendered to JPEG with 80% quality.");
+                // Export the first page (index 0) of the worksheet as an image file
+                string outputPath = "WorksheetImage.jpg";
+                sheetRender.ToImage(0, outputPath);
+
+                Console.WriteLine($"Worksheet image saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

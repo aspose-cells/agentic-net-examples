@@ -1,69 +1,75 @@
-// Title: C# – Convert TXT to PDF with a Page Break after Each Paragraph using Aspose.Cells
-// Description: Load a plain‑text file as an Aspose.Cells workbook, add a horizontal page break after every row (paragraph), and export the sheet to PDF with PdfSaveOptions. The sample includes file‑existence checking and exception handling.
-// Keywords: Aspose.Cells C# txt to pdf | add page break Aspose.Cells | horizontal page break worksheet | PdfSaveOptions Aspose.Cells | convert text file to PDF .NET | Excel page break programmatically | Aspose.Cells error handling
-// Common Searches: Aspose.Cells convert txt file to PDF C# | how to insert page break after each row in Aspose.Cells | C# export text workbook to PDF with page breaks | Aspose.Cells PdfSaveOptions example | add horizontal page break before PDF export Aspose.Cells
-// Developer Intent: Generate a PDF from a TXT workbook where each paragraph starts on a new page by inserting page breaks programmatically with Aspose.Cells.
-// Use Cases: Create paginated PDF reports from plain‑text logs, with one line per page. | Automate document formatting where each paragraph must appear on a separate PDF page. | Validate input files and gracefully handle conversion errors in .NET applications.
-// AI Prompts: Write C# code that reads a .txt file into an Aspose.Cells workbook, adds a page break after each row, and saves it as a PDF. | Explain the AddPageBreaks method in Aspose.Cells and how to use it before PDF conversion. | Provide best‑practice error handling for converting a text workbook to PDF with Aspose.Cells in .NET.
+// Title: Convert a TXT file to PDF with paragraph‑level page breaks using Aspose.Cells in C#
+// AI Prompts: Write C# code that reads a .txt file into an Aspose.Cells workbook with TxtLoadOptions, identifies paragraphs separated by empty rows, inserts a horizontal page break after each paragraph, and saves the workbook as a PDF. | Show how to programmatically add horizontal page breaks in an Aspose.Cells worksheet based on consecutive non‑empty rows that form a paragraph. | Demonstrate robust error handling for missing input files and unexpected exceptions when converting a text workbook to PDF with Aspose.Cells.
+// Common Searches: asp.net how to add page breaks after each paragraph when converting a text file to PDF with Aspose.Cells | c# detect paragraph boundaries in a worksheet loaded from a .txt file using Aspose.Cells | save workbook as PDF with horizontal page breaks based on empty rows Aspose.Cells | convert txt to pdf preserving paragraph spacing Aspose.Cells C# example
+// Tags: Aspose.Cells TxtLoadOptions paragraph detection | C# insert horizontal page breaks Aspose.Cells | convert text workbook to PDF Aspose.Cells | page break insertion based on empty rows | error handling file not found Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTxtToPdf
+// The sample checks for the existence of input.txt, loads it into a Workbook using TxtLoadOptions (each line becomes a row), scans rows to locate paragraph blocks separated by blank rows, adds a horizontal page break after each block, and saves the workbook as output.pdf while handling possible errors.
+class Program
 {
-    // Load a plain‑text file as an Aspose.Cells workbook, add a horizontal page break after every row (paragraph), and export the sheet to PDF with PdfSaveOptions. The sample includes file‑existence checking and exception handling.
-    public class TxtToPdfConverter
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                const string inputPath = "input.txt";
-                const string outputPath = "output.pdf";
+            const string inputPath = "input.txt";
+            const string outputPath = "output.pdf";
 
-                // Verify the input file exists
-                if (!File.Exists(inputPath))
+            // Verify that the input TXT file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the TXT file into a workbook. Each line becomes a separate row.
+            var loadOptions = new TxtLoadOptions();
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Work with the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Determine the last row that contains data.
+            int lastDataRow = sheet.Cells.MaxDataRow;
+
+            // Insert a horizontal page break after each paragraph.
+            // A paragraph is defined as a consecutive block of non‑empty rows.
+            int currentRow = 0;
+            while (currentRow <= lastDataRow)
+            {
+                // Skip any leading empty rows.
+                if (string.IsNullOrWhiteSpace(sheet.Cells[currentRow, 0].StringValue))
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
+                    currentRow++;
+                    continue;
                 }
 
-                // Load the TXT workbook; Aspose.Cells auto‑detects the format from the extension
-                Workbook workbook = new Workbook(inputPath);
-
-                // Work with the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Determine the last row that contains data (zero‑based index)
-                int lastDataRow = sheet.Cells.MaxDataRow;
-
-                // Insert a horizontal page break after each data row
-                for (int row = 0; row <= lastDataRow; row++)
+                // Find the last row of the current paragraph.
+                int paragraphEndRow = currentRow;
+                while (paragraphEndRow + 1 <= lastDataRow &&
+                       !string.IsNullOrWhiteSpace(sheet.Cells[paragraphEndRow + 1, 0].StringValue))
                 {
-                    // Break after the current row: Excel rows are 1‑based
-                    int breakRow = row + 2; // move to the first cell of the next row
-                    string cellName = $"A{breakRow}";
-                    sheet.AddPageBreaks(cellName);
+                    paragraphEndRow++;
                 }
 
-                // Save the workbook as PDF
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-                workbook.Save(outputPath, pdfOptions);
+                // Add a page break before the row that follows the paragraph.
+                // HorizontalPageBreaks.Add inserts a break before the specified row index.
+                sheet.HorizontalPageBreaks.Add(paragraphEndRow + 1);
 
-                Console.WriteLine($"PDF saved to '{outputPath}'.");
+                // Move to the row after the paragraph (which may be empty).
+                currentRow = paragraphEndRow + 1;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook as a PDF file.
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
         }
-
-        // Entry point for the application
-        public static void Main()
+        catch (Exception ex)
         {
-            Run();
+            // Log any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,64 +1,43 @@
-// Title: Detect Excel Workbook Format with Aspose.Cells for .NET (C#)
-// Description: C# sample that verifies a file’s existence, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to identify the workbook type, logs the detected FileFormatType, confirms it with Workbook.FileFormat, and handles errors gracefully.
-// Keywords: Aspose.Cells FileFormatUtil | Detect Excel file type C# | Workbook.FileFormat property | Identify spreadsheet format .NET | Excel format detection Aspose | C# Excel file validation
-// Common Searches: Aspose.Cells detect workbook format | C# get Excel file type using Aspose | How to identify unknown Excel file format .NET | FileFormatUtil DetectFileFormat example | Check Excel file format before opening Aspose
-// Developer Intent: Determine and log the format of an Excel workbook.
-// Use Cases: Validate the type of user‑uploaded spreadsheets (XLSX, XLS, CSV, etc.) before processing. | Log the detected format for audit trails in batch import jobs. | Prevent unsupported or malicious files from being opened by checking the format first.
-// AI Prompts: Write a C# method that receives a file path, uses Aspose.Cells to detect the spreadsheet format, returns the format enum, and includes robust error handling. | Show how to compare FileFormatUtil.DetectFileFormat output with Workbook.FileFormat and log any discrepancies. | Generate code that logs the detected Excel file type and skips processing if the format is not allowed.
+// Title: Detect the file format of an unknown Excel workbook using Aspose.Cells LoadOptions in C#
+// AI Prompts: Write a C# console program that accepts a file path, loads the workbook with LoadOptions.Auto, and outputs the detected LoadFormat. | Show how to use Aspose.Cells LoadOptions to automatically identify the spreadsheet format of any workbook and log the result. | Demonstrate error handling when the file cannot be loaded while still retrieving the detected format.
+// Common Searches: how to automatically identify Excel file type with Aspose.Cells in C# | C# Aspose.Cells detect workbook format without knowing extension | using LoadOptions.Auto to get spreadsheet format before processing | retrieve LoadFormat after loading workbook with Aspose.Cells | log unknown workbook file format in a C# console app
+// Tags: Aspose.Cells LoadOptions auto format detection | C# detect workbook file type Aspose.Cells | retrieve LoadFormat after workbook load | log detected spreadsheet format C# | handle unknown Excel extension with Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// A C# console application that receives a workbook path, uses Aspose.Cells LoadOptions with LoadFormat.Auto to let the library infer the file type, loads the workbook, reads loadOptions.LoadFormat to determine the format, writes the detected format to the console, and includes robust error handling.
+class WorkbookFormatDetector
 {
-    // C# sample that verifies a file’s existence, uses Aspose.Cells.FileFormatUtil.DetectFileFormat to identify the workbook type, logs the detected FileFormatType, confirms it with Workbook.FileFormat, and handles errors gracefully.
-    public class DetectWorkbookFormat
+    static void Main(string[] args)
     {
-        public static void Run(string filePath)
+        // Validate input arguments
+        if (args.Length == 0)
         {
-            try
-            {
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    return;
-                }
-
-                // Detect the file format using the utility method
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-                Console.WriteLine($"Detected format (FileFormatUtil): {formatInfo.FileFormatType}");
-
-                // Load the workbook and read its FileFormat property for verification
-                using (Workbook workbook = new Workbook(filePath))
-                {
-                    Console.WriteLine($"Workbook.FileFormat property: {workbook.FileFormat}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine("Please provide the path to the workbook file.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        string filePath = args[0];
+
+        // Use LoadOptions with Auto detection to let Aspose.Cells determine the format
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+
+        try
         {
-            string filePath;
+            // Load the workbook using the detection options
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-            if (args.Length > 0)
-            {
-                filePath = args[0];
-            }
-            else
-            {
-                Console.Write("Enter the path to the Excel file: ");
-                filePath = Console.ReadLine();
-            }
+            // After loading, LoadOptions.LoadFormat contains the detected format
+            LoadFormat detectedFormat = loadOptions.LoadFormat;
 
-            DetectWorkbookFormat.Run(filePath);
+            // Log the identified format
+            Console.WriteLine($"Detected workbook format: {detectedFormat}");
+        }
+        catch (Exception ex)
+        {
+            // Log any errors that occur during loading
+            Console.WriteLine($"Error detecting workbook format: {ex.Message}");
         }
     }
 }

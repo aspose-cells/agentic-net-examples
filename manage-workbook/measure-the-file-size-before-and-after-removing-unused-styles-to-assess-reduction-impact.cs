@@ -1,69 +1,36 @@
-// Title: C# Aspose.Cells: Measure Excel file size before and after RemoveUnusedStyles
-// Description: A concise example that creates a workbook, assigns a distinct style to each cell, deletes rows to leave orphaned styles, saves the file, records its byte size, invokes Workbook.RemoveUnusedStyles() to purge unused styles, saves the cleaned file, and then reports the absolute and percentage size reduction. Ideal for developers who need to quantify the impact of style cleanup on Excel file size.
-// Keywords: Aspose.Cells RemoveUnusedStyles | C# Excel file size measurement | Workbook size optimization .NET | Excel style cleanup impact | Aspose.Cells performance tuning | file size reduction Aspose.Cells | C# measure Excel bytes | remove orphaned styles Aspose
-// Common Searches: how to check Excel file size with Aspose.Cells C# | remove unused styles and see size difference Aspose.Cells | Workbook.RemoveUnusedStyles effect on file size | C# code to compare Excel sizes before and after cleanup | Aspose.Cells reduce workbook size by deleting styles
-// Developer Intent: Find out how much an Excel workbook shrinks when unused cell styles are removed using Aspose.Cells for .NET.
-// Use Cases: Validate that style cleanup lowers the size of large, program‑generated reports before distribution. | Integrate size‑reduction logging into a batch process that processes thousands of Excel files. | Generate audit reports that record the byte and percentage savings achieved by removing orphaned styles.
-// AI Prompts: Generate C# code with Aspose.Cells that logs workbook size before and after calling RemoveUnusedStyles and outputs the percentage reduction. | Explain how Workbook.RemoveUnusedStyles works internally and which parts of the XLSX package are affected. | Suggest additional Aspose.Cells techniques (e.g., compressing images, removing empty rows/columns) to further reduce Excel file size.
+// Title: Measure Excel workbook size before and after removing unused styles with Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program that loads an XLSX file with Aspose.Cells, records its byte size, calls Workbook.RemoveUnusedStyles(), saves the workbook, and outputs the size difference. | Show how to compare the file size of an Excel workbook before and after cleaning up unused styles using Aspose.Cells in a .NET console application. | Demonstrate logging the reduction in bytes achieved by Workbook.RemoveUnusedStyles() for a given workbook with Aspose.Cells.
+// Common Searches: how to compare Excel file size before and after RemoveUnusedStyles in C# | Aspose.Cells C# example for measuring workbook size reduction after style cleanup | C# code to get XLSX byte size, remove unused styles, and see impact | does Workbook.RemoveUnusedStyles reduce file size of large Excel workbooks | measure file size change after cleaning up Excel styles with Aspose.Cells .NET
+// Tags: Aspose.Cells RemoveUnusedStyles file size impact C# | Excel workbook byte reduction after style cleanup | C# track XLSX size before after Aspose.Cells | optimize workbook unused styles Aspose.Cells | evaluate workbook size change Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsStyleSizeDemo
+// The example loads 'input.xlsx' using Aspose.Cells, records its byte size, removes all unused styles with Workbook.RemoveUnusedStyles(), saves the cleaned workbook as 'output.xlsx', and prints the file sizes before and after the cleanup to illustrate the size reduction.
+class Program
 {
-    // A concise example that creates a workbook, assigns a distinct style to each cell, deletes rows to leave orphaned styles, saves the file, records its byte size, invokes Workbook.RemoveUnusedStyles() to purge unused styles, saves the cleaned file, and then reports the absolute and percentage size reduction. Ideal for developers who need to quantify the impact of style cleanup on Excel file size.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+        // Path to the original workbook
+        string inputPath = "input.xlsx";
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Load the workbook
+        Workbook workbook = new Workbook(inputPath);
 
-            // Add sample data with distinct styles
-            for (int i = 0; i < 10; i++)
-            {
-                Cell cell = cells[i, 0];
-                cell.PutValue($"Item {i + 1}");
+        // Measure file size before removing unused styles
+        long sizeBefore = new FileInfo(inputPath).Length;
+        Console.WriteLine($"File size before removing unused styles: {sizeBefore} bytes");
 
-                // Create a new style for each cell
-                Style style = wb.CreateStyle();
-                style.Font.Name = "Arial";
-                style.Font.Size = 10 + i;
-                style.Font.IsBold = i % 2 == 0;
-                cell.SetStyle(style);
-            }
+        // Remove all styles that are not used in the workbook
+        workbook.RemoveUnusedStyles();
 
-            // Delete some rows to leave unused styles in the workbook
-            sheet.Cells.DeleteRows(5, 5);
+        // Save the modified workbook to a new file
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
 
-            // Save the workbook before removing unused styles
-            string beforePath = "BeforeRemoveUnusedStyles.xlsx";
-            wb.Save(beforePath);
-
-            // Measure file size before cleanup
-            long sizeBefore = new FileInfo(beforePath).Length;
-            Console.WriteLine($"File size before removing unused styles: {sizeBefore} bytes");
-
-            // Remove all unused styles
-            wb.RemoveUnusedStyles();
-
-            // Save the workbook after cleanup
-            string afterPath = "AfterRemoveUnusedStyles.xlsx";
-            wb.Save(afterPath);
-
-            // Measure file size after cleanup
-            long sizeAfter = new FileInfo(afterPath).Length;
-            Console.WriteLine($"File size after removing unused styles: {sizeAfter} bytes");
-
-            // Display reduction information
-            long reduction = sizeBefore - sizeAfter;
-            double percent = sizeBefore > 0 ? (double)reduction / sizeBefore * 100 : 0;
-            Console.WriteLine($"Size reduction: {reduction} bytes ({percent:F2}%)");
-        }
+        // Measure file size after removal
+        long sizeAfter = new FileInfo(outputPath).Length;
+        Console.WriteLine($"File size after removing unused styles: {sizeAfter} bytes");
     }
 }

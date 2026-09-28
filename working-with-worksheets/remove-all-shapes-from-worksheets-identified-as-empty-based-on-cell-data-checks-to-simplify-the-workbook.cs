@@ -1,38 +1,35 @@
-// Title: Remove All Shapes and Drawing Objects from Empty Worksheets with Aspose.Cells for .NET
-// Description: Learn how to programmatically identify worksheets that contain no cell data (MaxDataRow and MaxDataColumn are -1) and delete every drawing object—shapes, pictures, charts, etc.—using Aspose.Cells' RemoveAllDrawingObjects method, then save the cleaned workbook.
-// Keywords: Aspose.Cells remove shapes C# | delete drawing objects empty worksheet | RemoveAllDrawingObjects example | clear graphics from blank Excel sheets | Aspose.Cells worksheet cleanup .NET
-// Common Searches: how to delete all shapes from empty worksheets Aspose.Cells | remove drawing objects from blank Excel tabs C# | check if worksheet is empty Aspose.Cells and clear drawings | Aspose.Cells RemoveAllDrawingObjects usage | clean empty sheets in Excel with Aspose.Cells
-// Developer Intent: Detect worksheets without any cell content and purge all drawing objects from those sheets.
-// Use Cases: Reduce file size before distributing a workbook by stripping graphics from unused tabs. | Automate preprocessing of user‑uploaded Excel files so blank sheets contain no leftover charts or images. | Enforce template compliance by ensuring placeholder worksheets are completely empty of drawings.
-// AI Prompts: Generate a C# snippet using Aspose.Cells that loops through all worksheets, checks for emptiness, and calls RemoveAllDrawingObjects on empty sheets. | Explain the impact of RemoveAllDrawingObjects on different drawing types (shapes, pictures, charts) in an empty worksheet. | Provide step‑by‑step guidance for cleaning a workbook of all graphics on blank worksheets before saving.
+// Title: Remove all shapes from empty worksheets in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, finds worksheets without any cell data, and clears their Shapes collection. | Show how to use MaxDataRow and MaxDataColumn to determine empty sheets and then remove all drawings from those sheets in Aspose.Cells. | Provide a reusable method that iterates through a workbook, detects blank worksheets, and calls Shapes.Clear() for each.
+// Common Searches: Aspose.Cells C# remove drawings from worksheets that have no data | how to clear shapes collection on blank Excel sheets using .NET | detect empty worksheet with MaxDataRow MaxDataColumn Aspose.Cells | C# code to delete all shapes from empty worksheets in an Excel workbook | automate removal of graphics from blank sheets with Aspose.Cells
+// Tags: clear shapes collection Aspose.Cells | empty worksheet detection MaxDataRow Aspose.Cells | remove drawings from blank Excel sheet C# | iterate worksheets and clear shapes Aspose.Cells | use MaxDataColumn to identify empty sheet .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads a workbook, checks each worksheet for data using MaxDataRow and MaxDataColumn, clears all shapes from sheets with no data, and saves the updated workbook.
+class RemoveShapesFromEmptySheets
 {
-    // Learn how to programmatically identify worksheets that contain no cell data (MaxDataRow and MaxDataColumn are -1) and delete every drawing object—shapes, pictures, charts, etc.—using Aspose.Cells' RemoveAllDrawingObjects method, then save the cleaned workbook.
-    class RemoveShapesFromEmptyWorksheets
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Determine if the worksheet is empty (no data in any cell)
+            // MaxDataRow and MaxDataColumn return -1 when there is no data
+            bool isEmpty = sheet.Cells.MaxDataRow < 0 && sheet.Cells.MaxDataColumn < 0;
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            if (isEmpty)
             {
-                // Determine if the worksheet is empty (no data in any cell)
-                // MaxDataRow returns -1 when there is no data
-                if (sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1)
-                {
-                    // Remove all drawing objects (shapes, pictures, charts, etc.) from the empty worksheet
-                    sheet.RemoveAllDrawingObjects();
-                }
+                // Remove all shapes from the empty worksheet
+                // Clear the Shapes collection
+                sheet.Shapes.Clear();
             }
-
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,47 +1,78 @@
-// Title: C# – Remove a column from an Aspose.Cells ListObject (Excel table) without losing other data
-// Description: Shows how to create a workbook, define a ListObject over range A1:C4, delete the unwanted "Name" column (column B) using Worksheet.Cells.DeleteColumn, and save the file while preserving the remaining columns.
-// Keywords: Aspose.Cells delete column | C# ListObject remove column | Excel table column removal Aspose | Worksheet.Cells.DeleteColumn example | Aspose.Cells preserve data | remove column from Excel table C# | Aspose.Cells table manipulation | C# Excel column delete Aspose
-// Common Searches: how to delete a column from an Aspose.Cells table in C# | remove specific column from ListObject using Aspose.Cells | Aspose.Cells delete column without affecting table data | C# code to drop a column from Excel table with Aspose | Aspose.Cells delete column B example
-// Developer Intent: Delete a specific column from an Excel ListObject while keeping the other columns intact.
-// Use Cases: Redact personal‑information columns before distributing a report | Trim placeholder columns after dynamic data import | Reformat generated tables by removing unnecessary fields | Prepare data sets for downstream processing by eliminating irrelevant columns
-// AI Prompts: Write C# code using Aspose.Cells to delete column C from a ListObject without breaking the table. | Show how to remove multiple columns from an Aspose.Cells table while preserving all other data. | Compare Worksheet.Cells.DeleteColumn and ListObject.DeleteColumn methods in Aspose.Cells with code examples.
+// Title: Remove an unwanted column from an Excel ListObject table using Aspose.Cells for .NET while keeping other data intact
+// AI Prompts: Generate C# code that locates a ListObject column by its header name and deletes it with Aspose.Cells, leaving the rest of the table unchanged. | Show how to programmatically drop a specific column from an Excel table (ListObject) in a workbook using Aspose.Cells for .NET. | Create a reusable method that accepts a worksheet and column header, then removes that column from the first table using Aspose.Cells without affecting other columns.
+// Common Searches: aspnet remove column from Excel table ListObject Aspose.Cells example | c# delete specific column in an Excel worksheet table using Aspose.Cells | how to drop a table column while preserving other columns in Aspose.Cells for .NET | remove unwanted column from first ListObject in workbook with Aspose.Cells C# | Aspose.Cells delete table column by header name programmatically
+// Tags: Aspose.Cells delete ListObject column C# | preserve other columns when dropping Excel table column Aspose.Cells | C# Aspose.Cells delete column by header name | modify worksheet table column removal Aspose.Cells | programmatic column deletion in Excel table .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// Shows how to create a workbook, define a ListObject over range A1:C4, delete the unwanted "Name" column (column B) using Worksheet.Cells.DeleteColumn, and save the file while preserving the remaining columns.
-class RemoveColumnFromTable
+// // Loads an existing workbook, accesses the first worksheet and its first ListObject, finds the column named 'UnwantedColumn', deletes that column while leaving all other columns untouched, and saves the updated workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
 
-        // Populate sample data for a table (columns A, B, C)
-        worksheet.Cells["A1"].PutValue("ID");
-        worksheet.Cells["B1"].PutValue("Name");
-        worksheet.Cells["C1"].PutValue("Age");
-        worksheet.Cells["A2"].PutValue(1);
-        worksheet.Cells["B2"].PutValue("Alice");
-        worksheet.Cells["C2"].PutValue(30);
-        worksheet.Cells["A3"].PutValue(2);
-        worksheet.Cells["B3"].PutValue("Bob");
-        worksheet.Cells["C3"].PutValue(25);
-        worksheet.Cells["A4"].PutValue(3);
-        worksheet.Cells["B4"].PutValue("Charlie");
-        worksheet.Cells["C4"].PutValue(28);
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Create a ListObject (table) that includes the data range A1:C4
-        int tableIndex = worksheet.ListObjects.Add("A1", "C4", true);
-        ListObject table = worksheet.ListObjects[tableIndex];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Delete the unwanted column (e.g., the "Name" column which is column B, index 1)
-        // This uses the DeleteColumn(int) method as defined in the rule set.
-        worksheet.Cells.DeleteColumn(1);
+            // Access the first worksheet (change index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the modified workbook
-        workbook.Save("TableColumnRemoved.xlsx");
+            // Verify that the worksheet contains at least one table (list object)
+            if (worksheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables found in the worksheet.");
+                return;
+            }
+
+            // Get the first table in the worksheet
+            ListObject table = worksheet.ListObjects[0];
+
+            // Name of the column to be removed
+            string columnNameToRemove = "UnwantedColumn";
+
+            // Locate the column index within the table (0‑based)
+            int columnIndex = -1;
+            for (int i = 0; i < table.ListColumns.Count; i++)
+            {
+                if (table.ListColumns[i].Name.Equals(columnNameToRemove, StringComparison.OrdinalIgnoreCase))
+                {
+                    columnIndex = i;
+                    break;
+                }
+            }
+
+            if (columnIndex >= 0)
+            {
+                // Remove the column while preserving data in other columns
+                table.ListColumns.RemoveAt(columnIndex);
+                Console.WriteLine($"Column '{columnNameToRemove}' removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"Column '{columnNameToRemove}' not found in the table.");
+            }
+
+            // Save the modified workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

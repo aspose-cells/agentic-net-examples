@@ -1,43 +1,88 @@
-// Title: Auto‑Refresh XML Map in Aspose.Cells Workbook When Source XML Changes (C#)
-// Description: Demonstrates how to create a workbook, add an external XML map, enable workbook‑wide IsRefreshAllConnections, set RefreshOnLoad for each data connection, and save the file so Excel automatically updates the XML map each time the workbook is opened.
-// Keywords: Aspose.Cells XML map auto refresh | RefreshOnLoad C# | IsRefreshAllConnections Aspose.Cells | external XML connection Excel | auto update XML data workbook | Aspose.Cells XML map example | C# Excel XML map refresh
-// Common Searches: Aspose.Cells refresh XML map on load | Enable automatic XML map update in .NET workbook | Set RefreshOnLoad for external connections Aspose.Cells | How to auto‑refresh XML data in Excel using Aspose.Cells | C# code to refresh XML map when source file changes
-// Developer Intent: Configure a workbook so the linked XML map refreshes automatically whenever the source XML file is modified.
-// Use Cases: Distribute a template that always reflects the latest values from a shared XML file. | Generate daily reports that pull current XML data without manual intervention. | Maintain synchronized data in collaborative workbooks where the XML source is frequently updated.
-// AI Prompts: Provide C# code to add multiple XML maps to a workbook and enable auto‑refresh for each using Aspose.Cells. | Show how to toggle the RefreshOnLoad flag for a specific external connection after it has been created. | Explain steps to verify that an XML map refreshes automatically when opening the saved workbook in Excel.
+// Title: How to configure an Aspose.Cells workbook to auto‑refresh XML map data when the source XML file changes (C#)
+// AI Prompts: Add an XML map to a workbook and enable its AutoRefresh property using Aspose.Cells in C#. | Use reflection to access the XmlMaps collection and add or replace an XmlMap for compatibility with older Aspose.Cells versions. | Save the workbook after setting AutoRefresh so the XML data updates automatically when the source file is modified. | Implement graceful fallback when the XmlMaps property or AutoRefresh member is unavailable.
+// Common Searches: aspocells set xmlmap autoreload when xml file changes c# | c# add xml map to existing workbook using reflection aspocells | how to enable auto refresh for xml map in aspocells older versions | update excel workbook xml data automatically with aspocells | c# check if XmlMaps property exists in Aspose.Cells workbook
+// Tags: Aspose.Cells set XmlMap AutoRefresh | C# reflection add XmlMap Aspose.Cells | auto refresh XML map in Excel workbook | configure XML map source file monitoring Aspose.Cells | legacy Aspose.Cells XmlMaps compatibility
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsXmlMapRefreshDemo
+// The example loads an existing Excel workbook, uses reflection to obtain the XmlMaps collection, adds (or replaces) an XmlMap that points to a source XML file, sets the XmlMap's AutoRefresh property to true when the property is present, and saves the workbook so that XML data is refreshed automatically whenever the source XML file changes.
+class Program
 {
-    // Demonstrates how to create a workbook, add an external XML map, enable workbook‑wide IsRefreshAllConnections, set RefreshOnLoad for each data connection, and save the file so Excel automatically updates the XML map each time the workbook is opened.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add an XML map that points to an external XML file on disk
-            // The XML file path can be absolute or relative
+            // Define file paths
+            string workbookPath = "input.xlsx";
             string xmlFilePath = "data.xml";
-            int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlFilePath);
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = "DataMap";
+            string outputPath = "output.xlsx";
+            string mapName = "MyXmlMap";
 
-            // Ensure that all external connections (including the XML map) are refreshed when the file is opened
-            workbook.Worksheets.IsRefreshAllConnections = true;
-
-            // Additionally, set the RefreshOnLoad flag for each external connection explicitly
-            foreach (ExternalConnection conn in workbook.DataConnections)
+            // Verify that required files exist
+            if (!File.Exists(workbookPath))
             {
-                conn.RefreshOnLoad = true;
+                Console.WriteLine($"Error: Workbook file not found – {workbookPath}");
+                return;
             }
 
-            // Save the workbook; when opened in Excel, it will automatically refresh the XML map data
-            workbook.Save("WorkbookWithAutoRefresh.xml");
+            if (!File.Exists(xmlFilePath))
+            {
+                Console.WriteLine($"Error: XML file not found – {xmlFilePath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Attempt to add (or replace) the XML map using reflection
+            // This avoids compile‑time dependency on the XmlMaps property,
+            // which may be absent in older Aspose.Cells versions.
+            try
+            {
+                PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+                if (xmlMapsProp != null)
+                {
+                    object xmlMaps = xmlMapsProp.GetValue(workbook);
+                    MethodInfo addMethod = xmlMaps.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+                    if (addMethod != null)
+                    {
+                        // Add the XML map
+                        XmlMap xmlMap = (XmlMap)addMethod.Invoke(xmlMaps, new object[] { mapName, xmlFilePath });
+
+                        // Enable AutoRefresh if the property exists
+                        PropertyInfo autoRefreshProp = xmlMap.GetType().GetProperty("AutoRefresh");
+                        if (autoRefreshProp != null && autoRefreshProp.CanWrite)
+                        {
+                            autoRefreshProp.SetValue(xmlMap, true);
+                        }
+
+                        Console.WriteLine("XML map added successfully.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Add method not found on XmlMaps collection.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("XmlMaps property is not available in this Aspose.Cells version.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to add XML map – {ex.Message}");
+            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
         }
     }
 }

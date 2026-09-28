@@ -1,55 +1,94 @@
-// Title: Insert Company Logo into Right Header of First Worksheet with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to load a PNG logo, use PageSetup.SetHeaderPicture to place it in the right section of the first worksheet's header, set the "&G" placeholder, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells C# header image | SetHeaderPicture right header | add logo to Excel header .NET | page setup header picture example | Aspose.Cells workbook branding | C# insert header picture | Excel header logo Aspose
-// Common Searches: Aspose.Cells add logo to right header C# | SetHeaderPicture section 2 example | how to place an image in Excel header using Aspose | C# code for header picture in first worksheet | insert company logo into Excel header Aspose.Cells
-// Developer Intent: Place a PNG logo in the right side of the header of the first worksheet and generate a branded Excel file.
-// Use Cases: Generate corporate reports with a consistent logo on every printed page. | Automate invoice creation where the vendor's emblem appears in the header. | Create a reusable workbook template that includes branding in the header.
-// AI Prompts: Write C# code with Aspose.Cells to add a PNG logo to the left header of all worksheets. | Show how to resize and align a header picture set via SetHeaderPicture in Aspose.Cells. | Provide robust error handling for missing image files when inserting a header picture with Aspose.Cells.
+// Title: Add a PNG company logo to the right header of the first worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that sets the right header placeholder "&G", inserts a PNG logo into the header of the first worksheet, and saves the workbook. | Demonstrate how to use reflection to retrieve the RightHeaderPicture object, assign a PNG file to it, and enable the IsScaled property for proper scaling. | Create a robust example that verifies the logo file exists, handles missing‑file errors gracefully, and writes the workbook to a specified output path.
+// Common Searches: how to insert a PNG logo into the right page header of an Excel sheet using Aspose.Cells C# | Aspose.Cells set right header picture with reflection for compatibility with older versions | adjust header image size when adding a logo with Aspose.Cells C# example | handle missing header image file when adding a company logo using Aspose.Cells | add company logo to Excel header using Aspose.Cells .NET API
+// Tags: Aspose.Cells insert header image C# | right header picture Aspose.Cells | header picture scaling Aspose.Cells | reflection access RightHeaderPicture Aspose.Cells | logo file existence check Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to load a PNG logo, use PageSetup.SetHeaderPicture to place it in the right section of the first worksheet's header, set the "&G" placeholder, and save the workbook as an .xlsx file.
-class InsertHeaderLogo
+// The example creates a new workbook, accesses the first worksheet, sets the right header placeholder to "&G", loads a PNG logo, uses reflection to assign the image to the RightHeaderPicture property, enables scaling, validates the logo file's presence, and saves the workbook as output.xlsx, with comprehensive error handling for missing files and API version differences.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Verify that the logo image file exists
-            const string logoPath = "logo.png";
-            if (!File.Exists(logoPath))
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set the right header placeholder for a picture ("&G")
+            try
             {
-                Console.WriteLine($"Logo file not found: {logoPath}");
-                return;
+                var pageSetup = sheet.PageSetup;
+                var rightHeaderProp = pageSetup.GetType().GetProperty("RightHeader");
+                if (rightHeaderProp != null && rightHeaderProp.CanWrite)
+                {
+                    rightHeaderProp.SetValue(pageSetup, "&G");
+                }
+                else
+                {
+                    Console.WriteLine("RightHeader property is not available in this Aspose.Cells version.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to set right header placeholder: {ex.Message}");
             }
 
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Path to the logo image
+            string logoPath = "logo.png";
 
-            // Load the company logo image into a byte array
-            byte[] logoBytes = File.ReadAllBytes(logoPath);
+            // Ensure the logo file exists before attempting to use it
+            if (!File.Exists(logoPath))
+                throw new FileNotFoundException($"Logo file not found: {logoPath}");
 
-            // Insert the image into the right section of the header (section index 2)
-            // SetHeaderPicture returns a Picture object which can be further customized if needed
-            Picture headerPic = worksheet.PageSetup.SetHeaderPicture(2, logoBytes);
+            // Set the header picture using reflection (covers versions without direct API)
+            try
+            {
+                var pageSetup = sheet.PageSetup;
+                var pictureProp = pageSetup.GetType().GetProperty("RightHeaderPicture");
+                if (pictureProp != null)
+                {
+                    var pictureObj = pictureProp.GetValue(pageSetup);
+                    var setImageMethod = pictureObj?.GetType().GetMethod("SetImage", new[] { typeof(string) });
+                    setImageMethod?.Invoke(pictureObj, new object[] { logoPath });
 
-            // Set the header script for the right section to display the picture
-            // The "&G" placeholder tells Excel to render the picture set above
-            worksheet.PageSetup.SetHeader(2, "&G");
+                    var isScaledProp = pictureObj?.GetType().GetProperty("IsScaled");
+                    if (isScaledProp != null && isScaledProp.CanWrite)
+                    {
+                        isScaledProp.SetValue(pictureObj, true);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Header picture feature is not available in this Aspose.Cells version.");
+                }
+            }
+            catch (Exception imgEx)
+            {
+                Console.WriteLine($"Failed to load logo image: {imgEx.Message}");
+                // Continue without the image if needed
+            }
 
-            // Save the workbook with the header image
-            const string outputPath = "Workbook_With_Header_Logo.xlsx";
-            workbook.Save(outputPath);
-
-            Console.WriteLine("Header logo inserted and workbook saved successfully.");
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

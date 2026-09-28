@@ -1,53 +1,66 @@
-// Title: C# – Save a Workbook with a Column Chart as QuarterlyReport.xlsx using Aspose.Cells
-// Description: Creates a new workbook, fills quarter and revenue data, adds a column chart, sets the chart title, ensures an "output" folder exists, and saves the file as QuarterlyReport.xlsx (XLSX) with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# save chart workbook | save workbook with chart Aspose.Cells | C# column chart Excel export | Aspose.Cells SaveFormat.Xlsx example | output folder Excel file C# | Aspose.Cells chart to XLSX | programmatic Excel report generation
-// Common Searches: how to save an Aspose.Cells workbook that contains a chart to a folder in C# | Aspose.Cells example create column chart and export to XLSX | C# code to generate quarterly report with chart and save as Excel file | Aspose.Cells SaveFormat.Xlsx with chart example | save Excel file with chart to specific directory using Aspose.Cells
-// Developer Intent: Programmatically save a workbook that includes a column chart as QuarterlyReport.xlsx in an "output" directory.
-// Use Cases: Automated generation of quarterly revenue reports with embedded charts. | Batch processing of Excel files that require chart visuals before distribution. | Integrating chart‑enabled workbook export into web APIs or background services.
-// AI Prompts: Show a C# example that creates a line chart from data and saves the workbook as Report.xlsx in a "results" folder using Aspose.Cells. | Explain how to change the chart title font size and export the same workbook to PDF instead of XLSX. | Provide step‑by‑step instructions to add multiple data series to a chart and save each workbook with a unique filename.
+// Title: Save a workbook with a column chart as QuarterlyReport.xlsx in an output folder using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a worksheet, fills quarter and revenue data, adds a column chart linked to those ranges, and saves the file as QuarterlyReport.xlsx in a specified output directory with Aspose.Cells. | Generate a .NET snippet that ensures an "output" folder exists, builds a column chart from cells A2:A5 and B2:B5, and writes the workbook to the folder in XLSX format using Aspose.Cells.
+// Common Searches: asp.net how to add a column chart to an Excel workbook and save it to a custom folder with Aspose.Cells | c# Aspose.Cells generate quarterly revenue chart and export as QuarterlyReport.xlsx | save workbook containing chart to output directory using Aspose.Cells for .NET | create Excel file with chart from range B2:B5 and A2:A5 in C#
+// Tags: Aspose.Cells create column chart | Aspose.Cells save workbook as xlsx | Aspose.Cells chart data source range | C# generate quarterly revenue Excel | Aspose.Cells ensure output directory
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartSaveDemo
+namespace AsposeCellsExamples
 {
-    // Creates a new workbook, fills quarter and revenue data, adds a column chart, sets the chart title, ensures an "output" folder exists, and saves the file as QuarterlyReport.xlsx (XLSX) with Aspose.Cells for .NET.
-    class Program
+    // The example creates a new workbook, populates cells A1:B5 with quarter and revenue values, adds a column chart that references those ranges, ensures an "output" folder exists, and saves the workbook as QuarterlyReport.xlsx in that folder using Aspose.Cells for .NET.
+    public class SaveWorkbookWithChart
     {
-        static void Main()
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Quarter");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["A5"].PutValue("Q4");
+            worksheet.Cells["A1"].PutValue("Quarter");
+            worksheet.Cells["A2"].PutValue("Q1");
+            worksheet.Cells["A3"].PutValue("Q2");
+            worksheet.Cells["A4"].PutValue("Q3");
+            worksheet.Cells["A5"].PutValue("Q4");
 
-            sheet.Cells["B1"].PutValue("Revenue");
-            sheet.Cells["B2"].PutValue(15000);
-            sheet.Cells["B3"].PutValue(20000);
-            sheet.Cells["B4"].PutValue(18000);
-            sheet.Cells["B5"].PutValue(22000);
+            worksheet.Cells["B1"].PutValue("Revenue");
+            worksheet.Cells["B2"].PutValue(15000);
+            worksheet.Cells["B3"].PutValue(20000);
+            worksheet.Cells["B4"].PutValue(18000);
+            worksheet.Cells["B5"].PutValue(22000);
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B5", true);               // Values
-            chart.NSeries.CategoryData = "A2:A5";           // Categories
-            chart.Title.Text = "Quarterly Revenue";
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 15);
+            Chart chart = worksheet.Charts[chartIndex];
 
-            // Define output path (ensure the folder exists)
-            string outputPath = System.IO.Path.Combine("output", "QuarterlyReport.xlsx");
-            System.IO.Directory.CreateDirectory("output");
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B5", true);
+            chart.NSeries.CategoryData = "A2:A5";
 
-            // Save the workbook as XLSX using the Save(string, SaveFormat) overload
+            // Ensure the output directory exists
+            string outputFolder = "output";
+            Directory.CreateDirectory(outputFolder);
+
+            // Save the workbook as an XLSX file named QuarterlyReport.xlsx
+            string outputPath = Path.Combine(outputFolder, "QuarterlyReport.xlsx");
             workbook.Save(outputPath, SaveFormat.Xlsx);
 
             Console.WriteLine($"Workbook with chart saved to: {outputPath}");

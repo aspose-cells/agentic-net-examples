@@ -1,33 +1,36 @@
-// Title: C# – Remove All Worksheet Printer Settings with Aspose.Cells and Save a Clean XLSX
-// Description: Load an existing workbook using Aspose.Cells for .NET, loop through each worksheet, clear its stored printer configuration by assigning PageSetup.PrinterSettings = null, and write the result to a new XLSX file without any printer settings.
-// Keywords: Aspose.Cells | C# | .NET Excel API | remove printer settings | clear PageSetup.PrinterSettings | clean Excel workbook | strip printer configuration | save as XLSX | Excel file sanitization
-// Common Searches: How to clear printer settings in an Excel file using Aspose.Cells C# | Aspose.Cells remove worksheet printer configuration | Set PageSetup.PrinterSettings to null C# | Save Excel without printer settings .NET | Programmatically strip printer settings from a workbook
-// Developer Intent: Open an existing Excel file, delete all printer settings from every worksheet, and save the modified workbook as a new clean XLSX document.
-// Use Cases: Prepare a workbook for distribution by removing printer configurations that may cause printing errors on other machines. | Create a template that contains no printer settings before sharing it with clients or partners. | Automate batch cleaning of printer settings across multiple workbooks in a CI/CD pipeline.
-// AI Prompts: Write C# code with Aspose.Cells that clears printer settings on all worksheets and saves a new XLSX file. | Explain why assigning null to PageSetup.PrinterSettings removes stored printer data in Aspose.Cells. | Show an example of iterating through a workbook's worksheets to reset printer settings while keeping other page‑setup options unchanged.
+// Title: Remove printer‑related page setup settings from all worksheets in an XLSX file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet, clears the PrintArea, PrintTitleRows, PrintTitleColumns, and resets FitToPagesWide/FitToPagesTall, then saves the workbook as a new XLSX file. | Show how to use the PageSetup object in Aspose.Cells to strip all printer configuration from each sheet and produce a clean Excel workbook.
+// Common Searches: aspnet remove print area and titles from all sheets in an existing Excel workbook | c# aspose.cells clear page setup settings for every worksheet | how to reset fit-to-page options in Aspose.Cells before saving workbook | strip printer settings from XLSX using Aspose.Cells .NET API
+// Tags: aspocells strip worksheet page setup | remove printer configuration from Excel using Aspose.Cells | clean Excel workbook by clearing page setup | aspocells reset worksheet print settings | save cleaned XLSX with Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// Load an existing workbook using Aspose.Cells for .NET, loop through each worksheet, clear its stored printer configuration by assigning PageSetup.PrinterSettings = null, and write the result to a new XLSX file without any printer settings.
-class RemovePrinterSettings
+// The program loads 'input.xlsx', iterates over each worksheet, clears print‑related PageSetup properties (PrintArea, PrintTitleRows, PrintTitleColumns, FitToPagesWide/Tall), and saves the cleaned workbook as 'cleaned.xlsx'.
+class Program
 {
     static void Main()
     {
         // Load the existing workbook
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Remove printer settings from each worksheet
+        // Remove printer‑related settings from each worksheet
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // The PrinterSettings property holds printer configuration as a byte array.
-            // Setting it to null clears any stored printer settings.
-            sheet.PageSetup.PrinterSettings = null;
+            PageSetup pageSetup = sheet.PageSetup;
+
+            // Clear the defined print area
+            pageSetup.PrintArea = "";
+
+            // Clear rows and columns set as print titles
+            pageSetup.PrintTitleRows = "";
+            pageSetup.PrintTitleColumns = "";
+
+            // Reset any fit‑to‑page scaling
+            pageSetup.FitToPagesWide = 0;
+            pageSetup.FitToPagesTall = 0;
         }
 
         // Save the cleaned workbook as a new XLSX file
-        string outputPath = "clean.xlsx";
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+        workbook.Save("cleaned.xlsx", SaveFormat.Xlsx);
     }
 }

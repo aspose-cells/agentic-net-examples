@@ -1,87 +1,65 @@
-// Title: Freeze First Two Columns in All Worksheets of Multiple Excel Workbooks in Parallel with Aspose.Cells for .NET
-// Description: Loads each workbook from a supplied list, iterates through every worksheet, applies FreezePanes to lock columns A and B (rows remain unfrozen), saves the modified file to a target folder, and runs the operation concurrently using Parallel.ForEach. Errors are logged per file without stopping the batch.
-// Keywords: Aspose.Cells | .NET | C# | FreezePanes | freeze columns | parallel processing | batch Excel | multiple workbooks | save to output folder | thread‑safe Excel automation
-// Common Searches: Aspose.Cells freeze first two columns | How to freeze columns in all sheets using C# | Parallel processing Excel files Aspose.Cells | Batch freeze panes Aspose.Cells .NET | Save processed workbooks to another directory C#
-// Developer Intent: Programmatically apply a column freeze to the first two columns of every worksheet across a collection of Excel files simultaneously and write the updated files to a separate location.
-// Use Cases: Batch‑process a folder of generated reports so identifier columns stay visible while scrolling. | Integrate into a data‑export pipeline that must freeze columns in thousands of workbooks without blocking the main thread. | Create read‑only copies of existing workbooks with frozen columns for distribution while preserving the originals. | Automate preparation of template workbooks for multiple users, ensuring consistent column locking across all sheets.
-// AI Prompts: Generate C# code that uses Aspose.Cells to freeze the first two columns of every sheet in a list of Excel files and process them concurrently. | Show how to add robust logging and exception handling when processing Excel workbooks in parallel with Aspose.Cells. | Demonstrate customizing the output path while preserving original filenames for batch‑processed workbooks.
+// Title: Freeze columns A and B in every worksheet of multiple Excel files concurrently using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans a directory for .xlsx files, opens each workbook with Aspose.Cells, applies FreezePanes to lock the first two columns on all worksheets, and saves the changes while executing the processing in parallel. | Create a parallel batch routine in C# that uses Aspose.Cells to load each Excel workbook from a folder, freeze columns A and B on every sheet, handle per‑file errors, and write the updated files to an output folder.
+// Common Searches: how to apply FreezePanes to the first two columns of all sheets in a batch of Excel workbooks with Aspose.Cells C# | parallel processing of multiple .xlsx files to freeze columns using Aspose.Cells .NET | C# example for freezing columns A and B across worksheets in many workbooks | Aspose.Cells freeze first two columns in each worksheet while saving files in parallel
+// Tags: freeze panes first two columns Aspose.Cells | batch freeze columns Excel C# Aspose.Cells | parallel workbook processing Aspose.Cells .NET | apply FreezePanes to all worksheets .xlsx | load and save multiple Excel files C# Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Loads each workbook from a supplied list, iterates through every worksheet, applies FreezePanes to lock columns A and B (rows remain unfrozen), saves the modified file to a target folder, and runs the operation concurrently using Parallel.ForEach. Errors are logged per file without stopping the batch.
-public class WorkbookProcessor
+// The sample enumerates all .xlsx files in a given folder, loads each workbook with Aspose.Cells, freezes columns A and B on every worksheet using the FreezePanes method, saves the modified workbook to an output directory, and performs the entire operation concurrently with Parallel.ForEach while handling errors per file.
+class Program
 {
-    // Processes a collection of Excel files in parallel,
-    // freezing the first two columns of every worksheet in each file.
-    public static void ProcessWorkbooks(IEnumerable<string> inputFiles, string outputDirectory)
+    static void Main()
     {
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputDirectory);
+        // Folder containing the workbooks to process
+        string inputFolder = @"C:\Workbooks\Input";
+        // Folder where the processed workbooks will be saved (can be the same as inputFolder)
+        string outputFolder = @"C:\Workbooks\Output";
 
-        // Parallel processing of each workbook file
-        Parallel.ForEach(inputFiles, inputFile =>
+        // Ensure the output folder exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Get all Excel files in the input folder
+        string[] workbookPaths = Directory.GetFiles(inputFolder, "*.xlsx");
+
+        // Process each workbook in parallel
+        Parallel.ForEach(workbookPaths, workbookPath =>
         {
             try
             {
-                // Verify the input file exists before loading
-                if (!File.Exists(inputFile))
+                // Verify the file exists before loading
+                if (!File.Exists(workbookPath))
                 {
-                    Console.WriteLine($"File not found: {inputFile}");
+                    Console.Error.WriteLine($"File not found: '{workbookPath}'");
                     return;
                 }
 
                 // Load the workbook
-                Workbook workbook = new Workbook(inputFile);
+                Workbook workbook = new Workbook(workbookPath);
 
-                // Iterate through all worksheets in the workbook
+                // Freeze the first two columns (column index is zero‑based, so 2 means columns A and B)
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Freeze the first two columns (A and B)
-                    // row = 0 (no rows frozen), column = 2 (C column), totalRows = 0, totalColumns = 2
+                    // FreezePanes(row, column, totalRows, totalColumns)
                     sheet.FreezePanes(0, 2, 0, 2);
                 }
 
-                // Determine the output file path (same name, different folder)
-                string outputPath = Path.Combine(outputDirectory, Path.GetFileName(inputFile));
+                // Determine the output file path
+                string fileName = Path.GetFileName(workbookPath);
+                string outputPath = Path.Combine(outputFolder, fileName);
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Processed and saved: {outputPath}");
             }
             catch (Exception ex)
             {
-                // Log any errors for this file without stopping other tasks
-                Console.WriteLine($"Error processing file '{inputFile}': {ex.Message}");
+                // Handle exceptions per workbook (logging, etc.)
+                Console.Error.WriteLine($"Error processing '{workbookPath}': {ex.Message}");
             }
         });
-    }
 
-    // Example usage
-    public static void Main()
-    {
-        // List of Excel files to process
-        List<string> files = new List<string>
-        {
-            @"C:\Data\Book1.xlsx",
-            @"C:\Data\Book2.xlsx",
-            @"C:\Data\Book3.xlsx"
-        };
-
-        // Folder where processed files will be saved
-        string outputFolder = @"C:\Data\Processed";
-
-        try
-        {
-            ProcessWorkbooks(files, outputFolder);
-            Console.WriteLine("All workbooks have been processed.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
+        Console.WriteLine("Processing completed.");
     }
 }

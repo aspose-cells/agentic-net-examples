@@ -1,44 +1,38 @@
-// Title: C# – Load Excel workbook, apply ISO 29500‑2008 Strict compliance, save and verify file size with Aspose.Cells
-// Description: Demonstrates how to load an existing .xlsx file using Aspose.Cells for .NET, set the workbook's OOXML compliance to ISO 29500‑2008 Strict via Settings.Compliance, save the workbook, and retrieve the saved file size with FileInfo. Includes an optional reload to confirm the compliance flag persists.
-// Keywords: Aspose.Cells C# ISO 29500 strict | set OoxmlCompliance Iso29500_2008_Strict | save workbook and get file size | verify Excel compliance after save | Aspose.Cells file size check | C# load and save Excel strict mode
-// Common Searches: Aspose.Cells set ISO 29500 strict compliance C# | how to get saved Excel file size with Aspose.Cells | verify compliance setting after saving workbook Aspose | C# load workbook change OOXML compliance | Aspose.Cells OoxmlCompliance example
-// Developer Intent: Set strict OOXML compliance on a workbook, save it, and confirm both the file size and that the compliance setting remains after reload.
-// Use Cases: Produce Excel files that must meet ISO 29500‑2008 Strict standards for regulatory compliance. | Measure storage impact of strict compliance versus default mode. | Automated validation pipelines that ensure the compliance flag is retained after file generation.
-// AI Prompts: Generate C# code with Aspose.Cells to load a .xlsx, set OoxmlCompliance.Iso29500_2008_Strict, save to a new path, and output the saved file size. | Create a reusable C# method that accepts input and output paths, applies ISO 29500‑2008 strict compliance, saves the workbook, and returns the file size and compliance value. | Explain how to programmatically confirm that the strict compliance setting persists after reloading the saved workbook using Aspose.Cells.
+// Title: Save an Excel workbook with ISO‑29500‑2008 strict compliance using Aspose.Cells for .NET and check the file size in C#
+// AI Prompts: Create a new Workbook, set Settings.Compliance to OoxmlCompliance.Iso29500_2008_Strict, write a value to a cell, save it as an .xlsx file, and output the resulting file size. | Load the saved .xlsx file with the Workbook constructor and display its Settings.Compliance value to confirm strict ISO compliance.
+// Common Searches: Aspose.Cells C# how to enforce ISO 29500-2008 strict mode when saving an Excel file | C# code to get file size after saving workbook with Aspose.Cells | Verify workbook compliance setting after loading a strict OOXML file using Aspose.Cells | Set OoxmlCompliance to Iso29500_2008_Strict in Aspose.Cells .NET example | Check saved Excel file size programmatically with Aspose.Cells in C#
+// Tags: aspocells set workbook compliance iso29500 strict | aspocells save workbook strict ooxml | c# get saved excel file size aspocells | aspocells load workbook read compliance setting | ooxml compliance iso29500_2008_strict c#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// The example creates a new Workbook, configures its Settings.Compliance to ISO‑29500‑2008 strict mode, writes a sample value, saves the file as StrictCompliance.xlsx, prints the saved file size, then reloads the workbook to display the compliance setting, demonstrating both strict OOXML compliance and file‑size verification.
+class Program
 {
-    // Demonstrates how to load an existing .xlsx file using Aspose.Cells for .NET, set the workbook's OOXML compliance to ISO 29500‑2008 Strict via Settings.Compliance, save the workbook, and retrieve the saved file size with FileInfo. Includes an optional reload to confirm the compliance flag persists.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the source workbook (replace with an actual file path)
-            string sourcePath = "source.xlsx";
+        // Create a new workbook (uses the Workbook() constructor rule)
+        Workbook workbook = new Workbook();
 
-            // Load the existing workbook using the provided constructor rule
-            Workbook workbook = new Workbook(sourcePath);
+        // Set the OOXML compliance level to ISO/IEC 29500:2008 Strict
+        workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
 
-            // Set the OOXML compliance level to ISO/IEC 29500:2008 Strict
-            workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+        // Add a simple value so the file is not empty
+        workbook.Worksheets[0].Cells["A1"].PutValue("Strict compliance demo");
 
-            // Define the output file path
-            string outputPath = "strict_compliance.xlsx";
+        // Define the output file name
+        string outputPath = "StrictCompliance.xlsx";
 
-            // Save the workbook using the provided Save(string) rule
-            workbook.Save(outputPath);
+        // Save the workbook (uses the Save(string) rule)
+        workbook.Save(outputPath);
 
-            // Verify the saved file size
-            FileInfo fileInfo = new FileInfo(outputPath);
-            Console.WriteLine($"Saved file size: {fileInfo.Length} bytes");
+        // Verify the saved file size
+        FileInfo fileInfo = new FileInfo(outputPath);
+        Console.WriteLine($"Saved file size: {fileInfo.Length} bytes");
 
-            // Optional: reload the saved workbook to confirm the compliance setting persisted
-            Workbook reloaded = new Workbook(outputPath);
-            Console.WriteLine($"Reloaded workbook compliance: {reloaded.Settings.Compliance}");
-        }
+        // Load the workbook back to confirm it can be opened (uses Workbook(string) rule)
+        Workbook loadedWorkbook = new Workbook(outputPath);
+        Console.WriteLine($"Loaded workbook compliance: {loadedWorkbook.Settings.Compliance}");
     }
 }

@@ -1,66 +1,58 @@
-// Title: C# – Load an XLSM workbook and access its VbaProject with Aspose.Cells for .NET
-// Description: Demonstrates how to open a macro‑enabled Excel file (XLSM) from disk using Aspose.Cells, verify the file's existence, retrieve the workbook's VbaProject, and display key VBA metadata such as project name, signing status, protection flag, and module count. Includes graceful handling for missing files or workbooks without VBA projects.
-// Keywords: Aspose.Cells C# | load XLSM workbook | VbaProject extraction | macro‑enabled Excel | VBA project properties | Aspose.Cells VBA analysis | .NET Excel macro example | read VBA modules
-// Common Searches: Aspose.Cells get VbaProject from XLSM C# | How to read VBA project details with Aspose.Cells | C# sample to list VBA modules in a macro‑enabled workbook | Check if Excel file contains signed VBA macros using Aspose.Cells | Retrieve VBA project name and module count with Aspose.Cells
-// Developer Intent: Open a macro‑enabled Excel file and obtain its VbaProject to inspect VBA metadata.
-// Use Cases: Display VBA project name, signing status, protection flag, and module count for an XLSM workbook. | Validate the presence of a VBA project before performing macro analysis or transformation. | Provide clear error messages when the target file is missing or lacks a VBA project.
-// AI Prompts: Generate C# code with Aspose.Cells that lists all VBA module names in an XLSM file. | Create a method to extract and save the source code of each VBA module from a loaded workbook. | Suggest robust error‑handling patterns for accessing VbaProject when the file may be absent or contain no macros.
+// Title: Load a macro-enabled XLSM workbook and list its VBA modules with Aspose.Cells for .NET
+// AI Prompts: Open a .xlsm file using Aspose.Cells, obtain the Workbook.VbaProject, and confirm the VBA project is present. | Iterate through Workbook.VbaProject.Modules and output each VbaModule.Name together with its VbaModule.Codes.
+// Common Searches: C# Aspose.Cells read VBA code from an .xlsm workbook | How to access VbaProject in a macro-enabled Excel file using Aspose.Cells | Enumerate VBA modules in a .xlsm file with Aspose.Cells .NET API | Retrieve VBA module names and source from Excel macro workbook in C# | Aspose.Cells check if workbook contains VBA project before reading modules
+// Tags: import macro-enabled Excel workbook Aspose.Cells | retrieve VbaProject object .NET | iterate VbaModule collection Aspose.Cells | extract VBA source from Excel macro file | validate presence of VBA project in workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.Vba; // Namespace containing VbaProject and VbaModule
 
-namespace AsposeCellsVbaDemo
+// The example verifies that a specified .xlsm file exists, loads it into an Aspose.Cells Workbook, accesses its VbaProject, checks for a VBA project, and then iterates through each VbaModule to display the module name and VBA source code, with exception handling for robustness.
+class VbaProjectAnalysis
 {
-    // Demonstrates how to open a macro‑enabled Excel file (XLSM) from disk using Aspose.Cells, verify the file's existence, retrieve the workbook's VbaProject, and display key VBA metadata such as project name, signing status, protection flag, and module count. Includes graceful handling for missing files or workbooks without VBA projects.
-    public class LoadVbaProject
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            // Path to the macro-enabled workbook (XLSM) on disk
-            string workbookPath = "sample_with_macro.xlsm";
+            // Path to the XLSM workbook
+            string workbookPath = @"C:\Path\To\YourWorkbook.xlsm";
 
             // Verify that the file exists to avoid FileNotFoundException
             if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+                Console.WriteLine($"File not found: {workbookPath}");
                 return;
             }
 
-            try
-            {
-                // Load the workbook using the string constructor (provided rule)
-                Workbook workbook = new Workbook(workbookPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-                // Obtain the VbaProject object from the loaded workbook
-                VbaProject vbaProject = workbook.VbaProject;
+            // Obtain the VBA project from the workbook
+            VbaProject vbaProject = workbook.VbaProject;
 
-                // Simple analysis: display some basic VBA project information
-                if (vbaProject != null)
-                {
-                    Console.WriteLine("VBA Project Name: " + vbaProject.Name);
-                    Console.WriteLine("Is Signed: " + vbaProject.IsSigned);
-                    Console.WriteLine("Is Protected: " + vbaProject.IsProtected);
-                    Console.WriteLine("Modules Count: " + vbaProject.Modules.Count);
-                }
-                else
-                {
-                    Console.WriteLine("The workbook does not contain a VBA project.");
-                }
-            }
-            catch (Exception ex)
+            // Check if a VBA project is present
+            if (vbaProject == null)
             {
-                // Catch any unexpected errors during processing
-                Console.WriteLine("An error occurred while processing the workbook:");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("The workbook does not contain a VBA project.");
+                return;
             }
+
+            // Iterate through all VBA modules and display their code
+            foreach (VbaModule module in vbaProject.Modules)
+            {
+                Console.WriteLine($"Module Name: {module.Name}");
+                Console.WriteLine("Code:");
+                Console.WriteLine(module.Codes);
+                Console.WriteLine(new string('-', 40));
+            }
+
+            // Additional analysis on vbaProject can be added here
         }
-
-        // Entry point required for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

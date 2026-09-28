@@ -1,16 +1,12 @@
-// Title: C# – Set custom worksheet page margins (0.5" top/bottom, 0.3" left/right) using Aspose.Cells for .NET
-// Description: Creates a new Workbook, accesses the first Worksheet, uses the PageSetup object to assign TopMarginInch, BottomMarginInch, LeftMarginInch, and RightMarginInch to the required inch values, and saves the file as CustomMargins.xlsx.
-// Keywords: Aspose.Cells PageSetup margins | TopMarginInch C# | BottomMarginInch example | LeftMarginInch usage | RightMarginInch code | set Excel worksheet margins programmatically | C# Excel page layout Aspose | custom worksheet margins .NET
-// Common Searches: Aspose.Cells set worksheet margins in inches | C# PageSetup TopMarginInch example | How to change Excel page margins with Aspose.Cells | custom page margins Aspose.Cells for .NET | set left and right margins programmatically in Excel
-// Developer Intent: Apply precise inch‑based page margin settings to a worksheet through the Aspose.Cells API.
-// Use Cases: Produce printable reports that maximize data density with narrow margins. | Prepare spreadsheets for legal‑size paper where non‑standard margins are required. | Standardize margin settings before converting a workbook to PDF or XPS. | Automate workbook formatting for batch‑generated invoices with consistent layout.
-// AI Prompts: Generate C# code that sets all four page margins in inches using Aspose.Cells PageSetup. | Show how to read existing worksheet margins and increase each by 0.1 inch with Aspose.Cells. | Explain how to apply identical custom margins to every sheet in an existing workbook. | Provide a snippet that saves the workbook after setting margins and then exports it to PDF.
+// Title: Set custom worksheet page margins (0.5" top/bottom, 0.3" left/right) with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells to set a worksheet's top and bottom margins to 0.5 inches and left/right margins to 0.3 inches, then save the workbook. | Demonstrate how to modify the PageSetup.Margin properties in Aspose.Cells to apply custom inch‑based margins to an Excel sheet.
+// Common Searches: Aspose.Cells C# example for setting worksheet margins in inches | how to change top bottom left right page margins with Aspose.Cells .NET | custom page margin values for Excel file using Aspose.Cells PageSetup | C# code to set worksheet margins to 0.5 and 0.3 inches with Aspose.Cells
+// Tags: Aspose.Cells worksheet page margins | PageSetup margin properties C# | custom Excel margins using Aspose.Cells | set worksheet margins inches .NET
 
-using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, accesses the first Worksheet, uses the PageSetup object to assign TopMarginInch, BottomMarginInch, LeftMarginInch, and RightMarginInch to the required inch values, and saves the file as CustomMargins.xlsx.
-class SetCustomPageMargins
+// Creates a new Workbook, accesses the first Worksheet, sets the PageSetup margins to 0.5 inches for top and bottom and 0.3 inches for left and right, and saves the file as CustomMargins.xlsx.
+class Program
 {
     static void Main()
     {
@@ -18,16 +14,13 @@ class SetCustomPageMargins
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the PageSetup object of the worksheet
-        PageSetup pageSetup = worksheet.PageSetup;
-
-        // Set custom margins in inches
-        pageSetup.TopMarginInch = 0.5;     // Top margin = 0.5 inches
-        pageSetup.BottomMarginInch = 0.5;  // Bottom margin = 0.5 inches
-        pageSetup.LeftMarginInch = 0.3;    // Left margin = 0.3 inches
-        pageSetup.RightMarginInch = 0.3;   // Right margin = 0.3 inches
+        // Set custom page margins (values are in inches)
+        sheet.PageSetup.TopMargin = 0.5;
+        sheet.PageSetup.BottomMargin = 0.5;
+        sheet.PageSetup.LeftMargin = 0.3;
+        sheet.PageSetup.RightMargin = 0.3;
 
         // Save the workbook to a file
         workbook.Save("CustomMargins.xlsx");

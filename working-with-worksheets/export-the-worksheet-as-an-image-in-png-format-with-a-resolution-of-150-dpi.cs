@@ -1,46 +1,64 @@
-// Title: Export a Worksheet to PNG at 150 DPI with Aspose.Cells (C#)
-// Description: Demonstrates how to create or load a workbook, set ImageOrPrintOptions for PNG format with 150 DPI horizontal and vertical resolution, enable OnePagePerSheet, and use SheetRender to save the first page as a high‑resolution PNG file.
-// Keywords: Aspose.Cells | C# | Export worksheet to PNG | 150 DPI | ImageOrPrintOptions | SheetRender | OnePagePerSheet | Excel to image | high resolution PNG | render Excel sheet
-// Common Searches: Aspose.Cells export worksheet PNG 150 DPI C# | set image resolution Aspose.Cells C# | render entire Excel sheet as PNG Aspose.Cells | ImageOrPrintOptions DPI setting example | SheetRender save worksheet as PNG
-// Developer Intent: Generate a PNG image of a worksheet at 150 DPI using Aspose.Cells in C#.
-// Use Cases: Create high‑resolution PNG snapshots of Excel reports for web dashboards. | Produce printable PNG assets for documentation, PDFs, or slide decks. | Automate batch conversion of multiple worksheets to 150 DPI PNG for archival or distribution.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a specific worksheet to a PNG image with 150 DPI, including all required option settings. | Explain how to configure ImageOrPrintOptions for DPI, image format, and page layout when rendering an Excel sheet with Aspose.Cells.
+// Title: Export the first worksheet page to a 150 DPI PNG image using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and saves the first worksheet as a PNG image at 150 DPI. | Show how to configure ImageOrPrintOptions for horizontal and vertical resolution and use SheetRender to generate a PNG file. | Add checks for the source file’s existence and create the destination directory before exporting the worksheet to PNG.
+// Common Searches: Aspose.Cells C# export worksheet page to PNG with specific DPI | how to set 150 dpi when converting Excel sheet to image using Aspose.Cells | C# example for saving Excel worksheet as high‑resolution PNG | render first sheet of workbook to PNG file with custom resolution Aspose.Cells
+// Tags: worksheet to PNG conversion with custom DPI Aspose.Cells | ImageOrPrintOptions DPI setting C# | SheetRender export Excel sheet as PNG | C# file existence check before Aspose.Cells export | create output directory for Aspose.Cells image rendering
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Demonstrates how to create or load a workbook, set ImageOrPrintOptions for PNG format with 150 DPI horizontal and vertical resolution, enable OnePagePerSheet, and use SheetRender to save the first page as a high‑resolution PNG file.
-class ExportWorksheetToPng
+// The example loads an Excel workbook, verifies the input file, configures ImageOrPrintOptions to 150 DPI, uses SheetRender to render the first worksheet page, creates the output folder if missing, and saves the result as a PNG image.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // create
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.png";
 
-        // Populate some sample data
-        sheet.Cells["A1"].PutValue("Sample Text");
-        sheet.Cells["B2"].PutValue(12345);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                return;
+            }
 
-        // Configure image rendering options
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = ImageType.Png;          // PNG format
-        options.HorizontalResolution = 150;        // 150 DPI horizontal
-        options.VerticalResolution = 150;          // 150 DPI vertical
-        options.OnePagePerSheet = true;            // render whole sheet on one page
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create a SheetRender instance with the worksheet and options
-        SheetRender renderer = new SheetRender(sheet, options);
+            // Get the first worksheet (or any specific worksheet you need)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define output file path
-        string outputPath = Path.Combine(Environment.CurrentDirectory, "Worksheet.png");
+            // Configure image rendering options: 150 DPI resolution
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // Image format defaults to PNG when the file extension is .png,
+                // so we omit setting ImageFormat to avoid API version issues.
+                HorizontalResolution = 150,
+                VerticalResolution = 150
+            };
 
-        // Render the first (and only) page to the PNG file
-        renderer.ToImage(0, outputPath); // export
+            // Create a SheetRender object using the worksheet and the image options
+            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
 
-        Console.WriteLine($"Worksheet exported to PNG at 150 DPI: {outputPath}");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Export the first page of the worksheet to a PNG file
+            sheetRender.ToImage(0, outputPath);
+
+            Console.WriteLine($"Worksheet exported successfully to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,48 +1,44 @@
-// Title: Aspose.Cells .NET – Switch to Manual Calculation, Bulk‑Update Cells, Then Recalculate Once
-// Description: Learn how to set Workbook.Settings.FormulaSettings.CalculationMode to Manual, insert thousands of values without triggering recalculation, add formulas, and finally call Workbook.CalculateFormula a single time for optimal performance.
-// Keywords: Aspose.Cells manual calculation mode | Workbook.Settings.FormulaSettings | CalculateFormula after bulk update | disable automatic formula evaluation .NET | bulk cell insert Aspose.Cells | performance optimization Aspose.Cells | C# Aspose.Cells example | Workbook.CalculateFormula | large data import Aspose.Cells
-// Common Searches: how to disable automatic calculation in Aspose.Cells .NET | bulk insert rows and recalculate formulas Aspose.Cells | manual calculation mode performance Aspose.Cells | set CalculationMode to Manual Aspose.Cells C# | calculate workbook once after data load Aspose.Cells
-// Developer Intent: Defer formula evaluation while loading large data sets, then run a single calculation pass to improve speed.
-// Use Cases: Import thousands of records into a worksheet without per‑row recalculation. | Generate financial reports where all formulas are evaluated only after data entry completes. | Create data‑intensive spreadsheets (e.g., sensor logs) and compute aggregates efficiently.
-// AI Prompts: Show me C# code to set Workbook.Settings.FormulaSettings.CalculationMode to Manual, bulk‑fill cells, and then call Workbook.CalculateFormula once. | Explain the performance impact of manual calculation mode when inserting 10,000 rows with Aspose.Cells. | Provide a step‑by‑step guide for loading large CSV data into an Aspose.Cells workbook while keeping calculation manual and recalculating at the end.
+// Title: Set Aspose.Cells workbook to Manual calculation mode, bulk‑populate cells, then run a single CalculateFormula in C#
+// AI Prompts: Demonstrate how to turn off automatic formula recalculation, efficiently fill a large cell range, add dependent formulas, and invoke Workbook.CalculateFormula once using Aspose.Cells for .NET. | Provide C# code that sets Workbook.Settings.FormulaSettings.CalculationMode to Manual, performs high‑volume cell updates, and triggers a single formula evaluation.
+// Common Searches: asp.net aspose.cells manual calculation mode for bulk data import | c# fill thousands of cells in worksheet then calculate formulas once | how to improve performance when inserting large ranges with Aspose.Cells | disable automatic recalculation Aspose.Cells before bulk update | example of using CalcModeType.Manual with SUM formulas in Aspose.Cells
+// Tags: manual formula evaluation Aspose.Cells | bulk cell insertion .NET | CalculateFormula after large data load | FormulaSettings.CalcModeType.Manual usage | high‑volume worksheet population Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsBulkUpdateExample
+// The example creates a workbook, switches calculation to Manual, efficiently fills a 1000 × 10 range, adds SUM formulas, runs a single CalculateFormula call, and saves the file as BulkUpdateManualCalc.xlsx.
+class BulkUpdateWithManualCalculation
 {
-    // Learn how to set Workbook.Settings.FormulaSettings.CalculationMode to Manual, insert thousands of values without triggering recalculation, add formulas, and finally call Workbook.CalculateFormula a single time for optimal performance.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Set calculation mode to Manual
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Perform bulk updates (example: fill a 1000x10 range with values)
+        for (int row = 0; row < 1000; row++)
         {
-            // Create a new workbook (default contains one worksheet)
-            Workbook workbook = new Workbook();
-
-            // Switch calculation mode to Manual to defer formula evaluation
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Perform bulk updates – fill column A with numbers 1..1000
-            for (int i = 0; i < 1000; i++)
+            for (int col = 0; col < 10; col++)
             {
-                cells[i, 0].PutValue(i + 1); // Row i, Column 0 (A)
+                cells[row, col].PutValue(row + col);
             }
-
-            // Add a formula that sums the range we just filled
-            cells["B1"].Formula = "=SUM(A1:A1000)";
-
-            // After all updates, trigger a single calculation pass
-            workbook.CalculateFormula();
-
-            // Optional: display the calculated sum in console
-            Console.WriteLine("Sum of A1:A1000 = " + cells["B1"].Value);
-
-            // Save the workbook (using the standard save method)
-            workbook.Save("BulkUpdateResult.xlsx");
         }
+
+        // Add some formulas that depend on the bulk data
+        cells["K1"].Formula = "=SUM(A1:J1)";
+        cells["K2"].Formula = "=SUM(A2:J2)";
+        cells["K3"].Formula = "=SUM(A3:J3)";
+
+        // Calculate all formulas once
+        workbook.CalculateFormula();
+
+        // Save the workbook
+        workbook.Save("BulkUpdateManualCalc.xlsx");
     }
 }

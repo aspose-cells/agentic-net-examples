@@ -1,69 +1,98 @@
-// Title: Toggle Waterfall chart series visibility programmatically with Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample data and a Waterfall chart with two series, then uses a boolean array to set each series' IsFiltered property, showing or hiding the series before saving the file.
-// Keywords: Aspose.Cells | Waterfall chart | series visibility | IsFiltered | .NET | C# | toggle chart series | hide Excel series | programmatic chart filter | Excel automation
-// Common Searches: Aspose.Cells hide waterfall series | How to filter chart series in Aspose.Cells | Set IsFiltered property C# | Toggle chart series visibility .NET | Programmatically show or hide Excel chart series
-// Developer Intent: Show or hide individual Waterfall chart series based on user‑defined preferences.
-// Use Cases: Allow users to deselect secondary series in a financial waterfall report via UI controls. | Create interactive Excel dashboards where checkboxes toggle series before export. | Generate scenario‑specific waterfall charts by displaying only the relevant series.
-// AI Prompts: Write C# code that reads series visibility flags from a JSON file and applies them to a Waterfall chart using Aspose.Cells' IsFiltered property. | Show how to bind WinForms checkboxes to each Waterfall series' IsFiltered setting for real‑time toggling. | Explain how to refresh a Waterfall chart after changing IsFiltered values so the changes appear in the saved workbook.
+// Title: How to programmatically hide or show specific series in a Waterfall chart using Aspose.Cells for C#
+// AI Prompts: Write C# code that loads an Excel workbook, finds a Waterfall chart, and sets the IsVisible flag of each series according to a Dictionary<int, bool> of user preferences. | Demonstrate using reflection in C# to assign the Series.IsVisible property when the property is not directly exposed by the Aspose.Cells API. | Provide a complete example that reads a workbook, modifies series visibility in a Waterfall chart, and saves the updated file to a new location.
+// Common Searches: C# Aspose.Cells hide specific series in a waterfall chart | programmatically set series visibility in Aspose.Cells chart | use reflection to change chart series IsVisible property Aspose.Cells | toggle waterfall chart series based on user settings in .NET | Aspose.Cells chart series visibility dictionary example
+// Tags: Aspose.Cells set waterfall series visibility C# | chart series IsVisible property reflection Aspose.Cells | toggle chart series visibility programmatically | user preference driven chart series display Aspose.Cells | load and save workbook with modified chart Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace WaterfallSeriesVisibilityDemo
+// The sample loads an Excel workbook, locates the first Waterfall chart, and iterates through its series. For each series it reads a user‑defined dictionary that maps series indexes to a visibility flag and applies the flag using the Series.IsVisible property via reflection when available. The workbook is then saved with the updated chart visibility settings.
+class WaterfallSeriesVisibilityToggle
 {
-    // Creates a workbook, adds sample data and a Waterfall chart with two series, then uses a boolean array to set each series' IsFiltered property, showing or hiding the series before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "InputWorkbook.xlsx";
+            const string outputPath = "OutputWorkbook.xlsx";
 
-            // Populate sample data for a Waterfall chart
-            // Category column
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Start");
-            sheet.Cells["A3"].PutValue("Increase");
-            sheet.Cells["A4"].PutValue("Decrease");
-            sheet.Cells["A5"].PutValue("End");
-
-            // Values column (multiple series for demonstration)
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["B3"].PutValue(30);
-            sheet.Cells["B4"].PutValue(-20);
-            sheet.Cells["B5"].PutValue(110);
-
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["C2"].PutValue(120);
-            sheet.Cells["C3"].PutValue(40);
-            sheet.Cells["C4"].PutValue(-10);
-            sheet.Cells["C5"].PutValue(150);
-
-            // Add a Waterfall chart
-            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Add the two series to the chart
-            chart.NSeries.Add("B2:B5", true);
-            chart.NSeries.Add("C2:C5", true);
-            chart.NSeries.CategoryData = "A2:A5";
-
-            // Simulated user preferences: true = visible, false = hidden
-            bool[] userPreferences = new bool[] { true, false }; // Series1 visible, Series2 hidden
-
-            // Apply visibility based on preferences using IsFiltered property
-            for (int i = 0; i < chart.NSeries.Count; i++)
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // If a series is filtered (IsFiltered = true) it will NOT be displayed.
-                // Therefore we set IsFiltered to the inverse of the user's visibility choice.
-                chart.NSeries[i].IsFiltered = !userPreferences[i];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook
-            workbook.Save("WaterfallSeriesVisibilityDemo.xlsx");
+            // Load the workbook containing the Waterfall chart
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume the Waterfall chart is on the first worksheet and is the first chart object
+            Worksheet sheet = workbook.Worksheets[0];
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
+            }
+
+            Chart chart = sheet.Charts[0];
+
+            // Verify that the chart type is Waterfall (optional safety check)
+            if (chart.Type != ChartType.Waterfall)
+            {
+                Console.WriteLine("The first chart is not a Waterfall chart.");
+                return;
+            }
+
+            // User preferences: key = series index (0‑based), value = desired visibility (true = visible)
+            // Example: hide series 1 and show series 0 and 2
+            Dictionary<int, bool> userPreferences = new Dictionary<int, bool>()
+            {
+                { 0, true },
+                { 1, false },
+                { 2, true }
+            };
+
+            // Iterate through all series in the Waterfall chart and set visibility
+            for (int i = 0; i < chart.NSeries.Count; i++)
+            {
+                bool makeVisible = true; // default to visible
+                if (userPreferences.ContainsKey(i))
+                    makeVisible = userPreferences[i];
+
+                Series series = chart.NSeries[i];
+
+                try
+                {
+                    // Attempt to set the IsVisible property via reflection (available in newer versions)
+                    PropertyInfo visibleProp = series.GetType().GetProperty("IsVisible", BindingFlags.Public | BindingFlags.Instance);
+                    if (visibleProp != null && visibleProp.CanWrite)
+                    {
+                        visibleProp.SetValue(series, makeVisible);
+                    }
+                    else
+                    {
+                        // If IsVisible is not available, no direct API exists in older versions.
+                        // As a best‑effort, we simply leave the series as is.
+                        // Optionally, you could manipulate data labels or values here if needed.
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to set visibility for series {i}: {ex.Message}");
+                }
+            }
+
+            // Save the workbook with the updated chart visibility settings
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

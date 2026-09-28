@@ -1,99 +1,137 @@
-// Title: Aspose.Cells C# – Create a Chart from a .crtx Template and Apply Custom Data Labels
-// Description: This example shows how to build a workbook, fill a simple data range, load a .crtx chart template (if it exists), add a column chart using the template or create one manually, and then customize the first series' data labels—showing values, setting the position to InsideEnd, applying a "0.00" number format, and styling the font (dark blue, size 12). The workbook is saved as an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | chart template | .crtx | custom data labels | column chart | Excel workbook | sample code | GitHub example | API usage | data label font | number format
-// Common Searches: load .crtx chart template Aspose.Cells C# | apply chart template to worksheet Aspose.Cells | set data label position and format Aspose.Cells | customize data label font Aspose.Cells column chart | fallback to manual chart creation when template missing Aspose.Cells
-// Developer Intent: Load a .crtx chart template, add a chart to a worksheet, and configure custom data label properties.
-// Use Cases: Read a ChartTemplate.crtx file into a byte array and create a chart with predefined styling. | Automatically switch to programmatic chart creation if the template file cannot be found. | Show series values on the chart, place labels inside the bar ends, apply a numeric format, and style the label font.
-// AI Prompts: Generate C# code that creates a line chart from a .crtx template and sets data label font to red, size 10, with a custom number format. | Explain how to edit a .crtx chart template to embed default data label settings before using it with Aspose.Cells. | Provide a step‑by‑step guide for handling missing chart template files and falling back to manual chart creation in Aspose.Cells.
+// Title: Load a .crtx chart template and customize data label appearance in Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads a .crtx file into a byte array, creates a column chart, applies the template with ChangeTemplate, and sets the data labels to show values with a dark‑blue font. | Show C# how to add a chart using the Add(byte[], string, bool, int, int, int, int) overload with a template byte array, then change the first series data label position to InsideEnd. | Create a reusable C# method that takes a template path and a workbook, adds a chart based on the template, and applies custom data label settings such as font color and label position.
+// Common Searches: how to apply a .crtx chart template to a chart in Aspose.Cells C# | Aspose.Cells change chart template from byte array example | set custom font color for chart data labels using Aspose.Cells .NET | add chart with template overload Aspose.Cells C# sample code | modify data label position to InsideEnd in Aspose.Cells chart
+// Tags: Aspose.Cells ChangeTemplate chart API | Aspose.Cells Add chart from byte array | custom data label font color Aspose.Cells | chart data label position InsideEnd Aspose.Cells | load .crtx template Aspose.Cells .NET
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using System.Drawing;
 
-namespace AsposeCellsExample
+namespace AsposeCellsChartTemplateDemo
 {
-    // This example shows how to build a workbook, fill a simple data range, load a .crtx chart template (if it exists), add a column chart using the template or create one manually, and then customize the first series' data labels—showing values, setting the position to InsideEnd, applying a "0.00" number format, and styling the font (dark blue, size 12). The workbook is saved as an Excel file.
+    // The example loads a .crtx chart template into a byte array, creates two workbooks, and demonstrates two ways to apply the template to column charts: using ChangeTemplate and using the Add(byte[], ...) overload. It also customizes data label settings—showing values, setting a dark‑blue font, and positioning labels inside the end—before saving the workbooks as .xlsx files.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            // ------------------------------------------------------------
+            // 1. Load chart template bytes if the file exists.
+            // ------------------------------------------------------------
+            byte[] templateBytes = null;
+            string templatePath = "ChartTemplate.crtx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
-
-                // Load a chart template (.crtx) into a byte array if the file exists
-                byte[] templateData = null;
-                const string templatePath = "ChartTemplate.crtx";
-
                 if (File.Exists(templatePath))
                 {
-                    templateData = File.ReadAllBytes(templatePath);
+                    templateBytes = File.ReadAllBytes(templatePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Template file \"{templatePath}\" not found. The chart will be created without a template.");
+                    Console.WriteLine($"Template file '{templatePath}' not found. Continuing without template.");
                 }
-
-                int chartIdx;
-
-                if (templateData != null)
-                {
-                    // Add a chart using the template. The Add method with a byte[] parameter applies the preset template.
-                    chartIdx = sheet.Charts.Add(
-                        templateData,          // template byte array
-                        "A1:B4",              // data range for the chart
-                        true,                 // plot series by column
-                        5,                    // top row of the chart
-                        0,                    // left column of the chart
-                        20,                   // bottom row of the chart
-                        8);                   // right column of the chart
-                }
-                else
-                {
-                    // Create a chart without a template and set its data source manually
-                    chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                    Chart tempChart = sheet.Charts[chartIdx];
-                    tempChart.NSeries.Add("A1:B4", true);
-                }
-
-                Chart chart = sheet.Charts[chartIdx];
-
-                // Ensure the chart type matches the intended type (optional)
-                chart.Type = ChartType.Column;
-
-                // Access the first series and configure its data labels
-                Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true; // show values
-                series.DataLabels.Position = LabelPositionType.InsideEnd; // position inside the end of bars
-                // Note: DataLabels does not expose a ShapeType property; omitted to avoid compilation error.
-                series.DataLabels.NumberFormat = "0.00"; // custom number format
-                series.DataLabels.Font.Color = Color.DarkBlue;
-                series.DataLabels.Font.Size = 12;
-                series.DataLabels.ApplyFont(); // apply font settings to all child labels
-
-                // Save the workbook with the chart
-                const string outputPath = "ChartWithTemplate.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error reading template file: {ex.Message}");
+                // Continue without template
+            }
+
+            // ------------------------------------------------------------
+            // 2. Create a workbook and add a chart that will use the template
+            //    via the ChangeTemplate method (if template is available).
+            // ------------------------------------------------------------
+            try
+            {
+                Workbook wbChangeTemplate = new Workbook();
+                Worksheet wsChange = wbChangeTemplate.Worksheets[0];
+
+                // Sample data
+                wsChange.Cells["A1"].PutValue("Category");
+                wsChange.Cells["A2"].PutValue("A");
+                wsChange.Cells["A3"].PutValue("B");
+                wsChange.Cells["A4"].PutValue("C");
+                wsChange.Cells["B1"].PutValue("Value");
+                wsChange.Cells["B2"].PutValue(10);
+                wsChange.Cells["B3"].PutValue(20);
+                wsChange.Cells["B4"].PutValue(30);
+
+                // Add a basic column chart
+                int chartIdx1 = wsChange.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart1 = wsChange.Charts[chartIdx1];
+                chart1.SetChartDataRange("A1:B4", true);
+
+                // Apply the template if we have it
+                if (templateBytes != null)
+                {
+                    chart1.ChangeTemplate(templateBytes);
+                }
+
+                // Adjust data label properties
+                Series series1 = chart1.NSeries[0];
+                series1.DataLabels.ShowValue = true;               // ensure values are shown
+                series1.DataLabels.Font.Color = Color.DarkBlue;    // override font color
+                series1.DataLabels.ApplyFont();                    // apply font to all labels
+
+                // Save the workbook
+                wbChangeTemplate.Save("Chart_With_ChangedTemplate.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating workbook with ChangeTemplate: {ex.Message}");
+            }
+
+            // ------------------------------------------------------------
+            // 3. Create another workbook and add a chart directly with the
+            //    template using the Add(byte[], ...) overload (if template is available).
+            // ------------------------------------------------------------
+            try
+            {
+                Workbook wbAddTemplate = new Workbook();
+                Worksheet wsAdd = wbAddTemplate.Worksheets[0];
+
+                // Sample data (same structure)
+                wsAdd.Cells["A1"].PutValue("Category");
+                wsAdd.Cells["A2"].PutValue("A");
+                wsAdd.Cells["A3"].PutValue("B");
+                wsAdd.Cells["A4"].PutValue("C");
+                wsAdd.Cells["B1"].PutValue("Value");
+                wsAdd.Cells["B2"].PutValue(15);
+                wsAdd.Cells["B3"].PutValue(25);
+                wsAdd.Cells["B4"].PutValue(35);
+
+                int chartIdx2;
+
+                if (templateBytes != null)
+                {
+                    // Add a chart using the template byte array.
+                    // Parameters: template data, data range, isVertical, topRow, leftColumn, bottomRow, rightColumn
+                    chartIdx2 = wsAdd.Charts.Add(
+                        templateBytes,   // template byte array
+                        "A1:B4",         // data range
+                        true,            // plot by column
+                        5, 0, 20, 8);    // position of the chart
+                }
+                else
+                {
+                    // Fallback: add a regular chart without a template.
+                    chartIdx2 = wsAdd.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                    wsAdd.Charts[chartIdx2].SetChartDataRange("A1:B4", true);
+                }
+
+                Chart chart2 = wsAdd.Charts[chartIdx2];
+
+                // Optionally modify a specific setting.
+                chart2.NSeries[0].DataLabels.Position = LabelPositionType.InsideEnd;
+
+                // Save the workbook
+                wbAddTemplate.Save("Chart_Added_With_Template.xlsx", SaveFormat.Xlsx);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating workbook with Add template overload: {ex.Message}");
             }
         }
     }

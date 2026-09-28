@@ -1,59 +1,27 @@
-// Title: C# – Load an Excel workbook with Aspose.Cells and read cell A1
-// Description: Demonstrates how to verify an Excel file's presence, create a Workbook object from the file path using Aspose.Cells for .NET, access the first worksheet, and output the value of cell A1 while handling possible exceptions.
-// Keywords: Aspose.Cells load workbook C# | read Excel cell Aspose.Cells | verify file exists before opening Excel | Workbook object Aspose.Cells .NET | exception handling Aspose.Cells
-// Common Searches: load Excel file into Aspose.Cells workbook C# | read cell A1 after opening workbook with Aspose.Cells | check if Excel file exists before creating Workbook in .NET | Aspose.Cells example for opening and reading Excel
-// Developer Intent: Open an existing Excel file, create a Workbook instance, and retrieve a cell value.
-// Use Cases: Load a workbook from a known path and read specific cell data. | Prevent FileNotFoundException by confirming the file exists before loading. | Initialize the first worksheet for further data processing after opening the workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to open an Excel file, verify its existence, and print the value of cell B2. | Create an Aspose.Cells example that loads a workbook, catches errors, and iterates over all cells in the first row.
+// Title: Load an .xlsx file into an Aspose.Cells Workbook in C# and display the first worksheet name and cell A1 value
+// AI Prompts: Write C# code that uses the Aspose.Cells Workbook(string) constructor to open a specified .xlsx file and prints the name of the first worksheet together with the text in cell A1. | Show how to wrap the workbook loading and cell reading in a try‑catch block to handle file‑not‑found and format exceptions when using Aspose.Cells. | Adapt the example to load the Excel file from a MemoryStream instead of a file path, then output the same worksheet name and cell value.
+// Common Searches: asp.net core open .xlsx using Aspose.Cells and get first sheet name | c# read value of cell A1 after loading Excel file with Aspose.Cells | sample code for Aspose.Cells Workbook(string) constructor | how to retrieve worksheet name and cell content from a loaded workbook in C# | load Excel file into memory with Aspose.Cells without writing to disk
+// Tags: file path workbook loading Aspose.Cells C# | first worksheet name retrieval Aspose.Cells | cell A1 extraction Aspose.Cells | Workbook constructor with file path Aspose.Cells | memory stream workbook loading Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Demonstrates loading an .xlsx file into an Aspose.Cells Workbook, accessing the first worksheet, and printing its name along with the value of cell A1.
+class LoadWorkbookDemo
 {
-    // Demonstrates how to verify an Excel file's presence, create a Workbook object from the file path using Aspose.Cells for .NET, access the first worksheet, and output the value of cell A1 while handling possible exceptions.
-    public class LoadWorkbookExample
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+        // Path to the Excel file to be loaded
+        string filePath = "input.xlsx";
 
-        public static void Run()
-        {
-            // Path to the Excel file to be loaded
-            string filePath = "example.xlsx";
+        // Load the workbook from the specified file (uses Workbook(string) constructor)
+        Workbook workbook = new Workbook(filePath);
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
+        // Example: access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            try
-            {
-                // Load the workbook from the file into memory
-                Workbook workbook = new Workbook(filePath);
-
-                // Access the first worksheet for further manipulation
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Example operation: read and display the value of cell A1
-                Console.WriteLine("Cell A1 value: " + worksheet.Cells["A1"].StringValue);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
-            }
-        }
+        // Example: read and display the worksheet name and the value of cell A1
+        Console.WriteLine("Worksheet Name: " + worksheet.Name);
+        Console.WriteLine("Cell A1 Value: " + worksheet.Cells["A1"].StringValue);
     }
 }

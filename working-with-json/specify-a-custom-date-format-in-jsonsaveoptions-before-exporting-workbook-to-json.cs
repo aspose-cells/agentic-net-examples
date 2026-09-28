@@ -1,47 +1,42 @@
-// Title: C# – Export Aspose.Cells Workbook to JSON with a Custom Date Format Using JsonSaveOptions
-// Description: Demonstrates how to export a workbook to JSON while forcing dates to appear in a chosen pattern (e.g., dd‑MM‑yyyy). The example creates a workbook, writes a date as a formatted string, uses JsonSaveOptions (which lacks a direct date‑format setting), and saves the file.
-// Keywords: Aspose.Cells | C# | JsonSaveOptions | custom date format | JSON export | date string formatting | Workbook to JSON | Aspose.Cells JSON | date representation
-// Common Searches: Aspose.Cells export to JSON with specific date format C# | How to change date pattern when saving workbook as JSON | JsonSaveOptions custom date format example | C# Aspose.Cells JSON date formatting dd-MM-yyyy | Set date format for JSON output in Aspose.Cells
-// Developer Intent: Define the appearance of date values in the JSON file produced from an Aspose.Cells workbook.
-// Use Cases: Integrate with a downstream API that expects dates in dd‑MM‑yyyy format. | Maintain consistent date strings across multiple exported JSON files without altering cell types. | Show that JsonSaveOptions does not expose a date‑format property, so cell‑level formatting is required.
-// AI Prompts: Generate C# code that exports an Aspose.Cells workbook to JSON with dates formatted as "yyyy/MM/dd" while keeping original cell types unchanged. | Explain why JsonSaveOptions lacks a direct date‑format option and how to work around it for custom JSON date strings. | Provide a method to apply a uniform date format to all date cells in a workbook before JSON export using Aspose.Cells.
+// Title: Why JsonSaveOptions cannot apply a custom date format when exporting an Aspose.Cells workbook to JSON (C#)
+// AI Prompts: Generate C# code that attempts to set a date pattern in JsonSaveOptions, captures the resulting limitation, and proposes a workaround for formatting dates in the exported JSON. | Explain the limitation of JsonSaveOptions regarding date formatting and describe alternative approaches to control date representation in JSON output using Aspose.Cells. | Provide a step‑by‑step guide for post‑processing the JSON file produced by Aspose.Cells to replace default date strings with a custom format.
+// Common Searches: Aspose.Cells JsonSaveOptions does not support custom date format | How to change date format in JSON output when saving workbook with Aspose.Cells .NET | Workaround for formatting dates in Aspose.Cells JSON export C# | Export workbook to JSON with specific date pattern using Aspose.Cells
+// Tags: json export custom date format Aspose.Cells | JsonSaveOptions date formatting limitation | Aspose.Cells workbook to JSON date serialization | C# Aspose.Cells JSON export settings | post‑process JSON dates Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Json;
 
-namespace AsposeCellsExample
+// The sample creates a workbook, inserts a DateTime value, and attempts to configure JsonSaveOptions for a custom date format. Because JsonSaveOptions lacks a DateFormat property, the export uses the default date representation. The example highlights this limitation and suggests alternative strategies such as cell formatting before export or post‑processing the generated JSON to achieve the desired date pattern.
+class Program
 {
-    // Demonstrates how to export a workbook to JSON while forcing dates to appear in a chosen pattern (e.g., dd‑MM‑yyyy). The example creates a workbook, writes a date as a formatted string, uses JsonSaveOptions (which lacks a direct date‑format setting), and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook and access the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-                // Add header
-                sheet.Cells["A1"].PutValue("Date");
+            // Add a worksheet and some data with a date value
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Date");
+            sheet.Cells["A2"].PutValue(new DateTime(2023, 5, 17));
 
-                // Add date value formatted as a string to achieve custom JSON date format
-                DateTime date = new DateTime(2023, 5, 15);
-                sheet.Cells["B1"].PutValue(date.ToString("dd-MM-yyyy"));
+            // Configure JSON save options
+            JsonSaveOptions jsonOptions = new JsonSaveOptions();
+            // JsonSaveOptions in this version does not expose a DateFormat property.
+            // The default date format will be used for JSON export.
 
-                // Configure JSON save options (no custom date format property needed)
-                JsonSaveOptions saveOptions = new JsonSaveOptions();
+            string outputFile = "ExportedData.json";
 
-                // Export the workbook to a JSON file
-                string outputPath = "ExportedWithCustomDateFormat.json";
-                workbook.Save(outputPath, saveOptions);
-                Console.WriteLine($"Workbook successfully exported to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Export the workbook to JSON using the configured options
+            workbook.Save(outputFile, jsonOptions);
+            Console.WriteLine($"Workbook successfully exported to JSON: {outputFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

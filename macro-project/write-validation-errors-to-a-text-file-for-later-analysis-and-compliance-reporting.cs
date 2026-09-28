@@ -1,132 +1,97 @@
-// Title: Aspose.Cells C# – Export Data‑Validation Rules and Violations to a Text Report
-// Description: A C# console example that creates a workbook, adds a whole‑number validation for cells A1:A5, populates test data, and generates a plain‑text file listing each validation’s settings and every cell that fails the rule. The workbook is saved for reference, making it ideal for compliance audits and automated spreadsheet checks.
-// Keywords: Aspose.Cells validation report | C# data validation export | write validation errors to txt | log worksheet rule violations | .NET spreadsheet compliance | cell validation CSV alternative | Aspose.Cells Workbook Save | data‑validation audit file
-// Common Searches: how to export Aspose.Cells validation errors to a file | Aspose.Cells write data‑validation details to text | C# generate validation report for Excel workbook | log out‑of‑range values using Aspose.Cells | create compliance report from Excel validation rules
-// Developer Intent: Produce a text file that documents all data‑validation definitions in a worksheet and enumerates the cells that violate those definitions.
-// Use Cases: Compliance audit: capture validation rules and offending cells for regulatory review. | Automated data quality check: identify non‑numeric or out‑of‑range entries in numeric columns. | Scheduled spreadsheet processing: generate daily validation summaries for ETL pipelines. | Debugging: quickly see which cells break custom validation logic during development.
-// AI Prompts: Add the worksheet name and cell address to each line of the validation error report. | Summarize the total number of violations per validation and append a summary section to the text file. | Convert the output format from plain text to CSV, including columns for Worksheet, Cell, Error Title, and Message. | Include a timestamp and the executing user in the report header for audit trails.
+// Title: Create a C# console program that validates specific cells in an Excel workbook with Aspose.Cells and writes validation errors to a text file
+// AI Prompts: Load an .xlsx workbook with Aspose.Cells in C#, verify a predefined list of required cells for empty values, perform numeric range checks on designated cells, collect any failures, and save the error messages to a .txt report. | Refactor the validation utility to read required‑cell and range‑check definitions from a JSON configuration file, then generate the validation results as a CSV log. | Update the code so that each run appends new validation messages to an existing log file instead of overwriting the previous contents.
+// Common Searches: c# Aspose.Cells how to check specific cells for emptiness and log errors to a text file | validate numeric range of Excel cells with Aspose.Cells and output a validation report | write Excel validation results to .txt using Aspose.Cells in a .NET console application | Aspose.Cells required cell validation example C# | generate compliance error log from workbook with Aspose.Cells
+// Tags: Aspose.Cells required‑cell validation C# | Aspose.Cells numeric range check .NET | write validation errors to text file Aspose.Cells | Excel workbook cell validation using Aspose.Cells | C# console error reporting for Excel with Aspose
 
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationReport
+// Loads an Excel workbook via Aspose.Cells, checks designated required cells for missing or empty values, validates numeric ranges for specific cells, aggregates any error messages, and writes the list to a text file (or creates an empty file when no errors are found).
+class ValidationErrorReporter
 {
-    // A C# console example that creates a workbook, adds a whole‑number validation for cells A1:A5, populates test data, and generates a plain‑text file listing each validation’s settings and every cell that fails the rule. The workbook is saved for reference, making it ideal for compliance audits and automated spreadsheet checks.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main()
+        // Path to the Excel file to validate
+        string excelPath = "input.xlsx";
+        // Path to the text file where validation errors will be written
+        string errorReportPath = "validation_errors.txt";
+
+        // Load the workbook
+        Workbook workbook = new Workbook(excelPath);
+
+        // Collect validation errors
+        List<string> errors = new List<string>();
+
+        // Example validation: check that required cells are not empty
+        // Define required cells per worksheet (sheet name -> list of cell names)
+        var requiredCells = new Dictionary<string, List<string>>
         {
-            try
+            { "Sheet1", new List<string> { "A1", "B2", "C3" } },
+            { "Sheet2", new List<string> { "D4", "E5" } }
+        };
+
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            if (!requiredCells.ContainsKey(sheet.Name))
+                continue;
+
+            foreach (string cellName in requiredCells[sheet.Name])
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Define a validation for cells A1:A5 (whole numbers between 10 and 20)
-                CellArea area = CellArea.CreateCellArea("A1", "A5");
-                int validationIndex = sheet.Validations.Add(area);
-                Validation validation = sheet.Validations[validationIndex];
-                validation.Type = ValidationType.WholeNumber;
-                validation.Operator = OperatorType.Between;
-                validation.Formula1 = "10";
-                validation.Formula2 = "20";
-                validation.ErrorTitle = "Invalid Input";
-                validation.ErrorMessage = "Value must be between 10 and 20.";
-                validation.ShowError = true;
-                validation.AlertStyle = ValidationAlertType.Stop;
-
-                // Insert some test values (some invalid)
-                sheet.Cells["A1"].PutValue(5);   // invalid
-                sheet.Cells["A2"].PutValue(15);  // valid
-                sheet.Cells["A3"].PutValue(25);  // invalid
-                sheet.Cells["A4"].PutValue(12);  // valid
-                sheet.Cells["A5"].PutValue(8);   // invalid
-
-                // Prepare the output file for validation error reporting
-                string reportPath = "ValidationErrorsReport.txt";
-
-                // Ensure the directory for the report exists
-                string reportDir = Path.GetDirectoryName(Path.GetFullPath(reportPath));
-                if (!Directory.Exists(reportDir))
+                Cell cell = sheet.Cells[cellName];
+                if (cell == null || cell.Value == null || string.IsNullOrWhiteSpace(cell.StringValue))
                 {
-                    Directory.CreateDirectory(reportDir);
+                    errors.Add($"Worksheet '{sheet.Name}': Cell '{cellName}' is empty or missing.");
                 }
+            }
+        }
 
-                using (StreamWriter writer = new StreamWriter(reportPath))
+        // Additional example validation: numeric range check for specific cells
+        // Define range checks (sheet name -> cell name -> (min, max))
+        var rangeChecks = new Dictionary<string, Dictionary<string, (double min, double max)>>()
+        {
+            {
+                "Sheet1", new Dictionary<string, (double, double)>
                 {
-                    // Iterate through all validations in the worksheet
-                    foreach (Validation val in sheet.Validations)
+                    { "D5", (0, 100) },
+                    { "E6", (10, 50) }
+                }
+            }
+        };
+
+        foreach (var sheetEntry in rangeChecks)
+        {
+            Worksheet sheet = workbook.Worksheets[sheetEntry.Key];
+            foreach (var cellEntry in sheetEntry.Value)
+            {
+                Cell cell = sheet.Cells[cellEntry.Key];
+                if (cell == null || !double.TryParse(cell.StringValue, out double value))
+                {
+                    errors.Add($"Worksheet '{sheet.Name}': Cell '{cellEntry.Key}' does not contain a valid number.");
+                }
+                else
+                {
+                    var (min, max) = cellEntry.Value;
+                    if (value < min || value > max)
                     {
-                        writer.WriteLine("Validation:");
-                        writer.WriteLine($"  Error Title : {val.ErrorTitle}");
-                        writer.WriteLine($"  Error Message : {val.ErrorMessage}");
-                        writer.WriteLine($"  Show Error : {val.ShowError}");
-                        writer.WriteLine($"  Alert Style : {val.AlertStyle}");
-                        writer.WriteLine("  Affected Ranges:");
-
-                        // List each cell area covered by this validation
-                        foreach (CellArea range in val.Areas)
-                        {
-                            writer.WriteLine($"    {range.StartRow + 1}:{range.StartColumn + 1} to {range.EndRow + 1}:{range.EndColumn + 1}");
-                        }
-
-                        writer.WriteLine();
-                    }
-
-                    // Check each cell in the validation ranges for violations
-                    foreach (Validation val in sheet.Validations)
-                    {
-                        foreach (CellArea range in val.Areas)
-                        {
-                            for (int row = range.StartRow; row <= range.EndRow; row++)
-                            {
-                                for (int col = range.StartColumn; col <= range.EndColumn; col++)
-                                {
-                                    Cell cell = sheet.Cells[row, col];
-
-                                    // Simple check for whole number between the two formulas
-                                    if (val.Type == ValidationType.WholeNumber && val.Operator == OperatorType.Between)
-                                    {
-                                        // Validation formulas may include a leading '=', remove it before parsing
-                                        string formula1 = val.Formula1?.TrimStart('=') ?? "0";
-                                        string formula2 = val.Formula2?.TrimStart('=') ?? "0";
-
-                                        if (double.TryParse(formula1, NumberStyles.Any, CultureInfo.InvariantCulture, out double min) &&
-                                            double.TryParse(formula2, NumberStyles.Any, CultureInfo.InvariantCulture, out double max))
-                                        {
-                                            if (cell.Type == CellValueType.IsNumeric)
-                                            {
-                                                double cellVal = cell.DoubleValue;
-                                                if (cellVal < min || cellVal > max)
-                                                {
-                                                    writer.WriteLine($"Cell {cell.Name} contains invalid value {cellVal}. {val.ErrorMessage}");
-                                                }
-                                            }
-                                            else
-                                            {
-                                                writer.WriteLine($"Cell {cell.Name} does not contain a numeric value. {val.ErrorMessage}");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        errors.Add($"Worksheet '{sheet.Name}': Cell '{cellEntry.Key}' value {value} is outside the allowed range [{min}, {max}].");
                     }
                 }
-
-                // Save the workbook (optional, just to keep the file)
-                string workbookPath = "ValidationDemo.xlsx";
-                workbook.Save(workbookPath);
-
-                Console.WriteLine($"Validation error report written to {Path.GetFullPath(reportPath)}");
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(workbookPath)}");
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+
+        // Write errors to the text file
+        if (errors.Count > 0)
+        {
+            File.WriteAllLines(errorReportPath, errors);
+            Console.WriteLine($"Validation completed. {errors.Count} error(s) written to '{errorReportPath}'.");
+        }
+        else
+        {
+            // Ensure the file exists but is empty if no errors
+            File.WriteAllText(errorReportPath, string.Empty);
+            Console.WriteLine("Validation completed. No errors found.");
         }
     }
 }

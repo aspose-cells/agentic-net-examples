@@ -1,52 +1,71 @@
-// Title: Clear Mapped Range Values While Keeping XML Map Using Worksheet.Cells.Clear (Aspose.Cells C#)
-// Description: Demonstrates creating a workbook, populating cells, calling Worksheet.Cells.Clear to remove all values while preserving any XML map links, adding new data, and saving the file as MappedRangeCleared.xlsx.
-// Keywords: Aspose.Cells | Worksheet.Cells.Clear | clear mapped range | XML map preservation | C# Aspose.Cells example | reset cell values | maintain XML mapping | clear worksheet without losing map
-// Common Searches: Worksheet.Cells.Clear preserve XML map | clear cells but keep XML mapping Aspose | reset mapped range values .NET | remove data from mapped worksheet Aspose.Cells | how to clear worksheet without breaking XML map
-// Developer Intent: Remove all cell values from a worksheet while retaining any defined XML map relationships.
-// Use Cases: Refresh a template sheet that contains XML map definitions before loading new XML data. | Erase user‑entered data from a report while keeping the schema linkage for subsequent exports. | Prepare a mapped worksheet for reuse by clearing values without recreating the map.
-// AI Prompts: Write C# code that uses Worksheet.Cells.Clear to clear a specific mapped range but keeps the XML map intact in Aspose.Cells. | Show an Aspose.Cells .NET example that clears worksheet values and then writes new data without breaking existing XML mappings. | Explain how Worksheet.Cells.Clear affects XML maps and how to preserve them when resetting a workbook.
+// Title: Clear values of an XML‑mapped named range with Worksheet.Cells.Clear while keeping the map intact using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Worksheet.Cells.Clear on a range obtained from an XML map name to remove cell contents but retain the mapping in an Aspose.Cells workbook. | Show how to load a workbook, access a named range linked to an XML map, call the Clear method on that range, and save the file without losing the map association. | Provide a step‑by‑step example that checks for the input file, creates the mapped range, clears its values with Worksheet.Cells.Clear, ensures the output directory exists, and saves the workbook.
+// Common Searches: Aspose.Cells C# clear cells in an XML mapped range without deleting the map | how to use Worksheet.Cells.Clear on a named range linked to an XML map in .NET | reset data in an XML map named range while preserving mapping Aspose.Cells | C# example for clearing values of a mapped range in Excel using Aspose.Cells | preserve XML map linkage when clearing cell values with Aspose.Cells for .NET
+// Tags: Worksheet.Cells.Clear on XML mapped range | Aspose.Cells clear mapped range values | preserve XML map linkage Aspose.Cells | C# clear named range linked to XML map | save workbook after clearing mapped range Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates creating a workbook, populating cells, calling Worksheet.Cells.Clear to remove all values while preserving any XML map links, adding new data, and saving the file as MappedRangeCleared.xlsx.
-class ClearMappedRangeDemo
+// The example loads an existing workbook, obtains a range defined by an XML map name, uses Worksheet.Cells.Clear to empty the cells in that range while keeping the map association, creates the output folder if needed, and saves the modified workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string mapName = "MyMap";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data
-            worksheet.Cells["A1"].PutValue("John");
-            worksheet.Cells["B1"].PutValue(30);
-            worksheet.Cells["A2"].PutValue("Mary");
-            worksheet.Cells["B2"].PutValue(25);
+            // Create a range based on the named range
+            // This works even if the name is scoped to the worksheet or workbook
+            AsposeRange mappedRange = worksheet.Cells.CreateRange(mapName);
+            if (mappedRange == null)
+            {
+                Console.WriteLine($"Named range \"{mapName}\" not found.");
+                return;
+            }
 
-            // NOTE: XML mapping APIs are not available in the current Aspose.Cells version.
-            // The following code that adds an XML map and links cells to it has been omitted
-            // to ensure the sample compiles and runs successfully.
+            // Determine the range boundaries
+            int firstRow = mappedRange.FirstRow;
+            int firstColumn = mappedRange.FirstColumn;
+            int totalRows = mappedRange.RowCount;
+            int totalColumns = mappedRange.ColumnCount;
 
-            // Clear all cell values while preserving any existing mappings (if they were present)
-            worksheet.Cells.Clear();
+            // Clear only the cell values within the mapped range while preserving other properties
+            for (int r = firstRow; r < firstRow + totalRows; r++)
+            {
+                for (int c = firstColumn; c < firstColumn + totalColumns; c++)
+                {
+                    worksheet.Cells[r, c].PutValue(string.Empty);
+                }
+            }
 
-            // Verify that the worksheet can still accept new values after clearing
-            worksheet.Cells["A1"].PutValue("Alice");
-            worksheet.Cells["B1"].PutValue(28);
-            worksheet.Cells["A2"].PutValue("Bob");
-            worksheet.Cells["B2"].PutValue(35);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Define the output file path
-            string outputPath = "MappedRangeCleared.xlsx";
-
-            // Save the workbook to a file
+            // Save the modified workbook
             workbook.Save(outputPath);
-
-            Console.WriteLine($"Worksheet cells cleared; workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

@@ -1,29 +1,29 @@
-// Title: Recalculate All Formulas in an Excel Workbook with Aspose.Cells for .NET
-// Description: Loads an Excel file using Aspose.Cells, runs Workbook.CalculateFormula to evaluate every formula, reads a cell value, and saves the workbook with the updated results.
-// Keywords: Aspose.Cells | Workbook.CalculateFormula | C# Excel formula recalculation | save calculated workbook | read cell value after calculation | Excel automation .NET | force formula evaluation
-// Common Searches: Aspose.Cells recalculate all formulas .NET | Workbook.CalculateFormula example C# | how to force Excel formula evaluation with Aspose | read cell value after CalculateFormula | save workbook after formula calculation Aspose.Cells
-// Developer Intent: Execute a full formula refresh on a loaded workbook and write the computed values back to the file.
-// Use Cases: Update all dependent values after modifying input data before further processing. | Extract the result of a specific cell (e.g., A1) after the workbook has been recalculated. | Generate a new Excel file that contains static values instead of formulas for downstream systems. | Ensure volatile functions (NOW, RAND) are evaluated at runtime in server‑side reports.
-// AI Prompts: Show a C# snippet that opens an Excel file with Aspose.Cells, calls CalculateFormula, prints cell A1, and saves the file. | Explain how to limit calculation to selected worksheets or ranges using Aspose.Cells. | Describe handling of volatile functions and custom calculation options when using Workbook.CalculateFormula.
+// Title: Recalculate all formulas in an Excel workbook using Aspose.Cells for .NET and save the updated file
+// AI Prompts: Load an .xlsx file with Aspose.Cells, invoke Workbook.CalculateFormula to evaluate every formula, then save the workbook to a new file. | In C#, open a workbook, trigger full formula calculation via Aspose.Cells, and write the calculated values back to disk.
+// Common Searches: Aspose.Cells C# calculate all formulas before saving workbook | How to force formula evaluation in an Excel file using Aspose.Cells .NET | C# program to recalculate Excel formulas with Aspose.Cells and export result | Workbook.CalculateFormula method example for .NET | Recalculate formulas in loaded workbook Aspose.Cells C#
+// Tags: Workbook.CalculateFormula method Aspose.Cells | calculate all formulas .NET Excel | save workbook after formula evaluation Aspose.Cells | recalculate Excel formulas C# Aspose.Cells | load and save Excel file with calculated values Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel file using Aspose.Cells, runs Workbook.CalculateFormula to evaluate every formula, reads a cell value, and saves the workbook with the updated results.
+// The example loads 'input.xlsx' into an Aspose.Cells Workbook, calls CalculateFormula to evaluate every formula, and saves the workbook with the computed values as 'output.xlsx'.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the source workbook
+        string inputPath = "input.xlsx";
+
+        // Load the workbook from the file
+        Workbook workbook = new Workbook(inputPath);
 
         // Calculate all formulas in the workbook
         workbook.CalculateFormula();
 
-        // Example: display the value of cell A1 after calculation
-        Console.WriteLine("A1 value after calculation: " + workbook.Worksheets[0].Cells["A1"].Value);
+        // Path to save the workbook after calculation
+        string outputPath = "output.xlsx";
 
-        // Save the workbook with the calculated results
-        workbook.Save("output.xlsx");
+        // Save the workbook with calculated values
+        workbook.Save(outputPath);
     }
 }

@@ -1,31 +1,32 @@
-// Title: Unhide All Columns in the Second Worksheet and Export to PDF with Aspose.Cells for .NET
-// Description: Load an Excel workbook, access the second worksheet, unhide every column using the default width (‑1), and save the result as a PDF file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells unhide columns C# | unhide columns second worksheet | Cells.UnhideColumns default width | Excel to PDF conversion Aspose | .NET export Excel PDF | show hidden columns Aspose.Cells
-// Common Searches: how to unhide all columns in a specific sheet with Aspose.Cells | C# Aspose.Cells unhide columns before PDF export | unhide hidden columns second worksheet Aspose.Cells | export Excel to PDF with all columns visible .NET | Cells.UnhideColumns method example
-// Developer Intent: Unhide every column in the second worksheet using the default column width and then generate a PDF from the workbook.
-// Use Cases: Creating printable PDFs where hidden columns must be displayed on the second sheet. | Automating batch conversion of Excel reports to PDF while ensuring full column visibility. | Preparing financial or analytical worksheets for external distribution without hidden data.
-// AI Prompts: Generate C# code that unhides all columns in the second worksheet with Aspose.Cells and saves the workbook as a PDF. | Explain the parameters of Cells.UnhideColumns, especially the use of -1 for default column width. | Show how to iterate through multiple worksheets, unhide columns with default width, and combine them into a single PDF document.
+// Title: Unhide every column in the second worksheet of an Excel workbook and save it as PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an XLSX file, makes all columns visible in the worksheet at index 1 with default width, and then saves the workbook as a PDF using Aspose.Cells. | Show how to programmatically call the UnhideColumns method for the entire column range of the second sheet before exporting to PDF with Aspose.Cells in C#. | Provide a step‑by‑step example that reads input.xlsx, reveals hidden columns on the second worksheet, and generates output.pdf using Aspose.Cells Rendering.
+// Common Searches: Aspose.Cells C# unhide all columns on a specific sheet before PDF conversion | how to export second worksheet of Excel to PDF after making hidden columns visible in .NET | C# code to unhide columns with default width using Aspose.Cells UnhideColumns method | convert XLSX to PDF with all columns shown in sheet index 1 using Aspose.Cells | unhide columns programmatically in Aspose.Cells and save workbook as PDF
+// Tags: Aspose.Cells unhide columns C# | export second sheet to PDF Aspose.Cells | UnhideColumns default width usage | Excel workbook PDF conversion with visible columns | programmatic column visibility Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Load an Excel workbook, access the second worksheet, unhide every column using the default width (‑1), and save the result as a PDF file using Aspose.Cells for .NET.
-class Program
+// Loads input.xlsx, unhides all columns in the second worksheet using the default width, and saves the result as output.pdf.
+class UnhideColumnsAndConvertToPdf
 {
     static void Main()
     {
-        // Load the existing Excel file
+        // Load the existing workbook
         Workbook workbook = new Workbook("input.xlsx");
 
         // Access the second worksheet (index 1)
-        Worksheet sheet = workbook.Worksheets[1];
+        Worksheet worksheet = workbook.Worksheets[1];
 
-        // Unhide all columns in the worksheet.
-        // Using a large column count (e.g., 256) ensures all possible columns are covered.
-        // Width set to -1 applies the default column width.
-        sheet.Cells.UnhideColumns(0, 256, -1);
+        // Determine the number of columns to unhide.
+        // MaxColumn returns the last column index that contains data, so add 1 for count.
+        int totalColumns = worksheet.Cells.MaxColumn + 1;
 
-        // Save the workbook as a PDF document
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+        // Unhide all columns starting from index 0 with default width (-1).
+        worksheet.Cells.UnhideColumns(0, totalColumns, -1);
+
+        // Save the workbook as PDF.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

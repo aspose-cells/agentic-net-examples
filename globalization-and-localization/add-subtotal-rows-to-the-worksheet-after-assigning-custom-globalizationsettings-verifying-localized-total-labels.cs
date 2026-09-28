@@ -1,88 +1,87 @@
-// Title: Add Subtotal Rows with a Custom SUM Total Label Using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, define a custom SettableGlobalizationSettings class that overrides the SUM total label, apply the setting, insert subtotal rows grouped by a column, programmatically verify the custom label "Custom Sum Total", and save the file.
-// Keywords: Aspose.Cells subtotal custom label | SettableGlobalizationSettings C# | override GetTotalName Aspose.Cells | custom SUM total name | globalization localization workbook | C# add subtotal rows | verify subtotal label | Aspose.Cells .NET example
-// Common Searches: custom subtotal total label Aspose.Cells C# | how to change SUM total name in Aspose.Cells | add subtotal rows with globalization settings .NET | verify custom total label after subtotal Aspose.Cells | override GetTotalName for localization in Aspose.Cells
-// Developer Intent: Insert subtotal rows while applying a custom globalization setting that changes the default SUM total label, then confirm the label appears in the worksheet.
-// Use Cases: Replace the default "Sum Total" text with a localized label such as "Custom Sum Total" for multilingual reports. | Generate grouped subtotals in financial or sales data and ensure the custom total label complies with corporate terminology. | Automate validation of customized subtotal labels before distributing workbooks to end users.
-// AI Prompts: Write C# code with Aspose.Cells that adds subtotal rows, uses a custom SettableGlobalizationSettings to rename the SUM total label to "Custom Sum Total", and checks for the label in the worksheet. | Explain how to override GetTotalName in SettableGlobalizationSettings to provide different total names for consolidation functions in Aspose.Cells. | Provide a step‑by‑step tutorial for adding subtotals, applying custom globalization, and programmatically verifying the custom total label in a .NET workbook.
+// Title: Add a French‑localized subtotal row with a SUM formula to an existing Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook, sets CultureInfo to fr-FR, inserts a row labeled "Sous‑total" after the last data row, and adds a SUM formula for column B with Aspose.Cells. | Demonstrate how to recalculate all formulas after adding a subtotal row in an Aspose.Cells workbook and save the updated file. | Modify the example to place the subtotal in column D and use the German label "Zwischensumme" while preserving the localization steps.
+// Common Searches: how to insert a localized subtotal row in Excel using Aspose.Cells C# | Aspose.Cells set workbook culture to French and add sum total row | C# recalculate formulas after adding a new row with Aspose.Cells | determine last populated row and add subtotal label in Aspose.Cells | change subtotal label language in an Aspose.Cells workbook
+// Tags: Aspose.Cells subtotal row insertion | Aspose.Cells workbook culture localization | Aspose.Cells insert SUM formula | Aspose.Cells find MaxDataRow | Aspose.Cells recalculate workbook formulas
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSubtotalDemo
+namespace AsposeCellsExample
 {
-    // Custom globalization settings that changes the total label for the SUM function
-    // Demonstrates how to create a workbook, define a custom SettableGlobalizationSettings class that overrides the SUM total label, apply the setting, insert subtotal rows grouped by a column, programmatically verify the custom label "Custom Sum Total", and save the file.
-    public class CustomGlobalizationSettings : SettableGlobalizationSettings
+    // The example loads an existing Excel file, sets the workbook's CultureInfo to French (fr-FR), writes the label "Sous‑total" in column A after the last data row, adds a SUM formula in column B covering the data range, forces formula recalculation, and saves the modified workbook.
+    class Program
     {
-        public override string GetTotalName(ConsolidationFunction functionType)
+        static void Main(string[] args)
         {
-            // Return a custom label for SUM subtotals; other functions use the default label
-            if (functionType == ConsolidationFunction.Sum)
-                return "Custom Sum Total";
-            return base.GetTotalName(functionType);
-        }
-    }
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-    public class Program
-    {
-        public static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate sample data (Header + 4 data rows)
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            cells["A2"].PutValue("North");
-            cells["B2"].PutValue(1000);
-            cells["A3"].PutValue("North");
-            cells["B3"].PutValue(1500);
-            cells["A4"].PutValue("South");
-            cells["B4"].PutValue(2000);
-            cells["A5"].PutValue("South");
-            cells["B5"].PutValue(2500);
-
-            // Apply custom globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
-
-            // Define the range that contains the data (including header)
-            CellArea dataArea = CellArea.CreateCellArea(0, 0, 4, 1); // rows 0‑4, columns 0‑1
-
-            // Add subtotal rows:
-            // - Group by column 0 (Category)
-            // - Use SUM function
-            // - Apply subtotal to column 1 (Amount)
-            // - Replace existing subtotals, add page breaks, place summary below data
-            cells.Subtotal(
-                dataArea,
-                0,
-                ConsolidationFunction.Sum,
-                new int[] { 1 },
-                true,
-                true,
-                true);
-
-            // Verify that the custom total label appears in the worksheet
-            bool labelFound = false;
-            int maxRow = cells.MaxDataRow + 10; // safety margin
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                if (cells[row, 0].StringValue == "Custom Sum Total")
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Custom total label found at row {row}");
-                    labelFound = true;
-                    break;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook;
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception loadEx)
+                {
+                    Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                    return;
+                }
+
+                // Set culture info (French) for the workbook
+                workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+
+                // Localized label for subtotals (used directly, not via Settings)
+                const string subtotalLabel = "Sous‑total";
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Determine the last row that contains data (zero‑based index)
+                int lastDataRow = sheet.Cells.MaxDataRow;
+
+                // Define the row where the subtotal will be inserted (one row after the last data row)
+                int subtotalRowIndex = lastDataRow + 1;
+
+                // Write the localized subtotal label in column A of the new row
+                sheet.Cells[subtotalRowIndex, 0].PutValue(subtotalLabel);
+
+                // Insert a SUM formula in column B of the subtotal row
+                // Assuming numeric values start at row 2 (Excel row 2, zero‑based index 1) in column B (index 1)
+                string sumFormula = $"=SUM(B2:B{lastDataRow + 1})";
+                sheet.Cells[subtotalRowIndex, 1].Formula = sumFormula;
+
+                // Recalculate all formulas so the subtotal value is evaluated
+                workbook.CalculateFormula();
+
+                // Save the modified workbook
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
                 }
             }
-
-            if (!labelFound)
-                Console.WriteLine("Custom total label not found.");
-
-            // Save the workbook
-            workbook.Save("SubtotalWithCustomGlobalization.xlsx");
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

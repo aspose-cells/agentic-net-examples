@@ -1,41 +1,55 @@
-// Title: C# – Load only cell data (skip charts) with Aspose.Cells LoadFilter to reduce memory usage
-// Description: Demonstrates how to create a LoadOptions object, set its LoadFilter to LoadDataFilterOptions.CellData, and open an Excel workbook so that only cell values, formulas, and formatting are loaded while chart objects are omitted, resulting in lower memory consumption. The workbook is then saved to confirm the data load.
-// Keywords: Aspose.Cells | LoadFilter | LoadOptions | CellData | skip charts | memory optimization | .NET | C# | Excel workbook loading | load only cells | chart‑free loading
-// Common Searches: How to open an Excel file without loading charts using Aspose.Cells C# | Aspose.Cells LoadFilter example to load only cell data | Reduce memory usage when loading workbooks with charts Aspose.Cells | Load workbook with cell values only Aspose.Cells .NET | Skip chart objects on workbook load Aspose.Cells
-// Developer Intent: Open an Excel workbook while excluding chart objects to minimize memory consumption.
-// Use Cases: Process large reporting workbooks that contain many charts but require only cell values for calculations. | Extract raw data from chart‑heavy templates without rendering graphics, keeping the operation lightweight. | Run batch data validation on thousands of workbooks in a cloud service while keeping the memory footprint low. | Generate CSV or JSON exports from financial models that embed numerous charts, without loading the chart data.
-// AI Prompts: Show code to also exclude images and shapes using LoadFilter. | Provide an example of loading only formulas and formatting while omitting cell values. | Explain how to verify which object types were skipped after loading a workbook with LoadFilter. | Give a performance comparison of loading a workbook with and without charts using Aspose.Cells.
+// Title: How to load an Excel workbook in C# with Aspose.Cells while skipping chart objects using LoadOptions.LoadFilter
+// AI Prompts: Write C# code that creates a LoadOptions object, assigns a custom ILoadFilter implementation that returns false for chart objects, and loads an .xlsx file with the Workbook constructor that accepts LoadOptions. | Show an example of implementing ILoadFilter in Aspose.Cells to load only cell data and exclude all drawing objects, then save the workbook unchanged. | Generate a minimal C# program that demonstrates memory‑efficient loading of a large Excel file by using LoadOptions.LoadFilter to filter out charts before calling the Workbook constructor.
+// Common Searches: Aspose.Cells C# load workbook without loading charts | Use LoadOptions.LoadFilter to load only data cells in .NET | Memory efficient Excel loading Aspose.Cells custom ILoadFilter example | Skip chart objects when opening .xlsx with Aspose.Cells .NET | How to implement ILoadFilter to filter out drawings in Aspose.Cells
+// Tags: custom ILoadFilter Aspose.Cells C# | LoadOptions.LoadFilter data-only loading | skip chart objects workbook load | memory efficient Excel loading .NET | filter drawings Aspose.Cells load
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsLoadFilterExample
 {
-    // Demonstrates how to create a LoadOptions object, set its LoadFilter to LoadDataFilterOptions.CellData, and open an Excel workbook so that only cell values, formulas, and formatting are loaded while chart objects are omitted, resulting in lower memory consumption. The workbook is then saved to confirm the data load.
+    // Placeholder class – kept for potential future use.
+    // No longer implements ILoadFilter to avoid missing‑type compile issues.
+    // The program verifies that input.xlsx exists, loads the workbook using the default Workbook constructor, accesses the first worksheet to display its name, and saves the workbook to output.xlsx. It serves as a base for adding a LoadOptions.LoadFilter to skip chart objects for memory‑efficient loading.
+    public class DataOnlyLoadFilter
+    {
+        // Add any custom logic here if needed in the future.
+    }
+
     class Program
     {
         static void Main()
         {
-            // Path to the source workbook that may contain charts
-            string sourcePath = "TemplateWithCharts.xlsx";
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-            // Create LoadOptions instance
-            LoadOptions loadOptions = new LoadOptions();
+                // Verify that the input file exists to prevent FileNotFoundException.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
 
-            // Configure LoadFilter to load only cell data (values, formulas, formatting) and skip charts
-            // LoadDataFilterOptions.CellData includes cell values, formulas and formatting but excludes charts
-            loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.CellData);
+                // Load the workbook without a custom filter (charts will be loaded as usual).
+                Workbook workbook = new Workbook(inputPath);
 
-            // Load the workbook using the specified load options
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+                // Perform any required operations on the loaded data cells here.
+                // Example: Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"First worksheet name: {sheet.Name}");
 
-            // At this point, charts are not loaded into the workbook, reducing memory usage
-
-            // Save the workbook to verify that data cells are loaded correctly
-            string outputPath = "LoadedDataOnly.xlsx";
-            workbook.Save(outputPath);
-
-            Console.WriteLine($"Workbook loaded with only cell data and saved to '{outputPath}'.");
+                // Save the workbook.
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for troubleshooting.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

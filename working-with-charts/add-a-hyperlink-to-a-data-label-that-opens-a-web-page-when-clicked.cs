@@ -1,67 +1,68 @@
-// Title: Add Clickable Hyperlink to Chart Data Labels with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create an Excel workbook, populate category, value and URL cells, attach Hyperlink objects, build a column chart, enable data labels, link those labels to URL cells via the LinkedSource property, and save the file so that clicking a data label opens the associated web page.
-// Keywords: Aspose.Cells | C# | .NET | Excel chart hyperlink | data label link | LinkedSource property | column chart | interactive Excel workbook | hyperlink API | chart automation
-// Common Searches: how to add hyperlink to chart data label using Aspose.Cells | Aspose.Cells set data label to open web page | C# link Excel chart label to URL | Aspose.Cells chart data label hyperlink example | make chart labels clickable in .NET
-// Developer Intent: Generate an Excel chart whose data labels act as clickable links that open specified URLs when selected.
-// Use Cases: Monthly sales chart where each column label opens a detailed dashboard for that month. | Product performance sheet that navigates to product pages from chart labels. | Executive presentation with chart labels that link to supporting documentation.
-// AI Prompts: Show C# code to attach hyperlinks to chart data labels with Aspose.Cells. | Explain how to use the LinkedSource property to make chart labels open web pages. | Provide step‑by‑step instructions for creating a column chart with clickable data labels in Aspose.Cells for .NET.
+// Title: How to add a clickable hyperlink to a chart data label in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart in a new workbook and set a hyperlink on the first data label so clicking it opens a web page. | Attach a hyperlink to the source cell of a specific chart point and verify that the corresponding data label acts as a clickable link. | Change the font color of a chart data label that contains a hyperlink using Aspose.Cells in C#.
+// Common Searches: aspocells make chart label clickable link c# example | add hyperlink to specific series point in Aspose.Cells chart .NET | c# set chart data label to open external URL with Aspose.Cells | how to link Excel chart label to website using Aspose.Cells | Aspose.Cells column chart label hyperlink tutorial
+// Tags: Aspose.Cells add hyperlink to chart label | C# chart point hyperlink | Excel column chart clickable label | format chart data label font color Aspose.Cells | worksheet hyperlink influencing chart label
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System.Drawing;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, fills cells A1:A5 and B1:B5 with sample data, adds a column chart, enables data labels, adds a hyperlink to cell B1 (making the first data label clickable and opening https://www.example.com), optionally changes the label's font color, and saves the file as ChartWithHyperlink.xlsx.
+class AddHyperlinkToDataLabel
 {
-    // Demonstrates how to create an Excel workbook, populate category, value and URL cells, attach Hyperlink objects, build a column chart, enable data labels, link those labels to URL cells via the LinkedSource property, and save the file so that clicking a data label opens the associated web page.
-    public class DataLabelHyperlinkDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data
-            // Category names
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["A4"].PutValue("Mar");
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category 1");
+            sheet.Cells["A2"].PutValue("Category 2");
+            sheet.Cells["A3"].PutValue("Category 3");
+            sheet.Cells["A4"].PutValue("Category 4");
+            sheet.Cells["A5"].PutValue("Category 5");
 
-            // Values for the series
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
+            sheet.Cells["B1"].PutValue(10);
+            sheet.Cells["B2"].PutValue(20);
+            sheet.Cells["B3"].PutValue(30);
+            sheet.Cells["B4"].PutValue(40);
+            sheet.Cells["B5"].PutValue(50);
 
-            // Cells that will hold the hyperlink text (linked source for data labels)
-            sheet.Cells["C2"].PutValue("https://example.com/jan");
-            sheet.Cells["C3"].PutValue("https://example.com/feb");
-            sheet.Cells["C4"].PutValue("https://example.com/mar");
-
-            // Add hyperlinks to the cells in column C
-            // These hyperlinks will be opened when the data label is clicked
-            sheet.Hyperlinks.Add("C2", 1, 1, "https://example.com/jan");
-            sheet.Hyperlinks.Add("C3", 1, 1, "https://example.com/feb");
-            sheet.Hyperlinks.Add("C4", 1, 1, "https://example.com/mar");
-
-            // Create a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 15);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add the series (values from B2:B4) and set category axis (A2:A4)
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Set the data source for the chart
+            chart.NSeries.Add("B1:B5", true);
+            chart.NSeries.CategoryData = "A1:A5";
 
-            // Enable data labels for the series
-            Series series = chart.NSeries[0];
-            series.DataLabels.ShowValue = true;               // Show the numeric value
-            series.DataLabels.ShowCategoryName = true;        // Show the category name
-            series.DataLabels.ShowSeriesName = false;
+            // Enable data labels to show values
+            chart.NSeries[0].DataLabels.ShowValue = true;
 
-            // Link the data labels to the cells that contain hyperlinks (C2:C4)
-            series.DataLabels.LinkedSource = "C2:C4";
+            // Add a hyperlink to the first data point's source cell (B1)
+            // This effectively makes the data label act as a hyperlink when clicked.
+            sheet.Hyperlinks.Add(0, 1, 1, 1, "https://www.example.com");
 
-            // Save the workbook to an XLSX file
-            workbook.Save("DataLabelHyperlinkDemo.xlsx");
+            // Optional: customize label appearance
+            // chart.NSeries[0].DataLabels.Font.Color = Color.Blue;
+
+            // Determine output file path
+            string outputPath = "ChartWithHyperlink.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

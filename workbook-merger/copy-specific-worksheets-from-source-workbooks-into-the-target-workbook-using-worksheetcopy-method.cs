@@ -1,87 +1,63 @@
-// Title: Copy specific worksheets from multiple Excel files into one workbook with Aspose.Cells for .NET (C#)
-// Description: The sample defines an array of source workbook paths and a parallel array of worksheet names to copy, creates an empty target workbook, iterates through each source file, loads it, validates the presence of each requested sheet, adds a new sheet with the same name to the target, transfers data and formatting via Worksheet.Copy, and finally saves the merged file as CombinedWorkbook.xlsx while handling missing files or sheets gracefully.
-// Keywords: Aspose.Cells | Worksheet.Copy | C# Excel merge | copy selected sheets | combine workbooks | merge specific worksheets | Excel file consolidation .NET | Aspose.Cells example | programmatic worksheet copy | Excel sheet merging
-// Common Searches: Aspose.Cells copy specific worksheets from multiple workbooks | C# example for merging selected Excel sheets | How to use Worksheet.Copy to combine Excel files | Copy sheets with formatting using Aspose.Cells .NET | Merge Excel workbooks by selected sheets C#
-// Developer Intent: Merge chosen worksheets from several source workbooks into a single target workbook using Aspose.Cells.
-// Use Cases: Consolidate monthly department reports (Data, Summary) into a master workbook for executive review. | Extract "Report" sheets from project files and assemble them into a unified analysis workbook. | Create a master data set by pulling specific sheets from multiple regional Excel files. | Automate the generation of a combined financial statement by copying designated worksheets from quarterly files.
-// AI Prompts: Generate a C# snippet that copies a list of worksheet names from multiple Excel files into one workbook with Aspose.Cells, including checks for missing files and sheets. | Explain how Worksheet.Copy retains cell formulas, styles, and page settings when merging selected sheets from different workbooks. | Suggest performance optimizations and more robust error handling for the provided worksheet‑copying code.
+// Title: Copy selected worksheets from a source Excel workbook to a new workbook using Aspose.Cells Worksheet.Copy in C#
+// AI Prompts: Copy the worksheets "Sheet1" and "Data" from Source.xlsx into a newly created workbook while preserving all formatting using Aspose.Cells in C#. | Update the code to accept a runtime list of worksheet names and copy each existing sheet from the source workbook to the target workbook with Worksheet.Copy. | Add robust handling for missing worksheets and ensure the merged workbook is saved as Target.xlsx in the correct Excel format.
+// Common Searches: Aspose.Cells C# copy specific sheets from one workbook to another preserving formatting | How to use Worksheet.Copy to duplicate selected worksheets into a new Excel file in C# | Programmatically merge multiple worksheets into a new workbook with Aspose.Cells | C# example for copying sheets by name from source Excel to target workbook using Aspose.Cells
+// Tags: Worksheet.Copy selected sheets Aspose.Cells | copy worksheets between workbooks C# | preserve formatting when copying Excel sheets Aspose | dynamic worksheet list copying Aspose.Cells | error handling missing worksheets Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetCopyExample
+// The program loads Source.xlsx, creates an empty workbook, copies the specified worksheets (e.g., "Sheet1" and "Data") using Worksheet.Copy to retain content and formatting, handles absent sheets gracefully, and saves the result as Target.xlsx.
+class Program
 {
-    // The sample defines an array of source workbook paths and a parallel array of worksheet names to copy, creates an empty target workbook, iterates through each source file, loads it, validates the presence of each requested sheet, adds a new sheet with the same name to the target, transfers data and formatting via Worksheet.Copy, and finally saves the merged file as CombinedWorkbook.xlsx while handling missing files or sheets gracefully.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string sourcePath = "Source.xlsx";
+            const string targetPath = "Target.xlsx";
+
+            // Verify source file exists
+            if (!File.Exists(sourcePath))
             {
-                // Paths to source workbooks
-                string[] sourceFiles = { "Source1.xlsx", "Source2.xlsx" };
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-                // For each source workbook define the worksheet names to copy
-                string[][] sheetsToCopy = {
-                    new string[] { "Data", "Summary" },   // from Source1.xlsx
-                    new string[] { "Report" }            // from Source2.xlsx
-                };
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Create an empty target workbook and remove the default sheet
-                Workbook targetWorkbook = new Workbook();
-                targetWorkbook.Worksheets.Clear();
+            // Create an empty target workbook
+            Workbook targetWorkbook = new Workbook();
+            targetWorkbook.Worksheets.Clear();
 
-                // Iterate over each source workbook
-                for (int i = 0; i < sourceFiles.Length; i++)
+            // Worksheets to copy
+            string[] sheetsToCopy = { "Sheet1", "Data" };
+
+            foreach (string sheetName in sheetsToCopy)
+            {
+                // Get source worksheet; skip if not found
+                Worksheet sourceSheet = sourceWorkbook.Worksheets[sheetName];
+                if (sourceSheet == null)
                 {
-                    string sourcePath = sourceFiles[i];
-
-                    // Verify source file exists
-                    if (!File.Exists(sourcePath))
-                    {
-                        Console.WriteLine($"Source file not found: {sourcePath}");
-                        continue; // Skip to next source workbook
-                    }
-
-                    try
-                    {
-                        // Load the source workbook
-                        Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                        // Copy each specified worksheet into the target workbook
-                        foreach (string sheetName in sheetsToCopy[i])
-                        {
-                            // Ensure the worksheet exists in the source workbook
-                            Worksheet sourceSheet = sourceWorkbook.Worksheets[sheetName];
-                            if (sourceSheet == null)
-                            {
-                                Console.WriteLine($"Worksheet '{sheetName}' not found in '{sourcePath}'.");
-                                continue;
-                            }
-
-                            // Add a new worksheet to the target workbook with the same name
-                            Worksheet targetSheet = targetWorkbook.Worksheets.Add(sheetName);
-
-                            // Copy the contents and formatting from the source worksheet
-                            targetSheet.Copy(sourceSheet);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing '{sourcePath}': {ex.Message}");
-                    }
+                    Console.WriteLine($"Worksheet \"{sheetName}\" not found in source workbook.");
+                    continue;
                 }
 
-                // Save the combined workbook
-                string outputPath = "CombinedWorkbook.xlsx";
-                targetWorkbook.Save(outputPath);
-                Console.WriteLine($"Worksheets copied successfully to '{outputPath}'.");
+                // Add a new worksheet with the same name to the target workbook
+                Worksheet destSheet = targetWorkbook.Worksheets.Add(sheetName);
+
+                // Copy contents and formatting
+                destSheet.Copy(sourceSheet);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
+
+            // Save the target workbook
+            targetWorkbook.Save(targetPath);
+            Console.WriteLine($"Target workbook saved to {targetPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

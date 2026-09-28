@@ -1,69 +1,65 @@
-// Title: Aspose.Cells for .NET – Apply '#,##0.00' number format to a PivotTable data field
-// Description: Demonstrates how to create a workbook, add sample product‑sales data, build a PivotTable, set the Sales field to Sum, and assign the currency format '#,##0.00' to the data field. The example refreshes the pivot cache, calculates the results, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells PivotTable number format | set currency format pivot .NET | custom numeric format '#,##0.00' Aspose | format pivot data field Aspose.Cells | PivotField NumberFormat property | Excel pivot table formatting C# | Aspose.Cells example currency formatting
-// Common Searches: Aspose.Cells set number format for pivot table | how to format pivot data as currency in .NET | apply '#,##0.00' to PivotField Aspose.Cells | pivot table number format example C# | change numeric format of pivot table values
-// Developer Intent: Apply a currency‑style numeric format '#,##0.00' to a PivotTable data field using Aspose.Cells for .NET.
-// Use Cases: Generate financial reports where summed sales appear with thousand separators and two decimals. | Create dashboards that export Excel files with pivot values displayed as currency. | Standardize numeric appearance across multiple pivot tables in an automated workbook generation process.
-// AI Prompts: Show how to set the NumberFormat property of a PivotField to '#,##0.00' in Aspose.Cells for C#. | Provide a code example that formats pivot table sum values as currency and refreshes the cache. | Explain the steps to change a pivot table data field’s numeric format after defining its aggregation function.
+// Title: How to apply the '#,##0.00' numeric format to a specific cell range in an Excel file with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a Style with the custom numeric format '#,##0.00' and applies it to cells B1:B10 using Aspose.Cells. | Show how to use StyleFlag to limit formatting to the number format only, then save the workbook after applying the currency style.
+// Common Searches: Aspose.Cells C# set number format '#,##0.00' for a range of cells | How to format Excel cells as currency using Aspose.Cells .NET | Apply custom numeric format to B1:B10 with Aspose.Cells library | Using StyleFlag to change only number format in Aspose.Cells workbook
+// Tags: numeric format styling Aspose.Cells | StyleFlag number format application | currency display formatting Excel | cell range formatting Aspose.Cells | C# workbook number format customization
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook, add sample product‑sales data, build a PivotTable, set the Sales field to Sum, and assign the currency format '#,##0.00' to the data field. The example refreshes the pivot cache, calculates the results, and saves the file as an Excel workbook.
-public class SetNumberFormatDemo
+namespace AsposeCellsExample
 {
-    public static void Run()
+    // The program loads an existing workbook, creates a Style with the custom numeric format '#,##0.00', applies it to cells B1:B10 via a StyleFlag that targets only the number format, and saves the modified workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(1234.56);
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["B3"].PutValue(2345.78);
-            worksheet.Cells["A4"].PutValue("Banana");
-            worksheet.Cells["B4"].PutValue(3456.90);
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+                }
 
-            // Add a pivot table based on the data range
-            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Add the product field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+                // Get the first worksheet (or specify the desired one)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add the sales field to the data area and obtain the PivotField object
-            int dataFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-            PivotField dataField = pivotTable.DataFields[dataFieldIndex];
-            dataField.Function = ConsolidationFunction.Sum;
+                // Create a new style object for currency formatting
+                Style currencyStyle = workbook.CreateStyle();
+                currencyStyle.Custom = "#,##0.00";
 
-            // Set the custom numeric format '#,##0.00' for the data field
-            dataField.NumberFormat = "#,##0.00";
+                // Define which style attributes to apply (only the number format)
+                StyleFlag styleFlag = new StyleFlag
+                {
+                    NumberFormat = true
+                };
 
-            // Refresh pivot cache and calculate data to apply the format
-            pivotTable.RefreshData();      // Correct method to refresh cache
-            pivotTable.CalculateData();
+                // Define the target range B1:B10 (row 0‑9, column 1)
+                Aspose.Cells.Range range = worksheet.Cells.CreateRange(0, 1, 10, 1);
+                range.ApplyStyle(currencyStyle, styleFlag);
 
-            // Save the workbook
-            workbook.Save("PivotNumberFormatDemo.xlsx");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        SetNumberFormatDemo.Run();
     }
 }

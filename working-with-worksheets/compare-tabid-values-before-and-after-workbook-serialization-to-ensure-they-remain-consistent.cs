@@ -1,63 +1,75 @@
-// Title: Check Worksheet TabId Persistence After Save and Load with Aspose.Cells for .NET
-// Description: Demonstrates how to set a worksheet's TabId, serialize the workbook to XLSX, reload it, and verify that the TabId value remains unchanged, with proper cleanup of resources.
-// Keywords: Aspose.Cells TabId verification | worksheet TabId after save | preserve TabId XLSX | TabId consistency Aspose | C# Aspose.Cells workbook serialization
-// Common Searches: Aspose.Cells keep worksheet TabId after saving | verify TabId value after workbook reload .NET | how to test TabId persistence in Excel file | compare TabId before and after Aspose.Cells save
-// Developer Intent: Confirm that the TabId property of a worksheet is retained unchanged when a workbook is saved and later reloaded using Aspose.Cells for .NET.
-// Use Cases: Automated CI test to ensure custom sheet identifiers survive serialization. | Migration script that validates sheet IDs are not altered during format conversion. | Debug routine for downstream processes that rely on stable TabId values.
-// AI Prompts: Write C# code with Aspose.Cells that assigns a TabId, saves the workbook, reloads it, and asserts the TabId is unchanged. | Explain the internal storage of the TabId property in an XLSX file and which save options might affect it. | Create an MSTest/NUnit unit test that checks TabId consistency after workbook serialization using Aspose.Cells.
+// Title: Check that Worksheet TabId values remain unchanged after saving and reloading an XLSX workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that records each worksheet's TabId, saves the workbook to a MemoryStream in XLSX format, reloads it, and verifies the TabId values are identical. | Show how to compare two List<int> of Worksheet.TabId before and after a workbook round‑trip with Aspose.Cells.
+// Common Searches: how to ensure worksheet TabId stays the same after Aspose.Cells workbook save and load in C# | Aspose.Cells .NET compare TabId values before and after workbook serialization | preserve worksheet tab order when saving Excel file with Aspose.Cells | C# verify worksheet TabId consistency after round‑trip XLSX using Aspose.Cells
+// Tags: worksheet TabId verification after XLSX roundtrip | Aspose.Cells workbook serialization to MemoryStream | compare Worksheet.TabId collections in C# | preserve Excel tab identifiers with Aspose.Cells | validate worksheet order after workbook reload
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTabIdComparison
+// The program creates a workbook with multiple worksheets, captures each worksheet's TabId, saves the workbook to a MemoryStream as XLSX, reloads it, captures the TabId values again, and compares the two sets to confirm that TabId values remain consistent across the serialization round‑trip.
+class Program
 {
-    // Demonstrates how to set a worksheet's TabId, serialize the workbook to XLSX, reload it, and verify that the TabId value remains unchanged, with proper cleanup of resources.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (using the provided creation rule)
-            Workbook workbook = new Workbook();
+            // ---------- Create workbook ----------
+            var workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Rename the default worksheet to avoid name conflict
+            workbook.Worksheets[0].Name = "Sheet0";
 
-            // Set a known TabId value
-            int originalTabId = 12345;
-            worksheet.TabId = originalTabId;
+            // Add additional worksheets with unique names
+            workbook.Worksheets.Add("Sheet1");
+            workbook.Worksheets.Add("Sheet2");
+            workbook.Worksheets.Add("Sheet3");
 
-            // Define a temporary file path for serialization
-            string tempFilePath = Path.Combine(Path.GetTempPath(), "TabIdTest.xlsx");
-
-            // Save the workbook (using the provided save rule)
-            workbook.Save(tempFilePath, SaveFormat.Xlsx);
-
-            // Load the saved workbook (using the provided load rule)
-            Workbook loadedWorkbook = new Workbook(tempFilePath);
-
-            // Retrieve the TabId from the loaded worksheet
-            int loadedTabId = loadedWorkbook.Worksheets[0].TabId;
-
-            // Compare the original and loaded TabId values
-            if (originalTabId == loadedTabId)
+            // Capture TabId values before serialization
+            var originalTabIds = new List<int>();
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                Console.WriteLine($"Success: TabId is consistent ({originalTabId}).");
-            }
-            else
-            {
-                Console.WriteLine($"Failure: Original TabId ({originalTabId}) != Loaded TabId ({loadedTabId}).");
+                originalTabIds.Add(ws.TabId);
             }
 
-            // Clean up temporary file
-            if (File.Exists(tempFilePath))
+            // ---------- Serialize workbook ----------
+            using (var ms = new MemoryStream())
             {
-                File.Delete(tempFilePath);
-            }
+                // Save to memory stream (serialization)
+                workbook.Save(ms, SaveFormat.Xlsx);
+                ms.Position = 0; // reset stream for reading
 
-            // Dispose workbooks
-            workbook.Dispose();
-            loadedWorkbook.Dispose();
+                // ---------- Load workbook ----------
+                var loadedWorkbook = new Workbook(ms);
+
+                // Capture TabId values after deserialization
+                var loadedTabIds = new List<int>();
+                foreach (Worksheet ws in loadedWorkbook.Worksheets)
+                {
+                    loadedTabIds.Add(ws.TabId);
+                }
+
+                // ---------- Compare TabId values ----------
+                bool isConsistent = originalTabIds.Count == loadedTabIds.Count;
+                if (isConsistent)
+                {
+                    for (int i = 0; i < originalTabIds.Count; i++)
+                    {
+                        if (originalTabIds[i] != loadedTabIds[i])
+                        {
+                            isConsistent = false;
+                            break;
+                        }
+                    }
+                }
+
+                Console.WriteLine("TabId consistency after serialization: " + isConsistent);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

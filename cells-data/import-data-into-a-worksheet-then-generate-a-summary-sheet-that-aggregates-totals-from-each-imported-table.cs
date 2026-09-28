@@ -1,10 +1,7 @@
-// Title: Import DataTables into worksheets and generate a totals summary with Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, builds two DataTables (Sales and Purchases), imports each table into its own worksheet with headers, adds a third "Summary" sheet, writes labels, and inserts SUM formulas that total the Amount or Cost columns from the source sheets. The formulas are calculated and the workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | C# | Import DataTable | Worksheet import | Summary sheet | SUM formula across sheets | CalculateFormula | Export to XLSX | ImportTableOptions | Excel automation .NET
-// Common Searches: Aspose.Cells import DataTable into specific worksheet | Create a summary worksheet that totals columns from multiple sheets in C# | How to add formulas that reference other worksheets with Aspose.Cells | Calculate formulas after importing data using Aspose.Cells | Save workbook as XLSX with Aspose.Cells .NET
-// Developer Intent: Generate a workbook, import two DataTables into separate worksheets, and add a summary sheet that aggregates numeric totals via formulas.
-// Use Cases: Load sales and purchase records into distinct sheets and automatically compute total sales amount and total purchase cost on a consolidated summary page. | Produce a departmental financial report where each department's data resides on its own worksheet and a summary sheet provides key aggregated metrics. | Combine multiple data sources into a single Excel file and create an overview sheet that sums important numeric columns for quick analysis.
-// AI Prompts: Show how to add average quantity calculations for each source sheet in the summary worksheet. | Provide code to apply conditional formatting to the summary totals based on a configurable threshold. | Explain how to dynamically add more DataTables and automatically extend the summary sheet with additional total rows.
+// Title: Import multiple DataTables into separate worksheets and generate a summary sheet that aggregates total Amount values with Aspose.Cells for .NET
+// AI Prompts: Import two DataTable objects into distinct worksheets, display column headers, and add a summary worksheet that uses SUM formulas to calculate each sheet's total Amount. | Create a workbook, auto‑fit all columns after importing the tables, and save the file as an XLSX document using Aspose.Cells. | Configure ImportTableOptions to show field names and insert rows when importing DataTables into worksheets.
+// Common Searches: how to import a DataTable into a specific worksheet with headers using Aspose.Cells C# | asp.net create summary worksheet that sums a column from multiple sheets in Aspose.Cells | set SUM formula for a column across worksheets with Aspose.Cells API
+// Tags: ImportTableOptions show field names Aspose.Cells | DataTable to worksheet import Aspose.Cells C# | summary worksheet SUM formula across sheets Aspose.Cells | auto fit columns after data import Aspose.Cells | save workbook as XLSX Aspose.Cells
 
 using System;
 using System.Data;
@@ -12,77 +9,86 @@ using Aspose.Cells;
 
 namespace AsposeCellsImportAndSummarize
 {
-    // Creates a new Workbook, builds two DataTables (Sales and Purchases), imports each table into its own worksheet with headers, adds a third "Summary" sheet, writes labels, and inserts SUM formulas that total the Amount or Cost columns from the source sheets. The formulas are calculated and the workbook is saved as an XLSX file.
+    // The program creates a new workbook, imports two DataTable objects into separate worksheets with column headers, adds a summary worksheet that uses SUM formulas to total the Amount column from each sheet, auto‑fits the columns for readability, and saves the workbook as ImportedAndSummarized.xlsx.
     class Program
     {
         static void Main()
         {
-            // ---------- Create a new workbook ----------
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // ---------- Prepare first data table ----------
-            DataTable salesTable = new DataTable("Sales");
-            salesTable.Columns.Add("Product", typeof(string));
-            salesTable.Columns.Add("Quantity", typeof(int));
-            salesTable.Columns.Add("Amount", typeof(double));
+            // ---------- Import first table ----------
+            // Prepare sample DataTable
+            DataTable table1 = new DataTable("Sales_Q1");
+            table1.Columns.Add("Product", typeof(string));
+            table1.Columns.Add("Quantity", typeof(int));
+            table1.Columns.Add("Amount", typeof(double));
 
-            salesTable.Rows.Add("Apple", 10, 150.0);
-            salesTable.Rows.Add("Banana", 20, 120.0);
-            salesTable.Rows.Add("Orange", 15, 180.0);
+            // Add rows
+            table1.Rows.Add("Apple", 120, 1500.0);
+            table1.Rows.Add("Banana", 80, 800.0);
+            table1.Rows.Add("Cherry", 50, 1250.0);
 
-            // ---------- Import first table into the first worksheet ----------
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "SalesData";
+            // Set import options (show column headers)
             ImportTableOptions options1 = new ImportTableOptions
             {
-                IsFieldNameShown = true,   // import column headers
+                IsFieldNameShown = true,
                 InsertRows = true
             };
-            sheet1.Cells.ImportData(salesTable, 0, 0, options1);
 
-            // ---------- Prepare second data table ----------
-            DataTable purchaseTable = new DataTable("Purchases");
-            purchaseTable.Columns.Add("Supplier", typeof(string));
-            purchaseTable.Columns.Add("Quantity", typeof(int));
-            purchaseTable.Columns.Add("Cost", typeof(double));
+            // Import into the first worksheet starting at cell A1 (row 0, column 0)
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Q1";
+            sheet1.Cells.ImportData(table1, 0, 0, options1);
 
-            purchaseTable.Rows.Add("SupplierA", 30, 200.0);
-            purchaseTable.Rows.Add("SupplierB", 25, 175.0);
-            purchaseTable.Rows.Add("SupplierC", 40, 300.0);
+            // ---------- Import second table ----------
+            // Create a new worksheet for the second table
+            int sheet2Index = workbook.Worksheets.Add();
+            Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+            sheet2.Name = "Q2";
 
-            // ---------- Add a new worksheet and import second table ----------
-            int sheetIndex = workbook.Worksheets.Add();
-            Worksheet sheet2 = workbook.Worksheets[sheetIndex];
-            sheet2.Name = "PurchaseData";
+            DataTable table2 = new DataTable("Sales_Q2");
+            table2.Columns.Add("Product", typeof(string));
+            table2.Columns.Add("Quantity", typeof(int));
+            table2.Columns.Add("Amount", typeof(double));
+
+            table2.Rows.Add("Apple", 100, 1300.0);
+            table2.Rows.Add("Banana", 90, 950.0);
+            table2.Rows.Add("Cherry", 70, 1400.0);
+
             ImportTableOptions options2 = new ImportTableOptions
             {
                 IsFieldNameShown = true,
                 InsertRows = true
             };
-            sheet2.Cells.ImportData(purchaseTable, 0, 0, options2);
 
-            // ---------- Create a summary worksheet ----------
-            Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            // Import into the second worksheet starting at cell A1
+            sheet2.Cells.ImportData(table2, 0, 0, options2);
+
+            // ---------- Create summary sheet ----------
+            int summaryIndex = workbook.Worksheets.Add();
+            Worksheet summarySheet = workbook.Worksheets[summaryIndex];
             summarySheet.Name = "Summary";
 
             // Header row
             summarySheet.Cells["A1"].PutValue("Source Sheet");
-            summarySheet.Cells["B1"].PutValue("Total Amount/Cost");
+            summarySheet.Cells["B1"].PutValue("Total Amount");
 
-            // Row for SalesData total (sum of Amount column, which is column C => index 2)
-            summarySheet.Cells["A2"].PutValue("SalesData");
-            // Formula sums the entire Amount column excluding header (starts at row 2)
-            summarySheet.Cells["B2"].Formula = $"SUM('{sheet1.Name}'!C2:C{sheet1.Cells.MaxDataRow + 1})";
+            // Row for first table total
+            summarySheet.Cells["A2"].PutValue(sheet1.Name);
+            // Formula to sum the "Amount" column of Q1 (excluding header)
+            // Assuming "Amount" is column C (index 2) and data starts at row 2 (index 1)
+            summarySheet.Cells["B2"].Formula = $"SUM('{sheet1.Name}'!C2:C{table1.Rows.Count + 1})";
 
-            // Row for PurchaseData total (sum of Cost column, column C => index 2)
-            summarySheet.Cells["A3"].PutValue("PurchaseData");
-            summarySheet.Cells["B3"].Formula = $"SUM('{sheet2.Name}'!C2:C{sheet2.Cells.MaxDataRow + 1})";
+            // Row for second table total
+            summarySheet.Cells["A3"].PutValue(sheet2.Name);
+            summarySheet.Cells["B3"].Formula = $"SUM('{sheet2.Name}'!C2:C{table2.Rows.Count + 1})";
 
-            // Optional: calculate the formulas now
-            workbook.CalculateFormula();
+            // Auto‑fit columns for better readability
+            summarySheet.AutoFitColumns();
 
-            // ---------- Save the workbook ----------
-            workbook.Save("ImportAndSummary.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            workbook.Save("ImportedAndSummarized.xlsx", SaveFormat.Xlsx);
         }
     }
 }

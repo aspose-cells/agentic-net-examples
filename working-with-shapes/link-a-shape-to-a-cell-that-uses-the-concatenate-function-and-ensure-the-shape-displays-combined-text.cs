@@ -1,62 +1,50 @@
-// Title: Link a Shape to a CONCATENATE Formula Cell in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, writes text to A1 and B1, sets C1 with a CONCATENATE formula, adds a rectangle shape, links the shape to C1, refreshes the displayed value, fits the shape to the text, and saves the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# shape linking | SetLinkedCell | CONCATENATE formula | rectangle shape | FitToTextSize | UpdateSelectedValue | Excel automation | cell to shape binding
-// Common Searches: Aspose.Cells link shape to cell C# | SetLinkedCell with formula Aspose.Cells | Fit shape to text size Aspose.Cells | Refresh shape text after formula change | Rectangle shape bound to CONCATENATE cell
-// Developer Intent: The developer needs to bind a rectangle shape to a cell that contains a CONCATENATE formula so the shape automatically displays the combined text.
-// Use Cases: Dynamic dashboards where shape captions reflect merged values from several cells. | Printable reports with address blocks inside shapes that update when source cells change. | Interactive worksheets where shape labels stay synchronized with formula‑driven cell content.
-// AI Prompts: Provide C# code that links a rectangle shape to a cell with a CONCATENATE formula and updates the shape text using Aspose.Cells. | Show how to bind multiple shapes to different formula cells and automatically fit each shape to its text. | Explain how to ensure a linked shape refreshes when the source cells of a CONCATENATE formula are edited in an Aspose.Cells workbook.
+// Title: Link a rectangle shape to a CONCATENATE formula cell and display the combined text using Aspose.Cells for .NET (C#)
+// AI Prompts: Create an Excel workbook, write a CONCATENATE formula in a cell, calculate the workbook, add a rectangle shape, and assign the shape's Text property to the evaluated cell value with Aspose.Cells in C#. | Generate a .xlsx file where a rectangle shape automatically reflects the result of a CONCATENATE formula after the workbook is calculated, using the Aspose.Cells .NET API. | Programmatically bind a shape's displayed text to the value of a formula cell, ensuring the formula is evaluated first, via Aspose.Cells C# methods.
+// Common Searches: Aspose.Cells C# link shape text to cell formula result | set rectangle shape text from CONCATENATE formula in Excel using Aspose.Cells | display calculated CONCATENATE value inside a shape with Aspose.Cells .NET
+// Tags: Aspose.Cells bind shape to calculated cell | C# rectangle shape displays formula result | evaluate workbook before shape assignment Aspose.Cells | Excel shape text from CONCATENATE cell using .NET | link shape to cell value Aspose.Cells API
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, writes text to A1 and B1, sets C1 with a CONCATENATE formula, adds a rectangle shape, links the shape to C1, refreshes the displayed value, fits the shape to the text, and saves the file using Aspose.Cells for .NET.
-class ShapeLinkExample
+// The example creates a workbook, inserts a CONCATENATE formula in B2, calculates the formula, adds a rectangle shape, sets the shape's Text property to the evaluated string from B2, and saves the file as LinkedShape.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells A1 and B1 with sample text
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
+            // Put a CONCATENATE formula in cell B2
+            sheet.Cells["B2"].Formula = "=CONCATENATE(\"Hello \",\"World\")";
 
-            // Set cell C1 to concatenate A1 and B1 with a space
-            sheet.Cells["C1"].Formula = "=CONCATENATE(A1,\" \",B1)";
+            // Evaluate the formula so the cell contains the combined text
+            workbook.CalculateFormula();
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
-            int upperRow = 2;    // Row index (0‑based)
-            int upperCol = 0;    // Column index (0‑based)
-            int lowerRow = 5;
-            int lowerCol = 3;
-            int width = 150;     // width in pixels
-            int height = 80;     // height in pixels
-            RectangleShape shape = sheet.Shapes.AddRectangle(upperRow, upperCol, lowerRow, lowerCol, width, height);
+            // Parameters: drawing type, upper left row, upper left column, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,    // upper left row
+                0,    // upper left column
+                0,    // top offset (pixels)
+                100,  // left offset (pixels)
+                30,   // height (pixels)
+                200   // width (pixels)
+            );
 
-            // Link the shape to cell C1 so it displays the concatenated result
-            shape.SetLinkedCell("C1", true, true);
+            // Link the shape's displayed text to the value of cell B2
+            shape.Text = sheet.Cells["B2"].StringValue;
 
-            // Update the shape's displayed value based on the linked cell
-            shape.UpdateSelectedValue();
-
-            // Optionally adjust the shape to fit the text size
-            shape.FitToTextSize();
-
-            // Save the workbook to a file
-            string outputPath = "ShapeLinkedToConcatenatedCell.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Save the workbook
+            workbook.Save("LinkedShape.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

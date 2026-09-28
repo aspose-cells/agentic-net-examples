@@ -1,71 +1,84 @@
-// Title: C# – Create a Dynamic Named Range that Grows with an Excel Table using Aspose.Cells
-// Description: This C# example demonstrates how to add a ListObject (Excel table) to a workbook, define a named range that points to =EmployeeTable[#All], insert new rows, resize the table, and verify that the named range automatically expands before saving the file.
-// Keywords: Aspose.Cells | C# dynamic named range | Excel table auto expand | ListObject resize | named range #All | Aspose.Cells .NET example | auto‑growing range | Excel named range formula | Aspose.Cells API
-// Common Searches: Aspose.Cells create dynamic named range | C# expand named range with table rows | How to resize ListObject in Aspose.Cells | Get address of named range after adding rows | Reference Excel table in named range Aspose.Cells
-// Developer Intent: The developer needs a named range that automatically includes new rows added to an Excel table.
-// Use Cases: Use the dynamic range in formulas, charts, or pivot tables so they always cover the full employee list. | Apply data validation, conditional formatting, or data bars to an expanding range without manual updates. | Export the workbook to PDF, CSV, or other formats while preserving the auto‑growing range for downstream processing. | Integrate the range with reporting tools that rely on a stable named range identifier.
-// AI Prompts: Write C# code using Aspose.Cells to create a ListObject and a named range that references EmployeeTable[#All] and expands automatically when rows are added. | Show how to add multiple rows to the table, resize it, and output the named range address before and after the insertion. | Explain how to reference the dynamic named range in worksheet formulas, charts, or pivot tables with Aspose.Cells.
+// Title: How to create a dynamic Excel table with an auto‑expanding named range using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to add a ListObject table, insert new rows, and automatically resize the table so the named range expands. | Show the steps to define a named range for an Excel table in Aspose.Cells and update it after appending data rows. | Provide a snippet that creates a workbook, builds a table with headers, adds a row, and calls Resize to keep the range dynamic.
+// Common Searches: Aspose.Cells C# create ListObject with dynamic named range that grows when rows are added | Resize Excel table programmatically after inserting rows using Aspose.Cells .NET | How to make an Excel table auto‑expand its range in Aspose.Cells C# example
+// Tags: Aspose.Cells ListObject dynamic range | C# resize Excel table Aspose | auto‑expand Excel table named range .NET | create Excel table with headers Aspose.Cells | add data row to Aspose.Cells ListObject
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
 
-// This C# example demonstrates how to add a ListObject (Excel table) to a workbook, define a named range that points to =EmployeeTable[#All], insert new rows, resize the table, and verify that the named range automatically expands before saving the file.
+// The example creates a new workbook, defines a ListObject table with headers, adds an extra data row, resizes the table to include the new row, and saves the file as DynamicTable.xlsx, demonstrating a dynamic named range that expands automatically.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data with headers
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Name");
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue("John");
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue("Mary");
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Add a table (ListObject) covering the initial data range
-            int tableIdx = worksheet.ListObjects.Add("A1", "B3", true);
-            ListObject table = worksheet.ListObjects[tableIdx];
-            table.DisplayName = "EmployeeTable";
+            // Add header row
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
 
-            // Create a dynamic named range that refers to the whole table.
-            // The reference "=EmployeeTable[#All]" expands automatically as the table grows.
-            int nameIdx = workbook.Worksheets.Names.Add("DynamicEmployees");
-            Name dynamicName = workbook.Worksheets.Names[nameIdx];
-            dynamicName.RefersTo = "=EmployeeTable[#All]";
+            // Add initial data rows
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
 
-            // Show the address of the named range before adding new rows
-            AsposeRange rangeBefore = dynamicName.GetRange();
-            Console.WriteLine("Named range before adding rows: " + rangeBefore.Address);
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(90);
 
-            // Add a new row to the worksheet (below the current table)
-            AsposeRange dataRange = table.DataRange;
-            int newRowIndex = dataRange.FirstRow + dataRange.RowCount; // index of the new row (0‑based)
+            // Define the initial range for the table (header + 2 data rows)
+            int firstRow = 0;          // zero‑based index for row 1 (header)
+            int firstColumn = 0;       // zero‑based index for column A
+            int totalRows = 3;         // 1 header + 2 data rows
+            int totalColumns = 3;      // ID, Name, Score
 
-            // Fill data in the newly added row
-            worksheet.Cells[newRowIndex, 0].PutValue(3);
-            worksheet.Cells[newRowIndex, 1].PutValue("Bob");
+            // Create a ListObject (Excel table) which provides a dynamic named range
+            // The last parameter 'hasHeaders' indicates that the first row contains headers
+            int tableIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
 
-            // Resize the table to include the new row (hasHeaders = true)
-            table.Resize(dataRange.FirstRow, dataRange.FirstColumn, dataRange.RowCount + 1, dataRange.ColumnCount, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.ShowHeaderRow = true;
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
 
-            // Retrieve the named range again to demonstrate that it has expanded
-            AsposeRange rangeAfter = dynamicName.GetRange();
-            Console.WriteLine("Named range after adding rows: " + rangeAfter.Address);
+            // Add a new row below the current table; the table will expand automatically
+            int newRowIdx = sheet.Cells.MaxDataRow + 1; // first empty row after existing data
+            sheet.Cells[newRowIdx, 0].PutValue(3);      // ID
+            sheet.Cells[newRowIdx, 1].PutValue("Charlie"); // Name
+            sheet.Cells[newRowIdx, 2].PutValue(78);    // Score
 
-            // Save the workbook
-            workbook.Save("DynamicTableNamedRange.xlsx");
+            // Resize the table to include the newly added row (hasHeaders = true)
+            int newTotalRows = sheet.Cells.MaxDataRow + 1; // total rows including header
+            table.Resize(firstRow, firstColumn, newTotalRows, totalColumns, true);
+
+            // Ensure output directory exists
+            string outputPath = "DynamicTable.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save(outputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

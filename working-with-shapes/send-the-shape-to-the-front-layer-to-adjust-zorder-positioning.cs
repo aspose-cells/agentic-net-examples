@@ -1,52 +1,68 @@
-// Title: Send a shape to the front layer (Z‑order) with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds two overlapping rectangle shapes, uses the ToFrontOrBack method with a positive value to move a shape to the front (and optionally a negative value to send a shape to the back), and saves the result as ShapeZOrderDemo.xlsx.
-// Keywords: Aspose.Cells | C# | shape Z-order | ToFrontOrBack | bring shape to front | send shape to back | Excel shape layering | .NET workbook | overlapping shapes
-// Common Searches: Aspose.Cells change shape Z order | C# bring shape to front in Excel | send shape to back Aspose.Cells | adjust shape layering programmatically | move overlapping shapes in workbook
-// Developer Intent: Reorder a specific shape’s Z‑order so it appears on the front (or back) layer of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Ensure a chart legend or annotation stays visible above other overlapping objects. | Create complex diagrams where certain shapes must be foreground elements. | Programmatically prepare reports with controlled visual hierarchy before distribution.
-// AI Prompts: Generate C# code with Aspose.Cells that moves the third shape in a worksheet to the front while leaving other shapes unchanged. | Explain the numeric parameters of the ToFrontOrBack method and how they affect shape positioning. | Write a script that iterates through all worksheet shapes and sends any shape named "Background" to the back layer.
+// Title: How to bring a specific shape to the front layer in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook, locate a shape by its name (or fall back to the first shape), set its ZOrderPosition to the highest index, and save the file with Aspose.Cells in C#. | Programmatically adjust the Z‑order of a worksheet shape to the topmost layer using the Shape.ZOrderPosition property in Aspose.Cells for .NET. | Retrieve a shape from a worksheet, change its layering order to bring it forward, and write the updated workbook to a new file with the Aspose.Cells C# API.
+// Common Searches: aspnet c# set shape ZOrderPosition to bring shape to front in Excel file | Aspose.Cells move shape to top layer programmatically | how to change shape layering order in an Excel worksheet using Aspose.Cells | retrieve shape by name and adjust Z order with Aspose.Cells .NET
+// Tags: Aspose.Cells Shape.ZOrderPosition | C# set Excel shape Z-order | Aspose.Cells retrieve worksheet shape | Excel shape layering with Aspose.Cells | Aspose.Cells topmost shape positioning
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// // This example loads an existing workbook, obtains a shape named "MyShape" (or the first shape if not found), sets its ZOrderPosition to the highest index to bring it to the front, and saves the modified workbook to a new file.
+class ShapeZOrderExample
 {
-    // This C# example creates a workbook, adds two overlapping rectangle shapes, uses the ToFrontOrBack method with a positive value to move a shape to the front (and optionally a negative value to send a shape to the back), and saves the result as ShapeZOrderDemo.xlsx.
-    public class ShapeToFrontDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add two overlapping shapes
-            Shape shape1 = worksheet.Shapes.AddRectangle(5, 5, 100, 100, 0, 0);
-            Shape shape2 = worksheet.Shapes.AddRectangle(20, 20, 100, 100, 0, 0);
-
-            // Bring shape2 to the front (positive value)
-            shape2.ToFrontOrBack(1);
-
-            // Send shape1 to the back (negative value) – optional
-            shape1.ToFrontOrBack(-1);
-
-            // Save the workbook
-            workbook.Save("ShapeZOrderDemo.xlsx");
-        }
-
-        // Entry point for the application
-        public static void Main()
-        {
+            // Retrieve the shape by name; fallback to first shape if not found
+            Shape? shape = null;
             try
             {
-                Run();
-                Console.WriteLine("Workbook saved successfully.");
+                shape = worksheet.Shapes["MyShape"];
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Ignored – will try alternative retrieval below
             }
+
+            if (shape == null && worksheet.Shapes.Count > 0)
+            {
+                shape = worksheet.Shapes[0];
+            }
+
+            if (shape == null)
+            {
+                Console.WriteLine("No shapes available in the worksheet.");
+                return;
+            }
+
+            // Bring the shape to the front by setting its Z‑order to the highest position
+            shape.ZOrderPosition = worksheet.Shapes.Count - 1;
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

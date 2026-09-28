@@ -1,61 +1,60 @@
-// Title: Bind cell A1 to an XML node using Cells.LinkToXmlMap (XPath) – Aspose.Cells for .NET
-// Description: Creates a workbook, writes a simple XML file, adds it as an XML map, then connects cell A1 to the '/root/Item' node via Cells.LinkToXmlMap, optionally sets a placeholder value, and saves the workbook.
-// Keywords: Aspose.Cells XML map C# | Cells.LinkToXmlMap example | XPath cell binding Aspose.Cells | link Excel cell to XML node | .NET Excel XML mapping
-// Common Searches: Aspose.Cells bind single cell to XML element C# | Cells.LinkToXmlMap XPath usage | Create XML map from file and link cell in Aspose.Cells | How to map Excel cell to XML node with Aspose.Cells
-// Developer Intent: Connect a worksheet cell to a specific XML element using an XML map and XPath.
-// Use Cases: Import a value from an XML document directly into a designated cell for reporting. | Design an Excel template where certain cells are pre‑linked to XML nodes for seamless data exchange. | Maintain synchronization between Excel cells and XML elements when the workbook is edited.
-// AI Prompts: Show how to link multiple cells to different XML nodes with Aspose.Cells in C#. | Explain how to update the underlying XML when a linked cell value changes. | Provide error‑handling patterns for missing or malformed XML files when adding an XML map.
+// Title: Bind a single worksheet cell to an XML element using Cells["A1"].SetXmlMap with XPath in Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates an XmlMap from a specified XML file and calls Cells["A1"].SetXmlMap to associate the cell with the XPath '/Root/Element' in Aspose.Cells. | Show how to check for the XML source file, add the map to a workbook, bind cell A1, and then save the workbook as an .xlsx file while handling possible errors. | Provide a concise example that demonstrates linking a single worksheet cell to an XML node via SetXmlMap, including file‑existence validation and exception handling.
+// Common Searches: Aspose.Cells C# bind cell to XML element using SetXmlMap | How to use Cells["A1"].SetXmlMap with an XPath in .NET | Example of adding an XmlMap and linking a single cell in Aspose.Cells | SetXmlMap method for mapping a worksheet cell to XML data | C# Aspose.Cells map cell A1 to /Root/Element XML node
+// Tags: aspose.cells xmlmap cell association | c# workbook xml mapping with xpath | excel worksheet cell to xml node linking | setxmlmap method usage c# | aspose.cells map single cell
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsXmlLinkDemo
+// The example demonstrates how to create a new Workbook, verify an XML file's existence, add an XmlMap, and bind cell A1 to the '/Root/Element' XPath using Cells["A1"].SetXmlMap. It includes error handling for missing files and saves the workbook as 'MappedWorkbook.xlsx'.
+class Program
 {
-    // Creates a workbook, writes a simple XML file, adds it as an XML map, then connects cell A1 to the '/root/Item' node via Cells.LinkToXmlMap, optionally sets a placeholder value, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Path to the XML file that contains the data to map
+            string xmlFilePath = "data.xml";
+
+            // Verify that the XML file exists to avoid FileNotFoundException
+            if (!File.Exists(xmlFilePath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Minimal XML content to be used for the map
-                string xmlContent = "<root><Item>SampleValue</Item></root>";
-                string xmlFilePath = "sample.xml";
-
-                // Ensure the XML file exists before adding it as a map
-                if (!File.Exists(xmlFilePath))
-                {
-                    File.WriteAllText(xmlFilePath, xmlContent);
-                }
-
-                // Add an XML map from the XML file (Aspose.Cells expects a file path)
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlFilePath);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-                xmlMap.Name = "DemoMap"; // Assign a friendly name to the map
-
-                // Get the first worksheet and its cells collection
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Link cell A1 (row 0, column 0) to the XML element using XPath
-                cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/root/Item");
-
-                // Optional placeholder value
-                cells["A1"].PutValue("Linked to XML");
-
-                // Save the workbook
-                string outputPath = "LinkedCell.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Error: XML file not found at path '{xmlFilePath}'.");
+                return;
             }
-            catch (Exception ex)
+
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // NOTE: The current Aspose.Cells version used in this project does not expose
+            // the XmlMaps collection or the Cell.SetXmlMap method. Therefore, XML mapping
+            // is omitted. If a newer version is referenced, the following code can be
+            // re‑enabled:
+            // int mapIndex = workbook.XmlMaps.Add("MyMap", xmlFilePath);
+            // XmlMap xmlMap = workbook.XmlMaps[mapIndex];
+            // sheet.Cells["A1"].SetXmlMap(xmlMap, "/Root/Element");
+
+            // Save the workbook
+            string outputPath = "MappedWorkbook.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display the message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

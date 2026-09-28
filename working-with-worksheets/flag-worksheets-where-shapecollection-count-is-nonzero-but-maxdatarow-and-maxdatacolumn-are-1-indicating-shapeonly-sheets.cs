@@ -1,17 +1,15 @@
-// Title: Detect and Flag Shape‑Only Worksheets in Excel with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, scans each worksheet, and flags those that contain shapes but no cell data (MaxDataRow = -1 and MaxDataColumn = -1). The flag is added as a custom property "ShapeOnly" and the sheet name is suffixed with "_ShapeOnly" before saving the file.
-// Keywords: Aspose.Cells shape only worksheet detection | C# identify worksheets with only drawings | add custom property to Excel sheet Aspose | MaxDataRow MaxDataColumn -1 check | rename worksheet based on shapes Aspose.Cells | flag shape‑only sheets .NET
-// Common Searches: how to find Excel sheets that only have shapes using Aspose.Cells | add custom property to mark shape‑only worksheets in .NET | rename worksheets with drawings but no data Aspose.Cells | detect empty data rows and columns in Excel via Aspose
-// Developer Intent: Locate worksheets that contain drawings but no cell data and mark them for downstream processing.
-// Use Cases: Exclude shape‑only sheets when converting a workbook to PDF. | Automatically rename drawing‑only tabs for easier navigation in large workbooks. | Store a flag in custom properties to drive conditional logic in automation pipelines.
-// AI Prompts: Create C# code using Aspose.Cells that scans all worksheets, flags those with Shapes.Count > 0 and MaxDataRow/MaxDataColumn = -1 by adding a "ShapeOnly" custom property and appending "_ShapeOnly" to the sheet name. | Provide an Aspose.Cells snippet that logs the names of shape‑only worksheets and saves the modified workbook. | Write a method that returns a list of worksheet names that have shapes but no data rows or columns using Aspose.Cells for .NET.
+// Title: Identify and flag shape‑only worksheets in an Excel file using Aspose.Cells for .NET by adding a comment and coloring the tab
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, detects sheets where Shapes.Count > 0 and Cells.MaxDataRow/MaxDataColumn are -1, then adds a comment "Shape‑only sheet" to cell A1 and sets the worksheet tab color to yellow. | Create a reusable C# method using Aspose.Cells that marks shape‑only worksheets by inserting a comment in A1, applying a yellow tab highlight, and returns the updated workbook.
+// Common Searches: aspnet how to find Excel worksheets that contain only drawings with Aspose.Cells | c# mark shape‑only sheets in a workbook by adding a comment and changing tab color | using Aspose.Cells detect worksheets with Shapes collection but no data rows | flag Excel sheets that have drawings but no cell data in .NET
+// Tags: detect shape‑only worksheets Aspose.Cells | add comment to worksheet cell A1 C# | set worksheet tab color Aspose.Cells | check MaxDataRow MaxDataColumn -1 Aspose.Cells | shape collection count > 0 Excel .NET
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, scans each worksheet, and flags those that contain shapes but no cell data (MaxDataRow = -1 and MaxDataColumn = -1). The flag is added as a custom property "ShapeOnly" and the sheet name is suffixed with "_ShapeOnly" before saving the file.
-class ShapeOnlySheetFlagger
+// The example loads an Excel workbook, iterates through each worksheet, and when a sheet has Shapes.Count > 0 while Cells.MaxDataRow and Cells.MaxDataColumn are -1 (indicating no data cells), it adds a comment "Shape‑only sheet" to cell A1, colors the worksheet tab yellow, and saves the modified file.
+class Program
 {
     static void Main()
     {
@@ -33,18 +31,19 @@ class ShapeOnlySheetFlagger
             // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine if the sheet contains shapes but no data rows/columns
+                // Condition: sheet contains shapes but has no data rows/columns
                 bool hasShapes = sheet.Shapes.Count > 0;
-                bool noDataRows = sheet.Cells.MaxDataRow == -1;
-                bool noDataCols = sheet.Cells.MaxDataColumn == -1;
+                bool hasNoData = sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1;
 
-                if (hasShapes && noDataRows && noDataCols)
+                if (hasShapes && hasNoData)
                 {
-                    // Flag the worksheet by adding a custom property (value must be a string)
-                    sheet.CustomProperties.Add("ShapeOnly", "true");
+                    // Flag the sheet by adding a comment to cell A1
+                    int commentIndex = sheet.Comments.Add("A1");
+                    Comment comment = sheet.Comments[commentIndex];
+                    comment.Note = "Shape‑only sheet";
 
-                    // Optionally, rename the sheet to make the flag visible in Excel
-                    sheet.Name = sheet.Name + "_ShapeOnly";
+                    // Optionally set the worksheet tab color to highlight it
+                    sheet.TabColor = Color.Yellow;
                 }
             }
 
@@ -54,7 +53,7 @@ class ShapeOnlySheetFlagger
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

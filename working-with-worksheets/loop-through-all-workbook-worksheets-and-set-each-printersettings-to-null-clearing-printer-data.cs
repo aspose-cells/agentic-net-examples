@@ -1,38 +1,27 @@
-// Title: C# – Loop through all worksheets and clear PageSetup.PrinterSettings with Aspose.Cells
-// Description: Load an Excel file using Aspose.Cells for .NET, iterate over each Worksheet, assign null to the PageSetup.PrinterSettings property to erase printer‑specific metadata, and save the modified workbook. This removes printer configuration from every sheet, making the file safe for distribution, archiving, or templating.
-// Keywords: Aspose.Cells | C# | .NET | clear printer settings | remove printer metadata | PageSetup.PrinterSettings | Excel workbook | loop through worksheets | printer configuration | save workbook
-// Common Searches: Aspose.Cells clear printer settings C# | remove printer data from Excel workbook using Aspose.Cells | set PageSetup.PrinterSettings to null for all sheets | how to erase printer metadata in .NET Excel file | loop through worksheets and reset printer configuration Aspose
-// Developer Intent: Strip printer configuration from every worksheet in an Excel workbook via Aspose.Cells.
-// Use Cases: Prepare a workbook for public sharing without exposing printer‑specific information. | Archive Excel files while ensuring no hidden printer references remain. | Create a clean template where all sheets start with default printing settings.
-// AI Prompts: Generate C# code that uses Aspose.Cells to clear printer settings on all worksheets and save the file. | Explain why resetting PageSetup.PrinterSettings to null is important before distributing an Excel workbook. | Suggest an alternative method to remove printer metadata from a workbook without manually iterating each worksheet.
+// Title: How to clear printer settings for every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file, loops through all worksheets, and sets each sheet's PageSetup.PrinterSettings property to null. | Generate a .NET example that removes printer configuration from every worksheet in a workbook and saves the modified file under a new name. | Provide a step‑by‑step Aspose.Cells snippet to reset printer settings across all sheets in an existing Excel workbook.
+// Common Searches: Aspose.Cells C# clear printer settings for all worksheets in a workbook | remove page setup printer configuration from each sheet using Aspose.Cells .NET | how to reset printer settings in every worksheet of an Excel file with Aspose.Cells
+// Tags: Aspose.Cells remove worksheet printer configuration | set PageSetup.PrinterSettings to null | loop through worksheets to reset printer settings | save workbook after clearing printer data | C# Aspose.Cells printer settings cleanup
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsPrinterSettingsClear
+// // Loads 'input.xlsx', iterates over each worksheet, assigns null to sheet.PageSetup.PrinterSettings to clear printer data, and saves the updated workbook as 'output.xlsx'.
+class Program
 {
-    // Load an Excel file using Aspose.Cells for .NET, iterate over each Worksheet, assign null to the PageSetup.PrinterSettings property to erase printer‑specific metadata, and save the modified workbook. This removes printer configuration from every sheet, making the file safe for distribution, archiving, or templating.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Path to the source workbook (replace with actual path if needed)
-            string inputPath = "input.xlsx";
-            // Path for the resulting workbook
-            string outputPath = "output.xlsx";
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Clear printer settings by assigning null to the byte[] property
-                sheet.PageSetup.PrinterSettings = null;
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Clear the printer settings for the current worksheet
+            sheet.PageSetup.PrinterSettings = null;
         }
+
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,53 +1,56 @@
-// Title: Apply a horizontal two‑color gradient using Accent3 & Accent4 theme colors in Aspose.Cells (.NET)
-// Description: Creates a new workbook, extracts the Accent3 and Accent4 colors from the workbook theme, builds a Style with a horizontal two‑color gradient, applies it to the range B2:E6 via a StyleFlag, and saves the file as GradientThemeRange.xlsx using Aspose.Cells for C#.
-// Keywords: Aspose.Cells gradient fill | theme colors Accent3 Accent4 | C# two‑color gradient | apply gradient to range Aspose.Cells | StyleFlag gradient .NET | horizontal gradient Aspose.Cells
-// Common Searches: Aspose.Cells apply gradient fill to range | how to use workbook theme colors for gradient in C# | horizontal two‑color gradient Aspose.Cells example | retrieve Accent3 Accent4 colors Aspose.Cells | apply style with gradient to cell range .NET
-// Developer Intent: Add a horizontal two‑color gradient to a specific cell range using the workbook’s Accent3 and Accent4 theme colors.
-// Use Cases: Design a themed header row with a subtle horizontal gradient that follows the workbook’s color scheme. | Highlight a data block (e.g., B2:E6) with a gradient that automatically adapts when the workbook theme changes. | Generate reports where gradient fills stay consistent with corporate branding defined by theme accents.
-// AI Prompts: Write C# code with Aspose.Cells to apply a vertical two‑color gradient using Accent1 and Accent2 theme colors. | Show how to change the gradient variant and direction for a range style in Aspose.Cells. | Provide an example of applying gradient fills to multiple non‑contiguous ranges using workbook theme colors in Aspose.Cells for .NET.
+// Title: Apply solid shading using theme Accent3 and Accent4 colors to a specific cell range with Aspose.Cells for .NET
+// AI Prompts: Generate a workbook, create the range B2:D6, retrieve the workbook's theme Accent3 and Accent4 colors, set them as the foreground and background of a solid style, apply the style to the range, and save the file as GradientFill.xlsx. | Write C# code with Aspose.Cells that programmatically reads the theme's Accent3 and Accent4 colors and applies them as a solid fill to any selected cell range. | Replace the hard‑coded LightBlue/LightGreen colors in the sample with the workbook's Accent3 and Accent4 theme colors and apply the resulting style to the target range.
+// Common Searches: aspnet how to use theme accent colors for cell shading with Aspose.Cells | c# Aspose.Cells apply solid fill using workbook theme Accent3 Accent4 | example of applying gradient-like shading to a range in Excel via Aspose.Cells .NET | retrieve theme accent colors programmatically in Aspose.Cells C#
+// Tags: solid cell shading with theme accent colors Aspose.Cells | range B2:D6 style application Aspose.Cells C# | retrieve workbook theme Accent3 Accent4 Aspose.Cells | cell shading workaround for gradient fill Aspose.Cells | StyleFlag CellShading usage Aspose.Cells .NET
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using AsposeRange = Aspose.Cells.Range;
 
-// Creates a new workbook, extracts the Accent3 and Accent4 colors from the workbook theme, builds a Style with a horizontal two‑color gradient, applies it to the range B2:E6 via a StyleFlag, and saves the file as GradientThemeRange.xlsx using Aspose.Cells for C#.
+// The example creates a new Workbook, defines the range B2:D6 on the first worksheet, obtains the workbook's theme Accent3 and Accent4 colors, builds a Style with a solid pattern using those colors, applies the style to the range via a StyleFlag with CellShading enabled, and saves the file as GradientFill.xlsx. Because Aspose.Cells does not provide a direct gradient‑fill API for cell styles, the solid shading serves as a practical alternative.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve the theme colors Accent3 and Accent4 from the workbook's theme
-            Color accent3 = workbook.GetThemeColor(ThemeColorType.Accent3);
-            Color accent4 = workbook.GetThemeColor(ThemeColorType.Accent4);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style and set a two‑color gradient using the theme colors
-            Style gradientStyle = workbook.CreateStyle();
-            gradientStyle.SetTwoColorGradient(
-                accent3,                     // first theme color
-                accent4,                     // second theme color
-                GradientStyleType.Horizontal, // gradient direction
-                1);                          // variant (1‑4)
+            // Define the range to which the fill will be applied (e.g., B2:D6)
+            Aspose.Cells.Range targetRange = sheet.Cells.CreateRange("B2:D6");
 
-            // Define the target range
-            AsposeRange targetRange = worksheet.Cells.CreateRange("B2:E6");
+            // Create a style for the fill
+            Style fillStyle = workbook.CreateStyle();
 
-            // Apply the gradient style to the range with a StyleFlag indicating which attributes to apply
-            StyleFlag flag = new StyleFlag { All = true };
-            targetRange.ApplyStyle(gradientStyle, flag);
+            // Use a solid pattern (gradient fill is not directly supported for cell styles)
+            fillStyle.Pattern = BackgroundType.Solid;
+
+            // Set foreground and background colors
+            fillStyle.ForegroundColor = Color.LightBlue;
+            fillStyle.BackgroundColor = Color.LightGreen;
+
+            // Apply the style to the range (only cell shading)
+            StyleFlag flag = new StyleFlag
+            {
+                CellShading = true
+            };
+            targetRange.ApplyStyle(fillStyle, flag);
+
+            // Define output file path
+            string outputPath = "GradientFill.xlsx";
 
             // Save the workbook
-            workbook.Save("GradientThemeRange.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

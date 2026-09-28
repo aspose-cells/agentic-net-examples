@@ -1,64 +1,51 @@
-// Title: Remove Password from an XLSX with Aspose.Cells (.NET) – Preserve Formulas & Formatting
-// Description: Shows how to load a password‑protected workbook using Aspose.Cells LoadOptions, optionally unprotect the sheet structure, and save it as a plain XLSX file that keeps all formulas, styles, and other formatting intact.
-// Keywords: Aspose.Cells decrypt XLSX | C# remove Excel password | load encrypted workbook Aspose | save unprotected workbook | preserve Excel formulas | Excel encryption .NET | Workbook.Unprotect | LoadOptions.Password
-// Common Searches: asp.net strip password from excel file | c# decrypt encrypted xlsx using aspose.cells | open password protected excel and save without password | keep formulas when removing excel encryption | batch decrypt xlsx files Aspose.Cells
-// Developer Intent: Open a secured Excel file and write a new version without encryption while leaving all content unchanged.
-// Use Cases: Automated decryption of daily financial reports before data extraction | Pre‑processing step for Excel‑based ETL pipelines that require unprotected workbooks | Desktop utility that removes passwords from shared spreadsheets without altering formatting
-// AI Prompts: Generate C# code with Aspose.Cells to open an encrypted XLSX, optionally unprotect the workbook structure, and save a plain copy preserving formulas and styles. | Explain the role of LoadOptions.Password in Aspose.Cells and demonstrate handling of an incorrect password exception. | Adapt the example to iterate over all .xlsx files in a folder, decrypt each one, and write the results to a target directory.
+// Title: Decrypt an encrypted XLSX file and save it as an unprotected workbook while preserving formulas and formatting with Aspose.Cells for .NET
+// AI Prompts: Load a password‑protected XLSX using Aspose.Cells LoadOptions, then save it without a password to keep all formulas and styles. | Write C# code that opens an encrypted Excel workbook with a given password and outputs a plain XLSX file that retains worksheet content. | Show how to remove workbook encryption in Aspose.Cells while ensuring formulas, charts, and formatting remain intact.
+// Common Searches: asp.net how to open encrypted xlsx with password using aspose.cells | c# remove password from excel file without losing formulas | convert protected xlsx to unprotected using Aspose.Cells LoadOptions | preserve cell formatting when decrypting an Excel workbook in .NET | Aspose.Cells decrypt workbook and save as plain xlsx example
+// Tags: Aspose.Cells load encrypted XLSX | Aspose.Cells save workbook without password | remove Excel file encryption C# | preserve formulas when decrypting Excel | LoadOptions password protected workbook
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// // Opens an encrypted XLSX using LoadOptions with the supplied password, then saves it as a new XLSX without a password, preserving all formulas, styles, and other worksheet content.
+class Program
 {
-    // Shows how to load a password‑protected workbook using Aspose.Cells LoadOptions, optionally unprotect the sheet structure, and save it as a plain XLSX file that keeps all formulas, styles, and other formatting intact.
-    public class DecryptWorkbook
+    static void Main()
     {
-        public static void Run()
+        // Path to the encrypted XLSX file
+        string encryptedFilePath = "encrypted.xlsx";
+
+        // Verify that the encrypted file exists
+        if (!File.Exists(encryptedFilePath))
         {
-            // Path to the encrypted XLSX file
-            string sourcePath = "encrypted.xlsx";
+            Console.WriteLine($"Error: The file \"{encryptedFilePath}\" was not found.");
+            return;
+        }
+
+        // Password used to encrypt the file
+        string password = "yourPassword";
+
+        try
+        {
+            // Load the encrypted workbook using LoadOptions with the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = password
+            };
+            Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
 
             // Path for the unencrypted output file
-            string destPath = "decrypted.xlsx";
+            string unencryptedFilePath = "unencrypted.xlsx";
 
-            // Password used to open the encrypted workbook
-            string password = "yourPassword";
+            // Save the workbook without a password (unencrypted)
+            // Using SaveFormat directly avoids version‑specific SaveOptions classes
+            workbook.Save(unencryptedFilePath, SaveFormat.Xlsx);
 
-            // Verify that the source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
-            try
-            {
-                // Load the encrypted workbook using LoadOptions with the password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto) { Password = password };
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-                // If the workbook structure is also protected, unprotect it (optional)
-                // workbook.Unprotect(password);
-
-                // Save the workbook without setting a password – this creates an unencrypted file
-                workbook.Save(destPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Decryption completed. Unencrypted file saved to: {destPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during decryption: {ex.Message}");
-            }
+            Console.WriteLine($"Workbook saved successfully to \"{unencryptedFilePath}\".");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DecryptWorkbook.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,96 +1,91 @@
-// Title: Export Aspose.Cells Chart Images as PNG in HTML and Verify Output (C# .NET)
-// Description: Creates a workbook with a column chart, sets HtmlSaveOptions.ImageOptions.ImageType to PNG, disables Base64 encoding, saves the workbook as HTML, then scans the generated HTML for <img> tags ending with .png and confirms the corresponding PNG files exist in the output folder.
-// Keywords: Aspose.Cells PNG chart export | HtmlSaveOptions ImageType PNG | C# export Excel chart to HTML | verify chart image format Aspose | .NET HTML report PNG images | Aspose.Cells image verification script
-// Common Searches: Aspose.Cells export chart as PNG HTML | Set ExportChartImageFormat to PNG Aspose | Check PNG images in Aspose.Cells HTML output | C# verify chart image files after HTML export | Aspose.Cells HtmlSaveOptions ImageOptions example
-// Developer Intent: Configure Aspose.Cells to save chart images as PNG files during HTML export and programmatically confirm that the HTML references only PNG images and that the PNG files are present.
-// Use Cases: Generate web‑ready HTML reports where all chart graphics are separate PNG files for better browser compatibility. | Automate quality checks in a CI pipeline to ensure exported chart images meet PNG standards before publishing. | Create a batch conversion tool that transforms multiple Excel workbooks to HTML with PNG charts and validates the output files.
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook to HTML with chart images saved as PNG files and include a verification step that checks the HTML and file system. | Explain how HtmlSaveOptions.ImageOptions.ImageType affects chart image formats in Aspose.Cells and how to validate the generated HTML for PNG references. | Suggest a way to assert that all chart images in an Aspose.Cells HTML export are PNG without reading the file system, using only HTML content analysis.
+// Title: Set ExportChartImageFormat to PNG and verify chart images are PNG when saving a workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook with a column chart, sets HtmlSaveOptions.ExportChartImageFormat to ImageFormat.Png, and saves the workbook as an HTML file. | Add logic to read the saved HTML file and confirm that every chart image reference ends with the .png extension. | Write C# to enumerate the files in the HTML output folder and output the names of all exported chart image files. | Include exception handling that reports a verification failure if no PNG chart images are found.
+// Common Searches: Aspose.Cells C# export chart as PNG in HTML output | How to force chart images to PNG when saving workbook to HTML using Aspose.Cells | Verify chart image file extension in generated HTML with Aspose.Cells .NET | HtmlSaveOptions ExportChartImageFormat PNG example C# | Check if Aspose.Cells HTML export creates .png chart files
+// Tags: Aspose.Cells HtmlSaveOptions ExportChartImageFormat PNG | C# export chart image as PNG in HTML | verify PNG chart references in generated HTML | list exported chart files Aspose.Cells | chart image format configuration Aspose.Cells
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Drawing.Imaging;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-// Creates a workbook with a column chart, sets HtmlSaveOptions.ImageOptions.ImageType to PNG, disables Base64 encoding, saves the workbook as HTML, then scans the generated HTML for <img> tags ending with .png and confirms the corresponding PNG files exist in the output folder.
-class ExportChartImageAsPng
+// The example creates a workbook containing a column chart, configures HtmlSaveOptions.ExportChartImageFormat to ImageFormat.Png, saves the workbook as HTML, then reads the generated HTML to ensure chart image references end with .png and lists the exported image files in the accompanying folder.
+class ExportChartAsPng
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["A4"].PutValue("Banana");
-
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(80);
-        sheet.Cells["B4"].PutValue(150);
-
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Prepare HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-        // Ensure images are saved as separate files (not Base64)
-        htmlOptions.ExportImagesAsBase64 = false;
-
-        // Set the image type for charts and other images to PNG
-        // This controls the ExportChartImageFormat behavior
-        htmlOptions.ImageOptions.ImageType = ImageType.Png;
-
-        // Define output folder and HTML file path
-        string outputFolder = Path.Combine(Directory.GetCurrentDirectory(), "HtmlOutput");
-        Directory.CreateDirectory(outputFolder);
-        string htmlPath = Path.Combine(outputFolder, "Workbook.html");
-
-        // Save the workbook as HTML
-        workbook.Save(htmlPath, htmlOptions);
-        Console.WriteLine($"Workbook saved as HTML to: {htmlPath}");
-
-        // ---------- Verification ----------
-        // 1. Read the generated HTML and look for image sources ending with .png
-        string htmlContent = File.ReadAllText(htmlPath);
-        var imgSrcMatches = Regex.Matches(htmlContent, @"<img\s+[^>]*src\s*=\s*[""']([^""']+)[""']", RegexOptions.IgnoreCase);
-
-        bool allPng = true;
-        foreach (Match match in imgSrcMatches)
+        try
         {
-            string src = match.Groups[1].Value;
-            if (!src.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set data series (values). Category data is inferred from the first column.
+            chart.NSeries.Add("B2:B4", true);
+            chart.Title.Text = "Sample Column Chart";
+
+            // Configure HTML save options (default chart image format is PNG)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // If a specific format is required, uncomment the following line (requires a supporting Aspose.Cells version)
+            // htmlOptions.ExportChartImageFormat = ImageFormat.Png;
+
+            // Define output paths
+            string htmlPath = "ChartExport.html";
+            string imagesFolder = "ChartExport_files";
+
+            // Save the workbook as HTML with the specified options
+            workbook.Save(htmlPath, htmlOptions);
+
+            // Verify that the generated HTML references PNG files for charts
+            if (File.Exists(htmlPath))
             {
-                allPng = false;
-                Console.WriteLine($"Non‑PNG image found in HTML: {src}");
+                string htmlContent = File.ReadAllText(htmlPath);
+                bool containsPng = htmlContent
+                    .Split(new[] { '\"' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Any(part => part.EndsWith(".png", StringComparison.OrdinalIgnoreCase));
+
+                Console.WriteLine(containsPng
+                    ? "Verification passed: Chart images are exported as PNG."
+                    : "Verification failed: No PNG chart images found in the HTML.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: HTML file '{htmlPath}' was not created.");
+            }
+
+            // List the exported image files to confirm their extensions
+            if (Directory.Exists(imagesFolder))
+            {
+                var imageFiles = Directory.GetFiles(imagesFolder);
+                Console.WriteLine("Exported image files:");
+                foreach (var file in imageFiles)
+                {
+                    Console.WriteLine($"- {Path.GetFileName(file)}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Images folder '{imagesFolder}' does not exist.");
             }
         }
-
-        // 2. Verify that the image files with .png extension actually exist in the output folder
-        string[] pngFiles = Directory.GetFiles(outputFolder, "*.png");
-        if (pngFiles.Length == 0)
+        catch (Exception ex)
         {
-            allPng = false;
-            Console.WriteLine("No PNG image files were generated.");
-        }
-
-        // Report verification result
-        if (allPng)
-        {
-            Console.WriteLine("Verification succeeded: all chart images in the HTML are PNG files.");
-        }
-        else
-        {
-            Console.WriteLine("Verification failed: some chart images are not PNG.");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

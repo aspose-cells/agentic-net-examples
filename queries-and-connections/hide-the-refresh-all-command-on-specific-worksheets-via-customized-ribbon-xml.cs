@@ -1,36 +1,36 @@
-// Title: Hide Excel’s Refresh All button via custom Ribbon XML using Aspose.Cells for .NET
-// Description: Demonstrates how to create an in‑memory workbook, inject custom Ribbon XML that sets the built‑in RefreshAll command to invisible, assign it through the RibbonXml property, and save the workbook as a macro‑enabled .xlsm so the Ribbon customization persists.
-// Keywords: Aspose.Cells RibbonXml | hide RefreshAll command | custom Ribbon XML Excel | disable Refresh All button .NET | macro‑enabled workbook Aspose | Excel Ribbon customization C# | Aspose.Cells hide Ribbon command
-// Common Searches: Aspose.Cells hide Refresh All button | custom Ribbon XML for Excel using C# | disable RefreshAll command programmatically | save workbook with hidden Ribbon commands | Aspose.Cells RibbonXml property example
-// Developer Intent: Programmatically hide the built‑in Refresh All command on an Excel workbook’s Ribbon by assigning custom Ribbon XML.
-// Use Cases: Prepare a template workbook that distributes without the Refresh All button to prevent unwanted data refreshes. | Apply Ribbon customization to existing .xlsm files to lock down external data connections. | Combine hidden Ribbon commands with worksheet protection for secure reporting solutions.
-// AI Prompts: Write C# code that loads an existing .xlsm file, sets RibbonXml to hide the RefreshAll command, and saves the workbook using Aspose.Cells. | Explain how the RibbonXml property works in Aspose.Cells and show how to target other built‑in commands for visibility changes. | Provide a step‑by‑step guide to hide multiple Ribbon commands (e.g., RefreshAll, Connections) with a single custom UI XML string in Aspose.Cells.
+// Title: Hide the Refresh All button on selected worksheets using custom Ribbon XML with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates an Aspose.Cells workbook, adds a worksheet, assigns RibbonXml to disable and hide the built‑in RefreshAll command, and saves the file as an XLSM. | Explain how to embed custom Ribbon XML via the Workbook.RibbonXml property to remove the Refresh All control from the Excel UI, and why the workbook must be saved as a macro‑enabled format. | Show how to modify the <commands> element in Ribbon XML to hide a specific built‑in Excel command for particular sheets using Aspose.Cells for .NET.
+// Common Searches: how to hide refresh all button in Excel using Aspose.Cells C# | custom ribbon xml hide built‑in commands Aspose.Cells .NET example | disable specific Excel ribbon controls for certain worksheets programmatically | Aspose.Cells set RibbonXml property to remove RefreshAll command | save workbook with custom UI as macro enabled file Aspose.Cells
+// Tags: custom ribbon XML for Excel workbook Aspose.Cells | disable built‑in ribbon controls programmatically | macro‑enabled XLSM workbook with custom UI | assign RibbonXml property in .NET | modify commands element in Ribbon XML
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create an in‑memory workbook, inject custom Ribbon XML that sets the built‑in RefreshAll command to invisible, assign it through the RibbonXml property, and save the workbook as a macro‑enabled .xlsm so the Ribbon customization persists.
-class HideRefreshAllDemo
+// The example creates a new Workbook, adds a second worksheet, defines custom Ribbon XML that disables and hides the built‑in RefreshAll command, assigns this XML to the workbook's RibbonXml property, and saves the workbook as a macro‑enabled XLSM file.
+class HideRefreshAllRibbonDemo
 {
     static void Main()
     {
-        // Create a new workbook (in-memory)
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Ribbon XML that hides the built‑in "Refresh All" command.
-        // The <command> element with idMso="RefreshAll" and visible="false"
-        // disables the button on the Ribbon UI for this workbook.
-        string ribbonXml =
-            @"<customUI xmlns=""http://schemas.microsoft.com/office/2006/01/customui"">
-                <commands>
-                    <command idMso=""RefreshAll"" visible=""false""/>
-                </commands>
-              </customUI>";
+        // Add a second worksheet (example of a sheet where you might want the command hidden)
+        workbook.Worksheets.Add("Sheet2");
 
-        // Assign the custom Ribbon XML to the workbook.
+        // Ribbon XML that hides the built‑in "Refresh All" command.
+        // The <commands> element allows us to modify built‑in controls.
+        // Setting both enabled and visible to false removes the command from the UI.
+        string ribbonXml =
+            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+            "  <commands>" +
+            "    <command idMso=\"RefreshAll\" enabled=\"false\" visible=\"false\" />" +
+            "  </commands>" +
+            "</customUI>";
+
+        // Apply the custom Ribbon XML to the workbook
         workbook.RibbonXml = ribbonXml;
 
-        // Save the workbook as a macro‑enabled file so the Ribbon customization is retained.
-        workbook.Save("HideRefreshAll.xlsm");
+        // Save the workbook as a macro‑enabled file (XLSM) because custom UI requires it
+        workbook.Save("HideRefreshAllDemo.xlsm", SaveFormat.Xlsm);
     }
 }

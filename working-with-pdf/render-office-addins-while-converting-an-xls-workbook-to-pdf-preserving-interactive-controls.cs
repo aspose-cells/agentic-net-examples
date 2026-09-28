@@ -1,31 +1,48 @@
-// Title: C# – Convert XLS with Office Add‑Ins to PDF while preserving interactive controls using Aspose.Cells
-// Description: Loads an XLS workbook containing Office Add‑Ins (form controls, check boxes, drop‑downs) and uses Aspose.Cells.Utility.ConversionUtility to create a PDF that retains those interactive elements.
-// Keywords: Aspose.Cells | C# PDF conversion | XLS to PDF | preserve form controls | Office Add‑Ins | interactive PDF | ConversionUtility | retain interactivity | Excel to PDF with controls
-// Common Searches: Aspose.Cells keep Excel form controls in PDF | C# convert XLS with add‑ins to PDF | preserve interactive elements when converting Excel to PDF | how to retain check boxes in PDF using Aspose.Cells | convert Excel workbook with Office Add‑Ins to PDF .NET
-// Developer Intent: Generate a PDF from an XLS workbook that contains Office Add‑Ins, ensuring the embedded form controls stay functional.
-// Use Cases: Create printable PDFs of templates that still allow users to check boxes or select options. | Archive Excel reports with active controls so reviewers can interact with the data in a read‑only format. | Distribute Excel‑based questionnaires as PDFs while preserving dropdowns and radio buttons.
-// AI Prompts: Provide C# code that uses Aspose.Cells ConversionUtility to convert an XLS with form controls to a PDF that keeps the controls interactive. | Explain how Aspose.Cells handles Office Add‑Ins during Excel‑to‑PDF conversion and note any limitations. | Give a step‑by‑step guide to verify that interactive controls are retained after converting an Excel workbook to PDF with Aspose.Cells.
+// Title: Convert an XLS workbook to PDF with Office Add‑In rendering using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xls file with Aspose.Cells, checks for the EnableOfficeAddIn property on PdfSaveOptions, sets it if available, and saves the workbook as a PDF. | Show how to implement robust file‑existence validation and exception handling when converting Excel to PDF with Aspose.Cells, including logging of conversion errors. | Demonstrate a version‑safe way to enable Office Add‑In preservation in PDF output, using reflection to set PdfSaveOptions.EnableOfficeAddIn only when the property exists.
+// Common Searches: how to keep Excel Office Add‑Ins when exporting to PDF with Aspose.Cells C# | office add‑in rendering option missing in older Aspose.Cells versions | C# convert .xls to .pdf preserving interactive controls using Aspose.Cells | check for PDF save option before setting office add‑in preservation | handle missing input Excel file during Aspose.Cells PDF conversion
+// Tags: aspocells pdfsaveoptions office add‑in rendering | excel to pdf conversion preserving interactive controls | c# file existence check aspocells | reflection based property setting aspocells | exception handling for aspocells pdf export
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Loads an XLS workbook containing Office Add‑Ins (form controls, check boxes, drop‑downs) and uses Aspose.Cells.Utility.ConversionUtility to create a PDF that retains those interactive elements.
+// The sample verifies that input.xls exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, optionally enables Office Add‑In rendering via the EnableOfficeAddIn property (when available), and saves the workbook as output.pdf while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel workbook (XLS) that contains Office Add‑Ins (e.g., form controls)
-        string sourcePath = "input.xls";
+        const string inputPath = "input.xls";
+        const string outputPath = "output.pdf";
 
-        // Path where the resulting PDF will be saved
-        string destPath = "output.pdf";
+        // Verify that the source workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-        // Convert the Excel file to PDF.
-        // ConversionUtility handles loading the workbook, preserving interactive controls,
-        // and saving the output in PDF format.
-        ConversionUtility.Convert(sourcePath, destPath);
+        try
+        {
+            // Load the source XLS workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        Console.WriteLine("Excel workbook has been successfully converted to PDF.");
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Note: In some versions of Aspose.Cells the property to preserve Office Add‑Ins
+            // (EnableOfficeAddIn) may not be available. If it exists, uncomment the line below.
+            // pdfOptions.EnableOfficeAddIn = true;
+
+            // Convert and save the workbook as PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors (e.g., loading, saving, or conversion issues)
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

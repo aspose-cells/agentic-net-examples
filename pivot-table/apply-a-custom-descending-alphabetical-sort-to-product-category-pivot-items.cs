@@ -1,70 +1,57 @@
-// Title: Sort Pivot Table Row Items Descending Alphabetically with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to generate a workbook, insert sample sales data, create a pivot table, and programmatically sort the Category row field in reverse alphabetical order using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# pivot sort | descending row field sort | reverse alphabetical pivot | SortOrder.Descending Aspose | Excel pivot table automation .NET | custom pivot field ordering | programmatic Excel sorting | C# Excel workbook generation
-// Common Searches: Aspose.Cells sort pivot rows descending | C# reverse alphabetical pivot field | How to set pivot table row order with Aspose | Programmatic pivot table sorting .NET | Sort pivot table categories Z to A using Aspose.Cells
-// Developer Intent: Apply a reverse‑alphabetical sort to the Category row field of a pivot table.
-// Use Cases: Produce sales dashboards where categories appear from Z to A for quick scanning. | Generate client‑ready reports that require pivot rows in reverse alphabetical order. | Automate monthly workbook creation with consistent row ordering to match corporate style guides.
-// AI Prompts: Show how to modify the code to sort the Category field in ascending order. | Give an example of sorting a pivot data field by numeric totals with Aspose.Cells. | Explain how to turn off auto‑sort after applying a custom sort on a pivot field.
+// Title: How to apply a custom descending alphabetical sort to a row field in an Aspose.Cells pivot table using C#
+// AI Prompts: Write C# code that creates a workbook, adds a pivot table from a range, and uses PivotField.SortBy to sort the row field labels from Z to A with Aspose.Cells. | Show the steps to refresh and recalculate a pivot table after applying a descending alphabetical sort to its row items in .NET. | Demonstrate how to save the workbook after sorting pivot table categories in descending order using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to sort pivot table row items alphabetically descending | programmatically set Z‑to‑A sort on pivot table category field using Aspose.Cells | C# example for custom descending sort of pivot table row field labels Aspose.Cells
+// Tags: pivot field SortBy descending Aspose.Cells | C# Aspose.Cells row field alphabetical ordering | custom pivot table sorting .NET | Excel workbook save after pivot sort Aspose | pivot table refresh post sort Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to generate a workbook, insert sample sales data, create a pivot table, and programmatically sort the Category row field in reverse alphabetical order using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsPivotCustomSort
 {
-    static void Main()
+    // The program creates a workbook, fills it with sample category‑sales data, adds a pivot table, places the Category field in the row area, applies a descending alphabetical sort to the Category pivot items using PivotField.SortBy, refreshes and calculates the pivot table, and finally saves the workbook as an .xlsx file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Product");
-        worksheet.Cells["C1"].PutValue("Sales");
+            // Populate sample data with product categories
+            sheet.Cells["A1"].Value = "Category";
+            sheet.Cells["B1"].Value = "Sales";
+            sheet.Cells["A2"].Value = "Electronics";
+            sheet.Cells["B2"].Value = 1200;
+            sheet.Cells["A3"].Value = "Furniture";
+            sheet.Cells["B3"].Value = 800;
+            sheet.Cells["A4"].Value = "Clothing";
+            sheet.Cells["B4"].Value = 450;
+            sheet.Cells["A5"].Value = "Books";
+            sheet.Cells["B5"].Value = 300;
 
-        worksheet.Cells["A2"].PutValue("Electronics");
-        worksheet.Cells["B2"].PutValue("Laptop");
-        worksheet.Cells["C2"].PutValue(1200);
+            // Add a pivot table based on the data range
+            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIdx];
 
-        worksheet.Cells["A3"].PutValue("Electronics");
-        worksheet.Cells["B3"].PutValue("Phone");
-        worksheet.Cells["C3"].PutValue(800);
+            // Add the Category field to the row area
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
 
-        worksheet.Cells["A4"].PutValue("Furniture");
-        worksheet.Cells["B4"].PutValue("Chair");
-        worksheet.Cells["C4"].PutValue(150);
+            // Add the Sales field to the data area
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-        worksheet.Cells["A5"].PutValue("Furniture");
-        worksheet.Cells["B5"].PutValue("Table");
-        worksheet.Cells["C5"].PutValue(250);
+            // Apply a custom descending alphabetical sort to the Category pivot items
+            // -1 indicates sorting by the field's own labels (i.e., alphabetical order)
+            // SortOrder.Descending makes it descending (Z → A)
+            PivotField categoryField = pivotTable.RowFields[0];
+            categoryField.SortBy(SortOrder.Descending, -1);
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Refresh and calculate the pivot table to apply sorting
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-        // Add "Category" as a row field and "Sales" as a data field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-        // Retrieve the row field representing the product categories
-        PivotField categoryField = pivotTable.RowFields[0];
-
-        // Apply descending alphabetical sort on the category field
-        // -1 indicates sorting by the field's own labels (i.e., alphabetical order)
-        categoryField.SortBy(SortOrder.Descending, -1);
-
-        // Ensure auto‑sort settings are consistent with the desired order
-        categoryField.IsAutoSort = true;
-        categoryField.IsAscendSort = false;   // false = descending
-        categoryField.AutoSortField = -1;     // sort by the field itself
-
-        // Refresh and calculate the pivot table to apply sorting
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Save the workbook with the sorted pivot table
-        workbook.Save("PivotCategoryDescAlphabetical.xlsx");
+            // Save the workbook
+            workbook.Save("PivotTable_CustomDescendingAlphabeticalSort.xlsx");
+        }
     }
 }

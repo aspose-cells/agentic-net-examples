@@ -1,113 +1,71 @@
-// Title: Export Excel Charts to Separate PDFs with Custom Globalization using Aspose.Cells (C#)
-// Description: Load an Excel workbook, apply a CustomGlobalizationSettings object that overrides chart titles, legends and axis units, then iterate every worksheet and export each chart to its own PDF file. Includes file‑existence check and error handling.
-// Keywords: Aspose.Cells | C# | export chart to PDF | chart globalization | CustomGlobalizationSettings | ChartGlobalizationSettings | Excel chart PDF | separate PDF per chart | localization | globalization | Aspose.Cells API | Chart.ToPdf
-// Common Searches: How to export each Excel chart to a separate PDF with Aspose.Cells | Apply custom chart globalization when converting charts to PDF in C# | Aspose.Cells export chart with custom titles and axis labels | Batch convert workbook charts to PDFs using Aspose.Cells | C# code for chart ToPdf with custom GlobalizationSettings
-// Developer Intent: Generate individual PDF files for all workbook charts while applying custom globalization strings.
-// Use Cases: Produce localized PDF reports for financial dashboards where each chart needs language‑specific titles and legends. | Automate creation of separate PDF assets for marketing presentations, customizing chart captions per region. | Integrate chart‑to‑PDF conversion into a CI pipeline that respects custom globalization for multi‑language releases.
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, sets a CustomGlobalizationSettings object, and exports every chart to a distinct PDF file. | Show how to subclass ChartGlobalizationSettings to override series names, titles, legends, and axis units, then use it during chart PDF export. | Explain how to safely check for a missing workbook file, log each exported PDF name, and handle exceptions while converting charts with Aspose.Cells.
+// Title: Export each Excel chart to a separate PDF file with per‑chart CultureInfo using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops through all worksheets in a Workbook, accesses each Chart object, assigns a specific CultureInfo to workbook.Settings.CultureInfo, and saves the chart as an individual PDF file. | Show how to construct PDF filenames that embed the chart index and the applied locale (e.g., Chart_1_en-US.pdf) while exporting charts with Aspose.Cells. | Provide robust error handling for missing Excel files and for exceptions thrown during chart‑to‑PDF conversion in a .NET console application.
+// Common Searches: how to export Excel charts to separate PDF files with different locales using Aspose.Cells C# | Aspose.Cells set CultureInfo for each chart before saving as PDF | C# iterate workbook charts and generate PDF per chart with language‑specific formatting | export chart to pdf with custom globalization settings Aspose.Cells .NET | save individual chart PDFs from an Excel workbook using locale‑aware settings
+// Tags: export chart to pdf Aspose.Cells | per‑chart CultureInfo setting .NET | chart globalization Aspose.Cells | C# workbook chart PDF conversion | locale‑aware chart export Aspose.Cells
 
 using System;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an Excel workbook, apply a CustomGlobalizationSettings object that overrides chart titles, legends and axis units, then iterate every worksheet and export each chart to its own PDF file. Includes file‑existence check and error handling.
+// The example loads an Excel workbook, defines a set of culture identifiers, and iterates through every worksheet and its charts. For each chart it selects a culture, applies it to workbook.Settings.CultureInfo to affect rendering, and exports the chart to a PDF file named with the chart number and culture code. The program reports the total number of exported charts and includes error handling for missing files and conversion failures.
 class ExportChartsToPdf
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
-                return;
-            }
-
             // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Apply custom globalization settings with custom chart settings
-            workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings
-            {
-                ChartSettings = new CustomChartGlobalizationSettings()
-            };
-
-            // Export each chart in each worksheet to a separate PDF file
-            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
-            {
-                Worksheet sheet = workbook.Worksheets[sheetIndex];
-                for (int chartIndex = 0; chartIndex < sheet.Charts.Count; chartIndex++)
-                {
-                    Chart chart = sheet.Charts[chartIndex];
-                    string pdfFileName = $"Chart_Sheet{sheetIndex}_Chart{chartIndex}.pdf";
-                    chart.ToPdf(pdfFileName);
-                    Console.WriteLine($"Exported chart to '{pdfFileName}'.");
-                }
-            }
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-
-    // Custom globalization settings (no additional overrides needed for workbook level)
-    public class CustomGlobalizationSettings : GlobalizationSettings
-    {
-    }
-
-    // Custom chart globalization settings to demonstrate overriding chart text
-    public class CustomChartGlobalizationSettings : ChartGlobalizationSettings
-    {
-        public override string GetSeriesName()
-        {
-            return "Custom Series";
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        public override string GetChartTitleName()
-        {
-            return "Custom Chart Title";
-        }
+        // Example list of culture names to apply per chart
+        string[] cultureNames = new[] { "en-US", "fr-FR", "de-DE", "ja-JP" };
+        int chartCounter = 0;
 
-        public override string GetLegendIncreaseName()
+        try
         {
-            return "Custom Increase";
-        }
-
-        public override string GetLegendDecreaseName()
-        {
-            return "Custom Decrease";
-        }
-
-        public override string GetOtherName()
-        {
-            return "Custom Other";
-        }
-
-        public override string GetAxisTitleName()
-        {
-            return "Custom Axis Title";
-        }
-
-        public override string GetAxisUnitName(DisplayUnitType type)
-        {
-            // Example: customize unit names
-            return type switch
+            // Iterate through all worksheets and their charts
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                DisplayUnitType.Hundreds => "Hundreds_Custom",
-                DisplayUnitType.Thousands => "Thousands_Custom",
-                DisplayUnitType.TenThousands => "TenThousands_Custom",
-                _ => base.GetAxisUnitName(type),
-            };
-        }
+                foreach (Chart chart in sheet.Charts)
+                {
+                    // Select a culture for the current chart
+                    string cultureName = cultureNames[chartCounter % cultureNames.Length];
+                    CultureInfo cultureInfo = new CultureInfo(cultureName);
 
-        public override string GetLegendTotalName()
+                    // Apply the culture to the workbook (affects chart rendering)
+                    workbook.Settings.CultureInfo = cultureInfo;
+
+                    // Export the chart to a PDF file
+                    string pdfFileName = $"Chart_{chartCounter + 1}_{cultureName}.pdf";
+                    chart.ToPdf(pdfFileName);
+
+                    chartCounter++;
+                }
+            }
+
+            Console.WriteLine($"{chartCounter} chart(s) exported to PDF with custom globalization settings.");
+        }
+        catch (Exception ex)
         {
-            return "Custom Total";
+            Console.WriteLine($"An error occurred during chart export: {ex.Message}");
         }
     }
 }

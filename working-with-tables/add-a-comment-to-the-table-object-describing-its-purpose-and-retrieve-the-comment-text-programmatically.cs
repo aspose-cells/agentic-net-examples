@@ -1,47 +1,69 @@
-// Title: Aspose.Cells C# – Set and Retrieve a ListObject (Table) Comment
-// Description: Demonstrates how to create a workbook, add a ListObject (Excel table), assign a purpose‑describing comment via the ListObject.Comment property, read the comment back programmatically, and save the file as XLSX.
-// Keywords: Aspose.Cells C# table comment | ListObject.Comment property | set Excel table description Aspose.Cells | retrieve ListObject comment .NET | Aspose.Cells add table metadata
-// Common Searches: how to add a comment to a ListObject using Aspose.Cells for .NET | retrieve comment text from an Excel table with Aspose.Cells C# | Aspose.Cells example setting table description | read ListObject.Comment after saving workbook
-// Developer Intent: Assign a purpose comment to a ListObject and programmatically read it back.
-// Use Cases: Document the intent of a data table so downstream processes can interpret its meaning. | Extract table metadata for reporting or validation after workbook generation. | Ensure every worksheet table includes a descriptive comment before publishing.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a comment to each ListObject in a worksheet and prints the comments. | Explain how the ListObject.Comment property is persisted in an XLSX file and how to access it after reopening the workbook. | Create a script that iterates through all tables in a workbook, sets a unique comment for each, and logs the comments to the console.
+// Title: How to add and read a comment on an Aspose.Cells ListObject (Excel table) in C#
+// AI Prompts: Create an Excel table with Aspose.Cells, assign a descriptive comment to the ListObject, and output the comment text to the console using C#. | Show how to set the Comment property of a ListObject and then retrieve it programmatically in a .NET workbook.
+// Common Searches: aspnet add comment to Excel table using Aspose.Cells ListObject | retrieve ListObject comment Aspose.Cells C# | how to set ListObject.Comment property in Aspose.Cells .NET | read table comment from workbook with Aspose.Cells C# | example of adding metadata comment to Excel table via Aspose.Cells
+// Tags: Aspose.Cells ListObject comment | C# set ListObject.Comment | read Excel table comment Aspose.Cells | Aspose.Cells add table metadata | Excel table comment .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
 
-namespace AsposeCellsTableCommentDemo
+// Creates a workbook, adds a ListObject named "Employees", sets a comment describing the table, retrieves the comment text, prints it, and saves the file.
+class Program
 {
-    // Demonstrates how to create a workbook, add a ListObject (Excel table), assign a purpose‑describing comment via the ListObject.Comment property, read the comment back programmatically, and save the file as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data for the table (ListObject)
-            worksheet.Cells["A1"].PutValue("ID");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue(1);
-            worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["A3"].PutValue(2);
-            worksheet.Cells["B3"].PutValue(200);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a ListObject (table) covering the data range A1:B3
-            int listObjectIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
-            ListObject listObject = worksheet.ListObjects[listObjectIndex];
+            // Populate sample data for the table
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
 
-            // Set a comment describing the purpose of the table
-            listObject.Comment = "This table stores sample ID and Value pairs for demonstration.";
+            // Define the range that will become the table (including header)
+            int firstRow = 0;          // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 3;         // header + 2 data rows
+            int totalColumns = 2;
+
+            // Add a ListObject (Excel table) to the worksheet; specify that the range has headers
+            int tableIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
+
+            ListObject table = sheet.ListObjects[tableIndex];
+
+            // Assign a meaningful display name to the table
+            table.DisplayName = "Employees";
+
+            // Add a comment describing the purpose of the table
+            table.Comment = "This table stores employee IDs and names.";
 
             // Retrieve the comment text programmatically
-            string retrievedComment = listObject.Comment;
-            Console.WriteLine("ListObject Comment: " + retrievedComment);
+            string commentText = table.Comment;
 
-            // Save the workbook
-            workbook.Save("TableCommentDemo.xlsx", SaveFormat.Xlsx);
+            // Display the comment
+            Console.WriteLine("Table comment: " + commentText);
+
+            // Save the workbook (optional)
+            string outputPath = "TableWithComment.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

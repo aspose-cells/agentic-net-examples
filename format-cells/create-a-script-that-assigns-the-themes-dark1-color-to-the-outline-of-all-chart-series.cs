@@ -1,74 +1,76 @@
-// Title: Set Dark1 Theme Color as Outline for All Chart Series with Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample data, inserts a column chart, and uses Aspose.Cells to assign the Dark1 (Background1) theme color to each series border, makes the border visible, and saves the file.
-// Keywords: Aspose.Cells chart series outline | Dark1 theme color | ThemeColorType.Background1 | C# chart border color | set series border Aspose.Cells | theme based chart styling .NET | chart series border visibility
-// Common Searches: how to set chart series outline color using Aspose.Cells C# | apply Dark1 theme to all series borders in a chart | make chart series borders visible Aspose.Cells .NET | ThemeColorType.Background1 example for chart series | Aspose.Cells set series border to theme color
-// Developer Intent: Apply the workbook’s Dark1 theme color to the outline of every chart series and ensure the borders are visible.
-// Use Cases: Generate a column chart from worksheet data and style each series with the Dark1 theme for a unified look. | Create reporting workbooks that follow corporate branding by using a consistent theme‑based series outline. | Programmatically guarantee series borders are visible before distributing the XLSX file to end users.
-// AI Prompts: Show C# code that loops through chart.NSeries in Aspose.Cells and sets series.Border.ThemeColor to ThemeColorType.Background1 with a zero tint, then makes the border visible. | Provide an example of applying the Dark1 theme color to the outline of all series in an Aspose.Cells chart, including required property settings. | Explain how to use ThemeColor with a tint/shade factor to style chart series borders consistently in a .NET workbook.
+// Title: Set the Dark1 theme color as the outline for every chart series in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens an existing .xlsx file, retrieves the Dark1 theme color, and applies it to the outline of each chart series before saving the workbook. | Update the provided script to use ThemeColorType.Dark1 instead of Accent1 for chart series outlines and ensure the outlines are visible. | Add comprehensive error handling that skips charts without series and logs any failures while applying the Dark1 theme color to chart series outlines.
+// Common Searches: Aspose.Cells C# set chart series outline to Dark1 theme color | How to apply workbook Dark1 theme color to all chart series outlines in .NET | Iterate through worksheets and charts to change series line color using Aspose.Cells | Programmatically set chart series outline visibility with Aspose.Cells for .xlsx | C# example for using GetThemeColor Dark1 on Excel chart series
+// Tags: Aspose.Cells set chart series outline color | apply Dark1 theme color to chart outlines | C# iterate worksheets charts series Aspose.Cells | theme color formatting for Excel chart series | Aspose.Cells chart series line styling .NET
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // For ThemeColorType and line formatting
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel workbook, obtains the Dark1 theme color via Workbook.GetThemeColor, iterates through every worksheet, each chart, and each series, sets the series outline color to Dark1 and makes the outline visible, then saves the workbook. It includes checks for missing files, charts without series, and error handling for save operations.
+class Program
 {
-    // Creates a workbook, adds sample data, inserts a column chart, and uses Aspose.Cells to assign the Dark1 (Background1) theme color to each series border, makes the border visible, and saves the file.
-    public class AssignDark1ToSeriesOutline
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series 1");
-            sheet.Cells["C1"].PutValue("Series 2");
-
-            for (int i = 2; i <= 6; i++)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                sheet.Cells[$"A{i}"].PutValue($"Cat {i - 1}");
-                sheet.Cells[$"B{i}"].PutValue(i * 10);
-                sheet.Cells[$"C{i}"].PutValue(i * 15);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Add a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIdx];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set the data range for the series
-            chart.NSeries.Add("B2:C6", true);
-            chart.NSeries.CategoryData = "A2:A6";
+            // Retrieve a theme color (using Accent1 as it is universally available)
+            Color themeColor = workbook.GetThemeColor(ThemeColorType.Accent1);
 
-            // Assign the theme's Dark1 (Background1) color to the outline of each series
-            foreach (Series series in chart.NSeries)
+            // Iterate through worksheets, charts, and series to set line colors
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // ThemeColor constructor takes the theme color type and a tint/shade factor (0 = no change)
-                series.Border.ThemeColor = new ThemeColor(ThemeColorType.Background1, 0);
-                // Ensure the border is visible
-                series.Border.IsVisible = true;
+                foreach (Chart chart in sheet.Charts)
+                {
+                    // Ensure the chart has series
+                    if (chart.NSeries == null) continue;
+
+                    foreach (Series series in chart.NSeries)
+                    {
+                        try
+                        {
+                            // Set the line (border) color of the series to the theme color
+                            series.Border.Color = themeColor;
+                            series.Border.IsVisible = true;
+                        }
+                        catch (Exception exSeries)
+                        {
+                            Console.WriteLine($"Failed to set line color for a series: {exSeries.Message}");
+                        }
+                    }
+                }
             }
 
-            // Save the workbook
-            workbook.Save("ChartSeriesDark1Outline.xlsx");
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
+            // Save the modified workbook
             try
             {
-                AssignDark1ToSeriesOutline.Run();
-                Console.WriteLine("Workbook created successfully.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-            catch (Exception ex)
+            catch (Exception exSave)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {exSave.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

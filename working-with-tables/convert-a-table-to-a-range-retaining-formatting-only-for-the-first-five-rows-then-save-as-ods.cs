@@ -1,70 +1,81 @@
-// Title: C# – Convert an Excel Table to a Range (first 5 rows) and Export as ODS with Aspose.Cells
-// Description: An Aspose.Cells for .NET sample that builds a workbook, fills it with headers and data, applies a light‑yellow style to rows 0‑4, creates a ListObject table, converts the table to a plain range while preserving the first five rows' formatting, and saves the result as an ODS file using OdsSaveOptions.
-// Keywords: Aspose.Cells | C# | Convert Table to Range | TableToRangeOptions | preserve row formatting | ODS export | ListObject | Excel to ODS | style first rows | .NET
-// Common Searches: Aspose.Cells convert table to range C# example | keep formatting when converting Excel table to range | save workbook as ODS using Aspose.Cells .NET | TableToRangeOptions LastRow usage | export styled Excel rows to ODS format
-// Developer Intent: Programmatically transform a ListObject into a regular cell range, retain the formatting of the top five rows, and write the workbook to OpenDocument Spreadsheet (ODS).
-// Use Cases: Generate a LibreOffice‑compatible report where only the header and the first few highlighted rows need to remain styled after removing the table structure. | Create a data‑processing template that strips table metadata while preserving background colors for the initial rows before sharing the file with non‑Excel users. | Automate conversion of a styled Excel table to a plain range for downstream analytics, then export the result as ODS for cross‑platform accessibility.
-// AI Prompts: Write C# code with Aspose.Cells that converts a ListObject to a range, keeps formatting for rows 0‑4, and saves the workbook as an ODS file. | Explain how TableToRangeOptions.LastRow influences the conversion of an Excel table to a range and how cell styles are retained in Aspose.Cells.
+// Title: Convert an Excel table to a regular range, preserve the first five rows' formatting, and export to ODS with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an XLSX workbook, removes the first ListObject while preserving its data, clears styles for rows after the fifth, and saves the file as ODS using Aspose.Cells. | Show how to keep the original formatting of the top five rows when converting an Excel table to a normal range and then export to ODS with Aspose.Cells. | Demonstrate resetting cell styles beyond a specific row index after a table‑to‑range conversion in Aspose.Cells for .NET.
+// Common Searches: asp.net convert excel table to range keep formatting first five rows and export as ods | c# aspose.cells delete ListObject but retain data then save workbook in ods format | how to clear cell formatting after row 5 after converting a table to a range using Aspose.Cells | save workbook as ODS after converting Excel table to normal range with Aspose.Cells .NET
+// Tags: Aspose.Cells table conversion preserving top rows formatting | Aspose.Cells ODS export after range transformation | Aspose.Cells reset cell styles beyond specific row | Aspose.Cells preserve worksheet data when removing a table | Aspose.Cells transform table into regular range
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using Aspose.Cells.Ods; // optional, OdsSaveOptions is also in Aspose.Cells
 
-// An Aspose.Cells for .NET sample that builds a workbook, fills it with headers and data, applies a light‑yellow style to rows 0‑4, creates a ListObject table, converts the table to a plain range while preserving the first five rows' formatting, and saves the result as an ODS file using OdsSaveOptions.
-class ConvertTableToRange
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an XLSX file, extracts the first ListObject, converts it to a standard range, clears formatting for all rows beyond the fifth while keeping the original styles for the top five rows, and finally saves the modified workbook as an ODS file using Aspose.Cells for .NET.
+class TableToRangeExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Fill sample data (10 data rows + header, 3 columns)
-        for (int col = 0; col < 3; col++)
+        try
         {
-            cells[0, col].PutValue($"Header {col + 1}");
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.ods";
 
-        for (int row = 1; row <= 10; row++)
-        {
-            for (int col = 0; col < 3; col++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                cells[row, col].PutValue($"R{row}C{col + 1}");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-        }
 
-        // Apply a background style to the first five rows (rows 0‑4)
-        Style style = workbook.CreateStyle();
-        style.ForegroundColor = Color.LightYellow;
-        style.Pattern = BackgroundType.Solid;
-        StyleFlag flag = new StyleFlag();
-        flag.CellShading = true;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        for (int r = 0; r < 5; r++)
-        {
-            for (int c = 0; c < 3; c++)
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one table (ListObject) on the sheet
+            if (sheet.ListObjects.Count == 0)
             {
-                cells[r, c].SetStyle(style, flag);
+                Console.WriteLine("No table found on the worksheet.");
+                return;
             }
+
+            // Get the first table
+            ListObject table = sheet.ListObjects[0];
+
+            // Store the data range before removing the table
+            AsposeRange dataRange = table.DataRange;
+
+            // Remove the table but keep the data (converts it to a normal range)
+            sheet.ListObjects.RemoveAt(0);
+
+            // Determine range boundaries
+            int startRow = dataRange.FirstRow;
+            int endRow = dataRange.FirstRow + dataRange.RowCount - 1;
+            int startCol = dataRange.FirstColumn;
+            int endCol = dataRange.FirstColumn + dataRange.ColumnCount - 1;
+
+            // Create a default (empty) style once
+            Style defaultStyle = workbook.CreateStyle();
+
+            // Clear formatting for rows beyond the first five
+            for (int row = startRow + 5; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    sheet.Cells[row, col].SetStyle(defaultStyle);
+                }
+            }
+
+            // Save the modified workbook as ODS
+            workbook.Save(outputPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-
-        // Create a table that spans all data rows (0‑10) and columns (0‑2)
-        int tableIdx = sheet.ListObjects.Add(0, 0, 10, 2, true);
-        ListObject table = sheet.ListObjects[tableIdx];
-        table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-        // Convert the table to a range, keeping only the first five rows
-        TableToRangeOptions options = new TableToRangeOptions
+        catch (Exception ex)
         {
-            LastRow = 4 // zero‑based index; rows 0‑4 correspond to the first five rows
-        };
-        table.ConvertToRange(options);
-
-        // Save the workbook as ODS
-        OdsSaveOptions odsOptions = new OdsSaveOptions();
-        workbook.Save("TableConverted.ods", odsOptions);
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

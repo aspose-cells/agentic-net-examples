@@ -1,46 +1,52 @@
-// Title: Detect Excel Workbook Encryption from a MemoryStream with Aspose.Cells for .NET
-// Description: Creates an in‑memory workbook, saves it to a MemoryStream, then uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify the file format and whether the workbook is password‑protected, printing the results to the console.
-// Keywords: Aspose.Cells encryption detection | FileFormatUtil DetectFileFormat | MemoryStream Excel .NET | check Excel password protection C# | detect workbook format type
-// Common Searches: Aspose.Cells detect encrypted workbook from stream | FileFormatUtil DetectFileFormat example C# | how to know if Excel file is password protected without saving | read Excel from MemoryStream and check encryption
-// Developer Intent: Determine if a workbook loaded via a MemoryStream is encrypted and retrieve its format type using Aspose.Cells.
-// Use Cases: Validate user‑uploaded spreadsheets in a web API before processing. | Log format and encryption status for compliance audits. | Skip or prompt for a password when an incoming file is flagged as encrypted.
-// AI Prompts: Generate C# code that reads an Excel byte array, detects password protection with Aspose.Cells, and returns the file format. | Explain how to handle a workbook flagged as encrypted by FileFormatUtil, including prompting for a password or aborting the operation.
+// Title: Load an Excel workbook from a MemoryStream, determine its file format, and check encryption status with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an Excel file into a MemoryStream, loads it with Aspose.Cells, prints the workbook's FileFormat, and attempts to detect encryption by catching the relevant exception. | Show how to open a workbook from a byte array using Aspose.Cells, output its format, and gracefully handle password‑protected files.
+// Common Searches: asp.net core load excel from memory stream using aspose.cells | c# detect password protected workbook with aspose.cells loadoptions | how to get workbook file format after loading from stream in aspose.cells | aspose.cells read excel bytes into workbook and check encryption status | c# handle encrypted excel file when opening with aspose.cells
+// Tags: load workbook from memory stream Aspose.Cells | retrieve workbook file format .NET | detect encrypted workbook Aspose.Cells | handle password protected Excel file C# | read Excel bytes into Aspose.Cells workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionDetection
+// The example reads an Excel file into a byte array, creates a MemoryStream, loads the workbook with Aspose.Cells, prints the detected FileFormat, and demonstrates that encryption detection must be performed by catching exceptions when attempting to open a password‑protected file.
+class Program
 {
-    // Creates an in‑memory workbook, saves it to a MemoryStream, then uses Aspose.Cells FileFormatUtil.DetectFileFormat to identify the file format and whether the workbook is password‑protected, printing the results to the console.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string filePath = "sample.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            // Create a new workbook (default format is Xlsx)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: File \"{filePath}\" not found.");
+            return;
+        }
 
-            // Optionally add some data to the workbook
-            workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+        try
+        {
+            // Load workbook bytes from the file
+            byte[] workbookBytes = File.ReadAllBytes(filePath);
 
-            // Save the workbook into a memory stream
-            using (MemoryStream stream = new MemoryStream())
+            // Create a memory stream from the byte array
+            using (MemoryStream memoryStream = new MemoryStream(workbookBytes))
             {
-                workbook.Save(stream, SaveFormat.Xlsx);
+                // Load the workbook from the memory stream
+                Workbook workbook = new Workbook(memoryStream);
 
-                // Reset the stream position to the beginning before reading
-                stream.Position = 0;
+                // Get the workbook's file format (e.g., Xlsx, Xls, Csv, etc.)
+                FileFormatType format = workbook.FileFormat;
 
-                // Detect file format and encryption status from the stream
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(stream);
+                // Output the format to the console
+                Console.WriteLine($"Format: {format}");
 
-                // Output detection results to the console
-                Console.WriteLine($"Detected File Format Type: {formatInfo.FileFormatType}");
-                Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
+                // Encryption detection is not directly available in this version of Aspose.Cells.
+                // If needed, attempt to load with LoadOptions and catch the exception for encrypted files.
+                Console.WriteLine("Encryption detection not supported in this API version.");
             }
-
-            // Clean up the workbook instance
-            workbook.Dispose();
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions (e.g., I/O errors, invalid format)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

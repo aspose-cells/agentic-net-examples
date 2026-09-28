@@ -1,68 +1,57 @@
-// Title: Copy an Excel range to a new workbook and freeze the top row using Aspose.Cells for .NET (C#)
-// Description: C# example that loads a source workbook, copies a defined range (e.g., A1:C5) into a freshly created workbook, applies FreezePanes to lock the first row, and saves the result as a separate file.
-// Keywords: Aspose.Cells copy range C# | freeze top row Aspose.Cells | Aspose.Cells FreezePanes example | copy Excel range between workbooks .NET | Aspose.Cells range copy and freeze | C# Excel automation Aspose | create new workbook from range
-// Common Searches: copy range from one Excel file to another using Aspose.Cells .NET | freeze first row after copying data with Aspose.Cells | Aspose.Cells programmatically copy cells and freeze panes | C# example to copy a block of cells to a new workbook | how to use FreezePanes in Aspose.Cells
-// Developer Intent: Copy a specific cell block to a new workbook and keep the header row fixed while scrolling.
-// Use Cases: Generate a lightweight report that contains only the required data slice while keeping column headers visible. | Distribute a portion of a large worksheet to external partners with the top row frozen for readability. | Automate extraction of a template section into a separate file for downstream processing, preserving the header row.
-// AI Prompts: Provide C# code with Aspose.Cells to copy range A1:D10 from source.xlsx to a new workbook and freeze the first two rows. | Show an Aspose.Cells .NET snippet that copies a dynamic range based on used cells to a new file and applies FreezePanes to lock the header row. | Explain how to copy multiple non‑contiguous ranges into a new workbook and set FreezePanes for the top row using Aspose.Cells.
+// Title: Copy a cell range from an existing Excel workbook to a new workbook and freeze the first row with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to load source.xlsx, copy the A1:D10 range into a freshly created workbook, and then apply FreezePanes to lock the header row. | Generate a program that creates a destination workbook, pastes a copied range from a source worksheet, and freezes the top row of the sheet with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells copy specific range to another workbook C# | how to freeze the first row after copying data with Aspose.Cells | C# example for copying A1:D10 from one Excel file to a new file using Aspose | using FreezePanes to lock header row in Aspose.Cells worksheet | copy range and preserve formatting to new workbook Aspose.Cells .NET
+// Tags: copy range to new workbook Aspose.Cells | freeze first row worksheet Aspose.Cells | Aspose.Cells CreateRange and Copy usage | Aspose.Cells FreezePanes C# example | C# load workbook and save separate file Aspose | preserve formatting when copying Excel range Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsRangeCopyAndFreeze
+// The program loads source.xlsx, copies the A1:D10 range into a newly created workbook, freezes the top row of the destination worksheet, and saves the result as destination.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // C# example that loads a source workbook, copies a defined range (e.g., A1:C5) into a freshly created workbook, applies FreezePanes to lock the first row, and saves the result as a separate file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string sourcePath = "source.xlsx";
+        const string destinationPath = "destination.xlsx";
+
+        // Verify source file exists
+        if (!File.Exists(sourcePath))
         {
-            try
-            {
-                const string sourcePath = "source.xlsx";
-                const string destPath = "copied_and_frozen.xlsx";
+            Console.WriteLine($"Error: Source file \"{sourcePath}\" not found.");
+            return;
+        }
 
-                // Ensure the source file exists; if not, create a simple workbook for demo purposes
-                if (!File.Exists(sourcePath))
-                {
-                    var tempWb = new Workbook();
-                    var tempSheet = tempWb.Worksheets[0];
-                    tempSheet.Cells["A1"].PutValue("Demo");
-                    tempSheet.Cells["B2"].PutValue(123);
-                    tempSheet.Cells["C3"].PutValue(DateTime.Now);
-                    tempWb.Save(sourcePath);
-                }
+        try
+        {
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(sourcePath);
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
 
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-                Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            // Define the range to copy (example: A1:D10)
+            AsposeRange sourceRange = sourceSheet.Cells.CreateRange("A1:D10");
 
-                // Define the source range to copy (e.g., A1:C5)
-                AsposeRange sourceRange = sourceSheet.Cells.CreateRange("A1:C5");
+            // Create a new workbook (contains one default worksheet)
+            Workbook destinationWorkbook = new Workbook();
+            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
 
-                // Create a new workbook that will receive the copied range
-                Workbook destWorkbook = new Workbook(); // creates a default worksheet
-                Worksheet destSheet = destWorkbook.Worksheets[0];
+            // Create a destination range with the same size and copy the source range into it
+            AsposeRange destRange = destinationSheet.Cells.CreateRange(
+                0, 0, sourceRange.RowCount, sourceRange.ColumnCount);
+            destRange.Copy(sourceRange);
 
-                // Define the destination range in the new workbook (starting at A1)
-                AsposeRange destRange = destSheet.Cells.CreateRange("A1:C5");
+            // Freeze the top row in the destination worksheet view
+            // FreezePanes(row, column, scrollRow, scrollColumn)
+            destinationSheet.FreezePanes(1, 0, 1, 0);
 
-                // Copy the source range into the destination range
-                sourceRange.Copy(destRange);
-
-                // Freeze the top row in the destination worksheet view
-                // Freeze at row index 1 (second row), column index 0, freezing 1 row and 0 columns
-                destSheet.FreezePanes(1, 0, 1, 0);
-
-                // Save the resulting workbook
-                destWorkbook.Save(destPath);
-                Console.WriteLine($"Workbook saved successfully to '{destPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the new workbook
+            destinationWorkbook.Save(destinationPath);
+            Console.WriteLine($"Workbook saved successfully to \"{destinationPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

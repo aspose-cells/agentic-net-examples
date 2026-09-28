@@ -1,64 +1,96 @@
-// Title: C# Aspose.Cells – Retrieve a Table with Cell.GetTable and Sum a Numeric Column
-// Description: Demonstrates creating an Excel table, obtaining its ListObject via Cell.GetTable, iterating data rows, converting values from the numeric column, and calculating the total. The sum is printed and the workbook saved.
-// Keywords: Aspose.Cells | C# | .NET | Cell.GetTable | ListObject | Excel table | sum column | aggregate numeric values | enumerate table rows | retrieve table from cell | calculate column total
-// Common Searches: Aspose.Cells get table from cell C# | How to sum a column in an Aspose.Cells ListObject | Cell.GetTable example for .NET | Iterate Aspose.Cells table rows and calculate total | C# aggregate numeric column in Excel table using Aspose
-// Developer Intent: Obtain a ListObject via Cell.GetTable and compute the sum of its numeric column.
-// Use Cases: Calculate total sales amount from a worksheet table for financial reports. | Aggregate inventory quantities across product rows to determine overall stock. | Sum student test scores stored in a table to generate class averages.
-// AI Prompts: Generate C# code that uses Aspose.Cells Cell.GetTable to retrieve a table and sum a specified numeric column, handling int and double values. | Explain step‑by‑step how to loop through the rows of a ListObject obtained with GetTable and compute a column total, including non‑numeric cell handling. | Create a reusable C# method that accepts a Worksheet and a column name, returns the sum of that column using Aspose.Cells, and demonstrates its usage.
+// Title: How to sum a numeric column in an Excel table using Cell.GetTable with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx workbook, calls Cell.GetTable to obtain the ListObject for a specific cell, locates a column by its header name, and computes the sum of that column's numeric values. | Demonstrate iterating over the DataRange of an Aspose.Cells table to aggregate values from a chosen column while safely handling empty or non‑numeric cells.
+// Common Searches: Aspose.Cells C# get table from cell and sum column values | How to calculate total of a column in an Excel ListObject using Aspose.Cells | C# iterate rows of a table retrieved with Cell.GetTable in Aspose.Cells | Sum numeric column named 'Amount' in an Excel table with Aspose.Cells .NET | Retrieve column index by header name in Aspose.Cells ListObject
+// Tags: sum column values using Cell.GetTable Aspose.Cells | retrieve ListObject from cell Aspose.Cells C# | iterate table DataRange Aspose.Cells | find column index by header Aspose.Cells ListColumns | calculate numeric column total Excel .xlsx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates creating an Excel table, obtaining its ListObject via Cell.GetTable, iterating data rows, converting values from the numeric column, and calculating the total. The sum is printed and the workbook saved.
+// // Loads 'input.xlsx', uses Cell.GetTable to get the ListObject containing cell A1, finds the 'Amount' column index via its header, iterates the table's DataRange rows, parses each cell as a double, accumulates the sum, and prints the result.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        string filePath = "input.xlsx";
 
-        // Populate sample data with a header row and a numeric column
-        cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Amount");
-        cells["A2"].PutValue("A");
-        cells["B2"].PutValue(10);
-        cells["A3"].PutValue("B");
-        cells["B3"].PutValue(20);
-        cells["A4"].PutValue("C");
-        cells["B4"].PutValue(30);
-
-        // Create a table that includes the data range (A1:B4)
-        int tableIdx = worksheet.ListObjects.Add("A1", "B4", true);
-        ListObject table = worksheet.ListObjects[tableIdx];
-
-        // Retrieve the same table using a cell that belongs to it
-        Cell sampleCell = cells["A2"];               // any cell inside the table
-        ListObject retrievedTable = sampleCell.GetTable();
-
-        // Compute the sum of the numeric column (second column, index 1)
-        double sum = 0;
-        int dataStartRow = retrievedTable.StartRow + 1; // skip header row
-        int dataEndRow = retrievedTable.EndRow;
-        int numericColIndex = retrievedTable.StartColumn + 1; // second column in the table
-
-        for (int row = dataStartRow; row <= dataEndRow; row++)
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            object val = cells[row, numericColIndex].Value;
-            if (val is double d)
-                sum += d;
-            else if (val is int i)
-                sum += i;
-            else if (double.TryParse(val?.ToString(), out double parsed))
-                sum += parsed;
+            Console.WriteLine($"File not found: {filePath}");
+            return;
         }
 
-        // Output the computed sum
-        Console.WriteLine($"Sum of column '{table.ListColumns[1].Name}': {sum}");
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-        // Save the workbook (optional)
-        workbook.Save("TableSumDemo.xlsx");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Get a cell that belongs to the table (adjust as needed)
+            Cell tableCell = worksheet.Cells["A1"];
+
+            // Retrieve the table (ListObject) that contains the cell
+            ListObject table = tableCell.GetTable();
+
+            if (table == null)
+            {
+                Console.WriteLine("No table found at the specified cell.");
+                return;
+            }
+
+            // Column header to sum
+            string numericColumnName = "Amount";
+
+            // Find the column index based on the header name
+            int columnIndex = -1;
+            for (int i = 0; i < table.ListColumns.Count; i++)
+            {
+                if (table.ListColumns[i].Name.Equals(numericColumnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    columnIndex = i;
+                    break;
+                }
+            }
+
+            if (columnIndex == -1)
+            {
+                Console.WriteLine($"Column \"{numericColumnName}\" not found in the table.");
+                return;
+            }
+
+            // Get the data range of the table (excluding header/footer)
+            AsposeRange dataRange = table.DataRange;
+            if (dataRange == null)
+            {
+                Console.WriteLine("The table does not contain any data rows.");
+                return;
+            }
+
+            // Compute the sum of the numeric column
+            double sum = 0.0;
+            int startRow = dataRange.FirstRow;
+            int startCol = dataRange.FirstColumn + columnIndex;
+
+            for (int r = 0; r < dataRange.RowCount; r++)
+            {
+                Cell cell = worksheet.Cells[startRow + r, startCol];
+                object cellValue = cell.Value;
+                if (cellValue != null && double.TryParse(cellValue.ToString(), out double numericValue))
+                {
+                    sum += numericValue;
+                }
+            }
+
+            Console.WriteLine($"Sum of column \"{numericColumnName}\": {sum}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

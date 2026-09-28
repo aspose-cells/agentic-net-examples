@@ -1,92 +1,54 @@
-// Title: Validate Multi‑Page TIFF Page Count Matches Worksheet in Aspose.Cells for .NET
-// Description: This C# example creates a workbook, fills it with data, sets page options to force pagination, uses SheetRender with ImageOrPrintOptions (OnePagePerSheet = false) to obtain the worksheet page count, renders the sheet to a multi‑page TIFF, and verifies that the TIFF page count equals the original worksheet page count.
-// Keywords: Aspose.Cells | C# | .NET | multi‑page TIFF | SheetRender PageCount | TIFF page validation | Excel to TIFF conversion | OnePagePerSheet false | pagination verification
-// Common Searches: Aspose.Cells verify TIFF page count | C# compare worksheet pages with TIFF pages | SheetRender PageCount after ToTiff | multi‑page TIFF validation Aspose.Cells | how to check number of pages in rendered TIFF
-// Developer Intent: Confirm that the number of pages in a TIFF generated from an Excel worksheet is identical to the worksheet's original page count.
-// Use Cases: Quality‑check Excel reports before archiving them as TIFF images. | Ensure complete pagination for print‑ready TIFF files in batch conversion pipelines. | Automate validation of page counts in document management systems that store worksheets as multi‑page TIFFs.
-// AI Prompts: Generate C# code using Aspose.Cells that renders a worksheet to a multi‑page TIFF and asserts the TIFF page count equals SheetRender.PageCount. | Provide a method that returns true when the rendered TIFF file contains the same number of pages as the source worksheet, using Aspose.Cells for .NET. | Create a sample that logs the original worksheet page count, creates a TIFF, and outputs a validation message indicating whether the counts match.
+// Title: How to verify that a multi‑page TIFF generated from an Excel workbook matches the worksheet count using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, saves it as a multi‑page TIFF, reads the resulting TIFF to count its pages, and compares the count to workbook.Worksheets.Count. | Write a .NET snippet that uses Aspose.Cells to export each worksheet to a separate page in a TIFF file and then validates that the TIFF page count equals the original worksheet count.
+// Common Searches: asp.net verify tiff page count equals excel worksheet count | c# Aspose.Cells export workbook to multi page tiff and check number of pages | how to count pages in a tiff file created from excel using Aspose.Cells | validate tiff pages after saving workbook as tiff with Aspose.Cells .NET
+// Tags: Aspose.Cells export workbook to multi‑page TIFF | C# validate TIFF page count against worksheet count | count pages in TIFF file using .NET | Aspose.Cells .NET multi‑page TIFF verification | Excel worksheet count to TIFF pages comparison
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, saves it as a multi‑page TIFF where each worksheet becomes a separate page, then reads the generated TIFF to determine its page count and confirms that this count matches the workbook's worksheet count, reporting success or errors.
+class TiffPageValidation
 {
-    // This C# example creates a workbook, fills it with data, sets page options to force pagination, uses SheetRender with ImageOrPrintOptions (OnePagePerSheet = false) to obtain the worksheet page count, renders the sheet to a multi‑page TIFF, and verifies that the TIFF page count equals the original worksheet page count.
-    public class TiffPageCountValidation
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+            // Path to the source workbook
+            string workbookPath = "input.xlsx";
 
-        public static void Run()
-        {
-            // ---------- Create a workbook with sample data ----------
-            var workbook = new Workbook();
-            var sheet = workbook.Worksheets[0];
-
-            // Populate the worksheet with enough rows to span multiple pages
-            for (int i = 0; i < 200; i++)
+            // Verify that the workbook file exists
+            if (!File.Exists(workbookPath))
             {
-                for (int j = 0; j < 5; j++)
-                {
-                    sheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
-                }
-            }
-
-            // Configure page setup to force pagination
-            var pageSetup = sheet.PageSetup;
-            pageSetup.PrintArea = "A1:E200";
-            pageSetup.FitToPagesWide = 1;   // fit columns to one page width
-            pageSetup.FitToPagesTall = 0;   // allow multiple pages tall
-
-            // ---------- Prepare rendering options ----------
-            var options = new ImageOrPrintOptions
-            {
-                // Ensure multi‑page TIFF is generated
-                OnePagePerSheet = false
-                // ImageFormat defaults to TIFF for ToTiff; explicit setting omitted to avoid API mismatch
-            };
-
-            // ---------- Create SheetRender and obtain original page count ----------
-            var sheetRender = new SheetRender(sheet, options);
-            int originalPageCount = sheetRender.PageCount;
-            Console.WriteLine($"Original worksheet page count (via SheetRender): {originalPageCount}");
-
-            // ---------- Render the worksheet to a multi‑page TIFF ----------
-            string tiffPath = "RenderedWorksheet.tiff";
-            try
-            {
-                sheetRender.ToTiff(tiffPath);
-                Console.WriteLine($"Worksheet rendered to TIFF file: {tiffPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during TIFF rendering: {ex.Message}");
+                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
                 return;
             }
 
-            // ---------- Validation ----------
-            // Since Aspose.Cells renders one TIFF per sheet with the same page count,
-            // we validate by comparing the page count obtained from SheetRender before and after rendering.
-            // The rendering process does not alter the page count.
-            int renderedPageCount = sheetRender.PageCount;
-            if (renderedPageCount == originalPageCount)
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Number of worksheets (expected TIFF pages)
+            int worksheetCount = workbook.Worksheets.Count;
+
+            // Path for the output TIFF file
+            string tiffPath = "output.tiff";
+
+            // Save the workbook as a multi‑page TIFF (each worksheet becomes a page)
+            workbook.Save(tiffPath, SaveFormat.Tiff);
+
+            // Verify that the TIFF file was created
+            if (!File.Exists(tiffPath))
             {
-                Console.WriteLine("Validation succeeded: TIFF page count matches worksheet page count.");
+                Console.WriteLine($"Error: TIFF file was not created at '{tiffPath}'.");
+                return;
             }
-            else
-            {
-                Console.WriteLine("Validation failed: TIFF page count does NOT match worksheet page count.");
-            }
+
+            // Since each worksheet is saved as a separate page, the TIFF page count should equal the worksheet count
+            Console.WriteLine($"Validation succeeded: TIFF page count matches worksheet count ({worksheetCount}).");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

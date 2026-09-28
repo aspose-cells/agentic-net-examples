@@ -1,53 +1,103 @@
-// Title: Check Shape Geometry Consistency After Workbook.ImportXml with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a rectangle shape with an adjustment value, records the counts of ShapeAdjustValues and Paths, imports a simple XML file using Workbook.ImportXml, re‑examines the same shape, and reports whether the geometry (adjustments and paths) remains unchanged before saving the file.
-// Keywords: Aspose.Cells | Workbook.ImportXml | shape geometry | ShapeAdjustValues | shape paths | .NET C# | drawing objects integrity | XML import validation
-// Common Searches: Aspose.Cells verify shape geometry after ImportXml | C# check if shape adjustments change when importing XML | Workbook.ImportXml impact on drawing objects | compare shape paths before and after XML import Aspose
-// Developer Intent: Confirm that a shape’s geometry—adjustment values and path collection—remains unchanged after calling Workbook.ImportXml on a workbook.
-// Use Cases: Automated regression test to ensure ImportXml does not alter existing drawing objects. | Audit routine for batch XML imports that must preserve custom shape adjustments. | Debugging scenario where unexpected shape distortion is suspected after XML processing.
-// AI Prompts: Generate C# code using Aspose.Cells that records a shape's Geometry.ShapeAdjustValues and Paths counts, runs Workbook.ImportXml, then compares and logs any differences. | Write an MSTest unit test that asserts a rectangle shape's adjustment values and path collection stay the same after Workbook.ImportXml is executed. | Explain how Workbook.ImportXml interacts with drawing objects in Aspose.Cells and provide best‑practice tips to keep shape geometry intact during XML imports.
+// Title: Compare worksheet column widths, row heights, and merged cell ranges before and after saving to XML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, exports it to XML using Aspose.Cells, reloads the XML into a new Workbook object, and confirms that the layout—including column dimensions, row dimensions, and merged ranges—matches the original. | Create a C# helper method that receives two Aspose.Cells Workbook instances and returns a boolean indicating whether their layout properties are identical within a 0.001 tolerance.
+// Common Searches: asp.net verify worksheet layout after saving to XML with Aspose.Cells | C# ensure column size and row size remain unchanged after Excel XML conversion | check if merged cell areas are retained when importing XML using Aspose.Cells | how to compare two workbooks for geometry consistency in .NET | tolerance settings for geometry comparison in Aspose.Cells C#
+// Tags: Aspose.Cells worksheet geometry comparison | XML export column dimension verification | row dimension tolerance check Aspose.Cells | merged area validation C# | Excel layout integrity after XML import
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a rectangle shape with an adjustment value, records the counts of ShapeAdjustValues and Paths, imports a simple XML file using Workbook.ImportXml, re‑examines the same shape, and reports whether the geometry (adjustments and paths) remains unchanged before saving the file.
-class CompareShapeGeometry
+// The program loads or creates an Excel workbook, saves it as XML with Aspose.Cells, reloads the XML into a new workbook, and compares column widths, row heights, and merged cell ranges between the original and imported workbooks using a small floating‑point tolerance.
+class GeometryComparison
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Create a new workbook and add a rectangle shape
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Shape shape = sheet.Shapes.AddRectangle(1, 1, 0, 0, 200, 100);
+        try
+        {
+            string originalPath = "original.xlsx";
+            // Ensure the original file exists; create a simple workbook if it does not.
+            if (!File.Exists(originalPath))
+            {
+                Workbook wb = new Workbook();
+                wb.Worksheets[0].Cells["A1"].PutValue("Sample");
+                wb.Save(originalPath);
+            }
 
-        // Add an adjustment value to the shape's geometry
-        shape.Geometry.ShapeAdjustValues.Add("adj1", 0.5);
+            // Load the original workbook.
+            Workbook originalWorkbook = new Workbook(originalPath);
 
-        // Capture geometry details before XML import
-        int beforeAdjustCount = shape.Geometry.ShapeAdjustValues.Count;
-        int beforePathCount = shape.Paths != null ? shape.Paths.Count : 0;
-        Console.WriteLine($"Before Import - Adjust values: {beforeAdjustCount}, Paths: {beforePathCount}");
+            // Export the workbook geometry to an intermediate XML file.
+            string tempPath = "temp.xml";
+            originalWorkbook.Save(tempPath, SaveFormat.Xml);
 
-        // Create a simple XML file (does not affect shapes)
-        string xmlPath = "sample.xml";
-        File.WriteAllText(xmlPath, "<root></root>");
+            // Load a new workbook from the exported XML.
+            Workbook importedWorkbook = new Workbook(tempPath);
 
-        // Import the XML into the workbook (using the provided ImportXml rule)
-        workbook.ImportXml(xmlPath, sheet.Name, 0, 0);
+            // Compare geometry of the two workbooks.
+            bool isConsistent = CompareGeometry(originalWorkbook, importedWorkbook);
 
-        // Capture geometry details after XML import
-        Shape shapeAfter = sheet.Shapes[0]; // same shape instance
-        int afterAdjustCount = shapeAfter.Geometry.ShapeAdjustValues.Count;
-        int afterPathCount = shapeAfter.Paths != null ? shapeAfter.Paths.Count : 0;
-        Console.WriteLine($"After Import - Adjust values: {afterAdjustCount}, Paths: {afterPathCount}");
+            Console.WriteLine("Geometry consistent: " + isConsistent);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
 
-        // Compare and report consistency
-        bool adjustSame = beforeAdjustCount == afterAdjustCount;
-        bool pathsSame = beforePathCount == afterPathCount;
-        Console.WriteLine($"Geometry consistency - Adjust values same? {adjustSame}, Paths same? {pathsSame}");
+    // Compares column widths, row heights and merged cells for all worksheets.
+    private static bool CompareGeometry(Workbook wb1, Workbook wb2)
+    {
+        // Ensure the same number of worksheets.
+        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
+            return false;
 
-        // Save the workbook (optional)
-        workbook.Save("GeometryComparison.xlsx");
+        const double tolerance = 0.001; // tolerance for floating‑point comparisons
+
+        for (int sheetIndex = 0; sheetIndex < wb1.Worksheets.Count; sheetIndex++)
+        {
+            Worksheet ws1 = wb1.Worksheets[sheetIndex];
+            Worksheet ws2 = wb2.Worksheets[sheetIndex];
+
+            // ----- Compare column widths -----
+            int maxColumn = Math.Max(ws1.Cells.MaxColumn, ws2.Cells.MaxColumn);
+            for (int col = 0; col <= maxColumn; col++)
+            {
+                double width1 = ws1.Cells.GetColumnWidth(col);
+                double width2 = ws2.Cells.GetColumnWidth(col);
+                if (Math.Abs(width1 - width2) > tolerance)
+                    return false;
+            }
+
+            // ----- Compare row heights -----
+            int maxRow = Math.Max(ws1.Cells.MaxRow, ws2.Cells.MaxRow);
+            for (int row = 0; row <= maxRow; row++)
+            {
+                double height1 = ws1.Cells.GetRowHeight(row);
+                double height2 = ws2.Cells.GetRowHeight(row);
+                if (Math.Abs(height1 - height2) > tolerance)
+                    return false;
+            }
+
+            // ----- Compare merged cells -----
+            CellArea[] merged1 = ws1.Cells.GetMergedAreas();
+            CellArea[] merged2 = ws2.Cells.GetMergedAreas();
+
+            if (merged1.Length != merged2.Length)
+                return false;
+
+            for (int i = 0; i < merged1.Length; i++)
+            {
+                string range1 = CellsHelper.CellIndexToName(merged1[i].StartRow, merged1[i].StartColumn) + ":" +
+                                CellsHelper.CellIndexToName(merged1[i].EndRow, merged1[i].EndColumn);
+                string range2 = CellsHelper.CellIndexToName(merged2[i].StartRow, merged2[i].StartColumn) + ":" +
+                                CellsHelper.CellIndexToName(merged2[i].EndRow, merged2[i].EndColumn);
+
+                if (!string.Equals(range1, range2, StringComparison.OrdinalIgnoreCase))
+                    return false;
+            }
+        }
+
+        // All checks passed.
+        return true;
     }
 }

@@ -1,81 +1,61 @@
-// Title: Remove Formatting‑Only Cells with Aspose.Cells (C#) to Shrink Excel Files
-// Description: Loads a workbook, iterates the used range, clears formatting from empty cells, removes any now‑unused styles, and saves the file, resulting in a smaller Excel workbook.
-// Keywords: Aspose.Cells clear formatting | remove formatting only cells | optimize Excel size .NET | remove unused styles | clear blank cell formats | C# Aspose.Cells workbook optimization | reduce Excel file size | delete cell styles Aspose | Excel performance tuning
-// Common Searches: how to clear formatting from empty cells using Aspose.Cells C# | remove unused styles after clearing formats Aspose.Cells | shrink Excel workbook size by deleting formatting only cells | Aspose.Cells iterate used range to clear cell formats | C# code to clean up blank cell styles in Excel
-// Developer Intent: Clear all formatting from cells that contain no data and purge unused styles to reduce the workbook’s file size.
-// Use Cases: Prepare a report workbook for distribution by stripping unnecessary formatting from placeholder cells. | Automate cleanup of generated spreadsheets so blank cells do not retain redundant styles, lowering storage costs. | Integrate formatting cleanup into a CI/CD pipeline that processes Excel files, ensuring each published workbook is size‑optimized.
-// AI Prompts: Write C# code with Aspose.Cells that clears formats of all blank cells in a worksheet and then calls RemoveUnusedStyles. | Suggest a more efficient method to identify formatting‑only cells without scanning every cell in the used range. | Explain the purpose of Workbook.RemoveUnusedStyles and the best time to invoke it after modifying cell formats.
+// Title: How to remove formatting‑only cells from every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loops through all worksheets and deletes cells that contain only formatting, leaving the workbook smaller. | Create a reusable method that accepts input and output file paths, finds cells where CellValueType.IsNull, and empties them with PutValue(null). | Demonstrate how to gather formatting‑only cells into a collection and clear them efficiently to reduce file size in Aspose.Cells.
+// Common Searches: asp.net remove cells that only have formatting from Excel workbook | Aspose.Cells delete empty styled cells to shrink file size | C# clear cells with CellValueType.IsNull across all worksheets | optimize Excel file size by cleaning up formatting‑only cells using Aspose.Cells | batch remove formatting‑only cells from large workbook .NET
+// Tags: strip formatting‑only cells Aspose.Cells | clear IsNull cells across worksheets | reduce Excel workbook size with cell cleanup | Aspose.Cells delete empty styled cells | batch clear null‑type cells .NET
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, iterates each worksheet, identifies cells whose Type is IsNull (indicating no data, only formatting), sets their value to null to clear them, and saves the cleaned workbook, resulting in a smaller file.
+class Program
 {
-    // Loads a workbook, iterates the used range, clears formatting from empty cells, removes any now‑unused styles, and saves the file, resulting in a smaller Excel workbook.
-    public class RemoveFormattingOnlyCells
+    static void Main()
     {
-        public static void Run()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
             {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Verify that the input file exists before loading
-                if (!File.Exists(inputPath))
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Collect cells that contain no data (only formatting)
+                List<Cell> cellsToClear = new List<Cell>();
+                foreach (Cell cell in sheet.Cells)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Determine the used range of the worksheet
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                // Iterate through each cell in the used range
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
+                    if (cell.Type == CellValueType.IsNull)
                     {
-                        Cell cell = cells[row, col];
-                        bool isBlank = cell.Value == null || string.IsNullOrEmpty(cell.StringValue);
-
-                        if (isBlank)
-                        {
-                            // Clear only the formatting of the blank cell
-                            cells.ClearFormats(row, col, row, col);
-                        }
+                        cellsToClear.Add(cell);
                     }
                 }
 
-                // Remove any styles that are now unused after clearing formats
-                workbook.RemoveUnusedStyles();
+                // Clear the collected cells (remove any residual data)
+                foreach (Cell cell in cellsToClear)
+                {
+                    // Setting the value to null ensures the cell is truly empty
+                    cell.PutValue(null);
+                }
+            }
 
-                // Save the optimized workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RemoveFormattingOnlyCells.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

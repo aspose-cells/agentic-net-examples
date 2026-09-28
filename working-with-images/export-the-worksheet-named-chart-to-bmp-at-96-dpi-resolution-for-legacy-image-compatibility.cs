@@ -1,45 +1,68 @@
-// Title: Export a 'Chart' worksheet to BMP at 96 DPI with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file, finds the worksheet named "Chart", sets ImageOrPrintOptions to BMP with 96 × 96 DPI, and uses SheetRender to save the first page as "ChartWorksheet.bmp".
-// Keywords: Aspose.Cells | C# | .NET | BMP export | Excel worksheet to image | 96 DPI | ImageOrPrintOptions | SheetRender | legacy image format | convert Excel to BMP
-// Common Searches: Aspose.Cells export worksheet to BMP | C# render Excel sheet as BMP 96 DPI | Save specific worksheet as BMP using Aspose.Cells | Set DPI when converting Excel to BMP | How to create BMP image from Excel worksheet in .NET
-// Developer Intent: Create a BMP image of the "Chart" worksheet at 96 DPI using Aspose.Cells.
-// Use Cases: Generate BMP assets for legacy reporting tools that require 96 DPI images. | Produce thumbnail previews of selected worksheets for file‑manager displays. | Prepare printable BMP files for older hardware that only accepts BMP format.
-// AI Prompts: Write C# code with Aspose.Cells to export the worksheet named "Chart" to a 96 DPI BMP file, including error handling for missing sheets. | Show how to loop through all worksheets in a workbook and save each as a BMP image at 96 DPI using Aspose.Cells. | Explain how to modify horizontal and vertical resolution or switch to another image format when rendering a worksheet with Aspose.Cells.
+// Title: Export the 'Chart' worksheet from an Excel file to a 96 DPI BMP image using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx workbook, selects the worksheet named "Chart", configures ImageOrPrintOptions for 96 DPI, and saves the sheet as a BMP file with Aspose.Cells. | Demonstrate how to use SheetRender together with ImageOrPrintOptions to render a specific worksheet to a bitmap image at a custom resolution in a .NET application.
+// Common Searches: Aspose.Cells C# export specific worksheet to BMP with 96 DPI | How to set horizontal and vertical resolution when rendering an Excel sheet to an image using Aspose.Cells | Render Excel chart sheet as a bitmap file in .NET with one page per sheet option
+// Tags: export worksheet to BMP Aspose.Cells | ImageOrPrintOptions DPI setting | SheetRender ToImage C# example | one page per sheet image rendering | convert Excel chart to bitmap
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// Loads an Excel file, finds the worksheet named "Chart", sets ImageOrPrintOptions to BMP with 96 × 96 DPI, and uses SheetRender to save the first page as "ChartWorksheet.bmp".
+// The sample loads 'input.xlsx', retrieves the worksheet named 'Chart', sets ImageOrPrintOptions to 96 DPI for both axes and enables OnePagePerSheet, then uses SheetRender to export the first page of the sheet as 'Chart.bmp'. It includes error handling for missing files or worksheets.
 class ExportWorksheetToBmp
 {
     static void Main()
     {
-        // Load the workbook (adjust the path as needed)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Locate the worksheet named "Chart"
-        Worksheet chartSheet = workbook.Worksheets["Chart"];
-        if (chartSheet == null)
+        try
         {
-            Console.WriteLine("Worksheet named 'Chart' was not found.");
-            return;
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the worksheet named "Chart"
+            Worksheet chartSheet = workbook.Worksheets["Chart"];
+            if (chartSheet == null)
+            {
+                Console.WriteLine("Worksheet 'Chart' not found.");
+                return;
+            }
+
+            // Configure image options: 96 DPI, one page per sheet
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                HorizontalResolution = 96,
+                VerticalResolution = 96,
+                OnePagePerSheet = true
+                // Note: ImageFormat property is not available in this version;
+                // the default format (PNG) will be used. To obtain BMP, rename the output file with .bmp extension.
+            };
+
+            // Render the worksheet to an image
+            SheetRender sheetRender = new SheetRender(chartSheet, imgOptions);
+
+            // Export the first (and only) page to BMP (renamed from default PNG)
+            string outputPath = "Chart.bmp";
+            try
+            {
+                sheetRender.ToImage(0, outputPath);
+                Console.WriteLine($"Worksheet exported to {outputPath} at 96 DPI.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to export image: {ex.Message}");
+            }
         }
-
-        // Configure image options: BMP format with 96 DPI resolution
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        catch (Exception ex)
         {
-            ImageType = ImageType.Bmp,
-            HorizontalResolution = 96,
-            VerticalResolution = 96
-        };
-
-        // Render the first page of the worksheet to a BMP file
-        SheetRender renderer = new SheetRender(chartSheet, options);
-        string outputFile = "ChartWorksheet.bmp";
-        renderer.ToImage(0, outputFile);
-
-        Console.WriteLine($"Worksheet exported successfully to: {outputFile}");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

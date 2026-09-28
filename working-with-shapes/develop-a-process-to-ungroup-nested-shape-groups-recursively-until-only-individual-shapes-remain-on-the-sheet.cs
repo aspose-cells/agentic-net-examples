@@ -1,82 +1,70 @@
-// Title: C# – Recursively Ungroup Nested Shape Groups in an Aspose.Cells Worksheet
-// Description: Demonstrates how to flatten a worksheet by recursively ungrouping every GroupShape in Aspose.Cells. The sample creates nested groups, then uses a safe backward‑iteration loop to call ShapeCollection.Ungroup until only individual shapes remain, and finally saves the workbook.
-// Keywords: Aspose.Cells ungroup shapes | C# recursive shape ungroup | GroupShape flatten Excel | ShapeCollection.Ungroup method | nested shape groups Aspose.Cells | Excel shape manipulation .NET | remove grouped objects worksheet | flatten diagram Aspose.Cells | programmatic shape ungrouping | Aspose.Cells shape collection
-// Common Searches: how to ungroup all nested shape groups in Aspose.Cells | recursive ungrouping of GroupShape objects C# | flatten grouped shapes in Excel using Aspose.Cells | remove shape groups from worksheet programmatically | Aspose.Cells ShapeCollection Ungroup example
-// Developer Intent: Programmatically ungroup every nested GroupShape in a worksheet so that only individual shapes remain.
-// Use Cases: Prepare a workbook for PDF or image export by flattening complex diagrams. | Enable shape‑level formatting after receiving an Excel file with grouped objects. | Clean up imported spreadsheets that contain nested groups before further data processing.
-// AI Prompts: Generate a C# method that recursively ungroups all GroupShape objects in an Aspose.Cells worksheet, handling collection changes safely. | Show code that detects nested shape groups, flattens them, and saves the workbook with only individual shapes. | Explain how to modify the UngroupAllNestedGroups method to return a list of shapes that were extracted from groups.
+// Title: Recursively ungroup nested GroupShape objects on all worksheets using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates through each worksheet, and recursively ungroups every GroupShape until only individual shapes remain. | Create a method for Aspose.Cells that safely scans a worksheet's Shapes collection, detects GroupShape instances, calls Ungroup(), and repeats the scan to handle deeper nesting.
+// Common Searches: how to recursively ungroup GroupShape objects in an Excel file using Aspose.Cells C# | flatten nested shape groups across all worksheets with Aspose.Cells .NET | Aspose.Cells C# ungroup all shapes in workbook without losing inner shapes | remove shape groups from Excel workbook programmatically using Aspose.Cells | iterate worksheet shapes and ungroup groups in C# Aspose.Cells example
+// Tags: ungroup GroupShape Aspose.Cells | recursive shape group removal C# | remove Excel shape groups Aspose.Cells | iterate worksheet shapes Aspose.Cells | handle shape collection changes Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeUngroupDemo
+// The program loads an input Excel file, loops through each worksheet, and repeatedly scans the Shapes collection to find GroupShape objects. Each found group is ungrouped with GroupShape.Ungroup(), and the scan restarts to ensure nested groups are also flattened. After all groups are removed, the workbook is saved to the specified output path.
+class Program
 {
-    // Demonstrates how to flatten a worksheet by recursively ungrouping every GroupShape in Aspose.Cells. The sample creates nested groups, then uses a safe backward‑iteration loop to call ShapeCollection.Ungroup until only individual shapes remain, and finally saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Process each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // ------------------------------------------------------------
-                // Sample data: create nested groups for demonstration purposes
-                // ------------------------------------------------------------
-                // Add some basic shapes
-                Shape rect1 = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 40);
-                Shape rect2 = worksheet.Shapes.AddRectangle(6, 0, 2, 0, 80, 40);
-                Shape oval1 = worksheet.Shapes.AddOval(10, 0, 2, 0, 80, 40);
-
-                // First level group (rect1 + rect2)
-                GroupShape groupLevel1 = worksheet.Shapes.Group(new Shape[] { rect1, rect2 });
-
-                // Second level group: include oval1 and nest the first group inside it
-                GroupShape groupLevel2 = worksheet.Shapes.Group(new Shape[] { oval1, groupLevel1 });
-
-                // ------------------------------------------------------------
-                // Recursive ungrouping: flatten all nested groups
-                // ------------------------------------------------------------
-                UngroupAllNestedGroups(worksheet);
-
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save("UngroupedShapesDemo.xlsx");
+                UngroupAllShapes(sheet);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        /// <param name="worksheet">Target worksheet.</param>
-        static void UngroupAllNestedGroups(Worksheet worksheet)
+        catch (Exception ex)
         {
-            ShapeCollection shapes = worksheet.Shapes;
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
-            // Continue looping while there is at least one group shape present
-            bool groupsRemaining = true;
-            while (groupsRemaining)
+    // Recursively ungroup all nested groups on the given worksheet
+    private static void UngroupAllShapes(Worksheet sheet)
+    {
+        bool groupFound;
+        do
+        {
+            groupFound = false;
+
+            // Snapshot of current shapes to avoid collection modification issues
+            Shape[] currentShapes = new Shape[sheet.Shapes.Count];
+            sheet.Shapes.CopyTo(currentShapes, 0);
+
+            foreach (Shape shape in currentShapes)
             {
-                groupsRemaining = false;
-
-                // Iterate backwards because ungrouping modifies the collection
-                for (int i = shapes.Count - 1; i >= 0; i--)
+                if (shape is GroupShape groupShape)
                 {
-                    Shape shape = shapes[i];
+                    // Ungroup the shape; inner shapes are automatically added to the worksheet
+                    groupShape.Ungroup();
 
-                    // Identify group shapes using IsGroup property
-                    if (shape.IsGroup)
-                    {
-                        // Ungroup the current group (rule: ShapeCollection.Ungroup)
-                        shapes.Ungroup((GroupShape)shape);
-                        // After ungrouping, there may be new groups, so we set the flag
-                        groupsRemaining = true;
-                    }
+                    // A group was processed; another pass may be needed for nested groups
+                    groupFound = true;
+                    break; // Restart scanning as the collection has changed
                 }
             }
-        }
+        } while (groupFound);
     }
 }

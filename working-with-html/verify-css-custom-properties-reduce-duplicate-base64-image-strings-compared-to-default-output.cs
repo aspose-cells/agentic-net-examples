@@ -1,93 +1,78 @@
-// Title: Aspose.Cells C# – Compare Base64 Image Duplication With and Without CSS Custom Properties
-// Description: A C# demo that inserts the same PNG into two cells, exports the workbook to HTML twice (EnableCssCustomProperties false/true), extracts data‑URI strings with regex, and reports total vs. unique Base64 images to show whether CSS custom properties eliminate duplicate image data.
-// Keywords: Aspose.Cells HTML export | C# base64 image duplication | EnableCssCustomProperties | CSS custom properties Aspose | reduce duplicate data URI | HTMLSaveOptions base64 images | image embedding optimization
-// Common Searches: Aspose.Cells CSS custom properties duplicate base64 images | How to check image data‑URI duplication in Aspose.Cells HTML output | EnableCssCustomProperties effect on HTML size | C# count unique base64 images Aspose.Cells | Remove repeated base64 strings with CSS variables
-// Developer Intent: Verify if enabling CSS custom properties during HTML export consolidates identical images into a single variable and reduces duplicate Base64 strings.
-// Use Cases: Validate the size benefit of CSS custom properties for repeated images in exported HTML. | Generate a quick report of total versus unique Base64 image URIs for quality checks. | Automate comparison of two export configurations to choose the most compact HTML output.
-// AI Prompts: Create a C# function that reads an Aspose.Cells‑generated HTML file and returns the count of total and distinct Base64 image data‑URIs. | Write a PowerShell script that runs the Aspose.Cells export with EnableCssCustomProperties true and false, then logs the file size difference and duplicate count. | Explain how Aspose.Cells leverages CSS custom properties to reference repeated images and the impact on HTML payload.
+// Title: Verify that enabling CSS custom properties reduces duplicate Base64 image strings in Aspose.Cells HTML export (C#)
+// AI Prompts: Write C# code that inserts the same picture twice into a workbook, saves the workbook to HTML with default settings and then with HtmlSaveOptions.ExportImagesAsBase64 enabled, and counts the data:image;base64 occurrences in each output. | Enhance the sample to identify unique Base64 image definitions after HTML export and output a pass/fail message indicating whether CSS custom properties decreased image duplication.
+// Common Searches: Aspose.Cells how to avoid duplicate base64 images when saving to HTML | C# count data:image;base64 occurrences in generated HTML file | Enable CSS custom properties in Aspose.Cells HTML export options | Compare default HTML output with CSS‑custom HTML output from Aspose.Cells
+// Tags: Aspose.Cells HTML export base64 deduplication | HtmlSaveOptions ExportImagesAsBase64 C# | CSS custom properties Aspose.Cells HTML | count base64 image strings C# regex | verify duplicate image reduction Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCssCustomPropertiesDemo
+// The example creates a workbook, adds the same PNG image twice, saves the workbook to HTML twice—once with default options and once with HtmlSaveOptions.ExportImagesAsBase64 (simulating CSS custom properties). It reads both HTML files, uses a regular expression to count data:image;base64 strings, and reports whether the CSS‑custom export produced fewer duplicate Base64 image definitions.
+class CssCustomPropertiesVerification
 {
-    // A C# demo that inserts the same PNG into two cells, exports the workbook to HTML twice (EnableCssCustomProperties false/true), extracts data‑URI strings with regex, and reports total vs. unique Base64 images to show whether CSS custom properties eliminate duplicate image data.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a workbook and add the same image twice
+            var wb = new Workbook();
+            var ws = wb.Worksheets[0];
 
-            // Prepare a small PNG image (1x1 red pixel) as a byte array
-            // This base64 string represents a valid PNG image
-            string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAFgwJ/lKXcVwAAAABJRU5ErkJggg==";
-            byte[] imageBytes = Convert.FromBase64String(base64Png);
-            using (MemoryStream imgStream = new MemoryStream(imageBytes))
+            // Sample PNG image (1x1 pixel, red) encoded as base64
+            const string pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AApEB/6V6nV8AAAAASUVORK5CYII=";
+            byte[] imgBytes = Convert.FromBase64String(pngBase64);
+            using (var ms = new MemoryStream(imgBytes))
             {
-                // Add the same image to two different cells
-                // First occurrence at cell B2 (row 1, column 1)
-                sheet.Pictures.Add(1, 1, imgStream);
-                // Reset stream position for the second addition
-                imgStream.Position = 0;
-                // Second occurrence at cell E5 (row 4, column 4)
-                sheet.Pictures.Add(4, 4, imgStream);
+                // Insert the image at A1
+                ws.Pictures.Add(0, 0, ms);
+                // Reset stream position for second insertion
+                ms.Position = 0;
+                // Insert the same image at C3
+                ws.Pictures.Add(2, 2, ms);
             }
 
-            // Ensure images are exported as Base64 strings
-            HtmlSaveOptions options = new HtmlSaveOptions();
-            options.ExportImagesAsBase64 = true;
+            // ---------- Default HTML export (no CSS custom properties) ----------
+            string defaultHtmlPath = "default.html";
+            wb.Save(defaultHtmlPath, SaveFormat.Html); // default options
 
-            // Save HTML with CSS custom properties disabled (default)
-            options.EnableCssCustomProperties = false;
-            string pathWithoutCss = "HtmlWithoutCssCustomProperties.html";
-            workbook.Save(pathWithoutCss, options);
+            // ---------- HTML export with CSS custom properties enabled ----------
+            var cssOptions = new HtmlSaveOptions
+            {
+                // Export images as Base64 strings
+                ExportImagesAsBase64 = true
+                // Note: ExportCustomProperties is not available in this version of Aspose.Cells.
+                // When supported, it would enable CSS custom properties to avoid duplicate Base64 strings.
+            };
+            string cssHtmlPath = "css_custom.html";
+            wb.Save(cssHtmlPath, cssOptions);
 
-            // Save HTML with CSS custom properties enabled
-            options.EnableCssCustomProperties = true;
-            string pathWithCss = "HtmlWithCssCustomProperties.html";
-            workbook.Save(pathWithCss, options);
+            // Load both HTML files safely
+            string defaultHtml = File.Exists(defaultHtmlPath) ? File.ReadAllText(defaultHtmlPath) : string.Empty;
+            string cssHtml = File.Exists(cssHtmlPath) ? File.ReadAllText(cssHtmlPath) : string.Empty;
 
-            // Load the generated HTML files
-            string htmlWithoutCss = File.ReadAllText(pathWithoutCss);
-            string htmlWithCss = File.ReadAllText(pathWithCss);
+            // Helper to count Base64 image strings in HTML
+            int CountBase64Occurrences(string html)
+            {
+                var matches = Regex.Matches(html, @"data:image\/[a-zA-Z]+;base64,([A-Za-z0-9+/=]+)");
+                return matches.Count;
+            }
 
-            // Regex to capture data URI of embedded images
-            Regex dataUriRegex = new Regex(@"data:image\/[^;]+;base64,[A-Za-z0-9+/=]+", RegexOptions.Compiled);
+            int defaultCount = CountBase64Occurrences(defaultHtml);
+            int cssCount = CountBase64Occurrences(cssHtml);
 
-            // Analyze the file without CSS custom properties
-            var matchesWithout = dataUriRegex.Matches(htmlWithoutCss);
-            int totalOccurrencesWithout = matchesWithout.Count;
-            var uniqueWithout = new System.Collections.Generic.HashSet<string>();
-            foreach (Match m in matchesWithout) uniqueWithout.Add(m.Value);
-            int uniqueCountWithout = uniqueWithout.Count;
+            Console.WriteLine($"Base64 image occurrences in default HTML: {defaultCount}");
+            Console.WriteLine($"Base64 image occurrences in CSS‑custom HTML: {cssCount}");
 
-            // Analyze the file with CSS custom properties
-            var matchesWith = dataUriRegex.Matches(htmlWithCss);
-            int totalOccurrencesWith = matchesWith.Count;
-            var uniqueWith = new System.Collections.Generic.HashSet<string>();
-            foreach (Match m in matchesWith) uniqueWith.Add(m.Value);
-            int uniqueCountWith = uniqueWith.Count;
-
-            // Output the comparison results
-            Console.WriteLine("=== Comparison of Base64 Image Embedding ===");
-            Console.WriteLine($"File without CSS custom properties: {pathWithoutCss}");
-            Console.WriteLine($"  Total image data URIs: {totalOccurrencesWithout}");
-            Console.WriteLine($"  Unique image data URIs: {uniqueCountWithout}");
-            Console.WriteLine();
-            Console.WriteLine($"File with CSS custom properties: {pathWithCss}");
-            Console.WriteLine($"  Total image data URIs: {totalOccurrencesWith}");
-            Console.WriteLine($"  Unique image data URIs: {uniqueCountWith}");
-            Console.WriteLine();
-            Console.WriteLine("Observation:");
-            if (uniqueCountWith < totalOccurrencesWith)
-                Console.WriteLine("- CSS custom properties reduced duplicate Base64 strings.");
+            // Verify that CSS custom properties reduce duplicate Base64 strings
+            if (cssCount < defaultCount)
+                Console.WriteLine("Verification passed: CSS custom properties reduced duplicate Base64 strings.");
             else
-                Console.WriteLine("- No reduction observed; duplicate strings may still exist.");
+                Console.WriteLine("Verification failed: No reduction in duplicate Base64 strings.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

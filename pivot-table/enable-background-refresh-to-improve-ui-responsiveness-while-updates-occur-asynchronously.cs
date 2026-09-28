@@ -1,62 +1,53 @@
-// Title: Aspose.Cells C# – Enable Background Refresh for External Data Connections
-// Description: Demonstrates how to set the BackgroundRefresh property to true on an external data connection in an Aspose.Cells workbook, allowing asynchronous refreshes that keep the UI responsive, then saves the file.
-// Keywords: Aspose.Cells background refresh | C# external data connection async | Enable BackgroundRefresh property | Aspose.Cells workbook save | asynchronous data refresh .NET
-// Common Searches: Aspose.Cells enable background refresh C# | set BackgroundRefresh true external connection | asynchronous refresh of external data in Aspose.Cells | how to keep UI responsive while refreshing workbook data
-// Developer Intent: Configure an external data connection to refresh asynchronously using Aspose.Cells for .NET.
-// Use Cases: Improve UI responsiveness by refreshing data in the background. | Apply background refresh only when a workbook contains external connections. | Persist the asynchronous refresh setting by saving the workbook after configuration.
-// AI Prompts: Generate C# code that iterates over all external data connections in an Aspose.Cells workbook, sets BackgroundRefresh = true for each, and initiates an asynchronous refresh. | Provide an example that handles the case where a workbook has no external connections while attempting to enable BackgroundRefresh, including proper error messages.
+// Title: Enable asynchronous background refresh for an external data connection in an Aspose.Cells workbook (C#)
+// AI Prompts: Write C# code that opens a workbook, iterates over its DataConnections, sets BackgroundRefresh = true for each, and saves the file using Aspose.Cells. | Generate a C# snippet that checks whether a workbook contains any external connections, enables background refresh on the first connection, and logs the operation outcome. | Create a C# example that toggles the BackgroundRefresh property of an ExternalConnection object and persists the changes to an .xlsx workbook.
+// Common Searches: Aspose.Cells C# enable background refresh for workbook data connections | how to set BackgroundRefresh on external connection using Aspose.Cells .NET | asynchronous data refresh in Excel file with Aspose.Cells API | C# sample to save workbook after modifying external connection settings in Aspose.Cells
+// Tags: Aspose.Cells background refresh | Aspose.Cells external data connection | C# set BackgroundRefresh property | asynchronous data refresh Aspose.Cells | save workbook after connection update
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+// This example demonstrates how to use Aspose.Cells for .NET to detect external data connections in a workbook, enable the BackgroundRefresh flag to allow asynchronous updates, and then save the modified workbook as an .xlsx file while providing console logging and error handling.
+class EnableBackgroundRefreshDemo
 {
-    // Demonstrates how to set the BackgroundRefresh property to true on an external data connection in an Aspose.Cells workbook, allowing asynchronous refreshes that keep the UI responsive, then saves the file.
-    public class EnableBackgroundRefreshDemo
+    public static void Run()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Check if the workbook contains any external connections
+            if (workbook.DataConnections.Count > 0)
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+                // Access the first external connection
+                ExternalConnection connection = workbook.DataConnections[0];
 
-                // Check if the workbook contains any external data connections
-                if (workbook.DataConnections.Count > 0)
-                {
-                    // Access the first external connection
-                    ExternalConnection connection = workbook.DataConnections[0];
+                // Enable background refresh (asynchronous update)
+                connection.BackgroundRefresh = true;
 
-                    // Enable background refresh so the connection can be refreshed asynchronously
-                    connection.BackgroundRefresh = true;
-
-                    Console.WriteLine("BackgroundRefresh set to: " + connection.BackgroundRefresh);
-                }
-                else
-                {
-                    // No external connections exist; inform the user.
-                    Console.WriteLine("The workbook does not contain any external data connections.");
-                }
-
-                // Save the workbook (lifecycle rule: save)
-                string outputPath = "EnableBackgroundRefreshDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine("BackgroundRefresh set to: " + connection.BackgroundRefresh);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("No external connections found in the workbook.");
             }
+
+            // Save the workbook with the modified connection settings
+            workbook.Save("BackgroundRefreshEnabled.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
+}
 
-    // Entry point for the application
-    public class Program
+class Program
+{
+    static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            EnableBackgroundRefreshDemo.Run();
-        }
+        EnableBackgroundRefreshDemo.Run();
     }
 }

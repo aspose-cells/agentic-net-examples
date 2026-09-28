@@ -1,16 +1,12 @@
-// Title: C# – Apply Currency Number Format to First Chart Series Data Labels with Aspose.Cells
-// Description: Creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, and sets the series' DataLabels.NumberFormat to "$#,##0.00" so every label displays values as US dollars with two decimal places. Saves the file as ChartWithCurrencyDataLabels.xlsx.
-// Keywords: Aspose.Cells C# chart data labels | currency format Excel chart | NumberFormat property Aspose.Cells | .NET chart series formatting | Excel column chart label styling
-// Common Searches: Aspose.Cells set data label format to currency | C# chart series number format Aspose.Cells | How to show dollar values on Excel chart labels using .NET | Apply custom number format to first series data labels
-// Developer Intent: Apply a US‑dollar number format to all data labels of the first series in an Aspose.Cells chart.
-// Use Cases: Financial reports that require chart labels to show amounts with a dollar sign and two decimals. | Automated sales dashboards where chart data labels must follow a consistent currency style. | Exporting Excel workbooks for accounting teams that need monetary values clearly formatted on charts.
-// AI Prompts: Generate C# code that sets the NumberFormat of data labels for the first series of an Aspose.Cells chart to "$#,##0.00". | Show how to apply a custom currency format to multiple chart series data labels in an Aspose.Cells workbook. | Explain step‑by‑step how to enable and format data labels on an Excel chart using Aspose.Cells for .NET.
+// Title: How to apply a custom currency number format to data labels of the first series in an Aspose.Cells column chart (C#)
+// AI Prompts: Write C# code using Aspose.Cells to enable data labels on the first series of a column chart and set their number format to "$#,##0.00". | Show the steps for formatting chart data labels as currency in an Excel workbook created with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set currency format for chart series data labels | How to display data labels as $ currency in a column chart using Aspose.Cells | Apply custom number format to Excel chart data labels with Aspose.Cells .NET | Enable and format data labels on the first series of an Aspose.Cells chart | C# Aspose.Cells chart data label number format example
+// Tags: Aspose.Cells chart series data label currency format | C# set data label number format Aspose.Cells | column chart data label customization Aspose.Cells | Excel chart currency formatting with Aspose.Cells | apply number format to chart labels .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, and sets the series' DataLabels.NumberFormat to "$#,##0.00" so every label displays values as US dollars with two decimal places. Saves the file as ChartWithCurrencyDataLabels.xlsx.
+// The example creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, applies the currency format "$#,##0.00" to those labels, and saves the file as ChartDataLabelsCurrency.xlsx.
 class ApplyCurrencyFormatToDataLabels
 {
     static void Main()
@@ -24,7 +20,6 @@ class ApplyCurrencyFormatToDataLabels
         sheet.Cells["A2"].PutValue("A");
         sheet.Cells["A3"].PutValue("B");
         sheet.Cells["A4"].PutValue("C");
-
         sheet.Cells["B1"].PutValue("Value");
         sheet.Cells["B2"].PutValue(1000);
         sheet.Cells["B3"].PutValue(2000);
@@ -34,11 +29,11 @@ class ApplyCurrencyFormatToDataLabels
         int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Set the data range for the series and categories
+        // Set the data range for the chart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Access the first series
+        // Access the first series of the chart
         Series series = chart.NSeries[0];
 
         // Enable data labels for the series
@@ -47,7 +42,7 @@ class ApplyCurrencyFormatToDataLabels
         // Apply a custom currency number format to all data labels in this series
         series.DataLabels.NumberFormat = "$#,##0.00";
 
-        // Save the workbook
-        workbook.Save("ChartWithCurrencyDataLabels.xlsx");
+        // Save the workbook to a file
+        workbook.Save("ChartDataLabelsCurrency.xlsx");
     }
 }

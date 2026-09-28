@@ -1,60 +1,84 @@
-// Title: C# Aspose.Cells – Remove All Trendlines from a Chart Before Adding New Ones
-// Description: Learn how to clear every trendline from an Aspose.Cells chart using the TrendLines.Clear() method, then add a new analytical trendline (e.g., exponential) with equation and R‑squared displayed, all in a concise C# example.
-// Keywords: Aspose.Cells | C# | chart trendlines | remove trendlines | clear trendlines | TrendLines.Clear | Aspose.Cells chart | add trendline | exponential trendline | trendline equation | R-squared | Aspose.Cells example | GitHub | source code
-// Common Searches: Aspose.Cells remove trendlines C# | clear chart trendlines Aspose.Cells .NET | how to delete trendlines from chart using Aspose.Cells | replace chart trendline Aspose.Cells | add exponential trendline after clearing Aspose.Cells
-// Developer Intent: The developer needs to delete any existing trendlines from a chart before inserting new analytical trendlines.
-// Use Cases: Refresh a chart’s analytical lines after data updates by clearing old trendlines and adding updated ones. | Switch from a linear to an exponential trendline in an automated report generated with Aspose.Cells. | Prepare a clean workbook for client distribution, ensuring only the intended trendlines are present. | Reuse a chart template programmatically while guaranteeing no residual trendlines remain.
-// AI Prompts: Write C# code that iterates through all series in an Aspose.Cells chart and removes each trendline using TrendLines.Clear(). | Show how to add a polynomial (order 3) trendline after clearing existing trendlines in an Aspose.Cells line chart. | Explain how to verify that a chart contains no trendlines before saving the workbook with Aspose.Cells.
+// Title: Remove all trendlines from an Excel chart using Aspose.Cells for .NET before adding new analytical lines
+// AI Prompts: Write C# code with Aspose.Cells that iterates through every series in a chart and deletes all existing trendlines. | Show how to clear trendlines from a chart's NSeries and then insert a new linear trendline using Aspose.Cells. | Provide a method that removes chart series trendlines, adds a fresh trendline, and saves the workbook to a new file.
+// Common Searches: aspocells how to delete all trendlines from a chart in C# | remove existing trendlines before adding new ones with Aspose.Cells .NET | clear chart series trendlines programmatically using Aspose.Cells | C# Aspose.Cells example to reset trendlines on an Excel chart | delete trendlines from Excel chart and add linear trendline Aspose.Cells
+// Tags: Aspose.Cells remove chart trendlines C# | clear Excel chart trendlines programmatically | add linear trendline after clearing Aspose.Cells | chart NSeries trendline manipulation Aspose.Cells | reset chart trendlines .NET Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// Learn how to clear every trendline from an Aspose.Cells chart using the TrendLines.Clear() method, then add a new analytical trendline (e.g., exponential) with equation and R‑squared displayed, all in a concise C# example.
+// The example loads an Excel workbook, accesses the first worksheet and its first chart, iterates through each series to remove all trendlines, optionally adds a new linear trendline to the first series, and saves the modified workbook.
 class RemoveTrendlinesExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data
-        sheet.Cells["A1"].PutValue("X");
-        sheet.Cells["B1"].PutValue("Y");
-        for (int i = 2; i <= 6; i++)
+        try
         {
-            sheet.Cells[$"A{i}"].PutValue(i - 1);          // X values
-            sheet.Cells[$"B{i}"].PutValue((i - 1) * 2 + 1); // Y values
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
+
+            // Get the first chart (adjust index as needed)
+            Chart chart = worksheet.Charts[0];
+
+            // Remove all existing trendlines from every series in the chart
+            foreach (dynamic series in chart.NSeries)
+            {
+                try
+                {
+                    // Remove trendlines in reverse order to avoid index shifting
+                    for (int i = series.Trendlines.Count - 1; i >= 0; i--)
+                    {
+                        series.Trendlines.RemoveAt(i);
+                    }
+                }
+                catch
+                {
+                    // If the Series type does not support Trendlines, ignore
+                }
+            }
+
+            // OPTIONAL: Add a new linear trendline to the first series
+            if (chart.NSeries.Count > 0)
+            {
+                try
+                {
+                    dynamic firstSeries = chart.NSeries[0];
+                    firstSeries.Trendlines.Add(TrendlineType.Linear);
+                }
+                catch
+                {
+                    // If Trendlines are not supported, skip adding
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        // Add a line chart and set its data source
-        int chartIdx = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIdx];
-        chart.NSeries.Add("B2:B6", true);
-        chart.NSeries.CategoryData = "A2:A6";
-
-        // Add an initial trendline to simulate existing ones
-        int existingIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.Linear);
-        Trendline existingTrend = chart.NSeries[0].TrendLines[existingIdx];
-        existingTrend.Color = Color.Blue;
-
-        // ----------------------------------------------------
-        // Remove all existing trendlines from every series
-        // ----------------------------------------------------
-        foreach (Series series in chart.NSeries)
+        catch (Exception ex)
         {
-            series.TrendLines.Clear();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Add new analytical trendline(s) after clearing old ones
-        int newIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.Exponential);
-        Trendline newTrend = chart.NSeries[0].TrendLines[newIdx];
-        newTrend.DisplayEquation = true;
-        newTrend.DisplayRSquared = true;
-        newTrend.Color = Color.Red;
-
-        // Save the workbook
-        workbook.Save("ChartWithoutOldTrendlines.xlsx");
     }
 }

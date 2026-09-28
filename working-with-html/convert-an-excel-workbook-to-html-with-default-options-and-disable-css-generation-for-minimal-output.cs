@@ -1,37 +1,54 @@
-// Title: Convert Excel to Minimal HTML (Disable CSS) with Aspose.Cells for .NET
-// Description: Loads an .xlsx workbook using Aspose.Cells, creates default HtmlSaveOptions, sets DisableCss = true to suppress stylesheet generation, and saves the result as inline‑styled HTML. Suitable for lightweight web pages or email bodies.
-// Keywords: Aspose.Cells | Excel to HTML | DisableCss | HtmlSaveOptions | C# conversion | minimal HTML | inline styling | .NET | export spreadsheet to HTML | no CSS
-// Common Searches: Aspose.Cells export Excel to HTML without CSS | C# HtmlSaveOptions DisableCss example | convert .xlsx to plain HTML .NET | how to disable CSS in Aspose.Cells HTML export | minimal HTML output from Excel
-// Developer Intent: Generate an HTML file from an Excel workbook while omitting external CSS, producing a compact document with inline styles.
-// Use Cases: Render spreadsheet data on web pages where external style sheets are prohibited. | Embed Excel content in email messages that require self‑contained HTML. | Create quick previews of workbooks in environments with strict CSS policies.
-// AI Prompts: Write C# code that uses Aspose.Cells to convert an .xlsx file to HTML with the DisableCss option enabled. | Explain how the DisableCss property changes the HTML output of Aspose.Cells and suggest ways to style the result afterward. | Show how to export an Excel workbook to HTML with inline images (base64) while keeping CSS disabled using Aspose.Cells.
+// Title: Convert an Excel workbook to minimal HTML without CSS using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ExportCss to false, embeds images as Base64, and saves a single HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions to produce a CSS‑free HTML output from a workbook. | Provide a robust example that validates the input Excel path, handles load and save exceptions, and creates a minimal HTML file with no external stylesheet.
+// Common Searches: Aspose.Cells C# generate HTML from workbook without CSS files | disable CSS generation in Aspose.Cells HtmlSaveOptions example | create self‑contained HTML from Excel file using Base64 images Aspose.Cells | minimal HTML output settings for Aspose.Cells workbook export
+// Tags: Aspose.Cells HtmlSaveOptions ExportCss false | C# Excel workbook HTML export without stylesheet | Aspose.Cells generate single HTML file with embedded images | minimal HTML generation using Aspose.Cells | exception handling for Aspose.Cells workbook operations
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// Loads an .xlsx workbook using Aspose.Cells, creates default HtmlSaveOptions, sets DisableCss = true to suppress stylesheet generation, and saves the result as inline‑styled HTML. Suitable for lightweight web pages or email bodies.
+// The sample verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to disable CSS generation and embed images as Base64, then saves the workbook as output.html while handling any loading or saving errors.
 class ExcelToHtmlConverter
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string sourcePath = "input.xlsx";
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.html";
 
-        // Path where the HTML output will be saved
-        string outputPath = "output.html";
+        // Verify that the input Excel file exists
+        if (!File.Exists(inputFile))
+        {
+            Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+            return;
+        }
 
-        // Load the workbook from the Excel file (uses the provided load rule)
-        Workbook workbook = new Workbook(sourcePath);
+        Workbook workbook;
+        try
+        {
+            // Load the workbook from the specified file
+            workbook = new Workbook(inputFile);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-        // Create HTML save options with default settings (uses the provided constructor rule)
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+        // Configure HTML save options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Optional: embed images as Base64 to keep a single output file
+        htmlOptions.ExportImagesAsBase64 = true;
 
-        // Disable CSS generation to produce minimal inline‑styled HTML
-        saveOptions.DisableCss = true;
-
-        // Save the workbook as HTML using the configured options (uses the provided save rule)
-        workbook.Save(outputPath, saveOptions);
-
-        Console.WriteLine("Conversion completed. HTML saved to: " + outputPath);
+        try
+        {
+            // Save the workbook as an HTML file
+            workbook.Save(outputFile, htmlOptions);
+            Console.WriteLine($"Workbook successfully converted to HTML: {outputFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving HTML file: {ex.Message}");
+        }
     }
 }

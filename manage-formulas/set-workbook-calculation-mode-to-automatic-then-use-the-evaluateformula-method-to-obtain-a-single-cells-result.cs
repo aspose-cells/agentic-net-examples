@@ -1,39 +1,39 @@
-// Title: Aspose.Cells .NET: Set Automatic Calculation Mode and Evaluate a Formula Directly
-// Description: This example demonstrates how to configure a workbook for automatic recalculation using Aspose.Cells, insert sample values, and obtain the result of an Excel formula on‑the‑fly with `worksheet.CalculateFormula`. The result is printed to the console and the workbook can be saved if needed.
-// Keywords: Aspose.Cells automatic calculation | C# evaluate Excel formula programmatically | worksheet.CalculateFormula example | set calculation mode Aspose.Cells | .NET Excel formula evaluation | Aspose.Cells formula settings
-// Common Searches: Aspose.Cells set calculation mode to automatic | How to evaluate a formula without placing it in a cell using Aspose.Cells | C# calculate =A1+B1 with Aspose.Cells | Automatic workbook recalculation Aspose.Cells .NET | Evaluate Excel formula programmatically in C#
-// Developer Intent: Configure a workbook for automatic calculation and retrieve a formula's result without writing the formula to a worksheet cell.
-// Use Cases: Automatically recalculate dependent formulas after updating cell values. | Fetch a quick calculation result for user input before persisting the workbook. | Perform ad‑hoc formula evaluations in server‑side processing or API services.
-// AI Prompts: Show how to switch the calculation mode to Manual and trigger a full workbook recalculation with Aspose.Cells. | Provide a C# snippet that uses worksheet.CalculateFormula to evaluate a nested formula referencing multiple worksheets. | Explain how to capture calculation errors when using CalculateFormula in Aspose.Cells.
+// Title: Set Aspose.Cells workbook to Automatic calculation mode and evaluate a single cell formula in C#
+// AI Prompts: Write C# code that switches the workbook's calculation engine to Automatic, assigns a formula to a target cell, and calls the EvaluateFormula method to obtain the cell's computed value. | Show how to retrieve the result of cell A1 without triggering a full workbook recalculation by using Aspose.Cells' EvaluateFormula functionality in a .NET application.
+// Common Searches: Aspose.Cells C# set calculation mode to Automatic and get result of one cell formula | How to evaluate a specific Excel cell formula with Aspose.Cells without recalculating the whole workbook | C# example using Aspose.Cells EvaluateFormula to read the calculated value from cell A1
+// Tags: automatic calculation mode Aspose.Cells C# | single cell formula evaluation Aspose.Cells | Aspose.Cells EvaluateFormula method | retrieve calculated cell value Aspose.Cells | set workbook calculation mode C#
 
-using System;
 using Aspose.Cells;
+using System;
 
-// This example demonstrates how to configure a workbook for automatic recalculation using Aspose.Cells, insert sample values, and obtain the result of an Excel formula on‑the‑fly with `worksheet.CalculateFormula`. The result is printed to the console and the workbook can be saved if needed.
+// Creates a workbook, places the formula "=5+3" in cell A1, ensures the calculation engine runs in Automatic mode, evaluates the formula with EvaluateFormula, and outputs the computed result.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set calculation mode to Automatic
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+            // Set a formula in cell A1
+            sheet.Cells["A1"].Formula = "=5+3";
 
-        // Populate some sample data
-        worksheet.Cells["A1"].PutValue(10);
-        worksheet.Cells["B1"].PutValue(20);
+            // Calculate all formulas in the workbook (default mode is Automatic)
+            workbook.CalculateFormula();
 
-        // Evaluate a formula directly (no need to place it in a cell)
-        object result = worksheet.CalculateFormula("=A1+B1");
+            // Retrieve the calculated value from the cell
+            object result = sheet.Cells["A1"].Value;
 
-        // Display the evaluated result
-        Console.WriteLine("Result of =A1+B1: " + result);
-
-        // Save the workbook (optional)
-        workbook.Save("CalculatedResult.xlsx");
+            // Display the result
+            Console.WriteLine($"Result of {sheet.Cells["A1"].Formula} is {result}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

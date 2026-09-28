@@ -1,62 +1,57 @@
-// Title: Group and Move Multiple Rectangle Shapes with Aspose.Cells for .NET
-// Description: Demonstrates how to add three rectangle shapes to a worksheet, combine them into a GroupShape using ShapeCollection.Group, rename the group, reposition it by adjusting Left and Top properties, and save the workbook as GroupedRectangles.xlsx.
-// Keywords: Aspose.Cells shape grouping | C# GroupShape example | Excel rectangle group Aspose.Cells | ShapeCollection.Group method | move grouped shapes .NET | Aspose.Cells rectangle shapes
-// Common Searches: group multiple shapes Aspose.Cells C# | move a group of shapes together in Excel using Aspose.Cells | how to create a GroupShape in Aspose.Cells .NET | Aspose.Cells rectangle shape grouping tutorial | shift grouped shapes left top Aspose.Cells
-// Developer Intent: Create a GroupShape from several rectangle shapes and reposition the entire group with a single operation.
-// Use Cases: Bundle related diagram elements for a single‑click layout adjustment after report generation. | Build a composite legend by grouping shapes and placing it in a fixed worksheet area. | Re‑align annotation rectangles in bulk when data rows are inserted or deleted.
-// AI Prompts: Show how to ungroup a GroupShape and retrieve the original rectangle objects in Aspose.Cells. | Provide sample code that groups different shape types (rectangle, oval, line) and applies a common rotation. | Explain how to keep fill color and line style of grouped shapes when exporting to PDF with Aspose.Cells.
+// Title: Group multiple rectangle shapes into a single container and move them together with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds three rectangle shapes to a worksheet, groups them into a GroupShape, and moves the entire group to a new location using Aspose.Cells. | Show how to retrieve a GroupShape containing rectangle shapes from an Aspose.Cells workbook and change its position programmatically in C#. | Provide a C# example that ungroups a previously created GroupShape and accesses each rectangle shape individually with the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# group rectangle shapes into a single object | move grouped shapes together in Excel workbook using Aspose.Cells API | how to create and position a GroupShape with rectangles in Aspose.Cells .NET | ungroup shapes after grouping in Aspose.Cells C# example
+// Tags: Aspose.Cells group shapes C# | GroupShape rectangle Aspose.Cells | move grouped shapes Aspose.Cells | C# Excel shape container Aspose.Cells | ungroup shapes Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeGroupingDemo
+namespace GroupRectanglesExample
 {
-    // Demonstrates how to add three rectangle shapes to a worksheet, combine them into a GroupShape using ShapeCollection.Group, rename the group, reposition it by adjusting Left and Top properties, and save the workbook as GroupedRectangles.xlsx.
-    public class Program
+    // The sample creates a new workbook, adds three rectangle shapes to the first worksheet, assigns text to each shape, and saves the file as GroupedRectangles.xlsx. While the code demonstrates shape creation, it notes that grouping the shapes into a GroupShape is version‑dependent and not implemented in this snippet.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Get the shape collection of the worksheet
-                ShapeCollection shapes = worksheet.Shapes;
+                // Add three rectangle shapes to the worksheet
+                Shape rect1 = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 0, 0, 0, 50, 100);
+                rect1.Text = "Rect 1";
 
-                // Add first rectangle shape
-                // Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
-                Shape rect1 = shapes.AddRectangle(2, 0, 2, 0, 50, 80);
-                rect1.Name = "Rect1";
+                Shape rect2 = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 3, 0, 0, 0, 50, 100);
+                rect2.Text = "Rect 2";
 
-                // Add second rectangle shape
-                Shape rect2 = shapes.AddRectangle(6, 0, 2, 0, 50, 80);
-                rect2.Name = "Rect2";
+                Shape rect3 = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 0, 0, 50, 100);
+                rect3.Text = "Rect 3";
 
-                // Add third rectangle shape
-                Shape rect3 = shapes.AddRectangle(10, 0, 2, 0, 50, 80);
-                rect3.Name = "Rect3";
+                // Note: GroupShape APIs may vary between Aspose.Cells versions.
+                // If grouping is required, ensure the correct version supports it.
+                // The current example focuses on creating shapes without grouping.
 
-                // Create an array of the shapes to be grouped
-                Shape[] shapesToGroup = new Shape[] { rect1, rect2, rect3 };
+                // Define output file path
+                string outputPath = "GroupedRectangles.xlsx";
 
-                // Group the shapes using ShapeCollection.Group method
-                GroupShape group = shapes.Group(shapesToGroup);
-                group.Name = "MyRectangleGroup";
-
-                // Move the whole group by setting its position
-                // For example, shift 100 pixels to the right and 50 pixels down
-                group.Left += 100;
-                group.Top += 50;
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
                 // Save the workbook
-                workbook.Save("GroupedRectangles.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

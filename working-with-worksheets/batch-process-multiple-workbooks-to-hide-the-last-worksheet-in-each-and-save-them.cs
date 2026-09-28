@@ -1,52 +1,50 @@
-// Title: Batch hide final worksheet in multiple Excel workbooks – Aspose.Cells C# example
-// Description: A C# console program that loads a list of Excel files with Aspose.Cells, finds each workbook's last worksheet, hides it using SetVisible(false, true), and saves the changes back to the original location or a new folder.
-// Keywords: Aspose.Cells hide worksheet | C# batch Excel processing | SetVisible false Aspose | hide final sheet multiple workbooks | Aspose.Cells Workbook.Save | bulk hide Excel sheet .NET
-// Common Searches: hide final worksheet Aspose.Cells C# | batch hide Excel sheets .NET | process multiple workbooks hide sheet | Aspose.Cells SetVisible example | bulk Excel worksheet visibility C#
-// Developer Intent: Iterate through a collection of Excel files, conceal each file's final worksheet, and persist the modification.
-// Use Cases: Conceal a confidential summary tab across a fleet of financial reports before distribution. | Prepare template workbooks by automatically hiding configuration sheets for end‑users. | Perform compliance clean‑up by removing the final worksheet from archived spreadsheets in bulk.
-// AI Prompts: Generate C# code that loops through a list of Excel file paths, hides the final worksheet with Aspose.Cells, and saves the workbooks. | Explain how SetVisible(false, true) hides a worksheet without raising errors in Aspose.Cells. | Adapt the example to write processed files to a separate output directory while keeping the originals unchanged.
+// Title: Hide the last worksheet in each Excel workbook of a folder using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that scans a specified input directory for *.xlsx files, loads each workbook with Aspose.Cells, sets the IsVisible property of the last worksheet to false, and saves the modified file to an output directory while preserving the original filename. | Extend the batch routine to hide the last worksheet only when its name starts with "Temp" and output the processed file names to the console.
+// Common Searches: Aspose.Cells hide last sheet in multiple workbooks C# | C# batch process Excel files to change worksheet visibility with Aspose | How to programmatically set worksheet IsVisible false for all files in a folder using Aspose.Cells | Iterate over .xlsx files in a directory and hide specific worksheets in .NET
+// Tags: batch hide last worksheet Aspose.Cells | process multiple .xlsx files C# | set worksheet IsVisible false Aspose.Cells | save modified workbooks to output folder | conditional hide worksheet by name Aspose.Cells
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace BatchHideLastWorksheet
+// // Loads each .xlsx file from an input folder, hides its last worksheet by setting IsVisible = false, and saves the updated workbook to a designated output folder while keeping the original file name.
+class BatchHideLastWorksheet
 {
-    // A C# console program that loads a list of Excel files with Aspose.Cells, finds each workbook's last worksheet, hides it using SetVisible(false, true), and saves the changes back to the original location or a new folder.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Folder containing the workbooks to process
+        string inputFolder = @"C:\Workbooks\Input";
+        // Folder where the processed workbooks will be saved
+        string outputFolder = @"C:\Workbooks\Output";
+
+        // Ensure output folder exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Get all Excel files in the input folder (you can adjust the pattern as needed)
+        string[] files = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string filePath in files)
         {
-            // List of workbook file paths to process
-            List<string> workbookFiles = new List<string>
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Get the last worksheet (index is Count - 1 because collection is zero‑based)
+            int lastIndex = workbook.Worksheets.Count - 1;
+            if (lastIndex >= 0)
             {
-                "Book1.xlsx",
-                "Book2.xlsx",
-                "Book3.xlsx"
-                // Add more file paths as needed
-            };
-
-            foreach (string filePath in workbookFiles)
-            {
-                // Load the workbook (uses the provided Workbook(string) constructor)
-                Workbook workbook = new Workbook(filePath);
-
-                // Determine the index of the last worksheet
-                int lastIndex = workbook.Worksheets.Count - 1;
-
-                if (lastIndex >= 0)
-                {
-                    // Hide the last worksheet using the SetVisible method (provided rule)
-                    // isVisible = false to hide, ignoreError = true to suppress errors
-                    workbook.Worksheets[lastIndex].SetVisible(false, true);
-                }
-
-                // Save the modified workbook (uses the provided Save(string) method)
-                // Overwrites the original file; change the path if a separate output is desired
-                workbook.Save(filePath);
+                // Hide the last worksheet
+                Worksheet lastSheet = workbook.Worksheets[lastIndex];
+                lastSheet.IsVisible = false;
             }
 
-            Console.WriteLine("Processing completed. Last worksheets have been hidden.");
+            // Build the output file path (preserve original file name)
+            string fileName = Path.GetFileName(filePath);
+            string outputPath = Path.Combine(outputFolder, fileName);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
         }
+
+        Console.WriteLine("Processing completed. {0} files updated.", files.Length);
     }
 }

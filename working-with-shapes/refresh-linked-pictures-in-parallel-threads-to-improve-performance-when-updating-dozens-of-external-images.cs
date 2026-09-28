@@ -1,49 +1,75 @@
-// Title: Refresh Linked Pictures in Parallel with Aspose.Cells for .NET (C#)
-// Description: Load an Excel workbook, iterate its worksheets, and use Parallel.For to toggle each linked picture's IsLink property. This forces Aspose.Cells to reload external images concurrently, then saves the updated file.
-// Keywords: Aspose.Cells | C# parallel processing | linked picture refresh | Excel image reload | Picture.IsLink | Workbook performance | multithreaded Excel | Aspose.Cells API | Parallel.For | external image update
-// Common Searches: How to refresh linked images in an Excel file using Aspose.Cells C# | Parallel refresh of linked pictures in Aspose.Cells workbook | Force reload of external pictures in Aspose.Cells by toggling IsLink | Improve performance when updating many linked pictures in Excel with Aspose.Cells | C# multithreaded picture refresh Aspose.Cells example
-// Developer Intent: Refresh all linked pictures concurrently to reduce processing time.
-// Use Cases: Batch update of chart snapshots after source data changes in financial reports. | Rapid reloading of product photos in a large inventory spreadsheet. | Accelerated generation of marketing dashboards containing dozens of linked diagrams.
-// AI Prompts: Generate C# code that refreshes linked pictures in parallel with Aspose.Cells and includes comprehensive exception handling. | Explain why toggling the IsLink property forces Aspose.Cells to reload external images and discuss any side effects. | Suggest alternative approaches to refresh linked pictures in Aspose.Cells without using the IsLink toggle, such as dedicated refresh methods.
+// Title: Refresh linked pictures in an Excel workbook concurrently with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel file using Aspose.Cells, enumerates all Picture objects across worksheets, and refreshes only the linked pictures in parallel with Parallel.ForEach. | Demonstrate how to use reflection to detect the IsLinked property and invoke the Refresh method on Aspose.Cells Picture objects for version‑independent parallel execution.
+// Common Searches: how to use Parallel.ForEach to refresh linked images in an Aspose.Cells workbook | c# refresh external pictures in Excel file with Aspose.Cells and reflection | update dozens of linked pictures in Excel efficiently using multithreading | Aspose.Cells picture.IsLinked property check before refreshing | parallel processing of pictures in Excel using Aspose.Cells .NET
+// Tags: parallel picture refresh Aspose.Cells | linked image refresh using reflection | Aspose.Cells external picture update | multithreaded Excel picture processing .NET | IsLinked property handling Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace LinkedPictureRefreshDemo
+// The example loads an Excel workbook, gathers all Picture objects from every worksheet, and uses Parallel.ForEach together with reflection to identify linked pictures (via the IsLinked property) and invoke their Refresh method. After processing, the workbook is saved, providing a fast, version‑agnostic way to update dozens of external images.
+class Program
 {
-    // Load an Excel workbook, iterate its worksheets, and use Parallel.For to toggle each linked picture's IsLink property. This forces Aspose.Cells to reload external images concurrently, then saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Load the workbook that contains linked pictures
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                PictureCollection pictures = sheet.Pictures;
-
-                // Refresh linked pictures in parallel
-                Parallel.For(0, pictures.Count, i =>
-                {
-                    Picture pic = pictures[i];
-
-                    // Process only linked pictures
-                    if (pic.IsLink)
-                    {
-                        // Toggle the IsLink property to force a refresh of the external image.
-                        // This simple trick forces Aspose.Cells to reload the image from its source.
-                        pic.IsLink = false;
-                        pic.IsLink = true;
-                    }
-                });
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Collect all pictures (potentially linked) from all worksheets
+            List<Picture> pictures = new List<Picture>();
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Picture picture in sheet.Pictures)
+                {
+                    pictures.Add(picture);
+                }
+            }
+
+            // Refresh each linked picture in parallel (using reflection to stay compatible with different Aspose.Cells versions)
+            Parallel.ForEach(pictures, picture =>
+            {
+                try
+                {
+                    // Check for an 'IsLinked' property via reflection
+                    PropertyInfo isLinkedProp = picture.GetType().GetProperty("IsLinked", BindingFlags.Public | BindingFlags.Instance);
+                    bool isLinked = isLinkedProp != null && isLinkedProp.PropertyType == typeof(bool) && (bool)isLinkedProp.GetValue(picture);
+
+                    if (isLinked)
+                    {
+                        // Invoke the 'Refresh' method via reflection if it exists
+                        MethodInfo refreshMethod = picture.GetType().GetMethod("Refresh", BindingFlags.Public | BindingFlags.Instance);
+                        refreshMethod?.Invoke(picture, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to refresh picture: {ex.Message}");
+                }
+            });
+
             // Save the updated workbook
-            workbook.Save("output.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

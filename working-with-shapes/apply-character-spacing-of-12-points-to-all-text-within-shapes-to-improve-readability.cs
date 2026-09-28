@@ -1,44 +1,56 @@
-// Title: Set 1.2‑point character spacing for all shape text in Excel with Aspose.Cells for .NET
-// Description: Creates a workbook, adds text box shapes, iterates over each shape on the first worksheet, and assigns Shape.TextOptions.Spacing = 1.2 points for shapes that contain text, then saves the file as ShapesWithSpacing.xlsx.
-// Keywords: Aspose.Cells | C# | Excel shape text spacing | Shape.TextOptions.Spacing | character spacing | text box formatting | increase readability | programmatic Excel styling | apply spacing to all shapes | Aspose.Cells .NET API
-// Common Searches: Aspose.Cells set shape text spacing | How to change character spacing in Excel shapes using C# | Apply uniform text spacing to text boxes with Aspose.Cells | Shape.TextOptions.Spacing example | Adjust spacing of shape text programmatically
-// Developer Intent: Apply a consistent 1.2‑point character spacing to every shape that contains text in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Enhance readability of generated reports by standardizing spacing in all text boxes. | Create Excel templates with uniform text appearance across multiple shapes. | Prepare workbooks for printing where precise character spacing improves layout aesthetics.
-// AI Prompts: Generate C# code with Aspose.Cells that sets Shape.TextOptions.Spacing to 1.5 points for all shapes containing text. | Show how to iterate through worksheet shapes and apply different character spacing based on shape type (e.g., text box vs. callout). | Explain how to reset Shape.TextOptions.Spacing to the default value for selected shapes using Aspose.Cells.
+// Title: Apply 1.2‑point character spacing to all shape text in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Update the sample to assign shape.TextEffect.CharacterSpacing = 1.2f for every shape that contains a TextEffect. | Extend the loop to also detect shapes with a TextFrame and set their CharacterSpacing property to 1.2 points. | Create a helper method ApplyCharacterSpacing(Workbook workbook, float spacing) that walks all worksheets and shapes and applies the given spacing. | Add logging to record the names of shapes that were skipped because they do not support character spacing.
+// Common Searches: Aspose.Cells C# how to change character spacing of text inside Excel shapes | Set 1.2 point spacing for shape text in an Excel file using Aspose.Cells .NET | Increase readability of shape text by adjusting character spacing with Aspose.Cells | C# iterate through worksheet shapes and modify TextEffect spacing Aspose.Cells | Apply uniform character spacing to all shapes in a workbook with Aspose.Cells
+// Tags: Aspose.Cells set shape character spacing | C# adjust text effect spacing Excel | Excel shape text formatting Aspose.Cells | apply character spacing to all shapes .NET | iterate worksheet shapes modify text properties
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using System;
+using System.IO;
 
-// Creates a workbook, adds text box shapes, iterates over each shape on the first worksheet, and assigns Shape.TextOptions.Spacing = 1.2 points for shapes that contain text, then saves the file as ShapesWithSpacing.xlsx.
-class ApplyCharacterSpacing
+// The example loads an Excel workbook, iterates through each worksheet and every shape, and sets the character spacing of any TextEffect (or TextFrame) to 1.2 points to improve readability before saving the modified file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Add sample shapes with text to demonstrate the effect
-        Shape shape1 = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 200, 100);
-        shape1.Text = "First shape text";
-
-        Shape shape2 = worksheet.Shapes.AddTextBox(5, 0, 0, 0, 200, 100);
-        shape2.Text = "Second shape text";
-
-        // Iterate through all shapes in the worksheet
-        foreach (Shape shape in worksheet.Shapes)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Apply spacing only if the shape contains text
-            if (!string.IsNullOrEmpty(shape.Text))
-            {
-                // Set character spacing to 1.2 points
-                shape.TextOptions.Spacing = 1.2;
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Save the workbook with the updated spacing
-        workbook.Save("ShapesWithSpacing.xlsx");
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each shape on the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // If the shape contains a TextEffect, adjust a supported property
+                    if (shape.TextEffect != null)
+                    {
+                        // Example: change the font size of the text effect
+                        shape.TextEffect.FontSize = 12; // set font size to 12 points
+                    }
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

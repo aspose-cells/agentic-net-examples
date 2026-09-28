@@ -1,120 +1,107 @@
-// Title: C# – Validate Conditional Formatting Applied via Smart Markers in Aspose.Cells
-// Description: Creates an in‑memory template with smart markers for Item and Status, fills it using a List<DataItem> through WorkbookDesigner, adds text‑based conditional formatting (Completed → LightGreen, Pending → LightYellow, Failed → LightCoral) to column B, then reads each cell's ConditionalFormattingResult to confirm the background color matches the status value before saving the workbook.
-// Keywords: Aspose.Cells | C# | smart markers | conditional formatting validation | status column coloring | WorkbookDesigner | programmatic color check | Excel automation testing
-// Common Searches: aspnet verify conditional formatting after smart markers | aspnet check cell background color Aspose.Cells | unit test conditional formatting Aspose.Cells | how to read ConditionalFormattingResult C#
-// Developer Intent: Confirm that conditional formatting rules added after processing smart markers correctly highlight Status cells according to their values.
-// Use Cases: Generate a status‑driven report where rows are automatically colored and programmatically verified. | Automate regression tests for conditional formatting in workbooks built with smart markers. | Create a reusable template that applies and validates visual cues for Completed, Pending, and Failed items.
-// AI Prompts: Write C# code that adds text‑based conditional formatting for 'Completed', 'Pending', and 'Failed' after processing smart markers with Aspose.Cells and verifies the applied colors. | Show how to retrieve ConditionalFormattingResult for a cell and compare its background color to an expected value in Aspose.Cells .NET. | Explain how to build a unit test that asserts conditional formatting matches data values in a workbook generated via smart markers.
+// Title: Validate smart‑marker conditional formatting for task status cells using Aspose.Cells for .NET
+// AI Prompts: Create a C# workbook template with smart markers for Task and Status, add text‑contains conditional formatting rules for "Completed" (green) and "Pending" (yellow), then process a DataTable line‑by‑line and verify the applied colors. | Write code that uses WorkbookDesigner to populate smart‑marker rows, defines conditional formatting on column B, retrieves ConditionalFormattingResult for each status cell, and outputs pass/fail based on expected background colors. | Generate an Excel file named SmartMarkerConditionalFormattingResult.xlsx that demonstrates conditional formatting validation after smart‑marker processing, printing validation results to the console.
+// Common Searches: asp.net how to test conditional formatting applied by smart markers in Aspose.Cells | c# verify conditional formatting colors after WorkbookDesigner.Process | example of line‑by‑line smart markers with conditional formatting in Aspose.Cells | check if text‑contains conditional formatting works for imported data in Excel using Aspose.Cells
+// Tags: smart markers conditional formatting Aspose.Cells | WorkbookDesigner line-by-line data import C# | validate conditional formatting result Aspose.Cells | Excel conditional formatting based on cell text C# | retrieve ConditionalFormattingResult programmatically
 
 using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 
-// Creates an in‑memory template with smart markers for Item and Status, fills it using a List<DataItem> through WorkbookDesigner, adds text‑based conditional formatting (Completed → LightGreen, Pending → LightYellow, Failed → LightCoral) to column B, then reads each cell's ConditionalFormattingResult to confirm the background color matches the status value before saving the workbook.
-class Program
+namespace SmartMarkerConditionalFormattingValidation
 {
-    static void Main()
+    // The example builds a template workbook, inserts smart markers for task names and statuses, defines two text‑contains conditional formatting rules on the Status column (green for "Completed", yellow for "Pending"), populates a DataTable with sample tasks, processes the smart markers line‑by‑line using WorkbookDesigner, iterates over the resulting rows to retrieve each cell's ConditionalFormattingResult, compares the actual background color with the expected one, prints pass/fail messages for each row, and saves the final workbook as SmartMarkerConditionalFormattingResult.xlsx.
+    class Program
     {
-        // 1. Create a template workbook with smart markers
-        Workbook template = new Workbook();
-        Worksheet ws = template.Worksheets[0];
-        Cells cells = ws.Cells;
-
-        // Header row
-        cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Status");
-
-        // Smart markers for data rows (line‑by‑line processing)
-        cells["A2"].PutValue("&=Data.Item");
-        cells["B2"].PutValue("&=Data.Status");
-
-        // Save the template to a memory stream (create rule)
-        using (MemoryStream ms = new MemoryStream())
+        static void Main()
         {
-            template.Save(ms, SaveFormat.Xlsx);
-            ms.Position = 0;
+            // ------------------- Create template workbook -------------------
+            Workbook template = new Workbook();
+            Worksheet sheet = template.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // 2. Load the template into WorkbookDesigner (load rule)
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = new Workbook(ms);
+            // Header row
+            cells["A1"].PutValue("Task");
+            cells["B1"].PutValue("Status");
 
-            // Optional: display detected smart markers
-            string[] markers = designer.GetSmartMarkers();
-            Console.WriteLine("Smart markers found:");
-            foreach (string m in markers) Console.WriteLine(m);
+            // Smart markers for data rows (line‑by‑line processing)
+            cells["A2"].PutValue("&=Tasks.TaskName");
+            cells["B2"].PutValue("&=Tasks.Status");
 
-            // 3. Prepare data source
-            List<DataItem> data = new List<DataItem>
+            // Define conditional formatting on the Status column (B)
+            // Highlight "Completed" with green background
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+
+            // Apply to a large range that will cover all imported rows
+            CellArea statusArea = new CellArea
             {
-                new DataItem { Item = "Task1", Status = "Completed" },
-                new DataItem { Item = "Task2", Status = "Pending" },
-                new DataItem { Item = "Task3", Status = "Failed" }
+                StartRow = 1,   // row 2 (zero‑based)
+                EndRow = 100,   // enough rows for data
+                StartColumn = 1,
+                EndColumn = 1
             };
-            designer.SetDataSource("Data", data);
-
-            // 4. Process smart markers (populate data)
-            designer.Process();
-
-            // 5. Apply conditional formatting to the Status column (B)
-            Worksheet resultSheet = designer.Workbook.Worksheets[0];
-            // Define a range that covers possible rows (B2:B100)
-            CellArea statusArea = new CellArea { StartRow = 1, EndRow = 100, StartColumn = 1, EndColumn = 1 };
-            int cfIndex = resultSheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcc = resultSheet.ConditionalFormattings[cfIndex];
             fcc.AddArea(statusArea);
 
-            // Completed → LightGreen
-            int condIdx = fcc.AddCondition(FormatConditionType.ContainsText);
-            FormatCondition fc = fcc[condIdx];
-            fc.Text = "Completed";
-            fc.Style.BackgroundColor = Color.LightGreen;
+            // Condition 1: ContainsText "Completed"
+            int condIdx1 = fcc.AddCondition(FormatConditionType.ContainsText);
+            FormatCondition cond1 = fcc[condIdx1];
+            cond1.Text = "Completed";
+            cond1.Style.BackgroundColor = Color.LightGreen;
 
-            // Pending → LightYellow
-            condIdx = fcc.AddCondition(FormatConditionType.ContainsText);
-            fc = fcc[condIdx];
-            fc.Text = "Pending";
-            fc.Style.BackgroundColor = Color.LightYellow;
+            // Condition 2: ContainsText "Pending"
+            int condIdx2 = fcc.AddCondition(FormatConditionType.ContainsText);
+            FormatCondition cond2 = fcc[condIdx2];
+            cond2.Text = "Pending";
+            cond2.Style.BackgroundColor = Color.LightYellow;
 
-            // Failed → LightCoral
-            condIdx = fcc.AddCondition(FormatConditionType.ContainsText);
-            fc = fcc[condIdx];
-            fc.Text = "Failed";
-            fc.Style.BackgroundColor = Color.LightCoral;
+            // ------------------- Prepare data source -------------------
+            DataTable dt = new DataTable("Tasks");
+            dt.Columns.Add("TaskName", typeof(string));
+            dt.Columns.Add("Status", typeof(string));
 
-            // 6. Validate that conditional formatting highlights cells correctly
-            Console.WriteLine("\nValidation Results:");
-            for (int i = 0; i < data.Count; i++)
+            dt.Rows.Add("Design UI", "Completed");
+            dt.Rows.Add("Implement Backend", "Pending");
+            dt.Rows.Add("Write Tests", "Completed");
+            dt.Rows.Add("Deploy", "Pending");
+
+            // ------------------- Process smart markers -------------------
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                int rowIndex = i + 1; // zero‑based index (row 1 = second row in sheet)
-                Cell statusCell = resultSheet.Cells[rowIndex, 1]; // Column B
-                ConditionalFormattingResult cfResult = statusCell.GetConditionalFormattingResult();
+                Workbook = template,
+                LineByLine = true   // process line by line (default)
+            };
+            designer.SetDataSource(dt);
+            designer.Process();
 
-                string expectedStatus = data[i].Status;
-                Color expectedColor = expectedStatus == "Completed" ? Color.LightGreen :
-                                      expectedStatus == "Pending"   ? Color.LightYellow :
-                                      expectedStatus == "Failed"    ? Color.LightCoral :
-                                      Color.Empty;
+            // ------------------- Validation of conditional formatting -------------------
+            // Expected background colors per status
+            Color expectedCompleted = Color.LightGreen;
+            Color expectedPending = Color.LightYellow;
 
-                bool isMatch = cfResult != null &&
-                               cfResult.ConditionalStyle != null &&
-                               cfResult.ConditionalStyle.BackgroundColor.Equals(expectedColor);
+            // Iterate over data rows (starting at row index 1)
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                int rowIndex = i + 1; // because data starts at row 2 in the sheet
+                Cell statusCell = cells[rowIndex, 1]; // column B
 
-                Console.WriteLine($"Row {rowIndex + 1}: Status='{expectedStatus}' " +
-                                  $"=> Highlighted={(cfResult?.ConditionalStyle != null)} " +
-                                  $"Match={isMatch}");
+                // Retrieve the conditional formatting result for the cell
+                ConditionalFormattingResult result = statusCell.GetConditionalFormattingResult();
+
+                // Determine expected color based on the source data
+                string statusValue = dt.Rows[i]["Status"].ToString();
+                Color expectedColor = statusValue == "Completed" ? expectedCompleted : expectedPending;
+
+                // Check if the conditional style was applied and matches expectation
+                bool isCorrect = result?.ConditionalStyle != null &&
+                                 result.ConditionalStyle.BackgroundColor.Equals(expectedColor);
+
+                Console.WriteLine($"Row {rowIndex + 1}: Status=\"{statusValue}\" " +
+                                  $"=> Conditional formatting {(isCorrect ? "PASSED" : "FAILED")}");
             }
 
-            // 7. Save the final workbook (save rule)
-            designer.Workbook.Save("ConditionalFormattingValidation.xlsx");
+            // ------------------- Save the result workbook -------------------
+            designer.Workbook.Save("SmartMarkerConditionalFormattingResult.xlsx");
         }
     }
-}
-
-// Simple POCO for data source
-public class DataItem
-{
-    public string Item { get; set; }
-    public string Status { get; set; }
 }

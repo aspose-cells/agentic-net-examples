@@ -1,64 +1,57 @@
-// Title: Aspose.Cells .NET: Create Overlapping Shapes, Set Z‑Order, and Verify Rendering Order
-// Description: Demonstrates how to add three overlapping rectangle shapes to a worksheet, assign explicit ZOrderPosition values, adjust stacking with ToFrontOrBack, output the before‑and‑after order, and save the workbook to confirm the visual rendering sequence.
-// Keywords: Aspose.Cells shape Z-order | C# set shape stacking order | ToFrontOrBack Aspose.Cells | overlapping Excel shapes .NET | ZOrderPosition programmatic | shape rendering order verification
-// Common Searches: change shape Z-order Aspose.Cells | bring shape to front C# Aspose | move shape backward Aspose.Cells .NET | verify Excel shape layering | adjust overlapping shapes order programmatically
-// Developer Intent: Create overlapping shapes, control their Z‑order programmatically, and confirm that the rendered order matches the expected stacking.
-// Use Cases: Define background, middle, and foreground layers for a custom report layout. | Reorder annotation or comment shapes on a chart so important notes appear on top. | Validate that dynamic shape ordering is reflected in the generated Excel file for dashboards.
-// AI Prompts: Write C# code that adds five different shapes to a worksheet and sets a custom Z‑order sequence using Aspose.Cells. | Explain how ToFrontOrBack works and how to move a shape multiple steps forward or backward. | Provide a method to programmatically check the visual stacking order of shapes after reordering in an Excel workbook.
+// Title: Assign Z-order to multiple rectangle shapes in an Excel worksheet and verify rendering order with Aspose.Cells for .NET
+// AI Prompts: Create three rectangle shapes on a worksheet, set each shape's ZOrderPosition (top, middle, bottom), and output the shape names sorted by their Z-order. | Generate an Excel file where shapes are layered using ZOrderPosition, then iterate through the Shapes collection ordered by ZOrderPosition to display the rendering sequence in the console. | Use Aspose.Cells to add rectangle shapes, assign custom Z-order indices, sort the shapes by ZOrderPosition, and save the workbook.
+// Common Searches: Aspose.Cells how to change shape layering order in C# | C# set ZOrderPosition for multiple shapes in Excel workbook | retrieve shapes sorted by ZOrderPosition using Aspose.Cells | verify shape rendering sequence in generated Excel file Aspose.Cells .NET | example of assigning Z-order to rectangle shapes with Aspose.Cells
+// Tags: Aspose.Cells shape Z-order assignment C# | Excel rectangle shape layering Aspose.Cells | C# add rectangle shapes Aspose.Cells | retrieve shapes by ZOrderPosition Aspose.Cells | save workbook with layered shapes Aspose.Cells
 
 using System;
+using System.IO;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsZOrderDemo
+// The sample creates a new workbook, adds three rectangle shapes to the first worksheet, assigns each a distinct ZOrderPosition (2 for topmost, 0 for bottom, 1 for middle), sorts the shapes by this property to display the rendering order from bottom to top, and saves the file as ShapesZOrder.xlsx.
+class Program
 {
-    // Demonstrates how to add three overlapping rectangle shapes to a worksheet, assign explicit ZOrderPosition values, adjust stacking with ToFrontOrBack, output the before‑and‑after order, and save the workbook to confirm the visual rendering sequence.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add three overlapping rectangle shapes
-            // Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
-            Shape shape1 = worksheet.Shapes.AddRectangle(5, 0, 5, 0, 120, 120);
+            // Add three rectangle shapes with different Z-order values
+            Shape shape1 = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 0, 0, 0, 100, 50);
             shape1.Name = "Shape1";
-            shape1.FillFormat.ForeColor = System.Drawing.Color.FromArgb(255, 200, 200, 255); // Light blue
+            shape1.ZOrderPosition = 2; // Topmost
 
-            Shape shape2 = worksheet.Shapes.AddRectangle(8, 0, 8, 0, 120, 120);
+            Shape shape2 = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 0, 0, 0, 100, 50);
             shape2.Name = "Shape2";
-            shape2.FillFormat.ForeColor = System.Drawing.Color.FromArgb(255, 200, 255, 200); // Light green
+            shape2.ZOrderPosition = 0; // Bottom
 
-            Shape shape3 = worksheet.Shapes.AddRectangle(11, 0, 11, 0, 120, 120);
+            Shape shape3 = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 3, 0, 0, 0, 100, 50);
             shape3.Name = "Shape3";
-            shape3.FillFormat.ForeColor = System.Drawing.Color.FromArgb(255, 255, 200, 200); // Light red
+            shape3.ZOrderPosition = 1; // Middle
 
-            // Initial Z-order: shape1 at back (0), shape2 in middle (1), shape3 at front (2)
-            shape1.ZOrderPosition = 0;
-            shape2.ZOrderPosition = 1;
-            shape3.ZOrderPosition = 2;
+            // Verify rendering order by sorting shapes based on ZOrderPosition (bottom to top)
+            var orderedShapes = sheet.Shapes.Cast<Shape>()
+                                            .OrderBy(s => s.ZOrderPosition)
+                                            .ToList();
 
-            Console.WriteLine("Initial Z-order positions:");
-            Console.WriteLine($"{shape1.Name}: {shape1.ZOrderPosition}");
-            Console.WriteLine($"{shape2.Name}: {shape2.ZOrderPosition}");
-            Console.WriteLine($"{shape3.Name}: {shape3.ZOrderPosition}");
+            Console.WriteLine("Shapes rendering order (bottom to top):");
+            foreach (var s in orderedShapes)
+            {
+                Console.WriteLine($"{s.Name} - ZOrderPosition: {s.ZOrderPosition}");
+            }
 
-            // Bring shape1 to the front using ToFrontOrBack (positive value)
-            shape1.ToFrontOrBack(1); // Moves shape1 one step forward
-
-            // Send shape3 to the back using ToFrontOrBack (negative value)
-            shape3.ToFrontOrBack(-2); // Moves shape3 two steps backward
-
-            // After adjustments, output the new Z-order positions
-            Console.WriteLine("\nAdjusted Z-order positions:");
-            Console.WriteLine($"{shape1.Name}: {shape1.ZOrderPosition}");
-            Console.WriteLine($"{shape2.Name}: {shape2.ZOrderPosition}");
-            Console.WriteLine($"{shape3.Name}: {shape3.ZOrderPosition}");
-
-            // Save the workbook to visualize the rendering order
-            workbook.Save("ShapeZOrderDemo.xlsx");
+            // Save the workbook to a file
+            string outputPath = "ShapesZOrder.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

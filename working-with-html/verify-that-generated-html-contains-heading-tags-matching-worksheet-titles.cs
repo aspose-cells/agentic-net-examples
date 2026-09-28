@@ -1,77 +1,64 @@
-// Title: Validate worksheet titles appear as HTML heading tags when exporting to HTML with Aspose.Cells for .NET
-// Description: C# sample that creates a workbook with "Sales" and "Inventory" sheets, exports all sheets to HTML using HtmlSaveOptions (ShowAllSheets), then uses regular expressions to confirm each sheet name is wrapped in an <h1>-<h6> element and prints the verification result.
-// Keywords: Aspose.Cells | C# HTML export | worksheet title heading | HtmlSaveOptions ShowAllSheets | regex HTML validation | Excel to HTML conversion | multi‑sheet export | heading verification | automated testing | CI validation
-// Common Searches: Aspose.Cells export workbook to HTML with sheet headings | C# check if worksheet names are in <h1> tags after HTML export | Regex verify sheet titles in Aspose.Cells generated HTML | ShowAllSheets option heading tags Aspose.Cells example | Automated test for HTML output of multi‑sheet workbook
-// Developer Intent: Confirm that every worksheet name is rendered as an HTML heading element in the exported file.
-// Use Cases: Automated QA for HTML reports generated from Excel workbooks, ensuring each sheet starts with a proper heading. | Creating documentation where each worksheet becomes a distinct HTML section with its name as a heading. | Integrating a validation step in CI/CD pipelines that fails the build if any worksheet title is missing from the HTML output.
-// AI Prompts: Generate C# code using Aspose.Cells to export a multi‑sheet workbook to HTML and verify each sheet name appears inside an <h2> tag with Regex. | Write an NUnit test that asserts worksheet titles are present as heading tags in the HTML produced by Aspose.Cells. | Explain how to configure HtmlSaveOptions to set a custom heading level for worksheet titles during HTML export.
+// Title: Verify that each Excel worksheet name is rendered as an <h1>‑<h6> heading when saving to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook using Aspose.Cells, saves it as HTML, and checks that every worksheet name appears inside an <h1>‑<h6> tag. | Create a C# method that parses the generated HTML, extracts all heading texts with a regular expression, and returns any worksheet titles that are missing from the headings.
+// Common Searches: aspocells verify worksheet titles in generated html headings | c# extract h1 h2 tags from aspocells html output | ensure Excel sheet names become headings in saved html using aspocells | regex to find heading tags in aspocells html file c#
+// Tags: Aspose.Cells HTML heading verification | worksheet title to heading mapping | C# regex h1‑h6 extraction | validate Excel sheet titles in HTML | save workbook as HTML Aspose.Cells
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlHeadingVerification
+// The program loads an Excel workbook, saves it as HTML with Aspose.Cells, reads the HTML file, extracts all <h1>‑<h6> tags using a regular expression, and verifies that each worksheet name is present among those headings, reporting pass or fail for each sheet.
+class HtmlHeadingVerifier
 {
-    // C# sample that creates a workbook with "Sales" and "Inventory" sheets, exports all sheets to HTML using HtmlSaveOptions (ShowAllSheets), then uses regular expressions to confirm each sheet name is wrapped in an <h1>-<h6> element and prints the verification result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Save the workbook as HTML
+        string htmlPath = "output.html";
+        workbook.Save(htmlPath, SaveFormat.Html);
+
+        // Read the generated HTML content
+        string htmlContent = File.ReadAllText(htmlPath);
+
+        // Prepare a regex to find heading tags (h1 to h6)
+        Regex headingRegex = new Regex(@"<h([1-6])\b[^>]*>(.*?)</h\1>", RegexOptions.IgnoreCase);
+
+        // Extract all heading texts from the HTML
+        var headings = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (Match match in headingRegex.Matches(htmlContent))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Group 2 contains the inner text of the heading
+            string headingText = match.Groups[2].Value.Trim();
+            if (!string.IsNullOrEmpty(headingText))
+                headings.Add(headingText);
+        }
 
-            // Rename the default sheet and add another sheet
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sales";
-            Worksheet sheet2 = workbook.Worksheets.Add("Inventory");
-
-            // Populate some sample data in both sheets
-            sheet1.Cells["A1"].PutValue("Product");
-            sheet1.Cells["B1"].PutValue("Amount");
-            sheet1.Cells["A2"].PutValue("Apple");
-            sheet1.Cells["B2"].PutValue(150);
-
-            sheet2.Cells["A1"].PutValue("Item");
-            sheet2.Cells["B1"].PutValue("Quantity");
-            sheet2.Cells["A2"].PutValue("Screws");
-            sheet2.Cells["B2"].PutValue(500);
-
-            // Configure HTML save options (export all sheets)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        // Verify each worksheet title appears as a heading in the HTML
+        bool allMatch = true;
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            string sheetName = sheet.Name;
+            if (headings.Contains(sheetName))
             {
-                // Ensure each worksheet is rendered with its title
-                ExportActiveWorksheetOnly = false,
-                ShowAllSheets = true
-            };
-
-            // Define output HTML file path
-            string htmlPath = Path.Combine(Path.GetTempPath(), "WorkbookExport.html");
-
-            // Save the workbook as HTML
-            workbook.Save(htmlPath, htmlOptions);
-
-            // Load the generated HTML content
-            string htmlContent = File.ReadAllText(htmlPath);
-
-            // Verify that each worksheet title appears inside a heading tag (e.g., <h1> or <h2>)
-            bool salesHeadingFound = Regex.IsMatch(htmlContent, @"<h[1-6][^>]*>\s*Sales\s*</h[1-6]>", RegexOptions.IgnoreCase);
-            bool inventoryHeadingFound = Regex.IsMatch(htmlContent, @"<h[1-6][^>]*>\s*Inventory\s*</h[1-6]>", RegexOptions.IgnoreCase);
-
-            // Output verification results
-            Console.WriteLine($"HTML file saved to: {htmlPath}");
-            Console.WriteLine($"Sales sheet heading present: {salesHeadingFound}");
-            Console.WriteLine($"Inventory sheet heading present: {inventoryHeadingFound}");
-
-            // Simple assertion (optional)
-            if (salesHeadingFound && inventoryHeadingFound)
-            {
-                Console.WriteLine("Verification succeeded: All worksheet titles are present as headings in the HTML.");
+                Console.WriteLine($"PASS: Worksheet title \"{sheetName}\" found as a heading.");
             }
             else
             {
-                Console.WriteLine("Verification failed: One or more worksheet titles are missing from the HTML headings.");
+                Console.WriteLine($"FAIL: Worksheet title \"{sheetName}\" NOT found as a heading.");
+                allMatch = false;
             }
+        }
+
+        if (allMatch)
+        {
+            Console.WriteLine("All worksheet titles are present as heading tags in the generated HTML.");
+        }
+        else
+        {
+            Console.WriteLine("Some worksheet titles are missing heading tags in the generated HTML.");
         }
     }
 }

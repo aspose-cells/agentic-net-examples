@@ -1,86 +1,84 @@
-// Title: C# – Validate Sparkline Data Range for Errors Before Adding Sparkline Group with Aspose.Cells
-// Description: Shows how to scan a worksheet range for Excel error values (e.g., #N/A, #DIV/0!) using Aspose.Cells, then conditionally create a line sparkline group in a .NET workbook. Includes the reusable IsDataRangeValid method, sample data setup, and workbook export.
-// Keywords: Aspose.Cells | C# | Sparkline | Data range validation | Error cells | #N/A | #DIV/0 | SparklineGroup | CellArea | .NET | Excel automation | prevent sparkline errors
-// Common Searches: Aspose.Cells check error values before sparkline | C# validate sparkline source range | how to avoid #N/A in Aspose.Cells sparkline | prevent sparkline creation when data contains errors | validate cell range for errors Aspose.Cells .NET
-// Developer Intent: Ensure a sparkline is only added when its source range has no error values.
-// Use Cases: Validate a row of financial metrics before generating a line sparkline in an automated report. | Check a user‑selected dynamic range for #N/A or #DIV/0! before inserting a column sparkline. | Iterate over multiple worksheets, creating sparkline groups only for ranges that pass error‑value validation.
-// AI Prompts: Write a C# method for Aspose.Cells that returns false if any cell in a given range contains an error value, then use it to conditionally add a sparkline group. | Generate code that logs the address of the first error cell and skips sparkline creation in Aspose.Cells. | Extend the validation to handle merged cells and custom error handling while creating sparklines with Aspose.Cells for .NET.
+// Title: How to validate a sparkline source range for error values before creating the sparkline with Aspose.Cells in C#
+// AI Prompts: Iterate over a worksheet range, detect cells where CellValueType.IsError is true, and add a SparklineGroup only when the range is error‑free using Aspose.Cells for .NET. | Create a line sparkline at a specified cell after confirming the source range contains no #DIV/0! or #N/A errors, then save the workbook.
+// Common Searches: Aspose.Cells C# check for error cells before adding a sparkline | prevent sparkline creation if source range contains #DIV/0! in .NET | validate Excel range for errors using Aspose.Cells before sparkline group addition | C# example of iterating over a range to detect IsError values with Aspose.Cells | how to abort sparkline generation when data range has errors in Aspose.Cells
+// Tags: sparkline source range error validation C# | Aspose.Cells check cell IsError before sparkline | create sparkline after range verification Aspose.Cells | line sparkline group addition conditional C# | Excel workbook save after sparkline validation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace SparklineValidationExample
+namespace AsposeCellsSparklineValidation
 {
-    // Shows how to scan a worksheet range for Excel error values (e.g., #N/A, #DIV/0!) using Aspose.Cells, then conditionally create a line sparkline group in a .NET workbook. Includes the reusable IsDataRangeValid method, sample data setup, and workbook export.
+    // The example creates a workbook, fills cells A1:A5 with numeric data, scans the range for any error‑type cells, aborts sparkline creation if an error is found, otherwise adds a line sparkline at B1, reports the outcome, saves the file as SparklineValidated.xlsx, and handles exceptions.
     class Program
     {
-        // Checks whether any cell in the specified range contains an error value.
-        static bool IsDataRangeValid(Worksheet sheet, string range)
-        {
-            // Split the range (e.g., "A1:D1") into start and end addresses.
-            string[] parts = range.Split(':');
-            if (parts.Length != 2) return false;
-
-            // Convert addresses to CellArea.
-            CellArea area = CellArea.CreateCellArea(parts[0], parts[1]);
-
-            // Iterate through each cell in the area.
-            for (int row = area.StartRow; row <= area.EndRow; row++)
-            {
-                for (int col = area.StartColumn; col <= area.EndColumn; col++)
-                {
-                    Cell cell = sheet.Cells[row, col];
-                    // If the cell type is an error, the range is invalid.
-                    if (cell.Type == CellValueType.IsError)
-                        return false;
-                }
-            }
-            return true;
-        }
-
         static void Main()
         {
-            // Create a new workbook.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the sparkline.
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["B1"].PutValue(3);
-            sheet.Cells["C1"].PutValue(7);
-            sheet.Cells["D1"].PutValue(2);
-            sheet.Cells["E1"].PutValue(9);
-
-            // Define the data range for the sparkline.
-            string dataRange = "A1:E1";
-
-            // Validate the data range before creating the sparkline.
-            if (IsDataRangeValid(sheet, dataRange))
+            try
             {
-                // Define where the sparkline will be placed.
-                CellArea location = new CellArea
+                // Create a new workbook (lifecycle rule)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the sparkline
+                sheet.Cells["A1"].PutValue(5);
+                sheet.Cells["A2"].PutValue(3);
+                sheet.Cells["A3"].PutValue(7);
+                sheet.Cells["A4"].PutValue(2);
+                sheet.Cells["A5"].PutValue(9);
+
+                // Define the data range that will be used for the sparkline
+                string dataRange = "A1:A5";
+
+                // Validate that the data range does not contain any error values
+                bool hasError = false;
+                AsposeRange range = sheet.Cells.CreateRange(dataRange);
+                foreach (Cell cell in range)
                 {
-                    StartRow = 0,
-                    EndRow = 0,
-                    StartColumn = 5,
-                    EndColumn = 5
-                };
+                    // Check if the cell contains an error (e.g., #DIV/0!, #N/A, etc.)
+                    if (cell.Type == CellValueType.IsError)
+                    {
+                        hasError = true;
+                        Console.WriteLine($"Error found in cell {cell.Name}: {cell.StringValue}");
+                        break;
+                    }
+                }
 
-                // Add a sparkline group using the validated range.
-                int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, dataRange, false, location);
-                SparklineGroup group = sheet.SparklineGroups[groupIdx];
+                if (hasError)
+                {
+                    Console.WriteLine("Sparkline creation aborted due to errors in the data range.");
+                }
+                else
+                {
+                    // Define where the sparkline will be placed
+                    CellArea location = new CellArea
+                    {
+                        StartRow = 0,
+                        EndRow = 0,
+                        StartColumn = 1,
+                        EndColumn = 1
+                    };
 
-                // Optionally add a sparkline explicitly (the Add method already creates one).
-                // group.Sparklines.Add(dataRange, 0, 5);
+                    // Add the sparkline group
+                    int groupIdx = sheet.SparklineGroups.Add(SparklineType.Line, dataRange, false, location);
+                    SparklineGroup group = sheet.SparklineGroups[groupIdx];
+
+                    // Access the created sparkline and display its data range
+                    Sparkline sparkline = group.Sparklines[0];
+                    Console.WriteLine("Sparkline created successfully. DataRange: " + sparkline.DataRange);
+                }
+
+                // Save the workbook (lifecycle rule)
+                string outputPath = "SparklineValidated.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("The specified data range contains errors and cannot be used for a sparkline.");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-
-            // Save the workbook.
-            workbook.Save("SparklineValidated.xlsx");
         }
     }
 }

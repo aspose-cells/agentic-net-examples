@@ -1,29 +1,29 @@
-// Title: Load an Excel workbook from a file and get the first worksheet with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a Workbook from a local .xlsx file, access the first worksheet via the zero‑based Worksheets collection, and print its Name using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells load workbook C# | open Excel file .NET | first worksheet Aspose.Cells | Workbook constructor file path | read worksheet name C#
-// Common Searches: Aspose.Cells open existing Excel file C# | C# get first worksheet name Aspose.Cells | load workbook from file Aspose.Cells .NET | how to read worksheet name using Aspose.Cells | Aspose.Cells C# load and access worksheets
-// Developer Intent: Open an existing .xlsx file and obtain a reference to its first worksheet.
-// Use Cases: Display the first worksheet name in a UI after a user selects an Excel file. | Iterate rows of the first worksheet to import data into a database. | Use the first worksheet as a template for generating a new report with Aspose.Cells.
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, verifies the file exists, and safely returns the first worksheet. | Show how to load a workbook and read all values from the first column of the first worksheet using Aspose.Cells. | Provide an example that catches exceptions when opening an Excel file with Aspose.Cells and logs the worksheet name on success.
+// Title: Load an Excel workbook from a file and retrieve the first worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to open a .xlsx file from a specified path and obtain the worksheet at index 0. | Create a console application that loads a workbook from disk with Aspose.Cells, accesses the first sheet, and prints its name.
+// Common Searches: Aspose.Cells C# open .xlsx file and get first sheet name | How to read the first worksheet of an Excel workbook using Aspose.Cells in .NET | C# example for loading workbook from file path with Aspose.Cells and accessing worksheet index 0 | Retrieve worksheet name from Excel file using Aspose.Cells library
+// Tags: load workbook from file Aspose.Cells C# | access first worksheet by index Aspose.Cells | read worksheet name .xlsx C# | Aspose.Cells open workbook by path
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a Workbook from a local .xlsx file, access the first worksheet via the zero‑based Worksheets collection, and print its Name using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // // Loads "input.xlsx" using Aspose.Cells, accesses the first worksheet (index 0), and writes its name to the console.
+    class Program
     {
-        // Path to the Excel file to be loaded
-        string filePath = "input.xlsx";
+        static void Main(string[] args)
+        {
+            // Path to the Excel file to be loaded
+            string filePath = "input.xlsx";
 
-        // Load the workbook from the specified file using the string constructor
-        Workbook workbook = new Workbook(filePath);
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(filePath);
 
-        // Access the first worksheet (zero‑based index)
-        Worksheet firstWorksheet = workbook.Worksheets[0];
+            // Access the first worksheet (index 0)
+            Worksheet firstWorksheet = workbook.Worksheets[0];
 
-        // Example usage: output the name of the first worksheet
-        Console.WriteLine("First worksheet name: " + firstWorksheet.Name);
+            // Example: output the name of the first worksheet
+            Console.WriteLine("First worksheet name: " + firstWorksheet.Name);
+        }
     }
 }

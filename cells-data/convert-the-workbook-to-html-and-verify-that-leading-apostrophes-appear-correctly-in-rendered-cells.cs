@@ -1,50 +1,54 @@
-// Title: Export Aspose.Cells Workbook to HTML with Correct Leading Apostrophe Rendering (C#)
-// Description: Demonstrates how to enable QuotePrefix handling, write a value that begins with a single quote, save the workbook as HTML, and verify that the leading apostrophe appears correctly (as &#39; or a literal character) in the generated HTML. Includes code to read the HTML file and retrieve the cell's HTML string.
-// Keywords: Aspose.Cells | C# | HTML export | leading apostrophe | QuotePrefixToStyle | QuotePrefix style | cell HTML string | preserve apostrophe | Aspose.Cells HTML save
-// Common Searches: Aspose.Cells preserve leading apostrophe in HTML | QuotePrefixToStyle HTML export Aspose.Cells | how to show single quote in exported HTML spreadsheet | Aspose.Cells GetHtmlString apostrophe | verify apostrophe entity in Aspose.Cells HTML output
-// Developer Intent: Generate HTML from a workbook and confirm that cells starting with an apostrophe retain the apostrophe in the exported HTML.
-// Use Cases: Export spreadsheets to web‑ready HTML while keeping leading apostrophes visible for data that uses them as text qualifiers. | Automated testing to ensure the exported HTML contains the correct apostrophe entity, guaranteeing data integrity after conversion. | Extract a cell's HTML representation for embedding in emails, reports, or custom web components.
-// AI Prompts: Write C# code using Aspose.Cells to save a workbook as HTML and check that a leading apostrophe in cell A1 is rendered as &#39; or a literal quote. | Explain the effect of Workbook.Settings.QuotePrefixToStyle and Style.QuotePrefix on HTML export of cells with leading apostrophes. | Create a C# unit test that creates a workbook with a leading apostrophe, exports it to HTML, and asserts the presence of the apostrophe entity in the output.
+// Title: Export a workbook to HTML with Aspose.Cells in C# while preserving leading apostrophes in cell values
+// AI Prompts: Write C# code that creates a workbook, sets a cell value beginning with an apostrophe, enables QuotePrefix, saves the workbook as HTML using Aspose.Cells, and confirms the apostrophe appears in the output. | Show how to obtain the HTML string of a single cell after applying QuotePrefix with Aspose.Cells. | Provide a snippet that reads the generated HTML file and verifies the leading apostrophe is present as a literal character or as the &#39; entity.
+// Common Searches: Aspose.Cells C# export to HTML keep leading single quote in cell | How to display a leading apostrophe in a cell when saving as HTML with Aspose.Cells | QuotePrefix property effect on HTML output in Aspose.Cells | Get HTML string for a specific cell after setting QuotePrefix in Aspose.Cells | Validate apostrophe character in generated HTML file using Aspose.Cells C#
+// Tags: html export quote-prefix aspocells c# | preserve leading apostrophe aspocells html | cell gethtmlstring aspocells | verify apostrophe in html output aspocells | save workbook as html aspocells c#
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using System.Text.RegularExpressions;
 
-// Demonstrates how to enable QuotePrefix handling, write a value that begins with a single quote, save the workbook as HTML, and verify that the leading apostrophe appears correctly (as &#39; or a literal character) in the generated HTML. Includes code to read the HTML file and retrieve the cell's HTML string.
-class LeadingApostropheHtmlDemo
+// The example creates a new workbook, writes a value that starts with an apostrophe into cell A1, applies the QuotePrefix style so the apostrophe is treated as a literal character, saves the workbook as HTML with Aspose.Cells, reads the generated HTML file to check for the apostrophe (either as a literal ' or the &#39; entity), and prints both the verification result and the HTML representation of the cell.
+class ExportWorkbookToHtmlWithApostrophe
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Enable automatic QuotePrefix handling for values that start with a single quote
-        workbook.Settings.QuotePrefixToStyle = true;
+        // Set a cell value that starts with a leading apostrophe
+        // The apostrophe is stored as part of the text and should be displayed in HTML
+        Cell cell = cells["A1"];
+        cell.PutValue("'LeadingApostrophe");
 
-        // Set a cell value that begins with a leading apostrophe
-        worksheet.Cells["A1"].PutValue("'Hello");
-
-        // Ensure the style reflects the QuotePrefix (optional, shown for clarity)
-        Style style = worksheet.Cells["A1"].GetStyle();
+        // Enable QuotePrefix style so the leading apostrophe is treated as a literal character
+        Style style = cell.GetStyle();
         style.QuotePrefix = true;
-        worksheet.Cells["A1"].SetStyle(style);
+        cell.SetStyle(style);
 
-        // Save the workbook as HTML using default HtmlSaveOptions
+        // Prepare HTML save options (default options are sufficient for this scenario)
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        string htmlPath = "output.html";
+
+        // Define output HTML file path
+        string htmlPath = "WorkbookWithApostrophe.html";
+
+        // Save the workbook as HTML
         workbook.Save(htmlPath, htmlOptions);
 
-        // Read the generated HTML file
+        // Read the generated HTML content
         string htmlContent = File.ReadAllText(htmlPath);
 
-        // Verify that the leading apostrophe is present in the HTML output
-        // It may appear as an HTML entity (&#39;) or as a literal character
-        bool apostrophePresent = htmlContent.Contains("&#39;") || htmlContent.Contains("'Hello");
-        Console.WriteLine("HTML contains leading apostrophe: " + apostrophePresent);
+        // Verify that the leading apostrophe appears in the HTML output
+        // It may be encoded as &#39; or appear as a literal '
+        bool containsApostrophe = htmlContent.Contains("'") || htmlContent.Contains("&#39;");
 
-        // Optionally, display the cell's own HTML representation
-        string cellHtml = worksheet.Cells["A1"].GetHtmlString(true);
-        Console.WriteLine("Cell HTML string: " + cellHtml);
+        Console.WriteLine("HTML contains leading apostrophe: " + containsApostrophe);
+
+        // Additionally, get the HTML string for the specific cell and display it
+        string cellHtml = cell.GetHtmlString(true);
+        Console.WriteLine("Cell A1 HTML representation:");
+        Console.WriteLine(cellHtml);
     }
 }

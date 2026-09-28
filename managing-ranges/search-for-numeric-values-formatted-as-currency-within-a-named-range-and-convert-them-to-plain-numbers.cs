@@ -1,97 +1,70 @@
-// Title: Aspose.Cells C# – Convert Currency‑Formatted Numbers to General Format in a Named Range
-// Description: Load an Excel workbook with Aspose.Cells, retrieve the named range "MyRange", iterate through its cells, detect numeric cells that use a currency style (custom format containing "$" or built‑in format ID 44), and change their style to the General number format (Number = 0) before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | currency format | remove currency formatting | named range | convert to general format | cell style | Excel number format | format ID 44 | custom number format | financial data cleaning
-// Common Searches: Aspose.Cells change currency format to general | C# remove $ symbol from cells in named range | detect currency style Aspose.Cells | convert formatted numbers to plain numbers Aspose.Cells | iterate named range cells Aspose.Cells C#
-// Developer Intent: Locate numeric cells formatted as currency inside a specific named range and convert them to the plain (General) number format.
-// Use Cases: Sanitize financial reports by stripping currency symbols before exporting data to other systems. | Prepare data for calculations where currency formatting interferes with numeric operations. | Standardize worksheet appearance by converting currency‑styled cells in a defined range to General.
-// AI Prompts: Provide C# code using Aspose.Cells to find numeric cells with a currency style in a named range and set their Number format to General while preserving other cell attributes. | Explain how to extend the sample to process multiple named ranges and support additional currency symbols such as € or £. | Suggest a technique to log the addresses of cells that were changed from currency to General during the conversion.
+// Title: Find and replace currency‑formatted numeric cells in a named range with General format using Aspose.Cells for .NET
+// AI Prompts: Search a workbook for numeric cells whose custom number format contains currency symbols within a specific named range and set their style to General with Aspose.Cells. | Write a C# method that takes a Workbook, a named range name, and a target format, then updates any currency‑styled numeric cells to the target format. | Add logging to capture the addresses of cells whose number format was changed from currency to General while processing a named range.
+// Common Searches: Aspose.Cells .NET change currency number format to General in a defined name range | C# iterate over cells in a named range and remove currency formatting | How to detect currency symbols in cell style using Aspose.Cells | Convert formatted currency cells to plain numbers in Excel with Aspose.Cells for .NET | Update number format of numeric cells in a specific named range using Aspose.Cells API
+// Tags: currency number format conversion Aspose.Cells .NET | named range cell style modification | detect currency symbols in cell format | set cell number format to General programmatically | iterate over defined name range Aspose.Cells | numeric cell type check Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsCurrencyConversion
+// The example loads an Excel file, retrieves a named range, scans each numeric cell for a custom format containing currency symbols, changes those cells' style to the General format, and saves the workbook.
+class Program
 {
-    // Load an Excel workbook with Aspose.Cells, retrieve the named range "MyRange", iterate through its cells, detect numeric cells that use a currency style (custom format containing "$" or built‑in format ID 44), and change their style to the General number format (Number = 0) before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string namedRangeName = "MyNamedRange";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Verify input file exists
-                if (!File.Exists(inputPath))
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the range by its defined name
+            Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName(namedRangeName);
+            if (range == null)
+            {
+                Console.WriteLine("Named range not found.");
+                return;
+            }
+
+            // Iterate through each cell in the range
+            foreach (Cell cell in range)
+            {
+                // Process only numeric cells
+                if (cell.Type == CellValueType.IsNumeric)
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
+                    // Get the cell's style to inspect its number format
+                    Style style = cell.GetStyle();
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Retrieve the named range "MyRange"
-                Name namedRange = workbook.Worksheets.Names["MyRange"];
-                if (namedRange == null)
-                {
-                    Console.WriteLine("Named range 'MyRange' not found.");
-                    return;
-                }
-
-                // Get the actual range object
-                Aspose.Cells.Range range = namedRange.GetRange();
-
-                // Iterate through each cell in the range
-                for (int row = range.FirstRow; row < range.FirstRow + range.RowCount; row++)
-                {
-                    for (int col = range.FirstColumn; col < range.FirstColumn + range.ColumnCount; col++)
+                    // Use the custom number format string (if any)
+                    string format = style.Custom;
+                    if (!string.IsNullOrEmpty(format) &&
+                        (format.Contains("$") || format.Contains("€") || format.Contains("£") ||
+                         format.Contains("¥") || format.Contains("₹")))
                     {
-                        Cell cell = workbook.Worksheets[0].Cells[row, col];
-
-                        // Process only numeric cells
-                        if (cell.Type == CellValueType.IsNumeric)
-                        {
-                            // Retrieve the cell's current style
-                            Style style = cell.GetStyle();
-
-                            // Determine if the cell uses a currency format
-                            bool isCurrencyFormat = false;
-
-                            // Check custom format string for currency symbols
-                            string customFormat = style.Custom;
-                            if (!string.IsNullOrEmpty(customFormat) && customFormat.Contains("$"))
-                            {
-                                isCurrencyFormat = true;
-                            }
-                            else
-                            {
-                                // Check built‑in format IDs (44 is a common currency format)
-                                if (style.Number == 44)
-                                    isCurrencyFormat = true;
-                            }
-
-                            // If currency formatted, change to General format
-                            if (isCurrencyFormat)
-                            {
-                                style.Number = 0; // General format
-                                // Optionally clear custom format to avoid conflicts
-                                style.Custom = string.Empty;
-                                cell.SetStyle(style);
-                            }
-                        }
+                        // Change format to General (plain number)
+                        style.Custom = "General";
+                        cell.SetStyle(style);
                     }
                 }
+            }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

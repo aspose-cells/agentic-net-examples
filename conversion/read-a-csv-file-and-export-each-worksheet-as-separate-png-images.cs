@@ -1,64 +1,67 @@
-// Title: C# – Convert CSV to XLSX and Export Each Worksheet as PNG with Aspose.Cells
-// Description: The sample converts a CSV file to a temporary XLSX workbook, loads it with Aspose.Cells, and iterates through every worksheet. For each sheet it configures ImageOrPrintOptions for PNG, renders the first page via SheetRender, saves the image as "Sheet_{n}.png", and finally deletes the temporary file.
-// Keywords: Aspose.Cells | C# CSV to PNG | convert CSV to XLSX | SheetRender PNG export | ImageOrPrintOptions | export worksheet as image | batch worksheet image generation | temporary workbook cleanup | .NET spreadsheet rendering
-// Common Searches: Aspose.Cells convert CSV to PNG per sheet | C# export each worksheet as separate PNG | how to render Excel sheet to image using Aspose.Cells | remove temporary XLSX after conversion Aspose | batch generate PNGs from CSV data C#
-// Developer Intent: Create a PNG file for every worksheet produced from a CSV source.
-// Use Cases: Generate visual previews of CSV‑derived sheets for dashboards or reports. | Automate image asset creation for web pages that display spreadsheet data. | Build a nightly batch that turns CSV datasets into individual PNG files for documentation.
-// AI Prompts: Write C# code that reads a CSV, converts it to a workbook, and saves each worksheet as a PNG using Aspose.Cells. | Explain the role of ImageOrPrintOptions and SheetRender when rendering a worksheet to a PNG image. | Suggest how to name PNG files with the worksheet title and organize them into separate folders.
+// Title: Convert a CSV file to individual PNG images for each worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a CSV file into an Aspose.Cells workbook and saves every worksheet as an individual PNG file. | Demonstrate how to set up image rendering options and generate PNG images for each sheet in a .NET project using Aspose.Cells. | Provide a script that creates an output folder, imports CSV data, iterates through all worksheets, and produces separate PNG screenshots with Aspose.Cells.
+// Common Searches: Aspose.Cells C# export each worksheet to PNG image | How to render CSV data as PNG files using Aspose.Cells .NET | C# convert CSV to Excel then save sheets as PNG with Aspose | OnePagePerSheet option Aspose.Cells render multiple sheets to separate images | Generate PNG screenshots of Excel worksheets from CSV in C#
+// Tags: import CSV into Aspose.Cells workbook C# | SheetRender export worksheet to PNG | ImageOrPrintOptions OnePagePerSheet usage | save each Excel sheet to separate PNG files | convert CSV to XLSX then render PNG with Aspose.Cells | batch render multiple worksheets to PNG in .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Drawing;
 
 namespace AsposeCellsCsvToPng
 {
-    // The sample converts a CSV file to a temporary XLSX workbook, loads it with Aspose.Cells, and iterates through every worksheet. For each sheet it configures ImageOrPrintOptions for PNG, renders the first page via SheetRender, saves the image as "Sheet_{n}.png", and finally deletes the temporary file.
+    // // This C# example reads a CSV file into a new Aspose.Cells workbook, creates an output directory, configures ImageOrPrintOptions for PNG with OnePagePerSheet, iterates through all worksheets, and uses SheetRender to generate a separate PNG image for each sheet, finally saving the workbook as an XLSX file for reference.
     class Program
     {
         static void Main()
         {
             // Path to the source CSV file
-            string csvPath = "input.csv";
+            string csvFilePath = "input.csv";
 
-            // Temporary XLSX file that will hold the converted CSV data
-            string tempXlsxPath = "temp_converted.xlsx";
+            // Directory where PNG images will be saved
+            string outputDir = "output_images";
+            Directory.CreateDirectory(outputDir);
 
-            // Convert CSV to XLSX using the provided ConversionUtility rule
-            ConversionUtility.Convert(csvPath, tempXlsxPath);
+            // Create a new workbook (empty)
+            Workbook workbook = new Workbook();
 
-            // Load the workbook from the converted XLSX file
-            Workbook workbook = new Workbook(tempXlsxPath);
+            // Import the CSV data into the first worksheet (A1 cell)
+            // Using comma as delimiter, convert numeric data, start at row 0, column 0
+            workbook.Worksheets[0].Cells.ImportCSV(csvFilePath, ",", true, 0, 0);
 
-            // Iterate through each worksheet and export it as a separate PNG image
+            // If the CSV should be split into multiple worksheets, add that logic here.
+            // For this example we assume a single worksheet.
+
+            // Configure image rendering options for PNG output
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                ImageType = ImageType.Png,
+                OnePagePerSheet = true // render the whole sheet as one page
+            };
+
+            // Iterate through each worksheet and render it to a PNG file
             for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
             {
-                // Configure image rendering options (PNG format, one page per sheet)
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                    OnePagePerSheet = true
-                };
+                Worksheet sheet = workbook.Worksheets[sheetIndex];
 
-                // Create a SheetRender instance for the current worksheet
-                SheetRender sheetRender = new SheetRender(workbook.Worksheets[sheetIndex], imgOptions);
+                // Create a SheetRender for the current worksheet
+                SheetRender sheetRender = new SheetRender(sheet, imgOptions);
 
-                // Render the first (and only) page of the sheet to a PNG file
-                string outputImagePath = $"Sheet_{sheetIndex + 1}.png";
-                sheetRender.ToImage(0, outputImagePath);
+                // Since OnePagePerSheet = true, there will be only one page (index 0)
+                string imagePath = Path.Combine(outputDir, $"Sheet{sheetIndex + 1}.png");
+
+                // Render the page to a PNG file
+                sheetRender.ToImage(0, imagePath);
 
                 // Release resources used by SheetRender
                 sheetRender.Dispose();
 
-                Console.WriteLine($"Worksheet {sheetIndex + 1} exported to {outputImagePath}");
+                Console.WriteLine($"Worksheet '{sheet.Name}' rendered to: {imagePath}");
             }
 
-            // Clean up the temporary XLSX file
-            if (File.Exists(tempXlsxPath))
-            {
-                File.Delete(tempXlsxPath);
-            }
+            // Optionally, save the workbook for reference
+            workbook.Save("ConvertedWorkbook.xlsx", SaveFormat.Xlsx);
         }
     }
 }

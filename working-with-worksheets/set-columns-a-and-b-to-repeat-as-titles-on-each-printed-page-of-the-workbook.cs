@@ -1,57 +1,25 @@
-// Title: C# – Repeat Columns A and B on Every Printed Page with Aspose.Cells
-// Description: Demonstrates how to set the PrintTitleColumns property to "$A:$B" so columns A and B appear on each printed page, adds sample data, and saves the workbook as PrintTitleColumnsAB.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PrintTitleColumns | repeat columns on printed page C# | Aspose.Cells set print titles | C# Excel repeat columns | Aspose.Cells workbook printing
-// Common Searches: Aspose.Cells repeat columns A B each page | C# set PrintTitleColumns property | how to print title columns with Aspose.Cells | Aspose.Cells repeat column headers on print
-// Developer Intent: Configure columns A and B to repeat as title columns on every printed page of an Excel workbook.
-// Use Cases: Multi‑page reports that need header columns visible on each page. | Invoices or catalogs where product description columns must appear on every printed sheet. | Large data exports where column identifiers should stay on each printed page for readability.
-// AI Prompts: Show how to set non‑adjacent columns as print titles with Aspose.Cells in C#. | Provide example code to configure both print title rows and columns together. | Explain how to programmatically verify the PrintTitleColumns setting after saving the file.
+// Title: Repeat columns A and B as print titles on each printed page with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to assign "$A:$B" to the worksheet's PageSetup.PrintTitleColumns property. | Programmatically configure an Excel workbook so that columns A and B appear as titles on every printed page using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set print title columns A B | repeat first two columns on every printed page using Aspose.Cells | C# Aspose.Cells PageSetup.PrintTitleColumns example | configure worksheet to repeat columns when printing with Aspose.Cells | how to set print titles for columns in an Excel workbook using Aspose.Cells .NET
+// Tags: Aspose.Cells PageSetup.PrintTitleColumns | repeat columns as print titles C# | Excel worksheet print title columns Aspose | C# set print titles for columns | Aspose.Cells workbook page setup repeat columns
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, sets columns A and B to repeat as print titles on every printed page via the PageSetup.PrintTitleColumns property, and saves the modified file.
+class Program
 {
-    // Demonstrates how to set the PrintTitleColumns property to "$A:$B" so columns A and B appear on each printed page, adds sample data, and saves the workbook as PrintTitleColumnsAB.xlsx using Aspose.Cells for .NET.
-    public class PrintTitleColumnsDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Load the workbook (replace with your actual file path)
+        var workbook = new Workbook("input.xlsx");
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet (or specify the desired worksheet index/name)
+        var worksheet = workbook.Worksheets[0];
 
-                // Set columns A and B to repeat on each printed page
-                worksheet.PageSetup.PrintTitleColumns = "$A:$B";
+        // Set columns A and B to repeat as titles on each printed page
+        worksheet.PageSetup.PrintTitleColumns = "$A:$B";
 
-                // Add sample data to illustrate the effect
-                for (int i = 0; i < 100; i++)
-                {
-                    worksheet.Cells[i, 0].PutValue($"Row {i + 1} - Column A");
-                    worksheet.Cells[i, 1].PutValue($"Row {i + 1} - Column B");
-                    worksheet.Cells[i, 2].PutValue($"Row {i + 1} - Column C");
-                }
-
-                // Save the workbook
-                workbook.Save("PrintTitleColumnsAB.xlsx");
-                Console.WriteLine("Workbook saved successfully as PrintTitleColumnsAB.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PrintTitleColumnsDemo.Run();
-        }
+        // Save the workbook with the changes
+        workbook.Save("output.xlsx");
     }
 }

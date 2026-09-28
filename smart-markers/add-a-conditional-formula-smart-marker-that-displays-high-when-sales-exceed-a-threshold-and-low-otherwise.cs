@@ -1,59 +1,65 @@
-// Title: C# – Conditional IF Smart Marker in Aspose.Cells to Flag Sales as High or Low
-// Description: This Aspose.Cells for .NET example creates a workbook, adds "Sales" and "Status" headers, and inserts a smart marker that uses the IF formula to output "High" when a sales value exceeds a configurable threshold (default 1000) and "Low" otherwise. A List<SalesData> is bound as the data source, processed with WorkbookDesigner, and the result is saved as an Excel file.
-// Keywords: Aspose.Cells | C# | smart markers | conditional formula | IF function | sales threshold | WorkbookDesigner | Excel report automation | .NET | US developers | Europe developers
-// Common Searches: Aspose.Cells conditional smart marker example | IF formula in smart markers C# | How to label sales high low using Aspose.Cells | Set threshold in Aspose.Cells smart marker | Generate status column with smart markers
-// Developer Intent: Add a smart marker that evaluates an IF expression to display "High" or "Low" based on each Sales value.
-// Use Cases: Automated sales reports that categorize each transaction as High or Low without manual formulas. | Excel dashboards that dynamically flag performance thresholds during data export. | Bulk data export pipelines where conditional text labels are required for downstream analytics.
-// AI Prompts: Write C# code that inserts a conditional IF smart marker in Aspose.Cells to mark sales as High or Low with a customizable threshold. | Explain how to bind a collection of objects to a smart marker and process conditional formulas using WorkbookDesigner. | Show how to change the threshold value in the smart marker formula at runtime without modifying the source code.
+// Title: Add a conditional IF smart marker in Aspose.Cells for .NET to label sales as High or Low using a threshold parameter
+// AI Prompts: Create a smart marker expression that uses the IF function to compare each sales cell with a Threshold column from a DataTable and returns "High" or "Low", then invoke WorkbookDesigner.Process to generate the final Excel workbook. | Place the smart marker in cell B2, bind a DataTable containing the threshold value, process the markers with WorkbookDesigner, and save the file as SalesConditionalSmartMarker.xlsx using Aspose.Cells for .NET.
+// Common Searches: aspnet conditional smart marker with if statement in Aspose.Cells | how to bind a DataTable threshold to a smart marker formula in Aspose.Cells | create high low labels in Excel using Aspose.Cells smart markers | using WorkbookDesigner to process IF smart markers based on a data source | Aspose.Cells smart marker syntax for conditional labeling
+// Tags: IF smart marker expression Aspose.Cells | WorkbookDesigner data source threshold | conditional labeling with smart markers Excel | smart marker formula using DataTable | Aspose.Cells generate high low sales report
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace ConditionalFormulaSmartMarkerDemo
+namespace AsposeCellsSmartMarkerExample
 {
-    // Simple data class for the smart marker data source
-    // This Aspose.Cells for .NET example creates a workbook, adds "Sales" and "Status" headers, and inserts a smart marker that uses the IF formula to output "High" when a sales value exceeds a configurable threshold (default 1000) and "Low" otherwise. A List<SalesData> is bound as the data source, processed with WorkbookDesigner, and the result is saved as an Excel file.
-    public class SalesData
+    // The example creates a workbook, writes sample sales values, inserts a conditional smart marker that evaluates each sales entry against a threshold supplied via a DataTable, processes the marker with WorkbookDesigner, and saves the result as SalesConditionalSmartMarker.xlsx.
+    class Program
     {
-        public double Sales { get; set; }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main()
         {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // 2. Add column headers
-            sheet.Cells["A1"].PutValue("Sales");
-            sheet.Cells["B1"].PutValue("Status");
-
-            // 3. Insert a smart marker that evaluates a conditional formula.
-            //    The marker will display "High" when the Sales value exceeds 1000,
-            //    otherwise it will display "Low".
-            //    Syntax: &="=IF(Sales>1000,\"High\",\"Low\")"
-            sheet.Cells["B2"].PutValue("&=IF(Sales>1000,\"High\",\"Low\")");
-
-            // 4. Prepare sample data source
-            List<SalesData> data = new List<SalesData>
+            try
             {
-                new SalesData { Sales = 750 },
-                new SalesData { Sales = 1250 },
-                new SalesData { Sales = 500 },
-                new SalesData { Sales = 2000 }
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // 5. Set up the WorkbookDesigner, assign the data source and process smart markers
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Data", data);
-            designer.Process();
+                // Add header for sales data
+                sheet.Cells["A1"].PutValue("Sales");
 
-            // 6. Save the resulting workbook
-            workbook.Save("ConditionalFormulaSmartMarkerOutput.xlsx");
+                // Sample sales values
+                double[] salesData = { 80, 120, 95, 150 };
+                for (int i = 0; i < salesData.Length; i++)
+                {
+                    // Column A (0-index) rows start at 1 (A2, A3, ...)
+                    sheet.Cells[i + 1, 0].PutValue(salesData[i]);
+                }
+
+                // Insert a smart marker that evaluates the sales value against a threshold
+                // The smart marker syntax: &=IF(A2>{Threshold},"High","Low")
+                // It will be copied down automatically when processed
+                sheet.Cells["B2"].PutValue("&=IF(A2>{Threshold},\"High\",\"Low\")");
+
+                // Prepare a data source containing the threshold value
+                DataTable dt = new DataTable("Parameters");
+                dt.Columns.Add("Threshold", typeof(double));
+                dt.Rows.Add(100); // Example threshold
+
+                // Set up the WorkbookDesigner, assign the data source, and process the smart markers
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                designer.SetDataSource(dt);
+                designer.Process();
+
+                // Save the resulting workbook
+                string outputPath = "SalesConditionalSmartMarker.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

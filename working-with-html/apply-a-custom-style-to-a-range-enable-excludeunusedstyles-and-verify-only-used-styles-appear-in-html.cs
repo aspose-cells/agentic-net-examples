@@ -1,98 +1,66 @@
-// Title: C# – Apply a Custom Style to a Range and Export HTML without Unused Styles using Aspose.Cells
-// Description: Demonstrates how to create a workbook with Aspose.Cells, define a custom bold blue style, apply it to cells A1:C3, add an unused style, and save the sheet as a single HTML file with HtmlSaveOptions.ExcludeUnusedStyles set to true. The example also shows how to read the generated HTML to confirm that the unused style is omitted.
-// Keywords: Aspose.Cells C# | custom style range | HtmlSaveOptions ExcludeUnusedStyles | export HTML without unused CSS | Aspose.Cells HTML export example | verify style not in HTML | single file HTML Aspose.Cells
-// Common Searches: Aspose.Cells apply style to range C# | ExcludeUnusedStyles HTML Aspose.Cells .NET | Save workbook as single HTML file Aspose.Cells | remove unused CSS when exporting Excel to HTML | how to verify unused style is not in exported HTML
-// Developer Intent: Create a workbook, apply a custom style to a specific range, and generate HTML that contains only the styles actually used.
-// Use Cases: Produce clean, lightweight HTML reports from Excel data. | Minimize HTML file size by excluding unused CSS definitions. | Automated testing to ensure compliance with style‑usage policies.
-// AI Prompts: Generate C# code with Aspose.Cells that defines a bold blue style, applies it to A1:C3, creates an unused style, and saves the workbook as a single HTML file with ExcludeUnusedStyles enabled. | Explain the purpose of HtmlSaveOptions.ExcludeUnusedStyles in Aspose.Cells and provide a snippet that checks the resulting HTML for the presence of an unused style.
+// Title: Apply a user‑defined cell style to a specific range and export to HTML while excluding unused styles with Aspose.Cells for .NET
+// AI Prompts: Create a new Workbook, define a user‑defined style named MyCustomStyle, apply it to cells A1:B3 using a StyleFlag with All=true, enable exclusion of unused styles, and save the workbook as an HTML file. | Read the generated HTML file and test whether the identifier MyCustomStyle appears, confirming that only the applied style was embedded.
+// Common Searches: Aspose.Cells C# apply style to a cell range and export to HTML | exclude unused CSS classes when saving Excel as HTML with Aspose.Cells | check that only used styles are written to HTML output in Aspose.Cells | optimize HTML export size by removing unused styles Aspose.Cells .NET | how to verify style inclusion in Aspose.Cells generated HTML
+// Tags: apply user-defined style range Aspose.Cells | HTML export exclude unused styles .NET | apply all formatting to range Aspose.Cells | verify style presence in generated HTML | user-defined cell style Aspose.Cells C#
 
 using System;
 using System.IO;
 using System.Drawing;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsCustomStyleHtmlDemo
+// The example creates a workbook, defines a custom style with a light‑green background and bold dark‑green font, applies it to the range A1:B3, saves the workbook as an HTML file while excluding unused styles, and then reads the HTML to confirm that the custom style name is present, demonstrating that only used styles are included in the output.
+class Program
 {
-    // Demonstrates how to create a workbook with Aspose.Cells, define a custom bold blue style, apply it to cells A1:C3, add an unused style, and save the sheet as a single HTML file with HtmlSaveOptions.ExcludeUnusedStyles set to true. The example also shows how to read the generated HTML to confirm that the unused style is omitted.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate some cells with data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1.2);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(0.8);
+
+            // Create a custom style
+            Style customStyle = workbook.CreateStyle();
+            customStyle.Name = "MyCustomStyle";                 // Give the style a recognizable name
+            customStyle.ForegroundColor = Color.LightGreen;    // Background color
+            customStyle.Pattern = BackgroundType.Solid;        // Apply background
+            customStyle.Font.Color = Color.DarkGreen;          // Font color
+            customStyle.Font.IsBold = true;                    // Bold font
+
+            // Apply the custom style to a specific range (A1:B3)
+            StyleFlag flag = new StyleFlag { All = true };
+            Aspose.Cells.Range targetRange = sheet.Cells.CreateRange("A1:B3");
+            targetRange.ApplyStyle(customStyle, flag);
+
+            // Save the workbook as HTML
+            string htmlFile = "StyledOutput.html";
+            workbook.Save(htmlFile, SaveFormat.Html);
+
+            // Verify that only used styles appear in the generated HTML
+            if (File.Exists(htmlFile))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // -------------------------------------------------
-                // 1. Create a custom style that will be applied
-                // -------------------------------------------------
-                Style usedStyle = workbook.CreateStyle(); // Workbook.CreateStyle()
-                usedStyle.Font.Name = "Arial";
-                usedStyle.Font.Size = 12;
-                usedStyle.Font.IsBold = true;
-                usedStyle.Font.Color = Color.Blue;
-                usedStyle.ForegroundColor = Color.LightYellow;
-                usedStyle.Pattern = BackgroundType.Solid;
-
-                // -------------------------------------------------
-                // 2. Apply the style to a specific range (A1:C3)
-                // -------------------------------------------------
-                AsposeRange range = sheet.Cells.CreateRange("A1:C3"); // Cells.CreateRange(string)
-                range.SetStyle(usedStyle); // Range.SetStyle(Style)
-
-                // -------------------------------------------------
-                // 3. Create another style but DO NOT apply it (unused)
-                // -------------------------------------------------
-                Style unusedStyle = workbook.CreateStyle(); // Workbook.CreateStyle()
-                unusedStyle.Font.Name = "Times New Roman";
-                unusedStyle.Font.Size = 14;
-                unusedStyle.Font.Color = Color.Red;
-                unusedStyle.Name = "UnusedStyle"; // give it a name for identification
-
-                // -------------------------------------------------
-                // 4. Configure HTML save options to exclude unused styles
-                // -------------------------------------------------
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(); // new HtmlSaveOptions()
-                htmlOptions.ExcludeUnusedStyles = true; // HtmlSaveOptions.ExcludeUnusedStyles
-                htmlOptions.SaveAsSingleFile = true; // optional single file output
-
-                // -------------------------------------------------
-                // 5. Save the workbook as HTML
-                // -------------------------------------------------
-                string htmlPath = "StyledOutput.html";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(htmlPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(htmlPath, htmlOptions); // Workbook.Save(string, SaveOptions)
-
-                // -------------------------------------------------
-                // 6. Verify that the unused style does NOT appear in the HTML
-                // -------------------------------------------------
-                if (File.Exists(htmlPath))
-                {
-                    string htmlContent = File.ReadAllText(htmlPath);
-                    bool unusedStyleFound = htmlContent.Contains("UnusedStyle");
-
-                    Console.WriteLine("HTML saved to: " + Path.GetFullPath(htmlPath));
-                    Console.WriteLine("Unused style present in HTML? " + (unusedStyleFound ? "Yes" : "No"));
-                    // Expected output: No
-                }
-                else
-                {
-                    Console.WriteLine("Failed to create HTML file at: " + Path.GetFullPath(htmlPath));
-                }
+                string htmlContent = File.ReadAllText(htmlFile);
+                bool customStyleFound = htmlContent.Contains("MyCustomStyle");
+                Console.WriteLine($"Custom style present in HTML: {customStyleFound}");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Failed to generate HTML file: {htmlFile}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

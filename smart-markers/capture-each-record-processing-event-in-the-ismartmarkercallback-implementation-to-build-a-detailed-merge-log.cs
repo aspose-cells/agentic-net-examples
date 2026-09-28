@@ -1,103 +1,77 @@
-// Title: Log Smart Marker Merges Using ISmartMarkerCallBack in Aspose.Cells for .NET
-// Description: Shows how to implement ISmartMarkerCallBack to capture every smart‑marker processing event during WorkbookDesigner merging. The callback records sheet, row, column, table and column names in a List<string>, outputs the log to the console, saves it to a text file, and writes the merged workbook. Includes a helper that creates a minimal template when none is present.
-// Keywords: Aspose.Cells | ISmartMarkerCallBack | smart marker log | C# example | WorkbookDesigner | merge audit | data merge debugging | Excel template | smart markers .NET | record merge events
-// Common Searches: How to log each smart marker replacement with Aspose.Cells | ISmartMarkerCallBack example for merge auditing in C# | Capture smart marker processing details during WorkbookDesigner merge | Aspose.Cells merge log for smart markers | Debug smart marker data merge in .NET
-// Developer Intent: Create a detailed audit trail of every smart‑marker replacement while merging data with Aspose.Cells.
-// Use Cases: Debugging incorrect data placement by reviewing sheet, row, and column logs | Compliance auditing of Excel data merges with a chronological record | Performance analysis of large smart‑marker merges | Generating custom reports of processed tables and columns | Automated unit tests that verify expected smart‑marker processing
-// AI Prompts: Write a C# extension for MergeLogSmartMarkerCallback that adds a UTC timestamp to each entry and exports the log as JSON. | Show how to filter the merge log to include only entries for a specific table name when using ISmartMarkerCallBack. | Provide code to read MergeLog.txt and display the entries in a Windows Forms ListView with sortable columns.
+// Title: How to capture and log each smart marker merge event using ISmartMarkerCallBack in Aspose.Cells for .NET
+// AI Prompts: Implement an ISmartMarkerCallBack class that appends sheet index, row index, column index, table name, and column name to a List<string> for every smart marker processed. | Demonstrate assigning the custom callback to a WorkbookDesigner, binding a DataTable as the data source, invoking Process(), and printing the accumulated log entries to the console. | Extend the callback so that each merge log entry is written directly to a text file while still maintaining the in‑memory list.
+// Common Searches: aspnet log smart marker merge details with ISmartMarkerCallBack | example of capturing smart marker processing events in Aspose.Cells C# | how to output smart marker merge positions to console using WorkbookDesigner | record table and column names for each smart marker during merge Aspose.Cells | save smart marker merge log to file in C# Aspose.Cells
+// Tags: smart marker merge logging Aspose.Cells | ISmartMarkerCallBack event capture C# | WorkbookDesigner callback for merge audit | log smart marker cell positions Excel | record smart marker table column details
 
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-namespace SmartMarkerMergeLogDemo
+namespace AsposeCellsSmartMarkerLogging
 {
-    // Callback implementation that records each smart marker processing event
-    // Shows how to implement ISmartMarkerCallBack to capture every smart‑marker processing event during WorkbookDesigner merging. The callback records sheet, row, column, table and column names in a List<string>, outputs the log to the console, saves it to a text file, and writes the merged workbook. Includes a helper that creates a minimal template when none is present.
-    public class MergeLogSmartMarkerCallback : ISmartMarkerCallBack
+    // Custom callback that records each smart marker processing event
+    // The example defines a MergeLogCallback that implements ISmartMarkerCallBack to record sheet, row, column, table, and column identifiers for every smart marker occurrence. The callback is assigned to WorkbookDesigner, a DataTable is set as the data source, Process() populates the workbook, and the collected log entries are printed, illustrating how to audit smart marker merges in Aspose.Cells for .NET.
+    public class MergeLogCallback : ISmartMarkerCallBack
     {
-        // Stores detailed log entries
-        public List<string> Log { get; } = new List<string>();
+        // Stores log entries
+        public List<string> LogEntries { get; } = new List<string>();
 
         // Called by Aspose.Cells for each smart marker occurrence
         public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
         {
-            // Build a descriptive log entry
+            // Build a detailed log entry
             string entry = $"Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:\"{tableName}\", Column:\"{columnName}\"";
-            Log.Add(entry);
+            LogEntries.Add(entry);
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Path to the template workbook containing smart markers
-            string templatePath = "Template.xlsx";
+            // Create a new workbook (template) and add smart markers
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            // Smart markers using table "Employees"
+            sheet.Cells["A1"].PutValue("&=Employees.Name");
+            sheet.Cells["B1"].PutValue("&=Employees.Age");
+            sheet.Cells["A2"].PutValue("&=Employees.Name");
+            sheet.Cells["B2"].PutValue("&=Employees.Age");
 
-            // Ensure the template file exists (for demo purposes we create a simple one if missing)
-            if (!File.Exists(templatePath))
-            {
-                CreateSampleTemplate(templatePath);
-            }
-
-            // Load the template workbook
-            Workbook workbook = new Workbook(templatePath);
-
-            // Initialize WorkbookDesigner with the loaded workbook
+            // Initialize WorkbookDesigner with the template workbook
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = workbook
             };
 
             // Create and assign the custom callback
-            MergeLogSmartMarkerCallback callback = new MergeLogSmartMarkerCallback();
+            MergeLogCallback callback = new MergeLogCallback();
             designer.CallBack = callback;
 
-            // Prepare a simple data source matching the smart markers in the template
-            DataTable data = new DataTable("Products");
-            data.Columns.Add("ProductName", typeof(string));
-            data.Columns.Add("Price", typeof(double));
-            data.Rows.Add("Apple", 1.2);
-            data.Rows.Add("Banana", 0.8);
-            data.Rows.Add("Cherry", 2.5);
+            // Prepare a simple data source
+            DataTable employeeTable = new DataTable("Employees");
+            employeeTable.Columns.Add("Name", typeof(string));
+            employeeTable.Columns.Add("Age", typeof(int));
+            employeeTable.Rows.Add("Alice", 30);
+            employeeTable.Rows.Add("Bob", 25);
+            employeeTable.Rows.Add("Charlie", 35);
 
             // Set the data source for the designer
-            designer.SetDataSource(data);
+            designer.SetDataSource(employeeTable);
 
-            // Process the smart markers (true = preserve unrecognized markers)
-            designer.Process(true);
+            // Process smart markers (populate data)
+            designer.Process();
 
-            // Save the processed workbook
-            string outputPath = "ProcessedOutput.xlsx";
-            designer.Workbook.Save(outputPath);
+            // Save the resulting workbook
+            designer.Workbook.Save("SmartMarkerResult.xlsx");
 
-            // Output the merge log to console
+            // Output the merge log
             Console.WriteLine("Smart Marker Processing Log:");
-            foreach (string logEntry in callback.Log)
+            foreach (string log in callback.LogEntries)
             {
-                Console.WriteLine(logEntry);
+                Console.WriteLine(log);
             }
-
-            // Optionally, write the log to a text file
-            string logFilePath = "MergeLog.txt";
-            File.WriteAllLines(logFilePath, callback.Log);
-            Console.WriteLine($"Merge log saved to: {logFilePath}");
-        }
-
-        // Helper method to create a minimal template with smart markers if none exists
-        private static void CreateSampleTemplate(string path)
-        {
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            // Insert smart markers that reference the "Products" table
-            ws.Cells["A1"].PutValue("&=Products.ProductName");
-            ws.Cells["B1"].PutValue("&=Products.Price");
-            // Name the range for smart markers (required when LineByLine = false, but not needed here)
-            ws.Cells.CreateRange("A1:B1").Name = "_CellsSmartMarkers";
-            wb.Save(path);
         }
     }
 }

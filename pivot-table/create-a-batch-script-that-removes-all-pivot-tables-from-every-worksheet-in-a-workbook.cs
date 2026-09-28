@@ -1,32 +1,23 @@
-// Title: C# – Remove All Pivot Tables from an Excel Workbook Using Aspose.Cells
-// Description: Load an Excel file with Aspose.Cells, call Worksheets.ClearPivottables() to delete every pivot table across all worksheets, and save the cleaned workbook. Ideal for batch cleanup of reports or templates.
-// Keywords: Aspose.Cells clear pivot tables | remove all pivot tables .NET | delete pivot tables workbook | C# Aspose.Cells pivot table removal | Excel pivot table cleanup
-// Common Searches: how to delete all pivot tables with Aspose.Cells | Aspose.Cells remove pivot tables from every sheet | C# batch script to clear pivot tables in Excel | clear pivot tables across workbook Aspose.Cells
-// Developer Intent: Eliminate every pivot table in a workbook and save the result.
-// Use Cases: Sanitize a template before distribution by stripping all pivot tables. | Prepare data‑only Excel files for downstream processing. | Automate cleanup of generated reports that contain unwanted pivot tables.
-// AI Prompts: Write C# code that uses Aspose.Cells to remove all pivot tables from an Excel workbook and saves the file. | Explain the requirements and side effects of Worksheets.ClearPivottables() in Aspose.Cells. | Create a PowerShell script that runs a compiled .NET executable to batch‑process multiple Excel files, removing their pivot tables.
+// Title: C# script to delete every pivot table in all worksheets of an Excel workbook with Aspose.Cells
+// AI Prompts: Generate a C# console application that loads an .xlsx file, removes all pivot tables from every worksheet using Workbook.Worksheets.ClearPivottables, and writes the result to a new file. | Show how to use Aspose.Cells to batch‑clear pivot tables across a workbook without iterating each sheet manually. | Provide code that demonstrates removing pivot tables from a workbook and saving it, suitable for inclusion in an automated build or deployment script.
+// Common Searches: aspnet remove all pivot tables from an Excel workbook using Aspose.Cells | C# clear pivot tables in every sheet programmatically Aspose.Cells | how to use ClearPivottables method in Aspose.Cells .NET | batch process to delete pivot tables from multiple worksheets with Aspose.Cells | automate pivot table cleanup in Excel files using C# Aspose.Cells
+// Tags: Aspose.Cells ClearPivottables method | remove pivot tables workbook C# | batch delete Excel pivot tables Aspose.Cells | clear all pivot tables .NET | automated pivot table cleanup Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Load an Excel file with Aspose.Cells, call Worksheets.ClearPivottables() to delete every pivot table across all worksheets, and save the cleaned workbook. Ideal for batch cleanup of reports or templates.
-class Program
+// // Loads an Excel workbook, calls Workbook.Worksheets.ClearPivottables to delete every pivot table across all worksheets, and saves the modified file.
+class RemoveAllPivotTables
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Input Excel file containing pivot tables
-        string inputPath = "input.xlsx";
-
-        // Output Excel file after removing all pivot tables
-        string outputPath = "output_no_pivots.xlsx";
-
-        // Load the workbook from the input file
-        Workbook workbook = new Workbook(inputPath);
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
         // Clear all pivot tables from every worksheet in the workbook
         workbook.Worksheets.ClearPivottables();
 
-        // Save the modified workbook to the output file
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+        // Save the workbook after removal
+        workbook.Save("output.xlsx");
     }
 }

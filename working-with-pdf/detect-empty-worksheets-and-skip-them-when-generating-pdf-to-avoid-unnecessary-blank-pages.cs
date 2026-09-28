@@ -1,60 +1,40 @@
-// Title: C# – Export Excel to PDF while Skipping Empty Worksheets with Aspose.Cells
-// Description: This example shows how to detect worksheets that contain no data and exclude them from PDF conversion. It uses MaxDataRow/MaxDataColumn to find populated sheets, builds a SheetSet, and configures PdfSaveOptions (OutputBlankPageWhenNothingToPrint = false, PrintingPageType = IgnoreBlank) to generate a clean PDF without blank pages.
-// Keywords: Aspose.Cells PDF export C# | skip empty worksheets Aspose | PdfSaveOptions OutputBlankPageWhenNothingToPrint | PrintingPageType IgnoreBlank | SheetSet non‑empty sheets | remove blank pages Excel to PDF | global | USA | India
-// Common Searches: How to prevent blank pages when saving Excel as PDF with Aspose.Cells | Aspose.Cells skip empty sheets during PDF conversion | C# code to export only populated worksheets to PDF | Ignore blank worksheets Aspose.Cells PDF export | PdfSaveOptions settings for removing empty pages
-// Developer Intent: Exclude worksheets that have no content so the resulting PDF contains only pages with actual data.
-// Use Cases: Create PDF reports from workbooks that may contain placeholder or template sheets, ensuring the final document shows only relevant data. | Batch‑process a folder of Excel files, automatically omitting blank worksheets to reduce PDF size and improve readability. | Build a web API that receives an Excel file and returns a PDF that filters out any completely empty sheets.
-// AI Prompts: Generate C# code using Aspose.Cells to export a workbook to PDF, omitting worksheets with no populated cells. | Show how to configure PdfSaveOptions to disable blank‑page generation and specify a SheetSet of non‑empty worksheet indexes. | Explain the method for detecting an empty worksheet in Aspose.Cells using MaxDataRow and MaxDataColumn.
+// Title: Delete blank worksheets from an Excel workbook before converting to PDF with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that scans a Workbook, removes any worksheet that has no used cells, and then saves the remaining sheets as a PDF using Aspose.Cells. | Show how to use MaxDataRow and MaxDataColumn to detect empty sheets, delete them, and export the cleaned workbook to PDF in C#.
+// Common Searches: aspnet remove empty worksheets before PDF export Aspose.Cells | c# detect and delete blank Excel sheets using MaxDataRow | skip blank worksheets when saving Excel as PDF with Aspose.Cells | avoid extra blank pages in PDF generated from Excel workbook | how to programmatically clean up workbook sheets prior to PDF conversion
+// Tags: delete empty worksheets Aspose.Cells | export non‑empty sheets to PDF Aspose.Cells | MaxDataRow empty sheet detection C# | skip blank worksheets during PDF conversion | clean workbook before PDF export Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// This example shows how to detect worksheets that contain no data and exclude them from PDF conversion. It uses MaxDataRow/MaxDataColumn to find populated sheets, builds a SheetSet, and configures PdfSaveOptions (OutputBlankPageWhenNothingToPrint = false, PrintingPageType = IgnoreBlank) to generate a clean PDF without blank pages.
-class GeneratePdfSkippingEmptySheets
+// Loads an Excel file, checks each worksheet’s MaxDataRow and MaxDataColumn to find sheets without data, removes those empty worksheets, and saves the remaining content as a PDF.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (replace with loading if needed)
-        Workbook workbook = new Workbook();
+        // Load the workbook from an existing Excel file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Example data: first sheet has content, second sheet is empty
-        workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-        workbook.Worksheets.Add("EmptySheet");
-
-        // Collect indexes of worksheets that contain at least one cell with data
-        List<int> printableSheetIndexes = new List<int>();
+        // Identify indexes of worksheets that contain no data
+        List<int> emptySheetIndexes = new List<int>();
         for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
             Worksheet sheet = workbook.Worksheets[i];
-            // MaxDataRow/MaxDataColumn are -1 when the sheet has no data
-            if (sheet.Cells.MaxDataRow >= 0 && sheet.Cells.MaxDataColumn >= 0)
+
+            // MaxDataRow/MaxDataColumn are -1 when the sheet has no used cells
+            if (sheet.Cells.MaxDataRow < 0 && sheet.Cells.MaxDataColumn < 0)
             {
-                printableSheetIndexes.Add(i);
+                emptySheetIndexes.Add(i);
             }
         }
 
-        // If no printable sheets exist, exit early
-        if (printableSheetIndexes.Count == 0)
+        // Remove empty worksheets starting from the highest index to avoid shifting
+        for (int i = emptySheetIndexes.Count - 1; i >= 0; i--)
         {
-            Console.WriteLine("Workbook contains no printable content.");
-            return;
+            workbook.Worksheets.RemoveAt(emptySheetIndexes[i]);
         }
 
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            // Prevent generation of a blank page when a sheet has nothing to print
-            OutputBlankPageWhenNothingToPrint = false,
-            // Omit pages that are completely blank after rendering
-            PrintingPageType = PrintingPageType.IgnoreBlank,
-            // Render only the identified non‑empty sheets
-            SheetSet = new SheetSet(printableSheetIndexes.ToArray())
-        };
-
-        // Save the workbook to PDF using the configured options
-        workbook.Save("output.pdf", pdfOptions);
-        Console.WriteLine("PDF saved successfully without empty worksheets.");
+        // Save the workbook as PDF; only non‑empty worksheets will be rendered
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

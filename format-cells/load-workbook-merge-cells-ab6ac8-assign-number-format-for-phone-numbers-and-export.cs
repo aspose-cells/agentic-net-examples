@@ -1,37 +1,58 @@
-// Title: Merge AB6:AC8 and apply phone number format (###) ###‑#### with Aspose.Cells for .NET
-// Description: Loads a workbook, merges the range AB6:AC8, applies the custom number format "(###) ###‑####" to the merged cell, and saves the result. Demonstrates zero‑based indexing, style handling, and export in C#.
-// Keywords: Aspose.Cells merge cells C# | custom phone number format | set number format merged cell | Aspose.Cells export workbook | C# Excel cell merging
-// Common Searches: Aspose.Cells merge range AB6 AC8 C# | apply custom phone number format with Aspose.Cells | how to set number format on merged cells Aspose.Cells .NET | save workbook after merging cells Aspose.Cells
-// Developer Intent: Combine a specific cell block, format it as a phone number, and write the workbook to disk.
-// Use Cases: Create a contact sheet where each phone number spans two columns with a standardized format. | Generate a report header that merges cells for phone numbers and enforces consistent formatting before distribution. | Design an invoice template with a merged phone‑number field that automatically displays numbers as (###) ###‑####.
-// AI Prompts: Show C# code to merge AB6:AC8 and set the phone number format (###) ###‑#### using Aspose.Cells. | Explain how to apply a custom number format to a merged cell in Aspose.Cells for .NET. | What are the zero‑based row and column indices for merging cells AB6:AC8 in Aspose.Cells?
+// Title: Merge cells AB6:AC8 and apply a custom phone‑number format '(###) ###‑####' in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an existing workbook, merge the range AB6:AC8, create a style with the custom number format '(###) ###‑####', apply it to the merged cells, and save the file using Aspose.Cells in C#. | Using Aspose.Cells, programmatically set a phone‑number format for a merged cell block (AB6‑AC8) and export the updated workbook.
+// Common Searches: how to merge AB6 to AC8 and set phone number format with Aspose.Cells C# | Aspose.Cells custom number format for merged cells example | C# code to apply '(###) ###‑####' format to a range in Excel using Aspose.Cells | merge specific cells and apply phone number style in .NET Excel library
+// Tags: merge cell range AB6:AC8 Aspose.Cells | custom phone number format Aspose.Cells .NET | apply number format to merged cells Excel C# | load and save workbook with Aspose.Cells styling | create style with custom format Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads a workbook, merges the range AB6:AC8, applies the custom number format "(###) ###‑####" to the merged cell, and saves the result. Demonstrates zero‑based indexing, style handling, and export in C#.
-class MergeAndFormatPhoneNumber
+// Loads input.xlsx, merges cells AB6:AC8, defines a style with custom phone‑number format '(###) ###‑####', applies the style to the merged range, and saves the workbook as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("InputWorkbook.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Merge cells AB6:AC8
-        // AB -> column index 27, AC -> column index 28
-        // Row 6 -> row index 5 (zero‑based)
-        // Total rows = 3 (6,7,8), total columns = 2 (AB,AC)
-        worksheet.Cells.Merge(5, 27, 3, 2);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Apply phone number format "(###) ###‑####" to the merged cell (top‑left cell of the range)
-        Style phoneStyle = worksheet.Cells[5, 27].GetStyle();
-        phoneStyle.Custom = "(###) ###-####";
-        worksheet.Cells[5, 27].SetStyle(phoneStyle);
+            // Get the first worksheet (you can change the index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the modified workbook (replace with desired output path)
-        workbook.Save("OutputWorkbook.xlsx");
+            // Merge cells AB6:AC8
+            // Row index is zero‑based (row 6 -> index 5)
+            // Column AB -> index 27, AC -> index 28
+            // Merge 3 rows (6‑8) and 2 columns (AB‑AC)
+            sheet.Cells.Merge(5, 27, 3, 2);
+
+            // Create a style with the custom phone number format "(###) ###‑####"
+            Style phoneStyle = workbook.CreateStyle();
+            phoneStyle.Custom = "(###) ###-####";
+
+            // Apply the style to the merged range (or any range that holds phone numbers)
+            // Use fully qualified Aspose.Cells.Range to avoid conflict with System.Range
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange(5, 27, 3, 2);
+            mergedRange.ApplyStyle(phoneStyle, new StyleFlag { NumberFormat = true });
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

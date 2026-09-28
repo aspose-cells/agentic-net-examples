@@ -1,52 +1,54 @@
-// Title: Export Workbooks with Thousands of Cell Comments to HTML using Aspose.Cells for .NET
-// Description: The sample builds a workbook, inserts 1,000 comments across 100 rows × 10 columns, enables HtmlSaveOptions.IsExportComments, optionally sets ExportCommentsType, and saves the result as an HTML file that retains every comment.
-// Keywords: Aspose.Cells HTML comment export | IsExportComments | ExportCommentsType | save workbook as HTML with comments | bulk comment export .NET | C# Aspose.Cells export Excel comments | HTMLSaveOptions | large comment dataset Aspose.Cells
-// Common Searches: Aspose.Cells export comments to HTML | Include cell comments when saving as HTML in .NET | HTMLSaveOptions IsExportComments example | Export thousands of Excel comments to HTML | Set ExportCommentsType in Aspose.Cells | C# save workbook with comments as HTML
-// Developer Intent: Generate an HTML version of an Excel file that contains all cell comments using Aspose.Cells for .NET.
-// Use Cases: Create a web‑ready report that shows every annotation from a heavily commented worksheet. | Archive an Excel document with extensive reviewer notes in a format viewable in browsers. | Provide stakeholders with an HTML preview that preserves comment context for quality‑control processes.
-// AI Prompts: Show how to export only comments from a specific author to HTML with Aspose.Cells. | Give C# code that styles exported comments using custom CSS in the HTML output. | Explain the effect of setting ExportCommentsType to PrintInPlace versus PrintInSeparateFile.
+// Title: How to export an Excel workbook that contains many cell comments to PDF and HTML while preserving all comments using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook, configures PdfSaveOptions to retain every cell comment, and saves the file as a PDF with Aspose.Cells. | Provide a C# example that sets up HtmlSaveOptions to embed all cell comments when converting a comment‑heavy worksheet to HTML using Aspose.Cells.
+// Common Searches: Aspose.Cells export workbook with comments to PDF C# | keep Excel cell comments when converting to HTML using Aspose.Cells .NET | C# save Excel file as PDF preserving all comments Aspose.Cells | export comment‑rich Excel sheet to HTML Aspose.Cells example | PdfSaveOptions comment preservation Aspose.Cells tutorial
+// Tags: export workbook to PDF with comments Aspose.Cells | export workbook to HTML with comments Aspose.Cells | PdfSaveOptions preserve cell comments | HtmlSaveOptions include all cell comments | Aspose.Cells handling comment‑rich worksheets C# | C# load workbook and save as PDF/HTML Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCommentExportDemo
+// The sample checks for the source Excel file, loads it with Aspose.Cells, creates default PdfSaveOptions and HtmlSaveOptions (which automatically include cell comments where supported), and saves the workbook as both PDF and HTML, handling any errors that may occur.
+class ExportWithComments
 {
-    // The sample builds a workbook, inserts 1,000 comments across 100 rows × 10 columns, enables HtmlSaveOptions.IsExportComments, optionally sets ExportCommentsType, and saves the result as an HTML file that retains every comment.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string pdfOutputPath = "output.pdf";
+        const string htmlOutputPath = "output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Load the workbook that contains many cell comments
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a large number of comments to simulate extensive comments
-            for (int row = 0; row < 100; row++)
-            {
-                for (int col = 0; col < 10; col++)
-                {
-                    // Add a comment to the current cell
-                    int commentIndex = sheet.Comments.Add(row, col);
-                    Comment comment = sheet.Comments[commentIndex];
-                    comment.Note = $"Comment at {CellsHelper.CellIndexToName(row, col)}";
-                    comment.Author = "DemoUser";
-                }
-            }
+            // ---------- Export to PDF ----------
+            // Create PDF save options (default settings export comments where supported)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Configure HTML save options to export comments
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Enable exporting of comments (default is false)
-                IsExportComments = true,
+            // Save the workbook as PDF using the configured options
+            workbook.Save(pdfOutputPath, pdfOptions);
+            Console.WriteLine($"PDF file saved to \"{pdfOutputPath}\".");
 
-                // Optionally, specify how comments are exported
-                // ExportCommentsType = PrintCommentsType.PrintInPlace
-            };
+            // ---------- Export to HTML ----------
+            // Create HTML save options (default settings export cell comments where supported)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Save the workbook as HTML with comments exported
-            workbook.Save("WorkbookWithComments.html", htmlOptions);
+            // Save the workbook as HTML using the configured options
+            workbook.Save(htmlOutputPath, htmlOptions);
+            Console.WriteLine($"HTML file saved to \"{htmlOutputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

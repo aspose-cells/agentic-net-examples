@@ -1,56 +1,69 @@
-// Title: Add a text watermark at (50,400) to every page of a PDF using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, defines a RenderingFont, builds a RenderingWatermark with the text "CONFIDENTIAL" positioned 50 pts from the left and 400 pts from the top, assigns it to PdfSaveOptions, and saves the workbook as a PDF where the watermark is rendered on each page.
-// Keywords: Aspose.Cells PDF watermark C# | RenderingWatermark offset | PdfSaveOptions watermark | watermark coordinates Aspose.Cells | cross‑string watermark | C# PDF export watermark | Aspose.Cells RenderingFont
-// Common Searches: Aspose.Cells place text watermark at specific coordinates | C# add watermark to every page of PDF with Aspose.Cells | set RenderingWatermark offset X Y Aspose.Cells | PdfSaveOptions watermark background PDF export | Aspose.Cells cross‑string watermark example
-// Developer Intent: Add a semi‑transparent text watermark at the (50,400) point on each page of a PDF generated from an Excel workbook.
-// Use Cases: Generate confidential reports with a fixed‑position watermark on all pages. | Embed a company disclaimer at a precise location when exporting Excel templates to PDF. | Automate batch PDF creation from multiple workbooks while maintaining consistent watermark placement for compliance.
-// AI Prompts: Show how to rotate the watermark 45° while keeping the (50,400) offset in Aspose.Cells. | Provide code that reads the watermark text from a variable and applies it using RenderingWatermark. | Explain how to assign different watermarks to odd and even pages when saving a workbook as PDF.
+// Title: Add a diagonal 'CONFIDENTIAL' watermark at coordinates (50,400) to every page of a PDF generated from an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, inserts a semi‑transparent WordArt watermark reading 'CONFIDENTIAL' at position (50,400) on each worksheet, rotates it -45°, and saves the workbook as a PDF. | Show how to use Aspose.Cells' Shapes.AddTextEffect method to place a diagonal watermark at specific coordinates, set its transparency and Z‑order, then export the workbook to PDF in C#. | Provide a complete example that validates the input Excel file, adds the same cross‑string watermark to all sheets, and writes the output PDF with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add watermark text at exact X Y coordinates before PDF export | How to place a diagonal CONFIDENTIAL watermark on each page of a PDF generated from Excel using Aspose.Cells | C# Aspose.Cells add semi transparent WordArt shape as watermark to all worksheets | Set watermark rotation and transparency with Aspose.Cells when saving workbook as PDF | Apply identical watermark to every sheet in an Excel workbook and export to PDF with Aspose.Cells
+// Tags: Aspose.Cells add watermark shape | C# Aspose.Cells PDF export with watermark | Shapes.AddTextEffect watermark coordinates | semi transparent rotated watermark Aspose.Cells | Excel to PDF watermark each worksheet
 
-using System.Drawing;
+using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Creates a workbook, defines a RenderingFont, builds a RenderingWatermark with the text "CONFIDENTIAL" positioned 50 pts from the left and 400 pts from the top, assigns it to PdfSaveOptions, and saves the workbook as a PDF where the watermark is rendered on each page.
-class WatermarkExample
+// // Loads an Excel file, adds a semi‑transparent diagonal 'CONFIDENTIAL' WordArt watermark at (50,400) on every worksheet, and saves the workbook as a PDF using Aspose.Cells.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add some sample data (optional)
-        worksheet.Cells["A1"].PutValue("Sample data for PDF with watermark");
-
-        // Define the font for the watermark text
-        RenderingFont font = new RenderingFont("Arial", 36)
+        try
         {
-            Bold = true,
-            Color = Color.Gray
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Create a text watermark
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+
+            // Load the workbook (load rule)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Add watermark text to each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Insert a WordArt shape with the watermark text.
+                // Parameters: preset, text, font name, font size, bold, italic,
+                // left, top, width, height, leftColumn, topRow
+                Shape watermark = sheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1, // preset effect
+                    "CONFIDENTIAL",                  // watermark text
+                    "Arial",                         // font name
+                    48,                              // font size
+                    false,                           // bold
+                    false,                           // italic
+                    50,                              // left (X) position
+                    400,                             // top (Y) position
+                    300,                             // width
+                    100,                             // height
+                    0,                               // left column
+                    0);                              // top row
+
+                // Make the watermark semi‑transparent
+                watermark.Fill.Transparency = 0.5;
+
+                // Remove outline by making the line fully transparent
+                watermark.Line.Transparency = 1;
+
+                // Rotate for typical watermark appearance
+                watermark.RotationAngle = -45;
+
+                // Send shape to back so it appears behind cell data
+                watermark.ZOrderPosition = 0;
+            }
+
+            // Save the workbook as PDF (save rule)
+            workbook.Save(outputPath, SaveFormat.Pdf);
+        }
+        catch (Exception ex)
         {
-            // Position the watermark at (50, 400) points from the top‑left corner
-            HAlignment = TextAlignmentType.Left,
-            VAlignment = TextAlignmentType.Top,
-            OffsetX = 50f,
-            OffsetY = 400f,
-
-            // Additional appearance settings
-            Rotation = 0f,
-            Opacity = 0.3f,
-            IsBackground = true
-        };
-
-        // Configure PDF save options to include the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
-
-        // Save the workbook as a PDF; the watermark will appear on every page
-        workbook.Save("WatermarkedOutput.pdf", pdfOptions);
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

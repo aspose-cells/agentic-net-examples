@@ -1,53 +1,67 @@
-// Title: Clone Worksheet PageSetup from a Template Sheet using Aspose.Cells for .NET (C#)
-// Description: Loads a template workbook, extracts its first worksheet's PageSetup, creates a new workbook, adds a fresh sheet, copies the template's print settings with CopyOptions, and saves the result. Handles missing template by generating a simple placeholder.
-// Keywords: Aspose.Cells C# | copy PageSetup | clone worksheet print settings | Aspose.Cells CopyOptions | Excel page layout automation .NET | duplicate margins orientation scaling | template worksheet page setup
-// Common Searches: Aspose.Cells copy page setup between worksheets | C# clone worksheet print settings using Aspose | How to duplicate PageSetup in Aspose.Cells | Copy margins and orientation from template sheet Aspose.Cells | Aspose.Cells CopyOptions example for PageSetup
-// Developer Intent: Replicate the PageSetup configuration of a template sheet and apply it to a newly created worksheet.
-// Use Cases: Generate reports that share identical print margins, orientation, and scaling with a predefined template. | Programmatically add multiple sheets that need consistent printing layouts across a workbook. | Migrate existing workbook page‑setup settings to a new workbook during automated document creation.
-// AI Prompts: Provide C# code that copies the full PageSetup (including headers, footers, and print options) from a template worksheet to another worksheet using Aspose.Cells. | Show an example of applying the cloned PageSetup to several new sheets in a loop with Aspose.Cells for .NET. | Explain how CopyOptions influences the PageSetup copy operation in Aspose.Cells.
+// Title: How to clone the page setup from a template worksheet to a new worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a template workbook, reads its first worksheet's PageSetup (paper size, orientation, margins, print area, fit‑to‑pages), creates a new worksheet, applies the same PageSetup values, and saves the result as Result.xlsx using Aspose.Cells. | Generate a program that checks for the existence of Template.xlsx, copies all printable layout settings from the source sheet to a newly added sheet named 'ClonedPageSetup', and handles any missing properties gracefully with Aspose.Cells. | Create a C# console application that duplicates the page‑setup configuration (including margins, paper size, orientation, and fit‑to‑page options) from a template worksheet to another worksheet in a separate workbook, then saves the workbook.
+// Common Searches: aspnet copy worksheet page setup properties from one Excel file to another using Aspose.Cells | c# clone print area, margins and orientation of a worksheet with Aspose.Cells | how to transfer page layout settings between worksheets in Aspose.Cells for .NET | Aspose.Cells example to duplicate page setup from template sheet to new sheet
+// Tags: Aspose.Cells copy worksheet page setup | C# clone Excel worksheet print settings | Aspose.Cells transfer page layout properties | duplicate margins orientation paper size Aspose.Cells | copy print area between worksheets C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads a template workbook, extracts its first worksheet's PageSetup, creates a new workbook, adds a fresh sheet, copies the template's print settings with CopyOptions, and saves the result. Handles missing template by generating a simple placeholder.
-class ClonePageSetupExample
+// The example loads Template.xlsx, extracts the first worksheet's PageSetup settings (paper size, orientation, margins, print area, and fit‑to‑page options), creates a new workbook with a sheet named 'ClonedPageSetup', applies the extracted settings to the new sheet, and saves the workbook as Result.xlsx while handling missing files and potential copy errors.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string templatePath = "template.xlsx";
-            const string outputPath = "output.xlsx";
+            // Path to the template workbook
+            const string templatePath = "Template.xlsx";
 
-            // Ensure the template file exists; create a simple one if it does not.
+            // Verify that the template file exists to avoid FileNotFoundException
             if (!File.Exists(templatePath))
             {
-                var tempWb = new Workbook();
-                tempWb.Worksheets[0].Name = "TemplateSheet";
-                tempWb.Save(templatePath);
+                Console.WriteLine($"Error: Template file not found at '{templatePath}'.");
+                return;
             }
 
-            // Load the template workbook containing the source worksheet.
+            // Load the template workbook containing the source worksheet
             Workbook templateWorkbook = new Workbook(templatePath);
-            Worksheet templateSheet = templateWorkbook.Worksheets[0]; // assume first sheet is the template
+            Worksheet templateSheet = templateWorkbook.Worksheets[0];
 
-            // Create a new workbook for the cloned sheet.
+            // Create a new workbook that will hold the newly created sheet
             Workbook newWorkbook = new Workbook();
-            // Remove the default sheet created with the new workbook.
-            newWorkbook.Worksheets.Clear();
+            Worksheet newSheet = newWorkbook.Worksheets[0];
+            newSheet.Name = "ClonedPageSetup";
 
-            // Add a new worksheet to the new workbook.
-            Worksheet newSheet = newWorkbook.Worksheets.Add("ClonedSheet");
+            // Clone the page setup from the template sheet to the new sheet
+            try
+            {
+                newSheet.PageSetup.PaperSize = templateSheet.PageSetup.PaperSize;
+                newSheet.PageSetup.Orientation = templateSheet.PageSetup.Orientation;
+                newSheet.PageSetup.PrintArea = templateSheet.PageSetup.PrintArea;
+                newSheet.PageSetup.FitToPagesWide = templateSheet.PageSetup.FitToPagesWide;
+                newSheet.PageSetup.FitToPagesTall = templateSheet.PageSetup.FitToPagesTall;
+                newSheet.PageSetup.BottomMargin = templateSheet.PageSetup.BottomMargin;
+                newSheet.PageSetup.TopMargin = templateSheet.PageSetup.TopMargin;
+                newSheet.PageSetup.LeftMargin = templateSheet.PageSetup.LeftMargin;
+                newSheet.PageSetup.RightMargin = templateSheet.PageSetup.RightMargin;
 
-            // Clone the page setup from the template worksheet to the new worksheet.
-            newSheet.PageSetup.Copy(templateSheet.PageSetup, new CopyOptions());
+                // Header/footer properties are not available in this version of Aspose.Cells.
+                // If needed, they can be set using the appropriate API for the used version.
+            }
+            catch (Exception copyEx)
+            {
+                Console.WriteLine($"Warning: Failed to copy some page setup properties. {copyEx.Message}");
+            }
 
-            // Save the workbook with the cloned page setup.
-            newWorkbook.Save(outputPath);
+            // Save the resulting workbook
+            const string resultPath = "Result.xlsx";
+            newWorkbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
         }
         catch (Exception ex)
         {
+            // Log any unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

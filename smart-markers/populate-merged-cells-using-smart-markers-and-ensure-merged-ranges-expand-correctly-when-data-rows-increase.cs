@@ -1,73 +1,96 @@
-// Title: Aspose.Cells for .NET – Populate Merged Cells with Smart Markers and Auto‑Expand Rows
-// Description: Demonstrates how to create a workbook, merge a header (A1:C1) and a data row (A2:C2), name the merged range as _CellsSmartMarkers, bind a List<Person> to smart markers (&=Data.Name, &=Data.Age), and use WorkbookDesigner to process the template so that the merged row repeats and expands for every record.
-// Keywords: Aspose.Cells | smart markers | merged cells | auto expand rows | WorkbookDesigner | C# | .NET | named smart marker range | populate merged range | list data source
-// Common Searches: Aspose.Cells smart markers merged cells example | auto expand merged rows with WorkbookDesigner | populate merged range from List<T> in C# | how to name smart marker range _CellsSmartMarkers | fill merged header and data rows using Aspose.Cells
-// Developer Intent: Generate a spreadsheet where a merged block is filled via smart markers and automatically repeats for each item in a collection.
-// Use Cases: Create an employee directory with a merged title row and a merged data row that expands for every employee object. | Design a financial report template where a merged section (e.g., A2:C2) serves as a repeating block for transaction records. | Build a printable invoice where product lines are placed in a merged area that grows with the number of line items.
-// AI Prompts: Show code that defines a merged range as a smart marker, binds a List<Person>, and processes it so the merged rows expand automatically. | Explain why the merged cells must be created before calling WorkbookDesigner.Process and why the range name _CellsSmartMarkers is required. | Provide a step‑by‑step guide to set up a merged header, add smart markers in a merged data row, and save the workbook using Aspose.Cells for .NET.
+// Title: How to populate merged header cells and auto‑expand smart‑marker rows in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates an Excel workbook, merges a header row across columns, inserts a smart‑marker row, binds a List<Product> to WorkbookDesigner, and processes the markers to duplicate rows for each product. | Show how to keep the merged header unchanged while the smart‑marker range expands dynamically based on the data source size in Aspose.Cells. | Demonstrate applying custom styling to a merged header after processing smart markers and saving the workbook as an .xlsx file.
+// Common Searches: aspnet c# using Aspose.Cells smart markers with merged header rows | expand smart marker rows automatically when binding a list in Aspose.Cells | preserve merged cells while processing smart markers in Excel using Aspose.Cells | naming convention for smart marker ranges in Aspose.Cells designer | example of WorkbookDesigner processing a List<T> with merged header in C#
+// Tags: merge header cells Aspose.Cells | smart marker row expansion WorkbookDesigner | CellsSmartMarkers range naming convention | populate Excel from C# List Aspose.Cells | maintain merged header during smart marker processing
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace SmartMarkersMergedCellsDemo
+namespace AsposeCellsSmartMarkersMergedDemo
 {
     // Sample data class
-    // Demonstrates how to create a workbook, merge a header (A1:C1) and a data row (A2:C2), name the merged range as _CellsSmartMarkers, bind a List<Person> to smart markers (&=Data.Name, &=Data.Age), and use WorkbookDesigner to process the template so that the merged row repeats and expands for every record.
-    public class Person
+    // C# example that creates a workbook with a merged header, defines a smart‑marker range, binds a List<Product> to WorkbookDesigner, processes the markers to auto‑expand data rows while keeping the merged header intact, applies header styling, and saves the file as SmartMarkersMergedDemo.xlsx.
+    public class Product
     {
+        public string Category { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
+        public double Price { get; set; }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                // Create a new workbook (lifecycle create)
+                // ---------- Create a new workbook (lifecycle rule: create) ----------
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // ----- Template setup -----
-                // Header row (merged across A1:C1)
-                cells["A1"].PutValue("Employee List");
-                cells.Merge(0, 0, 1, 3); // Merge A1:C1
+                // ---------- Define a merged header that should span the data columns ----------
+                // Merge cells A1:C1 to create a header area
+                cells.Merge(0, 0, 1, 3);
+                cells[0, 0].PutValue("Product List");
+                // Apply a simple style to the merged header
+                Style headerStyle = cells[0, 0].GetStyle();
+                headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+                headerStyle.VerticalAlignment = TextAlignmentType.Center;
+                headerStyle.Font.IsBold = true;
+                cells[0, 0].SetStyle(headerStyle);
 
-                // Data row with smart markers (row 2 -> index 1)
-                cells["A2"].PutValue("&=Data.Name"); // Smart marker for Name
-                cells["B2"].PutValue("&=Data.Age");  // Smart marker for Age
-                cells["C2"].PutValue("Static Text"); // Additional column (optional)
+                // ---------- Add column titles ----------
+                cells[1, 0].PutValue("Category");
+                cells[1, 1].PutValue("Name");
+                cells[1, 2].PutValue("Price");
 
-                // Merge the data row across A2:C2 to demonstrate expansion
-                cells.Merge(1, 0, 1, 3); // Merge A2:C2
+                // ---------- Insert smart markers for the data rows ----------
+                // Smart markers are placed in the row that will be repeated for each data item.
+                // The range A3:C3 will be duplicated for each Product in the data source.
+                cells[2, 0].PutValue("&=Category");
+                cells[2, 1].PutValue("&=Name");
+                cells[2, 2].PutValue("&=Price");
 
-                // Define the smart marker range (required for processing)
-                AsposeRange smartRange = cells.CreateRange("A2:C2");
-                smartRange.Name = "_CellsSmartMarkers";
+                // Name the range that contains the smart markers.
+                // The name must start with an underscore and end with "_CellsSmartMarkers"
+                // so that WorkbookDesigner recognises it automatically.
+                AsposeRange dataRange = cells.CreateRange(2, 0, 1, 3);
+                dataRange.Name = "_DataRange_CellsSmartMarkers";
 
-                // ----- Data source -----
-                List<Person> persons = new List<Person>
+                // ---------- Prepare sample data ----------
+                List<Product> products = new List<Product>
                 {
-                    new Person { Name = "John Doe", Age = 30 },
-                    new Person { Name = "Jane Smith", Age = 28 },
-                    new Person { Name = "Bob Johnson", Age = 45 }
+                    new Product { Category = "Beverages", Name = "Tea",      Price = 1.20 },
+                    new Product { Category = "Beverages", Name = "Coffee",   Price = 2.50 },
+                    new Product { Category = "Snacks",    Name = "Cookies",  Price = 3.10 },
+                    new Product { Category = "Snacks",    Name = "Chips",    Price = 1.80 }
                 };
 
-                // ----- Process smart markers -----
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource("Data", persons);
-                designer.Process(); // Populate data; merged rows will expand automatically
+                // ---------- Set up WorkbookDesigner and bind the data source ----------
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                // Bind the list of products to the designer.
+                designer.SetDataSource("Products", products);
 
-                // Save the result (lifecycle save)
-                workbook.Save("SmartMarkersMergedCellsOutput.xlsx");
+                // ---------- Process smart markers (lifecycle rule: process) ----------
+                // The designer will expand the range containing the smart markers,
+                // inserting as many rows as there are items in the data source.
+                // Merged cells defined outside the smart‑marker range (the header) remain intact.
+                designer.Process();
+
+                // ---------- Save the result (lifecycle rule: save) ----------
+                string outputPath = "SmartMarkersMergedDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

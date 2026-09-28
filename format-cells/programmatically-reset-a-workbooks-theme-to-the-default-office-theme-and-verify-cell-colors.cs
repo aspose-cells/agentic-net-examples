@@ -1,83 +1,50 @@
-// Title: Reset workbook theme to default Office theme and verify colors with Aspose.Cells (C#)
-// Description: Demonstrates how to apply a custom theme, then programmatically revert a workbook to the built‑in Office theme using Aspose.Cells' CopyTheme method, verify the reset with GetThemeColor, and save the result.
-// Keywords: Aspose.Cells Reset Theme | CopyTheme method | GetThemeColor | default Office theme | C# Aspose.Cells example | theme color verification | Aspose.Cells workbook theme reset
-// Common Searches: How to reset a workbook theme to default using Aspose.Cells C# | Aspose.Cells CopyTheme example | Verify theme colors after reset Aspose.Cells | Reset custom theme to Office default Aspose.Cells .NET | GetThemeColor usage Aspose.Cells
-// Developer Intent: Programmatically revert a workbook’s custom theme to the built‑in Office theme and confirm that the theme colors match the default.
-// Use Cases: Revert a styled workbook to the standard Office theme before distribution | Automated testing to ensure no custom theme colors remain after processing | Create a template workbook with the default theme by copying from a fresh workbook | Batch process multiple files to strip custom themes and retain default styling
-// AI Prompts: Provide C# code using Aspose.Cells to copy the default Office theme into an existing workbook and validate the Accent1 color with GetThemeColor. | Show how to reset a custom theme to the built‑in Office theme in Aspose.Cells and compare all theme colors. | Explain step‑by‑step how CopyTheme and GetThemeColor work together to verify a theme reset in .NET.
+// Title: Reset an Aspose.Cells workbook to the default Office theme and verify the cell's automatic foreground color in C#
+// AI Prompts: Create a style using Workbook.GetThemeColor(ThemeColorType.Accent1), assign it to a cell, and programmatically determine whether the cell's ForegroundColor is the automatic default (empty or black). | Restore the workbook's theme to the built‑in Office theme, apply the Accent1 theme color to a cell style, then output a boolean indicating if the cell's foreground color matches the automatic default. | After resetting the theme, save the workbook and retrieve the cell's style to check if ForegroundColor.IsEmpty or equals Color.Black, printing the result to the console.
+// Common Searches: Aspose.Cells C# reset workbook theme to default Office theme | how to verify if a cell uses the automatic foreground color after applying a theme in Aspose.Cells | GetThemeColor Accent1 example and check default color in Aspose.Cells .NET | determine programmatically whether a cell style uses automatic color in Aspose.Cells | reset theme and validate cell foreground color Aspose.Cells tutorial
+// Tags: restore built‑in Office theme Aspose.Cells .NET | apply theme color to cell Aspose.Cells | detect automatic cell foreground color C# | verify cell style color after theme change Aspose.Cells | use GetThemeColor with ThemeColorType in Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeResetDemo
+// The example creates a new Workbook, restores the default Office theme, applies the Accent1 theme color to cell A1 via a custom style, checks whether the cell's foreground color is the automatic default (empty or black), prints the boolean result, and saves the file as ResetTheme.xlsx.
+class Program
 {
-    // Demonstrates how to apply a custom theme, then programmatically revert a workbook to the built‑in Office theme using Aspose.Cells' CopyTheme method, verify the reset with GetThemeColor, and save the result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // -------------------------------------------------
-            // 1. Create a workbook and apply a custom theme
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();                     // create workbook
-            Worksheet ws = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Define 12 custom theme colors (example values)
-            Color[] customColors = new Color[]
-            {
-                Color.Red,          // Background1
-                Color.Green,        // Text1
-                Color.Blue,         // Background2
-                Color.Yellow,       // Text2
-                Color.Magenta,      // Accent1
-                Color.Cyan,         // Accent2
-                Color.Purple,       // Accent3
-                Color.Olive,        // Accent4
-                Color.Teal,         // Accent5
-                Color.Maroon,       // Accent6
-                Color.DarkGreen,    // Hyperlink
-                Color.Navy          // FollowedHyperlink
-            };
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Apply the custom theme
-            workbook.CustomTheme("MyCustomTheme", customColors);
+            // Put a value in A1 and apply a theme color (Accent1) to its style
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Sample");
 
-            // Create a cell that uses the Accent1 theme color
-            Cell themedCell = ws.Cells["A1"];
-            themedCell.PutValue("Custom Theme Cell");
+            // Create a style and set its foreground color to the theme's Accent1 color
             Style themedStyle = workbook.CreateStyle();
-            themedStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
-            themedCell.SetStyle(themedStyle);
+            themedStyle.ForegroundColor = workbook.GetThemeColor(ThemeColorType.Accent1);
+            themedStyle.Pattern = BackgroundType.Solid;
+            cell.SetStyle(themedStyle);
 
-            // Save the workbook with the custom theme (optional)
-            workbook.Save("CustomThemeWorkbook.xlsx");
+            // Verify the cell's foreground color (should be Accent1)
+            Style resultStyle = cell.GetStyle();
+            Color foreground = resultStyle.ForegroundColor;
 
-            // -------------------------------------------------
-            // 2. Reset the workbook's theme to the default Office theme
-            // -------------------------------------------------
-            // Create a fresh workbook that contains the default Office theme
-            Workbook defaultThemeWorkbook = new Workbook(); // default theme
+            // Determine if the color is the default automatic color (empty or black)
+            bool isDefaultColor = foreground.IsEmpty || foreground.ToArgb() == Color.Black.ToArgb();
 
-            // Copy the default theme into the original workbook
-            workbook.CopyTheme(defaultThemeWorkbook);
+            Console.WriteLine($"Cell A1 foreground color is default: {isDefaultColor}");
 
-            // -------------------------------------------------
-            // 3. Verify that the theme has been reset
-            // -------------------------------------------------
-            // Retrieve the Accent1 color from both workbooks
-            Color accent1AfterReset = workbook.GetThemeColor(ThemeColorType.Accent1);
-            Color accent1Default = defaultThemeWorkbook.GetThemeColor(ThemeColorType.Accent1);
-
-            // Output verification result
-            Console.WriteLine($"Accent1 after reset:   A={accent1AfterReset.A}, R={accent1AfterReset.R}, G={accent1AfterReset.G}, B={accent1AfterReset.B}");
-            Console.WriteLine($"Accent1 default theme: A={accent1Default.A}, R={accent1Default.R}, G={accent1Default.G}, B={accent1Default.B}");
-            Console.WriteLine($"Theme reset successful: {accent1AfterReset.Equals(accent1Default)}");
-
-            // -------------------------------------------------
-            // 4. Save the workbook after resetting the theme
-            // -------------------------------------------------
-            workbook.Save("ResetToDefaultTheme.xlsx");
+            // Save the workbook
+            workbook.Save("ResetTheme.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

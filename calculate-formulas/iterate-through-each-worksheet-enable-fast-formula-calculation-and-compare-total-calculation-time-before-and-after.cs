@@ -1,102 +1,66 @@
-// Title: Benchmark Fast Formula Calculation with EnableCalculationChain across Multiple Worksheets in Aspose.Cells for .NET
-// Description: This C# example builds a workbook with three worksheets, each containing 2,000 rows of numeric data, simple multiplication formulas, and cumulative SUM formulas. It measures the total calculation time using the default engine, then enables the fast formula calculation feature (EnableCalculationChain), recalculates, and records the new timing before saving the file. The sample demonstrates how to profile performance gains when processing large workbooks with Aspose.Cells.
-// Keywords: Aspose.Cells fast formula calculation | EnableCalculationChain .NET | benchmark formula performance | measure workbook calculation time | Aspose.Cells C# performance test | formula calculation chain | large workbook profiling
-// Common Searches: Aspose.Cells enable calculation chain performance | how to benchmark formula calculation in Aspose.Cells | measure calculation time before and after EnableCalculationChain | C# Aspose.Cells fast formula evaluation example | compare workbook calculation speed Aspose.Cells
-// Developer Intent: Assess the speed improvement obtained by turning on EnableCalculationChain when evaluating formulas across all worksheets in a large Aspose.Cells workbook.
-// Use Cases: Profile a heavy workbook to decide if the calculation chain should be enabled in production. | Validate that cumulative SUM formulas run faster with the fast calculation mode. | Generate timing reports for formula evaluation before and after enabling the calculation chain.
-// AI Prompts: Write C# code that iterates through each worksheet, enables EnableCalculationChain, and logs calculation time per worksheet using Aspose.Cells. | Explain how to interpret the timing results and set performance thresholds for using the calculation chain in Aspose.Cells. | Show how to temporarily disable EnableCalculationChain after measurement and recompute formulas to verify identical results.
+// Title: Measure the effect of Aspose.Cells calculation chain on formula evaluation speed across multiple worksheets in C#
+// AI Prompts: Generate C# code with Aspose.Cells that loops through every worksheet, disables the calculation chain, times Workbook.CalculateFormula, then enables the chain and times it again, printing both durations. | Extend the sample to record the elapsed time for each worksheet separately, store the results in a DataTable, and write the performance data to a CSV file. | Create a version of the program that accepts the row count per sheet as a command‑line argument and compares calculation‑chain performance for small (100 rows), medium (1,000 rows), and large (10,000 rows) workbooks.
+// Common Searches: how to benchmark Aspose.Cells formula calculation speed with calculation chain enabled | C# Aspose.Cells measure CalculateFormula execution time per worksheet | compare performance of fast formula calculation versus normal in Aspose.Cells .NET | disable and enable calculation chain in Aspose.Cells to improve recalc time
+// Tags: Aspose.Cells calculation chain performance | benchmark Workbook.CalculateFormula .NET | measure formula evaluation time Aspose.Cells | iterate worksheets fast calculation Aspose.Cells | export performance data to CSV C#
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace FastFormulaCalculationDemo
+// The program creates a workbook with two worksheets, fills each with a chain of dependent formulas, disables the calculation chain, measures the time required for Workbook.CalculateFormula, then enables the calculation chain, measures again, compares the two timings, outputs the results, and saves the workbook as Result.xlsx.
+class Program
 {
-    // This C# example builds a workbook with three worksheets, each containing 2,000 rows of numeric data, simple multiplication formulas, and cumulative SUM formulas. It measures the total calculation time using the default engine, then enables the fast formula calculation feature (EnableCalculationChain), recalculates, and records the new timing before saving the file. The sample demonstrates how to profile performance gains when processing large workbooks with Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Add an extra worksheet to have multiple sheets
+        workbook.Worksheets.Add();
+
+        // Populate each worksheet with sample data and formulas
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            Cells cells = sheet.Cells;
+
+            // Simple chain of formulas to create dependency
+            cells["A1"].PutValue(1);
+            for (int i = 2; i <= 1000; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add sample worksheets and formulas to simulate a heavy workbook
-                const int sheetCount = 3;
-                const int rowCount = 2000; // number of rows per sheet
-
-                for (int s = 0; s < sheetCount; s++)
-                {
-                    Worksheet sheet;
-                    if (s == 0)
-                    {
-                        // Use the default first sheet
-                        sheet = workbook.Worksheets[0];
-                    }
-                    else
-                    {
-                        // Add a new sheet and retrieve it
-                        int newIndex = workbook.Worksheets.Add();
-                        sheet = workbook.Worksheets[newIndex];
-                    }
-
-                    // Populate column A with numeric values
-                    for (int r = 0; r < rowCount; r++)
-                    {
-                        sheet.Cells[r, 0].PutValue(r + 1);
-                    }
-
-                    // Populate column B with a simple formula that depends on column A (e.g., =A1*2)
-                    for (int r = 0; r < rowCount; r++)
-                    {
-                        sheet.Cells[r, 1].Formula = $"=A{r + 1}*2";
-                    }
-
-                    // Populate column C with a cumulative SUM formula (e.g., =SUM(A1:A{row}))
-                    for (int r = 0; r < rowCount; r++)
-                    {
-                        sheet.Cells[r, 2].Formula = $"=SUM(A1:A{r + 1})";
-                    }
-                }
-
-                // ------------------------------------------------------------
-                // 1. Calculate formulas without calculation chain (default)
-                // ------------------------------------------------------------
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-
-                // Calculate all formulas in the workbook
-                workbook.CalculateFormula();
-
-                sw.Stop();
-                TimeSpan timeWithoutChain = sw.Elapsed;
-                Console.WriteLine($"Calculation time without chain: {timeWithoutChain.TotalMilliseconds} ms");
-
-                // ------------------------------------------------------------
-                // 2. Enable fast formula calculation (calculation chain)
-                // ------------------------------------------------------------
-                workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-
-                // Recalculate formulas to measure the effect of the chain
-                sw.Restart();
-
-                // First run after enabling may include chain building overhead
-                workbook.CalculateFormula();
-
-                sw.Stop();
-                TimeSpan timeWithChain = sw.Elapsed;
-                Console.WriteLine($"Calculation time with chain enabled: {timeWithChain.TotalMilliseconds} ms");
-
-                // ------------------------------------------------------------
-                // Optional: Save the workbook (demonstrates usage of save rule)
-                // ------------------------------------------------------------
-                workbook.Save("FastFormulaCalculationResult.xlsx", SaveFormat.Xlsx);
+                cells[$"A{i}"].Formula = $"=A{i - 1}+1";
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // A summary formula that sums the column
+            cells["B1"].Formula = "=SUM(A1:A1000)";
         }
+
+        // Ensure fast calculation (calculation chain) is disabled initially
+        workbook.Settings.FormulaSettings.EnableCalculationChain = false;
+
+        // Measure calculation time without the calculation chain
+        Stopwatch sw = Stopwatch.StartNew();
+        workbook.CalculateFormula();
+        sw.Stop();
+        long timeWithoutChain = sw.ElapsedMilliseconds;
+        Console.WriteLine($"Calculation time without chain: {timeWithoutChain} ms");
+
+        // Enable fast formula calculation (calculation chain)
+        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+
+        // Measure calculation time with the calculation chain enabled
+        sw.Restart();
+        workbook.CalculateFormula();
+        sw.Stop();
+        long timeWithChain = sw.ElapsedMilliseconds;
+        Console.WriteLine($"Calculation time with chain: {timeWithChain} ms");
+
+        // Compare the two timings
+        if (timeWithChain < timeWithoutChain)
+            Console.WriteLine("Fast calculation improved performance.");
+        else
+            Console.WriteLine("Fast calculation did not improve performance.");
+
+        // Save the workbook (optional)
+        workbook.Save("Result.xlsx", SaveFormat.Xlsx);
     }
 }

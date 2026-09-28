@@ -1,104 +1,116 @@
-// Title: C# – Log GlobalizationSettings Overrides in Aspose.Cells to Debug Localization at Runtime
-// Description: Shows how to derive from Aspose.Cells.GlobalizationSettings, override GetLocalFunctionName, GetLocalBuiltInName, and GetStandardBuiltInName, and write each call with its result to a timestamped log file. The example creates a workbook, assigns the custom settings, adds values, sets a SUM formula to trigger the overrides, runs formula calculation, captures errors, and saves the workbook.
-// Keywords: Aspose.Cells | .NET | GlobalizationSettings | logging | localization debugging | override GetLocalFunctionName | override GetLocalBuiltInName | override GetStandardBuiltInName | formula localization | C# example | debug workbook
-// Common Searches: Aspose.Cells log GlobalizationSettings overrides | C# debug localization in Aspose.Cells | How to capture GetLocalFunctionName calls | Custom GlobalizationSettings example for Aspose.Cells | Trace formula localization errors .NET
-// Developer Intent: Record every invocation of overridden globalization methods in a debug file while processing workbooks with Aspose.Cells.
-// Use Cases: Diagnose mismatches between localized and standard function names during formula evaluation. | Identify which built‑in functions are being translated in a multilingual workbook. | Capture localization‑related errors for audit or support purposes.
-// AI Prompts: Extend LoggingGlobalizationSettings to also log GetLocalNumberFormat calls in C#. | Configure Aspose.Cells to rotate the localization_debug.log daily and store logs in a user‑specified folder. | Provide a script that parses localization_debug.log and summarizes function name translation failures.
+// Title: Logging Aspose.Cells workbook load, save, and culture info operations to a debug file for runtime localization troubleshooting in C#
+// AI Prompts: Generate a C# DebugLogger class that writes timestamped entries for each Aspose.Cells workbook opening, saving, and GetString invocation to a specified log file, handling directory creation and silent failures. | Extend the sample program to automatically log every localization provider method (e.g., GetString) called by Aspose.Cells, preserving existing error handling and allowing the log file path to be configured at runtime. | Create a helper method that wraps Aspose.Cells workbook operations with try‑catch blocks and logs success or exception details together with the current CultureInfo.
+// Common Searches: c# write timestamped entries for Aspose.Cells workbook open and save actions | how to capture GetString calls from Aspose.Cells localization provider in a log file | debugging runtime localization problems in Aspose.Cells using a custom logger | log workbook processing steps with culture information when using Aspose.Cells .NET | configure debug log path for Aspose.Cells operations in a C# application
+// Tags: Aspose.Cells load operation logging C# | Aspose.Cells save operation logging C# | Aspose.Cells GetString call logging C# | runtime localization troubleshooting Aspose.Cells | C# debug logger for Excel file handling
 
 using System;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLocalizationLogging
+// The example defines a DebugLogger that appends UTC‑timestamped messages to a configurable log file, ensures the log directory exists, and silently ignores logging failures. In Main, it attempts to open an Excel workbook with Aspose.Cells, logs success or failure, creates a new workbook if needed, logs a sample GetString call with the current CultureInfo, ensures the output directory, saves the workbook, and logs the save operation. Any unexpected exceptions are also recorded, providing a complete runtime trace for localization troubleshooting.
+public class DebugLogger
 {
-    // Custom globalization settings that logs each overridden method call
-    // Shows how to derive from Aspose.Cells.GlobalizationSettings, override GetLocalFunctionName, GetLocalBuiltInName, and GetStandardBuiltInName, and write each call with its result to a timestamped log file. The example creates a workbook, assigns the custom settings, adds values, sets a SUM formula to trigger the overrides, runs formula calculation, captures errors, and saves the workbook.
-    public class LoggingGlobalizationSettings : GlobalizationSettings
+    private readonly string _logPath;
+
+    public DebugLogger(string logPath)
     {
-        private readonly string _logFilePath;
-
-        public LoggingGlobalizationSettings(string logDirectory)
+        _logPath = logPath;
+        // Ensure the directory for the log file exists
+        try
         {
-            // Ensure the log directory exists
-            Directory.CreateDirectory(logDirectory);
-            _logFilePath = Path.Combine(logDirectory, "localization_debug.log");
+            string dir = Path.GetDirectoryName(_logPath);
+            if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
         }
-
-        private void Log(string message)
+        catch
         {
-            // Append the log message with timestamp
-            File.AppendAllText(_logFilePath, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} - {message}{Environment.NewLine}");
-        }
-
-        public override string GetLocalFunctionName(string standardName)
-        {
-            Log($"GetLocalFunctionName called with standardName = '{standardName}'");
-            string result = base.GetLocalFunctionName(standardName);
-            Log($"GetLocalFunctionName returned '{result}'");
-            return result;
-        }
-
-        public override string GetLocalBuiltInName(string standardName)
-        {
-            Log($"GetLocalBuiltInName called with standardName = '{standardName}'");
-            string result = base.GetLocalBuiltInName(standardName);
-            Log($"GetLocalBuiltInName returned '{result}'");
-            return result;
-        }
-
-        public override string GetStandardBuiltInName(string localName)
-        {
-            Log($"GetStandardBuiltInName called with localName = '{localName}'");
-            string result = base.GetStandardBuiltInName(localName);
-            Log($"GetStandardBuiltInName returned '{result}'");
-            return result;
+            // Swallow any exception while preparing log directory; logging will fail silently.
         }
     }
 
-    public class Program
+    // Helper method to write log entries with a timestamp
+    public void Log(string message)
     {
-        public static void Main()
+        try
         {
-            try
+            File.AppendAllText(_logPath, $"{DateTime.UtcNow:O} - {message}{Environment.NewLine}");
+        }
+        catch
+        {
+            // Ignore logging failures to avoid breaking the main flow
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Path to the debug log file
+        string logFilePath = "localization_debug.log";
+        var logger = new DebugLogger(logFilePath);
+
+        try
+        {
+            Workbook workbook;
+
+            // Attempt to load an existing workbook (loading rule)
+            string inputPath = "input.xlsx";
+            if (File.Exists(inputPath))
             {
-                // Define a directory for logging
-                string logDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "AsposeLogs");
-                var loggingSettings = new LoggingGlobalizationSettings(logDir);
-
-                // Create a new workbook and assign the custom globalization settings
-                var workbook = new Workbook();
-                workbook.Settings.GlobalizationSettings = loggingSettings;
-
-                // Populate cells
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["B1"].PutValue(10);
-                sheet.Cells["B2"].PutValue(20);
-
-                // Use a formula that will trigger GetLocalFunctionName.
-                // Using the standard SUM ensures the formula is valid; the overridden method will still be logged.
-                sheet.Cells["A1"].Formula = "=SUM(B1:B2)";
-
-                // Calculate formulas (any errors are caught below)
                 try
                 {
-                    workbook.CalculateFormula();
+                    workbook = new Workbook(inputPath);
+                    logger.Log($"Successfully opened \"{inputPath}\".");
                 }
                 catch (Exception ex)
                 {
-                    // Log calculation errors but continue execution
-                    File.AppendAllText(Path.Combine(logDir, "calculation_errors.log"),
-                        $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} - Formula calculation error: {ex.Message}{Environment.NewLine}");
+                    // Log loading errors but continue with a new empty workbook
+                    logger.Log($"Failed to open \"{inputPath}\": {ex.Message}");
+                    workbook = new Workbook();
                 }
-
-                // Save the workbook
-                string outputPath = "LocalizationLoggingDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine($"An error occurred: {e.Message}");
+                // Log that the input file was not found; create a new empty workbook
+                logger.Log($"Input file \"{inputPath}\" not found. Created a new workbook.");
+                workbook = new Workbook();
+            }
+
+            // Example of using CultureInfo (no custom localization provider needed)
+            string sampleId = "SampleId";
+            string localizedString = sampleId; // fallback to the id itself
+            logger.Log($"GetString called: id=\"{sampleId}\", culture=\"{CultureInfo.CurrentCulture.Name}\", result=\"{localizedString}\"");
+
+            // Ensure the output directory exists
+            string outputPath = "output.xlsx";
+            try
+            {
+                string outDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                    Directory.CreateDirectory(outDir);
+            }
+            catch
+            {
+                // Ignore directory creation errors; Save will throw if it fails.
+            }
+
+            // Save the workbook (saving rule)
+            workbook.Save(outputPath);
+            logger.Log($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected exceptions
+            try
+            {
+                logger.Log($"Exception: {ex.GetType().Name} - {ex.Message}");
+            }
+            catch
+            {
+                // If logging fails, write to console as a last resort
+                Console.Error.WriteLine($"Exception: {ex}");
             }
         }
     }

@@ -1,62 +1,65 @@
-// Title: C# – Convert HTML to XLSX and embed meta tag values as custom document properties with Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells Workbook, extracts <meta> name/property and content attributes using a case‑insensitive regex, adds each unique meta entry as a custom document property, and saves the result as an XLSX workbook.
-// Keywords: Aspose.Cells HTML to XLSX C# | extract meta tags regex C# | custom document properties Excel | convert web page to Excel | Aspose.Cells workbook custom properties | load HTML workbook Aspose | save as Xlsx C#
-// Common Searches: Aspose.Cells load HTML and save as XLSX | add HTML meta tags as custom properties in Excel using C# | extract meta name and content from HTML with regex | convert web page to Excel preserving metadata | C# code to read meta tags and set workbook custom properties
-// Developer Intent: Load an HTML document, convert it to an Excel workbook, and store the HTML meta tag values as custom document properties.
-// Use Cases: Create Excel reports from web pages while retaining SEO metadata for downstream analytics. | Migrate legacy HTML reports to XLSX, capturing author, date, and other meta information as custom properties. | Run a batch job that processes multiple HTML files, converts each to XLSX, and embeds its meta tags for document‑management systems.
-// AI Prompts: Provide C# code that uses Aspose.Cells to load an HTML file, extract all meta name/property tags with a regular expression, add them as custom document properties, and save as XLSX. | Explain how to handle duplicate meta tag names when adding custom document properties with Aspose.Cells. | Suggest improvements to the regex pattern for robust extraction of meta tags with varying attribute order and whitespace.
+// Title: Convert an HTML file to an XLSX workbook and import its <meta> tag values as custom document properties using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an HTML file with Aspose.Cells, extracts every <meta name="..." content="..."> element, and writes each pair as a custom document property in the created Excel workbook. | Create a reusable C# method that accepts an HTML file path, returns a Workbook whose custom properties are populated from the HTML meta tags, and optionally saves it as XLSX. | Show how to extend the example to also map the HTML <title> element to the workbook's built‑in Title property while preserving other meta‑tag properties.
+// Common Searches: Aspose.Cells extract HTML meta tags and store them as custom properties in Excel | C# convert HTML page to XLSX while keeping meta information | How to map <meta name> values to Excel custom document properties using Aspose.Cells | Load HTML into Aspose.Cells workbook and add custom properties from meta elements | Preserve HTML metadata when converting to Excel with Aspose.Cells .NET
+// Tags: Aspose.Cells HTML to XLSX conversion with custom properties | C# regex extraction of HTML meta tags | populate workbook custom document properties from HTML | load HTML workbook using LoadOptions Html | update or add custom properties in Aspose.Cells workbook
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Loads an HTML file into an Aspose.Cells Workbook, extracts <meta> name/property and content attributes using a case‑insensitive regex, adds each unique meta entry as a custom document property, and saves the result as an XLSX workbook.
-class HtmlToExcelWithCustomProperties
+// The sample loads an HTML file into an Aspose.Cells Workbook, uses a regular expression to locate all <meta name="..." content="..."> tags, and adds each name/value pair as a custom document property (updating existing entries when needed). The workbook is then saved as an XLSX file, preserving the HTML metadata inside the Excel document.
+class Program
 {
     static void Main()
     {
-        // Paths for source HTML and destination Excel files
-        string htmlPath = "input.html";
-        string excelPath = "output.xlsx";
-
         try
         {
-            // Verify that the HTML source file exists
+            // Input HTML file path
+            string htmlPath = "input.html";
+
+            // Output Excel file path
+            string excelPath = "output.xlsx";
+
+            // Verify that the input HTML file exists
             if (!File.Exists(htmlPath))
             {
-                Console.WriteLine($"Error: HTML file not found at path '{htmlPath}'.");
+                Console.WriteLine($"Error: HTML file not found at '{htmlPath}'.");
                 return;
             }
 
-            // ---------- Load ----------
-            // Load the HTML file into a new workbook instance (Aspose.Cells detects the format automatically)
-            Workbook workbook = new Workbook(htmlPath);
+            // Load the HTML document into an Aspose.Cells workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
 
-            // Read the raw HTML text to extract meta tags
+            // Read the HTML content as text
             string htmlContent = File.ReadAllText(htmlPath);
 
-            // Regex pattern to capture meta tags with name/property and content attributes
-            Regex metaRegex = new Regex(
-                @"<meta\s+[^>]*?(?:name|property)\s*=\s*[""'](?<name>[^""']+)[""']\s+[^>]*?content\s*=\s*[""'](?<content>[^""']*)[""']|content\s*=\s*[""'](?<content2>[^""']*)[""']\s+[^>]*?(?:name|property)\s*=\s*[""'](?<name2>[^""']+)[""'])",
-                RegexOptions.IgnoreCase);
+            // Regex to find <meta name="..." content="..."> tags (case‑insensitive)
+            string pattern = @"<meta\s+[^>]*name\s*=\s*[""'](?<name>[^""']+)[""'][^>]*content\s*=\s*[""'](?<content>[^""']+)[""'][^>]*>";
+            var matches = Regex.Matches(htmlContent, pattern, RegexOptions.IgnoreCase);
 
-            // Iterate over all matches and add them as custom document properties
-            foreach (Match match in metaRegex.Matches(htmlContent))
+            // Process each meta tag found
+            foreach (Match match in matches)
             {
-                string name = match.Groups["name"].Success ? match.Groups["name"].Value : match.Groups["name2"].Value;
-                string value = match.Groups["content"].Success ? match.Groups["content"].Value : match.Groups["content2"].Value;
+                string name = match.Groups["name"].Value.Trim();
+                string content = match.Groups["content"].Value.Trim();
 
-                // Add the property only if it does not already exist
-                if (workbook.CustomDocumentProperties[name] == null)
+                if (!string.IsNullOrEmpty(name))
                 {
-                    workbook.CustomDocumentProperties.Add(name, value);
+                    var customProps = workbook.CustomDocumentProperties;
+                    if (customProps.Contains(name))
+                    {
+                        customProps[name].Value = content;
+                    }
+                    else
+                    {
+                        customProps.Add(name, content);
+                    }
                 }
             }
 
-            // ---------- Save ----------
-            // Save the workbook as an XLSX file
+            // Save the workbook as an Excel file
             workbook.Save(excelPath, SaveFormat.Xlsx);
             Console.WriteLine($"Workbook saved successfully to '{excelPath}'.");
         }

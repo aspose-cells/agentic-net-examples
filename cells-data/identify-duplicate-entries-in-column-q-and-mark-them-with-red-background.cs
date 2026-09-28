@@ -1,59 +1,61 @@
-// Title: Highlight duplicate values in column Q with red fill using Aspose.Cells for .NET (C#)
-// Description: C# code that loads an Excel workbook, defines a range for column Q, adds a DuplicateValues conditional‑formatting rule, creates a solid red style, applies the style to duplicate cells, and saves the file so any repeated entries in column Q are highlighted in red.
-// Keywords: Aspose.Cells | duplicate values | conditional formatting | C# | .NET | column Q | red background | Excel highlight duplicates
-// Common Searches: Aspose.Cells highlight duplicate cells | C# conditional formatting duplicate values column Q | set red background for duplicate entries in Excel using Aspose | mark duplicate rows in Excel with Aspose.Cells .NET
-// Developer Intent: Automatically detect duplicate entries in column Q of an Excel worksheet and emphasize them with a red background using Aspose.Cells for .NET.
-// Use Cases: Identify repeated product IDs in a catalog to prevent publishing errors. | Spot duplicate email addresses in a mailing list before a campaign launch. | Flag duplicate invoice numbers in a financial report to avoid processing mistakes.
-// AI Prompts: Generate C# code with Aspose.Cells that applies a DuplicateValues conditional‑formatting rule to column Q and uses a solid red fill. | Explain how to change the target column index and the highlight color in the duplicate‑highlighting example. | Provide a step‑by‑step guide to add additional conditional‑formatting rules (e.g., for blanks or unique values) alongside the duplicate‑value rule in the same worksheet.
+// Title: Highlight duplicate values in column Q with a red background using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to add a DuplicateValues conditional format to column Q and set a solid red fill for the matching cells. | Generate a .NET program that loads an Excel workbook, applies a red background style to any duplicate entries in column Q via conditional formatting, and saves the file.
+// Common Searches: Aspose.Cells C# highlight duplicate cells in column Q with red fill | How to apply conditional formatting for duplicate values in a specific column using Aspose.Cells .NET | Set red background for duplicate entries in Excel column Q programmatically with Aspose.Cells | C# example for duplicate value detection and styling in column Q using Aspose.Cells
+// Tags: Aspose.Cells duplicate values conditional formatting | red fill style for duplicate cells .NET | column Q duplicate detection Aspose.Cells | conditional formatting red background Excel .NET | highlight duplicate entries column Q C#
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// C# code that loads an Excel workbook, defines a range for column Q, adds a DuplicateValues conditional‑formatting rule, creates a solid red style, applies the style to duplicate cells, and saves the file so any repeated entries in column Q are highlighted in red.
-class DuplicateHighlighter
+namespace AsposeCellsDuplicateHighlight
 {
-    static void Main()
+    // The example loads or creates a workbook, defines a conditional formatting range for column Q, adds a DuplicateValues condition, applies a solid red fill style to the duplicates, and saves the modified file as output.xlsx.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Determine the last row with data in column Q (index 16)
-        int lastRow = cells.MaxDataRow;
-
-        // Define the range for column Q (from row 0 to lastRow)
-        CellArea range = new CellArea
+        static void Main()
         {
-            StartRow = 0,
-            EndRow = lastRow,
-            StartColumn = 16,   // Column Q (0‑based index)
-            EndColumn = 16
-        };
+            // Create a new workbook or load an existing one
+            // Replace "input.xlsx" with your source file if needed
+            Workbook workbook = new Workbook(); // new workbook
+            // If you have an existing file, use:
+            // Workbook workbook = new Workbook("input.xlsx");
 
-        // Add a new conditional formatting collection
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Apply the range to the conditional formatting
-        fcs.AddArea(range);
+            // Determine the last row that contains data in column Q (index 16)
+            int lastRow = worksheet.Cells.MaxDataRow;
 
-        // Add a condition that highlights duplicate values
-        int conditionIdx = fcs.AddCondition(FormatConditionType.DuplicateValues);
-        FormatCondition condition = fcs[conditionIdx];
+            // Define the range that covers column Q from the first row to the last data row
+            CellArea duplicateRange = new CellArea
+            {
+                StartRow = 0,
+                EndRow = lastRow,
+                StartColumn = 16,   // Column Q (0‑based index)
+                EndColumn = 16
+            };
 
-        // Create a style with red background
-        Style redStyle = workbook.CreateStyle();
-        redStyle.ForegroundColor = Color.Red;
-        redStyle.Pattern = BackgroundType.Solid;
+            // Add a new conditional formatting collection to the worksheet
+            int cfIndex = worksheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
 
-        // Assign the style to the condition
-        condition.Style = redStyle;
+            // Apply the range to the conditional formatting
+            fcs.AddArea(duplicateRange);
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Add a condition that highlights duplicate values
+            int conditionIndex = fcs.AddCondition(FormatConditionType.DuplicateValues);
+            FormatCondition duplicateCondition = fcs[conditionIndex];
+
+            // Create a style with a red background
+            Style redStyle = workbook.CreateStyle();
+            redStyle.ForegroundColor = Color.Red;
+            redStyle.Pattern = BackgroundType.Solid;
+
+            // Assign the style to the condition
+            duplicateCondition.Style = redStyle;
+
+            // Save the modified workbook
+            workbook.Save("output.xlsx");
+        }
     }
 }

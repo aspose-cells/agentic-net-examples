@@ -1,33 +1,40 @@
-// Title: Freeze the top three rows in Excel using Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, freezes the first three rows (row index 3) while leaving columns unfrozen, and saves the file as FreezeTopThreeRows.xlsx.
-// Keywords: Aspose.Cells FreezePanes C# | freeze top rows Excel .NET | freeze first three rows Aspose | C# Excel freeze rows without columns | Aspose.Cells workbook freeze panes
-// Common Searches: How to freeze the first three rows in an Excel file with Aspose.Cells | Aspose.Cells FreezePanes method example for rows only | C# code to lock header rows in Excel using Aspose | Freeze rows but not columns in Aspose.Cells for .NET | Save Excel workbook after freezing top rows with Aspose
-// Developer Intent: Programmatically lock the top three rows of a worksheet while keeping all columns scrollable.
-// Use Cases: Generate reports where header rows stay visible during vertical scrolling. | Create data‑entry templates with fixed title and instruction rows. | Automate Excel exports that require frozen header rows for better readability.
-// AI Prompts: Write a C# function that accepts a row count parameter and uses Aspose.Cells to freeze that many top rows. | Explain each parameter of the FreezePanes method and show how to unfreeze panes later. | Demonstrate freezing both rows and columns together with Aspose.Cells and then exporting the workbook to PDF.
+// Title: How to freeze the top three rows in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to freeze rows 1‑3 of a worksheet while keeping columns unfrozen, then save the file. | Demonstrate calling Worksheet.FreezePanes to lock the first three rows without affecting columns in a .NET application. | Provide a minimal Aspose.Cells example that creates a workbook, freezes the top three rows, and writes the result to FrozenRows.xlsx.
+// Common Searches: Aspose.Cells C# freeze first three rows without freezing columns | example of FreezePanes method to lock top rows in .NET Excel workbook | how to programmatically freeze rows 1 to 3 using Aspose.Cells for .NET
+// Tags: Aspose.Cells FreezePanes top rows | C# freeze first three rows Excel | worksheet freeze rows without columns | save workbook after applying freeze panes | Excel freeze panes programmatic Aspose
 
 using System;
 using Aspose.Cells;
 
-namespace FreezeTopRowsDemo
+namespace AsposeCellsExample
 {
-    // C# example that creates a workbook, freezes the first three rows (row index 3) while leaving columns unfrozen, and saves the file as FreezeTopThreeRows.xlsx.
+    // The sample creates a new workbook, accesses the first worksheet, freezes the top three rows with Worksheet.FreezePanes(3, 0, 3, 0) while leaving columns unfrozen, and saves the file as FrozenRows.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet (index 0)
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the top three rows (row index 3) and no columns (column index 0)
-            // Parameters: row index, column index, number of frozen rows, number of frozen columns
-            worksheet.FreezePanes(3, 0, 3, 0);
+                // Freeze the top three rows (row index 3) and no columns
+                // Parameters: row index where split occurs, column index where split occurs,
+                // number of rows to freeze, number of columns to freeze
+                sheet.FreezePanes(3, 0, 3, 0);
 
-            // Save the workbook to a file
-            workbook.Save("FreezeTopThreeRows.xlsx");
+                // Save the workbook to a file
+                string outputPath = "FrozenRows.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

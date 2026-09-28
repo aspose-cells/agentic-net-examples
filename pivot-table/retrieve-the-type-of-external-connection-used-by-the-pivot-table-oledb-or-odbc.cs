@@ -1,71 +1,90 @@
-// Title: Get PivotTable External Connection Type (OLE DB or ODBC) with Aspose.Cells for .NET
-// Description: Loads a workbook, accesses the first worksheet and its first PivotTable, extracts external connections via GetSourceDataConnections, reads the ConnectionDataSourceType enum, and translates it to a readable OLE DB or ODBC label.
-// Keywords: Aspose.Cells PivotTable external connection | ConnectionDataSourceType enum | OLE DB vs ODBC pivot source | C# get pivot table data source type | Aspose.Cells GetSourceDataConnections
-// Common Searches: Aspose.Cells determine pivot table connection type | C# check if PivotTable uses OLE DB or ODBC | Get external connection source type from Excel pivot using Aspose | Read ConnectionDataSourceType of a PivotTable in .NET
-// Developer Intent: Find out whether a PivotTable’s external data source is OLE DB or ODBC using Aspose.Cells.
-// Use Cases: Validate that a PivotTable complies with required connection standards before processing. | Log the connection type for audit trails in automated reporting pipelines. | Branch refresh or caching logic based on OLE DB versus ODBC sources.
-// AI Prompts: Generate C# code that enumerates all external connections of a PivotTable and prints their ConnectionDataSourceType using Aspose.Cells. | Create a method that receives a PivotTable object and returns "OLE DB", "ODBC", or "Other" based on its external connection type. | Add robust error handling for scenarios where a PivotTable has no external connections when retrieving the source type with Aspose.Cells.
+// Title: How to identify whether a pivot table’s external connection is OLEDB or ODBC using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that retrieves the ExternalConnection objects of a given PivotTable and returns the connection name together with its source type (OLEDB, ODBC, or other). | Create a method that accepts a PivotTable instance, calls GetSourceDataConnections, examines the ConnectionDataSourceType enumeration, and prints the detected connection kind.
+// Common Searches: aspnet how to check pivot table external connection type with Aspose.Cells | c# Aspose.Cells GetSourceDataConnections OLEDB vs ODBC | determine source data connection of a pivot table in Aspose.Cells .NET | retrieve external connection name and type from Aspose.Cells pivot table
+// Tags: Aspose.Cells GetSourceDataConnections usage | pivot table external connection type detection | ConnectionDataSourceType OLEDB ODBC enumeration | C# Aspose.Cells pivot table source data | retrieve external connection details Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExternalConnectionDemo
+namespace AsposeCellsExamples
 {
-    // Loads a workbook, accesses the first worksheet and its first PivotTable, extracts external connections via GetSourceDataConnections, reads the ConnectionDataSourceType enum, and translates it to a readable OLE DB or ODBC label.
-    class Program
+    // The example builds a workbook, adds sample data, creates a pivot table, and then uses the PivotTable.GetSourceDataConnections method to obtain any associated ExternalConnection objects. It checks each connection's SourceType to determine if it is OLEDB, ODBC, or another type, outputs the connection name and detected kind, and finally saves the workbook.
+    public class RetrievePivotExternalConnectionType
     {
-        static void Main()
+        public static void Main(string[] args)
         {
-            // Load an existing workbook that contains a pivot table with an external connection.
-            // Replace the path with the actual file location.
-            Workbook workbook = new Workbook("input.xlsx");
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-            // Assume the first worksheet contains the pivot table.
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first pivot table on the worksheet.
-            if (sheet.PivotTables.Count == 0)
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            for (int i = 2; i <= 6; i++)
             {
-                Console.WriteLine("No pivot tables found in the worksheet.");
-                return;
+                sheet.Cells[$"A{i}"].PutValue(i - 1);
+                sheet.Cells[$"B{i}"].PutValue($"Item_{i - 1}");
             }
 
-            PivotTable pivot = sheet.PivotTables[0];
+            // NOTE: Adding a DBConnection programmatically is not supported in the
+            // current Aspose.Cells version used for this example, so we proceed
+            // without explicitly creating one. The pivot table will still be created.
 
-            // Retrieve all external connections used by the pivot table.
+            // Create a pivot table based on the data range
+            int pivotIdx = sheet.PivotTables.Add("A1:B6", "D1", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, 0);
+            pivot.AddFieldToArea(PivotFieldType.Data, 1);
+
+            // Retrieve external connections associated with the pivot table
             ExternalConnection[] connections = pivot.GetSourceDataConnections();
 
-            if (connections.Length == 0)
+            if (connections.Length > 0)
             {
-                Console.WriteLine("The pivot table does not use any external connections.");
-                return;
+                ExternalConnection conn = connections[0];
+
+                // Determine connection type based on SourceType
+                string connectionKind = conn.SourceType switch
+                {
+                    ConnectionDataSourceType.OLEDBBasedSource => "OLEDB",
+                    ConnectionDataSourceType.ODBCBasedSource => "ODBC",
+                    _ => "Other"
+                };
+
+                Console.WriteLine($"Pivot Table External Connection Name: {conn.Name}");
+                Console.WriteLine($"Connection Class Type: {conn.ClassType}");
+                Console.WriteLine($"Detected Connection Type: {connectionKind}");
+            }
+            else
+            {
+                Console.WriteLine("No external connections are associated with the pivot table.");
             }
 
-            // For demonstration, we handle the first connection.
-            ExternalConnection conn = connections[0];
-
-            // The SourceType property indicates whether the connection is ODBC or OLE DB.
-            // Values are defined in the ConnectionDataSourceType enumeration.
-            ConnectionDataSourceType sourceType = conn.SourceType;
-
-            Console.WriteLine($"Connection Name : {conn.Name}");
-            Console.WriteLine($"Class Type      : {conn.ClassType}");
-            Console.WriteLine($"Source Type     : {sourceType}");
-
-            // Determine and display a friendly description.
-            string friendlyType = sourceType switch
+            // Save the workbook (optional)
+            string outputPath = "PivotExternalConnectionTypeDemo.xlsx";
+            try
             {
-                ConnectionDataSourceType.ODBCBasedSource => "ODBC",
-                ConnectionDataSourceType.OLEDBBasedSource => "OLE DB",
-                _ => "Other"
-            };
-
-            Console.WriteLine($"External connection is of type: {friendlyType}");
-
-            // Save the workbook if any modifications were made (optional).
-            // workbook.Save("output.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
         }
     }
 }

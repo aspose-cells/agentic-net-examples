@@ -1,38 +1,42 @@
-// Title: Set Workbook Theme to a Monospaced Font (Consolas) Using Aspose.Cells for .NET
-// Description: Demonstrates how to modify the DefaultStyle of an Aspose.Cells Workbook to apply a monospaced font across the entire workbook, ensuring all cells inherit the Consolas typeface—ideal for displaying code snippets. The example creates a workbook, updates the font name and size, reassigns the style, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | Excel workbook theme | default style font | monospaced font | Consolas | code snippets in Excel | set workbook font | change default font Aspose
-// Common Searches: how to change default font in Aspose.Cells workbook | apply monospaced font to all cells with Aspose.Cells .NET | set Consolas as workbook theme font using C# | Aspose.Cells default style font size and name | global font change for generated Excel file
-// Developer Intent: Apply a monospaced font to the workbook’s theme so every cell inherits the same fixed‑width typeface.
-// Use Cases: Generating Excel reports that embed source code blocks. | Standardizing font appearance for documentation workbooks. | Ensuring consistent visual style for data exported from applications.
-// AI Prompts: Show C# code that sets the workbook DefaultStyle font to Consolas with Aspose.Cells. | Explain how to change the theme font for an entire Excel file using Aspose.Cells for .NET. | Provide a step‑by‑step guide to apply a monospaced font to all cells in a newly created workbook.
+// Title: Update an Excel workbook’s theme to use a monospaced font (Consolas) with Aspose.Cells for .NET
+// AI Prompts: Load an existing workbook and assign 'Consolas' as the default font using Aspose.Cells in C#. | Programmatically apply a code‑friendly typeface to the entire Excel theme and save the workbook with Aspose.Cells. | Change the workbook’s default font to a programming‑oriented font across all sheets via the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# change workbook font to Consolas | set programming font for all cells in an existing Excel file using Aspose.Cells | programmatically update Excel theme to a monospaced typeface with .NET | C# Aspose.Cells change default style font for new worksheets
+// Tags: default workbook font Aspose.Cells C# | apply programming font to Excel theme programmatically | set workbook font to Consolas | modify Excel theme font scheme using Aspose.Cells | override workbook default style for all worksheets .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsThemeFontUpdate
+// Loads an existing Excel file, sets the workbook’s default font to the monospaced typeface Consolas, and saves the updated workbook.
+class Program
 {
-    // Demonstrates how to modify the DefaultStyle of an Aspose.Cells Workbook to apply a monospaced font across the entire workbook, ensuring all cells inherit the Consolas typeface—ideal for displaying code snippets. The example creates a workbook, updates the font name and size, reassigns the style, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Update the default style of the workbook to use a monospaced font.
-            // This will affect all cells that do not have an explicit style applied,
-            // effectively applying the monospaced font throughout the workbook.
-            Style defaultStyle = workbook.DefaultStyle;
-            defaultStyle.Font.Name = "Consolas";   // Monospaced font
-            defaultStyle.Font.Size = 11;           // Typical size for code snippets
-            // Optionally, you can set the scheme type if needed
-            // defaultStyle.Font.SchemeType = FontSchemeType.Minor;
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Assign the modified style back to the workbook
-            workbook.DefaultStyle = defaultStyle;
+            // Set the default font for the workbook to a monospaced font (e.g., Consolas)
+            workbook.DefaultStyle.Font.Name = "Consolas";
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("WorkbookWithMonospacedTheme.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

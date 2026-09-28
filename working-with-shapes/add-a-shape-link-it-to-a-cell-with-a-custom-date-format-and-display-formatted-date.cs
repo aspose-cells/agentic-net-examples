@@ -1,45 +1,77 @@
-// Title: C# – Add a label shape linked to a custom‑formatted date cell with Aspose.Cells
-// Description: Creates a new workbook, writes the current DateTime to cell A1, applies the custom number format "dd-mmm-yyyy", inserts a label shape, links the shape to the cell using SetLinkedCell, refreshes the shape to show the formatted date, and saves the file as ShapeLinkedDate.xlsx.
-// Keywords: Aspose.Cells C# | link shape to cell | custom date format Excel | SetLinkedCell method | label shape update | UpdateSelectedValue | Excel shape automation | dynamic date label
-// Common Searches: Aspose.Cells link label shape to cell C# | display formatted date in Excel shape using Aspose | SetLinkedCell isR1C1 false example | how to refresh linked shape value Aspose.Cells | add label shape with date in .NET
-// Developer Intent: Link a label shape to a worksheet cell that contains a date formatted with a custom pattern and have the shape display that formatted date automatically.
-// Use Cases: Generate a report header that always shows the generation date inside a shape. | Create an invoice template where the invoice date appears in a label shape and updates when the source cell changes. | Build a dashboard with dynamic date labels that reflect the latest data without manual edits.
-// AI Prompts: Write C# code with Aspose.Cells to add a label shape linked to cell A1 formatted as "dd-mmm-yyyy" and ensure the shape displays the formatted date. | Explain the role of the isR1C1 and isLocal parameters in SetLinkedCell and how they influence cell linking. | Suggest alternative methods to refresh a linked shape after the source cell value is modified in Aspose.Cells.
+// Title: Add a rectangle shape linked to a date cell with a custom format and display the formatted date using Aspose.Cells for .NET
+// AI Prompts: Write C# code that inserts a rectangle shape into a worksheet, links it to a specific cell, and sets the shape's text to the cell's formatted date value. | Adjust the shape's placement so it moves and resizes with the linked cell and position the shape directly over that cell. | Change the cell's custom date format to include time (e.g., "dd-MMM-yyyy HH:mm") and update the shape's displayed text accordingly.
+// Common Searches: aspnet add rectangle shape linked to date cell Aspose.Cells | display custom formatted date inside a shape using Aspose.Cells for .NET | how to make a shape move and size with its linked cell in Aspose.Cells | set custom date format in Excel cell and show it in a shape with Aspose.Cells
+// Tags: Aspose.Cells rectangle shape insertion | shape linked to cell placement MoveAndSize | custom date format in Excel cell Aspose.Cells | shape text bound to cell value .NET | save workbook as xlsx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, writes the current DateTime to cell A1, applies the custom number format "dd-mmm-yyyy", inserts a label shape, links the shape to the cell using SetLinkedCell, refreshes the shape to show the formatted date, and saves the file as ShapeLinkedDate.xlsx.
-class ShapeLinkedDateExample
+// The program creates a new workbook, writes the current date to cell A1 with a custom "dd-mmm-yyyy" format, adds a rectangle shape, links the shape to the cell using MoveAndSize placement, sets the shape's text to the formatted date, and saves the workbook as Output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Put a DateTime value into cell A1
-        Cell dateCell = worksheet.Cells["A1"];
-        dateCell.PutValue(DateTime.Now);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Apply a custom date format to the cell (e.g., "dd-mmm-yyyy")
-        Style dateStyle = workbook.CreateStyle();
-        dateStyle.Custom = "dd-mmm-yyyy";
-        dateCell.SetStyle(dateStyle);
+            // Put a DateTime value into cell A1
+            Cell dateCell = sheet.Cells["A1"];
+            dateCell.PutValue(DateTime.Now);
 
-        // Add a label shape that will display the linked cell value
-        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-        Label label = (Label)worksheet.Shapes.AddLabel(2, 2, 0, 0, 120, 30);
+            // Apply a custom date format (e.g., 15-Mar-2023)
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Custom = "dd-mmm-yyyy";
+            dateCell.SetStyle(dateStyle);
 
-        // Link the shape to cell A1 using the SetLinkedCell method
-        // isR1C1 = false (A1 style), isLocal = true (locale‑aware)
-        label.SetLinkedCell("$A$1", false, true);
+            // Add a rectangle shape to the sheet
+            // Position it initially at row 2, column 1 (B3) with size 150x50 points
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // Shape type
+                2,    // Upper left row (zero‑based)
+                1,    // Upper left column (zero‑based)
+                0,    // Top offset in points
+                0,    // Left offset in points
+                50,   // Height in points
+                150); // Width in points
 
-        // Refresh the shape so it shows the current value of the linked cell
-        label.UpdateSelectedValue();
+            // Link the shape to the date cell so it moves/resizes with the cell
+            shape.Placement = PlacementType.MoveAndSize;
 
-        // Save the workbook to a file
-        workbook.Save("ShapeLinkedDate.xlsx");
+            // (Optional) Position the shape over cell A1.
+            // The SetPosition method is not available in older versions, so we rely on the initial placement.
+            // shape.SetPosition(0, 0, 0, 0);
+
+            // Display the formatted date inside the shape
+            shape.Text = dateCell.StringValue;
+
+            // Determine output file path
+            string outputPath = "Output.xlsx";
+
+            // Ensure the directory exists (handle case where outputPath has no directory component)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (string.IsNullOrEmpty(outputDir))
+            {
+                outputDir = Directory.GetCurrentDirectory();
+            }
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

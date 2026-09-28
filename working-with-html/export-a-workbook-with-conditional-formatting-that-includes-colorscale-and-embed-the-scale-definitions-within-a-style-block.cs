@@ -1,71 +1,52 @@
-// Title: Export a workbook with 3‑color ColorScale conditional formatting to a single HTML file and embed the CSS in a <style> block (Aspose.Cells for .NET)
-// Description: This C# sample builds a 10×10 worksheet, applies a three‑color ColorScale (red‑yellow‑green) via conditional formatting, sets min, percentile, and max thresholds, and saves the workbook as one HTML document with the gradient defined in an inline <style> element using HtmlSaveOptions.
-// Keywords: Aspose.Cells | .NET | C# | HTML export | conditional formatting | ColorScale | 3‑color gradient | embedded CSS | single file HTML | Excel to HTML | CssStyles property
-// Common Searches: Aspose.Cells export Excel to HTML with ColorScale | How to embed CSS when saving workbook as HTML in .NET | Create 3‑color conditional formatting in Aspose.Cells | Save workbook as single HTML file Aspose | Add custom style block to HTML output Aspose.Cells
-// Developer Intent: Produce an HTML representation of an Excel workbook that retains a three‑color ColorScale rule and contains the required CSS directly inside the page.
-// Use Cases: Web‑based reporting where cell values are color‑graded without external style sheets | Email‑ready HTML snapshot of an Excel sheet preserving visual cues | Dashboard component that loads a pre‑styled HTML file generated from Excel data
-// AI Prompts: Generate code to switch the ColorScale to a 2‑color (red‑green) scheme and adjust the inline CSS. | Show how to extract the generated CSS class name and add font‑color or border styling. | Demonstrate exporting multiple worksheets, each with distinct conditional formats, while consolidating all CSS into one <style> block.
+// Title: Export an Excel workbook with a three‑color ColorScale conditional format to HTML using Aspose.Cells for .NET, embedding the CSS in a <style> tag
+// AI Prompts: Generate C# code that creates a workbook, applies a three‑color ColorScale (light green, yellow, red) to the range A1:A10, and saves it as HTML with the conditional formatting rendered inside a <style> block via Aspose.Cells. | Modify the example to use a custom ColorScale of LightBlue, Orange, and DarkRed, then verify that the produced HTML file contains the corresponding CSS rules in the <style> section. | Add a data‑bar conditional formatting rule to the same range while preserving the existing ColorScale, and export the workbook to HTML ensuring both formatting rules appear in the generated style block.
+// Common Searches: aspnet export excel with color scale conditional formatting to html using aspose.cells | how to embed conditional formatting CSS when saving workbook as html with aspose.cells | c# generate three color scale conditional format and save as html file | asp.net save workbook as html and include conditional formatting styles in style tag
+// Tags: Aspose.Cells HTMLSaveOptions conditional formatting | C# export Excel workbook to HTML | conditional formatting gradient Aspose.Cells | embed conditional formatting CSS in HTML output | add data bar rule to HTML export
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// This C# sample builds a 10×10 worksheet, applies a three‑color ColorScale (red‑yellow‑green) via conditional formatting, sets min, percentile, and max thresholds, and saves the workbook as one HTML document with the gradient defined in an inline <style> element using HtmlSaveOptions.
+// // This program creates a new workbook, fills cells A1:A10 with values 1‑10, applies a three‑color ColorScale (light green → yellow → red) conditional formatting, and saves the workbook as an HTML file where Aspose.Cells emits the conditional‑formatting rules as CSS inside a <style> block.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate the worksheet with sample numeric data
-        for (int row = 0; row < 10; row++)
+        try
         {
-            for (int col = 0; col < 10; col++)
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data in column A (A1:A10).
+            for (int row = 0; row < 10; row++)
             {
-                worksheet.Cells[row, col].PutValue(row * col);
+                sheet.Cells[row, 0].PutValue(row + 1);
             }
+
+            // Add a ColorScale conditional formatting to the range A1:A10.
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            var cf = sheet.ConditionalFormattings[cfIndex];
+            cf.AddArea(new CellArea { StartRow = 0, StartColumn = 0, EndRow = 9, EndColumn = 0 });
+
+            // Add a three‑color scale condition.
+            int conditionIndex = cf.AddCondition(FormatConditionType.ColorScale);
+            var condition = cf[conditionIndex];
+
+            // Set the colors for the scale. The default types are Min, Percentile (50), and Max.
+            condition.ColorScale.MinColor = Color.LightGreen;
+            condition.ColorScale.MidColor = Color.Yellow;
+            condition.ColorScale.MaxColor = Color.Red;
+
+            // Save the workbook as an HTML file.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            workbook.Save("ConditionalColorScale.html", htmlOptions);
         }
-
-        // Add a ColorScale conditional formatting rule (3‑color: Red → Yellow → Green)
-        int cfIndex = worksheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
-
-        // Define the range to which the conditional formatting applies
-        CellArea area = new CellArea
+        catch (Exception ex)
         {
-            StartRow = 0,
-            EndRow = 9,
-            StartColumn = 0,
-            EndColumn = 9
-        };
-        fcs.AddArea(area);
-
-        // Create the ColorScale condition
-        int conditionIndex = fcs.AddCondition(FormatConditionType.ColorScale);
-        FormatCondition fc = fcs[conditionIndex];
-
-        // Configure the ColorScale (min = Red, mid = Yellow, max = Green)
-        fc.ColorScale.Is3ColorScale = true;
-        fc.ColorScale.MinColor = Color.Red;
-        fc.ColorScale.MidColor = Color.Yellow;
-        fc.ColorScale.MaxColor = Color.Green;
-
-        // Set the value objects for the scale
-        fc.ColorScale.MinCfvo.Type = FormatConditionValueType.Min;
-        fc.ColorScale.MidCfvo.Type = FormatConditionValueType.Percentile;
-        fc.ColorScale.MidCfvo.Value = 50; // 50th percentile
-        fc.ColorScale.MaxCfvo.Type = FormatConditionValueType.Max;
-
-        // Prepare HTML save options to embed CSS in a <style> block
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.SaveAsSingleFile = true;               // All content in one HTML file
-        htmlOptions.CssStyles = @"
-            /* Custom CSS for the ColorScale conditional formatting */
-            .cs0 { background: linear-gradient(to right, red, yellow, green); }
-        ";
-
-        // Save the workbook as HTML with the embedded style definitions
-        workbook.Save("ColorScaleWithStyle.html", htmlOptions);
+            Console.WriteLine("Error: " + ex.Message);
+        }
     }
 }

@@ -1,84 +1,70 @@
-// Title: Aspose.Cells for .NET: Dynamically Link a Shape to a VLOOKUP Result Cell
-// Description: C# example that creates a lookup table, adds a VLOOKUP formula, inserts a rectangle shape, links the shape to the formula cell with SetLinkedCell, recalculates the workbook, and refreshes the shape text using UpdateSelectedValue so the shape always reflects the current lookup result.
-// Keywords: Aspose.Cells | C# | .NET | shape linked cell | SetLinkedCell | UpdateSelectedValue | VLOOKUP | dynamic shape text | Excel automation | worksheet shape binding
-// Common Searches: Aspose.Cells link shape to cell example | SetLinkedCell method with VLOOKUP result C# | Refresh shape text after formula change Aspose.Cells | How to bind a rectangle to a cell in Aspose.Cells .NET | Update linked shape when lookup key changes
-// Developer Intent: Bind a worksheet shape to a cell that contains a VLOOKUP formula and keep the shape’s displayed value synchronized with formula updates.
-// Use Cases: Display product prices inside shapes on a sales dashboard that automatically update when the selected item changes. | Create financial reports where key metrics are shown in shapes and stay current after data edits. | Build interactive Excel templates with shapes that reflect lookup‑driven calculations without manual refresh.
-// AI Prompts: Show me C# code that links a rectangle shape to a VLOOKUP result cell using Aspose.Cells and updates the shape after changing the lookup key. | Explain how SetLinkedCell and UpdateSelectedValue work together to keep a shape synchronized with a formula in Aspose.Cells for .NET. | Provide a step‑by‑step guide for handling multiple shapes, each linked to different VLOOKUP results, in the same worksheet.
+// Title: How to bind a rectangle shape’s text to a VLOOKUP formula cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate an Excel workbook in C# that creates a VLOOKUP table, writes a VLOOKUP formula in a cell, inserts a rectangle shape, and sets the shape's displayed text to reference that formula cell so the shape shows the lookup result. | Write C# code with Aspose.Cells to add a rectangle drawing to a worksheet, link its visible text to cell C2 containing =VLOOKUP(...), apply line formatting, and save the workbook as an .xlsx file. | Create a program that formats a rectangle shape (line weight, dash style) after binding its text to a VLOOKUP result cell, then exports the file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# bind shape text to cell with formula | display VLOOKUP result inside a shape using Aspose.Cells for .NET | set shape text to =C2 in generated Excel file with Aspose.Cells | make rectangle shape update automatically from a VLOOKUP cell in Aspose.Cells
+// Tags: Aspose.Cells bind shape text to formula cell | C# rectangle shape displaying VLOOKUP output | link shape displayed text to cell C2 with Aspose.Cells | dynamic shape content driven by VLOOKUP in Excel | shape line formatting after linking in Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeLinkedCellDemo
+// Demonstrates creating a workbook, building a VLOOKUP table, inserting a rectangle shape, linking the shape's displayed text to the VLOOKUP result cell, applying line formatting, and saving the file as an .xlsx using Aspose.Cells for .NET.
+class ShapeLinkExample
 {
-    // C# example that creates a lookup table, adds a VLOOKUP formula, inserts a rectangle shape, links the shape to the formula cell with SetLinkedCell, recalculates the workbook, and refreshes the shape text using UpdateSelectedValue so the shape always reflects the current lookup result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // -------------------------------------------------
-            // Populate lookup table (A1:B5)
-            // -------------------------------------------------
-            sheet.Cells["A1"].Value = "Item";
-            sheet.Cells["B1"].Value = "Price";
-            sheet.Cells["A2"].Value = "Apple";
-            sheet.Cells["B2"].Value = 1.2;
-            sheet.Cells["A3"].Value = "Banana";
-            sheet.Cells["B3"].Value = 0.8;
-            sheet.Cells["A4"].Value = "Cherry";
-            sheet.Cells["B4"].Value = 2.5;
-            sheet.Cells["A5"].Value = "Date";
-            sheet.Cells["B5"].Value = 3.0;
+            // ---------- Setup data for VLOOKUP ----------
+            // Lookup table (E2:F5)
+            sheet.Cells["E2"].PutValue("Key");
+            sheet.Cells["F2"].PutValue("Value");
+            sheet.Cells["E3"].PutValue("A");
+            sheet.Cells["F3"].PutValue(100);
+            sheet.Cells["E4"].PutValue("B");
+            sheet.Cells["F4"].PutValue(200);
+            sheet.Cells["E5"].PutValue("C");
+            sheet.Cells["F5"].PutValue(300);
 
-            // -------------------------------------------------
-            // Cell C1 will hold the lookup key (e.g., "Banana")
-            // -------------------------------------------------
-            sheet.Cells["C1"].Value = "Banana";
+            // Input key for lookup (A2)
+            sheet.Cells["A2"].PutValue("B");
 
-            // -------------------------------------------------
-            // D1 contains the VLOOKUP formula that returns the price
-            // =VLOOKUP(C1, $A$2:$B$5, 2, FALSE)
-            // -------------------------------------------------
-            sheet.Cells["D1"].Formula = "=VLOOKUP(C1, $A$2:$B$5, 2, FALSE)";
+            // Cell with VLOOKUP formula (C2)
+            // =VLOOKUP(A2, $E$2:$F$5, 2, FALSE)
+            sheet.Cells["C2"].Formula = "=VLOOKUP(A2, $E$2:$F$5, 2, FALSE)";
 
-            // -------------------------------------------------
-            // Add a rectangle shape that will display the lookup result
-            // -------------------------------------------------
-            // Parameters: upper left row, upper left column, upper left offset (pixels),
-            // lower right row, lower right column, lower right offset (pixels)
-            Shape rect = sheet.Shapes.AddRectangle(2, 2, 0, 4, 2, 0);
-            rect.Text = "Lookup Result";
+            // ---------- Add a shape and link it to the VLOOKUP result ----------
+            // Insert a rectangle shape
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                5,   // upper left row
+                0,   // upper left column
+                5,   // top offset (pixels)
+                0,   // left offset (pixels)
+                200, // height (pixels)
+                50   // width (pixels)
+            );
 
-            // Link the shape to the cell containing the VLOOKUP result (D1)
-            // Using SetLinkedCell method (formula, isR1C1, isLocal)
-            rect.SetLinkedCell("$D$1", false, true);
+            // Link shape's text to the cell containing the VLOOKUP formula.
+            // In Excel, setting the text to a formula (e.g., "=C2") makes the shape display the cell's value.
+            shape.Text = "=C2";
 
-            // -------------------------------------------------
-            // Recalculate the workbook so the formula evaluates
-            // -------------------------------------------------
-            workbook.CalculateFormula();
+            // Optional: format the shape's line
+            shape.Line.Weight = 1.0;
+            shape.Line.DashStyle = MsoLineDashStyle.Solid;
 
-            // Update the shape's displayed value based on the linked cell
-            rect.UpdateSelectedValue();
-
-            // -------------------------------------------------
-            // Change the lookup key to demonstrate dynamic update
-            // -------------------------------------------------
-            sheet.Cells["C1"].Value = "Cherry";
-
-            // Recalculate and refresh the shape again
-            workbook.CalculateFormula();
-            rect.UpdateSelectedValue();
-
-            // -------------------------------------------------
             // Save the workbook
-            // -------------------------------------------------
-            workbook.Save("ShapeLinkedCellVLookupDemo.xlsx");
+            string outputPath = "ShapeLinkedToVLookup.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

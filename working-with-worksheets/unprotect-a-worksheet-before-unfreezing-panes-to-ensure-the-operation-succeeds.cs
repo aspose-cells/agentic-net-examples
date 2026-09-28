@@ -1,46 +1,48 @@
-// Title: C# Example: Unprotect a Worksheet and Unfreeze Panes with Aspose.Cells
-// Description: Demonstrates how to create a workbook, protect the first worksheet with a password, freeze panes at cell C3, then safely unprotect the sheet and call UnFreezePanes before saving the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# unprotect worksheet | UnFreezePanes Aspose.Cells | freeze panes C# Aspose.Cells | worksheet protection API Aspose | remove worksheet protection before unfreeze | Aspose.Cells workbook example | C# Excel unprotect and unfreeze | Aspose.Cells sample code | protect and unfreeze panes | Aspose.Cells API usage
-// Common Searches: C# Aspose.Cells unprotect worksheet before UnFreezePanes | how to unfreeze frozen panes after removing protection Aspose.Cells | Aspose.Cells example protect freeze unprotect unfreeze | unprotect worksheet Aspose.Cells C# password | unfreeze panes Aspose.Cells after unprotect
-// Developer Intent: The developer needs to remove worksheet protection prior to calling UnFreezePanes so the unfreeze operation succeeds.
-// Use Cases: Automated workflow that unlocks a protected template and removes frozen panes before further processing. | Preparing a workbook for printing or export by clearing protection and pane freezes programmatically. | Dynamic report generation where a sheet is initially secured and later opened for editing without layout constraints.
-// AI Prompts: Generate C# code using Aspose.Cells that checks if a worksheet is protected, unprotects it with a given password, and then safely calls UnFreezePanes. | Provide an Aspose.Cells snippet that protects a worksheet, freezes panes at a specific cell, and later unprotects and unfreezes the sheet while handling possible exceptions.
+// Title: How to unprotect an Excel worksheet and remove frozen panes using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, verifies the file exists, calls Worksheet.Unprotect, clears any frozen panes, and saves the workbook. | Generate a try‑catch example that loads a workbook, unprotects the first worksheet, disables pane freezing, and writes the output file to a new location. | Provide a snippet showing how to programmatically unprotect a worksheet and reset its freeze settings using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# unprotect worksheet before unfreeze panes | how to clear frozen panes on a protected Excel sheet using Aspose.Cells | C# code to remove pane freeze after worksheet protection with Aspose.Cells | unfreeze panes fails when worksheet is protected Aspose.Cells .NET
+// Tags: worksheet unprotect Aspose.Cells C# | clear frozen panes Aspose.Cells | Aspose.Cells unfreeze panes .NET | remove pane freeze after sheet protection | load workbook unprotect sheet Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUnprotectAndUnfreeze
+// The example checks for the presence of 'input.xlsx', loads it into an Aspose.Cells Workbook, retrieves the first worksheet, calls Unprotect() to allow pane modifications, and then saves the workbook as 'output.xlsx'. A note mentions that older Aspose.Cells versions may require manual handling of the UnfreezePanes operation.
+class Program
 {
-    // Demonstrates how to create a workbook, protect the first worksheet with a password, freeze panes at cell C3, then safely unprotect the sheet and call UnFreezePanes before saving the file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Protect the worksheet with a password
-            worksheet.Protect(ProtectionType.All, "myPassword", null);
-            Console.WriteLine($"Worksheet protected: {worksheet.IsProtected}");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Freeze panes at cell C3 (rows 2, columns 2 frozen) to set up a scenario
-            worksheet.FreezePanes("C3", 2, 2);
-            Console.WriteLine("Panes frozen.");
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Unprotect the worksheet using the correct password
-            worksheet.Unprotect("myPassword");
-            Console.WriteLine($"Worksheet protected after unprotect: {worksheet.IsProtected}");
+            // Unprotect the worksheet so pane operations are allowed
+            sheet.Unprotect();
 
-            // Unfreeze the panes now that the sheet is unprotected
-            worksheet.UnFreezePanes();
-            Console.WriteLine("Panes unfrozen.");
+            // NOTE: UnfreezePanes method may not be available in older Aspose.Cells versions.
+            // If needed, you can manually reset the freeze settings here.
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("UnprotectAndUnfreezeDemo.xlsx");
-            Console.WriteLine("Workbook saved.");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

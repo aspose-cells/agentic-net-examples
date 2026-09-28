@@ -1,53 +1,27 @@
-// Title: Refresh Dynamic Array Formulas After Changing Source Cells with Workbook.CalculateFormula (C# Aspose.Cells)
-// Description: Demonstrates how to create a workbook, insert source values, set a dynamic‑array SEQUENCE formula, calculate all formulas, modify the source data, invoke Workbook.CalculateFormula to refresh the spilled results across every worksheet, display the updated values, and save the file.
-// Keywords: Aspose.Cells | .NET | C# | dynamic array | SEQUENCE formula | Workbook.CalculateFormula | recalculate formulas | spilled array refresh | update source cells | multiple worksheets
-// Common Searches: Aspose.Cells recalculate dynamic array after data change | Workbook.CalculateFormula refresh spilled array C# | How to update SEQUENCE formula in Aspose.Cells | Refresh all formulas in workbook Aspose.Cells .NET | Dynamic array formula recalc across sheets Aspose
-// Developer Intent: Recalculate every dynamic‑array formula after programmatically changing the source cells.
-// Use Cases: Refresh dynamic‑array results after bulk data import before exporting the workbook. | Ensure formulas on multiple sheets stay in sync after batch updates to source ranges. | Generate up‑to‑date SEQUENCE outputs for financial or reporting dashboards.
-// AI Prompts: Provide C# code that modifies source cells and calls wb.CalculateFormula to refresh dynamic‑array formulas in all worksheets using Aspose.Cells. | Explain how Workbook.CalculateFormula interacts with dynamic‑array (spilled) formulas and how to guarantee they recalculate after cell edits. | Show a pattern for looping through several worksheets and invoking CalculateFormula after batch updates in Aspose.Cells for .NET.
+// Title: Recalculate all formulas, including dynamic arrays, after updating cells with Aspose.Cells for .NET
+// AI Prompts: Load a workbook, change specific cell values, then call Workbook.CalculateFormula to refresh every formula in all worksheets using Aspose.Cells for .NET. | Demonstrate how to trigger a full workbook recalculation after modifying cells A1 and B2 with Aspose.Cells. | Show the steps to update cell data and invoke CalculateFormula to ensure dynamic array results are updated across the entire file.
+// Common Searches: Aspose.Cells how to recalculate dynamic array formulas after editing cells | C# workbook.CalculateFormula across all worksheets example | Refresh formulas in an Excel file after changing cell values using Aspose.Cells .NET | Trigger full formula evaluation in Aspose.Cells after updating cell A1 and B2 | CalculateFormula method to update dynamic arrays in Aspose.Cells workbook
+// Tags: Workbook.CalculateFormula for full workbook recalculation | dynamic array formula refresh Aspose.Cells | update cell values then recalc Excel workbook .NET | recalculate formulas across multiple worksheets Aspose.Cells | C# Aspose.Cells modify cells and recalculate
 
-using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, insert source values, set a dynamic‑array SEQUENCE formula, calculate all formulas, modify the source data, invoke Workbook.CalculateFormula to refresh the spilled results across every worksheet, display the updated values, and save the file.
+// The example loads 'input.xlsx', updates cells A1 and B2, calls Workbook.CalculateFormula to recompute all formulas—including dynamic arrays—across every worksheet, and saves the modified workbook as 'output.xlsx'.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (creation rule)
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
+        // Load an existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Populate source data that will be used by a dynamic array formula
-        cells["A1"].PutValue(1);
-        cells["A2"].PutValue(2);
-        cells["A3"].PutValue(3);
+        // Example: modify some cell values
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue(10);   // set A1 to 10
+        sheet.Cells["B2"].PutValue(20);   // set B2 to 20
 
-        // Set a dynamic array formula in B1 that spills into B1:B3
-        // The formula generates a sequence of numbers; calculateValue = true ensures initial calculation
-        cells["B1"].SetDynamicArrayFormula("=SEQUENCE(3)", new FormulaParseOptions(), true);
+        // Recalculate all formulas (including dynamic array formulas) across all sheets
+        workbook.CalculateFormula();
 
-        // Initial calculation of all formulas, including the dynamic array formula
-        wb.CalculateFormula();
-
-        // Modify the source data that influences the dynamic array formula
-        cells["A1"].PutValue(10);
-        cells["A2"].PutValue(20);
-        cells["A3"].PutValue(30);
-
-        // Recalculate all formulas across all worksheets.
-        // This refreshes the dynamic array formulas to reflect the updated data.
-        wb.CalculateFormula();
-
-        // Output the refreshed dynamic array results
-        Console.WriteLine("Dynamic array results after data change:");
-        for (int i = 0; i < 3; i++)
-        {
-            Console.WriteLine($"B{i + 1}: {cells[i, 1].Value}");
-        }
-
-        // Save the workbook (saving rule)
-        wb.Save("DynamicArrayRefreshDemo.xlsx");
+        // Save the updated workbook
+        workbook.Save("output.xlsx");
     }
 }

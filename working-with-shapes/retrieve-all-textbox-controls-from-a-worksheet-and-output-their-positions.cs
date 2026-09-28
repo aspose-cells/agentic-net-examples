@@ -1,68 +1,66 @@
-// Title: C# – Retrieve All TextBox Positions from an Excel Worksheet with Aspose.Cells
-// Description: Loads an Excel workbook, accesses the first worksheet’s TextBoxCollection, iterates each TextBox, and prints its Top, Left, Height, and Width values to the console. The workbook can then be saved optionally.
-// Keywords: Aspose.Cells | C# | Excel TextBox positions | shape coordinates | retrieve textbox size | list textbox locations | worksheet shapes | .NET Excel API
-// Common Searches: Aspose.Cells get textbox coordinates | list all textbox positions in Excel using C# | how to read textbox size with Aspose.Cells | enumerate shape locations Aspose.Cells .NET | retrieve textbox top left values Aspose.Cells
-// Developer Intent: The developer wants to enumerate every TextBox shape in a worksheet and obtain its exact location and dimensions.
-// Use Cases: Generate a layout audit that records the position and size of each TextBox in a spreadsheet. | Programmatically shift TextBox shapes by calculated offsets. | Export textbox coordinates to an external system for visualization or further processing.
-// AI Prompts: Write C# code that moves each TextBox in a worksheet 10 points down using Aspose.Cells. | Create a method that returns a list of objects containing Top, Left, Height, and Width for all TextBoxes in a given worksheet. | Explain how to filter TextBox shapes by size before retrieving their positions with Aspose.Cells.
+// Title: How to list all TextBox shapes in an Excel worksheet and display their cell positions using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, iterates through Worksheet.Shapes, selects only shapes whose type is TextBox, and prints each TextBox's name along with UpperLeftRow, UpperLeftColumn, LowerRightRow, and LowerRightColumn. | Extend the sample to also compute and output each TextBox's width and height in points while preserving the existing file‑existence check and per‑shape error handling.
+// Common Searches: Aspose.Cells C# get coordinates of TextBox shapes in a worksheet | C# enumerate shapes in an Excel file and find TextBox locations using Aspose | How to retrieve row and column indices of a TextBox control with Aspose.Cells | List all TextBox objects and their cell ranges in an .xlsx using Aspose.Cells for .NET
+// Tags: Aspose.Cells shape enumeration | Aspose.Cells TextBox position extraction | Aspose.Cells worksheet shape coordinates | C# Aspose.Cells retrieve shape cell range | Aspose.Cells .xlsx shape location
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The program loads an Excel workbook, iterates over all shapes on the first worksheet, filters shapes of type TextBox, and writes each TextBox's name together with its upper‑left and lower‑right row/column indices to the console, handling missing files and shape‑specific errors gracefully.
+class Program
 {
-    // Loads an Excel workbook, accesses the first worksheet’s TextBoxCollection, iterates each TextBox, and prints its Top, Left, Height, and Width values to the console. The workbook can then be saved optionally.
-    public class RetrieveTextBoxPositions
+    static void Main()
     {
-        public static void Run()
-        {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+        const string inputPath = "input.xlsx";
 
-            // Verify input file exists to avoid FileNotFoundException
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes in the worksheet
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Access the collection of TextBox objects
-                TextBoxCollection textBoxes = worksheet.TextBoxes;
-
-                // Iterate through all TextBoxes and output their positions
-                for (int i = 0; i < textBoxes.Count; i++)
+                try
                 {
-                    TextBox tb = textBoxes[i];
-                    Console.WriteLine($"TextBox {i}: Top={tb.Top}, Left={tb.Left}, Height={tb.Height}, Width={tb.Width}");
-                }
+                    // Identify TextBox controls without directly referencing ShapeType enum
+                    if (shape.Type.ToString() == "TextBox")
+                    {
+                        // Retrieve position details (row/column indices)
+                        int upperLeftRow = shape.UpperLeftRow;
+                        int upperLeftColumn = shape.UpperLeftColumn;
+                        int lowerRightRow = shape.LowerRightRow;
+                        int lowerRightColumn = shape.LowerRightColumn;
 
-                // Save the workbook (optional, can be the same file or a new one)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully
-                Console.WriteLine($"Error: {ex.Message}");
+                        // Output the TextBox name and its position
+                        Console.WriteLine($"TextBox '{shape.Name}' Position:");
+                        Console.WriteLine($"  Upper-Left: Row {upperLeftRow}, Column {upperLeftColumn}");
+                        Console.WriteLine($"  Lower-Right: Row {lowerRightRow}, Column {lowerRightColumn}");
+                    }
+                }
+                catch (Exception shapeEx)
+                {
+                    // Handle any shape-specific errors without stopping the whole process
+                    Console.WriteLine($"Error processing shape '{shape.Name}': {shapeEx.Message}");
+                }
             }
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RetrieveTextBoxPositions.Run();
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

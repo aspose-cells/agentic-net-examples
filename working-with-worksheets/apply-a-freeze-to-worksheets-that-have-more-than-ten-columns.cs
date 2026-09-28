@@ -1,59 +1,64 @@
-// Title: C# – Freeze Panes on Worksheets with Over 10 Columns Using Aspose.Cells
-// Description: Creates a workbook, adds worksheets with varying column counts, checks each sheet's MaxDataColumn, and applies FreezePanes(1,1,1,1) to lock the first row and column when the sheet contains more than ten populated columns, then saves the file.
-// Keywords: Aspose.Cells | C# FreezePanes | MaxDataColumn | conditional freeze panes | Excel automation .NET | freeze first row column | wide worksheet handling
-// Common Searches: Aspose.Cells freeze panes based on column count | C# freeze first row and column if more than 10 columns | How to use MaxDataColumn with FreezePanes in Aspose.Cells | Conditional FreezePanes example .NET | Freeze panes for large Excel sheets programmatically
-// Developer Intent: Automatically lock the header row and first column on any worksheet that has more than ten data columns.
-// Use Cases: Generate multi‑sheet reports where wide tables need frozen headers for easier navigation | Standardize freeze settings across all sheets in an automated Excel export | Improve readability of dashboards by preventing horizontal scrolling beyond a column threshold
-// AI Prompts: Generate C# code using Aspose.Cells that freezes the top row and left column only when a worksheet contains more than a specified number of columns. | Describe how MaxDataColumn can be leveraged to decide when to call FreezePanes in an Aspose.Cells workbook. | Suggest alternative approaches to apply FreezePanes conditionally without looping through each worksheet.
+// Title: Freeze the first ten columns in worksheets that exceed ten columns using Aspose.Cells for .NET
+// AI Prompts: Create a helper method that takes a Workbook and freezes columns A‑J on each worksheet where the total column count is greater than ten. | Update the foreach loop to invoke FreezePanes only when sheet.Cells.MaxColumn + 1 > 10, using the overload that freezes the first ten columns. | Add logging to record any worksheet that cannot be frozen and ensure the workbook is saved after processing all sheets.
+// Common Searches: c# Aspose.Cells conditional FreezePanes based on column count | how to freeze first ten columns only if worksheet has more than ten columns using .NET | programmatically apply freeze panes to wide Excel sheets with Aspose.Cells | apply FreezePanes to all worksheets in a workbook when column count exceeds 10
+// Tags: conditional FreezePanes with Aspose.Cells | freeze first ten columns .NET Excel | worksheet column count check Aspose.Cells | apply FreezePanes based on MaxColumn | Aspose.Cells wide worksheet handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace FreezePanesExample
+// The program loads an Excel workbook, iterates through each worksheet, checks if the sheet contains more than ten columns, and freezes the first ten columns using the FreezePanes method when the condition is met, then saves the updated file.
+class Program
 {
-    // Creates a workbook, adds worksheets with varying column counts, checks each sheet's MaxDataColumn, and applies FreezePanes(1,1,1,1) to lock the first row and column when the sheet contains more than ten populated columns, then saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle create rule)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Example: populate worksheets with sample data
-            // Worksheet 0 will have 12 columns (will be frozen)
-            Worksheet ws0 = workbook.Worksheets[0];
-            for (int col = 0; col < 12; col++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ws0.Cells[0, col].PutValue($"Header {col + 1}");
-                ws0.Cells[1, col].PutValue($"Data {col + 1}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Worksheet 1 will have 8 columns (will not be frozen)
-            Worksheet ws1 = workbook.Worksheets.Add("SmallSheet");
-            for (int col = 0; col < 8; col++)
-            {
-                ws1.Cells[0, col].PutValue($"H{col + 1}");
-                ws1.Cells[1, col].PutValue($"D{col + 1}");
-            }
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets
+            // Process each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine the number of columns that contain data
-                // MaxDataColumn returns zero‑based index of the last column with data
-                int lastDataColumnIndex = sheet.Cells.MaxDataColumn;
-
-                // If there are more than 10 columns (i.e., index >= 10)
-                if (lastDataColumnIndex >= 10)
+                try
                 {
-                    // Freeze the first row and first column (cell B2 is the freeze point)
-                    // Parameters: row, column, freezedRows, freezedColumns
-                    sheet.FreezePanes(1, 1, 1, 1);
+                    // Determine the last column index that contains data (0‑based)
+                    int lastColumnIndex = sheet.Cells.MaxColumn;
+
+                    // If the worksheet has more than ten columns, freeze the first ten columns
+                    if (lastColumnIndex + 1 > 10)
+                    {
+                        // Freeze the first ten columns using the 4‑parameter overload
+                        // totalRows and totalColumns define the pane size; using the current max values
+                        int totalRows = sheet.Cells.MaxRow + 1;
+                        int totalColumns = sheet.Cells.MaxColumn + 1;
+                        sheet.FreezePanes(totalRows, totalColumns, 0, 10);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {ex.Message}");
                 }
             }
 
-            // Save the workbook (lifecycle save rule)
-            workbook.Save("FreezePanesResult.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,107 +1,79 @@
-// Title: C# method to load an Excel workbook and export HTML with tooltips using Aspose.Cells
-// Description: A static utility that validates a file path, loads an Excel workbook via Aspose.Cells, enables HtmlSaveOptions.AddTooltipText, saves the workbook to a memory stream, and returns the resulting HTML string. Includes robust error handling.
-// Keywords: Aspose.Cells | C# HTML export | AddTooltipText | Excel to HTML conversion | memory stream HTML | tooltip in exported HTML | HtmlSaveOptions | load workbook | export workbook as HTML | convert Excel to HTML C#
-// Common Searches: Aspose.Cells export Excel to HTML with tooltips | C# convert Excel file to HTML string | Enable tooltip text in Aspose.Cells HTML export | Save Excel as HTML in memory stream Aspose | Get HTML from workbook without writing file Aspose.Cells
-// Developer Intent: Create a reusable function that reads an Excel file and returns its HTML representation with cell comments rendered as tooltips.
-// Use Cases: Show an HTML preview of an uploaded Excel file in a web portal while preserving comments as hover tooltips. | Generate email‑ready HTML from an Excel report without creating temporary files on disk. | Render Excel data with interactive tooltips in a WinForms/WPF application by injecting the returned HTML directly.
-// AI Prompts: Write a unit test for LoadWorkbookAndExportHtml that asserts tooltip markup appears in the output HTML. | Refactor the method to accept a Stream and optional HtmlSaveOptions, enabling custom export settings. | Demonstrate how to embed the HTML string returned by LoadWorkbookAndExportHtml into an ASP.NET MVC view.
+// Title: Generate an HTML string from an Excel workbook with tooltips using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that loads an .xlsx file with Aspose.Cells, turns on tooltip generation, and returns the resulting HTML markup as a string. | Build a utility that reads an Excel workbook, configures HTML export to embed cell comments as hover text, and outputs the HTML via a memory stream.
+// Common Searches: Aspose.Cells export Excel to HTML with cell comments displayed as tooltips | C# convert .xlsx file to HTML string including hover tooltips | how to enable tooltip text when saving workbook as HTML using Aspose.Cells | generate HTML from Excel workbook in memory without creating a file Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions tooltip support | convert Excel workbook to HTML string C# | export workbook with cell comments as hover text | memory stream HTML conversion Aspose.Cells | load workbook from file path Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Provides a static C# utility that validates a file path, loads the Excel workbook with Aspose.Cells, sets HtmlSaveOptions.AddTooltipText to true, saves the workbook to a MemoryStream as HTML, reads the stream into a string, and returns the HTML markup; errors are wrapped in an InvalidOperationException for clearer diagnostics.
+public static class WorkbookHtmlUtility
 {
-    // A static utility that validates a file path, loads an Excel workbook via Aspose.Cells, enables HtmlSaveOptions.AddTooltipText, saves the workbook to a memory stream, and returns the resulting HTML string. Includes robust error handling.
-    public static class HtmlUtility
+    /// <param name="filePath">Full path to the Excel file to be loaded.</param>
+    /// <returns>HTML string of the workbook.</returns>
+    public static string LoadWorkbookAndGetHtml(string filePath)
     {
-        /// <param name="excelFilePath">Full path to the source Excel file.</param>
-        /// <returns>HTML representation of the workbook with tooltip text enabled.</returns>
-        public static string LoadWorkbookAndExportHtml(string excelFilePath)
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("File path must be provided.", nameof(filePath));
+
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException("The specified Excel file was not found.", filePath);
+
+        try
         {
-            if (string.IsNullOrWhiteSpace(excelFilePath))
-                throw new ArgumentException("Excel file path must be provided.", nameof(excelFilePath));
+            // Load the workbook from the given file path
+            var workbook = new Workbook(filePath);
 
-            if (!File.Exists(excelFilePath))
-                throw new FileNotFoundException("The specified Excel file was not found.", excelFilePath);
-
-            try
+            // Configure HTML save options to include tooltip text
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Load the workbook from the file.
-                Workbook workbook = new Workbook(excelFilePath);
+                AddTooltipText = true
+            };
 
-                // Configure HTML save options and enable tooltip text.
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            // Save the workbook to a memory stream in HTML format
+            using (var htmlStream = new MemoryStream())
+            {
+                workbook.Save(htmlStream, htmlOptions);
+                htmlStream.Position = 0; // Reset stream position for reading
+
+                // Read the HTML content from the memory stream and return it as a string
+                using (var reader = new StreamReader(htmlStream))
                 {
-                    AddTooltipText = true
-                };
-
-                // Save the workbook to a memory stream as HTML.
-                using (MemoryStream htmlStream = new MemoryStream())
-                {
-                    workbook.Save(htmlStream, saveOptions);
-                    htmlStream.Position = 0; // Reset stream position for reading.
-
-                    // Read the HTML content from the stream and return it.
-                    using (StreamReader reader = new StreamReader(htmlStream))
-                    {
-                        return reader.ReadToEnd();
-                    }
+                    return reader.ReadToEnd();
                 }
-            }
-            catch (Exception ex)
-            {
-                // Wrap and rethrow to preserve stack trace while providing context.
-                throw new InvalidOperationException("Failed to convert Excel to HTML.", ex);
             }
         }
-    }
-
-    internal class Program
-    {
-        private static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                string excelPath;
+            // Wrap and rethrow to provide context
+            throw new InvalidOperationException($"Failed to convert workbook '{filePath}' to HTML.", ex);
+        }
+    }
+}
 
-                if (args.Length > 0)
-                {
-                    excelPath = args[0];
-                }
-                else
-                {
-                    Console.Write("Enter full path to the Excel file: ");
-                    excelPath = Console.ReadLine();
-                }
+public class Program
+{
+    // Simple entry point for demonstration purposes
+    public static void Main(string[] args)
+    {
+        try
+        {
+            // Expect the first argument to be the Excel file path
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide the full path to an Excel file as a command‑line argument.");
+                return;
+            }
 
-                // Validate the input path before processing.
-                if (string.IsNullOrWhiteSpace(excelPath))
-                    throw new ArgumentException("No Excel file path was provided.");
-
-                string htmlContent = HtmlUtility.LoadWorkbookAndExportHtml(excelPath);
-
-                // Output the HTML to console (or you could write to a file).
-                Console.WriteLine("=== Generated HTML ===");
-                Console.WriteLine(htmlContent);
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.Error.WriteLine($"File error: {fnfEx.Message}");
-            }
-            catch (ArgumentException argEx)
-            {
-                Console.Error.WriteLine($"Argument error: {argEx.Message}");
-            }
-            catch (InvalidOperationException invOpEx)
-            {
-                Console.Error.WriteLine($"Processing error: {invOpEx.Message}");
-                Console.Error.WriteLine(invOpEx.InnerException?.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            string excelPath = args[0];
+            string html = WorkbookHtmlUtility.LoadWorkbookAndGetHtml(excelPath);
+            Console.WriteLine("Generated HTML:");
+            Console.WriteLine(html);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

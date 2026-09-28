@@ -1,66 +1,71 @@
-// Title: Update a Named Range with Today’s Date using Aspose.Cells for .NET
-// Description: Demonstrates a macro‑like routine that creates a workbook, defines a named range (e.g., "TodayDate"), fills the range with the current date, applies a standard date format, and saves the file as UpdatedNamedRange.xlsx.
-// Keywords: Aspose.Cells C# named range date | set named range to today Aspose.Cells | update named range programmatically .NET | apply date format Aspose.Cells | macro‑like routine Aspose.Cells
-// Common Searches: Aspose.Cells set named range to current date | C# update named range daily Aspose.Cells | how to apply date format to named range in Aspose.Cells | macro alternative for updating date cell Aspose.Cells | schedule Aspose.Cells code to run each day
-// Developer Intent: Provide sample code that programmatically refreshes a named range with the current date and proper formatting in a .NET workbook.
-// Use Cases: Automated daily reports where the header shows the generation date. | Workbook templates that display today’s date whenever opened or saved. | Dashboard files that need the date cell refreshed before publishing.
-// AI Prompts: Generate C# Aspose.Cells code to create a named range "ReportDate" at cell B2, insert DateTime.Now, apply a custom date format, and save the workbook. | Show how to loop through a multi‑cell named range and set each cell to the current date with a specific style using Aspose.Cells. | Explain how to schedule the UpdateNamedRangeWithCurrentDate method to execute automatically each day on Windows or Linux.
+// Title: C# method to write the current date into a specific named range in an Excel workbook with Aspose.Cells
+// AI Prompts: Write C# code that opens an existing .xlsx file using Aspose.Cells, finds a named range, inserts DateTime.Today into its top‑left cell, applies the short date number format, and saves the workbook. | Create a static helper function that takes a workbook path and a named range name, updates that range with today's date, formats the cell as m/d/yyyy, and includes error handling for missing files or undefined ranges.
+// Common Searches: asp.net cells how to set today's date in a named range of an existing workbook | c# update excel named range with current date using Aspose.Cells library | programmatically refresh a date cell in a named range each day with Aspose.Cells | Aspose.Cells C# example for writing DateTime.Today to the first cell of a named range
+// Tags: update named range with current date Aspose.Cells | write DateTime.Today to first cell of named range | apply short date number format cell Aspose.Cells | load and save workbook after modifying named range | error handling missing file or undefined named range Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
 
-namespace AsposeCellsExamples
+// The provided C# example defines a static UpdateNamedRange method that loads an Excel workbook, retrieves a specified named range, writes the current date (without time) into its first cell, applies the m/d/yyyy number format, and saves the file, with comprehensive error handling for missing files and undefined ranges.
+public class NamedRangeUpdater
 {
-    // Demonstrates a macro‑like routine that creates a workbook, defines a named range (e.g., "TodayDate"), fills the range with the current date, applies a standard date format, and saves the file as UpdatedNamedRange.xlsx.
-    public class UpdateNamedRangeWithCurrentDate
+    // Updates the specified named range with the current date (date only, no time).
+    public static void UpdateNamedRange(string workbookPath, string namedRange)
     {
-        // Entry point for the example
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            // Ensure the workbook file exists before attempting to load it.
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load the existing workbook.
+            Workbook workbook = new Workbook(workbookPath);
 
-            // Access the first worksheet (default name is "Sheet1")
-            Worksheet sheet = workbook.Worksheets[0];
+            // Retrieve the range associated with the named range.
+            AsposeRange range = workbook.Worksheets.GetRangeByName(namedRange);
+            if (range == null)
+                throw new ArgumentException($"Named range '{namedRange}' does not exist in the workbook.");
 
-            // Define the cell that will hold the date (e.g., A1)
-            string targetCellAddress = "A1";
+            // Determine the top‑left cell of the range.
+            int firstRow = range.FirstRow;
+            int firstColumn = range.FirstColumn;
+            Worksheet sheet = range.Worksheet;
 
-            // Create a named range called "TodayDate" that refers to the target cell
-            int nameIndex = workbook.Worksheets.Names.Add("TodayDate");
-            Name todayName = workbook.Worksheets.Names[nameIndex];
-            todayName.RefersTo = $"={sheet.Name}!${targetCellAddress}";
+            // Write the current date (without time) into the cell.
+            Cell targetCell = sheet.Cells[firstRow, firstColumn];
+            targetCell.PutValue(DateTime.Today);
 
-            // Retrieve the range that the name points to
-            Aspose.Cells.Range dateRange = todayName.GetRange();
-
-            // Create a style for date formatting (Number format 14 = "m/d/yyyy")
+            // Apply a date number format (m/d/yyyy).
             Style dateStyle = workbook.CreateStyle();
-            dateStyle.Number = 14;
+            dateStyle.Number = 14; // 14 = "m/d/yyyy"
+            targetCell.SetStyle(dateStyle);
 
-            // Update each cell in the range with the current date and apply the style
-            foreach (Cell cell in dateRange)
-            {
-                cell.PutValue(DateTime.Today);
-                cell.SetStyle(dateStyle);
-            }
+            // Save the workbook (overwrites the original file).
+            workbook.Save(workbookPath);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error updating named range: {ex.Message}");
+            throw;
+        }
+    }
 
-            // Save the workbook to a file
-            string outputPath = "UpdatedNamedRange.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+    // Example usage.
+    public static void Main()
+    {
+        try
+        {
+            string filePath = @"C:\Temp\Sample.xlsx";
+            string rangeName = "TodayDate";
+
+            UpdateNamedRange(filePath, rangeName);
+            Console.WriteLine("Named range updated with current date.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Operation failed: {ex.Message}");
         }
     }
 }

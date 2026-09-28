@@ -1,39 +1,53 @@
-// Title: Export Excel to HTML with Excel‑style overflow via HtmlCrossType.Default (C# Aspose.Cells)
-// Description: Demonstrates how to create a workbook, insert a long string in cell A1, set a narrow column width, configure HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.Default, and save the sheet as HTML so the text overflows like in Excel.
-// Keywords: Aspose.Cells HTML export | HtmlCrossType.Default | Excel overflow HTML | C# Aspose.Cells example | cell text overflow | HtmlSaveOptions cross string | export worksheet to HTML
-// Common Searches: Aspose.Cells export HTML overflow behavior | HtmlCrossStringType Default example C# | how to keep Excel text overflow in HTML output | C# save workbook as HTML with overflow | Aspose.Cells HTMLCrossType settings
-// Developer Intent: Export a spreadsheet to HTML while preserving Excel‑like text overflow using HtmlCrossType.Default.
-// Use Cases: Generate web‑ready reports that display long cell values spilling into adjacent columns. | Create an online spreadsheet viewer that mimics Excel’s visual layout for better readability. | Produce printable HTML previews where column width constraints and overflow are retained.
-// AI Prompts: Show C# code to export multiple worksheets to HTML with HtmlCrossType.Default so each sheet keeps overflow behavior. | Explain how column width units influence overflow when using HtmlCrossType.Default in Aspose.Cells. | Provide a comparison of HtmlCrossType.Default vs. HtmlCrossType.Always for controlling text overflow in HTML exports.
+// Title: Create HTML from an Aspose.Cells workbook that mimics Excel cell overflow for long text using HtmlCrossType.Default (C#)
+// AI Prompts: Write C# code that narrows a column, places a lengthy string in a cell, and saves the worksheet as HTML with HtmlCrossType.Default so the text spills into neighboring cells. | Show how to configure HtmlSaveOptions in Aspose.Cells to export a sheet to HTML while preserving Excel‑style overflow for long strings.
+// Common Searches: asp.net aspose.cells export worksheet to html with text overflow | how to keep Excel cell overflow when converting to html using aspose.cells c# | HtmlCrossType.Default example for preserving overflow in html output | set column width and overflow long string in aspose.cells html export
+// Tags: Aspose.Cells HTML export overflow | HtmlCrossType.Default C# | set column width Aspose.Cells | long string cell overflow Aspose.Cells | export worksheet to HTML Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlCrossDemo
+// The sample creates a workbook, narrows column A, inserts a long string into A1, and saves the active worksheet as HTML using HtmlSaveOptions with the default HtmlCrossType, demonstrating Excel‑style text overflow in the generated HTML.
+class Program
 {
-    // Demonstrates how to create a workbook, insert a long string in cell A1, set a narrow column width, configure HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.Default, and save the sheet as HTML so the text overflows like in Excel.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet and set its name
+            var sheet = workbook.Worksheets[0];
+            sheet.Name = "OverflowDemo";
 
-            // Put a long text into a cell that will overflow the column width
-            sheet.Cells["A1"].PutValue("This is a very long text string that should overflow the cell width and demonstrate Excel-like overflow behavior when exported to HTML.");
+            // Set a narrow column width to force overflow (width in characters)
+            sheet.Cells.SetColumnWidth(0, 10);
 
-            // Set a narrow column width to force overflow
-            sheet.Cells.SetColumnWidth(0, 10); // width in characters
+            // Insert a long string that exceeds the column width
+            sheet.Cells["A1"].PutValue("This is a very long string that should overflow into adjacent empty cells when rendered as HTML.");
 
-            // Configure HTML save options to use the Default cross‑string behavior
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.HtmlCrossStringType = HtmlCrossType.Default; // mimic Excel overflow
+            // Configure HTML save options (default overflow behavior is sufficient)
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportActiveWorksheetOnly = true
+            };
 
-            // Save the workbook as an HTML file
-            workbook.Save("OverflowDemo.html", htmlOptions);
+            // Determine output file path and ensure the directory exists
+            string outputPath = "OverflowDemo.html";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"HTML file saved successfully to: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

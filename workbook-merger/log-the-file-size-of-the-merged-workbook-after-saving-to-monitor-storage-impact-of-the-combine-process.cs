@@ -1,10 +1,7 @@
-// Title: Log merged workbook size after CellsHelper.MergeFiles in Aspose.Cells for .NET
-// Description: Creates two temporary Excel files, merges them with CellsHelper.MergeFiles, saves the result, and writes the merged workbook's byte size to the console while cleaning up temporary files.
-// Keywords: Aspose.Cells | CellsHelper.MergeFiles | C# | .NET | merge Excel workbooks | log file size | merged workbook size | FileInfo length | storage impact | Excel file size measurement
-// Common Searches: How to get size of merged workbook using Aspose.Cells | Log file size after CellsHelper.MergeFiles C# | Measure storage impact of Excel merge Aspose | Retrieve merged Excel file byte count .NET | Aspose.Cells merge files and check output size
-// Developer Intent: The developer needs to combine multiple Excel workbooks and record the resulting file size to monitor storage usage or enforce size limits.
-// Use Cases: Automate daily report consolidation and capture the combined file size for quota monitoring. | Merge client‑provided spreadsheets and verify the final workbook stays within upload limits. | Aggregate data extracts into a single workbook and log its size for audit trails.
-// AI Prompts: Generate C# code that merges a list of Excel files with Aspose.Cells and prints the merged file size in bytes. | Show how to handle exceptions, clean temporary files, and log the merged workbook size using Aspose.Cells. | Explain how to format the merged workbook size in kilobytes or megabytes for readable console output.
+// Title: Merge multiple Excel workbooks with Aspose.Cells for .NET and log the saved file size
+// AI Prompts: Write C# code that uses Aspose.Cells to combine several .xlsx files and prints the byte size of the resulting file after saving. | Create a program that generates sample workbooks, merges them with Workbook.Combine, saves the merged workbook, and outputs the file length. | Show how to measure the storage impact of merging Excel files by retrieving the FileInfo.Length after calling Workbook.Save in C#.
+// Common Searches: C# Aspose.Cells combine two workbooks and get output file size | how to retrieve size of merged Excel file after using Workbook.Combine | Aspose.Cells .NET log file size after saving merged workbook | measure storage increase when merging multiple .xlsx files with Aspose.Cells | get byte count of saved workbook in C# Aspose.Cells
+// Tags: combine workbooks Aspose.Cells C# | retrieve saved workbook size .NET | measure merged Excel file size | Workbook.Combine storage impact | track file length after Aspose.Cells Save | monitor Excel merge file size
 
 using System;
 using System.IO;
@@ -12,53 +9,55 @@ using Aspose.Cells;
 
 namespace AsposeCellsMergeAndLogSize
 {
-    // Creates two temporary Excel files, merges them with CellsHelper.MergeFiles, saves the result, and writes the merged workbook's byte size to the console while cleaning up temporary files.
+    // The example creates two sample Excel workbooks, merges them into a single workbook using Aspose.Cells' Combine method, saves the merged file, and then logs the saved file's size in bytes before cleaning up the temporary source files.
     class Program
     {
         static void Main()
         {
-            // Prepare temporary files to merge
-            string[] filesToMerge = new string[2];
-            filesToMerge[0] = "TempFile1.xlsx";
-            filesToMerge[1] = "TempFile2.xlsx";
+            // Prepare temporary files to be merged
+            string[] sourceFiles = { "Source1.xlsx", "Source2.xlsx" };
+            CreateSampleWorkbook(sourceFiles[0], "Data from source 1");
+            CreateSampleWorkbook(sourceFiles[1], "Data from source 2");
 
-            // Create first workbook and save
-            Workbook wb1 = new Workbook();
-            wb1.Worksheets[0].Cells["A1"].PutValue("Data from first file");
-            wb1.Save(filesToMerge[0]);
+            // Load the first workbook which will receive the others
+            Workbook mergedWorkbook = new Workbook(sourceFiles[0]);
 
-            // Create second workbook and save
-            Workbook wb2 = new Workbook();
-            wb2.Worksheets[0].Cells["A1"].PutValue("Data from second file");
-            wb2.Save(filesToMerge[1]);
-
-            // Define cache and output files
-            string cacheFile = "MergeCache.tmp";
-            string outputFile = "MergedResult.xlsx";
-
-            try
+            // Load and combine the remaining workbooks
+            for (int i = 1; i < sourceFiles.Length; i++)
             {
-                // Merge the temporary files into a single workbook
-                CellsHelper.MergeFiles(filesToMerge, cacheFile, outputFile);
+                Workbook wb = new Workbook(sourceFiles[i]);
+                mergedWorkbook.Combine(wb);
+                wb.Dispose();
+            }
 
-                // Log the size of the merged workbook
-                FileInfo mergedInfo = new FileInfo(outputFile);
-                Console.WriteLine($"Merged workbook saved to '{outputFile}'.");
-                Console.WriteLine($"File size: {mergedInfo.Length} bytes");
-            }
-            catch (Exception ex)
+            // Define output path for the merged workbook
+            string mergedFilePath = "MergedResult.xlsx";
+
+            // Save the merged workbook (uses the provided Save method)
+            mergedWorkbook.Save(mergedFilePath);
+            mergedWorkbook.Dispose();
+
+            // Log the file size after saving
+            FileInfo info = new FileInfo(mergedFilePath);
+            Console.WriteLine($"Merged workbook saved to '{mergedFilePath}'.");
+            Console.WriteLine($"File size: {info.Length} bytes.");
+
+            // Clean up temporary source files
+            foreach (string file in sourceFiles)
             {
-                Console.WriteLine($"Error during merge: {ex.Message}");
+                if (File.Exists(file))
+                    File.Delete(file);
             }
-            finally
-            {
-                // Clean up temporary files
-                foreach (string path in filesToMerge)
-                {
-                    if (File.Exists(path)) File.Delete(path);
-                }
-                if (File.Exists(cacheFile)) File.Delete(cacheFile);
-            }
+        }
+
+        // Helper to create a simple workbook with a single cell value and save it
+        private static void CreateSampleWorkbook(string filePath, string cellValue)
+        {
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            ws.Cells["A1"].PutValue(cellValue);
+            wb.Save(filePath);
+            wb.Dispose();
         }
     }
 }

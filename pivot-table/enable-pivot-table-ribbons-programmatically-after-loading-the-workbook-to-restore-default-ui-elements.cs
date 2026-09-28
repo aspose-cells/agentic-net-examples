@@ -1,10 +1,7 @@
-// Title: Enable PivotTable Ribbon, Wizard, and Field List programmatically with Aspose.Cells for .NET (C#)
-// Description: Loads an existing XLSX workbook, removes any custom Ribbon XML to restore Excel's default ribbon, makes the PivotFieldList pane visible, and iterates through all worksheets to set each PivotTable's EnableWizard and EnableFieldList properties to true before saving the file.
-// Keywords: Aspose.Cells enable pivot ribbon | restore default Excel ribbon Aspose | show pivot field list C# | pivot table wizard enable Aspose.Cells | clear RibbonXml Aspose | pivot table UI programmatically | Aspose.Cells C# pivot settings
-// Common Searches: how to reset ribbon UI for pivot tables using Aspose.Cells | enable pivot table wizard and field list in all sheets Aspose.Cells .NET | remove custom RibbonXml and show pivot field list Aspose.Cells | programmatically show pivot field list in Excel workbook C# | restore default ribbon after loading workbook Aspose
-// Developer Intent: Reset any custom ribbon configuration and activate the PivotTable wizard and field‑list UI for every pivot table in a loaded workbook.
-// Use Cases: A reporting tool loads a workbook saved with a custom ribbon, clears RibbonXml, and returns the standard Excel ribbon for end users. | Generating dynamic dashboards where all pivot tables must expose the wizard and field‑list dialogs without manual user interaction. | Automating the preparation of shared workbooks so recipients can immediately access PivotTable UI features.
-// AI Prompts: Write C# code using Aspose.Cells to clear custom RibbonXml, enable the PivotTable wizard and field list for all pivot tables, and save the workbook. | Show an example that loads an .xlsx file, makes the PivotFieldList pane visible, restores the default ribbon UI, and saves the result. | Explain how to iterate over worksheets and pivot tables to set EnableWizard and EnableFieldList properties with Aspose.Cells for .NET.
+// Title: Programmatically restore the default PivotTable ribbon UI in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that sets Workbook.RibbonXml to null, turns on PivotTable.EnableWizard and EnableFieldList for every pivot table, and enables RefreshDataOnOpeningFile. | Provide an example that iterates through all worksheets, refreshes each PivotTable after activating the default UI elements, and saves the modified workbook.
+// Common Searches: Aspose.Cells how to enable pivot wizard and field list for all pivot tables | C# code to remove custom ribbon XML from Excel workbook with Aspose.Cells | Make pivot field list visible by default in an existing .xlsx using Aspose.Cells | Automatically refresh pivot tables on opening file with Aspose.Cells .NET
+// Tags: reset RibbonXml Aspose.Cells .NET | activate pivot wizard field list C# | show pivot field list workbook | configure pivot refresh on file open | default pivot UI settings Excel
 
 using System;
 using System.IO;
@@ -13,49 +10,56 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotRibbonDemo
 {
-    // Loads an existing XLSX workbook, removes any custom Ribbon XML to restore Excel's default ribbon, makes the PivotFieldList pane visible, and iterates through all worksheets to set each PivotTable's EnableWizard and EnableFieldList properties to true before saving the file.
+    // Loads an existing workbook, clears any custom Ribbon XML, makes the pivot field list visible, enables the wizard and field list for each PivotTable, sets them to refresh when the file opens, refreshes all pivot tables, and saves the updated workbook.
     public class Program
     {
         public static void Main()
         {
             const string inputPath = "InputWithPivot.xlsx";
-            const string outputPath = "OutputWithDefaultRibbon.xlsx";
+            const string outputPath = "OutputWithDefaultPivotUI.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+                return;
+            }
 
             try
             {
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    return;
-                }
-
                 // Load the workbook that contains pivot tables
                 Workbook workbook = new Workbook(inputPath);
 
-                // Restore the default Ribbon UI by clearing any custom Ribbon XML
+                // Use the default Ribbon UI (remove any custom Ribbon XML)
                 workbook.RibbonXml = null;
 
-                // Ensure the pivot field list UI is visible
+                // Ensure the pivot field list is visible at the workbook level
                 workbook.Settings.HidePivotFieldList = false;
 
-                // Enable UI features for each pivot table in every worksheet
+                // Iterate through all worksheets and their pivot tables
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
                     foreach (PivotTable pt in sheet.PivotTables)
                     {
+                        // Enable UI elements for the pivot table
                         pt.EnableWizard = true;
                         pt.EnableFieldList = true;
+
+                        // Refresh data automatically when the file is opened
+                        pt.RefreshDataOnOpeningFile = true;
                     }
+
+                    // Apply changes to all pivot tables in the current worksheet
+                    sheet.RefreshPivotTables();
                 }
 
-                // Save the modified workbook (default format is XLSX)
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                // Log any unexpected errors
+                // Handle any unexpected errors gracefully
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

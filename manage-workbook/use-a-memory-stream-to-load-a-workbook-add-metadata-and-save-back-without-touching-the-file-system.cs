@@ -1,52 +1,65 @@
-// Title: Add Custom Document Properties to an Aspose.Cells Workbook Using In‑Memory Streams (C#)
-// Description: Demonstrates how to create a workbook, save it to a MemoryStream, load WorkbookMetadata, add custom document properties, and write the updated metadata back to another MemoryStream—all without touching the file system.
-// Keywords: Aspose.Cells | WorkbookMetadata | MemoryStream | custom document properties | C# | .NET | in‑memory Excel | no file I/O | metadata manipulation | SaveFormat.Xlsx
-// Common Searches: Aspose.Cells add custom properties without saving to disk | C# load Excel workbook from MemoryStream and edit metadata | How to use WorkbookMetadata with MemoryStream | Update Excel custom document properties in memory | Aspose.Cells metadata stream example
-// Developer Intent: Modify or add custom document properties to an Excel workbook entirely in memory and retrieve the resulting metadata stream.
-// Use Cases: Generate an Excel report on a web server, embed processing details as custom properties, and return the stream to a client API. | Receive an uploaded Excel file as a stream, append audit information via custom properties, and store the updated stream in a database. | Validate metadata changes in automated tests by inspecting the length or content of the metadata MemoryStream.
-// AI Prompts: Show C# code to read existing custom document properties from a workbook loaded from a MemoryStream using Aspose.Cells. | Provide an example that updates built‑in properties (Author, Title) in an in‑memory workbook and returns the modified stream. | Explain how to apply both custom and built‑in property changes to a workbook before saving it to a MemoryStream.
+// Title: Load an Excel workbook from a byte array, add built‑in and custom document properties, and save back to a byte array using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an Excel workbook from a byte array using a MemoryStream, sets the Title, Author, Company and two custom properties, then outputs the revised workbook as a byte array with Aspose.Cells. | Write a method that accepts workbook bytes, injects built‑in metadata and user‑defined properties, and returns the updated bytes without writing any files, using Aspose.Cells for .NET. | Provide a sample that demonstrates modifying Excel document metadata entirely in memory and retrieving the resulting byte[] with Aspose.Cells.
+// Common Searches: Aspose.Cells add custom document properties to workbook from memory stream | How to modify Excel metadata in C# without saving to disk | Load Excel from byte array, set title and author, and get updated bytes using Aspose.Cells | Save modified workbook to byte array using Aspose.Cells for .NET
+// Tags: load workbook from memory stream Aspose.Cells | set built‑in document properties Aspose.Cells | add custom document properties Aspose.Cells | save workbook to byte array .NET | modify Excel metadata in memory
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Metadata;
 
-// Demonstrates how to create a workbook, save it to a MemoryStream, load WorkbookMetadata, add custom document properties, and write the updated metadata back to another MemoryStream—all without touching the file system.
+// The example loads an Excel workbook from a byte array via MemoryStream, updates built‑in properties (Title, Author, Company) and custom properties (ProjectId, Reviewed), then saves the workbook to another MemoryStream and returns the updated byte array for further processing.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].PutValue("Hello, Aspose!");
-        workbook.Worksheets[0].Cells["B1"].PutValue(DateTime.Now);
+        // Obtain the original workbook bytes from any source (e.g., database, API)
+        byte[] originalBytes = GetWorkbookBytes();
 
-        // Save the workbook to a memory stream (XLSX format)
-        using (MemoryStream workbookStream = new MemoryStream())
+        // Load the workbook from a memory stream
+        using (MemoryStream inputStream = new MemoryStream(originalBytes))
         {
-            workbook.Save(workbookStream, SaveFormat.Xlsx);
-            workbookStream.Position = 0; // Reset for reading
+            Workbook workbook = new Workbook(inputStream);
 
-            // Load metadata from the workbook stream
-            MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
-            WorkbookMetadata metadata = new WorkbookMetadata(workbookStream, metaOptions);
+            // Add built‑in metadata
+            workbook.BuiltInDocumentProperties.Title = "Sales Report";
+            workbook.BuiltInDocumentProperties.Author = "John Doe";
+            workbook.BuiltInDocumentProperties.Company = "Acme Corp";
 
-            // Add custom document properties
-            metadata.CustomDocumentProperties.Add("ProcessedBy", "AsposeDemo");
-            metadata.CustomDocumentProperties.Add("ProcessedOn", DateTime.UtcNow);
+            // Add custom metadata
+            workbook.CustomDocumentProperties.Add("ProjectId", "12345");
+            workbook.CustomDocumentProperties.Add("Reviewed", true);
 
-            // Save the modified metadata back to a new memory stream
-            using (MemoryStream metadataStream = new MemoryStream())
+            // Save the modified workbook back to a new memory stream
+            using (MemoryStream outputStream = new MemoryStream())
             {
-                metadata.Save(metadataStream);
-                metadataStream.Position = 0; // Reset if further processing is needed
+                workbook.Save(outputStream, SaveFormat.Xlsx);
 
-                // Demonstrate that metadata was saved to the stream
-                Console.WriteLine($"Metadata saved to memory stream. Length = {metadataStream.Length} bytes.");
+                // The updated workbook bytes are now in outputStream
+                byte[] updatedBytes = outputStream.ToArray();
+
+                // Use the updated bytes as needed (e.g., send over network, store in DB)
+                ProcessUpdatedWorkbook(updatedBytes);
             }
         }
+    }
 
-        // Clean up
-        workbook.Dispose();
+    // Example method to provide initial workbook bytes
+    static byte[] GetWorkbookBytes()
+    {
+        // Create a simple workbook in memory and return its bytes
+        using (MemoryStream ms = new MemoryStream())
+        {
+            Workbook wb = new Workbook();
+            wb.Worksheets[0].Cells["A1"].PutValue("Hello World");
+            wb.Save(ms, SaveFormat.Xlsx);
+            return ms.ToArray();
+        }
+    }
+
+    // Example method to handle the updated workbook bytes
+    static void ProcessUpdatedWorkbook(byte[] data)
+    {
+        // For demonstration, output the size of the updated workbook
+        Console.WriteLine($"Updated workbook size: {data.Length} bytes");
     }
 }

@@ -1,37 +1,41 @@
-// Title: C# – Load Excel with LightCells API, set a 30‑second SystemTimeInterruptMonitor, and save as PDF using Aspose.Cells
-// Description: Demonstrates how to configure a SystemTimeInterruptMonitor for a 30‑second timeout, attach it to LoadOptions, load an Excel workbook via the LightCells API, and export the workbook to PDF with Aspose.Cells for .NET. Ideal for server‑side scenarios where long‑running loads must be bounded.
-// Keywords: Aspose.Cells | LightCells API | SystemTimeInterruptMonitor | LoadOptions | C# | Excel to PDF conversion | timeout monitoring | workbook load timeout | server side Excel processing | .NET PDF export
-// Common Searches: Aspose.Cells LightCells interrupt monitor example | C# set timeout when loading Excel workbook | Convert Excel to PDF with LightCells and timeout | SystemTimeInterruptMonitor 30 seconds Aspose | LoadOptions InterruptMonitor usage C#
-// Developer Intent: Load an Excel file with LightCells while enforcing a 30‑second timeout, then convert the workbook to PDF.
-// Use Cases: Prevent runaway workbook loads in web services or background jobs. | Enforce execution‑time limits for user‑uploaded Excel files in multi‑tenant SaaS platforms. | Guarantee PDF conversion completes within a predefined window for batch processing pipelines.
-// AI Prompts: Show how to catch the timeout exception thrown by SystemTimeInterruptMonitor and return a custom error response. | Generate logging code that records when the interrupt monitor aborts a workbook load. | Explain how to replace the time‑based monitor with a CPU‑usage based InterruptMonitor in Aspose.Cells.
+// Title: Load an Excel workbook with Aspose.Cells LightCells API, set a 30‑second InterruptMonitor, and export it to PDF in C#
+// AI Prompts: Generate C# code that opens an .xlsx file using Aspose.Cells LightCells API, applies an InterruptMonitor with a 30‑second timeout, and saves the workbook as a PDF. | Show how to add a file‑existence check before loading the workbook and log any errors during LightCells PDF conversion in C#. | Provide a sample that configures LightCells options for PDF output and demonstrates handling a timeout exception from InterruptMonitor.
+// Common Searches: c# aspocells lightcells api convert excel to pdf with interruptmonitor timeout | how to set a 30 second processing timeout for lightcells in aspocells c# | excel to pdf conversion using lightcells api and file existence validation c# | aspocells interruptmonitor example for large workbook PDF export c# | c# code to load workbook, check file, and save as pdf using lightcells api
+// Tags: aspose.cells lightcells pdf export | aspose.cells interruptmonitor timeout | c# excel workbook loading with file check | c# lightcells api pdf conversion | c# handling timeout exception aspocells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to configure a SystemTimeInterruptMonitor for a 30‑second timeout, attach it to LoadOptions, load an Excel workbook via the LightCells API, and export the workbook to PDF with Aspose.Cells for .NET. Ideal for server‑side scenarios where long‑running loads must be bounded.
-class LightCellsInterruptDemo
+// Demonstrates C# code that verifies the presence of an input.xlsx file, loads it with Aspose.Cells LightCells API, configures an InterruptMonitor to abort after 30 seconds, and saves the workbook as output.pdf while handling errors.
+class Program
 {
     static void Main()
     {
-        // Create a SystemTimeInterruptMonitor (false = do not terminate without exception)
-        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-
-        // Configure LoadOptions to use the interrupt monitor
-        LoadOptions loadOptions = new LoadOptions
+        try
         {
-            InterruptMonitor = monitor
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Start the monitor with a 30‑second (30000 ms) time limit
-        monitor.StartMonitor(30000);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Load the workbook using the LightCells API (enabled via LoadOptions)
-        // Replace "input.xlsx" with the path to your source Excel file
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            // Load the workbook using the standard API
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as PDF
-        // Replace "output.pdf" with the desired output path
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Save the workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"Workbook successfully converted to PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,74 +1,72 @@
-// Title: Configure Z‑Axis Tick Mark Spacing to Show Every Second Depth Level in a 3‑D Column Chart (Aspose.Cells for .NET)
-// Description: C# sample that creates a workbook, inserts quarterly data, adds a 3‑D column chart, and sets SeriesAxis.TickMarkSpacing to 2 so the Z‑axis (depth/series) displays a tick and label for every other level before saving the file as an .xlsx document.
-// Keywords: Aspose.Cells | .NET | C# | 3D column chart | Z axis interval | SeriesAxis.TickMarkSpacing | depth level spacing | chart axis customization | Excel 3D chart Aspose | alternate series labels | tick mark spacing
-// Common Searches: Aspose.Cells set Z axis interval 3D chart | SeriesAxis.TickMarkSpacing example C# | display every other depth level in 3D column chart | how to adjust Z axis tick spacing Aspose.Cells | configure depth axis labels Aspose.Cells .NET
-// Developer Intent: Apply SeriesAxis.TickMarkSpacing to the Z (series) axis of a 3‑D chart so that only every second depth level is labeled.
-// Use Cases: Quarterly sales dashboard where alternating series labels reduce clutter on a 3‑D column chart. | Financial report with dozens of product series, showing only selected depth levels for readability. | Presentation‑ready Excel file that highlights specific depth levels by increasing the Z‑axis interval.
-// AI Prompts: Generate C# code using Aspose.Cells to set the Z‑axis tick interval to 3 for a 3‑D bar chart. | Explain the effect of SeriesAxis.TickMarkSpacing on chart rotation and perspective in Aspose.Cells. | Show how to hide Z‑axis labels while keeping tick marks visible in a 3‑D chart with Aspose.Cells.
+// Title: How to display every other depth level on a 3‑D column chart by setting the Z‑axis interval with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a 3‑D column chart in a workbook and set the series (Z) axis TickMarkSpacing to 2 using Aspose.Cells for .NET. | Adjust the depth axis of an Aspose.Cells chart so that only alternate depth labels are shown. | Save the workbook after configuring the Z‑axis interval for a 3‑D chart in a C# application.
+// Common Searches: Aspose.Cells C# set Z axis tick spacing for 3D column chart | Show every second depth level in Excel 3D chart using Aspose.Cells | How to configure series axis interval in a 3‑D chart with Aspose.Cells .NET
+// Tags: Aspose.Cells TickMarkSpacing on series axis C# | 3D column chart depth axis interval Aspose.Cells | configure Z axis label spacing .NET Excel chart | Aspose.Cells chart axis customization example | C# Excel 3D chart depth level display
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // C# sample that creates a workbook, inserts quarterly data, adds a 3‑D column chart, and sets SeriesAxis.TickMarkSpacing to 2 so the Z‑axis (depth/series) displays a tick and label for every other level before saving the file as an .xlsx document.
-    public class ConfigureZAxisIntervalDemo
+    // The sample creates a workbook, adds data, inserts a 3‑D column chart, sets the series (Z) axis TickMarkSpacing to 2 so that only every second depth level is shown, and saves the file.
+    class Program
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Add sample data for a 3‑D column chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("Q1");
+                worksheet.Cells["A3"].PutValue("Q2");
+                worksheet.Cells["A4"].PutValue("Q3");
+
+                worksheet.Cells["B1"].PutValue("Series 1");
+                worksheet.Cells["B2"].PutValue(120);
+                worksheet.Cells["B3"].PutValue(150);
+                worksheet.Cells["B4"].PutValue(180);
+
+                worksheet.Cells["C1"].PutValue("Series 2");
+                worksheet.Cells["C2"].PutValue(90);
+                worksheet.Cells["C3"].PutValue(110);
+                worksheet.Cells["C4"].PutValue(130);
+
+                // Add a 3‑D column chart
+                int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
+                Chart chart = worksheet.Charts[chartIndex];
+
+                // Set the data range for the chart
+                chart.NSeries.Add("B2:C4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Configure the depth (Z) axis to show every second depth level
+                // The depth axis corresponds to the series axis in a 3‑D chart.
+                // Setting TickMarkSpacing to 2 makes a tick (and thus a label) appear every second series.
+                Axis seriesAxis = chart.SeriesAxis;
+                seriesAxis.TickMarkSpacing = 2;
+
+                // Prepare output directory
+                string outputPath = "ZAxisIntervalEverySecondDepthLevel.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for a 3‑D column chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-            worksheet.Cells["B1"].PutValue("Series 1");
-            worksheet.Cells["B2"].PutValue(120);
-            worksheet.Cells["B3"].PutValue(150);
-            worksheet.Cells["B4"].PutValue(180);
-            worksheet.Cells["C1"].PutValue("Series 2");
-            worksheet.Cells["C2"].PutValue(90);
-            worksheet.Cells["C3"].PutValue(110);
-            worksheet.Cells["C4"].PutValue(130);
-
-            // Add a 3‑D column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 12);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:C4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Configure the Z (depth/series) axis to display every second depth level
-            // TickMarkSpacing defines the number of series between tick marks.
-            // Setting it to 2 shows a tick (and label) for every second depth level.
-            chart.SeriesAxis.TickMarkSpacing = 2;
-
-            // Optional: adjust other 3‑D view properties for better visibility
-            chart.Elevation = 30;
-            chart.RotationAngle = 20;
-            chart.Perspective = 30;
-
-            // Save the workbook
-            workbook.Save("ConfigureZAxisIntervalDemo.xlsx");
         }
     }
 }

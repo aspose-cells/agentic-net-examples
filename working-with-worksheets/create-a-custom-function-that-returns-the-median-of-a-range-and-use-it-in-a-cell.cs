@@ -1,58 +1,46 @@
-// Title: Aspose.Cells C# Example – Compute Median of a Range with the MEDIAN Formula and Save the Workbook
-// Description: This example creates a new Workbook, fills cells A1:A5 with numeric values, assigns the MEDIAN(A1:A5) formula to cell B1, forces formula evaluation, prints the calculated median, ensures the target folder exists, and saves the file as MedianResult.xlsx.
-// Keywords: Aspose.Cells median C# | MEDIAN formula Aspose.Cells | calculate median .NET workbook | Excel formula evaluation Aspose | save workbook after calculation | populate cells programmatically | C# Excel automation
-// Common Searches: Aspose.Cells how to use MEDIAN function in C# | calculate median of a range with Aspose.Cells | C# example for formula calculation and saving workbook | populate Excel cells and compute median using Aspose | ensure output directory exists before saving Aspose workbook
-// Developer Intent: Use Aspose.Cells to compute the median of a numeric range and store the result in a worksheet cell.
-// Use Cases: Generate a report that requires the median of a data column. | Programmatically evaluate Excel formulas and retrieve the result in .NET. | Create and save an Excel file after performing statistical calculations.
-// AI Prompts: Show me C# code that defines a user‑defined median function in Aspose.Cells and applies it to a cell. | Provide an Aspose.Cells example that fills a range, sets the MEDIAN formula, calculates all formulas, and saves the workbook. | Explain how to verify or create the output directory before writing an Aspose.Cells workbook to disk.
+// Title: Calculate the median of a cell range with Aspose.Cells for .NET and store the result in another cell (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that fills cells A1:A10 with numeric values, sets cell B1 formula to MEDIAN(A1:A10), forces formula calculation, and prints the median to the console. | Show how to programmatically evaluate an Excel MEDIAN function in a worksheet with Aspose.Cells, retrieve the computed value, and save the workbook to a file. | Provide a try‑catch example that demonstrates populating a column from an array, applying the MEDIAN formula, calling Workbook.CalculateFormula, and handling potential exceptions.
+// Common Searches: Aspose.Cells C# example for MEDIAN function on a range | How to use Aspose.Cells to calculate median of column A and write result to B1 | Programmatically evaluate Excel formulas with Aspose.Cells .NET | Saving workbook after formula calculation using Aspose.Cells C# | Retrieve calculated value of MEDIAN(A1:A10) with Aspose.Cells API
+// Tags: Aspose.Cells MEDIAN formula C# | populate worksheet cells from array Aspose.Cells | calculate range median Aspose.Cells | evaluate Excel formulas programmatically .NET | save workbook after formula calculation Aspose.Cells | exception handling Aspose.Cells workbook operations
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomMedian
+namespace AsposeCellsMedianExample
 {
-    // This example creates a new Workbook, fills cells A1:A5 with numeric values, assigns the MEDIAN(A1:A5) formula to cell B1, forces formula evaluation, prints the calculated median, ensures the target folder exists, and saves the file as MedianResult.xlsx.
+    // The example creates a new Workbook, fills cells A1‑A10 with numeric data, assigns the MEDIAN(A1:A10) formula to cell B1, forces calculation with Workbook.CalculateFormula, outputs the median value to the console, and saves the file as MedianExample.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                var wb = new Workbook();
-                var ws = wb.Worksheets[0];
-                var cells = ws.Cells;
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
 
-                // Populate sample numeric data in A1:A5
-                cells["A1"].PutValue(10);
-                cells["A2"].PutValue(20);
-                cells["A3"].PutValue(30);
-                cells["A4"].PutValue(40);
-                cells["A5"].PutValue(50);
+                // Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Use the built‑in MEDIAN function in cell B1
-                cells["B1"].Formula = "=MEDIAN(A1:A5)";
-
-                // Calculate all formulas in the workbook
-                wb.CalculateFormula();
-
-                // Output the result of the median function
-                Console.WriteLine("Median of A1:A5 = " + cells["B1"].Value);
-
-                // Save the workbook
-                string outputPath = "MedianResult.xlsx";
-
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
+                // Populate sample data in A1:A10.
+                double[] sampleData = { 5, 3, 8, 12, 7, 9, 2, 4, 6, 10 };
+                for (int i = 0; i < sampleData.Length; i++)
                 {
-                    Directory.CreateDirectory(outputDir);
+                    sheet.Cells[i, 0].PutValue(sampleData[i]); // Column A (index 0)
                 }
 
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // Use the built‑in MEDIAN function in cell B1.
+                sheet.Cells["B1"].Formula = "MEDIAN(A1:A10)";
+
+                // Calculate the workbook to evaluate the formula.
+                workbook.CalculateFormula();
+
+                // Output the result to the console.
+                Console.WriteLine("Median of A1:A10 = " + sheet.Cells["B1"].Value);
+
+                // Save the workbook (optional).
+                string outputPath = "MedianExample.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {

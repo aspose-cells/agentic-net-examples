@@ -1,77 +1,75 @@
-// Title: C# – Populate an Excel column chart from smart markers and set a dynamic title with Aspose.Cells
-// Description: This example demonstrates how to create a workbook, define smart markers for product and unit columns, expand them with a List<dynamic> data source using WorkbookDesigner, add a column chart, bind the NSeries and category data to the populated cells, set the chart title from the first product cell, recalculate the chart, and save the file as an .xlsx document.
-// Keywords: Aspose.Cells | C# Excel chart | smart markers | dynamic chart title | NSeries range | WorkbookDesigner data source | populate chart from cells | Excel column chart automation
-// Common Searches: Aspose.Cells smart markers fill chart data C# | Set Excel chart title from cell value using Aspose.Cells | Link NSeries to expanded smart marker range | Create column chart after processing smart markers | Dynamic chart title Aspose.Cells .NET
-// Developer Intent: Generate a column chart whose series and categories are automatically filled by smart markers and update the chart title based on the first populated product name.
-// Use Cases: Automated sales dashboards that insert product‑unit data via smart markers and visualize it in a column chart. | Templates that reuse the same workbook layout while swapping data sources, producing charts with titles that reflect the current dataset. | Reporting tools that need to adjust chart titles on‑the‑fly without recreating the chart object.
-// AI Prompts: Write C# code with Aspose.Cells to create a column chart from smart‑marker‑expanded cells and set the title using the first product name. | Explain how to bind NSeries and CategoryData to ranges that are populated by WorkbookDesigner smart markers and ensure the chart updates correctly. | Show how to change an Excel chart title dynamically after processing smart markers without rebuilding the chart.
+// Title: Create an Excel column chart with smart markers bound to a List<T> and set the chart title at runtime using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells WorkbookDesigner to populate a column chart series from a List<Record> via smart markers and then assign a scalar value to the chart title after processing. | Show how to define smart‑marker placeholders for a data range, bind a collection as a data source, generate the chart, and update the chart title dynamically with Aspose.Cells.
+// Common Searches: Aspose.Cells C# bind List<T> to smart markers for chart series | How to set Excel chart title dynamically after WorkbookDesigner.Process in .NET | Smart markers example for column chart with data source list in Aspose.Cells | Create chart with smart markers and dynamic title using Aspose.Cells for .NET
+// Tags: Aspose.Cells WorkbookDesigner smart markers list binding | C# column chart series from smart markers | dynamic chart title Aspose.Cells | populate Excel chart using List<T> smart markers | smart markers data source Excel .xlsx generation
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using AsposeRange = Aspose.Cells.Range;
 
-// This example demonstrates how to create a workbook, define smart markers for product and unit columns, expand them with a List<dynamic> data source using WorkbookDesigner, add a column chart, bind the NSeries and category data to the populated cells, set the chart title from the first product cell, recalculate the chart, and save the file as an .xlsx document.
-class Program
+namespace SmartMarkersChartDemo
 {
-    static void Main()
+    // Simple data class for smart markers
+    // The sample creates a workbook, adds headers, inserts smart‑marker placeholders for Category and Value, binds a List<Record> as the data source, sets a scalar ReportTitle, processes all smart markers with WorkbookDesigner, creates a column chart that references the smart‑marker range, assigns the processed ReportTitle to the chart title, and saves the file as SmartMarkersChart.xlsx.
+    public class Record
     {
-        try
+        public string Category { get; set; }
+        public int Value { get; set; }
+    }
+
+    class Program
+    {
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Header cells
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Units");
+            // Add headers
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
 
-            // Smart marker row – will be expanded by WorkbookDesigner
-            sheet.Cells["A2"].PutValue("&=$Product");
-            sheet.Cells["B2"].PutValue("&=$Units");
-
-            // Define the smart‑marker range (required by the designer)
-            AsposeRange smartRange = sheet.Cells.CreateRange("A2:B2");
-            smartRange.Name = "_CellsSmartMarkers";
-
-            // Sample data source for the smart markers
-            var products = new List<dynamic>
+            // Insert smart markers for data rows (5 rows)
+            for (int i = 2; i <= 6; i++)
             {
-                new { Product = "Apple",  Units = 120 },
-                new { Product = "Banana", Units = 80  },
-                new { Product = "Cherry", Units = 150 }
+                sheet.Cells[$"A{i}"].PutValue("&=$Category");
+                sheet.Cells[$"B{i}"].PutValue("&=$Value");
+            }
+
+            // Add a column chart that references the smart‑marker range
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("=Sheet1!$B$2:$B$6", true);          // Values
+            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$6";     // Categories
+
+            // Prepare data source for smart markers
+            List<Record> data = new List<Record>
+            {
+                new Record { Category = "Jan", Value = 120 },
+                new Record { Category = "Feb", Value = 150 },
+                new Record { Category = "Mar", Value = 180 },
+                new Record { Category = "Apr", Value = 200 },
+                new Record { Category = "May", Value = 170 }
             };
 
-            // Set the data source and process the smart markers
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Data", products);
-            designer.Process(); // populates A2:B4 with the data above
+            // Title that will be set dynamically after processing
+            string reportTitle = "Monthly Sales Report";
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+            // Set up WorkbookDesigner with data sources
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
+            designer.SetDataSource("Data", data);          // Smart markers will use this list
+            designer.SetDataSource("ReportTitle", reportTitle); // Scalar for title
 
-            // Populate the series using NSeries (linked to the filled cells)
-            chart.NSeries.Add("=Sheet1!$B$2:$B$4", true);
-            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$4";
+            // Process all smart markers in the workbook
+            designer.Process();
 
-            // Dynamically set the chart title based on the first product name
-            string firstProduct = sheet.Cells["A2"].StringValue;
-            chart.Title.Text = $"Units Sold – {firstProduct}";
-            chart.Title.OverLay = true; // overlay title without resizing the chart
-
-            // Ensure the chart reflects the latest data
-            chart.Calculate();
+            // Adjust chart title dynamically using the scalar value
+            chart.Title.Text = reportTitle;
 
             // Save the workbook
-            string outputPath = "SmartMarkersChart.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            workbook.Save("SmartMarkersChart.xlsx");
         }
     }
 }

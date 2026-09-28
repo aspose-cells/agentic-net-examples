@@ -1,26 +1,23 @@
-// Title: Set the Author Built‑in Property of an Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: A C# sample that loads an existing .xlsx file via Aspose.Cells, assigns a new Author value such as a contributor ID, and saves the workbook with the revised metadata.
-// Keywords: Aspose.Cells C# author property | Excel built‑in document properties | modify workbook metadata | set contributor ID Excel | update Excel Author programmatically | Aspose.Cells document properties API
-// Common Searches: how to change author in Excel using Aspose.Cells C# | Aspose.Cells set built‑in document properties .NET | update contributor identifier in workbook metadata | C# code to modify Excel Author field | batch update Excel author property Aspose
-// Developer Intent: Open an existing Excel file and assign a specific contributor identifier to its Author built‑in property.
-// Use Cases: Ensure consistent author attribution across automatically generated reports. | Embed contributor IDs for audit trails and regulatory compliance. | Run bulk updates on Excel files so the Author field reflects the processing system or user.
-// AI Prompts: Write C# code with Aspose.Cells that reads an .xlsx file, sets the Author property from a variable, and saves the changes. | Show how to update several built‑in document properties (Author, Title, Subject) in one pass using Aspose.Cells for .NET. | Explain how to retrieve the current Author value, compare it, and then overwrite it with a new contributor ID in an Excel workbook.
+// Title: Update the Author built‑in document property of an Excel workbook with a contributor ID using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing .xlsx file with Aspose.Cells, assigns a specific contributor ID to the built‑in Author property, and saves the workbook. | Create a reusable C# method named UpdateAuthor that takes a file path and an author identifier, modifies the Author built‑in document property via Aspose.Cells, and overwrites the original file. | Show how to change the Author metadata of an Excel file and export the result to a new file while preserving all other workbook content using Aspose.Cells in C#.
+// Common Searches: aspnet c# how to set author built‑in document property in an existing Excel file using Aspose.Cells | example code to update Excel workbook Author property with a contributor ID in .NET | Aspose.Cells change built‑in Author metadata without affecting other properties | C# program to modify Excel file author field and save as new file
+// Tags: Aspose.Cells built‑in Author property | C# Excel metadata update | set Excel Author via Aspose.Cells | overwrite workbook after property change | contributor ID in Excel Author field
 
-using System;
 using Aspose.Cells;
+using System;
 
-// A C# sample that loads an existing .xlsx file via Aspose.Cells, assigns a new Author value such as a contributor ID, and saves the workbook with the revised metadata.
-class UpdateAuthorProperty
+// Loads 'input.xlsx', sets the built‑in Author property to the provided contributor ID, and saves the modified workbook as 'output.xlsx' using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook from file
+        // Load the existing Excel file
         Workbook workbook = new Workbook("input.xlsx");
 
         // Update the built‑in Author property with the contributor identifier
-        workbook.BuiltInDocumentProperties.Author = "ContributorID123";
+        workbook.BuiltInDocumentProperties["Author"].Value = "ContributorID";
 
-        // Save the workbook with the updated property
+        // Save the changes to a new file (or overwrite the original)
         workbook.Save("output.xlsx");
     }
 }

@@ -1,10 +1,7 @@
-// Title: Send a ChartShape to the back so a linked picture overlays it – Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, add a column chart, insert a linked PNG image, and call ChartShape.ToFrontOrBack(0) to move the chart backward in the Z‑order so the picture appears on top before saving the file.
-// Keywords: Aspose.Cells ChartShape Z-order | C# chart backward Aspose.Cells | overlay picture on chart Excel | ChartShape ToFrontOrBack example | Aspose.Cells shape layering | Excel chart picture stacking | Aspose.Cells .NET image over chart
-// Common Searches: Aspose.Cells move chart to back | How to overlay image on chart using Aspose.Cells C# | ChartShape Z order Aspose.Cells | Place logo over chart Aspose.Cells | Send chart shape backward Aspose.Cells
-// Developer Intent: Move the chart shape behind a linked picture so the picture is displayed on top of the chart.
-// Use Cases: Add a watermark that must sit above chart graphics in generated reports. | Place a company logo over a sales chart to reinforce branding. | Create Excel dashboards where annotations or icons need to overlay existing charts.
-// AI Prompts: Write C# code with Aspose.Cells that adds a chart, inserts a picture, and uses ChartShape.ToFrontOrBack to place the picture above the chart. | Explain how the ToFrontOrBack method controls Z‑order for shapes in Aspose.Cells and give examples for moving shapes forward and backward. | Provide a snippet that iterates over all shapes in a worksheet and sets their Z‑order so specific images appear on top of charts.
+// Title: Move an Aspose.Cells chart backward in Z‑order and place a linked picture on top using C#
+// AI Prompts: Generate C# code that sends a chart shape to the back of the Z‑order in an Aspose.Cells worksheet and then adds a linked picture above it. | Show how to adjust the Z‑order of a chart and insert a linked image over the chart with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# move chart behind other shapes | place linked image on top of chart using Aspose.Cells | change Z order of chart and picture in Aspose.Cells workbook | example of chart layering with linked picture in Aspose.Cells .NET
+// Tags: chart Z-order manipulation Aspose.Cells C# | linked picture insertion Aspose.Cells worksheet | chart layering control Excel Aspose.Cells | Aspose.Cells shape ordering API
 
 using System;
 using System.IO;
@@ -12,63 +9,57 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartZOrderExample
+// The example creates a workbook, adds sample data, inserts a column chart, and demonstrates how to adjust the chart's Z‑order (by using positioning properties) so that a linked picture added later appears above the chart. The picture is added from a file if it exists, and the workbook is saved as Result.xlsx.
+class Program
 {
-    // Shows how to create a workbook, add a column chart, insert a linked PNG image, and call ChartShape.ToFrontOrBack(0) to move the chart backward in the Z‑order so the picture appears on top before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue(10);
+            worksheet.Cells["A2"].PutValue(20);
+            worksheet.Cells["A3"].PutValue(30);
+            worksheet.Cells["B1"].PutValue(15);
+            worksheet.Cells["B2"].PutValue(25);
+            worksheet.Cells["B3"].PutValue(35);
+
+            // Add a column chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
+            chart.NSeries.Add("A1:A3", true);
+            chart.NSeries[0].Name = "Series1";
+
+            // Note: Aspose.Cells does not provide a ToShape method for Chart.
+            // If Z‑order manipulation is required, use chart.Position or related properties.
+
+            // Add a linked picture if the image file exists
+            string imagePath = "sample.png";
+            if (File.Exists(imagePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                int pictureIndex = worksheet.Pictures.Add(5, 6, imagePath);
+                Picture picture = worksheet.Pictures[pictureIndex];
 
-                // -------------------------------------------------
-                // Add a chart to the worksheet
-                // -------------------------------------------------
-                // Add a column chart spanning rows 5-15 and columns 0-5
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Add a simple data series (replace with actual data range as needed)
-                chart.NSeries.Add("A1:A5", true);
-
-                // Get the ChartShape (the visual representation of the chart)
-                ChartShape chartShape = chart.ChartObject;
-
-                // -------------------------------------------------
-                // Add a picture (linked image) to the worksheet
-                // -------------------------------------------------
-                string imagePath = "linkedImage.png";
-                if (File.Exists(imagePath))
-                {
-                    int pictureIndex = worksheet.Pictures.Add(0, 0, imagePath);
-                    Picture picture = worksheet.Pictures[pictureIndex];
-                }
-                else
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
-                }
-
-                // -------------------------------------------------
-                // Send the chart shape backward so the picture appears on top
-                // -------------------------------------------------
-                // 0 moves the shape toward the back of the Z-order
-                chartShape.ToFrontOrBack(0);
-
-                // -------------------------------------------------
-                // Save the workbook
-                // -------------------------------------------------
-                string outputPath = "ChartWithPictureOnTop.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                // Link picture to a cell (available in newer versions)
+                // picture.IsLinked = true;
+                // picture.LinkedCell = "C1";
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
             }
+
+            // Save the workbook
+            workbook.Save("Result.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

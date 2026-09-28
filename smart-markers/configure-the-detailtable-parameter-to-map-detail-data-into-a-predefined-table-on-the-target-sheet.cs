@@ -1,113 +1,121 @@
-// Title: Map PivotTable drill‑down rows into an existing ListObject (DetailTable) using Aspose.Cells for .NET
-// Description: Demonstrates creating a workbook, adding a pivot table, defining a target sheet with an empty ListObject named DetailTable, and using PivotTable.ShowDetail to append the pivot's detail rows directly into that predefined table before saving the file.
-// Keywords: Aspose.Cells ShowDetail | C# PivotTable detail to ListObject | DetailTable parameter | populate existing Excel table | drill‑down pivot data | Aspose.Cells .NET example | Excel ListObject mapping
-// Common Searches: Aspose.Cells ShowDetail map to existing table | C# map pivot detail rows into ListObject | Configure DetailTable parameter in Aspose.Cells | Fill predefined Excel table with pivot drill‑down data | Aspose.Cells pivot ShowDetail example
-// Developer Intent: Insert the rows returned by PivotTable.ShowDetail into a pre‑created ListObject called DetailTable on another worksheet.
-// Use Cases: Generate a drill‑down report where selecting a pivot category writes its underlying records into a styled table on a separate sheet. | Automate population of a template workbook that contains a formatted table with pivot detail data for scheduled reporting. | Export detailed sales or inventory records for a specific pivot item into a structured Excel table for downstream analysis.
-// AI Prompts: Write C# code with Aspose.Cells that uses PivotTable.ShowDetail to fill an existing ListObject named DetailTable on a target worksheet. | Show how to configure the DetailTable parameter in ShowDetail to append rows to a predefined Excel table. | Explain the steps to activate the destination sheet before calling ShowDetail so the detail rows are written into the ListObject.
+// Title: Map pivot table detail rows into a predefined ListObject (DetailTable) on a different worksheet with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses PivotTable.ShowDetail to extract detail rows from a pivot table and writes them into an existing ListObject on another sheet. | Create a reusable method that accepts a PivotTable object and a ListObject reference, copies the extracted detail data, and populates the ListObject columns. | Show how to copy the range returned by ShowDetail into a target worksheet and bind it to a ListObject named DetailTable.
+// Common Searches: aspocells showdetail copy pivot detail to another worksheet listobject c# | how to populate an existing Excel table with pivot item details using Aspose.Cells | C# extract pivot table detail rows and insert into predefined ListObject | map pivot table ShowDetail output to a ListObject in Aspose.Cells for .NET | transfer pivot detail data to a separate sheet table programmatically
+// Tags: pivot table ShowDetail to ListObject mapping | Aspose.Cells populate existing ListObject from pivot detail | C# extract pivot detail rows into Excel table | copy pivot detail rows to another worksheet with Aspose.Cells | predefined ListObject data insertion using Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Tables;
 
 namespace AsposeCellsDetailTableDemo
 {
-    // Demonstrates creating a workbook, adding a pivot table, defining a target sheet with an empty ListObject named DetailTable, and using PivotTable.ShowDetail to append the pivot's detail rows directly into that predefined table before saving the file.
+    // The example creates a workbook, adds sample data, builds a pivot table, then creates a second worksheet with an empty ListObject named DetailTable. Using PivotTable.ShowDetail it extracts the detail rows of the first data cell, copies the resulting range to the target sheet, and writes each Category and Amount into the ListObject rows before saving the file as DetailTableMapped.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // -------------------------------------------------
-                // 1. Create a new workbook and get the first sheet
-                // -------------------------------------------------
+                // Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
-                Cells dataCells = dataSheet.Cells;
 
                 // -------------------------------------------------
-                // 2. Populate sample data for the pivot table
+                // 1. Prepare source data for the pivot table
                 // -------------------------------------------------
-                // Header row
-                dataCells["A1"].PutValue("Category");
-                dataCells["B1"].PutValue("Item");
-                dataCells["C1"].PutValue("Quantity");
+                Worksheet sourceSheet = workbook.Worksheets[0];
+                Cells srcCells = sourceSheet.Cells;
 
-                // Data rows
-                dataCells["A2"].PutValue("Fruit");
-                dataCells["B2"].PutValue("Apple");
-                dataCells["C2"].PutValue(10);
+                // Header
+                srcCells["A1"].PutValue("Category");
+                srcCells["B1"].PutValue("Amount");
 
-                dataCells["A3"].PutValue("Fruit");
-                dataCells["B3"].PutValue("Banana");
-                dataCells["C3"].PutValue(15);
-
-                dataCells["A4"].PutValue("Vegetable");
-                dataCells["B4"].PutValue("Carrot");
-                dataCells["C4"].PutValue(20);
-
-                dataCells["A5"].PutValue("Vegetable");
-                dataCells["B5"].PutValue("Tomato");
-                dataCells["C5"].PutValue(25);
+                // Sample rows
+                srcCells["A2"].PutValue("Food");
+                srcCells["B2"].PutValue(120);
+                srcCells["A3"].PutValue("Food");
+                srcCells["B3"].PutValue(80);
+                srcCells["A4"].PutValue("Travel");
+                srcCells["B4"].PutValue(200);
+                srcCells["A5"].PutValue("Travel");
+                srcCells["B5"].PutValue(150);
+                srcCells["A6"].PutValue("Utilities");
+                srcCells["B6"].PutValue(90);
 
                 // -------------------------------------------------
-                // 3. Add a pivot table based on the data range
+                // 2. Create a pivot table based on the source data
                 // -------------------------------------------------
-                // The pivot will be placed starting at cell E3
-                int pivotIndex = dataSheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-                PivotTable pivot = dataSheet.PivotTables[pivotIndex];
+                // Data range: A1:B6
+                int pivotIndex = sourceSheet.PivotTables.Add("A1:B6", "E3", "SalesPivot");
+                PivotTable pivot = sourceSheet.PivotTables[pivotIndex];
 
-                // Row field: Category
+                // Add fields: Category as row, Amount as data (sum)
                 pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                // Data field: Sum of Quantity
-                pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+                // Refresh and calculate the pivot to ensure data is ready
+                pivot.RefreshData();
+                pivot.CalculateData();
 
                 // -------------------------------------------------
-                // 4. Create a target worksheet that already contains a predefined table
+                // 3. Prepare the target sheet with a predefined table
                 // -------------------------------------------------
-                Worksheet detailSheet = workbook.Worksheets.Add("DetailData");
-                Cells detailCells = detailSheet.Cells;
+                Worksheet targetSheet = workbook.Worksheets.Add("DetailTableSheet");
+                Cells tgtCells = targetSheet.Cells;
 
-                // Define a placeholder range for the table (A1:C1 will be the header)
-                detailCells["A1"].PutValue("Item");
-                detailCells["B1"].PutValue("Quantity");
-                detailCells["C1"].PutValue("Category");
-
-                // Add a ListObject (Excel table) that will receive the detail data
-                // The table currently has only the header row; rows will be filled by ShowDetail
-                int tableIndex = detailSheet.ListObjects.Add(0, 0, 0, 2, true);
-                ListObject detailTable = detailSheet.ListObjects[tableIndex];
+                // Create an empty table (ListObject) at A1:B1 (header row only)
+                tgtCells["A1"].PutValue("Category");
+                tgtCells["B1"].PutValue("Amount");
+                int tableIndex = targetSheet.ListObjects.Add(0, 0, 0, 1, true);
+                ListObject detailTable = targetSheet.ListObjects[tableIndex];
                 detailTable.DisplayName = "DetailTable";
 
                 // -------------------------------------------------
-                // 5. Show detail for a specific pivot item and map it into the predefined table
+                // 4. Map the detail data of a pivot item into the predefined table
                 // -------------------------------------------------
-                // Activate the detail sheet before calling ShowDetail
-                workbook.Worksheets.ActiveSheetIndex = detailSheet.Index;
-
-                // ShowDetail will append rows to the existing table starting at A2
+                // ShowDetail extracts detail rows for the first data cell of the pivot
+                // and writes them to the same worksheet (sourceSheet) starting at row 1, column 0.
+                // After extraction, copy the data into the predefined table on targetSheet.
                 pivot.ShowDetail(
-                    rowOffset: 1,          // first data row in the pivot's data region
-                    columnOffset: 0,       // first data column in the pivot's data region
-                    newSheet: false,       // place detail on the current (active) sheet
-                    destRow: 1,            // start writing detail from row index 1 (A2)
-                    destColumn: 0);        // start from column index 0 (A)
+                    rowOffset: 1,
+                    columnOffset: 0,
+                    newSheet: false,
+                    destRow: 1,
+                    destColumn: 0);
+
+                // Copy extracted data (starting at E4 in sourceSheet) to the target table
+                // Determine the range of extracted data
+                int startRow = 3; // zero‑based index for row 4 (E4)
+                int startCol = 4; // zero‑based index for column E
+                int lastRow = sourceSheet.Cells.MaxDataRow;
+                int lastCol = sourceSheet.Cells.MaxDataColumn;
+
+                // Ensure there is data to copy
+                if (lastRow >= startRow)
+                {
+                    // Copy each row into the target table starting after its header
+                    int targetRow = 1; // zero‑based index for row 2 in target sheet
+                    for (int r = startRow; r <= lastRow; r++)
+                    {
+                        // Category (column A) -> source column E (index 4)
+                        object category = sourceSheet.Cells[r, startCol].Value;
+                        // Amount (column B) -> source column F (index 5) if exists
+                        object amount = (startCol + 1 <= lastCol) ? sourceSheet.Cells[r, startCol + 1].Value : null;
+
+                        tgtCells[targetRow, 0].PutValue(category);
+                        tgtCells[targetRow, 1].PutValue(amount);
+                        targetRow++;
+                    }
+                }
 
                 // -------------------------------------------------
-                // 6. Recalculate formulas (if any) and save the workbook
+                // 5. Save the workbook
                 // -------------------------------------------------
-                workbook.CalculateFormula();
-
-                string outputPath = "DetailTableMapped.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                workbook.Save("DetailTableMapped.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

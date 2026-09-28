@@ -1,68 +1,74 @@
-// Title: C# – Set PivotChart Legend to Bottom in an Existing XLSX Workbook with Aspose.Cells
-// Description: Loads an existing XLSX file, verifies the first chart is linked to a PivotTable, changes its legend position to the bottom using Aspose.Cells for .NET, and saves the workbook to a new file.
-// Keywords: Aspose.Cells C# PivotChart legend position | set chart legend bottom Aspose.Cells | modify PivotChart legend .NET | Aspose.Cells change chart legend location | C# update PivotChart legend | Aspose.Cells chart formatting
-// Common Searches: Aspose.Cells set PivotChart legend to bottom | C# change legend position of a PivotChart | How to move PivotChart legend in Aspose.Cells | Update chart legend location in existing XLSX with Aspose | Aspose.Cells example: legend position bottom
-// Developer Intent: Programmatically move the legend of a PivotChart to the bottom of the chart area and persist the change in the workbook.
-// Use Cases: Standardize legend placement across generated reports for clearer dashboards. | Automate post‑processing of workbooks that contain PivotCharts to meet corporate style guides. | Ensure a chart is linked to a PivotTable before applying formatting to avoid runtime errors.
-// AI Prompts: Generate C# code using Aspose.Cells that opens an XLSX file, finds the first PivotChart, sets its legend position to Bottom, and saves the workbook. | Provide an Aspose.Cells snippet that checks a chart's PivotSource before changing the legend position, with proper exception handling. | Create a reusable method that accepts input and output paths and updates the legend position of all PivotCharts in a workbook to the bottom.
+// Title: Set the legend position to Bottom for every chart in an existing XLSX workbook using Aspose.Cells for .NET
+// AI Prompts: Open an XLSX workbook with Aspose.Cells, traverse each worksheet and chart, assign Legend.Position = LegendPositionType.Bottom, then write the file to a new location. | Create C# code that loads a spreadsheet, checks for a legend on every chart, moves the legend to the bottom edge, and saves the modified workbook.
+// Common Searches: Aspose.Cells C# change legend placement of all charts in an Excel file | bulk update Excel chart legends to bottom using .NET library | programmatically set chart legend to lower position in existing XLSX | iterate over workbook charts and adjust legend location with Aspose.Cells | how to reposition chart legends in a saved Excel workbook via C#
+// Tags: Aspose.Cells set chart legend bottom | C# modify Excel chart legend position | iterate workbook charts Aspose.Cells | update legend placement XLSX via .NET | save workbook after chart legend change
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an existing XLSX file, verifies the first chart is linked to a PivotTable, changes its legend position to the bottom using Aspose.Cells for .NET, and saves the workbook to a new file.
+// The example loads an existing XLSX file with Aspose.Cells, iterates through each worksheet and its charts, sets the legend position to Bottom when a legend is present, ensures the output directory exists, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        const string inputFile = "input.xlsx";
-        const string outputFile = "output.xlsx";
-
-        // Verify that the input workbook exists to avoid FileNotFoundException
-        if (!File.Exists(inputFile))
-        {
-            Console.WriteLine($"Error: The input file '{inputFile}' was not found.");
-            return;
-        }
-
         try
         {
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputFile);
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Assume the workbook already contains a PivotChart.
-            // Retrieve the first chart in the worksheet.
-            if (worksheet.Charts.Count > 0)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                try
-                {
-                    Chart chart = worksheet.Charts[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                    // Verify that the chart is linked to a PivotTable.
-                    if (!string.IsNullOrEmpty(chart.PivotSource))
-                    {
-                        // Set the legend position to the bottom of the chart.
-                        // Use LegendPositionType enum for compatibility with various Aspose.Cells versions.
-                        chart.Legend.Position = LegendPositionType.Bottom;
-                    }
-                }
-                catch (Exception exChart)
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through worksheets and their charts
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
                 {
-                    Console.WriteLine($"Chart processing error: {exChart.Message}");
+                    try
+                    {
+                        // Set legend position to Bottom for all charts
+                        if (chart.Legend != null)
+                        {
+                            chart.Legend.Position = LegendPositionType.Bottom;
+                        }
+                    }
+                    catch (Exception exChart)
+                    {
+                        Console.WriteLine($"Error processing chart on sheet '{sheet.Name}': {exChart.Message}");
+                    }
                 }
             }
 
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
             // Save the modified workbook
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception exSave)
+            {
+                Console.WriteLine($"Error saving workbook: {exSave.Message}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

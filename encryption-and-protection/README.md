@@ -4,7 +4,8 @@ description: C# examples for Excel file encryption, open passwords, worksheet an
 product: Aspose.Cells for .NET
 category: encryption-and-protection
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Encrypt and Protect Excel Files in C# with Aspose.Cells

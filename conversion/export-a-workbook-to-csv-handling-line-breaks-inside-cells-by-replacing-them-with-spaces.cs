@@ -1,53 +1,58 @@
-// Title: Export Workbook to CSV with Line Breaks Replaced by Spaces using Aspose.Cells (C#)
-// Description: Creates a workbook, inserts cells containing LF, CRLF, or CR, replaces newline characters in all string cells with a single space, and saves the result as a CSV file using TxtSaveOptions.
-// Keywords: Aspose.Cells | C# | CSV export | remove line breaks | replace newline characters | TxtSaveOptions | SaveFormat.Csv | Excel to CSV conversion | clean cell values | CRLF handling
-// Common Searches: Aspose.Cells replace line breaks before CSV export | C# export Excel to CSV without newlines | remove CRLF from cells when saving as CSV | how to clean multi‑line text for CSV using Aspose.Cells | save workbook as CSV with spaces instead of line breaks
-// Developer Intent: Strip newline characters from every string cell and generate a CSV file that contains only single‑line values.
-// Use Cases: Prepare Excel data for systems that reject line breaks in CSV fields | Create clean, single‑line CSV reports from worksheets with wrapped text | Sanitize user‑generated comments or notes before bulk data export
-// AI Prompts: Show how to replace line breaks with a custom delimiter (e.g., '|') instead of a space. | Demonstrate applying the newline removal only to selected columns while exporting to CSV. | Explain how to preserve quoted fields using CsvSaveOptions after cleaning newline characters.
+// Title: Replace line breaks in Excel cells and export the workbook to CSV with Aspose.Cells for .NET
+// AI Prompts: Iterate all worksheets, replace '\r' and '\n' in string cells with a space, then save the workbook as CSV using Aspose.Cells. | Clean newline characters from Excel cell values before performing a CSV export in a C# application with Aspose.Cells.
+// Common Searches: Aspose.Cells .NET remove newline characters from Excel cells before CSV conversion | How to clean line breaks in Excel data when exporting to CSV using Aspose.Cells | C# replace line breaks in worksheet cells and save as CSV with Aspose.Cells library
+// Tags: replace line breaks in Excel cells Aspose.Cells | CSV export with cleaned cell values .NET | iterate worksheets modify string cells Aspose | remove newline characters during CSV conversion Aspose.Cells | handle embedded line breaks in CSV output .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a workbook, inserts cells containing LF, CRLF, or CR, replaces newline characters in all string cells with a single space, and saves the result as a CSV file using TxtSaveOptions.
-class ExportCsvWithLineBreaksHandled
+// The example loads an Excel workbook, iterates through each worksheet and its string cells, replaces any '\r' or '\n' line‑break characters with a space, updates the cells, and finally saves the modified workbook as a CSV file using Aspose.Cells.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add sample data containing line breaks
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("First line\nSecond line");
-        sheet.Cells["B1"].PutValue("Hello\r\nWorld");
-        sheet.Cells["C1"].PutValue("NoBreaksHere");
+        // Load the source workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets and cells to replace line breaks with spaces
-        foreach (Worksheet ws in workbook.Worksheets)
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Cells cells = ws.Cells;
-            foreach (Cell cell in cells)
+            // Get the cells collection for the current sheet
+            Cells cells = sheet.Cells;
+
+            // Determine the used range to limit iteration
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Loop through all cells in the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Process only string cells
-                if (cell.Type == CellValueType.IsString)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    string original = cell.StringValue;
-                    if (original.Contains("\n") || original.Contains("\r"))
+                    Cell cell = cells[row, col];
+
+                    // Process only string cells (skip numbers, dates, etc.)
+                    if (cell.Type == CellValueType.IsString)
                     {
-                        // Replace CRLF, LF, and CR with a single space
-                        string cleaned = original.Replace("\r\n", " ")
-                                                .Replace("\n", " ")
-                                                .Replace("\r", " ");
-                        cell.PutValue(cleaned);
+                        string text = cell.StringValue;
+
+                        // If the cell contains line breaks, replace them with spaces
+                        if (!string.IsNullOrEmpty(text) && (text.Contains("\n") || text.Contains("\r")))
+                        {
+                            string cleaned = text
+                                .Replace("\r\n", " ")
+                                .Replace("\n", " ")
+                                .Replace("\r", " ");
+
+                            // Update the cell with the cleaned text
+                            cell.PutValue(cleaned);
+                        }
                     }
                 }
             }
         }
 
-        // Configure CSV save options (using TxtSaveOptions)
-        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv);
-        csvOptions.Separator = ','; // default separator for CSV
-
-        // Save the workbook to a CSV file using the Save(string, SaveOptions) method
-        workbook.Save("output.csv", csvOptions);
+        // Export the modified workbook to CSV format
+        workbook.Save("output.csv", SaveFormat.Csv);
     }
 }

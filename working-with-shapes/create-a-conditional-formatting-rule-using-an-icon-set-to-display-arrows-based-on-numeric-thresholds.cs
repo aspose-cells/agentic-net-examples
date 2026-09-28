@@ -1,67 +1,66 @@
-// Title: Apply a 3‑Arrow Icon Set Conditional Formatting Rule with Aspose.Cells for C#
-// Description: Demonstrates how to create a workbook, populate cells A1‑A4, add a conditional‑formatting collection, and assign a 3‑arrow IconSet (Arrows3) with numeric thresholds (0, 50, 100). The example shows the cell value beside each arrow and saves the result as an XLSX file.
-// Keywords: Aspose.Cells C# | icon set conditional formatting | 3‑arrow icon set | Excel conditional formatting Aspose | numeric thresholds icon set | Arrows3 Aspose.Cells | C# Excel automation | Aspose.Cells tutorial | conditional formatting arrows .NET | GitHub Aspose.Cells examples
-// Common Searches: Aspose.Cells add 3‑arrow icon set | C# conditional formatting icon set thresholds | How to use IconSetType.Arrows3 in Aspose.Cells | Display arrows based on numeric values Excel C# | Aspose.Cells conditional formatting range example
-// Developer Intent: Create a conditional‑formatting rule that visualizes numeric values with a three‑arrow icon set in an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Show sales growth direction with up, right, and down arrows. | Visualize project milestone status in a dashboard worksheet. | Map risk scores to low, medium, and high arrows for quick assessment.
-// AI Prompts: Generate C# code to apply a 4‑traffic‑light icon set with custom numeric thresholds using Aspose.Cells. | Explain how to reverse the order of an icon set in Aspose.Cells conditional formatting. | Provide sample code that hides the cell value and displays only the icon in an Aspose.Cells icon set.
+// Title: Apply a 3‑arrow Icon Set conditional formatting with custom numeric thresholds to a range using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that applies an arrow‑based icon set to the range A1:A10 and defines thresholds at 0, 5, and 10. | Demonstrate how to set IconSet options like type, direction, value display, and individual criteria formulas with Aspose.Cells.
+// Common Searches: how to add an arrow icon set conditional formatting in Aspose.Cells C# | Aspose.Cells set custom numeric thresholds for IconSetCondition | C# example for applying three‑arrow icon set to a column in Excel with Aspose.Cells | configure IconSetCondition thresholds using formulas in Aspose.Cells .NET
+// Tags: Aspose.Cells conditional formatting icon set | C# apply three‑arrow icon set | numeric thresholds for icon set in Aspose.Cells | Excel conditional formatting arrows .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsIconSetExample
+// The sample creates a workbook, fills cells A1:A10 with even numbers, defines that range for conditional formatting, adds an IconSet rule of type Arrows3, configures it to show values, sets the direction, and establishes three numeric criteria (>=10, >=5, >=0) before saving the file as ConditionalFormatting_IconSet.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, populate cells A1‑A4, add a conditional‑formatting collection, and assign a 3‑arrow IconSet (Arrows3) with numeric thresholds (0, 50, 100). The example shows the cell value beside each arrow and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample numeric data in column A
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(45);
-            sheet.Cells["A3"].PutValue(75);
-            sheet.Cells["A4"].PutValue(110);
+            // Populate numeric data in column A (A1:A10)
+            for (int i = 0; i < 10; i++)
+            {
+                sheet.Cells[i, 0].PutValue(i * 2); // 0,2,4,...,18
+            }
 
-            // Add a new conditional formatting collection to the worksheet
+            // Define the range for conditional formatting (A1:A10)
+            CellArea range = CellArea.CreateCellArea("A1", "A10");
+
+            // Add a new conditional formatting rule
             int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
+            // Use dynamic to avoid compile‑time type issues with ConditionalFormatting
+            dynamic cf = sheet.ConditionalFormattings[cfIndex];
+            cf.Area = range;
 
-            // Define the range to which the icon set will be applied (A1:A4)
-            CellArea area = CellArea.CreateCellArea("A1", "A4");
-            fcs.AddArea(area);
+            // Add an Icon Set condition (arrows)
+            cf.AddCondition(FormatConditionType.IconSet);
+            // Use dynamic for IconSetCondition as well
+            dynamic iconSet = cf.IconSet;
 
-            // Add an IconSet condition
-            int conditionIdx = fcs.AddCondition(FormatConditionType.IconSet);
-            FormatCondition condition = fcs[conditionIdx];
+            // Configure the 3‑arrow icon set
+            iconSet.IconSetType = IconSetType.Arrows3;
+            iconSet.Reverse = false;      // higher values show upward arrows
+            iconSet.ShowValue = true;     // display cell value with the icon
 
-            // Configure the icon set to use the 3‑arrow set
-            condition.IconSet.Type = IconSetType.Arrows3;
-            condition.IconSet.ShowValue = true;   // Show the cell value alongside the icon
-            condition.IconSet.Reverse = false;    // Keep default icon order
+            // Define thresholds for the three icons
+            iconSet.IconCriteria[0].Operator = OperatorType.GreaterOrEqual;
+            iconSet.IconCriteria[0].Formula = "10";
 
-            // Define the three threshold values for the arrows
-            // First threshold (lowest) – values <= 0 show the lowest arrow
-            condition.IconSet.Cfvos[0].Type = FormatConditionValueType.Number;
-            condition.IconSet.Cfvos[0].Value = "0";
-            condition.IconSet.Cfvos[0].IsGTE = true;
+            iconSet.IconCriteria[1].Operator = OperatorType.GreaterOrEqual;
+            iconSet.IconCriteria[1].Formula = "5";
 
-            // Second threshold – values > 0 and <= 50 show the middle arrow
-            condition.IconSet.Cfvos[1].Type = FormatConditionValueType.Number;
-            condition.IconSet.Cfvos[1].Value = "50";
-            condition.IconSet.Cfvos[1].IsGTE = true;
+            iconSet.IconCriteria[2].Operator = OperatorType.GreaterOrEqual;
+            iconSet.IconCriteria[2].Formula = "0";
 
-            // Third threshold – values > 50 show the highest arrow
-            condition.IconSet.Cfvos[2].Type = FormatConditionValueType.Number;
-            condition.IconSet.Cfvos[2].Value = "100";
-            condition.IconSet.Cfvos[2].IsGTE = true;
-
-            // Save the workbook to an XLSX file
-            workbook.Save("IconSetArrowsExample.xlsx");
+            // Save the workbook
+            string outputPath = "ConditionalFormatting_IconSet.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,47 +1,58 @@
-// Title: Encrypt an Excel workbook with Aspose.Cells and benchmark opening time in .NET
-// Description: Creates a workbook, writes sample data, applies a password with strong cryptographic encryption (128‑bit), saves the file, then loads it using LoadOptions while measuring the elapsed milliseconds with Stopwatch. The script runs headlessly and outputs the load duration and the IsEncrypted flag.
-// Keywords: Aspose.Cells encrypt workbook | C# password protected Excel | measure workbook load time | headless .NET automation | LoadOptions password Aspose | encryption algorithm Aspose.Cells | performance benchmark Excel encryption
-// Common Searches: How to password‑protect an Excel file using Aspose.Cells for .NET | Benchmark opening time of an encrypted workbook in C# | Supported encryption types and key lengths in Aspose.Cells | Load a password‑protected workbook with LoadOptions | Run Aspose.Cells code in a headless Docker container
-// Developer Intent: Encrypt a workbook with a password and specific encryption settings, then programmatically measure how long it takes to open the protected file.
-// Use Cases: Secure sensitive spreadsheets before archiving and assess performance impact in CI pipelines. | Validate encryption strength and load speed for compliance or audit requirements. | Detect regressions in encryption handling by integrating load‑time metrics into automated tests.
-// AI Prompts: Generate C# code that encrypts an Excel workbook with AES‑256 using Aspose.Cells and logs the opening time in milliseconds. | Explain how to configure LoadOptions for different encryption algorithms and retrieve the IsEncrypted property after loading. | Suggest a Docker‑based, headless setup for running the opening‑time benchmark and exporting results to a monitoring system.
+// Title: Measure the time required to open a password‑protected XLSX workbook with Aspose.Cells in a headless C# automation test
+// AI Prompts: Create a C# console program that generates an XLSX file, sets Workbook.Settings.Password, saves it, then reloads the file using LoadOptions.Password while measuring the load duration with Stopwatch. | Modify the program to read the file path and password from command‑line arguments and print the opening time in milliseconds. | Add a loop that opens the encrypted workbook repeatedly, records each elapsed time, and outputs the average load time for performance testing in a headless environment.
+// Common Searches: C# Aspose.Cells how to benchmark opening speed of an encrypted Excel workbook | measure load time of password protected XLSX using LoadOptions.Password in .NET | headless automation test for decrypting Excel files with Aspose.Cells | performance testing of workbook decryption latency Aspose.Cells C#
+// Tags: measure encrypted workbook load time Aspose.Cells | Aspose.Cells password protection performance benchmark | C# load encrypted XLSX with LoadOptions | headless automation timing workbook decryption | benchmark workbook decryption latency .NET
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, writes sample data, applies a password with strong cryptographic encryption (128‑bit), saves the file, then loads it using LoadOptions while measuring the elapsed milliseconds with Stopwatch. The script runs headlessly and outputs the load duration and the IsEncrypted flag.
-class Program
+// Demonstrates creating an Excel workbook, applying password protection via Workbook.Settings.Password, saving it as XLSX, then loading it with LoadOptions.Password while timing the operation using Stopwatch to evaluate decryption performance in a headless C# automation scenario.
+class WorkbookEncryptionDemo
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
-        Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Encrypted data");
+        try
+        {
+            // Create a new workbook and add some sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["B1"].PutValue(123);
+            sheet.Cells["A2"].PutValue(DateTime.Now);
 
-        // Set password to encrypt the workbook
-        wb.Settings.Password = "Secret123";
+            // Define encryption password
+            const string password = "SecretPassword";
 
-        // Optional: specify encryption algorithm and key length
-        wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+            // Apply password protection to the workbook
+            workbook.Settings.Password = password;
 
-        // Save the encrypted workbook
-        string filePath = "encrypted_workbook.xlsx";
-        wb.Save(filePath);
-        wb.Dispose();
+            // Save the encrypted workbook to disk
+            string encryptedPath = "EncryptedWorkbook.xlsx";
+            workbook.Save(encryptedPath, SaveFormat.Xlsx);
 
-        // Prepare load options with the password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = "Secret123";
+            // Verify the file exists before attempting to load it
+            if (!File.Exists(encryptedPath))
+                throw new FileNotFoundException("Encrypted workbook file not found.", encryptedPath);
 
-        // Measure the time required to open the encrypted workbook
-        Stopwatch sw = Stopwatch.StartNew();
-        Workbook loadedWb = new Workbook(filePath, loadOptions);
-        sw.Stop();
+            // Prepare load options with the same password
+            LoadOptions loadOptions = new LoadOptions
+            {
+                Password = password
+            };
 
-        Console.WriteLine($"Time to open encrypted workbook: {sw.ElapsedMilliseconds} ms");
-        Console.WriteLine($"Workbook.IsEncrypted: {loadedWb.Settings.IsEncrypted}");
+            // Measure the time required to open the encrypted workbook
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            Workbook loadedWorkbook = new Workbook(encryptedPath, loadOptions);
+            stopwatch.Stop();
 
-        loadedWb.Dispose();
+            // Output the elapsed time
+            Console.WriteLine($"Time to open encrypted workbook: {stopwatch.ElapsedMilliseconds} ms");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

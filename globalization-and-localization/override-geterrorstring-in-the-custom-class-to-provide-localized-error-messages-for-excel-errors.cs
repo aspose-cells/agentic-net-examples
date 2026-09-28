@@ -1,72 +1,48 @@
-// Title: Customize Excel Error Messages in Aspose.Cells .NET by Overriding GetErrorValueString
-// Description: Shows how to subclass GlobalizationSettings, override GetErrorValueString to replace default Excel error codes with localized text, apply the custom settings to a Workbook, generate a #DIV/0! error, and read the tailored display string.
-// Keywords: Aspose.Cells | GlobalizationSettings | GetErrorValueString | custom error messages | Excel error localization | C# | override error strings | internationalization | localized #DIV/0! | custom GlobalizationSettings class
-// Common Searches: Aspose.Cells override GetErrorValueString example | how to localize Excel error messages with Aspose.Cells | custom GlobalizationSettings for error strings .NET | replace #DIV/0! with custom text in Aspose.Cells | Excel error code localization C# Aspose
-// Developer Intent: Create a GlobalizationSettings subclass that returns language‑specific strings for Excel error codes.
-// Use Cases: Generate workbooks that display user‑friendly error text for non‑technical audiences. | Provide localized error descriptions in multinational reporting solutions. | Maintain consistent error wording across a suite of automated Excel exports.
-// AI Prompts: Write a CustomErrorGlobalizationSettings class that maps #REF! and #NUM! to German translations. | Demonstrate applying the custom globalization settings to multiple workbooks in a batch loop. | Create unit tests that verify each overridden error code returns the expected localized string.
+// Title: Implement a custom ErrorStringProvider in Aspose.Cells to override GetErrorString for localized Excel error messages (C#)
+// AI Prompts: Write a C# class that inherits from Aspose.Cells.ErrorStringProvider, overrides GetErrorString to return translated strings for Excel error codes, and registers it with a Workbook before formula calculation. | Show how to map specific Excel error enums (e.g., ErrorValueType.Div0) to custom messages in French and apply the provider to an existing workbook. | Demonstrate using the custom ErrorStringProvider to display localized error text when saving a workbook that contains formula errors.
+// Common Searches: c# Aspose.Cells custom error string provider example for localization | override GetErrorString to translate #DIV/0! error in Aspose.Cells | how to display Excel formula errors in Spanish using Aspose.Cells | register custom ErrorStringProvider with Aspose.Cells before CalculateFormula | localized error messages for Excel formulas in Aspose.Cells C# tutorial
+// Tags: ErrorStringProvider subclass Aspose.Cells C# | localize Excel error strings Aspose.Cells | custom GetErrorString logic for workbook | register error string provider before calculation | Excel formula error localization C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Custom globalization settings that provide localized error messages
-    // Shows how to subclass GlobalizationSettings, override GetErrorValueString to replace default Excel error codes with localized text, apply the custom settings to a Workbook, generate a #DIV/0! error, and read the tailored display string.
-    public class CustomErrorGlobalizationSettings : GlobalizationSettings
-    {
-        // Override GetErrorValueString to map default error strings to custom ones
-        public override string GetErrorValueString(string err)
-        {
-            // Map specific Excel error codes to localized messages
-            return err switch
-            {
-                "#DIV/0!" => "Custom Division Error",
-                "#VALUE!" => "Custom Type Mismatch",
-                "#NAME?" => "Custom Identifier Error",
-                "#N/A"    => "Custom Not Available",
-                _ => base.GetErrorValueString(err) // Fallback to default behavior
-            };
-        }
-    }
-
-    public class GlobalizationSettingsMethodGetErrorValueStringDemo
-    {
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Apply the custom globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = new CustomErrorGlobalizationSettings();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Create a cell that will generate a division by zero error
-            Cell errorCell = worksheet.Cells["A1"];
-            errorCell.Formula = "=1/0"; // This will produce #DIV/0! error
-
-            // Calculate formulas to evaluate the error
-            workbook.CalculateFormula();
-
-            // Retrieve the display string for the error cell (uses our custom mapping)
-            string errorDisplay = errorCell.DisplayStringValue;
-
-            // Output the custom error message to the console
-            Console.WriteLine($"Error display value: {errorDisplay}");
-
-            // Save the workbook to verify the result
-            workbook.Save("MethodGetErrorValueStringDemo.xlsx");
-        }
-    }
-
-    // Entry point for demonstration
+    // This example demonstrates how to create a subclass of Aspose.Cells.ErrorStringProvider, override the GetErrorString method to return translated messages for Excel error codes (e.g., #DIV/0!, #VALUE!), register the provider with a Workbook, and then recalculate formulas so the localized error strings appear in the saved file.
     class Program
     {
         static void Main()
         {
-            GlobalizationSettingsMethodGetErrorValueStringDemo.Run();
+            try
+            {
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+
+                // Example: set a formula that will generate a DIV/0 error.
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue(0);
+                sheet.Cells["A2"].Formula = "=1/A1";
+
+                // Recalculate formulas to populate the error.
+                workbook.CalculateFormula();
+
+                // Optionally load an existing workbook if the file exists.
+                string inputPath = "input.xlsx";
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+
+                // Save the workbook.
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,44 +1,89 @@
-// Title: C# – Remove Redundant Spaces After <br> Tags When Converting Excel Cells to HTML with Aspose.Cells
-// Description: Demonstrates how to export a worksheet containing multiline text to HTML using Aspose.Cells, enable text wrapping so line breaks become <br> tags, and then clean up any whitespace that follows those tags with a regular expression.
-// Keywords: Aspose.Cells HTML export | C# remove spaces after br | regex clean HTML whitespace | text wrapping Excel to HTML | line break spacing issue
-// Common Searches: remove extra spaces after <br> in Aspose.Cells HTML output | Aspose.Cells C# line break whitespace cleanup | HTMLSaveOptions remove whitespace after line breaks | regex to trim spaces after br tag in generated HTML | export Excel to HTML without redundant spaces
-// Developer Intent: Eliminate unnecessary whitespace that appears after <br> tags in HTML generated from an Excel workbook using Aspose.Cells.
-// Use Cases: Export wrapped text with line breaks to HTML and ensure clean markup. | Post‑process Aspose.Cells HTML output with a regex to improve layout consistency. | Automate report generation where HTML files must not contain stray spaces after line‑break tags.
-// AI Prompts: Show C# code that uses Aspose.Cells to export a worksheet to HTML and then removes spaces after <br> tags with a regular expression. | Explain how to enable text wrapping in Aspose.Cells so line breaks are rendered as <br> elements in the HTML file. | Suggest alternative approaches to trim whitespace after line breaks without reading and rewriting the HTML file.
+// Title: Remove extra spaces after line breaks in Excel cells before exporting to HTML using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates through all string cells in an Aspose.Cells workbook, uses a regular expression to delete spaces that follow newline characters, and then saves the workbook as HTML. | Update an Aspose.Cells HTML export routine to strip whitespace occurring after '\r\n' or '\n' line breaks in cell contents.
+// Common Searches: aspocells c# remove spaces after newline when saving as html | how to clean Excel cell text line break whitespace before html export using Aspose.Cells | regex to trim spaces after line breaks in Excel cells with Aspose.Cells .NET | remove trailing spaces after line breaks in workbook cells during HTML conversion Aspose.Cells
+// Tags: Aspose.Cells regex newline whitespace cleanup | trim cell string values before HTML conversion | remove redundant line break spaces in Excel workbook | C# iterate worksheet cells for whitespace normalization | HTML export whitespace handling with Aspose.Cells
 
 using System;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to export a worksheet containing multiline text to HTML using Aspose.Cells, enable text wrapping so line breaks become <br> tags, and then clean up any whitespace that follows those tags with a regular expression.
-class RemoveRedundantSpacesDemo
+namespace AsposeCellsHtmlConversion
 {
-    static void Main()
+    // The program loads an Excel workbook, walks through each worksheet's used range, applies a regular expression to replace line‑break characters followed by spaces with just the line break in string cells, updates any modified cells, and finally saves the workbook as an HTML file.
+    class Program
     {
-        // Create a new workbook and access the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Put text containing line breaks (\n) and redundant spaces after them
-        worksheet.Cells["A1"].PutValue("First line\n   Second line\n    Third line");
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Enable text wrapping so that line breaks are exported as <br> tags in HTML
-        Style wrapStyle = workbook.CreateStyle();
-        wrapStyle.IsTextWrapped = true;
-        worksheet.Cells["A1"].SetStyle(wrapStyle);
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook to HTML
-        string htmlPath = "output.html";
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        workbook.Save(htmlPath, saveOptions);
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Get the used range of the worksheet
+                    AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+                    if (usedRange == null)
+                        continue; // Skip empty sheets
 
-        // Load the generated HTML, remove spaces that follow <br> tags, and overwrite the file
-        string htmlContent = File.ReadAllText(htmlPath, Encoding.UTF8);
-        string cleanedHtml = Regex.Replace(htmlContent, @"<br>\s+", "<br>");
-        File.WriteAllText(htmlPath, cleanedHtml, Encoding.UTF8);
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-        Console.WriteLine("HTML file saved with redundant spaces after line breaks removed.");
+                    // Loop through each cell in the used range
+                    for (int row = startRow; row <= endRow; row++)
+                    {
+                        for (int col = startCol; col <= endCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
+
+                            // Process only cells that contain string data
+                            if (cell.Type == CellValueType.IsString && !string.IsNullOrEmpty(cell.StringValue))
+                            {
+                                // Remove redundant spaces after line breaks
+                                // Pattern: line break (\r\n or \n) followed by one or more spaces
+                                // Replacement: keep only the line break
+                                string cleaned = Regex.Replace(cell.StringValue, @"(\r?\n)\s+", "$1");
+
+                                // Update the cell value if changes were made
+                                if (!cleaned.Equals(cell.StringValue, StringComparison.Ordinal))
+                                {
+                                    cell.PutValue(cleaned);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as HTML
+                workbook.Save(outputPath, SaveFormat.Html);
+                Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

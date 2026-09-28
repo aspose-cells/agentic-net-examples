@@ -1,45 +1,50 @@
-// Title: Explicitly Dispose Aspose.Cells Workbook Objects in C# to Release File Handles and Memory
-// Description: This C# example demonstrates how to create a new Aspose.Cells Workbook, write data, save it, and then call Workbook.Dispose to free file handles and memory. It also shows loading the saved file, modifying a cell, saving the changes, and disposing the second workbook, illustrating proper resource cleanup for both creation and modification scenarios.
-// Keywords: Aspose.Cells Workbook Dispose | C# Aspose.Cells memory management | release file handles Aspose.Cells | Aspose.Cells .NET resource cleanup | Workbook.Dispose best practice | Aspose.Cells save and close | prevent file lock Aspose.Cells | Aspose.Cells example GitHub
-// Common Searches: How to dispose Aspose.Cells Workbook in C# | Release file handles after saving Aspose.Cells workbook | Aspose.Cells memory leak prevention | Workbook.Dispose usage Aspose.Cells | Aspose.Cells example for disposing workbooks
-// Developer Intent: Ensure each Aspose.Cells Workbook is explicitly disposed after use to free file handles and memory, avoiding file locks and memory leaks.
-// Use Cases: Create a workbook, add data, save it, and call Dispose to close the file. | Load an existing workbook, modify cells, save changes, and dispose the object. | Process a batch of workbooks sequentially, disposing each one to prevent resource exhaustion.
-// AI Prompts: Generate C# code that uses a using statement to automatically dispose Aspose.Cells Workbook objects. | Refactor the provided snippet so Workbook.Dispose is called even when an exception occurs. | Explain the impact of Workbook.Dispose on file handles and memory in Aspose.Cells .NET.
+// Title: How to explicitly dispose Aspose.Cells Workbook objects in C# to release file handles and free memory
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, updates a specific cell, saves the workbook, and guarantees Workbook.Dispose is called in a finally block. | Create a reusable C# method for processing multiple workbooks that writes values, saves each file, and ensures each Workbook instance is disposed even when exceptions occur.
+// Common Searches: C# Aspose.Cells how to release file lock after saving workbook | ensure Workbook.Dispose is called when using Aspose.Cells in a loop | best practice for disposing Aspose.Cells Workbook objects in .NET | avoid Excel file handle leak with Aspose.Cells workbook | using try‑finally to call Workbook.Dispose in Aspose.Cells C#
+// Tags: Aspose.Cells workbook disposal C# | release Excel file handles Aspose.Cells | workbook lifecycle management Aspose.Cells | explicit Workbook.Dispose usage | memory cleanup after saving Aspose.Cells workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This C# example demonstrates how to create a new Aspose.Cells Workbook, write data, save it, and then call Workbook.Dispose to free file handles and memory. It also shows loading the saved file, modifying a cell, saving the changes, and disposing the second workbook, illustrating proper resource cleanup for both creation and modification scenarios.
+// // This program processes two Excel files with Aspose.Cells, writes values to specified cells, saves each workbook, and explicitly calls Workbook.Dispose to release file handles and free memory.
 class Program
 {
     static void Main()
     {
-        // ---------- Create a new workbook ----------
-        // Uses the Workbook() constructor rule
-        Workbook workbook1 = new Workbook();
+        // Process first workbook
+        ProcessWorkbook("Input1.xlsx", "Output1.xlsx", "A1", "Hello World");
+        // Process second workbook
+        ProcessWorkbook("Input2.xlsx", "Output2.xlsx", "B2", 12345);
+    }
 
-        // Access the default worksheet and add some data
-        Worksheet sheet1 = workbook1.Worksheets[0];
-        sheet1.Cells["A1"].PutValue("Hello Aspose.Cells!");
+    static void ProcessWorkbook(string inputPath, string outputPath, string cellName, object value)
+    {
+        try
+        {
+            Workbook workbook;
 
-        // Save the workbook to disk using the Save(string) rule
-        workbook1.Save("CreatedWorkbook.xlsx");
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+            }
 
-        // Explicitly release resources for the first workbook
-        workbook1.Dispose();
+            // Write the value to the specified cell in the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells[cellName].PutValue(value);
 
-        // ---------- Load the previously saved workbook ----------
-        // Uses the Workbook(string) constructor rule for loading
-        Workbook workbook2 = new Workbook("CreatedWorkbook.xlsx");
-
-        // Modify the workbook: add current date/time to cell B2
-        Worksheet sheet2 = workbook2.Worksheets[0];
-        sheet2.Cells["B2"].PutValue(DateTime.Now);
-
-        // Save the modified workbook using the Save(string, SaveFormat) rule
-        workbook2.Save("ModifiedWorkbook.xlsx", SaveFormat.Xlsx);
-
-        // Explicitly release resources for the second workbook
-        workbook2.Dispose();
+            // Save the workbook to the output file
+            workbook.Save(outputPath);
+            workbook.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
+        }
     }
 }

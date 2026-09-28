@@ -1,10 +1,7 @@
-// Title: Clear All Filters from an Aspose.Cells PivotTable in C# (.NET)
-// Description: Demonstrates how to create a workbook, add a PivotTable, apply label filters, then remove every filter (row, column, page, and PivotFilters collection) using ClearFilter, refresh the data, and save the file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells clear pivot filters | C# remove pivot table filters | Aspose.Cells PivotField ClearFilter | reset Aspose pivot filters programmatically | Aspose.Cells PivotFilters collection clear | unfilter Aspose.Cells PivotTable | Aspose.Cells .NET pivot table example
-// Common Searches: how to clear all filters Aspose.Cells pivot table C# | remove row and column filters from Aspose pivot table | reset pivot table filters Aspose.Cells .NET | Aspose.Cells ClearFilter example | unfilter PivotTable using Aspose.Cells
-// Developer Intent: Programmatically remove every filter applied to a PivotTable so the full dataset is displayed.
-// Use Cases: Return a PivotTable to its original state after temporary analysis filters. | Ensure exported reports contain unfiltered data for all recipients. | Automate workbook preparation where no residual filters should remain.
-// AI Prompts: Generate C# code with Aspose.Cells that clears all filters from a PivotTable, including row, column, page, and PivotFilters collections, then refreshes and saves the workbook. | Show an example of adding a PivotTable, applying label filters, removing them using ClearFilter, and explaining the required RefreshData and CalculateData calls. | Explain the difference between PivotField.ClearFilter and PivotFiltersCollection.ClearFilter in Aspose.Cells and when each should be used.
+// Title: How to remove every filter from an Aspose.Cells pivot table in C# and refresh the workbook
+// AI Prompts: Generate C# code that loops through each PivotTable field (rows, columns, pages) and invokes ClearFilter using Aspose.Cells. | Show how to empty the PivotFilters collection of a PivotTable and then recalculate the pivot data with Aspose.Cells. | Create a full example that removes every filter, refreshes the pivot, and saves the workbook to an .xlsx file using Aspose.Cells.
+// Common Searches: asp.net core remove pivot table filters Aspose.Cells example | c# clear row field filter in Aspose.Cells pivot table | how to reset column filters in Aspose.Cells PivotTable | refresh pivot after clearing filters Aspose.Cells .NET | clear all pivot filters and recalculate data Aspose.Cells C#
+// Tags: Aspose.Cells PivotTable ClearFilter C# | remove pivot filters Aspose.Cells .xlsx | refresh pivot data Aspose.Cells | iterate pivot fields Aspose.Cells | clear PivotFilters collection Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,8 +9,8 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add a PivotTable, apply label filters, then remove every filter (row, column, page, and PivotFilters collection) using ClearFilter, refresh the data, and save the file with Aspose.Cells for .NET.
-    public class RemoveAllPivotFiltersDemo
+    // The example creates a workbook, adds sample data, builds a pivot table, applies label filters, then removes all filters by iterating over row, column, and page fields and clearing the PivotFilters collection. After clearing, it refreshes and recalculates the pivot table and saves the result as PivotTable_NoFilters.xlsx.
+    class RemoveAllPivotFilters
     {
         public static void Run()
         {
@@ -30,22 +27,18 @@ namespace AsposeCellsExamples
 
                 worksheet.Cells["A2"].PutValue("Fruit");
                 worksheet.Cells["B2"].PutValue("Apple");
-                worksheet.Cells["C2"].PutValue(120);
+                worksheet.Cells["C2"].PutValue(100);
 
                 worksheet.Cells["A3"].PutValue("Fruit");
                 worksheet.Cells["B3"].PutValue("Banana");
-                worksheet.Cells["C3"].PutValue(80);
+                worksheet.Cells["C3"].PutValue(150);
 
                 worksheet.Cells["A4"].PutValue("Vegetable");
                 worksheet.Cells["B4"].PutValue("Carrot");
-                worksheet.Cells["C4"].PutValue(150);
-
-                worksheet.Cells["A5"].PutValue("Vegetable");
-                worksheet.Cells["B5"].PutValue("Broccoli");
-                worksheet.Cells["C5"].PutValue(130);
+                worksheet.Cells["C4"].PutValue(200);
 
                 // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+                int pivotIndex = worksheet.PivotTables.Add("A1:C4", "E1", "PivotTable1");
                 PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
                 // Configure the pivot table fields
@@ -53,67 +46,65 @@ namespace AsposeCellsExamples
                 pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Apply some filters to demonstrate clearing them later
-                // Filter Row field "Category" to show only "Fruit"
-                PivotField rowField = pivotTable.RowFields["Category"];
-                rowField.FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
+                // Apply some filters for demonstration purposes
+                // Row field: show only "Fruit"
+                pivotTable.RowFields[0].FilterByLabel(PivotFilterType.CaptionEqual, "Fruit", null);
+                // Column field: show only "Apple"
+                pivotTable.ColumnFields[0].FilterByLabel(PivotFilterType.CaptionEqual, "Apple", null);
 
-                // Filter Column field "Product" to show only "Apple"
-                PivotField columnField = pivotTable.ColumnFields["Product"];
-                columnField.FilterByLabel(PivotFilterType.CaptionEqual, "Apple", null);
-
-                // Refresh the pivot table to reflect the applied filters
+                // Refresh the pivot table to apply the filters
                 pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // ------------------- Remove all filters -------------------
-                // Clear filters on Row fields
-                foreach (PivotField pf in pivotTable.RowFields)
+                // -------------------------------------------------
+                // Remove all filters from the pivot table
+                // -------------------------------------------------
+
+                // Clear filters on each row field
+                foreach (PivotField field in pivotTable.RowFields)
                 {
-                    pf.ClearFilter();
+                    field.ClearFilter();
                 }
 
-                // Clear filters on Column fields
-                foreach (PivotField pf in pivotTable.ColumnFields)
+                // Clear filters on each column field
+                foreach (PivotField field in pivotTable.ColumnFields)
                 {
-                    pf.ClearFilter();
+                    field.ClearFilter();
                 }
 
-                // Clear filters on Page fields (if any)
-                foreach (PivotField pf in pivotTable.PageFields)
+                // Clear filters on each page field (if any)
+                foreach (PivotField field in pivotTable.PageFields)
                 {
-                    pf.ClearFilter();
+                    field.ClearFilter();
                 }
 
-                // Additionally, clear any filters stored in the PivotFilters collection
-                PivotFilterCollection filters = pivotTable.PivotFilters;
-                for (int i = 0; i < filters.Count; i++)
+                // Additionally clear any filters stored in the PivotFilters collection
+                PivotFilterCollection pivotFilters = pivotTable.PivotFilters;
+                int totalFieldCount = pivotTable.RowFields.Count + pivotTable.ColumnFields.Count + pivotTable.PageFields.Count;
+                for (int i = 0; i < totalFieldCount; i++)
                 {
-                    // The field index corresponds to the base field index of the filter
-                    filters.ClearFilter(i);
+                    pivotFilters.ClearFilter(i);
                 }
 
-                // Refresh the pivot table again to show unfiltered data
+                // Refresh the pivot table again to reflect the removal of filters
                 pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // Save the workbook
-                string outputPath = "RemoveAllPivotFiltersDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Save the workbook with the unfiltered pivot table
+                workbook.Save("PivotTable_NoFilters.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            RemoveAllPivotFiltersDemo.Run();
+            RemoveAllPivotFilters.Run();
         }
     }
 }

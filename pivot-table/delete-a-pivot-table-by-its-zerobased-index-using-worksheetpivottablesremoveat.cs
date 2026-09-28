@@ -1,49 +1,59 @@
-// Title: Remove a Pivot Table by Index with Worksheet.PivotTables.RemoveAt (Aspose.Cells for .NET C#)
-// Description: This C# example shows how to create a workbook, add three pivot tables, delete the second pivot table using Worksheet.PivotTables.RemoveAt(1), verify the remaining count, and save the file as PivotTableRemoved.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet.PivotTables.RemoveAt | delete pivot table | remove pivot table by index | pivot table API | Aspose.Cells pivot table | remove specific pivot table | Aspose.Cells example
-// Common Searches: Aspose.Cells remove pivot table by index | Worksheet.PivotTables.RemoveAt C# example | delete specific pivot table Aspose.Cells .NET | how to remove second pivot table Aspose.Cells | remove pivot table programmatically Aspose.Cells
-// Developer Intent: Delete a pivot table from a worksheet using its zero‑based index.
-// Use Cases: Eliminate unwanted pivot tables generated during dynamic reporting | Reduce workbook size by removing temporary pivot tables before export | Replace an outdated pivot table by deleting it at a known position and inserting a new one | Clean up pivot tables in automated spreadsheet processing pipelines
-// AI Prompts: Show code to check the pivot table count before and after calling RemoveAt. | Provide a loop that removes all pivot tables from a worksheet. | Explain how to locate a pivot table's index by name and delete it with RemoveAt. | Demonstrate error handling when the specified index is out of range. | Give an example of removing pivot tables from multiple worksheets in a workbook.
+// Title: How to delete a pivot table by zero‑based index from a worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, checks the number of pivot tables on the first worksheet, removes the pivot table at index 2 using Worksheet.PivotTables.RemoveAt, and saves the workbook. | Show a C# example that safely deletes a pivot table by verifying the provided zero‑based index against Worksheet.PivotTables.Count before calling RemoveAt. | Demonstrate how to log a friendly message when the requested pivot table index is out of range and continue processing.
+// Common Searches: aspnet remove pivot table at specific index using Aspose.Cells | c# Aspose.Cells delete pivot table from worksheet by index | how to check pivot table count before removing with Worksheet.PivotTables.RemoveAt | example of Worksheet.PivotTables.RemoveAt in Aspose.Cells .NET | error handling for out‑of‑range pivot table index Aspose.Cells
+// Tags: Aspose.Cells Worksheet.PivotTables.RemoveAt | remove pivot table at specific index | pivot table index validation Aspose.Cells | delete pivot table from .xlsx using .NET | exception handling for pivot table removal
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDeleteDemo
+namespace AsposeCellsExample
 {
-    // This C# example shows how to create a workbook, add three pivot tables, delete the second pivot table using Worksheet.PivotTables.RemoveAt(1), verify the remaining count, and save the file as PivotTableRemoved.xlsx.
+    // The sample loads 'input.xlsx' with Aspose.Cells, confirms the file exists, accesses the first worksheet, validates that a given zero‑based pivot table index is within the collection bounds, removes the pivot table using Worksheet.PivotTables.RemoveAt, and saves the updated workbook to 'output.xlsx' while handling possible errors and logging actions.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate sample data for pivot tables
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["B4"].PutValue(300);
+            try
+            {
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Add three pivot tables to the worksheet
-            sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            sheet.PivotTables.Add("A1:B4", "D10", "PivotTable2");
-            sheet.PivotTables.Add("A1:B4", "D20", "PivotTable3");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Remove the pivot table at zero‑based index 1 (the second pivot table)
-            sheet.PivotTables.RemoveAt(1);
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Optional: verify the remaining count
-            Console.WriteLine("Remaining Pivot Tables Count: " + sheet.PivotTables.Count);
+                // Zero‑based index of the pivot table to delete
+                int pivotIndex = 0; // change as required
 
-            // Save the workbook
-            workbook.Save("PivotTableRemoved.xlsx");
+                // Ensure the pivot table index is valid
+                if (pivotIndex >= 0 && pivotIndex < worksheet.PivotTables.Count)
+                {
+                    worksheet.PivotTables.RemoveAt(pivotIndex);
+                    Console.WriteLine($"Pivot table at index {pivotIndex} removed.");
+                }
+                else
+                {
+                    Console.WriteLine($"No pivot table found at index {pivotIndex}.");
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

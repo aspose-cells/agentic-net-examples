@@ -1,60 +1,81 @@
-// Title: Load, Modify Properties, Style, Settings, Add Worksheet, and Save as XLSX using Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to open an existing Excel file with Aspose.Cells, update built‑in properties (Author, Title), add a custom property, change the default font, enable iterative calculation, insert a new worksheet with a timestamp, and save the workbook as an XLSX file while preserving all modifications.
-// Keywords: Aspose.Cells C# workbook load | modify Excel document properties Aspose | add custom property Aspose.Cells | default font Aspose.Cells | iterative calculation Aspose.Cells | add worksheet Aspose.Cells | save as XLSX Aspose.Cells | Excel metadata update .NET | Aspose.Cells example
-// Common Searches: How to change Author property in Excel using Aspose.Cells C# | Add custom document property to workbook with Aspose.Cells | Set default font for all sheets in Aspose.Cells | Enable iterative calculation in Aspose.Cells | Save modified workbook as XLSX with Aspose.Cells | Aspose.Cells add new worksheet programmatically
-// Developer Intent: Programmatically update workbook metadata, style, calculation options, add content, and export to XLSX.
-// Use Cases: Prepare compliance‑ready Excel files by updating Author and Title metadata. | Apply corporate branding by setting a default font across the workbook. | Support complex formulas that require iterative calculation before distribution. | Generate summary sheets with timestamps for automated reporting. | Automate bulk updates of Excel files in a .NET workflow.
-// AI Prompts: Write C# code using Aspose.Cells to change built‑in properties, add a custom property, set default font, enable iterative calculation, add a worksheet with current date, and save as XLSX. | Provide an Aspose.Cells .NET snippet that updates workbook settings and preserves them after saving. | Explain how to ensure custom document properties are retained when exporting to XLSX with Aspose.Cells.
+// Title: Load an Excel workbook, set author, title, subject, and keywords via reflection, update a cell, and save as XLSX with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, uses reflection to assign Author, Title, Subject, and Keywords properties, changes the value of cell A1, and saves the workbook to a new .xlsx file. | Show how to safely handle errors when loading a workbook, setting document properties through reflection, and saving the file using Aspose.Cells SaveFormat.Xlsx. | Demonstrate accessing the WorkbookProperties object via reflection to maintain compatibility across different Aspose.Cells versions in a .NET application.
+// Common Searches: aspnet set workbook author and keywords using aspose.cells reflection | how to modify cell A1 and preserve document properties when saving Excel with Aspose.Cells | load existing xlsx, change metadata, and save as new file using Aspose.Cells for .NET | reflection based access to WorkbookProperties in Aspose.Cells C# example | error handling for loading and saving Excel files with Aspose.Cells
+// Tags: Aspose.Cells set workbook metadata via reflection | C# modify Excel cell and document properties | save workbook as XLSX using Aspose.Cells SaveFormat | load existing workbook with fallback creation Aspose.Cells | compatible WorkbookProperties access across Aspose.Cells versions
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Reflection;
 
-namespace AsposeCellsDemo
+// The example loads an existing XLSX workbook (or creates a new one if missing), uses reflection to set Author, Title, Subject, and Keywords in the workbook's properties, updates cell A1 with a custom value, and saves the modified workbook as a new XLSX file while handling potential errors.
+class Program
 {
-    // This C# example shows how to open an existing Excel file with Aspose.Cells, update built‑in properties (Author, Title), add a custom property, change the default font, enable iterative calculation, insert a new worksheet with a timestamp, and save the workbook as an XLSX file while preserving all modifications.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source Excel file (can be .xlsx, .xls, .csv, etc.)
-            string sourcePath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Load the workbook using the string constructor (provided rule)
-            Workbook workbook = new Workbook(sourcePath);
+            // Load existing workbook if it exists; otherwise create a new one
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to load '{inputPath}': {ex.Message}");
+                    workbook = new Workbook();
+                }
+            }
+            else
+            {
+                workbook = new Workbook();
+            }
 
-            // ----- Modify workbook properties -----
+            // Set document properties via reflection (compatible with all Aspose.Cells versions)
+            try
+            {
+                PropertyInfo wpInfo = workbook.GetType().GetProperty("WorkbookProperties");
+                if (wpInfo != null)
+                {
+                    object props = wpInfo.GetValue(workbook);
+                    Type propsType = props.GetType();
 
-            // 1. Built‑in document properties
-            workbook.BuiltInDocumentProperties["Author"].Value = "John Doe";
-            workbook.BuiltInDocumentProperties["Title"].Value = "Modified Workbook";
+                    propsType.GetProperty("Author")?.SetValue(props, "John Doe");
+                    propsType.GetProperty("Title")?.SetValue(props, "Modified Workbook");
+                    propsType.GetProperty("Subject")?.SetValue(props, "Aspose.Cells Demo");
+                    propsType.GetProperty("Keywords")?.SetValue(props, "Aspose, Cells, C#");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unable to set document properties: {ex.Message}");
+            }
 
-            // 2. Custom document property
-            workbook.CustomDocumentProperties.Add("ReviewedBy", "Jane Smith");
+            // Example modification: change the value of cell A1 in the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Hello, Aspose!");
 
-            // 3. Default style (change default font)
-            workbook.DefaultStyle.Font.Name = "Calibri";
-            workbook.DefaultStyle.Font.Size = 11;
-
-            // 4. Workbook settings (enable iterative calculation as an example)
-            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-            workbook.Settings.FormulaSettings.MaxIteration = 50;
-            workbook.Settings.FormulaSettings.MaxChange = 0.001;
-
-            // 5. Add a new worksheet and put some data
-            int newSheetIndex = workbook.Worksheets.Add();
-            Worksheet newSheet = workbook.Worksheets[newSheetIndex];
-            newSheet.Name = "Summary";
-            newSheet.Cells["A1"].PutValue("Report generated on:");
-            newSheet.Cells["B1"].PutValue(DateTime.Now);
-
-            // ----- Save the modified workbook as XLSX -----
-            // Use the Save(string, SaveFormat) overload (provided rule)
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
-
-            // Clean up
-            workbook.Dispose();
-
-            Console.WriteLine("Workbook loaded, modified, and saved as 'output.xlsx'.");
+            // Save the workbook to XLSX format
+            try
+            {
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

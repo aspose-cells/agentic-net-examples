@@ -1,40 +1,26 @@
-// Title: Aspose.Cells C# – Set FitToPagesWide = 1 and FitToPagesTall = 2 for a single‑column layout
-// Description: C# example that creates a workbook, adds sample data, and uses PageSetup.SetFitToPages to force the worksheet to print on 1 page wide by 2 pages tall, achieving a single‑column layout, then saves the file as an Excel workbook.
-// Keywords: Aspose.Cells C# | SetFitToPages | FitToPagesWide | FitToPagesTall | page setup scaling | single column print layout | .NET Excel printing | worksheet fit to pages | Aspose.Cells page scaling example
-// Common Searches: Aspose.Cells set FitToPagesWide to 1 | FitToPagesTall = 2 Aspose.Cells .NET | C# page setup fit to 1x2 pages Aspose | how to force single column layout in Excel with Aspose.Cells | Aspose.Cells SetFitToPages example
-// Developer Intent: Configure a worksheet’s page setup so the printed output fits exactly one page in width and two pages in height.
-// Use Cases: Printing a report that must stay within a single column across two pages for consistent formatting. | Generating invoices where all columns fit on one page width while allowing two pages height for item details. | Creating printable data lists that require a one‑page‑wide, two‑page‑tall layout to preserve column alignment.
-// AI Prompts: Show how to set FitToPagesWide and FitToPagesTall separately using PageSetup in Aspose.Cells for .NET. | Provide a C# snippet that scales a worksheet to fit a specific number of pages while keeping the column layout intact. | Explain the differences between PageSetup.SetFitToPages and setting FitToPagesWide/FitToPagesTall directly in Aspose.Cells.
+// Title: Set worksheet page setup to fit 1 page wide and 2 pages tall (single‑column layout) with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to configure a worksheet's PageSetup so that the printed output fits 1 page wide and 2 pages tall, then save the workbook as an .xlsx file. | Show how to apply a single‑column print layout by setting FitToPagesWide = 1 and FitToPagesTall = 2 on a worksheet with Aspose.Cells in C#. | Create a reusable C# method that accepts a Workbook and sets its first worksheet to a 1‑by‑2 page fit using Aspose.Cells PageSetup properties.
+// Common Searches: Aspose.Cells C# set worksheet FitToPagesWide to 1 and FitToPagesTall to 2 | How to configure single column print layout in Aspose.Cells .NET | Fit worksheet to specific number of pages using Aspose.Cells PageSetup | C# Aspose.Cells page scaling fit to 1 page wide 2 pages tall example | Set page setup for workbook to print on 1x2 pages with Aspose.Cells
+// Tags: Aspose.Cells worksheet page setup fit-to-page | C# page setup scaling properties Aspose.Cells | worksheet print scaling Aspose.Cells | Aspose.Cells page scaling configuration | save workbook as xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFitToPagesExample
+// // Configures the first worksheet's PageSetup to fit 1 page wide by 2 pages tall (single‑column layout) and saves the workbook as Output.xlsx.
+class Program
 {
-    // C# example that creates a workbook, adds sample data, and uses PageSetup.SetFitToPages to force the worksheet to print on 1 page wide by 2 pages tall, achieving a single‑column layout, then saves the file as an Excel workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // (Optional) Add some sample data to demonstrate the layout
-            worksheet.Cells["A1"].PutValue("Header");
-            for (int i = 2; i <= 50; i++)
-            {
-                worksheet.Cells[$"A{i}"].PutValue($"Row {i - 1}");
-            }
+        // Set the page setup for a single‑column layout
+        sheet.PageSetup.FitToPagesWide = 1;   // Fit to 1 page wide
+        sheet.PageSetup.FitToPagesTall = 2;   // Fit to 2 pages tall
 
-            // Set the page to fit 1 page wide and 2 pages tall
-            // Using the SetFitToPages method as it directly sets both properties
-            worksheet.PageSetup.SetFitToPages(1, 2);
-
-            // Save the workbook to a file
-            workbook.Save("FitToPagesExample.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("Output.xlsx");
     }
 }

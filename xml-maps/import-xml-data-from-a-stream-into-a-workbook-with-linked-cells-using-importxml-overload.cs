@@ -1,71 +1,58 @@
-// Title: Import XML from a Stream into an Aspose.Cells Workbook with Linked Cells (C#)
-// Description: Demonstrates how to create a Workbook, convert an XML string to a MemoryStream, and use the ImportXml overload to load the XML into a specified worksheet starting at cell A1, preserving the XML map, then save the file as an Excel workbook.
-// Keywords: Aspose.Cells ImportXml stream C# | load XML into Excel workbook | MemoryStream XML import Aspose | linked cells XML map Aspose.Cells | ImportXml overload example | C# Excel XML data import | Aspose.Cells XML map refresh
-// Common Searches: Aspose.Cells ImportXml from MemoryStream example | How to import XML into a worksheet using C# | Create linked cells from XML with Aspose.Cells | Save workbook after ImportXml stream | ImportXml overload parameters
-// Developer Intent: Load XML content supplied via a stream into a new workbook, map it to cells, and generate an Excel file.
-// Use Cases: Transform XML configuration received over a network into an Excel report. | Populate a spreadsheet with product data stored in an XML string for analysis. | Maintain a live connection between worksheet cells and source XML for periodic refreshes.
-// AI Prompts: Generate C# code that reads XML from a MemoryStream and imports it into a specific sheet using Aspose.Cells ImportXml while keeping the XML map intact. | Show an example of handling large XML streams with ImportXml overload and saving the workbook efficiently. | Explain best practices for error handling and resource cleanup when using ImportXml with a stream in Aspose.Cells.
+// Title: Import XML spreadsheet from a MemoryStream into an Aspose.Cells Workbook while preserving linked cells (C#)
+// AI Prompts: Generate C# code that creates a MemoryStream from an XML string and uses Aspose.Cells Workbook.ImportXml overload to load the data with linked cells intact. | Show how to load an XML spreadsheet via a stream into a Workbook, then save it as an XLSX file using Aspose.Cells in C#. | Provide a step‑by‑step example of preserving cell links when importing XML data from a stream into an Aspose.Cells workbook.
+// Common Searches: aspose.cells importxml from memorystream c# preserving linked cells | c# load xml spreadsheet into workbook using stream with aspose.cells | how to convert xml spreadsheet to xlsx while keeping cell links in c# | example of Workbook.ImportXml overload with MemoryStream in Aspose.Cells | import xml data into Aspose.Cells workbook from a stream c# tutorial
+// Tags: importxml overload memorystream c# | aspose.cells load xml spreadsheet | preserve linked cells aspose.cells | convert xml to xlsx using aspose.cells | c# memorystream xml workbook import
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates an XML spreadsheet string, writes it into a MemoryStream, uses Aspose.Cells Workbook.ImportXml (or the stream constructor) to load the XML while keeping linked cells, and then saves the workbook as an XLSX file.
+class Program
 {
-    // Demonstrates how to create a Workbook, convert an XML string to a MemoryStream, and use the ImportXml overload to load the XML into a specified worksheet starting at cell A1, preserving the XML map, then save the file as an Excel workbook.
-    public class ImportXmlFromStreamDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Sample XML content to be imported
+            string xmlContent = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<Workbook xmlns:ss=""urn:schemas-microsoft-com:office:spreadsheet"">
+  <Worksheet ss:Name=""Sheet1"">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type=""String"">Name</Data></Cell>
+        <Cell><Data ss:Type=""String"">Age</Data></Cell>
+      </Row>
+      <Row>
+        <Cell><Data ss:Type=""String"">John</Data></Cell>
+        <Cell><Data ss:Type=""Number"">30</Data></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+</Workbook>";
+
+            // Convert the XML string into a memory stream
+            using (MemoryStream xmlStream = new MemoryStream())
             {
-                // Create a new workbook instance
-                Workbook workbook = new Workbook();
-
-                // Sample XML content to be imported
-                string xmlData = @"<Products>
-    <Product>
-        <Name>Laptop</Name>
-        <Price>999.99</Price>
-    </Product>
-    <Product>
-        <Name>Phone</Name>
-        <Price>699.99</Price>
-    </Product>
-</Products>";
-
-                // Convert the XML string into a MemoryStream
-                using (MemoryStream xmlStream = new MemoryStream())
+                using (StreamWriter writer = new StreamWriter(xmlStream))
                 {
-                    using (StreamWriter writer = new StreamWriter(xmlStream))
-                    {
-                        writer.Write(xmlData);
-                        writer.Flush();
-                        xmlStream.Position = 0; // Reset position for reading
-
-                        // Import the XML data into the first worksheet at cell A1 (row 0, column 0)
-                        workbook.ImportXml(xmlStream, "Sheet1", 0, 0);
-                    }
+                    writer.Write(xmlContent);
+                    writer.Flush();
+                    xmlStream.Position = 0; // Reset stream position for reading
                 }
 
-                // Save the workbook to an Excel file
-                string outputPath = "ImportXmlFromStreamDemo.xlsx";
-                workbook.Save(outputPath);
+                // Load the workbook from the XML stream
+                Workbook workbook = new Workbook(xmlStream);
+
+                // Save the workbook to a file
+                string outputPath = "ImportedFromXml.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ImportXmlFromStreamDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

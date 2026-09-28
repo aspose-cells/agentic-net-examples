@@ -1,65 +1,67 @@
-// Title: Add a Totals Row with Count Aggregation for a Text Column using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, defines a ListObject (table), enables its totals row, sets the first text column to TotalsCalculation.Count, optionally adds a label, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# ListObject totals row | ListObject TotalsCalculation.Count | Excel table count aggregation | Aspose.Cells table totals | ShowTotals property | ListColumns TotalsRowLabel
-// Common Searches: Aspose.Cells show totals row | C# ListObject count total | How to set TotalsCalculation.Count in Aspose.Cells | Add totals row to Excel table using Aspose.Cells | Label totals row column Aspose.Cells
-// Developer Intent: Add a totals row to a ListObject and configure the first (text) column to display a Count aggregation.
-// Use Cases: Generate a summary row that counts distinct category entries in an automated Excel report. | Create a financial sheet where the totals row shows a custom label and count for a non‑numeric column. | Build a data‑export routine that adds a totals row with count statistics for textual data before distribution.
-// AI Prompts: Write C# code with Aspose.Cells to add a ListObject, enable its totals row, set TotalsCalculation.Count for the first column, and assign a custom label. | Explain how TotalsCalculation.Count works for a text column in an Aspose.Cells ListObject and how to read the calculated count after saving the workbook. | Provide a C# example that applies different TotalsCalculation types (Sum, Average, Count) to multiple ListObject columns using Aspose.Cells for .NET.
+// Title: Add a totals row to a ListObject table and count text entries using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a ListObject on a worksheet, enable its totals row, and write the number of rows in a text column to the totals row with Aspose.Cells. | Insert a SUM formula for a numeric column in the totals row of an Aspose.Cells table while displaying the count of a string column. | Generate an Excel file in C# that contains sample data, a table, and a totals row showing a row count for the Name column and a sum for the Amount column using Aspose.Cells.
+// Common Searches: Aspose.Cells C# add totals row to ListObject and count string column | how to set count aggregation for a text field in an Excel table using Aspose.Cells | C# Aspose.Cells totals row sum formula for numeric column and row count for text column
+// Tags: listobject totals row Aspose.Cells | text column count aggregation Aspose.Cells | numeric column sum formula totals row C# | create Excel table with totals row Aspose.Cells | Aspose.Cells set totals row values programmatically
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// Creates a workbook, defines a ListObject (table), enables its totals row, sets the first text column to TotalsCalculation.Count, optionally adds a label, and saves the file as an Excel workbook.
-class ListObjectTotalsCountDemo
+// The example creates a workbook, adds sample data, defines a ListObject covering A1:B4, enables the totals row, writes the row count of the text 'Name' column into the totals row, inserts a SUM formula for the numeric 'Amount' column, and saves the result as output.xlsx.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data: a text column and a numeric column
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Amount");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("A");
-            worksheet.Cells["B4"].PutValue(30);
-            worksheet.Cells["A5"].PutValue("B");
-            worksheet.Cells["B5"].PutValue(40);
+            // Populate sample data (Name column is text)
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["A4"].PutValue("Charlie");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-            // Add a ListObject (table) that includes the data range
-            int tableIndex = worksheet.ListObjects.Add("A1", "B5", true);
-            ListObject table = worksheet.ListObjects[tableIndex];
+            // Add a ListObject (table) that includes the data range A1:B4
+            int listIndex = sheet.ListObjects.Add("A1", "B4", true);
+            ListObject listObject = sheet.ListObjects[listIndex];
 
-            // Enable the totals row for the table
-            table.ShowTotals = true;
+            // Enable the totals row
+            listObject.ShowTotals = true;
 
-            // Configure the totals row to display a Count aggregation for the text column (first column)
-            table.ListColumns[0].TotalsCalculation = TotalsCalculation.Count;
+            // Determine the totals row index (first row after the data range)
+            int totalsRowIndex = listObject.DataRange.FirstRow + listObject.DataRange.RowCount;
 
-            // Optionally set a label for the totals cell of the first column
-            table.ListColumns[0].TotalsRowLabel = "Count";
+            // Set count for the "Name" column (simple count of rows)
+            int nameColumnIndex = listObject.DataRange.FirstColumn;
+            int rowCount = listObject.DataRange.RowCount;
+            sheet.Cells[totalsRowIndex, nameColumnIndex].PutValue(rowCount);
 
-            // Save the workbook to a file
-            workbook.Save("ListObjectTotalsCountDemo.xlsx");
+            // Set sum for the "Amount" column using a formula
+            int amountColumnIndex = nameColumnIndex + 1;
+            string amountColumnLetter = CellsHelper.ColumnIndexToName(amountColumnIndex);
+            int dataStartRow = listObject.DataRange.FirstRow + 2; // data starts at row 2 (A2)
+            int dataEndRow = dataStartRow + rowCount - 1;
+            string sumFormula = $"=SUM({amountColumnLetter}{dataStartRow}:{amountColumnLetter}{dataEndRow})";
+            sheet.Cells[totalsRowIndex, amountColumnIndex].Formula = sumFormula;
+
+            // Determine output file path
+            string outputPath = "output.xlsx";
+
+            // Save the workbook (overwrite if it already exists)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        ListObjectTotalsCountDemo.Run();
     }
 }

@@ -1,106 +1,59 @@
-// Title: Offset a Range Upward by 5 Rows and Copy Its Formatting with Aspose.Cells for .NET
-// Description: This C# example demonstrates how to create a workbook, define an original range (A6:D10), generate an offset range five rows above, apply a different style to the offset range, and then use `Range.CopyStyle` to transfer the formatting back to the original cells before saving the file.
-// Keywords: Aspose.Cells offset range | copy formatting Aspose.Cells | Range.CopyStyle .NET | C# Aspose.Cells example | shift range rows Aspose | Excel style copy programmatically | GitHub Aspose.Cells sample
-// Common Searches: Aspose.Cells offset range by rows | How to copy style between ranges in Aspose.Cells | C# move range upward and retain formatting | Range.CopyStyle usage example | Aspose.Cells copy formatting from another range
-// Developer Intent: Transfer the formatting of a range that has been moved five rows upward back to its original location using Aspose.Cells for .NET.
-// Use Cases: Apply a temporary style to a header area, shift it to data rows for preview, then restore the original cells' appearance with a single call. | Synchronize visual formatting across separate worksheet sections by copying styles from an offset block to the source block. | Implement a “style template” that can be edited in a hidden area and propagated to visible cells without altering their values.
-// AI Prompts: Write C# code that offsets a given range by N rows with Aspose.Cells and copies the style back to the original range. | Explain the limitations of `Range.CopyStyle` when copying formatting between non‑contiguous ranges in Aspose.Cells. | Show how to copy only the background color from an offset range to the original range while preserving other style attributes.
+// Title: Shift a cell range five rows upward and copy its formatting back to the original range using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that creates a range offset five rows above an existing range and copies the offset range’s style to the original cells. | Show how to clamp the offset start row to zero and transfer formatting from the offset range to the source range in a .NET Excel workbook.
+// Common Searches: Aspose.Cells offset range upward by 5 rows and copy formatting | C# copy style from one Excel range to another using Aspose.Cells | How to shift a range up and apply its formatting in .NET Excel library | Create range with same size at different row index Aspose.Cells C#
+// Tags: offset range rows Aspose.Cells | copy range style Aspose.Cells | shift range upward .NET Excel | clone formatting between ranges C# | create range same dimensions Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The program loads (or creates) an Excel workbook, defines a source range (e.g., A1:C10), creates an offset range five rows above (clamped to the first row), copies the formatting from the offset range back to the original range, and saves the modified file.
+class Program
 {
-    // This C# example demonstrates how to create a workbook, define an original range (A6:D10), generate an offset range five rows above, apply a different style to the offset range, and then use `Range.CopyStyle` to transfer the formatting back to the original cells before saving the file.
-    public class OffsetRangeCopyFormatting
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Ensure the input file exists; create a blank workbook if it does not.
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // ------------------------------------------------------------
-                // Sample data and formatting (for demonstration purposes only)
-                // ------------------------------------------------------------
-                // Fill the original range (A6:D10) with values and a style
-                Style demoStyle = workbook.CreateStyle();
-                demoStyle.Font.IsBold = true;
-                demoStyle.ForegroundColor = Color.LightYellow;
-                demoStyle.Pattern = BackgroundType.Solid;
-
-                // Original range coordinates
-                int origStartRow = 5;   // zero‑based index for row 6
-                int origStartCol = 0;   // column A
-                int rowCount = 5;
-                int colCount = 4;       // columns A‑D
-
-                // Populate original range with values and apply the style
-                for (int r = 0; r < rowCount; r++)
-                {
-                    for (int c = 0; c < colCount; c++)
-                    {
-                        cells[origStartRow + r, origStartCol + c].PutValue($"R{r + 1}C{c + 1}");
-                        cells[origStartRow + r, origStartCol + c].SetStyle(demoStyle);
-                    }
-                }
-
-                // ------------------------------------------------------------
-                // Define the original range object
-                // ------------------------------------------------------------
-                AsposeRange originalRange = cells.CreateRange(origStartRow, origStartCol, rowCount, colCount);
-
-                // ------------------------------------------------------------
-                // Define the offset range (5 rows upward)
-                // ------------------------------------------------------------
-                int offsetStartRow = origStartRow - 5; // move up by five rows
-                AsposeRange offsetRange = cells.CreateRange(offsetStartRow, origStartCol, rowCount, colCount);
-
-                // (Optional) Change formatting in the offset range to illustrate copying back
-                Style offsetStyle = workbook.CreateStyle();
-                offsetStyle.Font.IsBold = false;
-                offsetStyle.ForegroundColor = Color.LightBlue;
-                offsetStyle.Pattern = BackgroundType.Solid;
-
-                for (int r = 0; r < rowCount; r++)
-                {
-                    for (int c = 0; c < colCount; c++)
-                    {
-                        // Keep the same values, only modify the style
-                        cells[offsetStartRow + r, origStartCol + c].SetStyle(offsetStyle);
-                    }
-                }
-
-                // ------------------------------------------------------------
-                // Copy formatting from the offset range back to the original range
-                // ------------------------------------------------------------
-                originalRange.CopyStyle(offsetRange);
-
-                // ------------------------------------------------------------
-                // Save the workbook
-                // ------------------------------------------------------------
-                string outputPath = "OffsetRangeCopyFormatting.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                var newWorkbook = new Workbook();
+                newWorkbook.Save(inputPath);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet.
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define the original range (example: A1:C10).
+            AsposeRange originalRange = worksheet.Cells.CreateRange("A1:C10");
+
+            // Calculate the starting row for the offset range (5 rows upward).
+            int offsetStartRow = originalRange.FirstRow - 5;
+            if (offsetStartRow < 0) offsetStartRow = 0;
+
+            // Create the offset range with the same size as the original range.
+            AsposeRange offsetRange = worksheet.Cells.CreateRange(
+                offsetStartRow,
+                originalRange.FirstColumn,
+                originalRange.RowCount,
+                originalRange.ColumnCount);
+
+            // Copy formatting (style) from the offset range back to the original range.
+            originalRange.CopyStyle(offsetRange);
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
         }
-    }
-
-    // Entry point for the console application
-    internal class Program
-    {
-        private static void Main(string[] args)
+        catch (Exception ex)
         {
-            OffsetRangeCopyFormatting.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

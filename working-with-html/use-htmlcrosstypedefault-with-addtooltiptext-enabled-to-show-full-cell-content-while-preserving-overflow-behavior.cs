@@ -1,43 +1,52 @@
-// Title: Aspose.Cells .NET: Export to HTML with overflow tooltip using HtmlCrossType.Default
-// Description: Learn how to save a workbook as HTML with Aspose.Cells, forcing column overflow and showing the full cell text in a tooltip. The example uses HtmlSaveOptions, HtmlCrossType.Default, and AddTooltipText to preserve Excel‑like overflow behavior.
-// Keywords: Aspose.Cells | .NET | C# | HTML export | HtmlSaveOptions | HtmlCrossType.Default | AddTooltipText | cell overflow tooltip | Excel style overflow | web spreadsheet
-// Common Searches: Aspose.Cells HTML tooltip for overflow cells | Enable AddTooltipText in HtmlSaveOptions | HtmlCrossType.Default overflow behavior | Show full cell text on hover Aspose.Cells | Export Excel to HTML with tooltips C#
-// Developer Intent: Export a workbook to HTML where cells that exceed column width keep the overflow display and reveal the complete content in a tooltip on mouse‑over.
-// Use Cases: HTML reports with long descriptions that stay compact but are fully readable on hover. | Web‑based spreadsheets that mimic Excel overflow while providing accessibility via tooltips. | Dashboard tables where space is limited yet users need instant access to full cell values.
-// AI Prompts: Generate C# code that saves an Aspose.Cells workbook to HTML with HtmlCrossType.Default and AddTooltipText enabled for all cells. | Explain how HtmlCrossType.Default differs from other cross types and how AddTooltipText affects overflow rendering. | Suggest additional HtmlSaveOptions settings to style tooltips or control their appearance in the generated HTML.
+// Title: Generate HTML from an Excel workbook in C# with full cell text shown in a tooltip while preserving column overflow using Aspose.Cells
+// AI Prompts: Write C# code that creates a workbook, narrows a column, inserts a long string into a cell, and saves the sheet as HTML with HtmlSaveOptions.AddTooltipText enabled so the tooltip displays the entire cell value and the overflow layout stays unchanged. | Show how to set up Aspose.Cells HtmlSaveOptions to keep cell overflow and activate tooltip text for long cell contents when exporting a worksheet to HTML in .NET.
+// Common Searches: Aspose.Cells C# export worksheet to HTML with tooltip for long cell values | How to preserve column overflow and show full cell text in HTML using Aspose.Cells | Enable AddTooltipText in HtmlSaveOptions to display cell content on mouseover | Keep Excel cell overflow when converting to HTML with Aspose.Cells .NET | Show full cell content in HTML tooltip Aspose.Cells example
+// Tags: Aspose.Cells HtmlSaveOptions AddTooltipText | HTML export preserve cell overflow | C# tooltip for full cell content | Excel to HTML conversion with tooltip | HtmlCrossType.Default overflow handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlTooltipDemo
+// The example creates a workbook, narrows the first column, places a long text string in cell A1, enables AddTooltipText in HtmlSaveOptions, and saves the workbook as HTML. The resulting HTML retains the original overflow appearance while displaying the complete cell value in a mouseover tooltip.
+class Program
 {
-    // Learn how to save a workbook as HTML with Aspose.Cells, forcing column overflow and showing the full cell text in a tooltip. The example uses HtmlSaveOptions, HtmlCrossType.Default, and AddTooltipText to preserve Excel‑like overflow behavior.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a long text into a cell that will exceed the column width
-            sheet.Cells["A1"].PutValue("This is a very long text that will overflow the cell width and we want to see the full content in a tooltip.");
-
             // Set a narrow column width to force overflow
-            sheet.Cells.SetColumnWidth(0, 8); // width in characters
+            sheet.Cells.SetColumnWidth(0, 10);
 
-            // Configure HTML save options
+            // Put a long text into cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("This is a very long text that will overflow the cell width and should be shown in a tooltip.");
+
+            // Optional: set alignment to demonstrate overflow
+            Style style = cell.GetStyle();
+            style.HorizontalAlignment = TextAlignmentType.Left;
+            cell.SetStyle(style);
+
+            // Configure HTML export options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            // Use the default HTML cross type (behaves like Excel)
-            htmlOptions.HtmlCrossStringType = HtmlCrossType.Default;
-            // Enable tooltip text for cells where content cannot be fully displayed
+            // Enable tooltip with full cell content
             htmlOptions.AddTooltipText = true;
 
-            // Save the workbook as HTML
-            string outputPath = "OverflowWithTooltip.html";
-            workbook.Save(outputPath, htmlOptions);
+            // Define output file path
+            string outputPath = "output.html";
 
-            Console.WriteLine($"HTML file saved to: {outputPath}");
+            // Save the workbook as HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

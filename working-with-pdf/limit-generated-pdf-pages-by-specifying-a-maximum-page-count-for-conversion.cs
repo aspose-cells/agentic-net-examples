@@ -1,39 +1,52 @@
-// Title: C# – Cap PDF Pages When Converting Excel with Aspose.Cells
-// Description: Shows how to load an .xlsx file, set Aspose.Cells PdfSaveOptions.PageCount (and optionally PageIndex) to restrict the PDF length, then save the workbook as a PDF in .NET.
-// Keywords: Aspose.Cells | C# | PdfSaveOptions | PageCount | Excel to PDF | cap PDF pages | page range export | PDF conversion .NET | Workbook.Save PDF | Aspose.Cells PDF options
-// Common Searches: Aspose.Cells cap PDF pages C# | PdfSaveOptions PageCount example | Export only first N pages from Excel to PDF | Set maximum PDF pages with Aspose.Cells | C# export Excel workbook to PDF with page range
-// Developer Intent: Restrict the number of pages generated during Excel‑to‑PDF conversion using Aspose.Cells.
-// Use Cases: Create a short preview PDF containing the initial pages of a large workbook | Produce a lightweight report for email by reducing PDF length | Enforce printing or storage limits by exporting only a set number of pages | Generate a specific page range for documentation or compliance purposes
-// AI Prompts: Write a C# snippet that opens an .xlsx file, sets PdfSaveOptions.PageCount to a user‑defined value, and saves the workbook as a PDF with Aspose.Cells. | Explain how to combine PdfSaveOptions.PageIndex and PageCount to export a custom page range from an Excel workbook. | Show how to retrieve the total page count of a workbook, then limit the PDF output to that count or a lower number dynamically.
+// Title: How to limit exported pages when converting an Excel workbook to PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to save an Excel workbook as a PDF while restricting the output to a defined maximum number of pages. | Illustrate configuring Aspose.Cells PdfSaveOptions to export only the first N pages of a workbook during PDF conversion.
+// Common Searches: Aspose.Cells C# export first 5 pages of Excel to PDF | Set maximum page count when saving workbook as PDF using Aspose.Cells | Configure PdfSaveOptions to limit PDF pages in .NET conversion | C# convert Excel to PDF with page count restriction Aspose
+// Tags: Aspose.Cells PDF page limit setting | C# PDF page count configuration with Aspose | Excel to PDF conversion limit pages Aspose | Aspose.Cells set PageIndex zero based | restrict PDF output pages Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPageLimitDemo
+namespace AsposeCellsExample
 {
-    // Shows how to load an .xlsx file, set Aspose.Cells PdfSaveOptions.PageCount (and optionally PageIndex) to restrict the PDF length, then save the workbook as a PDF in .NET.
+    // The example checks for the source Excel file, loads it into a Workbook, sets PdfSaveOptions with PageIndex = 0 and PageCount = 5 to export only the first five pages, saves the workbook as a PDF, and handles any exceptions.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load an existing Excel workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Initialize PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            try
+            {
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
 
-            // Set the maximum number of pages to be saved.
-            // For example, limit the output to the first 5 pages.
-            pdfOptions.PageCount = 5;
+                // Load the existing Excel workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Optionally, you can also set the starting page index (default is 0)
-            // pdfOptions.PageIndex = 0;
+                // Configure PDF save options to export only the first 5 pages
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // PageIndex is zero‑based; PageCount specifies how many pages to export
+                    PageIndex = 0,
+                    PageCount = 5
+                };
 
-            // Save the workbook to PDF using the configured options
-            workbook.Save("output.pdf", pdfOptions);
+                // Save the workbook as a PDF using the configured options
+                workbook.Save(outputPath, pdfOptions);
 
-            Console.WriteLine("PDF saved with a maximum of 5 pages.");
+                Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

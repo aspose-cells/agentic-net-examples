@@ -1,73 +1,71 @@
-// Title: Load XLSM from MemoryStream and verify VBA modules using Aspose.Cells (C#)
-// Description: Demonstrates how to read a macro‑enabled .xlsm file into a byte array, create a MemoryStream, load it with Aspose.Cells, check the Workbook.HasMacro flag, and confirm that the VbaProject contains at least one VBA module.
-// Keywords: Aspose.Cells C# load xlsm | memory stream workbook Aspose | Workbook.HasMacro check | VbaProject modules count | macro‑enabled workbook verification | read xlsm from byte array | detect VBA modules Aspose.Cells | security scan macro files .NET | Aspose.Cells VBA project inspection | load macro workbook from stream
-// Common Searches: How to open an xlsm file from a MemoryStream with Aspose.Cells | Check if a workbook has macros using Aspose.Cells C# | Get VBA module count from a macro‑enabled workbook in .NET | Aspose.Cells load macro workbook from byte array | Verify presence of VBA modules in an XLSM file
-// Developer Intent: Load a macro‑enabled workbook from a MemoryStream and ensure it contains at least one VBA module.
-// Use Cases: Validate uploaded XLSM files on a web server before processing them. | Confirm that template workbooks include required VBA modules for automated reporting. | Perform a security audit by detecting macros and VBA modules in user‑submitted spreadsheets.
-// AI Prompts: Generate C# code that opens an .xlsm file from a byte array, checks Workbook.HasMacro, and lists all VBA module names with Aspose.Cells. | Explain step‑by‑step how to load a macro‑enabled workbook from a MemoryStream and verify the VbaProject contains at least one module using Aspose.Cells for .NET. | Provide best‑practice error handling for reading macro‑enabled workbooks from streams and detecting missing VBA modules with Aspose.Cells.
+// Title: Load a macro‑enabled XLSM workbook from a MemoryStream and verify it contains at least one VBA module with Aspose.Cells for .NET
+// AI Prompts: Create a C# method that accepts a byte array, wraps it in a MemoryStream, loads the workbook using Aspose.Cells LoadOptions.Auto, and returns true when the workbook's VbaProject includes one or more modules. | Develop a C# console application that reads an .xlsm file path, converts the file to a byte array, calls the validation method, and prints whether the workbook contains any VBA modules.
+// Common Searches: aspnet load xlsm from byte array and check for VBA modules | how to programmatically verify a macro-enabled Excel file contains VBA code using Aspose.Cells | C# detect presence of VBA project in an in‑memory workbook | Aspose.Cells LoadOptions.Auto example for macro-enabled workbooks | validate that an Excel workbook loaded from MemoryStream has at least one VBA module
+// Tags: load macro-enabled workbook memory stream Aspose.Cells | detect VBA modules C# Aspose.Cells | validate VBA project existence .NET | auto-detect workbook format Aspose.Cells | check XLSM for VBA code programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsMacroCheck
+namespace Example
 {
-    // Demonstrates how to read a macro‑enabled .xlsm file into a byte array, create a MemoryStream, load it with Aspose.Cells, check the Workbook.HasMacro flag, and confirm that the VbaProject contains at least one VBA module.
-    public class MacroVerification
+    // Demonstrates loading a macro‑enabled Excel workbook from a byte array via MemoryStream and using Aspose.Cells to confirm the workbook contains at least one VBA module.
+    public class MacroWorkbookValidator
     {
-        public static void Main(string[] args)
+        // Returns true if the workbook loaded from the given byte array contains at least one VBA module.
+        public static bool HasVbaModule(byte[] workbookBytes)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Path to a macro‑enabled workbook (xlsm). Adjust as needed.
-            string macroWorkbookPath = "sample_with_macro.xlsm";
-
-            // Ensure the file exists to avoid FileNotFoundException.
-            if (!File.Exists(macroWorkbookPath))
-            {
-                Console.WriteLine($"File not found: {macroWorkbookPath}");
-                return;
-            }
+            if (workbookBytes == null || workbookBytes.Length == 0)
+                return false;
 
             try
             {
-                // Load the file into a memory stream.
-                byte[] fileBytes = File.ReadAllBytes(macroWorkbookPath);
-                using (MemoryStream memoryStream = new MemoryStream(fileBytes))
+                using (MemoryStream ms = new MemoryStream(workbookBytes))
                 {
-                    // Reset position to the beginning before loading.
-                    memoryStream.Position = 0;
+                    // Let Aspose.Cells auto‑detect the format (including macro‑enabled files).
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+                    Workbook workbook = new Workbook(ms, loadOptions);
 
-                    // Load the workbook from the memory stream.
-                    Workbook workbook = new Workbook(memoryStream);
-
-                    // Verify that the workbook reports having macros.
-                    bool hasMacro = workbook.HasMacro;
-                    Console.WriteLine($"Workbook.HasMacro: {hasMacro}");
-
-                    // Verify that the VBA project contains at least one module.
-                    bool hasModules = false;
-                    if (workbook.VbaProject != null && workbook.VbaProject.Modules != null)
-                    {
-                        hasModules = workbook.VbaProject.Modules.Count > 0;
-                    }
-                    Console.WriteLine($"Workbook contains at least one VBA module: {hasModules}");
+                    // Verify that the VBA project exists and has at least one module.
+                    return workbook.VbaProject != null && workbook.VbaProject.Modules.Count > 0;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.Error.WriteLine($"Error processing workbook: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Entry point for testing the validator.
+        public static void Main(string[] args)
+        {
+            try
+            {
+                if (args.Length == 0)
+                {
+                    Console.WriteLine("Please provide the path to an XLSM file as an argument.");
+                    return;
+                }
+
+                string filePath = args[0];
+
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    return;
+                }
+
+                byte[] workbookBytes = File.ReadAllBytes(filePath);
+                bool containsVba = HasVbaModule(workbookBytes);
+
+                Console.WriteLine(containsVba
+                    ? "The workbook contains at least one VBA module."
+                    : "The workbook does not contain any VBA modules.");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

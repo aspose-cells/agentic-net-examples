@@ -1,48 +1,64 @@
-// Title: C# – Convert TSV to PDF with Custom Page Margins using Aspose.Cells
-// Description: Learn how to load a TSV file into an Aspose.Cells Workbook, set top, bottom, left, and right margins (in centimeters), configure portrait A4 layout, and save the worksheet as a PDF with one page per sheet.
-// Keywords: Aspose.Cells TSV to PDF | C# custom page margins | PdfSaveOptions OnePagePerSheet | set margins Aspose.Cells | portrait A4 PDF Aspose | load TSV with LoadOptions | export worksheet to PDF | C# PDF generation Aspose
-// Common Searches: how to convert tsv to pdf using aspose.cells c# | set custom margins when saving pdf with aspose.cells | aspose.cells pdfsaveoptions one page per sheet example | change paper size and orientation for pdf output in c# | load tsv file into workbook aspose.cells
-// Developer Intent: Load a TSV document, apply specific page margins, and export it as a PDF file.
-// Use Cases: Create printable reports from TSV data with precise margin control. | Generate A4 portrait PDFs for batch‑processed TSV files. | Produce one‑page‑per‑sheet PDFs where each worksheet respects custom margins.
-// AI Prompts: Show how to set page margins in inches instead of centimeters. | Add a header and footer to the worksheet before exporting to PDF. | Configure PdfSaveOptions to embed fonts while keeping the custom margins.
+// Title: Convert a TSV spreadsheet to PDF with custom margins using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads a .tsv file into an Aspose.Cells Workbook, sets top, bottom, left, and right margins, and exports the first worksheet to a PDF. | Show how to apply 0.5‑inch top/bottom and 0.75‑inch left/right margins and fit the worksheet to one page wide when saving a workbook as PDF with Aspose.Cells. | Write a console application that validates the input TSV path, creates the output directory if missing, and performs the conversion to PDF with custom page setup using LoadOptions and PdfSaveOptions.
+// Common Searches: C# Aspose.Cells set page margins before exporting TSV to PDF | How to fit worksheet to one page width when saving TSV as PDF with Aspose.Cells | Load TSV file into Aspose.Cells workbook and customize PDF margins | Aspose.Cells PDFSaveOptions margin settings for TSV conversion in .NET
+// Tags: TSV to PDF Aspose.Cells | PageSetup margin settings Aspose.Cells | FitToPagesWide usage Aspose.Cells | LoadOptions TSV Aspose.Cells | PdfSaveOptions configuration Aspose.Cells
 
 using System;
-using Aspose.Cells;
 using System.IO;
+using Aspose.Cells;
 
-// Learn how to load a TSV file into an Aspose.Cells Workbook, set top, bottom, left, and right margins (in centimeters), configure portrait A4 layout, and save the worksheet as a PDF with one page per sheet.
-class TsvToPdfWithMargins
+// The example loads a TSV file into an Aspose.Cells Workbook, configures the worksheet’s PageSetup margins (0.5 in top/bottom, 0.75 in left/right), sets FitToPagesWide = 1, and saves the sheet as a PDF using PdfSaveOptions, while handling missing input files and creating the output folder.
+class TsvToPdfConverter
 {
     static void Main()
     {
-        // Input TSV file and output PDF file paths
-        string inputTsvPath = "input.tsv";
-        string outputPdfPath = "output.pdf";
+        // Paths for input TSV and output PDF
+        string tsvPath = @"C:\Input\data.tsv";
+        string pdfPath = @"C:\Output\data.pdf";
 
-        // Load the TSV file using LoadOptions to specify the TSV format
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
-        Workbook workbook = new Workbook(inputTsvPath, loadOptions);
-
-        // Access the first worksheet (the TSV data is loaded into this sheet)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Set custom page margins (values are in centimeters)
-        sheet.PageSetup.TopMargin = 2.0;      // 2 cm top margin
-        sheet.PageSetup.BottomMargin = 1.5;   // 1.5 cm bottom margin
-        sheet.PageSetup.LeftMargin = 1.0;     // 1 cm left margin
-        sheet.PageSetup.RightMargin = 1.0;    // 1 cm right margin
-
-        // Optional: set orientation and paper size for better layout
-        sheet.PageSetup.Orientation = PageOrientationType.Portrait;
-        sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-
-        // Create PDF save options (e.g., one page per sheet)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            OnePagePerSheet = true
-        };
+            // Verify that the source TSV file exists
+            if (!File.Exists(tsvPath))
+            {
+                Console.WriteLine($"Input file not found: {tsvPath}");
+                return;
+            }
 
-        // Save the workbook as a PDF with the specified margins
-        workbook.Save(outputPdfPath, pdfOptions);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(pdfPath);
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Load the TSV file into a Workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
+            Workbook workbook = new Workbook(tsvPath, loadOptions);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set custom page margins (values are in points; 1 inch = 72 points)
+            sheet.PageSetup.TopMargin = 0.5 * 72;    // 0.5 inch
+            sheet.PageSetup.BottomMargin = 0.5 * 72; // 0.5 inch
+            sheet.PageSetup.LeftMargin = 0.75 * 72;  // 0.75 inch
+            sheet.PageSetup.RightMargin = 0.75 * 72; // 0.75 inch
+
+            // Optional: Fit the sheet to a single page width for better readability
+            sheet.PageSetup.FitToPagesWide = 1;
+            sheet.PageSetup.FitToPagesTall = 0; // 0 means unlimited height
+
+            // Save the workbook as a PDF
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                AllColumnsInOnePagePerSheet = false
+            };
+            workbook.Save(pdfPath, pdfOptions);
+
+            Console.WriteLine("TSV has been successfully converted to PDF with custom margins.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

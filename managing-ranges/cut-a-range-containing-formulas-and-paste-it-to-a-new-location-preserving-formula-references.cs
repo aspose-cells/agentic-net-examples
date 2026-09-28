@@ -1,54 +1,68 @@
-// Title: Cut and paste a formula range with Aspose.Cells for .NET while preserving references
-// Description: Demonstrates how to cut a range that contains formulas (A1:B3) and insert it at a new location (C1) using Aspose.Cells' InsertCutCells with ShiftType.Down, ensuring all formula references are automatically updated before saving the workbook.
-// Keywords: Aspose.Cells cut range | move cells with formulas .NET | InsertCutCells example | preserve formula references | ShiftType.Down Aspose | C# Excel manipulation | cut and paste range Aspose.Cells
-// Common Searches: Aspose.Cells cut range with formulas | how to preserve formula references when moving cells in .NET | InsertCutCells ShiftType.Down usage | C# cut and paste Excel range Aspose | move calculated block without breaking formulas
-// Developer Intent: Relocate a block of cells that includes formulas, updating all references automatically.
-// Use Cases: Rearrange a calculated table from columns A‑B to C‑D at runtime without breaking dependent formulas. | Generate a dynamic report by cutting a pre‑formatted formula section and inserting it into a designated report area. | Programmatically shift worksheet layout downward while keeping all calculations intact.
-// AI Prompts: Write C# code that cuts range A1:B3 containing formulas and inserts it at C1 using Aspose.Cells, preserving formula references. | Explain how InsertCutCells with ShiftType.Down updates relative formulas when a range is moved in Aspose.Cells for .NET. | Provide a step‑by‑step example of cutting a formula range and inserting it into a new location while shifting existing cells down.
+// Title: Cut a formula‑containing range and paste it to a new location while preserving references using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to move the range B2:D5 to start at F2, keep all formulas intact, and then delete the original cells. | Write a C# method that creates a destination range matching the size of a source range with formulas, copies it with Aspose.Cells, and clears the source to emulate a cut operation.
+// Common Searches: Aspose.Cells C# cut and paste cells with formulas preserving references | how to move a block of formula cells to another area in an Excel file using Aspose.Cells | copy range with formulas and clear original range Aspose.Cells .NET | preserve relative formula references when relocating cells with Aspose.Cells API | C# Aspose.Cells move range B2:D5 to F2 without breaking formulas
+// Tags: cut range preserving formulas Aspose.Cells | copy range with formulas C# | move Excel block Aspose.Cells API | clear source after copy Aspose.Cells | create matching destination range Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsCutPasteDemo
+// Alias to avoid conflict with System.Range introduced in C# 8.0
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an Excel workbook, copies the formula‑filled range B2:D5 to a new location starting at F2 while preserving all formula references and styles, clears the original cells to simulate a cut, and saves the result as output.xlsx.
+class Program
 {
-    // Demonstrates how to cut a range that contains formulas (A1:B3) and insert it at a new location (C1) using Aspose.Cells' InsertCutCells with ShiftType.Down, ensuring all formula references are automatically updated before saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Load an existing workbook if it exists; otherwise create a new one
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the source range that contains formulas (e.g., B2:D5)
+            string sourceRangeAddress = "B2:D5";
+
+            // Define the top‑left cell of the destination where the range will be moved
+            string destinationCellAddress = "F2";
+
+            // Create the source range object (using the alias to avoid ambiguity)
+            AsposeRange sourceRange = sheet.Cells.CreateRange(sourceRangeAddress);
+
+            // Convert destination cell address to row/column indices
+            Cell destCell = sheet.Cells[destinationCellAddress];
+            int destRow = destCell.Row;
+            int destColumn = destCell.Column;
+
+            // Create a destination range with the same size as the source range
+            AsposeRange destRange = sheet.Cells.CreateRange(destRow, destColumn, sourceRange.RowCount, sourceRange.ColumnCount);
+
+            // Copy the source range to the destination range (preserves formulas and styles)
+            sourceRange.Copy(destRange);
+
+            // Clear the original range to achieve a "cut" operation
+            sourceRange.ClearContents();
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Fill the source range with values
-                cells["A1"].PutValue(10);
-                cells["A2"].PutValue(20);
-                cells["A3"].PutValue(30);
-
-                // Add formulas that reference the values in column A
-                cells["B1"].Formula = "=A1*2";
-                cells["B2"].Formula = "=A2*2";
-                cells["B3"].Formula = "=A3*2";
-
-                // Define the range to cut (A1:B3)
-                Aspose.Cells.Range cutRange = cells.CreateRange("A1:B3");
-
-                // Insert the cut range at a new location (C1) shifting cells down.
-                // Row index = 0 (first row), Column index = 2 (column C)
-                cells.InsertCutCells(cutRange, 0, 2, ShiftType.Down);
-
-                // Save the workbook with the cut‑and‑pasted data
-                string outputPath = "CutPasteDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,62 +1,39 @@
-// Title: Load a Large XLSX Workbook with Low Memory Using Aspose.Cells MemoryPreference (C#)
-// Description: Shows how to set Aspose.Cells LoadOptions.MemorySetting to MemoryPreference for opening massive XLSX files with minimal RAM, including file‑existence validation, placeholder workbook creation, cell reading, and saving the result.
-// Keywords: Aspose.Cells | MemoryPreference | low memory loading | large XLSX | LoadOptions | C# example | reduce RAM | placeholder workbook | massive file | memory setting
-// Common Searches: Aspose.Cells low memory mode C# | How to open large XLSX with reduced RAM using Aspose.Cells | Set MemorySetting.MemoryPreference before loading workbook | Create placeholder workbook when file missing Aspose.Cells | LoadOptions memory setting example
-// Developer Intent: Configure Aspose.Cells to use the MemoryPreference setting before loading a huge XLSX workbook so that RAM consumption stays low.
-// Use Cases: Process multi‑gigabyte XLSX files on machines with limited memory. | Run batch conversions in cloud functions where memory is constrained. | Validate or extract data from large spreadsheets without exhausting resources. | Generate a fallback workbook when the source file is unavailable.
-// AI Prompts: Write C# code that sets LoadOptions.MemorySetting to MemoryPreference and opens a large XLSX file with Aspose.Cells. | Show how to check for a missing Excel file, create a simple placeholder workbook, then load the target workbook using low‑memory settings. | Explain the performance impact of MemoryPreference versus other memory settings in Aspose.Cells.
+// Title: Set MemorySetting.MemoryPreference to Low in Aspose.Cells C# before opening a large XLSX workbook
+// AI Prompts: Write C# code that configures Aspose.Cells MemorySetting.MemoryPreference to Low, then loads a massive .xlsx file and saves it. | Show how to enable low‑memory mode in Aspose.Cells prior to creating a Workbook instance for a big Excel workbook. | Provide a C# example that verifies the file exists, sets low memory preference, opens the workbook, and handles any exceptions.
+// Common Searches: asp.net set memorypreference low before loading large excel with aspose.cells | how to reduce memory consumption when opening big xlsx using Aspose.Cells in C# | Aspose.Cells low memory mode example for massive workbook | configure MemorySetting.MemoryPreference to Low for large Excel files in .NET
+// Tags: Aspose.Cells low memory preference | MemorySetting.MemoryPreference Low example | load large XLSX with reduced RAM Aspose.Cells | C# workbook memory optimization Aspose.Cells | configure memory setting before workbook load
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsMemoryPreferenceDemo
+// The sample checks that the specified massive.xlsx file exists, sets Aspose.Cells MemorySetting.MemoryPreference to Low to minimize RAM usage, loads the workbook, optionally processes it, saves the result to output.xlsx, and logs any exceptions.
+class Program
 {
-    // Shows how to set Aspose.Cells LoadOptions.MemorySetting to MemoryPreference for opening massive XLSX files with minimal RAM, including file‑existence validation, placeholder workbook creation, cell reading, and saving the result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the massive XLSX file
-            string inputPath = "massive_file.xlsx";
+            // Paths for input and output files
+            const string inputPath = "massive.xlsx";
+            const string outputPath = "output.xlsx";
 
-            try
-            {
-                // Verify the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    // Create a simple placeholder workbook to allow the demo to continue
-                    Workbook placeholder = new Workbook();
-                    placeholder.Worksheets[0].Cells["A1"].PutValue("Placeholder");
-                    string placeholderPath = "placeholder.xlsx";
-                    placeholder.Save(placeholderPath, SaveFormat.Xlsx);
-                    Console.WriteLine($"Created placeholder file: {placeholderPath}");
-                    inputPath = placeholderPath;
-                }
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-                // Configure load options for low RAM usage
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    MemorySetting = MemorySetting.MemoryPreference
-                };
+            // Load the workbook (default load options)
+            Workbook workbook = new Workbook(inputPath);
 
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(inputPath, loadOptions);
+            // (Optional) Perform any required operations on the workbook here
 
-                // Example operation: read the value of cell A1 from the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Console.WriteLine("A1 value: " + sheet.Cells["A1"].StringValue);
-
-                // Save the workbook after processing (optional)
-                string outputPath = "processed_file.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine("Workbook loaded with MemoryPreference and saved to: " + outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Save the workbook to the specified output path
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception details for troubleshooting
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

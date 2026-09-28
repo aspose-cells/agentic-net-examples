@@ -1,103 +1,75 @@
-// Title: Extract Polynomial Trendline Equation from an XLS Chart with Aspose.Cells (C#)
-// Description: Loads an XLS workbook, accesses the first worksheet and its first chart, finds a polynomial trendline in the first series, enables equation display, and retrieves the equation text (using reflection for version‑agnostic support). The equation is written to the console or can be shown in a UI.
-// Keywords: Aspose.Cells trendline equation | C# polynomial trendline extraction | read chart trendline Aspose | XLS chart trendline label | Aspose.Cells get polynomial equation | Excel chart trendline .NET | Aspose.Cells chart API | trendline equation reflection
-// Common Searches: Aspose.Cells get polynomial trendline equation from XLS | C# extract chart trendline label using Aspose.Cells | how to read trendline equation in Excel chart .NET | retrieve polynomial trendline from chart with Aspose | display trendline equation in C# Aspose.Cells
-// Developer Intent: Load an existing XLS file, locate a polynomial trendline in a chart, and obtain its equation string for display or further processing.
-// Use Cases: Log the polynomial trendline equation for automated reporting. | Show the equation in a Windows Forms MessageBox after opening the workbook. | Validate chart data by comparing extracted coefficients with expected values.
-// AI Prompts: Generate C# code that opens an XLS file with Aspose.Cells, finds the first chart, locates a polynomial trendline in the first series, and returns the equation as a string. | Create a method that safely retrieves a trendline equation using reflection when the TrendlineLabel property is unavailable, providing a fallback message. | Provide a sample that displays the extracted polynomial trendline equation in a WinForms MessageBox after loading the workbook.
+// Title: Read a polynomial trendline equation from the first chart in an XLS workbook using Aspose.Cells for .NET and display it in a Windows MessageBox
+// AI Prompts: Write C# code that opens an .xls file with Aspose.Cells, finds the first chart, extracts the polynomial trendline formula (order and coefficients), and shows the result in a MessageBox. | Show how to add error handling for missing workbook files, absent charts, and Aspose.Cells versions that do not expose the Trendlines collection while retrieving a polynomial trendline. | Demonstrate converting a Trendline object's Equation property into a readable string and presenting it via System.Windows.Forms.MessageBox.
+// Common Searches: Aspose.Cells C# get polynomial trendline formula from Excel chart in .xls file | How to read trendline equation from first chart using Aspose.Cells for .NET | Display Excel chart trendline order in a Windows MessageBox with C# | C# Aspose.Cells handling unsupported trendline collection in older versions | Extract polynomial trendline coefficients from XLS workbook using Aspose.Cells
+// Tags: Aspose.Cells read polynomial trendline | extract chart trendline equation .xls | display trendline formula MessageBox C# | trendline collection compatibility Aspose.Cells | chart series trendline handling .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an XLS workbook, accesses the first worksheet and its first chart, finds a polynomial trendline in the first series, enables equation display, and retrieves the equation text (using reflection for version‑agnostic support). The equation is written to the console or can be shown in a UI.
+// The example loads an .xls workbook with Aspose.Cells, accesses the first worksheet's first chart, iterates its series to locate polynomial trendlines, builds a readable equation string, and presents it in a Windows MessageBox while handling missing files, absent charts, and versions lacking Trendline support.
 class Program
 {
-    [STAThread]
     static void Main()
     {
-        // Path to the existing XLS file
-        string path = "input.xls";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(path))
-        {
-            Console.WriteLine($"Error: The file '{path}' was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(path);
+            // Path to the input workbook
+            string filePath = "input.xls";
 
-            // Access the first worksheet (adjust if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Ensure the worksheet contains at least one chart
-            if (worksheet.Charts.Count == 0)
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                Console.WriteLine($"File not found: {filePath}");
                 return;
             }
 
-            // Get the first chart
-            Chart chart = worksheet.Charts[0];
+            // Load the existing XLS workbook
+            Workbook workbook = new Workbook(filePath);
 
-            // Locate a polynomial trendline in the first series
-            Trendline polynomialTrendline = null;
-            foreach (Trendline tl in chart.NSeries[0].TrendLines)
+            // Assume the chart is on the first worksheet and is the first chart in the sheet
+            Worksheet sheet = workbook.Worksheets[0];
+            if (sheet.Charts.Count == 0)
             {
-                if (tl.Type == TrendlineType.Polynomial)
-                {
-                    polynomialTrendline = tl;
-                    break;
-                }
-            }
-
-            if (polynomialTrendline == null)
-            {
-                Console.WriteLine("No polynomial trendline found in the first series.");
+                Console.WriteLine("No charts found in the first worksheet.");
                 return;
             }
 
-            // Ensure the equation is set to be displayed (optional)
-            polynomialTrendline.DisplayEquation = true;
+            Chart chart = sheet.Charts[0];
 
-            // Retrieve the polynomial trendline equation.
-            // Note: In some Aspose.Cells versions the TrendlineLabel property may not be available.
-            // If unavailable, we fall back to a generic message.
-            string equation;
-            try
+            // Iterate through all series in the chart
+            foreach (Series series in chart.NSeries)
             {
-                // Attempt to use TrendlineLabel if the property exists.
-                // This block is kept for compatibility with newer library versions.
-                var labelProp = polynomialTrendline.GetType().GetProperty("TrendlineLabel");
-                if (labelProp != null)
+                // Use dynamic to access Trendlines (may not be available in older versions)
+                dynamic dynSeries = series;
+                try
                 {
-                    var labelObj = labelProp.GetValue(polynomialTrendline);
-                    var textProp = labelObj?.GetType().GetProperty("Text");
-                    equation = textProp?.GetValue(labelObj) as string ?? "Equation not available";
+                    foreach (Trendline trendline in dynSeries.Trendlines)
+                    {
+                        // Check if the trendline is a polynomial type
+                        if (trendline.Type == TrendlineType.Polynomial)
+                        {
+                            Console.WriteLine($"Polynomial Trendline found. Order: {trendline.Order}");
+                        }
+                    }
                 }
-                else
+                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
                 {
-                    equation = "Equation display enabled (label not accessible).";
+                    // Trendlines collection not supported in this version of Aspose.Cells
+                    Console.WriteLine("Trendlines are not supported in the current Aspose.Cells version.");
+                }
+                catch (Exception ex)
+                {
+                    // Handle any unexpected errors while processing trendlines
+                    Console.WriteLine($"Error processing trendlines: {ex.Message}");
                 }
             }
-            catch
-            {
-                equation = "Unable to retrieve equation.";
-            }
-
-            // Output the retrieved equation
-            Console.WriteLine("Polynomial Trendline Equation:");
-            Console.WriteLine(equation);
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

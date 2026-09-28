@@ -1,82 +1,66 @@
-// Title: Refresh All Nested Child Pivot Tables with Aspose.Cells for .NET (C#)
-// Description: C# example that loads a workbook, validates worksheets and pivot tables, refreshes the parent pivot, retrieves its child pivots via GetChildren(), refreshes and recalculates each child, and saves the updated file. Includes basic error handling for missing files and empty sheets.
-// Keywords: Aspose.Cells refresh child pivot tables | GetChildren pivot table .NET | nested pivot table refresh C# | RefreshData CalculateData Aspose | pivot table hierarchy synchronization | C# Excel pivot cache update | Aspose.Cells example refresh multiple pivots
-// Common Searches: how to refresh child pivot tables in Aspose.Cells | Aspose.Cells GetChildren method example | C# refresh all pivot tables sharing a cache | update nested pivot tables programmatically | Aspose.Cells refresh data and recalculate pivots
-// Developer Intent: Programmatically refresh a parent pivot table and all its linked child pivots to keep the hierarchy consistent.
-// Use Cases: After modifying source data, ensure every dependent pivot reflects the changes before distribution. | Automate nightly Excel processing where several pivots share a cache and must stay synchronized. | Generate a refreshed report by loading an existing workbook, updating the parent and child pivots, and saving a new version.
-// AI Prompts: Write C# code using Aspose.Cells to refresh a parent pivot table and all its child pivots, handling missing files and empty worksheets. | Explain the GetChildren method in Aspose.Cells and show how to iterate over the returned PivotTable array to recalculate each child. | Suggest enhancements for error handling and performance when refreshing a large number of nested pivot tables in Aspose.Cells.
+// Title: Refresh all nested child pivot tables in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an XLSX file with Aspose.Cells, iterates through every worksheet, finds each PivotTable (including child tables), calls RefreshData on them, logs any failures, and saves the workbook. | Create a reusable method in C# that accepts a Workbook object and refreshes all descendant pivot tables of a specified parent pivot table, handling missing files and exception logging with Aspose.Cells.
+// Common Searches: aspocells .net refresh nested pivot tables in workbook | how to programmatically refresh all child pivot tables using Aspose.Cells C# | iterate through worksheets and refresh each pivot table Aspose.Cells example | C# code to refresh pivot tables and log errors with Aspose.Cells | refresh pivot table hierarchy in Excel file using Aspose.Cells for .NET
+// Tags: refresh nested pivot tables Aspose.Cells .NET | iterate worksheets refresh pivot data C# | handle missing Excel file Aspose.Cells | log pivot table refresh errors .NET | bulk pivot table refresh Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace RefreshNestedPivotTables
+namespace AsposeCellsExample
 {
-    // C# example that loads a workbook, validates worksheets and pivot tables, refreshes the parent pivot, retrieves its child pivots via GetChildren(), refreshes and recalculates each child, and saves the updated file. Includes basic error handling for missing files and empty sheets.
-    public class Program
+    // The example loads an existing XLSX workbook with Aspose.Cells, checks that the input file exists, then loops through every worksheet and each PivotTable—including any child tables—calling RefreshData() to synchronize the data hierarchy. It captures and logs any refresh failures, and finally saves the updated workbook to a new file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
+            string inputPath = "Input.xlsx";
+            string outputPath = "Output.xlsx";
+
             try
             {
-                const string inputFile = "InputWorkbook.xlsx";
-                const string outputFile = "RefreshedWorkbook.xlsx";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputFile))
+                // Verify input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the workbook that contains the parent pivot table and its child pivot tables
-                Workbook workbook = new Workbook(inputFile);
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
 
-                // Ensure the workbook has at least one worksheet
-                if (workbook.Worksheets.Count == 0)
+                // Refresh all pivot tables in each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Console.WriteLine("Error: The workbook does not contain any worksheets.");
-                    return;
-                }
-
-                // Assume the parent pivot table is in the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("Error: No pivot tables found in the first worksheet.");
-                    return;
-                }
-
-                // Get the first pivot table as the parent pivot
-                PivotTable parentPivot = worksheet.PivotTables[0];
-
-                // Refresh the parent pivot table (optional but ensures base cache is up‑to‑date)
-                parentPivot.RefreshData();
-                parentPivot.CalculateData();
-
-                // Retrieve all child pivot tables that use the parent pivot table as their data source
-                PivotTable[] childPivots = parentPivot.GetChildren();
-
-                // Refresh each child pivot table to synchronize its hierarchy with the parent
-                if (childPivots != null)
-                {
-                    foreach (PivotTable childPivot in childPivots)
+                    foreach (PivotTable pt in sheet.PivotTables)
                     {
-                        childPivot.RefreshData();      // Refresh data from the shared cache
-                        childPivot.CalculateData();    // Recalculate the displayed data
+                        try
+                        {
+                            // Refresh the pivot table data
+                            pt.RefreshData();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to refresh pivot table '{pt.Name}' on sheet '{sheet.Name}': {ex.Message}");
+                        }
                     }
                 }
 
                 // Save the updated workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook refreshed and saved as \"{outputFile}\".");
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

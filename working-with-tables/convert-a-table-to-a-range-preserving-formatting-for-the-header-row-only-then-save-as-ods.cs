@@ -1,72 +1,93 @@
-// Title: Aspose.Cells C# – Convert Table to Range, Preserve Header Formatting, Save as ODS
-// Description: Creates a workbook, styles the header row (bold, light‑gray), fills data rows, defines a ListObject table, saves the header style, converts the table to a plain range, reapplies the header style, and exports the sheet to ODS using the LibreOffice generator.
-// Keywords: Aspose.Cells C# convert table to range | preserve header style Aspose.Cells | ListObject ConvertToRange example | ODS export Aspose.Cells | LibreOffice OdsSaveOptions | C# Excel table to range | Aspose.Cells header formatting
-// Common Searches: convert ListObject to range Aspose.Cells C# | keep header formatting after ConvertToRange | save Aspose.Cells workbook as ODS | LibreOffice generator ODS Aspose.Cells | reapply cell style after table conversion
-// Developer Intent: Turn an Aspose.Cells table into a normal range while retaining the header row’s visual style and export the result as an ODS file.
-// Use Cases: Modify a styled Excel table as a plain range without losing header appearance. | Generate ODS files compatible with LibreOffice after table conversion. | Reapply a saved Style to the header row to ensure consistent formatting post‑conversion.
-// AI Prompts: Generate C# code with Aspose.Cells that converts a ListObject to a range and keeps only the header row’s style. | Show how to export an Aspose.Cells workbook to ODS using the LibreOffice generator after converting a table to a range. | Provide an example of saving a header Style before ConvertToRange and reapplying it to the first row in C#.
+// Title: Convert an Excel ListObject to a plain range, keep header formatting, and save as ODS using Aspose.Cells for .NET
+// AI Prompts: Delete the table object from a worksheet while preserving the header row style, then export the workbook to ODS. | Clear formatting of all data rows in a ListObject, remove the table definition, and save the file as an ODS document with Aspose.Cells.
+// Common Searches: Aspose.Cells how to delete a table but retain header formatting in C# | convert Excel table to range and export to ODS using .NET | remove ListObject from worksheet and keep header style Aspose.Cells | save workbook as ODS after clearing table data row styles | C# code to transform Excel ListObject into plain cells and output ODS
+// Tags: listobject deletion keep header formatting Aspose.Cells | plain range conversion from table C# | ods export Aspose.Cells .NET | data rows style reset Aspose.Cells | excel to ods conversion C#
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using Aspose.Cells.Ods;
 
-// Creates a workbook, styles the header row (bold, light‑gray), fills data rows, defines a ListObject table, saves the header style, converts the table to a plain range, reapplies the header style, and exports the sheet to ODS using the LibreOffice generator.
-class TableToRangePreserveHeader
+// The example loads or creates an Excel workbook, accesses the first ListObject, clears styles from all data rows while preserving the header row's formatting, removes the table definition, and saves the resulting worksheet as an ODS file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add header values
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["C1"].PutValue("Score");
-        sheet.Cells["D1"].PutValue("Date");
-
-        // Define header formatting (bold font, light gray background)
-        Style headerStyle = workbook.CreateStyle();
-        headerStyle.Font.IsBold = true;
-        headerStyle.ForegroundColor = Color.LightGray;
-        headerStyle.Pattern = BackgroundType.Solid;
-
-        // Apply the header style to the header row (A1:D1)
-        sheet.Cells.CreateRange("A1:D1").ApplyStyle(headerStyle, new StyleFlag { All = true });
-
-        // Populate some data rows (rows 2 to 5)
-        for (int row = 2; row <= 5; row++)
+        try
         {
-            sheet.Cells[row - 1, 0].PutValue(row - 1);                     // ID
-            sheet.Cells[row - 1, 1].PutValue($"Person {row - 1}");        // Name
-            sheet.Cells[row - 1, 2].PutValue((row - 1) * 10);             // Score
-            sheet.Cells[row - 1, 3].PutValue(DateTime.Today.AddDays(row - 2)); // Date
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.ods";
+
+            // Load existing workbook or create a new one if the file does not exist.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                // Create a simple workbook with a sample table to work with.
+                workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[0];
+                ws.Cells["A1"].PutValue("Header1");
+                ws.Cells["B1"].PutValue("Header2");
+                ws.Cells["A2"].PutValue("Data1");
+                ws.Cells["B2"].PutValue("Data2");
+
+                // Add a table covering the sample data.
+                int firstRow = 0, firstColumn = 0, totalRows = 2, totalColumns = 2;
+                int tableIndex = ws.ListObjects.Add(firstRow, firstColumn,
+                    firstRow + totalRows, firstColumn + totalColumns - 1, true);
+                ListObject table = ws.ListObjects[tableIndex];
+                table.DisplayName = "SampleTable";
+            }
+
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve the first table (ListObject) on the worksheet.
+            if (sheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables found in the worksheet.");
+                return;
+            }
+
+            ListObject tableObj = sheet.ListObjects[0];
+
+            // Determine the bounds of the table (including the header row).
+            int startRow = tableObj.StartRow;          // Header row index
+            int startColumn = tableObj.StartColumn;    // First column index
+            int endRow = tableObj.EndRow;
+            int endColumn = tableObj.EndColumn;
+            int rowCount = endRow - startRow + 1;
+            int columnCount = endColumn - startColumn + 1;
+
+            // Create a default (empty) style.
+            Style defaultStyle = workbook.CreateStyle();
+
+            // Clear formatting for all data rows while preserving the header row.
+            for (int r = startRow + 1; r <= endRow; r++) // skip header row
+            {
+                for (int c = startColumn; c <= endColumn; c++)
+                {
+                    sheet.Cells[r, c].SetStyle(defaultStyle);
+                }
+            }
+
+            // Remove the table definition, leaving a plain range with the same cells.
+            int tableIndexToRemove = sheet.ListObjects.IndexOf(tableObj);
+            if (tableIndexToRemove >= 0)
+            {
+                sheet.ListObjects.RemoveAt(tableIndexToRemove);
+            }
+
+            // Save the workbook as an ODS file.
+            workbook.Save(outputPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Create a table (ListObject) that includes the header and data rows
-        int tableIdx = sheet.ListObjects.Add("A1", "D5", true);
-        ListObject table = sheet.ListObjects[tableIdx];
-        table.TableStyleType = TableStyleType.TableStyleMedium2; // optional visual style
-
-        // Save the current header style so it can be reapplied after conversion
-        Style savedHeaderStyle = sheet.Cells["A1"].GetStyle();
-
-        // Convert the table to a normal range
-        table.ConvertToRange();
-
-        // Reapply the saved header style to the first row (header) after conversion
-        for (int col = 0; col < 4; col++)
+        catch (Exception ex)
         {
-            sheet.Cells[0, col].SetStyle(savedHeaderStyle);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Prepare ODS save options (using LibreOffice generator)
-        OdsSaveOptions odsOptions = new OdsSaveOptions();
-        odsOptions.GeneratorType = OdsGeneratorType.LibreOffice;
-
-        // Save the workbook as an ODS file
-        workbook.Save("TableConverted.ods", odsOptions);
     }
 }

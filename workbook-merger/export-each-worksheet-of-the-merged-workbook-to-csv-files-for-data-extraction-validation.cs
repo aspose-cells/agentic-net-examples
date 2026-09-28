@@ -1,60 +1,44 @@
-// Title: C# – Export Each Worksheet of a Merged Workbook to Separate CSV Files with Aspose.Cells
-// Description: Merge multiple Excel files using CellsHelper.MergeFiles, load the combined workbook, iterate its worksheets, and save each one as an individual CSV file with TxtSaveOptions (ExportAllSheets = false). Optionally delete the temporary cache file.
-// Keywords: Aspose.Cells CSV export | merge Excel files .NET | export worksheet to CSV C# | TxtSaveOptions ExportAllSheets | split merged workbook into CSV | Aspose.Cells workbook to CSV files
-// Common Searches: Aspose.Cells export each sheet to CSV | C# merge Excel files and create CSV per worksheet | How to save a single worksheet as CSV using Aspose.Cells | Remove temporary cache file after CellsHelper.MergeFiles | Export active worksheet to CSV with TxtSaveOptions
-// Developer Intent: Generate a separate CSV file for every worksheet in a merged Excel workbook.
-// Use Cases: Validate data extraction by converting each merged sheet to CSV for downstream processing. | Produce per‑sheet CSV reports after consolidating client spreadsheets. | Automate archival of individual worksheet snapshots for audit compliance.
-// AI Prompts: Write C# code that merges a list of Excel files with Aspose.Cells and exports each worksheet to its own CSV file, ensuring only the active sheet is saved. | Show how to configure TxtSaveOptions in Aspose.Cells to export a single worksheet as CSV (ExportAllSheets = false). | Explain how to clean up the temporary cache file created by CellsHelper.MergeFiles before exporting worksheets.
+// Title: Export each worksheet from a merged Excel workbook to separate CSV files with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a merged .xlsx workbook using Aspose.Cells, iterates through all worksheets, and saves each one as an individual .csv file named after the worksheet. | Show how to configure TxtSaveOptions to export only the active worksheet to CSV and how to change the active sheet inside a loop with Aspose.Cells. | Provide a C# example that sanitizes worksheet names for safe file creation and sets a custom CSV delimiter when exporting sheets from a merged workbook.
+// Common Searches: Aspose.Cells .NET export each sheet of a combined workbook to separate CSV files | C# save individual worksheets as CSV from a merged Excel file using Aspose.Cells | How to loop through worksheets and export to CSV with TxtSaveOptions in Aspose.Cells | Export merged workbook worksheets to CSV for data validation using Aspose.Cells | Create CSV files per worksheet from a merged .xlsx using Aspose.Cells for .NET
+// Tags: export worksheet to csv using TxtSaveOptions | iterate workbook worksheets Aspose.Cells .NET | merged workbook csv extraction Aspose.Cells | save active sheet as csv Aspose.Cells | custom csv delimiter Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Merge multiple Excel files using CellsHelper.MergeFiles, load the combined workbook, iterate its worksheets, and save each one as an individual CSV file with TxtSaveOptions (ExportAllSheets = false). Optionally delete the temporary cache file.
-class ExportWorksheetsToCsv
+namespace ExportWorksheetsToCsv
 {
-    static void Main()
+    // Loads a merged workbook (MergedWorkbook.xlsx) with Aspose.Cells, loops through each worksheet, sets it as the active sheet, and saves it as a CSV file named after the worksheet using TxtSaveOptions.
+    class Program
     {
-        // Paths of source Excel files to be merged
-        string[] sourceFiles = new string[] { "File1.xlsx", "File2.xlsx" };
-
-        // Temporary cache file required by CellsHelper.MergeFiles
-        string cacheFile = "CacheFile.tmp";
-
-        // Destination merged workbook file
-        string mergedFile = "MergedWorkbook.xlsx";
-
-        // Merge the source files into a single workbook
-        CellsHelper.MergeFiles(sourceFiles, cacheFile, mergedFile);
-
-        // Load the merged workbook
-        Workbook mergedWorkbook = new Workbook(mergedFile);
-
-        // Export each worksheet to a separate CSV file
-        for (int i = 0; i < mergedWorkbook.Worksheets.Count; i++)
+        static void Main()
         {
-            // Set the current worksheet as active
-            mergedWorkbook.Worksheets.ActiveSheetIndex = i;
+            // Path to the merged workbook (created earlier by CellsHelper.MergeFiles or Workbook.Combine)
+            string mergedWorkbookPath = "MergedWorkbook.xlsx";
 
-            // Build a CSV file name that includes the worksheet name
-            string sheetName = mergedWorkbook.Worksheets[i].Name;
-            string csvFileName = Path.GetFileNameWithoutExtension(mergedFile) + "_" + sheetName + ".csv";
+            // Load the merged workbook
+            Workbook workbook = new Workbook(mergedWorkbookPath);
 
-            // Configure TxtSaveOptions to export only the active sheet
-            TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+            // Iterate through each worksheet and export it to an individual CSV file
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                ExportAllSheets = false   // ensure only the active sheet is saved
-            };
+                // Set the current worksheet as the active sheet
+                workbook.Worksheets.ActiveSheetIndex = i;
 
-            // Save the active worksheet as CSV
-            mergedWorkbook.Save(csvFileName, saveOptions);
-        }
+                // Build a CSV file name based on the worksheet name (or index)
+                string sheetName = workbook.Worksheets[i].Name;
+                string csvFileName = $"{sheetName}.csv";
 
-        // Clean up temporary files (optional)
-        if (File.Exists(cacheFile))
-        {
-            File.Delete(cacheFile);
+                // Create TxtSaveOptions for CSV format.
+                // ExportAllSheets defaults to false, which means only the active sheet will be saved.
+                TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
+
+                // Save the active worksheet to CSV using the save options
+                workbook.Save(csvFileName, saveOptions);
+
+                Console.WriteLine($"Worksheet '{sheetName}' exported to '{csvFileName}'.");
+            }
         }
     }
 }

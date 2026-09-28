@@ -1,58 +1,46 @@
-// Title: Insert SVG into Excel range E5:F6 with original size using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to load an external SVG file (logo.svg) into a byte array and insert it as a shape at cells E5:F6 in a new workbook. The AddSvg method is called with width and height set to -1 to retain the SVG's native dimensions, then the workbook is saved as output.xlsx.
-// Keywords: Aspose.Cells SVG insertion | C# AddSvg method | preserve SVG dimensions | insert SVG into Excel range | load SVG from file Aspose.Cells
-// Common Searches: Aspose.Cells add SVG to specific cells | keep original size when inserting SVG in Excel C# | how to use AddSvg with range E5:F6 | load external SVG into Aspose.Cells workbook
-// Developer Intent: Place an external SVG file into the E5:F6 cell block of an Excel worksheet while maintaining its original dimensions.
-// Use Cases: Embedding a company logo SVG in a report template without distortion. | Adding vector icons to a dashboard worksheet for crisp scaling. | Programmatically inserting branded SVG graphics into generated spreadsheets.
-// AI Prompts: Write C# code that uses Aspose.Cells to load a logo.svg file and insert it at range E5:F6, preserving its native size. | Show error‑handling best practices for reading an SVG file before adding it as a shape with Aspose.Cells. | Explain how to reposition or resize an SVG after insertion with the AddSvg method in Aspose.Cells.
+// Title: Insert an external SVG file into cells E5:F6 without scaling using Aspose.Cells for .NET
+// AI Prompts: Add the SVG file 'logo.svg' to the worksheet at cells E5:F6, keep its original size, and save the workbook as output.xlsx with Aspose.Cells C# API. | Generate C# code that verifies logo.svg exists, inserts it using the Pictures.Add overload that preserves dimensions, and exports the file to XLSX.
+// Common Searches: Aspose.Cells C# add external SVG to specific cells without resizing | How to place an SVG image in Excel range E5:F6 using Aspose.Cells | Preserve original SVG dimensions when inserting picture with Aspose.Cells .NET | C# Pictures.Add overload example for SVG file in Aspose.Cells | Insert external vector graphic into Excel worksheet using Aspose.Cells API
+// Tags: Aspose.Cells insert SVG picture | Pictures.Add overload preserve dimensions | C# add external SVG to worksheet | Insert image into specific cell range Aspose.Cells | Save workbook with SVG image .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to load an external SVG file (logo.svg) into a byte array and insert it as a shape at cells E5:F6 in a new workbook. The AddSvg method is called with width and height set to -1 to retain the SVG's native dimensions, then the workbook is saved as output.xlsx.
-class InsertSvg
+// The program creates a new workbook, checks for the presence of logo.svg, inserts the SVG into cells E5:F6 using the Pictures.Add overload that retains the original image size, and saves the result as output.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Path to the SVG file
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Path to the external SVG file
             string svgPath = "logo.svg";
 
-            // Verify that the SVG file exists before attempting to load it
-            if (!File.Exists(svgPath))
+            // Insert the SVG picture if the file exists
+            if (File.Exists(svgPath))
             {
-                Console.WriteLine($"SVG file not found: {svgPath}");
-                return;
+                // Insert the external SVG file at cell E5 (row index 4, column index 4)
+                // Using the overload without lower‑right cell preserves the original SVG dimensions.
+                sheet.Pictures.Add(4, 4, svgPath);
+            }
+            else
+            {
+                Console.WriteLine($"Warning: SVG file '{svgPath}' not found. Skipping picture insertion.");
             }
 
-            // Load the SVG file into a byte array
-            byte[] svgData;
-            using (FileStream fs = new FileStream(svgPath, FileMode.Open, FileAccess.Read))
-            {
-                svgData = new byte[fs.Length];
-                fs.Read(svgData, 0, svgData.Length);
-            }
-
-            // Insert the SVG at range E5:F6 (zero‑based indices: row 4, column 4)
-            // Height and width set to -1 to preserve the original SVG dimensions
-            ShapeCollection shapes = worksheet.Shapes;
-            shapes.AddSvg(4, 4, 0, 0, -1, -1, svgData, null);
-
-            // Save the workbook
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

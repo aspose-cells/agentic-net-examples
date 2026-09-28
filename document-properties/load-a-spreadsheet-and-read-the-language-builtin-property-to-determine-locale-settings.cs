@@ -1,32 +1,26 @@
-// Title: Read the Language Built‑In Property of an Excel Workbook using Aspose.Cells for .NET
-// Description: C# example that loads an Excel file with Aspose.Cells, accesses the BuiltInDocumentPropertyCollection, retrieves the Language property (the workbook's locale), and outputs it to the console.
-// Keywords: Aspose.Cells read Language property | C# Excel built‑in document properties | retrieve workbook locale Aspose | load workbook with LoadOptions .NET | Excel language built‑in property
-// Common Searches: How to get the Language built‑in property from an Excel file with Aspose.Cells | Aspose.Cells C# read document locale | Read Excel workbook language setting using Aspose | Get built‑in document properties Aspose.Cells .NET
-// Developer Intent: Load an Excel workbook and obtain its Language built‑in property to determine the file’s locale.
-// Use Cases: Detect the workbook’s locale to apply culture‑specific formatting or calculations. | Log or display the document language for auditing, reporting, or compliance. | Route processing logic based on the language setting of incoming Excel files.
-// AI Prompts: Show how to read other built‑in properties such as Author, Title, and CreatedDate with Aspose.Cells. | Provide code to modify the Language property of a workbook and save the changes. | Explain how to handle cases where the Language property is missing or empty.
+// Title: How to read the Language built-in document property (locale) from an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells and prints the workbook's BuiltInDocumentProperties.Language value. | Create a reusable C# method that accepts a file path or stream and returns the locale string from the workbook's Language built-in property using Aspose.Cells. | Show how to modify the example to retrieve the Language property from a workbook loaded from a MemoryStream instead of a file path.
+// Common Searches: aspnet read language built-in property from excel file using aspose.cells | c# get locale setting from workbook builtindocumentproperties language | how to extract excel document language (locale) with aspose.cells in .net | retrieve language built-in property from .xlsx using aspose.cells c# example | asp.net core read workbook language property aspose.cells
+// Tags: language built-in property extraction Aspose.Cells | workbook locale retrieval Aspose.Cells C# | builtindocumentproperties language access Aspose.Cells | xlsx language attribute reading Aspose.Cells | c# get excel document locale Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// C# example that loads an Excel file with Aspose.Cells, accesses the BuiltInDocumentPropertyCollection, retrieves the Language property (the workbook's locale), and outputs it to the console.
+// Loads 'input.xlsx' with Aspose.Cells, accesses the workbook's BuiltInDocumentProperties, reads the Language property (locale), and writes the value to the console.
 class Program
 {
     static void Main()
     {
-        // Create LoadOptions using the default constructor (rule-provided)
-        LoadOptions loadOptions = new LoadOptions();
+        // Load the spreadsheet from a file
+        var workbook = new Workbook("input.xlsx");
 
-        // Load the workbook with the specified LoadOptions
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+        // Access the built‑in document properties
+        var builtInProps = workbook.BuiltInDocumentProperties;
 
-        // Access the built‑in document properties collection
-        BuiltInDocumentPropertyCollection builtInProps = workbook.BuiltInDocumentProperties;
-
-        // Read the Language property which indicates the locale of the document
+        // Read the Language property which indicates the locale settings
         string language = builtInProps.Language;
 
-        Console.WriteLine($"Document language: {language}");
+        // Output the language (locale) information
+        Console.WriteLine("Document Language (Locale): " + language);
     }
 }

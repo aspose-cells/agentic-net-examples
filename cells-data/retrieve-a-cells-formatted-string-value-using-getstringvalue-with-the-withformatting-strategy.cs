@@ -1,41 +1,43 @@
-// Title: Get a formatted cell string using GetStringValue with CellValueFormatStrategy.WithFormatting in Aspose.Cells for .NET
-// Description: Creates a workbook, sets a numeric value in A1, applies a currency number format, and demonstrates how to obtain the cell's display text with GetStringValue using the WithFormatting strategy (and compares it to DisplayString and CellStyle). The formatted string is printed to the console and the workbook can be saved.
-// Keywords: Aspose.Cells GetStringValue WithFormatting | formatted cell value C# | CellValueFormatStrategy.WithFormatting example | currency format Aspose.Cells | retrieve display string from cell
-// Common Searches: Aspose.Cells GetStringValue WithFormatting | how to get formatted cell text in C# Aspose | CellValueFormatStrategy.WithFormatting sample code | retrieve currency formatted value Aspose.Cells | display string of a cell using Aspose.Cells
-// Developer Intent: Obtain the exact display string of a cell that reflects its applied number format.
-// Use Cases: Show a currency‑formatted amount directly in a UI without exporting the workbook. | Log cell values with their visual formatting for audit trails. | Compare different GetStringValue strategies to choose the appropriate representation for reporting.
-// AI Prompts: Write C# code that uses Aspose.Cells GetStringValue with CellValueFormatStrategy.WithFormatting to return a formatted string from a cell. | Explain the differences between DisplayString, CellStyle, and WithFormatting strategies in GetStringValue. | Demonstrate how to retrieve a date‑formatted cell value as a string using Aspose.Cells.
+// Title: Retrieve a formatted string from an Excel cell using GetStringValue with DisplayString strategy in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that writes a numeric value to cell A1, applies a currency number format, and reads the formatted text using Aspose.Cells GetStringValue with CellValueFormatStrategy.DisplayString. | Show how to obtain both the formatted and raw string representations of a cell value in Aspose.Cells by calling GetStringValue with DisplayString and None strategies. | Provide a complete .NET example that saves the workbook after extracting formatted cell strings with GetStringValue.
+// Common Searches: Aspose.Cells C# GetStringValue DisplayString example for formatted currency | How to read formatted cell value as string using Aspose.Cells .NET | CellValueFormatStrategy.DisplayString vs None in Aspose.Cells | Retrieve formatted Excel cell text with GetStringValue in C# | Aspose.Cells get string value with formatting strategy
+// Tags: Aspose.Cells GetStringValue formatted string C# | CellValueFormatStrategy DisplayString usage | apply currency number format Aspose.Cells | retrieve raw cell string Aspose.Cells | save workbook after GetStringValue Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, sets a numeric value in A1, applies a currency number format, and demonstrates how to obtain the cell's display text with GetStringValue using the WithFormatting strategy (and compares it to DisplayString and CellStyle). The formatted string is printed to the console and the workbook can be saved.
-class Program
+namespace AsposeCellsGetStringValueDemo
 {
-    static void Main()
+    // Creates a workbook, inserts a numeric value into A1, applies a currency format, then uses GetStringValue with CellValueFormatStrategy.DisplayString to obtain the formatted string and with CellValueFormatStrategy.None to obtain the raw value, finally saves the workbook.
+    class Program
     {
-        // Create a new workbook and access the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Put a numeric value into cell A1
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue(12345.6789);
+            // Put a numeric value into cell A1
+            cells["A1"].PutValue(12345.6789);
 
-        // Apply a currency number format to the cell
-        Style style = cell.GetStyle();
-        style.Number = 4; // Currency format
-        cell.SetStyle(style);
+            // Apply a number format (currency) to the cell
+            Style style = cells["A1"].GetStyle();
+            style.Number = 4; // Currency format
+            cells["A1"].SetStyle(style);
 
-        // Retrieve the formatted string using GetStringValue with the DisplayString strategy
-        string formattedValue = cell.GetStringValue(CellValueFormatStrategy.DisplayString);
-        Console.WriteLine("Formatted (DisplayString): " + formattedValue);
+            // Retrieve the formatted string using the DisplayString strategy
+            string formattedValue = cells["A1"].GetStringValue(CellValueFormatStrategy.DisplayString);
 
-        // Retrieve the formatted string using the CellStyle strategy for comparison
-        string cellStyleValue = cell.GetStringValue(CellValueFormatStrategy.CellStyle);
-        Console.WriteLine("Formatted (CellStyle): " + cellStyleValue);
+            // Output the result
+            Console.WriteLine("Formatted string (DisplayString strategy): " + formattedValue);
 
-        // Save the workbook (optional)
-        workbook.Save("FormattedCell.xlsx");
+            // Optionally, retrieve the raw value without formatting
+            string rawValue = cells["A1"].GetStringValue(CellValueFormatStrategy.None);
+            Console.WriteLine("Raw string (None strategy): " + rawValue);
+
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("GetStringValueDemo.xlsx");
+        }
     }
 }

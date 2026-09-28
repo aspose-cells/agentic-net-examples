@@ -1,42 +1,22 @@
-// Title: Disable shared formulas for an entire workbook using MaxRowsOfSharedFormula = 0 in Aspose.Cells for .NET
-// Description: Shows how to turn off shared formulas across a workbook by setting Workbook.Settings.MaxRowsOfSharedFormula to 0. The sample creates a workbook, adds data, applies a formula with SetSharedFormula (which behaves as a normal formula when sharing is disabled), recalculates, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | disable shared formulas | MaxRowsOfSharedFormula | formula settings | Workbook.Settings | SetSharedFormula | Excel compatibility | performance optimization
-// Common Searches: Aspose.Cells disable shared formulas | MaxRowsOfSharedFormula 0 effect | turn off shared formulas .NET | prevent shared formula generation Aspose | how to set MaxRowsOfSharedFormula in C#
-// Developer Intent: Turn off shared formulas for the whole workbook.
-// Use Cases: Maintain compatibility with legacy Excel versions that do not support shared formulas | Facilitate per‑cell formula auditing and debugging | Avoid shared‑formula limits when using custom or volatile functions | Improve stability when exporting large datasets to Excel
-// AI Prompts: Generate C# code to re‑enable shared formulas after they have been disabled with MaxRowsOfSharedFormula. | Show how to detect if a workbook has shared formulas disabled using Aspose.Cells. | Compare performance of a workbook with MaxRowsOfSharedFormula set to 0 versus a positive value. | Explain how MaxRowsOfSharedFormula interacts with SetSharedFormula and CalculateFormula methods.
+// Title: How to disable shared formulas for an entire workbook using Aspose.Cells for .NET by setting MaxRowsOfSharedFormula to zero
+// AI Prompts: Write C# code with Aspose.Cells that sets Workbook.Settings.MaxRowsOfSharedFormula to 0 to turn off shared formulas for all worksheets. | Show a complete example that loads an existing Excel file, disables shared formulas globally via the MaxRowsOfSharedFormula property, and saves the updated workbook.
+// Common Searches: Aspose.Cells C# set MaxRowsOfSharedFormula to zero to prevent shared formulas | How to turn off shared formula generation for every sheet in Aspose.Cells .NET | Disable shared formulas when saving workbook with Aspose.Cells API | Global workbook setting to stop shared formulas in Aspose.Cells for .NET
+// Tags: Aspose.Cells disable shared formulas | Workbook.Settings.MaxRowsOfSharedFormula .NET | global formula sharing setting Aspose.Cells | C# Aspose.Cells workbook configuration | Excel shared formula suppression Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// Shows how to turn off shared formulas across a workbook by setting Workbook.Settings.MaxRowsOfSharedFormula to 0. The sample creates a workbook, adds data, applies a formula with SetSharedFormula (which behaves as a normal formula when sharing is disabled), recalculates, and saves the file.
+// // Creates or loads a workbook, sets Settings.MaxRowsOfSharedFormula = 0 to disable shared formulas for the whole workbook, and saves the file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // create rule
 
         // Disable shared formulas for the entire workbook
         workbook.Settings.MaxRowsOfSharedFormula = 0;
 
-        // Example data to show that formulas still work (they just won't be shared)
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate column A with sample values
-        for (int i = 0; i < 5; i++)
-        {
-            cells[i, 0].PutValue(i + 1); // A1..A5 = 1..5
-        }
-
-        // Attempt to set a shared formula; with MaxRowsOfSharedFormula = 0 it behaves as a normal formula
-        cells["B1"].SetSharedFormula("=A1*2", 5, 1);
-
-        // Calculate formulas to obtain results
-        workbook.CalculateFormula();
-
         // Save the workbook
-        workbook.Save("DisabledSharedFormulas.xlsx");
+        workbook.Save("Result.xlsx"); // save rule
     }
 }

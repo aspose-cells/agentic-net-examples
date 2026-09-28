@@ -1,57 +1,50 @@
-// Title: Aspose.Cells for .NET: Apply Theme Accent3 Fill to a Multi‑Row Merged Range (C#)
-// Description: C# sample that creates a workbook, merges a 5‑row × 3‑column range, and applies a solid fill using the workbook’s ThemeColor Accent3. The styled range is saved as an Excel file.
-// Keywords: Aspose.Cells C# merge cells | ThemeColor Accent3 fill | apply theme color to merged range | Excel solid fill Aspose.Cells | StyleFlag CellShading example | Workbook theme color .NET | Aspose.Cells style merged cells | set background using ThemeColorType | Excel header merged cells theme | Aspose.Cells sample code
-// Common Searches: Aspose.Cells how to fill merged cells with theme Accent3 | C# apply workbook theme color to merged range Aspose.Cells | Set solid fill for merged cells using ThemeColor in .NET | Merge cells and style with Accent3 color in Aspose.Cells | Example code for ThemeColorType.Accent3 with merged cells | Aspose.Cells StyleFlag CellShading usage | Create multi‑row header with theme color in Excel using Aspose | GitHub Aspose.Cells merged cells fill example
-// Developer Intent: Apply the workbook’s Accent3 theme color as a solid fill to a merged range that spans multiple rows.
-// Use Cases: Design a multi‑row header in a report that matches the workbook’s theme. | Highlight a merged block in a dashboard with the Accent3 color for visual emphasis. | Generate Excel templates where merged sections inherit the theme’s accent color automatically. | Create printable invoices where the merged title area uses the theme’s Accent3 fill.
-// AI Prompts: Generate C# code that merges a range of cells and applies the workbook’s Accent3 theme color as a solid background using Aspose.Cells. | Explain how to use ThemeColorType.Accent3 with StyleFlag.CellShading to style merged cells in Aspose.Cells for .NET. | Show an example of changing the theme color index for a merged cell style in Aspose.Cells. | Provide a step‑by‑step guide to apply a gradient fill based on a theme color to a merged range in Aspose.Cells.
+// Title: Use Aspose.Cells for .NET to fill a merged cell range with the workbook's Accent3 theme color
+// AI Prompts: Merge a range of cells (e.g., B2:D5) and set its background to the workbook's Accent3 theme color using Aspose.Cells in C#. | Retrieve the Accent3 color from the workbook theme with GetThemeColor and apply a solid fill style to the top‑left cell of the merged block. | Create a Style with BackgroundType.Solid, assign the Accent3 color, and apply it to a merged range in an Excel file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to apply a theme accent color to merged cells | set background color of merged range using GetThemeColor Aspose.Cells | fill merged cells with workbook theme Accent3 in .NET | apply solid fill style to merged cells Aspose.Cells example | retrieve theme colors and style merged cells in Excel with Aspose
+// Tags: merge cells and apply theme accent fill Aspose.Cells | GetThemeColor Accent3 solid style .NET | style merged range background Aspose.Cells | theme color fill for merged cells C# | Aspose.Cells workbook theme color usage
 
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using System;
 using System.Drawing;
 
-// Alias to avoid conflict with System.Range introduced in C# 8.0
-using AsposeRange = Aspose.Cells.Range;
-
-// C# sample that creates a workbook, merges a 5‑row × 3‑column range, and applies a solid fill using the workbook’s ThemeColor Accent3. The styled range is saved as an Excel file.
+// The example creates a workbook, merges cells B2:D5, obtains the workbook's Accent3 theme color via GetThemeColor, builds a solid fill style with that color, applies the style to the top‑left cell of the merged range, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define a range that spans multiple rows (5 rows x 3 columns) and merge it
-            AsposeRange mergedRange = sheet.Cells.CreateRange(0, 0, 5, 3);
-            mergedRange.Merge();
+            // Define the range to merge (e.g., B2:D5)
+            int startRow = 1;      // Row 2 (zero‑based)
+            int startColumn = 1;   // Column B
+            int rowCount = 4;      // Rows 2‑5
+            int columnCount = 3;   // Columns B‑D
 
-            // Add some text to the merged cell for visual reference
-            sheet.Cells[0, 0].PutValue("Merged with Accent3 Fill");
+            // Merge the cells spanning multiple rows
+            sheet.Cells.Merge(startRow, startColumn, rowCount, columnCount);
 
-            // Create a style and set solid fill pattern
+            // Retrieve the theme's Accent3 color using GetThemeColor
+            Color accent3 = workbook.GetThemeColor(ThemeColorType.Accent3);
+
+            // Create a style with solid fill using Accent3
             Style style = workbook.CreateStyle();
+            style.ForegroundColor = accent3;
             style.Pattern = BackgroundType.Solid;
 
-            // Apply the theme's Accent3 color to the fill using ThemeColor
-            style.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent3, 0);
+            // Apply the style to the merged range (top‑left cell is sufficient)
+            StyleFlag flag = new StyleFlag { All = true };
+            sheet.Cells[startRow, startColumn].SetStyle(style, flag);
 
-            // Specify that cell shading (fill) should be applied
-            StyleFlag flag = new StyleFlag();
-            flag.CellShading = true;
-
-            // Apply the style to the merged range
-            mergedRange.ApplyStyle(style, flag);
-
-            // Save the workbook (lifecycle rule)
-            workbook.Save("MergedAccent3.xlsx");
+            // Save the workbook
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

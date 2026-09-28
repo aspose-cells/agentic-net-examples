@@ -1,10 +1,7 @@
-// Title: Rotate X‑Axis Labels 45° in Aspose.Cells (C#) to Prevent Overlap
-// Description: Creates a workbook, fills month names and values, adds a column chart, disables automatic rotation, sets the X‑axis tick label angle to 45 degrees, and saves the file as RotateXAxisLabelsDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells rotate X axis labels | C# chart label rotation | 45 degree tick label Aspose | prevent overlapping chart labels .NET | category axis label angle | Aspose.Cells column chart example | Excel chart label customization
-// Common Searches: rotate x axis labels 45 degrees Aspose.Cells | Aspose.Cells chart label rotation C# | how to prevent overlapping axis labels in Excel with Aspose | set tick label angle Aspose.Cells .NET | custom X‑axis label angle Aspose chart
-// Developer Intent: Apply a 45‑degree rotation to X‑axis tick labels in a column chart to improve readability and avoid label collisions.
-// Use Cases: Monthly sales chart where month names are tilted for clear display. | Dense categorical reports that require angled X‑axis labels for printing. | Automated Excel generation with custom label angles for presentation decks.
-// AI Prompts: Generate C# code with Aspose.Cells to rotate X‑axis labels to any angle for a given chart type. | Explain how to programmatically decide the label rotation based on the number of categories in an Aspose.Cells chart. | Show the steps to revert X‑axis label rotation back to automatic after a custom angle has been applied.
+// Title: How to rotate X‑axis tick labels 45° in an Aspose.Cells column chart using C#
+// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells and sets the X‑axis tick labels to a 45‑degree rotation. | Show how to disable automatic label rotation and apply a custom angle to the category axis in an Aspose.Cells workbook. | Provide a C# example that formats dense chart X‑axis labels by rotating them 45 degrees with Aspose.Cells.
+// Common Searches: Aspose.Cells C# rotate category axis labels 45 degrees to avoid overlap | set custom tick label rotation for column chart in Aspose.Cells using C# | disable auto label rotation Aspose.Cells chart and specify angle | how to adjust X‑axis label angle in Aspose.Cells spreadsheet programmatically
+// Tags: Aspose.Cells rotate X axis tick labels | category axis label rotation C# | disable automatic chart label rotation Aspose.Cells | column chart label formatting Aspose.Cells | Excel chart label angle Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,14 +9,14 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, fills month names and values, adds a column chart, disables automatic rotation, sets the X‑axis tick label angle to 45 degrees, and saves the file as RotateXAxisLabelsDemo.xlsx using Aspose.Cells for .NET.
+    // The example creates a new workbook, fills it with sample data, adds a column chart, assigns the data ranges, disables automatic label rotation, sets the X‑axis tick labels to a 45‑degree angle, and saves the file as RotateXAxisLabelsDemo.xlsx.
     public class RotateXAxisLabelsDemo
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
@@ -29,27 +26,29 @@ namespace AsposeCellsExamples
                 sheet.Cells["A3"].PutValue("Feb");
                 sheet.Cells["A4"].PutValue("Mar");
                 sheet.Cells["A5"].PutValue("Apr");
-                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A6"].PutValue("May");
+
+                sheet.Cells["B1"].PutValue("Sales");
                 sheet.Cells["B2"].PutValue(120);
                 sheet.Cells["B3"].PutValue(150);
                 sheet.Cells["B4"].PutValue(180);
-                sheet.Cells["B5"].PutValue(200);
+                sheet.Cells["B5"].PutValue(130);
+                sheet.Cells["B6"].PutValue(170);
 
-                // Add a column chart to the worksheet
+                // Add a column chart
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Set the data range for the chart
-                chart.NSeries.Add("B2:B5", true);          // Values
-                chart.NSeries.CategoryData = "A2:A5";     // Categories (X‑axis)
+                // Set the data source for the chart
+                chart.NSeries.Add("B2:B6", true);          // Values
+                chart.NSeries.CategoryData = "A2:A6";     // Categories (X‑axis)
 
-                // Rotate the X‑axis (category axis) tick labels by 45 degrees
-                chart.CategoryAxis.TickLabels.IsAutomaticRotation = false;
+                // Rotate X‑axis (category axis) tick labels by 45 degrees
+                chart.CategoryAxis.TickLabels.IsAutomaticRotation = false; // disable auto‑rotation
                 chart.CategoryAxis.TickLabels.RotationAngle = 45;
 
-                // Save the workbook to an XLSX file
+                // Save the workbook
                 workbook.Save("RotateXAxisLabelsDemo.xlsx");
-                Console.WriteLine("Workbook saved as RotateXAxisLabelsDemo.xlsx");
             }
             catch (Exception ex)
             {
@@ -58,7 +57,6 @@ namespace AsposeCellsExamples
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)

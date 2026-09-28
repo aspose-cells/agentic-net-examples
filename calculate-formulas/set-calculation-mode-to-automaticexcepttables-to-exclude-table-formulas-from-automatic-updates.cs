@@ -1,34 +1,26 @@
-// Title: Set Aspose.Cells CalculationMode to AutomaticExceptTable (C#)
-// Description: Demonstrates how to create a workbook, switch its FormulaSettings.CalculationMode to CalcModeType.AutomaticExceptTable so that only non‑table formulas recalculate automatically, verify the setting, and save the file as XLSX.
-// Keywords: Aspose.Cells calculation mode | AutomaticExceptTable C# | CalcModeType AutomaticExceptTable | exclude table formulas | .NET Excel recalculation | Aspose.Cells FormulaSettings
-// Common Searches: Aspose.Cells set AutomaticExceptTable mode | C# disable automatic recalculation for Excel tables | How to use CalcModeType.AutomaticExceptTable in .NET | Aspose.Cells formula calculation options | Prevent table formulas from auto‑updating with Aspose
-// Developer Intent: Configure a workbook so that Excel automatically recalculates regular formulas while leaving table‑based formulas untouched.
-// Use Cases: Create a new workbook and apply AutomaticExceptTable to improve performance when many table formulas exist. | Programmatically confirm the active calculation mode before exporting the file. | Switch between Automatic, Manual, and AutomaticExceptTable depending on the processing scenario.
-// AI Prompts: Generate C# code that sets Aspose.Cells Workbook.CalculationMode to AutomaticExceptTable and saves the workbook. | Explain the differences between Automatic, Manual, and AutomaticExceptTable calculation modes in Aspose.Cells. | Provide a step‑by‑step guide for toggling calculation modes in a .NET application using Aspose.Cells.
+// Title: Set Aspose.Cells workbook calculation mode to AutomaticExceptTable in C# to exclude table formulas from auto‑recalculation
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook and sets FormulaSettings.CalculationMode to AutomaticExceptTable so that table formulas are not recalculated automatically. | Show how to read back and display the current calculation mode after changing it, then save the workbook as an .xlsx file.
+// Common Searches: aspnet cells c# set calculation mode automaticexcepttable | how to prevent table formulas from auto updating in Aspose.Cells | C# Aspose.Cells change workbook formula calculation mode programmatically | example of using CalcModeType.AutomaticExceptTable with Aspose.Cells | skip table formula recalculation Aspose.Cells workbook settings
+// Tags: Aspose.Cells calculation mode without table formulas | C# set workbook formula calculation mode Aspose.Cells | exclude table formulas from auto recalculation Aspose.Cells | configure CalcModeType in Aspose.Cells | Aspose.Cells formula recalculation settings
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationModeExample
+// Demonstrates creating a new Aspose.Cells workbook in C#, configuring its FormulaSettings.CalculationMode to AutomaticExceptTable to skip table formulas during automatic recalculation, printing the mode, and saving the workbook to an .xlsx file.
+class Program
 {
-    // Demonstrates how to create a workbook, switch its FormulaSettings.CalculationMode to CalcModeType.AutomaticExceptTable so that only non‑table formulas recalculate automatically, verify the setting, and save the file as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (uses the provided creation rule)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Set the calculation mode to AutomaticExceptTable.
-            // This mode tells Excel to recalculate formulas automatically
-            // except those that belong to Excel tables.
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+        // Set calculation mode to AutomaticExceptTable to exclude table formulas from automatic updates
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
 
-            // Optional: display the current mode to verify
-            Console.WriteLine("Current CalculationMode: " + workbook.Settings.FormulaSettings.CalculationMode);
+        // Display the current calculation mode
+        Console.WriteLine("Calculation Mode: " + workbook.Settings.FormulaSettings.CalculationMode);
 
-            // Save the workbook (uses the provided save rule)
-            workbook.Save("CalculationMode_AutomaticExceptTable.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook (optional)
+        workbook.Save("CalculationModeDemo.xlsx");
     }
 }

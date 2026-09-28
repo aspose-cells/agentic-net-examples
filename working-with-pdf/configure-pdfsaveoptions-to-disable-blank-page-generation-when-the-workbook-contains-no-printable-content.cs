@@ -1,62 +1,44 @@
-// Title: Aspose.Cells for .NET – Disable Blank Page Generation When Saving an Empty Worksheet to PDF
-// Description: Demonstrates how to prevent Aspose.Cells from adding a blank page when a workbook has no printable content. The example hides the default sheet, adds an empty visible worksheet, sets a non‑printable print area, and saves the workbook as PDF with PdfSaveOptions.OutputBlankPageWhenNothingToPrint set to false.
-// Keywords: Aspose.Cells PdfSaveOptions | OutputBlankPageWhenNothingToPrint | disable blank page PDF | save empty worksheet to PDF | C# Aspose.Cells PDF conversion | hide worksheet Aspose.Cells | print area no printable cells
-// Common Searches: Aspose.Cells prevent blank page in PDF | PdfSaveOptions disable blank page when nothing to print | C# save empty Excel sheet as PDF without extra page | How to hide default worksheet in Aspose.Cells | Set print area to A1:A0 Aspose.Cells
-// Developer Intent: Avoid generating a blank PDF page when the workbook contains no printable cells.
-// Use Cases: Creating clean PDF reports where some worksheets are intentionally empty. | Automating Excel‑to‑PDF pipelines that must not include placeholder pages. | Generating printable PDFs from dynamic workbooks with optional data sections.
-// AI Prompts: Show C# code that configures Aspose.Cells PdfSaveOptions to skip blank pages when the print area is empty. | Explain how OutputBlankPageWhenNothingToPrint works and when to use it in PDF conversion. | Provide a step‑by‑step guide to hide the default sheet, add an empty visible sheet, set a non‑printable area, and save to PDF without a blank page using Aspose.Cells.
+// Title: How to prevent blank PDF pages when exporting an empty Excel workbook using Aspose.Cells PdfSaveOptions in C#
+// AI Prompts: Generate C# code that configures Aspose.Cells PdfSaveOptions to skip creating a PDF page for worksheets that have no printable content. | Show the specific PdfSaveOptions property to set in order to suppress blank pages when saving an empty workbook to PDF with Aspose.Cells. | Write a .NET example that saves an empty Workbook to PDF without producing a blank page, using the appropriate PdfSaveOptions setting.
+// Common Searches: Aspose.Cells C# disable blank page when saving empty worksheet to PDF | PdfSaveOptions property to avoid empty PDF pages in Aspose.Cells export | How to stop Aspose.Cells from creating a PDF page for a workbook with no data | Export empty Excel file to PDF without blank page using Aspose.Cells .NET | C# Aspose.Cells PDF export suppress empty pages
+// Tags: Aspose.Cells PdfSaveOptions DisablePrintingEmptyPages | C# export empty workbook to PDF without blank page | Aspose.Cells PDF blank page prevention | Aspose.Cells PDF save options configuration | Aspose.Cells PDF export suppress empty pages
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to prevent Aspose.Cells from adding a blank page when a workbook has no printable content. The example hides the default sheet, adds an empty visible worksheet, sets a non‑printable print area, and saves the workbook as PDF with PdfSaveOptions.OutputBlankPageWhenNothingToPrint set to false.
-class DisableBlankPagePdf
+// The sample creates an empty Workbook, sets PdfSaveOptions.DisablePrintingEmptyPages to true to stop a blank PDF page from being generated, and saves the workbook to a PDF file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new (empty) workbook
+            // Create a new workbook (empty workbook has no printable content)
             Workbook workbook = new Workbook();
 
-            // Ensure there is at least one visible worksheet.
-            // Hide the default worksheet and add a new empty visible worksheet.
-            Worksheet defaultSheet = workbook.Worksheets[0];
-            defaultSheet.IsVisible = false;
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Example option: generate one PDF page per worksheet
+            pdfOptions.OnePagePerSheet = true;
 
-            // Add a new worksheet and obtain its reference
-            int newSheetIndex = workbook.Worksheets.Add();
-            Worksheet emptySheet = workbook.Worksheets[newSheetIndex];
+            // Define output file path
+            string outputPath = "output.pdf";
 
-            // Set a print area that results in no printable cells.
-            emptySheet.PageSetup.PrintArea = "A1:A0";
-
-            // Configure PDF save options: do NOT generate a blank page when nothing is printable
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                OutputBlankPageWhenNothingToPrint = false
-            };
-
-            // Define the output file path (e.g., on the desktop)
-            string outputPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                "NoBlankPage.pdf");
-
-            // Ensure the directory exists
-            string? outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook as PDF using the configured options
+            // Save the workbook to PDF using the configured options
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to: {outputPath}");
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

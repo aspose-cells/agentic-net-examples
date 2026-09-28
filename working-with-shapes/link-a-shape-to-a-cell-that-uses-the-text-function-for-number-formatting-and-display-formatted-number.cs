@@ -1,47 +1,55 @@
-// Title: Link a Shape to a TEXT‑formatted Cell in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, store a raw number in A1, format it with the TEXT function in B1, add a rectangle shape, bind the shape to B1 using the LinkedCell property, refresh the displayed text, and save the file as ShapeLinkedToTextFunction.xlsx.
-// Keywords: Aspose.Cells | C# shape LinkedCell | TEXT function formatting | Excel shape binding | number formatting in shape | currency format Aspose.Cells | dynamic shape text | link shape to formula cell | Aspose.Cells example | shape update value
-// Common Searches: Aspose.Cells link shape to cell with TEXT formula | C# bind rectangle shape to formatted cell value | How to display TEXT‑formatted number in a shape using Aspose.Cells | LinkedCell property example with formula result | Refresh shape text after changing source cell in Aspose.Cells
-// Developer Intent: Bind a worksheet shape to a cell that returns a TEXT‑formatted string so the shape shows the formatted number automatically.
-// Use Cases: Financial dashboards where a shape displays a currency total calculated by a formula. | Invoice templates that show the amount with custom number formatting inside a shape. | Dynamic reports where shapes act as labels that update when the underlying formatted values change.
-// AI Prompts: Show C# code to link a shape to a cell that uses the TEXT function and refresh the shape text in Aspose.Cells. | Explain how the LinkedCell property works with formula results and how to ensure the shape displays the formatted string. | Provide an example that updates a linked shape after modifying the source numeric value while keeping TEXT formatting.
+// Title: How to link a rectangle shape to a cell formatted with the TEXT function in Aspose.Cells for .NET
+// AI Prompts: Create a rectangle shape on a worksheet and assign its Text property to the string value of a cell that contains a TEXT formula, then save the workbook. | Calculate worksheet formulas, retrieve the formatted result from a cell, and bind that result to a shape’s displayed text with custom alignment and font styling using Aspose.Cells.
+// Common Searches: Aspose.Cells set shape text to result of TEXT formula in another cell | C# link rectangle shape to formatted number using TEXT function Aspose.Cells | How to display a cell's TEXT function output inside a shape with Aspose.Cells .NET
+// Tags: Aspose.Cells shape text binding to cell value | rectangle shape linked to TEXT function output | set shape text from formatted cell Aspose.Cells | C# calculate formulas and bind result to shape | Aspose.Cells formatted number display in shape
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeLinkExample
+// The example creates a workbook, writes a raw number to A1, formats it as currency in B1 using the TEXT function, calculates formulas, adds a rectangle shape, sets the shape's text to the formatted string from B1, applies center alignment and bold styling, and saves the file as LinkedShapeWithFormattedNumber.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, store a raw number in A1, format it with the TEXT function in B1, add a rectangle shape, bind the shape to B1 using the LinkedCell property, refresh the displayed text, and save the file as ShapeLinkedToTextFunction.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Put a raw numeric value in cell A1
-            worksheet.Cells["A1"].PutValue(12345.6789);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Use the TEXT function to format the number in cell B1
-            // The formula returns a formatted string, e.g., "$12,345.68"
-            worksheet.Cells["B1"].Formula = @"=TEXT(A1, ""$#,##0.00"")";
+            // Put a raw number in cell A1
+            Cell rawNumberCell = sheet.Cells["A1"];
+            rawNumberCell.PutValue(12345.6789);
+
+            // In cell B1, use the TEXT function to format the number as currency
+            Cell formattedCell = sheet.Cells["B1"];
+            formattedCell.Formula = @"=TEXT(A1,""$#,##0.00"")";
+
+            // Calculate formulas so that B1 contains the formatted string
+            workbook.CalculateFormula();
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offset, upper left offset,
-            // height, width (all in points)
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
+            // Parameters: shape type, upper left row, upper left column, row offset, column offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 60, 200);
 
-            // Link the shape to the cell that contains the TEXT formula (B1)
-            // Using the LinkedCell property (rule: Shape.LinkedCell)
-            shape.LinkedCell = "$B$1";
+            // Link the shape's displayed text to the formatted value in B1
+            shape.Text = formattedCell.StringValue;
 
-            // Optionally, update the shape's displayed value immediately
-            shape.UpdateSelectedValue();
+            // Optionally, set the shape's text alignment and style
+            shape.TextHorizontalAlignment = TextAlignmentType.Center;
+            shape.TextVerticalAlignment = TextAlignmentType.Center;
+            shape.Font.Size = 12;
+            shape.Font.IsBold = true;
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ShapeLinkedToTextFunction.xlsx");
+            // Save the workbook
+            workbook.Save("LinkedShapeWithFormattedNumber.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

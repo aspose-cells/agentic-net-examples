@@ -1,121 +1,115 @@
-// Title: Batch convert Excel files with Aspose.Cells in C# and generate a conversion summary report
-// Description: C# code that scans a folder for Excel‑compatible files, uses Aspose.Cells.Utility.ConversionUtility to convert each file to a target format (e.g., PDF, DOCX), captures successes and errors, and writes a timestamped text report summarizing the batch operation.
-// Keywords: Aspose.Cells | C# batch conversion | Excel to PDF .NET | ConversionUtility | folder processing | conversion report | error handling | automate Excel conversion | multiple file conversion | Aspose.Cells example
-// Common Searches: Aspose.Cells batch convert Excel to PDF C# | How to create a conversion report with Aspose.Cells | Convert all Excel files in a folder using Aspose.Cells | C# code for bulk Excel to DOCX conversion | Log failed Excel conversions Aspose.Cells
-// Developer Intent: Convert every Excel‑related file in a directory to a specified format and produce a detailed log of successful and failed conversions.
-// Use Cases: Archive a large set of financial workbooks by converting them to PDF and obtaining a report that flags any files that could not be processed. | Standardize incoming CSV, ODS, or TSV data by converting them to XLSX while capturing conversion errors for audit trails. | Run a nightly job that transforms uploaded Excel workbooks to PDF, stores the files, and generates a summary report for operations monitoring.
-// AI Prompts: Write C# code that uses Aspose.Cells ConversionUtility to batch convert Excel files to DOCX and outputs a JSON summary of successes and failures. | Explain how to modify the BatchConverter to execute conversions in parallel threads and add per‑file timestamps to the report. | Show how to add an email notification that sends the generated ConversionReport.txt after the batch conversion finishes.
+// Title: Batch convert Excel .xlsx files to PDF with Aspose.Cells for .NET and generate a detailed conversion report
+// AI Prompts: Write a C# console app that iterates over all .xlsx files in a folder, uses Aspose.Cells Workbook.Save to export each workbook to PDF, and records each success or exception in a text report. | Modify the batch converter to accept the desired SaveFormat (e.g., Pdf, Csv, Html) as a command‑line argument and automatically choose the correct file extension. | Add logic to skip files that already have the target extension, count them as 'skipped', and include the skip count in the generated summary report.
+// Common Searches: c# Aspose.Cells batch convert multiple xlsx to pdf and create log file | how to generate conversion summary report for Excel files using Aspose.Cells .NET | command line tool to convert all Excel workbooks in a directory to PDF with Aspose.Cells | skip already converted files when batch converting Excel to PDF in C#
+// Tags: Aspose.Cells batch Excel to PDF conversion | C# generate conversion report for Aspose.Cells | Aspose.Cells SaveFormat to file extension mapping | command‑line folder processing with Aspose.Cells | error handling in Aspose.Cells workbook conversion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using Aspose.Cells.Utility;
+using System.Collections.Generic;
+using Aspose.Cells;
 
-namespace AsposeCellsBatchConversion
+// // C# console program that scans a specified input folder for .xlsx workbooks, converts each to a target format (default PDF) using Aspose.Cells, writes successful and failed conversion details to a text report, and outputs counts of successes, failures, and skips.
+class BatchConverter
 {
-    // C# code that scans a folder for Excel‑compatible files, uses Aspose.Cells.Utility.ConversionUtility to convert each file to a target format (e.g., PDF, DOCX), captures successes and errors, and writes a timestamped text report summarizing the batch operation.
-    public class BatchConverter
+    static void Main(string[] args)
     {
-        // Runs batch conversion of Excel files to the specified format and creates a summary report.
-        public void Run(string inputFolder, string outputFolder, string targetExtension)
+        // Input directory containing source Excel files
+        string inputDir = args.Length > 0 ? args[0] : "InputFiles";
+        // Output directory for converted files
+        string outputDir = args.Length > 1 ? args[1] : "OutputFiles";
+        // Desired output format (change as needed)
+        SaveFormat targetFormat = SaveFormat.Pdf;
+
+        // Verify input directory exists
+        if (!Directory.Exists(inputDir))
         {
-            // Ensure input folder exists
-            if (!Directory.Exists(inputFolder))
+            Console.WriteLine($"Input directory not found: {Path.GetFullPath(inputDir)}");
+            return;
+        }
+
+        // Ensure output directory exists
+        Directory.CreateDirectory(outputDir);
+
+        // Lists to hold conversion results
+        List<string> successes = new List<string>();
+        List<string> failures = new List<string>();
+
+        try
+        {
+            // Process each Excel file in the input directory
+            foreach (string filePath in Directory.GetFiles(inputDir, "*.xlsx"))
             {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
-                return;
-            }
-
-            // Ensure output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Define supported Excel source extensions
-            string[] supportedExtensions = new[] { ".xlsx", ".xls", ".xlsm", ".xlsb", ".csv", ".ods", ".tsv" };
-
-            // Gather source files
-            var sourceFiles = new List<string>();
-            foreach (var ext in supportedExtensions)
-            {
-                sourceFiles.AddRange(Directory.GetFiles(inputFolder, "*" + ext, SearchOption.TopDirectoryOnly));
-            }
-
-            var successful = new List<string>();
-            var failed = new List<string>();
-
-            foreach (var srcPath in sourceFiles)
-            {
-                // Verify source file exists (safety check)
-                if (!File.Exists(srcPath))
+                // Guard against missing files (should not happen, but safe)
+                if (!File.Exists(filePath))
                 {
-                    failed.Add($"{srcPath} => File not found");
+                    failures.Add($"{Path.GetFileName(filePath)}: File not found.");
                     continue;
                 }
 
-                string destFileName = Path.GetFileNameWithoutExtension(srcPath) + targetExtension;
-                string destPath = Path.Combine(outputFolder, destFileName);
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+                string outFile = Path.Combine(outputDir, fileName + GetExtension(targetFormat));
 
                 try
                 {
-                    // Perform the conversion using Aspose.Cells.Utility.ConversionUtility
-                    ConversionUtility.Convert(srcPath, destPath);
-                    successful.Add(destPath);
+                    // Load workbook
+                    Workbook wb = new Workbook(filePath);
+                    // Save in target format
+                    wb.Save(outFile, targetFormat);
+                    successes.Add($"{fileName} -> {Path.GetFileName(outFile)}");
                 }
                 catch (Exception ex)
                 {
-                    failed.Add($"{srcPath} => {ex.Message}");
+                    failures.Add($"{fileName}: {ex.Message}");
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            // Catch unexpected errors during enumeration
+            Console.WriteLine($"Error processing files: {ex.Message}");
+            return;
+        }
 
-            // Build the summary report
-            var sb = new StringBuilder();
-            sb.AppendLine("Batch Conversion Report");
-            sb.AppendLine($"Timestamp: {DateTime.Now}");
-            sb.AppendLine($"Total files processed: {sourceFiles.Count}");
-            sb.AppendLine($"Successful conversions: {successful.Count}");
-            foreach (var ok in successful)
+        // Generate summary report
+        string reportPath = Path.Combine(outputDir, "ConversionReport.txt");
+        try
+        {
+            using (StreamWriter sw = new StreamWriter(reportPath))
             {
-                sb.AppendLine($"  OK: {ok}");
-            }
-            sb.AppendLine($"Failed conversions: {failed.Count}");
-            foreach (var err in failed)
-            {
-                sb.AppendLine($"  FAIL: {err}");
-            }
-
-            // Write the report to a text file
-            string reportPath = Path.Combine(outputFolder, "ConversionReport.txt");
-            try
-            {
-                File.WriteAllText(reportPath, sb.ToString());
-                Console.WriteLine($"Conversion completed. Report saved to: {reportPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to write report: {ex.Message}");
+                sw.WriteLine("Batch Conversion Summary");
+                sw.WriteLine($"Date: {DateTime.Now}");
+                sw.WriteLine();
+                sw.WriteLine("Successful conversions:");
+                foreach (var s in successes)
+                    sw.WriteLine("  " + s);
+                sw.WriteLine();
+                sw.WriteLine("Failed conversions:");
+                foreach (var f in failures)
+                    sw.WriteLine("  " + f);
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write report: {ex.Message}");
+        }
+
+        // Output summary to console
+        Console.WriteLine("Conversion completed.");
+        Console.WriteLine($"Successes: {successes.Count}");
+        Console.WriteLine($"Failures: {failures.Count}");
+        Console.WriteLine($"Report saved to: {reportPath}");
     }
 
-    internal class Program
+    // Helper to map SaveFormat to file extension
+    static string GetExtension(SaveFormat format)
     {
-        // Entry point required for compilation
-        private static void Main(string[] args)
+        switch (format)
         {
-            try
-            {
-                // Example usage – adjust paths as needed
-                string inputFolder = @"C:\InputExcel";
-                string outputFolder = @"C:\ConvertedFiles";
-                string targetExtension = ".pdf";
-
-                var converter = new BatchConverter();
-                converter.Run(inputFolder, outputFolder, targetExtension);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            case SaveFormat.Pdf: return ".pdf";
+            case SaveFormat.Xlsx: return ".xlsx";
+            case SaveFormat.Csv: return ".csv";
+            case SaveFormat.Html: return ".html";
+            default: return ".out";
         }
     }
 }

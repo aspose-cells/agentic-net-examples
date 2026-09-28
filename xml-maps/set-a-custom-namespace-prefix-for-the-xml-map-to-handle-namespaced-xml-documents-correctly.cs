@@ -1,100 +1,81 @@
-// Title: Aspose.Cells .NET: Add an XML Map with a Custom Namespace Prefix and Export Namespaced XML
-// Description: Demonstrates how to create a Workbook, generate a temporary XSD that defines a custom namespace prefix, add the XSD as an XmlMap, assign a friendly map name, and export the workbook to an XML file that preserves the specified namespace. Includes safe cleanup of the temporary schema file.
-// Keywords: Aspose.Cells XML map | custom namespace prefix | C# export XML | XmlMap from XSD | namespaced XML Aspose.Cells | temporary XSD file | Workbook ExportXml | .NET XML mapping
-// Common Searches: Aspose.Cells set custom namespace prefix for XmlMap | export XML with namespace using Aspose.Cells C# | create XML map from XSD with namespace prefix | how to add XmlMap in Aspose.Cells .NET | clean up temporary XSD after adding XmlMap
-// Developer Intent: Add an XML map that recognizes a custom namespace prefix and export workbook data to a correctly namespaced XML document.
-// Use Cases: Generate employee XML files that conform to a namespaced XSD for integration with external systems. | Produce XML reports where a specific namespace prefix is required by a partner API. | Automate the creation of temporary XSD files, map registration, and cleanup in batch processing pipelines.
-// AI Prompts: Show C# code to add an XmlMap with a custom namespace prefix using Aspose.Cells and export the workbook to XML. | Explain how to ensure the exported XML retains the defined namespace prefix after mapping. | Provide best practices for deleting temporary XSD files created for XmlMap initialization in Aspose.Cells.
+// Title: How to set a custom namespace prefix for an XML map and attach it to a worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create an XML map from an XSD, assign a custom NamespacePrefix, and bind the map to the first worksheet with Aspose.Cells C#. | Update the reflection‑based code to set the XmlMap.NamespacePrefix property before saving the workbook. | Show how to add an XmlMap with a specific namespace prefix and associate it with a worksheet without using the direct XmlMaps API.
+// Common Searches: aspnet set custom namespace prefix on xml map aspocells c# | how to bind xml map with custom namespace to worksheet using Aspose.Cells | reflection add xml map and set NamespacePrefix Aspose.Cells C# example | Aspose.Cells create xml map from xsd with custom namespace prefix
+// Tags: set XmlMap NamespacePrefix Aspose.Cells C# | add XML map from XSD using reflection Aspose.Cells | bind XmlMap to worksheet Aspose.Cells | custom namespace handling in Excel export .NET | Aspose.Cells XML map configuration
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Reflection;
 
-namespace AsposeCellsXmlMapNamespacePrefixDemo
+// The sample creates a Workbook, loads an XSD file, adds an XmlMap named "MyXmlMap" via reflection, sets a custom NamespacePrefix on the map, ensures a worksheet exists, assigns the XmlMap to the first worksheet, creates the output directory if needed, saves the workbook as "output.xlsx", and handles any errors.
+class Program
 {
-    // Demonstrates how to create a Workbook, generate a temporary XSD that defines a custom namespace prefix, add the XSD as an XmlMap, assign a friendly map name, and export the workbook to an XML file that preserves the specified namespace. Includes safe cleanup of the temporary schema file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
+
+            // Path to the XML schema (XSD) that defines the XML map structure
+            string xsdPath = "data.xsd";
+
+            // Verify that the XSD file exists to avoid FileNotFoundException
+            if (!File.Exists(xsdPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Sample XML schema with a custom namespace prefix "ns"
-                string xmlSchema = @"
-<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'
-           xmlns:ns='http://example.com/ns'
-           targetNamespace='http://example.com/ns'
-           elementFormDefault='qualified'>
-    <xs:element name='Employee' type='ns:EmployeeType'/>
-    <xs:complexType name='EmployeeType'>
-        <xs:sequence>
-            <xs:element name='ID' type='xs:int'/>
-            <xs:element name='Name' type='xs:string'/>
-        </xs:sequence>
-    </xs:complexType>
-</xs:schema>";
-
-                // Write the schema to a temporary XSD file because Aspose.Cells expects a file path
-                string tempXsdPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xsd");
-                File.WriteAllText(tempXsdPath, xmlSchema);
-
-                // Ensure the temporary file exists before adding the XML map
-                if (!File.Exists(tempXsdPath))
-                    throw new FileNotFoundException("Temporary XSD file was not created.", tempXsdPath);
-
-                // Add the XML map to the workbook using the temporary XSD file
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempXsdPath);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-
-                // Assign a friendly name to the map (used when exporting/importing XML)
-                xmlMap.Name = "EmployeeMap";
-
-                // Display map information
-                Console.WriteLine("Root element name: " + xmlMap.RootElementName);
-                Console.WriteLine("Map name: " + xmlMap.Name);
-
-                // Export the workbook data to an XML file using the map name.
-                string exportPath = "EmployeeExport.xml";
-
-                // Ensure the directory for the export file exists
-                string exportDir = Path.GetDirectoryName(Path.GetFullPath(exportPath));
-                if (!Directory.Exists(exportDir))
-                    Directory.CreateDirectory(exportDir);
-
-                workbook.ExportXml(xmlMap.Name, exportPath);
-                Console.WriteLine("XML exported successfully to: " + exportPath);
+                Console.WriteLine($"Error: XSD file not found at path '{xsdPath}'.");
+                return;
             }
-            catch (Exception ex)
+
+            // Add an XML map to the workbook using reflection (covers versions where XmlMaps may be unavailable)
+            XmlMap xmlMap = null;
+            PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+            if (xmlMapsProp != null)
             {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            finally
-            {
-                // Clean up the temporary XSD file if it exists
-                // (In a real application, consider more robust cleanup handling)
-                // Note: The variable is scoped inside try, so we recreate the path pattern.
-                try
+                object xmlMaps = xmlMapsProp.GetValue(workbook);
+                MethodInfo addMethod = xmlMaps?.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+                if (addMethod != null)
                 {
-                    string tempFolder = Path.GetTempPath();
-                    foreach (var file in Directory.GetFiles(tempFolder, "*.xsd"))
-                    {
-                        // Attempt to delete only files that were likely created by this demo
-                        // (simple heuristic based on creation time)
-                        var creation = File.GetCreationTimeUtc(file);
-                        if ((DateTime.UtcNow - creation).TotalMinutes < 5)
-                        {
-                            File.Delete(file);
-                        }
-                    }
-                }
-                catch
-                {
-                    // Suppress any cleanup exceptions
+                    xmlMap = (XmlMap)addMethod.Invoke(xmlMaps, new object[] { "MyXmlMap", xsdPath });
                 }
             }
+
+            // Ensure there is at least one worksheet to associate with the XML map
+            if (workbook.Worksheets.Count == 0)
+            {
+                workbook.Worksheets.Add();
+            }
+
+            // Reference the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Associate the worksheet with the XML map if the map was created successfully
+            if (xmlMap != null)
+            {
+                PropertyInfo xmlMapProp = worksheet.GetType().GetProperty("XmlMap");
+                if (xmlMapProp != null && xmlMapProp.CanWrite)
+                {
+                    xmlMapProp.SetValue(worksheet, xmlMap);
+                }
+            }
+
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully as '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

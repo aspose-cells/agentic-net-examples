@@ -1,46 +1,46 @@
-// Title: C# – Export an Aspose.Cells workbook to PDF (Hello World example)
-// Description: Creates a new Aspose.Cells workbook, writes "Hello" and "World" to cells A1 and B1, ensures the output folder exists, and saves the workbook as a PDF file (WorksheetImage.pdf) with full exception handling.
-// Keywords: Aspose.Cells PDF export C# | save Excel as PDF .NET | Aspose.Cells workbook to PDF example | C# generate PDF from Excel data | Aspose.Cells SaveFormat.Pdf
-// Common Searches: Aspose.Cells export worksheet to PDF C# | How to save Excel file as PDF using Aspose.Cells | C# code to convert workbook to PDF | Create PDF from Excel without Office Interop | Aspose.Cells SaveFormat.Pdf usage
-// Developer Intent: Generate a PDF file directly from an Aspose.Cells workbook in a C# application.
-// Use Cases: Automated reporting: convert generated Excel sheets to PDF for distribution. | Server‑side document conversion where Microsoft Office is unavailable. | Providing a downloadable PDF version of an Excel report in web or desktop apps.
-// AI Prompts: Write C# code that builds an Aspose.Cells workbook, adds values to cells, and saves it as a PDF. | Show how to set page options (orientation, margins) when exporting an Aspose.Cells worksheet to PDF. | Explain best practices for handling file‑system errors and ensuring the output directory exists when saving PDFs with Aspose.Cells.
+// Title: Generate a single-page PDF from the first worksheet of an Excel file using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to place each worksheet on a single PDF page, and saves the result as a PDF. | Extend the conversion program to output the PDF in landscape orientation and add a custom footer while preserving the one‑page‑per‑sheet layout. | Implement a reusable C# method that accepts input and output file paths, converts the first worksheet to PDF using Aspose.Cells, returns a boolean success flag, and logs any errors.
+// Common Searches: Aspose.Cells C# export first worksheet to PDF single page per sheet | How to generate a PDF from Excel where each sheet fits on one page in .NET | C# PdfSaveOptions example to keep Excel sheet on one PDF page | Convert .xlsx to PDF using Aspose.Cells with page layout control
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# export Excel worksheet to PDF | single-page PDF generation from Excel | Aspose.Cells workbook to PDF conversion | PDF output settings for Excel in .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a new Aspose.Cells workbook, writes "Hello" and "World" to cells A1 and B1, ensures the output folder exists, and saves the workbook as a PDF file (WorksheetImage.pdf) with full exception handling.
+// The sample checks for the input Excel file, loads it into an Aspose.Cells Workbook, applies PdfSaveOptions to force each worksheet onto a single PDF page, and saves the first worksheet as a PDF, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
         try
         {
-            // -------------------- Create and populate workbook --------------------
-            Workbook workbook = new Workbook();                     // create a new workbook
-            Worksheet sheet = workbook.Worksheets[0];              // get the first worksheet
-            sheet.Cells["A1"].PutValue("Hello");                   // sample data
-            sheet.Cells["B1"].PutValue("World");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // -------------------- Save workbook as PDF --------------------
-            string pdfPath = "WorksheetImage.pdf";
-
-            // Ensure the directory exists
-            string pdfDir = Path.GetDirectoryName(pdfPath);
-            if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
+            // Verify that the input Excel file exists
+            if (!File.Exists(inputPath))
             {
-                Directory.CreateDirectory(pdfDir);
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Save the workbook directly to PDF format
-            workbook.Save(pdfPath, SaveFormat.Pdf);
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine("PDF created successfully at: " + Path.GetFullPath(pdfPath));
+            // Save the workbook (first worksheet) directly to PDF
+            // OnePagePerSheet ensures each sheet fits on a single PDF page
+            PdfSaveOptions saveOptions = new PdfSaveOptions
+            {
+                OnePagePerSheet = true
+            };
+
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"PDF file successfully created at \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

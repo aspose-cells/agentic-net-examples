@@ -1,94 +1,78 @@
-// Title: Auto‑fit Excel column widths by pixel measurement with Aspose.Cells for .NET
-// Description: Demonstrates iterating through populated cells, using Cell.GetWidthOfValue() to obtain each value's pixel width, computing the maximum width per column, adding optional padding, and setting the column width in pixels via Cells.SetColumnWidthPixel() before saving the workbook.
-// Keywords: Aspose.Cells set column width pixel | Cell.GetWidthOfValue | auto fit column width .NET | measure cell content pixel Aspose | adjust column width programmatically | Excel column width pixels C# | Aspose.Cells column autosize | pixel based column sizing
-// Common Searches: Aspose.Cells set column width in pixels | How to auto fit column width by pixel Aspose | GetWidthOfValue example C# | Calculate max pixel width per column Aspose.Cells | SetColumnWidthPixel usage
-// Developer Intent: Programmatically size each worksheet column to the widest cell content measured in pixels, optionally adding padding for readability.
-// Use Cases: Export reports where text length varies and columns must prevent truncation. | Create financial spreadsheets where the largest numeric value determines column width. | Generate templates that maintain consistent visual layout across different data sets. | Build automated Excel files for web applications that need precise pixel‑perfect column sizing.
-// AI Prompts: Modify the example to factor in cell font size and style when calculating pixel width. | Add logging that outputs the pixel width calculated for each column before applying it. | Show how to convert the pixel width returned by GetWidthOfValue to Excel's column width units. | Explain how to apply the same pixel‑based column sizing to multiple worksheets in a workbook. | Provide a version that respects merged cells while determining column width.
+// Title: Automatically adjust Excel column widths to content pixel size using Aspose.Cells GetWidthOfValue and SetColumnWidthPixel in C#
+// AI Prompts: Write a C# method that accepts a Worksheet, loops through each column, uses Cell.GetWidthOfValue to find the widest cell, adds a configurable pixel padding, and applies Cells.SetColumnWidthPixel for precise column sizing. | Generate C# code that enumerates the used rows and columns of a workbook, computes the maximum pixel width per column with GetWidthOfValue, and sets the column width via SetColumnWidthPixel without invoking AutoFitColumn. | Create a reusable C# utility class for Aspose.Cells that provides an AdjustColumnWidthsByPixel(Worksheet ws, int padding) function implementing pixel‑based column auto‑fit logic.
+// Common Searches: Aspose.Cells C# set column width in pixels based on cell content | How to use GetWidthOfValue for column auto‑fit in Aspose.Cells | C# calculate maximum pixel width of a column in an Excel workbook using Aspose.Cells | Programmatically adjust Excel column widths with Aspose.Cells measurement API | Difference between SetColumnWidthPixel and AutoFitColumn in Aspose.Cells C#
+// Tags: Aspose.Cells column width pixel measurement | C# GetWidthOfValue usage | SetColumnWidthPixel column auto fit | calculate maximum cell pixel width Aspose.Cells | programmatic column resizing Excel C#
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates iterating through populated cells, using Cell.GetWidthOfValue() to obtain each value's pixel width, computing the maximum width per column, adding optional padding, and setting the column width in pixels via Cells.SetColumnWidthPixel() before saving the workbook.
-public class AdjustColumnWidthByPixel
+namespace AdjustColumnWidthDemo
 {
-    public static void Run()
+    // The example creates a workbook, populates cells with varied text and numbers, determines the used range, and for each column measures the widest cell using Cell.GetWidthOfValue. After adding a small pixel padding, it sets the column width with Cells.SetColumnWidthPixel, producing an Excel file where each column perfectly fits its content.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Sample data placed in different columns
-            cells["A1"].PutValue("Short");
-            cells["A2"].PutValue("This is a longer piece of text");
-            cells["A3"].PutValue("Very very long text that needs more column width");
-
-            cells["B1"].PutValue("12345");
-            cells["B2"].PutValue("67890");
-            cells["B3"].PutValue("1234567890");
-
-            cells["C1"].PutValue("Alpha");
-            cells["C2"].PutValue("Beta Gamma Delta");
-            cells["C3"].PutValue("Omega");
-
-            // Determine the maximum pixel width required for each column
-            Dictionary<int, int> maxPixelWidth = new Dictionary<int, int>();
-
-            int maxRow = cells.MaxDataRow;      // last row that contains data
-            int maxCol = cells.MaxDataColumn;   // last column that contains data
-
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
+
+                // Populate sample data with varying lengths
+                cells["A1"].PutValue("Short");
+                cells["A2"].PutValue("This is a much longer piece of text that requires more width");
+                cells["B1"].PutValue(12345);
+                cells["B2"].PutValue(678901234);
+                cells["C1"].PutValue("Very very long text that will need a wide column");
+                cells["C2"].PutValue("Mid length");
+
+                // Determine the range of used rows and columns
+                int maxRow = cells.MaxDataRow;          // zero‑based index of the last used row
+                int maxColumn = cells.MaxDataColumn;    // zero‑based index of the last used column
+
+                // Iterate through each column to find the maximum pixel width of its cells
+                for (int col = 0; col <= maxColumn; col++)
                 {
-                    Cell cell = cells[row, col];
-                    // Skip empty cells
-                    if (cell == null || cell.Value == null)
-                        continue;
+                    int maxPixelWidth = 0;
 
-                    // Get the pixel width of the cell's value
-                    int valuePixelWidth = cell.GetWidthOfValue();
-
-                    // Track the maximum width per column
-                    if (!maxPixelWidth.ContainsKey(col) || valuePixelWidth > maxPixelWidth[col])
+                    for (int row = 0; row <= maxRow; row++)
                     {
-                        maxPixelWidth[col] = valuePixelWidth;
+                        Cell cell = cells[row, col];
+
+                        // Check if the cell contains a value (not null/empty)
+                        if (cell.Type != CellValueType.IsNull)
+                        {
+                            // Get the pixel width of the cell's displayed value
+                            int pixelWidth = cell.GetWidthOfValue();
+
+                            // Keep the largest width found in this column
+                            if (pixelWidth > maxPixelWidth)
+                                maxPixelWidth = pixelWidth;
+                        }
                     }
+
+                    // Add a small padding (e.g., 5 pixels) to avoid clipping
+                    int finalPixelWidth = maxPixelWidth + 5;
+
+                    // Set the column width in pixels for normal view
+                    cells.SetColumnWidthPixel(col, finalPixelWidth);
                 }
-            }
 
-            // Apply the calculated widths (add a small padding for visual comfort)
-            const int paddingPixels = 5;
-            foreach (KeyValuePair<int, int> entry in maxPixelWidth)
+                // Define output file name
+                string outputPath = "AdjustedColumnWidths.xlsx";
+
+                // Save the workbook with adjusted column widths
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
             {
-                int columnIndex = entry.Key;
-                int requiredPixelWidth = entry.Value + paddingPixels;
-
-                // Set the column width in pixels using the provided API
-                cells.SetColumnWidthPixel(columnIndex, requiredPixelWidth);
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook
-            string outputPath = "AdjustedColumnWidths.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        AdjustColumnWidthByPixel.Run();
     }
 }

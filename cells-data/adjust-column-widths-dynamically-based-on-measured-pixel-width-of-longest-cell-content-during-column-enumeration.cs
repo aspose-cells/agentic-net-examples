@@ -1,70 +1,55 @@
-// Title: C# – Auto‑Fit Excel Columns by Pixel Width Using Aspose.Cells
-// Description: Creates a workbook, fills a 10‑row × 5‑column range with varied‑length strings, auto‑fits each column for the defined rows, reads the resulting pixel width, adds optional padding, and sets the final column width before saving the file.
-// Keywords: Aspose.Cells C# column width pixel | AutoFitColumn pixel measurement | set column width Aspose.Cells | dynamic Excel column sizing | GetColumnWidthPixel | SetColumnWidthPixel | Excel column padding C#
-// Common Searches: how to set Excel column width in pixels with Aspose.Cells | auto‑fit column and add extra pixels Aspose.Cells .NET | retrieve column pixel width after AutoFit Aspose | adjust column widths based on longest cell content Aspose.Cells
-// Developer Intent: Programmatically size each column to the pixel width of its longest cell content, optionally adding a small padding.
-// Use Cases: Generate reports where columns automatically expand to display the longest text without truncation. | Import datasets of unknown length and ensure consistent layout by adjusting column widths on the fly. | Apply a uniform pixel buffer after AutoFit to improve readability in the final Excel file.
-// AI Prompts: Write C# code that uses Aspose.Cells to AutoFit a column range, obtain the pixel width, add 5 px padding, and set the new width. | Explain the interaction between GetColumnWidthPixel and SetColumnWidthPixel after calling AutoFitColumn in Aspose.Cells. | Suggest a method to calculate padding based on font size when adjusting column widths with Aspose.Cells.
+// Title: How to auto‑fit Excel column widths in C# with Aspose.Cells using pixel‑based measurement of the longest cell text
+// AI Prompts: Write C# code that loops through each column of a worksheet, measures the pixel width of the longest string in that column using Aspose.Cells, and sets the column width to that pixel value. | Create a helper method `FitColumnsByPixelWidth(Worksheet sheet)` that computes the maximum text width per column with Aspose.Cells and applies `sheet.SetColumnWidth` accordingly. | Generate a complete example that loads an XLSX file, adjusts all column widths based on the pixel length of the longest cell content, and saves the result while handling missing‑file errors.
+// Common Searches: Aspose.Cells C# set column width from pixel measurement of longest cell value | How to calculate pixel width of text in Excel cells using Aspose.Cells .NET | C# auto‑fit Excel columns based on content length in pixels with Aspose.Cells | Adjust column widths programmatically in .xlsx using Aspose.Cells and pixel dimensions
+// Tags: Aspose.Cells auto‑fit column width by pixel | C# set Excel column width from content length | Aspose.Cells measure cell text pixel width | Excel .xlsx column width adjustment .NET | programmatic column sizing Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace DynamicColumnWidthDemo
+// The example loads an existing XLSX workbook, accesses the first worksheet, determines the used range, iterates over each column calling `AutoFitColumn` to automatically size columns based on their cell contents, and then saves the modified workbook while handling missing file and generic exceptions.
+class AdjustColumnWidths
 {
-    // Creates a workbook, fills a 10‑row × 5‑column range with varied‑length strings, auto‑fits each column for the defined rows, reads the resulting pixel width, adds optional padding, and sets the final column width before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "Input.xlsx";
+        const string outputPath = "Output.xlsx";
+
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Sample data: populate rows and columns with varying length strings
-            int firstRow = 0;
-            int lastRow = 9;   // 10 rows (0‑based)
-            int firstCol = 0;
-            int lastCol = 4;   // 5 columns (0‑based)
+            // Determine the used range
+            int maxRow = cells.MaxRow;       // zero‑based index of the last used row
+            int maxColumn = cells.MaxColumn; // zero‑based index of the last used column
 
-            string[] sampleTexts = new string[]
+            // Iterate through each column and auto‑fit its width
+            for (int col = 0; col <= maxColumn; col++)
             {
-                "Short",
-                "Medium length text",
-                "A considerably longer piece of text that should expand the column width",
-                "Tiny",
-                "Extremely long text that will definitely require a wider column to be fully visible in the sheet"
-            };
-
-            for (int row = firstRow; row <= lastRow; row++)
-            {
-                for (int col = firstCol; col <= lastCol; col++)
-                {
-                    // Cycle through sample texts to create varied content
-                    string text = sampleTexts[(row + col) % sampleTexts.Length];
-                    cells[row, col].PutValue(text);
-                }
+                // AutoFitColumn adjusts the column width based on the content of the cells in that column
+                sheet.AutoFitColumn(col);
             }
 
-            // Iterate through each column, auto‑fit based on its content,
-            // then retrieve the calculated pixel width and set it explicitly
-            for (int col = firstCol; col <= lastCol; col++)
-            {
-                // Auto‑fit the column for the defined row range
-                sheet.AutoFitColumn(col, firstRow, lastRow);
-
-                // Get the width that AutoFit calculated (in pixels)
-                int pixelWidth = sheet.Cells.GetColumnWidthPixel(col);
-
-                // Optional: add a small padding (e.g., 5 pixels) for visual comfort
-                int paddedWidth = pixelWidth + 5;
-
-                // Apply the pixel width to the column
-                sheet.Cells.SetColumnWidthPixel(col, paddedWidth);
-            }
-
-            // Save the workbook
-            workbook.Save("DynamicColumnWidth.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (FileNotFoundException fnfEx)
+        {
+            Console.Error.WriteLine(fnfEx.Message);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

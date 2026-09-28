@@ -1,49 +1,49 @@
-// Title: Enable Multi‑Select Filtering on a PivotTable Page Field with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a PivotTable, place the "Category" field in the page (filter) area, and set its IsMultipleItemSelectionAllowed property to true so users can select multiple items in the filter dialog. The workbook is saved as an .xlsx file.
-// Keywords: Aspose.Cells | .NET | C# | PivotTable | EnableMultipleSelection | IsMultipleItemSelectionAllowed | multi select filter | page field | pivot filter | Excel sample code
-// Common Searches: Aspose.Cells enable multi select pivot filter C# | Set IsMultipleItemSelectionAllowed true Aspose.Cells | Allow multiple items in PivotTable page field Aspose | C# code for multi‑select pivot table filter Aspose.Cells | EnableMultipleSelection property Aspose.Cells PivotTable
-// Developer Intent: Activate multi‑selection for a PivotTable page (filter) field using Aspose.Cells for .NET.
-// Use Cases: Sales dashboard where analysts can filter by several product categories simultaneously. | Regional performance report that lets users pick multiple territories in a pivot filter. | Financial model requiring combined selection of multiple expense types in an Excel pivot table.
-// AI Prompts: Show C# code to set IsMultipleItemSelectionAllowed = true for a PivotTable page field with Aspose.Cells. | Provide an Aspose.Cells example that creates a PivotTable with multi‑select filter options. | Explain how to enable multiple item selection for all page fields in an Aspose.Cells PivotTable.
+// Title: Enable multiple item selection in a PivotTable filter field with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets the IsMultipleItemSelectionAllowed flag on a PivotField to allow multi‑select filtering in an Aspose.Cells PivotTable. | Show how to create a workbook, add a pivot table, place a field in the page area, and enable multiple selection for that filter using the Aspose.Cells API. | Provide an Aspose.Cells example that configures a PivotTable’s page field to support selecting multiple items in the filter dialog. | Write a step‑by‑step guide to activate multi‑select on a PivotTable filter in a .NET workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable multi select on pivot table page field | How to allow multiple items selection in pivot table filter using Aspose.Cells .NET | Set IsMultipleItemSelectionAllowed property for PivotField Aspose.Cells example | C# code sample for multi‑select filter in Aspose.Cells PivotTable | Aspose.Cells enable multiple selection in pivot table filter dialog
+// Tags: Aspose.Cells enable multiple selection pivot filter | C# set PivotField IsMultipleItemSelectionAllowed | Aspose.Cells create pivot table with page field | Aspose.Cells multi‑select filter dialog | Aspose.Cells PivotTable page field settings
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook, add a PivotTable, place the "Category" field in the page (filter) area, and set its IsMultipleItemSelectionAllowed property to true so users can select multiple items in the filter dialog. The workbook is saved as an .xlsx file.
-class Program
+namespace AsposeCellsPivotMultipleSelectionDemo
 {
-    static void Main()
+    // Creates a workbook, adds sample data, builds a PivotTable, puts the "Fruit" field in the page (filter) area, sets the PivotField.IsMultipleItemSelectionAllowed property to true to enable multi‑select filtering, and saves the file as PivotTable_MultipleSelection.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].Value = "Category";
-        sheet.Cells["B1"].Value = "Amount";
-        sheet.Cells["A2"].Value = "Food";
-        sheet.Cells["B2"].Value = 100;
-        sheet.Cells["A3"].Value = "Drink";
-        sheet.Cells["B3"].Value = 150;
-        sheet.Cells["A4"].Value = "Food";
-        sheet.Cells["B4"].Value = 200;
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].Value = "Fruit";
+            sheet.Cells["B1"].Value = "Quantity";
+            sheet.Cells["A2"].Value = "Apple";
+            sheet.Cells["B2"].Value = 10;
+            sheet.Cells["A3"].Value = "Orange";
+            sheet.Cells["B3"].Value = 15;
+            sheet.Cells["A4"].Value = "Banana";
+            sheet.Cells["B4"].Value = 20;
 
-        // Add a pivot table to the worksheet
-        // Source range: A1:B4, Destination: D1, Name: PivotTable1
-        int ptIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[ptIndex];
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add fields: make "Category" a page (filter) field and "Amount" a data field
-        pivotTable.AddFieldToArea(PivotFieldType.Page, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+            // Add the field to the Page area (filter area)
+            pivotTable.AddFieldToArea(PivotFieldType.Page, "Fruit");
 
-        // Enable multiple item selection for the page field
-        // This allows users to select multiple items in the filter dialog
-        PivotField pageField = pivotTable.PageFields[0];
-        pageField.IsMultipleItemSelectionAllowed = true;
+            // Enable multiple item selection for the page field
+            PivotField pageField = pivotTable.PageFields[0];
+            pageField.IsMultipleItemSelectionAllowed = true;
 
-        // Save the workbook to a file
-        workbook.Save("PivotTable_MultiSelect.xlsx");
+            // Optional: verify the property was set
+            Console.WriteLine("IsMultipleItemSelectionAllowed: " + pageField.IsMultipleItemSelectionAllowed);
+
+            // Save the workbook
+            workbook.Save("PivotTable_MultipleSelection.xlsx");
+        }
     }
 }

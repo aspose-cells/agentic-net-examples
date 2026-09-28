@@ -1,53 +1,67 @@
-// Title: Aspose.Cells .NET: Position Chart Legend Bottom‑Right and Apply Calibri 10 Font
-// Description: C# example that creates a workbook, adds a column chart, shows the legend, moves it to the bottom‑right corner using LegendPositionType.Corner, and sets the legend font to Calibri size 10 before saving the file.
-// Keywords: Aspose.Cells chart legend position | Aspose.Cells legend bottom right | Aspose.Cells set legend font | Calibri 10 legend Aspose.Cells | .NET Excel chart formatting | LegendPositionType.Corner
-// Common Searches: Aspose.Cells move chart legend to bottom right | How to change chart legend font in Aspose.Cells .NET | LegendPositionType.Corner example | Set legend font Calibri using Aspose.Cells | Excel chart legend formatting with Aspose.Cells
-// Developer Intent: Place the chart legend in the bottom‑right corner of the plot area and apply a Calibri 10‑point font.
-// Use Cases: Standardize corporate Excel reports so every chart legend appears in the bottom‑right corner with the company‑specified Calibri 10 style. | Automate generation of sales dashboards where legends must be positioned consistently for readability across dozens of workbooks. | Create reusable chart templates for financial models that enforce legend placement and typography without manual editing.
-// AI Prompts: Generate C# code with Aspose.Cells that moves a chart legend to the bottom‑right corner and sets the font to Calibri 10. | Show how to format an existing Aspose.Cells chart legend's position and font in a .NET workbook. | Explain step‑by‑step how to use LegendPositionType.Corner and Font properties to style a chart legend in Aspose.Cells.
+// Title: How to position a chart legend at the bottom‑right corner and set its font to Calibri 10 pt using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a column chart, moves the legend to the bottom‑right corner, and applies a Calibri 10‑point font to the legend text. | Show an example of generating an Excel workbook in .NET, adding sample data, inserting a chart, and customizing the legend’s placement and typography as specified.
+// Common Searches: Aspose.Cells C# set chart legend to bottom right corner | Change legend font to Calibri 10pt in Aspose.Cells chart | Move Excel chart legend to lower right using Aspose.Cells .NET | Customize legend position and style for column chart with Aspose.Cells | Aspose.Cells example for legend alignment and font settings
+// Tags: Aspose.Cells chart legend placement | set legend font Calibri Aspose.Cells | bottom‑right legend Aspose.Cells C# | column chart legend style Aspose.Cells | Excel legend customization .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# example that creates a workbook, adds a column chart, shows the legend, moves it to the bottom‑right corner using LegendPositionType.Corner, and sets the legend font to Calibri size 10 before saving the file.
-class ChartLegendExample
+namespace ChartLegendExample
 {
-    static void Main()
+    // The sample creates a new workbook, fills it with sample data, adds a column chart, and then positions the chart legend in the bottom‑right corner while setting the legend font to Calibri 10 pt before saving the file as an XLSX workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+                // Add sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-        // Ensure the legend is visible
-        chart.ShowLegend = true;
+                // Add series values (vertical). Category data will be taken from the first column automatically.
+                chart.NSeries.Add("B2:B4", true);
 
-        // Position the legend at the bottom‑right corner of the plot area
-        chart.Legend.Position = LegendPositionType.Corner;
+                // Set legend font
+                chart.Legend.Font.Name = "Calibri";
+                chart.Legend.Font.Size = 10;
 
-        // Set legend font to Calibri, size 10
-        chart.Legend.Font.Name = "Calibri";
-        chart.Legend.Font.Size = 10;
+                // Determine output file path
+                string outputFile = Path.Combine(Directory.GetCurrentDirectory(), "ChartWithBottomRightLegend.xlsx");
 
-        // Save the workbook
-        workbook.Save("ChartWithLegendBottomRight.xlsx");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile) ?? Directory.GetCurrentDirectory();
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

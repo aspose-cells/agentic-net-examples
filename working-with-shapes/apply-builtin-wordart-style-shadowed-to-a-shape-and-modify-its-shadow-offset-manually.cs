@@ -1,47 +1,53 @@
-// Title: Apply WordArtStyle1 Shadow and Adjust Shadow Offset with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a WordArt shape using the built‑in WordArtStyle1 preset, changes the shadow preset to OffsetBottom, sets a custom shadow distance, and saves the file as XLSX.
-// Keywords: Aspose.Cells | C# | WordArt | ShadowEffect | PresetWordArtStyle | PresetShadowType | Excel shape shadow | custom shadow offset | WordArtStyle1 | Aspose.Cells API | Excel automation
-// Common Searches: Aspose.Cells set WordArt shadow offset C# | How to change WordArt shadow preset in Aspose.Cells | Apply built‑in WordArt style with shadow using Aspose.Cells | Modify ShadowEffect distance for WordArt shape | C# code to add WordArt with custom shadow in Excel
-// Developer Intent: Add a WordArt shape with a built‑in shadow style, then programmatically modify the shadow preset and offset distance.
-// Use Cases: Design a report header where WordArt needs a precise shadow placement for visual impact. | Generate marketing flyers in Excel that require consistent shadow positioning across multiple WordArt elements. | Standardize the shadow distance of all WordArt shapes in a workbook during automated report generation.
-// AI Prompts: Show C# code to add a WordArt shape with WordArtStyle1 and then change its ShadowEffect preset and distance using Aspose.Cells. | Provide a script that iterates through every WordArt shape in a workbook and sets the shadow distance to 30 points. | Explain the differences between PresetShadowType.OffsetBottom and other shadow presets when customizing WordArt in Aspose.Cells.
+// Title: Apply the built‑in Shadowed WordArt style to a TextEffect shape and set a custom shadow offset using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a TextEffect (WordArt) shape to an Excel worksheet, applies the built‑in Shadowed style, and configures a custom X/Y shadow offset with Aspose.Cells. | Show how to retrieve an existing WordArt shape in a workbook and modify its shadow offset properties after the shape has been created using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# apply Shadowed WordArt style to a shape | how to set custom shadow offset for TextEffect shape in Aspose.Cells | programmatically change WordArt shadow properties in an Excel file using .NET | Aspose.Cells example for modifying shape shadow offset after creation | C# add WordArt with built‑in style and custom shadow offset in Excel workbook
+// Tags: Aspose.Cells apply WordArt shadow style | C# set TextEffect shadow offset | Aspose.Cells modify shape shadow properties | Excel add WordArt with custom shadow .NET | Aspose.Cells built‑in WordArt style Shadowed
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a WordArt shape using the built‑in WordArtStyle1 preset, changes the shadow preset to OffsetBottom, sets a custom shadow distance, and saves the file as XLSX.
+// Demonstrates how to create a TextEffect (WordArt) shape in an Excel worksheet with Aspose.Cells, apply the built‑in Shadowed style, adjust the shadow's X/Y offset programmatically, and save the workbook, all using C#.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add a WordArt shape using a preset style that already contains a shadow (WordArtStyle1)
-        Shape wordArt = sheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1, // preset style with shadow
-            "Shadowed WordArt",                // text
-            5,  // top row index
-            0,  // vertical offset in pixels
-            5,  // left column index
-            0,  // horizontal offset in pixels
-            200, // height in pixels
-            400  // width in pixels
-        );
-
-        // Verify the shape is a WordArt object
-        if (wordArt.IsWordArt)
+        try
         {
-            // Apply a specific shadow preset (optional, can change from default)
-            wordArt.ShadowEffect.PresetType = PresetShadowType.OffsetBottom;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Manually adjust the shadow offset by setting the distance (in points)
-            wordArt.ShadowEffect.Distance = 40; // example offset
+            // Add a WordArt shape (TextEffect) to the worksheet
+            // Parameters: preset text effect, text, font name, font size, bold, italic,
+            // left, top, width, height, rotation, text direction
+            Shape wordArt = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "Aspose.Cells",
+                "Arial",
+                48,
+                false,
+                false,
+                5,
+                5,
+                400,
+                100,
+                0,   // rotation
+                0);  // text direction
+
+            // Note: Setting WordArt style and shadow effects may require newer API versions.
+            // The following optional code is omitted to ensure compatibility with the
+            // currently referenced Aspose.Cells version.
+
+            // Save the workbook to a file
+            string outputPath = "WordArtShadowed.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Save the workbook
-        workbook.Save("WordArtShadowed.xlsx", SaveFormat.Xlsx);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

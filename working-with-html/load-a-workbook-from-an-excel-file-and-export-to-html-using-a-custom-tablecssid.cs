@@ -1,27 +1,24 @@
-// Title: Convert Excel to HTML with a custom TableCssId using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, sets HtmlSaveOptions.TableCssId to a custom identifier, and saves the file as HTML, enabling the generated <table> element to be styled via CSS.
-// Keywords: Aspose.Cells | C# | Excel to HTML | HtmlSaveOptions | TableCssId | custom CSS id | HTML export | save workbook as HTML
-// Common Searches: Aspose.Cells set TableCssId | C# export Excel to HTML with custom table id | How to add CSS id to HTML table when converting Excel | HtmlSaveOptions TableCssId example | Aspose.Cells HTML export custom CSS identifier
-// Developer Intent: Create an HTML version of an Excel workbook and assign a specific CSS id to the output table for targeted styling.
-// Use Cases: Generate web reports that rely on a predefined CSS table style by applying a custom id during conversion. | Embed Excel data into existing web pages where CSS rules target a particular table identifier. | Batch‑convert multiple workbooks to HTML while preserving a consistent table id for centralized styling.
-// AI Prompts: Write C# code with Aspose.Cells to convert input.xlsx to output.html and set TableCssId='report-table'. | Explain how the TableCssId property changes the HTML markup and how to reference it in a stylesheet. | Provide a CSS snippet that styles the table with id 'report-table' after Aspose.Cells HTML export. | Show how to process a folder of Excel files, exporting each to HTML with the same TableCssId using Aspose.Cells.
+// Title: Export an Excel workbook to HTML with a custom TableCssId using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as HTML while assigning a custom TableCssId to the generated table. | Show how to configure HtmlSaveOptions in Aspose.Cells to specify a CSS identifier for the HTML table when converting a workbook.
+// Common Searches: how to set TableCssId in Aspose.Cells HtmlSaveOptions C# | Aspose.Cells export Excel to HTML with custom table id example | C# convert .xlsx to HTML with specific table CSS identifier using Aspose.Cells | customize HTML table id when saving workbook as HTML Aspose.Cells | Aspose.Cells HTML export custom CSS id for table
+// Tags: Aspose.Cells HtmlSaveOptions custom TableCssId | C# HTML export with table CSS identifier | custom CSS id for HTML table Aspose.Cells | Excel to HTML conversion with table id | Aspose.Cells workbook HTML save with CSS id
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook, sets HtmlSaveOptions.TableCssId to a custom identifier, and saves the file as HTML, enabling the generated <table> element to be styled via CSS.
+// Loads an Excel file, configures HtmlSaveOptions with a custom TableCssId, and saves the workbook as an HTML file.
 class Program
 {
     static void Main()
     {
-        // Load the existing Excel workbook
+        // Load the workbook from an existing Excel file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Create HTML save options and set a custom TableCssId
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-        saveOptions.TableCssId = "custom-table-style";
+        // Configure HTML save options with a custom CSS ID for the generated table
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.TableCssId = "myCustomTableId";
 
-        // Export the workbook to HTML using the configured options
-        workbook.Save("output.html", saveOptions);
+        // Export the workbook to HTML using the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

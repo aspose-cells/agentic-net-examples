@@ -1,58 +1,55 @@
-// Title: Convert a Selected Excel Range to PDF While Ignoring Hidden Rows and Columns – Aspose.Cells for .NET
-// Description: This example demonstrates how to load an Excel workbook with Aspose.Cells, hide specific rows and columns, define a print area (e.g., A1:D20), and save only that visible range to a PDF using PdfSaveOptions. Hidden rows and columns are automatically excluded from the output.
-// Keywords: Aspose.Cells export range to PDF | ignore hidden rows PDF Aspose.Cells | ignore hidden columns PDF Aspose.Cells | set print area PDF conversion .NET | PdfSaveOptions selected range | C# convert Excel to PDF | Aspose.Cells hide rows columns PDF
-// Common Searches: Aspose.Cells export only A1:D20 to PDF | How to exclude hidden rows when saving Excel as PDF with Aspose | Set print area for PDF output using Aspose.Cells .NET | Convert Excel worksheet to PDF without hidden columns | C# Aspose.Cells PDF conversion selected range
-// Developer Intent: Generate a PDF that contains only a specified cell range from an Excel worksheet, automatically omitting any rows or columns that are hidden.
-// Use Cases: Create a clean report PDF that shows only the visible portion of a data table. | Produce printable invoices from a predefined area of a worksheet while ignoring hidden formatting rows. | Automate batch processing of multiple sheets, each with its own print area, to generate PDFs that contain only visible data.
-// AI Prompts: Write C# code with Aspose.Cells to export the A1:D20 range of a worksheet to PDF, ensuring hidden rows and columns are excluded. | Show how to set a print area and use PdfSaveOptions to save only visible cells to a PDF file in .NET. | Explain how Aspose.Cells determines which hidden rows or columns are omitted when converting a selected range to PDF.
+// Title: Convert specific worksheet ranges to PDF while ignoring hidden rows and columns using Aspose.Cells for .NET
+// AI Prompts: Write C# code that defines multiple non‑contiguous print areas on a worksheet and saves only those areas to a PDF with Aspose.Cells, automatically omitting any hidden rows or columns. | Show how to configure Aspose.Cells PdfSaveOptions to export selected ranges to PDF and ensure hidden rows and columns are not rendered in the output.
+// Common Searches: Aspose.Cells C# export only visible cells from selected ranges to PDF | how to set multiple print areas for PDF conversion with Aspose.Cells .NET | exclude hidden rows and columns when saving Excel to PDF using Aspose.Cells | C# convert non‑contiguous worksheet ranges to PDF with Aspose.Cells
+// Tags: Aspose.Cells set print area PDF | export selected Excel ranges to PDF C# | skip hidden rows columns Aspose.Cells | multiple non‑contiguous print areas .NET | PdfSaveOptions hide hidden rows
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// This example demonstrates how to load an Excel workbook with Aspose.Cells, hide specific rows and columns, define a print area (e.g., A1:D20), and save only that visible range to a PDF using PdfSaveOptions. Hidden rows and columns are automatically excluded from the output.
-class ConvertSelectedRangeToPdf
+// The example loads an Excel workbook, assigns multiple non‑contiguous ranges (e.g., A1:C10 and E1:G5) as the print area on the first worksheet, configures PdfSaveOptions, and saves only the visible cells of those ranges to a PDF, automatically ignoring any hidden rows or columns.
+class ConvertSelectedRangesToPdf
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputPath = "output_selected_range.pdf";
+            const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException.
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the existing workbook.
+            // Load the existing Excel workbook
             Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index or name as needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Example: hide some rows and columns.
-            sheet.Cells.HideRow(2);      // Hide row 3 (zero‑based index)
-            sheet.Cells.HideColumn(1);  // Hide column B
+            // Define the ranges you want to convert.
+            // Multiple ranges can be combined using commas.
+            // Example: Convert A1:C10 and E1:G5
+            sheet.PageSetup.PrintArea = "A1:C10,E1:G5";
 
-            // Define the range to export (e.g., A1:D20) and set it as the print area.
-            string exportRange = "A1:D20";
-            sheet.PageSetup.PrintArea = exportRange;
+            // Set up PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Optional: set other PDF options as required
+                // OnePagePerSheet = true,
+            };
 
-            // Create PDF save options.
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Note: In older Aspose.Cells versions the IgnoreHiddenRows/Columns
-            // properties are not available. Hidden rows/columns are excluded
-            // from the PDF when a print area is defined, so no additional settings are required.
-
-            // Save the selected range to PDF.
+            // Save the selected ranges as a PDF file
             workbook.Save(outputPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+            Console.WriteLine($"PDF successfully created at '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

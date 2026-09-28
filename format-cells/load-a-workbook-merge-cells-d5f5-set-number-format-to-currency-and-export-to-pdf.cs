@@ -1,34 +1,55 @@
-// Title: C# – Merge D5:F5, apply a currency style, and export to PDF with Aspose.Cells
-// Description: Load an Excel workbook, combine the cells from D5 to F5 on the first worksheet, assign a custom "$#,##0.00" monetary format to the merged area, and save the document as a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | merge cells | currency format | export PDF | Excel to PDF | custom number format | worksheet styling | SaveFormat.Pdf | cell merging
-// Common Searches: Aspose.Cells merge range D5 to F5 C# | apply monetary style to merged cells Aspose | convert formatted Excel sheet to PDF with Aspose.Cells | C# code for merging cells and creating PDF | set custom number format before PDF export Aspose
-// Developer Intent: Combine a specific cell block, format it as a monetary value, and generate a PDF version of the workbook.
-// Use Cases: Produce a financial summary where the header row spanning D5‑F5 shows a currency label, then deliver the report as a PDF. | Automate invoice creation that merges title cells, formats the total amount as money, and outputs a PDF for client delivery. | Batch‑process Excel worksheets that contain merged total rows, apply a currency style, and archive them as PDF files.
-// AI Prompts: Give me C# code that merges D5‑F5, sets a "$#,##0.00" format, and saves the workbook as a PDF using Aspose.Cells. | Show how to apply a custom currency number format to a merged range and then export the sheet to PDF with Aspose.Cells for .NET. | Explain the steps to combine cells, style the upper‑left cell as currency, and convert the Excel file to a PDF in Aspose.Cells.
+// Title: Merge cells D5 to F5, apply a built‑in currency format, and save the workbook as PDF using Aspose.Cells for .NET
+// AI Prompts: Merge the range D5:F5, set the built‑in currency number format (ID 164), and export the worksheet to a PDF file with Aspose.Cells in C#. | Create a style with currency formatting, apply it to merged cells D5:F5, then save the workbook as a PDF using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells .NET how to merge a range and apply currency format before PDF conversion | C# set built‑in number format 164 on merged cells and export to PDF with Aspose.Cells | Save Excel workbook as PDF after merging cells D5:F5 and formatting as currency using Aspose.Cells | Apply style flag to merged cells and convert to PDF in Aspose.Cells C# example
+// Tags: merge cells D5:F5 Aspose.Cells C# | apply built‑in currency number format Aspose.Cells | export worksheet to PDF Aspose.Cells | style flag all attributes Aspose.Cells | create style with number format ID 164 Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an Excel workbook, combine the cells from D5 to F5 on the first worksheet, assign a custom "$#,##0.00" monetary format to the merged area, and save the document as a PDF using Aspose.Cells for .NET.
-class MergeAndExportPdf
+// Loads input.xlsx, merges cells D5:F5, applies the built‑in currency number format (ID 164) to the merged range, and saves the result as output.pdf.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook from file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Merge cells D5:F5 (zero‑based indices: row 4, column 3, 1 row, 3 columns)
-        worksheet.Cells.Merge(4, 3, 1, 3);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Apply currency number format to the merged cell (upper‑left cell of the range)
-        Style style = worksheet.Cells[4, 3].GetStyle();
-        style.Custom = "$#,##0.00";          // Currency format
-        worksheet.Cells[4, 3].SetStyle(style);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Export the workbook to PDF
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+            // Merge cells D5:F5 (row index 4, columns 3‑5)
+            sheet.Cells.Merge(4, 3, 1, 3);
+
+            // Create a style with a built‑in currency number format
+            Style style = workbook.CreateStyle();
+            style.Number = 164; // "$#,##0.00"
+
+            // Apply the style to the merged range
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange("D5:F5");
+            StyleFlag flag = new StyleFlag();
+            flag.All = true; // Apply all style attributes (including number format)
+            mergedRange.ApplyStyle(style, flag);
+
+            // Save the workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

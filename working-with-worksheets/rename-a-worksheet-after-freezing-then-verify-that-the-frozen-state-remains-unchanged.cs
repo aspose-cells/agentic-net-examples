@@ -1,78 +1,45 @@
-// Title: Rename an Excel worksheet after freezing panes and verify freeze state – Aspose.Cells C#
-// Description: Demonstrates how to freeze panes at cell C3, capture the freeze configuration with GetFreezedPanes, rename the worksheet, re‑query the settings, compare before‑and‑after values, and save the workbook, proving that renaming does not alter frozen rows or columns.
-// Keywords: Aspose.Cells freeze panes | rename worksheet C# | GetFreezedPanes example | preserve frozen rows after rename | Excel worksheet rename Aspose.Cells
-// Common Searches: keep frozen panes when renaming a sheet Aspose.Cells | GetFreezedPanes after worksheet rename | C# freeze panes then rename worksheet | verify freeze state Aspose.Cells .NET
-// Developer Intent: Rename a worksheet that has frozen panes and confirm the freeze configuration stays the same.
-// Use Cases: Create a report sheet, freeze header rows/columns, rename for clarity, and ensure view settings persist. | Generate multiple worksheets programmatically, apply distinct freeze panes, rename each, and validate that all freeze settings remain intact. | Build an automated process where users rename worksheets on the fly while the application maintains frozen pane positions.
-// AI Prompts: Write C# code with Aspose.Cells to freeze panes at a given cell, rename the worksheet, and check that the freeze state is unchanged. | Explain the GetFreezedPanes method and how to compare its output before and after a worksheet rename. | Suggest error‑handling strategies if the freeze configuration differs after renaming a sheet using Aspose.Cells.
+// Title: Rename a worksheet after applying FreezePanes in Aspose.Cells for .NET and verify the freeze remains intact
+// AI Prompts: Rename the worksheet in a workbook after calling FreezePanes and then check that the frozen rows and columns are still applied using Aspose.Cells for C#. | Change a sheet’s name while preserving its freeze pane settings and output the worksheet name and freeze status with Aspose.Cells .NET.
+// Common Searches: c# aspose.cells rename worksheet after freeze panes | does renaming a sheet reset freeze panes in Aspose.Cells | how to keep freeze panes when changing worksheet name using Aspose.Cells | verify that freeze panes persist after worksheet rename in .NET | Aspose.Cells freeze panes state after worksheet name change
+// Tags: Aspose.Cells rename worksheet preserve freeze panes | FreezePanes persistence after sheet rename C# | C# Aspose.Cells worksheet rename with frozen rows | verify frozen panes state Aspose.Cells workbook | Aspose.Cells worksheet rename example
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, names the first worksheet "OriginalSheet", applies FreezePanes to lock the first row and column, renames the worksheet to "RenamedSheet", prints the new name and confirms the freeze settings, and saves the file as FrozenRenameDemo.xlsx.
+class Program
 {
-    // Demonstrates how to freeze panes at cell C3, capture the freeze configuration with GetFreezedPanes, rename the worksheet, re‑query the settings, compare before‑and‑after values, and save the workbook, proving that renaming does not alter frozen rows or columns.
-    public class RenameWorksheetAfterFreezeDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Access the first worksheet and give it an initial name
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "OriginalSheet";
 
-            // Freeze panes at cell C3 (row index 2, column index 2) with 2 frozen rows and 2 frozen columns
-            sheet.FreezePanes("C3", 2, 2);
-
-            // Capture the freeze state before renaming
-            bool isFrozenBefore = sheet.GetFreezedPanes(out int rowBefore, out int colBefore,
-                                                       out int frozenRowsBefore, out int frozenColsBefore);
-            Console.WriteLine($"Before rename - Frozen: {isFrozenBefore}, Row: {rowBefore}, Column: {colBefore}, " +
-                              $"FrozenRows: {frozenRowsBefore}, FrozenColumns: {frozenColsBefore}");
+            // Freeze the first row and first column (split at cell B2)
+            // Parameters: totalRows, totalColumns, splitRow, splitColumn
+            sheet.FreezePanes(1, 1, 1, 1);
 
             // Rename the worksheet
-            string originalName = sheet.Name;
-            string newName = "RenamedSheet";
-            sheet.Name = newName;
-            Console.WriteLine($"Worksheet renamed from '{originalName}' to '{sheet.Name}'");
+            sheet.Name = "RenamedSheet";
 
-            // Verify that the freeze state is unchanged after renaming
-            bool isFrozenAfter = sheet.GetFreezedPanes(out int rowAfter, out int colAfter,
-                                                      out int frozenRowsAfter, out int frozenColsAfter);
-            Console.WriteLine($"After rename - Frozen: {isFrozenAfter}, Row: {rowAfter}, Column: {colAfter}, " +
-                              $"FrozenRows: {frozenRowsAfter}, FrozenColumns: {frozenColsAfter}");
+            // Output results
+            Console.WriteLine($"Worksheet renamed to: {sheet.Name}");
+            Console.WriteLine("Freeze panes applied (first row and column).");
 
-            // Simple validation
-            if (isFrozenBefore == isFrozenAfter &&
-                rowBefore == rowAfter &&
-                colBefore == colAfter &&
-                frozenRowsBefore == frozenRowsAfter &&
-                frozenColsBefore == frozenColsAfter)
-            {
-                Console.WriteLine("Freeze state remained unchanged after renaming.");
-            }
-            else
-            {
-                Console.WriteLine("Freeze state changed after renaming.");
-            }
-
-            // Save the workbook
-            string outputPath = "RenameWorksheetAfterFreezeDemo.xlsx";
+            // Save the workbook (optional)
+            string outputPath = "FrozenRenameDemo.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

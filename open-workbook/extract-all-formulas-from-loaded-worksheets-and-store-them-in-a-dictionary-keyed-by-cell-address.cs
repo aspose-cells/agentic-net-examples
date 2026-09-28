@@ -1,63 +1,45 @@
-// Title: Extract Excel formulas into a C# Dictionary with Aspose.Cells
-// Description: Loads a workbook, forces formula parsing, walks every worksheet and populated cell, checks the IsFormula flag, and stores each cell's A1 address together with its formula text in a Dictionary<string,string> that is returned to the caller.
-// Keywords: Aspose.Cells formula extraction | C# Excel formula dictionary | parse formulas after load | .NET read Excel formulas | cell address to formula mapping | global | Aspose.Cells API
-// Common Searches: Aspose.Cells get all formulas C# | dictionary of cell formulas Aspose | extract Excel formulas programmatically | iterate worksheets and collect formulas | force formula parsing Aspose.Cells
-// Developer Intent: Collect every formula in a workbook and map it to its A1 cell reference.
-// Use Cases: Generate an audit list of all formula cells for compliance reviews. | Batch‑replace or adjust formulas across multiple sheets before saving. | Export formula mappings to JSON, CSV, or a database for external analysis.
-// AI Prompts: Create a C# method that opens an Excel file with Aspose.Cells, ensures formulas are parsed, and returns a Dictionary<string,string> of cell addresses and their formulas. | Show how to traverse all worksheets and cells in Aspose.Cells, selecting only those where IsFormula is true. | Explain how to handle workbooks loaded with formula parsing disabled and still retrieve the formulas using Aspose.Cells.
+// Title: Extract all formulas from an Excel workbook using Aspose.Cells for .NET and map them to a Dictionary with SheetName!CellAddress keys
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, iterates every worksheet and cell, detects formula cells, and adds each formula to a Dictionary<string,string> using "SheetName!CellAddress" as the key. | Enhance the extraction logic to also capture array and shared formulas, ensuring each unique formula is stored with its full address key in the same dictionary. | Add code that serializes the populated Dictionary of formulas to a JSON file using System.Text.Json after the extraction loop.
+// Common Searches: how to get all cell formulas from an Excel file using Aspose.Cells in C# | Aspose.Cells C# iterate worksheets and collect formulas into a dictionary | store Excel formulas with sheet name prefix in a .NET dictionary using Aspose.Cells | extract array and shared formulas with Aspose.Cells .NET | serialize extracted Excel formulas to JSON using Aspose.Cells and System.Text.Json
+// Tags: Aspose.Cells formula extraction | C# dictionary keyed by sheet name and cell address | iterate worksheets cells Aspose.Cells | read Excel cell formulas .NET | serialize extracted formulas to JSON
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads a workbook, forces formula parsing, walks every worksheet and populated cell, checks the IsFormula flag, and stores each cell's A1 address together with its formula text in a Dictionary<string,string> that is returned to the caller.
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and every cell, checks for formulas, and stores each formula string in a Dictionary where the key combines the sheet name and cell address (e.g., Sheet1!A1). The collected formulas can then be printed or serialized to JSON.
 class FormulaExtractor
 {
-    // Loads a workbook from the given path and extracts all formulas.
-    // Returns a dictionary where the key is the cell address (e.g., "A1")
-    // and the value is the formula string (e.g., "=SUM(B1:B5)").
-    public static Dictionary<string, string> ExtractFormulas(string filePath)
+    static void Main()
     {
-        // Load the workbook (uses default LoadOptions)
-        Workbook workbook = new Workbook(filePath);
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Ensure that any formulas that were not parsed on load are parsed now.
-        // This avoids null or empty Formula values for cells that were loaded with parsing disabled.
-        workbook.ParseFormulas(false);
+        // Dictionary to hold formulas keyed by full cell address (SheetName!CellAddress)
+        Dictionary<string, string> formulas = new Dictionary<string, string>();
 
-        var formulas = new Dictionary<string, string>();
-
-        // Iterate through each worksheet in the workbook.
+        // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            Cells cells = sheet.Cells;
-
-            // Iterate through all cells that contain data in the worksheet.
-            foreach (Cell cell in cells)
+            // Iterate through all cells in the current worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                // Check if the cell actually contains a formula.
+                // Check if the cell contains a formula
                 if (cell.IsFormula)
                 {
-                    // cell.Name returns the address in A1 notation.
-                    formulas[cell.Name] = cell.Formula;
+                    // Build a unique key using sheet name and cell address (e.g., Sheet1!A1)
+                    string key = $"{sheet.Name}!{cell.Name}";
+
+                    // Store the formula string in the dictionary
+                    formulas[key] = cell.Formula;
                 }
             }
         }
 
-        return formulas;
-    }
-
-    // Example entry point demonstrating usage.
-    static void Main()
-    {
-        string inputPath = "input.xlsx"; // Path to the workbook to process.
-
-        Dictionary<string, string> formulaMap = ExtractFormulas(inputPath);
-
-        // Output the extracted formulas.
-        foreach (KeyValuePair<string, string> kvp in formulaMap)
+        // Example usage: print all extracted formulas
+        foreach (var kvp in formulas)
         {
-            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+            Console.WriteLine($"{kvp.Key} = {kvp.Value}");
         }
     }
 }

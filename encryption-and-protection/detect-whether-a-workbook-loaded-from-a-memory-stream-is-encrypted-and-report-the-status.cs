@@ -1,57 +1,63 @@
-// Title: Check if an Excel workbook in a MemoryStream is encrypted with Aspose.Cells for .NET
-// Description: Demonstrates using Aspose.Cells' FileFormatUtil to inspect a MemoryStream for encryption, loading the workbook with a password when required, and confirming the flag via Workbook.Settings.IsEncrypted.
-// Keywords: Aspose.Cells | C# | MemoryStream | encrypted workbook detection | FileFormatUtil | DetectFileFormat | Workbook.Settings.IsEncrypted | password‑protected Excel | load encrypted Excel | .NET Excel encryption check
-// Common Searches: Aspose.Cells detect password protected Excel from stream | C# determine if Excel file is encrypted before loading | How to check encryption of workbook in MemoryStream | Load encrypted Excel using Aspose.Cells LoadOptions | FileFormatUtil.IsEncrypted example
-// Developer Intent: Identify the encryption state of a workbook supplied as a stream and open it with the appropriate password only when required.
-// Use Cases: Screen user‑uploaded Excel files for password protection before processing | Automatically apply stored passwords when reading encrypted workbooks from network streams | Log encryption status of in‑memory Excel files for compliance audits | Skip decryption steps for unprotected files to improve performance | Provide a fallback for opening both encrypted and plain workbooks in a single routine
-// AI Prompts: Write a C# method that receives a MemoryStream and returns true if the stream contains an encrypted Excel workbook using Aspose.Cells. | Explain why FileFormatUtil.DetectFileFormat.IsEncrypted may differ from Workbook.Settings.IsEncrypted after loading. | Generate sample code that reads an encrypted workbook from a stream with a password supplied from configuration. | Create a try‑catch pattern for handling incorrect passwords when opening encrypted Excel files with Aspose.Cells. | Provide a PowerShell script that calls a .NET assembly to check Excel encryption status.
+// Title: Detect if an Excel workbook loaded from a MemoryStream is encrypted using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an XLSX file into a MemoryStream, attempts to open it with Aspose.Cells Workbook, and returns a Boolean indicating encryption without providing a password. | Show how to wrap the Workbook constructor in a try‑catch block that catches CellsException to identify password‑protected files. | Explain how to use LoadOptions with default settings to test workbook encryption status from a byte array.
+// Common Searches: Aspose.Cells C# check workbook encryption from byte array | how to know if an Excel file is password protected when loading from MemoryStream | detect encrypted XLSX using Aspose.Cells without password | C# determine if workbook requires a password before opening with Aspose.Cells | catch CellsException to identify protected Excel files in .NET
+// Tags: detect encrypted workbook Aspose.Cells | load Excel from MemoryStream Aspose.Cells | catch CellsException for encryption detection | password‑protected Excel detection C# | Workbook encryption check without password
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionCheck
+// The example reads an XLSX file into a byte array, creates a MemoryStream, and attempts to load it with Aspose.Cells Workbook using default LoadOptions. A try‑catch block captures CellsException, which indicates the workbook is password‑protected, allowing the program to report the encryption status as a Boolean.
+class Program
 {
-    // Demonstrates using Aspose.Cells' FileFormatUtil to inspect a MemoryStream for encryption, loading the workbook with a password when required, and confirming the flag via Workbook.Settings.IsEncrypted.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the Excel file (could be encrypted or not)
-            string filePath = "sample.xlsx";
+            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Load the file into a memory stream
-            using (MemoryStream memoryStream = new MemoryStream(File.ReadAllBytes(filePath)))
+        try
+        {
+            // Load the workbook bytes into a memory stream
+            byte[] workbookBytes = File.ReadAllBytes(inputPath);
+            using (MemoryStream memoryStream = new MemoryStream(workbookBytes))
             {
-                // Detect file format information directly from the stream
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(memoryStream);
-                Console.WriteLine($"Is the workbook encrypted (detected from stream)? {formatInfo.IsEncrypted}");
+                // Load options without specifying a password
+                LoadOptions loadOptions = new LoadOptions();
 
-                // Reset stream position before any further operations
-                memoryStream.Position = 0;
+                bool isEncrypted = false;
+                Workbook workbook = null;
 
-                // If the workbook is encrypted, load it with a password (replace with actual password)
-                Workbook workbook;
-                if (formatInfo.IsEncrypted)
+                try
                 {
-                    // Example password; replace with the correct one for your file
-                    string password = "yourPassword";
-
-                    LoadOptions loadOptions = new LoadOptions
-                    {
-                        Password = password
-                    };
+                    // Attempt to load the workbook; if it succeeds, the file is not encrypted
                     workbook = new Workbook(memoryStream, loadOptions);
+                    isEncrypted = false;
                 }
-                else
+                catch (CellsException)
                 {
-                    // Load normally when not encrypted
-                    workbook = new Workbook(memoryStream);
+                    // Loading failed – most likely because the workbook is password protected
+                    isEncrypted = true;
+                }
+                catch (Exception ex)
+                {
+                    // Unexpected error while loading the workbook
+                    Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                    return;
                 }
 
-                // After loading, you can also check the Settings.IsEncrypted property
-                Console.WriteLine($"Is the loaded workbook encrypted (Workbook.Settings.IsEncrypted)? {workbook.Settings.IsEncrypted}");
+                Console.WriteLine($"Workbook encrypted: {isEncrypted}");
             }
+        }
+        catch (Exception ex)
+        {
+            // General exception handling for file I/O or other runtime errors
+            Console.WriteLine($"Runtime error: {ex.Message}");
         }
     }
 }

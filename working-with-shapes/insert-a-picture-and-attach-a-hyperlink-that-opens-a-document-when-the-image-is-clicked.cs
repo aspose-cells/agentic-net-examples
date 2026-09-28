@@ -1,49 +1,51 @@
-// Title: Insert a linked picture with clickable hyperlink in Excel using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a linked picture at a specific cell range, attach a file‑based hyperlink to the image, and save the file as an .xlsx document with Aspose.Cells C# API.
-// Keywords: Aspose.Cells C# picture hyperlink | AddLinkedPicture Aspose.Cells | Excel image click opens document | AddHyperlink to shape Aspose | linked picture Excel .NET | clickable image Excel workbook | Aspose.Cells example PDF hyperlink
-// Common Searches: Aspose.Cells add picture with hyperlink C# | How to make an Excel image open a PDF using Aspose | Insert linked picture and attach hyperlink in .NET | Clickable image in Excel workbook Aspose.Cells | AddHyperlink to picture shape Aspose.Cells example
-// Developer Intent: Place an image in a worksheet and make it open a target document when the user clicks the picture.
-// Use Cases: Product catalog where each thumbnail links to its spec sheet PDF. | Interactive dashboard icons that launch related reports or manuals. | Training workbook with screenshots that open detailed guide files.
-// AI Prompts: Generate C# code with Aspose.Cells to insert a picture from a URL and assign a web‑page hyperlink. | Show how to calculate picture dimensions based on cell size and set the position dynamically. | Provide robust error handling for missing image files or invalid hyperlink URIs when adding a picture hyperlink.
+// Title: Insert a PNG image into an Excel worksheet and attach a clickable hyperlink to a DOCX file using Aspose.Cells for .NET (C#)
+// AI Prompts: Add a picture to cell B2 of a new workbook and set its Hyperlink.Address to a .docx file with Aspose.Cells in C#. | Create an Excel file, embed a PNG, and make the image open a target document when clicked using the Aspose.Cells API. | Programmatically attach a hyperlink to a Picture object in Aspose.Cells and save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# insert image and link it to a Word document | set hyperlink on picture in Excel using Aspose.Cells for .NET | clickable image in generated XLSX that opens a DOCX file with Aspose.Cells
+// Tags: insert picture Aspose.Cells C# | picture hyperlink Aspose.Cells | add png to worksheet Aspose.Cells | hyperlink property for picture Aspose.Cells | link image to docx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPictureHyperlinkDemo
+// The example creates a new workbook, inserts a PNG image at cell B2, assigns a hyperlink that points to a DOCX file to the picture, and saves the result as an XLSX file.
+class Program
 {
-    // Demonstrates how to create a workbook, add a linked picture at a specific cell range, attach a file‑based hyperlink to the image, and save the file as an .xlsx document with Aspose.Cells C# API.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Path to the image that will be inserted
+            string imagePath = "sample.png";
 
-            // Define picture location and size (in pixels)
-            int topRow = 2;      // Row index (0‑based)
-            int leftColumn = 2;  // Column index (0‑based)
-            int pictureHeight = 150;
-            int pictureWidth = 150;
+            // Ensure the image file exists to avoid FileNotFoundException
+            if (!File.Exists(imagePath))
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
-            // Path to the image file to be linked (can be a local file or a URL)
-            string imagePath = @"C:\Images\sample.jpg";
-
-            // Add a linked picture to the worksheet
-            Picture picture = worksheet.Shapes.AddLinkedPicture(topRow, leftColumn, pictureHeight, pictureWidth, imagePath);
+            // Insert the picture at cell B2 (row index 1, column index 1)
+            // (lifecycle rule: insert picture)
+            int pictureIdx = sheet.Pictures.Add(1, 1, imagePath);
+            Picture picture = sheet.Pictures[pictureIdx];
 
             // Attach a hyperlink to the picture that opens a document when clicked
-            // Example: opening a PDF document located on the local file system
-            string documentHyperlink = @"file:///C:/Documents/TargetDocument.pdf";
-            picture.AddHyperlink(documentHyperlink);
+            // The Hyperlink object is read‑only; set its Address property directly
+            picture.Hyperlink.Address = "targetDocument.docx";
 
-            // Save the workbook to a file
-            workbook.Save("Workbook_With_Picture_Hyperlink.xlsx");
-
-            Console.WriteLine("Workbook saved successfully with a picture hyperlink.");
+            // Save the workbook (lifecycle rule: save)
+            string resultPath = "Result.xlsx";
+            workbook.Save(resultPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

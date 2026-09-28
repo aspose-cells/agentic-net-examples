@@ -1,58 +1,48 @@
-// Title: C# CLI Tool to Load an Excel Workbook, Optionally Add a Custom Property, and Dispose with Aspose.Cells
-// Description: A concise .NET console application that accepts a file path, opens the workbook via Aspose.Cells, adds a custom document property when a name/value pair is supplied, and automatically disposes the Workbook using a `using` block. No file is saved, making it ideal for validation or metadata tagging tasks.
-// Keywords: Aspose.Cells C# | CLI workbook loader | add custom document property | Workbook.Dispose | using statement | Excel file command line | batch Excel processing | CI pipeline Excel tag | GitHub Aspose.Cells example | code snippet C# console
-// Common Searches: how to open an Excel file with Aspose.Cells in C# console | add custom document property using Aspose.Cells | ensure Workbook.Dispose is called in .NET | C# command line tool for Aspose.Cells | sample code for loading and disposing a workbook
-// Developer Intent: Load a workbook from a path, optionally attach a custom property, and guarantee proper disposal.
-// Use Cases: Tag a batch of Excel files with metadata before archiving. | Validate that workbooks can be opened and resources released in CI builds. | Create a lightweight utility for automated property injection without persisting changes.
-// AI Prompts: Write a C# console program that uses Aspose.Cells to open a workbook from a command‑line path, adds a custom document property if two extra arguments are provided, and disposes the workbook automatically. | Show how to modify the code to save the workbook after adding the property while still using a `using` block for disposal. | Explain the resources released by Aspose.Cells when `Workbook.Dispose` is invoked inside a `using` statement.
+// Title: C# command‑line program to load an Excel workbook with Aspose.Cells, add a custom document property, and ensure proper disposal
+// AI Prompts: Generate a C# console application that accepts an Excel file path argument, opens the file with Aspose.Cells.Workbook, adds a custom document property named "OptionalProperty" with the value "OptionalValue", and disposes the workbook in a finally block. | Extend the console app to allow the property name and value to be supplied as optional command‑line parameters, defaulting to "OptionalProperty" and "OptionalValue" when omitted, while still guaranteeing workbook disposal. | Implement robust error handling for the console tool that logs any exceptions during workbook loading or property addition and ensures the Workbook object is always disposed, even on failure.
+// Common Searches: how to add a custom document property to an Excel file using Aspose.Cells in a C# console application | C# command line tool for loading an Excel workbook with Aspose.Cells and releasing resources | example of disposing Aspose.Cells Workbook safely in .NET console app | Aspose.Cells command line program to set optional property and close workbook | using Aspose.Cells to add custom properties from command line arguments in C#
+// Tags: aspocells add custom document property | aspocells workbook disposal .net | c# console load excel aspocells | command line excel processing aspocells | optional custom property workbook aspocells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCommandLine
 {
-    // A concise .NET console application that accepts a file path, opens the workbook via Aspose.Cells, adds a custom document property when a name/value pair is supplied, and automatically disposes the Workbook using a `using` block. No file is saved, making it ideal for validation or metadata tagging tasks.
+    // A C# console utility that reads an Excel file path from the command line, loads the workbook with Aspose.Cells, adds (or overwrites) a custom document property called "OptionalProperty" with a default value "OptionalValue", handles any loading errors, and guarantees the Workbook is disposed to free resources.
     class Program
     {
         static void Main(string[] args)
         {
-            // Expect at least the workbook file path.
-            if (args.Length < 1)
+            // Verify that a file path argument was provided
+            if (args.Length == 0)
             {
-                Console.WriteLine("Usage: AsposeCellsCommandLine <filePath> [propertyName propertyValue]");
+                Console.WriteLine("Usage: AsposeCellsCommandLine <excel-file-path>");
                 return;
             }
 
             string filePath = args[0];
 
-            // Load the workbook using the constructor that accepts a file path.
-            // This follows the provided create/load rule: Workbook(string file)
-            using (Workbook workbook = new Workbook(filePath))
+            // Load the workbook from the specified file
+            Workbook workbook = null;
+            try
             {
-                // If a property name and value are supplied, add a custom document property.
-                if (args.Length >= 3)
-                {
-                    string propertyName = args[1];
-                    string propertyValue = args[2];
+                workbook = new Workbook(filePath);
 
-                    // Add the custom property to the workbook.
-                    // The CustomDocumentProperties collection provides an Add method.
-                    workbook.CustomDocumentProperties.Add(propertyName, propertyValue);
+                // Add an optional custom document property
+                // If the property already exists, it will be overwritten
+                workbook.CustomDocumentProperties.Add("OptionalProperty", "OptionalValue");
 
-                    Console.WriteLine($"Added custom property: {propertyName} = {propertyValue}");
-                }
-                else
-                {
-                    Console.WriteLine("No custom property specified; workbook loaded only.");
-                }
-
-                // No explicit save is required per the task description.
-                // The workbook will be disposed automatically by the using statement,
-                // which invokes Workbook.Dispose() as defined in the API.
+                // Optionally, you could perform additional operations here
             }
-
-            // At this point the workbook has been disposed.
-            Console.WriteLine("Workbook disposed.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing workbook: {ex.Message}");
+            }
+            finally
+            {
+                // Ensure the workbook is properly disposed to release resources
+                workbook?.Dispose();
+            }
         }
     }
 }

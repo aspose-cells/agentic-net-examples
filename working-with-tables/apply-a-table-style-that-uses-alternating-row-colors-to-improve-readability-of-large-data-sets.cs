@@ -1,62 +1,64 @@
-// Title: C# – Apply Alternating Row Stripe Table Style with Aspose.Cells
-// Description: Shows how to build a 100‑row × 5‑column worksheet, create a ListObject, set the built‑in TableStyleMedium2, turn on row banding, turn off column banding, and save the file as an XLSX workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# table style | row banding | Excel row stripes | ListObject styling | TableStyleMedium2 | disable column stripes | programmatic Excel formatting | large data set | alternating colors
-// Common Searches: Aspose.Cells enable row stripes in a table | C# set built‑in table style with banded rows | how to hide column banding while keeping row banding in Excel via code | create ListObject with alternating row colors using Aspose.Cells | apply TableStyleMedium2 programmatically
-// Developer Intent: The developer wants to programmatically add a table to a worksheet and use alternating row colors to make a large dataset easier to read.
-// Use Cases: Produce a multi‑page report where the table rows are shaded alternately for quick visual scanning. | Export database query results to Excel with a predefined style that highlights rows but not columns. | Standardize the appearance of generated spreadsheets across an organization by applying a built‑in striped table style.
-// AI Prompts: Generate C# code that toggles row and column stripe visibility for an Aspose.Cells ListObject. | Explain how to choose a different built‑in table style that includes row banding in Aspose.Cells for .NET. | Write a reusable method to apply a striped table style to any worksheet range using Aspose.Cells.
+// Title: Apply a built-in banded-row table style to a 100-row Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a 100-row, 5-column worksheet, adds a ListObject, and applies TableStyleMedium2 with row stripes. | Show how to enable row stripe visibility on an Aspose.Cells ListObject while disabling column stripes. | Provide a complete example that saves the styled table to an .xlsx file and outputs a success message.
+// Common Searches: Aspose.Cells C# how to add a table with alternating row colors | C# Aspose.Cells apply built-in table style with banded rows | Set ShowTableStyleRowStripes property in Aspose.Cells ListObject example | Create Excel table with TableStyleMedium2 using Aspose.Cells .NET | Save styled Excel table to file with Aspose.Cells C#
+// Tags: Aspose.Cells apply TableStyleMedium2 | C# ListObject alternating row colors | Aspose.Cells enable row stripes | Excel table styling with Aspose.Cells .NET | save styled worksheet Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject and TableStyleType
 
-namespace AsposeCellsTableRowStripesDemo
+// The example creates a new workbook, fills a 100‑row by 5‑column range with sample data, adds a ListObject covering that range, sets TableStyleType to TableStyleMedium2, enables row stripe display, disables column stripes, and saves the workbook as StyledTable.xlsx.
+class Program
 {
-    // Shows how to build a 100‑row × 5‑column worksheet, create a ListObject, set the built‑in TableStyleMedium2, turn on row banding, turn off column banding, and save the file as an XLSX workbook using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook.
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate a large data set (e.g., 100 rows × 5 columns)
-            // Add header row
-            for (int col = 0; col < 5; col++)
+            // Populate the worksheet with sample data (e.g., 100 rows, 5 columns).
+            int totalRows = 100;
+            int totalColumns = 5;
+            for (int row = 0; row < totalRows; row++)
             {
-                cells[0, col].PutValue($"Header {col + 1}");
-            }
-
-            // Add data rows
-            for (int row = 1; row <= 100; row++)
-            {
-                for (int col = 0; col < 5; col++)
+                for (int col = 0; col < totalColumns; col++)
                 {
-                    cells[row, col].PutValue($"R{row}C{col + 1}");
+                    // Fill each cell with a simple value for demonstration.
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
-            // Create a ListObject (table) that covers the data range
+            // Define the range that will become a table (list object).
             int firstRow = 0;
             int firstColumn = 0;
-            int lastRow = 100;      // zero‑based index
-            int lastColumn = 4;
+            int lastRow = totalRows - 1;
+            int lastColumn = totalColumns - 1;
+
+            // Add a ListObject (table) to the worksheet.
             int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
             ListObject table = sheet.ListObjects[tableIndex];
 
-            // Apply a built‑in table style that supports row stripes
+            // Apply a built‑in table style that includes alternating row colors (banded rows).
             table.TableStyleType = TableStyleType.TableStyleMedium2;
 
-            // Enable alternating row colors (row stripe formatting)
+            // Ensure that row stripes (alternating colors) are displayed.
+            table.ShowTableStyleFirstColumn = false;
+            table.ShowTableStyleLastColumn = false;
             table.ShowTableStyleRowStripes = true;
-
-            // Optionally, disable column stripes if only row stripes are desired
             table.ShowTableStyleColumnStripes = false;
 
-            // Save the workbook
-            workbook.Save("TableWithRowStripes.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a file.
+            string outputPath = "StyledTable.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

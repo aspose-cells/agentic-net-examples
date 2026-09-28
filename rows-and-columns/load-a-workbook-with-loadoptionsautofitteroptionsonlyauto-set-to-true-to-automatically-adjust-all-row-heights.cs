@@ -1,40 +1,32 @@
-// Title: C# – Load Excel with Aspose.Cells AutoFitterOptions.OnlyAuto to auto‑fit rows
-// Description: Shows how to configure LoadOptions with AutoFitterOptions.OnlyAuto = true so that Aspose.Cells automatically adjusts the height of rows that are not manually sized when a workbook is opened.
-// Keywords: Aspose.Cells | AutoFitterOptions | OnlyAuto | LoadOptions | C# | auto‑fit rows | Excel row height | load workbook | adjust row height | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells load workbook auto‑fit rows C# | AutoFitterOptions OnlyAuto example | How to auto‑adjust row heights on load with Aspose.Cells | C# load Excel file with automatic row height | Aspose.Cells LoadOptions row height settings
-// Developer Intent: Automatically adjust non‑custom row heights while loading an Excel file using Aspose.Cells.
-// Use Cases: Open existing spreadsheets and ensure all default rows fit their content without altering manually sized rows. | Validate row height after loading to confirm auto‑fit behavior. | Batch‑process multiple workbooks, applying OnlyAuto auto‑fit during load before further data manipulation.
-// AI Prompts: Generate C# code that loads an Excel workbook with LoadOptions.AutoFitterOptions.OnlyAuto set to true and saves it. | Explain the effect of AutoFitterOptions.OnlyAuto on rows with custom heights versus default rows. | Combine AutoFitterOptions.OnlyAuto with other LoadOptions features, such as loading specific worksheets or preserving formulas.
+// Title: Automatically adjust non‑custom row heights when loading an Excel workbook with Aspose.Cells LoadOptions.AutoFitterOptions.OnlyAuto (C#)
+// AI Prompts: Load an .xlsx file using Aspose.Cells, set LoadOptions.AutoFitterOptions.OnlyAuto to true, and let the library auto‑fit rows that have default heights during the load. | Create a LoadOptions object, enable the OnlyAuto flag for row auto‑fit, open the workbook with these options, and save the modified file to a new location. | Modify the sample to also auto‑fit columns on load while preserving the OnlyAuto row‑height behavior.
+// Common Searches: Aspose.Cells C# load workbook with automatic row height adjustment only for default rows | How to enable OnlyAuto in AutoFitterOptions when loading an Excel file with Aspose.Cells | Auto‑fit rows on workbook load using LoadOptions in .NET | Load Excel file and auto‑fit row heights without affecting manually set heights Aspose.Cells | C# example for LoadOptions.AutoFitterOptions OnlyAuto true
+// Tags: Aspose.Cells LoadOptions AutoFitterOptions OnlyAuto | row height auto‑adjust during load | exclude custom row heights from auto‑fit | C# load Excel with automatic row height handling | default row height auto‑fit Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Shows how to configure LoadOptions with AutoFitterOptions.OnlyAuto = true so that Aspose.Cells automatically adjusts the height of rows that are not manually sized when a workbook is opened.
-class Program
+// // Loads an Excel workbook with LoadOptions.AutoFitterOptions.OnlyAuto = true, causing rows that use the default height to be auto‑fitted automatically, then saves the workbook.
+class AutoFitRowsOnLoad
 {
     static void Main()
     {
-        // Create AutoFitterOptions and enable OnlyAuto to auto‑fit rows that are not custom‑sized
-        AutoFitterOptions autoFitOptions = new AutoFitterOptions
+        // Paths to the source and destination files
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Create LoadOptions and configure AutoFitterOptions
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.AutoFitterOptions = new AutoFitterOptions
         {
+            // Only rows whose height is not customed will be auto‑fitted
             OnlyAuto = true
         };
 
-        // Assign the options to LoadOptions
-        LoadOptions loadOptions = new LoadOptions
-        {
-            AutoFitterOptions = autoFitOptions
-        };
+        // Load the workbook with the specified options (rows are auto‑fitted during load)
+        Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Load the workbook with the specified load options
-        // This will automatically adjust all row heights according to the OnlyAuto setting
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Example: output the height of the first row after loading
-        double firstRowHeight = workbook.Worksheets[0].Cells.GetRowHeight(0);
-        Console.WriteLine("First row height after auto‑fit: " + firstRowHeight);
-
-        // Save the workbook (using the standard save rule)
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+        // Save the workbook after loading
+        workbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

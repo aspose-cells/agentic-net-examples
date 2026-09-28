@@ -1,77 +1,63 @@
-// Title: Aspose.Cells for .NET – Create a Table of Contents worksheet with hyperlinks to every sheet
-// Description: C# example that builds a new Workbook, adds sample worksheets, inserts a "Table of Contents" sheet at the first position, lists each sheet name in column A and creates a hyperlink to the sheet's A1 cell, then saves the file as WorkbookWithTOC.xlsx.
-// Keywords: Aspose.Cells .NET | C# Excel Table of Contents | worksheet hyperlinks | generate Excel TOC programmatically | navigation sheet Aspose.Cells | Excel workbook automation | hyperlink to sheet A1 | insert worksheet at index 0 | GitHub Aspose.Cells example | coding‑agent Excel TOC
-// Common Searches: how to add a table of contents sheet with links using Aspose.Cells | Aspose.Cells create TOC for multi‑sheet workbook C# | C# generate Excel navigation sheet with hyperlinks | insert Table of Contents as first worksheet Aspose.Cells | programmatic Excel TOC example .NET
-// Developer Intent: Programmatically add a clickable Table of Contents sheet to an Excel workbook created with Aspose.Cells.
-// Use Cases: Produce a navigable TOC for large reports so readers can jump directly to each data section. | Build a reusable template that automatically inserts a summary sheet with links for any generated workbook. | Create an internal dashboard where the first sheet lists all analysis tabs with one‑click access.
-// AI Prompts: Show how to add sheet index numbers and custom styling (font size, color) to each TOC entry. | Give an example that skips hidden or template worksheets when building the Table of Contents. | Explain how to add a second column with user‑defined descriptions while keeping the hyperlinks functional.
+// Title: How to generate a Table of Contents worksheet with clickable links to each sheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to insert a 'Table of Contents' sheet at the start of a workbook and adds hyperlinks from each entry to the A1 cell of the corresponding worksheet. | Show an example that creates several worksheets, builds a TOC sheet, writes sheet names with a bold header, applies auto‑fit to the column, and saves the file as an .xlsx. | Demonstrate looping through all worksheets (excluding the TOC) and adding Hyperlink objects that point to each sheet's first cell using the Aspose.Cells API.
+// Common Searches: aspnet c# add table of contents to Excel workbook with Aspose.Cells | aspose.cells create worksheet hyperlinks for a TOC sheet | generate Excel TOC sheet programmatically using Aspose.Cells .NET | how to auto fit columns after populating data with Aspose.Cells | C# example linking TOC entries to sheet A1 using Aspose.Cells
+// Tags: Aspose.Cells generate TOC worksheet | Aspose.Cells add worksheet hyperlinks | Aspose.Cells auto fit columns | Aspose.Cells hyperlink to sheet A1 | Aspose.Cells build TOC from worksheet collection
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExamples
+// The sample creates a new workbook, adds several worksheets, inserts a 'Table of Contents' sheet at the first position, lists each worksheet name (excluding the TOC) in column A, adds hyperlinks to each sheet's A1 cell, auto‑fits the column width, and saves the workbook as WorkbookWithTOC.xlsx.
+class Program
 {
-    // C# example that builds a new Workbook, adds sample worksheets, inserts a "Table of Contents" sheet at the first position, lists each sheet name in column A and creates a hyperlink to the sheet's A1 cell, then saves the file as WorkbookWithTOC.xlsx.
-    public class TableOfContentsDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the worksheet collection
-            WorksheetCollection sheets = workbook.Worksheets;
+            // Add sample worksheets (replace or remove as needed)
+            workbook.Worksheets.Add("Introduction");
+            workbook.Worksheets.Add("Data");
+            workbook.Worksheets.Add("Analysis");
+            workbook.Worksheets.Add("Conclusion");
 
-            // Add sample worksheets that will become headings in the TOC
-            sheets.Add("SalesData");
-            sheets.Add("Inventory");
-            sheets.Add("Summary Report");
+            // Insert a Table of Contents sheet at the first position
+            Worksheet tocSheet = workbook.Worksheets[0];
+            tocSheet.Name = "Table of Contents";
 
-            // Insert a new worksheet at the beginning to serve as the Table of Contents
-            Worksheet tocSheet = sheets.Insert(0, SheetType.Worksheet, "TableOfContents");
+            // Header for TOC
+            tocSheet.Cells["A1"].PutValue("Table of Contents");
+            Style headerStyle = tocSheet.Cells["A1"].GetStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Size = 14;
+            tocSheet.Cells["A1"].SetStyle(headerStyle);
 
-            // Set a title for the TOC sheet
-            Cell titleCell = tocSheet.Cells["A1"];
-            titleCell.PutValue("Table of Contents");
-            // Apply bold font to the title
-            Style titleStyle = titleCell.GetStyle();
-            titleStyle.Font.IsBold = true;
-            titleCell.SetStyle(titleStyle);
-
-            // Start listing entries from row 3 (index 2) to leave space after the title
-            int tocRow = 2;
-
-            // Iterate over all worksheets except the TOC sheet itself
-            for (int i = 1; i < sheets.Count; i++)
+            // List each worksheet (skip the TOC itself) and add a hyperlink to its A1 cell
+            int row = 2; // start from row 2
+            for (int i = 1; i < workbook.Worksheets.Count; i++)
             {
-                Worksheet sheet = sheets[i];
+                Worksheet ws = workbook.Worksheets[i];
 
-                // Write the sheet name in column A
-                tocSheet.Cells[tocRow, 0].PutValue(sheet.Name);
+                // Write sheet name
+                tocSheet.Cells[row, 0].PutValue(ws.Name);
 
-                // Create a hyperlink from the cell to the corresponding sheet's A1 cell
-                string address = $"'{sheet.Name}'!A1";
-                tocSheet.Hyperlinks.Add(tocRow, 0, 1, 1, address);
+                // Add hyperlink pointing to the sheet's A1 cell
+                // Hyperlinks.Add(row, column, totalRows, totalColumns, address)
+                tocSheet.Hyperlinks.Add(row, 0, 1, 1, ws.Name + "!A1");
 
-                tocRow++;
+                row++;
             }
 
+            // Adjust column width to fit content
+            tocSheet.AutoFitColumns();
+
             // Save the workbook
-            string outputPath = "WorkbookWithTOC.xlsx";
-            workbook.Save(outputPath);
+            workbook.Save("WorkbookWithTOC.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

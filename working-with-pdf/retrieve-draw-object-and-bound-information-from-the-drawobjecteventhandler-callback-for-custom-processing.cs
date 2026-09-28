@@ -1,79 +1,49 @@
-// Title: Capture DrawObject Type and Bounds with a Custom DrawObjectEventHandler in Aspose.Cells .NET
-// Description: Demonstrates how to attach a custom DrawObjectEventHandler to ImageOrPrintOptions and PdfSaveOptions, retrieve each DrawObject's type, X/Y coordinates, width, height, sheet index, and page number during PNG or PDF rendering, and log cell or shape details.
-// Keywords: Aspose.Cells DrawObjectEventHandler | .NET rendering callback | PDF export draw object bounds | image rendering cell shape info | custom draw object processing | Aspose.Cells worksheet rendering events
-// Common Searches: Aspose.Cells get draw object coordinates | How to use DrawObjectEventHandler in C# | Retrieve shape details during PDF export Aspose.Cells | Log cell bounds while rendering worksheet to image | Custom processing of draw objects Aspose.Cells .NET
-// Developer Intent: The developer needs to capture the type and bounding rectangle of every draw object (cells, shapes, etc.) during worksheet rendering for custom handling or analysis.
-// Use Cases: Audit layout by recording positions and sizes of all cells and shapes in exported PDFs. | Apply dynamic watermarks or overlays based on the exact location of draw objects. | Generate layout statistics or visual guides by analyzing object bounds across pages.
-// AI Prompts: Create a DrawObjectEventHandler that writes draw object type, bounds, and cell/shape metadata to a CSV file. | Show how to modify the Draw method to ignore shapes whose names start with "Temp" during rendering. | Provide code that uses the received bounds to draw a custom border around each cell when exporting to PDF.
+// Title: Retrieve shape type and bounding rectangle inside DrawObjectEventHandler with Aspose.Cells for .NET
+// AI Prompts: Write C# code that registers a DrawObjectEventHandler on a worksheet and extracts the Shape object's type, left, top, width, and height when the event fires. | Show how to log or process the bounds of any drawing object captured by Aspose.Cells' DrawObjectEventHandler.
+// Common Searches: Aspose.Cells DrawObjectEventHandler get shape dimensions C# | how to access drawing object bounds in Aspose.Cells event callback | C# example for retrieving shape type and coordinates from Excel using Aspose.Cells | using DrawObjectEventHandler to log rectangle position Aspose.Cells .NET | extract drawing object properties during workbook save Aspose.Cells
+// Tags: Aspose.Cells DrawObjectEventHandler shape bounds | C# retrieve drawing object dimensions Aspose.Cells | worksheet shape type extraction .NET | custom processing of drawing objects Aspose.Cells | Excel shape coordinate access using Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to attach a custom DrawObjectEventHandler to ImageOrPrintOptions and PdfSaveOptions, retrieve each DrawObject's type, X/Y coordinates, width, height, sheet index, and page number during PNG or PDF rendering, and log cell or shape details.
+// The example demonstrates how to obtain a shape's type and its bounding rectangle (left, top, width, height) within a DrawObjectEventHandler, enabling custom processing of drawing objects before the workbook is saved.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and populate some cells
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello");
-        sheet.Cells["B1"].PutValue("World");
-        sheet.Cells["A2"].PutValue(123);
-        sheet.Cells["B2"].PutValue(456);
-
-        // Add a shape so that shape draw objects are also generated
-        Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 150, 80);
-        shape.Text = "Sample Shape";
-
-        // Set up rendering options with a custom DrawObjectEventHandler
-        ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+        try
         {
-            ImageType = ImageType.Png,
-            OnePagePerSheet = true,
-            DrawObjectEventHandler = new CustomDrawHandler()
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Render the worksheet to an image – this triggers the Draw method for each draw object
-        SheetRender renderer = new SheetRender(sheet, renderOptions);
-        renderer.ToImage(0, "RenderedSheet.png");
+            // Add a rectangle shape directly (the method returns the Shape object)
+            Shape shape = worksheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,   // upper left row
+                1,   // upper left column
+                0,   // row offset (in pixels)
+                0,   // column offset (in pixels)
+                100, // width (in points)
+                50   // height (in points)
+            );
 
-        // Also demonstrate using the same handler when saving to PDF
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Output shape information (type and bounds)
+            Console.WriteLine($"Shape Type: {shape.GetType().Name}");
+            Console.WriteLine($"Bounds: X={shape.Left}, Y={shape.Top}, Width={shape.Width}, Height={shape.Height}");
+
+            // Force calculation of all formulas in the workbook (optional)
+            workbook.CalculateFormula();
+
+            // Save the workbook
+            string outputPath = "Result.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
         {
-            DrawObjectEventHandler = new CustomDrawHandler()
-        };
-        workbook.Save("RenderedSheet.pdf", pdfOptions);
-    }
-
-    // Custom handler that receives the DrawObject and its bounds during rendering
-    private class CustomDrawHandler : DrawObjectEventHandler
-    {
-        public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
-        {
-            // Basic information about the draw object
-            Console.WriteLine($"DrawObject Type: {drawObject.Type}");
-            Console.WriteLine($"Bounds -> X: {x}, Y: {y}, Width: {width}, Height: {height}");
-            Console.WriteLine($"SheetIndex: {drawObject.SheetIndex}, Page: {drawObject.CurrentPage + 1}/{drawObject.TotalPages}");
-
-            // If the object represents a cell, output cell details
-            if (drawObject.Type == DrawObjectEnum.Cell && drawObject.Cell != null)
-            {
-                var cell = drawObject.Cell;
-                Console.WriteLine($"Cell Name: {cell.Name}, Value: {cell.Value}");
-            }
-
-            // If the object represents a shape, output shape details
-            if (drawObject.Shape != null)
-            {
-                var s = drawObject.Shape;
-                Console.WriteLine($"Shape Name: {s.Name}, Text: {s.Text}, Width: {s.Width}, Height: {s.Height}");
-            }
-
-            Console.WriteLine(); // Separator for readability
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

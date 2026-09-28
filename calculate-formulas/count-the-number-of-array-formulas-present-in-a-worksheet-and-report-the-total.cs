@@ -1,58 +1,45 @@
-// Title: Count legacy and dynamic array formulas in an Aspose.Cells worksheet (C#)
-// Description: This example creates a workbook, inserts a CSE‑style array formula and a dynamic array formula, forces calculation so the spill range materializes, then scans all used cells using the IsArrayFormula and IsDynamicArrayFormula flags to compute the total number of array‑formula cells and outputs the count.
-// Keywords: Aspose.Cells array formula count | C# IsArrayFormula | IsDynamicArrayFormula | legacy CSE array | dynamic spill formula | Excel audit .NET | spreadsheet automation | count array cells
-// Common Searches: Aspose.Cells count array formulas C# | detect dynamic array formulas with Aspose.Cells | enumerate legacy array formulas in Excel workbook C# | total array formula cells Aspose.Cells .NET | list spilled array cells Aspose.Cells
-// Developer Intent: Determine how many cells belong to any array formula—legacy or dynamic—in a worksheet.
-// Use Cases: Validate that a generated report contains the expected number of array calculations before distribution. | Create an audit report summarizing array‑formula usage across all worksheets in a large workbook. | Skip array‑formula cells during custom data‑processing loops. | Log the presence of spilled dynamic arrays prior to exporting data to CSV.
-// AI Prompts: Provide a C# function that returns a dictionary mapping each worksheet name to its array‑formula cell count using Aspose.Cells. | Show code to collect the addresses of every cell that participates in a dynamic array spill. | Explain the difference between IsArrayFormula and IsDynamicArrayFormula properties and when to use each.
+// Title: How to count both legacy CSE and dynamic array formulas in an Excel worksheet with Aspose.Cells for C#
+// AI Prompts: Write C# code using Aspose.Cells that scans every cell in a worksheet and returns the total number of cells where IsArrayFormula or IsDynamicArrayFormula is true. | Extend the example to also gather the addresses of all cells that contain an array formula while still providing the overall count.
+// Common Searches: Aspose.Cells count array formulas in .NET workbook | C# enumerate cells with IsDynamicArrayFormula property | detect legacy CSE array formulas using Aspose.Cells | retrieve total number of array formulas from Excel file with Aspose.Cells for C#
+// Tags: count array formulas Aspose.Cells C# | detect legacy CSE array formula Aspose.Cells | identify dynamic array formulas in workbook | iterate worksheet cells Aspose.Cells | array formula enumeration .xlsx C#
 
 using System;
 using Aspose.Cells;
 
-// This example creates a workbook, inserts a CSE‑style array formula and a dynamic array formula, forces calculation so the spill range materializes, then scans all used cells using the IsArrayFormula and IsDynamicArrayFormula flags to compute the total number of array‑formula cells and outputs the count.
+// The example creates a workbook, adds a legacy CSE array formula and a dynamic array formula, iterates through all cells checking IsArrayFormula and IsDynamicArrayFormula, counts the matching cells, prints the total count, and saves the workbook.
 class CountArrayFormulas
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();               // lifecycle: create
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Populate some sample data
-        cells["A1"].PutValue(1);
-        cells["A2"].PutValue(2);
-        cells["A3"].PutValue(3);
+        // -----------------------------------------------------------------
+        // Sample setup: add a few array formulas so the demo has something
+        // -----------------------------------------------------------------
+        // Legacy (CSE) array formula that spills over three rows
+        cells["A1"].SetArrayFormula("=SUM(B1:B3)", 3, 1);
 
-        // Add a legacy (CSE) array formula that spans 3 rows and 1 column
-        cells["B1"].SetArrayFormula("=A1:A3*2", 3, 1);
+        // Dynamic array formula (spills automatically)
+        cells["C1"].SetDynamicArrayFormula("=SEQUENCE(2,2)", new FormulaParseOptions(), true);
 
-        // Add a dynamic array formula (will spill into neighboring cells)
-        cells["D1"].SetDynamicArrayFormula("=SEQUENCE(4)", new FormulaParseOptions(), true);
-
-        // Calculate formulas so that the dynamic array spills are materialized
-        workbook.CalculateFormula();
-
-        // Count cells that contain either a legacy array formula or a dynamic array formula
+        // ---------------------------------------------------------------
+        // Count all cells that contain either a legacy or a dynamic array formula
+        // ---------------------------------------------------------------
         int arrayFormulaCount = 0;
-        int maxRow = cells.MaxDataRow;
-        int maxCol = cells.MaxDataColumn;
-
-        for (int row = 0; row <= maxRow; row++)
+        foreach (Cell cell in cells)
         {
-            for (int col = 0; col <= maxCol; col++)
+            if (cell.IsArrayFormula || cell.IsDynamicArrayFormula)
             {
-                Cell cell = cells[row, col];
-                if (cell.IsArrayFormula || cell.IsDynamicArrayFormula)
-                {
-                    arrayFormulaCount++;
-                }
+                arrayFormulaCount++;
             }
         }
 
         Console.WriteLine("Total array formulas in the worksheet: " + arrayFormulaCount);
 
-        // Save the workbook (optional)
+        // Save the workbook (optional, demonstrates lifecycle: save)
         workbook.Save("ArrayFormulaCountDemo.xlsx");
     }
 }

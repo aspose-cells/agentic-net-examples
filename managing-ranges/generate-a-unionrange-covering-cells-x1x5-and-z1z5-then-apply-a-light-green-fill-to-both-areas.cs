@@ -1,38 +1,41 @@
-// Title: Aspose.Cells C# – Create UnionRange X1:X5, Z1:Z5 and Apply Light‑Green Fill
-// Description: Shows how to build a UnionRange that merges the non‑adjacent cells X1:X5 and Z1:Z5 on the first worksheet, define a solid light‑green style, apply it to the range, and save the file as UnionRangeLightGreen.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | UnionRange | non‑adjacent range | light green fill | cell styling | Excel formatting | BackgroundType.Solid | StyleFlag | CreateUnionRange
-// Common Searches: Aspose.Cells create union range | C# apply background color to multiple ranges | Style non‑contiguous cells Aspose.Cells | UnionRange light green example | How to set fill color for union range in .NET
-// Developer Intent: Create a UnionRange for X1:X5 and Z1:Z5 and set a solid light‑green background on all cells.
-// Use Cases: Highlight separate columns in a financial dashboard with a uniform color. | Design input‑output sections in a template where the same styling is required for non‑adjacent cells. | Prepare a worksheet for data entry by visually grouping related ranges.
-// AI Prompts: Write C# code that creates a UnionRange covering X1:X5 and Z1:Z5 and applies a solid light‑green fill using Aspose.Cells. | Show how to style multiple non‑contiguous Excel ranges with a background color in Aspose.Cells for .NET. | Provide an example of defining a custom style and applying it to a UnionRange, then saving the workbook.
+// Title: Apply a light green fill to a union range covering X1:X5 and Z1:Z5 with Aspose.Cells for .NET
+// AI Prompts: Create a union range for cells X1:X5 and Z1:Z5 and set a solid light‑green background style using Aspose.Cells in C#. | Use Aspose.Cells to apply a light green fill to a non‑adjacent range defined by X1:X5,Z1:Z5 and save the workbook.
+// Common Searches: how to set background color for multiple non‑adjacent cells in Aspose.Cells C# | Aspose.Cells union range X1:X5 Z1:Z5 fill color example | C# code to apply solid light green style to a comma‑separated cell range in Aspose.Cells | create and style a union range with Aspose.Cells workbook | apply style to noncontiguous cells using Aspose.Cells CreateRange method
+// Tags: union range styling Aspose.Cells C# | noncontiguous cell fill color Aspose.Cells | light green fill style Aspose.Cells | CreateRange with comma separated addresses Aspose.Cells | StyleFlag All property Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 using System.Drawing;
 
-// Shows how to build a UnionRange that merges the non‑adjacent cells X1:X5 and Z1:Z5 on the first worksheet, define a solid light‑green style, apply it to the range, and save the file as UnionRangeLightGreen.xlsx using Aspose.Cells for .NET.
+// The program creates a new workbook, defines a union range covering X1:X5 and Z1:Z5, applies a solid light‑green fill style to the range, and saves the file as UnionRangeLightGreen.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-        // Get the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Create a union range that includes cells X1:X5 and Z1:Z5
+            var unionRange = worksheet.Cells.CreateRange("X1:X5,Z1:Z5");
 
-        // Create a union range that covers X1:X5 and Z1:Z5
-        UnionRange unionRange = workbook.Worksheets.CreateUnionRange("X1:X5,Z1:Z5", 0);
+            // Define a style with a light green solid fill
+            var style = workbook.CreateStyle();
+            style.ForegroundColor = Color.LightGreen;
+            style.Pattern = BackgroundType.Solid;
 
-        // Define a style with a solid light green fill
-        Style style = workbook.CreateStyle();
-        style.Pattern = BackgroundType.Solid;
-        style.ForegroundColor = Color.LightGreen;
+            // Apply the style to the entire union range
+            var flag = new StyleFlag() { All = true };
+            unionRange.ApplyStyle(style, flag);
 
-        // Apply the style to the entire union range
-        unionRange.ApplyStyle(style, new StyleFlag { All = true });
-
-        // Save the workbook
-        workbook.Save("UnionRangeLightGreen.xlsx");
+            // Save the workbook to a file
+            workbook.Save("UnionRangeLightGreen.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

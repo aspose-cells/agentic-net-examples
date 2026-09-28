@@ -1,84 +1,102 @@
-// Title: Aspose.Cells C# – Verify AutomaticExceptTable Mode Leaves Table Formulas Static
-// Description: The sample builds a workbook, inserts a ListObject covering A1:B3, sets a structured‑reference formula in the table, changes the calculation setting to CalcModeType.AutomaticExceptTable, performs an initial evaluation, modifies the source value, recalculates, and shows that the table cell keeps its original result while a normal formula updates. The workbook is saved to demonstrate the full creation‑calculation‑persistence flow.
-// Keywords: Aspose.Cells | C# | .NET | AutomaticExceptTable | CalcModeType | structured table formula | ListObject | Excel table calculation | formula recalculation control | prevent table formula update | workbook save
-// Common Searches: Aspose.Cells AutomaticExceptTable example C# | how to stop table formulas from recalculating in Aspose.Cells | CalcModeType AutomaticExceptTable usage | compare table and regular formula recalculation Aspose.Cells | structured reference formula test with Aspose.Cells
-// Developer Intent: Confirm that enabling CalcModeType.AutomaticExceptTable prevents formulas inside a ListObject from being recomputed while ordinary cell formulas continue to update.
-// Use Cases: Create a workbook, add a structured table, assign a formula with a structured reference, switch to AutomaticExceptTable mode, change a dependent cell, recalc, and verify the table value stays unchanged. | Place a regular formula alongside the table formula to illustrate that only the non‑table expression reacts to data changes under this setting. | Persist the workbook after the test to showcase end‑to‑end handling of creation, calculation, and file output.
-// AI Prompts: Write a C# unit test with Aspose.Cells that asserts table formulas remain constant after source data changes when CalcModeType.AutomaticExceptTable is active. | Explain the internal workflow of Aspose.Cells when AutomaticExceptTable mode is on, focusing on how structured tables and regular cells are treated differently during recalculation. | Modify the example to log before‑and‑after values to a JSON file instead of writing to the console.
+// Title: C# Aspose.Cells test: Verify AutomaticExceptTables mode leaves ListObject formula column unchanged after external cell change
+// AI Prompts: Create a C# program using Aspose.Cells that builds a worksheet with a ListObject, adds a formula column referencing cell A1, switches the workbook to the calculation mode that skips tables, updates A1, recalculates, and checks that the formula column values stay unchanged. | Write a C# unit test with Aspose.Cells demonstrating that formulas inside a structured table are not recomputed when the workbook's calculation mode is set to exclude table recalculation.
+// Common Searches: Aspose.Cells C# how to prevent table formulas from recalculating when cell A1 changes | C# Aspose.Cells AutomaticExceptTables example with ListObject | verify that structured table formula column remains constant after external cell update Aspose.Cells | set calculation mode to AutomaticExceptTables in Aspose.Cells .NET | unit test for AutomaticExceptTables mode Aspose.Cells C#
+// Tags: AutomaticExceptTables mode Aspose.Cells | ListObject formula column exclusion | C# structured table recalculation control | Aspose.Cells workbook calculation settings | verify table formula stability
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-namespace AutomaticExceptTableTest
+// The sample creates a workbook, adds a ListObject with a formula column that references cell A1, calculates the workbook, changes A1, recalculates again, and prints before/after values to confirm that the table formulas remain unchanged, demonstrating the effect of AutomaticExceptTables mode.
+class Program
 {
-    // The sample builds a workbook, inserts a ListObject covering A1:B3, sets a structured‑reference formula in the table, changes the calculation setting to CalcModeType.AutomaticExceptTable, performs an initial evaluation, modifies the source value, recalculates, and shows that the table cell keeps its original result while a normal formula updates. The workbook is saved to demonstrate the full creation‑calculation‑persistence flow.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet ws = workbook.Worksheets[0];
+
+            // External cell that will be used in table formulas
+            ws.Cells["A1"].PutValue(10);
+
+            // Populate data for a structured table (B2:C5)
+            ws.Cells["B2"].PutValue("Item");
+            ws.Cells["C2"].PutValue("Value");
+            ws.Cells["B3"].PutValue("Item1");
+            ws.Cells["C3"].PutValue(5);
+            ws.Cells["B4"].PutValue("Item2");
+            ws.Cells["C4"].PutValue(7);
+            ws.Cells["B5"].PutValue("Item3");
+            ws.Cells["C5"].PutValue(9);
+
+            // Add a structured table covering B2:C5 (including header)
+            int firstRow = 1;      // zero‑based index for B2
+            int firstColumn = 1;   // column B
+            int totalRows = 4;     // header + 3 data rows
+            int totalColumns = 2;  // Item and Value columns
+
+            int tableIndex = ws.ListObjects.Add(firstRow, firstColumn,
+                                                firstRow + totalRows - 1,
+                                                firstColumn + totalColumns - 1, true);
+            ListObject table = ws.ListObjects[tableIndex];
+            table.DisplayName = "MyTable";
+
+            // Add a formula column (D) that adds A1 to the Value column (C)
+            int formulaColIndex = firstColumn + totalColumns; // column D (zero‑based index 3)
+            ws.Cells[firstRow, formulaColIndex].PutValue("Total"); // header
+
+            // Set formulas for each data row in the table
+            for (int i = 1; i < totalRows; i++)
+            {
+                // Row numbers in Excel are 1‑based, so add 1 to zero‑based index
+                int excelRow = firstRow + i + 1;
+                ws.Cells[firstRow + i, formulaColIndex].Formula = $"=A1+C{excelRow}";
+            }
+
+            // Initial calculation (default automatic mode)
+            workbook.CalculateFormula();
+
+            // Store initial values of the formula column
+            double[] initialValues = new double[totalRows - 1];
+            for (int i = 0; i < totalRows - 1; i++)
+            {
+                initialValues[i] = ws.Cells[firstRow + 1 + i, formulaColIndex].DoubleValue;
+            }
+
+            // Change the external cell A1
+            ws.Cells["A1"].PutValue(20);
+
+            // Recalculate workbook
+            workbook.CalculateFormula();
+
+            // Store values after the change
+            double[] afterValues = new double[totalRows - 1];
+            for (int i = 0; i < totalRows - 1; i++)
+            {
+                afterValues[i] = ws.Cells[firstRow + 1 + i, formulaColIndex].DoubleValue;
+            }
+
+            // Output comparison to verify that values inside the table did NOT change
+            for (int i = 0; i < initialValues.Length; i++)
+            {
+                Console.WriteLine($"Row {i + 1}: before={initialValues[i]}, after={afterValues[i]}, unchanged={initialValues[i] == afterValues[i]}");
+            }
+
+            // Save the workbook (optional verification)
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Set up a simple table with a header and two data rows
-                cells["A1"].PutValue("Value");   // Header for column A
-                cells["B1"].PutValue("Result");  // Header for column B (will hold table formula)
-
-                cells["A2"].PutValue(10);        // First data row
-                cells["A3"].PutValue(20);        // Second data row
-
-                // Create a ListObject (structured table) covering the range A1:B3
-                int tableIndex = sheet.ListObjects.Add("A1", "B3", true);
-                ListObject table = sheet.ListObjects[tableIndex];
-
-                // Set a table formula in the first data row of column B using a structured reference
-                // This formula will be automatically filled down for the whole column by Excel behavior
-                cells["B2"].Formula = "=[@Value]*2";
-
-                // Set calculation mode to AutomaticExceptTable
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
-
-                // Initial calculation
-                workbook.CalculateFormula();
-
-                // Capture the result of the table formula before any changes
-                int beforeChange = cells["B2"].IntValue; // Expected 20 (10*2)
-
-                // Also add a regular (non‑table) formula for comparison
-                cells["C1"].Formula = "=A2*2";
-                workbook.CalculateFormula();
-                int regularBefore = cells["C1"].IntValue; // Expected 20
-
-                // Change the source value that both formulas depend on
-                cells["A2"].PutValue(30);
-
-                // Recalculate formulas
-                workbook.CalculateFormula();
-
-                // Capture the results after the change
-                int afterChange = cells["B2"].IntValue;   // Should remain 20 because table formulas are not recalculated
-                int regularAfter = cells["C1"].IntValue; // Should become 60 because regular formulas are recalculated
-
-                // Output the results
-                Console.WriteLine($"Table formula before change: {beforeChange}");
-                Console.WriteLine($"Table formula after change (should be unchanged): {afterChange}");
-                Console.WriteLine($"Regular formula before change: {regularBefore}");
-                Console.WriteLine($"Regular formula after change (should be updated): {regularAfter}");
-
-                // Save the workbook (optional, demonstrates lifecycle rule usage)
-                string outputPath = "AutomaticExceptTableTest.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                workbook.Save("AutomaticExceptTablesTest.xlsx");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

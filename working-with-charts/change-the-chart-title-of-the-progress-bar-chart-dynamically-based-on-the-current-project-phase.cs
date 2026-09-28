@@ -1,58 +1,83 @@
-// Title: Set a Dynamic Title for a Progress Bar Chart in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills task and completion data, adds a column chart styled as a progress bar, and assigns a title that incorporates a runtime variable (currentPhase). The title is shown, bolded, and sized to 14 pt before the file is saved.
-// Keywords: Aspose.Cells | .NET | C# | dynamic chart title | progress bar chart | update Excel chart title at runtime | chart title formatting | column chart Aspose.Cells | project phase label | Excel automation
-// Common Searches: Aspose.Cells change chart title dynamically C# | set Excel chart title from variable .NET | progress bar chart title based on project phase | format chart title bold 14 point Aspose.Cells | runtime update of Excel chart title using C#
-// Developer Intent: Add a runtime‑driven title to a progress bar chart in an Excel workbook using Aspose.Cells.
-// Use Cases: Generate weekly status reports where the chart title reflects the current phase (Design, Development, Testing, etc.). | Build a template that reads the phase name from a database or worksheet cell and automatically refreshes the chart title when data changes. | Create presentation‑ready workbooks with a bold, larger‑font title that highlights the active project phase.
-// AI Prompts: Write C# code with Aspose.Cells that sets a chart title from a string variable and formats it as bold 14‑point text. | Show how to bind a chart title to a worksheet cell so the title updates automatically when the cell value changes. | Provide an example that iterates over multiple charts in a workbook and assigns each a title from an array of project phase names.
+// Title: How to dynamically set the title of a "Progress Bar" chart in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, locates a chart named "Progress Bar" (or falls back to the first chart), assigns a variable containing the current project phase to the chart's Title.Text, ensures the title is visible, and saves the file. | Write a helper method in C# that determines the current project phase, formats a title like "Progress – {phase}", and applies it to a chart's Title property using Aspose.Cells. | Show how to gracefully handle a missing named chart in Aspose.Cells by checking for the chart, using a fallback chart, updating its title, and persisting the changes.
+// Common Searches: Aspose.Cells C# change Excel chart title based on variable value | Set dynamic title for specific chart in .NET workbook using Aspose.Cells | How to update chart title to current project phase in C# with Aspose.Cells | Fallback to first chart if named chart not found Aspose.Cells | Make chart title visible after updating with Aspose.Cells .NET
+// Tags: Aspose.Cells set chart title dynamically | C# update Excel chart title Aspose.Cells | retrieve chart by name Aspose.Cells | fallback to first chart Aspose.Cells | make chart title visible Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace ProgressBarChartDemo
+namespace AsposeCellsExample
 {
-    // Creates a workbook, fills task and completion data, adds a column chart styled as a progress bar, and assigns a title that incorporates a runtime variable (currentPhase). The title is shown, bolded, and sized to 14 pt before the file is saved.
+    // The example loads Project.xlsx, finds the chart named "Progress Bar" (or the first chart if the name is missing), composes a title using the current project phase, sets the chart's Title.Text, makes the title visible, and saves the updated workbook as Project_Updated.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Define the current project phase (could be retrieved from elsewhere)
-            string currentPhase = "Design";
+            try
+            {
+                string inputPath = "Project.xlsx";
+                string outputPath = "Project_Updated.xlsx";
 
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+                // Ensure the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
 
-            // Populate sample data for the progress bar chart
-            sheet.Cells["A1"].PutValue("Task");
-            sheet.Cells["A2"].PutValue("Planning");
-            sheet.Cells["A3"].PutValue("Development");
-            sheet.Cells["A4"].PutValue("Testing");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            sheet.Cells["B1"].PutValue("Completion");
-            sheet.Cells["B2"].PutValue(20);
-            sheet.Cells["B3"].PutValue(50);
-            sheet.Cells["B4"].PutValue(80);
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a column chart (can be styled as a progress bar)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+                // Retrieve the chart named "Progress Bar"
+                Chart progressChart = null;
+                try
+                {
+                    progressChart = worksheet.Charts["Progress Bar"];
+                }
+                catch
+                {
+                    // Ignore if not found by name
+                }
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Fallback to first chart if named chart is missing
+                if (progressChart == null && worksheet.Charts.Count > 0)
+                {
+                    progressChart = worksheet.Charts[0];
+                }
 
-            // Dynamically set the chart title based on the current project phase
-            chart.Title.IsVisible = true;
-            chart.Title.Text = $"Project Progress - {currentPhase} Phase";
+                if (progressChart == null)
+                {
+                    Console.WriteLine("Progress Bar chart not found in the worksheet.");
+                    return;
+                }
 
-            // Optional: adjust title appearance
-            chart.Title.Font.Size = 14;
-            chart.Title.Font.IsBold = true;
+                // Determine the current project phase (replace with real logic)
+                string currentPhase = GetCurrentProjectPhase();
 
-            // Save the workbook
-            workbook.Save("ProgressBarChart.xlsx");
+                // Set the chart title dynamically based on the current phase
+                progressChart.Title.Text = $"Progress – {currentPhase}";
+                progressChart.Title.IsVisible = true; // Ensure the title is displayed
+
+                // Save the workbook with the updated chart title
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+        // Helper method placeholder – replace with your real implementation
+        private static string GetCurrentProjectPhase()
+        {
+            // Example static value; in practice, retrieve this from your data source
+            return "Development";
         }
     }
 }

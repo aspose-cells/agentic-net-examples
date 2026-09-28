@@ -1,58 +1,58 @@
-// Title: Show #DIV/0! as Zero in C# with AspNet.Cells GlobalizationSettings
-// Description: Provides a C# example that defines a custom GlobalizationSettings class for Aspose.Cells, overrides GetErrorValueString to convert the Excel #DIV/0! error to "0", applies the setting to a workbook, recalculates formulas, and saves the file.
-// Keywords: Aspose.Cells C# | GlobalizationSettings | replace #DIV/0! with zero | Excel error handling | custom error display | formula calculation | workbook save | Aspose.Cells example | division by zero error | override GetErrorValueString
-// Common Searches: Aspose.Cells replace #DIV/0! with 0 | C# GlobalizationSettings error value string | show zero instead of division error Aspose.Cells | custom error handling in Aspose.Cells workbook | override GetErrorValueString Aspose.Cells C#
-// Developer Intent: Use Aspose.Cells to display zero instead of the #DIV/0! error in calculated cells.
-// Use Cases: Generate reports where division‑by‑zero cells should appear as 0 for readability. | Apply a single GlobalizationSettings instance to enforce consistent error display across all worksheets. | Extend the overridden method to map additional Excel errors (e.g., #N/A, #VALUE!) to user‑defined values.
-// AI Prompts: Write C# code that uses Aspose.Cells to replace all Excel error values with custom strings via GlobalizationSettings. | Show how to map #N/A and #VALUE! to empty strings while keeping #DIV/0! as zero in Aspose.Cells. | Explain how to attach a custom GlobalizationSettings object to an existing workbook without triggering a full recalculation.
+// Title: Replace all Excel error values (e.g., #DIV/0!) with zero using Aspose.Cells GlobalizationSettings in C#
+// AI Prompts: Generate C# code that creates an Aspose.Cells workbook, inserts a formula causing a division‑by‑zero error, and applies a custom GlobalizationSettings subclass so that any error is displayed as "0" before saving the file. | Write a C# class inheriting from Aspose.Cells.GlobalizationSettings that overrides GetErrorValueString to return "0", and demonstrate how to assign this class to Workbook.Settings.GlobalizationSettings. | Show how to calculate formulas in an Aspose.Cells workbook and save it as an .xlsx file where cells containing errors are rendered as zero.
+// Common Searches: how to show zero instead of #DIV/0! in Excel files generated with Aspose.Cells C# | Aspose.Cells custom GlobalizationSettings to replace all error values with 0 | C# Aspose.Cells example for overriding GetErrorValueString for error handling | save workbook with error cells displayed as 0 using Aspose.Cells | replace Excel error strings with numeric zero using Aspose.Cells API
+// Tags: Aspose.Cells error value globalization | C# custom GetErrorValueString implementation | replace Excel error strings with zero | save workbook with zeroed error cells | globalization settings for error handling
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates an Aspose.Cells workbook, adds a formula that generates a division‑by‑zero error, calculates the formulas, applies a custom GlobalizationSettings class that returns "0" for any error via GetErrorValueString, and saves the workbook so error cells display zero.
+public class Program
 {
-    // Custom globalization settings to replace division‑by‑zero errors with zero
-    // Provides a C# example that defines a custom GlobalizationSettings class for Aspose.Cells, overrides GetErrorValueString to convert the Excel #DIV/0! error to "0", applies the setting to a workbook, recalculates formulas, and saves the file.
-    public class ZeroErrorGlobalizationSettings : GlobalizationSettings
+    public static void Main()
     {
-        public override string GetErrorValueString(string err)
+        try
         {
-            // Map the specific error string to "0"; otherwise use the default handling
-            return err == "#DIV/0!" ? "0" : base.GetErrorValueString(err);
+            ShowErrorAsZero.Run();
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
+}
 
-    public class ShowErrorAsZeroDemo
+public class ShowErrorAsZero
+{
+    public static void Run()
     {
-        public static void Run()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Apply the custom globalization settings
-            workbook.Settings.GlobalizationSettings = new ZeroErrorGlobalizationSettings();
+        // Cell with a formula that generates a division by zero error
+        Cell errorCell = worksheet.Cells["A1"];
+        errorCell.Formula = "=1/0";
 
-            // Create a cell with a formula that would normally produce #DIV/0!
-            Cell errorCell = sheet.Cells["A1"];
-            errorCell.Formula = "=1/0";
+        // Calculate formulas so the error value is produced
+        workbook.CalculateFormula();
 
-            // Calculate formulas (the error will be transformed to "0")
-            workbook.CalculateFormula();
+        // Apply custom globalization settings to replace any error string with "0"
+        workbook.Settings.GlobalizationSettings = new ZeroErrorGlobalizationSettings();
 
-            // Verify the displayed value
-            Console.WriteLine("Cell A1 display value: " + errorCell.DisplayStringValue); // Expected output: 0
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ShowErrorAsZeroDemo.xlsx");
-        }
+        // Save the workbook; cells with errors will now display 0
+        string outputPath = "ErrorAsZero.xlsx";
+        workbook.Save(outputPath);
     }
+}
 
-    class Program
+// Custom globalization settings that maps all error values to zero
+public class ZeroErrorGlobalizationSettings : GlobalizationSettings
+{
+    public override string GetErrorValueString(string err)
     {
-        static void Main()
-        {
-            ShowErrorAsZeroDemo.Run();
-        }
+        // Return "0" for any error (e.g., #DIV/0!, #VALUE!, etc.)
+        return "0";
     }
 }

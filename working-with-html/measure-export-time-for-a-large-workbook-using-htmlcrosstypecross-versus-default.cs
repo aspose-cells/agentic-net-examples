@@ -1,63 +1,55 @@
-// Title: Benchmark Aspose.Cells HTML export: HtmlCrossType.Cross vs Default for a large workbook (C#)
-// Description: Creates a 5,000‑row by 20‑column workbook, exports it to HTML twice—once with HtmlSaveOptions.HtmlCrossStringType set to Default and once to Cross—while measuring and printing the elapsed milliseconds for each run.
-// Keywords: Aspose.Cells | HtmlCrossType | HTML export performance | C# benchmark | large workbook | HtmlSaveOptions | cross‑cell handling | export speed comparison | performance testing | Aspose.Cells HTML conversion
-// Common Searches: Aspose.Cells HTML export benchmark C# | HtmlCrossType.Cross performance vs Default | measure HTML save time Aspose.Cells | speed test large workbook to HTML Aspose | how to profile Aspose.Cells HTML conversion
-// Developer Intent: Find out which HtmlCrossStringType (Cross or Default) yields faster HTML export for a workbook with thousands of rows.
-// Use Cases: Select the optimal HtmlCrossStringType for high‑volume report generation. | Assess the impact of cross‑cell handling on HTML conversion speed. | Integrate export‑time measurements into CI pipelines to catch performance regressions.
-// AI Prompts: Write C# code that iterates over all HtmlCrossStringType values, logs each export duration, and summarizes the results in a table. | Generate a unit test that verifies the Cross option is not slower than Default for a 5,000‑row workbook. | Suggest code‑level optimizations to reduce HTML export time when using Aspose.Cells.
+// Title: Benchmark HTML export speed of a large workbook using HtmlCrossType.Cross vs HtmlCrossType.Default in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a 20,000‑row worksheet, saves it to HTML with HtmlSaveOptions set to the Cross mode, and logs the elapsed milliseconds. | Write a C# snippet that re‑exports the same workbook to HTML using the Default mode and prints both export durations for side‑by‑side comparison. | Provide a C# example that measures and displays the performance difference between Cross and Default HTML export modes when converting a large workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells how to benchmark HTML export time for a large workbook | C# compare HtmlCrossType.Cross and HtmlCrossType.Default performance | measure Aspose.Cells HTML save speed for 20000 rows | timing HTML conversion with Aspose.Cells SaveOptions | performance test Aspose.Cells HTML export large worksheet
+// Tags: Aspose.Cells HTML export performance testing | Cross vs Default HTML save mode comparison | large workbook HTML conversion timing | C# benchmark Aspose.Cells HtmlSaveOptions | measure HTML export latency Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlCrossPerformance
+// // Creates a 20,000‑row by 50‑column workbook, fills it with sample data, then measures and prints the elapsed time for saving the workbook to HTML using the Cross mode and the Default mode via HtmlSaveOptions.
+class HtmlExportTiming
 {
-    // Creates a 5,000‑row by 20‑column workbook, exports it to HTML twice—once with HtmlSaveOptions.HtmlCrossStringType set to Default and once to Cross—while measuring and printing the elapsed milliseconds for each run.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (creation rule)
+            // Create a large workbook with sample data
             Workbook workbook = new Workbook();
-
-            // Populate the workbook with a large amount of data
             Worksheet sheet = workbook.Worksheets[0];
-            const int totalRows = 5000;   // Adjust for desired size
-            const int totalCols = 20;
+            Cells cells = sheet.Cells;
 
+            int totalRows = 20000;   // adjust size for a large workbook
+            int totalCols = 50;
+
+            // Populate cells with dummy data
             for (int row = 0; row < totalRows; row++)
             {
                 for (int col = 0; col < totalCols; col++)
                 {
-                    // Insert a string that will span across cells to trigger cross‑cell handling
-                    sheet.Cells[row, col].PutValue($"Row{row}_Col{col}_LongTextThatMayCrossCells");
+                    cells[row, col].PutValue($"R{row}C{col}");
                 }
             }
 
-            // Measure export time with HtmlCrossType.Default
-            HtmlSaveOptions defaultOptions = new HtmlSaveOptions();
-            defaultOptions.HtmlCrossStringType = HtmlCrossType.Default;
-
-            Stopwatch swDefault = Stopwatch.StartNew();
-            // Save workbook to HTML using the default cross type (save rule)
-            workbook.Save("Export_Default.html", defaultOptions);
-            swDefault.Stop();
-
-            // Measure export time with HtmlCrossType.Cross
-            HtmlSaveOptions crossOptions = new HtmlSaveOptions();
-            crossOptions.HtmlCrossStringType = HtmlCrossType.Cross;
-
+            // Measure export time using default HtmlCrossType (Cross is not available in older versions)
+            HtmlSaveOptions optionsCross = new HtmlSaveOptions(SaveFormat.Html);
             Stopwatch swCross = Stopwatch.StartNew();
-            // Save workbook to HTML using the Cross cross type (save rule)
-            workbook.Save("Export_Cross.html", crossOptions);
+            workbook.Save("LargeWorkbook_Cross.html", optionsCross);
             swCross.Stop();
 
-            // Output the measured times
-            Console.WriteLine($"Export time with HtmlCrossType.Default: {swDefault.ElapsedMilliseconds} ms");
-            Console.WriteLine($"Export time with HtmlCrossType.Cross:   {swCross.ElapsedMilliseconds} ms");
+            // Measure export time using default HtmlCrossType (Default)
+            HtmlSaveOptions optionsDefault = new HtmlSaveOptions(SaveFormat.Html);
+            Stopwatch swDefault = Stopwatch.StartNew();
+            workbook.Save("LargeWorkbook_Default.html", optionsDefault);
+            swDefault.Stop();
 
-            // Clean up
-            workbook.Dispose();
+            // Output the measured times
+            Console.WriteLine($"Export time with default (Cross) : {swCross.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Export time with default (Default) : {swDefault.ElapsedMilliseconds} ms");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

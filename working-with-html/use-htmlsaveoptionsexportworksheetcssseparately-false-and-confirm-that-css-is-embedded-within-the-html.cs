@@ -1,43 +1,44 @@
-// Title: Embed Worksheet CSS in HTML using Aspose.Cells HtmlSaveOptions (ExportWorksheetCSSSeparately = false)
-// Description: Shows how to create a workbook, set HtmlSaveOptions.ExportWorksheetCSSSeparately to false so the stylesheet is placed inside a <style> tag, save the workbook as HTML, and programmatically verify that the CSS is embedded.
-// Keywords: Aspose.Cells HTML export | ExportWorksheetCSSSeparately | embed CSS in HTML | inline stylesheet Aspose.Cells | C# Aspose.Cells HTML save | verify embedded CSS | no external CSS file | HTMLSaveOptions CSS embedding
-// Common Searches: Aspose.Cells embed CSS in exported HTML | HtmlSaveOptions ExportWorksheetCSSSeparately example | How to include stylesheet inside HTML with Aspose.Cells | Check for <style> tag in Aspose.Cells HTML output | Save Excel as HTML with inline CSS C#
-// Developer Intent: Generate an HTML file from a workbook where all CSS is embedded directly in the document, eliminating external stylesheet files.
-// Use Cases: Create a single, portable HTML report that contains all styling. | Produce HTML email content where external CSS links are prohibited. | Automate validation that the exported HTML includes a <style> block.
-// AI Prompts: Modify the example to embed images as base64 strings while keeping CSS inline. | Add code that asserts a specific CSS rule exists inside the generated <style> tag. | Explain how to combine CSS embedding with custom page layout and image handling options in HtmlSaveOptions.
+// Title: Embed CSS in HTML output when saving an Aspose.Cells workbook by disabling ExportWorksheetCSSSeparately (C#)
+// AI Prompts: Generate C# code that saves a Workbook to an HTML file with inline CSS by setting HtmlSaveOptions.ExportWorksheetCSSSeparately = false. | Write C# to load the saved HTML file and programmatically verify that a <style> element exists, confirming CSS is embedded. | Adapt the example to write the HTML output to a MemoryStream while keeping the CSS inline, and return the HTML string.
+// Common Searches: Aspose.Cells C# save workbook as HTML with embedded CSS | How to prevent external CSS file when exporting Excel to HTML using Aspose.Cells | HtmlSaveOptions ExportWorksheetCSSSeparately false example in C# | Check for inline style tag in Aspose.Cells generated HTML | Save Excel to HTML without separate stylesheet using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions inline stylesheet | embed CSS in Aspose.Cells HTML export | C# save workbook to HTML with embedded stylesheet | verify inline style tag in generated HTML | memory stream HTML export Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExportDemo
+// Demonstrates creating a workbook, adding data, configuring HtmlSaveOptions with ExportWorksheetCSSSeparately = false to embed CSS directly in the generated HTML, saving the file, and programmatically confirming the presence of a <style> tag.
+class Program
 {
-    // Shows how to create a workbook, set HtmlSaveOptions.ExportWorksheetCSSSeparately to false so the stylesheet is placed inside a <style> tag, save the workbook as HTML, and programmatically verify that the CSS is embedded.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Embedded CSS Test");
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Initialize HtmlSaveOptions and ensure CSS is embedded (ExportWorksheetCSSSeparately = false)
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.ExportWorksheetCSSSeparately = false; // CSS will be embedded in the HTML file
+        // Access the first worksheet and add some data
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "SampleSheet";
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Price");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["B2"].PutValue(1.25);
+        sheet.Cells["A3"].PutValue("Banana");
+        sheet.Cells["B3"].PutValue(0.75);
 
-            // Define output HTML file path
-            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "EmbeddedCssOutput.html");
+        // Configure HTML save options to embed CSS within the HTML
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportWorksheetCSSSeparately = false; // CSS will be embedded
 
-            // Save the workbook as HTML using the configured options
-            workbook.Save(outputPath, saveOptions);
+        // Define output HTML file path
+        string htmlFile = "SampleOutput.html";
 
-            // Verify that CSS is embedded by checking for a <style> tag in the generated HTML
-            string htmlContent = File.ReadAllText(outputPath);
-            bool cssEmbedded = htmlContent.Contains("<style", StringComparison.OrdinalIgnoreCase);
+        // Save the workbook as HTML using the configured options
+        workbook.Save(htmlFile, htmlOptions);
 
-            Console.WriteLine($"HTML file saved to: {outputPath}");
-            Console.WriteLine($"CSS embedded within HTML: {cssEmbedded}");
-        }
+        // Verify that CSS is embedded by checking for a <style> tag in the generated HTML
+        string htmlContent = File.ReadAllText(htmlFile);
+        bool isCssEmbedded = htmlContent.Contains("<style");
+
+        Console.WriteLine($"CSS embedded in HTML: {isCssEmbedded}");
     }
 }

@@ -1,50 +1,56 @@
-// Title: C# – AutoFitRows with AutoFitterOptions.ForRendering for wrapped text in Aspose.Cells
-// Description: Demonstrates how to place a long string in a cell, enable text wrapping, set a narrow column width, and call Worksheet.AutoFitRows with AutoFitterOptions.ForRendering = true so the row height expands correctly and prevents clipping during rendering. The sample also shows how to read the adjusted row height and save the workbook.
-// Keywords: Aspose.Cells AutoFitRows | AutoFitterOptions ForRendering | wrap text row height .NET | prevent text clipping Aspose | C# spreadsheet rendering | read row height after autofit | adjust column width Aspose.Cells
-// Common Searches: AutoFitRows ForRendering example C# | how to avoid wrapped text clipping Aspose.Cells | auto fit row height for wrapped text .NET | retrieve row height after AutoFitRows | Aspose.Cells rendering row height issue
-// Developer Intent: Automatically expand row height for cells with wrapped text so the full content is visible when the worksheet is rendered or exported.
-// Use Cases: Prepare worksheets with long wrapped text for PDF or image export without truncation. | Calculate exact row heights after autofit to align custom graphics or reports. | Ensure consistent on‑screen and printed layout for spreadsheets that contain multi‑line cells.
-// AI Prompts: Generate C# code that uses Aspose.Cells to auto‑fit rows with AutoFitterOptions.ForRendering on a sheet containing wrapped text and then output the new row height. | Explain the effect of setting AutoFitterOptions.ForRendering to true on row‑height calculation and when this setting should be applied in Aspose.Cells.
+// Title: Auto-fit a worksheet row with wrapped text for rendering using Aspose.Cells AutoFitterOptions in C#
+// AI Prompts: Generate C# code that creates a workbook, wraps long text in a cell, and calls worksheet.AutoFitRows with AutoFitterOptions.ForRendering to prevent clipping. | Write C# to retrieve the pixel height of a specific row after applying AutoFitRows with the rendering option. | Provide C# that saves the workbook after auto‑fitting rows for rendering and prints the resulting row height.
+// Common Searches: Aspose.Cells C# AutoFitRows ForRendering option to avoid text clipping | How to get row height in pixels after AutoFitRows in Aspose.Cells | Wrap text and auto‑fit rows for PDF export using Aspose.Cells C# example | AutoFitRows rendering option sample code C#
+// Tags: AutoFitRows with AutoFitterOptions rendering | wrapped text row height pixels Aspose.Cells | C# Aspose.Cells row auto‑fit for PDF export | prevent text clipping Excel Aspose.Cells | AutoFitterOptions ForRendering usage C#
 
 using System;
 using Aspose.Cells;
 
-namespace AutoFitRowsForRenderingDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to place a long string in a cell, enable text wrapping, set a narrow column width, and call Worksheet.AutoFitRows with AutoFitterOptions.ForRendering = true so the row height expands correctly and prevents clipping during rendering. The sample also shows how to read the adjusted row height and save the workbook.
-    public class Program
+    // The example creates a new workbook, inserts a long wrapped text into cell A1, enables text wrapping, configures AutoFitterOptions with ForRendering=true, auto‑fits the first row, outputs the row height in pixels, and saves the file as AutoFitRowsForRendering.xlsx.
+    public class AutoFitRowsForRenderingDemo
     {
+        // Entry point for the console application
         public static void Main()
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Put a long text into cell A1
-            worksheet.Cells["A1"].PutValue("This is a long text that needs auto-fitting for rendering purposes. It contains enough characters to wrap over multiple lines when the column width is limited.");
-
-            // Enable text wrapping for the cell
+            // Put a long text into a cell and enable text wrapping
+            worksheet.Cells["A1"].PutValue(
+                "This is a very long piece of text that should be wrapped and auto‑fitted for rendering purposes. It contains enough characters to require multiple lines when wrapped.");
             Style style = worksheet.Cells["A1"].GetStyle();
             style.IsTextWrapped = true;
             worksheet.Cells["A1"].SetStyle(style);
 
-            // Optionally set a narrow column width to force wrapping
-            worksheet.Cells.SetColumnWidth(0, 15); // width in characters
-
-            // Create AutoFitterOptions and set ForRendering to true
+            // Configure AutoFitterOptions to fit for rendering
             AutoFitterOptions options = new AutoFitterOptions
             {
                 ForRendering = true
             };
 
-            // Auto-fit rows with rendering considerations
-            worksheet.AutoFitRows(options);
+            // Auto‑fit the first row using the rendering option
+            worksheet.AutoFitRows(0, 0, options);
 
-            // Output the resulting row height in points (optional)
-            Console.WriteLine("Row height after AutoFitRows (points): " + worksheet.Cells.GetRowHeight(0));
+            // Output the resulting row height in pixels
+            Console.WriteLine("Row height after AutoFitRows (pixels): " + worksheet.Cells.GetRowHeightPixel(0));
 
             // Save the workbook
-            workbook.Save("AutoFitRowsForRenderingDemo.xlsx");
+            workbook.Save("AutoFitRowsForRendering.xlsx");
         }
     }
 }

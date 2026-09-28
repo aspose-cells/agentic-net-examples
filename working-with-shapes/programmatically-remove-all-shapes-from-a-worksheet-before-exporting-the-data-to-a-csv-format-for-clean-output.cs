@@ -1,63 +1,48 @@
-// Title: Remove All Shapes from an Excel Workbook and Export to CSV with Aspose.Cells for .NET
-// Description: Loads a workbook, removes every drawing object (pictures, charts, text boxes) from each worksheet using `RemoveAllDrawingObjects`, then saves the first worksheet as a CSV file. Includes file‑existence validation and exception handling for reliable batch processing.
-// Keywords: Aspose.Cells remove shapes | delete drawing objects .NET | export worksheet to CSV | clean CSV output Aspose.Cells | RemoveAllDrawingObjects example
-// Common Searches: how to delete all shapes in Excel with Aspose.Cells | Aspose.Cells .NET remove drawing objects before CSV export | export first sheet to CSV after stripping images | batch convert Excel to CSV without charts
-// Developer Intent: Strip every shape from all worksheets and save the first sheet as a CSV file.
-// Use Cases: Prepare data extracts from templates that contain placeholder images before importing into a database. | Batch‑convert legacy Excel reports to CSV while eliminating embedded graphics to reduce file size. | Generate clean CSV files for downstream analytics when source workbooks include charts or logos.
-// AI Prompts: Create a C# method using Aspose.Cells that removes all drawing objects from each worksheet and saves a chosen sheet as CSV. | Provide a .NET code snippet that checks the input path, calls RemoveAllDrawingObjects, handles errors, and exports the first worksheet to CSV. | Write code that returns the total number of shapes removed before exporting the workbook to CSV with Aspose.Cells.
+// Title: How to delete every shape from an Excel worksheet with Aspose.Cells for .NET and then export it as CSV
+// AI Prompts: Write C# code using Aspose.Cells that removes all shapes from a specified worksheet and saves the result directly to a CSV file. | Show the pattern for iterating backwards through Worksheet.Shapes to safely delete each shape before calling Workbook.Save with SaveFormat.Csv. | Create a complete example that verifies the source .xlsx file exists, clears all drawings from the first sheet, and outputs a clean CSV without any graphics.
+// Common Searches: Aspose.Cells .NET delete all shapes from a worksheet before CSV export | How to remove pictures and charts from Excel file using Aspose.Cells and save as CSV | C# code to clear drawings in a worksheet then convert to CSV with Aspose.Cells | Export Excel to CSV without embedded objects using Aspose.Cells for .NET
+// Tags: remove worksheet shapes Aspose.Cells C# | clear drawings before CSV export Aspose.Cells | reverse iteration shape removal Aspose.Cells | save worksheet as CSV after shape deletion Aspose.Cells | Aspose.Cells CSV export without graphics
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, iterates backwards to delete every shape from the first worksheet, and saves the cleaned worksheet as a CSV file, including a file‑existence check and exception handling.
+class Program
 {
-    // Loads a workbook, removes every drawing object (pictures, charts, text boxes) from each worksheet using `RemoveAllDrawingObjects`, then saves the first worksheet as a CSV file. Includes file‑existence validation and exception handling for reliable batch processing.
-    public class RemoveShapesAndExportCsv
+    static void Main()
     {
-        public static void Run(string inputPath, string outputCsvPath)
+        try
         {
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file not found: {inputPath}");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
 
-            // Load the workbook
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the existing file
             Workbook workbook = new Workbook(inputPath);
 
-            // Remove all drawing objects from each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Access the first worksheet (or specify by name)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Remove all shapes from the worksheet (iterate backwards)
+            for (int i = worksheet.Shapes.Count - 1; i >= 0; i--)
             {
-                sheet.RemoveAllDrawingObjects();
+                worksheet.Shapes.RemoveAt(i);
             }
 
-            // Save the first worksheet as CSV
-            workbook.Save(outputCsvPath, SaveFormat.Csv);
+            // Save the cleaned worksheet as CSV
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                // Expect two arguments: input file path and output CSV path
-                if (args.Length < 2)
-                {
-                    Console.WriteLine("Usage: RemoveShapesAndExportCsv <input.xlsx> <output.csv>");
-                    return;
-                }
-
-                string inputPath = args[0];
-                string outputCsvPath = args[1];
-
-                RemoveShapesAndExportCsv.Run(inputPath, outputCsvPath);
-                Console.WriteLine($"CSV file successfully saved to: {outputCsvPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

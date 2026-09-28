@@ -1,92 +1,87 @@
-// Title: Batch encrypt ODS files with filename‑derived SHA‑256 passwords using Aspose.Cells for .NET
-// Description: A C# example that scans a folder for *.ods files, creates a SHA‑256 hash of each file name (without extension), converts the first 16 bytes to a hex string, sets this string as the workbook password, and saves the encrypted workbook with Aspose.Cells OdsSaveOptions to a target directory.
-// Keywords: Aspose.Cells | C# ODS encryption | batch ODS password protection | filename hash password | SHA256 password generation | OdsSaveOptions | encrypt multiple ODS files | Aspose.Cells for .NET example | GitHub code sample | automated spreadsheet security
-// Common Searches: encrypt all ODS files in a folder Aspose.Cells | C# generate password from file name for ODS encryption | batch protect ODS workbooks with Aspose.Cells | how to set workbook password programmatically .NET | example code for ODS encryption using Aspose
-// Developer Intent: Automatically apply a unique, deterministic password to each ODS workbook in a directory and save the protected files.
-// Use Cases: Secure confidential spreadsheets before archiving by using reproducible passwords derived from file names. | Automate protection of daily‑generated ODS reports, enabling later decryption with the same naming convention. | Integrate into CI/CD pipelines to encrypt ODS assets before distribution to partners or external systems.
-// AI Prompts: Generate C# code that validates a user‑entered password against the filename‑derived password when opening an encrypted ODS file with Aspose.Cells. | Provide a method to decrypt an ODS workbook that was encrypted using the filename‑derived SHA‑256 password shown in the sample. | Suggest a secure logging strategy for the password‑derivation process that prevents exposing the hash or generated password.
+// Title: Encrypt multiple ODS spreadsheets with unique SHA‑256‑derived passwords using Aspose.Cells for .NET
+// AI Prompts: Create a C# console application that scans a folder for .ods files, generates a 16‑character password from each file name using SHA‑256, applies the password as the workbook opening password via Aspose.Cells, and saves the protected files to a separate output directory. | Extend the batch ODS encryption tool to write a CSV log containing the source file name, the derived password, and the output path while preserving the encrypted workbook creation.
+// Common Searches: how to batch encrypt ODS files with a different password for each file in C# using Aspose.Cells | C# generate 16 character password from filename SHA256 for spreadsheet protection | set opening password on OpenDocument spreadsheet with Aspose.Cells .NET | automate encryption of multiple ODS workbooks and save to another folder in .NET
+// Tags: batch ODS encryption Aspose.Cells | SHA256 filename password generation C# | set workbook opening password OpenDocument | automated spreadsheet protection .NET | process multiple ODS files Aspose.Cells
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// A C# example that scans a folder for *.ods files, creates a SHA‑256 hash of each file name (without extension), converts the first 16 bytes to a hex string, sets this string as the workbook password, and saves the encrypted workbook with Aspose.Cells OdsSaveOptions to a target directory.
-class BatchEncryptOds
+// The sample scans a directory for .ods files, derives a 16‑character password from each file name using SHA‑256, loads each workbook with Aspose.Cells, assigns the password as the opening password, and saves the encrypted workbook to a target folder, enabling per‑file protection in bulk.
+class OdsBatchEncryptor
 {
-    static void Main()
-    {
-        // Folder containing source ODS files
-        string inputFolder = @"C:\Ods\Input";
-        // Folder where encrypted ODS files will be saved
-        string outputFolder = @"C:\Ods\Encrypted";
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
-        {
-            Console.WriteLine($"Input folder not found: {inputFolder}");
-            return;
-        }
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Process each .ods file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.ods"))
-        {
-            try
-            {
-                // Derive a password from the file name (without extension) using SHA256
-                string fileName = Path.GetFileNameWithoutExtension(filePath);
-                string password = DerivePasswordFromName(fileName);
-
-                // Verify the file exists before loading
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Set the workbook password
-                workbook.Settings.Password = password;
-
-                // Prepare ODS save options (optional: set generator type)
-                OdsSaveOptions saveOptions = new OdsSaveOptions
-                {
-                    GeneratorType = OdsGeneratorType.LibreOffice
-                };
-
-                // Save the encrypted workbook to the output folder
-                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Encrypted '{Path.GetFileName(filePath)}' with password derived from its name.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-            }
-        }
-    }
-
-    // Generates a password string from a given name using SHA256 and returns a hex representation
-    private static string DerivePasswordFromName(string name)
+    // Compute a password from the file name using SHA256 and take the first 16 characters of the hex string.
+    private static string DerivePassword(string fileName)
     {
         using (SHA256 sha256 = SHA256.Create())
         {
-            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(name));
-            // Convert the first 16 bytes of the hash to a hex string for a reasonable password length
-            StringBuilder sb = new StringBuilder(32);
-            for (int i = 0; i < 16; i++)
+            byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(fileName));
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hashBytes)
+                sb.Append(b.ToString("x2"));
+            // Use first 16 characters (8 bytes) as the password.
+            return sb.ToString().Substring(0, 16);
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        // Input folder containing ODS files.
+        string inputFolder = @"C:\InputOds";
+        // Output folder where encrypted ODS files will be saved.
+        string outputFolder = @"C:\EncryptedOds";
+
+        // Ensure output directory exists.
+        Directory.CreateDirectory(outputFolder);
+
+        try
+        {
+            // Process each ODS file in the input folder.
+            foreach (string filePath in Directory.GetFiles(inputFolder, "*.ods"))
             {
-                sb.Append(hashBytes[i].ToString("x2"));
+                try
+                {
+                    // Derive a unique password from the file name (without extension).
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+                    string password = DerivePassword(fileNameWithoutExt);
+
+                    // Verify the source file exists before loading.
+                    if (!File.Exists(filePath))
+                    {
+                        Console.WriteLine($"Source file not found: {filePath}");
+                        continue;
+                    }
+
+                    // Load the workbook.
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Apply password protection (opening password) to the workbook.
+                    workbook.Settings.Password = password;
+
+                    // Set up ODS save options (no password property needed).
+                    OdsSaveOptions saveOptions = new OdsSaveOptions(SaveFormat.Ods);
+
+                    // Determine the output file path.
+                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+
+                    // Save the encrypted workbook.
+                    workbook.Save(outputPath, saveOptions);
+
+                    Console.WriteLine($"Encrypted '{Path.GetFileName(filePath)}' with password '{password}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
             }
-            return sb.ToString();
+
+            Console.WriteLine("Batch encryption completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fatal error: {ex.Message}");
         }
     }
 }

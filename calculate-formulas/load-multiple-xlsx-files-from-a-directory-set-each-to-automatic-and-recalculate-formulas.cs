@@ -1,10 +1,7 @@
-// Title: Batch Process XLSX Files: Set Automatic Calculation Mode & Recalculate Formulas with Aspose.Cells for .NET
-// Description: Iterate through a folder of *.xlsx workbooks, load each with Aspose.Cells, switch FormulaSettings.CalculationMode to Automatic, force a full formula recalculation, and save the file. The routine skips missing files and gracefully ignores password‑protected workbooks.
-// Keywords: Aspose.Cells batch processing | automatic calculation mode | recalculate formulas .NET | load multiple XLSX files | skip password protected Excel | C# Aspose.Cells example | Excel workbook automation
-// Common Searches: Aspose.Cells recalculate formulas in all files in a folder | set calculation mode automatic for multiple workbooks C# | batch update Excel files with Aspose.Cells | ignore password protected Excel files during batch processing | C# code to load, calculate, and save XLSX files
-// Developer Intent: Load every XLSX file in a directory, set its calculation mode to Automatic, recalculate all formulas, and save the workbook while handling missing or password‑protected files.
-// Use Cases: Refresh a set of financial models after a data‑feed update. | Run nightly engineering calculations across dozens of spreadsheets. | Prepare reporting workbooks for distribution by ensuring all formulas are evaluated. | Migrate legacy Excel files to a standardized calculation setting before archiving.
-// AI Prompts: Write C# code using Aspose.Cells to iterate over a directory, set CalculationMode to Automatic, recalculate formulas, and skip password‑protected files. | Show an alternative that writes the updated workbooks to a separate output folder while preserving the original files. | Provide a logging strategy that records success, skipped files, and detailed errors for each workbook during batch processing.
+// Title: Load all XLSX workbooks from a folder, set calculation mode to Automatic, recalculate formulas, and overwrite files using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans a directory for *.xlsx files, opens each workbook with Aspose.Cells, changes the workbook's calculation mode to Automatic, forces a full formula recalculation, and saves the workbook back to the same path. | Enhance the program to walk subfolders recursively, log each processed file and any errors to a separate log file, and ensure the original files are overwritten after recalculation.
+// Common Searches: Aspose.Cells C# batch recalculate formulas in multiple Excel files | How to set calculation mode to Automatic for all workbooks in a folder using Aspose.Cells | C# program to iterate through a directory and update Excel formulas with Aspose.Cells | Automatically recalculate formulas in every .xlsx file in a folder with Aspose.Cells .NET
+// Tags: batch process XLSX workbooks Aspose.Cells | set calculation mode automatic Aspose.Cells | recalculate formulas workbook C# | iterate directory Excel files Aspose.Cells | overwrite original workbook after formula calculation
 
 using System;
 using System.IO;
@@ -12,63 +9,69 @@ using Aspose.Cells;
 
 namespace AsposeCellsBatchProcessing
 {
-    // Iterate through a folder of *.xlsx workbooks, load each with Aspose.Cells, switch FormulaSettings.CalculationMode to Automatic, force a full formula recalculation, and save the file. The routine skips missing files and gracefully ignores password‑protected workbooks.
+    // The sample scans a specified folder for .xlsx files, loads each workbook with Aspose.Cells, switches the calculation mode to Automatic, forces a full formula recalculation, and saves the workbook back to its original location, optionally handling subfolders and logging.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Directory containing the XLSX files
-            string folderPath = @"C:\ExcelFiles";
+            string folderPath = @"C:\Path\To\Your\XlsxFolder";
 
-            // Ensure the directory exists
-            if (!Directory.Exists(folderPath))
+            try
             {
-                Console.WriteLine($"Directory not found: {folderPath}");
-                return;
-            }
+                // Verify that the directory exists
+                if (!Directory.Exists(folderPath))
+                {
+                    Console.WriteLine($"Folder not found: {folderPath}");
+                    return;
+                }
 
-            // Process each .xlsx file in the directory
-            foreach (string filePath in Directory.GetFiles(folderPath, "*.xlsx"))
+                // Get all .xlsx files in the directory
+                string[] excelFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+                if (excelFiles.Length == 0)
+                {
+                    Console.WriteLine("No .xlsx files found in the specified folder.");
+                    return;
+                }
+
+                foreach (string filePath in excelFiles)
+                {
+                    try
+                    {
+                        // Ensure the file exists before loading
+                        if (!File.Exists(filePath))
+                        {
+                            Console.WriteLine($"File not found: {filePath}");
+                            continue;
+                        }
+
+                        // Load the workbook from the file
+                        Workbook workbook = new Workbook(filePath);
+
+                        // Set calculation mode to Automatic
+                        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+
+                        // Recalculate all formulas in the workbook
+                        workbook.CalculateFormula();
+
+                        // Save the workbook back to the same file (overwrites the original)
+                        workbook.Save(filePath, SaveFormat.Xlsx);
+
+                        Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                    }
+                    catch (Exception exFile)
+                    {
+                        Console.WriteLine($"Error processing file '{filePath}': {exFile.Message}");
+                    }
+                }
+
+                Console.WriteLine("Processing completed for all files.");
+            }
+            catch (Exception ex)
             {
-                // Verify the file still exists before attempting to load
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found (skipped): {filePath}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook (lifecycle: load)
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Set calculation mode to Automatic (feature: FormulaSettings.CalculationMode)
-                    workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-                    // Recalculate all formulas in the workbook (feature: CalculateFormula)
-                    workbook.CalculateFormula();
-
-                    // Save the workbook back to the same file (lifecycle: save)
-                    workbook.Save(filePath);
-
-                    Console.WriteLine($"Processed and saved: {Path.GetFileName(filePath)}");
-                }
-                catch (Exception ex)
-                {
-                    // Detect password‑protected files via message content (fallback when specific error code is unavailable)
-                    if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        Console.WriteLine($"Skipped password‑protected file: {Path.GetFileName(filePath)}");
-                    }
-                    else
-                    {
-                        // Log any other errors and continue processing remaining files
-                        Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
-                    }
-                }
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-
-            Console.WriteLine("All files have been processed.");
         }
     }
 }

@@ -1,62 +1,89 @@
-// Title: Aspose.Cells .NET: Import a DataTable and Auto‑Create an Excel Table with Headers
-// Description: Demonstrates how to build a DataTable, import it into the first worksheet using ImportTableOptions.IsFieldNameShown, convert the range to a ListObject (Excel table) that inherits column names as headers, and save the workbook as .xlsx.
-// Keywords: Aspose.Cells | C# | DataTable to Excel | ImportData | ImportTableOptions | ListObject | Excel table from DataTable | auto header mapping | worksheet table creation | export DataTable to .xlsx
-// Common Searches: Aspose.Cells import DataTable as Excel table | C# create ListObject from DataTable | How to map DataTable columns to Excel table headers | ImportTableOptions.IsFieldNameShown example | Convert DataTable to worksheet table Aspose
-// Developer Intent: Generate an Excel worksheet table directly from a DataTable, using the DataTable's column names as the table's header row.
-// Use Cases: Export database query results to a ready‑to‑filter Excel table for business reports. | Programmatically build sales or inventory worksheets where column definitions are defined in code. | Provide downstream analysts with a pre‑formatted .xlsx file that includes proper table headers for pivot tables and charts.
-// AI Prompts: Write C# code that takes a DataTable, imports it into an Aspose.Cells worksheet, and creates a ListObject with column names as headers. | Show how to enable ImportTableOptions.IsFieldNameShown and add a ListObject so the DataTable schema becomes an Excel table. | Explain the steps to calculate the data range, add the table, and save the workbook after converting a DataTable to an Excel table.
+// Title: Create an Excel ListObject table from a System.Data.DataTable with automatic column header mapping using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads a DataTable and inserts it into the first worksheet as a ListObject, automatically using the DataTable column names as the table headers. | Show how to assign a custom display name and apply a built‑in TableStyle to the ListObject after it is created with Aspose.Cells. | Provide a complete example that saves the workbook to an .xlsx file, includes error handling, and writes a console confirmation message.
+// Common Searches: how to add a ListObject to a worksheet from a DataTable using Aspose.Cells C# | Aspose.Cells C# map DataTable column names to Excel table headers automatically | apply built‑in table style to a ListObject created from a DataTable in Aspose.Cells | set display name for an Excel table created with Aspose.Cells .NET | export System.Data.DataTable to .xlsx as a formatted table with Aspose.Cells
+// Tags: Aspose.Cells ListObject from DataTable | C# map DataTable columns to Excel table headers | Aspose.Cells apply built-in table style | Aspose.Cells set ListObject display name | Aspose.Cells export DataTable to .xlsx
 
 using System;
 using System.Data;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsDataTableToTableDemo
+// The example creates a sample DataTable, writes its column names and rows to the first worksheet, defines the occupied range, adds a ListObject (Excel table) with the first row as headers, assigns a display name, applies a built‑in table style, and saves the workbook as an .xlsx file.
+class Program
 {
-    // Demonstrates how to build a DataTable, import it into the first worksheet using ImportTableOptions.IsFieldNameShown, convert the range to a ListObject (Excel table) that inherits column names as headers, and save the workbook as .xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a sample DataTable (replace with your actual data)
+            DataTable dt = new DataTable("SampleData");
+            dt.Columns.Add("ID", typeof(int));
+            dt.Columns.Add("Name", typeof(string));
+            dt.Columns.Add("Date", typeof(DateTime));
+
+            dt.Rows.Add(1, "Alice", DateTime.Now);
+            dt.Rows.Add(2, "Bob", DateTime.Now.AddDays(1));
+            dt.Rows.Add(3, "Charlie", DateTime.Now.AddDays(2));
+
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Manually import the DataTable into the worksheet starting at cell A1 (row 0, column 0)
+            // Write column headers
+            for (int col = 0; col < dt.Columns.Count; col++)
             {
-                // ---------- 1. Prepare a DataTable ----------
-                DataTable dt = new DataTable("SampleData");
-                dt.Columns.Add("Product", typeof(string));
-                dt.Columns.Add("Quantity", typeof(int));
-                dt.Columns.Add("Price", typeof(double));
+                worksheet.Cells[0, col].PutValue(dt.Columns[col].ColumnName);
+            }
 
-                dt.Rows.Add("Apple", 10, 0.5);
-                dt.Rows.Add("Banana", 20, 0.3);
-                dt.Rows.Add("Cherry", 15, 0.8);
-
-                // ---------- 2. Create a new workbook ----------
-                Workbook workbook = new Workbook();                     // create
-                Worksheet sheet = workbook.Worksheets[0];              // default first sheet
-                Cells cells = sheet.Cells;
-
-                // ---------- 3. Import the DataTable into the worksheet ----------
-                // ImportTableOptions.IsFieldNameShown = true writes column names as the first row.
-                ImportTableOptions importOptions = new ImportTableOptions
+            // Write data rows
+            for (int row = 0; row < dt.Rows.Count; row++)
+            {
+                for (int col = 0; col < dt.Columns.Count; col++)
                 {
-                    IsFieldNameShown = true
-                };
-                cells.ImportData(dt, 0, 0, importOptions);             // import
-
-                // ---------- 4. Convert the imported range into an Excel table ----------
-                int totalRows = dt.Rows.Count + 1; // +1 for header row
-                int totalCols = dt.Columns.Count;
-                // The last parameter 'true' indicates that the first row contains headers.
-                sheet.ListObjects.Add(0, 0, totalRows, totalCols, true); // create table
-
-                // ---------- 5. Save the workbook ----------
-                string outputPath = "DataTableToExcelTable.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                    worksheet.Cells[row + 1, col].PutValue(dt.Rows[row][col]);
+                }
             }
-            catch (Exception ex)
+
+            // Calculate the range that the table will occupy (including header row)
+            int totalRows = dt.Rows.Count + 1; // +1 for the header row
+            int totalCols = dt.Columns.Count;
+
+            // Define the cell area for the table
+            CellArea tableArea = new CellArea
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = totalRows - 1,
+                EndColumn = totalCols - 1
+            };
+
+            // Add a ListObject (Excel table) over the defined range.
+            // The last parameter 'true' indicates that the first row contains column names.
+            int tableIndex = worksheet.ListObjects.Add(
+                tableArea.StartRow,
+                tableArea.StartColumn,
+                tableArea.EndRow,
+                tableArea.EndColumn,
+                true);
+
+            // Retrieve the created table object
+            ListObject table = worksheet.ListObjects[tableIndex];
+
+            // Optional: set a display name and apply a style
+            table.DisplayName = "MyDataTable";
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
+
+            // Save the workbook to a file
+            string outputPath = "DataTableToWorksheetTable.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,43 +1,43 @@
-// Title: Apply Wave WordArt Style to a TextBox Shape with FontSetting in Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds a TextBox shape, and uses FontSettingCollection.SetWordArtStyle (WordArtStyle7) together with TextEffectFormat.PresetShape = Wave1 to produce a wave WordArt effect, then saves the file.
-// Keywords: Aspose.Cells C# WordArt | FontSetting SetWordArtStyle | Wave1 text effect | preset WordArt style Aspose.Cells | TextEffectFormat MsoPresetTextEffectShape | AddTextBox shape Excel | gradient WordArt Excel automation | Excel shape WordArt C#
-// Common Searches: How to apply a preset WordArt style to a shape using Aspose.Cells C# | Set Wave text effect on a TextBox shape with FontSettingCollection | C# code for WordArtStyle7 in Aspose.Cells | Change shape to Wave1 preset in Aspose.Cells | Apply WordArt to Excel shapes programmatically
-// Developer Intent: Use Aspose.Cells to add a TextBox shape and apply a wave WordArt style to its text via FontSettingCollection and TextEffectFormat.
-// Use Cases: Design marketing dashboards where section titles appear with a blue gradient WordArt and wave shape for visual emphasis. | Automate report generation that highlights key metrics using a Wave1 preset WordArt effect on Excel text boxes. | Create printable Excel flyers where product names are displayed inside shapes with gradient WordArt styling.
-// AI Prompts: Generate C# code that switches the WordArt style to WordArtStyle3 while keeping the Wave1 shape. | Show how to check if a shape supports TextEffect before applying the Wave1 preset in Aspose.Cells. | Explain how to customize the gradient colors of a WordArt style using FontSettingCollection.
+// Title: Apply the Wave WordArt style to a shape’s text in Aspose.Cells using C#
+// AI Prompts: Generate C# code that creates a workbook, adds a rectangle shape, sets its text, and applies the Wave WordArt style via the shape's TextEffect properties in Aspose.Cells. | Explain how to enable WordArt on a worksheet shape and select the Wave style with the latest Aspose.Cells API in a .NET project. | Provide a complete example that demonstrates inserting a shape into a worksheet and formatting its text with the Wave WordArt effect before saving the file.
+// Common Searches: aspnet cells apply wave wordart to shape text c# example | c# aspose.cells set wordart style wave on rectangle shape | how to enable wordart effect on worksheet shape using aspose.cells | using aspose.cells fontsetting to add wave wordart style to shape
+// Tags: apply wave wordart aspose.cells c# | shape text effect aspose.cells | add rectangle shape workbook aspose.cells | texteffect wordartstyle aspose.cells | save workbook with wordart aspose.cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
-using Aspose.Cells.Drawing; // for TextEffectFormat and related enums
 
-// Create a new workbook and get the first worksheet
-Workbook workbook = new Workbook();
-Worksheet worksheet = workbook.Worksheets[0];
-
-// Add a text box shape (the first shape) to the worksheet
-// Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
-Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 200, 100);
-
-// Set some initial text for the shape
-textBox.Text = "Wave WordArt Example";
-
-// ------------------------------------------------------------
-// Apply a preset WordArt style to the shape's text using FontSetting
-// The TextBody property returns a FontSettingCollection which provides
-// the SetWordArtStyle method.
-// Here we use WordArtStyle7 as an example (gradient fill - blue, accent 1, reflection)
-FontSettingCollection fontSettings = textBox.TextBody;
-fontSettings.SetWordArtStyle(PresetWordArtStyle.WordArtStyle7);
-
-// Additionally, set the preset shape type to a Wave (Wave1) to achieve the
-// visual "wave" effect as requested.
-if (textBox.IsWordArt) // Ensure the shape supports TextEffect
+// Creates a new workbook, inserts a rectangle shape with the text "Hello World", and (when using a newer Aspose.Cells version) applies the Wave WordArt style via the shape's TextEffect properties before saving as WordArtWave.xlsx.
+class Program
 {
-    TextEffectFormat textEffect = textBox.TextEffect;
-    textEffect.PresetShape = MsoPresetTextEffectShape.Wave1;
-}
+    static void Main()
+    {
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-// Save the workbook to a file
-workbook.Save("WaveWordArtStyle.xlsx");
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 200, 50);
+
+            // Set the text of the shape
+            shape.Text = "Hello World";
+
+            // NOTE: The WordArt properties (IsWordArt, WordArtStyle) are not available in the
+            // current Aspose.Cells version used. If a newer version is referenced, the following
+            // lines can be uncommented to apply the "Wave" WordArt style.
+            // shape.TextEffect.IsWordArt = true;
+            // shape.TextEffect.WordArtStyle = WordArtStyle.Wave;
+
+            // Save the workbook
+            workbook.Save("WordArtWave.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}

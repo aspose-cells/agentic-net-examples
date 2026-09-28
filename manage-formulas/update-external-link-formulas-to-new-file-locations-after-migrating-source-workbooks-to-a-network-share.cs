@@ -1,103 +1,57 @@
-// Title: C# – Update Excel external link paths to a network share using Aspose.Cells
-// Description: Loads a master workbook, scans its ExternalLinkCollection, replaces any data‑source paths that begin with an old folder prefix with a new network‑share prefix, updates both OriginalDataSource and DataSource, reloads the referenced workbooks, calls UpdateLinkedDataSource, recalculates formulas, and saves the workbook with corrected links.
-// Keywords: Aspose.Cells external links | C# update Excel link path | network share workbook reference | ExternalLinkCollection replace folder prefix | .NET Excel linked data source | recalculate formulas Aspose.Cells
-// Common Searches: change external workbook path Aspose.Cells C# | update Excel external links after moving files | replace folder prefix in Excel external references .NET | Aspose.Cells recalculate formulas after path change | load and refresh linked data sources C#
-// Developer Intent: Modify a workbook’s external link formulas so they point to a new network‑share location and refresh the linked data.
-// Use Cases: Migrate source files to a shared drive and automatically correct all external references in a master workbook. | Batch‑process multiple workbooks to replace an outdated folder prefix with a new UNC path. | Validate the presence of external workbooks after a path change, reload them, and recalculate formulas to maintain data integrity.
-// AI Prompts: Write C# code with Aspose.Cells that scans a workbook’s ExternalLinkCollection, swaps an old folder prefix for a new network‑share prefix, and saves the updated file. | Create a method that updates external link data sources, loads each referenced workbook, calls UpdateLinkedDataSource, recalculates formulas, and handles missing files gracefully. | Explain the difference between OriginalDataSource and DataSource in Aspose.Cells when updating external links and how to ensure formulas are refreshed.
+// Title: Replace old UNC base path with new network share in external link formulas of an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook with Aspose.Cells, scan all cells for formulas that contain a specific UNC folder path, replace the old path with a new UNC path, and save the workbook. | Iterate through each worksheet and cell, detect external link formulas referencing a legacy network share, update the reference to a new share, and preserve existing formula logic. | Add robust error handling to verify the source workbook exists before performing bulk UNC path replacement in external formulas with Aspose.Cells.
+// Common Searches: C# Aspose.Cells replace old UNC path in external link formulas | how to update external workbook references after moving files to a new network share using Aspose.Cells | programmatically change Excel external link paths in .NET | bulk edit formulas containing network share paths with Aspose.Cells
+// Tags: replace UNC base path in Aspose.Cells formulas | bulk update external link references .NET | migrate Excel external links to new network share | Aspose.Cells error handling for missing workbook | iterate cells to modify formulas Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace UpdateExternalLinksDemo
+// The example loads Summary.xlsx, iterates through every worksheet and cell, replaces any formula that contains the old UNC base path with the new UNC base path, saves the modified workbook as Summary_Updated.xlsx, and includes error handling for a missing source file.
+class UpdateExternalLinks
 {
-    // Loads a master workbook, scans its ExternalLinkCollection, replaces any data‑source paths that begin with an old folder prefix with a new network‑share prefix, updates both OriginalDataSource and DataSource, reloads the referenced workbooks, calls UpdateLinkedDataSource, recalculates formulas, and saves the workbook with corrected links.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths
+        string workbookPath = @"C:\Reports\Summary.xlsx";
+        string outputPath = @"C:\Reports\Summary_Updated.xlsx";
+
+        // Old and new base paths for the source workbooks
+        string oldBasePath = @"\\oldserver\share\SourceFiles\";
+        string newBasePath = @"\\newserver\share\SourceFiles\";
+
+        try
         {
-            // Paths and folder prefixes
-            string mainWorkbookPath = @"C:\Temp\MainWorkbook.xlsx";
-            string oldFolderPrefix = @"C:\OldData\";
-            string newFolderPrefix = @"\\NetworkShare\NewData\";
+            // Verify the input workbook exists
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException($"Workbook not found: {workbookPath}");
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the main workbook; create a new one if the file does not exist
-                Workbook mainWorkbook;
-                if (File.Exists(mainWorkbookPath))
+                // Update formulas that embed the old path directly
+                Cells cells = sheet.Cells;
+                foreach (Cell cell in cells)
                 {
-                    mainWorkbook = new Workbook(mainWorkbookPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Main workbook not found at '{mainWorkbookPath}'. Creating a new workbook for demonstration.");
-                    mainWorkbook = new Workbook(); // empty workbook
-                }
-
-                // Get external links collection
-                ExternalLinkCollection externalLinks = mainWorkbook.Worksheets.ExternalLinks;
-
-                // Update each external link's data source path
-                for (int i = 0; i < externalLinks.Count; i++)
-                {
-                    ExternalLink link = externalLinks[i];
-                    string currentSource = !string.IsNullOrEmpty(link.OriginalDataSource)
-                                            ? link.OriginalDataSource
-                                            : link.DataSource;
-
-                    if (currentSource.StartsWith(oldFolderPrefix, StringComparison.OrdinalIgnoreCase))
+                    if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula) &&
+                        cell.Formula.IndexOf(oldBasePath, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        string updatedSource = newFolderPrefix + currentSource.Substring(oldFolderPrefix.Length);
-                        link.OriginalDataSource = updatedSource;
-                        link.DataSource = updatedSource;
-                        Console.WriteLine($"Link {i} updated to: {updatedSource}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Link {i} does not need updating: {currentSource}");
+                        // Replace the old path with the new path inside the formula
+                        cell.Formula = cell.Formula.Replace(oldBasePath, newBasePath, StringComparison.OrdinalIgnoreCase);
                     }
                 }
-
-                // Load external workbooks based on updated data sources
-                Workbook[] externalWorkbooks = new Workbook[externalLinks.Count];
-                for (int i = 0; i < externalLinks.Count; i++)
-                {
-                    string externalPath = externalLinks[i].DataSource;
-                    if (File.Exists(externalPath))
-                    {
-                        externalWorkbooks[i] = new Workbook(externalPath);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Warning: External workbook not found at {externalPath}");
-                        externalWorkbooks[i] = null;
-                    }
-                }
-
-                // Remove null entries
-                externalWorkbooks = Array.FindAll(externalWorkbooks, wb => wb != null);
-
-                // Update linked data sources if any external workbooks were loaded
-                if (externalWorkbooks.Length > 0)
-                {
-                    mainWorkbook.UpdateLinkedDataSource(externalWorkbooks);
-                }
-
-                // Recalculate formulas to reflect any changes
-                mainWorkbook.CalculateFormula();
-
-                // Save the updated workbook
-                string outputPath = Path.Combine(Path.GetDirectoryName(mainWorkbookPath) ?? Environment.CurrentDirectory,
-                                                "MainWorkbook_Updated.xlsx");
-                mainWorkbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved with updated external links at: {outputPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook updated and saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

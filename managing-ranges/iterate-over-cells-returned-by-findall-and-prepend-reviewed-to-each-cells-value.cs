@@ -1,62 +1,63 @@
-// Title: C# – Use Aspose.Cells FindAll to prepend "Reviewed:" to every string cell
-// Description: Demonstrates how to create a workbook, populate sample text, locate all string cells with the FindAll method, prepend the prefix "Reviewed:" to each value, and save the result as ReviewedOutput.xlsx. Includes null‑safety and type checking.
-// Keywords: Aspose.Cells FindAll C# | prepend text to cell values | modify string cells .NET | iterate used range Aspose.Cells | add prefix to Excel cells | Aspose.Cells workbook automation | C# Excel cell update | global .NET spreadsheet processing
-// Common Searches: Aspose.Cells prepend prefix to all text cells | C# FindAll example for updating cell values | How to add "Reviewed:" to every string in an Excel file using Aspose | Iterate over used range and modify cells Aspose.Cells | Update cell content programmatically in .NET
-// Developer Intent: Add the "Reviewed:" prefix to each string‑type cell in a worksheet using Aspose.Cells.
-// Use Cases: Flag every task description as reviewed before distribution | Automatically label textual entries with a status marker for audit trails | Prepare export files where all string data must carry a custom prefix
-// AI Prompts: Write C# code that uses Aspose.Cells FindAll to locate all string cells and prepend "Reviewed:" to each. | Show how to replace a manual nested loop with FindAll while safely handling null or non‑string cells. | Explain best practices for bulk updating cell values in Aspose.Cells without affecting numeric data.
+// Title: How to prepend "Reviewed:" to every non‑empty cell in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an XLSX workbook with Aspose.Cells, scans the used range of the first worksheet, and prefixes each non‑null cell's string value with "Reviewed:" before saving the file. | Update an existing Aspose.Cells C# program so that it adds the text "Reviewed:" in front of the current content of every populated cell and writes the changes to a new workbook.
+// Common Searches: C# Aspose.Cells add prefix to all populated cells in a worksheet | How to update every cell value in an Excel file using Aspose.Cells .NET | Iterate over used range and prepend text to cell values with Aspose.Cells | Bulk prepend string to Excel cells in C# using Aspose.Cells library | Aspose.Cells replace cell text with custom label for non‑empty cells
+// Tags: cell value prefix Aspose.Cells C# | iterate used range modify cells Aspose.Cells | bulk update worksheet cells .NET | add custom label to Excel cells Aspose.Cells | process non‑empty cells Aspose.Cells workbook
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFindAllDemo
+// The example loads an existing XLSX file with Aspose.Cells, accesses the first worksheet, determines its used rows and columns, iterates through each cell in that range, and for every cell that contains data it prefixes the original string with "Reviewed:" before saving the workbook to a new file.
+class Program
 {
-    // Demonstrates how to create a workbook, populate sample text, locate all string cells with the FindAll method, prepend the prefix "Reviewed:" to each value, and save the result as ReviewedOutput.xlsx. Includes null‑safety and type checking.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Populate some sample data
-                cells["A1"].PutValue("Task 1");
-                cells["B2"].PutValue("Task 2");
-                cells["C3"].PutValue("Task 3");
+            // Access the first worksheet (adjust index as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Determine the used range of the worksheet
-                int maxRow = cells.MaxDataRow;
-                int maxColumn = cells.MaxDataColumn;
+            // Determine the used range of the worksheet
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
 
-                // Iterate over all cells in the used range
-                for (int row = 0; row <= maxRow; row++)
+            // Iterate through each cell in the used range
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    for (int col = 0; col <= maxColumn; col++)
+                    Cell cell = sheet.Cells[row, col];
+
+                    // Process only cells that contain a value
+                    if (cell != null && cell.Type != CellValueType.IsNull)
                     {
-                        Cell cell = cells[row, col];
-                        // Process only cells that contain a string value
-                        if (cell.Type == CellValueType.IsString)
-                        {
-                            string originalValue = cell.StringValue ?? string.Empty;
-                            // Prepend "Reviewed:" to the existing value
-                            cell.PutValue("Reviewed:" + originalValue);
-                        }
+                        string originalValue = cell.StringValue;
+                        cell.PutValue("Reviewed:" + originalValue);
                     }
                 }
+            }
 
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save("ReviewedOutput.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

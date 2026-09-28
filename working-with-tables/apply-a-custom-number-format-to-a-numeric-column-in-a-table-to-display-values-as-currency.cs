@@ -1,71 +1,92 @@
-// Title: Format a Table Column as Currency with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a ListObject table, defines a style with the custom format "$#,##0.00", uses a StyleFlag to apply only the number‑format to the price column, and saves the file as an XLSX workbook.
-// Keywords: Aspose.Cells | C# | custom number format | currency format | ListObject | ListColumn | ApplyStyle | StyleFlag | Excel table column formatting | Aspose.Cells .NET
-// Common Searches: Aspose.Cells set currency format for table column | C# apply custom number format to ListColumn | StyleFlag only number format Aspose.Cells | How to format price column in Excel table using Aspose.Cells | ApplyStyle currency format ListObject column
-// Developer Intent: Apply a custom currency number format to the numeric column of an Excel table without affecting other cell styles.
-// Use Cases: Generate product price lists where the price column shows values with a dollar sign and two decimals. | Produce financial reports that automatically display amount columns as currency. | Export invoices from an application with the total column pre‑formatted as currency in the resulting Excel file.
-// AI Prompts: Show how to format a ListColumn as currency in Aspose.Cells while preserving other styles. | Provide a C# example that uses StyleFlag to change only the number format of a table column. | Explain the steps to create a custom currency style and apply it to a specific column of a ListObject in Aspose.Cells.
+// Title: How to apply a custom currency number format to a column in an Excel table using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, finds the first ListObject, locates the column named "Amount", creates a style with the custom format "$#,##0.00", applies it to each cell in that column, and saves the workbook. | Show a step‑by‑step example of using Aspose.Cells Style.Custom to set a currency format for a specific table column identified by its header text. | Generate a reusable method that takes a workbook path, table name, and column header, then formats that column as currency with Aspose.Cells and writes the updated file.
+// Common Searches: Aspose.Cells C# format table column as currency custom number format | Set custom number format for ListObject column in .NET Excel workbook | Apply currency style to Excel table column using Aspose.Cells API
+// Tags: Aspose.Cells custom currency format | C# ListObject column styling | Excel table column number format Aspose | Apply Style.Custom to table data range | Aspose.Cells SetStyle column
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an existing workbook, accesses the first ListObject table, finds the "Amount" column by header, creates a style with the custom currency format "$#,##0.00", applies that style to each cell in the column's data range, and saves the modified workbook to a new file.
+class Program
 {
-    // Creates a workbook, adds a ListObject table, defines a style with the custom format "$#,##0.00", uses a StyleFlag to apply only the number‑format to the price column, and saves the file as an XLSX workbook.
-    public class TableColumnCurrencyFormat
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data: first column is product name, second column is price
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Price");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(1.25);
-                sheet.Cells["A3"].PutValue("Orange");
-                sheet.Cells["B3"].PutValue(0.85);
-                sheet.Cells["A4"].PutValue("Banana");
-                sheet.Cells["B4"].PutValue(0.60);
-
-                // Create a table that includes the data range (including headers)
-                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.DisplayName = "ProductsTable";
-
-                // Prepare a style with a custom currency number format
-                Style currencyStyle = workbook.CreateStyle();
-                currencyStyle.Custom = "$#,##0.00";
-
-                // Use StyleFlag to apply only the number format part of the style
-                StyleFlag flag = new StyleFlag();
-                flag.NumberFormat = true;
-
-                // Apply the style to the numeric column (second column, index 1) of the table
-                ListColumn priceColumn = table.ListColumns[1];
-                priceColumn.Range.ApplyStyle(currencyStyle, flag);
-
-                // Save the workbook to a file
-                workbook.Save("TableColumnCurrencyFormat.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            TableColumnCurrencyFormat.Run();
+            // Load the workbook containing the table
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one table (ListObject)
+            if (sheet.ListObjects.Count > 0)
+            {
+                // Retrieve the first table in the worksheet
+                ListObject table = sheet.ListObjects[0];
+
+                // Identify the column to format by its header name, e.g., "Amount"
+                int tableColumnIndex = -1;
+                for (int i = 0; i < table.ListColumns.Count; i++)
+                {
+                    if (table.ListColumns[i].Name == "Amount")
+                    {
+                        tableColumnIndex = i;
+                        break;
+                    }
+                }
+
+                if (tableColumnIndex != -1)
+                {
+                    // Convert the table column index to the worksheet column index
+                    int worksheetColumnIndex = table.StartColumn + tableColumnIndex;
+
+                    // Create a style with a custom currency number format
+                    Style currencyStyle = workbook.CreateStyle();
+                    currencyStyle.Custom = "$#,##0.00";
+
+                    // Get the data range of the table (excludes header row)
+                    AsposeRange dataRange = table.DataRange;
+                    int firstDataRow = dataRange.FirstRow;
+                    int lastDataRow = dataRange.FirstRow + dataRange.RowCount - 1;
+
+                    // Apply the custom style to each cell in the target column
+                    for (int row = firstDataRow; row <= lastDataRow; row++)
+                    {
+                        Cell cell = sheet.Cells[row, worksheetColumnIndex];
+                        cell.SetStyle(currencyStyle);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Column \"Amount\" not found in the table.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No tables found in the worksheet.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

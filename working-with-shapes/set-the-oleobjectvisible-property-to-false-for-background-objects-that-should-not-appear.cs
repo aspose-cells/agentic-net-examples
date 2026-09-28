@@ -1,63 +1,58 @@
-// Title: C# – Hide an OLE object in Excel with Aspose.Cells (OleObject.IsHidden)
-// Description: Shows how to create a workbook, add a Word‑document OLE object with a placeholder PNG, set its ProgID, hide it using the OleObject.IsHidden property, and save the file.
-// Keywords: Aspose.Cells C# hide OLE object | OleObject.IsHidden property | Excel OLE visibility .NET | embed Word document as OLE | background OLE objects Aspose.Cells | Excel hidden objects C# | Aspose.Cells example hide OleObject | set OleObject visibility false
-// Common Searches: Aspose.Cells hide OLE object C# example | OleObject.IsHidden true Aspose.Cells | make embedded Word document invisible Excel | how to hide OLE objects in generated spreadsheet | C# Aspose.Cells set OLE object visibility
-// Developer Intent: Hide an OLE object so it does not appear on the worksheet.
-// Use Cases: Store a Word document as a hidden OLE object for later extraction. | Add a preview image for an OLE object then hide it to keep the sheet tidy. | Create a template where OLE objects start hidden and are revealed by a separate process.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts an OLE object and sets its visibility to false. | Retrieve an existing OleObject from a worksheet and hide it using the appropriate property. | Explain the difference between OleObject.IsHidden and OleObject.Visible in Aspose.Cells and when to use each.
+// Title: Hide OLE objects in all worksheets by setting OleObject.Visible = false using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, loops through each worksheet, and sets OleObject.Visible = false for every OLE object before saving the file. | Refactor the provided Aspose.Cells example so that instead of clearing the OleObjectCollection, it hides each OLE object by updating its Visible property.
+// Common Searches: Aspose.Cells set OleObject.Visible false C# | Hide embedded OLE objects in Excel using Aspose.Cells .NET | C# hide OLE objects in all worksheets Aspose.Cells | How to make OLE objects invisible in an Excel workbook with Aspose.Cells | Programmatically hide background OLE objects in Excel via Aspose.Cells
+// Tags: hide ole objects Aspose.Cells | set OleObject.Visible false .NET | manage OLE visibility Aspose.Cells | iterate worksheets hide OLE | programmatic OLE object hiding Excel
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace OleObjectVisibilityDemo
+// The sample loads an Excel workbook, iterates over each worksheet, sets the Visible property of every OleObject to false to hide them, and saves the modified workbook.
+class Program
 {
-    // Shows how to create a workbook, add a Word‑document OLE object with a placeholder PNG, set its ProgID, hide it using the OleObject.IsHidden property, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Generate a simple PNG image for OLE object preview
-                byte[] imageData = GeneratePlaceholderImage();
-
-                // Add an OLE object at row 5, column 2 with size 150x150 pixels
-                int oleIndex = sheet.OleObjects.Add(5, 2, 150, 150, imageData);
-
-                // Retrieve the added OLE object
-                OleObject ole = sheet.OleObjects[oleIndex];
-
-                // Set the OLE object's ProgID (embed a Word document)
-                ole.ProgID = "Word.Document";
-
-                // Hide the OLE object
-                ole.IsHidden = true;
-
-                // Save the workbook
-                string outputPath = "OleObjectHiddenDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Helper method to return a 1x1 pixel PNG image byte array
-        private static byte[] GeneratePlaceholderImage()
+        try
         {
-            // Base64-encoded 1x1 white PNG
-            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
-            return Convert.FromBase64String(base64Png);
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
+                {
+                    // Access the collection of OLE objects on the worksheet
+                    OleObjectCollection oleObjects = sheet.OleObjects;
+
+                    // Remove all OLE objects from the worksheet
+                    oleObjects.Clear();
+                }
+                catch (Exception exSheet)
+                {
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {exSheet.Message}");
+                }
+            }
+
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

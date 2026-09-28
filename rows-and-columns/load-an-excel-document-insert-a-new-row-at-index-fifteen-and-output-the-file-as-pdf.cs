@@ -1,43 +1,64 @@
-// Title: C# – Insert Row at Index 15 and Export Excel to PDF with Aspose.Cells
-// Description: Loads an existing workbook, inserts a new row at zero‑based index 15 on the first worksheet, saves the change to a temporary file, and converts the result to PDF using Aspose.Cells ConversionUtility.
-// Keywords: Aspose.Cells InsertRow C# | Excel to PDF conversion Aspose | Worksheet.Cells.InsertRow example | ConversionUtility Convert PDF | temporary workbook save | C# Excel row insertion
-// Common Searches: Aspose.Cells insert row at specific index | C# convert modified Excel to PDF | How to add a row before exporting to PDF with Aspose | Insert row 15 in Excel using Aspose.Cells .NET | Save workbook temporarily then generate PDF
-// Developer Intent: Add a row at a fixed position in an Excel sheet and produce a PDF of the updated file.
-// Use Cases: Add a header row to a financial statement before creating a PDF report. | Insert a blank spacer row in a data table to improve layout for a PDF invoice. | Programmatically modify a template by inserting rows at a known index and then generate a PDF for automated distribution.
-// AI Prompts: Generate C# code that opens an Excel file, inserts a row at index 15, saves to a temporary workbook, and converts it to PDF using Aspose.Cells ConversionUtility. | Explain how Worksheet.Cells.InsertRow works with zero‑based indexing and how to chain it with ConversionUtility.Convert for PDF output. | Provide a robust C# example that includes error handling, temporary file cleanup, and logging when inserting rows and exporting to PDF with Aspose.Cells.
+// Title: Insert a row at index 15 in an Excel worksheet with Aspose.Cells for .NET and export the workbook to PDF
+// AI Prompts: Load a .xlsx file with Aspose.Cells, insert a new row at row index 15 in the first worksheet, save the workbook, and convert it to a PDF using ConversionUtility. | Using Aspose.Cells for .NET, add a blank row at the 16th row of a worksheet and generate a PDF from the modified workbook.
+// Common Searches: Aspose.Cells C# insert row at specific index and save as PDF | How to add a blank row at row 15 in Excel using Aspose.Cells .NET | Convert modified Excel workbook to PDF with Aspose.Cells ConversionUtility | C# example for inserting a row in worksheet and exporting to PDF using Aspose.Cells
+// Tags: insert row Aspose.Cells API | Excel row insertion Aspose.Cells C# | workbook to PDF conversion Aspose.Cells | ConversionUtility PDF export Aspose.Cells | modify worksheet and generate PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// Loads an existing workbook, inserts a new row at zero‑based index 15 on the first worksheet, saves the change to a temporary file, and converts the result to PDF using Aspose.Cells ConversionUtility.
+// Loads source.xlsx (creates a simple workbook if missing), inserts a blank row at index 15 in the first worksheet, saves the modified workbook, converts it to result.pdf using Aspose.Cells ConversionUtility, and deletes the temporary Excel file.
 class InsertRowAndConvertToPdf
 {
     static void Main()
     {
-        // Paths for the original Excel file, a temporary modified file, and the final PDF.
-        string inputFile = "input.xlsx";
-        string tempFile = "temp_modified.xlsx";
-        string outputPdf = "output.pdf";
+        // Define file paths
+        string sourceExcelPath = @"C:\Input\source.xlsx";
+        string modifiedExcelPath = @"C:\Input\source_modified.xlsx";
+        string outputPdfPath = @"C:\Output\result.pdf";
 
-        // Load the existing workbook.
-        Workbook workbook = new Workbook(inputFile);
+        try
+        {
+            // Ensure the source file exists; create a simple workbook if it does not
+            if (!File.Exists(sourceExcelPath))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(sourceExcelPath));
+                Workbook tempWb = new Workbook();
+                Worksheet tempWs = tempWb.Worksheets[0];
+                tempWs.Name = "Sheet1";
+                tempWs.Cells["A1"].PutValue("Sample Data");
+                tempWb.Save(sourceExcelPath);
+            }
 
-        // Access the first worksheet (you can change the index if needed).
-        Worksheet sheet = workbook.Worksheets[0];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(sourceExcelPath);
 
-        // Insert a new row at index 15 (zero‑based). Existing rows from 15 onward are shifted down.
-        sheet.Cells.InsertRow(15);
+            // Insert a new row at index 15 (16th row)
+            Worksheet worksheet = workbook.Worksheets[0];
+            worksheet.Cells.InsertRow(15);
 
-        // Save the modified workbook to a temporary file.
-        workbook.Save(tempFile);
+            // Ensure the directory for the modified file exists
+            Directory.CreateDirectory(Path.GetDirectoryName(modifiedExcelPath));
+            // Save the modified workbook
+            workbook.Save(modifiedExcelPath);
 
-        // Convert the temporary Excel file to PDF using the provided ConversionUtility rule.
-        ConversionUtility.Convert(tempFile, outputPdf);
+            // Ensure the directory for the PDF output exists
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPdfPath));
+            // Convert the modified workbook to PDF
+            ConversionUtility.Convert(modifiedExcelPath, outputPdfPath);
 
-        // Optional: clean up the temporary file.
-        // System.IO.File.Delete(tempFile);
+            // Clean up the temporary modified Excel file
+            if (File.Exists(modifiedExcelPath))
+            {
+                File.Delete(modifiedExcelPath);
+            }
 
-        Console.WriteLine("Row inserted and PDF generated successfully.");
+            Console.WriteLine("Row inserted and PDF generated successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

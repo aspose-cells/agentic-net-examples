@@ -1,50 +1,54 @@
-// Title: Remove the second sparkline from a SparklineGroup with Aspose.Cells for .NET (C#)
-// Description: This C# example creates a workbook, fills three rows of numeric data, adds a line‑type SparklineGroup covering A1:D3 with sparklines placed in column E, then deletes the sparkline at index 1 using SparklineGroup.Sparklines.RemoveAt, and finally saves the file as DeleteSecondSparkline.xlsx.
-// Keywords: Aspose.Cells | C# sparkline example | SparklineGroup RemoveAt | delete specific sparkline | Excel sparkline manipulation | Aspose.Cells tutorial | programmatic sparkline removal | line sparkline group | Excel automation C# | Aspose.Cells API
-// Common Searches: Aspose.Cells remove sparkline by index | C# SparklineGroup RemoveAt usage | how to delete a specific sparkline in Excel with Aspose | remove second sparkline from SparklineGroup | Aspose.Cells SparklineGroup example C#
-// Developer Intent: Delete the sparkline at position 1 in the first SparklineGroup.
-// Use Cases: Clean up automatically generated sparklines that are no longer needed before exporting a report. | Adjust the number of displayed sparklines based on user‑selected data ranges in a dashboard. | Programmatically eliminate invalid or outdated sparklines when synchronizing workbook data.
-// AI Prompts: Generate C# code that removes the sparkline at index 1 from a SparklineGroup using Aspose.Cells. | Explain how SparklineGroup.Sparklines.RemoveAt reindexes the remaining sparklines. | Show an example that loops through a SparklineGroup and deletes sparklines that meet a custom condition.
+// Title: Delete the second sparkline from the first sparkline group in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that removes the sparkline at index 1 from a SparklineGroup with Aspose.Cells and saves the workbook. | Show how to call SparklineGroup.Sparklines.RemoveAt to delete a specific sparkline in an Excel worksheet using Aspose.Cells.
+// Common Searches: asp.net remove sparkline at index 1 from sparkline group using Aspose.Cells | how to use SparklineGroup.RemoveAt in C# with Aspose.Cells | delete second sparkline in Excel file programmatically Aspose.Cells .NET | remove specific sparkline from SparklineGroup example C#
+// Tags: Aspose.Cells SparklineGroup.RemoveAt | C# delete sparkline by index | Aspose.Cells manipulate Excel sparklines | remove sparkline from Excel worksheet .NET | SparklineGroup sparklines collection removal
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This C# example creates a workbook, fills three rows of numeric data, adds a line‑type SparklineGroup covering A1:D3 with sparklines placed in column E, then deletes the sparkline at index 1 using SparklineGroup.Sparklines.RemoveAt, and finally saves the file as DeleteSecondSparkline.xlsx.
-class Program
+// The example creates a workbook, fills cells A1:D2 with data, adds a line sparkline group covering that range (creating two sparklines in column E), removes the second sparkline (index 1) from the group using SparklineGroup.Sparklines.RemoveAt, and saves the file as DeleteSecondSparkline.xlsx.
+class DeleteSecondSparkline
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data (3 rows, 4 columns) to generate multiple sparklines
-        for (int row = 0; row < 3; row++)
-        {
-            worksheet.Cells[row, 0].PutValue(row + 1);
-            worksheet.Cells[row, 1].PutValue((row + 1) * 2);
-            worksheet.Cells[row, 2].PutValue((row + 1) * 3);
-            worksheet.Cells[row, 3].PutValue((row + 1) * 4);
-        }
+        // Populate sample data for the sparklines (A1:D2)
+        sheet.Cells["A1"].PutValue(5);
+        sheet.Cells["B1"].PutValue(2);
+        sheet.Cells["C1"].PutValue(1);
+        sheet.Cells["D1"].PutValue(3);
+        sheet.Cells["A2"].PutValue(7);
+        sheet.Cells["B2"].PutValue(4);
+        sheet.Cells["C2"].PutValue(6);
+        sheet.Cells["D2"].PutValue(2);
 
-        // Define the location range where sparklines will be placed (column E, rows 0‑2)
+        // Define the location range where the sparklines will be placed (E1 and E2)
         CellArea location = new CellArea
         {
             StartRow = 0,
-            EndRow = 2,
+            EndRow = 1,
             StartColumn = 4,
             EndColumn = 4
         };
 
-        // Add a sparkline group; this creates one sparkline per row in the data range
-        int groupIndex = worksheet.SparklineGroups.Add(SparklineType.Line, "A1:D3", false, location);
-        SparklineGroup sparklineGroup = worksheet.SparklineGroups[groupIndex];
+        // Add a sparkline group with the data range A1:D2
+        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D2", false, location);
+        SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // The group now contains three sparklines (indices 0, 1, 2).
-        // Delete the second sparkline (index 1) using RemoveAt.
-        sparklineGroup.Sparklines.RemoveAt(1);
+        // The Add method of the Sparklines collection creates a sparkline for each row/column
+        // Since we specified a vertical range of two rows, two sparklines are created automatically.
+        // If needed, you could also add them manually:
+        // group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4); // first sparkline at E1
+        // group.Sparklines.Add(sheet.Name + "!A2:D2", 1, 4); // second sparkline at E2
 
-        // Save the workbook to verify the removal.
-        workbook.Save("DeleteSecondSparkline.xlsx", SaveFormat.Xlsx);
+        // Delete the second sparkline (index 1) from the first sparkline group
+        group.Sparklines.RemoveAt(1);
+
+        // Save the workbook to verify the result
+        workbook.Save("DeleteSecondSparkline.xlsx");
     }
 }

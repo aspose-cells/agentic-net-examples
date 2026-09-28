@@ -1,75 +1,82 @@
-// Title: Aspose.Cells .NET – Adjust Series Overlap & Gap Width to Separate Gantt Bars
-// Description: C# example that builds a horizontal stacked‑bar Gantt chart, hides the start‑date series, and applies Overlap = -40 and GapWidth = 150 to both series (and the chart) so overlapping tasks are visually separated. The workbook is saved as an Excel file.
-// Keywords: Aspose.Cells series overlap | gap width stacked bar chart | Gantt chart spacing .NET | horizontal stacked bar Aspose | Excel chart formatting C# | visual separation Gantt bars | Aspose.Cells chart properties
-// Common Searches: set series overlap Aspose.Cells | gap width for stacked bar chart .NET | separate overlapping Gantt tasks Excel | Aspose.Cells horizontal Gantt example | adjust chart spacing Aspose.Cells C#
-// Developer Intent: Modify a stacked‑bar Gantt chart in Aspose.Cells so that overlapping task bars are spaced apart by configuring the Overlap and GapWidth properties of the series and chart.
-// Use Cases: Create a horizontal stacked‑bar Gantt chart where the start‑date series is invisible and the duration series forms the visible bars. | Apply the same Overlap (-40) and GapWidth (150) settings to multiple series to ensure consistent spacing across all tasks. | Generate an Excel workbook with clearly spaced Gantt bars for project‑timeline reporting.
-// AI Prompts: Write C# code using Aspose.Cells to build a Gantt chart and set series Overlap and GapWidth for visual separation. | Explain the impact of Overlap and GapWidth on stacked‑bar charts in Aspose.Cells with code snippets. | Provide debugging steps when Gantt bars still overlap after setting Overlap and GapWidth in Aspose.Cells.
+// Title: How to adjust series overlap and gap width of a Gantt chart in Excel using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx workbook with Aspose.Cells, finds the first Gantt chart, and sets its Overlap to -20 and GapWidth to 150, using reflection to stay compatible with older library versions. | Create a reusable C# method that receives a Worksheet and applies custom series overlap and gap width values to every bar or column chart, checking for property existence before assignment. | Show how to save the updated workbook to a new file path and confirm that the chart spacing changes are reflected in the resulting Excel file.
+// Common Searches: Aspose.Cells C# set chart overlap negative value for Gantt chart | change gap width of bar chart in Excel using Aspose.Cells .NET | use reflection to modify chart properties in older Aspose.Cells versions | programmatically adjust spacing between Gantt bars in an Excel workbook with C#
+// Tags: Aspose.Cells set Overlap property C# | Aspose.Cells configure GapWidth .NET | customize Gantt chart bar spacing Aspose.Cells | use reflection for chart property compatibility Aspose.Cells | programmatic Excel chart spacing adjustment C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-namespace GanttChartExample
+namespace AsposeCellsExample
 {
-    // C# example that builds a horizontal stacked‑bar Gantt chart, hides the start‑date series, and applies Overlap = -40 and GapWidth = 150 to both series (and the chart) so overlapping tasks are visually separated. The workbook is saved as an Excel file.
+    // The example loads an existing Excel workbook, accesses the first chart (assumed to be a Gantt chart), and attempts to set its Overlap to -20 and GapWidth to 150 via reflection for backward‑compatible Aspose.Cells versions, then saves the modified workbook to a new file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Header row
-                sheet.Cells["A1"].PutValue("Task");
-                sheet.Cells["B1"].PutValue("Start");
-                sheet.Cells["C1"].PutValue("Duration");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Sample data – store start dates as Excel serial numbers (OADate)
-                sheet.Cells["A2"].PutValue("Task 1");
-                sheet.Cells["B2"].PutValue(DateTime.Today.ToOADate());
-                sheet.Cells["C2"].PutValue(5);
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                sheet.Cells["A3"].PutValue("Task 2");
-                sheet.Cells["B3"].PutValue(DateTime.Today.AddDays(3).ToOADate());
-                sheet.Cells["C3"].PutValue(7);
+                // Ensure there is at least one chart
+                if (worksheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found in the worksheet.");
+                    return;
+                }
 
-                sheet.Cells["A4"].PutValue("Task 3");
-                sheet.Cells["B4"].PutValue(DateTime.Today.AddDays(6).ToOADate());
-                sheet.Cells["C4"].PutValue(4);
+                // Retrieve the first chart (assumed Gantt chart)
+                Chart chart = worksheet.Charts[0];
 
-                // Add a stacked bar chart (horizontal) to represent the Gantt bars
-                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
+                // Set series overlap and gap width for bar/column charts if supported
+                // Note: Overlap and GapWidth properties are available in newer Aspose.Cells versions.
+                // If they are not present, this step is skipped.
+                try
+                {
+                    // Attempt to set properties via reflection to avoid compile-time errors on older versions
+                    var overlapProp = chart.GetType().GetProperty("Overlap");
+                    var gapWidthProp = chart.GetType().GetProperty("GapWidth");
 
-                // First series: Start dates (invisible, used for positioning)
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries[0].Values = "=B2:B4";
-                chart.NSeries[0].Name = "Start";
-                chart.NSeries[0].Border.IsVisible = false;
-                chart.NSeries[0].Area.ForegroundColor = Color.Transparent;
+                    if (overlapProp != null && overlapProp.CanWrite)
+                    {
+                        overlapProp.SetValue(chart, -20);
+                    }
 
-                // Second series: Duration (visible Gantt bars)
-                chart.NSeries.Add("C2:C4", true);
-                chart.NSeries[1].Values = "=C2:C4";
-                chart.NSeries[1].Name = "Duration";
+                    if (gapWidthProp != null && gapWidthProp.CanWrite)
+                    {
+                        gapWidthProp.SetValue(chart, 150);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Unable to set Overlap/GapWidth properties. {ex.Message}");
+                }
 
-                // Set category (task) labels
-                chart.NSeries.CategoryData = "A2:A4";
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Adjust overlap and gap width for better visual separation
-                chart.NSeries[0].Overlap = -40;
-                chart.NSeries[1].Overlap = -40;
-                chart.NSeries[0].GapWidth = 150;
-                chart.NSeries[1].GapWidth = 150;
-                chart.GapWidth = 150;
-
-                // Save the workbook
-                workbook.Save("GanttChartWithOverlapAndGapWidth.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

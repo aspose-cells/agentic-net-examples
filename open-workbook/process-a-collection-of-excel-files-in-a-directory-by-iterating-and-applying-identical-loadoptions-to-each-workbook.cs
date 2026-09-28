@@ -1,99 +1,58 @@
-// Title: C# – Batch load Excel workbooks with a shared LoadOptions using Aspose.Cells
-// Description: Iterates over all files in a folder, filters supported Excel formats, loads each workbook with a single LoadOptions instance, optionally manipulates it, and saves the result to another directory while preserving the original format.
-// Keywords: Aspose.Cells | C# batch load Excel | LoadOptions | process multiple workbooks | directory iteration | save workbook | Excel file conversion | Aspose.Cells .NET | bulk workbook processing
-// Common Searches: Aspose.Cells load all Excel files in a folder | C# batch process workbooks with same LoadOptions | How to iterate through directory and save Excel files using Aspose.Cells | Bulk load Excel workbooks Aspose.Cells .NET | Apply identical LoadOptions to multiple workbooks
-// Developer Intent: Load every Excel file in a specified folder with one LoadOptions object and write the workbooks to a target folder.
-// Use Cases: Apply uniform calculation settings (e.g., disable formula evaluation) across many workbooks before analysis. | Convert a batch of CSV or legacy XLS files to modern XLSX while keeping the original layout. | Add or update a custom document property in all workbooks as part of a migration.
-// AI Prompts: Write C# code that uses Aspose.Cells to batch load Excel files from a directory with LoadOptions that set LoadDataOnly = true, then save each workbook to a new folder. | Show how to add a custom document property to every workbook while iterating through a folder of Excel files with Aspose.Cells. | Provide a script that logs file name, worksheet count, and any errors to a CSV during batch processing with Aspose.Cells.
+// Title: Load multiple .xlsx workbooks with forced Xlsx LoadOptions, recalculate formulas, and save them to a new folder using Aspose.Cells for .NET
+// AI Prompts: Write C# code that enumerates all .xlsx files in a source folder, opens each workbook with LoadOptions set to LoadFormat.Xlsx, invokes CalculateFormula, and writes the workbook to a target directory. | Implement a function that receives input and output paths, applies identical LoadOptions to every Excel file, triggers full formula evaluation, and logs any errors while using Aspose.Cells.
+// Common Searches: how to open every .xlsx file in a directory with specific LoadOptions using Aspose.Cells | C# batch evaluate formulas in Excel workbooks with Aspose.Cells | force Xlsx load format for multiple workbooks Aspose.Cells LoadOptions example | save processed Excel files to another folder after calculation in .NET
+// Tags: batch load workbooks with LoadOptions Aspose.Cells | evaluate formulas in multiple .xlsx files C# | save processed Excel workbooks to output directory Aspose.Cells | set LoadFormat.Xlsx for workbook loading Aspose.Cells | iterate over Excel files in folder using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchProcessing
+// The program scans a specified input directory for .xlsx files, ensures an output directory exists, and for each file loads the workbook with LoadOptions forcing the Xlsx format, evaluates all formulas, and saves the workbook to the output folder while handling any errors that occur.
+class Program
 {
-    // Iterates over all files in a folder, filters supported Excel formats, loads each workbook with a single LoadOptions instance, optionally manipulates it, and saves the result to another directory while preserving the original format.
-    public class BatchLoader
+    static void Main()
     {
-        public static void Run()
+        // Path to the folder containing the source Excel files
+        string inputFolder = @"C:\InputExcel";
+
+        // Path to the folder where processed files will be saved
+        string outputFolder = @"C:\OutputExcel";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Verify the input directory exists
+        if (!Directory.Exists(inputFolder))
         {
-            // Directory containing the source Excel files
-            string sourceDirectory = @"C:\InputExcelFiles";
-
-            // Directory where processed files will be saved
-            string outputDirectory = @"C:\ProcessedExcelFiles";
-
-            // Verify source directory exists
-            if (!Directory.Exists(sourceDirectory))
-            {
-                Console.WriteLine($"Source directory does not exist: {sourceDirectory}");
-                return;
-            }
-
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputDirectory))
-            {
-                Directory.CreateDirectory(outputDirectory);
-            }
-
-            // Get all files in the source directory (filter later by extension)
-            string[] files = Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly);
-
-            // Common LoadOptions for all workbooks
-            LoadOptions loadOptions = new LoadOptions();
-
-            foreach (string filePath in files)
-            {
-                // Filter only supported Excel formats
-                string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsb" && extension != ".csv")
-                {
-                    continue; // Skip unsupported files
-                }
-
-                // Verify the file actually exists before loading
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook using the common LoadOptions
-                    Workbook workbook = new Workbook(filePath, loadOptions);
-
-                    // Example operation: output basic info
-                    Console.WriteLine($"Loaded '{Path.GetFileName(filePath)}' with {workbook.Worksheets.Count} worksheet(s).");
-
-                    // Determine the output file path (same name, different folder)
-                    string outputPath = Path.Combine(outputDirectory, Path.GetFileName(filePath));
-
-                    // Save the workbook (preserving original format)
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Saved processed file to '{outputPath}'.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                }
-            }
-
-            Console.WriteLine("Batch processing completed.");
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        // Iterate over all Excel files in the input directory
+        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
+            // Skip if the file somehow does not exist
+            if (!File.Exists(filePath))
+                continue;
+
             try
             {
-                BatchLoader.Run();
+                // Load the workbook with LoadOptions that force XLSX format
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                Workbook workbook = new Workbook(filePath, loadOptions);
+
+                // Recalculate all formulas
+                workbook.CalculateFormula();
+
+                // Build the output file path
+                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+
+                // Save the processed workbook (preserving the original format)
+                workbook.Save(outputPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
     }

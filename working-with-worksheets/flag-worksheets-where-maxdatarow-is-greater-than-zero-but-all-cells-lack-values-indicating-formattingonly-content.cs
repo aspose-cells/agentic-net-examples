@@ -1,55 +1,80 @@
-// Title: Flag formatting‑only worksheets (MaxDataRow > 0, no values) using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, iterates through each worksheet, and when MaxDataRow is greater than zero while every row is blank, writes a note to cell A1 and saves the file. Shows how to detect sheets that contain only styles without data in C# with Aspose.Cells.
-// Keywords: Aspose.Cells | .NET | C# | detect formatting only worksheet | MaxDataRow | empty data rows | flag sheet | Excel automation | worksheet validation | style‑only sheet
-// Common Searches: Aspose.Cells detect sheet with only formatting | C# check if Excel worksheet has data | MaxDataRow no values Aspose | flag empty Excel sheets using Aspose | write note to A1 when sheet has no data
-// Developer Intent: Identify worksheets that have rows but no cell values and mark them, indicating they consist solely of formatting.
-// Use Cases: Automated quality‑check of incoming Excel files to flag sheets that contain only styles. | Pre‑processing step that labels formatting‑only worksheets before downstream data extraction. | Generating a report of sheets lacking data to alert users or trigger cleanup actions.
-// AI Prompts: Generate C# code with Aspose.Cells that scans a workbook and adds a comment to cell A1 of any worksheet that has rows but no data values. | Suggest an alternative method using MaxDataRow or other properties to detect formatting‑only worksheets and flag them. | Explain how to modify the sample to log the names of formatting‑only sheets instead of writing to cell A1.
+// Title: Identify and flag formatting‑only worksheets in an Excel workbook with Aspose.Cells for .NET – add a custom property and apply a LightCoral tab highlight
+// AI Prompts: Write C# code using Aspose.Cells that iterates all worksheets, verifies MaxDataRow > 0 while every cell in the used range is empty, then stores a custom property called "FormattingOnly" and sets the worksheet tab color to LightCoral. | Create a reusable C# method with Aspose.Cells that marks worksheets containing only formatting (no cell values) by recording a flag property and changing the tab appearance, then saves the workbook.
+// Common Searches: how to detect worksheets that only have formatting and no data using Aspose.Cells C# | Aspose.Cells mark empty data sheets with a custom property | set Excel worksheet tab color based on content with Aspose.Cells .NET | use MaxDataRow to find formatting‑only sheets in C# | flag worksheets without cell values in Aspose.Cells and change tab highlight
+// Tags: identify formatting-only sheets Aspose.Cells | store FormattingOnly flag as custom property Aspose.Cells | apply LightCoral tab highlight Aspose.Cells | evaluate used cell range for empty values Aspose.Cells | MaxDataRow based empty sheet detection Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Drawing;
+using System.IO;
 
-// Loads an Excel workbook, iterates through each worksheet, and when MaxDataRow is greater than zero while every row is blank, writes a note to cell A1 and saves the file. Shows how to detect sheets that contain only styles without data in C# with Aspose.Cells.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, loops through each worksheet, and uses MaxDataRow/MaxDataColumn to define the used range. If the range reports rows but all cells are null, the sheet is treated as formatting‑only: a custom property "FormattingOnly" is added and the tab color is changed to LightCoral. The modified workbook is then saved.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet worksheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            Cells cells = worksheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Check if there are any cells that contain data or style
-            if (cells.MaxRow > 0)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                bool allRowsBlank = true;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Examine each row up to the maximum row index
-                for (int rowIndex = 0; rowIndex <= cells.MaxRow; rowIndex++)
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Row row = cells.Rows[rowIndex];
+                    // Determine the used range size (zero‑based indices)
+                    int maxDataRow = sheet.Cells.MaxDataRow + 1;
+                    int maxDataColumn = sheet.Cells.MaxDataColumn + 1;
 
-                    // Row.IsBlank is true when the row has no data (values)
-                    if (!row.IsBlank)
+                    // Proceed only if there is at least one reported data row
+                    if (maxDataRow > 0 && maxDataColumn > 0)
                     {
-                        allRowsBlank = false;
-                        break;
+                        bool hasValue = false;
+
+                        // Scan cells within the used range
+                        for (int row = 0; row < maxDataRow && !hasValue; row++)
+                        {
+                            for (int col = 0; col < maxDataColumn; col++)
+                            {
+                                if (sheet.Cells[row, col].Value != null)
+                                {
+                                    hasValue = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // If no cell contains a value, treat the sheet as formatting‑only
+                        if (!hasValue)
+                        {
+                            // Store a custom property (value must be a string)
+                            sheet.CustomProperties.Add("FormattingOnly", true.ToString());
+
+                            // Change the tab color as a visual indicator
+                            sheet.TabColor = Color.LightCoral;
+                        }
                     }
                 }
 
-                // If MaxRow > 0 but every row is blank, the sheet has only formatting
-                if (allRowsBlank)
-                {
-                    // Flag the worksheet by writing a note in cell A1
-                    cells["A1"].PutValue("Formatting‑only sheet (no data)");
-                }
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

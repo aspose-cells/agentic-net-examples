@@ -1,61 +1,53 @@
-// Title: C# Example: Add Rectangle Shape Linked to a Cell with Custom Thousand‑Separator Number Format using Aspose.Cells
-// Description: This sample creates a new workbook, writes the value 1234567 to cell B2, applies the custom number format "#,##0" (thousand separator), adds a rectangle shape, links the shape to B2 using A1 notation, and saves the file as ShapeLinkedNumberFormat.xlsx. The shape automatically shows the formatted cell value.
-// Keywords: Aspose.Cells | C# | .NET | add rectangle shape | linked cell | custom number format | thousand separator | Excel shape linking | sample code | example
-// Common Searches: Aspose.Cells link shape to cell C# | how to apply thousand separator format in Aspose.Cells | add rectangle shape and bind to cell using Aspose.Cells .NET | shape linked cell custom number format Aspose.Cells | C# example for linking shape to worksheet cell
-// Developer Intent: Create a shape that displays a cell's value with a custom thousand‑separator format and stays synchronized with the cell.
-// Use Cases: Financial dashboards where a shape shows a total amount formatted with commas. | Invoice templates that display the billed amount inside a shape, automatically updating when the cell changes. | Interactive reports that use linked shapes to highlight key metrics with custom numeric formatting.
-// AI Prompts: Generate C# code that adds a rectangle shape, links it to a specific cell, and applies the "#,##0" number format using Aspose.Cells for .NET. | Explain how to set a shape's linked cell so the shape displays the cell's formatted value and updates automatically when the cell value changes.
+// Title: Create a rectangle shape linked to a formatted cell with thousand separators using Aspose.Cells for .NET
+// AI Prompts: Add a rectangle shape to a worksheet and set its Text property to a formula that references cell A1, which contains a number formatted with "#,##0". | Apply a custom number format "#,##0" to a numeric cell so the value displays with thousand separators. | Configure the shape's Placement to MoveAndSize so it moves and resizes with the underlying cells, then save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells how to bind shape text to a cell value with custom number format | C# add rectangle shape that displays cell A1 formatted with thousand separator | set shape placement move and size in Aspose.Cells .NET example | apply "#,##0" number format to a cell and link it to a shape using Aspose.Cells | save workbook with shape linked to formatted cell Aspose.Cells
+// Tags: drawing rectangle object Aspose.Cells | link shape text to cell formula | custom number format "#,##0" Aspose.Cells | placement mode MoveAndSize for shapes .NET | save workbook with linked shape xlsx
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsShapeLinkExample
+// The example creates a new workbook, writes 1234567 to cell A1, applies the custom number format "#,##0" for thousand separators, adds a rectangle shape, links its text to A1, sets the shape to move and size with cells, and saves the file as ShapeLinkedToCell.xlsx.
+class Program
 {
-    // This sample creates a new workbook, writes the value 1234567 to cell B2, applies the custom number format "#,##0" (thousand separator), adds a rectangle shape, links the shape to B2 using A1 notation, and saves the file as ShapeLinkedNumberFormat.xlsx. The shape automatically shows the formatted cell value.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Put a numeric value into cell B2
-                Cell targetCell = sheet.Cells["B2"];
-                targetCell.PutValue(1234567);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Create a custom style with thousand separator format "#,##0"
-                Style customStyle = workbook.CreateStyle();
-                customStyle.Custom = "#,##0";
+            // Set a numeric value in cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue(1234567);
 
-                // Apply the custom style to the target cell
-                targetCell.SetStyle(customStyle);
+            // Apply custom number format with thousand separator
+            Style style = cell.GetStyle();
+            style.Custom = "#,##0";
+            cell.SetStyle(style);
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: shape type, upper left row, upper left column, top, left, width, height
-                Shape rectShape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 4, 0, 0, 0, 150, 50);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
 
-                // Link the shape's value to cell B2 (A1 style, locale‑aware)
-                rectShape.SetLinkedCell("$B$2", false, true);
+            // Link the shape's text to cell A1 so it displays the formatted value
+            shape.Text = "=A1";
 
-                // Optionally set some text for the shape (will display the linked value)
-                rectShape.Text = "Linked Value";
+            // Ensure the shape moves and sizes with the cells
+            shape.Placement = PlacementType.MoveAndSize;
 
-                // Define output file path
-                string outputPath = "ShapeLinkedNumberFormat.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = "ShapeLinkedToCell.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,84 +1,78 @@
-// Title: Refresh a Pivot Table After Expanding Its Named Range with Aspose.Cells (C#)
-// Description: This example demonstrates how to load a workbook, append new rows to the source sheet, enlarge the "DataRange" named range, refresh all pivot tables on a target sheet, and save the updated file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# refresh pivot table | expand named range Excel | RefreshPivotTables method | update DataRange programmatically | dynamic pivot data source | Aspose.Cells named range example | C# Excel pivot table automation | add rows to worksheet Aspose.Cells | pivot table source range change
-// Common Searches: how to refresh pivot table after adding rows Aspose.Cells | expand named range and refresh pivot C# | programmatically change pivot source range Aspose.Cells | Aspose.Cells RefreshPivotTables usage | update Excel named range with Aspose.Cells
-// Developer Intent: Programmatically extend the data range used by a pivot table and trigger a refresh so the new rows are reflected in the pivot report.
-// Use Cases: Add daily sales entries, grow the "DataRange" named range, and automatically refresh the sales‑summary pivot on the dashboard sheet. | Import a new month of financial figures, adjust the source named range, and refresh the monthly financial pivot without manual intervention. | Insert additional product records into a catalog, update the associated named range, and ensure all analysis pivots display the latest data.
-// AI Prompts: Generate C# code that appends rows to a worksheet, expands a named range, and calls RefreshPivotTables on a specific sheet using Aspose.Cells. | Show an Aspose.Cells example that checks for a named range, creates it if missing, updates its RefersTo property after data insertion, and refreshes all pivot tables. | Write a reusable function that receives a workbook path, a list of new rows, and a named range name, then adds the rows, expands the range, refreshes pivots, and saves the workbook.
+// Title: Expand a named range and refresh all pivot tables in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that enlarges an existing named range by a given number of rows and then calls RefreshData and CalculateData on every pivot table in the workbook using Aspose.Cells. | Show how to modify the RefersTo property of a named range and programmatically update all dependent pivot tables in a .xlsx file with Aspose.Cells. | Provide a step‑by‑step example that adds rows to a data source, updates the named range address, and refreshes pivot caches in C#.
+// Common Searches: aspnet c# expand named range and refresh pivot tables using Aspose.Cells | how to programmatically change RefersTo of a named range in Aspose.Cells .NET | refresh pivot cache after adding rows to data source with Aspose.Cells C# | update all pivot tables after extending data range in Excel via Aspose.Cells | Aspose.Cells example for dynamic pivot data source expansion
+// Tags: named range expansion Aspose.Cells | pivot table refresh Aspose.Cells | update RefersTo property C# | refresh pivot caches .xlsx Aspose.Cells | dynamic data source for pivot tables .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// This example demonstrates how to load a workbook, append new rows to the source sheet, enlarge the "DataRange" named range, refresh all pivot tables on a target sheet, and save the updated file using Aspose.Cells for .NET.
-class RefreshPivotAfterRangeExpand
+// The example loads a workbook, retrieves a named range, expands its RefersTo address to include additional rows, iterates through every worksheet to refresh and recalculate each pivot table, and saves the modified file.
+class PivotTableRefreshExample
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the existing workbook that contains the data range and the pivot table
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // -------------------------------------------------
-            // 1. Add new rows to the data source (first sheet)
-            // -------------------------------------------------
-            Worksheet dataSheet = workbook.Worksheets[0]; // assume data is on the first sheet
-            int newRowIndex = dataSheet.Cells.MaxDataRow + 1; // first empty row after existing data
-
-            // Example new data – adjust columns as needed
-            dataSheet.Cells[newRowIndex, 0].PutValue("NewProduct"); // Column A
-            dataSheet.Cells[newRowIndex, 1].PutValue(250);         // Column B
-
-            // -------------------------------------------------
-            // 2. Expand the named range that the pivot table uses
-            // -------------------------------------------------
-            // Assume the named range is called "DataRange" and originally starts at A1
+            // Get the named range that serves as the data source for the pivot table
+            // Replace "DataRange" with the actual name of your named range
             Name dataRange = workbook.Worksheets.Names["DataRange"];
-
-            // If the named range does not exist, create it
             if (dataRange == null)
             {
-                dataRange = workbook.Worksheets.Names[workbook.Worksheets.Names.Add("DataRange")];
+                Console.WriteLine("Error: Named range \"DataRange\" not found.");
+                return;
             }
 
-            // Build the new address string: =SheetName!$A$1:$B${lastRow}
-            // Column B has index 1 (zero‑based). CellsHelper converts indexes to Excel style names.
-            string lastCellAddress = CellsHelper.CellIndexToName(1, newRowIndex); // e.g., "B5"
-            string newRefersTo = $"={dataSheet.Name}!$A$1:${lastCellAddress}";
+            // Determine the new size of the range (e.g., add 10 more rows)
+            int additionalRows = 10;
 
-            dataRange.RefersTo = newRefersTo; // update the named range to include the new rows
+            // Obtain the current range represented by the named range
+            Aspose.Cells.Range range = dataRange.GetRange();
 
-            // -------------------------------------------------
-            // 3. Refresh the pivot table so it picks up the expanded range
-            // -------------------------------------------------
-            // Assume the pivot table resides on the second worksheet
-            if (workbook.Worksheets.Count > 1)
+            // Calculate new last row index
+            int startRow = range.FirstRow;
+            int startColumn = range.FirstColumn;
+            int rowCount = range.RowCount;
+            int columnCount = range.ColumnCount;
+            int newRowCount = rowCount + additionalRows;
+            int newEndRow = startRow + newRowCount - 1;
+            int endColumn = startColumn + columnCount - 1;
+
+            // Build the new address string (e.g., Sheet1!A1:C30)
+            string sheetName = range.Worksheet.Name;
+            string startCell = CellsHelper.CellIndexToName(startRow, startColumn);
+            string endCell = CellsHelper.CellIndexToName(newEndRow, endColumn);
+            dataRange.RefersTo = $"'{sheetName}'!{startCell}:{endCell}";
+
+            // Refresh all pivot tables that use this named range
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Worksheet pivotSheet = workbook.Worksheets[1];
-                pivotSheet.RefreshPivotTables(); // refreshes all pivot tables on this sheet
-            }
-            else
-            {
-                Console.WriteLine("Pivot sheet not found.");
+                foreach (PivotTable pivot in sheet.PivotTables)
+                {
+                    // Refresh the pivot cache data and recalculate
+                    pivot.RefreshData();
+                    pivot.CalculateData();
+                }
             }
 
-            // -------------------------------------------------
-            // 4. Save the updated workbook
-            // -------------------------------------------------
+            // Save the updated workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {

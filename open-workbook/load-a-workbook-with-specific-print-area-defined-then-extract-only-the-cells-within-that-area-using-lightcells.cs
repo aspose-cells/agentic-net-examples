@@ -1,101 +1,82 @@
-// Title: Aspose.Cells .NET – Extract Cells from a Defined Print Area Using LightCells
-// Description: Loads an Excel workbook in LightCells mode with a custom LightCellsDataHandler that reads each worksheet's PageSetup.PrintArea, converts it to a CellArea, and streams only the cells inside that range. Extracted cell addresses and values are stored in a dictionary for fast, memory‑efficient processing.
-// Keywords: Aspose.Cells LightCells | print area extraction .NET | LoadOptions LightCellsDataHandler | CellArea filter rows columns | stream Excel cells efficiently | custom LightCells handler example | Aspose.Cells C# print area
-// Common Searches: How to read only the print area with Aspose.Cells LightCells | Extract cell values from a specific print range in .NET | LightCellsDataHandler example for print area filtering | Load workbook efficiently and limit to printable region | Aspose.Cells C# extract cells by PageSetup.PrintArea
-// Developer Intent: Load a workbook in LightCells mode and retrieve only the cells that belong to the worksheet's defined print area.
-// Use Cases: Generate a report that includes just the printable section of a template workbook. | Copy or export data from the print area to another file or database without loading the full sheet. | Validate content inside the print area during automated QA tests.
-// AI Prompts: Create a LightCellsDataHandler that returns a list of cell addresses and their values for the defined print area. | Extend the PrintAreaHandler to also capture cell formulas and formatting information. | Show how to process multiple worksheets, each with its own print area, using LightCells in Aspose.Cells.
+// Title: C# example: read cells from a worksheet's defined print area using Aspose.Cells LightCells
+// AI Prompts: Provide C# sample code that opens an Excel file with Aspose.Cells, determines the PageSetup.PrintArea of the first worksheet, and uses the LightCells API to iterate through each cell in that area, outputting the address and value. | Create a reusable C# function that loads a workbook, identifies the defined print area (or falls back to the used range if none), and efficiently reads cell data with LightCells, including handling missing files and cell read exceptions.
+// Common Searches: Aspose.Cells C# read only cells inside the defined print area | How to use LightCells to process a print area in an Excel workbook | C# extract cell values from worksheet print area with Aspose.Cells | Get cell addresses from a print area range using Aspose.Cells LightCells | Fallback to used range when print area is not set in Aspose.Cells
+// Tags: Aspose.Cells LightCells read print area | C# extract worksheet print area cells | Aspose.Cells load workbook defined print area | Excel print area processing with LightCells | Efficient cell iteration Aspose.Cells C#
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Loads an Excel workbook in LightCells mode with a custom LightCellsDataHandler that reads each worksheet's PageSetup.PrintArea, converts it to a CellArea, and streams only the cells inside that range. Extracted cell addresses and values are stored in a dictionary for fast, memory‑efficient processing.
-class PrintAreaExtractor
+// The sample loads an Excel workbook, accesses the first worksheet, retrieves its PageSetup.PrintArea (or the used range if no print area is defined), calculates the boundaries, and uses Aspose.Cells LightCells to efficiently iterate over each cell in that region, printing the cell address and value while handling file‑not‑found and cell‑read errors.
+class ExtractPrintArea
 {
     static void Main()
     {
-        // Path to the workbook that has a print area defined
-        string filePath = "input.xlsx";
-
-        // Create a custom LightCellsDataHandler that extracts cells inside the print area
-        var handler = new PrintAreaHandler();
-
-        // Configure load options to use the handler
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = handler;
-
-        // Load the workbook in LightCells mode
-        Workbook workbook = new Workbook(filePath, loadOptions);
-
-        // After loading, the handler contains the extracted cells
-        Console.WriteLine("Cells extracted from the defined print area:");
-        foreach (var kvp in handler.ExtractedData)
+        try
         {
-            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-        }
-    }
-}
+            // Path to the input workbook
+            string workbookPath = "input.xlsx";
 
-// Custom handler implementing LightCellsDataHandler
-public class PrintAreaHandler : LightCellsDataHandler
-{
-    // Current worksheet print area
-    private CellArea _printArea;
+            // Ensure the file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"Error: File '{workbookPath}' not found.");
+                return;
+            }
 
-    // Collected cell address/value pairs
-    public Dictionary<string, object> ExtractedData { get; } = new Dictionary<string, object>();
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-    // Called when a new worksheet is encountered
-    public bool StartSheet(Worksheet sheet)
-    {
-        // Retrieve the print area string (e.g., "A1:B3")
-        string areaStr = sheet.PageSetup.PrintArea;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        if (!string.IsNullOrEmpty(areaStr))
-        {
-            // Convert the string to a CellArea object
-            var parts = areaStr.Split(':');
-            if (parts.Length == 2)
-                _printArea = CellArea.CreateCellArea(parts[0], parts[1]);
+            // Retrieve the defined print area (e.g., "A1:C10")
+            string printAreaRef = sheet.PageSetup.PrintArea;
+
+            // Determine the area to process
+            int startRow, startColumn, endRow, endColumn;
+
+            if (string.IsNullOrEmpty(printAreaRef))
+            {
+                // No print area defined – use the worksheet's used range
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+                startRow = usedRange.FirstRow;
+                startColumn = usedRange.FirstColumn;
+                endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+            }
             else
-                _printArea = new CellArea(); // fallback to empty area
+            {
+                // Use the print area reference to create a range and derive boundaries
+                AsposeRange printRange = sheet.Cells.CreateRange(printAreaRef);
+                startRow = printRange.FirstRow;
+                startColumn = printRange.FirstColumn;
+                endRow = printRange.FirstRow + printRange.RowCount - 1;
+                endColumn = printRange.FirstColumn + printRange.ColumnCount - 1;
+            }
+
+            // Iterate through the cells within the determined area
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startColumn; col <= endColumn; col++)
+                {
+                    try
+                    {
+                        Cell cell = sheet.Cells[row, col];
+                        // Output cell address (e.g., A1) and its value
+                        Console.WriteLine($"{cell.Name} = {cell.Value}");
+                    }
+                    catch (Exception cellEx)
+                    {
+                        Console.WriteLine($"Error reading cell R{row + 1}C{col + 1}: {cellEx.Message}");
+                    }
+                }
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // No print area defined – set an impossible range so nothing is processed
-            _printArea = new CellArea { StartRow = -1 };
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
-
-        // Continue processing rows in this sheet
-        return true;
-    }
-
-    // Called before processing each row
-    public bool StartRow(int rowIndex)
-    {
-        // Process the row only if its index lies within the print area rows
-        return rowIndex >= _printArea.StartRow && rowIndex <= _printArea.EndRow;
-    }
-
-    // Called after a row is started; return true to continue to its cells
-    public bool ProcessRow(Row row)
-    {
-        return true;
-    }
-
-    // Called before processing each cell in the current row
-    public bool StartCell(int columnIndex)
-    {
-        // Process the cell only if its column lies within the print area columns
-        return columnIndex >= _printArea.StartColumn && columnIndex <= _printArea.EndColumn;
-    }
-
-    // Called for each cell that passed the StartCell check
-    public bool ProcessCell(Cell cell)
-    {
-        // Store the cell's address (e.g., "B2") and its value
-        ExtractedData[cell.Name] = cell.Value;
-        return true;
     }
 }

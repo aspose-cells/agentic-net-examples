@@ -1,58 +1,67 @@
-// Title: Fill an Excel matrix from a 2‑D array using Aspose.Cells Range in C#
-// Description: Creates a new Workbook, builds a two‑dimensional int[,] matrix, computes its dimensions, generates a matching Range with Cells.CreateRange starting at A1, assigns the matrix to Range.Value, and saves the file as MatrixFromArray.xlsx.
-// Keywords: Aspose.Cells C# Range.Value | populate Excel from 2D array | CreateRange matrix size | write multi‑dimensional array to worksheet | Excel matrix fill example
-// Common Searches: Aspose.Cells fill range with 2D int array C# | CreateRange for matrix dimensions Aspose.Cells | Assign two‑dimensional array to Excel range | Save workbook after setting Range.Value | C# write matrix to Excel using Aspose
-// Developer Intent: Generate a worksheet range that matches a matrix’s dimensions and populate it in a single operation by assigning a two‑dimensional array to Range.Value.
-// Use Cases: Export calculation results stored in a 2‑D array directly to an Excel table without cell‑by‑cell loops. | Create a heat‑map or score grid by writing numeric matrix data to a worksheet range in one step. | Produce financial or statistical reports where data is already available as a multi‑dimensional array.
-// AI Prompts: Show how to start the matrix at cell B2 instead of A1. | Demonstrate writing a string[,] array to a range with Aspose.Cells. | Explain how to apply borders and background colors to the range after assigning the array.
+// Title: Fill a matrix layout in an Excel worksheet by assigning a 2D object array to an Aspose.Cells Range in C#
+// AI Prompts: Assign a two‑dimensional object[,] array directly to an Aspose.Cells Range using the Range.Value property. | Create a range that matches the dimensions of a source matrix and populate it with the array data in a single step. | Generate an .xlsx file where a specified cell block is filled from a C# 2D array via Aspose.Cells.
+// Common Searches: how to assign a 2d object array to an Aspose.Cells range in C# | Aspose.Cells fill Excel cells from multidimensional array | create range with same size as matrix Aspose.Cells .NET | populate Excel worksheet matrix using Range.Value property | C# example for writing object[,] to Excel with Aspose.Cells
+// Tags: set Range.Value with 2d object array | create range matching matrix dimensions | populate worksheet cells via Range.Value | matrix layout fill using Aspose.Cells C# | write object[,] data to Excel range
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// Creates a new Workbook, builds a two‑dimensional int[,] matrix, computes its dimensions, generates a matching Range with Cells.CreateRange starting at A1, assigns the matrix to Range.Value, and saves the file as MatrixFromArray.xlsx.
-public class FillMatrixFromArray
+// The example creates a new workbook, defines a 3×4 object[,] matrix, builds a matching range starting at cell A1, assigns the array directly to the range's Value property, and saves the workbook as MatrixFromArray.xlsx.
+public class MatrixFiller
 {
-    public static void Main()
+    // Fills the provided range with the values from a two‑dimensional array.
+    public static void FillMatrix(AsposeRange targetRange, object[,] data)
     {
-        try
-        {
-            Run();
-            Console.WriteLine("Workbook saved successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
+        // Directly assign the 2D array to the range's Value property.
+        // The range must have the same dimensions as the array.
+        targetRange.Value = data;
     }
 
     public static void Run()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Two‑dimensional array source (matrix data)
-        int[,] sourceMatrix = new int[,]
+        try
         {
-            { 1, 2, 3, 4 },
-            { 5, 6, 7, 8 },
-            { 9, 10, 11, 12 }
-        };
+            // Create a new workbook and get the first worksheet.
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Determine the size of the matrix
-        int rowCount = sourceMatrix.GetLength(0);
-        int columnCount = sourceMatrix.GetLength(1);
+            // Example source data: a 3x4 matrix.
+            object[,] sourceData = new object[,]
+            {
+                { "R1C1", "R1C2", "R1C3", "R1C4" },
+                { "R2C1", "R2C2", "R2C3", "R2C4" },
+                { "R3C1", "R3C2", "R3C3", "R3C4" }
+            };
 
-        // Create a range that matches the matrix size, starting at cell A1 (row 0, column 0)
-        AsposeRange targetRange = cells.CreateRange(0, 0, rowCount, columnCount);
+            // Determine the size of the source matrix.
+            int rowCount = sourceData.GetLength(0);
+            int columnCount = sourceData.GetLength(1);
 
-        // Fill the range with the two‑dimensional array using the Range.Value property
-        targetRange.Value = sourceMatrix;
+            // Create a range that matches the matrix size, starting at cell A1 (row 0, column 0).
+            AsposeRange matrixRange = cells.CreateRange(0, 0, rowCount, columnCount);
 
-        // Save the workbook to a file
-        string outputPath = "MatrixFromArray.xlsx";
-        workbook.Save(outputPath);
+            // Fill the created range with the source data.
+            FillMatrix(matrixRange, sourceData);
+
+            // Save the workbook to a file.
+            string outputPath = "MatrixFromArray.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+}
+
+// Entry point for demonstration.
+class Program
+{
+    static void Main()
+    {
+        MatrixFiller.Run();
     }
 }

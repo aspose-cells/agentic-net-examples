@@ -1,47 +1,59 @@
-// Title: Handle Invalid Custom Paper Size with Aspose.Cells PageSetup in C#
-// Description: Shows how to wrap Worksheet.PageSetup.CustomPaperSize in try‑catch blocks, capture CellsException for page‑setup errors, log clear messages, and still save the workbook when width or height are zero or negative.
-// Keywords: Aspose.Cells | C# custom paper size | PageSetup.CustomPaperSize | exception handling | CellsException | invalid dimensions | error logging | negative width height | Excel export | page layout errors
-// Common Searches: Aspose.Cells set custom paper size error | C# catch CellsException page setup | validate paper dimensions before CustomPaperSize | log page setup failures Aspose.Cells | exception thrown for negative page size
-// Developer Intent: Add robust error handling around custom paper size settings to prevent crashes and provide informative logs.
-// Use Cases: User enters custom page size in a UI; code validates and handles invalid values gracefully. | Automated report generation calculates dimensions; fallback to default size when values are out of range. | Batch processing of many workbooks where some contain zero or negative sizes; continue processing without interruption.
-// AI Prompts: Generate C# code that checks width and height before calling PageSetup.CustomPaperSize and writes an error to a log file if they are non‑positive. | Provide an example of catching CellsException with ExceptionType.PageSetup, distinguishing it from other exceptions, and recording the stack trace. | Create a reusable method SetCustomPaperSize(Worksheet ws, double w, double h) that returns a bool indicating success and logs detailed messages on failure.
+// Title: Add exception handling for invalid custom paper dimensions when setting a custom page size with Aspose.Cells for .NET
+// AI Prompts: Validate that the width and height values are positive before calling Sheet.PageSetup.CustomPaperSize, and throw an ArgumentException with a clear message if they are not. | Enclose the custom paper size configuration in a try‑catch block that captures any exception, logs a descriptive error to the console or a logger, and continues or aborts gracefully.
+// Common Searches: c# Aspose.Cells validate custom paper size before applying | Aspose.Cells custom page setup exception handling example | how to log error when setting custom paper dimensions in Aspose.Cells | prevent negative dimensions for custom paper size Aspose.Cells .NET | save workbook after catching custom paper size errors Aspose.Cells
+// Tags: custom paper size validation Aspose.Cells | Aspose.Cells page setup exception handling | Aspose.Cells workbook save error logging | Aspose.Cells custom dimensions .NET | Aspose.Cells PageSetup.CustomPaperSize error handling
 
 using System;
+using System.IO;
+using System.Drawing; // For SizeF if needed
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Shows how to wrap Worksheet.PageSetup.CustomPaperSize in try‑catch blocks, capture CellsException for page‑setup errors, log clear messages, and still save the workbook when width or height are zero or negative.
-class CustomPaperSizeDemo
+// The example creates a workbook, checks that custom paper width and height are positive, converts inches to points, applies a custom paper size to the first worksheet, ensures the output directory exists, saves the file, and logs any exceptions that occur during the custom size configuration.
+class CustomPaperExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        PageSetup pageSetup = worksheet.PageSetup;
-
-        // Example of invalid dimensions (zero or negative values)
-        double widthInInches = 0.0;
-        double heightInInches = -1.0;
-
         try
         {
-            // Attempt to set a custom paper size; this may throw a CellsException
-            pageSetup.CustomPaperSize(widthInInches, heightInInches);
-            Console.WriteLine($"Custom paper size set to {widthInInches} x {heightInInches} inches.");
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.PageSetup)
-        {
-            // Handle specific page‑setup related errors
-            Console.WriteLine($"PageSetup error: {ex.Message}");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Desired dimensions in inches
+            double widthInches = 8.5;
+            double heightInches = 11.0;
+
+            // Validate dimensions
+            if (widthInches <= 0 || heightInches <= 0)
+                throw new ArgumentException("Paper dimensions must be positive numbers.");
+
+            // Convert inches to points (1 inch = 72 points)
+            float widthPoints = (float)(widthInches * 72);
+            float heightPoints = (float)(heightInches * 72);
+
+            // Apply custom paper size
+            sheet.PageSetup.PaperSize = PaperSizeType.Custom;
+
+            // Set custom paper size using the appropriate API (method overload)
+            sheet.PageSetup.CustomPaperSize(widthPoints, heightPoints);
+
+            // Define output path and ensure directory exists
+            string outputPath = "CustomPaperOutput.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any other unexpected errors
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            // Log any errors that occur
+            Console.WriteLine($"Error setting custom paper dimensions: {ex.Message}");
         }
-
-        // Save the workbook (valid even if custom size was not applied)
-        workbook.Save("CustomPaperSizeDemo.xlsx");
     }
 }

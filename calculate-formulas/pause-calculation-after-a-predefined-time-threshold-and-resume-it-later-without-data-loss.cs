@@ -1,71 +1,58 @@
-// Title: Pause and Resume Formula Calculation with SystemTimeInterruptMonitor in Aspose.Cells for C#/.NET
-// Description: Shows how to set a time limit on workbook formula evaluation, capture the interruption, and later continue the computation without losing any intermediate values. The sample creates a 10,000‑row sheet, forces a 500 ms timeout, then restarts with a longer limit and writes the fully calculated workbook to disk.
-// Keywords: Aspose.Cells C# | .NET formula calculation timeout | SystemTimeInterruptMonitor usage | interrupt and continue spreadsheet calculation | large workbook performance | resume interrupted calculation | UI‑responsive Excel processing | server‑side spreadsheet quota handling
-// Common Searches: Aspose.Cells limit formula calculation time | How to continue a stopped calculation in Aspose.Cells | SystemTimeInterruptMonitor example C# | Resume workbook calculation after timeout | Break large spreadsheet calculation into chunks
-// Developer Intent: The developer needs to stop a long‑running formula evaluation after a predefined duration and then pick up the remaining work later, ensuring no data is lost.
-// Use Cases: Split heavy spreadsheet calculations into timed segments to keep a desktop UI responsive. | Honor execution‑time quotas in cloud services by pausing calculations when the limit is reached and finishing them in a subsequent request. | Defer resource‑intensive formula processing to off‑peak hours while preserving already computed results.
-// AI Prompts: Generate C# code that uses SystemTimeInterruptMonitor to halt a calculation after 1 second and then resume it with a new timeout. | Explain how to detect which cells remain unevaluated after an interruption and log their addresses before resuming. | Provide guidance on handling different CellsException codes when working with InterruptMonitor in Aspose.Cells.
+// Title: How to pause and later resume a long‑running workbook formula calculation with a time limit using Aspose.Cells for .NET
+// AI Prompts: Demonstrate using SystemTimeInterruptMonitor to interrupt Workbook.CalculateFormula after a specified number of milliseconds and then continue the calculation from the same state. | Provide C# code that catches the CellsException thrown on interruption, restarts the monitor with a new timeout, and finishes the remaining formulas without losing previously computed results.
+// Common Searches: c# Aspose.Cells interrupt CalculateFormula after 1 second and resume later | SystemTimeInterruptMonitor example for limiting formula calculation time | how to handle CellsException.Interrupted during large workbook calculation | resume workbook calculation after timeout using Aspose.Cells .NET | preserve partial results when pausing Aspose.Cells formula evaluation
+// Tags: SystemTimeInterruptMonitor timeout handling | interrupt Aspose.Cells formula calculation | resume workbook.CalculateFormula after interruption | partial calculation preservation Aspose.Cells | C# large workbook formula evaluation performance
 
 using System;
 using Aspose.Cells;
 
-// Shows how to set a time limit on workbook formula evaluation, capture the interruption, and later continue the computation without losing any intermediate values. The sample creates a 10,000‑row sheet, forces a 500 ms timeout, then restarts with a longer limit and writes the fully calculated workbook to disk.
-class PauseResumeCalculationDemo
+// The example creates a workbook filled with many SUM formulas, attaches a SystemTimeInterruptMonitor, runs CalculateFormula with a 1‑second limit causing an interruption, then restarts the monitor with a 2‑second limit to finish the remaining calculations, and finally saves the workbook while preserving any data computed before the interruptions.
+class PauseResumeCalculation
 {
     static void Main()
     {
-        // -------------------------------------------------
-        // 1. Create a workbook and populate it with data and formulas
-        // -------------------------------------------------
+        // Create a new workbook and populate it with many formulas to make calculation time-consuming
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Fill 10,000 rows with a value and a simple formula
-        for (int i = 0; i < 10000; i++)
+        for (int row = 0; row < 5000; row++)
         {
-            sheet.Cells[i, 0].PutValue(i);                     // Column A: raw value
-            sheet.Cells[i, 1].Formula = $"=A{i}+10";          // Column B: formula based on column A
+            // Each cell contains a formula that references a range; this creates a heavy calculation load
+            sheet.Cells[row, 0].Formula = $"=SUM(A{row + 1}:A{row + 10})";
         }
 
-        // -------------------------------------------------
-        // 2. Attach a SystemTimeInterruptMonitor to the workbook
-        // -------------------------------------------------
-        // terminateWithoutException = false -> an exception will be thrown when time limit is exceeded
+        // Attach a SystemTimeInterruptMonitor to the workbook.
+        // terminateWithoutException = false means an exception will be thrown when the time limit is reached.
         SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
         workbook.InterruptMonitor = monitor;
 
-        // -------------------------------------------------
-        // 3. First calculation attempt with a short time limit (pause scenario)
-        // -------------------------------------------------
-        monitor.StartMonitor(500); // 500 ms time limit
+        // ---------- First calculation attempt (pause after 1 second) ----------
+        monitor.StartMonitor(1000); // time limit in milliseconds
 
         try
         {
-            workbook.CalculateFormula(); // Start calculation
+            workbook.CalculateFormula();
+            Console.WriteLine("Calculation finished within the first time slice.");
         }
         catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
         {
-            Console.WriteLine("Calculation paused: time limit reached.");
+            Console.WriteLine("Calculation paused after reaching the first time limit.");
         }
 
-        // -------------------------------------------------
-        // 4. Resume calculation with a longer time limit
-        // -------------------------------------------------
-        monitor.StartMonitor(2000); // 2 seconds time limit for the remaining work
+        // ---------- Resume calculation (allow another 2 seconds) ----------
+        monitor.StartMonitor(2000); // new time limit
 
         try
         {
-            workbook.CalculateFormula(); // Continue calculation from where it stopped
-            Console.WriteLine("Calculation completed after resume.");
+            workbook.CalculateFormula();
+            Console.WriteLine("Remaining calculation completed successfully.");
         }
-        catch (CellsException ex)
+        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
         {
-            Console.WriteLine($"Unexpected interruption: {ex.Message}");
+            Console.WriteLine("Calculation paused again after reaching the second time limit.");
         }
 
-        // -------------------------------------------------
-        // 5. Save the workbook – data is intact and fully calculated
-        // -------------------------------------------------
-        workbook.Save("PausedResumeResult.xlsx");
+        // Save the workbook; data generated before interruption is preserved.
+        workbook.Save("Result.xlsx");
     }
 }

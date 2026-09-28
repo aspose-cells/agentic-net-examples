@@ -1,64 +1,71 @@
-// Title: Position a TextBox at exact pixel coordinates in a PDF with Aspose.Cells for .NET
-// Description: Creates a workbook, inserts a free‑floating TextBox shape using row/column indices and top‑/left pixel offsets, applies optional styling, and saves the sheet as a PDF so the text appears at the defined location.
-// Keywords: Aspose.Cells PDF export | C# textbox pixel offset | free floating shape Aspose.Cells | exact text placement PDF | custom text coordinates .NET | Aspose.Cells shape positioning | PDFSaveOptions Aspose.Cells
-// Common Searches: Aspose.Cells place textbox at specific pixel location | C# set exact coordinates for shape before PDF conversion | how to use PlacementType.FreeFloating in Aspose.Cells | pixel‑based positioning of text in PDF generated from Excel | Aspose.Cells precise text layout in PDF
-// Developer Intent: Add a free‑floating TextBox with defined pixel offsets and export the workbook so the text is rendered at that exact spot in the PDF.
-// Use Cases: Design invoices where the company header must align to a fixed spot on the PDF page. | Generate certificates with a signature line positioned consistently across all pages. | Overlay a disclaimer or watermark at a predetermined location in reports derived from Excel.
-// AI Prompts: Write C# code that adds a free‑floating TextBox at top offset 120 and left offset 250 pixels, then saves the workbook as a PDF using Aspose.Cells. | Explain the effect of PlacementType.FreeFloating on shape coordinates during PDF export in Aspose.Cells. | Show how to convert Excel cell dimensions to pixel offsets for accurate shape placement in a PDF.
+// Title: Add a free‑floating text box at precise cell coordinates with pixel offsets and export the workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, inserts a free‑floating text box at row 4 column 2 with a 15 px X offset and 10 px Y offset, sets the text to blue bold 12 pt, removes the border, and saves the file as a PDF. | Modify the example to place the text box on cell E7, change its size to 250 px width and 50 px height, use red italic 10 pt font, and keep the shape free‑floating when exporting to PDF.
+// Common Searches: Aspose.Cells C# how to position a text box using row and column indexes with pixel offsets | place custom text at exact location in PDF generated from Excel with Aspose.Cells | free floating shape placement offset pixels Aspose.Cells .NET example | set text box font color and style in Aspose.Cells before PDF export | remove border from Aspose.Cells shape when saving workbook as PDF
+// Tags: add free‑floating graphic Aspose.Cells | pixel offset shape placement C# | export workbook to PDF Aspose.Cells | custom text box font styling Aspose.Cells | remove shape border Aspose.Cells PDF
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCustomTextPosition
+namespace AsposeCellsPdfTextPlacement
 {
-    // Creates a workbook, inserts a free‑floating TextBox shape using row/column indices and top‑/left pixel offsets, applies optional styling, and saves the sheet as a PDF so the text appears at the defined location.
+    // Demonstrates creating a workbook, adding a free‑floating text box at a specific cell with pixel offsets, customizing its font and border, and saving the result as a PDF using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
 
-            // ------------------------------------------------------------
-            // Add a TextBox shape that will hold the custom text.
-            // Parameters: upper left row, upper left column, top offset (pixels),
-            // left offset (pixels), height (pixels), width (pixels)
-            // ------------------------------------------------------------
-            int upperLeftRow = 0;
-            int upperLeftColumn = 0;
-            int topOffset = 150;    // vertical position from the top of the sheet (pixels)
-            int leftOffset = 200;   // horizontal position from the left of the sheet (pixels)
-            int height = 50;        // height of the textbox (pixels)
-            int width = 300;        // width of the textbox (pixels)
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            Shape textBox = sheet.Shapes.AddTextBox(upperLeftRow, upperLeftColumn,
-                                                   topOffset, leftOffset, height, width);
+                // Define the exact position where the custom text will appear.
+                // Row and column are zero‑based indexes.
+                // Offsets are in pixels relative to the upper‑left corner of the cell.
+                int targetRow = 4;          // 5th row (A5)
+                int targetColumn = 2;       // 3rd column (C)
+                int offsetX = 15;           // 15 pixels to the right inside the cell
+                int offsetY = 10;           // 10 pixels down inside the cell
 
-            // Set the text that will appear in the PDF
-            textBox.Text = "Precise positioned custom text";
+                // Define the size of the text box (width & height in pixels)
+                int boxWidth = 200;
+                int boxHeight = 40;
 
-            // Make the textbox free‑floating so it does not move with cells
-            textBox.Placement = PlacementType.FreeFloating;
+                // Add a free‑floating text box shape at the specified coordinates
+                // (lifecycle rule: create shape, then set its properties)
+                Shape textBox = sheet.Shapes.AddTextBox(
+                    targetRow,          // Upper left row index
+                    targetColumn,       // Upper left column index
+                    offsetX,            // Upper left row offset (pixels)
+                    offsetY,            // Upper left column offset (pixels)
+                    boxWidth,           // Width (pixels)
+                    boxHeight);         // Height (pixels)
 
-            // Optional: style the text (font, color, size)
-            textBox.Font.IsBold = true;
-            textBox.Font.Size = 14;
-            textBox.Font.Color = System.Drawing.Color.DarkBlue;
+                // Ensure the shape is not tied to cell movement/resizing
+                textBox.Placement = PlacementType.FreeFloating;
 
-            // ------------------------------------------------------------
-            // Configure PDF save options.
-            // TextCrossType is kept at its default value; it does not affect positioning.
-            // ------------------------------------------------------------
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Set the custom text
+                textBox.Text = "Custom Text at Precise Coordinates";
 
-            // Save the workbook as a PDF; the textbox will be rendered at the exact
-            // coordinates specified above.
-            workbook.Save("CustomTextPosition.pdf", pdfOptions);
+                // Optional: format the text appearance
+                textBox.Font.Color = Color.Blue;
+                textBox.Font.Size = 12;
+                textBox.Font.IsBold = true;
 
-            Console.WriteLine("PDF generated with custom text positioned precisely.");
+                // Remove the shape border for a cleaner look
+                textBox.Line.Weight = 0;
+
+                // Save the workbook as PDF (lifecycle rule: save)
+                workbook.Save("CustomText.pdf", SaveFormat.Pdf);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

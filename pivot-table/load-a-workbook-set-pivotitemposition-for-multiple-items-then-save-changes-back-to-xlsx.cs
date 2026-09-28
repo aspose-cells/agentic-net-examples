@@ -1,88 +1,110 @@
-// Title: Reorder PivotTable Row Items by Setting PivotItem.Position in Aspose.Cells for .NET
-// Description: Loads an XLSX workbook, accesses the first worksheet’s first PivotTable, changes the Position of selected row PivotItems (e.g., "Apple" and "Banana"), refreshes the table, and saves the workbook as a new file.
-// Keywords: Aspose.Cells PivotItem.Position | C# reorder pivot table rows | set pivot item order programmatically | Aspose.Cells PivotTable row field | change pivot item sequence .NET | Aspose.Cells workbook save
-// Common Searches: Aspose.Cells change pivot item order | Set PivotItem.Position C# | Reorder rows in PivotTable using Aspose.Cells | Move specific pivot items to top Aspose.Cells | Programmatically sort pivot table items .NET
-// Developer Intent: Modify the display order of specific row items in a PivotTable and persist the changes to an XLSX file.
-// Use Cases: Place "Apple" as the first row entry and "Banana" as the second in a sales‑report PivotTable before exporting. | Align category order in a financial summary PivotTable with a custom hierarchy required by stakeholders. | Enforce a predefined sequence of items in an automatically generated dashboard workbook’s PivotTable.
-// AI Prompts: Show C# code that sets PivotItem.Position for multiple items in an Aspose.Cells PivotTable and saves the workbook. | How can I iterate over a list of pivot item names and assign custom positions to them using Aspose.Cells for .NET? | Explain the steps to refresh and recalculate a PivotTable after changing item positions with Aspose.Cells.
+// Title: Reorder specific row items in an Excel pivot table with Aspose.Cells for .NET and save the workbook
+// AI Prompts: Update the positions of the row items 'Apple', 'Banana', and 'Orange' in a pivot table, recalculate the pivot, and write the result to a new XLSX file using Aspose.Cells C#. | Generate C# code that safely changes the order of pivot items, skips items that are not present, refreshes the pivot data, and saves the workbook as OutputPivot.xlsx.
+// Common Searches: Aspose.Cells C# set pivot row item order programmatically | How to change the position of specific items in an Excel pivot table using .NET | Reorder pivot table row fields and save workbook with Aspose.Cells | Handle missing pivot items when updating order in C# | Refresh and recalculate pivot table after modifying item positions Aspose.Cells
+// Tags: pivot item position Aspose.Cells | reorder pivot row items C# | save workbook after pivot changes Aspose.Cells | missing pivot item handling .NET | recalculate pivot table Aspose.Cells
 
 using System;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads an XLSX workbook, accesses the first worksheet’s first PivotTable, changes the Position of selected row PivotItems (e.g., "Apple" and "Banana"), refreshes the table, and saves the workbook as a new file.
-class SetPivotItemPositions
+namespace PivotExample
 {
-    static void Main()
+    // The example loads InputPivot.xlsx, accesses the first worksheet's first pivot table, refreshes its data, safely sets the positions of the row items "Apple", "Banana", and "Orange", refreshes and recalculates the pivot again, and saves the modified workbook as OutputPivot.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            const string inputPath = "InputPivot.xlsx";
+            const string outputPath = "OutputPivot.xlsx";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
+
+                // Load the workbook containing the pivot table
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one pivot table
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                    return;
+                }
+
+                // Get the first pivot table
+                PivotTable pivotTable = worksheet.PivotTables[0];
+
+                // Refresh data using the correct API
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
+                // Ensure the pivot table has at least one row field
+                if (pivotTable.RowFields.Count == 0)
+                {
+                    Console.WriteLine("Pivot table has no row fields.");
+                    return;
+                }
+
+                // Access the first row field
+                PivotField rowField = pivotTable.RowFields[0];
+
+                // Set positions for specific pivot items, handling missing items gracefully
+                SetPivotItemPosition(rowField, "Apple", 0);
+                SetPivotItemPosition(rowField, "Banana", 1);
+                SetPivotItemPosition(rowField, "Orange", 2);
+
+                // Recalculate after modifying item positions
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved as '{outputPath}'.");
             }
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Ensure the workbook contains at least one worksheet
-            if (workbook.Worksheets.Count == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: The workbook does not contain any worksheets.");
-                return;
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Ensure the worksheet contains at least one pivot table
-            if (sheet.PivotTables.Count == 0)
-            {
-                Console.WriteLine("Error: No pivot tables found on the first worksheet.");
-                return;
-            }
-
-            PivotTable pivotTable = sheet.PivotTables[0];
-
-            // Ensure the pivot table has at least one row field
-            if (pivotTable.RowFields.Count == 0)
-            {
-                Console.WriteLine("Error: The pivot table does not contain any row fields.");
-                return;
-            }
-
-            // Access the first row field (adjust index if needed)
-            PivotField rowField = pivotTable.RowFields[0];
-            PivotItemCollection items = rowField.PivotItems;
-
-            // Move specific items to desired global positions
-            // Replace "Apple" and "Banana" with actual item names present in your pivot table
-            if (items["Apple"] != null)
-            {
-                items["Apple"].Position = 0; // first position globally
-            }
-
-            if (items["Banana"] != null)
-            {
-                items["Banana"].Position = 1; // second position globally
-            }
-
-            // Refresh and recalculate the pivot table to apply changes
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-        catch (Exception ex)
+
+        // Helper method to set the position of a pivot item safely
+        private static void SetPivotItemPosition(PivotField field, string itemName, int position)
         {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            try
+            {
+                // Find the pivot item by name
+                PivotItem pivotItem = field.PivotItems.FirstOrDefault(p => p.Name.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+
+                if (pivotItem != null)
+                {
+                    pivotItem.Position = position;
+                }
+                else
+                {
+                    Console.WriteLine($"Pivot item '{itemName}' not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to set position for '{itemName}': {ex.Message}");
+            }
         }
     }
 }

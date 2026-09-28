@@ -1,18 +1,15 @@
-// Title: Aspose.Cells .NET: Concatenate Raw Strings from All Merged Cells into a Summary Cell
-// Description: C# code that builds a workbook, creates merged ranges, extracts each cell's raw string value (without formatting), joins non‑empty texts with a StringBuilder, writes the combined result to a chosen summary cell (e.g., G1), and saves the workbook.
-// Keywords: Aspose.Cells merged cells | C# get merged cell values | concatenate merged cell text | summary cell Aspose.Cells | StringBuilder Excel .NET | raw string value merged range | Excel merged cells API | Aspose.Cells .NET example | C# Excel automation | US developers Aspose.Cells
-// Common Searches: How to read raw values from merged cells using Aspose.Cells C# | Combine text from multiple merged ranges into one cell Aspose.Cells | Aspose.Cells .NET concatenate merged cell strings | Extract unformatted strings from merged cells Aspose | Save merged cell summary in Excel with Aspose.Cells
-// Developer Intent: Read every merged area, pull each cell's raw text, merge the non‑empty strings, and place the final string into a designated summary cell.
-// Use Cases: Create an index cell that aggregates titles stored in merged header regions. | Summarize notes entered across several merged comment blocks before exporting. | Generate a dashboard label by joining labels from multiple merged sections into a single cell.
-// AI Prompts: Provide a C# Aspose.Cells snippet that iterates all merged areas, collects raw string values, concatenates them with a space, and writes the result to cell G1. | Show how to use StringBuilder with Aspose.Cells to build a summary string from non‑empty merged cells in a worksheet. | Explain the steps to retrieve unformatted text from merged cells, handle empty cells, and store the combined output in a separate summary cell.
+// Title: Concatenate raw string values from merged cells and store the result in a summary cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to loop through all merged cell areas, read each cell's StringValue, concatenate the texts, and write the combined string into a specified summary cell. | Show an example of extracting raw string content from merged ranges in a worksheet, building a single summary string, and saving the workbook with the summary placed in cell E1 using Aspose.Cells.
+// Common Searches: Aspose.Cells C# concatenate values from merged cell ranges into one cell | how to read StringValue of each cell in merged areas with Aspose.Cells | C# example for summarizing merged cell contents in Excel using Aspose.Cells | loop through merged cells and build a summary string Aspose.Cells .NET | store concatenated merged cell text in a separate cell with Aspose.Cells
+// Tags: concatenate merged cell stringvalues Aspose.Cells | retrieve raw string from merged ranges .NET | write summary cell after merging Aspose.Cells | iterate merged cell areas C# | StringValue extraction merged cells Aspose.Cells | merged cells aggregation Excel .NET
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsMergedCellSummary
+namespace MergedCellsSummary
 {
-    // C# code that builds a workbook, creates merged ranges, extracts each cell's raw string value (without formatting), joins non‑empty texts with a StringBuilder, writes the combined result to a chosen summary cell (e.g., G1), and saves the workbook.
+    // The program creates a workbook, merges two ranges (A1:B2 and A3:B4), iterates over each merged area, reads every cell's raw StringValue, concatenates the texts, writes the combined result into cell E1, and saves the file as MergedCellsSummary.xlsx.
     class Program
     {
         static void Main()
@@ -20,61 +17,42 @@ namespace AsposeCellsMergedCellSummary
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // ------------------------------------------------------------
-            // Sample data: create a few merged ranges and put values in them
-            // ------------------------------------------------------------
-            // Merge A1:B2 and set a value
-            cells.Merge(0, 0, 2, 2);               // A1:B2
-            cells[0, 0].PutValue("First");
+            // Sample merged cells for demonstration
+            // Merge A1:B2 and put a value
+            worksheet.Cells.Merge(0, 0, 2, 2);
+            worksheet.Cells[0, 0].PutValue("First");
 
-            // Merge C3:D4 and set a value
-            cells.Merge(2, 2, 2, 2);               // C3:D4
-            cells[2, 2].PutValue("Second");
+            // Merge A3:B4 and put a value
+            worksheet.Cells.Merge(2, 0, 2, 2);
+            worksheet.Cells[2, 0].PutValue("Second");
 
-            // Merge E5:E6 (single column) and set a value
-            cells.Merge(4, 4, 2, 1);               // E5:E6
-            cells[4, 4].PutValue("Third");
+            // Retrieve all merged areas
+            CellArea[] mergedAreas = worksheet.Cells.GetMergedAreas();
 
-            // ------------------------------------------------------------
-            // Retrieve raw string values from all merged cells,
-            // concatenate them, and store the result in a summary cell.
-            // ------------------------------------------------------------
-            // Get all merged areas in the worksheet
-            CellArea[] mergedAreas = cells.GetMergedAreas();
-
-            // Use StringBuilder for efficient concatenation
+            // Concatenate raw string values from each merged cell
             StringBuilder summaryBuilder = new StringBuilder();
 
             foreach (CellArea area in mergedAreas)
             {
-                // Iterate through each cell inside the merged area
                 for (int row = area.StartRow; row <= area.EndRow; row++)
                 {
                     for (int col = area.StartColumn; col <= area.EndColumn; col++)
                     {
-                        // Retrieve the raw string value (no formatting)
-                        string rawValue = cells[row, col].StringValue ?? string.Empty;
-
-                        // Append the value if it's not empty
-                        if (!string.IsNullOrEmpty(rawValue))
+                        Cell cell = worksheet.Cells[row, col];
+                        if (cell != null && cell.Value != null)
                         {
-                            // Separate values with a space (customize as needed)
-                            if (summaryBuilder.Length > 0)
-                                summaryBuilder.Append(' ');
-                            summaryBuilder.Append(rawValue);
+                            // Use StringValue to get the raw string representation
+                            summaryBuilder.Append(cell.StringValue);
                         }
                     }
                 }
             }
 
-            // Write the concatenated result to a separate summary cell (e.g., G1)
-            cells["G1"].PutValue(summaryBuilder.ToString());
+            // Store the concatenated result in a separate summary cell (e.g., E1)
+            worksheet.Cells["E1"].PutValue(summaryBuilder.ToString());
 
-            // ------------------------------------------------------------
             // Save the workbook
-            // ------------------------------------------------------------
             workbook.Save("MergedCellsSummary.xlsx");
         }
     }

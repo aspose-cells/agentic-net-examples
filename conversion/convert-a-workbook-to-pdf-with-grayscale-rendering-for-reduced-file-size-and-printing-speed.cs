@@ -1,39 +1,32 @@
-// Title: C# – Convert Excel Workbook to Grayscale PDF with Minimum File Size using Aspose.Cells
-// Description: Create a workbook, enable PageSetup.BlackAndWhite, set PdfSaveOptions to MinimumSize and Flate compression, then save as a grayscale PDF for reduced size and faster printing.
-// Keywords: Aspose.Cells | C# PDF conversion | grayscale PDF | BlackAndWhite PageSetup | PdfSaveOptions | MinimumSize optimization | Flate compression | Excel to PDF .NET | reduce PDF size | print speed
-// Common Searches: Aspose.Cells export grayscale PDF | C# save Excel as black‑and‑white PDF | minimum size PDF Aspose.Cells | how to use PdfSaveOptions OptimizationType MinimumSize | apply Flate compression with Aspose.Cells | reduce PDF file size from Excel .NET
-// Developer Intent: Produce a PDF from an Excel workbook in black‑and‑white mode while minimizing file size for faster printing or storage.
-// Use Cases: Generating lightweight grayscale PDFs for bulk report printing | Archiving Excel data as compact PDFs to save storage | Creating compliance documents where color is prohibited | Automating batch conversion of workbooks to small PDFs in server‑side .NET applications
-// AI Prompts: Write C# code that uses Aspose.Cells to convert a workbook to a grayscale PDF with MinimumSize optimization and Flate compression. | Explain the effect of PageSetup.BlackAndWhite on PDF output and how to combine it with PdfSaveOptions for smallest file size. | Provide a step‑by‑step tutorial for configuring Aspose.Cells PdfSaveOptions to produce a reduced‑size grayscale PDF in .NET.
+// Title: Convert an Excel workbook to a grayscale PDF with minimal file size using Aspose.Cells for .NET
+// AI Prompts: Write C# code that saves a Workbook as a grayscale PDF while applying the smallest possible file size settings with Aspose.Cells. | Demonstrate how to set Worksheet.PageSetup.BlackAndWhite and use PdfSaveOptions.OptimizationType = PdfOptimizationType.MinimumSize for PDF export. | Provide a complete example that creates a workbook, adds data, and generates a compact black‑and‑white PDF file.
+// Common Searches: asp.net convert excel to black and white PDF with Aspose.Cells | how to reduce PDF size when exporting Excel using Aspose.Cells C# | set grayscale rendering for PDF output in Aspose.Cells | PdfOptimizationType.MinimumSize example Aspose.Cells | export worksheet as PDF with black‑and‑white page setup C#
+// Tags: grayscale PDF export Aspose.Cells | Worksheet.PageSetup.BlackAndWhite property | PdfOptimizationType.MinimumSize usage | Aspose.Cells PDF size optimization | export Excel to black‑and‑white PDF C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Create a workbook, enable PageSetup.BlackAndWhite, set PdfSaveOptions to MinimumSize and Flate compression, then save as a grayscale PDF for reduced size and faster printing.
-class ConvertWorkbookToPdfGrayscale
+// // Creates a workbook, adds sample data, enables black‑and‑white page rendering, configures PdfSaveOptions for minimum size, and saves the file as GrayscaleOutput.pdf.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("Sample data for PDF conversion");
 
-        // Enable black‑and‑white (grayscale) rendering for the worksheet
-        // This forces all printed elements to be rendered in grayscale
+        // Add some sample data (optional, just to have content)
+        worksheet.Cells["A1"].PutValue("Sample Data for Grayscale PDF");
+
+        // Enable black‑and‑white (grayscale) rendering for printing
         worksheet.PageSetup.BlackAndWhite = true;
 
-        // Configure PDF save options for reduced file size
+        // Configure PDF save options to minimize file size
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Use the MinimumSize optimization type (smaller file, lower quality)
         pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
 
-        // Apply Flate compression to further shrink the PDF size
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate;
-
-        // Save the workbook as a PDF using the configured options
+        // Save the workbook as a PDF using the specified options
         workbook.Save("GrayscaleOutput.pdf", pdfOptions);
     }
 }

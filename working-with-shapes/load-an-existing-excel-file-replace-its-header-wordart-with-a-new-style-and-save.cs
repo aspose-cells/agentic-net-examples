@@ -1,77 +1,81 @@
-// Title: Replace Excel Header WordArt with a New Preset Style using Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, locates the first WordArt shape on a worksheet, records its geometry and text, removes the original shape, inserts a new WordArt with a chosen PresetWordArtStyle (e.g., WordArtStyle5), and saves the updated file.
-// Keywords: Aspose.Cells | C# | WordArt | replace WordArt | Excel header | preset WordArt style | shape manipulation | worksheet shapes | add WordArt | remove WordArt | Aspose.Cells for .NET | Excel automation | document styling
-// Common Searches: Aspose.Cells replace WordArt header C# | Change WordArt style in Excel with Aspose | How to update WordArt shape programmatically .NET | Add preset WordArt to worksheet using Aspose.Cells | Remove and insert WordArt preserving position | C# code to modify Excel shapes Aspose
-// Developer Intent: Programmatically replace an existing WordArt header in an Excel workbook with a different preset style while preserving its original text and layout.
-// Use Cases: Refresh corporate report templates by applying a new branded WordArt header across all generated workbooks. | Migrate legacy Excel files that contain outdated WordArt headers to a standardized style for visual consistency. | Create invoices where the header WordArt is automatically restyled based on client‑specific branding rules.
-// AI Prompts: Generate C# code using Aspose.Cells that finds the first WordArt shape on the first worksheet, captures its position and text, deletes it, adds a new WordArt with PresetWordArtStyle.WordArtStyle5, and saves the workbook. | Provide a reusable method for Aspose.Cells that accepts input and output file paths, a worksheet index, and a PresetWordArtStyle value, then replaces any WordArt header while handling missing files and preserving geometry. | Write a robust Aspose.Cells script that iterates through all shapes, identifies WordArt headers, replaces each with a specified preset style, and logs the changes for batch processing of multiple Excel files.
+// Title: Replace worksheet header WordArt with a custom TextEffect shape using Aspose.Cells for .NET
+// AI Prompts: Write a C# program that opens an existing .xlsx file, removes all shapes on each worksheet, and adds a new WordArt (TextEffect) shape as the header with specified text, font, and size using Aspose.Cells. | Adjust the example so that only the topmost WordArt header is replaced while preserving any other shapes on the sheet. | Enhance the code to apply a solid fill color, outline, and rotation to the inserted TextEffect shape.
+// Common Searches: how to replace header WordArt in an Excel workbook with Aspose.Cells C# | Aspose.Cells add TextEffect shape as header to each worksheet programmatically | C# remove all shapes from Excel sheet then insert new WordArt using Aspose.Cells | set font and size for WordArt shape in Aspose.Cells .NET example | save modified Excel file as new workbook after changing header WordArt Aspose.Cells
+// Tags: worksheet WordArt substitution Aspose.Cells | insert TextEffect shape C# | clear all shapes Excel Aspose.Cells | style WordArt font Aspose.Cells | save workbook as new file Aspose.Cells
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads a workbook, locates the first WordArt shape on a worksheet, records its geometry and text, removes the original shape, inserts a new WordArt with a chosen PresetWordArtStyle (e.g., WordArtStyle5), and saves the updated file.
+// The sample loads an existing workbook, clears every shape on each worksheet, creates a new TextEffect (WordArt) shape with custom text, font, and size as the header, optionally formats it, and saves the result as a new Excel file.
 class ReplaceHeaderWordArt
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
+            // Path to the existing Excel file
+            string inputPath = "input.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the existing Excel file
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Iterate through all shapes on the worksheet
-            for (int i = 0; i < worksheet.Shapes.Count; i++)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Shape shape = worksheet.Shapes[i];
+                ShapeCollection shapes = sheet.Shapes;
 
-                // Identify WordArt shapes (used as header in this scenario)
-                if (shape.IsWordArt)
+                // Remove existing shapes (optional – adjust as needed)
+                for (int i = shapes.Count - 1; i >= 0; i--)
                 {
-                    // Preserve original geometry and text
-                    int upperLeftRow = shape.UpperLeftRow;
-                    int upperLeftColumn = shape.UpperLeftColumn;
-                    int top = shape.Top;
-                    int left = shape.Left;
-                    int height = shape.Height;
-                    int width = shape.Width;
-                    string text = shape.Text;
-
-                    // Remove the existing WordArt shape
-                    worksheet.Shapes.RemoveAt(i);
-
-                    // Add a new WordArt shape with the desired preset style
-                    // Example: using WordArtStyle5 (Fill - Gold, Accent 4, Soft Bevel)
-                    worksheet.Shapes.AddWordArt(
-                        PresetWordArtStyle.WordArtStyle5,
-                        text,
-                        upperLeftRow,
-                        top,
-                        upperLeftColumn,
-                        left,
-                        height,
-                        width);
-
-                    // Since we replaced the header, exit the loop (assuming only one header WordArt)
-                    break;
+                    shapes.RemoveAt(i);
                 }
+
+                // Add a new WordArt (TextEffect) shape
+                Shape newWordArt = shapes.AddTextEffect(
+                    (MsoPresetTextEffect)0,          // preset effect (plain text)
+                    "New Header Title",              // text
+                    "Arial Black",                   // font name
+                    36,                              // font size
+                    true,                            // bold
+                    false,                           // italic
+                    0, 0,                            // left, top
+                    400, 50,                         // width, height
+                    0, 0);                           // shape type and additional parameter (default values)
+
+                // Basic formatting (fill and line) – optional
+                try
+                {
+                    // Note: FillFormat and LineFormat may not expose ForeColor in some library versions.
+                    // If needed, use alternative properties such as SolidFillColor or set line color via LineFormat.
+                    // Example (uncomment if supported):
+                    // newWordArt.Fill.ForeColor = Color.LightBlue;
+                    // newWordArt.Line.ForeColor = Color.DarkBlue;
+                    // newWordArt.Line.Weight = 2;
+                }
+                catch (Exception fmtEx)
+                {
+                    Console.WriteLine($"Formatting warning: {fmtEx.Message}");
+                }
+
+                // Rotation and Z-order
+                newWordArt.RotationAngle = 0;
+                newWordArt.ZOrderPosition = 0;
             }
 
-            // Save the modified workbook
+            // Path to save the modified Excel file
+            string outputPath = "output.xlsx";
+
+            // Save the workbook
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }

@@ -1,59 +1,44 @@
-// Title: Set German Excel formulas with Cell.FormulaLocal in Aspose.Cells for .NET
-// Description: Shows how to configure Workbook.Settings.Region for Germany, place sample values, assign an English SUM formula, replace it with the German SUMME function via Cell.FormulaLocal, confirm the automatic conversion to the English syntax, calculate the workbook, and save the file.
-// Keywords: Aspose.Cells | FormulaLocal | German Excel formula | SUMME | .NET | C# | Workbook.Settings.Region | localized functions | Excel localization
-// Common Searches: Aspose.Cells FormulaLocal German example | How to use SUMME function with Aspose.Cells C# | Set workbook region to Germany Aspose.Cells | Convert English formula to local language in Aspose.Cells | Calculate workbook after applying localized formula
-// Developer Intent: Write a formula in German using Cell.FormulaLocal, let Aspose.Cells translate it to the internal English representation, and ensure correct calculation and saving of the workbook.
-// Use Cases: Set Workbook.Settings.Region = CountryCode.Germany to enable German function names. | Apply Cell.FormulaLocal = "=SUMME(B1:C1)" to store a German formula. | Read Cell.Formula to see the automatically translated English formula (=SUM(B1:C1)). | Call Workbook.CalculateFormula() to evaluate the localized formula. | Save the workbook while preserving the German formula syntax.
-// AI Prompts: Generate C# code that uses Cell.FormulaLocal to set a French SOMME formula in Aspose.Cells and displays the translated English formula. | Explain how Workbook.Settings.Region influences formula translation with Cell.FormulaLocal in Aspose.Cells, including calculation behavior and file output.
+// Title: Set a Portuguese-language SUM formula in an Excel workbook using Cell.FormulaLocal with Aspose.Cells for .NET
+// AI Prompts: Insert a Portuguese SUM (SOMA) formula into cell A1 via Cell.FormulaLocal, then recalculate the workbook. | Configure the workbook's Settings.CultureInfo to pt-PT, apply a semicolon‑separated localized formula, and save the file. | Demonstrate how to evaluate culture‑specific formulas in Aspose.Cells by using FormulaLocal and Workbook.CalculateFormula.
+// Common Searches: how to assign a Portuguese SUM formula using Aspose.Cells C# | using Cell.FormulaLocal with pt-PT culture in Aspose.Cells | example of semicolon separated formulas in Aspose.Cells .NET | set workbook culture for localized functions in Aspose.Cells | calculate localized Excel formulas programmatically with Aspose.Cells
+// Tags: Cell.FormulaLocal localized function assignment | Aspose.Cells workbook culture pt-PT | Portuguese Excel formula evaluation .NET | semicolon separator in Aspose.Cells formulas | save workbook after FormulaLocal calculation
 
 using System;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsLocalizedFormulaDemo
+// The example creates a new workbook, sets its culture to Portuguese (Portugal), assigns the localized SUM function (SOMA) to cell A1 using FormulaLocal with semicolon separators, recalculates the workbook, and saves it as LocalizedFormula.xlsx.
+class Program
 {
-    // Shows how to configure Workbook.Settings.Region for Germany, place sample values, assign an English SUM formula, replace it with the German SUMME function via Cell.FormulaLocal, confirm the automatic conversion to the English syntax, calculate the workbook, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Set the workbook region to Germany to demonstrate German localized functions
-            workbook.Settings.Region = CountryCode.Germany;
+            // Set workbook culture to Portuguese (Portugal) so that localized formulas are recognized
+            workbook.Settings.CultureInfo = new CultureInfo("pt-PT");
 
-            // Access the first worksheet and its cells
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Put some sample values that the formulas will use
-            cells["B1"].PutValue(5);
-            cells["C1"].PutValue(10);
+            // Set a formula using the localized function name.
+            // In Portuguese Excel, the SUM function is "SOMA" and arguments are separated by ';'.
+            Cell targetCell = sheet.Cells["A1"];
+            targetCell.FormulaLocal = "=SOMA(10;20)";
 
-            // Set a formula using the standard (English) function name
-            Cell cellA1 = cells["A1"];
-            cellA1.Formula = "=SUM(B1:C1)";
-
-            // Display the standard formula
-            Console.WriteLine("Standard Formula: " + cellA1.Formula);
-
-            // Set the same formula using the localized (German) function name via FormulaLocal
-            cellA1.FormulaLocal = "=SUMME(B1:C1)";
-
-            // Display the localized formula
-            Console.WriteLine("Localized Formula (FormulaLocal): " + cellA1.FormulaLocal);
-
-            // Verify that the standard Formula property reflects the English name after setting FormulaLocal
-            Console.WriteLine("Standard Formula after setting FormulaLocal: " + cellA1.Formula);
-
-            // Calculate the workbook to evaluate the formula
+            // Recalculate the workbook to evaluate the formula.
             workbook.CalculateFormula();
 
-            // Show the calculated result
-            Console.WriteLine("Calculated Value in A1: " + cellA1.Value);
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("LocalizedFormulaDemo.xlsx");
+            // Save the workbook (lifecycle rule: save)
+            string outputPath = "LocalizedFormula.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

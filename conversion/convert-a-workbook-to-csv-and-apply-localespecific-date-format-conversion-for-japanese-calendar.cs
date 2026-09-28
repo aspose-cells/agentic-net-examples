@@ -1,77 +1,88 @@
-// Title: C# – Convert Excel to CSV with Japanese Era Date Formatting using Aspose.Cells
-// Description: Load an .xlsx workbook with Aspose.Cells, set the workbook region to Japan, apply the Japanese calendar format "[$-F800]yyyy年m月d日" to every DateTime cell, and save the result as a CSV file so dates appear in the Japanese era style.
-// Keywords: Aspose.Cells | C# CSV conversion | Japanese calendar | Japanese era date format | locale Japan | custom date format [$-F800] | .NET Excel export | workbook region Japan | Excel to CSV Aspose | date formatting Japan
-// Common Searches: Aspose.Cells export Excel to CSV with Japanese dates | C# set workbook region to Japan for CSV output | How to apply Japanese era format in CSV using Aspose.Cells | Convert Excel file to CSV preserving Japanese calendar | Custom date format [$-F800] in Aspose.Cells CSV
-// Developer Intent: Export an Excel workbook to CSV while rendering all date cells in the Japanese era format.
-// Use Cases: Create CSV reports for Japanese users where dates follow the era (年/月/日) convention. | Automate batch conversion of multiple workbooks to CSV with Japan‑specific date formatting. | Integrate locale‑aware data export into a .NET pipeline that must comply with Japanese regulatory standards.
-// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets the region to Japan, applies the Japanese calendar format to all date cells, and saves the workbook as CSV. | Explain the purpose of the format string "[$-F800]yyyy年m月d日" and how Aspose.Cells uses it during CSV export. | Provide a modification to the sample that processes every worksheet and creates separate CSV files while keeping the Japanese date format.
+// Title: Convert an Excel workbook to CSV while applying Japanese era (wareki) date formatting with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file using Aspose.Cells, sets the workbook CultureInfo to Japanese (ja-JP), formats every DateTime cell with the Japanese era pattern, and saves the first worksheet as a CSV file. | Show how to iterate over all cells in an Aspose.Cells workbook, detect cells of type DateTime, assign a wareki date style, and export the sheet to CSV in a .NET application.
+// Common Searches: aspocells export to csv with Japanese era date format c# | c# set workbook culture to ja-jp before csv conversion using aspose.cells | apply wareki date formatting to all cells when saving excel as csv | how to convert xlsx to csv preserving Japanese calendar in .net | aspocells custom number format for Japanese calendar during csv export
+// Tags: Japanese era custom format Aspose.Cells | export first worksheet to CSV Aspose.Cells C# | set workbook CultureInfo ja-JP Aspose.Cells | detect DateTime cell type Aspose.Cells | apply wareki number format ggge年M月d日
 
 using System;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// Loads input.xlsx, sets the workbook culture to Japanese (ja-JP), applies the Japanese era format "ggge年M月d日" to every DateTime cell across all worksheets, and saves the first sheet as output.csv in CSV format using Aspose.Cells.
+class WorkbookToCsvJapaneseCalendar
 {
-    // Load an .xlsx workbook with Aspose.Cells, set the workbook region to Japan, apply the Japanese calendar format "[$-F800]yyyy年m月d日" to every DateTime cell, and save the result as a CSV file so dates appear in the Japanese era style.
-    public class WorkbookToCsvJapaneseCalendar
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Path to the source Excel workbook
-            string sourcePath = "input.xlsx";
+            // Input workbook path
+            string inputPath = "input.xlsx";
 
             // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {sourcePath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook (default LoadOptions are sufficient)
-            Workbook workbook = new Workbook(sourcePath);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Set the workbook's regional settings to Japan.
-            // This enables Japanese calendar formatting when applying custom date formats.
-            workbook.Settings.Region = CountryCode.Japan;
+            // Set the workbook culture to Japanese (Japan) for Japanese calendar handling
+            workbook.Settings.CultureInfo = new CultureInfo("ja-JP");
 
-            // Define a custom date format that uses the Japanese calendar.
-            // The format string follows Excel's locale syntax.
-            const string japaneseDateFormat = "[$-F800]yyyy年m月d日";
+            // Custom number format using the Japanese era (wareki), e.g., "令和3年5月21日"
+            string japaneseDateFormat = "ggge年M月d日";
 
-            // Apply the custom format to all cells that contain DateTime values.
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Iterate through used cells only for efficiency.
-            foreach (Cell cell in cells)
+            // Iterate through all worksheets and apply the custom Japanese date format to date cells
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                if (cell.Type == CellValueType.IsDateTime)
+                // Get the used range of the worksheet
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+
+                // Determine start and end indices
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startColumn = usedRange.FirstColumn;
+                int endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                // Loop through each cell in the used range
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    // Get the existing style, modify the custom format, and reapply.
-                    Style style = cell.GetStyle();
-                    style.Custom = japaneseDateFormat;
-                    cell.SetStyle(style);
+                    for (int col = startColumn; col <= endColumn; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Apply format only to cells containing DateTime values
+                        if (cell.Type == CellValueType.IsDateTime)
+                        {
+                            Style style = cell.GetStyle();
+                            style.Custom = japaneseDateFormat;
+                            cell.SetStyle(style);
+                        }
+                    }
                 }
             }
 
-            // Save the workbook as CSV. The date values will be rendered using the
-            // Japanese calendar format defined above.
-            string csvPath = "output.csv";
-            workbook.Save(csvPath, SaveFormat.Csv);
+            // Output CSV path
+            string outputPath = "output.csv";
 
-            Console.WriteLine($"Workbook converted to CSV with Japanese date format: {csvPath}");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the first worksheet as CSV (default behavior)
+            workbook.Save(outputPath, SaveFormat.Csv);
+            Console.WriteLine($"Workbook successfully saved as CSV to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,30 +1,42 @@
-// Title: C# – Insert a Column at Index 3 and Save Worksheet as PDF using Aspose.Cells
-// Description: Loads input.xlsx, accesses the first sheet, inserts a new column at the fourth position (zero‑based index 3), and writes the workbook to output.pdf with PdfSaveOptions.
-// Keywords: Aspose.Cells | C# | InsertColumn | Excel to PDF | PdfSaveOptions | modify worksheet columns | export Excel as PDF | zero based column index
-// Common Searches: Aspose.Cells insert column at position 4 C# | Save Excel worksheet as PDF after adding column Aspose | How to add a blank column in .NET Excel file and export to PDF | Insert column zero based index Aspose.Cells example | Convert modified workbook to PDF using Aspose.Cells
-// Developer Intent: Add a column at the fourth position in an Excel sheet and generate a PDF file.
-// Use Cases: Prepare a printable PDF report after inserting a new data column. | Adjust column layout in a financial template before distribution as PDF. | Automate column insertion in batch processing and output PDFs. | Create a PDF version of a spreadsheet after structural changes.
-// AI Prompts: Write C# code with Aspose.Cells that inserts a column at zero‑based index 3 and saves the first worksheet as a PDF. | Show how to use PdfSaveOptions to export a workbook to PDF after adding a column. | Explain the steps to modify column structure in an Excel file with Aspose.Cells and generate a PDF without affecting other sheets.
+// Title: Insert a column at index 3 in an Excel worksheet with Aspose.Cells for .NET and export the sheet to PDF
+// AI Prompts: Load an existing .xlsx file, insert a new column at zero‑based index 3 in the first worksheet using Aspose.Cells, save the workbook to a temporary file, and convert it to a PDF. | Using Aspose.Cells for .NET, add a column at position 3 in a workbook, persist the change to a temporary file, then generate a PDF from that file while cleaning up the temporary file.
+// Common Searches: Aspose.Cells C# insert column at specific index before PDF conversion | How to add a column to an Excel file and then export to PDF using Aspose.Cells | C# example inserting a column in the first worksheet and saving as PDF | Convert modified Excel workbook to PDF with a temporary file in Aspose.Cells
+// Tags: Aspose.Cells column insertion C# | Aspose.Cells worksheet to PDF conversion | C# temporary workbook for PDF export | Excel worksheet modification prior to PDF generation | zero‑based column index insertion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-// Loads input.xlsx, accesses the first sheet, inserts a new column at the fourth position (zero‑based index 3), and writes the workbook to output.pdf with PdfSaveOptions.
+// Loads input.xlsx, inserts a column at zero‑based index 3 in the first worksheet, saves the workbook to a temporary file, converts the temporary file to output.pdf using ConversionUtility, and deletes the temporary file.
 class Program
 {
     static void Main()
     {
-        // Load the existing Excel file
-        Workbook workbook = new Workbook("input.xlsx");
+        // Paths for the original file, a temporary modified file, and the final PDF.
+        string inputFile = "input.xlsx";
+        string tempFile = "temp_modified.xlsx";
+        string pdfFile = "output.pdf";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Load the existing workbook (load rule).
+        Workbook workbook = new Workbook(inputFile);
 
-        // Insert a new column at index 3 (zero‑based, i.e., the fourth column)
-        worksheet.Cells.InsertColumn(3);
+        // Insert a new column at index 3 (zero‑based) in the first worksheet (insert column rule).
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells.InsertColumn(3);
 
-        // Export the worksheet (entire workbook) to PDF
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the modified workbook to a temporary file (save rule).
+        workbook.Save(tempFile);
+
+        // Convert the temporary Excel file to PDF using the provided ConversionUtility rule.
+        ConversionUtility.Convert(tempFile, pdfFile);
+
+        // Clean up the temporary file.
+        if (File.Exists(tempFile))
+        {
+            File.Delete(tempFile);
+        }
+
+        Console.WriteLine("Worksheet exported to PDF successfully.");
     }
 }

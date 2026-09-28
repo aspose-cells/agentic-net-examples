@@ -1,46 +1,43 @@
-// Title: C# – Validate Excel cell strings against expected numeric values using Aspose.Cells
-// Description: Creates a workbook, writes numeric, decimal, text and date strings to column A, reads each cell’s raw string via StringValue, compares it with a predefined list of expected numeric strings, outputs match results and the IsNumericValue flag, then saves the file.
-// Keywords: Aspose.Cells C# raw string value | StringValue | IsNumericValue | validate Excel cell content | compare cell string to expected value | numeric string validation | date string handling | Excel data validation .NET
-// Common Searches: Aspose.Cells get raw string from cell | C# compare cell value to expected string Aspose.Cells | How to check if cell is numeric Aspose.Cells | Validate Excel data against list of strings C# | IsNumericValue for date cells Aspose.Cells
-// Developer Intent: Read each cell’s original string, compare it to a predefined numeric string array, and determine whether the cell is treated as numeric by Aspose.Cells.
-// Use Cases: Validate user‑entered numeric strings in an uploaded Excel file before processing. | Ensure date strings are correctly recognized as numeric values during import. | Generate a validation report that lists mismatched cells together with their IsNumericValue status.
-// AI Prompts: Write C# code with Aspose.Cells that iterates through column A, retrieves each cell’s raw string via StringValue, compares it to an array of expected numeric strings, and prints the match result and IsNumericValue flag. | Show how to log validation failures, including cell name, raw value, expected value, and IsNumericValue, for later review. | Explain Aspose.Cells’ logic for setting IsNumericValue on date strings and suggest handling strategies when validating mixed data types.
+// Title: Validate Excel cell values by comparing raw StringValue to a predefined numeric string list using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates over a set of cells, reads each cell's StringValue, and determines whether it matches any entry in an array of expected numeric strings. | Show how to combine the IsNumericValue property with a string‑array lookup to confirm that a cell contains a numeric string in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells C# how to check if a cell's text matches a list of numeric strings | retrieve raw string value from Excel cell and verify against expected values using Aspose.Cells | using IsNumericValue with StringValue to validate numeric data in Aspose.Cells workbook | compare Excel cell content to predefined numeric strings in .NET application | validate cell data types and values in Aspose.Cells for .NET
+// Tags: compare cell StringValue with expected list Aspose.Cells | use IsNumericValue property Aspose.Cells | validate numeric string cells C# | retrieve raw string from Excel cell Aspose | check cell content against predefined numeric strings .NET
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, writes numeric, decimal, text and date strings to column A, reads each cell’s raw string via StringValue, compares it with a predefined list of expected numeric strings, outputs match results and the IsNumericValue flag, then saves the file.
+// The example creates a workbook, fills cells A1‑A5 with various string values, defines an array of expected numeric strings, then loops through each cell, reads its raw StringValue, checks if it exists in the expected array, evaluates the IsNumericValue flag, prints the results, and saves the file as ValidateCellContent.xlsx.
 class ValidateCellContent
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (creation rule)
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
         // Populate cells with various string values
         cells["A1"].PutValue("123");          // numeric string
         cells["A2"].PutValue("45.67");        // numeric string with decimal
         cells["A3"].PutValue("ABC");          // non‑numeric string
         cells["A4"].PutValue("2021-06-20");   // date string (treated as numeric after conversion)
+        cells["A5"].PutValue("12/34/5678");   // invalid date string
 
-        // Expected numeric strings for validation
-        string[] expectedValues = { "123", "45.67", "100", "2021-06-20" };
+        // Define the set of expected numeric strings
+        string[] expectedNumericStrings = { "123", "45.67", "2021-06-20" };
 
-        // Iterate through the cells and compare raw string values with expected strings
-        for (int row = 0; row < expectedValues.Length; row++)
+        // Validate each cell by comparing its raw StringValue with the expected set
+        foreach (string address in new[] { "A1", "A2", "A3", "A4", "A5" })
         {
-            Cell cell = cells[row, 0];               // Column A (index 0)
-            string rawString = cell.StringValue;     // Retrieve raw string representation
-            bool isMatch = rawString == expectedValues[row];
+            Cell cell = cells[address];
+            string rawString = cell.StringValue;                     // retrieve raw string value
+            bool matchesExpected = Array.Exists(expectedNumericStrings, s => s == rawString);
+            bool isNumeric = cell.IsNumericValue;                    // additional numeric check
 
-            Console.WriteLine($"Cell {cell.Name}: Raw='{rawString}' Expected='{expectedValues[row]}' Match={isMatch}");
-            // Additional check: whether the cell content is considered numeric by Aspose.Cells
-            Console.WriteLine($"  IsNumericValue = {cell.IsNumericValue}");
+            Console.WriteLine($"{address}: Raw=\"{rawString}\" | MatchesExpected={matchesExpected} | IsNumericValue={isNumeric}");
         }
 
-        // Save the workbook (optional, demonstrates the required save lifecycle step)
+        // Save the workbook (saving rule)
         workbook.Save("ValidateCellContent.xlsx");
     }
 }

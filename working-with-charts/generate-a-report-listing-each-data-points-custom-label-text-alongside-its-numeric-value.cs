@@ -1,83 +1,102 @@
-// Title: Aspose.Cells for .NET – C# Console Report of Custom Chart Data Labels and Their Values
-// Description: This C# sample creates a workbook, adds a column chart with three points, assigns custom label texts (Alpha, Beta, Gamma), disables automatic labeling, and prints each custom label together with its numeric Y‑value to the console before saving the file as an Excel workbook.
-// Keywords: Aspose.Cells C# chart custom labels | print chart data label values | Aspose.Cells console report | retrieve chart point value .NET | custom data labels Excel chart | Aspose.Cells chart point iteration
-// Common Searches: how to display custom data label text with values using Aspose.Cells | Aspose.Cells C# chart point value extraction | print custom chart labels to console Aspose.Cells | C# Aspose.Cells generate data label report
-// Developer Intent: List each chart point’s custom label alongside its numeric value in a console output.
-// Use Cases: Create an audit log of chart data where custom labels map to business codes. | Export label‑value pairs to a text or CSV file for downstream processing. | Validate that custom labels applied to chart points match expected categories in automated tests.
-// AI Prompts: Show how to include the category name in the console output for each data point. | Provide code that writes the label‑value pairs to a CSV file instead of the console. | Explain how to read and display the font style of each data label in the chart.
+// Title: Create an Excel workbook with a column chart that uses custom data‑label text and a separate worksheet listing each label with its numeric value using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that builds a column chart, disables automatic label text, assigns a custom label (e.g., "Item: <category>") to each point, and populates a new worksheet with the label and its Y‑value. | Update an Aspose.Cells chart example to generate a summary sheet that extracts every point's custom DataLabels.Text and corresponding numeric value, then save the workbook as an XLSX file.
+// Common Searches: Aspose.Cells C# set custom text for each chart point label | How to export chart point labels and values to a worksheet with Aspose.Cells | Create a report sheet of custom data‑labels and numeric values from an Excel chart in .NET | C# Aspose.Cells column chart with custom data labels and summary worksheet
+// Tags: custom data labels Aspose.Cells chart | export chart point values to worksheet C# | generate label/value report worksheet .NET | set point.DataLabels.Text Aspose.Cells | column chart custom labels Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCustomDataLabelReport
+namespace AsposeCellsCustomLabelReport
 {
-    // This C# sample creates a workbook, adds a column chart with three points, assigns custom label texts (Alpha, Beta, Gamma), disables automatic labeling, and prints each custom label together with its numeric Y‑value to the console before saving the file as an Excel workbook.
+    // The program creates a new workbook, adds a column chart with custom data‑label text derived from the category column, disables automatic label generation, and then writes each custom label together with its numeric Y‑value to a separate "Report" worksheet before saving the file as CustomLabelReport.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B2"].PutValue(100);
-                sheet.Cells["B3"].PutValue(200);
-                sheet.Cells["B4"].PutValue(300);
+                // -------------------------------------------------
+                // 1. Prepare data for the chart (first worksheet)
+                // -------------------------------------------------
+                Worksheet dataSheet = workbook.Worksheets[0];
+                dataSheet.Name = "Data";
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
+                // Header
+                dataSheet.Cells["A1"].PutValue("Category");
+                dataSheet.Cells["B1"].PutValue("Value");
 
-                // Set data range for the series
+                // Sample data
+                dataSheet.Cells["A2"].PutValue("Alpha");
+                dataSheet.Cells["A3"].PutValue("Beta");
+                dataSheet.Cells["A4"].PutValue("Gamma");
+
+                dataSheet.Cells["B2"].PutValue(1500);
+                dataSheet.Cells["B3"].PutValue(2750);
+                dataSheet.Cells["B4"].PutValue(3200);
+
+                // -------------------------------------------------
+                // 2. Add a chart and enable custom data labels
+                // -------------------------------------------------
+                int chartIndex = dataSheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+                Chart chart = dataSheet.Charts[chartIndex];
+
+                // Bind data
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Enable data labels for the series
+                // Enable data labels for the first series
                 Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true; // show numeric value
-                series.DataLabels.ShowCategoryName = false;
+                series.DataLabels.ShowValue = true;          // show numeric value
+                series.DataLabels.ShowCategoryName = false; // we will use custom text
 
-                // Define custom label texts
-                string[] customLabels = { "Alpha", "Beta", "Gamma" };
-
-                // Assign custom text to each data point
+                // Assign custom label to each point
                 for (int i = 0; i < series.Points.Count; i++)
                 {
                     ChartPoint point = series.Points[i];
-                    // Disable auto-generated text so we can set our own
+
+                    // Disable auto‑generated text so we can set our own
                     point.DataLabels.IsAutoText = false;
-                    // Set the custom label text
-                    point.DataLabels.Text = customLabels[i];
+
+                    // Retrieve the category name from the source data (column A)
+                    string category = dataSheet.Cells[i + 1, 0].StringValue; // A2, A3, ...
+
+                    // Set custom label
+                    point.DataLabels.Text = $"Item: {category}";
                 }
 
-                // Generate the report: list custom label and its numeric value
-                Console.WriteLine("Data Point Report:");
+                // -------------------------------------------------
+                // 3. Generate a report worksheet listing label text and value
+                // -------------------------------------------------
+                Worksheet reportSheet = workbook.Worksheets.Add("Report");
+                // Headers
+                reportSheet.Cells["A1"].PutValue("Custom Label");
+                reportSheet.Cells["B1"].PutValue("Numeric Value");
+
+                // Populate rows with data from the chart points
                 for (int i = 0; i < series.Points.Count; i++)
                 {
                     ChartPoint point = series.Points[i];
-                    string label = point.DataLabels.Text;               // custom label
-                    double value = Convert.ToDouble(point.YValue);      // numeric value
-                    Console.WriteLine($"Label: {label}, Value: {value}");
+                    int row = i + 2; // start from row 2 (1‑based index)
+
+                    // Custom label text
+                    reportSheet.Cells[row, 0].PutValue(point.DataLabels.Text);
+
+                    // Numeric value (YValue)
+                    reportSheet.Cells[row, 1].PutValue(point.YValue);
                 }
 
-                // Save the workbook (ensure the directory exists)
-                string outputPath = "CustomDataLabelReport.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                // -------------------------------------------------
+                // 4. Save the workbook
+                // -------------------------------------------------
+                workbook.Save("CustomLabelReport.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

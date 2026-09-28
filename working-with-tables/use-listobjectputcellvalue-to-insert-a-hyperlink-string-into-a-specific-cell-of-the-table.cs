@@ -1,53 +1,68 @@
-// Title: Add a Hyperlink to a ListObject Cell Using ListObject.PutCellValue in Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, define a ListObject (table), set the display text of a specific table cell with ListObject.PutCellValue, compute its absolute address, and attach a hyperlink via the Hyperlinks collection. The file is saved as an XLSX document.
-// Keywords: Aspose.Cells | ListObject.PutCellValue | C# hyperlink table cell | Excel table hyperlink Aspose | Add hyperlink to ListObject | Aspose.Cells .NET example | hyperlink cell address
-// Common Searches: Aspose.Cells add hyperlink to ListObject cell | ListObject.PutCellValue hyperlink example | how to set hyperlink text in Aspose.Cells table | retrieve absolute address of ListObject cell | C# Aspose.Cells table hyperlink code
-// Developer Intent: Insert a clickable link into a specific cell of an Aspose.Cells ListObject while defining the visible text.
-// Use Cases: Export a report where each row includes a link to a related document. | Generate product catalogs with URLs embedded in table cells. | Create data extracts that provide quick navigation to external resources from within an Excel table.
-// AI Prompts: Show C# code that adds a hyperlink to a ListObject cell using ListObject.PutCellValue and the Hyperlinks collection. | Explain how to calculate the absolute cell reference of a ListObject element for hyperlink insertion. | Provide a step‑by‑step guide to set display text and URL for a table cell in Aspose.Cells.
+// Title: Insert a hyperlink into a specific cell of an Aspose.Cells ListObject table using C#
+// AI Prompts: Generate C# code that creates a workbook, adds a ListObject table, and uses ListObject.PutCellValue to set a cell to a URL string. | Write a C# snippet that places the hyperlink "https://www.example.com" into the third row, second column of an Aspose.Cells ListObject and saves the file. | Provide C# example code for adding a ListObject to a worksheet, inserting a hyperlink into a table cell with PutCellValue, and handling output folder creation.
+// Common Searches: Aspose.Cells C# put hyperlink into ListObject table cell | How to use ListObject.PutCellValue to add a URL in Aspose.Cells | C# Aspose.Cells insert URL into specific table cell example | Saving workbook after adding hyperlink to Excel table with Aspose.Cells
+// Tags: Aspose.Cells ListObject PutCellValue hyperlink | C# insert URL into Excel table cell | Aspose.Cells create ListObject table | save workbook Aspose.Cells C# | set cell value to string Aspose.Cells | handle output directory Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-// Demonstrates how to create a workbook, define a ListObject (table), set the display text of a specific table cell with ListObject.PutCellValue, compute its absolute address, and attach a hyperlink via the Hyperlinks collection. The file is saved as an XLSX document.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, adds a ListObject spanning A1:C5, and uses ListObject.PutCellValue to insert the URL https://www.example.com into the cell at the third row, second column of the table, then saves the workbook to output.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Prepare header row for the table
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Link");
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add sample data rows
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["A3"].PutValue(2);
+                // Define the range for the table (ListObject)
+                // Table starts at cell A1 and spans 5 rows × 3 columns
+                int firstRow = 0;          // zero‑based index for row 1 (A1)
+                int firstColumn = 0;       // zero‑based index for column A
+                int totalRows = 5;
+                int totalColumns = 3;
 
-        // Create a ListObject (table) that spans A1:B3
-        int tableIndex = sheet.ListObjects.Add("A1", "B3", true);
-        ListObject table = sheet.ListObjects[tableIndex];
+                // Add the ListObject (table) to the worksheet
+                int tableIndex = worksheet.ListObjects.Add(
+                    firstRow,
+                    firstColumn,
+                    firstRow + totalRows,
+                    firstColumn + totalColumns,
+                    true);
 
-        // Insert the display text for the hyperlink into the table cell
-        // Row offset 1 (second row of the table), column offset 1 (second column)
-        table.PutCellValue(1, 1, "Visit Aspose");
+                ListObject table = worksheet.ListObjects[tableIndex];
 
-        // Determine the absolute cell address of the cell we just updated
-        int targetRow = table.StartRow + 1;      // absolute row index
-        int targetColumn = table.StartColumn + 1; // absolute column index
-        string cellName = CellsHelper.CellIndexToName(targetRow, targetColumn);
+                // Insert a hyperlink string into a specific cell of the table
+                // 3rd row (index 2) and 2nd column (index 1) within the table
+                string hyperlink = "https://www.example.com";
+                table.PutCellValue(2, 1, hyperlink);
 
-        // Add a hyperlink to that cell
-        sheet.Hyperlinks.Add(cellName, 1, 1, "https://www.aspose.com");
+                // Define output file path
+                string outputPath = "output.xlsx";
 
-        // Optionally set the text that will be displayed for the hyperlink
-        int hyperlinkIdx = sheet.Hyperlinks.Count - 1;
-        sheet.Hyperlinks[hyperlinkIdx].TextToDisplay = "Visit Aspose";
+                // Ensure the directory exists (handle case when outputPath has no directory part)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Save the workbook
-        workbook.Save("ListObjectHyperlinkDemo.xlsx", SaveFormat.Xlsx);
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
     }
 }

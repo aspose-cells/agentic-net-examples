@@ -1,47 +1,60 @@
-// Title: Aspose.Cells .NET – Apply a Pattern Fill While Preserving the Light2 Theme Background
-// Description: Shows how to create a workbook, define a diagonal‑stripe pattern style, set a red foreground, keep the Light2 theme background using BackgroundThemeColor, apply the style to cell B2, and save the file as XLSX.
-// Keywords: Aspose.Cells | .NET | pattern fill | BackgroundThemeColor | Light2 theme | ThemeColorType.Background2 | diagonal stripe | cell style | workbook theme | preserve theme colors
-// Common Searches: Aspose.Cells pattern fill with Light2 theme background | set BackgroundThemeColor for patterned style .NET | how to keep theme colors when using pattern fill Aspose.Cells | apply diagonal stripe pattern to a cell in C# | preserve workbook theme while styling cells
-// Developer Intent: Add a patterned fill to a cell while retaining the Light2 theme background reference.
-// Use Cases: Design reports that combine visual patterns with theme‑based colors for consistent branding. | Create reusable templates where pattern fills respect the workbook’s Light2 theme across multiple sheets. | Enhance accessibility by using theme colors for background while highlighting cells with patterned overlays.
-// AI Prompts: Generate C# code that applies a diagonal‑stripe pattern to a cell and uses BackgroundThemeColor to keep the Light2 theme background in Aspose.Cells. | Explain how to combine ForegroundColor and BackgroundThemeColor to create a theme‑aware patterned fill in a .NET workbook. | Show an example of applying the same Light2‑based pattern style to a range of cells using Aspose.Cells.
+// Title: Replace the Light2 theme background with a patterned fill while preserving theme colors in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, creates a style that uses the workbook's Light2 theme color as the foreground, applies a solid pattern fill, and assigns the style to the worksheet's used range. | Write a reusable C# method that takes a worksheet, a theme color index, and a background pattern type, then applies a corresponding patterned style to the entire sheet using Aspose.Cells. | Update the example to replace explicit Color values with references to the workbook's theme colors and change the BackgroundType to Gray50, then apply the style to the MaxDisplayRange.
+// Common Searches: Aspose.Cells replace Light2 theme background with pattern fill C# | How to use workbook theme colors in Aspose.Cells style for Excel | Apply solid pattern fill to entire worksheet using Aspose.Cells .NET | Set worksheet background pattern based on theme color index in C#
+// Tags: Light2 theme background pattern fill | apply patterned style to worksheet used range | theme color based style Aspose.Cells | C# solid pattern fill Excel sheet | MaxDisplayRange style application Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace AsposeCellsThemePatternDemo
+// The example demonstrates loading or creating an Excel workbook, defining a style that references the Light2 theme color with a solid pattern, applying this style to the worksheet's maximum display range, and saving the modified file.
+class Program
 {
-    // Shows how to create a workbook, define a diagonal‑stripe pattern style, set a red foreground, keep the Light2 theme background using BackgroundThemeColor, apply the style to cell B2, and save the file as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Load existing workbook if present; otherwise create a new one.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+            }
+
+            // Ensure there is at least one worksheet.
+            if (workbook.Worksheets.Count == 0)
+            {
+                workbook.Worksheets.Add();
+            }
+
+            // Create a style that uses a solid pattern and a standard color.
+            Style patternedStyle = workbook.CreateStyle();
+            patternedStyle.Pattern = BackgroundType.Solid;
+            patternedStyle.ForegroundColor = Color.Blue;   // Example foreground color
+            patternedStyle.BackgroundColor = Color.LightBlue; // Example background color
+
+            // Apply the style to the used range of the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-            // Define a style that uses a pattern fill
-            Style patternStyle = workbook.CreateStyle();
+            StyleFlag flag = new StyleFlag { CellShading = true };
+            usedRange.ApplyStyle(patternedStyle, flag);
 
-            // Set the pattern type (e.g., diagonal stripe)
-            patternStyle.Pattern = BackgroundType.DiagonalStripe;
-
-            // Set the foreground color of the pattern (regular Color)
-            patternStyle.ForegroundColor = Color.Red;
-
-            // Preserve the theme reference for the background by using BackgroundThemeColor
-            // ThemeColorType.Background2 corresponds to the Light2 background color of the theme
-            patternStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Background2, 0);
-
-            // Apply the style to a cell
-            Cell targetCell = sheet.Cells["B2"];
-            targetCell.PutValue("Pattern with Light2 background");
-            targetCell.SetStyle(patternStyle);
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("ThemePatternFillDemo.xlsx", SaveFormat.Xlsx);
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

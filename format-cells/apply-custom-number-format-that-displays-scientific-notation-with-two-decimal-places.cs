@@ -1,67 +1,47 @@
-// Title: Apply Custom Scientific Notation (0.00E+00) Number Format to a Cell with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, insert a numeric value, define a style with the custom format "0.00E+00", use StyleFlag to modify only the number format, apply the style to cell A1, and save the Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells scientific notation | C# custom number format | 0.00E+00 Excel format | StyleFlag NumberFormat | apply number format Aspose.Cells | Excel cell formatting .NET
-// Common Searches: Aspose.Cells set cell to scientific notation C# | custom number format 0.00E+00 Aspose.Cells | how to use StyleFlag to change only number format | format large numbers as 1.23E+04 in .NET Excel | apply number format without affecting other styles
-// Developer Intent: The developer needs to display a numeric value in scientific notation with two decimal places while leaving other cell styling unchanged.
-// Use Cases: Present engineering measurements compactly (e.g., 1.23E+04) in reports. | Show scientific data with consistent two‑decimal precision across selected cells. | Export financial calculations where exponential notation improves readability without altering fonts or borders.
-// AI Prompts: Write C# code using Aspose.Cells to apply the "0.00E+00" format to a specific range while preserving existing cell styles. | Explain the role of StyleFlag.NumberFormat in Aspose.Cells and give a concise example. | Provide a step‑by‑step tutorial for creating a workbook, inserting a value, setting a scientific notation style, and saving the file with Aspose.Cells for .NET.
+// Title: How to format cells in Aspose.Cells .NET to display numbers in scientific notation with two decimal places
+// AI Prompts: Generate C# code that creates a workbook, defines a style with the custom format "0.00E+00", and applies it to a specified range using a StyleFlag. | Write a method that receives a Worksheet and a cell address range, then sets those cells to show values in scientific notation with exactly two decimal places.
+// Common Searches: Aspose.Cells C# set custom number format 0.00E+00 for a range | How to display numbers in scientific notation with two decimal places in Excel using Aspose.Cells | Apply number format to specific cells without affecting other styles in Aspose.Cells | Saving workbook after applying scientific notation formatting with Aspose.Cells .NET
+// Tags: custom scientific notation format Aspose.Cells | apply custom format to range Aspose.Cells | use StyleFlag for number format Aspose.Cells | save Excel with scientific notation Aspose.Cells | C# Aspose.Cells number format customization
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-namespace AsposeCellsExamples
+// Demonstrates creating a workbook, inserting numeric values, defining a style with the custom format "0.00E+00" to show two decimal places in scientific notation, applying the style to cells A1:A3 via a StyleFlag, and saving the file as ScientificNotation.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, insert a numeric value, define a style with the custom format "0.00E+00", use StyleFlag to modify only the number format, apply the style to cell A1, and save the Excel file using Aspose.Cells for .NET.
-    public class ScientificNotationNumberFormatDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook (lifecycle create rule)
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Set a numeric value in cell A1
-                sheet.Cells["A1"].PutValue(12345.6789);
+            // Insert sample numeric values
+            sheet.Cells["A1"].PutValue(12345);
+            sheet.Cells["A2"].PutValue(0.00123);
+            sheet.Cells["A3"].PutValue(-987654321);
 
-                // Create a style with a custom scientific notation format (two decimal places)
-                Style style = workbook.CreateStyle();
-                style.Custom = "0.00E+00";
+            // Create a style with a custom number format for scientific notation
+            // "0.00E+00" shows two decimal places in scientific notation
+            Style sciStyle = workbook.CreateStyle();
+            sciStyle.Custom = "0.00E+00";
 
-                // Apply only the number format part of the style
-                StyleFlag styleFlag = new StyleFlag();
-                styleFlag.NumberFormat = true;
+            // Apply the style to the desired range
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:A3");
+            // Ensure only the number format is applied
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
+            range.ApplyStyle(sciStyle, flag);
 
-                // Apply the style to cell A1
-                AsposeRange range = sheet.Cells.CreateRange("A1");
-                range.ApplyStyle(style, styleFlag);
-
-                // Ensure the output directory exists
-                string outputPath = "ScientificNotationNumberFormatDemo.xlsx";
-                string directory = System.IO.Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(directory) && !System.IO.Directory.Exists(directory))
-                {
-                    System.IO.Directory.CreateDirectory(directory);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook (lifecycle save rule)
+            workbook.Save("ScientificNotation.xlsx");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

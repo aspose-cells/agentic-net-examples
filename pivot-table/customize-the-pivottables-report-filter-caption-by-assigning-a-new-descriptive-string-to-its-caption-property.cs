@@ -1,10 +1,7 @@
-// Title: Set a custom caption for a PivotTable report filter (page field) in C# with Aspose.Cells
-// Description: Shows how to create a workbook, add sample sales data, build a PivotTable, place the "Region" field as a page (report filter) field, and assign a user‑friendly caption (e.g., "Select Region") by updating the PageField's Name property, then refresh and save the workbook.
-// Keywords: Aspose.Cells | C# PivotTable | report filter caption | page field name | custom filter label | set pivot filter caption | Aspose.Cells PivotTable API | .NET spreadsheet library | programmatic Excel pivot | Excel automation
-// Common Searches: Aspose.Cells change PivotTable filter caption C# | set custom name for page field Aspose.Cells | how to rename PivotTable report filter using .NET | Aspose.Cells PivotTable page field label example | C# code to customize PivotTable filter dropdown text
-// Developer Intent: Programmatically assign a descriptive caption to a PivotTable report filter (page field).
-// Use Cases: Provide a clear label such as "Select Region" for end‑users when generating sales dashboards. | Standardize filter captions across multiple automatically created PivotTables. | Improve readability of Excel reports produced by a .NET reporting service.
-// AI Prompts: Generate C# code that sets a custom caption for a PivotTable page field using Aspose.Cells. | Explain how to rename multiple report filter fields in a PivotTable with Aspose.Cells for .NET. | Show the steps to refresh and recalculate a PivotTable after changing its filter caption.
+// Title: How to set a custom caption for a PivotTable report filter (page field) using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that assigns a new display name to a PivotTable page field using Aspose.Cells. | Show how to update the report filter caption of a PivotTable and then refresh and recalculate it in a .NET workbook. | Create a full example that builds a PivotTable, changes the filter label to a custom text, and saves the file with Aspose.Cells.
+// Common Searches: Aspose.Cells how to rename pivot table page field label in C# | set custom caption for pivot table report filter programmatically | change pivot table filter name using Aspose.Cells .NET | example of modifying pivot table filter caption in Aspose.Cells
+// Tags: Aspose.Cells set pivot page field name | custom report filter caption .NET | rename pivot table filter label Aspose.Cells | pivot table caption property C# | refresh calculate pivot after label update Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,68 +9,65 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, add sample sales data, build a PivotTable, place the "Region" field as a page (report filter) field, and assign a user‑friendly caption (e.g., "Select Region") by updating the PageField's Name property, then refresh and save the workbook.
+    // The example creates a workbook, adds sample data, builds a PivotTable, adds a page field for "Category", sets its Name property to "Select Category" to customize the filter caption, refreshes and calculates the PivotTable, and saves the workbook as PivotTableReportFilterCaptionDemo.xlsx.
     public class PivotTableReportFilterCaptionDemo
     {
-        public static void Main(string[] args)
+        public static void Run()
         {
             try
             {
-                Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the pivot table
+                sheet.Cells["A1"].Value = "Category";
+                sheet.Cells["B1"].Value = "Amount";
+                sheet.Cells["A2"].Value = "Food";
+                sheet.Cells["B2"].Value = 120;
+                sheet.Cells["A3"].Value = "Drink";
+                sheet.Cells["B3"].Value = 80;
+                sheet.Cells["A4"].Value = "Food";
+                sheet.Cells["B4"].Value = 150;
+                sheet.Cells["A5"].Value = "Drink";
+                sheet.Cells["B5"].Value = 70;
+
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+                // Add fields to the pivot table
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");   // Data field
+
+                // Add a report filter (page field) for the same "Category" field
+                pivotTable.AddFieldToArea(PivotFieldType.Page, "Category");
+
+                // Customize the report filter caption by setting a new name for the page field
+                // The Name property of a page field acts as the caption displayed in the filter area
+                pivotTable.PageFields[0].Name = "Select Category";
+
+                // Refresh and calculate the pivot table to apply changes
+                pivotTable.RefreshData();   // Correct API usage
+                pivotTable.CalculateData();
+
+                // Save the workbook
+                workbook.Save("PivotTableReportFilterCaptionDemo.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Region";
-            sheet.Cells["C1"].Value = "Sales";
-
-            sheet.Cells["A2"].Value = "Fruit";
-            sheet.Cells["B2"].Value = "North";
-            sheet.Cells["C2"].Value = 1200;
-
-            sheet.Cells["A3"].Value = "Fruit";
-            sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 800;
-
-            sheet.Cells["A4"].Value = "Vegetable";
-            sheet.Cells["B4"].Value = "North";
-            sheet.Cells["C4"].Value = 600;
-
-            sheet.Cells["A5"].Value = "Vegetable";
-            sheet.Cells["B5"].Value = "South";
-            sheet.Cells["C5"].Value = 900;
-
-            // Add a pivot table to the worksheet
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Add fields to the pivot table areas
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");   // Row field
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Region"); // Column field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");    // Data field
-
-            // Add a report filter (page field) and customize its caption
-            pivotTable.AddFieldToArea(PivotFieldType.Page, "Region");
-            // The 'Name' of the page field acts as the caption displayed for the filter
-            pivotTable.PageFields[0].Name = "Select Region";
-
-            // Refresh the pivot cache and calculate the pivot table data
-            pivotTable.RefreshData();   // Correct API to refresh data source
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotTableReportFilterCaptionDemo.xlsx");
+            PivotTableReportFilterCaptionDemo.Run();
         }
     }
 }

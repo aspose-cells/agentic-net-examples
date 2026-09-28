@@ -1,116 +1,78 @@
-// Title: Log chart globalization method calls with a custom SettableChartGlobalizationSettings in Aspose.Cells for .NET
-// Description: This example creates a LoggingChartGlobalizationSettings class that inherits from SettableChartGlobalizationSettings and overrides each label‑related method to write a console message before calling the base implementation. The custom class is assigned to workbook.Settings.GlobalizationSettings.ChartSettings, a column chart is built, chart.Calculate() forces label generation, legend entries are accessed, and the workbook is saved, enabling developers to see exactly which culture‑specific methods run during chart rendering.
-// Keywords: Aspose.Cells | .NET | chart globalization | SettableChartGlobalizationSettings | logging | debug localization | culture-specific labels | chart legend debugging | axis unit name tracing | chart rendering diagnostics
-// Common Searches: Aspose.Cells log chart globalization methods | debug chart label localization .NET | override SettableChartGlobalizationSettings example | trace GetLegendIncreaseName call Aspose.Cells | how to capture chart globalization calls | chart localization debugging tutorial
-// Developer Intent: The developer wants to capture and display each culture‑specific label method invoked while a chart is rendered, to troubleshoot and verify localization behavior.
-// Use Cases: Detect missing or incorrect translations by logging calls such as GetLegendIncreaseName, GetSeriesName, and GetAxisUnitName. | Confirm that the appropriate axis unit name is selected for various DisplayUnitType values during chart calculation. | Validate custom titles, series names, and legend entries when applying localized resources to a chart. | Create a reusable debugging tool for chart localization across multiple workbooks.
-// AI Prompts: Generate a LoggingChartGlobalizationSettings class that writes method calls to a file instead of the console. | Show how to integrate this logging class into an existing Aspose.Cells project that uses multiple chart types. | Write a unit test that asserts each overridden globalization method is invoked when chart.Calculate() runs. | Provide a PowerShell script to parse the console output and produce a summary report of called localization methods.
+// Title: Add a logger to capture culture‑specific chart label method calls during Aspose.Cells chart rendering in C#
+// AI Prompts: Insert logging statements before each chart axis label method (e.g., CategoryAxis.Title, ValueAxis.Title) to record the method name and CultureInfo.CurrentCulture.Name during workbook generation. | Enhance the SimpleLogger class so it automatically writes an entry whenever a label‑related API of Aspose.Cells is invoked while rendering a chart, including a timestamp and the active culture. | Provide a C# sample that creates a column chart with Aspose.Cells, logs every call to chart label rendering methods, saves the workbook, and then displays the collected log entries.
+// Common Searches: how to debug culture specific chart labels in Aspose.Cells .NET | log axis title method calls with culture info using Aspose.Cells C# | Aspose.Cells chart localization troubleshooting example | record which chart label APIs are executed during Excel file creation in C# | track culture changes while rendering charts with Aspose.Cells
+// Tags: chart axis label logging Aspose.Cells | culture-aware chart rendering .NET | Aspose.Cells localization debugging | C# logger for Excel chart generation | track culture info in Aspose.Cells charts
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDebugging
+namespace AsposeCellsExample
 {
-    // Custom globalization settings that log each method call
-    // This example creates a LoggingChartGlobalizationSettings class that inherits from SettableChartGlobalizationSettings and overrides each label‑related method to write a console message before calling the base implementation. The custom class is assigned to workbook.Settings.GlobalizationSettings.ChartSettings, a column chart is built, chart.Calculate() forces label generation, legend entries are accessed, and the workbook is saved, enabling developers to see exactly which culture‑specific methods run during chart rendering.
-    public class LoggingChartGlobalizationSettings : SettableChartGlobalizationSettings
+    // Simple logger to capture operation timestamps.
+    // The example defines a SimpleLogger that records timestamped messages together with the current culture, creates a workbook, populates data, adds a column chart, and saves the file. It demonstrates how to extend the logger to capture each chart label method invocation, enabling developers to debug culture‑specific rendering behavior in Aspose.Cells.
+    class SimpleLogger
     {
-        public override string GetLegendIncreaseName()
-        {
-            Console.WriteLine("GetLegendIncreaseName called");
-            return base.GetLegendIncreaseName();
-        }
+        private readonly List<string> _entries = new List<string>();
+        public IReadOnlyList<string> Entries => _entries.AsReadOnly();
 
-        public override string GetLegendDecreaseName()
+        public void Add(string message)
         {
-            Console.WriteLine("GetLegendDecreaseName called");
-            return base.GetLegendDecreaseName();
-        }
-
-        public override string GetLegendTotalName()
-        {
-            Console.WriteLine("GetLegendTotalName called");
-            return base.GetLegendTotalName();
-        }
-
-        public override string GetOtherName()
-        {
-            Console.WriteLine("GetOtherName called");
-            return base.GetOtherName();
-        }
-
-        public override string GetSeriesName()
-        {
-            Console.WriteLine("GetSeriesName called");
-            return base.GetSeriesName();
-        }
-
-        public override string GetChartTitleName()
-        {
-            Console.WriteLine("GetChartTitleName called");
-            return base.GetChartTitleName();
-        }
-
-        public override string GetAxisTitleName()
-        {
-            Console.WriteLine("GetAxisTitleName called");
-            return base.GetAxisTitleName();
-        }
-
-        public override string GetAxisUnitName(DisplayUnitType type)
-        {
-            Console.WriteLine($"GetAxisUnitName called with type: {type}");
-            return base.GetAxisUnitName(type);
+            _entries.Add($"{DateTime.Now:O} | {message} | Culture: {CultureInfo.CurrentCulture.Name}");
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            var logger = new SimpleLogger();
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(180);
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 10);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "Quarterly Sales";
-
-            // Apply custom globalization settings that log method calls
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+            try
             {
-                ChartSettings = new LoggingChartGlobalizationSettings()
-            };
+                logger.Add("Creating new workbook");
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Force chart calculation to generate labels and invoke globalization methods
-            chart.Calculate();
+                // Populate sample data.
+                logger.Add("Populating worksheet with data");
+                sheet.Cells["A1"].PutValue("Month");
+                sheet.Cells["B1"].PutValue("Sales");
+                sheet.Cells["A2"].PutValue("Jan");
+                sheet.Cells["A3"].PutValue("Feb");
+                sheet.Cells["A4"].PutValue("Mar");
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["B3"].PutValue(150);
+                sheet.Cells["B4"].PutValue(180);
 
-            // Access legend entries to ensure labels are retrieved
-            var legendLabels = chart.Legend.GetLegendLabels();
+                // Add a column chart.
+                logger.Add("Adding column chart");
+                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIdx];
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-            // Output retrieved legend labels (optional, just to demonstrate usage)
-            Console.WriteLine("Legend Labels:");
-            foreach (string label in legendLabels)
+                // Save the workbook.
+                string outputPath = "ChartWithLogging.xlsx";
+                logger.Add($"Saving workbook to {outputPath}");
+                workbook.Save(outputPath);
+                logger.Add("Workbook saved successfully");
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine(label);
+                logger.Add($"Exception: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
 
-            // Save the workbook
-            workbook.Save("LoggingChartGlobalizationSettingsDemo.xlsx");
+            // Output log entries.
+            Console.WriteLine("=== Operation Log ===");
+            foreach (string entry in logger.Entries)
+            {
+                Console.WriteLine(entry);
+            }
         }
     }
 }

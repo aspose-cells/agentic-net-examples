@@ -1,73 +1,60 @@
-// Title: Aspose.Cells C# – Show Row Grand Totals in a PivotTable
-// Description: This example creates a workbook, fills it with sample sales data, adds a PivotTable on range A1:C5, assigns Category, Region, and Sales to row, column, and data fields, enables row grand totals with the ShowRowGrandTotals property, and saves the file as PivotTableShowGrandTotalsForRows.xlsx.
-// Keywords: Aspose.Cells PivotTable row totals | C# ShowRowGrandTotals | Enable row grand totals Aspose | PivotTable ShowRowGrandTotals property | Aspose.Cells example C# | Excel pivot table grand totals code | Aspose.Cells reporting
-// Common Searches: Aspose.Cells how to display row grand totals | C# set ShowRowGrandTotals in PivotTable | Enable row totals in Aspose.Cells pivot table | PivotTable row grand total property C# | Aspose.Cells sample for row grand totals
-// Developer Intent: Add a PivotTable and turn on row grand totals using Aspose.Cells in C#.
-// Use Cases: Generate a sales summary that lists each category with a total row. | Create financial expense reports where each group shows a row subtotal. | Export Excel dashboards that require row‑level grand totals for downstream analysis.
-// AI Prompts: Write C# code with Aspose.Cells to create a PivotTable and enable row grand totals. | Explain how the ShowRowGrandTotals property changes the layout of an Aspose.Cells PivotTable. | Provide a complete Aspose.Cells example that sets ShowRowGrandTotals to true and customizes row, column, and data fields.
+// Title: Show row grand totals in an Aspose.Cells pivot table using C# (ShowRowGrandTotals property)
+// AI Prompts: Create a new workbook, populate sample sales data, add a pivot table, and enable row grand totals by setting PivotTable.ShowRowGrandTotals = true in C#. | Update an existing Aspose.Cells pivot table to display row totals at the bottom of the report by configuring the ShowRowGrandTotals property. | Programmatically generate an Excel file with a pivot table that shows row grand totals and save it as .xlsx using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to turn on row grand totals for a pivot table | set ShowRowGrandTotals to true in Aspose.Cells pivot table example | enable row totals at the bottom of pivot report using Aspose.Cells .NET | C# code to display row grand totals in Excel pivot table with Aspose
+// Tags: Aspose.Cells pivot table ShowRowGrandTotals | C# enable row grand totals Excel pivot | Aspose.Cells generate pivot table with row totals | programmatic Excel pivot row totals Aspose | C# workbook save .xlsx with pivot grand totals
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// This example creates a workbook, fills it with sample sales data, adds a PivotTable on range A1:C5, assigns Category, Region, and Sales to row, column, and data fields, enables row grand totals with the ShowRowGrandTotals property, and saves the file as PivotTableShowGrandTotalsForRows.xlsx.
-class SetPivotTableShowGrandTotalsForRows
+namespace AsposeCellsPivotDemo
 {
-    public static void Main()
+    // The sample creates a workbook, fills cells A1:C5 with product, region, and sales data, adds a pivot table at E3, assigns Product, Region, and Sales fields, enables row grand totals by setting ShowRowGrandTotals to true, and saves the file as ShowGrandTotalsForRowsDemo.xlsx.
+    class ShowGrandTotalsForRows
     {
-        try
+        static void Main()
         {
-            Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the pivot table
+            Cells cells = sheet.Cells;
+            cells["A1"].Value = "Product";
+            cells["B1"].Value = "Region";
+            cells["C1"].Value = "Sales";
+
+            cells["A2"].Value = "Laptop";
+            cells["B2"].Value = "North";
+            cells["C2"].Value = 1200;
+
+            cells["A3"].Value = "Laptop";
+            cells["B3"].Value = "South";
+            cells["C3"].Value = 1500;
+
+            cells["A4"].Value = "Phone";
+            cells["B4"].Value = "North";
+            cells["C4"].Value = 800;
+
+            cells["A5"].Value = "Phone";
+            cells["B5"].Value = "South";
+            cells["C5"].Value = 1100;
+
+            // Add a pivot table based on the data range
+            PivotTableCollection pivotTables = sheet.PivotTables;
+            int pivotIndex = pivotTables.Add("A1:C5", "E3", "SalesPivot");
+            PivotTable pivotTable = pivotTables[pivotIndex];
+
+            // Add fields to the pivot table
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");   // Product as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Column, "Region"); // Region as column field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");    // Sales as data field
+
+            // Enable grand totals for rows (display row totals at the bottom)
+            pivotTable.ShowRowGrandTotals = true;
+
+            // Save the workbook to a file
+            workbook.Save("ShowGrandTotalsForRowsDemo.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the pivot table
-        var cells = sheet.Cells;
-        cells["A1"].Value = "Category";
-        cells["B1"].Value = "Region";
-        cells["C1"].Value = "Sales";
-
-        cells["A2"].Value = "Electronics";
-        cells["B2"].Value = "North";
-        cells["C2"].Value = 1200;
-
-        cells["A3"].Value = "Electronics";
-        cells["B3"].Value = "South";
-        cells["C3"].Value = 1500;
-
-        cells["A4"].Value = "Furniture";
-        cells["B4"].Value = "North";
-        cells["C4"].Value = 800;
-
-        cells["A5"].Value = "Furniture";
-        cells["B5"].Value = "South";
-        cells["C5"].Value = 950;
-
-        // Add a pivot table based on the data range
-        int ptIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[ptIndex];
-
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Category as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Region as column field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales as data field
-
-        // Enable grand totals for rows
-        pivotTable.ShowRowGrandTotals = true;
-
-        // Save the workbook to a file
-        string outputPath = "PivotTableShowGrandTotalsForRows.xlsx";
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

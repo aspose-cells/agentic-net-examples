@@ -1,91 +1,98 @@
-// Title: Use GetStringValue with WithFormatting to extract and sort dates in Aspose.Cells for .NET
-// Description: Creates a workbook, writes mixed‑format date strings to column A, reads each cell's displayed value via GetStringValue (WithFormatting), parses the strings into DateTime objects, orders them chronologically, and writes the sorted dates to column B with a consistent built‑in date style.
-// Keywords: Aspose.Cells GetStringValue WithFormatting | read formatted date string .NET | parse Excel dates C# | sort dates Aspose.Cells | Excel date style Aspose | DateTime conversion Aspose.Cells | C# Excel date sorting example
-// Common Searches: GetStringValue with formatting Aspose.Cells example | how to read displayed date value from Excel using Aspose | parse and sort mixed format dates in C# with Aspose.Cells | extract formatted cell value Aspose.Cells .NET | sort Excel dates programmatically Aspose
-// Developer Intent: Read the visible date text from worksheet cells, convert it to DateTime, and reorder the rows based on chronological order.
-// Use Cases: Normalize a column of heterogeneous date strings before analysis. | Generate a chronologically ordered report by writing sorted dates to a new column. | Log rows that contain unparseable date strings for data‑quality review.
-// AI Prompts: Write C# code that uses Aspose.Cells GetStringValue with WithFormatting to read date strings, convert them to DateTime, sort them, and output the sorted list to another column. | Show how to handle parsing errors when extracting formatted dates from Excel cells with Aspose.Cells. | Explain how to apply a built‑in date number format to both source and sorted cells in an Aspose.Cells workbook.
+// Title: C# example: extract date strings with GetStringValue, convert to DateTime, apply a uniform format, and sort the column using Aspose.Cells
+// AI Prompts: Generate C# code that reads each cell in a column using Aspose.Cells GetStringValue, attempts to parse the text with several date patterns into a DateTime, replaces the cell value with the DateTime, applies a yyyy‑MM‑dd number format to the range, and sorts the rows in ascending order. | Enhance the sample to recognize additional patterns such as "MM-dd-yyyy" and "dd MMM yyyy", then sort the dates in descending order while keeping the header row intact.
+// Common Searches: Aspose.Cells C# how to convert mixed date strings to DateTime and sort the column | Using GetStringValue to read dates from Excel and sort with DataSorter in Aspose.Cells | Apply a consistent date format to a range after parsing string dates in Aspose.Cells .NET | Parse multiple date formats in an Excel worksheet with Aspose.Cells and C# | Sort Excel rows by date after converting string values using Aspose.Cells
+// Tags: Aspose.Cells GetStringValue date extraction | Aspose.Cells DateTime conversion from string | Aspose.Cells uniform date format styling | Aspose.Cells DataSorter sort by date | Aspose.Cells parse multiple date patterns
 
 using System;
-using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsDateSortingDemo
+// Demonstrates reading date strings from cells with GetStringValue, parsing them into DateTime using TryParseExact with several patterns, replacing the cell values, applying a uniform yyyy‑MM‑dd number format to the range, and sorting the column with DataSorter in Aspose.Cells for .NET.
+public class DateStringSortingDemo
 {
-    // Creates a workbook, writes mixed‑format date strings to column A, reads each cell's displayed value via GetStringValue (WithFormatting), parses the strings into DateTime objects, orders them chronologically, and writes the sorted dates to column B with a consistent built‑in date style.
-    class Program
+    public static void Main(string[] args)
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
+        }
+    }
 
-                // Populate column A with date strings in various formats
-                string[] dateStrings = {
-                    "15/05/2023",      // dd/MM/yyyy
-                    "2023-05-14",      // yyyy-MM-dd
-                    "May 13, 2023",    // MMM dd, yyyy
-                    "2023.05.12",      // yyyy.MM.dd
-                    "2023/05/11"       // yyyy/MM/dd
+    public static void Run()
+    {
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate column A with header and date strings in various formats
+            cells["A1"].PutValue("Date");
+            cells["A2"].PutValue("2023-05-15");   // ISO format
+            cells["A3"].PutValue("15/04/2023");   // European format
+            cells["A4"].PutValue("2023/06/01");   // Slash format
+            cells["A5"].PutValue("01-Jul-2023");  // Textual month format
+
+            // Convert each string to a DateTime value
+            for (int row = 1; row <= 5; row++) // rows 2 to 6 (0‑based index)
+            {
+                Cell cell = cells[row, 0];
+                string dateStr = cell.StringValue; // get the displayed string
+                if (string.IsNullOrWhiteSpace(dateStr))
+                    continue;
+
+                DateTime dt;
+                // Define possible date patterns
+                string[] patterns = {
+                    "yyyy-MM-dd",
+                    "dd/MM/yyyy",
+                    "yyyy/MM/dd",
+                    "dd-MMM-yyyy"
                 };
 
-                for (int i = 0; i < dateStrings.Length; i++)
+                // Try exact parsing first, then fallback to general parsing
+                bool parsed = DateTime.TryParseExact(dateStr, patterns,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None, out dt) ||
+                    DateTime.TryParse(dateStr, out dt);
+
+                if (parsed)
                 {
-                    // Put the raw string into the cell
-                    cells[i, 0].PutValue(dateStrings[i]);
-
-                    // Apply a date style so the cell displays a date format
-                    Style style = cells[i, 0].GetStyle();
-                    style.Number = 14; // Built‑in date format (e.g., "m/d/yyyy")
-                    cells[i, 0].SetStyle(style);
+                    // Replace the cell content with an actual DateTime value
+                    cell.PutValue(dt);
                 }
-
-                // Extract the formatted date strings using the displayed value
-                List<(int Row, DateTime Date)> extractedDates = new List<(int, DateTime)>();
-                for (int i = 0; i < dateStrings.Length; i++)
-                {
-                    // StringValue returns the displayed (formatted) value of the cell
-                    string formatted = cells[i, 0].StringValue;
-
-                    // Try to parse the string into a DateTime object using flexible parsing
-                    if (DateTime.TryParse(formatted, out DateTime dt))
-                    {
-                        extractedDates.Add((i, dt));
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Unable to parse date string at row {i + 1}: '{formatted}'");
-                    }
-                }
-
-                // Sort the list by the DateTime value
-                extractedDates.Sort((a, b) => a.Date.CompareTo(b.Date));
-
-                // Write the sorted dates (as DateTime values) into column B
-                for (int i = 0; i < extractedDates.Count; i++)
-                {
-                    DateTime sortedDate = extractedDates[i].Date;
-
-                    // Place the DateTime value in column B (index 1)
-                    cells[i, 1].PutValue(sortedDate);
-
-                    // Apply the same date style for consistency
-                    Style style = cells[i, 1].GetStyle();
-                    style.Number = 14; // Built‑in date format
-                    cells[i, 1].SetStyle(style);
-                }
-
-                // Save the workbook to demonstrate the result
-                workbook.Save("SortedDates.xlsx");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Apply a uniform date display format to the column
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Custom = "yyyy-MM-dd";
+            StyleFlag flag = new StyleFlag { NumberFormat = true };
+            AsposeRange dateRange = cells.CreateRange("A2:A5");
+            dateRange.ApplyStyle(dateStyle, flag);
+
+            // Define the area to sort (including header)
+            CellArea sortArea = CellArea.CreateCellArea("A1", "A5");
+
+            // Configure the DataSorter to sort by the first column (index 0) ascending
+            DataSorter sorter = workbook.DataSorter;
+            sorter.AddKey(0, SortOrder.Ascending);
+            sorter.Sort(cells, sortArea);
+
+            // Save the workbook with sorted dates
+            string outputPath = "SortedDates.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred during processing: {ex.Message}");
         }
     }
 }

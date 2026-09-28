@@ -1,69 +1,43 @@
-// Title: Rename an XML Map and Save the Workbook with XmlSaveOptions in Aspose.Cells (C#)
-// Description: Demonstrates how to create a workbook, write a simple XSD to a temporary file, add it as an XML map, rename the map, configure XmlSaveOptions with the new map name, and save the workbook so the modified XML map is persisted in the output XML file.
-// Keywords: Aspose.Cells XML map rename | XmlSaveOptions C# | save workbook with XML map | temporary XSD Aspose.Cells | persist XML map changes | export workbook to XML | C# Aspose.Cells example
-// Common Searches: how to rename an XML map in Aspose.Cells | save workbook with modified XML map C# | XmlSaveOptions usage Aspose.Cells | add XML map from XSD file Aspose.Cells | persist XML map after editing
-// Developer Intent: Persist modifications to an XML map by saving the workbook with the appropriate XmlSaveOptions.
-// Use Cases: Rename an existing XML map and export only that map to an XML file. | Create a workbook, attach an XML map from a schema file, change its properties, and save for downstream XML processing. | Generate a temporary XSD, bind it as an XML map, adjust settings, and ensure the configuration is stored in the saved workbook.
-// AI Prompts: Show how to add an XML map from an in‑memory XSD string without writing a temporary file using Aspose.Cells. | Provide code to update multiple XML maps in a workbook and save each with distinct XmlSaveOptions. | Explain how to verify that a renamed XML map is correctly included in the exported XML file.
+// Title: Saving an Excel workbook after updating XML maps with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, modifies its XML map (when the API is available), and calls Workbook.Save to write the updated workbook to a new file. | Demonstrate how to verify the source file, apply XML map changes, and persist those changes using Workbook.Save while handling exceptions in a C# Aspose.Cells application.
+// Common Searches: Aspose.Cells C# how to persist changes to an XML map in an Excel file | save workbook after editing XML map using Workbook.Save in .NET | example code for updating Excel XML map and saving with Aspose.Cells
+// Tags: Aspose.Cells Workbook.Save Excel file | C# update XML map Aspose.Cells | persist XML map changes .NET | save workbook after XML map edit | Aspose.Cells XML map handling C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsXmlMapSaveDemo
+// The example verifies that input.xlsx exists, loads it into an Aspose.Cells Workbook, notes that XML map functionality is unavailable in the current version, then saves the workbook as output.xlsx using Workbook.Save while catching and reporting any exceptions.
+class Program
 {
-    // Demonstrates how to create a workbook, write a simple XSD to a temporary file, add it as an XML map, rename the map, configure XmlSaveOptions with the new map name, and save the workbook so the modified XML map is persisted in the output XML file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook instance
-                Workbook workbook = new Workbook();
-
-                // Define a simple XML schema for the map
-                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                        <xs:element name='Root'>
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name='Item' type='xs:string'/>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:schema>";
-
-                // Write the schema to a temporary file (Aspose.Cells expects a file path)
-                string tempSchemaPath = Path.Combine(Path.GetTempPath(), "tempSchema.xsd");
-                File.WriteAllText(tempSchemaPath, xmlSchema);
-
-                // Ensure the temporary schema file exists before adding the XML map
-                if (!File.Exists(tempSchemaPath))
-                    throw new FileNotFoundException("Temporary XML schema file was not created.", tempSchemaPath);
-
-                // Add the XML map to the workbook using the temporary schema file
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempSchemaPath);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-
-                // Modify the XML map (e.g., change its name)
-                xmlMap.Name = "MyCustomXmlMap";
-
-                // Prepare save options to include the modified XML map in the saved file
-                XmlSaveOptions saveOptions = new XmlSaveOptions
-                {
-                    XmlMapName = xmlMap.Name // ensure the map is exported
-                };
-
-                // Save the workbook, persisting the XML map changes
-                string outputPath = "WorkbookWithModifiedXmlMap.xml";
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Workbook saved successfully with modified XML map at '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: XML map functionality is not available in the current Aspose.Cells version.
+            // If needed, XML map handling should be added when the appropriate API is present.
+
+            // Save the workbook with the desired format
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors to prevent the application from crashing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

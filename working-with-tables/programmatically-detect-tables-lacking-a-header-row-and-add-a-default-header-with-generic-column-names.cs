@@ -1,72 +1,63 @@
-// Title: C# – Detect Tables Without Headers and Add Generic Column Names Using AspNet.Cells for .NET
-// Description: This example creates a workbook, adds a ListObject (Excel table) without a header row, scans every worksheet, inserts a new top row for each header‑less table, fills it with generic names (Column1, Column2, …), calls ListObject.UpdateColumnName to sync the table definition, and saves the result as an .xlsx file.
-// Keywords: Aspose.Cells C# | Aspose.Cells .NET | detect missing table header | add default header row | generic column names Excel | ListObject UpdateColumnName | programmatically add table header | Excel table without headers | C# Excel automation | Aspose.Cells sample code
-// Common Searches: how to add a header row to an Aspose.Cells ListObject | detect tables without headers in a workbook using Aspose.Cells | insert generic column names into Excel tables C# | Aspose.Cells update column names after inserting header | C# code to add default headers to all tables in Excel file
-// Developer Intent: Automatically insert a default header row with generic column names into any ListObject that lacks one.
-// Use Cases: Ensure every table in a generated report has a header before publishing. | Standardize imported spreadsheets that miss header rows by adding Column1, Column2, … automatically. | Prepare workbooks for downstream analytics that require defined column names for each table.
-// AI Prompts: Write C# code with Aspose.Cells that scans a workbook, finds ListObjects without headers, inserts a header row named Column1, Column2, etc., and updates the table definition. | Explain why ListObject.UpdateColumnName must be called after adding a header row in Aspose.Cells. | Create a reusable method that accepts a Workbook object, adds generic headers to any header‑less table, and returns the modified workbook.
+// Title: Add a default header row to Excel tables missing headers using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates through each worksheet and ListObject, checks if ShowHeaderRow is false, sets it to true, and writes generic headers such as Column1, Column2 into the newly created header row. | Update the example so it accepts a custom header prefix (e.g., "Field") and an output file path via command‑line arguments, while still adding default headers to tables that lack a header row.
+// Common Searches: how to programmatically add missing header rows to Excel tables with Aspose.Cells in C# | Aspose.Cells C# detect ListObject without header and insert default column names | C# iterate worksheets and ListObjects to enable ShowHeaderRow property | add generic column headers to Excel tables that lack a header using Aspose.Cells | set ShowHeaderRow = true and populate header cells in Aspose.Cells
+// Tags: add default header to Excel ListObject Aspose.Cells | detect tables missing header row C# | enable ShowHeaderRow for ListObject programmatically | populate generic column names in Excel table | iterate worksheets and tables Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, adds a ListObject (Excel table) without a header row, scans every worksheet, inserts a new top row for each header‑less table, fills it with generic names (Column1, Column2, …), calls ListObject.UpdateColumnName to sync the table definition, and saves the result as an .xlsx file.
-    class DetectAndAddTableHeaders
+    // The program loads an input XLSX workbook, scans every worksheet and its ListObjects, enables the header row for any table where ShowHeaderRow is false, inserts generic column names (Column1, Column2, …) into the new header row, and saves the modified workbook to the specified output file.
+    class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputFile);
 
-                // Sample data without a header row (table starts at A1)
-                worksheet.Cells["A1"].PutValue("Apple");
-                worksheet.Cells["B1"].PutValue(10);
-                worksheet.Cells["A2"].PutValue("Orange");
-                worksheet.Cells["B2"].PutValue(15);
-                worksheet.Cells["A3"].PutValue("Banana");
-                worksheet.Cells["B3"].PutValue(8);
-
-                // Add a ListObject (table) without headers (showHeaders = false)
-                int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, false);
-                ListObject table = worksheet.ListObjects[tableIndex];
-                table.DisplayName = "FruitTable";
-
-                // Iterate through all worksheets and their tables
-                foreach (Worksheet ws in workbook.Worksheets)
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    foreach (ListObject lo in ws.ListObjects)
+                    // Iterate through all tables (ListObjects) in the worksheet
+                    foreach (ListObject table in sheet.ListObjects)
                     {
-                        // Determine the range of the table
-                        int startRow = lo.StartRow;
-                        int startColumn = lo.StartColumn;
-                        int columnCount = lo.EndColumn - lo.StartColumn + 1;
-
-                        // Insert a new row at the beginning of the table range
-                        ws.Cells.InsertRow(startRow);
-
-                        // Populate generic column names: Column1, Column2, ...
-                        for (int c = 0; c < columnCount; c++)
+                        // If the table does not have a header row, add one
+                        if (!table.ShowHeaderRow)
                         {
-                            ws.Cells[startRow, startColumn + c].PutValue($"Column{c + 1}");
-                        }
+                            table.ShowHeaderRow = true;
 
-                        // Update the ListObject's column names to match the new header cells
-                        lo.UpdateColumnName();
+                            int headerRowIndex = table.StartRow;          // Row where the header will be placed
+                            int firstColumnIndex = table.StartColumn;    // First column of the table
+                            int columnCount = table.EndColumn - table.StartColumn + 1; // Number of columns in the table
+
+                            // Insert generic column names (Column1, Column2, ...) into the header row
+                            for (int col = 0; col < columnCount; col++)
+                            {
+                                string headerName = $"Column{col + 1}";
+                                sheet.Cells[headerRowIndex, firstColumnIndex + col].PutValue(headerName);
+                            }
+                        }
                     }
                 }
 
-                // Define output file path
-                string outputPath = "TablesWithHeaders.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // Save the modified workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
             }
             catch (Exception ex)
             {

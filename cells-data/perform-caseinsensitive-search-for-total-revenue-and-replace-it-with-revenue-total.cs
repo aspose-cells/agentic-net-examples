@@ -1,33 +1,37 @@
-// Title: Case‑insensitive find and replace of "Revenue Total" in an Excel workbook using Aspose.Cells for .NET
-// Description: The sample loads an Excel workbook with Aspose.Cells, configures ReplaceOptions to ignore case and allow partial matches, substitutes every occurrence of revenue‑related text (e.g., "total revenue", "Total Revenue") with the standardized phrase "Revenue Total", and saves the updated file.
-// Keywords: Aspose.Cells case insensitive replace | C# Excel find and replace | Workbook.Replace options | standardize revenue terminology | Excel text normalization .NET | replace string in .xlsx | financial spreadsheet automation
-// Common Searches: Aspose.Cells replace text ignoring case | C# replace partial cell content in Excel | How to standardize revenue labels in Excel using Aspose | Case‑insensitive string replace in .NET Excel library | Update legacy financial spreadsheets programmatically
-// Developer Intent: Replace all variations of revenue‑related wording with the consistent label "Revenue Total" in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Ensure uniform financial terminology across quarterly reports before distribution. | Modernize legacy workbooks where revenue headings appear in mixed capitalizations. | Automate post‑processing of generated Excel files to enforce a single revenue label.
-// AI Prompts: Generate C# code that replaces multiple revenue‑related phrases with "Revenue Total" across all worksheets using Aspose.Cells. | Explain how ReplaceOptions properties affect case‑insensitive matching in Workbook.Replace. | Show how to log each replacement made when normalizing text in an Excel workbook with Aspose.Cells.
+// Title: Perform a case‑insensitive find‑and‑replace of 'total revenue' with 'Revenue Total' in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells C# API to replace every occurrence of the phrase 'total revenue' with 'Revenue Total' across all worksheets, ignoring case. | Show how to configure ReplaceOptions for a case‑insensitive, partial‑match text substitution in an Excel file with Aspose.Cells. | Generate C# code that loads an .xlsx file, executes a case‑insensitive replace operation, and saves the modified workbook.
+// Common Searches: asp.net replace text in Excel cells case insensitive Aspose.Cells | c# Aspose.Cells find and replace string ignoring case in workbook | how to change 'total revenue' to 'Revenue Total' in all sheets using Aspose.Cells | replace partial text in .xlsx with Aspose.Cells C# example
+// Tags: Aspose.Cells ReplaceOptions ignore case | C# workbook text substitution | partial cell match replace .xlsx | Excel find replace across worksheets | string substitution using Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The sample loads an Excel workbook with Aspose.Cells, configures ReplaceOptions to ignore case and allow partial matches, substitutes every occurrence of revenue‑related text (e.g., "total revenue", "Total Revenue") with the standardized phrase "Revenue Total", and saves the updated file.
+// The example creates (or loads) a workbook, writes sample data, sets up ReplaceOptions to ignore case and allow partial matches, replaces every occurrence of "total revenue" with "Revenue Total", outputs the number of replacements, and saves the updated file as Output.xlsx.
 class ReplaceTotalRevenue
 {
     static void Main()
     {
-        // Load the workbook (replace "input.xlsx" with your source file)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // For loading: new Workbook("input.xlsx");
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure replace options for case‑insensitive search
+        // Example data – can be removed when using a real workbook
+        sheet.Cells["A1"].PutValue("Total Revenue");
+        sheet.Cells["A2"].PutValue("total revenue for Q1");
+        sheet.Cells["A3"].PutValue("Net profit");
+
+        // Configure replace options for case‑insensitive replacement
         ReplaceOptions options = new ReplaceOptions
         {
-            CaseSensitive = false,          // ignore case
-            MatchEntireCellContents = false // allow partial matches within a cell
+            CaseSensitive = false,               // ignore case
+            MatchEntireCellContents = false      // allow partial matches within cells
         };
 
-        // Replace all occurrences of "total revenue" with "Revenue Total"
-        workbook.Replace("total revenue", "Revenue Total", options);
+        // Perform the replacement
+        int replacedCount = workbook.Replace("total revenue", "Revenue Total", options);
+        Console.WriteLine($"Replacements made: {replacedCount}");
 
-        // Save the modified workbook (replace "output.xlsx" with your desired path)
-        workbook.Save("output.xlsx");
+        // Save the workbook
+        workbook.Save("Output.xlsx");
     }
 }

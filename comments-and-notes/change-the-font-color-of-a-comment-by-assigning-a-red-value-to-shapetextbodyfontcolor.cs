@@ -1,55 +1,40 @@
-// Title: Aspose.Cells for .NET – Set Excel Comment Font Color to Red (C#)
-// Description: This C# example creates a workbook, adds a comment to cell A1, accesses its CommentShape, and changes the comment text color to red via TextBody[0].Font.Color before saving as CommentWithRedFont.xlsx.
-// Keywords: Aspose.Cells comment font color | C# change Excel comment color | CommentShape TextBody color | set comment text red Aspose | Excel comment styling .NET | Aspose.Cells API TextBody Font.Color
-// Common Searches: Aspose.Cells set comment text color | C# change Excel comment font to red | How to format comment shape in Aspose.Cells | Red font for Excel comment using .NET | CommentShape TextBody formatting example
-// Developer Intent: Apply a red font color to a worksheet comment programmatically.
-// Use Cases: Emphasize critical notes in generated spreadsheets | Flag warnings in automated reports with red comment text | Apply consistent comment styling during batch workbook creation
-// AI Prompts: Write C# code with Aspose.Cells to change comment font color to blue. | Provide a loop that sets all worksheet comments to green text in a workbook. | Explain how to use CommentShape.TextBody to modify font size, style, and color of Excel comments.
+// Title: How to set the font color of an Excel cell comment to red using Aspose.Cells for .NET (C#)
+// AI Prompts: Change the comment text color to red by accessing the CommentShape.TextBody[0].Font.Color property in C# with Aspose.Cells. | Apply a custom font color to an Excel comment by modifying the first FontSetting in the comment's TextBody using Aspose.Cells .NET. | Programmatically set the font color of a worksheet comment and save the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set comment font color to red | How to change the text color of an Excel comment using Aspose.Cells | Modify comment shape text body font color programmatically in .NET | Change Excel cell comment text color with Aspose.Cells API
+// Tags: Aspose.Cells comment shape font color | C# set comment text color Aspose.Cells | CommentShape TextBody Font.Color example | Excel comment font color Aspose.Cells .NET | programmatic comment styling Aspose.Cells
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This C# example creates a workbook, adds a comment to cell A1, accesses its CommentShape, and changes the comment text color to red via TextBody[0].Font.Color before saving as CommentWithRedFont.xlsx.
-class ChangeCommentFontColor
+namespace AsposeCellsCommentFontColor
 {
-    static void Main()
+    // Demonstrates creating a workbook, adding a comment to cell A1, retrieving its CommentShape, setting the comment text font color to red via TextBody[0].Font.Color, and saving the file as CommentFontColorDemo.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (create rule)
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a comment to cell A1 and set its text
+            // Add a comment to cell A1
             int commentIndex = worksheet.Comments.Add("A1");
             Comment comment = worksheet.Comments[commentIndex];
             comment.Note = "This is a sample comment";
 
-            // Access the shape that represents the comment
+            // Get the shape associated with the comment
             CommentShape commentShape = comment.CommentShape;
 
-            // Set the comment text
-            commentShape.Text = comment.Note;
+            // Change the font color of the comment text via the shape's TextBody
+            // TextBody is a collection of FontSetting objects; we modify the first (and only) entry
+            commentShape.TextBody[0].Font.Color = Color.Red;
 
-            // Change the font color of the comment text to red
-            if (commentShape.TextBody.Count > 0)
-            {
-                commentShape.TextBody[0].Font.Color = Color.Red;
-            }
-
-            // Define output file path
-            string outputPath = "CommentWithRedFont.xlsx";
-
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Save the workbook (save rule)
+            workbook.Save("CommentFontColorDemo.xlsx");
         }
     }
 }

@@ -1,27 +1,26 @@
-// Title: Hide First Worksheet Tab and Save as New Excel File with Aspose.Cells for .NET (C#)
-// Description: Load an existing workbook, set the first worksheet's IsVisible property to false to hide its tab, and save the modified workbook as a new XLSX file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells hide worksheet tab | C# hide first sheet | set worksheet visibility Aspose | export workbook with hidden sheet | save Excel file invisible tab
-// Common Searches: Aspose.Cells hide first worksheet tab C# | how to make a worksheet tab invisible with Aspose.Cells | save Excel workbook with hidden sheet using .NET | C# hide worksheet tab and export file | Aspose.Cells hide sheet before saving
-// Developer Intent: Hide the first worksheet tab and export the workbook to a new Excel file using Aspose.Cells in C#.
-// Use Cases: Distribute a report while keeping the index or configuration sheet hidden from end users. | Create a template that contains a hidden data sheet for macros, then generate a clean version for clients. | Publish a workbook on a public portal with internal calculation sheets concealed for security.
-// AI Prompts: Generate C# code with Aspose.Cells that hides the first worksheet tab and saves the workbook as output.xlsx. | Explain how to hide multiple worksheets, preserve their visibility states, and export the workbook using Aspose.Cells. | Provide robust error handling for missing input files and permission issues when hiding a worksheet and saving the workbook.
+// Title: Hide the first worksheet tab and export the workbook to a new Excel file with Aspose.Cells for .NET
+// AI Prompts: Load an existing .xlsx file, set the first worksheet's IsVisible property to false, and save the workbook under a different filename using Aspose.Cells in C#. | Using Aspose.Cells for .NET, programmatically hide the first sheet tab and write the modified workbook to a new Excel document.
+// Common Searches: Aspose.Cells C# hide first worksheet tab and save as new file | how to set worksheet visibility to hidden with Aspose.Cells .NET | export workbook after changing sheet visibility using Aspose.Cells | C# code to hide a sheet tab and create a copy of the Excel workbook
+// Tags: Aspose.Cells worksheet visibility control | C# modify worksheet IsVisible attribute | save workbook under new filename Aspose.Cells | export workbook after sheet visibility change
 
 using System;
 using Aspose.Cells;
 
-// Load an existing workbook, set the first worksheet's IsVisible property to false to hide its tab, and save the modified workbook as a new XLSX file using Aspose.Cells in C#.
+// The example loads 'input.xlsx', hides the first worksheet tab by setting its IsVisible property to false, and saves the updated workbook as 'output.xlsx' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         // Load the existing spreadsheet
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
-        // Hide the first worksheet tab (index 0)
-        // You can also use SetVisible(false, true) or VisibilityType = VisibilityType.Hidden
-        workbook.Worksheets[0].IsVisible = false;
+        // Set the first worksheet tab to invisible
+        Worksheet firstSheet = workbook.Worksheets[0];
+        firstSheet.IsVisible = false;
 
-        // Save the workbook to a new file
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+        // Export (save) to a new file
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
     }
 }

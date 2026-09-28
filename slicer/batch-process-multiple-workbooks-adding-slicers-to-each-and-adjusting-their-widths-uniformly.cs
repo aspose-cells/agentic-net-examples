@@ -1,74 +1,88 @@
-// Title: Batch add slicers with a uniform column width to multiple Excel workbooks using Aspose.Cells for .NET (C#)
-// Description: A C# example that iterates over a list of workbook files, loads each workbook, adds a slicer for the first pivot‑table field (or creates a ListObject and adds a slicer when no pivot exists), sets the slicer's ColumnWidth to a common value, and saves the workbook. Demonstrates batch processing and consistent slicer sizing across many Excel files.
-// Keywords: Aspose.Cells | C# slicer | batch add slicer | uniform slicer width | Excel pivot slicer | ListObject slicer | process multiple workbooks | Aspose.Cells .NET | slicer ColumnWidth | automate Excel formatting
-// Common Searches: How to add a slicer to several Excel files with Aspose.Cells | Set the same slicer width for multiple workbooks in C# | Create slicer from a pivot table using Aspose.Cells .NET | Add slicer to a ListObject when no pivot table exists | Batch update slicer properties with Aspose.Cells
-// Developer Intent: Add a slicer to each workbook and enforce a consistent column width across all slicers.
-// Use Cases: Standardize slicer appearance in a suite of financial dashboards before distribution. | Generate slicers for tables in workbooks that lack pivot tables while keeping layout uniform. | Automate the preparation of Excel reports for a multinational team, ensuring slicer size matches corporate UI guidelines.
-// AI Prompts: Generate a reusable C# method that accepts a collection of workbook paths and a column width, then adds slicers to each workbook handling both pivot tables and ListObjects with Aspose.Cells. | Provide error‑handling code for missing files, empty worksheets, or invalid data ranges when batch adding slicers. | Show how to also set slicer style, position, and column width uniformly across multiple workbooks using Aspose.Cells.
+// Title: Add slicers with uniform column width to every pivot table in multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Insert a slicer for the first base field of each pivot table in every worksheet of all .xlsx files in a folder, then set the slicer’s column width to a given point size with Aspose.Cells. | Iterate through a directory of workbooks, add slicers to pivot tables, apply a consistent column width, and save the updated files to a separate output directory using C#.
+// Common Searches: C# how to programmatically add a slicer to each pivot table in a batch of Excel files with Aspose.Cells | set the same slicer column width for multiple workbooks using Aspose.Cells .NET | automate slicer creation for all worksheets in a folder of .xlsx files | Aspose.Cells batch processing example for adding slicers and adjusting width | process multiple Excel workbooks to add slicers based on first pivot field in C#
+// Tags: batch add slicers Aspose.Cells .NET | uniform slicer column width C# | process multiple .xlsx workbooks Aspose.Cells | pivot table slicer automation Aspose.Cells | slicer column width setting Aspose.Cells API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Tables;
 using Aspose.Cells.Slicers;
 
-// A C# example that iterates over a list of workbook files, loads each workbook, adds a slicer for the first pivot‑table field (or creates a ListObject and adds a slicer when no pivot exists), sets the slicer's ColumnWidth to a common value, and saves the workbook. Demonstrates batch processing and consistent slicer sizing across many Excel files.
+// The program scans a specified input folder for .xlsx files, loads each workbook with Aspose.Cells, iterates through all worksheets, adds a slicer based on the first base field of the first pivot table, sets the slicer’s column width to a uniform value, and saves the modified workbook to an output folder.
 class BatchSlicerProcessor
 {
     static void Main()
     {
-        // Paths of workbooks to process
-        string[] workbookFiles = new string[]
+        // Folder containing source workbooks
+        string inputFolder = "InputWorkbooks";
+        // Folder where processed workbooks will be saved
+        string outputFolder = "OutputWorkbooks";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Verify input folder exists; if not, create it and exit (no files to process)
+        if (!Directory.Exists(inputFolder))
         {
-            "Workbook1.xlsx",
-            "Workbook2.xlsx",
-            "Workbook3.xlsx"
-        };
+            Console.WriteLine($"Input folder \"{inputFolder}\" does not exist. Creating it now.");
+            Directory.CreateDirectory(inputFolder);
+            Console.WriteLine("Place .xlsx files in the input folder and rerun the program.");
+            return;
+        }
 
-        // Desired uniform column width for all slicers (points)
-        double uniformColumnWidth = 80.0;
+        // Desired uniform column width for all slicers (in points)
+        double uniformWidth = 80.0;
 
-        foreach (string filePath in workbookFiles)
+        // Process each .xlsx file in the input folder
+        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
-            // Load existing workbook
-            Workbook workbook = new Workbook(filePath);
-
-            // Work with the first worksheet (adjust as needed)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Try to add a slicer based on an existing pivot table
-            if (sheet.PivotTables.Count > 0)
+            try
             {
-                // Use the first pivot table in the sheet
-                PivotTable pivot = sheet.PivotTables[0];
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
 
-                // Use the first base field of the pivot table for the slicer
-                string baseFieldName = pivot.BaseFields[0].Name;
+                // Load the workbook
+                using (Workbook workbook = new Workbook(filePath))
+                {
+                    // Iterate through all worksheets in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Proceed only if the worksheet contains at least one pivot table
+                        if (sheet.PivotTables.Count > 0)
+                        {
+                            // Use the first pivot table as the data source for the slicer
+                            PivotTable pivot = sheet.PivotTables[0];
 
-                // Add slicer at cell A1 (upper‑left corner of slicer range)
-                int slicerIndex = sheet.Slicers.Add(pivot, "A1", baseFieldName);
-                Slicer slicer = sheet.Slicers[slicerIndex];
+                            // Determine the field name to base the slicer on (first base field)
+                            if (pivot.BaseFields.Count == 0)
+                                continue; // No base fields to create a slicer
 
-                // Apply uniform column width
-                slicer.ColumnWidth = uniformColumnWidth;
+                            string baseFieldName = pivot.BaseFields[0].Name;
+
+                            // Add a slicer at cell A1
+                            int slicerIdx = sheet.Slicers.Add(pivot, "A1", baseFieldName);
+
+                            // Retrieve the newly added slicer
+                            Slicer slicer = sheet.Slicers[slicerIdx];
+
+                            // Set the column width uniformly
+                            slicer.ColumnWidth = uniformWidth;
+                        }
+                    }
+
+                    // Save the modified workbook to the output folder
+                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+                    workbook.Save(outputPath);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // No pivot table – create a simple table (ListObject) from a data range
-                // Assumes data exists in A1:B5; adjust range as required
-                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-
-                // Add slicer for the first column of the table at cell D1
-                int slicerIndex = sheet.Slicers.Add(table, 0, "D1");
-                Slicer slicer = sheet.Slicers[slicerIndex];
-
-                // Apply uniform column width
-                slicer.ColumnWidth = uniformColumnWidth;
+                Console.WriteLine($"Error processing file \"{filePath}\": {ex.Message}");
             }
-
-            // Save the workbook (overwrites the original file)
-            workbook.Save(filePath);
         }
     }
 }

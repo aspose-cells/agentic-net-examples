@@ -1,90 +1,137 @@
-// Title: Custom Calculation Engine in Aspose.Cells (.NET) for User‑Defined Functions
-// Description: Shows how to create a workbook, populate cells, assign formulas that include the built‑in SUM and custom functions DOUBLE and CONCAT, implement a custom engine by extending AbstractCalculationEngine, set it via CalculationOptions.CustomEngine, calculate all formulas with wb.CalculateFormula, display the results, and save the workbook.
-// Keywords: Aspose.Cells | custom calculation engine | AbstractCalculationEngine | user‑defined functions | C# | .NET | Excel formula extension | DOUBLE function | CONCAT function | wb.CalculateFormula | CalculationOptions | GitHub example
-// Common Searches: Aspose.Cells custom calculation engine example | how to add user defined functions in Aspose.Cells | C# extend AbstractCalculationEngine | replace missing Excel functions with custom logic Aspose.Cells | calculate formulas with custom engine .NET
-// Developer Intent: Create and register a custom calculation engine that implements undefined Excel functions and use it to evaluate workbook formulas in Aspose.Cells.
-// Use Cases: Extend Aspose.Cells to support a DOUBLE function that returns twice the numeric argument. | Implement a CONCAT function that joins multiple cell values into a single string. | Run wb.CalculateFormula with a custom engine to combine built‑in and user‑defined functions, then export the results.
-// AI Prompts: Generate a C# class inheriting from AbstractCalculationEngine that adds a POWER(base, exponent) function for Aspose.Cells. | Explain how to register a custom calculation engine in Aspose.Cells and evaluate formulas containing both native and custom functions. | Provide robust error‑handling code for parameter conversion inside a custom calculation engine method.
+// Title: Create a custom calculation engine in Aspose.Cells for .NET to replace undefined Excel functions with user‑defined SUM and AVERAGE logic
+// AI Prompts: Implement an AbstractCalculationEngine subclass that maps unknown function names (e.g., FOO, BAR) to custom handlers and assign it through CalculationOptions.CustomEngine to recalculate a workbook. | Add a new custom function called MAXX to the SubstituteEngine that returns the maximum of its arguments, then use =MAXX(A1,B2) in a worksheet and display the result. | Demonstrate how to extract cell values from a ReferredArea inside a custom calculation engine to support range arguments for SUM‑like and AVERAGE‑like functions. | Show how to handle unrecognized functions by returning the #NAME? error from the custom engine.
+// Common Searches: aspnet how to handle unknown Excel functions with a custom calculation engine in Aspose.Cells | replace custom function FOO with SUM logic using Aspose.Cells C# | example of AbstractCalculationEngine overriding formula evaluation in Aspose.Cells | use CalculationOptions.CustomEngine to map undefined functions to built‑in behavior | retrieve range values inside custom Aspose.Cells calculation engine
+// Tags: custom calculation engine Aspose.Cells | user‑defined function substitution .NET | AbstractCalculationEngine handler mapping | override Excel formula evaluation with C# | replace undefined functions with SUM logic | average function implementation in custom engine
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace CustomEngineDemo
+// The sample creates a workbook, writes sample data, and assigns formulas that reference undefined functions (FOO, BAR). A SubstituteEngine derived from AbstractCalculationEngine maps these names to SUM‑like and AVERAGE‑like handlers. The engine is set via CalculationOptions.CustomEngine, the workbook is recalculated, results are printed, and the file is saved.
+class Program
 {
-    // Shows how to create a workbook, populate cells, assign formulas that include the built‑in SUM and custom functions DOUBLE and CONCAT, implement a custom engine by extending AbstractCalculationEngine, set it via CalculationOptions.CustomEngine, calculate all formulas with wb.CalculateFormula, display the results, and save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        // Populate some sample data
+        ws.Cells["A1"].PutValue(10);
+        ws.Cells["A2"].PutValue(20);
+        ws.Cells["A3"].PutValue(30);
+        ws.Cells["B1"].PutValue(5);
+        ws.Cells["B2"].PutValue(15);
+
+        // Formulas that use undefined functions (FOO, BAR)
+        // These will be substituted by the custom engine
+        ws.Cells["C1"].Formula = "=FOO(A1,A2)"; // should behave like SUM
+        ws.Cells["C2"].Formula = "=BAR(B1,B2)"; // should behave like AVERAGE
+
+        // Set calculation options to use the custom engine
+        CalculationOptions opts = new CalculationOptions
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            CustomEngine = new SubstituteEngine()
+        };
 
-            // Populate cells with sample data
-            ws.Cells["A1"].PutValue(5);
-            ws.Cells["A2"].PutValue(10);
-            ws.Cells["B1"].PutValue("Hello");
-            ws.Cells["B2"].PutValue("World");
+        // Calculate all formulas using the custom engine
+        wb.CalculateFormula(opts);
 
-            // Built‑in function
-            ws.Cells["C1"].Formula = "=SUM(A1:A2)";
+        // Display the results
+        Console.WriteLine("C1 (FOO) = " + ws.Cells["C1"].Value);
+        Console.WriteLine("C2 (BAR) = " + ws.Cells["C2"].Value);
 
-            // Custom functions that are not built‑in
-            ws.Cells["C2"].Formula = "=DOUBLE(A1)";
-            ws.Cells["C3"].Formula = "=CONCAT(B1, \" \", B2)";
+        // Save the workbook
+        wb.Save("SubstituteEngineDemo.xlsx");
+    }
+}
 
-            // Set calculation options with the custom engine
-            CalculationOptions opts = new CalculationOptions
-            {
-                CustomEngine = new MyCustomEngine()
-            };
+// Custom calculation engine that substitutes missing functions with user‑defined equivalents
+class SubstituteEngine : AbstractCalculationEngine
+{
+    // Mapping from unknown function name to a handler that performs the calculation
+    private readonly Dictionary<string, Func<CalculationData, object>> _substitutes;
 
-            // Calculate all formulas using the custom engine
-            wb.CalculateFormula(opts);
+    public SubstituteEngine()
+    {
+        _substitutes = new Dictionary<string, Func<CalculationData, object>>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "FOO", SumFunction },      // FOO will act like SUM
+            { "BAR", AverageFunction }   // BAR will act like AVERAGE
+        };
+    }
 
-            // Output results
-            Console.WriteLine("SUM(A1:A2) = " + ws.Cells["C1"].Value);
-            Console.WriteLine("DOUBLE(A1) = " + ws.Cells["C2"].Value);
-            Console.WriteLine("CONCAT(B1, \" \", B2) = " + ws.Cells["C3"].StringValue);
-
-            // Save the workbook
-            wb.Save("CustomEngineResult.xlsx");
+    // Core method called by Aspose.Cells for each function occurrence
+    public override void Calculate(CalculationData data)
+    {
+        if (_substitutes.TryGetValue(data.FunctionName, out var handler))
+        {
+            // Use the mapped handler to compute the result
+            data.CalculatedValue = handler(data);
+        }
+        else
+        {
+            // Function not recognized – return #NAME? so Excel shows an error
+            data.CalculatedValue = "#NAME?";
         }
     }
 
-    // Custom calculation engine that provides implementations for missing functions
-    class MyCustomEngine : AbstractCalculationEngine
+    // Implementation of a SUM‑like function
+    private object SumFunction(CalculationData data)
     {
-        public override void Calculate(CalculationData data)
+        double sum = 0;
+        for (int i = 0; i < data.ParamCount; i++)
         {
-            string func = data.FunctionName?.ToUpperInvariant();
-
-            if (func == "DOUBLE")
+            object param = data.GetParamValue(i);
+            if (param is ReferredArea area)
             {
-                // One numeric parameter, return its double
-                object param = data.GetParamValue(0);
-                double val = Convert.ToDouble(param);
-                data.CalculatedValue = val * 2;
-                return;
-            }
-
-            if (func == "CONCAT")
-            {
-                // Concatenate all parameters as strings
-                var sb = new System.Text.StringBuilder();
-                for (int i = 0; i < data.ParamCount; i++)
+                // Iterate over the range
+                for (int r = area.StartRow; r <= area.EndRow; r++)
                 {
-                    object p = data.GetParamValue(i);
-                    sb.Append(p?.ToString());
+                    for (int c = area.StartColumn; c <= area.EndColumn; c++)
+                    {
+                        object cellVal = area.GetValue(r - area.StartRow, c - area.StartColumn);
+                        sum += Convert.ToDouble(cellVal);
+                    }
                 }
-                data.CalculatedValue = sb.ToString();
-                return;
             }
-
-            // For other functions, let the default engine handle them (do nothing)
+            else
+            {
+                sum += Convert.ToDouble(param);
+            }
         }
-
-        // No need to force recalculation for these functions
-        public override bool ForceRecalculate(string functionName) => false;
+        return sum;
     }
+
+    // Implementation of an AVERAGE‑like function
+    private object AverageFunction(CalculationData data)
+    {
+        double sum = 0;
+        int count = 0;
+        for (int i = 0; i < data.ParamCount; i++)
+        {
+            object param = data.GetParamValue(i);
+            if (param is ReferredArea area)
+            {
+                for (int r = area.StartRow; r <= area.EndRow; r++)
+                {
+                    for (int c = area.StartColumn; c <= area.EndColumn; c++)
+                    {
+                        object cellVal = area.GetValue(r - area.StartRow, c - area.StartColumn);
+                        sum += Convert.ToDouble(cellVal);
+                        count++;
+                    }
+                }
+            }
+            else
+            {
+                sum += Convert.ToDouble(param);
+                count++;
+            }
+        }
+        return count == 0 ? 0 : sum / count;
+    }
+
+    // No need to force recalculation for these functions
+    public override bool ForceRecalculate(string functionName) => false;
 }

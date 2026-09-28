@@ -1,39 +1,61 @@
-// Title: Remove Leading Apostrophe from an Excel Cell using Aspose.Cells C# (Style.QuotePrefix & StyleFlag)
-// Description: Demonstrates how to delete the leading single‑quote in a cell (e.g., B2) by creating a Style with QuotePrefix set to false, enabling the property with a StyleFlag, applying it to the cell, and saving the workbook as RemovedApostrophe.xlsx.
-// Keywords: Aspose.Cells remove apostrophe | Style.QuotePrefix false C# | StyleFlag QuotePrefix | Excel leading single quote removal | C# delete cell prefix Aspose
-// Common Searches: how to remove leading apostrophe Aspose.Cells C# | Style.QuotePrefix false example | apply StyleFlag to cell Aspose | remove single quote from Excel cell programmatically | Aspose.Cells delete apostrophe prefix
-// Developer Intent: Eliminate the leading apostrophe of a cell by setting Style.QuotePrefix to false and applying it with a StyleFlag.
-// Use Cases: Convert text values entered with a leading apostrophe into true numbers for calculations. | Clean imported CSV or user‑entered data where the apostrophe prevents proper sorting or filtering. | Prepare worksheets for export to systems that reject the leading single‑quote character.
-// AI Prompts: Generate C# code that opens an existing workbook, removes apostrophe prefixes from an entire column using Style.QuotePrefix = false with a StyleFlag, and saves the file. | Explain the relationship between Style, StyleFlag, and QuotePrefix in Aspose.Cells and why setting QuotePrefix to false removes the leading apostrophe. | Create a reusable method in C# that accepts a worksheet and a range, then removes leading apostrophes from all cells in that range using Aspose.Cells.
+// Title: How to remove a leading apostrophe from an Excel cell using Aspose.Cells Style and StyleFlag in C#
+// AI Prompts: Generate C# code that clears the QuotePrefix flag on a specific cell by creating a Style with QuotePrefix = false and applying it with a StyleFlag in Aspose.Cells. | Show a step‑by‑step example of programmatically stripping the leading single‑quote indicator from a cell value using Aspose.Cells styling APIs.
+// Common Searches: c# aspose.cells clear quoteprefix flag on a cell | how to programmatically remove leading apostrophe from Excel cell using Aspose.Cells | using StyleFlag to disable QuotePrefix in Aspose.Cells C# example | remove text prefix flag from cell value aspose.cells
+// Tags: Aspose.Cells StyleFlag QuotePrefix | C# remove leading apostrophe Excel cell | Aspose.Cells clear text prefix flag | Excel cell style modify QuotePrefix | Aspose.Cells disable cell text prefix
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to delete the leading single‑quote in a cell (e.g., B2) by creating a Style with QuotePrefix set to false, enabling the property with a StyleFlag, applying it to the cell, and saving the workbook as RemovedApostrophe.xlsx.
-class RemoveApostropheDemo
+// The sample creates a workbook, writes a value prefixed with a single quote into cell B2, displays the initial QuotePrefix flag, then builds a Style with QuotePrefix set to false, applies it using a StyleFlag that enables the QuotePrefix property, verifies that the flag is cleared and the apostrophe is removed, and finally saves the workbook as an XLSX file.
+public class RemoveApostropheDemo
 {
-    static void Main()
+    public static void Run()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Put a value that starts with a single quote (apostrophe)
-        Cell cell = worksheet.Cells["B2"];
-        cell.PutValue("'12345");
+            // Access a cell and put a value that starts with a single quote
+            // Excel treats this as a text value and sets QuotePrefix = true internally
+            Cell cell = worksheet.Cells["B2"];
+            cell.PutValue("'12345");
 
-        // Create a style and set QuotePrefix to false (remove the leading apostrophe)
-        Style style = workbook.CreateStyle();
-        style.QuotePrefix = false;
+            // Display the initial QuotePrefix flag (should be true)
+            Console.WriteLine("Initial QuotePrefix: " + cell.GetStyle().QuotePrefix);
 
-        // Create a StyleFlag to indicate that the QuotePrefix property should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.QuotePrefix = true;
+            // Create a new style and set QuotePrefix to false (remove the leading apostrophe flag)
+            Style style = workbook.CreateStyle();
+            style.QuotePrefix = false;
 
-        // Apply the style to the cell using the flag
-        cell.SetStyle(style, flag);
+            // Create a StyleFlag and enable the QuotePrefix flag so it will be applied
+            StyleFlag flag = new StyleFlag();
+            flag.QuotePrefix = true;
 
-        // Save the workbook
-        workbook.Save("RemovedApostrophe.xlsx");
+            // Apply the style to the cell using the flag
+            cell.SetStyle(style, flag);
+
+            // Verify that the QuotePrefix flag is now false and display the cell's value
+            Console.WriteLine("After removal QuotePrefix: " + cell.GetStyle().QuotePrefix);
+            Console.WriteLine("Cell value (without leading apostrophe): " + cell.StringValue);
+
+            // Save the workbook
+            string outputPath = "RemovedApostrophe.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        RemoveApostropheDemo.Run();
     }
 }

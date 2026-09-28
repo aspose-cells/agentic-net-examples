@@ -1,10 +1,7 @@
-// Title: C# Rolling Line Chart that Shifts Data Window Every Minute with Aspose.Cells
-// Description: Creates an Excel workbook, fills it with dates and random values, adds a line chart with a time‑scaled X‑axis, and uses System.Timers.Timer to move a fixed‑size data window down one row each minute. The chart series range is updated and recalculated automatically before the file is saved.
-// Keywords: Aspose.Cells | C# | .NET | rolling chart | dynamic chart range | timer update | real‑time Excel chart | time‑scaled axis | line chart programmatically | Excel automation | chart refresh
-// Common Searches: Aspose.Cells rolling chart example | C# update Excel chart every minute | timer based chart data window Aspose.Cells | dynamic line chart with time axis .NET | how to shift chart series range programmatically
-// Developer Intent: The developer wants to generate a line chart that automatically scrolls through a predefined number of rows, advancing the window at one‑minute intervals.
-// Use Cases: Live sensor or IoT data visualization that scrolls in near‑real time. | Continuous sales or KPI dashboard where the latest values replace the oldest. | Animated presentation of historical trends that moves forward automatically.
-// AI Prompts: Show how to replace System.Timers.Timer with an async/await loop for chart updates. | Provide code to export the chart as a PNG after each timer tick. | Explain modifications needed to use a 15‑row window and a 30‑second interval.
+// Title: How to create a rolling line chart in Excel that updates every minute using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells to generate a line chart that shows a 10‑row moving window and refreshes the series each minute using System.Timers.Timer. | Adjust the sample to use a 30‑second timer interval and display the latest 20 rows of data in the chart. | Extend the rolling chart by adding a second series that computes and plots a moving average of the values.
+// Common Searches: Aspose.Cells C# example for updating an Excel chart every minute | How to shift the data range of a chart with a timer in .NET | Create a dynamic line chart that scrolls with new data using Aspose.Cells | C# timer based rolling data window for Excel chart
+// Tags: rolling line chart Aspose.Cells | timer driven chart series update C# | dynamic Excel chart data window .NET | shift chart series range programmatically | Aspose.Cells moving data range example
 
 using System;
 using System.IO;
@@ -12,117 +9,148 @@ using System.Timers;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates an Excel workbook, fills it with dates and random values, adds a line chart with a time‑scaled X‑axis, and uses System.Timers.Timer to move a fixed‑size data window down one row each minute. The chart series range is updated and recalculated automatically before the file is saved.
-class RollingChartDemo
+namespace RollingChartDemo
 {
-    // Configuration
-    const int TotalRows = 30;          // Total data rows (including header)
-    const int WindowSize = 10;         // Number of rows displayed in the chart window
-    const int StartDataRow = 2;        // First data row (1‑based index in Excel)
-    const int DateColumn = 0;          // Column A
-    const int ValueColumn = 1;         // Column B
-    const int ChartTopRow = 5;
-    const int ChartLeftColumn = 0;
-    const int ChartBottomRow = 20;
-    const int ChartRightColumn = 8;
-    const double TimerIntervalMs = 60_000; // 1 minute
-
-    static Workbook workbook;
-    static Worksheet sheet;
-    static Chart chart;
-    static int currentStartRow = StartDataRow; // Tracks the first row of the current window
-
-    static void Main()
+    // // Demonstrates creating an Excel workbook with timestamp and random value data, adding a line chart, and using a System.Timers.Timer to shift a 10‑row data window each minute, updating the chart series and saving the workbook.
+    class Program
     {
-        try
+        // Path to the Excel file that will hold the chart.
+        private const string WorkbookPath = "RollingChart.xlsx";
+
+        // Number of rows to display in the rolling window.
+        private const int WindowSize = 10;
+
+        // Total number of data rows available.
+        private const int TotalRows = 100;
+
+        // Current start row of the window (1‑based, includes header row).
+        private static int _currentStartRow = 2; // Assuming row 1 has headers.
+
+        // Aspose.Cells objects that need to be accessed from the timer callback.
+        private static Workbook _workbook = null!;
+        private static Worksheet _dataSheet = null!;
+        private static Chart _chart = null!;
+
+        static void Main()
         {
-            // ---------- Create workbook and populate sample data ----------
-            workbook = new Workbook();
-            sheet = workbook.Worksheets[0];
-
-            // Header
-            sheet.Cells[0, DateColumn].PutValue("Date");
-            sheet.Cells[0, ValueColumn].PutValue("Value");
-
-            // Populate dates (today + i days) and random values
-            Random rnd = new Random();
-            for (int i = 0; i < TotalRows - 1; i++)
+            try
             {
-                int row = i + 1; // Excel rows are 0‑based in Aspose.Cells
-                sheet.Cells[row, DateColumn].PutValue(DateTime.Today.AddDays(i));
-                sheet.Cells[row, ValueColumn].PutValue(rnd.Next(50, 150));
+                // -------------------------------------------------
+                // 1. Create a new workbook and populate sample data.
+                // -------------------------------------------------
+                _workbook = new Workbook();
+                _dataSheet = _workbook.Worksheets[0];
+                _dataSheet.Name = "Data";
+
+                // Header row.
+                _dataSheet.Cells["A1"].PutValue("Timestamp");
+                _dataSheet.Cells["B1"].PutValue("Value");
+
+                // Fill sample data (e.g., timestamps at 1‑minute intervals and random values).
+                DateTime startTime = DateTime.Now.AddMinutes(-TotalRows);
+                Random rnd = new Random();
+                for (int i = 0; i < TotalRows; i++)
+                {
+                    _dataSheet.Cells[i + 2, 0].PutValue(startTime.AddMinutes(i)); // Column A
+                    _dataSheet.Cells[i + 2, 1].PutValue(rnd.NextDouble() * 100); // Column B
+                }
+
+                // -------------------------------------------------
+                // 2. Create a line chart that will display the window.
+                // -------------------------------------------------
+                int chartIndex = _dataSheet.Charts.Add(ChartType.Line, 5, 0, 25, 10);
+                _chart = _dataSheet.Charts[chartIndex];
+                _chart.Title.Text = "Rolling Data Window";
+
+                // Initial series using the first window.
+                UpdateChartSeries();
+
+                // -------------------------------------------------
+                // 3. Save the initial workbook.
+                // -------------------------------------------------
+                EnsureDirectoryExists(WorkbookPath);
+                _workbook.Save(WorkbookPath);
+
+                // -------------------------------------------------
+                // 4. Set up a timer to shift the window every minute.
+                // -------------------------------------------------
+                System.Timers.Timer timer = new System.Timers.Timer(60_000); // 60,000 ms = 1 minute
+                timer.Elapsed += OnTimerElapsed;
+                timer.AutoReset = true;
+                timer.Start();
+
+                Console.WriteLine("Rolling chart started. Press Enter to exit...");
+                Console.ReadLine();
+
+                // Clean up.
+                timer.Stop();
+                timer.Dispose();
             }
-
-            // ---------- Add a line chart ----------
-            int chartIndex = sheet.Charts.Add(ChartType.Line, ChartTopRow, ChartLeftColumn, ChartBottomRow, ChartRightColumn);
-            chart = sheet.Charts[chartIndex];
-
-            // Initial data window
-            UpdateChartDataRange();
-
-            // Optional: format axes as time scale
-            chart.CategoryAxis.CategoryType = CategoryType.TimeScale;
-            chart.CategoryAxis.MinorUnitScale = TimeUnit.Days;
-            chart.CategoryAxis.MinorUnit = 1;
-
-            // ---------- Set up a timer to shift the window ----------
-            System.Timers.Timer timer = new System.Timers.Timer(TimerIntervalMs);
-            timer.Elapsed += OnTimerElapsed;
-            timer.AutoReset = true;
-            timer.Start();
-
-            Console.WriteLine("Rolling chart started. Press ENTER to stop...");
-            Console.ReadLine();
-
-            timer.Stop();
-            timer.Dispose();
-
-            // Save the workbook (you can open it in Excel to see the final state)
-            string outputPath = "RollingChartDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
-        catch (Exception ex)
+
+        // -------------------------------------------------
+        // Timer callback: shift the data window and refresh the chart.
+        // -------------------------------------------------
+        private static void OnTimerElapsed(object? sender, ElapsedEventArgs e)
         {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
+            try
+            {
+                // Move the window one row down. Loop back to the start when reaching the end.
+                _currentStartRow++;
+                if (_currentStartRow + WindowSize - 1 > TotalRows + 1) // +1 because of header row
+                {
+                    _currentStartRow = 2; // Reset to first data row.
+                }
 
-    // Timer callback: shift the window by one row and refresh the chart
-    private static void OnTimerElapsed(object? sender, ElapsedEventArgs e)
-    {
-        try
+                // Update the chart series to point to the new range.
+                UpdateChartSeries();
+
+                // Save the workbook so the changes are visible in Excel.
+                EnsureDirectoryExists(WorkbookPath);
+                _workbook.Save(WorkbookPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Timer error: {ex.Message}");
+            }
+        }
+
+        // -------------------------------------------------
+        // Helper: rebuild the chart series with the current window range.
+        // -------------------------------------------------
+        private static void UpdateChartSeries()
         {
-            // Move start row down, wrap around when reaching the end of data
-            if (currentStartRow + WindowSize > TotalRows)
-                currentStartRow = StartDataRow;
-            else
-                currentStartRow++;
+            // Build the address strings for the category (X) and values (Y) ranges.
+            string categoryRange = $"Data!$A${_currentStartRow}:$A${_currentStartRow + WindowSize - 1}";
+            string valuesRange   = $"Data!$B${_currentStartRow}:$B${_currentStartRow + WindowSize - 1}";
 
-            UpdateChartDataRange();
-
-            // Recalculate the chart so the visual reflects the new range
-            chart.Calculate();
-
-            Console.WriteLine($"Chart window updated: rows {currentStartRow} to {currentStartRow + WindowSize - 1} at {DateTime.Now}");
+            // Recreate the series for the current window.
+            _chart.NSeries.Clear();
+            _chart.NSeries.Add(valuesRange, true);
+            // If the Aspose.Cells version supports CategoryData, uncomment the next line:
+            // _chart.NSeries[0].CategoryData = categoryRange;
         }
-        catch (Exception ex)
+
+        // Ensure the directory for the workbook exists to avoid FileNotFoundException.
+        private static void EnsureDirectoryExists(string filePath)
         {
-            Console.WriteLine($"Timer error: {ex.Message}");
+            try
+            {
+                string? directory = Path.GetDirectoryName(Path.GetFullPath(filePath));
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Directory creation error: {ex.Message}");
+                throw;
+            }
         }
-    }
-
-    // Helper: builds the range string for the current window and applies it to the chart
-    private static void UpdateChartDataRange()
-    {
-        // Build range strings like "B2:B11" for values and "A2:A11" for categories
-        string valueRange = $"B{currentStartRow + 1}:B{currentStartRow + WindowSize}";
-        string categoryRange = $"A{currentStartRow + 1}:A{currentStartRow + WindowSize}";
-
-        // Clear existing series and add a new one with values
-        chart.NSeries.Clear();
-        chart.NSeries.Add(valueRange, true);
-        // Assign category (X‑axis) data using XValues (compatible with all Aspose.Cells versions)
-        chart.NSeries[0].XValues = categoryRange;
     }
 }

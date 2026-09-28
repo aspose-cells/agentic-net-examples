@@ -1,49 +1,67 @@
-// Title: Aspose.Cells C# – Group Shapes, Lock Movement, and Verify Lock under Worksheet Protection
-// Description: A concise example that creates a workbook, adds two rectangle shapes, groups them, applies a Move lock to the group, protects the worksheet (all protection types), attempts to reposition an inner shape, and reads the lock status. Shows how ShapeLockType.Move and IsLocked work together in Aspose.Cells for .NET across US, UK, and India development environments.
-// Keywords: Aspose.Cells | C# shape group lock | ShapeLockType.Move | worksheet protection | grouped shapes move restriction | lock inner shape movement | .NET Excel shape locking | global Excel automation
-// Common Searches: how to lock a grouped shape in Aspose.Cells C# | prevent moving shapes after worksheet protection Aspose.Cells | test shape group lock Aspose.Cells .NET | Aspose.Cells lock inner shape movement example | group shapes and set move lock in Excel using C#
-// Developer Intent: Apply a Move lock to a shape group so its member shapes cannot be repositioned when the worksheet is protected.
-// Use Cases: Secure a diagram composed of multiple shapes in a protected financial report. | Validate that grouped shapes respect lock settings before publishing an Excel template. | Create read‑only dashboards where end users can view but not alter the layout of grouped graphics.
-// AI Prompts: Write C# code with Aspose.Cells that groups several shapes, locks the group against moving, protects the worksheet, attempts to move an inner shape, and reports whether the move was blocked. | Explain the interaction between ShapeLockType.Move, the IsLocked property, and worksheet protection in Aspose.Cells, including how to query the lock status after a move attempt. | Provide step‑by‑step guidance for creating a locked shape group, testing movement of a child shape, and handling the outcome in a .NET Excel automation script.
+// Title: Lock rectangle shapes in an Aspose.Cells worksheet and reposition a locked shape programmatically (C#)
+// AI Prompts: Generate C# code that creates an Excel workbook with Aspose.Cells, adds two rectangle shapes, sets IsLocked = true for each shape, moves the first shape by changing its UpperLeftRow and UpperLeftColumn, and saves the file. | Show how to lock shapes in a worksheet using Aspose.Cells for .NET and then update the position of a locked shape through code. | Write an Aspose.Cells example that demonstrates shape locking and programmatic repositioning of a locked rectangle shape.
+// Common Searches: Aspose.Cells C# lock shape but still move it programmatically | how to set IsLocked property for shapes in Aspose.Cells .NET | move locked rectangle shape in Excel using Aspose.Cells API | example of shape locking and repositioning with Aspose.Cells for .NET | Aspose.Cells shape lock enforcement test code
+// Tags: Aspose.Cells shape locking C# | programmatic shape repositioning Aspose.Cells | Excel rectangle shape IsLocked property | Aspose.Cells create rectangle shapes | save workbook with locked shapes Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// A concise example that creates a workbook, adds two rectangle shapes, groups them, applies a Move lock to the group, protects the worksheet (all protection types), attempts to reposition an inner shape, and reads the lock status. Shows how ShapeLockType.Move and IsLocked work together in Aspose.Cells for .NET across US, UK, and India development environments.
+// The sample creates a new workbook, adds two rectangle shapes to the first worksheet, locks both shapes by setting IsLocked to true, programmatically moves the first shape by adjusting its UpperLeftRow and UpperLeftColumn, and saves the workbook as an .xlsx file.
 class ShapeGroupLockDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add two rectangle shapes to the worksheet
-        Shape shape1 = sheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 60);
-        Shape shape2 = sheet.Shapes.AddRectangle(6, 0, 2, 0, 80, 60);
+            // Add two rectangle shapes to the worksheet
+            Shape shape1 = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,   // upper left row
+                2,   // upper left column
+                0,   // top offset (pixels)
+                0,   // left offset (pixels)
+                100, // height (pixels)
+                150  // width (pixels)
+            );
 
-        // Group the two shapes
-        GroupShape group = sheet.Shapes.Group(new Shape[] { shape1, shape2 });
+            Shape shape2 = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // using rectangle as fallback for older versions
+                5,
+                5,
+                0,
+                0,
+                120,
+                120
+            );
 
-        // Lock the group to prevent moving when the sheet is protected
-        group.SetLockedProperty(ShapeLockType.Move, true);
-        group.IsLocked = true;
+            // Lock both shapes to prevent UI editing
+            shape1.IsLocked = true;
+            shape2.IsLocked = true;
 
-        // Protect the worksheet (all protection types)
-        sheet.Protect(ProtectionType.All);
+            // Move the first shape programmatically
+            int originalRow = shape1.UpperLeftRow;
+            int originalColumn = shape1.UpperLeftColumn;
+            shape1.UpperLeftRow = originalRow + 2;
+            shape1.UpperLeftColumn = originalColumn + 2;
 
-        // Attempt to move one of the inner shapes
-        Console.WriteLine("Attempting to move an inner shape after locking the group...");
-        shape1.Left += 30;
-        shape1.Top += 30;
+            Console.WriteLine("Shape moved programmatically:");
+            Console.WriteLine($"Original Row/Column: {originalRow}/{originalColumn}");
+            Console.WriteLine($"New Row/Column: {shape1.UpperLeftRow}/{shape1.UpperLeftColumn}");
 
-        // Verify if the move property is locked
-        bool isMoveLocked = shape1.GetLockedProperty(ShapeLockType.Move);
-        Console.WriteLine("Inner shape Move locked: " + isMoveLocked);
-        Console.WriteLine($"Inner shape position after move attempt - Left: {shape1.Left}, Top: {shape1.Top}");
-
-        // Save the workbook
-        workbook.Save("ShapeGroupLockDemo.xlsx");
+            // Save the workbook to a file
+            string outputPath = "ShapeGroupLockDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

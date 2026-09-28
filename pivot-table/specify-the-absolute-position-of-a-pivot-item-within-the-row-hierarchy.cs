@@ -1,98 +1,108 @@
-// Title: Set absolute position of a PivotItem in a row hierarchy with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, accesses the first pivot table, selects a row field, finds a pivot item by name, assigns its PositionInSameParentNode to place it at a specific index, recalculates the pivot table, and saves the updated file.
-// Keywords: Aspose.Cells PivotItem PositionInSameParentNode | C# reorder pivot row items | move pivot item to top Aspose | set pivot item absolute position .NET | pivot table item ordering Aspose.Cells
-// Common Searches: Aspose.Cells change pivot item order C# | PositionInSameParentNode example | how to move pivot row item to first position | set absolute position of pivot item Aspose | reorder row field items in pivot table .NET
-// Developer Intent: Place a specific pivot item at a defined index within the row hierarchy of an Aspose.Cells pivot table.
-// Use Cases: Show a priority product category first in a sales dashboard. | Display the current month before other months in a financial report. | Ensure a custom label appears at the top of a hierarchical list before exporting.
-// AI Prompts: Generate C# code that sets PositionInSameParentNode for a PivotItem to a given index using Aspose.Cells. | Provide an example that checks for a pivot item’s existence, moves it to the first position, and handles missing items gracefully. | Explain why recalculating the pivot table is required after changing item positions in Aspose.Cells.
+// Title: Set absolute position of a pivot item in a row hierarchy with Aspose.Cells for .NET (C#)
+// AI Prompts: Assign PositionInSameParentNode to a pivot item to move it to a specific index within its row hierarchy using Aspose.Cells in C#. | Reorder pivot table row items by setting their absolute positions programmatically with Aspose.Cells for .NET. | Update the order of specific row field items in an existing pivot table and recalculate the data using C#.
+// Common Searches: Aspose.Cells C# set pivot row item order using PositionInSameParentNode | How to change the absolute position of a pivot item in a .NET workbook | Programmatically reorder items in a pivot table row hierarchy with Aspose.Cells | Move pivot table row field items to first position in C# | Aspose.Cells example for positioning pivot items in row hierarchy
+// Tags: Aspose.Cells pivot item absolute positioning | C# set pivot row item order | PositionInSameParentNode property Aspose.Cells | reorder pivot table rows .NET | modify pivot hierarchy programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotItemPositionDemo
+namespace AsposeCellsExamples
 {
-    // Loads a workbook, accesses the first pivot table, selects a row field, finds a pivot item by name, assigns its PositionInSameParentNode to place it at a specific index, recalculates the pivot table, and saves the updated file.
-    class Program
+    // The example loads or creates a workbook, builds a pivot table, accesses the first row field's items, and uses the PositionInSameParentNode property to set absolute positions for "ItemA" and "ItemB", thereby reordering them. After recalculating the pivot table, the modified workbook is saved.
+    class SetPivotItemAbsolutePosition
     {
         static void Main()
         {
             try
             {
-                const string sourceFile = "PivotSource.xlsx";
-                const string outputFile = "PivotSource_WithItemPosition.xlsx";
+                const string sourcePath = "PivotSource.xlsx";
+                Workbook workbook;
 
-                // Verify that the source workbook exists
-                if (!File.Exists(sourceFile))
+                // Load existing workbook or create a sample one if it does not exist
+                if (File.Exists(sourcePath))
                 {
-                    Console.WriteLine($"Error: File '{sourceFile}' not found.");
-                    return;
-                }
-
-                // Load the workbook containing the pivot table
-                Workbook workbook = new Workbook(sourceFile);
-
-                // Assume the pivot table is on the first worksheet
-                Worksheet pivotSheet = workbook.Worksheets[0];
-
-                // Ensure the worksheet contains at least one pivot table
-                if (pivotSheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("Error: No pivot tables found on the first worksheet.");
-                    return;
-                }
-
-                // Get the first pivot table
-                PivotTable pivotTable = pivotSheet.PivotTables[0];
-
-                // Ensure there is at least one row field
-                if (pivotTable.RowFields.Count == 0)
-                {
-                    Console.WriteLine("Error: Pivot table does not contain any row fields.");
-                    return;
-                }
-
-                // Choose the first row field (adjust index as needed)
-                PivotField rowField = pivotTable.RowFields[0];
-
-                // Access the collection of pivot items for that row field
-                PivotItemCollection items = rowField.PivotItems;
-
-                // Name of the pivot item to reposition
-                string targetItemName = "ItemName";
-
-                // Find the pivot item by name
-                PivotItem targetItem = null;
-                foreach (PivotItem pi in items)
-                {
-                    if (pi.Name.Equals(targetItemName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        targetItem = pi;
-                        break;
-                    }
-                }
-
-                if (targetItem != null)
-                {
-                    // Set the item's position among its siblings (0 = first)
-                    targetItem.PositionInSameParentNode = 0;
+                    workbook = new Workbook(sourcePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Warning: Pivot item '{targetItemName}' not found.");
+                    workbook = new Workbook();
+                    Worksheet ws = workbook.Worksheets[0];
+
+                    // Sample data for the pivot table
+                    ws.Cells["A1"].PutValue("Category");
+                    ws.Cells["B1"].PutValue("Value");
+                    ws.Cells["A2"].PutValue("ItemA");
+                    ws.Cells["B2"].PutValue(10);
+                    ws.Cells["A3"].PutValue("ItemB");
+                    ws.Cells["B3"].PutValue(20);
+                    ws.Cells["A4"].PutValue("ItemC");
+                    ws.Cells["B4"].PutValue(30);
+
+                    // Create a pivot table based on the sample data
+                    string sourceRange = "A1:B4";
+                    int pivotRow = 6;
+                    int pivotColumn = 0;
+                    int pivotIndex = ws.PivotTables.Add(sourceRange, pivotRow, pivotColumn, "PivotTable1");
+                    PivotTable pt = ws.PivotTables[pivotIndex];
+
+                    // Add row and data fields using AddFieldToArea
+                    pt.AddFieldToArea(PivotFieldType.Row, 0);   // Column A as row field
+                    pt.AddFieldToArea(PivotFieldType.Data, 1);  // Column B as data field
+
+                    // Refresh and calculate the pivot table
+                    pt.RefreshData();
+                    pt.CalculateData();
+
+                    // Save the generated source workbook for future runs
+                    workbook.Save(sourcePath);
                 }
 
-                // Recalculate the pivot table after changing positions
+                // Access the first worksheet and its first pivot table
+                Worksheet worksheet = workbook.Worksheets[0];
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                    return;
+                }
+
+                PivotTable pivotTable = worksheet.PivotTables[0];
+                if (pivotTable.RowFields.Count == 0)
+                {
+                    Console.WriteLine("The pivot table does not contain any row fields.");
+                    return;
+                }
+
+                // Obtain the first row field and its items
+                PivotField rowField = pivotTable.RowFields[0];
+                PivotItemCollection items = rowField.PivotItems;
+
+                // Retrieve specific items by name using indexer
+                PivotItem itemA = items["ItemA"];
+                PivotItem itemB = items["ItemB"];
+
+                if (itemA != null && itemB != null)
+                {
+                    // Set absolute positions within the same parent node
+                    itemA.PositionInSameParentNode = 0; // Move "ItemA" to first position
+                    itemB.PositionInSameParentNode = 1; // Move "ItemB" to second position
+                }
+                else
+                {
+                    Console.WriteLine("Required pivot items ('ItemA' or 'ItemB') were not found.");
+                }
+
+                // Recalculate the pivot table to apply changes
                 pivotTable.CalculateData();
 
                 // Save the modified workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved as '{outputFile}'.");
+                workbook.Save("PivotModified.xlsx");
+                Console.WriteLine("Pivot item positions updated and workbook saved as 'PivotModified.xlsx'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

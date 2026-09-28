@@ -1,60 +1,68 @@
-// Title: C# – Edit Threaded Comment Text in Excel with Aspose.Cells
-// Description: Shows how to create a workbook, add a threaded comment to cell A1, retrieve the comment, modify its text using the ThreadedComment.Notes property, and save the result as EditedThreadedComment.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | threaded comment | edit comment text | ThreadedComment.Notes | Excel workbook | programmatic comment update | modify Excel comment | Aspose.Cells API
-// Common Searches: Aspose.Cells change threaded comment text C# | update ThreadedComment Notes property | edit Excel threaded comment programmatically | Aspose.Cells set comment notes .NET | how to modify threaded comment in workbook
-// Developer Intent: Change the text of an existing threaded comment in an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Replace placeholder notes with final review comments after document approval. | Synchronize comment content with external data sources before publishing the workbook. | Batch‑correct spelling errors in threaded comments across multiple Excel files.
-// AI Prompts: Generate C# code that finds a threaded comment by cell address and updates its Notes property with Aspose.Cells. | Provide an example that loops through all threaded comments in a worksheet and adds a timestamp prefix to each comment's text.
+// Title: How to edit the text of an existing cell comment in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Update the Note property of the comment attached to cell B2 and save the workbook as a new file with Aspose.Cells. | Replace the content of a specific worksheet comment in C# without creating a new comment object using the Aspose.Cells API.
+// Common Searches: aspocells change comment text in a specific cell c# example | c# update existing comment note in excel workbook using Aspose.Cells | modify worksheet comment programmatically aspocells .net | save workbook after editing cell comment aspocells c#
+// Tags: Aspose.Cells edit comment Note property | C# update worksheet comment text | Aspose.Cells save workbook after comment change | Excel comment editing with Aspose.Cells .NET | cell B2 comment update Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsThreadedCommentEdit
+// The sample loads an existing Excel file, accesses cell B2 on the first worksheet, checks for a comment, updates its Note to a new string, ensures the output directory exists, and saves the modified workbook to a new file.
+class Program
 {
-    // Shows how to create a workbook, add a threaded comment to cell A1, retrieve the comment, modify its text using the ThreadedComment.Notes property, and save the result as EditedThreadedComment.xlsx with Aspose.Cells for .NET.
-    public class EditThreadedComment
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Create or obtain a threaded comment author
-                ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors["User1"];
-                author.Name = "User1";
-
-                // Add a threaded comment to cell A1 with initial text
-                worksheet.Comments.AddThreadedComment(0, 0, "Initial comment text", author);
-
-                // Retrieve the threaded comment that was just added
-                Comment comment = worksheet.Comments[0];
-                ThreadedComment threadedComment = comment.ThreadedComments[0];
-
-                // Update the comment text using the Notes property
-                threadedComment.Notes = "Updated comment text";
-
-                // Optional: display the updated text to verify
-                Console.WriteLine("Threaded comment updated to: " + threadedComment.Notes);
-
-                // Save the workbook
-                workbook.Save("EditedThreadedComment.xlsx");
-                Console.WriteLine("Workbook saved as EditedThreadedComment.xlsx");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook (lifecycle rule: load)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (or specify by name)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Resolve cell B2 to row/column indices
+            Cell targetCell = sheet.Cells["B2"];
+            int row = targetCell.Row;
+            int column = targetCell.Column;
+
+            // Retrieve a regular comment for cell B2 using the Comments collection
+            Comment comment = sheet.Comments[row, column];
+
+            if (comment != null)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // Edit the comment text
+                comment.Note = "This is the updated comment text.";
             }
+            else
+            {
+                Console.WriteLine("No comment found in cell B2.");
+            }
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the modified comment (lifecycle rule: save)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            EditThreadedComment.Run();
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,10 +1,7 @@
-// Title: Load Excel from UNC share, set compatibility, and save locally using Aspose.Cells (C#)
-// Description: C# example that checks a workbook's existence on a UNC network share, loads it with Aspose.Cells, enables the CheckCompatibility flag for older Excel versions, creates the target folder if needed, and saves the file as XLSX to a local path while handling errors.
-// Keywords: Aspose.Cells UNC path | load workbook from network share C# | CheckCompatibility Aspose.Cells | save Excel locally Aspose.Cells | C# Excel file network share example | Aspose.Cells file existence check | Create directory before saving Aspose.Cells
-// Common Searches: How to open an Excel file from a UNC path with Aspose.Cells | Aspose.Cells enable compatibility check before saving | Save Aspose.Cells workbook to a specific local folder | C# verify network file exists before loading Excel | Create missing directory when saving Aspose.Cells workbook
-// Developer Intent: Open an Excel workbook located on a network share, turn on compatibility checking, and write the modified file to a local directory.
-// Use Cases: Distribute a company‑wide template stored on a shared drive, ensuring it remains compatible with Excel 97‑2003 before sending copies to users. | Automate nightly processing that reads workbooks from a file server, applies compatibility settings, and stages them in a local folder for downstream workflows. | Prevent runtime errors in a server application by confirming the network file exists and the output folder is present before using Aspose.Cells.
-// AI Prompts: Generate C# code that loads an Excel workbook from a UNC path with Aspose.Cells, sets workbook.Settings.CheckCompatibility = true, creates the destination folder if missing, and saves the file locally. | Show how to handle FileNotFound and other exceptions when opening a workbook from a network share using Aspose.Cells. | Explain the purpose of the CheckCompatibility property in Aspose.Cells and when to apply it before saving a workbook.
+// Title: Load an Excel workbook from a UNC network share, set CheckCompatibility, and save it locally using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file from a UNC path, turns on workbook.Settings.CheckCompatibility, and writes the file to a local folder with Aspose.Cells. | Create a C# console program that validates the existence of a workbook on a network share, creates the destination directory if missing, and saves the workbook as XLSX after enabling compatibility mode using Aspose.Cells. | Show how to use Aspose.Cells to read a workbook from a network location, activate Excel compatibility checks, and export the modified workbook to a specified local path.
+// Common Searches: aspnet load excel file from UNC path using Aspose.Cells | how to enable CheckCompatibility in Aspose.Cells before saving workbook | save workbook to local folder after opening from network share with Aspose.Cells C# | verify network file exists before loading Aspose.Cells | create destination directory automatically when saving workbook Aspose.Cells
+// Tags: read Excel file from network share Aspose.Cells | set workbook check compatibility Aspose.Cells | save workbook as XLSX locally Aspose.Cells | verify network file existence C# Aspose.Cells | create destination directory before save Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,43 +9,44 @@ using Aspose.Cells;
 
 namespace AsposeCellsNetworkExample
 {
-    // C# example that checks a workbook's existence on a UNC network share, loads it with Aspose.Cells, enables the CheckCompatibility flag for older Excel versions, creates the target folder if needed, and saves the file as XLSX to a local path while handling errors.
+    // // Loads an Excel workbook from a UNC network share, enables compatibility checks, ensures the target folder exists, and saves the workbook locally as XLSX using Aspose.Cells.
     class Program
     {
         static void Main()
         {
-            // Path to the workbook on a network share
-            string networkFilePath = @"\\ServerName\ShareFolder\SourceWorkbook.xlsx";
+            // Path to the workbook on a network share (UNC path)
+            string networkPath = @"\\Server\Share\Documents\SourceWorkbook.xlsx";
 
-            // Verify that the source file exists before attempting to load it
-            if (!File.Exists(networkFilePath))
+            // Local path where the modified workbook will be saved
+            string localPath = @"C:\Temp\ModifiedWorkbook.xlsx";
+
+            // Verify that the source workbook exists before attempting to load it
+            if (!File.Exists(networkPath))
             {
-                Console.WriteLine($"Source workbook not found at: {networkFilePath}");
+                Console.WriteLine($"Source workbook not found at network location: {networkPath}");
                 return;
             }
 
             try
             {
                 // Load the workbook from the network location
-                Workbook workbook = new Workbook(networkFilePath);
-
-                // Enable compatibility checks for older Excel versions
-                workbook.Settings.CheckCompatibility = true;
-
-                // Define local path for the modified workbook
-                string localSavePath = @"C:\Temp\ModifiedWorkbook.xlsx";
-
-                // Ensure the target directory exists
-                string localDir = Path.GetDirectoryName(localSavePath);
-                if (!Directory.Exists(localDir))
+                using (Workbook workbook = new Workbook(networkPath))
                 {
-                    Directory.CreateDirectory(localDir);
+                    // Enable compatibility checks for older Excel versions
+                    workbook.Settings.CheckCompatibility = true;
+
+                    // Ensure the target directory exists
+                    string localDir = Path.GetDirectoryName(localPath);
+                    if (!Directory.Exists(localDir))
+                    {
+                        Directory.CreateDirectory(localDir);
+                    }
+
+                    // Save the workbook locally in XLSX format
+                    workbook.Save(localPath, SaveFormat.Xlsx);
                 }
 
-                // Save the modified workbook locally
-                workbook.Save(localSavePath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbook loaded, compatibility modified, and saved to: {localSavePath}");
+                Console.WriteLine("Workbook loaded from network, compatibility modified, and saved to local path.");
             }
             catch (Exception ex)
             {

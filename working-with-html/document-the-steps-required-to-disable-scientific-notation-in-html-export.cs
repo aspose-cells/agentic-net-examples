@@ -1,63 +1,41 @@
-// Title: How to Prevent Scientific Notation in HTML Export with Aspose.Cells for .NET (C#)
-// Description: Step‑by‑step guide that creates an in‑memory workbook, applies the Text number format (Number = 49) to cells that could be rendered in exponent form, and saves the file as HTML using HtmlSaveOptions. The resulting HTML displays the original numeric strings without scientific notation.
-// Keywords: Aspose.Cells HTML export | disable exponent notation | C# scientific notation | Number format 49 | text format cells Aspose | .NET large numbers HTML | small decimal HTML output | prevent scientific notation Aspose.Cells | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells keep numbers as plain text in HTML | remove scientific notation when saving workbook to HTML | C# export to HTML without exponent format | how to set cell style to text for HTML output Aspose | large number display in Aspose.Cells HTML export
-// Developer Intent: Export a workbook to HTML while ensuring all numeric values appear in their original decimal representation.
-// Use Cases: Show product IDs or transaction numbers exactly as entered in web reports. | Present precise measurement values (e.g., 0.00000012345) on dashboards without auto‑conversion. | Create HTML invoices where every numeric field must retain its literal format.
-// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook as HTML and forces every numeric cell to use the Text format (Number = 49). | Explain how to apply a Text style to specific cells before HTML export to avoid exponent notation in Aspose.Cells for .NET. | Provide a concise tutorial on configuring HtmlSaveOptions and cell styles to keep numbers unchanged during HTML conversion.
+// Title: Disable scientific notation in HTML export using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that applies a custom number format to a cell to force plain decimal output and saves the workbook as HTML with Aspose.Cells. | Show how to configure HTML export options so that numeric values are rendered without exponent notation during HTML export.
+// Common Searches: Aspose.Cells C# export to HTML without scientific notation for large numbers | prevent exponent display in HTML output using Aspose.Cells | show plain decimal values in HTML export with Aspose.Cells | disable scientific notation when saving workbook as HTML in .NET | Aspose.Cells HTML export keep numeric formatting plain
+// Tags: cell style plain integer Aspose.Cells | HTML export options plain decimal | suppress exponent display Aspose.Cells | C# export workbook to HTML without exponent | Aspose.Cells numeric formatting for HTML
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExample
+// The example creates a workbook, inserts a large numeric value, applies a cell style with the custom format "0" to force plain integer display, and saves the workbook as HTML using default HtmlSaveOptions, producing HTML output where the number appears without scientific notation.
+class Program
 {
-    // Step‑by‑step guide that creates an in‑memory workbook, applies the Text number format (Number = 49) to cells that could be rendered in exponent form, and saves the file as HTML using HtmlSaveOptions. The resulting HTML displays the original numeric strings without scientific notation.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                // Create a new workbook (in-memory)
-                Workbook workbook = new Workbook();
+            // 1. Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // 2. Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate cells with values that could be shown in scientific notation
-                // Set the style to Text (Number format 49) to preserve plain representation
-                Cell cellA1 = sheet.Cells["A1"];
-                cellA1.PutValue(123456789012345L);
-                cellA1.GetStyle().Number = 49; // Text format
-                cellA1.SetStyle(cellA1.GetStyle());
+            // 3. Insert a numeric value that would normally be displayed in scientific notation
+            sheet.Cells["A1"].PutValue(123456789012345.0);
 
-                Cell cellA2 = sheet.Cells["A2"];
-                cellA2.PutValue(0.00000012345);
-                cellA2.GetStyle().Number = 49; // Text format
-                cellA2.SetStyle(cellA2.GetStyle());
+            // 4. Apply a custom number format that forces plain decimal representation (no scientific notation)
+            Style plainStyle = workbook.CreateStyle();
+            plainStyle.Custom = "0"; // display as integer without exponent
+            sheet.Cells["A1"].SetStyle(plainStyle);
 
-                // Configure HTML save options (default options are sufficient)
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // 5. Configure HTML export options (default behavior preserves the formatted string)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-                string outputPath = "output.html";
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as HTML
-                workbook.Save(outputPath, htmlOptions);
-
-                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // 6. Save the workbook as an HTML file with the specified options
+            workbook.Save("ExportedWithoutScientificNotation.html", htmlOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

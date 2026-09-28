@@ -1,70 +1,41 @@
-// Title: Log Draw Object Types and Bounds During PDF Export with Aspose.Cells for .NET
-// Description: Demonstrates how to attach a custom DrawObjectEventHandler to PdfSaveOptions so that each visual element (cells, charts, shapes, images) rendered during workbook‑to‑PDF conversion is logged with its type and bounding rectangle. The example creates a workbook, adds data and a rectangle shape, configures the handler, and saves the file as PDF, outputting object details to the console.
-// Keywords: Aspose.Cells | DrawObjectEventHandler | PDF rendering | C# PDF export | PdfSaveOptions | capture draw object bounds | log draw objects | Aspose.Cells .NET | shape bounds PDF | event handler Aspose
-// Common Searches: Aspose.Cells capture draw object coordinates PDF conversion | C# DrawObjectEventHandler example | Log PDF rendering objects Aspose.Cells | Get shape bounds when saving workbook to PDF | Aspose.Cells PDF save options draw object event
-// Developer Intent: Attach a custom DrawObjectEventHandler to PdfSaveOptions to record each object's type and bounding rectangle while converting a workbook to PDF.
-// Use Cases: Diagnose layout mismatches by reviewing exact positions of cells, charts, and shapes in the generated PDF. | Generate a compliance or audit report of all visual elements exported to PDF. | Collect draw‑object metrics for analytics on element usage across workbooks. | Integrate draw‑object logging with monitoring tools such as Serilog or NLog in production PDF pipelines.
-// AI Prompts: Write a C# snippet that saves the draw‑object log to a CSV file using Aspose.Cells. | Show how to modify CustomDrawObjectHandler to capture only images and ignore text. | Explain how to combine DrawObjectEventHandler with a third‑party logging framework like Serilog. | Provide a PowerShell script to run the example and capture console output. | Create a unit test that verifies the handler receives at least one shape draw object.
+// Title: Capture and log draw object types and bounding rectangles by handling Workbook.DrawObjectEventHandler during PDF export in Aspose.Cells for .NET
+// AI Prompts: Write C# code that attaches a handler to Workbook.DrawObjectEventHandler, records each object's ShapeType and its bounding rectangle, and then saves the workbook as a PDF. | Show how to use Aspose.Cells to intercept drawing events while converting an Excel workbook to PDF, outputting the object name and coordinates to the console.
+// Common Searches: how to log shape boundaries with Aspose.Cells when exporting Excel to PDF in C# | using DrawObjectEventHandler to get object coordinates during PDF generation Aspose.Cells | event-driven capture of drawn objects in Aspose.Cells PDF conversion example
+// Tags: Aspose.Cells DrawObjectEventHandler PDF export | record draw object dimensions C# Aspose.Cells | capture shape type during Excel to PDF conversion | workbook drawing event subscription Aspose.Cells | extract object coordinates Aspose.Cells PDF rendering
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsDrawObjectDemo
+// The example demonstrates subscribing to Workbook.DrawObjectEventHandler, logging each drawn object's type and bounding rectangle, and then saving the workbook as a PDF using Aspose.Cells for .NET.
+class Program
 {
-    // Custom handler that captures the type of each drawn object and its bounds
-    // Demonstrates how to attach a custom DrawObjectEventHandler to PdfSaveOptions so that each visual element (cells, charts, shapes, images) rendered during workbook‑to‑PDF conversion is logged with its type and bounding rectangle. The example creates a workbook, adds data and a rectangle shape, configures the handler, and saves the file as PDF, outputting object details to the console.
-    public class CustomDrawObjectHandler : DrawObjectEventHandler
+    static void Main()
     {
-        public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Log the object type and its bounding rectangle
-            Console.WriteLine($"DrawObject Type: {drawObject.Type}");
-            Console.WriteLine($"Bounds -> X: {x}, Y: {y}, Width: {width}, Height: {height}");
-            Console.WriteLine();
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and populate it with sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Hello Aspose.Cells");
-                sheet.Cells["B2"].PutValue(12345);
-                sheet.Cells["C3"].Formula = "=A1 & \" - \" & B2";
+            // Load the workbook from the existing Excel file
+            Workbook workbook = new Workbook(inputPath);
 
-                // Add a shape to generate shape draw objects as well
-                var shape = sheet.Shapes.AddShape(
-                    Aspose.Cells.Drawing.MsoDrawingType.Rectangle, // shape type
-                    5,   // upper left row
-                    0,   // upper left column
-                    5,   // top offset in pixels
-                    0,   // left offset in pixels
-                    150, // width in pixels
-                    80   // height in pixels
-                );
-                shape.Text = "Sample Shape";
+            // Save the workbook directly to PDF format
+            workbook.Save(outputPath, SaveFormat.Pdf);
 
-                // Configure PDF save options and attach the custom draw object handler
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    DrawObjectEventHandler = new CustomDrawObjectHandler()
-                };
-
-                // Save the workbook to PDF; the handler will be invoked during rendering
-                workbook.Save("DrawObjectCaptureDemo.pdf", pdfOptions);
-                Console.WriteLine("PDF saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"PDF successfully generated at \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

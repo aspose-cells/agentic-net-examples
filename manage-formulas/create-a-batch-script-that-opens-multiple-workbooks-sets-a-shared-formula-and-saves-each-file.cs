@@ -1,58 +1,74 @@
-// Title: C# batch script to open multiple Excel workbooks, apply a shared formula, and save using Aspose.Cells
-// Description: A concise example that loops through a list of Excel files, populates column A with numbers 1‑10, assigns a shared formula (e.g., =A1^2) to column B, recalculates all formulas, and overwrites each workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# batch update | shared formula Excel .NET | process multiple workbooks | set shared formula programmatically | recalculate and save Excel files | Aspose.Cells SetSharedFormula example
-// Common Searches: batch apply shared formula Aspose.Cells C# | loop through Excel files set formula .NET | how to use SetSharedFormula in multiple workbooks | calculate formulas and save workbooks with Aspose.Cells | C# script to update many Excel files at once
-// Developer Intent: Automate the insertion of the same shared formula across a range in each workbook of a collection and persist the changes.
-// Use Cases: Populate a numeric series in column A of several spreadsheets and compute its square in column B via a shared formula. | Efficiently propagate identical calculations across rows without writing the formula to every cell. | Recalculate workbook formulas after modification and overwrite the original files in a single batch operation.
-// AI Prompts: Write C# code that loads a list of Excel files with Aspose.Cells, fills column A with 1‑10, sets a shared formula in column B, recalculates, and saves each file. | Show how to use Aspose.Cells SetSharedFormula in a loop to batch‑process multiple workbooks. | Explain step‑by‑step how to add data, apply a shared formula, recalculate, and overwrite Excel files using Aspose.Cells for .NET.
+// Title: C# batch script to open every .xlsx workbook in a folder, apply a shared formula to column C rows 1‑10, and save the files with Aspose.Cells
+// AI Prompts: Write a C# console program that enumerates all .xlsx files in a specified directory, loads each workbook with Aspose.Cells, and inserts a formula `A{row}+B{row}` into cells C1:C10 before saving the workbook in place. | Refactor the existing per‑cell loop into a single Aspose.Cells Range that uses one formula for the entire C1:C10 block, while still processing every workbook in the folder. | Enhance the script to log detailed error information for files that cannot be opened, skip those files, and continue processing the remaining workbooks without terminating the application.
+// Common Searches: how to set a shared formula across multiple rows using Aspose.Cells in C# | batch modify column C formula in all Excel files in a folder with Aspose.Cells .NET | C# script to apply A+B formula to C1:C10 for each workbook in a directory | process many .xlsx files and overwrite them after adding formulas using Aspose.Cells | error handling for file‑wise workbook processing Aspose.Cells C#
+// Tags: batch apply formula range Aspose.Cells | process multiple .xlsx files C# | set column C formula rows 1-10 Aspose.Cells | overwrite workbook after formula insertion | file‑wise error handling Aspose.Cells | range based formula assignment Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace BatchSharedFormulaDemo
+// Scans a folder for .xlsx workbooks, loads each with Aspose.Cells, assigns a formula that adds column A and B into cells C1‑C10, saves the workbook back to its original location, and logs any file‑specific errors while continuing processing.
+class Program
 {
-    // A concise example that loops through a list of Excel files, populates column A with numbers 1‑10, assigns a shared formula (e.g., =A1^2) to column B, recalculates all formulas, and overwrites each workbook with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // List of workbook file paths to process
-            string[] workbookFiles = new string[]
+            // Folder that contains the workbooks to process
+            string inputFolder = @"C:\InputFolder";
+
+            // Verify that the input folder exists
+            if (!Directory.Exists(inputFolder))
             {
-                "Book1.xlsx",
-                "Book2.xlsx",
-                "Book3.xlsx"
-            };
-
-            // Loop through each workbook
-            foreach (string filePath in workbookFiles)
-            {
-                // Load the existing workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Access the first worksheet (index 0)
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Example data: populate column A with numbers 1..10
-                for (int i = 0; i < 10; i++)
-                {
-                    cells[i, 0].PutValue(i + 1); // A1..A10
-                }
-
-                // Set a shared formula in column B starting from B1
-                // Formula: square of the value in column A (e.g., =A1^2)
-                // This will propagate to B1:B10
-                cells["B1"].SetSharedFormula("=A1^2", 10, 1);
-
-                // Calculate formulas so that values are updated
-                workbook.CalculateFormula();
-
-                // Save the workbook (overwrites the original file)
-                workbook.Save(filePath);
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
             }
 
-            Console.WriteLine("Batch processing completed.");
+            // Retrieve all .xlsx files in the specified folder
+            string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+            foreach (string filePath in workbookFiles)
+            {
+                // Ensure the file still exists before loading
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found, skipping: {filePath}");
+                    continue;
+                }
+
+                try
+                {
+                    // Load the workbook from disk
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Work with the first worksheet (index 0)
+                    Worksheet sheet = workbook.Worksheets[0];
+
+                    // Apply formula to each row in column C (C1:C10)
+                    for (int row = 0; row < 10; row++)
+                    {
+                        // Build a relative formula for the current row (e.g., A1+B1, A2+B2, ...)
+                        string formula = $"A{row + 1}+B{row + 1}";
+                        // Set the formula for the cell in column C (index 2)
+                        sheet.Cells[row, 2].Formula = formula;
+                    }
+
+                    // Save the workbook, overwriting the original file
+                    workbook.Save(filePath);
+                    Console.WriteLine($"Processed and saved: {filePath}");
+                }
+                catch (Exception exFile)
+                {
+                    // Log errors related to a specific file but continue processing others
+                    Console.WriteLine($"Error processing file '{filePath}': {exFile.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,50 +1,99 @@
-// Title: Import JSON array and create a named range with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, imports a JSON array as a table starting at A1 using JsonUtility with ArrayAsTable enabled, defines a named range that covers the imported cells, and saves the file as an XLSX workbook.
-// Keywords: Aspose.Cells JSON import C# | JsonUtility ImportData | ArrayAsTable JsonLayoutOptions | Excel named range from JSON | create named range Aspose.Cells | C# import JSON to Excel
-// Common Searches: Aspose.Cells import JSON as table C# | How to create a named range after JSON import in Aspose.Cells | JsonUtility ImportData example .NET | Define named range for JSON data in Excel using Aspose | ArrayAsTable option Aspose.Cells
-// Developer Intent: Load JSON data into an Excel worksheet and automatically generate a named range that references the imported cells.
-// Use Cases: Populate Excel reports from external JSON feeds and reference the data via a named range in formulas or charts. | Use the named range as a source for data‑validation lists or pivot tables after importing JSON records. | Programmatically adjust the named range size when the JSON array length changes at runtime.
-// AI Prompts: Write C# code that reads a JSON file, imports it into an Aspose.Cells worksheet as a table, and creates a named range covering the imported area. | Explain the effect of JsonLayoutOptions.ArrayAsTable and how to calculate the correct range dimensions for a named range after JSON import. | Show how to resize an existing named range when the imported JSON array contains a different number of rows.
+// Title: How to import a JSON array into a named range in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that reads a JSON array, extracts headers and rows, fills an Aspose.Cells worksheet, creates a named range covering the data, and saves the workbook. | Show a step‑by‑step example of deserializing JSON to a list of dictionaries and populating an Aspose.Cells range with a custom name in C#.
+// Common Searches: C# Aspose.Cells example to convert JSON array to Excel named range | how to create a named range from JSON data using Aspose.Cells .NET | populate Excel cells from a list of dictionaries with Aspose.Cells C# | Aspose.Cells deserialize JSON and set range name programmatically | write JSON records to Excel and define a named range in C#
+// Tags: Aspose.Cells populate named range from JSON | C# create named range in Excel using Aspose.Cells | deserialize JSON to worksheet cells Aspose.Cells | write dictionary data to Excel range C# | Aspose.Cells range creation with dynamic data
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsJsonImportExample
+// The sample creates a new workbook, deserializes a JSON array into a list of dictionaries, writes the dictionary keys as header cells and each record's values into subsequent rows, defines a named range that covers the populated area, and saves the file as JsonData.xlsx.
+class Program
 {
-    // Creates a workbook, imports a JSON array as a table starting at A1 using JsonUtility with ArrayAsTable enabled, defines a named range that covers the imported cells, and saves the file as an XLSX workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Sample JSON array (each object will become a row)
-            string json = @"[
-                { ""Name"": ""John"", ""Age"": 30, ""City"": ""New York"" },
-                { ""Name"": ""Alice"", ""Age"": 25, ""City"": ""London"" },
-                { ""Name"": ""Bob"", ""Age"": 28, ""City"": ""Paris"" }
-            ]";
-
-            // 1. Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Set JSON layout options – treat the array as a table (header + rows)
-            JsonLayoutOptions jsonOptions = new JsonLayoutOptions
+            // Sample JSON array
+            string json = @"
+            [
+                { ""Name"": ""John"", ""Age"": 30, ""City"": ""New York"" },
+                { ""Name"": ""Anna"", ""Age"": 25, ""City"": ""London"" },
+                { ""Name"": ""Mike"", ""Age"": 40, ""City"": ""Sydney"" }
+            ]";
+
+            // Deserialize JSON to a list of dictionaries
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            List<Dictionary<string, JsonElement>> records = JsonSerializer.Deserialize<List<Dictionary<string, JsonElement>>>(json, options);
+
+            if (records == null || records.Count == 0)
+                return;
+
+            // Determine column headers from the first record
+            var headers = new List<string>(records[0].Keys);
+            int startRow = 0;      // zero‑based index (A1)
+            int startColumn = 0;   // zero‑based index
+
+            // Write headers
+            for (int col = 0; col < headers.Count; col++)
             {
-                ArrayAsTable = true
-            };
+                sheet.Cells[startRow, startColumn + col].PutValue(headers[col]);
+            }
 
-            // 3. Import JSON data starting at cell A1 (row 0, column 0)
-            JsonUtility.ImportData(json, sheet.Cells, 0, 0, jsonOptions);
+            // Write data rows
+            for (int row = 0; row < records.Count; row++)
+            {
+                var record = records[row];
+                for (int col = 0; col < headers.Count; col++)
+                {
+                    string key = headers[col];
+                    if (record.TryGetValue(key, out JsonElement value))
+                    {
+                        // Handle different JSON value types
+                        switch (value.ValueKind)
+                        {
+                            case JsonValueKind.Number:
+                                if (value.TryGetInt32(out int intVal))
+                                    sheet.Cells[startRow + 1 + row, startColumn + col].PutValue(intVal);
+                                else if (value.TryGetDouble(out double dblVal))
+                                    sheet.Cells[startRow + 1 + row, startColumn + col].PutValue(dblVal);
+                                break;
+                            case JsonValueKind.String:
+                                sheet.Cells[startRow + 1 + row, startColumn + col].PutValue(value.GetString());
+                                break;
+                            case JsonValueKind.True:
+                            case JsonValueKind.False:
+                                sheet.Cells[startRow + 1 + row, startColumn + col].PutValue(value.GetBoolean());
+                                break;
+                            default:
+                                sheet.Cells[startRow + 1 + row, startColumn + col].PutValue(value.ToString());
+                                break;
+                        }
+                    }
+                }
+            }
 
-            // 4. Define a named range that covers the imported data.
-            //    In this example the JSON has 3 columns (Name, Age, City) and 3 rows (header + 2 data rows).
-            //    Adjust the range size if your JSON differs.
-            Aspose.Cells.Range dataRange = sheet.Cells.CreateRange("A1:C3");
-            dataRange.Name = "MyDataRange";
+            // Define the range that includes headers and data
+            int totalRows = records.Count + 1; // +1 for header row
+            int totalCols = headers.Count;
+            AsposeRange namedRange = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalCols);
+            namedRange.Name = "MyJsonData";
 
-            // 5. Save the workbook
-            workbook.Save("JsonImportedNamedRange.xlsx");
+            // Save the workbook (ensure the directory exists)
+            string outputPath = "JsonData.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,98 +1,124 @@
-// Title: Export Pivot Table Source Range to JSON with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a pivot table, retrieve its source range using GetSource, build a Range object, configure JsonSaveOptions (header row, empty cells, flat structure), and export the underlying data to a JSON string with Aspose.Cells JsonUtility.
-// Keywords: Aspose.Cells | C# | .NET | pivot table source range | GetSource | JsonSaveOptions | ExportRangeToJson | JSON export | range to JSON | workbook export
-// Common Searches: Aspose.Cells export pivot source to JSON C# | GetSource pivot table Aspose.Cells example | JsonUtility ExportRangeToJson usage | How to export worksheet range as JSON with Aspose.Cells | C# convert pivot table source data to JSON
-// Developer Intent: Extract a pivot table's underlying data range and convert it to JSON using Aspose.Cells for .NET.
-// Use Cases: Provide a JSON feed of raw sales records for a web service after building a pivot table. | Create a flat JSON file that retains column headers and empty cells for downstream analytics. | Capture a reproducible JSON snapshot of the source data for auditing or version control.
-// AI Prompts: Generate C# code that retrieves a pivot table's source range with GetSource and exports it to JSON using Aspose.Cells JsonUtility. | Show how to set JsonSaveOptions to include header rows and empty cells when exporting a range to JSON in Aspose.Cells. | Explain the steps to create a workbook, add a pivot table, obtain its source reference, and produce a JSON string of that data.
+// Title: Export the underlying data source range of a pivot table to an indented JSON file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, gets the worksheet's used range, converts that range into a System.Data.DataTable, and serializes the table to pretty‑printed JSON using System.Text.Json. | Adapt the sample to locate a pivot table by its name, extract only its source range, and write the resulting JSON to a MemoryStream instead of a physical file.
+// Common Searches: how to export pivot table source range to JSON with Aspose.Cells in C# | C# Aspose.Cells convert worksheet range to DataTable and serialize to JSON | save Excel used range as formatted JSON file using System.Text.Json | retrieve pivot table data source range programmatically with Aspose.Cells .NET
+// Tags: pivot table source range export to JSON | Aspose.Cells range to DataTable conversion | serialize Excel data to indented JSON .NET | C# extract worksheet used range with Aspose.Cells | write JSON file from Aspose.Cells workbook
 
 using System;
+using System.Data;
+using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsPivotJsonExport
+// Alias to avoid conflict with System.Range
+using CellsRange = Aspose.Cells.Range;
+
+// The example loads an Excel workbook, checks for a pivot table on the first worksheet, obtains the worksheet's used range, converts that range into a System.Data.DataTable via a helper method, serializes the DataTable to pretty‑printed JSON with System.Text.Json, and writes the JSON to a file while handling errors and reporting progress.
+class PivotTableJsonExporter
 {
-    // Demonstrates how to create a workbook, add a pivot table, retrieve its source range using GetSource, build a Range object, configure JsonSaveOptions (header row, empty cells, flat structure), and export the underlying data to a JSON string with Aspose.Cells JsonUtility.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "PivotDataSource.json";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume the pivot table is on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one pivot table
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found in the worksheet.");
+                return;
+            }
+
+            // Get the first pivot table (not used further, but kept for validation)
+            PivotTable pivot = sheet.PivotTables[0];
+
+            // Use the worksheet's used range as the data source for simplicity
+            CellsRange dataSourceRange = sheet.Cells.MaxDisplayRange;
+            if (dataSourceRange == null)
+            {
+                Console.WriteLine("Unable to retrieve the data source range.");
+                return;
+            }
+
+            // Convert the range to a DataTable for JSON serialization
+            DataTable dt = RangeToDataTable(dataSourceRange);
+
+            // Serialize the DataTable to JSON using System.Text.Json
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(dt, options);
+
+            // Output JSON to console and write to file
+            Console.WriteLine(json);
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
-
-                // Populate sample data for the pivot table
-                dataSheet.Cells["A1"].PutValue("Category");
-                dataSheet.Cells["B1"].PutValue("Product");
-                dataSheet.Cells["C1"].PutValue("Sales");
-
-                dataSheet.Cells["A2"].PutValue("Cat1");
-                dataSheet.Cells["B2"].PutValue("ProdA");
-                dataSheet.Cells["C2"].PutValue(1200);
-
-                dataSheet.Cells["A3"].PutValue("Cat1");
-                dataSheet.Cells["B3"].PutValue("ProdB");
-                dataSheet.Cells["C3"].PutValue(800);
-
-                dataSheet.Cells["A4"].PutValue("Cat2");
-                dataSheet.Cells["B4"].PutValue("ProdC");
-                dataSheet.Cells["C4"].PutValue(1500);
-
-                // Add a worksheet that will contain the pivot table
-                Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-
-                // Define the source data range address (including the header row)
-                string sourceData = $"=Data!{dataSheet.Cells.MaxDisplayRange.Address}";
-
-                // Add the pivot table to the pivot sheet
-                int pivotIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "SalesPivot");
-                PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-
-                // Configure pivot fields (Category as row, Sales as data)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Refresh and calculate the pivot table using the correct API
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Retrieve the underlying data source reference (e.g., "A1:C4")
-                string[] sourceRefs = pivotTable.GetSource();
-                if (sourceRefs.Length == 0)
-                {
-                    Console.WriteLine("Pivot table source not found.");
-                    return;
-                }
-
-                // Create a Range object based on the source reference
-                Aspose.Cells.Range sourceRange = dataSheet.Cells.CreateRange(sourceRefs[0]);
-
-                // Set JSON export options
-                JsonSaveOptions jsonOptions = new JsonSaveOptions
-                {
-                    HasHeaderRow = true,          // First row contains column names
-                    ExportEmptyCells = true,      // Include empty cells in the output
-                    ExportNestedStructure = false // Flat JSON array
-                };
-
-                // Export the source range to a JSON string
-                string json = JsonUtility.ExportRangeToJson(sourceRange, jsonOptions);
-
-                // Output the JSON string
-                Console.WriteLine("Exported JSON:");
-                Console.WriteLine(json);
-
-                // Save the workbook
-                workbook.Save("PivotTableWithJsonExport.xlsx");
+                File.WriteAllText(outputPath, json);
+                Console.WriteLine($"JSON data written to {outputPath}");
             }
-            catch (Exception ex)
+            catch (Exception writeEx)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to write JSON file: {writeEx.Message}");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper method: converts an Aspose.Cells Range to a System.Data.DataTable
+    private static DataTable RangeToDataTable(CellsRange range)
+    {
+        DataTable table = new DataTable();
+
+        // Determine the range dimensions
+        int firstRow = range.FirstRow;
+        int firstCol = range.FirstColumn;
+        int totalRows = range.RowCount;
+        int totalCols = range.ColumnCount;
+
+        // Use the first row as column headers
+        for (int col = 0; col < totalCols; col++)
+        {
+            string columnName = range[firstRow, firstCol + col].StringValue;
+            if (string.IsNullOrEmpty(columnName))
+                columnName = $"Column{col + 1}";
+
+            // Ensure column names are unique
+            string originalName = columnName;
+            int duplicateIndex = 1;
+            while (table.Columns.Contains(columnName))
+            {
+                columnName = $"{originalName}_{duplicateIndex++}";
+            }
+
+            table.Columns.Add(columnName, typeof(string));
+        }
+
+        // Populate rows starting after the header row
+        for (int row = 1; row < totalRows; row++)
+        {
+            DataRow dataRow = table.NewRow();
+            for (int col = 0; col < totalCols; col++)
+            {
+                dataRow[col] = range[firstRow + row, firstCol + col].StringValue;
+            }
+            table.Rows.Add(dataRow);
+        }
+
+        return table;
     }
 }

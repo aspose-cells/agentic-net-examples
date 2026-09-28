@@ -1,42 +1,45 @@
-// Title: Determine if a worksheet is a dialog sheet using Aspose.Cells IsDialogSheet in C#
-// Description: Creates a workbook, adds a dialog sheet (SheetType.Dialog), and uses the IsDialogSheet property (or SheetType comparison) to identify dialog worksheets. The result is written to the console and the file can be saved.
-// Keywords: Aspose.Cells | C# | .NET | IsDialogSheet | dialog sheet detection | SheetType.Dialog | worksheet type check | identify dialog worksheet | Aspose.Cells example
-// Common Searches: Aspose.Cells IsDialogSheet C# example | how to detect dialog sheet in Aspose.Cells | check worksheet type Aspose.Cells .NET | identify dialog worksheets using Aspose.Cells | IsDialogSheet property usage
-// Developer Intent: Find out whether a given worksheet is a dialog sheet.
-// Use Cases: Skip dialog sheets while exporting data from a workbook. | Apply custom formatting only to dialog worksheets. | Validate workbook structure by confirming the presence of dialog sheets before publishing.
-// AI Prompts: Write C# code that iterates through all worksheets in an Aspose.Cells workbook and prints the worksheet name with a true/false IsDialogSheet flag. | Show how to exclude dialog sheets when copying data between two Aspose.Cells workbooks in .NET. | Provide an example that logs the names of every dialog sheet in a workbook using Aspose.Cells for C#.
+// Title: Check each worksheet for dialog sheet type in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells and prints the name and dialog‑sheet status of every worksheet. | Show how to use the Worksheet.Type property together with SheetType.Dialog to filter dialog sheets in a .NET application. | Write a reusable C# method that returns a list of worksheet names that are dialog sheets from a given workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to determine if a worksheet is a dialog sheet | C# code sample for detecting dialog sheets in an Excel workbook with Aspose.Cells | Using SheetType.Dialog enumeration to list dialog worksheets in .NET | Identify dialog sheet type in Excel file using Aspose.Cells library
+// Tags: Aspose.Cells worksheet type detection | C# SheetType.Dialog usage | list dialog sheets Aspose.Cells | Excel dialog sheet identification .NET | filter worksheets by type Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, adds a dialog sheet (SheetType.Dialog), and uses the IsDialogSheet property (or SheetType comparison) to identify dialog worksheets. The result is written to the console and the file can be saved.
+// The example loads 'input.xlsx' with Aspose.Cells, iterates through all worksheets, checks each worksheet's Type against SheetType.Dialog, and prints the worksheet name along with a boolean indicating whether it is a dialog sheet, while handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a dialog sheet to the workbook (Add returns the sheet index)
-            int dialogSheetIndex = workbook.Worksheets.Add(SheetType.Dialog);
-            Worksheet dialogWorksheet = workbook.Worksheets[dialogSheetIndex];
-            dialogWorksheet.Name = "MyDialogSheet";
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Determine whether the worksheet is a dialog sheet
+                bool isDialog = sheet.Type == SheetType.Dialog;
 
-            // The workbook already contains a default worksheet (type Worksheet)
-            Worksheet normalWorksheet = workbook.Worksheets[0];
-
-            // Check whether each worksheet is a dialog sheet using the Type property
-            Console.WriteLine($"{dialogWorksheet.Name} IsDialogSheet: {dialogWorksheet.Type == SheetType.Dialog}");
-            Console.WriteLine($"{normalWorksheet.Name} IsDialogSheet: {normalWorksheet.Type == SheetType.Dialog}");
-
-            // Save the workbook (optional)
-            workbook.Save("DialogSheetCheck.xlsx");
+                // Output the result
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" is a dialog sheet: {isDialog}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

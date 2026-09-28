@@ -1,49 +1,87 @@
-// Title: Set Worksheet Paper Size from a Configuration Map While Loading a Workbook – Aspose.Cells for .NET
-// Description: This C# example shows how to load an Excel file with Aspose.Cells, read a dictionary that maps worksheet names to PaperSizeType values, assign the corresponding page‑setup paper size to each matching sheet, and save the updated workbook.
-// Keywords: Aspose.Cells set worksheet paper size | C# paper size mapping Excel | load workbook change page setup | dictionary based page setup Aspose | configure print settings programmatically | PaperSizeType example | Aspose.Cells LoadOptions
-// Common Searches: how to set different paper sizes for each sheet using Aspose.Cells .NET | apply worksheet name to paper size mapping when loading Excel | C# change page setup paper size per worksheet | Aspose.Cells assign A4 to Sheet1 and Letter to Sheet2 | programmatically update print settings in Excel files
-// Developer Intent: Apply a predefined name‑to‑paper‑size mapping to worksheets during workbook load.
-// Use Cases: Load a template and automatically set A4 for Sheet1, Letter for Sheet2, A3 for Report before distribution. | Generate reports where each worksheet requires a specific print format without manual editing. | Create a utility that reads a JSON or XML config and updates page‑setup settings of existing workbooks.
-// AI Prompts: Write C# code with Aspose.Cells that reads a JSON file containing worksheet‑name to PaperSizeType mappings and applies them during workbook load. | Show how to log worksheet names that are missing from the configuration and skip them gracefully. | Demonstrate using LoadOptions to keep existing page‑setup options while overriding only the paper size for selected sheets.
+// Title: Load an Excel workbook with Aspose.Cells for .NET and set each worksheet's paper size from a JSON configuration file
+// AI Prompts: Read a JSON file that maps worksheet names to paper size strings, convert each string to the PaperSizeType enum, and assign it to the matching worksheet's PageSetup using Aspose.Cells. | Enhance the code to gracefully skip worksheets with missing or invalid paper size entries without throwing exceptions during workbook loading. | After updating the page setup, export the workbook to PDF and save both the modified Excel file and the generated PDF.
+// Common Searches: asp.net set worksheet paper size from json using Aspose.Cells | how to map sheet names to PaperSizeType enum in C# Aspose.Cells | load excel file and apply different page sizes per sheet based on a config file | Aspose.Cells change page setup for each worksheet programmatically | c# read json configuration and set worksheet page setup Aspose.Cells
+// Tags: set worksheet paper size Aspose.Cells | json driven page setup .NET | parse PaperSizeType enum C# | apply per-sheet page setup Aspose.Cells | load workbook modify page setup Aspose.Cells | export workbook to PDF after page setup
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
+using Aspose.Cells.Drawing; // For PaperSizeType enum
 
-namespace AsposeCellsPaperSizeMapping
+// The example reads a JSON file containing worksheet‑to‑paper‑size mappings, loads an Excel workbook with Aspose.Cells, iterates through each worksheet, parses the size string into the PaperSizeType enum, applies it to the sheet's PageSetup, and saves the updated workbook (optionally exporting to PDF).
+class Program
 {
-    // This C# example shows how to load an Excel file with Aspose.Cells, read a dictionary that maps worksheet names to PaperSizeType values, assign the corresponding page‑setup paper size to each matching sheet, and save the updated workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Configuration mapping: worksheet name -> desired paper size
-            var sheetPaperSizes = new Dictionary<string, PaperSizeType>(StringComparer.OrdinalIgnoreCase)
+            // Path to configuration file that maps worksheet names to paper size names
+            string configPath = "config.json";
+            if (!File.Exists(configPath))
             {
-                { "Sheet1", PaperSizeType.PaperA4 },
-                { "Sheet2", PaperSizeType.PaperLetter },
-                { "Report", PaperSizeType.PaperA3 }
-                // Add more mappings as needed
-            };
+                Console.WriteLine($"Configuration file not found: {configPath}");
+                return;
+            }
 
-            // Create load options (default settings)
-            LoadOptions loadOptions = new LoadOptions();
+            // Deserialize the JSON mapping (e.g., { "Sheet1": "A4", "Report": "Legal" })
+            var json = File.ReadAllText(configPath);
+            var paperSizeMap = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-            // Apply paper size to each worksheet based on the configuration mapping
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Path to the input workbook
+            string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
             {
-                if (sheetPaperSizes.TryGetValue(ws.Name, out PaperSizeType size))
+                Console.WriteLine($"Input workbook not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // Apply paper sizes based on the configuration
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (paperSizeMap.TryGetValue(sheet.Name, out string sizeName))
                 {
-                    // Set the paper size for the current worksheet
-                    ws.PageSetup.PaperSize = size;
+                    // Try to parse the paper size name to the Aspose.Cells PaperSizeType enum (case‑insensitive)
+                    if (Enum.TryParse(sizeName, ignoreCase: true, out PaperSizeType paperSize))
+                    {
+                        sheet.PageSetup.PaperSize = paperSize;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Warning: '{sizeName}' is not a valid PaperSize for worksheet '{sheet.Name}'.");
+                    }
                 }
             }
 
             // Save the modified workbook
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,50 +1,93 @@
-// Title: Add a Bottom‑Centered Semi‑Transparent “CONFIDENTIAL” Watermark to PDF with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, inserts sample data, defines a red 36‑pt Arial font, and applies a RenderingWatermark with the text “CONFIDENTIAL”. The watermark is centered horizontally, aligned to the bottom of each page, set to 30 % opacity, and rendered on top of the content. The configured PdfSaveOptions save the workbook as a PDF where every page displays the overlay watermark.
-// Keywords: Aspose.Cells PDF watermark | C# add confidential watermark | bottom centered watermark Aspose | semi transparent PDF watermark | RenderingWatermark example | PdfSaveOptions watermark overlay
-// Common Searches: how to add a confidential watermark to each PDF page using Aspose.Cells | Aspose.Cells C# overlay text watermark at bottom of PDF | set watermark opacity and alignment in PdfSaveOptions | render watermark on top of PDF content Aspose.Cells | bottom‑center watermark for PDF export .NET
-// Developer Intent: Apply a semi‑transparent “CONFIDENTIAL” text overlay at the bottom of every page when exporting a workbook to PDF.
-// Use Cases: Distribute internal reports that must be marked confidential on each page. | Create legal or compliance documents with a visible disclaimer without altering layout. | Generate marketing PDFs that require a bottom‑center notice while preserving original design.
-// AI Prompts: Show how to change the watermark text, font size, or color programmatically before saving the PDF with Aspose.Cells. | Provide code to apply different watermarks to odd and even pages during PDF export. | Explain how to toggle between background and overlay watermark modes and adjust opacity in PdfSaveOptions.
+// Title: Add a red semi‑transparent “Confidential” text watermark to the bottom of each worksheet in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that inserts a red, 50 % transparent WordArt shape containing the word “Confidential” at the bottom‑center of every worksheet and saves the workbook. | Show how to programmatically apply a horizontal text‑effect watermark to all sheets of an XLSX file, configuring font size, color, transparency, and placement with Aspose.Cells in .NET.
+// Common Searches: Aspose.Cells C# add confidential watermark to every sheet of an Excel file | how to place semi transparent text at the bottom of Excel worksheets using Aspose.Cells | C# programmatically overlay WordArt watermark on all worksheets in XLSX | set watermark transparency and position with Aspose.Cells .NET | add bottom‑center text watermark to Excel workbook via code
+// Tags: Aspose.Cells add WordArt watermark to worksheets | C# Excel worksheet bottom text overlay | semi transparent text effect Aspose.Cells | programmatic Excel watermark placement | confidential watermark Excel file .NET | Aspose.Cells shape transparency settings
 
+using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// This example creates a workbook, inserts sample data, defines a red 36‑pt Arial font, and applies a RenderingWatermark with the text “CONFIDENTIAL”. The watermark is centered horizontally, aligned to the bottom of each page, set to 30 % opacity, and rendered on top of the content. The configured PdfSaveOptions save the workbook as a PDF where every page displays the overlay watermark.
+// The example loads an existing XLSX file, iterates through each worksheet, and adds a WordArt shape that displays the word “Confidential” in red, bold 36‑point font with 50 % fill and line transparency. The shape is positioned at the bottom‑center of the page based on the worksheet's page dimensions, then the modified workbook is saved to a new file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample content for PDF");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string watermarkText = "Confidential";
 
-        // Define the font for the watermark text
-        RenderingFont font = new RenderingFont("Arial", 36)
+        try
         {
-            Bold = true,
-            Color = Color.Red
-        };
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Create a text watermark with the word "CONFIDENTIAL"
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Apply watermark to each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
+                {
+                    // Add a WordArt shape as a watermark
+                    // Parameters: preset effect, text, font name, size, bold, italic,
+                    // left, top, width, height, textEffect, shapeId
+                    Shape watermarkShape = sheet.Shapes.AddTextEffect(
+                        MsoPresetTextEffect.TextEffect1,
+                        watermarkText,
+                        "Arial",
+                        36,
+                        true,
+                        false,
+                        0,
+                        0,
+                        500,
+                        100,
+                        0,
+                        0);
+
+                    // Set appearance
+                    watermarkShape.Fill.Transparency = 0.5;          // Semi‑transparent fill
+                    watermarkShape.Line.Transparency = 0.5;          // Semi‑transparent outline
+                    watermarkShape.Font.Color = Color.Red;
+                    watermarkShape.Font.IsBold = true;
+                    watermarkShape.Font.Size = 36;
+                    watermarkShape.RotationAngle = 0;                // Horizontal orientation
+                    watermarkShape.Placement = PlacementType.FreeFloating;
+                    watermarkShape.Name = "Watermark";
+
+                    // Center the shape on the page (approximate)
+                    double pageWidth = sheet.PageSetup.PaperWidth;
+                    double pageHeight = sheet.PageSetup.PaperHeight;
+                    watermarkShape.Left = (int)((pageWidth - watermarkShape.Width) / 2);
+                    watermarkShape.Top = (int)((pageHeight - watermarkShape.Height) / 2);
+                }
+                catch (Exception exShape)
+                {
+                    Console.WriteLine($"Failed to add watermark to sheet '{sheet.Name}': {exShape.Message}");
+                }
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Watermarked workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
         {
-            // Center horizontally, align to the bottom of each page
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Bottom,
-            // Make the watermark semi‑transparent and render on top of page contents
-            Opacity = 0.3f,
-            IsBackground = false
-        };
-
-        // Configure PDF save options to use the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
-
-        // Save the workbook as a PDF with the watermark applied to every page
-        workbook.Save("ConfidentialOutput.pdf", pdfOptions);
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

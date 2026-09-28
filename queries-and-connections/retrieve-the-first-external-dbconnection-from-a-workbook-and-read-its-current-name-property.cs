@@ -1,55 +1,46 @@
-// Title: Get the First DBConnection Name from an Excel Workbook with Aspose.Cells for .NET
-// Description: Loads a workbook, accesses its DataConnections collection, verifies the presence of at least one connection, casts the first item to DBConnection, reads the Name property, prints it to the console, and optionally saves the file.
-// Keywords: Aspose.Cells DBConnection name | read external connection .NET | first data connection Excel | retrieve DBConnection Name property | Aspose.Cells external connections example
-// Common Searches: Aspose.Cells get first DBConnection name | read external DBConnection property C# | how to access workbook data connections Aspose | retrieve connection name from Excel file using Aspose.Cells
-// Developer Intent: Extract the Name value of the initial DBConnection defined in an Excel workbook.
-// Use Cases: Log the connection identifier for troubleshooting before data import. | Validate that a workbook references the expected database by comparing the retrieved name. | Show the source connection name in a UI to inform end‑users about the linked database.
-// AI Prompts: Generate C# code that iterates through all DBConnection objects in a workbook and outputs each Name. | Demonstrate how to rename a DBConnection after reading its current Name and then save the workbook. | Create robust error handling for missing connections or non‑DBConnection types when accessing workbook.DataConnections.
+// Title: Retrieve the Name of the first DBConnection from an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file with Aspose.Cells, get the workbook's DataConnections collection, cast the first connection to DBConnection, and output its Name property. | Check whether the first external connection in a workbook is a DBConnection and, if so, print its Name value. | Iterate the workbook's external connections, identify the first DBConnection, and retrieve its Name attribute using C#.
+// Common Searches: Aspose.Cells C# get name of first database connection in workbook | How to read DBConnection Name property from Excel file using Aspose.Cells .NET | Retrieve external data connection name from .xlsx with Aspose.Cells API
+// Tags: read DBConnection Name Aspose.Cells .NET | cast first external connection to DBConnection C# | workbook DataConnections enumeration Aspose.Cells | extract database connection identifier from Excel file | manage external data connections Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsDemo
+// The example loads an existing .xlsx workbook with Aspose.Cells, accesses its DataConnections collection, verifies that the first external connection is a DBConnection, reads the connection's Name property, prints it to the console, and optionally saves the workbook.
+class Program
 {
-    // Loads a workbook, accesses its DataConnections collection, verifies the presence of at least one connection, casts the first item to DBConnection, reads the Name property, prints it to the console, and optionally saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (provide the correct file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the collection of external connections
+        ExternalConnectionCollection connections = workbook.DataConnections;
+
+        if (connections.Count > 0)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Retrieve the first external connection
+            ExternalConnection firstConnection = connections[0];
 
-            // Access the collection of external data connections
-            ExternalConnectionCollection connections = workbook.DataConnections;
-
-            // Ensure there is at least one connection
-            if (connections.Count > 0)
+            // Verify that the connection is a DBConnection
+            if (firstConnection is DBConnection dbConnection)
             {
-                // Retrieve the first connection
-                ExternalConnection externalConn = connections[0];
-
-                // Check if the connection is a DBConnection
-                if (externalConn is DBConnection dbConn)
-                {
-                    // Read the Name property of the DBConnection
-                    string connectionName = dbConn.Name;
-
-                    // Output the name to the console
-                    Console.WriteLine("First DBConnection Name: " + connectionName);
-                }
-                else
-                {
-                    Console.WriteLine("The first connection is not a DBConnection.");
-                }
+                // Read the Name property of the DBConnection
+                string connectionName = dbConnection.Name;
+                Console.WriteLine("First DBConnection Name: " + connectionName);
             }
             else
             {
-                Console.WriteLine("No external connections found in the workbook.");
+                Console.WriteLine("The first connection is not a DBConnection. Type: " + firstConnection.GetType().Name);
             }
-
-            // Save the workbook (optional, but follows lifecycle rules)
-            workbook.Save("output.xlsx");
         }
+        else
+        {
+            Console.WriteLine("No external connections found in the workbook.");
+        }
+
+        // Save the workbook (optional, adjust the path as needed)
+        workbook.Save("output.xlsx");
     }
 }

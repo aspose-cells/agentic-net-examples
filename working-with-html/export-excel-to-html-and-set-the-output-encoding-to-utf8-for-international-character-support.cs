@@ -1,33 +1,39 @@
-// Title: Export Excel to UTF‑8 HTML using Aspose.Cells for .NET
-// Description: Demonstrates how to save a Workbook as an HTML file with UTF‑8 encoding via HtmlSaveOptions, ensuring Japanese and other Unicode characters render correctly.
-// Keywords: Aspose.Cells HTML export | UTF-8 encoding C# | HtmlSaveOptions Encoding | multilingual Excel to HTML | .NET spreadsheet to web | Unicode Excel export
-// Common Searches: Aspose.Cells export HTML UTF-8 | C# save workbook as HTML with Unicode | HtmlSaveOptions set encoding Aspose | convert Excel to HTML multilingual | UTF-8 HTML output Aspose.Cells
-// Developer Intent: Generate an HTML version of an Excel workbook that preserves international characters by applying UTF‑8 encoding.
-// Use Cases: Publish Excel‑based reports on multilingual websites without garbled text. | Create email‑ready HTML previews of spreadsheets containing Japanese, Arabic, or other non‑Latin scripts. | Automate batch conversion of Excel templates to web‑friendly HTML for global audiences.
-// AI Prompts: Provide C# code that loads an existing .xlsx, sets HtmlSaveOptions.Encoding to UTF‑8, and saves it as HTML with Aspose.Cells. | Explain how to test that the generated HTML correctly displays Japanese characters after applying UTF‑8 encoding. | Show how to add custom CSS to the HTML export while keeping UTF‑8 encoding for Unicode text.
+// Title: Export an Excel workbook to a single UTF-8 encoded HTML file with grid lines using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file and saves it as a UTF-8 HTML document with grid lines using Aspose.Cells. | Demonstrate how to set HtmlSaveOptions.Encoding to UTF-8 and export the full workbook as one HTML page. | Show a complete example that configures HtmlSaveOptions to include grid lines and produces a single UTF-8 HTML output.
+// Common Searches: how to save an Excel workbook as UTF-8 HTML with Aspose.Cells in C# | Aspose.Cells export full workbook to one HTML file including grid lines | set HTML output encoding to UTF-8 using HtmlSaveOptions Aspose.Cells | C# generate single-page HTML from .xlsx with international characters | export Excel to HTML preserving Unicode characters Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions UTF-8 | C# export Excel to single HTML page | include grid lines in HTML export Aspose.Cells | full workbook HTML conversion Aspose.Cells | Unicode support HTML output Aspose.Cells
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-// Demonstrates how to save a Workbook as an HTML file with UTF‑8 encoding via HtmlSaveOptions, ensuring Japanese and other Unicode characters render correctly.
-class ExportExcelToHtmlUtf8
+namespace ExcelToHtmlExport
 {
-    static void Main()
+    // Loads an .xlsx workbook, configures HtmlSaveOptions with Encoding = Encoding.UTF8, enables ExportGridLines and full‑workbook export, then saves the result as a single UTF-8 HTML file using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            // Load the source Excel workbook
+            // Replace "input.xlsx" with the path to your Excel file
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Add sample data containing international characters
-        workbook.Worksheets[0].Cells["A1"].PutValue("こんにちは世界"); // Japanese greeting
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                // Set the output encoding to UTF-8 for proper international character support
+                Encoding = Encoding.UTF8,
 
-        // Initialize HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+                // Optional: Export the entire workbook as a single HTML file
+                ExportActiveWorksheetOnly = false,
 
-        // Set the output encoding to UTF‑8 for proper character support
-        saveOptions.Encoding = Encoding.UTF8;
+                // Optional: Export grid lines and other formatting as needed
+                ExportGridLines = true
+            };
 
-        // Export the workbook to HTML using the configured options
-        workbook.Save("output.html", saveOptions);
+            // Save the workbook as an HTML file with the specified encoding
+            // Replace "output.html" with the desired output path
+            workbook.Save("output.html", saveOptions);
+        }
     }
 }

@@ -1,55 +1,59 @@
-// Title: Copy values to a range three columns left using Range.Offset in Aspose.Cells for .NET
-// Description: Demonstrates creating a workbook, defining a source range, offsetting it three columns left with Range.GetOffset(0, -3), copying values via CopyValue, and saving the file.
-// Keywords: Aspose.Cells Range.Offset example | CopyValue with offset range | C# Aspose.Cells move data left | Range.GetOffset negative column | Aspose.Cells .NET tutorial
-// Common Searches: Aspose.Cells copy range three columns left | Range.GetOffset usage C# | How to shift a range left in Aspose.Cells | CopyValue offset range example | Aspose.Cells offset range tutorial
-// Developer Intent: Create an offset range three columns left of an existing range and copy the original values into it.
-// Use Cases: Generate a summary column adjacent to a data table by shifting values left. | Create a side‑by‑side copy of a table for comparison in a report. | Populate legacy columns with the same data as a newly added table.
-// AI Prompts: Write C# code that uses Aspose.Cells to copy a range to a location three columns left using Range.GetOffset and CopyValue. | Explain how Range.GetOffset handles negative column offsets and how to match the size of the offset range with the source range. | Provide a step‑by‑step guide to create a source range, offset it, copy its values, and save the workbook using Aspose.Cells for .NET.
+// Title: Offset a range three columns to the left and copy its values using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to create a new range three columns left of an existing range and copy the original values into it. | Demonstrate how to check for a negative column index, offset a worksheet range by -3 columns, and duplicate the range data with the Aspose.Cells Range.Copy method.
+// Common Searches: Aspose.Cells C# offset a range three columns left and copy data | How to duplicate an Excel range to another location with Aspose.Cells for .NET | Create a range with the same size at a different column index using Aspose.Cells | Prevent out‑of‑bounds column index when offsetting ranges in Aspose.Cells | Copy values from one worksheet range to another using Aspose.Cells Range.Copy
+// Tags: range offset columns Aspose.Cells | copy range values Aspose.Cells C# | create range same dimensions Aspose.Cells | negative column index handling Aspose.Cells | excel workbook manipulation .NET Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsOffsetExample
+// The program loads 'input.xlsx', defines a source range (e.g., B2:D4), creates a new range three columns to the left (ensuring the column index stays non‑negative), copies the source values into the offset range, and saves the result as 'output.xlsx' using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates creating a workbook, defining a source range, offsetting it three columns left with Range.GetOffset(0, -3), copying values via CopyValue, and saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate a source range (e.g., D5:F7) with sample data
-                AsposeRange sourceRange = cells.CreateRange("D5", "F7");
-                for (int i = 0; i < sourceRange.RowCount; i++)
-                {
-                    for (int j = 0; j < sourceRange.ColumnCount; j++)
-                    {
-                        sourceRange[i, j].PutValue($"R{i + 5}C{j + 4}");
-                    }
-                }
-
-                // Get a new range that is three columns to the left of the source range
-                // Row offset = 0 (same rows), Column offset = -3 (three columns left)
-                AsposeRange offsetRange = sourceRange.GetOffset(0, -3);
-
-                // Copy the values from the source range to the offset range
-                offsetRange.CopyValue(sourceRange);
-
-                // Save the workbook
-                string outputPath = "OffsetCopyDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the original range (example: B2:D4)
+            AsposeRange originalRange = sheet.Cells.CreateRange("B2", "D4");
+
+            // Calculate the offset position (three columns to the left)
+            int offsetRow = originalRange.FirstRow;
+            int offsetColumn = originalRange.FirstColumn - 3;
+            if (offsetColumn < 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Offset results in a negative column index. Operation aborted.");
+                return;
             }
+
+            // Create a new range at the offset position with the same size as the original range
+            AsposeRange offsetRange = sheet.Cells.CreateRange(offsetRow, offsetColumn, originalRange.RowCount, originalRange.ColumnCount);
+
+            // Copy the values from the original range to the offset range
+            offsetRange.Copy(originalRange);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

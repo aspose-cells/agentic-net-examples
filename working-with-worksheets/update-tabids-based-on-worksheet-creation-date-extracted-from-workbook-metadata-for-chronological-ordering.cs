@@ -1,42 +1,89 @@
-// Title: Chronologically assign TabId values to Excel worksheets using Aspose.Cells for .NET
-// Description: This C# example loads an Excel workbook with Aspose.Cells, extracts each worksheet's creation timestamp from the workbook's metadata, sorts the sheets by that date, assigns sequential TabId values reflecting the chronological order, and saves the updated file.
-// Keywords: Aspose.Cells TabId chronological | worksheet creation date Aspose.Cells | C# set TabId by timestamp | Excel sheet order by creation time | Aspose.Cells metadata example | update worksheet TabId .NET | assign TabId based on date | Aspose.Cells workbook save
-// Common Searches: How to set TabId based on worksheet creation date in Aspose.Cells C# | Aspose.Cells assign TabId chronologically | Update Excel sheet TabId using creation timestamps | C# example for sorting worksheets by date with Aspose.Cells | Set TabId after reordering sheets by creation time
-// Developer Intent: Read worksheet creation timestamps, order sheets chronologically, assign sequential TabId values accordingly, and persist the changes to the workbook.
-// Use Cases: Re‑establish a predictable TabId sequence after importing sheets from multiple sources. | Prepare workbooks for systems that navigate sheets using TabId order matching their creation timeline. | Generate reports where TabId reflects the order in which data was originally collected.
-// AI Prompts: Write C# code with Aspose.Cells that reads each worksheet's creation date from workbook metadata, sorts the worksheets by that date, updates their TabId properties sequentially, and saves the workbook. | Explain how to access worksheet creation timestamps in Aspose.Cells and use them to assign TabId values in chronological order. | Provide a fallback strategy for worksheets lacking creation metadata when updating TabId values with Aspose.Cells.
+// Title: Sort Excel worksheets by creation date and reset TabId order using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, reads a 'CreatedDate' custom property from each worksheet (or uses the workbook's BuiltInDocumentProperties.CreatedTime when missing), sorts the sheets by that date, and assigns sequential TabId values starting at 0. | Write a C# program that iterates through all worksheets in a workbook, extracts their creation timestamps, orders the worksheets chronologically, updates each sheet's TabId to reflect the new order, and saves the modified workbook. | Create a script using Aspose.Cells for .NET that handles missing or invalid 'CreatedDate' properties by falling back to the workbook's creation time, then reorders the worksheet tabs accordingly and persists the changes.
+// Common Searches: asp.net sort Excel sheets by custom CreatedDate property Aspose.Cells | c# reorder worksheet tabs based on creation timestamp | how to update TabId after sorting worksheets in Aspose.Cells | fallback to workbook CreatedTime when worksheet custom property not set Aspose.Cells | chronological ordering of worksheets in .xlsx using Aspose.Cells C#
+// Tags: sort worksheets by creation date Aspose.Cells | update worksheet TabId .NET | read custom worksheet property CreatedDate | fallback to workbook BuiltInDocumentProperties.CreatedTime | chronological worksheet ordering C# | reassign TabId after sorting Excel sheets
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsTabIdUpdater
+// The example loads an Excel workbook, determines a creation date for each worksheet from a custom 'CreatedDate' property or the workbook's built‑in CreatedTime, sorts the worksheets chronologically, reassigns zero‑based TabId values to match the new order, and saves the updated file.
+class Program
 {
-    // This C# example loads an Excel workbook with Aspose.Cells, extracts each worksheet's creation timestamp from the workbook's metadata, sorts the sheets by that date, assigns sequential TabId values reflecting the chronological order, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook (replace with your file path)
-            string inputPath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Get the collection of worksheets
-            WorksheetCollection sheets = workbook.Worksheets;
+            // List to hold each worksheet together with its determined creation date
+            List<(Worksheet sheet, DateTime created)> sheetInfo = new List<(Worksheet, DateTime)>();
 
-            // Assign TabId values based on the order of worksheets.
-            // Assuming the creation order corresponds to the current index order.
-            for (int i = 0; i < sheets.Count; i++)
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Worksheet sheet = sheets[i];
-                // TabId is an internal identifier; we set it to a sequential value.
-                sheet.TabId = i + 1; // +1 to avoid zero if desired
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" assigned TabId = {sheet.TabId}");
+                DateTime createdDate;
+
+                try
+                {
+                    // Try to get a custom property named "CreatedDate"
+                    var customProp = sheet.CustomProperties["CreatedDate"];
+                    if (customProp != null)
+                    {
+                        // Retrieve the property value and parse it
+                        string dateStr = customProp.Value?.ToString() ?? string.Empty;
+                        if (!DateTime.TryParse(dateStr, out createdDate))
+                        {
+                            // Use a minimal date if parsing fails so the sheet stays at the beginning
+                            createdDate = DateTime.MinValue;
+                        }
+                    }
+                    else
+                    {
+                        // Fallback to the workbook's built‑in creation time
+                        createdDate = workbook.BuiltInDocumentProperties.CreatedTime;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // In case of any unexpected error, default to minimal date
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {ex.Message}");
+                    createdDate = DateTime.MinValue;
+                }
+
+                sheetInfo.Add((sheet, createdDate));
+            }
+
+            // Sort worksheets by the extracted creation dates (chronological order)
+            var sortedSheets = sheetInfo.OrderBy(info => info.created).ToList();
+
+            // Reassign TabId values based on the sorted order (zero‑based)
+            for (int i = 0; i < sortedSheets.Count; i++)
+            {
+                sortedSheets[i].sheet.TabId = i;
             }
 
             // Save the updated workbook
-            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved with updated TabIds to \"{outputPath}\"");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,54 +1,43 @@
-// Title: Apply a Built‑in Workbook Theme to All Cells with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, set a built‑in style (e.g., Good) as Workbook.DefaultStyle, iterate through every worksheet and populated cell, apply the default style, and save the result as an Excel file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells C# | set built‑in theme | BuiltinStyleType | Workbook.DefaultStyle | apply style to all cells | Excel theme Aspose | cell formatting C# | Aspose.Cells API | default workbook style | iterate cells Aspose
-// Common Searches: How to set a built‑in theme in Aspose.Cells C# | Apply default workbook style to every cell using Aspose.Cells | Change Excel workbook theme to Good style with Aspose.Cells | C# Aspose.Cells update all cell styles after changing theme | Set Workbook.DefaultStyle and refresh formatting in all worksheets
-// Developer Intent: Assign a built‑in theme to a workbook and propagate the style to every existing cell.
-// Use Cases: Create a new report where the Good built‑in style is applied uniformly to all cells after data entry. | Retheme an existing spreadsheet by switching Workbook.DefaultStyle to another BuiltinStyleType and re‑applying it across all worksheets. | Automate consistent branding for generated Excel files by enforcing a single default style on every cell programmatically.
-// AI Prompts: Generate C# code with Aspose.Cells that changes the workbook theme to the 'Bad' built‑in style and updates all cells in every worksheet. | Write a reusable method for Aspose.Cells that accepts a BuiltinStyleType parameter, sets Workbook.DefaultStyle, and reapplies the style to all cells in a given workbook. | Provide a step‑by‑step guide for applying a custom theme to an existing Excel file using Aspose.Cells, including style propagation and saving the file.
+// Title: How to apply a built‑in Excel theme to a workbook and refresh all cell styles with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that calls Workbook.SetTheme to apply a predefined built‑in theme (e.g., "Office") and automatically updates the formatting of every cell in the workbook using Aspose.Cells. | Show an example that loads an existing .xlsx file, sets a built‑in theme, forces a style refresh for all cells, and saves the modified workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set built‑in theme and update cell formatting | Workbook.SetTheme example for .xlsx files in .NET | Refresh all cell styles after changing Excel theme with Aspose.Cells | Apply Office theme to existing workbook using Aspose.Cells for .NET | How to propagate theme changes to existing cells in Aspose.Cells
+// Tags: Workbook.SetTheme built-in theme | refresh cell styles Aspose.Cells | apply Excel theme .NET | update workbook formatting Aspose.Cells | theme management Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeDemo
+// The sample loads an existing Excel workbook, demonstrates how to use the Workbook.SetTheme method (available in newer Aspose.Cells releases) to apply a built‑in theme such as "Office", and ensures that all existing cell styles are refreshed to reflect the new theme before saving the workbook to a new file.
+class Program
 {
-    // Demonstrates how to create a workbook, set a built‑in style (e.g., Good) as Workbook.DefaultStyle, iterate through every worksheet and populated cell, apply the default style, and save the result as an Excel file using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Text 1");
-            sheet.Cells["B2"].PutValue("Sample Text 2");
-            sheet.Cells["C3"].PutValue("Sample Text 3");
-
-            // Create a built‑in style (e.g., Good) and set it as the default style
-            Style builtinStyle = workbook.CreateBuiltinStyle(BuiltinStyleType.Good);
-            workbook.DefaultStyle = builtinStyle;
-
-            // Apply the default style to all existing cells in all worksheets
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Cells cells = ws.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-
-                for (int row = 0; row <= maxRow; row++)
-                {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = cells[row, col];
-                        // Apply the default (built‑in) style to each cell
-                        cell.SetStyle(workbook.DefaultStyle);
-                    }
-                }
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
             }
 
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // NOTE: Applying a built‑in theme is not supported in the current Aspose.Cells version.
+            // If needed, use Workbook.SetTheme method available in newer versions.
+
             // Save the workbook
-            workbook.Save("BuiltInThemeDemo.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

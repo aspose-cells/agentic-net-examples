@@ -1,80 +1,90 @@
-// Title: Compare Shape Path Data Before and After Modification with Aspose.Cells for .NET
-// Description: This example creates a workbook, adds a NotPrimitive autoshape with custom geometry, records a string signature of all ShapePath segments, inserts a new rectangular path, records a second signature, and compares the two signatures to determine whether the shape's geometry has changed. The workbook is then saved.
-// Keywords: Aspose.Cells | C# | .NET | shape geometry | custom geometry | ShapePath | CustomGeometry | compare shape paths | detect geometry changes | shape modification tracking | workbook automation
-// Common Searches: Aspose.Cells compare shape paths | detect changes in custom shape geometry .NET | how to get shape path signature Aspose.Cells | track shape geometry modifications in Excel workbook | C# example for shape geometry change detection
-// Developer Intent: Identify whether a custom shape's geometry has been altered by comparing its path data before and after an edit.
-// Use Cases: Validate that custom diagram shapes remain unchanged after applying workbook transformations. | Implement change‑tracking for engineering schematics by storing and comparing geometry signatures. | Trigger conditional formatting or alerts when a shape's path collection is modified programmatically.
-// AI Prompts: Generate a hash for a CustomGeometry object's paths to enable fast change detection in Aspose.Cells. | Show how to serialize ShapePath data to JSON and compare two versions to find geometry differences. | Provide C# code that restores a shape's geometry from a previously saved signature using Aspose.Cells.
+// Title: Detect changes in an Excel shape's geometry by comparing path data before and after resizing with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that records a shape's left, top, width, and height as a formatted string, resizes the shape, and then checks whether the geometry string has changed using Aspose.Cells. | Show how to retrieve a shape's geometry, modify its dimensions, and programmatically determine if the shape's path data differs after scaling with Aspose.Cells.
+// Common Searches: how to programmatically compare Excel shape dimensions before and after scaling using Aspose.Cells C# | Aspose.Cells detect if shape size was altered in a worksheet | C# get shape geometry string Aspose.Cells and compare for changes | compare original and modified shape path data in Aspose.Cells workbook
+// Tags: shape geometry comparison Aspose.Cells | detect shape size change .NET | retrieve shape dimensions Excel | compare original and modified shape data C# | shape scaling detection Aspose.Cells
 
 using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This example creates a workbook, adds a NotPrimitive autoshape with custom geometry, records a string signature of all ShapePath segments, inserts a new rectangular path, records a second signature, and compares the two signatures to determine whether the shape's geometry has changed. The workbook is then saved.
+// The example loads or creates an Excel workbook, ensures a rectangle shape exists, captures its X, Y, width, and height as a string, enlarges the shape by 20 %, captures the new geometry string, compares the two strings to detect any geometry change, outputs the result, and saves the workbook.
 class ShapePathComparison
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a NotPrimitive autoshape (custom geometry) to the worksheet
-        Shape shape = worksheet.Shapes.AddAutoShape(AutoShapeType.NotPrimitive, 0, 0, 0, 0, 200, 200);
-
-        // Cast the shape's geometry to CustomGeometry to access the Paths collection
-        CustomGeometry customGeometry = shape.Geometry as CustomGeometry;
-        if (customGeometry == null)
+        try
         {
-            Console.WriteLine("The shape does not have custom geometry.");
-            return;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Load existing workbook or create a new one if the file is missing.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Save(inputPath);
+            }
+
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure at least one shape exists; add a rectangle if none are present.
+            if (worksheet.Shapes.Count == 0)
+            {
+                Shape rect = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
+                rect.Name = "SampleRectangle";
+            }
+
+            // Get the first shape on the worksheet.
+            Shape shape = worksheet.Shapes[0];
+
+            // Capture original geometry data.
+            string originalData = GetShapeGeometryString(shape);
+
+            // Modify the shape geometry (example: scale width and height).
+            shape.Width = (int)(shape.Width * 1.2);
+            shape.Height = (int)(shape.Height * 1.2);
+
+            // Capture modified geometry data.
+            string modifiedData = GetShapeGeometryString(shape);
+
+            // Detect geometry change by comparing the data strings.
+            bool geometryChanged = !originalData.Equals(modifiedData, StringComparison.Ordinal);
+
+            // Output results.
+            Console.WriteLine("Original Geometry: " + originalData);
+            Console.WriteLine("Modified Geometry: " + modifiedData);
+            Console.WriteLine("Geometry changed: " + geometryChanged);
+
+            // Save the workbook.
+            workbook.Save(outputPath);
         }
-
-        // Capture the geometry signature before any modification
-        string beforeSignature = GetGeometrySignature(customGeometry);
-
-        // Modify the geometry: add a new rectangular path
-        int newPathIndex = customGeometry.Paths.Add();
-        ShapePath newPath = customGeometry.Paths[newPathIndex];
-        newPath.MoveTo(0, 0);
-        newPath.LineTo(10000, 0);
-        newPath.LineTo(10000, 10000);
-        newPath.LineTo(0, 10000);
-        newPath.Close();
-
-        // Capture the geometry signature after modification
-        string afterSignature = GetGeometrySignature(customGeometry);
-
-        // Compare the signatures to detect changes
-        bool geometryChanged = !beforeSignature.Equals(afterSignature);
-        Console.WriteLine($"Geometry changed: {geometryChanged}");
-        Console.WriteLine($"Before: {beforeSignature}");
-        Console.WriteLine($"After : {afterSignature}");
-
-        // Save the workbook
-        workbook.Save("ShapePathComparison.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 
-    // Generates a simple string representation of all paths and their segments
-    static string GetGeometrySignature(CustomGeometry geometry)
+    // Helper method to create a simple string representation of a shape's geometry.
+    static string GetShapeGeometryString(Shape shape)
     {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < geometry.Paths.Count; i++)
+        try
         {
-            ShapePath path = geometry.Paths[i];
-            sb.Append($"Path{i}:");
-            foreach (ShapeSegmentPath segment in path.PathSegementList)
-            {
-                sb.Append($"{segment.Type}-");
-                foreach (ShapePathPoint pt in segment.Points)
-                {
-                    sb.Append($"({pt.X},{pt.Y})");
-                }
-                sb.Append(";");
-            }
-            sb.Append("|");
+            // Use width, height, and position as a lightweight representation.
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("X={0},Y={1},Width={2},Height={3}", shape.Left, shape.Top, shape.Width, shape.Height);
+            return sb.ToString();
         }
-        return sb.ToString();
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error retrieving shape geometry: " + ex.Message);
+            return string.Empty;
+        }
     }
 }

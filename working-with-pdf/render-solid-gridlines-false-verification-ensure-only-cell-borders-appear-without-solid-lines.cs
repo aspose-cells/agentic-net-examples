@@ -1,76 +1,82 @@
-// Title: C# – Render Excel to PNG with Gridlines Hidden, Showing Only Cell Borders using Aspose.Cells
-// Description: Shows how to build a workbook, apply thin borders, turn off the default gridlines, set GridlineType to Hair, and export the first sheet as a PNG image with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# hide gridlines | render Excel to PNG | gridline type hair | cell borders only | export worksheet image | disable default gridlines | ImageOrPrintOptions Aspose.Cells | C# Excel image export | Aspose.Cells border style | Excel to PNG without gridlines
-// Common Searches: Aspose.Cells hide worksheet gridlines C# | Export Excel sheet to PNG with only borders | GridlineType Hair Aspose.Cells example | C# render Excel as image without solid lines | Apply thin borders to range Aspose.Cells
-// Developer Intent: Create a PNG image of an Excel sheet that displays only the explicitly defined cell borders and no default gridlines.
-// Use Cases: Generating clean table images for web dashboards where Excel gridlines would be distracting. | Producing printable report graphics that rely on custom border styling. | Automated testing to confirm that GridlineType settings suppress solid gridlines in rendered output.
-// AI Prompts: How can I change the border color while keeping gridlines hidden in the PNG export? | Show me the steps to export the same worksheet to PDF with only cell borders visible. | Provide a verification script that checks the rendered PNG contains no solid gridlines.
+// Title: Render an Excel worksheet to PNG with only cell borders (gridlines hidden) using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that turns off worksheet gridlines, adds thin borders to a specific cell range, and saves the sheet as a PNG image using Aspose.Cells. | Show how to set high‑resolution ImageOrPrintOptions and use SheetRender to export a workbook page while preserving only the applied cell borders.
+// Common Searches: how to hide gridlines when exporting Excel to PNG with Aspose.Cells C# | Aspose.Cells render worksheet to image with custom borders only | C# code sample that adds thin cell borders and exports the sheet as a PNG image
+// Tags: disable worksheet gridlines Aspose.Cells | apply thin borders to range Aspose.Cells | render worksheet to PNG Aspose.Cells | high‑resolution image rendering options | SheetRender export image without gridlines
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
-using System.Drawing;
 
 // Alias to avoid conflict with System.Range
 using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to build a workbook, apply thin borders, turn off the default gridlines, set GridlineType to Hair, and export the first sheet as a PNG image with Aspose.Cells for .NET.
-class SolidGridlinesVerification
+namespace RenderGridlinesExampleApp
 {
-    static void Main()
+    // // Demonstrates creating a workbook, applying thin borders to cells A1:B2, disabling gridlines, configuring image options, and rendering the worksheet to a PNG image using Aspose.Cells.
+    class RenderGridlinesExample
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add some sample data
-            worksheet.Cells["A1"].PutValue("Header");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("Item1");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("Item2");
-            worksheet.Cells["B3"].PutValue(20);
-
-            // Define a style that contains thin borders on all sides
-            Style borderStyle = workbook.CreateStyle();
-            borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-
-            // Apply the border style to the range A1:B3
-            StyleFlag flag = new StyleFlag { All = true };
-            AsposeRange range = worksheet.Cells.CreateRange("A1:B3");
-            range.ApplyStyle(borderStyle, flag);
-
-            // Hide the default worksheet gridlines so only the explicit borders are visible
-            worksheet.IsGridlinesVisible = false;
-
-            // Configure rendering options: use a non‑solid gridline type (Hair) to ensure no solid lines appear
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            try
             {
-                ImageType = ImageType.Png,
-                GridlineType = GridlineType.Hair // non‑solid gridline style
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Render the first sheet to an image file
-            SheetRender sheetRender = new SheetRender(worksheet, renderOptions);
-            string imagePath = "BordersOnly.png";
-            sheetRender.ToImage(0, imagePath);
-            Console.WriteLine($"Image saved to: {Path.GetFullPath(imagePath)}");
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Header 1");
+                sheet.Cells["B1"].PutValue("Header 2");
+                sheet.Cells["A2"].PutValue("Data 1");
+                sheet.Cells["B2"].PutValue("Data 2");
 
-            // Save the workbook (optional, for verification)
-            string workbookPath = "BordersOnly.xlsx";
-            workbook.Save(workbookPath);
-            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(workbookPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Apply borders so cells are visible when gridlines are hidden
+                Style borderStyle = workbook.CreateStyle();
+                borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+
+                // Apply the style to the range A1:B2
+                AsposeRange range = sheet.Cells.CreateRange("A1:B2");
+                range.ApplyStyle(borderStyle, new StyleFlag { Borders = true });
+
+                // Hide worksheet gridlines
+                sheet.IsGridlinesVisible = false;
+
+                // Configure rendering options (gridlines already hidden)
+                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+                {
+                    HorizontalResolution = 150,
+                    VerticalResolution = 150
+                };
+
+                // Render the worksheet to an image
+                SheetRender sr = new SheetRender(sheet, renderOptions);
+                string outputPath = "RenderedSheet.png";
+
+                // Ensure any existing file is overwritten safely
+                if (File.Exists(outputPath))
+                {
+                    File.Delete(outputPath);
+                }
+
+                sr.ToImage(0, outputPath);
+
+                // Verify that the file was created
+                if (File.Exists(outputPath))
+                {
+                    Console.WriteLine($"Rendering completed. Check '{outputPath}' for output without solid gridlines.");
+                }
+                else
+                {
+                    Console.WriteLine("Rendering completed, but the output file was not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

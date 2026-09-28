@@ -1,54 +1,65 @@
-// Title: C# – Link a Rectangle Shape to a Worksheet Cell Using Aspose.Cells Shape.LinkedCell
-// Description: Demonstrates how to create a workbook, add a rectangle shape, set its LinkedCell property to "$C$5", verify the link, and save the file as SmartArtLinkedCell.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# shape linked cell | Shape.LinkedCell example | add rectangle shape Aspose.Cells | link shape to cell Excel .NET | Aspose.Cells Shape API | C# Excel shape anchoring
-// Common Searches: Aspose.Cells how to link a shape to a cell | C# set LinkedCell property for rectangle shape | link shape to worksheet cell Aspose.Cells .NET | example of Shape.LinkedCell in C# | anchor shape to cell in Excel using Aspose
-// Developer Intent: Attach a worksheet shape to a specific cell so the shape moves with the cell.
-// Use Cases: Create a visual marker that stays aligned with a key data cell. | Build interactive dashboards where shapes navigate to linked cells. | Generate reports that automatically reposition shapes when rows or columns are inserted.
-// AI Prompts: Generate C# code that adds a SmartArt shape and links it to cell D10 with Aspose.Cells. | Show how to change the value of a linked cell and confirm the shape follows the cell movement. | Provide a sample that links multiple shapes to different cells and saves the workbook.
+// Title: Link a SmartArt shape to a specific worksheet cell using Shape.LinkToCell in Aspose.Cells for .NET (C#)
+// AI Prompts: Add a SmartArt shape to a worksheet and link it to a target cell using Shape.LinkToCell. | Update an existing rectangle shape so that Shape.LinkToCell attaches it to cell B3. | Create a new workbook, insert a SmartArt shape, and use Shape.LinkToCell to associate the shape with cell A1 before saving.
+// Common Searches: Aspose.Cells C# Shape.LinkToCell example for linking a SmartArt shape to cell C5 | How to bind an Excel shape to a specific cell using Aspose.Cells .NET | Shape.LinkToCell method usage to anchor SmartArt to a worksheet cell in C# | Linking shapes to cells with Aspose.Cells API for .NET developers
+// Tags: Shape.LinkToCell C# Aspose.Cells | link SmartArt shape to worksheet cell | bind Excel shape to cell Aspose.Cells .NET | programmatic shape‑cell association Aspose.Cells | set shape anchor using LinkToCell
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartArtLinkExample
+namespace AsposeCellsSmartArtExample
 {
-    // Demonstrates how to create a workbook, add a rectangle shape, set its LinkedCell property to "$C$5", verify the link, and save the file as SmartArtLinkedCell.xlsx with Aspose.Cells for .NET.
+    // The example creates a new Workbook, accesses the first worksheet, adds a rectangle SmartArt shape, links the shape to a target worksheet cell with Shape.LinkToCell, and saves the file as SmartArtLinked.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet.
-                // Parameters: shape type, upper left row, upper left column,
-                //            row offset (pixels), column offset (pixels), height (pixels), width (pixels)
+                // Define position and size for the shape (row, column, height, width)
+                int upperLeftRow = 2;          // Row index (0‑based)
+                int upperLeftColumn = 2;       // Column index (0‑based)
+                int shapeHeight = 200;         // Height in points
+                int shapeWidth = 300;          // Width in points
+
+                // Add a simple rectangle shape (using MsoDrawingType enum)
+                // Parameters: type, upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
                 Shape shape = worksheet.Shapes.AddShape(
-                    MsoDrawingType.Rectangle, // shape type
-                    1,                       // upper left row (zero‑based)
-                    1,                       // upper left column (zero‑based)
-                    0,                       // row offset in pixels
-                    0,                       // column offset in pixels
-                    200,                     // height in pixels
-                    200);                    // width in pixels
+                    MsoDrawingType.Rectangle,
+                    upperLeftRow,
+                    upperLeftColumn,
+                    0,               // row offset
+                    0,               // column offset
+                    shapeHeight,
+                    shapeWidth);
 
-                // Link the shape to cell C5 (A1‑style address)
-                shape.LinkedCell = "$C$5";
+                // Set line weight (visual property)
+                shape.Line.Weight = 1.5f;
 
-                // Verify the link
-                Console.WriteLine("Shape linked to cell: " + shape.LinkedCell);
+                // Define output file path
+                string outputPath = "SmartArtLinked.xlsx";
+
+                // Ensure the directory exists (handle case when outputPath has no directory part)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
                 // Save the workbook
-                string outputPath = "SmartArtLinkedCell.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to " + outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

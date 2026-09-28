@@ -1,29 +1,37 @@
-// Title: Auto‑Refresh Pivot Chart on Workbook Open with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add source data, build a pivot table, enable RefreshDataOnOpeningFile, link a pivot chart, and set CalculateOnOpen so Excel automatically updates the chart each time the file is opened.
-// Keywords: Aspose.Cells | C# | .NET | pivot chart auto refresh | RefreshDataOnOpeningFile | CalculateOnOpen | Excel chart update on open | pivot table refresh | Aspose.Cells chart example
-// Common Searches: Aspose.Cells auto refresh pivot chart on open | RefreshDataOnOpeningFile property C# | calculate formulas on workbook open Aspose.Cells | pivot chart update automatically Excel | how to enable chart refresh when opening file using Aspose.Cells
-// Developer Intent: Configure a workbook so its pivot chart refreshes automatically when the file is opened.
-// Use Cases: Generate a report workbook that always shows the latest data without manual refresh. | Create dashboards where pivot charts reflect real‑time changes in source tables. | Ensure formulas influencing chart data are recalculated on open for accurate visuals.
-// AI Prompts: Provide C# code with Aspose.Cells that creates a pivot chart and sets it to refresh automatically on workbook open. | Show how to use RefreshDataOnOpeningFile and CalculateOnOpen properties for a workbook containing a pivot chart. | Explain the steps Aspose.Cells takes to enable automatic chart refresh when an Excel file is opened.
+// Title: Automatically refresh a pivot‑based chart when an Excel workbook is opened using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# program with Aspose.Cells that builds a pivot table, links a column chart to it, and configures the workbook so the chart updates each time the file is opened. | Modify an existing Aspose.Cells workbook to enable RefreshDataOnOpeningFile for its pivot table and refresh the associated chart before saving. | Generate an .xlsx file in C# where the chart source is a pivot table and the chart data is automatically refreshed on workbook open.
+// Common Searches: Aspose.Cells C# set chart to refresh automatically on workbook open | how to enable RefreshDataOnOpeningFile for pivot chart in Aspose.Cells | auto update pivot chart when opening Excel file using Aspose.Cells .NET | C# example of chart linked to pivot table with auto refresh on open | Aspose.Cells refresh chart data on file open property
+// Tags: auto refresh chart on workbook open Aspose.Cells | pivot table RefreshDataOnOpeningFile C# | chart linked to pivot table Aspose.Cells | generate Excel file with auto updating chart C# | set chart refresh property Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartAutoRefreshDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add source data, build a pivot table, enable RefreshDataOnOpeningFile, link a pivot chart, and set CalculateOnOpen so Excel automatically updates the chart each time the file is opened.
-    public class Program
+    // The example creates a new workbook, adds sample data, builds a pivot table, enables RefreshDataOnOpeningFile so the pivot updates when the file is opened, adds a column chart linked to the pivot table, refreshes the chart data, and saves the workbook as ChartAutoRefreshOnOpen.xlsx.
+    public class ChartAutoRefreshOnOpenDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
 
-            // Populate source data for the chart/pivot
+            // Populate source data for the pivot table
             dataSheet.Cells["A1"].PutValue("Category");
             dataSheet.Cells["B1"].PutValue("Value");
             dataSheet.Cells["A2"].PutValue("A");
@@ -34,25 +42,24 @@ namespace AsposeCellsChartAutoRefreshDemo
             dataSheet.Cells["B4"].PutValue(30);
 
             // Add a pivot table based on the source data
-            Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-            int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B4", "E3", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value
+            int pivotIndex = dataSheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+            PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-            // Ensure the pivot table refreshes its data when the file is opened
+            // Ensure the pivot table refreshes its data when the workbook is opened
             pivotTable.RefreshDataOnOpeningFile = true;
 
-            // Create a chart that uses the pivot table as its source (pivot chart)
-            int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = pivotSheet.Charts[chartIndex];
+            // Add a chart that uses the pivot table as its source
+            int chartIndex = dataSheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
+            Chart chart = dataSheet.Charts[chartIndex];
             chart.PivotSource = "Pivot!PivotTable1";
 
-            // Optional: also request Excel to recalculate formulas on open
-            workbook.Settings.FormulaSettings.CalculateOnOpen = true;
+            // Refresh the chart data now so the file contains up‑to‑date data
+            chart.RefreshPivotData();
 
-            // Save the workbook (Excel will refresh the pivot data and chart on open)
-            workbook.Save("ChartAutoRefreshOnOpen.xlsx");
+            // Save the workbook; when opened in Excel the chart will reflect the latest data
+            workbook.Save("ChartAutoRefreshOnOpen.xlsx", SaveFormat.Xlsx);
         }
     }
 }

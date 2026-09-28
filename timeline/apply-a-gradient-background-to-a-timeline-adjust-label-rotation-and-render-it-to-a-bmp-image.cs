@@ -1,21 +1,18 @@
-// Title: C# – Apply Gradient Fill & Rotate Labels on an Aspose.Cells Timeline, Export to BMP
-// Description: Creates a workbook, builds a pivot table, adds a timeline linked to the date field, applies a horizontal two‑color gradient to the timeline shape, rotates the labels 45°, and renders the sheet as a BMP image using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells timeline gradient | C# timeline label rotation | export timeline to BMP | pivot table timeline Aspose.Cells | two‑color gradient fill shape | SheetRender BMP Aspose.Cells | TimelineShape FillType Gradient | Aspose.Cells example C#
-// Common Searches: how to add gradient fill to a timeline in Aspose.Cells .NET | rotate timeline labels Aspose.Cells C# | export worksheet with timeline as BMP image | create pivot table and timeline programmatically Aspose.Cells | set horizontal two‑color gradient on timeline shape
-// Developer Intent: Generate a timeline tied to a pivot table, style it with a two‑color gradient, tilt the labels for better readability, and save the resulting sheet as a BMP file.
-// Use Cases: Design a sales‑trend visual with a blue gradient for inclusion in presentations. | Produce a printable report where rotated month labels prevent overlap. | Create a web‑ready BMP snapshot of a styled timeline for dashboards.
-// AI Prompts: Show how to change the gradient colors and direction of a timeline shape in Aspose.Cells for .NET. | Provide code to set a different label rotation angle and render the sheet as PNG instead of BMP. | Explain how to add multiple timelines to a worksheet and export each to separate image files.
+// Title: Add a horizontal two‑color gradient to an Aspose.Cells timeline, rotate its caption, and export the worksheet as a BMP image using C#
+// AI Prompts: Generate C# code that creates a pivot table, attaches a timeline, sets a horizontal LightBlue‑to‑DarkBlue two‑color gradient fill on the timeline shape, rotates the caption 45°, and saves the sheet as a BMP file with Aspose.Cells. | Show how to apply a two‑color gradient background to a TimelineShape, adjust its rotation angle, and render the containing worksheet to a BMP image while also saving the workbook as XLSX in .NET.
+// Common Searches: c# aspose.cells timeline gradient background example | how to set caption angle for Aspose.Cells timeline | export worksheet with timeline to BMP image using Aspose.Cells .NET | link timeline to pivot table and apply gradient fill in Aspose.Cells | two‑color gradient fill on Aspose.Cells timeline shape tutorial
+// Tags: timeline shape gradient Aspose.Cells | timeline caption rotation Aspose.Cells | export worksheet as BMP Aspose.Cells | pivot table timeline linkage Aspose.Cells | two‑color gradient timeline Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using System;
+using System.Drawing;
 
-// Creates a workbook, builds a pivot table, adds a timeline linked to the date field, applies a horizontal two‑color gradient to the timeline shape, rotates the labels 45°, and renders the sheet as a BMP image using Aspose.Cells for .NET.
-class TimelineGradientRender
+// The example creates a workbook, fills it with sample data, builds a pivot table, adds a timeline linked to the pivot, applies a horizontal LightBlue‑to‑DarkBlue two‑color gradient to the timeline shape, rotates the caption 45°, renders the worksheet to a BMP file, and saves the workbook as XLSX.
+class TimelineGradientExample
 {
     static void Main()
     {
@@ -26,55 +23,52 @@ class TimelineGradientRender
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data for the pivot table (date and value)
+            // Populate sample data for the pivot table
             cells["A1"].PutValue("Date");
             cells["B1"].PutValue("Value");
-            cells["A2"].PutValue(new DateTime(2023, 1, 1));
-            cells["B2"].PutValue(100);
-            cells["A3"].PutValue(new DateTime(2023, 2, 1));
-            cells["B3"].PutValue(200);
-            cells["A4"].PutValue(new DateTime(2023, 3, 1));
-            cells["B4"].PutValue(300);
+            DateTime start = new DateTime(2023, 1, 1);
+            for (int i = 0; i < 5; i++)
+            {
+                cells[1 + i, 0].PutValue(start.AddMonths(i));
+                cells[1 + i, 1].PutValue(100 + i * 50);
+            }
 
-            // Add a pivot table based on the data
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-
-            // Place the date field in the column area (required for timeline)
-            pivot.AddFieldToArea(PivotFieldType.Column, "Date");
-            // Place the value field in the data area
+            // Create a pivot table based on the data
+            PivotTableCollection pivots = sheet.PivotTables;
+            int pivotIdx = pivots.Add("A1:B6", "D1", "Pivot1");
+            PivotTable pivot = pivots[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
             pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-
-            // Refresh and calculate the pivot table
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Add a timeline linked to the pivot table using the date field
-            int timelineIdx = sheet.Timelines.Add(pivot, 10, 5, "Date");
+            // Add a timeline linked to the pivot table.
+            // Use the field index (0) for the "Date" field to avoid name‑lookup issues.
+            int timelineIdx = sheet.Timelines.Add(pivot, 10, 0, 0);
             Timeline timeline = sheet.Timelines[timelineIdx];
 
-            // Access the underlying shape of the timeline
-            TimelineShape shape = timeline.Shape;
-
             // Apply a two‑color gradient background to the timeline shape
+            TimelineShape shape = timeline.Shape;
             shape.Fill.FillType = FillType.Gradient;
             shape.Fill.SetTwoColorGradient(Color.LightBlue, Color.DarkBlue, GradientStyleType.Horizontal, 1);
 
-            // Rotate the timeline labels (shape rotation) by 45 degrees
+            // Rotate the timeline (caption) for better label orientation
             shape.RotationAngle = 45;
 
             // Render the worksheet (which contains the timeline) to a BMP image
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                ImageType = ImageType.Bmp,
-                OnePagePerSheet = true
+                ImageType = ImageType.Bmp
             };
-            SheetRender renderer = new SheetRender(sheet, imgOptions);
-            renderer.ToImage(0, "TimelineOutput.bmp");
+            SheetRender render = new SheetRender(sheet, options);
+            render.ToImage(0, "TimelineOutput.bmp");
+
+            // Save the workbook (optional)
+            workbook.Save("TimelineDemo.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

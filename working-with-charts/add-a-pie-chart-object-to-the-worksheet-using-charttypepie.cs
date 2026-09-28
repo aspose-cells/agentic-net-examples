@@ -1,21 +1,18 @@
-// Title: Add a Pie Chart to an Excel Worksheet with Aspose.Cells (C#)
-// Description: Demonstrates how to create a new Workbook, fill cells with category names and values, insert a Pie chart using ChartType.Pie, bind the series to B2:B4, set category labels from A2:A4, add a title, and save the file as PieChart.xlsx.
-// Keywords: Aspose.Cells pie chart C# | ChartType.Pie example | add pie chart Aspose.Cells | C# Excel chart creation | Aspose.Cells save workbook with chart
-// Common Searches: Aspose.Cells add pie chart .NET | C# create pie chart in Excel with Aspose | how to bind data to pie chart Aspose.Cells | set pie chart title Aspose.Cells C# | export Excel file with chart using Aspose
-// Developer Intent: Insert a Pie chart, link it to worksheet data, customize the title, and export the workbook.
-// Use Cases: Generate a product‑share pie chart for monthly sales reports. | Build an interactive dashboard that visualizes market segment distribution. | Export survey results with a summary pie chart of respondent choices.
-// AI Prompts: Show how to display data labels on the pie chart in Aspose.Cells C#. | Provide code to change slice colors and explode a specific slice. | Explain how to adjust the chart range automatically when rows are added.
+// Title: Add a Pie chart to an Excel worksheet with Aspose.Cells for .NET (C# example)
+// AI Prompts: Write C# code that creates a new workbook, populates category and value cells, inserts a Pie chart using ChartType.Pie, binds the series to B2:B4 and categories to A2:A4, and saves the file as an .xlsx with Aspose.Cells. | Demonstrate how to adjust the position and size of a Pie chart in an Aspose.Cells worksheet by specifying start and end rows and columns. | Provide a C# snippet that adds a title and legend to a Pie chart created with Aspose.Cells, then exports the workbook to a file named PieChart.xlsx.
+// Common Searches: aspnet cells c# how to insert a pie chart into an existing worksheet | example of binding category labels to a pie chart using Aspose.Cells | aspose.cells create pie chart from cell range B2:B4 and A2:A4 | set pie chart dimensions rows 5 to 15 columns 0 to 5 Aspose.Cells | save workbook with pie chart as PieChart.xlsx using Aspose.Cells
+// Tags: Aspose.Cells add pie chart C# | Aspose.Cells chart data binding | Aspose.Cells set chart position rows columns | Aspose.Cells export workbook to xlsx | Aspose.Cells customize pie chart title legend
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a new Workbook, fill cells with category names and values, insert a Pie chart using ChartType.Pie, bind the series to B2:B4, set category labels from A2:A4, add a title, and save the file as PieChart.xlsx.
+// // Creates a new workbook, fills A1:B4 with category and value data, adds a Pie chart covering rows 5‑15 and columns 0‑5, binds values from B2:B4 and categories from A2:A4, then saves the workbook as PieChart.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
@@ -30,18 +27,15 @@ class Program
         sheet.Cells["B3"].PutValue(30);
         sheet.Cells["B4"].PutValue(20);
 
-        // Add a pie chart to the worksheet (topRow, leftColumn, bottomRow, rightColumn)
+        // Add a pie chart to the worksheet (rows 5‑15, columns 0‑5)
         int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 15, 5);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Define the data range for the series and categories
+        // Define the data series and category labels for the chart
         chart.NSeries.Add("B2:B4", true);          // Values
         chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-        // Optional: set a title for the chart
-        chart.Title.Text = "Fruit Distribution";
-
-        // Save the workbook with the pie chart
+        // Save the workbook with the newly added chart
         workbook.Save("PieChart.xlsx", SaveFormat.Xlsx);
     }
 }

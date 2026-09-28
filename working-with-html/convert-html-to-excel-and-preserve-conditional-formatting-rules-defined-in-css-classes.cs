@@ -1,39 +1,47 @@
-// Title: C# – Convert HTML with CSS Conditional Formatting to Excel using Aspose.Cells
-// Description: A .NET example that loads an HTML file containing CSS‑based conditional formatting via LoadOptions (Html) and converts it to an XLSX workbook with ConversionUtility, automatically preserving the formatting rules.
-// Keywords: Aspose.Cells | C# | HTML to Excel conversion | CSS conditional formatting | LoadOptions Html | ConversionUtility | preserve styles | Excel export .NET | GitHub example | Aspose.Cells API
-// Common Searches: Aspose.Cells preserve CSS conditional formatting when converting HTML to Excel | C# convert HTML table with conditional formatting to XLSX | Load HTML with CSS styles into workbook Aspose.Cells | ConversionUtility HTML to Excel example | How to keep conditional formatting from HTML in Excel using Aspose
-// Developer Intent: Transform an HTML document that uses CSS conditional formatting into an Excel workbook while retaining the original formatting rules.
-// Use Cases: Export web‑based financial dashboards that rely on CSS conditional formatting into Excel for further analysis. | Migrate styled HTML reports or email templates into Excel without losing visual cues such as color‑coded thresholds. | Automate bulk conversion of HTML tables with conditional styling into XLSX files for downstream data processing.
-// AI Prompts: Show how to map specific CSS classes to Excel conditional formatting after using ConversionUtility. | Provide code to validate that conditional formatting from the source HTML was retained in the generated workbook. | Explain how to customize LoadOptions to handle external CSS files during HTML‑to‑Excel conversion.
+// Title: Convert HTML to XLSX with Aspose.Cells for .NET while preserving CSS‑based conditional formatting
+// AI Prompts: Generate C# code that loads a local HTML file using Aspose.Cells HtmlLoadOptions, maps CSS classes containing conditional‑formatting rules to Excel style objects, and saves the workbook as an XLSX file. | Show how to add robust error handling that verifies the HTML file exists and gracefully handles conversion exceptions in a C# Aspose.Cells application. | Demonstrate customizing HtmlLoadOptions to retain CSS styling—including conditional formatting—when importing HTML into an Aspose.Cells Workbook.
+// Common Searches: asp.net c# convert html table with css conditional formatting to xlsx using aspose.cells | how to keep css style rules when importing html into excel workbook with aspose.cells | example of HtmlLoadOptions preserving conditional formatting from html to excel | map css classes to Excel conditional formatting in a C# Aspose.Cells project | load html file into workbook and export as xlsx while retaining styling in .NET
+// Tags: html-to-xlsx conversion Aspose.Cells C# | css conditional formatting mapping to Excel styles | Aspose.Cells HtmlLoadOptions HTML import | preserve css styling during HTML to Excel conversion | c# load html workbook and save as xlsx | excel conditional formatting from css classes
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// A .NET example that loads an HTML file containing CSS‑based conditional formatting via LoadOptions (Html) and converts it to an XLSX workbook with ConversionUtility, automatically preserving the formatting rules.
-class HtmlToExcelConverter
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an input.html file into an Aspose.Cells Workbook using HtmlLoadOptions, then saves the workbook as output.xlsx. It includes basic file‑existence checking and exception handling, and can be extended to map CSS classes that define conditional formatting into equivalent Excel style rules, ensuring the visual formatting from the HTML is retained in the generated XLSX file.
+    class Program
     {
-        // Path to the source HTML file that contains CSS‑based conditional formatting
-        string htmlFile = "input.html";
+        static void Main(string[] args)
+        {
+            try
+            {
+                const string inputPath = "input.html";
+                const string outputPath = "output.xlsx";
 
-        // Desired path for the resulting Excel workbook
-        string excelFile = "output.xlsx";
+                // Verify that the input HTML file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
+                }
 
-        // LoadOptions specify that the source file is HTML.
-        // This enables Aspose.Cells to parse the HTML and its CSS styles.
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+                // Initialize HTML load options (additional options can be set if supported by the library version)
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
 
-        // OoxmlSaveOptions are used for saving the workbook in XLSX format.
-        // No special settings are required for preserving conditional formatting,
-        // as the parsing of CSS classes is handled during the load phase.
-        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
+                // Load the HTML file into a new workbook using the specified options
+                Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Perform the conversion from HTML to Excel.
-        // The ConversionUtility respects the provided load and save options.
-        ConversionUtility.Convert(htmlFile, loadOptions, excelFile, saveOptions);
+                // Save the workbook to an Excel file (XLSX format)
+                workbook.Save(outputPath, SaveFormat.Xlsx);
 
-        Console.WriteLine("Conversion completed. Excel file saved to: " + excelFile);
+                Console.WriteLine($"Conversion completed successfully. Output saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

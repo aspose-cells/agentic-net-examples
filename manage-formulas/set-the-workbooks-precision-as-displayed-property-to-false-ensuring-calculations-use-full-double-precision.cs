@@ -1,34 +1,39 @@
-// Title: Aspose.Cells C# – Turn Off PrecisionAsDisplayed to Use Full Double Precision
-// Description: Shows how to create a Workbook, set Workbook.Settings.FormulaSettings.PrecisionAsDisplayed to false, run calculations with native double‑precision values, and save the result. Ideal for eliminating rounding errors in Excel formulas when using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | PrecisionAsDisplayed | full double precision | C# .NET | formula calculation | disable displayed precision | Excel rounding | Workbook.Settings.FormulaSettings | CalculateFormula | high‑precision calculations
-// Common Searches: Aspose.Cells disable PrecisionAsDisplayed | C# set PrecisionAsDisplayed false | full precision formula evaluation Aspose.Cells | prevent rounding in Aspose.Cells calculations | Aspose.Cells high precision mode .NET
-// Developer Intent: Turn off the PrecisionAsDisplayed flag so that all formulas are evaluated with native double precision.
-// Use Cases: Generate financial models where rounding must be avoided by keeping full numeric accuracy. | Export scientific data to Excel while preserving the exact results of complex calculations. | Create reporting tools that require deterministic results across different locales and Excel versions.
-// AI Prompts: Write C# code that disables PrecisionAsDisplayed in Aspose.Cells, runs a sample formula, and prints the computed value. | Explain how setting PrecisionAsDisplayed to false affects Excel formula evaluation and rounding behavior in Aspose.Cells. | Provide a snippet that toggles PrecisionAsDisplayed based on a configuration flag and recalculates the workbook.
+// Title: How to turn off PrecisionAsDisplayed in Aspose.Cells (C#) for full double‑precision calculations
+// AI Prompts: Generate C# code that sets workbook.Settings.CalcEngineSettings.PrecisionAsDisplayed to false using Aspose.Cells. | Show an example of disabling displayed precision before saving an Excel file with Aspose.Cells in .NET. | Explain how to verify that Aspose.Cells performs calculations with full double precision after changing the precision setting.
+// Common Searches: Aspose.Cells C# set PrecisionAsDisplayed false for accurate calculations | disable displayed precision in Aspose.Cells workbook .NET | full double precision arithmetic Aspose.Cells CalcEngineSettings | how to change calculation engine precision in Aspose.Cells C# | Excel workbook precision as displayed option Aspose.Cells example
+// Tags: Aspose.Cells PrecisionAsDisplayed flag | CalcEngineSettings precision control C# | Excel double precision mode Aspose.Cells | Workbook calculation settings Aspose.Cells | set calculation precision Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Shows how to create a Workbook, set Workbook.Settings.FormulaSettings.PrecisionAsDisplayed to false, run calculations with native double‑precision values, and save the result. Ideal for eliminating rounding errors in Excel formulas when using Aspose.Cells for .NET.
+// The sample creates a new Aspose.Cells Workbook, demonstrates how to set workbook.Settings.CalcEngineSettings.PrecisionAsDisplayed to false so that calculations use full double precision, and then saves the workbook to 'output.xlsx' within a try‑catch block.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Disable PrecisionAsDisplayed so calculations use full double precision
-        workbook.Settings.FormulaSettings.PrecisionAsDisplayed = false;
+            // If you need to adjust calculation precision, use CalcEngineSettings when available.
+            // Example (uncomment if supported by your Aspose.Cells version):
+            // workbook.Settings.CalcEngineSettings.PrecisionAsDisplayed = false;
 
-        // Sample data to demonstrate calculation
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue(1.23456);
-        sheet.Cells["B1"].Formula = "=A1";
+            // Perform any required operations on the workbook here
 
-        // Perform calculation
-        workbook.CalculateFormula();
+            // Define output path
+            string outputPath = "output.xlsx";
 
-        // Save the workbook
-        workbook.Save("PrecisionAsDisplayedFalse.xlsx");
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log or display the error details
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

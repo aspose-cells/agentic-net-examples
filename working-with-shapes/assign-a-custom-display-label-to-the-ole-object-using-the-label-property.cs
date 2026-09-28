@@ -1,67 +1,65 @@
-// Title: Assign a custom label to an OLE object in Excel using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, insert an OLE object with a 1×1 transparent PNG icon, set the OleObject.Label property, save the file, reload it, and verify that the label persists.
-// Keywords: Aspose.Cells | C# OleObject label | Excel OLE object custom label | OleObject.Label property | add OLE object Aspose.Cells | placeholder PNG for OLE | read OLE label after save
-// Common Searches: how to set OleObject.Label in Aspose.Cells C# | change display label of Excel OLE object programmatically | Aspose.Cells add OLE object with custom icon | verify OLE object label after saving workbook | C# example for labeling OLE objects in Excel
-// Developer Intent: The developer needs to assign or modify the display label of an OLE object embedded in an Excel workbook using the Aspose.Cells .NET API.
-// Use Cases: Insert a new OLE object with a custom label and placeholder image when generating reports. | Open an existing spreadsheet, locate OLE objects, update their labels to reflect current content, and save the changes. | Iterate through all OLE objects on a worksheet to assign unique, descriptive labels for downstream processing.
-// AI Prompts: Generate C# code that adds an OLE object with a custom label and a transparent PNG using Aspose.Cells. | Show how to load an existing Excel file, change the Label of each OleObject, and persist the modifications. | Explain how to confirm that an OLE object's label was saved correctly and can be read back after workbook serialization.
+// Title: How to set a custom display label for an embedded OLE object in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to embed a DOCX file as an OLE object in cell A1 and assign a custom label via the OleObject.Label property in C#. | Create a new workbook, add an OLE object from a byte array, set its display label, and save the workbook as XLSX with Aspose.Cells.
+// Common Searches: C# Aspose.Cells set OleObject.Label after embedding a file | How to change the display name of an OLE object in an Excel file with Aspose | Assign custom label to embedded DOCX OLE object using Aspose.Cells .NET | Aspose.Cells example for adding OLE object and modifying its label property | Save Excel workbook with labeled OLE object using Aspose.Cells C#
+// Tags: Aspose.Cells OleObject label property | C# embed file as OLE object | add OLE object to Excel worksheet | custom OLE object display name | save Excel with labeled OLE
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace OleObjectDemo
+// The example creates a new workbook, embeds a DOCX file as an OLE object in cell A1, sets the OleObject.Label to a custom string, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create a workbook, insert an OLE object with a 1×1 transparent PNG icon, set the OleObject.Label property, save the file, reload it, and verify that the label persists.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Path to the file that will be embedded as an OLE object
+            string oleSourcePath = "sample.docx";
+
+            // Ensure the source file exists before attempting to embed it
+            if (!File.Exists(oleSourcePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Generate a simple placeholder image for the OLE object's icon
-                byte[] imageData = CreatePlaceholderImage();
-
-                // Add an OLE object with the placeholder image
-                int oleIndex = worksheet.OleObjects.Add(10, 10, 200, 200, imageData);
-                OleObject oleObject = worksheet.OleObjects[oleIndex];
-
-                // Assign a custom display label to the OLE object
-                oleObject.Label = "My Custom OLE Label";
-
-                // Save the workbook to a file
-                string outputPath = "OleObjectLabelDemo.xlsx";
-                workbook.Save(outputPath);
-
-                // Verify the label was saved
-                if (File.Exists(outputPath))
+                Console.WriteLine($"Error: The file \"{oleSourcePath}\" was not found.");
+            }
+            else
+            {
+                try
                 {
-                    Workbook loadedWorkbook = new Workbook(outputPath);
-                    OleObject loadedOleObject = loadedWorkbook.Worksheets[0].OleObjects[0];
-                    Console.WriteLine("OLE Object Label: " + loadedOleObject.Label);
+                    // Read the file into a byte array (required by the Add method)
+                    byte[] oleData = File.ReadAllBytes(oleSourcePath);
+
+                    // Add an OLE object to cell A1 (row 0, column 0) with a size of 100x100 pixels
+                    // The Add method returns the index of the created OleObject
+                    int oleIndex = sheet.OleObjects.Add(0, 0, 100, 100, oleData);
+
+                    // Retrieve the OleObject using the returned index
+                    OleObject ole = sheet.OleObjects[oleIndex];
+
+                    // Assign a custom display label to the OLE object
+                    ole.Label = "My Custom Document";
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Failed to save the workbook.");
+                    Console.WriteLine($"Failed to embed OLE object: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
+
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully as {outputPath}.");
         }
-
-        // Returns a 1x1 transparent PNG image as a byte array
-        private static byte[] CreatePlaceholderImage()
+        catch (Exception ex)
         {
-            // Base64 representation of a 1x1 transparent PNG
-            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
-            return Convert.FromBase64String(base64Png);
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

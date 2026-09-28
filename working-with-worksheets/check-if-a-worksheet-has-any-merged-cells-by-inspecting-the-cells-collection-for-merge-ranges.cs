@@ -1,48 +1,28 @@
-// Title: Check for Merged Cells in a Worksheet with Aspose.Cells for .NET
-// Description: Shows how to call Cells.GetMergedAreas() to find any merged ranges in a worksheet, return a true/false flag, and enumerate each merged area's coordinates. Includes an optional merge example and workbook save step.
-// Keywords: Aspose.Cells | C# | GetMergedAreas | merged cells detection | worksheet merged ranges | Excel merge check | Aspose.Cells API | C# Excel processing
-// Common Searches: Aspose.Cells find merged cells C# | GetMergedAreas example .NET | how to detect merged ranges in Excel using Aspose | check if worksheet has merged cells Aspose.Cells | list merged areas Aspose.Cells C#
-// Developer Intent: Determine whether a worksheet contains any merged cells and obtain their locations.
-// Use Cases: Validate an incoming workbook before data extraction to avoid parsing errors caused by merged cells. | Generate a report of merged ranges for auditing or documentation purposes. | Trigger conditional formatting or layout adjustments only when merged cells are present.
-// AI Prompts: Write C# code that opens an existing Excel file with Aspose.Cells, lists all merged cell ranges, and returns them as a collection. | Provide a C# snippet that unmerges every merged area in a worksheet after detecting them with Aspose.Cells. | Explain how to check for merged cells efficiently without loading the entire workbook into memory using Aspose.Cells.
+// Title: How to check if a worksheet contains any merged cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and returns a boolean indicating whether the first worksheet has any merged cell ranges. | Generate a method in C# using Aspose.Cells that prints a custom message based on the presence of merged cells in a given worksheet. | Create a C# snippet that counts the number of merged cell blocks in a worksheet via Aspose.Cells and outputs the count.
+// Common Searches: asp.net aspose.cells detect merged cells in worksheet c# | c# check if excel sheet has merged cells using aspose.cells library | how to count merged cell ranges in an Excel file with aspose.cells c# | determine presence of merged cells in workbook using aspose.cells for .net
+// Tags: detect merged cell ranges Aspose.Cells | worksheet merged cells check C# | Cells.MergedCells count Aspose.Cells | Excel merged cells detection C# | Aspose.Cells worksheet merge detection
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsMergedCheck
+// Loads an Excel workbook, accesses a worksheet, uses worksheet.Cells.MergedCells.Count to determine if any merged cells exist, and writes a message indicating the result.
+class Program
 {
-    // Shows how to call Cells.GetMergedAreas() to find any merged ranges in a worksheet, return a true/false flag, and enumerate each merged area's coordinates. Includes an optional merge example and workbook save step.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Access the first worksheet (or any specific worksheet by index/name)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Example merge (can be removed if checking an existing file)
-            cells.Merge(0, 0, 2, 2); // Merges A1:B2
+        // Determine if there are any merged cells in the worksheet
+        bool hasMergedCells = worksheet.Cells.MergedCells.Count > 0;
 
-            // Retrieve all merged areas
-            CellArea[] mergedAreas = cells.GetMergedAreas();
-
-            // Determine if any merged cells exist
-            bool hasMerged = mergedAreas != null && mergedAreas.Length > 0;
-
-            Console.WriteLine("Worksheet has merged cells: " + hasMerged);
-            if (hasMerged)
-            {
-                foreach (CellArea area in mergedAreas)
-                {
-                    Console.WriteLine($"Merged area: Row[{area.StartRow}-{area.EndRow}], Column[{area.StartColumn}-{area.EndColumn}]");
-                }
-            }
-
-            // Save the workbook (optional)
-            workbook.Save("MergedCheckResult.xlsx");
-        }
+        // Output the result
+        Console.WriteLine(hasMergedCells
+            ? "The worksheet contains merged cells."
+            : "The worksheet does not contain any merged cells.");
     }
 }

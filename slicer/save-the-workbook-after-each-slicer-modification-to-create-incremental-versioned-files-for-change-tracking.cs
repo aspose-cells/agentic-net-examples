@@ -1,10 +1,7 @@
-// Title: Incrementally Save Excel Workbook After Each Slicer Change Using Aspose.Cells for .NET
-// Description: C# sample that creates a workbook, adds a pivot table and a linked slicer, then modifies slicer properties (caption, lock, column count, size) and saves a new file after each change (SlicerVersion_0.xlsx – SlicerVersion_5.xlsx) to provide versioned change tracking.
-// Keywords: Aspose.Cells | C# slicer | Excel slicer versioning | incremental workbook save | pivot table slicer | track slicer changes | Workbook.Save | .NET Excel automation | change log Excel | slicer property refresh
-// Common Searches: how to save Excel after each slicer modification Aspose.Cells | C# versioned files for slicer property changes | track slicer adjustments with incremental saves | Aspose.Cells example for slicer change tracking | save workbook multiple times after slicer refresh
-// Developer Intent: Create a series of sequentially named Excel files that capture every slicer property update for audit and change‑tracking purposes.
-// Use Cases: Generate an initial workbook, then record each caption change as a separate versioned file. | Lock or unlock slicer position, refresh the view, and persist each state for compliance reporting. | Alter slicer layout (columns, width, height), refresh the pivot table, and save distinct files to compare visual configurations.
-// AI Prompts: Write C# code with Aspose.Cells that adds a slicer to a pivot table and saves the workbook after each slicer property change using sequential filenames. | Provide a helper method that accepts a slicer, applies a given property change, refreshes it, and saves the workbook with an incremented version number. | Explain how to implement change tracking for slicer modifications by creating incremental workbook versions in Aspose.Cells for .NET.
+// Title: Create versioned Excel files after each slicer property change using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a slicer to a PivotTable, updates its caption, lock state, column count, and dimensions, refreshes the slicer, and saves the workbook to sequentially numbered .xlsx files. | Show how to implement incremental versioning of an Excel workbook by invoking Workbook.Save with a dynamic filename after each slicer adjustment in Aspose.Cells.
+// Common Searches: Aspose.Cells C# save workbook after each slicer update with versioned filenames | how to implement incremental Excel file versioning when changing slicer properties in .NET | C# example for tracking slicer changes by saving separate Excel files using Aspose.Cells | automate slicer property modifications and file versioning in Aspose.Cells for .NET | generate sequentially named Excel files after slicer adjustments with Aspose.Cells
+// Tags: Aspose.Cells save workbook after slicer change | incremental Excel versioning Aspose.Cells C# | slicer property modification Aspose.Cells | refresh slicer linked pivot Aspose.Cells | dynamic filename generation C# Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -13,16 +10,16 @@ using Aspose.Cells.Slicers;
 
 namespace AsposeCellsSlicerVersioningDemo
 {
-    // C# sample that creates a workbook, adds a pivot table and a linked slicer, then modifies slicer properties (caption, lock, column count, size) and saves a new file after each change (SlicerVersion_0.xlsx – SlicerVersion_5.xlsx) to provide versioned change tracking.
+    // The sample program creates a workbook with sample data, builds a PivotTable, adds a slicer linked to the PivotTable, then sequentially modifies slicer properties (caption, locked position, column count, size). After each modification the slicer is refreshed and the workbook is saved to a uniquely numbered file (SlicerVersion_0.xlsx through SlicerVersion_5.xlsx), demonstrating incremental versioning for change tracking.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook
+            // Initialize a new workbook
             Workbook workbook = new Workbook();
 
             // -------------------------------------------------
-            // Prepare sample data for a pivot table
+            // 1. Prepare sample data for a PivotTable
             // -------------------------------------------------
             Worksheet dataSheet = workbook.Worksheets[0];
             dataSheet.Name = "Data";
@@ -39,63 +36,55 @@ namespace AsposeCellsSlicerVersioningDemo
             dataSheet.Cells["A4"].PutValue("Beverage");
             dataSheet.Cells["B4"].PutValue(150);
             dataSheet.Cells["A5"].PutValue("Beverage");
-            dataSheet.Cells["B5"].PutValue(70);
+            dataSheet.Cells["B5"].PutValue(200);
             dataSheet.Cells["A6"].PutValue("Supplies");
-            dataSheet.Cells["B6"].PutValue(200);
+            dataSheet.Cells["B6"].PutValue(90);
 
             // -------------------------------------------------
-            // Create a worksheet to host the pivot table and slicer
+            // 2. Create a PivotTable based on the data
             // -------------------------------------------------
             Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
-            // Add a pivot table based on the data range
             int pivotIndex = pivotSheet.PivotTables.Add("A1:B6", "C3", "SalesPivot");
             PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
-            // Configure pivot fields
             pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sum of Amount
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sum of Amount
 
             // -------------------------------------------------
-            // Add a slicer linked to the pivot table (Category field)
+            // 3. Add a slicer linked to the PivotTable
             // -------------------------------------------------
-            int slicerIndex = pivotSheet.Slicers.Add(pivotTable, "A1", "Category");
-            Slicer slicer = pivotSheet.Slicers[slicerIndex];
-            slicer.Caption = "Category Filter";
+            Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
+            int slicerIndex = slicerSheet.Slicers.Add(pivotTable, "A1", "Category");
+            Slicer slicer = slicerSheet.Slicers[slicerIndex];
 
-            // Save initial state
+            // Initial save (version 0)
             workbook.Save("SlicerVersion_0.xlsx");
 
             // -------------------------------------------------
-            // First modification: change slicer caption
+            // 4. Modify slicer properties and save after each change
             // -------------------------------------------------
-            slicer.Caption = "Product Category";
-            slicer.Refresh(); // Refresh slicer and underlying pivot table
+
+            // Change 1: Update caption
+            slicer.Caption = "Category Filter";
+            slicer.Refresh(); // Refresh slicer and underlying PivotTable
             workbook.Save("SlicerVersion_1.xlsx");
 
-            // -------------------------------------------------
-            // Second modification: lock slicer position
-            // -------------------------------------------------
+            // Change 2: Lock the slicer position
             slicer.LockedPosition = true;
             slicer.Refresh();
             workbook.Save("SlicerVersion_2.xlsx");
 
-            // -------------------------------------------------
-            // Third modification: change number of columns displayed
-            // -------------------------------------------------
-            slicer.NumberOfColumns = 3;
+            // Change 3: Set number of columns displayed in the slicer
+            slicer.NumberOfColumns = 2;
             slicer.Refresh();
             workbook.Save("SlicerVersion_3.xlsx");
 
-            // -------------------------------------------------
-            // Fourth modification: resize slicer
-            // -------------------------------------------------
+            // Change 4: Adjust size of the slicer
             slicer.WidthPixel = 250;
             slicer.HeightPixel = 180;
             slicer.Refresh();
             workbook.Save("SlicerVersion_4.xlsx");
 
-            // -------------------------------------------------
-            // Fifth modification: unlock slicer position
-            // -------------------------------------------------
+            // Change 5: Unlock the slicer position
             slicer.LockedPosition = false;
             slicer.Refresh();
             workbook.Save("SlicerVersion_5.xlsx");

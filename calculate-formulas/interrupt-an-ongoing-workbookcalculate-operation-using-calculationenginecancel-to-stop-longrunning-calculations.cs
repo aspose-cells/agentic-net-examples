@@ -1,10 +1,7 @@
-// Title: Cancel a long‑running workbook.CalculateFormula with Aspose.Cells InterruptMonitor (C#)
-// Description: Demonstrates how to assign an InterruptMonitor to a workbook, trigger an interrupt from a background task, and catch the Interrupted exception to stop a time‑consuming workbook.CalculateFormula operation in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | InterruptMonitor | Cancel workbook.CalculateFormula | CalculationEngine.Cancel | C# | .NET | long running formula calculation | Interrupted exception | Excel calculation cancellation | performance optimization
-// Common Searches: how to stop workbook.CalculateFormula in Aspose.Cells | Aspose.Cells interrupt long calculation C# example | cancel Excel formula evaluation with Aspose.Cells | InterruptMonitor usage Aspose.Cells .NET | handle CellsException Interrupted Aspose.Cells
-// Developer Intent: Terminate an ongoing workbook.CalculateFormula call by signaling an interrupt.
-// Use Cases: Prevent UI freeze by aborting heavy spreadsheet recalculations after a timeout. | Provide a cancel button that stops formula evaluation in desktop or web apps. | Save a workbook with partially calculated data when the calculation is interrupted.
-// AI Prompts: Generate C# code that uses Aspose.Cells InterruptMonitor to cancel workbook.CalculateFormula after 1 second and handle the Interrupted exception. | Explain how to integrate calculation interruption into an ASP.NET MVC app with Aspose.Cells, including user feedback for cancellation. | Write unit tests that verify workbook.CalculateFormula is interrupted when InterruptMonitor.Interrupt is invoked.
+// Title: How to interrupt a long‑running workbook.CalculateFormula call using Aspose.Cells InterruptMonitor in C#
+// AI Prompts: Generate C# code that configures an Aspose.Cells InterruptMonitor to cancel a workbook.CalculateFormula execution after a timed delay. | Show how to catch CellsException with ExceptionType.Interrupted during both formula calculation and workbook saving in Aspose.Cells. | Explain how to launch a background task that triggers CalculationEngine.Cancel while formulas are being evaluated with Aspose.Cells.
+// Common Searches: c# aspnet interrupt workbook.CalculateFormula after 1 second using Aspose.Cells | Aspose.Cells how to cancel long running formula calculation in .NET | example of using InterruptMonitor to stop Excel calculation with Aspose.Cells | handling interrupted calculation exception when saving workbook in C# Aspose.Cells | stop calculation engine in Aspose.Cells without freezing UI
+// Tags: Aspose.Cells InterruptMonitor for calculation cancellation | cancel workbook.CalculateFormula in C# | handle CellsException Interrupted in Aspose.Cells | background task to stop Excel formula evaluation | saving workbook after interrupted calculation Aspose.Cells
 
 using System;
 using System.Threading;
@@ -13,7 +10,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsInterruptDemo
 {
-    // Demonstrates how to assign an InterruptMonitor to a workbook, trigger an interrupt from a background task, and catch the Interrupted exception to stop a time‑consuming workbook.CalculateFormula operation in Aspose.Cells for .NET.
+    // The sample creates a workbook with 20,000 rows of growing SUM formulas, assigns an InterruptMonitor to the workbook, and starts a background task that calls monitor.Interrupt() after 500 ms. The workbook.CalculateFormula() call runs inside a try‑catch that specifically handles CellsException with ExceptionType.Interrupted, and the save operation is wrapped similarly to manage possible interruption during file writing.
     class Program
     {
         static void Main()
@@ -21,15 +18,14 @@ namespace AsposeCellsInterruptDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate a large number of cells with formulas to make calculation time‑consuming
+            // Populate a large range with formulas to make calculation time‑consuming
+            // Example: each cell in column B sums a range in column A
             for (int row = 0; row < 20000; row++)
             {
-                // Simple formula that depends on the previous row to create a chain of calculations
-                if (row == 0)
-                    sheet.Cells[row, 0].Formula = "=1";
-                else
-                    sheet.Cells[row, 0].Formula = $"=A{row}+1";
+                cells[row, 0].PutValue(row + 1);                     // Column A: simple numbers
+                cells[row, 1].Formula = $"=SUM(A1:A{row + 1})";      // Column B: growing SUM formula
             }
 
             // Create an interrupt monitor and assign it to the workbook
@@ -41,36 +37,39 @@ namespace AsposeCellsInterruptDemo
             {
                 Thread.Sleep(500); // Wait 0.5 seconds before interrupting
                 Console.WriteLine("Requesting interruption...");
-                monitor.Interrupt(); // Signal the interrupt
+                monitor.Interrupt(); // Signal the calculation to stop
             });
 
-            // Attempt to calculate all formulas; this operation should be interrupted
+            // Perform the long‑running calculation and handle possible interruption
             try
             {
                 Console.WriteLine("Starting calculation...");
-                workbook.CalculateFormula(); // Long‑running operation
-                Console.WriteLine("Calculation completed without interruption (unexpected).");
+                workbook.CalculateFormula(); // This may be interrupted by the monitor
+                Console.WriteLine("Calculation completed successfully.");
             }
             catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
             {
-                // Expected path when the operation is interrupted
-                Console.WriteLine("Calculation was successfully interrupted.");
+                Console.WriteLine("Calculation was interrupted as requested.");
             }
             catch (Exception ex)
             {
-                // Any other unexpected exception
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Unexpected error during calculation: {ex.Message}");
             }
 
-            // Save the workbook (partial results may be present)
+            // Attempt to save the workbook; handle possible interruption exception during save
             try
             {
                 workbook.Save("InterruptedResult.xlsx");
-                Console.WriteLine("Workbook saved (partial data may be present).");
+                Console.WriteLine("Workbook saved.");
+            }
+            catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+            {
+                // Saving may also be interrupted; still attempt to write the file if possible
+                Console.WriteLine("Save operation was interrupted, but partial results may have been written.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                Console.WriteLine($"Unexpected error during save: {ex.Message}");
             }
         }
     }

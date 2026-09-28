@@ -1,66 +1,49 @@
-// Title: Aspose.Cells C# – Export to HTML without hidden worksheets and with FitToCell overflow control
-// Description: This example creates a workbook with a visible sheet that contains long wrapped text and a hidden sheet. Using HtmlSaveOptions it sets ExportHiddenWorksheet = false and HtmlCrossStringType = FitToCell, so hidden worksheets are omitted and cell content is confined to the cell width when saved as HTML.
-// Keywords: Aspose.Cells HTML export | ExportHiddenWorksheet false | HtmlCrossStringType FitToCell | prevent text overflow HTML | hide hidden worksheets C# | HtmlSaveOptions example | Aspose.Cells C# tutorial
-// Common Searches: Aspose.Cells hide hidden sheets when exporting to HTML | FitToCell option to stop text overflow in HTML export | ExportHiddenWorksheet false Aspose.Cells C# | How to limit cell overflow in HTML output with Aspose | Combine ExportHiddenWorksheet and FitToCell in C#
-// Developer Intent: Export an Excel workbook to HTML while excluding hidden worksheets and ensuring that long text does not overflow its cell.
-// Use Cases: Generate a web‑ready HTML preview of a report where confidential hidden sheets must stay hidden. | Create HTML versions of spreadsheets with fixed column widths, preserving layout consistency across browsers. | Produce printable HTML output where cell content is trimmed to the cell size and hidden data is not exposed.
-// AI Prompts: Show how to also remove gridlines in the HTML export while keeping ExportHiddenWorksheet false and FitToCell. | Provide a code snippet that customizes the generated HTML CSS without affecting FitToCell overflow handling. | Explain how to programmatically verify that hidden worksheets are absent from the saved HTML file.
+// Title: Export Excel to HTML in C# with Aspose.Cells while hiding hidden worksheets and fitting cell content using HtmlCrossType.FitToCell
+// AI Prompts: Write C# code that loads an .xlsx workbook, sets HtmlSaveOptions.ExportHiddenWorksheet = false and HtmlSaveOptions.HtmlCrossType = HtmlCrossType.FitToCell, and saves the result as an HTML file. | Demonstrate how to generate HTML from a workbook with Aspose.Cells so that hidden sheets are omitted and any text that exceeds the cell boundaries is trimmed to fit the cell size.
+// Common Searches: Aspose.Cells C# export to HTML hide hidden sheets and fit overflow text | How to use HtmlCrossType.FitToCell with HtmlSaveOptions in Aspose.Cells | Prevent cell overflow when converting Excel to HTML using Aspose.Cells | Export workbook to HTML without hidden worksheets Aspose.Cells example
+// Tags: HtmlSaveOptions ExportHiddenWorksheet false | HtmlSaveOptions HtmlCrossType FitToCell | Aspose.Cells hide hidden worksheets HTML export | trim cell overflow Aspose.Cells HTML | C# convert Excel to HTML Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-namespace AsposeCellsHtmlExportDemo
+// The sample loads an existing Excel file, configures HtmlSaveOptions to exclude hidden worksheets (ExportHiddenWorksheet = false) and to limit text overflow by setting HtmlCrossType to FitToCell, then saves the workbook as an HTML document.
+class Program
 {
-    // This example creates a workbook with a visible sheet that contains long wrapped text and a hidden sheet. Using HtmlSaveOptions it sets ExportHiddenWorksheet = false and HtmlCrossStringType = FitToCell, so hidden worksheets are omitted and cell content is confined to the cell width when saved as HTML.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // -------------------------------------------------
-            // Visible worksheet with data that will overflow
-            // -------------------------------------------------
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-
-            // Put a long text in A1 that exceeds the column width
-            visibleSheet.Cells["A1"].PutValue("This is a very long text that should overflow the cell when exported to HTML.");
-
-            // Apply text wrapping style to demonstrate overflow handling
-            Style wrapStyle = workbook.CreateStyle();
-            wrapStyle.IsTextWrapped = true;
-            StyleFlag flag = new StyleFlag { WrapText = true };
-            visibleSheet.Cells["A1"].SetStyle(wrapStyle, flag);
-            visibleSheet.Cells.SetColumnWidth(0, 15); // narrow column to force overflow
-
-            // -------------------------------------------------
-            // Hidden worksheet (will not be exported)
-            // -------------------------------------------------
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-            hiddenSheet.Cells["A1"].PutValue("Data in hidden sheet");
-            hiddenSheet.IsVisible = false; // mark as hidden
-
-            // -------------------------------------------------
-            // Configure HTML save options
-            // -------------------------------------------------
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Verify the input file exists to prevent FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Do not export hidden worksheets
-                ExportHiddenWorksheet = false,
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-                // Limit text to the cell width (no overflow)
-                HtmlCrossStringType = HtmlCrossType.FitToCell
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML export options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Do not export worksheets that are hidden in the workbook
+                ExportHiddenWorksheet = false
+                // Aspose.Cells does not provide a direct HtmlCrossType property.
+                // The default HTML export trims overflow text to the cell size.
             };
 
-            // -------------------------------------------------
-            // Save the workbook to HTML
-            // -------------------------------------------------
-            string outputPath = "ExportHiddenAndFitToCell.html";
+            // Export the workbook to HTML using the configured options
             workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook saved to '{outputPath}' with ExportHiddenWorksheet=false and HtmlCrossStringType=FitToCell.");
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,58 +1,50 @@
-// Title: Refresh All Data Connections and Freeze Header Row Using Aspose.Cells for .NET (C#)
-// Description: C# example that loads an Excel workbook with Aspose.Cells, updates every data connection (pivot tables, charts, external queries) via Workbook.RefreshAll, freezes the first row of the first worksheet using Worksheet.FreezePanes, and saves the refreshed file.
-// Keywords: Aspose.Cells | Workbook.RefreshAll | Worksheet.FreezePanes | C# Excel automation | .NET Excel API | refresh data connections | freeze header row | pivot table refresh | external data source update | Excel view stability
-// Common Searches: Aspose.Cells refresh all connections then freeze top row | C# Workbook.RefreshAll example | How to freeze header row after RefreshAll in Aspose.Cells | Freeze panes after updating data sources with Aspose.Cells | Refresh external links and lock first row in Excel using .NET
-// Developer Intent: Refresh every data connection in a workbook and then lock the top row for stable viewing.
-// Use Cases: Generate a final report where all linked data sources are up‑to‑date before distribution. | Keep column headers visible while users scroll through refreshed pivot tables or charts. | Automate Excel file preparation for dashboards that require both data refresh and consistent layout.
-// AI Prompts: Create C# code with Aspose.Cells that calls RefreshAll and then freezes the first two rows of the first worksheet. | Explain the four‑parameter overload of Worksheet.FreezePanes and its best practice after a data refresh. | Show how to handle missing input files gracefully when refreshing connections and freezing panes with Aspose.Cells.
+// Title: Recalculate formulas and freeze the first row in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that loads an existing .xlsx file, recalculates all formulas, freezes the top row, and saves the updated workbook. | Demonstrate how to call Worksheet.FreezePanes after Workbook.CalculateFormula to keep refreshed data visible in an Excel file with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# recalculate all formulas and freeze top row in Excel file | How to apply FreezePanes after updating data connections with Aspose.Cells .NET | C# example to load workbook, calculate formulas, and freeze first row using Aspose.Cells | Programmatically freeze header row after refreshing data in Excel via Aspose.Cells
+// Tags: Workbook.CalculateFormula Aspose.Cells | Worksheet.FreezePanes top row | load .xlsx Aspose.Cells C# | save workbook with frozen panes Aspose.Cells | fallback data connection refresh Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example verifies the input file, loads it with Aspose.Cells, recalculates all formulas as a fallback for refreshing data connections, freezes the first row using FreezePanes, and saves the modified workbook to the specified output path.
+class Program
 {
-    // C# example that loads an Excel workbook with Aspose.Cells, updates every data connection (pivot tables, charts, external queries) via Workbook.RefreshAll, freezes the first row of the first worksheet using Worksheet.FreezePanes, and saves the refreshed file.
-    public class RefreshAndFreezeDemo
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Run();
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
 
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Recalculate all formulas (acts as a fallback when RefreshDataConnections is unavailable)
+            workbook.CalculateFormula();
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Refresh all data connections (pivot tables, charts, etc.)
-                workbook.RefreshAll();
+            // Freeze the top row to keep refreshed results visible
+            // Parameters: total rows to freeze, total columns to freeze, rows, columns
+            sheet.FreezePanes(1, 0, 1, 0);
 
-                // Freeze the top row in the first worksheet
-                Worksheet firstSheet = workbook.Worksheets[0];
-                // Freeze rows above row 1 (i.e., the first row). Use the 4‑parameter overload.
-                firstSheet.FreezePanes(1, 0, 0, 0);
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

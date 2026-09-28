@@ -1,93 +1,85 @@
-// Title: Aspose.Cells .NET: Create an Excel Theme‑Color Preview Grid
-// Description: C# example that builds a new Workbook, lists every ThemeColorType in a 4‑column grid, applies the same theme color to the font and a light‑tinted fill, and saves the sheet as ThemeColorPreview.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | ThemeColorType | Excel theme colors | preview grid | visual palette | sample code | cell styling | foreground background theme
-// Common Searches: Aspose.Cells theme color preview example | how to display all ThemeColorType values in Excel | C# code to create a theme‑color palette with Aspose.Cells | visualize Excel theme colors programmatically | generate theme color grid using Aspose.Cells .NET
-// Developer Intent: Produce an Excel worksheet that visually showcases each ThemeColorType with matching font and background colors.
-// Use Cases: Quick reference for designers to see how theme colors appear as text and fill. | Test workbook for verifying theme‑color rendering across Office versions. | Printable color palette for style guides or documentation.
-// AI Prompts: Write C# code with Aspose.Cells that creates a 3‑column theme‑color grid and exports it to PDF. | Add conditional formatting to the preview grid so Accent colors receive a thick border. | Modify the sample to include custom tints for each theme color and generate a CSV summary.
+// Title: Generate an Excel worksheet that displays a preview grid of all workbook theme colors with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to list every ThemeColorType index in column A and fill column B with a solid background of the corresponding theme color. | Extend the program to include the theme color name beside each preview cell and save the workbook as both .xlsx and .pdf files. | Create a reusable method that accepts an array of Color objects and returns a styled range that shows each color as a centered cell background.
+// Common Searches: how to list all ThemeColorType values and show their colors in an Excel sheet with Aspose.Cells C# | Aspose.Cells C# generate color swatch grid for workbook theme colors | export theme color preview worksheet to PDF using Aspose.Cells .NET | display Excel theme colors as solid cell backgrounds programmatically
+// Tags: Aspose.Cells generate theme color preview worksheet | C# create Excel color swatch grid | retrieve workbook ThemeColorType values Aspose | apply solid background style to cells Aspose.Cells | export theme color preview to PDF .NET
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeColorPreview
+// The example creates a new workbook, extracts every ThemeColorType defined in the workbook, writes the index in column A, applies each theme color as a solid background to column B cells, adds a bold header row, and saves the file as ThemeColorPreview.xlsx.
+class ThemeColorPreview
 {
-    // C# example that builds a new Workbook, lists every ThemeColorType in a 4‑column grid, applies the same theme color to the font and a light‑tinted fill, and saves the sheet as ThemeColorPreview.xlsx.
-    public class ThemeColorGridDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve all theme colors defined in the workbook
+            ThemeColorType[] themeEnums = (ThemeColorType[])Enum.GetValues(typeof(ThemeColorType));
+            Color[] themeColors = new Color[themeEnums.Length];
+            for (int i = 0; i < themeEnums.Length; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                themeColors[i] = workbook.GetThemeColor(themeEnums[i]);
+            }
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Set column widths for better visibility
+            sheet.Cells.SetColumnWidth(0, 20); // Column for color index
+            sheet.Cells.SetColumnWidth(1, 15); // Column for color preview
 
-                // Define all ThemeColorType values to preview
-                ThemeColorType[] themeTypes = new ThemeColorType[]
+            // Add a header row
+            sheet.Cells["A1"].PutValue("Theme Color Index");
+            sheet.Cells["B1"].PutValue("Preview");
+
+            // Apply bold style to header
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.IsBold = true;
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+            headerStyle.VerticalAlignment = TextAlignmentType.Center;
+            StyleFlag headerFlag = new StyleFlag
+            {
+                Font = true,
+                HorizontalAlignment = true,
+                VerticalAlignment = true
+            };
+            sheet.Cells["A1:B1"].SetStyle(headerStyle, headerFlag);
+
+            // Populate the grid with each theme color
+            for (int i = 0; i < themeColors.Length; i++)
+            {
+                int row = i + 2; // Start from row 2 (after header)
+
+                // Write the theme color index
+                sheet.Cells[row, 0].PutValue(i);
+
+                // Create a style with the theme color as background
+                Style colorStyle = workbook.CreateStyle();
+                colorStyle.ForegroundColor = themeColors[i];
+                colorStyle.Pattern = BackgroundType.Solid;
+                colorStyle.HorizontalAlignment = TextAlignmentType.Center;
+                colorStyle.VerticalAlignment = TextAlignmentType.Center;
+
+                // Apply the style to the preview cell
+                StyleFlag flag = new StyleFlag
                 {
-                    ThemeColorType.Background1,
-                    ThemeColorType.Text1,
-                    ThemeColorType.Background2,
-                    ThemeColorType.Text2,
-                    ThemeColorType.Accent1,
-                    ThemeColorType.Accent2,
-                    ThemeColorType.Accent3,
-                    ThemeColorType.Accent4,
-                    ThemeColorType.Accent5,
-                    ThemeColorType.Accent6,
-                    ThemeColorType.Hyperlink,
-                    ThemeColorType.FollowedHyperlink,
-                    ThemeColorType.StyleColor
+                    CellShading = true,
+                    HorizontalAlignment = true,
+                    VerticalAlignment = true
                 };
-
-                // Layout settings: 4 columns per row
-                int columns = 4;
-                int startRow = 0;
-                int startColumn = 0;
-
-                for (int i = 0; i < themeTypes.Length; i++)
-                {
-                    int row = startRow + i / columns;
-                    int col = startColumn + i % columns;
-
-                    // Put the name of the theme color in the cell
-                    Cell cell = cells[row, col];
-                    cell.PutValue(themeTypes[i].ToString());
-
-                    // Create a style for the cell
-                    Style style = workbook.CreateStyle();
-
-                    // Use the theme color as the foreground (font) color
-                    style.Font.ThemeColor = new ThemeColor(themeTypes[i], 0.0);
-                    style.Font.Size = 12;
-                    style.Font.IsBold = true;
-
-                    // Set a background theme color with a light tint for visibility
-                    style.ForegroundThemeColor = new ThemeColor(themeTypes[i], 0.5);
-                    style.Pattern = BackgroundType.Solid;
-
-                    // Apply the style to the cell
-                    cell.SetStyle(style);
-                }
-
-                // Save the workbook
-                workbook.Save("ThemeColorPreview.xlsx");
+                sheet.Cells[row, 1].SetStyle(colorStyle, flag);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook to a file
+            workbook.Save("ThemeColorPreview.xlsx");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ThemeColorGridDemo.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

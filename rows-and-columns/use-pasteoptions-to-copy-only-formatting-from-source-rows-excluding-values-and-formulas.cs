@@ -1,72 +1,60 @@
-// Title: Copy Row Formatting Only with PasteOptions in Aspose.Cells (C#/.NET)
-// Description: C# example that copies only the formatting of rows from a source worksheet to a destination workbook using Aspose.Cells. It sets PasteOptions.PasteType to PasteType.Formats and calls Cells.CopyRows, so styles are transferred while values and formulas are excluded. The sample creates a styled source file, copies the rows, and saves both workbooks.
-// Keywords: Aspose.Cells | C# | .NET | CopyRows | PasteOptions | PasteType.Formats | row formatting | copy formatting only | exclude values | exclude formulas | Excel workbook styling | cell style transfer | Aspose.Cells example | copy row styles | Excel automation
-// Common Searches: Aspose.Cells copy row formatting only | PasteOptions format only C# | CopyRows without values Aspose | How to copy only styles between worksheets Aspose.Cells | Transfer row styles to another workbook .NET | Copy formatting of rows Aspose.Cells | PasteType.Formats example C#
-// Developer Intent: Transfer row styles from one worksheet to another while leaving cell values and formulas untouched.
-// Use Cases: Apply a pre‑designed header style to multiple data workbooks without copying the data. | Generate reports that reuse existing row formatting while programmatically inserting fresh content. | Synchronize the visual layout of separate Excel files when only appearance needs to be shared.
-// AI Prompts: Show a C# snippet that copies only row formatting between two Aspose.Cells worksheets using PasteOptions. | Generate an Aspose.Cells example that copies a specific range of rows with formatting only, preserving no cell values. | Explain how to modify the code to copy column formatting instead of rows while using PasteType.Formats.
+// Title: Copy rows with formatting only using PasteOptions (PasteType.Formats) in Aspose.Cells for .NET C#
+// AI Prompts: Copy the first three rows from a source worksheet to a destination worksheet while preserving only cell styles using PasteOptions in C#. | Configure PasteOptions with PasteType.Formats to duplicate row formatting without transferring values or formulas in Aspose.Cells. | Generate C# code that copies rows between workbooks, applying only formatting via CopyRows and PasteOptions.
+// Common Searches: Aspose.Cells copy rows without values or formulas C# | How to copy only cell formatting between worksheets using Aspose.Cells .NET | PasteOptions PasteType.Formats example for row copy in C# | Copy row styles but not data with Aspose.Cells CopyRows method | Exclude formulas when copying rows in Aspose.Cells for .NET
+// Tags: CopyRows with PasteOptions formatting only | PasteOptions PasteType.Formats Aspose.Cells | C# copy row styles without values | Aspose.Cells row formatting transfer | Exclude formulas during row copy .NET
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-// C# example that copies only the formatting of rows from a source worksheet to a destination workbook using Aspose.Cells. It sets PasteOptions.PasteType to PasteType.Formats and calls Cells.CopyRows, so styles are transferred while values and formulas are excluded. The sample creates a styled source file, copies the rows, and saves both workbooks.
-class CopyRowFormattingOnly
+// The example creates a source workbook containing a bold header, a yellow‑filled numeric cell, and a formula, then uses CopyRows together with PasteOptions set to PasteType.Formats to copy the first three rows into a new workbook, preserving only the original formatting while omitting values and formulas.
+class Program
 {
     static void Main()
     {
-        // Create source workbook and add data with formatting
+        // Create source workbook and populate it with data, formulas and formatting
         Workbook sourceWorkbook = new Workbook();
         Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
 
-        // Row 0: set value and make font bold
+        // Header with bold font
         sourceSheet.Cells["A1"].PutValue("Header");
         Style headerStyle = sourceWorkbook.CreateStyle();
         headerStyle.Font.IsBold = true;
-        headerStyle.Font.Color = Color.White;
-        headerStyle.ForegroundColor = Color.DarkBlue;
-        headerStyle.Pattern = BackgroundType.Solid;
         sourceSheet.Cells["A1"].SetStyle(headerStyle);
 
-        // Row 1: set value and apply background color
-        sourceSheet.Cells["A2"].PutValue("Data 1");
-        Style dataStyle = sourceWorkbook.CreateStyle();
-        dataStyle.ForegroundColor = Color.LightYellow;
-        dataStyle.Pattern = BackgroundType.Solid;
-        sourceSheet.Cells["A2"].SetStyle(dataStyle);
+        // Numeric value with background color
+        sourceSheet.Cells["A2"].PutValue(123);
+        Style valueStyle = sourceWorkbook.CreateStyle();
+        valueStyle.ForegroundColor = Color.Yellow;
+        valueStyle.Pattern = BackgroundType.Solid;
+        sourceSheet.Cells["A2"].SetStyle(valueStyle);
 
-        // Row 2: set value and apply another background color
-        sourceSheet.Cells["A3"].PutValue("Data 2");
-        Style dataStyle2 = sourceWorkbook.CreateStyle();
-        dataStyle2.ForegroundColor = Color.LightGreen;
-        dataStyle2.Pattern = BackgroundType.Solid;
-        sourceSheet.Cells["A3"].SetStyle(dataStyle2);
+        // Formula cell
+        sourceSheet.Cells["A3"].Formula = "=A2*2";
 
-        // Create destination workbook (empty)
-        Workbook destWorkbook = new Workbook();
-        Worksheet destSheet = destWorkbook.Worksheets[0];
+        // Create destination workbook where rows will be copied
+        Workbook destinationWorkbook = new Workbook();
+        Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
 
-        // Prepare copy and paste options
-        CopyOptions copyOptions = new CopyOptions(); // default options
+        // Default copy options (no special behavior)
+        CopyOptions copyOptions = new CopyOptions();
+
+        // Paste options configured to copy only formatting
         PasteOptions pasteOptions = new PasteOptions
         {
-            // Copy only formatting, no values or formulas
-            PasteType = PasteType.Formats
+            PasteType = PasteType.Formats   // Formats only, no values or formulas
         };
 
-        // Copy the rows from source to destination using the options
-        // Here we copy all rows that contain data in the source sheet
-        int rowsToCopy = sourceSheet.Cells.MaxDisplayRange.RowCount;
-        destSheet.Cells.CopyRows(
-            sourceSheet.Cells,          // source cells
-            0,                          // source start row index
-            0,                          // destination start row index
-            rowsToCopy,                 // number of rows to copy
-            copyOptions,                // copy options (default)
-            pasteOptions);              // paste options (formats only)
+        // Copy the first three rows (0,1,2) from source to destination starting at row 0
+        destinationSheet.Cells.CopyRows(
+            sourceSheet.Cells,   // source cells
+            0,                   // source row index
+            0,                   // destination row index
+            3,                   // number of rows to copy
+            copyOptions,
+            pasteOptions);
 
-        // Save both workbooks for verification
-        sourceWorkbook.Save("SourceWorkbook.xlsx");
-        destWorkbook.Save("DestinationWorkbook_FormattingOnly.xlsx");
+        // Save the result
+        destinationWorkbook.Save("RowsCopyFormatsOnly.xlsx");
     }
 }

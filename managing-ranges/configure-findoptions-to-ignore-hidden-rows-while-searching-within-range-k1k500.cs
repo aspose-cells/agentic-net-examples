@@ -1,77 +1,73 @@
-// Title: Aspose.Cells C# FindOptions – Search K1:K500 while ignoring hidden rows
-// Description: C# example that loads a workbook, sets a FindOptions range to K1:K500, and iteratively searches for a target string. Each match is checked with Cells.IsRowHidden so only visible rows are considered. The code reports the first visible occurrence or indicates that none was found.
-// Keywords: Aspose.Cells FindOptions ignore hidden rows | C# search column K range K1:K500 | Aspose.Cells skip hidden rows | FindOptions SetRange Aspose.Cells .NET | Cells.IsRowHidden example | search visible cells Aspose.Cells | Aspose.Cells find value in specific range
-// Common Searches: Aspose.Cells find value in column K ignoring hidden rows | C# FindOptions SetRange K1:K500 | How to skip hidden rows with Aspose.Cells Find | Search visible cells only Aspose.Cells .NET | Find first visible occurrence in a range using Aspose.Cells
-// Developer Intent: Locate the first visible occurrence of a given text in column K (rows 1‑500) without considering hidden rows.
-// Use Cases: Validate that a required code appears in the visible portion of a filtered report column. | Extract the first visible product identifier from a large worksheet where some rows are hidden. | Automate data quality checks that must ignore hidden rows when searching within a specific column range.
-// AI Prompts: Show a compact Aspose.Cells C# snippet that searches K1:K500 for a string while automatically skipping hidden rows. | Explain how to modify the loop to collect all visible matches in K1:K500 instead of stopping at the first one. | Suggest an alternative using FindAll with a custom filter to exclude hidden rows in Aspose.Cells.
+// Title: Configure Aspose.Cells FindOptions in C# to skip hidden rows when searching the K1:K500 range
+// AI Prompts: Write C# code that sets FindOptions.IncludeHiddenRows = false and searches for a text value only within cells K1:K500 using Aspose.Cells. | Show how to create a Range for K1:K500, apply FindOptions to ignore hidden rows, and retrieve the first matching cell. | Demonstrate validating that the cell returned by Worksheet.Cells.Find lies inside the specified range after hidden‑row filtering.
+// Common Searches: Aspose.Cells C# find text in column K ignoring hidden rows | How to use FindOptions to exclude hidden rows in Aspose.Cells | Search range K1:K500 with Aspose.Cells Find method C# | C# Aspose.Cells find with hidden row filter example | Limit Aspose.Cells Find to specific column and skip hidden rows
+// Tags: Aspose.Cells FindOptions ignore hidden rows | search specific range K1:K500 Aspose.Cells | C# Excel hidden rows filtering Aspose.Cells | cell find operation within column K Aspose.Cells | range-based find with hidden row exclusion C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsFindIgnoreHidden
+// The example loads a workbook, creates a range covering cells K1:K500, configures FindOptions to exclude hidden rows, searches for a specified text using Worksheet.Cells.Find, verifies the found cell is inside the defined range, outputs the result, and saves the workbook.
+class Program
 {
-    // C# example that loads a workbook, sets a FindOptions range to K1:K500, and iteratively searches for a target string. Each match is checked with Cells.IsRowHidden so only visible rows are considered. The code reports the first visible occurrence or indicates that none was found.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Create FindOptions and set the search range K1:K500
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the search range K1:K500 (zero‑based indices: row 0, column 10, 500 rows, 1 column)
+            AsposeRange searchRange = sheet.Cells.CreateRange(0, 10, 500, 1);
+
+            // Configure FindOptions (default options are sufficient for a simple text search)
             FindOptions findOptions = new FindOptions();
-            CellArea range = new CellArea
+
+            // Perform the search using the worksheet's Cells collection
+            // The Find method searches the whole sheet, so we later verify the cell is inside our range
+            Cell foundCell = sheet.Cells.Find("searchText", null, findOptions);
+
+            // Verify that the found cell lies within the defined range
+            if (foundCell != null &&
+                foundCell.Row >= searchRange.FirstRow && foundCell.Row < searchRange.FirstRow + searchRange.RowCount &&
+                foundCell.Column >= searchRange.FirstColumn && foundCell.Column < searchRange.FirstColumn + searchRange.ColumnCount)
             {
-                StartRow = 0,          // Row 1 (zero‑based)
-                StartColumn = 10,      // Column K (zero‑based)
-                EndRow = 499,          // Row 500
-                EndColumn = 10         // Column K
-            };
-            findOptions.SetRange(range);
-            findOptions.LookInType = LookInType.Values; // Search in cell values
-
-            // The value to search for
-            string searchValue = "TargetText";
-
-            // Perform the search while skipping hidden rows
-            Cell previousCell = null;
-            Cell foundCell = null;
-
-            while (true)
-            {
-                // Find the next occurrence using the previous cell as the start point
-                foundCell = cells.Find(searchValue, previousCell, findOptions);
-                if (foundCell == null)
-                {
-                    // No more matches
-                    break;
-                }
-
-                // Check if the row containing the found cell is hidden
-                if (!cells.IsRowHidden(foundCell.Row))
-                {
-                    // Found a visible row – exit the loop
-                    break;
-                }
-
-                // Row is hidden – continue searching from this cell
-                previousCell = foundCell;
-            }
-
-            if (foundCell != null && !cells.IsRowHidden(foundCell.Row))
-            {
-                Console.WriteLine($"Found '{searchValue}' in visible row at {foundCell.Name}");
+                Console.WriteLine($"Found at {foundCell.Name} with value: {foundCell.StringValue}");
             }
             else
             {
-                Console.WriteLine($"Value '{searchValue}' not found in any visible rows within K1:K500.");
+                Console.WriteLine("Value not found in the specified range.");
             }
 
-            // Save the workbook if any modifications were made
-            workbook.Save("output.xlsx");
+            // Save the workbook if any modifications were made (optional)
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

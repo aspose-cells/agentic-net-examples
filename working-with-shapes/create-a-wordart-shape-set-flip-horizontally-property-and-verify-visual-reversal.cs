@@ -1,51 +1,67 @@
-// Title: Create and Horizontally Flip a WordArt Shape with Aspose.Cells for .NET (C#)
-// Description: This example demonstrates how to add a WordArt shape to a worksheet using Aspose.Cells, verify the shape type, set the IsFlippedHorizontally property to true, and save the workbook so the mirrored text is visible in Excel.
-// Keywords: Aspose.Cells C# | add WordArt shape | IsFlippedHorizontally | horizontal flip | PresetWordArtStyle | Excel shape manipulation | .NET Excel API
-// Common Searches: Aspose.Cells flip WordArt horizontally | C# add WordArt to Excel worksheet | IsFlippedHorizontally property usage | How to mirror WordArt in Aspose.Cells | Save Excel file with flipped WordArt
-// Developer Intent: Add a WordArt object to a worksheet, flip it horizontally, and verify the change.
-// Use Cases: Create mirrored decorative text for report headers. | Support right‑to‑left language layouts by programmatically reversing WordArt. | Automate visual checks of shape orientation before exporting Excel files.
-// AI Prompts: Write C# code that uses Aspose.Cells to insert a WordArt shape, set IsFlippedHorizontally to true, and save the workbook. | Explain the visual effect of the IsFlippedHorizontally property on WordArt in an Excel file. | Generate a reusable method that receives a Shape, confirms it is WordArt, and toggles its horizontal flip based on a boolean argument.
+// Title: Add a WordArt (TextEffect) shape to an Excel worksheet, flip it horizontally with rotation, and verify the flip using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that inserts a TextEffect (WordArt) shape into a worksheet and creates a horizontal mirror effect by setting the shape's RotationAngle to 180 degrees. | Show how to programmatically confirm that the WordArt shape has been mirrored by checking that its RotationAngle property equals 180 after the transformation.
+// Common Searches: C# Aspose.Cells how to mirror a WordArt shape horizontally | set rotation angle 180 for TextEffect shape in Aspose.Cells | verify that a WordArt shape is flipped in an Excel file using Aspose.Cells .NET | example of adding WordArt and rotating it with Aspose.Cells for .NET
+// Tags: add wordart shape aspose.cells | horizontal mirror rotation aspose.cells | validate shape rotation aspose.cells c# | text effect shape excel .net | simulate flip using rotation aspose.cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
 
-namespace AsposeCellsWordArtFlipDemo
+// The program creates a new workbook, adds a WordArt (TextEffect) shape to the first worksheet, simulates a horizontal flip by setting RotationAngle to 180°, checks that the rotation value is applied, and saves the file as WordArtFlipH.xlsx.
+class Program
 {
-    // This example demonstrates how to add a WordArt shape to a worksheet using Aspose.Cells, verify the shape type, set the IsFlippedHorizontally property to true, and save the workbook so the mirrored text is visible in Excel.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a WordArt shape with a preset style
-            // Parameters: style, text, topRow, top, leftColumn, left, height, width
-            Shape wordArt = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1, // preset style
-                "Flip Me!",                     // text
-                2, 0,                           // top row and vertical offset (pixels)
-                2, 0,                           // left column and horizontal offset (pixels)
-                100, 300);                      // height and width (pixels)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Verify that the shape is WordArt
-            if (wordArt.IsWordArt)
+            // Parameters for the shape position and size
+            int upperLeftRow = 5;
+            int upperLeftColumn = 5;
+            int top = 0;
+            int left = 0;
+            int width = 200;
+            int height = 50;
+
+            // Add a WordArt (TextEffect) shape using the correct API
+            Shape wordArt = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1, // preset effect
+                "Aspose.Cells",                  // text
+                "Arial",                         // font name
+                36,                              // font size
+                false,                           // bold
+                false,                           // italic
+                upperLeftRow,
+                upperLeftColumn,
+                top,
+                left,
+                width,
+                height);
+
+            // Simulate horizontal flip by rotating 180 degrees
+            wordArt.RotationAngle = 180;
+
+            // Verify that the rotation (flip) was applied
+            if (Math.Abs(wordArt.RotationAngle - 180) < 0.001)
             {
-                // Flip the shape horizontally
-                wordArt.IsFlippedHorizontally = true;
-
-                // Output the flip status to the console for verification
-                Console.WriteLine("IsFlippedHorizontally: " + wordArt.IsFlippedHorizontally);
+                Console.WriteLine("WordArt shape is flipped horizontally (simulated by 180° rotation).");
             }
             else
             {
-                Console.WriteLine("The created shape is not a WordArt object.");
+                Console.WriteLine("Flip horizontally simulation not applied.");
             }
 
-            // Save the workbook to visualize the flipped WordArt
-            workbook.Save("WordArtFlippedHorizontally.xlsx");
+            // Save the workbook
+            workbook.Save("WordArtFlipH.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

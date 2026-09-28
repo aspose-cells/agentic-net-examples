@@ -1,41 +1,58 @@
-// Title: Prompt for password and load a protected Excel workbook in C# with Aspise.Cells
-// Description: Shows how to request a password from the console user, assign it to LoadOptions.Password, open a password‑protected .xlsx file with Aspose.Cells, read a cell value, and properly dispose the Workbook.
-// Keywords: Aspose.Cells | C# | load password protected workbook | LoadOptions.Password | Excel encryption | prompt for password | console application | read protected Excel file
-// Common Searches: Aspose.Cells open encrypted Excel C# | C# ask user for Excel password Aspose | LoadOptions password example | Read cell from password protected workbook Aspose.Cells | Handle wrong password when loading Excel with Aspose
-// Developer Intent: Open a password‑protected Excel file by obtaining the password from the user at runtime and then read its data using Aspose.Cells.
-// Use Cases: Interactive console utilities that need to process secured workbooks | Batch jobs that decrypt and extract data from protected Excel files | Validating a user‑supplied password before performing any workbook operations | Reading specific cells (e.g., A1) after successful decryption | Ensuring the Workbook object is disposed to free memory
-// AI Prompts: Generate C# code that prompts the user for a password and opens a protected Excel workbook with Aspose.Cells, including error handling for incorrect passwords. | Provide an example that reads multiple cells from a password‑protected workbook after the user enters the password. | Explain best practices for disposing Aspose.Cells Workbook objects in a console application.
+// Title: Prompt user for password and open a protected Excel workbook with Aspose.Cells in C#
+// AI Prompts: Write C# code that asks the user for an Excel file path and password, then loads the encrypted workbook using Aspose.Cells LoadOptions. | Show how to handle missing file and incorrect password errors when opening a password‑protected .xlsx with Aspose.Cells.
+// Common Searches: C# how to read a password protected .xlsx file using Aspose.Cells LoadOptions | Aspose.Cells open encrypted Excel workbook after prompting user for password | example code to validate Excel file path before loading with Aspose.Cells in .NET | retrieve first worksheet name from a protected workbook using Aspose.Cells C#
+// Tags: Aspose.Cells LoadOptions.Password for encrypted XLSX | C# collect workbook path and decryption key | open password protected workbook with Aspose.Cells | extract first sheet title from encrypted workbook | manage absent Excel file errors in Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordLoadDemo
+// The console app asks for the workbook location and password, verifies the file exists, applies the password via LoadOptions, opens the protected Excel file with Aspose.Cells, and prints the name of the first worksheet while handling missing‑file and password errors.
+class Program
 {
-    // Shows how to request a password from the console user, assign it to LoadOptions.Password, open a password‑protected .xlsx file with Aspose.Cells, read a cell value, and properly dispose the Workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the password‑protected workbook
-            string filePath = "protected.xlsx";
+            // Prompt for workbook path
+            Console.Write("Enter the full path to the workbook: ");
+            string filePath = Console.ReadLine()?.Trim();
 
-            // Prompt the user to enter the password
-            Console.Write("Enter password to open the workbook: ");
+            // Validate the path
+            if (string.IsNullOrEmpty(filePath))
+            {
+                Console.WriteLine("No path was entered. Exiting.");
+                return;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            // Prompt for password
+            Console.Write("Enter the password to open the workbook (leave empty if none): ");
             string password = Console.ReadLine();
 
-            // Create LoadOptions and set the entered password
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.Password = password;
+            // Set load options with password (if any)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            if (!string.IsNullOrEmpty(password))
+                loadOptions.Password = password;
 
-            // Load the workbook using the load options
+            // Load the workbook
             Workbook workbook = new Workbook(filePath, loadOptions);
+            Console.WriteLine("Workbook opened successfully.");
 
-            // Example: read and display the value of cell A1 from the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Console.WriteLine("Value of A1: " + sheet.Cells["A1"].Value?.ToString());
-
-            // Dispose the workbook when done
-            workbook.Dispose();
+            // Display first worksheet name, if present
+            if (workbook.Worksheets.Count > 0)
+                Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
+            else
+                Console.WriteLine("The workbook contains no worksheets.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

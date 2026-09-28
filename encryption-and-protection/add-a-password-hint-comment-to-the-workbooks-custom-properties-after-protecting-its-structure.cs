@@ -1,38 +1,54 @@
-// Title: Add a Password Hint via Custom Document Property After Protecting Workbook Structure (Aspose.Cells for .NET)
-// Description: Demonstrates how to protect an Excel workbook's structure with a password using Aspose.Cells, then store a user‑friendly password hint in a custom document property, save the file, and optionally read the hint back for verification.
-// Keywords: Aspose.Cells protect workbook structure | Excel password hint custom property | Aspose.Cells add custom document property | C# store password hint in Excel | Aspose.Cells .NET encryption example
-// Common Searches: how to add a password hint to an Excel file with Aspose.Cells | protect workbook structure and store hint Aspose.Cells C# | read custom document property from a protected workbook | Aspose.Cells example for structure protection and hint
-// Developer Intent: Create a protected workbook and embed a readable password hint as a custom document property.
-// Use Cases: Provide administrators with a non‑intrusive hint for a protected workbook password. | Display the hint in a UI before prompting users for the protection password. | Update or replace the hint later without removing the existing structure protection.
-// AI Prompts: Generate C# code with Aspose.Cells that protects a workbook's structure and adds a custom document property named "PasswordHint" containing a hint. | Show how to retrieve the "PasswordHint" property from a workbook that has structure protection applied using Aspose.Cells for .NET. | Explain how to modify the password hint in an already protected workbook without disabling the structure protection.
+// Title: Add a password hint as a custom document property after protecting an Excel workbook's structure with Aspose.Cells for .NET
+// AI Prompts: Create a custom document property named "PasswordHint" containing a hint string immediately after calling Workbook.Protect for structure protection. | Check whether the directory for the output Excel file exists and create it if it does not before invoking workbook.Save. | Save the workbook to a new file while preserving the structure protection and the added custom document property.
+// Common Searches: how to add a password hint to an Excel file using Aspose.Cells .NET | store custom document property in a protected workbook Aspose.Cells C# example | protect workbook structure and add metadata with Aspose.Cells | ensure output folder exists before saving workbook Aspose.Cells C# | Aspose.Cells protect structure and add custom property tutorial
+// Tags: protect workbook structure Aspose.Cells | add custom document property password hint | save workbook with custom metadata C# | create output directory before workbook.Save | Aspose.Cells workbook protection example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordHintDemo
+// The sample loads an existing Excel file, protects its structure with a password, adds a custom document property called "PasswordHint" containing a user-defined hint, ensures the output directory exists, and saves the modified workbook to a new file.
+class Program
 {
-    // Demonstrates how to protect an Excel workbook's structure with a password using Aspose.Cells, then store a user‑friendly password hint in a custom document property, save the file, and optionally read the hint back for verification.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string password = "MySecretPassword";
+            const string hint = "Use your favorite pet's name";
 
-            // Protect the workbook structure with a password
-            // This prevents adding, deleting, renaming, moving, or hiding worksheets without the password
-            workbook.Protect(ProtectionType.Structure, "MyStrongPassword!");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a custom document property that serves as a password hint
-            // Custom properties are stored in the workbook and can be read without opening the file
-            workbook.CustomDocumentProperties.Add("PasswordHint", "Your favorite pet's name");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook to a file
-            workbook.Save("Workbook_With_PasswordHint.xlsx");
+            // Protect the workbook's structure with a password
+            workbook.Protect(ProtectionType.Structure, password);
 
-            // Optional: Verify that the custom property was added
-            Console.WriteLine("Custom Property 'PasswordHint' = " +
-                workbook.CustomDocumentProperties["PasswordHint"].Value);
+            // Add a custom property to store the password hint
+            workbook.CustomDocumentProperties.Add("PasswordHint", hint);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

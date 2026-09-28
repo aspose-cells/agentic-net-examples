@@ -1,53 +1,58 @@
-// Title: C# – Append a Percent Sign to Pie Chart Data Labels Using Aspose.Cells
-// Description: This example creates a workbook, adds sample categories and values, inserts a pie chart, binds the series to the data range, and configures the series’ data labels to display only percentages with a trailing “%” by setting the NumberFormat to "0%" and disabling raw values. The workbook is then saved as an Excel file.
-// Keywords: Aspose.Cells | C# pie chart | data label formatting | percentage label | custom number format | Excel chart labels | Aspose.Cells .NET | chart data labels | show percentage | hide values
-// Common Searches: Aspose.Cells show percentage on pie chart | C# set chart data label format Aspose.Cells | add % sign to pie chart labels .NET | custom data label formatter Aspose.Cells | how to hide values in chart labels Aspose.Cells
-// Developer Intent: Configure pie chart data labels to show percentages with a % sign and omit raw values.
-// Use Cases: Generate a pie chart where each slice label shows a formatted percentage | Create Excel reports with clean percentage-only labels on charts | Standardize chart label appearance across multiple workbooks using Aspose.Cells
-// AI Prompts: Write C# code with Aspose.Cells that creates a pie chart and formats data labels to display only percentages followed by a percent sign. | Show how to set NumberFormat = "0%" for chart data labels and hide the underlying values in Aspose.Cells. | Explain the steps to enable percentage labels and apply a custom formatter to a pie chart using Aspose.Cells for .NET.
+// Title: Add a percentage sign to pie chart data labels with a custom number format using Aspose.Cells for .NET
+// AI Prompts: Create a pie chart in Aspose.Cells and configure its data labels to display each value followed by a % sign. | Apply a custom number format to chart data labels in C# so the labels appear as percentages. | Generate an Excel workbook with a pie chart where the data label formatter appends a percent symbol to every label.
+// Common Searches: how to show percent sign on pie chart data labels in Aspose.Cells C# | Aspose.Cells custom number format for chart labels .NET | C# example adding % to pie chart labels using Aspose.Cells | format pie chart data labels as percentages in Excel with Aspose.Cells | Aspose.Cells chart data label formatter percentage sign
+// Tags: pie chart data label number format Aspose.Cells | custom percentage label formatter .NET | Aspose.Cells chart data label formatting | Excel pie chart label percent sign C# | Aspose.Cells set data label format
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsCustomDataLabel
+// The example creates a new workbook, fills it with category and value data, adds a pie chart, links the series and category ranges, enables data labels, applies the number format "0%" to append a percentage sign to each label, and saves the file as PieChartWithCustomLabels.xlsx.
+class Program
 {
-    // This example creates a workbook, adds sample categories and values, inserts a pie chart, binds the series to the data range, and configures the series’ data labels to display only percentages with a trailing “%” by setting the NumberFormat to "0%" and disabling raw values. The workbook is then saved as an Excel file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook wb = new Workbook();
+
+            // Get the first worksheet
+            Worksheet ws = wb.Worksheets[0];
 
             // Populate sample data for the pie chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["B2"].PutValue(30);
+            ws.Cells["A3"].PutValue("B");
+            ws.Cells["B3"].PutValue(70);
 
             // Add a pie chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            int chartIdx = ws.Charts.Add(ChartType.Pie, 5, 0, 20, 10);
+            Chart chart = ws.Charts[chartIdx];
 
-            // Set the data range for the series
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Set the series data range (values)
+            chart.NSeries.Add("B2:B3", true);
 
-            // Enable data labels for the first series
-            DataLabels dataLabels = chart.NSeries[0].DataLabels;
-            dataLabels.ShowPercentage = true;          // Show the percentage value
-            dataLabels.ShowValue = false;              // Hide the raw value (optional)
-            dataLabels.NumberFormat = "0%";            // Custom format that appends a percent sign
+            // Set the category (label) data range for the series
+            // Use XValues for compatibility across Aspose.Cells versions
+            chart.NSeries[0].XValues = "A2:A3";
 
-            // Save the workbook
-            workbook.Save("PieChartCustomDataLabels.xlsx");
+            // Enable data labels to show the values
+            chart.NSeries[0].DataLabels.ShowValue = true;
+
+            // Apply a custom number format that appends a percentage sign
+            chart.NSeries[0].DataLabels.NumberFormat = "0%";
+
+            // Save the workbook with the chart
+            string outputPath = "PieChartWithCustomLabels.xlsx";
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

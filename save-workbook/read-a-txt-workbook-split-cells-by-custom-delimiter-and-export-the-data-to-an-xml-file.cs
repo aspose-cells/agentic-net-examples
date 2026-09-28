@@ -1,53 +1,55 @@
-// Title: C# – Load pipe‑delimited TXT, split columns with TextToColumns, and save as XML using Aspose.Cells
-// Description: Shows how to load a TXT file with a custom delimiter via TxtLoadOptions, apply Cells.TextToColumns to separate the data into individual cells, and export the workbook to XML format in .NET.
-// Keywords: Aspose.Cells | C# | TxtLoadOptions | custom delimiter | pipe delimited | TextToColumns | export to XML | load txt file | save workbook as XML | txt to xml conversion
-// Common Searches: Aspose.Cells load pipe delimited txt | TextToColumns example C# | Save workbook as XML Aspose.Cells | Convert txt to xml using Aspose | How to split custom delimited text in Aspose.Cells
-// Developer Intent: Import a delimited TXT file, split its fields into separate cells, and generate an XML workbook.
-// Use Cases: Convert legacy pipe‑separated log files into XML for downstream processing. | Transform custom‑delimited exports from a mainframe into XML to feed an XML‑based API. | Automate batch conversion of daily TXT reports to XML within a scheduled .NET service.
-// AI Prompts: Generate C# code with Aspose.Cells that loads a semicolon‑delimited TXT, splits the data into columns, and saves the workbook as XML. | Explain the interaction between TxtLoadOptions.Separator and Cells.TextToColumns for parsing custom delimited text in Aspose.Cells. | Provide a step‑by‑step tutorial for converting a tab‑delimited text file to XML using Aspose.Cells for .NET, including handling of empty rows.
+// Title: Convert a pipe‑delimited TXT file to XML by splitting the first column with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a pipe‑delimited TXT file into an Aspose.Cells Workbook using TxtLoadOptions, splits column A into separate columns with TextToColumns, and saves the workbook as an XML file. | Generate a C# example showing how to set a custom separator in TxtLoadOptions, apply TextToColumns on the first column of a loaded TXT workbook, and export the processed workbook to XML with Aspose.Cells.
+// Common Searches: aspnet c# how to use TextToColumns on a txt workbook with Aspose.Cells | convert pipe separated txt to xml using Aspose.Cells .NET | load txt file with custom delimiter and split column A in Aspose.Cells | save workbook as xml after processing txt data in C# Aspose.Cells | Aspose.Cells TxtLoadOptions separator example c#
+// Tags: TxtLoadOptions custom separator Aspose.Cells | TextToColumns split column C# Aspose.Cells | export workbook to XML Aspose.Cells | pipe delimited txt to XML conversion Aspose.Cells | process txt workbook Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsTxtToXmlDemo
 {
-    // Shows how to load a TXT file with a custom delimiter via TxtLoadOptions, apply Cells.TextToColumns to separate the data into individual cells, and export the workbook to XML format in .NET.
+    // The sample loads a pipe‑delimited TXT file into an Aspose.Cells Workbook using TxtLoadOptions, splits the data in the first column into separate columns via TextToColumns, and then saves the workbook as an XML file.
     class Program
     {
         static void Main()
         {
-            // Path to the source TXT file (each line contains values separated by a custom delimiter)
+            // Paths for the input TXT file and the output XML file
             string txtPath = "input.txt";
+            string xmlPath = "output.xml";
 
-            // Configure load options with a custom delimiter (e.g., pipe character)
+            // -----------------------------------------------------------------
+            // 1. Load the TXT file into a Workbook.
+            //    Use TxtLoadOptions to specify the same delimiter that the file uses.
+            // -----------------------------------------------------------------
             TxtLoadOptions loadOptions = new TxtLoadOptions();
-            loadOptions.Separator = '|';               // you can also use SeparatorString = "|" if preferred
-
-            // Load the TXT file into a workbook using the specified options
+            // Example custom delimiter – change as needed (e.g., '|', ';', etc.)
+            loadOptions.Separator = '|';
             Workbook workbook = new Workbook(txtPath, loadOptions);
 
-            // Access the first worksheet where the data was loaded
+            // -----------------------------------------------------------------
+            // 2. Split the data in the first column into multiple columns.
+            //    The TextToColumns method works on a specific column range.
+            // -----------------------------------------------------------------
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Determine the range to apply TextToColumns:
-            // - start at the first row (0)
-            // - start at the first column (0) where the combined text resides
-            // - totalRows is the number of rows that contain data
-            int startRow = 0;
-            int startColumn = 0;
-            int totalRows = cells.MaxDataRow + 1; // MaxDataRow is zero‑based
+            // Determine how many rows contain data in the first column.
+            int totalRows = cells.MaxDataRow + 1; // MaxDataRow is zero‑based.
 
-            // Apply TextToColumns to split the combined text into separate columns
-            // Reuse the same load options (they contain the same separator)
-            cells.TextToColumns(startRow, startColumn, totalRows, loadOptions);
+            // Options for the split operation – set the same delimiter.
+            TxtLoadOptions splitOptions = new TxtLoadOptions();
+            splitOptions.SeparatorString = "|";
 
-            // Export the processed workbook to an XML file.
-            // Saving with an .xml extension automatically uses the XML format.
-            string xmlOutputPath = "output.xml";
-            workbook.Save(xmlOutputPath);
+            // Split starting at row 0, column 0 (cell A1).
+            cells.TextToColumns(0, 0, totalRows, splitOptions);
 
-            Console.WriteLine($"TXT file '{txtPath}' has been split and exported to XML at '{xmlOutputPath}'.");
+            // -----------------------------------------------------------------
+            // 3. Export the processed workbook to an XML file.
+            //    Saving with an .xml extension automatically creates XML output.
+            // -----------------------------------------------------------------
+            workbook.Save(xmlPath);
+
+            Console.WriteLine($"TXT file '{txtPath}' has been processed and exported to XML file '{xmlPath}'.");
         }
     }
 }

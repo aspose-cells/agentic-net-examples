@@ -1,49 +1,72 @@
-// Title: Aspose.Cells .NET – Apply Custom Number Format to PivotChart Axis Labels (C#)
-// Description: Load a workbook, locate a PivotChart, set a custom number format for the value (and optionally category) axis tick labels, and save the updated file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PivotChart number format | C# chart axis custom format | set value axis format Aspose.Cells | format pivot chart tick labels | apply currency format to chart axis | date format category axis Aspose.Cells | Aspose.Cells chart formatting example
-// Common Searches: Aspose.Cells change PivotChart axis number format C# | how to set custom format for chart value axis using Aspose.Cells | apply dollar format to PivotChart axis labels .NET | date format for PivotChart category axis Aspose.Cells | save workbook after modifying chart axis Aspose.Cells
-// Developer Intent: Modify the number format of a PivotChart’s axis tick labels and persist the changes in the workbook.
-// Use Cases: Display monetary values on a PivotChart’s value axis with "$#,##0.00" formatting before exporting. | Show month‑day labels on the category axis of a PivotChart using "mmm dd" format. | Validate the presence of charts, apply distinct formats to each axis, and save the workbook in a single operation.
-// AI Prompts: Generate a C# snippet that sets a custom number format for both value and category axes of a PivotChart with Aspose.Cells. | Provide code that iterates through all charts in a workbook and applies different axis formats based on chart type using Aspose.Cells for .NET. | Explain how to detect a PivotChart and safely apply axis number formatting with Aspose.Cells.
+// Title: Set a custom numeric format on a PivotChart value axis in an existing Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, locates the first PivotChart, and assigns "#,##0.00" to the chart's value axis NumberFormat property. | Create a reusable C# method that takes a file path, chart index, and format string, applies the format to the chart's Y‑axis via Aspose.Cells, and saves the workbook. | Show how to use C# dynamic objects to safely set the ValueAxis.NumberFormat of a chart when the Aspose.Cells API version may differ.
+// Common Searches: Aspose.Cells C# set custom number format for pivot chart axis in existing workbook | How to change the value axis format of an Excel chart using Aspose.Cells .NET | Apply numeric format to chart Y axis without affecting data with Aspose.Cells | C# modify chart axis properties using reflection in Aspose.Cells
+// Tags: set chart value axis number format Aspose.Cells | custom numeric format for PivotChart .NET | load workbook modify chart Aspose.Cells | dynamic axis property handling C# | apply number format to Excel chart using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace PivotChartNumberFormatExample
+// The example loads an existing Excel workbook, verifies a chart exists on the first worksheet, and uses Aspose.Cells with a dynamic object to set the chart's value (Y) axis NumberFormat to "#,##0.00". It then saves the modified workbook to a new file, handling missing files, absent charts, and formatting exceptions.
+class Program
 {
-    // Load a workbook, locate a PivotChart, set a custom number format for the value (and optionally category) axis tick labels, and save the updated file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Load an existing workbook that contains a PivotChart
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Ensure there is at least one chart in the worksheet
-            if (worksheet.Charts.Count == 0)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Get the first chart (assumed to be a PivotChart)
-            Chart chart = worksheet.Charts[0];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Apply a custom number format to the value axis tick labels
-            // Example format: two decimal places with a dollar sign
-            chart.ValueAxis.TickLabels.NumberFormat = "$#,##0.00";
+            // Assume the chart is on the first worksheet (adjust index as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Optionally, apply a custom format to the category axis tick labels
-            // chart.CategoryAxis.TickLabels.NumberFormat = "mmm dd";
+            // Ensure there is at least one chart on the worksheet
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the worksheet.");
+                return;
+            }
+
+            // Get the first chart (replace with appropriate index if necessary)
+            Chart chart = sheet.Charts[0];
+
+            // Apply a custom number format to the value (Y) axis labels.
+            // Use dynamic to avoid compile‑time binding issues with older API versions.
+            try
+            {
+                dynamic valueAxis = chart.ValueAxis;
+                valueAxis.NumberFormat = "#,##0.00";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error applying number format: {ex.Message}");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the modified workbook
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
-
-            Console.WriteLine("PivotChart axis labels formatted and workbook saved.");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

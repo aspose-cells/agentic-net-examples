@@ -1,46 +1,43 @@
-// Title: Aspose.Cells for .NET – Read formatted cell text, replace placeholders, and write back
-// Description: Demonstrates how to load or create an Excel workbook with Aspose.Cells, read a cell's formatted string, substitute placeholder tokens (e.g., {Name}, {OrderId}) with actual values, write the updated text to the same cell, and save the file while preserving cell formatting.
-// Keywords: Aspose.Cells placeholder replacement | read formatted string cell Aspose | write updated text Excel .NET | C# Excel token substitution | Aspose.Cells string replace | Excel cell text update Aspose | placeholder substitution Aspose.Cells
-// Common Searches: replace tokens in Excel cell using Aspose.Cells C# | read cell string value and update it Aspose.Cells | Aspose.Cells replace {Name} placeholder | how to write modified text back to same cell Aspose | preserve cell formatting while replacing text Aspose.Cells
-// Developer Intent: Swap placeholder tokens in a cell's text and save the modified value with Aspose.Cells for .NET.
-// Use Cases: Generate personalized letters by inserting customer names and order IDs into template strings stored in worksheet cells. | Update dynamic status messages in reports by replacing placeholders with runtime data before exporting the workbook. | Batch‑process an existing spreadsheet to replace placeholders across multiple cells and overwrite the original content.
-// AI Prompts: Show C# code with Aspose.Cells that reads a cell's string, replaces placeholders like {Date} and {Amount}, and writes the result back to the same cell. | Provide an example that iterates over a range of cells in Aspose.Cells and performs placeholder substitution for each cell's text. | Explain how to keep number/date formatting intact while replacing placeholder tokens in an Excel cell using Aspose.Cells for .NET.
+// Title: Replace {Name} and {Place} placeholders in an Excel cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Invoke Aspose.Cells Replace method with a custom ReplaceOptions object to substitute the {Name} token in cell A1 of a C# workbook. | Configure ReplaceOptions for case‑insensitive, partial‑cell matching and apply it to replace the {Place} placeholder alongside other tokens in the same cell. | After updating the cell's formatted string, call the Aspose.Cells Save method to write the workbook to an .xlsx file.
+// Common Searches: aspnet replace placeholder text in Excel cell using Aspose.Cells C# | case insensitive string replacement in an Aspose.Cells worksheet cell | Aspose.Cells ReplaceOptions example for updating cell content | C# replace multiple tokens in a single Excel cell with Aspose.Cells | save workbook after modifying cell value with Aspose.Cells .NET
+// Tags: replace placeholders in Excel cell Aspose.Cells C# | case insensitive ReplaceOptions Aspose.Cells | update formatted string cell Aspose.Cells | save workbook as Xlsx Aspose.Cells .NET | multiple token substitution worksheet cell
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsPlaceholderReplacement
 {
-    // Demonstrates how to load or create an Excel workbook with Aspose.Cells, read a cell's formatted string, substitute placeholder tokens (e.g., {Name}, {OrderId}) with actual values, write the updated text to the same cell, and save the file while preserving cell formatting.
+    // The example creates a workbook, writes a string containing {Name} and {Place} placeholders into cell A1, uses Aspose.Cells Replace with case‑insensitive ReplaceOptions to substitute each token, prints the updated value, and saves the workbook as PlaceholderReplaced.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // new workbook
-            // If you need to load an existing file, use:
-            // Workbook workbook = new Workbook("input.xlsx");
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Put a sample string containing placeholders into cell A1
+            // Example: "Hello {Name}, welcome to {Place}!"
+            cells["A1"].PutValue("Hello {Name}, welcome to {Place}!");
 
-            // Example: put a formatted string with a placeholder into cell A1
-            Cell targetCell = worksheet.Cells["A1"];
-            targetCell.PutValue("Dear {Name}, your order {OrderId} is confirmed.");
+            // Define replace options (case‑insensitive, replace within the cell content)
+            ReplaceOptions options = new ReplaceOptions
+            {
+                CaseSensitive = false,
+                MatchEntireCellContents = false
+            };
 
-            // Read the cell's formatted string (includes any number/date formatting)
-            string formattedString = targetCell.StringValue;
+            // Replace the placeholders one by one
+            cells["A1"].Replace("{Name}", "Alice", options);
+            cells["A1"].Replace("{Place}", "Wonderland", options);
 
-            // Replace placeholder tokens with actual values
-            string replacedString = formattedString
-                .Replace("{Name}", "John Doe")
-                .Replace("{OrderId}", "12345");
-
-            // Write the updated string back to the same cell
-            targetCell.PutValue(replacedString);
+            // Optionally, display the updated formatted string in the console
+            Console.WriteLine("Updated cell value: " + cells["A1"].StringValue);
 
             // Save the workbook to a file
-            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+            workbook.Save("PlaceholderReplaced.xlsx", SaveFormat.Xlsx);
         }
     }
 }

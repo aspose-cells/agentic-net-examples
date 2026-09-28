@@ -1,27 +1,25 @@
-// Title: Add a "ProcessedDate" custom document property (current DateTime) to an Excel workbook with Aspose.Cells for .NET
-// Description: Creates or loads a Workbook, adds a custom document property named ProcessedDate containing DateTime.Now, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells custom document property | C# add Excel custom property | ProcessedDate property Aspose | Workbook.CustomDocumentProperties | save workbook with metadata | Excel metadata .NET
-// Common Searches: how to add custom property to Excel using Aspose.Cells C# | Aspose.Cells set ProcessedDate property | add current datetime to workbook properties .NET | read custom document property Aspose.Cells | save Excel file with custom metadata using Aspose
-// Developer Intent: Insert a custom document property called "ProcessedDate" that holds the current date and time into a workbook and persist the file.
-// Use Cases: Timestamp generated reports for audit trails and traceability. | Embed processing dates to support version control and data lineage in exported spreadsheets. | Provide downstream automation with a reliable processing date stored in workbook metadata.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a "ProcessedDate" custom property using DateTime.UtcNow and saves the workbook as XLSX. | Show how to retrieve the "ProcessedDate" custom document property from an existing Excel file using Aspose.Cells. | Create robust error handling for adding or reading custom document properties when loading a workbook from a stream in Aspose.Cells.
+// Title: Add a 'ProcessedDate' custom document property with the current DateTime to an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an existing .xlsx file, adds a custom document property named 'ProcessedDate' set to DateTime.Now, and saves the workbook. | Use Aspose.Cells to insert a DateTime.Now custom property called ProcessedDate into a workbook and output the modified file. | Create a .NET routine that updates an Excel file's metadata by adding a ProcessedDate property with the current timestamp via Aspose.Cells.
+// Common Searches: aspocells add custom document property processeddate c# | how to set current timestamp as a custom property in Excel using Aspose.Cells .NET | C# example for adding DateTime custom property to existing workbook with Aspose.Cells | save Excel file after adding custom metadata Aspose.Cells | update workbook custom document properties programmatically in .NET
+// Tags: custom document property insertion Aspose.Cells | DateTime metadata update Excel .NET | programmatic workbook metadata modification | save workbook after custom property change | ProcessedDate Excel custom property
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Creates or loads a Workbook, adds a custom document property named ProcessedDate containing DateTime.Now, and saves the workbook as an XLSX file using Aspose.Cells for .NET.
+// Loads an existing Excel workbook, adds a custom document property named 'ProcessedDate' with the current DateTime, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook
+        string inputPath = "input.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
         // Add a custom document property named "ProcessedDate" with the current date and time
         workbook.CustomDocumentProperties.Add("ProcessedDate", DateTime.Now);
 
-        // Save the workbook to a file
-        workbook.Save("ProcessedWorkbook.xlsx", SaveFormat.Xlsx);
+        // Save the workbook with the new property
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
     }
 }

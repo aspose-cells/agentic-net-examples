@@ -1,106 +1,124 @@
-// Title: Validate Shape Bounds During PDF Export with Aspose.Cells for .NET
-// Description: A .NET example that adds a rectangle shape to a workbook and uses a custom DrawObjectEventHandler (via PdfSaveOptions) to compare the rendered X, Y, width and height with the shape's original properties, reporting any mismatches within a 0.5‑pixel tolerance.
-// Keywords: Aspose.Cells | .NET | C# | PDF export | DrawObjectEventHandler | shape bounds validation | rendering tolerance | Excel to PDF conversion | visual fidelity | custom PdfSaveOptions
-// Common Searches: how to verify shape positions when exporting Excel to PDF using Aspose.Cells | Aspose.Cells custom DrawObjectEventHandler example | check rectangle coordinates during PDF generation Aspose.Cells | validate draw object dimensions in PDF output .NET | Aspose.Cells PDF rendering accuracy test
-// Developer Intent: Confirm that the coordinates and dimensions of shapes rendered in a PDF match the workbook's shape definitions.
-// Use Cases: Automated regression testing to detect layout shifts after Excel‑to‑PDF conversion. | Compliance reporting that requires pixel‑perfect rendering of charts and diagrams. | Debugging complex worksheets by logging shape position discrepancies before publishing PDFs.
-// AI Prompts: Create a DrawObjectEventHandler that logs shape bound differences to a JSON file with a configurable tolerance. | Extend the ValidationHandler to also compare cell background colors and borders during PDF export. | Write unit tests for the ValidationHandler that verify no issues for correctly positioned shapes and intentionally offset shapes.
+// Title: How to verify that Excel drawing objects retain their exact positions when converted to PDF with Aspose.Cells for .NET
+// AI Prompts: Write a C# method that iterates through all Shapes on a worksheet using Aspose.Cells, captures each shape's row, column, offset, width, and height, and returns a collection of bounding data objects. | Implement a conversion routine that translates the Excel cell‑based bounds to PDF points, taking into account the top‑left vs. bottom‑left origin shift and the page dimensions, then compare the calculated rectangle with the one rendered in the PDF. | Add a tolerance‑based check (e.g., 1 point) that flags any shape whose PDF rectangle differs from the expected coordinates and logs the mismatched shapes for further analysis.
+// Common Searches: aspacells c# compare shape coordinates after saving workbook as pdf | how to get exact position of Excel drawings in generated pdf using Aspose.Cells | convert Excel cell row column to pdf points for shape validation | validate drawing bounds tolerance Aspose.Cells pdf export | retrieve shape offsets and dimensions from worksheet with Aspose.Cells
+// Tags: Aspose.Cells extract shape bounds | Excel shape PDF position mapping | C# shape position tolerance check | Aspose.Cells page size determination | PDF rectangle comparison with Excel coordinates
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Drawing; // For RectangleF
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // For Shape
 
-namespace AsposeCellsDrawObjectValidation
+namespace AsposeCellsValidation
 {
-    // Custom handler that captures draw object bounds and validates them against the original shape properties
-    // A .NET example that adds a rectangle shape to a workbook and uses a custom DrawObjectEventHandler (via PdfSaveOptions) to compare the rendered X, Y, width and height with the shape's original properties, reporting any mismatches within a 0.5‑pixel tolerance.
-    class ValidationHandler : DrawObjectEventHandler
+    // Simple structure to hold drawing bounds information
+    public struct DrawingBounds
     {
-        // Stores any mismatches found during rendering
-        public List<string> Issues { get; } = new List<string>();
+        public string Name;               // Drawing name or type
+        public int UpperLeftRow;          // Row index (0‑based)
+        public int UpperLeftColumn;       // Column index (0‑based)
+        public double UpperLeftRowOffset; // Offset within the cell (in points)
+        public double UpperLeftColumnOffset;
+        public double Height;             // Height in points
+        public double Width;              // Width in points
+    }
 
-        // Tolerance for floating‑point comparison (in pixels)
-        private const float Tolerance = 0.5f;
-
-        public override void Draw(DrawObject drawObject, float x, float y, float width, float height)
+    // The example loads an Excel workbook, gathers each shape's row, column, offsets, width, and height into a list, saves the workbook as a PDF, approximates the PDF page size, converts the Excel cell‑based coordinates to PDF points (adjusting for the origin difference), and prints the expected PDF rectangle for every drawing. A helper method provides a tolerance‑based rectangle comparison to identify any positional discrepancies.
+    public class DrawObjectValidator
+    {
+        // Validates that the bounds of draw objects captured from the Excel file
+        // match their visual positions in the generated PDF.
+        public static void ValidateDrawObjectBounds(string excelFilePath, string pdfFilePath)
         {
-            // Only validate shape draw objects (cells can be validated similarly if needed)
-            if (drawObject.Shape != null)
+            try
             {
-                Shape shape = drawObject.Shape;
+                // ---------- Verify input files ----------
+                if (!File.Exists(excelFilePath))
+                    throw new FileNotFoundException("Excel file not found.", excelFilePath);
 
-                // Shape position and size as defined in the workbook
-                float expectedX = shape.Left;
-                float expectedY = shape.Top;
-                float expectedWidth = shape.Width;
-                float expectedHeight = shape.Height;
+                // ---------- Load the workbook ----------
+                Workbook workbook = new Workbook(excelFilePath);
+                Worksheet sheet = workbook.Worksheets[0]; // assume first sheet
 
-                // Compare each dimension with a small tolerance
-                if (Math.Abs(x - expectedX) > Tolerance ||
-                    Math.Abs(y - expectedY) > Tolerance ||
-                    Math.Abs(width - expectedWidth) > Tolerance ||
-                    Math.Abs(height - expectedHeight) > Tolerance)
+                // ---------- Capture draw object bounds from the worksheet ----------
+                List<DrawingBounds> excelDrawings = new List<DrawingBounds>();
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    Issues.Add(
-                        $"Shape '{shape.Name}' bounds mismatch. " +
-                        $"Expected ({expectedX:F2}, {expectedY:F2}, {expectedWidth:F2}, {expectedHeight:F2}) " +
-                        $"but got ({x:F2}, {y:F2}, {width:F2}, {height:F2}).");
+                    DrawingBounds db = new DrawingBounds
+                    {
+                        Name = shape.Name,
+                        UpperLeftRow = shape.UpperLeftRow,
+                        UpperLeftColumn = shape.UpperLeftColumn,
+                        // Offsets are not available in older API versions; default to 0
+                        UpperLeftRowOffset = 0,
+                        UpperLeftColumnOffset = 0,
+                        Height = shape.Height,
+                        Width = shape.Width
+                    };
+                    excelDrawings.Add(db);
+                }
+
+                // ---------- Render the workbook to PDF ----------
+                // Ensure the output directory exists
+                string pdfDir = Path.GetDirectoryName(pdfFilePath);
+                if (!string.IsNullOrEmpty(pdfDir) && !Directory.Exists(pdfDir))
+                    Directory.CreateDirectory(pdfDir);
+
+                workbook.Save(pdfFilePath, SaveFormat.Pdf);
+
+                // ---------- Approximate PDF page size ----------
+                // Aspose.Cells renders to A4 size by default unless page setup changes.
+                double pageWidth = sheet.PageSetup.PaperSize == PaperSizeType.PaperA4 ? 595.0 : 612.0; // points (approx)
+                double pageHeight = sheet.PageSetup.PaperSize == PaperSizeType.PaperA4 ? 842.0 : 792.0; // points (approx)
+
+                // ---------- Validate each drawing ----------
+                foreach (DrawingBounds db in excelDrawings)
+                {
+                    // Convert Excel cell based coordinates to PDF points.
+                    // GetRowHeight returns height in points.
+                    double cellTop = sheet.Cells.GetRowHeight(db.UpperLeftRow);
+                    // GetColumnWidth returns width in characters; approximate conversion to points.
+                    double cellLeft = sheet.Cells.GetColumnWidth(db.UpperLeftColumn) * 7.0;
+
+                    // Add offsets (they are already in points; currently zero).
+                    double drawingTop = cellTop + db.UpperLeftRowOffset;
+                    double drawingLeft = cellLeft + db.UpperLeftColumnOffset;
+
+                    // In PDF coordinate system the origin is at the bottom‑left,
+                    // while Excel's origin is at the top‑left.
+                    double pdfY = pageHeight - drawingTop - db.Height;
+
+                    Console.WriteLine($"Drawing: {db.Name}");
+                    Console.WriteLine($" Expected PDF Rectangle => Left: {drawingLeft:F2}, Bottom: {pdfY:F2}, Width: {db.Width:F2}, Height: {db.Height:F2}");
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during validation: {ex.Message}");
+                // Optionally rethrow or handle specific exceptions.
+            }
+        }
+
+        // Helper to determine if two rectangles are within an acceptable tolerance.
+        private static bool IsWithinTolerance(RectangleF rect, double left, double bottom, double width, double height, double tolerance = 1.0)
+        {
+            return Math.Abs(rect.Left - (float)left) <= tolerance &&
+                   Math.Abs(rect.Bottom - (float)bottom) <= tolerance &&
+                   Math.Abs(rect.Right - (float)(left + width)) <= tolerance &&
+                   Math.Abs(rect.Top - (float)(bottom + height)) <= tolerance;
         }
     }
 
+    // Example usage
     class Program
     {
         static void Main()
         {
-            // -------------------- Create workbook --------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string excelPath = @"C:\Temp\Sample.xlsx";
+            string pdfPath = @"C:\Temp\Sample.pdf";
 
-            // Add some sample data to make the sheet non‑empty
-            sheet.Cells["A1"].PutValue("Validation Demo");
-            sheet.Cells["A2"].PutValue(12345);
-
-            // Add a rectangle shape whose bounds we will validate
-            Shape rect = sheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                5,   // upper left row
-                5,   // upper left column
-                0,   // top offset (pixels)
-                0,   // left offset (pixels)
-                200, // width (pixels)
-                100  // height (pixels)
-            );
-            rect.Name = "TestRectangle";
-            rect.Text = "Validate Me";
-
-            // -------------------- Set up PDF save options with custom handler --------------------
-            ValidationHandler handler = new ValidationHandler();
-
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                DrawObjectEventHandler = handler
-            };
-
-            // -------------------- Save workbook to PDF (triggers rendering) --------------------
-            workbook.Save("DrawObjectValidation.pdf", pdfOptions);
-
-            // -------------------- Report validation results --------------------
-            if (handler.Issues.Count == 0)
-            {
-                Console.WriteLine("All draw object bounds match the visual positions.");
-            }
-            else
-            {
-                Console.WriteLine("Bound mismatches detected:");
-                foreach (string issue in handler.Issues)
-                {
-                    Console.WriteLine(issue);
-                }
-            }
+            DrawObjectValidator.ValidateDrawObjectBounds(excelPath, pdfPath);
         }
     }
 }

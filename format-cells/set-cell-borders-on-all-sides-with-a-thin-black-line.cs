@@ -1,51 +1,45 @@
-// Title: C# – Add Thin Black Borders to All Sides of a Cell Range with Aspose.Cells
-// Description: Creates a workbook, defines range A1:D4, builds a Style, sets thin black borders on left, right, top and bottom, applies only the border settings via StyleFlag, and saves as AllSidesThinBlackBorder.xlsx.
-// Keywords: Aspose.Cells C# border | thin black cell border | apply borders to range Aspose.Cells | StyleFlag border only | set cell borders .NET | Excel border formatting code
-// Common Searches: Aspose.Cells add thin black border to range | C# set cell borders without changing other styles | How to apply borders on all sides using Aspose.Cells | StyleFlag usage for borders Aspose.Cells .NET | Create thin black borders around A1:D4
-// Developer Intent: Add a uniform thin black border to every side of a specified cell range.
-// Use Cases: Design a table header where each cell is outlined with a thin black border. | Highlight a financial data block by surrounding it with consistent borders. | Produce a printable invoice section that is clearly separated by a thin black outline.
-// AI Prompts: Write C# code with Aspose.Cells to apply a thick red border only to the outer edges of range B2:E10. | Show how to reuse a single Style object to assign different colors to each side of a range in Aspose.Cells. | Explain combining border styling with background fill for a range using Aspose.Cells in .NET.
+// Title: How to add a thin black border on all sides of a cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a style with a thin black border on the top, bottom, left, and right and applies it to a specified cell in an Aspose.Cells workbook. | Provide a reusable C# method named ApplyThinBlackBorder that takes a Worksheet and a cell address, sets a uniform thin black border using Aspose.Cells, and returns the styled cell. | Show the steps to save the workbook as an .xlsx file after applying the border style to a cell with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set uniform thin black border for a single cell | How to apply borders on all sides of a cell with Aspose.Cells .NET | C# example adding thin black borders to cell A1 using Aspose.Cells | Aspose.Cells style object border color and line style tutorial | Saving workbook after formatting cell borders in Aspose.Cells C#
+// Tags: apply thin black border Aspose.Cells C# | cell style borders Aspose.Cells .NET | uniform cell border formatting Aspose.Cells | save workbook after styling cell Aspose.Cells | CellBorderType.Thin usage example
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-// Creates a workbook, defines range A1:D4, builds a Style, sets thin black borders on left, right, top and bottom, applies only the border settings via StyleFlag, and saves as AllSidesThinBlackBorder.xlsx.
+// // Demonstrates creating a workbook, defining a style with thin black borders on all four sides, applying it to cell A1, and saving the file as Output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook (create rule)
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Define the range to which borders will be applied
-            // Use fully qualified type to avoid conflict with System.Range
-            Aspose.Cells.Range range = worksheet.Cells.CreateRange("A1:D4");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style object
-            Style style = workbook.CreateStyle();
+        // Get the cell to apply borders (e.g., A1)
+        Cell cell = sheet.Cells["A1"];
 
-            // Set thin black borders on all four sides
-            style.SetBorder(BorderType.LeftBorder,   CellBorderType.Thin, Color.Black);
-            style.SetBorder(BorderType.RightBorder,  CellBorderType.Thin, Color.Black);
-            style.SetBorder(BorderType.TopBorder,    CellBorderType.Thin, Color.Black);
-            style.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
+        // Create a style object
+        Style style = workbook.CreateStyle();
 
-            // Apply only the border settings to the range
-            StyleFlag flag = new StyleFlag { Borders = true };
-            range.ApplyStyle(style, flag);
+        // Set thin black border on all sides
+        style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+        style.Borders[BorderType.TopBorder].Color = Color.Black;
 
-            // Save the workbook (save rule)
-            string outputPath = "AllSidesThinBlackBorder.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+        style.Borders[BorderType.BottomBorder].Color = Color.Black;
+
+        style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+        style.Borders[BorderType.LeftBorder].Color = Color.Black;
+
+        style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+        style.Borders[BorderType.RightBorder].Color = Color.Black;
+
+        // Apply the style to the cell
+        cell.SetStyle(style);
+
+        // Save the workbook
+        workbook.Save("Output.xlsx");
     }
 }

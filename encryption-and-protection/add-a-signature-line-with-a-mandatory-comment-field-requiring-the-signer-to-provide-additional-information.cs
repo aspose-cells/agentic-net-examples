@@ -1,38 +1,51 @@
-// Title: Add a mandatory comment signature line to an Excel worksheet with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new Workbook, configure a SignatureLine that forces the signer to enter comments, display the signing date, set custom instructions, place the line in cell B2, and save the file as SignatureLineWithComments.xlsx using Aspose.Cells for C#.
-// Keywords: Aspose.Cells signature line | C# mandatory comment signature | Excel signature line with comments | Aspose.Cells add signature line | SignatureLine AllowComments | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells required comment on signature line | C# add signature line with mandatory comments | How to enforce comments in Excel signature line using Aspose | Place signature line in specific cell Aspose.Cells | Show signed date with Aspose.Cells signature line
-// Developer Intent: Insert a signature line into an Excel sheet that obliges the signer to provide a comment and records the signing date.
-// Use Cases: Approval worksheets where each reviewer must sign and add remarks before finalization. | Contract templates that capture signer comments for audit compliance. | Automated audit logs embedding signature lines with mandatory feedback and timestamp.
-// AI Prompts: Write C# code with Aspose.Cells to add a signature line that requires a comment and shows the signed date. | Explain how to check if the comment field was filled after signing an Aspose.Cells workbook. | Provide a tutorial to customize instruction text and enforce mandatory comments on a signature line in Excel.
+// Title: Insert a mandatory signature comment into a specific Excel cell using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that adds a visible comment to cell B6 as a required signature placeholder and saves the workbook. | Modify the example to accept a cell address parameter and enforce that the comment text is not empty before saving. | Add validation that throws an exception if the comment author or note is missing, and ensure the output folder is created automatically.
+// Common Searches: how to add a required signature comment to a cell with Aspose.Cells C# | Aspose.Cells create visible comment for signer in Excel workbook | C# ensure output directory exists when saving Excel file with Aspose.Cells | validate comment author and note before saving workbook using Aspose.Cells | add mandatory comment placeholder for signature line in .xlsx using .NET
+// Tags: add visible comment Aspose.Cells C# | mandatory signature placeholder Excel Aspose.Cells | create comment in specific cell Aspose.Cells | ensure output directory exists Aspose.Cells save | validate comment fields before workbook save Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a new Workbook, configure a SignatureLine that forces the signer to enter comments, display the signing date, set custom instructions, place the line in cell B2, and save the file as SignatureLineWithComments.xlsx using Aspose.Cells for C#.
-class Program
+// Demonstrates creating a new workbook with Aspose.Cells, inserting a visible comment in cell B6 as a mandatory signature placeholder, ensuring the target directory exists, and saving the file as SignatureLineWithMandatoryComment.xlsx.
+class AddSignatureLineWithMandatoryComment
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
 
-        // Configure the signature line
-        SignatureLine signatureLine = new SignatureLine();
-        signatureLine.Signer = "John Doe";                     // Signer's name
-        signatureLine.Title = "Approver";                      // Signer's title
-        signatureLine.Email = "john.doe@example.com";          // Signer's email
-        signatureLine.IsLine = true;                           // Mark as a signature line
-        signatureLine.AllowComments = true;                    // Require comments from signer
-        signatureLine.Instructions = "Please sign and provide comments."; // Prompt shown to signer
-        signatureLine.ShowSignedDate = true;                   // Show date after signing
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add the signature line to the worksheet at row 2, column 2 (zero‑based indices)
-        worksheet.Shapes.AddSignatureLine(1, 1, signatureLine);
+            // Add a comment to cell B6 (row index 5, column index 2) as a placeholder for a signature line.
+            int row = 5;
+            int column = 2;
+            Cell targetCell = sheet.Cells[row, column];
+            int commentIndex = sheet.Comments.Add(row, column);
+            Comment comment = sheet.Comments[commentIndex];
+            comment.Author = "John Doe";
+            comment.Note = "Please sign and add your comments.";
+            comment.IsVisible = true; // Make the comment visible
 
-        // Save the workbook with the signature line
-        workbook.Save("SignatureLineWithComments.xlsx");
+            // Save the workbook to a file (lifecycle rule: save)
+            string outputPath = "SignatureLineWithMandatoryComment.xlsx";
+
+            // Ensure the directory exists before saving (handle cases where outputPath has no directory part)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

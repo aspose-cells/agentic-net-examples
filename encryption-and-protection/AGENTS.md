@@ -5,7 +5,8 @@ product: Aspose.Cells for .NET
 language: C#
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: Encrypt Excel files and protect workbooks, worksheets, cells, VBA projects, and signatures in C#
 primary_apis: [Worksheet.Protect, Worksheet.Unprotect, ProtectionType, WorkbookSettings, EncryptionType, WriteProtection]
 related_categories: [../open-workbook/, ../save-workbook/, ../macro-project/, ../document-properties/]

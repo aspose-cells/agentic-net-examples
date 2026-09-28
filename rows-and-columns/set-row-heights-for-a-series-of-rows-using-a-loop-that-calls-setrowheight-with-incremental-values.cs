@@ -1,65 +1,33 @@
-// Title: Set Incremental Row Heights in Excel with Aspose.Cells for .NET (C# Loop)
-// Description: This example creates a new Workbook, accesses the first worksheet, and uses a C# for‑loop to assign each of the first ten rows a distinct height, starting at 15 pt and increasing by 2.5 pt per row via Cells.SetRowHeight. It also writes a label in column A showing the applied height and saves the file as RowHeightsLoopDemo.xlsx.
-// Keywords: Aspose.Cells | SetRowHeight | C# Excel row height | incremental row height | loop row height | programmatic row sizing | Excel automation .NET | Cells.SetRowHeight example
-// Common Searches: Aspose.Cells set row height in a loop | C# incremental row height Aspose.Cells | how to change multiple row heights programmatically Excel .NET | SetRowHeight example with varying heights | apply different heights to rows using Aspose.Cells
-// Developer Intent: Programmatically apply different heights to multiple rows in a worksheet using a loop.
-// Use Cases: Create a report where each successive row is taller to visually separate sections. | Generate a spreadsheet with progressively larger header rows for emphasis. | Add diagnostic text that displays each row's height to verify custom sizing in generated files.
-// AI Prompts: Show how to adjust the loop so row height is calculated from the length of cell content with Aspose.Cells. | Provide a sample that reads a list of height values from an array and applies them to rows using Cells.SetRowHeight. | Explain how to revert rows back to the default height after custom heights have been set in Aspose.Cells.
+// Title: How to set incremental row heights for multiple rows in an Excel sheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook with Aspose.Cells, loops through rows 0‑9, and sets each row height starting at 15 pt and increasing by 2 pt per row, then saves the file as .xlsx. | Generate a .NET example that demonstrates using Cells.SetRowHeight inside a for‑loop to apply varying heights to consecutive rows.
+// Common Searches: Aspose.Cells C# set different row heights in a loop | programmatically increase Excel row height by 2 points per row using Aspose | example of using SetRowHeight for multiple rows with Aspose.Cells .NET | how to apply incremental row heights to rows 1‑10 in an Excel file with C# | loop through rows and assign custom heights with Aspose.Cells API
+// Tags: Aspose.Cells SetRowHeight C# loop | incremental row height Aspose.Cells | dynamic Excel row height .NET | for-loop row height automation Aspose | Excel worksheet row height programmatic
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsRowHeightDemo
 {
-    // This example creates a new Workbook, accesses the first worksheet, and uses a C# for‑loop to assign each of the first ten rows a distinct height, starting at 15 pt and increasing by 2.5 pt per row via Cells.SetRowHeight. It also writes a label in column A showing the applied height and saves the file as RowHeightsLoopDemo.xlsx.
-    public class SetRowHeightsWithLoop
+    // Creates a new workbook, iterates rows 0‑9, sets each row height starting at 15 pt and adding 2 pt per row using Cells.SetRowHeight, and saves the result as RowHeightsDemo.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Loop through rows 0 to 9 and set incremental heights
+            // Height starts at 15 points and increases by 2 points for each subsequent row
+            for (int rowIndex = 0; rowIndex < 10; rowIndex++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Define the number of rows to modify, the starting height, and the increment per row
-                int totalRows = 10;
-                double startHeight = 15.0;   // height for the first row (in points)
-                double increment = 2.5;      // increase each subsequent row by this amount
-
-                // Loop through the rows and set their heights using SetRowHeight
-                for (int rowIndex = 0; rowIndex < totalRows; rowIndex++)
-                {
-                    double height = startHeight + (rowIndex * increment);
-                    cells.SetRowHeight(rowIndex, height);
-                }
-
-                // Optionally, add some data to visualize the row heights
-                for (int i = 0; i < totalRows; i++)
-                {
-                    cells[i, 0].PutValue($"Row {i + 1} height set to {cells.GetRowHeight(i)} points");
-                }
-
-                // Save the workbook to a file
-                string outputPath = "RowHeightsLoopDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                double height = 15.0 + (rowIndex * 2.0);
+                cells.SetRowHeight(rowIndex, height);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetRowHeightsWithLoop.Run();
+            // Save the workbook to a file
+            workbook.Save("RowHeightsDemo.xlsx");
         }
     }
 }

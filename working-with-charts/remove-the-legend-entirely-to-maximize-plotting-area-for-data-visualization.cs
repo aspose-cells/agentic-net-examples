@@ -1,24 +1,23 @@
-// Title: Hide chart legend in Aspose.Cells for .NET to maximize plot area
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, bind the data range, disable the legend using the ShowLegend property, and save the result as ChartWithoutLegend.xlsx.
-// Keywords: Aspose.Cells hide legend | Aspose.Cells ShowLegend false | remove chart legend C# | Aspose.Cells chart area optimization | Aspose.Cells .NET chart formatting
-// Common Searches: How to hide a legend in an Aspose.Cells chart (C#) | Aspose.Cells remove chart legend to increase plot area | Set ShowLegend = false in Aspose.Cells | Maximize Excel chart area by disabling legend with Aspose.Cells | C# Aspose.Cells chart without legend
-// Developer Intent: Disable the chart legend so the plot area occupies the full chart space.
-// Use Cases: Compact dashboards where legends are redundant | Space‑efficient Excel reports with multiple charts | Print‑ready charts that avoid unnecessary legend space | Embedding charts in PDFs where legends would be clipped
-// AI Prompts: Generate C# code with Aspose.Cells to create a line chart and hide its legend. | Explain the ShowLegend property and list other chart elements that can be toggled in Aspose.Cells. | Show how to automatically resize a chart after hiding the legend to fill the empty area.
+// Title: Remove the legend from a column chart in Aspose.Cells for .NET to expand the plotting area
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart and disables its legend to increase the plot region. | Show how to assign false to chart.ShowLegend in Aspose.Cells to hide the legend. | Write a C# example that builds an Excel workbook, adds sample data, inserts a column chart, hides the legend, and saves the file.
+// Common Searches: Aspose.Cells C# expand column chart area by removing legend | how to hide legend in an Excel column chart using Aspose.Cells .NET | increase chart plot region by disabling legend with Aspose.Cells API
+// Tags: Aspose.Cells chart legend suppression C# | column chart plot area expansion Aspose.Cells | chart legend visibility Aspose.Cells .NET | Excel chart formatting without legend Aspose | C# Aspose.Cells chart customization
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a workbook, add sample data, insert a column chart, bind the data range, disable the legend using the ShowLegend property, and save the result as ChartWithoutLegend.xlsx.
-public class RemoveLegendDemo
+namespace RemoveLegendExample
 {
-    public static void Run()
+    // Creates a workbook, adds sample data, inserts a column chart, disables the legend to maximize the plot area, and saves the workbook as an Excel file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
@@ -31,7 +30,7 @@ public class RemoveLegendDemo
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart to the worksheet
+            // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
@@ -39,23 +38,11 @@ public class RemoveLegendDemo
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Hide the legend completely to maximize the plotting area
+            // Hide the legend to maximize the plotting area
             chart.ShowLegend = false;
 
-            // Save the workbook with the chart that has no legend
+            // Save the workbook
             workbook.Save("ChartWithoutLegend.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        RemoveLegendDemo.Run();
     }
 }

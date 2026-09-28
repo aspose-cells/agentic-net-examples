@@ -1,50 +1,49 @@
-// Title: Aspose.Cells C# – Assign a Unique Name to a TextBox and Retrieve It by Name
-// Description: Shows how to create a workbook, add a TextBox, set its Name property to a unique identifier, save the file, reload it, locate the TextBox using the name indexer, modify its text, and save the updated workbook.
-// Keywords: Aspose.Cells TextBox Name | C# named TextBox Aspose | retrieve TextBox by name Aspose.Cells | Aspose.Cells shape naming | Excel TextBox manipulation C# | Aspose.Cells workbook shapes | set TextBox identifier | update TextBox content Aspose | Aspose.Cells .NET TextBox example
-// Common Searches: how to name a TextBox in Aspose.Cells C# | retrieve TextBox by name Aspose.Cells .NET | Aspose.Cells change TextBox text after loading workbook | C# Aspose.Cells add and edit TextBox | access Excel shape by name using Aspose.Cells
-// Developer Intent: Create a uniquely named TextBox and later modify it via its Name property.
-// Use Cases: Form‑like data entry where a specific TextBox must be updated without scanning all shapes. | Version‑controlled annotations that need consistent identification across workbook revisions. | Automation scripts that target a particular TextBox among many shapes for dynamic content updates. | Generating reports where placeholder TextBoxes are replaced with calculated values. | Building Excel‑based UI components that require stable references.
-// AI Prompts: Write C# code with Aspose.Cells to add a TextBox, assign a custom Name, save the workbook, reload it, and change the TextBox content using the Name indexer. | Explain the purpose of the TextBox.Name property in Aspose.Cells and best practices for retrieving shapes by name after loading a workbook. | Show how to implement error handling when accessing a TextBox by name that may not exist, including null checks and exception management. | Provide a step‑by‑step guide to rename an existing TextBox in an Excel file using Aspose.Cells C#. | Create a reusable method that accepts a workbook path, TextBox name, and new text, then updates the specified TextBox.
+// Title: How to assign a custom Name to a textbox shape in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, adds a textbox shape, and sets its Name property to a custom identifier with Aspose.Cells. | Show how to rename an existing textbox shape in a worksheet and update its displayed text using Aspose.Cells for .NET. | Provide a complete example that positions a textbox over specific cells, assigns a unique name, and saves the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# set custom name for textbox shape in Excel | rename textbox shape programmatically in .NET workbook using Aspose.Cells | identify a specific textbox in an Excel file with Aspose.Cells API | C# example adding named textbox to worksheet with Aspose.Cells | assign unique identifier to Excel shape for later manipulation Aspose.Cells
+// Tags: add textbox shape Aspose.Cells C# | set shape Name property Aspose.Cells | named textbox Excel Aspose.Cells | shape identification Aspose.Cells workbook | save workbook as xlsx Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add a TextBox, set its Name property to a unique identifier, save the file, reload it, locate the TextBox using the name indexer, modify its text, and save the updated workbook.
+// Creates a new workbook, adds a textbox shape positioned over cells B2:C4, assigns it a unique Name ("UniqueTextbox_001"), sets its displayed text, and saves the file as Output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // ---------- Create a workbook and add a named TextBox ----------
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-
-        // Add a TextBox to the worksheet and obtain its index
-        int tbIndex = ws.TextBoxes.Add(2, 2, 150, 50);
-        TextBox tb = ws.TextBoxes[tbIndex];
-
-        // Assign a unique name for later identification
-        tb.Name = "UniqueTextBox1";
-
-        // Set initial text (optional)
-        tb.Text = "Initial content";
-
-        // Save the workbook
-        wb.Save("NamedTextbox.xlsx");
-
-        // ---------- Load the workbook and manipulate the named TextBox ----------
-        Workbook loadedWb = new Workbook("NamedTextbox.xlsx");
-        Worksheet loadedWs = loadedWb.Worksheets[0];
-
-        // Retrieve the TextBox by its unique name
-        TextBox namedTb = loadedWs.TextBoxes["UniqueTextBox1"];
-        if (namedTb != null)
+        try
         {
-            // Update the text of the TextBox
-            namedTb.Text = "Updated content";
-        }
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
 
-        // Save the updated workbook
-        loadedWb.Save("NamedTextbox_Updated.xlsx");
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a textbox shape to the worksheet.
+            // Parameters: upper left row, upper left column, top offset, left offset, width, height (in pixels)
+            // This places the textbox roughly over cells B2:C4.
+            Shape textbox = sheet.Shapes.AddTextBox(
+                1,    // upper left row (B2, zero‑based)
+                1,    // upper left column (B2)
+                0,    // top offset (pixels)
+                0,    // left offset (pixels)
+                200,  // width (pixels)
+                100   // height (pixels)
+            );
+
+            // Assign a unique name for later identification and manipulation
+            textbox.Name = "UniqueTextbox_001";
+
+            // Set the displayed text
+            textbox.Text = "Sample Text";
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

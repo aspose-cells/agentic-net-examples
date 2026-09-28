@@ -1,44 +1,63 @@
-// Title: Remove OLE objects by label in Excel using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, iterates each worksheet, scans the OleObjects collection in reverse, compares each object's Label to a target string, removes matching OLE objects, and saves the updated file.
-// Keywords: Aspose.Cells | C# remove OLE object | delete OLE object by label | OleObjects collection | Excel OLE removal | Aspose.Cells API | RemoveAt | batch OLE cleanup
-// Common Searches: Aspose.Cells delete OLE object by label | C# remove specific OLE object from Excel | How to iterate OleObjects in Aspose.Cells | Remove unwanted OLE shapes from workbook | Batch remove OLE objects Aspose.Cells
-// Developer Intent: Remove all OLE objects whose label matches a specified value from one or more worksheets.
-// Use Cases: Sanitize workbooks by stripping confidential embedded documents before sharing. | Automate cleanup of placeholder OLE charts inserted during data import. | Prepare template files for production by removing development‑only OLE objects. | Integrate into CI pipelines to ensure no prohibited OLE content in generated reports.
-// AI Prompts: Write C# code using Aspose.Cells to delete OLE objects with a given label from a specific worksheet. | Show how to log each removed OLE object's label and sheet name while processing a workbook. | Provide a LINQ‑based method to filter and remove OLE objects by label in Aspose.Cells. | Explain how to handle exceptions when the target label does not exist.
+// Title: Remove an OLE object with a specific label from an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, finds an OLE object whose Name matches a given label, deletes it, and saves the file. | Show how to iterate the Worksheet.OleObjects collection in reverse order and remove the matching OLE object by its label safely. | Create a reusable method RemoveOleObject(string inputPath, string label, string outputPath) that purges the unwanted OLE object using Aspose.Cells.
+// Common Searches: Aspose.Cells C# remove OLE object by name from worksheet | how to delete embedded OLE object in Excel using Aspose.Cells .NET | iterate OleObjectCollection and delete specific object Aspose.Cells | C# code to purge unwanted OLE object from Excel file with Aspose.Cells | remove OLE object with label UnwantedLabel using Aspose.Cells
+// Tags: remove OLE object Aspose.Cells | OleObjectCollection iteration C# | delete embedded OLE object Excel .NET | filter OLE objects by name Aspose.Cells | save workbook after OLE removal Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Loads an Excel workbook, iterates each worksheet, scans the OleObjects collection in reverse, compares each object's Label to a target string, removes matching OLE objects, and saves the updated file.
-class RemoveOleObjectByLabel
+// Loads an Excel workbook, searches the first worksheet for an OLE object whose Name equals a specified label, removes that object from the OleObjectCollection, and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Load the workbook containing OLE objects
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Define the label of the OLE object to remove
-        string unwantedLabel = "UnwantedLabel";
-
-        // Iterate through all worksheets (optional – you can target a specific sheet)
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Iterate backwards to safely remove items from the collection
-            for (int i = sheet.OleObjects.Count - 1; i >= 0; i--)
-            {
-                OleObject ole = sheet.OleObjects[i];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-                // Check the label of the OLE object
-                if (ole.Label == unwantedLabel)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define the label (name) of the OLE object that should be removed
+            string unwantedLabel = "UnwantedLabel";
+
+            // Get the collection of OLE objects on the worksheet
+            OleObjectCollection oleObjects = worksheet.OleObjects;
+
+            // Iterate backwards so removal does not affect the loop index
+            for (int i = oleObjects.Count - 1; i >= 0; i--)
+            {
+                OleObject ole = oleObjects[i];
+
+                // Compare the OLE object's name (label) with the target label
+                if (ole.Name == unwantedLabel)
                 {
-                    // Remove the OLE object at the current index
-                    sheet.OleObjects.RemoveAt(i);
+                    // Remove the matching OLE object from the worksheet
+                    oleObjects.RemoveAt(i);
                 }
             }
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

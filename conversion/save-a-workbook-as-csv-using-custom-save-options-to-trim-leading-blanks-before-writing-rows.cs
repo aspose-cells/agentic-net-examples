@@ -1,18 +1,15 @@
-// Title: Aspose.Cells C# – Save Workbook to CSV while Trimming Leading Blank Rows/Columns
-// Description: Shows how to build a workbook, place data at C3, and use TxtSaveOptions (comma delimiter, UTF‑8 encoding, TrimLeadingBlankRowAndColumn = true) to export a CSV that excludes any initial empty rows or columns.
-// Keywords: Aspose.Cells | C# | CSV export | TxtSaveOptions | TrimLeadingBlankRowAndColumn | remove leading blanks | UTF-8 CSV | custom delimiter | Excel to CSV .NET | save workbook as CSV
-// Common Searches: Aspose.Cells trim leading blanks CSV | TxtSaveOptions TrimLeadingBlankRowAndColumn example | export Excel to CSV without empty rows C# | remove initial empty columns when saving CSV Aspose | custom CSV delimiter Aspose.Cells
-// Developer Intent: Export an Excel workbook to CSV while automatically discarding leading empty rows and columns.
-// Use Cases: Produce clean CSV reports from spreadsheets that contain header rows after blank rows or columns. | Feed CSV files into data pipelines that cannot handle leading empty rows. | Generate UTF‑8 encoded CSV files with a specific delimiter and no preceding blanks.
-// AI Prompts: Write C# code with Aspose.Cells to save a workbook as a semicolon‑delimited CSV and trim leading empty rows and columns. | Explain the effect of the TrimLeadingBlankRowAndColumn property in TxtSaveOptions on the output CSV. | Show how to configure TxtSaveOptions for UTF‑16 encoding and keep leading blanks unchanged.
+// Title: Save an Aspose.Cells workbook as CSV with TxtSaveOptions that trim leading blank rows and columns (C#)
+// AI Prompts: Write C# code that creates a workbook, adds data starting at cell C3, configures TxtSaveOptions to remove leading empty rows and columns, sets a comma delimiter and UTF‑8 encoding, and saves the result as a CSV file. | Show how to use Aspose.Cells TxtSaveOptions in C# to export a worksheet to CSV while automatically trimming blank rows/columns and specifying a custom separator.
+// Common Searches: asp.net aspose.cells csv trim leading blank rows and columns | c# txtsaveoptions trimleadingblankrowandcolumn example | export excel worksheet to csv without empty rows using Aspose.Cells | set custom csv delimiter and utf-8 encoding in Aspose.Cells C# | how to remove empty rows and columns when saving to CSV with Aspose.Cells
+// Tags: Aspose.Cells TxtSaveOptions CSV trimming | TrimLeadingBlankRowAndColumn export | C# Aspose.Cells set CSV separator | UTF-8 encoding Aspose.Cells CSV output | remove empty rows Aspose.Cells conversion
 
 using System;
-using Aspose.Cells;
 using System.Text;
+using Aspose.Cells;
 
 namespace AsposeCellsCsvTrimExample
 {
-    // Shows how to build a workbook, place data at C3, and use TxtSaveOptions (comma delimiter, UTF‑8 encoding, TrimLeadingBlankRowAndColumn = true) to export a CSV that excludes any initial empty rows or columns.
+    // Creates a workbook, places data at C3, configures TxtSaveOptions to trim leading blank rows and columns, sets a comma separator and UTF‑8 encoding, and saves the workbook as a trimmed CSV file.
     class Program
     {
         static void Main()
@@ -22,19 +19,24 @@ namespace AsposeCellsCsvTrimExample
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate some data with leading blank rows and columns
-            // Row 0 and column 0 are left blank intentionally
-            cells["C3"].PutValue("Data1"); // Row index 2, Column index 2
-            cells["D4"].PutValue("Data2"); // Row index 3, Column index 3
-            cells["E5"].PutValue("Data3"); // Row index 4, Column index 4
+            // Add data with leading blank rows and columns
+            // Row 0 and 1 are blank, column 0 and 1 are blank
+            cells["C3"].PutValue("First");
+            cells["D4"].PutValue("Second");
+            cells["E5"].PutValue("Third");
 
-            // Configure text (CSV) save options
-            TxtSaveOptions saveOptions = new TxtSaveOptions();
-            saveOptions.Separator = ',';                     // Use comma as delimiter
-            saveOptions.Encoding = Encoding.UTF8;            // UTF-8 encoding
-            saveOptions.TrimLeadingBlankRowAndColumn = true; // Trim leading blank rows/columns
+            // Configure TxtSaveOptions to trim leading blank rows and columns
+            TxtSaveOptions saveOptions = new TxtSaveOptions
+            {
+                // Ensure leading blanks are removed (default is true, set explicitly for clarity)
+                TrimLeadingBlankRowAndColumn = true,
+                // Use comma as the CSV separator
+                Separator = ',',
+                // Optional: set encoding if needed
+                Encoding = Encoding.UTF8
+            };
 
-            // Save the workbook as CSV using the custom options
+            // Save the workbook as CSV with the specified options
             workbook.Save("TrimmedOutput.csv", saveOptions);
 
             Console.WriteLine("Workbook saved as CSV with leading blanks trimmed.");

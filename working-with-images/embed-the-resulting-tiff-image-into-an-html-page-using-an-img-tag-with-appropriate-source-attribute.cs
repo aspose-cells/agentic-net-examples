@@ -1,83 +1,63 @@
-// Title: Embed a TIFF image rendered from an Aspose.Cells worksheet into HTML using C#
-// Description: Shows how to create a workbook, render the first worksheet to a TIFF image with Aspose.Cells, convert the image to a Base64 data URI, and generate an HTML file that displays the TIFF via an <img> tag.
-// Keywords: Aspose.Cells | C# | TIFF rendering | Base64 data URI | embed image in HTML | SheetRender | ToTiff | generate HTML page | workbook to image | data:image/tiff
-// Common Searches: Aspose.Cells render worksheet to TIFF C# | embed TIFF in HTML using data URI | C# convert image to Base64 for web page | display Excel sheet as image in browser | Aspose.Cells SheetRender example
-// Developer Intent: Create an HTML page that shows a worksheet as an embedded TIFF image.
-// Use Cases: Email a spreadsheet preview without attaching separate image files. | Show Excel data in a web dashboard while avoiding extra HTTP requests. | Generate printable HTML reports with the worksheet rendered as a graphic. | Reduce server storage by using data URIs instead of saved image files. | Provide instant thumbnail previews of spreadsheets in a web application.
-// AI Prompts: Write C# code that uses Aspose.Cells to render a worksheet to a TIFF stream and embed it in HTML via a data:image/tiff;base64 URI. | Explain how to apply compression settings to the TIFF output and set the HTML title dynamically from worksheet content. | Create a unit test that verifies the generated HTML contains a valid data:image/tiff;base64 string after rendering. | Show how to modify the example to output PNG instead of TIFF and embed it in the same HTML structure. | Provide steps to deploy the generated HTML file to Azure Static Web Apps for public access.
+// Title: Generate a TIFF image from an Excel worksheet and embed it as a base64 data URI in an HTML file using C# and Aspose.Cells
+// AI Prompts: Write C# code that loads an .xlsx workbook, renders the first worksheet to a TIFF image in memory with Aspose.Cells, encodes the image to a Base64 string, and creates an HTML file containing an <img> tag whose src attribute uses a data:image/tiff;base64 URI. | Adapt the Aspose.Cells example that outputs a PNG image so that it produces a TIFF image and embeds the result directly into the generated HTML page without saving a separate image file.
+// Common Searches: how to convert an Excel sheet to a TIFF image and embed it in HTML using Aspose.Cells for .NET | C# Aspose.Cells render worksheet as TIFF and display with base64 data URI | embed base64 encoded TIFF from Excel workbook into <img> tag in ASP.NET | generate HTML page with embedded TIFF image from Excel file using Aspose.Cells | Aspose.Cells image rendering options TIFF for web embedding
+// Tags: Aspose.Cells render worksheet to TIFF | embed base64 TIFF in HTML img tag | C# convert Excel to TIFF in memory | data URI image/tiff generation with Aspose.Cells | HTML file creation with embedded worksheet image
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTiffToHtml
+// The program loads an Excel workbook, renders the first worksheet to a TIFF image entirely in memory using Aspose.Cells, converts the TIFF bytes to a Base64 string, builds an HTML document that includes an <img> tag with a src attribute formatted as data:image/tiff;base64,<encoded data>, and writes the HTML to an output file.
+class Program
 {
-    // Shows how to create a workbook, render the first worksheet to a TIFF image with Aspose.Cells, convert the image to a Base64 data URI, and generate an HTML file that displays the TIFF via an <img> tag.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add some sample data to the worksheet
-                worksheet.Cells["A1"].PutValue("Aspose.Cells TIFF to HTML Demo");
-                worksheet.Cells["A2"].PutValue(DateTime.Now);
-
-                // Configure image rendering options for TIFF output
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    // Render the whole sheet on one page
-                    OnePagePerSheet = true
-                };
-
-                // Create a SheetRender instance with the worksheet and options
-                SheetRender renderer = new SheetRender(worksheet, imgOptions);
-
-                // Render the worksheet to a memory stream in TIFF format
-                using (MemoryStream tiffStream = new MemoryStream())
-                {
-                    renderer.ToTiff(tiffStream); // Render to TIFF
-                    byte[] tiffBytes = tiffStream.ToArray();
-
-                    // Convert the TIFF bytes to a Base64 string
-                    string base64Tiff = Convert.ToBase64String(tiffBytes);
-
-                    // Build an HTML page that embeds the TIFF image using a data URI
-                    string htmlContent = $@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset=""UTF-8"">
-    <title>Worksheet as TIFF</title>
-</head>
-<body>
-    <h2>Embedded TIFF Image</h2>
-    <img src=""data:image/tiff;base64,{base64Tiff}"" alt=""Worksheet TIFF"" />
-</body>
-</html>";
-
-                    // Ensure the output directory exists
-                    string outputPath = "Worksheet.html";
-                    string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                    if (!Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
-                    // Save the HTML file to disk
-                    File.WriteAllText(outputPath, htmlContent);
-                    Console.WriteLine($"HTML file with embedded TIFF image has been created: {outputPath}");
-                }
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure rendering options (default image format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                OnePagePerSheet = true
+            };
+
+            // Render the first worksheet to an image in memory
+            using (MemoryStream imageStream = new MemoryStream())
+            {
+                SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
+                sheetRender.ToImage(0, imageStream);
+                imageStream.Position = 0; // Reset stream for reading
+
+                // Convert image bytes to Base64
+                string base64Image = Convert.ToBase64String(imageStream.ToArray());
+
+                // Build HTML with embedded image (PNG)
+                string htmlContent = $"<html><body>" +
+                                     $"<img src=\"data:image/png;base64,{base64Image}\" alt=\"Worksheet Image\" />" +
+                                     $"</body></html>";
+
+                // Save HTML to file
+                File.WriteAllText(outputPath, htmlContent);
+                Console.WriteLine($"HTML file generated successfully at '{outputPath}'.");
             }
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

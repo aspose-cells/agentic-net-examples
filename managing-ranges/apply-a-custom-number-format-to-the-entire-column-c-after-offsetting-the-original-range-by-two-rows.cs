@@ -1,75 +1,70 @@
-// Title: Aspose.Cells .NET – Apply Custom Percentage Format to Column C After Row Offset
-// Description: Creates a workbook, offsets a range from C1 to C3, retrieves the whole column C, builds a style with the custom format "##0.00%", and applies it using a StyleFlag that targets only the number format.
-// Keywords: Aspose.Cells | custom number format | percentage format | column C formatting | range offset rows | StyleFlag | C# Excel automation | .NET workbook styling
-// Common Searches: Aspose.Cells offset range by rows | apply custom number format to entire column in .NET | percentage format column C Aspose.Cells | StyleFlag number format only Aspose.Cells | C# set column format after moving range
-// Developer Intent: Set a custom percentage number format for the whole column C after moving a source range down two rows.
-// Use Cases: Standardize percentage display in financial reports regardless of data start row. | Create a reusable template where column C always shows values as "##0.00%" after inserting rows. | Automate formatting of copied data when the source range is shifted within a worksheet.
-// AI Prompts: Generate Aspose.Cells .NET code that offsets a range by two rows and applies the custom format "##0.00%" to the entire column containing the offset range. | Show how to create a Style with a custom percentage pattern and use StyleFlag to apply only the number format to column C after an offset operation. | Write a reusable function that accepts a worksheet, an original range, and a row offset, then formats the whole column of the offset range with a custom numeric pattern.
+// Title: Apply a custom number format to column C while skipping the first two rows with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook, creates a range for column C starting at row 3, and applies the custom number format '#,##0.00;[Red]-#,##0.00' using Aspose.Cells. | Provide a reusable method that takes a worksheet, column index, start‑row offset, and format string, then creates the appropriate range and applies the style with Aspose.Cells. | Show how to modify the example to format column D instead of C and use a different custom format while keeping the two‑row offset.
+// Common Searches: Aspose.Cells how to format a whole column with a custom number format after skipping header rows | C# create a range with offset rows and apply StyleFlag.All in Aspose.Cells | Apply red negative number formatting to column C using Aspose.Cells .NET | Set custom numeric format for dynamic range based on last data row Aspose.Cells | Skip first two rows when applying number format to Excel column with Aspose.Cells
+// Tags: apply custom number format Aspose.Cells | create range with start row offset Aspose.Cells | format column C Aspose.Cells .NET | use StyleFlag.All Aspose.Cells | skip header rows number formatting Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Alias to avoid conflict with System.Range
-    using CellsRange = Aspose.Cells.Range;
-
-    // Creates a workbook, offsets a range from C1 to C3, retrieves the whole column C, builds a style with the custom format "##0.00%", and applies it using a StyleFlag that targets only the number format.
-    public class ApplyCustomNumberFormatToColumnC
+    // Loads an existing workbook, creates a range covering column C from row 3 to the last data row, applies a custom number format '#,##0.00;[Red]-#,##0.00' using a style with StyleFlag.All, and saves the modified file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                var workbook = new Workbook(inputPath);
 
                 // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                var worksheet = workbook.Worksheets[0];
 
-                // Define an original range starting at cell C1 (row 0, column 2)
-                // For demonstration we use a single‑cell range; the size can be adjusted as needed
-                CellsRange originalRange = cells.CreateRange(0, 2, 1, 1);
+                // Determine the last row that contains data
+                int lastDataRow = worksheet.Cells.MaxDataRow;
 
-                // Offset the original range by two rows (row index + 2)
-                // Since there is no direct Offset method, create a new range at the offset position
-                CellsRange offsetRange = cells.CreateRange(2, 2, 1, 1); // starts at C3
+                // Define the offset (skip the first two rows)
+                int startRow = 2;               // Zero‑based index: row 3 in Excel
+                int startColumn = 2;            // Column C (zero‑based)
 
-                // Get the entire column that contains the offset range (column C)
-                CellsRange entireColumn = offsetRange.EntireColumn;
+                // Calculate how many rows to include in the range
+                int totalRows = (lastDataRow >= startRow) ? (lastDataRow - startRow + 1) : 0;
 
-                // Create a style with a custom number format (percentage with two decimals)
-                Style style = workbook.CreateStyle();
-                style.Custom = "##0.00%";
-
-                // Configure the style flag to apply only the number format
-                StyleFlag styleFlag = new StyleFlag
+                // Apply the custom number format only if there are rows to format
+                if (totalRows > 0)
                 {
-                    NumberFormat = true
-                };
+                    // Create a range that covers column C from the offset row to the last data row
+                    var range = worksheet.Cells.CreateRange(startRow, startColumn, totalRows, 1);
 
-                // Apply the style to the entire column C
-                entireColumn.ApplyStyle(style, styleFlag);
+                    // Create a style with the desired custom number format
+                    var style = workbook.CreateStyle();
+                    style.Custom = "#,##0.00;[Red]-#,##0.00";   // Example custom format
 
-                // Save the workbook
-                string outputPath = "ColumnC_CustomNumberFormat.xlsx";
+                    // Apply the style to the range (apply all style attributes)
+                    var flag = new StyleFlag { All = true };
+                    range.ApplyStyle(style, flag);
+                }
+
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ApplyCustomNumberFormatToColumnC.Run();
         }
     }
 }

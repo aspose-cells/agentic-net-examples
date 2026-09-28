@@ -1,70 +1,95 @@
-// Title: C# – Export Chart Shape Connection Points to CSV with Aspose.Cells
-// Description: This example creates a workbook, adds a column chart, inserts a rectangle shape inside the chart, retrieves the shape's connection points using GetConnectionPoints(), and writes each point's index, X and Y coordinates to a CSV file. The workbook can also be saved for further inspection.
-// Keywords: Aspose.Cells GetConnectionPoints | chart shape coordinates C# | export shape points to CSV | Aspose.Cells shape connection points example | C# Aspose.Cells chart shape CSV export | retrieve shape anchor points Aspose | Aspose.Cells shape geometry extraction
-// Common Searches: How to get connection points of a chart shape using Aspose.Cells | Export shape connection points to CSV in C# | Aspose.Cells GetConnectionPoints chart example | Save chart shape coordinates as CSV file | C# Aspose.Cells retrieve rectangle shape points
-// Developer Intent: Extract all connection points of a chart shape and write them to a CSV file.
-// Use Cases: Generate a CSV report of shape anchor points for layout analysis. | Feed shape geometry data into downstream reporting or visualization tools. | Automate custom connector logic by programmatically accessing shape connection points.
-// AI Prompts: Write C# code that reads the CSV of shape connection points and creates a scatter chart from the data using Aspose.Cells. | Show how to resize the rectangle shape, recalculate its connection points, and export the updated coordinates to a new CSV file. | Explain how to iterate over every shape in a chart, collect each shape's connection points, and generate separate CSV files for each shape.
+// Title: Export chart shape connection points to a CSV file with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an Excel workbook using Aspose.Cells, iterates over each chart, calls Shape.GetConnectionPoints, and writes the point index with X/Y coordinates to a CSV file. | Enhance the example to also record the chart's top‑left cell address and the worksheet name in each CSV row. | Add comprehensive error handling that skips charts lacking a shape or connection points and logs descriptive warnings to the console.
+// Common Searches: Aspose.Cells C# how to extract chart connection points and save to CSV | GetConnectionPoints method example for Excel charts in .NET | Export chart shape coordinates from an .xlsx file using Aspose.Cells | C# code to list chart connection point coordinates in an Excel workbook
+// Tags: Aspose.Cells GetConnectionPoints API | export chart connection points as CSV | chart shape coordinates extraction .NET | Excel chart connection points Aspose.Cells | C# write point data to CSV file
 
 using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// This example creates a workbook, adds a column chart, inserts a rectangle shape inside the chart, retrieves the shape's connection points using GetConnectionPoints(), and writes each point's index, X and Y coordinates to a CSV file. The workbook can also be saved for further inspection.
-class Program
+// The sample loads 'input.xlsx', accesses the first worksheet, iterates through all charts, obtains each chart's Shape object, retrieves its connection points via GetConnectionPoints, converts them to PointF values, and writes the chart name, point index, and X/Y coordinates to 'ChartConnectionPoints.csv'. It includes file‑existence checks, skips charts without shapes or points, and logs warnings for missing data.
+class ExportChartConnectionPoints
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputCsv = "ChartConnectionPoints.csv";
 
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
-
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Add a rectangle shape inside the chart (this shape has connection points)
-        Shape shape = chart.Shapes.AddShape(
-            MsoDrawingType.Rectangle, // shape type
-            1000,   // left position (in 1/4000 of chart width)
-            1000,   // top position (in 1/4000 of chart height)
-            2000,   // width (in 1/4000 of chart width)
-            1000,   // height (in 1/4000 of chart height)
-            0,      // rotation angle
-            0);     // flip mode
-        shape.Text = "Demo Shape";
-
-        // Retrieve all connection points of the shape
-        float[][] connectionPoints = shape.GetConnectionPoints();
-
-        // Export the connection points to a CSV file
-        string csvFile = "ChartShapeConnectionPoints.csv";
-        using (StreamWriter writer = new StreamWriter(csvFile))
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Header
-            writer.WriteLine("Index,X,Y");
-            // Data rows
-            for (int i = 0; i < connectionPoints.Length; i++)
-            {
-                writer.WriteLine($"{i + 1},{connectionPoints[i][0]},{connectionPoints[i][1]}");
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Save the workbook (optional, to keep the chart and shape)
-        workbook.Save("ChartShapeDemo.xlsx");
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Prepare a CSV file to write the connection points
+            using (StreamWriter csvWriter = new StreamWriter(outputCsv))
+            {
+                // Write CSV header
+                csvWriter.WriteLine("ChartName,PointIndex,X,Y");
+
+                // Iterate through all charts in the worksheet
+                foreach (Chart chart in sheet.Charts)
+                {
+                    // Obtain the shape that represents the chart
+                    Shape chartShape = chart.ChartObject;
+                    if (chartShape == null)
+                    {
+                        Console.WriteLine($"Warning: Chart \"{chart.Name}\" does not have an associated shape.");
+                        continue;
+                    }
+
+                    // Retrieve the connection points (float[][]) and convert to PointF[]
+                    PointF[] connectionPoints;
+                    try
+                    {
+                        float[][] rawPoints = chartShape.GetConnectionPoints();
+                        if (rawPoints == null || rawPoints.Length == 0)
+                        {
+                            Console.WriteLine($"Info: No connection points found for chart \"{chart.Name}\".");
+                            continue;
+                        }
+
+                        connectionPoints = rawPoints
+                            .Where(p => p != null && p.Length >= 2)
+                            .Select(p => new PointF(p[0], p[1]))
+                            .ToArray();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Unable to get connection points for chart \"{chart.Name}\": {ex.Message}");
+                        continue;
+                    }
+
+                    // Export each point to the CSV file
+                    for (int i = 0; i < connectionPoints.Length; i++)
+                    {
+                        PointF pt = connectionPoints[i];
+                        // X and Y are in points (1/72 inch). Adjust if needed.
+                        csvWriter.WriteLine($"{chart.Name},{i},{pt.X},{pt.Y}");
+                    }
+                }
+            }
+
+            Console.WriteLine($"Chart connection points have been exported to \"{outputCsv}\"");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine("An error occurred while exporting chart connection points:");
+            Console.WriteLine(ex.Message);
+        }
     }
 }

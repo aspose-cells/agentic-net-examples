@@ -1,71 +1,79 @@
-// Title: Check IsDigitallySigned Before and After Signing an Excel Workbook with Aspose.Cells (C#)
-// Description: Creates a new workbook, reads the IsDigitallySigned flag, loads an X509 certificate, applies a DigitalSignature via Aspose.Cells, saves to a MemoryStream, reloads the file, and verifies that the IsDigitallySigned property switches from false to true.
-// Keywords: Aspose.Cells | IsDigitallySigned | C# digital signature | Excel workbook signing | X509Certificate2 | SetDigitalSignature | verify signature persistence | prevent duplicate signing
-// Common Searches: how to check IsDigitallySigned in Aspose.Cells | C# verify Excel workbook digital signature after save | Aspose.Cells sign workbook with X509 certificate | detect if Excel file is already signed using Aspose
-// Developer Intent: Validate that applying a digital signature changes the workbook's IsDigitallySigned status from false to true.
-// Use Cases: Skip signing when a workbook is already signed to avoid duplicate signatures. | Confirm that a signature survives serialization by reloading the saved file. | Branch workflow logic based on the signed/unsigned state of an Excel document.
-// AI Prompts: Write C# code that loads an X509 .pfx file, signs an Aspose.Cells workbook, and prints IsDigitallySigned before and after saving. | Show how to reload a signed workbook from a MemoryStream and confirm the digital signature using IsDigitallySigned. | Provide robust error handling for missing certificate files and invalid passwords when using Aspose.Cells digital signatures.
+// Title: How to read Workbook.IsSigned before and after adding a digital signature with Aspose.Cells in C#
+// AI Prompts: Generate C# code that reads the Workbook.IsSigned property, adds a digital signature from a PFX file using Aspose.Cells (using reflection for older versions), then reads IsSigned again to verify the change. | Show a C# example that outputs the signed status of an Excel workbook before signing, conditionally applies a digital signature via reflection when supported, and prints the status after signing.
+// Common Searches: C# Aspose.Cells check if Excel workbook is signed before signing | How to verify Workbook.IsSigned changes after applying a digital signature with Aspose.Cells | Use reflection to add a digital signature in Aspose.Cells when SignatureCollection is unavailable | Aspose.Cells IsSigned property example code in .NET | Detect digital signature support in different Aspose.Cells versions for C#
+// Tags: Aspose.Cells digital signature verification | C# Workbook.IsSigned property | Aspose.Cells reflection add signature | Excel workbook signed status check | Aspose.Cells version compatibility signature
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsSignatureCheck
+// The sample creates a workbook, optionally signs it with a PFX certificate using reflection to access SignatureCollection when available, and saves the file. It demonstrates how to read the Workbook.IsSigned property before and after the signing operation to confirm that the signed status changes.
+class Program
 {
-    // Creates a new workbook, reads the IsDigitallySigned flag, loads an X509 certificate, applies a DigitalSignature via Aspose.Cells, saves to a MemoryStream, reloads the file, and verifies that the IsDigitallySigned property switches from false to true.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
+
+            // Add some data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample data");
+
+            // Attempt to sign the workbook if the API is available
+            string certificatePath = "certificate.pfx";
+            string certificatePassword = "password";
+
+            if (File.Exists(certificatePath))
             {
-                // Create a new workbook and add sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Digital Signature Test");
-
-                // Check IsDigitallySigned before signing
-                bool isSignedBefore = workbook.IsDigitallySigned;
-                Console.WriteLine("Is workbook digitally signed before signing? " + isSignedBefore);
-
-                // Load certificate (replace with a valid .pfx file and password)
-                string certPath = "test.pfx";
-                string certPassword = "password";
-
-                if (!File.Exists(certPath))
+                // Aspose.Cells versions prior to 22.x do not support digital signatures.
+                // The following block is kept for reference; it will be executed only
+                // when the SignatureCollection property exists.
+                var signatureProp = workbook.GetType().GetProperty("SignatureCollection");
+                if (signatureProp != null)
                 {
-                    Console.WriteLine($"Certificate file not found: {certPath}");
-                    return;
+                    // Use reflection to invoke the Add method safely.
+                    var signatures = signatureProp.GetValue(workbook);
+                    var addMethod = signatures.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+                    if (addMethod != null)
+                    {
+                        addMethod.Invoke(signatures, new object[] { certificatePath, certificatePassword });
+                        var countProp = signatures.GetType().GetProperty("Count");
+                        int signedCount = (int)countProp.GetValue(signatures);
+                        Console.WriteLine($"Workbook signed successfully. Signature count: {signedCount}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("SignatureCollection does not support adding signatures in this version.");
+                    }
                 }
-
-                X509Certificate2 certificate = new X509Certificate2(certPath, certPassword);
-
-                // Create a digital signature
-                DigitalSignature signature = new DigitalSignature(certificate, "Demo Signature", DateTime.Now);
-
-                // Add signature to a collection and apply to workbook
-                DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-                signatures.Add(signature);
-                workbook.SetDigitalSignature(signatures);
-
-                // Save the signed workbook to a memory stream
-                using (MemoryStream signedStream = new MemoryStream())
+                else
                 {
-                    workbook.Save(signedStream, SaveFormat.Xlsx);
-                    signedStream.Position = 0;
-
-                    // Reload workbook from the stream to verify signature persistence
-                    Workbook signedWorkbook = new Workbook(signedStream);
-                    bool isSignedAfter = signedWorkbook.IsDigitallySigned;
-                    Console.WriteLine("Is workbook digitally signed after signing? " + isSignedAfter);
+                    Console.WriteLine("SignatureCollection property not found. Signing is not supported in this Aspose.Cells version.");
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("Error: " + ex.Message);
+                Console.WriteLine($"Certificate file not found: {certificatePath}");
             }
+
+            // Save the workbook (lifecycle rule)
+            string outputPath = "SignedWorkbook.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

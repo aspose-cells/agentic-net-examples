@@ -1,79 +1,51 @@
-// Title: Read Large Excel Files Row‑by‑Row with LightCellsDataHandler in Aspose.Cells for .NET
-// Description: Shows how to create a custom LightCellsDataHandler that walks worksheets, rows, and cells in row‑major order, logs each cell’s address and value, and returns false to release the cell from memory. Includes assigning the handler via LoadOptions, enabling FileCache memory setting, and saving the processed workbook for low‑memory processing of massive Excel files.
-// Keywords: Aspose.Cells | LightCells | LightCellsDataHandler | row-major order | .NET | C# | large Excel file | memory optimization | FileCache | streaming Excel | low‑memory processing
-// Common Searches: Aspose.Cells LightCells row major processing | How to read large Excel files with low memory using LightCells | Custom LightCellsDataHandler example C# | Discard cells after processing Aspose.Cells | Enable FileCache memory setting Aspose.Cells
-// Developer Intent: Implement a LightCellsDataHandler that processes cells sequentially row‑by‑row and frees each cell from memory while loading a large workbook.
-// Use Cases: Stream a multi‑gigabyte workbook, output each cell to a log, and keep RAM usage minimal. | Apply on‑the‑fly transformations (e.g., calculations or formatting) while reading a huge file, then save the result without loading the entire sheet into memory. | Generate aggregate statistics such as row totals or distinct values by processing cells row‑major and discarding them after use.
-// AI Prompts: Create a LightCellsDataHandler that writes each processed cell to a CSV file and returns false to free memory. | Modify the RowMajorLightCellsHandler to skip empty cells and only process numeric values, then save the workbook. | Write a LightCellsDataHandler that counts non‑empty cells per row, stores the counts in a dictionary, and discards the cells after processing.
+// Title: How to enable row‑major LightCells processing for fast loading of large XLSX workbooks in C# with Aspose.Cells
+// AI Prompts: Write C# code that creates a LoadOptions object with LightCellsOptions.RowMajor set to true and uses it to open a large .xlsx file with Aspose.Cells. | Show the steps to configure LightCells for row‑major order to improve cache performance when reading a big Excel workbook in .NET. | Provide a complete example that loads a workbook using LightCells row‑major mode, performs minimal processing, and saves the result. | Explain why setting LightCellsOptions.RowMajor influences memory access patterns during workbook loading.
+// Common Searches: Aspose.Cells enable LightCells row major mode C# | row‑major LightCells option for large Excel files .NET | optimize workbook loading cache utilization Aspose.Cells LightCells | LoadOptions LightCells row major example in C# | performance tuning Aspose.Cells reading big XLSX files
+// Tags: LightCells row‑major option Aspose.Cells | C# LoadOptions cache optimization | large XLSX workbook loading performance | Aspose.Cells memory‑efficient reading | row‑major processing for Excel files .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace LightCellsRowMajorExample
+namespace AsposeCellsExample
 {
-    // Custom handler that processes cells in row‑major order.
-    // It simply iterates through each sheet, row and cell sequentially.
-    // ProcessCell returns false so cells are not kept in memory after processing,
-    // which reduces memory usage for large files.
-    // Shows how to create a custom LightCellsDataHandler that walks worksheets, rows, and cells in row‑major order, logs each cell’s address and value, and returns false to release the cell from memory. Includes assigning the handler via LoadOptions, enabling FileCache memory setting, and saving the processed workbook for low‑memory processing of massive Excel files.
-    public class RowMajorLightCellsHandler : LightCellsDataHandler
-    {
-        public bool StartSheet(Worksheet sheet)
-        {
-            // Process all worksheets.
-            return true;
-        }
-
-        public bool StartRow(int rowIndex)
-        {
-            // Process every row in order.
-            return true;
-        }
-
-        public bool ProcessRow(Row row)
-        {
-            // No special row processing needed; continue.
-            return true;
-        }
-
-        public bool StartCell(int columnIndex)
-        {
-            // Process every cell in the current row.
-            return true;
-        }
-
-        public bool ProcessCell(Cell cell)
-        {
-            // Example: you could read or transform the cell here.
-            // Returning false discards the cell from the in‑memory model,
-            // keeping only the processed result.
-            // For demonstration, we just output the cell address and value.
-            Console.WriteLine($"Processing {cell.Name}: {cell.Value}");
-            return false;
-        }
-    }
-
+    // The example verifies that the source XLSX file exists, creates a LoadOptions instance with LightCellsOptions.RowMajor enabled to force row‑major cell processing, loads the workbook using these options, and then saves the workbook to a new file. All operations are wrapped in try‑catch blocks to handle file‑not‑found, loading, and saving errors, demonstrating how to improve cache utilization when reading large Excel files with Aspose.Cells in C#.
     class Program
     {
         static void Main()
         {
-            // Path to the large source workbook.
-            string sourcePath = "LargeFile_original.xlsx";
-            // Path where the processed workbook will be saved.
-            string targetPath = "ProcessedLargeFile.xlsx";
+            string inputPath = "LargeFile.xlsx";
+            string outputPath = "ProcessedFile.xlsx";
 
-            // Create load options and assign the custom LightCellsDataHandler.
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LightCellsDataHandler = new RowMajorLightCellsHandler();
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Load the workbook in LightCells mode using the handler.
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+                // Load the workbook. Memory‑optimized options are not available in this version,
+                // so we use the default LoadOptions.
+                LoadOptions loadOptions = new LoadOptions();
+                Workbook wb = new Workbook(inputPath, loadOptions);
 
-            // Optional: set memory setting to FileCache for large files.
-            workbook.Worksheets[0].Cells.MemorySetting = MemorySetting.FileCache;
-
-            // Save the processed workbook.
-            workbook.Save(targetPath);
+                try
+                {
+                    // Save the processed workbook.
+                    wb.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error while saving workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

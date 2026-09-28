@@ -1,41 +1,28 @@
-// Title: C# – Delete Blank Rows in an Excel Worksheet and Export to PDF with Aspose.Cells
-// Description: Load an Excel file using Aspose.Cells, remove every empty row with Cells.DeleteBlankRows, configure PdfSaveOptions to ignore blank pages, and save the cleaned workbook as a PDF.
-// Keywords: Aspose.Cells | C# delete blank rows | Excel to PDF conversion | PdfSaveOptions | IgnoreBlank pages | Remove empty rows | Cells.DeleteBlankRows | Workbook.Save PDF | Aspose.Cells API
-// Common Searches: Aspose.Cells delete blank rows C# | How to remove empty rows before PDF export Aspose | Convert Excel to PDF ignoring blank pages .NET | Cells.DeleteBlankRows example | PdfSaveOptions PrintingPageType.IgnoreBlank usage
-// Developer Intent: Clean a worksheet by deleting all empty rows and generate a compact PDF without blank pages using Aspose.Cells for .NET.
-// Use Cases: Prepare data‑driven reports by stripping out blank rows prior to PDF generation, ensuring a tidy printable document. | Archive Excel workbooks as PDFs after removing unnecessary empty rows to reduce file size and improve readability. | Create client‑facing PDFs from spreadsheets that contain sporadic gaps, preventing the appearance of blank pages in the final output.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, deletes all blank rows, sets PdfSaveOptions to ignore blank pages, and saves the result as a PDF. | Show an example of using Cells.DeleteBlankRows and PdfSaveOptions.PrintingPageType = IgnoreBlank to convert an Excel worksheet to a compact PDF. | Explain how to programmatically remove empty rows from a specific worksheet before exporting to PDF with Aspose.Cells for .NET.
+// Title: Remove all empty rows from an Excel worksheet and save the result as a PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx file, invoke DeleteBlankRows on the desired worksheet, then export the workbook to PDF with Aspose.Cells in C#. | Using Aspose.Cells in a .NET project, compact a worksheet by deleting rows without data and generate a PDF output.
+// Common Searches: C# Aspose.Cells delete rows that have no data and export to PDF | How to remove blank rows from an Excel sheet before PDF conversion using Aspose.Cells | Aspose.Cells DeleteBlankRows method example for .NET | Convert cleaned Excel workbook to PDF with Aspose.Cells C#
+// Tags: DeleteBlankRows Aspose.Cells C# | Excel to PDF conversion Aspose.Cells | remove empty rows worksheet Aspose.Cells | compact workbook before PDF export .NET | SaveFormat.Pdf usage Aspose.Cells | worksheet row cleanup Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Load an Excel file using Aspose.Cells, remove every empty row with Cells.DeleteBlankRows, configure PdfSaveOptions to ignore blank pages, and save the cleaned workbook as a PDF.
-class DeleteBlankRowsAndSavePdf
+// // Loads an Excel file, removes all completely empty rows from the first worksheet, and saves the cleaned workbook as a PDF.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
+        // Load the existing workbook (replace with your actual file path)
         string inputPath = "input.xlsx";
-
-        // Path for the resulting PDF file
-        string outputPath = "output.pdf";
-
-        // Load the workbook from the specified file
         Workbook workbook = new Workbook(inputPath);
 
-        // Access the first worksheet (you can modify this to target a specific sheet)
+        // Get the first worksheet (or any specific worksheet you need)
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Delete all blank rows in the worksheet
+        // Delete all blank rows that contain no data or objects
         worksheet.Cells.DeleteBlankRows();
 
-        // Optional: configure PDF save options (e.g., ignore completely blank pages)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            PrintingPageType = PrintingPageType.IgnoreBlank
-        };
-
         // Save the compacted workbook as a PDF file
-        workbook.Save(outputPath, pdfOptions);
+        string outputPath = "output.pdf";
+        workbook.Save(outputPath, SaveFormat.Pdf);
     }
 }

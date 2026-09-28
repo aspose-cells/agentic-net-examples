@@ -1,75 +1,96 @@
-// Title: Create a migration checklist for Excel external links on network drives with Aspose.Cells for .NET
-// Description: A C# console app that loads an Excel workbook, scans its ExternalLinkCollection, identifies links whose DataSource paths are UNC (e.g., \\server\share) or mapped drives (e.g., D:\), and prints a migration checklist with the current path, a network‑drive flag, and recommended actions. The sample also shows how to update the DataSource to a new location and save the workbook.
-// Keywords: Aspose.Cells external links | C# detect network drive references | Excel UNC path migration | ExternalLinkCollection Aspose.Cells | update DataSource programmatically | migration checklist Excel | sharepoint onedrive link conversion
-// Common Searches: list external workbook links Aspose.Cells .NET | identify UNC paths in Excel using C# | migrate network drive links to cloud storage | change external link datasource with Aspose.Cells | generate checklist for Excel external links
-// Developer Intent: Locate every external workbook reference that points to a network drive and produce a step‑by‑step migration checklist, optionally rewriting the links to a new location.
-// Use Cases: Audit all network‑based external links before moving source files to SharePoint or OneDrive. | Automate path replacement after copying linked workbooks to a local or cloud folder. | Validate link accessibility and flag entries that require manual intervention.
-// AI Prompts: Write C# code using Aspose.Cells to replace every external link DataSource that starts with "\\" with a specified local folder path while preserving the original path. | Show how to export the checklist output to a CSV file instead of the console in the provided program. | Explain safe practices for updating ExternalLink.OriginalDataSource and ExternalLink.DataSource when migrating links to cloud storage.
+// Title: Identify and list Excel formulas that reference UNC network paths and create a migration checklist with Aspose.Cells for .NET
+// AI Prompts: Write a C# program using Aspose.Cells that iterates through every cell in an .xlsx workbook, detects formulas containing UNC network paths, and records the worksheet name, cell address, full formula, and external path. | Create a script that outputs a plain‑text migration checklist summarizing all detected network‑share references, suitable for reviewing before moving files to a new location. | Enhance the solution to parse the sheet and cell reference inside each external link and include those details in the generated checklist.
+// Common Searches: C# Aspose.Cells how to list formulas that point to files on a \\ network share | extract external workbook links from an Excel file using Aspose.Cells .NET | generate a migration checklist of Excel cells with UNC path references | scan all worksheets for external references in .xlsx with Aspose.Cells
+// Tags: Aspose.Cells scan external UNC references | C# detect network share links in Excel formulas | generate migration checklist for external workbook links | extract external file paths from .xlsx using Aspose.Cells | list cells with external workbook references in .NET
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace ExternalLinkMigrationChecklist
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and cell, checks for formulas, extracts any path enclosed in brackets, and if the path starts with a UNC prefix (\\) records the worksheet name, cell address, full formula, and external path. All findings are written to a text file that serves as a migration checklist for updating or removing network‑share references.
+class ExternalFormulaChecker
 {
-    // A C# console app that loads an Excel workbook, scans its ExternalLinkCollection, identifies links whose DataSource paths are UNC (e.g., \\server\share) or mapped drives (e.g., D:\), and prints a migration checklist with the current path, a network‑drive flag, and recommended actions. The sample also shows how to update the DataSource to a new location and save the workbook.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Input Excel file path (replace with actual path)
+        string inputPath = @"C:\Input\Workbook.xlsx";
+
+        // Output checklist file path
+        string outputPath = @"C:\Output\MigrationChecklist.txt";
+
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Load the workbook that needs to be inspected
-            // (Replace \"input.xlsx\" with the actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Prepare a checklist header
-            Console.WriteLine("=== External Links Migration Checklist ===");
-            Console.WriteLine();
+        // Ensure the output directory exists
+        string outputDir = Path.GetDirectoryName(outputPath);
+        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
+        }
 
-            // Iterate through all external links defined in the workbook
-            ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+        Workbook workbook = null;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            for (int i = 0; i < externalLinks.Count; i++)
+        // List to hold checklist entries
+        List<string> checklist = new List<string>();
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through all cells in the used range
+            foreach (Cell cell in sheet.Cells)
             {
-                ExternalLink link = externalLinks[i];
-                string dataSource = link.DataSource; // Current path of the external workbook
-
-                // Identify network drive references:
-                //   UNC paths start with "\\" (e.g., \\server\share\file.xlsx)
-                //   Mapped drive letters that are typically network drives end with ":\"
-                // For simplicity, we treat any path that starts with "\\" or contains ":\"
-                bool isNetworkPath = dataSource.StartsWith(@"\\") || dataSource.Contains(@":\");
-
-                if (isNetworkPath)
+                // Process only cells that contain formulas
+                if (cell.IsFormula)
                 {
-                    // Output checklist entry for this external link
-                    Console.WriteLine($"External Link #{i + 1}");
-                    Console.WriteLine($"- Current DataSource : {dataSource}");
-                    Console.WriteLine("- Detected as network drive reference.");
+                    string formula = cell.Formula;
 
-                    // Suggested migration actions (customize as needed)
-                    Console.WriteLine("- Action Items:");
-                    Console.WriteLine("  1. Verify accessibility of the network location.");
-                    Console.WriteLine("  2. Copy the external workbook to a local or cloud location if required.");
-                    Console.WriteLine("  3. Update the DataSource to the new location using ExternalLink.OriginalDataSource or ExternalLink.DataSource.");
-                    Console.WriteLine();
+                    // Look for external reference pattern: [path]Sheet!Cell
+                    if (formula.Contains("[") && formula.Contains("]"))
+                    {
+                        int startIdx = formula.IndexOf('[') + 1;
+                        int endIdx = formula.IndexOf(']');
 
-                    // Example of updating the link to a new local path (optional)
-                    // string newPath = @"C:\MigratedFiles\" + System.IO.Path.GetFileName(dataSource);
-                    // link.OriginalDataSource = newPath; // Preserve original for reference
-                    // link.DataSource = newPath;          // Apply the new location
+                        if (startIdx < endIdx)
+                        {
+                            string externalReference = formula.Substring(startIdx, endIdx - startIdx);
+
+                            // Identify network drive references (start with \\)
+                            if (externalReference.StartsWith(@"\\"))
+                            {
+                                // Build checklist entry
+                                string entry = $"Worksheet: {sheet.Name}, Cell: {cell.Name}, Formula: {formula}, External Path: {externalReference}";
+                                checklist.Add(entry);
+                            }
+                        }
+                    }
                 }
             }
+        }
 
-            // If no network links were found, inform the user
-            if (externalLinks.Count == 0)
-            {
-                Console.WriteLine("No external links found in the workbook.");
-            }
-
-            // Save the workbook (if any modifications were made above)
-            // (Replace \"output.xlsx\" with the desired output file path)
-            workbook.Save("output.xlsx");
-
-            Console.WriteLine("Checklist generation completed. Workbook saved as \"output.xlsx\".");
+        try
+        {
+            // Write the checklist to a text file
+            File.WriteAllLines(outputPath, checklist);
+            Console.WriteLine($"Checklist written to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write checklist: {ex.Message}");
         }
     }
 }

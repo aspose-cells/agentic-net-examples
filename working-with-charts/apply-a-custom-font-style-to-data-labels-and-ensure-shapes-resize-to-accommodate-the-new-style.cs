@@ -1,37 +1,21 @@
-// Title: Set Custom Font for Chart Data Labels and Auto‑Resize Shapes with Aspose.Cells for .NET
-// Description: This example creates a workbook, adds a column chart, enables data labels, applies a Calibri 14 pt bold dark‑blue font, activates automatic shape resizing (IsResizeShapeToFitText), propagates the font to all label nodes (ApplyFont), and saves the file as an XLSX document.
-// Keywords: Aspose.Cells chart data label font | IsResizeShapeToFitText | ApplyFont Aspose.Cells | .NET chart label styling | auto resize chart label shape | custom font Excel chart Aspose | Aspose.Cells column chart example
-// Common Searches: how to change chart data label font Aspose.Cells .NET | auto resize data label shape Aspose.Cells | set bold Calibri font for Excel chart labels | Aspose.Cells IsResizeShapeToFitText usage | apply font to all data label nodes Aspose
-// Developer Intent: Apply a specific font to chart data labels and ensure the label shapes automatically adjust to the new text size using Aspose.Cells for .NET.
-// Use Cases: Generate Excel reports with branded chart labels that match corporate typography. | Create dashboards where data labels must remain fully visible after font changes. | Automate workbook creation for clients in the US and Europe who require precise label styling.
-// AI Prompts: Show C# code to set a custom font for chart data labels and enable auto‑resize with Aspose.Cells. | Explain the difference between IsResizeShapeToFitText and ApplyFont in Aspose.Cells chart styling. | Provide a step‑by‑step guide to style all data label nodes in a column chart using Aspose.Cells for .NET.
+// Title: Set a custom font for Excel chart data labels and auto‑resize label shapes with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a column chart, turns on data labels, assigns Calibri 14 bold dark‑blue font to the labels, and enables the label shapes to resize automatically to fit the text using Aspose.Cells. | Update an existing Aspose.Cells chart series so that its data label font is bold Calibri 14 dark blue and the labels automatically adjust their shape size and font scaling.
+// Common Searches: asp.net how to change font of chart data labels with Aspose.Cells | asp.net chart data label shape auto resize Aspose.Cells example | c# set bold dark blue font for Excel chart data labels using Aspose.Cells | asp.net enable autoscale font for chart data labels Aspose.Cells | apply custom font to all data label nodes in Aspose.Cells chart series
+// Tags: set chart data label font Aspose.Cells | enable data label shape auto‑resize Aspose.Cells | auto‑scale chart data label font .NET | custom font for series data labels Aspose.Cells | column chart label styling Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCustomDataLabelFont
 {
-    // This example creates a workbook, adds a column chart, enables data labels, applies a Calibri 14 pt bold dark‑blue font, activates automatic shape resizing (IsResizeShapeToFitText), propagates the font to all label nodes (ApplyFont), and saves the file as an XLSX document.
-    public class CustomDataLabelFontAndResize
+    // The example creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, applies a Calibri 14 bold dark‑blue font to the labels, activates shape resizing and auto‑scaling for the labels, propagates the font to child label nodes, and saves the file as CustomDataLabelFont.xlsx.
+    public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (create rule)
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
@@ -60,7 +44,7 @@ namespace AsposeCellsExamples
             Series series = chart.NSeries[0];
             series.DataLabels.ShowValue = true;
 
-            // Apply a custom font style to the data labels
+            // Apply custom font style to the data labels
             series.DataLabels.Font.Name = "Calibri";
             series.DataLabels.Font.Size = 14;
             series.DataLabels.Font.Color = Color.DarkBlue;
@@ -68,12 +52,14 @@ namespace AsposeCellsExamples
 
             // Ensure the data label shape resizes to fit the new font
             series.DataLabels.IsResizeShapeToFitText = true;
+            // Optionally enable auto‑scaling of the font when the shape size changes
+            series.DataLabels.AutoScaleFont = true;
 
-            // Propagate the font settings to all child label nodes
+            // Apply the font settings to all child label nodes
             series.DataLabels.ApplyFont();
 
-            // Save the workbook
-            workbook.Save("CustomDataLabelFontAndResize.xlsx");
+            // Save the workbook (save rule)
+            workbook.Save("CustomDataLabelFont.xlsx");
         }
     }
 }

@@ -1,30 +1,59 @@
-// Title: C# – Convert Excel to PDF and Strip All Hyperlinks with Aspose.Cells
-// Description: Load an Excel workbook using Aspose.Cells for .NET, clear every worksheet's Hyperlinks collection, and save the result as a static, non‑interactive PDF ready for printing or archiving.
-// Keywords: Aspose.Cells C# PDF conversion | remove hyperlinks Excel | Excel to PDF without links | clear worksheet hyperlinks | static printable PDF | Aspose.Cells SaveFormat.Pdf | batch Excel PDF conversion
-// Common Searches: Aspose.Cells remove hyperlinks before PDF export | C# convert .xlsx to PDF without clickable links | how to clear all hyperlinks in an Excel workbook using Aspose | generate printable PDF from Excel with Aspose.Cells | strip hyperlinks from Excel and save as PDF C#
-// Developer Intent: Produce a PDF version of an Excel file where all hyperlinks are removed, yielding a static document suitable for printing or compliance purposes.
-// Use Cases: Creating printable reports from Excel templates that must not contain active links. | Preparing regulatory or legal documents by converting spreadsheets to PDF without clickable URLs. | Automating batch conversion of multiple workbooks to PDF while stripping hyperlinks for archival storage.
-// AI Prompts: Write C# code with Aspose.Cells to load an .xlsx file, delete every hyperlink on all worksheets, and export it as a PDF. | Explain how Aspose.Cells SaveOptions can be configured to ensure hyperlinks are excluded during PDF export. | Provide a script that processes a directory of Excel files, removes all hyperlinks from each workbook, and saves them as PDFs using Aspose.Cells.
+// Title: Convert an Excel workbook to a static PDF and strip all hyperlinks using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file, deletes every hyperlink, removes hyperlink underline and color styling, and saves the workbook as a PDF. | Demonstrate how to clear the Hyperlinks collection of each worksheet and reset cell styles before calling Workbook.Save with SaveFormat.Pdf.
+// Common Searches: aspocells remove hyperlinks before pdf export c# | c# convert excel to pdf without hyperlink formatting using aspose.cells | how to strip hyperlink styling from Excel workbook in .NET | export static printable PDF from Excel workbook Aspose.Cells | clear all hyperlinks in workbook programmatically Aspose.Cells
+// Tags: remove hyperlinks Aspose.Cells | excel to pdf conversion without links | clear cell hyperlink formatting Aspose.Cells | static printable PDF from Excel | hyperlink removal before pdf export C#
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-// Load an Excel workbook using Aspose.Cells for .NET, clear every worksheet's Hyperlinks collection, and save the result as a static, non‑interactive PDF ready for printing or archiving.
+// The program loads 'input.xlsx', clears every hyperlink and resets underline and font color on all cells, then saves the workbook as a static 'output.pdf' using Aspose.Cells.
 class Program
 {
     static void Main()
     {
-        // Load the source workbook (replace with your actual file path)
-        string sourcePath = "input.xlsx";
-        Workbook workbook = new Workbook(sourcePath); // Load rule
-
-        // Remove all hyperlinks from every worksheet to make the document static
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            sheet.Hyperlinks.Clear(); // Clear hyperlink collection
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-        // Save the workbook as a PDF file (static printable version)
-        workbook.Save("output.pdf", SaveFormat.Pdf); // Save rule
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Process each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Remove all hyperlinks from the worksheet
+                sheet.Hyperlinks.Clear();
+
+                // Reset hyperlink‑like formatting on cells
+                foreach (Cell cell in sheet.Cells)
+                {
+                    Style style = cell.GetStyle();
+
+                    // Clear underline and set default font color
+                    style.Font.Underline = FontUnderlineType.None;
+                    style.Font.Color = Color.Black;
+
+                    cell.SetStyle(style);
+                }
+            }
+
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

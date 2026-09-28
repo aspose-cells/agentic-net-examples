@@ -1,89 +1,92 @@
-// Title: C# – Count Cells by Data Type in an Aspose.Cells Worksheet
-// Description: Creates a workbook, populates cells with numeric, string, DateTime, Boolean, null and error values, then enumerates the worksheet's Cells collection. For each cell the Cell.Type (CellValueType) is examined and counters for Unknown, Null, Numeric, DateTime, String, Boolean and Error are incremented. The totals are printed and the workbook saved.
-// Keywords: Aspose.Cells C# count cells by type | CellValueType enumeration | worksheet cell data type statistics | iterate Aspose.Cells cells | Excel cell type detection Aspose | C# Aspose.Cells cell counters | enumerate cells Aspose.Cells API
-// Common Searches: how to count cells by data type using Aspose.Cells C# | enumerate worksheet cells and get CellValueType | Aspose.Cells count numeric and string cells | C# get cell type distribution in Excel workbook | Aspose.Cells tally error cells in a sheet
-// Developer Intent: The developer needs to determine how many cells of each data type exist in a worksheet and produce a summary of those counts.
-// Use Cases: Generate a data‑type breakdown report to validate spreadsheet content before further processing. | Identify unexpected error or null cells for data cleansing or quality checks. | Calculate ratios of numeric versus textual entries for analytics on imported Excel data.
-// AI Prompts: Write C# code using Aspose.Cells that returns a dictionary of CellValueType counts for a given worksheet. | Extend the example to separate formula cells from their evaluated values while counting types. | Suggest alternative Aspose.Cells methods that provide cell type statistics without manual enumeration.
+// Title: Count cells by data type in an Aspose.Cells worksheet using C# enumeration of CellValueType
+// AI Prompts: Write C# code that uses Aspose.Cells to iterate over all cells in a worksheet and returns a dictionary mapping each CellValueType to its occurrence count. | Create a method that receives a Worksheet object and outputs separate totals for numeric, string, datetime, boolean, null, error, and unknown cells. | Extend the sample to also track and report the number of formula cells in addition to the standard CellValueType categories.
+// Common Searches: how to count different cell types in an Excel file with Aspose.Cells C# | Aspose.Cells enumerate cells and get CellValueType statistics .NET | C# sample to tally numeric, string, date, boolean cells using Aspose.Cells | retrieve cell type distribution from a workbook using Aspose.Cells API
+// Tags: enumerate cells CellValueType Aspose.Cells | count Excel cell data types C# | Aspose.Cells cell type aggregation | worksheet cell type statistics | C# tally numeric string datetime cells
 
 using System;
-using System.Collections;
 using Aspose.Cells;
+using System.Collections;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, populates cells with numeric, string, DateTime, Boolean, null and error values, then enumerates the worksheet's Cells collection. For each cell the Cell.Type (CellValueType) is examined and counters for Unknown, Null, Numeric, DateTime, String, Boolean and Error are incremented. The totals are printed and the workbook saved.
+    // The example creates a workbook, fills six cells with numeric, string, DateTime, boolean, null, and error values, then iterates over every instantiated cell using a foreach loop. A switch on Cell.Type increments counters for each CellValueType (Unknown, Null, Numeric, DateTime, String, Bool, Error). The counts are printed and the workbook is saved.
     class CountCellsByDataType
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet's cells collection
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate sample data of various types
-            cells["A1"].PutValue(123);                     // Numeric
-            cells["A2"].PutValue("Hello World");           // String
-            cells["A3"].PutValue(DateTime.Now);            // DateTime
-            cells["A4"].PutValue(true);                    // Boolean
-            cells["A5"].PutValue(null);                    // Null
-            cells["A6"].PutValue("=1/0");                  // Error (division by zero)
-
-            // Initialize counters for each CellValueType
-            int unknownCount = 0;
-            int nullCount = 0;
-            int numericCount = 0;
-            int dateTimeCount = 0;
-            int stringCount = 0;
-            int boolCount = 0;
-            int errorCount = 0;
-
-            // Iterate through all instantiated cells using the enumerator
-            IEnumerator enumerator = cells.GetEnumerator();
-            while (enumerator.MoveNext())
+            try
             {
-                Cell cell = (Cell)enumerator.Current;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Increment the appropriate counter based on the cell's type
-                switch (cell.Type)
+                // Populate sample data of various types
+                cells["A1"].PutValue(123);                     // Numeric
+                cells["A2"].PutValue("Hello World");           // String
+                cells["A3"].PutValue(DateTime.Now);            // DateTime
+                cells["A4"].PutValue(true);                    // Boolean
+                cells["A5"].PutValue(null);                    // Null
+                cells["A6"].PutValue("=1/0");                  // Error (division by zero)
+
+                // Counters for each CellValueType
+                int unknownCount = 0;
+                int nullCount = 0;
+                int numericCount = 0;
+                int dateTimeCount = 0;
+                int stringCount = 0;
+                int boolCount = 0;
+                int errorCount = 0;
+
+                // Iterate through all instantiated cells using foreach
+                foreach (Cell cell in cells)
                 {
-                    case CellValueType.IsUnknown:
-                        unknownCount++;
-                        break;
-                    case CellValueType.IsNull:
-                        nullCount++;
-                        break;
-                    case CellValueType.IsNumeric:
-                        numericCount++;
-                        break;
-                    case CellValueType.IsDateTime:
-                        dateTimeCount++;
-                        break;
-                    case CellValueType.IsString:
-                        stringCount++;
-                        break;
-                    case CellValueType.IsBool:
-                        boolCount++;
-                        break;
-                    case CellValueType.IsError:
-                        errorCount++;
-                        break;
+                    switch (cell.Type)
+                    {
+                        case CellValueType.IsUnknown:
+                            unknownCount++;
+                            break;
+                        case CellValueType.IsNull:
+                            nullCount++;
+                            break;
+                        case CellValueType.IsNumeric:
+                            numericCount++;
+                            break;
+                        case CellValueType.IsDateTime:
+                            dateTimeCount++;
+                            break;
+                        case CellValueType.IsString:
+                            stringCount++;
+                            break;
+                        case CellValueType.IsBool:
+                            boolCount++;
+                            break;
+                        case CellValueType.IsError:
+                            errorCount++;
+                            break;
+                    }
                 }
+
+                // Output the results
+                Console.WriteLine("Cell counts by data type:");
+                Console.WriteLine($"Unknown : {unknownCount}");
+                Console.WriteLine($"Null    : {nullCount}");
+                Console.WriteLine($"Numeric : {numericCount}");
+                Console.WriteLine($"DateTime: {dateTimeCount}");
+                Console.WriteLine($"String  : {stringCount}");
+                Console.WriteLine($"Bool    : {boolCount}");
+                Console.WriteLine($"Error   : {errorCount}");
+
+                // Save the workbook (optional, demonstrates lifecycle usage)
+                string outputPath = "CountCellsByDataType.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-
-            // Output the results
-            Console.WriteLine("Cell counts by data type:");
-            Console.WriteLine($"Unknown   : {unknownCount}");
-            Console.WriteLine($"Null      : {nullCount}");
-            Console.WriteLine($"Numeric   : {numericCount}");
-            Console.WriteLine($"DateTime  : {dateTimeCount}");
-            Console.WriteLine($"String    : {stringCount}");
-            Console.WriteLine($"Boolean   : {boolCount}");
-            Console.WriteLine($"Error     : {errorCount}");
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("CountCellsByDataType.xlsx");
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

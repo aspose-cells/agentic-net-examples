@@ -7,7 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: Render Excel worksheets, workbooks, and charts to image formats in C#
 primary_apis: [SheetRender, WorkbookRender, ImageOrPrintOptions, Chart.ToImage]
 search_intents: [convert Excel to PNG in C#, render worksheet to image, Excel to TIFF without Microsoft Excel, export chart to SVG]

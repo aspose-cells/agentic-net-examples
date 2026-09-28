@@ -1,50 +1,55 @@
-// Title: C# – Count case‑insensitive keyword occurrences in an Excel column with Aspose.Cells
-// Description: Creates a workbook, writes sample strings to column A, defines a search term, scans each populated cell using its raw string value, increments a counter when the term is found (ignoring case), prints the total and saves the file as KeywordCount.xlsx.
-// Keywords: Aspose.Cells C# keyword count | case insensitive text search Excel .NET | retrieve raw cell value Aspose.Cells | count word occurrences column | Excel data analysis Aspose.Cells | C# iterate worksheet cells | Aspose.Cells performance scanning | search string in Excel column
-// Common Searches: Aspose.Cells count word in column C# | case‑insensitive search Excel worksheet using .NET | how to get raw cell text with Aspose.Cells | C# count occurrences of a string in Excel column | Aspose.Cells iterate rows to find keyword
-// Developer Intent: Determine how many times a specific word or phrase appears in a chosen column of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate a term‑frequency report for a data column. | Validate that required keywords meet a minimum count in imported spreadsheets. | Build a summary sheet that aggregates keyword totals across multiple columns or worksheets.
-// AI Prompts: Create a reusable C# method that accepts a Worksheet, column index, and search term, then returns the case‑insensitive occurrence count using Aspose.Cells. | Show how to loop through all worksheets in a workbook, count a given keyword in each column, and write the results to a new summary sheet. | Explain techniques to improve performance when scanning large Excel files for text matches with Aspose.Cells.
+// Title: Count case‑insensitive occurrences of a keyword in a specific Excel column using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans column B of an Excel workbook and returns the number of cells that contain the word "Invoice" regardless of case. | Modify the example to also output the row indices where the keyword is found, using a List<int>. | Create a reusable method `int CountKeyword(string filePath, string keyword, int columnIndex)` that loads a workbook with Aspose.Cells and returns the occurrence count for any column.
+// Common Searches: aspocells count how many times a word appears in column A c# | case insensitive text search in Excel column using Aspose.Cells .NET | retrieve string values from a single column and count keyword occurrences with Aspose.Cells | C# Aspose.Cells example to count keyword occurrences in a worksheet column | how to get total matches of a specific word in Excel column using Aspose.Cells
+// Tags: keyword count column Aspose.Cells | case-insensitive search column Aspose.Cells | iterate column cells Aspose.Cells | load workbook process column Aspose.Cells | log occurrence count console C#
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, writes sample strings to column A, defines a search term, scans each populated cell using its raw string value, increments a counter when the term is found (ignoring case), prints the total and saves the file as KeywordCount.xlsx.
+// Loads an Excel workbook, iterates through a specified column, counts case‑insensitive occurrences of a given keyword in string cells, writes the total to the console, and optionally saves the workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Populate column A with sample string values
-        string[] sampleData = { "apple", "banana", "apple pie", "orange", "Apple", "grape", "pineapple" };
-        for (int i = 0; i < sampleData.Length; i++)
-        {
-            sheet.Cells[i, 0].PutValue(sampleData[i]); // Column index 0 = column A
-        }
+        // Keyword to search for
+        string keyword = "Aspose";
 
-        // Define the keyword to search for (case‑insensitive)
-        string keyword = "apple";
-
-        // Count occurrences of the keyword in column A
+        // Counter for occurrences
         int occurrenceCount = 0;
-        int lastRow = sheet.Cells.MaxDataRow; // Last row that contains data
+
+        // Determine the last row that contains data in the worksheet
+        int lastRow = cells.MaxDataRow;
+
+        // Iterate through each cell in column A (index 0)
         for (int row = 0; row <= lastRow; row++)
         {
-            string cellText = sheet.Cells[row, 0].StringValue;
-            if (!string.IsNullOrEmpty(cellText) &&
-                cellText.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+            Cell cell = cells[row, 0]; // Column A
+
+            // Process only string cells
+            if (cell.Type == CellValueType.IsString)
             {
-                occurrenceCount++;
+                string cellText = cell.StringValue;
+
+                // Check if the cell text contains the keyword (case‑insensitive)
+                if (!string.IsNullOrEmpty(cellText) &&
+                    cellText.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    occurrenceCount++;
+                }
             }
         }
 
         // Log the total count
         Console.WriteLine($"Total occurrences of \"{keyword}\" in column A: {occurrenceCount}");
 
-        // Save the workbook
-        workbook.Save("KeywordCount.xlsx");
+        // Save the workbook (optional, can be omitted if no changes are needed)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,28 +1,44 @@
-// Title: Convert XLSB with Office Add‑Ins to PDF using Aspose.Cells ConversionUtility (C#)
-// Description: Demonstrates how to use Aspose.Cells.Utility.ConversionUtility.Convert in C# to turn an XLSB workbook—including embedded Office Add‑Ins—into a PDF while retaining interactive features.
-// Keywords: Aspose.Cells | C# conversion utility | XLSB to PDF | Office Add‑Ins | preserve interactive elements | PDF export | ConversionUtility | Excel binary workbook PDF | retain add‑in functionality
-// Common Searches: Aspose.Cells convert XLSB to PDF C# | preserve Office Add‑Ins when exporting to PDF | keep interactive elements in PDF from XLSB | ConversionUtility Convert method example | export Excel binary workbook with add‑ins to PDF
-// Developer Intent: Generate a PDF from an XLSB file that contains Office Add‑Ins, ensuring the add‑in functionality remains in the exported document.
-// Use Cases: Batch‑process Excel reports that embed custom task‑pane add‑ins and deliver them as PDFs for archiving. | Create printable PDFs from workbooks with embedded add‑ins without stripping their interactive behavior. | Expose a web service that accepts XLSB uploads and returns PDFs that retain Office Add‑In features.
-// AI Prompts: Write C# code that uses Aspose.Cells ConversionUtility to convert an XLSB file to PDF and verify that Office Add‑Ins are retained. | Explain how to batch convert a folder of XLSB workbooks to PDFs while preserving interactive add‑in elements with Aspose.Cells. | List ConversionUtility settings that influence the rendering of Office Add‑Ins during PDF export and show how to configure them.
+// Title: Convert an XLSB workbook to PDF with Aspose.Cells for .NET and handle missing file errors
+// AI Prompts: Write a C# console program that checks whether an .xlsb file exists, loads it with Aspose.Cells, and saves it as a PDF using the default PdfSaveOptions, wrapping the whole process in a try‑catch block. | Show how to log detailed exception information when converting an XLSB workbook to PDF with Aspose.Cells in a .NET application. | Demonstrate customizing PdfSaveOptions (e.g., embedding fonts) while converting an XLSB file to PDF using Aspose.Cells in C#. | Provide a C# snippet that returns the output PDF path after successfully converting an XLSB workbook with Aspose.Cells.
+// Common Searches: asp.net convert xlsb file to pdf using aspose.cells with file not found check | c# example for saving an xlsb workbook as pdf with Aspose.Cells PdfSaveOptions | how to handle exceptions when converting xlsb to pdf in a .NET console app | default pdf save options for Aspose.Cells workbook conversion | sample code to verify input file existence before Aspose.Cells PDF export
+// Tags: xlsb to pdf conversion Aspose.Cells | Aspose.Cells PdfSaveOptions C# | file existence validation Aspose.Cells | exception handling workbook to pdf .NET | convert binary Excel workbook to PDF using Aspose | default PDF export settings Aspose.Cells
 
 using System;
-using Aspose.Cells.Utility;
+using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to use Aspose.Cells.Utility.ConversionUtility.Convert in C# to turn an XLSB workbook—including embedded Office Add‑Ins—into a PDF while retaining interactive features.
-class ConvertXlsbToPdf
+// The example verifies that the source .xlsb file exists, loads it into an Aspose.Cells Workbook, and saves it as a PDF using the default PdfSaveOptions, while gracefully handling any runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source XLSB workbook (contains Office Add‑Ins)
-        string sourcePath = "input.xlsb";
+        const string inputPath = "input.xlsb";
+        const string outputPath = "output.pdf";
 
-        // Desired output PDF file path
-        string destPath = "output.pdf";
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Convert the XLSB workbook to PDF while preserving interactive elements
-        ConversionUtility.Convert(sourcePath, destPath);
+            // Load the XLSB workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        Console.WriteLine("XLSB workbook has been successfully converted to PDF.");
+            // Configure PDF save options (default options are sufficient for most scenarios)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

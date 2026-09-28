@@ -1,31 +1,28 @@
-// Title: Add a comment to cell D4 in Excel with Aspose.Cells for .NET (C#)
-// Description: C# code that creates a new workbook, accesses the first worksheet, inserts a comment into cell D4, sets the comment text to "Review required before final submission.", and saves the file as Output.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | add comment to Excel cell | cell D4 comment | Comments.Add | Comment.Note | save workbook Aspose.Cells | Output.xlsx | Excel annotation
-// Common Searches: Aspose.Cells add comment to specific cell C# | How to set comment text for D4 using Aspose.Cells | Save Excel file after adding comments Aspose.Cells .NET | Insert review note in Excel cell with Aspose.Cells | C# Aspose.Cells comment API example
-// Developer Intent: Insert a predefined comment into cell D4 of a newly created Excel workbook.
-// Use Cases: Mark cells that need reviewer attention before publishing the spreadsheet. | Create an audit trail by programmatically adding notes to critical cells. | Automate data‑validation feedback by placing comments on cells that fail checks.
-// AI Prompts: Generate C# code that adds a comment to cell D4 with Aspose.Cells and saves the workbook. | Show how to add multiple comments with different texts to various cells using Aspose.Cells for .NET. | Explain how to customize a comment’s author, font style, and background color after adding it to a cell with Aspose.Cells.
+// Title: Add a comment with the text “Review required before final submission” to cell D4 of the first worksheet using Aspose.Cells for .NET
+// AI Prompts: Insert a comment containing 'Review required before final submission' into cell D4 and save the workbook as output.xlsx. | Change the target cell and comment text dynamically by using variables before adding the comment with Aspose.Cells. | After adding a comment, retrieve its index from the worksheet's Comments collection and output it to the console. | Add multiple comments to different cells in the same worksheet and verify each comment's note property.
+// Common Searches: how to add a note to cell D4 using Aspose.Cells C# | Aspose.Cells set comment text for a specific cell in .NET | retrieve comment index after adding a comment with Aspose.Cells | save Excel file after inserting comments with Aspose.Cells for .NET
+// Tags: worksheet.comments.add Aspose.Cells | set comment.note property C# | add comment to cell D4 Aspose.Cells | retrieve comment index Aspose.Cells | save workbook to xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// C# code that creates a new workbook, accesses the first worksheet, inserts a comment into cell D4, sets the comment text to "Review required before final submission.", and saves the file as Output.xlsx using Aspose.Cells for .NET.
+// // Creates a new workbook, adds a comment with the text 'Review required before final submission' to cell D4 (row 4, column 4) of the first worksheet, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook (or load an existing one if needed)
+        var workbook = new Workbook();
 
-        // Add a comment to cell D4 using the cell name overload
-        int commentIndex = worksheet.Comments.Add("D4");
-        Comment comment = worksheet.Comments[commentIndex];
+        // Get the first worksheet
+        var worksheet = workbook.Worksheets[0];
 
-        // Set the comment text
-        comment.Note = "Review required before final submission.";
+        // Add a comment to cell D4 (row index 3, column index 3)
+        // The Add method returns the index of the new comment in the Comments collection
+        int commentIndex = worksheet.Comments.Add(3, 3);
+        var comment = worksheet.Comments[commentIndex];
+        comment.Note = "Review required before final submission";
 
         // Save the workbook to a file
-        workbook.Save("Output.xlsx");
+        workbook.Save("output.xlsx");
     }
 }

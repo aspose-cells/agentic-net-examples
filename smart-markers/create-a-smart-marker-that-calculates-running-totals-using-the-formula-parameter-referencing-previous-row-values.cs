@@ -1,78 +1,105 @@
-// Title: C# Aspose.Cells Smart Marker for Running Total Using a Previous‑Row Formula
-// Description: Creates a workbook, adds Item, Amount, and Running Total headers, inserts smart markers &=$Item and &=$Amount, applies the formula =IFERROR(B2+C1,B2) to compute cumulative totals, binds a DataTable, processes the template with WorkbookDesigner, and saves the file as RunningTotalSmartMarker.xlsx.
-// Keywords: Aspose.Cells | C# | Smart Marker | running total | previous row formula | IFERROR | cumulative sum | WorkbookDesigner | DataTable source | Excel automation
-// Common Searches: Aspose.Cells running total smart marker example | C# formula referencing previous row in smart marker | How to calculate cumulative sum with Aspose.Cells | Smart marker IFERROR running total | Generate Excel report with running total using Aspose.Cells
-// Developer Intent: Produce an Excel worksheet where a smart‑marker column automatically calculates a running total by adding each row’s amount to the total from the preceding row.
-// Use Cases: Sales ledger that shows each transaction and a live cumulative total. | Inventory sheet that updates a running balance as stock entries are added. | Expense report where each line adds to a running expense total without manual formulas.
-// AI Prompts: Generate C# code using Aspose.Cells that inserts smart markers for Item and Amount and adds a Running Total column with the formula =IFERROR(B2+C1,B2). | Explain the purpose of IFERROR(B2+C1,B2) in a smart‑marker template for cumulative totals. | Show how to adapt the template to start the running total from a different column or reset the total after a specific condition.
+// Title: Generate an Excel file with Aspose.Cells smart markers that calculate a running‑total column using formulas referencing previous rows in C#
+// AI Prompts: Write C# code that creates a workbook, adds smart markers for Name and Amount, processes a List<Record> data source, and then inserts a cumulative‑sum formula into the column that stores the running total. | Demonstrate using Aspose.Cells Table.PutCellFormula after smart marker processing to set formulas such as =B2 and =B3+C2 for each row, recalculate the workbook, and save the file.
+// Common Searches: how to compute a cumulative sum column with Aspose.Cells smart markers in C# | c# Aspose.Cells set formula referencing previous row in a ListObject table | example of using Table.PutCellFormula for running total after smart marker expansion | generate Excel report with smart markers and calculate totals per row using Aspose.Cells
+// Tags: Aspose.Cells smart marker total column | C# Table.PutCellFormula previous row reference | Excel cumulative column using smart markers | dynamic ListObject with formulas Aspose.Cells | apply formulas after smart marker processing C#
 
 using System;
-using System.Data;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
 namespace AsposeCellsSmartMarkerRunningTotal
 {
-    // Creates a workbook, adds Item, Amount, and Running Total headers, inserts smart markers &=$Item and &=$Amount, applies the formula =IFERROR(B2+C1,B2) to compute cumulative totals, binds a DataTable, processes the template with WorkbookDesigner, and saves the file as RunningTotalSmartMarker.xlsx.
-    class Program
+    // Simple data class for the smart marker source
+    // The example creates a workbook, defines smart markers for Name and Amount, processes a List<Record> data source into a ListObject table, then programmatically adds running‑total formulas in column C that reference the current Amount cell and the previous row's total, recalculates all formulas, and saves the result as an Excel file.
+    public class Record
     {
-        static void Main()
+        public string Name { get; set; }
+        public double Amount { get; set; }
+
+        public Record(string name, double amount)
+        {
+            Name = name;
+            Amount = amount;
+        }
+    }
+
+    public class RunningTotalDemo
+    {
+        public static void Main()
         {
             try
             {
-                // -------------------------------------------------
-                // 1. Create a new workbook (lifecycle rule: create)
-                // -------------------------------------------------
+                // ---------- Create a new workbook (lifecycle rule) ----------
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // -------------------------------------------------
-                // 2. Build the template with smart markers
-                // -------------------------------------------------
+                // ---------- Set up the template with smart markers ----------
                 // Header row
-                cells["A1"].PutValue("Item");
+                cells["A1"].PutValue("Name");
                 cells["B1"].PutValue("Amount");
-                cells["C1"].PutValue("Running Total");
+                cells["C1"].PutValue("RunningTotal");
 
-                // Data row (smart markers)
-                // &=$Item and &=$Amount will be replaced by data source values
-                cells["A2"].PutValue("&=$Item");
+                // Data row with smart markers (will be repeated)
+                cells["A2"].PutValue("&=$Name");
                 cells["B2"].PutValue("&=$Amount");
+                // Column C (RunningTotal) is left empty; we'll fill it with formulas later
 
-                // Running total formula using regular cell references.
-                // For the first data row, C1 is empty, so IFERROR returns the current amount.
-                cells["C2"].Formula = "=IFERROR(B2 + C1, B2)";
+                // ---------- Create a table that covers the template range ----------
+                // The table will automatically expand when the smart markers are processed
+                int tableIndex = sheet.ListObjects.Add(0, 0, 2, 2, true);
+                ListObject table = sheet.ListObjects[tableIndex];
 
-                // -------------------------------------------------
-                // 3. Prepare the data source (DataTable)
-                // -------------------------------------------------
-                DataTable dt = new DataTable("Sales");
-                dt.Columns.Add("Item", typeof(string));
-                dt.Columns.Add("Amount", typeof(double));
+                // ---------- Prepare data source ----------
+                List<Record> data = new List<Record>
+                {
+                    new Record("Item A", 100),
+                    new Record("Item B", 150),
+                    new Record("Item C", 200),
+                    new Record("Item D", 250),
+                    new Record("Item E", 300)
+                };
 
-                dt.Rows.Add("Apple", 120);
-                dt.Rows.Add("Banana", 80);
-                dt.Rows.Add("Cherry", 150);
-                dt.Rows.Add("Date", 60);
-
-                // -------------------------------------------------
-                // 4. Process the smart markers (lifecycle rule: process)
-                // -------------------------------------------------
+                // ---------- Process smart markers ----------
                 WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource(dt);
+                designer.SetDataSource("Data", data);
                 designer.Process();
 
-                // -------------------------------------------------
-                // 5. Save the result (lifecycle rule: save)
-                // -------------------------------------------------
-                string outputPath = "RunningTotalSmartMarker.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // ---------- Insert running‑total formulas ----------
+                // The table now contains the data rows. We set a formula for each row in column C.
+                // Row offset 0 = header, so data rows start at offset 1.
+                for (int rowOffset = 1; rowOffset <= data.Count; rowOffset++)
+                {
+                    // Convert table row offset to worksheet row number (1‑based for Excel)
+                    int sheetRow = table.StartRow + rowOffset + 1; // +1 because Excel rows start at 1
+
+                    string formula;
+                    if (rowOffset == 1)
+                    {
+                        // First row: running total equals the amount of the first row
+                        formula = $"=B{sheetRow}";
+                    }
+                    else
+                    {
+                        // Subsequent rows: current amount + previous running total
+                        int prevSheetRow = sheetRow - 1;
+                        formula = $"=B{sheetRow}+C{prevSheetRow}";
+                    }
+
+                    // Put the formula into column C (offset 2) of the current table row
+                    table.PutCellFormula(rowOffset, 2, formula);
+                }
+
+                // ---------- Calculate all formulas ----------
+                workbook.CalculateFormula();
+
+                // ---------- Save the workbook (lifecycle rule) ----------
+                workbook.Save("RunningTotalSmartMarker.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

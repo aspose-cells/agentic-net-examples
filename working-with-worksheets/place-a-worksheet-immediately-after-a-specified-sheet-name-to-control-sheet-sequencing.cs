@@ -1,58 +1,93 @@
-// Title: C# – Insert a Worksheet After a Specific Sheet with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, find a worksheet by its name, and insert a new worksheet immediately after it using Aspose.Cells for .NET, then save the result.
-// Keywords: Aspose.Cells | C# insert worksheet | add worksheet after sheet | worksheet index | control sheet order | .NET spreadsheet library | InsertWorksheet method | Workbook manipulation
-// Common Searches: Aspose.Cells insert worksheet after existing sheet | C# add new worksheet after specific tab | How to place a worksheet after another in Aspose.Cells | Get worksheet index by name Aspose.Cells .NET | Programmatically reorder sheets Aspose.Cells
-// Developer Intent: Add a new worksheet directly after a given worksheet to set the desired sheet sequence in a generated workbook.
-// Use Cases: Create a summary sheet that must follow a data sheet in a financial report. | Insert an analysis tab immediately after a user‑selected worksheet during runtime. | Maintain a predefined sheet order when dynamically adding new worksheets to a template.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a worksheet after a sheet named 'SheetX' and copies the formatting from the preceding sheet. | Provide an example that retrieves a worksheet index by name and inserts multiple worksheets sequentially after it using Aspose.Cells for .NET. | Explain how to handle the situation where the target sheet name does not exist when inserting a new worksheet with Aspose.Cells.
+// Title: Insert a newly created worksheet immediately after a given sheet name with Aspose.Cells for .NET
+// AI Prompts: Create a worksheet called 'NewSheet' and place it directly after the existing worksheet 'Sheet1' in a workbook using Aspose.Cells. | Reorder worksheets by removing a newly added sheet and inserting it at the index that follows a target sheet identified by its name, then save the workbook.
+// Common Searches: Aspose.Cells C# insert worksheet after existing sheet by name | how to move a newly added worksheet to follow a specific worksheet in Aspose.Cells | reposition worksheet to a particular index using Aspose.Cells .NET | programmatically set worksheet order based on sheet name Aspose.Cells
+// Tags: insert worksheet after target sheet Aspose.Cells | reorder worksheets by name .NET | add worksheet at specific index C# Aspose.Cells | move worksheet to desired position Aspose.Cells | worksheet sequencing with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Shows how to create a workbook, find a worksheet by its name, and insert a new worksheet immediately after it using Aspose.Cells for .NET, then save the result.
-    public class InsertWorksheetAfterSpecifiedSheet
+    // The code loads or creates a workbook, adds a worksheet named 'NewSheet', locates the worksheet named 'Sheet1', removes the new sheet and inserts it immediately after 'Sheet1', and finally saves the workbook as output.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                const string inputPath = "input.xlsx";
+                Workbook workbook;
 
-                // Add initial worksheets
-                workbook.Worksheets.Add("SheetA");
-                workbook.Worksheets.Add("SheetB");
-                workbook.Worksheets.Add("SheetC");
+                // Load existing workbook if present, otherwise create a new one
+                if (File.Exists(inputPath))
+                {
+                    try
+                    {
+                        workbook = new Workbook(inputPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to load '{inputPath}': {ex.Message}");
+                        workbook = new Workbook();
+                    }
+                }
+                else
+                {
+                    workbook = new Workbook();
+                }
 
-                // Name of the sheet after which the new sheet should be placed
-                string targetSheetName = "SheetB";
+                // Add a new worksheet that we want to position
+                int newSheetIndex = workbook.Worksheets.Add();
+                Worksheet newSheet = workbook.Worksheets[newSheetIndex];
+                newSheet.Name = "NewSheet";
 
-                // Get the index of the target sheet (zero‑based)
-                int targetIndex = workbook.Worksheets[targetSheetName].Index;
+                // Name of the sheet after which the new sheet should appear
+                const string targetSheetName = "Sheet1";
 
-                // Insert a new worksheet immediately after the target sheet
-                Worksheet insertedSheet = workbook.Worksheets.Insert(targetIndex + 1, SheetType.Worksheet, "InsertedAfterB");
+                // Locate the target sheet by name (returns null if not found)
+                Worksheet targetSheet = workbook.Worksheets[targetSheetName];
 
-                // Optional: add some data to the new sheet to verify it was created
-                insertedSheet.Cells["A1"].PutValue($"This sheet was inserted after {targetSheetName}");
+                if (targetSheet != null)
+                {
+                    int targetIndex = workbook.Worksheets.IndexOf(targetSheet);
+                    int sourceIndex = workbook.Worksheets.IndexOf(newSheet);
+
+                    // Reposition the new sheet to be immediately after the target sheet
+                    try
+                    {
+                        // Remove the source sheet
+                        workbook.Worksheets.RemoveAt(sourceIndex);
+
+                        // Determine correct insertion index after removal
+                        int insertIndex = sourceIndex < targetIndex ? targetIndex : targetIndex + 1;
+
+                        // Insert a new worksheet at the desired position
+                        Worksheet inserted = workbook.Worksheets.Insert(insertIndex, SheetType.Worksheet);
+                        inserted.Name = newSheet.Name;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to reposition worksheet: {ex.Message}");
+                    }
+                }
 
                 // Save the workbook
-                string outputPath = "SheetSequenceDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                const string outputPath = "output.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        // Entry point for the console application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

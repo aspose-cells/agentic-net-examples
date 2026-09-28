@@ -1,39 +1,52 @@
-// Title: Aspose.Cells C# DeleteOptions.UpdateReference – Delete Rows While Preserving Formulas
-// Description: Demonstrates how to create a DeleteOptions object with UpdateReference enabled and pass it to Cells.DeleteRows, so formulas that reference the removed rows are automatically recalculated. Includes workbook setup, sample data, and saving the result.
-// Keywords: Aspose.Cells DeleteOptions | UpdateReference property | DeleteRows C# | preserve formulas after row deletion | .NET spreadsheet API | adjust cell references programmatically
-// Common Searches: Aspose.Cells DeleteOptions example | how to keep formulas after deleting rows in C# | DeleteRows with UpdateReference usage | prevent broken references Aspose.Cells
-// Developer Intent: Instantiate DeleteOptions with UpdateReference = true and use it to delete rows so that any dependent formulas are automatically updated.
-// Use Cases: Remove a single row without corrupting formulas that reference it. | Delete multiple consecutive rows while maintaining calculation integrity. | Automate worksheet cleanup in a .NET application without manual formula adjustments.
-// AI Prompts: Write C# code using Aspose.Cells to delete rows with DeleteOptions that updates formula references. | Explain the effect of DeleteOptions.UpdateReference on formulas when rows are removed. | Show how to delete columns with DeleteOptions and keep dependent formulas correct.
+// Title: Delete columns B and C while automatically updating formulas with DeleteOptions in Aspose.Cells for .NET
+// AI Prompts: Instantiate DeleteOptions with UpdateReference = true, call the DeleteColumns overload to remove columns B and C, and verify that the SUM formula shifts to the new range. | Show how to delete multiple adjacent columns in a C# Aspose.Cells workbook and keep all dependent formulas correct by configuring DeleteOptions.
+// Common Searches: Aspose.Cells DeleteOptions keep formulas correct C# example | how to delete specific columns and keep formulas updated in Aspose.Cells | C# delete columns B and C and adjust SUM formula Aspose.Cells | using DeleteColumns overload with DeleteOptions in Aspose.Cells .NET | preserve cell references after column deletion Aspose.Cells
+// Tags: DeleteOptions reference update | delete columns with formula adjustment Aspose.Cells | Aspose.Cells DeleteColumns overload | C# Excel column removal preserving formulas | Aspose.Cells workbook column deletion example
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Demonstrates how to create a DeleteOptions object with UpdateReference enabled and pass it to Cells.DeleteRows, so formulas that reference the removed rows are automatically recalculated. Includes workbook setup, sample data, and saving the result.
-class DeleteOptionsDemo
+namespace AsposeCellsDeleteOptionsDemo
 {
-    static void Main()
+    // The sample creates a workbook, fills cells A1:D2, adds a SUM formula in E1, configures DeleteOptions with UpdateReference=true, deletes columns B and C via the DeleteColumns overload, automatically updates the formula to reference the new range, prints the updated formula, and saves the file as DeleteOptionsDemo.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Add sample data and a formula that references the second row
-        cells["A1"].PutValue(10);   // Row 0
-        cells["A2"].PutValue(20);   // Row 1 (will be deleted)
-        cells["B1"].Formula = "=A1+A2";
-
-        // Create DeleteOptions and enable reference updating
-        DeleteOptions options = new DeleteOptions
+        static void Main()
         {
-            UpdateReference = true
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Delete the second row (index 1) using the DeleteOptions instance
-        cells.DeleteRows(1, 1, options);
+            // Populate some sample data in columns A to D
+            cells["A1"].PutValue("Header A");
+            cells["B1"].PutValue("Header B");
+            cells["C1"].PutValue("Header C");
+            cells["D1"].PutValue("Header D");
 
-        // Save the workbook to verify the formula has been updated
-        workbook.Save("DeleteOptionsDemo.xlsx");
+            cells["A2"].PutValue(10);
+            cells["B2"].PutValue(20);
+            cells["C2"].PutValue(30);
+            cells["D2"].PutValue(40);
+
+            // Add a formula that references the columns we will delete
+            cells["E1"].Formula = "=SUM(A2:D2)";
+
+            // Create DeleteOptions and set UpdateReference to true
+            DeleteOptions deleteOptions = new DeleteOptions
+            {
+                UpdateReference = true // ensures formulas adjust after deletion
+            };
+
+            // Delete columns B and C (indexes 1 and 2) using the DeleteOptions overload
+            // This will shift remaining columns left and update the formula in E1
+            sheet.Cells.DeleteColumns(1, 2, deleteOptions);
+
+            // After deletion, column D becomes column B, and the formula should be updated to "=SUM(A2:B2)"
+            Console.WriteLine("Formula after deleting columns B and C: " + cells["E1"].Formula);
+
+            // Save the workbook to demonstrate that changes are persisted
+            workbook.Save("DeleteOptionsDemo.xlsx");
+        }
     }
 }

@@ -1,88 +1,82 @@
-// Title: C# – Extract All OLE Objects from an Excel Workbook with Aspose.Cells
-// Description: Loads an Excel workbook, iterates every worksheet and its OleObjects collection, determines a file name for linked or embedded objects, retrieves the binary via ObjectData or FullObjectBin, and saves each OLE object to a specified output folder.
-// Keywords: Aspose.Cells | C# OLE extraction | extract OLE objects Excel | save embedded OLE files | linked OLE extraction .NET | OleObject iteration | Workbook OleObjects | export OLE binaries | Aspose.Cells example | GitHub C# Aspose.Cells
-// Common Searches: How to extract OLE objects from Excel using Aspose.Cells C# | C# code to save embedded OLE files from a workbook | Export linked OLE objects to folder Aspose.Cells | Iterate OleObjects collection in .NET | Extract all OLE objects from all worksheets Aspose.Cells
-// Developer Intent: Retrieve every OLE object (embedded or linked) from a workbook and write it to a chosen directory.
-// Use Cases: Create an archive of all embedded charts, Word documents, and PDFs in a financial model for offline analysis. | Relocate linked OLE files before sharing a workbook to avoid broken references. | Generate a compliance‑ready backup of every OLE binary for audit trails. | Automate migration of legacy Excel reports that contain embedded objects to a document management system.
-// AI Prompts: Write C# code that extracts both embedded and linked OLE objects from an Excel file using Aspose.Cells, with robust error handling. | Add logging to the OLE extraction routine that records file names, worksheet names, and missing‑data warnings. | Modify the example to group extracted objects by file extension into separate subfolders. | Provide a PowerShell script that calls the compiled C# extractor for batch processing of multiple workbooks.
+// Title: Extract all embedded OLE objects from an Excel workbook to a folder with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, loops through each worksheet, and writes the ObjectData of every OleObject to a specified directory. | Modify the extraction logic to use the OleObject.Name as the filename and fall back to a sequential name when the Name property is empty. | Add error handling that logs OleObjects without data and continues processing the remaining objects.
+// Common Searches: how to export embedded OLE objects from an Excel file using Aspose.Cells C# | c# iterate OleObject collection in workbook and save to disk | Aspose.Cells extract binary data of OLE objects to folder | save each OleObject from .xlsx as separate file with Aspose.Cells | handle missing OLE object data when extracting from Excel in .NET
+// Tags: extract OLE objects Aspose.Cells | save OleObject binary data C# | iterate worksheet OleObject collection | fallback filename for unnamed OleObject | log missing OLE data Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Loads an Excel workbook, iterates every worksheet and its OleObjects collection, determines a file name for linked or embedded objects, retrieves the binary via ObjectData or FullObjectBin, and saves each OLE object to a specified output folder.
-class ExtractOleObjects
+// The program loads an Excel workbook using Aspose.Cells, iterates through every worksheet's OleObjects collection, and writes each object's binary data to a target folder, naming files from the OleObject.Name or a generated identifier and logging any objects without data.
+class Program
 {
     static void Main()
     {
-        // Path to the source workbook
-        string sourcePath = @"C:\Temp\InputWorkbook.xlsx";
-
-        // Folder where extracted OLE files will be saved
-        string outputFolder = @"C:\Temp\ExtractedOleObjects";
-
         try
         {
-            // Verify that the source workbook exists
-            if (!File.Exists(sourcePath))
+            // Path to the source workbook
+            string workbookPath = "input.xlsx";
+
+            // Verify that the workbook file exists
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Source workbook not found: {sourcePath}");
+                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
                 return;
             }
+
+            // Destination folder for extracted OLE objects
+            string outputFolder = "ExtractedOleObjects";
 
             // Ensure the output folder exists
             Directory.CreateDirectory(outputFolder);
 
             // Load the workbook
-            Workbook workbook = new Workbook(sourcePath);
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Counter for generating unique file names when needed
+            int oleCounter = 0;
 
             // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through each OLE object in the current worksheet
+                // Iterate through each OleObject in the current worksheet
                 foreach (OleObject ole in sheet.OleObjects)
                 {
-                    // Determine a file name for the extracted object
-                    string fileName;
-
-                    // If the OLE object is linked, use its source file name
-                    if (ole.IsLink && !string.IsNullOrEmpty(ole.ObjectSourceFullName))
+                    try
                     {
-                        fileName = Path.GetFileName(ole.ObjectSourceFullName);
+                        // Base name: use the OLE object's name if available
+                        string baseName = !string.IsNullOrEmpty(ole.Name)
+                            ? ole.Name
+                            : $"OleObject_{oleCounter}";
+
+                        // Default file extension (binary data)
+                        string extension = ".bin";
+
+                        // Combine folder, name, and extension to get the full output path
+                        string outputPath = Path.Combine(outputFolder, baseName + extension);
+
+                        // Save the OLE object data to the file system (if data is available)
+                        if (ole.ObjectData != null && ole.ObjectData.Length > 0)
+                        {
+                            File.WriteAllBytes(outputPath, ole.ObjectData);
+                            Console.WriteLine($"Extracted: {outputPath}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Warning: OleObject '{baseName}' has no data to save.");
+                        }
+
+                        oleCounter++;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        // For embedded objects, try to use the original source name if available
-                        fileName = !string.IsNullOrEmpty(ole.ObjectSourceFullName)
-                            ? Path.GetFileName(ole.ObjectSourceFullName)
-                            : $"EmbeddedOle_{Guid.NewGuid()}.bin";
-                    }
-
-                    // Build the full path for the extracted file
-                    string outputPath = Path.Combine(outputFolder, fileName);
-
-                    // Extract the OLE data
-                    byte[] data = ole.ObjectData;
-
-                    // If ObjectData is null or empty, fall back to FullObjectBin
-                    if (data == null || data.Length == 0)
-                    {
-                        data = ole.FullObjectBin;
-                    }
-
-                    // Write the data to the file system if we have any bytes
-                    if (data != null && data.Length > 0)
-                    {
-                        File.WriteAllBytes(outputPath, data);
-                        Console.WriteLine($"Extracted OLE object to: {outputPath}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"No data found for OLE object in sheet '{sheet.Name}'.");
+                        Console.WriteLine($"Failed to extract an OLE object: {ex.Message}");
                     }
                 }
             }
+
+            Console.WriteLine("OLE object extraction completed.");
         }
         catch (Exception ex)
         {

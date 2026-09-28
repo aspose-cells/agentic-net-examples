@@ -1,65 +1,66 @@
-// Title: Batch convert Excel files to CSV with Aspose.Cells – trim blanks, keep headers
-// Description: A C# console app that scans a directory for .xlsx, .xls, and .xlsm workbooks, loads each with Aspose.Cells, applies TxtSaveOptions to remove leading empty rows/columns and export only the active sheet, then writes a CSV file with the same base name to a target folder.
-// Keywords: Aspose.Cells | C# batch Excel to CSV | trim leading blanks | export active sheet | TxtSaveOptions CSV | folder processing | Excel to CSV automation | remove empty rows columns
-// Common Searches: C# Aspose.Cells convert folder of Excel files to CSV | remove leading empty rows when saving CSV with Aspose.Cells | batch export active worksheet as CSV using Aspose.Cells | Aspose.Cells TxtSaveOptions example for CSV | keep column headers in CSV export Aspose.Cells
-// Developer Intent: Programmatically transform every Excel workbook in a given folder into a CSV file, stripping initial blank rows/columns while preserving the first row as column headers.
-// Use Cases: Automate nightly ingestion of Excel reports into a CSV‑based data pipeline. | Clean spreadsheets that contain leading empty rows or columns before legacy system import. | Generate CSV snapshots of the active sheet from multiple workbooks in a single batch job.
-// AI Prompts: Write C# code using Aspose.Cells to iterate over a directory, load each .xlsx/.xls/.xlsm file, trim leading blank rows and columns, and save the active worksheet as a CSV with the same filename in another folder. | Explain how TxtSaveOptions.TrimLeadingBlankRowAndColumn works when exporting to CSV and why column headers remain intact. | Provide a step‑by‑step guide for batch converting Excel files to CSV with Aspose.Cells, including error handling for unsupported formats.
+// Title: Batch convert Excel workbooks to CSV with trimmed leading blanks using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that enumerates all Excel files in a directory and converts each to a CSV file, applying TxtSaveOptions to eliminate any leading empty rows or columns. | Modify the batch converter to generate a separate CSV file for every worksheet in each workbook while preserving the original column headers. | Enhance the conversion loop with try‑catch blocks that log failed files to a text report and continue processing the remaining workbooks.
+// Common Searches: how to batch convert xlsx and ods files to csv with Aspose.Cells .NET | remove leading empty rows and columns when exporting Excel to csv using Aspose.Cells | save only the active worksheet as csv with Aspose.Cells C# | convert multiple Excel formats to csv programmatically Aspose.Cells | Aspose.Cells TxtSaveOptions trim leading blanks example
+// Tags: batch excel to csv Aspose.Cells | TxtSaveOptions trim leading blanks | convert multiple workbook formats csv | export active sheet as csv C# | Aspose.Cells CSV conversion options
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-namespace BatchExcelToCsv
+namespace AsposeCellsBatchConversion
 {
-    // A C# console app that scans a directory for .xlsx, .xls, and .xlsm workbooks, loads each with Aspose.Cells, applies TxtSaveOptions to remove leading empty rows/columns and export only the active sheet, then writes a CSV file with the same base name to a target folder.
-    class Program
+    // The utility scans a source folder for Excel files (xlsx, xlsm, xls, xlsb, ods), loads each workbook with Aspose.Cells, and saves it as a CSV in a destination folder using TxtSaveOptions that trim leading blank rows and columns while exporting only the active sheet.
+    public class ExcelToCsvConverter
     {
-        static void Main()
+        /// <param name="sourceFolder">Folder containing Excel files (e.g., .xlsx, .xlsm).</param>
+        /// <param name="destFolder">Folder where the resulting CSV files will be saved.</param>
+        public static void BatchConvert(string sourceFolder, string destFolder)
         {
-            // Folder containing the source Excel files
-            string sourceFolder = @"C:\InputExcelFiles";
+            // Ensure the destination directory exists
+            if (!Directory.Exists(destFolder))
+                Directory.CreateDirectory(destFolder);
 
-            // Folder where the resulting CSV files will be saved
-            string outputFolder = @"C:\OutputCsvFiles";
+            // Define the Excel file extensions to process
+            string[] excelExtensions = new[] { "*.xlsx", "*.xlsm", "*.xls", "*.xlsb", "*.ods" };
 
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Get all Excel files (XLSX and XLS) in the source folder
-            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string excelPath in excelFiles)
+            // Iterate over each supported extension
+            foreach (var pattern in excelExtensions)
             {
-                // Process only supported Excel formats
-                string ext = Path.GetExtension(excelPath).ToLowerInvariant();
-                if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm")
-                    continue;
-
-                // Load the workbook (lifecycle: create & load)
-                Workbook workbook = new Workbook(excelPath);
-
-                // Configure CSV save options
-                TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+                foreach (var excelPath in Directory.GetFiles(sourceFolder, pattern, SearchOption.TopDirectoryOnly))
                 {
-                    // Trim leading blank rows and columns (default is true, set explicitly for clarity)
-                    TrimLeadingBlankRowAndColumn = true,
+                    // Load the workbook (using default LoadOptions)
+                    Workbook workbook = new Workbook(excelPath);
 
-                    // Export only the active sheet (default is false)
-                    ExportAllSheets = false
-                };
+                    // Prepare CSV save options
+                    TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+                    {
+                        // Trim leading blank rows/columns like Excel does
+                        TrimLeadingBlankRowAndColumn = true,
 
-                // Build the output CSV file path
-                string csvFileName = Path.GetFileNameWithoutExtension(excelPath) + ".csv";
-                string csvPath = Path.Combine(outputFolder, csvFileName);
+                        // Export only the active sheet (change to true if all sheets are required)
+                        ExportAllSheets = false
+                    };
 
-                // Save the workbook as CSV (lifecycle: save)
-                workbook.Save(csvPath, saveOptions);
+                    // Build the output CSV file path (same name, .csv extension)
+                    string csvFileName = Path.GetFileNameWithoutExtension(excelPath) + ".csv";
+                    string csvPath = Path.Combine(destFolder, csvFileName);
 
-                Console.WriteLine($"Converted '{excelPath}' to '{csvPath}'.");
+                    // Save the workbook as CSV using the configured options
+                    workbook.Save(csvPath, saveOptions);
+
+                    Console.WriteLine($"Converted: {excelPath} -> {csvPath}");
+                }
             }
+        }
 
-            Console.WriteLine("Batch conversion completed.");
+        // Example usage
+        public static void Main()
+        {
+            string sourceFolder = @"C:\InputExcelFiles";
+            string destFolder   = @"C:\OutputCsvFiles";
+
+            BatchConvert(sourceFolder, destFolder);
         }
     }
 }

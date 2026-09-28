@@ -1,68 +1,49 @@
-// Title: Protect Specific Cells with a Password in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to lock individual cells with a password while leaving other cells editable using Aspose.Cells for .NET. The example creates a workbook, writes sample data, unlocks a range (B1:C1) by applying a style with IsLocked = false, adds a password‑protected range for cell A1 via AllowEditRanges, optionally secures the whole sheet, and saves the file as ProtectedIndividualCells.xlsx.
-// Keywords: Aspose.Cells protect cell password | C# lock single cell Excel | AllowEditRanges Aspose.Cells | unlock cell range Aspose.Cells | worksheet protection .NET | password protected Excel cell C# | Aspose.Cells cell level security
-// Common Searches: how to lock a single cell with a password using Aspose.Cells | unlock a range of cells while protecting the rest of a worksheet in C# | set password for specific cells in an Excel file with Aspose.Cells | cell‑level protection Aspose.Cells .NET example | protect individual cells Aspose.Cells C# tutorial
-// Developer Intent: The developer needs to apply password protection to selected cells while keeping the remaining cells editable.
-// Use Cases: Create a template where only input cells are editable and calculation cells are password‑locked. | Distribute a financial model that safeguards key formulas but allows users to modify assumptions. | Generate a report that hides confidential values behind cell‑level passwords while exposing summary fields for editing.
-// AI Prompts: Show how to protect multiple non‑contiguous cells with different passwords using Aspose.Cells for .NET. | Explain how to check if a cell is locked and retrieve its password programmatically with Aspose.Cells. | Provide code to change the password of an existing protected range without affecting other protections.
+// Title: Password‑protect specific cells while leaving other cells editable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that locks selected cells, unlocks others, and applies a worksheet password. | Show how to create a style that sets IsLocked = false and use it to make certain cells editable before protecting the sheet with a password.
+// Common Searches: Aspose.Cells C# protect only certain cells with a password | How to unlock specific cells while protecting the rest of the worksheet in Aspose.Cells | C# example for cell‑level protection using Aspose.Cells workbook | Apply password protection to a worksheet but allow editing of designated cells in .NET | Selective cell locking with Aspose.Cells and password protection
+// Tags: worksheet password protection Aspose.Cells | unlock cells for editing Aspose.Cells | cell lock style Aspose.Cells C# | selective cell protection .NET | apply locked property style Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a workbook, writes data to A1‑B2, unlocks cells B1 and B2 via a style with IsLocked = false, protects the worksheet with a password so locked cells become read‑only, and saves the file as ProtectedCells.xlsx.
+class ProtectCellsExample
 {
-    // Demonstrates how to lock individual cells with a password while leaving other cells editable using Aspose.Cells for .NET. The example creates a workbook, writes sample data, unlocks a range (B1:C1) by applying a style with IsLocked = false, adds a password‑protected range for cell A1 via AllowEditRanges, optionally secures the whole sheet, and saves the file as ProtectedIndividualCells.xlsx.
-    public class ProtectIndividualCellsDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Fill some sample data
-            cells["A1"].PutValue("Password Protected Cell");
-            cells["B1"].PutValue("Editable Cell 1");
-            cells["C1"].PutValue("Editable Cell 2");
-            cells["A2"].PutValue("Another Locked Cell");
+            sheet.Cells["A1"].PutValue("Read‑Only Cell");
+            sheet.Cells["B1"].PutValue("Editable Cell");
+            sheet.Cells["A2"].PutValue("Read‑Only Cell 2");
+            sheet.Cells["B2"].PutValue("Editable Cell 2");
 
-            // Unlock the range B1:C1 so users can edit without a password
+            // By default all cells are locked. Unlock the cells that should remain editable.
             Style unlockedStyle = workbook.CreateStyle();
-            unlockedStyle.IsLocked = false;
+            unlockedStyle.IsLocked = false; // make editable
+
+            // Apply the unlocked style to the cells that users can edit
             StyleFlag flag = new StyleFlag();
-            flag.Locked = true; // apply the lock property from the style
-            cells.CreateRange("B1:C1").ApplyStyle(unlockedStyle, flag);
+            flag.Locked = true; // indicate that the Locked property should be applied
 
-            // Add a protected range for cell A1 that requires a password to edit
-            int rangeIndex = worksheet.AllowEditRanges.Add("PasswordProtectedA1", 0, 0, 0, 0);
-            ProtectedRange protectedRange = worksheet.AllowEditRanges[rangeIndex];
-            protectedRange.Password = "cellpwd";
+            sheet.Cells["B1"].SetStyle(unlockedStyle, flag);
+            sheet.Cells["B2"].SetStyle(unlockedStyle, flag);
 
-            // Protect the worksheet with a sheet password (optional)
-            worksheet.Protect(ProtectionType.All, "sheetpwd", null);
+            // Protect the worksheet with a password.
+            // All locked cells become read‑only, while unlocked cells stay editable.
+            sheet.Protect(ProtectionType.All, "MySecretPassword", null);
 
             // Save the workbook
-            string outputPath = "ProtectedIndividualCells.xlsx";
-            workbook.Save(outputPath);
-
-            // Output verification information
-            Console.WriteLine("Worksheet protected with password: " + worksheet.Protection.IsProtectedWithPassword);
-            Console.WriteLine("Cell A1 requires password: " + protectedRange.IsProtectedWithPassword);
-            Console.WriteLine("Editable range B1:C1 is unlocked.");
-            Console.WriteLine($"Workbook saved to: {outputPath}");
+            workbook.Save("ProtectedCells.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

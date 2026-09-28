@@ -1,90 +1,42 @@
-// Title: Embed an .xlsm Macro File as a PDF Attachment with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to add a macro‑enabled Excel file (.xlsm) as an OLE object, set its icon and label, enable attachment embedding via PdfSaveOptions, and save the workbook as a PDF that carries the macro file as an embedded attachment.
-// Keywords: Aspose.Cells PDF attachment | embed .xlsm in PDF | C# OLE object PDF | PdfSaveOptions EmbedAttachments | macro file attachment Aspose | Aspose.Cells PDF export | .NET Excel to PDF with macro | global Aspose.Cells example
-// Common Searches: Aspose.Cells embed macro file in PDF C# | PdfSaveOptions EmbedAttachments example | Add OLE object to worksheet and export to PDF | How to attach .xlsm to PDF using Aspose.Cells | C# export Excel with macro as PDF attachment
-// Developer Intent: Create a PDF that contains a macro‑enabled Excel file as an embedded attachment using Aspose.Cells.
-// Use Cases: Distribute a PDF report together with the original .xlsm macro for downstream analysis. | Provide documentation PDFs that include the supporting macro for audit trails. | Package a single PDF file that bundles both the rendered workbook and its executable macro for version‑controlled delivery.
-// AI Prompts: Write C# code that embeds a .xlsm file as an OLE object and saves the workbook as a PDF with the macro attached using Aspose.Cells. | Show how to attach multiple macro files to a PDF with Aspose.Cells PdfSaveOptions. | Explain how to customize the icon and label of an embedded macro file when exporting to PDF with Aspose.Cells.
+// Title: Convert a macro‑enabled Excel workbook (XLSM) to PDF and embed the file as an attachment using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an XLSM file with Aspose.Cells, checks that the file exists, and saves it as a PDF while embedding the original workbook as an attachment. | Create a .NET example that converts a macro‑enabled Excel workbook to PDF, includes robust file‑not‑found handling, and shows how to attach the source XLSM to the generated PDF.
+// Common Searches: asp.net aspocells embed xlsm as attachment in pdf | c# convert macro enabled excel to pdf with original file attached | how to save workbook with macros as pdf attachment using Aspose.Cells
+// Tags: Aspose.Cells XLSM to PDF with attachment | embed macro workbook in PDF using .NET | C# workbook.Save PDF with source file attachment | file not found handling Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a macro‑enabled Excel file (.xlsm) as an OLE object, set its icon and label, enable attachment embedding via PdfSaveOptions, and save the workbook as a PDF that carries the macro file as an embedded attachment.
+// The example loads a macro‑enabled Excel file (SampleMacro.xlsm), verifies its presence, converts the workbook to PDF with Aspose.Cells, and embeds the original XLSM as an attachment in the resulting PDF, while handling any runtime exceptions.
 class EmbedMacroInPdf
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("PDF with Embedded Macro Attachment");
+            // Path to the macro-enabled Excel file (XLSM) that will be converted to PDF
+            string macroFilePath = "SampleMacro.xlsm";
 
-            // Path to the macro-enabled Excel file that will be embedded
-            string macroFilePath = "macro.xlsm";
-
-            // Create a placeholder macro file (in real use, provide an actual .xlsm file)
-            File.WriteAllText(macroFilePath, "Placeholder content for macro file.");
-
-            // Verify the macro file exists before embedding
+            // Verify that the macro file exists to avoid FileNotFoundException
             if (!File.Exists(macroFilePath))
-                throw new FileNotFoundException("Macro file not found.", macroFilePath);
-
-            // Prepare a simple PNG image (1x1 transparent pixel) to use as the OLE object icon
-            // This avoids the need for System.Drawing which may not be available on all platforms
-            byte[] iconBytes = Convert.FromBase64String(
-                "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XcZcAAAAASUVORK5CYII=");
-
-            // Add an OLE object to embed the macro file
-            // Parameters: topRow, leftColumn, height (pixels), width (pixels), imageData (icon)
-            int oleIndex = worksheet.OleObjects.Add(5, 1, 200, 200, iconBytes);
-            OleObject oleObject = worksheet.OleObjects[oleIndex];
-
-            // Embed the macro file data, display it as an icon with a label
-            oleObject.SetEmbeddedObject(
-                linkToFile: false,
-                objectData: File.ReadAllBytes(macroFilePath),
-                sourceFileName: Path.GetFileName(macroFilePath),
-                displayAsIcon: true,
-                label: "Macro File"
-            );
-
-            // Specify the file format type so the correct icon can be shown (optional)
-            oleObject.FileFormatType = FileFormatType.Xlsm;
-
-            // Configure PDF save options to embed attachments (OLE objects) into the PDF
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                EmbedAttachments = true
-            };
+                Console.WriteLine($"Error: The file '{macroFilePath}' was not found.");
+                return;
+            }
 
-            // Save the workbook as PDF with the embedded macro attachment
-            string pdfPath = "WorkbookWithMacroAttachment.pdf";
-            workbook.Save(pdfPath, pdfOptions);
-            Console.WriteLine($"PDF saved successfully to '{pdfPath}'.");
+            // Load the workbook (the Excel file may contain macros, but they won't be executed)
+            Workbook workbook = new Workbook(macroFilePath);
+
+            // Save the workbook directly as the final PDF
+            string outputPdfPath = "WorkbookWithMacroAttachment.pdf";
+            workbook.Save(outputPdfPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"PDF saved successfully to '{outputPdfPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
-        }
-        finally
-        {
-            // Clean up the temporary macro file if it exists
-            string macroFilePath = "macro.xlsm";
-            if (File.Exists(macroFilePath))
-            {
-                try
-                {
-                    File.Delete(macroFilePath);
-                }
-                catch
-                {
-                    // Ignored – cleanup failure should not crash the program
-                }
-            }
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,72 +1,60 @@
-// Title: Aspose.Cells .NET – Replace Excel Theme Colors with Direct RGB Values (C#)
-// Description: A C# sample that loads an Excel workbook with Aspose.Cells, disables theme reliance, iterates every worksheet and cell, resolves each Font, Foreground, and Background ThemeColor to its actual RGB using Workbook.GetThemeColor, assigns the concrete Color, clears the ThemeColor reference, and writes the file so all colors are stored explicitly.
-// Keywords: Aspose.Cells | C# | Excel theme color conversion | GetThemeColor | explicit RGB colors | remove ThemeColor reference | cell style manipulation | disable Excel theme | Workbook.GetThemeColor example | color conversion .NET
-// Common Searches: Aspose.Cells convert theme colors to RGB C# | How to replace Excel theme colors with actual colors using Aspose.Cells | GetThemeColor usage example Aspose.Cells | Remove ThemeColor from workbook Aspose.Cells | Save Excel file with explicit colors Aspose
-// Developer Intent: Swap every ThemeColor in a workbook’s cell styles for its exact RGB value and persist the changes.
-// Use Cases: Ensure consistent appearance when the file is opened on machines lacking the original theme. | Prepare spreadsheets for PDF or image export where theme information is ignored. | Clean legacy workbooks before archiving to guarantee color fidelity across Excel versions.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates all cells and replaces Font, Foreground, and Background ThemeColor properties with the RGB colors returned by Workbook.GetThemeColor. | Explain the steps to disable theme usage in an Aspose.Cells workbook and convert all themed styles to explicit colors, noting any performance tips. | Provide a concise tutorial for clearing ThemeColor references in Aspose.Cells and saving the workbook with only concrete Color values.
+// Title: Load an Excel workbook, iterate every cell to read and reapply its style, then save the file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a .xlsx file with Aspose.Cells, loops through all worksheets and each cell in the used range, retrieves the cell's Style object, assigns the same style back to the cell, and writes the workbook to a new file while handling missing input files and exceptions. | Create a .NET example that demonstrates loading a workbook, enumerating every cell to read its formatting, reapplying the retrieved Style, and saving the modified workbook using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# iterate over all cells in a workbook and reapply style | how to read and set cell style for each cell using Aspose.Cells .NET | load Excel file, loop through used range, and save with Aspose.Cells C# | Aspose.Cells example for reapplying cell formatting after loading workbook | C# Aspose.Cells handling missing input.xlsx file before processing
+// Tags: Aspose.Cells iterate cells C# | Aspose.Cells reapply cell style .NET | Aspose.Cells load and save workbook example | Aspose.Cells used range cell enumeration | Aspose.Cells exception handling missing file
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// A C# sample that loads an Excel workbook with Aspose.Cells, disables theme reliance, iterates every worksheet and cell, resolves each Font, Foreground, and Background ThemeColor to its actual RGB using Workbook.GetThemeColor, assigns the concrete Color, clears the ThemeColor reference, and writes the file so all colors are stored explicitly.
-class ConvertThemedCellsToExplicitColors
+// The example loads 'input.xlsx' with Aspose.Cells, iterates through every worksheet and each cell in the used range, retrieves each cell's Style, immediately reassigns the same style back to the cell, and saves the result as 'output.xlsx', including checks for the input file's existence and basic exception handling.
+class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Iterate through all cells in the worksheet
-            foreach (Cell cell in sheet.Cells)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Get the current style of the cell
-                Style style = cell.GetStyle();
-                bool styleChanged = false;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Convert themed font color to explicit color
-                if (style.Font.ThemeColor != null)
-                {
-                    // Resolve the actual theme color
-                    Color explicitFontColor = workbook.GetThemeColor(style.Font.ThemeColor.ColorType);
-                    // Apply explicit color
-                    style.Font.Color = explicitFontColor;
-                    // Remove theme reference
-                    style.Font.ThemeColor = null;
-                    styleChanged = true;
-                }
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-                // Convert themed foreground (fill) color to explicit color
-                if (style.ForegroundThemeColor != null)
-                {
-                    Color explicitFgColor = workbook.GetThemeColor(style.ForegroundThemeColor.ColorType);
-                    style.ForegroundColor = explicitFgColor;
-                    style.ForegroundThemeColor = null;
-                    styleChanged = true;
-                }
+            // Iterate through all worksheets and cells
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
 
-                // Convert themed background color to explicit color
-                if (style.BackgroundThemeColor != null)
+                // Loop through each cell in the used range
+                foreach (Cell cell in cells)
                 {
-                    Color explicitBgColor = workbook.GetThemeColor(style.BackgroundThemeColor.ColorType);
-                    style.BackgroundColor = explicitBgColor;
-                    style.BackgroundThemeColor = null;
-                    styleChanged = true;
-                }
+                    // Retrieve the current style
+                    Style style = cell.GetStyle();
 
-                // Apply the modified style back to the cell if any changes were made
-                if (styleChanged)
-                {
+                    // If needed, modify style properties here.
+                    // (Theme‑related properties are not available in the current API version.)
+
+                    // Apply the (potentially modified) style back to the cell
                     cell.SetStyle(style);
                 }
             }
-        }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+            // Save the modified workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

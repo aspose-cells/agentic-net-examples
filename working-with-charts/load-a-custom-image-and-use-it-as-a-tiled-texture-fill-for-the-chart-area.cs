@@ -1,20 +1,18 @@
-// Title: Apply a Custom Tiled Texture Fill to an Excel Chart Area with Aspose.Cells for .NET
-// Description: Shows how to read a PNG (or a base‑64 placeholder), set the chart area's FillFormat to Texture, enable tiling, and fine‑tune scaling and offset via TilePicOption, then save the workbook.
-// Keywords: Aspose.Cells chart texture fill | tiled background image Excel chart .NET | load custom PNG Aspose.Cells | TextureFill TilePicOption scaling | chart area FillFormat Texture Aspose
-// Common Searches: Aspose.Cells set tiled texture for chart area | how to use a PNG as chart background in .NET | enable texture tiling on Excel chart with Aspose | adjust tile scaling offset in Aspose.Cells chart | fallback image for missing chart texture Aspose
-// Developer Intent: Load an image and apply it as a repeating texture fill to the chart area of an Excel chart using Aspose.Cells.
-// Use Cases: Create a column chart and give it a patterned background using a user‑provided PNG. | Provide a default red‑pixel image when the specified texture file cannot be found. | Control the size and position of each tile with TilePicOption properties.
-// AI Prompts: Write C# code that reads a user‑specified image file and applies it as a tiled texture fill to an Aspose.Cells chart area, including error handling for missing files. | Explain how to modify TilePicOption.ScaleX, ScaleY, OffsetX, and OffsetY to customize the appearance of a tiled chart background. | Show how to replace the base‑64 placeholder with another image and update the texture fill without rebuilding the workbook.
+// Title: How to load a PNG image and apply it as a tiled texture fill to a chart area in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that reads a PNG file and sets it as a tiled texture fill for the ChartArea of a column chart using Aspose.Cells. | Show how to configure texture scaling, tiling options, and a fallback solid fill when the image file is not found with the Aspose.Cells API. | Demonstrate saving the workbook after applying a custom tiled background to the chart area in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set chart area background image with tiling | C# Aspose.Cells texture fill for chart area using custom PNG | How to apply tiled texture fill to a chart in Aspose.Cells .NET | Aspose.Cells fallback solid fill when texture image missing | Configure texture scaling and offset for chart background in Aspose.Cells
+// Tags: chart background tiled texture Aspose.Cells C# | load png image for chart area Aspose.Cells | configure texture scaling Aspose.Cells chart | fallback solid fill Aspose.Cells when image missing | apply texture fill to chartarea Aspose.Cells
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTextureFillDemo
+namespace Example
 {
-    // Shows how to read a PNG (or a base‑64 placeholder), set the chart area's FillFormat to Texture, enable tiling, and fine‑tune scaling and offset via TilePicOption, then save the workbook.
+    // The example creates a workbook, adds sample data, inserts a column chart, loads a PNG file, and applies it as a tiled texture fill to the chart's background. It configures scaling and tiling, provides a solid‑gray fallback if the image is absent, and saves the file as ChartWithTiledTexture.xlsx.
     class Program
     {
         static void Main()
@@ -23,70 +21,53 @@ namespace AsposeCellsTextureFillDemo
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
+                // Add sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set data range for the chart
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Configure chart area to use texture fill
-                chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
-
-                // Load custom texture image or use a placeholder
-                string imagePath = Path.Combine(Environment.CurrentDirectory, "customTexture.png");
-                byte[] imageData;
-
-                if (File.Exists(imagePath))
+                // Apply texture fill if the image file exists
+                string texturePath = "customTexture.png";
+                if (File.Exists(texturePath))
                 {
-                    // Load image bytes from file
-                    imageData = File.ReadAllBytes(imagePath);
+                    byte[] imageData = File.ReadAllBytes(texturePath);
+                    chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
+                    chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
+                    chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
+                    chart.ChartArea.Area.FillFormat.TextureFill.TilePicOption = new TilePicOption
+                    {
+                        ScaleX = 50, // horizontal scale percentage
+                        ScaleY = 50, // vertical scale percentage
+                        OffsetX = 0,
+                        OffsetY = 0
+                    };
                 }
                 else
                 {
-                    // 1x1 red PNG (base64 encoded) as a placeholder
-                    const string redPixelBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
-                    imageData = Convert.FromBase64String(redPixelBase64);
+                    // Fallback to a solid fill when texture image is missing
+                    chart.ChartArea.Area.FillFormat.FillType = FillType.Solid;
+                    chart.ChartArea.Area.FillFormat.SolidFill.Color = Color.LightGray;
                 }
 
-                // Apply the image as the texture fill
-                chart.ChartArea.Area.FillFormat.TextureFill.ImageData = imageData;
-
-                // Enable tiling so the image repeats across the chart area
-                chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
-
-                // Optional: adjust tile scaling and offset
-                TilePicOption tileOptions = new TilePicOption
-                {
-                    ScaleX = 50,   // 50% horizontal scale
-                    ScaleY = 50,   // 50% vertical scale
-                    OffsetX = 0,
-                    OffsetY = 0
-                };
-                chart.ChartArea.Area.FillFormat.TextureFill.TilePicOption = tileOptions;
-
-                // Save the workbook
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "ChartWithTiledTexture.xlsx");
-                workbook.Save(outputPath);
-
-                Console.WriteLine($"Workbook saved to: {outputPath}");
+                // Save the workbook with the chart
+                workbook.Save("ChartWithTiledTexture.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

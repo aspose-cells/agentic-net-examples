@@ -1,85 +1,86 @@
-// Title: Decrypt a Password‑Protected Aspose.Cells Workbook on a Background Thread (C#)
-// Description: This example creates a workbook, applies a password and strong AES encryption, saves it, then loads the file on a background thread using LoadOptions. It verifies that the workbook is no longer encrypted, enables MultiThreadReading for safe concurrent access, reads a cell value to confirm successful decryption, and cleans up—all while demonstrating thread‑safe usage of Aspose.Cells in .NET.
-// Keywords: Aspose.Cells | C# | decrypt workbook | background thread | password protected Excel | strong encryption | LoadOptions | MultiThreadReading | .NET | thread safety
-// Common Searches: Aspose.Cells load encrypted Excel on separate thread | C# decrypt password protected workbook using Aspose.Cells | Is Aspose.Cells workbook loading thread safe | Enable MultiThreadReading after opening encrypted file | How to set strong encryption with Aspose.Cells
-// Developer Intent: Open an encrypted Excel file in a background thread, confirm decryption, and ensure safe concurrent reads.
-// Use Cases: Keep the UI responsive by decrypting large protected workbooks off the UI thread. | Validate that a workbook is fully decrypted before any processing begins. | Enable multi‑threaded cell reads after opening a password‑protected file. | Integrate secure workbook handling into server‑side batch jobs.
-// AI Prompts: Generate C# code that uses Task.Run to open an encrypted workbook with Aspose.Cells and returns the first cell value. | Explain Aspose.Cells thread‑safety model for reading cells after a workbook is loaded with a password. | List exceptions thrown by Aspose.Cells when an incorrect password is supplied during LoadOptions. | Show how to configure Aspose.Cells to use AES‑256 encryption when saving a workbook.
+// Title: Decrypt a password‑protected XLSX workbook on a background thread with Aspose.Cells for .NET and verify thread safety
+// AI Prompts: Load an encrypted Excel file using LoadOptions.Password on a Task thread, modify a cell, and save it without a password. | Implement robust error handling for the decryption Task and surface exceptions to the calling thread. | Extend the sample to decrypt several password‑protected XLSX files in parallel using Task.WhenAll and validate each output.
+// Common Searches: asp.net core decrypt password protected xlsx using Aspose.Cells in a background task | is Aspose.Cells thread safe when loading encrypted workbooks | c# async decryption of encrypted Excel file with Aspose.Cells LoadOptions | verify workbook content after decrypting Excel file on separate thread | process multiple encrypted Excel files concurrently with Aspose.Cells
+// Tags: background thread workbook decryption Aspose.Cells | LoadOptions password property XLSX | thread‑safe Excel decryption .NET | verify decrypted workbook cell value | parallel XLSX decryption Aspose.Cells
 
 using System;
-using System.Threading;
+using System.IO;
+using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsThreadSafetyDemo
+// The example checks for an encrypted XLSX file, runs a Task that loads the workbook with a password via LoadOptions, writes "Decrypted" to cell A1, saves it without a password, waits for the task, then loads the resulting file on the main thread to confirm the cell value, demonstrating thread‑safe decryption.
+class Program
 {
-    // This example creates a workbook, applies a password and strong AES encryption, saves it, then loads the file on a background thread using LoadOptions. It verifies that the workbook is no longer encrypted, enables MultiThreadReading for safe concurrent access, reads a cell value to confirm successful decryption, and cleans up—all while demonstrating thread‑safe usage of Aspose.Cells in .NET.
-    class Program
+    static void Main()
     {
-        // Path for the temporary encrypted workbook
-        private const string EncryptedFilePath = "encrypted_demo.xlsx";
+        // Paths and password for the encrypted workbook
+        string encryptedPath = "encrypted.xlsx";
+        string password = "myPassword";
+        string decryptedPath = "decrypted.xlsx";
 
-        static void Main()
+        // Ensure the encrypted file exists before attempting to load it
+        if (!File.Exists(encryptedPath))
         {
-            // -------------------------------------------------
-            // Step 1: Create a workbook, add data and encrypt it
-            // -------------------------------------------------
-            Workbook wb = new Workbook();                         // create workbook
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Thread safety test");    // add sample data
+            Console.WriteLine($"Error: Encrypted file \"{encryptedPath}\" not found.");
+            return;
+        }
 
-            // Set password to protect the workbook
-            wb.Settings.Password = "SecretPwd";
-
-            // Optionally set strong encryption (requires Aspose.Cells 23.5+)
-            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-            // Save the encrypted workbook
-            wb.Save(EncryptedFilePath);
-            Console.WriteLine($"Encrypted workbook saved to '{EncryptedFilePath}'.");
-
-            // -------------------------------------------------
-            // Step 2: Decrypt the workbook on a background thread
-            // -------------------------------------------------
-            Thread decryptThread = new Thread(() =>
+        // Decrypt the workbook on a background thread
+        Task decryptTask = Task.Run(() =>
+        {
+            try
             {
-                try
+                // Load the encrypted workbook using the password
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
                 {
-                    // LoadOptions with password to open the encrypted file
-                    LoadOptions loadOptions = new LoadOptions
-                    {
-                        Password = "SecretPwd"
-                    };
+                    Password = password
+                };
+                Workbook wb = new Workbook(encryptedPath, loadOptions);
 
-                    // Load the workbook (decryption happens internally)
-                    Workbook loadedWb = new Workbook(EncryptedFilePath, loadOptions);
+                // Simple operation to prove the workbook is usable after decryption
+                wb.Worksheets[0].Cells["A1"].PutValue("Decrypted");
 
-                    // Verify that the workbook is no longer encrypted after loading
-                    bool isEncrypted = loadedWb.Settings.IsEncrypted;
-                    Console.WriteLine($"[Thread] Workbook IsEncrypted after load: {isEncrypted}");
+                // Save the workbook without a password (i.e., decrypted)
+                wb.Save(decryptedPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Decryption failed: {ex.Message}");
+                throw;
+            }
+        });
 
-                    // Enable multi‑thread reading for safety (not strictly required here)
-                    loadedWb.Worksheets[0].Cells.MultiThreadReading = true;
+        try
+        {
+            // Wait for the background operation to finish
+            decryptTask.Wait();
+        }
+        catch (AggregateException ae)
+        {
+            // Unwrap and display the original exception
+            foreach (var inner in ae.InnerExceptions)
+            {
+                Console.WriteLine($"Error during decryption task: {inner.Message}");
+            }
+            return;
+        }
 
-                    // Read the cell value to confirm successful decryption
-                    string cellValue = loadedWb.Worksheets[0].Cells["A1"].StringValue;
-                    Console.WriteLine($"[Thread] Decrypted cell value: {cellValue}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[Thread] Exception: {ex.Message}");
-                }
-            });
+        // Verify that the decrypted file was created
+        if (!File.Exists(decryptedPath))
+        {
+            Console.WriteLine($"Error: Decrypted file \"{decryptedPath}\" was not created.");
+            return;
+        }
 
-            // Start the background thread
-            decryptThread.IsBackground = true;
-            decryptThread.Start();
-
-            // Wait for the thread to finish
-            decryptThread.Join();
-
-            // Cleanup
-            wb.Dispose();
-            Console.WriteLine("Demo completed.");
+        // Verify on the main thread that the workbook was decrypted correctly
+        try
+        {
+            Workbook verifyWb = new Workbook(decryptedPath);
+            Console.WriteLine("Cell A1 value after decryption: " + verifyWb.Worksheets[0].Cells["A1"].StringValue);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Verification failed: {ex.Message}");
         }
     }
 }

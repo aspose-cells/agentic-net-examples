@@ -1,49 +1,47 @@
-// Title: Aspose.Cells for .NET – Create a Dynamic Named Range with OFFSET & COUNTA (Column A)
-// Description: C# example that builds a workbook, inserts sample data in column A, adds a named range called DynamicRange using the OFFSET formula combined with COUNTA to automatically cover all non‑empty rows, resolves the range to get its address, and saves the file as DynamicNamedRange.xlsx. Ideal for charts and formulas that need a self‑adjusting data source.
-// Keywords: Aspose.Cells dynamic named range | OFFSET function .NET | COUNTA Excel formula | C# Excel named range example | auto‑expanding range Aspose | chart data source dynamic range | programmatic Excel range | Aspose.Cells workbook sample | Excel OFFSET COUNTA code
-// Common Searches: Aspose.Cells define dynamic named range with OFFSET | C# OFFSET COUNTA named range Aspose.Cells | auto expanding range column A Aspose.Cells | how to create dynamic range for chart in .NET | Aspose.Cells named range that grows with data
-// Developer Intent: Programmatically add a named range that automatically expands to include every non‑empty cell in column A.
-// Use Cases: Link a chart series to a range that grows as new rows are added. | Reference a continuously updating dataset in formulas without manual range changes. | Export workbooks where the data source size varies per user or per run.
-// AI Prompts: Modify the OFFSET formula to start at A2 while keeping the dynamic height. | Add code that appends rows to column A and then prints the updated DynamicRange address. | Show how to set DynamicRange as the source series for a chart created with Aspose.Cells.
+// Title: Create a dynamic named range with OFFSET and COUNTA for non‑empty rows in column A using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that defines a named range using OFFSET and COUNTA to automatically include all populated cells in column A. | Show how to reference the dynamic named range in a SUM formula, trigger formula calculation, and retrieve the computed value. | Demonstrate saving the workbook after the dynamic range is created and the formula is evaluated.
+// Common Searches: asp.net aspose.cells create dynamic named range with offset based on column A values | c# use COUNTA in named range formula with Aspose.Cells | calculate sum of a dynamic range defined by OFFSET in Aspose.Cells .NET | save workbook after defining dynamic named range in Aspose.Cells C# example
+// Tags: OFFSET dynamic named range Aspose.Cells | COUNTA based range definition C# | SUM formula using named range Aspose.Cells | calculate workbook formulas Aspose.Cells | save Excel workbook with dynamic range Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// C# example that builds a workbook, inserts sample data in column A, adds a named range called DynamicRange using the OFFSET formula combined with COUNTA to automatically cover all non‑empty rows, resolves the range to get its address, and saves the file as DynamicNamedRange.xlsx. Ideal for charts and formulas that need a self‑adjusting data source.
-class Program
+namespace DynamicNamedRangeDemo
 {
-    static void Main()
+    // The example creates a new workbook, fills column A with sample data, adds a named range called DynamicRange using an OFFSET formula that counts non‑empty rows via COUNTA, inserts a SUM(DynamicRange) formula in cell B1, calculates all formulas, prints the sum, and saves the file as DynamicNamedRangeDemo.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
+            // 1. Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Sample data in column A (optional, just for demonstration)
+            // 2. Populate column A with sample data (some non‑empty rows)
             cells["A1"].PutValue("Header");
             cells["A2"].PutValue(10);
             cells["A3"].PutValue(20);
             cells["A4"].PutValue(30);
+            // Row 5 left blank to demonstrate COUNTA counting only non‑empty rows
 
-            // Add a named range that expands automatically with non‑empty rows in column A
-            int nameIndex = wb.Worksheets.Names.Add("DynamicRange");
-            Name dynamicName = wb.Worksheets.Names[nameIndex];
-            // OFFSET(start, rows, cols, height, width)
-            // Height is determined by COUNTA of column A (non‑empty cells)
-            dynamicName.RefersTo = "=OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)";
+            // 3. Define a dynamic named range using OFFSET and COUNTA
+            //    Formula: =OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)
+            int nameIndex = workbook.Worksheets.Names.Add("DynamicRange");
+            Name dynamicName = workbook.Worksheets.Names[nameIndex];
+            dynamicName.RefersTo = $"=OFFSET({sheet.Name}!$A$1,0,0,COUNTA({sheet.Name}!$A:$A),1)";
 
-            // Resolve the named range to an Aspose.Cells.Range object
-            Aspose.Cells.Range resolvedRange = dynamicName.GetRange();
-            Console.WriteLine("Dynamic range address: " + resolvedRange.Address);
+            // 4. Use the named range in a formula (e.g., sum of the range)
+            cells["B1"].Formula = "=SUM(DynamicRange)";
 
-            // Save the workbook
-            wb.Save("DynamicNamedRange.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // 5. Calculate formulas so that the result is materialized
+            workbook.CalculateFormula();
+
+            // 6. Output the calculated sum to console (optional verification)
+            Console.WriteLine("Sum of DynamicRange: " + cells["B1"].Value);
+
+            // 7. Save the workbook (lifecycle: save)
+            workbook.Save("DynamicNamedRangeDemo.xlsx");
         }
     }
 }

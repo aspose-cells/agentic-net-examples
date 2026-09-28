@@ -1,33 +1,25 @@
-// Title: C# – Set shape text left margin to 8 pt using Aspose.Cells
-// Description: Creates a workbook, adds a rectangle shape, assigns text, sets the shape's left text margin to 8 points via TextBody.TextAlignment.LeftMarginPt, and saves the file as LeftMarginDemo.xlsx.
-// Keywords: Aspose.Cells C# shape left margin | set shape text margin points | TextBody.TextAlignment.LeftMarginPt example | align shape caption with cell border | Aspose.Cells shape text formatting
-// Common Searches: Aspose.Cells set left margin of shape text | C# shape text margin 8 points | align rectangle shape text with cell edges Aspose | TextBody left margin property Aspose.Cells
-// Developer Intent: Apply an 8‑point left margin to a shape’s text so it lines up with the surrounding cell borders.
-// Use Cases: Designing a report where shape labels must start exactly at the cell’s left edge. | Building a dashboard that requires precise text padding to match column gridlines. | Generating templates where shape captions need consistent alignment across multiple worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a shape’s left text margin to 8 pt and explain the visual effect. | Show how to adjust all four text margins (left, right, top, bottom) of a shape in Aspose.Cells for .NET. | Describe the TextBody.TextAlignment.LeftMarginPt property and how to choose the point value based on cell dimensions.
+// Title: Set worksheet left page margin to 8 points using Aspose.Cells for .NET (C#)
+// AI Prompts: Apply Aspose.Cells PageSetup.LeftMargin to set an 8‑point left margin for a worksheet in C#. | Programmatically align Excel cell text with borders by configuring the left margin to 8 points via Aspose.Cells. | Create a workbook, adjust the left page margin to 8 points, and save the file using Aspose.Cells in .NET.
+// Common Searches: Aspose.Cells C# set worksheet left margin 8 points | how to change page left margin in Excel using Aspose.Cells .NET | align text with cell borders by adjusting left margin in Aspose.Cells workbook | PageSetup.LeftMargin property example Aspose.Cells C# | set Excel page margins programmatically Aspose.Cells
+// Tags: Aspose.Cells PageSetup.LeftMargin property | C# set worksheet left margin points | Excel workbook left page margin adjustment | align cell text with borders Aspose.Cells | programmatic Excel page margin configuration .NET
 
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a rectangle shape, assigns text, sets the shape's left text margin to 8 points via TextBody.TextAlignment.LeftMarginPt, and saves the file as LeftMarginDemo.xlsx.
-class SetLeftMarginDemo
+// The example creates a new Workbook, accesses the first Worksheet, sets the left page margin to 8 points via the PageSetup.LeftMargin property, and saves the workbook as Output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 100, 200, 0);
-        shape.Text = "Text aligned with cell borders";
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the left margin of the shape's text to 8 points
-        shape.TextBody.TextAlignment.LeftMarginPt = 8.0;
+        // Set the left margin to 8 points to align text with cell borders
+        sheet.PageSetup.LeftMargin = 8f;
 
         // Save the workbook
-        workbook.Save("LeftMarginDemo.xlsx");
+        workbook.Save("Output.xlsx");
     }
 }

@@ -1,74 +1,59 @@
-// Title: Bind Multiple DataTables to Smart Marker Groups with WorkbookDesigner.SetDataSource (C# Aspose.Cells)
-// Description: Demonstrates how to create a DataSet with several DataTables, place smart markers for each table in distinct worksheet sections, and use WorkbookDesigner.SetDataSource to automatically link each DataTable to its smart‑marker group. The example processes the markers and saves the result as SmartMarkerOutput.xlsx.
-// Keywords: Aspose.Cells SetDataSource | C# smart markers multiple tables | WorkbookDesigner DataSet binding | smart marker groups Aspose.Cells | bind DataSet to smart markers .NET | Aspose.Cells multi‑table example
-// Common Searches: How to bind a DataSet with several DataTables to different smart marker groups in Aspose.Cells | WorkbookDesigner SetDataSource example with multiple tables | Aspose.Cells smart markers using a DataSet | C# bind DataSet to smart markers for Customers and Orders
-// Developer Intent: The developer needs to connect a DataSet that contains multiple DataTables to corresponding smart‑marker blocks in an Excel template using WorkbookDesigner.SetDataSource.
-// Use Cases: Create a single worksheet that lists customers in one area and their orders in another, each populated from separate DataTables. | Generate a master‑detail report (e.g., employees and salaries) where each detail section is driven by its own DataTable. | Export related data sets such as Products, Categories, and Suppliers into one template, assigning each table to a distinct smart‑marker region.
-// AI Prompts: Add a third DataTable for Products and place its smart markers below the Orders section in the same worksheet. | Show how to apply formatting (bold headers, auto‑fit columns) after designer.Process() completes. | Explain how to use SetDataSource with a DataSet that defines relationships and reference parent/child fields in smart markers.
+// Title: How to bind a multi‑table DataSet to smart markers using WorkbookDesigner.SetDataSource in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a DataSet with 'Customers' and 'Orders' tables, assigns it to WorkbookDesigner via SetDataSource, and processes smart markers to generate an Excel workbook. | Show the step‑by‑step process for mapping different smart marker groups to separate DataTables in a DataSet and producing the populated file with Aspose.Cells. | Provide a complete example that adds smart marker placeholders, builds a DataSet containing several tables, binds it using WorkbookDesigner.SetDataSource, and saves the resulting Excel document.
+// Common Searches: asp.net aspose.cells setdatasource multiple datatables smart markers example | c# bind dataset with customers and orders tables to workbookdesigner smart markers | how to populate smart markers from two tables in Aspose.Cells | using WorkbookDesigner.SetDataSource with a DataSet that has several tables | smart markers for customers and orders excel generation Aspose.Cells C#
+// Tags: WorkbookDesigner SetDataSource with DataSet | populate smart markers from multiple DataTables | Aspose.Cells generate Excel from DataSet | C# smart markers multiple tables example | Excel smart markers data binding Aspose.Cells
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerDemo
+// The sample creates a workbook, inserts header cells and smart marker placeholders referencing "Customers" and "Orders" tables, builds a DataSet containing two DataTables with sample data, binds the DataSet to a WorkbookDesigner via SetDataSource, processes the smart markers to fill the worksheet, and saves the populated workbook as an Excel file.
+class Program
 {
-    // Demonstrates how to create a DataSet with several DataTables, place smart markers for each table in distinct worksheet sections, and use WorkbookDesigner.SetDataSource to automatically link each DataTable to its smart‑marker group. The example processes the markers and saves the result as SmartMarkerOutput.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a DataSet containing multiple tables.
-            DataSet ds = new DataSet();
+        // Create a new workbook that will hold the smart markers.
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // First table: Customers
-            DataTable customers = new DataTable("Customers");
-            customers.Columns.Add("CustomerID", typeof(int));
-            customers.Columns.Add("Name", typeof(string));
-            customers.Rows.Add(1, "John Doe");
-            customers.Rows.Add(2, "Jane Smith");
-            ds.Tables.Add(customers);
+        // Add header cells.
+        sheet.Cells["A1"].PutValue("Customer Name");
+        sheet.Cells["B1"].PutValue("Customer City");
+        sheet.Cells["C1"].PutValue("Order ID");
+        sheet.Cells["D1"].PutValue("Product");
 
-            // Second table: Orders
-            DataTable orders = new DataTable("Orders");
-            orders.Columns.Add("OrderID", typeof(int));
-            orders.Columns.Add("CustomerID", typeof(int));
-            orders.Columns.Add("Product", typeof(string));
-            orders.Columns.Add("Quantity", typeof(int));
-            orders.Rows.Add(1001, 1, "Laptop", 2);
-            orders.Rows.Add(1002, 2, "Smartphone", 5);
-            ds.Tables.Add(orders);
+        // Add smart marker rows. Each marker refers to a table name in the DataSet.
+        // "Customers" and "Orders" are the two tables we will bind later.
+        sheet.Cells["A2"].PutValue("&=Customers.Name");
+        sheet.Cells["B2"].PutValue("&=Customers.City");
+        sheet.Cells["C2"].PutValue("&=Orders.OrderID");
+        sheet.Cells["D2"].PutValue("&=Orders.Product");
 
-            // Create a workbook and place smart markers for each table.
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+        // Build a DataSet containing two DataTables.
+        DataSet dataSet = new DataSet();
 
-            // Smart markers for Customers table.
-            ws.Cells["A1"].PutValue("CustomerID");
-            ws.Cells["B1"].PutValue("Name");
-            ws.Cells["A2"].PutValue("&=Customers.CustomerID");
-            ws.Cells["B2"].PutValue("&=Customers.Name");
+        // First table: Customers
+        DataTable customers = new DataTable("Customers");
+        customers.Columns.Add("Name", typeof(string));
+        customers.Columns.Add("City", typeof(string));
+        customers.Rows.Add("Alice", "London");
+        customers.Rows.Add("Bob", "Paris");
+        dataSet.Tables.Add(customers);
 
-            // Smart markers for Orders table (starting at row 6).
-            ws.Cells["A6"].PutValue("OrderID");
-            ws.Cells["B6"].PutValue("CustomerID");
-            ws.Cells["C6"].PutValue("Product");
-            ws.Cells["D6"].PutValue("Quantity");
-            ws.Cells["A7"].PutValue("&=Orders.OrderID");
-            ws.Cells["B7"].PutValue("&=Orders.CustomerID");
-            ws.Cells["C7"].PutValue("&=Orders.Product");
-            ws.Cells["D7"].PutValue("&=Orders.Quantity");
+        // Second table: Orders
+        DataTable orders = new DataTable("Orders");
+        orders.Columns.Add("OrderID", typeof(int));
+        orders.Columns.Add("Product", typeof(string));
+        orders.Rows.Add(1001, "Laptop");
+        orders.Rows.Add(1002, "Smartphone");
+        dataSet.Tables.Add(orders);
 
-            // Initialize the designer with the workbook.
-            WorkbookDesigner designer = new WorkbookDesigner(wb);
+        // Bind the DataSet to the WorkbookDesigner.
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource(dataSet);
+        designer.Process(); // Populate the smart markers with data.
 
-            // Bind the DataSet; each DataTable is automatically linked to its smart marker group.
-            designer.SetDataSource(ds);
-
-            // Process the smart markers.
-            designer.Process();
-
-            // Save the populated workbook.
-            designer.Workbook.Save("SmartMarkerOutput.xlsx");
-        }
+        // Save the populated workbook.
+        designer.Workbook.Save("SmartMarkerMultipleTables.xlsx");
     }
 }

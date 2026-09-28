@@ -1,27 +1,32 @@
-// Title: Refresh All PivotTables in an Excel Workbook Using Aspose.Cells for .NET (C#)
-// Description: Load a workbook, call WorksheetCollection.RefreshPivotTables() to update every PivotTable on every sheet, and save the file. This ensures that all pivot caches are synchronized before the workbook is exported or further processed.
-// Keywords: Aspose.Cells refresh pivot tables | WorksheetCollection.RefreshPivotTables | C# update all pivot tables | synchronize pivot cache Excel | refresh pivot tables programmatically | .NET Excel pivot refresh
-// Common Searches: how to refresh all pivot tables with Aspose.Cells | Aspose.Cells C# refresh pivot tables across worksheets | refresh pivot tables before saving workbook .NET | WorksheetCollection.RefreshPivotTables example
-// Developer Intent: Update every PivotTable in a workbook so the data reflects the latest source before saving or exporting.
-// Use Cases: Refresh all pivots after modifying source data to keep multiple reports consistent. | Automate nightly jobs that regenerate Excel files with up‑to‑date pivot calculations. | Prepare a workbook for PDF conversion, ensuring pivot tables display current values.
-// AI Prompts: Show how to refresh selected PivotTables while leaving others unchanged using Aspose.Cells. | Give an example that refreshes PivotTables and then recalculates all formulas in the same workbook. | Explain error handling for RefreshPivotTables when the data source is missing or corrupted.
+// Title: Refresh every PivotTable in an Excel workbook sequentially with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, loops through all worksheets, calls RefreshPivotTables() on each sheet, and saves the updated workbook. | Adapt the sample to refresh pivot tables only on worksheets whose names contain "Report" and write each refreshed sheet name to the console. | Wrap the pivot‑refresh loop in try‑catch blocks, log any exceptions, and ensure the workbook is saved even if errors occur.
+// Common Searches: Aspose.Cells C# how to refresh all pivot tables in an Excel file | C# loop through worksheets and refresh pivot tables using Aspose.Cells | Refresh pivot tables sequentially before saving workbook with Aspose.Cells .NET | Update pivot cache for multiple sheets Aspose.Cells example
+// Tags: Aspose.Cells RefreshPivotTables method | C# iterate worksheets refresh pivot tables | Excel workbook pivot cache synchronization Aspose.Cells | save workbook after pivot refresh Aspose.Cells | sequential pivot table update .NET
 
 using System;
 using Aspose.Cells;
 
-// Load a workbook, call WorksheetCollection.RefreshPivotTables() to update every PivotTable on every sheet, and save the file. This ensures that all pivot caches are synchronized before the workbook is exported or further processed.
-class Program
+namespace RefreshAllPivotTablesDemo
 {
-    static void Main()
+    // Loads an Excel workbook, iterates over each worksheet invoking RefreshPivotTables() to synchronize all pivot tables, and saves the refreshed workbook to a new file.
+    class Program
     {
-        // Load the existing workbook that contains one or more PivotTables
-        Workbook workbook = new Workbook("input.xlsx");
+        static void Main()
+        {
+            // Load the workbook that contains the pivot tables.
+            // Replace "input.xlsx" with the path to your source file.
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Refresh all PivotTables across all worksheets in the workbook.
-        // This uses the WorksheetCollection.RefreshPivotTables() method.
-        workbook.Worksheets.RefreshPivotTables();
+            // Iterate through each worksheet and refresh its pivot tables sequentially.
+            // This uses the Worksheet.RefreshPivotTables() method.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.RefreshPivotTables();
+            }
 
-        // Save the workbook after the refresh operation.
-        workbook.Save("output.xlsx");
+            // Save the workbook after all pivot tables have been refreshed.
+            // The file "output.xlsx" will contain the synchronized data.
+            workbook.Save("output.xlsx");
+        }
     }
 }

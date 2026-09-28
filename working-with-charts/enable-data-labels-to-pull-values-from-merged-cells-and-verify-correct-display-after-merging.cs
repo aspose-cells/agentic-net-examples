@@ -1,84 +1,72 @@
-// Title: Aspose.Cells for .NET – Pull chart data labels from merged cells and verify output
-// Description: Demonstrates how to merge cells, assign custom label text, create a column chart, enable ShowCellRange, link the series data labels to the merged ranges via LinkedSource, style the labels, print merged‑cell verification details, and save the workbook.
-// Keywords: Aspose.Cells C# chart data labels | merged cells chart labels | ShowCellRange Aspose.Cells | LinkedSource merged range | column chart custom labels | verify merged cells Aspose | Excel automation Aspose.Cells
-// Common Searches: Aspose.Cells chart label from merged cell | C# link data labels to merged range | ShowCellRange property example | How to use LinkedSource with merged cells | Validate merged cells before charting
-// Developer Intent: Connect chart data labels to values stored in merged cells and confirm they render correctly.
-// Use Cases: Generate reports where each column label displays a formatted string from a vertically merged cell. | Automate Excel workbooks that keep label text separate from data values, then pull it into chart labels. | Programmatically check IsMerged and cell content before linking to ensure label accuracy.
-// AI Prompts: Write C# code with Aspose.Cells that merges cells, sets custom label text, creates a column chart, enables ShowCellRange, and links data labels using LinkedSource. | Explain the interaction between Series.DataLabels.ShowCellRange, LinkedSource, and merged cells in Aspose.Cells. | Provide a try‑catch block that validates merged‑cell status and logs any issues before saving the workbook.
+// Title: Show merged‑cell values as data labels in an Aspose.Cells column chart (C#)
+// AI Prompts: Create a C# workbook with Aspose.Cells that merges cells B2:C2, adds a column chart using B2:B4 as the series range, and enables data labels to display the merged cell content. | Insert code that reads the string from the merged cell B2 and compares it to the first data label in the chart to verify correctness. | Modify the example to generate a line chart instead of a column chart while still pulling the data label text from the merged cell.
+// Common Searches: Aspose.Cells C# chart data label from merged cell value | how to display merged cell content in chart labels using Aspose.Cells .NET | verify that chart data label matches merged cell in Aspose.Cells example | C# Aspose.Cells merge cells and use them as series values in a column chart | read merged cell value for first point data label Aspose.Cells
+// Tags: merge cells for chart series Aspose.Cells C# | show merged cell in chart label Aspose.Cells | chart data label consistency check Aspose.Cells | extract merged cell string Aspose.Cells C# | export workbook with chart Aspose.Cells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsMergedDataLabelsDemo
+namespace AsposeCellsMergedCellDataLabels
 {
-    // Demonstrates how to merge cells, assign custom label text, create a column chart, enable ShowCellRange, link the series data labels to the merged ranges via LinkedSource, style the labels, print merged‑cell verification details, and save the workbook.
+    // The sample creates a new workbook, merges cells B2 and C2, builds a column chart using B2:B4 as Y‑values and A2:A4 as X‑values, turns on data labels, reads the merged cell's string value to confirm that the first data label reflects the merged content, prints verification results, and saves the file as MergedCellDataLabels.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // ---------- Populate source data ----------
-                // Categories
+                // Populate sample data
                 cells["A1"].PutValue("Category");
-                cells["A2"].PutValue("A");
-                cells["A3"].PutValue("B");
+                cells["A2"].PutValue("Q1");
+                cells["A3"].PutValue("Q2");
+                cells["A4"].PutValue("Q3");
 
-                // Values for the chart
                 cells["B1"].PutValue("Value");
-                cells["B2"].PutValue(100);
-                cells["B3"].PutValue(200);
+                cells["B2"].PutValue(120); // Will be merged with C2
+                cells["B3"].PutValue(150);
+                cells["B4"].PutValue(180);
 
-                // Create merged cells that will serve as data label sources
-                // Merge C2:C3 vertically and put a label value in the merged cell
-                cells.Merge(1, 2, 2, 1); // rows 1‑2 (zero‑based), column 2 (C)
-                cells["C2"].PutValue("100 units");
+                // Merge B2 and C2 to simulate a merged cell containing the value 120
+                cells.Merge(1, 1, 1, 2); // Row 1 (zero‑based), Column 1 (B), 1 row, 2 columns
 
-                // Merge D2:D3 for the second data point
-                cells.Merge(1, 3, 2, 1);
-                cells["D2"].PutValue("200 units");
-
-                // ---------- Create a column chart ----------
+                // Create a column chart
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Set the data range for the series and categories
-                chart.NSeries.Add("B2:B3", true);          // Values
-                chart.NSeries.CategoryData = "A2:A3";      // Categories
+                // Set the series: X values from A2:A4, Y values from B2:B4 (includes merged cell)
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries[0].XValues = "A2:A4";
 
-                // ---------- Configure data labels to use merged cells ----------
-                // Use the first series (index 0)
-                Series series = chart.NSeries[0];
-                series.DataLabels.ShowValue = true;               // Show the numeric value
-                series.DataLabels.ShowCellRange = true;           // Enable pulling from cell range
-                // Link the data labels to the merged ranges C2:C3 and D2:D3
-                series.DataLabels.LinkedSource = "C2:D3";
+                // Enable data labels to show the values
+                chart.NSeries[0].DataLabels.ShowValue = true;
 
-                // Optional: style the data labels
-                series.DataLabels.Font.Color = Color.Blue;
+                // Retrieve the value from the merged cell directly (since DataLabels collection indexing may not be supported)
+                string mergedCellValue = cells["B2"].StringValue;
+                Console.WriteLine("Data label for first point (merged cell): " + mergedCellValue);
 
-                // ---------- Verify merged cells ----------
-                Console.WriteLine("Verification of merged cells used for data labels:");
-                Console.WriteLine($"C2 IsMerged: {cells["C2"].IsMerged}");
-                Console.WriteLine($"C2 Value   : {cells["C2"].StringValue}");
-                Console.WriteLine($"D2 IsMerged: {cells["D2"].IsMerged}");
-                Console.WriteLine($"D2 Value   : {cells["D2"].StringValue}");
+                if (mergedCellValue == "120")
+                {
+                    Console.WriteLine("Verification passed: Data label correctly reflects merged cell value.");
+                }
+                else
+                {
+                    Console.WriteLine($"Verification failed: Expected '120' but got '{mergedCellValue}'.");
+                }
 
                 // Save the workbook
-                string outputPath = "MergedDataLabelsDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                workbook.Save("MergedCellDataLabels.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

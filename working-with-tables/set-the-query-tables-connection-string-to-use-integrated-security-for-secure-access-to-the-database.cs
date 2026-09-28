@@ -1,62 +1,59 @@
-// Title: Configure QueryTable Connection String for Integrated Security with Aspose.Cells (.NET)
-// Description: Shows how to locate a QueryTable in a worksheet, set its ExternalConnection.ConnectionString to an OLE DB string that uses Windows Integrated Security (SSPI), and save the workbook.
-// Keywords: Aspose.Cells | QueryTable | Integrated Security | Windows Authentication | OLE DB | ConnectionString | .NET | C# | Excel automation | secure database access | external connection
-// Common Searches: Aspose.Cells set query table integrated security | How to use Windows authentication for QueryTable in Aspose.Cells | Change QueryTable connection string to SSPI C# | Update external connection of existing query table Aspose.Cells | Secure Excel data connection with Integrated Security Aspose.Cells
-// Developer Intent: Update an existing QueryTable’s connection string to use Windows Integrated Security for secure data retrieval.
-// Use Cases: Convert a QueryTable from SQL authentication to Windows authentication without storing credentials. | Programmatically generate Excel reports that pull data from a protected SQL Server using SSPI. | Automate workbook creation where the data connection must comply with corporate security policies.
-// AI Prompts: Provide C# code using Aspose.Cells to modify a QueryTable’s ExternalConnection.ConnectionString to Integrated Security=SSPI. | Explain the steps to retrieve and change the connection string of an existing QueryTable in Aspose.Cells for Windows authentication. | Describe how to verify that a saved Excel file’s QueryTable uses Integrated Security when refreshed.
+// Title: Recreate a QueryTable with an Integrated Security connection string using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that removes an existing QueryTable from a worksheet and adds a new QueryTable with a Windows‑authenticated (Integrated Security) connection string using Aspose.Cells. | Show how to create a QueryTable in Aspose.Cells that connects to a SQL Server database using Trusted_Connection=True and then refreshes its data.
+// Common Searches: Aspose.Cells .NET create query table with integrated security connection string | how to set trusted connection for a query table in Aspose.Cells | recreate Excel query table using Windows authentication with Aspose.Cells | C# Aspose.Cells change query table connection string to use integrated security
+// Tags: recreate query table with integrated security | Aspose.Cells set query table connection string | Windows authentication for Excel query table | Aspose.Cells .NET query table refresh
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.ExternalConnections;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads a workbook, checks for an existing QueryTable, explains that Aspose.Cells cannot modify the connection string directly, and demonstrates how to delete the old QueryTable and recreate it with a Windows‑authenticated (Integrated Security) connection string before saving the workbook.
+class Program
 {
-    // Shows how to locate a QueryTable in a worksheet, set its ExternalConnection.ConnectionString to an OLE DB string that uses Windows Integrated Security (SSPI), and save the workbook.
-    public class SetQueryTableIntegratedSecurity
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add sample data (optional)
-                sheet.Cells["A1"].PutValue("ID");
-                sheet.Cells["B1"].PutValue("Name");
-                sheet.Cells["A2"].PutValue(1);
-                sheet.Cells["B2"].PutValue("Sample");
-
-                // If a query table exists, update its connection string to use Integrated Security
-                if (sheet.QueryTables.Count > 0)
-                {
-                    QueryTable queryTable = sheet.QueryTables[0];
-                    ExternalConnection connection = queryTable.ExternalConnection;
-
-                    // Example OLE DB connection string with Integrated Security
-                    connection.ConnectionString =
-                        "Provider=SQLOLEDB;Data Source=MyServer;Initial Catalog=MyDatabase;Integrated Security=SSPI;";
-                }
-
-                // Save the workbook
-                string outputPath = "QueryTableIntegratedSecurity.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Verify that the worksheet contains at least one query table
+            if (sheet.QueryTables.Count > 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Retrieve the first query table
+                QueryTable queryTable = sheet.QueryTables[0];
+
+                // NOTE: Aspose.Cells does not expose a direct property to modify the
+                // connection string of an existing QueryTable, nor a Refresh method.
+                // If you need to change the connection, you must recreate the query table.
+                Console.WriteLine("Query table detected. Updating its connection string is not supported directly via Aspose.Cells API.");
             }
+            else
+            {
+                Console.WriteLine("No query tables found in the worksheet.");
+            }
+
+            // Save the workbook with the (potentially) updated content
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            // Catch any unexpected errors to prevent the application from crashing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

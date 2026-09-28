@@ -1,61 +1,62 @@
-// Title: Aspose.Cells C# – Export Formula Dependent Cells to CSV with GetDependents
-// Description: Creates a workbook, adds formulas that reference cell A1, calculates all formulas, retrieves every dependent cell (direct, indirect, and cross‑worksheet) using the GetDependents method, and writes the cell addresses to a CSV file with a header row.
-// Keywords: Aspose.Cells | GetDependents | C# | CSV export | dependent cells | formula audit | cross‑worksheet dependencies | impact analysis | cell address list
-// Common Searches: Aspose.Cells get dependent cells C# | export formula dependents to CSV | GetDependents cross worksheet example | list cells affected by a source cell Aspose.Cells | how to save dependent cell names as CSV
-// Developer Intent: Extract all cells that rely on a specific source cell and save their addresses in a CSV file for reporting or analysis.
-// Use Cases: Produce an audit report showing which cells will recalculate when a source cell changes. | Create a CSV inventory of dependent cells for downstream data pipelines or documentation. | Perform impact analysis across multiple worksheets before modifying a critical formula.
-// AI Prompts: Generate C# code that uses Aspose.Cells to find dependents of cell B2 across all worksheets and writes the results to a JSON file. | Provide a reusable method that accepts a Workbook and a cell reference, returns a list of dependent cell names, and exports them to CSV with error handling and logging.
+// Title: Retrieve all cells dependent on a specific formula in an Excel workbook using Aspose.Cells for .NET and export the addresses to a CSV file
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, calls GetDependents(true) on a target cell, and writes each dependent cell's full address (Sheet!Cell) to a CSV file. | Create a .NET console application that checks the input file exists, extracts recursive dependents of cell B2 using Aspose.Cells, and saves the results with a header to dependents.csv. | Generate a C# snippet that handles exceptions, uses Aspose.Cells to find all cells that depend on a formula, and outputs the list in CSV format including sheet names.
+// Common Searches: aspocells getdependents example c# recursive dependent cells | how to export list of dependent cells from Excel to CSV using Aspose.Cells | c# code to find cells that reference a formula cell with Aspose.Cells | save dependent cell addresses to CSV file in .NET Aspose.Cells
+// Tags: Aspose.Cells GetDependents to CSV | export formula dependents Aspose.Cells .NET | retrieve dependent cells Excel C# | recursive cell dependency extraction Aspose.Cells | write dependent cell addresses CSV C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsDependentsExport
+// // Loads an Excel workbook, retrieves all cells that depend on cell B2 via GetDependents(true), and writes each dependent cell's full address (SheetName!CellName) to a CSV file.
+class Program
 {
-    // Creates a workbook, adds formulas that reference cell A1, calculates all formulas, retrieves every dependent cell (direct, indirect, and cross‑worksheet) using the GetDependents method, and writes the cell addresses to a CSV file with a header row.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "dependents.csv";
 
-            // Sample data: set a source value and formulas that depend on it
-            cells["A1"].PutValue(10);               // source cell
-            cells["B1"].Formula = "=A1*2";          // direct dependent
-            cells["C1"].Formula = "=A1+B1";         // indirect dependent
-            cells["D1"].Formula = "=B1*3";          // direct dependent
-            cells["F4"].Formula = "=A1*5";          // direct dependent on another sheet (if any)
-
-            // Calculate all formulas so that dependents are recognized
-            workbook.CalculateFormula();
-
-            // Retrieve all dependents of cell A1 (row 0, column 0), including indirect ones
-            // isAll = false -> only current worksheet; set true to include other worksheets
-            Cell[] dependents = cells.GetDependents(true, 0, 0);
-
-            // Prepare CSV file path
-            string csvPath = "A1_Dependents.csv";
-
-            // Export dependents to CSV (one cell name per line)
-            using (StreamWriter writer = new StreamWriter(csvPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Write header
-                writer.WriteLine("DependentCellName");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-                // Write each dependent cell name
-                foreach (Cell dep in dependents)
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Specify the cell that contains the formula (adjust address as needed)
+            Cell formulaCell = worksheet.Cells["B2"];
+
+            // Retrieve all cells that depend on the formula cell
+            // Pass 'true' to get all dependent cells recursively
+            Cell[] dependentCells = formulaCell.GetDependents(true);
+
+            // Export the list of dependent cells to a CSV file
+            using (StreamWriter writer = new StreamWriter(outputPath))
+            {
+                // Write CSV header
+                writer.WriteLine("DependentCell");
+
+                // Write each dependent cell's full address (SheetName!CellName)
+                foreach (Cell dep in dependentCells)
                 {
-                    writer.WriteLine(dep.Name);
+                    string fullAddress = $"{dep.Worksheet.Name}!{dep.Name}";
+                    writer.WriteLine(fullAddress);
                 }
             }
 
-            // Save the workbook (optional, just to keep the sample workbook)
-            workbook.Save("DependentsSample.xlsx");
-
-            Console.WriteLine($"Dependents of A1 have been exported to '{csvPath}'.");
+            Console.WriteLine($"Dependent cells have been written to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,65 +1,91 @@
-// Title: Add a Row to an Aspose.Cells ListObject Table from a C# Dictionary
-// Description: Shows how to build a workbook, define a ListObject table with headers, and append a new row by matching dictionary keys to column names. Values are written with PutCellValue and the workbook is saved as TableWithNewRow.xlsx.
-// Keywords: Aspose.Cells | ListObject | add row | C# dictionary | PutCellValue | Excel table population | .NET | dynamic column mapping | workbook save | Excel automation
-// Common Searches: Aspose.Cells add row to ListObject using dictionary | C# populate Excel table from Dictionary<string, object> | How to insert a new record into an Aspose.Cells table | PutCellValue example with column headers | Append data to Excel ListObject programmatically
-// Developer Intent: Append a new record to an existing Aspose.Cells ListObject by mapping dictionary entries to the table's column headers.
-// Use Cases: Insert product details stored in a Dictionary into an inventory table. | Add a generated financial entry to a reporting table without hard‑coding column positions. | Synchronize deserialized JSON objects with an Excel table by iterating over key/value pairs.
-// AI Prompts: Write C# code that adds a row to an Aspose.Cells ListObject using a Dictionary<string, object> where keys match the table headers. | Explain how to handle missing keys in the dictionary when populating a new ListObject row, leaving those cells empty. | Provide a loop that inserts multiple rows from a List<Dictionary<string, object>> into an Aspose.Cells table.
+// Title: Add a new row to an Excel ListObject table and populate it from a C# Dictionary using Aspose.Cells
+// AI Prompts: Insert a new row after the last row of the first ListObject on a worksheet and write values from a Dictionary where each key matches a column header. | Resize the ListObject to include the newly added row and save the workbook to a different file path. | Skip any dictionary entries whose keys do not correspond to existing table headers while populating the row.
+// Common Searches: how to insert a row into an Aspose.Cells ListObject from a C# dictionary | populate Excel table row with dictionary values using Aspose.Cells .NET | expand Aspose.Cells ListObject after adding a new row programmatically | match dictionary keys to Excel table column headers in C# Aspose.Cells
+// Tags: insert row into ListObject Aspose.Cells | populate table from dictionary C# | resize ListObject after adding data Aspose.Cells | match dictionary keys to column headers Aspose.Cells | save modified workbook Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Shows how to build a workbook, define a ListObject table with headers, and append a new row by matching dictionary keys to column names. Values are written with PutCellValue and the workbook is saved as TableWithNewRow.xlsx.
+// Loads a workbook, retrieves the first ListObject, adds a new row after the table, fills cells by matching dictionary keys to column headers, expands the table range to include the new row, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Define table headers
-        cells["A1"].PutValue("ID");
-        cells["B1"].PutValue("Name");
-        cells["C1"].PutValue("Price");
-
-        // Add some initial data rows
-        cells["A2"].PutValue(1);
-        cells["B2"].PutValue("Apple");
-        cells["C2"].PutValue(0.5);
-        cells["A3"].PutValue(2);
-        cells["B3"].PutValue("Banana");
-        cells["C3"].PutValue(0.3);
-
-        // Create a ListObject (Excel table) that includes the header and data rows
-        int tableIndex = sheet.ListObjects.Add(0, 0, 2, 2, true);
-        ListObject table = sheet.ListObjects[tableIndex];
-
-        // Dictionary containing values for the new row
-        var newRowValues = new Dictionary<string, object>
+        try
         {
-            { "ID", 3 },
-            { "Name", "Cherry" },
-            { "Price", 0.8 }
-        };
-
-        // Determine the offset for the new row (after existing data rows)
-        int newRowOffset = table.DataRange.RowCount; // zero‑based offset within the table
-
-        // Populate the new row using the dictionary values
-        for (int col = 0; col < table.ListColumns.Count; col++)
-        {
-            string header = table.ListColumns[col].Name;
-            if (newRowValues.TryGetValue(header, out object value))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                table.PutCellValue(newRowOffset, col, value);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
 
-        // Save the workbook
-        workbook.Save("TableWithNewRow.xlsx", SaveFormat.Xlsx);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one table
+            if (sheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables (ListObjects) found on the first worksheet.");
+                return;
+            }
+
+            // Get the first table (ListObject) on the worksheet
+            ListObject table = sheet.ListObjects[0];
+
+            // Determine the index of the new row (first empty row after the table)
+            int newWorksheetRowIndex = table.EndRow + 1;
+
+            // Example dictionary containing column name → value pairs
+            Dictionary<string, object> rowData = new Dictionary<string, object>()
+            {
+                { "Name", "John Doe" },
+                { "Age", 28 },
+                { "Country", "USA" }
+            };
+
+            // Populate the new row using the dictionary
+            foreach (KeyValuePair<string, object> kvp in rowData)
+            {
+                // Find the column index that matches the dictionary key (header text)
+                int columnIndex = -1;
+                for (int col = table.StartColumn; col <= table.EndColumn; col++)
+                {
+                    string header = sheet.Cells[table.StartRow, col].StringValue;
+                    if (header == kvp.Key)
+                    {
+                        columnIndex = col;
+                        break;
+                    }
+                }
+
+                // If the column was found, write the value into the new row cell
+                if (columnIndex != -1)
+                {
+                    sheet.Cells[newWorksheetRowIndex, columnIndex].PutValue(kvp.Value);
+                }
+            }
+
+            // Expand the table to include the newly added row
+            table.Resize(table.StartRow, table.StartColumn, newWorksheetRowIndex, table.EndColumn, true);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

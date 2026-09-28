@@ -1,40 +1,37 @@
-// Title: Save Aspose.Cells Workbook to CSV in C# Without Quoting Numbers
-// Description: Demonstrates how to export a workbook created with Aspose.Cells to a CSV file using C#. The example sets TxtSaveOptions for CSV format with a comma separator, UTF‑8 encoding, normal quoting, and disables always‑quoted mode so numeric cells are written without surrounding quotes.
-// Keywords: Aspose.Cells CSV export C# | TxtSaveOptions CSV | SaveFormat.Csv numeric values unquoted | UTF-8 CSV Aspose.Cells | .NET workbook to CSV | quote only when needed Aspose | CSV separator Aspose.Cells
-// Common Searches: Aspose.Cells export to CSV without quotes | C# save workbook as CSV numeric values not quoted | TxtSaveOptions CSV separator UTF-8 | How to prevent quoting of numbers in Aspose.Cells CSV | Aspose.Cells CSV encoding and quoting options
-// Developer Intent: Export a workbook to CSV while keeping numeric cells unquoted.
-// Use Cases: Generate lightweight CSV reports for data pipelines that require plain numbers. | Create UTF‑8 encoded CSV files for database imports where quoted numbers cause parsing errors. | Automate CSV exports with custom separators and minimal quoting to reduce file size.
-// AI Prompts: Write C# code using Aspose.Cells to save a workbook as CSV with a comma separator, UTF‑8 encoding, and quoting only text values. | Show how to configure TxtSaveOptions so numeric cells are not surrounded by quotes when exporting to CSV. | Explain how to change the CSV separator to a semicolon while still avoiding unnecessary quotes.
+// Title: Save an Aspose.Cells workbook to CSV in C# without quoting numeric cells
+// AI Prompts: Generate C# code that uses Aspose.Cells to export a workbook to a CSV file, applying TxtSaveOptions so that only necessary values are quoted. | Show how to configure TxtSaveOptions with QuoteType.Minimum, UTF‑8 encoding, and a comma delimiter for CSV output in Aspose.Cells.
+// Common Searches: Aspose.Cells C# export to CSV avoid quotes around numbers | How to configure TxtSaveOptions for minimal quoting in CSV files | CSV save options separator comma UTF-8 Aspose.Cells example | Prevent numeric values from being enclosed in quotes when saving Excel as CSV with Aspose.Cells
+// Tags: Aspose.Cells CSV export minimal quoting | TxtSaveOptions QuoteType Minimum C# | CSV separator comma UTF-8 Aspose.Cells | prevent numeric quoting Aspose.Cells | save workbook as CSV Aspose.Cells C#
 
 using System.Text;
 using Aspose.Cells;
 
-// Demonstrates how to export a workbook created with Aspose.Cells to a CSV file using C#. The example sets TxtSaveOptions for CSV format with a comma separator, UTF‑8 encoding, normal quoting, and disables always‑quoted mode so numeric cells are written without surrounding quotes.
-class CsvExportExample
+// Creates a workbook, adds sample data, sets TxtSaveOptions to use a comma delimiter, UTF‑8 encoding, and QuoteType.Minimum so numeric cells are written without surrounding quotes, then saves the file as output.csv.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Name");
-        sheet.Cells["B1"].PutValue("Age");
-        sheet.Cells["A2"].PutValue("John");
-        sheet.Cells["B2"].PutValue(30);
-        sheet.Cells["A3"].PutValue("Jane");
-        sheet.Cells["B3"].PutValue(25);
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Configure CSV save options: comma separator, UTF-8 encoding,
-        // quote only when necessary (numeric values will not be quoted)
-        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+        // Populate sample data
+        worksheet.Cells["A1"].PutValue("Name");
+        worksheet.Cells["B1"].PutValue("Age");
+        worksheet.Cells["A2"].PutValue("John");
+        worksheet.Cells["B2"].PutValue(30);
+        worksheet.Cells["A3"].PutValue("Jane");
+        worksheet.Cells["B3"].PutValue(25);
+
+        // Configure CSV save options to avoid unnecessary quoting of numeric values
+        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
         {
-            Separator = ',',
-            Encoding = Encoding.UTF8,
-            QuoteType = TxtValueQuoteType.Normal,
-            AlwaysQuoted = false // obsolete property, kept for completeness
+            Separator = ',',               // Use comma as delimiter
+            Encoding = Encoding.UTF8,      // UTF-8 encoding
+            QuoteType = TxtValueQuoteType.Minimum // Quote only when truly needed
         };
 
-        // Save the workbook as a CSV file using the configured options
-        workbook.Save("output.csv", csvOptions);
+        // Save the workbook as CSV
+        workbook.Save("output.csv", saveOptions);
     }
 }

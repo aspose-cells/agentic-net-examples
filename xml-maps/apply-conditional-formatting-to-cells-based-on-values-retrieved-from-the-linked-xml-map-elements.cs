@@ -1,104 +1,87 @@
-// Title: Conditional Formatting for XML‑Mapped Cells with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to add an XML map to a workbook, link cells to XML elements, retrieve the linked ranges via XmlMapQuery, and apply a rule that highlights values greater than 100 with a light‑green fill before saving the file.
-// Keywords: Aspose.Cells C# XML map | conditional formatting XML linked cells | XmlMapQuery example | highlight cells based on XML data | LinkToXmlMap C# | FormatCondition greater than | Excel automation Aspose
-// Common Searches: Aspose.Cells XmlMapQuery conditional formatting example | C# highlight XML‑mapped cells in Excel | How to apply conditional formatting to XML linked cells using Aspose.Cells | Create conditional formatting rule for XML map in .NET
-// Developer Intent: Automatically emphasize cells that are bound to XML map elements when their numeric values exceed a defined threshold.
-// Use Cases: Compliance reports that flag Issued_Document values above 100. | Dashboards where XML‑driven metrics are visually highlighted based on business limits. | Spreadsheets that update formatting instantly when the underlying XML source changes.
-// AI Prompts: Generate code to add multiple conditional formatting rules (e.g., <50 red, >150 blue) to the same XML‑linked range. | Show how to save the workbook to a MemoryStream while preserving all XML map links and formatting. | Explain how to refresh the XML data source and re‑apply the formatting without rebuilding the workbook.
+// Title: Apply red fill conditional formatting to cells with values > 100 after importing XML map data using Aspose.Cells in C#
+// AI Prompts: Generate C# code that creates a workbook, imports an XML file via an Aspose.Cells XML map, defines a target range, and adds a conditional formatting rule that colors cells red when the value exceeds 100. | Show how to use dynamic objects in C# with Aspose.Cells to attach a cell‑value condition to a specific range after loading XML map data.
+// Common Searches: asp.net c# how to import XML map with Aspose.Cells and set conditional formatting for values above 100 | conditional formatting based on XML map data in Aspose.Cells C# example | apply red background to cells greater than 100 after XML map import using Aspose.Cells | using dynamic objects to add conditional formatting in Aspose.Cells C# | create range and add cell value condition from imported XML data Aspose.Cells
+// Tags: xml map import Aspose.Cells C# | conditional formatting cell value Aspose.Cells | apply red fill style Aspose.Cells | dynamic object Aspose.Cells API | range creation Aspose.Cells C#
 
 using System;
-using System.Collections;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlConditionalFormatting
+// The example creates a new workbook, imports data from a local XML file through an Aspose.Cells XML map named "MyMap", defines the range B2:B10, adds a conditional formatting rule that highlights cells with values greater than 100 in red, and saves the workbook as output.xlsx.
+class Program
 {
-    // Demonstrates how to add an XML map to a workbook, link cells to XML elements, retrieve the linked ranges via XmlMapQuery, and apply a rule that highlights values greater than 100 with a light‑green fill before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Path to the XML file that contains the data
+            string xmlPath = "data.xml";
+
+            // Ensure the XML file exists before attempting to import
+            if (File.Exists(xmlPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Sample XML data to create an XML map
-                string xml = @"<?xml version='1.0' encoding='UTF-8'?>
-<Transmittals>
-    <Issued_Document>150</Issued_Document>
-    <Issued_Document>80</Issued_Document>
-    <Issued_Document>200</Issued_Document>
-</Transmittals>";
-
-                // Write XML content to a temporary file (required because Add(string) expects a file path)
-                string tempXmlPath = Path.Combine(Path.GetTempPath(), "TempXmlMap.xml");
                 try
                 {
-                    File.WriteAllText(tempXmlPath, xml);
+                    // Use dynamic to call XML map APIs that may not be present in older versions
+                    dynamic wbDynamic = workbook;
+                    wbDynamic.XmlMaps.Add("MyMap", "Root", string.Empty);
+                    wbDynamic.ImportXmlMap(xmlPath, "MyMap");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to write temporary XML file: {ex.Message}");
-                    return;
+                    Console.WriteLine($"XML import failed: {ex.Message}");
                 }
-
-                // Add the XML map to the workbook (using the temporary file)
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempXmlPath);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-                xmlMap.Name = "Transmittals_Map";
-
-                // Link three cells to the XML elements (A1, A2, A3)
-                cells.LinkToXmlMap(xmlMap.Name, 0, 0, "/Transmittals/Issued_Document[1]");
-                cells.LinkToXmlMap(xmlMap.Name, 1, 0, "/Transmittals/Issued_Document[2]");
-                cells.LinkToXmlMap(xmlMap.Name, 2, 0, "/Transmittals/Issued_Document[3]");
-
-                // Query the worksheet for all cell areas linked to the Issued_Document path
-                ArrayList linkedAreas = sheet.XmlMapQuery("/Transmittals/Issued_Document", xmlMap);
-
-                // Create a conditional formatting collection for the worksheet
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-                // Add each linked area to the conditional formatting range
-                foreach (CellArea area in linkedAreas)
-                {
-                    fcc.AddArea(area);
-                }
-
-                // Add a condition: highlight cells with value greater than 100
-                int conditionIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "100", null);
-                FormatCondition condition = fcc[conditionIdx];
-
-                // Define the style to apply when the condition is met
-                Style style = workbook.CreateStyle();
-                style.ForegroundColor = Color.LightGreen;
-                style.Pattern = BackgroundType.Solid;
-                condition.Style = style;
-
-                // Define output file path
-                string outputPath = "XmlConditionalFormattingOutput.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Warning: XML file not found at path '{xmlPath}'. Skipping XML import.");
             }
+
+            // Define the range where the XML data (or sample data) is located
+            int firstRow = 1;      // Row index 1 => Excel row 2
+            int firstColumn = 1;   // Column index 1 => Excel column B
+            int totalRows = 9;     // Rows 2 through 10
+            int totalColumns = 1;  // Single column
+
+            // Create the range object (fully qualified to avoid ambiguity with System.Range)
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
+
+            // Add a conditional formatting rule to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
+
+            // Use dynamic to avoid compile‑time dependency on ConditionalFormatting type
+            dynamic cf = sheet.ConditionalFormattings[cfIndex];
+            cf.AddArea(range); // Apply to the defined range
+
+            // Condition: cell value greater than 100
+            int conditionIndex = cf.AddCondition(
+                FormatConditionType.CellValue,
+                OperatorType.GreaterThan,
+                "100",
+                string.Empty);
+
+            // Define the style for the condition
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Red;
+            style.Pattern = BackgroundType.Solid;
+            cf[conditionIndex].Style = style;
+
+            // Save the workbook with the applied conditional formatting
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

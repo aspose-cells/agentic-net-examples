@@ -1,46 +1,47 @@
-// Title: Configure DeleteBlankOptions.UpdateReference for DeleteBlankRows and DeleteBlankColumns in Aspose.Cells .NET
-// Description: C# example that creates a workbook, adds data and a formula, then sets DeleteBlankOptions.UpdateReference = true (with EmptyStringAsBlank). The configured options are used to remove blank rows and columns while automatically adjusting any formula references, and the workbook is saved as Result.xlsx.
-// Keywords: Aspose.Cells DeleteBlankOptions | UpdateReference true | DeleteBlankRows C# | DeleteBlankColumns C# | preserve formula references | treat empty strings as blanks | Aspose.Cells .NET example | remove blank rows columns | GitHub Aspose.Cells sample | C# spreadsheet automation
-// Common Searches: Aspose.Cells keep formulas when deleting blank rows | Set UpdateReference for DeleteBlankRows in C# | DeleteBlankColumns without breaking references Aspose.Cells | How to treat empty strings as blanks in Aspose.Cells | C# code sample for DeleteBlankOptions
-// Developer Intent: Enable UpdateReference on DeleteBlankOptions before calling DeleteBlankRows or DeleteBlankColumns so that cell references are recalculated automatically.
-// Use Cases: Remove empty rows while ensuring dependent formulas stay correct. | Delete unused columns and have all related calculations update instantly. | Consider cells containing "" as blank during cleanup operations.
-// AI Prompts: Provide C# code that sets DeleteBlankOptions.UpdateReference to true and deletes blank rows and columns with Aspose.Cells. | Explain why omitting UpdateReference can break formulas when using DeleteBlankRows or DeleteBlankColumns. | Show an Aspose.Cells .NET example that treats empty strings as blanks while cleaning a worksheet.
+// Title: Configure DeleteBlankOptions.UpdateReference before deleting blank rows and columns using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets DeleteBlankOptions.UpdateReference to true and then calls Cells.DeleteBlankRows and Cells.DeleteBlankColumns. | Show how to reuse a single DeleteBlankOptions object for both row and column blank removal while keeping formulas intact. | Describe the impact of EmptyStringAsBlank and UpdateReference settings on worksheet references after deleting blanks.
+// Common Searches: Aspose.Cells how to keep formulas when deleting blank rows in C# | Set DeleteBlankOptions.UpdateReference property before DeleteBlankRows Aspose.Cells .NET | Reuse DeleteBlankOptions for deleting both rows and columns in a workbook | Effect of EmptyStringAsBlank option on blank row removal in Aspose.Cells | Update cell references after removing empty columns with Aspose.Cells
+// Tags: DeleteBlankOptions UpdateReference configuration | delete blank rows and columns Aspose.Cells | preserve formulas during blank deletion | reuse DeleteBlankOptions instance for rows and columns | EmptyStringAsBlank effect Aspose.Cells | cell reference update after blank removal
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// C# example that creates a workbook, adds data and a formula, then sets DeleteBlankOptions.UpdateReference = true (with EmptyStringAsBlank). The configured options are used to remove blank rows and columns while automatically adjusting any formula references, and the workbook is saved as Result.xlsx.
-class Program
+namespace DeleteBlankRowsColumnsDemo
 {
-    static void Main()
+    // // Demonstrates creating a workbook, adding data with blank rows and columns, configuring DeleteBlankOptions (UpdateReference=true, EmptyStringAsBlank=true), deleting blank rows and columns using the same options, and saving the workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate some data, including blank rows/columns and a formula that references them
-        cells["A1"].PutValue(10);
-        cells["B1"].PutValue(20);
-        cells["C1"].Formula = "=A1+B1"; // Formula will be updated when columns are deleted
-        cells["A2"].PutValue("");      // Blank row
-        cells["B2"].PutValue("");      // Blank column
-        cells["C2"].PutValue("");
-
-        // Prepare DeleteBlankOptions with UpdateReference set to true
-        DeleteBlankOptions options = new DeleteBlankOptions
+        static void Main()
         {
-            UpdateReference = true,      // Ensure references are updated after deletion
-            EmptyStringAsBlank = true    // Treat empty strings as blanks
-        };
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-        // Delete blank rows using the configured options
-        cells.DeleteBlankRows(options);
+            // Populate some data with blank rows and columns
+            cells["A1"].PutValue("Header");
+            cells["A2"].PutValue("");               // Blank row
+            cells["A3"].PutValue("Data");
+            cells["B1"].PutValue("");               // Blank column
+            cells["C1"].PutValue("Another Header");
+            cells["C2"].PutValue("More Data");
 
-        // Delete blank columns using the same options (UpdateReference remains true)
-        cells.DeleteBlankColumns(options);
+            // Configure DeleteBlankOptions with UpdateReference set to true
+            DeleteBlankOptions deleteOptions = new DeleteBlankOptions
+            {
+                UpdateReference = true,          // Ensure references are updated
+                EmptyStringAsBlank = true,       // Treat empty strings as blanks
+                DrawingsAsBlank = true           // Default behavior
+            };
 
-        // Save the modified workbook
-        workbook.Save("Result.xlsx");
+            // Delete blank rows using the configured options
+            cells.DeleteBlankRows(deleteOptions);
+
+            // Delete blank columns using the same configured options
+            cells.DeleteBlankColumns(deleteOptions);
+
+            // Save the workbook to verify the result
+            workbook.Save("DeletedBlankRowsAndColumns.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

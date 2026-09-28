@@ -1,67 +1,100 @@
-// Title: Batch add a consistent watermark while converting Excel to PDF with Aspose.Cells for .NET (C#)
-// Description: Creates input/output folders, defines a reusable RenderingWatermark (centered, rotated, semi‑transparent), loops through all *.xlsx files, applies the watermark via PdfSaveOptions, and saves each workbook as a watermarked PDF.
-// Keywords: Aspose.Cells watermark PDF C# | batch Excel to PDF conversion | RenderingWatermark example | reusable watermark Aspose.Cells | automate PDF watermarking
-// Common Searches: apply same watermark to multiple Excel files Aspose.Cells | C# batch convert .xlsx to PDF with diagonal watermark | loop RenderingWatermark with PdfSaveOptions | reuse watermark instance for many workbooks | watermark all PDFs generated from Excel folder
-// Developer Intent: Generate watermarked PDFs from every Excel workbook in a directory using a single shared watermark definition.
-// Use Cases: Produce confidential PDFs for a batch of financial reports. | Automate watermarking of contract spreadsheets before client delivery. | Create a searchable, watermarked archive of daily sales Excel files.
-// AI Prompts: Give C# code that adds a semi‑transparent diagonal watermark to every worksheet in a workbook with Aspose.Cells. | Show how to extend the batch processor to handle .xls files and set a custom watermark text per file. | Explain how to vary watermark opacity and rotation based on workbook metadata at runtime.
+// Title: How to batch add a diagonal semi‑transparent text watermark to every worksheet in multiple .xlsx files using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that scans a directory for .xlsx files, opens each workbook with Aspose.Cells, and inserts a semi‑transparent diagonal text‑effect shape labeled "CONFIDENTIAL" on every worksheet. | Adjust the watermark shape so it has 50 % transparency, -45° rotation, moves with cells, is sent to the back, and then save each modified workbook to a separate output folder.
+// Common Searches: asp.net core batch watermark multiple excel files using aspose.cells | c# program to add diagonal text watermark to all sheets in a folder of xlsx workbooks | how to apply a semi transparent watermark to every worksheet with Aspose.Cells | automate adding CONFIDENTIAL watermark to many Excel workbooks in C#
+// Tags: batch processing Excel workbooks with Aspose.Cells | insert text effect shape as watermark in .xlsx | configure shape transparency and rotation Aspose.Cells | move watermark with cells placement type | export watermarked workbooks to separate directory
 
 using System;
 using System.IO;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Creates input/output folders, defines a reusable RenderingWatermark (centered, rotated, semi‑transparent), loops through all *.xlsx files, applies the watermark via PdfSaveOptions, and saves each workbook as a watermarked PDF.
+// A C# console application iterates over all .xlsx files in a specified input folder, loads each workbook with Aspose.Cells, adds a semi‑transparent diagonal text‑effect shape labeled "CONFIDENTIAL" to every worksheet, and saves the watermarked workbooks to an output directory.
 class BatchWatermarkProcessor
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Directory containing source Excel files
-        string inputDir = @"C:\InputExcel";
+        // Directory containing the Excel files to process
+        string inputDirectory = @"C:\InputExcelFiles";
+        // Directory where the processed files will be saved
+        string outputDirectory = @"C:\OutputExcelFiles";
 
-        // Directory where watermarked PDFs will be saved
-        string outputDir = @"C:\OutputPdf";
-        Directory.CreateDirectory(outputDir);
-
-        // Define a consistent watermark font
-        RenderingFont font = new RenderingFont("Arial", 48)
+        // Verify input directory exists
+        if (!Directory.Exists(inputDirectory))
         {
-            Bold = true,
-            Italic = true,
-            Color = Color.Red
-        };
+            Console.WriteLine($"Input directory does not exist: {inputDirectory}");
+            return;
+        }
 
-        // Create a single watermark instance to reuse for all files
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-        {
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Center,
-            Rotation = 45,
-            Opacity = 0.3f,
-            ScaleToPagePercent = 75,
-            IsBackground = true
-        };
+        // Ensure the output directory exists
+        if (!Directory.Exists(outputDirectory))
+            Directory.CreateDirectory(outputDirectory);
+
+        // Define the watermark text (consistent for all files)
+        const string watermarkText = "CONFIDENTIAL";
 
         // Process each .xlsx file in the input directory
-        foreach (string filePath in Directory.GetFiles(inputDir, "*.xlsx"))
+        foreach (string filePath in Directory.GetFiles(inputDirectory, "*.xlsx"))
         {
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(filePath);
-
-            // Configure PDF save options with the watermark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Guard against missing files (should not happen with GetFiles, but added for safety)
+            if (!File.Exists(filePath))
             {
-                Watermark = watermark
-            };
+                Console.WriteLine($"File not found, skipping: {filePath}");
+                continue;
+            }
 
-            // Determine output PDF path
-            string outputFile = Path.Combine(outputDir, Path.GetFileNameWithoutExtension(filePath) + ".pdf");
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-            // Save the workbook as PDF with the watermark applied
-            workbook.Save(outputFile, pdfOptions);
+                // Apply watermark to every worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    try
+                    {
+                        // Add a text effect shape that acts as a watermark
+                        Shape watermarkShape = sheet.Shapes.AddTextEffect(
+                            MsoPresetTextEffect.TextEffect1,
+                            watermarkText,
+                            "Arial",
+                            72,
+                            true,
+                            false,
+                            0,
+                            0,
+                            500,
+                            200,
+                            0,
+                            0);
 
-            Console.WriteLine($"Watermarked PDF saved: {outputFile}");
+                        // Set shape formatting
+                        // Note: ForeColor and IsVisible properties are not available in some versions;
+                        // they are omitted to maintain compatibility.
+                        watermarkShape.Fill.Transparency = 0.5; // 50% transparent
+                        watermarkShape.RotationAngle = -45;    // Diagonal orientation
+                        watermarkShape.Placement = PlacementType.Move; // Move with cells
+                        watermarkShape.ZOrderPosition = 0;    // Send to back
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        Console.WriteLine($"Failed to add watermark to sheet '{sheet.Name}': {shapeEx.Message}");
+                    }
+                }
+
+                // Build the output file path (same name, different folder)
+                string outputPath = Path.Combine(outputDirectory, Path.GetFileName(filePath));
+
+                // Save the modified workbook (overwrites if file exists)
+                workbook.Save(outputPath);
+                Console.WriteLine($"Processed and saved: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+            }
         }
+
+        Console.WriteLine("Batch watermarking completed.");
     }
 }

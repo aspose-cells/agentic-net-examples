@@ -1,61 +1,62 @@
-// Title: Ungroup Shapes in Aspose.Cells for .NET (C#) While Preserving Fill and Line Formatting
-// Description: Demonstrates how to group two rectangle shapes, ungroup them with GroupShape.Ungroup, and keep each shape's original fill and line colors. The example shows the IsInGroup flag before and after ungrouping and saves the workbook as an Excel file.
-// Keywords: Aspose.Cells ungroup shapes | C# group shape ungroup | preserve shape formatting Aspose.Cells | GroupShape.Ungroup example | IsInGroup property | .NET Excel shape formatting
-// Common Searches: how to ungroup shapes in Aspose.Cells C# | retain fill color after ungrouping Aspose.Cells | Aspose.Cells GroupShape.Ungroup usage | check IsInGroup flag Aspose.Cells | C# example ungroup Excel shapes
-// Developer Intent: Separate previously grouped shapes so each retains its original fill and line settings.
-// Use Cases: Create a workbook, group multiple shapes, then ungroup to edit them individually without losing colors. | Verify that the IsInGroup property changes from true to false after calling Ungroup. | Generate an Excel file where each shape appears exactly as designed after ungrouping.
-// AI Prompts: Write C# code using Aspose.Cells to ungroup a GroupShape while keeping each shape's FillFormat and LineFormat. | Explain the effect of GroupShape.Ungroup on the IsInGroup property of member shapes. | Provide a step‑by‑step example that groups, ungroups, and saves shapes in an Excel workbook without altering their appearance.
+// Title: Ungroup grouped shapes in an Excel worksheet and retain original formatting with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, finds every GroupShape on the first worksheet, calls Ungroup() on each, and saves the workbook while preserving each shape's original formatting. | Show how to safely iterate over a worksheet's ShapeCollection, detect GroupShape instances, and ungroup them without modifying the collection during enumeration. | Provide a complete example that checks for the input file, processes the workbook, and outputs a new file where all grouped shapes are separated but keep their visual appearance.
+// Common Searches: aspnet ungroup Excel shapes while keeping formatting | Aspose.Cells C# ungroup GroupShape preserve appearance | how to separate grouped shapes in a workbook using Aspose.Cells | C# code to ungroup shapes in an .xlsx file with Aspose.Cells | remove shape groups from worksheet without losing style Aspose
+// Tags: ungroup GroupShape Aspose.Cells | preserve shape formatting Aspose.Cells | iterate ShapeCollection C# | process first worksheet Aspose.Cells | separate grouped shapes .NET
 
 using System;
-using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsUngroupShapesDemo
+namespace AsposeCellsUngroupExample
 {
-    // Demonstrates how to group two rectangle shapes, ungroup them with GroupShape.Ungroup, and keep each shape's original fill and line colors. The example shows the IsInGroup flag before and after ungrouping and saves the workbook as an Excel file.
+    // Loads an existing .xlsx workbook, iterates through the first worksheet's ShapeCollection, calls Ungroup() on any GroupShape to split it while retaining each child shape's original formatting, and saves the result to a new file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                string inputPath = "Input.xlsx";
+                string outputPath = "Output.xlsx";
 
-                // Add two rectangle shapes with distinct formatting
-                Shape rect1 = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 40);
-                rect1.FillFormat.ForeColor = Color.LightBlue;   // Set fill color
-                rect1.LineFormat.ForeColor = Color.DarkBlue;    // Set line color
-                rect1.Text = "Rect 1";
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                Shape rect2 = worksheet.Shapes.AddRectangle(6, 0, 2, 0, 80, 40);
-                rect2.FillFormat.ForeColor = Color.LightGreen;  // Set fill color
-                rect2.LineFormat.ForeColor = Color.DarkGreen;   // Set line color
-                rect2.Text = "Rect 2";
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Group the two shapes
-                GroupShape group = worksheet.Shapes.Group(new Shape[] { rect1, rect2 });
+                // Get the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // At this point both shapes are inside the group (IsInGroup == true)
-                Console.WriteLine($"Before ungroup - Rect1 IsInGroup: {rect1.IsInGroup}");
-                Console.WriteLine($"Before ungroup - Rect2 IsInGroup: {rect2.IsInGroup}");
+                // Get the collection of shapes on the worksheet
+                ShapeCollection shapes = sheet.Shapes;
 
-                // Ungroup the shapes; formatting is preserved automatically
-                group.Ungroup();
+                // Copy shapes to a list to avoid modifying the collection while iterating
+                List<Shape> shapeList = new List<Shape>();
+                foreach (Shape shp in shapes)
+                {
+                    shapeList.Add(shp);
+                }
 
-                // After ungrouping each shape should retain its original formatting
-                Console.WriteLine($"After ungroup - Rect1 IsInGroup: {rect1.IsInGroup}");
-                Console.WriteLine($"After ungroup - Rect2 IsInGroup: {rect2.IsInGroup}");
-                Console.WriteLine($"Rect1 Fill Color: {rect1.FillFormat.ForeColor}");
-                Console.WriteLine($"Rect2 Fill Color: {rect2.FillFormat.ForeColor}");
+                // Iterate through the copied list and ungroup any GroupShape found
+                foreach (Shape shp in shapeList)
+                {
+                    if (shp is GroupShape groupShape)
+                    {
+                        // Ungroup the shape; the original GroupShape is removed automatically
+                        groupShape.Ungroup();
+                    }
+                }
 
-                // Save the workbook
-                string outputPath = "UngroupedShapesDemo.xlsx";
+                // Save the workbook with the shapes now ungrouped
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {

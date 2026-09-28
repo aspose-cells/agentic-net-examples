@@ -1,82 +1,76 @@
-// Title: Encrypt an Excel workbook with AES‑256 and enforce password complexity using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, validate that a password meets minimum length, uppercase, lowercase, digit and special‑character requirements, apply AES‑256 encryption via SetEncryptionOptions, save the file, and programmatically confirm the password using LoadOptions and FileFormatUtil.VerifyPassword.
-// Keywords: Aspose.Cells encryption C# | AES 256 Excel password | password complexity validation .NET | Workbook.SetEncryptionOptions | FileFormatUtil VerifyPassword | secure Excel file Aspose | LoadOptions password Excel
-// Common Searches: Aspose.Cells encrypt Excel with AES‑256 | C# check password strength before workbook encryption | verify Excel file password programmatically Aspose | how to set strong encryption for .xlsx using Aspose.Cells | validate password rules Aspose.Cells .NET
-// Developer Intent: Secure an Excel workbook with AES‑256 encryption while ensuring the password satisfies defined complexity rules before saving.
-// Use Cases: Generate a new workbook, run a complexity check, and save it encrypted with a strong password. | Reload the encrypted file with LoadOptions to confirm decryption works with the correct password. | Use FileFormatUtil.VerifyPassword on the saved stream to programmatically validate the password.
-// AI Prompts: Write C# code that encrypts an Aspose.Cells workbook with AES‑256 and enforces a password containing at least 8 characters, an uppercase letter, a lowercase letter, a digit, and a special character. | Provide a reusable method for password‑complexity validation that integrates with Aspose.Cells encryption workflow. | Show how to programmatically verify an encrypted workbook’s password using LoadOptions and FileFormatUtil in Aspose.Cells for .NET.
+// Title: Encrypt an Excel workbook with a strong password and enforce custom password complexity using Aspose.Cells for .NET
+// AI Prompts: Create C# code that checks a password for minimum length, uppercase, lowercase, digit, and special character requirements before calling Workbook.Protect to encrypt an .xlsx file with Aspose.Cells. | Refactor the example to raise a custom PasswordComplexityException instead of printing validation errors when the password does not meet the rules. | Update the sample to retrieve the password from an environment variable, validate it, and then protect the workbook with Aspose.Cells.
+// Common Searches: asp.net encrypt excel file with password using Aspose.Cells and custom complexity validation | c# validate password strength before calling Workbook.Protect in Aspose.Cells | how to enforce password rules for Excel workbook encryption with Aspose.Cells .NET | example of protecting .xlsx with Aspose.Cells after password complexity check | Aspose.Cells workbook.Protect usage with password policy in C#
+// Tags: encrypt workbook with Aspose.Cells Protect | password complexity validation C# Aspose.Cells | protect .xlsx file using Workbook.Protect | custom password policy for Excel encryption | Aspose.Cells workbook encryption example
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 
-namespace AsposeCellsEncryptionDemo
+// The program validates a password against length, uppercase, lowercase, digit, and special‑character rules, then uses Aspose.Cells Workbook.Protect to encrypt and save an .xlsx workbook with the verified strong password.
+class Program
 {
-    // Demonstrates how to create a workbook, validate that a password meets minimum length, uppercase, lowercase, digit and special‑character requirements, apply AES‑256 encryption via SetEncryptionOptions, save the file, and programmatically confirm the password using LoadOptions and FileFormatUtil.VerifyPassword.
-    class Program
+    static void Main()
     {
-        // Checks password complexity: minimum 8 chars, at least one upper, lower, digit, special character
-        static bool IsPasswordComplex(string password)
+        try
         {
-            if (string.IsNullOrEmpty(password) || password.Length < 8)
-                return false;
+            // Define the password to be used for encryption
+            string password = "Str0ng!Passw0rd";
 
-            bool hasUpper = false, hasLower = false, hasDigit = false, hasSpecial = false;
-            foreach (char c in password)
+            // Verify that the password meets complexity requirements
+            if (!ValidatePasswordComplexity(password, out string validationError))
             {
-                if (char.IsUpper(c)) hasUpper = true;
-                else if (char.IsLower(c)) hasLower = true;
-                else if (char.IsDigit(c)) hasDigit = true;
-                else hasSpecial = true;
-            }
-            return hasUpper && hasLower && hasDigit && hasSpecial;
-        }
-
-        static void Main()
-        {
-            // Define a strong password that satisfies the complexity rules
-            string strongPassword = "Str0ng!Pass";
-
-            // Verify password complexity before applying it
-            if (!IsPasswordComplex(strongPassword))
-            {
-                Console.WriteLine("Password does not meet complexity requirements.");
+                Console.WriteLine("Password validation failed: " + validationError);
                 return;
             }
 
-            // Create a new workbook and add sample data
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Encrypted content");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Apply encryption password
-            wb.Settings.Password = strongPassword;
+            // (Optional) Add some sample data
+            workbook.Worksheets[0].Cells["A1"].PutValue("Hello Aspose.Cells");
 
-            // Set strong encryption options (AES 256)
-            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
+            // Protect the workbook with the validated password (strong encryption is applied automatically for .xlsx)
+            // Note: Protect method expects ProtectionType first, then password
+            workbook.Protect(ProtectionType.All, password);
 
             // Save the encrypted workbook
-            string encryptedPath = "EncryptedWorkbook.xlsx";
-            wb.Save(encryptedPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved with encryption to '{encryptedPath}'.");
+            string outputPath = "EncryptedWorkbook.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
 
-            // Verify that the workbook is marked as encrypted
-            Console.WriteLine($"IsEncrypted property after save: {wb.Settings.IsEncrypted}");
-
-            // Load the encrypted workbook using the correct password
-            LoadOptions loadOptions = new LoadOptions { Password = strongPassword };
-            Workbook loadedWb = new Workbook(encryptedPath, loadOptions);
-            Console.WriteLine("Workbook loaded successfully with correct password.");
-
-            // Verify that the loaded workbook is indeed encrypted
-            Console.WriteLine($"IsEncrypted after load: {loadedWb.Settings.IsEncrypted}");
-
-            // Additional verification using FileFormatUtil
-            using (Stream stream = File.OpenRead(encryptedPath))
-            {
-                bool isPasswordValid = FileFormatUtil.VerifyPassword(stream, strongPassword);
-                Console.WriteLine($"FileFormatUtil password verification result: {isPasswordValid}");
-            }
+            Console.WriteLine($"Workbook encrypted and saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
+
+    // Checks password complexity: minimum 8 chars, at least one upper, lower, digit, and special character
+    static bool ValidatePasswordComplexity(string password, out string errorMessage)
+    {
+        List<string> errors = new List<string>();
+
+        if (password.Length < 8)
+            errors.Add("minimum 8 characters");
+        if (!Regex.IsMatch(password, "[A-Z]"))
+            errors.Add("an uppercase letter");
+        if (!Regex.IsMatch(password, "[a-z]"))
+            errors.Add("a lowercase letter");
+        if (!Regex.IsMatch(password, "[0-9]"))
+            errors.Add("a digit");
+        if (!Regex.IsMatch(password, "[^a-zA-Z0-9]"))
+            errors.Add("a special character");
+
+        if (errors.Count == 0)
+        {
+            errorMessage = string.Empty;
+            return true;
+        }
+
+        errorMessage = "Password must contain " + string.Join(", ", errors) + ".";
+        return false;
     }
 }

@@ -1,56 +1,60 @@
-// Title: Verify French Excel Function Mapping (SUM → SOMME) with Aspose.Cells for .NET
-// Description: Shows how to configure Aspose.Cells SettableGlobalizationSettings to map the English function SUM to the French name SOMME, insert sample data, apply the localized formula, evaluate it, and save a workbook that Excel presents with French function names.
-// Keywords: Aspose.Cells | .NET | Excel localized functions | French function name mapping | SettableGlobalizationSettings | globalization settings | bidirectional function mapping | formula localization | workbook calculation
-// Common Searches: map English Excel function to French using Aspose.Cells | verify localized formula names in a .NET workbook | set custom globalization settings for Excel functions | does Excel show French function names after saving with Aspose.Cells | Aspose.Cells French SUM SOMME example
-// Developer Intent: Ensure that a custom mapping of the English function SUM to the French equivalent SOMME is applied, calculated correctly in code, and recognized by Excel when the file is opened.
-// Use Cases: Automatically generate workbooks that display French function names for francophone users. | Create template files with locale‑specific formulas before distribution. | Programmatically test that formulas using localized names evaluate correctly prior to saving.
-// AI Prompts: Provide an example that maps several English Excel functions to their German equivalents with SettableGlobalizationSettings. | Show code to read back a localized function name from a saved workbook to confirm the mapping. | Explain how to enable and use bidirectional function name mapping for custom locales in Aspose.Cells.
+// Title: Validate German localized Excel function SUMME recognition in Aspose.Cells for .NET by configuring workbook CultureInfo
+// AI Prompts: Generate C# code that sets Workbook.Settings.CultureInfo to de-DE, inserts a SUMME(A1:A3) formula, calculates it, and verifies the result equals 60. | Write a .NET program that creates a workbook, populates cells A1‑A3 with numbers, applies the German function name SUMME in a formula, runs CalculateFormula, and checks the computed value. | Show how to programmatically confirm that a localized Excel function is evaluated correctly after setting the workbook culture in Aspose.Cells.
+// Common Searches: how to configure Aspose.Cells workbook culture to German for localized formulas in C# | Aspose.Cells verify that SUMME formula returns correct result | C# example for using German function names like SUMME with Aspose.Cells | set workbook Settings.CultureInfo de-DE and calculate localized Excel functions in .NET
+// Tags: Workbook.Settings.CultureInfo de-DE Aspose.Cells | German localized function SUMME formula | verify localized formula result C# | calculate Excel formulas with culture settings
 
 using System;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace LocalizedFunctionVerification
+// Creates a new workbook, sets its CultureInfo to German (de-DE), fills cells A1‑A3 with numeric values, assigns a formula using the German function name SUMME, calculates the formula, validates that the result is 60, and saves the workbook as LocalizedFunctionVerification.xlsx.
+class LocalizedFunctionVerification
 {
-    // Shows how to configure Aspose.Cells SettableGlobalizationSettings to map the English function SUM to the French name SOMME, insert sample data, apply the localized formula, evaluate it, and save a workbook that Excel presents with French function names.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Set the workbook culture to German to use German function names (e.g., SUMME)
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+            // Note: In newer Aspose.Cells versions the UseFormulaLocale property may be unavailable.
+            // The CultureInfo setting is sufficient for this example.
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Create customizable globalization settings
-            SettableGlobalizationSettings settings = new SettableGlobalizationSettings();
+            // Fill cells A1, A2, A3 with numeric values
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
 
-            // Map the standard English function name "SUM" to the French localized name "SOMME"
-            // Bidirectional = true enables automatic reverse mapping (local -> standard)
-            settings.SetLocalFunctionName("SUM", "SOMME", true);
+            // Set a formula using the German localized function name "SUMME"
+            sheet.Cells["A4"].Formula = "SUMME(A1:A3)";
 
-            // Apply the custom globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = settings;
-
-            // Verify the mapping by retrieving the localized name via GetLocalFunctionName
-            string localizedName = settings.GetLocalFunctionName("SUM");
-            Console.WriteLine($"Localized name for 'SUM' is: {localizedName}");
-
-            // Populate sample data in column B (B1:B5)
-            for (int i = 0; i < 5; i++)
-            {
-                sheet.Cells[$"B{i + 1}"].PutValue(i + 1); // Values 1,2,3,4,5
-            }
-
-            // Use the localized function name in a formula
-            sheet.Cells["A1"].Formula = $"={localizedName}(B1:B5)";
-
-            // Calculate the formula
+            // Calculate the formula (respects the set culture)
             workbook.CalculateFormula();
 
-            // Output the calculation result
-            Console.WriteLine($"Result of formula using localized function: {sheet.Cells["A1"].Value}");
+            // Verify that the calculated value matches the expected sum (60)
+            double result = sheet.Cells["A4"].DoubleValue;
+            if (Math.Abs(result - 60) < 0.0001)
+            {
+                Console.WriteLine("Localized function name recognized correctly. Result: " + result);
+            }
+            else
+            {
+                Console.WriteLine("Verification failed. Result: " + result);
+            }
 
-            // Save the workbook – Excel will display the formula using the locale of the user opening the file
-            workbook.Save("LocalizedFunctionDemo.xlsx");
+            // Save the workbook
+            string outputPath = "LocalizedFunctionVerification.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to: " + outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

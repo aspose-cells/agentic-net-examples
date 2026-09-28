@@ -1,65 +1,88 @@
-// Title: Resize Data Label Shapes with Leader Lines in an Aspose.Cells Column Chart (C#/.NET)
-// Description: This example creates a workbook, adds a column chart, enables leader lines with custom styling, shows data labels outside the columns, disables auto‑fit for each point, and sets a fixed pixel width, height, and rectangular shape for the data label shapes before saving the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | column chart | data labels | leader lines | fixed label size | pixel width | pixel height | disable auto fit | rectangle data label shape | ResizeDataLabelShapesDemo
-// Common Searches: Aspose.Cells set fixed size for chart data labels | Enable leader lines and customize data label shape in C# | Resize data label shapes after turning on leader lines Aspose.Cells | How to prevent auto‑fit of data labels in Aspose chart | Change data label shape to rectangle in Aspose.Cells .NET
-// Developer Intent: Apply leader lines to a chart series and give every data label a constant pixel width, height, and rectangular shape while disabling automatic resizing.
-// Use Cases: Generate Excel reports with column charts where data labels have uniform rectangular shapes for a clean, predictable layout. | Create dashboards that require leader lines and fixed‑size data labels to maintain alignment across multiple series regardless of label text length. | Automate workbook creation where consistent visual spacing of data labels is essential for printing or PDF export.
-// AI Prompts: Show C# code using Aspose.Cells to enable leader lines on a column chart series and set a fixed pixel width and height for each data label, disabling auto‑fit. | Provide an Aspose.Cells example that changes all data label shapes to rectangles and customizes leader line style in .NET. | Explain how to position data labels outside data points, keep their size constant, and ensure they stay aligned when the chart is resized.
+// Title: Resizing data label shapes to a fixed width and height after enabling leader lines in an Aspose.Cells column chart (C#)
+// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells, activates data labels and leader lines, disables auto‑fit for each label, and sets the label shape to 80 pt width and 30 pt height. | Write a C# snippet using Aspose.Cells to set the leader line weight to 1 pt, color to dark gray, and apply a fixed‑size data label rectangle to every point in a chart series. | Provide a C# example that iterates over chart points, turns off DataLabels.IsResizeShapeToFitText, and assigns explicit Width and Height values to the data label shapes after enabling leader lines.
+// Common Searches: Aspose.Cells set fixed width and height for chart data label shapes in C# | C# Aspose.Cells enable data label leader lines and prevent auto resizing | How to customize leader line color and weight in an Aspose.Cells column chart | Resize data label rectangles after turning on leader lines using Aspose.Cells | Aspose.Cells chart data labels fixed size without auto‑fit C#
+// Tags: fixed-size data label shapes Aspose.Cells | activate data label leader lines Aspose.Cells | disable auto‑fit data labels Aspose.Cells | set data label dimensions column chart | customize leader line weight color Aspose.Cells
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// This example creates a workbook, adds a column chart, enables leader lines with custom styling, shows data labels outside the columns, disables auto‑fit for each point, and sets a fixed pixel width, height, and rectangular shape for the data label shapes before saving the file as an Excel workbook.
-class ResizeDataLabelShapesDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Shows how to create a column chart with Aspose.Cells, enable data labels and leader lines, turn off automatic label sizing, and assign a fixed width of 80 points and height of 30 points to each data label shape before saving the workbook.
+    public class ResizeDataLabelShapesWithLeaderLines
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
-
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);          // Set values
-        chart.NSeries.CategoryData = "A2:A4";      // Set categories
-
-        // Access the first series in the chart
-        Series series = chart.NSeries[0];
-
-        // Enable leader lines for the series and customize their appearance
-        series.HasLeaderLines = true;
-        series.LeaderLines.IsAuto = false;
-        series.LeaderLines.Style = LineType.Solid;
-        series.LeaderLines.WeightPt = 1.0;
-        series.LeaderLines.Color = Color.DarkGray;
-
-        // Show data labels and place them outside the data points
-        series.DataLabels.ShowValue = true;
-        series.DataLabels.Position = LabelPositionType.OutsideEnd;
-
-        // For each data point, disable auto‑fit and set a custom size for the label shape
-        foreach (ChartPoint point in series.Points)
+        public static void Run()
         {
-            point.DataLabels.IsResizeShapeToFitText = false; // Prevent auto‑resizing
-            point.DataLabels.WidthPixel = 60;                // Custom width (pixels)
-            point.DataLabels.HeightPixel = 30;               // Custom height (pixels)
-            point.DataLabels.ShapeType = DataLabelShapeType.Rect; // Use a rectangle shape
-        }
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the workbook with the configured chart
-        workbook.Save("ResizeDataLabelShapesDemo.xlsx");
+                // Populate sample data for the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["A4"].PutValue("C");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["B4"].PutValue(30);
+
+                // Add a column chart
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = worksheet.Charts[chartIndex];
+
+                // Set the data range for the chart
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Access the first series
+                Series series = chart.NSeries[0];
+
+                // Enable data labels and leader lines
+                series.DataLabels.ShowValue = true;
+                series.HasLeaderLines = true;                     // Enable leader lines
+                series.LeaderLines.IsAuto = false;                // Disable automatic leader line layout
+                // LeaderLines does not expose a LineStyle property; omit setting it
+                series.LeaderLines.WeightPt = 1.0;
+                series.LeaderLines.Color = Color.DarkGray;
+
+                // Resize each data label shape
+                foreach (ChartPoint point in series.Points)
+                {
+                    // Prevent auto‑fit so we can set a fixed size
+                    point.DataLabels.IsResizeShapeToFitText = false;
+
+                    // Optionally set a custom shape type; default is rectangle, so this line is omitted
+                    // point.DataLabels.ShapeType = MsoPresetShape.Rectangle;
+
+                    // Set fixed dimensions (width and height are in points)
+                    point.DataLabels.Width = 80;   // width in points
+                    point.DataLabels.Height = 30;  // height in points
+                }
+
+                // Save the workbook
+                string outputPath = "ResizeDataLabelShapesWithLeaderLines.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ResizeDataLabelShapesWithLeaderLines.Run();
+        }
     }
 }

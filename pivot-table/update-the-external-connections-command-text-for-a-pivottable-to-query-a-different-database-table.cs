@@ -1,80 +1,53 @@
-// Title: Change PivotTable External DBConnection Command Text with Aspose.Cells for .NET
-// Description: Loads a workbook, iterates through all worksheets and PivotTables, finds external DBConnection objects, updates their Command property to a new SELECT statement, and saves the file. Demonstrates how to retarget PivotTable queries to a different database table using Aspose.Cells.
-// Keywords: Aspose.Cells PivotTable external connection | C# DBConnection command text | update PivotTable source query | change SELECT statement Aspose.Cells | .NET modify external DB connection | PivotTable data source rewrite | Aspose.Cells workbook automation
-// Common Searches: how to modify DBConnection command for a PivotTable in Aspose.Cells | Aspose.Cells change external connection query C# | update PivotTable source table programmatically | set new SELECT statement for PivotTable external connection | Aspose.Cells example updating PivotTable DBConnection
-// Developer Intent: Replace the SQL command of each external DBConnection linked to a PivotTable so it retrieves data from a different database table.
-// Use Cases: Batch‑update workbooks after a database schema change to point all PivotTables to the new table. | Create a deployment script that rewrites PivotTable queries before distributing reports. | Build a maintenance utility that adjusts PivotTable data sources without opening Excel.
-// AI Prompts: Generate C# code that accepts a workbook path and a SELECT statement, then updates the Command property of every DBConnection used by PivotTables with Aspose.Cells. | Write a method to locate a PivotTable by name and change its external DBConnection command text to a specified query, then refresh the PivotTable. | Explain how to verify that the new command text is applied and programmatically refresh the PivotTable data using Aspose.Cells.
+// Title: Update a PivotTable external DB connection command to query a different table with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that changes the Command and SecondCommand of a DBConnection used by a PivotTable via Aspose.Cells. | Show how to replace the source SELECT statement of a PivotTable’s external connection in a .NET workbook using Aspose.Cells. | Write a script that iterates over a PivotTable’s external connections and sets a new query string for each DBConnection.
+// Common Searches: aspnet change pivot table external connection query Aspose.Cells | C# update DBConnection command text for Excel pivot table using Aspose.Cells | how to set new SELECT statement for PivotTable source data in Aspose.Cells .NET | modify pivot table external data source command property in C# workbook
+// Tags: pivot table external db connection command Aspose.Cells | update pivot table source query C# | modify DBConnection Command property .NET | Aspose.Cells change external connection query | set new SELECT for Excel pivot via Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The example loads a workbook, accesses the first PivotTable, iterates its external connections, and updates the Command and SecondCommand of any DBConnection (or the generic Command of other connections) to "SELECT * FROM NewTable", then saves the workbook as output.xlsx.
+class UpdatePivotConnection
 {
-    // Loads a workbook, iterates through all worksheets and PivotTables, finds external DBConnection objects, updates their Command property to a new SELECT statement, and saves the file. Demonstrates how to retarget PivotTable queries to a different database table using Aspose.Cells.
-    public class UpdatePivotTableConnectionCommand
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Load the workbook that contains the PivotTable
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Ensure the worksheet has at least one PivotTable
+        if (worksheet.PivotTables.Count > 0)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+            // Get the first PivotTable
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-        public static void Run()
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Retrieve the external connections used by the PivotTable
+            ExternalConnection[] connections = pivotTable.GetSourceDataConnections();
 
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            foreach (ExternalConnection connection in connections)
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
-                return;
-            }
-
-            try
-            {
-                // Load the workbook containing a PivotTable with an external DB connection
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // If the connection is a DBConnection, update its Command property
+                if (connection is DBConnection dbConn)
                 {
-                    // Iterate through all pivot tables in the worksheet
-                    foreach (PivotTable pivot in sheet.PivotTables)
-                    {
-                        // Get the external connections used by the pivot table
-                        ExternalConnection[] connections = pivot.GetSourceDataConnections();
+                    // Set the new command text to query a different database table
+                    dbConn.Command = "SELECT * FROM NewTable";
 
-                        // Update the command text of each DBConnection found
-                        foreach (ExternalConnection conn in connections)
-                        {
-                            if (conn is DBConnection dbConn)
-                            {
-                                dbConn.Command = "SELECT * FROM NewTable";
-                                Console.WriteLine($"Updated command for connection '{dbConn.Name}' to: {dbConn.Command}");
-                            }
-                        }
-                    }
+                    // Also update the SecondCommand (used for server‑based page fields)
+                    dbConn.SecondCommand = "SELECT * FROM NewTable";
                 }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                else
+                {
+                    // For other types of external connections, update the generic Command property
+                    connection.Command = "SELECT * FROM NewTable";
+                }
             }
         }
+
+        // Save the workbook with the modified connection
+        workbook.Save("output.xlsx");
     }
 }

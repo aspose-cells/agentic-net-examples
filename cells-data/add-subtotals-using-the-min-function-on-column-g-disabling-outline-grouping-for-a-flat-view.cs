@@ -1,57 +1,66 @@
-// Title: Add Min Subtotal to Column G and Show Flat Summary Rows with Aspose.Cells for .NET
-// Description: Creates a workbook, populates columns A‑G, defines range A1:G11, and uses Worksheet.Cells.Subtotal with ConsolidationFunction.Min to insert minimum subtotals for column G. The summary is placed below the data, existing subtotals are replaced, page breaks are suppressed, and outline grouping is turned off (SummaryRowBelow = false) for a flat view. The file is saved as Subtotal_Min_ColumnG_FlatView.xlsx.
-// Keywords: Aspose.Cells | .NET | subtotal min | column G | disable outline | flat view | Worksheet.Cells.Subtotal | ConsolidationFunction.Min | summary row below | Excel automation
-// Common Searches: Aspose.Cells add min subtotal column | disable outline grouping Aspose.Cells .NET | Worksheet.Cells.Subtotal example C# | flat view subtotal rows Aspose.Cells | C# Aspose.Cells subtotal without grouping
-// Developer Intent: Generate an Excel workbook that calculates the minimum subtotal for column G and displays the summary rows without collapsible outlines.
-// Use Cases: Financial reporting where the lowest transaction amount per category is highlighted as a subtotal in a flat list. | Inventory sheets that need minimum quantity subtotals per group while keeping the worksheet free of outline hierarchies. | Automated data exports that require min subtotals on a numeric column and a non‑collapsible presentation for downstream processing.
-// AI Prompts: Write C# code using Aspose.Cells to add a Min subtotal on column G for a given range and disable outline grouping so the summary rows appear in a flat view. | Show an example of Worksheet.Cells.Subtotal with ConsolidationFunction.Min and set Worksheet.Outline.SummaryRowBelow to false in Aspose.Cells for .NET. | Explain how to replace existing subtotals, avoid page breaks, place the summary below the data, and turn off outline grouping when using Aspose.Cells.
+// Title: Create a flat‑view Excel file with minimum subtotals on column G grouped by column F using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that groups rows by column F and inserts a Min subtotal for column G while keeping the worksheet outline flat. | Show how to turn off outline grouping after adding subtotals so the summary rows stay inline in the same sheet using Aspose.Cells .NET.
+// Common Searches: how to add a min subtotal for a column in Aspose.Cells C# | Aspose.Cells disable outline grouping for flat view after subtotal | C# Aspose.Cells subtotal by group column without inserting extra rows
+// Tags: min subtotal calculation Aspose.Cells C# | column grouping subtotal Aspose.Cells | outline grouping off for flat view Aspose.Cells | subtotal without extra summary rows Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// Creates a workbook, populates columns A‑G, defines range A1:G11, and uses Worksheet.Cells.Subtotal with ConsolidationFunction.Min to insert minimum subtotals for column G. The summary is placed below the data, existing subtotals are replaced, page breaks are suppressed, and outline grouping is turned off (SummaryRowBelow = false) for a flat view. The file is saved as Subtotal_Min_ColumnG_FlatView.xlsx.
+// The example creates a new workbook, fills columns F (group) and G (values) with sample data, defines a cell area, adds subtotals that compute the minimum of column G for each group in column F, disables outline grouping to produce a flat view, and saves the file as SubtotalMinFlatView.xlsx.
 class Program
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Populate sample data (columns A to G). Column G (index 6) will hold numeric values.
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["G1"].PutValue("Amount");
+        // -------------------------------------------------
+        // Sample data preparation (columns F = Group, G = Value)
+        // -------------------------------------------------
+        cells["F1"].PutValue("Group");   // Header for grouping column (column G in zero‑based index is 5)
+        cells["G1"].PutValue("Value");   // Header for values column (column G in zero‑based index is 6)
 
+        // Populate 10 rows of sample data
         for (int i = 0; i < 10; i++)
         {
-            // Example grouping column (A) – alternating groups
-            worksheet.Cells[i + 1, 0].PutValue(i % 2 == 0 ? "Group1" : "Group2");
-            // Column G values
-            worksheet.Cells[i + 1, 6].PutValue((i + 1) * 10);
+            // Alternate groups "A" and "B" in column F
+            cells[i + 1, 5].PutValue(i % 2 == 0 ? "A" : "B");
+            // Some numeric values in column G
+            cells[i + 1, 6].PutValue(100 + i * 10);
         }
 
-        // Define the cell area that contains the data (A1:G11)
-        CellArea area = CellArea.CreateCellArea("A1", "G11");
+        // -------------------------------------------------
+        // Define the range that contains the data (including headers)
+        // StartRow = 0, StartColumn = 5 (F), EndRow = 10, EndColumn = 6 (G)
+        // -------------------------------------------------
+        CellArea area = CellArea.CreateCellArea(0, 5, 10, 6);
 
+        // -------------------------------------------------
         // Add subtotals:
-        // - Group by column G (index 6)
-        // - Use the Min function
-        // - Apply the subtotal to column G (index 6)
-        // - Replace existing subtotals, no page breaks, summary placed below data
-        worksheet.Cells.Subtotal(
+        //   - Group by the first column of the area (column F)
+        //   - Use the Min function on the second column of the area (column G)
+        //   - Do not replace existing subtotals, no page breaks, and do not place summary rows below data
+        // -------------------------------------------------
+        cells.Subtotal(
             area,
-            6,                                 // groupBy column (G)
-            ConsolidationFunction.Min,         // Min function
-            new int[] { 6 },                   // subtotal column (G)
-            true,                              // replace existing subtotals
-            false,                             // no page breaks between groups
-            true                               // summary below data
+            0,                                 // groupBy: first column of the area (column F)
+            ConsolidationFunction.Min,         // function: Min
+            new int[] { 1 },                   // totalList: second column of the area (column G)
+            false,                             // replace existing subtotals
+            false,                             // add page breaks between groups
+            false                              // place summary rows below data
         );
 
-        // Disable outline grouping for a flat view (summary rows will not be shown as outline groups)
-        worksheet.Outline.SummaryRowBelow = false;
+        // -------------------------------------------------
+        // Disable outline grouping for a flat view
+        // Setting SummaryRowBelow to false prevents the outline from inserting extra rows
+        // -------------------------------------------------
+        sheet.Outline.SummaryRowBelow = false;
 
+        // -------------------------------------------------
         // Save the workbook
-        workbook.Save("Subtotal_Min_ColumnG_FlatView.xlsx");
+        // -------------------------------------------------
+        workbook.Save("SubtotalMinFlatView.xlsx");
     }
 }

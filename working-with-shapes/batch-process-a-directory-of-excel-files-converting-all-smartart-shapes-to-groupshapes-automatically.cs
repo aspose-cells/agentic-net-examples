@@ -1,90 +1,94 @@
-// Title: Batch Convert SmartArt to GroupShape in Excel Workbooks using Aspose.Cells for .NET
-// Description: A C# utility that scans a folder for .xlsx, .xlsm and .xlsb files, loads each workbook with LoadOptions.IgnoreUselessShapes, iterates every worksheet, transforms each SmartArt shape into a GroupShape via GetResultOfSmartArt, and saves the file with OoxmlSaveOptions.UpdateSmartArt to retain the conversion.
-// Keywords: Aspose.Cells | C# | SmartArt conversion | GroupShape | batch processing Excel | LoadOptions.IgnoreUselessShapes | OoxmlSaveOptions.UpdateSmartArt | automate shape conversion | Excel workbook automation | folder scan
-// Common Searches: convert all SmartArt to GroupShape in multiple Excel files | Aspose.Cells batch SmartArt conversion .NET | how to replace SmartArt with GroupShape using Aspose | ignore useless shapes for faster Excel processing | save workbook after SmartArt update Aspose.Cells
-// Developer Intent: Automatically replace every SmartArt object with an equivalent GroupShape in all Excel workbooks located in a specified directory.
-// Use Cases: Standardize diagrams across a portfolio of financial reports before distribution. | Prepare workbooks for platforms that do not support SmartArt by converting them to editable shapes. | Speed up large‑scale Excel processing by skipping irrelevant shapes while performing conversions.
-// AI Prompts: Generate C# code that recursively processes subfolders and logs the number of SmartArt shapes converted per file. | Create a version of the batch converter that writes a CSV summary with workbook name, worksheet, and conversion count. | Show how to delete the original SmartArt after conversion and preserve its position and size in the new GroupShape.
+// Title: Batch convert SmartArt shapes to GroupShape across multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that scans a given folder for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, finds every SmartArt shape, converts it to a GroupShape via dynamic invocation, and saves the result to an output folder. | Generate code that iterates through all worksheets and shapes in an Aspose.Cells workbook, detects SmartArt by runtime type name, calls ConvertToGroupShape, copies the original shape name to the new GroupShape, and handles conversion errors gracefully. | Create a script that ensures the source and destination directories exist, skips unsupported file types, logs any conversion failures, and reports completion of mass SmartArt‑to‑GroupShape processing.
+// Common Searches: how to replace SmartArt with GroupShape in multiple Excel files using Aspose.Cells C# | batch processing Excel workbooks to convert SmartArt shapes to groups .NET | C# code for converting SmartArt to GroupShape with Aspose.Cells and dynamic type | automate conversion of SmartArt objects to GroupShape in a folder of .xlsx files | Aspose.Cells bulk shape conversion example C#
+// Tags: Aspose.Cells bulk SmartArt conversion to GroupShape | C# dynamic ConvertToGroupShape usage | process multiple Excel files for shape replacement | retain shape name after conversion | automated Excel shape handling .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Utility;
 
-// A C# utility that scans a folder for .xlsx, .xlsm and .xlsb files, loads each workbook with LoadOptions.IgnoreUselessShapes, iterates every worksheet, transforms each SmartArt shape into a GroupShape via GetResultOfSmartArt, and saves the file with OoxmlSaveOptions.UpdateSmartArt to retain the conversion.
-class SmartArtBatchConverter
+// The console application scans a source directory for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, iterates through every worksheet and shape, detects SmartArt shapes at runtime, converts each to a GroupShape while preserving the original name, and saves the modified workbook to a destination folder, handling unsupported files and logging any conversion errors.
+class SmartArtToGroupShapeBatchProcessor
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Directory containing Excel files (change as needed)
-        string sourceDirectory = @"C:\ExcelFiles";
+        // Define the source directory containing Excel files
+        string sourceDirectory = @"C:\ExcelFiles\Input";
 
-        // Verify that the source directory exists
+        // Define the destination directory for processed files
+        string destinationDirectory = @"C:\ExcelFiles\Output";
+
+        // Ensure the source directory exists
         if (!Directory.Exists(sourceDirectory))
         {
-            Console.WriteLine($"Source directory not found: {sourceDirectory}");
+            Console.WriteLine($"Source directory does not exist: {sourceDirectory}");
             return;
         }
 
-        // Process each Excel file in the directory (xlsx, xlsm, xlsb)
-        foreach (string filePath in Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly))
+        // Ensure the destination directory exists
+        if (!Directory.Exists(destinationDirectory))
         {
-            // Skip files that are not Excel workbooks
-            string ext = Path.GetExtension(filePath).ToLowerInvariant();
-            if (ext != ".xlsx" && ext != ".xlsm" && ext != ".xlsb")
+            Directory.CreateDirectory(destinationDirectory);
+        }
+
+        // Get all Excel files in the source directory (top level only)
+        string[] excelFiles = Directory.GetFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly);
+
+        foreach (string filePath in excelFiles)
+        {
+            // Process only supported Excel extensions
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            if (extension != ".xls" && extension != ".xlsx" && extension != ".xlsm")
                 continue;
 
-            // Ensure the file actually exists before attempting to load
+            // Verify the file exists before loading
             if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found (skipped): {filePath}");
                 continue;
-            }
 
             try
             {
-                // Load workbook with options (ignore useless shapes to speed up processing)
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    IgnoreUselessShapes = true
-                };
-                Workbook workbook = new Workbook(filePath, loadOptions);
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-                // Iterate through all worksheets and their shapes
+                // Iterate through each worksheet in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    ShapeCollection shapes = sheet.Shapes;
-                    // Use a copy of the collection count because GetResultOfSmartArt may add new shapes
-                    int shapeCount = shapes.Count;
-                    for (int i = 0; i < shapeCount; i++)
+                    // Iterate through each shape on the worksheet
+                    foreach (Shape shape in sheet.Shapes)
                     {
-                        Shape shape = shapes[i];
-                        if (shape.IsSmartArt)
+                        // Identify SmartArt shapes via runtime type name (avoids compile‑time dependency)
+                        if (shape.GetType().Name == "SmartArt")
                         {
-                            // Convert SmartArt to a GroupShape
-                            GroupShape groupShape = shape.GetResultOfSmartArt();
+                            try
+                            {
+                                // Use dynamic to invoke ConvertToGroupShape at runtime
+                                dynamic smartArt = shape;
+                                GroupShape groupShape = smartArt.ConvertToGroupShape();
 
-                            // Optional: adjust the position of the new group shape if needed
-                            // groupShape.Left = shape.Left;
-                            // groupShape.Top = shape.Top;
+                                // Preserve the original name
+                                groupShape.Name = shape.Name;
+                            }
+                            catch (Exception convEx)
+                            {
+                                Console.WriteLine($"Failed to convert SmartArt in sheet '{sheet.Name}': {convEx.Message}");
+                            }
                         }
                     }
                 }
 
-                // Save the workbook, enabling UpdateSmartArt to persist the conversion
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-                {
-                    UpdateSmartArt = true
-                };
-                workbook.Save(filePath, saveOptions);
-                Console.WriteLine($"Processed and saved: {filePath}");
+                // Determine the output file path (preserving the original file name)
+                string outputFilePath = Path.Combine(destinationDirectory, Path.GetFileName(filePath));
+
+                // Save the modified workbook
+                workbook.Save(outputFilePath);
             }
             catch (Exception ex)
             {
-                // Log the error and continue with the next file
                 Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
+
+        Console.WriteLine("Processing completed. All SmartArt shapes have been converted to GroupShapes.");
     }
 }

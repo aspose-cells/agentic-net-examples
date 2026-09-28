@@ -1,44 +1,33 @@
-// Title: Add a Mailto Email Hyperlink to Cell N3 with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a mailto hyperlink into cell N3, sets the visible text to "Send Email", and saves the file as EmailHyperlink.xlsx using the Aspose.Cells API for C#.
-// Keywords: Aspose.Cells | C# email hyperlink | mailto link Excel | hyperlink cell N3 | TextToDisplay property | Hyperlinks.Add example | Excel automation .NET | save workbook with hyperlink
-// Common Searches: Aspose.Cells add mailto hyperlink | C# create email link in Excel cell | set hyperlink display text Aspose.Cells | how to add clickable email address to Excel using .NET | Aspose.Cells Hyperlinks.Add usage
-// Developer Intent: Insert a mailto hyperlink into cell N3 and define its display text using Aspose.Cells for .NET.
-// Use Cases: Generate an invoice workbook that includes a "Contact Support" email button. | Provide a feedback link in a data‑entry template that opens the user's email client. | Create a scheduled sales report with a quick‑email link to the sales team.
-// AI Prompts: Generate C# code that adds a mailto hyperlink to cell N3 with display text "Send Email" using Aspose.Cells. | Show how to retrieve and modify the address or display text of an existing hyperlink in an Aspose.Cells workbook. | Explain the steps to create and save an Excel file containing an email hyperlink with Aspose.Cells for .NET.
+// Title: Insert a mailto hyperlink into cell N3 with display text using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to add a mailto hyperlink to cell N3 and set the visible text to "Contact Support". | Show how to create a clickable email link in a specific Excel cell with Aspose.Cells, including saving the workbook.
+// Common Searches: asp.net add mailto link to Excel cell using Aspose.Cells | c# aspose.cells set hyperlink display text for a cell | how to create email hyperlink in a specific worksheet cell with Aspose.Cells | aspose.cells insert clickable email address into N3 cell
+// Tags: Aspose.Cells mailto hyperlink | C# set hyperlink text Aspose.Cells | Excel cell email link Aspose.Cells | Hyperlink range creation Aspose.Cells | Save workbook with email hyperlink Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Creates a new workbook, adds a mailto hyperlink to cell N3 with the display text "Contact Support", and saves the file as HyperlinkEmail.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a new workbook, inserts a mailto hyperlink into cell N3, sets the visible text to "Send Email", and saves the file as EmailHyperlink.xlsx using the Aspose.Cells API for C#.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a hyperlink to cell N3 that opens an email client
-                int hyperlinkIndex = worksheet.Hyperlinks.Add("N3", 1, 1, "mailto:example@domain.com");
+        // Define the email address (mailto link)
+        string emailLink = "mailto:support@example.com";
 
-                // Set the display text for the hyperlink
-                worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Send Email";
+        // Add a hyperlink to cell N3 (row index 2, column index 13)
+        // This creates a 1x1 hyperlink range that opens the default mail client
+        sheet.Hyperlinks.Add(2, 13, 1, 1, emailLink);
 
-                // Save the workbook
-                string outputPath = "EmailHyperlink.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Set the display text for the hyperlink
+        sheet.Cells["N3"].PutValue("Contact Support");
+
+        // Save the workbook
+        workbook.Save("HyperlinkEmail.xlsx");
     }
 }

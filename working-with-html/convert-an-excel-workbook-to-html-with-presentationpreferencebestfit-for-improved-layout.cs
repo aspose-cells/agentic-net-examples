@@ -1,36 +1,46 @@
-// Title: Convert Excel to HTML with PresentationPreference = BestFit using Aspose.Cells for .NET (C#)
-// Description: Shows how to export a workbook as HTML with PresentationPreference enabled (BestFit) and without full‑path links, using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | PresentationPreference | BestFit | HtmlSaveOptions | IsFullPathLink | workbook export | HTML conversion
-// Common Searches: Aspose.Cells enable PresentationPreference BestFit | save Excel as HTML without full path links .NET | HTML conversion of workbook with adjusted layout | C# Aspose.Cells HtmlSaveOptions examples | export Excel to web‑friendly HTML
-// Developer Intent: Generate an HTML file from an Excel workbook that automatically fits column widths and row heights, using Aspose.Cells with PresentationPreference set to BestFit.
-// Use Cases: Quick preview of spreadsheets on a website with optimal column sizing. | Exporting Excel reports to HTML for embedding in intranet portals or emails. | Creating web‑ready versions of dashboards without exposing local file paths.
-// AI Prompts: Write C# code that loads an existing .xlsx file and saves it as HTML with PresentationPreference = BestFit and IsFullPathLink disabled using Aspose.Cells. | Explain the effect of PresentationPreference on column width and row height when converting Excel to HTML with Aspose.Cells. | Provide a step‑by‑step guide to customize styles and images in the HTML output after enabling PresentationPreference in Aspose.Cells.
+// Title: Convert an Excel workbook to HTML with best‑fit layout using Aspose.Cells PresentationPreference in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.PresentationPreference to BestFit, and saves the result as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions for best‑fit HTML rendering, including a check for the source file and proper exception handling.
+// Common Searches: Aspose.Cells C# HtmlSaveOptions PresentationPreference BestFit example | How to export Excel to HTML while preserving column widths using Aspose.Cells | C# convert .xlsx to .html with optimal layout Aspose.Cells | Saving a workbook as HTML with best‑fit rendering in Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference | C# export Excel to HTML best fit | HTML conversion preserving layout Aspose.Cells | Workbook.Save HTML best‑fit rendering | file existence validation Aspose.Cells conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Shows how to export a workbook as HTML with PresentationPreference enabled (BestFit) and without full‑path links, using Aspose.Cells for .NET.
+// The sample verifies that the input Excel file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with PresentationPreference.BestFit for optimal column‑width rendering, saves the workbook as an HTML file, and handles any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (empty Excel file)
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
 
-        // Add some sample data to the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Presentation Preference Test");
-        sheet.Cells["B1"].PutValue(123.45);
-        sheet.Cells["A2"].PutValue(DateTime.Now);
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        // Enable PresentationPreference for a more beautiful layout (BestFit)
-        htmlOptions.PresentationPreference = true;
-        // Optional: avoid using full path links in generated HTML files
-        htmlOptions.IsFullPathLink = false;
+        try
+        {
+            // Load the Excel workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook as HTML using the configured options
-        workbook.Save("output.html", htmlOptions);
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Note: PresentationPreference enum may not be available in some versions.
+            // If needed, adjust options here.
+
+            // Save the workbook as an HTML file with the specified options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

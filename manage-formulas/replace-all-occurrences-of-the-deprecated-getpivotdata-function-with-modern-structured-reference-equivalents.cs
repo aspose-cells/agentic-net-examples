@@ -1,78 +1,93 @@
-// Title: Replace GETPIVOTDATA with Structured References using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, scans every worksheet and cell, detects formulas that start with GETPIVOTDATA, substitutes each with a structured‑reference placeholder (e.g., =Table1[Column1]) via Aspose.Cells, and saves the modified file.
-// Keywords: Aspose.Cells | C# | .NET | GETPIVOTDATA replacement | structured reference | Excel formula conversion | batch formula update | legacy Excel migration
-// Common Searches: Aspose.Cells replace GETPIVOTDATA formula | convert GETPIVOTDATA to table reference C# | update deprecated Excel functions with Aspose.Cells | batch replace GETPIVOTDATA across worksheets | structured reference example Aspose.Cells
-// Developer Intent: Automatically substitute all GETPIVOTDATA formulas in a workbook with modern structured‑reference expressions.
-// Use Cases: Modernize legacy reports that rely on GETPIVOTDATA before distribution. | Process large collections of workbooks to ensure compatibility with newer Excel versions. | Embed formula migration into an automated data‑export pipeline.
-// AI Prompts: Write C# code using Aspose.Cells that finds every GETPIVOTDATA formula in a workbook and replaces it with a user‑defined structured reference string. | Show how to log the address, original formula, and replacement for each cell while performing the conversion. | Demonstrate parameterizing the replacement so the target table name and column are extracted from the original GETPIVOTDATA arguments.
+// Title: Replace deprecated GETPIVOTDATA formulas with structured references in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, scans every cell for a GETPIVOTDATA formula, and rewrites it as a structured reference. | Create a helper method that parses a GETPIVOTDATA string and returns the equivalent structured‑reference syntax for use in Aspose.Cells formulas. | Show how to save the workbook after converting all GETPIVOTDATA formulas to structured references with Aspose.Cells.
+// Common Searches: how to convert GETPIVOTDATA to structured reference using Aspose.Cells C# | Aspose.Cells programmatically replace deprecated GETPIVOTDATA formulas | C# iterate through Excel cells and update GETPIVOTDATA to structured reference
+// Tags: replace GETPIVOTDATA with structured reference Aspose.Cells | scan and modify Excel formulas C# | convert deprecated Excel function Aspose.Cells .NET | bulk formula update .xlsx C# | structured reference generation Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads an input .xlsx workbook with Aspose.Cells, iterates through all worksheets and cells, detects formulas containing the GETPIVOTDATA function, converts each to a simple structured‑reference syntax via a placeholder parser, replaces the original formula, and saves the modified workbook to a new file.
+class Program
 {
-    // Loads an Excel workbook, scans every worksheet and cell, detects formulas that start with GETPIVOTDATA, substitutes each with a structured‑reference placeholder (e.g., =Table1[Column1]) via Aspose.Cells, and saves the modified file.
-    public class ReplaceGetPivotData
+    static void Main()
     {
-        public static void Run()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            try
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the workbook that contains GETPIVOTDATA formulas
-                Workbook workbook = new Workbook(inputPath);
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Scan all cells within the used range
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Iterate through all used cells in the worksheet
-                    foreach (Cell cell in sheet.Cells)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        // Process only cells that contain a formula
-                        if (cell.IsFormula)
+                        Cell cell = cells[row, col];
+
+                        // Identify formulas that contain the deprecated GETPIVOTDATA function
+                        if (cell.IsFormula && cell.Formula.IndexOf("GETPIVOTDATA", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            string formula = cell.Formula;
+                            string oldFormula = cell.Formula;
 
-                            // Check if the formula uses the deprecated GETPIVOTDATA function
-                            if (formula.StartsWith("GETPIVOTDATA", StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Placeholder structured reference replacement
-                                string placeholderStructuredRef = "=Table1[Column1]";
+                            // Convert the GETPIVOTDATA call to a modern structured reference
+                            string newFormula = ConvertGetPivotDataToStructuredReference(oldFormula);
 
-                                // Replace the old formula with the new structured reference
-                                cell.PutValue(placeholderStructuredRef);
-                            }
+                            // Replace the formula with the new structured reference
+                            cell.Formula = newFormula;
                         }
                     }
                 }
+            }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 
-    // Entry point for the application
-    public class Program
+    // Simple placeholder conversion: extracts the field name from GETPIVOTDATA and builds a structured reference.
+    // Real-world scenarios would require full parsing of all arguments.
+    static string ConvertGetPivotDataToStructuredReference(string formula)
     {
-        public static void Main(string[] args)
-        {
-            ReplaceGetPivotData.Run();
-        }
+        // Locate the GETPIVOTDATA function name
+        int funcPos = formula.IndexOf("GETPIVOTDATA", StringComparison.OrdinalIgnoreCase);
+        if (funcPos < 0) return formula;
+
+        // Find the first quoted field name argument
+        int firstQuote = formula.IndexOf('\"', funcPos);
+        int secondQuote = formula.IndexOf('\"', firstQuote + 1);
+        if (firstQuote < 0 || secondQuote < 0) return formula;
+
+        // Extract the field name (e.g., "Sum of Sales")
+        string fieldName = formula.Substring(firstQuote + 1, secondQuote - firstQuote - 1);
+
+        // Build a structured reference using the extracted field name
+        // Example: =GETPIVOTDATA("Sum of Sales",$A$3) -> =[@[Sum of Sales]]
+        string structuredReference = $"[@[{fieldName}]]";
+
+        // Return the new formula (as a simple reference; adjust as needed for complex cases)
+        return structuredReference;
     }
 }

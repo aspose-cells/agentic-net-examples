@@ -1,86 +1,66 @@
-// Title: Profile Memory Usage While Enumerating Large Worksheets with Aspose.Cells for .NET
-// Description: C# sample that creates a 200,000‑row workbook, switches Cells.MemorySetting to FileCache, iterates rows with IEnumerator, logs managed memory at intervals, measures execution time, and disposes resources to detect possible memory leaks during large‑scale enumeration.
-// Keywords: Aspose.Cells memory profiling | FileCache mode enumeration | large worksheet iteration .NET | managed memory leak detection | row enumeration performance | C# Aspose.Cells memory usage | benchmark spreadsheet processing
-// Common Searches: Aspose.Cells how to profile memory while reading rows | enumerate rows in FileCache mode without leaks | measure managed memory during large worksheet processing | C# Aspose.Cells performance tips for 200k rows | detect memory growth in Aspose.Cells iteration
-// Developer Intent: The developer needs to monitor and verify managed memory consumption when iterating over a massive worksheet to ensure the FileCache setting prevents leaks and to benchmark performance.
-// Use Cases: Identify memory spikes in server‑side spreadsheet processing pipelines | Validate that FileCache mode keeps memory stable during row‑by‑row reads | Benchmark enumeration speed and memory impact for bulk data imports
-// AI Prompts: Generate C# code that records managed memory every 10,000 rows while iterating a worksheet with Aspose.Cells FileCache mode. | Suggest optimizations to minimize memory delta during large worksheet enumeration in Aspose.Cells. | Create a unit‑test method that asserts memory usage stays below a defined threshold while processing 200,000 rows.
+// Title: How to profile memory usage while iterating over used cells in large Excel worksheets with Aspose.Cells for .NET
+// AI Prompts: Create a C# console application that loads an Excel workbook using Aspose.Cells, iterates through the used range of every worksheet, and logs memory usage to the console after a configurable number of rows. | Adjust the enumeration code to capture a memory snapshot after each worksheet finishes processing and display the total memory delta compared with the baseline. | Add a configurable memory‑threshold check that aborts the iteration and reports the worksheet name when the memory increase exceeds the specified limit.
+// Common Searches: aspnet memory profiling while reading large Excel files with Aspose.Cells | how to detect memory leaks during worksheet iteration in C# using Aspose.Cells | measure heap growth when enumerating used cells of an Excel workbook in .NET | C# code to log memory usage every 1000 rows while processing large worksheets with Aspose.Cells
+// Tags: memory profiling Aspose.Cells cell enumeration | heap usage monitoring worksheet iteration .NET | used range iteration performance Aspose.Cells | periodic GC snapshot large Excel processing | memory leak detection Aspose.Cells workbook traversal
 
 using System;
-using System.Collections;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryProfiling
+// Demonstrates how to measure memory consumption while walking through the used cells of each worksheet in a large Excel workbook with Aspose.Cells, reporting baseline, periodic (e.g., every 1,000 rows) and final memory usage.
+class Program
 {
-    // C# sample that creates a 200,000‑row workbook, switches Cells.MemorySetting to FileCache, iterates rows with IEnumerator, logs managed memory at intervals, measures execution time, and disposes resources to detect possible memory leaks during large‑scale enumeration.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main()
+        // Path to the large workbook to be analyzed.
+        string inputPath = "largeWorkbook.xlsx"; // TODO: replace with actual file path.
+
+        // Load the workbook using Aspose.Cells.
+        Workbook workbook = new Workbook(inputPath);
+
+        // Force a full garbage collection and capture the baseline memory usage.
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        long baselineMemory = GC.GetTotalMemory(true);
+        Console.WriteLine($"Baseline memory: {baselineMemory / 1024.0 / 1024.0:F2} MB");
+
+        // Iterate through each worksheet in the workbook.
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Processing worksheet: {sheet.Name}");
+
+            // Obtain the used range to limit iteration to populated cells.
             Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxColumn = cells.MaxDataColumn;
 
-            // Set memory usage mode to FileCache to reduce in‑memory footprint
-            cells.MemorySetting = MemorySetting.FileCache;
-
-            // Populate a large number of rows (e.g., 200,000 rows, 5 columns)
-            const int totalRows = 200_000;
-            const int totalCols = 5;
-            for (int r = 0; r < totalRows; r++)
+            // Iterate rows.
+            for (int row = 0; row <= maxRow; row++)
             {
-                for (int c = 0; c < totalCols; c++)
+                // Iterate columns within the current row.
+                for (int col = 0; col <= maxColumn; col++)
                 {
-                    cells[r, c].PutValue($"R{r}C{c}");
+                    // Access the cell value. This forces Aspose.Cells to materialize the cell object.
+                    object value = cells[row, col].Value;
+                    // (Optional) Process the value here if needed.
+                }
+
+                // Periodically report memory usage to spot leaks during long iterations.
+                if (row % 1000 == 0) // Adjust the interval based on worksheet size.
+                {
+                    long currentMemory = GC.GetTotalMemory(true);
+                    Console.WriteLine($"Row {row}/{maxRow} - Memory: {currentMemory / 1024.0 / 1024.0:F2} MB");
                 }
             }
-
-            // Save the workbook (uses the provided save rule)
-            workbook.Save("LargeData.xlsx");
-
-            // Prepare for profiling
-            Console.WriteLine("Starting enumeration and memory profiling...");
-            long initialMemory = GC.GetTotalMemory(forceFullCollection: true);
-            Console.WriteLine($"Initial managed memory: {initialMemory / 1024 / 1024} MB");
-
-            Stopwatch sw = Stopwatch.StartNew();
-
-            // Enumerate rows sequentially (recommended for FileCache mode)
-            IEnumerator rowEnum = cells.Rows.GetEnumerator();
-            int processedRows = 0;
-            while (rowEnum.MoveNext())
-            {
-                Row row = (Row)rowEnum.Current;
-
-                // Access each cell in the row to simulate work
-                IEnumerator cellEnum = row.GetEnumerator();
-                while (cellEnum.MoveNext())
-                {
-                    Cell cell = (Cell)cellEnum.Current;
-                    // Simple read operation
-                    string val = cell.StringValue;
-                }
-
-                processedRows++;
-
-                // Periodically report memory usage to detect leaks
-                if (processedRows % 20_000 == 0)
-                {
-                    long currentMemory = GC.GetTotalMemory(forceFullCollection: true);
-                    Console.WriteLine($"Rows processed: {processedRows}, Managed memory: {currentMemory / 1024 / 1024} MB");
-                }
-            }
-
-            sw.Stop();
-            long finalMemory = GC.GetTotalMemory(forceFullCollection: true);
-            Console.WriteLine($"Enumeration completed in {sw.Elapsed.TotalSeconds:F2} seconds.");
-            Console.WriteLine($"Final managed memory: {finalMemory / 1024 / 1024} MB");
-            Console.WriteLine($"Memory delta: {(finalMemory - initialMemory) / 1024 / 1024} MB");
-
-            // Dispose workbook resources (important for FileCache mode)
-            workbook.Dispose();
         }
+
+        // Final memory snapshot after full enumeration.
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+        long finalMemory = GC.GetTotalMemory(true);
+        Console.WriteLine($"Final memory: {finalMemory / 1024.0 / 1024.0:F2} MB");
+        Console.WriteLine($"Memory delta: {(finalMemory - baselineMemory) / 1024.0 / 1024.0:F2} MB");
     }
 }

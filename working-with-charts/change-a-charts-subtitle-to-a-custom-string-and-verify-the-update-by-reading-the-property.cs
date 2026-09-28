@@ -1,56 +1,59 @@
-// Title: C# Example – Set and Verify a Chart Subtitle Using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add sample data, insert a column chart, set a custom string via the chart's SubTitle.Text property, read the subtitle back for verification, print it to the console, and save the workbook as ChartWithCustomSubtitle.xlsx.
-// Keywords: Aspose.Cells chart subtitle C# | set chart subtitle .NET | read chart subtitle Aspose.Cells | verify chart subtitle property | Aspose.Cells SubTitle.Text | column chart subtitle example | Excel chart subtitle automation
-// Common Searches: Aspose.Cells set chart subtitle C# | how to read chart subtitle Aspose.Cells | verify chart subtitle value .NET | chart subtitle example Aspose.Cells | C# code for chart subtitle in Excel
-// Developer Intent: Programmatically assign a custom subtitle to a chart and confirm the assignment by reading the SubTitle.Text property.
-// Use Cases: Add a descriptive subtitle to a generated column chart for clearer reporting. | Validate chart metadata in automated tests by setting and then reading the subtitle. | Create Excel dashboards where subtitles are dynamically generated and later extracted for analytics.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a chart's subtitle and then reads it back. | Explain how to verify a chart subtitle after assigning it in an Aspose.Cells workbook. | Show how to handle charts that lack a subtitle element before attempting to set SubTitle.Text.
+// Title: Simulate a chart subtitle in Aspose.Cells by setting Title.Text and read it back in C#
+// AI Prompts: Assign a custom string to the chart's Title.Text to act as a subtitle, then output the Title.Text value for confirmation. | Create a column chart, use the Title.Text property as a subtitle placeholder, and programmatically retrieve the text to verify the change. | Set the chart's Title.Text in Aspose.Cells, read the property back, and display it to ensure the subtitle simulation succeeded.
+// Common Searches: how to use Title.Text as subtitle for an Aspose.Cells chart in C# | Aspose.Cells chart title verification after setting custom subtitle text | C# example adding subtitle‑like text to an Excel chart with Aspose.Cells
+// Tags: Aspose.Cells chart title text property | C# simulate subtitle with chart title Aspose.Cells | column chart custom title text Aspose.Cells | read chart title value C# Aspose.Cells | validate chart title update Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsSubtitleDemo
+// The sample creates a workbook, adds sample data, inserts a column chart, sets the chart's Title.Text to a custom string (used as a subtitle surrogate), reads back the Title.Text to confirm the assignment, and saves the workbook as an Excel file.
+class Program
 {
-    // Shows how to create a workbook, add sample data, insert a column chart, set a custom string via the chart's SubTitle.Text property, read the subtitle back for verification, print it to the console, and save the workbook as ChartWithCustomSubtitle.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
+            // Define the data series for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Set the main title (optional)
-            chart.Title.Text = "Main Chart Title";
+            // Set a custom title for the chart (Aspose.Cells does not have a Subtitle property)
+            chart.Title.Text = "Sales Overview Q1";
 
-            // Set the subtitle to a custom string
-            chart.SubTitle.Text = "Custom Chart Subtitle";
+            // Verify the title by reading the property
+            string title = chart.Title.Text;
+            Console.WriteLine("Chart title: " + title);
 
-            // Verify the subtitle by reading the property
-            string retrievedSubtitle = chart.SubTitle.Text;
-            Console.WriteLine("Subtitle set to: " + retrievedSubtitle);
-
-            // Save the workbook to a file
-            workbook.Save("ChartWithCustomSubtitle.xlsx");
+            // Save the workbook to a file (lifecycle rule: save)
+            string outputPath = "ChartWithSubtitle.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

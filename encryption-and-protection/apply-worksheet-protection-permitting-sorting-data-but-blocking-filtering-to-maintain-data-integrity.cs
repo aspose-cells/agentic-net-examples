@@ -1,56 +1,54 @@
-// Title: Aspose.Cells C# – Protect Worksheet, Enable Sorting, Disable Filtering
-// Description: Demonstrates how to protect an Aspose.Cells worksheet, allow users to sort data, and block filtering. The example creates a workbook, applies full protection, sets AllowSorting = true and AllowFiltering = false, then saves the file as WorksheetProtection.xlsx.
-// Keywords: Aspose.Cells worksheet protection C# | AllowSorting true Aspose.Cells | AllowFiltering false Aspose.Cells | protect Excel sheet enable sorting | disable filter on protected worksheet | .NET Excel protection example | Aspose.Cells security settings | C# Excel workbook protection
-// Common Searches: Aspose.Cells enable sorting on protected worksheet C# | How to block filtering while protecting a sheet with Aspose.Cells | Set AllowSorting and AllowFiltering in Aspose.Cells .NET | C# code to protect Excel sheet but allow sorting only | Aspose.Cells worksheet protection options
-// Developer Intent: Apply worksheet protection that permits sorting operations while preventing filter changes.
-// Use Cases: Distribute a protected report where analysts can reorder rows but cannot hide data with filters. | Create a template that lets end‑users sort tables for convenience while preserving the original filter configuration. | Generate an Excel file for compliance audits where sorting is allowed for review but filtering is locked to maintain data integrity.
-// AI Prompts: Generate C# code using Aspose.Cells to protect a worksheet, enable sorting, and disable filtering. | Show how to modify an existing Aspose.Cells workbook to change AllowSorting and AllowFiltering settings. | Provide a complete .NET example that saves a protected Excel file with custom protection options.
+// Title: Protect an Excel worksheet with Aspose.Cells for .NET while allowing sorting and disabling filtering
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, applies password protection to the first worksheet, enables sorting, disables filtering, and saves the workbook. | Demonstrate how to configure worksheet protection settings in Aspose.Cells for .NET to permit sorting operations but block filter usage.
+// Common Searches: Aspose.Cells .NET protect worksheet allow sorting disable filtering example | C# set worksheet protection to enable sort only using Aspose.Cells | How to apply password protection to an Excel sheet while permitting sorting in Aspose.Cells
+// Tags: Aspose.Cells worksheet protection allow sorting | disable filtering on protected worksheet C# | password protect Excel sheet Aspose.Cells .NET | configure worksheet protection options Aspose.Cells | Excel sorting permission Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to protect an Aspose.Cells worksheet, allow users to sort data, and block filtering. The example creates a workbook, applies full protection, sets AllowSorting = true and AllowFiltering = false, then saves the file as WorksheetProtection.xlsx.
-    public class WorksheetProtectionDemo
+    // The sample loads an existing workbook, accesses the first worksheet, configures its protection to allow sorting but prevent filtering, applies a password using ProtectionType.All, and saves the modified file, handling missing input files and runtime exceptions.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (index 0)
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Protect the worksheet with all protection types (no password)
-                sheet.Protect(ProtectionType.All);
+                // Allow sorting but disallow filtering
+                sheet.Protection.AllowSorting = true;
+                sheet.Protection.AllowFiltering = false;
 
-                // Access the protection settings
-                Protection protection = sheet.Protection;
+                // Protect the worksheet with a password (oldPassword not required, pass null)
+                sheet.Protect(ProtectionType.All, "YourPassword", null);
 
-                // Allow sorting on the protected sheet
-                protection.AllowSorting = true;
-
-                // Disallow filtering on the protected sheet
-                protection.AllowFiltering = false;
-
-                // Save the workbook with the applied protection settings
-                workbook.Save("WorksheetProtection.xlsx");
-                Console.WriteLine("Workbook saved successfully as WorksheetProtection.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
+                // Catch any unexpected exceptions and display the message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorksheetProtectionDemo.Run();
         }
     }
 }

@@ -1,10 +1,7 @@
-// Title: C# – Load a template, build a pivot table, add an Aspose.Cells timeline, and replace {{ProjectName}} placeholder
-// Description: Loads Template.xlsx (or creates a new workbook), writes date/value data, creates a PivotTable, adds a Timeline linked to the Date field, scans all cells to replace the {{ProjectName}} token with a runtime project name, and saves the file as TimelineWithProjectName.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells timeline | C# add timeline to pivot table | replace placeholder in Excel C# | Excel template automation Aspose | dynamic project name Excel | pivot table timeline .NET | Aspose.Cells load template workbook
-// Common Searches: How to add a timeline to a pivot table with Aspose.Cells C# | Replace {{ProjectName}} placeholder in Excel using C# | Load an existing Excel template and populate data with Aspose.Cells | Create a timeline control linked to a pivot table programmatically | Aspose.Cells replace text in all cells
-// Developer Intent: Generate an Excel workbook from a predefined template, programmatically create a pivot table, attach a timeline control, and inject a project name into placeholder cells.
-// Use Cases: Automated production of project schedule reports where the timeline reflects pivot data and the project name varies per run. | Reusing a single Excel template to output multiple workbooks with different project identifiers without manual editing. | Building interactive dashboards that include a timeline filter tied to pivot data for quick date range selection.
-// AI Prompts: Write C# code with Aspose.Cells to load a template workbook, create a pivot table from date/value data, add a timeline bound to the Date field, replace a {{ProjectName}} placeholder with a variable, and save the result. | Show how to iterate through every cell in an Aspose.Cells worksheet to find and replace a specific placeholder string with a dynamic value. | Provide step‑by‑step instructions for adding a timeline to a pivot table in Aspose.Cells, setting its caption, and customizing its appearance.
+// Title: Create an Excel timeline from a custom template and replace {{ProjectName}} placeholder using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook from a template file, scans all cells for the token {{ProjectName}}, substitutes it with a given project name, builds a pivot table on the Date and Project columns, attaches a timeline to the Date field, and saves the result. | Refactor the sample so that the template path, project name, and output file name are supplied via command‑line arguments while preserving the timeline generation steps. | Demonstrate how to switch the timeline’s base field from "Date" to another date column such as "StartDate" and adjust the pivot table fields accordingly with Aspose.Cells.
+// Common Searches: asp.net replace placeholder in Excel template before adding timeline with Aspose.Cells | how to add a timeline to a pivot table using Aspose.Cells C# example | generate project timeline Excel file from a custom template and dynamic project name Aspose.Cells | c# Aspose.Cells create pivot table then attach timeline to date field | replace {{ProjectName}} token in Excel workbook using Aspose.Cells C#
+// Tags: replace placeholder text Aspose.Cells workbook | create pivot table Aspose.Cells C# | add timeline to pivot table Aspose.Cells | load custom Excel template Aspose.Cells | dynamic project name insertion Excel Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,92 +9,100 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
 
-// Loads Template.xlsx (or creates a new workbook), writes date/value data, creates a PivotTable, adds a Timeline linked to the Date field, scans all cells to replace the {{ProjectName}} token with a runtime project name, and saves the file as TimelineWithProjectName.xlsx using Aspose.Cells for .NET.
-class TimelineWithTemplate
+namespace TimelineFromTemplate
 {
-    static void Main()
+    // The example loads or creates a template workbook, replaces the {{ProjectName}} token with a specified project name, builds a pivot table on the Date and Project columns, adds a timeline linked to the Date field, sets a caption, and saves the final workbook as an Excel file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Load the custom template workbook if it exists; otherwise create a new workbook.
-            Workbook workbook;
-            const string templatePath = "Template.xlsx";
-            if (File.Exists(templatePath))
+            // Path to the custom template workbook
+            string templatePath = "ProjectTemplate.xlsx";
+
+            Workbook workbook = null;
+
+            try
             {
-                workbook = new Workbook(templatePath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                workbook.Worksheets.Add();
-            }
-
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // -------------------------------------------------
-            // 1. Populate data that will be used for the PivotTable (Date and Value)
-            // -------------------------------------------------
-            sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["B1"].PutValue("Value");
-
-            sheet.Cells["A2"].PutValue(new DateTime(2023, 1, 1));
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue(new DateTime(2023, 2, 1));
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["A4"].PutValue(new DateTime(2023, 3, 1));
-            sheet.Cells["B4"].PutValue(180);
-
-            // -------------------------------------------------
-            // 2. Create a PivotTable that will serve as the data source for the Timeline
-            // -------------------------------------------------
-            // Add the PivotTable to the worksheet (source range A1:B4, destination C1)
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "C1", "ProjectPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-
-            // Add fields: Date as Row field, Value as Data field
-            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-
-            // Refresh and calculate the PivotTable
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // -------------------------------------------------
-            // 3. Add a Timeline linked to the PivotTable
-            // -------------------------------------------------
-            // Place the Timeline starting at cell E1 and bind it to the Date field
-            int timelineIdx = sheet.Timelines.Add(pivot, "E1", "Date");
-            Timeline timeline = sheet.Timelines[timelineIdx];
-            timeline.Caption = "Project Schedule";
-
-            // -------------------------------------------------
-            // 4. Replace placeholder text with dynamic project names
-            // -------------------------------------------------
-            const string placeholder = "{{ProjectName}}";
-            string projectName = "Apollo Expansion";
-
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
-            for (int row = 0; row <= maxRow; row++)
-            {
-                for (int col = 0; col <= maxCol; col++)
+                // Load existing template or create a new one if it does not exist
+                if (File.Exists(templatePath))
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    if (cell.Type == CellValueType.IsString && cell.StringValue.Contains(placeholder))
+                    workbook = new Workbook(templatePath);
+                }
+                else
+                {
+                    // Create a simple template with required columns
+                    workbook = new Workbook();
+                    Worksheet ws = workbook.Worksheets[0];
+                    ws.Name = "Data";
+
+                    // Header row
+                    ws.Cells["A1"].PutValue("Date");
+                    ws.Cells["B1"].PutValue("Project");
+
+                    // Sample data (optional)
+                    ws.Cells["A2"].PutValue(DateTime.Today);
+                    ws.Cells["B2"].PutValue("Sample Project");
+                }
+
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Dynamic project name to replace the placeholder
+                string projectName = "Alpha Project";
+
+                // Replace placeholder text "{{ProjectName}}" with the actual project name
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        cell.PutValue(cell.StringValue.Replace(placeholder, projectName));
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell.Type == CellValueType.IsString && cell.StringValue.Contains("{{ProjectName}}"))
+                        {
+                            cell.PutValue(cell.StringValue.Replace("{{ProjectName}}", projectName));
+                        }
                     }
                 }
-            }
 
-            // -------------------------------------------------
-            // 5. Save the resulting workbook
-            // -------------------------------------------------
-            workbook.Save("TimelineWithProjectName.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // Determine the data range for the pivot table (including header row)
+                string dataRange = $"A1:B{maxRow + 1}";
+
+                // Add a pivot table that will serve as the data source for the timeline
+                int pivotIndex = sheet.PivotTables.Add(dataRange, "D1", "ProjectPivot");
+                PivotTable pivot = sheet.PivotTables[pivotIndex];
+
+                // Add the Date field to the Row area (base field for timeline)
+                pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+
+                // Add the Project field to the Data area (just to have some data)
+                pivot.AddFieldToArea(PivotFieldType.Data, "Project");
+
+                // Refresh and calculate the pivot table
+                pivot.RefreshData();
+                pivot.CalculateData();
+
+                // Add a timeline linked to the pivot table, using the Date field as the base field
+                sheet.Timelines.Add(pivot, "F1", "Date");
+
+                // Optionally set a caption for the timeline
+                Timeline timeline = sheet.Timelines[0];
+                timeline.Caption = $"Timeline for {projectName}";
+
+                // Save the resulting workbook
+                workbook.Save("ProjectTimeline.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                // Ensure resources are released
+                if (workbook != null)
+                {
+                    workbook.Dispose();
+                }
+            }
         }
     }
 }

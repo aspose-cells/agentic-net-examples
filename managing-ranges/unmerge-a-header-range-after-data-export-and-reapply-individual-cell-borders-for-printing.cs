@@ -1,55 +1,58 @@
-// Title: Unmerge Header Row and Add Thin Black Borders to Each Cell with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, unmerges a header range (e.g., A1:D1), applies thin black borders to every cell that was part of the merged area, and saves the file ready for printing.
-// Keywords: Aspose.Cells | C# | unmerge range | cell borders | thin black border | Excel header styling | print‑ready workbook | range.UnMerge | style borders | .NET Excel automation
-// Common Searches: Aspose.Cells unmerge header row C# | How to add borders after unmerging cells in Aspose.Cells | C# Aspose.Cells set thin borders for each cell | Unmerge merged cells and apply borders Aspose.Cells .NET | Print‑ready Excel with individual cell borders using Aspose
-// Developer Intent: The developer wants to programmatically break a merged header into separate cells and give each resulting cell its own thin black border before the workbook is printed or exported.
-// Use Cases: Create print‑ready Excel reports where merged titles must be split and bordered. | Prepare data exports for PDF conversion with consistent cell outlines. | Standardize worksheet appearance across generated files by automating unmerge and border styling.
-// AI Prompts: Write C# code using Aspose.Cells to unmerge a specified range and apply thin black borders to each resulting cell. | Show how to preserve existing cell formatting while adding borders after unmerging a header row in Aspose.Cells. | Explain step‑by‑step how to iterate over a range and set BorderType.Thin for all sides in Aspose.Cells .NET.
+// Title: How to unmerge a header row and add thin black borders to each cell in an exported Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads an existing workbook, unmerges a specified header range (e.g., A1:D1), and applies thin black borders to every cell in that range for print‑ready output. | Create a reusable C# method using Aspose.Cells to remove merged header cells and set individual border styles before saving the workbook.
+// Common Searches: aspnet unmerge merged header cells and set borders with Aspose.Cells | c# Aspose.Cells apply individual borders after unmerging header row | how to add thin black borders to each cell of a previously merged range in Excel using Aspose.Cells | printing Excel file with unmerged header and cell borders using Aspose.Cells .NET | remove merged cells from exported Excel and style header cells Aspose.Cells
+// Tags: header range unmerge Aspose.Cells | thin black cell borders Aspose.Cells | cell style customization Excel .NET | merged cells removal Aspose.Cells | print formatting Excel workbook C#
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
-using Aspose.Cells;
 
-// Loads an Excel workbook, unmerges a header range (e.g., A1:D1), applies thin black borders to every cell that was part of the merged area, and saves the file ready for printing.
+// The example loads an exported Excel workbook, detects and removes a merged header range (A1:D1), then iterates over each cell in that range to apply thin black borders on all sides, and finally saves the modified workbook ready for printing.
 class Program
 {
     static void Main()
     {
         try
         {
-            string inputPath = "Input.xlsx";
-            string outputPath = "Output.xlsx";
+            const string inputPath = "ExportedData.xlsx";
+            const string outputPath = "ExportedData_WithHeaderBorders.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the source workbook exists
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook that contains exported data
+            // Load the workbook that was created during data export
             Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Address of the merged header range (e.g., A1:D1)
-            string headerRangeAddress = "A1:D1";
-
-            // Create the range using Aspose.Cells.Range to avoid ambiguity with System.Range
-            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange(headerRangeAddress);
-            headerRange.UnMerge();
-
-            // Apply individual borders to each cell that was part of the merged header
-            int firstRow = headerRange.FirstRow;
-            int firstColumn = headerRange.FirstColumn;
-            int totalRows = headerRange.RowCount;
-            int totalColumns = headerRange.ColumnCount;
-
-            for (int r = firstRow; r < firstRow + totalRows; r++)
+            // Define the header range that was previously merged (e.g., A1:D1)
+            CellArea headerArea = new CellArea
             {
-                for (int c = firstColumn; c < firstColumn + totalColumns; c++)
+                StartRow = 0,      // Row 1 (zero‑based)
+                StartColumn = 0,   // Column A
+                EndRow = 0,        // Row 1
+                EndColumn = 3      // Column D
+            };
+
+            // Unmerge the header range if it is merged
+            // Aspose.Cells may not expose Cells.Unmerge in some versions; use MergedCells collection instead
+            if (sheet.Cells.MergedCells.Contains(headerArea))
+            {
+                sheet.Cells.MergedCells.Remove(headerArea);
+            }
+
+            // Apply individual borders to each cell in the header range
+            for (int row = headerArea.StartRow; row <= headerArea.EndRow; row++)
+            {
+                for (int col = headerArea.StartColumn; col <= headerArea.EndColumn; col++)
                 {
-                    Cell cell = sheet.Cells[r, c];
+                    Cell cell = sheet.Cells[row, col];
                     Style style = cell.GetStyle();
 
                     // Set thin black borders on all sides
@@ -69,7 +72,7 @@ class Program
 
             // Save the workbook ready for printing
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

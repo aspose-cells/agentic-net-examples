@@ -1,37 +1,56 @@
-// Title: Export a Single Worksheet to HTML with Aspose.Cells for .NET using HtmlSaveOptions.SheetSet
-// Description: Shows how to save only the worksheet named "Details" from a workbook to an HTML file by setting HtmlSaveOptions.SheetSet in C#.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | SheetSet | export single worksheet to HTML | save specific sheet as HTML | Aspose.Cells HTML export | selective worksheet export | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells export one sheet to HTML | HtmlSaveOptions SheetSet C# example | save specific worksheet as HTML Aspose | how to export only selected worksheet using Aspose.Cells | Aspose.Cells HTML export by sheet name
-// Developer Intent: Save only the "Details" worksheet from a workbook as an HTML file.
-// Use Cases: Create a web‑ready report that includes just the detailed data sheet from a larger workbook. | Generate separate HTML files for each worksheet by looping through sheet names and applying SheetSet. | Allow end‑users to download individual sections of a spreadsheet as HTML in a web application.
-// AI Prompts: Provide C# code that exports a specific worksheet to HTML using Aspose.Cells HtmlSaveOptions.SheetSet. | Show how to export multiple selected worksheets to separate HTML files with Aspose.Cells. | Explain the role of HtmlSaveOptions.SheetSet when exporting worksheets to HTML in Aspose.Cells.
+// Title: Export a single worksheet to HTML by setting HtmlSaveOptions.SheetName in Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, assigns the target sheet name to HtmlSaveOptions.SheetName, and saves only that sheet as an HTML file using Aspose.Cells. | Show how to configure HtmlSaveOptions with the SheetName property to export a named worksheet to HTML in a .NET console application.
+// Common Searches: Aspose.Cells C# HtmlSaveOptions SheetName export specific worksheet | How to save only one sheet as HTML using Aspose.Cells .NET | Set SheetName property in HtmlSaveOptions to export selected worksheet to HTML | Export Excel worksheet to HTML by name Aspose.Cells | C# Aspose.Cells save particular sheet to HTML file
+// Tags: HtmlSaveOptions SheetName Aspose.Cells | export specific worksheet to HTML C# | Aspose.Cells save single sheet as HTML | C# set HtmlSaveOptions for named sheet | Aspose.Cells HTML export by worksheet name
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Shows how to save only the worksheet named "Details" from a workbook to an HTML file by setting HtmlSaveOptions.SheetSet in C#.
-class ExportSpecificWorksheetToHtml
+// The example demonstrates loading an Excel workbook, configuring HtmlSaveOptions.SheetName with the desired worksheet name, and saving only that worksheet as an HTML file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Load or create a workbook
-        Workbook workbook = new Workbook(); // creates a new workbook
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+        const string targetSheetName = "TargetSheetName";
 
-        // Add worksheets and sample data
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Name = "Summary";
-        sheet1.Cells["A1"].PutValue("Summary data");
+        try
+        {
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        Worksheet sheet2 = workbook.Worksheets.Add("Details");
-        sheet2.Cells["A1"].PutValue("Details data");
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Prepare HtmlSaveOptions and specify the sheet to export by name
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        // Use SheetSet with the desired sheet name
-        htmlOptions.SheetSet = new SheetSet("Details");
+            // Get the worksheet by name
+            Worksheet targetSheet = workbook.Worksheets[targetSheetName];
+            if (targetSheet == null)
+            {
+                Console.WriteLine($"Worksheet \"{targetSheetName}\" not found in the workbook.");
+                return;
+            }
 
-        // Save only the "Details" worksheet to HTML
-        workbook.Save("DetailsOnly.html", htmlOptions);
+            // Create a new workbook containing only the target worksheet
+            Workbook singleSheetWb = new Workbook();
+            singleSheetWb.Worksheets.Clear();
+
+            // Add a new sheet to the new workbook and copy the target sheet into it
+            Worksheet newSheet = singleSheetWb.Worksheets.Add(targetSheet.Name);
+            targetSheet.Copy(newSheet);
+
+            // Save the selected worksheet as an HTML file
+            singleSheetWb.Save(outputPath, SaveFormat.Html);
+            Console.WriteLine($"Worksheet \"{targetSheetName}\" saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

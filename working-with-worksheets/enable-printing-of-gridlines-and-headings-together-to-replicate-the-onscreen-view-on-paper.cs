@@ -1,68 +1,28 @@
-// Title: Print Gridlines and Row/Column Headings with Aspose.Cells for .NET
-// Description: Shows how to enable PrintGridlines and PrintHeadings via Worksheet.PageSetup, optionally define a PrintArea, and save the workbook so the printed page mirrors the on‑screen view.
-// Keywords: Aspose.Cells | .NET | C# | PrintGridlines | PrintHeadings | PageSetup | print area | gridlines on print | row headings | column headings | Excel print settings
-// Common Searches: Aspose.Cells print gridlines and headings | C# enable PrintHeadings in Excel export | set PrintArea with Aspose.Cells | how to print Excel gridlines using Aspose.Cells .NET | Aspose.Cells page setup print options
-// Developer Intent: Configure a worksheet to print both gridlines and row/column headings so the hard‑copy matches the on‑screen layout.
-// Use Cases: Generate a sales report that retains gridlines and column headers when printed. | Create printable invoices where row numbers and column letters aid manual reference. | Define a specific print area for a data subset while preserving visual grid structure.
-// AI Prompts: Provide C# code that sets PrintGridlines, PrintHeadings, and a custom PrintArea using Aspose.Cells. | Show how to configure PageSetup to print gridlines, headings, and fit the worksheet to one page in Aspose.Cells for .NET. | Explain how to programmatically verify that PrintGridlines and PrintHeadings settings are applied after saving the workbook.
+// Title: How to print both gridlines and row/column headings in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, sets PageSetup.PrintGridlines and PageSetup.PrintHeadings to true, and saves the file. | Show how to configure Aspose.Cells Worksheet.PageSetup to enable printing of gridlines and headings together before exporting the workbook.
+// Common Searches: Aspose.Cells C# enable printing of gridlines and row headings in the same printout | set PrintHeadings and PrintGridlines together using Aspose.Cells .NET | how to replicate on-screen view when printing Excel with Aspose.Cells | C# Aspose.Cells PageSetup print options for gridlines and headings | save workbook after turning on PrintGridlines and PrintHeadings in Aspose.Cells
+// Tags: Aspose.Cells PageSetup PrintGridlines | Aspose.Cells PageSetup PrintHeadings | C# print Excel gridlines with Aspose.Cells | C# print Excel headings with Aspose.Cells | match on-screen view when printing Excel using Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an existing workbook, accesses the first worksheet, enables printing of both gridlines and row/column headings via the worksheet's PageSetup, and saves the updated workbook.
+class Program
 {
-    // Shows how to enable PrintGridlines and PrintHeadings via Worksheet.PageSetup, optionally define a PrintArea, and save the workbook so the printed page mirrors the on‑screen view.
-    public class PrintGridlinesAndHeadingsDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Load an existing workbook (replace with your file path)
+        var workbook = new Workbook("input.xlsx");
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Access the first worksheet (or any specific worksheet)
+        var worksheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Enable printing of gridlines
+        worksheet.PageSetup.PrintGridlines = true;
 
-            // Populate some sample data
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Price");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(2.5);
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["B3"].PutValue(1.8);
+        // Enable printing of row and column headings
+        worksheet.PageSetup.PrintHeadings = true;
 
-            // Enable printing of gridlines and row/column headings
-            worksheet.PageSetup.PrintGridlines = true;   // print cell gridlines
-            worksheet.PageSetup.PrintHeadings = true;   // print row (1,2,…) and column (A,B,…) headings
-
-            // Optionally define a print area to limit what gets printed
-            worksheet.PageSetup.PrintArea = "A1:B3";
-
-            // Define output file path
-            string outputPath = "PrintGridlinesAndHeadings.xlsx";
-
-            // Ensure the directory exists before saving
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            // Save the workbook (Excel format retains the print settings)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
+        // Save the workbook (replace with desired output path)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,61 +1,56 @@
-// Title: Aspose.Cells for .NET: Link a TextBox shape to a TEXTJOIN formula (C# example)
-// Description: Shows how to create a workbook, fill A1:A5 with values, use TEXTJOIN in C1 to concatenate them, add a TextBox shape, bind the shape to cell C1, style the shape, and save the file.
-// Keywords: Aspose.Cells | C# example | SetLinkedCell | TextBox shape | TEXTJOIN | concatenate range | link shape to cell | Excel shape binding | dynamic label | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells link shape to cell C# | SetLinkedCell TEXTJOIN example | How to bind a TextBox to a formula cell in Aspose.Cells | C# Aspose.Cells shape displays concatenated list | Create dynamic label with TEXTJOIN and shape
-// Developer Intent: Display a comma‑separated list of values inside a TextBox shape by linking the shape to a cell that contains a TEXTJOIN formula.
-// Use Cases: Add a live label that updates automatically when the source range changes. | Build a simple dashboard element that aggregates multiple cells into a readable string. | Generate a printable report where a shape shows a consolidated list of items.
-// AI Prompts: Generate C# code using Aspose.Cells to add a TextBox, set a TEXTJOIN formula, link the shape to the formula cell, and apply basic formatting. | Explain how SetLinkedCell works with formula cells and how the shape refreshes when source data is modified. | Provide an example that creates several TextBox shapes, each linked to different TEXTJOIN results, within the same workbook.
+// Title: Link a TEXTJOIN formula result to a rectangle shape in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that fills cells A1:A5, inserts a TEXTJOIN formula in C1, adds a rectangle shape, and sets the shape's text to =C1. | Show how to format a rectangle shape (fill color, line weight) and save the workbook as an .xlsx file after linking its text to a cell formula using Aspose.Cells. | Create a C# example that links multiple shapes to different TEXTJOIN results across several worksheets with Aspose.Cells.
+// Common Searches: how to bind a shape's text to a cell formula with Aspose.Cells C# | using TEXTJOIN in Aspose.Cells and displaying result in a shape | Aspose.Cells C# rectangle shape linked to cell value example | set shape text to =C1 in Excel workbook via Aspose.Cells .NET | concatenate range values with TEXTJOIN and show in shape using Aspose.Cells
+// Tags: Aspose.Cells link shape to cell formula | C# TEXTJOIN formula Aspose.Cells | rectangle shape text binding Aspose.Cells | format shape fill color Aspose.Cells | save workbook with linked shape .xlsx
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, fill A1:A5 with values, use TEXTJOIN in C1 to concatenate them, add a TextBox shape, bind the shape to cell C1, style the shape, and save the file.
+// // Demonstrates creating a workbook, populating A1:A5, applying TEXTJOIN in C1, adding a rectangle shape, linking its text to the formula result, styling the shape, and saving as ShapeLinkedWithTextJoin.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data in A1:A5
+            // Populate cells A1:A5 with sample text values
             sheet.Cells["A1"].PutValue("Apple");
             sheet.Cells["A2"].PutValue("Banana");
             sheet.Cells["A3"].PutValue("Cherry");
             sheet.Cells["A4"].PutValue("Date");
             sheet.Cells["A5"].PutValue("Elderberry");
 
-            // Set a formula in C1 that concatenates the list using TEXTJOIN
-            sheet.Cells["C1"].Formula = "=TEXTJOIN(\", \",TRUE,A1:A5)";
+            // In cell C1, set a TEXTJOIN formula that concatenates the values in A1:A5
+            // The result will be: Apple, Banana, Cherry, Date, Elderberry
+            sheet.Cells["C1"].Formula = @"TEXTJOIN("","", TRUE, A1:A5)";
 
-            // Add a TextBox shape to the worksheet
-            // Parameters: upperLeftRow, upperLeftColumn, top, left, width, height
-            TextBox shape = sheet.Shapes.AddTextBox(2, 0, 2, 0, 300, 50);
+            // Add a rectangle shape to the worksheet
+            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 1, 0, 0, 100, 200);
 
-            // Link the shape to the cell containing the TEXTJOIN formula
-            // The linked cell will display the concatenated result inside the shape
-            shape.SetLinkedCell("C1", false, false);
+            // Link the shape's displayed text to the cell containing the TEXTJOIN result (C1)
+            shape.Text = "=C1";
 
-            // Adjust the shape appearance
-            shape.Fill.FillType = FillType.Solid;
-            // Optional: set a solid fill color (commented out to avoid compatibility issues)
-            // shape.Fill.ForeColor = Color.LightYellow;
+            // Optionally format the shape (e.g., fill color, line)
+            shape.FillFormat.ForeColor = System.Drawing.Color.LightYellow;
             shape.Line.Weight = 1.0;
-            // Optional: set dash style if needed (commented out to avoid compatibility issues)
-            // shape.Line.DashStyle = LineDashStyle.Solid;
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("LinkedShape_TextJoin.xlsx");
+            // Define output file path
+            string outputPath = "ShapeLinkedWithTextJoin.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

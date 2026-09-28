@@ -1,117 +1,94 @@
-// Title: C# – Apply Different GlobalizationSettings to Individual Worksheets in Aspose.Cells
-// Description: Demonstrates how to assign custom GlobalizationSettings objects to separate worksheets in a single Aspose.Cells workbook, localizing boolean and error strings for English and Russian sheets, saving the file, and reading back the localized values.
-// Keywords: Aspose.Cells | C# | .NET | GlobalizationSettings | per worksheet localization | custom globalization | English worksheet | Russian worksheet | localized boolean strings | localized error values | Excel workbook localization | save workbook Aspose.Cells | read localized cells
-// Common Searches: Aspose.Cells set GlobalizationSettings per sheet | C# localize Excel worksheet with Aspose.Cells | how to display Russian boolean values in Aspose.Cells | custom error messages for different worksheets Aspose.Cells | save mixed‑language workbook using Aspose.Cells
-// Developer Intent: Create a workbook where each worksheet uses its own GlobalizationSettings to show language‑specific boolean and error strings.
-// Use Cases: Generate an English sheet with default strings and a Russian sheet with RussianGlobalizationSettings, then save both in one workbook. | Load the saved workbook and output the localized strings for each sheet to confirm per‑sheet globalization. | Add additional language worksheets (e.g., French, Spanish) by defining new GlobalizationSettings subclasses and applying them without affecting existing sheets.
-// AI Prompts: Write C# code that assigns a custom GlobalizationSettings object to a specific worksheet in Aspose.Cells while leaving other sheets unchanged. | Show how to create a FrenchGlobalizationSettings class and apply it to a new worksheet in an existing Aspose.Cells workbook. | Explain how to retrieve and display localized boolean and error strings from a workbook that used different GlobalizationSettings per worksheet.
+// Title: How to assign different custom globalization objects to separate worksheets in an Aspose.Cells workbook (C#)
+// AI Prompts: Create two classes inheriting SettableGlobalizationSettings (e.g., EnglishGlobalization and GermanGlobalization) and configure boolean strings and function names. | Set the workbook's GlobalizationSettings to each class before adding a worksheet, then write localized values and formulas on the respective sheets. | Calculate all formulas, output the localized boolean and formula results to the console, and save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# set different globalization settings for each worksheet | per‑sheet localization of boolean strings and function names in Excel using Aspose.Cells | example of English and German custom globalization in a single workbook Aspose.Cells | how to apply SettableGlobalizationSettings to individual sheets in Aspose.Cells | save workbook with mixed language globalization Aspose.Cells C#
+// Tags: per‑sheet custom globalization Aspose.Cells | localized function names worksheet C# | boolean string localization Aspose.Cells | SettableGlobalizationSettings example C# | mixed language workbook Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace AsposeCellsExamples
 {
-    // Custom globalization for English (default behavior)
-    // Demonstrates how to assign custom GlobalizationSettings objects to separate worksheets in a single Aspose.Cells workbook, localizing boolean and error strings for English and Russian sheets, saving the file, and reading back the localized values.
-    public class EnglishGlobalizationSettings : GlobalizationSettings
+    // First custom globalization: English‑like settings
+    // The example defines EnglishGlobalization and GermanGlobalization classes derived from SettableGlobalizationSettings, assigns each to a different worksheet in the same Workbook, writes boolean values and localized formulas, calculates the formulas, prints the localized results to the console, and saves the file as WorkbookPerSheetGlobalization.xlsx.
+    public class EnglishGlobalization : SettableGlobalizationSettings
     {
-        // No overrides – keep the default English strings
-    }
-
-    // Custom globalization for Russian
-    public class RussianGlobalizationSettings : GlobalizationSettings
-    {
-        // Override boolean display strings
-        public override string GetBooleanValueString(bool value)
+        public EnglishGlobalization()
         {
-            return value ? "ИСТИНА" : "ЛОЖЬ";
-        }
-
-        // Override error value strings
-        public override string GetErrorValueString(string err)
-        {
-            return err switch
-            {
-                "#DIV/0!" => "#ДЕЛ/0!",
-                "#NAME?"  => "#ИМЯ?",
-                "#REF!"   => "#ССЫЛКА!",
-                "#VALUE!" => "#ЗНАЧ!",
-                "#N/A"    => "#Н/Д",
-                "#NUM!"   => "#ЧИСЛО!",
-                "#NULL!"  => "#ПУСТО!",
-                _ => base.GetErrorValueString(err)
-            };
-        }
-
-        // Override default sheet name (illustrative)
-        public override string GetDefaultSheetName()
-        {
-            return "Лист";
+            // Boolean strings
+            SetBooleanValueString(true, "TRUE_EN");
+            SetBooleanValueString(false, "FALSE_EN");
+            // Function names
+            SetLocalFunctionName("SUM", "SUM_EN", true);
         }
     }
 
+    // Second custom globalization: German‑like settings
+    public class GermanGlobalization : SettableGlobalizationSettings
+    {
+        public GermanGlobalization()
+        {
+            SetBooleanValueString(true, "WAHR");
+            SetBooleanValueString(false, "FALSCH");
+            SetLocalFunctionName("SUM", "SUMME", true);
+        }
+    }
+
+    public class WorkbookWithPerSheetGlobalization
+    {
+        public static void Run()
+        {
+            // ---------- Create a new workbook ----------
+            Workbook wb = new Workbook();
+
+            // ---------- Apply English globalization and add first sheet ----------
+            wb.Settings.GlobalizationSettings = new EnglishGlobalization();
+
+            // Adding a sheet uses the current globalization settings for the default name
+            int firstIndex = wb.Worksheets.Add();               // Sheet name will be based on English settings
+            Worksheet sheetEn = wb.Worksheets[firstIndex];
+            sheetEn.Name = "EnglishSection";                    // Optional explicit rename
+            sheetEn.Cells["A1"].PutValue(true);                // Will display "TRUE_EN"
+            sheetEn.Cells["A2"].Formula = "=SUM(B1:B3)";       // Uses "SUM_EN" internally
+
+            // ---------- Apply German globalization and add second sheet ----------
+            wb.Settings.GlobalizationSettings = new GermanGlobalization();
+
+            int secondIndex = wb.Worksheets.Add();              // Sheet name will be based on German settings
+            Worksheet sheetDe = wb.Worksheets[secondIndex];
+            sheetDe.Name = "GermanSection";
+            sheetDe.Cells["A1"].PutValue(true);                // Will display "WAHR"
+            sheetDe.Cells["A2"].Formula = "=SUMME(B1:B3)";     // Localized function name works
+
+            // ---------- Populate some data for the formulas ----------
+            sheetEn.Cells["B1"].PutValue(10);
+            sheetEn.Cells["B2"].PutValue(20);
+            sheetEn.Cells["B3"].PutValue(30);
+
+            sheetDe.Cells["B1"].PutValue(5);
+            sheetDe.Cells["B2"].PutValue(15);
+            sheetDe.Cells["B3"].PutValue(25);
+
+            // Calculate formulas for both sheets
+            wb.CalculateFormula();
+
+            // ---------- Display results in console ----------
+            Console.WriteLine($"English sheet boolean display: {sheetEn.Cells["A1"].StringValue}");
+            Console.WriteLine($"English sheet SUM result: {sheetEn.Cells["A2"].Value}");
+
+            Console.WriteLine($"German sheet boolean display: {sheetDe.Cells["A1"].StringValue}");
+            Console.WriteLine($"German sheet SUM result: {sheetDe.Cells["A2"].Value}");
+
+            // ---------- Save the workbook ----------
+            wb.Save("WorkbookPerSheetGlobalization.xlsx");
+        }
+    }
+
+    // Entry point for demonstration
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add two worksheets for demonstration
-                Worksheet sheetEn = workbook.Worksheets[0]; // First sheet (default name)
-                Worksheet sheetRu = workbook.Worksheets.Add("Russian");
-
-                // Populate English sheet using English globalization settings
-                workbook.Settings.GlobalizationSettings = new EnglishGlobalizationSettings();
-
-                Cells cellsEn = sheetEn.Cells;
-                cellsEn[0, 0].PutValue(true);   // Boolean true
-                cellsEn[0, 1].PutValue(false);  // Boolean false
-                cellsEn[0, 2].PutValue("#DIV/0!"); // Error value
-
-                // Populate Russian sheet using Russian globalization settings
-                workbook.Settings.GlobalizationSettings = new RussianGlobalizationSettings();
-
-                Cells cellsRu = sheetRu.Cells;
-                cellsRu[0, 0].PutValue(true);   // Will display "ИСТИНА"
-                cellsRu[0, 1].PutValue(false);  // Will display "ЛОЖЬ"
-                cellsRu[0, 2].PutValue("#DIV/0!"); // Will display "#ДЕЛ/0!"
-
-                // Save the workbook (lifecycle rule: create → save)
-                string outputPath = "LocalizedWorksheets.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-
-                // Demonstrate reading back the localized strings (optional)
-                if (File.Exists(outputPath))
-                {
-                    Workbook loadedWb = new Workbook(outputPath);
-
-                    // English sheet (first sheet) – uses default globalization (English)
-                    Console.WriteLine("\nEnglish sheet values:");
-                    Console.WriteLine(loadedWb.Worksheets[0].Cells[0, 0].StringValue); // TRUE
-                    Console.WriteLine(loadedWb.Worksheets[0].Cells[0, 1].StringValue); // FALSE
-                    Console.WriteLine(loadedWb.Worksheets[0].Cells[0, 2].StringValue); // #DIV/0!
-
-                    // Russian sheet (second sheet) – uses Russian globalization that was active
-                    // when the values were written, so the stored strings are already localized.
-                    Console.WriteLine("\nRussian sheet values:");
-                    Console.WriteLine(loadedWb.Worksheets[1].Cells[0, 0].StringValue); // ИСТИНА
-                    Console.WriteLine(loadedWb.Worksheets[1].Cells[0, 1].StringValue); // ЛОЖЬ
-                    Console.WriteLine(loadedWb.Worksheets[1].Cells[0, 2].StringValue); // #ДЕЛ/0!
-                }
-                else
-                {
-                    Console.WriteLine($"Error: The file '{outputPath}' was not found.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            WorkbookWithPerSheetGlobalization.Run();
         }
     }
 }

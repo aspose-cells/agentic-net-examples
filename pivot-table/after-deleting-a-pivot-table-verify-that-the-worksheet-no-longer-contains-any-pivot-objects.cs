@@ -1,59 +1,46 @@
-// Title: Remove a PivotTable and verify its deletion with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a PivotTable, delete it using Worksheet.PivotTables.Remove, and confirm the worksheet contains zero pivot objects before saving the file.
-// Keywords: Aspose.Cells delete pivot table | C# remove PivotTable | verify pivot table removal | Worksheet.PivotTables.Count | Aspose.Cells .NET pivot cleanup
-// Common Searches: how to delete a pivot table in Aspose.Cells C# | check if worksheet has any pivot tables after removal | Aspose.Cells remove pivot and confirm count | C# code to clear pivot tables from a sheet
-// Developer Intent: Delete an existing PivotTable and ensure the worksheet no longer contains any pivot objects.
-// Use Cases: Clean up pivot tables after data updates to prevent stale references. | Validate workbook integrity before export by confirming zero pivot tables. | Implement conditional workflows that proceed only when a sheet is free of pivot objects.
-// AI Prompts: Show C# code using Aspose.Cells to remove a specific PivotTable and assert that sheet.PivotTables.Count is zero. | Provide an example that iterates through all PivotTables in a worksheet, deletes each, and logs the result. | Explain safe removal of a PivotTable with Aspose.Cells, including handling cases where the table may not exist.
+// Title: Delete the first pivot table from an Excel worksheet and verify its removal with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that removes the first PivotTable from a worksheet, checks that the PivotTables collection is empty, and saves the workbook. | Show how to programmatically delete a PivotTable in a .NET workbook, confirm no PivotTables remain, and output the verification result.
+// Common Searches: C# Aspose.Cells how to remove a pivot table and ensure it is deleted | verify that a worksheet has no pivot tables after removal using Aspose.Cells | Aspose.Cells delete first PivotTable and check PivotTables.Count | remove pivot tables programmatically in .NET and confirm removal | Aspose.Cells sample code for deleting pivot tables and validating cleanup
+// Tags: Aspose.Cells delete pivot table C# | Aspose.Cells verify pivot table count | C# remove first worksheet pivot table | Aspose.Cells check worksheet for remaining pivot tables | Aspose.Cells save workbook after pivot removal
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotRemovalDemo
+// The example loads an existing Excel file (or creates a new workbook), accesses the first worksheet, removes the first pivot table if present, verifies that the worksheet's PivotTables collection is empty, prints the verification result, and saves the updated workbook.
+class Program
 {
-    // Demonstrates how to create a workbook, add a PivotTable, delete it using Worksheet.PivotTables.Remove, and confirm the worksheet contains zero pivot objects before saving the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Load existing workbook if the file exists; otherwise create a new one.
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Apple");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["B4"].PutValue(130);
-
-            // Add a pivot table
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-            pivot.RefreshData();
-            pivot.CalculateData();
-
-            // Remove the pivot table
-            sheet.PivotTables.Remove(pivot);
-
-            // Verify that no pivot tables remain in the worksheet
-            if (sheet.PivotTables.Count == 0)
+            // Remove the first pivot table if any exist.
+            if (sheet.PivotTables.Count > 0)
             {
-                Console.WriteLine("Pivot table removed successfully. No pivot tables remain.");
-            }
-            else
-            {
-                Console.WriteLine("Pivot table removal failed. Remaining count: " + sheet.PivotTables.Count);
+                sheet.PivotTables.RemoveAt(0);
             }
 
-            // Save the workbook (optional, just to complete lifecycle)
-            workbook.Save("PivotTableRemoved.xlsx");
+            // Verify removal.
+            bool noPivotTables = sheet.PivotTables.Count == 0;
+            Console.WriteLine(noPivotTables
+                ? "All pivot tables have been removed."
+                : "Pivot tables still exist on the worksheet.");
+
+            // Save the workbook with changes.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

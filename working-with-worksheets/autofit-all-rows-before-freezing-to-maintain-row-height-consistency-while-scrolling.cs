@@ -1,45 +1,58 @@
-// Title: Auto‑Fit Rows Then Freeze Panes in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, writes short and long text (including wrapped multi‑line cells), applies text wrapping, auto‑fits all rows to adjust heights, freezes the first three rows and columns, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# | AutoFitRows | FreezePanes | row height | text wrap | Excel export | worksheet formatting
-// Common Searches: Aspose.Cells auto fit rows C# | Freeze panes after AutoFitRows Aspose.Cells | Preserve wrapped text height when freezing panes | How to auto fit rows before FreezePanes in .NET | AutoFitRows effect on frozen rows Aspose.Cells
-// Developer Intent: Automatically adjust row heights before applying FreezePanes so that the visual layout remains consistent while scrolling.
-// Use Cases: Generating reports with wrapped text where header rows and columns are frozen for easy navigation. | Exporting data to Excel with multi‑line cells, ensuring rows are sized correctly before pane freezing. | Creating printable spreadsheets that retain calculated row heights after freezing panes.
-// AI Prompts: Provide C# code that wraps text, auto‑fits all rows, then freezes the first three rows and columns using Aspose.Cells. | Explain why AutoFitRows should be called before FreezePanes in Aspose.Cells for .NET and how it preserves row height consistency. | Show a step‑by‑step example of maintaining wrapped‑text row heights while freezing panes in an Aspose.Cells workbook.
+// Title: How to auto‑fit all rows and then freeze the top row in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an existing .xlsx workbook with Aspose.Cells, determines the used range, calls AutoFitRows for every row, freezes the first row while keeping all columns scrollable, and saves the modified file. | Show a C# example that checks for the input file, uses Worksheet.AutoFitRows(0, lastRow) and Worksheet.FreezePanes(1, 0, lastRow, lastColumn) to maintain row heights when freezing panes, and includes basic exception handling. | Provide a robust Aspose.Cells snippet that calculates MaxDataRow/MaxDataColumn, applies AutoFitRows before FreezePanes, and writes the result to a new workbook with proper error messages.
+// Common Searches: Aspose.Cells C# auto fit rows then freeze first row in Excel | C# code to auto adjust row heights before applying FreezePanes with Aspose.Cells | How to keep row height consistent when freezing panes using Aspose.Cells for .NET | Determine used range and auto fit rows in Aspose.Cells before freezing header row | Freeze top row while preserving column visibility Aspose.Cells .NET example
+// Tags: auto-fit rows Aspose.Cells .NET | freeze top row worksheet Aspose.Cells | calculate used range Aspose.Cells | preserve row height freeze panes .NET | load and save workbook Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsAutoFitAndFreezeDemo
+namespace AsposeCellsExample
 {
-    // Creates a workbook, writes short and long text (including wrapped multi‑line cells), applies text wrapping, auto‑fits all rows to adjust heights, freezes the first three rows and columns, and saves the file as an Excel workbook.
+    // The example loads input.xlsx, computes the used rows and columns, auto‑fits all rows to their content, freezes the first row while keeping all columns visible, and saves the result to output.xlsx, with file‑existence checks and exception handling.
     class Program
     {
         static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Populate some sample data that will affect row heights
-            worksheet.Cells["A1"].PutValue("Short text");
-            worksheet.Cells["A2"].PutValue("This is a longer piece of text that should cause the row to expand when auto‑fitted.");
-            worksheet.Cells["A3"].PutValue("Another line with\nmultiple line breaks\nto demonstrate row height adjustment.");
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Apply text wrapping to demonstrate multi‑line row height changes
-            Style wrapStyle = worksheet.Cells["A3"].GetStyle();
-            wrapStyle.IsTextWrapped = true;
-            worksheet.Cells["A3"].SetStyle(wrapStyle);
+                // Get the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Auto‑fit all rows in the worksheet before freezing panes
-            worksheet.AutoFitRows();
+                // Determine the number of rows and columns that contain data
+                int totalRows = sheet.Cells.MaxDataRow + 1;       // +1 because rows are zero‑based
+                int totalColumns = sheet.Cells.MaxDataColumn + 1; // +1 because columns are zero‑based
 
-            // Freeze panes at cell C4 (row index 3, column index 3) with 3 rows and 3 columns frozen
-            worksheet.FreezePanes(3, 3, 3, 3);
+                // Auto‑fit all rows to match their content height
+                sheet.AutoFitRows(0, totalRows);
 
-            // Save the workbook
-            workbook.Save("AutoFitRowsAndFreezePanes.xlsx");
+                // Freeze the top row (row index 1) while keeping all columns visible
+                // FreezePanes(row, column, totalRows, totalColumns)
+                sheet.FreezePanes(1, 0, totalRows, totalColumns);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine("An error occurred while processing the workbook:");
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

@@ -1,56 +1,69 @@
-// Title: Hide rows with the If parameter when Status = "Inactive" using Aspose.Cells Smart Markers (C#)
-// Description: Demonstrates how to apply the If smart‑marker parameter to hide entire rows in an Excel workbook when the Status column contains "Inactive". The example creates a workbook, adds sample data, uses the If parameter to evaluate each row, hides matching rows, and saves the file as RowsHiddenBasedOnStatus.xlsx.
-// Keywords: Aspose.Cells | C# | smart markers | If parameter | hide rows | conditional row visibility | Excel row hiding | status column | inactive records
-// Common Searches: Aspose.Cells hide rows with If parameter | C# hide Excel rows based on cell value | smart markers conditional row hiding | how to hide rows when status is inactive in Aspose.Cells | Excel row visibility using Aspose.Cells C#
-// Developer Intent: Programmatically hide every worksheet row whose Status cell equals "Inactive" by leveraging the If smart‑marker parameter in Aspose.Cells for .NET.
-// Use Cases: Generate reports that automatically conceal inactive entries for a cleaner presentation. | Prepare printable worksheets where rows marked as inactive are omitted without deleting data. | Create Excel exports for downstream systems that hide rows with specific status values to simplify review.
-// AI Prompts: Write C# code using Aspose.Cells smart markers with the If parameter to hide rows where a column equals "Inactive". | Show how to apply Cells.HideRow in a loop after evaluating an If smart‑marker condition on the Status field. | Explain step‑by‑step how the If parameter can be used to conditionally hide rows in an Excel file with Aspose.Cells.
+// Title: How to hide entire rows in an Excel file using Aspose.Cells C# when the Status column equals "Inactive" (If smart‑marker example)
+// AI Prompts: Generate C# code with Aspose.Cells that iterates through a worksheet, checks column B for the value "Inactive", and calls Cells.HideRow to hide those rows before saving the workbook. | Demonstrate how to use the Aspose.Cells smart‑marker If parameter to automatically hide rows whose Status field is "Inactive" in a generated Excel report. | Provide a snippet that records the row numbers hidden by the conditional logic, prints them to the console, and then saves the file as an .xlsx document.
+// Common Searches: aspnet hide rows where column value is Inactive using Aspose.Cells | c# Aspose.Cells conditional row visibility based on status column | smart markers If parameter hide rows Aspose.Cells example | how to programmatically hide rows in Excel with Aspose.Cells .NET | filter out inactive rows in generated Excel using Aspose.Cells C#
+// Tags: conditional row hiding Aspose.Cells C# | hide rows based on column value Excel .NET | smart markers If parameter Aspose.Cells | programmatic Excel row visibility C# | Aspose.Cells hide row API
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHideRowsExample
+namespace AsposeCellsRowHideDemo
 {
-    // Demonstrates how to apply the If smart‑marker parameter to hide entire rows in an Excel workbook when the Status column contains "Inactive". The example creates a workbook, adds sample data, uses the If parameter to evaluate each row, hides matching rows, and saves the file as RowsHiddenBasedOnStatus.xlsx.
+    // The example creates a workbook, fills it with Name and Status data, loops through each data row, and uses Cells.HideRow to hide any row where the Status column equals "Inactive". It logs which rows were hidden and saves the result as RowsHiddenBasedOnStatus.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Sample data with a "Status" column (column B)
-            // Header
-            cells["A1"].PutValue("ID");
+            // Add header row
+            cells["A1"].PutValue("Name");
             cells["B1"].PutValue("Status");
 
-            // Data rows
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("Active");
-
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue("Inactive");
-
-            cells["A4"].PutValue(3);
-            cells["B4"].PutValue("Active");
-
-            cells["A5"].PutValue(4);
-            cells["B5"].PutValue("Inactive");
-
-            // Loop through the data rows and hide rows where Status = "Inactive"
-            // Row indices are zero‑based; data starts at row index 1 (second row)
-            for (int row = 1; row <= cells.MaxDataRow; row++)
+            // Sample data rows
+            string[,] data = new string[,]
             {
-                // Get the value of the Status cell in column B (index 1)
-                string status = cells[row, 1].StringValue;
+                { "Alice",   "Active"   },
+                { "Bob",     "Inactive" },
+                { "Charlie", "Active"   },
+                { "Diana",   "Inactive" },
+                { "Eve",     "Active"   }
+            };
 
-                // If the status equals "Inactive", hide the entire row
+            // Populate the worksheet with sample data
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                int rowIndex = i + 1; // +1 to account for header row
+                cells[$"A{rowIndex + 1}"].PutValue(data[i, 0]); // Name column (A)
+                cells[$"B{rowIndex + 1}"].PutValue(data[i, 1]); // Status column (B)
+            }
+
+            // Hide rows where the Status column equals "Inactive"
+            // Status column is column index 1 (B)
+            int firstDataRow = 1; // zero‑based index of first data row (row 2 in Excel)
+            int lastDataRow = cells.MaxDataRow; // last row with data
+
+            for (int row = firstDataRow; row <= lastDataRow; row++)
+            {
+                // Retrieve the status value as string
+                string status = cells[row, 1].StringValue; // column B
+
+                // If status is "Inactive", hide the entire row
                 if (status.Equals("Inactive", StringComparison.OrdinalIgnoreCase))
                 {
-                    cells.HideRow(row); // HideRow uses zero‑based row index
+                    cells.HideRow(row);
                 }
+            }
+
+            // Optional: Verify hidden rows (for debugging)
+            for (int row = 0; row <= lastDataRow; row++)
+            {
+                bool hidden = cells.IsRowHidden(row);
+                Console.WriteLine($"Row {row + 1} hidden: {hidden}");
             }
 
             // Save the workbook

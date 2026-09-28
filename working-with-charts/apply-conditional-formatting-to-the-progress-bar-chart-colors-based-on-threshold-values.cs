@@ -1,76 +1,83 @@
-// Title: Apply threshold‑based red, yellow, and green data‑bar conditional formatting in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, writes progress percentages to column A, defines the target range, and adds three DataBar conditional‑format rules (0‑30 → red, 31‑70 → yellow, 71‑100 → green). The formatted column is saved as an XLSX file.
-// Keywords: Aspose.Cells C# conditional formatting | data bar thresholds Aspose.Cells | progress bar colors Excel .NET | multi‑range data bar Aspose | red yellow green conditional format | Aspose.Cells progress visualization
-// Common Searches: Aspose.Cells data bar conditional formatting C# | how to set red yellow green progress bars in Excel using Aspose | multiple data bar rules Aspose.Cells .NET | conditional formatting thresholds Aspose.Cells example
-// Developer Intent: Generate an Excel file with a progress column where values are automatically colored red, yellow, or green via data‑bar conditional formatting based on defined numeric ranges.
-// Use Cases: Project dashboards that highlight task completion status with color‑coded bars. | KPI reports where low, medium, and high metrics are instantly recognizable. | Sales or performance sheets that flag under‑performing, average, and top results.
-// AI Prompts: Write C# code using Aspose.Cells to add three DataBar conditional formats with custom colors for low, medium, and high ranges. | Show how to extend the example with an additional rule for values above 100 (e.g., blue color). | Provide a guide to list, modify, or delete existing DataBar conditional formats in an Aspose.Cells workbook.
+// Title: How to apply threshold‑based conditional colors to a progress bar chart in Excel using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a bar chart and assigns red, yellow, or green fill colors to each bar based on its numeric progress value. | Show how to read values from worksheet cells and conditionally set the foreground color of individual chart points using the Aspose.Cells .NET API. | Generate a complete example that builds an Excel file, adds a progress‑bar style bar chart, and applies threshold‑driven color formatting to the chart series.
+// Common Searches: Aspose.Cells C# set bar chart point color based on cell value | conditional formatting of chart series in Aspose.Cells .NET example | change individual bar colors in Excel chart using Aspose.Cells API | progress bar visualization with red yellow green colors in Aspose.Cells
+// Tags: Aspose.Cells conditional chart point coloring | C# bar chart color thresholds Aspose.Cells | Excel progress bar chart formatting Aspose.Cells | set chart series point foreground color .NET | threshold based bar colors Excel C#
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
 
-// Creates a workbook, writes progress percentages to column A, defines the target range, and adds three DataBar conditional‑format rules (0‑30 → red, 31‑70 → yellow, 71‑100 → green). The formatted column is saved as an XLSX file.
-class ProgressBarConditionalFormatting
+namespace ProgressBarExample
 {
-    static void Main()
+    // Demonstrates creating an Excel workbook with Aspose.Cells, adding a bar chart that acts as a progress bar, and applying conditional fill colors (red, yellow, green) to each bar based on progress values using C#.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample progress values (0-100)
-        double[] progressValues = { 10, 35, 55, 80, 20, 65, 90 };
-        for (int i = 0; i < progressValues.Length; i++)
+        static void Main(string[] args)
         {
-            sheet.Cells[i, 0].PutValue(progressValues[i]);
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the progress bar
+                sheet.Cells["A1"].PutValue("Task");
+                sheet.Cells["B1"].PutValue("Progress");
+                sheet.Cells["A2"].PutValue("Task 1");
+                sheet.Cells["B2"].PutValue(20);   // 20% progress
+                sheet.Cells["A3"].PutValue("Task 2");
+                sheet.Cells["B3"].PutValue(55);   // 55% progress
+                sheet.Cells["A4"].PutValue("Task 3");
+                sheet.Cells["B4"].PutValue(85);   // 85% progress
+
+                // Add a bar chart that will act as a progress bar
+                int chartIndex = sheet.Charts.Add(ChartType.Bar, 6, 0, 20, 7);
+                Chart chart = sheet.Charts[chartIndex];
+                chart.Title.Text = "Progress Bar";
+
+                // Define the series (values) and categories (tasks)
+                int dataCount = 3; // number of tasks
+                string valuesRange = $"B2:B{dataCount + 1}";
+                string categoriesRange = $"A2:A{dataCount + 1}";
+
+                chart.NSeries.Add(valuesRange, true);
+                chart.NSeries.CategoryData = categoriesRange;
+
+                // Threshold values for conditional coloring
+                double redThreshold = 30;    // below 30% -> red
+                double yellowThreshold = 70; // 30% - 70% -> yellow
+                // above 70% -> green
+
+                // Apply conditional colors to each data point based on its value
+                var series = chart.NSeries[0]; // Series object
+                for (int i = 0; i < series.Points.Count; i++)
+                {
+                    // Retrieve the progress value from the worksheet (row i+2, column B)
+                    double progressValue = sheet.Cells[i + 1, 1].DoubleValue;
+
+                    // Determine fill color according to thresholds
+                    Color fillColor;
+                    if (progressValue < redThreshold)
+                        fillColor = Color.Red;
+                    else if (progressValue <= yellowThreshold)
+                        fillColor = Color.Yellow;
+                    else
+                        fillColor = Color.Green;
+
+                    // Set the fill color of the corresponding bar (data point)
+                    series.Points[i].Area.ForegroundColor = fillColor;
+                }
+
+                // Save the workbook with the conditional formatted progress bar chart
+                string outputPath = "ProgressBarConditionalFormatting.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
-
-        // Define the range that will receive the data‑bar conditional formatting
-        CellArea range = new CellArea
-        {
-            StartRow = 0,
-            EndRow = progressValues.Length - 1,
-            StartColumn = 0,
-            EndColumn = 0
-        };
-
-        // Add an empty conditional formatting collection to the worksheet
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
-        cfCollection.AddArea(range);
-
-        // ---------- Low range (0 – 30) : Red ----------
-        int lowIdx = cfCollection.AddCondition(FormatConditionType.DataBar);
-        FormatCondition lowCondition = cfCollection[lowIdx];
-        lowCondition.DataBar.MinCfvo.Type = FormatConditionValueType.Number;
-        lowCondition.DataBar.MinCfvo.Value = 0;
-        lowCondition.DataBar.MaxCfvo.Type = FormatConditionValueType.Number;
-        lowCondition.DataBar.MaxCfvo.Value = 30;
-        lowCondition.DataBar.Color = Color.Red;
-        lowCondition.DataBar.ShowValue = true; // show the numeric value
-
-        // ---------- Medium range (31 – 70) : Yellow ----------
-        int mediumIdx = cfCollection.AddCondition(FormatConditionType.DataBar);
-        FormatCondition mediumCondition = cfCollection[mediumIdx];
-        mediumCondition.DataBar.MinCfvo.Type = FormatConditionValueType.Number;
-        mediumCondition.DataBar.MinCfvo.Value = 31;
-        mediumCondition.DataBar.MaxCfvo.Type = FormatConditionValueType.Number;
-        mediumCondition.DataBar.MaxCfvo.Value = 70;
-        mediumCondition.DataBar.Color = Color.Yellow;
-        mediumCondition.DataBar.ShowValue = true;
-
-        // ---------- High range (71 – 100) : Green ----------
-        int highIdx = cfCollection.AddCondition(FormatConditionType.DataBar);
-        FormatCondition highCondition = cfCollection[highIdx];
-        highCondition.DataBar.MinCfvo.Type = FormatConditionValueType.Number;
-        highCondition.DataBar.MinCfvo.Value = 71;
-        highCondition.DataBar.MaxCfvo.Type = FormatConditionValueType.Number;
-        highCondition.DataBar.MaxCfvo.Value = 100;
-        highCondition.DataBar.Color = Color.Green;
-        highCondition.DataBar.ShowValue = true;
-
-        // Save the workbook
-        workbook.Save("ProgressBarConditionalFormatting.xlsx", SaveFormat.Xlsx);
     }
 }

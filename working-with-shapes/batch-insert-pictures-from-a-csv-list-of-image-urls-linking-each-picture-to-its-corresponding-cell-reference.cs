@@ -1,74 +1,99 @@
-// Title: Batch Insert Linked Pictures from CSV URLs into Excel Cells with Aspose.Cells for .NET
-// Description: Creates a workbook, imports a CSV where column A contains cell addresses and column B holds image URLs, converts each address to row/column indices, and uses Shapes.AddLinkedPicture to place a 100 × 100 px linked image in the target cell. The workbook is then saved with all pictures embedded.
-// Keywords: Aspose.Cells | .NET | linked picture | CSV import | batch image insertion | Excel cell address | Shapes.AddLinkedPicture | image URL | automated Excel graphics | worksheet picture placement
-// Common Searches: Aspose.Cells add linked picture from URL | batch insert images into Excel using .NET | place picture in cell address from CSV | how to import image URLs into Excel worksheet | automate picture placement with Aspose.Cells
-// Developer Intent: Programmatically add multiple linked images to specific Excel cells based on a CSV mapping of cell references to image URLs.
-// Use Cases: Generate a product catalog where each SKU cell automatically shows its online image. | Create a regional sales dashboard that inserts flag icons into header cells using a URL list. | Build a marketing report that populates predefined cells with brand logos from a CSV configuration.
-// AI Prompts: Write a C# method that reads a CSV of cell addresses and image URLs and inserts linked pictures into the corresponding cells using Aspose.Cells. | Modify the sample to accept width and height columns in the CSV and set each picture's dimensions accordingly. | Add error handling that logs invalid URLs, skips failed rows, and continues processing the remaining entries.
+// Title: Batch insert pictures into Excel cells from a CSV of image URLs using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads a CSV file with cell addresses and image URLs, downloads each image via HttpClient, inserts the picture into the corresponding cell of an Aspose.Cells workbook, and sets the picture's Placement to MoveAndSize. | Update the insertion loop to give each picture a name derived from its cell reference and to log download or insertion errors without stopping the batch process.
+// Common Searches: Aspose.Cells C# add pictures to cells from a CSV list of URLs | C# batch download images and place them in specific Excel cells using Aspose.Cells | How to set picture placement to MoveAndSize when inserting images into Excel with Aspose.Cells | Read cell reference and image URL from CSV and insert image into Excel worksheet using Aspose.Cells .NET
+// Tags: batch picture insertion Aspose.Cells | add image to Excel cell from URL | move and size picture placement | CSV-driven image insertion C# | HttpClient image download for Excel
 
 using System;
 using System.IO;
+using System.Net.Http;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, imports a CSV where column A contains cell addresses and column B holds image URLs, converts each address to row/column indices, and uses Shapes.AddLinkedPicture to place a 100 × 100 px linked image in the target cell. The workbook is then saved with all pictures embedded.
+// The program reads a CSV file containing cell references and image URLs, downloads each image with HttpClient, adds the picture to the matching cell in a new Aspose.Cells workbook, sets the picture to MoveAndSize with the cell, optionally names the picture after its cell, and saves the workbook as OutputWithPictures.xlsx.
 class BatchInsertPictures
 {
     static void Main()
     {
-        try
+        // Path to the CSV file containing cell references and image URLs
+        string csvPath = "images.csv";
+
+        // Verify that the CSV file exists to avoid FileNotFoundException
+        if (!File.Exists(csvPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"CSV file not found: {csvPath}");
+            return;
+        }
 
-            // Path to the CSV file containing cell addresses and image URLs
-            string csvPath = "images.csv";
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Import CSV only if the file exists
-            if (File.Exists(csvPath))
+        // HttpClient for downloading images (disposed after use)
+        using (HttpClient httpClient = new HttpClient())
+        {
+            try
             {
-                // Import CSV: Column A = cell address, Column B = image URL
-                worksheet.Cells.ImportCSV(csvPath, ",", true, 0, 0);
+                // Read all lines from the CSV file
+                foreach (string line in File.ReadAllLines(csvPath))
+                {
+                    // Skip empty lines
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+
+                    // Expected CSV format: CellReference,ImageUrl
+                    // Example: B2,https://example.com/pic1.png
+                    string[] parts = line.Split(new[] { ',' }, 2);
+                    if (parts.Length != 2)
+                        continue; // malformed line
+
+                    string cellRef = parts[0].Trim();
+                    string imageUrl = parts[1].Trim();
+
+                    // Convert cell reference (e.g., "B2") to zero‑based row and column indices
+                    Cell cell = sheet.Cells[cellRef];
+                    int row = cell.Row;
+                    int column = cell.Column;
+
+                    // Download the image into a memory stream
+                    try
+                    {
+                        using (Stream imageStream = httpClient.GetStreamAsync(imageUrl).Result)
+                        {
+                            // Add the picture to the worksheet at the specified cell
+                            int pictureIndex = sheet.Pictures.Add(row, column, imageStream);
+                            Picture picture = sheet.Pictures[pictureIndex];
+
+                            // Set the picture to move and size with cells (linking it to the cell)
+                            picture.Placement = PlacementType.MoveAndSize;
+
+                            // Optional: give the picture a name based on the cell reference
+                            picture.Name = $"Pic_{cellRef}";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // If download or insertion fails, log and continue with next entry
+                        Console.WriteLine($"Failed to insert picture for {cellRef}: {ex.Message}");
+                        continue;
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine($"CSV file not found: {csvPath}");
-                // Continue with an empty worksheet or exit as needed
-                // Here we simply proceed without inserting pictures
-                workbook.Save("output_with_pictures.xlsx");
+                Console.WriteLine($"Error processing CSV file: {ex.Message}");
                 return;
             }
+        }
 
-            // Determine the last row that contains data
-            int lastRow = worksheet.Cells.MaxDataRow;
-
-            // Iterate through each row of the CSV data
-            for (int row = 0; row <= lastRow; row++)
-            {
-                // Read cell address and image URL from the imported CSV
-                string cellAddress = worksheet.Cells[row, 0].StringValue?.Trim();
-                string imageUrl = worksheet.Cells[row, 1].StringValue?.Trim();
-
-                // Skip rows with missing data
-                if (string.IsNullOrEmpty(cellAddress) || string.IsNullOrEmpty(imageUrl))
-                    continue;
-
-                // Convert the cell address (e.g., "C5") to row and column indices
-                Cell targetCell = worksheet.Cells[cellAddress];
-                int targetRow = targetCell.Row;
-                int targetColumn = targetCell.Column;
-
-                // Add a linked picture at the specified cell (size: 100x100 pixels)
-                worksheet.Shapes.AddLinkedPicture(targetRow, targetColumn, 100, 100, imageUrl);
-            }
-
-            // Save the workbook with the inserted pictures
-            workbook.Save("output_with_pictures.xlsx");
+        // Save the workbook to a file (ensure the directory is writable)
+        try
+        {
+            workbook.Save("OutputWithPictures.xlsx");
+            Console.WriteLine("Workbook saved as OutputWithPictures.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

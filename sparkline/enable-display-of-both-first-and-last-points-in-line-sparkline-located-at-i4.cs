@@ -1,16 +1,13 @@
-// Title: Aspose.Cells for .NET – Show First & Last Points of a Line Sparkline in Cell I4
-// Description: Creates a workbook, inserts sample data in row 4, adds a line sparkline for A4:D4 into cell I4, turns on first‑ and last‑point markers, applies purple and yellow colors, and saves the file as SparklineFirstLastPoint.xlsx using C#.
-// Keywords: Aspose.Cells | C# line sparkline | ShowFirstPoint | ShowLastPoint | sparkline point color | Excel sparkline I4 | SparklineGroup | .NET Aspose.Cells | custom sparkline markers | Excel dashboard sparkline
-// Common Searches: Aspose.Cells enable first point marker line sparkline | How to show last point in Aspose.Cells sparkline C# | Set custom colors for sparkline markers Aspose.Cells | Add line sparkline to cell I4 using Aspose.Cells | SparklineGroup ShowFirstPoint ShowLastPoint example
-// Developer Intent: Insert a line sparkline at I4 and highlight its start and end values with distinct colors.
-// Use Cases: Highlight the opening and closing values of a sales trend in a financial report. | Create an Excel dashboard where each row’s sparkline endpoints are colored to draw attention to performance extremes. | Generate automated quality‑control sheets that emphasize the first and last measurements of a process.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a line sparkline to I4, shows both first and last markers, and colors them purple and yellow. | Explain how to configure ShowFirstPoint and ShowLastPoint for a SparklineGroup and assign custom CellsColor objects in Aspose.Cells. | Provide an example that creates a sparkline for range A4:D4, places it in cell I4, and uses different colors for the start and end points.
+// Title: Show first and last point markers in a line sparkline placed in cell I4 using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a line sparkline from A1:D1, positions it in cell I4, and enables first and last point markers. | Set the SparklineGroup to color the first point purple and the last point yellow. | Save the workbook as SparklineFirstLastPoint.xlsx after configuring the sparkline settings.
+// Common Searches: Aspose.Cells C# how to display first and last markers in a line sparkline at a specific cell | set custom colors for sparkline first and last points using Aspose.Cells .NET | add a line sparkline to cell I4 based on range A1:D1 with Aspose.Cells
+// Tags: Aspose.Cells sparkline first point marker | Aspose.Cells sparkline last point marker | SparklineGroup ShowFirstPoint property | SparklineGroup ShowLastPoint property | Aspose.Cells sparkline point color customization | place sparkline in specific cell Aspose.Cells
 
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// Creates a workbook, inserts sample data in row 4, adds a line sparkline for A4:D4 into cell I4, turns on first‑ and last‑point markers, applies purple and yellow colors, and saves the file as SparklineFirstLastPoint.xlsx using C#.
+// The example creates a workbook, inserts sample data, adds a line sparkline at cell I4 sourced from A1:D1, enables first and last point markers, applies purple and yellow colors to those markers, and saves the file as SparklineFirstLastPoint.xlsx.
 class Program
 {
     static void Main()
@@ -19,13 +16,13 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data for the sparkline (row 4)
-        sheet.Cells["A4"].PutValue(5);
-        sheet.Cells["B4"].PutValue(2);
-        sheet.Cells["C4"].PutValue(1);
-        sheet.Cells["D4"].PutValue(3);
+        // Add sample data for the sparkline (row 1, columns A‑D)
+        sheet.Cells["A1"].PutValue(5);
+        sheet.Cells["B1"].PutValue(2);
+        sheet.Cells["C1"].PutValue(1);
+        sheet.Cells["D1"].PutValue(3);
 
-        // Define the location cell I4 (column index 8, row index 3)
+        // Define the location of the sparkline: cell I4 (zero‑based column 8, row 3)
         CellArea location = new CellArea
         {
             StartRow = 3,
@@ -34,15 +31,15 @@ class Program
             EndColumn = 8
         };
 
-        // Add a line sparkline group with the data range A4:D4 and place it at I4
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A4:D4", false, location);
+        // Add a line sparkline group with the data range A1:D1 and place it at I4
+        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // Enable highlighting of both the first and last points
+        // Enable highlighting of the first and last points
         group.ShowFirstPoint = true;
         group.ShowLastPoint = true;
 
-        // Optional: set custom colors for the first and last points
+        // Optional: set colors for the first and last points
         CellsColor firstPointColor = workbook.CreateCellsColor();
         firstPointColor.Color = Color.Purple;
         group.FirstPointColor = firstPointColor;

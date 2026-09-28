@@ -1,54 +1,57 @@
-// Title: Aspose.Cells for .NET – Set Chart Data Range and Freeze Source Rows (C#)
-// Description: C# example that creates a workbook, fills rows 1‑5 with sample data, adds a column chart linked to range A1:B5, freezes the first five rows using FreezePanes, and saves the file as ChartWithFrozenSource.xlsx.
-// Keywords: Aspose.Cells | C# chart data range | SetChartDataRange | FreezePanes | freeze worksheet rows | column chart Aspose.Cells | Excel chart source visibility | Aspose.Cells example GitHub | worksheet freeze panes API | Aspose.Cells for .NET tutorial
-// Common Searches: Aspose.Cells set chart data range C# | How to freeze rows that feed a chart in Aspose.Cells | FreezePanes after creating a chart Aspose.Cells | C# example chart with frozen source rows | SetChartDataRange with headers Aspose.Cells
-// Developer Intent: Create a column chart, bind it to a specific range, and lock the source rows so they stay visible while scrolling.
-// Use Cases: Financial dashboards where the data table above a chart must remain in view. | Sales reports that combine a chart with a frozen data grid for easy comparison. | Automated Excel exports that protect chart source data from accidental scrolling.
-// AI Prompts: Generate C# code to freeze both rows and columns that contain a chart’s source data using Aspose.Cells. | Show how to bind a chart to a range without headers in Aspose.Cells for .NET. | Explain the steps to apply FreezePanes after adding multiple charts so each chart’s source rows stay visible.
+// Title: Bind a column chart to a cell range and freeze the source rows in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a column chart that uses cells A2:B11 as its data source, then apply FreezePanes to lock rows 1‑11 so the chart source stays visible, using Aspose.Cells in C#. | Generate sample data in columns A and B, add a column chart referencing that data, freeze the first 11 rows of the worksheet, and save the workbook as an .xlsx file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set chart data source range and freeze rows | freeze panes for chart source data using Aspose.Cells .NET | C# Aspose.Cells column chart from A2:B11 with frozen source rows | keep chart source rows visible in Excel with Aspose.Cells
+// Tags: Aspose.Cells set chart data source range | Aspose.Cells FreezePanes rows example | Aspose.Cells column chart from worksheet range | Aspose.Cells save workbook with frozen rows | Aspose.Cells populate worksheet sample data
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsChartFreezeDemo
+// The example creates a new workbook, fills cells A1:B11 with sample categories and values, adds a column chart bound to the range A2:B11, freezes the first 11 rows to keep the chart's source data visible, and saves the file as ChartWithFrozenRows.xlsx.
+class Program
 {
-    // C# example that creates a workbook, fills rows 1‑5 with sample data, adds a column chart linked to range A1:B5, freezes the first five rows using FreezePanes, and saves the file as ChartWithFrozenSource.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart (rows 1‑5)
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B4"].PutValue(30);
-            worksheet.Cells["A5"].PutValue("D");
-            worksheet.Cells["B5"].PutValue(40);
+            // Populate sample data that will be used as the chart source
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            for (int i = 2; i <= 11; i++) // rows 2‑11 contain data
+            {
+                sheet.Cells[i - 1, 0].PutValue("Item " + (i - 1)); // Column A
+                sheet.Cells[i - 1, 1].PutValue(i * 10);           // Column B
+            }
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 13, 0, 30, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the chart's data source range (including headers)
-            chart.SetChartDataRange("A1:B5", true);
+            // Set the chart's data source range
+            // Values series: B2:B11, Categories: A2:A11
+            chart.NSeries.Add("=Sheet1!$B$2:$B$11", true);
+            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$11";
 
-            // Freeze the rows that contain the chart source data (rows 1‑5)
-            // FreezePanes(string cellName, int freezedRows, int freezedColumns)
-            // Cell "A6" is the first row below the data; freeze 5 rows above it.
-            worksheet.FreezePanes("A6", 5, 0);
+            // Freeze the rows that contain the source data (rows 1‑11)
+            // FreezePanes(row, column, totalRows, totalColumns) uses zero‑based indexes.
+            // To freeze the first 11 rows, set row = 11 and column = 0.
+            sheet.FreezePanes(11, 0, 0, 0);
+
+            // Define output file path
+            string outputPath = "ChartWithFrozenRows.xlsx";
 
             // Save the workbook
-            workbook.Save("ChartWithFrozenSource.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

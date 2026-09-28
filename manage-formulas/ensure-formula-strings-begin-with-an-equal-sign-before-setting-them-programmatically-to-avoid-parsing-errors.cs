@@ -1,69 +1,50 @@
-// Title: Add Missing '=' to Excel Formulas in Aspose.Cells for .NET
-// Description: Shows a C# helper that guarantees every formula string begins with an equal sign before assigning it to a cell via the Formula property, avoiding parsing errors. The sample creates a workbook, writes values, corrects raw formulas, calculates results, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | Excel formula validation | prepend equal sign | Formula property | parsing error prevention | EnsureFormula helper | workbook calculation | Excel automation | programmatic formula correction
-// Common Searches: how to add '=' to Excel formulas using Aspose.Cells C# | Aspose.Cells formula parsing error missing equal sign | C# helper to ensure Excel formula starts with = | set formula property in Aspose.Cells without error | validate raw formula strings before assigning to cells
-// Developer Intent: Validate and automatically prepend an equal sign to any formula string before setting Cells[i].Formula in Aspose.Cells to prevent runtime parsing exceptions.
-// Use Cases: Sanitize user‑entered or external system‑generated formulas before inserting them into a workbook. | Standardize formula syntax across multiple worksheets in large‑scale reporting pipelines. | Create a reusable utility that safely assigns formulas in automated Excel generation tasks.
-// AI Prompts: Generate a C# method for Aspose.Cells that adds a leading '=' to a formula only if it is missing, and demonstrate its use with sample cells. | Write C# code that scans a range of cells in an Aspose.Cells workbook, ensures each cell's Formula property starts with '=', and handles empty strings gracefully. | Provide an example that corrects formulas with a helper, saves the workbook, then reopens it to verify that all formulas contain the leading '='.
+// Title: Add a leading '=' to Excel formula strings before assigning them to cells with Aspose.Cells in C# to prevent parsing errors
+// AI Prompts: Write a C# utility method that checks a formula string and prepends an '=' if it is missing, then use it when setting Worksheet.Cells[].Formula with Aspose.Cells. | Refactor the example to automatically sanitize any formula input before assigning it to a cell, ensuring the workbook saves without formula parsing exceptions.
+// Common Searches: Aspose.Cells C# how to add missing equal sign to formula before setting cell value | prevent formula parsing error when using Worksheet.Cells[].Formula in Aspose.Cells | C# helper function to ensure Excel formulas start with '=' for Aspose.Cells workbooks
+// Tags: prepend equal sign to Excel formula Aspose.Cells | formula sanitization before setting cell C# | avoid formula parsing errors Aspose.Cells | validate Excel formula string Aspose.Cells | cell formula helper method C#
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsFormulaHelperDemo
+// Demonstrates creating a workbook, trimming a raw formula, ensuring it begins with '=', assigning it to cell B1, and saving as output.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Shows a C# helper that guarantees every formula string begins with an equal sign before assigning it to a cell via the Formula property, avoiding parsing errors. The sample creates a workbook, writes values, corrects raw formulas, calculates results, and saves the file.
-    class Program
+    static void Main()
     {
-        // Ensures that a formula string starts with '='.
-        // If the input already starts with '=', it is returned unchanged.
-        // Otherwise, '=' is prepended.
-        static string EnsureFormula(string formula)
-        {
-            if (string.IsNullOrEmpty(formula))
-                return formula; // Let the caller handle empty strings.
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            return formula.StartsWith("=") ? formula : "=" + formula;
-        }
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+        // Example formula string that may be missing the leading equal sign
+        string rawFormula = "SUM(A1:A10)";
 
-                // Put some sample values that will be used in formulas.
-                cells["A1"].PutValue(10);
-                cells["A2"].PutValue(20);
-                cells["B1"].PutValue(5);
+        // Ensure the formula string starts with '=' to avoid parsing errors
+        string safeFormula = EnsureFormulaStartsWithEqual(rawFormula);
 
-                // Example formulas without leading '='.
-                string rawFormula1 = "SUM(A1,A2)";          // Should become "=SUM(A1,A2)"
-                string rawFormula2 = "A1*B1";              // Should become "=A1*B1"
-                string rawFormula3 = "=AVERAGE(A1:A2)";    // Already has '=', keep as is.
+        // Set the formula to cell B1
+        cells["B1"].Formula = safeFormula;
 
-                // Set formulas using the Formula property (automatically handles parsing).
-                cells["C1"].Formula = EnsureFormula(rawFormula1);
-                cells["C2"].Formula = EnsureFormula(rawFormula2);
-                cells["C3"].Formula = EnsureFormula(rawFormula3);
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
+    }
 
-                // Calculate all formulas in the workbook.
-                workbook.CalculateFormula();
+    // Helper method to prepend '=' if it's not already present
+    static string EnsureFormulaStartsWithEqual(string formula)
+    {
+        if (string.IsNullOrWhiteSpace(formula))
+            return formula; // Return as is if null or empty
 
-                // Output the results to verify correct calculation.
-                Console.WriteLine("C1 (SUM): " + cells["C1"].Value);          // Expected 30
-                Console.WriteLine("C2 (Product): " + cells["C2"].Value);    // Expected 50
-                Console.WriteLine("C3 (Average): " + cells["C3"].Value);    // Expected 15
+        // Trim leading whitespace
+        string trimmed = formula.TrimStart();
 
-                // Optionally, save the workbook to inspect the formulas.
-                workbook.Save("FormulaHelperDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+        // If the trimmed formula already starts with '=', return it unchanged
+        if (trimmed.StartsWith("="))
+            return trimmed;
+
+        // Otherwise, prepend '='
+        return "=" + trimmed;
     }
 }

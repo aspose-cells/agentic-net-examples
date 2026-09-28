@@ -1,33 +1,53 @@
-// Title: C# – Convert TSV to PDF with OnePagePerSheet using Aspose.Cells
-// Description: Loads a tab‑separated values (TSV) file into an Aspose.Cells Workbook, sets PdfSaveOptions.OnePagePerSheet to true so each worksheet fits on a single PDF page, and saves the result as a PDF with the default (no password) security.
-// Keywords: Aspose.Cells | TSV to PDF | OnePagePerSheet | PdfSaveOptions | C# | .NET | tab‑separated values | export workbook as PDF | Aspose.Cells PDF export
-// Common Searches: Aspose.Cells convert TSV to PDF C# | OnePagePerSheet option in PdfSaveOptions | C# load TSV file with Aspose.Cells | Export workbook to PDF without password Aspose.Cells | How to render each sheet on one PDF page using Aspose.Cells
-// Developer Intent: Create a PDF from a TSV workbook where every worksheet is rendered on a single page, using the default (no‑password) security settings.
-// Use Cases: Generate printable reports from TSV data sources with a consistent one‑page‑per‑sheet layout. | Batch‑process multiple TSV files into PDFs for archival or distribution. | Provide a web service that accepts TSV uploads and returns a ready‑to‑print PDF without requiring password protection.
-// AI Prompts: Show how to add password protection while keeping OnePagePerSheet enabled. | Give an example of customizing page margins and orientation for TSV‑to‑PDF conversion. | Suggest memory‑efficient techniques for converting very large TSV files to PDF with Aspose.Cells.
+// Title: Convert a TSV file to a single-page-per-sheet PDF using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads a TSV file with Aspose.Cells LoadOptions, sets PdfSaveOptions.OnePagePerSheet = true, and saves the workbook as a PDF. | Show how to add file‑existence validation and exception handling to a TSV‑to‑PDF conversion using Aspose.Cells. | Demonstrate exporting a workbook to PDF with default security settings while ensuring each worksheet fits on one page.
+// Common Searches: Aspose.Cells C# convert tab separated values file to PDF with one page per sheet | How to use LoadOptions for TSV format in Aspose.Cells .NET | Set OnePagePerSheet option when saving workbook as PDF using Aspose.Cells | TSV to PDF conversion example with Aspose.Cells and default PDF security | C# code sample for exporting a workbook loaded from TSV to PDF
+// Tags: load TSV workbook with Aspose.Cells | PdfSaveOptions OnePagePerSheet configuration | convert TSV data to PDF via Aspose.Cells | export workbook as PDF with default security | C# LoadOptions for TSV files
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTsvToPdf
+namespace AsposeCellsExample
 {
-    // Loads a tab‑separated values (TSV) file into an Aspose.Cells Workbook, sets PdfSaveOptions.OnePagePerSheet to true so each worksheet fits on a single PDF page, and saves the result as a PDF with the default (no password) security.
+    // Loads a TSV file into an Aspose.Cells Workbook, configures PdfSaveOptions.OnePagePerSheet to true, and saves the workbook as a PDF using default security settings, with basic file existence checking and error handling.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the TSV file into a workbook
-            // Aspose.Cells automatically detects the TSV format based on the file extension
-            Workbook workbook = new Workbook("input.tsv");
+            // Path to the source TSV file
+            string tsvPath = "input.tsv";
 
-            // Create PDF save options and enable OnePagePerSheet
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            pdfOptions.OnePagePerSheet = true; // All content of each sheet will be placed on a single PDF page
+            // Path for the resulting PDF file
+            string pdfPath = "output.pdf";
 
-            // Save the workbook as PDF using the configured options
-            // No security options are set, so default (no password) security is applied
-            workbook.Save("output.pdf", pdfOptions);
+            try
+            {
+                // Verify that the input file exists
+                if (!File.Exists(tsvPath))
+                {
+                    Console.WriteLine($"Input file not found: {tsvPath}");
+                    return;
+                }
+
+                // Load the TSV workbook using LoadOptions to specify the TSV format
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
+                Workbook workbook = new Workbook(tsvPath, loadOptions);
+
+                // Configure PDF save options to fit each sheet onto a single page
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    OnePagePerSheet = true
+                };
+
+                // Export the workbook to PDF
+                workbook.Save(pdfPath, pdfOptions);
+
+                Console.WriteLine($"PDF successfully saved to: {pdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

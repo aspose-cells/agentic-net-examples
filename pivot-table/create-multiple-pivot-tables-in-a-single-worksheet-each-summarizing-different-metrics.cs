@@ -1,10 +1,7 @@
-// Title: Create Multiple Pivot Tables in One Worksheet with Aspose.Cells for .NET
-// Description: This example builds a workbook, fills it with random sales data, defines the entire data block as the source range, and adds two pivot tables to the same sheet—one summarizing total Quantity by Region at F3 and another summarizing total Revenue by Product at F20. Each pivot uses a different built‑in style, is refreshed, calculated, and the workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells multiple pivot tables | C# create pivot tables same worksheet | Aspose.Cells .NET pivot table example | summarize quantity by region Aspose | summarize revenue by product Aspose | pivot table style Aspose.Cells | refresh calculate pivot Aspose
-// Common Searches: how to add two pivot tables on one sheet using Aspose.Cells | Aspose.Cells example multiple pivot tables .NET | set different styles for each pivot table Aspose | create pivot tables from same source range Aspose.Cells
-// Developer Intent: Generate two distinct pivot tables on a single worksheet, each summarizing a different metric from the same source data.
-// Use Cases: Generate a sales report that shows quantity per region alongside revenue per product in one workbook. | Build a dashboard worksheet with side‑by‑side KPIs for quick comparative analysis. | Apply separate built‑in styles to visually differentiate multiple pivot summaries.
-// AI Prompts: Add a third pivot table that calculates average revenue per region using the existing data range. | Change the aggregation of the Quantity field from Sum to Count in the first pivot table and refresh it. | Move the second pivot table to a new cell location and update its source range programmatically.
+// Title: Create multiple pivot tables in a single worksheet with Aspose.Cells for .NET – sales by Category and quantity by SubCategory
+// AI Prompts: Generate a pivot table at cell F3 that groups rows by the 'Category' field and sums the 'Sales' field, then apply the PivotTableStyleMedium9 style. | Create a second pivot table at cell F20 that groups rows by the 'SubCategory' field and sums the 'Quantity' field, apply the PivotTableStyleMedium4 style, refresh all pivot tables, and save the workbook as MultiplePivotTables.xlsx.
+// Common Searches: asp.net add two pivot tables to the same sheet using Aspose.Cells C# | how to set different PivotTableStyleMedium styles for multiple pivot tables in Aspose.Cells | refresh all pivot tables programmatically after creation Aspose.Cells .NET | define source data range for pivot tables with formula reference Aspose.Cells | save workbook as xlsx after creating multiple pivot tables Aspose.Cells
+// Tags: add multiple pivot tables Aspose.Cells | pivot table row field Category Aspose.Cells | pivot table data field Sales Aspose.Cells | pivot table row field SubCategory Aspose.Cells | pivot table data field Quantity Aspose.Cells | apply PivotTableStyleMedium9 Aspose.Cells | refresh pivot tables Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,77 +9,59 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsMultiplePivotTables
 {
-    // This example builds a workbook, fills it with random sales data, defines the entire data block as the source range, and adds two pivot tables to the same sheet—one summarizing total Quantity by Region at F3 and another summarizing total Revenue by Product at F20. Each pivot uses a different built‑in style, is refreshed, calculated, and the workbook is saved as an XLSX file.
+    // The example creates a new workbook, populates it with Category, SubCategory, Sales, and Quantity data, defines the source range, adds a pivot table at F3 that sums Sales by Category with a medium style, adds another pivot table at F20 that sums Quantity by SubCategory with a different medium style, refreshes both pivot tables, and saves the file as MultiplePivotTables.xlsx.
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data
-            // Header row
-            cells["A1"].PutValue("Region");
-            cells["B1"].PutValue("Product");
-            cells["C1"].PutValue("Quantity");
-            cells["D1"].PutValue("Revenue");
+            // Populate sample data (Category, SubCategory, Sales, Quantity)
+            Cells cells = sheet.Cells;
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("SubCategory");
+            cells["C1"].PutValue("Sales");
+            cells["D1"].PutValue("Quantity");
 
             // Sample rows
-            string[] regions = { "North", "South", "East", "West" };
-            string[] products = { "Apple", "Banana", "Cherry" };
-            Random rnd = new Random();
+            string[] categories = { "Food", "Food", "Beverage", "Beverage", "Food", "Beverage" };
+            string[] subCategories = { "Fruit", "Vegetable", "Soda", "Juice", "Fruit", "Juice" };
+            double[] sales = { 1200, 800, 1500, 1100, 900, 1300 };
+            int[] qty = { 30, 20, 50, 40, 25, 45 };
 
-            int row = 2;
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < categories.Length; i++)
             {
-                cells[row, 0].PutValue(regions[rnd.Next(regions.Length)]);
-                cells[row, 1].PutValue(products[rnd.Next(products.Length)]);
-                cells[row, 2].PutValue(rnd.Next(1, 100));          // Quantity
-                cells[row, 3].PutValue(rnd.Next(100, 1000));      // Revenue
-                row++;
+                int row = i + 2; // Data starts from row 2
+                cells[$"A{row}"].PutValue(categories[i]);
+                cells[$"B{row}"].PutValue(subCategories[i]);
+                cells[$"C{row}"].PutValue(sales[i]);
+                cells[$"D{row}"].PutValue(qty[i]);
             }
 
             // Define the source data range for pivot tables
             // Using a formula style reference to the whole data block
-            string sourceData = $"=Sheet1!{cells.MaxDisplayRange.Address}";
+            string sourceData = $"=Sheet1!{sheet.Cells.MaxDisplayRange.Address}";
 
-            // -------------------------------------------------
-            // First PivotTable: Summarize total Quantity by Region
-            // -------------------------------------------------
+            // Add first pivot table: Sales summary by Category
             PivotTableCollection pivots = sheet.PivotTables;
-            int pivotIndex1 = pivots.Add(sourceData, "F3", "QuantityByRegion");
+            int pivotIndex1 = pivots.Add(sourceData, "F3", "SalesByCategory");
             PivotTable pivot1 = pivots[pivotIndex1];
-
-            // Row field: Region
-            pivot1.AddFieldToArea(PivotFieldType.Row, "Region");
-            // Data field: Quantity (sum)
-            pivot1.AddFieldToArea(PivotFieldType.Data, "Quantity");
-
+            pivot1.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot1.AddFieldToArea(PivotFieldType.Data, "Sales");
             // Optional: set a built‑in style
             pivot1.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
 
-            // -------------------------------------------------
-            // Second PivotTable: Summarize total Revenue by Product
-            // -------------------------------------------------
-            int pivotIndex2 = pivots.Add(sourceData, "F20", "RevenueByProduct");
+            // Add second pivot table: Quantity summary by SubCategory
+            int pivotIndex2 = pivots.Add(sourceData, "F20", "QtyBySubCategory");
             PivotTable pivot2 = pivots[pivotIndex2];
+            pivot2.AddFieldToArea(PivotFieldType.Row, "SubCategory");
+            pivot2.AddFieldToArea(PivotFieldType.Data, "Quantity");
+            pivot2.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium4;
 
-            // Row field: Product
-            pivot2.AddFieldToArea(PivotFieldType.Row, "Product");
-            // Data field: Revenue (sum)
-            pivot2.AddFieldToArea(PivotFieldType.Data, "Revenue");
-
-            // Apply a different style
-            pivot2.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium12;
-
-            // Refresh and calculate data for both pivot tables
-            pivot1.RefreshData();
-            pivot1.CalculateData();
-
-            pivot2.RefreshData();
-            pivot2.CalculateData();
+            // Refresh data for both pivot tables
+            sheet.RefreshPivotTables();
 
             // Save the workbook
             workbook.Save("MultiplePivotTables.xlsx");

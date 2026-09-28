@@ -1,66 +1,71 @@
-// Title: Extract OData Endpoint URLs from DataMashup Power Query Formulas with Aspose.Cells for .NET
-// Description: Shows how to load an Excel workbook using Aspose.Cells, access its DataMashup object, iterate through Power Query formulas, and retrieve the OData service endpoint via reflection (ConnectionString or Url). The endpoints are written to the console, with optional workbook saving.
-// Keywords: Aspose.Cells | C# | .NET | DataMashup | Power Query | OData endpoint | ConnectionString | Url property | reflection | extract OData URL | Excel workbook | query tables | API example
-// Common Searches: Aspose.Cells get OData URL from DataMashup | Read Power Query connection string Aspose.Cells | C# extract OData service endpoint Excel | How to list OData connections in workbook using Aspose | Retrieve DataMashup formulas Aspose.Cells | Get OData endpoint from Power Query formula .NET
-// Developer Intent: Retrieve and log the OData service endpoint URLs defined in a workbook’s DataMashup Power Query formulas.
-// Use Cases: Validate external OData source URLs before refreshing Power Query connections. | Audit OData connections across multiple workbooks for compliance reporting. | Generate a summary of Power Query formulas and their endpoints for documentation. | Automate health checks of external data sources in batch processing pipelines.
-// AI Prompts: Write a reusable method that returns a list of OData endpoint strings from a Workbook’s DataMashup using Aspose.Cells. | Enhance the sample to also capture endpoints stored in a custom property named 'ServiceUrl' on the formula objects. | Create an example that writes the extracted OData endpoints to a CSV file instead of the console. | Generate unit tests that verify the reflection logic correctly extracts ConnectionString and Url values.
+// Title: How to extract OData service endpoint URLs from Power Query connections in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, reads its DataMashup, and prints each Power Query name together with its OData service URL. | Modify the example to return a Dictionary<string,string> where the key is the Power Query name and the value is the extracted endpoint URL, handling cases where the Url property is missing. | Create a reusable static method GetPowerQueryEndpoints(string workbookPath) that loads the workbook and returns a list of (query name, endpoint URL) tuples using reflection on the PowerQueryFormula objects.
+// Common Searches: aspnet extract OData endpoint from Power Query DataMashup using Aspose.Cells | c# list all Power Query connection URLs in an Excel file with Aspose.Cells | how to read DataMashup PowerQueryFormulas Url property in Aspose.Cells .NET | retrieve OData service URLs from Excel workbook Power Query using reflection
+// Tags: Aspose.Cells extract OData endpoint from DataMashup | C# read PowerQueryFormulas Url property | list Power Query connections in Excel workbook | handle missing Url property reflection | dictionary of query names to service URLs Aspose.Cells
 
 using System;
-using System.Reflection;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.QueryTables;
+using Aspose.Cells.QueryTables; // For DataMashup related types
 
-// Shows how to load an Excel workbook using Aspose.Cells, access its DataMashup object, iterate through Power Query formulas, and retrieve the OData service endpoint via reflection (ConnectionString or Url). The endpoints are written to the console, with optional workbook saving.
+// Loads an Excel workbook, accesses its DataMashup, iterates over PowerQueryFormulas, and logs each query name with the OData service endpoint URL obtained via reflection, handling absent Url properties gracefully.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-        // Access the DataMashup object which holds Power Query formulas
-        DataMashup mashup = workbook.DataMashup;
-
-        if (mashup != null)
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Iterate through all Power Query formulas
-            foreach (var formula in mashup.PowerQueryFormulas)
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook that may contain Power Query (OData) connections
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the DataMashup object; it can be null if no Power Query data exists
+            DataMashup mashup = workbook.DataMashup;
+            if (mashup == null)
             {
-                // Attempt to retrieve the OData service endpoint.
-                // Some versions expose it via ConnectionString, others via Url.
-                string endpoint = string.Empty;
+                Console.WriteLine("No Power Query (DataMashup) information found in the workbook.");
+                return;
+            }
 
-                Type formulaType = formula.GetType();
+            // Ensure the collection of PowerQueryFormulas is available
+            var formulas = mashup.PowerQueryFormulas;
+            if (formulas == null || formulas.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any Power Query formulas.");
+                return;
+            }
 
-                // Try ConnectionString property
-                PropertyInfo connProp = formulaType.GetProperty("ConnectionString");
-                if (connProp != null)
+            // Iterate through all Power Query formulas in the mashup
+            foreach (var formula in formulas)
+            {
+                // Display the name of the query
+                Console.WriteLine($"Query Name: {formula.Name}");
+
+                // Attempt to obtain the service endpoint URL via reflection
+                var urlProperty = formula.GetType().GetProperty("Url");
+                if (urlProperty != null)
                 {
-                    endpoint = connProp.GetValue(formula) as string;
+                    string url = urlProperty.GetValue(formula) as string;
+                    Console.WriteLine($"Service Endpoint URL: {url ?? "null"}");
                 }
                 else
                 {
-                    // Fallback to Url property
-                    PropertyInfo urlProp = formulaType.GetProperty("Url");
-                    if (urlProp != null)
-                    {
-                        endpoint = urlProp.GetValue(formula) as string;
-                    }
+                    Console.WriteLine("Service Endpoint URL: not available via Url property.");
                 }
-
-                // Log the details
-                Console.WriteLine($"Power Query Formula: {formula.Name}");
-                Console.WriteLine($"OData Service Endpoint: {endpoint}");
-                Console.WriteLine(new string('-', 40));
             }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No DataMashup information found in the workbook.");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Save the workbook (optional, adjust path as needed)
-        workbook.Save("output.xlsx");
     }
 }

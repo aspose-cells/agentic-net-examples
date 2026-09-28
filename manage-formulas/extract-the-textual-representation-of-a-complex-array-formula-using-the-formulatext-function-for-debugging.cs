@@ -1,46 +1,46 @@
-// Title: Extract array formula text with FORMULATEXT in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills two ranges, sets a 3‑row array formula "=A1:A3*B1:B3" in C1:C3, uses the Excel FORMULATEXT function in D1 to retrieve the exact formula string, calculates, prints the result, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | array formula | FORMULATEXT | formula text extraction | debug Excel formulas | SetArrayFormula | FormulaText function
-// Common Searches: Aspose.Cells get formula text of array formula | C# FORMULATEXT example with Aspose.Cells | retrieve array formula string in .NET | debug complex array formulas Aspose.Cells | how to use SetArrayFormula and FORMULATEXT
-// Developer Intent: Obtain the exact textual representation of a multi‑cell array formula for debugging or documentation using Aspose.Cells.
-// Use Cases: Log the precise formula applied to an array range to verify implementation. | Compare retrieved formula text with expected patterns during automated tests. | Generate audit reports that list all array formulas present in a workbook.
-// AI Prompts: Show C# code that extracts the text of a multi‑cell array formula using Aspose.Cells and FORMULATEXT. | Explain how to debug complex array formulas in Aspose.Cells by retrieving their string representation. | Provide an example of handling cases where FORMULATEXT returns an empty string for a non‑array cell.
+// Title: How to extract the text of a complex array formula using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that assigns an array formula to a cell with Aspose.Cells and then uses the Formula property to obtain the exact formula string for debugging. | Show how to retrieve the formula text of a shared or non‑shared array formula in a worksheet cell using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# get formula string from cell containing array formula | How to read array formula text in a .NET workbook with Aspose.Cells | Debugging complex Excel array formulas by extracting formula text using Aspose.Cells API
+// Tags: Aspose.Cells retrieve array formula text | C# extract cell formula string | Aspose.Cells debugging array formulas | SetArrayFormula and Formula property .NET | Excel array formula extraction with Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook, fills two ranges, sets a 3‑row array formula "=A1:A3*B1:B3" in C1:C3, uses the Excel FORMULATEXT function in D1 to retrieve the exact formula string, calculates, prints the result, and saves the file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, applies the array formula SUM(IF(A1:A10>5, A1:A10, 0)) to cell B1, then reads the formula text via the cell's Formula property and writes it to the console.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Populate some sample data that will be used by the array formula
-        worksheet.Cells["A1"].PutValue(1);
-        worksheet.Cells["A2"].PutValue(2);
-        worksheet.Cells["A3"].PutValue(3);
-        worksheet.Cells["B1"].PutValue(4);
-        worksheet.Cells["B2"].PutValue(5);
-        worksheet.Cells["B3"].PutValue(6);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a complex array formula (e.g., element‑wise multiplication of two ranges)
-        // The formula will occupy a 3‑row by 1‑column range starting at C1
-        worksheet.Cells["C1"].SetArrayFormula("=A1:A3*B1:B3", 3, 1);
+                // Define a complex array formula (example: SUM of IF condition)
+                string arrayFormula = "SUM(IF(A1:A10>5, A1:A10, 0))";
 
-        // Use the Excel FORMULATEXT function to retrieve the textual representation
-        // of the array formula from the first cell of the array (C1)
-        worksheet.Cells["D1"].Formula = "=FORMULATEXT(C1)";
+                // Get the target cell (B1)
+                Cell cell = sheet.Cells["B1"];
 
-        // Calculate all formulas so that FORMULATEXT returns the actual text
-        workbook.CalculateFormula();
+                // Apply the array formula to the single cell.
+                // Overload: SetArrayFormula(string formula, int firstRow, int firstColumn, bool isShared, bool isArray)
+                cell.SetArrayFormula(arrayFormula, cell.Row, cell.Column, false, true);
 
-        // Output the extracted formula text for debugging purposes
-        Console.WriteLine("Extracted array formula: " + worksheet.Cells["D1"].StringValue);
+                // Retrieve the formula text for debugging (Formula property works for array formulas)
+                string formulaText = cell.Formula;
 
-        // Save the workbook (optional, demonstrates lifecycle compliance)
-        workbook.Save("ArrayFormulaDebug.xlsx");
+                // Output the formula text
+                Console.WriteLine("Array formula text: " + formulaText);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
     }
 }

@@ -1,18 +1,14 @@
-// Title: Set column width in pixels with Cells.SetColumnWidthPixel – Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, access the first worksheet, and assign pixel‑based widths (e.g., 150 px for column C and 80 px for column A) using the Cells.SetColumnWidthPixel method in C# with Aspose.Cells, then save the workbook.
-// Keywords: Aspose.Cells | Cells.SetColumnWidthPixel | set column width pixel | C# Aspose.Cells column width | Excel column width pixels | .NET column width | adjust column width Aspose | pixel based column width | Aspose.Cells column sizing
-// Common Searches: Aspose.Cells set column width in pixels C# | Cells.SetColumnWidthPixel example | How to set column width to 150 pixels with Aspose.Cells | C# set first column width to 80 pixels Aspose | pixel based column width Aspose.Cells .NET
-// Developer Intent: The developer wants to define exact pixel widths for specific worksheet columns using Aspose.Cells for .NET.
-// Use Cases: Create a report where the first column needs a compact 80‑pixel width for IDs. | Allocate 150 pixels to a description column to prevent text wrapping. | Apply consistent pixel‑based column sizing across multiple worksheets before exporting to Excel.
-// AI Prompts: Generate C# code that sets pixel widths for a range of columns using a loop with Cells.SetColumnWidthPixel. | Explain error‑handling strategies when applying pixel‑based column widths in Aspose.Cells. | Show how to convert point or character width measurements to pixel values for column sizing in Aspose.Cells.
+// Title: How to set a worksheet column width in pixels with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Cells.SetColumnWidthPixel to set column C (index 2) to 150 px and saves the workbook. | Demonstrate adjusting multiple column widths in pixels using Aspose.Cells before populating data in a .NET workbook. | Show how to retrieve the Cells collection from a worksheet and apply SetColumnWidthPixel for precise column sizing in an Excel file.
+// Common Searches: Aspose.Cells C# set column width by pixel example | How to use SetColumnWidthPixel to define exact column size in Excel with .NET | Set column C width to 150 pixels using Aspose.Cells API | Adjust Excel column widths in pixels programmatically with Aspose.Cells for C#
+// Tags: Aspose.Cells SetColumnWidthPixel method | C# set Excel column width pixels | programmatic column width adjustment Aspose.Cells | Excel column pixel sizing .NET | worksheet column width precision Aspose
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, access the first worksheet, and assign pixel‑based widths (e.g., 150 px for column C and 80 px for column A) using the Cells.SetColumnWidthPixel method in C# with Aspose.Cells, then save the workbook.
+    // The example creates a new Workbook, accesses the first worksheet, and uses Cells.SetColumnWidthPixel to set column index 2 (column C) to 150 pixels, writes a label into cell C1, saves the file as SetColumnWidthPixelDemo.xlsx, and includes basic exception handling.
     public class SetColumnWidthPixelDemo
     {
         public static void Run()
@@ -20,22 +16,25 @@ namespace AsposeCellsExamples
             try
             {
                 // Create a new workbook
-                Workbook workbook = new Workbook();
+                using (Workbook workbook = new Workbook())
+                {
+                    // Access the first worksheet
+                    Worksheet worksheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                    // Get the Cells collection
+                    Cells cells = worksheet.Cells;
 
-                // Set column widths in pixels
-                cells.SetColumnWidthPixel(2, 150); // third column
-                cells.SetColumnWidthPixel(0, 80);  // first column
+                    // Set the width of column 2 (third column, zero‑based index) to 150 pixels
+                    cells.SetColumnWidthPixel(2, 150);
 
-                // Define output file path
-                string outputPath = "ColumnWidthPixelDemo.xlsx";
+                    // Put some data to visualize the column width
+                    cells["C1"].PutValue("Column C with 150px width");
 
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                    // Save the workbook
+                    string outputPath = "SetColumnWidthPixelDemo.xlsx";
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                }
             }
             catch (Exception ex)
             {

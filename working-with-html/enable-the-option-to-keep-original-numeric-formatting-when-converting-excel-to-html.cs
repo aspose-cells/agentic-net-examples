@@ -1,49 +1,46 @@
-// Title: Keep Original Numeric Formatting When Converting Excel to HTML with Aspose.Cells for .NET
-// Description: Shows how to load an Excel workbook, enable HtmlSaveOptions.ExportNumericFormat (and optionally ExportFormula), and save it as HTML so that currency, percentage, and custom number formats are preserved exactly as they appear in the source file.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportNumericFormat | preserve numeric formatting | Excel to HTML conversion | C# | .NET | number format export | currency format HTML | percentage format Excel | custom number format Aspose
-// Common Searches: Aspose.Cells keep numeric format when saving as HTML | HtmlSaveOptions ExportNumericFormat C# example | convert .xlsx to .html preserving number formats | retain currency and percentage formatting in HTML export Aspose.Cells | how to export Excel to HTML with original number formatting
-// Developer Intent: Add the ExportNumericFormat flag to HtmlSaveOptions so that numeric formatting is retained during HTML export.
-// Use Cases: Publish a financial statement to the web while keeping currency symbols and decimal precision. | Create an HTML preview of a spreadsheet that contains percentages and custom formats without losing visual fidelity. | Generate a web‑ready report from a data‑analysis workbook where the exact number formatting must match the Excel view.
-// AI Prompts: Provide C# code using Aspose.Cells to convert an Excel file to HTML while preserving original numeric formatting, including the required HtmlSaveOptions properties. | Explain which HtmlSaveOptions settings control numeric formatting and formula export when saving to HTML with Aspose.Cells for .NET. | Give a step‑by‑step guide to modify existing Aspose.Cells HTML export code to keep number formats such as currency, percentages, and custom patterns.
+// Title: How to keep original numeric formatting when converting an Excel workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that configures HtmlSaveOptions to retain Excel number formats during HTML export using Aspose.Cells. | Update the sample program to explicitly enable numeric format preservation when saving a workbook as HTML. | Identify the HtmlSaveOptions property that controls number format export and state its default behavior.
+// Common Searches: Aspose.Cells preserve number format Excel to HTML C# example | HtmlSaveOptions keep numeric display unchanged during conversion | C# export Excel workbook to HTML with original number formatting | how to retain Excel cell number formatting in HTML output using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions numeric format | preserve Excel number formatting HTML conversion | C# export workbook to HTML with original formatting | keep cell numeric display Aspose.Cells | HTML save options retain number formats
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to load an Excel workbook, enable HtmlSaveOptions.ExportNumericFormat (and optionally ExportFormula), and save it as HTML so that currency, percentage, and custom number formats are preserved exactly as they appear in the source file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example checks for the source Excel file, loads it into a Workbook, creates an HtmlSaveOptions object (numeric formats are retained by default), and saves the workbook as HTML, handling any runtime exceptions.
+    class Program
     {
-        try
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
-
-            // Ensure the input file exists before loading
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
+                string inputFile = "input.xlsx";
+                string outputFile = "output.html";
+
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the source Excel workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // Set HTML save options (numeric formats are preserved by default)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+                // Save the workbook as HTML using the configured options
+                workbook.Save(outputFile, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
             }
-
-            // Load the source Excel workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            catch (Exception ex)
             {
-                // Keep formulas in the HTML output
-                ExportFormula = true
-            };
-
-            // Save the workbook as HTML
-            workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

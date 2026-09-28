@@ -1,18 +1,16 @@
-// Title: C# – Export Aspose.Cells Chart to Landscape PDF (Full‑Width)
-// Description: Creates a workbook, adds sample data, inserts a column chart, sets the chart's PageSetup orientation to Landscape, and exports the chart to a PDF so it occupies the entire page width.
-// Keywords: Aspose.Cells chart PDF landscape | C# export chart to PDF | set chart orientation Aspose.Cells | chart.ToPdf landscape | Aspose.Cells PageSetup orientation
-// Common Searches: Aspose.Cells set chart to landscape before PDF export | C# export column chart as landscape PDF | How to use PageSetup orientation with Aspose.Cells chart | chart.ToPdf landscape mode example
-// Developer Intent: Configure a chart's page orientation to Landscape and generate a PDF file using Aspose.Cells for .NET.
-// Use Cases: Produce printable reports where wide charts need the full page width. | Create dashboard PDFs that display column charts without clipping. | Automate batch conversion of multiple charts into separate landscape PDFs.
-// AI Prompts: Write C# code with Aspose.Cells that sets a chart's orientation to Landscape and saves it as a PDF. | Explain the steps to modify a chart's PageSetup before calling ToPdf in Aspose.Cells. | Show how to iterate through all charts in a workbook and export each to a landscape‑oriented PDF.
+// Title: Convert an Aspose.Cells column chart to a PDF with landscape page orientation using C#
+// AI Prompts: Generate C# code that creates a worksheet, adds a column chart, sets Chart.PageSetup.Orientation to Landscape, and saves the chart as a PDF with Aspose.Cells. | Show how to export an Aspose.Cells chart to PDF in landscape mode so the chart occupies the full page width.
+// Common Searches: c# aspnet export excel chart to pdf landscape orientation using aspose.cells | how to set chart page orientation to landscape before pdf conversion in asp.net | asp.net core generate column chart and save as landscape pdf with aspose.cells | aspose.cells chart to pdf full width landscape example c#
+// Tags: Aspose.Cells chart to PDF landscape | C# set chart orientation Aspose.Cells | Export Excel chart as landscape PDF .NET | Chart.PageSetup.Orientation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds sample data, inserts a column chart, sets the chart's PageSetup orientation to Landscape, and exports the chart to a PDF so it occupies the entire page width.
+    // The sample creates a workbook, inserts sample data, builds a column chart, changes the chart's PageSetup.Orientation to Landscape, and then exports the chart to a PDF file using Aspose.Cells for .NET.
     public class ChartToPdfLandscapeDemo
     {
         public static void Run()
@@ -30,7 +28,6 @@ namespace AsposeCellsExamples
                 worksheet.Cells["A2"].PutValue("A");
                 worksheet.Cells["A3"].PutValue("B");
                 worksheet.Cells["A4"].PutValue("C");
-
                 worksheet.Cells["B1"].PutValue("Value");
                 worksheet.Cells["B2"].PutValue(10);
                 worksheet.Cells["B3"].PutValue(20);
@@ -41,30 +38,37 @@ namespace AsposeCellsExamples
                 Chart chart = worksheet.Charts[chartIndex];
 
                 // Set the data range for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+                chart.SetChartDataRange("A1:B4", true);
+                chart.Title.Text = "Sample Chart";
 
-                // Set the chart's page orientation to Landscape
+                // Set the chart's page orientation to Landscape to use full width
                 chart.PageSetup.Orientation = PageOrientationType.Landscape;
 
-                // Export the chart to a PDF file; the landscape orientation ensures full width usage
-                chart.ToPdf("ChartLandscape.pdf");
+                // Define output PDF path
+                string outputPath = "ChartLandscape.pdf";
 
-                Console.WriteLine("Chart exported to PDF with landscape orientation successfully.");
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Export the chart to a PDF file
+                chart.ToPdf(outputPath);
+
+                Console.WriteLine("Chart exported to PDF with landscape orientation.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
+        // Application entry point
         public static void Main(string[] args)
         {
-            ChartToPdfLandscapeDemo.Run();
+            Run();
         }
     }
 }

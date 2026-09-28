@@ -1,17 +1,14 @@
-// Title: C# Aspose.Cells Top 10 AutoFilter for Highest‑Selling Products
-// Description: Creates a workbook, populates product and sales columns, defines an AutoFilter range, applies a Top 10 filter on the Sales column to keep the ten largest values, refreshes the view, and saves the file as Top10Products.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | AutoFilter | Top 10 filter | highest sales | product ranking | Excel automation | filter by top values
-// Common Searches: Aspose.Cells Top 10 filter C# example | How to show top selling items with Aspose.Cells | C# AutoFilter highest sales Aspose | Apply Top10 filter on Excel column using Aspose.Cells | Filter top 10 rows by value in .NET
-// Developer Intent: Generate an Excel workbook and use Aspose.Cells to display only the ten products with the greatest sales figures.
-// Use Cases: Quickly produce a sales dashboard that highlights the best‑performing products. | Create a reusable report template that automatically filters to the top‑10 items for monthly reviews. | Export a pre‑filtered list of top sellers to downstream systems or BI tools.
-// AI Prompts: Write C# code with Aspose.Cells to apply a Top 10 AutoFilter on column B and save the workbook. | Modify the example to use a percentage‑based Top 10 filter instead of a count‑based filter. | Add conditional formatting that colors rows meeting the Top 10 criteria.
+// Title: Apply a Top 10 AutoFilter to the Sales column in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates an Excel workbook with Product and Sales columns, defines an AutoFilter range, and uses Aspose.Cells FilterTop10 to display only the top 10 sales rows. | Show how to modify the Top 10 filter to a percentage‑based filter (e.g., top 10 % of sales) with Aspose.Cells AutoFilter in C#. | Explain the steps to refresh the AutoFilter after calling FilterTop10 and save the filtered workbook to a file using Aspose.Cells.
+// Common Searches: asp.net c# aspocells how to filter top 10 rows by sales column | example code for applying top 10 autofilter on Excel sheet using Aspose.Cells | filter highest selling products in Excel with Aspose.Cells C# | using FilterTop10 method in Aspose.Cells to show top sales items | Aspose.Cells AutoFilter range and top 10 filter tutorial
+// Tags: Aspose.Cells FilterTop10 API usage C# | Excel AutoFilter range definition Aspose.Cells | Top 10 sales filter Aspose.Cells C# | percentage based top filter Aspose.Cells | refresh AutoFilter after FilterTop10 Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsTop10FilterDemo
 {
-    // Creates a workbook, populates product and sales columns, defines an AutoFilter range, applies a Top 10 filter on the Sales column to keep the ten largest values, refreshes the view, and saves the file as Top10Products.xlsx.
+    // The sample creates a new workbook, fills columns A and B with product names and sales figures, sets an AutoFilter covering the data range, applies Aspose.Cells' FilterTop10 to keep only the ten highest‑selling rows, refreshes the filter to hide other rows, and saves the result as Top10SalesFilter.xlsx.
     public class Program
     {
         public static void Main()
@@ -19,36 +16,34 @@ namespace AsposeCellsTop10FilterDemo
             // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Add header row
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Sales");
+            // Populate sample data: Product names and Sales values
+            // Header row
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
 
-            // Sample product and sales data
-            string[] products = { "Apple", "Banana", "Orange", "Grapes", "Mango", "Pineapple", "Strawberry", "Blueberry", "Kiwi", "Peach", "Cherry", "Lemon", "Watermelon", "Papaya", "Guava" };
-            int[] sales = { 120, 85, 150, 60, 200, 95, 130, 70, 55, 110, 90, 65, 180, 75, 50 };
+            // Sample data rows
+            string[] products = { "Apple", "Banana", "Orange", "Grapes", "Mango", "Pineapple", "Strawberry", "Kiwi", "Peach", "Cherry", "Lemon", "Watermelon" };
+            int[] sales = { 120, 85, 150, 60, 200, 95, 110, 70, 130, 55, 40, 180 };
 
-            // Populate the worksheet with data
             for (int i = 0; i < products.Length; i++)
             {
-                cells[i + 1, 0].PutValue(products[i]); // Column A (Product)
-                cells[i + 1, 1].PutValue(sales[i]);    // Column B (Sales)
+                sheet.Cells[i + 1, 0].PutValue(products[i]);   // Column A: Product
+                sheet.Cells[i + 1, 1].PutValue(sales[i]);     // Column B: Sales
             }
 
-            // Define the autofilter range (including header)
-            int lastRow = products.Length + 1; // +1 for header row
-            sheet.AutoFilter.Range = $"A1:B{lastRow}";
+            // Define the autofilter range covering both columns (including header)
+            sheet.AutoFilter.Range = "A1:B13";
 
             // Apply a Top 10 filter on the Sales column (field index 1)
-            // isTop = true (show highest), isPercent = false (use count), itemCount = 10
+            // Parameters: fieldIndex, isTop, isPercent, itemCount
             sheet.AutoFilter.FilterTop10(fieldIndex: 1, isTop: true, isPercent: false, itemCount: 10);
 
             // Refresh the filter to hide rows that do not meet the criteria
             sheet.AutoFilter.Refresh();
 
             // Save the workbook
-            workbook.Save("Top10Products.xlsx");
+            workbook.Save("Top10SalesFilter.xlsx");
         }
     }
 }

@@ -1,37 +1,39 @@
-// Title: List All ThemeColorType Enum Values and Their Default RGB Colors with Aspose.Cells for .NET
-// Description: Shows how to create a Workbook, loop through the ThemeColorType enumeration, retrieve each default theme color using Workbook.GetThemeColor, and print the enum name with its R, G, B components. The sample also demonstrates optional workbook saving.
-// Keywords: Aspose.Cells | ThemeColorType | GetThemeColor | default theme colors | RGB values | C# | .NET | Excel theme palette | enumerate theme colors | workbook theme colors | color enumeration
-// Common Searches: Aspose.Cells list ThemeColorType values | Get default RGB for Excel theme colors C# | Workbook.GetThemeColor example | enumerate Excel theme colors with Aspose | ThemeColorType enum RGB Aspose.Cells
-// Developer Intent: Retrieve and display the built‑in RGB values for every ThemeColorType in an Aspose.Cells workbook.
-// Use Cases: Create a reference table of Excel theme colors for UI design or documentation. | Validate that custom theme colors match the default palette in a workbook. | Generate a color legend for reports by iterating over ThemeColorType and outputting RGB values.
-// AI Prompts: Write a method that returns a Dictionary<ThemeColorType, Color> containing the default theme colors using Aspose.Cells. | Modify the example to export ThemeColorType names and their RGB values to a CSV file. | Explain how Workbook.GetThemeColor determines the color and which theme is applied when a new workbook is created.
+// Title: How to enumerate all ThemeColorType values and retrieve their default RGB colors using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates over the ThemeColorType enum and prints each theme color's default RGB components using Workbook.GetThemeColor. | Create a method that returns a Dictionary<ThemeColorType, string> where each value is the hex representation of the default theme color. | Show how to log the names of all theme colors and their RGB values to a text file with Aspose.Cells.
+// Common Searches: C# Aspose.Cells retrieve default theme colors for each enum value | list Excel theme colors and their RGB values using Aspose.Cells library | how to display all theme color types with their colors in .NET | sample code to print theme colors from a workbook in Aspose.Cells
+// Tags: Aspose.Cells ThemeColorType enumeration | default theme colors with Workbook API | C# extract Excel theme color RGB | list Excel theme color types programmatically | console output of theme colors Aspose
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsThemeColorDemo
+namespace AsposeCellsExample
 {
-    // Shows how to create a Workbook, loop through the ThemeColorType enumeration, retrieve each default theme color using Workbook.GetThemeColor, and print the enum name with its R, G, B components. The sample also demonstrates optional workbook saving.
+    // The example creates a new Workbook, loops through every ThemeColorType enum member, obtains each type's default color via Workbook.GetThemeColor, and writes the theme name together with its R, G, B values to the console.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (default theme is applied)
-            Workbook workbook = new Workbook();
-
-            // Iterate through all ThemeColorType enum values
-            foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+            try
             {
-                // Get the default theme color for the current type
-                Color color = workbook.GetThemeColor(type);
+                // Create a new workbook (no existing file needed)
+                Workbook workbook = new Workbook();
 
-                // Output the enum name and its RGB components
-                Console.WriteLine($"{type}: R={color.R}, G={color.G}, B={color.B}");
+                // Enumerate all ThemeColorType values and output their default RGB values
+                foreach (ThemeColorType colorType in Enum.GetValues(typeof(ThemeColorType)))
+                {
+                    // Get the default color for the current theme color type
+                    Color rgb = workbook.GetThemeColor(colorType);
+
+                    // Print the theme color type and its RGB components
+                    Console.WriteLine($"{colorType}: R={rgb.R}, G={rgb.G}, B={rgb.B}");
+                }
             }
-
-            // Optionally save the workbook if you want to inspect the theme in Excel
-            workbook.Save("ThemeColorsDemo.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,42 +1,53 @@
-// Title: Batch add TextBox shapes with unique names to every worksheet using Aspose.Cells for .NET
-// Description: Creates a new Workbook, optionally adds extra sheets, loops through all worksheets, inserts a TextBox at cell B2 (row 1, column 1) sized 100 × 200 px, assigns a name such as TextBox_0_0, sets its caption to include the sheet name, and saves the file as BatchTextBoxes.xlsx.
-// Keywords: Aspose.Cells textbox | C# add textbox worksheet | batch shape creation Aspose | unique textbox name | iterate worksheets Aspose.Cells | .NET Excel shapes
-// Common Searches: Add a TextBox to each sheet with Aspose.Cells C# | Batch insert textbox shapes in Excel using Aspose | How to give each Aspose.Cells TextBox a unique identifier | Loop through worksheets and create shapes with Aspose.Cells .NET | Aspose.Cells generate template with textbox per worksheet
-// Developer Intent: Insert a TextBox into every worksheet and give each one a distinct Name.
-// Use Cases: Build a multi‑sheet template where every sheet shows a labeled instruction box. | Prepare a report that later code can locate by textbox name for dynamic content insertion. | Automate placeholder TextBox placement before populating data across many worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates over all worksheets and adds a TextBox at B2, assigning a unique Name based on the sheet index. | Show how to batch add TextBox controls, set their Text to include the worksheet name, and save as 'ReportWithTextBoxes.xlsx' using Aspose.Cells for .NET. | Explain how to modify font size, border style, and background color of TextBoxes after they are added to multiple worksheets with Aspose.Cells.
+// Title: Add uniquely named TextBox shapes to every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an existing .xlsx file with Aspose.Cells, iterates all worksheets, inserts a TextBox shape at a given cell location, and assigns a distinct Name to each TextBox. | Adjust the TextBox insertion logic to compute row, column, and pixel offsets based on each worksheet's layout while ensuring sequential identifiers are applied without overwriting existing shapes.
+// Common Searches: aspnet c# add textbox shape to each worksheet aspose.cells example | assign incremental names to shapes when looping through worksheets in Aspose.Cells | batch create text boxes in all sheets of an Excel workbook using Aspose.Cells for .NET | set textbox size and position programmatically with Aspose.Cells C#
+// Tags: bulk shape insertion aspose.cells | sequential shape identifiers .net | worksheet loop shape creation c# | textbox geometry parameters aspose.cells | excel workbook shape handling .net
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new Workbook, optionally adds extra sheets, loops through all worksheets, inserts a TextBox at cell B2 (row 1, column 1) sized 100 × 200 px, assigns a name such as TextBox_0_0, sets its caption to include the sheet name, and saves the file as BatchTextBoxes.xlsx.
+// The sample loads an existing Excel file, loops through every worksheet, adds a TextBox shape at a fixed cell with defined pixel dimensions, sets its displayed text, assigns a unique Name using an incrementing counter, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        // Paths to the source and destination Excel files
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Add extra worksheets for demonstration (optional)
-        wb.Worksheets.Add(); // Sheet1
-        wb.Worksheets.Add(); // Sheet2
+        // Load the workbook (lifecycle rule: load)
+        Workbook workbook = new Workbook(inputPath);
 
-        // Loop through each worksheet in the workbook
-        foreach (Worksheet ws in wb.Worksheets)
+        // Counter to generate unique identifiers for each TextBox
+        int textboxCounter = 0;
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Add a TextBox to the worksheet at row 1, column 1 with height 100px and width 200px
-            int tbIndex = ws.TextBoxes.Add(1, 1, 100, 200);
-            TextBox tb = ws.TextBoxes[tbIndex];
+            // Define position and size for the TextBox (row, column, top, left, height, width)
+            int upperLeftRow = 1;          // Row index (0‑based)
+            int upperLeftColumn = 1;       // Column index (0‑based)
+            int top = 0;                   // Pixels from the top of the cell
+            int left = 0;                  // Pixels from the left of the cell
+            int height = 100;              // Height in pixels
+            int width = 200;               // Width in pixels
 
-            // Assign a unique identifier (Name) using worksheet index and textbox index
-            tb.Name = $"TextBox_{ws.Index}_{tbIndex}";
-            tb.Text = $"TextBox on sheet '{ws.Name}'";
+            // Add a TextBox shape to the current worksheet
+            TextBox textBox = sheet.Shapes.AddTextBox(
+                upperLeftRow, upperLeftColumn, top, left, height, width);
 
-            // Additional formatting can be applied here if needed
+            // Set the displayed text (optional)
+            textBox.Text = $"TextBox on sheet \"{sheet.Name}\"";
+
+            // Assign a unique identifier using the Name property
+            textBox.Name = $"TextBox_{textboxCounter}";
+
+            // Increment the counter for the next TextBox
+            textboxCounter++;
         }
 
-        // Save the workbook with all added TextBoxes
-        wb.Save("BatchTextBoxes.xlsx");
+        // Save the modified workbook (lifecycle rule: save)
+        workbook.Save(outputPath);
     }
 }

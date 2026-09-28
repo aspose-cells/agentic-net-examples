@@ -1,38 +1,29 @@
-// Title: Insert a TextBox at B2 with 200‑pt width using Aspose.Cells .NET
-// Description: This C# example creates a new Workbook, accesses the first worksheet, adds a TextBox anchored to cell B2, sets its WidthPt property to 200 points, optionally assigns text, and saves the result as TextBoxAtB2.xlsx.
-// Keywords: Aspose.Cells | C# TextBox | Insert TextBox B2 | WidthPt 200 | shape positioning .NET | Excel TextBox Aspose | worksheet shapes | Aspose.Cells example
-// Common Searches: Aspose.Cells add TextBox to specific cell | set TextBox width in points C# | position shape at B2 Aspose.Cells | change TextBox WidthPt property | C# Aspose.Cells create textbox
-// Developer Intent: Add a TextBox to Sheet1 at cell B2 and set its width to 200 points using Aspose.Cells.
-// Use Cases: Create a header label in a financial report by placing a 200‑pt TextBox at B2. | Provide on‑sheet instructions for data entry with a fixed‑width TextBox anchored at B2. | Design a dashboard annotation where the TextBox width must match column layout, positioned at B2.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a TextBox at cell C3, height 60 px, width 150 pt. | Show how to change the background color and border style of a TextBox placed at D5 using Aspose.Cells. | Write a method that receives a list of cell addresses and adds a TextBox to each, setting each WidthPt to 180 points.
+// Title: Create a TextBox shape on Sheet1 at cell B2 with a 200‑point width using Aspose.Cells for .NET
+// AI Prompts: Write C# code that adds a TextBox shape to the first worksheet at cell B2, sets its width to 200 points, and saves the workbook with Aspose.Cells. | Generate a program that creates a new workbook, inserts a TextBox at B2 with a width of 200 points (height 100 points), assigns sample text, and writes the file to disk using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells how to place a TextBox at a specific cell in C# | set textbox width in points when adding shape with Aspose.Cells | C# Aspose.Cells add TextBox shape to Sheet1 at B2 | adjust dimensions of a TextBox shape using Aspose.Cells API | save workbook after inserting a TextBox with custom size Aspose.Cells
+// Tags: add textbox shape Aspose.Cells C# | set textbox width points Aspose.Cells | position shape at cell B2 Aspose.Cells | textbox dimensions Excel Aspose.Cells | create shape on worksheet Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// This C# example creates a new Workbook, accesses the first worksheet, adds a TextBox anchored to cell B2, sets its WidthPt property to 200 points, optionally assigns text, and saves the result as TextBoxAtB2.xlsx.
+// The example creates a new workbook, adds a TextBox shape to Sheet1 at cell B2 with a width of 200 points (height 100 points), sets its text, and saves the file as output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (Sheet1 is the first worksheet)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook
+        var workbook = new Workbook();
 
-        // Add a TextBox positioned at cell B2 (row index 1, column index 1)
-        // Parameters: topRow, leftColumn, height (pixels), width (pixels)
-        int textBoxIndex = sheet.TextBoxes.Add(1, 1, 50, 100);
+        // Get the first worksheet (Sheet1)
+        var sheet = workbook.Worksheets[0];
 
-        // Retrieve the created TextBox object
-        TextBox textBox = sheet.TextBoxes[textBoxIndex];
+        // Add a TextBox at cell B2 (row index 1, column index 1)
+        // Parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
+        var textBox = sheet.Shapes.AddTextBox(1, 1, 0, 0, 100, 200);
 
-        // Set the width of the TextBox to 200 points
-        textBox.WidthPt = 200;
-
-        // (Optional) Set some sample text
+        // Set optional text inside the TextBox
         textBox.Text = "Sample TextBox";
 
-        // Save the workbook to a file
-        workbook.Save("TextBoxAtB2.xlsx");
+        // Save the workbook
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,71 +1,61 @@
-// Title: Load an Excel workbook from a file path using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to open an Excel file with Aspose.Cells by passing a full file path to the Workbook constructor, validate the file's existence, handle loading errors, and retrieve basic worksheet information such as the first sheet name and total sheet count.
-// Keywords: Aspose.Cells load workbook | C# open Excel file | Workbook constructor file path | validate Excel file existence | exception handling Aspose.Cells | read worksheet names C# | Aspose.Cells .NET example
-// Common Searches: How to open an Excel file with Aspose.Cells in C# | Aspose.Cells load workbook from path | C# read first worksheet name using Aspose.Cells | Count worksheets after loading workbook Aspose | Aspose.Cells error handling when file not found
-// Developer Intent: Load an Excel workbook from a specified path into memory so it can be processed programmatically.
-// Use Cases: Open a user‑provided Excel file for data extraction or transformation. | Verify that the target file exists before creating a Workbook object. | Capture and log exceptions that occur during workbook initialization. | Retrieve the name of the first worksheet and the total number of sheets for quick validation.
-// AI Prompts: Write C# code that uses Aspose.Cells to load an Excel file from a given path, prints all worksheet names, and gracefully handles missing‑file or corrupted‑file errors. | Provide a reusable method in C# for opening an Excel workbook with Aspose.Cells that includes file‑existence checks and detailed exception logging.
+// Title: Load an Excel workbook from a file path with Aspose.Cells in C# and create a new workbook if the file is missing
+// AI Prompts: Write C# code that uses Aspose.Cells to open an Excel workbook from a specified path, and if the file does not exist, instantiate a new workbook and save it to the same location. | Show how to check for the existence of an Excel file before loading it with Aspose.Cells, then access the first worksheet after the workbook is loaded or created.
+// Common Searches: aspocells open workbook from specific path c# | c# create new Excel workbook when file not found using Aspose.Cells | check file existence before loading Excel with Aspose.Cells | save newly created workbook to original path aspocells | access first worksheet after loading workbook aspocells c#
+// Tags: load workbook from file Aspose.Cells C# | create workbook on missing file Aspose.Cells | save workbook to same location Aspose.Cells | verify Excel file existence before opening Aspose.Cells | access first worksheet Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to open an Excel file with Aspose.Cells by passing a full file path to the Workbook constructor, validate the file's existence, handle loading errors, and retrieve basic worksheet information such as the first sheet name and total sheet count.
-    public class LoadWorkbookDemo
+    // C# example that loads an Excel workbook from a given file path using Aspose.Cells; if the file is absent, it creates a new workbook, saves it to the same path, and then accesses the first worksheet.
+    class Program
     {
-        /// <param name="filePath">Full path to the Excel file to load.</param>
-        public static void Run(string filePath)
+        static void Main(string[] args)
         {
+            // Path to the Excel file
+            string filePath = @"C:\Path\To\Your\Workbook.xlsx";
+
+            Workbook workbook = null;
+
             try
             {
-                // Load the workbook using the constructor that accepts a file path.
-                Workbook workbook = new Workbook(filePath);
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(filePath))
+                {
+                    workbook = new Workbook(filePath);
+                    Console.WriteLine("Workbook loaded from file.");
+                }
+                else
+                {
+                    workbook = new Workbook(); // creates a default workbook with one worksheet
+                    Console.WriteLine("File not found. A new workbook has been created.");
 
-                // Example processing: display the name of the first worksheet and total sheet count.
-                Worksheet firstSheet = workbook.Worksheets[0];
-                Console.WriteLine($"First worksheet name: {firstSheet.Name}");
-                Console.WriteLine($"Total worksheets: {workbook.Worksheets.Count}");
+                    // Optionally save the new workbook for future runs
+                    try
+                    {
+                        workbook.Save(filePath);
+                        Console.WriteLine($"New workbook saved to '{filePath}'.");
+                    }
+                    catch (Exception saveEx)
+                    {
+                        Console.WriteLine($"Failed to save new workbook: {saveEx.Message}");
+                    }
+                }
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine("Loaded worksheet name: " + sheet.Name);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            string filePath;
-
-            if (args.Length > 0)
-            {
-                filePath = args[0];
-            }
-            else
-            {
-                // Provide a default path or prompt the user.
-                Console.Write("Enter the full path to the Excel file: ");
-                filePath = Console.ReadLine();
+                Console.WriteLine("An error occurred while processing the workbook: " + ex.Message);
             }
 
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                Console.WriteLine("No file path provided.");
-                return;
-            }
-
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            // Run the demo with the validated file path.
-            LoadWorkbookDemo.Run(filePath);
+            // Keep console window open
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }

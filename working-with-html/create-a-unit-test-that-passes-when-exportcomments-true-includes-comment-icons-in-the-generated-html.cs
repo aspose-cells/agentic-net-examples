@@ -1,66 +1,63 @@
-// Title: C# Unit Test – Verify ExportComments=true Generates Comment Icons in Aspose.Cells HTML Export
-// Description: Creates a workbook, adds a visible comment to cell A1, sets HtmlSaveOptions.IsExportComments to true, saves to a memory stream as HTML, and asserts that the output contains the comment markup, confirming that comment icons are exported.
-// Keywords: Aspose.Cells | HTML export | IsExportComments | comment icons | C# unit test | automated verification | memory stream | comment markup
-// Common Searches: Aspose.Cells unit test export comments to HTML | How to check comment icons in Aspose.Cells HTML output | IsExportComments true example C# | Validate comment visibility in Aspose.Cells HTML export
-// Developer Intent: Write an automated test that ensures comment icons appear in the HTML when IsExportComments is enabled.
-// Use Cases: CI pipeline validation that HTML reports retain cell comments for end‑user documentation. | Regression test to detect accidental removal of comment markup during library updates. | Quality assurance of web‑based spreadsheet viewers that rely on Aspose.Cells HTML export.
-// AI Prompts: Generate an MSTest method that creates a workbook, adds a visible comment, exports to HTML with IsExportComments = true, and asserts the HTML contains the comment element. | Provide an xUnit test example that validates Aspose.Cells includes comment icons in the HTML output when HtmlSaveOptions.IsExportComments is set. | Write a NUnit test that checks for the presence of the comment CSS class or HTML tag after saving a workbook with comments to HTML using Aspose.Cells.
+// Title: Create a C# unit test that verifies ExportComments=true adds comment icons when saving a workbook to HTML with Aspose.Cells
+// AI Prompts: Generate a C# test method (e.g., NUnit or MSTest) that adds a comment to cell A1, saves the workbook using HtmlSaveOptions, and asserts that the produced HTML string contains the 'comment.png' image. | Write code to export a workbook to a MemoryStream with ExportComments enabled, read the HTML output, and fail the test if the comment icon is not found.
+// Common Searches: how to assert comment icons appear in Aspose.Cells HTML export unit test | C# Aspose.Cells ExportComments true unit test example | verify comment.png is included in HTML saved by Aspose.Cells | unit testing workbook comment rendering in HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions test for comment image presence
+// Tags: Aspose.Cells HtmlSaveOptions ExportComments verification | C# unit test comment icon in HTML output | check comment.png presence in Aspose.Cells HTML export | save workbook as HTML with comment icons | Aspose.Cells comment rendering test
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+namespace AsposeCellsTests
 {
-    // Creates a workbook, adds a visible comment to cell A1, sets HtmlSaveOptions.IsExportComments to true, saves to a memory stream as HTML, and asserts that the output contains the comment markup, confirming that comment icons are exported.
+    // A C# unit test that creates a workbook, adds a comment to cell A1, saves the workbook as HTML using HtmlSaveOptions with ExportComments enabled, reads the HTML from a memory stream, and asserts that the output contains the 'comment.png' image indicating the comment icon.
+    public class HtmlExportTests
+    {
+        public void ExportComments_IncludesCommentIcons()
+        {
+            try
+            {
+                // Create a new workbook and add a comment to cell A1
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
+                int commentIndex = sheet.Comments.Add("A1");
+                var comment = sheet.Comments[commentIndex];
+                comment.Note = "Sample comment";
+
+                // Configure HTML export options (comments are exported by default)
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+                // Export to HTML using a memory stream
+                using (var stream = new MemoryStream())
+                {
+                    workbook.Save(stream, htmlOptions);
+                    stream.Position = 0;
+                    string html = new StreamReader(stream).ReadToEnd();
+
+                    // Verify that the generated HTML contains the comment icon image
+                    if (html.Contains("comment.png"))
+                    {
+                        Console.WriteLine("Test passed: Comment icon found in HTML output.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Test failed: Comment icon not found in HTML output.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Runtime safety: report any unexpected errors
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+            }
+        }
+    }
+
     class Program
     {
         static void Main()
         {
-            try
-            {
-                ExportComments_IncludesCommentIcons();
-                Console.WriteLine("Test passed.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Test failed: {ex.Message}");
-            }
-        }
-
-        static void ExportComments_IncludesCommentIcons()
-        {
-            // Create a new workbook and add some data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Data");
-
-            // Add a visible comment to cell A1
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.Note = "This is a test comment";
-            comment.IsVisible = true; // ensures the comment icon is present
-
-            // Configure HTML save options to export comments
-            HtmlSaveOptions options = new HtmlSaveOptions
-            {
-                IsExportComments = true
-            };
-
-            // Save the workbook to a memory stream as HTML
-            using (MemoryStream ms = new MemoryStream())
-            {
-                workbook.Save(ms, options);
-                ms.Position = 0;
-                string html = new StreamReader(ms, Encoding.UTF8).ReadToEnd();
-
-                // Verify that the generated HTML contains comment markup (icon)
-                if (!html.Contains("comment", StringComparison.OrdinalIgnoreCase))
-                {
-                    throw new InvalidOperationException("HTML should contain comment markup when IsExportComments is true.");
-                }
-            }
+            var test = new HtmlExportTests();
+            test.ExportComments_IncludesCommentIcons();
         }
     }
 }

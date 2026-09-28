@@ -1,47 +1,54 @@
-// Title: Unlock a locked TextBox shape in Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a TextBox shape that is initially locked, enable editing of drawing objects on a protected worksheet, set the shape's IsLocked property to false, optionally protect the sheet, and save the file so the TextBox can be moved and resized.
-// Keywords: Aspose.Cells | .NET | C# | TextBox shape | IsLocked | Worksheet protection | AllowEditingObject | unlock shape | resize shape | move shape
-// Common Searches: Aspose.Cells unlock TextBox | How to edit size of a locked shape in .NET | Enable shape movement on a protected worksheet | C# unlock textbox shape Aspose.Cells | Allow editing of drawing objects after sheet protection
-// Developer Intent: Remove the lock from a TextBox shape so its position and dimensions can be modified programmatically.
-// Use Cases: Programmatically release a TextBox to reposition it on a protected sheet. | Allow end‑users to resize or move shapes while the worksheet remains locked for data entry. | Adjust the dimensions of a shape after unlocking it to accommodate dynamic content.
-// AI Prompts: Generate C# code with Aspose.Cells that unlocks a TextBox shape and then changes its width and height. | Show how to protect a worksheet but still permit editing of drawing objects, including unlocking a shape. | Explain the role of the AllowEditingObject property when unlocking shapes on a protected sheet.
+// Title: Unlock a locked TextBox shape in an Excel .xlsx file with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to iterate over Worksheet.Shapes, detect TextBox objects, and set their IsLocked property to false in C#. | Load an existing .xlsx workbook, unlock all TextBox shapes to enable moving and resizing, then save the file using Aspose.Cells. | Programmatically change the lock state of Excel TextBox shapes by accessing the Shape.IsLocked property via the Aspose.Cells API.
+// Common Searches: C# Aspose.Cells how to unlock TextBox shape in Excel workbook | set IsLocked false for TextBox objects using Aspose.Cells .NET | modify locked textbox position and size programmatically in .xlsx with Aspose | unlock Excel shape lock property Aspose.Cells example | iterate worksheet shapes to find TextBox and change lock state in C#
+// Tags: Aspose.Cells unlock TextBox shape C# | Shape.IsLocked property usage | Iterate worksheet shapes Aspose.Cells | Edit Excel textbox position programmatically | Load and save .xlsx with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace UnlockTextBoxDemo
+// Loads an existing .xlsx workbook, loops through all shapes on the first worksheet, unlocks any TextBox shapes by setting Shape.IsLocked = false, and saves the updated file.
+class Program
 {
-    // Demonstrates how to create a workbook, add a TextBox shape that is initially locked, enable editing of drawing objects on a protected worksheet, set the shape's IsLocked property to false, optionally protect the sheet, and save the file so the TextBox can be moved and resized.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Add a regular TextBox shape (initially locked)
-            // Parameters: upper left row, upper left column, top offset, left offset, width, height (in pixels)
-            Shape textBoxShape = sheet.Shapes.AddTextBox(2, 2, 0, 0, 150, 60);
-            textBoxShape.Text = "Locked TextBox";
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Lock the shape to simulate a previously locked textbox
-            textBoxShape.IsLocked = true;
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // ---- Unlocking process ----
+            // Iterate through all shapes and unlock any TextBox shapes
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                // Check if the shape is a TextBox
+                if (shape is TextBox)
+                {
+                    // Unlock the shape to allow editing of position and size
+                    shape.IsLocked = false;
+                }
+            }
 
-            // 1. Ensure the worksheet allows editing of drawing objects when protected
-            sheet.Protection.AllowEditingObject = true;
-
-            // 2. Unlock the textbox shape so its position and size can be edited
-            textBoxShape.IsLocked = false;
-
-            // (Optional) Protect the worksheet to see the effect of AllowEditingObject
-            sheet.Protect(ProtectionType.All);
-
-            // Save the workbook
-            workbook.Save("UnlockedTextBox.xlsx");
+            // Save the workbook with the unlocked textbox
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

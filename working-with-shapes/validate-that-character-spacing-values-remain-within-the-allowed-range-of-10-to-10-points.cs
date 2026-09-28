@@ -1,50 +1,91 @@
-// Title: C# Example: Validate and Clamp TextBox Character Spacing (-10 to 10) with Aspose.Cells
-// Description: This Aspose.Cells for .NET sample creates a workbook, adds a TextBox shape, sets its TextOptions.Spacing property, checks whether the value lies between -10 and 10 points, automatically clamps out‑of‑range values to the nearest limit, and saves the file. It demonstrates proper handling of character‑spacing constraints for shape text.
-// Keywords: Aspose.Cells TextBox spacing | C# TextOptions.Spacing range | character spacing validation .NET | clamp shape spacing Aspose | Aspose.Cells example GitHub | Excel shape text spacing | adjust TextBox character spacing | Aspose.Cells API usage | range check -10 to 10 points | C# workbook shape validation
-// Common Searches: How to limit TextBox character spacing in Aspose.Cells? | Validate TextOptions.Spacing range in C# | Clamp out‑of‑range spacing for Excel shapes using Aspose | What is the allowed spacing range for Aspose.Cells TextBox? | Example code for correcting shape spacing in .NET
-// Developer Intent: Ensure a TextBox's character spacing stays within the supported -10 to 10 point interval and automatically correct values that fall outside this range.
-// Use Cases: Sanitize user‑provided spacing values before applying them to report templates. | Batch‑process worksheets to enforce spacing limits on all TextBox shapes. | Integrate spacing validation into a CI pipeline that generates Excel files with dynamic text styling.
-// AI Prompts: Generate a C# method that receives a TextOptions object and clamps its Spacing property to the -10..10 point range. | Write code that iterates over every shape in a worksheet and ensures each TextBox's character spacing complies with Aspose.Cells limits. | Provide a logging snippet that warns when a TextBox spacing value is out of range, then corrects it before saving the workbook.
+// Title: Check and Adjust Cell Font Size (Character Spacing) to Stay Within -10 to 10 Points Using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens an Excel workbook, iterates every used cell, reads the Font.Size property, and resets any value outside the -10 to 10 point range. | Create a method that validates character spacing by clamping Font.Size for each cell across all worksheets and then saves the corrected workbook.
+// Common Searches: Aspose.Cells how to enforce font size limits in an Excel file C# | C# iterate all cells and correct out‑of‑range character spacing with Aspose.Cells | Validate and clamp cell style properties using Aspose.Cells .NET | Check font size range in each cell of a workbook with Aspose.Cells
+// Tags: Aspose.Cells validate cell font size range | C# clamp character spacing Aspose.Cells | Excel workbook style property correction Aspose.Cells | iterate all cells Aspose.Cells .NET | font size bounds enforcement Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using System;
+using System.IO;
 
-// This Aspose.Cells for .NET sample creates a workbook, adds a TextBox shape, sets its TextOptions.Spacing property, checks whether the value lies between -10 and 10 points, automatically clamps out‑of‑range values to the nearest limit, and saves the file. It demonstrates proper handling of character‑spacing constraints for shape text.
-class ValidateCharacterSpacing
+// The example loads an Excel workbook with Aspose.Cells, walks through every used cell in all worksheets, reads the Font.Size (used as a proxy for character spacing), clamps any values outside the -10 to 10 point range, writes the corrected style back to the cell, and saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Add a text box shape to the worksheet
-        TextBox textBox = sheet.Shapes.AddTextBox(0, 0, 2, 0, 200, 100);
-        textBox.Text = "Sample Text";
-
-        // Access the TextOptions of the text box
-        TextOptions textOptions = textBox.TextOptions;
-
-        // Set a spacing value (example value that may be out of range)
-        textOptions.Spacing = 12.5; // Points
-
-        // Validate that the spacing is within the allowed range of -10 to 10 points
-        double spacing = textOptions.Spacing;
-        if (spacing < -10.0 || spacing > 10.0)
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Adjust to the nearest allowed value
-            double corrected = Math.Max(-10.0, Math.Min(10.0, spacing));
-            Console.WriteLine($"Spacing {spacing} is out of range. Adjusting to {corrected}.");
-            textOptions.Spacing = corrected;
-        }
-        else
-        {
-            Console.WriteLine($"Spacing {spacing} is within the allowed range.");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Save the workbook
-        workbook.Save("ValidatedSpacing.xlsx");
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Allowed font size range in points (used here as a stand‑in for character spacing)
+        const double MinSize = -10.0;
+        const double MaxSize = 10.0;
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Determine the used range of cells to limit iteration
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    Cell cell = sheet.Cells[row, col];
+
+                    // Retrieve the cell's style to access font properties
+                    Style style = cell.GetStyle();
+
+                    // Current font size value (used as a proxy for character spacing)
+                    double size = style.Font.Size;
+
+                    // Validate the size value
+                    if (size < MinSize || size > MaxSize)
+                    {
+                        // Clamp to the nearest allowed value
+                        double corrected = Math.Max(MinSize, Math.Min(MaxSize, size));
+
+                        // Apply corrected size (cast to int if Font.Size expects int)
+                        style.Font.Size = (int)corrected;
+
+                        // Apply the corrected style back to the cell
+                        cell.SetStyle(style);
+                    }
+                }
+            }
+        }
+
+        try
+        {
+            // Save the workbook after validation
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

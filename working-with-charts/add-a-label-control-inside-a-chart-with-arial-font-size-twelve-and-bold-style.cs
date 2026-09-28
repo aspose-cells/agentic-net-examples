@@ -1,53 +1,55 @@
-// Title: Add a Bold Arial 12‑pt Label Inside a Chart with Aspose.Cells for .NET
-// Description: Creates a workbook, fills sample data, inserts a column chart, and uses AddLabelInChart to place a label inside the chart area. The label text is set to "Chart Label" and formatted with Arial, 12‑pt, bold (optional black color), then saves the file as ChartWithLabel.xlsx.
-// Keywords: Aspose.Cells | C# | AddLabelInChart | chart label | Arial 12 bold | text box in chart | column chart annotation | .NET Excel automation | US
-// Common Searches: Aspose.Cells add label inside chart C# | Set chart label font Arial Aspose.Cells | Add text box to Excel chart .NET | How to format chart annotation Aspose.Cells | AddLabelInChart example
-// Developer Intent: Place a formatted text label inside an Excel chart using Aspose.Cells for .NET.
-// Use Cases: Add an annotation to highlight a data point within a column chart. | Insert a subtitle or note directly in the chart area for clearer reporting. | Apply corporate branding by styling chart labels with a specific font and size.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a label inside a chart and formats it as Arial 12‑pt bold. | Show how to position a label in a chart using AddLabelInChart with top, left, height, and width parameters. | Provide an example of adding multiple chart labels, each with different font styles, using Aspose.Cells for .NET.
+// Title: How to add an Arial 12‑point bold title to a column chart with Aspose.Cells in C#
+// AI Prompts: Write C# code that creates a column chart using Aspose.Cells and applies an Arial 12‑point bold font to the chart title. | Show how to modify the Font properties of a chart title in an Aspose.Cells workbook programmatically. | Provide a step‑by‑step example of adding a custom styled title to an Excel chart with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set chart title font to Arial bold | example of formatting column chart title in Aspose.Cells .NET | how to apply 12 point Arial style to Excel chart title using Aspose.Cells
+// Tags: Aspose.Cells set chart title font | C# column chart title styling | Excel chart title Arial bold | Aspose.Cells chart title formatting .NET
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, fills sample data, inserts a column chart, and uses AddLabelInChart to place a label inside the chart area. The label text is set to "Chart Label" and formatted with Arial, 12‑pt, bold (optional black color), then saves the file as ChartWithLabel.xlsx.
-class AddLabelToChart
+// The sample creates a new workbook, inserts sample data, adds a column chart, and then sets the chart title text to "Sample Chart Title" with an Arial 12‑point bold font before saving the workbook as ChartWithLabel.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 1, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.SetChartDataRange("A1:B4", true);
+            // Add sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a label inside the chart (units are 1/4000 of the chart area)
-        // top, left, height, width
-        Label chartLabel = chart.Shapes.AddLabelInChart(100, 100, 200, 200);
-        chartLabel.Text = "Chart Label";
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Set label font: Arial, size 12, bold
-        chartLabel.Font.Name = "Arial";
-        chartLabel.Font.Size = 12;
-        chartLabel.Font.IsBold = true;
-        chartLabel.Font.Color = Color.Black; // optional color
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Save the workbook
-        workbook.Save("ChartWithLabel.xlsx");
+            // Add a label (chart title) with Arial font, size 12, bold style
+            chart.Title.Text = "Sample Chart Title";
+            chart.Title.Font.Name = "Arial";
+            chart.Title.Font.Size = 12;
+            chart.Title.Font.IsBold = true;
+
+            // Save the workbook to a file
+            workbook.Save("ChartWithLabel.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

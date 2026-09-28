@@ -1,29 +1,43 @@
-// Title: Open an XLSX workbook from a file path using Aspose.Cells Workbook(string) constructor (C#)
-// Description: Shows how to load an existing XLSX file by passing its local path to the Aspose.Cells Workbook(string) constructor and then read the name of the first worksheet.
-// Keywords: Aspose.Cells | C# | Workbook constructor | load XLSX | open Excel file | read worksheet name | local file path | Aspose.Cells .NET
-// Common Searches: Aspose.Cells open XLSX from disk C# | Workbook(string) constructor example Aspose.Cells | How to read first worksheet name with Aspose.Cells | Load Excel workbook using Aspose.Cells C#
-// Developer Intent: Load an existing Excel workbook from a local path and access its worksheets with Aspose.Cells.
-// Use Cases: Display the name of the first worksheet after opening the file. | Modify cell values, add rows/columns, or insert charts once the workbook is loaded. | Convert the opened workbook to PDF, CSV, or another format. | Retrieve workbook metadata such as total sheet count or sheet visibility.
-// AI Prompts: Provide C# code that opens an XLSX file with Aspose.Cells and prints all worksheet names. | Show how to catch and handle FileNotFoundException when using the Workbook(string) constructor in Aspose.Cells. | Explain the steps to open a workbook from a file path and immediately save it as a PDF using Aspose.Cells C#.
+// Title: Load an XLSX file from a local path with Aspose.Cells in C# and create a new workbook if the file is missing
+// AI Prompts: Create C# code that uses Aspose.Cells to read an Excel workbook located at a specified path, verifies the file's presence, and if absent, instantiates a new Workbook and saves it to that location. | Write a try‑catch block in C# that loads an existing .xlsx using the Workbook(string) constructor and falls back to a default Workbook() with a save operation when the specified file cannot be found.
+// Common Searches: c# aspocells load excel file using full path and create if missing | how to verify excel file existence before opening with Aspose.Cells in .NET | using Aspose.Cells Workbook constructor to open existing xlsx or generate new one | example handling missing Excel file when loading with Aspose.Cells C#
+// Tags: Aspose.Cells open workbook from file path | C# verify Excel file existence before loading | fallback create new workbook Aspose.Cells | Aspose.Cells workbook initialization from file | handle missing XLSX file Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// The sample checks whether a given .xlsx file exists, loads it with the Workbook(string) constructor when present, otherwise creates a new Workbook, saves it to the same path, and wraps the process in a try‑catch for robust error handling.
+class Program
 {
-    // Shows how to load an existing XLSX file by passing its local path to the Aspose.Cells Workbook(string) constructor and then read the name of the first worksheet.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the Excel file
+        string filePath = @"C:\path\to\your\file.xlsx";
+
+        try
         {
-            // Path to the existing XLSX file
-            string filePath = "example.xlsx";
+            Workbook workbook;
 
-            // Open the workbook from the specified file path using the string constructor
-            Workbook workbook = new Workbook(filePath);
+            if (File.Exists(filePath))
+            {
+                // Load existing workbook
+                workbook = new Workbook(filePath);
+                Console.WriteLine("Workbook loaded successfully.");
+            }
+            else
+            {
+                // Create a new workbook as fallback and save it
+                workbook = new Workbook();
+                workbook.Save(filePath);
+                Console.WriteLine($"File not found. Created new workbook and saved to '{filePath}'.");
+            }
 
-            // Example operation: display the name of the first worksheet
-            Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
+            // Further operations on 'workbook' can be added here
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

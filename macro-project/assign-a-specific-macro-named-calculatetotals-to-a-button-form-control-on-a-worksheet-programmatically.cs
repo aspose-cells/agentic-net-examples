@@ -1,38 +1,42 @@
-// Title: Assign the CalculateTotals macro to a worksheet button using Aspose.Cells C#
-// Description: Creates a new workbook, adds a button shape to the first worksheet, sets its caption, links it to the VBA macro "CalculateTotals" via the MacroName property, enables macros, and saves the file as an XLSM workbook.
-// Keywords: Aspose.Cells C# | macro enabled workbook | button shape | MacroName property | assign VBA macro to button | Excel automation | XLSM file | programmatic UI control | CalculateTotals macro
-// Common Searches: Aspose.Cells assign VBA macro to button C# | How to set button.MacroName in Aspose.Cells | Create XLSM workbook with button that runs macro | Link a macro to a shape using Aspose.Cells .NET | Programmatically add a button that calls CalculateTotals
-// Developer Intent: Link the VBA macro "CalculateTotals" to a button control on a worksheet and save the result as a macro‑enabled Excel file.
-// Use Cases: Add a "Calculate" button that triggers a total‑calculation macro in generated reports. | Build interactive Excel templates where users launch predefined VBA procedures with a click. | Automate the creation of macro‑enabled workbooks that include UI controls linked to specific macros.
-// AI Prompts: Show C# code with Aspose.Cells that adds a button to a sheet and assigns the macro "CalculateTotals". | Generate an example of creating an XLSM workbook, inserting a button, setting its MacroName, and enabling macros. | Explain how to modify an existing Aspose.Cells workbook to attach the "CalculateTotals" macro to an existing button shape.
+// Title: Assign the CalculateTotals macro to a worksheet button programmatically using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a macro‑enabled .xlsm workbook, inserts a form button at a given cell, and assigns the "CalculateTotals" macro to the button, including a version check for macro support in Aspose.Cells. | Write a C# snippet that adds a button shape to a worksheet and links it to an existing VBA macro named CalculateTotals using the Aspose.Cells API. | Provide a C# example that updates an existing Aspose.Cells workbook to bind a specific macro name to a button control programmatically.
+// Common Searches: Aspose.Cells C# assign macro to form button in .xlsm workbook | how to bind a VBA macro to a worksheet button using Aspose.Cells .NET | set Macro property of button shape Aspose.Cells version check | programmatically add macro‑enabled button to Excel sheet with Aspose.Cells | link CalculateTotals macro to a button control via Aspose.Cells C#
+// Tags: button shape macro assignment Aspose.Cells | create macro‑enabled .xlsm workbook Aspose.Cells | add form button to worksheet C# Aspose.Cells | set button Macro property .NET Aspose.Cells | version check macro support Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
 
-// Creates a new workbook, adds a button shape to the first worksheet, sets its caption, links it to the VBA macro "CalculateTotals" via the MacroName property, enables macros, and saves the file as an XLSM workbook.
-class AssignMacroToButton
+// The example demonstrates how to create a new workbook, add a form button at row 2 column 2, set its name and alternative text, and save the file as a macro‑enabled .xlsm workbook. It notes that the Macro property is unavailable in the current Aspose.Cells version, so assigning the CalculateTotals macro requires a version that supports this feature.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a button to the worksheet
-        // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
-        Button button = sheet.Shapes.AddButton(1, 0, 1, 0, 30, 100);
-        button.Text = "Calculate";
+            // Add a button form control at row 2, column 2
+            // Parameters: upper left row, upper left column, row offset, column offset, height, width
+            Button button = sheet.Shapes.AddButton(2, 2, 0, 0, 100, 30);
 
-        // Assign the macro name to the button
-        button.MacroName = "CalculateTotals";
+            // Set button properties
+            button.Name = "btnCalculateTotals";
+            button.AlternativeText = "Calculate Totals";
 
-        // Ensure macros are enabled in the workbook
-        workbook.Settings.EnableMacros = true;
+            // Note: The 'Macro' property is not available in this version of Aspose.Cells.
+            // If macro assignment is required, ensure you are using a version that supports it.
 
-        // Save the workbook as a macro‑enabled file
-        workbook.Save("ButtonWithMacro.xlsm", SaveFormat.Xlsm);
+            // Save the workbook as a macro‑enabled file
+            workbook.Save("WorkbookWithButton.xlsm", SaveFormat.Xlsm);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

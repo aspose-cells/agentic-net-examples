@@ -1,35 +1,38 @@
-// Title: C# – Protect an Excel workbook with a password and recommend read‑only using Aspose.Cells
-// Description: Shows how to enable write‑protection on a workbook, set a modification password and author, turn on the RecommendReadOnly flag, and save the file so Excel asks for the password only when a user attempts to edit.
-// Keywords: Aspose.Cells C# protect workbook | Excel password modify only | write protection RecommendReadOnly | set workbook author Aspose | read‑only recommendation Excel | C# Excel file security Aspose.Cells
-// Common Searches: Aspose.Cells set password to modify Excel file C# | How to enable RecommendReadOnly in Aspose.Cells | Add author to workbook protection Aspose.Cells | Create read‑only Excel workbook with password using .NET | C# code for write protection in Excel with Aspose
-// Developer Intent: Add write‑protection with a modify password and suggest read‑only opening.
-// Use Cases: Distribute a report that anyone can view but only authorized users can edit. | Provide a template that records the creator and encourages users to open it in read‑only mode. | Generate audit‑ready spreadsheets that prevent accidental changes without a password.
-// AI Prompts: Generate C# code that applies write protection with a password and custom author to an existing workbook using Aspose.Cells. | Explain how to programmatically change or remove the RecommendReadOnly flag after a workbook has been saved. | Show an example of toggling the write‑protection password based on user input in a .NET console application.
+// Title: How to password‑protect an Excel workbook for read‑only access using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to apply a password to a workbook's structure and windows, then save it as a read‑only .xlsx file. | Show an example of calling workbook.Protect with ProtectionType.All and a password, followed by saving the protected workbook in C#. | Demonstrate creating a workbook, inserting data, setting a password for read‑only access, and exporting the file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# protect workbook with password and restrict editing | Set read‑only mode for an Excel file using Aspose.Cells .NET | How to apply structure and windows protection to an .xlsx with Aspose.Cells | C# example for password‑protected Excel workbook using Aspose.Cells
+// Tags: Aspose.Cells workbook.Protect method | C# Excel workbook password protection | read‑only .xlsx Aspose.Cells | protect workbook structure windows Aspose | save protected workbook .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Shows how to enable write‑protection on a workbook, set a modification password and author, turn on the RecommendReadOnly flag, and save the file so Excel asks for the password only when a user attempts to edit.
-class ProtectWorkbookReadOnly
+// The sample creates a new Workbook, adds data to the first worksheet, protects the workbook's structure and windows with a password using workbook.Protect(ProtectionType.All, password), and saves the resulting read‑only Excel file as 'ProtectedWorkbook.xlsx'.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the write‑protection settings
-        WriteProtection writeProtection = workbook.Settings.WriteProtection;
+            // Add some sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["A2"].PutValue("Data");
 
-        // Set the password required to modify the file
-        writeProtection.Password = "modify123";
+            // Protect the workbook (structure and windows) with a password
+            string password = "MySecretPassword";
+            workbook.Protect(ProtectionType.All, password);
 
-        // Optionally set the author of the protection
-        writeProtection.Author = "Admin";
-
-        // Recommend opening the file as read‑only
-        writeProtection.RecommendReadOnly = true;
-
-        // Save the workbook; users will be prompted for the password only if they try to edit
-        workbook.Save("ReadOnlyProtected.xlsx", SaveFormat.Xlsx);
+            // Save the protected workbook
+            string outputPath = "ProtectedWorkbook.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

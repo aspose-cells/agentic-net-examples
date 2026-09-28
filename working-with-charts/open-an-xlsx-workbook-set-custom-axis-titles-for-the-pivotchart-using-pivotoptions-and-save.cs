@@ -1,59 +1,75 @@
-// Title: Aspose.Cells for .NET: Create a PivotChart with custom axis titles and enable drop zones via PivotOptions (C#)
-// Description: This example demonstrates how to generate an XLSX workbook, add source data, create a pivot table, insert a column PivotChart, enable drop zones using PivotOptions, set custom category and value axis titles, refresh the chart data, and save the file as PivotChartWithCustomAxis.xlsx using Aspose.Cells for .NET (C#).
-// Keywords: Aspose.Cells | C# | PivotChart | custom axis title | PivotOptions | drop zones | refresh pivot chart | create pivot table | column chart | save XLSX | Aspose.Cells API | chart axis customization
-// Common Searches: Aspose.Cells set pivot chart axis title C# | Enable drop zones on PivotChart Aspose.Cells | Refresh pivot chart after changing PivotOptions | How to add custom category axis text in Aspose.Cells | Create pivot chart from worksheet using Aspose.Cells .NET
-// Developer Intent: Create and save an XLSX workbook that contains a pivot chart with custom axis titles and visible drop zones using Aspose.Cells for .NET.
-// Use Cases: Automated financial reporting that requires pivot charts with clear, custom axis labels for stakeholders. | Dynamic dashboards where users can rearrange fields via drop zones while preserving customized axis titles. | Batch generation of sales analysis workbooks that need refreshed pivot chart data after source updates.
-// AI Prompts: Write C# code with Aspose.Cells to build a workbook, add a pivot table, create a column PivotChart, enable drop zones via PivotOptions, set custom category and value axis titles, refresh the chart, and save the file. | Explain step‑by‑step how PivotOptions affect interactivity of a PivotChart and how to set custom axis titles in Aspose.Cells for .NET. | Provide a concise guide for developers to add a pivot table, link it to a chart, customize axis titles, enable drop zones, refresh the chart data, and export to XLSX using Aspose.Cells.
+// Title: Set custom X‑axis and Y‑axis titles on a PivotChart in an existing XLSX workbook using Aspose.Cells for .NET
+// AI Prompts: Open an existing XLSX file with Aspose.Cells, locate the first PivotChart, enable axis title visibility, assign new text to the category and value axes, and save the workbook. | Programmatically change the category (X) axis label and the value (Y) axis label of a PivotChart in C# using Aspose.Cells' Axis.Title properties. | Update a workbook's PivotChart to display custom axis titles and write the modified file to a new location with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set pivot chart X axis title in existing workbook | how to change Y axis label of a PivotChart using Aspose.Cells for .NET | modify axis titles of a chart in an XLSX file with Aspose.Cells C# example | update pivot chart axis text programmatically Aspose.Cells
+// Tags: pivot chart axis title Aspose.Cells | set category axis text .NET | modify value axis label C# | Aspose.Cells update chart axis labels XLSX | axis title modification workbook
 
+using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-// This example demonstrates how to generate an XLSX workbook, add source data, create a pivot table, insert a column PivotChart, enable drop zones using PivotOptions, set custom category and value axis titles, refresh the chart data, and save the file as PivotChartWithCustomAxis.xlsx using Aspose.Cells for .NET (C#).
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing XLSX workbook, verifies a chart exists, assumes the first chart is a PivotChart, makes the category and value axis titles visible, sets custom text for each axis, and saves the updated workbook to a new file, handling missing files or axes gracefully.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-        // Populate source data for the pivot table
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["A4"].PutValue("A");
-        worksheet.Cells["B4"].PutValue(30);
-        worksheet.Cells["A5"].PutValue("B");
-        worksheet.Cells["B5"].PutValue(40);
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("=A1:B5", "D1", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
+                // Load the existing XLSX workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Add a chart and link it to the pivot table
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.PivotSource = "PivotTable1";
+                // Get the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Use PivotOptions (e.g., enable drop zones)
-        PivotOptions pivotOptions = chart.PivotOptions;
-        pivotOptions.DropZonesVisible = true;
+                // Ensure there is at least one chart on the sheet
+                if (sheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found in the worksheet.");
+                    return;
+                }
 
-        // Set custom axis titles for the pivot chart
-        chart.CategoryAxis.Title.Text = "Custom Category Axis";
-        chart.ValueAxis.Title.Text = "Custom Value Axis";
+                // Assume the first chart on the sheet is a PivotChart
+                Chart pivotChart = sheet.Charts[0];
 
-        // Refresh chart data from the pivot table
-        chart.RefreshPivotData();
+                // Set custom titles for the category (X) and value (Y) axes
+                // Ensure the axis titles are visible
+                if (pivotChart.CategoryAxis != null && pivotChart.ValueAxis != null)
+                {
+                    // Category axis (usually X axis)
+                    Axis categoryAxis = pivotChart.CategoryAxis;
+                    categoryAxis.Title.IsVisible = true;
+                    categoryAxis.Title.Text = "Custom Category Axis Title";
 
-        // Save the workbook
-        workbook.Save("PivotChartWithCustomAxis.xlsx");
+                    // Value axis (usually Y axis)
+                    Axis valueAxis = pivotChart.ValueAxis;
+                    valueAxis.Title.IsVisible = true;
+                    valueAxis.Title.Text = "Custom Value Axis Title";
+                }
+                else
+                {
+                    Console.WriteLine("The chart does not have both category and value axes to set titles.");
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,47 +1,42 @@
-// Title: C# – Convert Aspose.Cells Workbook to PDF with lossless Flate compression
-// Description: Creates a workbook, fills it with sample data, configures PdfSaveOptions to use PdfCompressionCore.Flate, and saves the file as a PDF. The Flate compression reduces size while keeping image and chart quality intact.
-// Keywords: Aspose.Cells PDF export C# | lossless PDF compression Aspose | PdfCompressionCore.Flate example | high‑quality Excel to PDF conversion | .NET workbook to PDF | Flate compression for PDFs
-// Common Searches: Aspose.Cells save workbook as PDF with lossless compression | C# set PdfCompressionCore.Flate when exporting Excel to PDF | how to keep image quality in Aspose.Cells PDF output | reduce PDF size without losing fidelity using Aspose.Cells
-// Developer Intent: Export an Excel workbook to PDF while applying Flate compression to retain visual fidelity.
-// Use Cases: Generate financial statements as PDFs that preserve chart clarity. | Create printable invoices with high‑resolution graphics and modest file size. | Archive regulatory spreadsheets as PDFs without degrading images or layout.
-// AI Prompts: Provide C# code that converts an Aspose.Cells workbook to PDF using PdfCompressionCore.Flate. | Show how to configure PdfSaveOptions for lossless compression in Aspose.Cells .NET. | Explain the impact of Flate compression on PDF size and image quality when exporting from Aspose.Cells.
+// Title: Convert an Excel workbook to PDF with lossless image compression using Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to preserve image quality, and saves the workbook as a PDF. | Show how to export an Excel workbook to PDF while keeping the original image fidelity by adjusting PdfSaveOptions in a .NET project.
+// Common Searches: how to keep image quality when converting Excel to PDF with Aspose.Cells C# | Aspose.Cells PdfSaveOptions lossless image compression example | C# convert .xlsx to PDF without losing visual fidelity using Aspose.Cells
+// Tags: Aspose.Cells lossless PDF image compression | C# PdfSaveOptions visual fidelity | Excel to PDF high-quality images Aspose.Cells | Workbook conversion to PDF preserving images .NET | Aspose.Cells PDF export with original image quality
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfConversion
+// The program checks for the existence of input.xlsx, loads it into an Aspose.Cells Workbook, creates PdfSaveOptions (which use lossless image handling by default), and saves the workbook as output.pdf while preserving visual fidelity.
+class Program
 {
-    // Creates a workbook, fills it with sample data, configures PdfSaveOptions to use PdfCompressionCore.Flate, and saves the file as a PDF. The Flate compression reduces size while keeping image and chart quality intact.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Bananas");
-            sheet.Cells["B3"].PutValue(85);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Configure PDF save options
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (default compression)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Apply lossless compression (Flate) to all PDF content except images
-            // This preserves visual fidelity while reducing file size
-            pdfOptions.PdfCompression = PdfCompressionCore.Flate;
-
-            // Optionally, keep the default optimization (high quality)
-            // pdfOptions.OptimizationType = PdfOptimizationType.Standard;
-
-            // Save the workbook as a PDF using the configured options
-            string outputPath = "Workbook_Lossless.pdf";
+            // Save the workbook as a PDF with the specified options
             workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully saved to PDF with lossless compression: {outputPath}");
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

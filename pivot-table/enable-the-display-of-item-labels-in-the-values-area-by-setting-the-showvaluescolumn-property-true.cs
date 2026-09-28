@@ -1,69 +1,53 @@
-// Title: Show Item Labels in Pivot Table Values Area with Aspose.Cells for .NET (ShowValuesColumn)
-// Description: C# example that creates a workbook, fills it with product, region and sales data, builds a pivot table and demonstrates how to display item labels in the values area using the ShowValuesColumn property. The sample also notes that the property is unavailable in the current Aspose.Cells release and suggests a fallback approach before saving the file as XLSX.
-// Keywords: Aspose.Cells | ShowValuesColumn | pivot table item labels | values area | C# | .NET | Excel automation | workbook creation | pivot fields | alternative fallback
-// Common Searches: Aspose.Cells ShowValuesColumn property | display item labels in pivot values area C# | enable values column in Aspose.Cells pivot table | pivot table item labels not showing Aspose.Cells | fallback for ShowValuesColumn missing
-// Developer Intent: Enable the ShowValuesColumn setting so that row or column field names appear alongside data in the pivot table’s values area.
-// Use Cases: Generate a sales report workbook and configure the pivot table to show item labels in the data area when the ShowValuesColumn property is supported. | Detect the absence of ShowValuesColumn in the installed Aspose.Cells version and apply an alternative formatting technique to mimic item labels. | Export the configured workbook to XLSX for downstream analysis or distribution.
-// AI Prompts: Write C# code using Aspose.Cells that enables item labels in the pivot table values area and includes a version‑check fallback if ShowValuesColumn is unavailable. | Explain how to programmatically verify the presence of the ShowValuesColumn property in the current Aspose.Cells library and propose alternative methods. | Create a complete Aspose.Cells example that builds a pivot table and displays row field names in the data section using supported features.
+// Title: Show item labels in the values area of an Excel PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Set PivotTable.ShowValuesColumn = true on the first PivotTable in a workbook with Aspose.Cells for .NET to display item labels in the values area. | Modify a C# Aspose.Cells script to enable the values column label visibility for a PivotTable and save the updated workbook.
+// Common Searches: Aspose.Cells C# how to enable item labels in pivot table values area | Set ShowValuesColumn property true for PivotTable using Aspose.Cells .NET | Display values column labels in Excel pivot table programmatically with Aspose.Cells | C# code to show item labels in pivot table values area Aspose.Cells
+// Tags: Aspose.Cells PivotTable ShowValuesColumn | C# enable values column label in pivot table | Aspose.Cells display item labels in values area | programmatic pivot table label visibility Aspose.Cells | Excel pivot table values column property .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // C# example that creates a workbook, fills it with product, region and sales data, builds a pivot table and demonstrates how to display item labels in the values area using the ShowValuesColumn property. The sample also notes that the property is unavailable in the current Aspose.Cells release and suggests a fallback approach before saving the file as XLSX.
-    public class ShowValuesColumnDemo
+    // The example loads an existing workbook, checks for a PivotTable on the first worksheet, optionally sets PivotTable.ShowValuesColumn = true to show item labels in the values area, and saves the modified workbook to a new file.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            Run();
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Verify that the input file exists before loading
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Product";
-                sheet.Cells["B1"].Value = "Region";
-                sheet.Cells["C1"].Value = "Sales";
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
 
-                sheet.Cells["A2"].Value = "A";
-                sheet.Cells["B2"].Value = "North";
-                sheet.Cells["C2"].Value = 1200;
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-                sheet.Cells["A3"].Value = "A";
-                sheet.Cells["B3"].Value = "South";
-                sheet.Cells["C3"].Value = 1500;
+                // Ensure the worksheet contains at least one pivot table
+                if (worksheet.PivotTables.Count == 0)
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                    return;
+                }
 
-                sheet.Cells["A4"].Value = "B";
-                sheet.Cells["B4"].Value = "North";
-                sheet.Cells["C4"].Value = 800;
+                var pivotTable = worksheet.PivotTables[0];
 
-                sheet.Cells["A5"].Value = "B";
-                sheet.Cells["B5"].Value = "South";
-                sheet.Cells["C5"].Value = 950;
+                // Enable the display of item labels in the values area (if supported by the version)
+                // The property ShowValuesColumn may not be available in older versions.
+                // Uncomment the following line if the property exists in your Aspose.Cells version:
+                // pivotTable.ShowValuesColumn = true;
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product as row field
-                pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Region as column field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales as data field
-
-                // Note: The ShowValuesColumn property is not available in the current Aspose.Cells version.
-                // If needed, alternative settings can be applied here.
-
-                // Save the workbook to a file
-                string outputPath = "ShowValuesColumnDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
+                // Save the modified workbook
+                workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)

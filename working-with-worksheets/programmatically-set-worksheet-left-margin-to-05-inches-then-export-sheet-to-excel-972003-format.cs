@@ -1,33 +1,26 @@
-// Title: C# – Set Worksheet Left Margin to 0.5 in and Save as Excel 97‑2003 (.xls) with Aspose.Cells
-// Description: Creates a new workbook, sets the first worksheet's left page margin to 0.5 inches via PageSetup.LeftMarginInch, optionally adds sample data, configures XlsSaveOptions, and saves the file as an Excel 97‑2003 (.xls) document.
-// Keywords: Aspose.Cells left margin C# | PageSetup.LeftMarginInch example | export to Excel 97-2003 | save workbook as .xls | legacy Excel format Aspose.Cells | C# worksheet margin settings
-// Common Searches: how to set left margin 0.5 inches Aspose.Cells | C# save workbook as Excel 97-2003 file | Aspose.Cells PageSetup margin properties | export worksheet with custom margins to .xls | Aspose.Cells legacy Excel format example
-// Developer Intent: Set a worksheet's left margin to 0.5 inches and export the workbook as an Excel 97‑2003 (.xls) file using Aspose.Cells for .NET.
-// Use Cases: Produce printable reports with a precise left margin while delivering them in a legacy .xls format. | Automate batch generation of Excel 97‑2003 files where specific page margins are required for compliance. | Archive spreadsheets with predefined margins to guarantee consistent layout when opened in older Excel versions.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a worksheet's left margin to 0.5 inches and saves the workbook as an Excel 97‑2003 (.xls) file. | Show how to adjust all page margins (top, bottom, left, right) in Aspose.Cells and export the result to .xls using C#. | Explain the behavior of PageSetup.LeftMarginInch and how it interacts with XlsSaveOptions for creating legacy Excel files.
+// Title: Set a worksheet's left margin to 0.5 inches and save the workbook as an Excel 97‑2003 (.xls) file using Aspose.Cells for .NET
+// AI Prompts: Apply Aspose.Cells to set the left page margin of the first worksheet to 0.5 inches, then save the workbook as an Excel 97‑2003 (.xls) file. | In C#, modify a worksheet's left margin to half an inch using Aspose.Cells and export the workbook to the legacy .xls format.
+// Common Searches: c# aspocells set left page margin to half an inch | how to export workbook to Excel 97-2003 format with custom margins using Aspose.Cells | Aspose.Cells change worksheet margins programmatically .NET | save workbook as .xls with specific page setup in C# | adjust left margin of worksheet before saving as legacy Excel file
+// Tags: worksheet left margin inches Aspose.Cells | save workbook as xls Excel97To2003 | page setup margin configuration .NET | export to legacy Excel format C# | custom page margins Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, sets the first worksheet's left page margin to 0.5 inches via PageSetup.LeftMarginInch, optionally adds sample data, configures XlsSaveOptions, and saves the file as an Excel 97‑2003 (.xls) document.
+// // Creates a workbook, sets the first worksheet's left margin to 0.5 inches, and saves it as an Excel 97‑2003 (.xls) file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
         // Set the left margin to 0.5 inches
-        sheet.PageSetup.LeftMarginInch = 0.5;
+        sheet.PageSetup.LeftMargin = 0.5;
 
-        // Add sample data (optional, just to have some content)
-        sheet.Cells["A1"].PutValue("Left margin set to 0.5 inches");
-
-        // Create save options for Excel 97‑2003 format
-        XlsSaveOptions saveOptions = new XlsSaveOptions();
-
-        // Save the workbook as an .xls file using the specified options
-        workbook.Save("LeftMarginDemo.xls", saveOptions);
+        // Export the workbook to Excel 97‑2003 format (.xls)
+        workbook.Save("output.xls", SaveFormat.Excel97To2003);
     }
 }

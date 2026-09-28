@@ -1,56 +1,65 @@
-// Title: Set TableToRangeOptions.LastRow Dynamically from ListObject Row Count in Aspose.Cells for .NET
-// Description: Shows how to read a ListObject's EndRow property, assign it to TableToRangeOptions.LastRow, convert the table to a regular range, and save the workbook. The sample uses a 5‑column table with a header and a variable number of data rows.
-// Keywords: Aspose.Cells | TableToRangeOptions | LastRow | ListObject | ConvertToRange | C# | .NET | dynamic row count | Excel table conversion | Aspose.Cells example
-// Common Searches: Aspose.Cells set TableToRangeOptions.LastRow | Convert ListObject to range dynamically | Get last row index of a table in Aspose.Cells C# | TableToRangeOptions LastRow based on ListObject rows | Aspose.Cells dynamic table conversion
-// Developer Intent: Retrieve the actual last row index of a ListObject and assign it to TableToRangeOptions.LastRow before calling ConvertToRange.
-// Use Cases: Automatically adjust the conversion range when the number of data rows changes. | Generate reports that need to convert only the populated portion of a table to a range for further processing. | Combine multiple tables where each table's exact boundaries are determined at runtime.
-// AI Prompts: Write C# code using Aspose.Cells that reads a ListObject's EndRow and sets TableToRangeOptions.LastRow before converting the table to a range. | Explain how to dynamically determine the last row of an Excel table in Aspose.Cells and apply it to TableToRangeOptions for conversion. | Provide a step‑by‑step example of converting a ListObject to a range when the row count is unknown at compile time.
+// Title: Dynamically assign TableToRangeOptions.LastRow from a ListObject’s row count before converting an Excel table to a range with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, checks for the first ListObject, calculates its data row count, sets TableToRangeOptions.LastRow to that count minus one, and converts the table to a range. | Show how to safely verify file existence and the presence of tables, then use Aspose.Cells TableToRangeOptions to convert a table to a range with a dynamically computed last row. | Provide a snippet that demonstrates retrieving ListObject.Rows.Count, configuring TableToRangeOptions.LastRow, and saving the workbook after the conversion.
+// Common Searches: aspnet aspose.cells set TableToRangeOptions.LastRow based on ListObject row count | convert excel table to range with dynamic last row using Aspose.Cells C# | how to get number of data rows in a ListObject with Aspose.Cells | Aspose.Cells TableToRangeOptions LastRow example for .NET | C# check for tables before converting to range in Aspose.Cells
+// Tags: runtime last row calculation Aspose.Cells | listobject row count to range conversion | c# aspose.cells convert table with options | verify table existence before conversion | excel workbook table to range .net
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Shows how to read a ListObject's EndRow property, assign it to TableToRangeOptions.LastRow, convert the table to a regular range, and save the workbook. The sample uses a 5‑column table with a header and a variable number of data rows.
+// The program loads "input.xlsx", confirms the file and that the first worksheet contains a table, obtains the first ListObject, computes its data row count, sets TableToRangeOptions.LastRow to rowCount‑1, converts the table to a range, and saves the result as "output.xlsx" with basic error handling.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate sample data (header + 9 data rows, 5 columns)
-        for (int col = 0; col < 5; col++)
+        try
         {
-            cells[0, col].PutValue($"Header{col + 1}");
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        for (int row = 1; row <= 9; row++)
-        {
-            for (int col = 0; col < 5; col++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                cells[row, col].PutValue($"R{row}C{col + 1}");
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                return;
             }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one table
+            if (worksheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
+                return;
+            }
+
+            // Access the first ListObject (table) on the worksheet
+            ListObject table = worksheet.ListObjects[0];
+
+            // Determine the number of rows in the table's data range
+            int rowCount = table.DataRange.RowCount;
+
+            // Create conversion options and set the last row dynamically (zero‑based index)
+            TableToRangeOptions options = new TableToRangeOptions
+            {
+                LastRow = rowCount - 1
+            };
+
+            // Convert the table to a range using the defined options
+            table.ConvertToRange(options);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
         }
-
-        // Add a ListObject (table) that covers the populated range
-        int tableIndex = worksheet.ListObjects.Add(0, 0, 9, 4, true);
-        ListObject table = worksheet.ListObjects[tableIndex];
-
-        // Dynamically determine the last row index based on the table's row count
-        // Row count includes the header row; EndRow already gives the last row index.
-        int lastRowIndex = table.EndRow; // equivalent to table.StartRow + (table.EndRow - table.StartRow)
-
-        // Set the LastRow option dynamically
-        TableToRangeOptions options = new TableToRangeOptions
+        catch (Exception ex)
         {
-            LastRow = lastRowIndex
-        };
-
-        // Convert the table to a range using the dynamically set options
-        table.ConvertToRange(options);
-
-        // Save the workbook
-        workbook.Save("TableToRangeDynamicLastRow.xlsx");
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

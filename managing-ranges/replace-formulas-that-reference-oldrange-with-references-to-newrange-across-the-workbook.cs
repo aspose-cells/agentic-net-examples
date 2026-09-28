@@ -1,39 +1,47 @@
-// Title: Replace named range references (OldRange → NewRange) in all formulas with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, scans every worksheet and cell, detects formulas that contain the named range "OldRange", swaps it for "NewRange", writes the updated formula back, and saves the modified file.
-// Keywords: Aspose.Cells replace named range | C# update formula references | change OldRange to NewRange | bulk formula edit Aspose.Cells | .NET Excel range substitution
-// Common Searches: Aspose.Cells rename named range in formulas | C# replace OldRange with NewRange in Excel workbook | how to update all formula references using Aspose.Cells | bulk edit named range across worksheets .NET
-// Developer Intent: Replace every occurrence of the named range "OldRange" with "NewRange" in formulas throughout an Excel workbook using Aspose.Cells.
-// Use Cases: Refresh legacy reports after a named range is renamed. | Redirect formulas to a new data block without manual edits. | Automate preprocessing of workbooks before distribution or publishing.
-// AI Prompts: Write C# code with Aspose.Cells that swaps a specific named range in all formulas across a workbook. | Suggest a performance‑optimized method to update formula references without scanning every cell. | Explain how to validate formulas after a named‑range substitution using Aspose.Cells.
+// Title: Replace all occurrences of the named range 'OldRange' with 'NewRange' in formulas across an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet in a workbook and substitutes the named range 'OldRange' with 'NewRange' in any formula, then saves the file. | Generate a method that updates formulas containing a specific named range to a new name across all sheets using Aspose.Cells. | Create a script that loads an .xlsx file, replaces 'OldRange' references in formulas with 'NewRange', and writes the result to a new file.
+// Common Searches: how to rename a named range in all formulas using Aspose.Cells C# | replace specific range name in Excel formulas programmatically .NET | bulk update named range references across worksheets Aspose.Cells | C# Aspose.Cells change formula text OldRange to NewRange
+// Tags: replace named range in formulas Aspose.Cells | bulk formula text substitution .NET | iterate worksheets Aspose.Cells | named range rename Excel C# | update formula references Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Loads an Excel workbook, scans every worksheet and cell, detects formulas that contain the named range "OldRange", swaps it for "NewRange", writes the updated formula back, and saves the modified file.
-class ReplaceOldRange
+// The program loads an Excel workbook, iterates through every worksheet and cell, replaces any formula that references the named range 'OldRange' with 'NewRange', and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook
+        // Load the existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Loop through each worksheet in the workbook
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Loop through each cell that contains data
-            foreach (Cell cell in sheet.Cells)
+            // Get the cells collection for the current worksheet
+            Cells cells = sheet.Cells;
+
+            // Loop through each cell in the worksheet
+            foreach (Cell cell in cells)
             {
-                // Check if the cell contains a formula referencing "OldRange"
-                if (cell.IsFormula && cell.Formula != null && cell.Formula.Contains("OldRange"))
+                // Process only cells that contain a formula
+                if (cell.IsFormula)
                 {
-                    // Replace the reference and assign the updated formula back to the cell
-                    string updatedFormula = cell.Formula.Replace("OldRange", "NewRange");
-                    cell.Formula = updatedFormula;
+                    string formula = cell.Formula;
+
+                    // Check if the formula references the old range name
+                    if (!string.IsNullOrEmpty(formula) && formula.Contains("OldRange"))
+                    {
+                        // Replace "OldRange" with "NewRange" in the formula
+                        string updatedFormula = formula.Replace("OldRange", "NewRange");
+
+                        // Assign the updated formula back to the cell
+                        cell.Formula = updatedFormula;
+                    }
                 }
             }
         }
 
-        // Save the workbook with the updated formulas
+        // Save the modified workbook to a new file (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

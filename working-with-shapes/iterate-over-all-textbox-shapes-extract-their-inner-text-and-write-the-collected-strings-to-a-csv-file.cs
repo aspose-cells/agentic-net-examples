@@ -1,10 +1,7 @@
-// Title: Extract TextBox Shape Text from an Excel Workbook and Export to CSV with Aspose.Cells for .NET
-// Description: Load an Excel file, loop through every worksheet, gather the Text property of each non‑empty TextBox shape, and write the collected strings to a CSV file with proper quoting. The workbook can be saved afterward if needed.
-// Keywords: Aspose.Cells TextBox extraction | C# export TextBox to CSV | read shape text Aspose.Cells | .NET Excel TextBox to CSV | iterate worksheets Aspose.Cells | extract textbox contents | Excel shape text export | Aspose.Cells CSV output | workbook TextBox collection | Aspose.Cells shape handling
-// Common Searches: how to get text from all TextBox shapes using Aspose.Cells | export Excel TextBox contents to CSV in C# | Aspose.Cells iterate over worksheet TextBoxes | C# read TextBox shape text from workbook | save TextBox values to CSV with Aspose
-// Developer Intent: Collect every TextBox shape's inner text from a workbook and write the values to a CSV file.
-// Use Cases: Consolidate user comments stored in TextBox shapes across multiple sheets for reporting. | Migrate legacy data entered in TextBoxes to a CSV format for database import. | Create an audit log of TextBox contents before performing bulk edits on the workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to iterate all worksheets, extract each TextBox's Text, and export the results to a CSV file with proper escaping. | Show how to filter extracted TextBox text by a keyword before writing to CSV using Aspose.Cells. | Explain performance‑friendly techniques for extracting TextBox contents from large Excel files with Aspose.Cells while keeping memory usage low.
+// Title: Extract all TextBox shape text from an Excel workbook and save it to a CSV file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, finds shapes with a non‑empty Text property, and writes each text value as a quoted field to an output CSV file. | Adjust the shape‑iteration example to skip shapes without text and ensure double quotes are escaped correctly when generating CSV rows. | Add comprehensive error handling for workbook loading and CSV writing, including file‑existence verification and detailed exception messages.
+// Common Searches: how to export textbox contents from an Excel file to csv using Aspose.Cells C# | iterate through shapes in a workbook and get text property with Aspose.Cells .NET | save extracted shape text from Excel to a CSV file with proper quoting Aspose.Cells
+// Tags: Aspose.Cells extract shape text to CSV | C# iterate worksheet shapes Aspose.Cells | export TextBox contents Excel Aspose.Cells | CSV generation with escaped quotes C# | handle empty shape text Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -12,47 +9,64 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Load an Excel file, loop through every worksheet, gather the Text property of each non‑empty TextBox shape, and write the collected strings to a CSV file with proper quoting. The workbook can be saved afterward if needed.
+// The program loads an Excel workbook with Aspose.Cells, loops through all worksheets and their shapes, collects the Text property of each shape that contains text (e.g., TextBox), and writes the collected strings to a CSV file, quoting each field and escaping internal double quotes.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Collect the inner text of all TextBox shapes across all worksheets
-        List<string> textboxTexts = new List<string>();
-
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // The TextBoxes property gives access to the TextBox collection of the worksheet
-            foreach (TextBox tb in sheet.TextBoxes)
+            const string inputPath = "input.xlsx";
+            const string outputCsv = "output.csv";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Guard against null or empty text
-                if (!string.IsNullOrEmpty(tb.Text))
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Collect texts from shapes that contain text (e.g., TextBox)
+            List<string> extractedTexts = new List<string>();
+
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    textboxTexts.Add(tb.Text);
+                    // Add text if the shape has non‑empty Text property
+                    if (!string.IsNullOrEmpty(shape.Text))
+                    {
+                        extractedTexts.Add(shape.Text);
+                    }
                 }
             }
-        }
 
-        // Write the collected strings to a CSV file
-        string csvPath = "textbox_texts.csv";
-        using (StreamWriter writer = new StreamWriter(csvPath))
-        {
-            // Optional header row
-            writer.WriteLine("TextBoxText");
-
-            foreach (string txt in textboxTexts)
+            // Write the collected strings to a CSV file (one entry per line)
+            try
             {
-                // Escape double quotes for CSV compliance
-                string escaped = txt.Replace("\"", "\"\"");
-                writer.WriteLine($"\"{escaped}\"");
+                using (StreamWriter writer = new StreamWriter(outputCsv))
+                {
+                    foreach (string line in extractedTexts)
+                    {
+                        // Escape double quotes and wrap the field in quotes
+                        string escaped = $"\"{line.Replace("\"", "\"\"")}\"";
+                        writer.WriteLine(escaped);
+                    }
+                }
+
+                Console.WriteLine($"Extraction completed. Results saved to \"{outputCsv}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing CSV file: {ex.Message}");
             }
         }
-
-        // Save the workbook if any modifications were made (optional)
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

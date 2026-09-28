@@ -1,81 +1,83 @@
-// Title: C# – Import Custom Objects with DateTime and Apply "dd-MMM-yyyy" Format using Aspose.Cells
-// Description: Demonstrates how to create a Workbook, define a Product class with a DateTime property, build a List<Product>, and use Worksheet.Cells.ImportCustomObjects to import the list while specifying a custom date format (dd-MMM-yyyy). The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | ImportCustomObjects | C# | .NET | custom object import | DateTime format | dd-MMM-yyyy | Excel export | worksheet cell formatting | save workbook
-// Common Searches: Aspose.Cells import list of objects with date format | C# ImportCustomObjects custom date pattern | how to set date format when importing objects into Excel | apply dd-MMM-yyyy to DateTime cells Aspose.Cells | export product list to Excel with formatted dates
-// Developer Intent: Import a collection of custom C# objects into an Excel worksheet and display their DateTime values using a custom "dd-MMM-yyyy" format.
-// Use Cases: Generate a sales report where release dates appear as 31-Dec-2023, 15-Jan-2024, etc. | Create an inventory sheet that shows restock dates in a consistent, readable format. | Export an event schedule to Excel while ensuring all dates follow the same custom pattern.
-// AI Prompts: Write C# code that uses Aspose.Cells to import a list of objects containing DateTime fields and format the date column as "dd-MMM-yyyy". | Explain the purpose of the dateFormatString parameter in ImportCustomObjects and how to adapt it for different locales. | Show how to extend the example to include time formatting, e.g., "dd-MMM-yyyy HH:mm", for a DateTime column.
+// Title: Import a list of Employee objects into an Aspose.Cells worksheet and format the HireDate column as dd-MMM-yyyy using C#
+// AI Prompts: Import an array of Employee objects into a worksheet with a header row using Aspose.Cells for .NET. | Create a style with a custom date pattern and apply it only to the HireDate column range. | Save the workbook as an .xlsx file after formatting the date column.
+// Common Searches: how to import custom objects into Aspose.Cells worksheet with headers | apply custom date format dd-MMM-yyyy in Aspose.Cells C# | set number format for a specific column after ImportCustomObjects Aspose.Cells | format DateTime column in exported Excel using Aspose.Cells .NET
+// Tags: populate worksheet from object collection Aspose.Cells | apply custom date style Aspose.Cells | format HireDate column Aspose.Cells | custom object list export to Excel .NET | style flag numberformat Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDateFormatExample
 {
-    // Custom object with a DateTime property
-    // Demonstrates how to create a Workbook, define a Product class with a DateTime property, build a List<Product>, and use Worksheet.Cells.ImportCustomObjects to import the list while specifying a custom date format (dd-MMM-yyyy). The workbook is saved as an XLSX file.
-    public class Product
+    // Define a custom object with a DateTime property
+    // Shows how to import a collection of Employee objects into a worksheet with field names, apply a custom "dd-MMM-yyyy" date style to the HireDate column, and save the workbook as EmployeesWithFormattedDates.xlsx.
+    public class Employee
     {
-        public string Name { get; set; } = string.Empty;   // initialize to avoid nullable warning
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
-        public DateTime Date { get; set; }
-    }
+        public string Name { get; set; }
+        public DateTime HireDate { get; set; }
+        public double Salary { get; set; }
 
-    public class ImportCustomObjectsWithDateFormatDemo
-    {
-        public static void Run()
+        public Employee(string name, DateTime hireDate, double salary)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Prepare sample data
-                List<Product> products = new List<Product>
-                {
-                    new Product { Name = "Apple", Price = 2.99m, Stock = 150, Date = new DateTime(2023, 12, 31) },
-                    new Product { Name = "Orange", Price = 1.99m, Stock = 200, Date = new DateTime(2024, 1, 15) }
-                };
-
-                // Define the order of properties to import
-                string[] propertyNames = { "Name", "Price", "Stock", "Date" };
-
-                // Import the custom objects.
-                // The dateFormatString parameter sets the desired display format for DateTime cells.
-                int importedRows = worksheet.Cells.ImportCustomObjects(
-                    products,                // ICollection list
-                    propertyNames,           // property names to import
-                    true,                    // show property names in the first row
-                    0,                       // first row index
-                    0,                       // first column index
-                    products.Count,          // number of rows to import
-                    true,                    // insert rows if needed
-                    "dd-MMM-yyyy",           // custom date format
-                    true                     // convert strings to numbers where possible
-                );
-
-                Console.WriteLine($"Successfully imported {importedRows} rows with custom date format.");
-
-                // Save the workbook
-                string outputPath = "ImportCustomObjectsWithDateFormat.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Name = name;
+            HireDate = hireDate;
+            Salary = salary;
         }
     }
 
-    // Entry point for the application
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            ImportCustomObjectsWithDateFormatDemo.Run();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Prepare a list of custom objects
+                List<Employee> employees = new List<Employee>
+                {
+                    new Employee("Alice", new DateTime(2020, 1, 15), 75000),
+                    new Employee("Bob",   new DateTime(2019, 6, 30), 82000),
+                    new Employee("Carol", new DateTime(2021, 11, 5), 68000)
+                };
+
+                // Import the list into the worksheet starting at cell A1
+                // The first row will contain property names (Name, HireDate, Salary)
+                ImportTableOptions importOptions = new ImportTableOptions
+                {
+                    IsFieldNameShown = true   // include header row
+                };
+                sheet.Cells.ImportCustomObjects(employees.ToArray(), 0, 0, importOptions);
+
+                // Apply custom number format to the HireDate column (column B, index 1)
+                // The format string "dd-MMM-yyyy" will display dates like "15-Jan-2020"
+                Style dateStyle = workbook.CreateStyle();
+                dateStyle.Custom = "dd-MMM-yyyy";
+
+                // Create a style flag to apply only the number format
+                StyleFlag flag = new StyleFlag
+                {
+                    NumberFormat = true
+                };
+
+                // Determine the range that contains the date values (excluding header)
+                int firstDataRow = 1; // zero‑based index; row 1 is the second row (after header)
+                Aspose.Cells.Range dateRange = sheet.Cells.CreateRange(firstDataRow, 1, employees.Count, 1); // column B
+
+                // Apply the style to the range
+                dateRange.ApplyStyle(dateStyle, flag);
+
+                // Save the workbook to a file
+                workbook.Save("EmployeesWithFormattedDates.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,35 +1,57 @@
-// Title: Check if an Excel workbook’s structure or window is protected using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag to determine whether the workbook’s structure or window is protected, and writes the boolean result to the console.
-// Keywords: Aspose.Cells | C# | WorkbookSettings.IsProtected | check workbook protection | Excel structure protection | window protection | detect workbook protection | read protection flag | Aspose.Cells example
-// Common Searches: Aspose.Cells how to check workbook protection | C# get workbook structure protection status | IsProtected property Aspose.Cells | determine if Excel workbook is locked with Aspose.Cells | read workbook protection flag C#
-// Developer Intent: Identify whether the loaded workbook’s structure or window is protected.
-// Use Cases: Prevent editing operations when a workbook is protected. | Show or hide UI controls (Save, Modify) based on protection state. | Log protection status of incoming workbooks for compliance audits.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unprotect a workbook when WorkbookSettings.IsProtected is true, handling a password. | Show how to differentiate between structure protection and window protection using Aspose.Cells properties. | Explain how to programmatically remove workbook protection with a password in Aspose.Cells for .NET.
+// Title: Check if an Excel workbook's structure is protected using Aspose.Cells for .NET and output the result
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, reads the Workbook.Protection.IsStructureProtected flag, and writes the boolean value to the console. | Demonstrate how to use reflection in C# to obtain the IsStructureProtected property from the Workbook.Protection object when the property is not directly accessible. | Create a robust console program that reports workbook structure protection, includes file‑existence validation, and provides a fallback message for older Aspose.Cells versions lacking the Protection API.
+// Common Searches: aspocells c# determine if workbook structure is locked | how to read IsStructureProtected property from an Excel file using Aspose.Cells | C# reflection to access Workbook protection information in Aspose.Cells | fallback method for workbook protection status in older Aspose.Cells releases | console output workbook structure protection status Aspose.Cells .NET
+// Tags: check workbook structure protection Aspose.Cells | read Workbook.Protection.IsStructureProtected via reflection | fallback for Aspose.Cells versions without Protection property | C# console report Excel protection status | validate input file existence Aspose.Cells
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-namespace WorkbookProtectionCheck
+// The example loads an Excel workbook with Aspose.Cells, uses reflection to retrieve the Workbook.Protection.IsStructureProtected flag when available, prints the protection status to the console, validates the input file, and supplies a fallback message for older library versions that lack the Protection property.
+class Program
 {
-    // Loads an Excel file with Aspose.Cells, reads the WorkbookSettings.IsProtected flag to determine whether the workbook’s structure or window is protected, and writes the boolean result to the console.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the workbook to be examined
-            string filePath = "SampleWorkbook.xlsx";
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Load the workbook (uses the provided load rule)
-            Workbook workbook = new Workbook(filePath);
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access workbook settings
-            WorkbookSettings settings = workbook.Settings;
+            // Attempt to retrieve workbook protection information via reflection
+            PropertyInfo protectionProp = typeof(Workbook).GetProperty("Protection");
+            if (protectionProp != null)
+            {
+                object protectionObj = protectionProp.GetValue(workbook);
+                PropertyInfo isStructureProp = protectionObj?.GetType().GetProperty("IsStructureProtected");
+                bool isStructureProtected = false;
 
-            // Determine if the workbook structure or window is protected
-            bool isProtected = settings.IsProtected;
+                if (isStructureProp != null && isStructureProp.PropertyType == typeof(bool))
+                {
+                    isStructureProtected = (bool)isStructureProp.GetValue(protectionObj);
+                }
 
-            // Output the protection status to the console
-            Console.WriteLine("Workbook structure/window protected: " + isProtected);
+                Console.WriteLine("Workbook structure protected: " + isStructureProtected);
+            }
+            else
+            {
+                // Fallback message for older Aspose.Cells versions lacking the Protection property
+                Console.WriteLine("Workbook protection information not available in this Aspose.Cells version.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

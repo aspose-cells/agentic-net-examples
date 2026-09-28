@@ -1,55 +1,61 @@
-// Title: Reset worksheet printer settings and set new print options with Aspose.Cells for .NET (C#)
-// Description: Shows how to clear existing printer settings from a worksheet by assigning null to PageSetup.PrinterSettings, then configure PrintDraft, PrintCopies, and PrintArea before saving the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells clear printer settings | PageSetup.PrinterSettings null | reset worksheet print configuration .NET | Aspose.Cells C# print draft | set print copies Aspose.Cells | define print area Aspose.Cells | reset PageSetup before printing | Aspose.Cells workbook save
-// Common Searches: Aspose.Cells how to remove printer settings from a worksheet | clear PageSetup.PrinterSettings Aspose.Cells C# | reset worksheet print options before saving | set print draft and copies with Aspose.Cells | define print area in Aspose.Cells .NET | Aspose.Cells clear printer configuration for batch printing
-// Developer Intent: The developer needs to delete any pre‑existing printer settings on a worksheet so that fresh print options can be applied without interference.
-// Use Cases: Reuse a template workbook without inheriting prior print configurations. | Prepare workbooks for automated batch printing with consistent draft mode and copy count. | Programmatically adjust the printable range for dynamically generated reports. | Guarantee uniform printing behavior across different printers and environments.
-// AI Prompts: Write C# code using Aspose.Cells to clear a worksheet's printer settings and then set PrintDraft, PrintCopies, and PrintArea. | Explain why assigning null to PageSetup.PrinterSettings resets printer configuration and list other PageSetup properties that can be modified afterward. | Create a reusable C# method that accepts draft mode, copy number, and print area parameters, clears existing printer settings, and applies the new values with Aspose.Cells.
+// Title: Clear existing print area and set a new print range with fit‑to‑page settings using Aspose.Cells for .NET (C#)
+// AI Prompts: Remove any current print area from a worksheet and define a new print range A1:D20 using Aspose.Cells in C#. | Configure the worksheet to fit to one page wide and unlimited pages tall after resetting the page setup with Aspose.Cells. | Ensure the output folder exists, then save the workbook with the updated print configuration to a specified file path using Aspose.Cells.
+// Common Searches: Aspose.Cells C# clear worksheet print area before setting new range | set print area A1:D20 and fit to one page wide using Aspose.Cells .NET | reset page setup in Aspose.Cells then apply fit‑to‑pages settings | how to create output directory automatically when saving workbook with Aspose.Cells | remove previous printer settings in Excel file using Aspose.Cells for .NET
+// Tags: clear existing print area Aspose.Cells | define new print range A1:D20 Aspose.Cells | fit worksheet to one page wide Aspose.Cells | auto‑create output folder before saving Aspose.Cells | reset page setup prior to print configuration Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, clears any existing print area on the first worksheet, sets a new print range (A1:D20), configures fit‑to‑page settings (1 page wide, unlimited tall), ensures the output directory exists, and saves the modified workbook to a new file.
+class Program
 {
-    // Shows how to clear existing printer settings from a worksheet by assigning null to PageSetup.PrinterSettings, then configure PrintDraft, PrintCopies, and PrintArea before saving the workbook using Aspose.Cells for .NET.
-    class ClearPrinterSettingsDemo
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists before loading
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the PageSetup object for the worksheet
-            PageSetup pageSetup = worksheet.PageSetup;
+            // Clear any existing print area
+            sheet.PageSetup.PrintArea = null;
 
-            // Clear any existing printer settings.
-            pageSetup.PrinterSettings = null;
+            // Apply new print configuration
+            sheet.PageSetup.PrintArea = "A1:D20";
 
-            // Apply new print configuration as needed.
-            pageSetup.PrintDraft = true;          // print without graphics
-            pageSetup.PrintCopies = 2;            // print two copies
-            pageSetup.PrintArea = "A1:D20";       // define the area to print
+            // Set page orientation if the enum is available; otherwise skip
+            // sheet.PageSetup.Orientation = PageOrientation.Portrait;
 
-            // Save the workbook
-            string outputPath = "ClearedPrinterSettings.xlsx";
+            sheet.PageSetup.FitToPagesWide = 1;
+            sheet.PageSetup.FitToPagesTall = 0;
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the updated workbook
             workbook.Save(outputPath);
-
-            Console.WriteLine("Printer settings cleared and new configuration applied successfully.");
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

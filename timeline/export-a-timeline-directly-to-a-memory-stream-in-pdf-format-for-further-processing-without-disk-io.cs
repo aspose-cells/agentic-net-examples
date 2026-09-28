@@ -1,10 +1,7 @@
-// Title: Export Aspose.Cells Timeline to PDF in a MemoryStream (C#) – No Disk I/O
-// Description: Shows how to build a workbook with a pivot table and a timeline, then save the workbook as a PDF directly into a MemoryStream using Aspose.Cells for .NET, allowing further processing without creating a physical file.
-// Keywords: Aspose.Cells | timeline PDF export | MemoryStream PDF C# | Aspose.Cells pivot timeline | save PDF to stream | in‑memory PDF generation | C# Aspose.Cells export | no file I/O PDF | Aspose.Cells PDF options | export workbook to stream
-// Common Searches: Aspose.Cells export timeline to PDF stream C# | Save workbook with timeline to MemoryStream Aspose.Cells | Generate PDF from timeline without writing file | Aspose.Cells PDF in‑memory export example | C# export pivot timeline to PDF stream
-// Developer Intent: Create a PDF that includes a timeline and write it directly to a MemoryStream for downstream use.
-// Use Cases: Attach a sales‑timeline PDF to an email without creating a temporary file. | Upload the generated PDF stream to a REST API or cloud storage service directly from memory. | Persist PDF bytes in a database BLOB after in‑memory generation.
-// AI Prompts: Provide C# code that adds a timeline to a pivot table and saves the workbook as a PDF into a MemoryStream using Aspose.Cells. | Explain how to reset the MemoryStream position and retrieve the PDF byte array for uploading to a web service. | Show how to configure PDF export options (page size, orientation, compression) when exporting a workbook with a timeline to a stream.
+// Title: Export an Aspose.Cells timeline to a PDF using a MemoryStream in C#
+// AI Prompts: Write C# code that builds a pivot table, attaches a timeline, and saves the workbook as a PDF into a MemoryStream with Aspose.Cells. | Show how to reset the MemoryStream position after saving the PDF so it can be consumed by other components.
+// Common Searches: Aspose.Cells C# export timeline to PDF without writing a file | How to generate an in‑memory PDF from an Excel timeline using Aspose.Cells | Saving a workbook with a timeline to a MemoryStream as PDF in .NET | Read PDF bytes from MemoryStream after Aspose.Cells SaveFormat.Pdf | C# Aspose.Cells timeline PDF output stream example
+// Tags: Aspose.Cells timeline PDF stream export | C# in‑memory PDF generation Aspose.Cells | pivot table timeline PDF save Aspose.Cells | save workbook as PDF stream .NET | memory stream PDF output Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,10 +9,10 @@ using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
 
-// Shows how to build a workbook with a pivot table and a timeline, then save the workbook as a PDF directly into a MemoryStream using Aspose.Cells for .NET, allowing further processing without creating a physical file.
-class ExportTimelineToPdfStream
+// The example creates a workbook, adds sample data, builds a pivot table, links a timeline, and then saves the entire workbook—including the timeline—as a PDF directly into a MemoryStream, resets the stream position, and prints the generated PDF size.
+public class ExportTimelineToPdfMemoryStream
 {
-    static void Main()
+    public static void Run()
     {
         try
         {
@@ -23,38 +20,45 @@ class ExportTimelineToPdfStream
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate worksheet with sample date and sales data
+            // Populate worksheet with sample data including a date field
             worksheet.Cells["A1"].PutValue("Date");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["A2"].PutValue(DateTime.Now.AddDays(-3));
-            worksheet.Cells["A3"].PutValue(DateTime.Now.AddDays(-2));
-            worksheet.Cells["A4"].PutValue(DateTime.Now.AddDays(-1));
-            worksheet.Cells["A5"].PutValue(DateTime.Now);
-            worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["B3"].PutValue(150);
-            worksheet.Cells["B4"].PutValue(200);
-            worksheet.Cells["B5"].PutValue(250);
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["A2"].PutValue(DateTime.Now.AddDays(-4));
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["A3"].PutValue(DateTime.Now.AddDays(-3));
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["A4"].PutValue(DateTime.Now.AddDays(-2));
+            worksheet.Cells["B4"].PutValue(30);
+            worksheet.Cells["A5"].PutValue(DateTime.Now.AddDays(-1));
+            worksheet.Cells["B5"].PutValue(40);
+            worksheet.Cells["A6"].PutValue(DateTime.Now);
+            worksheet.Cells["B6"].PutValue(50);
 
             // Create a pivot table that will serve as the data source for the timeline
-            int pivotIndex = worksheet.PivotTables.Add("A1:B5", "D1", "SalesPivot");
+            int pivotIndex = worksheet.PivotTables.Add("A1:B6", "D1", "PivotTable1");
             PivotTable pivot = worksheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
 
-            // Add the date field to the Page area (required for timelines) and the sales field to the Data area
-            pivot.AddFieldToArea(PivotFieldType.Page, "Date");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Refresh pivot cache data using the correct API
             pivot.RefreshData();
+            pivot.CalculateData();
 
-            // Add a timeline linked to the pivot table's date field
-            int timelineIndex = worksheet.Timelines.Add(pivot, 0, 0, "Date");
+            // Add a timeline linked to the pivot table
+            int timelineIndex = worksheet.Timelines.Add(pivot, "F1", "Date");
             Timeline timeline = worksheet.Timelines[timelineIndex];
-            timeline.Caption = "Sales Timeline";
+            timeline.Caption = "Sample Timeline";
 
-            // Export the workbook (which includes the timeline) to a PDF stored in a memory stream
+            // Create a memory stream to hold the PDF output
             using (MemoryStream pdfStream = new MemoryStream())
             {
+                // Save the workbook (including the timeline) as PDF into the memory stream
                 workbook.Save(pdfStream, SaveFormat.Pdf);
-                pdfStream.Position = 0; // Reset for further processing
 
+                // Reset the stream position for any subsequent reading
+                pdfStream.Position = 0;
+
+                // Output the size of the generated PDF
                 Console.WriteLine($"Generated PDF stream length: {pdfStream.Length} bytes");
             }
         }
@@ -62,5 +66,11 @@ class ExportTimelineToPdfStream
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Entry point for the application
+    public static void Main()
+    {
+        Run();
     }
 }

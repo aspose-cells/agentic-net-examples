@@ -1,69 +1,62 @@
-// Title: Copy a range with formulas and external links to a new workbook using Aspose.Cells for .NET
-// Description: Loads a source workbook, creates an empty destination workbook, copies a specified range (including formulas, values, and formatting) with PasteOptions that preserve external links, updates each ExternalLink.DataSource to point to the original file, and saves the result as a new Excel file.
-// Keywords: Aspose.Cells copy range | copy formulas with external links | PasteOptions IgnoreLinksToOriginalFile | ExternalLink DataSource | C# Excel workbook copy | .NET Excel range transfer | update external references Aspose
-// Common Searches: Aspose.Cells copy range preserving external links | C# copy cells with formulas to another workbook | how to update ExternalLink.DataSource after copying cells | PasteOptions to retain external references in Aspose.Cells | copy Excel range with formulas and links using .NET
-// Developer Intent: Transfer a cell range that contains formulas with external references to a new workbook and re‑point those links to the original source file.
-// Use Cases: Create a report workbook that reuses calculation blocks from a master file while keeping formulas functional. | Generate a template by copying a data‑driven area and ensuring all external links resolve to the source workbook. | Automate a summary sheet that pulls formulas from another workbook and updates link paths for consistent data sourcing.
-// AI Prompts: Write C# code with Aspose.Cells to copy a range that includes formulas and external links to a new workbook, then adjust the link paths to a given file. | Explain the role of PasteOptions.IgnoreLinksToOriginalFile when copying formulas that reference external workbooks. | Provide a step‑by‑step tutorial for updating ExternalLink.DataSource after copying a range in Aspose.Cells for .NET.
+// Title: Copy a range with formulas to another workbook and automatically update external workbook references using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to copy the A1:C10 range from source.xlsx to dest.xlsx while preserving all formulas. | Iterate over the copied cells in dest.xlsx and replace any "[source.xlsx]" workbook name in the formulas with the destination file name. | Save the updated destination workbook as dest.xlsx.
+// Common Searches: how to copy a range with formulas to a new workbook using Aspose.Cells C# | replace source workbook name in cell formulas after copying range Aspose.Cells .NET | update external references in copied formulas Aspose.Cells example | copy range preserving formulas and change file reference Aspose.Cells C#
+// Tags: range.Copy preserving formulas Aspose.Cells | external reference replacement in cell formulas .NET | copy range between workbooks Aspose.Cells C# | modify workbook name in formulas programmatically | Aspose.Cells update formula references after copy
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Loads a source workbook, creates an empty destination workbook, copies a specified range (including formulas, values, and formatting) with PasteOptions that preserve external links, updates each ExternalLink.DataSource to point to the original file, and saves the result as a new Excel file.
+// The example loads source.xlsx, creates an empty destination workbook, copies the A1:C10 range while keeping formulas, iterates the copied cells to replace "[source.xlsx]" with the destination file name in each formula, and saves the result as dest.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string sourcePath = "Source.xlsx";
-            const string destinationPath = "Destination.xlsx";
+            const string sourcePath = "source.xlsx";
+            const string destPath = "dest.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException.
+            // Verify source file exists
             if (!File.Exists(sourcePath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Source file \"{sourcePath}\" not found.");
                 return;
             }
 
-            // Load the source workbook that contains formulas with external references.
+            // Load the source workbook that contains the range with formulas
             Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Create a new (empty) destination workbook.
+            // Create a new (empty) destination workbook
             Workbook destinationWorkbook = new Workbook();
-            // Remove the default sheet and add a fresh one for the copied data.
-            destinationWorkbook.Worksheets.Clear();
-            Worksheet destSheet = destinationWorkbook.Worksheets.Add("CopiedData");
 
-            // Define the range in the source workbook that you want to copy.
-            // Use fully qualified Aspose.Cells.Range to avoid ambiguity with System.Range.
-            Aspose.Cells.Range sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange("A1:B10");
+            // Ensure the destination workbook has at least one worksheet
+            Worksheet destSheet = destinationWorkbook.Worksheets[0];
 
-            // Define the destination range with the same size.
-            Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("A1:B10");
+            // Define the range to copy from the source workbook (adjust the address as needed)
+            AsposeRange sourceRange = sourceWorkbook.Worksheets[0].Cells.CreateRange("A1:C10");
 
-            // Configure paste options to copy everything (values, formulas, formats, etc.).
-            // Setting IgnoreLinksToOriginalFile to false ensures that external links are retained.
-            PasteOptions pasteOptions = new PasteOptions
+            // Create a matching range in the destination worksheet
+            AsposeRange destRange = destSheet.Cells.CreateRange("A1:C10");
+
+            // Copy the range, preserving formulas
+            sourceRange.Copy(destRange);
+
+            // Update external references inside the copied formulas manually
+            foreach (Cell cell in destRange)
             {
-                PasteType = PasteType.All,
-                IgnoreLinksToOriginalFile = false
-            };
-
-            // Perform the copy operation.
-            destRange.Copy(sourceRange, pasteOptions);
-
-            // Update external links in the destination workbook to point to the source workbook.
-            foreach (ExternalLink link in destinationWorkbook.Worksheets.ExternalLinks)
-            {
-                // Assign the source workbook file name (or full path) to the DataSource property.
-                link.DataSource = sourceWorkbook.FileName;
+                if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula))
+                {
+                    // Replace the source workbook name with the destination workbook name in the formula
+                    string updatedFormula = cell.Formula.Replace("[source.xlsx]", $"[{Path.GetFileName(destPath)}]");
+                    cell.Formula = updatedFormula;
+                }
             }
 
-            // Save the destination workbook.
-            destinationWorkbook.Save(destinationPath);
-            Console.WriteLine($"Workbook copied successfully to {destinationPath}");
+            // Save the destination workbook
+            destinationWorkbook.Save(destPath);
+            Console.WriteLine($"Workbook saved successfully to \"{destPath}\".");
         }
         catch (Exception ex)
         {

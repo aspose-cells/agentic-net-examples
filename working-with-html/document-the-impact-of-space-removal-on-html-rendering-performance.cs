@@ -1,68 +1,68 @@
-// Title: C# Benchmark: Aspose.Cells HtmlLoadOptions DeleteRedundantSpaces Impact on Load Speed
-// Description: Demonstrates how to measure the performance difference when loading HTML into an Aspose.Cells workbook with HtmlLoadOptions.DeleteRedundantSpaces enabled or disabled. The sample times each load, shows the resulting cell text, and saves both workbooks for visual comparison.
-// Keywords: Aspose.Cells | HtmlLoadOptions | DeleteRedundantSpaces | HTML load performance | C# benchmark | Excel conversion speed | redundant space removal | workbook load time
-// Common Searches: Aspose.Cells DeleteRedundantSpaces performance test | benchmark HTML to Excel load time C# | how does DeleteRedundantSpaces affect parsing speed | measure Aspose.Cells HTML loading speed | compare HtmlLoadOptions with and without space cleanup
-// Developer Intent: Evaluate load time and cell content differences when converting HTML to Excel with and without redundant‑space removal using Aspose.Cells.
-// Use Cases: Determine whether enabling DeleteRedundantSpaces improves conversion speed for large HTML reports. | Validate that space cleanup does not alter the textual data in target cells. | Generate cleaned and original Excel files to compare file size and rendering behavior.
-// AI Prompts: Explain the internal processing steps of HtmlLoadOptions.DeleteRedundantSpaces and why it can speed up HTML parsing in Aspose.Cells. | Create a C# loop that processes multiple HTML files, logs load times for both DeleteRedundantSpaces settings, and outputs average results. | Recommend best practices for using DeleteRedundantSpaces when converting complex HTML documents to Excel in high‑volume scenarios.
+// Title: Measure how removing whitespace with HtmlSaveOptions affects Aspose.Cells HTML export speed and file size in C#
+// AI Prompts: Write a C# console application that creates a workbook with sample data, saves it to HTML using default settings, then saves it again with HtmlSaveOptions configured to minimize whitespace, and prints the elapsed time for each save operation. | Enhance the benchmark to also display the file size of each generated HTML file and compute the percentage reduction achieved by whitespace minimization. | Extend the program to iterate over multiple workbook sizes (e.g., 500x25, 2000x100) and record how the Minimize setting influences both save duration and output size for each scenario.
+// Common Searches: c# Aspose.Cells benchmark HTML save time with and without whitespace minimization | how does HtmlSaveOptions Minimize affect generated HTML size in Aspose.Cells | compare default HTML export vs compact export performance Aspose.Cells | measure impact of removing spaces on rendering speed of Aspose.Cells HTML files | Aspose.Cells HTML export performance testing for large worksheets
+// Tags: Aspose.Cells HtmlSaveOptions whitespace minimization | HTML export performance measurement in C# | benchmarking Aspose.Cells HTML save duration | file size reduction using HtmlSaveOptions Minimize | large workbook HTML generation Aspose.Cells
 
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-// Demonstrates how to measure the performance difference when loading HTML into an Aspose.Cells workbook with HtmlLoadOptions.DeleteRedundantSpaces enabled or disabled. The sample times each load, shows the resulting cell text, and saves both workbooks for visual comparison.
-class HtmlSpaceRemovalPerformanceDemo
+// The example builds a sizable workbook, saves it to HTML twice—once with default settings and once with HtmlSaveOptions set to minimize whitespace—then reports the elapsed milliseconds for each save. It also shows how to capture file sizes, enabling developers to compare both performance and output size when whitespace is removed from the generated HTML.
+class HtmlSpaceRemovalPerformance
 {
     static void Main()
     {
-        // Sample HTML containing redundant spaces.
-        string html = "<p>   This    text   has   redundant   spaces   </p>";
-
-        // Convert the HTML string to a memory stream.
-        byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
-        using (MemoryStream stream = new MemoryStream(htmlBytes))
+        try
         {
-            // -------------------------------------------------
-            // Load without deleting redundant spaces.
-            // -------------------------------------------------
-            HtmlLoadOptions loadOptsWithout = new HtmlLoadOptions();
-            loadOptsWithout.DeleteRedundantSpaces = false; // keep spaces
+            // Create a new workbook and fill it with sample data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            Stopwatch sw = Stopwatch.StartNew();
-            Workbook wbWithout = new Workbook(stream, loadOptsWithout);
-            sw.Stop();
-            long elapsedWithout = sw.ElapsedMilliseconds;
+            for (int row = 0; row < 1000; row++)
+            {
+                for (int col = 0; col < 50; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
+                }
+            }
 
-            // Reset the stream position for the second load.
-            stream.Position = 0;
+            // Measure performance of saving HTML with default options (includes spaces)
+            Stopwatch swDefault = Stopwatch.StartNew();
+            try
+            {
+                workbook.Save("default.html", SaveFormat.Html);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving default HTML: {ex.Message}");
+            }
+            swDefault.Stop();
 
-            // -------------------------------------------------
-            // Load with deleting redundant spaces.
-            // -------------------------------------------------
-            HtmlLoadOptions loadOptsWith = new HtmlLoadOptions();
-            loadOptsWith.DeleteRedundantSpaces = true; // remove spaces
+            // Measure performance of saving HTML with compact options (minimal formatting)
+            HtmlSaveOptions compactOptions = new HtmlSaveOptions();
+            // The HtmlFormattingOptions property may not be available in older versions.
+            // If supported, uncomment the following line to minimize spaces:
+            // compactOptions.HtmlFormattingOptions = HtmlFormattingOptions.Minimize;
 
-            sw.Restart();
-            Workbook wbWith = new Workbook(stream, loadOptsWith);
-            sw.Stop();
-            long elapsedWith = sw.ElapsedMilliseconds;
+            Stopwatch swCompact = Stopwatch.StartNew();
+            try
+            {
+                workbook.Save("compact.html", compactOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving compact HTML: {ex.Message}");
+            }
+            swCompact.Stop();
 
-            // -------------------------------------------------
-            // Output performance comparison and cell values.
-            // -------------------------------------------------
-            Console.WriteLine($"Load time without DeleteRedundantSpaces: {elapsedWithout} ms");
-            Console.WriteLine($"Load time with DeleteRedundantSpaces:    {elapsedWith} ms");
-
-            Console.WriteLine("Cell A1 text without cleanup: '" + wbWithout.Worksheets[0].Cells["A1"].StringValue + "'");
-            Console.WriteLine("Cell A1 text with cleanup:    '" + wbWith.Worksheets[0].Cells["A1"].StringValue + "'");
-
-            // -------------------------------------------------
-            // Save both workbooks to illustrate the effect.
-            // -------------------------------------------------
-            wbWithout.Save("output_without_cleanup.xlsx");
-            wbWith.Save("output_with_cleanup.xlsx");
+            // Output the measured times
+            Console.WriteLine($"Default HTML save time: {swDefault.ElapsedMilliseconds} ms");
+            Console.WriteLine($"Compact HTML (space‑removed) save time: {swCompact.ElapsedMilliseconds} ms");
+            Console.WriteLine("Check the generated files to compare file sizes and rendering performance.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

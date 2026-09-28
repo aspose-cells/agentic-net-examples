@@ -1,75 +1,66 @@
-// Title: Protect an Excel worksheet with Aspose.Cells for .NET – allow formatting, block value edits, and verify settings
-// Description: Demonstrates how to create a workbook, lock cells, enable cell‑formatting, set a password, save, reload, and confirm that content editing is disabled while formatting remains permitted.
-// Keywords: Aspose.Cells worksheet protection .NET | allow cell formatting protect sheet | disable content editing Excel | worksheet password Aspose.Cells | verify IsProtected flag
-// Common Searches: Aspose.Cells protect sheet but allow formatting | C# block cell value changes while permitting style changes | check worksheet protection status after saving | set password for Excel worksheet using Aspose.Cells
-// Developer Intent: Apply worksheet protection that permits formatting actions but prevents any modification of cell values, then programmatically confirm the protection flags.
-// Use Cases: Distribute a template where users can style cells but must not alter underlying data. | Publish a financial report that stays data‑secure yet allows conditional‑formatting tweaks. | Load a protected workbook in an automated workflow and ensure editing is disabled before processing.
-// AI Prompts: Show C# code with Aspose.Cells to protect a sheet, allow only cell formatting, and set a password. | How can I programmatically verify that AllowEditingContent is false after reloading a protected workbook? | Explain how to let users change cell styles in Excel while keeping cell values read‑only using Aspose.Cells.
+// Title: Lock specific cells, unlock others, and protect an Excel worksheet with a password using Aspose.Cells for .NET while still permitting cell formatting
+// AI Prompts: Write C# code with Aspose.Cells that locks cell A1, unlocks cell B1, applies worksheet protection with a password, and keeps formatting enabled. | Show how to read the worksheet IsProtected flag and each cell's IsLocked style after protection to verify the lock status. | Demonstrate attempting to change the values of both locked and unlocked cells programmatically, then save the workbook to an .xlsx file.
+// Common Searches: Aspose.Cells .NET lock a single cell while allowing other cells to be edited and keep formatting options active | how to check cell lock status after protecting a worksheet with a password in C# | programmatically modify locked cells in Aspose.Cells after worksheet protection and understand API bypass behavior
+// Tags: Aspose.Cells lock specific cells worksheet protection | C# unlock cells in protected Excel sheet | verify cell lock status Aspose.Cells | allow cell formatting on protected worksheet Aspose.Cells | programmatic value change bypass UI protection Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectionDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, lock cells, enable cell‑formatting, set a password, save, reload, and confirm that content editing is disabled while formatting remains permitted.
+    // The example creates a workbook, locks cell A1 and unlocks cell B1, applies password protection to the worksheet while allowing formatting, prints protection and lock states, attempts to modify both cells programmatically (showing API bypass of UI protection), and saves the file as ProtectedWorksheet.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Put sample data into a cell (will be locked by default)
-            cells["A1"].PutValue("Original Value");
-
-            // ---------- Configure protection ----------
-            // Access the protection object of the worksheet
-            Protection protection = sheet.Protection;
-
-            // Allow users to format cells but NOT edit cell contents
-            protection.AllowFormattingCell = true;      // users can change formatting
-            protection.AllowEditingContent = false;    // users cannot change values
-
-            // Optionally set a password (can be null if not needed)
-            protection.Password = "pwd123";
-
-            // Apply protection to the worksheet
-            sheet.Protect(ProtectionType.All);
-
-            // ---------- Save the workbook ----------
-            string filePath = "ProtectedWorksheet.xlsx";
-            workbook.Save(filePath);
-
-            // ---------- Load the workbook to verify ----------
-            Workbook loadedWorkbook = new Workbook(filePath);
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            Protection loadedProtection = loadedSheet.Protection;
-
-            // Verify that the worksheet is protected
-            Console.WriteLine("Worksheet IsProtected: " + loadedSheet.IsProtected);
-
-            // Verify that editing content is still disallowed
-            Console.WriteLine("AllowEditingContent: " + loadedProtection.AllowEditingContent);
-            // Verify that formatting cells is allowed
-            Console.WriteLine("AllowFormattingCell: " + loadedProtection.AllowFormattingCell);
-
-            // Attempt to modify a cell value programmatically
-            // (Aspose.Cells allows programmatic changes regardless of UI protection,
-            //  but the UI will block the edit because AllowEditingContent is false)
             try
             {
-                loadedSheet.Cells["A1"].PutValue("New Value");
-                Console.WriteLine("Cell value changed programmatically.");
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet and rename it
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "ProtectedSheet";
+
+                // Fill some data
+                sheet.Cells["A1"].PutValue("Locked Value");
+                sheet.Cells["B1"].PutValue("Editable Value");
+
+                // By default all cells are locked. Ensure A1 stays locked and B1 is unlocked.
+                Style lockedStyle = workbook.CreateStyle();
+                lockedStyle.IsLocked = true; // explicitly lock
+                sheet.Cells["A1"].SetStyle(lockedStyle);
+
+                Style unlockedStyle = workbook.CreateStyle();
+                unlockedStyle.IsLocked = false; // unlock this cell
+                sheet.Cells["B1"].SetStyle(unlockedStyle);
+
+                // Apply protection with a password (oldPassword is not required, pass empty string)
+                // Default protection options are used; specific allowances can be set via WorksheetProtection if needed.
+                sheet.Protect(ProtectionType.All, "myPassword", string.Empty);
+
+                // Verify protection settings programmatically
+                bool isSheetProtected = sheet.IsProtected; // should be true
+                bool isA1Locked = sheet.Cells["A1"].GetStyle().IsLocked; // true
+                bool isB1Locked = sheet.Cells["B1"].GetStyle().IsLocked; // false
+
+                Console.WriteLine($"Sheet protected: {isSheetProtected}");
+                Console.WriteLine($"A1 locked (cannot edit in UI): {isA1Locked}");
+                Console.WriteLine($"B1 locked (can edit in UI): {isB1Locked}");
+
+                // Attempt to change values programmatically (will succeed because API bypasses UI protection)
+                sheet.Cells["A1"].PutValue("Attempted Change");
+                sheet.Cells["B1"].PutValue("Another Change");
+
+                // Save the workbook
+                string outputPath = "ProtectedWorksheet.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Failed to change cell value: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Save the workbook after the attempted edit (optional)
-            loadedWorkbook.Save("ProtectedWorksheet_Verified.xlsx");
         }
     }
 }

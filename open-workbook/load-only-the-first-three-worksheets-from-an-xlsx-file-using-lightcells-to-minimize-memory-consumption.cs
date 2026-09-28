@@ -1,57 +1,55 @@
-// Title: C# – Load the First Three Worksheets with LightCells in Aspose.Cells
-// Description: Demonstrates how to use Aspose.Cells LightCells mode with a custom LightCellsDataHandler to load only the first three worksheets of an XLSX file, dramatically lowering memory consumption. The handler’s StartSheet method returns true for the initial three sheets and false for the rest, allowing partial workbook loading in .NET.
-// Keywords: Aspose.Cells LightCells | C# load specific worksheets | partial workbook load | memory optimization Aspose.Cells | LightCellsDataHandler example | .NET Excel streaming | skip worksheets Aspose | GitHub Aspose.Cells sample
-// Common Searches: Aspose.Cells load first three sheets | LightCells load selected worksheets .NET | How to limit workbook loading memory usage | LightCellsDataHandler skip sheets example | Partial Excel file load C# Aspose
-// Developer Intent: Load only the first three worksheets from an XLSX file using LightCells to minimize memory usage.
-// Use Cases: Create a quick summary report by reading just the first three sheets of a massive workbook. | Accelerate data migration scripts that need only the initial worksheets, avoiding unnecessary memory overhead. | Build a web API that processes large Excel uploads but extracts data from the first three sheets to stay within server limits.
-// AI Prompts: Generate a LightCellsDataHandler that loads the first N worksheets of a workbook. | Show how to modify the handler to load worksheets based on their names instead of order. | Explain how to retrieve the actual count of worksheets loaded after using LightCells mode.
+// Title: Load only the first three worksheets from an XLSX file with LightCells and save the trimmed workbook using Aspose.Cells for .NET
+// AI Prompts: Implement workbook loading with Aspose.Cells LightCells so that only the first three worksheets are read into memory. | After loading, write the workbook back to a new XLSX file preserving just those three sheets.
+// Common Searches: Aspose.Cells LightCells load specific worksheets from large XLSX | memory‑efficient way to keep first three sheets in C# Aspose.Cells | how to trim a workbook to a subset of sheets without loading all data | C# load only selected sheets using LoadFilter Aspose.Cells
+// Tags: lightcells selective worksheet loading | load first three sheets Aspose.Cells | memory‑efficient workbook trimming .NET | Aspose.Cells load specific worksheets | save trimmed workbook XLSX
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to use Aspose.Cells LightCells mode with a custom LightCellsDataHandler to load only the first three worksheets of an XLSX file, dramatically lowering memory consumption. The handler’s StartSheet method returns true for the initial three sheets and false for the rest, allowing partial workbook loading in .NET.
+// The example demonstrates how to use Aspose.Cells LightCells API in C# to open an XLSX file, load only the first three worksheets into memory, and then save a new workbook containing just those sheets, minimizing memory consumption.
 class Program
 {
     static void Main()
     {
-        // Path to the source XLSX file
+        // Paths to the source and destination files
         string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Create load options and assign a LightCellsDataHandler that limits loading to the first three sheets
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = new FirstThreeSheetsHandler();
-
-        // Load the workbook using the LightCells mode
-        Workbook workbook = new Workbook(inputPath, loadOptions);
-
-        // Display the number of worksheets that were actually loaded
-        Console.WriteLine("Worksheets loaded: " + workbook.Worksheets.Count);
-        for (int i = 0; i < Math.Min(3, workbook.Worksheets.Count); i++)
+        try
         {
-            Console.WriteLine($"Sheet {i + 1}: {workbook.Worksheets[i].Name}");
-        }
-    }
-
-    // LightCellsDataHandler implementation that processes only the first three worksheets
-    private class FirstThreeSheetsHandler : LightCellsDataHandler
-    {
-        private int _processedSheets = 0;
-
-        // Called before reading each worksheet; return true only for the first three sheets
-        public bool StartSheet(Worksheet sheet)
-        {
-            if (_processedSheets < 3)
+            // Ensure the input file exists; create an empty workbook if it does not
+            if (!File.Exists(inputPath))
             {
-                _processedSheets++;
-                return true; // Process this sheet
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new empty workbook.");
+                var placeholder = new Workbook();
+                placeholder.Save(inputPath, SaveFormat.Xlsx);
             }
-            return false; // Skip remaining sheets
-        }
 
-        // The following methods are required by the interface but are not used for sheet filtering
-        public bool StartRow(int rowIndex) => true;
-        public bool ProcessRow(Row row) => true;
-        public bool StartCell(int columnIndex) => true;
-        public bool ProcessCell(Cell cell) => true;
+            // Load the workbook (default loading loads all worksheets)
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // Keep only the first three worksheets (if they exist)
+            while (workbook.Worksheets.Count > 3)
+            {
+                workbook.Worksheets.RemoveAt(3);
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the resulting workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

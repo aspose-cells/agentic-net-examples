@@ -1,46 +1,51 @@
-// Title: C# – Set 1.5 line spacing in an Aspose.Cells textbox shape using TextParagraph and TextOptions
-// Description: Creates a workbook, adds a textbox shape, inserts multiline text, and applies 1.5‑line (150 %) spacing via TextParagraph.LineSpaceSizeType = Percentage and LineSpace = 150 (or TextOptions.LineSpacing). The shape is then auto‑sized with FitToTextSize and saved as an XLSX file.
-// Keywords: Aspose.Cells line spacing | textbox shape line spacing .NET | TextParagraph LineSpacePercentage | TextOptions.LineSpacing Aspose | C# adjust shape text layout | fit shape to text Aspose.Cells | 1.5 line spacing Excel shape | Aspose.Cells shape formatting
-// Common Searches: how to change line spacing in a textbox shape using Aspose.Cells C# | Aspose.Cells TextParagraph line spacing percentage example | set 150% line spacing for shape text in .NET | auto resize shape after modifying line spacing Aspose | TextOptions.LineSpacing usage in Aspose.Cells
-// Developer Intent: Apply 1.5‑line (150 %) spacing to the text inside a shape.
-// Use Cases: Design a readable multiline textbox in an Excel worksheet. | Maintain consistent paragraph spacing across multiple shapes. | Resize a shape automatically after changing line spacing to avoid clipping.
-// AI Prompts: Generate C# code that sets 150% line spacing for every paragraph in a shape's TextBody using Aspose.Cells. | Show how to loop through all TextParagraphs of a shape and apply 1.5 line spacing, then call FitToTextSize. | Create an example that reads a line‑spacing value from a variable and applies it via TextOptions.LineSpacing to a textbox shape.
+// Title: Apply 1.5 line spacing to text inside a TextBox shape in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a TextBox shape, sets its TextOptions.LineSpacing to 1.5, and saves the workbook with Aspose.Cells. | Show how to modify an existing Aspose.Cells TextBox shape to use 1.5 line spacing for its multiline text. | Provide a snippet that demonstrates configuring line spacing for shape text via TextOptions in Aspose.Cells for .NET.
+// Common Searches: asp.net set line spacing for textbox shape using Aspose.Cells | c# Aspose.Cells TextBox line height 1.5 | how to change line spacing of shape text in Excel with Aspose.Cells .NET | TextOptions.LineSpacing example for Excel shapes in C#
+// Tags: Aspose.Cells TextOptions.LineSpacing property | C# set textbox shape line spacing | Excel shape text formatting Aspose.Cells | adjust line height in Excel shape .NET | multiline textbox shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a textbox shape, inserts multiline text, and applies 1.5‑line (150 %) spacing via TextParagraph.LineSpaceSizeType = Percentage and LineSpace = 150 (or TextOptions.LineSpacing). The shape is then auto‑sized with FitToTextSize and saved as an XLSX file.
-class AdjustLineSpacingDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Creates a new workbook, adds a multiline TextBox shape, configures TextOptions.LineSpacing to 1.5 to achieve 1.5‑line spacing, and saves the file as LineSpacingExample.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a text box shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset in pixels,
-        // lower right row, lower right column, lower right offset in pixels
-        Shape textBox = worksheet.Shapes.AddTextBox(2, 2, 0, 2, 2, 0);
-        textBox.Width = 300;
-        textBox.Height = 150;
+                // Add a textbox shape to the worksheet.
+                // Parameters: upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, width, height
+                TextBox textBox = worksheet.Shapes.AddTextBox(2, 1, 2, 1, 200, 80);
 
-        // Set multiline text inside the shape
-        textBox.Text = "First line\nSecond line\nThird line";
+                // Set the text inside the shape (use line breaks)
+                textBox.Text = "First line\nSecond line\nThird line";
 
-        // Access the first paragraph of the text box
-        TextParagraph paragraph = textBox.TextBody.TextParagraphs[0];
+                // Define output file path
+                string outputPath = "LineSpacingExample.xlsx";
 
-        // Set line spacing to 1.5 lines (150% of the font size)
-        paragraph.LineSpaceSizeType = LineSpaceSizeType.Percentage; // use percentage unit
-        paragraph.LineSpace = 150; // 150% = 1.5 lines
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Optionally, fit the shape size to the new text layout
-        textBox.FitToTextSize();
-
-        // Save the workbook
-        workbook.Save("AdjustedLineSpacing.xlsx");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

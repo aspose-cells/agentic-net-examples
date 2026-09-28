@@ -1,41 +1,51 @@
-// Title: List SmartArt Shape Names in an Excel Worksheet with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, accesses a worksheet, iterates through its Shapes collection, checks the IsSmartArt flag, writes each SmartArt shape's Name to the console, and saves the file.
-// Keywords: Aspose.Cells | C# SmartArt shapes | list SmartArt names | IsSmartArt property | Excel worksheet shapes | retrieve SmartArt layout | .NET Excel automation
-// Common Searches: How to list SmartArt objects in an Excel file using Aspose.Cells C# | Retrieve names of SmartArt diagrams from a worksheet with Aspose.Cells | Iterate worksheet shapes to find SmartArt in .NET | Get SmartArt shape names from a workbook programmatically
-// Developer Intent: Find every SmartArt object in a worksheet and output its name.
-// Use Cases: Create an inventory of SmartArt diagrams in a template workbook | Verify required SmartArt exists before generating reports | Log SmartArt identifiers for auditing Excel assets
-// AI Prompts: Generate C# code that extracts all SmartArt shape names from every worksheet in a workbook and returns them as a List<string> using Aspose.Cells. | Show how to filter worksheet shapes to SmartArt only and write each name to a CSV file with Aspose.Cells. | Explain how to also obtain the SmartArt layout type and node count for each identified shape.
+// Title: How to list the names of SmartArt shapes in every worksheet of an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook and prints each worksheet's SmartArt shape names. | Create a method that returns a Dictionary<string, List<string>> mapping worksheet names to their SmartArt shape names using Aspose.Cells. | Modify the example to also output the SmartArt layout type (e.g., Hierarchy, Process) for each identified shape.
+// Common Searches: aspnet list smartart objects in an excel workbook using aspose.cells | c# enumerate smartart items in each worksheet of an xlsx file | how to retrieve smartart layout type with aspose.cells .net | get smartart shape properties from excel file using aspose.cells c# | iterate over worksheet shapes and filter smartart with aspose.cells
+// Tags: aspocells enumerate smartart shapes | c# extract smartart identifiers | aspocells get smartart layout type | excel worksheet shape iteration .net | smartart shape detection using aspose.cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartArtDemo
+// The program loads an Excel workbook, iterates through each worksheet and its Shapes collection, checks the IsSmartArt flag, and writes the worksheet name together with each SmartArt shape's Name (and optionally its layout type) to the console, while handling missing files and runtime exceptions.
+class Program
 {
-    // Loads a workbook, accesses a worksheet, iterates through its Shapes collection, checks the IsSmartArt flag, writes each SmartArt shape's Name to the console, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
 
-            // Access the first worksheet (or modify as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Iterate through all shapes in the worksheet
-            foreach (Shape shape in worksheet.Shapes)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Check if the shape is a SmartArt object
-                if (shape.IsSmartArt)
-                {
-                    // Output the name of the SmartArt shape
-                    Console.WriteLine($"SmartArt Shape Name: {shape.Name}");
-                }
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
 
-            // Save the workbook (no modifications made, but required by lifecycle rules)
-            workbook.Save("output.xlsx");
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each shape on the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Identify SmartArt shapes
+                    if (shape.IsSmartArt)
+                    {
+                        // Output the SmartArt shape's name and its worksheet
+                        Console.WriteLine($"Worksheet: {sheet.Name}, SmartArt Name: {shape.Name}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

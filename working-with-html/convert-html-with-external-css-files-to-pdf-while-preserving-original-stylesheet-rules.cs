@@ -1,56 +1,46 @@
-// Title: Convert HTML with External CSS to PDF using Aspise.Cells (.NET)
-// Description: Loads an HTML file that references external CSS files into an Aspose.Cells Workbook, then exports it to PDF while preserving the original stylesheet formatting.
-// Keywords: Aspose.Cells HTML to PDF | external CSS conversion | C# HTML PDF export | preserve stylesheet Aspose.Cells | .NET HTML to PDF example | load HTML with linked CSS
-// Common Searches: Aspose.Cells convert HTML with linked CSS to PDF C# | preserve external stylesheet when exporting HTML to PDF | HTML to PDF conversion using Aspose.Cells .NET | load HTML file with <link> tags in Aspose.Cells
-// Developer Intent: Generate a PDF from an HTML document that uses external CSS, ensuring the visual style is retained, via Aspose.Cells for .NET.
-// Use Cases: Create printable PDFs from web pages that rely on separate style sheets. | Archive HTML email newsletters with linked CSS as styled PDFs. | Produce branded invoices or reports from HTML templates that include external CSS.
-// AI Prompts: Write C# code to load an HTML file containing <link> tags to external CSS into an Aspose.Cells Workbook and save it as a styled PDF. | Explain how Aspose.Cells resolves and applies external CSS during HTML‑to‑PDF conversion, and list any known limitations. | Suggest robust error‑handling and batch‑processing patterns for converting multiple HTML files with linked stylesheets to PDF using Aspose.Cells.
+// Title: Convert HTML with linked external CSS to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an HTML file with external CSS files into an Aspose.Cells Workbook using HtmlLoadOptions and saves it as a PDF. | Demonstrate how to configure Aspose.Cells to automatically include linked stylesheet rules when converting HTML to PDF in a .NET application. | Provide error‑handling logic for missing HTML input files and exceptions during HTML‑to‑PDF conversion with Aspose.Cells.
+// Common Searches: asp.net core convert html page that references external css to pdf with aspose.cells | c# sample that loads html and linked stylesheet then exports to pdf using aspose.cells | how to ensure linked css styles are applied when saving html as pdf in aspose.cells | example of checking html file existence before workbook load in aspose.cells conversion
+// Tags: CSS file inclusion in Aspose.Cells HTML load | preserve stylesheet formatting during PDF generation | console app for styled HTML conversion | pre‑load file existence verification for workbook creation | SaveFormat.Pdf usage with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlToPdf
+// The example checks that the input HTML file exists, loads it into an Aspose.Cells Workbook with default HtmlLoadOptions (which automatically processes linked CSS), and saves the result as a PDF using SaveFormat.Pdf, while handling potential errors.
+class Program
 {
-    // Loads an HTML file that references external CSS files into an Aspose.Cells Workbook, then exports it to PDF while preserving the original stylesheet formatting.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source HTML file that contains <link> tags referencing external CSS files
-            string htmlPath = @"C:\Input\sample.html";
+            // Path to the source HTML file
+            string htmlPath = "input.html";
 
-            // Path where the resulting PDF will be saved
-            string pdfPath = @"C:\Output\sample.pdf";
+            // Path for the generated PDF file
+            string pdfPath = "output.pdf";
 
-            try
+            // Verify that the HTML file exists
+            if (!File.Exists(htmlPath))
             {
-                // Verify that the input HTML file exists
-                if (!File.Exists(htmlPath))
-                {
-                    Console.WriteLine($"Input file not found: {htmlPath}");
-                    return;
-                }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(pdfPath);
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Load the HTML file into a Workbook; Aspose.Cells parses the HTML and applies external CSS.
-                Workbook workbook = new Workbook(htmlPath);
-
-                // Save the workbook as PDF. Visual appearance, including styles from external CSS, is preserved.
-                workbook.Save(pdfPath, SaveFormat.Pdf);
-
-                Console.WriteLine("HTML has been successfully converted to PDF with original stylesheet rules.");
+                Console.WriteLine($"Error: HTML file not found at '{htmlPath}'.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Configure loading options (default loads external CSS and images)
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+
+            // Load the HTML file into a new workbook
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+            // Save the workbook as PDF, preserving the original stylesheet formatting
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"PDF successfully created at '{pdfPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

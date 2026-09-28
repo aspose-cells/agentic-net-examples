@@ -1,54 +1,56 @@
-// Title: Apply Built‑In Chart Style and Freeze Header Rows with Aspose.Cells in C#
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, apply a built‑in chart style (e.g., style #2), freeze the first four rows that contain the chart source data using Worksheet.FreezePanes, and save the file as ChartStyleAndFreeze.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells chart style C# | freeze panes Aspose.Cells | Worksheet.FreezePanes .NET | apply built‑in chart style | column chart Aspose.Cells | Excel automation C# | freeze header rows Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells set chart style and freeze rows | How to freeze panes after adding a chart in C# | Apply built‑in chart style Aspose.Cells .NET | Worksheet.FreezePanes example with chart data | Freeze header rows in Excel using Aspose.Cells
-// Developer Intent: The developer wants to style a chart with a predefined Aspose.Cells chart style and lock the rows that provide the chart’s data so the layout remains consistent when scrolling.
-// Use Cases: Create a financial report where the header rows stay visible while a styled column chart displays quarterly results. | Generate an automated Excel export that applies a corporate chart theme and freezes the data‑source rows to preserve dashboard layout. | Build a multi‑chart dashboard workbook that uses consistent styling and freezes source rows to prevent accidental scrolling off the data range.
-// AI Prompts: Show C# code to apply a built‑in chart style and freeze specific rows with Aspose.Cells. | How do I use Worksheet.FreezePanes to lock the first four rows after creating a chart in Aspose.Cells for .NET? | Explain the parameters of Worksheet.FreezePanes and give an example that freezes header rows for a chart.
+// Title: Apply a predefined chart style and freeze top rows in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create an Excel workbook, add sample sales data, insert a column chart, set its built‑in style to index 9, and freeze the first four rows with Aspose.Cells in C#. | Write C# code that uses Aspose.Cells to apply a predefined chart style to a chart and then lock the top rows so they stay visible while scrolling. | Generate a file named ChartWithStyleAndFrozenRows.xlsx where the chart uses style 9 and the worksheet panes are frozen at row 4 using Aspose.Cells.
+// Common Searches: how to set a built‑in chart style in Aspose.Cells C# | freeze panes on specific rows after adding a chart with Aspose.Cells | Aspose.Cells example applying chart style index 9 and freezing top rows | C# Aspose.Cells freeze first four rows of worksheet | apply predefined chart style and freeze header rows in Excel using Aspose.Cells
+// Tags: chart style index nine Aspose.Cells | worksheet pane freezing Aspose.Cells | column chart predefined style Aspose.Cells | Excel workbook generation Aspose.Cells C# | header rows visibility Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsChartStyleAndFreeze
+// The program creates a new workbook, populates sample sales data, inserts a column chart, applies chart style index 9, freezes the first four rows of the worksheet, and saves the file as ChartWithStyleAndFrozenRows.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, add sample data, insert a column chart, apply a built‑in chart style (e.g., style #2), freeze the first four rows that contain the chart source data using Worksheet.FreezePanes, and save the file as ChartStyleAndFreeze.xlsx using Aspose.Cells for .NET.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data that will be used by the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B4"].PutValue(30);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a column chart that covers rows 5‑20 and columns 0‑8
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(130);
 
-            // Set the data series and category data for the chart
-            chart.NSeries.Add("B2:B4", false);
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Apply a built‑in style (e.g., style #2) to the chart
-            chart.Style = 2; // Valid values are 1‑48; -1 means not set
+            // Apply a predefined chart style (style index 9)
+            chart.Style = 9;
 
-            // Freeze the rows that contain the chart data (rows 1‑4)
-            // FreezePanes(rowIndex, columnIndex, freezedRows, freezedColumns)
-            // Row and column indices are zero‑based, so row 4 corresponds to the 5th row.
-            worksheet.FreezePanes(4, 0, 4, 0);
+            // Freeze the first 4 rows (rows 1‑4)
+            // The overload requires row, column, totalRows, totalColumns
+            sheet.FreezePanes(4, 0, 0, 0);
 
             // Save the workbook
-            workbook.Save("ChartStyleAndFreeze.xlsx");
+            workbook.Save("ChartWithStyleAndFrozenRows.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

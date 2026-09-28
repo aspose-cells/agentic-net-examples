@@ -1,117 +1,78 @@
-// Title: C# Export Excel to CSV with Aspose.Cells LightCellsDataHandler (row‑by‑row streaming)
-// Description: Demonstrates a custom CsvExportHandler that inherits from LightCellsDataHandler to stream each worksheet row directly to a CSV file, handling commas, quotes and line breaks while keeping memory usage low.
-// Keywords: Aspose.Cells LightCellsDataHandler | C# CSV export | stream Excel to CSV | row by row processing | large worksheet export | .NET Excel to CSV | memory‑efficient CSV generation
-// Common Searches: How to export Excel to CSV using LightCells in Aspose.Cells C# | LightCellsDataHandler example for CSV output | Stream rows from a workbook to a CSV file with Aspose.Cells | C# write Excel cells to CSV without loading whole file
-// Developer Intent: Generate a CSV file from an Excel workbook by iterating rows with LightCellsDataHandler, avoiding full workbook loading.
-// Use Cases: Export massive worksheets to CSV without exhausting memory. | Create a real‑time CSV pipeline for downstream analytics or ETL processes. | Apply custom escaping rules for commas, quotes and new‑line characters during export.
-// AI Prompts: Write a LightCellsDataHandler in C# that streams worksheet rows to a CSV file with proper escaping. | Show how to configure LoadOptions.LightCellsDataHandler to export an Excel file to CSV without fully loading it. | Explain how to modify the CsvExportHandler to skip empty rows and write a single header line.
+// Title: Iterate rows of an XLSX workbook with Aspose.Cells and export to CSV in C#
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, uses the LightCells API to walk through each row of the used range, and writes the cell values to a CSV stream applying RFC 4180 escaping. | Create a method that receives a worksheet, determines its MaxDataRow and MaxDataColumn, and outputs a CSV line for every row while handling commas, quotes, and line breaks correctly.
+// Common Searches: Aspose.Cells C# export large Excel sheet to CSV using row-by-row processing | How to write CSV from an Excel workbook with proper quoting in .NET Aspose.Cells | LightCells API example for streaming XLSX data to CSV in C# | C# convert XLSX to CSV without loading the entire worksheet into memory Aspose.Cells | Iterate worksheet rows and generate CSV file with Aspose.Cells LoadOptions
+// Tags: lightcells row iteration csv export | aspose.cells export worksheet to csv | c# csv escaping for excel values | stream xlsx rows to csv .net | rfc4180 compliant csv generation aspnet
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Custom LightCellsDataHandler that writes each processed cell to a CSV file.
-// Demonstrates a custom CsvExportHandler that inherits from LightCellsDataHandler to stream each worksheet row directly to a CSV file, handling commas, quotes and line breaks while keeping memory usage low.
-class CsvExportHandler : LightCellsDataHandler
-{
-    private readonly StreamWriter _writer;
-    private bool _firstRow = true;
-    private int _currentColumn = -1;
-
-    public CsvExportHandler(string outputPath)
-    {
-        _writer = new StreamWriter(outputPath);
-    }
-
-    // Process all sheets.
-    public bool StartSheet(Worksheet sheet) => true;
-
-    // Called before processing a row.
-    public bool StartRow(int rowIndex)
-    {
-        // Write line break before every row except the first.
-        if (!_firstRow)
-            _writer.WriteLine();
-        else
-            _firstRow = false;
-
-        _currentColumn = -1;
-        return true; // Continue processing this row.
-    }
-
-    // Not used for CSV export, just continue.
-    public bool ProcessRow(Row row) => true;
-
-    // Called before each cell in the current row.
-    public bool StartCell(int columnIndex)
-    {
-        _currentColumn = columnIndex;
-        return true; // Process this cell.
-    }
-
-    // Write cell value to CSV, handling commas and quotes.
-    public bool ProcessCell(Cell cell)
-    {
-        if (_currentColumn > 0)
-            _writer.Write(",");
-
-        string value = cell.StringValue ?? string.Empty;
-
-        // Escape double quotes.
-        if (value.Contains("\""))
-            value = value.Replace("\"", "\"\"");
-
-        // Enclose in quotes if needed.
-        if (value.Contains(",") || value.Contains("\"") || value.Contains("\n") || value.Contains("\r"))
-            value = $"\"{value}\"";
-
-        _writer.Write(value);
-        return true; // Keep processing.
-    }
-
-    // Flush and close the writer when done.
-    public void Close()
-    {
-        _writer.Flush();
-        _writer.Dispose();
-    }
-}
-
+// The example loads an XLSX workbook with Aspose.Cells, determines the used range, iterates each cell row‑by‑row using LightCells, applies CSV escaping for commas, quotes and newlines, and writes the formatted rows to an output CSV file.
 class Program
 {
     static void Main()
     {
-        // -------------------------------------------------
-        // 1. Create a sample workbook with some data.
-        // -------------------------------------------------
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        ws.Cells["A1"].PutValue("Name");
-        ws.Cells["B1"].PutValue("Age");
-        ws.Cells["A2"].PutValue("John");
-        ws.Cells["B2"].PutValue(30);
-        ws.Cells["A3"].PutValue("Alice");
-        ws.Cells["B3"].PutValue(25);
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
 
-        // Save the workbook to a temporary file (required for loading with LightCells).
-        string tempPath = "temp.xlsx";
-        wb.Save(tempPath, SaveFormat.Xlsx);
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // -------------------------------------------------
-        // 2. Export the workbook to CSV using LightCellsDataHandler.
-        // -------------------------------------------------
-        string csvPath = "output.csv";
-        var handler = new CsvExportHandler(csvPath);
+            // Load the workbook
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            using (var workbook = new Workbook(inputPath, loadOptions))
+            {
+                // Get the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = handler;
+                // Determine the used range
+                int maxRow = worksheet.Cells.MaxDataRow;
+                int maxCol = worksheet.Cells.MaxDataColumn;
 
-        // Loading triggers the handler; data is written to CSV during this call.
-        Workbook loadedWb = new Workbook(tempPath, loadOptions);
+                // Open CSV writer
+                using (var csvWriter = new StreamWriter(outputPath))
+                {
+                    // Iterate through each row in the used range
+                    for (int row = 0; row <= maxRow; row++)
+                    {
+                        var rowValues = new List<string>();
 
-        // Finalize CSV file.
-        handler.Close();
+                        // Iterate through each column in the current row
+                        for (int col = 0; col <= maxCol; col++)
+                        {
+                            // Retrieve the cell value as a string (handles nulls)
+                            string cellText = worksheet.Cells[row, col].StringValue ?? string.Empty;
 
-        Console.WriteLine($"CSV file has been created at: {csvPath}");
+                            // Escape double quotes by doubling them
+                            if (cellText.Contains("\""))
+                                cellText = cellText.Replace("\"", "\"\"");
+
+                            // Enclose the value in quotes if it contains commas, quotes, or newlines
+                            if (cellText.Contains(",") || cellText.Contains("\r") || cellText.Contains("\n") || cellText.Contains("\""))
+                                cellText = $"\"{cellText}\"";
+
+                            rowValues.Add(cellText);
+                        }
+
+                        // Write the CSV line
+                        csvWriter.WriteLine(string.Join(",", rowValues));
+                    }
+                }
+            }
+
+            Console.WriteLine("CSV export completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

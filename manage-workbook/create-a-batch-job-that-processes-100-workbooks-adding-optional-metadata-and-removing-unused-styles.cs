@@ -1,66 +1,61 @@
-// Title: C# Batch Processing of 100 Excel Workbooks with Aspose.Cells – Add Metadata & Clean Unused Styles
-// Description: A ready‑to‑run C# console example that loops through 100 Excel files, loads each workbook with Aspose.Cells, optionally adds a custom document property and sets the Author built‑in property, removes any unused cell styles to shrink file size, and saves the result to a separate output folder. The code includes checks for missing files and robust error handling, making it ideal for automation scripts or GitHub‑hosted utilities.
-// Keywords: Aspose.Cells batch processing | C# Excel workbook loop | add custom document property Aspose | remove unused styles Excel | bulk Excel metadata update | automate Excel file cleanup .NET | GitHub Aspose.Cells example | Excel file size reduction
-// Common Searches: how to process multiple Excel files with Aspose.Cells in C# | add custom document properties to many workbooks programmatically | remove unused styles from Excel workbooks in bulk | set author property for a batch of Excel files using .NET | sample code for batch Excel processing Aspose.Cells GitHub
-// Developer Intent: Automate the modification of a large set of Excel workbooks—add optional metadata and eliminate unused styles—while handling missing files and runtime errors.
-// Use Cases: Prepare 100 workbooks for archiving by inserting a custom property that records the batch job identifier. | Standardize the Author property across all files before publishing or compliance checks. | Reduce workbook size and improve performance by stripping unused cell styles during bulk conversion or migration.
-// AI Prompts: Generate C# code using Aspose.Cells to iterate over a folder of Excel files, add custom and built‑in document properties, remove unused styles, and save each file to an output directory. | Suggest best‑practice error‑handling patterns for large‑scale workbook processing with Aspose.Cells in .NET. | Explain how to verify that RemoveUnusedStyles() successfully eliminated all redundant styles after processing.
+// Title: Batch process 100 Excel workbooks in C# with Aspose.Cells: add author and custom properties, remove unused styles
+// AI Prompts: Create a C# console application that loops from Workbook1.xlsx to Workbook100.xlsx, loads each file with Aspose.Cells, sets the built‑in Author property, adds a custom ProcessedDate property, invokes RemoveUnusedStyles, and saves the modified workbook to a designated output folder. | Enhance the batch processor to accept command‑line parameters for input folder, output folder, and the start/end workbook numbers, and write a log file that records missing source files and any processing exceptions.
+// Common Searches: C# Aspose.Cells loop through multiple XLSX files and set document properties | remove unused styles from a batch of Excel workbooks using Aspose.Cells | add custom ProcessedDate property to many Excel files programmatically .NET | how to handle missing Excel files in a bulk processing script with Aspose.Cells | save modified workbooks to a different directory using Aspose.Cells C#
+// Tags: batch update built‑in author property Aspose.Cells | add custom ProcessedDate property to XLSX files | clean unused cell styles Aspose.Cells | bulk workbook processing C# console | output directory saving Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchWorkbookProcessor
+// The program iterates over 100 Excel files, loads each with Aspose.Cells, sets the Author built‑in property, adds a custom ProcessedDate property, removes any styles that are not referenced, and saves the updated workbook to an output folder while handling missing files and logging errors.
+class BatchWorkbookProcessor
 {
-    // A ready‑to‑run C# console example that loops through 100 Excel files, loads each workbook with Aspose.Cells, optionally adds a custom document property and sets the Author built‑in property, removes any unused cell styles to shrink file size, and saves the result to a separate output folder. The code includes checks for missing files and robust error handling, making it ideal for automation scripts or GitHub‑hosted utilities.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define input and output directories
+        string inputDir = @"C:\Workbooks\Input";
+        string outputDir = @"C:\Workbooks\Output";
+
+        // Ensure output directory exists
+        Directory.CreateDirectory(outputDir);
+
+        // Process workbooks named Workbook1.xlsx to Workbook100.xlsx
+        for (int i = 1; i <= 100; i++)
         {
-            // Folder paths – adjust as needed
-            string inputFolder = @"C:\Workbooks\Input";
-            string outputFolder = @"C:\Workbooks\Output";
+            string inputFile = Path.Combine(inputDir, $"Workbook{i}.xlsx");
+            string outputFile = Path.Combine(outputDir, $"Workbook{i}.xlsx");
 
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Process 100 workbooks
-            for (int i = 1; i <= 100; i++)
+            // Skip if the input file does not exist
+            if (!File.Exists(inputFile))
             {
-                string inputFile = Path.Combine(inputFolder, $"Workbook{i}.xlsx");
-                string outputFile = Path.Combine(outputFolder, $"Workbook{i}_processed.xlsx");
-
-                // Skip missing input files
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook
-                    Workbook wb = new Workbook(inputFile);
-
-                    // Add custom metadata (optional)
-                    wb.CustomDocumentProperties.Add($"ProcessedBy_{i}", "BatchJob");
-
-                    // Add built‑in metadata (optional)
-                    wb.BuiltInDocumentProperties["Author"].Value = "AutomationEngine";
-
-                    // Remove unused styles
-                    wb.RemoveUnusedStyles();
-
-                    // Save the modified workbook
-                    wb.Save(outputFile);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing workbook {i}: {ex.Message}");
-                }
+                Console.WriteLine($"Input file not found: {inputFile}");
+                continue;
             }
 
-            Console.WriteLine("Batch processing of workbooks completed.");
+            try
+            {
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(inputFile);
+
+                // ---- Optional Metadata Section ----
+                // Set built‑in property (e.g., Author)
+                workbook.BuiltInDocumentProperties["Author"].Value = "BatchProcessor";
+
+                // Add custom property (e.g., ProcessedDate)
+                workbook.CustomDocumentProperties.Add("ProcessedDate", DateTime.Now);
+
+                // ---- Remove Unused Styles ----
+                // Cleans up any style definitions that are not referenced by cells
+                workbook.RemoveUnusedStyles();
+
+                // Save the modified workbook (lifecycle rule: save)
+                workbook.Save(outputFile, SaveFormat.Xlsx);
+                Console.WriteLine($"Processed and saved: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file {inputFile}: {ex.Message}");
+            }
         }
     }
 }

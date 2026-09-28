@@ -1,43 +1,45 @@
-// Title: Define Print Area, Repeat Header Row, and Freeze Panes with Aspose.Cells for .NET
-// Description: Learn how to set a print area (A1:B20), repeat the first row on every printed page, and freeze that header row in an Aspose.Cells workbook using C#.
-// Keywords: Aspose.Cells | .NET | C# | print area | repeat header rows | PrintTitleRows | freeze panes | FreezePanes | PageSetup | Excel export | worksheet view alignment
-// Common Searches: Aspose.Cells set print area C# | repeat header rows Aspose.Cells .NET | freeze first row Aspose.Cells | align printed view with frozen panes Aspose.Cells | PageSetup.PrintTitleRows example
-// Developer Intent: Configure a print area, repeat the header row on each page, and freeze that header to keep the worksheet view and printed output synchronized.
-// Use Cases: Create multi‑page reports where column headers appear on every printed page and stay visible while scrolling. | Generate invoices or data sheets with a fixed header that matches the defined print range. | Export large data tables to Excel with a specific print area and synchronized on‑screen freeze for easier review.
-// AI Prompts: Show C# code using Aspose.Cells to set PageSetup.PrintArea, PageSetup.PrintTitleRows, and FreezePanes so the header row repeats on print and stays frozen. | Provide a step‑by‑step guide to align the worksheet view with the printed output by freezing rows after defining a print area in Aspose.Cells. | Explain how to configure print titles and freeze panes together for a printable Excel report in Aspose.Cells for .NET.
+// Title: Set a print area that includes the header row and freeze the header in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells to define a print area covering A1:C20, repeat the first row on every printed page, and freeze the header at cell A2. | Update an existing Aspose.Cells workbook to configure PrintTitleRows for the header row and apply FreezePanes at A2 while keeping the current print area.
+// Common Searches: asp.net aspose.cells set print area and freeze header row in C# | c# aspose.cells repeat first row on each printed page and freeze panes | how to use PrintTitleRows with FreezePanes in Aspose.Cells .NET
+// Tags: Aspose.Cells set print area C# | Aspose.Cells repeat header rows on print | Aspose.Cells freeze panes at specific cell | Aspose.Cells configure PrintTitleRows .NET | Aspose.Cells worksheet print setup
 
 using System;
 using Aspose.Cells;
 
-// Learn how to set a print area (A1:B20), repeat the first row on every printed page, and freeze that header row in an Aspose.Cells workbook using C#.
-class Program
+// Demonstrates creating a workbook, populating data, setting the print area to A1:C20, repeating the first row on every printed page, freezing the header row at A2, and saving the file with Aspose.Cells for .NET.
+class PrintAreaAndFreezeDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add header row
-        worksheet.Cells["A1"].PutValue("Header1");
-        worksheet.Cells["B1"].PutValue("Header2");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Add sample data rows (rows 2‑20)
+        // ----- Populate sample data -----
+        // Header row
+        sheet.Cells["A1"].PutValue("ID");
+        sheet.Cells["B1"].PutValue("Name");
+        sheet.Cells["C1"].PutValue("Amount");
+
+        // Data rows
         for (int i = 2; i <= 20; i++)
         {
-            worksheet.Cells[$"A{i}"].PutValue($"Data{i - 1}A");
-            worksheet.Cells[$"B{i}"].PutValue($"Data{i - 1}B");
+            sheet.Cells[$"A{i}"].PutValue(i - 1);
+            sheet.Cells[$"B{i}"].PutValue($"Item {i - 1}");
+            sheet.Cells[$"C{i}"].PutValue((i - 1) * 10);
         }
 
-        // Set the print area to include the header and all data rows
-        worksheet.PageSetup.PrintArea = "A1:B20";
+        // ----- Set print area that includes the header and all data rows -----
+        sheet.PageSetup.PrintArea = "A1:C20";
 
-        // Ensure the header row repeats on each printed page
-        worksheet.PageSetup.PrintTitleRows = "$1:$1";
+        // Repeat the header row on each printed page
+        sheet.PageSetup.PrintTitleRows = "$1:$1";
 
-        // Freeze the header row so the view aligns with the printed output
+        // ----- Freeze the header row -----
         // Freeze at cell A2, freezing 1 row (the header) and 0 columns
-        worksheet.FreezePanes("A2", 1, 0);
+        sheet.FreezePanes("A2", 1, 0);
 
         // Save the workbook
         workbook.Save("PrintAreaAndFreezeDemo.xlsx");

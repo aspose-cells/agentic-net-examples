@@ -1,53 +1,52 @@
-// Title: Get PivotTable External Connection Strings with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, walks through every worksheet and its PivotTables, calls GetSourceDataConnections() to fetch any ExternalConnection objects, and prints each connection's ConnectionString to the console. No workbook changes are made, but the file can be saved afterward.
-// Keywords: Aspose.Cells | C# | PivotTable | ExternalConnection | GetSourceDataConnections | connection string | Excel audit | data source lookup
-// Common Searches: Aspose.Cells get pivot table connection string | How to list external data connections of a PivotTable in C# | Retrieve pivot source connections using Aspose.Cells | C# read external connection from Excel pivot | Audit pivot table data sources Aspose
-// Developer Intent: Extract and display the external data source connection strings used by each PivotTable in a workbook.
-// Use Cases: Audit all PivotTables to confirm they reference approved data sources before publishing. | Generate a compliance report that lists every external connection string in an Excel file. | Detect and flag PivotTables that point to deprecated or insecure external databases.
-// AI Prompts: Write C# code with Aspose.Cells that collects all external connection strings from PivotTables and writes them to a CSV file. | Show how to update the ConnectionString of a specific PivotTable's external data source using Aspose.Cells. | Provide a method to filter and list only PivotTables that have more than one external data connection.
+// Title: How to retrieve external data connection strings from a PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that enumerates all external connection strings of a specified PivotTable in an Excel file. | Create a method that returns a list of source data connection strings for the first PivotTable on the first worksheet using Aspose.Cells. | Write a script that audits and prints the external connections of a PivotTable, then saves the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# get pivot table source connection string from workbook | How to list external data connections of a PivotTable using .NET | Retrieve connection strings for Excel pivot tables programmatically with Aspose | Audit pivot table external connections in C# Aspose.Cells example | Get source data connections of first pivot table in Excel file using Aspose.Cells
+// Tags: Aspose.Cells pivot table external connections | C# retrieve pivot table connection string | Aspose.Cells GetSourceDataConnections method | audit Excel pivot table data sources .NET | list pivot table source connections Aspose
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsPivotConnectionAudit
+// The example loads an existing workbook, accesses the first worksheet, checks for PivotTables, obtains the first PivotTable, calls GetSourceDataConnections() to fetch any external data connections, prints each connection string, and optionally saves the workbook after auditing.
+class RetrievePivotTableConnectionString
 {
-    // Loads an Excel workbook, walks through every worksheet and its PivotTables, calls GetSourceDataConnections() to fetch any ExternalConnection objects, and prints each connection's ConnectionString to the console. No workbook changes are made, but the file can be saved afterward.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook that contains a pivot table with an external data connection
+        Workbook workbook = new Workbook("PivotWorkbook.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Verify that the worksheet contains at least one pivot table
+        if (sheet.PivotTables.Count > 0)
         {
-            // Load an existing workbook that contains a pivot table with an external data connection
-            Workbook workbook = new Workbook("input.xlsx");
+            // Get the first pivot table in the worksheet
+            PivotTable pivot = sheet.PivotTables[0];
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Retrieve all external data connections associated with the pivot table
+            ExternalConnection[] connections = pivot.GetSourceDataConnections();
+
+            // Output the connection string(s) for auditing purposes
+            if (connections.Length > 0)
             {
-                // Iterate through all pivot tables in the worksheet
-                foreach (PivotTable pivot in sheet.PivotTables)
+                for (int i = 0; i < connections.Length; i++)
                 {
-                    // Retrieve the external data connections associated with the pivot table
-                    ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-                    // If there are any connections, display their connection strings
-                    if (connections.Length > 0)
-                    {
-                        Console.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pivot.Name}");
-                        for (int i = 0; i < connections.Length; i++)
-                        {
-                            Console.WriteLine($"  Connection {i + 1} String: {connections[i].ConnectionString}");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pivot.Name} has no external data connections.");
-                    }
+                    Console.WriteLine($"Connection {i + 1} String: {connections[i].ConnectionString}");
                 }
             }
-
-            // Optionally, save the workbook (no modifications made in this example)
-            workbook.Save("output.xlsx");
+            else
+            {
+                Console.WriteLine("No external data connections found for the pivot table.");
+            }
         }
+        else
+        {
+            Console.WriteLine("No pivot tables found in the worksheet.");
+        }
+
+        // Save the workbook (optional, if any changes were made)
+        workbook.Save("PivotWorkbook_Audited.xlsx");
     }
 }

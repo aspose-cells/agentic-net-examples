@@ -1,65 +1,88 @@
-// Title: Create a Line Chart from a Smart‑Marker Template with WorkbookDesigner in Aspose.Cells for .NET
-// Description: Load a workbook template that contains smart markers, bind a JSON data source, process the markers with WorkbookDesigner, add a line chart that references the populated cells, set title and legend, and save the workbook as a new Excel file.
-// Keywords: Aspose.Cells line chart | WorkbookDesigner smart markers | C# JSON data source Aspose.Cells | add chart programmatically .NET | set chart data range Aspose.Cells | smart marker template Excel | automate chart generation C#
-// Common Searches: Aspose.Cells create line chart after processing smart markers | WorkbookDesigner JSON data source example | C# add line chart to Excel with Aspose.Cells | set dynamic chart range Aspose.Cells | smart markers line chart template
-// Developer Intent: Generate a line chart in an Excel workbook by processing smart markers with WorkbookDesigner and binding JSON data.
-// Use Cases: Automatically populate a sales‑report template with JSON data and produce a monthly sales line chart. | Reuse a single chart template to create multiple workbooks, each showing trend lines for different data sets. | Integrate API‑driven JSON responses into Excel and generate performance trend charts without manual editing.
-// AI Prompts: Show how to calculate the chart data range dynamically based on the number of rows in the JSON array. | Provide code to add data labels and customize line colors and markers for the generated chart. | Explain how to reference a named range instead of a hard‑coded A2:B6 range for the chart source.
+// Title: Create a line chart in an Excel template after processing Smart Markers with WorkbookDesigner using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing Excel template, binds a DataTable to WorkbookDesigner, processes Smart Markers, and inserts a line chart referencing the populated range. | Modify the example to produce a multi‑series column chart by adding extra columns to the DataTable and mapping each column to a separate series. | Extend the program to save the generated chart as a PNG image file while still preserving the workbook.
+// Common Searches: Aspose.Cells how to add a line chart after smart marker processing in C# | C# generate Excel chart from DataTable using WorkbookDesigner | Create chart in Excel template with Aspose.Cells .NET example | Smart markers populate data then create chart Aspose.Cells tutorial | Export Aspose.Cells chart to image file after workbook save
+// Tags: Aspose.Cells WorkbookDesigner smart markers | Aspose.Cells add line chart programmatically | Aspose.Cells chart from DataTable range | Aspose.Cells export chart as image | Aspose.Cells generate chart in Excel template
 
 using System;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsSmartMarkerLineChart
+// Loads an Excel template, fills it with a DataTable via WorkbookDesigner, processes Smart Markers, adds a line chart that references the populated cells, and saves the workbook.
+class Program
 {
-    // Load a workbook template that contains smart markers, bind a JSON data source, process the markers with WorkbookDesigner, add a line chart that references the populated cells, set title and legend, and save the workbook as a new Excel file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the workbook template that contains smart markers.
-            // The template should have a range named "_CellsSmartMarkers" or use line‑by‑line processing.
-            Workbook workbook = new Workbook("TemplateWithSmartMarkers.xlsx");
+            const string templatePath = "Template.xlsx";
+            const string resultPath = "Result.xlsx";
 
-            // Initialize the WorkbookDesigner with the loaded workbook.
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            // Ensure the template file exists; create a simple one if missing
+            if (!File.Exists(templatePath))
+            {
+                var tempWb = new Workbook();
+                var tempSheet = tempWb.Worksheets[0];
+                tempSheet.Cells[0, 0].PutValue("Month");
+                tempSheet.Cells[0, 1].PutValue("Value");
+                tempWb.Save(templatePath);
+            }
 
-            // Example JSON data source that matches the smart markers in the template.
-            // Adjust the JSON structure to correspond to the markers you placed in the template.
-            string jsonData = @"{
-                ""SalesData"": [
-                    { ""Month"": ""Jan"", ""Amount"": 1200 },
-                    { ""Month"": ""Feb"", ""Amount"": 1500 },
-                    { ""Month"": ""Mar"", ""Amount"": 1800 },
-                    { ""Month"": ""Apr"", ""Amount"": 2100 },
-                    { ""Month"": ""May"", ""Amount"": 2400 }
-                ]
-            }";
+            // Load the workbook template that contains Smart Markers
+            Workbook workbook = new Workbook(templatePath);
 
-            // Bind the JSON data to a smart‑marker name (e.g., "SalesData").
-            designer.SetJsonDataSource("SalesData", jsonData);
+            // Prepare the data source for Smart Markers
+            DataTable dt = new DataTable("SalesData");
+            dt.Columns.Add("Month", typeof(string));
+            dt.Columns.Add("Value", typeof(double));
+            dt.Rows.Add("Jan", 120);
+            dt.Rows.Add("Feb", 150);
+            dt.Rows.Add("Mar", 130);
+            dt.Rows.Add("Apr", 170);
+            dt.Rows.Add("May", 160);
 
-            // Process the smart markers and populate the worksheet with the data.
-            designer.Process();
+            // Set up the WorkbookDesigner with the data source
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook
+            };
+            designer.SetDataSource(dt);
+            designer.Process(); // Process Smart Markers
 
-            // After processing, add a line chart that visualizes the populated data.
+            // After processing, add a line chart to the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a line chart to the worksheet. Position it from row 10, column 1 to row 30, column 10.
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 9, 0, 29, 9);
-            Chart lineChart = sheet.Charts[chartIndex];
+            // Add a line chart at row 5, column 0 with size spanning rows 5-20 and columns 0-10
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Monthly Sales";
 
-            // Define the data range for the chart.
-            // Assuming the processed data starts at A2 (Month) and B2 (Amount) and extends downwards.
-            // Adjust the range as needed based on the actual data size.
-            lineChart.SetChartDataRange("A2:B6", true);
+            // Define the data range (A2:B6) after Smart Marker processing
+            int firstRow = 1;   // zero‑based index for row 2
+            int firstCol = 0;   // column A
+            int lastRow = 5;    // zero‑based index for row 6
+            int monthCol = firstCol;       // column A contains Month
+            int valueCol = firstCol + 1;   // column B contains Value
 
-            // Optional: set chart title and enable legend.
-            lineChart.Title.Text = "Monthly Sales";
-            lineChart.ShowLegend = true;
+            // Create ranges for Y‑values and X‑values
+            AsposeRange yRange = sheet.Cells.CreateRange(firstRow, valueCol, lastRow - firstRow + 1, 1);
+            AsposeRange xRange = sheet.Cells.CreateRange(firstRow, monthCol, lastRow - firstRow + 1, 1);
 
-            // Save the resulting workbook with the chart.
-            workbook.Save("OutputWithLineChart.xlsx");
+            // Add the Y‑values series using the range reference string
+            chart.NSeries.Add(yRange.RefersTo, true);
+            // Set the X‑values (Month) for the series
+            chart.NSeries[0].XValues = xRange.RefersTo;
+            chart.NSeries[0].Name = "Sales";
+
+            // Save the workbook with the generated chart
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

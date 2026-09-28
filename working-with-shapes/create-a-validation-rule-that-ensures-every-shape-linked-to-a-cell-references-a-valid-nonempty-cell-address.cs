@@ -1,76 +1,91 @@
-// Title: Validate Shape LinkedCell Addresses with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds rectangle shapes with linked cells (valid, empty, malformed), iterates through each shape, verifies that the LinkedCell string is non‑empty and resolves to a real cell, clears invalid references, and saves the file.
-// Keywords: Aspose.Cells shape linked cell validation | C# linked cell address check | clear invalid shape links | non‑empty LinkedCell property | Aspose.Cells workbook cleanup
-// Common Searches: how to verify shape linked cell address Aspose.Cells C# | remove invalid linked cells from shapes Aspose.Cells | validate and clear shape LinkedCell in .NET | detect empty or malformed linked cell in Aspose.Cells | shape LinkedCell validation example
-// Developer Intent: Ensure every shape’s LinkedCell points to a non‑empty, syntactically correct cell and automatically clear any invalid links.
-// Use Cases: Pre‑save validation of all shapes in a worksheet to prevent runtime errors. | Cleaning up templates that contain shapes with missing or corrupt linked cells. | Automated post‑processing of generated reports to remove bad shape references.
-// AI Prompts: Generate a C# method that returns a list of shape names with invalid LinkedCell values in a given worksheet. | Write code to log and optionally fix shapes that have empty or malformed LinkedCell strings using Aspose.Cells. | Create an NUnit test suite that confirms the validator correctly identifies valid, empty, and malformed linked cell addresses.
+// Title: C# Aspose.Cells example to ensure every shape references a non‑empty cell address
+// AI Prompts: Write C# code using Aspose.Cells that loops through all worksheets, examines each shape’s UpperLeftRow and UpperLeftColumn, converts them to a cell address, and flags shapes whose linked cell is null or contains only whitespace. | Create a routine that collects validation messages for shapes linked to empty cells, writes them to a text file, and includes the worksheet and shape names in each message. | Add comprehensive try‑catch blocks around workbook loading, shape processing, file writing, and workbook saving while implementing the shape‑to‑cell validation with Aspose.Cells.
+// Common Searches: aspocells c# validate shape linked cell not empty | how to check if Excel shape points to a blank cell using Aspose.Cells | iterate over worksheet shapes and verify cell value Aspose.Cells C# | generate report of shapes with empty linked cells in Aspose.Cells | error handling for shape validation in Aspose.Cells workbook
+// Tags: Aspose.Cells shape linked cell validation | Aspose.Cells iterate worksheet shapes | Aspose.Cells check empty cell for shape | Aspose.Cells generate shape validation report | Aspose.Cells robust error handling for shape processing | Aspose.Cells save workbook after validation
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using System;
+using System.Collections.Generic;
+using System.IO;
 
-// Creates a workbook, adds rectangle shapes with linked cells (valid, empty, malformed), iterates through each shape, verifies that the LinkedCell string is non‑empty and resolves to a real cell, clears invalid references, and saves the file.
-class ShapeLinkedCellValidator
+// The program loads an Excel workbook with Aspose.Cells, iterates each worksheet and its shapes, derives the cell address from a shape's UpperLeftRow and UpperLeftColumn, verifies that the linked cell is not null or whitespace, records any violations in a text report, and finally saves the workbook.
+class ShapeCellValidator
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string reportPath = "validation_report.txt";
+
+        // Ensure the input file exists before attempting to load
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add shapes with various linked cell values
-            Shape shapeValid = worksheet.Shapes.AddRectangle(1, 1, 100, 100, 0, 0);
-            shapeValid.SetLinkedCell("$A$1", false, false); // valid address
-
-            Shape shapeEmpty = worksheet.Shapes.AddRectangle(2, 2, 100, 100, 0, 0);
-            shapeEmpty.SetLinkedCell(string.Empty, false, false); // empty address
-
-            Shape shapeInvalid = worksheet.Shapes.AddRectangle(3, 3, 100, 100, 0, 0);
-            shapeInvalid.SetLinkedCell("Invalid!Ref", false, false); // malformed address
-
-            // Validate each shape's linked cell
-            foreach (Shape shape in worksheet.Shapes)
-            {
-                string linkedCell = shape.LinkedCell;
-                bool isValid = false;
-
-                // Non‑empty check
-                if (!string.IsNullOrEmpty(linkedCell))
-                {
-                    try
-                    {
-                        // Attempt to retrieve the cell; if no exception, address is syntactically valid
-                        Cell cell = worksheet.Cells[linkedCell];
-                        // Additional check: ensure the cell object exists
-                        isValid = cell != null;
-                    }
-                    catch
-                    {
-                        // Any exception means the address is invalid
-                        isValid = false;
-                    }
-                }
-
-                if (!isValid)
-                {
-                    Console.WriteLine($"Shape \"{shape.Name}\" has invalid linked cell '{linkedCell}'. Clearing link.");
-                    shape.LinkedCell = string.Empty; // Clear invalid reference
-                }
-                else
-                {
-                    Console.WriteLine($"Shape \"{shape.Name}\" linked to valid cell '{linkedCell}'.");
-                }
-            }
-
-            // Save the workbook with validated shapes
-            workbook.Save("ShapeLinkedCellValidated.xlsx", SaveFormat.Xlsx);
+            // Load the workbook (lifecycle rule: load)
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Collect validation errors
+        List<string> errors = new List<string>();
+
+        // Iterate through each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through each shape on the worksheet
+            foreach (Shape shape in sheet.Shapes)
+            {
+                try
+                {
+                    // Determine the cell address based on the shape's upper‑left corner
+                    int row = shape.UpperLeftRow;
+                    int column = shape.UpperLeftColumn;
+                    string cellAddress = CellsHelper.CellIndexToName(row, column);
+
+                    // Validate that the address refers to a real cell and that the cell is not empty
+                    Cell linkedCell = sheet.Cells[cellAddress];
+                    if (linkedCell.Value == null || string.IsNullOrWhiteSpace(linkedCell.StringValue))
+                    {
+                        errors.Add($"Shape '{shape.Name}' on sheet '{sheet.Name}' is linked to an empty cell '{cellAddress}'.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Record any unexpected errors while processing a shape
+                    errors.Add($"Error processing shape '{shape.Name}' on sheet '{sheet.Name}': {ex.Message}");
+                }
+            }
+        }
+
+        // Write validation results to a text file
+        try
+        {
+            File.WriteAllLines(reportPath, errors);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write report: {ex.Message}");
+        }
+
+        // Save the workbook (lifecycle rule: save)
+        try
+        {
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

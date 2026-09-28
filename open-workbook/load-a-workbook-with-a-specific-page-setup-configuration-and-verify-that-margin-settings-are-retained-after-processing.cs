@@ -1,63 +1,71 @@
-// Title: Verify Excel PageSetup Margins After Load/Save with Aspose.Cells for .NET
-// Description: Demonstrates how to create an Excel workbook, set left, right, top, and bottom margins in centimeters, save it, reload it with Aspose.Cells, read the PageSetup margin values, confirm they match the expected measurements, add a confirmation cell, and save a processed copy while preserving the original margin configuration.
-// Keywords: Aspose.Cells margin verification | C# Excel PageSetup margins | load workbook Aspose.Cells .NET | preserve Excel margins after save | PageSetup LeftMargin RightMargin TopMargin BottomMargin | Excel margin unit centimeters | Aspose.Cells margin unit conversion
-// Common Searches: how to read page margins from Excel using Aspose.Cells | verify Excel margin values after saving with Aspose.Cells | Aspose.Cells get left and right margin in cm | C# check Excel PageSetup margins after load | preserve page setup settings Aspose.Cells .NET
-// Developer Intent: Ensure that margin settings defined in an Excel workbook remain unchanged after loading, processing, and re‑saving with Aspose.Cells.
-// Use Cases: Set custom page margins for a workbook before distribution and confirm they are retained. | Load an existing Excel file, read its PageSetup margins, and validate them against design specifications. | Perform additional worksheet operations after margin verification while keeping the original margin configuration intact.
-// AI Prompts: Generate C# code using Aspose.Cells to set page margins in centimeters, save the workbook, reload it, and assert that LeftMargin, RightMargin, TopMargin, and BottomMargin are unchanged. | Write a .NET unit test that opens an Excel file with Aspose.Cells and verifies that all PageSetup margin values match expected numbers. | Explain how Aspose.Cells stores PageSetup margin values, the default units, and how unit conversion works when reading or writing margins.
+// Title: C# – Load an Excel workbook with predefined page margins using Aspose.Cells for .NET and verify margins remain unchanged after saving
+// AI Prompts: Write a C# console program that opens an existing .xlsx file with Aspose.Cells, reads the worksheet PageSetup margin values, modifies a cell, saves the workbook, reloads it, and confirms the margins are identical within a small tolerance. | Generate code that compares TopMargin, BottomMargin, LeftMargin, and RightMargin before and after saving a workbook, then outputs whether the margins were preserved. | Create a reusable C# method that accepts a file path, loads the workbook with Aspose.Cells, performs any processing, and returns true only if the page margins are unchanged after the file is saved.
+// Common Searches: Aspose.Cells C# how to ensure page margins are not altered when saving an Excel workbook | verify Excel worksheet margins after modifying cells with Aspose.Cells for .NET | compare original and saved page setup margins using Aspose.Cells in a C# application | check if Aspose.Cells preserves top, bottom, left, and right margins after workbook save | C# code sample to read and validate Excel page margins with Aspose.Cells
+// Tags: Aspose.Cells read page setup margins | C# check worksheet margin consistency | Aspose.Cells retain margins on save | Excel page margin validation .NET | Aspose.Cells workbook margin preservation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace PageSetupMarginVerification
+// Loads InputWithMargins.xlsx, reads its TopMargin, BottomMargin, LeftMargin, and RightMargin via PageSetup, adds a value to A1, saves as Processed.xlsx, reloads the file, and verifies that all margin values remain unchanged within a 0.001 tolerance.
+class Program
 {
-    // Demonstrates how to create an Excel workbook, set left, right, top, and bottom margins in centimeters, save it, reload it with Aspose.Cells, read the PageSetup margin values, confirm they match the expected measurements, add a confirmation cell, and save a processed copy while preserving the original margin configuration.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Define file paths
-            string originalPath = "OriginalMargins.xlsx";
-            string processedPath = "ProcessedMargins.xlsx";
+        // Path to the source workbook that already has page setup margins configured
+        string sourcePath = "InputWithMargins.xlsx";
 
-            // ---------- Create a new workbook and set margin values ----------
-            Workbook workbook = new Workbook(); // create
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Set specific margin values (centimeters)
-            sheet.PageSetup.LeftMargin = 1.0;    // 1 cm
-            sheet.PageSetup.RightMargin = 1.5;   // 1.5 cm
-            sheet.PageSetup.TopMargin = 2.0;     // 2 cm
-            sheet.PageSetup.BottomMargin = 2.5;  // 2.5 cm
+            // Retrieve the original margin settings
+            PageSetup pageSetup = sheet.PageSetup;
+            double originalTop = pageSetup.TopMargin;
+            double originalBottom = pageSetup.BottomMargin;
+            double originalLeft = pageSetup.LeftMargin;
+            double originalRight = pageSetup.RightMargin;
 
-            // Save the workbook with the configured margins
-            workbook.Save(originalPath, SaveFormat.Xlsx); // save
+            // (Optional) Perform any processing on the workbook here
+            // For demonstration, we simply add a value to a cell
+            sheet.Cells["A1"].PutValue("Test");
 
-            // ---------- Load the workbook and verify margin settings ----------
-            Workbook loadedWorkbook = new Workbook(originalPath); // load
-            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-            PageSetup ps = loadedSheet.PageSetup;
+            // Save the processed workbook to a new file
+            string processedPath = "Processed.xlsx";
+            workbook.Save(processedPath);
 
-            // Retrieve margin values
-            double left = ps.LeftMargin;
-            double right = ps.RightMargin;
-            double top = ps.TopMargin;
-            double bottom = ps.BottomMargin;
+            // Reload the saved workbook to verify margin retention
+            Workbook reloaded = new Workbook(processedPath);
+            Worksheet reloadedSheet = reloaded.Worksheets[0];
+            PageSetup reloadedSetup = reloadedSheet.PageSetup;
 
-            // Output the retrieved margin values
-            Console.WriteLine($"Loaded Margins (cm): Left={left}, Right={right}, Top={top}, Bottom={bottom}");
+            // Compare margins
+            bool marginsRetained =
+                Math.Abs(reloadedSetup.TopMargin - originalTop) < 0.001 &&
+                Math.Abs(reloadedSetup.BottomMargin - originalBottom) < 0.001 &&
+                Math.Abs(reloadedSetup.LeftMargin - originalLeft) < 0.001 &&
+                Math.Abs(reloadedSetup.RightMargin - originalRight) < 0.001;
 
-            // Simple verification: compare with expected values
-            bool marginsMatch = Math.Abs(left - 1.0) < 0.0001 &&
-                                Math.Abs(right - 1.5) < 0.0001 &&
-                                Math.Abs(top - 2.0) < 0.0001 &&
-                                Math.Abs(bottom - 2.5) < 0.0001;
-
-            Console.WriteLine("Margin verification " + (marginsMatch ? "succeeded." : "failed."));
-
-            // Optionally, perform additional processing (e.g., add data) and save again
-            loadedSheet.Cells["A1"].PutValue("Margin verification completed.");
-            loadedWorkbook.Save(processedPath, SaveFormat.Xlsx); // save processed workbook
+            // Output verification result
+            Console.WriteLine(marginsRetained
+                ? "Margin settings are retained after processing."
+                : "Margin settings have changed.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

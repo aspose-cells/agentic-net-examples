@@ -1,66 +1,91 @@
-// Title: Compress Aspose.Cells HTML Export with GZipStream in C# – Fast Web Delivery
-// Description: A complete C# example that creates an Aspose.Cells workbook, exports the active worksheet to HTML using HtmlSaveOptions, compresses the HTML with GZipStream via MemoryStream, and writes the result to a .gz file or streams it in an ASP.NET response for efficient bandwidth usage.
-// Keywords: Aspose.Cells HTML export C# | GZipStream compression .NET | C# memory stream gzip | export worksheet to HTML | gzip HTML response ASP.NET | compressed Excel report | Aspose.Cells HtmlSaveOptions | download gzipped HTML
-// Common Searches: how to gzip Aspose.Cells HTML output in C# | C# code to compress Excel HTML export with GZipStream | Aspose.Cells export to HTML and send as gzip in ASP.NET Core | compress workbook HTML for web transmission .NET | save Aspose.Cells HTML as .gz file
-// Developer Intent: Generate HTML from an Excel workbook and apply GZip compression for low‑latency delivery.
-// Use Cases: Create a single‑sheet HTML report, gzip it, and return the byte array from a Web API endpoint. | Archive Excel‑derived HTML reports on disk as .gz files to save storage space. | Stream GZip‑compressed HTML directly to browsers with the appropriate Content‑Encoding header.
-// AI Prompts: Write a C# method that takes an Aspose.Cells Workbook and returns a GZip‑compressed HTML byte array. | Show how to configure HtmlSaveOptions to minimize HTML size before applying GZipStream. | Provide an ASP.NET Core controller action that streams the compressed HTML from a MemoryStream with the correct Content‑Encoding header.
+// Title: Compress HTML generated from an Excel workbook with Aspose.Cells using GZipStream in C#
+// AI Prompts: Write a C# method that loads an Excel file with Aspose.Cells, saves it as HTML in a MemoryStream, and returns the HTML compressed with GZipStream as a byte array. | Create code that reads the HTML string produced by Aspose.Cells, encodes it to UTF‑8 bytes, compresses those bytes using GZipStream, and outputs the compressed data for efficient web transmission.
+// Common Searches: how to use Aspose.Cells to export Excel as HTML and gzip the output in .NET | C# compress HTML string from workbook with GZipStream for web API | Aspose.Cells save as HTML then compress bytes for HTTP response | generate gzip‑compressed HTML from Excel file using C# memory streams | best practice for sending Aspose.Cells HTML output as gzip in ASP.NET
+// Tags: Aspose.Cells HTML export compression | GZipStream compress HTML bytes C# | Excel to HTML conversion Aspose.Cells | MemoryStream HTML generation .NET | Web delivery compressed HTML Aspose
 
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlGzipDemo
+namespace AsposeCellsExample
 {
-    // A complete C# example that creates an Aspose.Cells workbook, exports the active worksheet to HTML using HtmlSaveOptions, compresses the HTML with GZipStream via MemoryStream, and writes the result to a .gz file or streams it in an ASP.NET response for efficient bandwidth usage.
-    class Program
+    // The example loads an Excel workbook with Aspose.Cells, saves it as HTML into a MemoryStream, reads the HTML as a UTF‑8 string, compresses the resulting byte array with GZipStream, and returns the compressed data for efficient web delivery.
+    public static class HtmlCompressor
     {
-        static void Main()
+        /// <param name="workbookPath">Full path to the source workbook.</param>
+        /// <returns>Byte array containing the compressed HTML.</returns>
+        public static byte[] GenerateCompressedHtml(string workbookPath)
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells HTML Export");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["B1"].PutValue(12345);
-            sheet.Cells["B2"].PutValue("Compressed HTML");
-
-            // Configure HTML save options (using the provided constructor)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.ExportActiveWorksheetOnly = true; // export only the first sheet
-            htmlOptions.ExcludeUnusedStyles = true;       // reduce HTML size
-
-            // Save the workbook as HTML into a memory stream
-            using (MemoryStream htmlStream = new MemoryStream())
+            try
             {
-                workbook.Save(htmlStream, htmlOptions);
-                htmlStream.Position = 0; // reset for reading
+                // Verify that the workbook file exists.
+                if (!File.Exists(workbookPath))
+                    throw new FileNotFoundException("Workbook file not found.", workbookPath);
 
-                // Prepare a stream to hold the GZip-compressed data
-                using (MemoryStream compressedStream = new MemoryStream())
+                // Load the workbook using Aspose.Cells.
+                var workbook = new Workbook(workbookPath);
+
+                // Save the workbook as HTML into a memory stream.
+                using (var htmlStream = new MemoryStream())
                 {
-                    // Compress the HTML stream using GZipStream
-                    using (GZipStream gzip = new GZipStream(compressedStream, CompressionMode.Compress, leaveOpen: true))
+                    workbook.Save(htmlStream, SaveFormat.Html);
+                    htmlStream.Position = 0;
+
+                    // Read the generated HTML as a UTF‑8 string.
+                    string html;
+                    using (var reader = new StreamReader(htmlStream, Encoding.UTF8))
                     {
-                        htmlStream.CopyTo(gzip);
+                        html = reader.ReadToEnd();
                     }
 
-                    // After compression, reset position to read the compressed bytes
-                    compressedStream.Position = 0;
+                    // Convert HTML string to UTF‑8 bytes.
+                    byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
 
-                    // Optionally write the compressed data to a .gz file for verification
-                    using (FileStream file = new FileStream("output.html.gz", FileMode.Create, FileAccess.Write))
+                    // Compress the HTML bytes using GZip.
+                    using (var compressedStream = new MemoryStream())
                     {
-                        compressedStream.CopyTo(file);
-                    }
+                        using (var gzip = new GZipStream(compressedStream, CompressionMode.Compress, leaveOpen: true))
+                        {
+                            gzip.Write(htmlBytes, 0, htmlBytes.Length);
+                        }
 
-                    Console.WriteLine("HTML content has been compressed and saved as 'output.html.gz'.");
+                        // Return the compressed data.
+                        return compressedStream.ToArray();
+                    }
                 }
             }
+            catch (Exception)
+            {
+                // Rethrow to allow caller to handle or log as needed.
+                throw;
+            }
+        }
+    }
 
-            // Clean up
-            workbook.Dispose();
+    public class Program
+    {
+        public static void Main()
+        {
+            try
+            {
+                // Specify the path to the Excel file you want to convert.
+                string workbookPath = "sample.xlsx";
+
+                // Generate compressed HTML.
+                byte[] compressedHtml = HtmlCompressor.GenerateCompressedHtml(workbookPath);
+
+                Console.WriteLine($"Compressed size: {compressedHtml.Length} bytes");
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine($"File not found: {fnfEx.FileName}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

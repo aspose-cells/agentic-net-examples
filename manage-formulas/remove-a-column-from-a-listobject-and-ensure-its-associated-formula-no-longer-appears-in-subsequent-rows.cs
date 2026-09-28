@@ -1,55 +1,92 @@
-// Title: Aspose.Cells C# – Delete a ListObject column without retaining its formula
-// Description: Shows how to build a workbook, define a table, set a column formula, clear the ListColumn formula, delete the column, and save the file so the removed column's calculations are not present in any remaining rows.
-// Keywords: Aspose.Cells | C# | .NET | ListObject delete column | clear ListColumn formula | Excel table column removal | prevent formula copy | ListColumn.Formula | Excel automation | remove calculated column
-// Common Searches: Aspose.Cells delete table column formula C# | how to remove ListObject column without leaving formulas | clear ListColumn formula before column deletion Aspose.Cells | stop formula propagation when deleting Excel column using Aspose | remove calculated column from Excel table with Aspose.Cells
-// Developer Intent: Delete a ListObject column and ensure its formula does not affect other rows.
-// Use Cases: Eliminate a temporary "Total" column from a sales table while keeping all other data intact. | Clean up a worksheet by removing a helper column that contained a formula, avoiding stray calculations. | Update an Excel template by discarding an obsolete column and guaranteeing no residual formulas remain.
-// AI Prompts: Provide C# code that clears a ListColumn formula before deleting the column with Aspose.Cells. | Show an example of removing a ListObject column in Aspose.Cells while ensuring the column's formula is not copied to remaining rows. | Explain why setting ListColumn.Formula to an empty string stops formula propagation after the column is deleted.
+// Title: Remove a column from an Excel ListObject and clear its formulas using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that clears all formulas in a specified ListObject column and then deletes that column from the table. | Show how to iterate over a ListObject's data range in Aspose.Cells to purge formulas before removing the column at index 1. | Provide a .NET example that safely deletes a table column in an Excel worksheet while ensuring no formula remnants remain in other rows.
+// Common Searches: Aspose.Cells how to delete a column from a ListObject without leaving formulas | C# remove Excel table column and purge formulas using Aspose.Cells | remove formulas in a ListObject column before deletion Aspose.Cells .NET | prevent formula propagation after deleting a table column with Aspose.Cells | remove ListObject column programmatically in C# and clean up formulas
+// Tags: remove ListObject column Aspose.Cells C# | purge column formulas Aspose.Cells | delete Excel table column without residual formulas .NET | Aspose.Cells ListObject column removal data integrity | sanitize formulas before ListObject column deletion C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to build a workbook, define a table, set a column formula, clear the ListColumn formula, delete the column, and save the file so the removed column's calculations are not present in any remaining rows.
+// The example loads an Excel workbook, verifies a ListObject exists, clears any formulas in a chosen data column of the table, removes that column from the ListObject, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data (header + two data rows)
-        sheet.Cells["A1"].PutValue("Item");
-        sheet.Cells["B1"].PutValue("Quantity");
-        sheet.Cells["C1"].PutValue("Total");
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["B2"].PutValue(2);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B3"].PutValue(3);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a formula to the Total column (C) that references the Quantity column (B)
-        sheet.Cells["C2"].Formula = "=B2*10";
-        sheet.Cells["C3"].Formula = "=B3*10";
+            // Ensure the worksheet contains at least one table (ListObject)
+            if (sheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
+                return;
+            }
 
-        // Create a ListObject (table) that includes the range A1:C3
-        int tableIndex = sheet.ListObjects.Add("A1", "C3", true);
-        ListObject table = sheet.ListObjects[tableIndex];
+            // Access the first ListObject
+            ListObject table = sheet.ListObjects[0];
 
-        // Set the same formula for the entire Total column via ListColumn.Formula
-        // ListColumns are zero‑based; column C is index 2
-        ListColumn totalColumn = table.ListColumns[2];
-        totalColumn.Formula = "=B2*10";
+            // Zero‑based index of the column to remove (e.g., 1 = second column)
+            int columnIndex = 1;
 
-        // Clear the column formula so it will not be propagated after deletion
-        totalColumn.Formula = string.Empty;
+            // Clear any formulas in the target column before removal
+            AsposeRange dataRange = table.DataRange; // Data rows only (excludes header)
+            int startRow = dataRange.FirstRow;
+            int endRow = dataRange.FirstRow + dataRange.RowCount - 1;
+            int startColumn = dataRange.FirstColumn;
 
-        // Delete the Total column (index 2) and update references in other cells
-        sheet.Cells.DeleteColumn(2, true);
+            for (int row = startRow; row <= endRow; row++)
+            {
+                int col = startColumn + columnIndex;
+                Cell cell = sheet.Cells[row, col];
+                if (cell.IsFormula)
+                {
+                    // Remove formula/value
+                    cell.PutValue(string.Empty);
+                }
+            }
 
-        // Save the modified workbook
-        workbook.Save("RemoveColumnFromListObject.xlsx");
+            // Remove the column from the ListObject
+            if (columnIndex >= 0 && columnIndex < table.ListColumns.Count)
+            {
+                table.ListColumns.RemoveAt(columnIndex);
+            }
+            else
+            {
+                Console.WriteLine("Column index is out of range.");
+                return;
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

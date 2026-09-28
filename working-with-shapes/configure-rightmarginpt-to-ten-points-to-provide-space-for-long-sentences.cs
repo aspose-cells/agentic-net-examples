@@ -1,34 +1,16 @@
-// Title: Set RightMarginPt to 10 Points for Shape Text in Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, adds a rectangle shape, inserts a long sentence, and configures the shape's text frame right margin to 10 points using TextBody.TextAlignment.RightMarginPt, then saves the file as RightMarginDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | shape text margin | RightMarginPt | rectangle shape | text wrapping | right margin points | Aspose.Cells example | Excel shape formatting
-// Common Searches: Aspose.Cells set right margin for shape text | RightMarginPt property C# example | increase right padding of rectangle shape in Aspose.Cells | avoid text clipping in shape Aspose.Cells .NET | how to add margin to shape text Aspose.Cells
-// Developer Intent: Configure a shape's text frame right margin to 10 points to prevent clipping of long sentences in an Excel worksheet generated with Aspose.Cells for .NET.
-// Use Cases: Ensure long labels inside rectangle shapes are fully visible by adding a 10‑point right margin. | Standardize right‑margin spacing across multiple shapes when generating reports programmatically. | Improve readability of shape‑based annotations in automated Excel dashboards.
-// AI Prompts: Show how to set left, top, and bottom margins for a shape's text body in Aspose.Cells using C#. | Provide code to apply a 10‑point right margin to all shapes on a worksheet with Aspose.Cells. | Explain the effect of RightMarginPt on text wrapping and alignment inside a shape in Aspose.Cells.
+// Title: Set the worksheet right margin to 10 points with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells PageSetup.RightMargin to set a 10‑point right margin for an Excel worksheet in C#. | Create a workbook, configure the right page margin to 10 points, and save the file using Aspose.Cells. | Adjust the right margin of the first worksheet to provide extra space for long sentences with the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# set worksheet right margin to 10 points | how to increase right page margin in Excel using Aspose.Cells .NET | C# code to set right margin in points with Aspose.Cells PageSetup | provide extra space for long sentences by adjusting right margin in Aspose.Cells | Aspose.Cells PageSetup.RightMargin property example
+// Tags: Aspose.Cells set right margin points | worksheet page setup right margin C# | Excel right margin 10 points Aspose | adjust worksheet margins using Aspose.Cells API | right margin configuration Aspose.Cells .NET
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+// Create a new workbook
+var workbook = new Aspose.Cells.Workbook();
 
-// This example creates a workbook, adds a rectangle shape, inserts a long sentence, and configures the shape's text frame right margin to 10 points using TextBody.TextAlignment.RightMarginPt, then saves the file as RightMarginDemo.xlsx.
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+// Access the first worksheet
+var worksheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 50);
+// Set the right margin to 10 points (provides space for long sentences)
+worksheet.PageSetup.RightMargin = 10f; // RightMargin is measured in points
 
-        // Set sample text that may be long
-        shape.Text = "This is a very long sentence that needs extra right margin space to avoid clipping.";
-
-        // Configure the right margin of the text frame to 10 points
-        shape.TextBody.TextAlignment.RightMarginPt = 10.0;
-
-        // Save the workbook
-        workbook.Save("RightMarginDemo.xlsx");
-    }
-}
+// Save the workbook to a file
+workbook.Save("Output.xlsx");

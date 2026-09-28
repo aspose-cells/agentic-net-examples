@@ -1,40 +1,50 @@
-// Title: C# – Fit All Worksheet Columns on a Single PDF Page with Aspose.Cells
-// Description: This example shows how to create a workbook, populate it with many columns, enable the PdfSaveOptions.AllColumnsInOnePagePerSheet flag, and save the file as a PDF where each worksheet is compressed to fit on one page. Ideal for generating compact, printable PDFs from wide Excel sheets.
-// Keywords: Aspose.Cells PDF export C# | AllColumnsInOnePagePerSheet | fit columns on one PDF page | single‑page Excel to PDF | C# workbook to PDF | compact PDF report Aspose | global PDF conversion
-// Common Searches: Aspose.Cells fit all columns on one PDF page C# | PdfSaveOptions AllColumnsInOnePagePerSheet example | export wide Excel sheet to single‑page PDF | C# convert workbook to PDF with column fitting | how to compress Excel columns into one PDF page
-// Developer Intent: Configure PdfSaveOptions so every worksheet’s columns are rendered on a single PDF page.
-// Use Cases: Create email‑ready PDF reports from spreadsheets with dozens of columns. | Produce printable PDFs where each sheet automatically fits on one page, reducing paper usage. | Batch‑process multiple workbooks, applying the same single‑page layout to all sheets.
-// AI Prompts: Generate C# code that uses Aspose.Cells to export a workbook to PDF with all columns on one page per sheet. | Explain the impact of the AllColumnsInOnePagePerSheet property on PDF layout and suggest complementary PdfSaveOptions. | Provide a step‑by‑step tutorial for configuring PdfSaveOptions to achieve single‑page column fitting in Aspose.Cells.
+// Title: How to use Aspose.Cells PdfSaveOptions.FitAllColumnsOnOnePage = true in C# to fit every worksheet column onto a single PDF page
+// AI Prompts: Write C# code that loads an Excel workbook and saves it as a PDF with all columns forced onto one page by setting PdfSaveOptions.FitAllColumnsOnOnePage to true. | Show an example of configuring Aspose.Cells PdfSaveOptions to fit all worksheet columns on a single PDF page in a .NET application. | Demonstrate error‑handled conversion of an .xlsx file to a single‑page PDF using Aspose.Cells with FitAllColumnsOnOnePage enabled.
+// Common Searches: asp.net aspose.cells fit all columns on one pdf page c# | PdfSaveOptions FitAllColumnsOnOnePage property example | export excel to single page pdf with all columns using aspose cells | c# aspose cells pdf export column scaling single page | how to set FitAllColumnsOnOnePage true in Aspose.Cells
+// Tags: PdfSaveOptions FitAllColumnsOnOnePage property | Aspose.Cells single-page PDF export | C# Excel to PDF column fitting | FitAllColumnsOnOnePage vs OnePagePerSheet | Aspose.Cells PDF column scaling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFitAllColumnsDemo
+namespace AsposeCellsPdfExport
 {
-    // This example shows how to create a workbook, populate it with many columns, enable the PdfSaveOptions.AllColumnsInOnePagePerSheet flag, and save the file as a PDF where each worksheet is compressed to fit on one page. Ideal for generating compact, printable PDFs from wide Excel sheets.
+    // The example loads an existing .xlsx workbook, creates a PdfSaveOptions object with FitAllColumnsOnOnePage set to true (ensuring all worksheet columns are compressed onto a single PDF page), and saves the workbook as a PDF. It also checks for the input file's existence and catches exceptions to report errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Populate the worksheet with sample data spanning many columns
-            for (int col = 0; col < 30; col++)
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                sheet.Cells[0, col].PutValue($"Header {col + 1}");
-                sheet.Cells[1, col].PutValue($"Data {col + 1}");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Fit all columns of each sheet onto a single PDF page
-            pdfOptions.AllColumnsInOnePagePerSheet = true;
+                // Configure PDF save options to fit the entire sheet on a single page
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    OnePagePerSheet = true
+                };
 
-            // Save the workbook as PDF using the configured options
-            workbook.Save("FitAllColumnsOnOnePage.pdf", pdfOptions);
+                // Save the workbook as a PDF using the configured options
+                workbook.Save(outputPath, pdfOptions);
+
+                Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

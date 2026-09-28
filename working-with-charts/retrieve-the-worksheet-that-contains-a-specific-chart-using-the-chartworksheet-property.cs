@@ -1,73 +1,61 @@
-// Title: Get the Worksheet Containing a Chart via Chart.Worksheet in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to use the Chart.Worksheet property in Aspose.Cells for .NET to retrieve the parent Worksheet of a chart. The sample creates a workbook, adds data and a column chart, then prints the chart's worksheet index and name before saving the file.
-// Keywords: Aspose.Cells | Chart.Worksheet | C# | .NET | retrieve chart worksheet | parent worksheet of chart | Aspose.Cells chart example | access worksheet from chart | Aspose.Cells API | chart parent sheet
-// Common Searches: Aspose.Cells Chart.Worksheet example | how to get worksheet of a chart in C# | retrieve parent sheet of Aspose chart | chart worksheet index Aspose.Cells | C# Aspose.Cells get chart's worksheet name
-// Developer Intent: Find the Worksheet object that hosts a specific Chart using the Chart.Worksheet property.
-// Use Cases: Determine which sheet a chart belongs to when working with workbooks that contain multiple worksheets. | Log or display the worksheet name and index for debugging or reporting purposes. | Perform further modifications on the chart's parent sheet after locating it.
-// AI Prompts: Write a C# snippet that adds a column chart to a worksheet with Aspose.Cells and then prints the chart's parent worksheet name and index using Chart.Worksheet. | Generate code that iterates over all charts in a workbook and outputs each chart’s containing worksheet name and index. | Create a method that accepts a Chart object and safely returns its Worksheet, handling null references and providing meaningful error messages.
+// Title: Retrieve the parent worksheet of a chart with Aspose.Cells Chart.Worksheet in C#
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, selects a chart (by index or name), and uses the Chart.Worksheet property to output the worksheet's name. | Create a C# example that loads a .xlsx file, accesses the first chart on the first sheet, and prints the name of the sheet that owns the chart via Chart.Worksheet. | Write a C# snippet that finds a chart by its title in an Aspose.Cells workbook and returns the containing worksheet object.
+// Common Searches: Aspose.Cells C# get worksheet of a specific chart | How to use Chart.Worksheet to identify chart's sheet in .NET | Find parent worksheet for an Excel chart using Aspose.Cells library | Retrieve chart's sheet name with Aspose.Cells Chart.Worksheet property | C# Aspose.Cells example to locate chart's worksheet by chart name
+// Tags: Aspose.Cells Chart.Worksheet property | C# retrieve chart parent worksheet | Excel chart location Aspose.Cells | chart worksheet identification .NET | load workbook access chart worksheet
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, accesses a chart, uses the Chart.Worksheet property to obtain the worksheet that contains the chart, and prints the worksheet's name.
+class Program
 {
-    // Demonstrates how to use the Chart.Worksheet property in Aspose.Cells for .NET to retrieve the parent Worksheet of a chart. The sample creates a workbook, adds data and a column chart, then prints the chart's worksheet index and name before saving the file.
-    public class RetrieveChartWorksheetDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string filePath = "input.xlsx";
+
+            // Verify the input file exists
+            if (!File.Exists(filePath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("A");
-                worksheet.Cells["A3"].PutValue("B");
-                worksheet.Cells["A4"].PutValue("C");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(20);
-                worksheet.Cells["B4"].PutValue(30);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set chart data range
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Retrieve the worksheet that contains this chart
-                Worksheet chartParentWorksheet = chart.Worksheet;
-
-                // Output worksheet information to verify
-                Console.WriteLine("Chart's worksheet index: " + chartParentWorksheet.Index);
-                Console.WriteLine("Chart's worksheet name: " + chartParentWorksheet.Name);
-
-                // Save the workbook
-                string outputPath = "RetrieveChartWorksheetDemo_out.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to: " + outputPath);
+                Console.WriteLine($"File not found: {filePath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Ensure the workbook has at least one worksheet
+            if (workbook.Worksheets.Count == 0)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("The workbook contains no worksheets.");
+                return;
             }
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("The worksheet contains no charts.");
+                return;
+            }
+
+            // Retrieve the first chart
+            Chart chart = worksheet.Charts[0];
+
+            // Get the worksheet that holds this chart
+            Worksheet chartWorksheet = chart.Worksheet;
+
+            // Display the name of the worksheet containing the chart
+            Console.WriteLine("The chart is located in worksheet: " + chartWorksheet.Name);
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RetrieveChartWorksheetDemo.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

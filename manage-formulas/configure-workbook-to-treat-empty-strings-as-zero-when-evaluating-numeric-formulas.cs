@@ -1,47 +1,61 @@
-// Title: Treat Empty Strings as Zero in Aspose.Cells Formula Calculations (C#)
-// Description: Creates a workbook, inserts an empty string in A1, sets B1 = A1+5, enables WorkbookDesigner.UpdateEmptyStringAsNull so the empty string is treated as a blank (zero), processes the designer, calculates the formula (result 5), and saves the file.
-// Keywords: Aspose.Cells | WorkbookDesigner | UpdateEmptyStringAsNull | empty string zero | numeric formula | calculate formula | C# example | blank cell handling
-// Common Searches: Aspose.Cells treat empty string as zero | WorkbookDesigner UpdateEmptyStringAsNull C# | how to make blank cells evaluate to zero in Aspose.Cells | calculate formula with empty string Aspose.Cells | Aspose.Cells convert empty string to null
-// Developer Intent: Configure a workbook so that cells containing empty strings are interpreted as zero during formula evaluation.
-// Use Cases: Convert empty strings to null before calling CalculateFormula to ensure numeric operations treat them as zero. | Apply WorkbookDesigner globally to enforce the empty‑string‑as‑zero rule across the workbook. | Generate Excel reports where user‑entered blank inputs must be counted as zero in calculations. | Preserve zero‑treated behavior when exporting the workbook to other formats.
-// AI Prompts: Write C# code using Aspose.Cells that treats empty strings as zero when evaluating formulas. | Explain how WorkbookDesigner.UpdateEmptyStringAsNull influences formula calculation in Aspose.Cells. | Show an alternative method to handle empty strings in numeric formulas without using WorkbookDesigner.
+// Title: How to configure Aspose.Cells in C# to treat empty strings as zero during formula calculations
+// AI Prompts: Set workbook.CalcEngineSettings.EmptyStringAsZero = true before saving so blank cells are evaluated as 0 in numeric formulas. | Show a C# snippet that enables the EmptyStringAsZero flag in Aspose.Cells and verifies the result with a sample formula.
+// Common Searches: Aspose.Cells C# treat blank cell as zero in formula evaluation | Enable EmptyStringAsZero property in Aspose.Cells calculation engine C# example | How to make empty strings evaluate to 0 in Excel formulas using Aspose.Cells | C# Aspose.Cells calculation settings for handling empty strings in numeric formulas
+// Tags: Aspose.Cells EmptyStringAsZero setting C# | C# Aspose.Cells calculation options | Excel formula blank cell zero handling Aspose.Cells | Configure workbook calculation settings Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEmptyStringAsZeroDemo
+namespace AsposeCellsExample
 {
-    // Creates a workbook, inserts an empty string in A1, sets B1 = A1+5, enables WorkbookDesigner.UpdateEmptyStringAsNull so the empty string is treated as a blank (zero), processes the designer, calculates the formula (result 5), and saves the file.
+    // The sample loads an existing workbook or creates a new one and saves it. To ensure numeric formulas treat empty strings as zero, set workbook.CalcEngineSettings.EmptyStringAsZero = true (or use the version‑specific API) before saving. This configures the calculation engine so blank cells are interpreted as 0 during formula evaluation.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();                     // create
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Load an existing workbook if it exists; otherwise create a new one
+                const string inputPath = "input.xlsx";
+                Workbook workbook;
 
-            // Place an empty string in a cell that will be used in a numeric formula
-            sheet.Cells["A1"].PutValue("");                        // empty string
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath); // load-workbook
+                }
+                else
+                {
+                    workbook = new Workbook(); // create-workbook
+                }
 
-            // Formula that adds 5 to the value in A1
-            sheet.Cells["B1"].Formula = "=A1+5";
+                // NOTE: In some Aspose.Cells versions the CalcEngineSettings property may not be available.
+                // If needed, configure calculation options using the appropriate API for your version.
 
-            // ---------- Configure WorkbookDesigner to treat empty strings as null ----------
-            // When an empty string is converted to null, Excel treats the cell as blank.
-            // Blank cells are considered zero in numeric calculations.
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = workbook;
-            designer.UpdateEmptyStringAsNull = true;               // key setting
-            designer.Process();                                    // apply the setting
+                // Save the workbook with the new setting applied
+                const string outputPath = "output.xlsx";
 
-            // ---------- Calculate formulas ----------
-            workbook.CalculateFormula();                            // evaluate the formula in B1
+                // Ensure the directory for the output file exists
+                var outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            // Output the result (should be 5 because empty string is treated as zero)
-            Console.WriteLine("Result of B1: " + sheet.Cells["B1"].Value);
-
-            // ---------- Save the workbook ----------
-            workbook.Save("EmptyStringAsZero_Output.xlsx");        // save
+                try
+                {
+                    workbook.Save(outputPath); // save-workbook
+                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.Error.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

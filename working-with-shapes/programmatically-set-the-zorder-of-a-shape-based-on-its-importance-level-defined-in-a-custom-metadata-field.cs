@@ -1,75 +1,83 @@
-// Title: Set worksheet shape Z‑order in Aspose.Cells C# using custom Importance metadata
-// Description: Demonstrates how to add shapes to a worksheet, store an "Importance" value in each shape's Name property, parse that value, and call ToFrontOrBack to bring high‑importance shapes forward and send low‑importance shapes backward before saving the workbook.
-// Keywords: Aspose.Cells shape Z-order | C# Aspose.Cells shape layering | custom metadata shape ordering | ToFrontOrBack Aspose.Cells | bring shape to front Aspose.Cells | send shape to back worksheet | programmatic shape priority
-// Common Searches: Aspose.Cells change shape Z‑order by custom field | C# set shape layering based on importance in Excel | How to bring a shape to front in Aspose.Cells | Send low priority shape to back Aspose.Cells C# | Use shape Name property for metadata Aspose.Cells
-// Developer Intent: Reorder worksheet shapes programmatically according to an importance level stored in a custom metadata field.
-// Use Cases: Display critical annotations above charts and images in auto‑generated reports. | Prevent decorative graphics from covering data cells by sending them to the back. | Maintain a consistent visual hierarchy when multiple overlapping shapes are added via code.
-// AI Prompts: Generate C# code that reads a numeric "Priority" custom property from each shape in an Aspose.Cells worksheet and reorders the shapes so higher priority shapes appear on top. | Show an example that extracts XML‑based custom metadata from shapes and uses it to set their Z‑order in an Aspose.Cells workbook.
+// Title: Set Excel shape Z‑order in C# with Aspose.Cells using a custom 'Importance' metadata field
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, reads each shape's AlternativeText for an 'Importance' key, and assigns the shape's ZOrderPosition based on a High/Medium/Low mapping. | Create a function that extracts a custom metadata value (e.g., 'Priority') from a shape's AlternativeText and returns the appropriate Z‑order index for use with Aspose.Cells. | Generate C# logic that logs shapes lacking a valid importance entry while reordering all shapes according to their metadata‑defined Z‑order in an Excel workbook.
+// Common Searches: how to change the ZOrderPosition of shapes in an Excel file using Aspose.Cells C# | read custom metadata from shape AlternativeText and reorder shapes in Aspose.Cells | map importance levels to shape layering in a .xlsx workbook with Aspose.Cells | C# Aspose.Cells example for setting shape Z‑order based on a metadata field | Aspose.Cells shape ordering by priority stored in AlternativeText
+// Tags: Aspose.Cells set shape ZOrderPosition | C# read shape AlternativeText metadata | Excel shape layering based on importance | custom metadata to Z‑order mapping Aspose.Cells | shape ordering dictionary mapping C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace AsposeCellsZOrderDemo
+// Loads an .xlsx workbook, iterates over worksheet shapes, extracts an 'Importance' value from each shape's AlternativeText, maps High/Medium/Low to ZOrderPosition values (3,2,1), assigns the Z‑order, logs missing or invalid entries, and saves the updated file.
+class Program
 {
-    // Demonstrates how to add shapes to a worksheet, store an "Importance" value in each shape's Name property, parse that value, and call ToFrontOrBack to bring high‑importance shapes forward and send low‑importance shapes backward before saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Add three shapes with a custom metadata field "Importance"
-                // For demonstration we store the importance level in the shape's Name property
-                Shape shapeA = sheet.Shapes.AddRectangle(5, 5, 100, 50, 0, 0);
-                shapeA.Name = "Importance:Low";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                Shape shapeB = sheet.Shapes.AddRectangle(30, 30, 100, 50, 0, 0);
-                shapeB.Name = "Importance:Medium";
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                Shape shapeC = sheet.Shapes.AddRectangle(60, 60, 100, 50, 0, 0);
-                shapeC.Name = "Importance:High";
+            // Mapping of importance levels to Z‑order values (higher = front)
+            var importanceToZOrder = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "High",   3 },
+                { "Medium", 2 },
+                { "Low",    1 }
+            };
 
-                // Adjust Z‑order based on the importance level
-                // Higher importance => bring to front, lower => send to back
-                // Iterate backwards to avoid collection modification issues
-                for (int i = sheet.Shapes.Count - 1; i >= 0; i--)
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                // Assume the importance level is stored in the shape's AlternativeText
+                // in the format: "Importance=High"
+                string importance = GetImportanceFromAlternativeText(shape.AlternativeText);
+
+                if (importance != null && importanceToZOrder.TryGetValue(importance, out int zOrder))
                 {
-                    Shape shp = sheet.Shapes[i];
-
-                    // Extract the importance value from the Name (e.g., "Importance:High")
-                    string[] parts = shp.Name.Split(':');
-                    if (parts.Length != 2) continue; // skip if format is unexpected
-
-                    string level = parts[1].Trim().ToLowerInvariant();
-
-                    // Apply Z‑order change
-                    if (level == "high")
-                    {
-                        // Bring to front
-                        shp.ToFrontOrBack(1);
-                    }
-                    else if (level == "low")
-                    {
-                        // Send to back
-                        shp.ToFrontOrBack(-1);
-                    }
-                    // "medium" – no change
+                    // Set the Z‑order of the shape (higher value brings the shape to the front)
+                    shape.ZOrderPosition = zOrder;
                 }
+            }
 
-                // Save the workbook
-                string outputPath = "ZOrderByImportance.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper method to extract the importance value from AlternativeText
+    private static string GetImportanceFromAlternativeText(string alternativeText)
+    {
+        if (string.IsNullOrEmpty(alternativeText))
+            return null;
+
+        // Split possible multiple key‑value pairs
+        string[] pairs = alternativeText.Split(new[] { ';', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+        foreach (string pair in pairs)
+        {
+            string[] kv = pair.Split(new[] { '=' }, 2);
+            if (kv.Length == 2 && kv[0].Trim().Equals("Importance", StringComparison.OrdinalIgnoreCase))
+                return kv[1].Trim();
+        }
+        return null;
     }
 }

@@ -1,59 +1,75 @@
-// Title: Add a multiline TextBox to a chart’s plot area (top‑right) with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a column chart, and uses Chart.Shapes.AddTextBoxInChart to insert a multiline TextBox at the plot area’s top‑right corner (coordinates 0,3000) with custom height, width, and AllowTextToOverflow enabled, then saves the file.
-// Keywords: Aspose.Cells | C# chart textbox | AddTextBoxInChart | multiline textbox Aspose.Cells | chart shape positioning | top right chart textbox | text overflow chart | Aspose.Cells example | Excel chart annotation | plot area coordinates
-// Common Searches: how to add a textbox to a chart using Aspose.Cells | multiline textbox in Aspose.Cells chart | position chart textbox top right | allow text overflow in chart textbox Aspose.Cells | C# example AddTextBoxInChart | set chart shape coordinates Aspose.Cells | Aspose.Cells chart annotation tutorial
-// Developer Intent: Insert a multiline TextBox shape into a chart and position it at the plot area’s top‑right corner.
-// Use Cases: Add explanatory notes to a column chart with line breaks for clarity. | Create a dashboard element that may exceed its box size, using AllowTextToOverflow to prevent clipping. | Place a dynamic title or timestamp at the chart’s top‑right without affecting the legend.
-// AI Prompts: Write C# code that uses Aspose.Cells to add a multiline TextBox to a chart, set line‑break text, enable overflow, and position it at the chart’s top‑right. | Explain how to calculate the left coordinate for AddTextBoxInChart to align a textbox with the right edge of the plot area. | Show how to modify the size, position, and text properties of an existing TextBoxInChart in Aspose.Cells after it has been added.
+// Title: Add a multiline TextBox to the top‑right corner of a chart’s plot area using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a multiline TextBox shape into the plot area of a column chart at the top‑right position with Aspose.Cells for C#. | Calculate the plot area coordinates of a chart and add a centered multiline textbox inside it using the Aspose.Cells .NET API. | Set horizontal and vertical center alignment for a chart textbox and optionally apply fill and border colors in C#.
+// Common Searches: Aspose.Cells C# add multiline textbox to chart plot area | position textbox at top right of chart using Aspose.Cells .NET | how to place a shape inside a chart with Aspose.Cells | center align text inside chart textbox Aspose.Cells C# | save workbook with chart and textbox Aspose.Cells example
+// Tags: add multiline textbox to chart Aspose.Cells | chart plot area shape positioning .NET | Aspose.Cells textbox alignment | insert shape into column chart C# | Aspose.Cells chart formatting example
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a column chart, and uses Chart.Shapes.AddTextBoxInChart to insert a multiline TextBox at the plot area’s top‑right corner (coordinates 0,3000) with custom height, width, and AllowTextToOverflow enabled, then saves the file.
+// Demonstrates creating a workbook, populating sample data, adding a column chart, computing the top‑right coordinates of the chart’s plot area, inserting a multiline TextBox shape inside the chart, setting its text and center alignment, optionally configuring fill and border styling, and saving the workbook with Aspose.Cells for .NET.
 class InsertMultilineTextboxInChart
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add some sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["A5"].PutValue("D");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
-        worksheet.Cells["B5"].PutValue(40);
+            // Add sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Bind data to the chart
-        chart.NSeries.Add("B2:B5", true);
-        chart.NSeries.CategoryData = "A2:A5";
+            // Set the chart data source (values)
+            chart.NSeries.Add("B2:B4", true);
+            // Category (X‑axis) data is taken automatically from the first column of the range
 
-        // Insert a multiline TextBox into the chart.
-        // Units are 1/4000 of the chart area.
-        // Position it at the top‑right corner of the plot area.
-        // Top = 0 (top edge), Left = 3000 (near right edge), Height = 500, Width = 800.
-        TextBox textBox = chart.Shapes.AddTextBoxInChart(0, 3000, 500, 800);
+            // Define textbox size (points)
+            int textboxWidth = 120;
+            int textboxHeight = 60;
 
-        // Set multiline text using line breaks
-        textBox.Text = "First line\nSecond line\nThird line";
+            // Calculate position: top‑right corner of the plot area
+            int leftPosition = chart.PlotArea.X + chart.PlotArea.Width - textboxWidth;
+            int topPosition = chart.PlotArea.Y;
 
-        // Allow the text to overflow if needed (optional)
-        textBox.TextBoxOptions.AllowTextToOverflow = true;
+            // Add a multiline textbox inside the chart
+            TextBox textbox = chart.Shapes.AddTextBoxInChart(leftPosition, topPosition, textboxWidth, textboxHeight);
 
-        // Save the workbook
-        workbook.Save("MultilineTextboxInChart.xlsx");
+            // Set multiline text
+            textbox.Text = "First line\nSecond line\nThird line";
+
+            // Optional formatting
+            textbox.TextHorizontalAlignment = TextAlignmentType.Center;
+            textbox.TextVerticalAlignment = TextAlignmentType.Center;
+            // Background fill and border formatting can be set if needed, e.g.:
+            // textbox.Fill.ForeColor = Color.LightYellow;
+            // textbox.Line.ForeColor = Color.DarkGray;
+            // textbox.Line.Weight = 1;
+
+            // Save the workbook
+            string outputPath = "ChartWithMultilineTextbox.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,119 +1,90 @@
-// Title: Aspose.Cells for .NET: Protect a Worksheet, Copy Its Data to an Unprotected Sheet, and Verify Protection Behavior
-// Description: Demonstrates how to protect the first worksheet of a workbook with a password, persist the protection after saving, export its values, import them into a newly added unprotected sheet, test edit restrictions on the protected sheet, unprotect it, modify a cell, and save the final file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells worksheet protection | C# protect Excel sheet password | copy data from protected worksheet | ExportArray Aspose.Cells | ImportArray Aspose.Cells | IsProtected property | Unprotect worksheet C# | Excel sheet security .NET | persist worksheet protection | copy values between sheets Aspose | modify protected cell Aspose.Cells | Aspose.Cells lifecycle rule
-// Common Searches: protect Excel worksheet with password using Aspose.Cells C# | copy cells from a protected sheet to another sheet Aspose.Cells | check if worksheet protection is retained after saving | unprotect worksheet and edit cells Aspose.Cells .NET | ExportArray and ImportArray example Aspose.Cells
-// Developer Intent: The developer needs to lock a worksheet with a password, duplicate its content to a separate unprotected sheet, confirm that protected cells cannot be edited until the sheet is unlocked, and then save the workbook.
-// Use Cases: Ensuring worksheet protection survives file save/load cycles. | Migrating data from a locked sheet to a new sheet without transferring protection settings. | Programmatically validating that protected cells reject modifications until unprotected. | Demonstrating the ExportArray/ImportArray workflow for protected worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that protects a worksheet, copies its values to another sheet, and verifies protection status before and after unprotecting. | Explain why Aspose.Cells allows PutValue on a protected cell and how to enforce true read‑only behavior. | Show how to use IsProtected and Unprotect methods to test worksheet security in a .NET application.
+// Title: How to protect a worksheet with a password, copy it to another sheet, and ensure the copy is unprotected using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that locks a worksheet with a password, attempts a prohibited edit, copies the worksheet to a new sheet, clears its protection, and confirms that the copied sheet can be edited using Aspose.Cells. | Demonstrate catching the error raised when trying to modify a locked cell on the original sheet and then successfully updating the same cell on the unprotected copied sheet in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells .NET protect worksheet with password and copy to new sheet unprotected | C# copy protected worksheet and remove protection after copy using Aspose.Cells | How to handle exception when editing a protected cell in Aspose.Cells | Verify worksheet protection status after copying in Aspose.Cells C# | Save workbook after unprotecting copied worksheet Aspose.Cells
+// Tags: password-protect sheet Aspose.Cells .NET | copy sheet and clear protection Aspose.Cells | unprotect copied sheet Aspose.Cells | handle edit exception on protected sheet Aspose.Cells | save workbook after sheet protection changes Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to protect the first worksheet of a workbook with a password, persist the protection after saving, export its values, import them into a newly added unprotected sheet, test edit restrictions on the protected sheet, unprotect it, modify a cell, and save the final file using Aspose.Cells for .NET.
+// The example creates a workbook, applies password protection to the first worksheet, catches the exception from an illegal edit, copies the sheet to a new worksheet, removes protection from the copy, verifies that edits are now allowed, and saves the workbook.
 class WorksheetProtectionDemo
 {
     static void Main()
     {
         try
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook and add some data
-            // -------------------------------------------------
-            Workbook wb = new Workbook();
-            Worksheet src = wb.Worksheets[0];
-            src.Cells["A1"].PutValue("Hello");
-            src.Cells["B2"].PutValue(123);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // -------------------------------------------------
-            // 2. Protect the source worksheet with a password
-            // -------------------------------------------------
-            src.Protect(ProtectionType.All, "pwd123", null);
-            Console.WriteLine("Source sheet protected (in memory): " + src.IsProtected);
+            // Access the first worksheet and add some data
+            Worksheet sourceSheet = workbook.Worksheets[0];
+            sourceSheet.Name = "ProtectedSheet";
+            sourceSheet.Cells["A1"].PutValue("Header");
+            sourceSheet.Cells["A2"].PutValue("Data1");
+            sourceSheet.Cells["A3"].PutValue("Data2");
 
-            // -------------------------------------------------
-            // 3. Save the workbook (lifecycle rule)
-            // -------------------------------------------------
-            string protectedPath = "protected.xlsx";
-            wb.Save(protectedPath);
+            // Protect the worksheet with a password (oldPassword is not required, pass null)
+            sourceSheet.Protect(ProtectionType.All, "Secret123", null);
 
-            // -------------------------------------------------
-            // 4. Load the workbook to verify protection persists
-            // -------------------------------------------------
-            if (!File.Exists(protectedPath))
-            {
-                Console.WriteLine($"File not found: {protectedPath}");
-                return;
-            }
-
-            Workbook loadedWb = new Workbook(protectedPath);
-            Worksheet loadedSrc = loadedWb.Worksheets[0];
-            Console.WriteLine("Loaded source sheet protected: " + loadedSrc.IsProtected);
-
-            // -------------------------------------------------
-            // 5. Add a new (unprotected) worksheet as destination
-            // -------------------------------------------------
-            int destIndex = loadedWb.Worksheets.Add();
-            Worksheet dest = loadedWb.Worksheets[destIndex];
-
-            // -------------------------------------------------
-            // 6. Copy the contents from the protected sheet to the unprotected sheet
-            // -------------------------------------------------
-            int totalRows = loadedSrc.Cells.MaxDisplayRange.RowCount;
-            int totalCols = loadedSrc.Cells.MaxDisplayRange.ColumnCount;
-
-            // Export values from source
-            object[,] values = loadedSrc.Cells.ExportArray(0, 0, totalRows, totalCols);
-
-            // Convert to string[,] because ImportArray overload expects string[,] in this SDK version
-            string[,] stringValues = new string[totalRows, totalCols];
-            for (int i = 0; i < totalRows; i++)
-            {
-                for (int j = 0; j < totalCols; j++)
-                {
-                    object val = values[i, j];
-                    stringValues[i, j] = val?.ToString() ?? string.Empty;
-                }
-            }
-
-            // Import into destination worksheet
-            dest.Cells.ImportArray(stringValues, 0, 0);
-            Console.WriteLine("Destination sheet protected: " + dest.IsProtected);
-
-            // -------------------------------------------------
-            // 7. Attempt to modify a cell in the protected sheet without unprotecting
-            // -------------------------------------------------
+            // Attempt to modify a cell in the protected sheet (should fail)
             try
             {
-                loadedSrc.Cells["A1"].PutValue("Modified without unprotect");
-                Console.WriteLine("Modified protected sheet without unprotect (API permits it).");
+                sourceSheet.Cells["A2"].PutValue("ModifiedData");
+                Console.WriteLine("Unexpected: Modification succeeded on a protected sheet.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error modifying protected sheet: " + ex.Message);
+                Console.WriteLine("Expected exception when modifying protected sheet: " + ex.Message);
             }
 
-            // -------------------------------------------------
-            // 8. Unprotect the worksheet using the correct password
-            // -------------------------------------------------
-            loadedSrc.Unprotect("pwd123");
-            Console.WriteLine("Source sheet protected after unprotect: " + loadedSrc.IsProtected);
+            // Add a new unprotected worksheet
+            int destIndex = workbook.Worksheets.Add();
+            Worksheet destSheet = workbook.Worksheets[destIndex];
+            destSheet.Name = "UnprotectedCopy";
 
-            // -------------------------------------------------
-            // 9. Modify the cell after unprotecting to show normal operation
-            // -------------------------------------------------
-            loadedSrc.Cells["A1"].PutValue("Modified after unprotect");
-            Console.WriteLine("Cell A1 after modification: " + loadedSrc.Cells["A1"].StringValue);
+            // Copy contents from the protected sheet to the new sheet
+            // This copies cells, formats, etc., but also copies protection settings
+            sourceSheet.Copy(destSheet);
 
-            // -------------------------------------------------
-            // 10. Save the final workbook (lifecycle rule)
-            // -------------------------------------------------
-            string finalPath = "final.xlsx";
-            loadedWb.Save(finalPath);
+            // Ensure the destination sheet is unprotected
+            destSheet.Unprotect();
+
+            // Verify that the destination sheet is not protected
+            if (!destSheet.IsProtected)
+            {
+                Console.WriteLine("Destination sheet is unprotected as expected.");
+            }
+            else
+            {
+                Console.WriteLine("Unexpected: Destination sheet is still protected.");
+            }
+
+            // Attempt to modify a cell in the copied (unprotected) sheet (should succeed)
+            try
+            {
+                destSheet.Cells["A2"].PutValue("ModifiedInCopy");
+                Console.WriteLine("Modification succeeded on the unprotected copied sheet.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unexpected exception when modifying unprotected sheet: " + ex.Message);
+            }
+
+            // Save the workbook to verify the result
+            string outputPath = "WorksheetProtectionDemo.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving workbook: " + ex.Message);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Unexpected error: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

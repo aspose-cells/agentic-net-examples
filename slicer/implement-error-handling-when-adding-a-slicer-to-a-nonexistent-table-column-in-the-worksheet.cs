@@ -1,86 +1,62 @@
-// Title: Aspose.Cells C# – Error handling for adding a slicer to a non‑existent table column
-// Description: Demonstrates how to create a workbook, define a two‑column table, validate a zero‑based column index, throw an ArgumentOutOfRangeException for invalid indexes, catch errors during slicer creation, log the issue, and save the file safely.
-// Keywords: Aspose.Cells | C# slicer | slicer error handling | invalid column index | ListObject slicer exception | ArgumentOutOfRangeException | validate slicer column | Aspose.Cells API | Excel slicer programmatically | Aspose.Cells .NET
-// Common Searches: Aspose.Cells add slicer invalid column | C# validate slicer column index Aspose.Cells | How to catch slicer creation exception in Aspose.Cells | ListObject slicer out of range error | Aspose.Cells slicer error handling example
-// Developer Intent: Add a slicer to a table column while safely handling cases where the column does not exist.
-// Use Cases: Prevent runtime crashes by checking column index before calling SlicerCollection.Add. | Log detailed error messages when slicer creation fails. | Skip slicer creation and continue processing when the target column is missing. | Provide a fallback UI element (e.g., dropdown) if a slicer cannot be added. | Automate workbook generation with robust slicer validation.
-// AI Prompts: Write C# code using Aspose.Cells that adds a slicer to a table column with pre‑validation and try‑catch for errors. | Show how to record slicer creation failures to a log file instead of console output in Aspose.Cells. | Explain how to enumerate ListObject columns and select a valid column before adding a slicer in Aspose.Cells .NET. | Provide a step‑by‑step guide to handle ArgumentOutOfRangeException when adding a slicer to a non‑existent column. | Generate a reusable method that adds a slicer with built‑in validation for any Aspose.Cells workbook.
+// Title: How to catch ArgumentOutOfRangeException when adding a slicer to a non‑existent table column in Aspose.Cells for .NET
+// AI Prompts: Write C# code that validates a ListObject column index before creating a slicer and wraps the operation in a try‑catch block for Aspose.Cells. | Show an example that catches ArgumentOutOfRangeException when calling Worksheet.Slicers.Add with an out‑of‑range column in Aspose.Cells. | Demonstrate how to log the error and continue processing after a slicer addition fails because the target table column is missing in Aspose.Cells.
+// Common Searches: aspnet add slicer to table column index out of range exception handling | c# Aspose.Cells slicer creation fails when column does not exist | how to validate slicer column index before adding in Aspose.Cells workbook | catch ArgumentOutOfRangeException for slicer.Add in Aspose.Cells .NET
+// Tags: Aspose.Cells slicer column existence check | C# try‑catch for slicer addition errors | ListObject column range validation Aspose.Cells | Workbook save after slicer failure Aspose.Cells | Exception handling pattern for Aspose.Cells slicers
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsSlicerErrorHandling
 {
-    // Demonstrates how to create a workbook, define a two‑column table, validate a zero‑based column index, throw an ArgumentOutOfRangeException for invalid indexes, catch errors during slicer creation, log the issue, and save the file safely.
-    public class SlicerErrorHandlingDemo
+    // The example creates a workbook with a two‑column table, then attempts to add a slicer for a column index that does not exist. The slicer addition is enclosed in a try‑catch block that specifically handles ArgumentOutOfRangeException and a generic Exception, logs appropriate messages, and finally saves the workbook regardless of success.
+    public class Program
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        public static void Main()
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unexpected error: " + ex.Message);
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();                     // create rule
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data for a table (2 columns, 3 rows)
-            worksheet.Cells["A1"].PutValue("Column1");
-            worksheet.Cells["B1"].PutValue("Column2");
-            worksheet.Cells["A2"].PutValue("Data1");
-            worksheet.Cells["B2"].PutValue("Data2");
-            worksheet.Cells["A3"].PutValue("Data3");
-            worksheet.Cells["B3"].PutValue("Data4");
+            // Populate some sample data for a table (2 columns)
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue("Fruit");
+            worksheet.Cells["A3"].PutValue("Carrot");
+            worksheet.Cells["B3"].PutValue("Vegetable");
 
-            // Add a table covering the data range
+            // Add a ListObject (table) covering the data range
             int tableIndex = worksheet.ListObjects.Add("A1", "B3", true);
             ListObject table = worksheet.ListObjects[tableIndex];
+            table.TableStyleType = TableStyleType.TableStyleMedium2;
 
-            // Define the target column index (zero‑based). Intentionally invalid.
-            int targetColumnIndex = 5; // Table only has 2 columns (indices 0 and 1)
-
-            // Attempt to add a slicer for the specified column with error handling
+            // Attempt to add a slicer for a column that does NOT exist (e.g., index 5)
             try
             {
-                // Verify that the column exists before accessing it
-                if (targetColumnIndex < 0 || targetColumnIndex >= table.ListColumns.Count)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        nameof(targetColumnIndex),
-                        $"Column index {targetColumnIndex} is out of range. Table has {table.ListColumns.Count} columns.");
-                }
-
-                // Retrieve the ListColumn object
-                ListColumn column = table.ListColumns[targetColumnIndex];
-
-                // Add the slicer at cell I38
-                SlicerCollection slicers = worksheet.Slicers;
-                int slicerIndex = slicers.Add(table, column, "I38");
-
-                // Optional: configure the slicer (e.g., set a caption)
-                Slicer slicer = slicers[slicerIndex];
-                slicer.Caption = $"Slicer for {column.Name}";
+                // This will throw if the column index is out of range
+                ListColumn nonExistentColumn = table.ListColumns[5]; // zero‑based index
+                // Add slicer using the valid overload that accepts ListColumn and destination cell name
+                SlicerCollection slicers = worksheet.Slicers;        // property rule
+                slicers.Add(table, nonExistentColumn, "D5");        // add rule
+                Console.WriteLine("Slicer added successfully.");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                // Handle the specific case where the column index is invalid
+                Console.WriteLine("Error: The specified table column does not exist.");
+                Console.WriteLine($"Details: {ex.Message}");
             }
             catch (Exception ex)
             {
-                // Handle any errors that occur during slicer creation
-                Console.WriteLine("Error adding slicer: " + ex.Message);
+                // General fallback for any other unexpected errors
+                Console.WriteLine("An unexpected error occurred while adding the slicer.");
+                Console.WriteLine($"Details: {ex.Message}");
             }
 
-            // Save the workbook
-            workbook.Save("SlicerErrorHandlingOutput.xlsx");
-            Console.WriteLine("Workbook saved as SlicerErrorHandlingOutput.xlsx");
+            // Save the workbook (even if slicer addition failed)
+            workbook.Save("SlicerErrorHandlingOutput.xlsx");        // save rule
         }
     }
 }

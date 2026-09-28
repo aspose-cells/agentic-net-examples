@@ -1,93 +1,74 @@
-// Title: Batch Apply Custom GlobalizationSettings to Excel Workbooks with Aspose.Cells (.NET)
-// Description: C# sample that defines a CustomGlobalizationSettings class (e.g., Russian boolean and error strings) and a WorkbookBatchProcessor which scans a source folder, loads each .xls/.xlsx/.xlsb/.xlsm file, assigns the custom globalization settings, and saves the localized copy to a destination folder while preserving file names.
-// Keywords: Aspose.Cells | C# | GlobalizationSettings | custom localization | batch processing | Excel folder automation | Russian error messages | boolean translation | SettableGlobalizationSettings | list separator
-// Common Searches: apply custom GlobalizationSettings to multiple Excel files Aspose.Cells | batch localize Excel workbooks .NET | Aspose.Cells change error text for a folder of workbooks | set list separator for all workbooks using Aspose.Cells | C# code to process Excel files with custom globalization
-// Developer Intent: Automatically assign a user‑defined GlobalizationSettings implementation to every workbook in a directory and save the localized versions.
-// Use Cases: Convert a collection of financial reports to display Russian TRUE/FALSE and error texts before distribution. | Prepare Excel templates for European markets by switching the list separator to a semicolon in bulk. | Standardize error messages across legacy workbooks to meet regulatory language requirements.
-// AI Prompts: Write C# code that iterates over a folder of .xlsx files, loads each workbook with Aspose.Cells, applies a GlobalizationSettings subclass returning French translations, and saves the results to an output directory. | Explain how to extend GlobalizationSettings in Aspose.Cells to provide custom boolean and error strings, then use it in a batch process for multiple workbooks. | Provide step‑by‑step instructions for changing the list separator via SettableGlobalizationSettings while processing a batch of Excel files with Aspose.Cells.
+// Title: Apply a custom CultureInfo (comma decimal, dot thousand, Euro currency) to all Excel workbooks in a folder using Aspose.Cells for .NET
+// AI Prompts: Generate a C# console application that scans a specified directory for .xlsx, .xls, and .xlsm files, loads each workbook with Aspose.Cells, assigns a cloned InvariantCulture where NumberDecimalSeparator=',' , NumberGroupSeparator='.', CurrencySymbol='€', and saves the modified workbook to an output folder. | Update the batch utility so that after applying the custom CultureInfo it overwrites the original Excel files instead of writing copies to a separate directory. | Add comprehensive logging to the processing loop that writes the file path, success status, and any exception details to a log file for each workbook.
+// Common Searches: how to change decimal separator for multiple Excel files using Aspose.Cells in C# | batch set custom CultureInfo for all workbooks in a folder Aspose.Cells .NET | C# script to apply Euro currency format to a directory of .xls and .xlsx files with Aspose | automate globalization settings across many spreadsheets using Aspose.Cells | process all Excel workbooks in a folder with custom number format using Aspose.Cells
+// Tags: Aspose.Cells apply custom CultureInfo to Excel workbooks | batch processing Excel files with Aspose.Cells | set number decimal separator programmatically Aspose.Cells | globalization settings for .xlsx files C# | replace workbook with updated culture Aspose.Cells
 
 using System;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchGlobalization
+// The program iterates through a given input folder, loads each .xlsx, .xls, or .xlsm workbook with Aspose.Cells, applies a custom CultureInfo that uses a comma as the decimal separator, a dot as the thousands separator, and the Euro symbol for currency, then saves the workbook to an output directory (or overwrites the original file if configured).
+class GlobalizationBatchProcessor
 {
-    // Custom globalization settings derived from GlobalizationSettings.
-    // Override methods to provide localized strings for booleans and errors.
-    // C# sample that defines a CustomGlobalizationSettings class (e.g., Russian boolean and error strings) and a WorkbookBatchProcessor which scans a source folder, loads each .xls/.xlsx/.xlsb/.xlsm file, assigns the custom globalization settings, and saves the localized copy to a destination folder while preserving file names.
-    public class CustomGlobalizationSettings : GlobalizationSettings
+    static void Main(string[] args)
     {
-        public override string GetBooleanValueString(bool value)
+        // Folder containing the source workbooks
+        string inputFolder = @"C:\Workbooks\Input";
+
+        // Folder where the processed workbooks will be saved (can be the same as inputFolder to overwrite)
+        string outputFolder = @"C:\Workbooks\Output";
+
+        // Ensure the input and output directories exist
+        if (!Directory.Exists(inputFolder))
         {
-            // Example: Russian boolean strings.
-            return value ? "ИСТИНА" : "ЛОЖЬ";
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
         }
+        Directory.CreateDirectory(outputFolder);
 
-        public override string GetErrorValueString(string err)
+        // Retrieve all Excel files in the input folder
+        string[] excelFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+        foreach (string filePath in excelFiles)
         {
-            // Map standard error texts to localized versions.
-            return err switch
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            if (extension != ".xlsx" && extension != ".xls" && extension != ".xlsm")
+                continue; // Skip non‑Excel files
+
+            // Verify the file exists before attempting to load
+            if (!File.Exists(filePath))
             {
-                "#NAME?" => "#ИМЯ?",
-                "#DIV/0!" => "#ДЕЛ/0!",
-                "#REF!" => "#ССЫЛКА!",
-                "#VALUE!" => "#ЗНАЧ!",
-                "#N/A" => "#Н/Д",
-                "#NUM!" => "#ЧИСЛО!",
-                "#NULL!" => "#ПУСТО!",
-                _ => base.GetErrorValueString(err)
-            };
-        }
-    }
+                Console.WriteLine($"File not found: {filePath}");
+                continue;
+            }
 
-    public static class WorkbookBatchProcessor
-    {
-        // Applies the custom globalization settings to every workbook in the source folder.
-        // Processed files are saved to the destination folder preserving original file names.
-        public static void ApplyGlobalizationToFolder(string sourceFolder, string destinationFolder)
-        {
-            // Ensure destination folder exists.
-            Directory.CreateDirectory(destinationFolder);
-
-            // Get all supported Excel files in the source folder.
-            string[] files = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string filePath in files)
+            try
             {
-                // Filter by known Excel extensions.
-                string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsb" && ext != ".xlsm")
-                    continue;
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-                // Load the workbook (create rule: Workbook(string) constructor).
-                Workbook wb = new Workbook(filePath);
+                // Create a custom CultureInfo with desired separators and currency settings
+                CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+                customCulture.NumberFormat.NumberDecimalSeparator = ",";   // Use comma as decimal separator
+                customCulture.NumberFormat.NumberGroupSeparator = ".";    // Use dot as thousands separator
+                customCulture.NumberFormat.CurrencySymbol = "€";          // Euro symbol
+                customCulture.NumberFormat.CurrencyPositivePattern = 2; // "€ n"
+                customCulture.NumberFormat.CurrencyNegativePattern = 9; // "€-n"
 
-                // Apply the custom globalization settings.
-                wb.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+                // Apply the custom culture to the workbook
+                workbook.Settings.CultureInfo = customCulture;
 
-                // Optionally, you can also use SettableGlobalizationSettings for additional tweaks.
-                // Example: change list separator to semicolon.
-                // var settable = new SettableGlobalizationSettings();
-                // settable.SetListSeparator(';');
-                // wb.Settings.GlobalizationSettings = settable;
-
-                // Save the modified workbook to the destination folder (save rule: Workbook.Save(string)).
-                string destPath = Path.Combine(destinationFolder, Path.GetFileName(filePath));
-                wb.Save(destPath);
+                // Save the modified workbook to the output folder (preserving original name)
+                string fileName = Path.GetFileName(filePath);
+                string outputPath = Path.Combine(outputFolder, fileName);
+                workbook.Save(outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
-    }
 
-    // Example usage.
-    class Program
-    {
-        static void Main()
-        {
-            string inputFolder = @"C:\InputWorkbooks";
-            string outputFolder = @"C:\OutputWorkbooks";
-
-            WorkbookBatchProcessor.ApplyGlobalizationToFolder(inputFolder, outputFolder);
-
-            Console.WriteLine("Batch processing completed.");
-        }
+        Console.WriteLine("Custom globalization settings have been applied to all workbooks.");
     }
 }

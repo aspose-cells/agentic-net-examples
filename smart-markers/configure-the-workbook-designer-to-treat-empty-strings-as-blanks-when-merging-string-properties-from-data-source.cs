@@ -1,67 +1,51 @@
-// Title: Aspose.Cells WorkbookDesigner: Convert Empty Strings to Blank Cells with UpdateEmptyStringAsNull (C#)
-// Description: Demonstrates how to set WorkbookDesigner.UpdateEmptyStringAsNull to true so that empty string values from a DataSet/DataTable are merged as null (blank) cells when processing smart markers. The example creates a workbook, adds markers, binds the data source, runs the designer, and saves the result.
-// Keywords: Aspose.Cells | WorkbookDesigner | UpdateEmptyStringAsNull | empty string handling | blank cells | smart markers | C# | .NET | Excel export | DataSet | DataTable | null conversion
-// Common Searches: Aspose.Cells UpdateEmptyStringAsNull example | WorkbookDesigner treat empty strings as null | smart markers ignore empty values C# | convert empty string to blank cell Aspose.Cells | how to hide empty strings in Excel export using Aspose
-// Developer Intent: Configure WorkbookDesigner to replace empty string fields from a data source with null/blank cells during smart‑marker processing.
-// Use Cases: Generating invoices where missing product names or prices should appear as empty cells rather than literal empty strings. | Creating sales or inventory reports from optional‑field DataTables while keeping the Excel layout clean. | Exporting a database view to Excel via smart markers, ensuring that nullable text columns render as blank cells.
-// AI Prompts: Show C# code that sets WorkbookDesigner.UpdateEmptyStringAsNull to true for smart marker processing in Aspose.Cells. | Provide a step‑by‑step example of binding a DataSet with empty strings to WorkbookDesigner and saving the workbook with blank cells. | Explain how UpdateEmptyStringAsNull affects cell formatting and how to verify that empty strings become blank cells after processing.
+// Title: How to configure Aspose.Cells WorkbookDesigner to convert empty strings to blank cells when using smart markers in C#
+// AI Prompts: Set WorkbookDesigner.UpdateEmptyStringAsNull = true before calling Process() so that empty string values from a DataSet become blank cells during smart marker merging. | Place smart markers like &=$Products.Name in a worksheet, supply a DataTable containing empty strings, and enable blank conversion with the UpdateEmptyStringAsNull property. | Generate an Excel file with Aspose.Cells where any empty string fields from the source data are rendered as empty cells rather than literal empty strings.
+// Common Searches: Aspose.Cells WorkbookDesigner blank cells for empty string values in smart markers C# | UpdateEmptyStringAsNull property example for merging DataSet into Excel | Treat empty strings as null when using smart markers with Aspose.Cells | How to prevent empty string literals in Excel output using Aspose.Cells WorkbookDesigner | Smart marker merge ignore empty string columns Aspose.Cells .NET
+// Tags: WorkbookDesigner UpdateEmptyStringAsNull | smart markers blank cell handling | Aspose.Cells merge empty string as null | C# export DataSet to Excel with blanks | Excel smart marker empty string conversion
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsWorkbookDesignerDemo
 {
-    // Demonstrates how to set WorkbookDesigner.UpdateEmptyStringAsNull to true so that empty string values from a DataSet/DataTable are merged as null (blank) cells when processing smart markers. The example creates a workbook, adds markers, binds the data source, runs the designer, and saves the result.
-    public class WorkbookDesignerEmptyStringAsBlankDemo
+    // Demonstrates creating a DataSet with empty string values, inserting smart markers into a workbook, enabling WorkbookDesigner.UpdateEmptyStringAsNull to treat those strings as blanks, processing the merge, and saving the resulting Excel file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // Create a sample DataSet containing empty strings
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable("Products");
+            dt.Columns.Add("Name");
+            dt.Columns.Add("Price");
+            dt.Rows.Add("Laptop", "");          // Price is empty string
+            dt.Rows.Add("", "999.99");          // Name is empty string
+            ds.Tables.Add(dt);
+
+            // Create a new workbook and add designer markers
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("&=$Products.Name");   // Merge string property
+            sheet.Cells["B1"].PutValue("&=$Products.Price");  // Merge string property
+
+            // Initialize WorkbookDesigner and configure it to treat empty strings as blanks
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                // Create a sample DataSet containing empty strings
-                DataSet ds = new DataSet();
-                DataTable dt = new DataTable("Products");
-                dt.Columns.Add("Name");
-                dt.Columns.Add("Price");
-                dt.Rows.Add("Laptop", "");          // Price is empty
-                dt.Rows.Add("", "999.99");          // Name is empty
-                ds.Tables.Add(dt);
+                Workbook = workbook,
+                UpdateEmptyStringAsNull = true   // Key setting
+            };
 
-                // Create a new workbook and place designer markers
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("&=$Products.Name");
-                sheet.Cells["B1"].PutValue("&=$Products.Price");
+            // Set the data source and process the merge
+            designer.SetDataSource(ds.Tables["Products"]);
+            designer.Process();
 
-                // Initialize WorkbookDesigner and set it to treat empty strings as blanks (null)
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook,
-                    UpdateEmptyStringAsNull = true // key property
-                };
+            // Verify the merged values (optional console output)
+            Console.WriteLine("A1 merged value: " + sheet.Cells["A1"].StringValue);
+            Console.WriteLine("B1 merged value: " + (sheet.Cells["B1"].StringValue == string.Empty ? "(blank)" : sheet.Cells["B1"].StringValue));
 
-                // Bind the data source and process the markers
-                designer.SetDataSource(ds.Tables["Products"]);
-                designer.Process();
-
-                // Save the resulting workbook
-                string outputPath = "WorkbookDesigner_EmptyStringAsBlank_Output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorkbookDesignerEmptyStringAsBlankDemo.Run();
+            // Save the resulting workbook
+            workbook.Save("MergedResult.xlsx");
         }
     }
 }

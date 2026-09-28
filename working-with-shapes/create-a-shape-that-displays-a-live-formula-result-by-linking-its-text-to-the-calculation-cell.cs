@@ -1,38 +1,55 @@
-// Title: Aspose.Cells for .NET – Link a Shape to a Formula Cell for Live Value Display
-// Description: Demonstrates how to add a rectangle shape to a worksheet, link its text to a formula cell using SetLinkedCell, refresh the displayed value with UpdateSelectedValue, and save the workbook. The shape automatically reflects any changes to the underlying formula.
-// Keywords: Aspose.Cells C# shape linked cell | SetLinkedCell example | UpdateSelectedValue method | dynamic shape text Aspose.Cells | live formula result in shape | rectangle shape Excel automation | C# Excel shape binding | global developers Aspose.Cells
-// Common Searches: how to bind a shape to a cell in Aspose.Cells | display formula result in a shape using Aspose.Cells for .NET | Aspose.Cells SetLinkedCell usage | refresh shape text after formula change Aspose | C# add rectangle shape linked to cell
-// Developer Intent: Enable a shape’s displayed text to automatically show the current result of a formula cell, eliminating manual updates.
-// Use Cases: Dashboard KPI: a shape shows a calculated metric that updates when source data changes. | Report label: a shape displays a total or tax amount derived from a formula without extra code. | Invoice template: a shape reflects a computed discount linked to a formula cell.
-// AI Prompts: Generate C# code that adds multiple shapes, each linked to a different formula cell, and updates them after data modifications. | Explain the parameters of SetLinkedCell, including locale‑aware linking and absolute vs. relative references. | Show how to change the formula in a linked cell and immediately refresh the shape’s text using Aspose.Cells.
+// Title: How to bind a rectangle shape’s text to a cell formula for live updates in Aspose.Cells for .NET
+// AI Prompts: Create a rectangle shape on a worksheet and set its Text property to a cell reference so the shape displays the current formula result. | Generate code that links a shape’s displayed text to a worksheet cell, ensuring the text updates automatically when the cell’s formula recalculates.
+// Common Searches: Aspose.Cells .NET bind shape text to cell formula for live result | display cell formula result in a textbox shape using Aspose.Cells | update shape text automatically when worksheet cell changes Aspose.Cells | link rectangle shape to B2 formula Aspose.Cells example
+// Tags: rectangle shape text binding Aspose.Cells .NET | dynamic shape content from worksheet formula | shape text linked to cell value Aspose.Cells | C# Aspose.Cells live formula display in shape | binding shape to cell calculation result
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle shape to a worksheet, link its text to a formula cell using SetLinkedCell, refresh the displayed value with UpdateSelectedValue, and save the workbook. The shape automatically reflects any changes to the underlying formula.
+// The example creates a workbook, writes a SUM formula in cell B2, adds a rectangle shape, sets the shape's Text property to "=B2" so it shows the live calculation result, formats the text, and saves the file as LiveFormulaShape.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Put a formula in cell B2 (e.g., double the value of A1)
-        worksheet.Cells["B2"].Formula = "=A1*2";
+            // Put a formula in cell B2 (example: sum of numbers)
+            sheet.Cells["B2"].Formula = "=SUM(1,2,3)"; // Result will be 6
 
-        // Add a rectangle shape that will display the linked cell value
-        // Parameters: upper left row, upper left column, width, height, upper left offset X, offset Y
-        Shape linkedShape = worksheet.Shapes.AddRectangle(2, 2, 120, 30, 0, 0);
+            // Add a rectangle shape (acts as a textbox) to the worksheet
+            // Parameters: drawing type, upper left row, upper left column,
+            // top offset (points), left offset (points), height (points), width (points)
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,    // upper left row
+                0,    // upper left column
+                0,    // top offset
+                100,  // left offset
+                30,   // height
+                200   // width
+            );
 
-        // Link the shape's displayed text to cell B2 (A1 style, locale‑aware)
-        linkedShape.SetLinkedCell("$B$2", false, true);
+            // Link the shape's text to the cell containing the formula.
+            // The shape will display the live result of B2 and update automatically.
+            shape.Text = "=B2";
 
-        // Refresh the shape so it shows the current value of the linked cell
-        linkedShape.UpdateSelectedValue();
+            // Optional: format the text inside the shape
+            shape.Font.Size = 12;
+            shape.Font.IsBold = true;
 
-        // Save the workbook
-        workbook.Save("LinkedShapeDemo.xlsx");
+            // Save the workbook to a file
+            string outputPath = "LiveFormulaShape.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

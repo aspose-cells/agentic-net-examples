@@ -1,78 +1,57 @@
-// Title: Export a Workbook to XML with a Custom Root Element using Aspose.Cells C#
-// Description: Shows how to build an Aspose.Cells workbook, create an XSD schema that defines a custom root node, add the schema as an XmlMap, and call ExportXml to produce an XML file with that root element in C#.
-// Keywords: Aspose.Cells ExportXml | C# export workbook to XML | custom root element XML Aspose | XmlMap XSD schema | temporary XSD file Aspose.Cells | Excel to XML with custom root | Aspose.Cells XML map example | Export workbook as XML C# | Define XML schema for Excel export | Aspose.Cells XML export guide
-// Common Searches: Aspose.Cells export XML custom root | How to use XmlMap with XSD in Aspose.Cells | C# export Excel to XML with specific root element | Add temporary XSD to workbook Aspose.Cells | ExportXml with custom root node | Aspose.Cells XML map example C# | Create XML from workbook using XSD schema
-// Developer Intent: Produce an XML document from a workbook where the root element is defined by a user‑supplied XSD map.
-// Use Cases: Integrate Excel data into systems that require a predefined XML structure with a specific root tag. | Generate XML reports that conform to an external XSD without modifying the original workbook layout. | Automate data exchange between .NET applications and services that consume custom‑root XML payloads.
-// AI Prompts: Write C# code with Aspose.Cells to export a workbook to XML using an XSD that sets a custom root element. | Explain the steps to add an XmlMap from a temporary XSD file and call ExportXml for a custom root node. | Provide troubleshooting tips when ExportXml fails because the XSD file is missing or incorrectly formatted.
+// Title: How to export an Aspose.Cells workbook to an XML file in C# using XmlSaveOptions
+// AI Prompts: Create C# code that builds an Aspose.Cells workbook, populates cells, and saves it as an XML document with XmlSaveOptions. | Write a C# routine that checks for the existence of the target folder and creates it if missing before exporting a workbook to XML using Aspose.Cells. | Generate a C# example that configures XmlSaveOptions for default XML export and saves the workbook to a specified path.
+// Common Searches: Aspose.Cells C# export workbook to XML file example | How to use XmlSaveOptions for XML output in Aspose.Cells .NET | C# save Excel workbook as XML with Aspose.Cells and ensure output folder exists | Set custom root element when exporting Excel to XML using Aspose.Cells C# | XmlSaveOptions default settings for XML export in Aspose.Cells C#
+// Tags: Aspose.Cells export workbook to XML | XmlSaveOptions configure XML output | C# ensure output directory before saving | Aspose.Cells create workbook programmatically | Export Excel data as XML using .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to build an Aspose.Cells workbook, create an XSD schema that defines a custom root node, add the schema as an XmlMap, and call ExportXml to produce an XML file with that root element in C#.
-class ExportWorkbookWithCustomRoot
+namespace AsposeCellsExportXml
 {
-    static void Main()
+    // The example demonstrates creating an Aspose.Cells workbook, filling it with sample data, configuring XmlSaveOptions, ensuring the destination directory exists, and saving the workbook as an XML file while handling potential errors.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "DataSheet";
-            sheet.Cells["A1"].PutValue("Id");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Define an XML schema whose root element is "CustomRoot"
-            string xmlSchema = @"
-                <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                    <xs:element name='CustomRoot'>
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name='Record' maxOccurs='unbounded'>
-                                    <xs:complexType>
-                                        <xs:sequence>
-                                            <xs:element name='Id' type='xs:integer'/>
-                                            <xs:element name='Name' type='xs:string'/>
-                                        </xs:sequence>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:schema>";
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Write the schema to a temporary file to satisfy XmlMaps.Add(string filePath)
-            string tempSchemaPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xsd");
-            File.WriteAllText(tempSchemaPath, xmlSchema);
+                // Populate some sample data
+                sheet.Cells["A1"].PutValue("Name");
+                sheet.Cells["B1"].PutValue("Age");
+                sheet.Cells["A2"].PutValue("John");
+                sheet.Cells["B2"].PutValue(30);
+                sheet.Cells["A3"].PutValue("Jane");
+                sheet.Cells["B3"].PutValue(25);
 
-            // Ensure the temporary schema file exists before adding
-            if (!File.Exists(tempSchemaPath))
-                throw new FileNotFoundException("Temporary XML schema file was not created.", tempSchemaPath);
+                // Configure XML save options (SaveFormat is Xml by default, no need to set)
+                XmlSaveOptions xmlOptions = new XmlSaveOptions();
 
-            // Add the XML map to the workbook
-            int mapIndex = workbook.Worksheets.XmlMaps.Add(tempSchemaPath);
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = "CustomMap";
+                // Define output file path
+                string outputPath = "ExportedWorkbook.xml";
 
-            // Export the workbook data to XML using the custom map
-            string outputPath = "CustomRootOutput.xml";
-            workbook.ExportXml(xmlMap.Name, outputPath);
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-            Console.WriteLine("XML exported successfully with custom root element.");
+                // Save the workbook to XML
+                workbook.Save(outputPath, xmlOptions);
 
-            // Clean up temporary schema file
-            if (File.Exists(tempSchemaPath))
-                File.Delete(tempSchemaPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Workbook successfully exported to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

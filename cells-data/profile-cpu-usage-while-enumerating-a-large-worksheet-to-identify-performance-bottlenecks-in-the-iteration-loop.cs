@@ -1,80 +1,64 @@
-// Title: Profile CPU and detect slow cells while enumerating a large worksheet with Aspose.Cells for .NET
-// Description: Creates a 10,000 × 50 worksheet, enables CellsData access cache, iterates through every cell with an IEnumerator, measures total and per‑cell execution time using Stopwatch, logs cells exceeding a 1 ms threshold, closes the cache, and saves the file.
-// Keywords: Aspose.Cells | C# | cell enumeration performance | CPU profiling | StartAccessCache | large worksheet iteration | per‑cell timing | performance bottleneck detection
-// Common Searches: Aspose.Cells enumerate cells performance .NET | measure cell iteration time with Stopwatch | StartAccessCache effect on worksheet traversal speed | log slow cells during Aspose.Cells enumeration | profile CPU usage while reading large Excel file
-// Developer Intent: Measure CPU consumption and isolate cells that cause delays when iterating over a massive worksheet with Aspose.Cells.
-// Use Cases: Identify individual cells that exceed a processing‑time threshold for optimization. | Compare enumeration speed with and without CellsData access cache to choose the best strategy. | Gather benchmark data for total and per‑cell execution time in high‑volume spreadsheet processing.
-// AI Prompts: Rewrite the enumeration loop to capture both CPU and memory metrics per cell using Aspose.Cells. | Suggest alternative iteration methods (e.g., Range, DataTable) and compare their performance with IEnumerator. | Generate a performance report template that aggregates per‑cell timings and highlights the top 10 slowest cells.
+// Title: How to profile CPU time while enumerating a 100,000‑row worksheet with Aspose.Cells GetEnumerator in C#
+// AI Prompts: Create a workbook with 100,000 rows, enable AccessCacheOptions.CellsData, iterate through every cell using the Cells enumerator, and return the elapsed CPU time measured by Stopwatch. | Add logging that records both the total processed cell count and the elapsed seconds during large‑worksheet iteration with Aspose.Cells, then suggest where to insert additional performance counters. | Extend the example to capture peak memory usage together with CPU timing while enumerating cells, and output a concise performance summary.
+// Common Searches: c# how to measure CPU time for Aspose.Cells cell enumeration on large worksheets | profiling performance of Cells.GetEnumerator in Aspose.Cells with large Excel files | using AccessCacheOptions.CellsData to speed up iteration over 100k rows in Aspose.Cells | detecting bottlenecks when iterating over millions of cells with Aspose.Cells C#
+// Tags: Aspose.Cells iteration speed | C# Stopwatch profiling Aspose.Cells | AccessCacheOptions.CellsData caching | large worksheet performance optimization | CPU usage measurement Aspose.Cells
 
 using System;
 using System.Collections;
 using System.Diagnostics;
 using Aspose.Cells;
 
-// Creates a 10,000 × 50 worksheet, enables CellsData access cache, iterates through every cell with an IEnumerator, measures total and per‑cell execution time using Stopwatch, logs cells exceeding a 1 ms threshold, closes the cache, and saves the file.
-class CpuProfilingEnumeration
+namespace AsposeCellsPerformanceProfiling
 {
-    static void Main()
+    // The sample builds a workbook containing 100,000 rows and 10 columns, starts a cell‑data cache, enumerates all instantiated cells with Cells.GetEnumerator while timing the loop using Stopwatch, closes the cache, and prints the number of processed cells along with the elapsed seconds.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate a large worksheet (e.g., 10,000 rows × 50 columns)
-        int totalRows = 10000;
-        int totalCols = 50;
-        for (int r = 0; r < totalRows; r++)
+        static void Main()
         {
-            for (int c = 0; c < totalCols; c++)
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate a large worksheet (e.g., 100,000 rows × 10 columns)
+            const int totalRows = 100000;
+            const int totalCols = 10;
+            for (int row = 0; row < totalRows; row++)
             {
-                cells[r, c].PutValue(r * totalCols + c);
-            }
-        }
-
-        // Start access cache for cell data to improve read‑only enumeration performance
-        workbook.StartAccessCache(AccessCacheOptions.CellsData);
-
-        // Get the cells enumerator
-        IEnumerator enumerator = cells.GetEnumerator();
-
-        // Stopwatch to measure total enumeration time
-        Stopwatch totalTimer = Stopwatch.StartNew();
-
-        // Stopwatch to measure time spent on each individual cell (optional)
-        Stopwatch cellTimer = new Stopwatch();
-
-        long processedCells = 0;
-
-        while (enumerator.MoveNext())
-        {
-            cellTimer.Restart();
-
-            // Current cell from the enumerator
-            Cell cell = (Cell)enumerator.Current;
-
-            // Example processing: read the cell value
-            var value = cell.Value;
-
-            cellTimer.Stop();
-
-            // Log cells that take unusually long to process (e.g., > 1 ms)
-            if (cellTimer.ElapsedMilliseconds > 1)
-            {
-                Console.WriteLine($"Slow cell {cell.Name}: {cellTimer.ElapsedMilliseconds} ms");
+                for (int col = 0; col < totalCols; col++)
+                {
+                    cells[row, col].PutValue(row * totalCols + col);
+                }
             }
 
-            processedCells++;
+            // Enable cache for cell data access to reduce overhead during enumeration
+            workbook.StartAccessCache(AccessCacheOptions.CellsData);
+
+            // Measure CPU time spent iterating through all instantiated cells
+            Stopwatch sw = Stopwatch.StartNew();
+
+            // Use the Cells.GetEnumerator method as documented
+            IEnumerator enumerator = cells.GetEnumerator();
+            long processedCount = 0;
+            while (enumerator.MoveNext())
+            {
+                // Cast to Cell; accessing Value forces a read which is part of the workload
+                Cell cell = (Cell)enumerator.Current;
+                var value = cell.Value; // Simulate processing
+                processedCount++;
+            }
+
+            sw.Stop();
+
+            // Close the cache after the operation
+            workbook.CloseAccessCache(AccessCacheOptions.CellsData);
+
+            // Output profiling results
+            Console.WriteLine($"Processed {processedCount:N0} cells.");
+            Console.WriteLine($"Elapsed time: {sw.Elapsed.TotalSeconds:F2} seconds.");
+
+            // Save the workbook (optional, demonstrates create/save rule usage)
+            workbook.Save("LargeWorksheetProfiled.xlsx");
         }
-
-        totalTimer.Stop();
-
-        // Close the cache after enumeration is finished
-        workbook.CloseAccessCache(AccessCacheOptions.CellsData);
-
-        Console.WriteLine($"Enumerated {processedCells} cells in {totalTimer.Elapsed.TotalSeconds:F2} seconds.");
-
-        // Save the workbook (optional, demonstrates lifecycle rule usage)
-        workbook.Save("LargeWorksheet.xlsx");
     }
 }

@@ -1,56 +1,48 @@
-// Title: Extract Named Destinations from a PDF using Aspose.PDF for .NET
-// Description: A .NET example that loads an exported PDF, reads its named destinations (named links/bookmarks), and returns the collection of destination names. The sample includes error handling for missing files and invalid PDFs.
-// Keywords: Aspose.PDF extract named destinations | C# get PDF named destinations | list PDF bookmarks Aspose | read PDF link destinations .NET | retrieve named destinations from PDF
-// Common Searches: how to list named destinations in a PDF with Aspose.PDF | C# code to read PDF bookmarks using Aspose | extract PDF link names Aspose.PDF .NET | get all named destinations from a PDF file programmatically | Aspose.PDF retrieve destination dictionary
-// Developer Intent: Obtain a complete list of named destinations defined in a PDF document for further processing or validation.
-// Use Cases: Validate that exported PDFs contain all expected internal links before publishing. | Generate a table of contents by enumerating named destinations in a report PDF. | Audit PDF accessibility by checking the presence and naming of destinations.
-// AI Prompts: Write C# code that opens a PDF with Aspose.PDF, extracts all named destinations, and prints each name to the console with proper exception handling. | Provide a snippet that returns a List<string> of destination names from a PDF using Aspose.PDF for .NET. | Explain how to access the DestinationDictionary of a PDF document with Aspose.PDF and iterate over its entries.
+// Title: Extract all named ranges from an Excel .xlsx workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, iterates through Workbook.Worksheets.Names, and prints each named range. | Show a try‑catch example that loads a workbook, gathers the Text property of every Name object into a list, and outputs the list to the console. | Demonstrate how to verify the existence of an Excel file before extracting its defined names with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# how to list all defined names in an Excel file | C# retrieve named ranges from .xlsx using Aspose.Cells library | example code to enumerate workbook named ranges with Aspose.Cells .NET | read Excel named ranges programmatically in C# Aspose.Cells | list workbook names collection Aspose.Cells C# tutorial
+// Tags: Aspose.Cells enumerate named ranges | C# extract Excel defined names | list workbook names Aspose.Cells | read .xlsx named ranges .NET | Aspose.Cells named range extraction
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// A .NET example that loads an exported PDF, reads its named destinations (named links/bookmarks), and returns the collection of destination names. The sample includes error handling for missing files and invalid PDFs.
+// The sample loads an existing .xlsx workbook with Aspose.Cells, checks that the file exists, iterates through the Workbook.Worksheets.Names collection, collects each Name's Text into a list, and writes the defined (named) ranges to the console while handling errors gracefully.
 class Program
 {
     static void Main()
     {
-        // Path to the Excel file to be processed
-        string excelPath = "output.xlsx";
-
         try
         {
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(excelPath))
+            string filePath = "input.xlsx";
+
+            // Ensure the input workbook exists
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {excelPath}");
+                Console.WriteLine($"File not found: {filePath}");
                 return;
             }
 
             // Load the workbook
-            Workbook workbook = new Workbook(excelPath);
+            Workbook workbook = new Workbook(filePath);
 
-            // Retrieve the collection of worksheets
-            WorksheetCollection worksheets = workbook.Worksheets;
-
-            // Output the names of all worksheets
-            if (worksheets != null && worksheets.Count > 0)
+            // Collect defined (named) ranges from the workbook
+            List<string> definedNames = new List<string>();
+            foreach (Name name in workbook.Worksheets.Names)
             {
-                Console.WriteLine("Worksheets found in the Excel file:");
-                foreach (Worksheet sheet in worksheets)
-                {
-                    Console.WriteLine($"- {sheet.Name}");
-                }
+                definedNames.Add(name.Text);
             }
-            else
+
+            // Output the extracted defined names
+            foreach (string name in definedNames)
             {
-                Console.WriteLine("No worksheets were found in the Excel file.");
+                Console.WriteLine(name);
             }
         }
         catch (Exception ex)
         {
-            // Handle any unexpected errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

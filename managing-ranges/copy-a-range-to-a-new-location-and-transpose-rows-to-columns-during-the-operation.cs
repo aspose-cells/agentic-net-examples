@@ -1,70 +1,79 @@
-// Title: Copy a Range and Transpose Rows to Columns with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, fill a horizontal range (A1:D1), define source and destination ranges, enable PasteOptions.Transpose, copy the data vertically, and save the result as CopyTransposeDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells copy range transpose C# | PasteOptions.Transpose Aspose.Cells | copy range to new location Aspose.Cells | transpose rows to columns .NET | Aspose.Cells range copy example
-// Common Searches: Aspose.Cells copy range with transpose | C# Aspose.Cells transpose rows to columns | how to use PasteOptions.Transpose in Aspose.Cells | copy horizontal range to vertical range Aspose.Cells | Aspose.Cells range copy and paste example
-// Developer Intent: Copy a source range to a different location while converting rows into columns in a .NET application.
-// Use Cases: Turn a header row into a vertical list for data validation or dropdowns. | Reformat a matrix so that reporting templates expecting columnar data receive the correct layout. | Convert horizontally collected sensor readings into a column format for charting or analysis.
-// AI Prompts: Generate C# code that copies a range and transposes it with Aspose.Cells, keeping formatting and formulas intact. | Show an example of copying a vertical range and pasting it horizontally using PasteOptions.Transpose in Aspose.Cells. | Explain how to copy multiple non‑contiguous ranges and apply transposition to each with Aspose.Cells for .NET.
+// Title: Copy a cell range and transpose rows to columns in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that copies a specified range and writes it transposed to a target cell, preserving values and formatting. | Show how to implement a reusable method in Aspose.Cells for .NET that copies any range and flips rows and columns while keeping cell styles. | Generate an example that loads a workbook, copies range A1:C3, transposes it to cell E1, and saves the file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# copy range and transpose to another location | how to preserve cell formatting when transposing a range with Aspose.Cells | transpose rows to columns while copying range in Excel using Aspose.Cells for .NET | C# Aspose.Cells example for copying range A1:C3 to E1 with transposition | manual range copy with style preservation Aspose.Cells .NET
+// Tags: range copy with transposition Aspose.Cells | preserve cell formatting during range copy .NET | transpose rows to columns Excel Aspose.Cells | copy range A1:C3 to E1 Aspose.Cells example | save workbook after transposed range Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// Copies the range A1:C3 from the first worksheet, transposes it to start at cell E1 while preserving values and cell styles, and saves the workbook.
+class Program
 {
-    // Demonstrates how to create a workbook, fill a horizontal range (A1:D1), define source and destination ranges, enable PasteOptions.Transpose, copy the data vertically, and save the result as CopyTransposeDemo.xlsx using Aspose.Cells for .NET.
-    public class CopyAndTransposeDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-                // Populate a horizontal source range (A1:D1) with sample data
-                for (int col = 0; col < 4; col++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the source worksheet (first sheet in this example)
+            Worksheet sourceSheet = workbook.Worksheets[0];
+
+            // Define the source range to copy (e.g., A1:C3)
+            AsposeRange sourceRange = sourceSheet.Cells.CreateRange("A1:C3");
+
+            // Destination start cell where the transposed data will be placed (e.g., E1)
+            int destRow = 0;      // Row index for row 1
+            int destColumn = 4;   // Column index for column E
+
+            // Manually copy with transposition (preserving values and styles)
+            int rowCount = sourceRange.RowCount;
+            int columnCount = sourceRange.ColumnCount;
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
                 {
-                    cells[0, col].PutValue($"Data {col + 1}");
+                    // Source cell
+                    Cell srcCell = sourceSheet.Cells[sourceRange.FirstRow + i, sourceRange.FirstColumn + j];
+
+                    // Destination cell (transposed)
+                    Cell destCell = sourceSheet.Cells[destRow + j, destColumn + i];
+
+                    // Copy value
+                    destCell.PutValue(srcCell.Value);
+
+                    // Copy style
+                    destCell.SetStyle(srcCell.GetStyle());
                 }
-
-                // Define the source range (row 0, column 0, 1 row, 4 columns)
-                AsposeRange sourceRange = cells.CreateRange(0, 0, 1, 4);
-
-                // Define the destination range where the transposed data will be placed
-                // It should be 4 rows by 1 column starting at A2 (row 1, column 0)
-                AsposeRange destRange = cells.CreateRange(1, 0, 4, 1);
-
-                // Set up paste options to enable transposition
-                PasteOptions pasteOptions = new PasteOptions
-                {
-                    PasteType = PasteType.All, // copy all content (values, formats, etc.)
-                    Transpose = true           // transpose rows ↔ columns during paste
-                };
-
-                // Perform the copy with transpose
-                destRange.Copy(sourceRange, pasteOptions);
-
-                // Save the workbook to a file
-                string outputPath = "CopyTransposeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
         {
-            CopyAndTransposeDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

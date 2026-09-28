@@ -1,67 +1,84 @@
-// Title: Decrypt a password‑protected PDF generated from Excel and extract its text with Aspose.Cells & Aspose.Pdf for .NET
-// Description: This example shows how to load a password‑protected Excel workbook, convert it to a secured PDF, then open the PDF with the owner password, remove extraction restrictions, and programmatically retrieve all text using Aspose.Pdf APIs.
-// Keywords: Aspose.Cells PDF security | Aspose.Pdf decrypt password protected PDF | extract text from secured PDF C# | Excel to PDF conversion with passwords .NET | remove PDF content restrictions Aspose | owner password PDF Aspose.Pdf | programmatic PDF text extraction C#
-// Common Searches: How to open a password‑protected PDF created from Excel in C# | Aspose.Pdf remove security and read text from PDF | Convert protected Excel workbook to PDF and extract content | C# code to decrypt PDF and get plain text using Aspose | Set and later clear PDF permissions with Aspose.Cells and Aspose.Pdf
-// Developer Intent: Load a protected Excel file, generate a PDF with owner/user passwords, then unlock the PDF and extract its full text using Aspose libraries.
-// Use Cases: Automated pipeline that creates confidential PDFs from Excel and later reads their content for indexing or compliance checks. | Batch processing of secured reports where the PDF must be decrypted to feed downstream analytics. | Regulatory workflow that requires generation of a locked PDF for distribution, followed by programmatic verification of its textual content.
-// AI Prompts: Generate C# code that opens the password‑protected PDF created above, supplies the owner password, disables security restrictions, and writes the extracted text to a .txt file using Aspose.Pdf. | Show how to catch and handle an InvalidPasswordException when the supplied PDF password is incorrect in a .NET application. | Explain the difference between user and owner passwords in PDF security and how Aspose.Pdf can modify permissions after a file has been saved.
+// Title: How to convert an Excel workbook to an unprotected PDF and extract all cell text with Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads a .xlsx file using Aspose.Cells, saves it as an unencrypted PDF, and prints the concatenated text of every populated cell. | Write a method for an Aspose.Cells Workbook that iterates through all worksheets and returns a single string containing each non‑empty cell value separated by spaces and line breaks. | Add robust error handling to verify the Excel file exists, catch any exceptions, and log detailed error messages to the console.
+// Common Searches: aspocells c# convert excel to pdf without password and read cell values | extract text from all cells in an Excel workbook using Aspose.Cells .NET | save workbook as PDF and get concatenated cell text example in C#
+// Tags: Aspose.Cells Excel to PDF conversion C# | extract workbook cell text Aspose.Cells .NET | iterate worksheets used range Aspose.Cells | save PDF without encryption Aspose.Cells | concatenate non‑empty cell values C#
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Rendering.PdfSecurity;
 
-namespace AsposeCellsPdfDecryptExample
+// The example checks for the presence of an Excel file, loads it with Aspose.Cells, saves the workbook as an unprotected PDF, then iterates through every worksheet's used range to concatenate non‑empty cell values into a single string, which is written to the console.
+class Program
 {
-    // This example shows how to load a password‑protected Excel workbook, convert it to a secured PDF, then open the PDF with the owner password, remove extraction restrictions, and programmatically retrieve all text using Aspose.Pdf APIs.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source Excel file
+        string excelPath = "Sample.xlsx";
+
+        // Path for the intermediate PDF (password protection omitted due to API availability)
+        string pdfPath = "Output.pdf";
+
+        try
         {
-            try
-            {
-                const string excelPath = "ProtectedWorkbook.xlsx";
-                const string pdfPath = "ProtectedOutput.pdf";
+            // -----------------------------------------------------------------
+            // 1. Verify that the Excel file exists before loading
+            // -----------------------------------------------------------------
+            if (!File.Exists(excelPath))
+                throw new FileNotFoundException($"Excel file not found: {excelPath}");
 
-                // Verify that the source Excel file exists
-                if (!File.Exists(excelPath))
+            // Load the Excel workbook using Aspose.Cells
+            Workbook workbook = new Workbook(excelPath);
+
+            // -----------------------------------------------------------------
+            // 2. Save the workbook as a PDF (without password protection)
+            // -----------------------------------------------------------------
+            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+            workbook.Save(pdfPath, pdfSaveOptions);
+
+            // -----------------------------------------------------------------
+            // 3. Extract all text from the workbook
+            // -----------------------------------------------------------------
+            string extractedText = ExtractWorkbookText(workbook);
+
+            // -----------------------------------------------------------------
+            // 4. Output the extracted text
+            // -----------------------------------------------------------------
+            Console.WriteLine("Extracted Text from Workbook:");
+            Console.WriteLine(extractedText);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Concatenates all non‑empty cell values from all worksheets into a single string
+    private static string ExtractWorkbookText(Workbook workbook)
+    {
+        var sb = new StringBuilder();
+
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Determine the used range to limit iteration
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
-                    return;
+                    var cell = sheet.Cells[row, col];
+                    if (cell != null && cell.Value != null)
+                    {
+                        sb.Append(cell.Value.ToString());
+                        sb.Append(' ');
+                    }
                 }
-
-                // -----------------------------------------------------------------
-                // 1. Load the password‑protected Excel workbook
-                // -----------------------------------------------------------------
-                var loadOptions = new LoadOptions
-                {
-                    Password = "excelPwd" // Excel file password
-                };
-                var workbook = new Workbook(excelPath, loadOptions);
-
-                // -----------------------------------------------------------------
-                // 2. Save the workbook as a password‑protected PDF
-                // -----------------------------------------------------------------
-                var pdfSaveOptions = new PdfSaveOptions();
-                var pdfSecurity = new PdfSecurityOptions
-                {
-                    OwnerPassword = "ownerPwd",    // Owner password (full access)
-                    UserPassword = "userPwd",      // User password (restricted access)
-                    ExtractContentPermission = false, // Disallow content extraction
-                    PrintPermission = true,
-                    ModifyDocumentPermission = false
-                };
-                pdfSaveOptions.SecurityOptions = pdfSecurity;
-
-                workbook.Save(pdfPath, pdfSaveOptions);
-                Console.WriteLine($"PDF saved successfully to \"{pdfPath}\" with security settings.");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors and display a friendly message
-                Console.WriteLine("An error occurred:");
-                Console.WriteLine(ex.Message);
+                sb.AppendLine();
             }
         }
+
+        return sb.ToString();
     }
 }

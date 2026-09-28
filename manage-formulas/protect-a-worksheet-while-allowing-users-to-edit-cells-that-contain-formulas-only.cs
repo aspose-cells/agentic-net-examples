@@ -1,59 +1,60 @@
-// Title: Protect an Excel Worksheet but Keep Formula Cells Editable with Aspose.Cells for .NET (C#)
-// Description: Shows how to unlock only formula cells by setting Style.IsLocked = false, protect the entire worksheet with ProtectionType.All and a password, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells protect worksheet C# | unlock formula cells Aspose.Cells | Cell.IsFormula | Style.IsLocked | worksheet protection password | C# Excel lock unlock cells | Aspose.Cells example | editable formulas in protected sheet | Excel template formula editing
-// Common Searches: Aspose.Cells protect sheet but allow formula editing | C# unlock cells with formulas before protecting worksheet | How to keep formula cells editable in a protected Excel file using Aspose.Cells | Set IsLocked false for formula cells Aspose.Cells .NET | Protect Excel worksheet with password using Aspose.Cells
-// Developer Intent: Unlock only cells that contain formulas, then protect the whole worksheet with a password so users can edit those formulas while all other cells remain locked.
-// Use Cases: Financial model where end‑users can modify calculated results but cannot change input constants. | Reporting dashboard that locks static data yet permits analysts to adjust formula outcomes. | Excel‑based data‑entry form that secures reference cells while allowing formula edits. | Template distribution that prevents changes to constants but keeps calculations editable.
-// AI Prompts: Generate C# code using Aspose.Cells to iterate over used cells, set Style.IsLocked = false for cells where Cell.IsFormula is true, then protect the worksheet with ProtectionType.All and a password. | Explain step‑by‑step how Cell.IsFormula and Style.IsLocked work together to allow editing of formula cells on a protected sheet in Aspose.Cells. | Provide a complete Aspose.Cells .NET example that creates a workbook, adds constants and formulas, unlocks formula cells, protects the sheet, and saves the file.
+// Title: How to protect an Excel worksheet with Aspose.Cells for .NET while allowing only formula cells to be edited
+// AI Prompts: Write C# code using Aspose.Cells to lock all cells in a worksheet, unlock only those that contain formulas, and apply password protection. | Show how to mark formula cells as unlocked by modifying their style, then protect the worksheet with a password using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# protect worksheet but keep formula cells editable | unlock only formula cells before worksheet protection Aspose.Cells | set cell IsLocked false for formulas in Aspose.Cells .NET | apply password to Excel sheet while allowing formula editing using Aspose.Cells | how to iterate cells and unlock formulas in Aspose.Cells workbook
+// Tags: worksheet password protection Aspose.Cells | unlock cells containing formulas Aspose.Cells C# | modify cell style to allow editing formulas | password protect sheet with formula edit access | iterate worksheet cells to set lock status Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetProtectionDemo
+namespace WorksheetProtectionExample
 {
-    // Shows how to unlock only formula cells by setting Style.IsLocked = false, protect the entire worksheet with ProtectionType.All and a password, and save the workbook using Aspose.Cells for .NET.
+    // The example creates a workbook, iterates through every cell in the first worksheet, unlocks cells that contain formulas by clearing their locked flag, then protects the worksheet with a password so only those formula cells remain editable, and finally saves the file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Sample data: some constants and some formulas
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].Formula = "=A1+A2";          // formula cell
-            cells["B1"].PutValue("Text");
-            cells["B2"].Formula = "=LEN(B1)";        // formula cell
-            cells["C1"].PutValue(5);
-            cells["C2"].Formula = "=C1*2";           // formula cell
-
-            // Unlock only the cells that contain formulas so they can be edited after protection
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                for (int col = 0; col <= maxCol; col++)
+                // Create a new workbook (or load an existing one if needed)
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Unlock cells that contain formulas so they can be edited by users
+                foreach (Cell cell in worksheet.Cells)
                 {
-                    Cell cell = cells[row, col];
                     if (cell.IsFormula)
                     {
-                        // Get the current style, set IsLocked to false, and apply it back
                         Style style = cell.GetStyle();
-                        style.IsLocked = false;   // unlocked cells can be edited on a protected sheet
+                        style.IsLocked = false; // Allow editing
                         cell.SetStyle(style);
                     }
                 }
+
+                // Protect the worksheet. Only unlocked cells (the formula cells) can be edited.
+                // Provide the new password and an empty old password as required by the API.
+                worksheet.Protect(ProtectionType.All, "myPassword", string.Empty);
+
+                // Define output path
+                string outputPath = "WorksheetProtectionExample.xlsx";
+
+                // Ensure the directory exists (handle case where Path.GetDirectoryName returns null)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Protect the worksheet (all protection types) with a password
-            sheet.Protect(ProtectionType.All, "SecurePwd123", null);
-
-            // Save the workbook
-            workbook.Save("WorksheetProtected_FormulaEditable.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

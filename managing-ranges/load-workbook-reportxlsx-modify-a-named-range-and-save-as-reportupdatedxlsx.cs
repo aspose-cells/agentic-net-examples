@@ -1,10 +1,7 @@
-// Title: C# – Load an Excel workbook, update a named range, and save as a new file using Aspose.Cells
-// Description: This example checks for the presence of Report.xlsx, opens it with Aspose.Cells for .NET, retrieves the named range "MyRange", replaces every cell value in that range with "Updated", and writes the result to ReportUpdated.xlsx. It includes basic file‑existence and range‑validation handling.
-// Keywords: Aspose.Cells C# | update named range | modify Excel cells .NET | load workbook Aspose | save workbook as new file | named range iteration | Excel file existence check | Report.xlsx | ReportUpdated.xlsx | error handling Aspose.Cells
-// Common Searches: Aspose.Cells change values in a named range C# | How to save a modified workbook with a different name using Aspose.Cells | Check if a named range exists before updating Aspose.Cells .NET | Iterate through cells of a named range in C# | Replace all cells in a named range with a constant string Aspose
-// Developer Intent: Replace every cell in a specific named range of an existing Excel file and create a new workbook with the changes applied.
-// Use Cases: Refresh a report section by overwriting a predefined named range with a new value. | Create versioned copies of a workbook after bulk updates while keeping the original intact. | Validate named‑range presence to prevent runtime errors during automated data processing.
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, updates all cells in a given named range to a supplied string, and saves the workbook under a new filename. | Explain best practices for handling missing files or undefined named ranges when using Aspose.Cells in .NET. | Show how to log the address of each cell modified inside a named range with Aspose.Cells.
+// Title: Load an existing Excel workbook, update a named range, and save as a new file using Aspose.Cells for .NET (C#)
+// AI Prompts: Using Aspose.Cells in C#, open 'Report.xlsx', locate the named range 'MyRange', set the first cell's value to 'Updated', and write the workbook to 'ReportUpdated.xlsx'. | Retrieve a named range by name from a workbook with Aspose.Cells, iterate over its cells to assign a new value, and save the modified workbook under a different filename in C#. | Add error handling to verify that 'Report.xlsx' exists and that the named range is present before updating its cells and saving the updated file with Aspose.Cells.
+// Common Searches: asp.net c# how to change a specific named range in an existing Excel file with Aspose.Cells | example code to load workbook, edit named range, and save as new file using Aspose.Cells for .NET | retrieve named range by name and update cell values in C# Aspose.Cells | save modified Excel workbook after editing named range with Aspose.Cells library
+// Tags: load workbook with Aspose.Cells C# | retrieve named range by name Aspose.Cells | modify cell value in named range Aspose.Cells | save updated workbook Aspose.Cells C# | error handling missing file Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,50 +9,56 @@ using Aspose.Cells;
 
 namespace AsposeCellsExample
 {
-    // This example checks for the presence of Report.xlsx, opens it with Aspose.Cells for .NET, retrieves the named range "MyRange", replaces every cell value in that range with "Updated", and writes the result to ReportUpdated.xlsx. It includes basic file‑existence and range‑validation handling.
+    // // C# program that uses Aspose.Cells to open 'Report.xlsx', fetches the named range 'MyRange', updates the first cell to "Updated" (optionally iterates all cells), and saves the result as 'ReportUpdated.xlsx' with basic file‑existence and range‑presence checks.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                const string inputPath = "Report.xlsx";
-                const string outputPath = "ReportUpdated.xlsx";
+                const string inputFile = "Report.xlsx";
+                const string outputFile = "ReportUpdated.xlsx";
+                const string namedRangeName = "MyRange";
 
-                // Verify the input file exists
-                if (!File.Exists(inputPath))
+                // Verify that the input workbook exists
+                if (!File.Exists(inputFile))
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    Console.WriteLine($"Input file \"{inputFile}\" not found.");
                     return;
                 }
 
                 // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
+                Workbook workbook = new Workbook(inputFile);
 
-                // Retrieve the named range (replace "MyRange" with the actual name in the workbook)
-                Name namedRange = workbook.Worksheets.Names["MyRange"];
-                if (namedRange == null)
+                // Retrieve the range associated with the named range
+                Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName(namedRangeName);
+
+                if (range != null)
                 {
-                    Console.WriteLine("Named range 'MyRange' not found.");
-                    return;
+                    // Example modification: set the value of the first cell in the range
+                    range[0, 0].PutValue("Updated");
+
+                    // Uncomment the following block to modify all cells in the range
+                    // for (int row = 0; row < range.RowCount; row++)
+                    // {
+                    //     for (int col = 0; col < range.ColumnCount; col++)
+                    //     {
+                    //         range[row, col].PutValue("Updated");
+                    //     }
+                    // }
+                }
+                else
+                {
+                    Console.WriteLine($"Named range \"{namedRangeName}\" not found.");
                 }
 
-                // Get the actual cell range that the name refers to
-                Aspose.Cells.Range range = namedRange.GetRange();
-
-                // Modify each cell in the range – set a new string value
-                foreach (Cell cell in range)
-                {
-                    cell.PutValue("Updated");
-                }
-
-                // Save the modified workbook to a new file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                // Save the modified workbook
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved as \"{outputFile}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

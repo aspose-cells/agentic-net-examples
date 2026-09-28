@@ -1,44 +1,42 @@
-// Title: Aspose.Cells for .NET – Verify exception when opening an encrypted workbook with a wrong password (C#)
-// Description: Shows how to encrypt a workbook, save it, and then load it with an incorrect password using LoadOptions. The code catches the expected exception, proving that Aspose.Cells rejects invalid passwords.
-// Keywords: Aspose.Cells | .NET | C# | encrypted workbook | password protection | LoadOptions | wrong password | exception handling | Workbook security
-// Common Searches: Aspose.Cells load encrypted workbook wrong password | C# catch exception incorrect password Aspose.Cells | verify password protection error Aspose.Cells .NET | how to test invalid password with Aspose.Cells
-// Developer Intent: Confirm that loading a password‑protected workbook with an invalid password throws an exception in Aspose.Cells.
-// Use Cases: Unit test to ensure the library blocks access when the password is incorrect. | Automated validation of encrypted Excel files before batch processing. | Graceful error handling in services that accept user‑uploaded, password‑protected workbooks.
-// AI Prompts: Generate an NUnit test that asserts Aspose.Cells throws the correct exception when a workbook encrypted with a known password is opened with a wrong password. | Provide a try‑catch example that logs the specific Aspose.Cells exception type for an incorrect password scenario. | Create code that distinguishes between a missing password and an incorrect password when loading a protected workbook using Aspose.Cells.
+// Title: How to verify that opening a password‑protected Excel workbook with an incorrect password throws a CellsException in Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates an Excel workbook, encrypts it with a password using Aspose.Cells, saves it, then attempts to open it with a different password and catches the resulting CellsException. | Generate a C# unit test using Aspose.Cells that asserts a CellsException is thrown when LoadOptions.Password does not match the workbook’s encryption password. | Provide a step‑by‑step example showing how to handle an invalid password error when loading an encrypted .xlsx file with Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells throws exception when opening encrypted .xlsx with wrong password | C# load password protected Excel file using Aspose.Cells and catch CellsException | How to test invalid workbook password handling in Aspose.Cells .NET | LoadOptions.Password incorrect value exception Aspose.Cells example | Validate encryption password mismatch error with Aspose.Cells for .NET
+// Tags: Aspose.Cells load encrypted workbook exception | LoadOptions incorrect password handling | CellsException invalid password | C# workbook encryption validation | Aspose.Cells password protection error
 
 using System;
 using Aspose.Cells;
 
-// Shows how to encrypt a workbook, save it, and then load it with an incorrect password using LoadOptions. The code catches the expected exception, proving that Aspose.Cells rejects invalid passwords.
-class VerifyIncorrectPassword
+// The example creates a workbook, sets a password, saves it as an encrypted .xlsx file, then attempts to open the file with a mismatched password using LoadOptions, catching the CellsException to confirm that Aspose.Cells correctly reports an invalid password error.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some data
+        // Create a new workbook and add sample data
         Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Secret data");
+        wb.Worksheets[0].Cells["A1"].PutValue("Sample");
 
-        // Set a password to encrypt the workbook
+        // Encrypt the workbook with a known password
         wb.Settings.Password = "correctPassword";
-
-        // Save the encrypted workbook
-        string filePath = "encryptedWorkbook.xlsx";
+        string filePath = "encrypted.xlsx";
         wb.Save(filePath);
 
-        // Prepare load options with an incorrect password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = "wrongPassword";
-
-        // Try to open the encrypted workbook with the wrong password
+        // Attempt to open the encrypted workbook using an incorrect password
         try
         {
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            loadOptions.Password = "wrongPassword";
+
+            // This line should throw an exception because the password is incorrect
             Workbook wbWrong = new Workbook(filePath, loadOptions);
-            Console.WriteLine("Workbook opened unexpectedly with wrong password.");
+
+            // If no exception is thrown, the test has failed
+            Console.WriteLine("Test Failed: No exception was thrown.");
         }
-        catch (Exception ex)
+        catch (Aspose.Cells.CellsException ex)
         {
-            // Expected: an exception is thrown because the password is incorrect
-            Console.WriteLine("Expected exception caught: " + ex.Message);
+            // Expected path: an exception is thrown for an invalid password
+            Console.WriteLine("Test Passed: Exception thrown as expected.");
+            Console.WriteLine("Exception Message: " + ex.Message);
         }
     }
 }

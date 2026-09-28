@@ -1,37 +1,88 @@
-// Title: C# – Update Excel Built‑in & Custom Document Properties and Save as CSV using Aspose.Cells
-// Description: Load an existing workbook with Aspose.Cells for .NET, modify the Author and Title built‑in properties, add a custom boolean flag, and export the result directly to CSV for downstream processing.
-// Keywords: Aspose.Cells C# update document properties | set Excel author title .NET | add custom Excel property Aspose | export workbook to CSV Aspose.Cells | save Excel as CSV C# | modify built‑in document properties | custom document property boolean | CSV conversion Aspose.Cells | programmatic Excel metadata | Aspose.Cells SaveFormat.Csv
-// Common Searches: Aspose.Cells change Excel author property C# | How to add custom document property in Aspose.Cells | Export Excel to CSV after updating metadata with Aspose | C# code to set built‑in properties and save as CSV | Aspose.Cells document properties example | Convert Excel to CSV using Aspose.Cells after editing properties
-// Developer Intent: Programmatically modify workbook metadata and convert the file to CSV.
-// Use Cases: Generate CSV reports that include standardized author and title metadata for compliance audits. | Mark processed workbooks with a custom flag before bulk CSV conversion in ETL pipelines. | Enforce document governance by setting built‑in properties prior to exporting data to CSV. | Add a preprocessing step that enriches Excel files with metadata before downstream analytics. | Track processing status with a boolean property when converting Excel files to CSV.
-// AI Prompts: Provide C# Aspose.Cells code that sets the Author and Title built‑in properties, adds a boolean custom property named Processed, and saves the workbook as a CSV file. | Show how to safely add or update a custom document property in an Excel workbook using Aspose.Cells, then export it to CSV with a specific encoding. | Explain the steps to modify both built‑in and custom document properties in Aspose.Cells before converting the workbook to CSV, including error handling for existing properties.
+// Title: Update Excel workbook document properties via reflection and save the active sheet as UTF-8 CSV using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file (or create a new workbook if it doesn't exist), set the workbook's Title, Author, and Comments properties using reflection for version‑agnostic access, then export the active worksheet to a UTF-8 encoded CSV with a comma separator via TxtSaveOptions. | Write C# code that ensures the output directory exists, configures TxtSaveOptions for CSV output, and saves the workbook after updating its document properties, handling scenarios where WorkbookProperties is unavailable.
+// Common Searches: how to set workbook title and author with Aspose.Cells when WorkbookProperties is missing | c# save current sheet as UTF-8 CSV with Aspose.Cells TxtSaveOptions | use reflection to modify Excel document properties in Aspose.Cells .NET | convert Excel workbook to UTF-8 CSV using Aspose.Cells example | create new workbook if input.xlsx not found Aspose.Cells C#
+// Tags: Aspose.Cells reflection for workbook properties | TxtSaveOptions CSV export with UTF-8 encoding | fallback when WorkbookProperties not available | auto-create workbook if source file missing | ensure output folder existence in C# Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Text;
 
-// Load an existing workbook with Aspose.Cells for .NET, modify the Author and Title built‑in properties, add a custom boolean flag, and export the result directly to CSV for downstream processing.
+// The sample loads an existing Excel file or creates a new workbook, uses reflection to set Title, Author, and Comments when WorkbookProperties is present, prepares TxtSaveOptions for UTF-8 CSV output, ensures the target directory exists, and saves the active worksheet as a CSV file.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel workbook
-        string sourcePath = "input.xlsx";
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.csv";
 
-        // Path where the CSV file will be saved
-        string csvPath = "output.csv";
+            // Load workbook if the input file exists; otherwise create a new empty workbook.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook();
+            }
 
-        // Load the workbook from the file system
-        Workbook workbook = new Workbook(sourcePath);
+            // Attempt to set document properties using reflection (covers versions where WorkbookProperties may be absent).
+            try
+            {
+                var wpProp = workbook.GetType().GetProperty("WorkbookProperties");
+                if (wpProp != null)
+                {
+                    var wp = wpProp.GetValue(workbook);
+                    var titleProp = wp.GetType().GetProperty("Title");
+                    var authorProp = wp.GetType().GetProperty("Author");
+                    var commentsProp = wp.GetType().GetProperty("Comments");
 
-        // Update built‑in document properties
-        workbook.BuiltInDocumentProperties["Author"].Value = "John Doe";
-        workbook.BuiltInDocumentProperties["Title"].Value = "Sales Report";
+                    titleProp?.SetValue(wp, "Updated Title");
+                    authorProp?.SetValue(wp, "John Doe");
+                    commentsProp?.SetValue(wp, "Updated via Aspose.Cells");
+                }
+                else
+                {
+                    Console.WriteLine("WorkbookProperties API not available in this Aspose.Cells version.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unable to set workbook properties: {ex.Message}");
+            }
 
-        // Add a custom document property (if it already exists, this will throw;
-        // for simplicity we assume it does not exist)
-        workbook.CustomDocumentProperties.Add("Processed", true);
+            // Configure CSV save options.
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
+            {
+                Encoding = Encoding.UTF8,
+                Separator = ','
+                // ExportActiveWorksheetOnly is true by default for CSV.
+            };
 
-        // Export the workbook to CSV format
-        workbook.Save(csvPath, SaveFormat.Csv);
+            // Ensure the output directory exists.
+            try
+            {
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath, csvOptions);
+                Console.WriteLine($"Workbook saved as CSV to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving CSV: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

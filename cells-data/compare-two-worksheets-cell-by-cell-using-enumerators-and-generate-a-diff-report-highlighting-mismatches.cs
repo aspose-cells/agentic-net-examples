@@ -1,10 +1,7 @@
-// Title: C# Aspose.Cells: Cell‑by‑Cell Worksheet Comparison with Diff Report
-// Description: Loads two Excel workbooks (creates empty workbooks if files are missing), enumerates every populated cell in the first worksheet, compares each cell's value with the matching cell in the second worksheet, records mismatches and cells that exist only in one sheet, and saves the results to a DiffReport.xlsx workbook.
-// Keywords: Aspose.Cells compare worksheets | cell level diff C# | enumerator cell comparison | Excel diff report .NET | missing file handling Aspose | worksheet mismatch detection
-// Common Searches: compare two Excel worksheets cell by cell Aspose.Cells | generate diff report for Excel files C# | enumerate cells Aspose.Cells to find differences | create diff workbook when one file is missing
-// Developer Intent: Produce a workbook that lists every cell where two worksheets differ, including cells present in only one of the files.
-// Use Cases: Validate data consistency between two versions of a financial statement before release. | Verify that a data migration copied all cell values correctly by comparing source and target spreadsheets. | Audit configuration changes after an automated update by generating a mismatch report.
-// AI Prompts: Write C# code with Aspose.Cells to compare two worksheets cell by cell and output mismatched cells to a new workbook. | Refactor the diff report program to use foreach loops instead of IEnumerator while keeping the same functionality. | Explain how to extend the diff report to capture differences in cell formatting such as font color or background.
+// Title: Create a cell‑by‑cell diff report for two Excel worksheets with Aspose.Cells in C#
+// AI Prompts: Write C# code that uses Aspose.Cells enumerators to walk through every cell of two worksheets, compare their values, and collect mismatched addresses. | Add logic that records cells present only in one worksheet as NULL in the diff output. | Encapsulate the comparison into a reusable method that returns a list of (address, valueFromFirst, valueFromSecond) tuples and writes the list to a new worksheet named DiffReport.
+// Common Searches: aspocells c# compare two worksheets cell by cell | how to generate an Excel diff report using Aspose.Cells | enumerate worksheet cells with Aspose.Cells and find differences | c# create diff worksheet that shows missing or changed cells between workbooks | Aspose.Cells diff two workbooks and export mismatched cells to new sheet
+// Tags: cell enumeration with Aspose.Cells | worksheet value comparison Aspose.Cells | Excel diff report generation C# | detect missing cells between workbooks Aspose.Cells | write diff results to new worksheet Aspose.Cells | compare two .xlsx files using Aspose.Cells
 
 using System;
 using System.Collections;
@@ -14,100 +11,138 @@ using Aspose.Cells;
 
 namespace AsposeCellsDiffReport
 {
-    // Loads two Excel workbooks (creates empty workbooks if files are missing), enumerates every populated cell in the first worksheet, compares each cell's value with the matching cell in the second worksheet, records mismatches and cells that exist only in one sheet, and saves the results to a DiffReport.xlsx workbook.
+    // The program ensures two sample .xlsx files exist, loads them with Aspose.Cells, enumerates every cell of the first worksheet in each workbook, compares values address‑by‑address, captures mismatches and cells that exist only in one sheet, writes the differences (address, value from workbook1, value from workbook2) to a newly added "DiffReport" worksheet, and saves the result as DiffReport.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Paths to the source workbooks
-                string sourcePath1 = "File1.xlsx";
-                string sourcePath2 = "File2.xlsx";
+                // Ensure input workbooks exist; create sample files if they are missing.
+                string file1 = "Workbook1.xlsx";
+                string file2 = "Workbook2.xlsx";
+                EnsureWorkbook(file1, new Dictionary<string, object>
+                {
+                    { "A1", "Name" },
+                    { "B1", "Age" },
+                    { "A2", "Alice" },
+                    { "B2", 30 }
+                });
+                EnsureWorkbook(file2, new Dictionary<string, object>
+                {
+                    { "A1", "Name" },
+                    { "B1", "Age" },
+                    { "A2", "Alice" },
+                    { "B2", 31 }, // Different value to demonstrate diff
+                    { "A3", "Bob" } // Extra row in Workbook2
+                });
 
-                // Load the two workbooks, create empty ones if files are missing
-                Workbook wb1 = File.Exists(sourcePath1) ? new Workbook(sourcePath1) : CreateEmptyWorkbook(sourcePath1);
-                Workbook wb2 = File.Exists(sourcePath2) ? new Workbook(sourcePath2) : CreateEmptyWorkbook(sourcePath2);
+                // Load the two workbooks to be compared
+                Workbook wb1 = new Workbook(file1);
+                Workbook wb2 = new Workbook(file2);
 
-                // Access the first worksheet of each workbook
+                // Assume we compare the first worksheet of each workbook
                 Worksheet ws1 = wb1.Worksheets[0];
                 Worksheet ws2 = wb2.Worksheets[0];
 
-                // Create a new workbook that will hold the diff report
-                Workbook diffWb = new Workbook();
-                Worksheet diffSheet = diffWb.Worksheets[0];
-                diffSheet.Name = "DiffReport";
-
-                // Write header row
-                diffSheet.Cells[0, 0].PutValue("Cell");
-                diffSheet.Cells[0, 1].PutValue("Value in File1");
-                diffSheet.Cells[0, 2].PutValue("Value in File2");
-
-                int diffRowIndex = 1; // start after header
-
-                // ---------- Compare cells that exist in the first worksheet ----------
-                IEnumerator enum1 = ws1.Cells.GetEnumerator(); // get enumerator for cells collection
+                // Store all cells from the first worksheet in a dictionary (address -> value)
+                var sheet1Cells = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                IEnumerator enum1 = ws1.Cells.GetEnumerator();
                 while (enum1.MoveNext())
                 {
-                    Cell cell1 = (Cell)enum1.Current;
-                    // Get the counterpart cell from the second worksheet using same row/column
-                    Cell cell2 = ws2.Cells[cell1.Row, cell1.Column];
-
-                    // Convert values to string for comparison (handle nulls)
-                    string val1 = cell1.Value?.ToString() ?? string.Empty;
-                    string val2 = cell2?.Value?.ToString() ?? string.Empty;
-
-                    // If values differ, record the mismatch
-                    if (!val1.Equals(val2))
-                    {
-                        diffSheet.Cells[diffRowIndex, 0].PutValue(cell1.Name);
-                        diffSheet.Cells[diffRowIndex, 1].PutValue(val1);
-                        diffSheet.Cells[diffRowIndex, 2].PutValue(val2);
-                        diffRowIndex++;
-                    }
+                    Cell cell = (Cell)enum1.Current;
+                    sheet1Cells[cell.Name] = cell.Value;
                 }
 
-                // ---------- Find cells that exist only in the second worksheet ----------
-                // Use a hash set to remember cells already processed from the first sheet
-                var processed = new HashSet<string>();
-                IEnumerator enumProcessed = ws1.Cells.GetEnumerator();
-                while (enumProcessed.MoveNext())
-                {
-                    Cell c = (Cell)enumProcessed.Current;
-                    processed.Add(c.Name);
-                }
+                // Prepare a list to hold differences
+                var diffs = new List<(string Address, object Value1, object Value2)>();
+                // Keep track of addresses that have been processed from sheet1
+                var processed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+                // Enumerate cells of the second worksheet and compare with sheet1
                 IEnumerator enum2 = ws2.Cells.GetEnumerator();
                 while (enum2.MoveNext())
                 {
-                    Cell cell2 = (Cell)enum2.Current;
-                    // Skip cells already compared
-                    if (processed.Contains(cell2.Name))
-                        continue;
+                    Cell cell = (Cell)enum2.Current;
+                    string address = cell.Name;
+                    object value2 = cell.Value;
 
-                    // Cell exists only in second worksheet
-                    string val2 = cell2.Value?.ToString() ?? string.Empty;
-                    diffSheet.Cells[diffRowIndex, 0].PutValue(cell2.Name);
-                    diffSheet.Cells[diffRowIndex, 1].PutValue(string.Empty); // no value in first file
-                    diffSheet.Cells[diffRowIndex, 2].PutValue(val2);
-                    diffRowIndex++;
+                    if (sheet1Cells.TryGetValue(address, out object value1))
+                    {
+                        // Mark as processed
+                        processed.Add(address);
+
+                        // Compare values (handle nulls)
+                        bool equal = (value1 == null && value2 == null) ||
+                                     (value1 != null && value1.Equals(value2));
+
+                        if (!equal)
+                        {
+                            diffs.Add((address, value1, value2));
+                        }
+                    }
+                    else
+                    {
+                        // Cell exists only in sheet2
+                        diffs.Add((address, null, value2));
+                    }
                 }
 
-                // Save the diff report
-                diffWb.Save("DiffReport.xlsx");
-                Console.WriteLine("Diff report generated successfully: DiffReport.xlsx");
+                // Any cells that exist only in sheet1 (not visited in sheet2)
+                foreach (var kvp in sheet1Cells)
+                {
+                    if (!processed.Contains(kvp.Key))
+                    {
+                        diffs.Add((kvp.Key, kvp.Value, null));
+                    }
+                }
+
+                // Create a new worksheet to hold the diff report
+                Worksheet diffSheet = wb1.Worksheets.Add("DiffReport");
+                // Write header
+                diffSheet.Cells["A1"].PutValue("Cell Address");
+                diffSheet.Cells["B1"].PutValue("Workbook1 Value");
+                diffSheet.Cells["C1"].PutValue("Workbook2 Value");
+
+                // Populate diff rows
+                int rowIndex = 1; // zero‑based index; start after header
+                foreach (var diff in diffs)
+                {
+                    diffSheet.Cells[rowIndex, 0].PutValue(diff.Address);
+                    diffSheet.Cells[rowIndex, 1].PutValue(diff.Value1?.ToString() ?? "NULL");
+                    diffSheet.Cells[rowIndex, 2].PutValue(diff.Value2?.ToString() ?? "NULL");
+                    rowIndex++;
+                }
+
+                // Save the workbook containing the diff report
+                string reportFile = "DiffReport.xlsx";
+                wb1.Save(reportFile);
+                Console.WriteLine($"Diff report saved to '{reportFile}'.");
+            }
+            catch (CellsException ex)
+            {
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
 
-        // Helper method to create an empty workbook and optionally inform the user
-        private static Workbook CreateEmptyWorkbook(string missingFilePath)
+        private static void EnsureWorkbook(string path, Dictionary<string, object> cellData)
         {
-            Console.WriteLine($"File not found: {missingFilePath}. An empty workbook will be used.");
-            return new Workbook();
+            if (File.Exists(path))
+                return;
+
+            var wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+
+            foreach (var kvp in cellData)
+            {
+                ws.Cells[kvp.Key].PutValue(kvp.Value);
+            }
+
+            wb.Save(path);
         }
     }
 }

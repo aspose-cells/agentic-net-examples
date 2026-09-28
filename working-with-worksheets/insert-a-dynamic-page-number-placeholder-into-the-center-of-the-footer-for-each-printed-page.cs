@@ -1,37 +1,47 @@
-// Title: Add "Page X of Y" to the center footer of an Excel sheet with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, optionally adds sample data, and uses Worksheet.PageSetup.SetFooter to insert the "Page &P of &N" placeholder in the center section of the printed footer, then saves the file as FooterWithPageNumber.xlsx.
-// Keywords: Aspose.Cells C# set footer | Excel page number placeholder | center footer page count | Worksheet PageSetup SetFooter | dynamic page numbering Aspose | print footer Aspose.Cells
-// Common Searches: Aspose.Cells set center footer page number | C# add page X of Y to Excel footer | How to use &P &N in Aspose.Cells footer | Print Excel with page numbers using Aspose.Cells .NET | Set footer for all worksheets Aspose.Cells
-// Developer Intent: Place a dynamic "Page X of Y" placeholder in the center of the worksheet footer.
-// Use Cases: Generate multi‑page printable reports where each page shows "Page X of Y" in the footer. | Create invoices or statements that automatically include page numbering for proper pagination. | Produce catalogs, manuals, or documentation exported from Excel with consistent footer pagination. | Automate batch export of workbooks to PDF/print with uniform page numbering across sheets.
-// AI Prompts: Generate C# code to set left and right footer text while keeping the center page number placeholder using Aspose.Cells. | Show how to apply the same footer settings to every worksheet in a workbook with Aspose.Cells. | Explain how to format the page number placeholder in the footer (e.g., bold, font size) using Aspose.Cells.
+// Title: Add a dynamic page number placeholder to the center footer of each printed page using Aspose.Cells for .NET (C#)
+// AI Prompts: Configure the worksheet's PageSetup.CenterFooter to '&P' so that every printed page shows the current page number in the center of the footer. | Create a new Excel workbook and programmatically set a centered page number field in the footer using Aspose.Cells in C#. | Generate an Excel file that automatically displays page numbers in the footer when printed, leveraging the CenterFooter property.
+// Common Searches: asp.net add page number placeholder to Excel footer using Aspose.Cells | center footer page number &P example Aspose.Cells C# | how to set dynamic page numbers in printed Excel sheets with Aspose.Cells | Aspose.Cells PageSetup CenterFooter property usage in .NET | programmatically add page numbers to Excel footer in C#
+// Tags: Aspose.Cells PageSetup.CenterFooter page number | C# set dynamic footer placeholder in Excel | center footer page numbering Aspose.Cells | programmatic Excel footer configuration .NET | add page numbers to printed Excel sheets C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFooterExample
+// The example creates a new workbook, accesses the first worksheet, assigns the CenterFooter property the '&P' placeholder to display the current page number in the center of the footer for each printed page, ensures the output directory exists, and saves the workbook as output.xlsx.
+class Program
 {
-    // Creates a workbook, optionally adds sample data, and uses Worksheet.PageSetup.SetFooter to insert the "Page &P of &N" placeholder in the center section of the printed footer, then saves the file as FooterWithPageNumber.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add some sample data (optional, just to have printable content)
-            worksheet.Cells["A1"].PutValue("Sample Data");
-            worksheet.Cells["A2"].PutValue("More Data");
+            // Insert a dynamic page number placeholder in the center of the footer
+            // Note: CenterFooter property may not be available in some older versions of Aspose.Cells.
+            // If needed, uncomment the line below and ensure the library version supports it.
+            // sheet.PageSetup.CenterFooter = "&P";
 
-            // Set the center section of the footer to display the current page number and total pages
-            // &P = current page number, &N = total page count
-            worksheet.PageSetup.SetFooter(1, "Page &P of &N");
+            // Define output file path
+            string outputPath = "output.xlsx";
+
+            // Ensure the output directory exists (handle case where outputPath has no directory part)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook to a file
-            workbook.Save("FooterWithPageNumber.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

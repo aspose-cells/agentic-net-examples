@@ -1,62 +1,62 @@
-// Title: Compress Aspose.Cells SVG Worksheet with GZip in C#
-// Description: Shows how to render a worksheet to SVG using Aspose.Cells and then compress the SVG file with GZipStream to lower size and speed up network transmission.
-// Keywords: Aspose.Cells | C# | SVG rendering | GZip compression | GZipStream | worksheet to SVG | compress SVG | network transfer | file compression .NET | Aspose.Cells SVG output
-// Common Searches: Aspose.Cells render worksheet to SVG C# | How to gzip an SVG file in .NET | Compress Aspose.Cells SVG output | C# GZipStream example for SVG | Reduce size of Excel SVG export
-// Developer Intent: Generate an SVG representation of an Excel worksheet with Aspose.Cells and then compress that SVG using GZip so it can be sent over the network with minimal bandwidth.
-// Use Cases: Web preview where a compressed SVG snapshot of a spreadsheet is delivered to browsers. | REST API that returns a GZip‑compressed SVG of a workbook for client‑side rendering. | Archiving multiple worksheet SVGs in a .gz package for long‑term storage. | Streaming compressed SVG to mobile apps to conserve data usage.
-// AI Prompts: Write a C# method that accepts a Workbook, renders the first worksheet to SVG in memory, and returns a GZip‑compressed byte array. | Provide C# code that renders an Aspose.Cells worksheet to SVG, compresses it with GZipStream, and safely deletes temporary files. | Explain the performance advantages of gzipping SVG output from Aspose.Cells and how to set appropriate HTTP response headers for compressed content.
+// Title: Compress an Aspose.Cells worksheet saved as SVG with GZip in C# for faster network transfer
+// AI Prompts: Generate C# code that uses Aspose.Cells to export a worksheet to SVG, then compress the SVG bytes with GZipStream and save as a .gz file. | Demonstrate how to pipe the SVG MemoryStream from Aspose.Cells directly into a GZipStream for network‑ready compression in C#. | Show how to configure ImageSaveOptions for SVG and perform in‑memory GZip compression before writing the result to disk.
+// Common Searches: C# how to gzip compress SVG output from Aspose.Cells before sending over HTTP | Aspose.Cells save worksheet as SVG and compress with GZipStream for web API | example of streaming Aspose.Cells SVG to GZipStream in .NET
+// Tags: Aspose.Cells export worksheet to SVG | C# GZipStream compress SVG data | in‑memory SVG compression with Aspose.Cells | network‑optimized SVG file from Excel workbook
 
+using Aspose.Cells;
+using Aspose.Cells.Saving;
 using System;
 using System.IO;
 using System.IO.Compression;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Shows how to render a worksheet to SVG using Aspose.Cells and then compress the SVG file with GZipStream to lower size and speed up network transmission.
+// The sample creates a workbook, fills it with data, saves the first worksheet as an SVG image using ImageSaveOptions, compresses the SVG stream with GZipStream in memory, and writes the compressed .gz file, enabling efficient transmission over the network.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook and access the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Fruit");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(150);
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["B3"].PutValue(250);
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Configure SVG rendering options (FitToViewPort ensures the whole sheet fits the viewport)
-            SvgImageOptions svgOptions = new SvgImageOptions
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Score");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(85);
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(92);
+
+            // Set SVG save options using the recommended ImageSaveOptions
+            ImageSaveOptions saveOptions = new ImageSaveOptions(SaveFormat.Svg);
+            saveOptions.ImageOrPrintOptions.OnePagePerSheet = true;
+
+            // Save the worksheet to a memory stream as SVG
+            using (MemoryStream svgStream = new MemoryStream())
             {
-                FitToViewPort = true
-            };
+                workbook.Save(svgStream, saveOptions);
+                svgStream.Position = 0; // Reset for reading
 
-            // Render the worksheet to an SVG file
-            string svgFilePath = "worksheet.svg";
-            SheetRender renderer = new SheetRender(worksheet, svgOptions);
-            renderer.ToImage(0, svgFilePath);
+                // Compress the SVG data using GZip
+                byte[] compressedData;
+                using (MemoryStream compressedStream = new MemoryStream())
+                {
+                    using (GZipStream gzip = new GZipStream(compressedStream, CompressionMode.Compress, true))
+                    {
+                        svgStream.CopyTo(gzip);
+                    }
+                    compressedData = compressedStream.ToArray();
+                }
 
-            // Verify that the SVG file was created before compression
-            if (!File.Exists(svgFilePath))
-                throw new FileNotFoundException("SVG file was not created.", svgFilePath);
-
-            // Compress the generated SVG using GZip
-            string gzFilePath = "worksheet.svg.gz";
-            using (FileStream originalFile = File.OpenRead(svgFilePath))
-            using (FileStream compressedFile = File.Create(gzFilePath))
-            using (GZipStream gzipStream = new GZipStream(compressedFile, CompressionMode.Compress))
-            {
-                originalFile.CopyTo(gzipStream);
+                // Write the compressed SVG to a file
+                File.WriteAllBytes("Worksheet.svg.gz", compressedData);
             }
-
-            Console.WriteLine($"SVG file has been compressed to: {gzFilePath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

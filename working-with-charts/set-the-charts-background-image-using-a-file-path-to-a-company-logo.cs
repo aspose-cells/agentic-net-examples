@@ -1,10 +1,7 @@
-// Title: Set Chart Background Image from a File Path (Company Logo) with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, adds sample data, inserts a column chart, and applies a PNG logo as the chart area's background using texture fill. The code checks the file path, loads the image into a byte array, sets FillFormat.TextureFill.ImageData, and saves the workbook as an .xlsx file.
-// Keywords: Aspose.Cells chart background image | C# set chart texture fill | load PNG into chart area Aspose | Excel chart logo background .NET | FillFormat.TextureFill ImageData | Aspose.Cells file path image
-// Common Searches: Aspose.Cells set chart background from file | C# add logo to Excel chart background | texture fill chart area Aspose.Cells | how to use FillFormat.TextureFill in .NET | chart background image not showing Aspose
-// Developer Intent: Apply a company logo stored on disk as the background image of an Excel chart using Aspose.Cells for .NET.
-// Use Cases: Generate a column chart and brand it with a corporate logo as the background. | Validate the logo file exists before applying the texture fill to avoid runtime errors. | Produce Excel reports where charts carry consistent visual identity across automated workflows.
-// AI Prompts: Write C# code that loads a PNG file and sets it as the background image of an Aspose.Cells chart, with error handling for missing files. | Explain the role of FillFormat.TextureFill.ImageData when applying a texture fill to a chart area in Aspose.Cells. | Provide step‑by‑step instructions to embed a company logo as a chart background and export the workbook to .xlsx.
+// Title: How to set a chart's background image from a file path using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a column chart in an Aspose.Cells workbook and configures the chart area's FillFormat to use a texture fill. | Write C# that reads a PNG logo file from a specified path into a byte array and assigns it to chart.ChartArea.Area.FillFormat.TextureFill.ImageData.
+// Common Searches: Aspose.Cells C# set chart background image from local file | apply texture fill to chart area using Aspose.Cells .NET | load PNG file into byte array for chart fill Aspose.Cells | add company logo as background to Excel chart with Aspose.Cells
+// Tags: chart area texture fill Aspose.Cells | set chart background image C# | load image bytes for chart fill Aspose.Cells | apply PNG logo to chart background | column chart background image Aspose.Cells
 
 using System;
 using System.IO;
@@ -14,69 +11,79 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsChartBackgroundImage
 {
-    // Creates a new workbook, adds sample data, inserts a column chart, and applies a PNG logo as the chart area's background using texture fill. The code checks the file path, loads the image into a byte array, sets FillFormat.TextureFill.ImageData, and saves the workbook as an .xlsx file.
+    // The example creates a new workbook, adds sample data, inserts a column chart, changes the chart area's fill type to texture, reads a PNG logo from disk into a byte array, assigns the image as the chart's background, and saves the workbook as ChartWithBackgroundImage.xlsx.
     public class SetChartBackgroundImage
     {
-        public static void Run()
+        public static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // (Optional) Add some sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["A4"].PutValue("Banana");
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(50);
-                worksheet.Cells["B3"].PutValue(30);
-                worksheet.Cells["B4"].PutValue(20);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = worksheet.Charts[chartIndex];
-
-                // Set the data source for the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Load the company logo image into a byte array if the file exists
-                string logoPath = "company_logo.png"; // Replace with the actual file path
-                if (File.Exists(logoPath))
-                {
-                    byte[] logoBytes = File.ReadAllBytes(logoPath);
-                    // Apply texture fill to the chart area and set the image data
-                    chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
-                    chart.ChartArea.Area.FillFormat.TextureFill.ImageData = logoBytes;
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Logo file '{logoPath}' not found. Skipping background image.");
-                }
-
-                // Save the workbook with the chart background image applied
-                string outputPath = "ChartWithBackgroundImage.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Run();
+                Console.WriteLine("Workbook created successfully.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        public static void Run()
         {
-            SetChartBackgroundImage.Run();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Q1");
+            sheet.Cells["A3"].PutValue("Q2");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
+
+            // Configure the chart area to use a texture fill (image background)
+            chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;
+
+            // Load the company logo image into a byte array if the file exists
+            string logoPath = "company_logo.png"; // replace with actual file path
+            if (File.Exists(logoPath))
+            {
+                try
+                {
+                    byte[] logoBytes = File.ReadAllBytes(logoPath);
+                    chart.ChartArea.Area.FillFormat.TextureFill.ImageData = logoBytes;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Failed to read logo file. {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Warning: Logo file '{logoPath}' not found. Skipping background image.");
+            }
+
+            // Save the workbook with the chart background image applied
+            string outputPath = "ChartWithBackgroundImage.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+                throw;
+            }
         }
     }
 }

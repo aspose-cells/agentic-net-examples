@@ -1,33 +1,36 @@
-// Title: Set ODS Worksheet Page Background to Light Gray with Aspose.Cells for .NET
-// Description: Creates a new workbook, accesses the first worksheet, configures the ODS page background to LightGray via OdsPageBackground, and saves the file as an .ods document.
-// Keywords: Aspose.Cells | C# | ODS | worksheet background | light gray | OdsPageBackground | page color | print contrast
-// Common Searches: Aspose.Cells set ODS page background color C# | how to change worksheet background in ODS using .NET | light gray page background Aspose.Cells | set ODS page background before saving workbook | C# print page background color Aspose.Cells
-// Developer Intent: Programmatically apply a light gray background to the ODS page layout of a worksheet.
-// Use Cases: Enhance readability of printed ODS reports by adding a subtle gray page background. | Enforce a consistent visual style across automatically generated ODS files. | Meet corporate branding requirements that specify a particular page shade for exported spreadsheets.
-// AI Prompts: Show how to set a custom RGB background color for an ODS worksheet with Aspose.Cells in C#. | Provide code to switch the ODS page background between a solid color and an image at runtime. | Explain methods to verify the background color after saving the workbook as an ODS file.
+// Title: How to set an Excel worksheet tab color to light gray using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that changes the first worksheet's tab color to LightGray and saves the workbook. | Provide a snippet that demonstrates setting a worksheet's TabColor property to a custom shade for better print contrast in Aspose.Cells.
+// Common Searches: Aspose.Cells C# change worksheet tab color to light gray for printing | set Excel sheet tab shade programmatically with Aspose.Cells .NET | how to improve printed worksheet contrast by adjusting tab color using Aspose.Cells
+// Tags: Aspose.Cells worksheet TabColor customization | C# apply LightGray to worksheet tab | print-friendly worksheet tab shading Aspose.Cells | modify Excel tab appearance .NET | Aspose.Cells visual contrast for printed worksheets
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// Creates a new workbook, accesses the first worksheet, configures the ODS page background to LightGray via OdsPageBackground, and saves the file as an .ods document.
-class SetWorksheetBackground
+// The example creates a new Workbook (or loads an existing one), accesses the first Worksheet, sets its TabColor property to Color.LightGray to improve printed contrast, saves the file as 'WorksheetWithGrayBackground.xlsx', and includes basic exception handling.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Configure the ODS page background to a light gray color
-        OdsPageBackground background = sheet.PageSetup.ODSPageBackground;
-        background.Type = OdsPageBackgroundType.Color;
-        background.Color = Color.LightGray;
+            // Set the worksheet tab color to light gray for better printed contrast
+            worksheet.TabColor = Color.LightGray;
 
-        // Save the workbook (ODS format supports the background color setting)
-        workbook.Save("WorksheetWithBackground.ods");
+            // Save the workbook to a file
+            string outputPath = "WorksheetWithGrayBackground.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

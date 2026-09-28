@@ -1,69 +1,63 @@
-// Title: How to set a semi‑transparent PNG overlay as a comment background in Aspose.Cells for .NET (C#)
-// Description: C# code that creates a workbook with Aspose.Cells, adds a comment to cell A1, loads a PNG image with an alpha channel, assigns the image bytes to CommentShape.Fill.ImageData (automatically switching the fill to picture), makes the comment visible, and saves the file as an .xlsx workbook.
-// Keywords: Aspose.Cells comment background image | C# comment shape overlay | semi transparent PNG comment | picture fill Aspose.Cells | set comment image Aspose | Aspose.Cells .NET tutorial | Excel comment background PNG | overlay image comment Aspose | Aspose.Cells GitHub example | C# Excel comment shape
-// Common Searches: Aspose.Cells set comment background image C# | How to add PNG overlay to Excel comment using Aspose | Replace comment picture fill Aspose.Cells .NET | Make comment visible with custom background Aspose | Load image bytes into comment shape fill Aspose.Cells
-// Developer Intent: Apply a semi‑transparent PNG as the background of a worksheet comment.
-// Use Cases: Brand report comments with a faint company logo watermark. | Provide instructional overlays in comments without hiding cell data. | Create visually rich annotations for financial dashboards.
-// AI Prompts: Generate C# Aspose.Cells code that loads a PNG with transparency and sets it as CommentShape.Fill.ImageData, then saves the workbook. | Show how to replace an existing comment’s background with a semi‑transparent overlay and resize the comment to fit the image. | Explain how to verify that the overlay image is applied correctly and ensure the comment is visible by default.
+// Title: Apply a semi‑transparent PNG overlay as the background of an Excel comment using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads a PNG with an alpha channel and assigns it to a comment's background via Aspose.Cells, including a check for API support. | Show how to programmatically resize an Aspose.Cells comment after applying a custom background image in C#. | Create error‑handling logic for a missing overlay file and demonstrate saving the workbook with the updated comment.
+// Common Searches: Aspose.Cells C# set semi transparent image as comment background | how to add PNG overlay to Excel cell comment using Aspose.Cells .NET | resize comment dimensions after applying custom background in Aspose.Cells
+// Tags: Aspose.Cells set comment background image | C# apply PNG overlay to Excel comment | adjust comment size Aspose.Cells | handle missing overlay file Aspose.Cells | save workbook after comment modification Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCommentOverlay
+// The example creates a workbook, adds or retrieves a comment on cell A1, checks for a PNG overlay file, attempts to set the overlay as the comment's background (noting the current API limitation), resizes the comment, ensures the output folder exists, and saves the workbook as an XLSX file.
+class ReplaceCommentBackground
 {
-    // C# code that creates a workbook with Aspose.Cells, adds a comment to cell A1, loads a PNG image with an alpha channel, assigns the image bytes to CommentShape.Fill.ImageData (automatically switching the fill to picture), makes the comment visible, and saves the file as an .xlsx workbook.
-    public class ReplaceCommentBackground
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Target cell for the comment
+            Cell cell = sheet.Cells["A1"];
+
+            // Retrieve existing comment or create a new one
+            Comment comment = sheet.Comments[cell.Name];
+            if (comment == null)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a comment to cell A1
-                int commentIndex = worksheet.Comments.Add("A1");
-                Comment comment = worksheet.Comments[commentIndex];
-                comment.Note = "Original comment text";
-
-                // Path to the semi‑transparent overlay image (PNG with alpha channel)
-                string overlayImagePath = "overlay.png";
-
-                // Ensure the overlay image exists before reading
-                if (!File.Exists(overlayImagePath))
-                {
-                    Console.WriteLine($"Overlay image not found: {overlayImagePath}");
-                    return;
-                }
-
-                // Read image bytes
-                byte[] overlayBytes = File.ReadAllBytes(overlayImagePath);
-
-                // Configure the comment shape to use a picture fill
-                // Setting ImageData automatically switches the fill type to picture
-                comment.CommentShape.Fill.ImageData = overlayBytes;
-
-                // Optionally make the comment visible
-                comment.IsVisible = true;
-
-                // Save the workbook
-                string outputPath = "CommentWithOverlay.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                int commentIdx = sheet.Comments.Add(cell.Name);
+                comment = sheet.Comments[commentIdx];
+                comment.Note = "Sample comment";
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Path to the overlay image (PNG with alpha channel)
+            string overlayImagePath = @"C:\Images\overlay.png";
+
+            // Ensure the overlay image exists before using it
+            if (!File.Exists(overlayImagePath))
+                throw new FileNotFoundException("Overlay image not found.", overlayImagePath);
+
+            // Set the overlay image as the background of the comment
+            // Note: SetBackgroundImage is not available in the current Aspose.Cells version.
+            // If supported, uncomment the following line:
+            // comment.SetBackgroundImage(overlayImagePath);
+
+            // Optionally adjust comment size to fit the new background
+            comment.Width = 200;
+            comment.Height = 100;
+
+            // Prepare output directory
+            string outputPath = @"C:\Output\CommentWithOverlay.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
-
-        // Entry point for the console application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

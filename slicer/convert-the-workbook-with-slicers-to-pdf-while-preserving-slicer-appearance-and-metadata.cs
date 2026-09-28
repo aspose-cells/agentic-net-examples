@@ -1,40 +1,38 @@
-// Title: Export Excel Workbook with Slicers to PDF – Preserve Slicer Visibility & Metadata (C# Aspose.Cells)
-// Description: Loads an Excel file, sets every slicer to printable, enables ExportDocumentStructure in PdfSaveOptions, and saves the workbook as a PDF. The resulting PDF retains slicer graphics and workbook metadata.
-// Keywords: Aspose.Cells slicer PDF export | C# convert Excel to PDF with slicers | printable slicer Aspose.Cells | ExportDocumentStructure PDF | preserve slicer appearance PDF | Excel workbook metadata PDF
-// Common Searches: Aspose.Cells make slicers printable when saving to PDF | C# PDFSaveOptions ExportDocumentStructure example | how to keep slicer graphics in PDF conversion | export Excel workbook with slicers to PDF preserving metadata | Aspose.Cells slicer visibility PDF output
-// Developer Intent: Export an Excel workbook that contains slicers to a PDF file while ensuring the slicers appear in the output and the document’s metadata is retained.
-// Use Cases: Distribute a financial report with slicer controls as a PDF without losing visual cues. | Create printable dashboards where slicer buttons must be visible in the PDF version. | Archive Excel workbooks with slicers, keeping searchable metadata for compliance.
-// AI Prompts: Show C# code to set all slicers printable before saving an Excel file to PDF with Aspose.Cells. | Provide an example that uses PdfSaveOptions.ExportDocumentStructure to retain metadata in the PDF. | Explain how to verify that slicer objects are included in the generated PDF using Aspose.Cells.
+// Title: Convert an Excel workbook with slicers to PDF while preserving slicer visuals and document metadata using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, iterates through every worksheet, sets each slicer's IsPrintable property to true, and saves the workbook as a PDF with ExportDocumentStructure enabled via Aspose.Cells. | Show how to configure PdfSaveOptions in Aspose.Cells to retain slicer appearance and embed the workbook's document structure when converting Excel to PDF.
+// Common Searches: C# Aspose.Cells keep slicers visible when exporting Excel to PDF | preserve slicer formatting and metadata during Excel to PDF conversion | how to set slicer IsPrintable property for PDF output with Aspose.Cells | Aspose.Cells PdfSaveOptions ExportDocumentStructure example for slicers
+// Tags: Aspose.Cells PDF conversion with slicers | set slicer IsPrintable property C# | export Excel slicers to PDF preserving metadata | PdfSaveOptions ExportDocumentStructure usage | convert workbook with slicers to PDF .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-// Loads an Excel file, sets every slicer to printable, enables ExportDocumentStructure in PdfSaveOptions, and saves the workbook as a PDF. The resulting PDF retains slicer graphics and workbook metadata.
+// Loads an Excel workbook, marks all slicers as printable, configures PdfSaveOptions to export document structure, ensures the output directory exists, and saves the workbook as a PDF.
 class ConvertWorkbookWithSlicersToPdf
 {
     static void Main()
     {
-        string inputPath = "input.xlsx";
-        string outputPath = "output.pdf";
-
         try
         {
-            // Verify that the input file exists
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
+
+            // Verify the input workbook exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook that contains slicers
+            // Load the workbook containing slicers
             Workbook workbook = new Workbook(inputPath);
 
-            // Ensure slicers are marked as printable so they appear in the PDF
+            // Ensure all slicers are marked as printable so they appear in the PDF
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                foreach (Slicer slicer in sheet.Slicers)
+                SlicerCollection slicers = sheet.Slicers;
+                foreach (Slicer slicer in slicers)
                 {
                     slicer.IsPrintable = true;
                 }
@@ -45,6 +43,13 @@ class ConvertWorkbookWithSlicersToPdf
             {
                 ExportDocumentStructure = true
             };
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook as PDF
             workbook.Save(outputPath, pdfOptions);

@@ -1,10 +1,7 @@
-// Title: Enable Drill‑Down in an Aspose.Cells Pivot Table (C#/.NET)
-// Description: This example creates a workbook, populates sample sales data, adds a pivot table on range A1:C5, assigns Category, SubCategory and Sales to row, column and data areas, and activates drill‑down by setting EnableDrilldown, ShowDrill and PrintDrill to true. The pivot is refreshed, calculated, and saved as PivotTableDrilldownDemo.xlsx, providing interactive expand/collapse functionality and printable drill indicators.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | drill down | EnableDrilldown | ShowDrill | PrintDrill | expand collapse buttons | interactive Excel report | Excel pivot drill‑through
-// Common Searches: Aspose.Cells enable drill down pivot table C# | How to show expand collapse buttons in Aspose.Cells pivot | Print drill indicators with Aspose.Cells .NET | C# code for drill‑through in Excel pivot using Aspose | Aspose.Cells pivot table interactive dashboard example
-// Developer Intent: Add interactive drill‑down capability to a pivot table so end‑users can view the underlying rows behind aggregated values.
-// Use Cases: Allow analysts to double‑click a total and see the detailed sales records that compose it. | Generate printable reports that retain visual drill icons for offline review. | Build Excel‑based dashboards where rows and columns can be expanded or collapsed on demand. | Create reusable workbook templates with pre‑configured drill‑down settings for multiple datasets.
-// AI Prompts: Write C# code that builds a pivot table with EnableDrilldown, ShowDrill, and PrintDrill set to true, and applies custom number formatting. | Explain how to retrieve the source rows displayed after a user drills down into a pivot cell using Aspose.Cells APIs. | Show how to toggle ShowDrill and PrintDrill at runtime based on a configuration flag in an Aspose.Cells workbook.
+// Title: Enable drill‑down and expand/collapse buttons on an Aspose.Cells pivot table in C#
+// AI Prompts: Write C# code that builds a pivot table from a worksheet range and turns on the EnableDrilldown and ShowDrill properties using Aspose.Cells. | Adapt the example to load data from an existing Excel file, then configure the pivot table to allow drill‑down while keeping the same row and column fields. | Create a reusable method that receives a worksheet and a data range, adds a pivot table, and sets up drill‑down and expand/collapse UI elements for Aspose.Cells .NET.
+// Common Searches: Aspose.Cells C# how to turn on drilldown for pivot table cells | show expand collapse buttons in Aspose.Cells pivot table example | double‑click a pivot cell to view source rows using Aspose.Cells .NET | enable drill‑down property on Aspose.Cells pivot table programmatically | C# code sample for creating pivot table with drill‑down in Aspose.Cells
+// Tags: Aspose.Cells pivot drilldown configuration | C# Aspose.Cells pivot expand collapse UI | Aspose.Cells create pivot from cell range | Aspose.Cells refresh and calculate pivot data | Aspose.Cells enable drilldown property example
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsDrilldownDemo
 {
-    // This example creates a workbook, populates sample sales data, adds a pivot table on range A1:C5, assigns Category, SubCategory and Sales to row, column and data areas, and activates drill‑down by setting EnableDrilldown, ShowDrill and PrintDrill to true. The pivot is refreshed, calculated, and saved as PivotTableDrilldownDemo.xlsx, providing interactive expand/collapse functionality and printable drill indicators.
+    // Demonstrates creating a workbook, populating sample data, adding a pivot table, enabling drill‑down and expand/collapse buttons, refreshing the pivot cache, calculating results, and saving the file as an .xlsx document using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
@@ -24,45 +21,52 @@ namespace AsposeCellsDrilldownDemo
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
+            // Columns: Category, SubCategory, Sales
             sheet.Cells["A1"].Value = "Category";
             sheet.Cells["B1"].Value = "SubCategory";
             sheet.Cells["C1"].Value = "Sales";
 
-            sheet.Cells["A2"].Value = "Electronics";
-            sheet.Cells["B2"].Value = "Phones";
-            sheet.Cells["C2"].Value = 1200;
+            sheet.Cells["A2"].Value = "Fruit";
+            sheet.Cells["B2"].Value = "Apple";
+            sheet.Cells["C2"].Value = 120;
 
-            sheet.Cells["A3"].Value = "Electronics";
-            sheet.Cells["B3"].Value = "Laptops";
-            sheet.Cells["C3"].Value = 2500;
+            sheet.Cells["A3"].Value = "Fruit";
+            sheet.Cells["B3"].Value = "Orange";
+            sheet.Cells["C3"].Value = 150;
 
-            sheet.Cells["A4"].Value = "Furniture";
-            sheet.Cells["B4"].Value = "Chairs";
-            sheet.Cells["C4"].Value = 800;
+            sheet.Cells["A4"].Value = "Vegetable";
+            sheet.Cells["B4"].Value = "Carrot";
+            sheet.Cells["C4"].Value = 80;
 
-            sheet.Cells["A5"].Value = "Furniture";
-            sheet.Cells["B5"].Value = "Tables";
-            sheet.Cells["C5"].Value = 1500;
+            sheet.Cells["A5"].Value = "Vegetable";
+            sheet.Cells["B5"].Value = "Broccoli";
+            sheet.Cells["C5"].Value = 95;
 
             // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+            // Destination top‑left cell is D3
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "D3", "SalesPivot");
             PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-            // Configure the pivot fields
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");      // Row field
-            pivot.AddFieldToArea(PivotFieldType.Column, "SubCategory"); // Column field
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");       // Data field
+            // Configure the pivot table:
+            // - Row field: Category
+            // - Column field: SubCategory
+            // - Data field: Sales (sum)
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Column, "SubCategory");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Enable drill‑down functionality and show the expand/collapse buttons
-            pivot.EnableDrilldown = true;   // Allows users to double‑click a cell to see underlying records
-            pivot.ShowDrill = true;        // Displays the drill indicators in the UI
-            pivot.PrintDrill = true;       // Ensures the indicators are printed if needed
+            // Enable drill‑down functionality so users can double‑click a cell
+            // and see the underlying records.
+            pivot.EnableDrilldown = true;
 
-            // Refresh and calculate the pivot table data
+            // Show the expand/collapse (drill) buttons in the UI.
+            pivot.ShowDrill = true;
+
+            // Refresh the pivot cache and calculate the results.
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Save the workbook to a file
+            // Save the workbook to a file.
             workbook.Save("PivotTableDrilldownDemo.xlsx");
         }
     }

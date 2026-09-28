@@ -1,18 +1,16 @@
-// Title: Aspose.Cells for .NET – Concatenate raw StringValues from a range into a summary cell
-// Description: This C# example creates a workbook, fills range B2:D4 with text, numbers and dates, iterates the range using Aspose.Cells.Range, concatenates each cell's raw StringValue with a space, trims the result and writes it to cell A1 before saving as SummaryResult.xlsx.
-// Keywords: Aspose.Cells concatenate range | Cell.StringValue .NET | read raw string from cells | summary cell Aspose.Cells | C# Excel string concatenation | Aspose.Cells range iteration
-// Common Searches: how to join cell values into one cell using Aspose.Cells | retrieve raw string from Excel range Aspose.Cells .NET | concatenate text numbers dates Aspose.Cells example | Aspose.Cells write summary string to a cell
-// Developer Intent: Read the raw string representation of every cell in a specified range, combine them into a single text string, and store that string in a designated summary cell.
-// Use Cases: Create a one‑line report that merges product names, IDs and dates from a table. | Generate a searchable keyword list by joining mixed data types from a selected area. | Build a consolidated comment field for export by concatenating non‑empty cells in a user‑defined range.
-// AI Prompts: Write C# code with Aspose.Cells that concatenates raw StringValues from a dynamic range, skips empty cells, and outputs to a target cell. | Show how to change the delimiter to a comma and ignore whitespace‑only cells in the concatenation example. | Explain the difference between Cell.StringValue and Cell.Value in Aspose.Cells and advise when each should be used for building text strings.
+// Title: How to concatenate raw string values from an Aspose.Cells range and write the result to a summary cell in C#
+// AI Prompts: Write C# code that iterates over an Aspose.Cells Range, extracts each cell's StringValue, concatenates the values with a StringBuilder, and stores the combined text in a target cell. | Show an example of using Aspose.Cells for .NET to read raw strings from a multi‑cell range, merge them into a single string, write the merged string to another cell, and then save the workbook.
+// Common Searches: Aspose.Cells C# concatenate values from A1:C2 into D1 | retrieve StringValue from each cell in a range using Aspose.Cells .NET | combine multiple cell strings into one cell with Aspose.Cells API | how to iterate over an Aspose.Cells range and build a single string | save workbook after merging cell text in Aspose.Cells C#
+// Tags: concatenate range StringValue Aspose.Cells C# | write merged text to cell Aspose.Cells | Aspose.Cells range iteration example | StringBuilder usage with Aspose.Cells | save workbook after cell concatenation Aspose.Cells
 
 using System;
+using System.Text;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsSummaryDemo
+namespace AsposeCellsConcatenateExample
 {
-    // This C# example creates a workbook, fills range B2:D4 with text, numbers and dates, iterates the range using Aspose.Cells.Range, concatenates each cell's raw StringValue with a space, trims the result and writes it to cell A1 before saving as SummaryResult.xlsx.
+    // The example creates a workbook, fills cells A1:C2 with text, iterates over the defined range to collect each cell's raw StringValue, concatenates them using StringBuilder, writes the combined string to cell D1, and saves the file as ConcatenatedResult.xlsx.
     class Program
     {
         static void Main()
@@ -24,37 +22,30 @@ namespace AsposeCellsSummaryDemo
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Populate some sample data in the range B2:D4
-                cells["B2"].PutValue("Apple");
-                cells["C2"].PutValue(123);               // numeric value will be converted to string
-                cells["D2"].PutValue(DateTime.Today);    // date will be formatted as string
-                cells["B3"].PutValue("Banana");
-                cells["C3"].PutValue("Cherry");
-                cells["D3"].PutValue("Date");
-                cells["B4"].PutValue("Elderberry");
-                cells["C4"].PutValue("Fig");
-                cells["D4"].PutValue("Grape");
+                // Populate a sample range with string values
+                cells["A1"].PutValue("Hello");
+                cells["B1"].PutValue("World");
+                cells["C1"].PutValue("!");
+                cells["A2"].PutValue("Foo");
+                cells["B2"].PutValue("Bar");
+                cells["C2"].PutValue("Baz");
 
-                // Define the range from which to gather raw string values
-                string rangeAddress = "B2:D4";
-                AsposeRange range = cells.CreateRange(rangeAddress);
+                // Define the range from which raw strings will be retrieved
+                AsposeRange sourceRange = cells.CreateRange("A1:C2");
 
-                // Concatenate the raw string values of each cell in the range
-                string concatenated = string.Empty;
-                foreach (Cell cell in range)
+                // Concatenate the raw string values of all cells in the range
+                StringBuilder concatenated = new StringBuilder();
+                foreach (Cell cell in sourceRange)
                 {
-                    // StringValue returns the formatted string representation of the cell's content
-                    concatenated += cell.StringValue + " ";
+                    // StringValue returns the formatted text of the cell
+                    concatenated.Append(cell.StringValue);
                 }
 
-                // Trim the trailing separator
-                concatenated = concatenated.TrimEnd();
+                // Write the concatenated result to a summary cell (e.g., D1)
+                cells["D1"].PutValue(concatenated.ToString());
 
-                // Write the concatenated result to a summary cell (e.g., A1)
-                cells["A1"].PutValue(concatenated);
-
-                // Save the workbook
-                workbook.Save("SummaryResult.xlsx");
+                // Save the workbook to a file
+                workbook.Save("ConcatenatedResult.xlsx");
             }
             catch (Exception ex)
             {

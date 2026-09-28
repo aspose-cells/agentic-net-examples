@@ -1,47 +1,43 @@
-// Title: Preserve HTML Formatting When Importing a DataTable into Excel with Aspose.Cells .NET
-// Description: Demonstrates how to set the IsHtmlString flag in ImportTableOptions so that HTML tags (e.g., hyperlinks, bold, italic) are kept as formatted cell content when a DataTable is imported into an Aspose.Cells worksheet and saved as .xlsx.
-// Keywords: Aspose.Cells ImportTableOptions | IsHtmlString | HTML import Excel .NET | preserve HTML in Excel | ImportData HTML formatting | C# Aspose.Cells rich text
-// Common Searches: Aspose.Cells preserve HTML when importing | ImportTableOptions IsHtmlString example | C# import DataTable with HTML tags into Excel | keep hyperlinks after ImportData Aspose.Cells | how to retain HTML styling in Excel cells
-// Developer Intent: Enable the IsHtmlString flag so HTML markup is rendered as formatted content rather than plain text during DataTable import.
-// Use Cases: Import a report that contains clickable links and styled text directly from a database. | Migrate web‑generated HTML summaries into Excel while preserving visual formatting. | Create dashboards where comments or descriptions include bold, italic, or colored HTML snippets.
-// AI Prompts: Show C# code that imports a DataTable with HTML strings into an Aspose.Cells worksheet using ImportTableOptions.IsHtmlString. | Explain how to configure ImportTableOptions to retain HTML formatting and save the workbook. | What steps are needed to ensure HTML entities render correctly after importing with Aspose.Cells?
+// Title: Import a DataTable containing HTML links into Excel while preserving HTML formatting with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that imports a DataTable with HTML strings into an Excel worksheet using Aspose.Cells and retains the HTML tags. | Show how to enable ImportTableOptions.IsHtmlString and apply custom number formats when importing rich‑text data with Aspose.Cells. | Demonstrate saving the workbook after importing HTML content to an .xlsx file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# import DataTable preserve HTML tags | How to keep HTML formatting when using Cells.ImportData in .NET | ImportTableOptions IsHtmlString example for Excel export | Saving HTML links from a DataTable to Excel with Aspose.Cells | Set time column number format while importing HTML content using Aspose.Cells
+// Tags: importdatatable preservehtml aspocells | importtableoptions ishtmlstring property | excel export html content c# | cells.importdata html formatting | numberformats time column aspocells
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlImportDemo
+// The example creates a DataTable with an HTML anchor tag, configures ImportTableOptions to set IsHtmlString=true (and optional time number formats), imports the table into the first worksheet starting at cell A1, and saves the workbook as PreserveHtmlImportDemo.xlsx, preserving the HTML formatting in the Excel cells.
+class PreserveHtmlImportDemo
 {
-    // Demonstrates how to set the IsHtmlString flag in ImportTableOptions so that HTML tags (e.g., hyperlinks, bold, italic) are kept as formatted cell content when a DataTable is imported into an Aspose.Cells worksheet and saved as .xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a DataTable with HTML content
+        DataTable table = new DataTable();
+        table.Columns.Add("ID");
+        table.Columns.Add("Content");
+        table.Columns.Add("Time");
+
+        // Add a row containing an HTML link
+        table.Rows.Add("1", "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
+
+        // Create a new workbook and get the first worksheet's cells
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Configure import options to preserve HTML formatting
+        ImportTableOptions importOptions = new ImportTableOptions
         {
-            // Prepare a DataTable containing HTML formatted text
-            DataTable table = new DataTable();
-            table.Columns.Add("ID");
-            table.Columns.Add("Content"); // This column will hold HTML strings
-            table.Columns.Add("Timestamp");
+            IsFieldNameShown = true,               // import column headers
+            IsHtmlString = true,                   // preserve HTML tags
+            NumberFormats = new string[] { null, null, "h:mm AM/PM" } // optional time format
+        };
 
-            // Add a row with HTML content (e.g., a hyperlink)
-            table.Rows.Add("1", "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
+        // Import the DataTable starting at cell A1 (row 0, column 0)
+        cells.ImportData(table, 0, 0, importOptions);
 
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Configure import options to treat cell values as HTML strings
-            ImportTableOptions importOptions = new ImportTableOptions
-            {
-                IsFieldNameShown = true, // Import column headers as the first row
-                IsHtmlString = true      // Preserve HTML formatting during import
-            };
-
-            // Import the DataTable into the worksheet starting at cell A1 (row 0, column 0)
-            worksheet.Cells.ImportData(table, 0, 0, importOptions);
-
-            // Save the workbook; the HTML formatting will be retained in the cell
-            workbook.Save("HtmlImportResult.xlsx");
-        }
+        // Save the workbook to an Excel file
+        workbook.Save("PreserveHtmlImportDemo.xlsx");
     }
 }

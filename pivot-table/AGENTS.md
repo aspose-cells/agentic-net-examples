@@ -7,7 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: Create, configure, refresh, calculate, filter, group, and format Excel PivotTables in C#
 primary_apis: [PivotTable, PivotTableCollection, PivotField, PivotItem, PivotFieldType]
 search_intents: [create PivotTable in C#, refresh Excel PivotTable, add PivotTable fields, group PivotTable data]

@@ -1,18 +1,15 @@
-// Title: Set ConvergenceThreshold (MaxChange) = 0.001 for Iterative Calculations in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to enable iterative calculation in Aspose.Cells, set the convergence threshold (MaxChange) to 0.001, optionally limit iterations, create a circular reference, calculate formulas, output results, and save the workbook.
-// Keywords: Aspose.Cells iterative calculation | ConvergenceThreshold Aspose.Cells | MaxChange C# | Aspose.Cells circular reference | FormulaSettings precision | Aspose.Cells .NET example | Set MaxIteration Aspose.Cells | Iterative formula evaluation
-// Common Searches: Aspose.Cells set convergence threshold | How to configure MaxChange in Aspose.Cells | Enable iterative calculation Aspose.Cells C# | Circular reference handling Aspose.Cells | Iterative formula settings Aspose.Cells .NET
-// Developer Intent: Configure Aspose.Cells to use a 0.001 convergence threshold for iterative formula evaluation.
-// Use Cases: Resolve circular references by enabling iterative calculation with a precise convergence threshold. | Balance performance and accuracy by adjusting MaxIteration and MaxChange values. | Validate iterative results by calculating formulas and saving the workbook.
-// AI Prompts: Show C# code to set ConvergenceThreshold (MaxChange) to 0.001 in Aspose.Cells. | Provide an Aspose.Cells example that enables iterative calculation and defines MaxIteration and MaxChange. | Explain how MaxChange influences the resolution of circular references in Aspose.Cells.
+// Title: Configure Aspose.Cells for .NET to use a 0.001 convergence threshold in iterative formula calculations
+// AI Prompts: Generate C# code that enables iterative calculation and sets the convergence threshold (MaxChange) to 0.001 in an Aspose.Cells workbook. | Show how to adjust the FormulaSettings of Aspose.Cells to define a precision of 0.001 for circular reference evaluation. | Provide a step‑by‑step example that configures iterative mode, limits iterations, and saves the workbook after applying a 0.001 MaxChange value.
+// Common Searches: Aspose.Cells C# set MaxChange to 0.001 for iterative formulas | How to define convergence precision for circular references using Aspose.Cells .NET | Enable iterative calculation and specify 0.001 threshold in Aspose.Cells workbook | Set iterative calculation options like MaxIteration and MaxChange in Aspose.Cells C# example
+// Tags: Aspose.Cells API set MaxChange precision | circular reference handling via formula engine options | C# workbook iterative mode configuration | define convergence threshold in Aspose.Cells | adjust MaxIteration and MaxChange values .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsIterativeCalculation
 {
-    // Demonstrates how to enable iterative calculation in Aspose.Cells, set the convergence threshold (MaxChange) to 0.001, optionally limit iterations, create a circular reference, calculate formulas, output results, and save the workbook.
-    class SetConvergenceThresholdDemo
+    // // Creates a workbook with a circular reference, enables iterative calculation, sets MaxIteration to 100 and convergence threshold (MaxChange) to 0.001, calculates formulas, and saves the file as IterativeCalculationResult.xlsx.
+    class Program
     {
         static void Main()
         {
@@ -21,29 +18,27 @@ namespace AsposeCellsExamples
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Enable iterative calculation and set related options
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Set up a simple circular reference for demonstration
+                worksheet.Cells["A1"].Formula = "=B1+1";
+                worksheet.Cells["B1"].Formula = "=A1+1";
+
+                // Enable iterative calculation in the workbook settings
                 workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-                workbook.Settings.FormulaSettings.MaxIteration = 100;          // optional: maximum iterations
-                workbook.Settings.FormulaSettings.MaxChange = 0.001;          // precision for iterative calculations
+                workbook.Settings.FormulaSettings.MaxIteration = 100;          // optional, defines max iterations
+                workbook.Settings.FormulaSettings.MaxChange = 0.001;          // convergence threshold (precision)
 
-                // Example circular reference to demonstrate iterative calculation
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].Formula = "=B1+1";
-                sheet.Cells["B1"].Formula = "=A1+1";
-
-                // Calculate all formulas
+                // Perform calculation
                 workbook.CalculateFormula();
 
-                // Output the results
-                Console.WriteLine("A1 value: " + sheet.Cells["A1"].Value);
-                Console.WriteLine("B1 value: " + sheet.Cells["B1"].Value);
-
-                // Save the workbook
-                workbook.Save("ConvergenceThresholdDemo.xlsx");
+                // Save the workbook to verify the result
+                workbook.Save("IterativeCalculationResult.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

@@ -1,53 +1,65 @@
-// Title: Load Excel workbook from MemoryStream and get worksheet count with Aspose.Cells for .NET
-// Description: Creates a workbook with two sheets, saves it to a MemoryStream (XLSX), resets the stream, loads a new Workbook directly from the stream, and reads Worksheets.Count—all without writing to disk.
-// Keywords: Aspose.Cells | .NET | C# | MemoryStream | load workbook from stream | worksheet count | in‑memory Excel | Workbook.SaveToStream | Workbook(Stream) constructor | no file system I/O
-// Common Searches: Aspose.Cells load workbook from memory stream | C# count worksheets in Excel file without saving | read Excel from byte array using Aspose.Cells | get worksheet count from stream Aspose | in‑memory Excel processing Aspose.Cells .NET
-// Developer Intent: Load an Excel file from a MemoryStream and determine the number of worksheets without persisting the file to disk.
-// Use Cases: Validate sheet count of an Excel payload received via a web API by loading the byte array into a MemoryStream and checking Worksheets.Count. | Generate a report in memory, serialize it to a stream, reload it to verify the worksheet structure before sending the file to a client. | Run a background batch that processes many workbooks entirely in memory to count sheets and avoid costly file‑system operations.
-// AI Prompts: Provide C# code using Aspose.Cells that reads an Excel file from a MemoryStream and returns the total number of worksheets. | Show an example that creates a workbook, saves it to a MemoryStream, reloads it with the Workbook(Stream) constructor, and prints the worksheet count. | Explain why resetting the MemoryStream position is required before loading it with Aspose.Cells and how to do it correctly.
+// Title: Count worksheets in an Excel file loaded from a byte array using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that receives a byte[] of an Excel workbook, creates a MemoryStream, loads it with Aspose.Cells, and returns the total number of worksheets. | Demonstrate how to read an Excel file into a byte array, pass it to a helper class, and print the worksheet count without writing the file to disk using Aspose.Cells.
+// Common Searches: aspnet count worksheets in excel file from memory stream | aspocells get number of sheets from byte array | c# load excel workbook from byte[] without saving to disk | how to retrieve worksheet count using Aspose.Cells and MemoryStream | read excel file into byte array and count sheets in .NET
+// Tags: Aspose.Cells load workbook from byte array | retrieve worksheet count in .NET | C# MemoryStream Excel workbook | count sheets without saving file | Aspose.Cells worksheets collection count
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook with two sheets, saves it to a MemoryStream (XLSX), resets the stream, loads a new Workbook directly from the stream, and reads Worksheets.Count—all without writing to disk.
-class LoadFromMemoryStreamDemo
+// Loads an Excel workbook from a byte array via MemoryStream using Aspose.Cells and returns the total number of worksheets in the workbook.
+public class ExcelHelper
 {
-    static void Main()
+    /// <param name="excelData">Byte array containing the Excel file.</param>
+    /// <returns>Count of worksheets in the workbook.</returns>
+    public int GetWorksheetCount(byte[] excelData)
     {
-        // ------------------------------------------------------------
-        // 1. Create a sample workbook with two worksheets
-        // ------------------------------------------------------------
-        Workbook originalWorkbook = new Workbook();               // uses Workbook() constructor
-        originalWorkbook.Worksheets[0].Name = "FirstSheet";
+        // Create a memory stream from the provided byte array
+        using (MemoryStream stream = new MemoryStream(excelData))
+        {
+            // Load the workbook from the memory stream
+            Workbook workbook = new Workbook(stream);
 
-        // Add a second worksheet
-        int secondSheetIndex = originalWorkbook.Worksheets.Add();
-        originalWorkbook.Worksheets[secondSheetIndex].Name = "SecondSheet";
+            // Retrieve and return the worksheet count
+            return workbook.Worksheets.Count;
+        }
+    }
+}
 
-        // ------------------------------------------------------------
-        // 2. Save the workbook to a MemoryStream (Excel 2007+ format)
-        // ------------------------------------------------------------
-        // SaveToStream returns a MemoryStream containing the XLSX data
-        MemoryStream memoryStream = originalWorkbook.SaveToStream(); // uses Workbook.SaveToStream()
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        try
+        {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Usage: AsposeCellsRunner <excel-file-path>");
+                return;
+            }
 
-        // Reset the stream position to the beginning before reading
-        memoryStream.Position = 0;
+            string filePath = args[0];
 
-        // ------------------------------------------------------------
-        // 3. Load a new workbook from the MemoryStream
-        // ------------------------------------------------------------
-        Workbook loadedWorkbook = new Workbook(memoryStream);    // uses Workbook(Stream) constructor
+            // Prevent FileNotFoundException by checking existence
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Error: File not found - {filePath}");
+                return;
+            }
 
-        // ------------------------------------------------------------
-        // 4. Retrieve and display the worksheet count
-        // ------------------------------------------------------------
-        int worksheetCount = loadedWorkbook.Worksheets.Count;
-        Console.WriteLine($"Worksheet count loaded from memory stream: {worksheetCount}");
+            // Read the Excel file into a byte array
+            byte[] excelData = File.ReadAllBytes(filePath);
 
-        // Clean up
-        memoryStream.Dispose();
-        originalWorkbook.Dispose();
-        loadedWorkbook.Dispose();
+            // Use ExcelHelper to get worksheet count
+            ExcelHelper helper = new ExcelHelper();
+            int sheetCount = helper.GetWorksheetCount(excelData);
+
+            Console.WriteLine($"Worksheet count: {sheetCount}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

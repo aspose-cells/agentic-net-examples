@@ -1,44 +1,64 @@
-// Title: Insert Multi‑Line Text into an Aspose.Cells ListObject Table Cell with PutCellValue (C#)
-// Description: Creates a workbook, defines a table spanning A1:B3, builds a string that includes "\r\n" line breaks, and calls ListObject.PutCellValue(rowOffset, columnOffset, text) to write the wrapped content into the second data row, second column before saving as MultiLineTableCell.xlsx.
-// Keywords: Aspose.Cells ListObject PutCellValue | C# multiline cell | Excel table line break | programmatic text wrap | insert newline in table cell
-// Common Searches: Aspose.Cells how to add line break in table cell | PutCellValue multiline C# example | Set wrapped text in ListObject cell | Insert address with newlines using Aspose.Cells | Create Excel table with multi‑line description column
-// Developer Intent: Place a string that contains line‑break characters into a targeted cell of a ListObject table.
-// Use Cases: Populate a description column with bullet‑point style entries that span several lines. | Store address or notes fields as wrapped text inside table cells for clearer reports. | Generate an Excel worksheet where multi‑line strings improve readability of tabular data.
-// AI Prompts: Show how to enable text wrapping for a ListObject cell after inserting a multi‑line string with PutCellValue. | Provide C# code that writes a multi‑line value into a table cell and automatically adjusts the row height for proper display. | Explain the effect of using "\n" versus "\r\n" when passing newline characters to ListObject.PutCellValue.
+// Title: Insert a multi‑line string into a ListObject table cell and enable text wrapping using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells ListObject.PutCellValue to write a newline‑separated string into a specific table cell and apply a wrapped‑text style in C#. | Create a ListObject table, add multi‑line text to a cell, set IsTextWrapped = true on the corresponding worksheet cell, then save the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to add newline characters to a ListObject table cell | Insert multi line text into an Aspose.Cells table cell example | Enable text wrapping for a cell after inserting multi‑line string in Aspose.Cells | Saving an XLSX workbook after writing multi‑line data to a ListObject in C# | Aspose.Cells ListObject insert multi‑line string with text wrap
+// Tags: Aspose.Cells ListObject multi-line cell | Aspose.Cells text wrap style C# | C# insert newline string into table cell | Aspose.Cells create and style table | Aspose.Cells save workbook xlsx
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, defines a table spanning A1:B3, builds a string that includes "\r\n" line breaks, and calls ListObject.PutCellValue(rowOffset, columnOffset, text) to write the wrapped content into the second data row, second column before saving as MultiLineTableCell.xlsx.
-class InsertMultiLineStringIntoTableCell
+// The sample creates a new workbook, adds a ListObject table, defines a multi‑line string using '\n', inserts it into the second row‑second column of the table with PutCellValue, applies a style with IsTextWrapped set to true to the corresponding worksheet cell, and saves the file as MultiLineTable.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-        // Add header row and some sample data for the table
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Description");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue("Item 1");
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue("Item 2");
+            // Define the range for the ListObject (table) – starts at A1, 3 rows x 2 columns
+            int firstRow = 0;          // A1 row index (zero‑based)
+            int firstColumn = 0;       // A1 column index (zero‑based)
+            int totalRows = 3;
+            int totalColumns = 2;
 
-        // Create a ListObject (table) that spans the range A1:B3
-        int tableIndex = sheet.ListObjects.Add("A1", "B3", true);
-        ListObject table = sheet.ListObjects[tableIndex];
+            // Add the ListObject (table) to the worksheet
+            int listObjectIndex = sheet.ListObjects.Add(firstRow, firstColumn,
+                                                        firstRow + totalRows,
+                                                        firstColumn + totalColumns, true);
+            ListObject table = sheet.ListObjects[listObjectIndex];
+            table.DisplayName = "MyTable";
 
-        // Define a multi‑line string using newline characters
-        string multiLineText = "First line\r\nSecond line\r\nThird line";
+            // Multi‑line string to insert (use \n for line breaks)
+            string multiLineText = "Line 1\nLine 2\nLine 3";
 
-        // Insert the multi‑line string into the second data row, second column of the table
-        // Row offset = 1 (zero‑based, so row 2 of the table), column offset = 1 (second column)
-        table.PutCellValue(1, 1, multiLineText);
+            // Put the multi‑line string into the second row, second column of the table
+            // (row and column indices are zero‑based relative to the table)
+            table.PutCellValue(1, 1, multiLineText);
 
-        // Save the workbook to a file
-        workbook.Save("MultiLineTableCell.xlsx", SaveFormat.Xlsx);
+            // Enable text wrapping for the target cell so the newlines are visible
+            Style wrapStyle = workbook.CreateStyle();
+            wrapStyle.IsTextWrapped = true;
+
+            // Calculate the absolute cell address within the worksheet
+            int targetRow = table.StartRow + 1;      // table.StartRow is the first row of the table
+            int targetColumn = table.StartColumn + 1;
+            sheet.Cells[targetRow, targetColumn].SetStyle(wrapStyle);
+
+            // Define output file path
+            string outputPath = "MultiLineTable.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

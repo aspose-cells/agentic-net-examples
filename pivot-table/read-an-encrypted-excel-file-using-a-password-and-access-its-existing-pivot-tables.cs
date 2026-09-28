@@ -1,10 +1,7 @@
-// Title: C# – Open a password‑protected Excel workbook and enumerate its pivot tables using Aspose.Cells
-// Description: Demonstrates how to load an encrypted .xlsx file with a password via LoadOptions, iterate through each worksheet, detect existing pivot tables, output their names and row‑field counts, refresh and recalculate the pivot data, and handle missing‑file, invalid‑password and runtime exceptions.
-// Keywords: Aspose.Cells encrypted workbook | C# open password protected Excel | enumerate pivot tables Aspose.Cells | refresh pivot cache Aspose.Cells | LoadOptions password Excel .NET | handle CellsException | pivot table calculation C#
-// Common Searches: open password protected Excel file Aspose.Cells C# | list pivot tables in encrypted workbook using Aspose.Cells | refresh pivot tables after loading protected Excel file | Aspose.Cells invalid password exception handling | C# code to read encrypted .xlsx and access pivot tables
-// Developer Intent: Load a password‑protected Excel file and work with its existing pivot tables programmatically.
-// Use Cases: Read a secured workbook and display the count of pivot tables per sheet. | Retrieve each pivot table’s name and row‑field count for reporting. | Refresh the pivot cache and recalculate data after opening the protected file. | Gracefully capture errors such as missing file, wrong password, or pivot refresh failures.
-// AI Prompts: Write C# code that opens a password‑protected Excel workbook with Aspose.Cells and lists all pivot table names. | Show how to refresh and calculate pivot tables in an encrypted workbook, including exception handling for invalid passwords. | Explain the steps to catch CellsException when loading a protected workbook and to log detailed error information.
+// Title: Read a password‑protected .xlsx file and list its pivot tables using Aspose.Cells for .NET
+// AI Prompts: Open a password‑protected Excel file with Aspose.Cells LoadOptions and retrieve every PivotTable from each worksheet. | After loading the protected workbook, call RefreshData and CalculateData on each PivotTable and print the number of row and data fields. | Add robust error handling for missing files, wrong passwords, and pivot‑table processing failures when working with an encrypted Excel workbook in C#.
+// Common Searches: Aspose.Cells C# read encrypted Excel workbook and get pivot tables | open password protected .xlsx with Aspose.Cells and list all pivot tables | C# Aspose.Cells LoadOptions password example for accessing pivot tables | refresh pivot table data after loading a protected Excel file using Aspose.Cells
+// Tags: load workbook with password Aspose.Cells | enumerate pivot tables Aspose.Cells .NET | recalculate pivot tables Aspose.Cells | pivot field count extraction Aspose.Cells C# | encrypted Excel exception handling Aspose.Cells
 
 using System;
 using System.IO;
@@ -13,73 +10,79 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsEncryptedPivotDemo
 {
-    // Demonstrates how to load an encrypted .xlsx file with a password via LoadOptions, iterate through each worksheet, detect existing pivot tables, output their names and row‑field counts, refresh and recalculate the pivot data, and handle missing‑file, invalid‑password and runtime exceptions.
+    // Demonstrates opening a password‑protected Excel workbook via Aspose.Cells LoadOptions, iterating worksheets to access each PivotTable, refreshing and calculating its data, and outputting row and data field counts while handling possible errors.
     class Program
     {
         static void Main()
         {
             // Path to the encrypted Excel file
-            string filePath = "encrypted.xlsx";
+            string encryptedFilePath = "encrypted_with_pivot.xlsx";
 
-            // Password used to protect the workbook
-            string password = "xixi";
-
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(filePath))
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(encryptedFilePath))
             {
-                Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+                Console.WriteLine($"File not found: {encryptedFilePath}");
                 return;
             }
 
+            // Password used to protect the workbook
+            string password = "mySecretPwd";
+
             try
             {
-                // Set load options with the password for the encrypted workbook
+                // Load the workbook with the password using LoadOptions
                 LoadOptions loadOptions = new LoadOptions
                 {
                     Password = password
                 };
 
-                // Load the password‑protected workbook
-                Workbook workbook = new Workbook(filePath, loadOptions);
+                // Open the encrypted workbook
+                Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
 
-                // Iterate through all worksheets and access their pivot tables
+                // Optional: verify that the workbook is indeed encrypted
+                Console.WriteLine("Workbook is encrypted: " + workbook.Settings.IsEncrypted);
+
+                // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    if (sheet.PivotTables.Count > 0)
+                    // Access the collection of pivot tables in the current worksheet
+                    PivotTableCollection pivots = sheet.PivotTables;
+
+                    // If there are pivot tables, process them
+                    if (pivots.Count > 0)
                     {
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\" contains {sheet.PivotTables.Count} pivot table(s).");
+                        Console.WriteLine($"Worksheet \"{sheet.Name}\" contains {pivots.Count} pivot table(s).");
 
-                        // Process each pivot table in the worksheet
-                        foreach (PivotTable pivotTable in sheet.PivotTables)
+                        for (int i = 0; i < pivots.Count; i++)
                         {
-                            Console.WriteLine($"  Pivot Table Name: {pivotTable.Name}");
-
                             try
                             {
-                                // Refresh the pivot cache data (correct API)
-                                pivotTable.RefreshData();
-                                // Recalculate the pivot table after refresh
-                                pivotTable.CalculateData();
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine($"    Error refreshing pivot table \"{pivotTable.Name}\": {ex.Message}");
-                            }
+                                PivotTable pivot = pivots[i];
 
-                            // Output the number of row fields
-                            Console.WriteLine($"    Row Fields Count: {pivotTable.RowFields.Count}");
+                                // Refresh the pivot data and recalculate
+                                pivot.RefreshData();
+                                pivot.CalculateData();
+
+                                // Output basic information about the pivot table
+                                Console.WriteLine($"  Pivot Table \"{pivot.Name}\":");
+                                // Source data string may not be directly exposed in newer API versions; skip if unavailable
+                                Console.WriteLine($"    Row Fields Count: {pivot.RowFields.Count}");
+                                Console.WriteLine($"    Data Fields Count: {pivot.DataFields.Count}");
+                            }
+                            catch (Exception exPivot)
+                            {
+                                Console.WriteLine($"    Error processing pivot table at index {i}: {exPivot.Message}");
+                            }
                         }
                     }
                 }
-            }
-            catch (CellsException ex)
-            {
-                // Handles errors related to Aspose.Cells operations, including invalid password
-                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+
+                // No need to save if only reading; if modifications are required, uncomment below:
+                // workbook.Save("output.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

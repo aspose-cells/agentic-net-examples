@@ -1,51 +1,47 @@
-// Title: Set default worksheet font to Calibri 11 with Aspose.Cells for .NET
-// Description: Creates a new Workbook, configures the default style to Calibri size 11, syncs Settings.DefaultStyleSettings and Workbook.DefaultStyle, optionally reapplies the style to existing cells, and saves the file as WorksheetDefaultFont.xlsx.
-// Keywords: Aspose.Cells default font | set worksheet font .NET | Calibri 11 Aspose.Cells | default style settings | apply default style to cells | Aspose.Cells workbook font | C# Aspose.Cells example
-// Common Searches: how to change default font in Aspose.Cells | Aspose.Cells set Calibri 11 for all worksheets | default style settings Aspose.Cells .NET example | apply default style to existing cells Aspose | C# code to set workbook default font Aspose.Cells
-// Developer Intent: Configure a workbook so every new and existing cell uses Calibri 11 as the default font.
-// Use Cases: Generate reports where the corporate font (Calibri 11) is applied automatically to every cell. | Standardize the appearance of legacy workbooks by syncing default style settings with existing cell formatting. | Create templates that enforce a consistent font without manually setting each cell style.
-// AI Prompts: Write C# code using Aspose.Cells to set the workbook default font to Calibri 11 and propagate the change to all current cells. | Show how to update Settings.DefaultStyleSettings and Workbook.DefaultStyle for font name and size in Aspose.Cells. | Provide an example that re‑applies the default style to a worksheet after changing the default font in Aspose.Cells.
+// Title: Set Calibri 11pt as the default font for all worksheets using Aspose.Cells for .NET
+// AI Prompts: Create a new Workbook, build a Style with Font.Name = "Calibri" and Font.Size = 11, assign it to Workbook.DefaultStyle, then save the workbook. | Open an existing Excel file, modify its Workbook.DefaultStyle to use Calibri 11pt, and overwrite the file with the updated style.
+// Common Searches: Aspose.Cells .NET set default worksheet font to Calibri 11 | C# apply a global font style to every sheet in a new Excel workbook with Aspose | How to change the default font for all worksheets in an Aspose.Cells workbook | Set workbook.DefaultStyle font name and size using Aspose.Cells C#
+// Tags: Aspose.Cells workbook default style configuration | global font Calibri 11pt for .NET Excel workbook | C# set workbook default font Aspose.Cells | apply default style to all sheets Aspose.Cells | initialize workbook with specific font Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a new Workbook, configures the default style to Calibri size 11, syncs Settings.DefaultStyleSettings and Workbook.DefaultStyle, optionally reapplies the style to existing cells, and saves the file as WorksheetDefaultFont.xlsx.
-public class SetWorksheetDefaultFont
+// The example creates a workbook, defines a Calibri 11pt style, assigns it to the workbook's DefaultStyle (affecting every worksheet), ensures the output directory exists, and saves the file as Result.xlsx.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Set the workbook's default style settings: Calibri, size 11
-            // This influences all worksheets unless overridden
-            workbook.Settings.DefaultStyleSettings.FontName = "Calibri";
-            workbook.Settings.DefaultStyleSettings.FontSize = 11.0;
+            // Create a style with Calibri font, size 11
+            Style defaultStyle = workbook.CreateStyle();
+            defaultStyle.Font.Name = "Calibri";
+            defaultStyle.Font.Size = 11;
 
-            // Also update the DefaultStyle object to keep it in sync
-            workbook.DefaultStyle.Font.Name = "Calibri";
-            workbook.DefaultStyle.Font.Size = 11;
+            // Set this style as the workbook's default style (applies to all worksheets)
+            workbook.DefaultStyle = defaultStyle;
 
-            // Apply the default style to the first worksheet (optional, ensures existing cells adopt it)
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells.ApplyStyle(workbook.CreateStyle(), new StyleFlag() { All = true });
+            // Define output file path
+            string outputPath = "Result.xlsx";
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("WorksheetDefaultFont.xlsx");
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        SetWorksheetDefaultFont.Run();
     }
 }

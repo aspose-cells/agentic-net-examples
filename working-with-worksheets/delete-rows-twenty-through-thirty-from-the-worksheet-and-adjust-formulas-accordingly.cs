@@ -1,31 +1,19 @@
-// Title: C# – Delete rows 20‑30 in an Excel sheet and auto‑update formulas with Aspose.Cells
-// Description: Load a workbook, remove rows 20‑30 (zero‑based index 19, count 11) using Cells.DeleteRows, set the third parameter to true so all formula references adjust automatically, then save the file. Includes a ready‑to‑run Aspose.Cells .NET example.
-// Keywords: Aspose.Cells DeleteRows C# | remove multiple rows Excel .NET | auto adjust formulas Aspose | Excel row deletion example | C# Aspose.Cells GitHub | Excel automation US developers | Excel automation UK developers | Excel automation India developers
-// Common Searches: How to delete rows 20 to 30 with Aspose.Cells C# | Aspose.Cells delete rows and keep formulas correct | C# code to remove a range of rows in Excel | Aspose.Cells DeleteRows method example | Update formulas after deleting rows in Excel .NET
-// Developer Intent: Remove rows 20‑30 from a worksheet and have every dependent formula automatically corrected.
-// Use Cases: Clean imported datasets by cutting out unwanted row blocks while preserving calculation integrity. | Prepare a report template: delete placeholder rows before inserting new data, ensuring formulas recalculate correctly. | Programmatic sheet restructuring where a specific row range must be removed and all related calculations stay accurate.
-// AI Prompts: Write C# code using Aspose.Cells to delete rows 20‑30 and automatically adjust all formulas. | Explain the impact of each parameter in Cells.DeleteRows on formula references. | Show how to delete rows while preserving conditional formatting, named ranges, and chart data sources with Aspose.Cells.
+// Title: Delete rows 20‑30 from the first worksheet and automatically adjust formulas with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that removes rows 20 through 30 from the first sheet of an XLSX workbook using Aspose.Cells and ensures all dependent formulas are recalculated. | Generate a snippet that loads an Excel file, deletes a specific range of rows with zero‑based indexing, and saves the file while preserving formula integrity using Aspose.Cells.
+// Common Searches: Aspose.Cells C# delete rows 20-30 and keep formulas intact | how to remove a block of rows in Excel with Aspose.Cells and update formulas | C# Aspose.Cells delete multiple rows without breaking cell references
+// Tags: delete rows Aspose.Cells C# | adjust formulas after row deletion Aspose.Cells | zero‑based row indexing Aspose.Cells | remove multiple rows Excel .NET | preserve formula references Aspose.Cells
 
 using Aspose.Cells;
 
-// Load a workbook, remove rows 20‑30 (zero‑based index 19, count 11) using Cells.DeleteRows, set the third parameter to true so all formula references adjust automatically, then save the file. Includes a ready‑to‑run Aspose.Cells .NET example.
-class DeleteRowsExample
-{
-    static void Main()
-    {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+// Load the workbook
+Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (or any specific worksheet you need)
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+// Access the first worksheet
+Worksheet ws = workbook.Worksheets[0];
 
-        // Delete rows 20 through 30 (1‑based indexing).
-        // Zero‑based start index is 19 and the total rows to delete is 11.
-        // The third parameter 'true' updates all formula references automatically.
-        cells.DeleteRows(19, 11, true);
+// Delete rows 20 through 30 (inclusive).
+// Aspose.Cells uses zero‑based indexing, so start at row 19 and delete 11 rows.
+ws.Cells.DeleteRows(19, 11);
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
-    }
-}
+// Save the modified workbook
+workbook.Save("output.xlsx");

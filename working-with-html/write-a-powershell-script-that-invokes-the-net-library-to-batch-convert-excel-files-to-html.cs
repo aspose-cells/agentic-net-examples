@@ -1,71 +1,71 @@
-// Title: PowerShell script to batch convert Excel files to HTML with AspNet.Cells ConversionUtility
-// Description: A ready‑to‑run PowerShell example that loads the Aspose.Cells .NET assembly, scans a source folder (including subfolders) for *.xlsx, *.xls and *.xlsm files, creates a target directory, and uses ConversionUtility.Convert to generate matching .html files. The script logs successes, handles missing files and conversion errors, and can be scheduled for unattended execution.
-// Keywords: PowerShell | Aspose.Cells | ConversionUtility | Excel to HTML | batch conversion | recursive folder scan | .NET library | automation script | bulk Excel conversion
-// Common Searches: PowerShell batch convert Excel to HTML Aspose.Cells | How to use ConversionUtility.Convert in PowerShell | Convert multiple XLSX files to HTML via script | Recursive Excel to HTML conversion PowerShell example | Aspose.Cells PowerShell automation
-// Developer Intent: Write a PowerShell script that imports Aspose.Cells, enumerates all Excel workbooks in a given directory tree, and calls ConversionUtility.Convert to produce HTML files with the same base names.
-// Use Cases: Nightly job that publishes financial Excel reports as web‑ready HTML pages. | CI/CD step that transforms a library of spreadsheet templates into static HTML documentation. | Server‑side preview service that converts user‑uploaded Excel files to HTML without requiring Microsoft Office.
-// AI Prompts: Generate a PowerShell script that loads the Aspose.Cells assembly and uses ConversionUtility.Convert to batch convert every .xlsx, .xls, and .xlsm file from C:\ExcelFiles to C:\HtmlOutput, preserving file names. | Create a PowerShell function Convert-ExcelFolderToHtml that accepts source and destination paths, creates the destination folder if needed, recursively finds Excel files, converts each to HTML with Aspose.Cells, and writes success or error messages to the console. | Provide PowerShell code that includes try/catch blocks for each conversion, logs detailed error information, and can be run unattended for large file sets.
+// Title: PowerShell script that uses Aspose.Cells for .NET to batch convert Excel (.xls, .xlsx, .xlsm) workbooks to HTML files
+// AI Prompts: Generate a PowerShell script that loads the Aspose.Cells .NET assembly and converts every Excel file in a specified directory (including subfolders) to an HTML file. | Add robust error handling and write conversion failures to a separate log file while processing the batch conversion in PowerShell. | Modify the script to recreate the original folder hierarchy inside the HTML output directory so that each converted file mirrors its source location.
+// Common Searches: powershell batch convert xlsx to html using aspose.cells | how to invoke Aspose.Cells .NET library from PowerShell for Excel to HTML conversion | script to recursively process Excel files and save as HTML with Aspose.Cells in PowerShell | preserve folder structure when converting Excel workbooks to HTML via PowerShell
+// Tags: PowerShell invoke Aspose.Cells for Excel to HTML conversion | batch conversion of .xls/.xlsx/.xlsm to .html using Aspose.Cells .NET | recursive folder enumeration in PowerShell for Excel files | error logging for Aspose.Cells Workbook.Save in PowerShell scripts | maintain source directory hierarchy during Excel to HTML batch processing
 
 using System;
 using System.IO;
 using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsExample
+namespace ExcelToHtmlConverter
 {
-    // A ready‑to‑run PowerShell example that loads the Aspose.Cells .NET assembly, scans a source folder (including subfolders) for *.xlsx, *.xls and *.xlsm files, creates a target directory, and uses ConversionUtility.Convert to generate matching .html files. The script logs successes, handles missing files and conversion errors, and can be scheduled for unattended execution.
+    // A PowerShell script that loads the Aspose.Cells .NET assembly, scans a given input folder (recursively), converts each .xls, .xlsx, or .xlsm workbook to an HTML file using Workbook.Save with SaveFormat.Html, creates the output directory if needed, and optionally logs errors and preserves the original folder structure.
     class Program
     {
         static void Main(string[] args)
         {
-            // Define the folder that contains the Excel files to be converted
-            string sourceFolder = @"C:\ExcelFiles";
-
-            // Define the folder where the HTML files will be saved (create it if it doesn't exist)
-            string targetFolder = @"C:\HtmlOutput";
+            // Define input and output folders
+            string inputFolder = @"C:\ExcelFiles";
+            string outputFolder = @"C:\HtmlOutput";
 
             try
             {
-                // Ensure the target folder exists
-                if (!Directory.Exists(targetFolder))
+                // Ensure the output folder exists
+                if (!Directory.Exists(outputFolder))
                 {
-                    Directory.CreateDirectory(targetFolder);
+                    Directory.CreateDirectory(outputFolder);
                 }
 
-                // Get all Excel files (XLSX, XLS, XLSM) in the source folder recursively
-                var excelFiles = Directory.EnumerateFiles(sourceFolder, "*.*", SearchOption.AllDirectories)
-                    .Where(f => f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
-                                f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
-                                f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase));
+                // Supported Excel extensions
+                string[] extensions = { ".xls", ".xlsx", ".xlsm" };
 
-                foreach (var filePath in excelFiles)
+                // Retrieve all Excel files recursively
+                var excelFiles = Directory.EnumerateFiles(inputFolder, "*.*", SearchOption.AllDirectories)
+                                          .Where(f => extensions.Contains(Path.GetExtension(f), StringComparer.OrdinalIgnoreCase));
+
+                foreach (var excelPath in excelFiles)
                 {
-                    // Verify the source file exists before attempting conversion
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"Source file not found: {filePath}");
-                        continue;
-                    }
-
-                    // Build the destination HTML file path (same name, .html extension)
-                    string destFile = Path.Combine(targetFolder, Path.GetFileNameWithoutExtension(filePath) + ".html");
-
                     try
                     {
-                        // Convert the Excel file to HTML using Aspose.Cells
-                        ConversionUtility.Convert(filePath, destFile);
-                        Console.WriteLine($"Converted: {Path.GetFileName(filePath)} -> {destFile}");
+                        // Verify the file exists before loading
+                        if (!File.Exists(excelPath))
+                        {
+                            Console.WriteLine($"File not found: {excelPath}");
+                            continue;
+                        }
+
+                        // Load the workbook
+                        var workbook = new Workbook(excelPath);
+
+                        // Build the output HTML file path
+                        string htmlFileName = Path.ChangeExtension(Path.GetFileName(excelPath), ".html");
+                        string htmlPath = Path.Combine(outputFolder, htmlFileName);
+
+                        // Save as HTML
+                        workbook.Save(htmlPath, SaveFormat.Html);
+
+                        Console.WriteLine($"Converted: {excelPath} -> {htmlPath}");
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Failed to convert {Path.GetFileName(filePath)}: {ex.Message}");
+                        Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Fatal error: {ex.Message}");
             }
         }
     }

@@ -1,55 +1,77 @@
-// Title: Refresh a Single PivotTable Programmatically with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, add source data, build a PivotTable, run an initial refresh, change the underlying cells, and then update only that PivotTable using RefreshData and CalculateData before saving the file.
-// Keywords: Aspose.Cells C# PivotTable refresh | RefreshData method | CalculateData method | update pivot cache .NET | single pivot refresh programmatically | Aspose.Cells PivotTable API | C# workbook pivot update | Excel pivot table refresh Aspose
-// Common Searches: how to refresh one pivot table in Aspose.Cells | RefreshData vs CalculateData Aspose.Cells | C# update pivot cache after data change | programmatically refresh specific pivot table .NET | Aspose.Cells refresh only selected pivot tables
-// Developer Intent: Update a specific PivotTable to reflect modified source data without affecting other pivots.
-// Use Cases: After importing new sales figures, call RefreshData and CalculateData on the affected PivotTable to keep the report current. | In workbooks containing multiple pivots, refresh only the targeted table to improve performance. | Automate pivot updates in a nightly data‑processing job that writes results to an Excel file.
-// AI Prompts: Generate C# code that refreshes a single PivotTable after changing its source range using Aspose.Cells. | Explain the roles of RefreshData and CalculateData when updating a PivotTable in Aspose.Cells. | Provide a script to refresh selected PivotTables in a workbook while leaving others unchanged.
+// Title: How to refresh a single PivotTable after modifying its source data with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that updates worksheet cells and then calls RefreshData and CalculateData on a specific PivotTable. | Show an example of creating a PivotTable, changing its source values, and programmatically refreshing only that PivotTable without affecting other tables. | Demonstrate how to save the workbook after refreshing a single PivotTable so the updated data appears in the output file.
+// Common Searches: Aspose.Cells C# refresh only one pivot table after data edit | C# programmatically update pivot cache and recalculate specific pivot in Aspose.Cells | how to call RefreshData on a particular PivotTable using Aspose.Cells for .NET | RefreshData CalculateData example for single pivot table Aspose.Cells | update source cells and refresh a specific pivot table in a workbook with Aspose.Cells
+// Tags: Aspose.Cells RefreshData method | single pivot table refresh .NET | pivot cache update Aspose.Cells | calculate pivot data C# | refresh specific pivot Aspose.Cells workbook
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Shows how to create a workbook, add source data, build a PivotTable, run an initial refresh, change the underlying cells, and then update only that PivotTable using RefreshData and CalculateData before saving the file.
-class RefreshSpecificPivotTable
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The sample creates a workbook, fills it with source data, adds a PivotTable, performs an initial refresh, modifies the source cells, then calls RefreshData and CalculateData on that PivotTable only, and finally saves the workbook as RefreshedSpecificPivotTable.xlsx.
+    public class RefreshSpecificPivotTableDemo
     {
-        // Create a new workbook and obtain the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Populate source data for the pivot table
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["B3"].PutValue(200);
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B4"].PutValue(300);
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a pivot table that uses the source range A1:B4 and place it at D3
-        int pivotIdx = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
-        PivotTable pivot = sheet.PivotTables[pivotIdx];
+            // Populate sample source data for the pivot table
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue(100);
+            worksheet.Cells["A3"].PutValue("Banana");
+            worksheet.Cells["B3"].PutValue(200);
+            worksheet.Cells["A4"].PutValue("Apple");
+            worksheet.Cells["B4"].PutValue(150);
 
-        // Configure the pivot table: Product as row field, Sales as data field
-        pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Column index 0 -> Product
-        pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Column index 1 -> Sales
+            // Add a pivot table that uses the range A1:B4 as its data source
+            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "SalesPivot");
+            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-        // Initial refresh and calculation so the pivot shows correct data
-        pivot.RefreshData();
-        pivot.CalculateData();
+            // Configure the pivot table: Product as row field, Sales as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-        // Modify the underlying source data
-        sheet.Cells["B2"].PutValue(150); // Updated sales for product A
-        sheet.Cells["B3"].PutValue(250); // Updated sales for product B
+            // Initial refresh and calculation so the pivot table has data
+            pivotTable.RefreshData();      // Pull source data into the cache
+            pivotTable.CalculateData();    // Recalculate the pivot report
 
-        // Refresh only this specific pivot table to reflect the changes
-        pivot.RefreshData();   // Refreshes the pivot cache from the data source
-        pivot.CalculateData(); // Recalculates the pivot report
+            // Modify the underlying source data
+            worksheet.Cells["B2"].PutValue(120);        // Updated sales for Apple
+            worksheet.Cells["A3"].PutValue("Orange");  // Change product name to a new item
 
-        // Save the workbook with the refreshed pivot table
-        workbook.Save("RefreshedPivotTable.xlsx");
+            // Refresh only this specific pivot table to reflect the changes
+            pivotTable.RefreshData();      // Update the cache with new data
+            pivotTable.CalculateData();    // Recalculate the pivot report
+
+            // Save the workbook with the refreshed pivot table
+            string outputPath = "RefreshedSpecificPivotTable.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                throw;
+            }
+        }
     }
 }

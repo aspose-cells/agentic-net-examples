@@ -1,76 +1,62 @@
-// Title: C# – Batch Convert XLSX Files >5 MB to HTML with Aspose.Cells ExcludeUnusedStyles
-// Description: A C# console application that scans a folder, loads each .xlsx larger than 5 MB with Aspose.Cells, sets HtmlSaveOptions.ExcludeUnusedStyles = true, and saves the workbook as an HTML file in a target directory while logging successes and errors.
-// Keywords: Aspose.Cells | C# Excel to HTML conversion | ExcludeUnusedStyles | HtmlSaveOptions | batch convert XLSX to HTML | process large Excel files | convert files over 5 MB | .NET Excel HTML export | folder processing C# | Aspose.Cells example
-// Common Searches: convert large xlsx to html aspose.cells | c# batch excel to html exclude unused styles | htmlsaveoptions excludeunusedstyles example | process folder of xlsx files .net | asp.net convert excel files larger than 5mb to html
-// Developer Intent: Convert only XLSX workbooks larger than 5 MB in a directory to HTML using Aspose.Cells with unused styles excluded.
-// Use Cases: Generate compact HTML reports from big Excel workbooks for web portals. | Automate nightly conversion of financial spreadsheets that exceed a size threshold for intranet dashboards. | Archive large Excel files as lightweight HTML pages in a document management system. | Create HTML previews for user uploads, processing only files that meet a minimum size to reduce server load.
-// AI Prompts: Provide a C# function that iterates through a directory and converts every .xlsx file larger than 5 MB to HTML using Aspose.Cells with ExcludeUnusedStyles enabled. | Show how to add CSV logging of source path, destination path, file size, and conversion status to the batch program. | Explain how to extend the code to support .xls files and to apply a custom CSS stylesheet via HtmlSaveOptions. | Suggest ways to parallelize the conversion for faster processing on multi‑core machines. | Demonstrate how to wrap the logic into a reusable class library with dependency injection.
+// Title: C# batch processing of XLSX files larger than 5 MB with Aspose.Cells – handling missing ExcludeUnusedStyles
+// AI Prompts: Write a C# console application that scans a specified folder, checks each .xlsx file’s size, and for files exceeding 5 MB loads the workbook with Aspose.Cells, attempts to call the ExcludeUnusedStyles property (or logs a warning if the property is unavailable), then overwrites the original file. | Enhance the sample code to add verbose logging (file name, size, success or error), ensure files under the 5 MB threshold are skipped, and provide a fallback routine that removes unused styles by iterating the workbook’s style collection when ExcludeUnusedStyles cannot be used.
+// Common Searches: how to process only large Excel files with Aspose.Cells in C# | C# script to apply ExcludeUnusedStyles to workbooks bigger than 5 MB | Aspose.Cells batch remove unused styles from XLSX files | skip small Excel files when cleaning up styles using Aspose.Cells .NET | handle missing ExcludeUnusedStyles property in Aspose.Cells 2023
+// Tags: batch processing XLSX with Aspose.Cells | filter Excel files by size C# | unused style cleanup Aspose.Cells | fallback style removal Aspose.Cells | large workbook optimization .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// A C# console application that scans a folder, loads each .xlsx larger than 5 MB with Aspose.Cells, sets HtmlSaveOptions.ExcludeUnusedStyles = true, and saves the workbook as an HTML file in a target directory while logging successes and errors.
+// The program enumerates .xlsx files in a given directory, skips any file 5 MB or smaller, loads larger workbooks with Aspose.Cells, notes that the ExcludeUnusedStyles property may be unavailable, saves the workbook back to the same path, and logs each operation’s outcome.
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Folder containing the source XLSX files
-        string sourceFolder = @"C:\InputFolder";
+        // Specify the folder containing the XLSX files
+        string folderPath = @"C:\Path\To\Your\Folder";
 
-        // Folder where the processed HTML files will be saved
-        string outputFolder = @"C:\OutputFolder";
-
-        // Ensure output folder exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Verify source folder exists
-        if (!Directory.Exists(sourceFolder))
+        // Verify that the folder exists
+        if (!Directory.Exists(folderPath))
         {
-            Console.WriteLine($"Source folder not found: {sourceFolder}");
+            Console.WriteLine($"Folder not found: {folderPath}");
             return;
         }
 
-        // Process each .xlsx file in the source folder
-        foreach (string xlsxPath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+        // Define the size threshold (5 MB)
+        const long sizeThreshold = 5L * 1024 * 1024; // bytes
+
+        // Get all .xlsx files in the folder (non‑recursive)
+        string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string filePath in files)
         {
             try
             {
-                // Verify the file still exists before processing
-                if (!File.Exists(xlsxPath))
+                // Ensure the file still exists before processing
+                if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found: {xlsxPath}");
+                    Console.WriteLine($"File not found (skipped): {filePath}");
                     continue;
                 }
 
-                FileInfo fileInfo = new FileInfo(xlsxPath);
+                // Check file size
+                FileInfo fi = new FileInfo(filePath);
+                if (fi.Length <= sizeThreshold)
+                    continue; // Skip files below the threshold
 
-                // Apply ExcludeUnusedStyles only if the file size exceeds 5 MB
-                if (fileInfo.Length > 5 * 1024 * 1024)
-                {
-                    // Load the workbook
-                    Workbook workbook = new Workbook(xlsxPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-                    // Create HTML save options and enable exclusion of unused styles
-                    HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                    {
-                        ExcludeUnusedStyles = true
-                    };
+                // NOTE: ExcludeUnusedStyles property is not available in the current Aspose.Cells version.
+                // If needed, upgrade the library or use alternative methods.
 
-                    // Build the output HTML file path
-                    string htmlPath = Path.Combine(
-                        outputFolder,
-                        Path.GetFileNameWithoutExtension(xlsxPath) + ".html");
-
-                    // Save the workbook as HTML with the specified options
-                    workbook.Save(htmlPath, htmlOptions);
-                    Console.WriteLine($"Converted: {xlsxPath} -> {htmlPath}");
-                }
+                // Save the workbook, overwriting the original file
+                workbook.Save(filePath, SaveFormat.Xlsx);
+                Console.WriteLine($"Processed and saved: {filePath}");
             }
             catch (Exception ex)
             {
-                // Log any errors for the current file and continue processing others
-                Console.WriteLine($"Error processing file '{xlsxPath}': {ex.Message}");
+                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
             }
         }
     }

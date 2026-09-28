@@ -1,99 +1,110 @@
-// Title: Remove Named Ranges Outside the Used Area with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, determines the worksheet's used range via MaxDataRow/MaxDataColumn, scans all defined names, identifies those whose referenced range extends beyond the used rows or columns, removes the offending names from the NameCollection, and saves the cleaned file.
-// Keywords: Aspose.Cells remove external named ranges | delete named range outside used area | C# Aspose.Cells named range management | filter out‑of‑bounds named ranges | Aspose.Cells .NET clean workbook
-// Common Searches: how to delete named ranges that point outside the used range in Aspose.Cells | remove out‑of‑bounds named ranges C# Aspose.Cells | Aspose.Cells check if a named range is beyond MaxDataRow | prune stale named ranges in Excel using Aspose.Cells
-// Developer Intent: Programmatically eliminate any named range that references cells beyond the worksheet's populated area.
-// Use Cases: Sanitize legacy Excel files before distribution by stripping obsolete named ranges. | Ensure data‑export routines only encounter valid ranges, preventing runtime errors. | Automate workbook validation in CI pipelines to keep file size and complexity low.
-// AI Prompts: Generate C# code with Aspose.Cells that logs each removed named range to the console. | Show how to extend the sample to also delete names that refer to whole rows or columns outside the used area. | Create a unit test that confirms named ranges outside the used range are removed after processing.
+// Title: Remove named ranges that reference cells outside the used range of each worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that iterates all worksheets, identifies defined names whose range exceeds the worksheet's MaxDataRow/MaxDataColumn, and deletes those names from the NameCollection. | Show a complete example that collects out‑of‑range named ranges, removes them safely, and saves the cleaned workbook.
+// Common Searches: Aspose.Cells C# delete defined names that point beyond the used area of a worksheet | how to clean up Excel named ranges that are outside the data region using .NET | remove worksheet‑scoped named ranges that reference empty rows or columns in Aspose.Cells | C# code to filter invalid named ranges in an Excel file with Aspose.Cells
+// Tags: remove out-of-range named ranges Aspose.Cells | filter defined names by used range .NET | delete invalid Excel named ranges C# | iterate worksheets to clean NameCollection Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, determines the used range for each worksheet, finds any defined names whose referenced cells lie outside that range, removes those names from the workbook's NameCollection, and saves the updated file.
+class RemoveOutOfRangeNamedRanges
 {
-    // Loads a workbook, determines the worksheet's used range via MaxDataRow/MaxDataColumn, scans all defined names, identifies those whose referenced range extends beyond the used rows or columns, removes the offending names from the NameCollection, and saves the cleaned file.
-    public class RemoveExternalNamedRanges
+    static void Main()
     {
-        public static void Main()
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Processing completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Load an existing workbook if the file exists; otherwise create a new one.
-            string inputPath = "input.xlsx";
-            Workbook workbook;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            if (File.Exists(inputPath))
+            // Access the collection of defined names (both workbook‑ and worksheet‑scoped)
+            NameCollection allNames = workbook.Worksheets.Names;
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a blank workbook
-            }
+                // Determine the used range limits of the current worksheet
+                int maxDataRow = sheet.Cells.MaxDataRow;          // zero‑based index of last used row
+                int maxDataColumn = sheet.Cells.MaxDataColumn;    // zero‑based index of last used column
 
-            // Access the first worksheet (adjust if needed)
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+                // Collect names that need to be removed (cannot modify collection while iterating)
+                List<string> namesToRemove = new List<string>();
 
-            // Determine the used range of the worksheet
-            int usedLastRow = cells.MaxDataRow;          // zero‑based index of the last row with data
-            int usedLastColumn = cells.MaxDataColumn;    // zero‑based index of the last column with data
-
-            // Collect names that refer to ranges outside the used area
-            NameCollection names = workbook.Worksheets.Names;
-            List<string> namesToRemove = new List<string>();
-
-            foreach (Name name in names)
-            {
-                // Only process names that refer to a range
-                if (name.RefersTo == null)
-                    continue;
-
-                // Get the actual range the name points to
-                Aspose.Cells.Range rng = name.GetRange();
-
-                if (rng == null)
-                    continue; // not a range reference
-
-                // Calculate the absolute bounds of the range
-                int rangeFirstRow = rng.FirstRow;
-                int rangeFirstColumn = rng.FirstColumn;
-                int rangeLastRow = rangeFirstRow + rng.RowCount - 1;
-                int rangeLastColumn = rangeFirstColumn + rng.ColumnCount - 1;
-
-                // Check if any part of the range lies outside the used range
-                bool outside = rangeFirstRow > usedLastRow ||
-                               rangeFirstColumn > usedLastColumn ||
-                               rangeLastRow > usedLastRow ||
-                               rangeLastColumn > usedLastColumn;
-
-                if (outside)
+                // Examine all names
+                foreach (Name name in allNames)
                 {
-                    namesToRemove.Add(name.Text);
+                    try
+                    {
+                        // Get the range the name refers to
+                        Aspose.Cells.Range range = name.GetRange();
+
+                        // If the name does not refer to a range, skip it
+                        if (range == null)
+                            continue;
+
+                        // Ensure the range belongs to the current worksheet
+                        if (range.Worksheet != sheet)
+                            continue;
+
+                        // Calculate the boundaries of the named range
+                        int firstRow = range.FirstRow;
+                        int firstCol = range.FirstColumn;
+                        int lastRow = firstRow + range.RowCount - 1;
+                        int lastCol = firstCol + range.ColumnCount - 1;
+
+                        // Determine if any part of the range lies outside the used range
+                        bool outsideUsedRange = firstRow > maxDataRow ||
+                                                firstCol > maxDataColumn ||
+                                                lastRow > maxDataRow ||
+                                                lastCol > maxDataColumn;
+
+                        // Mark the name for removal if it references cells outside the used range
+                        if (outsideUsedRange)
+                        {
+                            // Use the Text property to get the defined name string
+                            namesToRemove.Add(name.Text);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log and continue with other names
+                        Console.WriteLine($"Error processing name '{name.Text}': {ex.Message}");
+                    }
+                }
+
+                // Remove the identified names from the collection
+                foreach (string nameToRemove in namesToRemove)
+                {
+                    allNames.Remove(nameToRemove);
                 }
             }
 
-            // Remove the identified names
-            if (namesToRemove.Count > 0)
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                names.Remove(namesToRemove.ToArray());
+                Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook (or to a new file)
-            string outputPath = "Output.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

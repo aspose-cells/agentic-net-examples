@@ -1,67 +1,37 @@
-// Title: Refresh All External Data Connections in an Excel Workbook with Aspose.Cells for .NET
-// Description: Load an existing workbook, enable RefreshOnLoad for each external data connection, recalculate formulas, and save the updated file to guarantee data consistency across the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells refresh external connections | C# RefreshOnLoad property | update Excel data connections programmatically | recalculate formulas after data refresh | save workbook after connection refresh | Aspose.Cells ExternalConnectionCollection | automated Excel reporting .NET
-// Common Searches: how to refresh all external connections in Excel using Aspose.Cells C# | set RefreshOnLoad for data connections Aspose.Cells | recalculate formulas after refreshing external data connections .NET | save workbook after updating external connections Aspose.Cells | programmatically refresh ODBC or web query connections in Excel
-// Developer Intent: Programmatically enable refresh for every external data connection, recalculate dependent formulas, and write the refreshed workbook to a new file.
-// Use Cases: Automated reporting pipelines that must pull the latest data from web queries, ODBC, or other external sources before generating final Excel files. | Scheduled tasks that process multiple workbooks, ensuring each file’s connections are refreshed and formulas are up‑to‑date. | Integration of Excel data refresh into CI/CD workflows where consistency of external data is required for downstream validation.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through all external connections, sets RefreshOnLoad to true, recalculates formulas, and saves the workbook. | Explain the difference between RefreshOnLoad and an immediate refresh in Aspose.Cells, and show how to force a refresh without reopening the file. | Create a reusable method that accepts input and output paths and refreshes every external data connection sequentially using Aspose.Cells for .NET.
+// Title: Refresh every external data connection sequentially in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that opens an .xlsx file, loops through its ExternalConnection collection, sets RefreshOnLoad to true, turns off BackgroundRefresh, forces a synchronous refresh, recalculates all formulas, and saves the workbook. | Modify the given Aspose.Cells example so that each external connection is refreshed one after another before the workbook is written to disk. | Create a reusable C# method using Aspose.Cells that ensures all linked data sources are updated synchronously and then triggers a full formula recalculation.
+// Common Searches: Aspose.Cells C# how to refresh external data connections before saving workbook | set RefreshOnLoad and turn off BackgroundRefresh for Excel connections using .NET | sequentially update multiple external connections in an .xlsx with Aspose.Cells | recalculate formulas after external connection refresh in Aspose.Cells | force synchronous data connection refresh in Aspose.Cells .NET
+// Tags: Aspose.Cells external connection refresh | turn off background refresh Aspose.Cells | enable RefreshOnLoad property .NET | recalculate workbook formulas Aspose.Cells | save workbook after connection update
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+// Loads an Excel file, iterates over its ExternalConnection collection, enables RefreshOnLoad, disables background refresh for synchronous updates, recalculates all formulas, and saves the refreshed workbook.
+class RefreshExternalConnections
 {
-    // Load an existing workbook, enable RefreshOnLoad for each external data connection, recalculate formulas, and save the updated file to guarantee data consistency across the workbook using Aspose.Cells for .NET.
-    public class RefreshAllExternalConnectionsDemo
+    static void Main()
     {
-        public static void Run()
+        // Load the workbook that contains external data connections
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Get the collection of external connections
+        ExternalConnectionCollection connections = workbook.DataConnections;
+
+        // Iterate through each connection and trigger a refresh
+        foreach (ExternalConnection conn in connections)
         {
-            try
-            {
-                const string inputPath = "InputWithConnections.xlsx";
-                const string outputPath = "OutputAfterRefresh.xlsx";
+            // Ensure the connection is set to refresh when the workbook is opened
+            conn.RefreshOnLoad = true;
 
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook containing external data connections
-                Workbook workbook = new Workbook(inputPath);
-
-                // Get the collection of external connections
-                ExternalConnectionCollection connections = workbook.DataConnections;
-
-                // Enable refresh on load for each connection
-                foreach (ExternalConnection conn in connections)
-                {
-                    conn.RefreshOnLoad = true;
-                }
-
-                // Recalculate all formulas to reflect refreshed data
-                workbook.CalculateFormula();
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Force synchronous refresh (no background processing)
+            conn.BackgroundRefresh = false;
         }
-    }
 
-    // Program entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            RefreshAllExternalConnectionsDemo.Run();
-        }
+        // Recalculate all formulas so that any data retrieved by the connections is applied
+        workbook.CalculateFormula();
+
+        // Save the workbook after all connections have been refreshed
+        workbook.Save("output.xlsx");
     }
 }

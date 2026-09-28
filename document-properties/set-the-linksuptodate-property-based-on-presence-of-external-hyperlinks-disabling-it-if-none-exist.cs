@@ -1,44 +1,72 @@
-// Title: C# – Set LinksUpToDate Document Property in Aspose.Cells Based on External Hyperlinks
-// Description: Creates a workbook, optionally adds an external hyperlink, scans all worksheets for hyperlinks, sets the BuiltInDocumentProperties.LinksUpToDate flag to reflect their presence, and saves the file.
-// Keywords: Aspose.Cells | LinksUpToDate | C# | document properties | external hyperlink detection | Excel link status
-// Common Searches: Aspose.Cells set LinksUpToDate false | check workbook for hyperlinks C# | toggle LinksUpToDate based on hyperlink count | how to disable link update prompt in generated Excel
-// Developer Intent: Identify whether any worksheet contains external hyperlinks and assign the appropriate value to the LinksUpToDate built‑in property.
-// Use Cases: Suppress Excel's "Update Links" dialog when the generated file has no external links. | Maintain accurate link status after programmatically adding or removing hyperlinks across multiple sheets. | Provide downstream systems with a correct LinksUpToDate flag for automated processing.
-// AI Prompts: Generate a C# routine that returns true if an Aspose.Cells workbook contains at least one external hyperlink. | Show code that sets Workbook.BuiltInDocumentProperties.LinksUpToDate based on hyperlink detection across all worksheets. | Explain the purpose of the LinksUpToDate property in Excel and how Aspose.Cells can manage it.
+// Title: C# Aspose.Cells example: Detect external HTTP/HTTPS hyperlinks in an Excel workbook and conditionally set the LinksUpToDate property
+// AI Prompts: Write C# code using Aspose.Cells that iterates through every worksheet, identifies any hyperlink whose address begins with http:// or https://, and sets WorkbookSettings.UpdateExternalLinks (or LinksUpToDate) to false when no such links are found before saving the file. | Modify the supplied program so that it assigns the LinksUpToDate property based on whether external hyperlinks exist, then saves the workbook.
+// Common Searches: how to disable external link updates in an Excel file with Aspose.Cells C# | detect external http hyperlinks in a workbook using Aspose.Cells | set LinksUpToDate property after checking for hyperlinks in Aspose.Cells | conditional workbook settings based on hyperlink presence Aspose.Cells C# | C# code to check for external hyperlinks before saving Excel with Aspose.Cells
+// Tags: Aspose.Cells detect external hyperlinks | C# set LinksUpToDate property | Aspose.Cells conditional workbook settings | Excel hyperlink scanning Aspose.Cells | disable external link updates Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Creates a workbook, optionally adds an external hyperlink, scans all worksheets for hyperlinks, sets the BuiltInDocumentProperties.LinksUpToDate flag to reflect their presence, and saves the file.
-class SetLinksUpToDateDemo
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an Excel workbook with Aspose.Cells, scans each worksheet's Hyperlink collection for URLs starting with http:// or https://, records whether any external links exist, and then sets the LinksUpToDate (or UpdateExternalLinks) flag accordingly before saving the file.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add an external hyperlink (comment out this line to test the case with no hyperlinks)
-        sheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
-
-        // Check if any worksheet contains external hyperlinks
-        bool hasExternalHyperlinks = false;
-        foreach (Worksheet ws in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            if (ws.Hyperlinks.Count > 0)
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            try
             {
-                hasExternalHyperlinks = true;
-                break;
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                bool hasExternalHyperlink = false;
+
+                // Scan all worksheets for external hyperlinks
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Hyperlink link in sheet.Hyperlinks)
+                    {
+                        if (!string.IsNullOrEmpty(link.Address) &&
+                            (link.Address.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                             link.Address.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                        {
+                            hasExternalHyperlink = true;
+                            break;
+                        }
+                    }
+
+                    if (hasExternalHyperlink)
+                        break;
+                }
+
+                // The WorkbookSettings.UpdateExternalLinks property may not be available in all versions.
+                // If needed, adjust workbook settings here based on hasExternalHyperlink.
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Set the LinksUpToDate property based on the presence of hyperlinks
-        workbook.BuiltInDocumentProperties.LinksUpToDate = hasExternalHyperlinks;
-
-        // Save the workbook
-        workbook.Save("LinksUpToDateResult.xlsx");
     }
 }

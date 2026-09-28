@@ -1,38 +1,38 @@
-// Title: C# Aspose.Cells Example: Hide Rows 20‑30 and Save Workbook
-// Description: Shows how to hide rows 20 through 30 (zero‑based indices 19‑29) in an Aspose.Cells worksheet and save the workbook as an .xlsx file using C#.
-// Keywords: Aspose.Cells hide rows C# | HideRows method Aspose.Cells | C# hide Excel rows | Aspose.Cells save hidden rows | Aspose.Cells .NET example | Excel row concealment C# | GitHub Aspose.Cells hide rows | Aspose.Cells workbook export | C# Excel automation hide rows | Aspose.Cells documentation hide rows
-// Common Searches: How to hide rows 20-30 using Aspose.Cells C# | Aspose.Cells HideRows example .NET | C# code to conceal specific rows in Excel | Save Excel file with hidden rows Aspose.Cells | Aspose.Cells hide multiple rows tutorial
-// Developer Intent: Hide rows 20 to 30 in a worksheet and save the workbook with those rows concealed.
-// Use Cases: Create a report where intermediate calculation rows (20‑30) are hidden before distribution. | Prepare a template that hides placeholder rows so end users only see the relevant sections. | Generate a clean‑looking workbook by concealing helper rows used for internal formulas.
-// AI Prompts: Write C# code using Aspose.Cells to hide rows 20‑30 and save the workbook as HiddenRows20to30.xlsx. | Explain the zero‑based indexing of the HideRows method in Aspose.Cells and how to calculate the row count. | Provide a reusable function that hides rows based on variable start index and count, then saves the file.
+// Title: Hide rows 20‑30 in an Excel worksheet and save the workbook with Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells for .NET to hide rows 20 through 30 in a worksheet and then save the workbook as an .xlsx file. | Programmatically conceal a range of rows (20‑30) in a new Excel workbook using the Cells.HideRows method and persist the file. | Create a workbook, hide rows 20‑30 on the first sheet with Aspose.Cells, and export the result to HiddenRows.xlsx.
+// Common Searches: Aspose.Cells C# hide rows 20 to 30 and save workbook | How to conceal a specific row range in Excel using Aspose.Cells .NET | C# example for hiding rows in an Aspose.Cells worksheet | Saving an Excel file with hidden rows using Aspose.Cells for .NET | Cells.HideRows method usage in Aspose.Cells C# example
+// Tags: Aspose.Cells hide rows example | Cells.HideRows C# | save workbook with hidden rows Aspose | Excel row concealment Aspose.Cells .NET | programmatic row hiding Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace HideRowsExample
+// The sample creates a new workbook, hides rows 20‑30 on the first worksheet using Cells.HideRows, and saves the file as HiddenRows.xlsx.
+class Program
 {
-    // Shows how to hide rows 20 through 30 (zero‑based indices 19‑29) in an Aspose.Cells worksheet and save the workbook as an .xlsx file using C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Optionally populate some data (not required for hiding)
-            for (int i = 0; i < 40; i++)
-            {
-                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
-            }
+            // Define the range to hide (rows 20 to 30, 1‑based indexing)
+            int startRowIndex = 19; // row 20 (zero‑based)
+            int endRowIndex = 29;   // row 30 (zero‑based)
+            int totalRows = endRowIndex - startRowIndex + 1;
 
-            // Hide rows 20 to 30 (zero‑based index: 19 to 29, total 11 rows)
-            worksheet.Cells.HideRows(19, 11);
+            // Hide the specified rows using the correct API
+            sheet.Cells.HideRows(startRowIndex, totalRows);
 
-            // Save the workbook with hidden rows concealed
-            workbook.Save("HiddenRows20to30.xlsx");
+            // Save the workbook with the rows concealed
+            workbook.Save("HiddenRows.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

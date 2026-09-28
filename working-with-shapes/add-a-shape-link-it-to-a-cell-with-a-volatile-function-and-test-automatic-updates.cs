@@ -1,58 +1,64 @@
-// Title: Link a Rectangle Shape to a Cell with a Volatile NOW() Formula and Auto‑Refresh in Aspose.Cells for .NET
-// Description: Demonstrates how to add a rectangle shape to a worksheet, bind it to cell C5, assign the volatile NOW() formula, trigger initial calculation, pause, recalculate to get a new timestamp, refresh the shape's displayed value with UpdateSelectedValue, and save the workbook.
-// Keywords: Aspose.Cells shape linking | volatile formula NOW | UpdateSelectedValue | auto refresh linked shape | C# workbook.CalculateFormula | shape to cell binding | dynamic timestamp in Excel | .NET Excel automation
-// Common Searches: Aspose.Cells link shape to cell with NOW() | Refresh linked shape after formula recalculation | C# update shape value from volatile function | SetLinkedCell parameters example | How to auto‑update shape after workbook.CalculateFormula
-// Developer Intent: Create a rectangle shape, bind it to a cell containing a volatile formula, and verify that the shape updates automatically after recalculation.
-// Use Cases: Display a live timestamp on a dashboard by linking a shape to =NOW(). | Showcase automatic synchronization between shapes and volatile formulas in reporting tools. | Persist shape‑cell relationships for later editing or data refresh scenarios.
-// AI Prompts: Write C# code that adds a rectangle shape, links it to a cell with =NOW(), and refreshes the shape after calling workbook.CalculateFormula using Aspose.Cells. | Explain the effect of each parameter in SetLinkedCell and how UpdateSelectedValue works with volatile formulas. | Provide a step‑by‑step tutorial for testing automatic updates of a linked shape when the NOW() value changes.
+// Title: Create a rectangle shape linked to a volatile NOW() formula and automatically refresh its caption using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet, sets its Text property to the evaluated result of cell A1 containing =NOW(), and updates the Text after each workbook.CalculateFormula call with Aspose.Cells. | Write a method that binds any shape’s caption to a cell holding a volatile function so the caption reflects the latest calculation result without manual intervention. | Provide error‑handling logic that keeps a shape’s text synchronized with a linked cell even when the cell formula throws an exception during recalculation.
+// Common Searches: how to bind a shape’s caption to a volatile formula in Aspose.Cells C# | refresh shape text after workbook.CalculateFormula Aspose.Cells example | link rectangle shape to NOW() cell value using Aspose.Cells for .NET | automatic update of shape text when volatile function recalculates in Excel with Aspose | C# Aspose.Cells shape text synchronization with cell formulas
+// Tags: add rectangle shape Aspose.Cells C# | link shape caption to cell value | volatile function shape text update | auto refresh shape after workbook recalculation | save workbook with linked shape Aspose.Cells
 
 using System;
 using System.Threading;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle shape to a worksheet, bind it to cell C5, assign the volatile NOW() formula, trigger initial calculation, pause, recalculate to get a new timestamp, refresh the shape's displayed value with UpdateSelectedValue, and save the workbook.
+// Shows how to insert a rectangle shape, bind its text to the result of a volatile NOW() formula in cell A1, recalculate the workbook to refresh the caption automatically, and save the workbook as an .xlsx file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, width, height, upper left offset X, offset Y
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 100, 50, 0, 0);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Link the shape to cell C5
-            shape.SetLinkedCell("$C$5", false, true);
+            // Insert a volatile function (NOW) into cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.Formula = "=NOW()";
 
-            // Set a volatile function (NOW) in the linked cell
-            // Use the Formula property to avoid overload issues
-            worksheet.Cells["C5"].Formula = "=NOW()";
+            // Add a rectangle shape to the worksheet and obtain the Shape object directly
+            // Parameters: shape type, upper left row, upper left column, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,    // upper left row
+                0,    // upper left column
+                0,    // top (pixels)
+                0,    // left (pixels)
+                30,   // height (pixels)
+                100); // width (pixels)
 
-            // Perform initial calculation so the volatile function gets a value
+            // Force calculation to evaluate the volatile function
             workbook.CalculateFormula();
 
-            Console.WriteLine("Initial linked cell value: " + worksheet.Cells["C5"].Value);
+            // Set shape text to the evaluated cell value
+            shape.Text = cell.Value?.ToString() ?? string.Empty;
 
-            // Wait a few seconds to allow the volatile function to change
-            Thread.Sleep(3000);
+            // Display the shape's text after the first calculation
+            Console.WriteLine("Shape text after first calculation: " + shape.Text);
 
-            // Recalculate to update the volatile function result
+            // Pause briefly, then recalculate to demonstrate automatic update
+            Thread.Sleep(2000);
             workbook.CalculateFormula();
 
-            Console.WriteLine("After recalculation linked cell value: " + worksheet.Cells["C5"].Value);
+            // Update shape text again after recalculation
+            shape.Text = cell.Value?.ToString() ?? string.Empty;
 
-            // Update the shape's selected value from the linked cell (if applicable)
-            shape.UpdateSelectedValue();
+            // Display the shape's text after the second calculation
+            Console.WriteLine("Shape text after second calculation: " + shape.Text);
 
-            // Save the workbook (optional, demonstrates full lifecycle)
-            string outputPath = "ShapeLinkedCellVolatile.xlsx";
+            // Save the workbook
+            string outputPath = "ShapeLinkedToVolatileFunction.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

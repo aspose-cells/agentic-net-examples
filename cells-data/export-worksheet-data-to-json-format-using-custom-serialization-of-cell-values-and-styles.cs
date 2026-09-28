@@ -1,18 +1,15 @@
-// Title: Export Excel Range to JSON with Custom Value and Style Serialization using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, populate a product‑price table, apply header and numeric formatting, and then export the A1:B4 range to a pretty‑printed JSON string. The example uses JsonSaveOptions to serialize all cell values as strings, include empty cells as null, write styles per cell, treat the first row as a header, and control indentation.
-// Keywords: Aspose.Cells | C# | .NET | JsonSaveOptions | export range to JSON | Excel to JSON | custom JSON serialization | include empty cells | export cell styles | pretty printed JSON | header row handling | range export
-// Common Searches: Aspose.Cells export range to JSON C# | how to include empty cells in JSON export with Aspose.Cells | export Excel sheet as JSON with custom style options | pretty printed JSON from Excel using Aspose.Cells | JsonSaveOptions ExportAsString example
-// Developer Intent: Generate a JSON representation of a selected worksheet range with custom serialization of values and styles.
-// Use Cases: Create a JSON API payload from an Excel product list while preserving column headers and representing missing prices as null. | Produce a readable, indented JSON file for data exchange with systems that require all values as strings. | Log worksheet content in JSON format for debugging, auditing, or version control.
-// AI Prompts: Show how to modify JsonSaveOptions to use a shared style pool instead of per‑cell style export. | Provide code to deserialize the generated JSON back into a DataTable or a list of C# objects. | Explain how to export a nested JSON structure from multiple worksheets using Aspose.Cells.
+// Title: Export an Aspose.Cells worksheet to a formatted JSON file with custom value conversion and per‑cell style information in C#
+// AI Prompts: Generate C# code that uses Aspose.Cells JsonSaveOptions to save an entire worksheet as an indented JSON document, converting every cell value to a string and embedding each cell's style data. | Write C# that extracts a specific range from a worksheet and returns its JSON representation using JsonUtility.ExportRangeToJson with options for empty cells, string conversion, and Excel structure. | Show how to adjust JsonSaveOptions to produce a compact JSON output that omits per‑cell style information while preserving header rows.
+// Common Searches: how to use Aspose.Cells JsonSaveOptions to export a worksheet as JSON with cell styles in C# | C# Aspose.Cells export selected range to JSON string including formatting | save Excel workbook to a pretty printed JSON file using Aspose.Cells .NET | Aspose.Cells export empty cells as null and values as strings in JSON | customize JSON output from Aspose.Cells to include Excel structure
+// Tags: Aspose.Cells JsonSaveOptions export worksheet to JSON | C# export Excel range to JSON with style data | serialize cell values as strings using Aspose.Cells | include per‑cell formatting in JSON output Aspose | pretty‑printed JSON export from workbook Aspose.Cells
 
 using System;
 using System.IO;
-using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to create a workbook, populate a product‑price table, apply header and numeric formatting, and then export the A1:B4 range to a pretty‑printed JSON string. The example uses JsonSaveOptions to serialize all cell values as strings, include empty cells as null, write styles per cell, treat the first row as a header, and control indentation.
+// The example creates a workbook, adds sample data, applies header and numeric styles, configures JsonSaveOptions to serialize all values as strings, include empty cells, embed per‑cell style information, treat the first row as a header, and pretty‑print the JSON with indentation. It then saves the whole worksheet to a JSON file and demonstrates exporting a defined range to a JSON string.
 class ExportWorksheetToJson
 {
     static void Main()
@@ -21,61 +18,57 @@ class ExportWorksheetToJson
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Price");
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue(1.5);
-            cells["A3"].PutValue("Banana");
-            cells["B3"].PutValue(0.8);
-            // Leave B4 empty intentionally to test empty‑cell handling
-            cells["A4"].PutValue("Cherry");
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Price");
+            worksheet.Cells["C1"].PutValue("InStock");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue(1.2);
+            worksheet.Cells["C2"].PutValue(true);
+            worksheet.Cells["A3"].PutValue("Banana");
+            worksheet.Cells["B3"].PutValue(0.8);
+            worksheet.Cells["C3"].PutValue(false);
 
-            // Apply distinct styles to header cells
+            // Apply a header style
             Style headerStyle = workbook.CreateStyle();
             headerStyle.Font.IsBold = true;
-            headerStyle.Font.Color = Color.White;
-            headerStyle.ForegroundColor = Color.DarkBlue;
+            headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
             headerStyle.Pattern = BackgroundType.Solid;
-            cells["A1"].SetStyle(headerStyle);
-            cells["B1"].SetStyle(headerStyle);
+            worksheet.Cells["A1:C1"].SetStyle(headerStyle);
 
-            // Apply numeric format to price cells
+            // Apply a numeric style to price column
             Style priceStyle = workbook.CreateStyle();
             priceStyle.Number = 2; // two decimal places
-            cells["B2"].SetStyle(priceStyle);
-            cells["B3"].SetStyle(priceStyle);
+            worksheet.Cells["B2:B3"].SetStyle(priceStyle);
 
-            // Configure JSON export options with custom serialization settings
+            // Configure JSON export options for custom serialization
             JsonSaveOptions jsonOptions = new JsonSaveOptions
             {
-                ExportAsString = true,          // export all values as strings
-                ExportEmptyCells = true,        // include empty cells as null
-                ExportStylePool = false,        // export style for each cell individually
-                HasHeaderRow = true,            // first row is treated as header
-                Indent = "    ",                // pretty‑print with 4‑space indentation
-                ExportNestedStructure = false  // flat JSON structure
+                ExportAsString = true,      // serialize all cell values as strings
+                ExportEmptyCells = true,    // include empty cells as null
+                ExportStylePool = false,    // export style information per cell
+                HasHeaderRow = true,        // first row is treated as header
+                Indent = "    ",            // pretty‑print JSON with 4‑space indentation
+                ToExcelStruct = true        // include Excel structure (styles) in JSON
             };
 
-            // Define the range to export (A1:B4)
-            AsposeRange exportRange = sheet.Cells.CreateRange("A1:B4");
+            // Export the entire worksheet to a JSON file using the configured options
+            string outputPath = "WorksheetExport.json";
+            workbook.Save(outputPath, jsonOptions);
+            Console.WriteLine($"Workbook exported to JSON file: {Path.GetFullPath(outputPath)}");
 
-            // Convert the range to JSON using the configured options
-            string jsonResult = exportRange.ToJson(jsonOptions);
-
-            // Output the JSON string to the console
-            Console.WriteLine(jsonResult);
-
-            // Optionally write the JSON to a file
-            string outputPath = "ExportedData.json";
-            File.WriteAllText(outputPath, jsonResult);
+            // Obtain the JSON string for a specific range
+            AsposeRange range = worksheet.Cells.CreateRange("A1:C3");
+            string jsonString = JsonUtility.ExportRangeToJson(range, jsonOptions);
+            Console.WriteLine("JSON for selected range:");
+            Console.WriteLine(jsonString);
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

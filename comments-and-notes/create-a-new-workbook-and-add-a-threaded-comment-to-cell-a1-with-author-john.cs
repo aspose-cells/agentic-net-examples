@@ -1,31 +1,34 @@
-// Title: Add a Threaded Comment by John to Cell A1 in a New Workbook – Aspose.Cells for .NET
-// Description: C# example that creates a fresh Workbook, registers a threaded comment author named John, inserts a threaded comment with custom text into cell A1, and saves the file as ThreadedCommentDemo.xlsx using Aspose.Cells.
-// Keywords: Aspose.Cells threaded comment C# | add comment to cell A1 | threaded comment author | create workbook Aspose.Cells | save Excel with comments .NET | Aspose.Cells API example
-// Common Searches: how to add a threaded comment in Aspose.Cells C# | set author for threaded comments Aspose.Cells | save workbook with threaded comments .NET | Aspose.Cells add comment to specific cell
-// Developer Intent: Insert a threaded comment authored by John into cell A1 of a newly created workbook.
-// Use Cases: Annotate key cells in generated reports for reviewer feedback. | Maintain an audit trail by embedding author information in spreadsheet comments. | Automate collaborative note‑taking before distributing Excel files.
-// AI Prompts: Show how to add multiple threaded comments with different authors in Aspose.Cells for .NET. | Provide code to list all threaded comments and their authors from an existing Excel workbook. | Explain how to modify the text of an existing threaded comment using Aspose.Cells.
+// Title: How to create an Excel workbook and add a threaded comment to cell A1 with author John using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that initializes a new Workbook, registers a threaded comment author named John, inserts a threaded comment into cell A1, and saves the file as an .xlsx. | Demonstrate using the ThreadedCommentAuthors collection and the Comments.AddThreadedComment method to attach a comment to a specific cell in Aspose.Cells. | Show the steps to persist an Excel file after adding a threaded comment with a custom author in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add threaded comment to cell A1 with custom author | How to set up ThreadedCommentAuthors in Aspose.Cells .NET | Saving an Excel workbook after inserting a threaded comment using Aspose.Cells | Example code for adding a threaded comment in Aspose.Cells for .NET | Create workbook and add comment author John Aspose.Cells C#
+// Tags: Aspose.Cells threaded comment workflow | C# threaded comment author setup | Insert comment into specific cell Aspose.Cells | Save Excel file after comment insertion | Excel threaded comment author configuration .NET
 
 using System;
 using Aspose.Cells;
 
-// C# example that creates a fresh Workbook, registers a threaded comment author named John, inserts a threaded comment with custom text into cell A1, and saves the file as ThreadedCommentDemo.xlsx using Aspose.Cells.
-class Program
+namespace AsposeCellsThreadedCommentDemo
 {
-    static void Main()
+    // Creates a new workbook, registers a threaded comment author named John, adds a threaded comment to cell A1, and saves the workbook as ThreadedCommentDemo.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook (uses the Aspose.Cells create rule)
+            Workbook workbook = new Workbook();
 
-        // Add a threaded comment author named John
-        int authorIndex = workbook.Worksheets.ThreadedCommentAuthors.Add("John", "john@example.com", "PROVIDER");
-        ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIndex];
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a threaded comment to cell A1 with the author John
-        worksheet.Comments.AddThreadedComment("A1", "This is a threaded comment.", author);
+            // Add a threaded comment author named "John"
+            // Parameters: name, userId, providerId
+            int authorIndex = workbook.Worksheets.ThreadedCommentAuthors.Add("John", "john@example.com", "PROVIDER");
+            ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIndex];
 
-        // Save the workbook
-        workbook.Save("ThreadedCommentDemo.xlsx");
+            // Add a threaded comment to cell A1 (row 0, column 0) with the author
+            worksheet.Comments.AddThreadedComment(0, 0, "This is a threaded comment by John.", author);
+
+            // Save the workbook (uses the Aspose.Cells save rule)
+            workbook.Save("ThreadedCommentDemo.xlsx");
+        }
     }
 }

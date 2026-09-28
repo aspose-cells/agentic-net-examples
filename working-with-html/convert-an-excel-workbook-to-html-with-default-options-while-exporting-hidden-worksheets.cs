@@ -1,35 +1,23 @@
-// Title: Convert Excel to HTML with Aspose.Cells (C#) – include hidden worksheets
-// Description: Loads an .xlsx file into an Aspose.Cells Workbook, creates HtmlSaveOptions with default settings, sets ExportHiddenWorksheet to true, and saves the workbook as an HTML file. All worksheets, including hidden ones, are rendered in the output.
-// Keywords: Aspose.Cells | C# Excel to HTML | HtmlSaveOptions | ExportHiddenWorksheet | convert hidden worksheets to HTML | default HTML conversion | Workbook.Save HTML | Aspose.Cells .NET
-// Common Searches: Aspose.Cells export hidden worksheets to HTML C# | Convert Excel workbook to HTML with default options | HtmlSaveOptions ExportHiddenWorksheet example | C# save .xlsx as .html using Aspose.Cells | How to include hidden sheets in HTML export Aspose
-// Developer Intent: The developer needs to transform an Excel workbook into an HTML document while ensuring that any hidden worksheets are also rendered.
-// Use Cases: Publish a complete Excel report on a website, showing hidden analysis sheets in HTML. | Create HTML snapshots of workbooks for email or documentation, preserving all worksheet visibility. | Automate batch conversion of multiple .xlsx files to .html for an internal knowledge base, using default settings and exporting hidden sheets.
-// AI Prompts: Generate C# code with Aspose.Cells to convert an Excel file to HTML and include hidden worksheets. | Explain the default behavior of HtmlSaveOptions.ExportHiddenWorksheet and when to set it explicitly. | Provide a script that batch processes a folder of Excel files, converting each to HTML while exporting hidden worksheets.
+// Title: Convert an Excel workbook to HTML and include hidden worksheets using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file and saves it as .html with all worksheets, including hidden ones, using Aspose.Cells. | Show how to enable HtmlSaveOptions.ExportHiddenWorksheet in Aspose.Cells to export hidden sheets during HTML conversion. | Provide a minimal .NET example that converts a workbook to HTML while preserving hidden worksheet visibility.
+// Common Searches: Aspose.Cells export hidden worksheets to HTML in C# | C# convert Excel file to HTML with hidden sheets included | HtmlSaveOptions ExportHiddenWorksheet property usage example | How to save an Excel workbook as HTML and keep hidden worksheets using Aspose.Cells | Convert .xlsx to .html with all sheets visible using Aspose.Cells .NET
+// Tags: Aspose.Cells HTML hidden worksheet export | HtmlSaveOptions ExportHiddenWorksheet usage | C# Excel to HTML conversion Aspose | include hidden sheets in HTML output | Aspose.Cells save workbook as HTML
 
-using System;
 using Aspose.Cells;
 
-// Loads an .xlsx file into an Aspose.Cells Workbook, creates HtmlSaveOptions with default settings, sets ExportHiddenWorksheet to true, and saves the workbook as an HTML file. All worksheets, including hidden ones, are rendered in the output.
+// // Loads 'input.xlsx', sets HtmlSaveOptions.ExportHiddenWorksheet to true, and saves the workbook as 'output.html' using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Source Excel file path
-        string sourcePath = "input.xlsx";
+        // Load the Excel workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Destination HTML file path
-        string outputPath = "output.html";
+        // Configure HTML save options to include hidden worksheets
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportHiddenWorksheet = true; // export hidden sheets
 
-        // Load the workbook from the Excel file
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Create HTML save options with default settings
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-
-        // Explicitly export hidden worksheets (default is true, set for clarity)
-        saveOptions.ExportHiddenWorksheet = true;
-
-        // Save the workbook as an HTML file using the specified options
-        workbook.Save(outputPath, saveOptions);
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

@@ -1,49 +1,71 @@
-// Title: Find Hidden and Protected Worksheets in an Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file using Aspose.Cells, iterates through every worksheet, checks hidden status via IsVisible/VisibilityType and protection via IsProtected, and prints the names of sheets that are both hidden and protected.
-// Keywords: Aspose.Cells hidden worksheets | Aspose.Cells protected sheets | C# detect hidden Excel sheets | list hidden protected worksheets .NET | Excel workbook security audit Aspose | enumerate hidden protected worksheets C# | worksheet visibility Aspose.Cells | check worksheet protection Aspose.Cells
-// Common Searches: how to list hidden and password protected worksheets using Aspose.Cells C# | Aspose.Cells C# find worksheets that are hidden and protected | detect hidden protected sheets in Excel with Aspose.Cells .NET | enumerate invisible protected worksheets Aspose.Cells | C# code to check worksheet visibility and protection Aspose
-// Developer Intent: Retrieve the names of all worksheets that are simultaneously hidden and protected in an Excel workbook.
-// Use Cases: Perform a security audit of an Excel file before distribution by identifying concealed protected sheets. | Automate compliance checks to ensure confidential data isn’t stored in hidden protected worksheets. | Generate a report of hidden protected worksheets for documentation or review purposes.
-// AI Prompts: Write C# code with Aspose.Cells that lists hidden and protected worksheets and then unhides them. | Show how to save a copy of the workbook after removing protection from hidden sheets using Aspose.Cells. | Explain the difference between hidden, very hidden, and protected worksheets and the Aspose.Cells properties that expose each state.
+// Title: Find hidden and protected worksheets in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that takes a file path and returns a list of worksheet names that are both hidden and protected. | Create a reusable method in C# that scans an Excel workbook with Aspose.Cells and prints each hidden protected sheet name. | Extend the sample to also output the protection status (e.g., password set) for each hidden worksheet using Aspose.Cells.
+// Common Searches: asp.net how to list hidden protected worksheets using Aspose.Cells | c# Aspose.Cells retrieve names of hidden sheets that are password protected | detect hidden and protected worksheets in .xlsx with Aspose.Cells library | check worksheet visibility and protection status programmatically Aspose.Cells C#
+// Tags: Aspose.Cells hidden worksheet detection | C# list protected Excel sheets | retrieve hidden protected worksheet names Aspose | Excel workbook worksheet visibility check Aspose.Cells | Aspose.Cells worksheet protection status .NET
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHiddenProtectedSheets
+// Loads an Excel file with Aspose.Cells, iterates through all worksheets, checks IsVisible and IsProtected flags, collects names of sheets that are both hidden and protected, and outputs the list or a message when none are found.
+class Program
 {
-    // Loads an Excel file using Aspose.Cells, iterates through every worksheet, checks hidden status via IsVisible/VisibilityType and protection via IsProtected, and prints the names of sheets that are both hidden and protected.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the workbook to be inspected
-            string inputPath = "input.xlsx";
+            // Path to the input workbook
+            string filePath = "input.xlsx";
 
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputPath);
-
-            Console.WriteLine("Hidden and protected worksheets:");
-
-            // Iterate through all worksheets
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            // Ensure the file exists before attempting to load it
+            if (!File.Exists(filePath))
             {
-                Worksheet sheet = workbook.Worksheets[i];
+                Console.WriteLine($"Error: The file \"{filePath}\" was not found.");
+                return;
+            }
 
-                // Determine if the sheet is hidden (IsVisible false or VisibilityType not Visible)
-                bool isHidden = !sheet.IsVisible || sheet.VisibilityType != VisibilityType.Visible;
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-                // Determine if the sheet is protected
+            // List to hold names of worksheets that are both hidden and protected
+            List<string> hiddenProtectedSheets = new List<string>();
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // A worksheet is hidden when its IsVisible property is false
+                bool isHidden = !sheet.IsVisible;
+
+                // Determine if the worksheet is protected.
+                // In newer Aspose.Cells versions the Worksheet class exposes IsProtected directly.
                 bool isProtected = sheet.IsProtected;
 
-                // If both conditions are true, output the sheet name
+                // Add the sheet name to the list if both conditions are met
                 if (isHidden && isProtected)
                 {
-                    Console.WriteLine($"- {sheet.Name}");
+                    hiddenProtectedSheets.Add(sheet.Name);
                 }
             }
 
-            // Optionally, save a copy of the workbook (lifecycle rule: save)
-            // workbook.Save("output.xlsx");
+            // Output the results
+            if (hiddenProtectedSheets.Count > 0)
+            {
+                Console.WriteLine("Hidden and protected worksheets found:");
+                foreach (string name in hiddenProtectedSheets)
+                {
+                    Console.WriteLine("- " + name);
+                }
+            }
+            else
+            {
+                Console.WriteLine("No hidden protected worksheets found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

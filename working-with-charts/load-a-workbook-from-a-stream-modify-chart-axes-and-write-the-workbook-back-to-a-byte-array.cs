@@ -1,53 +1,43 @@
-// Title: Modify Excel Chart Axes from a Byte Array with Aspose.Cells for .NET
-// Description: Loads an Excel workbook from a byte[] using a MemoryStream, accesses the first worksheet and its first chart, updates the category and value axis titles, sets major tick marks to outside, optionally defines the value axis range, then saves the workbook back to a byte[] in XLSX format.
-// Keywords: Aspose.Cells | C# | .NET | chart axis modification | load workbook from byte array | save workbook to byte array | Excel chart formatting | memory stream | set axis titles | tick mark style | axis range
-// Common Searches: Aspose.Cells change chart axis title programmatically | load Excel file from byte[] and edit chart | save modified Excel workbook to byte array C# | set chart tick marks Aspose.Cells .NET | adjust chart axis range using Aspose.Cells
-// Developer Intent: Edit the axis properties of the first chart in a workbook that is read from a byte array and return the updated workbook as a byte array.
-// Use Cases: Server‑side processing of uploaded Excel files to rename chart axes before sending the file back to the client. | Dynamic report generation where axis titles and ranges are calculated from data and the result is streamed via a web API. | Document conversion pipelines that need to modify chart formatting without writing intermediate files to disk.
-// AI Prompts: Create a C# method that receives a byte[] of an Excel file, changes the first chart's category and value axis titles, sets major tick marks to outside, defines a value axis range of 0‑100, and returns the modified workbook as a byte[]. | Add robust error handling to the chart‑axis modification routine: check for the existence of charts, log a warning if none are found, and handle unexpected exceptions gracefully. | Extend the ModifyChartAxes function to iterate through all worksheets and update every chart's axis titles and ranges based on supplied parameters.
+// Title: Load an Excel workbook from a byte array, modify chart axis titles and value range, and save back to a byte array using Aspose.Cells for .NET
+// AI Prompts: Read an Excel file from a byte[] via MemoryStream, loop through every worksheet and chart, set custom text for CategoryAxis.Title and ValueAxis.Title, define ValueAxis.MinValue and ValueAxis.MaxValue, then write the workbook to a new MemoryStream and return the resulting byte array with Aspose.Cells in C#. | Load a workbook from a byte array, adjust each chart's axis labels and numeric limits, and export the updated workbook as a byte[] without touching the file system, using the Aspose.Cells chart API.
+// Common Searches: Aspose.Cells C# change chart axis title from byte array | How to set chart value axis min and max programmatically with Aspose.Cells | Save modified Excel workbook to byte[] after editing charts in .NET | Iterate over all charts in a workbook loaded from MemoryStream using Aspose.Cells | Update chart axis labels in an in-memory Excel file with Aspose.Cells
+// Tags: Aspose.Cells chart axis title update | byte array workbook loading Aspose.Cells | chart value axis min max Aspose.Cells | enumerate charts worksheet Aspose.Cells | export workbook to byte array .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExample
+// The sample loads an Excel workbook from a byte array using a MemoryStream, iterates through each worksheet and its charts, changes the CategoryAxis and ValueAxis titles, sets a fixed minimum and maximum for the value axis, and then saves the modified workbook to another MemoryStream, returning the updated workbook as a byte array.
+public class ChartAxisModifier
 {
-    // Loads an Excel workbook from a byte[] using a MemoryStream, accesses the first worksheet and its first chart, updates the category and value axis titles, sets major tick marks to outside, optionally defines the value axis range, then saves the workbook back to a byte[] in XLSX format.
-    public class ChartAxisModifier
+    // Loads a workbook from a byte array, modifies chart axes, and returns the updated workbook as a byte array.
+    public static byte[] ModifyChartAxes(byte[] sourceBytes)
     {
-        /// <param name="inputExcel">The input Excel file bytes.</param>
-        /// <returns>Byte array of the modified workbook.</returns>
-        public static byte[] ModifyChartAxes(byte[] inputExcel)
+        try
         {
-            // Load the workbook from the input stream
-            using (MemoryStream inputStream = new MemoryStream(inputExcel))
+            using (MemoryStream inputStream = new MemoryStream(sourceBytes))
+            using (Workbook workbook = new Workbook(inputStream))
             {
-                Workbook workbook = new Workbook(inputStream);
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one chart to modify
-                if (worksheet.Charts.Count > 0)
+                // Iterate through all worksheets
+                foreach (Worksheet worksheet in workbook.Worksheets)
                 {
-                    // Get the first chart
-                    Chart chart = worksheet.Charts[0];
+                    // Iterate through all charts in the worksheet
+                    foreach (Chart chart in worksheet.Charts)
+                    {
+                        // Modify the X (category) axis title
+                        chart.CategoryAxis.Title.Text = "Modified Category Axis";
 
-                    // Modify axis titles
-                    chart.CategoryAxis.Title.Text = "New Category Axis";
-                    chart.ValueAxis.Title.Text = "New Value Axis";
+                        // Modify the Y (value) axis title
+                        chart.ValueAxis.Title.Text = "Modified Value Axis";
 
-                    // Set major tick marks for both axes
-                    chart.CategoryAxis.MajorTickMark = TickMarkType.Outside;
-                    chart.ValueAxis.MajorTickMark = TickMarkType.Outside;
-
-                    // Optionally set axis range (example values)
-                    chart.ValueAxis.MinValue = 0;
-                    chart.ValueAxis.MaxValue = 100;
+                        // Example: set a fixed range for the value axis
+                        chart.ValueAxis.MinValue = 0;
+                        chart.ValueAxis.MaxValue = 100;
+                    }
                 }
 
-                // Save the modified workbook to a memory stream as XLSX
+                // Save the modified workbook to an output stream
                 using (MemoryStream outputStream = new MemoryStream())
                 {
                     workbook.Save(outputStream, SaveFormat.Xlsx);
@@ -55,41 +45,69 @@ namespace AsposeCellsExample
                 }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error modifying chart axes: {ex.Message}");
+            throw;
+        }
     }
 
-    public class Program
+    // Demonstration of usage
+    public static void Main()
     {
-        // Entry point required for compilation
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists; if not, create a simple workbook with a chart
+            if (!File.Exists(inputPath))
             {
-                // Determine input and output file paths
-                string inputPath = args.Length > 0 ? args[0] : "input.xlsx";
-                string outputPath = args.Length > 1 ? args[1] : "output_modified.xlsx";
-
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Read input workbook bytes
-                byte[] inputBytes = File.ReadAllBytes(inputPath);
-
-                // Modify chart axes
-                byte[] resultBytes = ChartAxisModifier.ModifyChartAxes(inputBytes);
-
-                // Write the modified workbook to the output file
-                File.WriteAllBytes(outputPath, resultBytes);
-                Console.WriteLine($"Modified workbook saved to: {outputPath}");
+                CreateSampleWorkbookWithChart(inputPath);
+                Console.WriteLine($"Sample workbook created at '{inputPath}'.");
             }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load an existing Excel file into a byte array
+            byte[] originalBytes = File.ReadAllBytes(inputPath);
+
+            // Modify chart axes and obtain the updated workbook bytes
+            byte[] modifiedBytes = ModifyChartAxes(originalBytes);
+
+            // Write the modified workbook to a file for verification
+            File.WriteAllBytes(outputPath, modifiedBytes);
+
+            Console.WriteLine($"Chart axes have been modified and saved to '{outputPath}'.");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    // Helper method to create a sample workbook containing a simple chart
+    private static void CreateSampleWorkbookWithChart(string filePath)
+    {
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+        ws.Name = "Data";
+
+        // Populate sample data
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["B1"].PutValue("Value");
+        ws.Cells["A2"].PutValue("A");
+        ws.Cells["B2"].PutValue(10);
+        ws.Cells["A3"].PutValue("B");
+        ws.Cells["B3"].PutValue(40);
+        ws.Cells["A4"].PutValue("C");
+        ws.Cells["B4"].PutValue(70);
+
+        // Add a chart
+        int chartIndex = ws.Charts.Add(ChartType.Column, 5, 0, 15, 7);
+        Chart chart = ws.Charts[chartIndex];
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
+
+        // Save the workbook
+        wb.Save(filePath, SaveFormat.Xlsx);
     }
 }

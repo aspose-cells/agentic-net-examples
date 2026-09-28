@@ -1,52 +1,58 @@
-// Title: Handle IncorrectPassword Exception when Opening an Encrypted Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a password‑protected workbook, save it, then attempt to load it with a wrong password using LoadOptions. The code catches CellsException with ExceptionType.IncorrectPassword, prints the message and code, and handles any other exceptions separately.
-// Keywords: Aspose.Cells | C# | encrypted workbook | incorrect password | CellsException | ExceptionType.IncorrectPassword | LoadOptions password | Excel encryption .NET | catch password exception | open protected workbook
-// Common Searches: Aspose.Cells catch incorrect password | How to handle CellsException IncorrectPassword | Load encrypted Excel file with wrong password Aspose.Cells | Get exception details for wrong password Aspose.Cells | C# open password protected workbook Aspose.Cells
-// Developer Intent: Attempt to open a password‑protected Excel file with an invalid password and capture the specific IncorrectPassword exception details.
-// Use Cases: Validate a user‑entered password, log audit information, and prevent unauthorized access when the password is wrong. | Display a friendly error message in a UI when Aspose.Cells reports an incorrect password. | Write unit tests that confirm Aspose.Cells throws CellsException with code IncorrectPassword for invalid credentials.
-// AI Prompts: Generate C# code that opens an encrypted workbook using Aspose.Cells, accepts a password argument, and returns a structured error object when the password is invalid. | Create a NUnit test that verifies Aspose.Cells throws CellsException with ExceptionType.IncorrectPassword when loading a workbook with an incorrect password. | Refactor the example to log the exception message and code to a file and rethrow a custom exception for higher‑level handling.
+// Title: How to open an encrypted Excel workbook with an incorrect password and retrieve Aspose.Cells exception information in C#
+// AI Prompts: Load a password‑protected .xlsx file using Aspose.Cells with an invalid password and print the CellsException message and stack trace. | Demonstrate catching Aspose.Cells CellsException when opening an encrypted workbook with a wrong password in a C# console application. | Show how to configure LoadOptions with an incorrect password and handle the resulting error from Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to handle wrong password error when opening encrypted Excel file | retrieve exception details for invalid workbook password using Aspose.Cells LoadOptions | C# example catching CellsException for password‑protected .xlsx file
+// Tags: catch CellsException for invalid workbook password | load encrypted .xlsx with Aspose.Cells LoadOptions | handle wrong password error in Aspose.Cells | exception handling for password‑protected Excel in C# | Aspose.Cells workbook decryption failure handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a password‑protected workbook, save it, then attempt to load it with a wrong password using LoadOptions. The code catches CellsException with ExceptionType.IncorrectPassword, prints the message and code, and handles any other exceptions separately.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program checks for the presence of an encrypted Excel file, attempts to open it with Aspose.Cells using LoadOptions that contain an incorrect password, and captures both CellsException and generic Exception to display detailed error messages and stack traces.
+    class Program
     {
-        // Create a new workbook and add some data
-        Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Secret Data");
-
-        // Protect the workbook with a password
-        wb.Settings.Password = "correctPassword";
-
-        // Save the encrypted workbook
-        string filePath = "encryptedWorkbook.xlsx";
-        wb.Save(filePath);
-
-        // Prepare load options with an incorrect password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = "wrongPassword";
-
-        try
+        static void Main()
         {
-            // Attempt to open the encrypted workbook using the wrong password
-            Workbook wbWrong = new Workbook(filePath, loadOptions);
-            Console.WriteLine("Workbook opened successfully (unexpected).");
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.IncorrectPassword)
-        {
-            // Capture and display details of the incorrect password exception
-            Console.WriteLine("Incorrect password exception caught:");
-            Console.WriteLine($"Message: {ex.Message}");
-            Console.WriteLine($"Exception Code: {ex.Code}");
-        }
-        catch (Exception ex)
-        {
-            // Capture any other unexpected exceptions
-            Console.WriteLine("An unexpected exception occurred:");
-            Console.WriteLine(ex.Message);
+            // Path to the encrypted workbook
+            string filePath = "EncryptedWorkbook.xlsx";
+
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            // Incorrect password
+            string wrongPassword = "WrongPassword";
+
+            // Load options with the wrong password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = wrongPassword
+            };
+
+            try
+            {
+                // Attempt to open the workbook
+                Workbook workbook = new Workbook(filePath, loadOptions);
+                Console.WriteLine("Workbook opened successfully (unexpected).");
+            }
+            catch (CellsException ex)
+            {
+                // Aspose.Cells specific exception handling
+                Console.WriteLine("Failed to open workbook:");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            }
+            catch (Exception ex)
+            {
+                // General exception handling
+                Console.WriteLine("An unexpected error occurred:");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            }
         }
     }
 }

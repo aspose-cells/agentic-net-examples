@@ -1,54 +1,67 @@
-// Title: C# – Add a Semi‑Transparent Centered Text Watermark to Every PDF Page with Aspose.Cells
-// Description: Demonstrates how to create a workbook, define a large bold Arial font, and apply a RenderingWatermark (text "CONFIDENTIAL", centered, 45° rotation, 30% opacity, background layer, 75% page scale) via PdfSaveOptions. The workbook is saved as a PDF where the watermark appears on each page.
-// Keywords: Aspose.Cells | C# | PDF watermark | RenderingWatermark | semi transparent watermark | centered text watermark | rotate watermark | opacity setting | background watermark | PdfSaveOptions | Aspose.Cells example
-// Common Searches: Aspose.Cells add text watermark to PDF | C# semi transparent PDF watermark Aspose.Cells | RenderingWatermark rotation opacity example | centered background watermark each PDF page | scale watermark to page size Aspose.Cells
-// Developer Intent: Apply a semi‑transparent, centered, rotated text watermark to every page when converting an Aspose.Cells workbook to PDF.
-// Use Cases: Confidential reports with a faint "CONFIDENTIAL" overlay on all pages. | Company‑branded PDFs where the logo or name appears as a background watermark. | Draft or review documents marked with a semi‑transparent "DRAFT" label across each page.
-// AI Prompts: Show C# code to add a semi‑transparent, rotated text watermark to each PDF page using Aspose.Cells. | Explain the RenderingWatermark properties (Opacity, Rotation, HAlignment, VAlignment, ScaleToPagePercent) for PDF output. | Provide step‑by‑step instructions to set a background watermark when saving a workbook as PDF with Aspose.Cells, including font and positioning options.
+// Title: Create a semi‑transparent rotated text watermark on every worksheet and export to PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a 45‑degree, 50% transparent "CONFIDENTIAL" text effect shape as a watermark to each worksheet in an Aspose.Cells workbook before saving it as a PDF. | Demonstrate how to iterate through all worksheets, insert a free‑floating text effect shape with custom font, rotation, and transparency, and generate a PDF using Aspose.Cells for .NET.
+// Common Searches: asp.net add 45 degree watermark to PDF generated from Excel with Aspose.Cells | c# Aspose.Cells rotate text shape and set transparency for PDF export | how to use AddTextEffect to create watermark in Aspose.Cells workbook | set watermark opacity when converting Excel to PDF using Aspose.Cells | apply CONFIDENTIAL watermark to every page of PDF from Excel C#
+// Tags: Aspose.Cells text effect watermark | C# rotate shape transparency | export workbook to PDF with watermark | semi transparent watermark Excel PDF | free floating shape placement Aspose.Cells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWatermarkDemo
+// The program creates a workbook, adds a centered 45‑degree, 50% transparent "CONFIDENTIAL" text effect shape as a watermark to each worksheet, and saves the workbook as a PDF.
+class Program
 {
-    // Demonstrates how to create a workbook, define a large bold Arial font, and apply a RenderingWatermark (text "CONFIDENTIAL", centered, 45° rotation, 30% opacity, background layer, 75% page scale) via PdfSaveOptions. The workbook is saved as a PDF where the watermark appears on each page.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
+
+            // Example content – can be removed if loading an existing workbook
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample content for PDF with watermark.");
+            sheet.Cells["A1"].PutValue("Sample Data");
 
-            // Define the font for the watermark text
-            RenderingFont font = new RenderingFont("Arial", 72)
+            // Watermark settings
+            const string watermarkText = "CONFIDENTIAL";
+
+            // Apply watermark text to every worksheet using a text effect shape
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                Bold = true,
-                Color = Color.Gray   // Light gray for a subtle appearance
-            };
+                // Add a text effect shape that will act as a watermark
+                // Note: AddTextEffect requires 12 parameters; the last two are anchor and text effect type (set to 0 for defaults)
+                Shape watermarkShape = ws.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1,
+                    watermarkText,
+                    "Arial",
+                    72,
+                    false,
+                    false,
+                    0,      // left
+                    0,      // top
+                    500,    // width
+                    100,    // height
+                    0,      // anchor (default)
+                    0);     // text effect (default)
 
-            // Create a semi‑transparent text watermark
-            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-            {
-                HAlignment = TextAlignmentType.Center,   // Center horizontally
-                VAlignment = TextAlignmentType.Center,   // Center vertically
-                Rotation = 45,                           // Rotate 45 degrees
-                Opacity = 0.3f,                          // 30% opacity (semi‑transparent)
-                IsBackground = true,                     // Place behind page contents
-                ScaleToPagePercent = 75                  // Scale relative to page size
-            };
+                // Position the shape roughly at the center of the sheet
+                watermarkShape.Left = 0;
+                watermarkShape.Top = 0;
 
-            // Configure PDF save options with the watermark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Watermark = watermark
-            };
+                // Rotate and make the shape semi‑transparent
+                watermarkShape.RotationAngle = 45;                     // Rotate the watermark
+                watermarkShape.Fill.Transparency = 0.5;               // 0 = opaque, 1 = fully transparent
 
-            // Save the workbook as a PDF with the watermark applied to each page
-            workbook.Save("output_watermark.pdf", pdfOptions);
+                // Ensure the shape does not interfere with cell editing
+                watermarkShape.Placement = PlacementType.FreeFloating;
+                watermarkShape.IsLocked = false;
+            }
+
+            // Save the workbook as PDF – the watermark will appear on each page
+            workbook.Save("Result.pdf", SaveFormat.Pdf);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

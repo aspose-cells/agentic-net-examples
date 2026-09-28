@@ -1,10 +1,7 @@
-// Title: C# – Generate SHA256 checksum from all cell values in an Aspose.Cells workbook
-// Description: The sample creates a Workbook, fills cells with text, numbers, dates and booleans, walks through every cell via Cells.GetEnumerator, appends each formatted value to a StringBuilder, hashes the combined text with SHA256, converts the digest to hex, prints it and saves the file as ChecksumDemo.xlsx.
-// Keywords: Aspose.Cells | C# checksum | SHA256 hash Excel | cell enumeration | string concatenation | .NET data integrity | Workbook hash | Excel verification | hashing cell values
-// Common Searches: how to compute SHA256 hash of Excel cells using Aspose.Cells C# | enumerate cells in Aspose.Cells and create a checksum | concatenate cell values and generate a hash in .NET | verify workbook integrity with SHA256 in Aspose.Cells | C# example for hashing all worksheet values
-// Developer Intent: Create a SHA256 digest that represents the combined string values of every populated cell in a worksheet.
-// Use Cases: Validate that a workbook has not been altered during transfer by comparing hashes before and after upload. | Detect accidental or malicious changes to worksheet content by recomputing the digest. | Generate a stable identifier for worksheet data to support caching, version control, or duplicate detection.
-// AI Prompts: Write a reusable method that returns the SHA256 hash of all non‑empty cells in a given Aspose.Cells worksheet. | Adapt the code to ignore formula cells and hash only the displayed results. | Show how to store the computed hash in a hidden worksheet cell and retrieve it later for verification.
+// Title: Generate a SHA256 checksum of all cell values in an Aspose.Cells workbook with C#
+// AI Prompts: Write C# code that uses Aspose.Cells to iterate through every cell in a worksheet, concatenate each non‑null value as a string, and return the SHA256 hash as a hex string. | Create a reusable method in C# that accepts an Aspose.Cells Workbook and produces a checksum by hashing the concatenated string representations of all cell values. | Modify the example to compute an MD5 checksum instead of SHA256 while keeping the same cell enumeration and concatenation logic.
+// Common Searches: C# Aspose.Cells how to hash all worksheet cell values | calculate SHA256 checksum for Excel data using Aspose.Cells | enumerate cells in Aspose.Cells and generate a data checksum | concatenate non‑null cell values and compute hash in .NET | verify workbook integrity with checksum in Aspose.Cells C#
+// Tags: Aspose.Cells compute SHA256 checksum | enumerate worksheet cells C# | concatenate cell values Aspose.Cells | hash workbook data .NET | cell value checksum Excel
 
 using System;
 using System.Collections;
@@ -12,52 +9,63 @@ using System.Text;
 using System.Security.Cryptography;
 using Aspose.Cells;
 
-// The sample creates a Workbook, fills cells with text, numbers, dates and booleans, walks through every cell via Cells.GetEnumerator, appends each formatted value to a StringBuilder, hashes the combined text with SHA256, converts the digest to hex, prints it and saves the file as ChecksumDemo.xlsx.
-class Program
+namespace AsposeCellsChecksumDemo
 {
-    static void Main()
+    // The program creates a workbook, fills several cells with different data types, enumerates all cells, concatenates their non‑null string representations, computes a SHA256 hash of the combined string, outputs the hexadecimal checksum, and saves the workbook as ChecksumDemo.xlsx.
+    class Program
     {
-        // Create a new workbook (creation rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some sample data
-        worksheet.Cells["A1"].PutValue("Hello");
-        worksheet.Cells["B1"].PutValue(123);
-        worksheet.Cells["C1"].PutValue(DateTime.Now);
-        worksheet.Cells["A2"].PutValue(3.14);
-        worksheet.Cells["B2"].PutValue(true);
-
-        // Enumerate all cells using the Cells.GetEnumerator method
-        StringBuilder concatenatedValues = new StringBuilder();
-        IEnumerator enumerator = worksheet.Cells.GetEnumerator();
-        while (enumerator.MoveNext())
+        static void Main()
         {
-            Cell cell = (Cell)enumerator.Current;
-            if (cell != null && cell.Value != null)
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate some sample data
+            cells["A1"].PutValue("Hello");
+            cells["B1"].PutValue(123);
+            cells["C1"].PutValue(DateTime.Now);
+            cells["A2"].PutValue(3.1415);
+            cells["B2"].PutValue(true);
+            cells["C2"].PutValue("World");
+
+            // Concatenate string representations of all cell values
+            StringBuilder concatenated = new StringBuilder();
+
+            // Enumerate cells using the provided GetEnumerator method
+            IEnumerator enumerator = cells.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                // Use the formatted string representation of the cell value
-                concatenatedValues.Append(cell.StringValue);
+                Cell cell = (Cell)enumerator.Current;
+                // Use the cell's Value property; if null, skip
+                if (cell.Value != null)
+                {
+                    concatenated.Append(cell.Value.ToString());
+                }
             }
+
+            // Compute a SHA256 hash of the concatenated string
+            byte[] hashBytes;
+            using (SHA256 sha = SHA256.Create())
+            {
+                hashBytes = sha.ComputeHash(Encoding.UTF8.GetBytes(concatenated.ToString()));
+            }
+
+            // Convert hash bytes to a hexadecimal string
+            StringBuilder hashString = new StringBuilder();
+            foreach (byte b in hashBytes)
+            {
+                hashString.Append(b.ToString("x2"));
+            }
+
+            // Output the checksum
+            Console.WriteLine("Checksum (SHA256) of all cell values:");
+            Console.WriteLine(hashString.ToString());
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("ChecksumDemo.xlsx");
         }
-
-        // Compute a SHA256 checksum of the concatenated string
-        byte[] hashBytes;
-        using (SHA256 sha256 = SHA256.Create())
-        {
-            hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(concatenatedValues.ToString()));
-        }
-
-        // Convert the hash to a hexadecimal string for display
-        StringBuilder hex = new StringBuilder(hashBytes.Length * 2);
-        foreach (byte b in hashBytes)
-        {
-            hex.AppendFormat("{0:x2}", b);
-        }
-
-        Console.WriteLine("Checksum (SHA256): " + hex.ToString());
-
-        // Save the workbook (save rule)
-        workbook.Save("ChecksumDemo.xlsx");
     }
 }

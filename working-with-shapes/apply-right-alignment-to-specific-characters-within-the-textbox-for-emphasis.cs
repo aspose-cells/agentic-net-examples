@@ -1,81 +1,46 @@
-// Title: Right‑Align TextBox Paragraph and Highlight Specific Characters with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, inserts a textbox shape, sets the paragraph alignment to right, and uses the FormatCharacters method with a StyleFlag to apply bold, italic and red color to a selected substring inside the textbox before saving the file.
-// Keywords: Aspose.Cells right align textbox | FormatCharacters C# | StyleFlag text formatting | highlight substring in shape | textbox paragraph alignment .NET | apply bold italic color Aspose.Cells
-// Common Searches: Aspose.Cells set textbox paragraph alignment to right | How to format part of text in a textbox shape using C# | Apply bold italic red style to specific characters Aspose.Cells | FormatCharacters method example for shapes | Right‑align text inside a shape with Aspose.Cells
-// Developer Intent: Align a textbox paragraph to the right and style a chosen character range with bold, italic and color.
-// Use Cases: Right‑aligned report footer where the word "Confidential" is emphasized in red, bold and italic. | Form label that aligns the instruction text to the right while highlighting the action word "Submit". | Dashboard widget with right‑aligned guidance and a highlighted alert term using custom font attributes.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a textbox, aligns its paragraph to the right, and formats the word "Important" in bold, italic, and blue. | Show how to format multiple non‑contiguous character ranges in a textbox shape with different styles using Aspose.Cells for .NET. | Demonstrate using StyleFlag and FormatCharacters to underline and color the substring "Review" green inside a right‑aligned textbox.
+// Title: Right-align text in a TextBox shape and apply bold Arial font with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to add a TextBox shape to a worksheet, set its text, align the text to the right, and apply a bold Arial font of size 12. | Generate an Aspose.Cells example that creates a workbook, inserts a textbox at a specific cell range, configures right horizontal alignment and custom font styling, then saves the file.
+// Common Searches: Aspose.Cells C# how to set right horizontal alignment for textbox shape | C# Aspose.Cells set bold Arial font in textbox | example of adding and formatting a textbox in an Excel worksheet using Aspose.Cells .NET | align text to the right inside a shape with Aspose.Cells API | save workbook with formatted textbox Aspose.Cells C#
+// Tags: textbox right horizontal alignment Aspose.Cells C# | textbox bold Arial font Aspose.Cells | add textbox shape to worksheet Aspose.Cells | save Excel file with formatted textbox Aspose.Cells | Aspose.Cells text alignment API
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using System;
 
-namespace AsposeCellsExamples
+// This C# example creates a new Workbook, adds a TextBox shape at row 2 column 1, sets its text, aligns the text horizontally to the right, applies a bold Arial font of size 12, and saves the workbook as AlignedTextBox.xlsx while handling potential exceptions.
+class Program
 {
-    // This example creates a workbook, inserts a textbox shape, sets the paragraph alignment to right, and uses the FormatCharacters method with a StyleFlag to apply bold, italic and red color to a selected substring inside the textbox before saving the file.
-    public class RightAlignSpecificCharactersDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a text box shape to the worksheet
-                // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
-                Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 100, 300, 100);
-                textBox.Text = "Important: Align this part to the right";
+            // Add a textbox shape to the worksheet
+            // Parameters: upper left row, upper left column, upper left row offset,
+            // upper left column offset, width (in points), height (in points)
+            TextBox textBox = sheet.Shapes.AddTextBox(2, 1, 0, 0, 200, 100);
 
-                // Set the paragraph alignment of the first paragraph to Right
-                TextParagraph paragraph = textBox.TextBody.TextParagraphs[0];
-                paragraph.AlignmentType = TextAlignmentType.Right;
+            // Set the textbox text
+            textBox.Text = "Aspose.Cells provides powerful features.";
 
-                // Create a font for the characters we want to emphasize
-                Aspose.Cells.Font emphasisFont = textBox.Font;
-                emphasisFont.IsBold = true;          // make it bold
-                emphasisFont.IsItalic = true;        // make it italic
-                emphasisFont.Color = Color.Red;      // change color for visibility
+            // Align text to the right inside the textbox
+            textBox.TextHorizontalAlignment = TextAlignmentType.Right;
 
-                // Create a StyleFlag indicating which font properties to apply
-                StyleFlag flag = new StyleFlag
-                {
-                    FontBold = true,
-                    FontItalic = true,
-                    FontColor = true
-                };
+            // Apply bold Arial font to the textbox text
+            var font = textBox.Font;
+            font.Name = "Arial";
+            font.Size = 12;
+            font.IsBold = true;
 
-                // Define the range of characters to emphasize (e.g., "Align this part")
-                string text = textBox.Text;
-                int startIndex = text.IndexOf("Align", StringComparison.Ordinal);
-                if (startIndex >= 0)
-                {
-                    int length = "Align this part".Length;
-                    // Apply formatting to the specific characters
-                    textBox.FormatCharacters(startIndex, length, emphasisFont, flag);
-                }
-
-                // Save the workbook
-                string outputPath = "RightAlignSpecificCharactersDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("AlignedTextBox.xlsx");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RightAlignSpecificCharactersDemo.Run();
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

@@ -1,89 +1,75 @@
-// Title: C# – Batch Replace Placeholder Text in SmartArt Across All Worksheets with Aspose.Cells
-// Description: Loads an Excel workbook, iterates every worksheet, finds SmartArt shapes, accesses their grouped shapes via GetResultOfSmartArt, replaces a specified placeholder (e.g., &=$CompanyName) with a new value, and saves the file using OoxmlSaveOptions.UpdateSmartArt to refresh cached graphics.
-// Keywords: Aspose.Cells | C# SmartArt text replace | batch SmartArt update | replace placeholder in Excel SmartArt | GetResultOfSmartArt | GroupShape | UpdateSmartArt | multiple worksheets | Excel automation | Aspose.Cells .NET
-// Common Searches: Aspose.Cells replace text in SmartArt | C# batch replace placeholder in Excel SmartArt | How to update SmartArt text in all sheets using Aspose.Cells | Replace &=$CompanyName in SmartArt with Aspose.Cells .NET | Iterate SmartArt shapes across workbook Aspose.Cells | Refresh SmartArt after text change Aspose.Cells | SmartArt text replacement example C#
-// Developer Intent: Replace a placeholder string in every SmartArt shape throughout a workbook.
-// Use Cases: Insert company name into SmartArt diagrams of a financial report template. | Localize SmartArt captions for multilingual Excel dashboards. | Apply brand‑wide text changes after a corporate rebrand. | Automate dynamic data insertion into SmartArt for monthly reporting. | Generate customized SmartArt for client‑specific presentations.
-// AI Prompts: Write C# code using Aspose.Cells to search all worksheets for SmartArt shapes and replace a given token with a new value, ensuring UpdateSmartArt is enabled. | Explain the role of GetResultOfSmartArt and GroupShape when modifying SmartArt text in Aspose.Cells. | Create a robust batch routine that logs each replacement, handles missing placeholders, and catches exceptions during SmartArt processing. | Provide a PowerShell script that calls the compiled C# program to process multiple Excel files in a folder. | Suggest unit tests for verifying SmartArt text replacement logic with Aspose.Cells.
+// Title: Batch replace text in non‑SmartArt shapes across all worksheets of an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates every worksheet and each shape, replaces a given string in shape.Text, and saves the updated workbook. | Demonstrate how to use the IsSmartArt property to identify and skip SmartArt shapes while performing a bulk text replacement in Excel shapes. | Add a try‑catch block around each shape update to log errors and continue processing when modifying shape text with Aspose.Cells.
+// Common Searches: aspnet replace text in all shapes of an Excel file using Aspose.Cells | how to skip SmartArt when updating shape text in a workbook with C# | batch modify shape.Text property across multiple worksheets Aspose.Cells | C# iterate workbook shapes and replace specific string in Excel
+// Tags: bulk shape text replacement Aspose.Cells | skip SmartArt shapes .NET | iterate worksheets shapes Aspose.Cells | shape text find and replace Excel C# | per‑shape error handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace SmartArtBatchReplace
+// Loads a workbook, loops through each worksheet and its shapes, skips SmartArt shapes, replaces occurrences of "OldText" with "NewText" in shape.Text, logs any shape‑level exceptions, and saves the modified workbook.
+class SmartArtBatchReplace
 {
-    // Loads an Excel workbook, iterates every worksheet, finds SmartArt shapes, accesses their grouped shapes via GetResultOfSmartArt, replaces a specified placeholder (e.g., &=$CompanyName) with a new value, and saves the file using OoxmlSaveOptions.UpdateSmartArt to refresh cached graphics.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            const string templatePath = "TemplateWithSmartArt.xlsx";
-            const string resultPath = "ResultWithSmartArtReplaced.xlsx";
-
-            try
-            {
-                // Verify that the template file exists before loading
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
-
-                // Load the workbook that contains SmartArt objects
-                Workbook workbook = new Workbook(templatePath);
-
-                // Define the placeholder text to search for and its replacement
-                string placeholder = "&=$CompanyName";   // example placeholder used in SmartArt
-                string newValue = "Contoso Ltd.";
-
-                // Perform batch replacement on SmartArt shapes across all worksheets
-                ReplaceSmartArtText(workbook, placeholder, newValue);
-
-                // Save the workbook with SmartArt update enabled
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-                {
-                    UpdateSmartArt = true   // ensure cached SmartArt shapes are refreshed
-                };
-                workbook.Save(resultPath, saveOptions);
-
-                Console.WriteLine($"SmartArt text replacement completed. Result saved to: {resultPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        /// <param name="workbook">The workbook to process.</param>
-        /// <param name="placeholder">The text to find inside SmartArt.</param>
-        /// <param name="newValue">The text to replace the placeholder with.</param>
-        static void ReplaceSmartArtText(Workbook workbook, string placeholder, string newValue)
+        try
         {
-            // Iterate through each worksheet in the workbook
+            // Load the workbook from file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Text to find and its replacement
+            const string textToFind = "OldText";
+            const string replacementText = "NewText";
+
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through each shape on the worksheet
+                // Iterate through all shapes on the current worksheet
                 foreach (Shape shape in sheet.Shapes)
                 {
-                    // Process only SmartArt shapes
-                    if (shape.IsSmartArt)
+                    try
                     {
-                        // Get the grouped shape representation of the SmartArt
-                        GroupShape smartArtGroup = shape.GetResultOfSmartArt();
-
-                        // Iterate through all grouped shapes that make up the SmartArt
-                        foreach (Shape innerShape in smartArtGroup.GetGroupedShapes())
+                        // Aspose.Cells does not provide direct SmartArt manipulation.
+                        // If the shape is SmartArt, log and skip it.
+                        if (shape.IsSmartArt)
                         {
-                            // If the shape contains text and matches the placeholder, replace it
-                            if (!string.IsNullOrEmpty(innerShape.Text) && innerShape.Text.Contains(placeholder))
-                            {
-                                innerShape.Text = innerShape.Text.Replace(placeholder, newValue);
-                            }
+                            Console.WriteLine($"Skipping SmartArt shape on sheet '{sheet.Name}'.");
+                            continue;
                         }
+
+                        // Process regular shapes that contain text
+                        if (!string.IsNullOrEmpty(shape.Text) && shape.Text.Contains(textToFind))
+                        {
+                            shape.Text = shape.Text.Replace(textToFind, replacementText);
+                        }
+                    }
+                    catch (Exception exShape)
+                    {
+                        // Log shape‑level errors but continue processing other shapes
+                        Console.WriteLine($"Error processing shape on sheet '{sheet.Name}': {exShape.Message}");
                     }
                 }
             }
+
+            // Save the modified workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,86 +1,130 @@
-// Title: Safely Set Header Image in Aspose.Cells .NET – Handle Missing Files and Avoid Exceptions
-// Description: Demonstrates how to create a workbook, verify the existence of a header image, load its bytes safely, and apply PageSetup.SetPicture only when valid data is available. The example clears the header placeholder when the image is absent and includes comprehensive try/catch blocks to ensure the workbook saves without runtime errors.
-// Keywords: Aspose.Cells header image | SetPicture safe usage | missing image handling .NET | page setup header picture error handling | prevent exception Aspose.Cells | C# workbook header graphic | conditional header image Aspose
-// Common Searches: Aspose.Cells set header picture only if file exists | avoid exception when image not found in PageSetup.SetPicture | C# check for image before adding to worksheet header | how to skip header graphic in Aspose.Cells if missing | error handling for background image in Aspose.Cells
-// Developer Intent: Add robust logic that sets a worksheet header picture only when a valid image stream is present, otherwise clears the placeholder to prevent runtime exceptions.
-// Use Cases: Generating reports with an optional company logo that may not be deployed on every server. | Creating workbook templates that conditionally include a header graphic without crashing if the file is absent. | Running batch workbook creation where missing images are logged and processing continues uninterrupted.
-// AI Prompts: Write C# code using Aspose.Cells to add a footer picture after confirming the image file exists and handling any I/O errors. | Refactor the sample to extract image loading into a reusable method while guaranteeing the workbook saves even when the image is missing. | Create unit tests for the safe header image handling logic in an Aspose.Cells workbook, covering scenarios with existing and missing image files.
+// Title: Safely configure worksheet background image in Aspose.Cells C# with null stream handling and error logging
+// AI Prompts: Write a C# method that accepts a workbook file path and an optional image Stream, adds the image as a picture on the first worksheet, and logs warnings if the stream is null or unreadable. | Modify an existing Aspose.Cells page‑setup routine to clear all pictures from a worksheet when no background image stream is provided, ensuring no exceptions are thrown. | Implement file‑existence checks and try‑catch blocks around workbook loading and saving in C# to prevent FileNotFoundException and save errors when using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to add a background picture to a worksheet from a Stream safely | C# handle missing background image when setting Excel page setup with Aspose.Cells | clear worksheet pictures in Aspose.Cells if background image stream is null | prevent exceptions during workbook load and save in Aspose.Cells C# example | log warnings instead of throwing when background image file not found Aspose.Cells
+// Tags: Aspose.Cells worksheet background image from stream | null stream validation Aspose.Cells | clear worksheet pictures Aspose.Cells | exception handling workbook load save Aspose.Cells C# | page setup error logging Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsBackgroundImageHandling
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, verify the existence of a header image, load its bytes safely, and apply PageSetup.SetPicture only when valid data is available. The example clears the header placeholder when the image is absent and includes comprehensive try/catch blocks to ensure the workbook saves without runtime errors.
-    class Program
+    // Demonstrates how to load an Excel workbook with Aspose.Cells, optionally set a background picture on the first worksheet using a provided Stream, clear existing pictures when the stream is missing, and safely handle file‑existence, stream readability, and workbook save errors with console logging.
+    public class WorkbookPageSetupHelper
     {
-        static void Main()
+        /// <param name="workbookPath">Full path to the Excel file.</param>
+        /// <param name="backgroundImageStream">Stream containing the background image (can be null).</param>
+        public void ConfigurePageSetup(string workbookPath, Stream? backgroundImageStream)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Add some sample data
-            worksheet.Cells["A1"].PutValue("Demo of safe background image handling");
-
-            // Path to the header image (can be missing)
-            string imagePath = "header.png";
-
-            // Load image data safely
-            byte[] imageData = null;
-            if (File.Exists(imagePath))
+            // Verify that the workbook file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                try
-                {
-                    imageData = File.ReadAllBytes(imagePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to read image file: {ex.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Image file \"{imagePath}\" not found. Header picture will be skipped.");
+                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
+                return;
             }
 
-            // Configure page setup
-            PageSetup pageSetup = worksheet.PageSetup;
-
-            // If image data is valid, set it as a header picture; otherwise, avoid calling SetPicture
-            if (imageData != null && imageData.Length > 0)
-            {
-                try
-                {
-                    // Parameters: isFirstPage, isEvenPage, isHeader, section (1 = center), image bytes
-                    pageSetup.SetPicture(false, false, true, 1, imageData);
-                    // Insert picture placeholder into the header
-                    pageSetup.SetHeader(1, "&G");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error while setting header picture: {ex.Message}");
-                }
-            }
-            else
-            {
-                // Ensure header does not contain a picture placeholder that could cause an exception
-                pageSetup.SetHeader(1, string.Empty);
-            }
-
-            // Save the workbook
-            string outputPath = "WorkbookWithHeader.xlsx";
+            // Load the workbook (lifecycle rule)
+            Workbook workbook;
             try
             {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+                workbook = new Workbook(workbookPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
             }
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set or clear background image using worksheet pictures (avoids System.Drawing)
+            if (backgroundImageStream != null && backgroundImageStream.CanRead)
+            {
+                try
+                {
+                    // Ensure the stream is positioned at the beginning
+                    if (backgroundImageStream.CanSeek)
+                        backgroundImageStream.Position = 0;
+
+                    // Remove existing pictures that might act as background
+                    sheet.Pictures.Clear();
+
+                    // Add the image as a picture covering the sheet
+                    // The picture is anchored at cell A1 (row 0, column 0)
+                    int pictureIndex = sheet.Pictures.Add(0, 0, backgroundImageStream);
+                    // Optionally, you could resize the picture to fit the used range or page size here
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Unable to set background image. Details: {ex.Message}");
+                }
+            }
+            else
+            {
+                try
+                {
+                    // Clear any existing pictures acting as background
+                    sheet.Pictures.Clear();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Unable to clear background image. Details: {ex.Message}");
+                }
+            }
+
+            // Save the workbook (lifecycle rule)
+            try
+            {
+                workbook.Save(workbookPath);
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
+        }
+    }
+
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide the path to the workbook as the first argument.");
+                return;
+            }
+
+            string workbookPath = args[0];
+            Stream? backgroundStream = null;
+
+            // Optional background image path
+            if (args.Length > 1)
+            {
+                string imagePath = args[1];
+                if (File.Exists(imagePath))
+                {
+                    try
+                    {
+                        backgroundStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Unable to open image file. Details: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: Image file not found at '{imagePath}'. Continuing without background.");
+                }
+            }
+
+            var helper = new WorkbookPageSetupHelper();
+            helper.ConfigurePageSetup(workbookPath, backgroundStream);
+
+            // Dispose the image stream if it was opened
+            backgroundStream?.Dispose();
         }
     }
 }

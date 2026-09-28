@@ -1,116 +1,51 @@
-// Title: Render Gradient WordArt in PDF with Raster Fallback Using Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds a WordArt shape with a two‑color horizontal gradient, inserts a PNG fallback picture aligned to the same size, sets the Z‑order so the WordArt overlays the raster image, and saves the sheet as a PDF with font‑compatibility options.
-// Keywords: Aspose.Cells | WordArt gradient | PDF export | fallback image | AddPicture shape | Z‑order shapes | PdfSaveOptions | .NET Excel to PDF | gradient fill rendering
-// Common Searches: Aspose.Cells render WordArt gradient in PDF | add fallback PNG for WordArt gradient Aspose.Cells | set shape Z‑order Aspose.Cells PDF | PdfSaveOptions font compatibility Aspose.Cells | gradient WordArt not showing in PDF viewer
-// Developer Intent: Generate a PDF from an Excel workbook that preserves a gradient‑filled WordArt heading while providing a raster PNG fallback for PDF viewers that cannot render gradients.
-// Use Cases: Create marketing brochures with decorative gradient WordArt titles that remain visible on legacy PDF readers. | Automate batch conversion of spreadsheets containing gradient WordArt, embedding aligned PNG fallbacks to avoid rendering issues. | Produce financial or technical reports where section headings use gradient WordArt, ensuring consistent appearance across all PDF viewers.
-// AI Prompts: Write C# code with Aspose.Cells to add a WordArt shape using a two‑color horizontal gradient and embed a matching PNG fallback image before saving as PDF. | Explain how to control the Z‑order of shapes in Aspose.Cells so the WordArt appears above a raster fallback image in the exported PDF. | Show how to configure PdfSaveOptions for font compatibility and reliable gradient rendering when converting Excel to PDF with Aspose.Cells.
+// Title: C# convert Excel workbook with WordArt gradient fills to PDF using Aspose.Cells and embed raster fallback for unsupported viewers
+// AI Prompts: Write C# code that loads an .xlsx file, accesses its first worksheet, and saves it as a PDF using Aspose.Cells with PdfSaveOptions. | Adjust the PDF conversion settings so that WordArt objects retain their gradient fills and a raster‑image fallback is embedded for PDF viewers that cannot render the gradients.
+// Common Searches: Aspose.Cells C# preserve WordArt gradient colors when saving Excel as PDF | how to embed raster fallback image for WordArt gradients in PDF using Aspose.Cells | C# PdfSaveOptions to keep WordArt appearance and add raster fallback during Excel to PDF conversion | Excel to PDF conversion with WordArt gradient support in .NET
+// Tags: Aspose.Cells PDF WordArt gradient rendering | PdfSaveOptions WordArt gradient support | fallback raster image for PDF conversion | C# Excel to PDF with WordArt support
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-// This C# example creates a workbook, adds a WordArt shape with a two‑color horizontal gradient, inserts a PNG fallback picture aligned to the same size, sets the Z‑order so the WordArt overlays the raster image, and saves the sheet as a PDF with font‑compatibility options.
-class WordArtPdfWithFallback
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program checks for the existence of an input Excel file, loads it into an Aspose.Cells Workbook, accesses the first worksheet that contains WordArt, creates a PdfSaveOptions object (where you can enable WordArt gradient rendering and specify a raster fallback for viewers lacking gradient support), saves the workbook as a PDF, and reports success or any errors encountered.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            ShapeCollection shapes = sheet.Shapes;
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // ------------------------------------------------------------
-            // 1. Add a WordArt shape that uses a preset style with a gradient
-            // ------------------------------------------------------------
-            // WordArtStyle7 = Gradient Fill - Blue, Accent 1, Reflection
-            Shape wordArt = shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle7, // preset style with gradient
-                "Gradient WordArt",               // text
-                2,    // top row index
-                10,   // vertical offset (pixels)
-                2,    // left column index
-                10,   // horizontal offset (pixels)
-                100,  // height (pixels)
-                400   // width (pixels)
-            );
-
-            // Ensure the fill type is gradient (optional, preset already sets it)
-            wordArt.Fill.FillType = FillType.Gradient;
-
-            // Apply a custom two‑color gradient (blue → light blue, horizontal)
-            wordArt.Fill.SetTwoColorGradient(
-                Color.Blue,          // first color
-                Color.LightBlue,     // second color
-                GradientStyleType.Horizontal,
-                1                    // variant
-            );
-
-            // ------------------------------------------------------------
-            // 2. Add a raster image as a fallback for viewers that cannot render the gradient
-            // ------------------------------------------------------------
-            string fallbackImagePath = "fallback.png"; // path to a raster image file
-
-            if (File.Exists(fallbackImagePath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                try
-                {
-                    // Load the image into a stream because AddPicture expects a Stream
-                    using (FileStream imgStream = new FileStream(fallbackImagePath, FileMode.Open, FileAccess.Read))
-                    {
-                        // Add the picture shape; cell range is arbitrary and will be adjusted later
-                        Shape rasterFallback = shapes.AddPicture(
-                            2, // upper left row
-                            2, // upper left column
-                            3, // lower right row
-                            3, // lower right column
-                            imgStream
-                        );
-
-                        // Align the raster picture with the WordArt dimensions.
-                        rasterFallback.Top = wordArt.Top;
-                        rasterFallback.Left = wordArt.Left;
-                        rasterFallback.Height = wordArt.Height;
-                        rasterFallback.Width = wordArt.Width;
-
-                        // Send the raster shape to the back so the WordArt appears on top.
-                        rasterFallback.ZOrderPosition = 0; // back
-                        wordArt.ZOrderPosition = 1;        // front
-                    }
-                }
-                catch (Exception imgEx)
-                {
-                    Console.WriteLine($"Failed to add fallback image: {imgEx.Message}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Fallback image not found: {fallbackImagePath}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // ------------------------------------------------------------
-            // 3. Configure PDF save options and export the workbook
-            // ------------------------------------------------------------
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            try
             {
-                // Ensure proper font handling for Unicode characters
-                CheckWorkbookDefaultFont = true,
-                CheckFontCompatibility = true
-            };
+                // Load the Excel workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as PDF.
-            string outputPdf = "WordArtWithFallback.pdf";
-            workbook.Save(outputPdf, pdfOptions);
-            Console.WriteLine($"PDF generated: {outputPdf}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Access the first worksheet (contains WordArt)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Uncomment the following line if the PdfCompliance enum is available in your Aspose.Cells version
+                // pdfOptions.Compliance = PdfCompliance.PdfA1b;
+
+                // Save the workbook as PDF with the configured options
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

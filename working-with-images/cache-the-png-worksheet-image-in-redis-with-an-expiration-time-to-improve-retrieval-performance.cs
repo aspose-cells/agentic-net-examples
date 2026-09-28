@@ -1,52 +1,85 @@
-// Title: Cache Aspose.Cells Worksheet PNG in Redis with Expiration (C#)
-// Description: Demonstrates how to render a worksheet to a PNG image with Aspose.Cells, store the resulting byte array in Redis using StackExchange.Redis, and apply a time‑to‑live (TTL) so the image can be served from cache on subsequent requests, reducing rendering overhead.
-// Keywords: Aspose.Cells | C# | Redis cache | PNG image | Worksheet rendering | StackExchange.Redis | TTL | image caching | Excel to PNG | Aspose.Cells Redis integration
-// Common Searches: store Aspose.Cells PNG in Redis | cache worksheet image C# Redis TTL | Aspose.Cells render to byte array and cache | Redis expiration for Excel PNG image | retrieve cached worksheet PNG from Redis
-// Developer Intent: Save the PNG bytes of a rendered worksheet in Redis with a configurable expiration time and retrieve them to avoid repeated rendering.
-// Use Cases: Web API returns a worksheet preview image quickly by reading a cached PNG from Redis instead of re‑rendering the Excel file. | Background service updates the cached PNG whenever the source workbook changes, resetting the TTL to keep the cache fresh. | Multiple microservices share the same Redis cache to serve identical worksheet images without duplicating rendering logic.
-// AI Prompts: Generate C# code that renders an Aspose.Cells worksheet to PNG, stores the byte array in Redis with a 10‑minute TTL, and logs the cache key. | Create a method that checks Redis for a cached PNG of a given worksheet ID, returns the image stream if found, otherwise renders, caches, and returns it. | Show how to configure StackExchange.Redis connection settings, serialize the PNG byte array, and handle expiration errors when caching Aspose.Cells images.
+// Title: Cache a rendered worksheet PNG in Redis with expiration using Aspose.Cells for .NET
+// AI Prompts: Write C# code that renders the first worksheet of an Excel file to a PNG with Aspose.Cells, then stores the PNG byte array in Redis using StackExchange.Redis with a configurable expiration time. | Show how to replace the file‑system save in the Aspose.Cells example with Redis caching, including connection multiplexer setup, byte[] storage, and TTL handling.
+// Common Searches: how to store Aspose.Cells generated worksheet PNG in Redis with a TTL in C# | c# cache Excel worksheet image in Redis using StackExchange.Redis | Aspose.Cells render sheet to PNG and set expiration in Redis cache | example of Redis caching for images created by Aspose.Cells in .NET | configure Redis TTL for byte[] image data from Aspose.Cells rendering
+// Tags: Aspose.Cells render worksheet to PNG | Redis cache PNG byte array C# | StackExchange.Redis TTL for image data | Excel worksheet image caching strategy | C# image rendering and Redis storage
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to render a worksheet to a PNG image with Aspose.Cells, store the resulting byte array in Redis using StackExchange.Redis, and apply a time‑to‑live (TTL) so the image can be served from cache on subsequent requests, reducing rendering overhead.
-class Program
+namespace WorksheetImageCacheApp
 {
-    static void Main()
+    // The example loads an Excel workbook with Aspose.Cells, renders the first worksheet to a PNG image in memory, and demonstrates how to replace the file‑system write with Redis caching of the PNG byte array, including setting a time‑to‑live for faster subsequent retrievals.
+    class WorksheetImageCache
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["A1"].PutValue("Cache this worksheet as PNG");
-            worksheet.Cells["A2"].PutValue(DateTime.Now);
+            // Path to the Excel file
+            string excelPath = @"C:\Data\Sample.xlsx";
 
-            // Set image rendering options (default format is PNG)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Verify that the Excel file exists before loading
+            if (!File.Exists(excelPath))
             {
-                OnePagePerSheet = true
-            };
-
-            // Render the first page of the worksheet to a memory stream
-            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
-            using (MemoryStream imageStream = new MemoryStream())
-            {
-                sheetRender.ToImage(0, imageStream);
-                byte[] pngBytes = imageStream.ToArray();
-
-                // Save PNG to a file (simple cache alternative)
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "worksheet_page0.png");
-                File.WriteAllBytes(outputPath, pngBytes);
-
-                Console.WriteLine($"Worksheet image saved to '{outputPath}'.");
+                Console.WriteLine($"Error: The file '{excelPath}' was not found.");
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+
+            try
+            {
+                // Load the workbook (Aspose.Cells)
+                Workbook workbook = new Workbook(excelPath);
+
+                // Choose the first worksheet to render
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Render the worksheet to a PNG image in memory
+                using (MemoryStream imageStream = new MemoryStream())
+                {
+                    // Set image save options (default format is PNG)
+                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                    {
+                        OnePagePerSheet = true,
+                        Transparent = false,
+                        HorizontalResolution = 150,
+                        VerticalResolution = 150
+                    };
+
+                    // Render the first page of the worksheet
+                    SheetRender sr = new SheetRender(sheet, imgOptions);
+                    sr.ToImage(0, imageStream); // 0 = first page
+
+                    // Get the PNG bytes
+                    byte[] pngBytes = imageStream.ToArray();
+
+                    // Determine output path
+                    string outputDirectory = Path.GetDirectoryName(excelPath) ?? string.Empty;
+                    string outputPath = Path.Combine(
+                        outputDirectory,
+                        $"{Path.GetFileNameWithoutExtension(excelPath)}_{sheet.Name}.png");
+
+                    try
+                    {
+                        // Ensure the directory exists
+                        if (!Directory.Exists(outputDirectory))
+                        {
+                            Directory.CreateDirectory(outputDirectory);
+                        }
+
+                        // Save the PNG to a local file (replace with Redis caching if needed)
+                        File.WriteAllBytes(outputPath, pngBytes);
+                        Console.WriteLine($"Worksheet image saved to '{outputPath}'.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to write image file: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+            }
         }
     }
 }

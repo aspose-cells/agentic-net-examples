@@ -1,41 +1,50 @@
-// Title: Aspose.Cells for .NET – Export Excel to HTML without downlevel‑revealed comments
-// Description: Demonstrates how to use Aspose.Cells HtmlSaveOptions.DisableDownlevelRevealedComments in C# to generate clean HTML from a workbook, removing legacy conditional comment syntax.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DisableDownlevelRevealedComments | C# HTML export | Excel to HTML | .NET workbook conversion | remove conditional comments
-// Common Searches: disable downlevel revealed comments Aspose.Cells | Aspose.Cells export Excel to HTML without IE comments | HtmlSaveOptions.DisableDownlevelRevealedComments example | clean HTML output from Aspose.Cells .NET | remove conditional comments when saving workbook as HTML
-// Developer Intent: Export an Excel workbook to HTML while suppressing downlevel‑revealed conditional comment markup.
-// Use Cases: Create web‑ready HTML reports from Excel without legacy IE comment syntax. | Generate markup that passes HTML validators for modern browsers. | Produce lightweight HTML files for embedding in web applications.
-// AI Prompts: How do I set HtmlSaveOptions.DisableDownlevelRevealedComments in Aspose.Cells C#? | Show a C# code snippet that saves a workbook to HTML without conditional comments. | Explain the impact of disabling downlevel‑revealed comments on the generated HTML.
+// Title: Export an Excel workbook to HTML5 without conditional comments using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a workbook and saves it as HTML5 while disabling downlevel revealed comment syntax with Aspose.Cells. | Show how to set HtmlSaveOptions.HtmlVersion to Html5 and configure the options to omit conditional comments in the HTML output. | Provide a complete example that checks for a template file, creates a workbook if missing, and exports it to clean HTML using Aspose.Cells.
+// Common Searches: Aspose.Cells how to remove conditional comments from HTML export | C# save Excel as HTML5 without downlevel revealed comments | HtmlSaveOptions HtmlVersion Html5 suppress conditional comments Aspose.Cells | Export workbook to clean HTML using Aspose.Cells .NET example | Disable conditional comments in Aspose.Cells HTML output
+// Tags: Aspose.Cells HtmlSaveOptions Html5 | Aspose.Cells suppress conditional comments | C# export Excel to clean HTML | Aspose.Cells HTML5 output without downlevel revealed comments | Aspose.Cells workbook to HTML5 example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+namespace AsposeCellsExample
 {
-    // Demonstrates how to use Aspose.Cells HtmlSaveOptions.DisableDownlevelRevealedComments in C# to generate clean HTML from a workbook, removing legacy conditional comment syntax.
+    // The sample loads an existing Excel template or creates a new workbook, configures HtmlSaveOptions with HtmlVersion.Html5 to generate HTML5, disables downlevel revealed conditional comments, and saves the result as a clean HTML file using Aspose.Cells for .NET.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook (empty by default)
-            Workbook workbook = new Workbook();
-
-            // Add some sample data to demonstrate the export
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
-            sheet.Cells["B2"].PutValue(12345);
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            try
             {
-                // Disable downlevel-revealed conditional comments in the generated HTML
-                DisableDownlevelRevealedComments = true
-            };
+                // Create a new workbook or load an existing template if it exists
+                Workbook workbook;
+                const string templatePath = "Template.xlsx";
 
-            // Save the workbook as HTML using the configured options
-            string outputPath = "ExportedWorkbook.html";
-            workbook.Save(outputPath, htmlOptions);
+                if (File.Exists(templatePath))
+                {
+                    workbook = new Workbook(templatePath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    // Add sample data to the first worksheet
+                    workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
+                }
 
-            Console.WriteLine($"Workbook successfully saved to '{outputPath}' with DisableDownlevelRevealedComments = true");
+                // Configure HTML save options to generate HTML5 without conditional comments
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+                // Set the HTML version to HTML5 (available in recent Aspose.Cells versions)
+                htmlOptions.HtmlVersion = HtmlVersion.Html5;
+
+                // Save the workbook as HTML
+                const string outputPath = "ExportedDocument.html";
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

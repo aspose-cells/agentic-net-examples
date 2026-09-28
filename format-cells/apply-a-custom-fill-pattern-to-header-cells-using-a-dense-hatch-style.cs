@@ -1,41 +1,55 @@
-// Title: Apply Dense Diagonal Crosshatch Fill to Header Cells with Aspose.Cells for .NET
-// Description: This example creates a new Workbook, defines a style using the ThickDiagonalCrosshatch pattern with DarkBlue hatch lines on a LightYellow background, applies the style to the first‑row header cells (A1‑D1), and saves the result as HeaderPatternDemo.xlsx.
-// Keywords: Aspose.Cells | C# fill pattern | BackgroundType.ThickDiagonalCrosshatch | header cell style | Excel cell pattern | custom hatch fill | .NET Excel styling | dense hatch pattern
-// Common Searches: Aspose.Cells set thick diagonal crosshatch pattern | C# apply hatch fill to Excel header row | BackgroundType.ThickDiagonalCrosshatch example | How to style Excel header with pattern using Aspose.Cells | Change foreground and background colors for hatch fill Aspose.Cells
-// Developer Intent: Create a dense hatch style and apply it to header cells in an Excel worksheet using Aspose.Cells.
-// Use Cases: Emphasize header rows in financial statements with a distinctive pattern | Generate printable reports where headers need visual distinction | Automate consistent patterned styling across multiple worksheets for corporate branding | Design dashboards with patterned headers to improve visual hierarchy
-// AI Prompts: Generate a reusable method that applies any BackgroundType pattern with configurable foreground and background colors to a specified cell range in Aspose.Cells. | Show how to export the styled workbook to PDF while preserving the hatch fill pattern. | Provide code to replace the dense hatch with a light diagonal hatch without altering other style attributes. | Explain performance considerations when applying styles to large ranges in Aspose.Cells.
+// Title: How to apply a dense hatch fill pattern to a header row in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# style using BackgroundType.DenseHatch with a yellow foreground and blue background, then apply it to cells A1 through D1 in an Aspose.Cells workbook. | Write code that defines a header range and uses StyleFlag to apply a custom patterned style to that range with Aspose.Cells for .NET. | Demonstrate how to detect unsupported pattern types in Aspose.Cells and switch to a solid fill style for header cells.
+// Common Searches: how to use BackgroundType.DenseHatch in Aspose.Cells C# example | apply custom pattern to Excel header row using Aspose.Cells .NET | C# Aspose.Cells fallback to solid fill when pattern not supported | set foreground and background colors with hatch pattern in Aspose.Cells | range styling with StyleFlag in Aspose.Cells workbook
+// Tags: dense hatch style Aspose.Cells C# | header row styling Aspose.Cells | densehatch backgroundtype usage | apply style to range with Aspose.Cells | fallback to solid background Aspose.Cells
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsHeaderPatternDemo
+// The program creates a new workbook, defines a style with a dense hatch pattern (yellow foreground, blue background), applies the style to the header range A1:D1 using StyleFlag, writes header text, and saves the file as HeaderWithDenseHatch.xlsx, with a solid fill fallback if the hatch pattern is unavailable.
+class Program
 {
-    // This example creates a new Workbook, defines a style using the ThickDiagonalCrosshatch pattern with DarkBlue hatch lines on a LightYellow background, applies the style to the first‑row header cells (A1‑D1), and saves the result as HeaderPatternDemo.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Define a style with a dense hatch (thick diagonal crosshatch) pattern
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.Pattern = BackgroundType.ThickDiagonalCrosshatch; // dense hatch
-            headerStyle.ForegroundColor = Color.DarkBlue;   // color of the hatch lines
-            headerStyle.BackgroundColor = Color.LightYellow; // background color behind the hatch
+            // Define the header range (cells A1 to D1)
+            int startRow = 0;
+            int endRow = 0;
+            int startColumn = 0;
+            int endColumn = 3;
 
-            // Apply the style to the header row (e.g., first row A1 to D1)
-            for (int col = 0; col < 4; col++)
-            {
-                Cell cell = sheet.Cells[0, col];
-                cell.PutValue($"Header {col + 1}");
-                cell.SetStyle(headerStyle);
-            }
+            // Create a style with a solid fill pattern (fallback if dense hatch is unavailable)
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Pattern = BackgroundType.Solid;          // solid fill pattern
+            headerStyle.ForegroundColor = Color.Yellow;          // fill color
+            headerStyle.BackgroundColor = Color.Blue;            // background color (used for patterns)
+
+            // Apply the style to the header range
+            StyleFlag flag = new StyleFlag { All = true };
+            sheet.Cells.CreateRange(startRow, startColumn,
+                                    endRow - startRow + 1,
+                                    endColumn - startColumn + 1).ApplyStyle(headerStyle, flag);
+
+            // Set header text
+            sheet.Cells["A1"].PutValue("Header 1");
+            sheet.Cells["B1"].PutValue("Header 2");
+            sheet.Cells["C1"].PutValue("Header 3");
+            sheet.Cells["D1"].PutValue("Header 4");
 
             // Save the workbook
-            workbook.Save("HeaderPatternDemo.xlsx", SaveFormat.Xlsx);
+            string outputPath = "HeaderWithDenseHatch.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

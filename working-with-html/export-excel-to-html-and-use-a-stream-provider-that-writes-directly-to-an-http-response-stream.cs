@@ -1,82 +1,133 @@
-// Title: Stream an Aspose.Cells Workbook as a Single HTML5 File Directly to HttpResponse in C#
-// Description: Demonstrates how to convert an Excel workbook to HTML5 with UTF‑8 encoding using Aspose.Cells, configure HtmlSaveOptions for a single‑file output, and write the result straight to an ASP.NET (Core) HttpResponse stream without creating a temporary file.
-// Keywords: Aspose.Cells HTML export | C# stream HTML to HttpResponse | ASP.NET Core Aspose.Cells download | single file HTML5 Aspose | HtmlSaveOptions streaming | UTF-8 HTML output .NET | memory stream Aspose.Cells | web API Excel to HTML | download Excel as HTML C#
-// Common Searches: Aspose.Cells export workbook to HTML stream | How to send Aspose.Cells HTML output via HttpResponse | ASP.NET Core return Excel as HTML5 using Aspose | Stream Aspose.Cells HTML without saving file | Set content‑type for Aspose.Cells HTML response
-// Developer Intent: The developer needs to generate HTML from an Excel workbook with Aspose.Cells and deliver it instantly to the browser through an HTTP response stream.
-// Use Cases: Return a live preview of a spreadsheet in a web application. | Provide a download endpoint that serves Excel data as a single HTML5 file. | Integrate Excel‑to‑HTML conversion into an API that returns HTML for embedding in client‑side pages.
-// AI Prompts: Show how to modify the sample code to write the HTML output to HttpResponse.Body using a MemoryStream. | Give an ASP.NET Core controller example that sets the correct Content‑Type and Content‑Disposition headers for the streamed HTML. | Explain how to configure HtmlSaveOptions to embed images as base64 when streaming the HTML response.
+// Title: Export an Excel workbook to HTML with Aspose.Cells and stream the result directly to an HTTP response using a custom IStreamProvider (C#)
+// AI Prompts: Write a C# method that loads a Workbook from a file path and saves it as HTML to any Stream by configuring HtmlSaveOptions with a custom stream provider. | Create a class that implements the Aspose.Cells IStreamProvider interface to return the same output Stream for all HTML resources such as images and CSS. | Develop a console program that receives an Excel file path and writes the generated HTML to the HttpResponse output stream via the custom stream provider.
+// Common Searches: how to export Excel to HTML directly to HttpResponse stream using Aspose.Cells C# | Aspose.Cells custom IStreamProvider example for HTMLSaveOptions | C# write all Aspose.Cells HTML resources to a single output stream | stream Aspose.Cells HTML export to browser without creating temporary files
+// Tags: Aspose.Cells HTMLSaveOptions custom stream provider | export workbook to HTML stream C# | single output stream for Aspose.Cells HTML export | write Aspose.Cells HTML output to HttpResponse | C# Excel to HTML conversion using IStreamProvider
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWebExport
+namespace AsposeCellsExample
 {
-    // Demonstrates how to convert an Excel workbook to HTML5 with UTF‑8 encoding using Aspose.Cells, configure HtmlSaveOptions for a single‑file output, and write the result straight to an ASP.NET (Core) HttpResponse stream without creating a temporary file.
-    public class ExcelToHtmlExporter
+    // Entry point for the console application.
+    // The example demonstrates loading an Excel workbook with Aspose.Cells, configuring HtmlSaveOptions to use a custom IStreamProvider that directs every generated resource (HTML, images, CSS) to the same output Stream, and saving the workbook as HTML directly to that Stream. A console wrapper accepts input and output paths, enabling the HTML to be streamed to an HTTP response or any other Stream without intermediate files.
+    public class Program
     {
-        /// <param name="outputPath">Full path of the HTML file to create.</param>
-        public void Export(string outputPath)
+        // Usage: AsposeCellsExample.exe <excelFilePath> <outputHtmlPath>
+        public static void Main(string[] args)
         {
-            if (string.IsNullOrWhiteSpace(outputPath))
-                throw new ArgumentException("Output path must be provided.", nameof(outputPath));
-
             try
             {
-                // Ensure the target directory exists
-                string directory = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                if (args.Length < 2)
                 {
-                    Directory.CreateDirectory(directory);
+                    Console.WriteLine("Please provide the Excel file path and the output HTML file path as arguments.");
+                    return;
                 }
 
-                // Create a sample workbook and populate it with data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "SampleData";
+                string excelFilePath = args[0];
+                string outputHtmlPath = args[1];
 
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Age");
-                sheet.Cells["A2"].PutValue("John Doe");
-                sheet.Cells["B2"].PutValue(30);
-                sheet.Cells["A3"].PutValue("Jane Smith");
-                sheet.Cells["B3"].PutValue(28);
-
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                // Verify that the source Excel file exists.
+                if (!File.Exists(excelFilePath))
                 {
-                    SaveAsSingleFile = true,
-                    HtmlVersion = HtmlVersion.Html5,
-                    Encoding = Encoding.UTF8
-                };
+                    Console.WriteLine($"The Excel file '{excelFilePath}' was not found.");
+                    return;
+                }
 
-                // Save workbook as HTML using the configured options
-                workbook.Save(outputPath, htmlOptions);
+                // Ensure the output directory exists.
+                string outputDir = Path.GetDirectoryName(outputHtmlPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Export the Excel file to HTML.
+                using (FileStream outputStream = new FileStream(outputHtmlPath, FileMode.Create, FileAccess.Write))
+                {
+                    var exporter = new ExcelToHtmlExporter();
+                    exporter.Export(outputStream, excelFilePath);
+                }
+
+                Console.WriteLine($"Export completed successfully. HTML saved to '{outputHtmlPath}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error exporting workbook to HTML: {ex.Message}");
-                throw;
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }
 
-    class Program
+    // Exports the Excel file located at excelFilePath to HTML and writes directly to the provided output stream.
+    public class ExcelToHtmlExporter
     {
-        static void Main(string[] args)
+        public void Export(Stream outputStream, string excelFilePath)
         {
             try
             {
-                string outputPath = Path.Combine(Environment.CurrentDirectory, "output", "sample.html");
-                var exporter = new ExcelToHtmlExporter();
-                exporter.Export(outputPath);
-                Console.WriteLine($"Workbook exported successfully to: {outputPath}");
+                // Load the workbook from the specified file.
+                var workbook = new Workbook(excelFilePath);
+
+                // Configure HTML save options.
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    // Direct all generated resources (images, CSS) to the same output stream.
+                    StreamProvider = new OutputStreamProvider(outputStream)
+                };
+
+                // Save the workbook directly to the output stream.
+                workbook.Save(outputStream, htmlOptions);
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+                // In case of error, write the message to the output stream as plain text.
+                using (var writer = new StreamWriter(outputStream, leaveOpen: true))
+                {
+                    writer.Write($"Error exporting Excel to HTML: {ex.Message}");
+                    writer.Flush();
+                }
             }
+        }
+    }
+
+    // Custom stream provider that directs all resource streams to a single output stream.
+    public class OutputStreamProvider : IStreamProvider
+    {
+        private readonly Stream _outputStream;
+
+        public OutputStreamProvider(Stream outputStream)
+        {
+            _outputStream = outputStream;
+        }
+
+        // Returns the output stream for a given resource name.
+        public Stream GetStream(string name) => _outputStream;
+
+        // Overload that also receives the file extension; still returns the output stream.
+        public Stream GetStream(string name, string extension) => _outputStream;
+
+        // Called before any streams are requested; no initialization needed for the output stream.
+        public void InitStream(StreamProviderOptions options)
+        {
+            // No action required.
+        }
+
+        // Called after the stream is no longer needed; no action required for the output stream.
+        public void CloseStream(string name, Stream stream)
+        {
+            // No action required.
+        }
+
+        // Overload with options (required by newer IStreamProvider definitions).
+        public void CloseStream(string name, Stream stream, StreamProviderOptions options)
+        {
+            // No action required.
+        }
+
+        // Additional overload that may be required by some versions of the interface.
+        public void CloseStream(StreamProviderOptions options)
+        {
+            // No action required.
         }
     }
 }

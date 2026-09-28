@@ -1,67 +1,55 @@
-// Title: C# Example: Insert Horizontal Page Breaks Below Frozen Rows with Aspose.Cells for .NET
-// Description: Demonstrates how to freeze the top rows and first column of a worksheet, add horizontal page breaks immediately after the frozen area (and at additional rows), list the freeze‑pane settings and page‑break indices, and save the workbook as PageBreaksWithFrozenRows.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | horizontal page break | freeze panes | worksheet pagination | Excel page break API | .NET Excel export | verify page break position | GitHub Aspose.Cells example | programmatic page break
-// Common Searches: add page break after frozen rows Aspose.Cells .NET | C# freeze panes and insert horizontal page break | how to list page break rows with Aspose.Cells | verify page break placement relative to freeze panes | Aspose.Cells example for pagination with frozen headers
-// Developer Intent: Insert horizontal page breaks right after frozen rows and confirm their locations programmatically.
-// Use Cases: Create printable Excel reports where header rows stay frozen while each printed page starts after the header. | Generate large workbooks with consistent pagination and frozen navigation panes for easier data review. | Debug worksheet layout by outputting freeze‑pane details and the exact row indices of all horizontal page breaks.
-// AI Prompts: Generate C# code using Aspose.Cells to freeze the first N rows and column, then add a horizontal page break directly below the frozen area and list all page‑break rows. | Show how to retrieve freeze‑pane information and verify that added horizontal page breaks are positioned correctly in an Aspose.Cells worksheet. | Explain best practices for preventing page breaks from intersecting frozen rows when adding them programmatically with Aspose.Cells for .NET.
+// Title: Insert a manual horizontal page break below frozen rows and verify freeze pane settings using Aspose.Cells for .NET
+// AI Prompts: Add a horizontal page break at row 5 after freezing the top rows and output its Row, StartColumn, and EndColumn values. | Call GetFreezedPanes to obtain the freeze pane coordinates and counts, then display them in the console. | Save the workbook and open it to confirm that the page break starts immediately after the frozen area.
+// Common Searches: Aspose.Cells how to add a page break after frozen rows in C# | C# example to retrieve freeze pane parameters after inserting manual page breaks | using FreezePanes and HorizontalPageBreaks together with Aspose.Cells .NET | verify that printed pages start after frozen rows using Aspose.Cells | list all horizontal page breaks and frozen pane details in an Aspose.Cells worksheet
+// Tags: horizontal page break after FreezePanes Aspose.Cells | retrieve freeze pane parameters C# | validate page break placement with frozen rows | Aspose.Cells worksheet page break verification | freeze panes and manual page breaks .NET
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsPageBreakDemo
 {
-    // Demonstrates how to freeze the top rows and first column of a worksheet, add horizontal page breaks immediately after the frozen area (and at additional rows), list the freeze‑pane settings and page‑break indices, and save the workbook as PageBreaksWithFrozenRows.xlsx using Aspose.Cells for .NET.
+    // The sample creates a workbook, fills 50 rows, freezes the first five rows and the first column, inserts a horizontal page break just below the frozen rows, prints freeze pane and page break details to the console, and saves the file as PageBreaksWithFreeze.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (30 rows, 5 columns)
-            for (int i = 0; i < 30; i++)
+            // Populate the worksheet with sample data (e.g., 50 rows)
+            for (int i = 0; i < 50; i++)
             {
-                for (int j = 0; j < 5; j++)
-                {
-                    worksheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
-                }
+                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
             }
 
-            // Freeze the top 5 rows (rows 0-4) and the first column (column 0)
-            int freezeRow = 5;          // Row index where the freeze line starts (zero‑based)
-            int freezeColumn = 1;       // Column index where the freeze line starts (zero‑based)
-            int frozenRows = 5;         // Number of rows to freeze
-            int frozenColumns = 1;      // Number of columns to freeze
-            worksheet.FreezePanes(freezeRow, freezeColumn, frozenRows, frozenColumns);
+            // Freeze the top 5 rows (rows 0‑4) and the first column (column 0)
+            // Parameters: row index, column index, number of frozen rows, number of frozen columns
+            worksheet.FreezePanes(5, 1, 5, 1);
 
-            // Add a horizontal page break immediately below the frozen rows
-            // Since rows are zero‑based, the first row after the frozen area is index 5
-            worksheet.HorizontalPageBreaks.Add(frozenRows);
-
-            // Add additional page breaks for demonstration
-            worksheet.HorizontalPageBreaks.Add(15); // After row 15
-            worksheet.HorizontalPageBreaks.Add(25); // After row 25
+            // Add a manual horizontal page break just below the frozen rows (at row index 5)
+            // This places the break after the frozen area so that printing starts from the next visible row
+            worksheet.HorizontalPageBreaks.Add(5);
 
             // Verify freeze pane information
-            bool hasFreeze = worksheet.GetFreezedPanes(out int fpRow, out int fpColumn, out int fpRows, out int fpColumns);
+            int freezeRow, freezeColumn, frozenRows, frozenColumns;
+            bool hasFreeze = worksheet.GetFreezedPanes(out freezeRow, out freezeColumn, out frozenRows, out frozenColumns);
             Console.WriteLine($"Worksheet has freeze panes: {hasFreeze}");
             if (hasFreeze)
             {
-                Console.WriteLine($"Freeze position - Row: {fpRow}, Column: {fpColumn}");
-                Console.WriteLine($"Frozen rows: {fpRows}, Frozen columns: {fpColumns}");
+                Console.WriteLine($"Freeze position - Row: {freezeRow}, Column: {freezeColumn}");
+                Console.WriteLine($"Frozen rows: {frozenRows}, Frozen columns: {frozenColumns}");
             }
 
-            // Verify that page breaks are positioned correctly relative to frozen rows
-            Console.WriteLine("Horizontal page breaks (row indices):");
+            // Verify the added horizontal page break
+            Console.WriteLine("Horizontal Page Breaks:");
             foreach (HorizontalPageBreak hpb in worksheet.HorizontalPageBreaks)
             {
-                Console.WriteLine($"Row: {hpb.Row}");
+                Console.WriteLine($"Break at Row: {hpb.Row}, StartColumn: {hpb.StartColumn}, EndColumn: {hpb.EndColumn}");
             }
 
-            // Save the workbook
-            workbook.Save("PageBreaksWithFrozenRows.xlsx");
+            // Save the workbook to verify the result in Excel
+            workbook.Save("PageBreaksWithFreeze.xlsx");
         }
     }
 }

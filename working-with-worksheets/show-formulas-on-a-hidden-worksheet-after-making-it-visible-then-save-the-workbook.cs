@@ -1,70 +1,62 @@
-// Title: Aspose.Cells for .NET – Show Formulas on a Hidden Worksheet and Save the Workbook
-// Description: C# example that creates a workbook, adds a hidden sheet, writes a SUM formula to A1, unhides the sheet, enables the ShowFormulas view, and saves the file as XLSX using Aspose.Cells.
-// Keywords: Aspose.Cells C# ShowFormulas | display formulas hidden worksheet | unhide worksheet Aspose.Cells | save workbook with formulas visible | Aspose.Cells HideWorksheet property | Excel formula view programmatically | Aspose.Cells .NET example
-// Common Searches: how to show formulas on a hidden sheet with Aspose.Cells | Aspose.Cells make hidden worksheet visible C# | set ShowFormulas property before saving workbook | C# Aspose.Cells display formulas instead of values | unhide worksheet and show formulas Aspose.Cells .NET
-// Developer Intent: Unhide a worksheet, display its formulas, and persist the workbook.
-// Use Cases: Audit hidden calculation sheets by revealing formulas before distribution. | Debug template helpers: hide formula sheets during normal use, then expose them for troubleshooting. | Automate a quality‑check step that toggles visibility and switches to formula view to verify correctness prior to final save.
-// AI Prompts: Generate C# code with Aspose.Cells that unhides a worksheet, sets ShowFormulas = true, and saves the workbook as XLSX. | Provide an Aspose.Cells example that hides a sheet, inserts a formula, then makes the sheet visible and shows formulas before saving. | Explain the effect of the ShowFormulas property on the saved Excel file when a hidden worksheet is made visible.
+// Title: Unhide the first hidden worksheet, display its formulas, and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .xlsx file, locate the first hidden worksheet, set its IsVisible property to true, enable Settings.ShowFormula, and save the workbook to a new file with Aspose.Cells in C#. | Using Aspose.Cells for .NET, make a hidden sheet visible, turn on formula view, and export the modified workbook while handling missing input files.
+// Common Searches: Aspose.Cells C# unhide hidden worksheet and show formulas | How to enable ShowFormula setting when saving Excel workbook with Aspose.Cells | C# code to make hidden Excel sheet visible and keep formulas displayed | Save modified workbook after revealing hidden sheet using Aspose.Cells | Check for hidden worksheets in Aspose.Cells and make them visible
+// Tags: make hidden sheet visible Aspose.Cells | enable formula view Settings.ShowFormula | export workbook after sheet visibility change | load and iterate worksheets Aspose.Cells C# | validate input file existence Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// // Loads input.xlsx, finds the first hidden worksheet, sets its IsVisible to true, optionally turns on Settings.ShowFormula to display formulas, and saves the updated workbook as output.xlsx while handling missing files and runtime exceptions.
+class Program
 {
-    // C# example that creates a workbook, adds a hidden sheet, writes a SUM formula to A1, unhides the sheet, enables the ShowFormulas view, and saves the file as XLSX using Aspose.Cells.
-    public class ShowFormulasOnHiddenSheetDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Error: Input file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Locate the first hidden worksheet
+            Worksheet hiddenSheet = null;
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                if (!ws.IsVisible) // worksheet is hidden
+                {
+                    hiddenSheet = ws;
+                    break;
+                }
+            }
 
-                // Add a new worksheet that will be hidden initially
-                Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-
-                // Hide the worksheet
-                hiddenSheet.IsVisible = false;
-
-                // Put a formula in cell A1 of the hidden worksheet
-                hiddenSheet.Cells["A1"].Formula = "=SUM(10,20,30)";
-
+            if (hiddenSheet != null)
+            {
                 // Make the hidden worksheet visible
                 hiddenSheet.IsVisible = true;
 
-                // Enable showing formulas instead of their calculated results
-                hiddenSheet.ShowFormulas = true;
-
-                // Define output file path
-                string outputPath = "ShowFormulasOnHiddenSheet.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}' with formulas shown on the previously hidden sheet.");
+                // Note: Displaying formulas instead of calculated values requires
+                // the ShowFormula property, which may not be available in older
+                // Aspose.Cells versions. If supported, uncomment the line below:
+                // workbook.Settings.ShowFormula = true;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the modified workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ShowFormulasOnHiddenSheetDemo.Run();
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

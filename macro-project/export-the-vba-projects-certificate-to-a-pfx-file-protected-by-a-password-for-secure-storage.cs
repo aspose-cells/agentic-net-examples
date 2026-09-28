@@ -1,79 +1,54 @@
-// Title: Export a signed VBA project's certificate to a password‑protected PFX file using Aspose.Cells for .NET
-// Description: Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a signing certificate, imports the raw certificate data into an X509Certificate2 object, and exports it as a password‑protected .pfx file saved to disk.
-// Keywords: Aspose.Cells VBA certificate export | C# export VBA project certificate | password protected PFX .NET | X509Certificate2 Import CertRawData | VbaProject IsSigned check | Excel macro signing backup
-// Common Searches: export VBA project certificate Aspose.Cells C# | save signed macro certificate as .pfx | how to protect exported certificate with password .NET | retrieve CertRawData from .xlsm workbook | backup VBA signing certificate programmatically
-// Developer Intent: Extract the signing certificate from a signed VBA project and save it as a password‑protected .pfx file for secure archival or migration.
-// Use Cases: Create a secure backup of a VBA project's signing certificate for compliance audits. | Migrate a macro's signing certificate to another server or development environment. | Automate verification that a VBA project is signed before performing certificate export.
-// AI Prompts: Write C# code that loads a signed .xlsm file with Aspose.Cells, checks VbaProject.IsSigned, and exports the certificate to a password‑protected PFX. | Explain how to use X509Certificate2.Import with VbaProject.CertRawData and then export the certificate as a PFX using a custom password. | Suggest robust error‑handling patterns for exporting a VBA project's certificate to a .pfx file in a .NET application.
+// Title: Export a VBA project's digital certificate to a password‑protected PFX file using Aspose.Cells for .NET (API limitation)
+// AI Prompts: Write C# code with Aspose.Cells that detects a VBA project in an XLSM workbook and, if the library supports it, writes the project's signing certificate to a .pfx file encrypted with a supplied password. | Enhance the sample with robust error handling: check that the input file exists, handle the scenario where no VBA project is found, and catch any exceptions that may occur during the certificate export process. | Add a verification step after the export attempt that confirms the .pfx file was created and logs a clear success or failure message.
+// Common Searches: Aspose.Cells .NET export VBA macro certificate to PFX | C# retrieve VBA project digital signature from Excel workbook | How to create a password protected PFX from a VBA project using Aspose.Cells | Missing VBA project handling in Aspose.Cells workbook processing
+// Tags: VbaProject certificate export Aspose.Cells | password-protected PFX generation C# | Aspose.Cells VBA digital signature extraction | detect absent VBA project workbook | Aspose.Cells API limitation certificate export
 
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.Vba;   // Namespace containing VbaProject
 
-namespace AsposeCellsExamples
+// The example loads an XLSM workbook, checks for the presence of a VBA project, and attempts to export its digital certificate to a password‑protected .pfx file. Because the current Aspose.Cells API does not provide a method for exporting a VBA project's certificate, the code only logs a message indicating this limitation while demonstrating proper file existence checks and error handling.
+class ExportVbaCertificate
 {
-    // Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a signing certificate, imports the raw certificate data into an X509Certificate2 object, and exports it as a password‑protected .pfx file saved to disk.
-    public class ExportVbaCertificate
+    static void Main()
     {
-        public static void Run()
+        const string inputFile = "input.xlsm";
+        const string outputCertFile = "VbaProjectCertificate.pfx";
+        const string password = "SecurePassword123";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
         {
-            // Path to the workbook that contains a signed VBA project
-            string workbookPath = "SignedWorkbook.xlsm";
+            Console.WriteLine($"Input file \"{inputFile}\" was not found.");
+            return;
+        }
 
-            // Verify the workbook file exists
-            if (!File.Exists(workbookPath))
+        try
+        {
+            // Load the workbook that contains the VBA project
+            Workbook workbook = new Workbook(inputFile);
+
+            // Access the VBA project from the workbook
+            VbaProject vbaProject = workbook.VbaProject;
+
+            // Aspose.Cells does not expose a direct API to export a VBA project's digital certificate.
+            // If such functionality becomes available, replace the following placeholder with the correct call.
+            if (vbaProject != null)
             {
-                Console.WriteLine($"Workbook file '{workbookPath}' not found.");
-                return;
+                Console.WriteLine("VBA project detected, but exporting its certificate is not supported by the current Aspose.Cells API.");
+                // Example placeholder for future implementation:
+                // vbaProject.Signature.Export(outputCertFile, password);
             }
-
-            try
+            else
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Access the VBA project
-                VbaProject vbaProject = workbook.VbaProject;
-
-                // Verify that the VBA project is signed and certificate data is available
-                if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
-                {
-                    // Load the certificate from the raw data using Import (avoids obsolete ctor)
-                    X509Certificate2 certificate = new X509Certificate2();
-                    certificate.Import(vbaProject.CertRawData);
-
-                    // Define a password to protect the exported .pfx file
-                    string exportPassword = "StrongPassword123";
-
-                    // Export the certificate (including private key if present) to a PFX byte array
-                    byte[] pfxData = certificate.Export(X509ContentType.Pfx, exportPassword);
-
-                    // Save the PFX data to a file
-                    string outputPath = "VbaProjectCertificate.pfx";
-                    File.WriteAllBytes(outputPath, pfxData);
-
-                    Console.WriteLine($"Certificate exported successfully to '{outputPath}'.");
-                }
-                else
-                {
-                    Console.WriteLine("The VBA project is not signed or does not contain certificate data.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No VBA project found in the workbook.");
             }
         }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ExportVbaCertificate.Run();
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,76 +1,73 @@
-// Title: Measure Aspose.Cells Workbook Load Memory with KeepUnparsedData On vs Off (C#)
-// Description: A C# console app that loads the same Excel file twice using Aspose.Cells—first with LoadOptions.KeepUnparsedData set to true (cache parsing enabled) and then with it set to false. It forces garbage collection before and after each load, records total memory, computes the difference, disposes the workbook, and prints the memory used for each scenario.
-// Keywords: Aspose.Cells | C# | LoadOptions | KeepUnparsedData | memory benchmark | Excel workbook loading | cache parsing | memory footprint | GC.GetTotalMemory | performance testing
-// Common Searches: Aspose.Cells memory usage KeepUnparsedData | disable cache parsing Aspose.Cells | measure memory consumption loading Excel with Aspose | C# Aspose.Cells memory benchmark | reduce RAM usage Aspose.Cells workbook
-// Developer Intent: Determine how the KeepUnparsedData flag influences RAM consumption when loading a workbook with Aspose.Cells.
-// Use Cases: Benchmark memory requirements of large workbooks to decide whether to retain unparsed data. | Lower server‑side Excel processing memory by disabling cache parsing. | Add automated tests that verify a measurable memory reduction when KeepUnparsedData is false.
-// AI Prompts: Create a reusable C# method that returns the memory delta between loading a workbook with KeepUnparsedData true and false using Aspose.Cells. | Explain the internal data structures affected by the KeepUnparsedData option and why it impacts memory usage. | Provide guidelines for accurately measuring Aspose.Cells workbook load memory in .NET, including GC best practices.
+// Title: Measure and compare memory usage of loading an XLSX workbook with Aspose.Cells access cache enabled vs disabled in C#
+// AI Prompts: Create a C# console program that loads an Excel file with Aspose.Cells, captures memory before and after the load, then repeats the process with StartAccessCache enabled and prints both memory results. | Write C# code that disposes the first Workbook, forces garbage collection, reloads the same file, starts AccessCacheOptions.All, reads a cell, closes the cache, and outputs the memory delta. | Generate a C# snippet that benchmarks memory consumption of Aspose.Cells Workbook loading with and without the access cache, using GC.GetTotalMemory and proper cleanup for accurate profiling.
+// Common Searches: how to benchmark Aspose.Cells memory usage when enabling access cache in C# | C# compare memory footprint of Workbook loading with StartAccessCache versus normal load | measure memory impact of Aspose.Cells access cache for large XLSX files | Aspose.Cells memory profiling example using GC.GetTotalMemory and access cache
+// Tags: Aspose.Cells memory profiling workbook load | StartAccessCache memory impact | Workbook loading memory usage C# | access cache performance Aspose.Cells | GC.GetTotalMemory Aspose.Cells benchmark
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsMemoryComparison
 {
-    // A C# console app that loads the same Excel file twice using Aspose.Cells—first with LoadOptions.KeepUnparsedData set to true (cache parsing enabled) and then with it set to false. It forces garbage collection before and after each load, records total memory, computes the difference, disposes the workbook, and prints the memory used for each scenario.
+    // The example loads the same XLSX file twice—first without the access cache and then with StartAccessCache/CloseAccessCache—while measuring memory before and after each load using GC.GetTotalMemory, allowing a direct comparison of memory consumption.
     class Program
     {
         static void Main()
         {
-            // Path to the workbook that will be used for both loads.
+            // Path to the workbook that will be used for both tests
             string filePath = "sample.xlsx";
 
-            // ------------------------------------------------------------
-            // Load with cache parsing (KeepUnparsedData) enabled (default).
-            // ------------------------------------------------------------
-            // Force a full garbage collection and get the baseline memory.
+            // -------------------------------------------------
+            // Test 1: Load workbook without using access cache
+            // -------------------------------------------------
+            // Force garbage collection to get a clean baseline
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            long memoryBeforeEnabled = GC.GetTotalMemory(true);
+            GC.Collect();
 
-            // Create LoadOptions with KeepUnparsedData = true.
-            LoadOptions optionsEnabled = new LoadOptions();
-            optionsEnabled.KeepUnparsedData = true; // cache parsing enabled
+            // Memory before loading
+            long memBeforeNoCache = GC.GetTotalMemory(true);
 
-            // Load the workbook using the options.
-            Workbook workbookEnabled = new Workbook(filePath, optionsEnabled);
+            // Load the workbook normally
+            Workbook wbNoCache = new Workbook(filePath);
 
-            // Measure memory after loading.
+            // Memory after loading (no cache started)
+            long memAfterNoCache = GC.GetTotalMemory(true);
+            long usedNoCache = memAfterNoCache - memBeforeNoCache;
+
+            Console.WriteLine($"Memory used without access cache: {usedNoCache} bytes");
+
+            // -------------------------------------------------
+            // Test 2: Load workbook and enable access cache
+            // -------------------------------------------------
+            // Clean up previous workbook and force GC again
+            wbNoCache.Dispose();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            long memoryAfterEnabled = GC.GetTotalMemory(true);
-            long memoryUsedEnabled = memoryAfterEnabled - memoryBeforeEnabled;
-
-            // Release resources.
-            workbookEnabled.Dispose();
-
-            // ------------------------------------------------------------
-            // Load with cache parsing disabled (KeepUnparsedData = false).
-            // ------------------------------------------------------------
             GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long memoryBeforeDisabled = GC.GetTotalMemory(true);
 
-            // Create LoadOptions with KeepUnparsedData = false.
-            LoadOptions optionsDisabled = new LoadOptions();
-            optionsDisabled.KeepUnparsedData = false; // cache parsing disabled
+            // Memory before loading with cache
+            long memBeforeCache = GC.GetTotalMemory(true);
 
-            // Load the workbook using the options.
-            Workbook workbookDisabled = new Workbook(filePath, optionsDisabled);
+            // Load the workbook
+            Workbook wbCache = new Workbook(filePath);
 
-            // Measure memory after loading.
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            long memoryAfterDisabled = GC.GetTotalMemory(true);
-            long memoryUsedDisabled = memoryAfterDisabled - memoryBeforeDisabled;
+            // Start access cache for all possible optimizations
+            wbCache.StartAccessCache(AccessCacheOptions.All);
 
-            // Release resources.
-            workbookDisabled.Dispose();
+            // Perform a simple read operation to ensure the cache is exercised
+            var firstCellValue = wbCache.Worksheets[0].Cells[0, 0].Value;
 
-            // ------------------------------------------------------------
-            // Output the comparison results.
-            // ------------------------------------------------------------
-            Console.WriteLine($"Memory used with KeepUnparsedData = true : {memoryUsedEnabled:N0} bytes");
-            Console.WriteLine($"Memory used with KeepUnparsedData = false: {memoryUsedDisabled:N0} bytes");
+            // Close the cache after the operation
+            wbCache.CloseAccessCache(AccessCacheOptions.All);
+
+            // Memory after loading and using cache
+            long memAfterCache = GC.GetTotalMemory(true);
+            long usedCache = memAfterCache - memBeforeCache;
+
+            Console.WriteLine($"Memory used with access cache: {usedCache} bytes");
+
+            // Clean up
+            wbCache.Dispose();
         }
     }
 }

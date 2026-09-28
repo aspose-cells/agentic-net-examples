@@ -1,53 +1,66 @@
-// Title: Batch export XML maps from multiple Excel workbooks with Aspose.Cells for .NET (C#)
-// Description: A C# console utility that scans a directory of .xlsx files, loads each workbook with Aspose.Cells, detects every defined XML map, and writes each map to a uniquely named XML file in an output folder using Workbook.ExportXml.
-// Keywords: Aspose.Cells | ExportXml | XML map export | batch Excel processing | C# .NET | multiple workbooks | folder iteration | save XML files | Windows | data integration
-// Common Searches: aspocells export all xml maps from folder | c# batch export xml from excel workbooks | how to use Workbook.ExportXml for multiple files | export xml maps Aspose.Cells example | iterate excel files and export xml maps
-// Developer Intent: Export every XML map present in each workbook of a folder to separate XML files.
-// Use Cases: Automate generation of XML payloads for downstream services from a library of Excel templates. | Create per‑map XML exports for a reporting pipeline that consumes XML inputs. | Migrate Excel‑based XML data to an external system by saving each map as an individual file.
-// AI Prompts: Write a reusable method that accepts input and output folder paths and uses Aspose.Cells to export all XML maps from each .xlsx file. | Add comprehensive error handling and logging to the batch XML export code to capture missing maps, file‑access errors, and permission issues. | Modify the batch export to export only XML maps whose names start with a given prefix. | Refactor the example into an async version that processes workbooks in parallel while preserving order of output files.
+// Title: Batch export XML maps from a folder of Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans a directory for .xlsx files and uses Aspose.Cells Workbook.ExportXml to export a predefined list of XML maps from each workbook. | Modify the batch export program to read XML map names from an external JSON file and apply them to every workbook in the input folder. | Add comprehensive logging to the batch ExportXml script, recording the path of each processed workbook, the exported map name, and any errors encountered.
+// Common Searches: aspnet c# batch export xml maps from multiple excel files using aspose.cells | how to loop through a folder of .xlsx files and call ExportXml for each map | c# program to extract specific XML maps from many workbooks with Aspose.Cells | read xml map names from json and export them with Aspose.Cells in bulk | error handling for ExportXml when processing a directory of workbooks
+// Tags: Aspose.Cells ExportXml batch processing | C# iterate folder export XML maps | automated XML map extraction from Excel workbooks | read XML map list from JSON C# | logging ExportXml operations .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// A C# console utility that scans a directory of .xlsx files, loads each workbook with Aspose.Cells, detects every defined XML map, and writes each map to a uniquely named XML file in an output folder using Workbook.ExportXml.
-class BatchXmlExport
+// The program walks through all .xlsx files in a specified input directory, loads each workbook with Aspose.Cells, and exports the defined XML maps (e.g., Map1, Map2) to an output folder. Each exported file is named using the source workbook name and map identifier, with error handling and folder creation logic included.
+class Program
 {
     static void Main()
     {
-        // Folder containing the source Excel workbooks
+        // Folder containing the source workbooks
         string inputFolder = @"C:\InputWorkbooks";
 
-        // Folder where the exported XML files will be saved
+        // Folder where the exported XML files will be placed
         string outputFolder = @"C:\ExportedXml";
+
+        // Verify input folder exists
+        if (!Directory.Exists(inputFolder))
+        {
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
+        }
 
         // Ensure the output directory exists
         Directory.CreateDirectory(outputFolder);
 
-        // Retrieve all Excel files (you can adjust the pattern if needed)
-        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+        // List of map names to export from each workbook
+        List<string> mapNames = new List<string> { "Map1", "Map2" };
 
-        foreach (string workbookPath in workbookFiles)
+        // Iterate over all .xlsx files in the input folder
+        foreach (string workbookPath in Directory.GetFiles(inputFolder, "*.xlsx"))
         {
-            // Load the workbook (uses the standard Workbook(string) constructor)
-            Workbook wb = new Workbook(workbookPath);
-
-            // Check if the workbook has any XML maps defined
-            if (wb.Worksheets.XmlMaps.Count > 0)
+            // Guard against missing files (should not happen with GetFiles, but added for safety)
+            if (!File.Exists(workbookPath))
             {
-                // Iterate through each XML map in the workbook
-                for (int i = 0; i < wb.Worksheets.XmlMaps.Count; i++)
-                {
-                    XmlMap xmlMap = wb.Worksheets.XmlMaps[i];
+                Console.WriteLine($"File not found: {workbookPath}");
+                continue;
+            }
 
-                    // Construct a unique XML file name using the workbook name and map name
-                    string workbookName = Path.GetFileNameWithoutExtension(workbookPath);
-                    string xmlFileName = $"{workbookName}_{xmlMap.Name}.xml";
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Export each specified map to an XML file
+                foreach (string mapName in mapNames)
+                {
+                    // Construct a unique XML file name per workbook and map
+                    string xmlFileName = $"{Path.GetFileNameWithoutExtension(workbookPath)}_{mapName}.xml";
                     string xmlFullPath = Path.Combine(outputFolder, xmlFileName);
 
-                    // Export the XML data for the current map (uses ExportXml(string, string))
-                    wb.ExportXml(xmlMap.Name, xmlFullPath);
+                    // Export the map to XML using the correct API
+                    workbook.ExportXml(mapName, xmlFullPath);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{workbookPath}': {ex.Message}");
             }
         }
     }

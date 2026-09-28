@@ -1,61 +1,60 @@
-// Title: Use a worksheet range as custom data labels in an Aspose.Cells .NET chart
-// Description: Creates a workbook, adds categories and values, stores custom label strings in a separate column, builds a column chart, links the series data labels to the range C2:C4 via the LinkedSource property, hides numeric values, sets label font color and position, and saves the file as ChartWithCustomDataLabels.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | chart data labels | custom data labels | LinkedSource property | cell range labels | column chart | label formatting | hide numeric values | label font color | label position
-// Common Searches: Aspose.Cells custom data labels from cell range | set chart data label source to worksheet cells .NET | display text instead of values on Aspose.Cells chart | change data label font color and position Aspose.Cells | link series data labels to a range in Aspose.Cells
-// Developer Intent: Show custom text stored in worksheet cells as the data labels of a chart created with Aspose.Cells for .NET.
-// Use Cases: Replace numeric values with product names on a sales column chart. | Show month abbreviations from a separate column as labels on a performance chart. | Apply a specific font color and inside‑end position to custom labels sourced from another range.
-// AI Prompts: Generate C# code that binds a cell range to data labels of a pie chart using Aspose.Cells and hides the default values. | Provide an example that sets individual font styles for each custom label based on a second cell range. | Explain how to update the LinkedSource range automatically when new rows are added to the chart data.
+// Title: Create a column chart with data labels sourced from a separate worksheet range using Aspose.Cells for .NET
+// AI Prompts: Write C# code that adds a column chart to a worksheet and links its data labels to a cell range on another sheet with Aspose.Cells. | Show how to hide the default numeric values of chart data labels and display custom text strings from a different worksheet using Aspose.Cells. | Demonstrate configuring Series.DataLabels.LinkedSource to show custom label strings for a column chart in a .NET Excel workbook.
+// Common Searches: Aspose.Cells custom data label text from another worksheet | C# link chart data labels to a range on a different sheet Aspose.Cells | display custom strings instead of values in column chart labels using Aspose.Cells for .NET | Series.DataLabels.ShowCellRange true example Aspose.Cells
+// Tags: Aspose.Cells column chart custom data labels | Series.DataLabels.LinkedSource usage | chart data labels from external worksheet range | hide default label values Aspose.Cells | C# Excel chart custom label text
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// Creates a workbook, adds categories and values, stores custom label strings in a separate column, builds a column chart, links the series data labels to the range C2:C4 via the LinkedSource property, hides numeric values, sets label font color and position, and saves the file as ChartWithCustomDataLabels.xlsx.
+// The example creates a workbook with two worksheets: one holds chart data and the other stores custom label strings. It adds a column chart to the data sheet, configures the series to hide default values, enables cell‑range labels, and links the labels to the range Labels!A2:A4. The chart is saved as ChartWithCustomDataLabels.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook and get the default worksheet (Sheet1)
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet sheet1 = workbook.Worksheets[0];
+        sheet1.Name = "Data";
 
-        // Populate chart data (categories and values)
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
+        // Populate chart data in Sheet1
+        sheet1.Cells["A1"].PutValue("Category");
+        sheet1.Cells["A2"].PutValue("A");
+        sheet1.Cells["A3"].PutValue("B");
+        sheet1.Cells["A4"].PutValue("C");
 
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["B3"].PutValue(200);
-        sheet.Cells["B4"].PutValue(300);
+        sheet1.Cells["B1"].PutValue("Value");
+        sheet1.Cells["B2"].PutValue(120);
+        sheet1.Cells["B3"].PutValue(80);
+        sheet1.Cells["B4"].PutValue(150);
 
-        // Store custom label strings in a separate column
-        sheet.Cells["C1"].PutValue("CustomLabel");
-        sheet.Cells["C2"].PutValue("First");
-        sheet.Cells["C3"].PutValue("Second");
-        sheet.Cells["C4"].PutValue("Third");
+        // Add a second worksheet to hold custom label texts
+        Worksheet sheet2 = workbook.Worksheets.Add("Labels");
+        sheet2.Cells["A1"].PutValue("CustomLabel");
+        sheet2.Cells["A2"].PutValue("High");
+        sheet2.Cells["A3"].PutValue("Medium");
+        sheet2.Cells["A4"].PutValue("Low");
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-        Chart chart = sheet.Charts[chartIndex];
+        // Add a column chart to Sheet1
+        int chartIndex = sheet1.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+        Chart chart = sheet1.Charts[chartIndex];
 
-        // Define the data series and category axis
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+        // Set the data range for the series and categories
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-        // Configure data labels to display the custom strings
+        // Enable data labels for the first series
         Series series = chart.NSeries[0];
-        series.DataLabels.ShowValue = false;       // Hide the default numeric value
-        series.DataLabels.ShowCellRange = true;    // Enable showing cell range as label
-        series.DataLabels.LinkedSource = "C2:C4";  // Range containing custom text
+        series.DataLabels.ShowValue = false;          // hide default value
+        series.DataLabels.ShowCellRange = true;       // enable custom text from cells
+        // Link the custom text range (Sheet2!A2:A4) to the data labels
+        series.DataLabels.LinkedSource = "Labels!A2:A4";
 
         // Optional: adjust label appearance
-        series.DataLabels.Font.Color = Color.Blue;
         series.DataLabels.Position = LabelPositionType.InsideEnd;
+        series.DataLabels.Font.Color = System.Drawing.Color.Blue;
 
-        // Save the workbook with the chart
+        // Save the workbook
         workbook.Save("ChartWithCustomDataLabels.xlsx");
     }
 }

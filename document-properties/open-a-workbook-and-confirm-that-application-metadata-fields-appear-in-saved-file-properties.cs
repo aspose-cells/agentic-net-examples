@@ -1,84 +1,76 @@
-// Title: Persist Built‑in and Custom Document Properties Using Aspose.Cells WorkbookMetadata (C#)
-// Description: Demonstrates how to create an Excel workbook, set built‑in (Author, Title) and custom properties, edit them via WorkbookMetadata with DocumentProperties options, save to a new file, and verify that the changes are retained.
-// Keywords: Aspose.Cells | C# | WorkbookMetadata | DocumentProperties | built‑in document properties | custom document properties | modify Excel metadata | verify Excel file properties | metadata API | save without full workbook
-// Common Searches: Aspose.Cells change author property C# | Add custom document property with WorkbookMetadata | Read and write Excel metadata without opening workbook | Persist modified document properties in .xlsx using Aspose | WorkbookMetadata save updated properties
-// Developer Intent: Edit built‑in and custom document properties of an Excel file through WorkbookMetadata and confirm the updates are saved.
-// Use Cases: Set Author and Title, add a custom property, then modify them via WorkbookMetadata and save to a new workbook. | Load an existing .xlsx, change a built‑in property, add another custom property, and persist changes without re‑saving the whole workbook. | After updating metadata, reopen the file to read back all properties and ensure they match the expected values.
-// AI Prompts: Generate C# code that opens an existing .xlsx, updates the Author to "Jane Doe" using WorkbookMetadata, adds a custom property "ReviewedOn" with today’s date, and saves to a new file. | Explain how WorkbookMetadata with MetadataOptions.DocumentProperties enables read‑write access to both built‑in and custom Excel properties without loading the full workbook.
+// Title: How to set and validate built‑in Excel document properties with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells to assign Application, Author, Title, Subject, and Keywords built‑in document properties to a workbook and save it. | Write C# that loads the saved workbook, reads the same built‑in document properties via the BuiltInDocumentProperties indexer, and stores them in variables. | Create a C# verification routine that compares the retrieved property values with the expected strings and prints a success or failure message.
+// Common Searches: Aspose.Cells C# set built‑in document properties like Application and Author | C# verify Excel metadata persistence after saving with Aspose.Cells | Read built‑in document properties from an existing .xlsx using Aspose.Cells .NET | How to programmatically add keywords to an Excel file with Aspose.Cells | Check if custom application name is stored in workbook properties using Aspose.Cells
+// Tags: Aspose.Cells set built-in document properties | Aspose.Cells read workbook metadata | C# verify Excel property persistence | BuiltInDocumentProperties indexer usage | Excel file metadata verification Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Metadata;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsMetadataDemo
+// The example loads or creates an Excel workbook, uses the BuiltInDocumentProperties indexer to set Application, Author, Title, Subject, and Keywords, saves the file, reloads it, reads the same properties back, and prints a verification result confirming that the metadata persisted correctly.
+class Program
 {
-    // Demonstrates how to create an Excel workbook, set built‑in (Author, Title) and custom properties, edit them via WorkbookMetadata with DocumentProperties options, save to a new file, and verify that the changes are retained.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            // Paths for the original and the updated workbook
-            string originalPath = "Original.xlsx";
-            string updatedPath = "Updated.xlsx";
+            // Load existing workbook or create a new one
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+            }
 
-            // ------------------------------------------------------------
-            // 1. Create a new workbook and set built‑in & custom properties
-            // ------------------------------------------------------------
-            Workbook workbook = new Workbook();
+            // Set built‑in document properties using the indexer
+            var props = workbook.BuiltInDocumentProperties;
+            props["Application"].Value = "MyApp";
+            props["Author"].Value = "John Doe";
+            props["Title"].Value = "Test Workbook";
+            props["Subject"].Value = "Metadata Verification";
+            props["Keywords"].Value = "Aspose,Metadata";
 
-            // Set some built‑in document properties
-            workbook.BuiltInDocumentProperties.Author = "John Smith";
-            workbook.BuiltInDocumentProperties.Title = "Metadata Demo";
+            // Save the workbook
+            workbook.Save(outputPath);
 
-            // Add a custom document property
-            workbook.CustomDocumentProperties.Add("Project", "Aspose.Cells Metadata");
+            // Reload to verify metadata persistence
+            Workbook reloaded = new Workbook(outputPath);
+            var reloadedProps = reloaded.BuiltInDocumentProperties;
 
-            // Save the workbook to disk (uses the standard Workbook.Save method)
-            workbook.Save(originalPath);
+            // Retrieve property values using the indexer
+            string app = reloadedProps["Application"]?.Value?.ToString();
+            string author = reloadedProps["Author"]?.Value?.ToString();
+            string title = reloadedProps["Title"]?.Value?.ToString();
+            string subject = reloadedProps["Subject"]?.Value?.ToString();
+            string keywords = reloadedProps["Keywords"]?.Value?.ToString();
 
-            // ------------------------------------------------------------
-            // 2. Load the workbook metadata (document properties) using WorkbookMetadata
-            // ------------------------------------------------------------
-            // Create MetadataOptions to work with document properties
-            MetadataOptions options = new MetadataOptions(MetadataType.DocumentProperties);
+            // Output metadata values
+            Console.WriteLine("Application: " + app);
+            Console.WriteLine("Author: " + author);
+            Console.WriteLine("Title: " + title);
+            Console.WriteLine("Subject: " + subject);
+            Console.WriteLine("Keywords: " + keywords);
 
-            // Load metadata from the saved workbook (uses the WorkbookMetadata(string, MetadataOptions) constructor)
-            WorkbookMetadata metadata = new WorkbookMetadata(originalPath, options);
+            // Simple verification
+            bool isValid = app == "MyApp" &&
+                           author == "John Doe" &&
+                           title == "Test Workbook" &&
+                           subject == "Metadata Verification" &&
+                           keywords == "Aspose,Metadata";
 
-            // Access built‑in properties (read‑write)
-            BuiltInDocumentPropertyCollection builtInProps = metadata.BuiltInDocumentProperties;
-            Console.WriteLine("Built‑in Author (before): " + builtInProps.Author);
-            Console.WriteLine("Built‑in Title (before): " + builtInProps.Title);
-
-            // Modify a built‑in property via metadata
-            builtInProps.Author = "Aspose Developer";
-
-            // Access custom properties
-            CustomDocumentPropertyCollection customProps = metadata.CustomDocumentProperties;
-            Console.WriteLine("Custom Property 'Project': " + customProps["Project"].Value);
-
-            // Add another custom property
-            customProps.Add("ReviewedBy", "Jane Doe");
-
-            // ------------------------------------------------------------
-            // 3. Save the modified metadata to a new file
-            // ------------------------------------------------------------
-            // Save using the WorkbookMetadata.Save(string) method
-            metadata.Save(updatedPath);
-
-            // ------------------------------------------------------------
-            // 4. Verify that the properties are persisted in the saved file
-            // ------------------------------------------------------------
-            Workbook verifiedWorkbook = new Workbook(updatedPath);
-
-            // Verify built‑in properties
-            Console.WriteLine("Verified Built‑in Author: " + verifiedWorkbook.BuiltInDocumentProperties.Author);
-            Console.WriteLine("Verified Built‑in Title: " + verifiedWorkbook.BuiltInDocumentProperties.Title);
-
-            // Verify custom properties
-            Console.WriteLine("Verified Custom Property 'Project': " + verifiedWorkbook.CustomDocumentProperties["Project"].Value);
-            Console.WriteLine("Verified Custom Property 'ReviewedBy': " + verifiedWorkbook.CustomDocumentProperties["ReviewedBy"].Value);
+            Console.WriteLine(isValid ? "Metadata verification succeeded." : "Metadata verification failed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

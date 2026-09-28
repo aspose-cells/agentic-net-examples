@@ -1,10 +1,7 @@
-// Title: Log performance of empty worksheet detection across large Excel workbooks with Aspose.Cells for .NET
-// Description: A C# console app that iterates over a collection of Excel files, loads each workbook with Aspose.Cells, counts worksheets where Cells.MaxDataRow and Cells.MaxDataColumn are -1 (empty), and records per‑file and total elapsed time using Stopwatch. Ideal for benchmarking batch validation of large workbooks.
-// Keywords: Aspose.Cells | C# | empty worksheet detection | performance measurement | Stopwatch | large Excel workbook | batch processing | Excel file validation | .NET benchmark | worksheet emptiness
-// Common Searches: how to measure time for empty sheet detection with Aspose.Cells | benchmark Aspose.Cells loading large workbooks .NET | log per‑file processing time for Excel validation | detect and count empty worksheets in batch using C# | performance testing Aspose.Cells workbook parsing
-// Developer Intent: Measure and log the elapsed time required to identify empty worksheets in each workbook and the aggregate time for the entire batch.
-// Use Cases: Benchmarking Aspose.Cells load speed before optimizing data pipelines. | Skipping empty sheets in automated ETL jobs while tracking processing time. | Generating performance reports for enterprise Excel validation routines.
-// AI Prompts: Provide C# code that records per‑workbook and overall detection time for empty worksheets using Aspose.Cells and prints a summary. | Suggest a thread‑safe way to process the workbook list in parallel and still capture accurate timing for each file. | Explain how Cells.MaxDataRow and Cells.MaxDataColumn can be used to reliably detect empty worksheets and log performance metrics.
+// Title: Measure performance of empty worksheet detection across multiple large .xlsx workbooks using Aspose.Cells in C#
+// AI Prompts: Create a C# console application that walks through a directory of .xlsx files, loads each workbook with Aspose.Cells, counts worksheets where MaxDataRow and MaxDataColumn are -1, and records the total elapsed time for the scan. | Update the worksheet‑iteration loop to capture the processing duration for each individual workbook and display it together with the empty worksheet count. | Add code to generate a CSV report that lists the workbook name, number of empty worksheets, and the processing time for each file.
+// Common Searches: how long does Aspose.Cells take to scan large Excel files for empty sheets in C# | C# code to benchmark empty worksheet detection across many .xlsx workbooks | measure performance of worksheet scanning with Aspose.Cells .NET | log processing time while counting empty worksheets in multiple Excel workbooks | Aspose.Cells performance test for empty sheet detection in a folder of workbooks
+// Tags: Aspose.Cells empty sheet detection benchmark | C# worksheet scanning performance measurement | large .xlsx workbook processing with Aspose.Cells | measure Excel sheet analysis time in .NET | log workbook scan duration using Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -12,72 +9,84 @@ using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceDemo
+// The program scans all .xlsx files in a specified folder, counts worksheets that contain no data using Aspose.Cells, logs total and per‑workbook processing times, and can export the results to a CSV file.
+class EmptyWorksheetPerformanceLogger
 {
-    // A C# console app that iterates over a collection of Excel files, loads each workbook with Aspose.Cells, counts worksheets where Cells.MaxDataRow and Cells.MaxDataColumn are -1 (empty), and records per‑file and total elapsed time using Stopwatch. Ideal for benchmarking batch validation of large workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // List of workbook file paths to be processed
-            List<string> workbookFiles = new List<string>
-            {
-                @"C:\Data\LargeWorkbook1.xlsx",
-                @"C:\Data\LargeWorkbook2.xlsx",
-                @"C:\Data\LargeWorkbook3.xlsx"
-                // Add more file paths as needed
-            };
+            // Directory containing the large workbooks to analyze
+            string workbooksFolder = @"C:\LargeWorkbooks";
 
-            // Stopwatch to measure total elapsed time
+            // Verify that the directory exists
+            if (!Directory.Exists(workbooksFolder))
+            {
+                Console.WriteLine($"Directory not found: {workbooksFolder}");
+                return;
+            }
+
+            // Gather all workbook file paths (e.g., .xlsx files)
+            List<string> workbookFiles = new List<string>(Directory.GetFiles(workbooksFolder, "*.xlsx", SearchOption.AllDirectories));
+
+            // Stopwatch to measure total detection time
             Stopwatch totalStopwatch = Stopwatch.StartNew();
+
+            // Store results for each workbook
+            var results = new List<(string FileName, int EmptyWorksheetCount)>();
 
             foreach (string filePath in workbookFiles)
             {
-                // Verify that the file exists before attempting to load it
+                // Ensure the file still exists before loading
                 if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found: {filePath}");
-                    Console.WriteLine();
+                    Console.WriteLine($"File not found, skipping: {filePath}");
                     continue;
                 }
 
-                // Measure time for each workbook
-                Stopwatch wbStopwatch = Stopwatch.StartNew();
-
                 try
                 {
-                    // Load the workbook (no custom interrupt monitor needed for this demo)
-                    Workbook wb = new Workbook(filePath);
+                    // Load the workbook (Aspose.Cells handles large files efficiently)
+                    Workbook workbook = new Workbook(filePath);
 
-                    // Detect empty worksheets
-                    int emptySheetCount = 0;
-                    foreach (Worksheet sheet in wb.Worksheets)
+                    int emptyCount = 0;
+
+                    // Iterate through all worksheets in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        // A worksheet is considered empty if it has no data rows and no data columns.
-                        // Cells.MaxDataRow and Cells.MaxDataColumn return -1 when there is no data.
-                        if (sheet.Cells.MaxDataRow < 0 && sheet.Cells.MaxDataColumn < 0)
+                        // A worksheet is considered empty when it has no data rows and no data columns
+                        // MaxDataRow and MaxDataColumn return -1 if the sheet contains no data
+                        if (sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1)
                         {
-                            emptySheetCount++;
+                            emptyCount++;
                         }
                     }
 
-                    wbStopwatch.Stop();
-                    Console.WriteLine($"File: {filePath}");
-                    Console.WriteLine($"  Empty worksheets: {emptySheetCount}");
-                    Console.WriteLine($"  Detection time: {wbStopwatch.ElapsedMilliseconds} ms");
-                    Console.WriteLine();
+                    results.Add((Path.GetFileName(filePath), emptyCount));
                 }
                 catch (Exception ex)
                 {
-                    wbStopwatch.Stop();
-                    Console.WriteLine($"Error processing file: {filePath}");
-                    Console.WriteLine($"  Exception: {ex.Message}");
-                    Console.WriteLine();
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
                 }
             }
 
             totalStopwatch.Stop();
-            Console.WriteLine($"Total detection time for all workbooks: {totalStopwatch.ElapsedMilliseconds} ms");
+
+            // Output performance summary
+            Console.WriteLine("=== Empty Worksheet Detection Performance ===");
+            Console.WriteLine($"Total workbooks processed: {results.Count}");
+            Console.WriteLine($"Total time elapsed: {totalStopwatch.Elapsed.TotalSeconds:F2} seconds");
+            Console.WriteLine();
+
+            // Detailed per‑workbook results
+            foreach (var result in results)
+            {
+                Console.WriteLine($"Workbook: {result.FileName} - Empty worksheets: {result.EmptyWorksheetCount}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

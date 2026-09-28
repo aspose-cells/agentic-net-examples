@@ -1,75 +1,47 @@
-// Title: C# Aspose.Cells – Apply Conditional Number Format to Negative Values in a Column
-// Description: Demonstrates how to create a workbook, fill cells A1:A5 with mixed numbers, add a conditional formatting rule for values less than zero, define a custom style "[Red]-0;[Red]-0;0" to show negatives in red with a minus sign, and save the file as an XLSX document.
-// Keywords: Aspose.Cells conditional formatting C# | custom number format negative values | red negative numbers Excel | conditional style negative cells .NET | apply number format Aspose.Cells
-// Common Searches: Aspose.Cells set custom format for negative numbers | C# conditional formatting red negative values Excel | how to highlight negative cells with Aspose.Cells | apply number format to a range using Aspose.Cells
-// Developer Intent: Generate an Excel workbook where any cell with a value below zero is displayed in red using a custom number format.
-// Use Cases: Mark financial losses in generated reports with red formatting. | Flag inventory shortages for quick visual identification. | Display negative account balances distinctly in accounting sheets.
-// AI Prompts: Write C# code with Aspose.Cells that formats numbers less than zero in red for the range B2:B15 and saves the workbook. | Create a reusable method that adds a conditional formatting rule to any worksheet to apply a custom style to negative values. | Explain how to modify the custom number format string to show negative numbers in parentheses instead of a minus sign.
+// Title: How to apply a red-colored conditional number format to negative values in an Excel column using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a custom style with the format '#,##0;[Red]-#,##0' and applies it to a range of cells using Aspose.Cells. | Show how to use StyleFlag to apply only the number‑format attribute of a style to a specific column in a workbook. | Write a complete Aspose.Cells example that inserts sample positive and negative numbers, formats negatives in red, and saves the file.
+// Common Searches: Aspose.Cells C# format negative numbers in red within a column | apply custom number format to Excel range using StyleFlag Aspose.Cells | conditional number formatting for negative values in .NET workbook | example code for red negative number style in Aspose.Cells | how to use CreateStyle and ApplyStyle for conditional formatting in C#
+// Tags: negative-number red style Aspose.Cells .NET | StyleFlag numberformat usage Aspose.Cells | custom format pattern '#,##0;[Red]-#,##0' Aspose | apply style to cell range Aspose.Cells C# | conditional number formatting Excel Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalNumberFormat
+// The example creates a workbook, adds a header and mixed positive/negative values to column A, defines a custom number format '#,##0;[Red]-#,##0' that displays negative numbers in red, uses a StyleFlag to apply only the number‑format part of the style to the range A2:A5, and saves the result as ConditionalNumberFormatDemo.xlsx.
+class ConditionalNumberFormatDemo
 {
-    // Demonstrates how to create a workbook, fill cells A1:A5 with mixed numbers, add a conditional formatting rule for values less than zero, define a custom style "[Red]-0;[Red]-0;0" to show negatives in red with a minus sign, and save the file as an XLSX document.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data with both positive and negative values
-                sheet.Cells["A1"].PutValue(150);
-                sheet.Cells["A2"].PutValue(-75);
-                sheet.Cells["A3"].PutValue(200);
-                sheet.Cells["A4"].PutValue(-30);
-                sheet.Cells["A5"].PutValue(0);
+            // Add sample data with both positive and negative numbers
+            sheet.Cells["A1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue(1500);
+            sheet.Cells["A3"].PutValue(-750);
+            sheet.Cells["A4"].PutValue(300);
+            sheet.Cells["A5"].PutValue(-1200);
 
-                // Add a conditional formatting collection to the worksheet
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            // Define a custom number format: positive numbers normal, negative numbers in red
+            Style style = workbook.CreateStyle();
+            style.Custom = "#,##0;[Red]-#,##0";
 
-                // Define the range to which the conditional formatting will be applied (A1:A5)
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 4,
-                    StartColumn = 0,
-                    EndColumn = 0
-                };
-                cfCollection.AddArea(area);
+            // Use StyleFlag to apply only the number format part of the style
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
 
-                // Add a condition for cells with values less than 0 (negative numbers)
-                int conditionIndex = cfCollection.AddCondition(
-                    FormatConditionType.CellValue,
-                    OperatorType.LessThan,
-                    "0",
-                    null);
+            // Apply the style to the data range (excluding the header)
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("A2:A5");
+            range.ApplyStyle(style, flag);
 
-                // Retrieve the created condition
-                FormatCondition condition = cfCollection[conditionIndex];
-
-                // Create a style that defines a custom number format for negative values
-                // The format displays negative numbers in red with a minus sign
-                Style negativeStyle = workbook.CreateStyle();
-                negativeStyle.Custom = "[Red]-0;[Red]-0;0";
-
-                // Apply the style to the condition
-                condition.Style = negativeStyle;
-
-                // Save the workbook
-                string outputPath = "ConditionalNegativeNumberFormat.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ConditionalNumberFormatDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

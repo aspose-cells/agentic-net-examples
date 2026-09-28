@@ -1,61 +1,77 @@
-// Title: Set ShowValuesSetting.CalculationType to RankLargestToSmallest for All Pivot Data Fields (Aspose.Cells C#)
-// Description: Creates a workbook, adds sample Category/SubCategory/Amount data, builds a pivot table, adds two Amount data fields, loops through the pivot table's DataFields collection, and sets each field's ShowValuesSetting.CalculationType to RankLargestToSmallest before refreshing, recalculating, and saving the file.
-// Keywords: Aspose.Cells C# pivot table | ShowValuesSetting CalculationType | RankLargestToSmallest | set calculation type for multiple data fields | loop through pivot data fields | refresh pivot table Aspose.Cells | Excel ranking pivot data | Aspose.Cells API ShowValuesSetting
-// Common Searches: Aspose.Cells set ShowValuesSetting to RankLargestToSmallest | C# pivot table rank values largest to smallest | apply calculation type to all data fields Aspose.Cells | loop over PivotTable.DataFields C# | change pivot field display format Aspose.Cells
-// Developer Intent: Apply the RankLargestToSmallest calculation type uniformly to every data field in an Aspose.Cells pivot table using C#.
-// Use Cases: Rank multiple data fields in a pivot table without configuring each field separately. | Update the display calculation of existing pivot data fields after they have been added. | Refresh and recalculate a pivot table to reflect a new ranking order.
-// AI Prompts: Generate C# code with Aspose.Cells that sets ShowValuesSetting.CalculationType to RankLargestToSmallest for all pivot data fields. | Explain how ShowValuesSetting.CalculationType affects pivot table output in Aspose.Cells and demonstrate an efficient way to apply it to several fields. | Provide a LINQ one‑liner to assign RankLargestToSmallest to each PivotField in pivotTable.DataFields.
+// Title: How to set ShowValuesSetting.CalculationType to RankLargestToSmallest for multiple pivot data fields using Aspose.Cells for .NET (C#)
+// AI Prompts: Configure the ShowValuesSetting of a pivot table so that all data fields use a largest‑to‑smallest ranking calculation in Aspose.Cells (C#). | Apply a uniform ranking calculation to the Amount and Quantity data fields of a pivot table using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# set ShowValuesSetting calculation type for multiple pivot data fields | Rank largest to smallest for pivot table values using Aspose.Cells .NET | How to apply the same ShowValuesSetting to all data items in an Aspose.Cells pivot table
+// Tags: aspocells pivot showvalues calculationtype ranklargesttosmallest | c# set pivot data field ranking aspocells | uniform showvalues setting multiple fields aspocells | pivot table ranking calculation aspocells c#
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Creates a workbook, adds sample Category/SubCategory/Amount data, builds a pivot table, adds two Amount data fields, loops through the pivot table's DataFields collection, and sets each field's ShowValuesSetting.CalculationType to RankLargestToSmallest before refreshing, recalculating, and saving the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a workbook, fills it with sample data, adds a pivot table with Category rows, SubCategory columns, and Amount and Quantity as data fields, sets ShowValuesSetting.CalculationType to RankLargestToSmallest for both data fields, refreshes and calculates the pivot, and saves the result as PivotShowValues_RankLargestToSmallest.xlsx.
+    public class SetShowValuesCalculationForMultipleFields
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].Value = "Category";
-        sheet.Cells["B1"].Value = "SubCategory";
-        sheet.Cells["C1"].Value = "Amount";
-
-        string[] categories = { "A", "A", "B", "B", "C", "C" };
-        string[] subCategories = { "X", "Y", "X", "Y", "X", "Y" };
-        double[] amounts = { 100, 200, 150, 250, 120, 220 };
-
-        for (int i = 0; i < categories.Length; i++)
+        public static void Run()
         {
-            sheet.Cells[i + 1, 0].Value = categories[i];
-            sheet.Cells[i + 1, 1].Value = subCategories[i];
-            sheet.Cells[i + 1, 2].Value = amounts[i];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the pivot table
+                sheet.Cells["A1"].Value = "Category";
+                sheet.Cells["B1"].Value = "SubCategory";
+                sheet.Cells["C1"].Value = "Amount";
+                sheet.Cells["D1"].Value = "Quantity";
+
+                string[] categories = { "A", "A", "B", "B", "C", "C" };
+                string[] subCategories = { "X", "Y", "X", "Y", "X", "Y" };
+                double[] amounts = { 1000, 1500, 2000, 2500, 3000, 3500 };
+                int[] quantities = { 10, 15, 20, 25, 30, 35 };
+
+                for (int i = 0; i < categories.Length; i++)
+                {
+                    int row = i + 2; // Data starts from row 2
+                    sheet.Cells[row, 0].Value = categories[i];
+                    sheet.Cells[row, 1].Value = subCategories[i];
+                    sheet.Cells[row, 2].Value = amounts[i];
+                    sheet.Cells[row, 3].Value = quantities[i];
+                }
+
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:D7", "F3", "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+                // Add fields to the pivot table
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
+
+                // Add two data fields: Amount and Quantity
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
+
+                // Refresh and calculate the pivot table data using the correct API
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
+                // Save the workbook
+                workbook.Save("PivotShowValues_RankLargestToSmallest.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
+    }
 
-        // Add a pivot table based on the data range
-        int pivotIndex = sheet.PivotTables.Add("A1:C7", "E3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-        // Add fields to the pivot table
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
-        // Add two data fields (same source column) to demonstrate uniform setting
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-        // Set ShowValuesSetting.CalculationType to RankLargestToSmallest for all data fields
-        foreach (PivotField dataField in pivotTable.DataFields)
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            dataField.ShowValuesSetting.CalculationType = PivotFieldDataDisplayFormat.RankLargestToSmallest;
+            SetShowValuesCalculationForMultipleFields.Run();
         }
-
-        // Refresh and calculate the pivot table data
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Save the workbook
-        workbook.Save("PivotShowValuesRankLargestToSmallest.xlsx");
     }
 }

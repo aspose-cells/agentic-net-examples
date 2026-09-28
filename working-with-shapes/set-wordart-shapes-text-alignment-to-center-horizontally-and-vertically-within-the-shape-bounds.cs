@@ -1,46 +1,54 @@
-// Title: Center WordArt Text Horizontally & Vertically in Excel using Aspose.Cells for .NET (C#)
-// Description: Shows how to insert a WordArt shape into an Excel workbook with Aspose.Cells for .NET and set its TextHorizontalAlignment and TextVerticalAlignment properties to Center before saving the file.
-// Keywords: Aspose.Cells | C# | WordArt | text alignment | horizontal center | vertical center | Excel shape | PresetWordArtStyle | TextHorizontalAlignment | TextVerticalAlignment
-// Common Searches: Aspose.Cells center WordArt text | C# set WordArt horizontal alignment in Excel | how to vertically align WordArt with Aspose.Cells | center text inside WordArt shape .NET | Aspose.Cells WordArt alignment example
-// Developer Intent: Center the text of a WordArt shape both horizontally and vertically.
-// Use Cases: Create a title banner where the WordArt label stays perfectly centered regardless of column width. | Generate dashboard cards with WordArt captions that remain aligned in the middle of each shape. | Build a reusable Excel template where WordArt captions automatically stay centered after shape resizing.
-// AI Prompts: Provide C# code to align WordArt text to the left and top using Aspose.Cells. | Show how to resize a WordArt shape while preserving its centered text alignment. | Explain how to apply different PresetWordArtStyle values without affecting text centering.
+// Title: How to center text horizontally and vertically in a WordArt (TextEffect) shape using Aspose.Cells for .NET
+// AI Prompts: Create a TextEffect (WordArt) shape on a worksheet and set its TextHorizontalAlignment and TextVerticalAlignment properties to TextAlignmentType.Center with Aspose.Cells in C#. | Adjust an existing WordArt shape so that its text is centered both horizontally and vertically within the shape bounds using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# set horizontal alignment for WordArt shape | center vertical text in TextEffect shape Aspose.Cells .NET | how to align WordArt text to middle of shape in Excel using Aspose.Cells | C# Aspose.Cells TextAlignmentType.Center for TextEffect shape
+// Tags: Aspose.Cells TextEffect shape alignment | C# set WordArt text horizontal alignment | C# set WordArt text vertical alignment | Excel shape text centering with Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
 
-namespace AsposeCellsWordArtAlignment
+// The example creates a new workbook, adds a WordArt (TextEffect) shape containing the text "Aspose", centers the text horizontally and vertically within the shape using TextAlignmentType.Center, and saves the file as WordArtAligned.xlsx.
+class Program
 {
-    // Shows how to insert a WordArt shape into an Excel workbook with Aspose.Cells for .NET and set its TextHorizontalAlignment and TextVerticalAlignment properties to Center before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a WordArt shape
-            // Parameters: style, text, topRow, top, leftColumn, left, height, width
-            Shape wordArt = worksheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle1,
-                "Centered WordArt",
-                2,      // topRow
-                10,     // top (pixels)
-                2,      // leftColumn
-                10,     // left (pixels)
-                100,    // height (pixels)
-                300);   // width (pixels)
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Set horizontal text alignment to Center
+            // Add a WordArt (TextEffect) shape
+            // Parameters: preset effect, text, font name, font size, bold, italic,
+            // upper left row, upper left column, height, width, lower right row, lower right column
+            Shape wordArt = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "Aspose",
+                "Arial",
+                48,
+                false,
+                false,
+                5,      // upper left row
+                5,      // upper left column
+                200,    // height
+                100,    // width
+                5,      // lower right row (using same as upper left for simplicity)
+                5);     // lower right column
+
+            // Center text horizontally within the shape
             wordArt.TextHorizontalAlignment = TextAlignmentType.Center;
 
-            // Set vertical text alignment to Center
+            // Center text vertically within the shape
             wordArt.TextVerticalAlignment = TextAlignmentType.Center;
 
             // Save the workbook
-            workbook.Save("WordArtCentered.xlsx");
+            workbook.Save("WordArtAligned.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

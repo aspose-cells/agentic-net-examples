@@ -1,109 +1,91 @@
-// Title: C# – Apply a Custom Array Function in Aspose.Cells to Sum a Range (MYFUNC)
-// Description: This example shows how to create a custom function (MYFUNC) that runs in array‑mode, registers its definition, and plugs a custom calculation engine into Aspose.Cells. The engine sums all numeric values in the supplied range, and the function is invoked with an array formula like =MYFUNC(A1:A5) using Worksheet.CalculateArrayFormula. The workbook can then be saved or further processed.
-// Keywords: Aspose.Cells custom function C# | custom array function Aspose.Cells | CalculateArrayFormula example | custom calculation engine Aspose.Cells | MYFUNC sum range | register custom function definition | .NET Excel custom function | array‑mode parameters Aspose.Cells | C# Aspose.Cells workbook calculation | Excel custom function array formula
-// Common Searches: how to create a custom array function in Aspose.Cells .NET | register custom function definition for array formulas Aspose.Cells | Aspose.Cells custom calculation engine example C# | sum a column with a custom function using CalculateArrayFormula | Aspose.Cells array‑mode parameter handling
-// Developer Intent: Implement and use a custom array‑mode function in Aspose.Cells to calculate a sum over a cell range.
-// Use Cases: Define a custom function (MYFUNC) that processes its argument in array mode and returns the total of numeric cells. | Register the function definition with Workbook.UpdateCustomFunctionDefinition and attach a custom engine via CalculationOptions. | Execute the function in an array formula (e.g., =MYFUNC(A1:A5)) and retrieve the result with Worksheet.CalculateArrayFormula. | Integrate the custom calculation into existing spreadsheet workflows, including saving the workbook after evaluation.
-// AI Prompts: Generate C# code for an Aspose.Cells custom function called PRODUCT that multiplies all numbers in a range using array‑mode. | Show how to register a custom function definition and a custom calculation engine, then evaluate an array formula across multiple columns in Aspose.Cells. | Explain error handling strategies inside a custom Aspose.Cells calculation engine and how to return proper Excel error values.
+// Title: Apply a custom array‑mode function to a column range with an array formula in Aspose.Cells for .NET
+// AI Prompts: Write C# code that defines a user‑defined function, registers it with Aspose.Cells, and calls CalculateArrayFormula on a cell range. | Show how to implement a custom calculation engine in Aspose.Cells that returns the supplied array unchanged for a user‑defined function. | Demonstrate filling column A, applying the user‑defined array‑mode function, and writing the results to column B using Aspose.Cells.
+// Common Searches: Aspose.Cells calculate array formula with user defined function in .NET | register user defined function for array mode Aspose.Cells | C# example using CalculateArrayFormula to apply a user defined function to a range | how to return an object array from a custom calculation engine in Aspose.Cells | apply user defined function to column A and write results to column B Aspose.Cells
+// Tags: custom function array mode Aspose.Cells | CalculateArrayFormula with UDF | register custom function definition .NET | custom engine returning object array Aspose.Cells | apply UDF to column range | Aspose.Cells array formula example
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomArrayFunctionDemo
+// The sample creates a workbook, populates column A with values 1‑5, registers a custom function (MYFUNC) whose first argument is evaluated in array mode, implements a custom calculation engine that returns the input array unchanged, calculates the array formula =MYFUNC(A1:A5) via CalculateArrayFormula, writes the resulting values to column B, and saves the workbook as CustomArrayFunctionDemo.xlsx.
+class Program
 {
-    // Custom function definition that tells the engine which parameters need array‑mode calculation
-    // This example shows how to create a custom function (MYFUNC) that runs in array‑mode, registers its definition, and plugs a custom calculation engine into Aspose.Cells. The engine sums all numeric values in the supplied range, and the function is invoked with an array formula like =MYFUNC(A1:A5) using Worksheet.CalculateArrayFormula. The workbook can then be saved or further processed.
+    static void Main()
+    {
+        // Create a new workbook and get the first worksheet
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        // Populate column A with sample data (1 to 5)
+        for (int i = 0; i < 5; i++)
+        {
+            ws.Cells[i, 0].PutValue(i + 1); // Cells A1:A5
+        }
+
+        // Register a custom function definition that marks the first parameter
+        // of MYFUNC to be evaluated in array mode
+        wb.UpdateCustomFunctionDefinition(new MyCustomFunctionDefinition());
+
+        // Set calculation options to use the custom engine
+        CalculationOptions opts = new CalculationOptions
+        {
+            CustomEngine = new MyCustomEngine()
+        };
+
+        // Define an array formula that calls the custom function on the range A1:A5
+        string arrayFormula = "=MYFUNC(A1:A5)";
+
+        // Calculate the array formula; result is a two‑dimensional object array
+        object[][] result = ws.CalculateArrayFormula(arrayFormula, opts);
+
+        // Write the resulting values into column B (B1:B5)
+        for (int i = 0; i < result.Length; i++)
+        {
+            ws.Cells[i, 1].PutValue(result[i][0]);
+        }
+
+        // Recalculate the workbook (not strictly necessary here)
+        wb.CalculateFormula();
+
+        // Output the results to the console
+        Console.WriteLine("Results of custom array function (written to column B):");
+        for (int i = 0; i < result.Length; i++)
+        {
+            Console.WriteLine($"B{i + 1} = {ws.Cells[i, 1].Value}");
+        }
+
+        // Save the workbook
+        wb.Save("CustomArrayFunctionDemo.xlsx");
+    }
+
+    // Custom function definition: indicates that parameter 0 of MYFUNC
+    // must be processed in array mode.
     class MyCustomFunctionDefinition : CustomFunctionDefinition
     {
-        // The first (and only) parameter of MYFUNC should be calculated in array mode
         public override int[] GetArrayModeParameters(string functionName)
         {
             if (functionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
-                return new int[] { 0 };   // zero‑based index of the parameter
+                return new int[] { 0 }; // first parameter
             return null;
         }
     }
 
-    // Custom calculation engine that implements the logic of MYFUNC
+    // Custom calculation engine that implements MYFUNC.
+    // It simply returns the input array unchanged.
     class MyCustomEngine : AbstractCalculationEngine
     {
-        // Indicate that this engine requires array‑mode parameters (optional, but safe)
+        // The engine requires parameters to be supplied in array mode.
         public override bool IsParamArrayModeRequired => true;
 
         public override void Calculate(CalculationData data)
         {
-            try
+            if (data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
             {
-                if (!data.FunctionName.Equals("MYFUNC", StringComparison.OrdinalIgnoreCase))
-                    return; // ignore other functions
+                // Retrieve the first parameter as an array.
+                // Passing 0 for maxRowCount/ColumnCount uses the actual size.
+                object[][] paramArray = data.GetParamValueInArrayMode(0, 0, 0);
 
-                // Use large values to let the engine determine the actual needed size
-                int maxRows = int.MaxValue;
-                int maxCols = int.MaxValue;
-
-                // Retrieve the parameter in array mode
-                object[][] paramArray = data.GetParamValueInArrayMode(0, maxRows, maxCols);
-
-                double sum = 0;
-                foreach (object[] row in paramArray)
-                {
-                    foreach (object item in row)
-                    {
-                        if (item != null && double.TryParse(item.ToString(), out double d))
-                            sum += d;
-                    }
-                }
-
-                // Return the sum as the function result
-                data.CalculatedValue = sum;
-            }
-            catch (Exception ex)
-            {
-                // In case of unexpected errors, set the result to an error value
-                data.CalculatedValue = $"#ERROR: {ex.Message}";
-            }
-        }
-
-        // No special forced recalculation logic
-        public override bool ForceRecalculate(string functionName) => false;
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            try
-            {
-                // 1. Create a workbook and fill a simple data table (A1:A5)
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
-                for (int i = 0; i < 5; i++)
-                    ws.Cells[i, 0].PutValue(i + 1);   // A1=1, A2=2, ..., A5=5
-
-                // 2. Register the custom function definition
-                wb.UpdateCustomFunctionDefinition(new MyCustomFunctionDefinition());
-
-                // 3. Prepare calculation options with the custom engine
-                CalculationOptions opts = new CalculationOptions
-                {
-                    CustomEngine = new MyCustomEngine()
-                };
-
-                // 4. Use an array formula that calls the custom function over the whole column
-                string arrayFormula = "=MYFUNC(A1:A5)";
-
-                // Calculate the array formula; result is a 2‑dimensional object array
-                object[][] result = ws.CalculateArrayFormula(arrayFormula, opts);
-
-                // 5. Output the computed value (should be 1+2+3+4+5 = 15)
-                Console.WriteLine("Result of custom array function MYFUNC: " + result[0][0]);
-
-                // 6. Save the workbook (optional, demonstrates lifecycle compliance)
-                wb.Save("CustomArrayFunctionDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // For demonstration, return the same array as the function result.
+                data.CalculatedValue = paramArray;
             }
         }
     }

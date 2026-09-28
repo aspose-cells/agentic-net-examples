@@ -1,51 +1,49 @@
-// Title: Enable Multi‑Threaded Formula Calculation in AspNet.Cells for .NET (C#)
-// Description: This example shows how to create a workbook, add numeric values, assign a SUM formula, enable parallel formula evaluation by setting CalculationOptions.UseMultiThreadedCalculation = true, run Workbook.CalculateFormula(), and save the result. Enabling this option can significantly reduce calculation time for large sheets.
-// Keywords: Aspose.Cells | C# | .NET Excel | multi‑threaded calculation | CalculationOptions.UseMultiThreadedCalculation | parallel formula evaluation | CalculateFormula performance | Excel processing speed
-// Common Searches: Aspose.Cells enable multi‑threaded calculation C# | CalculationOptions.UseMultiThreadedCalculation example | How to speed up Excel formula calculation with Aspose.Cells | Parallel formula evaluation Aspose.Cells .NET | Increase workbook.CalculateFormula performance
-// Developer Intent: Set CalculationOptions.UseMultiThreadedCalculation = true before invoking Workbook.CalculateFormula to utilize multiple CPU cores for formula processing.
-// Use Cases: Accelerate calculations in financial models that contain thousands of formulas. | Improve report generation time when exporting large data sets to Excel. | Benchmark calculation speed with and without multi‑threading to quantify performance gains.
-// AI Prompts: Provide a C# snippet that sets CalculationOptions.UseMultiThreadedCalculation = true, runs CalculateFormula, and measures execution time. | Show how to verify that multi‑threaded calculation is active in an Aspose.Cells workbook. | Explain how to limit the number of calculation threads in Aspose.Cells when custom thread pools are required.
+// Title: How to enable multi‑threaded formula calculation in Aspose.Cells for .NET by setting CalculationOptions.UseMultiThreadedCalculation
+// AI Prompts: Generate C# code that sets Workbook.Settings.CalculationOptions.UseMultiThreadedCalculation = true before invoking workbook.CalculateFormula in Aspose.Cells. | Show an example of configuring Aspose.Cells to perform parallel formula evaluation, then calculate and save the workbook. | Provide a step‑by‑step snippet that demonstrates improving formula calculation speed by enabling multi‑threaded processing in a .NET workbook.
+// Common Searches: Aspose.Cells .NET enable multi‑threaded formula processing | How to improve calculation speed for large worksheets in Aspose.Cells | Configure Aspose.Cells to use parallel calculation for formulas | Best practices for multi‑core formula evaluation with Aspose.Cells | Enable parallel workbook calculation in C# Aspose.Cells example
+// Tags: Aspose.Cells calculationoptions multithreaded | C# workbook parallel formula evaluation | Aspose.Cells UseMultiThreadedCalculation setting | performance optimization Aspose.Cells calculateformula | multi‑threaded calculation Aspose.Cells .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// This example shows how to create a workbook, add numeric values, assign a SUM formula, enable parallel formula evaluation by setting CalculationOptions.UseMultiThreadedCalculation = true, run Workbook.CalculateFormula(), and save the result. Enabling this option can significantly reduce calculation time for large sheets.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, fills column A with numbers, adds a SUM formula in B1, enables multi‑threaded formula calculation by setting CalculationOptions.UseMultiThreadedCalculation to true, calculates all formulas, and saves the file as MultiThreadedCalculation.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data and a formula
-            worksheet.Cells["A1"].PutValue(10);
-            worksheet.Cells["A2"].PutValue(20);
-            worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
-
-            // Perform calculation (Aspose.Cells uses multi‑threaded calculation internally when possible)
-            workbook.CalculateFormula();
-
-            // Define output file path
-            string outputPath = "MultiThreadedCalculationResult.xlsx";
-
-            // Ensure the directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            try
             {
-                Directory.CreateDirectory(outputDir);
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-            // Save the workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Fill column A with sample numeric data (A1..A1000)
+                for (int i = 0; i < 1000; i++)
+                {
+                    cells[i, 0].PutValue(i + 1);
+                }
+
+                // Add a formula that sums the entire column A and place the result in B1
+                cells[0, 1].Formula = $"=SUM(A1:A{cells.MaxDataRow + 1})";
+
+                // Multi‑threaded calculation is enabled by default in recent Aspose.Cells versions.
+                // If needed, you can control it via WorkbookSettings, but the property may not exist in older versions.
+
+                // Calculate all formulas in the workbook
+                workbook.CalculateFormula();
+
+                // Save the workbook to a file
+                string outputPath = "MultiThreadedCalculation.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

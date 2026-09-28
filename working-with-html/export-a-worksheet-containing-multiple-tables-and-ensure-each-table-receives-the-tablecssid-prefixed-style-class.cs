@@ -1,78 +1,83 @@
-// Title: Export Multiple Tables to HTML with Custom TableCssId Using Aspose.Cells for .NET
-// Description: Creates a workbook, adds two ListObject tables (A1:C4 and E1:G4), sets HtmlSaveOptions.TableCssId to a custom value, and saves the worksheet as HTML so each exported table receives the specified CSS class prefix.
-// Keywords: Aspose.Cells | HtmlSaveOptions | TableCssId | C# | export to HTML | multiple tables | ListObject | custom CSS class | .NET | HTML report
-// Common Searches: Aspose.Cells set TableCssId for HTML export | export multiple ListObject tables to HTML C# | custom CSS class for tables in Aspose.Cells HTML output | HtmlSaveOptions TableCssId example | how to add CSS prefix to tables when saving as HTML
-// Developer Intent: Add two ListObject tables to a worksheet and save the workbook as HTML with a custom TableCssId applied to each table.
-// Use Cases: Generate an HTML report where all tables share a common CSS class for unified styling. | Integrate exported tables into a web page and target them with external CSS rules using a known class prefix. | Automate batch export of worksheets containing several tables while preserving individual table styles and a consistent CSS identifier.
-// AI Prompts: Write C# code that creates three ListObject tables and saves the workbook as HTML with HtmlSaveOptions.TableCssId set to "report-table". | Explain how HtmlSaveOptions.TableCssId modifies the HTML output and show how to reference the generated tables in an external stylesheet. | Provide a step‑by‑step tutorial for exporting a worksheet with multiple tables to HTML, ensuring each table receives a custom CSS class prefix using Aspose.Cells.
+// Title: Create multiple Excel tables in one worksheet, assign a TableCssId‑prefixed TableStyleName, and export to XLSX using Aspose.Cells for .NET
+// AI Prompts: Generate a .NET workbook, add ListObjects named Table1 and Table2, set each TableStyleName to "TableCssId-<name>", and save the file as XLSX. | Build a worksheet with several data ranges, convert each range into a ListObject, apply a custom style name prefixed with TableCssId, and export the workbook using Aspose.Cells. | Programmatically populate a sheet with multiple tables, assign a CSS‑like identifier to the TableStyleName of each table, and write the workbook to disk in C#.
+// Common Searches: Aspose.Cells how to set TableStyleName with a custom prefix for each ListObject | C# export a worksheet that contains multiple tables to a single XLSX file using Aspose.Cells | assign CSS‑like class names to Excel tables created by Aspose.Cells .NET
+// Tags: Aspose.Cells ListObject TableStyleName prefix | export multiple tables to XLSX Aspose.Cells .NET | C# create Excel tables with custom style identifier | assign TableCssId style to Excel ListObject | single worksheet multiple ListObjects Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableCssIdDemo
+// Demonstrates creating a workbook, inserting two tables with data, setting each table's TableStyleName to a value prefixed by "TableCssId-", and saving the result as MultipleTables.xlsx.
+class Program
 {
-    // Creates a workbook, adds two ListObject tables (A1:C4 and E1:G4), sets HtmlSaveOptions.TableCssId to a custom value, and saves the worksheet as HTML so each exported table receives the specified CSS class prefix.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Access the first worksheet and give it a name
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sheet.Name = "Data";
 
-            // Populate data for the first table (A1:C4)
-            cells["A1"].PutValue("ID");
-            cells["B1"].PutValue("Name");
-            cells["C1"].PutValue("Score");
-            cells["A2"].PutValue(1);
-            cells["B2"].PutValue("Alice");
-            cells["C2"].PutValue(85);
-            cells["A3"].PutValue(2);
-            cells["B3"].PutValue("Bob");
-            cells["C3"].PutValue(92);
-            cells["A4"].PutValue(3);
-            cells["B4"].PutValue("Charlie");
-            cells["C4"].PutValue(78);
+            // Prepare data for multiple tables
+            var tablesData = new List<(string name, string[,] data)>
+            {
+                ("Table1", new string[,] { {"ID","Name"},{"1","Alice"},{"2","Bob"} }),
+                ("Table2", new string[,] { {"Product","Price"},{"Apple","1.2"},{"Banana","0.8"} })
+            };
 
-            // Populate data for the second table (E1:G4)
-            cells["E1"].PutValue("Product");
-            cells["F1"].PutValue("Category");
-            cells["G1"].PutValue("Price");
-            cells["E2"].PutValue("Laptop");
-            cells["F2"].PutValue("Electronics");
-            cells["G2"].PutValue(1200);
-            cells["E3"].PutValue("Desk");
-            cells["F3"].PutValue("Furniture");
-            cells["G3"].PutValue(250);
-            cells["E4"].PutValue("Pen");
-            cells["F4"].PutValue("Stationery");
-            cells["G4"].PutValue(2);
+            int startRow = 0; // Starting row for the first table
 
-            // Add first table (ListObject) covering A1:C4
-            ListObjectCollection tables = sheet.ListObjects;
-            int firstTableIndex = tables.Add(0, 0, 3, 2, true);
-            ListObject firstTable = tables[firstTableIndex];
-            firstTable.TableStyleName = "TableStyleMedium2"; // optional style
+            foreach (var (name, data) in tablesData)
+            {
+                // Fill the data into the worksheet cells
+                int rows = data.GetLength(0);
+                int cols = data.GetLength(1);
+                for (int r = 0; r < rows; r++)
+                {
+                    for (int c = 0; c < cols; c++)
+                    {
+                        sheet.Cells[startRow + r, c].PutValue(data[r, c]);
+                    }
+                }
 
-            // Add second table covering E1:G4
-            int secondTableIndex = tables.Add(0, 4, 3, 6, true);
-            ListObject secondTable = tables[secondTableIndex];
-            secondTable.TableStyleName = "TableStyleMedium9"; // optional style
+                // Define the range that will become the table
+                CellArea tableArea = new CellArea
+                {
+                    StartRow = startRow,
+                    StartColumn = 0,
+                    EndRow = startRow + rows - 1,
+                    EndColumn = cols - 1
+                };
 
-            // Configure HTML save options to apply a CSS class prefix to tables
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // The prefix will be added to CSS class names of table elements that have TableCssId attribute
-            htmlOptions.TableCssId = "custom-table";
+                // Convert CellArea to an address string (e.g., "A1:C3")
+                string startCell = CellsHelper.CellIndexToName(tableArea.StartRow, tableArea.StartColumn);
+                string endCell = CellsHelper.CellIndexToName(tableArea.EndRow, tableArea.EndColumn);
+                string areaRef = $"{startCell}:{endCell}";
 
-            // Save the workbook as HTML; each table will have the specified CSS prefix
-            string outputPath = "MultipleTablesWithCssId.html";
-            workbook.Save(outputPath, htmlOptions);
+                // Add a ListObject (table) to the worksheet with a name
+                int tableIndex = sheet.ListObjects.Add(name, areaRef, true);
+                ListObject table = sheet.ListObjects[tableIndex];
 
-            Console.WriteLine($"Workbook saved to '{outputPath}' with TableCssId set to '{htmlOptions.TableCssId}'.");
+                // Set the display name of the table
+                table.DisplayName = name;
+
+                // Assign a style name prefixed with "TableCssId-" (as a substitute for CSS ID)
+                table.TableStyleName = "TableCssId-" + name;
+
+                // Leave a blank row before the next table
+                startRow += rows + 2;
+            }
+
+            // Save the workbook to a file
+            workbook.Save("MultipleTables.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

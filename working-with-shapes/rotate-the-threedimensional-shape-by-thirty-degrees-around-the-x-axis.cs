@@ -1,21 +1,18 @@
-// Title: Rotate a 3D Shape 30° Around the X‑Axis with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a rectangle shape, sets ThreeDFormat.RotationX to 30°, applies extrusion height and an orthographic front camera for visual effect, and saves the file as RotateShapeXDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells rotate shape X axis | ThreeDFormat RotationX .NET | 3D shape rotation Aspose.Cells | extrusion height Aspose.Cells | PresetCameraType OrthographicFront | C# Aspose.Cells 3D formatting | Excel shape 3D rotation .NET
-// Common Searches: Aspose.Cells rotate shape on X axis | How to set RotationX property in Aspose.Cells | C# example for 3D shape rotation in Excel | Add extrusion height to shape Aspose.Cells | Set camera type for 3D shape Aspose.Cells
-// Developer Intent: Apply a 30‑degree X‑axis rotation to a 3D rectangle in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Generate reports with tilted 3D graphics for better visual emphasis. | Create engineering diagrams where X‑axis tilt conveys perspective. | Produce marketing dashboards that showcase 3D objects with realistic depth. | Combine RotationX, extrusion height, and orthographic camera to simulate 3D models in Excel.
-// AI Prompts: Show how to rotate a shape around the Y axis with Aspose.Cells for .NET. | Provide code to animate a 3D shape rotating incrementally on the X axis across multiple worksheets. | Explain how to reset ThreeDFormat properties to defaults after applying a rotation.
+// Title: Rotate a 3D rectangle shape 30° around the X‑axis using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet and sets its ThreeDFormat.RotationX to 30 degrees with Aspose.Cells. | Create an Excel workbook containing a 3‑D formatted shape rotated 30° on the X‑axis via the Aspose.Cells Shape.ThreeDFormat API. | Write a C# program that demonstrates applying X‑axis rotation to a shape's ThreeDFormat property and saving the file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# rotate shape 30 degrees on X axis | set ThreeDFormat.RotationX for rectangle shape in Aspose.Cells | example of 3D shape rotation in Excel using Aspose.Cells .NET | how to apply X‑axis rotation to a worksheet shape with Aspose.Cells | C# code to create 3D rectangle shape and rotate it in an Excel file
+// Tags: Aspose.Cells shape ThreeDFormat rotation | C# rotate worksheet shape X‑axis | Excel 3D shape rotation Aspose.Cells | set RotationX property Aspose.Cells | create 3D rectangle shape Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook, adds a rectangle shape, sets ThreeDFormat.RotationX to 30°, applies extrusion height and an orthographic front camera for visual effect, and saves the file as RotateShapeXDemo.xlsx using Aspose.Cells for .NET.
-    public class RotateShapeXDemo
+    // The example creates a new workbook, adds a three‑dimensional rectangle shape to the first worksheet, sets its ThreeDFormat.RotationX to 30 degrees, saves the workbook as RotatedShape.xlsx, and handles any exceptions.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
@@ -23,37 +20,29 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: type, upper left row, upper left column, top, left, height, width
-                Shape shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 2, 200, 100, 100);
+                // Add a three‑dimensional rectangle shape to the worksheet
+                Shape shape = worksheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // shape type
+                    1,    // upper‑left row
+                    1,    // upper‑left column
+                    0,    // upper‑left row offset (pixels)
+                    0,    // upper‑left column offset (pixels)
+                    150,  // width (pixels)
+                    100   // height (pixels)
+                );
 
-                // Access the shape's 3D formatting object
-                ThreeDFormat threeDFormat = shape.ThreeDFormat;
+                // Enable 3‑D formatting by setting rotation (3‑D is applied automatically)
+                shape.ThreeDFormat.RotationX = 30;
 
-                // Rotate the shape 30 degrees around the X‑axis
-                threeDFormat.RotationX = 30;
-
-                // Set additional 3D properties so the rotation is visible
-                threeDFormat.ExtrusionHeight = 20;
-                threeDFormat.PresetCameraType = PresetCameraType.OrthographicFront;
-
-                // Save the workbook with the rotated shape
-                workbook.Save("RotateShapeXDemo.xlsx");
-                Console.WriteLine("Workbook saved as RotateShapeXDemo.xlsx");
+                // Save the workbook to a file
+                string outputPath = "RotatedShape.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            RotateShapeXDemo.Run();
         }
     }
 }

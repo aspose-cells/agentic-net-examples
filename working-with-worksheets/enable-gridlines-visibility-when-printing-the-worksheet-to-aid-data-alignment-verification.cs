@@ -1,51 +1,26 @@
-// Title: Enable printing of gridlines in an Excel worksheet using Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, sets worksheet.IsGridlinesVisible to true, enables PageSetup.PrintGridlines, adds sample data, and saves the file so that gridlines appear both on screen and in the printed output.
-// Keywords: Aspose.Cells | C# | PrintGridlines | IsGridlinesVisible | Excel gridlines | worksheet printing | PageSetup | export to Excel | gridline visibility | Aspose.Cells .NET
-// Common Searches: Aspose.Cells print gridlines C# | How to show gridlines when printing Excel with Aspose | Enable worksheet gridlines in Aspose.Cells | Set PrintGridlines property Aspose.Cells | Make gridlines visible on screen Aspose.Cells
-// Developer Intent: Configure a worksheet so gridlines appear on screen and are included in printed output.
-// Use Cases: Generate reports that retain cell borders when printed for easier data verification. | Create invoices or statements where gridlines improve readability on paper copies. | Automate export of data tables where alignment must be preserved in both screen view and hard copy.
-// AI Prompts: Write C# code with Aspose.Cells that turns on IsGridlinesVisible and PrintGridlines, then saves the workbook as PDF. | Show how to toggle the PrintGridlines setting based on a user‑defined boolean flag in Aspose.Cells. | Provide an example that applies IsGridlinesVisible and PrintGridlines to all worksheets in a multi‑sheet workbook.
+// Title: How to enable gridlines when printing an Excel worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that sets Worksheet.PageSetup.PrintGridlines to true using Aspose.Cells and saves the workbook. | Show an example of loading an existing workbook, turning on gridline printing, and exporting it as XLSX with Aspose.Cells. | Explain how to configure page‑setup printing options to include gridlines in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# enable gridlines on printed worksheet | set PrintGridlines property before saving Excel file with Aspose.Cells | how to show Excel gridlines when printing using Aspose.Cells for .NET | page setup print options gridlines Aspose.Cells example | C# Aspose.Cells print gridlines without displaying them on screen
+// Tags: Aspose.Cells print gridlines C# | worksheet page setup print options | enable gridlines on printed Excel Aspose.Cells | set PrintGridlines property Aspose.Cells | Excel workbook printing settings C#
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a new Workbook, sets worksheet.IsGridlinesVisible to true, enables PageSetup.PrintGridlines, adds sample data, and saves the file so that gridlines appear both on screen and in the printed output.
-public class EnablePrintGridlines
+// Creates or loads a workbook, accesses the first worksheet, sets its PageSetup.PrintGridlines property to true, and saves the file, ensuring gridlines appear when the worksheet is printed.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add some sample data so the gridlines are visible in the output
-            worksheet.Cells["A1"].PutValue("Sample Data");
-            worksheet.Cells["B2"].PutValue(123);
+        // Enable gridlines visibility when printing
+        worksheet.PageSetup.PrintGridlines = true;
 
-            // Make gridlines visible on screen (optional, but often desired)
-            worksheet.IsGridlinesVisible = true;
-
-            // Enable printing of gridlines
-            worksheet.PageSetup.PrintGridlines = true;
-
-            // Save the workbook with the gridlines setting applied
-            workbook.Save("PrintGridlinesEnabled.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        EnablePrintGridlines.Run();
+        // Save the workbook to a file
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

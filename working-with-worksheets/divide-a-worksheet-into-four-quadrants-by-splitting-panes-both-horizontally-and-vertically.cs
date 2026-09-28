@@ -1,49 +1,62 @@
-// Title: Split an Excel worksheet into four quadrants with Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, populates sample data, enables pane splitting, defines horizontal and vertical split positions, selects a specific quadrant as the active pane, and saves the file as an XLSX document using Aspose.Cells.
-// Keywords: Aspose.Cells | C# | .NET | split worksheet panes | Excel quadrants | horizontal split | vertical split | first visible row | first visible column | active pane | PaneCollection
-// Common Searches: Aspose.Cells split worksheet into panes C# | how to create four quadrants in Excel with Aspose | set active pane after splitting Excel sheet Aspose.Cells | horizontal and vertical split positions Aspose.Cells | C# example for pane splitting in Excel workbook
-// Developer Intent: Produce a workbook that displays four independent view areas by applying both a horizontal and a vertical split and optionally activate one of the quadrants.
-// Use Cases: Navigate large tables while keeping header rows and columns visible in separate panes. | Design a dashboard where each quadrant shows a different chart or summary table. | Allow simultaneous scrolling of distinct data sections for side‑by‑side comparison.
-// AI Prompts: Generate C# code with Aspose.Cells that splits a worksheet at row 15 and column 8, then sets the top‑left pane as active. | Explain how to retrieve and modify PaneCollection properties such as FirstVisibleRowOfBottomPane and FirstVisibleColumnOfRightPane after calling Worksheet.Split(). | Provide a complete example that creates quadrants, inserts a chart in each pane, and exports the workbook to PDF using Aspose.Cells.
+// Title: Split an Excel worksheet into four quadrants by freezing panes horizontally and vertically with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to create a workbook, populate cells, and freeze panes at a given row and column to produce four quadrants. | Demonstrate how to call Worksheet.FreezePanes to split a sheet both horizontally and vertically and then set the active pane. | Adjust the split row and column values in an Aspose.Cells example to customize the size and position of the quadrants.
+// Common Searches: Aspose.Cells C# freeze panes both rows and columns to create quadrant view | How to split an Excel worksheet into four panes using Aspose.Cells .NET | Set active pane after freezing rows and columns with Aspose.Cells | Example of Worksheet.FreezePanes for horizontal and vertical split in C# | Customize split positions for quadrants in Aspose.Cells workbook
+// Tags: Worksheet.FreezePanes Aspose.Cells C# | split worksheet quadrants Aspose.Cells | set active pane Excel Aspose.Cells | freeze panes horizontally and vertically .NET | programmatic quadrant layout Excel C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// C# example that creates a workbook, populates sample data, enables pane splitting, defines horizontal and vertical split positions, selects a specific quadrant as the active pane, and saves the file as an XLSX document using Aspose.Cells.
-class SplitWorksheetQuadrants
+namespace SplitPaneExample
 {
-    static void Main()
+    // Creates a new workbook, fills a 20x10 range with sample data, freezes panes at row 10 and column 5 to divide the first worksheet into four quadrants, and saves the file as SplitPaneResult.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data (optional, just to visualize the quadrants)
-        for (int i = 0; i < 30; i++)
+        static void Main(string[] args)
         {
-            for (int j = 0; j < 15; j++)
+            try
             {
-                sheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Fill some data to visualize the quadrants
+                for (int row = 0; row < 20; row++)
+                {
+                    for (int col = 0; col < 10; col++)
+                    {
+                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    }
+                }
+
+                // Define split positions (zero‑based)
+                int splitRow = 10;   // splits after row 10
+                int splitColumn = 5; // splits after column 5
+
+                // Split the worksheet and set the active pane.
+                // Using FreezePanes without PaneType for compatibility with all versions.
+                sheet.FreezePanes(splitRow, splitColumn, splitRow, splitColumn);
+
+                // Define output file path
+                string outputPath = "SplitPaneResult.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Split the worksheet window
-        sheet.Split();
-
-        // Retrieve the pane collection to configure split positions
-        PaneCollection panes = sheet.GetPanes();
-
-        // Set split after row 10 (zero‑based) and column 5
-        panes.FirstVisibleRowOfBottomPane = 10;   // Top pane shows rows 0‑9, bottom pane starts at row 10
-        panes.FirstVisibleColumnOfRightPane = 5; // Left pane shows columns 0‑4, right pane starts at column 5
-
-        // Optionally set the active pane (e.g., bottom‑right quadrant)
-        panes.AcitvePaneType = RectangleAlignmentType.BottomRight;
-
-        // Save the workbook
-        workbook.Save("QuadrantsSplit.xlsx", SaveFormat.Xlsx);
     }
 }

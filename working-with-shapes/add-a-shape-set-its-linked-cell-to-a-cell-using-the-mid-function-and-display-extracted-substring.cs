@@ -1,44 +1,32 @@
-// Title: Link a Rectangle Shape to a MID Formula Cell in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, place the text "Aspose.Cells" in A1, apply a MID formula in B1 to extract a substring, add a rectangle shape, link the shape to B1, clear the shape's own text so it shows the formula result, and save the file as an .xlsx document.
-// Keywords: Aspose.Cells | C# | shape linked cell | MID function | rectangle shape | dynamic shape text | Excel automation | linked shape formula | Aspose.Cells example | cell formula to shape
-// Common Searches: Aspose.Cells link shape to cell | C# add rectangle shape linked to formula | display MID formula result in shape using Aspose.Cells | set shape text from cell formula Aspose.Cells .NET | dynamic shape label with MID function
-// Developer Intent: Create a rectangle shape whose displayed text automatically reflects the result of a MID formula applied to another cell.
-// Use Cases: Show a label that updates when the source string changes, without manual edits. | Build a dashboard where a shape presents a specific portion of a longer text field. | Generate printable forms that display extracted substrings directly inside shapes.
-// AI Prompts: Write C# code with Aspose.Cells to add a rectangle shape linked to a cell that uses the MID function and save the workbook. | Explain how to change the start position or length parameters of the MID formula after the shape is linked so the displayed text updates dynamically. | Provide best‑practice error handling for cases where the MID function arguments exceed the source string length when linking a shape.
+// Title: Create a rectangle shape in an Excel worksheet and bind its text to a MID formula using Aspose.Cells for .NET (C#)
+// AI Prompts: Add a rectangle shape to a worksheet and set its Text property to a MID formula that extracts a substring from cell A1 with Aspose.Cells in C#. | Generate an Excel file where a shape displays the result of =MID(A1,2,5) by linking the shape's text to the formula using Aspose.Cells .NET API. | Create C# code that adds a shape, assigns a MID formula to its caption, and saves the workbook.
+// Common Searches: Aspose.Cells example showing shape displaying MID(A1,2,5) result | how to bind a rectangle shape to a cell formula in C# | display substring from a cell inside a shape using Aspose.Cells .NET | C# code to create shape with linked formula in Excel workbook
+// Tags: add rectangle shape Aspose.Cells | link shape text to cell formula | display MID function result in shape | Aspose.Cells shape binding example | C# generate workbook with linked shape
 
-using System;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// Demonstrates how to create a workbook, place the text "Aspose.Cells" in A1, apply a MID formula in B1 to extract a substring, add a rectangle shape, link the shape to B1, clear the shape's own text so it shows the formula result, and save the file as an .xlsx document.
-class ShapeLinkedCellMidExample
-{
-    static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+// Access the first worksheet
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+// Put sample text into cell A1 (the source for the MID function)
+sheet.Cells["A1"].PutValue("Aspose.Cells");
 
-        // Put source text in cell A1
-        sheet.Cells["A1"].PutValue("Aspose.Cells");
+// Add a rectangle shape to the worksheet
+// Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+Aspose.Cells.Drawing.Shape shape = sheet.Shapes.AddShape(
+    Aspose.Cells.Drawing.MsoDrawingType.Rectangle, // shape type
+    2,    // upper left row
+    0,    // upper left column
+    0,    // top offset (in points)
+    0,    // left offset (in points)
+    100,  // height (in points)
+    30    // width (in points)
+);
 
-        // Set a formula in B1 that extracts a substring using MID
-        // Example: extract 5 characters starting from the 2nd character -> "spose"
-        sheet.Cells["B1"].Formula = "=MID(A1,2,5)";
+// Link the shape's displayed text to a cell using the MID function
+// The formula extracts a substring from A1; the shape will show the result
+shape.Text = "=MID(A1,2,5)"; // extracts "spose"
 
-        // Add a rectangle shape to the worksheet (positioned at row 2, column 2)
-        // Parameters: upperRow, upperColumn, width, height, lowerRow, lowerColumn
-        Shape shape = sheet.Shapes.AddRectangle(2, 2, 100, 30, 2, 2);
-
-        // Link the shape to the cell containing the MID formula (B1)
-        shape.LinkedCell = "B1";
-
-        // Optionally, set the shape's text to be empty; it will display the linked cell's value
-        shape.Text = "";
-
-        // Save the workbook to a file
-        workbook.Save("ShapeLinkedCellMidExample.xlsx");
-    }
-}
+// Save the workbook to a file
+workbook.Save("ShapeLinkedCell.xlsx");

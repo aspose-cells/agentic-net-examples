@@ -1,40 +1,51 @@
-// Title: Export a Wide Worksheet to a Single PDF Page with All Columns Using Aspose.Cells for .NET (C#)
-// Description: This C# example creates a workbook, adds many columns, sets the worksheet page setup to fit the width to one page (FitToPagesWide = 1, FitToPagesTall = 0), enables PdfSaveOptions.OnePagePerSheet and AllColumnsInOnePagePerSheet, and saves the file as a PDF where each sheet appears on a single page containing all columns.
-// Keywords: Aspose.Cells | C# | .NET | PdfSaveOptions | OnePagePerSheet | AllColumnsInOnePagePerSheet | FitToPagesWide | fit columns to one PDF page | export worksheet to PDF | single page PDF | wide worksheet PDF | page setup
-// Common Searches: Aspose.Cells set OnePagePerSheet true | fit all columns on one PDF page Aspose.Cells | PdfSaveOptions AllColumnsInOnePagePerSheet example | C# export Excel to single-page PDF | force worksheet columns onto one PDF page | Aspose.Cells PDF page setup width
-// Developer Intent: Generate a PDF where each worksheet is rendered on a single page and all columns are compressed to fit the page width.
-// Use Cases: Printing wide reports without horizontal scrolling | Creating compact PDFs for catalogs or dashboards | Archiving spreadsheets so each sheet occupies one page | Producing invoices or purchase orders with many line‑item columns | Distributing spreadsheet data to stakeholders with limited screen space
-// AI Prompts: Show C# code that uses Aspose.Cells to export a worksheet to a one‑page‑per‑sheet PDF with all columns forced onto the page. | Write an example that sets worksheet.PageSetup.FitToPagesWide = 1, FitToPagesTall = 0 and enables PdfSaveOptions.OnePagePerSheet and AllColumnsInOnePagePerSheet. | Explain how to combine page‑setup settings and PdfSaveOptions to produce a single‑page PDF for a wide worksheet in Aspose.Cells.
+// Title: Export an Excel workbook to PDF with each worksheet on a single page and attempt to fit all columns onto the page using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, enables PdfSaveOptions.OnePagePerSheet, and saves the workbook as a PDF. | Show how to programmatically resize column widths in a worksheet before PDF export when the FitColumnsToPage property is not available. | Create a C# snippet that verifies the source Excel file exists and gracefully handles exceptions during the PDF conversion with Aspose.Cells.
+// Common Searches: how to export Excel to PDF with one page per sheet using Aspose.Cells .NET | Aspose.Cells PDF export fit all columns on a single page | C# adjust column widths before saving workbook as PDF with Aspose.Cells | PdfSaveOptions OnePagePerSheet true example Aspose.Cells | handling missing Excel file error when converting to PDF with Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions OnePagePerSheet | C# fit columns to PDF page Aspose.Cells | Excel to PDF conversion column width adjustment | error handling missing workbook Aspose.Cells | Aspose.Cells PDF export per worksheet page
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// This C# example creates a workbook, adds many columns, sets the worksheet page setup to fit the width to one page (FitToPagesWide = 1, FitToPagesTall = 0), enables PdfSaveOptions.OnePagePerSheet and AllColumnsInOnePagePerSheet, and saves the file as a PDF where each sheet appears on a single page containing all columns.
+// The example loads an existing Excel workbook, configures PdfSaveOptions with OnePagePerSheet set to true, notes that FitColumnsToPage is unavailable, and saves the workbook as a PDF while performing a file‑existence check and basic exception handling.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-        // Populate the sheet with sample data (optional, demonstrates many columns)
-        for (int col = 0; col < 50; col++)
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            worksheet.Cells[0, col].PutValue("Column " + (col + 1));
-            worksheet.Cells[1, col].PutValue("Sample data " + (col + 1));
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Configure page setup to fit all columns on one page (height adjusts automatically)
-        worksheet.PageSetup.FitToPagesWide = 1;   // one page wide
-        worksheet.PageSetup.FitToPagesTall = 0;   // unlimited height
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create PDF save options and enable the required properties
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = true;                // all content on one page per sheet
-        pdfOptions.AllColumnsInOnePagePerSheet = true;    // force all columns onto that page
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Render each worksheet on a separate PDF page
+                OnePagePerSheet = true
 
-        // Save the workbook as PDF using the configured options
-        workbook.Save("output.pdf", pdfOptions);
+                // Note: FitColumnsToPage is not available in the current Aspose.Cells version.
+                // If needed, adjust column widths manually before saving.
+            };
+
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

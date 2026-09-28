@@ -1,60 +1,47 @@
-// Title: C# – Apply a Yellow Bold Style to /Customer/Name Cells Mapped via XML in Aspose.Cells
-// Description: Loads an existing workbook, creates a solid‑yellow background with bold font style, defines the range that corresponds to the /Customer/Name XML element, applies the style to every cell in that range, and saves the workbook while handling missing‑file errors.
-// Keywords: Aspose.Cells C# XML mapping | apply custom style to Excel cells | highlight customer name column | yellow background bold font Aspose.Cells | range styling based on XML map | C# Excel formatting Aspose.Cells
-// Common Searches: Aspose.Cells style cells mapped to XML element | C# highlight /Customer/Name column in Excel | apply yellow background to Excel range using Aspose.Cells | how to format XML‑mapped cells in .NET | Aspose.Cells custom style example C#
-// Developer Intent: Highlight the cells that represent the /Customer/Name element by applying a yellow background and bold font using Aspose.Cells for .NET.
-// Use Cases: Make customer names stand out in reports generated from XML data. | Visually separate name fields from other mapped data after importing XML into Excel. | Ensure consistent formatting across multiple workbooks processed programmatically.
-// AI Prompts: Generate a reusable C# method in Aspose.Cells that applies a yellow‑bold style to any range identified by an XML map path. | Show how to retrieve the exact cell range for /Customer/Name dynamically instead of using a hard‑coded address. | Provide best‑practice error handling for loading workbooks and applying styles with Aspose.Cells.
+// Title: Apply a custom yellow background and red bold font style to the 'Customer_Name' named range (mapped to /Customer/Name) using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Style with a solid yellow fill, red bold font, and applies it to the named range 'Customer_Name' in a workbook loaded with Aspose.Cells. | Write a C# snippet that loads an existing Excel template, defines a custom highlight style, uses StyleFlag.All, applies the style to the XML‑mapped range for Customer Name, and saves the workbook.
+// Common Searches: Aspose.Cells C# apply custom style to named range linked to XML element | highlight cells mapped to /Customer/Name in Excel using Aspose.Cells | C# set yellow background and red bold font for Customer_Name range with Aspose.Cells | how to use StyleFlag.All when styling XML mapped cells in Aspose.Cells .NET | apply formatting to XML mapped range Aspose.Cells C#
+// Tags: apply custom style to named range Aspose.Cells | highlight XML mapped cells C# | StyleFlag.All usage Aspose.Cells | yellow background red font style Aspose.Cells | Customer_Name range styling Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
 using System.IO;
-using Aspose.Cells;
 
-// Loads an existing workbook, creates a solid‑yellow background with bold font style, defines the range that corresponds to the /Customer/Name XML element, applies the style to every cell in that range, and saves the workbook while handling missing‑file errors.
-class ApplyCustomStyleToCustomerNames
+// The program loads a template workbook (or creates a new one), creates a Style with a solid yellow fill and red bold font, sets a StyleFlag with All=true, applies the style to the named range "Customer_Name" (mapped to the /Customer/Name XML element), and saves the modified workbook as Output.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            const string templatePath = "Template.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
+            // Load existing template or create a new workbook if the file is missing
+            Workbook workbook = File.Exists(templatePath) ? new Workbook(templatePath) : new Workbook();
 
-            // Load the workbook that contains the mapped XML data
-            Workbook workbook = new Workbook(inputPath);
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Create a custom style (yellow background, bold font) to highlight names
+            // Create a custom style to highlight customer names
             Style highlightStyle = workbook.CreateStyle();
-            highlightStyle.Pattern = BackgroundType.Solid;
             highlightStyle.ForegroundColor = Color.Yellow;
+            highlightStyle.Pattern = BackgroundType.Solid;
+            highlightStyle.Font.Color = Color.Red;
             highlightStyle.Font.IsBold = true;
 
-            // Define the cell range that corresponds to the /Customer/Name element.
-            // Example assumes customer names are placed in column B, rows 2 through 100.
-            Aspose.Cells.Range nameRange = cells.CreateRange("B2:B100");
-
-            // Apply the custom style to all cells in the defined range
+            // Apply all style attributes
             StyleFlag flag = new StyleFlag { All = true };
+
+            // Apply the style to the named range "Customer_Name"
+            Worksheet sheet = workbook.Worksheets[0];
+            Aspose.Cells.Range nameRange = sheet.Cells.CreateRange("Customer_Name");
             nameRange.ApplyStyle(highlightStyle, flag);
 
-            // Save the workbook with the applied styling
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,74 +1,93 @@
-// Title: Extract Shape Path Segment Points from a Non‑Primitive AutoShape with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a custom (non‑primitive) AutoShape, accesses its CustomGeometry, builds a rectangle path, then iterates every ShapePath, ShapeSegmentPath, and ShapePathPoint to output XPixel/YPixel coordinates before saving the file.
-// Keywords: Aspose.Cells | CustomGeometry | ShapePathSegmentList | non‑primitive AutoShape | C# shape coordinates | extract shape points | .NET vector geometry | XPixel YPixel
-// Common Searches: read custom shape points Aspose.Cells C# | iterate ShapeSegmentPath list .NET | get vertex coordinates of AutoShape | extract path segment coordinates Aspose.Cells
-// Developer Intent: Programmatically retrieve every coordinate that defines the segments of a non‑primitive AutoShape’s geometry.
-// Use Cases: Export shape vertices to SVG, PDF, or other vector formats. | Validate shape geometry by comparing segment points against design specifications. | Reconstruct or modify shapes dynamically based on their existing point data.
-// AI Prompts: Write C# code using Aspose.Cells to loop through all ShapeSegmentPath objects of a CustomGeometry shape and print each point’s XPixel and YPixel values. | Create a method that accepts a Shape instance and returns a collection of (X, Y) coordinates for every segment in a non‑primitive AutoShape. | Explain how to add new points to an existing ShapePathSegment after extracting the current points with Aspose.Cells.
+// Title: How to extract coordinates of free‑form shape path segments from an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program with Aspose.Cells that loads an .xlsx file, iterates all worksheets, finds free‑form shapes, and prints each path segment’s type together with the X and Y values of its points. | Generate C# code that uses reflection to obtain a shape’s FreeFormPath and its Segments collection in Aspose.Cells, then enumerates every point in each segment and outputs the coordinates.
+// Common Searches: c# aspocells read freeform shape points from excel | aspocells extract path segment coordinates from shape | how to get FreeFormPath segments using Aspose.Cells .NET | enumerate shape points in Excel workbook with Aspose.Cells C# | reflection based access to non‑primitive shape data Aspose.Cells
+// Tags: Aspose.Cells freeform shape path extraction C# | enumerate shape segment points .NET | reflection access FreeFormPath Aspose.Cells | read non‑primitive shape data Excel | extract path segment coordinates from .xlsx
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System;
 
-// Creates a workbook, adds a custom (non‑primitive) AutoShape, accesses its CustomGeometry, builds a rectangle path, then iterates every ShapePath, ShapeSegmentPath, and ShapePathPoint to output XPixel/YPixel coordinates before saving the file.
-class ExtractShapeSegmentPoints
+// The example loads an Excel workbook, walks through each worksheet and its shapes, uses reflection to retrieve the FreeFormPath of free‑form shapes, iterates the Segments collection, and prints the segment type along with the X/Y coordinates of every point in each segment.
+class ShapePathExtractor
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
 
-        // Add a non‑primitive auto shape (e.g., a custom shape)
-        Shape shape = worksheet.Shapes.AddAutoShape(
-            AutoShapeType.NotPrimitive, // shape type
-            1, 1,                       // top row, top offset
-            0, 0,                       // left column, left offset
-            300, 300);                  // height, width
-
-        // Cast the shape's geometry to CustomGeometry to access paths
-        CustomGeometry geometry = shape.Geometry as CustomGeometry;
-        if (geometry == null)
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine("The shape does not contain custom geometry.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
             return;
         }
 
-        // Ensure there is at least one path; create one if none exist
-        if (geometry.Paths.Count == 0)
+        Workbook workbook = null;
+        try
         {
-            geometry.Paths.Add();
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        // Build a simple rectangle path for demonstration
-        ShapePath path = geometry.Paths[0];
-        path.MoveTo(0, 0);
-        path.LineTo(10000, 0);
-        path.LineTo(10000, 10000);
-        path.LineTo(0, 10000);
-        path.Close();
-
-        // Iterate through all paths, their segment paths, and points
-        for (int p = 0; p < geometry.Paths.Count; p++)
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            ShapePath curPath = geometry.Paths[p];
-            Console.WriteLine($"Path {p} contains {curPath.PathSegementList.Count} segment(s).");
+            ShapeCollection shapes = sheet.Shapes;
 
-            for (int s = 0; s < curPath.PathSegementList.Count; s++)
+            // Iterate through each shape
+            foreach (Shape shape in shapes)
             {
-                ShapeSegmentPath segment = curPath.PathSegementList[s];
-                Console.WriteLine($"  Segment {s} Type: {segment.Type}, Points: {segment.Points.Count}");
+                // Use reflection to safely access FreeFormPath (may not be available in older versions)
+                var freeFormPathProp = shape.GetType().GetProperty("FreeFormPath");
+                if (freeFormPathProp == null) continue; // Not a free‑form shape
 
-                for (int pt = 0; pt < segment.Points.Count; pt++)
+                var freeFormPath = freeFormPathProp.GetValue(shape);
+                if (freeFormPath == null) continue; // No path data
+
+                // Retrieve the Segments collection via reflection
+                var segmentsProp = freeFormPath.GetType().GetProperty("Segments");
+                var segments = segmentsProp?.GetValue(freeFormPath) as IEnumerable;
+                if (segments == null) continue;
+
+                Console.WriteLine($"Worksheet: {sheet.Name}, Shape Name: {shape.Name}");
+
+                // Iterate through each segment
+                foreach (var segment in segments)
                 {
-                    ShapePathPoint point = segment.Points[pt];
-                    // Use pixel coordinates for readability
-                    Console.WriteLine($"    Point {pt}: X = {point.XPixel}, Y = {point.YPixel}");
+                    // Segment type
+                    var typeProp = segment.GetType().GetProperty("Type");
+                    var segType = typeProp?.GetValue(segment);
+                    Console.WriteLine($"  Segment Type: {segType}");
+
+                    // Points collection
+                    var pointsProp = segment.GetType().GetProperty("Points");
+                    var points = pointsProp?.GetValue(segment) as IEnumerable;
+                    if (points == null) continue;
+
+                    int pointIndex = 0;
+                    foreach (var ptObj in points)
+                    {
+                        // Each point is a System.Drawing.PointF
+                        var xProp = ptObj.GetType().GetProperty("X");
+                        var yProp = ptObj.GetType().GetProperty("Y");
+                        var x = xProp?.GetValue(ptObj);
+                        var y = yProp?.GetValue(ptObj);
+                        Console.WriteLine($"    Point {pointIndex}: X = {x}, Y = {y}");
+                        pointIndex++;
+                    }
                 }
             }
         }
 
-        // Save the workbook
-        workbook.Save("ExtractShapeSegmentPoints.xlsx");
+        // If modifications were made, you could save the workbook here.
+        // workbook.Save("output.xlsx");
     }
 }

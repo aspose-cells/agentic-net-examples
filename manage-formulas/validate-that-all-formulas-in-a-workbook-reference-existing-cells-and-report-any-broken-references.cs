@@ -1,63 +1,71 @@
-// Title: C# Aspose.Cells – Detect Missing Worksheet References in Excel Formulas
-// Description: Loads an Excel file, parses all formulas, walks each worksheet and cell, extracts precedent areas, skips external links, and reports any formula that points to a non‑existent sheet.
-// Keywords: Aspose.Cells formula validation | C# Excel broken sheet reference | detect missing worksheet in formula | Excel formula precedents check | programmatic formula integrity .NET | Excel data quality validation | global Excel automation
-// Common Searches: Aspose.Cells find formulas referencing non‑existent sheets | C# code to validate Excel formula references | how to check broken worksheet links in Excel using .NET | detect missing sheet references in Excel formulas programmatically | validate Excel workbook formulas with Aspose.Cells
-// Developer Intent: Identify every formula cell that references a worksheet that does not exist in the current workbook and surface those errors.
-// Use Cases: Run the validator before distributing a workbook to guarantee all formulas resolve correctly. | Integrate the check into CI/CD pipelines for Excel‑based reporting solutions. | Generate a log of cells with invalid sheet references for audit trails and automated correction.
-// AI Prompts: Create a method that returns a list of Cell objects with broken sheet references instead of writing to the console. | Enhance the validator to also flag references to rows or columns outside the used range of an existing sheet. | Write a unit test using Aspose.Cells that confirms the validator catches a formula pointing to a missing worksheet.
+// Title: Identify and list broken #REF! formula references in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program with Aspose.Cells that opens a given .xlsx file, scans every worksheet for formulas containing "#REF!", and prints the sheet name, cell address, and full formula for each broken reference. | Create a reusable C# method that receives a Workbook object and returns a collection of cells whose formulas have invalid references, leveraging the Aspose.Cells API. | Add robust error handling to a C# Aspose.Cells script that verifies the input file exists before loading, then logs any detected #REF! errors to the console.
+// Common Searches: C# Aspose.Cells how to detect #REF! errors in all worksheets of an Excel file | list cells with broken formula references using Aspose.Cells .NET | validate formulas for missing references in an .xlsx workbook with Aspose.Cells | Aspose.Cells iterate through cells to find invalid #REF! formulas in C# console app
+// Tags: detect broken #REF! formulas Aspose.Cells | iterate worksheets cells Aspose.Cells C# | validate Excel formulas .NET | log invalid formula references Aspose.Cells | check formula integrity Excel .xlsx Aspose
 
 using System;
-using System.Linq;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaValidator
+namespace AsposeCellsExamples
 {
-    // Loads an Excel file, parses all formulas, walks each worksheet and cell, extracts precedent areas, skips external links, and reports any formula that points to a non‑existent sheet.
-    class Program
+    // A C# console example that loads an .xlsx workbook with Aspose.Cells, iterates through all worksheets and cells, identifies formulas containing the "#REF!" token, and outputs the sheet name, cell address, and formula for each broken reference, with file‑existence checks and exception handling.
+    class FormulaReferenceValidator
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Load the workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Ensure all formulas are parsed before analysis
-            workbook.ParseFormulas(false);
-
-            // Iterate through each worksheet
-            foreach (Worksheet worksheet in workbook.Worksheets)
+            try
             {
-                Cells cells = worksheet.Cells;
+                // Path to the input workbook
+                string inputPath = "input.xlsx";
 
-                // Iterate through each cell in the worksheet
-                foreach (Cell cell in cells)
+                // Verify that the file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Process only formula cells
-                    if (cell.IsFormula)
+                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                bool hasBrokenReferences = false;
+
+                // Iterate through all worksheets and cells to detect broken references (#REF!)
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    Cells cells = sheet.Cells;
+                    foreach (Cell cell in cells)
                     {
-                        // Get all references (precedents) used in the formula
-                        ReferredAreaCollection precedents = cell.GetPrecedents();
-
-                        if (precedents == null) continue;
-
-                        foreach (ReferredArea area in precedents)
+                        if (cell.IsFormula)
                         {
-                            // Skip external links; they are not validated here
-                            if (area.IsExternalLink) continue;
-
-                            // Verify that the referenced sheet exists in the workbook
-                            bool sheetExists = workbook.Worksheets.Any(ws => ws.Name.Equals(area.SheetName, StringComparison.OrdinalIgnoreCase));
-
-                            if (!sheetExists)
+                            string formula = cell.Formula;
+                            if (!string.IsNullOrEmpty(formula) && formula.Contains("#REF!"))
                             {
-                                Console.WriteLine($"Broken reference in cell {cell.Name} (Formula: {cell.Formula}) -> Sheet '{area.SheetName}' does not exist.");
+                                hasBrokenReferences = true;
+                                Console.WriteLine("Broken reference found:");
+                                Console.WriteLine($"  Sheet : {sheet.Name}");
+                                Console.WriteLine($"  Cell  : {cell.Name}");
+                                Console.WriteLine($"  Formula: {formula}");
+                                Console.WriteLine();
                             }
                         }
                     }
                 }
-            }
 
-            // Optionally, save the workbook after validation (if any modifications were made)
-            // workbook.Save("validated_output.xlsx");
+                if (!hasBrokenReferences)
+                {
+                    Console.WriteLine("No broken references were detected in any formula.");
+                }
+
+                // Optionally, save a copy of the workbook (if modifications were made)
+                // workbook.Save("output.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

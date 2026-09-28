@@ -1,53 +1,60 @@
-// Title: Aspose.Cells C# – Compare PDF number formatting under InvariantCulture vs French (fr‑FR)
-// Description: This example creates a workbook with a numeric value formatted by "#,##0.00", switches Workbook.Settings.CultureInfo between InvariantCulture and French (fr‑FR), captures the formatted string for each locale, saves two PDFs (Invariant.pdf and French.pdf), and prints whether the displayed formats differ.
-// Keywords: Aspose.Cells | C# | PDF export | CultureInfo | InvariantCulture | fr-FR | number formatting | localization | globalization | custom number format | Excel to PDF | regional settings
-// Common Searches: Aspose.Cells PDF French number format | compare invariant and French culture in Aspose.Cells | C# set workbook CultureInfo for PDF export | Aspose.Cells localization PDF output | how to change number separators in exported PDF
-// Developer Intent: Determine how switching the workbook's CultureInfo between invariant and French affects number formatting in the generated PDFs.
-// Use Cases: Verify that financial PDFs show correct thousand and decimal separators for each target market. | Automate regression tests for PDF exports across multiple locales to catch formatting regressions. | Produce region‑specific invoices or reports where numeric values follow local conventions.
-// AI Prompts: Generate C# code that loops through a list of cultures, saves a PDF for each with Aspose.Cells, and logs any differences in formatted numbers. | Explain the impact of Workbook.Settings.CultureInfo on number formatting during PDF conversion in Aspose.Cells. | Suggest an automated way to extract and compare formatted numbers inside the resulting PDFs for each culture.
+// Title: Compare PDF output of an Excel workbook when exported with InvariantCulture versus French (fr-FR) culture using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets Workbook.Settings.CultureInfo to CultureInfo.InvariantCulture, saves the workbook as PDF, then changes CultureInfo to fr-FR, saves a second PDF, and compares the two PDF files byte‑by‑byte to determine if any formatting differences exist. | Extend the sample to output a log that records each numeric cell's formatted value in the invariant‑culture PDF and the French‑culture PDF, highlighting differences such as decimal separators or grouping symbols.
+// Common Searches: aspnet compare pdf files generated from Excel with different CultureInfo settings | Aspose.Cells export to PDF using invariant culture vs French locale | detect number format changes in PDF when changing workbook culture in C# | how to set workbook.Settings.CultureInfo for PDF conversion in Aspose.Cells | byte array comparison of two PDFs created by Aspose.Cells
+// Tags: Aspose.Cells culture‑specific PDF generation | C# workbook.Settings.CultureInfo configuration | byte‑wise PDF difference detection Aspose.Cells | locale number formatting in Excel to PDF | French (fr-FR) PDF output with Aspose.Cells
 
 using System;
 using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCultureComparison
+// The program loads an Excel workbook with Aspose.Cells, saves it as PDF twice—first using InvariantCulture and then using French (fr-FR) culture—reads both PDFs into byte arrays, and performs a byte‑wise comparison to report whether the outputs differ, illustrating locale‑dependent number formatting.
+class Program
 {
-    // This example creates a workbook with a numeric value formatted by "#,##0.00", switches Workbook.Settings.CultureInfo between InvariantCulture and French (fr‑FR), captures the formatted string for each locale, saves two PDFs (Invariant.pdf and French.pdf), and prints whether the displayed formats differ.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source Excel workbook
+        string excelPath = "input.xlsx";
+
+        // Load the workbook (lifecycle rule: load)
+        Workbook workbook = new Workbook(excelPath);
+
+        // ---------- Invariant Culture ----------
+        // Set culture to invariant for number formatting
+        workbook.Settings.CultureInfo = CultureInfo.InvariantCulture;
+
+        // Save as PDF using invariant culture (lifecycle rule: save)
+        string pdfInvariantPath = "output_invariant.pdf";
+        workbook.Save(pdfInvariantPath, SaveFormat.Pdf);
+
+        // ---------- French Culture ----------
+        // Change culture to French (France) for number formatting
+        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
+
+        // Save as PDF using French culture
+        string pdfFrenchPath = "output_french.pdf";
+        workbook.Save(pdfFrenchPath, SaveFormat.Pdf);
+
+        // ---------- Comparison ----------
+        // Load both PDF files into byte arrays
+        byte[] invariantBytes = File.ReadAllBytes(pdfInvariantPath);
+        byte[] frenchBytes = File.ReadAllBytes(pdfFrenchPath);
+
+        // Simple byte‑wise comparison to detect differences
+        bool areIdentical = invariantBytes.Length == frenchBytes.Length;
+        if (areIdentical)
         {
-            // Create a workbook with a numeric value and a custom number format
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
-            cell.PutValue(1234567.89);
-
-            // Apply a custom number format that uses group and decimal separators
-            Style style = wb.CreateStyle();
-            style.Custom = "#,##0.00";
-            cell.SetStyle(style);
-
-            // ---------- Invariant Culture ----------
-            // Set workbook culture to invariant and capture the formatted string
-            wb.Settings.CultureInfo = CultureInfo.InvariantCulture;
-            string invariantFormatted = cell.StringValue;
-
-            // Save PDF generated with invariant culture
-            wb.Save("Invariant.pdf", SaveFormat.Pdf);
-
-            // ---------- French Culture ----------
-            // Change workbook culture to French (France) and capture the formatted string
-            wb.Settings.CultureInfo = new CultureInfo("fr-FR");
-            string frenchFormatted = cell.StringValue;
-
-            // Save PDF generated with French culture
-            wb.Save("French.pdf", SaveFormat.Pdf);
-
-            // ---------- Comparison ----------
-            Console.WriteLine($"Invariant format: {invariantFormatted}");
-            Console.WriteLine($"French format:    {frenchFormatted}");
-            Console.WriteLine($"Formats differ:   {invariantFormatted != frenchFormatted}");
+            for (int i = 0; i < invariantBytes.Length; i++)
+            {
+                if (invariantBytes[i] != frenchBytes[i])
+                {
+                    areIdentical = false;
+                    break;
+                }
+            }
         }
+
+        // Output the result
+        Console.WriteLine("PDFs are {0}.", areIdentical ? "identical" : "different");
     }
 }

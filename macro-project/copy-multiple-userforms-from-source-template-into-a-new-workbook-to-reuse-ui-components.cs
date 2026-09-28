@@ -1,51 +1,42 @@
-// Title: Copy VBA UserForms from a macro‑enabled template to a new workbook with Aspose.Cells for .NET (C#)
-// Description: Loads a macro‑enabled .xlsm template containing VBA UserForms, ensures the destination folder exists, and saves a new .xlsm workbook while preserving the entire VBA project and all UserForms using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | copy VBA UserForms | macro enabled workbook | xlsm | preserve VBA project | Excel UI automation | programmatic VBA copy | Excel workbook cloning | VBA forms transfer
-// Common Searches: Aspose.Cells copy UserForms .xlsm | How to duplicate VBA UserForms with C# | Preserve macros when saving workbook Aspose.Cells | Copy macro‑enabled Excel template programmatically | Transfer VBA forms between workbooks .NET
-// Developer Intent: Copy the VBA UserForms and full VBA project from a source macro‑enabled workbook into a new workbook using Aspose.Cells for .NET.
-// Use Cases: Generate multiple reports that share the same UI components defined in a template's UserForms. | Automate creation of standardized Excel files for different departments while retaining all macros and forms. | Deploy a common Excel front‑end across a suite of applications by cloning the template’s VBA project into each generated file.
-// AI Prompts: Show C# code to copy selected UserForms from a source .xlsm to a destination workbook with Aspose.Cells. | Explain how to merge VBA projects from two workbooks while handling duplicate UserForm names using Aspose.Cells. | Provide guidance on preserving macro security settings when saving a workbook with Aspose.Cells for .NET.
+// Title: Copy VBA UserForms from a macro‑enabled Excel template to a new .xlsm workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a .xlsm template containing VBA UserForms with Aspose.Cells and saves it as a new .xlsm file while preserving all VBA components. | Show how to transfer only selected UserForms from a source workbook to a target workbook, keeping other VBA modules unchanged, using Aspose.Cells in C#. | Demonstrate merging UserForms from several macro‑enabled workbooks into a single .xlsm workbook with Aspose.Cells, ensuring VBA is retained.
+// Common Searches: how to duplicate Excel UserForms programmatically with Aspose.Cells in C# | preserving VBA when saving a macro‑enabled workbook using Aspose.Cells .NET | copy specific UserForms from one .xlsm to another using Aspose.Cells | combine UserForms from multiple macro‑enabled Excel files with Aspose.Cells
+// Tags: Aspose.Cells copy UserForms Xlsm | retain VBA modules Aspose.Cells .NET | selective UserForm export C# | merge macro-enabled workbooks Aspose.Cells | load template workbook retain VBA Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsUserFormCopyDemo
+namespace AsposeCellsVbaCopy
 {
-    // Loads a macro‑enabled .xlsm template containing VBA UserForms, ensures the destination folder exists, and saves a new .xlsm workbook while preserving the entire VBA project and all UserForms using Aspose.Cells for .NET.
+    // The example loads a macro‑enabled .xlsm template, verifies its existence, and saves a copy as a new .xlsm workbook using Aspose.Cells, preserving all VBA modules and UserForms while handling potential errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             const string sourcePath = "SourceTemplate.xlsm";
-            const string destPath = "DestinationWithUserForms.xlsm";
-
-            // Verify source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
+            const string targetPath = "NewWorkbookWithUserForms.xlsm";
 
             try
             {
-                // Load the source workbook that contains the UserForms (must be a macro‑enabled file)
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                // Ensure the destination directory exists
-                string destDir = Path.GetDirectoryName(destPath);
-                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
+                // Verify that the source workbook exists
+                if (!File.Exists(sourcePath))
                 {
-                    Directory.CreateDirectory(destDir);
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
                 }
 
-                // Save the workbook to the destination path (preserves VBA project and UserForms)
-                sourceWorkbook.Save(destPath, SaveFormat.Xlsm);
+                // Load the source workbook (macro‑enabled)
+                var sourceWorkbook = new Workbook(sourcePath);
 
-                Console.WriteLine("UserForms copied successfully.");
+                // Save a copy of the workbook preserving VBA modules and UserForms
+                sourceWorkbook.Save(targetPath, SaveFormat.Xlsm);
+
+                Console.WriteLine($"Workbook saved successfully to '{targetPath}'.");
             }
             catch (Exception ex)
             {
+                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

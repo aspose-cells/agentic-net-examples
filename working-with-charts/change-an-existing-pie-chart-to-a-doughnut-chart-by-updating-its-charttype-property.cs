@@ -1,60 +1,81 @@
-// Title: Aspose.Cells for .NET: Convert a Pie Chart to a Doughnut Chart (C#)
-// Description: Load an Excel workbook with Aspose.Cells, locate the first chart, set its ChartType to Doughnut, and save the file. The sample includes checks for missing files and absent charts to prevent runtime errors.
-// Keywords: Aspose.Cells C# change chart type | ChartType Doughnut | convert pie chart to doughnut Aspose | programmatic Excel chart update | C# Aspose.Cells chart manipulation | global | USA | India
-// Common Searches: Aspose.Cells set chart type to Doughnut C# | how to replace a pie chart with a doughnut chart in Excel using .NET | change chart.Type to Doughnut Aspose.Cells example | C# code to convert existing pie chart to doughnut chart | update Excel chart programmatically Aspose.Cells
-// Developer Intent: Modify the ChartType of an existing pie chart so it becomes a doughnut chart within an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Standardize report visuals by converting all pie charts to doughnut charts before distribution. | Automate chart‑type migration in a batch process that processes multiple workbooks. | Replace a legacy pie chart with a doughnut chart while preserving data series and formatting.
-// AI Prompts: Generate C# code that loads a workbook, finds the first chart, changes its type to Doughnut, and saves the result using Aspose.Cells. | Write a method that scans every worksheet, detects pie charts, and switches each to a doughnut chart. | Explain best practices for handling workbooks that may lack charts when updating chart types with Aspose.Cells.
+// Title: Convert an existing Excel pie chart to a doughnut chart by setting the chart’s Type with Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx workbook, locate the first chart, and assign ChartType.Doughnut to its Type using Aspose.Cells in C#. | Programmatically replace a pie chart with a doughnut chart in an existing Excel file by updating the chart’s Type property via the Aspose.Cells API. | Create a sample workbook containing a pie chart, then demonstrate how to switch the chart to doughnut format and save the file with C#.
+// Common Searches: Aspose.Cells C# change chart type from pie to doughnut | How to set chart Type to Doughnut in an existing Excel workbook using Aspose.Cells | Update first chart in .xlsx to doughnut chart programmatically .NET | Convert pie chart to doughnut chart Aspose.Cells example code
+// Tags: Aspose.Cells chart property update | C# doughnut chart generation | Excel workbook chart modification | Aspose.Cells chart type conversion | pie chart to doughnut transformation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace Example
+// The sample loads an existing workbook (or creates one with a pie chart), changes the first chart's Type to ChartType.Doughnut, and saves the modified workbook as a new .xlsx file.
+class Program
 {
-    // Load an Excel workbook with Aspose.Cells, locate the first chart, set its ChartType to Doughnut, and save the file. The sample includes checks for missing files and absent charts to prevent runtime errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "ExistingPieChart.xlsx";
+            const string outputPath = "UpdatedDoughnutChart.xlsx";
+
+            Workbook workbook;
+
+            // Load existing workbook or create a sample one if the file is missing
+            if (File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = CreateSampleWorkbookWithPieChart();
+                workbook.Save(inputPath);
+                Console.WriteLine($"Input file not found. Created sample workbook '{inputPath}'.");
+            }
 
-                // Verify input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Ensure there is at least one chart on the worksheet
-                if (sheet.Charts.Count == 0)
-                {
-                    Console.WriteLine("No charts found in the worksheet.");
-                    return;
-                }
-
-                // Retrieve the first chart (assumed to be a pie chart)
+            // Change the first chart's type to Doughnut if a chart exists
+            if (sheet.Charts.Count > 0)
+            {
                 Chart chart = sheet.Charts[0];
-
-                // Change the chart type to Doughnut
                 chart.Type = ChartType.Doughnut;
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine("Chart type changed to Doughnut.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No charts found in the worksheet.");
             }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved as '{outputPath}'.");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Creates a workbook containing a simple pie chart for demonstration purposes
+    private static Workbook CreateSampleWorkbookWithPieChart()
+    {
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        // Sample data
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["B1"].PutValue("Value");
+        ws.Cells["A2"].PutValue("A");
+        ws.Cells["B2"].PutValue(30);
+        ws.Cells["A3"].PutValue("B");
+        ws.Cells["B3"].PutValue(70);
+
+        // Add a pie chart
+        int chartIndex = ws.Charts.Add(ChartType.Pie, 5, 0, 15, 5);
+        Chart chart = ws.Charts[chartIndex];
+        chart.NSeries.Add("B2:B3", true);
+        chart.NSeries.CategoryData = "A2:A3";
+
+        return wb;
     }
 }

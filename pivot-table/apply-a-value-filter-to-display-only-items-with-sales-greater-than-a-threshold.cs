@@ -1,19 +1,16 @@
-// Title: C# – Apply a Value‑Greater‑Than Filter to a Pivot Table with Aspose.Cells
-// Description: This example creates a workbook, adds product and sales data, builds a pivot table, and uses PivotFilterCollection.AddValueFilter with PivotFilterType.ValueGreaterThan to show only rows where the Sales amount exceeds a defined threshold. The pivot cache is refreshed, the data recalculated, and the file saved as an XLSX workbook.
-// Keywords: Aspose.Cells pivot filter C# | ValueGreaterThan pivot table | filter pivot rows by sales | Aspose.Cells .NET example | apply numeric filter to pivot | C# Excel pivot value filter | Aspose.Cells PivotTable API
-// Common Searches: Aspose.Cells filter pivot table values greater than | C# add value greater than filter to Aspose.Cells pivot | how to show only sales over a threshold in Aspose.Cells | PivotFilterCollection AddValueFilter example | Aspose.Cells pivot table numeric filter
-// Developer Intent: Show only pivot table items whose Sales value is higher than a specified threshold.
-// Use Cases: Generate a sales report that lists only products with revenue above $100. | Create a dashboard that automatically hides low‑performing items in a pivot view. | Export a filtered pivot table to Excel for stakeholder distribution.
-// AI Prompts: How can I change the sales threshold at runtime and refresh the pivot table in Aspose.Cells? | Provide code to remove a ValueGreaterThan filter from an Aspose.Cells pivot table. | Explain how to combine a value filter with a label filter in a pivot table using Aspose.Cells.
+// Title: Apply a ValueGreaterThan filter to a pivot table in Aspose.Cells for .NET (C#) to display only products with sales above a threshold
+// AI Prompts: Generate an Excel workbook with a pivot table that shows only rows where the Sales column exceeds a given value using Aspose.Cells in C#. | Add a PivotFilterCollection.ValueGreaterThan filter to the row field of a pivot table, then refresh and calculate the pivot cache with Aspose.Cells for .NET. | Write a C# program that creates a pivot table from a data range, applies a sales‑greater‑than filter, and saves the filtered result as an .xlsx file.
+// Common Searches: Aspose.Cells C# apply value greater than filter on pivot table sales column | filter pivot table rows by sales amount using Aspose.Cells for .NET | example code for PivotFilterType.ValueGreaterThan in C# Aspose.Cells | show only products with sales over 100 in an Aspose.Cells pivot table | refresh pivot cache after applying value filter Aspose.Cells C#
+// Tags: Aspose.Cells pivot table value filter C# | PivotFilterType.ValueGreaterThan Aspose.Cells | filter pivot rows by sales threshold C# | refresh pivot cache Aspose.Cells | save filtered pivot table to Excel C#
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using System;
 
 namespace AsposeCellsExamples
 {
-    // This example creates a workbook, adds product and sales data, builds a pivot table, and uses PivotFilterCollection.AddValueFilter with PivotFilterType.ValueGreaterThan to show only rows where the Sales amount exceeds a defined threshold. The pivot cache is refreshed, the data recalculated, and the file saved as an XLSX workbook.
-    public class PivotValueFilterGreaterThanDemo
+    // The example creates a workbook with product and sales data, builds a pivot table, applies a PivotFilterType.ValueGreaterThan filter on the Sales field to keep only items with sales above a defined threshold, refreshes and calculates the pivot, and saves the filtered pivot table to an Excel file.
+    public class ApplyValueFilterDemo
     {
         public static void Run()
         {
@@ -21,62 +18,64 @@ namespace AsposeCellsExamples
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Product";
-                sheet.Cells["B1"].Value = "Sales";
+                // Populate sample data: Product names and their sales figures
+                worksheet.Cells["A1"].Value = "Product";
+                worksheet.Cells["B1"].Value = "Sales";
+                worksheet.Cells["A2"].Value = "WidgetA";
+                worksheet.Cells["B2"].Value = 120.0;
+                worksheet.Cells["A3"].Value = "WidgetB";
+                worksheet.Cells["B3"].Value = 85.0;
+                worksheet.Cells["A4"].Value = "WidgetC";
+                worksheet.Cells["B4"].Value = 200.0;
+                worksheet.Cells["A5"].Value = "WidgetD";
+                worksheet.Cells["B5"].Value = 45.0;
 
-                sheet.Cells["A2"].Value = "WidgetA";
-                sheet.Cells["B2"].Value = 120.0;
+                // Define the data range for the pivot table (including headers)
+                string dataRange = "A1:B5";
 
-                sheet.Cells["A3"].Value = "WidgetB";
-                sheet.Cells["B3"].Value = 85.0;
+                // Add a pivot table to the worksheet
+                int pivotIndex = worksheet.PivotTables.Add(dataRange, "D3", "SalesPivot");
+                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-                sheet.Cells["A4"].Value = "WidgetC";
-                sheet.Cells["B4"].Value = 200.0;
+                // Add the Product field to the Row area
+                pivotTable.AddFieldToArea(PivotFieldType.Row, 0); // 0 = column A (Product)
 
-                sheet.Cells["A5"].Value = "WidgetD";
-                sheet.Cells["B5"].Value = 45.0;
-
-                // Create a pivot table based on the data range A1:B5, place it at D2
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D2", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Add "Product" as a row field and "Sales" as a data field
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+                // Add the Sales field to the Data area
+                pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // 1 = column B (Sales)
 
                 // Define the sales threshold
                 double salesThreshold = 100.0;
 
-                // Apply a value filter to show only items where Sales > salesThreshold
+                // Apply a value filter to show only items with Sales > salesThreshold
                 PivotFilterCollection filters = pivotTable.PivotFilters;
                 filters.AddValueFilter(
                     baseFieldIndex: 0,
                     valueFieldIndex: 1,
                     type: PivotFilterType.ValueGreaterThan,
                     value1: salesThreshold,
-                    value2: 0.0 // Ignored for "greater than" filter
-                );
+                    value2: 0);
 
-                // Refresh the pivot cache and recalculate data
+                // Refresh the pivot cache and calculate data to apply the filter
                 pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // Save the workbook
-                workbook.Save("PivotValueFilterGreaterThanDemo.xlsx");
+                // Save the workbook with the filtered pivot table
+                workbook.Save("ApplyValueFilterDemo.xlsx");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
+    }
 
-        // Entry point for the application
-        public static void Main()
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Run();
+            ApplyValueFilterDemo.Run();
         }
     }
 }

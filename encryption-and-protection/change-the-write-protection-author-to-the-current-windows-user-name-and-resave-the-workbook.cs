@@ -1,29 +1,23 @@
-// Title: Set Write‑Protection Author to Current Windows User and Overwrite Workbook with Aspose.Cells for .NET
-// Description: Loads an existing Excel file, assigns the current Windows user (Environment.UserName) as the write‑protection author, and saves the workbook back to the original location, overwriting the file.
-// Keywords: Aspose.Cells | .NET | C# | write protection author | Environment.UserName | overwrite Excel workbook | update workbook protection
-// Common Searches: Aspose.Cells change write protection author C# | set Excel write protection author to Windows user | overwrite Excel file after updating protection settings | update workbook protection metadata programmatically
-// Developer Intent: Update the workbook's write‑protection author to the logged‑in Windows user and save the changes in place.
-// Use Cases: Ensure the author of write‑protected Excel files reflects the person who last processed the document. | Create an audit trail by embedding the current Windows username into the protection metadata of each workbook. | Run a batch operation that updates and overwrites multiple workbooks without generating duplicate files.
-// AI Prompts: Provide C# code that sets workbook.Settings.WriteProtection.Author to Environment.UserName using Aspose.Cells and saves the file in place. | Show an example of updating the write‑protection author of an existing Excel workbook and overwriting the original file with Aspose.Cells for .NET. | Explain how to programmatically change the write‑protection author of a workbook, preserve other settings, and save without creating a new copy.
+// Title: Set the write‑protection author of an Excel workbook to the logged‑in Windows user and save the file using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file with Aspose.Cells, assign Environment.UserName to workbook.Settings.WriteProtection.Author, and save the workbook. | Programmatically change the write‑protection author of a workbook to the current Windows account in C# and overwrite the original file with Aspose.Cells. | Retrieve the current Windows username, set it as the write‑protection author property, and persist the Excel document using Aspose.Cells.
+// Common Searches: how to change write protection author to current windows user using Aspose.Cells C# | Aspose.Cells example for setting workbook.Settings.WriteProtection.Author | C# code to assign Environment.UserName as Excel file protection author before saving | update Excel workbook protection metadata with logged in Windows username using Aspose.Cells | overwrite existing .xlsx after modifying write protection author programmatically
+// Tags: Excel workbook security settings | dotnet metadata update for Excel | set workbook protection fields programmatically | save Excel workbook with new settings | modify workbook security attributes
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing Excel file, assigns the current Windows user (Environment.UserName) as the write‑protection author, and saves the workbook back to the original location, overwriting the file.
+// Loads an existing Excel workbook, sets the write‑protection author to the current Windows user via workbook.Settings.WriteProtection.Author, and saves the workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Path to the workbook that needs its write‑protection author updated
-        string workbookPath = "input.xlsx";
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Load the existing workbook
-        Workbook workbook = new Workbook(workbookPath);
-
-        // Update the write‑protection author to the current Windows user name
+        // Change the write‑protection author to the current Windows user name
         workbook.Settings.WriteProtection.Author = Environment.UserName;
 
-        // Re‑save the workbook (overwrites the original file)
-        workbook.Save(workbookPath);
+        // Re‑save the workbook (overwrite or specify a new file name)
+        workbook.Save("output.xlsx");
     }
 }

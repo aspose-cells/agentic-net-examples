@@ -1,10 +1,7 @@
-// Title: Create Mailto Hyperlinks from Email Text in Excel with Aspose.Cells (C#)
-// Description: This C# example scans a worksheet, detects email addresses using a regular expression, retrieves each cell's formatted HTML, and adds a mailto hyperlink via HyperlinkCollection. The email becomes the display text and the workbook is saved as EmailHyperlinks.xlsx.
-// Keywords: Aspose.Cells | C# | email hyperlink | mailto link | regex email detection | GetHtmlString | HyperlinkCollection.Add | Excel automation | .NET | workbook save
-// Common Searches: Aspose.Cells add mailto hyperlink C# | C# regex find email in Excel Aspose | convert email text to clickable link in Excel using Aspose.Cells | GetHtmlString cell Aspose.Cells example | create email hyperlink in worksheet programmatically
-// Developer Intent: Generate clickable mailto links for email addresses found in worksheet cells.
-// Use Cases: Automatically convert plain email strings in generated reports to clickable links before saving the workbook. | Build a contact‑list Excel file where each email cell opens the default mail client. | Process imported data, replace email text with hyperlinked cells, and keep the original display formatting.
-// AI Prompts: Write C# code using Aspose.Cells to iterate over all used cells, detect email addresses with a regex, and add a mailto hyperlink to each cell. | Show how to use GetHtmlString to obtain a cell's formatted HTML before inserting a hyperlink in Aspose.Cells. | Explain how to handle multiple email addresses in a single cell and create separate mailto hyperlinks for each using Aspose.Cells.
+// Title: Detect email addresses in Excel cells and add mailto hyperlinks with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that scans every string cell in an Aspose.Cells workbook, uses a regular expression to locate email addresses, and inserts a 'mailto:' hyperlink for each detected address. | Demonstrate how to replace a cell's text with the first email match and attach a clickable mailto hyperlink using the Aspose.Cells API.
+// Common Searches: how to create mailto hyperlinks from email addresses in an Excel file using Aspose.Cells C# | regex email detection in Aspose.Cells workbook and add hyperlink | iterate over cells in Aspose.Cells and convert email text to clickable link | Aspose.Cells replace cell text with first email and add hyperlink .NET
+// Tags: email regex detection Aspose.Cells C# | add mailto hyperlink Aspose.Cells | process string cells Aspose.Cells workbook | replace cell value with email Aspose.Cells | hyperlink insertion Excel Aspose.Cells .NET
 
 using System;
 using System.Text.RegularExpressions;
@@ -12,48 +9,43 @@ using Aspose.Cells;
 
 namespace AsposeCellsEmailHyperlinkDemo
 {
-    // This C# example scans a worksheet, detects email addresses using a regular expression, retrieves each cell's formatted HTML, and adds a mailto hyperlink via HyperlinkCollection. The email becomes the display text and the workbook is saved as EmailHyperlinks.xlsx.
+    // The example creates a workbook, writes a string containing email addresses to a cell, iterates over all string cells, uses a regular expression to find email addresses, replaces the cell content with the first matched email, adds a clickable 'mailto:' hyperlink to that cell, and saves the file as EmailHyperlinks.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Sample data containing email addresses
-            sheet.Cells["A1"].PutValue("Contact: john.doe@example.com");
-            sheet.Cells["A2"].PutValue("No email here");
-            sheet.Cells["A3"].PutValue("Multiple: alice@domain.com, bob@site.org");
+            // Sample cell containing one or more email addresses
+            worksheet.Cells["A1"].PutValue("Contact: john.doe@example.com and jane@domain.org");
 
             // Regular expression to detect email addresses
             Regex emailRegex = new Regex(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}");
 
-            // Iterate through all used cells
-            foreach (Cell cell in sheet.Cells)
+            // Iterate through all used cells in the worksheet
+            foreach (Cell cell in worksheet.Cells)
             {
-                // Retrieve the formatted text of the cell (HTML representation)
-                string formattedText = cell.GetHtmlString(false);
-
-                // Search for email addresses in the cell's plain string value
-                Match match = emailRegex.Match(cell.StringValue);
-                if (match.Success)
+                // Process only string cells
+                if (cell.Type == CellValueType.IsString)
                 {
-                    string email = match.Value;
+                    string cellText = cell.StringValue;
+                    MatchCollection matches = emailRegex.Matches(cellText);
 
-                    // Add a mailto hyperlink to the cell (using HyperlinkCollection.Add)
-                    int linkIndex = sheet.Hyperlinks.Add(cell.Name, 1, 1, $"mailto:{email}");
-                    Hyperlink link = sheet.Hyperlinks[linkIndex];
+                    if (matches.Count > 0)
+                    {
+                        // For demonstration, replace the cell content with the first detected email
+                        string firstEmail = matches[0].Value;
+                        cell.PutValue(firstEmail);
 
-                    // Set the display text of the hyperlink to the email address
-                    link.TextToDisplay = email;
-
-                    // Optionally, replace the cell's content with just the email (preserves display)
-                    cell.PutValue(email);
+                        // Add a clickable "mailto:" hyperlink to the same cell
+                        worksheet.Hyperlinks.Add(cell.Name, 1, 1, "mailto:" + firstEmail);
+                    }
                 }
             }
 
-            // Save the workbook (lifecycle rule)
+            // Save the workbook with the added hyperlinks
             workbook.Save("EmailHyperlinks.xlsx");
         }
     }

@@ -1,40 +1,33 @@
-// Title: Aspose.Cells C# – Save Workbook as HTML with Hover Tooltips (AddTooltipText)
-// Description: Shows how to export an Excel workbook to HTML using Aspose.Cells for .NET, set a narrow column width, and enable the AddTooltipText option so truncated cell values appear as hover tooltips.
-// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | AddTooltipText | HTML export | tooltip | truncated cell | Excel to HTML | hover tooltip | web report
-// Common Searches: Aspose.Cells AddTooltipText example C# | export Excel to HTML with tooltips | show full cell value on hover Aspose.Cells | HTML tooltip for truncated cells Aspose | how to enable tooltip text in HtmlSaveOptions
-// Developer Intent: Enable hover tooltips that reveal the complete cell content for cells that are truncated in the HTML output.
-// Use Cases: Web‑based reports where long descriptions are hidden in narrow columns but accessible via mouse‑over tooltips. | Interactive spreadsheet views in portals that keep column widths compact while still providing full data visibility. | Improved accessibility for exported HTML tables by supplying full cell values through tooltips.
-// AI Prompts: Write C# code using Aspose.Cells to save a worksheet as HTML with AddTooltipText set to true so long cell values appear as hover tooltips. | Show how to configure HtmlSaveOptions in Aspose.Cells to automatically add tooltip text for cells truncated in the HTML export. | Provide an example that inserts a long string, narrows a column, and exports to HTML with tooltips enabled using Aspose.Cells for .NET.
+// Title: Export an Excel worksheet to HTML with full cell text displayed as a hover tooltip using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, inserts a long string into a cell, narrows the column to force truncation, enables tooltip text in HtmlSaveOptions, and saves the result as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions so that each cell in the generated HTML includes a tooltip containing the complete cell value. | Explain the steps to make truncated Excel cells show their full content on mouse hover after exporting to HTML with Aspose.Cells.
+// Common Searches: Aspose.Cells C# export to HTML with tooltip for long cell values | how to show full cell text on hover in HTML output from Aspose.Cells | enable tooltip option in HtmlSaveOptions to display complete cell content | C# set column width and add hover tooltip when saving workbook as HTML
+// Tags: Aspose.Cells HtmlSaveOptions AddTooltipText | export Excel to HTML with cell tooltips .NET | display full cell content on hover Aspose.Cells | C# set column width for HTML rendering Aspose.Cells | generate tooltip for truncated cells Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlTooltipDemo
+// // Creates a workbook, writes a long string to cell A1, narrows column A to cause truncation, sets HtmlSaveOptions.AddTooltipText = true, and saves the worksheet as output.html so the complete text appears as a hover tooltip in the HTML view.
+class Program
 {
-    // Shows how to export an Excel workbook to HTML using Aspose.Cells for .NET, set a narrow column width, and enable the AddTooltipText option so truncated cell values appear as hover tooltips.
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Put a long text into a cell that will exceed the column width
-            worksheet.Cells["A1"].PutValue("This is a very long text that will not fit into the cell width and should appear as a tooltip when hovered.");
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a narrow column width to force truncation in the HTML view
-            worksheet.Cells.SetColumnWidth(0, 10); // Column A width
+        // Put a long text into a cell (will be truncated in HTML view)
+        sheet.Cells["A1"].PutValue("This is a very long text that exceeds the cell width and should appear as a tooltip when exported to HTML.");
 
-            // Configure HTML save options to add tooltip text for truncated cells
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
-            saveOptions.AddTooltipText = true; // Enable tooltip generation
+        // Set column width to force truncation in the HTML rendering
+        sheet.Cells.SetColumnWidth(0, 10); // Column A
 
-            // Save the workbook as an HTML file with the specified options
-            string outputPath = "HtmlWithTooltip.html";
-            workbook.Save(outputPath, saveOptions);
+        // Configure HTML save options to add tooltip text
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+        htmlOptions.AddTooltipText = true; // Enable full cell text as hover tooltip
 
-            Console.WriteLine($"HTML file saved with tooltip enabled: {outputPath}");
-        }
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

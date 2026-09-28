@@ -1,10 +1,7 @@
-// Title: Filter a collection with LINQ before binding to WorkbookDesigner for smart‑marker rows (Aspose.Cells for .NET)
-// Description: This C# example shows how to use LINQ to filter a List<Person> (e.g., Age > 30), bind the filtered list to a WorkbookDesigner smart‑marker named "Person", and generate a dynamic Excel sheet where each filtered record creates a new row. The workbook is saved as FilteredPersons.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | WorkbookDesigner | smart markers | LINQ filter | Excel export | SetDataSource | dynamic rows | code example
-// Common Searches: Aspose.Cells LINQ filter before WorkbookDesigner | smart markers with filtered collection C# | how to bind LINQ result to WorkbookDesigner | generate Excel rows from LINQ query Aspose.Cells | filter list before processing smart markers
-// Developer Intent: I need to apply a LINQ filter to a data collection and then bind only the filtered items to a WorkbookDesigner so that smart markers create rows solely for those items.
-// Use Cases: Create an employee report that includes only staff members meeting age or department criteria. | Export a customized Excel sheet where business rules (e.g., sales > threshold) determine which records appear. | Generate department‑specific summaries by pre‑filtering data before smart‑marker processing.
-// AI Prompts: Write C# code that filters a List<Person> with LINQ and binds the result to a WorkbookDesigner smart‑marker in Aspose.Cells. | Show how to add conditional formatting to the smart‑marker row after applying a LINQ filter. | Provide troubleshooting steps when filtered rows are missing after calling WorkbookDesigner.Process().
+// Title: Filter employee data with LINQ and populate Excel using Aspose.Cells WorkbookDesigner smart markers (C#)
+// AI Prompts: Generate C# code that uses LINQ to select employees older than a given age and passes the filtered collection to WorkbookDesigner for smart‑marker processing. | Show how to create a reusable method that accepts any IEnumerable<T>, applies a LINQ predicate, and sets it as the data source for Aspose.Cells WorkbookDesigner. | Provide an example that modifies the smart‑marker row to output only the Name and Department fields after the collection has been filtered.
+// Common Searches: aspnet linq filter collection before using Aspose.Cells WorkbookDesigner smart markers | c# example of binding a filtered list to Aspose.Cells smart markers | how to use LINQ Where clause with Aspose.Cells WorkbookDesigner SetDataSource | export filtered employee records to Excel using Aspose.Cells smart markers | Aspose.Cells smart markers with LINQ filtered IEnumerable
+// Tags: LINQ filtering with Aspose.Cells WorkbookDesigner | smart markers data binding filtered collection | C# export filtered employees to Excel using Aspose.Cells | WorkbookDesigner SetDataSource after LINQ Where | Excel generation with smart markers and LINQ
 
 using System;
 using System.Collections.Generic;
@@ -13,68 +10,66 @@ using Aspose.Cells;
 
 namespace AsposeCellsSmartMarkerLinqDemo
 {
-    // Simple data class used as a data source
-    // This C# example shows how to use LINQ to filter a List<Person> (e.g., Age > 30), bind the filtered list to a WorkbookDesigner smart‑marker named "Person", and generate a dynamic Excel sheet where each filtered record creates a new row. The workbook is saved as FilteredPersons.xlsx.
-    public class Person
+    // Simple POCO representing an employee
+    // Demonstrates creating a list of Employee objects, applying a LINQ Where clause to keep only employees older than 30, placing smart markers in a worksheet, passing the filtered list to WorkbookDesigner via SetDataSource, processing the markers to generate rows, and saving the result as FilteredEmployees.xlsx.
+    public class Employee
     {
         public string Name { get; set; }
         public int Age { get; set; }
         public string Department { get; set; }
-
-        public Person(string name, int age, string department)
-        {
-            Name = name;
-            Age = age;
-            Department = department;
-        }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // 1. Prepare a collection of Person objects
-            List<Person> allPersons = new List<Person>
+            // -----------------------------------------------------------------
+            // 1. Prepare source data (could come from any source, e.g., DB)
+            // -----------------------------------------------------------------
+            List<Employee> allEmployees = new List<Employee>
             {
-                new Person("John Doe", 28, "Sales"),
-                new Person("Jane Smith", 35, "Marketing"),
-                new Person("Bob Johnson", 42, "IT"),
-                new Person("Alice Brown", 31, "HR")
+                new Employee { Name = "John Doe",   Age = 28, Department = "Sales" },
+                new Employee { Name = "Jane Smith", Age = 35, Department = "HR" },
+                new Employee { Name = "Bob Brown",  Age = 42, Department = "IT" },
+                new Employee { Name = "Alice White",Age = 31, Department = "Finance" }
             };
 
-            // 2. Use LINQ to filter the collection (e.g., only persons older than 30)
-            List<Person> filteredPersons = allPersons
-                .Where(p => p.Age > 30)
+            // -----------------------------------------------------------------
+            // 2. Filter the collection using LINQ (e.g., only employees older than 30)
+            // -----------------------------------------------------------------
+            List<Employee> filteredEmployees = allEmployees
+                .Where(e => e.Age > 30)
                 .ToList();
 
-            // 3. Create a new workbook and set up smart markers
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // -----------------------------------------------------------------
+            // 3. Create a workbook and place smart markers.
+            //    Row 2 contains the markers; they will be repeated for each item.
+            // -----------------------------------------------------------------
+            Workbook workbook = new Workbook();                     // create workbook
+            Worksheet sheet = workbook.Worksheets[0];              // first worksheet
 
             // Header row
             sheet.Cells["A1"].PutValue("Name");
             sheet.Cells["B1"].PutValue("Age");
             sheet.Cells["C1"].PutValue("Department");
 
-            // Smart marker row – the designer will repeat this row for each item in the data source
-            sheet.Cells["A2"].PutValue("&Person.Name");
-            sheet.Cells["B2"].PutValue("&Person.Age");
-            sheet.Cells["C2"].PutValue("&Person.Department");
+            // Smart marker row – will be expanded for each Employee in the data source
+            sheet.Cells["A2"].PutValue("&Employees.Name");
+            sheet.Cells["B2"].PutValue("&Employees.Age");
+            sheet.Cells["C2"].PutValue("&Employees.Department");
 
-            // 4. Initialize WorkbookDesigner and bind the filtered collection
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
+            // -----------------------------------------------------------------
+            // 4. Bind the filtered collection to the WorkbookDesigner and process.
+            // -----------------------------------------------------------------
+            WorkbookDesigner designer = new WorkbookDesigner();     // create designer
+            designer.Workbook = workbook;                          // assign workbook
+            designer.SetDataSource("Employees", filteredEmployees); // bind filtered list
+            designer.Process();                                    // process smart markers
 
-            // Bind the filtered list to the smart marker name "Person"
-            designer.SetDataSource("Person", filteredPersons);
-
-            // 5. Process the smart markers – rows will be generated for each filtered item
-            designer.Process();
-
-            // 6. Save the result
-            workbook.Save("FilteredPersons.xlsx");
+            // -----------------------------------------------------------------
+            // 5. Save the result.
+            // -----------------------------------------------------------------
+            workbook.Save("FilteredEmployees.xlsx");
         }
     }
 }

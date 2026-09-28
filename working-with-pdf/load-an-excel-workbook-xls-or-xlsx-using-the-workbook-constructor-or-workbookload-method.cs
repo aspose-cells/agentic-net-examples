@@ -1,35 +1,23 @@
-// Title: C# – Load an Excel Workbook (XLS or XLSX) with Aspose.Cells using the Constructor or Load Method
-// Description: Demonstrates how to instantiate an Aspose.Cells Workbook from a local .xls or .xlsx file, access the first worksheet, read the value of cell A1, output it to the console, and properly dispose the workbook in a .NET application.
-// Keywords: Aspose.Cells load workbook C# | open Excel file .NET | Workbook constructor Aspose.Cells | Workbook.Load method example | read cell A1 Aspose.Cells | C# Excel file handling | dispose Aspose.Cells workbook | XLSX to console Aspose.Cells
-// Common Searches: How to open an .xlsx file with Aspose.Cells in C# | Aspose.Cells read cell value after loading workbook | Workbook.Load vs constructor Aspose.Cells | C# example for loading Excel workbook using Aspose.Cells | Dispose Aspose.Cells workbook after use
-// Developer Intent: Load an Excel file into an Aspose.Cells Workbook and retrieve cell data.
-// Use Cases: Quickly open a spreadsheet to extract a single cell value (e.g., A1). | Load a workbook for further processing such as iterating worksheets or rows. | Release unmanaged resources by disposing the Workbook after operations.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells using Workbook.Load and prints the value of cell B2. | Show how to catch and log exceptions when a corrupted .xls file is loaded with Aspose.Cells. | Create a reusable method that opens any Excel file with Aspose.Cells and returns a dictionary of cell addresses and values.
+// Title: Load an Excel workbook (XLS or XLSX) from a file path using Aspose.Cells Workbook constructor or Workbook.Load in C#
+// AI Prompts: Write C# code that creates a Workbook instance from a .xlsx file path using the Aspose.Cells constructor. | Demonstrate how to call Workbook.Load to open an existing .xls file with Aspose.Cells, including basic error handling. | Show a C# snippet that decides at runtime whether to use the constructor or Load method for opening Excel files with Aspose.Cells.
+// Common Searches: aspocells c# open existing xls file from disk | difference between Workbook constructor and Load method in Aspose.Cells | how to read an Excel workbook using Aspose.Cells without saving changes | c# load excel workbook from path using Aspose.Cells library | example of loading both .xls and .xlsx with Aspose.Cells in .NET
+// Tags: initialize workbook using file location Aspose.Cells C# | invoke Workbook.Load for Excel import Aspose.Cells | open XLSX workbook programmatically Aspose.Cells | read Excel file from local storage Aspose.Cells | error handling for unsupported Excel format Aspose.Cells | select loading strategy for Excel import Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadExample
+// Demonstrates loading an Excel workbook (XLS or XLSX) from a specified file path using Aspose.Cells' Workbook constructor, with an alternative approach shown using the Workbook.Load method.
+class Program
 {
-    // Demonstrates how to instantiate an Aspose.Cells Workbook from a local .xls or .xlsx file, access the first worksheet, read the value of cell A1, output it to the console, and properly dispose the workbook in a .NET application.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the Excel file to be loaded (can be .xls or .xlsx)
-            string filePath = "sample.xlsx";
+        // Path to the Excel file (XLS or XLSX)
+        string filePath = "input.xlsx";
 
-            // Load the workbook using the constructor that accepts a file path
-            Workbook workbook = new Workbook(filePath);
+        // Load the workbook using the constructor (preferred for simplicity)
+        Workbook workbook = new Workbook(filePath);
 
-            // Access the first worksheet in the workbook
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Read and display the value of cell A1
-            Console.WriteLine("Value of A1: " + worksheet.Cells["A1"].StringValue);
-
-            // Optional: clean up resources
-            workbook.Dispose();
-        }
+        // Alternative way: load using the Load method
+        // Workbook workbook = new Workbook();
+        // workbook.Load(filePath);
     }
 }

@@ -1,35 +1,37 @@
-// Title: Export a Worksheet with a 5×7‑inch Custom Paper Size to PDF using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, populates cells A1‑B3, applies a 5 in × 7 in custom paper size via PageSetup.CustomPaperSize, and saves the workbook as a PDF with Workbook.Save (SaveFormat.Pdf).
-// Keywords: Aspose.Cells | C# | .NET | custom paper size | PageSetup.CustomPaperSize | PDF export | SaveFormat.Pdf | 5x7 inch | worksheet to PDF | Excel to PDF rendering
-// Common Searches: Aspose.Cells set custom paper size and export to PDF | C# export Excel worksheet as 5x7 inch PDF | PageSetup.CustomPaperSize example Aspose.Cells | Save workbook as PDF with specific dimensions .NET | Render worksheet to PDF with non‑standard page size
-// Developer Intent: Export a worksheet to a PDF file using a 5 × 7‑inch custom page size.
-// Use Cases: Generate 5×7‑inch product flyers directly from Excel data. | Create compact invoices or receipts that match a specific envelope size. | Produce mobile‑friendly PDF reports with a reduced page footprint.
-// AI Prompts: Show how to set a 5 in × 7 in custom paper size for a worksheet and save it as PDF with Aspose.Cells in C#. | Provide a C# example that configures margins, orientation, and scaling together with a custom paper size before PDF export. | Explain how to use rendering options to ensure worksheet content fits a 5×7‑inch PDF page when using Aspose.Cells.
+// Title: Export a worksheet with Letter-size paper setup to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that configures a worksheet's PageSetup to Letter size and saves the workbook as a PDF with Aspose.Cells. | Show how to set custom paper dimensions in points for a worksheet before calling Workbook.Save to generate a PDF. | Demonstrate adding sample cell data and exporting the worksheet to a PDF file with a specific page size using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set worksheet page size to Letter before PDF export | how to define custom paper dimensions in points for PDF output with Aspose.Cells | C# save workbook as PDF with specific page setup using Aspose.Cells | export worksheet to PDF with custom page size using Aspose.Cells .NET
+// Tags: worksheet page setup paper size Aspose.Cells | export worksheet to PDF C# Aspose | custom paper dimensions points Aspose.Cells | save workbook as PDF specific page size | Aspose.Cells PDF export page layout
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a workbook, populates cells A1‑B3, applies a 5 in × 7 in custom paper size via PageSetup.CustomPaperSize, and saves the workbook as a PDF with Workbook.Save (SaveFormat.Pdf).
-class RenderWorksheetCustomPaperToPdf
+// The example creates a new workbook, sets the first worksheet's page size to Letter (8.5×11 inches), adds sample content, and saves the worksheet as a PDF file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate some sample data
-        worksheet.Cells["A1"].PutValue("Item");
-        worksheet.Cells["B1"].PutValue("Quantity");
-        worksheet.Cells["A2"].PutValue("Apples");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("Bananas");
-        worksheet.Cells["B3"].PutValue(20);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set custom paper size (width: 5 inches, height: 7 inches)
-        worksheet.PageSetup.CustomPaperSize(5.0, 7.0);
+            // Set paper size to Letter (8.5 x 11 inches)
+            // 1 point = 1/72 inch, so Letter size matches the desired dimensions.
+            worksheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
 
-        // Save the worksheet to a PDF file using the Save method
-        workbook.Save("CustomPaperWorksheet.pdf", SaveFormat.Pdf);
+            // Optional: add some content to the worksheet
+            worksheet.Cells["A1"].PutValue("Sample content on a custom-sized PDF page.");
+
+            // Save the worksheet as a PDF file
+            workbook.Save("CustomPaperDimensions.pdf", SaveFormat.Pdf);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

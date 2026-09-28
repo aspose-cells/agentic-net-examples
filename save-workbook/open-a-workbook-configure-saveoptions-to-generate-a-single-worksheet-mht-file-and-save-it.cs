@@ -1,34 +1,38 @@
-// Title: Create a Single‑Worksheet MHT File from Excel with Aspose.Cells for .NET (C#)
-// Description: Opens an existing Excel workbook, selects the first worksheet as active, configures HtmlSaveOptions for MHTML output with ExportActiveWorksheetOnly enabled, and saves the result as a single‑worksheet MHT file.
-// Keywords: Aspose.Cells | C# | .NET | MHT | MHTML | HtmlSaveOptions | ExportActiveWorksheetOnly | single worksheet export | Excel to MHT conversion | save workbook as MHT
-// Common Searches: Aspose.Cells save active sheet as MHT | C# export single worksheet to MHTML | How to generate MHT from Excel using Aspose | HtmlSaveOptions ExportActiveWorksheetOnly example | Convert Excel workbook to MHT file .NET
-// Developer Intent: Generate an MHT document that contains only the active worksheet of an existing Excel file.
-// Use Cases: Attach a specific worksheet snapshot to an email in a web‑friendly format. | Publish a dashboard sheet on an intranet portal without exposing the whole workbook. | Archive a single worksheet as a self‑contained HTML file for documentation.
-// AI Prompts: Write C# code that saves the third worksheet of an Excel file as a separate MHT file using Aspose.Cells. | Show how to embed images and apply a custom CSS stylesheet when exporting a worksheet to MHTML with Aspose.Cells. | Provide a loop that iterates through selected worksheets and creates individual MHT files for each.
+// Title: Save only the active worksheet as a single‑page MHT file with Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells and exports the current sheet to a one‑page MHTML document. | Show how to configure HtmlSaveOptions so that Aspose.Cells creates a single MHT file containing just the active worksheet.
+// Common Searches: Aspose.Cells C# export active sheet to MHTML as one file | How to generate a single‑page MHT from Excel using Aspose.Cells .NET | C# save only selected worksheet as MHT with Aspose.Cells HtmlSaveOptions
+// Tags: Aspose.Cells HtmlSaveOptions SaveAsSingleFile | C# export active worksheet to MHT | Aspose.Cells single worksheet MHTML conversion | MHT single file generation with Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Opens an existing Excel workbook, selects the first worksheet as active, configures HtmlSaveOptions for MHTML output with ExportActiveWorksheetOnly enabled, and saves the result as a single‑worksheet MHT file.
-class Program
+namespace AsposeCellsMhtExample
 {
-    static void Main()
+    // The example opens 'input.xlsx' with Aspose.Cells, sets HtmlSaveOptions to MHtml, enables SaveAsSingleFile and ExportActiveWorksheetOnly (with optional PresentationPreference), and saves the active sheet as a single‑page MHT file named 'output.mht'.
+    class Program
     {
-        // Path to the source workbook (replace with your actual file)
-        string sourcePath = "input.xlsx";
+        static void Main()
+        {
+            // Path to the source workbook (can be any supported Excel format)
+            string sourcePath = "input.xlsx";
 
-        // Open the existing workbook
-        Workbook workbook = new Workbook(sourcePath);
+            // Open the workbook using the constructor that accepts a file name
+            Workbook workbook = new Workbook(sourcePath);
 
-        // Set the worksheet you want to export as the active sheet
-        workbook.Worksheets.ActiveSheetIndex = 0; // first worksheet
+            // Create HtmlSaveOptions for MHTML format
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.MHtml);
 
-        // Configure save options for MHTML and export only the active worksheet
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.MHtml);
-        saveOptions.ExportActiveWorksheetOnly = true; // single worksheet
+            // Configure options to generate a single‑worksheet MHT file
+            saveOptions.SaveAsSingleFile = true;               // Save as a single file
+            saveOptions.ExportActiveWorksheetOnly = true;      // Export only the active sheet
+            // Optional: improve visual presentation
+            saveOptions.PresentationPreference = true;
 
-        // Save the workbook as a single‑worksheet MHT file
-        string outputPath = "single_sheet.mht";
-        workbook.Save(outputPath, saveOptions);
+            // Save the workbook as MHTML
+            string outputPath = "output.mht";
+            workbook.Save(outputPath, saveOptions);
+
+            Console.WriteLine($"Workbook saved as single‑worksheet MHT to: {outputPath}");
+        }
     }
 }

@@ -1,38 +1,50 @@
-// Title: Read the calculated value of cell D5 after Worksheet.CalculateFormula in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, assigns numbers to A5‑C5, sets a SUM formula in D5, runs Worksheet.CalculateFormula with recursive evaluation, and retrieves the computed result via the Cell.Value property.
-// Keywords: Aspose.Cells C# | Worksheet.CalculateFormula | read formula result | cell value after calculation | SUM(A5:C5) example | CalculationOptions recursive | retrieve calculated cell | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells get value after Worksheet.CalculateFormula | C# read calculated result of a formula cell | How to retrieve D5 value after SUM formula in Aspose.Cells | Worksheet.CalculateFormula recursive flag usage | Aspose.Cells read cell value after calculation
-// Developer Intent: Obtain the evaluated result of cell D5 after programmatically calculating worksheet formulas.
-// Use Cases: Generate a total row in a financial report, calculate it with Worksheet.CalculateFormula, then export the sum from D5. | Automated unit testing of spreadsheet logic by setting input cells, invoking calculation, and asserting D5's value. | Integrate a computed metric (e.g., total sales) from D5 into downstream services after in‑memory workbook processing.
-// AI Prompts: Show C# code that sets values in A5‑C5, adds a SUM formula to D5, runs Worksheet.CalculateFormula with recursive option, and returns the cell's Value. | Explain how CalculationOptions and the recursive flag influence formula evaluation before accessing the result in Aspose.Cells. | Provide a step‑by‑step example of reading a formula cell's calculated value after calling Worksheet.CalculateFormula in Aspose.Cells for .NET.
+// Title: How to read the evaluated value of cell D5 after recalculating formulas with Aspose.Cells in C#
+// AI Prompts: Load an Excel workbook with Aspose.Cells, invoke Workbook.CalculateFormula, and return the value of cell D5 as a C# object. | Adapt the code to accept any cell address and output its calculated value after Worksheet.CalculateFormula execution. | Format the retrieved D5 value to two decimal places and display it on the console using C#.
+// Common Searches: Aspose.Cells C# get value of a cell after calling CalculateFormula | C# read evaluated result of Excel cell D5 using Aspose.Cells | How to recalculate formulas and fetch a specific cell value with Aspose.Cells for .NET | Example of Workbook.CalculateFormula and accessing cell value in C#
+// Tags: aspocells calculateformula read cell value | c# retrieve evaluated excel cell aspocells | worksheet recalculate formulas get cell result | excel cell d5 value after recalculation aspocells | load workbook calculate all formulas aspocells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Creates a workbook, assigns numbers to A5‑C5, sets a SUM formula in D5, runs Worksheet.CalculateFormula with recursive evaluation, and retrieves the computed result via the Cell.Value property.
+// Loads 'input.xlsx' with Aspose.Cells, recalculates all formulas using Workbook.CalculateFormula, reads the evaluated value of cell D5, and prints it to the console.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
 
-        // Populate some cells that will be used in the formula
-        worksheet.Cells["A5"].PutValue(10);
-        worksheet.Cells["B5"].PutValue(20);
-        worksheet.Cells["C5"].PutValue(30);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Set a formula in D5 that depends on the above cells
-        worksheet.Cells["D5"].Formula = "=SUM(A5:C5)";
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Calculate all formulas in this worksheet (recursive = true)
-        worksheet.CalculateFormula(new CalculationOptions(), true);
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Read the calculated result of cell D5
-        object calculatedResult = worksheet.Cells["D5"].Value;
+            // Get the first worksheet (or specify by name/index)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Output the result
-        Console.WriteLine("Calculated value of D5: " + calculatedResult);
+            // Retrieve cell D5 (row 4, column 3)
+            Cell cellD5 = worksheet.Cells["D5"];
+
+            // Read the calculated value
+            object calculatedValue = cellD5.Value;
+
+            // Display the result
+            Console.WriteLine("Calculated value of D5: " + calculatedValue);
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

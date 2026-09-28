@@ -1,79 +1,65 @@
-// Title: Apply Workbook Theme Hyperlink Color to Programmatically Added URLs with Aspose.Cells for .NET
-// Description: Creates a workbook, inserts URL hyperlinks into cells, extracts the theme's hyperlink color from the default style, builds a single style with that color and underline, and applies it to every cell that contains a hyperlink before saving the file.
-// Keywords: Aspose.Cells C# hyperlink theme color | set hyperlink font color programmatically | apply default theme style to Excel links | format hyperlink cells Aspose.Cells | .NET Excel hyperlink styling
-// Common Searches: Aspose.Cells apply theme hyperlink color | C# set hyperlink style to workbook theme | how to format hyperlink cells with default theme in Aspose.Cells | programmatically change Excel hyperlink color .NET
-// Developer Intent: Use Aspose.Cells to style all programmatically added hyperlink cells with the workbook's theme hyperlink color.
-// Use Cases: Generate Excel reports where every inserted URL automatically matches the document's theme color. | Batch‑add hyperlinks to a sheet and ensure consistent visual formatting without manual styling. | Refresh hyperlink appearance after changing the workbook theme to keep the UI cohesive.
-// AI Prompts: Show how to retrieve the theme hyperlink color from a workbook's default style and apply it to hyperlink cells using Aspose.Cells for .NET. | Refactor the code to apply a single style object to all hyperlink ranges without iterating each cell. | Explain how to keep hyperlink formatting synchronized with theme changes after hyperlinks have been created.
+// Title: Apply the workbook theme's hyperlink color to URL cells inserted programmatically with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a style using the workbook's built‑in Hyperlink theme color and applies it to cells containing URL strings. | Show how to add clickable hyperlinks to Excel cells while preserving the default theme underline and blue font using Aspose.Cells. | Demonstrate saving an Excel file where all programmatically inserted URLs retain the workbook's theme hyperlink formatting.
+// Common Searches: aspocells apply theme hyperlink color to inserted URLs in C# | how to style programmatically added hyperlinks with workbook theme in Aspose.Cells | C# Aspose.Cells add clickable hyperlink preserving theme formatting | set hyperlink font color to theme default when writing Excel with Aspose.Cells
+// Tags: theme-based hyperlink styling Aspose.Cells | insert URLs with styled hyperlinks C# | hyperlink cell formatting using workbook theme | add clickable hyperlinks programmatically Aspose.Cells | export Excel with themed hyperlink appearance
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, inserts URL strings into cells, defines a style that uses the workbook's built‑in Hyperlink theme color (blue underline), applies the style to each cell, adds actual clickable hyperlinks, and saves the workbook as HyperlinkThemeColor.xlsx.
+class Program
 {
-    // Creates a workbook, inserts URL hyperlinks into cells, extracts the theme's hyperlink color from the default style, builds a single style with that color and underline, and applies it to every cell that contains a hyperlink before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // URLs to insert
+            string[] urls = { "https://www.example.com", "http://www.test.com/page" };
+
+            // Create a style that mimics the built‑in Hyperlink style
+            Style hyperlinkStyle = workbook.CreateStyle();
+            hyperlinkStyle.Font.Color = Color.Blue;                     // Theme hyperlink color
+            hyperlinkStyle.Font.Underline = FontUnderlineType.Single;   // Underline like a hyperlink
+
+            // Insert each URL and apply the hyperlink style
+            for (int i = 0; i < urls.Length; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Put the URL text into the cell
+                Cell cell = sheet.Cells[i, 0];
+                cell.PutValue(urls[i]);
 
-                // Add several hyperlinks (URL strings) to the worksheet
-                worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
-                worksheet.Hyperlinks.Add("B2", 1, 1, "https://docs.aspose.com");
-                worksheet.Hyperlinks.Add("C3", 1, 1, "https://github.com/aspose");
+                // Apply the hyperlink style
+                cell.SetStyle(hyperlinkStyle);
 
-                // Retrieve the theme's hyperlink color from the default style
-                Style hyperlinkStyle = workbook.DefaultStyle;
-                // Use the default font color (theme hyperlink color) and underline
-                hyperlinkStyle.Font.Color = workbook.DefaultStyle.Font.Color;
-                hyperlinkStyle.Font.Underline = FontUnderlineType.Single;
-
-                // Apply the style to each cell that contains a hyperlink
-                foreach (Hyperlink link in worksheet.Hyperlinks)
-                {
-                    // The hyperlink's Area gives the range it occupies
-                    int firstRow = link.Area.StartRow;
-                    int firstColumn = link.Area.StartColumn;
-                    int totalRows = link.Area.EndRow - link.Area.StartRow + 1;
-                    int totalColumns = link.Area.EndColumn - link.Area.StartColumn + 1;
-
-                    // Apply the style to every cell in the hyperlink range
-                    for (int r = firstRow; r < firstRow + totalRows; r++)
-                    {
-                        for (int c = firstColumn; c < firstColumn + totalColumns; c++)
-                        {
-                            Cell cell = worksheet.Cells[r, c];
-                            cell.SetStyle(hyperlinkStyle);
-                        }
-                    }
-                }
-
-                // Determine output path and ensure its directory exists
-                string outputPath = "HyperlinksWithThemeColor.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (string.IsNullOrEmpty(outputDir))
-                {
-                    outputDir = Directory.GetCurrentDirectory();
-                }
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Add an actual hyperlink to make it clickable
+                sheet.Hyperlinks.Add(i, 0, 1, 1, urls[i]);
             }
-            catch (Exception ex)
+
+            // Define output file path
+            string outputPath = "HyperlinkThemeColor.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

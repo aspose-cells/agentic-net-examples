@@ -1,52 +1,62 @@
-// Title: Copy worksheet page‑setup using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to configure page‑setup settings on a source worksheet and duplicate the entire configuration to another worksheet with the PageSetup.Copy method and default CopyOptions, then save the workbook.
-// Keywords: Aspose.Cells page setup copy | PageSetup.Copy C# | duplicate worksheet print settings | Aspose.Cells copy options | transfer page orientation Aspose.Cells | C# workbook page layout
-// Common Searches: Aspose.Cells copy page setup from one sheet to another | PageSetup.Copy example C# | How to duplicate print area in Aspose.Cells | Copy worksheet page layout Aspose.Cells .NET | Transfer page orientation between worksheets C#
-// Developer Intent: Replicate all page‑setup properties from a source worksheet to a destination worksheet in a .NET workbook.
-// Use Cases: Apply a predefined print layout to newly created worksheets in a report workbook. | Synchronize page‑setup settings before exporting multiple sheets to PDF or XPS. | Clone page‑setup when programmatically generating templated worksheets for automated reporting.
-// AI Prompts: Generate C# code that copies page‑setup settings from one worksheet to many worksheets using a loop with Aspose.Cells. | Explain how to use custom CopyOptions with PageSetup.Copy to copy only selected properties. | Provide robust error handling for PageSetup.Copy when source or destination worksheets may be missing.
+// Title: Copy all PageSetup settings from one worksheet to another using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to copy every writable PageSetup property from a source worksheet to a target worksheet. | Apply reflection to transfer page layout settings such as margins, orientation, and printable area between two sheets in an Excel workbook. | Programmatically duplicate the printing configuration of one worksheet onto another and save the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells copy page setup from one sheet to another C# | How to duplicate worksheet printing settings using reflection in .NET | Transfer margins and printable area between Excel worksheets with Aspose.Cells | Copy printable area orientation scaling from source sheet to destination sheet in C#
+// Tags: copy worksheet page setup Aspose.Cells C# | transfer PageSetup properties via reflection | duplicate printable area margins Excel Aspose | clone worksheet printing configuration .NET | Aspose.Cells copy page layout settings
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Reflection;
 
-namespace AsposeCellsPageSetupCopyDemo
+// The example loads an Excel file, selects a source and a destination worksheet (with fallbacks), iterates over all readable and writable PageSetup properties using reflection, copies each value from the source sheet's PageSetup to the destination sheet's PageSetup, and saves the updated workbook.
+class Program
 {
-    // Demonstrates how to configure page‑setup settings on a source worksheet and duplicate the entire configuration to another worksheet with the PageSetup.Copy method and default CopyOptions, then save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (source and destination are in the same workbook)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet as the source
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.Name = "SourceSheet";
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Configure some page‑setup settings on the source worksheet
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the source worksheet; fallback to the first sheet if not found
+            Worksheet sourceSheet = workbook.Worksheets["Source"] ?? workbook.Worksheets[0];
+            if (sourceSheet == null)
+                throw new InvalidOperationException("Source worksheet could not be determined.");
+
+            // Retrieve the destination worksheet; fallback to the second sheet if not found
+            Worksheet destinationSheet = workbook.Worksheets["Destination"] ?? 
+                                         (workbook.Worksheets.Count > 1 ? workbook.Worksheets[1] : null);
+            if (destinationSheet == null)
+                throw new InvalidOperationException("Destination worksheet could not be determined.");
+
+            // Get the PageSetup objects
             PageSetup srcSetup = sourceSheet.PageSetup;
-            srcSetup.PaperSize = PaperSizeType.PaperA3;
-            srcSetup.Orientation = PageOrientationType.Landscape;
-            srcSetup.PrintArea = "A1:D20";
-            srcSetup.CenterHorizontally = true;
-            srcSetup.CenterVertically = true;
-            srcSetup.FitToPagesWide = 1;
-            srcSetup.FitToPagesTall = 1;
+            PageSetup destSetup = destinationSheet.PageSetup;
 
-            // Add a second worksheet that will receive the copied page‑setup
-            Worksheet destSheet = workbook.Worksheets.Add("DestinationSheet");
+            // Copy writable PageSetup properties via reflection
+            foreach (PropertyInfo prop in typeof(PageSetup).GetProperties())
+            {
+                if (prop.CanRead && prop.CanWrite && prop.GetIndexParameters().Length == 0)
+                {
+                    object value = prop.GetValue(srcSetup);
+                    prop.SetValue(destSetup, value);
+                }
+            }
 
-            // Copy the entire page‑setup configuration from source to destination
-            // Use the PageSetup.Copy method with default CopyOptions
-            destSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
-
-            // Verify the copy (optional)
-            Console.WriteLine("Destination paper size: " + destSheet.PageSetup.PaperSize);
-            Console.WriteLine("Destination orientation: " + destSheet.PageSetup.Orientation);
-            Console.WriteLine("Destination print area: " + destSheet.PageSetup.PrintArea);
-
-            // Save the workbook (uses the provided save rule)
-            workbook.Save("PageSetupCopyResult.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

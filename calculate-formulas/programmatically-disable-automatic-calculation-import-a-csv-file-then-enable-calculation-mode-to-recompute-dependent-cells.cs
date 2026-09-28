@@ -1,52 +1,43 @@
-// Title: Aspose.Cells .NET: Disable Auto‑Calc, Import CSV, Re‑enable Calculation and Recalculate Formulas (C#)
-// Description: Demonstrates how to set a workbook's CalculationMode to Manual before importing CSV data with ImportCSV, then switch back to Automatic (or AutomaticExceptTable) and force a full formula recalculation using CalculateFormula, finally saving the result as XLSX. This approach prevents unnecessary formula evaluation during bulk data loads and improves performance.
-// Keywords: Aspose.Cells C# | disable automatic calculation | ImportCSV Aspose.Cells | re‑enable calculation mode | CalculateFormula | CSV to Excel conversion | performance optimization Aspose.Cells | CalcModeType Manual | CalcModeType Automatic
-// Common Searches: how to turn off formula calculation in Aspose.Cells before importing CSV | Aspose.Cells import CSV without triggering formulas | recalculate all formulas after CSV import Aspose.Cells .NET | set calculation mode manual then automatic Aspose.Cells | force formula evaluation after data load Aspose.Cells
-// Developer Intent: Load CSV data without triggering formulas, then enable calculation and recompute all dependent cells.
-// Use Cases: Bulk import of financial data from CSV into a model while avoiding intermediate formula runs. | Generating large reports where raw data is loaded first and formulas are evaluated once at the end. | Improving performance of data‑intensive workbooks by toggling calculation mode around ImportCSV.
-// AI Prompts: Write C# code with Aspose.Cells that disables automatic calculation, imports a CSV file, re‑enables calculation, forces formula recalculation, and saves the workbook. | Explain the performance benefits of setting CalcModeType to Manual before ImportCSV and how to restore automatic calculation afterward. | Provide a concise Aspose.Cells example that toggles CalcModeType, uses ImportCSV, calls CalculateFormula, and outputs an XLSX file.
+// Title: Disable automatic calculation, import a CSV file, then re‑enable calculation and recalculate formulas with Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets Workbook.Settings.FormulaSettings.CalculationMode to Manual, uses Cells.ImportCSV to load a CSV file into the first worksheet, switches the mode back to Automatic, and calls Workbook.CalculateFormula to update all dependent cells. | Provide a step‑by‑step example showing how to pause formula evaluation in an Aspose.Cells workbook, import CSV data, resume automatic calculation, and force a full formula recomputation.
+// Common Searches: Aspose.Cells C# import CSV without triggering formula calculation | How to set manual calculation mode before loading data in Aspose.Cells .NET | Recalculate all formulas after importing CSV with Aspose.Cells | Temporarily disable formula evaluation in an Aspose.Cells workbook
+// Tags: Aspose.Cells manual calculation mode .NET | Cells.ImportCSV CSV data loading | Aspose.Cells automatic calculation mode | Workbook.CalculateFormula full recalculation | disable formula evaluation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCalcModeExample
 {
-    // Demonstrates how to set a workbook's CalculationMode to Manual before importing CSV data with ImportCSV, then switch back to Automatic (or AutomaticExceptTable) and force a full formula recalculation using CalculateFormula, finally saving the result as XLSX. This approach prevents unnecessary formula evaluation during bulk data loads and improves performance.
+    // The example creates a new workbook, switches the calculation mode to manual, imports CSV data starting at cell A1, restores automatic calculation, forces a full formula recalculation, and saves the result as an XLSX file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // 1. Create a new workbook (empty)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // 2. Access the first worksheet and its cells collection
+            // Access the first worksheet and its cells
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // 3. Disable automatic calculation before importing data
-            //    This prevents any formulas from being evaluated while the CSV is being loaded.
+            // Disable automatic calculation (FormulaSettings.CalculationMode = Manual)
             workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-            // 4. Import CSV data
-            //    Adjust the file path, delimiter and other parameters as needed.
-            string csvPath = "input.csv";          // Path to your CSV file
-            string delimiter = ",";                // CSV delimiter
-            bool convertNumeric = true;            // Convert numeric strings to numbers
-            int startRow = 0;                      // Zero‑based index for the first row (A1)
-            int startColumn = 0;                   // Zero‑based index for the first column (A1)
+            // Path to the CSV file to be imported
+            string csvPath = "data.csv";
 
-            cells.ImportCSV(csvPath, delimiter, convertNumeric, startRow, startColumn);
+            // Import CSV data starting at cell A1 (row 0, column 0)
+            // Using comma as delimiter and converting numeric data
+            cells.ImportCSV(csvPath, ",", true, 0, 0);
 
-            // 5. Re‑enable automatic calculation (or set to AutomaticExceptTable if preferred)
+            // Re‑enable automatic calculation (or choose another mode as needed)
             workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-            // 6. Force calculation of all formulas now that the data is loaded
+            // Recalculate all formulas after the import
             workbook.CalculateFormula();
 
-            // 7. Save the workbook to verify results
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
-
-            Console.WriteLine("CSV imported and formulas recalculated successfully.");
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("Result.xlsx", SaveFormat.Xlsx);
         }
     }
 }

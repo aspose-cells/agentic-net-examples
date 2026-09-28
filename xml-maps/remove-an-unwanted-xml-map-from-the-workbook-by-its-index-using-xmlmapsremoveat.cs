@@ -1,49 +1,58 @@
-// Title: Aspose.Cells C# – Remove an XML Map by Index with XmlMapCollection.RemoveAt
-// Description: Load a workbook, access its XmlMapCollection, validate the target index, call RemoveAt to delete the unwanted XML map, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells remove XML map | XmlMapCollection RemoveAt C# | delete Excel XML map by index | Aspose.Cells XML map removal example | .NET workbook XML map delete
-// Common Searches: how to delete an XML map in Aspose.Cells | remove XML map at specific index C# | XmlMapCollection.RemoveAt usage | Aspose.Cells remove unwanted XML map
-// Developer Intent: Programmatically delete a specific XML map from an Excel workbook using its zero‑based index.
-// Use Cases: Clean up legacy XML maps after data import. | Strip confidential XML mappings before sharing a workbook. | Automate workbook preparation by removing obsolete XML maps.
-// AI Prompts: Show a C# snippet that removes an XML map by its name instead of index with Aspose.Cells. | Demonstrate how to enumerate all XML map names, let the user pick one, and safely remove it. | Explain how to verify that an XML map was successfully removed after calling RemoveAt.
+// Title: Remove an unwanted XML map from an Excel workbook by index using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, checks for an XML map at a given index, removes it, and saves the workbook. | Show a version‑safe approach that uses reflection to access the XmlMaps collection and delete a specific XML map without compile‑time dependencies. | Demonstrate how to verify the presence of XmlMaps in a workbook and programmatically remove the first map when it exists.
+// Common Searches: Aspose.Cells remove xml map by index C# | delete unwanted XML map from Excel workbook programmatically | how to use reflection to access XmlMaps collection in Aspose.Cells
+// Tags: aspocells xmlmap removal using reflection | c# delete xml map from workbook | excel xml map collection manipulation | version‑compatible xmlmaps access | dynamic xmlmap handling aspocells
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-// Load a workbook, access its XmlMapCollection, validate the target index, call RemoveAt to delete the unwanted XML map, and save the file using Aspose.Cells for .NET.
-class RemoveXmlMapDemo
+// // Loads an Excel file, uses reflection to obtain the XmlMaps collection if available, removes the XML map at index 0 when present, and saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Get the collection of XML maps from the workbook
-        XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
-
-        // Ensure there is at least one XML map to remove
-        if (xmlMaps.Count > 0)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Index of the XML map to remove (adjust as needed)
-            int indexToRemove = 0;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Validate the index before removal
-            if (indexToRemove >= 0 && indexToRemove < xmlMaps.Count)
+        try
+        {
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Attempt to remove an XML map if the XmlMaps property is available in this version
+            const int mapIndex = 0;
+            PropertyInfo xmlMapsProp = typeof(Workbook).GetProperty("XmlMaps");
+            if (xmlMapsProp != null)
             {
-                // Remove the XML map at the specified index
-                xmlMaps.RemoveAt(indexToRemove);
-                Console.WriteLine($"Removed XML map at index {indexToRemove}.");
+                // Use dynamic to work with the XmlMapCollection without a direct compile‑time reference
+                dynamic xmlMaps = xmlMapsProp.GetValue(workbook);
+                if (xmlMaps != null && mapIndex >= 0 && mapIndex < xmlMaps.Count)
+                {
+                    xmlMaps.RemoveAt(mapIndex);
+                }
             }
             else
             {
-                Console.WriteLine("Specified index is out of range.");
+                Console.WriteLine("XmlMaps property is not supported in the current Aspose.Cells version.");
             }
-        }
-        else
-        {
-            Console.WriteLine("No XML maps found in the workbook.");
-        }
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,68 +1,61 @@
-// Title: C# – Create an Excel table with a merged title row using Aspose.Cells for .NET
-// Description: A complete C# example that creates a new workbook, merges cells A1:D1 for a centered title, adds a header row and sample data, defines a ListObject table, auto‑fits columns, and saves the file as TableWithMergedTitle.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# Excel merge cells | merged title row | ListObject table | auto fit columns | save workbook .xlsx | Aspose.Cells example | GitHub sample | Excel table creation | Aspose.Cells .NET
-// Common Searches: Aspose.Cells merge cells for title row C# | Create ListObject table after merged header Aspose.Cells | Save Excel file with merged title using Aspose.Cells .NET | C# example for merged title and table in Excel | How to auto‑fit columns in Aspose.Cells C#
-// Developer Intent: Generate an Excel worksheet that features a merged title spanning the table width, followed by a formatted ListObject table, using Aspose.Cells in a .NET C# project.
-// Use Cases: Produce monthly sales reports with a full‑width title and a data table that can be filled programmatically. | Build reusable Excel templates that include a centered heading and a structured table for downstream analysis. | Export database query results to Excel with a merged header and a styled ListObject for easy filtering and sorting.
-// AI Prompts: Write C# code with Aspose.Cells to create a worksheet, merge cells A1:D1 for a title, add a header row and sample rows, convert the range into a ListObject table, auto‑fit columns, and save as an .xlsx file. | Show a complete Aspose.Cells .NET example that demonstrates merging cells for a title row, creating a table with headers, setting the table’s display name, and adjusting column widths. | Explain how to apply alignment and styling to a merged title row after merging cells using Aspose.Cells in C#.
+// Title: How to create an Excel worksheet with a merged, centered title row and styled table header using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that merges cells A1:D1 into a single title cell, centers and bolds the text, adds a bold centered header row, imports a two‑dimensional array of data, auto‑fits the columns, and saves the workbook as an .xlsx file. | Show how to define and apply a custom Style for a merged title cell and for header cells in an Aspose.Cells workbook, including horizontal/vertical alignment, font size, and bold settings.
+// Common Searches: Aspose.Cells C# merge cells for a report title and style it | C# create Excel table with merged header row using Aspose.Cells | How to import a two‑dimensional array into a worksheet with Aspose.Cells .NET | AutoFitColumns after adding data with Aspose.Cells C# example | Set bold and centered style for header row in Aspose.Cells workbook
+// Tags: merge cells A1:D1 Aspose.Cells | apply bold centered style Aspose.Cells | import two-dimensional array Aspose.Cells | auto-fit columns Aspose.Cells | create Excel table with header Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
 
-// A complete C# example that creates a new workbook, merges cells A1:D1 for a centered title, adds a header row and sample data, defines a ListObject table, auto‑fits columns, and saves the file as TableWithMergedTitle.xlsx with Aspose.Cells for .NET.
+// // Generates an Excel .xlsx file using Aspose.Cells for .NET: merges cells A1:D1 into a centered bold title, adds a bold centered header row, imports sample data via a two‑dimensional array, auto‑fits columns, and saves as TableWithMergedHeader.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // ----- Title row (merged across 4 columns) -----
-        // Put the title text in the upper‑left cell of the range
-        worksheet.Cells[0, 0].PutValue("Sales Report 2023");
-        // Merge cells A1:D1 (row 0, column 0, 1 row, 4 columns)
-        worksheet.Cells.Merge(0, 0, 1, 4);
+        // Merge cells for the title (A1:D1)
+        sheet.Cells.Merge(0, 0, 1, 4); // row, column, rows to merge, columns to merge
+        Cell titleCell = sheet.Cells[0, 0];
+        titleCell.PutValue("Sales Report Q1 2024");
 
-        // ----- Table header row (row 2) -----
-        worksheet.Cells[1, 0].PutValue("Product");
-        worksheet.Cells[1, 1].PutValue("Region");
-        worksheet.Cells[1, 2].PutValue("Units Sold");
-        worksheet.Cells[1, 3].PutValue("Revenue");
+        // Style the title
+        Style titleStyle = workbook.CreateStyle();
+        titleStyle.HorizontalAlignment = TextAlignmentType.Center;
+        titleStyle.VerticalAlignment = TextAlignmentType.Center;
+        titleStyle.Font.IsBold = true;
+        titleStyle.Font.Size = 14;
+        titleCell.SetStyle(titleStyle);
 
-        // ----- Sample data rows -----
-        worksheet.Cells[2, 0].PutValue("Apple");
-        worksheet.Cells[2, 1].PutValue("North");
-        worksheet.Cells[2, 2].PutValue(120);
-        worksheet.Cells[2, 3].PutValue(2400);
+        // Header row (row 2) for the table
+        string[] headers = { "Product", "Region", "Units Sold", "Revenue" };
+        for (int i = 0; i < headers.Length; i++)
+        {
+            Cell headerCell = sheet.Cells[1, i];
+            headerCell.PutValue(headers[i]);
 
-        worksheet.Cells[3, 0].PutValue("Banana");
-        worksheet.Cells[3, 1].PutValue("South");
-        worksheet.Cells[3, 2].PutValue(85);
-        worksheet.Cells[3, 3].PutValue(1275);
+            // Header style
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+            headerStyle.Font.IsBold = true;
+            headerCell.SetStyle(headerStyle);
+        }
 
-        // ----- Create a ListObject (table) -----
-        // Table starts at the header row (row index 1) and includes the data rows
-        int firstRow = 1;          // zero‑based index for row 2
-        int firstColumn = 0;       // column A
-        int totalRows = 3;         // header + 2 data rows
-        int totalColumns = 4;      // columns A‑D
+        // Sample data rows starting from row 3
+        object[,] data = {
+            { "Widget A", "North", 120, 3600 },
+            { "Widget B", "South", 85, 2550 },
+            { "Widget C", "East", 150, 4500 },
+            { "Widget D", "West", 95, 2850 }
+        };
+        sheet.Cells.ImportTwoDimensionArray(data, 2, 0);
 
-        int tableIndex = worksheet.ListObjects.Add(
-            firstRow,
-            firstColumn,
-            firstRow + totalRows - 1,
-            firstColumn + totalColumns - 1,
-            true); // true => has headers
-
-        ListObject table = worksheet.ListObjects[tableIndex];
-        table.DisplayName = "SalesData";
-
-        // Adjust column widths for readability
-        worksheet.AutoFitColumns();
+        // Auto-fit columns for better appearance
+        sheet.AutoFitColumns();
 
         // Save the workbook
-        workbook.Save("TableWithMergedTitle.xlsx");
+        workbook.Save("TableWithMergedHeader.xlsx");
     }
 }

@@ -1,50 +1,79 @@
-// Title: Record PivotTable RefreshDate for Every Worksheet with Aspose.Cells (.NET)
-// Description: Loads an Excel workbook using Aspose.Cells, iterates through all worksheets and their PivotTables, refreshes each table to update its RefreshDate, and writes the worksheet name, pivot name, and RefreshDate to a text log before saving the file.
-// Keywords: Aspose.Cells C# PivotTable RefreshDate | log pivot refresh timestamp | iterate worksheets Aspose.Cells | export pivot refresh date to file | Excel automation audit log | C# write pivot data to text file | Aspose.Cells example RefreshDate
-// Common Searches: How to get RefreshDate of each PivotTable with Aspose.Cells | C# code to log pivot table refresh dates | Iterate all worksheets and write pivot timestamps to a file | Aspose.Cells retrieve pivot refresh timestamp | Export PivotTable RefreshDate to text file in .NET
-// Developer Intent: Extract the RefreshDate of every PivotTable in a workbook and persist it to a log file.
-// Use Cases: Create an audit trail of when each pivot table was last refreshed for compliance reporting. | Validate data freshness by comparing pivot refresh timestamps before publishing a workbook. | Automate monitoring of pivot table updates across multiple sheets in a batch processing pipeline.
-// AI Prompts: Generate C# code with Aspose.Cells that lists all PivotTables in a workbook and outputs their RefreshDate without altering the file. | Show how to write PivotTable RefreshDate values to a CSV file with robust error handling and proper resource disposal. | Explain the steps to refresh PivotTables, capture their RefreshDate, and keep the original workbook formatting intact using Aspose.Cells.
+// Title: Log the RefreshDate of each PivotTable in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that opens an Excel file, iterates through all worksheets, reads every PivotTable's RefreshDate, and writes worksheet name, pivot name, and date to a log file. | Enhance the PivotRefreshDateLogger to also capture each PivotTable's cache ID and include it in the same log output. | Create a reusable method that returns a list of objects containing worksheet name, pivot table name, RefreshDate, and cache ID for further processing.
+// Common Searches: aspocells get pivot table refreshdate c# example | how to write pivot table metadata to a log file using Aspose.Cells | enumerate all pivot tables in a workbook and retrieve their refresh timestamps .net | c# Aspose.Cells iterate worksheets and extract pivot properties | log pivot cache id and refresh date from Excel using Aspose.Cells
+// Tags: Aspose.Cells read pivot refresh date | C# log pivot table metadata to file | enumerate worksheets pivot tables Aspose.Cells | export pivot refresh timestamps .NET | capture pivot cache identifier Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads an Excel workbook using Aspose.Cells, iterates through all worksheets and their PivotTables, refreshes each table to update its RefreshDate, and writes the worksheet name, pivot name, and RefreshDate to a text log before saving the file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Loads an Excel workbook, loops through every worksheet, extracts each PivotTable's RefreshDate (and optionally cache ID), and writes the worksheet name, pivot name, and date to a log file.
+    public class PivotRefreshDateLogger
     {
-        // Path to the source workbook
-        string workbookPath = "input.xlsx";
+        // Adjust these paths as needed
+        private const string InputFilePath = "input.xlsx";
+        private const string LogFilePath = "PivotRefreshDates.log";
 
-        // Path to the log file where refresh dates will be written
-        string logFilePath = "PivotRefreshLog.txt";
-
-        // Load the workbook (uses Aspose.Cells load rule)
-        Workbook workbook = new Workbook(workbookPath);
-
-        // Open a StreamWriter to create/overwrite the log file
-        using (StreamWriter writer = new StreamWriter(logFilePath, false))
+        public static void Run()
         {
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            try
             {
-                // Iterate through all pivot tables in the current worksheet
-                foreach (PivotTable pivotTable in sheet.PivotTables)
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(InputFilePath))
                 {
-                    // Refresh the pivot table to ensure RefreshDate is up‑to‑date
-                    pivotTable.RefreshData();
-                    pivotTable.CalculateData();
-
-                    // Log worksheet name, pivot table name and its RefreshDate
-                    writer.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pivotTable.Name}, RefreshDate: {pivotTable.RefreshDate}");
+                    Console.WriteLine($"Input file not found: {InputFilePath}");
+                    return;
                 }
+
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(InputFilePath);
+
+                // Open a StreamWriter to write the log file
+                using (StreamWriter writer = new StreamWriter(LogFilePath, false))
+                {
+                    // Iterate through all worksheets in the workbook
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Access the collection of pivot tables in the current worksheet
+                        PivotTableCollection pivotTables = sheet.PivotTables;
+
+                        // If there are no pivot tables, continue to the next worksheet
+                        if (pivotTables == null || pivotTables.Count == 0)
+                            continue;
+
+                        // Iterate through each pivot table
+                        for (int i = 0; i < pivotTables.Count; i++)
+                        {
+                            PivotTable pivot = pivotTables[i];
+
+                            // Retrieve the RefreshDate property
+                            DateTime refreshDate = pivot.RefreshDate;
+
+                            // Write worksheet name, pivot table name, and refresh date to the log
+                            writer.WriteLine($"Worksheet: {sheet.Name}, PivotTable: {pivot.Name}, RefreshDate: {refreshDate}");
+                        }
+                    }
+                }
+
+                Console.WriteLine($"Pivot refresh dates logged to {LogFilePath}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+    }
 
-        // Save the workbook if any modifications were made (uses Aspose.Cells save rule)
-        workbook.Save("output.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            PivotRefreshDateLogger.Run();
+        }
     }
 }

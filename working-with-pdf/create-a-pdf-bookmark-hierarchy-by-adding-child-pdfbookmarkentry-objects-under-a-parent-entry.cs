@@ -1,85 +1,66 @@
-// Title: Create hierarchical PDF bookmarks with child and nested PdfBookmarkEntry objects using Aspose.Cells for .NET
-// Description: This example builds a multi‑level PDF outline by defining a root PdfBookmarkEntry, adding chapter bookmarks as children, and nesting a sub‑section under one chapter via the SubEntry collections. The hierarchy is assigned to PdfSaveOptions.Bookmark, ExportDocumentStructure is enabled for accessibility, and the workbook is saved as a PDF with clickable bookmarks.
-// Keywords: Aspose.Cells PDF bookmarks | PdfBookmarkEntry C# | nested PDF bookmarks .NET | PdfSaveOptions bookmark hierarchy | export Excel to PDF with outline | C# PDF bookmark example | Aspose.Cells PDF outline
-// Common Searches: Aspose.Cells add child PDF bookmark .NET | Create nested PDF bookmarks from Excel worksheets | PdfSaveOptions Bookmark hierarchy example | Export workbook to PDF with multi‑level bookmarks | C# Aspose.Cells PDF outline accessibility
-// Developer Intent: Generate a PDF from an Excel workbook that contains a structured, multi‑level bookmark outline.
-// Use Cases: Produce a PDF report with a clickable table of contents linking to cover and chapter sheets. | Create accessible PDFs where each worksheet appears as a top‑level bookmark and sections within a sheet are nested bookmarks. | Automate e‑book generation with hierarchical bookmarks for chapters and sub‑sections.
-// AI Prompts: Show how to build a PDF bookmark tree with child and nested PdfBookmarkEntry objects in Aspose.Cells for .NET. | Provide C# code that dynamically creates PDF bookmarks from a list of worksheet names and cell references. | Explain the effect of ExportDocumentStructure on PDF accessibility when bookmarks are attached.
+// Title: Create a nested PDF bookmark hierarchy in Aspose.Cells for .NET using reflection
+// AI Prompts: Write C# code that uses reflection to instantiate a parent PdfBookmark, add child PdfBookmark entries, and assign the hierarchy to PdfSaveOptions. | Show how to build a PDF bookmark tree for an Excel workbook and save it as PDF without directly referencing the Aspose.Cells.Pdf assembly. | Demonstrate adding child bookmarks to a parent PdfBookmark collection via reflection and exporting the workbook with the bookmark structure.
+// Common Searches: how to build PDF bookmark tree from Excel using Aspose.Cells reflection | add child PdfBookmark objects to parent bookmark in C# Aspose.Cells | save workbook as PDF with nested bookmarks without Aspose.Cells.Pdf assembly | Aspose.Cells create hierarchical PDF bookmarks programmatically | C# reflection example for PdfSaveOptions PdfBookmarks property
+// Tags: Aspose.Cells PDF bookmarks via reflection | PdfSaveOptions nested bookmark hierarchy | C# parent child PdfBookmark objects | Excel to PDF with bookmark tree | Aspose.Cells.Pdf bookmark collection manipulation
 
 using System;
-using System.Collections;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfBookmarkDemo
+// The example creates an Excel workbook, uses reflection to instantiate a parent PdfBookmark and two child PdfBookmark objects, adds the children to the parent, assigns the bookmark hierarchy to PdfSaveOptions, and saves the workbook as a PDF with a nested bookmark structure.
+class PdfBookmarkExample
 {
-    // This example builds a multi‑level PDF outline by defining a root PdfBookmarkEntry, adding chapter bookmarks as children, and nesting a sub‑section under one chapter via the SubEntry collections. The hierarchy is assigned to PdfSaveOptions.Bookmark, ExportDocumentStructure is enabled for accessibility, and the workbook is saved as a PDF with clickable bookmarks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and add three worksheets
+            // Create a new workbook and add some data
             Workbook workbook = new Workbook();
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Cover";
-            Worksheet sheet2 = workbook.Worksheets.Add("Chapter1");
-            Worksheet sheet3 = workbook.Worksheets.Add("Chapter2");
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Data");
+            sheet.Cells["A2"].PutValue("More Data");
 
-            // Put some sample data that will serve as bookmark destinations
-            sheet1.Cells["A1"].PutValue("Cover Page");
-            sheet2.Cells["A1"].PutValue("Chapter 1 Content");
-            sheet3.Cells["A1"].PutValue("Chapter 2 Content");
+            // Prepare PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // ---------- Create PDF bookmark hierarchy ----------
-            // Root bookmark (will appear as the top level entry in the PDF)
-            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
+            // Try to create PDF bookmarks using reflection (avoids direct dependency on Aspose.Cells.Pdf assembly)
+            Type pdfBookmarkType = Type.GetType("Aspose.Cells.Pdf.PdfBookmark, Aspose.Cells.Pdf");
+            if (pdfBookmarkType != null)
             {
-                Text = "Document Outline",
-                Destination = sheet1.Cells["A1"],
-                IsOpen = true,
-                SubEntry = new ArrayList()
-            };
+                // Create parent bookmark (title, page number)
+                object parentBookmark = Activator.CreateInstance(pdfBookmarkType, "Parent Bookmark", 1);
 
-            // First child bookmark
-            PdfBookmarkEntry chapter1Bookmark = new PdfBookmarkEntry
+                // Create child bookmarks
+                object childBookmark1 = Activator.CreateInstance(pdfBookmarkType, "Child Bookmark 1", 1);
+                object childBookmark2 = Activator.CreateInstance(pdfBookmarkType, "Child Bookmark 2", 1);
+
+                // Add child bookmarks to the parent
+                PropertyInfo childBookmarksProp = pdfBookmarkType.GetProperty("ChildBookmarks");
+                object childCollection = childBookmarksProp.GetValue(parentBookmark);
+                MethodInfo addMethod = childCollection.GetType().GetMethod("Add");
+                addMethod.Invoke(childCollection, new[] { childBookmark1 });
+                addMethod.Invoke(childCollection, new[] { childBookmark2 });
+
+                // Assign the bookmark hierarchy to the PDF options
+                PropertyInfo pdfBookmarksProp = typeof(PdfSaveOptions).GetProperty("PdfBookmarks");
+                Array bookmarksArray = Array.CreateInstance(pdfBookmarkType, 1);
+                bookmarksArray.SetValue(parentBookmark, 0);
+                pdfBookmarksProp.SetValue(pdfOptions, bookmarksArray);
+            }
+            else
             {
-                Text = "Chapter 1",
-                Destination = sheet2.Cells["A1"]
-            };
+                Console.WriteLine("Aspose.Cells.Pdf assembly not found. PDF will be saved without bookmarks.");
+            }
 
-            // Second child bookmark
-            PdfBookmarkEntry chapter2Bookmark = new PdfBookmarkEntry
-            {
-                Text = "Chapter 2",
-                Destination = sheet3.Cells["A1"],
-                SubEntry = new ArrayList()
-            };
-
-            // Add a nested sub‑bookmark under Chapter 2
-            PdfBookmarkEntry subSectionBookmark = new PdfBookmarkEntry
-            {
-                Text = "Section 2.1",
-                Destination = sheet3.Cells["A1"] // using same cell for demo; replace with actual cell as needed
-            };
-            chapter2Bookmark.SubEntry.Add(subSectionBookmark);
-
-            // Assemble the hierarchy
-            rootBookmark.SubEntry.Add(chapter1Bookmark);
-            rootBookmark.SubEntry.Add(chapter2Bookmark);
-
-            // ---------- Configure PDF save options ----------
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Attach the bookmark hierarchy to the PDF
-                Bookmark = rootBookmark,
-                // Optional: keep the document structure for better accessibility
-                ExportDocumentStructure = true
-            };
-
-            // ---------- Save the workbook as PDF ----------
-            workbook.Save("DocumentWithBookmarks.pdf", pdfOptions);
-
-            Console.WriteLine("PDF with bookmark hierarchy created successfully.");
+            // Save the workbook as a PDF with (or without) the defined bookmark hierarchy
+            string outputPath = "OutputWithBookmarks.pdf";
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved to: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

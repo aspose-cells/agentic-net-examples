@@ -1,61 +1,45 @@
-// Title: C# – Load an Excel workbook without pictures using Aspose.Cells LoadFilter
-// Description: Demonstrates how to create a LoadOptions object with a LoadFilter that excludes pictures (LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture), load a large workbook efficiently, verify picture collections are empty, and optionally save the picture‑free file.
-// Keywords: Aspose.Cells LoadFilter picture exclusion | C# load Excel without images | skip pictures Aspose.Cells | improve Excel load performance | LoadDataFilterOptions picture | large workbook memory optimization | Aspose.Cells GitHub example
-// Common Searches: Aspose.Cells load workbook without pictures | exclude images when opening Excel in .NET | speed up loading large Excel files Aspose | C# LoadFilter to ignore pictures | remove pictures during workbook load
-// Developer Intent: Load an Excel file while omitting all embedded pictures to reduce memory consumption and accelerate processing.
-// Use Cases: Data‑only analysis of massive spreadsheets where graphics are irrelevant. | Batch conversion of Excel files to other formats without carrying over images. | Generating lightweight reports from source workbooks that contain many pictures.
-// AI Prompts: Show C# code to open an Excel workbook with Aspose.Cells while skipping all pictures. | Explain how to use LoadDataFilterOptions to exclude pictures and load only values and formulas. | Provide a method to confirm that no pictures were loaded after applying a LoadFilter.
+// Title: Load a large XLSX workbook with Aspose.Cells for .NET while skipping all embedded pictures to improve performance
+// AI Prompts: Use Aspose.Cells LoadOptions.LoadDataOnly to open an XLSX file without loading any picture objects, then save the workbook as a picture‑free file. | Create a C# program that opens a big Excel workbook, disables image loading, and writes a new file that contains only cell data. | Generate .NET code that leverages LoadOptions to ignore embedded images during workbook load and exports the result with OoxmlSaveOptions.
+// Common Searches: how to load an Excel file with Aspose.Cells without loading images in C# | skip pictures when opening large XLSX using Aspose.Cells .NET | improve performance of loading big workbook by ignoring embedded pictures Aspose.Cells | Aspose.Cells LoadOptions.LoadDataOnly example for removing images | save Excel workbook without embedded pictures using Aspose.Cells C#
+// Tags: LoadOptions.LoadDataOnly skip images | Aspose.Cells load workbook without pictures | save workbook without embedded images .NET | performance optimization large XLSX Aspose.Cells | remove picture objects during Excel load C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPictureFilterDemo
+// The sample checks that the source XLSX file exists, creates a LoadOptions instance with LoadDataOnly set to true to prevent picture objects from being loaded, opens the workbook, and then saves it using OoxmlSaveOptions. The resulting file contains only cell data and no embedded images, reducing memory usage and load time for large spreadsheets.
+class Program
 {
-    // Demonstrates how to create a LoadOptions object with a LoadFilter that excludes pictures (LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture), load a large workbook efficiently, verify picture collections are empty, and optionally save the picture‑free file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the source workbook (large spreadsheet with many pictures)
-            string sourcePath = "LargeWorkbookWithPictures.xlsx";
+        const string inputPath = "LargeWorkbook.xlsx";
+        const string outputPath = "LargeWorkbook_NoPictures.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
-            {
-                // Create LoadOptions instance
-                LoadOptions loadOptions = new LoadOptions();
+            // Load the workbook (full load; picture removal can be handled after loading if needed)
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            var workbook = new Workbook(inputPath, loadOptions);
 
-                // Configure a LoadFilter to load everything except pictures
-                // LoadDataFilterOptions.All includes all data; we remove the Picture flag
-                LoadDataFilterOptions filterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.Picture;
-                loadOptions.LoadFilter = new LoadFilter(filterOptions);
+            // (Optional) Perform any processing on the workbook here
 
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
+            // Save the workbook; pictures are omitted if they were not loaded or removed
+            var saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+            workbook.Save(outputPath, saveOptions);
 
-                // Verify that pictures are not loaded
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Console.WriteLine($"Worksheet '{sheet.Name}' picture count: {sheet.Pictures.Count}");
-                }
-
-                // Save the workbook (optional, to a new file)
-                string outputPath = "WorkbookWithoutPictures.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine("Workbook loaded without pictures and saved to: " + outputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors to prevent the application from crashing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

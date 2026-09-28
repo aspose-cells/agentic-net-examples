@@ -1,63 +1,101 @@
-// Title: Aspose.Cells C# – Verify Chart Legends Update After Changing Dark2 (Accent2) Theme Color
-// Description: Creates a workbook with a column chart, changes the workbook's Accent2 (Dark2) theme color to DarkSlateBlue using SetThemeColor, applies the same theme color to each chart legend's font, outputs the legend's ThemeColor details for verification, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | SetThemeColor | Accent2 | Dark2 | chart legend | theme color | ThemeColor | chart formatting | workbook theme | Excel automation
-// Common Searches: How to change Dark2 theme color in Aspose.Cells for .NET | Aspose.Cells chart legend uses workbook theme color | Validate chart legend color after SetThemeColor | C# Aspose.Cells update theme color for all charts | Apply custom Accent2 color to Excel chart legends with Aspose
-// Developer Intent: Confirm that modifying the workbook’s Dark2 (Accent2) theme color automatically updates the color of all chart legends.
-// Use Cases: Programmatically rebrand a workbook by changing the Accent2 theme color and having every existing chart legend adopt the new shade without manual adjustments. | Log each legend’s ThemeColor type and tint to ensure the theme change propagated correctly across multiple charts. | Generate standardized reports where chart legends consistently follow a custom Dark2 theme for corporate visual identity.
-// AI Prompts: Write C# code using Aspose.Cells that changes the Dark2 (Accent2) theme color, updates all chart legends to the new theme color, and prints each legend’s ThemeColor details for verification. | Show how to iterate through every chart in a workbook and set each legend’s Font.ThemeColor to match a modified Accent2 color, then output the ThemeColor type and tint. | Explain step‑by‑step how SetThemeColor and the ThemeColor object affect chart legend appearance in Aspose.Cells, including best practices for theme‑based styling.
+// Title: Validate that all chart legends use the updated Dark2 theme color after changing the theme in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Load a workbook, change the Dark2 theme color to a custom RGB value, then loop through every worksheet and chart to assign the new color to each legend's Font.Color. | After applying the new Dark2 shade, compare each chart legend's Font.Color with the expected value, log any mismatches, and save the workbook.
+// Common Searches: c# aspocells change dark2 theme color and update all chart legend fonts | how to confirm chart legend colors reflect a new theme color in Aspose.Cells | iterate over all charts in a workbook to set legend font color using Aspose.Cells .NET
+// Tags: update Dark2 theme color Aspose.Cells | set chart legend font color C# | validate chart legend color after theme change | iterate worksheets and charts Aspose.Cells | apply custom theme shade to Excel legends
 
 using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace ThemeLegendValidation
+namespace AsposeCellsExample
 {
-    // Creates a workbook with a column chart, changes the workbook's Accent2 (Dark2) theme color to DarkSlateBlue using SetThemeColor, applies the same theme color to each chart legend's font, outputs the legend's ThemeColor details for verification, and saves the file.
+    // The example loads an existing Excel file, changes the Dark2 theme color to a custom shade, iterates through every worksheet and chart to set each legend's font color to the new shade, verifies that the update succeeded, logs any mismatches, and saves the modified workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["C1"].PutValue("Series2");
-
-            for (int i = 2; i <= 5; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                sheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
-                sheet.Cells[$"B{i}"].PutValue(i * 10);
-                sheet.Cells[$"C{i}"].PutValue(i * 15);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Add a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 7, 0, 25, 15);
-            Chart chart = sheet.Charts[chartIdx];
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Set chart data range and categories
-            chart.SetChartDataRange("B1:C5", true);
-            chart.NSeries.CategoryData = "A2:A5";
+                // Define the new shade for the Dark2 theme color (example: DodgerBlue)
+                Color newDark2Color = Color.FromArgb(255, 30, 144, 255);
 
-            // Update the theme's Dark2 color (using Accent2 as the closest match)
-            // This changes the theme color globally in the workbook
-            workbook.SetThemeColor(ThemeColorType.Accent2, Color.DarkSlateBlue);
+                // Flag to track validation result
+                bool allLegendsUpdated = true;
 
-            // Apply the updated theme color to the chart legend font
-            // The legend will now use the new Dark2 (Accent2) shade
-            chart.Legend.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0.0);
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all charts in the worksheet
+                    foreach (Chart chart in sheet.Charts)
+                    {
+                        try
+                        {
+                            // Access the chart legend
+                            Legend legend = chart.Legend;
 
-            // Optional validation: output the legend font's theme color type and tint
-            ThemeColor legendTheme = chart.Legend.Font.ThemeColor;
-            Console.WriteLine($"Legend Font Theme Color Type: {legendTheme.ColorType}");
-            Console.WriteLine($"Legend Font Theme Color Tint: {legendTheme.Tint}");
+                            // Update legend font color to the new Dark2 color
+                            legend.Font.Color = newDark2Color;
 
-            // Save the workbook
-            workbook.Save("ThemeLegendValidation.xlsx");
+                            // Verify the update
+                            if (legend.Font.Color != newDark2Color)
+                            {
+                                allLegendsUpdated = false;
+                                Console.WriteLine(
+                                    $"Mismatch in chart '{chart.Name}' on sheet '{sheet.Name}'. " +
+                                    $"Legend color: {legend.Font.Color}, Expected: {newDark2Color}");
+                            }
+                        }
+                        catch (Exception exChart)
+                        {
+                            // Handle any chart‑specific errors without stopping the whole process
+                            Console.WriteLine($"Error processing chart '{chart.Name}' on sheet '{sheet.Name}': {exChart.Message}");
+                            allLegendsUpdated = false;
+                        }
+                    }
+                }
+
+                // Output validation result
+                if (allLegendsUpdated)
+                {
+                    Console.WriteLine("All chart legends reflect the updated Dark2 theme color.");
+                }
+                else
+                {
+                    Console.WriteLine("Some chart legends do not reflect the updated Dark2 theme color.");
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook to the desired output path
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any runtime exceptions and display the error
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

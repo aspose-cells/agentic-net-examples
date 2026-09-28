@@ -1,10 +1,7 @@
-// Title: Use Aspose.Cells CalculationMonitor in C# to Track Formula Evaluation and Detect Circular References
-// Description: Shows how to extend AbstractCalculationMonitor with a ProgressCalculationMonitor, attach it through CalculationOptions, and run Workbook.CalculateFormula to log before/after cell processing, report original vs. calculated values, and handle circular references in .NET.
-// Keywords: Aspose.Cells | CalculationMonitor | AbstractCalculationMonitor | C# | formula evaluation | circular reference detection | .NET | Workbook.CalculateFormula | progress logging | long‑running calculations
-// Common Searches: Aspose.Cells custom calculation monitor example | track formula calculation progress C# | detect circular references Aspose.Cells | log before after cell calculation Aspose.Cells | how to use CalculationOptions with monitor
-// Developer Intent: Subscribe to calculation engine events to monitor the progress of long‑running formula evaluations.
-// Use Cases: Console‑based debugging of large workbooks by logging each cell's calculation start and end. | Real‑time detection and reporting of circular references while allowing the calculation to continue. | Combining the monitor with options such as Recursive and IgnoreError to control evaluation flow and capture detailed metrics.
-// AI Prompts: Create a CalculationMonitor that writes before/after details to a file instead of the console. | Add logic to count processed cells and display the total after Workbook.CalculateFormula finishes. | Show how to abort calculation inside OnCircular based on a custom threshold.
+// Title: Subscribe to Aspose.Cells calculation engine events with a custom AbstractCalculationMonitor to log formula evaluation and handle circular references in C#
+// AI Prompts: Create a class inheriting from AbstractCalculationMonitor, override BeforeCalculate, AfterCalculate, and OnCircular to write cell coordinates, original and new values, and return true for circular references, then assign it to CalculationOptions.CalculationMonitor and invoke Workbook.CalculateFormula. | Configure CalculationOptions with Recursive = true and a custom monitor to capture volatile function evaluation, run the calculation, and display the final values of the evaluated cells. | Demonstrate saving the workbook after the monitored calculation run, ensuring the custom monitor streams progress messages to the console throughout the process.
+// Common Searches: Aspose.Cells C# monitor formula calculation progress with AbstractCalculationMonitor | How to detect circular references during Workbook.CalculateFormula in Aspose.Cells | Log before and after each cell calculation using Aspose.Cells CalculationOptions | Enable recursive calculation and volatile function tracking in Aspose.Cells .NET | Custom calculation monitor example for Aspose.Cells workbook evaluation
+// Tags: custom AbstractCalculationMonitor implementation C# | Aspose.Cells calculation monitor logging | circular reference detection Aspose.Cells | recursive formula evaluation Aspose.Cells | volatile function handling Aspose.Cells
 
 using System;
 using System.Collections;
@@ -13,20 +10,20 @@ using Aspose.Cells;
 namespace AsposeCellsCalculationMonitorDemo
 {
     // Custom monitor to track calculation progress
-    // Shows how to extend AbstractCalculationMonitor with a ProgressCalculationMonitor, attach it through CalculationOptions, and run Workbook.CalculateFormula to log before/after cell processing, report original vs. calculated values, and handle circular references in .NET.
-    public class ProgressCalculationMonitor : AbstractCalculationMonitor
+    // The example defines MyCalculationMonitor derived from AbstractCalculationMonitor to log cell coordinates, original and calculated values, and enumerate circular references. It attaches the monitor to CalculationOptions, enables recursive evaluation, runs Workbook.CalculateFormula, prints final results, and saves the workbook.
+    public class MyCalculationMonitor : AbstractCalculationMonitor
     {
         // Called before each cell is calculated
         public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            Console.WriteLine($"[Before] Sheet {sheetIndex}, Row {rowIndex}, Column {columnIndex}");
+            Console.WriteLine($"Before: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
         }
 
         // Called after each cell is calculated
         public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            Console.WriteLine($"[After]  Sheet {sheetIndex}, Row {rowIndex}, Column {columnIndex}");
-            Console.WriteLine($"    Original: {OriginalValue}, New: {CalculatedValue}, Changed: {ValueChanged}");
+            Console.WriteLine($"After : Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
+            Console.WriteLine($"  Original: {OriginalValue}, New: {CalculatedValue}, Changed: {ValueChanged}");
         }
 
         // Called when a circular reference is detected
@@ -35,7 +32,7 @@ namespace AsposeCellsCalculationMonitorDemo
             Console.WriteLine("Circular reference detected:");
             while (circularCellsData.MoveNext())
             {
-                Console.WriteLine($"    {circularCellsData.Current}");
+                Console.WriteLine($"  {circularCellsData.Current}");
             }
             // Continue calculation for circular cells
             return true;
@@ -46,38 +43,36 @@ namespace AsposeCellsCalculationMonitorDemo
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells with data and formulas (simulate a long‑running scenario)
+            // Populate some data and formulas
             sheet.Cells["A1"].PutValue(10);
             sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].Formula = "=A1+A2";               // Simple sum
-            sheet.Cells["B1"].Formula = "=A3*5";                // Dependent formula
-            sheet.Cells["C1"].Formula = "=SUM(A1:A3)";          // Built‑in function
-            sheet.Cells["D1"].Formula = "=IF(A1>5,\"High\",\"Low\")";
+            sheet.Cells["A3"].Formula = "=A1+A2";          // Simple addition
+            sheet.Cells["B1"].Formula = "=A3*2";           // Dependent on A3
+            sheet.Cells["C1"].Formula = "=B1+NOW()";      // Volatile function
 
-            // Create calculation options and attach the custom monitor
-            CalculationOptions calcOptions = new CalculationOptions
+            // Set up calculation options with the custom monitor
+            CalculationOptions options = new CalculationOptions
             {
-                CalculationMonitor = new ProgressCalculationMonitor(),
-                Recursive = true,          // Ensure dependent cells are calculated
-                IgnoreError = false       // Show errors if they occur
+                CalculationMonitor = new MyCalculationMonitor(),
+                Recursive = true,
+                IgnoreError = false
             };
 
-            // Perform calculation with monitoring
-            workbook.CalculateFormula(calcOptions);
+            // Perform calculation; monitor callbacks will be invoked
+            workbook.CalculateFormula(options);
 
-            // Output final results
-            Console.WriteLine("\nFinal cell values:");
+            // Output final values
+            Console.WriteLine("\nFinal Results:");
             Console.WriteLine($"A3 = {sheet.Cells["A3"].Value}");
             Console.WriteLine($"B1 = {sheet.Cells["B1"].Value}");
             Console.WriteLine($"C1 = {sheet.Cells["C1"].Value}");
-            Console.WriteLine($"D1 = {sheet.Cells["D1"].Value}");
 
-            // Save the workbook (demonstrates lifecycle rule usage)
-            workbook.Save("CalculationMonitorResult.xlsx");
+            // Save the workbook (optional)
+            workbook.Save("CalculationMonitorDemo.xlsx");
         }
     }
 }

@@ -1,56 +1,93 @@
-// Title: C# – Load Excel from MemoryStream, change a formula, and recalculate with CalculationOptions using Aspose.Cells
-// Description: Demonstrates how to read an XLSX file into a byte array, open it with Aspose.Cells via a MemoryStream, update a cell formula, apply CalculationOptions (e.g., IgnoreError), recalculate all formulas with Workbook.CalculateFormula, and save the result back to a stream or file.
-// Keywords: Aspose.Cells | C# load workbook from MemoryStream | modify cell formula programmatically | CalculationOptions | Workbook.CalculateFormula | ignore calculation errors | save workbook to stream | in‑memory Excel processing
-// Common Searches: Aspose.Cells load workbook from byte array | change Excel cell formula in C# | recalculate formulas with options Aspose.Cells | ignore errors during Aspose.Cells calculation | save modified Excel to MemoryStream C#
-// Developer Intent: Open an Excel workbook from a memory stream, edit a cell's formula, recalculate all formulas with custom options, and persist the changes without using the file system.
-// Use Cases: Retrieve a workbook stored as a BLOB, adjust formulas, recalculate while suppressing errors, and write the updated file back to the database. | Process uploaded Excel files in a web API: modify formulas based on user input, recalculate with specific options, and return the updated file as a stream. | Generate a workbook entirely in memory, set dynamic formulas, perform a calculation with tailored settings, and stream the final file to a client application.
-// AI Prompts: Generate C# code that opens an Excel file from a byte array with Aspose.Cells, changes cell C5 to '=SUM(A1:A10)', and recalculates all formulas while ignoring errors. | Show how to use Aspose.Cells CalculationOptions to disable iterative calculation and recalculate a workbook loaded from a MemoryStream. | Explain how to save a workbook after formula recalculation directly to a MemoryStream and obtain the resulting byte array in C#.
+// Title: Load an Excel workbook from a MemoryStream, modify a cell formula, and recalculate with custom CalculationOptions using Aspose.Cells for .NET
+// AI Prompts: Read an Excel file from a MemoryStream, set cell B1 formula to '=A1*3', configure CalculationOptions with IgnoreError=true and Recursive=true, then call Workbook.CalculateFormula in C#. | Using Aspose.Cells for .NET, load a workbook from a stream, replace an existing formula, and recalculate all dependent cells with custom calculation settings.
+// Common Searches: Aspose.Cells C# load Excel from MemoryStream and edit cell formula | calculate workbook formulas with ignore errors option in Aspose.Cells | how to apply recursive calculation to all worksheets using Aspose.Cells | save modified workbook to a new MemoryStream after formula recalculation Aspose.Cells
+// Tags: memory stream workbook loading Aspose.Cells | modify cell formula programmatically C# | custom CalculationOptions for Workbook.CalculateFormula | ignore errors during Excel formula evaluation Aspose.Cells | recursive formula recalculation across worksheets Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaUpdate
+namespace AsposeCellsFormulaDemo
 {
-    // Demonstrates how to read an XLSX file into a byte array, open it with Aspose.Cells via a MemoryStream, update a cell formula, apply CalculationOptions (e.g., IgnoreError), recalculate all formulas with Workbook.CalculateFormula, and save the result back to a stream or file.
+    // Demonstrates loading an Excel workbook from a MemoryStream, updating a cell's formula, configuring CalculationOptions (IgnoreError and Recursive), and recalculating all formulas with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Assume the workbook binary data is available in a byte array.
-            // In a real scenario this could come from a database, network, etc.
-            byte[] workbookData = File.ReadAllBytes("input.xlsx");
-
-            // Load the workbook from a memory stream.
-            using (MemoryStream inputStream = new MemoryStream(workbookData))
+            try
             {
-                Workbook workbook = new Workbook(inputStream);
+                // ------------------------------------------------------------
+                // 1. Create a sample workbook and save it into a memory stream
+                // ------------------------------------------------------------
+                Workbook originalWorkbook = new Workbook();
+                Worksheet sheet = originalWorkbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                // Change an existing formula (or set a new one) in the first worksheet.
-                // Example: modify cell B1 to multiply the value of A1 by 3.
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["B1"].Formula = "=A1*3";
+                // Populate some initial data and a formula
+                cells["A1"].PutValue(10);
+                cells["B1"].Formula = "=A1*2"; // Original formula
 
-                // Prepare calculation options.
-                CalculationOptions calcOptions = new CalculationOptions
+                // Save the workbook to a MemoryStream (simulating an existing file)
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    // Example option: ignore errors during calculation.
-                    IgnoreError = true
-                };
+                    originalWorkbook.Save(ms, SaveFormat.Xlsx);
+                    ms.Position = 0; // Reset stream position for reading
 
-                // Recalculate all formulas in the workbook using the specified options.
-                workbook.CalculateFormula(calcOptions);
+                    // ------------------------------------------------------------
+                    // 2. Load the workbook from the memory stream
+                    // ------------------------------------------------------------
+                    Workbook loadedWorkbook = new Workbook(ms);
+                    Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+                    Cells loadedCells = loadedSheet.Cells;
 
-                // (Optional) Save the updated workbook to a new memory stream or file.
-                using (MemoryStream outputStream = new MemoryStream())
-                {
-                    workbook.Save(outputStream, SaveFormat.Xlsx);
-                    // For demonstration, write the result to a file.
-                    File.WriteAllBytes("output.xlsx", outputStream.ToArray());
+                    // ------------------------------------------------------------
+                    // 3. Change the formula in cell B1
+                    // ------------------------------------------------------------
+                    loadedCells["B1"].Formula = "=A1*3"; // Updated formula
+
+                    // ------------------------------------------------------------
+                    // 4. Prepare calculation options (e.g., ignore errors)
+                    // ------------------------------------------------------------
+                    CalculationOptions calcOptions = new CalculationOptions
+                    {
+                        IgnoreError = true,   // Hide errors during calculation
+                        Recursive = true      // Recalculate dependent cells across worksheets
+                    };
+
+                    // Optional: set iterative calculation at workbook level if needed
+                    // Note: EnableIterativeCalculation property may not be available in all versions.
+                    // loadedWorkbook.Settings.EnableIterativeCalculation = false;
+
+                    // ------------------------------------------------------------
+                    // 5. Calculate all formulas using the specified options
+                    // ------------------------------------------------------------
+                    try
+                    {
+                        loadedWorkbook.CalculateFormula(calcOptions);
+                    }
+                    catch (Exception calcEx)
+                    {
+                        Console.WriteLine("Calculation error: " + calcEx.Message);
+                    }
+
+                    // ------------------------------------------------------------
+                    // 6. Output the result of the changed formula
+                    // ------------------------------------------------------------
+                    Console.WriteLine("Result of B1 after recalculation: " + loadedCells["B1"].Value);
+
+                    // ------------------------------------------------------------
+                    // 7. (Optional) Save the modified workbook back to a new memory stream
+                    // ------------------------------------------------------------
+                    using (MemoryStream outStream = new MemoryStream())
+                    {
+                        loadedWorkbook.Save(outStream, SaveFormat.Xlsx);
+                        // The outStream now contains the updated workbook.
+                    }
                 }
-
-                // Display a result to verify the calculation.
-                Console.WriteLine("Calculated value in B1: " + sheet.Cells["B1"].Value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
     }

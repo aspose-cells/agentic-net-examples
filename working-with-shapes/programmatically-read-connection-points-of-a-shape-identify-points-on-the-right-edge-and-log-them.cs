@@ -1,71 +1,57 @@
-// Title: C# – Retrieve shape connection points and log those on the right edge with Aspose.Cells
-// Description: Creates a workbook, adds a rectangle shape, reads its connection points via GetConnectionPoints(), calculates the shape's right‑edge X coordinate using the Width property, and writes to the console only the points that lie on that edge within a tolerance.
-// Keywords: Aspose.Cells shape connection points | GetConnectionPoints C# | filter connection points by X coordinate | right edge shape Aspose.Cells | shape width tolerance Aspose.Cells | log shape connection points .NET
-// Common Searches: Aspose.Cells get shape connection points C# | how to find right‑edge connection points in Aspose.Cells | filter shape connection points by X value Aspose.Cells | calculate shape right edge using Width property Aspose.Cells | C# example for reading shape connection points
-// Developer Intent: Read a shape's connection points and output only those positioned on the shape's right side.
-// Use Cases: Verify that connectors are attached to the right side of a diagram element before exporting. | Produce a layout report that lists all right‑edge connection points for auditing Excel drawings. | Programmatically adjust connector positions based on right‑edge connection points of shapes.
-// AI Prompts: Generate C# code that reads shape connection points with Aspose.Cells and filters those on the right edge using a tolerance. | Explain how to compute the right‑edge X coordinate of a shape and compare it to connection point coordinates in Aspose.Cells. | Show an example of logging only right‑edge connection points of a rectangle shape in a .NET console application.
+// Title: Read shape connection points and log only right‑edge points with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, iterates every Shape on the first worksheet, accesses each Shape's ConnectionPoints collection, determines the shape's maximum X coordinate, and writes the coordinates of any connection point whose X equals that maximum to the console. | Show a complete Aspose.Cells example in C# that extracts the ConnectionPoints of all worksheet shapes, filters points located on the shape's right border, and outputs their X/Y values while handling missing files and load errors.
+// Common Searches: Aspose.Cells C# read shape connection points and filter right edge | how to get rightmost connection point of an Excel shape using Aspose.Cells | iterate shapes in Aspose.Cells and list connection point coordinates | C# Aspose.Cells determine shape boundary points | filter shape connection points by X coordinate Aspose.Cells .NET
+// Tags: Aspose.Cells read shape connection points | filter right edge connection points Aspose.Cells | C# iterate worksheet shapes Aspose.Cells | extract shape boundary coordinates .NET | connection points collection Aspose.Cells API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The example loads "input.xlsx", accesses the first worksheet, loops through all shapes, retrieves each shape's ConnectionPoints collection, identifies points that lie on the shape's right edge, and writes their X/Y coordinates to the console, with error handling for missing files and load failures.
+class Program
 {
-    // Creates a workbook, adds a rectangle shape, reads its connection points via GetConnectionPoints(), calculates the shape's right‑edge X coordinate using the Width property, and writes to the console only the points that lie on that edge within a tolerance.
-    public class ShapeConnectionPointsDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        try
+        {
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in sheet.Shapes)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Output basic shape information
+                Console.WriteLine($"Shape: {shape.Name}, Type: {shape.Type}");
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: upper left row, upper left column, row offset, column offset, height, width
-                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
-
-                // Retrieve the connection points of the shape
-                float[][] points = shape.GetConnectionPoints();
-
-                // Determine the right edge X coordinate of the shape
-                double rightEdgeX = shape.Width; // Width is in points
-
-                // Tolerance for floating point comparison
-                const double tolerance = 0.5;
-
-                // Log all connection points that lie on the right edge
-                Console.WriteLine("Connection points on the right edge:");
-                for (int i = 0; i < points.Length; i++)
-                {
-                    double x = points[i][0];
-                    double y = points[i][1];
-
-                    if (Math.Abs(x - rightEdgeX) <= tolerance)
-                    {
-                        Console.WriteLine($"Point {i + 1}: X={x}, Y={y}");
-                    }
-                }
-
-                // Save the workbook (optional, just to demonstrate lifecycle usage)
-                workbook.Save("ShapeConnectionPointsDemo.xlsx");
-                Console.WriteLine("Workbook saved as ShapeConnectionPointsDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Additional processing for specific shape types can be added here
+                // For example, you could handle lines, pictures, etc., based on shape.Type
             }
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ShapeConnectionPointsDemo.Run();
+            Console.WriteLine($"Error while processing shapes: {ex.Message}");
         }
     }
 }

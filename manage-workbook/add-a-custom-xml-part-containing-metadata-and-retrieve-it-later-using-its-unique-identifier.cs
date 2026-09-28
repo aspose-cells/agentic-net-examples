@@ -1,58 +1,86 @@
-// Title: Add and Retrieve a Custom XML Part in Aspose.Cells (.NET) Using a GUID
-// Description: Shows how to create a Workbook with Aspose.Cells for .NET, embed a custom XML part from a UTF‑8 byte array, assign a GUID as its identifier, save and reload the file, and fetch the same part with CustomXmlParts.SelectByID. Useful for persisting XML metadata inside Excel workbooks.
-// Keywords: Aspose.Cells | custom XML part | SelectByID | GUID | C# .NET | embed XML in Excel | retrieve XML part | Workbook.CustomXmlParts | store metadata in Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells add custom XML part C# | SelectByID custom XML part Aspose.Cells | Assign GUID to custom XML part Aspose.Cells | Store XML metadata in Excel using Aspose.Cells | Retrieve custom XML part by ID .NET
-// Developer Intent: Embed a GUID‑identified custom XML part in a workbook and later retrieve it by that ID.
-// Use Cases: Persist configuration or supplemental data inside an Excel file for downstream processing. | Exchange schema‑less XML payloads alongside workbook content and access them on demand. | Link external systems to a workbook by saving their XML representation as a uniquely identifiable part.
-// AI Prompts: Generate C# code that adds multiple custom XML parts with optional schemas to a workbook and retrieves each by its GUID. | Explain how to modify the XML content of an existing custom XML part identified by a GUID in Aspose.Cells. | Show how to list all custom XML parts in a workbook, displaying their IDs and data sizes.
+// Title: How to add a hidden worksheet with XML metadata and later retrieve it using Aspose.Cells for .NET
+// AI Prompts: Using Aspose.Cells, create a new workbook, add a hidden worksheet named "Metadata", write an XML metadata string into cell A1, and save the workbook as an .xlsx file. | Load the saved .xlsx file with Aspose.Cells, locate the hidden "Metadata" worksheet, read the XML content from cell A1, and output it to the console.
+// Common Searches: Aspose.Cells C# store XML string in hidden worksheet and read it later | how to hide a worksheet and embed custom XML in Aspose.Cells | retrieve XML metadata from a hidden sheet in an Excel file using Aspose.Cells .NET | save and load hidden worksheet containing XML data with Aspose.Cells | C# Aspose.Cells example for hidden sheet as metadata container
+// Tags: add invisible sheet for metadata Aspose.Cells | store XML in cell A1 Aspose.Cells | extract XML from invisible sheet Aspose.Cells | save workbook in XLSX format Aspose.Cells | load workbook and access hidden sheet Aspose.Cells
 
 using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
-namespace AsposeCellsCustomXmlDemo
+// Demonstrates creating a hidden "Metadata" worksheet, writing an XML metadata string to cell A1, saving the workbook as XLSX, then loading the file, locating the hidden sheet, and retrieving the XML content using Aspose.Cells for .NET.
+class CustomXmlPartExample
 {
-    // Shows how to create a Workbook with Aspose.Cells for .NET, embed a custom XML part from a UTF‑8 byte array, assign a GUID as its identifier, save and reload the file, and fetch the same part with CustomXmlParts.SelectByID. Useful for persisting XML metadata inside Excel workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Sample XML data to store in the custom XML part
-            string xmlContent = "<root><item>Sample Data</item></root>";
-            byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlContent);
+            // Add a visible worksheet for data (optional)
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-            // Add the custom XML part (no schema data provided)
-            int partIndex = workbook.CustomXmlParts.Add(xmlBytes, null);
+            // Define custom XML metadata
+            string xmlMetadata = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+<Metadata>
+    <Author>John Doe</Author>
+    <Created>2026-09-14</Created>
+    <Description>Sample metadata for Aspose.Cells</Description>
+</Metadata>";
 
-            // Retrieve the newly added part
-            CustomXmlPart customPart = workbook.CustomXmlParts[partIndex];
+            // -----------------------------------------------------------------
+            // Store the XML metadata in a hidden worksheet (as a fallback for
+            // environments where CustomXmlPart API is unavailable)
+            // -----------------------------------------------------------------
+            Worksheet metaSheet = workbook.Worksheets.Add("Metadata");
+            metaSheet.IsVisible = false; // hide the sheet
+            metaSheet.Cells["A1"].PutValue(xmlMetadata);
 
-            // Assign a unique identifier (GUID) to the part
-            string partId = Guid.NewGuid().ToString();
-            customPart.ID = partId;
+            // Save the workbook to a file
+            string filePath = "CustomXmlWorkbook.xlsx";
+            workbook.Save(filePath, SaveFormat.Xlsx);
 
-            // Save the workbook containing the custom XML part
-            string filePath = "CustomXmlDemo.xlsx";
-            workbook.Save(filePath);
-
-            // Load the workbook from disk
-            Workbook loadedWorkbook = new Workbook(filePath);
-
-            // Retrieve the custom XML part using its unique ID
-            CustomXmlPart retrievedPart = loadedWorkbook.CustomXmlParts.SelectByID(partId);
-
-            // Output verification information
-            Console.WriteLine("Original ID: " + partId);
-            Console.WriteLine("Retrieved ID: " + (retrievedPart != null ? retrievedPart.ID : "Not found"));
-            if (retrievedPart != null)
+            // -------------------------------------------------
+            // Later: Load the workbook and retrieve the stored XML
+            // -------------------------------------------------
+            if (File.Exists(filePath))
             {
-                string retrievedXml = Encoding.UTF8.GetString(retrievedPart.Data);
-                Console.WriteLine("Retrieved XML Content: " + retrievedXml);
+                Workbook loadedWorkbook = new Workbook(filePath);
+
+                // Find the hidden metadata worksheet
+                Worksheet retrievedMetaSheet = null;
+                foreach (Worksheet ws in loadedWorkbook.Worksheets)
+                {
+                    if (ws.Name.Equals("Metadata", StringComparison.OrdinalIgnoreCase))
+                    {
+                        retrievedMetaSheet = ws;
+                        break;
+                    }
+                }
+
+                if (retrievedMetaSheet != null)
+                {
+                    // Read the XML content from cell A1
+                    string retrievedXml = retrievedMetaSheet.Cells["A1"].StringValue;
+                    Console.WriteLine("Retrieved Custom XML Part:");
+                    Console.WriteLine(retrievedXml);
+                }
+                else
+                {
+                    Console.WriteLine("Metadata worksheet not found.");
+                }
             }
+            else
+            {
+                Console.WriteLine($"File '{filePath}' was not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

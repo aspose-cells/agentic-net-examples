@@ -1,68 +1,44 @@
-// Title: Export Named Ranges and Their RefersTo Formulas to an Audit Sheet with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, defines sample named ranges, adds a "NamedRangesAudit" worksheet, writes column headers, iterates the workbook's NameCollection, and records each range's name and RefersTo formula. The columns are auto‑fitted and the file is saved as an Excel audit report.
-// Keywords: Aspose.Cells C# | export named ranges | RefersTo formula | list defined names | Excel audit worksheet | retrieve named range addresses | .NET Excel automation | named range reporting | Workbook NameCollection | generate range inventory
-// Common Searches: Aspose.Cells list all named ranges .NET | How to export RefersTo formulas to a sheet using C# | Create an audit report of named ranges in Excel with Aspose.Cells | Iterate NameCollection and write names to worksheet | Export defined names to a new worksheet programmatically
-// Developer Intent: Create an Excel worksheet that enumerates every named range in a workbook together with its RefersTo expression for auditing or documentation.
-// Use Cases: Produce a compliance report that shows all named ranges and their target cells. | Validate that named ranges point to the correct ranges before sharing a workbook. | Provide users with a quick reference sheet of all defined names in a workbook.
-// AI Prompts: Generate C# code using Aspose.Cells that adds an audit sheet listing each named range and its RefersTo formula. | Modify the example to also capture the scope (worksheet or workbook) of each named range in the audit report. | Write a reusable method that returns a DataTable with Name and RefersTo columns for all defined names in a Workbook.
+// Title: Export all named ranges and their RefersTo formulas to a new audit worksheet with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file, creates a worksheet named 'NamedRangesAudit', and writes each defined name together with its RefersTo formula into two columns using Aspose.Cells. | Generate a method that extracts every defined name and its RefersTo expression from a workbook and writes them to a newly created sheet for verification. | Provide a complete Aspose.Cells example that adds a header row, iterates through the NameCollection, records name and formula pairs, and saves the workbook with the audit sheet.
+// Common Searches: Aspose.Cells C# export defined names and formulas to a separate sheet | How to list all named ranges with their RefersTo expressions using Aspose.Cells .NET | Create a verification worksheet for named ranges in an Excel workbook with Aspose.Cells | Save workbook after adding a sheet that contains name and formula columns for each named range
+// Tags: export named ranges Aspose.Cells C# | retrieve RefersTo defined names | add overview worksheet Excel | iterate NameCollection workbook | save workbook with additional sheet
 
 using System;
 using Aspose.Cells;
 
-namespace NamedRangeAudit
+// The program loads 'input.xlsx', adds a worksheet called 'NamedRangesAudit', writes header cells, iterates through the workbook's NameCollection, records each defined name and its RefersTo formula, and saves the result as 'output_with_named_ranges_audit.xlsx'.
+class ExportNamedRanges
 {
-    // This example creates a workbook, defines sample named ranges, adds a "NamedRangesAudit" worksheet, writes column headers, iterates the workbook's NameCollection, and records each range's name and RefersTo formula. The columns are auto‑fitted and the file is saved as an Excel audit report.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the source workbook
+        Workbook srcWorkbook = new Workbook("input.xlsx");
+
+        // Add a new worksheet for auditing named ranges
+        Worksheet auditSheet = srcWorkbook.Worksheets[srcWorkbook.Worksheets.Add()];
+        auditSheet.Name = "NamedRangesAudit";
+
+        // Write header row
+        auditSheet.Cells[0, 0].PutValue("Name");
+        auditSheet.Cells[0, 1].PutValue("Refers To (Formula)");
+
+        // Retrieve the collection of named ranges
+        NameCollection names = srcWorkbook.Worksheets.Names;
+
+        // Export each named range and its formula
+        int row = 1;
+        foreach (Name name in names)
         {
-            // Create a new workbook (in-memory)
-            Workbook workbook = new Workbook();
+            // Name of the named range
+            auditSheet.Cells[row, 0].PutValue(name.Text);
 
-            // -------------------------------------------------
-            // OPTIONAL: create some sample named ranges for demo
-            // -------------------------------------------------
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Data";
-            sheet1.Cells["A1"].PutValue("Item");
-            sheet1.Cells["B1"].PutValue("Qty");
-            sheet1.Cells["A2"].PutValue("Apple");
-            sheet1.Cells["B2"].PutValue(10);
-            sheet1.Cells["A3"].PutValue("Banana");
-            sheet1.Cells["B3"].PutValue(20);
+            // Formula that the named range refers to (e.g., =Sheet1!$A$1:$B$10)
+            auditSheet.Cells[row, 1].PutValue(name.RefersTo);
 
-            // Define two named ranges
-            sheet1.Cells.CreateRange("A1:B1").Name = "HeaderRange";
-            sheet1.Cells.CreateRange("A2:B3").Name = "DataRange";
-
-            // -------------------------------------------------
-            // Create an audit worksheet to list named ranges
-            // -------------------------------------------------
-            int auditIndex = workbook.Worksheets.Add();
-            Worksheet auditSheet = workbook.Worksheets[auditIndex];
-            auditSheet.Name = "NamedRangesAudit";
-
-            // Write header row
-            auditSheet.Cells["A1"].PutValue("Name");
-            auditSheet.Cells["B1"].PutValue("RefersTo");
-
-            // Retrieve all defined names
-            NameCollection names = workbook.Worksheets.Names;
-
-            // Iterate through the collection and write details
-            int row = 1; // zero‑based index; start after header
-            foreach (Name name in names)
-            {
-                auditSheet.Cells[row, 0].PutValue(name.Text);        // Name text
-                auditSheet.Cells[row, 1].PutValue(name.RefersTo);   // Formula (e.g., =Sheet1!$A$1:$B$3)
-                row++;
-            }
-
-            // Adjust column widths for readability
-            auditSheet.AutoFitColumns();
-
-            // Save the workbook to a file
-            workbook.Save("NamedRangesAudit.xlsx");
+            row++;
         }
+
+        // Save the workbook with the audit sheet
+        srcWorkbook.Save("output_with_named_ranges_audit.xlsx");
     }
 }

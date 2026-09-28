@@ -1,57 +1,60 @@
-// Title: Password‑protect rows 20‑25 in an Excel sheet using Aspose.Cells for .NET (EntireRow)
-// Description: Creates a workbook, fills cells A1:E30, selects rows 20‑25 with the EntireRow property, adds them to the AllowEditRanges collection, assigns a password, protects the worksheet with all protection types, and saves the file as ProtectedRows20to25.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | protect rows | EntireRow property | password protection | AllowEditRanges | Excel worksheet protection | range protection | specific rows
-// Common Searches: Aspose.Cells protect specific rows | How to password protect rows in Excel using Aspose.Cells | EntireRow property example Aspose.Cells | C# protect rows 20 to 25 Aspose.Cells | Set AllowEditRanges password Aspose.Cells
-// Developer Intent: The developer needs to lock rows 20‑25 of a worksheet with a password by using the EntireRow property in Aspose.Cells for .NET.
-// Use Cases: Lock header or template rows in a generated report while keeping data rows editable. | Secure confidential financial rows in a shared workbook to prevent accidental changes. | Create a read‑only section in a data‑entry form that users cannot modify.
-// AI Prompts: Generate C# code that password‑protects rows 10‑15 in an Excel file using Aspose.Cells. | Explain how to use AllowEditRanges with the EntireRow property to lock specific rows in Aspose.Cells for .NET. | Show the steps to unprotect a password‑protected row range in an Aspose.Cells workbook.
+// Title: How to lock rows 20‑25 and protect an Excel worksheet with a password using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to apply a locked style to rows 20 through 25 and then protect the worksheet with a password. | Show how to unlock all cells in a workbook, lock a specific row range, and save the file as an .xlsx using Aspose.Cells for .NET. | Write a C# snippet that creates a workbook, locks rows 20‑25 with a style, calls Worksheet.Protect with a password, and outputs ProtectedRows.xlsx.
+// Common Searches: Aspose.Cells C# lock specific rows and set worksheet password | protect rows 20 to 25 in Excel file using Aspose.Cells .NET | apply locked style to entire row range with Aspose.Cells API | how to unlock all cells before protecting selected rows in Aspose.Cells | C# example for worksheet protection with password and row‑level locking
+// Tags: lock rows Aspose.Cells | worksheet protect password Aspose.Cells | apply locked style to rows Aspose.Cells | unlock all cells Aspose.Cells | protect specific rows Excel Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace ProtectRowsExampleApp
 {
-    // Creates a workbook, fills cells A1:E30, selects rows 20‑25 with the EntireRow property, adds them to the AllowEditRanges collection, assigns a password, protects the worksheet with all protection types, and saves the file as ProtectedRows20to25.xlsx.
-    public class ProtectRowsWithEntireRowDemo
+    // The example creates a new workbook, unlocks every cell, applies a locked style to rows 20‑25, protects the worksheet with a password, and saves the result as ProtectedRows.xlsx.
+    class ProtectRowsExample
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                for (int row = 0; row < 30; row++)
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Unlock all cells in the worksheet first
+                Style unlockedStyle = workbook.CreateStyle();
+                unlockedStyle.IsLocked = false;
+                StyleFlag unlockFlag = new StyleFlag { All = true };
+                sheet.Cells.ApplyStyle(unlockedStyle, unlockFlag);
+
+                // Define the password for protection
+                string password = "MySecretPassword";
+
+                // Create a style that locks cells
+                Style lockedStyle = workbook.CreateStyle();
+                lockedStyle.IsLocked = true;
+                StyleFlag lockFlag = new StyleFlag { All = true };
+
+                // Protect rows 20 through 25 (Excel rows are 1‑based)
+                for (int rowIndex = 19; rowIndex <= 24; rowIndex++)
                 {
-                    for (int col = 0; col < 5; col++)
-                    {
-                        worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
+                    // Apply the locked style to the entire row
+                    sheet.Cells.Rows[rowIndex].ApplyStyle(lockedStyle, lockFlag);
                 }
 
-                // Create a range covering rows 20‑25 and get the entire rows
-                Aspose.Cells.Range rowsRange = worksheet.Cells.CreateRange("A20:A25").EntireRow;
+                // Protect the worksheet with the password
+                sheet.Protect(ProtectionType.All, password, string.Empty);
 
-                // Add a protected range for those rows
-                ProtectedRangeCollection allowEditRanges = worksheet.AllowEditRanges;
-                int protectedIndex = allowEditRanges.Add(
-                    "Rows20to25",
-                    rowsRange.FirstRow,
-                    rowsRange.FirstColumn,
-                    rowsRange.FirstRow + rowsRange.RowCount - 1,
-                    rowsRange.FirstColumn + rowsRange.ColumnCount - 1);
-
-                // Set a password for the protected range
-                ProtectedRange protectedRange = allowEditRanges[protectedIndex];
-                protectedRange.Password = "MySecretPassword";
-
-                // Protect the worksheet (all protection types)
-                worksheet.Protect(ProtectionType.All);
+                // Determine output path and ensure directory exists
+                string outputPath = "ProtectedRows.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
                 // Save the workbook
-                string outputPath = "ProtectedRows20to25.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to {outputPath}");
             }
@@ -59,15 +62,6 @@ namespace AsposeCellsExamples
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ProtectRowsWithEntireRowDemo.Run();
         }
     }
 }

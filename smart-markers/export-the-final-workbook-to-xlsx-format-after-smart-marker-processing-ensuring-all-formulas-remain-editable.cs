@@ -1,76 +1,45 @@
-// Title: Export Smart Marker Workbook to XLSX with Editable Formulas – Aspose.Cells for .NET
-// Description: C# code that loads a template workbook with Aspose.Cells smart markers, binds a custom data source, processes the markers while preserving unknown tags, disables automatic calculation on save, and saves the file as XLSX so all formulas remain editable for downstream editing.
-// Keywords: Aspose.Cells C# smart markers export | save workbook as xlsx without recalculating formulas | WorkbookDesigner CalculateOnSave false | editable formulas after smart marker processing | .NET spreadsheet automation | preserve formulas Aspose.Cells | smart marker data binding C# | export template to xlsx Aspose | global spreadsheet generation
-// Common Searches: how to export smart marker workbook to xlsx without formula recalculation | aspnet keep formulas editable after processing smart markers | disable calculate on save Aspose.Cells C# | save processed smart markers as xlsx preserving formulas | Aspose.Cells smart marker export example
-// Developer Intent: Save a workbook that has been processed with smart markers as an XLSX file while preventing automatic formula recalculation.
-// Use Cases: Generate personalized reports from a template and let users adjust totals or other calculations after the data merge. | Create invoices where tax and discount formulas stay editable for accountants to modify post‑generation. | Export data‑driven spreadsheets for downstream analytics while retaining all original calculation logic.
-// AI Prompts: Write C# code using Aspose.Cells to process smart markers in a template and save the result as XLSX without triggering formula recalculation. | Explain the impact of Workbook.Settings.FormulaSettings.CalculateOnSave on formula editability after smart marker processing. | Show how to bind a List of custom objects to a smart marker data source and preserve all formulas when saving the workbook.
+// Title: Export a workbook processed with Aspose.Cells smart markers to XLSX while keeping formulas editable in C#
+// AI Prompts: Generate C# code that loads an XLSX template, binds a collection to smart markers via WorkbookDesigner, turns off automatic formula evaluation, and saves the workbook as a new XLSX file. | Demonstrate how to preserve editable formulas after processing smart markers with Aspose.Cells by setting CalculateOnSave to false before saving.
+// Common Searches: C# Aspose.Cells keep formulas editable when saving workbook after smart marker processing | How to disable CalculateOnSave in Aspose.Cells after using WorkbookDesigner | Export smart marker populated workbook to XLSX without evaluating formulas Aspose.Cells .NET | Aspose.Cells preserve formula cells when saving processed smart markers
+// Tags: process smart markers Aspose.Cells C# | save workbook as xlsx Aspose.Cells | disable formula calculation on save Aspose.Cells | WorkbookDesigner data binding C# | keep formulas editable Aspose.Cells
 
 using System;
 using System.Collections;
-using System.IO;
 using Aspose.Cells;
 
-// C# code that loads a template workbook with Aspose.Cells smart markers, binds a custom data source, processes the markers while preserving unknown tags, disables automatic calculation on save, and saves the file as XLSX so all formulas remain editable for downstream editing.
-public class SmartMarkerExport
+// // Loads a template workbook, binds a list of Person objects to smart markers using WorkbookDesigner, processes the markers, disables automatic formula calculation on save, and saves the result as an XLSX file with formulas remaining editable.
+class SmartMarkerExport
 {
-    public static void Run()
+    static void Main()
     {
-        try
-        {
-            string templatePath = "template.xlsx";
-            if (!File.Exists(templatePath))
-                throw new FileNotFoundException($"Template file not found: {templatePath}");
+        // Load the template workbook that contains smart markers
+        Workbook workbook = new Workbook("Template.xlsx");
 
-            // Load the template workbook that contains smart markers
-            Workbook workbook = new Workbook(templatePath);
+        // Create a WorkbookDesigner and assign the loaded workbook
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
 
-            // Create a WorkbookDesigner and assign the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
+        // Prepare a simple data source (list of Person objects)
+        ArrayList persons = new ArrayList();
+        persons.Add(new Person { Name = "John Doe", Age = 30 });
+        persons.Add(new Person { Name = "Jane Smith", Age = 28 });
 
-            // Prepare a sample data source (replace with your actual data)
-            ArrayList persons = new ArrayList
-            {
-                new Person { Name = "John Doe", Age = 30 },
-                new Person { Name = "Jane Smith", Age = 28 }
-            };
+        // Bind the data source to the name used in the smart markers
+        designer.SetDataSource("Persons", persons);
 
-            // Bind the data source to a name used in the smart markers
-            designer.SetDataSource("Persons", persons);
+        // Process all smart markers in the workbook
+        designer.Process();
 
-            // Process the smart markers; true = preserve unrecognized markers
-            designer.Process(true);
+        // Keep formulas editable (do not force calculation on save)
+        workbook.Settings.FormulaSettings.CalculateOnSave = false;
 
-            // Ensure formulas stay editable (do not recalculate on save)
-            workbook.Settings.FormulaSettings.CalculateOnSave = false;
-
-            // Save the processed workbook to XLSX format
-            string outputPath = "output.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the processed workbook to XLSX format
+        workbook.Save("Result.xlsx", SaveFormat.Xlsx);
     }
 
-    // Sample data class used in the data source
+    // POCO class used as a data source for smart markers
     public class Person
     {
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
         public int Age { get; set; }
-    }
-}
-
-// Entry point
-public class Program
-{
-    public static void Main()
-    {
-        SmartMarkerExport.Run();
     }
 }

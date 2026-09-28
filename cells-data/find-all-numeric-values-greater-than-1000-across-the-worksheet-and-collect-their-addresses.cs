@@ -1,72 +1,61 @@
-// Title: Aspose.Cells C# example: List addresses of cells with values > 1000 and export to a new worksheet
-// Description: Loads an Excel file, scans the used range of the first worksheet, captures the addresses of cells whose numeric value (int, double, or parsable string) exceeds 1,000, writes those addresses to a newly created sheet named "Values>1000", and saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | Excel | find cells greater than 1000 | cell address list | used range iteration | export to new worksheet | threshold filter | sample code
-// Common Searches: Aspose.Cells find cells with value over 1000 | C# list cell addresses exceeding a threshold | How to export high‑value cells to another sheet using Aspose.Cells | Iterate used range in Excel with Aspose.Cells .NET
-// Developer Intent: Extract every cell address whose numeric content is larger than a specified limit and store the results in a separate worksheet.
-// Use Cases: Create an audit sheet of outlier amounts in financial reports | Pre‑process data by flagging entries that surpass a business rule | Generate a quick summary of high‑value items for dashboards
-// AI Prompts: Write a reusable method that returns cell addresses where the value exceeds a given threshold using Aspose.Cells. | Refactor the nested loops into a LINQ query or use Aspose.Cells' FindAll to locate cells > 1000. | Add error handling that logs non‑numeric cells and continues processing without interruption.
+// Title: Identify Excel cells with numeric values above 1000 and export their addresses using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, scans every cell in a worksheet, and returns a list of cell names where the numeric value exceeds 1000. | Enhance the solution to accept a configurable numeric limit and handle decimal numbers, then write the matching cell addresses to a newly added worksheet. | Create a reusable method that takes input and output file paths plus a numeric threshold, extracts addresses of cells greater than that threshold, and saves them to a separate sheet using Aspose.Cells.
+// Common Searches: Aspose.Cells C# find cell addresses where value is greater than 1000 | How to list Excel cells with numbers over a certain threshold using Aspose.Cells | Export addresses of large numeric values from a worksheet with Aspose.Cells .NET | C# Aspose.Cells filter cells by numeric limit and write results to new sheet
+// Tags: find cells with numeric value exceeding threshold Aspose.Cells | collect cell addresses from Excel using Aspose.Cells C# | write address list to new worksheet Aspose.Cells | iterate all worksheet cells Aspose.Cells .NET | filter large numbers in Excel with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads an Excel file, scans the used range of the first worksheet, captures the addresses of cells whose numeric value (int, double, or parsable string) exceeds 1,000, writes those addresses to a newly created sheet named "Values>1000", and saves the workbook.
-class Program
+// Loads an Excel workbook, iterates through every cell in the first worksheet, records the addresses of numeric values (int, long, double) greater than 1000, writes those addresses to a new worksheet named "LargeValues", and saves the updated file.
+class FindLargeValues
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
+        // Load an existing workbook (replace with your file path)
         Workbook workbook = new Workbook("input.xlsx");
+
+        // Work with the first worksheet (you can loop through all worksheets if needed)
         Worksheet worksheet = workbook.Worksheets[0];
 
         // List to store addresses of cells whose numeric value is greater than 1000
-        List<string> addresses = new List<string>();
+        List<string> largeValueAddresses = new List<string>();
 
-        // Determine the used range of the worksheet
-        int maxRow = worksheet.Cells.MaxDataRow;
-        int maxCol = worksheet.Cells.MaxDataColumn;
-
-        // Scan each cell within the used range
-        for (int row = 0; row <= maxRow; row++)
+        // Iterate through all cells in the worksheet
+        foreach (Cell cell in worksheet.Cells)
         {
-            for (int col = 0; col <= maxCol; col++)
-            {
-                Cell cell = worksheet.Cells[row, col];
-                if (cell == null || cell.Value == null)
-                    continue;
+            // Skip cells that have no value
+            if (cell.Value == null) continue;
 
-                // Direct numeric types
-                if (cell.Value is double d && d > 1000)
-                {
-                    addresses.Add(cell.Name);
-                }
-                else if (cell.Value is int i && i > 1000)
-                {
-                    addresses.Add(cell.Name);
-                }
-                else
-                {
-                    // Attempt to parse string representations of numbers
-                    if (double.TryParse(cell.StringValue, out double parsed) && parsed > 1000)
-                    {
-                        addresses.Add(cell.Name);
-                    }
-                }
+            // Check for double values
+            if (cell.Value is double d && d > 1000)
+            {
+                largeValueAddresses.Add(cell.Name);
+                continue;
+            }
+
+            // Check for integer values (Aspose may store integers as int or long)
+            if (cell.Value is int i && i > 1000)
+            {
+                largeValueAddresses.Add(cell.Name);
+                continue;
+            }
+
+            if (cell.Value is long l && l > 1000)
+            {
+                largeValueAddresses.Add(cell.Name);
+                continue;
             }
         }
 
-        // Write the collected addresses to a new worksheet
-        int resultIndex = workbook.Worksheets.Add();
-        Worksheet resultSheet = workbook.Worksheets[resultIndex];
-        resultSheet.Name = "Values>1000";
-
-        resultSheet.Cells[0, 0].PutValue("CellAddress");
-        for (int i = 0; i < addresses.Count; i++)
+        // Write the collected addresses to a new worksheet for reference
+        Worksheet resultSheet = workbook.Worksheets.Add("LargeValues");
+        for (int i = 0; i < largeValueAddresses.Count; i++)
         {
-            resultSheet.Cells[i + 1, 0].PutValue(addresses[i]);
+            resultSheet.Cells[i, 0].PutValue(largeValueAddresses[i]);
         }
 
-        // Save the modified workbook
+        // Save the workbook with the results (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

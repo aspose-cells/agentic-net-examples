@@ -1,51 +1,48 @@
-// Title: C# Aspose.Cells: Import HTML with <br> tags and confirm line breaks in a worksheet cell
-// Description: This example shows how to load an HTML string that contains <br> tags into a Workbook using a MemoryStream and HtmlLoadOptions (DeleteRedundantSpaces = false). It reads the text of cell A1, checks for newline characters (\n or \r), prints the result, and optionally saves the file as an XLSX document.
-// Keywords: Aspose.Cells HTML import C# | preserve line breaks from <br> tags | HtmlLoadOptions DeleteRedundantSpaces | verify newline characters in Excel cell | load HTML from memory stream Aspose.Cells | C# Excel line break handling
-// Common Searches: Aspose.Cells keep <br> as line break | C# load HTML into Excel workbook with line breaks | HtmlLoadOptions preserve newline characters | check cell text for \n after HTML import | convert HTML paragraph to multi‑line Excel cell
-// Developer Intent: Load an HTML fragment that uses <br> tags into an Excel worksheet and ensure the tags are translated into actual line‑break characters inside the target cell.
-// Use Cases: Transform an HTML email body into an Excel report while retaining its original line formatting. | Import web‑scraped table data where cells contain <br> separators and need to appear as multi‑line entries. | Automated validation that exported Excel files preserve the line‑break structure of source HTML content.
-// AI Prompts: Generate C# code that configures HtmlLoadOptions to keep <br> tags as new lines when loading HTML into Aspose.Cells. | Write a unit test that asserts cell A1 contains a newline after importing HTML with line‑break tags using Aspose.Cells. | Explain how to replace <br> tags with "\n" before loading HTML if Aspose.Cells does not automatically preserve them.
+// Title: Check that <br> tags in imported HTML are rendered as line breaks in an Aspose.Cells C# worksheet cell
+// AI Prompts: Load an HTML snippet containing <br> elements into a Workbook using HtmlLoadOptions and read the resulting cell value. | Convert the HTML string to a MemoryStream, import it with Aspose.Cells, and programmatically detect newline characters in the cell text. | Save the workbook after the HTML import and output a boolean indicating whether the cell contains line‑break characters.
+// Common Searches: Aspose.Cells C# import HTML with <br> tags and keep line breaks | How to detect newline characters after loading HTML into an Excel cell using Aspose.Cells | C# example for converting HTML <br> tags to Excel cell line breaks with HtmlLoadOptions | Verify line break rendering when loading HTML into Aspose.Cells workbook
+// Tags: html import newline handling Aspose.Cells C# | HtmlLoadOptions line break conversion | memory stream html to workbook Aspose.Cells | cell value includes carriage return after HTML load | preserve <br> tags in Excel import Aspose.Cells
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlLineBreakDemo
 {
-    // This example shows how to load an HTML string that contains <br> tags into a Workbook using a MemoryStream and HtmlLoadOptions (DeleteRedundantSpaces = false). It reads the text of cell A1, checks for newline characters (\n or \r), prints the result, and optionally saves the file as an XLSX document.
+    // The example builds an HTML string with <br> tags, loads it into an Aspose.Cells Workbook via HtmlLoadOptions using a MemoryStream, reads the cell's string value to confirm newline characters are present, prints the verification result, and optionally saves the workbook as an XLSX file.
     class Program
     {
         static void Main()
         {
-            // HTML containing <br> tags that should become line breaks in the cell
+            // Sample HTML containing <br> tags
             string htmlContent = "<p>First line<br>Second line<br/>Third line</p>";
 
-            // Convert the HTML string to a UTF‑8 memory stream
-            byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
+            // Convert the HTML string to a memory stream
+            byte[] htmlBytes = System.Text.Encoding.UTF8.GetBytes(htmlContent);
             using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
             {
-                // Configure HTML load options (optional: keep default DeleteRedundantSpaces)
+                // Load the HTML into a workbook using HtmlLoadOptions
                 HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-                loadOptions.DeleteRedundantSpaces = false; // preserve spaces around <br> tags
-
-                // Load the HTML into a workbook
+                // DeleteRedundantSpaces is false by default; keep it unchanged
                 Workbook workbook = new Workbook(htmlStream, loadOptions);
-                Worksheet sheet = workbook.Worksheets[0];
 
-                // Retrieve the value of the first cell (A1) after import
-                string cellText = sheet.Cells["A1"].StringValue;
+                // Access the first worksheet and the cell where the HTML was imported (A1)
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cell cell = worksheet.Cells["A1"];
 
-                // Output the raw cell text to the console
-                Console.WriteLine("Cell A1 text after HTML import:");
+                // Retrieve the cell's string value; Aspose.Cells converts <br> to newline characters
+                string cellText = cell.StringValue;
+
+                // Output the cell content to verify line breaks
+                Console.WriteLine("Cell A1 content after HTML import:");
                 Console.WriteLine(cellText);
 
-                // Verify that line break characters are present
-                bool containsLineBreak = cellText.Contains("\n") || cellText.Contains("\r");
-                Console.WriteLine("Contains line break characters: " + containsLineBreak);
+                // Check whether the text contains newline characters
+                bool containsNewLine = cellText.Contains("\n") || cellText.Contains("\r");
+                Console.WriteLine("Line break rendered as new line: " + containsNewLine);
 
-                // Save the workbook for further inspection (optional)
-                workbook.Save("ImportedHtml.xlsx", SaveFormat.Xlsx);
+                // Save the workbook to an Excel file for further inspection (optional)
+                workbook.Save("HtmlImportResult.xlsx", SaveFormat.Xlsx);
             }
         }
     }

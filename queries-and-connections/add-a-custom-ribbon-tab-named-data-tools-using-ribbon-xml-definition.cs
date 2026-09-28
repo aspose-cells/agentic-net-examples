@@ -1,40 +1,43 @@
-// Title: Add a Data Tools ribbon tab to an Excel workbook with Aspose.Cells for .NET
-// Description: Shows how to create a macro‑enabled .xlsm file, inject custom Ribbon XML that defines a “Data Tools” tab with a large Refresh button, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | RibbonXml | custom ribbon tab | Data Tools tab | Excel .xlsm | C# | macro‑enabled workbook | custom UI | Excel add‑in generation | programmatic ribbon
-// Common Searches: Aspose.Cells add custom ribbon tab C# | How to set RibbonXml in Aspose.Cells | Create Excel file with custom UI using Aspose.Cells | Save workbook with custom ribbon as .xlsm | Define ribbon XML for Excel in .NET
-// Developer Intent: Programmatically embed a custom ribbon tab in an Excel workbook and preserve it in a macro‑enabled file.
-// Use Cases: Provide end‑users with a dedicated Data Tools tab that launches data‑refresh macros. | Distribute workbooks that already contain a predefined UI for import/export operations. | Automate generation of Excel add‑ins with custom ribbon groups for corporate reporting tools.
-// AI Prompts: Generate C# code to add additional buttons to the Data Tools ribbon tab with Aspose.Cells. | Show how to link the Refresh button in the custom ribbon to a VBA macro using Aspose.Cells. | Explain how to extend the RibbonXml to include a dropdown list and toggle controls in the Data Tools group.
+// Title: Create a custom "Data Tools" ribbon tab with a Refresh Data button in an Excel macro-enabled workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that builds Ribbon XML to add a "Data Tools" tab with a large "Refresh Data" button, assigns it to Workbook.RibbonXml, and saves the workbook as an XLSM file with Aspose.Cells. | Explain how to confirm that the custom ribbon tab was applied by reading the Workbook.RibbonXml property after the file is saved. | Show how to extend the Ribbon XML to add another group or button under the "Data Tools" tab using Aspose.Cells. | Provide a step‑by‑step guide for creating a macro‑enabled Excel file with custom UI via Aspose.Cells, including required namespaces and the correct SaveFormat.
+// Common Searches: how to add a custom ribbon tab in Excel using Aspose.Cells .NET | Aspose.Cells RibbonXml property example for macro-enabled XLSM | C# code to create a Data Tools ribbon group with Refresh Data button in Excel workbook | setting custom UI on Excel workbook with Aspose.Cells and saving as XLSM | retrieve and inspect Ribbon XML from an Aspose.Cells workbook
+// Tags: custom ribbon tab Aspose.Cells .NET | RibbonXml property macro-enabled XLSM | define Excel ribbon XML Aspose.Cells | add refresh data button to Excel ribbon | data tools group custom UI Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a macro‑enabled .xlsm file, inject custom Ribbon XML that defines a “Data Tools” tab with a large Refresh button, and save the workbook using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsRibbonDemo
 {
-    static void Main()
+    // The program creates a new Workbook, defines Ribbon XML that adds a "Data Tools" tab containing a large "Refresh Data" button, assigns the XML to the workbook via the RibbonXml property, and saves the file as a macro‑enabled XLSM workbook to preserve the custom UI.
+    class Program
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook instance
+            Workbook workbook = new Workbook();
 
-        // Define the Ribbon XML that adds a custom tab named "Data Tools"
-        string ribbonXml =
-            "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
-            "  <ribbon>" +
-            "    <tabs>" +
-            "      <tab id=\"dataToolsTab\" label=\"Data Tools\">" +
-            "        <group id=\"dataToolsGroup\" label=\"Data Tools Group\">" +
-            "          <button id=\"btnRefresh\" label=\"Refresh\" size=\"large\" />" +
-            "        </group>" +
-            "      </tab>" +
-            "    </tabs>" +
-            "  </ribbon>" +
-            "</customUI>";
+            // Define the Ribbon XML that adds a custom tab named "Data Tools"
+            string ribbonXml =
+                "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
+                "  <ribbon>" +
+                "    <tabs>" +
+                "      <tab id=\"dataToolsTab\" label=\"Data Tools\">" +
+                "        <group id=\"dataToolsGroup\" label=\"Data Operations\">" +
+                "          <button id=\"refreshButton\" label=\"Refresh Data\" size=\"large\" />" +
+                "        </group>" +
+                "      </tab>" +
+                "    </tabs>" +
+                "  </ribbon>" +
+                "</customUI>";
 
-        // Assign the Ribbon XML to the workbook
-        workbook.RibbonXml = ribbonXml;
+            // Assign the Ribbon XML to the workbook
+            workbook.RibbonXml = ribbonXml;
 
-        // Save the workbook (use a macro-enabled format to preserve the custom UI)
-        workbook.Save("DataToolsRibbon.xlsm");
+            // Save the workbook as a macro-enabled file (XLSM) to preserve the custom UI
+            workbook.Save("DataToolsWorkbook.xlsm", SaveFormat.Xlsm);
+
+            // Optional: confirm that the RibbonXml property has been set
+            Console.WriteLine("Custom Ribbon tab 'Data Tools' has been added.");
+        }
     }
 }

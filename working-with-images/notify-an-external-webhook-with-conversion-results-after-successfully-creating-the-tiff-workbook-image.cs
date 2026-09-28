@@ -1,83 +1,95 @@
-// Title: Render a Workbook to LZW‑Compressed TIFF and Send Conversion Details to a Webhook (C# Aspose.Cells)
-// Description: This example shows how to create an Excel workbook with Aspose.Cells, configure ImageOrPrintOptions for a 300 dpi LZW‑compressed multi‑page TIFF, render the workbook to a MemoryStream using WorkbookRender.ToImage, build a JSON payload (success, format, sizeBytes, timestamp), post it to an external webhook via HttpClient, and optionally save the TIFF file locally.
-// Keywords: Aspose.Cells TIFF rendering C# | WorkbookRender ToImage MemoryStream | LZW compression 300 dpi TIFF | C# post JSON webhook | Excel to TIFF conversion metadata | Aspose.Cells webhook notification | save TIFF from stream | Aspose.Cells image export
-// Common Searches: How to export an Aspose.Cells workbook to a TIFF image in C# | C# Aspose.Cells render workbook as multi‑page TIFF | Send conversion results to a webhook after generating TIFF with Aspose.Cells | Post JSON payload from C# after Aspose.Cells image rendering | Save TIFF from Aspose.Cells MemoryStream
-// Developer Intent: Generate a high‑resolution TIFF from an Excel workbook with Aspose.Cells and automatically report the conversion outcome to an external webhook.
-// Use Cases: Automated document pipelines that convert Excel files to searchable TIFFs and notify a document‑management service. | Batch processing jobs that need to log file size, format, and timestamp for compliance auditing. | CI/CD workflows where conversion status is sent to a monitoring endpoint before proceeding to the next step.
-// AI Prompts: Create C# code that renders an Aspose.Cells workbook to a 300 dpi LZW‑compressed multi‑page TIFF and posts a JSON payload with success, format, sizeBytes, and timestamp to a given webhook URL. | Add retry logic and detailed error handling to the webhook call after TIFF rendering, including logging of HTTP response codes. | Refactor the sample to stream the TIFF directly to the webhook without writing a local file, while still returning conversion metadata.
+// Title: Convert an Aspose.Cells workbook to a TIFF file and send conversion details to an external webhook using C#
+// AI Prompts: Write C# code that creates a workbook with Aspose.Cells, saves it as a TIFF image, and posts a JSON payload (file name, size, success flag, UTC timestamp) to a given webhook URL. | Add robust try‑catch logic so that if the TIFF export or the HTTP request fails, a failure JSON payload containing the error message is sent to the same webhook. | Demonstrate reusing a single HttpClient instance for both success and error webhook notifications after exporting a workbook to TIFF.
+// Common Searches: how to export Aspose.Cells workbook to TIFF and notify a webhook in C# | c# Aspose.Cells save as tiff then post json to external service | send conversion result metadata to webhook after generating TIFF from Excel using Aspose.Cells | error handling for webhook notification after Aspose.Cells image export in .NET
+// Tags: Aspose.Cells export workbook to TIFF C# | post JSON payload to webhook .NET | TIFF conversion result metadata Aspose.Cells | error handling webhook notification Aspose.Cells | HttpClient reuse for webhook calls C#
 
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWebhookDemo
+// Creates a simple workbook with Aspose.Cells, saves it as a TIFF image, gathers file information, and posts a JSON payload with the conversion result to a specified webhook. Includes error handling that sends a failure payload if the export or HTTP request fails.
+class Program
 {
-    // This example shows how to create an Excel workbook with Aspose.Cells, configure ImageOrPrintOptions for a 300 dpi LZW‑compressed multi‑page TIFF, render the workbook to a MemoryStream using WorkbookRender.ToImage, build a JSON payload (success, format, sizeBytes, timestamp), post it to an external webhook via HttpClient, and optionally save the TIFF file locally.
-    public class Program
-    {
-        // Entry point
-        public static async Task Main()
-        {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF Rendering Demo");
+    // Replace with your actual webhook URL
+    private const string WebhookUrl = "https://example.com/webhook";
 
-            // Configure image rendering options for TIFF output
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+    static async Task Main(string[] args)
+    {
+        // Path for the generated TIFF image
+        string tiffPath = "WorkbookImage.tiff";
+
+        try
+        {
+            // ---------- Create a simple workbook ----------
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
+
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Bananas");
+            sheet.Cells["B3"].PutValue(85);
+
+            // ---------- Save the workbook as a TIFF image ----------
+            workbook.Save(tiffPath, SaveFormat.Tiff);
+
+            // Verify that the file was created
+            if (!File.Exists(tiffPath))
+                throw new FileNotFoundException("TIFF file was not created.", tiffPath);
+
+            // Gather conversion result details
+            var fileInfo = new FileInfo(tiffPath);
+            var resultPayload = new
             {
-                ImageType = ImageType.Tiff,                     // Render as TIFF
-                TiffCompression = TiffCompression.CompressionLZW,
-                HorizontalResolution = 300,
-                VerticalResolution = 300,
-                OnePagePerSheet = true
+                FileName = fileInfo.Name,
+                FileSizeBytes = fileInfo.Length,
+                Success = true,
+                CreatedAtUtc = DateTime.UtcNow
             };
 
-            // Render the whole workbook to a memory stream using the provided ToImage method
-            using (MemoryStream tiffStream = new MemoryStream())
+            // Serialize payload to JSON
+            string jsonPayload = JsonSerializer.Serialize(resultPayload);
+
+            // ---------- Notify external webhook ----------
+            using var httpClient = new HttpClient();
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await httpClient.PostAsync(WebhookUrl, content);
+
+            // Ensure the webhook responded successfully
+            response.EnsureSuccessStatusCode();
+
+            Console.WriteLine("Webhook notified successfully.");
+        }
+        catch (Exception ex)
+        {
+            // In case of any failure, send a failure notification to the webhook
+            var errorPayload = new
             {
-                WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
-                renderer.ToImage(tiffStream); // Rule: WorkbookRender.ToImage(Stream)
+                FileName = Path.GetFileName(tiffPath),
+                Success = false,
+                ErrorMessage = ex.Message,
+                CreatedAtUtc = DateTime.UtcNow
+            };
 
-                // Prepare webhook notification payload
-                var payload = new
-                {
-                    success = true,
-                    format = "tiff",
-                    sizeBytes = tiffStream.Length,
-                    timestamp = DateTime.UtcNow
-                };
-                string json = System.Text.Json.JsonSerializer.Serialize(payload);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                // Send POST request to external webhook
-                using (HttpClient httpClient = new HttpClient())
-                {
-                    // Replace with your actual webhook URL
-                    string webhookUrl = "https://example.com/webhook";
-
-                    HttpResponseMessage response = await httpClient.PostAsync(webhookUrl, content);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine("Webhook notified successfully.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Webhook notification failed. Status: {response.StatusCode}");
-                    }
-                }
-
-                // Optionally, save the TIFF to a file for verification
-                string outputPath = Path.Combine("output", "workbook_render.tiff");
-                Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
-                File.WriteAllBytes(outputPath, tiffStream.ToArray());
-                Console.WriteLine($"TIFF image saved to: {outputPath}");
+            string errorJson = JsonSerializer.Serialize(errorPayload);
+            using var httpClient = new HttpClient();
+            var errorContent = new StringContent(errorJson, Encoding.UTF8, "application/json");
+            try
+            {
+                await httpClient.PostAsync(WebhookUrl, errorContent);
             }
+            catch
+            {
+                // Swallow any exceptions from the error notification to avoid recursive failures
+            }
+
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

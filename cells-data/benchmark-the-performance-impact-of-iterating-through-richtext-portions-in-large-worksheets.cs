@@ -1,78 +1,94 @@
-// Title: Benchmark Rich‑Text Segment Iteration in Large Worksheets with Aspose.Cells for .NET
-// Description: Creates a 1,000 × 10 worksheet, fills each cell with a three‑part rich‑text string (bold, italic, red), then uses a Stopwatch to measure the time required to read the Font properties of each segment via the Characters API. The elapsed milliseconds are printed and the workbook is saved.
-// Keywords: Aspose.Cells | .NET | rich text iteration | Characters API performance | cell formatting benchmark | large worksheet speed test | Excel rich‑text processing | performance measurement | bulk cell iteration | Aspose.Cells performance
-// Common Searches: Aspose.Cells benchmark reading rich‑text formatting | how fast is Characters API in large Excel sheets | measure performance of rich‑text iteration Aspose.Cells .NET | speed test for iterating formatted text in thousands of cells | performance impact of cell.Characters in Aspose.Cells
-// Developer Intent: Quantify the execution time needed to access rich‑text formatting for each segment across a high‑volume cell range.
-// Use Cases: Assess feasibility of bulk rich‑text scanning before applying transformations. | Compare processing cost of styled text versus plain text when extracting data. | Evaluate the benefit of parallel loops or calculation disabling on iteration speed.
-// AI Prompts: Provide a Parallel.For implementation that speeds up the rich‑text iteration loop. | Show how to log per‑cell timing and generate a summary of fastest and slowest cells. | Suggest memory‑efficient techniques for accessing Characters objects in a large workbook.
+// Title: Benchmark the impact of CellDisplay AccessCache on iterating rich‑text character formatting in a large Aspose.Cells worksheet (C#)
+// AI Prompts: Execute the sample C# program and capture the elapsed milliseconds for the loop that reads bold and italic font properties without any cache, then run the same loop after calling wb.StartAccessCache(AccessCacheOptions.CellDisplay) and output the performance difference. | Extend the benchmark to test different worksheet sizes (e.g., 1,000‑row, 5,000‑row, 10,000‑row) and record how the CellDisplay access cache scales the iteration time for cell.Characters().Font accesses.
+// Common Searches: Aspose.Cells C# benchmark reading cell.Characters font properties with and without CellDisplay cache | How much faster does rich‑text iteration become when using StartAccessCache in a large worksheet | Performance test for Aspose.Cells rich text formatting access in a 5,000 row workbook | Measure the effect of AccessCacheOptions.CellDisplay on font retrieval speed in .NET spreadsheets
+// Tags: benchmark cell characters access cache Aspose.Cells | rich text font retrieval performance C# | CellDisplay access cache usage Aspose.Cells | large worksheet iteration speed test | Aspose.Cells performance testing rich text
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
-using System.Drawing;
 
-// Creates a 1,000 × 10 worksheet, fills each cell with a three‑part rich‑text string (bold, italic, red), then uses a Stopwatch to measure the time required to read the Font properties of each segment via the Characters API. The elapsed milliseconds are printed and the workbook is saved.
-class Program
+// The program creates a 5,000‑row by 10‑column workbook with rich‑text cells, then benchmarks two loops that read bold and italic font properties—once without caching and once using wb.StartAccessCache(AccessCacheOptions.CellDisplay)—and prints the elapsed milliseconds for each approach.
+class RichTextIterationBenchmark
 {
     static void Main()
     {
+        // Parameters for a large worksheet
+        const int totalRows = 5000;
+        const int totalCols = 10;
+
         // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Workbook wb = new Workbook();
+        Worksheet sheet = wb.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Define the size of the test sheet
-        int totalRows = 1000;   // number of rows
-        int totalCols = 10;     // number of columns
-
-        // Populate each cell with a rich‑text string that has three formatted parts
-        // Part1 : bold, Part2 : italic, Part3 : red color
-        for (int row = 0; row < totalRows; row++)
+        // Populate the worksheet with rich‑text cells
+        for (int r = 0; r < totalRows; r++)
         {
-            for (int col = 0; col < totalCols; col++)
+            for (int c = 0; c < totalCols; c++)
             {
-                // Set the cell value
-                cells[row, col].PutValue("Part1 Part2 Part3");
+                // Example text with three parts
+                string text = "Bold Italic Normal";
+                cells[r, c].PutValue(text);
 
-                // Apply formatting to each part
-                // "Part1"
-                cells[row, col].Characters(0, 5).Font.IsBold = true;
-
-                // "Part2"
-                cells[row, col].Characters(6, 5).Font.IsItalic = true;
-
-                // "Part3"
-                cells[row, col].Characters(12, 5).Font.Color = Color.Red;
+                // Apply rich‑text formatting to each part
+                // "Bold" part
+                cells[r, c].Characters(0, 4).Font.IsBold = true;
+                // "Italic" part
+                cells[r, c].Characters(5, 6).Font.IsItalic = true;
+                // "Normal" part left unchanged
             }
         }
 
-        // Start timing the iteration over rich‑text portions
+        // -----------------------------------------------------------------
+        // Benchmark 1: Iterate through rich‑text portions without caching
+        // -----------------------------------------------------------------
         Stopwatch sw = Stopwatch.StartNew();
 
-        // Iterate through every cell and read the formatting of each rich‑text segment
-        for (int row = 0; row < totalRows; row++)
+        for (int r = 0; r < totalRows; r++)
         {
-            for (int col = 0; col < totalCols; col++)
+            for (int c = 0; c < totalCols; c++)
             {
-                // Retrieve the cell
-                Cell cell = cells[row, col];
-
-                // Access each formatted segment (the indices match the ones used during creation)
-                var part1 = cell.Characters(0, 5);   // bold segment
-                var part2 = cell.Characters(6, 5);   // italic segment
-                var part3 = cell.Characters(12, 5);  // red segment
-
-                // Dummy reads to simulate work and prevent compiler optimizations
-                bool isBold = part1.Font.IsBold;
-                bool isItalic = part2.Font.IsItalic;
-                Color color = part3.Font.Color;
+                Cell cell = cells[r, c];
+                // Retrieve the display style for each character range
+                // Here we simply read the font properties to simulate work
+                Font fontBold = cell.Characters(0, 4).Font;
+                Font fontItalic = cell.Characters(5, 6).Font;
+                // Access a property to ensure the objects are materialized
+                bool isBold = fontBold.IsBold;
+                bool isItalic = fontItalic.IsItalic;
             }
         }
 
         sw.Stop();
-        Console.WriteLine($"Iterating rich‑text portions in {totalRows * totalCols} cells took {sw.ElapsedMilliseconds} ms.");
+        Console.WriteLine($"Iteration without cache: {sw.ElapsedMilliseconds} ms");
 
-        // Save the workbook (optional, demonstrates normal save flow)
-        workbook.Save("RichTextBenchmark.xlsx");
+        // -----------------------------------------------------------------
+        // Benchmark 2: Iterate through rich‑text portions with AccessCache
+        // -----------------------------------------------------------------
+        // Start cache that optimizes display‑related queries (rich‑text formatting)
+        wb.StartAccessCache(AccessCacheOptions.CellDisplay);
+
+        Stopwatch swCache = Stopwatch.StartNew();
+
+        for (int r = 0; r < totalRows; r++)
+        {
+            for (int c = 0; c < totalCols; c++)
+            {
+                Cell cell = cells[r, c];
+                Font fontBold = cell.Characters(0, 4).Font;
+                Font fontItalic = cell.Characters(5, 6).Font;
+                bool isBold = fontBold.IsBold;
+                bool isItalic = fontItalic.IsItalic;
+            }
+        }
+
+        swCache.Stop();
+        Console.WriteLine($"Iteration with CellDisplay cache: {swCache.ElapsedMilliseconds} ms");
+
+        // Close the cache to restore normal access mode
+        wb.CloseAccessCache(AccessCacheOptions.CellDisplay);
+
+        // Save the workbook (optional, demonstrates lifecycle usage)
+        wb.Save("RichTextBenchmark.xlsx");
     }
 }

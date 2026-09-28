@@ -1,76 +1,53 @@
-// Title: Limit PivotField Items in Aspose.Cells (C#) – Show Top N Rows with AutoShow
-// Description: Creates a workbook, adds sample data, builds a pivot table, and restricts the row field to a defined number of items by enabling AutoShow and setting AutoShowCount (or ShowItemsCount) before refreshing and saving the file.
-// Keywords: Aspose.Cells | C# | PivotTable | PivotField | AutoShow | ShowItemsCount | limit pivot items | top N rows | Excel automation | pivot table filtering
-// Common Searches: Aspose.Cells limit pivot field items | C# show top 3 rows in pivot table | PivotField ShowItemsCount example | How to use AutoShow in Aspose.Cells | Restrict pivot table rows Aspose.Cells
-// Developer Intent: Display only a specific number of row items (e.g., top N) in a pivot table using Aspose.Cells.
-// Use Cases: Financial report that shows only the top 5 product categories by revenue. | Dashboard view that hides low‑frequency categories to keep the pivot table concise. | User‑driven report where the viewer selects how many rows should be visible without rebuilding the pivot. | Export of large pivot tables with limited rows to improve performance and file size.
-// AI Prompts: Write C# code with Aspose.Cells to limit a PivotField to the top 10 items using ShowItemsCount. | Explain the difference between IsAutoShow and ShowItemsCount for limiting pivot field items in Aspose.Cells. | Generate a method that updates AutoShowCount at runtime based on a user‑provided integer. | Provide a step‑by‑step guide to filter pivot rows to a specific count in Aspose.Cells.
+// Title: How to display only the top N row items in an Aspose.Cells PivotTable using C# AutoShow settings
+// AI Prompts: Generate C# code that creates a workbook, adds a PivotTable, and configures the row field to show only the top 3 categories by enabling IsAutoShow and setting AutoShowCount with Aspose.Cells. | Write a C# snippet that limits a PivotTable row field to a specific number of items using the AutoShow properties of Aspose.Cells PivotField.
+// Common Searches: C# Aspose.Cells limit pivot table row field to top 5 items | How to use AutoShowCount in Aspose.Cells PivotField | Show only a certain number of categories in a PivotTable with Aspose.Cells .NET | Aspose.Cells hide low‑value rows in pivot table programmatically | Set row field item count in Aspose.Cells pivot table example
+// Tags: Aspose.Cells pivot table AutoShow | C# limit pivot row field items | Aspose.Cells set AutoShowCount | top N items pivot field .NET | limit displayed pivot categories
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, populates it with sample category and sales data, adds a PivotTable, and then limits the row field to the top three categories by enabling AutoShow, setting AutoShowCount to 3, and configuring the sort order before refreshing and saving the workbook as LimitedPivotItems.xlsx.
+class LimitPivotFieldItems
 {
-    // Creates a workbook, adds sample data, builds a pivot table, and restricts the row field to a defined number of items by enabling AutoShow and setting AutoShowCount (or ShowItemsCount) before refreshing and saving the file.
-    public class LimitPivotFieldItemsDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Populate sample data for the pivot table
+        cells["A1"].PutValue("Category");
+        cells["B1"].PutValue("Sales");
+        string[] categories = { "A", "B", "C", "D", "E" };
+        int[] sales = { 100, 200, 150, 120, 180 };
+        for (int i = 0; i < categories.Length; i++)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            cells[i + 1, 0].PutValue(categories[i]);
+            cells[i + 1, 1].PutValue(sales[i]);
         }
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Add a pivot table to the worksheet
+        int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "MyPivot");
+        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Populate sample data for the pivot table
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            cells["A2"].PutValue("A");
-            cells["B2"].PutValue(100);
-            cells["A3"].PutValue("B");
-            cells["B3"].PutValue(200);
-            cells["A4"].PutValue("C");
-            cells["B4"].PutValue(300);
-            cells["A5"].PutValue("D");
-            cells["B5"].PutValue(400);
-            cells["A6"].PutValue("E");
-            cells["B6"].PutValue(500);
+        // Add row field (Category) and data field (Sales)
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+        // Limit the number of displayed items in the row field to the top 3 categories
+        PivotField rowField = pivotTable.RowFields[0];
+        rowField.IsAutoShow = true;          // Enable AutoShow
+        rowField.AutoShowCount = 3;          // Number of items to display
+        rowField.IsAscendShow = false;       // Show top items (descending order)
+        rowField.AutoShowField = -1;         // Use the field itself for ranking
 
-            // Add the "Category" field to the row area
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        // Refresh and calculate the pivot table data
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
-            // Add the "Amount" field to the data area
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
-
-            // Access the row field and limit displayed items
-            PivotField rowField = pivotTable.RowFields[0];
-            rowField.IsAutoShow = true;          // Enable auto‑show
-            rowField.AutoShowCount = 3;          // Show only top 3 items
-            rowField.AutoShowField = -1;         // Use the field itself for ranking
-            rowField.IsAscendShow = true;        // Show top items (ascending)
-
-            // Refresh the pivot cache and calculate the pivot table data
-            pivotTable.RefreshData();            // Correct API to refresh data
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("LimitPivotFieldItemsDemo.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("LimitedPivotItems.xlsx");
     }
 }

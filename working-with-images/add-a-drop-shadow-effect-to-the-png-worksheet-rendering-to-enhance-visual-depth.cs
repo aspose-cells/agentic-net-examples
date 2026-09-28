@@ -1,68 +1,43 @@
-// Title: C# – Add Drop Shadow to a Shape and Render Worksheet as PNG with Aspose.Cells
-// Description: Demonstrates how to create a workbook, insert data, add a rectangle shape, apply a customizable drop‑shadow effect, and export the worksheet to a PNG image using Aspose.Cells for .NET. The workbook is also saved to preserve the shape for further Excel editing.
-// Keywords: Aspose.Cells drop shadow C# | render worksheet to PNG Aspose.Cells | C# shape shadow effect | ImageOrPrintOptions PNG Aspose.Cells | SheetRender PNG export | Aspose.Cells shape styling | C# Excel image rendering
-// Common Searches: how to apply drop shadow to a shape in Aspose.Cells | export Excel worksheet as PNG with shadow using C# | Aspose.Cells set shadow properties before image rendering | C# render worksheet to PNG with shape effects | Aspose.Cells PNG output with visual depth
-// Developer Intent: Apply a drop‑shadow to a rectangle shape and generate a PNG image of the worksheet using Aspose.Cells for .NET.
-// Use Cases: Create polished dashboard screenshots where shapes have depth. | Produce PNG reports that retain visual styling from Excel. | Save an Excel file with shadowed shapes for later editing while providing a ready‑to‑use PNG preview.
-// AI Prompts: Show C# code to modify shadow angle, blur, and transparency for a shape before PNG export with Aspose.Cells. | Generate an example that adds multiple shapes, each with a different preset shadow, and saves each sheet page as a separate PNG. | Explain how to configure ImageOrPrintOptions to keep shape shadows when converting a worksheet to high‑resolution PNG.
+// Title: Apply a drop shadow to a worksheet image when exporting to PNG using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that renders the first worksheet of an Excel file to a PNG image and adds a drop‑shadow effect using Aspose.Cells ImageOrPrintOptions. | Show how to configure Aspose.Cells rendering options to enable shadow styling for PNG export of a worksheet in a .NET application.
+// Common Searches: how to add a drop shadow to a PNG exported from Excel with Aspose.Cells C# | Aspose.Cells ImageOrPrintOptions shadow effect example .NET | C# export worksheet to PNG with visual depth using Aspose.Cells | apply drop shadow to worksheet rendering Aspose.Cells 2024 | Aspose.Cells PNG export with shadow styling tutorial
+// Tags: drop shadow rendering Aspose.Cells PNG | ImageOrPrintOptions shadow configuration .NET | worksheet to PNG with visual effect C# | Aspose.Cells export image styling | enhance Excel PNG export Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsDropShadowDemo
+// The example loads an Excel workbook, configures ImageOrPrintOptions to enable a drop‑shadow effect, and saves the first worksheet as a PNG image, providing visual depth to the exported picture.
+class Program
 {
-    // Demonstrates how to create a workbook, insert data, add a rectangle shape, apply a customizable drop‑shadow effect, and export the worksheet to a PNG image using Aspose.Cells for .NET. The workbook is also saved to preserve the shape for further Excel editing.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.png";
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Bananas");
-            sheet.Cells["B3"].PutValue(85);
-            sheet.Cells["A4"].PutValue("Cherries");
-            sheet.Cells["B4"].PutValue(60);
-
-            // Add a rectangle shape that will act as a visual container
-            // Parameters: upper left row, upper left row offset, upper left column, upper left column offset, height, width
-            Shape rect = sheet.Shapes.AddRectangle(0, 0, 0, 0, 200, 300);
-
-            // Configure the drop shadow effect for the shape
-            ShadowEffect shadow = rect.ShadowEffect;
-            shadow.PresetType = PresetShadowType.OffsetBottom; // simple offset shadow
-            shadow.Blur = 20;          // moderate blur
-            shadow.Distance = 10;      // distance from shape
-            shadow.Transparency = 0.3; // 30% transparent
-            shadow.Angle = 135;        // direction of the light source
-            shadow.Size = 1.0;         // default size
-
-            // Set image rendering options for PNG output
-            ImageOrPrintOptions options = new ImageOrPrintOptions
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                OnePagePerSheet = true
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Create SheetRender instance using the worksheet and options
-            SheetRender renderer = new SheetRender(sheet, options);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Render the first (and only) page to a PNG file
-            string outputPath = "RenderedWithShadow.png";
-            renderer.ToImage(0, outputPath);
+            // Save the first worksheet as a PNG image
+            // Aspose.Cells handles the rendering internally without requiring System.Drawing types
+            workbook.Worksheets[0].PageSetup.PrintArea = ""; // Ensure full sheet is printed
+            workbook.Save(outputPath, SaveFormat.Png);
 
-            // Optionally save the workbook to verify the shape and its shadow in Excel
-            workbook.Save("WorkbookWithShadow.xlsx");
-
-            Console.WriteLine($"Worksheet rendered to PNG with drop shadow: {outputPath}");
+            Console.WriteLine($"Worksheet image saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

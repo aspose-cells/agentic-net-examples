@@ -1,79 +1,66 @@
-// Title: C# – Reset All Slicer Selections in an Excel Workbook with Aspose.Cells
-// Description: This example demonstrates how to load an existing or new workbook, iterate through every slicer on the first worksheet, deselect all items in each slicer's cache, refresh the slicer, and save the updated file. It provides a reliable way to return slicer filters to their default (unselected) state programmatically.
-// Keywords: Aspose.Cells | C# slicer reset | clear slicer selections | Excel slicer programmatic | reset slicer filter .NET | SlicerCacheItem Selected false | refresh slicer Aspose | Excel automation | workbook cleanup
-// Common Searches: how to clear slicer selections with Aspose.Cells | reset Excel slicer filter using C# | programmatically deselect all slicer items .NET | Aspose.Cells example to refresh slicer after clearing | remove slicer selections before saving workbook
-// Developer Intent: Programmatically clear every selected item in all slicers of a worksheet to restore the default filter state.
-// Use Cases: Prepare a report workbook so all slicers start unfiltered before distribution. | Automate cleanup after data refresh by resetting slicer filters. | Ensure a shared template opens with no slicer selections applied.
-// AI Prompts: Generate C# code using Aspose.Cells that clears all slicer selections, refreshes each slicer, and saves the workbook. | Explain how to safely reset slicer filters in an existing Excel file when no slicers are present. | Show a minimal Aspose.Cells snippet to deselect slicer items without altering other worksheet data.
+// Title: Reset an Excel slicer to its default state by selecting all items with Aspose.Cells for .NET (C#)
+// AI Prompts: Provide C# code that iterates through a slicer's SlicerCacheItems, sets each item's Selected property to true, and refreshes the slicer using Aspose.Cells. | Show how to programmatically clear a slicer filter in an Excel workbook by marking all slicer items as selected with Aspose.Cells for .NET. | Generate a method that resets a pivot table slicer to its initial state in a .NET workbook and saves the file.
+// Common Searches: Aspose.Cells C# clear slicer selections programmatically | How to remove slicer filter from an Excel workbook using Aspose.Cells | Select every item in an Excel slicer with C# and Aspose.Cells | Refresh a slicer after updating its items in a .NET workbook | Reset pivot table slicer to show all data via code in C#
+// Tags: Aspose.Cells C# slicer selection reset | iterate slicer cache items .NET | apply slicer refresh Aspose.Cells | pivot table slicer default configuration | remove slicer filter programmatically Excel
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;   // Required for slicer related classes
+using Aspose.Cells.Pivot;
+using Aspose.Cells.Slicers;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsSlicerReset
 {
-    // This example demonstrates how to load an existing or new workbook, iterate through every slicer on the first worksheet, deselect all items in each slicer's cache, refresh the slicer, and save the updated file. It provides a reliable way to return slicer filters to their default (unselected) state programmatically.
+    // The example creates a workbook, adds sample data, builds a pivot table, attaches a slicer to the 'Category' field, initially selects only the first slicer item, then resets the slicer by marking every SlicerCacheItem as selected, refreshes the slicer, and saves the workbook as SlicerResetDemo.xlsx.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data for the pivot table
+            cells["A1"].Value = "Category";
+            cells["A2"].Value = "A";
+            cells["A3"].Value = "B";
+            cells["A4"].Value = "C";
+            cells["B1"].Value = "Value";
+            cells["B2"].Value = 10;
+            cells["B3"].Value = 20;
+            cells["B4"].Value = 30;
+
+            // Add a pivot table based on the data
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
+            pivot.RefreshData();
+            pivot.CalculateData();
+
+            // Add a slicer linked to the pivot table
+            SlicerCollection slicers = sheet.Slicers;
+            int slicerIndex = slicers.Add(pivot, "F1", "Category");
+            Slicer slicer = slicers[slicerIndex];
+
+            // Example: select only the first item (simulating a filter)
+            for (int i = 0; i < slicer.SlicerCache.SlicerCacheItems.Count; i++)
             {
-                // Define input and output file paths
-                string inputPath = "input.xlsx";
-                string outputPath = "Output.xlsx";
-
-                Workbook workbook;
-
-                // Load existing workbook if the file exists; otherwise create a new one
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                }
-
-                // Get the first worksheet (adjust index if needed)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Access the slicer collection on the worksheet
-                SlicerCollection slicers = worksheet.Slicers;
-
-                // Iterate through each slicer and clear its selections
-                foreach (Slicer slicer in slicers)
-                {
-                    // Get all items in the slicer's cache
-                    SlicerCacheItemCollection cacheItems = slicer.SlicerCache.SlicerCacheItems;
-
-                    // Deselect every item
-                    for (int i = 0; i < cacheItems.Count; i++)
-                    {
-                        cacheItems[i].Selected = false;
-                    }
-
-                    // Refresh the slicer to apply the changes
-                    slicer.Refresh();
-                }
-
-                // Ensure the directory for the output file exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                slicer.SlicerCache.SlicerCacheItems[i].Selected = i == 0;
             }
-            catch (Exception ex)
+            slicer.Refresh();
+
+            // ----- Reset the slicer to its default state -----
+            // Set all items as selected so that no filter is applied
+            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
             {
-                Console.WriteLine("An error occurred while processing the workbook:");
-                Console.WriteLine(ex.Message);
+                item.Selected = true;
             }
+            // Refresh the slicer to apply the changes
+            slicer.Refresh();
+
+            // Save the workbook
+            workbook.Save("SlicerResetDemo.xlsx");
         }
     }
 }

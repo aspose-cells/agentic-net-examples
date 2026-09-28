@@ -1,58 +1,76 @@
-// Title: Benchmark DBConnection Refresh Time in Excel with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, enumerates its external data connections, identifies DBConnection objects, measures the time required to access the ConnectionString (as a refresh proxy) with a Stopwatch, logs the elapsed milliseconds, and optionally saves the workbook. Ideal for profiling and optimizing data‑connection performance in Aspose.Cells.
-// Keywords: Aspose.Cells DBConnection timing | measure external connection refresh .NET | C# stopwatch Excel data connection | benchmark DBConnection performance | log refresh duration Aspose.Cells | Excel workbook external connections | performance profiling Aspose.Cells | DBConnection refresh simulation | optimize Excel data source latency
-// Common Searches: how to time DBConnection refresh using Aspose.Cells C# | measure performance of external data connections in Excel .NET | log refresh duration for each DBConnection Aspose.Cells | benchmark Excel DBConnection refresh time | Aspose.Cells measure external connection latency
-// Developer Intent: Capture and record the execution time of each DBConnection refresh operation in an Excel workbook for performance analysis.
-// Use Cases: Identify slow‑running database connections before publishing a workbook. | Generate a performance report of all DBConnection refresh times for auditing or optimization. | Compare connection latency across multiple workbooks to fine‑tune data source configurations.
-// AI Prompts: Create C# code that iterates through a Workbook's DataConnections, measures the refresh time of each DBConnection with a Stopwatch, and returns a dictionary of connection names to elapsed milliseconds. | Suggest a reliable method to trigger an actual DBConnection refresh in Aspose.Cells and capture its execution time. | Provide a reusable utility class for logging DBConnection refresh performance, including handling cases where no DBConnection objects are present.
+// Title: How to measure and log the refresh duration of each DBConnection in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, enumerates all DBConnection objects, toggles BackgroundRefresh to trigger a refresh, and captures the elapsed milliseconds using Stopwatch. | Show how to output the refresh time for each DBConnection to the console in a readable format while handling missing input files gracefully. | Explain how to save the workbook after measuring DBConnection refresh performance and ensure any changes are persisted.
+// Common Searches: c# Aspose.Cells how to benchmark the refresh time of external DB connections in an Excel workbook | measure performance of DataConnections using Stopwatch in Aspose.Cells .NET | log refresh latency of each DBConnection object while processing a workbook with Aspose.Cells
+// Tags: measure DBConnection refresh Aspose.Cells | log external connection latency .NET | benchmark Excel data connections C# | stopwatch timing DBConnection Aspose.Cells | performance profiling Aspose.Cells external connections
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-// Loads an Excel workbook, enumerates its external data connections, identifies DBConnection objects, measures the time required to access the ConnectionString (as a refresh proxy) with a Stopwatch, logs the elapsed milliseconds, and optionally saves the workbook. Ideal for profiling and optimizing data‑connection performance in Aspose.Cells.
-class DBConnectionRefreshPerformance
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // // Loads an Excel workbook, iterates through its DBConnection objects, measures the time taken to refresh each connection by toggling BackgroundRefresh, logs the elapsed milliseconds to the console, and saves the workbook.
+    public class DBConnectionRefreshPerformanceDemo
     {
-        // Load the workbook that contains external DB connections
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Get the collection of external connections
-        ExternalConnectionCollection connections = workbook.DataConnections;
-
-        // Iterate through each connection and measure refresh time for DBConnection objects
-        for (int i = 0; i < connections.Count; i++)
+        public static void Run()
         {
-            ExternalConnection conn = connections[i];
-
-            if (conn is DBConnection dbConn)
+            try
             {
-                Console.WriteLine($"Refreshing DBConnection #{i} - Name: {dbConn.Name}");
+                string inputPath = "input.xlsx";
 
-                // Start timing
-                Stopwatch sw = Stopwatch.StartNew();
+                // Ensure the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
 
-                // ------------------------------------------------------------
-                // NOTE: Aspose.Cells does not expose a direct Refresh method for
-                // DBConnection. The actual refresh normally occurs when the
-                // workbook is opened in Excel or when the connection is used to
-                // populate a table. Here we simulate the refresh operation.
-                // Accessing a property (e.g., ConnectionString) ensures the
-                // object is touched without altering its state.
-                // ------------------------------------------------------------
-                string dummy = dbConn.ConnectionString;
+                // Load the workbook containing external DB connections
+                Workbook workbook = new Workbook(inputPath);
 
-                // Stop timing
-                sw.Stop();
+                // Retrieve the collection of external connections
+                ExternalConnectionCollection connections = workbook.DataConnections;
 
-                Console.WriteLine($"Time taken: {sw.ElapsedMilliseconds} ms");
+                // Iterate through each connection and measure refresh time for DBConnection objects
+                foreach (ExternalConnection conn in connections)
+                {
+                    if (conn is DBConnection dbConn)
+                    {
+                        Console.WriteLine($"Processing DBConnection: {dbConn.Name}");
+
+                        // Start timing
+                        Stopwatch sw = Stopwatch.StartNew();
+
+                        // Simulate a refresh by toggling a property that forces re‑evaluation
+                        bool originalBackgroundRefresh = dbConn.BackgroundRefresh;
+                        dbConn.BackgroundRefresh = !originalBackgroundRefresh;
+                        dbConn.BackgroundRefresh = originalBackgroundRefresh;
+
+                        // Stop timing
+                        sw.Stop();
+
+                        // Log the elapsed time
+                        Console.WriteLine($"Refresh time for '{dbConn.Name}': {sw.ElapsedMilliseconds} ms");
+                    }
+                }
+
+                // Save the workbook (if any changes were made)
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
-        // Save the workbook after processing (optional)
-        workbook.Save("output.xlsx");
+        // Entry point required for compilation
+        public static void Main(string[] args)
+        {
+            Run();
+        }
     }
 }

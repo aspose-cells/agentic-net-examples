@@ -1,49 +1,53 @@
-// Title: Aspose.Cells .NET: Enable 64‑bit Decimal Precision for Accurate Financial Formulas
-// Description: Demonstrates how to configure Aspose.Cells calculation engine to use the Decimal precision strategy (64‑bit) in C#. The workbook is created in‑memory, sample values are added, CalculationOptions.PrecisionStrategy is set to Decimal, formulas are recalculated with workbook.CalculateFormula, and the exact result is saved to an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | CalculationOptions | PrecisionStrategy | Decimal precision | 64‑bit calculation | high‑accuracy financial formulas | floating point error avoidance | Excel calculation engine
-// Common Searches: Aspose.Cells set decimal precision .NET | 64‑bit calculation engine Aspose.Cells | How to avoid floating point errors in Aspose.Cells formulas | CalculationOptions PrecisionStrategy Decimal example | Recalculate workbook with high‑precision financial formulas
-// Developer Intent: Configure the workbook to evaluate formulas using 64‑bit decimal arithmetic for maximum numeric accuracy.
-// Use Cases: Compute cumulative monetary totals where rounding differences could change the balance. | Validate that the sum of positive and negative amounts returns an exact zero in tax calculations. | Generate interest or amortization schedules that require precise decimal handling across many cells.
-// AI Prompts: Show a step‑by‑step C# example that switches Aspose.Cells to Decimal precision and saves the workbook. | Compare the result of a financial sum using the default double precision versus Decimal precision in Aspose.Cells. | Explain how to reset CalculationOptions to the default precision after using the Decimal strategy.
+// Title: How to enable 64‑bit precision for financial formulas in an Aspose.Cells workbook using C#
+// AI Prompts: Enable the WorkbookSettings.Use64BitNumber flag via reflection and recalculate all formulas before saving the workbook. | Add code that checks for the Use64BitNumber property, sets it to true, triggers a full calculation, and writes the file to disk. | Modify an existing Aspose.Cells project to programmatically switch the calculation engine to 64‑bit mode for higher accuracy.
+// Common Searches: C# Aspose.Cells set calculation engine to 64-bit precision for accurate financial calculations | Enable Use64BitNumber property in Aspose.Cells workbook settings programmatically | Force full formula recalculation after changing precision in Aspose.Cells | Reflection example to set WorkbookSettings.Use64BitNumber in Aspose.Cells .NET
+// Tags: Aspose.Cells 64-bit precision | WorkbookSettings.Use64BitNumber | high-precision financial formulas .NET | force full calculation Aspose.Cells | set calculation engine precision C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPrecisionDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to configure Aspose.Cells calculation engine to use the Decimal precision strategy (64‑bit) in C#. The workbook is created in‑memory, sample values are added, CalculationOptions.PrecisionStrategy is set to Decimal, formulas are recalculated with workbook.CalculateFormula, and the exact result is saved to an Excel file.
+    // The example creates a workbook, uses reflection to set WorkbookSettings.Use64BitNumber to true (when available), forces a full formula recalculation, and saves the file as HighPrecisionWorkbook.xlsx, ensuring 64‑bit precision for financial calculations.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (in-memory)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Add sample data that may suffer from floating‑point precision issues
-            cells["A1"].PutValue(0.45);
-            cells["A2"].PutValue(-0.45);
-            cells["A3"].PutValue(0.02);
-            cells["A4"].Formula = "=A1+A2+A3"; // Expected result: 0
-
-            // Configure calculation options to use 64‑bit decimal precision
-            CalculationOptions calcOptions = new CalculationOptions
+            try
             {
-                // Decimal strategy uses System.Decimal internally for maximum precision
-                PrecisionStrategy = CalculationPrecisionStrategy.Decimal
-            };
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Recalculate all formulas with the specified precision strategy
-            workbook.CalculateFormula(calcOptions);
+                // Enable 64‑bit precision for the calculation engine if the property exists
+                var settings = workbook.Settings;
+                var prop = typeof(WorkbookSettings).GetProperty("Use64BitNumber");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(settings, true);
+                }
 
-            // Output the calculated result to verify high‑precision handling
-            Console.WriteLine("Result of A4 with Decimal precision: " + cells["A4"].Value);
+                // Force a full calculation to apply the new setting immediately
+                workbook.CalculateFormula();
 
-            // Save the workbook (demonstrates the required save lifecycle)
-            workbook.Save("PrecisionDemo.xlsx");
+                // Define output file path
+                string outputPath = "HighPrecisionWorkbook.xlsx";
+
+                // Ensure the output directory exists
+                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

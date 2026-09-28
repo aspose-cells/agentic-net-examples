@@ -1,39 +1,58 @@
-// Title: Aspose.Cells .NET: Load Workbook, Enable ISO 29500 Strict Mode, and Handle Save Permission Errors
-// Description: Loads an existing Excel file with Aspose.Cells, sets OoxmlCompliance.Iso29500_2008_Strict, and attempts to save to a protected directory (e.g., C:\Windows\System32). The sample catches the resulting UnauthorizedAccessException and displays the error message.
-// Keywords: Aspose.Cells | C# | strict compliance | ISO 29500 | OoxmlCompliance | Workbook.Save | permission error | UnauthorizedAccessException | protected folder | Windows System32
-// Common Searches: Aspose.Cells set strict OOXML compliance C# | How to catch permission error when saving Excel with Aspose.Cells | Saving workbook to C:\Windows\System32 using Aspose.Cells | Exception thrown for insufficient write permissions Aspose.Cells | Enable ISO 29500 strict mode before saving Aspose.Cells
-// Developer Intent: The developer wants to confirm that enabling ISO/IEC 29500:2008 strict compliance does not override file‑system security and to implement robust error handling for save operations targeting directories without write access.
-// Use Cases: Validate that strict OOXML compliance is applied before persisting a workbook. | Test application behavior when attempting to save to a location that requires administrative rights. | Capture and log UnauthorizedAccessException for user feedback or audit purposes. | Demonstrate that compliance settings do not suppress permission‑related exceptions.
-// AI Prompts: Generate C# Aspose.Cells code that loads a workbook, sets OoxmlCompliance.Iso29500_2008_Strict, and saves to a folder with limited permissions while handling UnauthorizedAccessException. | Explain how Aspose.Cells strict compliance mode interacts with the .NET file‑system security model during a save operation. | What are best practices for handling save failures caused by insufficient permissions in Aspose.Cells applications?
+// Title: Load an Excel workbook, enable ISO/IEC 29500:2008 strict compliance, and handle save errors caused by insufficient permissions using Aspose.Cells in C#
+// AI Prompts: Generate C# code that opens an existing .xlsx file with Aspose.Cells, sets workbook.Settings.Compliance to OoxmlCompliance.Iso29500_2008_Strict, and attempts to save it to a directory without write rights, capturing any exception. | Show how to catch and log an UnauthorizedAccessException when saving a strict‑compliance workbook to a protected system folder in C# with Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable ISO 29500 strict mode and save to protected folder | how to catch unauthorized access exception when saving Excel file with Aspose.Cells | save workbook with strict compliance to System32 directory C# | set OoxmlCompliance.Iso29500_2008_Strict before saving and handle permission error
+// Tags: enable strict OoxmlCompliance Aspose.Cells | save workbook to protected directory C# | handle UnauthorizedAccessException Aspose.Cells | load workbook then set ISO29500 strict mode | Aspose.Cells permission error on save
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an existing Excel file with Aspose.Cells, sets OoxmlCompliance.Iso29500_2008_Strict, and attempts to save to a protected directory (e.g., C:\Windows\System32). The sample catches the resulting UnauthorizedAccessException and displays the error message.
-class StrictComplianceSaveDemo
+namespace AsposeCellsStrictComplianceDemo
 {
-    static void Main()
+    // The example creates a temporary workbook, reloads it, switches the workbook's compliance to ISO/IEC 29500:2008 Strict, and then tries to save the file to a system folder that requires elevated rights. It demonstrates catching the resulting permission‑related exception and cleaning up the temporary file.
+    class Program
     {
-        // Load an existing workbook (ensure the file exists at this path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Enable ISO/IEC 29500:2008 Strict compliance for OOXML
-        workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
-
-        // Define a path that typically requires elevated permissions
-        string restrictedPath = @"C:\Windows\System32\restricted.xlsx";
-
-        try
+        static void Main()
         {
-            // Attempt to save the workbook to the restricted location
-            workbook.Save(restrictedPath);
-            Console.WriteLine("Workbook saved successfully.");
-        }
-        catch (Exception ex)
-        {
-            // Expected failure due to insufficient permissions
-            Console.WriteLine("Failed to save workbook: " + ex.Message);
+            // Create a new workbook and add some data
+            Workbook tempWorkbook = new Workbook();
+            tempWorkbook.Worksheets[0].Cells["A1"].PutValue("Strict compliance test");
+
+            // Save the workbook to a temporary file (normal location)
+            string tempPath = Path.Combine(Path.GetTempPath(), "TempWorkbook.xlsx");
+            tempWorkbook.Save(tempPath);
+            tempWorkbook.Dispose();
+
+            // Load the workbook from the temporary file
+            Workbook workbook = new Workbook(tempPath);
+
+            // Enable ISO/IEC 29500:2008 Strict compliance
+            workbook.Settings.Compliance = OoxmlCompliance.Iso29500_2008_Strict;
+
+            // Attempt to save to a location with insufficient permissions
+            // Example: system directory (usually requires elevated rights)
+            string restrictedPath = @"C:\Windows\System32\RestrictedWorkbook.xlsx";
+
+            try
+            {
+                workbook.Save(restrictedPath);
+                Console.WriteLine("Workbook saved successfully (unexpected).");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to save workbook due to insufficient permissions:");
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                workbook.Dispose();
+
+                // Clean up temporary file
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
+                }
+            }
         }
     }
 }

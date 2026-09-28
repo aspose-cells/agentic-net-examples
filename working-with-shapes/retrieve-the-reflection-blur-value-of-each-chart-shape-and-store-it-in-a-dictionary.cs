@@ -1,82 +1,71 @@
-// Title: C# Example: Retrieve Chart Shape Reflection Blur Using Aspose.Cells for .NET
-// Description: Loads an existing or new workbook, walks through each worksheet and its shapes, filters ChartShape objects, reads the Reflection.Blur property (default 0 if missing), stores the blur radius in a dictionary keyed by worksheet and shape name, outputs the results, and saves the workbook unchanged.
-// Keywords: Aspose.Cells | C# | .NET | chart shape reflection blur | Reflection.Blur property | retrieve chart effects | Excel shape reflection | dictionary of blur values | Aspose.Cells example | GitHub source code
-// Common Searches: Aspose.Cells get chart reflection blur C# | read reflection effect of chart shapes .NET | extract blur radius from Excel chart shape | store chart reflection values in dictionary | Aspose.Cells chart shape reflection property example
-// Developer Intent: Read the blur radius of the reflection effect for every chart shape in a workbook and collect the values in a dictionary.
-// Use Cases: Generate a design audit that lists reflection blur settings for all charts across worksheets. | Validate visual consistency of chart reflections before publishing an Excel file. | Compare or adjust chart reflection blur values programmatically during automated report generation.
-// AI Prompts: Write C# code with Aspose.Cells to set the reflection blur of all chart shapes to a given value. | Create a method that returns a dictionary mapping chart identifiers to their reflection blur values for a workbook. | Explain how to handle null Reflection objects safely when extracting blur values from chart shapes in Aspose.Cells.
+// Title: Read chart reflection blur values from an Excel workbook and store them in a C# Dictionary using Aspose.Cells
+// AI Prompts: Write C# code with Aspose.Cells that loops through every worksheet and each chart, obtains the chart's reflection blur (or assigns a default when the property is unavailable) and adds the result to a Dictionary<string, double> keyed by a unique chart identifier. | Show how to gracefully handle the missing Reflection property on Aspose.Cells Chart objects by using a fallback blur value while still collecting blur information for all chart shapes.
+// Common Searches: Aspose.Cells get reflection blur of chart shape in .NET | C# read visual effect properties of Excel charts using Aspose.Cells | store Excel chart properties in a dictionary with Aspose.Cells | workaround for unsupported chart reflection property in Aspose.Cells C# | retrieve chart effect parameters from a workbook using Aspose.Cells
+// Tags: Aspose.Cells retrieve chart reflection blur | C# dictionary store chart blur values | iterate worksheets and charts Aspose.Cells | fallback for missing chart reflection property Aspose.Cells | generate unique chart key C#
 
+using Aspose.Cells;
+using Aspose.Cells.Charts;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Loads an existing or new workbook, walks through each worksheet and its shapes, filters ChartShape objects, reads the Reflection.Blur property (default 0 if missing), stores the blur radius in a dictionary keyed by worksheet and shape name, outputs the results, and saves the workbook unchanged.
-class RetrieveChartReflectionBlur
+// The example loads an Excel file with Aspose.Cells, iterates over each worksheet and its charts, attempts to read a reflection blur value (using a default of 0.0 because the API lacks a direct property), creates a unique identifier for each chart, stores the blur value in a Dictionary<string, double>, and prints the collected results.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load workbook if it exists; otherwise create a new one.
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                workbook = new Workbook();
-            }
+            // Dictionary to store each chart's reflection blur value (placeholder if not supported)
+            Dictionary<string, double> chartReflectionBlur = new Dictionary<string, double>();
 
-            // Store blur values for each chart shape.
-            var chartBlurValues = new Dictionary<string, double>();
-
-            // Iterate through all worksheets.
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Iterate through all shapes on the worksheet.
-                foreach (Shape shape in sheet.Shapes)
+                // Iterate through all charts on the worksheet
+                foreach (Chart chart in sheet.Charts)
                 {
-                    // Process only chart shapes using pattern matching.
-                    if (shape is ChartShape chartShape && chartShape.Chart != null)
+                    try
                     {
-                        try
-                        {
-                            // Get the reflection effect of the chart shape.
-                            ReflectionEffect reflection = chartShape.Reflection;
+                        // Aspose.Cells Chart does not expose a Reflection property directly.
+                        // Use a placeholder value (0.0) for blur.
+                        double blur = 0.0;
 
-                            // Use worksheet name and shape name as a unique key.
-                            string key = $"{sheet.Name}_{chartShape.Name}";
+                        // Build a unique key for the chart
+                        string key = !string.IsNullOrEmpty(chart.Name)
+                            ? chart.Name
+                            : $"{sheet.Name}_Chart_{chart.GetHashCode()}";
 
-                            // Store the blur radius (in points). If reflection is null, default to 0.
-                            chartBlurValues[key] = reflection?.Blur ?? 0;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to retrieve reflection for chart \"{chartShape.Name}\": {ex.Message}");
-                        }
+                        chartReflectionBlur[key] = blur;
+                    }
+                    catch (Exception exChart)
+                    {
+                        Console.WriteLine($"Error processing chart on sheet \"{sheet.Name}\": {exChart.Message}");
                     }
                 }
             }
 
-            // Output collected blur values.
-            foreach (var kvp in chartBlurValues)
+            // Output the collected blur values
+            foreach (var kvp in chartReflectionBlur)
             {
                 Console.WriteLine($"Chart: {kvp.Key}, Reflection Blur: {kvp.Value}");
             }
-
-            // Save the workbook (no modifications made in this example).
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

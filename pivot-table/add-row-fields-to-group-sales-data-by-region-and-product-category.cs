@@ -1,86 +1,71 @@
-// Title: Aspose.Cells for .NET: Create a Pivot Table that Groups Sales by Region and Product Category (C#)
-// Description: C# code that builds a workbook with sample sales rows (Region, Category, Sales), adds a pivot table on A1:C7, assigns Region and Category to the row area, sums the Sales field, refreshes the cache, calculates the results, and saves the file as GroupedSalesByRegionAndCategory.xlsx.
-// Keywords: Aspose.Cells | C# pivot table example | add row fields to pivot | group sales by region | product category pivot | sum aggregation Aspose.Cells | Excel automation .NET | pivot cache refresh | calculate pivot data | sample workbook code
-// Common Searches: Aspose.Cells add multiple row fields pivot C# | C# pivot table group by region and category | How to sum sales in an Aspose.Cells pivot | Create pivot table programmatically Aspose.Cells .NET
-// Developer Intent: Add Region and Category as row fields in a pivot table and compute total Sales using Aspose.Cells for .NET.
-// Use Cases: Produce a regional sales summary that breaks down totals by product category for management reporting. | Build an Excel workbook that can be refreshed with new sales data while automatically updating grouped totals. | Export a pivot‑driven sales analysis to Excel for distribution to finance or marketing teams.
-// AI Prompts: Show how to add a Year column field to the same pivot table with Aspose.Cells. | Provide C# code to format pivot headers and apply currency formatting to the Sales sum. | Explain how to change the data source range of the pivot table and refresh it programmatically.
+// Title: How to create an Excel pivot table that groups sales by region and product category and sums sales using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that builds a pivot table, adds Region and Category as row fields, and sets Sales as a summed data field. | Show the steps to define a source range, insert a pivot table at a specific cell, then refresh and calculate it using Aspose.Cells. | Provide an example that saves the resulting workbook as an .xlsx file after creating the grouped pivot.
+// Common Searches: aspocells c# create pivot table with multiple row fields | group sales data by region and category in Excel using Aspose.Cells | sum sales column in Aspose.Cells pivot table example | how to refresh and calculate a pivot table with Aspose.Cells .NET | save pivot table workbook as xlsx using Aspose.Cells C#
+// Tags: Aspose.Cells pivot table row grouping | C# define source range for Aspose.Cells pivot | Aspose.Cells sum function for data field | export Aspose.Cells workbook to XLSX | refresh and calculate Aspose.Cells pivot programmatically
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsPivotExample
 {
-    // C# code that builds a workbook with sample sales rows (Region, Category, Sales), adds a pivot table on A1:C7, assigns Region and Category to the row area, sums the Sales field, refreshes the cache, calculates the results, and saves the file as GroupedSalesByRegionAndCategory.xlsx.
-    public class GroupSalesByRegionAndCategory
+    // The sample creates a new workbook, fills it with sales data (Region, Category, Sales), defines the source range A1:C9, adds a pivot table at E3 named SalesPivot, adds Region and Category as row fields, adds Sales as a data field with SUM aggregation, refreshes and calculates the pivot, and saves the file as GroupedSalesPivot.xlsx.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample sales data
+            // Header row
             sheet.Cells["A1"].PutValue("Region");
             sheet.Cells["B1"].PutValue("Category");
             sheet.Cells["C1"].PutValue("Sales");
 
-            sheet.Cells["A2"].PutValue("North");
-            sheet.Cells["B2"].PutValue("Electronics");
-            sheet.Cells["C2"].PutValue(1200);
+            // Data rows
+            object[,] data = new object[,]
+            {
+                { "North", "Electronics", 1200 },
+                { "North", "Furniture",   800 },
+                { "South", "Electronics", 1500 },
+                { "South", "Furniture",   700 },
+                { "East",  "Electronics", 900 },
+                { "East",  "Furniture",   600 },
+                { "West",  "Electronics", 1100 },
+                { "West",  "Furniture",   500 }
+            };
 
-            sheet.Cells["A3"].PutValue("North");
-            sheet.Cells["B3"].PutValue("Furniture");
-            sheet.Cells["C3"].PutValue(800);
+            for (int r = 0; r < data.GetLength(0); r++)
+            {
+                for (int c = 0; c < data.GetLength(1); c++)
+                {
+                    sheet.Cells[r + 1, c].PutValue(data[r, c]);
+                }
+            }
 
-            sheet.Cells["A4"].PutValue("South");
-            sheet.Cells["B4"].PutValue("Electronics");
-            sheet.Cells["C4"].PutValue(1500);
+            // Define the source range for the pivot table
+            string sourceRange = "A1:C9";
 
-            sheet.Cells["A5"].PutValue("South");
-            sheet.Cells["B5"].PutValue("Furniture");
-            sheet.Cells["C5"].PutValue(700);
-
-            sheet.Cells["A6"].PutValue("East");
-            sheet.Cells["B6"].PutValue("Electronics");
-            sheet.Cells["C6"].PutValue(900);
-
-            sheet.Cells["A7"].PutValue("East");
-            sheet.Cells["B7"].PutValue("Furniture");
-            sheet.Cells["C7"].PutValue(600);
-
-            // Add a pivot table based on the data range A1:C7
-            int pivotIndex = sheet.PivotTables.Add("A1:C7", "E3", "SalesPivot");
+            // Add a pivot table to the worksheet at cell E3
+            int pivotIndex = sheet.PivotTables.Add(sourceRange, "E3", "SalesPivot");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Configure row fields
+            // Add row fields to group by Region and then by Category
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
 
-            // Add data field and set aggregation to Sum
+            // Add the Sales field as a data field (sum aggregation)
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
             pivotTable.DataFields[0].Function = ConsolidationFunction.Sum;
 
-            // Refresh the pivot cache and calculate the pivot table
+            // Refresh and calculate the pivot table to populate data
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Save the workbook
-            workbook.Save("GroupedSalesByRegionAndCategory.xlsx");
+            // Save the workbook with the pivot table
+            workbook.Save("GroupedSalesPivot.xlsx");
         }
     }
 }

@@ -1,54 +1,65 @@
-// Title: C# – Keep Table Formatting Through Row 15 Using TableToRangeOptions.LastRow in Aspose.Cells
-// Description: Shows how to create a workbook, add a styled ListObject, set TableToRangeOptions.LastRow so rows 0‑14 retain the table style, convert the table to a plain range, and save the result.
-// Keywords: Aspose.Cells | TableToRangeOptions | LastRow | C# | preserve table style | convert ListObject to range | Excel row formatting | row 15
-// Common Searches: Aspose.Cells TableToRangeOptions LastRow C# example | keep table formatting after converting to range | retain style for first 15 rows Aspose.Cells | flatten ListObject without losing formatting | C# Aspose.Cells keep specific rows styled
-// Developer Intent: The developer wants to flatten a ListObject into a regular range while preserving the original table styling for the first fifteen rows.
-// Use Cases: Export a table to Excel where the header and the initial 15 rows keep their visual design before further manipulation. | Maintain conditional formatting on a subset of rows after removing the table structure for data processing. | Apply custom formatting to rows beyond the 15th row after the table has been converted to a plain range.
-// AI Prompts: Write C# code using Aspose.Cells that converts a ListObject to a range and keeps the table style for rows up to a given index. | Explain the purpose of TableToRangeOptions.LastRow, its zero‑based indexing, and how to adjust it for different row counts. | Provide a step‑by‑step tutorial for converting a table to a range while preserving formatting for the first N rows in Aspose.Cells.
+// Title: Use TableToRangeOptions.LastRow to preserve formatting through row 15 when converting an Excel table to a range with Aspose.Cells in C#
+// AI Prompts: Load a workbook, set TableToRangeOptions.LastRow = 14, and call ListObject.ConvertToRange to keep formatting up to row 15. | Write C# code that checks for a ListObject, applies TableToRangeOptions to retain cell styles for the first fifteen rows, and saves the workbook. | Show how to limit the formatting retention range during a table‑to‑range conversion using Aspose.Cells TableToRangeOptions.
+// Common Searches: Aspose.Cells C# TableToRangeOptions LastRow keep formatting through row 15 | how to convert Excel table to range while preserving first 15 rows styles using Aspose | C# example limiting table-to-range conversion rows with Aspose.Cells | retain table formatting up to a specific row when converting to range in Aspose.Cells | convert ListObject to normal range and keep formatting for rows 1-15 Aspose.Cells
+// Tags: Aspose.Cells TableToRangeOptions row limit | keep table styles after conversion to range | convert ListObject to normal range C# | limit formatting rows during table-to-range conversion | retain cell styles up to row fifteen Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Shows how to create a workbook, add a styled ListObject, set TableToRangeOptions.LastRow so rows 0‑14 retain the table style, convert the table to a plain range, and save the result.
-class TableToRangeLastRowDemo
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads input.xlsx, verifies a table exists in the first worksheet, sets TableToRangeOptions.LastRow to 14 to keep formatting through row 15, converts the first ListObject to a normal range, and saves the modified workbook as output.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data: 5 columns, 20 data rows (plus header row)
-        for (int col = 0; col < 5; col++)
+        static void Main(string[] args)
         {
-            cells[0, col].PutValue($"Header {col + 1}");
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        for (int row = 1; row <= 20; row++)
-        {
-            for (int col = 0; col < 5; col++)
+            try
             {
-                cells[row, col].PutValue($"R{row}C{col + 1}");
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Ensure the worksheet contains at least one table (ListObject)
+                if (sheet.ListObjects.Count == 0)
+                {
+                    Console.WriteLine("No tables (ListObjects) found in the worksheet.");
+                    return;
+                }
+
+                // Get the first table
+                ListObject table = sheet.ListObjects[0];
+
+                // Set conversion options (keep formatting up to row 15, zero‑based index 14)
+                TableToRangeOptions options = new TableToRangeOptions
+                {
+                    LastRow = 14
+                };
+
+                // Convert the table to a normal range
+                table.ConvertToRange(options);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Add a table that initially spans rows 0‑20 and columns 0‑4
-        int tableIndex = sheet.ListObjects.Add(0, 0, 20, 4, true);
-        ListObject table = sheet.ListObjects[tableIndex];
-        table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-        // Configure conversion options: keep formatting through row 15 (zero‑based index 14)
-        TableToRangeOptions options = new TableToRangeOptions
-        {
-            LastRow = 14   // rows 0‑14 will retain table formatting after conversion
-        };
-
-        // Convert the table to a regular range using the specified options
-        table.ConvertToRange(options);
-
-        // Save the resulting workbook
-        workbook.Save("TableToRange_LastRow.xlsx");
     }
 }

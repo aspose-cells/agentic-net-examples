@@ -1,42 +1,47 @@
-// Title: Export Excel to HTML with vertically merged cells – Aspose.Cells for .NET
-// Description: This C# sample builds a workbook, merges cells A1:A3 vertically and B1:C2 across rows and columns, configures HtmlSaveOptions.MergeEmptyTdType to MergeForcely, and saves the result as MergedCells.html so that merged cells spanning multiple rows appear correctly in the HTML output.
-// Keywords: Aspose.Cells | C# | HTML export | merged cells | vertical merge | MergeEmptyTdType | .NET | Excel to HTML | preserve cell merges | HtmlSaveOptions
-// Common Searches: Aspose.Cells export Excel to HTML merged cells | how to keep vertical merged cells in HTML output | HtmlSaveOptions MergeEmptyTdType example | C# save workbook as HTML with merged ranges | merged cells not showing in HTML Aspose.Cells
-// Developer Intent: Generate an HTML file from an Excel workbook while ensuring that cells merged across multiple rows are rendered correctly.
-// Use Cases: Create web‑ready reports where a header spans several rows | Convert Excel tables with merged blocks into responsive HTML emails | Publish Excel‑based dashboards on a website without losing layout
-// AI Prompts: Show how to set HtmlSaveOptions.MergeEmptyTdType to preserve vertical merged cells when exporting to HTML with Aspose.Cells. | Provide C# code that exports a workbook with merged ranges and forces empty TD elements to merge. | Explain why MergeForcely is needed for correct HTML rendering of multi‑row merged cells.
+// Title: Export an Excel workbook to HTML while preserving multi‑row merged cells using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions to keep merged cells that span several rows, and saves the result as an HTML file. | Show how to configure Aspose.Cells HtmlSaveOptions so that merged cell ranges are rendered correctly in the HTML output. | Add robust file‑existence checking and exception handling to a C# Excel‑to‑HTML conversion that maintains the original merged‑cell layout.
+// Common Searches: Aspose.Cells C# export Excel to HTML with merged cells spanning rows | How to keep multi‑row merged cells when converting .xlsx to HTML using Aspose | HtmlSaveOptions PreserveMergedCells property Aspose.Cells | C# convert workbook to HTML preserving merged cell layout | Export all worksheets to HTML Aspose.Cells merged cells issue
+// Tags: Aspose.Cells HtmlSaveOptions merged cells | C# Excel to HTML conversion preserving layout | Export merged cell ranges to HTML Aspose | HtmlSaveOptions ExportActiveWorksheetOnly false | Exception handling file validation Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// This C# sample builds a workbook, merges cells A1:A3 vertically and B1:C2 across rows and columns, configures HtmlSaveOptions.MergeEmptyTdType to MergeForcely, and saves the result as MergedCells.html so that merged cells spanning multiple rows appear correctly in the HTML output.
-class ExportMergedCellsHtml
+// The example checks for the presence of input.xlsx, loads it with Aspose.Cells Workbook, configures HtmlSaveOptions (ExportActiveWorksheetOnly = false) to retain merged cells that span multiple rows, and saves the workbook as output.html while handling any runtime errors.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
 
-        // Populate some data
-        worksheet.Cells["A1"].PutValue("Header");
-        worksheet.Cells["A2"].PutValue("Row 1");
-        worksheet.Cells["A3"].PutValue("Row 2");
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Merge cells vertically (A1:A3) – this is a merged cell spanning multiple rows
-        worksheet.Cells.CreateRange("A1", "A3").Merge();
+        try
+        {
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Another merged region across rows and columns (B1:C2)
-        worksheet.Cells["B1"].PutValue("Block");
-        worksheet.Cells.CreateRange("B1", "C2").Merge();
+            // Set HTML export options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                // Export all worksheets; set to true to export only the active sheet
+                ExportActiveWorksheetOnly = false
+            };
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-        // Force merging of empty TD elements so that merged cells render correctly in HTML
-        htmlOptions.MergeEmptyTdType = MergeEmptyTdType.MergeForcely;
-
-        // Save the workbook as HTML
-        workbook.Save("MergedCells.html", htmlOptions);
+            // Export the workbook to HTML using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

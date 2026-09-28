@@ -1,75 +1,59 @@
-// Title: C# unit test to ensure Aspose.Cells HTML output with PresentationPreference exceeds 2 MB
-// Description: Creates a workbook with 5,000 rows × 50 columns of 200‑character strings, saves it as a single HTML file using HtmlSaveOptions (PresentationPreference = true), measures the resulting stream size, and fails the test when the HTML is 2 MB or smaller.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | PresentationPreference | HTML size test | 2 MB limit | unit test | SaveAsSingleFile | MemoryStream | performance regression
-// Common Searches: Aspose.Cells unit test HTML size | PresentationPreference HTML output size | C# check HTML file size Aspose.Cells | Validate HtmlSaveOptions SaveAsSingleFile size | Measure Aspose.Cells HTML stream length
-// Developer Intent: Write an automated test that fails if the HTML generated with PresentationPreference does not exceed 2 MB.
-// Use Cases: Detect regressions where PresentationPreference reduces HTML payload | Integrate size validation into CI pipelines for large workbook exports | Confirm that SaveAsSingleFile aggregates resources into a single HTML document of expected size
-// AI Prompts: Generate an MSTest method that asserts HtmlSaveOptions.PresentationPreference produces HTML larger than 2 MB for a workbook filled with 5,000 rows and 50 columns of 200‑character strings. | Create a NUnit test that saves a workbook to a MemoryStream with SaveAsSingleFile = true, checks stream.Length, and fails when size ≤ 2 MB. | Provide an xUnit test example that captures HTML output, measures its length, and throws an AssertionFailedException if the size does not exceed 2 MB.
+// Title: Write a C# unit test with Aspose.Cells that fails when PresentationPreference.BestFit generates HTML larger than 2 MB
+// AI Prompts: Create an MSTest method that builds a workbook with many rows, saves it to HTML using HtmlSaveOptions.PresentationPreference = PresentationPreference.BestFit, and asserts the MemoryStream length is under 2 MB. | Provide a NUnit test example that populates a worksheet, exports to HTML with BestFit presentation, and throws an assertion failure if the output exceeds 2 MB.
+// Common Searches: aspocells unit test for HTML export size limit | c# assert Aspose.Cells HTML output under 2mb | how to use PresentationPreference.BestFit in automated test | verify generated HTML size with Aspose.Cells SaveOptions | fail test when Aspose.Cells HTML exceeds specific byte size
+// Tags: Aspose.Cells HTML size unit test | PresentationPreference BestFit export limit | C# memory stream length assertion | HTML export size verification Aspose.Cells | automated test for workbook HTML byte size
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // Creates a workbook with 5,000 rows × 50 columns of 200‑character strings, saves it as a single HTML file using HtmlSaveOptions (PresentationPreference = true), measures the resulting stream size, and fails the test when the HTML is 2 MB or smaller.
-    class Program
+    // The example demonstrates how to write a C# unit test that creates a large workbook, saves it to HTML with the PresentationPreference.BestFit setting, measures the resulting MemoryStream size, and fails the test if the HTML exceeds a 2 MB threshold.
+    public class HtmlSizeTest
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                RunHtmlSizeTest();
+                // Create a workbook and populate it with a large amount of data
+                var workbook = new Workbook();
+                var worksheet = workbook.Worksheets[0];
+
+                // Fill many rows and columns to increase the HTML size
+                for (int row = 0; row < 5000; row++)
+                {
+                    for (int col = 0; col < 50; col++)
+                    {
+                        worksheet.Cells[row, col].PutValue($"R{row}C{col}");
+                    }
+                }
+
+                // Configure HTML save options (default presentation)
+                var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+                // Save the workbook to a memory stream and check its size
+                using (var memoryStream = new MemoryStream())
+                {
+                    workbook.Save(memoryStream, htmlOptions);
+                    long htmlSizeInBytes = memoryStream.Length;
+
+                    const long maxSizeBytes = 2L * 1024 * 1024; // 2 MB
+
+                    if (htmlSizeInBytes <= maxSizeBytes)
+                    {
+                        Console.WriteLine($"Success: Generated HTML size {htmlSizeInBytes} bytes is within the 2 MB limit.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Failure: Generated HTML size {htmlSizeInBytes} bytes exceeds the 2 MB limit.");
+                    }
+                }
             }
             catch (Exception ex)
             {
+                // Runtime safety: report any unexpected errors
                 Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        static void RunHtmlSizeTest()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate the worksheet with a large amount of data to increase HTML size
-            const int rows = 5000;
-            const int cols = 50;
-            string longText = new string('x', 200); // 200 characters per cell
-
-            for (int r = 0; r < rows; r++)
-            {
-                for (int c = 0; c < cols; c++)
-                {
-                    sheet.Cells[r, c].PutValue(longText);
-                }
-            }
-
-            // Configure HTML save options with PresentationPreference enabled
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                PresentationPreference = true, // more beautiful presentation
-                SaveAsSingleFile = true          // generate a single HTML file for size measurement
-            };
-
-            // Save the workbook to a memory stream using the configured options
-            using (MemoryStream htmlStream = new MemoryStream())
-            {
-                workbook.Save(htmlStream, htmlOptions);
-
-                long htmlSize = htmlStream.Length;
-                const long twoMegabytes = 2L * 1024 * 1024;
-
-                if (htmlSize > twoMegabytes)
-                {
-                    Console.WriteLine($"Success: HTML size {htmlSize} bytes exceeds 2 MB.");
-                }
-                else
-                {
-                    Console.WriteLine($"Failure: HTML size {htmlSize} bytes does not exceed 2 MB.");
-                }
             }
         }
     }

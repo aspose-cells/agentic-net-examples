@@ -1,61 +1,65 @@
-// Title: Replace Workbook Theme Font with a Custom Font Family and Update All Cell Styles – Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, sets the default style font to a custom family (e.g., Calibri) with a major scheme, then walks through every worksheet and used cell to apply the same font to each cell's style before saving the file as CustomThemeFont.xlsx.
-// Keywords: Aspose.Cells | C# | change theme font | custom font family | update cell styles | default workbook font | Excel automation | font scheme major | global font change
-// Common Searches: Aspose.Cells change theme font C# | set default font for entire workbook Aspose.Cells | apply custom font to all cells Aspose.Cells .NET | replace theme font in Excel using Aspose | global font update Aspose.Cells example
-// Developer Intent: Replace the workbook’s theme font with a specific custom font family and ensure that every existing cell style in all worksheets reflects the new font.
-// Use Cases: Generate corporate Excel reports that automatically use the company’s standard font without manual formatting. | Retrofitting legacy workbooks to match a new branding guideline by updating the theme and all cell styles in one operation. | Automating multilingual Excel exports where a single, universally supported font must be enforced across all sheets.
-// AI Prompts: Show C# code using Aspose.Cells to change the workbook theme font to 'Arial' and propagate the change to all existing cell styles. | Provide an example that iterates through every worksheet and cell in an Aspose.Cells workbook, setting each cell's font to a custom family while preserving other style attributes. | Explain how to update the default style and apply a major font scheme to all cells in an Excel file with Aspose.Cells for .NET.
+// Title: Replace an Excel workbook's theme font with a custom font and update all cell styles using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets the workbook's default Font.Name to a custom family, and applies that font to every cell's style before saving. | Show how to loop through all worksheets and used cells in an Aspose.Cells workbook to change each cell's Font.Name while preserving other style attributes. | Explain how to create the output directory if it does not exist when saving a workbook after changing its theme font with Aspose.Cells.
+// Common Searches: Aspose.Cells C# change workbook theme font to Calibri and apply to all cells | C# code to set default font for entire Excel file using Aspose.Cells | How to update font for every used cell in an Excel workbook with Aspose.Cells .NET | Save modified workbook after changing default style font with Aspose.Cells
+// Tags: set workbook default font Aspose.Cells C# | apply custom font to all cell styles Aspose.Cells | update Excel theme font programmatically .NET | iterate cells to change font Aspose.Cells | save modified workbook with new font Aspose.Cells
 
-using Aspose.Cells;
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// Creates a new Workbook, sets the default style font to a custom family (e.g., Calibri) with a major scheme, then walks through every worksheet and used cell to apply the same font to each cell's style before saving the file as CustomThemeFont.xlsx.
+// The example loads an existing Excel file (or creates a new workbook), sets a custom default font for the workbook, iterates through all used cells in each worksheet to apply the font to each cell's style, ensures the output directory exists, and saves the updated workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add sample data
-        worksheet.Cells["A1"].PutValue("Sample Text 1");
-        worksheet.Cells["A2"].PutValue("Sample Text 2");
-
-        // Define the custom font family to replace the theme font
-        string customFontFamily = "Calibri";
-
-        // Update the default style of the workbook
-        Style defaultStyle = workbook.DefaultStyle;
-        defaultStyle.Font.Name = customFontFamily;
-        defaultStyle.Font.SchemeType = FontSchemeType.Major; // apply to major scheme
-        workbook.DefaultStyle = defaultStyle;
-
-        // Iterate through all worksheets and cells to update existing styles
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // Determine the used range
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+            string customFont = "Calibri";
 
-            for (int row = 0; row <= maxRow; row++)
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook
+            }
+
+            // Set the default font for the workbook
+            workbook.DefaultStyle.Font.Name = customFont;
+
+            // Update all cells' styles to use the custom font
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                // Iterate through all used cells only for efficiency
+                foreach (Cell cell in cells)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    if (cell != null)
-                    {
-                        Style style = cell.GetStyle();
-                        style.Font.Name = customFontFamily;
-                        style.Font.SchemeType = FontSchemeType.Major;
-                        cell.SetStyle(style);
-                    }
+                    Style style = cell.GetStyle();
+                    style.Font.Name = customFont;
+                    cell.SetStyle(style);
                 }
             }
-        }
 
-        // Save the workbook (lifecycle rule: save)
-        workbook.Save("CustomThemeFont.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

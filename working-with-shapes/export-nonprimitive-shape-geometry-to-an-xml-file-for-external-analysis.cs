@@ -1,10 +1,7 @@
-// Title: Export Non‑Primitive Auto Shape Geometry to XML with Aspose.Cells for .NET (C#)
-// Description: The sample creates a new workbook, inserts a non‑primitive auto shape, reads its CustomGeometry, builds an XML document with the shape’s ID, name and path placeholders, and writes the file (NonPrimitiveShapeGeometry.xml) for external processing.
-// Keywords: Aspose.Cells | C# | .NET | Excel shape export | non‑primitive auto shape | CustomGeometry | shape geometry XML | shape ID | shape name | XDocument | XML file generation | shape paths extraction
-// Common Searches: how to export shape geometry to xml using aspose.cells | c# export non primitive auto shape custom geometry | aspose.cells save shape paths as xml | extract custom geometry from excel shape .net | xml representation of excel shape geometry
-// Developer Intent: Generate an XML file that describes the geometry of a non‑primitive auto shape created with Aspose.Cells.
-// Use Cases: Provide shape geometry to third‑party diagram or analytics tools. | Archive Excel shape definitions for version‑controlled documentation. | Enable automated inspection of shape paths by parsing the exported XML.
-// AI Prompts: Show C# code to retrieve actual path commands from a CustomGeometry object in Aspose.Cells. | Demonstrate how to add fill color and line style information to the exported shape XML. | Explain how to iterate over ShapePath segments and create a detailed XML schema for shape geometry.
+// Title: Export worksheet shape geometry (position, size, type) to an XML file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates over every shape on the first worksheet, and writes each shape's name, ID, runtime type, left, top, width, and height into an XML document. | Create a method in a .NET console app that takes a workbook path and an XML output path, ensures the output folder exists, extracts shape geometry from the worksheet using Aspose.Cells, and saves the data as a structured XML file with error handling for individual shapes. | Generate a reusable utility function that serializes non‑primitive shape properties from an Aspose.Cells worksheet into a custom XML schema, including attributes for position and dimensions.
+// Common Searches: how to extract Excel shape coordinates with Aspose.Cells C# | Aspose.Cells example for saving shape dimensions to XML | C# code to enumerate worksheet shapes and export their geometry | export non‑primitive shape properties from an .xlsx file to XML using Aspose.Cells | serialize Aspose.Cells shape data to custom XML format
+// Tags: Aspose.Cells export shape geometry to XML | enumerate worksheet shapes C# | extract shape position and size Aspose.Cells | serialize Excel shape data as XML | handle shape processing errors Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,80 +9,75 @@ using System.Xml.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, iterates through all shapes on the first worksheet, captures each shape's name, ID, runtime type, and geometric attributes (left, top, width, height), and writes this information into a structured XML file. It creates the output directory if needed and includes per‑shape error handling.
+class ExportShapeGeometry
 {
-    // The sample creates a new workbook, inserts a non‑primitive auto shape, reads its CustomGeometry, builds an XML document with the shape’s ID, name and path placeholders, and writes the file (NonPrimitiveShapeGeometry.xml) for external processing.
-    public class ExportNonPrimitiveShapeGeometry
+    static void Main()
     {
-        public static void Run()
+        string workbookPath = "input.xlsx";
+        string xmlOutputPath = "shapesGeometry.xml";
+
+        try
         {
-            try
+            // Verify that the input workbook exists
+            if (!File.Exists(workbookPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Workbook file not found: {workbookPath}");
+                return;
+            }
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
 
-                // Add a non‑primitive auto shape to the worksheet
-                Shape shape = worksheet.Shapes.AddAutoShape(
-                    AutoShapeType.NotPrimitive, 0, 0, 0, 0, 200, 150);
+            // Work with the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Get custom geometry of the shape
-                CustomGeometry customGeometry = shape.Geometry as CustomGeometry;
-                if (customGeometry == null)
+            // Root XML element for all shapes
+            XElement root = new XElement("Shapes");
+
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in sheet.Shapes)
+            {
+                try
                 {
-                    Console.WriteLine("The shape does not have custom geometry.");
-                    return;
+                    // Basic shape information
+                    XElement shapeElement = new XElement("Shape",
+                        new XAttribute("Name", shape.Name),
+                        new XAttribute("Id", shape.Id),
+                        // Use the runtime type name as a fallback for shape type
+                        new XAttribute("Type", shape.GetType().Name));
+
+                    // Export position and size as a simple geometry representation
+                    XElement geometryElement = new XElement("Geometry",
+                        new XAttribute("Left", shape.Left),
+                        new XAttribute("Top", shape.Top),
+                        new XAttribute("Width", shape.Width),
+                        new XAttribute("Height", shape.Height));
+
+                    shapeElement.Add(geometryElement);
+                    root.Add(shapeElement);
                 }
-
-                // Build XML describing the geometry
-                XDocument xmlDoc = new XDocument(
-                    new XElement("ShapeGeometry",
-                        new XAttribute("ShapeId", shape.Id),
-                        new XAttribute("ShapeName", shape.Name ?? string.Empty),
-                        new XElement("Paths",
-                            new Func<XElement>(() =>
-                            {
-                                XElement pathsElement = new XElement("Paths");
-                                for (int i = 0; i < customGeometry.Paths.Count; i++)
-                                {
-                                    ShapePath path = customGeometry.Paths[i];
-                                    pathsElement.Add(
-                                        new XElement("Path",
-                                            new XAttribute("Index", i),
-                                            new XElement("Data", "Path commands not directly accessible via API")
-                                        )
-                                    );
-                                }
-                                return pathsElement;
-                            })()
-                        )
-                    )
-                );
-
-                // Define output file path
-                string outputPath = "NonPrimitiveShapeGeometry.xml";
-
-                // Write the XML to file
-                string xmlContent = (xmlDoc.Declaration?.ToString() ?? string.Empty) + Environment.NewLine + xmlDoc.ToString();
-                File.WriteAllText(outputPath, xmlContent);
-
-                Console.WriteLine($"Shape geometry exported to '{outputPath}'.");
+                catch (Exception exShape)
+                {
+                    Console.WriteLine($"Failed to process shape '{shape.Name}': {exShape.Message}");
+                }
             }
-            catch (Exception ex)
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(xmlOutputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
-        }
-    }
 
-    // Entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+            // Save the XML document
+            XDocument doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), root);
+            doc.Save(xmlOutputPath);
+            Console.WriteLine($"Shape geometry exported to {xmlOutputPath}");
+        }
+        catch (Exception ex)
         {
-            ExportNonPrimitiveShapeGeometry.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

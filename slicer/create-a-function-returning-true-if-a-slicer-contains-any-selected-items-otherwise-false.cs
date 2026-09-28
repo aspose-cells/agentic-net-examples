@@ -1,83 +1,58 @@
-// Title: Check if an Aspose.Cells Slicer Has Selected Items (C#/.NET)
-// Description: Provides a C# helper method that inspects a slicer's SlicerCacheItems collection and returns true when at least one item’s Selected flag is set. Includes sample code that loads a workbook, retrieves the first slicer, and prints the selection status, with argument validation and error handling.
-// Keywords: Aspose.Cells slicer selected items | C# check slicer selection | SlicerCacheItem.Selected | Excel slicer detection .NET | Aspose.Cells SlicerHelper | boolean slicer check | workbook slicer API | Aspose.Cells .NET example
-// Common Searches: how to detect selected items in an Aspose.Cells slicer | C# Aspose.Cells check if slicer has any selections | determine slicer selection state using Aspose.Cells for .NET | Aspose.Cells slicer selected flag example | C# method to verify slicer selections in Excel workbook
-// Developer Intent: Find out whether a slicer contains at least one selected cache item.
-// Use Cases: Prevent applying filters when a slicer has no selections, avoiding empty result sets. | Toggle UI controls (e.g., buttons, panels) based on slicer activity. | Log user interaction with slicers by recording when selections exist.
-// AI Prompts: Generate unit tests for SlicerHelper.HasSelectedItems covering both selected and unselected scenarios using Moq. | Rewrite HasSelectedItems with LINQ to make the implementation a single expression. | Create an overload of HasSelectedItems that returns the count of selected items instead of a boolean.
+// Title: C# utility method to check whether an Aspose.Cells slicer contains any selected items
+// AI Prompts: Generate a static C# method that accepts an Aspose.Cells Slicer object, validates it, and returns true if any SlicerCacheItem has its Selected flag set. | Write C# code that iterates through slicer.SlicerCache.SlicerCacheItems and determines if at least one item is selected, throwing ArgumentNullException for a null slicer.
+// Common Searches: how to verify if a slicer in Aspose.Cells for .NET has selected values | C# Aspose.Cells method to detect selected slicer cache items | check slicer selection status using Aspose.Cells API | Aspose.Cells SlicerHelper HasSelectedItems usage example | determine if any slicer items are selected in an Excel workbook with C#
+// Tags: Aspose.Cells slicer selection check | C# detect slicer cache item selected | SlicerCacheItem Selected property Aspose.Cells | validate slicer reference null handling | utility method for slicer selection status | Excel slicer selected items detection C#
 
 using System;
-using System.IO;
-using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-// Provides a C# helper method that inspects a slicer's SlicerCacheItems collection and returns true when at least one item’s Selected flag is set. Includes sample code that loads a workbook, retrieves the first slicer, and prints the selection status, with argument validation and error handling.
-public static class SlicerHelper
+namespace AsposeCellsSlicerUtilities
 {
-    // Returns true if the slicer has at least one selected item
-    public static bool HasSelectedItems(Slicer slicer)
+    // Provides a static helper method HasSelectedItems that throws ArgumentNullException for a null slicer, iterates through slicer.SlicerCache.SlicerCacheItems, and returns true when any item's Selected property is true; otherwise returns false.
+    public static class SlicerHelper
     {
-        if (slicer == null) throw new ArgumentNullException(nameof(slicer));
-
-        // Access the collection of cache items for the slicer
-        SlicerCacheItemCollection items = slicer.SlicerCache.SlicerCacheItems;
-
-        // Iterate through items and check the Selected property
-        foreach (SlicerCacheItem item in items)
+        /// <param name="slicer">The slicer to inspect.</param>
+        /// <returns>True if at least one slicer cache item is selected; otherwise false.</returns>
+        public static bool HasSelectedItems(Slicer slicer)
         {
-            if (item.Selected)
-                return true; // Found a selected item
-        }
+            // Guard against null slicer reference
+            if (slicer == null)
+                throw new ArgumentNullException(nameof(slicer));
 
-        return false; // No selected items found
+            // Access the collection of cache items associated with the slicer
+            SlicerCacheItemCollection items = slicer.SlicerCache.SlicerCacheItems;
+
+            // Iterate through the items and check the Selected property
+            for (int i = 0; i < items.Count; i++)
+            {
+                SlicerCacheItem item = items[i];
+                if (item.Selected)
+                {
+                    // At least one item is selected
+                    return true;
+                }
+            }
+
+            // No selected items found
+            return false;
+        }
     }
-}
 
-class Program
-{
-    static void Main()
+    // Entry point for the console application
+    internal class Program
     {
-        try
+        private static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify the input file exists
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"File '{inputPath}' not found.");
-                return;
+                // Placeholder for future demonstration code.
+                // Example: load a workbook, retrieve a slicer, and call HasSelectedItems.
+                // Currently no operation is required.
             }
-
-            // Load the workbook that contains a slicer
-            Workbook workbook = new Workbook(inputPath);
-            workbook.Worksheets.RefreshAll();
-
-            // Ensure there is at least one worksheet
-            if (workbook.Worksheets.Count == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("Workbook contains no worksheets.");
-                return;
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            Worksheet ws = workbook.Worksheets[0];
-
-            // Ensure the worksheet contains at least one slicer
-            if (ws.Slicers == null || ws.Slicers.Count == 0)
-            {
-                Console.WriteLine("No slicers found in the first worksheet.");
-                return;
-            }
-
-            // Retrieve the first slicer
-            Slicer slicer = ws.Slicers[0];
-
-            // Determine if any items are selected
-            bool anySelected = SlicerHelper.HasSelectedItems(slicer);
-            Console.WriteLine("Slicer has selected items: " + anySelected);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

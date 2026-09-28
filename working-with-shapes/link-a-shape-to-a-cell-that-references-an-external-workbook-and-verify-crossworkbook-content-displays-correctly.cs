@@ -1,81 +1,88 @@
-// Title: Link a Shape to an External Workbook Cell and Verify the Value with Aspose.Cells for .NET
-// Description: Demonstrates how to create an external workbook, add a rectangle shape to a main workbook, link the shape to cell B2, set a formula that references the external file, register the link via the ExternalLinks collection, refresh data with UpdateLinkedDataSource, recalculate formulas, and confirm that the shape displays the external value using Aspose.Cells for C#.
-// Keywords: Aspose.Cells shape link external workbook | C# rectangle shape linked cell | ExternalLinks collection Aspose.Cells | UpdateLinkedDataSource method | verify shape displays external value | link shape to cell formula | cross‑workbook reference Aspose.Cells
-// Common Searches: Aspose.Cells link shape to external workbook cell | C# shape linked cell formula external file | How to update external links in Aspose.Cells | Verify shape value after external formula calculation | Add rectangle shape and link to cell using Aspose.Cells
-// Developer Intent: Create a shape whose linked cell pulls data from another workbook, refresh the link, and ensure the shape shows the updated value.
-// Use Cases: Build dashboards where shapes reflect live data from a separate source workbook. | Generate reports that automatically update shape captions when the linked data workbook changes. | Automate testing of external links by reading the linked cell after formula recalculation.
-// AI Prompts: Write C# code with Aspose.Cells to add a rectangle shape, link it to cell B2, set B2's formula to reference an external workbook, register the external link, refresh data, recalculate formulas, and output the linked cell value. | Explain the role of the ExternalLinks collection and the UpdateLinkedDataSource method in refreshing shape‑linked cells from an external file using Aspose.Cells.
+// Title: Link a rectangle shape to a cell that references an external workbook and verify the displayed value using Aspose.Cells for .NET
+// AI Prompts: Create an external workbook named External.xlsx, write a value to cell A1, and save it. | In a new workbook, add a formula that references '[External.xlsx]Sheet1'!A1, insert a rectangle shape, and set the shape’s internal hyperlink to the formula cell (e.g., B2). | Force formula calculation, read the value from the linked cell, and output it to confirm the external reference is resolved.
+// Common Searches: Aspose.Cells C# link shape to a cell that contains an external workbook formula | how to set an internal hyperlink on a shape that points to a cell referencing another workbook | verify that a shape hyperlink displays the value from an external workbook in .NET | C# Aspose.Cells create rectangle shape and assign hyperlink to cell B2 | recalculate formulas that include external workbook references using Aspose.Cells
+// Tags: shape creation Aspose.Cells | internal hyperlink from shape to cell | external workbook formula reference | calculate workbook with external links | verify external cell value Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExternalShapeLinkDemo
+// Demonstrates creating an external workbook, referencing its A1 cell from a main workbook via a formula, adding a rectangle shape linked to that cell through an internal hyperlink, recalculating formulas, and saving both workbooks while confirming the external value is correctly displayed.
+class ShapeExternalLinkDemo
 {
-    // Demonstrates how to create an external workbook, add a rectangle shape to a main workbook, link the shape to cell B2, set a formula that references the external file, register the link via the ExternalLinks collection, refresh data with UpdateLinkedDataSource, recalculate formulas, and confirm that the shape displays the external value using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Wrap the whole process in a try-catch to handle unexpected errors gracefully
-            try
-            {
-                // ---------- Create external workbook ----------
-                Workbook externalWb = new Workbook();
-                Worksheet externalWs = externalWb.Worksheets[0];
-                externalWs.Name = "Sheet1";
+            // Paths for the main workbook and the external workbook
+            string externalPath = "External.xlsx";
+            string mainPath = "MainWorkbook.xlsx";
 
-                // Put a test value in A1 of the external workbook
-                externalWs.Cells["A1"].PutValue("External Value");
+            // -------------------------------------------------
+            // 1. Create the external workbook and set a value
+            // -------------------------------------------------
+            Workbook externalWb = new Workbook();                     // create external workbook
+            Worksheet extSheet = externalWb.Worksheets[0];
+            extSheet.Name = "Sheet1";
+            extSheet.Cells["A1"].PutValue("Hello from external!");   // value to be referenced
 
-                // Save external workbook (required for external link to resolve)
-                string externalFile = "ExternalData.xlsx";
-                externalWb.Save(externalFile);
+            // Save external workbook (overwrite if it already exists)
+            externalWb.Save(externalPath, SaveFormat.Xlsx);
 
-                // ---------- Create main workbook ----------
-                Workbook mainWb = new Workbook();
-                Worksheet mainWs = mainWb.Worksheets[0];
-                mainWs.Name = "MainSheet";
+            // -------------------------------------------------
+            // 2. Create the main workbook
+            // -------------------------------------------------
+            Workbook mainWb = new Workbook();                         // create main workbook
+            Worksheet mainSheet = mainWb.Worksheets[0];
+            mainSheet.Name = "MainSheet";
 
-                // Add a rectangle shape to the main worksheet
-                // Parameters: upper left row, upper left column, top offset, left offset, height, width
-                Shape shape = mainWs.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
+            // -------------------------------------------------
+            // 3. Insert a formula that references the external workbook
+            // -------------------------------------------------
+            // Formula syntax: ='[External.xlsx]Sheet1'!A1
+            string externalFormula = $"='[{externalPath}]Sheet1'!A1";
+            mainSheet.Cells["B2"].Formula = externalFormula;
 
-                // Link the shape to cell B2 (no $ signs – LinkedCell expects a simple address)
-                shape.LinkedCell = "B2";
+            // -------------------------------------------------
+            // 4. Add a shape and link it to the cell containing the external reference
+            // -------------------------------------------------
+            // Add a rectangle shape (row, column, top, left, height, width)
+            Shape linkedShape = mainSheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,    // upper left row
+                0,    // upper left column
+                0,    // top offset (pixels)
+                0,    // left offset (pixels)
+                50,   // height (pixels)
+                100); // width (pixels)
 
-                // Set formula in the linked cell to reference the external workbook
-                mainWs.Cells["B2"].Formula = $"='[{externalFile}]Sheet1'!A1";
+            // Set the shape's text (optional)
+            linkedShape.Text = "Click to view external value";
 
-                // Register the external link in the workbook's external links collection
-                int linkIndex = mainWb.Worksheets.ExternalLinks.Add(externalFile, new string[] { "Sheet1" });
-                ExternalLink extLink = mainWb.Worksheets.ExternalLinks[linkIndex];
-                Console.WriteLine($"Added external link with DataSource: {extLink.DataSource}");
+            // Configure an internal hyperlink that points to cell B2
+            // Use a hash (#) prefix for internal workbook links
+            linkedShape.Hyperlink.Address = $"#{mainSheet.Name}!B2";
 
-                // Update linked data source so that the main workbook fetches the latest value
-                mainWb.UpdateLinkedDataSource(new Workbook[] { externalWb });
+            // -------------------------------------------------
+            // 5. Recalculate formulas and verify the external value is retrieved
+            // -------------------------------------------------
+            mainWb.CalculateFormula(); // forces calculation, including external reference
 
-                // Recalculate formulas to reflect the external value
-                mainWb.CalculateFormula();
+            // Retrieve the calculated value from B2
+            string retrievedValue = mainSheet.Cells["B2"].StringValue;
 
-                // Verify that the shape's linked cell now contains the external value
-                string linkedCellAddress = shape.LinkedCell;
-                string linkedCellValue = mainWs.Cells[linkedCellAddress].StringValue;
-                Console.WriteLine($"Shape linked cell ({linkedCellAddress}) value: {linkedCellValue}");
+            // Simple verification output
+            Console.WriteLine("Value in B2 (should match external A1): " + retrievedValue);
 
-                // Save the main workbook
-                string mainFile = "MainWorkbookWithShapeLink.xlsx";
-                mainWb.Save(mainFile);
-                Console.WriteLine($"Main workbook saved as {mainFile}");
-
-                // Clean up
-                externalWb.Dispose();
-                mainWb.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // -------------------------------------------------
+            // 6. Save the main workbook
+            // -------------------------------------------------
+            mainWb.Save(mainPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

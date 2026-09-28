@@ -1,66 +1,73 @@
-// Title: Flag Shape‑Only Worksheets (No Cell Data) with a Custom Property using Aspose.Cells for .NET
-// Description: Load an Excel workbook, iterate each worksheet, detect sheets where Cells.MaxDataRow = -1 and Shapes.Count > 0, add a custom property "ShapeOnly" = true, and save the updated file.
-// Keywords: Aspose.Cells | C# Excel | shape only worksheet | MaxDataRow | Shapes.Count | custom property | flag worksheet | drawing objects | worksheet metadata | .NET Excel automation
-// Common Searches: Aspose.Cells detect worksheets with only drawings | C# flag Excel sheets that have no data but contain shapes | Add custom property to Excel sheet using Aspose.Cells | Check MaxDataRow and Shapes.Count in .NET | Identify shape‑only worksheets programmatically
-// Developer Intent: Detect worksheets lacking cell data but containing drawings and mark them with a custom property.
-// Use Cases: Automated content classification before publishing workbooks | Generate audit reports of drawing‑only sheets | Skip or treat shape‑only worksheets differently in downstream processes | Ensure compliance by tagging non‑data sheets | Integrate with document management systems to flag shape‑only content
-// AI Prompts: Generate C# code with Aspose.Cells that scans each worksheet, checks Cells.MaxDataRow == -1 and Shapes.Count > 0, adds a custom property "ShapeOnly" = "true", and saves the file. | Explain how to combine MaxDataRow and Shapes.Count to identify shape‑only worksheets and use CustomProperties to flag them in Aspose.Cells for .NET. | Provide error‑handling and performance recommendations for flagging shape‑only worksheets in large Excel workbooks using Aspose.Cells.
+// Title: Flag Excel worksheets that contain only shapes (no data rows) using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates all worksheets, checks if Cells.MaxDataRow equals -1 and Shapes.Count > 0, then adds a custom property named "ShapeOnlyContent" set to "True" and writes "Shape‑only content detected" into cell A1. | Update an existing workbook using Aspose.Cells to mark sheets that have no data rows but contain shapes by inserting a flag property and a visible label, then save the modified file. | Create a reusable C# method that returns a list of worksheet names where MaxDataRow is -1 and the shape collection is not empty, using Aspose.Cells.
+// Common Searches: asp.net detect worksheets that contain only shapes with Aspose.Cells | how to store a flag in an Excel sheet when it has shapes but no data rows in C# | Aspose.Cells check for empty data rows while shapes exist in a worksheet | flag shape‑only sheets in an Excel workbook using Aspose.Cells .NET | list worksheet names with MaxDataRow -1 and Shapes.Count > 0 Aspose.Cells
+// Tags: shape‑only worksheet detection Aspose.Cells | shape‑only flag property Excel | MaxDataRow -1 and Shapes.Count validation | flag worksheets without data rows .NET | write label to cell A1 Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsShapeOnlyFlag
+// The program loads an Excel workbook, scans each worksheet, and when a sheet has no data rows (Cells.MaxDataRow == -1) but contains shapes (Shapes.Count > 0), it adds or updates a custom property "ShapeOnlyContent" set to "True" and writes a visible note "Shape‑only content detected" into cell A1 before saving the workbook.
+class Program
 {
-    // Load an Excel workbook, iterate each worksheet, detect sheets where Cells.MaxDataRow = -1 and Shapes.Count > 0, add a custom property "ShapeOnly" = true, and save the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Verify that the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // MaxDataRow == -1 means the sheet has no data rows
+                // Shapes.Count > 0 means there are shapes present
+                if (sheet.Cells.MaxDataRow == -1 && sheet.Shapes.Count > 0)
                 {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // MaxDataRow returns -1 when the worksheet contains no cell data
-                    bool hasNoCellData = sheet.Cells.MaxDataRow == -1;
-
-                    // ShapeCollection.Count gives the number of drawing objects on the sheet
-                    bool hasShapes = sheet.Shapes.Count > 0;
-
-                    // Flag the worksheet if it has shapes but no cell data
-                    if (hasNoCellData && hasShapes)
+                    // Add or update a custom property to flag the worksheet
+                    var existingProp = sheet.CustomProperties["ShapeOnlyContent"];
+                    if (existingProp != null)
                     {
-                        // Add a custom property named "ShapeOnly" with value "true"
-                        sheet.CustomProperties.Add("ShapeOnly", true.ToString());
-
-                        // Write the sheet name to console for verification
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\" flagged as shape‑only content.");
+                        // Store boolean as string because CustomProperty.Value expects a string
+                        existingProp.Value = true.ToString();
                     }
-                }
+                    else
+                    {
+                        // Add expects a string value; store boolean as string
+                        sheet.CustomProperties.Add("ShapeOnlyContent", true.ToString());
+                    }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                    // Write a note in cell A1 for visual indication
+                    Cell flagCell = sheet.Cells["A1"];
+                    flagCell.PutValue("Shape‑only content detected");
+                }
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

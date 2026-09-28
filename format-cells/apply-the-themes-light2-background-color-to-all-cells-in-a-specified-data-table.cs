@@ -1,74 +1,64 @@
-// Title: Apply Light2 Theme Background to an Excel Table with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, fills cells A1:C4, converts the range into a ListObject, and applies the built‑in TableStyleLight2 so the entire table inherits the workbook's Light2 theme background color. The workbook is then saved as an .xlsx file.
-// Keywords: Aspose.Cells Light2 table style | C# apply Excel theme background | TableStyleLight2 Aspose.Cells example | set built‑in table style .NET | Excel ListObject theme color Aspose | apply theme background to table programmatically | Aspose.Cells formatting tables | C# Excel table style Light2
-// Common Searches: Aspose.Cells apply Light2 style to table | C# set TableStyleLight2 for ListObject | how to use theme colors in Aspose.Cells | apply built‑in Excel table style with Aspose.Cells .NET | change Excel table background to Light2 using code
-// Developer Intent: Apply the built‑in Light2 table style so the whole ListObject uses the workbook’s Light2 theme background color.
-// Use Cases: Generate sales or inventory reports that automatically match the workbook’s Light2 theme for consistent branding. | Export processed data to Excel with a ready‑made Light2 styled table to improve readability. | Create templates where all tables adopt the Light2 background, reducing manual formatting effort.
-// AI Prompts: Show how to switch the table style from Light2 to Light3 after the ListObject is created with Aspose.Cells. | Provide code to set a custom column background while preserving the Light2 table style for the rest of the table. | Explain how to read the actual RGB value of the workbook’s Light2 theme color using Aspose.Cells.
+// Title: Apply the Light2 theme background color to all cells in a specific data table using Aspose.Cells for .NET
+// AI Prompts: Create a C# routine that builds a Style with BackgroundColor = Color.LightGray, Pattern = BackgroundType.Solid, and applies it to the range A1:D10 using StyleFlag.All = true in Aspose.Cells. | Write code that loads a workbook, selects a worksheet, defines a range for a data table, applies a LightGray background style to every cell in that range, and saves the updated file.
+// Common Searches: Aspose.Cells C# how to set Light2 theme background for a selected range | C# apply solid background style to an Excel table using Aspose.Cells | Using StyleFlag.All to format entire data table in Aspose.Cells .NET | Change background color of cells A1:D10 with Aspose.Cells for .NET | Apply theme color to worksheet range programmatically with Aspose.Cells
+// Tags: light2 theme color Aspose.Cells | styleflag all attributes C# | format data table range Aspose.Cells | solid background style Excel C# | apply style to range Aspose.Cells | create workbook style Aspose.Cells
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, fills cells A1:C4, converts the range into a ListObject, and applies the built‑in TableStyleLight2 so the entire table inherits the workbook's Light2 theme background color. The workbook is then saved as an .xlsx file.
-    public class ApplyLight2BackgroundToTable
+    // Loads an existing workbook, creates a solid LightGray style, applies it to the A1:D10 data table range with a StyleFlag that enables all style attributes, and saves the modified workbook as output.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (or specify by name/index)
                 Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
 
-                // Populate sample data for the table (A1:C4)
-                cells["A1"].PutValue("Product");
-                cells["B1"].PutValue("Category");
-                cells["C1"].PutValue("Price");
+                // Define the data table range you want to format (adjust as needed)
+                AsposeRange dataTable = worksheet.Cells.CreateRange("A1:D10");
 
-                cells["A2"].PutValue("Apple");
-                cells["B2"].PutValue("Fruit");
-                cells["C2"].PutValue(1.2);
+                // Create a new style
+                Style themeStyle = workbook.CreateStyle();
 
-                cells["A3"].PutValue("Carrot");
-                cells["B3"].PutValue("Vegetable");
-                cells["C3"].PutValue(0.8);
+                // Apply a solid background color (using a light theme-like color)
+                themeStyle.BackgroundColor = Color.LightGray;
+                themeStyle.Pattern = BackgroundType.Solid;
 
-                cells["A4"].PutValue("Bread");
-                cells["B4"].PutValue("Grain");
-                cells["C4"].PutValue(2.5);
+                // Prepare a flag to apply all style attributes
+                StyleFlag flag = new StyleFlag { All = true };
 
-                // Create a ListObject (Excel table) covering the data range
-                int tableIndex = worksheet.ListObjects.Add("A1", "C4", true);
-                ListObject table = worksheet.ListObjects[tableIndex];
+                // Apply the style to the entire data table range
+                dataTable.ApplyStyle(themeStyle, flag);
 
-                // Apply the built‑in Light2 table style which uses the theme's Light2 background color
-                table.TableStyleType = TableStyleType.TableStyleLight2;
-
-                // Ensure the style is applied to the entire range of the table
-                table.ApplyStyleToRange();
-
-                // Save the workbook
-                string outputPath = "ApplyLight2BackgroundToTable.xlsx";
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                // Catch any runtime exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ApplyLight2BackgroundToTable.Run();
         }
     }
 }

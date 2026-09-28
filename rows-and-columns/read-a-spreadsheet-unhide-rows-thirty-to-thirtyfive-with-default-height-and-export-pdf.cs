@@ -1,24 +1,20 @@
-// Title: C# – Unhide Rows 30‑35 and Export Excel to PDF with Aspose.Cells
-// Description: Loads an existing workbook (input.xlsx) with Aspose.Cells, unhides rows 30‑35 on the first worksheet using Cells.UnhideRows (default height ‑1), and saves the result as a PDF (output.pdf).
-// Keywords: Aspose.Cells C# unhide rows | Cells.UnhideRows | Excel to PDF conversion .NET | default row height -1 | batch Excel PDF Aspose | unhide hidden rows Aspose.Cells
-// Common Searches: Aspose.Cells how to unhide specific rows | C# unhide rows 30-35 Excel | Convert Excel to PDF after unhiding rows Aspose | Set default row height when unhiding rows Aspose.Cells | Export hidden rows to PDF using Aspose.Cells
-// Developer Intent: Reveal rows 30‑35 in an Excel sheet and generate a PDF version.
-// Use Cases: Create printable reports where hidden rows must appear. | Automate bulk workbook processing to ensure rows 30‑35 are visible before PDF conversion. | Maintain consistent row spacing by resetting hidden rows to default height during export. | Prepare financial statements that hide intermediate rows in the source but require full visibility in the final PDF.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unhide rows 30‑35 with default height and save the workbook as a PDF. | Explain the meaning of the parameters in Cells.UnhideRows, especially the -1 height value. | Show how to add error handling for file loading, row unhiding, and PDF saving with Aspose.Cells. | Provide a sample that processes multiple Excel files, unhides rows 30‑35, and converts each to PDF. | Demonstrate how to verify that rows were successfully unhidden before exporting.
+// Title: How to unhide rows 30‑35 with default height and save the worksheet as PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to unhide rows 30 through 35 (default height) and then export the workbook to a PDF file. | Create a reusable C# method that takes a worksheet, start row, row count, and height, unhides those rows with Aspose.Cells, and returns a PDF stream. | Adapt the Aspose.Cells example to accept a user‑provided Excel file path, unhide a configurable row range, and save the result as a PDF.
+// Common Searches: Aspose.Cells C# unhide rows 30-35 before converting to PDF | set default row height while unhiding rows using Aspose.Cells .NET | convert Excel to PDF after making hidden rows visible with Aspose.Cells | C# code to unhide specific rows in a worksheet and export to PDF using Aspose.Cells
+// Tags: Aspose.Cells row visibility C# | Aspose.Cells PDF export .NET | default row height Aspose.Cells | worksheet row range manipulation Aspose.Cells | unhide rows operation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads an existing workbook (input.xlsx) with Aspose.Cells, unhides rows 30‑35 on the first worksheet using Cells.UnhideRows (default height ‑1), and saves the result as a PDF (output.pdf).
+// The example loads an existing Excel file with Aspose.Cells, unhides rows 30‑35 using the default height (-1), and saves the worksheet as a PDF document.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
+        // Load the existing spreadsheet
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Unhide rows 30 to 35 (zero‑based index) with default height (-1)
-        // totalRows = 6 because rows 30,31,32,33,34,35 are to be unhidden
+        // Unhide rows 30 to 35 (zero‑based index), total 6 rows, default height (-1)
         workbook.Worksheets[0].Cells.UnhideRows(30, 6, -1);
 
         // Export the workbook to PDF

@@ -1,131 +1,108 @@
-// Title: Compare Excel custom document properties with Aspose.Cells (.NET) and generate a differences report
-// Description: Loads two Excel files, extracts their CustomDocumentProperty collections, and uses case‑insensitive dictionaries to identify added, removed, or modified properties. The differences are printed to the console and written to a new workbook (two‑column table: Difference Type, Details) for auditing purposes.
-// Keywords: Aspose.Cells C# compare custom document properties | Excel custom property audit .NET | list added removed modified properties | generate property differences report | custom document property comparison | Aspose.Cells workbook comparison | Excel metadata audit | C# export differences workbook
-// Common Searches: compare custom document properties Aspose.Cells | audit Excel custom properties .NET | list differences between two workbooks custom properties | export custom property changes to Excel | C# code to compare workbook metadata
-// Developer Intent: Detect added, removed, or changed custom document properties between two Excel workbooks and produce an Excel report of the findings.
-// Use Cases: Validate that critical metadata (e.g., Author, ReviewDate) remains unchanged after a data‑processing pipeline. | Create a change‑log for regulatory compliance by listing all custom property modifications between quarterly report versions. | Support version‑control audits by comparing production and staging workbooks and exporting the discrepancies. | Automate quality checks in CI/CD pipelines to ensure custom properties meet corporate standards before deployment.
-// AI Prompts: Write C# code using Aspose.Cells to compare the CustomDocumentProperties of two Excel workbooks and output added, removed, and modified entries to a new workbook. | Provide a reusable method that returns a list of difference strings for custom properties between two Workbook objects, handling null values and case‑insensitive names. | Explain how to extend the comparison to include built‑in document properties and export the combined results as a CSV file.
+// Title: Generate an audit report of differing custom document properties between two Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that takes two Aspose.Cells Workbook objects and returns a list describing any mismatched or missing custom document properties. | Show how to load two .xlsx files with Aspose.Cells, compare their CustomDocumentProperties collections, and output a summary of differences. | Add comprehensive error handling to a custom property comparison routine, covering file‑not‑found checks and exception reporting.
+// Common Searches: aspnet compare custom document properties of two Excel files with Aspose.Cells | c# code to audit custom properties differences between two workbooks | how to list missing custom properties when comparing two .xlsx files using Aspose.Cells | generate a diff report of custom document properties in Excel workbooks with Aspose.Cells .NET
+// Tags: customdocumentproperties comparison Aspose.Cells | audit workbook metadata .NET | detect mismatched custom properties Excel | compare workbook custom properties C# | list missing custom document properties Aspose
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsCustomPropertyComparison
+// The example verifies that two .xlsx files exist, loads them into Aspose.Cells Workbook objects, extracts their CustomDocumentProperties, and iterates through each collection to identify value mismatches or properties present in only one workbook. It returns a descriptive list of differences and includes robust error handling for missing files and comparison exceptions.
+class Program
 {
-    // Loads two Excel files, extracts their CustomDocumentProperty collections, and uses case‑insensitive dictionaries to identify added, removed, or modified properties. The differences are printed to the console and written to a new workbook (two‑column table: Difference Type, Details) for auditing purposes.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Paths to the workbooks to compare
+        string workbookPath1 = "Workbook1.xlsx";
+        string workbookPath2 = "Workbook2.xlsx";
+
+        try
         {
-            try
+            // Verify that the input files exist
+            if (!File.Exists(workbookPath1))
+                throw new FileNotFoundException($"File not found: {workbookPath1}");
+            if (!File.Exists(workbookPath2))
+                throw new FileNotFoundException($"File not found: {workbookPath2}");
+
+            // Load the two workbooks
+            Workbook wb1 = new Workbook(workbookPath1);
+            Workbook wb2 = new Workbook(workbookPath2);
+
+            // Compare custom properties and collect differences
+            List<string> differences = CompareCustomProperties(wb1, wb2);
+
+            // Output the differences for auditing
+            foreach (string diff in differences)
             {
-                // Paths to the two workbooks to compare
-                string workbookPath1 = "Workbook1.xlsx";
-                string workbookPath2 = "Workbook2.xlsx";
-
-                // Verify that the input files exist
-                if (!File.Exists(workbookPath1))
-                {
-                    Console.WriteLine($"File not found: {workbookPath1}");
-                    return;
-                }
-
-                if (!File.Exists(workbookPath2))
-                {
-                    Console.WriteLine($"File not found: {workbookPath2}");
-                    return;
-                }
-
-                // Load the workbooks
-                Workbook wb1 = new Workbook(workbookPath1);
-                Workbook wb2 = new Workbook(workbookPath2);
-
-                // Retrieve the custom document property collections
-                CustomDocumentPropertyCollection props1 = wb1.CustomDocumentProperties;
-                CustomDocumentPropertyCollection props2 = wb2.CustomDocumentProperties;
-
-                // Build dictionaries for fast lookup (name -> DocumentProperty)
-                var dict1 = new Dictionary<string, DocumentProperty>(StringComparer.OrdinalIgnoreCase);
-                foreach (DocumentProperty prop in props1)
-                    dict1[prop.Name] = prop;
-
-                var dict2 = new Dictionary<string, DocumentProperty>(StringComparer.OrdinalIgnoreCase);
-                foreach (DocumentProperty prop in props2)
-                    dict2[prop.Name] = prop;
-
-                // List to hold difference descriptions
-                List<string> differences = new List<string>();
-
-                // Detect removed or modified properties
-                foreach (var kvp in dict1)
-                {
-                    string name = kvp.Key;
-                    DocumentProperty prop1 = kvp.Value;
-
-                    if (!dict2.ContainsKey(name))
-                    {
-                        differences.Add($"Removed: {name} = {prop1.Value}");
-                    }
-                    else
-                    {
-                        DocumentProperty prop2 = dict2[name];
-                        object val1 = prop1.Value;
-                        object val2 = prop2.Value;
-                        bool areEqual = (val1 == null && val2 == null) ||
-                                        (val1 != null && val1.Equals(val2));
-
-                        if (!areEqual)
-                        {
-                            differences.Add($"Modified: {name} from '{val1}' to '{val2}'");
-                        }
-                    }
-                }
-
-                // Detect added properties
-                foreach (var kvp in dict2)
-                {
-                    string name = kvp.Key;
-                    if (!dict1.ContainsKey(name))
-                    {
-                        DocumentProperty prop = kvp.Value;
-                        differences.Add($"Added: {name} = {prop.Value}");
-                    }
-                }
-
-                // Output differences to console
-                Console.WriteLine("Custom Document Property Differences:");
-                foreach (string diff in differences)
-                    Console.WriteLine(diff);
-
-                // Create a simple report workbook to store the differences
-                Workbook reportWb = new Workbook(); // default constructor
-                Worksheet sheet = reportWb.Worksheets[0];
-
-                // Write header
-                sheet.Cells[0, 0].PutValue("Difference Type");
-                sheet.Cells[0, 1].PutValue("Details");
-
-                // Populate rows
-                for (int i = 0; i < differences.Count; i++)
-                {
-                    string diff = differences[i];
-                    // Split the first word as type (Added/Removed/Modified)
-                    string type = diff.Split(':')[0];
-                    sheet.Cells[i + 1, 0].PutValue(type);
-                    sheet.Cells[i + 1, 1].PutValue(diff);
-                }
-
-                // Save the report workbook
-                string reportPath = "CustomPropertiesDifferencesReport.xlsx";
-                reportWb.Save(reportPath);
-                Console.WriteLine($"Report saved to {reportPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine(diff);
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    /// <param name="wb1">First workbook.</param>
+    /// <param name="wb2">Second workbook.</param>
+    /// <returns>List of difference descriptions.</returns>
+    static List<string> CompareCustomProperties(Workbook wb1, Workbook wb2)
+    {
+        var diffs = new List<string>();
+
+        try
+        {
+            // Retrieve the custom property collections
+            var props1 = wb1.CustomDocumentProperties;
+            var props2 = wb2.CustomDocumentProperties;
+
+            // Check each property in the first collection
+            foreach (var propObj1 in props1)
+            {
+                // Use dynamic to avoid compile‑time dependency on CustomDocumentProperty type
+                dynamic prop1 = propObj1;
+                string name = prop1.Name as string;
+
+                if (props2.Contains(name))
+                {
+                    // Property exists in both workbooks; compare values
+                    dynamic prop2 = props2[name];
+                    if (!object.Equals(prop1.Value, prop2.Value))
+                    {
+                        diffs.Add($"Value mismatch for property '{name}': Workbook1 = '{prop1.Value}' vs Workbook2 = '{prop2.Value}'.");
+                    }
+                }
+                else
+                {
+                    // Property missing in the second workbook
+                    diffs.Add($"Property '{name}' exists in Workbook1 but not in Workbook2.");
+                }
+            }
+
+            // Find properties that exist only in the second workbook
+            foreach (var propObj2 in props2)
+            {
+                dynamic prop2 = propObj2;
+                string name = prop2.Name as string;
+
+                if (!props1.Contains(name))
+                {
+                    diffs.Add($"Property '{name}' exists in Workbook2 but not in Workbook1.");
+                }
+            }
+
+            // If no differences were found, indicate that
+            if (diffs.Count == 0)
+            {
+                diffs.Add("No differences in custom properties between the two workbooks.");
+            }
+        }
+        catch (Exception ex)
+        {
+            diffs.Add($"Error during comparison: {ex.Message}");
+        }
+
+        return diffs;
     }
 }

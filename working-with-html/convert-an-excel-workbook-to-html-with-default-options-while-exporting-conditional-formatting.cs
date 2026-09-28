@@ -1,69 +1,38 @@
-// Title: C# Example: Convert Excel to HTML with Aspose.Cells – Preserve Conditional Formatting (Default HtmlSaveOptions)
-// Description: A complete C# snippet that checks an XLSX file, loads it with Aspose.Cells, optionally adds a conditional‑format rule, and saves the workbook as HTML using the default HtmlSaveOptions, which automatically export conditional formatting.
-// Keywords: Aspose.Cells | C# Excel to HTML | conditional formatting export | HtmlSaveOptions default | convert .xlsx to .html | Aspose.Cells sample code | .NET workbook conversion | HTML report from Excel | GitHub Aspose.Cells example | code snippet
-// Common Searches: Aspose.Cells export conditional formatting to HTML | C# default HtmlSaveOptions Excel to HTML conversion | How to keep conditional formatting when saving Excel as HTML | Aspose.Cells HTML conversion example .NET | Convert .xlsx to .html preserving styles C#
-// Developer Intent: Generate an HTML file from an Excel workbook in C# while retaining any conditional formatting using Aspose.Cells.
-// Use Cases: Display a spreadsheet on a web page with its color‑coded rules intact. | Create automated HTML reports from Excel templates that rely on conditional formatting. | Batch‑process multiple .xlsx files into web‑ready HTML without losing formatting.
-// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as HTML using the default HtmlSaveOptions, ensuring conditional formatting is included. | Explain how Aspose.Cells' HtmlSaveOptions handles conditional formatting during Excel‑to‑HTML conversion. | Show how to modify the example to export each worksheet to a separate HTML file while preserving conditional formatting.
+// Title: Convert an Excel .xlsx workbook to HTML in C# with Aspose.Cells default options while preserving conditional formatting
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as an HTML file using the default HtmlSaveOptions, ensuring conditional formatting is retained. | Show how to export an Excel workbook to HTML in .NET without customizing any save options, relying on Aspose.Cells' built‑in behavior to include conditional formatting.
+// Common Searches: asp.net convert xlsx to html using aspose.cells default settings | c# export excel workbook to html keeping conditional formatting | how to save workbook as html with Aspose.Cells without custom options | default HtmlSaveOptions export conditional formatting Aspose.Cells
+// Tags: Aspose.Cells default HtmlSaveOptions export | C# convert Excel to HTML with conditional formatting | SaveFormat.Html usage in Aspose.Cells | Export .xlsx to .html using Aspose.Cells | HTML conversion preserving Excel conditional formatting
 
-using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
+using System.IO;
 
-// A complete C# snippet that checks an XLSX file, loads it with Aspose.Cells, optionally adds a conditional‑format rule, and saves the workbook as HTML using the default HtmlSaveOptions, which automatically export conditional formatting.
+// The sample checks for an input .xlsx file, loads it into an Aspose.Cells Workbook, creates a HtmlSaveOptions instance (which exports conditional formatting by default), and saves the workbook as an .html file, handling any errors that may occur.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.html";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.html";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the input file exists before loading
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the source Excel workbook
+            // Load the Excel workbook from the file
             Workbook workbook = new Workbook(inputPath);
 
-            // ------------------------------------------------------------
-            // OPTIONAL: Add a sample conditional formatting rule so that the
-            // conversion demonstrates exporting conditional formatting.
-            // This step can be omitted if the source file already contains
-            // conditional formatting.
-            // ------------------------------------------------------------
-            Worksheet sheet = workbook.Worksheets[0];
+            // Create HTML save options (conditional formatting is exported by default)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Define the range to which the conditional formatting will be applied
-            CellArea area = CellArea.CreateCellArea("A1", "B10");
-
-            // Add a new ConditionalFormatting collection for the defined range
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            var cf = sheet.ConditionalFormattings[cfIndex];
-            cf.AddArea(area);
-
-            // Create a condition: cells with values > 50 will have a red background
-            int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
-            var condition = cf[conditionIndex];
-            var style = condition.Style;
-            style.ForegroundColor = Color.Red;
-            style.Pattern = BackgroundType.Solid;
-            condition.Style = style;
-
-            // ------------------------------------------------------------
-            // Save the workbook as HTML using default HtmlSaveOptions.
-            // The default options include exporting conditional formatting.
-            // ------------------------------------------------------------
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(); // default options
+            // Save the workbook as an HTML file using the specified options
             workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully saved as HTML to: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
         }
         catch (Exception ex)
         {

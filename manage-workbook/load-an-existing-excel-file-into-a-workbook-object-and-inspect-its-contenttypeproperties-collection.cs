@@ -1,55 +1,51 @@
-// Title: Read and List ContentTypeProperties of an Excel Workbook using Aspose.Cells for .NET (C#)
-// Description: This example demonstrates how to open an existing Excel file with Aspose.Cells, retrieve the workbook's ContentTypeProperties collection, verify its presence, and iterate through each property to display Name, Value, Type, and IsNillable information in the console.
-// Keywords: Aspose.Cells ContentTypeProperties | C# read Excel metadata | Workbook ContentTypePropertyCollection example | load Excel file Aspose.Cells | inspect custom content type in Excel
-// Common Searches: how to get ContentTypeProperties from a workbook using Aspose.Cells | enumerate ContentTypeProperty objects in C# | check if Excel file contains content type metadata Aspose | list custom properties of an Excel workbook .NET | Aspose.Cells read custom content type information
-// Developer Intent: Load an Excel workbook and output all its ContentTypeProperty metadata.
-// Use Cases: Verify that required custom content‑type properties exist before further processing. | Debug missing or incorrect metadata by printing each property's details. | Create audit logs of workbook content‑type information for compliance reporting.
-// AI Prompts: Write C# code to add a new ContentTypeProperty to a workbook with Aspose.Cells. | Show how to filter ContentTypeProperties where IsNillable is true and output only their names. | Provide an example of saving changes after modifying the ContentTypeProperties collection.
+// Title: Load an existing .xlsx workbook with Aspose.Cells in C# and list its ContentTypeProperties
+// AI Prompts: Write C# code that opens a specified .xlsx file using Aspose.Cells, retrieves the Workbook.ContentTypeProperties collection, and prints each property's name and value. | Show how to safely load an Excel workbook with Aspose.Cells, verify the file exists, and handle exceptions while accessing content‑type metadata. | Demonstrate iterating over ContentTypeProperties via reflection in Aspose.Cells to avoid compile‑time type dependencies.
+// Common Searches: how to read custom content type properties from an existing Excel file using Aspose.Cells C# | C# Aspose.Cells enumerate workbook ContentTypeProperties collection | list metadata stored in ContentTypeProperties of a loaded workbook Aspose.Cells | Aspose.Cells reflection example to get property name and value from ContentTypeProperties
+// Tags: load workbook contenttypeproperties aspose.cells c# | enumerate contenttypeproperties collection | excel custom metadata extraction aspose.cells | reflection based property access aspose.cells | handle missing excel file aspose.cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
+using System;
+using System.IO;
 
-namespace AsposeCellsContentTypeDemo
+// The example checks for the presence of an input .xlsx file, loads it into an Aspose.Cells Workbook, accesses the ContentTypeProperties collection, and uses reflection to output each property's name and value while handling potential runtime errors.
+class Program
 {
-    // This example demonstrates how to open an existing Excel file with Aspose.Cells, retrieve the workbook's ContentTypeProperties collection, verify its presence, and iterate through each property to display Name, Value, Type, and IsNillable information in the console.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the existing Excel file.
-            string filePath = "Sample.xlsx";
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Load the workbook from the file using the provided constructor (load rule).
-            using (Workbook workbook = new Workbook(filePath))
+        try
+        {
+            // Load the existing Excel file into a Workbook object
+            Workbook workbook = new Workbook(inputPath);
+
+            // Retrieve the collection of content type properties
+            var contentProps = workbook.ContentTypeProperties;
+
+            // Iterate through each property using reflection to avoid direct type dependencies
+            foreach (var prop in contentProps)
             {
-                // Access the collection of ContentTypeProperty objects.
-                ContentTypePropertyCollection contentProps = workbook.ContentTypeProperties;
+                var propType = prop.GetType();
+                var nameProp = propType.GetProperty("Name");
+                var valueProp = propType.GetProperty("Value");
 
-                // If there are no content type properties, inform the user.
-                if (contentProps.Count == 0)
-                {
-                    Console.WriteLine("The workbook does not contain any ContentTypeProperties.");
-                }
-                else
-                {
-                    // Iterate through each property and display its details.
-                    for (int i = 0; i < contentProps.Count; i++)
-                    {
-                        ContentTypeProperty prop = contentProps[i];
-                        Console.WriteLine($"Property #{i + 1}");
-                        Console.WriteLine($"  Name       : {prop.Name}");
-                        Console.WriteLine($"  Value      : {prop.Value}");
-                        Console.WriteLine($"  Type       : {prop.Type}");
-                        Console.WriteLine($"  IsNillable : {prop.IsNillable}");
-                        Console.WriteLine();
-                    }
-                }
+                var name = nameProp?.GetValue(prop, null);
+                var value = valueProp?.GetValue(prop, null);
+
+                Console.WriteLine($"{name}: {value}");
             }
-
-            // Keep console window open if run outside an IDE.
-            Console.WriteLine("Inspection completed. Press any key to exit.");
-            Console.ReadKey();
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

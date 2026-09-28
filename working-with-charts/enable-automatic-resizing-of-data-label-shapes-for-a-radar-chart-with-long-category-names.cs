@@ -1,10 +1,7 @@
-// Title: Auto‑Resize Radar Chart Data Labels for Long Category Names in Aspose.Cells (.NET)
-// Description: Demonstrates how to create a radar chart with lengthy category names, enable axis labels, show category names and values in data labels, and set IsResizeShapeToFitText so each label shape expands automatically before saving the workbook as XLSX.
-// Keywords: Aspose.Cells | .NET | C# | radar chart | auto resize data labels | IsResizeShapeToFitText | long category names | chart axis labels | Excel export | data label shape fit
-// Common Searches: Aspose.Cells auto resize radar chart data labels | C# radar chart long category names Aspose.Cells | IsResizeShapeToFitText property usage | show category name and value in radar chart labels | fit data label shape to text Aspose.Cells
-// Developer Intent: Automatically adjust radar chart data label shapes to accommodate long category text.
-// Use Cases: Generate radar charts with verbose category labels that remain fully readable. | Produce Excel reports where data labels display both category names and values without truncation. | Integrate auto‑fitting label shapes into .NET applications that export workbooks to XLSX.
-// AI Prompts: Write C# code using Aspose.Cells to create a radar chart, enable axis labels, display category names and values in data labels, and set IsResizeShapeToFitText to true. | Explain the impact of the IsResizeShapeToFitText property on radar chart label rendering and any known limitations. | Provide a step‑by‑step guide for automatically resizing radar chart data label shapes for long category names in a .NET project.
+// Title: How to auto‑resize data label shapes for long category names in a radar chart using Aspose.Cells for .NET
+// AI Prompts: Write C# code that builds a radar chart with long category names, displays those names in data labels, and enables the label shapes to automatically resize to fit the text with Aspose.Cells. | Show the steps to set the IsResizeShapeToFitText property on a radar chart series, recalculate the chart, and save the workbook in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# radar chart auto resize data labels for long category names | How to make radar chart data label shapes fit long text using Aspose.Cells | Enable IsResizeShapeToFitText on radar chart series in .NET | Resize radar chart data labels automatically with Aspose.Cells example
+// Tags: radar chart data label auto‑fit Aspose.Cells | resize label shape to fit long category names C# | set IsResizeShapeToFitText property Aspose.Cells | enable radar axis labels with long text .NET | auto‑adjust chart label dimensions Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,29 +9,29 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsRadarChartAutoResize
 {
-    // Demonstrates how to create a radar chart with lengthy category names, enable axis labels, show category names and values in data labels, and set IsResizeShapeToFitText so each label shape expands automatically before saving the workbook as XLSX.
+    // Creates a workbook, adds a radar chart with long category names, shows those names in data labels, sets IsResizeShapeToFitText to true so label shapes auto‑resize to fit the text, recalculates the chart layout, and saves the file as RadarChart_AutoResizeDataLabels.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data with long category names
                 sheet.Cells["A1"].PutValue("Category");
                 sheet.Cells["A2"].PutValue("Very Long Category Name 1");
-                sheet.Cells["A3"].PutValue("Very Long Category Name 2");
-                sheet.Cells["A4"].PutValue("Very Long Category Name 3");
+                sheet.Cells["A3"].PutValue("Extremely Long Category Name 2");
+                sheet.Cells["A4"].PutValue("Super Long Category Name 3");
 
                 sheet.Cells["B1"].PutValue("Series1");
                 sheet.Cells["B2"].PutValue(10);
                 sheet.Cells["B3"].PutValue(20);
                 sheet.Cells["B4"].PutValue(30);
 
-                // Add a radar chart (positioned from row 5, column 0 to row 20, column 12)
+                // Add a radar chart
                 int chartIndex = sheet.Charts.Add(ChartType.Radar, 5, 0, 20, 12);
                 Chart chart = sheet.Charts[chartIndex];
 
@@ -42,30 +39,26 @@ namespace AsposeCellsRadarChartAutoResize
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Enable axis labels for radar chart (required for category names)
+                // Enable axis labels for radar chart (category names)
+                chart.NSeries[0].HasRadarAxisLabels = true;
+
+                // Enable data labels for the series
                 Series series = chart.NSeries[0];
-                series.HasRadarAxisLabels = true;
+                series.DataLabels.ShowCategoryName = true;   // display the long category names
+                series.DataLabels.Position = LabelPositionType.Center;
 
-                // Enable data labels and show category names and values
-                series.DataLabels.ShowCategoryName = true;
-                series.DataLabels.ShowValue = true;
-
-                // Auto‑fit the data label shape to the text
+                // Allow the data label shape to auto‑fit the text
                 series.DataLabels.IsResizeShapeToFitText = true;
-
-                // Note: Setting a specific shape type is optional; omitted if enum unavailable.
 
                 // Recalculate the chart to apply layout changes
                 chart.Calculate();
 
                 // Save the workbook
-                string outputPath = "RadarChartAutoResizeDataLabels.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook.Save("RadarChart_AutoResizeDataLabels.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

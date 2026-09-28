@@ -1,53 +1,45 @@
-// Title: Compute the average of numeric cells in an Apple Numbers‑generated XLSX with Aspose.Cells for .NET
-// Description: Loads an Apple Numbers‑exported workbook using Aspose.Cells, scans the used range of the first worksheet, sums cells flagged as IsNumericValue, calculates the mean, and writes the result to the console.
-// Keywords: Aspose.Cells .NET average numeric cells | read numeric values Apple Numbers XLSX | C# iterate used range Excel | calculate spreadsheet mean Aspose | console utility Excel statistics | Apple Numbers export processing
-// Common Searches: Aspose.Cells calculate average of numbers in Excel file | C# read only numeric cells from Apple Numbers export | How to get mean of all values in a workbook using Aspose.Cells | Iterate used range and sum numeric cells Aspose .NET | Console program to average numeric cells in XLSX
-// Developer Intent: Determine the mean value of every numeric cell in a loaded workbook and display it.
-// Use Cases: Produce quick summary metrics for financial reports exported from Apple Numbers. | Validate data quality across multiple macOS‑generated spreadsheets by checking the overall average. | Build a lightweight command‑line tool that flags unusually high or low averages in engineering data sets. | Integrate into automated pipelines that need a numeric‑only checksum before further processing.
-// AI Prompts: Create a reusable function that accepts an Aspose.Cells Workbook and returns the average of its numeric cells, excluding dates. | Modify the example to handle multiple worksheets and output each sheet's average separately. | Add robust error handling for missing files, empty worksheets, and non‑numeric content while logging detailed diagnostics.
+// Title: Read numeric cells from an Apple‑generated Excel workbook with Aspose.Cells for .NET and calculate their average
+// AI Prompts: Write C# code using Aspose.Cells that opens a given Excel file, iterates over every used cell in the first worksheet, sums only numeric values, computes the average, and writes the result to the console. | Update the Aspose.Cells example to exclude cells located in hidden rows or columns when determining the average of numeric data. | Add robust try‑catch blocks around workbook loading and numeric aggregation to provide clear error messages in the Aspose.Cells C# sample.
+// Common Searches: Aspose.Cells C# calculate average of numeric cells in Excel workbook | how to ignore hidden rows while averaging numbers with Aspose.Cells .NET | read numeric values from an Apple generated .xlsx using Aspose.Cells | C# example to sum and average cells of type numeric in Aspose.Cells
+// Tags: calculate average numeric cells Aspose.Cells | iterate worksheet cells .NET | load Apple generated Excel file Aspose.Cells | skip hidden rows Aspose.Cells | exception handling workbook loading Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads an Apple Numbers‑exported workbook using Aspose.Cells, scans the used range of the first worksheet, sums cells flagged as IsNumericValue, calculates the mean, and writes the result to the console.
+// The program loads an Excel workbook, scans all used cells in the first worksheet, sums values of cells identified as numeric, computes their average, and prints the result to the console.
 class Program
 {
     static void Main()
     {
-        // Path to the Apple‑generated spreadsheet (replace with actual file path)
-        string filePath = "input.xlsx";
+        // Load the Apple‑generated spreadsheet
+        var workbook = new Workbook("input.xlsx"); // replace with actual file path
 
-        // Load the workbook
-        Workbook workbook = new Workbook(filePath);
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Access the first worksheet (modify if needed)
+        var worksheet = workbook.Worksheets[0];
+        var cells = worksheet.Cells;
 
         double sum = 0;
         int count = 0;
 
-        // Determine the used range of the worksheet
-        int maxRow = cells.MaxDataRow;
-        int maxCol = cells.MaxDataColumn;
-
-        // Iterate through all cells in the used range
-        for (int row = 0; row <= maxRow; row++)
+        // Iterate through all used cells and collect numeric values
+        foreach (Cell cell in cells)
         {
-            for (int col = 0; col <= maxCol; col++)
+            if (cell.Type == CellValueType.IsNumeric)
             {
-                Cell cell = cells[row, col];
-                // Check if the cell contains a numeric value (including dates and times)
-                if (cell != null && cell.IsNumericValue)
-                {
-                    sum += cell.DoubleValue;
-                    count++;
-                }
+                sum += cell.DoubleValue;
+                count++;
             }
         }
 
-        // Calculate the average
-        double average = count > 0 ? sum / count : 0;
-
-        // Output the result to the console
-        Console.WriteLine($"Average of numeric cells: {average}");
+        // Calculate and output the average
+        if (count > 0)
+        {
+            double average = sum / count;
+            Console.WriteLine($"Average of numeric cells: {average}");
+        }
+        else
+        {
+            Console.WriteLine("No numeric cells found.");
+        }
     }
 }

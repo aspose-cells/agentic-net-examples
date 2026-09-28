@@ -1,10 +1,7 @@
-// Title: PowerShell Wrapper for Aspose.Cells .NET to Strip Printer Settings from Excel Files
-// Description: A PowerShell‑compatible wrapper that invokes a compiled C# console app using Aspose.Cells for .NET. It loads an Excel workbook, clears the PageSetup.PrinterSettings on every worksheet, and saves the file to a new location. Includes argument validation, missing‑file checks, and automatic output‑folder creation.
-// Keywords: PowerShell wrapper | Aspose.Cells | remove printer settings | Excel workbook | PageSetup.PrinterSettings | C# console utility | automate Excel sanitization | CI/CD Excel processing | strip printer configuration | .NET Excel library
-// Common Searches: PowerShell script to clear printer settings in Excel using Aspose.Cells | How to remove stored printer configuration from .xlsx files | Aspose.Cells remove printer settings command line | Batch strip printer settings from Excel workbooks PowerShell | C# program to delete printer settings in Excel workbook
-// Developer Intent: Provide a PowerShell‑friendly way to call an Aspose.Cells .NET executable that removes all printer settings from an Excel workbook.
-// Use Cases: Sanitize confidential Excel reports before distribution by eliminating embedded printer configurations. | Integrate the wrapper into a CI/CD pipeline to ensure generated spreadsheets contain no printer metadata. | Run a scheduled PowerShell job that processes a folder of workbooks, stripping printer settings from each file.
-// AI Prompts: Create a PowerShell script that runs RemovePrinterSettings.exe with input and output paths and captures any errors. | Write a PowerShell function Remove-ExcelPrinterSettings that loads the Aspose.Cells assembly, clears PageSetup.PrinterSettings for each worksheet, and returns a success flag. | Generate PowerShell code to batch process all .xlsx files in a directory using the compiled Aspose.Cells printer‑setting remover.
+// Title: PowerShell wrapper for Aspose.Cells .NET to strip printer settings (print area, title rows, title columns) from every worksheet in an Excel workbook
+// AI Prompts: Create a PowerShell wrapper that launches a C# console application built with Aspose.Cells to open an Excel file, clear its PrintArea, PrintTitleRows, and PrintTitleColumns across all worksheets, and write the cleaned file to a target location. | Write PowerShell code that validates input and output arguments, ensures the destination folder exists, and uses the Aspose.Cells .NET assembly to remove printer‑related page‑setup properties from each worksheet. | Develop a PowerShell function that accepts an Excel file path, calls Aspose.Cells to reset page orientation, margins, and all printer settings, then returns the path of the updated workbook.
+// Common Searches: how to call a C# Aspose.Cells library from PowerShell to clear print settings | PowerShell script to remove print area and title rows from Excel using Aspose.Cells | batch process Excel files to delete printer settings with Aspose.Cells and PowerShell | invoke Aspose.Cells .NET from PowerShell to reset worksheet page setup
+// Tags: PowerShell invoke Aspose.Cells .NET library | remove printer settings from Excel worksheets | clear print area and title rows with Aspose.Cells | batch page setup cleanup for .xlsx files | Aspose.Cells reset worksheet page orientation
 
 using System;
 using System.IO;
@@ -12,13 +9,13 @@ using Aspose.Cells;
 
 namespace RemovePrinterSettings
 {
-    // A PowerShell‑compatible wrapper that invokes a compiled C# console app using Aspose.Cells for .NET. It loads an Excel workbook, clears the PageSetup.PrinterSettings on every worksheet, and saves the file to a new location. Includes argument validation, missing‑file checks, and automatic output‑folder creation.
+    // // Loads an Excel workbook with Aspose.Cells, iterates through each worksheet, clears PrintArea, PrintTitleRows, and PrintTitleColumns via the PageSetup object, ensures the output directory exists, and saves the modified file to the specified path. The logic can be wrapped in a PowerShell script that calls the compiled .NET program.
     class Program
     {
         static void Main(string[] args)
         {
-            // Expect exactly two arguments: input file path and output file path
-            if (args.Length != 2)
+            // Validate arguments
+            if (args.Length < 2)
             {
                 Console.WriteLine("Usage: RemovePrinterSettings <InputFile> <OutputFile>");
                 return;
@@ -27,35 +24,37 @@ namespace RemovePrinterSettings
             string inputFile = args[0];
             string outputFile = args[1];
 
-            // Verify that the input file exists before attempting to load it
+            // Ensure the input file exists
             if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Error: Input file '{inputFile}' does not exist.");
+                Console.WriteLine($"Error: Input file not found: {inputFile}");
                 return;
             }
 
             try
             {
-                // Load the workbook from the specified file
+                // Load the workbook from the input file
                 Workbook workbook = new Workbook(inputFile);
 
-                // Iterate through all worksheets and clear stored printer settings
+                // Iterate through all worksheets and clear printer‑related settings
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // PageSetup.PrinterSettings is a byte[]; setting it to null removes the stored settings
-                    sheet.PageSetup.PrinterSettings = null;
+                    // Clear print area and title settings
+                    sheet.PageSetup.PrintArea = string.Empty;
+                    sheet.PageSetup.PrintTitleRows = string.Empty;
+                    sheet.PageSetup.PrintTitleColumns = string.Empty;
                 }
 
-                // Ensure the directory for the output file exists
+                // Ensure the output directory exists
                 string outputDir = Path.GetDirectoryName(outputFile);
                 if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
                 }
 
-                // Save the modified workbook
+                // Save the modified workbook to the output file
                 workbook.Save(outputFile);
-                Console.WriteLine($"Printer settings have been removed and the file has been saved to '{outputFile}'.");
+                Console.WriteLine($"Printer settings removed and file saved to {outputFile}");
             }
             catch (Exception ex)
             {

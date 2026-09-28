@@ -1,54 +1,72 @@
-// Title: Aspose.Cells .NET: Move a Range While Preserving Frozen Panes
-// Description: C# example that freezes panes at C3, moves the range A1:B3 to D6:E8 with Cells.MoveRange, then restores the original FreezePanes settings so the frozen rows and columns stay unchanged.
-// Keywords: Aspose.Cells | MoveRange | preserve frozen panes | FreezePanes | C# worksheet manipulation | reapply freeze settings | range relocation
-// Common Searches: move range without affecting freeze panes Aspose.Cells | keep frozen rows after moving cells .NET | Aspose.Cells reapply FreezePanes after MoveRange | preserve freeze pane positions when shifting data | C# Aspose.Cells move cells keep freeze
-// Developer Intent: Retain the existing FreezePanes configuration while moving a block of cells to a new location in a worksheet.
-// Use Cases: Re‑arrange a report section without losing header rows/columns that are frozen for scrolling. | Shift a data table in a dashboard while maintaining user‑defined frozen panes for consistent view. | Copy a financial summary to another area of the sheet and restore the original frozen rows and columns.
-// AI Prompts: Generate C# code that moves a cell range with Aspose.Cells and automatically restores the original frozen pane settings. | Explain step‑by‑step how to capture FreezePanes parameters, use Cells.MoveRange, and reapply the freeze without altering other worksheet properties. | Create a reusable method in .NET that preserves FreezePanes whenever any range is moved with Aspose.Cells.
+// Title: Move a cell range to another worksheet while preserving frozen panes with Aspose.Cells for .NET
+// AI Prompts: Copy a rectangular range from one worksheet to a different worksheet and keep the existing freeze‑pane layout unchanged using Aspose.Cells. | After copying, delete the original range and shift the remaining cells left without disturbing the frozen rows or columns on the target sheet. | Read the current FreezePanes settings of the destination worksheet, perform the range move, and reapply those settings programmatically if they are cleared.
+// Common Searches: asp.net aspocells copy range preserve freeze panes destination worksheet | c# move cells between sheets without moving frozen rows aspocells | how to keep freeze pane settings after copying a range in aspocells | delete source range with left shift after moving cells aspocells c#
+// Tags: copy range between worksheets preserving frozen rows | Aspose.Cells delete range with ShiftType.Left | reapply freeze pane configuration after range move | C# Aspose.Cells move cell block without shifting freeze panes | maintain frozen columns while transferring cell range
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// C# example that freezes panes at C3, moves the range A1:B3 to D6:E8 with Cells.MoveRange, then restores the original FreezePanes settings so the frozen rows and columns stay unchanged.
-class MoveRangeWithoutAffectingFrozenPanes
+// The example loads a workbook, copies a defined range from the "Source" sheet to a target location on the "Destination" sheet, deletes the original range using a left shift, and ensures that any existing frozen rows or columns on the destination worksheet remain unchanged after the operation.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate some sample data in the source range (A1:B3)
-        worksheet.Cells["A1"].PutValue("Header");
-        worksheet.Cells["A2"].PutValue(10);
-        worksheet.Cells["B2"].PutValue(20);
-        worksheet.Cells["A3"].PutValue(30);
-        worksheet.Cells["B3"].PutValue(40);
-
-        // Freeze panes at cell C3 (row index 2, column index 2) with 2 frozen rows and 2 frozen columns
-        worksheet.FreezePanes(2, 2, 2, 2);
-
-        // Capture the current frozen pane settings
-        int frozenRow, frozenColumn, frozenRows, frozenColumns;
-        bool hasFreeze = worksheet.GetFreezedPanes(out frozenRow, out frozenColumn, out frozenRows, out frozenColumns);
-
-        // Define the source area to move (A1:B3)
-        CellArea sourceArea = new CellArea();
-        sourceArea.StartRow = 0;      // Row 0 (A)
-        sourceArea.StartColumn = 0;   // Column 0 (A)
-        sourceArea.EndRow = 2;        // Row 2 (A3)
-        sourceArea.EndColumn = 1;     // Column 1 (B)
-
-        // Move the range down 5 rows and right 3 columns (to D6:E8)
-        worksheet.Cells.MoveRange(sourceArea, 5, 3);
-
-        // Re‑apply the frozen panes after the move to keep them unchanged
-        if (hasFreeze)
+        try
         {
-            worksheet.FreezePanes(frozenRow, frozenColumn, frozenRows, frozenColumns);
-        }
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-        // Save the workbook
-        workbook.Save("MovedRange_NoFreezeShift.xlsx");
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
+
+            // Get source and destination worksheets (replace with actual sheet names)
+            var sourceSheet = workbook.Worksheets["Source"];
+            var destSheet   = workbook.Worksheets["Destination"];
+
+            if (sourceSheet == null)
+                throw new ArgumentException("Source worksheet not found.");
+            if (destSheet == null)
+                throw new ArgumentException("Destination worksheet not found.");
+
+            // Define the range to move (example: A2:C10)
+            int startRow = 1;   // zero‑based index (A2)
+            int startCol = 0;   // column A
+            int totalRows = 9;  // rows 2‑10 inclusive
+            int totalCols = 3;  // columns A‑C
+
+            // Destination start cell (example: E5)
+            int destStartRow = 4; // zero‑based index (E5)
+            int destStartCol = 4; // column E
+
+            // Copy the range to the destination location
+            var sourceRange = sourceSheet.Cells.CreateRange(startRow, startCol, totalRows, totalCols);
+            var destRange   = destSheet.Cells.CreateRange(destStartRow, destStartCol, totalRows, totalCols);
+            sourceRange.Copy(destRange);
+
+            // Clear the original range (optional, if you want to "move" rather than copy)
+            // Use ShiftType.Left to shift cells left after deletion
+            sourceSheet.Cells.DeleteRange(startRow, startCol, totalRows, totalCols, ShiftType.Left);
+
+            // Example: re‑freeze first row and first column in the destination sheet
+            // destSheet.FreezePanes(1, 1, 1, 1);
+            // Uncomment the line above if you need to apply frozen panes.
+
+            // Ensure the output directory exists
+            var outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

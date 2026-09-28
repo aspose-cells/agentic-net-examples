@@ -1,10 +1,7 @@
-// Title: C# – Remove “Region*” slicers from an Excel workbook with Aspose.Cells and save as XLSX
-// Description: Loads a workbook, scans each worksheet’s SlicerCollection, deletes slicers whose Name starts with “Region” (case‑insensitive) using reverse iteration, and saves the modified file as an XLSX document.
-// Keywords: Aspose.Cells | C# | remove slicer | slicer collection | delete slicer by name | Region slicer | save workbook xlsx | Excel slicer removal | Aspose.Cells API | batch workbook processing
-// Common Searches: Aspose.Cells delete slicer by prefix | C# remove Excel slicer starting with Region | iterate SlicerCollection Aspose.Cells | save workbook after slicer removal Aspose | remove all slicers from workbook using Aspose.Cells
-// Developer Intent: Programmatically eliminate every slicer whose name begins with “Region” from all worksheets and output the cleaned workbook in XLSX format.
-// Use Cases: Strip automatically generated region slicers before publishing a report to stakeholders. | Batch‑process a set of workbooks to clean up temporary slicers after a data refresh. | Prepare an archive copy of a workbook by removing slicers that are no longer relevant.
-// AI Prompts: Generate C# code with Aspose.Cells that deletes slicers whose names start with a given prefix and then saves the workbook as XLSX. | Explain how to safely iterate a SlicerCollection in reverse order to avoid index errors when removing matching slicers. | Create a reusable method that accepts a file path and a slicer name prefix, removes matching slicers from every worksheet, and writes the result to a new file.
+// Title: Remove all slicers whose names start with "Region" from an Excel workbook using Aspose.Cells for .NET and save as XLSX
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through each worksheet's SlicerCollection, removes any slicer whose Name starts with "Region" (case‑insensitive), and saves the workbook as an XLSX file. | Show a step‑by‑step example of looping backwards through a SlicerCollection in Aspose.Cells for .NET to safely delete slicers matching a specific prefix and then export the workbook. | Generate a reusable C# method that accepts a workbook path and a slicer name prefix, removes matching slicers using Aspose.Cells, and writes the result to a new XLSX file.
+// Common Searches: c# aspnet remove slicers with name starting with region from excel using aspose.cells | aspose.cells delete slicer by prefix programmatically | how to loop through slicer collection and remove specific slicers in .net | save workbook after removing slicers aspose.cells c# | remove region slicers from multiple worksheets aspose.cells example
+// Tags: aspose.cells slicer removal by name prefix | c# iterate slicercollection aspose.cells | delete region slicers excel workbook | save modified workbook as xlsx aspose.cells | case‑insensitive slicer name filter aspose.cells
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Slicers;
 
 namespace AsposeCellsSlicerRemoval
 {
-    // Loads a workbook, scans each worksheet’s SlicerCollection, deletes slicers whose Name starts with “Region” (case‑insensitive) using reverse iteration, and saves the modified file as an XLSX document.
+    // Loads an Excel file, iterates through all worksheets, removes any slicer whose Name begins with "Region" (case‑insensitive) by looping backwards through the SlicerCollection, and saves the updated workbook as output.xlsx in XLSX format.
     class Program
     {
         static void Main()
@@ -26,13 +23,17 @@ namespace AsposeCellsSlicerRemoval
                 // Get the slicer collection for the current worksheet
                 SlicerCollection slicers = sheet.Slicers;
 
-                // Remove slicers whose name starts with "Region"
-                // Iterate backwards to avoid index shifting when removing
+                // Loop backwards to safely remove items while iterating
                 for (int i = slicers.Count - 1; i >= 0; i--)
                 {
                     Slicer slicer = slicers[i];
-                    if (slicer.Name != null && slicer.Name.StartsWith("Region", StringComparison.OrdinalIgnoreCase))
+
+                    // Check if the slicer's name starts with "Region"
+                    // (using case‑insensitive comparison)
+                    if (!string.IsNullOrEmpty(slicer.Name) &&
+                        slicer.Name.StartsWith("Region", StringComparison.OrdinalIgnoreCase))
                     {
+                        // Remove the slicer at the current index
                         slicers.RemoveAt(i);
                     }
                 }

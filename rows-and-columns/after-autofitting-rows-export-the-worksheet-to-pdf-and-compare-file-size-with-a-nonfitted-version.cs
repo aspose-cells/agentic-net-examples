@@ -1,54 +1,95 @@
-// Title: Aspose.Cells .NET: Export Worksheet to PDF Before and After AutoFitRows and Compare File Sizes
-// Description: C# example that creates a workbook, adds wrapped long text, saves a PDF with default row heights, applies Worksheet.AutoFitRows(), saves a second PDF, and outputs the byte sizes to show how AutoFitRows impacts PDF file size.
-// Keywords: Aspose.Cells AutoFitRows PDF | C# export Excel to PDF | compare PDF size Aspose.Cells | row auto fit PDF output .NET | worksheet.AutoFitRows effect on file size
-// Common Searches: Aspose.Cells export PDF before AutoFitRows | Does AutoFitRows increase PDF size in .NET | How to compare PDF file sizes with and without row auto‑fit | C# Aspose.Cells PDF size optimization | Measure impact of AutoFitRows on PDF output
-// Developer Intent: Generate two PDFs—one with default row heights and one after applying AutoFitRows—and determine the size difference.
-// Use Cases: Validate that row auto‑fitting does not unnecessarily enlarge PDF reports. | Choose the optimal PDF generation strategy based on file‑size impact. | Integrate a CI check that flags PDFs whose size grows after AutoFitRows.
-// AI Prompts: Write C# code using Aspose.Cells to save a worksheet as PDF, apply AutoFitRows, save again, and report the size delta. | Create a method that accepts a Workbook, exports PDFs before and after AutoFitRows, and returns true if the second PDF is larger. | Explain how text wrapping and AutoFitRows influence PDF rendering and file size in Aspose.Cells.
+// Title: Compare PDF file sizes before and after using Worksheet.AutoFitRows in Aspose.Cells (C#)
+// AI Prompts: Write C# code that creates a workbook, saves it as a PDF, then invokes Worksheet.AutoFitRows, saves a second PDF, and prints the byte sizes of both files. | Show how to configure PdfSaveOptions and calculate the file length of PDFs generated with and without row auto‑fitting using Aspose.Cells. | Provide a C# example that wraps cell text, auto‑fits rows, exports the worksheet to PDF, and logs whether the PDF size increased, decreased, or stayed the same.
+// Common Searches: how to measure PDF size difference after applying Worksheet.AutoFitRows in Aspose.Cells C# | Aspose.Cells export worksheet to PDF before and after auto fitting rows | does auto fitting rows affect PDF output size in Aspose.Cells .NET | C# code sample for comparing PDF file sizes with and without row auto fit using Aspose.Cells | PdfSaveOptions without auto fit rows Aspose.Cells size comparison
+// Tags: auto-fit rows PDF size comparison | Aspose.Cells PdfSaveOptions row height | C# measure PDF file size Aspose.Cells | row auto fitting impact on PDF output | export worksheet to PDF Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// C# example that creates a workbook, adds wrapped long text, saves a PDF with default row heights, applies Worksheet.AutoFitRows(), saves a second PDF, and outputs the byte sizes to show how AutoFitRows impacts PDF file size.
-class AutoFitRowsPdfComparison
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a workbook, adds wrapped text to cells, saves a PDF without auto‑fitting rows, records its size, calls sheet.AutoFitRows(), saves a second PDF, records the new size, and prints a comparison indicating whether the auto‑fit operation increased, decreased, or left the PDF file size unchanged.
+    public class AutoFitRowsPdfComparison
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and access the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate cells with long text to demonstrate row height changes
-        worksheet.Cells["A1"].PutValue("This is a very long text that will require row auto‑fitting. It contains multiple sentences to increase the height.");
-        worksheet.Cells["A2"].PutValue("Short text");
-        worksheet.Cells["A3"].PutValue("Another long text that should wrap and increase row height when auto‑fit is applied.");
+                // Populate sample data that will cause varying row heights
+                sheet.Cells["A1"].PutValue("Short text");
+                sheet.Cells["A2"].PutValue("This is a longer text that should increase the row height when wrapped.");
+                sheet.Cells["A3"].PutValue("Another long text\nwith line breaks\nto demonstrate auto‑fit behavior.");
 
-        // Enable text wrapping for the cells that contain long text
-        Style wrapStyle = worksheet.Cells["A1"].GetStyle();
-        wrapStyle.IsTextWrapped = true;
-        worksheet.Cells["A1"].SetStyle(wrapStyle);
-        worksheet.Cells["A3"].SetStyle(wrapStyle);
+                // Enable text wrapping for the cells to allow row height changes
+                for (int row = 0; row < 3; row++)
+                {
+                    Style style = sheet.Cells[row, 0].GetStyle();
+                    style.IsTextWrapped = true;
+                    sheet.Cells[row, 0].SetStyle(style);
+                }
 
-        // Save PDF without applying AutoFitRows
-        string pdfWithoutFit = "WithoutAutoFit.pdf";
-        workbook.Save(pdfWithoutFit, SaveFormat.Pdf);
+                // Define file paths for the PDFs
+                string basePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                // Ensure the directory exists
+                if (!Directory.Exists(basePath))
+                {
+                    Directory.CreateDirectory(basePath);
+                }
 
-        // AutoFit all rows in the worksheet
-        worksheet.AutoFitRows();
+                string pdfWithoutFit = Path.Combine(basePath, "Worksheet_NoAutoFit.pdf");
+                string pdfWithFit = Path.Combine(basePath, "Worksheet_AutoFit.pdf");
 
-        // Save PDF after applying AutoFitRows
-        string pdfWithFit = "WithAutoFit.pdf";
-        workbook.Save(pdfWithFit, SaveFormat.Pdf);
+                // Save PDF without auto‑fitting rows
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                workbook.Save(pdfWithoutFit, pdfOptions);
 
-        // Compare file sizes
-        long sizeWithoutFit = new FileInfo(pdfWithoutFit).Length;
-        long sizeWithFit = new FileInfo(pdfWithFit).Length;
+                // Get file size of the non‑fitted PDF
+                long sizeWithoutFit = new FileInfo(pdfWithoutFit).Length;
 
-        Console.WriteLine($"PDF size without AutoFitRows: {sizeWithoutFit} bytes");
-        Console.WriteLine($"PDF size with AutoFitRows: {sizeWithFit} bytes");
-        Console.WriteLine(sizeWithFit > sizeWithoutFit
-            ? "AutoFitRows increased the PDF size."
-            : "AutoFitRows reduced or kept the PDF size unchanged.");
+                // Auto‑fit all rows in the worksheet
+                sheet.AutoFitRows();
+
+                // Save PDF after auto‑fitting rows
+                workbook.Save(pdfWithFit, pdfOptions);
+
+                // Get file size of the fitted PDF
+                long sizeWithFit = new FileInfo(pdfWithFit).Length;
+
+                // Output the comparison results
+                Console.WriteLine($"PDF size without AutoFitRows: {sizeWithoutFit} bytes");
+                Console.WriteLine($"PDF size with AutoFitRows   : {sizeWithFit} bytes");
+                if (sizeWithFit > sizeWithoutFit)
+                {
+                    Console.WriteLine("Auto‑fitting rows increased the PDF file size.");
+                }
+                else if (sizeWithFit < sizeWithoutFit)
+                {
+                    Console.WriteLine("Auto‑fitting rows decreased the PDF file size.");
+                }
+                else
+                {
+                    Console.WriteLine("PDF file size unchanged after auto‑fitting rows.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            AutoFitRowsPdfComparison.Run();
+        }
     }
 }

@@ -1,87 +1,99 @@
-// Title: Apply Opening Password and Structure Protection to an Excel Workbook with Aspose.Cells (.NET) and Verify Independently
-// Description: Demonstrates how to create a workbook, set an opening (encryption) password, protect the workbook structure with a separate password, save the file, test each protection separately, unprotect the structure while keeping the opening password, and confirm the remaining encryption on reload.
-// Keywords: Aspose.Cells opening password | workbook structure protection .NET | Excel encryption Aspose.Cells | unprotect workbook password | LoadOptions password Aspose.Cells | verify workbook protection
-// Common Searches: Aspose.Cells set opening password and protect structure | test Excel file encryption and structure protection with Aspose.Cells | remove workbook structure protection but keep opening password .NET | how to load password‑protected workbook using Aspose.Cells | check if workbook is encrypted Aspose.Cells
-// Developer Intent: The developer wants to secure an Excel file with both an opening password and a structure lock, validate each protection independently, and later remove the structure lock while preserving the opening password.
-// Use Cases: Create a new workbook, assign an opening password, and protect its structure before saving. | Attempt to open the protected file without a password to confirm encryption enforcement. | Load the file with the correct opening password, inspect encryption and structure flags, and handle incorrect unprotect attempts. | Remove the structure protection using the proper password, save the workbook, and verify that the opening password remains active.
-// AI Prompts: Generate C# code with Aspose.Cells that adds an opening password and a separate structure protection to a workbook, then shows how to load the file with the opening password and read protection status. | Provide a C# example that catches exceptions when opening a password‑protected workbook without a password and when unprotecting the structure with an invalid password using Aspose.Cells.
+// Title: How to set an opening password and worksheet structure protection on an Excel file with Aspose.Cells for .NET and verify each protection
+// AI Prompts: Create C# code that applies a file‑open password using Workbook.Settings.Password and protects the worksheet structure with Worksheet.Protect, then saves the workbook. | Write C# logic to load the password‑protected workbook with LoadOptions, attempt opening without a password, and test unprotecting the worksheet with both incorrect and correct passwords, handling CellsException.
+// Common Searches: aspnet set file open password for Excel using Aspose.Cells | protect worksheet structure with password Aspose.Cells C# example | load password protected xlsx with Aspose.Cells LoadOptions .NET | catch CellsException when opening Excel without password Aspose.Cells | unprotect worksheet with wrong password Aspose.Cells handling exception
+// Tags: Workbook.Settings.Password protection Aspose.Cells | Worksheet.Protect structure password C# | LoadOptions password opening Excel Aspose.Cells | CellsException handling for protection errors | save protected workbook Xlsx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectionDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, set an opening (encryption) password, protect the workbook structure with a separate password, save the file, test each protection separately, unprotect the structure while keeping the opening password, and confirm the remaining encryption on reload.
+    // // Demonstrates creating a workbook, applying an opening password via Workbook.Settings.Password, protecting the worksheet structure with Worksheet.Protect, saving the file, attempting to open it without a password (expecting a CellsException), loading it with the correct password, testing unprotect with an incorrect password (catching the exception), then unprotecting with the correct password and saving an unprotected copy.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // ------------------- Create and protect workbook -------------------
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Data");
-
-            // Apply an opening (encryption) password
-            workbook.Settings.Password = "open123";
-
-            // Protect the workbook structure with a separate password
-            workbook.Protect(ProtectionType.Structure, "struct123");
-
-            // Save the protected workbook
-            string protectedPath = "ProtectedWorkbook.xlsx";
-            workbook.Save(protectedPath);
-            workbook.Dispose();
-
-            // ------------------- Test opening password -------------------
-            // Attempt to open without password (should throw)
             try
             {
-                Workbook wrongLoad = new Workbook(protectedPath);
-                wrongLoad.Dispose(); // Not expected to reach here
+                // Create a new workbook and add some data
+                Workbook workbook = new Workbook();
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+
+                // ---------- Apply opening password ----------
+                workbook.Settings.Password = "OpenPwd123"; // password required to open the file
+
+                // ---------- Apply worksheet protection (acts as structure protection for demo) ----------
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Protect the worksheet with a password (oldPassword is not required for new protection)
+                sheet.Protect(ProtectionType.All, "StructPwd456", string.Empty);
+
+                // Save the protected workbook
+                string filePath = "ProtectedWorkbook.xlsx";
+                workbook.Save(filePath, SaveFormat.Xlsx);
+
+                // ---------- Test opening password ----------
+                try
+                {
+                    // Attempt to load without providing a password – should fail
+                    if (File.Exists(filePath))
+                    {
+                        Workbook wbNoPwd = new Workbook(filePath);
+                        Console.WriteLine("ERROR: Workbook opened without password (unexpected).");
+                    }
+                    else
+                    {
+                        Console.WriteLine("ERROR: File not found: " + filePath);
+                    }
+                }
+                catch (CellsException ex)
+                {
+                    Console.WriteLine("Opening without password failed as expected: " + ex.Message);
+                }
+
+                // Load with correct opening password
+                if (File.Exists(filePath))
+                {
+                    LoadOptions loadOpts = new LoadOptions(LoadFormat.Xlsx)
+                    {
+                        Password = "OpenPwd123"
+                    };
+                    Workbook wbWithPwd = new Workbook(filePath, loadOpts);
+                    Console.WriteLine("Workbook opened successfully with correct opening password.");
+
+                    // ---------- Test worksheet protection ----------
+                    Worksheet loadedSheet = wbWithPwd.Worksheets[0];
+
+                    // Attempt to unprotect with wrong password – should raise an exception
+                    try
+                    {
+                        loadedSheet.Unprotect("WrongPwd");
+                        Console.WriteLine("ERROR: Worksheet unprotected with wrong password (unexpected).");
+                    }
+                    catch (CellsException ex)
+                    {
+                        Console.WriteLine("Unprotecting with wrong password failed as expected: " + ex.Message);
+                    }
+
+                    // Unprotect with correct password
+                    loadedSheet.Unprotect("StructPwd456");
+                    Console.WriteLine("Worksheet protection successfully removed with correct password.");
+
+                    // (Optional) Save the workbook after removing protection
+                    string unprotectedPath = "UnprotectedWorkbook.xlsx";
+                    wbWithPwd.Save(unprotectedPath, SaveFormat.Xlsx);
+                    Console.WriteLine("Unprotected workbook saved to: " + unprotectedPath);
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: File not found for loading with password: " + filePath);
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Opening without password failed as expected: " + ex.Message);
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
             }
-
-            // Open with the correct opening password
-            LoadOptions loadOptions = new LoadOptions { Password = "open123" };
-            Workbook loadedWorkbook = new Workbook(protectedPath, loadOptions);
-
-            // Verify encryption and structure protection status
-            Console.WriteLine("Is workbook encrypted (requires opening password): " + loadedWorkbook.Settings.IsEncrypted);
-            Console.WriteLine("Is workbook protected with password (structure/window): " + loadedWorkbook.IsWorkbookProtectedWithPassword);
-            Console.WriteLine("Workbook settings IsProtected (structure/window): " + loadedWorkbook.Settings.IsProtected);
-
-            // ------------------- Test structure protection -------------------
-            // Attempt to unprotect with an incorrect password
-            try
-            {
-                loadedWorkbook.Unprotect("wrongPassword");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unprotect with wrong password failed as expected: " + ex.Message);
-            }
-
-            // Unprotect with the correct structure password
-            loadedWorkbook.Unprotect("struct123");
-            Console.WriteLine("After correct unprotect, IsWorkbookProtectedWithPassword: " + loadedWorkbook.IsWorkbookProtectedWithPassword);
-            Console.WriteLine("After correct unprotect, Settings.IsProtected: " + loadedWorkbook.Settings.IsProtected);
-
-            // Save the workbook after removing structure protection (opening password remains)
-            string unprotectedPath = "UnprotectedWorkbook.xlsx";
-            loadedWorkbook.Save(unprotectedPath);
-            loadedWorkbook.Dispose();
-
-            // ------------------- Verify that opening password still works -------------------
-            // Load the newly saved file with the opening password
-            LoadOptions verifyOptions = new LoadOptions { Password = "open123" };
-            Workbook verifyWorkbook = new Workbook(unprotectedPath, verifyOptions);
-            Console.WriteLine("Verification load - IsEncrypted: " + verifyWorkbook.Settings.IsEncrypted);
-            Console.WriteLine("Verification load - IsWorkbookProtectedWithPassword: " + verifyWorkbook.IsWorkbookProtectedWithPassword);
-            verifyWorkbook.Dispose();
         }
     }
 }

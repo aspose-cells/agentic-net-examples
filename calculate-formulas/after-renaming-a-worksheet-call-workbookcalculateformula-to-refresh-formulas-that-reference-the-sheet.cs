@@ -1,46 +1,46 @@
-// Title: Rename a worksheet and refresh dependent formulas using Workbook.CalculateFormula in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to rename a worksheet, populate data, and call Workbook.CalculateFormula to automatically update all formulas that reference the renamed sheet, then retrieve the recalculated result.
-// Keywords: Aspose.Cells rename worksheet | Workbook.CalculateFormula C# | update formula references after sheet rename | refresh formulas Aspose.Cells .NET | programmatic sheet rename Aspose.Cells | calculate all formulas Aspose.Cells
-// Common Searches: Aspose.Cells update formulas after renaming sheet | Workbook.CalculateFormula example C# | how to refresh formulas when sheet name changes Aspose.Cells | C# rename worksheet and recalculate formulas | Aspose.Cells formula refresh after sheet rename
-// Developer Intent: Recalculate all workbook formulas so they reflect a worksheet’s new name.
-// Use Cases: Rename a data sheet in a generated report and keep summary calculations accurate. | Automate batch renaming of worksheets while preserving dependent formulas. | Create dynamic workbooks where sheet names change based on user input and formulas must stay valid.
-// AI Prompts: Show a C# example that renames a worksheet and then calls Workbook.CalculateFormula to update formulas in Aspose.Cells. | Explain why Workbook.CalculateFormula is required after changing a sheet name and what alternatives exist. | Provide step‑by‑step code to rename a sheet, refresh formulas, and read the calculated value using Aspose.Cells for .NET.
+// Title: Rename an Excel worksheet and recalculate formulas that reference it using Aspose.Cells for .NET (C#)
+// AI Prompts: Rename a worksheet in a Workbook, then invoke Workbook.CalculateFormula to update all formulas that still point to the original sheet name. | Create a workbook, assign a formula that includes the sheet name, change the sheet's name, and refresh the formula result with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# how to update formulas after renaming a worksheet | recalculate Excel formulas when sheet name changes using Aspose.Cells .NET | Workbook.CalculateFormula usage after worksheet rename in C# | refresh formula results that reference old sheet name with Aspose.Cells
+// Tags: worksheet rename refresh formulas Aspose.Cells | Workbook.CalculateFormula after sheet rename | update formula references C# Aspose.Cells | Excel sheet name change recalculate formulas .NET | Aspose.Cells rename worksheet and recalc
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsRenameAndRefresh
 {
-    // Demonstrates how to rename a worksheet, populate data, and call Workbook.CalculateFormula to automatically update all formulas that reference the renamed sheet, then retrieve the recalculated result.
+    // The example creates a new workbook, adds values and a formula that explicitly references the worksheet name, renames the worksheet, calls Workbook.CalculateFormula to refresh the formula, outputs the result, and saves the file as RenamedAndRefreshed.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
+            // Create a new workbook (lifecycle create)
             Workbook workbook = new Workbook();
 
-            // Access the default first worksheet
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "OriginalSheet";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a second worksheet that contains a formula referencing the first sheet
-            Worksheet sheet2 = workbook.Worksheets.Add("Summary");
-            // Example: sum of A1:A3 from the first sheet
-            sheet2.Cells["A1"].Formula = "=SUM(OriginalSheet!A1:A3)";
+            // Add some data and a formula that references the sheet name
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            // Formula uses the sheet name explicitly (e.g., Sheet1!A1+A2)
+            sheet.Cells["B1"].Formula = $"={sheet.Name}!A1+{sheet.Name}!A2";
 
-            // Populate some data in the first sheet
-            sheet1.Cells["A1"].PutValue(10);
-            sheet1.Cells["A2"].PutValue(20);
-            sheet1.Cells["A3"].PutValue(30);
+            // Rename the worksheet
+            string oldName = sheet.Name;
+            string newName = "RenamedSheet";
+            sheet.Name = newName;
 
-            // Rename the first worksheet
-            sheet1.Name = "RenamedSheet";
-
-            // Refresh all formulas in the workbook so that references to the renamed sheet are updated
+            // After renaming, recalculate all formulas in the workbook
+            // This will refresh formulas that referenced the old sheet name
             workbook.CalculateFormula();
 
-            // Output the result of the formula after refresh
-            Console.WriteLine("Result of formula in Summary!A1 after renaming: " + sheet2.Cells["A1"].Value);
+            // Output the result of the formula to verify it was refreshed
+            Console.WriteLine($"Old sheet name: {oldName}");
+            Console.WriteLine($"New sheet name: {newName}");
+            Console.WriteLine($"Formula result in B1: {sheet.Cells["B1"].Value}");
+
+            // Save the workbook (lifecycle save) – optional for verification
+            workbook.Save("RenamedAndRefreshed.xlsx");
         }
     }
 }

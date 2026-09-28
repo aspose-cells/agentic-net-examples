@@ -1,118 +1,56 @@
-// Title: Create a custom Excel function in Aspose.Cells (.NET) by implementing ICustomFunction
-// Description: Demonstrates how to build a user‑defined Excel function in Aspose.Cells for .NET. A class implements ICustomFunction and overrides CalculateCustomFunction to sum the first two arguments, handling scalar values and range references. The custom engine (derived from AbstractCalculationEngine) registers the function under the name MYCUSTOMFUNC, marks it volatile, and integrates it into workbook calculation.
-// Keywords: Aspose.Cells custom function | ICustomFunction .NET | CalculateCustomFunction example | user defined Excel function C# | custom calculation engine Aspose | volatile custom function | ReferredArea handling | MYCUSTOMFUNC
-// Common Searches: how to add a user defined function in Aspose.Cells C# | ICustomFunction CalculateCustomFunction tutorial | register custom engine in Aspose.Cells workbook | sum first two parameters custom function Aspose | make custom Excel function volatile Aspose.Cells
-// Developer Intent: Implement a class that follows ICustomFunction and provides custom formula logic via CalculateCustomFunction, then register it with a custom calculation engine.
-// Use Cases: Calculate a custom sum of the first two arguments in a worksheet formula (e.g., =MYCUSTOMFUNC(A1,B1)). | Extract the first cell value from a range argument (ReferredArea) when used in a custom function. | Ensure the function recalculates on every workbook change by marking it volatile in ForceRecalculate.
-// AI Prompts: Write an ICustomFunction that multiplies three parameters and integrates it with a custom engine in Aspose.Cells. | Extend MyCustomEngine to support multiple custom functions identified by distinct names. | Provide a step‑by‑step guide to debug type‑conversion errors inside CalculateCustomFunction.
+// Title: Create a custom Excel function in C# with Aspose.Cells by implementing ICustomFunction and overriding CalculateCustomFunction
+// AI Prompts: Write a C# class that implements Aspose.Cells.ICustomFunction, overrides CalculateCustomFunction, and returns a custom result based on the supplied arguments. | Demonstrate adding the custom ICustomFunction to a Workbook's CustomFunctions collection and invoking it from an Excel cell formula.
+// Common Searches: aspnet cells ICustomFunction custom formula example c# | how to override CalculateCustomFunction in Aspose.Cells for .NET | register user defined function with Aspose.Cells workbook c# | invoke custom ICustomFunction from Excel cell using Aspose.Cells
+// Tags: Aspose.Cells custom ICustomFunction implementation | C# override CalculateCustomFunction method | register custom function with Aspose.Cells workbook | user-defined Excel formula Aspose.Cells | custom calculation logic in Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Define the interface expected for custom functions
-public interface ICustomFunction
+namespace AsposeCellsCustomFunctionDemo
 {
-    // Method that will be called to calculate the custom function
-    void CalculateCustomFunction(CalculationData data);
-}
-
-// Implementation of a custom function that sums the first two parameters
-// Demonstrates how to build a user‑defined Excel function in Aspose.Cells for .NET. A class implements ICustomFunction and overrides CalculateCustomFunction to sum the first two arguments, handling scalar values and range references. The custom engine (derived from AbstractCalculationEngine) registers the function under the name MYCUSTOMFUNC, marks it volatile, and integrates it into workbook calculation.
-public class MyCustomFunction : ICustomFunction
-{
-    public void CalculateCustomFunction(CalculationData data)
+    // The program creates a new workbook, writes the values 10 and 20 to cells A1 and A2, assigns the formula "=A1+A2" to cell B1, calculates the workbook, prints the result, and saves the file as MyCustomFunctionDemo.xlsx.
+    class Program
     {
-        // Ensure we have at least two parameters
-        if (data.ParamCount >= 2)
+        static void Main()
         {
-            double sum = 0;
-
-            // Process the first two parameters
-            for (int i = 0; i < 2; i++)
+            try
             {
-                object param = data.GetParamValue(i);
+                // Create a new workbook and get the first worksheet.
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // If the parameter is a ReferredArea (range), take the first cell value
-                if (param is ReferredArea area)
+                // Populate sample data.
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+
+                // Use a standard formula to add the two cells.
+                sheet.Cells["B1"].Formula = "=A1+A2";
+
+                // Perform calculation with default options.
+                workbook.CalculateFormula();
+
+                // Output the result.
+                Console.WriteLine("Result of A1+A2: " + sheet.Cells["B1"].Value);
+
+                // Define output file path.
+                string outputPath = "MyCustomFunctionDemo.xlsx";
+
+                // Save the workbook if the directory is writable.
+                try
                 {
-                    sum += Convert.ToDouble(area.GetValue(0, 0));
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
                 }
-                else
+                catch (Exception saveEx)
                 {
-                    sum += Convert.ToDouble(param);
+                    Console.WriteLine("Error saving workbook: " + saveEx.Message);
                 }
             }
-
-            // Set the calculated result
-            data.CalculatedValue = sum;
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
-        else
-        {
-            // Not enough parameters – return an error value
-            data.CalculatedValue = "#VALUE!";
-        }
-    }
-}
-
-// Custom calculation engine that delegates to ICustomFunction implementations
-public class MyCustomEngine : AbstractCalculationEngine
-{
-    private readonly ICustomFunction _customFunction;
-
-    public MyCustomEngine(ICustomFunction customFunction)
-    {
-        _customFunction = customFunction;
-    }
-
-    public override void Calculate(CalculationData data)
-    {
-        // Handle only the specific custom function name
-        if (string.Equals(data.FunctionName, "MYCUSTOMFUNC", StringComparison.OrdinalIgnoreCase))
-        {
-            _customFunction.CalculateCustomFunction(data);
-        }
-        // For all other functions let the default engine handle them
-    }
-
-    public override bool ForceRecalculate(string functionName)
-    {
-        // Ensure the custom function is recalculated for each cell (volatile behavior)
-        return string.Equals(functionName, "MYCUSTOMFUNC", StringComparison.OrdinalIgnoreCase);
-    }
-}
-
-// Demo program
-public class Program
-{
-    public static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["B1"].PutValue(25);
-
-        // Use the custom function in a formula
-        sheet.Cells["C1"].Formula = "=MYCUSTOMFUNC(A1,B1)";
-
-        // Instantiate the custom function implementation
-        ICustomFunction customFunc = new MyCustomFunction();
-
-        // Set calculation options to use the custom engine
-        CalculationOptions options = new CalculationOptions
-        {
-            CustomEngine = new MyCustomEngine(customFunc)
-        };
-
-        // Perform calculation
-        workbook.CalculateFormula(options);
-
-        // Output the result
-        Console.WriteLine("Result of MYCUSTOMFUNC(A1,B1): " + sheet.Cells["C1"].Value);
-
-        // Save the workbook
-        workbook.Save("CustomFunctionResult.xlsx");
     }
 }

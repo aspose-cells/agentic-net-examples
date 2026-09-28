@@ -1,64 +1,49 @@
-// Title: C# – Validate ExternalLink DataSource File Exists Before Updating with Aspose.Cells
-// Description: Loads an Excel workbook, verifies that a specified external workbook file is present, updates every ExternalLink.DataSource to the new path, and saves the workbook, with robust handling for missing files.
-// Keywords: Aspose.Cells ExternalLink | C# validate external link | check external workbook existence | update DataSource Aspose.Cells | Excel external link validation | file existence check C# | Aspose.Cells workbook external references
-// Common Searches: How to check if external Excel file exists before setting ExternalLink.DataSource in Aspose.Cells C# | Aspose.Cells C# update external link path with validation | Validate external link source file in workbook using Aspose.Cells | C# Aspose.Cells external link file existence check | Prevent missing external file errors Aspose.Cells
-// Developer Intent: Confirm that the new external link points to an existing file before modifying the workbook’s ExternalLink.DataSource.
-// Use Cases: Avoid runtime failures when redirecting external references by ensuring the target file is available. | Batch‑process multiple workbooks to point their external links to a verified data source. | Integrate a safety check into deployment scripts that update external links only after confirming file presence.
-// AI Prompts: Generate C# code using Aspose.Cells that updates all ExternalLink.DataSource values only after confirming each target file exists. | Create detailed error‑handling and logging for missing external Excel files when changing ExternalLink.DataSource in a workbook. | Refactor the sample to support multiple new external paths, log validation results, and return a summary of successful updates.
+// Title: Check file existence before updating external link DataSource in an Aspose.Cells workbook (C#)
+// AI Prompts: Use System.IO.File.Exists to confirm a new file path is present before assigning it to ExternalLink.DataSource. | Iterate through Workbook.Worksheets.ExternalLinks and set each link's DataSource only when the target file is found. | Save the workbook to a new file after conditionally updating external link paths based on file existence.
+// Common Searches: Aspose.Cells C# update external link path only if file exists | validate external link DataSource before saving workbook using Aspose.Cells | C# check file existence before changing external link in Excel with Aspose.Cells | conditional external link update Aspose.Cells workbook example
+// Tags: external link datasource validation Aspose.Cells | conditional update of external links C# | file existence check before setting ExternalLink.DataSource | Aspose.Cells workbook external links handling | System.IO.File.Exists with Aspose.Cells external links
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, verifies that a specified external workbook file is present, updates every ExternalLink.DataSource to the new path, and saves the workbook, with robust handling for missing files.
-class ValidateExternalLink
+// The code loads an Excel workbook, iterates its external links, verifies that a new external file path exists, updates each link's DataSource to the new path only when the file is found, logs the result, and saves the modified workbook as output.xlsx.
+class ValidateExternalLinkPath
 {
-    public static void Run()
+    static void Main()
     {
-        try
+        // Path to the workbook that contains external links
+        string workbookPath = "input.xlsx";
+
+        // New external file path to set
+        string newExternalPath = @"C:\Data\external.xlsx";
+
+        // Load the workbook
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Get the collection of external links
+        ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
+
+        // Iterate through each external link
+        for (int i = 0; i < externalLinks.Count; i++)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            ExternalLink link = externalLinks[i];
 
-            // Verify input workbook exists
-            if (!File.Exists(inputPath))
+            // Validate that the new path points to an existing file
+            if (File.Exists(newExternalPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook (lifecycle rule: load)
-            Workbook workbook = new Workbook(inputPath);
-
-            // Define the new external link path
-            string newExternalPath = @"C:\Data\external.xlsx";
-
-            // Validate that the external file exists before applying the change
-            if (!File.Exists(newExternalPath))
-            {
-                Console.WriteLine($"The specified external file does not exist: {newExternalPath}");
-                return;
-            }
-
-            // Update the DataSource of each external link (feature rule: ExternalLink.DataSource)
-            foreach (ExternalLink link in workbook.Worksheets.ExternalLinks)
-            {
+                // Apply the new data source
                 link.DataSource = newExternalPath;
+                Console.WriteLine($"External link at index {i} updated to: {newExternalPath}");
             }
-
-            // Save the workbook with the updated external link (lifecycle rule: save)
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            else
+            {
+                // Skip updating and inform the user
+                Console.WriteLine($"File not found: {newExternalPath}. External link at index {i} not changed.");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
 
-    // Entry point for the application
-    static void Main(string[] args)
-    {
-        Run();
+        // Save the workbook with updated external links
+        workbook.Save("output.xlsx");
     }
 }

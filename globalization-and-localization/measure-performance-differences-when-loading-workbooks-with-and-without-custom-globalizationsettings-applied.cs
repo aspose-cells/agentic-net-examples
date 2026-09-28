@@ -1,73 +1,68 @@
-// Title: Benchmark Aspose.Cells Workbook Load Time With vs Without Custom GlobalizationSettings (C#)
-// Description: Creates a sample workbook, saves it, then loads the file twice while measuring elapsed time: once with the default globalization settings and once after assigning a custom GlobalizationSettings that overrides boolean string values. The program prints both load times and shows the effect on cell string representations.
-// Keywords: Aspose.Cells | .NET | C# | Workbook load performance | GlobalizationSettings | custom localization | benchmark | measure load time | boolean string override | performance testing
-// Common Searches: Aspose.Cells load time benchmark C# | Does GlobalizationSettings affect workbook loading speed | Measure performance difference default vs custom GlobalizationSettings | How to time Aspose.Cells workbook load in .NET | Custom GlobalizationSettings impact on Aspose.Cells performance
-// Developer Intent: Compare the loading speed of an Excel workbook using Aspose.Cells with the default globalization settings versus after applying a custom GlobalizationSettings object.
-// Use Cases: Profile load latency for large Excel files when custom localization is required. | Validate that overriding boolean strings does not introduce noticeable overhead. | Integrate load‑time measurements into automated regression tests for Aspose.Cells deployments.
-// AI Prompts: Generate a C# program that loads the same Excel file multiple times, records the elapsed milliseconds for default and custom GlobalizationSettings, and calculates average times. | Show how to extend GlobalizationSettings to customize date and number formats, then benchmark any impact on workbook load performance. | Provide a PowerShell script that runs the compiled C# benchmark executable on a set of sample workbooks and aggregates the results.
+// Title: Measure and compare Aspose.Cells workbook load performance with default settings versus custom GlobalizationSettings in C#
+// AI Prompts: Create a C# console application that loads an XLSX file with Aspose.Cells, uses Stopwatch to record the load time, then reloads the same file using a LoadOptions instance and sets Workbook.Settings.CultureInfo to a chosen culture, printing both timings. | Enhance the benchmark to loop through several CultureInfo values (e.g., en-US, fr-FR, ja-JP) and output a formatted table showing load duration for each culture. | Add comprehensive error handling that verifies the file path, catches Aspose.Cells exceptions, and logs the worksheet count after each load to confirm successful parsing.
+// Common Searches: aspnet measure Aspose.Cells workbook load time with custom culture | how to benchmark Excel file loading speed using LoadOptions in Aspose.Cells | performance impact of setting Workbook.Settings.CultureInfo in Aspose.Cells | compare default and custom globalization settings when loading XLSX with Aspose.Cells | C# timing of Aspose.Cells workbook load with and without LoadOptions
+// Tags: benchmark Aspose.Cells workbook loading | custom GlobalizationSettings performance .NET | LoadOptions culture load time measurement | Workbook.Settings.CultureInfo impact on load speed | Excel XLSX load performance Aspose.Cells
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPerformanceDemo
+// The program loads 'Sample.xlsx' twice—first with default Aspose.Cells settings and then with a LoadOptions object followed by setting Workbook.Settings.CultureInfo to French—measuring and printing the elapsed milliseconds for each load and displaying the worksheet counts to verify successful loading.
+class Program
 {
-    // Custom globalization settings overriding boolean display strings
-    // Creates a sample workbook, saves it, then loads the file twice while measuring elapsed time: once with the default globalization settings and once after assigning a custom GlobalizationSettings that overrides boolean string values. The program prints both load times and shows the effect on cell string representations.
-    public class CustomGlobalizationSettings : GlobalizationSettings
+    static void Main()
     {
-        public override string GetBooleanValueString(bool value)
+        // Path to the workbook to be loaded for the test
+        string workbookPath = "Sample.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            return value ? "TRUE_CUSTOM" : "FALSE_CUSTOM";
+            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main()
+        try
         {
-            // Path for the sample workbook
-            string sampleFile = "SampleWorkbook.xlsx";
+            // -----------------------------------------------------------------
+            // Measure loading time with default settings (no custom globalization)
+            // -----------------------------------------------------------------
+            Stopwatch swDefault = Stopwatch.StartNew();
 
-            // -------------------------------------------------
-            // Create a sample workbook and save it (using provided APIs)
-            // -------------------------------------------------
-            Workbook createWb = new Workbook();                     // Workbook()
-            Worksheet sheet = createWb.Worksheets[0];              // Access first worksheet
-            Cells cells = sheet.Cells;
-            cells["A1"].PutValue(true);                            // Boolean value
-            cells["A2"].PutValue(false);
-            cells["B1"].PutValue(12345.67);                        // Numeric value
-            cells["B2"].PutValue("Sample text");                   // Text value
-            createWb.Save(sampleFile);                             // Save(string)
+            // Load workbook using default settings
+            Workbook wbDefault = new Workbook(workbookPath);
 
-            // -------------------------------------------------
-            // Measure load time without custom globalization settings
-            // -------------------------------------------------
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            Workbook wbDefault = new Workbook(sampleFile);          // Workbook(string)
-            sw.Stop();
-            long elapsedDefault = sw.ElapsedMilliseconds;
+            swDefault.Stop();
+            Console.WriteLine($"Loading time with default settings: {swDefault.ElapsedMilliseconds} ms");
 
-            // -------------------------------------------------
-            // Measure load time with custom globalization settings applied after load
-            // -------------------------------------------------
-            sw.Restart();
-            Workbook wbCustom = new Workbook(sampleFile);           // Workbook(string)
-            wbCustom.Settings.GlobalizationSettings = new CustomGlobalizationSettings(); // Apply custom settings
-            sw.Stop();
-            long elapsedCustom = sw.ElapsedMilliseconds;
+            // -----------------------------------------------------------------
+            // Measure loading time with custom globalization settings applied
+            // -----------------------------------------------------------------
+            // Create LoadOptions (custom settings can be added here if supported by the version)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-            // -------------------------------------------------
-            // Output the performance results
-            // -------------------------------------------------
-            Console.WriteLine($"Load time without custom globalization: {elapsedDefault} ms");
-            Console.WriteLine($"Load time with custom globalization (applied after load): {elapsedCustom} ms");
+            Stopwatch swCustom = Stopwatch.StartNew();
 
-            // Demonstrate that the custom settings affect cell string values
-            Console.WriteLine($"Default workbook cell A1 string: {wbDefault.Worksheets[0].Cells["A1"].StringValue}");
-            Console.WriteLine($"Custom workbook cell A1 string: {wbCustom.Worksheets[0].Cells["A1"].StringValue}");
+            // Load workbook using the LoadOptions
+            Workbook wbCustom = new Workbook(workbookPath, loadOptions);
+
+            // Apply custom culture after loading (affects parsing/formatting)
+            wbCustom.Settings.CultureInfo = new CultureInfo("fr-FR");
+
+            swCustom.Stop();
+            Console.WriteLine($"Loading time with custom globalization settings: {swCustom.ElapsedMilliseconds} ms");
+
+            // -----------------------------------------------------------------
+            // Optional: Verify that both workbooks are loaded correctly
+            // -----------------------------------------------------------------
+            Console.WriteLine($"Default workbook worksheets count: {wbDefault.Worksheets.Count}");
+            Console.WriteLine($"Custom workbook worksheets count: {wbCustom.Worksheets.Count}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

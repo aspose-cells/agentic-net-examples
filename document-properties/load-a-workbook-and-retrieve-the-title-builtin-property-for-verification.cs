@@ -1,32 +1,44 @@
-// Title: Read the Title built‑in document property from an Excel workbook with Aspose.Cells for .NET (C#)
-// Description: Loads SampleWorkbook.xlsx into an Aspose.Cells Workbook, accesses the Title built‑in document property via workbook.BuiltInDocumentProperties.Title, and prints the value to the console for verification.
-// Keywords: Aspose.Cells C# read document property | Excel Title built‑in property | Workbook BuiltInDocumentProperties.Title example | load Excel file Aspose.Cells | .NET Excel metadata extraction | retrieve Excel title programmatically
-// Common Searches: how to get the Title property from an Excel file using Aspose.Cells C# | C# code to read built‑in document properties with Aspose.Cells | Aspose.Cells example for retrieving workbook metadata | read Excel file title with Aspose.Cells for .NET
-// Developer Intent: Extract the Title built‑in document property from an existing Excel workbook using Aspose.Cells in C#.
-// Use Cases: Validate that a generated report contains the correct title before distribution. | Audit multiple workbooks to ensure consistent title metadata across files. | Log document titles during automated batch processing of Excel documents.
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells and prints its Title built‑in property. | Explain how to handle missing or empty Title properties when reading Excel metadata with Aspose.Cells. | Show how to modify the Title built‑in property and save the workbook using Aspose.Cells for .NET.
+// Title: Read the Title built‑in document property from an Excel workbook using Aspose.Cells in C#
+// AI Prompts: Generate C# code that opens a given .xlsx file with Aspose.Cells, verifies the file exists, and prints the workbook's built‑in Title property. | Show how to access the BuiltInDocumentProperties of a Workbook and extract the Title value while handling possible exceptions. | Provide a snippet that loads an Excel file with Aspose.Cells and outputs its Title metadata to the console.
+// Common Searches: c# aspocells get title built-in document property from excel file | how to read built-in document properties like Title using Aspose.Cells .NET | example code to retrieve Excel workbook Title with Aspose.Cells and handle missing file | Aspose.Cells read Title property from .xlsx workbook in C# | retrieve Excel file metadata Title using Aspose.Cells and exception handling
+// Tags: Aspose.Cells read built‑in document properties | C# retrieve Excel workbook Title property | load .xlsx workbook and access BuiltInDocumentProperties | exception handling for Aspose.Cells workbook loading | verify Excel file existence with Aspose.Cells | output workbook Title metadata to console
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBuiltInPropertyDemo
+// The example loads 'input.xlsx' with Aspose.Cells, checks for the file's existence, accesses the BuiltInDocumentProperties collection, reads the Title property, prints it to the console, and gracefully handles any runtime exceptions.
+class Program
 {
-    // Loads SampleWorkbook.xlsx into an Aspose.Cells Workbook, accesses the Title built‑in document property via workbook.BuiltInDocumentProperties.Title, and prints the value to the console for verification.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputFile = "input.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
         {
-            // Path to the existing Excel file
-            string filePath = "SampleWorkbook.xlsx";
+            Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+            return;
+        }
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(filePath);
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputFile);
 
-            // Retrieve the Title built‑in document property
-            string title = workbook.BuiltInDocumentProperties.Title;
+            // Access the built‑in document properties collection
+            var properties = workbook.BuiltInDocumentProperties;
 
-            // Output the Title for verification
-            Console.WriteLine("Document Title: " + title);
+            // Retrieve the Title property
+            string title = properties.Title;
+
+            // Output the title to verify
+            Console.WriteLine("Title: " + title);
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

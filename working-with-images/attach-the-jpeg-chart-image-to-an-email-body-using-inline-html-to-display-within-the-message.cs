@@ -1,19 +1,17 @@
-// Title: Embed Aspose.Cells Chart as Inline JPEG in HTML Email (C#)
-// Description: Creates a workbook, builds a column chart, converts the chart to a JPEG, encodes it as a Base64 data URI, and sends an HTML email with the chart displayed inline using SmtpClient.
-// Keywords: Aspose.Cells | chart to JPEG | inline image email | Base64 data URI | C# SmtpClient | embed chart in email | Excel chart image | HTML email embedding
-// Common Searches: Aspose.Cells embed chart in email C# | C# send chart as inline image email | convert Excel chart to JPEG base64 | inline JPEG in HTML email C# | Aspose.Cells chart to Base64 for email
-// Developer Intent: Generate a JPEG snapshot of an Aspose.Cells chart and embed it directly in the HTML body of an email without using attachments.
-// Use Cases: Automated daily reports that show chart previews inside the email body. | Alert notifications that present key metrics as embedded charts. | Batch emails containing multiple chart images inline for comprehensive dashboards.
-// AI Prompts: Generate C# code that converts an Aspose.Cells chart to a PNG and embeds it inline in an email using a Base64 data URI. | Explain how to embed several Aspose.Cells chart images as separate inline images within one HTML email. | Show how to replace the temporary file with an in‑memory stream for chart image conversion and email embedding.
+// Title: Render an Aspose.Cells chart to a JPEG image and embed it inline in an HTML email using C#
+// AI Prompts: Generate C# code that creates a workbook with Aspose.Cells, builds a chart, converts the chart to a JPEG stream, and inserts the image into an HTML email body using a Content‑ID and LinkedResource. | Show how to configure System.Net.Mail to send an HTML email with an inline chart image rendered by Aspose.Cells without writing the image to disk.
+// Common Searches: C# Aspose.Cells export chart to JPEG stream for email | embed chart image inline in HTML email using System.Net.Mail | how to use LinkedResource with Content-ID to display chart in email body | send Aspose.Cells generated chart as inline image without temporary file | render Aspose chart to memory stream and attach to email C#
+// Tags: Aspose.Cells chart to JPEG stream | inline chart image in HTML email C# | LinkedResource Content-ID email embedding | System.Net.Mail embed image from memory | render Aspose chart without saving to file
 
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Mail;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Rendering;
+using System;
+using System.IO;
+using System.Net.Mail;
+using System.Net.Mime;
 
-// Creates a workbook, builds a column chart, converts the chart to a JPEG, encodes it as a Base64 data URI, and sends an HTML email with the chart displayed inline using SmtpClient.
+// The example creates a workbook, adds sample data, generates a column chart, renders the chart to a JPEG image stored in a memory stream with Aspose.Cells, and then builds an HTML email where the chart is displayed inline using a Content‑ID and LinkedResource in System.Net.Mail.
 class Program
 {
     static void Main()
@@ -21,92 +19,74 @@ class Program
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["A4"].PutValue("Cherry");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(30);
-            worksheet.Cells["B3"].PutValue(45);
-            worksheet.Cells["B4"].PutValue(25);
+            // Fill worksheet with sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart and set its data source
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            var chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true); // Values
 
-            // Save chart as JPEG to a temporary file
-            string tempImagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".jpg");
-            try
+            // Export the chart to a JPEG image stored in memory
+            using (var imageStream = new MemoryStream())
             {
-                chart.ToImage(tempImagePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error converting chart to image: {ex.Message}");
-                return;
-            }
-
-            // Ensure the image file was created
-            if (!File.Exists(tempImagePath))
-            {
-                Console.WriteLine("Chart image file was not created.");
-                return;
-            }
-
-            // Read image bytes and encode as Base64 for inline HTML
-            byte[] imageBytes = File.ReadAllBytes(tempImagePath);
-            string base64Image = Convert.ToBase64String(imageBytes);
-            string imgSrc = $"data:image/jpeg;base64,{base64Image}";
-
-            // Build the HTML body with the embedded image
-            string htmlBody = $"<html><body><h2>Embedded Chart</h2><img src=\"{imgSrc}\" alt=\"Chart\"/></body></html>";
-
-            // Configure the email message
-            using (MailMessage mail = new MailMessage())
-            {
-                mail.From = new MailAddress("sender@example.com");
-                mail.To.Add("recipient@example.com");
-                mail.Subject = "Chart Image Embedded in Email";
-                mail.Body = htmlBody;
-                mail.IsBodyHtml = true;
-
-                // Set up the SMTP client (replace with actual server details)
-                using (SmtpClient smtp = new SmtpClient("smtp.example.com", 587))
+                var imgOptions = new ImageOrPrintOptions
                 {
-                    smtp.Credentials = new NetworkCredential("username", "password");
+                    OnePagePerSheet = true
+                    // ImageFormat property is not available in some versions; default format (PNG) will be used.
+                };
+
+                // Render chart to the stream
+                chart.ToImage(imageStream, imgOptions);
+                imageStream.Position = 0; // Reset stream position for reading
+
+                // Build the email message
+                var mail = new MailMessage
+                {
+                    From = new MailAddress("sender@example.com"),
+                    Subject = "Chart Image Inline",
+                    IsBodyHtml = true
+                };
+                mail.To.Add("recipient@example.com");
+
+                // HTML body referencing the image via Content-ID
+                string contentId = "ChartImage";
+                string htmlBody = $"<html><body><h3>Here is the chart:</h3><img src=\"cid:{contentId}\" alt=\"Chart\"/></body></html>";
+
+                // Create an AlternateView for the HTML body
+                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+
+                // Create a LinkedResource for the JPEG image (or PNG if default)
+                var inlineImage = new LinkedResource(imageStream, MediaTypeNames.Image.Jpeg)
+                {
+                    ContentId = contentId,
+                    TransferEncoding = TransferEncoding.Base64
+                };
+                htmlView.LinkedResources.Add(inlineImage);
+                mail.AlternateViews.Add(htmlView);
+
+                // Configure SMTP client (replace with real settings)
+                using (var smtp = new SmtpClient("smtp.example.com"))
+                {
+                    smtp.Credentials = new System.Net.NetworkCredential("username", "password");
                     smtp.EnableSsl = true;
-
-                    try
-                    {
-                        smtp.Send(mail);
-                        Console.WriteLine("Email sent successfully.");
-                    }
-                    catch (SmtpException ex)
-                    {
-                        Console.WriteLine($"SMTP error: {ex.Message}");
-                    }
+                    // smtp.Send(mail); // Uncomment to send the email
                 }
-            }
-
-            // Clean up temporary image file
-            try
-            {
-                File.Delete(tempImagePath);
-            }
-            catch
-            {
-                // Ignore any errors during cleanup
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

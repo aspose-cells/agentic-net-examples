@@ -1,73 +1,96 @@
-// Title: Aspose.Cells C# – Custom Calculation Monitor for Percentage Progress
-// Description: Demonstrates how to extend AbstractCalculationMonitor to create a ProgressCalculationMonitor that counts processed cells, calculates completion percentage, and writes it to the console during workbook.CalculateFormula. The example fills a worksheet with many formulas, attaches the monitor via CalculationOptions, runs the calculation, and saves the result.
-// Keywords: Aspose.Cells | C# | AbstractCalculationMonitor | CalculationOptions | formula calculation progress | percentage completion callback | custom calculation monitor | large worksheet performance
-// Common Searches: Aspose.Cells progress callback C# | how to monitor formula calculation percentage | custom AbstractCalculationMonitor example | track workbook calculation progress Aspose.Cells | display calculation status in .NET
-// Developer Intent: Add a callback that reports the percentage of formulas processed during a workbook calculation.
-// Use Cases: Log real‑time progress of formula evaluation in a massive sheet. | Update a UI progress bar while CalculateFormula runs. | Provide feedback in console applications for long‑running calculations. | Integrate custom monitoring with parallel calculation settings.
-// AI Prompts: Generate a C# ProgressCalculationMonitor that updates a WinForms ProgressBar instead of writing to the console. | Show how to throttle console output in AfterCalculate to improve performance for thousands of cells. | Create an example that combines a custom calculation monitor with Aspose.Cells parallel calculation mode while preserving overall progress reporting.
+// Title: Implement a C# Aspose.Cells calculation monitor that logs percentage progress of formula evaluation
+// AI Prompts: Create a C# class that inherits from AbstractCalculationMonitor and outputs the current cell index and percentage completed before each formula is calculated. | Write code to enumerate all formula cells in a workbook, initialize CalculationOptions with the custom monitor, and invoke workbook.CalculateFormula to display real‑time progress. | Modify the ProgressCalculationMonitor to raise a .NET event instead of writing to the console, enabling UI components to receive progress updates.
+// Common Searches: how to monitor formula calculation progress in Aspose.Cells using C# | Aspose.Cells calculation monitor example showing percentage completed | C# progress callback for workbook.CalculateFormula in Aspose.Cells | count total formula cells before running CalculateFormula Aspose.Cells | handle circular references in custom calculation monitor Aspose.Cells
+// Tags: custom AbstractCalculationMonitor implementation | formula calculation progress reporting Aspose.Cells | percentage completion callback workbook.CalculateFormula | total formula cell count Aspose.Cells | circular reference handling calculation monitor
 
 using System;
-using System.Collections;
 using Aspose.Cells;
+using System.Collections;
 
-// Demonstrates how to extend AbstractCalculationMonitor to create a ProgressCalculationMonitor that counts processed cells, calculates completion percentage, and writes it to the console during workbook.CalculateFormula. The example fills a worksheet with many formulas, attaches the monitor via CalculationOptions, runs the calculation, and saves the result.
-class ProgressCalculationMonitor : AbstractCalculationMonitor
+namespace AsposeCellsProgressDemo
 {
-    private readonly int _totalCells;
-    private int _processedCells;
-
-    public ProgressCalculationMonitor(int totalCells)
+    // Custom monitor that reports calculation progress as a percentage.
+    // The example defines a ProgressCalculationMonitor class derived from AbstractCalculationMonitor that increments a processed‑cell counter in BeforeCalculate, computes the completion percentage based on the total number of formula cells, and writes the progress to the console. The program counts all formula cells in the workbook, assigns the monitor to CalculationOptions, runs workbook.CalculateFormula with live progress reporting, and finally saves the workbook.
+    public class ProgressCalculationMonitor : AbstractCalculationMonitor
     {
-        _totalCells = totalCells;
-        _processedCells = 0;
-    }
+        private readonly int _totalFormulaCells;
+        private int _processedCells;
 
-    // Called after each cell is calculated
-    public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
-    {
-        _processedCells++;
-        double percent = (double)_processedCells / _totalCells * 100;
-        Console.WriteLine($"Calculated cell [Sheet {sheetIndex}, Row {rowIndex}, Column {colIndex}] - {percent:F2}% completed");
-    }
-
-    // Optional: before calculation (not used here)
-    public override void BeforeCalculate(int sheetIndex, int rowIndex, int colIndex) { }
-
-    // Optional: handle circular references (continue calculation)
-    public override bool OnCircular(IEnumerator circularCellsData) => true;
-}
-
-class CalculationProgressDemo
-{
-    public static void Main()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate the sheet with many formulas to simulate an extensive calculation
-        int rowCount = 500; // adjust as needed for testing
-        for (int i = 0; i < rowCount; i++)
+        public ProgressCalculationMonitor(int totalFormulaCells)
         {
-            // Simple numeric value
-            worksheet.Cells[i, 0].PutValue(i + 1);
-            // Formula that depends on the numeric value
-            worksheet.Cells[i, 1].Formula = $"=A{i + 1}*2";
+            _totalFormulaCells = totalFormulaCells > 0 ? totalFormulaCells : 1; // avoid division by zero
+            _processedCells = 0;
         }
 
-        // Total number of formula cells that will be processed
-        int totalFormulaCells = rowCount;
-
-        // Set up calculation options with the custom progress monitor
-        CalculationOptions calcOptions = new CalculationOptions
+        // Called before each cell is calculated.
+        public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            CalculationMonitor = new ProgressCalculationMonitor(totalFormulaCells)
-        };
+            _processedCells++;
+            int percent = (int)((double)_processedCells / _totalFormulaCells * 100);
+            Console.WriteLine($"Calculating cell {_processedCells}/{_totalFormulaCells} ({percent}%) - Sheet {sheetIndex}, Row {rowIndex}, Column {columnIndex}");
+        }
 
-        // Perform the calculation with monitoring
-        workbook.CalculateFormula(calcOptions);
+        // Optional: after calculation you could also output details.
+        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
+        {
+            // No additional action needed for this demo.
+        }
 
-        // Save the workbook to verify results
-        workbook.Save("CalculationProgressDemo.xlsx");
+        // Optional: handle circular references if they occur.
+        public override bool OnCircular(IEnumerator circularCellsData)
+        {
+            Console.WriteLine("Circular reference detected during calculation.");
+            return true; // continue calculation
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // Create a new workbook and populate it with many formulas to simulate an extensive calculation.
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Fill 1000 rows with simple dependent formulas.
+            int rowCount = 1000;
+            cells["A1"].PutValue(1);
+            for (int i = 2; i <= rowCount; i++)
+            {
+                // Each cell adds the previous cell value plus 1.
+                cells[$"A{i}"].Formula = $"=A{i - 1}+1";
+            }
+
+            // Add a few additional formulas across other columns.
+            for (int i = 1; i <= rowCount; i++)
+            {
+                cells[$"B{i}"].Formula = $"=A{i}*2";
+                cells[$"C{i}"].Formula = $"=SUM(A{i}:B{i})";
+            }
+
+            // Count total formula cells to calculate percentage.
+            int totalFormulaCells = 0;
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                foreach (Cell cell in ws.Cells)
+                {
+                    if (cell.IsFormula)
+                        totalFormulaCells++;
+                }
+            }
+
+            // Set up calculation options with the custom progress monitor.
+            CalculationOptions options = new CalculationOptions
+            {
+                CalculationMonitor = new ProgressCalculationMonitor(totalFormulaCells)
+            };
+
+            // Perform the calculation while the monitor reports progress.
+            workbook.CalculateFormula(options);
+
+            // Save the workbook (the save operation is not part of the progress monitoring).
+            workbook.Save("ProgressCalculationDemo.xlsx");
+        }
     }
 }

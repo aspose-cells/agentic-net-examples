@@ -1,62 +1,63 @@
-// Title: C# – Add a Count Data Field to an Aspose.Cells PivotTable
-// Description: Demonstrates how to create a workbook with sample data, add a PivotTable, place "Category" in the row area, add "Item" as a data field, set its aggregation to Count using ConsolidationFunction.Count, refresh and calculate the pivot, and save the result as an Excel file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PivotTable Count | C# add data field Count | ConsolidationFunction.Count Aspose | Aspose.Cells .NET pivot aggregation | Excel PivotTable count items C# | PivotFieldType.Data Aspose.Cells | RefreshData CalculateData Aspose
-// Common Searches: Aspose.Cells set pivot data field to Count C# | How to add Count aggregation to a PivotTable using Aspose.Cells | C# code for counting items in an Aspose.Cells pivot table | Aspose.Cells PivotTable Count function example | Add data field and set ConsolidationFunction.Count in .NET
-// Developer Intent: Add a new data field to a PivotTable and configure it to use the Count aggregation function.
-// Use Cases: Count occurrences of each item within categories for inventory reports. | Create a frequency summary of products sold per category in sales dashboards. | Generate a quick tally of record counts for data validation or audit logs.
-// AI Prompts: Generate C# code with Aspose.Cells that adds an "Item" data field to a PivotTable and sets its function to Count. | Explain how to change the aggregation of an existing Aspose.Cells PivotTable data field to Count and recalculate the table. | Provide step‑by‑step instructions to refresh and calculate a PivotTable after adding a Count data field using Aspose.Cells for .NET.
+// Title: Add a Count aggregation field to a PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, populates it with sample data, adds a PivotTable, and configures a data field to use the Count aggregation via Aspose.Cells. | Modify an existing Aspose.Cells PivotTable in C# by inserting a new data field and setting its ConsolidationFunction to Count for item tallying.
+// Common Searches: Aspose.Cells C# how to set Count function for a pivot table data field | programmatically add a count data field to a pivot table with Aspose.Cells .NET | C# example of using ConsolidationFunction.Count in Aspose.Cells PivotTable | create pivot table with product row and count of items using Aspose.Cells | Aspose.Cells pivot table aggregation options count example
+// Tags: Aspose.Cells add count data field pivot table | C# set ConsolidationFunction.Count Aspose.Cells | pivot table data field aggregation Aspose.Cells | Aspose.Cells create pivot table with row field | Aspose.Cells count aggregation example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotExample
+namespace AsposeCellsPivotCountExample
 {
-    // Demonstrates how to create a workbook with sample data, add a PivotTable, place "Category" in the row area, add "Item" as a data field, set its aggregation to Count using ConsolidationFunction.Count, refresh and calculate the pivot, and save the result as an Excel file with Aspose.Cells for .NET.
-    class AddDataFieldWithCount
+    // The sample creates a new workbook, fills it with product, region, and sales data, adds a PivotTable at E3, assigns 'Product' as a row field, adds 'Product' again as a data field with the Count aggregation, refreshes and calculates the pivot, and saves the file as PivotTable_CountField.xlsx.
+    class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample source data
-            // Column A: Category, Column B: Item (to be counted)
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Item");
-            cells["A2"].PutValue("Fruit");
-            cells["B2"].PutValue("Apple");
-            cells["A3"].PutValue("Fruit");
-            cells["B3"].PutValue("Orange");
-            cells["A4"].PutValue("Vegetable");
-            cells["B4"].PutValue("Carrot");
-            cells["A5"].PutValue("Fruit");
-            cells["B5"].PutValue("Apple");
-            cells["A6"].PutValue("Vegetable");
-            cells["B6"].PutValue("Broccoli");
+            // Populate sample data
+            // Columns: Product, Region, Sales
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Region");
+            sheet.Cells["C1"].PutValue("Sales");
 
-            // Add a pivot table based on the source range A1:B6, place it at E3
-            int pivotIndex = sheet.PivotTables.Add("A1:B6", "E3", "PivotTable1");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue("North");
+            sheet.Cells["C2"].PutValue(120);
+
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue("South");
+            sheet.Cells["C3"].PutValue(150);
+
+            sheet.Cells["A4"].PutValue("Apple");
+            sheet.Cells["B4"].PutValue("East");
+            sheet.Cells["C4"].PutValue(200);
+
+            sheet.Cells["A5"].PutValue("Banana");
+            sheet.Cells["B5"].PutValue("West");
+            sheet.Cells["C5"].PutValue(180);
+
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
             PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add "Category" as a row field
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            // Add "Product" as a row field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
 
-            // Add "Item" as a data field
-            int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Item");
-
-            // Set the aggregation function of the newly added data field to Count
+            // Add "Product" as a data field to count the number of items per product
+            int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Product");
             PivotField dataField = pivotTable.DataFields[dataFieldPos];
-            dataField.Function = ConsolidationFunction.Count;
+            dataField.Function = ConsolidationFunction.Count; // Set aggregation to Count
 
             // Refresh and calculate the pivot table
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
             // Save the workbook
-            workbook.Save("PivotTable_With_CountField.xlsx");
+            workbook.Save("PivotTable_CountField.xlsx");
         }
     }
 }

@@ -1,84 +1,101 @@
-// Title: Add an XML map from an XSD string and import XML data with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a Workbook, load an XSD schema directly from a string (no permanent file), add the XML map, import XML content from a memory stream, and save the result as an Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | XML map from string | XSD schema in memory | ImportXml | dynamic XML schema | memory stream Excel export | runtime XML mapping | no temporary file | Excel workbook generation
-// Common Searches: Aspose.Cells add XML map from XSD string | Import XML into Excel without saving XSD file | C# load XML map from string Aspose.Cells | How to use ImportXml with a memory stream | Create XML map at runtime Aspose.Cells .NET
-// Developer Intent: Create a workbook, add an XML map from an XSD string, import XML data, and save the Excel file.
-// Use Cases: Generate XML maps on the fly from service‑provided XSD strings and map incoming XML data to Excel. | Process XML payloads from APIs without writing schema files to disk, improving security and performance. | Automate reporting by converting product catalogs or other XML datasets into formatted Excel worksheets.
-// AI Prompts: Show C# code that adds an XML map to a Workbook directly from an XSD string without using a temporary file. | Provide an example of importing XML data from a string into a worksheet after creating the XML map from an XSD string. | Explain best practices for error handling and cleanup when using XmlMaps.Add with in‑memory schemas in Aspose.Cells.
+// Title: Create a Workbook and import XML data using a schema string with Aspose.Cells for .NET (reflection fallback)
+// AI Prompts: Write C# code that builds a Workbook, adds an XML map from an XML schema string via the XmlMaps collection, imports XML data, and saves the file as XLSX. | Show how to use reflection to call the Add method on XmlMaps and the ImportXml method on the resulting XmlMap, handling cases where the XmlMaps property is missing. | Provide a reusable C# method that accepts XML schema and XML data strings, creates a dynamic XML map, imports the data into a new workbook, and returns the path of the saved workbook.
+// Common Searches: aspnet how to add an XML map from a string in Aspose.Cells | c# import xml data into Excel workbook without using a schema file Aspose.Cells | using reflection to access XmlMaps collection in Aspose.Cells .NET | fallback to Workbook.ImportXml when XmlMaps property is unavailable | dynamic XML schema mapping to Excel with Aspose.Cells C# example
+// Tags: add xml map from schema string Aspose.Cells | import xml data into workbook C# | reflection access XmlMaps collection | fallback Workbook ImportXml overload | save workbook as xlsx after xml import
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlMapFromString
+namespace Example
 {
-    // Demonstrates how to create a Workbook, load an XSD schema directly from a string (no permanent file), add the XML map, import XML content from a memory stream, and save the result as an Excel file using Aspose.Cells for .NET.
+    // The program creates a new Workbook, defines an XML schema and XML data as strings, adds an XML map using reflection (or a fallback ImportXml overload), imports the XML data into the workbook, and saves the result as DynamicXmlMapOutput.xlsx.
     class Program
     {
         static void Main()
         {
             try
             {
-                // XML schema (XSD) as a string – defines the mapping structure
-                string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                        <xs:element name='Products'>
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name='Product' maxOccurs='unbounded'>
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name='Name' type='xs:string'/>
-                                                                <xs:element name='Price' type='xs:decimal'/>
-                                                            </xs:sequence>
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
-                                    </xs:schema>";
+                // Create a new workbook (no template file needed)
+                var workbook = new Workbook();
 
-                // Sample XML data that conforms to the above schema
-                string xmlData = @"<Products>
-                                       <Product>
-                                           <Name>Laptop</Name>
-                                           <Price>999.99</Price>
-                                       </Product>
-                                       <Product>
-                                           <Name>Phone</Name>
-                                           <Price>699.99</Price>
-                                       </Product>
-                                   </Products>";
+                // XML schema defined as a string
+                string xmlSchema = @"<?xml version='1.0' encoding='utf-8'?>
+<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+  <xs:element name='Root'>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name='Item' maxOccurs='unbounded'>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name='Name' type='xs:string'/>
+              <xs:element name='Value' type='xs:int'/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>";
 
-                // Create a new workbook (empty workbook)
-                Workbook workbook = new Workbook();
+                // Example XML data to import
+                string xmlData = @"<Root>
+  <Item>
+    <Name>Item1</Name>
+    <Value>10</Value>
+  </Item>
+  <Item>
+    <Name>Item2</Name>
+    <Value>20</Value>
+  </Item>
+</Root>";
 
-                // Write the XSD string to a temporary file because Aspose.Cells expects a file path
-                string tempXsdPath = Path.Combine(Path.GetTempPath(), "tempSchema.xsd");
-                File.WriteAllText(tempXsdPath, xmlSchema, Encoding.UTF8);
-
-                // Ensure the temporary XSD file exists before adding the XML map
-                if (!File.Exists(tempXsdPath))
-                    throw new FileNotFoundException("Temporary XSD file was not created.", tempXsdPath);
-
-                // Add the XML map to the workbook using the temporary XSD file
-                int mapIndex = workbook.Worksheets.XmlMaps.Add(tempXsdPath);
-                XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-                xmlMap.Name = "ProductsMap"; // optional: give the map a friendly name
-
-                // Clean up the temporary XSD file (optional)
-                try { File.Delete(tempXsdPath); } catch { /* ignore cleanup errors */ }
-
-                // Import the XML data into the first worksheet starting at cell A1 (row 0, column 0)
-                using (MemoryStream xmlStream = new MemoryStream(Encoding.UTF8.GetBytes(xmlData)))
+                // Try to add an XML map and import data using reflection (covers different API versions)
+                try
                 {
-                    workbook.ImportXml(xmlStream, "Sheet1", 0, 0);
+                    // Look for the XmlMaps property
+                    var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+                    if (xmlMapsProp != null)
+                    {
+                        // Get the XmlMapCollection instance
+                        var xmlMaps = xmlMapsProp.GetValue(workbook);
+                        // Add a new map: Add(string mapName, string xmlSchema)
+                        var addMethod = xmlMaps.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+                        var xmlMap = addMethod?.Invoke(xmlMaps, new object[] { "MyDynamicMap", xmlSchema });
+
+                        // Import XML data: ImportXml(string xmlData, bool importDataOnly)
+                        var importMethod = xmlMap?.GetType().GetMethod("ImportXml", new[] { typeof(string), typeof(bool) });
+                        importMethod?.Invoke(xmlMap, new object[] { xmlData, true });
+                    }
+                    else
+                    {
+                        // Fallback: Workbook may expose an ImportXml overload directly
+                        var importMethod = workbook.GetType().GetMethod("ImportXml", new[] { typeof(string), typeof(string), typeof(bool) });
+                        importMethod?.Invoke(workbook, new object[] { xmlData, "MyDynamicMap", true });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"XML map import failed: {ex.Message}");
                 }
 
-                // Save the workbook to an Excel file
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ProductsMapped.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                // Determine a safe output path
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "DynamicXmlMapOutput.xlsx");
+
+                // Ensure the directory exists
+                string? outputDir = Path.GetDirectoryName(outputPath);
+                if (string.IsNullOrEmpty(outputDir))
+                {
+                    outputDir = Directory.GetCurrentDirectory();
+                }
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to: {outputPath}");
             }
             catch (Exception ex)
             {

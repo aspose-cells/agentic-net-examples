@@ -1,67 +1,102 @@
-// Title: C# – Sort Excel data while preserving merged header cells with Aspose.Cells DataSorter
-// Description: Demonstrates how to sort a worksheet range by a specific column using Aspose.Cells.DataSorter in .NET, with HasHeaders set to true so merged header cells remain unchanged, and saves the result to an XLSX file.
-// Keywords: Aspose.Cells | DataSorter | C# sort merged cells | preserve merged header | HasHeaders true | Excel sort range .NET | disable merge handling | CellArea sort | Aspose.Cells example
-// Common Searches: Aspose.Cells sort range without breaking merged cells | C# preserve merged header when sorting Excel with Aspose | DataSorter keep merged cells intact | How to disable merge handling in Aspose.Cells DataSorter | Sort Excel sheet by column while keeping merged header
-// Developer Intent: Sort worksheet rows by a column while leaving merged header cells unchanged using Aspose.Cells in C#.
-// Use Cases: Reorder a category/value list in a report where the title row spans multiple columns. | Apply an ascending numeric sort to a financial table without affecting a merged title row. | Organize product inventory data while preserving a merged block containing the report name and date. | Generate a sorted export of survey results that includes a merged header for the questionnaire title.
-// AI Prompts: Write C# code that uses Aspose.Cells.DataSorter to sort a worksheet range by column B and keep merged header cells intact. | Explain how setting DataSorter.HasHeaders = true disables merge handling during sorting. | Show how to define a CellArea for sorting when the first row contains merged cells. | Provide a step‑by‑step guide to sort multiple columns in Aspose.Cells while preserving any merged cells.
+// Title: Sort Excel data with Aspose.Cells while keeping a merged header row intact (C#)
+// AI Prompts: Sort a worksheet range by the first column using Aspose.Cells DataSorter while preserving a merged header row. | Configure DataSorter.HasHeaders and disable merge handling to sort data without affecting merged cells in C#. | Show how to define a CellArea and apply DataSorter.Sort so the merged header stays unchanged.
+// Common Searches: C# Aspose.Cells sort range keep merged header row | How to prevent merged cells from moving when sorting with Aspose.Cells DataSorter | Aspose.Cells DataSorter disable merge handling example | Sorting Excel sheet with merged header using Aspose.Cells .NET | Preserve merged cells during sort Aspose.Cells C#
+// Tags: Aspose.Cells DataSorter sort range with merged header | C# preserve merged cells during Excel sort | DataSorter.HasHeaders option example | CellArea definition for sorting Aspose.Cells | disable merge handling Aspose.Cells DataSorter
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to sort a worksheet range by a specific column using Aspose.Cells.DataSorter in .NET, with HasHeaders set to true so merged header cells remain unchanged, and saves the result to an XLSX file.
+    // The example creates a workbook, merges cells A1:C1 as a header, fills rows with fruit data, sets DataSorter.HasHeaders = true, defines a CellArea covering the header and data rows, sorts by the first column while keeping the merged header intact, and saves the workbook as SortedPreservingMergedCells.xlsx.
     class Program
     {
         static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet.
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
                 Cells cells = worksheet.Cells;
 
-                // Populate sample data (including a header row).
-                cells["A1"].PutValue("Category");
-                cells["B1"].PutValue("Value");
-                cells["A2"].PutValue("Fruit");
+                // ------------------------------------------------------------
+                // Prepare sample data with a merged header row
+                // ------------------------------------------------------------
+
+                // Merge cells A1:C1 to act as a header that should stay intact after sorting
+                cells.Merge(0, 0, 1, 3);
+                cells[0, 0].PutValue("Merged Header");
+
+                // Add data below the header (rows 2‑5, columns A‑C)
+                cells["A2"].PutValue("Banana");
                 cells["B2"].PutValue(30);
-                cells["A3"].PutValue("Vegetable");
-                cells["B3"].PutValue(20);
-                cells["A4"].PutValue("Grain");
-                cells["B4"].PutValue(10);
+                cells["C2"].PutValue("Yellow");
 
-                // Merge the header cells to demonstrate that the merge is preserved after sorting.
-                cells.Merge(0, 0, 1, 2); // Merge A1:B1
+                cells["A3"].PutValue("Apple");
+                cells["B3"].PutValue(10);
+                cells["C3"].PutValue("Red");
 
-                // Configure the DataSorter.
+                cells["A4"].PutValue("Cherry");
+                cells["B4"].PutValue(20);
+                cells["C4"].PutValue("Red");
+
+                cells["A5"].PutValue("Date");
+                cells["B5"].PutValue(40);
+                cells["C5"].PutValue("Brown");
+
+                // ------------------------------------------------------------
+                // Configure the DataSorter
+                // ------------------------------------------------------------
+
+                // Get the DataSorter from the workbook
                 DataSorter sorter = workbook.DataSorter;
-                sorter.HasHeaders = true;                 // First row is a header (merged cells)
-                sorter.AddKey(1, SortOrder.Ascending);    // Sort by the second column (Value)
 
-                // Define the sort area (including the merged header).
+                // The data has a header row (the merged cells). Setting HasHeaders = true
+                // tells the sorter to keep the first row in place.
+                sorter.HasHeaders = true;
+
+                // Sort by the first column (Fruit name) in ascending order
+                sorter.AddKey(0, SortOrder.Ascending);
+
+                // ------------------------------------------------------------
+                // Perform the sort
+                // ------------------------------------------------------------
+
+                // Define the area to sort: from row 0 (header) to row 4 (last data row),
+                // and from column 0 to column 2 (A‑C). The header row is included but
+                // will remain fixed because HasHeaders = true.
                 CellArea sortArea = new CellArea
                 {
                     StartRow = 0,
                     StartColumn = 0,
-                    EndRow = 3,
-                    EndColumn = 1
+                    EndRow = 4,
+                    EndColumn = 2
                 };
 
-                // Perform the sort. Merged cells are not altered because the sorter
-                // does not process merge handling when HasHeaders is true.
-                sorter.Sort(cells, sortArea);
+                sorter.Sort(worksheet.Cells, sortArea);
 
-                // Save the workbook.
+                // ------------------------------------------------------------
+                // Save the result
+                // ------------------------------------------------------------
+
                 string outputPath = "SortedPreservingMergedCells.xlsx";
+
+                // Ensure the directory exists (use current directory if no path is provided)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("An error occurred while processing the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

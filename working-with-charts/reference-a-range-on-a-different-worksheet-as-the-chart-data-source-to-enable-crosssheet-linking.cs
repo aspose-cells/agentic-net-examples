@@ -1,29 +1,27 @@
-// Title: Create a Cross‑Sheet Column Chart in Aspose.Cells for .NET
-// Description: Shows how to generate a workbook with a data worksheet and a separate chart worksheet, fill the data sheet with categories and values, use SetChartDataRange("DataSheet!$A$1:$B$4") to source chart data from another sheet, and link the chart title to a cell on the data sheet before saving.
-// Keywords: Aspose.Cells cross sheet chart | SetChartDataRange .NET | chart data from another worksheet | link chart title to cell Aspose.Cells | C# Aspose.Cells chart example | column chart external range | Aspose.Cells chart source range | Aspose.Cells workbook chart linking
-// Common Searches: Aspose.Cells reference another sheet for chart data | SetChartDataRange with sheet name Aspose.Cells | How to link chart title to a cell in Aspose.Cells | Create chart on one sheet using data from another sheet C# | Cross‑worksheet chart source Aspose.Cells | Aspose.Cells column chart from separate data sheet
-// Developer Intent: Create a chart on one worksheet that pulls its data and optional title from a different worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate a sales column chart on a summary sheet while keeping raw data on a hidden data sheet, with the title linked to a cell for automatic updates. | Build a dashboard workbook where each chart on a main sheet references modular data ranges from separate worksheets, simplifying maintenance and data refresh. | Automate report creation that places charts on a cover page and isolates source data on protected sheets for security and clarity.
-// AI Prompts: Write C# code with Aspose.Cells to add a pie chart on Sheet1 that uses the range Sheet2!$A$2:$B$5 as its data source and links the chart title to Sheet2!$C$1. | Explain the SetChartDataRange method for cross‑worksheet references in Aspose.Cells and demonstrate how to change the source range at runtime. | Provide step‑by‑step instructions to create multiple charts on a single sheet, each pulling data from different worksheets, using Aspose.Cells for .NET.
+// Title: Create a column chart in Aspose.Cells .NET with its data range taken from another worksheet
+// AI Prompts: Write C# code that adds a column chart on a new worksheet and sets its data source to a range on a different worksheet using Aspose.Cells. | Show how to bind a chart title to a cell located on a separate sheet in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells how to set chart data source to a range on a different sheet in C# | C# Aspose.Cells cross‑sheet chart data range example | link chart title to a cell on another worksheet using Aspose.Cells .NET | use A1 notation to reference external worksheet range for chart in Aspose.Cells | create column chart on separate worksheet with data from DataSheet Aspose.Cells
+// Tags: set chart data range cross‑sheet Aspose.Cells | column chart on separate worksheet C# | chart title linked source Aspose.Cells | A1 notation range for chart data Aspose.Cells | reference another worksheet for chart Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to generate a workbook with a data worksheet and a separate chart worksheet, fill the data sheet with categories and values, use SetChartDataRange("DataSheet!$A$1:$B$4") to source chart data from another sheet, and link the chart title to a cell on the data sheet before saving.
-class CrossSheetChartDemo
+// The example creates a workbook, adds a data sheet and a chart sheet, fills sample data, inserts a column chart on the chart sheet, sets the chart's data range to a range on the data sheet using A1 notation, optionally links the chart title to a cell on the data sheet, and saves the file as CrossSheetChart.xlsx.
+class CrossSheetChartExample
 {
     static void Main()
     {
         // Create a new workbook
-        Workbook wb = new Workbook();
+        Workbook workbook = new Workbook();
 
-        // First worksheet will host the chart
-        Worksheet chartSheet = wb.Worksheets[0];
-        chartSheet.Name = "ChartSheet";
+        // First worksheet will hold the data
+        Worksheet dataSheet = workbook.Worksheets[0];
+        dataSheet.Name = "DataSheet";
 
-        // Second worksheet contains the data source
-        Worksheet dataSheet = wb.Worksheets.Add("DataSheet");
+        // Second worksheet will contain the chart
+        Worksheet chartSheet = workbook.Worksheets.Add("ChartSheet");
+
+        // Populate sample data in DataSheet
         dataSheet.Cells["A1"].PutValue("Category");
         dataSheet.Cells["B1"].PutValue("Value");
         dataSheet.Cells["A2"].PutValue("A");
@@ -33,18 +31,19 @@ class CrossSheetChartDemo
         dataSheet.Cells["A4"].PutValue("C");
         dataSheet.Cells["B4"].PutValue(30);
 
-        // Add a chart to the first worksheet
+        // Add a column chart to ChartSheet
         int chartIndex = chartSheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
         Chart chart = chartSheet.Charts[chartIndex];
 
-        // Reference a range on the second worksheet as the chart data source
-        chart.SetChartDataRange("DataSheet!$A$1:$B$4", true);
+        // Set the chart's data range to a range on a different worksheet (cross‑sheet linking)
+        // The range string follows Excel A1 notation and includes the sheet name.
+        chart.SetChartDataRange("'DataSheet'!$A$1:$B$4", true);
 
         // Optionally link the chart title to a cell on the data sheet
         dataSheet.Cells["D1"].PutValue("Sales Chart");
-        chart.Title.LinkedSource = $"='{dataSheet.Name}'!$D$1";
+        chart.Title.LinkedSource = "'DataSheet'!$D$1";
 
         // Save the workbook
-        wb.Save("CrossSheetChart.xlsx");
+        workbook.Save("CrossSheetChart.xlsx");
     }
 }

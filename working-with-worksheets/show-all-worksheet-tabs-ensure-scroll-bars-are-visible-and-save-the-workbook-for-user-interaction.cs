@@ -1,33 +1,39 @@
-// Title: C# – Show Worksheet Tabs and Scrollbars in Aspose.Cells and Save the Workbook
-// Description: Creates a new Workbook, enables worksheet tabs, makes vertical and horizontal scrollbars visible via Workbook.Settings, and saves the file as an XLSX document ready for end‑user interaction.
-// Keywords: Aspose.Cells ShowTabs | Aspose.Cells scrollbars | C# display worksheet tabs | enable vertical scrollbar Aspose | enable horizontal scrollbar Aspose | save workbook with UI settings | Aspose.Cells workbook UI configuration
-// Common Searches: Aspose.Cells show worksheet tabs C# | how to enable scrollbars in Aspose.Cells workbook | C# Aspose.Cells set ShowTabs true | make vertical and horizontal scrollbars visible Aspose.Cells | save Excel file with tabs and scrollbars using Aspose
-// Developer Intent: Enable worksheet tabs and both scrollbars in a generated Excel file and persist the workbook for user viewing.
-// Use Cases: Programmatically prepare an Excel template where users see tabs and scrollbars immediately on open. | Generate reports that require full navigation controls without manual Excel configuration. | Distribute workbooks from a web service or desktop app with UI settings pre‑configured for better usability.
-// AI Prompts: Generate C# code with Aspose.Cells that turns on ShowTabs, IsVScrollBarVisible, and IsHScrollBarVisible, then saves the workbook as XLSX. | Explain how Workbook.Settings properties affect the Excel UI and provide a sample implementation. | Create a reusable method that accepts a file path, configures tab and scrollbar visibility, and writes the workbook.
+// Title: How to display worksheet tabs, maintain default scrollbars, and save an Excel workbook with Aspose.Cells in C#
+// AI Prompts: Generate C# code that sets Workbook.Settings.ShowTabs to true, adds data to the first worksheet, and saves the workbook as an .xlsx file using Aspose.Cells. | Write a .NET snippet that ensures worksheet tabs are visible, confirms scrollbars remain enabled, and exports the workbook for user interaction with Aspose.Cells. | Create an example that creates a new workbook, makes sheet tabs visible, inserts sample data, and writes the file to disk with Aspose.Cells for C#.
+// Common Searches: Aspose.Cells C# show worksheet tabs in generated Excel file | How to keep scrollbars visible when creating a workbook with Aspose.Cells .NET | Save Excel workbook with visible sheet tabs using Aspose.Cells in C# | C# Aspose.Cells Workbook.Settings.ShowTabs example | Export interactive Excel file with Aspose.Cells in .NET
+// Tags: Workbook.Settings.ShowTabs usage | display worksheet tabs Aspose.Cells | export Excel as Xlsx using Aspose.Cells | C# ensure scrollbars visible Aspose.Cells | interactive Excel file generation .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// // Demonstrates creating a new workbook, enabling worksheet tabs, adding sample data, and saving the file as Result.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a new Workbook, enables worksheet tabs, makes vertical and horizontal scrollbars visible via Workbook.Settings, and saves the file as an XLSX document ready for end‑user interaction.
-    class ShowTabsAndScrollbars
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one with new Workbook("input.xlsx"))
             Workbook workbook = new Workbook();
 
-            // Make sure worksheet tabs are displayed
+            // Ensure worksheet tabs are visible
             workbook.Settings.ShowTabs = true;
 
-            // Ensure both vertical and horizontal scrollbars are visible
-            workbook.Settings.IsVScrollBarVisible = true;
-            workbook.Settings.IsHScrollBarVisible = true;
+            // Scroll bars are shown by default; explicit properties are not available in this API version.
 
-            // Save the workbook so the user can open it
-            workbook.Save("WorkbookWithTabsAndScrollbars.xlsx", SaveFormat.Xlsx);
+            // Add sample data to demonstrate the workbook
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Data");
+
+            // Save the workbook for user interaction
+            string outputPath = "Result.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

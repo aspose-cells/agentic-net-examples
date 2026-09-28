@@ -4,7 +4,8 @@ description: C# examples for adding XSD-backed XML Maps, linking cells to XPath,
 product: Aspose.Cells for .NET
 category: xml-maps
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Excel XML Maps in C# with Aspose.Cells for .NET

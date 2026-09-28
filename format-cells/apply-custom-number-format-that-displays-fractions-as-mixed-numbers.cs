@@ -1,48 +1,36 @@
-// Title: Apply Mixed Fraction Custom Number Format (# ?/?) with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, writes 2.75 to cell A1, defines a style with the custom format "# ?/?" to display values as mixed fractions, applies the style using a StyleFlag that targets only the number format, saves the file as MixedFractionFormatDemo.xlsx, and prints the formatted string to the console.
-// Keywords: Aspose.Cells | mixed fraction format | custom number format | # ?/? | C# | .NET | Excel cell formatting | fraction display
-// Common Searches: Aspose.Cells mixed fraction custom format | C# apply "# ?/?" number format in Excel | how to show fractions as mixed numbers with Aspose.Cells | format cell as mixed fraction .NET | custom number format for fractions Aspose
-// Developer Intent: Display numeric values as mixed fractions by applying a custom number format to one or more worksheet cells.
-// Use Cases: Financial statements that require measurements like 2 3/4 units for clarity. | Engineering reports where dimensions are traditionally expressed as mixed fractions. | Invoices or order forms that list quantities in mixed‑fraction notation.
-// AI Prompts: Generate C# code using Aspose.Cells to apply the "# ?/?" mixed‑fraction format to an entire column while preserving existing cell styles. | Explain how to modify the custom format to show leading zeros in the fractional part (e.g., "# 01/04"). | Provide a sample that formats multiple rows with the mixed‑fraction style and then exports the workbook to PDF.
+// Title: How to format a worksheet cell as a mixed fraction using a custom number format with Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# snippet that uses Aspose.Cells to place 2.75 in cell A1 and apply a custom format that renders the value as a mixed number (e.g., 2 ¾). | Demonstrate setting a custom fraction pattern on a cell style with Aspose.Cells, then save the workbook as an .xlsx file. | Create an Aspose.Cells example that shows how to convert any decimal to a whole‑plus‑fraction representation by applying a custom number format to a worksheet cell.
+// Common Searches: Aspose.Cells C# apply custom fraction format to a worksheet cell | Show integer part and fraction together in Excel using Aspose.Cells API | C# custom number format for displaying fractions as whole‑plus‑fraction in an .xlsx file
+// Tags: Aspose.Cells custom mixed‑fraction number format | C# apply custom pattern to Excel cell using Aspose.Cells | save workbook with mixed number display Aspose.Cells | set cell style with custom fraction format in Aspose.Cells | convert decimal to whole‑plus‑fraction in .NET Excel export
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFractionMixedNumberDemo
+// Demonstrates creating a workbook, inserting the decimal 2.75 into cell A1, applying a custom number format that shows the value as a mixed fraction, and saving the result as MixedFraction.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a workbook, writes 2.75 to cell A1, defines a style with the custom format "# ?/?" to display values as mixed fractions, applies the style using a StyleFlag that targets only the number format, saves the file as MixedFractionFormatDemo.xlsx, and prints the formatted string to the console.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook (lifecycle rule)
+        var workbook = new Workbook();
 
-            // Set a numeric value that will be displayed as a mixed fraction
-            // Example: 2.75 will be shown as "2 3/4"
-            sheet.Cells["A1"].PutValue(2.75);
+        // Access the first worksheet
+        var sheet = workbook.Worksheets[0];
 
-            // Create a style with a custom number format for mixed fractions
-            // "# ?/?" displays the integer part followed by a simple fraction
-            Style mixedFractionStyle = workbook.CreateStyle();
-            mixedFractionStyle.Custom = "# ?/?";
+        // Insert a decimal value that will be shown as a mixed fraction
+        var cell = sheet.Cells["A1"];
+        cell.PutValue(2.75); // Represents 2 ¾
 
-            // Use StyleFlag to apply only the number format part of the style
-            StyleFlag flag = new StyleFlag();
-            flag.NumberFormat = true;
+        // Retrieve the cell's style
+        var style = cell.GetStyle();
 
-            // Apply the style to the target cell (A1)
-            // CreateRange(row, column, totalRows, totalColumns)
-            Aspose.Cells.Range targetRange = sheet.Cells.CreateRange(0, 0, 1, 1);
-            targetRange.ApplyStyle(mixedFractionStyle, flag);
+        // Apply a custom number format that displays fractions as mixed numbers
+        // "# ??/??" shows an integer part followed by a fraction with up to two‑digit denominator
+        style.Custom = "# ??/??";
 
-            // Save the workbook to a file
-            workbook.Save("MixedFractionFormatDemo.xlsx");
+        // Assign the modified style back to the cell
+        cell.SetStyle(style);
 
-            // Optional: Output the formatted string to console for verification
-            Console.WriteLine("Formatted value in A1: " + sheet.Cells["A1"].StringValue);
-        }
+        // Save the workbook (lifecycle rule)
+        workbook.Save("MixedFraction.xlsx");
     }
 }

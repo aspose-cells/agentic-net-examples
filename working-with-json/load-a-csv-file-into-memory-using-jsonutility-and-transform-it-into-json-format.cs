@@ -1,73 +1,48 @@
-// Title: C# – Convert CSV to JSON using Aspose.Cells JsonUtility
-// Description: Loads a CSV file into an Aspose.Cells workbook, creates a range covering all data, configures JsonSaveOptions (header row, empty cells), exports the range to a JSON string with JsonUtility.ExportRangeToJson, and saves the result to a file.
-// Keywords: Aspose.Cells CSV to JSON | JsonUtility ExportRangeToJson C# | ImportCSV Aspose.Cells example | JsonSaveOptions header row | C# convert CSV file to JSON | Aspose.Cells write JSON file
-// Common Searches: Aspose.Cells convert CSV to JSON C# | JsonUtility ExportRangeToJson usage | ImportCSV then export JSON Aspose.Cells | C# code to export worksheet range as JSON | Save JSON output from Aspose.Cells
-// Developer Intent: Read a CSV file, load it into an Aspose.Cells workbook, and export the worksheet data as a JSON string or file.
-// Use Cases: Transform flat CSV data into JSON for web APIs. | Generate configuration files from spreadsheet data without manual conversion. | Create JSON payloads for services by exporting selected worksheet ranges.
-// AI Prompts: Show a C# snippet that reads a CSV with Aspose.Cells, sets JsonSaveOptions, and writes the exported JSON to a file. | Explain how to adjust JsonSaveOptions to produce nested JSON structures when exporting a range. | Provide guidance on streaming large CSV files into Aspose.Cells before converting them to JSON for optimal performance.
+// Title: Load a CSV file into an Aspose.Cells Workbook and export it as a JSON string using JsonSaveOptions in C#
+// AI Prompts: Generate C# code that reads a CSV file into an Aspose.Cells Workbook, then uses JsonSaveOptions to write the workbook to a MemoryStream and returns the JSON string. | Modify the program to accept the input CSV path and an optional output JSON file path from command‑line arguments, writing the JSON result to the specified file. | Add error handling that validates the CSV file exists, catches malformed CSV content, and ensures the JSON output is encoded in UTF‑8.
+// Common Searches: c# how to read a CSV file with Aspose.Cells and convert it to JSON | using Aspose.Cells JsonSaveOptions to export workbook to JSON string | convert CSV to JSON in memory stream Aspose.Cells C# example | Aspose.Cells load CSV and save as JSON without creating intermediate Excel file
+// Tags: Aspose.Cells load CSV workbook | JsonSaveOptions export to JSON | C# convert CSV to JSON in memory | Aspose.Cells memory stream JSON output | CSV to JSON conversion using Aspose.Cells
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Loads a CSV file into an Aspose.Cells workbook, creates a range covering all data, configures JsonSaveOptions (header row, empty cells), exports the range to a JSON string with JsonUtility.ExportRangeToJson, and saves the result to a file.
-class Program
+// Demonstrates loading a CSV file into an Aspose.Cells Workbook, exporting the workbook to a MemoryStream with JsonSaveOptions, converting the stream to a UTF‑8 JSON string, and printing the result, with basic file‑existence checking and exception handling.
+class CsvToJsonConverter
 {
     static void Main()
     {
         try
         {
-            // Path to the source CSV file
-            string csvPath = "input.csv";
+            const string inputPath = "input.csv";
 
-            // Verify that the CSV file exists to avoid FileNotFoundException
-            if (!File.Exists(csvPath))
+            // Ensure the input CSV file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.Error.WriteLine($"Error: CSV file not found at path '{csvPath}'.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            // Load the CSV file into a Workbook object
+            Workbook workbook = new Workbook(inputPath);
 
-            // Get the Cells collection of the first worksheet
-            Cells cells = workbook.Worksheets[0].Cells;
-
-            // Import CSV data into the worksheet starting at cell A1
-            // Using comma as delimiter and converting numeric strings to numbers
-            cells.ImportCSV(csvPath, ",", true, 0, 0);
-
-            // Determine the used range dimensions
-            int lastRow = cells.MaxDataRow;          // zero‑based index of the last row with data
-            int lastColumn = cells.MaxDataColumn;    // zero‑based index of the last column with data
-
-            // Create a range that covers all imported data
-            Aspose.Cells.Range dataRange = cells.CreateRange(0, 0, lastRow + 1, lastColumn + 1);
-
-            // Configure JSON export options
-            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            // Export the workbook to JSON using JsonSaveOptions
+            string json;
+            using (MemoryStream ms = new MemoryStream())
             {
-                ExportEmptyCells = true,
-                HasHeaderRow = true,
-                ExportNestedStructure = false
-            };
+                JsonSaveOptions jsonOptions = new JsonSaveOptions();
+                workbook.Save(ms, jsonOptions);
+                json = Encoding.UTF8.GetString(ms.ToArray());
+            }
 
-            // Export the range to a JSON string using the JsonUtility method
-            string jsonResult = JsonUtility.ExportRangeToJson(dataRange, jsonOptions);
-
-            // Output the JSON string to the console
-            Console.WriteLine(jsonResult);
-
-            // Optionally, write the JSON string to a file
-            string outputPath = "output.json";
-            File.WriteAllText(outputPath, jsonResult);
-            Console.WriteLine($"JSON output written to '{outputPath}'.");
+            // Output the resulting JSON
+            Console.WriteLine(json);
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

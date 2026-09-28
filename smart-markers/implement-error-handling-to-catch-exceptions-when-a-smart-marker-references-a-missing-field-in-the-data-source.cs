@@ -1,10 +1,7 @@
-// Title: C# – Catch Missing Field Exceptions in Aspose.Cells Smart Markers
-// Description: Shows how to protect WorkbookDesigner.Process() and Workbook.Save() with try‑catch blocks when a smart marker points to a column that is absent from the DataTable data source.
-// Keywords: Aspose.Cells | smart markers | missing column | exception handling | C# | .NET | WorkbookDesigner | DataTable | error handling | catch exception
-// Common Searches: Aspose.Cells smart marker missing column error | how to handle smart marker exceptions in C# | catch exception when smart marker field not found | WorkbookDesigner.Process error handling | smart marker references non‑existent field
-// Developer Intent: The developer needs to detect and manage runtime errors caused by smart markers that reference fields not present in the supplied data source.
-// Use Cases: Wrap designer.Process() in a try‑catch block to log or display a clear message when a smart marker field is missing. | Validate DataTable column names against smart marker placeholders before processing to avoid exceptions. | Save the workbook even after a processing failure, preserving original smart marker tags for later correction.
-// AI Prompts: Create C# code that checks smart marker field names against a DataTable and logs any missing columns before calling WorkbookDesigner.Process(). | Show how to write detailed Aspose.Cells smart marker exception information to a log file while still saving the workbook. | Provide an example that replaces missing smart marker fields with a default value using custom error handling in Aspose.Cells for .NET.
+// Title: Use try‑catch to handle missing column errors in Aspose.Cells smart markers (C#)
+// AI Prompts: Generate C# code that binds a DataTable to a smart marker and wraps WorkbookDesigner.Process in a try‑catch to capture missing field exceptions. | Show how to log the exception message when a smart marker references a column that does not exist in the data source. | Demonstrate saving the workbook after handling the error so the original smart marker text remains in the file.
+// Common Searches: Aspose.Cells C# smart marker throws exception when column is missing | how to catch missing field error in WorkbookDesigner.Process | example of error handling for absent data columns in Aspose.Cells smart markers
+// Tags: smart marker missing column exception Aspose.Cells | WorkbookDesigner.Process error handling C# | catch smart marker field not found Aspose.Cells | exception handling for Aspose.Cells smart markers | save workbook after smart marker error C#
 
 using System;
 using System.Data;
@@ -12,67 +9,59 @@ using Aspose.Cells;
 
 namespace AsposeCellsSmartMarkerErrorHandling
 {
-    // Shows how to protect WorkbookDesigner.Process() and Workbook.Save() with try‑catch blocks when a smart marker points to a column that is absent from the DataTable data source.
+    // Demonstrates handling of missing field errors in smart markers
+    // The example creates a workbook with a smart marker that references a non‑existent "Name" column, binds a DataTable containing only an "Age" column, and processes the markers inside a try‑catch block. The caught exception is logged, and the workbook is saved with the original smart marker text preserved.
     public class MissingFieldHandler
     {
         public static void Run()
         {
-            // Create a new workbook and add a smart marker that references a non‑existent field
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            // Smart marker expects a field named "MissingField"
-            sheet.Cells["A1"].PutValue("&=$DataTable.MissingField");
 
-            // Prepare a data source that does NOT contain the "MissingField" column
-            DataTable dt = new DataTable("DataTable");
-            dt.Columns.Add("ExistingField", typeof(string));
-            dt.Rows.Add("Value1");
-            dt.Rows.Add("Value2");
+            // Insert a smart marker that refers to a non‑existent column "Name"
+            // The data source will only contain the column "Age"
+            sheet.Cells["A1"].PutValue("&=$Employees.Name");
 
-            // Initialize the WorkbookDesigner with the workbook and data source
+            // Prepare a DataTable with only the "Age" column (no "Name" column)
+            DataTable dt = new DataTable("Employees");
+            dt.Columns.Add("Age", typeof(int));
+            dt.Rows.Add(30);
+            dt.Rows.Add(45);
+
+            // Set up the WorkbookDesigner
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = workbook
             };
-            designer.SetDataSource(dt);
 
-            // Process the smart markers inside a try‑catch block to handle missing field errors
+            // Bind the data source to the name used in the smart marker
+            designer.SetDataSource("Employees", dt);
+
+            // Process the smart markers with error handling
             try
             {
-                designer.Process(); // This will throw if the smart marker field is missing
+                // This will throw because the "Name" field is missing in the data source
+                designer.Process();
                 Console.WriteLine("Smart markers processed successfully.");
             }
             catch (Exception ex)
             {
-                // Handle the exception caused by the missing field
+                // Catch and display the error caused by the missing field
                 Console.WriteLine($"Error processing smart markers: {ex.Message}");
             }
 
-            // Save the workbook (the file will contain the original smart marker if processing failed)
-            try
-            {
-                workbook.Save("MissingFieldResult.xlsx");
-                Console.WriteLine("Workbook saved as MissingFieldResult.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+            // Save the workbook (the file will contain the original smart marker text)
+            workbook.Save("MissingFieldResult.xlsx");
         }
     }
 
-    public class Program
+    // Entry point
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                MissingFieldHandler.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            MissingFieldHandler.Run();
         }
     }
 }

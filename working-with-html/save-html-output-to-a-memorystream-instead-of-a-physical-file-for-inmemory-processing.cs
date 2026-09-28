@@ -1,37 +1,48 @@
-// Title: Save Aspose.Cells Workbook as HTML to a MemoryStream in C# (.NET)
-// Description: Demonstrates how to generate HTML from an Aspose.Cells workbook directly into a MemoryStream, read the markup as a string, and avoid creating a temporary file. Ideal for web APIs, email bodies, or any scenario that requires in‑memory HTML processing.
-// Keywords: Aspose.Cells HTML MemoryStream | C# export workbook to HTML stream | in‑memory HTML generation .NET | Aspose.Cells SaveFormat.Html stream | convert workbook to HTML without file
-// Common Searches: Aspose.Cells save workbook as HTML to MemoryStream | C# generate HTML from Excel without writing file | How to use MemoryStream with Aspose.Cells Save method | In‑memory HTML export Aspose.Cells .NET
-// Developer Intent: Create HTML output from a workbook directly in memory for further processing or transmission.
-// Use Cases: Return HTML from an ASP.NET Core controller as a response. | Embed generated markup in an email template without disk I/O. | Store HTML in a database or pass it to another service.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook as HTML into a MemoryStream and returns the HTML string. | Show how to send the MemoryStream HTML result from an ASP.NET Core endpoint using FileContentResult. | Explain the benefits of using a custom MemoryStream factory when exporting HTML with Aspose.Cells.
+// Title: Export an Aspose.Cells Workbook to HTML using a MemoryStream in C#
+// AI Prompts: Generate C# code that creates an Aspose.Cells Workbook, fills it with data, and saves it directly to a MemoryStream in HTML format. | Show how to reset the MemoryStream after saving HTML and retrieve the HTML string for further processing. | Refactor the example into a reusable method that returns the HTML MemoryStream from a given Workbook.
+// Common Searches: aspocells save workbook as html to memory stream c# example | how to generate html from excel in memory using Aspose.Cells | c# read html output from Aspose.Cells workbook without writing a file | asp.net core return excel as html stream using Aspose.Cells
+// Tags: Aspose.Cells HTML export to MemoryStream | C# in‑memory Excel to HTML conversion | HTML output from Aspose.Cells using MemoryStream | MemoryStream handling for Aspose.Cells output | File‑system‑free Excel HTML generation
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to generate HTML from an Aspose.Cells workbook directly into a MemoryStream, read the markup as a string, and avoid creating a temporary file. Ideal for web APIs, email bodies, or any scenario that requires in‑memory HTML processing.
-class Program
+// Demonstrates creating an Aspose.Cells Workbook, populating cells, and saving it as HTML directly into a MemoryStream, then resetting the stream and reading the HTML string, enabling in‑memory Excel‑to‑HTML conversion without touching the file system.
+class HtmlToMemoryStreamExample
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
+        // Create a new workbook (or load an existing one)
         Workbook workbook = new Workbook();
+
+        // Add some sample data to the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello Aspose.Cells");
+        sheet.Cells["A1"].PutValue("Name");
+        sheet.Cells["B1"].PutValue("Score");
+        sheet.Cells["A2"].PutValue("Alice");
+        sheet.Cells["B2"].PutValue(85);
+        sheet.Cells["A3"].PutValue("Bob");
+        sheet.Cells["B3"].PutValue(92);
 
-        // Create a MemoryStream using the provided factory method
-        CustomImplementationFactory factory = new CustomImplementationFactory();
-        MemoryStream htmlStream = factory.CreateMemoryStream();
+        // Prepare a memory stream to hold the HTML output
+        using (MemoryStream htmlStream = new MemoryStream())
+        {
+            // Save the workbook as HTML into the memory stream
+            workbook.Save(htmlStream, SaveFormat.Html);
 
-        // Save the workbook as HTML directly into the memory stream
-        workbook.Save(htmlStream, SaveFormat.Html);
+            // Reset the stream position to the beginning for reading
+            htmlStream.Position = 0;
 
-        // Reset the stream position to read the generated HTML
-        htmlStream.Position = 0;
-        string htmlContent = new StreamReader(htmlStream).ReadToEnd();
+            // Example: read the HTML content as a string (optional)
+            using (StreamReader reader = new StreamReader(htmlStream))
+            {
+                string htmlContent = reader.ReadToEnd();
+                Console.WriteLine("Generated HTML:");
+                Console.WriteLine(htmlContent);
+            }
 
-        // Output the HTML content (for demonstration purposes)
-        Console.WriteLine(htmlContent);
+            // At this point, htmlStream contains the HTML representation of the workbook
+            // It can be returned, sent over a network, or processed further without touching the file system
+        }
     }
 }

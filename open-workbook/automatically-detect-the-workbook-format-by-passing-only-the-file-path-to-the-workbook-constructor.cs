@@ -1,62 +1,23 @@
-// Title: Auto‑Detect Excel Workbook Format Using Aspose.Cells Workbook(filePath) in C#
-// Description: Shows how to load an Excel file of any supported type (XLSX, XLS, CSV, etc.) by passing only its path to the Aspose.Cells Workbook constructor. The library automatically identifies the format, accessible via Workbook.FileFormat, after confirming the file exists and reading the first worksheet.
-// Keywords: Aspose.Cells | C# workbook format detection | Workbook constructor file path | auto detect Excel type | Workbook.FileFormat | load XLSX XLS CSV Aspose | detect workbook format C#
-// Common Searches: Aspose.Cells detect file format from path | Load Excel file without specifying format C# | Workbook.FileFormat property example | Open unknown Excel extension Aspose.Cells | Check file exists before creating Workbook Aspose
-// Developer Intent: Open an Excel workbook by providing only its file path and let Aspose.Cells infer the file format.
-// Use Cases: Process incoming Excel files of unknown extensions in a batch job. | Log the detected format for auditing before further processing. | Validate file presence and safely load workbooks in automated ETL pipelines. | Read initial worksheet data after auto‑detection to confirm successful load.
-// AI Prompts: Write C# code that accepts a file path, verifies the file exists, creates an Aspose.Cells Workbook, prints the detected Workbook.FileFormat, and displays the first worksheet name and cell A1 value. | Create a method that loads multiple Excel files of varying extensions using a single Workbook constructor and returns a dictionary of file names to detected formats. | Generate error‑handling logic for loading a workbook with Aspose.Cells when the file path is invalid or the format is unsupported.
+// Title: Load any Excel or CSV workbook by passing only the file path to Aspose.Cells Workbook constructor in C#
+// AI Prompts: Generate a C# example that creates a new Aspose.Cells Workbook using just a file path, allowing the library to automatically detect XLS, XLSX, CSV, or other supported formats, then prints the total number of worksheets. | Show how to open a workbook with an unknown extension in C# using Aspose.Cells, access its Worksheets collection, and demonstrate that no format argument is required.
+// Common Searches: Aspose.Cells C# open workbook without specifying file type | How to let Aspose.Cells detect XLSX or CSV format from file path in .NET | C# load Excel file of unknown extension using Aspose.Cells Workbook constructor | Retrieve worksheet count after auto-detecting workbook format with Aspose.Cells
+// Tags: auto-detect workbook format Aspose.Cells | load workbook from file path C# | open XLSX or CSV without format parameter Aspose.Cells | instantiate Workbook with path detection | retrieve worksheet count Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// // Demonstrates using the Aspose.Cells Workbook constructor to open a workbook from a file path, letting the library automatically determine the file format (XLS, XLSX, CSV, etc.) and then outputting the number of worksheets loaded.
+class Program
 {
-    // Shows how to load an Excel file of any supported type (XLSX, XLS, CSV, etc.) by passing only its path to the Aspose.Cells Workbook constructor. The library automatically identifies the format, accessible via Workbook.FileFormat, after confirming the file exists and reading the first worksheet.
-    public class DetectWorkbookFormatDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
+        // Specify the path to the workbook file (XLS, XLSX, CSV, etc.).
+        string filePath = @"C:\Data\SampleWorkbook.xlsx";
 
-        public static void Run()
-        {
-            // Path to the Excel file (any supported format: .xlsx, .xls, .csv, etc.)
-            string filePath = "sample.xlsx";
+        // The Workbook constructor automatically detects the file format.
+        Workbook workbook = new Workbook(filePath);
 
-            // Verify that the file exists to prevent FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
-
-            try
-            {
-                // The Workbook constructor that takes a file path automatically detects the format.
-                Workbook workbook = new Workbook(filePath);
-
-                // After loading, the FileFormat property reflects the detected format.
-                Console.WriteLine($"Loaded file: {filePath}");
-                Console.WriteLine($"Detected workbook format: {workbook.FileFormat}");
-
-                // Example: access the first worksheet to prove the workbook is usable.
-                Worksheet sheet = workbook.Worksheets[0];
-                Console.WriteLine($"First worksheet name: {sheet.Name}");
-                Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-            }
-        }
+        // Example usage: output the number of worksheets loaded.
+        Console.WriteLine($"Worksheets loaded: {workbook.Worksheets.Count}");
     }
 }

@@ -1,87 +1,95 @@
-// Title: Aspose.Cells C# PivotTable – Show Values as Percentage of Column Total
-// Description: Creates a workbook with sample sales data, builds a PivotTable (Product rows, Quarter columns, Sales values) and uses PivotField.ShowValuesAs with the PercentageOfColumn format to display each sales figure as a share of its column total, then refreshes, calculates, and saves the file.
-// Keywords: Aspose.Cells PivotTable C# | ShowValuesAs PercentageOfColumn | pivot table column percentage | Aspose.Cells display values as percent | .NET Excel pivot percentages | RefreshData CalculateData Aspose.Cells
-// Common Searches: Aspose.Cells show pivot values as percent of column | C# PivotField.ShowValuesAs PercentageOfColumn example | How to set column total percentage in Aspose.Cells pivot | Refresh and calculate pivot after changing display format Aspose.Cells | Aspose.Cells pivot table percentage of column total
-// Developer Intent: Configure a PivotTable data field to display values as a percentage of the column total.
-// Use Cases: Sales analysis where each product's revenue is shown as its share of quarterly totals. | Financial reporting that presents expense categories as a percentage of monthly columns. | Dashboard exports that require pivot percentages instead of raw numbers.
-// AI Prompts: Generate C# code with Aspose.Cells to set a pivot table data field to PercentageOfColumn and refresh the table. | Explain the parameters of PivotField.ShowValuesAs for calculating column‑total percentages. | Show how to format the resulting percentages to two decimal places in the exported Excel workbook.
+// Title: Display sales values as percentage of column total in an Aspose.Cells PivotTable using C#
+// AI Prompts: Generate C# code that creates a workbook, adds a pivot table, and configures the data field to show values as PercentageOfColumn with Aspose.Cells. | Write the method call that applies PivotFieldDataDisplayFormat.PercentageOfColumn to a pivot field and then refreshes and calculates the pivot table.
+// Common Searches: Aspose.Cells C# pivot table show values as percent of column total | Set PivotField ShowValuesAs to PercentageOfColumn in .NET workbook | Refresh and calculate Aspose.Cells pivot table after changing display format | Example of using PivotFieldDataDisplayFormat.PercentageOfColumn with Aspose.Cells | Create pivot table with product rows and quarter columns using Aspose.Cells C#
+// Tags: Aspose.Cells pivot table display format percentage | C# configure pivot field as column total percent | Aspose.Cells refresh and calculate pivot | Create pivot table from range Aspose.Cells C# | PivotFieldDataDisplayFormat PercentageOfColumn usage
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotDemo
 {
-    // Creates a workbook with sample sales data, builds a PivotTable (Product rows, Quarter columns, Sales values) and uses PivotField.ShowValuesAs with the PercentageOfColumn format to display each sales figure as a share of its column total, then refreshes, calculates, and saves the file.
-    class ShowValuesAsPercentageOfColumn
+    // The sample creates a new workbook, fills it with product, quarter, and sales data, adds a pivot table with Product as rows, Quarter as columns, and Sales as values, then sets the Sales data field to display as a percentage of the column total using ShowValuesAs with PivotFieldDataDisplayFormat.PercentageOfColumn, refreshes the pivot cache, calculates the table, and saves the workbook.
+    public class ShowValuesAsPercentageOfColumn
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            // Columns: Product, Quarter, Sales
-            cells["A1"].Value = "Product";
-            cells["B1"].Value = "Quarter";
-            cells["C1"].Value = "Sales";
+                // Populate sample data
+                // Columns: Product, Quarter, Sales
+                sheet.Cells["A1"].Value = "Product";
+                sheet.Cells["B1"].Value = "Quarter";
+                sheet.Cells["C1"].Value = "Sales";
 
-            cells["A2"].Value = "Laptop";
-            cells["B2"].Value = "Q1";
-            cells["C2"].Value = 1200;
+                sheet.Cells["A2"].Value = "Apple";
+                sheet.Cells["B2"].Value = "Q1";
+                sheet.Cells["C2"].Value = 1200;
 
-            cells["A3"].Value = "Laptop";
-            cells["B3"].Value = "Q2";
-            cells["C3"].Value = 1500;
+                sheet.Cells["A3"].Value = "Apple";
+                sheet.Cells["B3"].Value = "Q2";
+                sheet.Cells["C3"].Value = 1500;
 
-            cells["A4"].Value = "Phone";
-            cells["B4"].Value = "Q1";
-            cells["C4"].Value = 800;
+                sheet.Cells["A4"].Value = "Orange";
+                sheet.Cells["B4"].Value = "Q1";
+                sheet.Cells["C4"].Value = 800;
 
-            cells["A5"].Value = "Phone";
-            cells["B5"].Value = "Q2";
-            cells["C5"].Value = 950;
+                sheet.Cells["A5"].Value = "Orange";
+                sheet.Cells["B5"].Value = "Q2";
+                sheet.Cells["C5"].Value = 950;
 
-            cells["A6"].Value = "Tablet";
-            cells["B6"].Value = "Q1";
-            cells["C6"].Value = 600;
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            cells["A7"].Value = "Tablet";
-            cells["B7"].Value = "Q2";
-            cells["C7"].Value = 700;
+                // Add fields to the pivot table
+                // Row field: Product
+                int rowFieldIdx = pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+                // Column field: Quarter
+                int columnFieldIdx = pivotTable.AddFieldToArea(PivotFieldType.Column, "Quarter");
+                // Data field: Sales
+                int dataFieldIdx = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-            // Add a pivot table to the worksheet
-            // Source range: A1:C7, Destination: E3, Name: SalesPivot
-            int pivotIndex = sheet.PivotTables.Add("A1:C7", "E3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Retrieve the column field and data field objects
+                PivotField columnField = pivotTable.ColumnFields[columnFieldIdx];
+                PivotField dataField = pivotTable.DataFields[dataFieldIdx];
 
-            // Add fields to the pivot table
-            // Row field: Product
-            int rowFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-            // Column field: Quarter
-            int columnFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Column, "Quarter");
-            // Data field: Sales
-            int dataFieldIndex = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Configure the data field to show values as percentage of column total
+                dataField.ShowValuesAs(
+                    PivotFieldDataDisplayFormat.PercentageOfColumn,
+                    columnField.BaseIndex,
+                    PivotItemPositionType.Next,
+                    0);
 
-            // Retrieve the data field object
-            PivotField dataField = pivotTable.DataFields[dataFieldIndex];
+                // Refresh the pivot cache and calculate the pivot table
+                pivotTable.RefreshData();      // Correct method to refresh cache
+                pivotTable.CalculateData();
 
-            // Configure the data field to show values as percentage of column total
-            // Using the ShowValuesAs method as required
-            dataField.ShowValuesAs(
-                PivotFieldDataDisplayFormat.PercentageOfColumn, // display format
-                columnFieldIndex,                               // base field (the column field)
-                PivotItemPositionType.Next,                    // base item position type (default)
-                0);                                             // base item index (not used for PercentageOfColumn)
+                // Define output file path
+                string outputPath = "Pivot_ShowValuesAs_PercentageOfColumn.xlsx";
 
-            // Refresh the pivot table data and calculate the results
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
 
-            // Save the workbook to a file
-            workbook.Save("Pivot_ShowValuesAs_PercentageOfColumn.xlsx");
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ShowValuesAsPercentageOfColumn.Run();
         }
     }
 }

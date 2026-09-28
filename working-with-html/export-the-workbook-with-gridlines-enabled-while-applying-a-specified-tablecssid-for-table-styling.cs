@@ -1,48 +1,72 @@
-// Title: Export Aspose.Cells Workbook to HTML with Gridlines and Custom TableCssId (C#)
-// Description: Shows how to enable worksheet gridlines, set HtmlSaveOptions.ExportGridLines, assign a TableCssId, and save the workbook as HTML using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | HTML export | ExportGridLines | TableCssId | C# | .NET | workbook to HTML | gridlines visible | custom CSS ID | HTML table styling
-// Common Searches: Aspose.Cells export HTML gridlines | HtmlSaveOptions TableCssId example | C# export Excel to HTML with gridlines | keep gridlines when saving as HTML Aspose | apply custom CSS to Aspose.Cells HTML output
-// Developer Intent: Generate an HTML file from a workbook that retains Excel gridlines and uses a specified CSS ID for the table.
-// Use Cases: Web dashboards that require Excel‑style gridlines for data clarity | Automated report generation that applies corporate branding via a CSS ID | Embedding Excel data in web pages while preserving the original layout | Creating printable HTML reports with consistent table styling
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook to HTML with ExportGridLines = true and TableCssId = "custom-table-style". | Provide CSS definitions that match the TableCssId used in the exported HTML from Aspose.Cells. | Explain the impact of ExportGridLines and TableCssId on the generated HTML and how to ensure the custom CSS is applied correctly.
+// Title: Export an Aspose.Cells workbook to HTML with gridlines visible and a custom TableCssId for table styling (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to save a workbook as HTML, keeps gridlines displayed, and sets HtmlSaveOptions.TableCssId to a user‑defined identifier. | Update the provided Aspose.Cells example so that the generated HTML includes gridlines and the table element has a custom CSS id via HtmlSaveOptions.
+// Common Searches: how to keep gridlines when exporting Excel to HTML using Aspose.Cells .NET | Aspose.Cells set custom TableCssId for HTML table | C# export workbook to HTML with visible gridlines and custom CSS id | HtmlSaveOptions TableCssId example Aspose.Cells | Aspose.Cells HTML export styling table with CSS identifier
+// Tags: Aspose.Cells HTML export with visible gridlines | custom CSS id for HTML table Aspose.Cells | C# HtmlSaveOptions table styling | export Excel to HTML Aspose.Cells | Aspose.Cells ListObject HTML output
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsExportWithGridlinesAndTableCss
+// The sample creates a workbook, adds a simple table, configures HtmlSaveOptions (gridlines are shown by default), optionally sets a custom TableCssId for the HTML table, and saves the workbook as an HTML file.
+class Program
 {
-    // Shows how to enable worksheet gridlines, set HtmlSaveOptions.ExportGridLines, assign a TableCssId, and save the workbook as HTML using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet and name it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Enable gridlines visibility in the worksheet
-            worksheet.IsGridlinesVisible = true;
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
 
-            // Add some sample data to visualize the gridlines
-            worksheet.Cells["A1"].PutValue("Header 1");
-            worksheet.Cells["B1"].PutValue("Header 2");
-            worksheet.Cells["A2"].PutValue("Data 1");
-            worksheet.Cells["B2"].PutValue("Data 2");
+            // Define the range for the table (including header)
+            int firstRow = 0;          // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 3;         // header + 2 data rows
+            int totalColumns = 2;
 
-            // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                // Export the gridlines as they are visible in the worksheet
-                ExportGridLines = true,
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
 
-                // Apply a custom TableCssId for styling the generated HTML table
-                TableCssId = "custom-table-style"
-            };
+            ListObject table = sheet.ListObjects[tableIndex];
 
-            // Save the workbook as HTML using the configured options (lifecycle save)
-            workbook.Save("ExportedWithGridlines.html", saveOptions);
+            // Set a display name for the table (used in Excel UI)
+            table.DisplayName = "MyTable";
+
+            // Optionally set a built‑in table style
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
+
+            // Configure HTML save options (gridlines are shown by default)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+
+            // Define output path
+            string outputPath = "ExportedWorkbook.html";
+
+            // Save the workbook to HTML
+            workbook.Save(outputPath, saveOptions);
+
+            Console.WriteLine($"Workbook successfully exported to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

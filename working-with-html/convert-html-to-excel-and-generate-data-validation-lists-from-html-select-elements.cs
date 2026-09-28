@@ -1,18 +1,17 @@
-// Title: Convert HTML to Excel with Aspose.Cells and create dropdown validation from <select> tags (C#)
-// Description: Loads an HTML file into an Aspose.Cells Workbook, extracts <select> elements (using the element's id as the target cell address), builds a comma‑separated list of option values, applies a list‑type data‑validation rule to the corresponding cells, and saves the result as an XLSX file with in‑cell dropdowns.
-// Keywords: Aspose.Cells HTML to Excel | C# data validation list | Excel dropdown from HTML select | .NET parse select options | HTML table conversion Aspose | programmatic list validation | convert HTML form to Excel
-// Common Searches: Aspose.Cells convert HTML to Excel with dropdowns | C# create Excel data validation from <select> tags | How to map HTML select id to Excel cell using Aspose | Generate Excel list validation from HTML form | Parse HTML select options in .NET for Excel
-// Developer Intent: Transform an HTML document into an Excel workbook and turn each <select> element into a cell‑level dropdown list using Aspose.Cells.
-// Use Cases: Build Excel templates from web‑form pages, preserving choice fields as validated dropdowns. | Migrate survey definitions written in HTML to Excel while keeping answer options as list validations. | Automate report pipelines that convert HTML tables to Excel and add selectable options for specific cells.
-// AI Prompts: Generate C# code with Aspose.Cells that loads an HTML file, extracts <select> elements, and adds list validation to cells based on each element's id. | Rewrite the SimpleHtmlParser to use HtmlAgilityPack for robust <select> and <option> extraction while keeping the existing validation logic.
+// Title: Convert an HTML file to Excel and generate dropdown lists from <select> elements using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an HTML document into an Aspose.Cells Workbook, extracts each <select> element's option values, and adds a list‑type data validation to successive cells. | Demonstrate how to parse <select> tags with regular expressions in C# and use the extracted options to create Excel dropdown lists via Aspose.Cells validations. | Provide a complete example that saves the modified workbook as an XLSX file after adding data‑validation lists derived from HTML select elements.
+// Common Searches: aspocells c# convert html to xlsx with dropdown validation from select tags | how to add list validation to cells after loading html with Aspose.Cells .NET | extract option values from html select and create excel dropdown using Aspose.Cells | load html string into Aspose.Cells workbook via MemoryStream c# example
+// Tags: Aspose.Cells HTML to XLSX conversion | C# data validation list creation | extract select options with regex | apply list validation to Excel cells | load HTML via MemoryStream in Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
+using System.Text;
+using System.Text.RegularExpressions;
 
-// Loads an HTML file into an Aspose.Cells Workbook, extracts <select> elements (using the element's id as the target cell address), builds a comma‑separated list of option values, applies a list‑type data‑validation rule to the corresponding cells, and saves the result as an XLSX file with in‑cell dropdowns.
-class HtmlToExcelWithValidation
+// The program reads an HTML file, loads it into an Aspose.Cells Workbook using a memory stream, extracts option texts from each <select> element with regular expressions, adds a list‑type data validation (dropdown) to consecutive cells in column A, and saves the result as an XLSX workbook.
+class Program
 {
     static void Main()
     {
@@ -21,182 +20,91 @@ class HtmlToExcelWithValidation
             // Path to the source HTML file
             string htmlPath = "input.html";
 
-            // Verify that the HTML file exists to avoid FileNotFoundException
+            // Ensure the HTML file exists
             if (!File.Exists(htmlPath))
             {
-                Console.WriteLine($"Error: The file '{htmlPath}' was not found.");
+                Console.WriteLine($"Error: File '{htmlPath}' not found.");
                 return;
             }
 
-            // --------------------------------------------------------------------
-            // 1. Load the HTML file into a Workbook using HtmlLoadOptions.
-            // --------------------------------------------------------------------
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions
+            // Read the HTML content
+            string html = File.ReadAllText(htmlPath);
+
+            // -------------------------------------------------
+            // Load HTML into an Aspose.Cells workbook
+            // -------------------------------------------------
+            Workbook workbook;
+            // Load from HTML string via a memory stream
+            using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(html)))
             {
-                // Enable conversion of HTML tables to ListObjects (optional)
-                TableLoadOptions = { TableToListObject = false }
-            };
-
-            Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-            // --------------------------------------------------------------------
-            // 2. Parse the HTML to extract <select> elements and their options.
-            //    For simplicity, this example assumes each <select> has an "id"
-            //    attribute that matches the target cell address (e.g., id="B3").
-            // --------------------------------------------------------------------
-            string htmlContent = File.ReadAllText(htmlPath);
-            List<SimpleHtmlParser.SelectInfo> selectElements = SimpleHtmlParser.ExtractSelectElements(htmlContent);
-
-            // --------------------------------------------------------------------
-            // 3. For each <select>, create a data‑validation list in the
-            //    corresponding cell.
-            // --------------------------------------------------------------------
-            if (workbook.Worksheets.Count == 0)
-            {
-                Console.WriteLine("Error: No worksheets were loaded from the HTML.");
-                return;
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+                workbook = new Workbook(ms, loadOptions);
             }
 
             Worksheet sheet = workbook.Worksheets[0];
 
-            foreach (var select in selectElements)
+            // -------------------------------------------------
+            // Parse the HTML to find <select> elements and their <option> values
+            // -------------------------------------------------
+            var selectMatches = Regex.Matches(html, @"<select[^>]*>(.*?)</select>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            if (selectMatches.Count > 0)
             {
-                // The cell address is taken from the select's id attribute.
-                string cellAddress = select.Id?.Trim();
-                if (string.IsNullOrEmpty(cellAddress))
-                    continue; // skip if no mapping
+                int currentRow = 0; // start placing validations from the first row
 
-                // Build a comma‑separated list of option values.
-                string listFormula = string.Join(",", select.Options);
-
-                try
+                foreach (Match selectMatch in selectMatches)
                 {
-                    // Resolve the cell to obtain row/column indices.
-                    Cell cell = sheet.Cells[cellAddress];
+                    string selectInnerHtml = selectMatch.Groups[1].Value;
+
+                    // Gather all option texts for the current <select>
+                    List<string> optionTexts = new List<string>();
+                    var optionMatches = Regex.Matches(selectInnerHtml, @"<option[^>]*>(.*?)</option>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                    foreach (Match optionMatch in optionMatches)
+                    {
+                        string text = optionMatch.Groups[1].Value.Trim();
+                        if (!string.IsNullOrEmpty(text))
+                            optionTexts.Add(text);
+                    }
+
+                    // Build a comma‑separated list for the validation formula
+                    string listFormula = "\"" + string.Join(",", optionTexts) + "\"";
+
+                    // -------------------------------------------------
+                    // Add a data‑validation list to a cell (column A, current row)
+                    // -------------------------------------------------
+                    Cell targetCell = sheet.Cells[currentRow, 0]; // A1, A2, ...
+
+                    // Define the cell area for the validation (single cell)
                     CellArea area = new CellArea
                     {
-                        StartRow = cell.Row,
-                        StartColumn = cell.Column,
-                        EndRow = cell.Row,
-                        EndColumn = cell.Column
+                        StartRow = currentRow,
+                        EndRow = currentRow,
+                        StartColumn = 0,
+                        EndColumn = 0
                     };
 
-                    // Add a validation rule to the worksheet for the specific cell.
                     int validationIndex = sheet.Validations.Add(area);
                     Validation validation = sheet.Validations[validationIndex];
                     validation.Type = ValidationType.List;
-                    validation.InCellDropDown = true;               // show dropdown arrow
-                    validation.Formula1 = listFormula;              // e.g., "Red,Green,Blue"
                     validation.Operator = OperatorType.None;
+                    validation.Formula1 = listFormula;
                     validation.ShowError = true;
                     validation.ErrorTitle = "Invalid selection";
-                    validation.ErrorMessage = "Please choose a value from the list.";
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Could not apply validation to '{cellAddress}'. {ex.Message}");
+                    validation.ErrorMessage = "Please select a value from the list.";
+
+                    currentRow++; // move to the next row for the next <select>
                 }
             }
 
-            // --------------------------------------------------------------------
-            // 4. Save the workbook as an Excel file.
-            // --------------------------------------------------------------------
-            string excelPath = "output.xlsx";
-            workbook.Save(excelPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"HTML converted to Excel with validation lists: {excelPath}");
+            // -------------------------------------------------
+            // Save the workbook to an Excel file
+            // -------------------------------------------------
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-}
-
-// ------------------------------------------------------------------------
-// Minimal HTML parser for <select> elements.
-// This is a lightweight implementation; for complex HTML use HtmlAgilityPack.
-// ------------------------------------------------------------------------
-static class SimpleHtmlParser
-{
-    public class SelectInfo
-    {
-        public string? Id { get; set; }                 // Expected to be a cell address like "C5"
-        public List<string> Options { get; set; } = new List<string>();
-    }
-
-    public static List<SelectInfo> ExtractSelectElements(string html)
-    {
-        var result = new List<SelectInfo>();
-        int pos = 0;
-
-        while ((pos = html.IndexOf("<select", pos, StringComparison.OrdinalIgnoreCase)) != -1)
-        {
-            // Find the end of the opening tag
-            int startTagEnd = html.IndexOf('>', pos);
-            if (startTagEnd == -1) break;
-
-            // Extract the opening tag substring
-            string openingTag = html.Substring(pos, startTagEnd - pos + 1);
-
-            // Get the id attribute (if present)
-            string? id = GetAttributeValue(openingTag, "id");
-
-            // Locate the closing </select>
-            int closeTagStart = html.IndexOf("</select>", startTagEnd, StringComparison.OrdinalIgnoreCase);
-            if (closeTagStart == -1) break;
-
-            // Extract inner HTML of the select
-            string innerHtml = html.Substring(startTagEnd + 1, closeTagStart - startTagEnd - 1);
-
-            // Parse <option> values
-            var options = new List<string>();
-            int optPos = 0;
-            while ((optPos = innerHtml.IndexOf("<option", optPos, StringComparison.OrdinalIgnoreCase)) != -1)
-            {
-                int optStartEnd = innerHtml.IndexOf('>', optPos);
-                if (optStartEnd == -1) break;
-                int optClose = innerHtml.IndexOf("</option>", optStartEnd, StringComparison.OrdinalIgnoreCase);
-                if (optClose == -1) break;
-
-                string optionText = innerHtml.Substring(optStartEnd + 1, optClose - optStartEnd - 1).Trim();
-
-                // If the option has a value attribute, prefer it
-                string optionTag = innerHtml.Substring(optPos, optStartEnd - optPos + 1);
-                string? valueAttr = GetAttributeValue(optionTag, "value");
-                if (!string.IsNullOrEmpty(valueAttr))
-                    optionText = valueAttr;
-
-                if (!string.IsNullOrEmpty(optionText))
-                    options.Add(optionText);
-
-                optPos = optClose + 9; // length of "</option>"
-            }
-
-            result.Add(new SelectInfo { Id = id, Options = options });
-
-            pos = closeTagStart + 9; // move past "</select>"
-        }
-
-        return result;
-    }
-
-    private static string? GetAttributeValue(string tag, string attributeName)
-    {
-        string search = attributeName + "=";
-        int idx = tag.IndexOf(search, StringComparison.OrdinalIgnoreCase);
-        if (idx == -1) return null;
-
-        int valueStart = idx + search.Length;
-        if (valueStart >= tag.Length) return null;
-
-        char quote = tag[valueStart];
-        if (quote != '\'' && quote != '\"')
-            return null;
-
-        int valueEnd = tag.IndexOf(quote, valueStart + 1);
-        if (valueEnd == -1) return null;
-
-        return tag.Substring(valueStart + 1, valueEnd - valueStart - 1);
     }
 }

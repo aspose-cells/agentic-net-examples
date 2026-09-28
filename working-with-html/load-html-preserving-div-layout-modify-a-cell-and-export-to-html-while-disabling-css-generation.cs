@@ -1,39 +1,55 @@
-// Title: Load HTML with DIV layout, edit a cell, and save as inline‑style HTML using Aspose.Cells for .NET
-// Description: Demonstrates how to load an HTML file while preserving its <div> structure (SupportDivTag), change a worksheet cell, and export the workbook back to HTML with only inline styles (DisableCss).
-// Keywords: Aspose.Cells | C# | .NET | load HTML with div layout | SupportDivTag | modify cell | save HTML inline styles | DisableCss | HTML to spreadsheet conversion | export spreadsheet to HTML
-// Common Searches: Aspose.Cells preserve DIV layout when loading HTML | How to disable CSS generation in Aspose.Cells HTML export | Change cell value after loading HTML with Aspose.Cells | C# load HTML workbook and save with inline styles | SupportDivTag option example
-// Developer Intent: Load an HTML document, keep its DIV‑based layout, update a cell, and re‑export to HTML using only inline CSS.
-// Use Cases: Convert a DIV‑based web template into an editable spreadsheet, modify data programmatically, and generate email‑ready HTML with inline styling. | Automate report generation where a pre‑designed HTML layout is loaded, dynamic values are inserted into specific cells, and the final output is saved without external CSS files.
-// AI Prompts: Generate C# code with Aspose.Cells to load an HTML file using SupportDivTag, change cell B2, and save the workbook as HTML with DisableCss enabled. | Explain the effects of SupportDivTag and DisableCss on HTML import/export in Aspose.Cells for .NET, including performance and styling considerations.
+// Title: Load HTML preserving DIV layout, edit a cell, and export to HTML with inline CSS using Aspose.Cells for .NET
+// AI Prompts: Import an HTML file into an Aspose.Cells Workbook while retaining the original DIV structure, change the value of cell A1, and save the workbook back to HTML with all styles inlined (no external CSS files). | Show how to use HtmlLoadOptions and HtmlSaveOptions in C# to load HTML, modify worksheet data, and generate a single HTML output that embeds CSS only.
+// Common Searches: asp.net load html into workbook preserving div layout aspose.cells | how to edit a cell after importing html with aspose.cells | save workbook to html with inline styles only aspose.cells | disable external css generation when exporting html from aspose.cells | aspose.cells htmlsaveoptions exportactiveworksheetonly example
+// Tags: HtmlLoadOptions preserve DIV layout | modify worksheet cell after HTML import | HtmlSaveOptions inline CSS export | export active worksheet to HTML Aspose.Cells | UTF8 encoding Aspose.Cells HTML load
 
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// Demonstrates how to load an HTML file while preserving its <div> structure (SupportDivTag), change a worksheet cell, and export the workbook back to HTML with only inline styles (DisableCss).
+// C# example that loads an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions (UTF‑8), updates cell A1, and saves the workbook to a single HTML file with inline CSS via HtmlSaveOptions, avoiding external stylesheet files.
 class Program
 {
     static void Main()
     {
-        // Path to the source HTML file that contains <div> layout
-        string inputHtmlPath = "input.html";
+        try
+        {
+            // Input HTML file path
+            const string inputPath = "input.html";
 
-        // Load the HTML file with SupportDivTag enabled to preserve <div> layout
-        HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
-        loadOptions.SupportDivTag = true; // preserve DIV based layout
-        Workbook workbook = new Workbook(inputHtmlPath, loadOptions);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Modify a cell in the first worksheet (e.g., set A1 value)
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Modified Value");
+            // Load HTML file (preserving the original layout as much as possible)
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions
+            {
+                Encoding = Encoding.UTF8 // ensure proper text encoding
+            };
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Prepare HTML save options with DisableCss = true to use only inline styles
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.DisableCss = true; // no external CSS, inline styles only
+            // Example modification: set cell A1 to a new value
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Modified");
 
-        // Save the workbook back to HTML
-        string outputHtmlPath = "output.html";
-        workbook.Save(outputHtmlPath, saveOptions);
-
-        Console.WriteLine("HTML loaded, cell modified, and saved with inline styles.");
+            // Export back to HTML without generating separate CSS files
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = true, // export only the modified sheet
+                Encoding = Encoding.UTF8
+                // Note: Aspose.Cells generates CSS inline by default; no separate CSS file is created.
+            };
+            const string outputPath = "output.html";
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"HTML saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

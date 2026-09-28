@@ -1,45 +1,57 @@
-// Title: C# Aspose.Cells: Merge D2:E2 and Add a Dropdown List Validation
-// Description: Loads an existing Excel workbook, merges cells D2:E2 on the first worksheet, creates a list‑type data validation (e.g., "Option1,Option2,Option3"), applies the validation to the merged range, and saves the updated file.
-// Keywords: Aspose.Cells | C# | .NET | merge cells | Excel merge D2:E2 | data validation list | dropdown list | merged cells validation | save workbook | list validation
-// Common Searches: Aspose.Cells merge cells D2 E2 C# | add dropdown validation to merged cells Aspose.Cells | C# example list validation for merged range Excel | how to apply data validation to merged cells using Aspose.Cells | save workbook after adding validation Aspose.Cells .NET
-// Developer Intent: Merge cells D2:E2, attach a list‑type data validation, and save the workbook.
-// Use Cases: Create a header that spans D2:E2 with a predefined dropdown for user selection. | Build a template where merged title cells enforce entry from a specific list. | Generate reports that require consistent values in merged cells via a dropdown.
-// AI Prompts: Write C# code with Aspose.Cells to merge D2:E2, add a list validation containing custom items, and save the workbook. | Show how to replace the hard‑coded validation list with a reference to a named range in Aspose.Cells. | Provide robust error handling for missing input files and invalid validation formulas when merging cells and adding data validation.
+// Title: How to merge cells D2:E2 and add a dropdown list validation to A1:A10 in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write a C# program that merges the range D2:E2 on the first worksheet, creates a list‑type data validation for cells A1 through A10 with custom error titles and messages, and then saves the workbook. | Modify the example so it works on a worksheet named "Sheet2" and changes the dropdown options to "Red,Green,Blue" while keeping the same merged cells and validation settings. | Generate code that loads an existing workbook, merges any specified cell range, adds a dropdown validation with a given comma‑separated list, and writes the updated file to a new location.
+// Common Searches: Aspose.Cells C# merge specific cells and set a dropdown validation list | programmatically add list validation to A1:A10 after merging cells with Aspose.Cells | C# example for creating a merged header and attaching a data validation list in Excel | save changes to an Excel workbook after applying cell merging and validation using Aspose.Cells
+// Tags: cell range merging Aspose.Cells | list validation creation Aspose.Cells | validation error handling Aspose.Cells | workbook saving Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads an existing Excel workbook, merges cells D2:E2 on the first worksheet, creates a list‑type data validation (e.g., "Option1,Option2,Option3"), applies the validation to the merged range, and saves the updated file.
+// The program loads (or creates) an Excel workbook, merges cells D2:E2 on the first worksheet, adds a list‑type data validation dropdown to A1:A10 with custom error titles and messages, and saves the modified file as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Merge cells D2:E2 (zero‑based row 1, column 3, 1 row, 2 columns)
-        worksheet.Cells.Merge(1, 3, 1, 2);
-
-        // Add a data‑validation list to the merged cells
-        Validation validation = worksheet.Validations[worksheet.Validations.Add()];
-        validation.Type = ValidationType.List;
-        // List items are provided as a comma‑separated string enclosed in quotes
-        validation.Formula1 = "\"Option1,Option2,Option3\"";
-
-        // Define the cell area that the validation applies to (D2:E2)
-        CellArea area = new CellArea
+        try
         {
-            StartRow = 1,
-            StartColumn = 3,
-            EndRow = 1,
-            EndColumn = 4
-        };
-        validation.AddArea(area);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the modified workbook
-        string outputPath = "output.xlsx";
-        workbook.Save(outputPath);
+            // Load existing workbook or create a new one if the file is missing
+            Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Merge cells D2:E2 (row index 1, column indices 3 to 4)
+            sheet.Cells.Merge(1, 3, 1, 4);
+
+            // Define the range for the validation (A1:A10)
+            CellArea validationArea = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 9,
+                EndColumn = 0
+            };
+
+            // Add a data validation list to the specified range
+            int validationIndex = sheet.Validations.Add(validationArea);
+            Validation validation = sheet.Validations[validationIndex];
+            validation.Type = ValidationType.List;
+            validation.Operator = OperatorType.None;
+            // Define the list values (comma‑separated, enclosed in quotes)
+            validation.Formula1 = "\"Option1,Option2,Option3\"";
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Input";
+            validation.ErrorMessage = "Please select a value from the list.";
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

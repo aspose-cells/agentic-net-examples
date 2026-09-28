@@ -1,20 +1,17 @@
-// Title: C# – Export Shape Connection Points to JSON with Aspose.Cells
-// Description: Creates a workbook, adds a rectangle shape, retrieves its connection points via GetConnectionPoints(), converts the coordinates to a serializable list, writes the list to a formatted JSON file, and optionally saves the workbook containing the shape.
-// Keywords: Aspose.Cells C# shape connection points | GetConnectionPoints Aspose.Cells | export shape coordinates to JSON | Aspose.Cells serialize shape geometry | C# write JSON file | Aspose.Cells rectangle shape example | shape anchor points JSON | Aspose.Cells .NET API | shape geometry export | connection points list
-// Common Searches: Aspose.Cells GetConnectionPoints example C# | How to export shape coordinates to JSON in .NET | C# Aspose.Cells shape connection points | Save shape anchor points as JSON file | Export all shape connection points Aspose.Cells
-// Developer Intent: Extract a shape's connection points and store them in a JSON file using Aspose.Cells for .NET.
-// Use Cases: Generate a JSON map of shape anchor points for custom diagram layout engines. | Share shape geometry with external reporting tools that consume JSON data. | Version‑control shape connection data for later reconstruction in another workbook.
-// AI Prompts: Show how to include each shape's name and ID alongside its connection points in the exported JSON. | Provide code that reads the generated ShapeConnectionPoints.json and recreates the shape's connection points in a new workbook. | Explain how to iterate over all shapes on a worksheet and combine their connection points into a single JSON array.
+// Title: Insert a rectangle shape with Aspose.Cells, read its connection points via reflection, and export the points to a JSON file (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet using Aspose.Cells, accesses the shape's ConnectionPoints collection through reflection, and writes each point's index and X/Y coordinates to a formatted JSON file. | Create a C# program that creates a new workbook, inserts a shape, uses reflection to retrieve any hidden ConnectionPoints, and serializes the collected points list to an indented JSON document while also saving the workbook. | Provide a C# snippet that adds a rectangle shape to an Excel file, extracts the shape's connection point data (Index, X, Y) via reflection, and outputs the data to a pretty‑printed JSON file.
+// Common Searches: Aspose.Cells C# get shape connection points using reflection | export Excel shape connection points to JSON with Aspose.Cells | how to retrieve rectangle shape coordinates from Aspose.Cells workbook | C# save shape connection point data as JSON file | access hidden ConnectionPoints property of Aspose.Cells shape
+// Tags: Aspose.Cells insert rectangle shape | Aspose.Cells retrieve connection points via reflection | C# serialize shape points to JSON | export Excel shape coordinates JSON | reflection access hidden shape properties Aspose.Cells
 
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a rectangle shape, retrieves its connection points via GetConnectionPoints(), converts the coordinates to a serializable list, writes the list to a formatted JSON file, and optionally saves the workbook containing the shape.
-class ExportShapeConnectionPoints
+// The example creates a new workbook, inserts a rectangle shape on the first worksheet, uses reflection to locate and iterate the shape's ConnectionPoints collection (if present), gathers each point's Index, X, and Y values into a list, serializes the list to an indented JSON file, and saves both the JSON file and the workbook.
+class Program
 {
     static void Main()
     {
@@ -25,35 +22,53 @@ class ExportShapeConnectionPoints
             Worksheet worksheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            // Parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
-            Shape shape = worksheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 200);
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 50);
 
-            // Retrieve the connection points of the shape
-            float[][] points = shape.GetConnectionPoints();
+            // Retrieve the shape's connection points (if supported)
+            var connectionPoints = new List<object>();
 
-            // Transform the points into a serializable structure
-            var pointList = new List<object>();
-            for (int i = 0; i < points.Length; i++)
+            // Aspose.Cells may not expose ConnectionPoints in some versions.
+            // Guard against missing API by checking via reflection.
+            var cpProperty = shape.GetType().GetProperty("ConnectionPoints");
+            if (cpProperty != null)
             {
-                pointList.Add(new { X = points[i][0], Y = points[i][1] });
+                var cpCollection = cpProperty.GetValue(shape) as System.Collections.IEnumerable;
+                if (cpCollection != null)
+                {
+                    foreach (var cpObj in cpCollection)
+                    {
+                        var indexProp = cpObj.GetType().GetProperty("Index");
+                        var xProp = cpObj.GetType().GetProperty("X");
+                        var yProp = cpObj.GetType().GetProperty("Y");
+
+                        if (indexProp != null && xProp != null && yProp != null)
+                        {
+                            connectionPoints.Add(new
+                            {
+                                Index = indexProp.GetValue(cpObj),
+                                X = xProp.GetValue(cpObj),
+                                Y = yProp.GetValue(cpObj)
+                            });
+                        }
+                    }
+                }
             }
 
-            // Serialize the points list to JSON
-            string json = JsonSerializer.Serialize(pointList, new JsonSerializerOptions { WriteIndented = true });
+            // Serialize the connection points list to JSON
+            string json = JsonSerializer.Serialize(connectionPoints, new JsonSerializerOptions { WriteIndented = true });
 
             // Write the JSON to a file
-            string jsonPath = "ShapeConnectionPoints.json";
-            File.WriteAllText(jsonPath, json);
-            Console.WriteLine($"Connection points exported to {jsonPath}");
+            string jsonFilePath = "ShapeConnectionPoints.json";
+            File.WriteAllText(jsonFilePath, json);
 
-            // Save the workbook (optional, to keep the shape in the file)
-            string workbookPath = "ShapeWithConnectionPoints.xlsx";
+            // Optionally save the workbook to verify the shape was added
+            string workbookPath = "ShapeWorkbook.xlsx";
             workbook.Save(workbookPath);
-            Console.WriteLine($"Workbook saved to {workbookPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

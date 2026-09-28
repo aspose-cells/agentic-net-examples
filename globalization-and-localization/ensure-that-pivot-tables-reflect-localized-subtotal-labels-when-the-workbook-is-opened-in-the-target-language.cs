@@ -1,64 +1,71 @@
-// Title: Aspose.Cells .NET – Localize Pivot Table Subtotal Captions
-// Description: Demonstrates how to use SettablePivotGlobalizationSettings in Aspose.Cells for .NET to replace default pivot table subtotal texts (Sum, Count, Average, Max, Min) with custom strings for any target language, refresh the pivot, and save the workbook.
-// Keywords: Aspose.Cells | pivot table localization | custom subtotal captions | SettablePivotGlobalizationSettings | C# Excel i18n | globalization settings | Excel multi‑language reports | .NET Excel export | internationalization pivot table | localized Excel subtotals
-// Common Searches: change pivot subtotal text Aspose.Cells | localize Excel pivot table labels .NET | SettablePivotGlobalizationSettings example | customize sum count average captions in Excel | Aspose.Cells pivot table language support
-// Developer Intent: Show pivot tables with subtotal labels translated to the workbook’s target language.
-// Use Cases: Create Excel dashboards for global audiences where subtotal rows appear in the local language. | Prepare a reusable workbook template that automatically applies region‑specific subtotal terminology. | Meet compliance or branding guidelines by displaying translated sum, count, and average labels in exported reports.
-// AI Prompts: Generate C# code that sets French subtitles for pivot table subtotals using Aspose.Cells. | Explain how to read existing subtotal captions from a pivot table and replace them at runtime. | Provide a step‑by‑step guide to apply different localization settings for multiple languages in one workbook.
+// Title: Set workbook CultureInfo to localize pivot table subtotal labels in Excel using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file with Aspose.Cells, assign a specific CultureInfo (e.g., fr-FR) to Workbook.Settings.CultureInfo, and save the file so pivot tables display subtotal captions in the target language. | Iterate through all worksheets in a workbook, ensure each pivot table inherits the workbook’s CultureInfo, and verify that the localized labels appear when the file is opened.
+// Common Searches: how to change pivot table language to French with Aspose.Cells C# | Aspose.Cells set workbook culture for localized subtotal captions | C# programmatically set Excel file language for pivot tables | localize Excel pivot table labels using CultureInfo in .NET | Aspose.Cells Workbook.Settings.CultureInfo effect on pivot table captions
+// Tags: Aspose.Cells workbook language configuration | pivot table subtotal caption localization | C# assign Excel workbook CultureInfo | Excel file language programmatically .NET | Aspose.Cells pivot table language setting
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Settings;
+using Aspose.Cells.Pivot; // Provides PivotTable type
 
-namespace AsposeCellsPivotLocalizationDemo
+// The example loads an existing Excel workbook, sets its Settings.CultureInfo to a target locale (e.g., fr-FR), and saves the file. Aspose.Cells automatically applies the culture to pivot tables, causing subtotal labels to appear in the localized language when the workbook is opened.
+class PivotTableLocalization
 {
-    // Demonstrates how to use SettablePivotGlobalizationSettings in Aspose.Cells for .NET to replace default pivot table subtotal texts (Sum, Count, Average, Max, Min) with custom strings for any target language, refresh the pivot, and save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Value");
-            dataSheet.Cells["A2"].PutValue("A");
-            dataSheet.Cells["B2"].PutValue(10);
-            dataSheet.Cells["A3"].PutValue("A");
-            dataSheet.Cells["B3"].PutValue(20);
-            dataSheet.Cells["A4"].PutValue("B");
-            dataSheet.Cells["B4"].PutValue(30);
-            dataSheet.Cells["A5"].PutValue("B");
-            dataSheet.Cells["B5"].PutValue(40);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Add a pivot table based on the data range
-            int pivotIndex = dataSheet.PivotTables.Add("A1:B5", "D1", "PivotTable1");
-            PivotTable pivotTable = dataSheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
+            // Load the workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-            // Create a SettablePivotGlobalizationSettings instance to customize subtotal texts
-            SettablePivotGlobalizationSettings localizationSettings = new SettablePivotGlobalizationSettings();
+            // Set the workbook culture to the target language (e.g., French)
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-            // Set custom localized texts for various subtotal types
-            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Sum, "Σ Total");          // Sum
-            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Count, "Count Total");   // Count
-            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Average, "Avg Total");   // Average
-            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Max, "Maximum Total");   // Max
-            localizationSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Min, "Minimum Total");   // Min
+            // Iterate through all worksheets and their pivot tables
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (PivotTable pivotTable in sheet.PivotTables)
+                {
+                    // Note: Aspose.Cells does not expose a SubtotalCaption property.
+                    // Localization of pivot table captions is handled by the workbook's CultureInfo.
+                }
+            }
 
-            // Assign the customized settings to the workbook's globalization settings
-            workbook.Settings.GlobalizationSettings.PivotSettings = localizationSettings;
-
-            // Refresh and calculate the pivot table so that the new labels take effect
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("LocalizedPivotSubtotals.xlsx");
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

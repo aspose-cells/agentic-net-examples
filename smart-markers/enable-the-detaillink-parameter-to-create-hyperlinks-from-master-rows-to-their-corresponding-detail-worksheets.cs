@@ -1,61 +1,64 @@
-// Title: Add DetailLink Hyperlinks from Master to Detail Worksheets with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to generate a workbook with Master and Detail sheets, populate them with sample data, and use Aspose.Cells Hyperlinks.Add to create DetailLink navigation links from each master row to its corresponding detail row, then save the file.
-// Keywords: Aspose.Cells | DetailLink | Hyperlink | Master sheet | Detail sheet | C# | ASP.NET | Excel navigation | Hyperlinks.Add example
-// Common Searches: Aspose.Cells add hyperlink between worksheets C# | DetailLink master detail example .NET | How to create navigation links in Excel using Aspose.Cells | C# Aspose.Cells Hyperlinks.Add usage
-// Developer Intent: Create DetailLink navigation hyperlinks from master rows to matching detail rows in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Build an interactive report where clicking an ID in the Master sheet jumps to the related record in the Detail sheet. | Automate generation of Excel dashboards that provide quick access to underlying transaction data. | Enable end‑users to navigate large exported workbooks (e.g., ERP or financial statements) without manual searching.
-// AI Prompts: Generate C# code that loops through all master rows and adds DetailLink hyperlinks to the matching detail rows using Aspose.Cells. | Explain how to set custom display text for a hyperlink while keeping the underlying DetailLink address in Aspose.Cells. | Show an example of using Aspose.Cells Hyperlinks.Add to link a master sheet cell to a specific cell on a detail worksheet.
+// Title: Enable DetailLink in Aspose.Cells for .NET to add hyperlinks from pivot table master rows to generated detail worksheets (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to build a pivot table, invoke ShowDetail with newSheet=true, and insert a hyperlink from the master cell to the A1 cell of the automatically created detail worksheet. | Write a reusable C# method that, given a Workbook and a pivot table, creates a detail sheet via ShowDetail and adds a DetailLink hyperlink from a specified master row cell to the new sheet using Aspose.Cells.
+// Common Searches: Aspose.Cells C# enable DetailLink to hyperlink pivot row to detail sheet | How to add a hyperlink from a master pivot table row to a generated detail worksheet using Aspose.Cells | ShowDetail new worksheet hyperlink example Aspose.Cells .NET | Create master‑detail Excel links with Aspose.Cells pivot tables in C#
+// Tags: Aspose.Cells pivot ShowDetail hyperlink | C# Aspose.Cells master‑detail worksheet linking | Aspose.Cells create detail worksheet hyperlink | Aspose.Cells hyperlink to generated sheet | Aspose.Cells pivot table detail link C#
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
-// Demonstrates how to generate a workbook with Master and Detail sheets, populate them with sample data, and use Aspose.Cells Hyperlinks.Add to create DetailLink navigation links from each master row to its corresponding detail row, then save the file.
+// The example demonstrates how to enable the DetailLink feature in Aspose.Cells for .NET: it creates a workbook with a master sheet, builds a pivot table, calls ShowDetail to generate a separate detail worksheet, and adds a hyperlink from the master pivot cell to cell A1 of the newly created detail sheet, then saves the file.
 class DetailLinkDemo
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook and get the first worksheet (master sheet)
+            Workbook workbook = new Workbook();
+            Worksheet masterSheet = workbook.Worksheets[0];
+            masterSheet.Name = "Master";
 
-        // -------------------- Master Worksheet --------------------
-        Worksheet masterSheet = workbook.Worksheets[0];
-        masterSheet.Name = "Master";
+            // Populate master sheet with sample data for the pivot table
+            masterSheet.Cells["A1"].PutValue("Category");
+            masterSheet.Cells["B1"].PutValue("Amount");
+            masterSheet.Cells["A2"].PutValue("Food");
+            masterSheet.Cells["B2"].PutValue(120);
+            masterSheet.Cells["A3"].PutValue("Food");
+            masterSheet.Cells["B3"].PutValue(80);
+            masterSheet.Cells["A4"].PutValue("Travel");
+            masterSheet.Cells["B4"].PutValue(200);
+            masterSheet.Cells["A5"].PutValue("Travel");
+            masterSheet.Cells["B5"].PutValue(150);
 
-        // Header
-        masterSheet.Cells["A1"].PutValue("ID");
-        masterSheet.Cells["B1"].PutValue("Name");
+            // Add a pivot table on the master sheet
+            int pivotIndex = masterSheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            PivotTable pivot = masterSheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-        // Sample master rows
-        masterSheet.Cells["A2"].PutValue(1);
-        masterSheet.Cells["B2"].PutValue("Item 1");
-        masterSheet.Cells["A3"].PutValue(2);
-        masterSheet.Cells["B3"].PutValue("Item 2");
+            // Refresh pivot cache data (correct API) and calculate the pivot table
+            pivot.RefreshData();
+            pivot.CalculateData();
 
-        // -------------------- Detail Worksheet --------------------
-        Worksheet detailSheet = workbook.Worksheets.Add("Detail");
+            // Show detail for the first data item (rowOffset = 0, columnOffset = 0)
+            // newSheet = true creates a new worksheet that contains the detail data
+            pivot.ShowDetail(0, 0, true, 0, 0);
 
-        // Header
-        detailSheet.Cells["A1"].PutValue("MasterID");
-        detailSheet.Cells["B1"].PutValue("DetailInfo");
+            // The detail worksheet is the last worksheet added to the workbook
+            Worksheet detailSheet = workbook.Worksheets[workbook.Worksheets.Count - 1];
+            detailSheet.Name = "Detail";
 
-        // Sample detail rows corresponding to master IDs
-        detailSheet.Cells["A2"].PutValue(1);
-        detailSheet.Cells["B2"].PutValue("Detail for Item 1");
-        detailSheet.Cells["A3"].PutValue(2);
-        detailSheet.Cells["B3"].PutValue("Detail for Item 2");
+            // Add a hyperlink on the master sheet that points to the detail sheet
+            // Link cell D3 (where the pivot table starts) to cell A1 of the detail sheet
+            masterSheet.Hyperlinks.Add("D3", 1, 1, $"'{detailSheet.Name}'!A1");
 
-        // -------------------- Create Hyperlinks (DetailLink) --------------------
-        // Hyperlink address format: 'SheetName'!CellReference
-        // Link master row 2 to detail row 2
-        masterSheet.Hyperlinks.Add("A2", 1, 1, "'Detail'!A2");
-        // Link master row 3 to detail row 3
-        masterSheet.Hyperlinks.Add("A3", 1, 1, "'Detail'!A3");
-
-        // Optional: change displayed text for clarity
-        masterSheet.Cells["A2"].PutValue("Go to Detail 1");
-        masterSheet.Cells["A3"].PutValue("Go to Detail 2");
-
-        // Save the workbook
-        workbook.Save("DetailLinkDemo.xlsx");
+            // Save the workbook
+            workbook.Save("DetailLinkDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,61 +1,82 @@
-// Title: Fallback to Default GlobalizationSettings in Aspose.Cells .NET When Custom Label Throws Exception
-// Description: This C# example creates a workbook, applies a custom FaultyGlobalizationSettings that deliberately throws in GetAllName, catches the error, restores the built‑in GlobalizationSettings, verifies the default '(All)' label, and saves the file. It demonstrates a safe fallback pattern for globalization and localization in Aspose.Cells.
-// Keywords: Aspose.Cells | C# | .NET | GlobalizationSettings | fallback | exception handling | custom localization | GetAllName | label override | workbook settings | error recovery
-// Common Searches: Aspose.Cells reset globalization settings after exception | How to handle GetAllName error in Aspose.Cells | C# fallback to default GlobalizationSettings | Aspose.Cells custom globalization example | Recover from faulty localization in Aspose.Cells workbook
-// Developer Intent: Demonstrate how to detect a failure in a custom GlobalizationSettings implementation and automatically switch back to the built‑in default so workbook operations continue without interruption.
-// Use Cases: Recover from unreliable user‑provided localization extensions during workbook generation | Guarantee that standard labels like '(All)' are always available for pivot tables | Implement defensive programming for multi‑tenant SaaS reporting services | Swap globalization settings at runtime after a runtime error | Provide robust error handling for localized Excel exports
-// AI Prompts: Generate C# code that wraps Aspose.Cells GlobalizationSettings label calls in try‑catch blocks and restores the default settings on failure. | Create a unit test that verifies the fallback to GlobalizationSettings works when FaultyGlobalizationSettings throws in GetAllName. | Explain how Aspose.Cells selects the GlobalizationSettings instance at runtime and the safest way to replace it after an exception. | Suggest best practices for designing custom GlobalizationSettings classes that avoid breaking workbook processing. | Write a blog snippet describing the fallback pattern for globalization in Aspose.Cells with performance considerations.
+// Title: Add a fallback to default globalization and axis label formatting when custom chart label logic throws an exception in Aspose.Cells for .NET
+// AI Prompts: Wrap the SetCustomAxisLabels call in a try‑catch, and on catch reset workbook.Settings.CultureInfo to CultureInfo.InvariantCulture then invoke SetDefaultAxisLabels to apply a generic number format before saving. | Implement error handling that logs any exception from custom axis label generation, reverts the workbook's culture to invariant, and ensures the chart's CategoryAxis.TickLabels use the "General" format.
+// Common Searches: Aspose.Cells how to revert to invariant culture after custom axis label exception | C# fallback globalization settings for chart axis labels in Aspose.Cells | Handling errors in custom chart label methods with Aspose.Cells .NET | Set default tick label number format when custom label method fails Aspose.Cells | Try‑catch around SetCustomAxisLabels to restore default culture in workbook
+// Tags: fallback globalization Aspose.Cells .NET | reset workbook CultureInfo on chart label error | default axis tick label format Aspose.Cells | exception handling for custom chart labels | apply invariant culture to workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
+using System;
+using System.Globalization;
 
-// This C# example creates a workbook, applies a custom FaultyGlobalizationSettings that deliberately throws in GetAllName, catches the error, restores the built‑in GlobalizationSettings, verifies the default '(All)' label, and saves the file. It demonstrates a safe fallback pattern for globalization and localization in Aspose.Cells.
+// The example creates a workbook, applies French culture, adds data and a column chart, then attempts to set custom axis labels. If the custom method throws, the code logs the error, resets the workbook's CultureInfo to InvariantCulture, applies a default "General" number format to the chart's category axis, and saves the file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Assign custom globalization settings that may throw exceptions
-        workbook.Settings.GlobalizationSettings = new FaultyGlobalizationSettings();
-
-        // Attempt to use a label method that could fail
         try
         {
-            // This call will throw in FaultyGlobalizationSettings
-            string allLabel = workbook.Settings.GlobalizationSettings.GetAllName();
-            Console.WriteLine($"Custom '(All)' label: {allLabel}");
+            // Create a new workbook
+            var workbook = new Workbook();
+
+            // Apply custom globalization settings
+            var customCulture = new CultureInfo("fr-FR");
+            workbook.Settings.CultureInfo = customCulture;
+
+            // Populate sample data
+            var sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("A1:A3", true);
+
+            // Attempt to set custom axis labels; fallback on failure
+            try
+            {
+                SetCustomAxisLabels(chart);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (optional)
+                Console.WriteLine("Custom label method failed: " + ex.Message);
+
+                // Revert to default globalization settings
+                workbook.Settings.CultureInfo = CultureInfo.InvariantCulture;
+
+                // Apply default axis label settings
+                SetDefaultAxisLabels(chart);
+            }
+
+            // Save the workbook
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Console.WriteLine($"Custom globalization error: {ex.Message}");
+            // General exception handling to prevent crashes
+            Console.WriteLine("An error occurred: " + e.Message);
+        }
+    }
 
-            // Revert to the default globalization settings
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings();
-
-            // Verify that the default settings work correctly
-            string defaultAll = workbook.Settings.GlobalizationSettings.GetAllName();
-            Console.WriteLine($"Reverted to default '(All)' label: {defaultAll}");
+    // Custom label method that may throw an exception
+    static void SetCustomAxisLabels(Chart chart)
+    {
+        // Example condition that triggers an exception
+        if (chart.Worksheet.Workbook.Settings.CultureInfo.Name == "fr-FR")
+        {
+            throw new InvalidOperationException("Custom label generation failed for French culture.");
         }
 
-        // Save the workbook
-        workbook.Save("FallbackGlobalizationDemo.xlsx");
-    }
-}
-
-// Custom globalization that deliberately throws an exception for demonstration
-class FaultyGlobalizationSettings : GlobalizationSettings
-{
-    // Override a label method and simulate a failure
-    public override string GetAllName()
-    {
-        throw new InvalidOperationException("Simulated failure in GetAllName");
+        // If no exception, apply custom number format to axis labels
+        chart.CategoryAxis.TickLabels.NumberFormat = "0.00";
     }
 
-    // Other overrides can be added as needed; this one works normally
-    public override string GetColumnLabelsOfPivotTable()
+    // Default label method used as a fallback
+    static void SetDefaultAxisLabels(Chart chart)
     {
-        return "Custom Column Labels";
+        chart.CategoryAxis.TickLabels.NumberFormat = "General";
     }
 }

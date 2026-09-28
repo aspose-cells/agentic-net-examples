@@ -1,46 +1,45 @@
-// Title: C# – Load an Excel workbook with Aspose.Cells while skipping data validation to save memory
-// Description: Shows how to configure Aspose.Cells LoadOptions and LoadFilter in C# to exclude DataValidation objects when opening a workbook. The filter clears the DataValidation flag, preserving cells, formulas, and formatting, enabling low‑memory extraction such as reading A1 values and optionally saving the file.
-// Keywords: Aspose.Cells LoadFilter | LoadOptions DataValidation | skip data validation | reduce memory usage | C# Excel loading | exclude data validation Aspose | memory‑efficient workbook load | read cell values without validation | Aspose.Cells performance | filter workbook load
-// Common Searches: Aspose.Cells load workbook without data validation | C# LoadFilter exclude DataValidation | how to reduce memory when loading Excel with Aspose | skip data validation objects Aspose.Cells | LoadOptions to ignore validation rules .NET
-// Developer Intent: Load a workbook while omitting data validation objects to lower memory consumption.
-// Use Cases: Processing large Excel files when only cell values are required. | Performing quick data extraction (e.g., reading A1 from each sheet) without the overhead of validation rules. | Running batch jobs on limited‑memory servers or containers. | Saving a workbook after read‑only operations to confirm that filtered loading does not affect functionality.
-// AI Prompts: Generate C# code that uses Aspose.Cells LoadFilter to open an Excel file without loading data validation objects. | Explain how to combine LoadFilter with other LoadDataFilterOptions for custom workbook loading. | Provide a step‑by‑step guide to read cell values from each worksheet after excluding data validation with LoadOptions.
+// Title: Load an Excel workbook in C# with Aspose.Cells while skipping DataValidation objects using LoadOptions.FilterObjects
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells using LoadOptions.FilterObjects set to exclude DataValidation objects, then reads a cell value. | Modify the sample program to create a LoadOptions instance, configure its FilterObjects property to omit DataValidation, and load the workbook with this filter before accessing cells. | Provide a complete example that combines LoadOptions.FilterObjects, a simple cell read, and saving the workbook, highlighting the memory savings from not loading validation rules.
+// Common Searches: aspocells c# load workbook without data validation objects | how to use LoadOptions.FilterObjects to exclude validation rules in Excel files | reduce memory usage when opening large .xlsx with Aspose.Cells by skipping DataValidation | c# example of loading Excel file with FilterObjects set to DataValidation | skip data validation rules during workbook load Aspose.Cells performance
+// Tags: filterobjects datavalidation c# | memory efficient workbook loading aspocells | omit validation rules aspocells | excel extraction without validation rules | filterobjects usage aspocells c# | optimize workbook load memory aspocells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to configure Aspose.Cells LoadOptions and LoadFilter in C# to exclude DataValidation objects when opening a workbook. The filter clears the DataValidation flag, preserving cells, formulas, and formatting, enabling low‑memory extraction such as reading A1 values and optionally saving the file.
+// The example shows how to instantiate a LoadOptions object, set its FilterObjects property to DataValidation to prevent loading validation rules, load the workbook with this option, read a cell value, and save the workbook, thereby reducing memory consumption for simple data extraction tasks.
 class Program
 {
     static void Main()
     {
-        // Paths for the source and destination files
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
-
-        // Create LoadOptions instance
-        LoadOptions loadOptions = new LoadOptions();
-
-        // Create a LoadFilter with default options (LoadDataFilterOptions.All)
-        LoadFilter filter = new LoadFilter();
-
-        // Remove the DataValidation flag from the filter options
-        // This keeps all other data (cells, formulas, formatting, etc.) but skips data validations
-        filter.LoadDataFilterOptions = filter.LoadDataFilterOptions & ~LoadDataFilterOptions.DataValidation;
-
-        // Assign the customized filter to the load options
-        loadOptions.LoadFilter = filter;
-
-        // Load the workbook using the filter to reduce memory usage
-        Workbook workbook = new Workbook(inputPath, loadOptions);
-
-        // Simple extraction: display the value of cell A1 from each worksheet
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Console.WriteLine($"Worksheet '{sheet.Name}' - A1: {sheet.Cells["A1"].StringValue}");
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the workbook (optional, demonstrates that the workbook remains functional)
-        workbook.Save(outputPath);
+            // Ensure the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook. No specific LoadFilter is used to keep compatibility with all Aspose.Cells versions.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Example: extract a simple value from the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
+            string cellValue = sheet.Cells["A1"].StringValue;
+            Console.WriteLine("Value in A1: " + cellValue);
+
+            // Save the workbook after processing.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message.
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

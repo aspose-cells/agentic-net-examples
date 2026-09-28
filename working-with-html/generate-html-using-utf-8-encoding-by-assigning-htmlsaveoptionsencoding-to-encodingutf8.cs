@@ -1,38 +1,52 @@
-// Title: Save Aspose.Cells Workbook as UTF-8 HTML using HtmlSaveOptions.Encoding (C#)
-// Description: Demonstrates how to create a workbook, insert Unicode text (including emojis), set HtmlSaveOptions.Encoding to Encoding.UTF8, and export the workbook to a UTF‑8 encoded HTML file with Aspose.Cells for C#.
-// Keywords: Aspose.Cells HTML export | UTF-8 encoding C# | HtmlSaveOptions.Encoding | Unicode Excel to HTML | emoji support Aspose.Cells | C# save workbook as HTML | global character set Aspose
-// Common Searches: Aspose.Cells export to HTML with UTF-8 | Set HtmlSaveOptions.Encoding to UTF-8 in C# | How to preserve Unicode characters when saving Excel as HTML | C# Aspose.Cells HTML output encoding | Save workbook as UTF-8 HTML file
-// Developer Intent: Generate an HTML file from an Aspose.Cells workbook that uses UTF‑8 encoding to correctly render Unicode characters.
-// Use Cases: Publish multilingual Excel reports on the web with proper Unicode display. | Create HTML email templates from spreadsheets that include special symbols or emojis. | Build web‑based dashboards that require UTF‑8 encoded HTML for international audiences.
-// AI Prompts: Provide C# code that sets HtmlSaveOptions.Encoding to UTF-8 when saving an Aspose.Cells workbook as HTML. | Show an example of exporting a workbook containing emojis to an HTML file with Aspose.Cells and verifying the UTF-8 charset. | Explain how to check the character encoding of the generated HTML file after using HtmlSaveOptions.Encoding = Encoding.UTF8.
+// Title: Convert an Excel .xlsx file to UTF-8 encoded HTML using Aspose.Cells for .NET
+// AI Prompts: Write a C# program that loads a workbook from a given .xlsx path, sets HtmlSaveOptions.Encoding to UTF-8, and saves it as an HTML file. | Show how to verify the existence of an input Excel file before exporting it to UTF-8 HTML with Aspose.Cells. | Demonstrate using Aspose.Cells HtmlSaveOptions to export only the active worksheet to a UTF-8 encoded HTML document.
+// Common Searches: asp.net how to export Excel to HTML with UTF-8 encoding using Aspose.Cells | c# set HtmlSaveOptions.Encoding to UTF8 when saving workbook as HTML | check file exists before Aspose.Cells workbook.Save to HTML | convert .xlsx to UTF-8 HTML with Aspose.Cells .NET example
+// Tags: Aspose.Cells HtmlSaveOptions UTF-8 encoding | C# export workbook to HTML Aspose.Cells | verify Excel file existence before Aspose.Cells conversion | save active worksheet as HTML Aspose.Cells | UTF-8 HTML output from .xlsx using Aspose.Cells
 
 using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlEncodingDemo
+namespace AsposeCellsHtmlExport
 {
-    // Demonstrates how to create a workbook, insert Unicode text (including emojis), set HtmlSaveOptions.Encoding to Encoding.UTF8, and export the workbook to a UTF‑8 encoded HTML file with Aspose.Cells for C#.
+    // Loads an .xlsx workbook, checks that the file exists, configures HtmlSaveOptions with Encoding = Encoding.UTF8, and saves the workbook as an HTML file using Aspose.Cells, with basic error handling.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.html";
 
-            // Add sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello, UTF-8 🌍");
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                    return;
+                }
 
-            // Initialize HTML save options and set the encoding to UTF-8
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.Encoding = Encoding.UTF8;
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as an HTML file using the specified encoding
-            string outputPath = "output_utf8.html";
-            workbook.Save(outputPath, saveOptions);
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    Encoding = Encoding.UTF8
+                    // ExportActiveWorksheetOnly = true,
+                    // ExportGridLines = true
+                };
 
-            Console.WriteLine($"HTML file saved to {outputPath} with UTF-8 encoding.");
+                // Save the workbook as an HTML file using the specified options
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

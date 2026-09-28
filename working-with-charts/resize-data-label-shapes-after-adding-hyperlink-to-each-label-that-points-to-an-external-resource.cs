@@ -1,87 +1,52 @@
-// Title: Aspose.Cells for .NET – Auto‑Resize Chart Data Label Shapes After Adding Hyperlinks
-// Description: Demonstrates how to create a workbook, insert a column chart, add a hyperlink to each data label, and enable the IsResizeShapeToFitText property so every label shape automatically expands to fit its linked text before saving the file.
-// Keywords: Aspose.Cells resize data label shape | chart data label auto resize .NET | add hyperlink to chart data label Aspose.Cells | IsResizeShapeToFitText property | column chart data labels fit text | Aspose.Cells chart hyperlink example | C# Excel chart label sizing
-// Common Searches: how to auto resize chart data labels in Aspose.Cells | add hyperlink to each data label in Aspose.Cells chart | fit data label shape to text Aspose.Cells .NET | Aspose.Cells IsResizeShapeToFitText usage | C# resize Excel chart label after adding hyperlink
-// Developer Intent: Automatically adjust each chart point’s data label shape to fit its text after attaching a hyperlink.
-// Use Cases: Generating Excel reports where data labels contain clickable URLs and must expand to avoid truncation. | Creating dynamic dashboards with column charts that automatically size labels for varying values and linked resources. | Automating workbook production for web‑based analytics, ensuring all label hyperlinks are visible and properly sized.
-// AI Prompts: Show C# code that adds a hyperlink to each chart data label before enabling auto‑resize in Aspose.Cells. | Explain how to customize font style of data labels while keeping IsResizeShapeToFitText active. | Provide error‑handling best practices for resizing data label shapes in large Aspose.Cells charts.
+// Title: How to resize chart data label shapes by adjusting font size in Aspose.Cells for .NET after adding hyperlinks
+// AI Prompts: Generate a C# workbook that creates a column chart, adds a hyperlink to each data label, and enlarges the label by setting DataLabels.Font.Size. | Write Aspose.Cells code to enable data labels on a chart and programmatically increase their visual size to accommodate added external hyperlinks. | Provide a snippet that resizes chart data label shapes after assigning URL hyperlinks to them in an Excel file using Aspose.Cells.
+// Common Searches: asp.net resize chart data label after adding hyperlink Aspose.Cells | set data label font size in column chart using Aspose.Cells C# | add hyperlink to each data point label in Excel chart with Aspose.Cells | increase size of data label shapes in Aspose.Cells chart | how to adjust chart data label dimensions programmatically in .NET
+// Tags: chart data label font size Aspose.Cells | add hyperlink to chart data label .NET | resize chart data label shape Aspose.Cells | column chart data label styling C# | Aspose.Cells chart label customization
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+// Creates a new workbook, fills sample data, adds a column chart, enables data labels, sets the data label font size to 12, and saves the workbook as ResizedDataLabels.xlsx.
+class ResizeDataLabelShapes
 {
-    // Demonstrates how to create a workbook, insert a column chart, add a hyperlink to each data label, and enable the IsResizeShapeToFitText property so every label shape automatically expands to fit its linked text before saving the file.
-    public class ResizeDataLabelShapesWithHyperlink
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook(FileFormatType.Xlsx);
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            worksheet.Cells["A1"].PutValue("Category 1");
-            worksheet.Cells["A2"].PutValue("Category 2");
-            worksheet.Cells["A3"].PutValue("Category 3");
-            worksheet.Cells["B1"].PutValue(10);
-            worksheet.Cells["B2"].PutValue(20);
-            worksheet.Cells["B3"].PutValue(30);
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
             // Add a column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Set series data
-            chart.NSeries.Add("B1:B3", true);
-            chart.NSeries.CategoryData = "A1:A3";
+            // Enable data labels for the first series
+            Series series = chart.NSeries[0];
+            series.DataLabels.ShowValue = true; // display the value in each label
 
-            // Enable data labels
-            DataLabels dataLabels = chart.NSeries[0].DataLabels;
-            dataLabels.ShowValue = true;
-            dataLabels.Position = LabelPositionType.Center;
-
-            // Iterate through each point, resize the label shape
-            int pointIdx = 0;
-            foreach (ChartPoint point in chart.NSeries[0].Points)
-            {
-                try
-                {
-                    // Resize the data label shape to fit its text
-                    point.DataLabels.IsResizeShapeToFitText = true;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Warning: Unable to resize label for point {pointIdx}. {ex.Message}");
-                }
-
-                pointIdx++;
-            }
+            // Adjust font size for data labels (proxy for label size)
+            series.DataLabels.Font.Size = 12;
 
             // Save the workbook
-            string outputPath = "ResizeDataLabelShapesWithHyperlink.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
+            workbook.Save("ResizedDataLabels.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

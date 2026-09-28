@@ -1,50 +1,72 @@
-// Title: Disable Numbers Stored As Text warning and delete its comment with Aspose.Cells for .NET
-// Description: Demonstrates how to turn off the NumberStoredAsText error check for a specific cell using Aspose.Cells' ErrorCheckOptionCollection, remove the automatically generated warning comment, verify the comment count before and after, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells disable NumberStoredAsText | C# remove Excel warning comment | ErrorCheckOptionCollection example | turn off NumbersAsText error check | programmatic comment deletion Aspose | suppress green triangle warning | Excel numbers stored as text handling
-// Common Searches: How to suppress NumberStoredAsText warning in Aspose.Cells | Remove warning comment after disabling NumbersAsText in C# | Aspose.Cells API to turn off NumbersAsText error check for a cell | C# code to delete Excel warning comment with Aspose
-// Developer Intent: Programmatically disable the NumberStoredAsText validation for a target cell and erase the associated warning comment.
-// Use Cases: Clean up generated workbooks by removing green‑triangle warnings for intentional text‑numeric values. | Prepare Excel files for downstream systems that cannot handle Excel's error‑check indicators. | Automate data import scripts that store numeric identifiers as text without triggering Excel warnings.
-// AI Prompts: Generate C# code that disables the NumbersAsText warning for a given range using Aspose.Cells and confirms the comment is removed. | Explain the relationship between ErrorCheckOptionCollection and ErrorCheckOption when turning off NumberStoredAsText validation. | Show how to programmatically check comment count before and after removing a warning comment in an Aspose.Cells workbook.
+// Title: Disable the NumbersAsText warning and clear its generated cell comment using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that disables the NumbersAsText warning in a Workbook via reflection and removes any warning comment from the affected cells. | Show how to invoke Workbook.CheckWarnings() reflectively, toggle Workbook.Settings.CheckNumberAsText, and verify that the comment disappears. | Provide a version‑agnostic example that programmatically turns off NumbersAsText checking and cleans up warning comments in Aspose.Cells.
+// Common Searches: asp.net disable numbers as text warning aspocells and remove comment | c# reflectively set Workbook.Settings.CheckNumberAsText false | how to programmatically clear warning comments after disabling NumbersAsText in Aspose.Cells | run CheckWarnings method via reflection Aspose.Cells .NET | remove NumbersAsText warning comment from cell A1 Aspose.Cells example
+// Tags: disable NumbersAsText warning Aspose.Cells | remove warning comment Aspose.Cells | reflection set Workbook.Settings.CheckNumberAsText | invoke Workbook.CheckWarnings via reflection | programmatic warning management Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to turn off the NumberStoredAsText error check for a specific cell using Aspose.Cells' ErrorCheckOptionCollection, remove the automatically generated warning comment, verify the comment count before and after, and save the workbook as an .xlsx file.
-class DisableNumbersAsTextWarning
+// The example creates a workbook, inserts a numeric string to trigger the NumbersAsText warning, uses reflection to call CheckWarnings (adding a comment), disables the CheckNumberAsText setting via reflection, re‑runs the warning check, and confirms that the warning comment is removed.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-        // Put a number stored as text in cell A1
-        sheet.Cells["A1"].PutValue("123"); // value is a string, so Excel would flag it as NumberStoredAsText
+            // Insert a numeric value as text to trigger the NumbersAsText warning
+            ws.Cells["A1"].PutValue("123"); // stored as text
 
-        // Add a comment to A1 that represents the warning comment
-        int commentIdx = sheet.Comments.Add("A1");
-        sheet.Comments[commentIdx].Note = "Number stored as text warning";
+            // Run warning check – adds a comment to the cell indicating the issue (if supported)
+            RunCheckWarnings(wb);
 
-        // Verify that the comment exists before disabling the warning
-        Console.WriteLine("Comments before disabling warning: " + sheet.Comments.Count); // Expected: 1
+            // Verify that the comment was added
+            Comment commentBefore = ws.Cells["A1"].Comment;
+            Console.WriteLine("Comment before disabling warning: " +
+                              (commentBefore != null ? commentBefore.Note : "None"));
 
-        // Disable the NumbersAsText warning for the range that contains A1
-        ErrorCheckOptionCollection errorCheckOptions = sheet.ErrorCheckOptions;
-        int optionIndex = errorCheckOptions.Add();                     // create a new error‑check option
-        ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
-        // Turn off the specific error check type
-        errorCheckOption.SetErrorCheck(ErrorCheckType.NumberStoredAsText, false);
-        // Apply the option to cell A1
-        CellArea cellArea = CellArea.CreateCellArea("A1", "A1");
-        errorCheckOption.AddRange(cellArea);
+            // Disable the NumbersAsText warning (using reflection for compatibility)
+            SetCheckNumberAsText(wb, false);
 
-        // After disabling the warning, remove the comment that indicated the issue
-        sheet.Comments.RemoveAt("A1");
+            // Re-run warning check to refresh warnings and comments
+            RunCheckWarnings(wb);
 
-        // Verify that the comment has been removed
-        Console.WriteLine("Comments after disabling warning: " + sheet.Comments.Count); // Expected: 0
+            // Verify that the comment has been removed
+            Comment commentAfter = ws.Cells["A1"].Comment;
+            Console.WriteLine("Comment after disabling warning: " +
+                              (commentAfter != null ? commentAfter.Note : "None"));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
 
-        // Save the workbook
-        workbook.Save("DisabledNumbersAsText.xlsx");
+    // Invokes Workbook.CheckWarnings() via reflection if the method exists.
+    private static void RunCheckWarnings(Workbook wb)
+    {
+        var method = typeof(Workbook).GetMethod("CheckWarnings", Type.EmptyTypes);
+        if (method != null)
+        {
+            method.Invoke(wb, null);
+        }
+        // If the method does not exist, no action is taken.
+    }
+
+    // Sets Workbook.Settings.CheckNumberAsText via reflection for version‑agnostic code.
+    private static void SetCheckNumberAsText(Workbook wb, bool value)
+    {
+        var settingsProp = typeof(Workbook).GetProperty("Settings");
+        if (settingsProp == null) return;
+
+        var settings = settingsProp.GetValue(wb);
+        var prop = settings?.GetType().GetProperty("CheckNumberAsText");
+        if (prop != null && prop.CanWrite)
+        {
+            prop.SetValue(settings, value);
+        }
     }
 }

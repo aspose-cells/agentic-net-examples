@@ -1,40 +1,74 @@
-// Title: Replace <TAG_1> in a named TextBox (HeaderBox) with a dynamic title using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses the first worksheet, retrieves the TextBox called "HeaderBox", substitutes the <TAG_1> placeholder with a runtime title, and saves the updated file.
-// Keywords: Aspose.Cells | C# | Excel TextBox | named shape | replace placeholder | dynamic title | HeaderBox | load workbook | save workbook | worksheet shape text
-// Common Searches: How to change the text of a TextBox named HeaderBox in Excel with Aspose.Cells | Aspose.Cells replace placeholder tag in Excel shape | C# replace <TAG_1> in an Excel TextBox | Update header title in an Excel template using Aspose.Cells | Get TextBox by name in Aspose.Cells .NET
-// Developer Intent: Swap the <TAG_1> tag inside the HeaderBox TextBox for a generated title and write the changes back to the workbook.
-// Use Cases: Automate quarterly report generation by inserting the report period into a pre‑designed header TextBox. | Populate invoice templates with customer‑specific data by replacing placeholder tags in shape text. | Refresh dashboard workbooks programmatically, updating the title TextBox across multiple files.
-// AI Prompts: Write C# code with Aspose.Cells that locates a TextBox named "HeaderBox" and replaces a <TAG_1> placeholder with a variable string. | Provide an example that iterates over all TextBoxes in a worksheet and substitutes any <TAG_*> placeholders using values from a dictionary. | Explain how to safely handle cases where the specified TextBox does not exist or its Text property is null when using Aspose.Cells.
+// Title: Replace a placeholder tag in a TextBox named HeaderBox in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, finds the Shape whose Name is "HeaderBox", replaces the string "<TAG_1>" in its Text property with a variable title, and saves the workbook to a new location. | Create a reusable C# method that takes a workbook path, a textbox name, a placeholder token, and a replacement string, then updates the textbox text using Aspose.Cells and writes the result to an output file. | Generate a C# example that iterates through all worksheets, locates a TextBox shape, performs multiple placeholder replacements (e.g., <TAG_1>, <TAG_2>) in its content, and saves the modified workbook.
+// Common Searches: Aspose.Cells C# replace placeholder text in a specific TextBox shape of an Excel workbook | Find and edit a named TextBox in an .xlsx file using Aspose.Cells for .NET | How to programmatically update <TAG_1> token inside a textbox named HeaderBox with Aspose.Cells | C# iterate worksheets to modify shape text in Excel using Aspose.Cells
+// Tags: replace placeholder in Excel textbox Aspose.Cells | search shape by name Aspose.Cells .NET | update TextBox shape text Aspose.Cells | modify shape content in .xlsx using C# | dynamic title insertion into Excel textbox
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, accesses the first worksheet, retrieves the TextBox called "HeaderBox", substitutes the <TAG_1> placeholder with a runtime title, and saves the updated file.
+// // Loads an input Excel file, searches all worksheets for a TextBox shape named "HeaderBox", replaces the "<TAG_1>" placeholder with a dynamic title, and saves the updated workbook to the specified output path.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Dynamic title to replace the placeholder tag
+        string dynamicTitle = "Quarterly Report";
 
-        // Retrieve the TextBox named "HeaderBox" from the worksheet
-        TextBox headerBox = worksheet.TextBoxes["HeaderBox"];
-
-        // Ensure the TextBox exists and contains text
-        if (headerBox != null && headerBox.Text != null)
+        try
         {
-            // Define the dynamic title that will replace the placeholder
-            string dynamicTitle = "Quarterly Report 2026";
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Replace the placeholder <TAG_1> with the dynamic title
-            headerBox.Text = headerBox.Text.Replace("<TAG_1>", dynamicTitle);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            bool headerBoxFound = false;
+
+            // Search for the TextBox named "HeaderBox"
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Check only the name; assume it's the intended TextBox
+                    if (shape.Name == "HeaderBox")
+                    {
+                        // Replace placeholder with dynamic title
+                        string currentText = shape.Text;
+                        string updatedText = currentText.Replace("<TAG_1>", dynamicTitle);
+                        shape.Text = updatedText;
+
+                        headerBoxFound = true;
+                        break; // Exit inner loop
+                    }
+                }
+
+                if (headerBoxFound)
+                    break; // Exit outer loop
+            }
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

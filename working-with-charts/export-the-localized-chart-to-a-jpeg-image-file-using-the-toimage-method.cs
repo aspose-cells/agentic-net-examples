@@ -1,49 +1,83 @@
-// Title: Export an Aspose.Cells chart to JPEG in C# using the ToImage method
-// Description: Creates a workbook, fills cells A1:B4 with sample data, adds a column chart, and saves the chart as a JPEG file (ChartImage.jpeg) by calling Chart.ToImage with ImageType.Jpeg.
-// Keywords: Aspose.Cells chart export | C# ToImage JPEG | save Aspose chart as image | export Excel chart to JPEG | .NET chart to image | Aspose.Cells image conversion | chart ToImage example | Aspose.Cells C# tutorial | Excel chart image generation
-// Common Searches: Aspose.Cells export chart to JPEG C# | How to save a chart as JPEG using Aspose.Cells | ToImage method example for chart export | C# code to convert Excel chart to JPEG | Aspose.Cells chart image output
-// Developer Intent: Generate a JPEG file from a chart created with Aspose.Cells.
-// Use Cases: Embed sales charts as JPEG images in PDF reports. | Attach chart snapshots to automated email alerts. | Create thumbnail images for web dashboards that display Excel‑derived charts.
-// AI Prompts: Show how to export the same chart as PNG instead of JPEG using ToImage. | Add a title and legend to the chart before saving it as a JPEG. | Write code that iterates over all charts in a worksheet and saves each as a separate JPEG file.
+// Title: Export a chart from an Excel workbook to a JPEG file using Aspose.Cells ToImage with reflection in C#
+// AI Prompts: Generate C# code that loads an .xlsx file, retrieves the first worksheet chart, and saves it as a JPEG using Aspose.Cells Chart.ToImage invoked via reflection. | Show how to adapt the reflection logic to export the same chart as a PNG image instead of JPEG. | Create a reusable C# method that accepts input workbook path, output image path, and desired image format, then returns a success flag after exporting the chart with Aspose.Cells.
+// Common Searches: how to use Aspose.Cells ToImage method with reflection to save a chart as jpg | export Excel chart to image in C# without System.Drawing.Common | save first worksheet chart to jpeg using Aspose.Cells API | C# code example for converting workbook chart to jpg file | invoke Chart.ToImage via reflection for chart image export
+// Tags: chart export to jpeg via Aspose.Cells | Aspose.Cells ToImage reflection usage | C# chart image generation without System.Drawing | Excel chart to jpg conversion Aspose.Cells | invoke Chart.ToImage with ImageFormat
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using System;
+using System.IO;
+using System.Reflection;
 
-// Creates a workbook, fills cells A1:B4 with sample data, adds a column chart, and saves the chart as a JPEG file (ChartImage.jpeg) by calling Chart.ToImage with ImageType.Jpeg.
-class ExportChartToJpeg
+// Loads an Excel workbook, obtains the first chart from the first worksheet, and uses reflection to call Chart.ToImage with a JPEG ImageFormat, writing the resulting image to a .jpg file.
+class ExportChart
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "chart.jpg";
 
-        // Get the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["A4"].PutValue("Banana");
+            // Load the workbook that contains the chart
+            Workbook workbook = new Workbook(inputPath);
 
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(1200);
-        sheet.Cells["B3"].PutValue(800);
-        sheet.Cells["B4"].PutValue(1500);
+            // Access the first worksheet (adjust index if necessary)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("Error: No charts found in the worksheet.");
+                return;
+            }
 
-        // Set the data range for the chart
-        chart.SetChartDataRange("A1:B4", true);
+            // Retrieve the first chart
+            Chart chart = worksheet.Charts[0];
 
-        // Export the chart to a JPEG image file
-        string imagePath = "ChartImage.jpeg";
-        chart.ToImage(imagePath, ImageType.Jpeg);
+            // Load ImageFormat type via reflection to avoid direct dependency on System.Drawing.Common
+            Type imageFormatType = Type.GetType("System.Drawing.Imaging.ImageFormat, System.Drawing.Common");
+            if (imageFormatType == null)
+            {
+                Console.WriteLine("Error: Unable to load ImageFormat type. Ensure System.Drawing.Common is available.");
+                return;
+            }
 
-        Console.WriteLine($"Chart exported successfully to {imagePath}");
+            // Get the static JPEG format instance
+            object jpegFormat = imageFormatType.GetProperty("Jpeg")?.GetValue(null);
+            if (jpegFormat == null)
+            {
+                Console.WriteLine("Error: Unable to obtain JPEG ImageFormat.");
+                return;
+            }
+
+            // Find the ToImage method that accepts (Stream, ImageFormat)
+            MethodInfo toImageMethod = chart.GetType().GetMethod("ToImage", new[] { typeof(Stream), imageFormatType });
+            if (toImageMethod == null)
+            {
+                Console.WriteLine("Error: Unable to locate the ToImage method on the Chart object.");
+                return;
+            }
+
+            // Export the chart to a JPEG image file using the reflected method
+            using (FileStream imageStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+            {
+                toImageMethod.Invoke(chart, new object[] { imageStream, jpegFormat });
+            }
+
+            Console.WriteLine($"Chart exported successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

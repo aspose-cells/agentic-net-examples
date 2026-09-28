@@ -1,59 +1,55 @@
-// Title: C# Console App: Freeze Panes in Excel with Aspose.Cells Using Command‑Line Row/Column Indices
-// Description: A lightweight console utility that reads a row index and a column index from the command line, validates the inputs, creates a new workbook, applies Worksheet.FreezePanes at the specified position, saves the file as FreezePanesOutput.xlsx, and prints status messages.
-// Keywords: Aspose.Cells | C# | FreezePanes | command line | row index | column index | Excel automation | console application | programmatic freeze panes | Aspose.Cells example
-// Common Searches: Aspose.Cells freeze panes from command line | C# freeze rows and columns in Excel programmatically | how to use Worksheet.FreezePanes with arguments | console app to lock Excel headers Aspose | run FreezePanes demo with parameters
-// Developer Intent: Implement a command‑line driven C# program that freezes specific rows and columns in an Excel worksheet using Aspose.Cells.
-// Use Cases: Create a reusable CLI tool for end‑users to set freeze panes before distributing reports. | Integrate freeze‑pane logic into automated build pipelines that generate Excel dashboards. | Provide a quick‑start example for developers learning how to control worksheet view settings via code.
-// AI Prompts: Write C# code that reads row and column numbers from the command line and calls Worksheet.FreezePanes with Aspose.Cells. | Add comprehensive error handling to the FreezePanes console app, including out‑of‑range checks and custom messages. | Show how to modify the example to freeze only the top rows while keeping columns scrollable.
+// Title: Freeze specific rows and columns in an Excel worksheet using Aspose.Cells for .NET with command‑line arguments
+// AI Prompts: Generate C# code that reads row and column numbers from command‑line inputs and applies Worksheet.FreezePanes with Aspose.Cells. | Add validation for the command‑line values and default to no freeze when the inputs are missing or invalid. | Show how to modify the FreezePanes call to freeze a fixed number of rows and columns that differ from the split position.
+// Common Searches: asp.net console app freeze panes using Aspose.Cells command line arguments | c# how to set freeze row and column in Excel file with Aspose.Cells | using Worksheet.FreezePanes with user‑provided indices in a .NET application | example of freezing top rows and left columns in generated Excel workbook via Aspose.Cells | command line driven freeze pane configuration in Aspose.Cells C#
+// Tags: Aspose.Cells FreezePanes API C# | command‑line row column freeze Aspose.Cells | programmatic Excel freeze pane .NET | set freeze panes from args Aspose.Cells | freeze rows and columns in generated workbook
 
 using System;
 using Aspose.Cells;
 
-namespace FreezePanesDemo
+// The console program reads optional row and column indices from the command line, creates a new workbook, fills sample data, applies Worksheet.FreezePanes with the supplied indices on the first worksheet, and saves the result as FrozenPaneOutput.xlsx.
+class Program
 {
-    // A lightweight console utility that reads a row index and a column index from the command line, validates the inputs, creates a new workbook, applies Worksheet.FreezePanes at the specified position, saves the file as FreezePanesOutput.xlsx, and prints status messages.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        try
         {
-            // Expect two command‑line arguments: row index and column index for freezing.
-            // Example usage: FreezePanesDemo.exe 3 3
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: <exe> <rowIndex> <columnIndex>");
-                return;
-            }
+            // Parse command‑line arguments for row and column freeze values.
+            // If arguments are missing or invalid, defaults to 0 (no freeze).
+            int freezeRow = 0;
+            int freezeColumn = 0;
 
-            // Parse the row and column indices.
-            if (!int.TryParse(args[0], out int rowIndex) || rowIndex < 0)
-            {
-                Console.WriteLine("Invalid row index.");
-                return;
-            }
+            if (args.Length >= 1 && int.TryParse(args[0], out int parsedRow))
+                freezeRow = parsedRow;
 
-            if (!int.TryParse(args[1], out int columnIndex) || columnIndex < 0)
-            {
-                Console.WriteLine("Invalid column index.");
-                return;
-            }
+            if (args.Length >= 2 && int.TryParse(args[1], out int parsedColumn))
+                freezeColumn = parsedColumn;
 
             // Create a new workbook.
             Workbook workbook = new Workbook();
 
             // Access the first worksheet.
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze panes at the specified cell.
-            // The last two parameters define how many rows and columns are frozen,
-            // which in this simple scenario are the same as the freeze position.
-            worksheet.FreezePanes(rowIndex, columnIndex, rowIndex, columnIndex);
+            // Populate some sample data (optional, just to visualize the freeze effect).
+            for (int i = 0; i < 20; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    sheet.Cells[i, j].PutValue($"R{i + 1}C{j + 1}");
+                }
+            }
 
-            // Save the workbook to a file.
-            string outputPath = "FreezePanesOutput.xlsx";
-            workbook.Save(outputPath);
+            // Apply FreezePanes.
+            // FreezePanes(row, column, totalRows, totalColumns) freezes 'totalRows' rows above 'row'
+            // and 'totalColumns' columns left of 'column'.
+            sheet.FreezePanes(freezeRow, freezeColumn, freezeRow, freezeColumn);
 
-            Console.WriteLine($"Freeze panes applied at row {rowIndex}, column {columnIndex}.");
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            // Save the workbook.
+            workbook.Save("FrozenPaneOutput.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,58 +1,76 @@
-// Title: C# – Fill a 3×3 range with a pre‑calculated 2‑D array using SetDynamicArrayFormula and a slicer in Aspose.Cells
-// Description: Demonstrates how to create a workbook, define a 3 × 3 object array, place a slicer value, and apply SetDynamicArrayFormula with the SEQUENCE(3,3) formula to spill the array into A5:C7 without recalculating the range or values. The example also shows refreshing dynamic‑array formulas and saving the file.
-// Keywords: Aspose.Cells C# | .NET dynamic array formula | SetDynamicArrayFormula | SEQUENCE spill range | 2D object array | variable array markers | slicer integration | populate rectangular block | pre‑calculated data matrix | RefreshDynamicArrayFormulas
-// Common Searches: Aspose.Cells SetDynamicArrayFormula example C# | populate cells from 2D array Aspose.Cells | use slicer with dynamic array formula .NET | disable range calculation Aspose.Cells | dynamic array spill range C# Aspose
-// Developer Intent: Insert a 3 × 3 block of values into a worksheet by applying a dynamic array formula that uses a pre‑computed 2‑D array and optionally references a slicer cell, while preventing automatic range and value recalculation.
-// Use Cases: Load a pre‑processed data matrix into a spill range without triggering extra calculations. | Combine a slicer or dropdown cell value with a dynamic array to drive conditional data population. | Refresh dynamic‑array formulas after setting them to materialize the spill range in the saved workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to set a dynamic array formula for a 4 × 5 object array, disabling automatic range calculation. | Show how to link a slicer cell value to a SEQUENCE‑based dynamic array formula in Aspose.Cells and refresh the spill range. | Provide an example where SetDynamicArrayFormula is called with calculateRange:false and calculateValue:true to recalculate values while preserving dimensions.
+// Title: Use Aspose.Cells Smart Markers to Fill a 2x2 Excel range from a sliced jagged int array in C#
+// AI Prompts: Write C# code that extracts rows 1‑2 and columns 1‑2 from a jagged int[][] using the C# range operator, converts the 2x2 slice into a DataTable, places variable array smart markers (&=Block, &=Block.Col0, &=Block.Col1) in a worksheet, processes them with WorkbookDesigner, and saves the workbook as an .xlsx file. | Show how to map a sliced two‑dimensional array to Aspose.Cells smart markers so each element populates a rectangular block of cells, including dynamic DataTable schema creation and WorkbookDesigner invocation.
+// Common Searches: aspocells c# slice jagged array and fill excel range with smart markers | using variable array markers to write sub‑array data into an .xlsx file with Aspose.Cells | transform sliced int array into a DataTable for Aspose.Cells WorkbookDesigner | example of C# range slicer feeding smart markers in Aspose.Cells | fill a 2x2 cell range from a jagged array slice using Aspose.Cells
+// Tags: smart markers slice jagged array to datatable | c# range operator aspocells workbookdesigner | variable array markers rectangular block | int[][] slice conversion to datatable aspocells | excel block filling via smart markers c#
 
 using System;
+using System.Data;
+using System.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, define a 3 × 3 object array, place a slicer value, and apply SetDynamicArrayFormula with the SEQUENCE(3,3) formula to spill the array into A5:C7 without recalculating the range or values. The example also shows refreshing dynamic‑array formulas and saving the file.
-    class VariableArrayWithSlicerDemo
+    // The program creates a Workbook, defines a 4x4 jagged int array, slices rows 1‑2 and columns 1‑2 with C# range syntax to obtain a 2x2 sub‑array, converts that slice into a DataTable, inserts variable array smart markers (&=Block, &=Block.Col0, &=Block.Col1) into cells A1‑B2, processes the markers with WorkbookDesigner, and saves the result as Output.xlsx.
+    class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Define a two‑dimensional array that we want to populate into the sheet
-            //    The array is 3 rows × 3 columns
-            object[][] data = new object[3][];
-            data[0] = new object[] { 10, 20, 30 };
-            data[1] = new object[] { 40, 50, 60 };
-            data[2] = new object[] { 70, 80, 90 };
+                // Define a two‑dimensional jagged array
+                int[][] sourceArray = new int[][]
+                {
+                    new int[] { 1, 2, 3, 4 },
+                    new int[] { 5, 6, 7, 8 },
+                    new int[] { 9, 10, 11, 12 },
+                    new int[] { 13, 14, 15, 16 }
+                };
 
-            // 3. Place a slicer value (for demonstration) in cell D1.
-            //    In a real scenario this could be a dropdown or a slicer linked to a table.
-            cells["D1"].PutValue("SliceValue");
+                // Use C# range slicer to obtain a rectangular sub‑array (rows 1‑2, columns 1‑2)
+                // Note: slicing a jagged array requires slicing each inner array separately
+                int[][] slicedArray = sourceArray[1..3]                     // rows 1 and 2 (0‑based)
+                    .Select(row => row[1..3].ToArray())                    // columns 1 and 2
+                    .ToArray();                                            // result is 2x2 array
 
-            // 4. Set a dynamic array formula in cell A5.
-            //    The formula itself is a simple SEQUENCE that creates a 3×3 spill range.
-            //    We provide the pre‑calculated values (the 2‑D array) so that the cells are filled
-            //    directly without re‑calculating the formula.
-            Cell target = cells["A5"];
-            string formula = "=SEQUENCE(3,3)";                     // creates a 3‑row, 3‑column spill
-            FormulaParseOptions parseOptions = new FormulaParseOptions(); // default options
+                // Convert the sliced jagged array into a DataTable – the format expected by Smart Markers
+                DataTable dt = new DataTable("Block");
 
-            // calculateRange = false  -> use the dimensions of the supplied 'data' array
-            // calculateValue = false  -> do not recalculate, use the supplied values
-            target.SetDynamicArrayFormula(formula, parseOptions, data, calculateRange: false, calculateValue: false);
+                // Add columns dynamically based on the inner array length
+                for (int col = 0; col < slicedArray[0].Length; col++)
+                {
+                    dt.Columns.Add("Col" + col, typeof(int));
+                }
 
-            // 5. Refresh dynamic array formulas so that the spill range is materialised.
-            //    The 'true' flag also calculates the values (already supplied) for completeness.
-            workbook.RefreshDynamicArrayFormulas(true);
+                // Populate rows
+                foreach (int[] row in slicedArray)
+                {
+                    dt.Rows.Add(row.Cast<object>().ToArray());
+                }
 
-            // 6. Optionally, calculate the whole workbook (not strictly required here)
-            workbook.CalculateFormula();
+                // Place variable array markers in the worksheet.
+                // The marker "&=Block" tells Aspose.Cells to repeat the row for each DataTable row.
+                // The markers "&=Block.Col0", "&=Block.Col1", … refer to individual column values.
+                sheet.Cells["A1"].PutValue("&=Block");
+                sheet.Cells["A2"].PutValue("&=Block.Col0");
+                sheet.Cells["B2"].PutValue("&=Block.Col1");
 
-            // 7. Save the workbook
-            workbook.Save("VariableArrayWithSlicerDemo.xlsx");
+                // Process the smart markers using WorkbookDesigner
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource(dt);
+                designer.Process();
+
+                // Save the workbook (lifecycle rule: save)
+                workbook.Save("Output.xlsx");
+                Console.WriteLine("Workbook saved successfully as Output.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

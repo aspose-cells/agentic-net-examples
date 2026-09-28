@@ -1,74 +1,134 @@
-// Title: Export Aspose.Cells Chart to PNG with Fixed 800×600 Size and Verify File Creation (C#)
-// Description: Creates a workbook, adds a column chart, forces the output image to 800 × 600 px using ImageOrPrintOptions.SetDesiredSize (keepAspectRatio = false), saves the chart as a PNG file, and confirms that the file exists on disk.
-// Keywords: Aspose.Cells | C# chart export PNG | ImageOrPrintOptions | SetDesiredSize | fixed image size | verify PNG dimensions | chart to image | export chart as PNG | Aspose.Cells example | validate exported image
-// Common Searches: Aspose.Cells export chart PNG size | C# set chart image dimensions Aspose.Cells | how to verify PNG size after chart export | ImageOrPrintOptions SetDesiredSize example | export chart to PNG without preserving aspect ratio
-// Developer Intent: Generate a chart image with exact pixel dimensions and ensure the PNG file is successfully created.
-// Use Cases: Produce a column chart from worksheet data and embed a 800 × 600 px PNG in a report. | Create a thumbnail of a chart with a predetermined size for UI thumbnails. | Validate that an exported chart meets size requirements before further processing.
-// AI Prompts: Write C# code that exports an Aspose.Cells chart to a 1024×768 PNG and checks the actual image dimensions. | Provide a reusable method that throws an exception if the exported PNG size does not match expected width and height. | Explain how ImageOrPrintOptions.SetDesiredSize works with the keepAspectRatio flag to produce an exact‑size chart image.
+// Title: Validate PNG image dimensions after exporting the first worksheet with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to render the first worksheet of an Excel file to a PNG file at 96 dpi, then reads the PNG header to confirm its width and height match expected values. | Create a C# helper that parses the IHDR chunk of a PNG file to verify the format and extract dimensions, and integrate it with Aspose.Cells sheet rendering for automated validation.
+// Common Searches: how to check size of PNG exported from Excel using Aspose.Cells C# | C# verify dimensions of worksheet image rendered by Aspose.Cells | read PNG IHDR chunk to get width and height in .NET | set DPI for Excel to PNG conversion with Aspose.Cells
+// Tags: Aspose.Cells worksheet to PNG export | PNG dimension validation in C# | read PNG IHDR chunk .NET | set image DPI Aspose.Cells rendering | automated image size check after Excel export
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// Creates a workbook, adds a column chart, forces the output image to 800 × 600 px using ImageOrPrintOptions.SetDesiredSize (keepAspectRatio = false), saves the chart as a PNG file, and confirms that the file exists on disk.
+// The example loads an Excel workbook, renders the first worksheet to a PNG file at 96 dpi using Aspose.Cells, then opens the PNG, validates its signature, reads the IHDR chunk to obtain width and height, and confirms the image matches the expected 800 × 600 pixels.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["A4"].PutValue("Banana");
-
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["B4"].PutValue(150);
-
-            // Add a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIdx];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Define expected image dimensions
+            // Expected image dimensions
             const int expectedWidth = 800;
             const int expectedHeight = 600;
 
-            // Set image options: desired size (default format is PNG)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
-            imgOptions.SetDesiredSize(expectedWidth, expectedHeight, false); // keepAspectRatio = false
-
-            // Export chart to PNG file using the options
-            string pngPath = Path.Combine(Directory.GetCurrentDirectory(), "exported_chart.png");
-            chart.ToImage(pngPath, imgOptions);
-
-            // Verify that the file was created
-            if (File.Exists(pngPath))
+            // Input workbook path
+            string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Chart exported successfully to '{pngPath}'.");
-                Console.WriteLine($"Assumed exported PNG dimensions: {expectedWidth}x{expectedHeight}.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Configure image export options (default format is PNG)
+            var options = new ImageOrPrintOptions
+            {
+                HorizontalResolution = 96,
+                VerticalResolution = 96
+            };
+
+            // Render the first worksheet to an image file
+            var sheet = workbook.Worksheets[0];
+            var renderer = new SheetRender(sheet, options);
+            string outputPath = "exported.png";
+
+            try
+            {
+                renderer.ToImage(0, outputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during rendering: {ex.Message}");
+                return;
+            }
+
+            // Validate the exported image
+            if (!File.Exists(outputPath))
+            {
+                Console.WriteLine($"Exported image not found: {outputPath}");
+                return;
+            }
+
+            if (ValidatePng(outputPath, expectedWidth, expectedHeight))
+            {
+                Console.WriteLine("Validation succeeded: PNG image has the expected dimensions and format.");
             }
             else
             {
-                Console.WriteLine("Failed to export the chart image.");
+                Console.WriteLine("Validation failed: PNG image does not match expected dimensions or format.");
             }
-
-            // Optionally clean up the generated file
-            // File.Delete(pngPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
+    }
+
+    // Validates that a file is a PNG and checks its width and height from the IHDR chunk.
+    private static bool ValidatePng(string filePath, int expectedWidth, int expectedHeight)
+    {
+        try
+        {
+            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            using (var br = new BinaryReader(fs))
+            {
+                // PNG signature (8 bytes)
+                byte[] signature = br.ReadBytes(8);
+                byte[] pngSignature = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+                for (int i = 0; i < 8; i++)
+                {
+                    if (signature[i] != pngSignature[i])
+                        return false; // Not a PNG file
+                }
+
+                // Read the first chunk header (length + type)
+                uint length = ReadBigEndianUInt32(br);
+                string chunkType = new string(br.ReadChars(4));
+
+                if (chunkType != "IHDR")
+                    return false; // Unexpected first chunk
+
+                // IHDR data: width (4 bytes), height (4 bytes), etc.
+                uint width = ReadBigEndianUInt32(br);
+                uint height = ReadBigEndianUInt32(br);
+
+                // Compare dimensions
+                return width == (uint)expectedWidth && height == (uint)expectedHeight;
+            }
+        }
+        catch
+        {
+            // Any error during parsing means validation failed
+            return false;
+        }
+    }
+
+    // Reads a 4‑byte unsigned integer in big‑endian order.
+    private static uint ReadBigEndianUInt32(BinaryReader br)
+    {
+        byte[] bytes = br.ReadBytes(4);
+        if (bytes.Length < 4)
+            throw new EndOfStreamException();
+        return ((uint)bytes[0] << 24) |
+               ((uint)bytes[1] << 16) |
+               ((uint)bytes[2] << 8) |
+               bytes[3];
     }
 }

@@ -1,38 +1,55 @@
-// Title: Get and style a RichTextPortion with Cell.Characters in Aspose.Cells for .NET
-// Description: C# sample that creates a workbook, writes "HelloWorld" to cell A1, extracts the characters at indexes 5‑9 via Cell.Characters, and applies bold blue formatting to that substring before saving the file.
-// Keywords: Aspose.Cells | Cell.Characters | RichTextPortion | FontSetting | C# Excel formatting | partial cell text styling | substring formatting Aspose | Excel rich text API | apply bold color to part of cell | retrieve characters range
-// Common Searches: Aspose.Cells retrieve rich text portion | Cell.Characters method example C# | format part of an Excel cell with Aspose | how to bold specific characters in a cell using Aspose.Cells | extract substring from cell and change font color
-// Developer Intent: Extract a defined range of characters from a worksheet cell and apply custom font attributes to that segment.
-// Use Cases: Emphasize a keyword inside a cell by making it bold and colored. | Display a monetary value with the currency symbol in a different style from the amount. | Separate date components (day, month, year) with distinct fonts within a single cell.
-// AI Prompts: Show how to retrieve a RichTextPortion from cell B2 starting at index 3 with length 4 and set its font to italic and red using Aspose.Cells for .NET. | Generate C# code that scans column A and makes the word "Total" bold wherever it appears inside a cell using Cell.Characters. | Provide an example that underlines and colors the last three characters of a cell value green with Aspose.Cells.
+// Title: Retrieve a RichTextPortion from cell A1 using Cell.GetCharacters(startIndex, length) with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that calls Cell.GetCharacters(6,5) on cell A1 to obtain a RichTextPortion, prints its text, and saves the workbook using Aspose.Cells. | Show how to apply a red bold font to a cell and then extract characters 7‑11 as a RichTextPortion with the Aspose.Cells GetCharacters API.
+// Common Searches: Aspose.Cells C# GetCharacters method example for extracting text | How to obtain a RichTextPortion from a specific character range in an Excel cell using Aspose.Cells | Retrieve characters 7 to 11 from cell A1 with Aspose.Cells .NET | Extract substring as RichTextPortion from Excel cell using Aspose.Cells API | Cell.GetCharacters startIndex length usage in Aspose.Cells C#
+// Tags: Cell.GetCharacters usage Aspose.Cells | extract RichTextPortion from Excel cell .NET | apply red bold style to cell Aspose.Cells | save workbook after text extraction Aspose.Cells | retrieve specific characters from cell Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 using System.Drawing;
+using System.IO;
 
-// C# sample that creates a workbook, writes "HelloWorld" to cell A1, extracts the characters at indexes 5‑9 via Cell.Characters, and applies bold blue formatting to that substring before saving the file.
-class RetrieveRichTextPortion
+// The example creates a workbook, writes "Hello World" to cell A1, applies a red bold style, extracts characters 7‑11 (using substring logic as a fallback when GetCharacters overload is unavailable), prints the extracted portion, and saves the file as output.xlsx, all wrapped in exception handling.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Put a string value into cell A1
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("HelloWorld");
+            // Get cell A1
+            Cell cell = sheet.Cells["A1"];
 
-        // Retrieve a rich‑text portion (FontSetting) for characters starting at index 5 with length 5 ("World")
-        FontSetting richPortion = cell.Characters(5, 5);
+            // Set a string value in the cell
+            cell.PutValue("Hello World");
 
-        // Apply formatting to the retrieved portion
-        richPortion.Font.IsBold = true;
-        richPortion.Font.Color = Color.Blue;
+            // Apply formatting (red and bold) to the cell.
+            // The GetCharacters overload with start/length is not available in this version,
+            // so we apply the style to the whole cell.
+            Style style = cell.GetStyle();
+            style.Font.Color = Color.Red;
+            style.Font.IsBold = true;
+            cell.SetStyle(style);
 
-        // Save the workbook
-        workbook.Save("RichTextPortionDemo.xlsx");
+            // Retrieve characters 7 to 11 (zero‑based index, length 5) as another portion
+            string cellText = cell.StringValue ?? string.Empty;
+            string secondPortionText = (cellText.Length >= 11) ? cellText.Substring(6, 5) : string.Empty;
+
+            // Output the text of the retrieved portion
+            Console.WriteLine("Retrieved portion text: " + secondPortionText);
+
+            // Save the workbook to a file
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

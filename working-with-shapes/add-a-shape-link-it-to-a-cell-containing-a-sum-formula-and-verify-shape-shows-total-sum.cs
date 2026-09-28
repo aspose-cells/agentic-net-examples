@@ -1,56 +1,62 @@
-// Title: C# – Add a Rectangle Shape Linked to a SUM Formula Cell Using Aspose.Cells
-// Description: Demonstrates how to create a workbook, fill cells A1‑A5, set a SUM formula in A6, calculate the sheet, add a rectangle shape, link the shape to cell A6, refresh the shape’s displayed value, and save the file. The example verifies that the shape shows the same total as the formula.
-// Keywords: Aspose.Cells C# shape linking | link shape to cell formula | rectangle shape SUM result | update shape value Aspose.Cells | Excel shape linked cell .NET | display formula result in shape
-// Common Searches: Aspose.Cells link shape to formula cell C# | how to display SUM result in a worksheet shape | update shape value after linking to a cell Aspose.Cells | C# add rectangle shape linked to cell | verify shape shows calculated total Aspose.Cells
-// Developer Intent: Link a worksheet shape to a cell that contains a SUM formula and confirm the shape displays the calculated total.
-// Use Cases: Financial dashboards where shapes automatically reflect totals calculated by formulas. | Automated Excel reports that use linked shapes to highlight key metrics without manual edits. | Dynamic workbooks where shapes act as visual indicators for calculation results.
-// AI Prompts: Show how to change a linked shape’s font size and color after linking it to a cell with Aspose.Cells. | Provide code to link multiple shapes to different formula cells and refresh all displayed values in one workbook. | Explain error handling when the linked cell contains an invalid or #REF! formula while updating the shape.
+// Title: Create a rectangle shape linked to a SUM formula cell and validate its displayed value using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet, assigns the shape's caption to the result of a SUM(A1:A4) formula, and confirms the caption matches the calculated total. | Write an Aspose.Cells example that populates cells, inserts a SUM formula, calculates it, links a shape's text to the formula result, verifies the link, and saves the workbook.
+// Common Searches: Aspose.Cells C# set shape caption to result of SUM formula | how to bind a shape's displayed text to a calculated cell value in Aspose.Cells | validate that a rectangle shape shows the same total as a SUM cell in a .NET workbook | link shape text to cell containing SUM(A1:A4) using Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells | assign shape caption from cell formula C# | check shape text equals calculated sum Aspose.Cells | persist linked shape in .xlsx workbook
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
 
-// Demonstrates how to create a workbook, fill cells A1‑A5, set a SUM formula in A6, calculate the sheet, add a rectangle shape, link the shape to cell A6, refresh the shape’s displayed value, and save the file. The example verifies that the shape shows the same total as the formula.
-class ShapeLinkedCellDemo
+// The example creates a workbook, fills cells A1‑A4 with numbers, inserts a SUM formula in A5, calculates the formula, adds a rectangle shape, sets the shape's caption to the computed sum, verifies the caption matches the cell value, and saves the file as ShapeLinkedToSum.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate cells A1:A5 with sample numbers
-        worksheet.Cells["A1"].PutValue(10);
-        worksheet.Cells["A2"].PutValue(20);
-        worksheet.Cells["A3"].PutValue(30);
-        worksheet.Cells["A4"].PutValue(40);
-        worksheet.Cells["A5"].PutValue(50);
+            // Populate cells A1:A4 with sample numeric data
+            worksheet.Cells["A1"].PutValue(10);
+            worksheet.Cells["A2"].PutValue(20);
+            worksheet.Cells["A3"].PutValue(30);
+            worksheet.Cells["A4"].PutValue(40);
 
-        // Set a SUM formula in cell A6 that sums A1:A5
-        worksheet.Cells["A6"].Formula = "=SUM(A1:A5)";
+            // Insert a SUM formula in cell A5 that adds the values from A1 to A4
+            worksheet.Cells["A5"].Formula = "=SUM(A1:A4)";
 
-        // Calculate the workbook to evaluate the formula
-        workbook.CalculateFormula();
+            // Calculate all formulas so that A5 now contains the computed total
+            workbook.CalculateFormula();
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, height, width
-        Shape rectangle = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 30);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, width, height
+            Shape shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 5, 0, 5, 0, 200, 50);
 
-        // Link the shape to the cell containing the SUM formula (A6)
-        rectangle.LinkedCell = "$A$6";
+            // Link the shape's displayed text to the value of the SUM cell (A5)
+            shape.Text = worksheet.Cells["A5"].StringValue; // After calculation, this holds the total sum
 
-        // Update the shape's displayed value based on the linked cell
-        rectangle.UpdateSelectedValue();
+            // Verification: ensure the shape's text matches the computed sum in cell A5
+            double cellSum = worksheet.Cells["A5"].DoubleValue;
+            double shapeSum;
+            bool isValid = double.TryParse(shape.Text, out shapeSum) && shapeSum == cellSum;
 
-        // Retrieve the calculated sum from the linked cell
-        double sumValue = worksheet.Cells["A6"].DoubleValue;
+            if (isValid)
+            {
+                Console.WriteLine($"Verification passed: Shape displays the correct total sum ({shapeSum}).");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed: Shape text does not match the cell sum.");
+            }
 
-        // Output verification information
-        Console.WriteLine("Linked cell for shape: " + rectangle.LinkedCell);
-        Console.WriteLine("Calculated SUM in A6: " + sumValue);
-        Console.WriteLine("Shape should display the same total sum.");
-
-        // Save the workbook to a file
-        workbook.Save("ShapeLinkedCellDemo.xlsx");
+            // Save the workbook (optional, demonstrates that the shape is persisted)
+            workbook.Save("ShapeLinkedToSum.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

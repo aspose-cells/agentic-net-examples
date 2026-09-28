@@ -1,35 +1,26 @@
-// Title: C# – Set worksheet zoom to 75% with Aspose.Cells for .NET
-// Description: This example creates a new Workbook, accesses the first Worksheet, sets its Zoom property to 75 %, prints the applied value, and saves the file as WorksheetZoom75.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | worksheet zoom | Zoom property | set Excel view programmatically | 75 percent zoom | Aspose.Cells for .NET example | GitHub Aspose.Cells sample | Excel workbook zoom
-// Common Searches: Aspose.Cells set worksheet zoom C# | how to change Excel zoom with Aspose.Cells | C# code to set worksheet view to 75% | Aspose.Cells Zoom property example | programmatically adjust Excel zoom level
-// Developer Intent: Set the worksheet's view zoom to 75 % before saving the workbook.
-// Use Cases: Provide a default 75 % zoom for data‑entry worksheets to improve on‑screen readability. | Standardize the initial view of generated reports across all users. | Apply user‑defined zoom levels dynamically when exporting workbooks.
-// AI Prompts: Write C# code that uses Aspose.Cells to set a worksheet's zoom to a variable percentage and save the workbook. | Explain the range and behavior of the Zoom property in Aspose.Cells, including how to read the current zoom factor. | Show how to assign different zoom percentages to multiple worksheets within the same workbook using Aspose.Cells.
+// Title: How to set a worksheet’s zoom level to 75 % using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new workbook, accesses the first worksheet, sets its Zoom property to 75, and saves the file. | Show how to adjust the view scale of a specific worksheet to 75 % before saving with Aspose.Cells. | Demonstrate changing the worksheet zoom factor programmatically in C# using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# set worksheet zoom to 75 percent before saving | programmatically change Excel sheet zoom level using Aspose.Cells .NET | C# example for adjusting worksheet view scale with Aspose.Cells
+// Tags: Aspose.Cells set worksheet zoom | C# worksheet view scale Aspose | adjust Excel sheet zoom programmatically | Aspose.Cells workbook save with custom zoom | worksheet Zoom property .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsZoomDemo
+// // Creates a new workbook, sets the first worksheet's Zoom property to 75 %, and saves as ZoomedWorksheet.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // This example creates a new Workbook, accesses the first Worksheet, sets its Zoom property to 75 %, prints the applied value, and saves the file as WorksheetZoom75.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the worksheet zoom to 75%
-            worksheet.Zoom = 75;
+        // Set the zoom factor to 75%
+        sheet.Zoom = 75;
 
-            // Optional: display the current zoom factor
-            Console.WriteLine("Worksheet zoom set to: " + worksheet.Zoom + "%");
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("WorksheetZoom75.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("ZoomedWorksheet.xlsx");
     }
 }

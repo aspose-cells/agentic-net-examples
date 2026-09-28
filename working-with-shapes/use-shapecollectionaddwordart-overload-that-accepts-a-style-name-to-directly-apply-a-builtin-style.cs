@@ -1,45 +1,56 @@
-// Title: Add WordArt with a Built‑in Preset Style Using ShapeCollection.AddWordArt (Aspose.Cells .NET)
-// Description: Demonstrates how to create a workbook, access the first worksheet's ShapeCollection, and call the AddWordArt overload that accepts a PresetWordArtStyle (e.g., WordArtStyle7). The example sets the text, position, size, makes the font bold, adjusts the size to 24 pt, and saves the file as WordArtStyleDemo.xlsx.
-// Keywords: Aspose.Cells AddWordArt preset style | ShapeCollection.AddWordArt .NET | WordArtStyle7 Aspose.Cells | apply built‑in WordArt style C# | customize WordArt font Aspose.Cells | Excel WordArt automation | Aspose.Cells shape styling
-// Common Searches: ShapeCollection.AddWordArt with PresetWordArtStyle example | how to apply a built‑in WordArt style in Aspose.Cells | C# add WordArt to worksheet using Aspose.Cells | set WordArt font bold size in Aspose.Cells | Aspose.Cells WordArt style parameter
-// Developer Intent: Insert a WordArt shape that uses a predefined style and optionally tweak its font attributes programmatically.
-// Use Cases: Create a stylized title banner for financial reports. | Add colored WordArt labels to chart legends for visual emphasis. | Programmatically annotate key sections of a spreadsheet with bold, large WordArt text.
-// AI Prompts: Generate C# code that adds a WordArt shape with PresetWordArtStyle.WordArtStyle5, sets the text to "Sales Summary", makes the font italic, and uses a 18 pt size. | Write a method that inserts multiple WordArt shapes, each with a different built‑in style, and returns the collection of created Shape objects.
+// Title: Insert WordArt with a built‑in preset style into an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new workbook, adds a WordArt shape using the PresetWordArtStyle.WordArtStyle1 preset, sets the font size to 24, and saves the file as WordArtStyleExample.xlsx with Aspose.Cells. | Write a C# snippet that uses the ShapeCollection.AddWordArt overload to place WordArt spanning rows 2‑6 and columns 1‑5, specifies a width of 400 points and a height of 100 points, applies a built‑in style, and outputs the workbook.
+// Common Searches: Aspose.Cells C# add WordArt with preset style to specific cell range | How to use ShapeCollection.AddWordArt overload for built‑in WordArt styles in .NET | C# example of applying WordArtStyle1 to a shape in an Excel file with Aspose.Cells | Set font size of WordArt shape created by Aspose.Cells | Save workbook containing WordArt shape using Aspose.Cells for .NET
+// Tags: ShapeCollection.AddWordArt preset style | apply WordArtStyle1 Aspose.Cells | WordArt shape font size C# | save workbook with WordArt Aspose.Cells | Excel worksheet WordArt built‑in style .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, access the first worksheet's ShapeCollection, and call the AddWordArt overload that accepts a PresetWordArtStyle (e.g., WordArtStyle7). The example sets the text, position, size, makes the font bold, adjusts the size to 24 pt, and saves the file as WordArtStyleDemo.xlsx.
-class Program
+namespace WordArtExample
 {
-    static void Main()
+    // Demonstrates creating a new workbook, accessing the first worksheet, adding a WordArt shape with the WordArtStyle1 preset via ShapeCollection.AddWordArt, adjusting its font size, and saving the workbook as an .xlsx file.
+    class Program
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Access the shape collection of the worksheet
-        ShapeCollection shapes = worksheet.Shapes;
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a WordArt shape using a built‑in preset style.
-        // Parameters: style, text, topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
-        Shape wordArt = shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle7, // Gradient Fill - Blue, Accent 1, Reflection
-            "Aspose WordArt",                 // Text to display
-            2,    // Upper‑left row index
-            0,    // Vertical offset in pixels
-            2,    // Upper‑left column index
-            0,    // Horizontal offset in pixels
-            100,  // Height in pixels
-            400   // Width in pixels
-        );
+                // Get the shape collection of the worksheet
+                ShapeCollection shapes = sheet.Shapes;
 
-        // Optional: further customize the WordArt appearance
-        wordArt.TextEffect.FontBold = true;
-        wordArt.TextEffect.FontSize = 24;
+                // Add WordArt with a built‑in style.
+                // Parameters: style, text, upper left row, upper left column,
+                // lower right row, lower right column, width, height
+                Shape wordArt = shapes.AddWordArt(
+                    PresetWordArtStyle.WordArtStyle1,
+                    "Aspose.Cells WordArt",
+                    2, // upper left row (zero‑based)
+                    1, // upper left column (zero‑based)
+                    6, // lower right row
+                    5, // lower right column
+                    400, // width in points
+                    100  // height in points
+                );
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("WordArtStyleDemo.xlsx");
+                // Optionally adjust the font size
+                wordArt.Font.Size = 24;
+
+                // Save the workbook to a file
+                string outputPath = "WordArtStyleExample.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

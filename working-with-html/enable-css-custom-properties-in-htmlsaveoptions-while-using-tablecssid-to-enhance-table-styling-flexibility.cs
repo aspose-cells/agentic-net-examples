@@ -1,98 +1,35 @@
-// Title: Enable CSS Custom Properties & TableCssId in Aspose.Cells HtmlSaveOptions (C#)
-// Description: Demonstrates how to export an Excel workbook to HTML with Aspose.Cells for .NET while activating CSS custom properties and assigning a TableCssId. The example creates a sample sheet, applies header styling, optionally embeds a logo image, defines inline CSS rules linked to the TableCssId, and saves the file as HTML with enhanced table‑style flexibility.
-// Keywords: Aspose.Cells | HtmlSaveOptions | EnableCssCustomProperties | TableCssId | C# | custom CSS | HTML export | Excel to HTML | CSS variables | table styling | workbook.Save | .NET
-// Common Searches: Aspose.Cells enable CSS custom properties when saving to HTML | How to set TableCssId in HtmlSaveOptions | Export Excel to HTML with custom table CSS using Aspose.Cells | C# HtmlSaveOptions CssStyles example | Aspose.Cells HTML export custom styling
-// Developer Intent: Activate CSS custom properties and assign a TableCssId in HtmlSaveOptions to apply user‑defined CSS rules to the generated HTML table.
-// Use Cases: Create a reusable visual theme for all exported tables by linking them to a specific TableCssId and providing matching CSS rules. | Leverage CSS custom properties for dynamic theming (colors, spacing, borders) in the HTML output. | Combine worksheet image insertion with styled HTML export while preserving custom table formatting.
-// AI Prompts: Generate a CssStyles block that uses CSS variables for table background and border colors with EnableCssCustomProperties enabled. | Show how to export multiple worksheets to separate HTML files, each with a different TableCssId and corresponding CSS. | Explain how to override the CSS variables defined by EnableCssCustomProperties in an external stylesheet after the HTML file is saved.
+// Title: Enable CSS custom properties and assign a custom TableCssId when exporting a workbook to HTML with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells HtmlSaveOptions to export a workbook to HTML with EnableCssCustomProperties enabled and a specific TableCssId applied. | Demonstrate how to configure Aspose.Cells HTML export to leverage CSS variables for styling and set a custom CSS ID on the generated table.
+// Common Searches: asp.net aspose.cells html export enable css custom properties | how to set tablecssid in htmlsaveoptions c# | aspose.cells export workbook to html with css variables and custom table id | c# save workbook as html using aspose.cells custom css id | using css custom properties in aspose.cells html output
+// Tags: Aspose.Cells HtmlSaveOptions CSS custom properties | Aspose.Cells HtmlSaveOptions TableCssId | C# Aspose.Cells HTML export styling | Aspose.Cells CSS variables for HTML tables
 
-using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// Creates a workbook, fills it with sample data, configures HtmlSaveOptions to enable CSS custom properties and assign a custom TableCssId, then saves the workbook as an HTML file.
+class Program
 {
-    // Demonstrates how to export an Excel workbook to HTML with Aspose.Cells for .NET while activating CSS custom properties and assigning a TableCssId. The example creates a sample sheet, applies header styling, optionally embeds a logo image, defines inline CSS rules linked to the TableCssId, and saves the file as HTML with enhanced table‑style flexibility.
-    public class HtmlSaveOptionsEnableCssCustomPropertiesDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-                // Add sample data with formatting to demonstrate CSS styling
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Price");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["B2"].PutValue(1.25);
-                worksheet.Cells["A3"].PutValue("Banana");
-                worksheet.Cells["B3"].PutValue(0.80);
+        // Populate the workbook with sample data
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Price");
+        sheet.Cells["A2"].PutValue("Apple");
+        sheet.Cells["B2"].PutValue(1.2);
+        sheet.Cells["A3"].PutValue("Banana");
+        sheet.Cells["B3"].PutValue(0.8);
 
-                // Apply style to the header row
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.Font.IsBold = true;
-                headerStyle.Font.Color = Color.White;
-                headerStyle.ForegroundColor = Color.DarkBlue;
-                headerStyle.Pattern = BackgroundType.Solid;
-                worksheet.Cells["A1"].SetStyle(headerStyle);
-                worksheet.Cells["B1"].SetStyle(headerStyle);
+        // Configure HTML save options
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+        // Enable CSS custom properties for flexible styling
+        saveOptions.EnableCssCustomProperties = true;
+        // Assign a custom CSS ID to the generated HTML table
+        saveOptions.TableCssId = "myCustomTable";
 
-                // Path to the image file
-                const string imagePath = "logo.png";
-
-                // Insert the same image into two different cells if the file exists
-                if (File.Exists(imagePath))
-                {
-                    int pictureIndex1 = worksheet.Pictures.Add(2, 0, imagePath);
-                    Picture picture1 = worksheet.Pictures[pictureIndex1];
-                    picture1.Width = 50;
-                    picture1.Height = 50;
-
-                    int pictureIndex2 = worksheet.Pictures.Add(4, 0, imagePath);
-                    Picture picture2 = worksheet.Pictures[pictureIndex2];
-                    picture2.Width = 50;
-                    picture2.Height = 50;
-                }
-                else
-                {
-                    Console.WriteLine($"Image file '{imagePath}' not found. Skipping picture insertion.");
-                }
-
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    EnableCssCustomProperties = true,
-                    TableCssId = "custom-table-style",
-                    CssStyles = @"
-                        #custom-table-style table { border: 1px solid #ccc; }
-                        #custom-table-style th { background-color: #f2f2f2; }
-                        #custom-table-style td { padding: 5px; }"
-                };
-
-                // Save the workbook as HTML using the configured options
-                const string outputHtml = "HtmlWithCssCustomPropertiesAndTableCssId.html";
-                workbook.Save(outputHtml, htmlOptions);
-
-                Console.WriteLine($"HTML file saved as '{outputHtml}' with EnableCssCustomProperties=true and TableCssId set.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
-            HtmlSaveOptionsEnableCssCustomPropertiesDemo.Run();
-        }
+        // Save the workbook as HTML using the configured options
+        workbook.Save("output.html", saveOptions);
     }
 }

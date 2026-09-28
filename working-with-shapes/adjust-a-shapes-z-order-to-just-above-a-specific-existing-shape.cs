@@ -1,43 +1,69 @@
-// Title: C# – Move a shape just above another shape by adjusting ZOrderPosition in Aspose.Cells
-// Description: Demonstrates how to create a workbook, add two rectangle shapes, and set the ZOrderPosition of one shape to be one level higher than a reference shape so it renders directly above it, then saves the file.
-// Keywords: Aspose.Cells C# shape ZOrderPosition | adjust shape stacking order .NET | bring shape to front Aspose.Cells | Excel shape layering programmatically | change shape order Aspose.Cells
-// Common Searches: Aspose.Cells set shape above another shape | C# change ZOrderPosition of Excel shape | how to bring a shape forward in Aspose.Cells | move shape in front of another shape .NET | shape layering example Aspose.Cells
-// Developer Intent: Set shapeA's Z-order so it appears directly in front of shapeB.
-// Use Cases: Overlay a label on a chart to show dynamic titles. | Ensure comment or annotation shapes stay visible above data markers. | Display a custom tooltip shape above a selected cell range.
-// AI Prompts: Generate C# code that moves a specific shape above another without hard‑coding ZOrderPosition values. | Show how to programmatically bring a chosen shape to the front of all worksheet shapes using Aspose.Cells. | Explain how to swap the ZOrderPosition of two shapes in a .NET workbook.
+// Title: How to set a shape's Z-order just above another shape in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Locate the shape called 'MyShape' and assign its Z-order to be one level higher than the shape 'ReferenceShape' via the Aspose.Cells C# library. | Raise a target shape above a reference shape in an Excel worksheet by updating the shape's stacking order with Aspose.Cells. | Reorder two worksheet shapes so the first appears directly on top of the second using Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells C# bring one shape to front of another in Excel | how to change shape Z-order in an Excel file using Aspose.Cells | set shape stacking order relative to another shape with Aspose.Cells .NET | C# code to move Excel shape above another shape programmatically | adjust worksheet shape order using Aspose.Cells API
+// Tags: Aspose.Cells modify shape order C# | Excel worksheet shape hierarchy Aspose.Cells | C# adjust shape ZOrderPosition Aspose.Cells | Aspose.Cells reorder worksheet shapes .NET | set shape front/back order Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsZOrderExample
+// The example loads an existing workbook, retrieves two shapes by name, reads the Z-order of the reference shape, sets the target shape's ZOrderPosition to one higher, and saves the workbook with the updated stacking order.
+class Program
 {
-    // Demonstrates how to create a workbook, add two rectangle shapes, and set the ZOrderPosition of one shape to be one level higher than a reference shape so it renders directly above it, then saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Add two rectangle shapes
-            // shapeA will be the shape we want to move
-            Shape shapeA = worksheet.Shapes.AddRectangle(5, 5, 100, 100, 0, 0);
-            // shapeB is the reference shape
-            Shape shapeB = worksheet.Shapes.AddRectangle(50, 50, 100, 100, 0, 0);
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Initial Z-order (optional, just for clarity)
-            // Lower ZOrderPosition means closer to the back
-            shapeA.ZOrderPosition = 0; // back
-            shapeB.ZOrderPosition = 1; // front of shapeA
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Adjust shapeA to be just above shapeB
-            // Set shapeA's ZOrderPosition to shapeB's position + 1
-            shapeA.ZOrderPosition = shapeB.ZOrderPosition + 1;
+            // Get the collection of shapes on the worksheet
+            ShapeCollection shapes = sheet.Shapes;
 
-            // Save the workbook to verify the result
-            workbook.Save("ZOrderAdjusted.xlsx");
+            // Retrieve the shape to move (replace with actual name or index)
+            Shape shapeToMove = shapes["MyShape"];
+            if (shapeToMove == null)
+            {
+                Console.WriteLine("Error: Shape \"MyShape\" not found.");
+                return;
+            }
+
+            // Retrieve the reference shape that should be directly below the moved shape
+            Shape referenceShape = shapes["ReferenceShape"];
+            if (referenceShape == null)
+            {
+                Console.WriteLine("Error: Shape \"ReferenceShape\" not found.");
+                return;
+            }
+
+            // Get the Z-order position of the reference shape
+            int referenceZOrder = referenceShape.ZOrderPosition;
+
+            // Set the Z-order of the target shape to be just above the reference shape
+            shapeToMove.ZOrderPosition = referenceZOrder + 1;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

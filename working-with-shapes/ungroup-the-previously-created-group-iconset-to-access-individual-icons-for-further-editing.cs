@@ -1,57 +1,91 @@
-// Title: Ungroup a GroupShape and edit individual icons using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add rectangle shapes, group them, ungroup the GroupShape, modify each shape's fill color, and save the file with Aspose.Cells C# API.
-// Keywords: Aspose.Cells | .NET | C# | GroupShape | Ungroup | shape editing | icon set | fill color | Excel workbook | worksheet shapes
-// Common Searches: Aspose.Cells ungroup GroupShape C# | how to edit individual icons after grouping in Aspose.Cells | change shape fill color after Ungroup Aspose.Cells | C# code to ungroup shapes in Excel using Aspose.Cells
-// Developer Intent: Separate a grouped shape to access and modify each component shape.
-// Use Cases: Ungroup a grouped icon set to recolor each icon individually. | Retrieve and reposition shapes after ungrouping for custom layout. | Apply distinct formatting (fill, border, text) to shapes once they are ungrouped.
-// AI Prompts: Write C# code with Aspose.Cells that ungroups a GroupShape and sets a unique border style for each shape. | Show how to loop through the shapes returned by Ungroup() and add a text label to any text box within the group.
+// Title: How to ungroup an IconSet group shape and change each icon’s fill color using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells C# to locate a GroupShape named 'IconSetGroup', call Ungroup(), then set the ForeColor of each resulting Picture shape to LightGreen. | Write C# code that loads a workbook, finds the IconSet group, ungroups it, iterates over the new picture shapes, and applies a LightGreen fill using the FillFormat API.
+// Common Searches: aspnet ungroup grouped shape IconSet Aspose.Cells C# example | change fill color of individual icons after ungrouping in Excel with Aspose.Cells | C# Aspose.Cells how to edit picture shapes inside an IconSet group
+// Tags: Aspose.Cells ungroup GroupShape API | modify picture FillFormat in Excel using C# | IconSet group shape manipulation Aspose.Cells | C# change shape foreground color Aspose.Cells | Excel workbook shape editing with Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The program loads an Excel workbook, finds a GroupShape named 'IconSetGroup', ungroups it so the icons become top‑level picture shapes, changes each picture's foreground fill to LightGreen via the FillFormat API, and saves the updated file.
+class Program
 {
-    // Demonstrates how to create a workbook, add rectangle shapes, group them, ungroup the GroupShape, modify each shape's fill color, and save the file with Aspose.Cells C# API.
-    public class UngroupIconSetDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add two rectangle shapes (simulating icons)
-            Shape shape1 = worksheet.Shapes.AddRectangle(0, 0, 0, 0, 100, 50);
-            Shape shape2 = worksheet.Shapes.AddRectangle(0, 0, 3, 0, 100, 50);
+            // Locate the grouped shape named "IconSetGroup"
+            GroupShape? groupShape = null;
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                if (shape.IsGroup && shape.Name == "IconSetGroup")
+                {
+                    groupShape = (GroupShape)shape;
+                    break;
+                }
+            }
 
-            // Group the two shapes into a GroupShape
-            GroupShape groupShape = worksheet.Shapes.Group(new Shape[] { shape1, shape2 });
+            if (groupShape != null)
+            {
+                try
+                {
+                    // Ungroup the shape; after this call the child shapes become top‑level shapes
+                    groupShape.Ungroup();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to ungroup shape: {ex.Message}");
+                }
 
-            // Ungroup the previously created group to access individual shapes
-            groupShape.Ungroup();
+                // Modify each picture shape (icon) that resulted from ungrouping
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    // Check if the shape is a picture
+                    if ((MsoDrawingType)shape.Type == MsoDrawingType.Picture)
+                    {
+                        // Change the foreground fill color to LightGreen
+                        shape.FillFormat.ForeColor = Color.LightGreen;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Group shape 'IconSetGroup' not found.");
+            }
 
-            // After ungrouping, edit the individual shapes (e.g., change fill colors)
-            shape1.FillFormat.ForeColor = Color.Yellow;
-            shape2.FillFormat.ForeColor = Color.LightBlue;
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook
-            string outputPath = "UngroupedIconSetDemo.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,38 +1,22 @@
-// Title: C# – Use Workbook.CalculateFormula to evaluate formulas before Aspose.Cells PDF export
-// Description: Shows how to force Aspose.Cells to compute every worksheet formula with Workbook.CalculateFormula, then save the workbook as a PDF using PdfSaveOptions (CalculateFormula = true). The resulting PDF contains the evaluated values.
-// Keywords: Aspose.Cells C# calculate formulas | Workbook.CalculateFormula example | PdfSaveOptions CalculateFormula property | export Excel to PDF C# | evaluate formulas before PDF export | Aspose.Cells PDF generation | C# spreadsheet to PDF
-// Common Searches: Aspose.Cells calculate all formulas before PDF export | Workbook.CalculateFormula vs PdfSaveOptions.CalculateFormula C# | How to ensure formulas are evaluated when saving Excel as PDF with Aspose.Cells | C# export Excel workbook to PDF with evaluated formulas | Aspose.Cells PDF export formula evaluation
-// Developer Intent: The developer needs to guarantee that every formula in a workbook is calculated before the file is saved as a PDF.
-// Use Cases: Financial statements PDF where totals must reflect the latest calculations. | Invoice PDFs that include tax, discount, and subtotal formulas. | Automated reporting pipelines that convert Excel sheets to PDF with up‑to‑date derived values.
-// AI Prompts: Write C# code using Aspose.Cells to calculate all workbook formulas and then export the workbook to PDF with the results embedded. | Explain the impact of setting PdfSaveOptions.CalculateFormula to true when Workbook.CalculateFormula has already been called. | Provide a C# example with error handling for exporting a formula‑rich workbook to PDF using Aspose.Cells.
+// Title: How to recalculate all formulas in an Excel workbook before exporting to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx file, trigger a full formula evaluation using Workbook.CalculateFormula, and then generate a PDF with Aspose.Cells in C#. | Write C# code that refreshes every Excel calculation before calling Workbook.Save with SaveFormat.Pdf. | Show how to force a complete formula refresh and export the workbook to PDF using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# recalculate workbook formulas prior to PDF conversion | Force formula update when saving Excel as PDF with Aspose.Cells | C# example for Workbook.CalculateFormula followed by PDF export | Ensure PDF output reflects latest Excel calculations using Aspose.Cells .NET
+// Tags: formula calculation API Aspose.Cells | refresh workbook calculations Aspose.Cells | Excel to PDF output with updated formulas | ensure formulas are evaluated prior to PDF generation | Aspose.Cells C# PDF generation after calculations
 
-using System;
 using Aspose.Cells;
 
-// Shows how to force Aspose.Cells to compute every worksheet formula with Workbook.CalculateFormula, then save the workbook as a PDF using PdfSaveOptions (CalculateFormula = true). The resulting PDF contains the evaluated values.
+// Loads an Excel workbook, forces full formula calculation with Workbook.CalculateFormula, and saves the workbook as a PDF.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the workbook from an existing Excel file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Add sample data and a formula
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
-
-        // Explicitly calculate all formulas in the workbook
+        // Ensure all formulas in the workbook are evaluated
         workbook.CalculateFormula();
 
-        // Set PDF save options (optional: CalculateFormula can be true, but formulas are already evaluated)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            CalculateFormula = true
-        };
-
-        // Export the workbook to PDF
-        workbook.Save("output.pdf", pdfOptions);
+        // Export the workbook to PDF after formulas have been calculated
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

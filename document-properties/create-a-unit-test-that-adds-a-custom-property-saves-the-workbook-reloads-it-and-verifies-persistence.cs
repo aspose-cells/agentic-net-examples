@@ -1,102 +1,79 @@
-// Title: Aspose.Cells .NET Unit Test: Add Custom Worksheet Property, Save, Reload, Verify Persistence
-// Description: C# example that builds a Workbook, inserts a custom property into the first worksheet, saves the workbook to a temporary .xlsx file, reloads it, and asserts that the property name and value are unchanged. The test also removes the temporary file after verification.
-// Keywords: Aspose.Cells | C# unit test | custom worksheet property | Excel custom property persistence | save and reload workbook | temporary file handling | MSTest example | xUnit test | NUnit scenario | .NET Excel automation
-// Common Searches: how to unit test custom worksheet properties with Aspose.Cells | verify Excel custom property persists after save .NET | Aspose.Cells C# example add and read custom properties | unit testing Excel metadata using temporary files | Aspose.Cells unit test for document property persistence
-// Developer Intent: Write an automated test that adds a custom property to a worksheet, saves the workbook, reloads it, and confirms the property remains intact.
-// Use Cases: Continuous‑integration validation that generated reports keep custom metadata. | Regression testing for services that embed business identifiers in Excel worksheets. | Quality‑gate checks ensuring document properties survive serialization across environments.
-// AI Prompts: Generate an MSTest method that adds a custom worksheet property with Aspose.Cells, saves to a temp file, reloads the workbook, and asserts the property value. | Provide an xUnit test snippet that creates a Workbook, inserts a custom property, persists the file, reads it back, and uses Assert.Equal to verify the value. | Write a NUnit test that adds a custom property to the first sheet, saves as .xlsx, loads the file, and confirms the property exists with the expected string.
+// Title: Create an MSTest unit test to add a custom document property, save as XLSX, reload, and verify persistence with Aspose.Cells for .NET
+// AI Prompts: Generate an MSTest method that instantiates a Workbook, adds a custom document property, saves the file in XLSX format, reloads it, and asserts the property value remains unchanged. | Write an NUnit test case using Aspose.Cells that creates a workbook, sets a custom property, persists the workbook, loads it back, and validates the property value.
+// Common Searches: how to write a unit test for custom document properties using Aspose.Cells in C# | Aspose.Cells verify custom property after saving and loading workbook | C# MSTest example for persisting custom properties in an XLSX file with Aspose.Cells | unit testing Aspose.Cells workbook property persistence .NET
+// Tags: Aspose.Cells add custom document property | save workbook as XLSX Aspose.Cells | load workbook and verify property Aspose.Cells | unit test Aspose.Cells workbook properties | C# custom property persistence Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExample
 {
-    // C# example that builds a Workbook, inserts a custom property into the first worksheet, saves the workbook to a temporary .xlsx file, reloads it, and asserts that the property name and value are unchanged. The test also removes the temporary file after verification.
-    class Program
+    // The example creates a new workbook, adds a custom document property named 'TestProperty' with the value 'HelloWorld', saves it as 'CustomPropTest.xlsx', reloads the file, checks that the property value is retained, and finally cleans up the test file.
+    public class Program
     {
-        static void Main()
+        private const string FilePath = "CustomPropTest.xlsx";
+
+        public static void Main()
         {
-            // Create a new workbook and add a custom property to the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            CustomPropertyCollection customProps = sheet.CustomProperties;
-            const string propertyName = "TestProperty";
-            const string propertyValue = "TestValue";
-
             try
             {
-                customProps.Add(propertyName, propertyValue);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error adding custom property: {ex.Message}");
-                return;
-            }
-
-            // Define a temporary file path for saving the workbook
-            string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".xlsx");
-
-            try
-            {
-                // Save the workbook
-                workbook.Save(tempFilePath, SaveFormat.Xlsx);
-
-                // Verify the file was created before attempting to load
-                if (!File.Exists(tempFilePath))
+                // Ensure a clean environment before execution
+                if (File.Exists(FilePath))
                 {
-                    Console.WriteLine("Failed to create the temporary workbook file.");
+                    File.Delete(FilePath);
+                }
+
+                // Create a new workbook (creation rule)
+                Workbook workbook = new Workbook();
+
+                // Add a custom document property (custom property rule)
+                workbook.CustomDocumentProperties.Add("TestProperty", "HelloWorld");
+
+                // Save the workbook to disk (save rule)
+                workbook.Save(FilePath, SaveFormat.Xlsx);
+
+                // Verify the file was created
+                if (!File.Exists(FilePath))
+                {
+                    Console.WriteLine($"Failed to create the file '{FilePath}'.");
                     return;
                 }
 
-                // Load the workbook from the saved file
-                Workbook loadedWorkbook = new Workbook(tempFilePath);
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-                CustomPropertyCollection loadedCustomProps = loadedSheet.CustomProperties;
+                // Load the workbook from disk (load rule)
+                Workbook loadedWorkbook = new Workbook(FilePath);
 
-                // Retrieve the property by name
-                CustomProperty loadedProperty = null;
-                foreach (CustomProperty prop in loadedCustomProps)
-                {
-                    if (prop.Name == propertyName)
-                    {
-                        loadedProperty = prop;
-                        break;
-                    }
-                }
+                // Retrieve the custom property value
+                string persistedValue = loadedWorkbook.CustomDocumentProperties["TestProperty"]?.Value?.ToString();
 
-                // Validate that the property exists and its value matches the original
-                if (loadedProperty == null)
+                // Verify that the custom property persisted correctly
+                if (persistedValue == "HelloWorld")
                 {
-                    Console.WriteLine($"Custom property '{propertyName}' was not found after loading.");
-                }
-                else if (!propertyValue.Equals(loadedProperty.Value?.ToString()))
-                {
-                    Console.WriteLine($"Custom property value mismatch. Expected: '{propertyValue}', Actual: '{loadedProperty.Value}'.");
+                    Console.WriteLine("Custom property persisted successfully.");
                 }
                 else
                 {
-                    Console.WriteLine("Custom property persisted correctly after save and load.");
+                    Console.WriteLine($"Custom property verification failed. Expected 'HelloWorld', got '{persistedValue}'.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred during workbook processing: {ex.Message}");
+                // Runtime safety: log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
             finally
             {
-                // Cleanup: delete the temporary file if it exists
+                // Clean up the test file after execution
                 try
                 {
-                    if (File.Exists(tempFilePath))
+                    if (File.Exists(FilePath))
                     {
-                        File.Delete(tempFilePath);
+                        File.Delete(FilePath);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"Failed to delete temporary file: {ex.Message}");
+                    // Suppress any cleanup exceptions
                 }
             }
         }

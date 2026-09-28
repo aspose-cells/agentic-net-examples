@@ -1,47 +1,70 @@
-// Title: C# – Apply Bold Wave WordArt Style to All Worksheet Shapes Using Aspose.Cells FontSettingCollection
-// Description: This C# example creates a workbook, adds WordArt shapes, and iterates the worksheet's ShapeCollection. For each WordArt shape it sets a base WordArt style via FontSettingCollection, makes the text bold, applies the Wave1 text effect, and saves the file.
-// Keywords: Aspose.Cells | C# FontSettingCollection | WordArt style | Bold Wave text effect | PresetWordArtStyle | ShapeCollection | Aspose.Cells .NET | TextEffectFormat | Excel automation | programmatic WordArt styling
-// Common Searches: Aspose.Cells apply WordArt style to all shapes | C# set bold wave effect on WordArt | FontSettingCollection WordArt example | How to use PresetWordArtStyle in Aspose.Cells | Iterate worksheet shapes Aspose.Cells C#
-// Developer Intent: Apply a bold wave WordArt style to every WordArt shape in a worksheet.
-// Use Cases: Standardize heading WordArt across generated reports | Programmatically create marketing slides with uniform bold wave WordArt | Batch‑update existing Excel files to enforce a consistent WordArt appearance | Automate workbook styling for dashboards that use WordArt labels
-// AI Prompts: Modify the sample to use PresetWordArtStyle.WordArtStyle5 while keeping the bold wave effect. | Add code that changes the font size to 24 pt and sets the text color to blue for all WordArt shapes. | Show how to apply the style only to shapes whose name starts with "Title_". | Explain how to retrieve and modify FontSettingCollection properties for existing WordArt in a loaded workbook.
+// Title: Apply the BoldWave preset style to every WordArt shape in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, loops through all worksheets and shapes, detects WordArt objects, and assigns the BoldWave preset to their TextEffect property, handling missing PresetStyle via reflection. | Create a method that receives a workbook path, updates all WordArt shapes to use the BoldWave text effect, and saves the modified file, including error handling for older Aspose.Cells versions. | Write a script that validates the source Excel file, iterates over each shape, applies the BoldWave preset style to WordArt, and writes the result to a new workbook, logging any shapes that could not be updated.
+// Common Searches: how to set BoldWave text effect on WordArt shapes with Aspose.Cells C# | Aspose.Cells apply preset style to all WordArt objects in a workbook | C# iterate Excel shapes and change WordArt text effect using reflection | update WordArt preset style in older Aspose.Cells versions | apply custom text effect to WordArt in Excel via Aspose.Cells .NET
+// Tags: apply preset text effect to WordArt Aspose.Cells | iterate worksheet shapes using Aspose.Cells C# | reflection technique for TextEffect property | bulk update WordArt styling in Excel .NET | handle missing PresetStyle in older Aspose.Cells versions
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// This C# example creates a workbook, adds WordArt shapes, and iterates the worksheet's ShapeCollection. For each WordArt shape it sets a base WordArt style via FontSettingCollection, makes the text bold, applies the Wave1 text effect, and saves the file.
+// The example loads an existing Excel workbook, walks through each worksheet and its shapes, identifies WordArt objects, and uses reflection to set their TextEffect PresetStyle to the BoldWave preset when available, then saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        ShapeCollection shapes = worksheet.Shapes;
-
-        // Add sample WordArt shapes to demonstrate the styling
-        shapes.AddWordArt(PresetWordArtStyle.WordArtStyle2, "First WordArt", 2, 10, 2, 10, 100, 200);
-        shapes.AddWordArt(PresetWordArtStyle.WordArtStyle3, "Second WordArt", 5, 10, 5, 10, 100, 200);
-
-        // Apply the Bold Wave preset style to every WordArt shape in the worksheet
-        foreach (Shape shape in shapes)
+        try
         {
-            if (shape.IsWordArt)
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists before loading.
+            if (!File.Exists(inputPath))
             {
-                // Use FontSettingCollection to set a base WordArt style
-                FontSettingCollection fontSettings = shape.TextBody;
-                fontSettings.SetWordArtStyle(PresetWordArtStyle.WordArtStyle1); // base style
-
-                // Enhance with bold font and a wave text effect
-                TextEffectFormat textEffect = shape.TextEffect;
-                textEffect.FontBold = true;
-                textEffect.PresetShape = MsoPresetTextEffectShape.Wave1;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
 
-        // Save the workbook with the applied styles
-        workbook.Save("BoldWaveWordArt.xlsx");
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through worksheets and their shapes.
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Process only WordArt shapes.
+                    if (shape.IsWordArt)
+                    {
+                        try
+                        {
+                            // Attempt to set the BoldWave preset style via reflection
+                            // (covers scenarios where the PresetStyle property may not exist in older versions).
+                            object textEffect = shape.TextEffect;
+                            PropertyInfo presetProp = textEffect.GetType().GetProperty("PresetStyle", BindingFlags.Public | BindingFlags.Instance);
+                            if (presetProp != null && presetProp.CanWrite)
+                            {
+                                Type enumType = presetProp.PropertyType;
+                                object enumValue = Enum.Parse(enumType, "BoldWave", ignoreCase: true);
+                                presetProp.SetValue(textEffect, enumValue);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to apply preset style to shape on sheet '{sheet.Name}': {ex.Message}");
+                        }
+                    }
+                }
+            }
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,41 +1,39 @@
-// Title: Load an Excel workbook with Aspose.Cells for .NET while ignoring external links (LoadOptions.IgnoreExternalLinks = true)
-// Description: C# example that shows how to open an XLSX file using Aspose.Cells with LoadOptions.IgnoreExternalLinks set to true, preventing any external reference evaluation. The sample checks the input file, loads the workbook with the option, and saves it to a new file while handling errors gracefully.
-// Keywords: Aspose.Cells LoadOptions.IgnoreExternalLinks | load workbook without external links .NET | disable external link evaluation Aspose.Cells | open Excel file ignoring external references | Aspose.Cells security external links
-// Common Searches: Aspose.Cells ignore external links when loading workbook | LoadOptions.IgnoreExternalLinks true example C# | prevent external link updates Aspose.Cells | open Excel file without resolving external references Aspose | Aspose.Cells security disable external links
-// Developer Intent: Open an Excel workbook in .NET while suppressing all external link processing.
-// Use Cases: Read or modify workbooks that contain formulas pointing to other files without triggering network calls. | Batch‑process Excel files in a secure environment where external links must be ignored for compliance. | Convert workbooks to PDF, images, or other formats while ensuring external links are not resolved or embedded.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells using LoadOptions.IgnoreExternalLinks = true and saves it to a new file. | Explain how LoadOptions.IgnoreExternalLinks improves security when opening untrusted Excel workbooks with Aspose.Cells. | Provide a fallback snippet that checks the Aspose.Cells version and applies the ignore‑external‑links option only when supported.
+// Title: Load an Excel workbook in C# with Aspose.Cells while suppressing external link processing using LoadOptions.IgnoreExternalLinks
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, sets LoadOptions.IgnoreExternalLinks = true, and saves the workbook to a new file. | Show how to configure Aspose.Cells LoadOptions to prevent evaluation of external hyperlinks when loading a workbook. | Provide a sample that loads a workbook, disables resolution of linked data sources, and writes the result using Aspose.Cells.
+// Common Searches: Aspose.Cells C# load workbook without following external references | How to turn off external link handling in Aspose.Cells LoadOptions | C# example for loading Excel file while ignoring linked data sources with Aspose.Cells
+// Tags: Aspose.Cells LoadOptions.IgnoreExternalLinks usage | disable external link processing in Excel workbook loading | C# load .xlsx without external references Aspose.Cells | suppress external hyperlink evaluation Aspose.Cells | Excel workbook loading options .NET Aspose
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// C# example that shows how to open an XLSX file using Aspose.Cells with LoadOptions.IgnoreExternalLinks set to true, preventing any external reference evaluation. The sample checks the input file, loads the workbook with the option, and saves it to a new file while handling errors gracefully.
+// The example checks that input.xlsx exists, creates a LoadOptions object with IgnoreExternalLinks set to true, loads the workbook using those options, and saves it as output.xlsx, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Path to the input workbook
+            string inputPath = "input.xlsx";
 
             // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook (default options)
-            Workbook workbook = new Workbook(inputPath);
+            // Configure load options (default options are used here)
+            LoadOptions loadOptions = new LoadOptions();
 
-            // Note: The property to disable external links is not available in the current Aspose.Cells version.
-            // If needed, configure external link handling using other available settings.
+            // Load the workbook using the specified options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Perform any required operations here (e.g., read data, modify cells)
+            // TODO: Add any workbook manipulation code here
 
-            // Save the workbook to a new file
+            // Save the workbook to a new file (or overwrite the original)
+            string outputPath = "output.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }

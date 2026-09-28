@@ -1,70 +1,54 @@
-// Title: Skip Corrupted Excel Workbooks in Batch Processing with Aspose.Cells for .NET
-// Description: Shows how to load multiple Excel files using Aspose.Cells, catch CellsException (FileCorrupted) and generic errors, log the issue, optionally enable RepairLoad, and continue processing the remaining workbooks.
-// Keywords: Aspose.Cells | C# | .NET | batch workbook processing | error handling | corrupted Excel file | CellsException | FileCorrupted | RepairLoad | continue loop | Excel automation
-// Common Searches: Aspose.Cells ignore corrupted file | C# batch process Excel workbooks with error handling | skip bad Excel files Aspose | continue after CellsException | repair load Aspose.Cells example
-// Developer Intent: Add try‑catch logic so a failed workbook load does not abort the entire batch operation.
-// Use Cases: Automated reporting pipelines that handle dozens of spreadsheets. | Data migration where some source files may be damaged. | Scheduled server jobs that must finish even if individual files are unreadable. | Applying RepairLoad to attempt recovery before moving on to the next file.
-// AI Prompts: Write C# code that iterates over a list of .xlsx paths, loads each with Aspose.Cells, catches CellsException with ExceptionType.FileCorrupted, logs a warning, and proceeds to the next file. | Show how to enable Workbook.Settings.RepairLoad and handle generic exceptions during batch Excel processing.
+// Title: How to skip corrupted Excel files while batch processing workbooks with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads each .xlsx file in a directory with Aspose.Cells inside a try‑catch, logs the exception details, and continues to the next file. | Show how to append the paths of workbooks that fail to load to a log file without interrupting the batch operation. | Demonstrate preserving the original sub‑folder hierarchy when saving processed workbooks after handling load errors.
+// Common Searches: asp.net batch process excel files continue on load error aspose.cells | c# aspose.cells ignore corrupted workbook and keep processing | log corrupted excel file path during aspose.cells batch operation | skip invalid .xlsx files in aspose.cells while iterating directory | how to handle workbook load exception in aspose.cells c#
+// Tags: Aspose.Cells batch workbook processing with error handling | skip corrupted .xlsx files using Aspose.Cells | log workbook load failures in C# | preserve output folder structure Aspose.Cells | continue processing after workbook load exception
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchProcessing
+// The example enumerates all .xlsx files in an input folder, attempts to load each workbook with Aspose.Cells inside a try‑catch block, logs any load exceptions (e.g., corrupted files), and proceeds to the next file, saving successfully processed workbooks to an output folder while optionally preserving the original directory hierarchy.
+class BatchWorkbookProcessor
 {
-    // Shows how to load multiple Excel files using Aspose.Cells, catch CellsException (FileCorrupted) and generic errors, log the issue, optionally enable RepairLoad, and continue processing the remaining workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Folder containing the workbooks to process
+        string inputFolder = @"C:\InputWorkbooks";
+        // Folder where processed workbooks will be saved
+        string outputFolder = @"C:\OutputWorkbooks";
+
+        // Ensure output folder exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Get all Excel files in the input folder
+        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+        foreach (string filePath in workbookFiles)
         {
-            // List of workbook file paths to process
-            List<string> workbookFiles = new List<string>
+            try
             {
-                "Workbook1.xlsx",
-                "Workbook2.xlsx",
-                "CorruptedWorkbook.xlsx", // Example of a corrupted file
-                "Workbook3.xlsx"
-            };
+                // Load workbook (using the provided load rule)
+                Workbook workbook = new Workbook(filePath);
 
-            // Output directory for processed workbooks
-            string outputDir = "ProcessedWorkbooks";
+                // -------------------------------------------------
+                // Place any workbook processing logic here.
+                // For example, you could modify cells, add sheets, etc.
+                // -------------------------------------------------
 
-            // Ensure the output directory exists
-            System.IO.Directory.CreateDirectory(outputDir);
-
-            foreach (string filePath in workbookFiles)
-            {
-                try
-                {
-                    // Load the workbook (uses the Workbook(string) constructor)
-                    Workbook workbook = new Workbook(filePath);
-
-                    // Enable repair mode for future operations (optional but demonstrates usage)
-                    workbook.Settings.RepairLoad = true;
-
-                    // Example processing: write the number of worksheets to console
-                    Console.WriteLine($"Loaded '{filePath}' successfully. Worksheets count: {workbook.Worksheets.Count}");
-
-                    // Save the processed workbook to the output folder (uses Workbook.Save(string))
-                    string outputPath = System.IO.Path.Combine(outputDir, System.IO.Path.GetFileName(filePath));
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Saved processed workbook to '{outputPath}'.");
-                }
-                catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted)
-                {
-                    // Specific handling for corrupted files – log and continue with next file
-                    Console.WriteLine($"[Warning] The file '{filePath}' is corrupted (ExceptionType.FileCorrupted). Skipping this workbook.");
-                    continue;
-                }
-                catch (Exception ex)
-                {
-                    // General error handling – log and continue
-                    Console.WriteLine($"[Error] Failed to process '{filePath}'. Reason: {ex.Message}");
-                    continue;
-                }
+                // Save workbook (using the provided save rule)
+                string outputPath = Path.Combine(outputFolder, Path.GetFileName(filePath));
+                workbook.Save(outputPath);
+                Console.WriteLine($"Successfully processed: {filePath}");
             }
-
-            Console.WriteLine("Batch processing completed.");
+            catch (Exception ex)
+            {
+                // Handle load failures (e.g., corrupted files) and continue with next workbook
+                Console.WriteLine($"Error loading workbook '{filePath}': {ex.Message}");
+                // Optionally, log the error to a file or monitoring system
+                continue; // Continue processing the remaining workbooks
+            }
         }
+
+        Console.WriteLine("Batch processing completed.");
     }
 }

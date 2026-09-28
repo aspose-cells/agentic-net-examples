@@ -1,10 +1,7 @@
-// Title: Aspose.Cells .NET – Verify MultiThreadReading Thread‑Safety with Concurrent Cell Reads
-// Description: Creates a workbook, turns on cells.MultiThreadReading, fills column A with 1,000 OADate values, then launches five threads that each read a separate row range from the same column. Completion is tracked with Interlocked and errors are collected in a StringBuilder, demonstrating that parallel reads succeed without exceptions.
-// Keywords: Aspose.Cells | MultiThreadReading | thread safety | concurrent cell reading | C# | .NET | cells collection | Interlocked synchronization | multi‑threaded workbook access | performance testing
-// Common Searches: enable MultiThreadReading in Aspose.Cells .NET | is Aspose.Cells thread‑safe for reading cells | sample code for concurrent cell reads with Aspose.Cells | how to use Interlocked with Aspose.Cells multi‑threading
-// Developer Intent: Confirm that setting cells.MultiThreadReading = true allows multiple threads to read the same worksheet cells without raising errors.
-// Use Cases: Validate thread‑safety when extracting data from large worksheets in a parallel processing pipeline. | Compare read throughput of a workbook with MultiThreadReading enabled versus a single‑threaded approach. | Implement error‑free concurrent data retrieval in a multi‑threaded API or background service.
-// AI Prompts: Write a C# unit test that asserts no exception is thrown when five threads read the same column after enabling cells.MultiThreadReading. | Add timing logic using Stopwatch to compare the duration of concurrent reads against sequential reads in the sample. | Explain strategies for safely writing to cells while MultiThreadReading is active, including lock usage and write‑only sections.
+// Title: Testing Aspose.Cells thread safety by concurrently reading the same column with MultiThreadReading enabled in C#
+// AI Prompts: Enable MultiThreadReading on a Cells collection, populate a column with OADate values, and launch several threads that each read a distinct range of cells to verify that no race conditions occur. | Apply Interlocked to count finished threads and use a StringBuilder to collect any exceptions while performing concurrent cell reads in Aspose.Cells. | Extend the sample to read multiple columns in parallel, logging each thread's ID and the retrieved values for deeper thread‑safety validation.
+// Common Searches: Aspose.Cells C# example for multi‑threaded cell reading with MultiThreadReading property | how to verify thread safety of Cells collection in Aspose.Cells | concurrent read of the same column using Aspose.Cells and C# threads | C# Aspose.Cells multi‑thread reading without exceptions | test Aspose.Cells MultiThreadReading performance with multiple threads
+// Tags: Aspose.Cells MultiThreadReading concurrency test | C# concurrent cell value retrieval | thread‑safe cell reading Aspose.Cells | Interlocked thread completion tracking | StringBuilder exception aggregation in multi‑threaded Aspose.Cells
 
 using System;
 using System.Text;
@@ -13,7 +10,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsThreadSafetyDemo
 {
-    // Creates a workbook, turns on cells.MultiThreadReading, fills column A with 1,000 OADate values, then launches five threads that each read a separate row range from the same column. Completion is tracked with Interlocked and errors are collected in a StringBuilder, demonstrating that parallel reads succeed without exceptions.
+    // The program creates a new Workbook, turns on MultiThreadReading for its Cells collection, fills the first column with 1,000 OADate values, and starts five threads that each read a separate segment of that column simultaneously. It uses Interlocked to count completed threads and a StringBuilder to capture any exceptions, finally reporting whether all threads finished without errors, thereby demonstrating thread‑safe concurrent reads.
     class Program
     {
         static void Main()
@@ -22,7 +19,7 @@ namespace AsposeCellsThreadSafetyDemo
             Workbook workbook = new Workbook();
             Cells cells = workbook.Worksheets[0].Cells;
 
-            // Enable multi‑thread reading
+            // Enable multi‑thread reading on the cells collection
             cells.MultiThreadReading = true;
 
             // Populate the first column with sample data (dates converted to OADate)
@@ -50,17 +47,17 @@ namespace AsposeCellsThreadSafetyDemo
                     {
                         for (int row = startRow; row < endRow; row++)
                         {
-                            // Read the cell value (no formatting APIs are used)
+                            // Read the cell value; this is the operation we are testing for thread safety
                             object value = cells[row, 0].Value;
                             Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId}: Cell[{row},0] = {value}");
                         }
 
-                        // Signal successful completion
+                        // Signal successful completion of this thread
                         Interlocked.Increment(ref finished[0]);
                     }
                     catch (Exception ex)
                     {
-                        // Capture any unexpected exception
+                        // Capture any exception details
                         lock (errors)
                         {
                             errors.AppendLine($"Thread {Thread.CurrentThread.ManagedThreadId} error: {ex.Message}");

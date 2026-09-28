@@ -1,28 +1,45 @@
-// Title: Add Integer Custom Document Property 'ProjectId' to an Excel Workbook with Aspose.Cells for .NET
-// Description: Demonstrates how to load an existing Excel file using Aspose.Cells for .NET, add a custom document property named ProjectId with an integer value, and save the workbook preserving the new metadata.
-// Keywords: Aspose.Cells | custom document property | integer property | C# | .NET | Excel metadata | ProjectId | add custom property | Workbook.Save
-// Common Searches: Aspose.Cells add integer custom property | C# add ProjectId custom document property Excel | How to set numeric custom property with Aspose.Cells | Save workbook after adding custom document property .NET | Create custom metadata in Excel using Aspose.Cells
-// Developer Intent: Add an integer custom document property called ProjectId to an existing Excel workbook and save the file.
-// Use Cases: Store a unique project identifier inside the workbook for integration with external systems | Enable version tracking and audit trails by embedding numeric metadata | Facilitate automated processing by tagging files with a database key
-// AI Prompts: Write C# code with Aspose.Cells to add a string custom property 'Author' to a workbook. | Show how to check for an existing custom property before adding 'ProjectId' using Aspose.Cells. | Provide a C# example that lists all custom document properties and their values in an Excel file.
+// Title: How to add an integer custom document property named ProjectId to an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Open an existing Excel file or instantiate a new workbook, then insert a custom document property called ProjectId with an integer value via Aspose.Cells and save the result. | Modify the example to retrieve the ProjectId value from a configuration source or environment variable before adding it as a custom document property. | Enhance the code to detect whether a custom property named ProjectId already exists in the workbook and update its value instead of creating a duplicate.
+// Common Searches: asp.net add integer custom document property to Excel using Aspose.Cells | c# aspose.cells set custom property ProjectId if workbook already contains it | how to open or create Excel file and add custom document property with Aspose.Cells .NET | aspose.cells example for integer custom document properties in Excel | save Excel workbook with custom property ProjectId using C#
+// Tags: integer custom document property Aspose.Cells | create or load workbook Aspose.Cells C# | custom document properties Excel Aspose.Cells | save workbook with custom properties Aspose.Cells | check existing custom property before adding Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Demonstrates how to load an existing Excel file using Aspose.Cells for .NET, add a custom document property named ProjectId with an integer value, and save the workbook preserving the new metadata.
+// The program loads an existing Excel file or creates a new workbook, adds a custom document property named "ProjectId" with the integer value 12345, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load the existing Excel file
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Add a custom document property named "ProjectId" with an integer value
-        // Uses CustomDocumentPropertyCollection.Add(string, int) overload
-        workbook.CustomDocumentProperties.Add("ProjectId", 12345);
+            Workbook workbook;
 
-        // Save the workbook with the new custom property
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook
+            }
+
+            // Add a custom document property named "ProjectId" with an integer value
+            // Overload without isLinkToContent is used for compatibility with various Aspose.Cells versions
+            workbook.CustomDocumentProperties.Add("ProjectId", 12345);
+
+            // Save the workbook with the new custom property
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

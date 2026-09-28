@@ -1,61 +1,50 @@
-// Title: Hide Column B in Aspose.Cells (C#) Using the EntireColumn Property
-// Description: Demonstrates how to create a workbook, obtain the EntireColumn for range B1, retrieve its zero‑based index, hide column B with HideColumn, and save the file as HideColumnB.xlsx.
-// Keywords: Aspose.Cells hide column C# | EntireColumn property | HideColumn method | column B Excel Aspose | .NET Excel column visibility
-// Common Searches: Aspose.Cells hide specific column | C# hide column B using EntireColumn | How to hide a column in Aspose.Cells workbook | Retrieve column index from range Aspose.Cells
-// Developer Intent: Programmatically hide column B by extracting its index via the EntireColumn property and calling HideColumn.
-// Use Cases: Mask confidential data before sharing a workbook | Apply user‑defined column visibility settings | Temporarily collapse columns during dynamic report generation
-// AI Prompts: Write C# code to hide multiple columns using the EntireColumn property in Aspose.Cells. | Show how to toggle column visibility with a boolean flag in Aspose.Cells for .NET. | Explain the steps to get a column index from a Range and hide that column using Aspose.Cells.
+// Title: Hide column B in an Excel workbook using Aspose.Cells .NET EntireColumn property
+// AI Prompts: Write C# code that selects column B via the EntireColumn property and sets its IsHidden flag to true with Aspose.Cells. | Show how to toggle the visibility of a specific column (e.g., column B) in an Excel file using Aspose.Cells .NET APIs. | Provide an example that hides multiple columns (such as C and D) by iterating over their EntireColumn ranges in Aspose.Cells.
+// Common Searches: Aspose.Cells .NET hide column B using EntireColumn property | C# programmatically hide a specific Excel column with Aspose.Cells | How to set column visibility in an Aspose.Cells workbook | Using EntireColumn to hide columns in Aspose.Cells C# example | Save Excel file after hiding columns with Aspose.Cells
+// Tags: Aspose.Cells hide column using EntireColumn | C# set column IsHidden Aspose.Cells | Aspose.Cells column visibility .NET | Excel workbook hide column programmatically | Aspose.Cells save workbook after column hide
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Example demonstrating how to hide a column using the EntireColumn property.
-    // Demonstrates how to create a workbook, obtain the EntireColumn for range B1, retrieve its zero‑based index, hide column B with HideColumn, and save the file as HideColumnB.xlsx.
-    public class HideColumnUsingEntireColumn
+    // The program creates a new workbook, accesses the first worksheet, selects column B via the Columns collection, hides it by setting IsHidden = true, ensures the output directory exists, saves the workbook as output.xlsx, and handles any exceptions.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook.
-                Workbook workbook = new Workbook();
+                // Create a new workbook
+                var workbook = new Workbook();
 
-                // Access the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Get the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-                // Create a range that starts at cell B1.
-                // Use CreateRange to obtain an Aspose.Cells.Range object.
-                Aspose.Cells.Range range = worksheet.Cells.CreateRange("B1");
+                // Hide column B (zero‑based index 1) using the Column object's IsHidden property
+                var column = worksheet.Cells.Columns[1];
+                column.IsHidden = true;
+                // Alternatively: worksheet.Cells.HideColumn(1);
 
-                // Get the entire column that contains the range (column B).
-                Aspose.Cells.Range entireColumn = range.EntireColumn;
+                // Output file path
+                string outputPath = "output.xlsx";
 
-                // Determine the zero‑based column index of the entire column.
-                int columnIndex = entireColumn.FirstColumn; // Column B => index 1
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Hide the column using the column index.
-                worksheet.Cells.HideColumn(columnIndex);
-
-                // Save the workbook.
-                string outputPath = "HideColumnB.xlsx";
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the console application.
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
-            HideColumnUsingEntireColumn.Run();
         }
     }
 }

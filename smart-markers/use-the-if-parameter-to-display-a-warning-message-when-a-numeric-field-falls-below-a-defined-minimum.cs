@@ -1,50 +1,76 @@
-// Title: Aspose.Cells C# – Show a warning when a numeric cell is below a defined minimum
-// Description: Creates an Excel workbook, inserts sample numbers, and adds a whole‑number validation that uses the LessThan operator. The rule is set to the Warning alert style with a custom title and message, so any entry lower than the specified minimum triggers a non‑blocking warning before the file is saved.
-// Keywords: Aspose.Cells | C# | Excel data validation | warning alert | LessThan operator | minimum numeric value | smart markers example | US developers | EU developers
-// Common Searches: Aspose.Cells show warning for low numeric value C# | Excel validation less than threshold with warning dialog using Aspose.Cells | C# data validation warning style Aspose.Cells example | How to add a warning alert to a cell range in Aspose.Cells
-// Developer Intent: Add a validation rule that displays a warning message when a cell’s numeric entry is smaller than a preset minimum.
-// Use Cases: Enforce a minimum purchase amount in a sales ledger while allowing the user to continue after acknowledging the warning. | Alert inventory managers when a stock count is entered below the reorder level without blocking the spreadsheet. | Provide immediate feedback for age fields in a registration form, warning when the age is below the legal threshold.
-// AI Prompts: Generate Aspose.Cells C# code that warns if values in B2:B15 are less than 5, using a custom error title. | Explain how to replace the constant minimum with a cell reference or named range in the validation rule. | Show how to apply the same warning validation to an entire column and customize the message based on the column header.
+// Title: Add a warning‑style numeric minimum validation with custom error and input messages to a cell range using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, fills column A, and applies a whole‑number validation to A1:A10 that shows a warning when the entered value is less than 10 using Aspose.Cells. | Generate a C# snippet to configure ValidationAlertType.Warning with a custom error title and message for numeric cells that fall below a defined threshold in an Aspose.Cells worksheet. | Provide a C# example that adds an input prompt and warning message to a numeric validation rule for a column of cells in an Excel file using Aspose.Cells.
+// Common Searches: asp.net add warning data validation for numbers below minimum using Aspose.Cells | c# Aspose.Cells set numeric validation with custom error title and message | how to show input message with numeric validation in Aspose.Cells workbook | Aspose.Cells less than operator warning alert example in C#
+// Tags: Aspose.Cells warning style validation | C# set validation alert type warning | custom error title Aspose.Cells | input prompt for validated cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsIfWarningDemo
+namespace AsposeCellsExamples
 {
-    // Creates an Excel workbook, inserts sample numbers, and adds a whole‑number validation that uses the LessThan operator. The rule is set to the Warning alert style with a custom title and message, so any entry lower than the specified minimum triggers a non‑blocking warning before the file is saved.
+    // The example creates a workbook, populates column A with numeric values, adds a whole‑number validation to cells A1:A10 that triggers a warning when a value is less than 10, and configures custom error title, error message, and an input prompt before saving the file as NumericMinimumWarningDemo.xlsx.
+    public class NumericMinimumWarningDemo
+    {
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Populate some sample numeric data in column A (cells A1:A10)
+                for (int i = 0; i < 10; i++)
+                {
+                    worksheet.Cells[i, 0].PutValue(i * 5); // values: 0,5,10,...45
+                }
+
+                // Define the range to which the validation will be applied (A1:A10)
+                CellArea validationArea = CellArea.CreateCellArea(0, 0, 9, 0);
+
+                // Add a validation rule to the worksheet using the newer API
+                int validationIndex = worksheet.Validations.Add(validationArea);
+                Validation validation = worksheet.Validations[validationIndex];
+
+                // Configure the validation:
+                // - Whole number type
+                // - Operator: LessThan (value must be less than the minimum)
+                // - Minimum threshold set to 10
+                validation.Type = ValidationType.WholeNumber;
+                validation.Operator = OperatorType.LessThan;
+                validation.Formula1 = "10";
+
+                // Set the alert style to Warning so a warning message is shown (not a stop)
+                validation.AlertStyle = ValidationAlertType.Warning;
+
+                // Provide a title and message for the warning
+                validation.ErrorTitle = "Value Too Low";
+                validation.ErrorMessage = "The entered number is below the allowed minimum of 10.";
+
+                // Ensure the warning is displayed when the user enters an invalid value
+                validation.ShowError = true;
+
+                // Optionally, display an input message when the cell is selected
+                validation.ShowInput = true;
+                validation.InputTitle = "Enter Value";
+                validation.InputMessage = "Please enter a number greater than or equal to 10.";
+
+                // Save the workbook
+                workbook.Save("NumericMinimumWarningDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
     public class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Define the minimum allowed value
-            const int minAllowed = 10;
-
-            // Add some sample data (some values below the minimum)
-            sheet.Cells["A1"].PutValue(5);   // Below minimum – should trigger warning
-            sheet.Cells["A2"].PutValue(12);  // Above minimum – no warning
-            sheet.Cells["A3"].PutValue(8);   // Below minimum – should trigger warning
-
-            // Create a validation rule for the range A1:A3
-            Validation validation = sheet.Validations[sheet.Validations.Add()];
-            validation.AddArea(CellArea.CreateCellArea("A1", "A3"));
-
-            // Set validation to WholeNumber and use the "LessThan" operator
-            validation.Type = ValidationType.WholeNumber;
-            validation.Operator = OperatorType.LessThan;
-            validation.Formula1 = minAllowed.ToString(); // Minimum threshold
-
-            // Configure the warning style (not a stop error)
-            validation.AlertStyle = ValidationAlertType.Warning; // Show a warning dialog
-            validation.ShowError = true;                         // Enable the message
-            validation.ErrorTitle = "Value Too Low";
-            validation.ErrorMessage = $"The entered number must be greater than or equal to {minAllowed}.";
-
-            // Save the workbook
-            workbook.Save("IfWarningDemo.xlsx");
+            NumericMinimumWarningDemo.Run();
         }
     }
 }

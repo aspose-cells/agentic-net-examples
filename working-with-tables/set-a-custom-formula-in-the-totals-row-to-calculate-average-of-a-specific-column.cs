@@ -1,96 +1,74 @@
-// Title: C# – Apply a Custom Average Formula to a Table’s Totals Row Using Aspose.Cells
-// Description: Shows how to build a new workbook, populate rows with item data, turn the range A1:C6 into a ListObject, enable the totals row, mark the Price column for custom calculation, and assign the structured reference =AVERAGE([Price]) through SetCustomTotalsRowFormula before exporting to an XLSX file.
-// Keywords: Aspose.Cells C# | SetCustomTotalsRowFormula | Excel table totals row | custom calculation | structured reference formula | average of column | ListObject API | C# spreadsheet automation | totals row custom formula | Aspose.Cells examples
-// Common Searches: Aspose.Cells set custom formula in totals row C# | How to calculate average in table totals row with Aspose.Cells | ListObject SetCustomTotalsRowFormula example | C# code for average column in Excel table totals row | structured reference AVERAGE formula Aspose.Cells
-// Developer Intent: Generate an Excel file where a table’s totals row displays the mean value of a chosen column via a user‑defined formula.
-// Use Cases: Sales ledger that highlights average unit price at the bottom of the price column. | Inventory sheet that reports the mean quantity across items in the totals row. | Budget overview where the average expense per category is shown in the table footer.
-// AI Prompts: Create C# Aspose.Cells code that adds a table with a totals row and sets a custom AVERAGE formula for the "Price" column. | Explain the parameters of SetCustomTotalsRowFormula, including A1 vs R1C1 notation and locale settings. | Show how to reference a column by its index when assigning a custom totals‑row formula in Aspose.Cells.
+// Title: Add an AVERAGE formula to the totals row of an Aspose.Cells ListObject table in C#
+// AI Prompts: Generate C# code that creates a workbook with Aspose.Cells, inserts a ListObject table, turns on the totals row, and sets the formula AVERAGE([Quantity]) in the totals row for the Quantity column. | Modify an existing Aspose.Cells workbook to enable the totals row of a table and apply a custom structured‑reference formula that computes the average of a specified column. | Write a C# routine that saves an Aspose.Cells workbook to a given file path, ensuring the output directory is created if it does not already exist.
+// Common Searches: how to use structured references for totals row formulas with Aspose.Cells ListObject in C# | Aspose.Cells C# set average calculation in table totals row | C# example of adding a totals row to an Excel table and applying AVERAGE formula using Aspose.Cells | create Excel table with totals row and custom formula programmatically with Aspose.Cells
+// Tags: Aspose.Cells ListObject totals row formula | C# set AVERAGE structured reference | Excel table average calculation Aspose.Cells | programmatic totals row creation Aspose.Cells | save workbook with directory creation C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-namespace AsposeCellsExamples
+// Demonstrates creating a workbook, adding a ListObject table, enabling the totals row, labeling it "Average", assigning the structured‑reference formula AVERAGE([Quantity]) to the Quantity column in the totals row, and saving the file while ensuring the output folder exists.
+class Program
 {
-    // Shows how to build a new workbook, populate rows with item data, turn the range A1:C6 into a ListObject, enable the totals row, mark the Price column for custom calculation, and assign the structured reference =AVERAGE([Price]) through SetCustomTotalsRowFormula before exporting to an XLSX file.
-    public class SetCustomTotalsRowAverage
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("Cherry");
+            sheet.Cells["B4"].PutValue(30);
+
+            // Define the range for the table (including header and data)
+            int firstRow = 0;      // zero‑based index for row 1
+            int firstColumn = 0;   // zero‑based index for column A
+            int totalRows = 5;     // rows 1‑5 (header + 4 data rows)
+            int totalColumns = 2;  // columns A‑B
+
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+
+            // Enable the totals row
+            table.ShowTotals = true;
+
+            // Calculate the index of the totals row (zero‑based)
+            int totalsRowIndex = firstRow + totalRows - 1;
+
+            // Set a label in the first column of the totals row
+            sheet.Cells[totalsRowIndex, 0].PutValue("Average");
+
+            // Set a formula in the "Quantity" column of the totals row to calculate the average
+            // Using structured reference for the column inside the table
+            sheet.Cells[totalsRowIndex, 1].Formula = "AVERAGE([Quantity])";
+
+            // Save the workbook to a file
+            string outputPath = "TableWithAverageTotals.xlsx";
+
+            // Ensure the directory exists (prevents FileNotFoundException on save)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data (header + 5 rows)
-                cells["A1"].PutValue("Item");
-                cells["B1"].PutValue("Quantity");
-                cells["C1"].PutValue("Price");
-
-                cells["A2"].PutValue("Apple");
-                cells["B2"].PutValue(10);
-                cells["C2"].PutValue(1.5);
-
-                cells["A3"].PutValue("Banana");
-                cells["B3"].PutValue(20);
-                cells["C3"].PutValue(0.8);
-
-                cells["A4"].PutValue("Cherry");
-                cells["B4"].PutValue(15);
-                cells["C4"].PutValue(2.0);
-
-                cells["A5"].PutValue("Date");
-                cells["B5"].PutValue(5);
-                cells["C5"].PutValue(3.5);
-
-                cells["A6"].PutValue("Elderberry");
-                cells["B6"].PutValue(8);
-                cells["C6"].PutValue(4.2);
-
-                // Add a table that includes the data range (A1:C6) and enable totals row
-                int tableIndex = sheet.ListObjects.Add("A1", "C6", true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.ShowTotals = true;
-
-                // Choose the column for which we want a custom average in the totals row (e.g., "Price")
-                ListColumn priceColumn = table.ListColumns["Price"]; // can also use index 2
-
-                // Set the totals calculation type to Custom
-                priceColumn.TotalsCalculation = TotalsCalculation.Custom;
-
-                // Define a custom formula for the totals row using structured reference
-                // isR1C1 = false (A1 style), isLocal = false (invariant locale)
-                priceColumn.SetCustomTotalsRowFormula("=AVERAGE([Price])", false, false);
-
-                // Ensure output directory exists
-                string outputPath = "CustomTotalsRowAverage.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Directory.CreateDirectory(outputDir);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred while creating the workbook:");
-                Console.WriteLine(ex.Message);
-            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetCustomTotalsRowAverage.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

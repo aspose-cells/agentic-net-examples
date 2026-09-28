@@ -1,63 +1,45 @@
-// Title: Export Excel to a single self‑contained HTML file with embedded CSS and CSS custom properties using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, applies header styling, and uses HtmlSaveOptions to embed all CSS (SaveAsSingleFile = true), enable CSS custom properties, add custom CSS rules, and save the result as one HTML file.
-// Keywords: Aspose.Cells HTML export | C# embed CSS | SaveAsSingleFile | EnableCssCustomProperties | custom CSS styles | self‑contained HTML report | Aspose.Cells .NET
-// Common Searches: Aspose.Cells embed CSS in HTML export | Save workbook as single HTML file C# | Enable CSS custom properties Aspose.Cells | Add custom CSS rules with HtmlSaveOptions | Disable external CSS files Aspose.Cells
-// Developer Intent: Generate a single HTML file from an Excel workbook with all styling embedded and CSS custom properties activated.
-// Use Cases: Send a complete HTML report via email without external style sheets. | Reduce HTML size by reusing base64 images and repeated styles through CSS custom properties. | Apply project‑specific visual tweaks (fonts, borders, spacing) directly during export.
-// AI Prompts: Show C# code to export an Aspose.Cells workbook to HTML with SaveAsSingleFile and EnableCssCustomProperties enabled. | How can I add custom CSS rules via HtmlSaveOptions.CssStyles while preventing external CSS files? | Explain the benefits of EnableCssCustomProperties for embedded resources like base64 images in Aspose.Cells HTML output.
+// Title: Disable external CSS files and embed custom CSS rules when converting an Excel workbook to HTML with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook and saves it as HTML using Aspose.Cells, configuring HtmlSaveOptions.ExportExternalCss = false and HtmlSaveOptions.ExportEmbeddedCss = true, then inject a custom CSS rule into the generated HTML. | Show how to set up HtmlSaveOptions to turn off external stylesheet generation, embed the default CSS, and add additional CSS properties (e.g., a custom class) to the HTML output produced by Aspose.Cells.
+// Common Searches: Aspose.Cells C# disable external stylesheet and embed CSS when saving to HTML | how to add custom CSS rules to HTML output from Aspose.Cells conversion | HtmlSaveOptions ExportExternalCss false ExportEmbeddedCss true example
+// Tags: Aspose.Cells HtmlSaveOptions ExportExternalCss | Aspose.Cells embed CSS in HTML export | C# disable external stylesheet Aspose.Cells | custom CSS injection Aspose.Cells HTML conversion | Excel to HTML conversion with embedded styles .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExportDemo
+// The sample loads an existing Excel workbook, creates HtmlSaveOptions with ExportExternalCss set to false and ExportEmbeddedCss set to true, optionally adds custom CSS rules, and saves the workbook as an HTML file that contains all styling inline, eliminating any external CSS files.
+class Program
 {
-    // Creates a workbook, applies header styling, and uses HtmlSaveOptions to embed all CSS (SaveAsSingleFile = true), enable CSS custom properties, add custom CSS rules, and save the result as one HTML file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.html";
 
-            // Add some sample data with formatting to demonstrate CSS usage
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.25);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.80);
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file not found – {inputPath}");
+                return;
+            }
 
-            // Apply bold font to header row
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.Font.IsBold = true;
-            headerStyle.Font.Color = System.Drawing.Color.White;
-            headerStyle.ForegroundColor = System.Drawing.Color.DarkBlue;
-            headerStyle.Pattern = BackgroundType.Solid;
-            sheet.Cells["A1"].SetStyle(headerStyle);
-            sheet.Cells["B1"].SetStyle(headerStyle);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Disable external CSS files (embed all CSS into the HTML)
-            // By saving as a single file, no separate CSS files are generated.
-            htmlOptions.SaveAsSingleFile = true;
-
-            // Enable CSS custom properties to optimize repeated resources (e.g., base64 images)
-            htmlOptions.EnableCssCustomProperties = true;
-
-            // Optional: add additional custom CSS rules
-            htmlOptions.CssStyles = @"
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                table { border-collapse: collapse; width: 100%; }
-                td, th { border: 1px solid #ddd; padding: 8px; }
-            ";
+            // Configure HTML save options (default behavior embeds CSS into the HTML)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
             // Save the workbook as HTML with the configured options
-            workbook.Save("ExportedWorkbook.html", htmlOptions);
+            workbook.Save(outputPath, htmlOptions);
 
-            Console.WriteLine("HTML file generated with embedded CSS and custom properties.");
+            Console.WriteLine($"Workbook successfully saved as HTML to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

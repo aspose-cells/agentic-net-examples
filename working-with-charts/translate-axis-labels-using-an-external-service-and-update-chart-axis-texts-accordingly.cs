@@ -1,100 +1,130 @@
-// Title: Translate Aspose.Cells Chart Axis Labels Using an External Service (C#/.NET)
-// Description: Creates a workbook with a column chart, extracts the current X‑ and Y‑axis texts, translates each label via an async external service, writes the translated category names back to the sheet, reassigns the category range, applies a custom number format to the value axis, and saves the file as TranslatedChart.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | chart axis translation | localize chart labels | external translation API | async label translation | category axis update | value axis number format | Excel chart localization | Aspose.Cells Chart API
-// Common Searches: Aspose.Cells translate chart axis labels | localize Excel chart axis text C# | update category axis after chart creation Aspose.Cells | apply custom number format to value axis Aspose.Cells | call translation service from Aspose.Cells example | async translation of chart labels .NET
-// Developer Intent: Replace chart axis texts with translations obtained from an external service.
-// Use Cases: Localize chart axis labels by calling a translation API for each label and writing the results back to the source cells. | Refresh the chart after updating the category data range so the new translated labels appear automatically. | Show numeric axis values with a language‑specific suffix using a custom number format.
-// AI Prompts: Generate C# code that calls Azure Translator to translate Aspose.Cells chart axis labels and updates the chart. | Explain how to set a dynamic number format on the value axis to append a language code suffix to each numeric label. | Provide steps to recalculate and redraw an Aspose.Cells chart after modifying worksheet cells that supply category data.
+// Title: Translate Excel chart category axis labels with Aspose.Cells using an external REST API in C#
+// AI Prompts: Generate C# code that extracts the category axis texts from an Aspose.Cells chart, calls a translation REST endpoint for each label, and returns the translated strings. | Add comprehensive error handling so that if a translation request fails, the original label is kept, then write the final labels back to the worksheet cells. | Demonstrate how to recalculate the chart after updating the source cells and save the workbook as an XLSX file with Aspose.Cells.
+// Common Searches: how to use Aspose.Cells to translate chart axis labels via a web service in C# | c# Aspose.Cells update category axis text after calling external API | refresh Excel chart in Aspose.Cells after programmatically changing cell values | handle translation API failures when modifying Excel chart labels with Aspose.Cells
+// Tags: Aspose.Cells chart axis localization via REST | C# update category axis text in Excel chart | recalculate Aspose.Cells chart after cell edit | error handling external translation service Aspose.Cells | save workbook as XLSX using Aspose.Cells
 
 using System;
+using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartAxisTranslation
+// Shows how to create a workbook, add a column chart, read its category axis labels, translate each label through an async HTTP call, write the translated labels back to the source cells, recalculate the chart to reflect the changes, and save the result as an XLSX file.
+class Program
 {
-    // Creates a workbook with a column chart, extracts the current X‑ and Y‑axis texts, translates each label via an async external service, writes the translated category names back to the sheet, reassigns the category range, applies a custom number format to the value axis, and saves the file as TranslatedChart.xlsx.
-    class Program
+    static async Task Main(string[] args)
     {
-        // Mock external translation service – replace with real implementation as needed
-        private static async Task<string> TranslateAsync(string text, string targetLanguage = "es")
+        try
         {
-            // Simulate async call latency
-            await Task.Delay(10);
-            // Simple mock: append language code
-            return $"{text}_{targetLanguage}";
+            // Create workbook (lifecycle rule placeholder)
+            Workbook workbook = CreateWorkbook();
+
+            Worksheet ws = workbook.Worksheets[0];
+
+            // Populate sample data
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["A3"].PutValue("B");
+            ws.Cells["A4"].PutValue("C");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["B2"].PutValue(8000);
+            ws.Cells["B3"].PutValue(4000);
+            ws.Cells["B4"].PutValue(-8000);
+
+            // Add a column chart
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = ws.Charts[chartIdx];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Calculate chart to generate axis texts
+            chart.Calculate();
+
+            // Retrieve current axis labels
+            string[] originalLabels = chart.CategoryAxis.GetAxisTexts();
+
+            // Translate each label via an external service (fallback to original on failure)
+            string[] translatedLabels = new string[originalLabels.Length];
+            for (int i = 0; i < originalLabels.Length; i++)
+            {
+                try
+                {
+                    translatedLabels[i] = await TranslateLabelAsync(originalLabels[i]);
+                }
+                catch (Exception ex)
+                {
+                    // Log the error and keep the original label
+                    Console.WriteLine($"Translation failed for \"{originalLabels[i]}\": {ex.Message}");
+                    translatedLabels[i] = originalLabels[i];
+                }
+            }
+
+            // Write translated labels back to the source cells (A2, A3, ...)
+            for (int i = 0; i < translatedLabels.Length; i++)
+            {
+                ws.Cells[i + 1, 0].PutValue(translatedLabels[i]); // Row i+1, column 0 = "A"
+            }
+
+            // Recalculate chart to reflect updated labels
+            chart.Calculate();
+
+            // Save workbook (lifecycle rule placeholder)
+            SaveWorkbook(workbook, "TranslatedChart.xlsx");
         }
-
-        static async Task Main()
+        catch (Exception ex)
         {
-            try
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
+    }
+
+    // Calls an external translation service (mock implementation with graceful fallback)
+    static async Task<string> TranslateLabelAsync(string text)
+    {
+        // Replace with a real endpoint if available
+        const string endpoint = "https://api.example.com/translate";
+
+        using (HttpClient client = new HttpClient())
+        {
+            // Build request URL
+            string requestUrl = $"{endpoint}?text={Uri.EscapeDataString(text)}&to=es";
+
+            // Send request
+            HttpResponseMessage response = await client.GetAsync(requestUrl);
+            response.EnsureSuccessStatusCode();
+
+            // Return translated text
+            return await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    // Placeholder for the create lifecycle rule
+    static Workbook CreateWorkbook()
+    {
+        // The actual implementation is supplied by the rule engine
+        return new Workbook();
+    }
+
+    // Placeholder for the save lifecycle rule
+    static void SaveWorkbook(Workbook wb, string path)
+    {
+        try
+        {
+            // Ensure the directory exists
+            string directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                // ---------- Create a new workbook ----------
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["A4"].PutValue("Cherry");
-
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["B4"].PutValue(150);
-
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set data range for series and categories
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Calculate the chart so that axis labels are generated
-                chart.Calculate();
-
-                // ---------- Retrieve current axis labels ----------
-                // Value axis (Y‑axis) labels
-                string[] valueAxisLabels = chart.ValueAxis.GetAxisTexts();
-
-                // Category axis (X‑axis) labels
-                string[] categoryAxisLabels = chart.CategoryAxis.GetAxisTexts();
-
-                // ---------- Translate labels ----------
-                for (int i = 0; i < valueAxisLabels.Length; i++)
-                {
-                    valueAxisLabels[i] = await TranslateAsync(valueAxisLabels[i]);
-                }
-
-                for (int i = 0; i < categoryAxisLabels.Length; i++)
-                {
-                    categoryAxisLabels[i] = await TranslateAsync(categoryAxisLabels[i]);
-                }
-
-                // ---------- Update axis labels ----------
-                // Write translated category names back to the worksheet.
-                for (int i = 0; i < categoryAxisLabels.Length; i++)
-                {
-                    // Cells A2, A3, ... hold the original category names
-                    sheet.Cells[i + 2, 0].PutValue(categoryAxisLabels[i]);
-                }
-
-                // Re‑assign the category data range to reflect the new texts
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // For value‑axis labels (numeric), set a custom number format that includes the language suffix.
-                // Example: 120 becomes 120_es
-                chart.ValueAxis.TickLabels.NumberFormat = "\"_es\"0";
-
-                // ---------- Save the workbook ----------
-                workbook.Save("TranslatedChart.xlsx", SaveFormat.Xlsx);
+                Directory.CreateDirectory(directory);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook
+            wb.Save(path, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to \"{path}\"");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            throw;
         }
     }
 }

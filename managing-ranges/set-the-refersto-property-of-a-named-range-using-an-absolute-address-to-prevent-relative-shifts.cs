@@ -1,47 +1,56 @@
-// Title: C# – Set an absolute RefersTo address for a named range in Aspose.Cells to prevent shifting
-// Description: Creates a workbook, adds data to Sheet1, defines a named range "MyAbsoluteRange" and assigns its RefersTo property with an absolute A1‑style address ("=Sheet1!$A$1:$A$3") using SetRefersTo, ensuring the range stays fixed when rows or columns are inserted, then saves the file.
-// Keywords: Aspose.Cells | named range absolute address | SetRefersTo | C# | RefersTo property | prevent range shift | A1 style reference
-// Common Searches: Aspose.Cells set RefersTo absolute address C# | prevent named range from moving when inserting rows Aspose.Cells | SetRefersTo parameters isR1C1 false isLocal false | how to create fixed named range Aspose.Cells | absolute reference in named range Aspose.Cells .NET
-// Developer Intent: Define a named range with an absolute A1‑style address so it remains unchanged after inserting rows or columns.
-// Use Cases: Maintain a constant reference to cells A1:A3 for formulas, charts, or data validation. | Export workbooks where downstream processes rely on stable named ranges. | Create templates that preserve key ranges despite user edits or automated row insertions.
-// AI Prompts: Write C# code with Aspose.Cells that creates a named range using an absolute RefersTo address that does not shift when rows are added. | Explain the purpose of the isR1C1 and isLocal parameters in SetRefersTo when assigning an absolute address to a named range.
+// Title: Set the RefersTo property of a named range to an absolute address in Aspose.Cells for .NET
+// AI Prompts: Create a Name called MyAbsoluteRange and assign its RefersTo property the absolute range $A$1:$B$10 using Aspose.Cells. | Add a named range to the worksheet's Names collection and lock it with an absolute address so it does not move when rows or columns are inserted. | Ensure the output folder exists, then save the workbook and verify that the named range retains the absolute reference.
+// Common Searches: Aspose.Cells how to set a named range with an absolute address | prevent named range from shifting after inserting rows in .NET Excel library | RefersTo property absolute reference example for Aspose.Cells | save workbook with fixed named range using Aspose.Cells for C#
+// Tags: Aspose.Cells RefersTo absolute address | named range fixed reference .NET | add named range to worksheet Names collection | save workbook with named range Aspose.Cells | prevent range shift on row insert Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsAbsoluteNamedRange
+// The example creates a workbook, adds sample data, defines an absolute address "$A$1:$B$10", adds a named range "MyAbsoluteRange" to the worksheet's Names collection, sets its RefersTo property to the absolute address, ensures the output directory exists, and saves the file as Output.xlsx.
+class Program
 {
-    // Creates a workbook, adds data to Sheet1, defines a named range "MyAbsoluteRange" and assigns its RefersTo property with an absolute A1‑style address ("=Sheet1!$A$1:$A$3") using SetRefersTo, ensuring the range stays fixed when rows or columns are inserted, then saves the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet and give it a name
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].PutValue(30);
+            // Optional: put some sample data
+            sheet.Cells["A1"].PutValue(1);
+            sheet.Cells["B10"].PutValue(10);
 
-            // Add a named range to the workbook
+            // Define the absolute address for the named range
+            // The $ signs make the address absolute, preventing relative shifts
+            string absoluteAddress = "$A$1:$B$10";
+
+            // Add a named range to the workbook's Names collection
+            // Add returns the index of the newly added name
             int nameIndex = workbook.Worksheets.Names.Add("MyAbsoluteRange");
             Name namedRange = workbook.Worksheets.Names[nameIndex];
 
-            // Set the RefersTo property using an absolute address.
-            // The address is absolute ($ signs) so it will not shift when rows/columns are inserted.
-            // Using SetRefersTo with isR1C1 = false (A1 style) and isLocal = false (invariant locale).
-            namedRange.SetRefersTo("=Sheet1!$A$1:$A$3", false, false);
+            // Set the RefersTo property using the absolute address
+            namedRange.RefersTo = absoluteAddress;
 
-            // Optionally, you could also assign directly:
-            // namedRange.RefersTo = "=Sheet1!$A$1:$A$3";
+            // Determine output file path
+            string outputPath = "Output.xlsx";
 
-            // Save the workbook to a file
-            workbook.Save("AbsoluteNamedRange.xlsx");
+            // Ensure the directory exists (prevents FileNotFoundException on save)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

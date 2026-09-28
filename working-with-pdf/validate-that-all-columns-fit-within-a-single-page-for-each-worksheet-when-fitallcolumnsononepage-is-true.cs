@@ -1,83 +1,89 @@
-// Title: C# – Validate that all columns fit on a single PDF page per worksheet with Aspose.Cells
-// Description: Loads an Excel workbook, sets each worksheet’s FitToPagesWide to 1, enables AllColumnsInOnePagePerSheet and OnePagePerSheet, renders each sheet to verify the page count, logs a warning for sheets that exceed one page, and saves the workbook as a PDF with the same one‑page‑wide configuration.
-// Keywords: Aspose.Cells | C# | .NET | FitToPagesWide | AllColumnsInOnePagePerSheet | PDF conversion | column width validation | SheetRender page count | PdfSaveOptions | Excel to PDF
-// Common Searches: Aspose.Cells fit all columns on one PDF page | C# validate worksheet page count before PDF export | How to use AllColumnsInOnePagePerSheet with Aspose.Cells | Set FitToPagesWide = 1 for each sheet in Aspose.Cells | Check if Excel columns fit on a single PDF page .NET
-// Developer Intent: Confirm that every worksheet renders to exactly one PDF page and enforce the setting before saving.
-// Use Cases: Validate column fitting prior to generating PDF reports to avoid unintended multi‑page spreads. | Automatically adjust PageSetup for each worksheet so the PDF output is one page wide. | Detect and log worksheets that still exceed one page after applying FitToPagesWide = 1.
-// AI Prompts: Show C# code that uses Aspose.Cells to verify each worksheet renders to a single page when AllColumnsInOnePagePerSheet is enabled. | Explain how to programmatically set FitToPagesWide = 1 for all worksheets and save the workbook as a one‑page‑wide PDF. | Provide a method to capture and handle cases where a worksheet exceeds one page after applying the one‑page‑wide setting.
+// Title: Check if all columns fit on one printed page for worksheets with FitAllColumnsOnOnePage enabled using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates through each worksheet in a workbook and reports whether the combined width of used columns fits within the printable area when FitToPagesWide is set to 1. | Create a reusable function in Aspose.Cells that returns a boolean indicating if a worksheet's columns can be printed on a single page, handling pixel‑to‑point conversion and margin calculations. | Write a C# routine that lists the column indexes that cause the total width to exceed the printable page width for worksheets with FitAllColumnsOnOnePage enabled.
+// Common Searches: how to verify column width fits on one page with Aspose.Cells C# | Aspose.Cells check FitAllColumnsOnOnePage column overflow | C# calculate printable page width for Excel worksheet using Aspose.Cells | determine if Excel columns exceed printable area when FitToPagesWide = 1 | validate worksheet column layout before PDF export Aspose.Cells
+// Tags: Aspose.Cells column width validation | FitAllColumnsOnOnePage printable width check | pixel to point conversion Aspose.Cells | worksheet margin calculation Aspose.Cells | Excel to PDF column overflow detection
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Loads an Excel workbook, sets each worksheet’s FitToPagesWide to 1, enables AllColumnsInOnePagePerSheet and OnePagePerSheet, renders each sheet to verify the page count, logs a warning for sheets that exceed one page, and saves the workbook as a PDF with the same one‑page‑wide configuration.
-class FitAllColumnsValidator
+// C# program that loads an XLSX workbook, examines each worksheet with FitToPagesWide set to 1, converts column pixel widths to points, computes the printable page width from margins, and reports whether the total column width fits on a single printed page.
+class ColumnFitValidator
 {
     static void Main()
     {
         try
         {
             const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
 
-            // Verify that the input workbook exists; create a new one if it does not.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
-                workbook = new Workbook();
-                // Optionally add a sample worksheet with data here.
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
 
-            // Flag indicating whether to enforce all columns on one page
-            bool fitAllColumnsOnOnePage = true;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            if (fitAllColumnsOnOnePage)
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Configure each worksheet to fit all columns on a single page
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    ws.PageSetup.FitToPagesWide = 1; // one page wide
-                    ws.PageSetup.FitToPagesTall = 0; // height adjusts automatically
-                }
+                // Determine if the worksheet is configured to fit all columns on one page
+                // In Aspose.Cells this is represented by FitToPagesWide == 1
+                bool fitAllColumnsOnOnePage = sheet.PageSetup.FitToPagesWide == 1;
 
-                // Rendering options used for validation
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+                if (fitAllColumnsOnOnePage)
                 {
-                    AllColumnsInOnePagePerSheet = true,
-                    OnePagePerSheet = true
-                };
+                    // Calculate printable width of the page (points)
+                    // PaperWidth, LeftMargin, RightMargin are in points (1 point = 1/72 inch)
+                    double printableWidth = sheet.PageSetup.PaperWidth
+                                            - sheet.PageSetup.LeftMargin
+                                            - sheet.PageSetup.RightMargin;
 
-                // Validate that each worksheet fits on one page
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    SheetRender render = new SheetRender(ws, renderOptions);
-                    int pageCount = render.PageCount;
-                    Console.WriteLine($"Worksheet \"{ws.Name}\" page count: {pageCount}");
-                    if (pageCount != 1)
+                    // Sum the widths of all used columns
+                    double totalColumnWidthPoints = 0.0;
+                    int maxColumn = sheet.Cells.MaxDataColumn; // last column that contains data
+
+                    // If the sheet is empty, skip validation
+                    if (maxColumn < 0)
                     {
-                        Console.WriteLine("Warning: Columns do not fit within a single page.");
+                        Console.WriteLine($"Worksheet \"{sheet.Name}\": empty sheet, nothing to validate.");
+                        continue;
+                    }
+
+                    for (int col = 0; col <= maxColumn; col++)
+                    {
+                        // Get column width in pixels via Cells collection
+                        int widthPixels = sheet.Cells.GetColumnWidthPixel(col);
+                        // Convert pixels to points (default screen DPI = 96)
+                        double widthPoints = widthPixels * 72.0 / 96.0; // 1 point = 1/72 inch
+                        totalColumnWidthPoints += widthPoints;
+                    }
+
+                    // Validate whether total column width fits within printable width
+                    if (totalColumnWidthPoints <= printableWidth)
+                    {
+                        Console.WriteLine($"Worksheet \"{sheet.Name}\": all columns fit on one page (total width {totalColumnWidthPoints:F2} pt, printable width {printableWidth:F2} pt).");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Worksheet \"{sheet.Name}\": columns exceed one page (total width {totalColumnWidthPoints:F2} pt, printable width {printableWidth:F2} pt).");
                     }
                 }
-
-                // Save the workbook as PDF with the same fitting options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                else
                 {
-                    AllColumnsInOnePagePerSheet = true,
-                    OnePagePerSheet = true
-                };
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook saved as PDF to \"{outputPath}\".");
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\": FitAllColumnsOnOnePage is disabled, validation skipped.");
+                }
             }
+
+            // No changes are made to the workbook, so saving is optional.
+            // Uncomment the following line if you need to save the workbook.
+            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

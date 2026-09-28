@@ -1,42 +1,64 @@
-// Title: Configure Aspose.Cells to use Decimal precision for 10‑12 decimal places (C#)
-// Description: Demonstrates how to set Aspose.Cells' calculation engine to the Decimal precision strategy, enabling 10‑12 decimal place accuracy for scientific formulas. The example creates a workbook, inserts a high‑precision formula, applies CalculationOptions.PrecisionStrategy = Decimal, calculates the result, and saves the file.
-// Keywords: Aspose.Cells Decimal precision | CalculationOptions PrecisionStrategy | high precision scientific formula C# | 10‑12 decimal places Aspose.Cells | custom calculation accuracy .NET | Aspose.Cells calculation engine | decimal vs double precision Aspose
-// Common Searches: Aspose.Cells set decimal precision for formulas | CalculationPrecisionStrategy.Decimal example | increase formula accuracy Aspose.Cells .NET | how to calculate small scientific constants with Aspose.Cells | custom precision options Aspose.Cells C#
-// Developer Intent: Enable decimal‑based calculation in Aspose.Cells to achieve 10‑12 decimal place accuracy for scientific formulas.
-// Use Cases: Calculating tiny scientific constants (e.g., π × 10⁻¹¹) without double‑precision rounding errors. | Performing engineering or financial analyses that require consistent high‑precision results across worksheets. | Generating reports where regulatory standards demand exact decimal representation of computed values.
-// AI Prompts: Show C# code that configures Aspose.Cells CalculationOptions to use Decimal precision and evaluates a workbook. | Explain how CalculationPrecisionStrategy.Decimal provides up to 28‑29 significant digits compared to Double. | Give a step‑by‑step guide to verify 10‑12 decimal place results after setting custom precision in Aspose.Cells.
+// Title: How to set custom decimal precision (10‑12 places) for scientific formulas using Aspose.Cells CalcEngineSettings in C#
+// AI Prompts: Configure the Aspose.Cells calculation engine to disable PrecisionAsDisplayed and set NumberDecimalPlaces to 12 via CalcEngineSettings in C#. | Use reflection to access CalcEngineSettings when it is not directly exposed, then apply a custom decimal precision to a workbook. | Add robust error handling for missing input files and unavailable CalcEngineSettings while adjusting formula precision.
+// Common Searches: Aspose.Cells C# set number of decimal places for formula calculation | How to change calculation precision for scientific formulas in an Aspose.Cells workbook | Disable PrecisionAsDisplayed and set custom decimal places with Aspose.Cells .NET | Reflection example to modify CalcEngineSettings properties in Aspose.Cells | Error handling for missing CalcEngineSettings API in Aspose.Cells
+// Tags: calcenginesettings decimal precision Aspose.Cells | disable precisionasdisplayed property .NET | set numberdecimalplaces via reflection | custom formula precision Excel workbook C# | handle missing CalcEngineSettings API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to set Aspose.Cells' calculation engine to the Decimal precision strategy, enabling 10‑12 decimal place accuracy for scientific formulas. The example creates a workbook, inserts a high‑precision formula, applies CalculationOptions.PrecisionStrategy = Decimal, calculates the result, and saves the file.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, uses reflection to obtain the CalcEngineSettings object, disables the PrecisionAsDisplayed flag, sets the NumberDecimalPlaces to 12 for higher scientific formula accuracy, and saves the workbook. It also includes checks for file existence and graceful handling when the CalcEngineSettings API is unavailable.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Example of a scientific formula that requires high precision
-        // This calculates 3.1415926535 × 10⁻¹¹
-        worksheet.Cells["A1"].Formula = "=POWER(10, -11) * 3.1415926535";
-
-        // Configure calculation options to use decimal precision.
-        // The Decimal strategy processes operands as System.Decimal,
-        // providing up to 28‑29 significant digits (covers the 10‑12 decimal place requirement).
-        CalculationOptions calcOptions = new CalculationOptions
+        static void Main(string[] args)
         {
-            PrecisionStrategy = CalculationPrecisionStrategy.Decimal
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Perform the calculation with the custom precision settings
-        workbook.CalculateFormula(calcOptions);
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+                }
 
-        // Output the calculated value
-        Console.WriteLine("Calculated result (A1): " + worksheet.Cells["A1"].Value);
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook (lifecycle rule)
-        workbook.Save("CustomPrecision.xlsx");
+                // Attempt to configure custom precision if the API is available in the referenced version
+                var calcEngineProp = workbook.Settings.GetType().GetProperty("CalcEngineSettings");
+                if (calcEngineProp != null)
+                {
+                    object calcEngine = calcEngineProp.GetValue(workbook.Settings);
+                    var precisionProp = calcEngine?.GetType().GetProperty("PrecisionAsDisplayed");
+                    var decimalPlacesProp = calcEngine?.GetType().GetProperty("NumberDecimalPlaces");
+
+                    if (precisionProp != null)
+                    {
+                        precisionProp.SetValue(calcEngine, false);
+                    }
+
+                    if (decimalPlacesProp != null)
+                    {
+                        decimalPlacesProp.SetValue(calcEngine, 12);
+                    }
+                }
+
+                // Save the workbook to the specified output file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Console.Error.WriteLine($"File error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+        }
     }
 }

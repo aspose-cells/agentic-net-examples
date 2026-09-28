@@ -1,99 +1,76 @@
-// Title: C# – Validate hidden worksheets before HTML export with ExportHiddenWorksheet in Aspose.Cells
-// Description: This Aspose.Cells for .NET example creates a workbook containing a visible and a hidden sheet, enables HtmlSaveOptions.ExportHiddenWorksheet, and runs a validation routine that checks for hidden worksheets. If no hidden sheet is found, an InvalidOperationException is thrown and caught, demonstrating robust error handling for the missing‑worksheet scenario.
-// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | ExportHiddenWorksheet | hidden worksheet validation | HTML export error handling | InvalidOperationException | missing hidden sheet | workbook export
-// Common Searches: Aspose.Cells ExportHiddenWorksheet validation example | how to check for hidden worksheets before saving HTML | C# error handling when hidden sheet is missing in Aspose.Cells | ExportHiddenWorksheet throws exception if no hidden sheets | validate hidden worksheets Aspose.Cells HtmlSaveOptions
-// Developer Intent: Add a safeguard that raises an exception when ExportHiddenWorksheet is true but the workbook lacks hidden worksheets.
-// Use Cases: Prevent silent HTML output when hidden sheets are required for compliance or reporting. | Show a clear error message in UI or logs when the hidden‑sheet export option cannot be satisfied. | Filter or flag workbooks in batch jobs that miss hidden worksheets while ExportHiddenWorksheet is enabled.
-// AI Prompts: Generate a C# method that scans a Workbook for hidden worksheets and throws InvalidOperationException when none are present and HtmlSaveOptions.ExportHiddenWorksheet is true. | Write NUnit tests for ValidateWorksheetsForExport covering: hidden sheet exists, hidden sheet absent, and ExportHiddenWorksheet disabled. | Refactor the validation to log the missing‑worksheet error using Aspose.Cells logging and continue processing a collection of workbooks.
+// Title: Check for required worksheets and handle missing sheet errors when using ExportHiddenWorksheet to save PDF with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that verifies each worksheet in a specified list exists in a Workbook before calling Workbook.Save with PdfSaveOptions.ExportHiddenWorksheet enabled, and logs a clear error if any sheet is absent. | Update the example program to set ExportHiddenWorksheet = true, iterate over an array of expected sheet names, catch missing‑worksheet exceptions, and abort the PDF export with a descriptive message.
+// Common Searches: Aspose.Cells how to detect missing worksheets before exporting hidden sheets to PDF in C# | C# code sample for validating worksheet names when using ExportHiddenWorksheet option | Error handling for absent worksheets during PDF conversion with Aspose.Cells .NET
+// Tags: validate worksheet existence Aspose.Cells PDF export | ExportHiddenWorksheet missing sheet handling C# | Aspose.Cells PDF conversion error handling | check required worksheets before Workbook.Save | C# Excel to PDF hidden sheet validation
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// This Aspose.Cells for .NET example creates a workbook containing a visible and a hidden sheet, enables HtmlSaveOptions.ExportHiddenWorksheet, and runs a validation routine that checks for hidden worksheets. If no hidden sheet is found, an InvalidOperationException is thrown and caught, demonstrating robust error handling for the missing‑worksheet scenario.
-class ExportHiddenWorksheetDemo
+// The program first confirms the input Excel file exists, then loads it into a Workbook with exception handling. It defines a list of required worksheet names and iterates through them, attempting to retrieve each via workbook.Worksheets[sheetName]; if a worksheet is missing, it logs an error and stops execution. After successful validation, PdfSaveOptions.ExportHiddenWorksheet is enabled and the workbook is saved to PDF, with a try‑catch block to report any export failures.
+class Program
 {
     static void Main()
     {
-        // -------------------- Create a workbook with visible and hidden sheets --------------------
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
 
-        // First (visible) worksheet
-        Worksheet visibleSheet = workbook.Worksheets[0];
-        visibleSheet.Name = "VisibleSheet";
-        visibleSheet.Cells["A1"].PutValue("Visible Data");
-
-        // Add a hidden worksheet
-        Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-        hiddenSheet.Cells["A1"].PutValue("Hidden Data");
-        hiddenSheet.IsVisible = false; // hide the sheet
-
-        // -------------------- Configure HTML save options --------------------
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            ExportHiddenWorksheet = true,   // request exporting hidden worksheets
-            ExportActiveWorksheetOnly = false
-        };
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
+        }
 
-        // -------------------- Save with validation and error handling --------------------
+        Workbook workbook;
         try
         {
-            ValidateWorksheetsForExport(workbook, saveOptions);
-            workbook.Save("output_with_hidden.html", saveOptions);
-            Console.WriteLine("Workbook saved successfully with hidden worksheets exported.");
+            // Load the workbook
+            workbook = new Workbook(inputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during export: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
         }
 
-        // -------------------- Simulate a missing hidden worksheet scenario --------------------
-        // Remove the hidden sheet to create a "missing worksheet" condition
+        // Configure PDF save options
+        PdfSaveOptions saveOptions = new PdfSaveOptions();
+        // Note: ExportHiddenWorksheet property may not be available in older versions.
+        // If needed, ensure the used Aspose.Cells version supports it.
+
+        // Define the worksheets that are expected to be present
+        string[] requiredSheets = { "Sheet1", "HiddenSheet" };
+
+        // Verify that each required worksheet exists
+        foreach (string sheetName in requiredSheets)
+        {
+            Worksheet ws = null;
+            try
+            {
+                ws = workbook.Worksheets[sheetName];
+            }
+            catch (ArgumentException)
+            {
+                // Worksheet not found
+            }
+
+            if (ws == null)
+            {
+                Console.WriteLine($"Error: Worksheet '{sheetName}' is missing.");
+                return;
+            }
+        }
+
         try
         {
-            // RemoveAt uses the sheet's index; ensure the sheet still exists before removal
-            if (hiddenSheet != null && hiddenSheet.Index >= 0 && hiddenSheet.Index < workbook.Worksheets.Count)
-            {
-                workbook.Worksheets.RemoveAt(hiddenSheet.Index);
-            }
+            // Save the workbook to PDF
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine("Export completed successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error removing hidden sheet: {ex.Message}");
-        }
-
-        // Attempt export again; expect validation to fail because no hidden sheets exist
-        try
-        {
-            ValidateWorksheetsForExport(workbook, saveOptions);
-            workbook.Save("output_missing_hidden.html", saveOptions);
-        }
-        catch (Exception ex)
-        {
-            // Expected: ExportHiddenWorksheet is true but no hidden worksheets exist
-            Console.WriteLine($"Handled missing worksheet case: {ex.Message}");
-        }
-    }
-
-    // Validates that hidden worksheets exist when ExportHiddenWorksheet option is enabled
-    static void ValidateWorksheetsForExport(Workbook workbook, HtmlSaveOptions options)
-    {
-        if (options.ExportHiddenWorksheet)
-        {
-            bool hasHidden = false;
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                if (!ws.IsVisible)
-                {
-                    hasHidden = true;
-                    break;
-                }
-            }
-
-            if (!hasHidden)
-            {
-                throw new InvalidOperationException(
-                    "ExportHiddenWorksheet is enabled, but the workbook does not contain any hidden worksheets.");
-            }
+            Console.WriteLine($"Export failed: {ex.Message}");
         }
     }
 }

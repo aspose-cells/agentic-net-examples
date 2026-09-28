@@ -1,30 +1,27 @@
-// Title: Set Worksheet Tab Color to Teal with Aspose.Cells for .NET (C#)
-// Description: A concise guide showing how to change an Excel worksheet's tab color to teal using Aspose.Cells for .NET. The sample creates a workbook, selects the first sheet, assigns Color.Teal to the TabColor property, and saves the file.
-// Keywords: Aspose.Cells worksheet tab color | C# set Excel tab color | TabColor property .NET | change sheet tab color programmatically | teal tab color Aspose.Cells | Excel workbook styling C#
-// Common Searches: how to set worksheet tab color using Aspose.Cells C# | Aspose.Cells change Excel sheet tab to teal | C# code for setting tab color in Excel workbook | programmatically modify worksheet tab color .NET | Aspose.Cells TabColor example
-// Developer Intent: Apply a teal color to a worksheet tab via Aspose.Cells.
-// Use Cases: Highlight a summary or dashboard sheet with a distinct teal tab. | Apply corporate branding colors to specific tabs in automated reports. | Mark newly generated worksheets for easy identification during runtime.
-// AI Prompts: Generate C# code that uses Aspose.Cells to set a worksheet's TabColor to teal and save the workbook. | Show how to assign different TabColor values to multiple worksheets in a single workbook with Aspose.Cells. | Explain the steps to read, modify, and persist the TabColor property of an Excel sheet using Aspose.Cells for .NET.
+// Title: Set a teal tab color for a specific worksheet in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to change the tab color of the worksheet named "Data" to teal and then saves the workbook as Output.xlsx. | Show how to apply a custom Color (e.g., teal) to an Excel sheet tab with Aspose.Cells in a .NET console application.
+// Common Searches: asp.net set worksheet tab color teal using Aspose.Cells | c# Aspose.Cells change Excel sheet tab color programmatically | how to apply custom tab color to an Excel worksheet with Aspose.Cells .NET | example of setting worksheet tab color in Aspose.Cells C#
+// Tags: Aspose.Cells set worksheet tab color | C# change Excel sheet tab color | apply teal tab color to worksheet | Aspose.Cells workbook tab customization | Excel worksheet tab color .NET
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-// A concise guide showing how to change an Excel worksheet's tab color to teal using Aspose.Cells for .NET. The sample creates a workbook, selects the first sheet, assigns Color.Teal to the TabColor property, and saves the file.
-class SetWorksheetTabColor
+// The example creates a new workbook, renames the first worksheet to "Data", sets its tab color to teal using Aspose.Cells, and saves the file as Output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook instance
+        // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet in the workbook
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet (or add a new one if needed)
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Data";
 
         // Set the worksheet tab color to teal
-        worksheet.TabColor = Color.Teal;
+        sheet.TabColor = Color.Teal;
 
         // Save the workbook to a file
-        workbook.Save("WorksheetWithTealTab.xlsx");
+        workbook.Save("Output.xlsx");
     }
 }

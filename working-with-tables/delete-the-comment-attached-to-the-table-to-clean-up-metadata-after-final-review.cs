@@ -1,43 +1,53 @@
-// Title: Aspose.Cells for .NET – Delete a ListObject (Excel Table) Comment
-// Description: Creates a workbook, adds sample data, defines a ListObject covering A1:B3, assigns a temporary comment, then removes the comment by clearing the ListObject.Comment property and saves the file as TableCommentRemoved.xlsx.
-// Keywords: Aspose.Cells delete table comment | clear ListObject comment C# | remove Excel table metadata Aspose.Cells | Aspose.Cells ListObject.Comment | C# Aspose.Cells table comment removal
-// Common Searches: how to clear a comment from an Aspose.Cells table in C# | Aspose.Cells remove ListObject comment example | delete table comment .NET Aspose.Cells
-// Developer Intent: The developer needs to erase a comment attached to a ListObject (Excel table) in a workbook using Aspose.Cells for .NET.
-// Use Cases: Strip temporary notes from generated tables before sharing a report. | Sanitize workbook metadata during an automated cleanup pipeline. | Prepare workbooks for archiving by removing all table comments to meet compliance standards.
-// AI Prompts: Show how to delete a ListObject comment in Aspose.Cells without altering other table settings. | Provide a C# loop that clears comments from every table in a worksheet using Aspose.Cells. | Explain the effect of setting ListObject.Comment to null versus string.Empty in Aspose.Cells.
+// Title: How to delete a comment from an Excel table (ListObject) using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that opens a workbook, locates a ListObject by name, clears its Comment property, and saves the file. | Show an example that validates the existence of the input file, worksheet, and table before removing the table comment in Aspose.Cells. | Provide a snippet that demonstrates error handling for missing files or invalid table names while clearing a ListObject comment.
+// Common Searches: C# Aspose.Cells clear comment on a ListObject table | example code to remove Excel table comment using Aspose.Cells .NET | how to delete metadata comment from an Excel table programmatically | Aspose.Cells delete table comment after loading workbook
+// Tags: Aspose.Cells clear ListObject comment | C# remove Excel table comment | Aspose.Cells delete table comment | programmatic Excel table metadata cleanup .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, adds sample data, defines a ListObject covering A1:B3, assigns a temporary comment, then removes the comment by clearing the ListObject.Comment property and saves the file as TableCommentRemoved.xlsx.
-class DeleteTableComment
+// This example loads an existing Excel workbook with Aspose.Cells, accesses a specified worksheet and ListObject (table) by name, clears the table's Comment property if present, and saves the workbook to a new file. It includes robust error handling for missing files, worksheets, or tables.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Define file paths and identifiers (replace with actual values)
+        string inputFilePath = "{InputFilePath}";
+        string outputFilePath = "{OutputFilePath}";
+        string sheetName = "{SheetName}";
+        string tableName = "{TableName}";
 
-        // Add sample data for the table
-        worksheet.Cells["A1"].PutValue("ID");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue(1);
-        worksheet.Cells["B2"].PutValue(100);
-        worksheet.Cells["A3"].PutValue(2);
-        worksheet.Cells["B3"].PutValue(200);
+        try
+        {
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFilePath))
+                throw new FileNotFoundException("Input workbook not found.", inputFilePath);
 
-        // Create a ListObject (table) that covers the data range A1:B3
-        int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
-        ListObject table = worksheet.ListObjects[tableIndex];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputFilePath);
 
-        // Assign a comment to the table (metadata before review)
-        table.Comment = "Table created for initial analysis";
+            // Access the specified worksheet
+            Worksheet sheet = workbook.Worksheets[sheetName];
+            if (sheet == null)
+                throw new ArgumentException($"Worksheet \"{sheetName}\" does not exist.");
 
-        // Delete the comment after final review by clearing the property
-        table.Comment = string.Empty; // or null
+            // Retrieve the table (ListObject) by its name
+            ListObject table = sheet.ListObjects[tableName];
+            if (table == null)
+                throw new ArgumentException($"Table \"{tableName}\" does not exist in worksheet \"{sheetName}\".");
 
-        // Save the workbook with the cleaned‑up table metadata
-        workbook.Save("TableCommentRemoved.xlsx", SaveFormat.Xlsx);
+            // Delete the comment attached to the table, if it exists
+            if (!string.IsNullOrEmpty(table.Comment))
+                table.Comment = string.Empty; // clears the comment
+
+            // Save the workbook after removing the comment
+            workbook.Save(outputFilePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

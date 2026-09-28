@@ -1,72 +1,64 @@
-// Title: Hide a PivotField in an Aspose.Cells PivotTable with C#
-// Description: Creates a workbook, populates sample sales data, builds a PivotTable, adds Category (row), Product (column) and Sales (data) fields, then hides the Product field by removing it from the column area, refreshes the pivot, and saves the file.
-// Keywords: Aspose.Cells hide pivot field | C# PivotTable remove column field | Aspose.Cells PivotField Visible false | hide column field Aspose.Cells .NET | remove pivot field programmatically
-// Common Searches: how to hide a pivot column field in Aspose.Cells C# | remove pivot field from report area Aspose.Cells | set PivotField visibility false Aspose.Cells | Aspose.Cells hide product field in pivot table | C# hide specific PivotField Aspose.Cells
-// Developer Intent: Programmatically hide the "Product" PivotField from the column area of an Aspose.Cells PivotTable using C#.
-// Use Cases: Create cleaner reports by omitting unnecessary column fields. | Allow end‑users to toggle pivot fields on or off in a .NET application. | Prepare workbooks for export where certain pivot fields must remain hidden.
-// AI Prompts: Write C# code that hides a specific PivotField in an Aspose.Cells PivotTable without deleting the field definition. | Show how to toggle the Visible property of a PivotField and refresh the pivot in Aspose.Cells. | Explain the steps to remove a pivot field from its area, recalculate the PivotTable, and save the workbook using Aspose.Cells.
+// Title: Hide a specific row field in an Excel pivot table with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells to hide the "Category" row field in an existing pivot table and save the workbook. | Show how to programmatically remove a pivot row field from the report area with Aspose.Cells for .NET. | Create a C# example that verifies a workbook contains a pivot table, finds a row field by name, hides it, and writes the updated file.
+// Common Searches: aspnet cells hide pivot row field Category C# | remove specific field from Excel pivot table using Aspose.Cells .NET | how to programmatically hide a pivot field in an existing workbook with Aspose.Cells | C# Aspose.Cells example to delete a row field from a pivot table | Excel pivot table field visibility Aspose.Cells API
+// Tags: aspnet-cells hide pivot row field | aspnet-cells remove pivot field | csharp aspnet-cells modify pivot table layout | excel pivot table field visibility aspnet-cells | aspnet-cells pivot table rowfield delete
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotFieldHideDemo
+// The example loads an existing Excel workbook, accesses the first worksheet's first pivot table, locates the row field named "Category", removes it from the RowFields collection to hide it from the report area, and saves the modified workbook as output.xlsx, with file existence checks and exception handling.
+class HidePivotFieldExample
 {
-    // Creates a workbook, populates sample sales data, builds a PivotTable, adds Category (row), Product (column) and Sales (data) fields, then hides the Product field by removing it from the column area, refreshes the pivot, and saves the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Populate sample data for the pivot table
-            cells["A1"].Value = "Category";
-            cells["B1"].Value = "Product";
-            cells["C1"].Value = "Sales";
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            cells["A2"].Value = "Fruit";
-            cells["B2"].Value = "Apple";
-            cells["C2"].Value = 1200;
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            cells["A3"].Value = "Fruit";
-            cells["B3"].Value = "Banana";
-            cells["C3"].Value = 800;
+            // Ensure the worksheet contains at least one pivot table
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No pivot tables found on the first worksheet.");
+                return;
+            }
 
-            cells["A4"].Value = "Vegetable";
-            cells["B4"].Value = "Carrot";
-            cells["C4"].Value = 600;
+            // Assume the first pivot table on the sheet is the target
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            cells["A5"].Value = "Vegetable";
-            cells["B5"].Value = "Tomato";
-            cells["C5"].Value = 900;
+            // Retrieve the row field named "Category"
+            PivotField pivotField = pivotTable.RowFields["Category"];
+            if (pivotField == null)
+            {
+                Console.WriteLine("Pivot field \"Category\" not found in row fields.");
+                return;
+            }
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Hide the field by removing it from the row fields collection
+            pivotTable.RowFields.Remove(pivotField);
 
-            // Add fields to the pivot table
-            // Row field: Category
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            // Column field: Product
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-            // Data field: Sales
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // ------------------------------------------------------------
-            // Hide the "Product" pivot field from the report area.
-            // This is achieved by removing the field from its current area.
-            // ------------------------------------------------------------
-            pivotTable.RemoveField(PivotFieldType.Column, "Product");
-
-            // Refresh and calculate the pivot table after modification
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook with the hidden pivot field
-            workbook.Save("PivotFieldHiddenDemo.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

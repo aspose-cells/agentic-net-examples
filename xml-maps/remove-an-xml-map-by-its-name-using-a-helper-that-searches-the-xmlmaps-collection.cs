@@ -1,70 +1,46 @@
-// Title: C# Helper to Remove an XML Map by Name in Aspose.Cells Workbook
-// Description: Shows how to locate and delete a specific XmlMap from a Workbook using Aspose.Cells for .NET. The sample adds an XML schema, names the map "EmployeeMap", searches the Worksheets.XmlMaps collection with a case‑insensitive match, removes the map via RemoveAt, and saves the workbook.
-// Keywords: Aspose.Cells | C# remove XmlMap | delete XML map .NET | XmlMapCollection RemoveAt | XML map management Aspose | remove XML map by name | Aspose.Cells helper method | search XmlMaps collection | case insensitive map removal | Workbook XML map deletion
-// Common Searches: remove xml map Aspose.Cells C# | delete specific XmlMap by name .NET | how to remove XML map from workbook using Aspose | Aspose.Cells XmlMapCollection remove example | C# code to delete XML map in Excel file | search and delete XmlMap in Aspose.Cells
-// Developer Intent: Programmatically delete a particular XML map from an Excel workbook based on its name.
-// Use Cases: Clean up imported XML maps that are no longer needed, reducing file size. | Automate removal of a map before publishing a workbook to external systems. | Batch‑process a library of workbooks to purge a legacy XML map across all files.
-// AI Prompts: Generate a C# method that removes an XmlMap with a given name from an Aspose.Cells Workbook and returns true if the map was found. | Provide code to list all XmlMap names in a workbook and delete those matching a wildcard pattern using Aspose.Cells for .NET. | Explain best practices for safely removing an XmlMap without affecting existing worksheets, data connections, or formulas.
+// Title: How to delete a specific XML map by its name from an Excel workbook using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that locates an XML map with a given name in a workbook and removes it from the Worksheets.XmlMaps collection. | Create a reusable helper method that returns the index of a named XML map in a Workbook, then use it to delete the map and save the updated file.
+// Common Searches: asp.net remove xml map from workbook using aspose.cells c# | c# find and delete xml map by name in excel file with aspose | how to get index of a specific xml map in aspose.cells workbook | remove unwanted xml map from worksheets.xmlmaps collection | aspose.cells delete xml map before saving workbook
+// Tags: delete xml map Aspose.Cells C# | xml map index lookup Aspose.Cells | workbook xml maps collection manipulation | remove xml map from Excel file using Aspose | c# helper method find xml map index
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-// Shows how to locate and delete a specific XmlMap from a Workbook using Aspose.Cells for .NET. The sample adds an XML schema, names the map "EmployeeMap", searches the Worksheets.XmlMaps collection with a case‑insensitive match, removes the map via RemoveAt, and saves the workbook.
-public class RemoveXmlMapByNameDemo
+// The example loads an Excel workbook, uses a helper to locate the index of an XML map named "MyXmlMap" in the Worksheets.XmlMaps collection, removes the map if it exists, and saves the workbook.
+class Program
 {
-    public static void Main(string[] args)
+    static void Main()
     {
-        try
+        // Load the workbook (uses the provided load rule)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Name of the XML map to be removed
+        string xmlMapName = "MyXmlMap";
+
+        // Find the index of the XML map using the helper
+        int mapIndex = FindXmlMapIndex(workbook, xmlMapName);
+
+        // If the map exists, remove it from the collection
+        if (mapIndex >= 0)
         {
-            Run();
+            workbook.Worksheets.XmlMaps.RemoveAt(mapIndex);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+
+        // Save the workbook (uses the provided save rule)
+        workbook.Save("output.xlsx");
     }
 
-    public static void Run()
-    {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-
-        // Add a sample XML map to demonstrate removal
-        string xmlSchema = "<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>" +
-                           "<xs:element name='Employee'>" +
-                           "<xs:complexType><xs:sequence>" +
-                           "<xs:element name='ID' type='xs:int'/>" +
-                           "<xs:element name='Name' type='xs:string'/>" +
-                           "</xs:sequence></xs:complexType></xs:element></xs:schema>";
-        int mapIndex = workbook.Worksheets.XmlMaps.Add(xmlSchema);
-        XmlMap map = workbook.Worksheets.XmlMaps[mapIndex];
-        map.Name = "EmployeeMap";
-
-        // Remove the XML map by its name using the helper method
-        RemoveXmlMapByName(workbook, "EmployeeMap");
-
-        // Determine output path and save the workbook
-        string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "RemovedXmlMapDemo.xlsx");
-        workbook.Save(outputPath);
-        Console.WriteLine($"Workbook saved to: {outputPath}");
-    }
-
-    // Helper that searches the XmlMaps collection and removes the map with the specified name
-    private static void RemoveXmlMapByName(Workbook workbook, string mapName)
+    // Helper that searches the XmlMaps collection for a map with the specified name
+    static int FindXmlMapIndex(Workbook workbook, string mapName)
     {
         XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
-
-        // Iterate through the collection to find the matching map
         for (int i = 0; i < xmlMaps.Count; i++)
         {
             if (xmlMaps[i].Name.Equals(mapName, StringComparison.OrdinalIgnoreCase))
             {
-                // Remove the map at the found index
-                xmlMaps.RemoveAt(i);
-                // Exit after removal
-                break;
+                return i; // Return the index of the matching XML map
             }
         }
+        return -1; // Not found
     }
 }

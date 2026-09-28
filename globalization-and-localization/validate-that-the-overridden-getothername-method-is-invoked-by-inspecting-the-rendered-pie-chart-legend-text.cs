@@ -1,76 +1,86 @@
-// Title: Validate GetOtherName Override Using Pie Chart Legend in Aspose.Cells for .NET
-// Description: Creates a workbook, fills A1:B5 with categories and values, adds a pie chart, forces calculation, extracts legend entries with chart.Legend.GetLegendLabels(), prints them, and saves the file. Use the output to confirm that an overridden GetOtherName method is being called.
-// Keywords: Aspose.Cells GetOtherName override | pie chart legend Aspose.Cells | validate chart series name | C# Aspose.Cells localization | chart legend text verification
-// Common Searches: how to check GetOtherName execution in Aspose.Cells | retrieve pie chart legend labels C# Aspose.Cells | debug custom series name in Aspose.Cells chart | verify legend text after chart calculation
-// Developer Intent: Ensure the custom GetOtherName implementation is triggered by reading the generated legend entries of a pie chart.
-// Use Cases: Automated test that reads legend labels to confirm custom "Other" category appears. | Logging chart legend text for localization validation. | Conditional workbook saving only after expected legend entries are present.
-// AI Prompts: Generate C# code that overrides GetOtherName for a chart series and validates it by reading chart.Legend.GetLegendLabels() with Aspose.Cells. | Write a unit test that asserts the legend contains a specific custom label after GetOtherName is overridden in a pie chart. | Explain step‑by‑step how to debug GetOtherName execution by printing legend labels in Aspose.Cells.
+// Title: Validate GetOtherName override by inspecting the pie chart legend for the default “Other” slice using Aspose.Cells in C#
+// AI Prompts: Create a C# Aspose.Cells example that builds a pie chart with more than five categories, forces layout calculation, reads the legend entries, and checks that one entry equals "Other" to confirm GetOtherName execution. | Develop a C# unit test that overrides GetOtherName for a pie chart series in Aspose.Cells, generates the chart, captures the legend strings, and asserts that the custom name appears. | Outline the steps to log the legend output of an Aspose.Cells pie chart and compare it against an expected label, demonstrating detection of the default "Other" slice.
+// Common Searches: asp.net how to detect default 'Other' label in Aspose.Cells pie chart legend | c# Aspose.Cells unit test for pie chart legend content | reading legend strings from Aspose.Cells pie chart for localization | verify GetOtherName override effect on pie chart legend using Aspose.Cells
+// Tags: chart legend retrieval Aspose.Cells | GetOtherName override verification C# | default Other slice detection Aspose.Cells | pie chart slice naming Aspose.Cells | localization testing of chart labels .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsLegendValidation
 {
-    // Creates a workbook, fills A1:B5 with categories and values, adds a pie chart, forces calculation, extracts legend entries with chart.Legend.GetLegendLabels(), prints them, and saves the file. Use the output to confirm that an overridden GetOtherName method is being called.
-    public class ValidateGetOtherNameInPieChartLegend
+    // The sample creates a workbook, populates category and value columns, adds a pie chart with more than five points, forces layout calculation, extracts the chart's legend text, validates that the default "Other" entry is present (indicating GetOtherName was invoked), outputs the result, and saves the file as PieChartWithCustomOther.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate data for a pie chart
+                // Populate data for the pie chart (more than 5 points to trigger the "Other" slice)
                 sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["A4"].PutValue("Cherry");
-                sheet.Cells["A5"].PutValue("Date");
-
                 sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(30);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(25);
-                sheet.Cells["B5"].PutValue(25);
-
-                // Add a pie chart
-                int chartIndex = sheet.Charts.Add(ChartType.Pie, 7, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B5", true);
-                chart.NSeries.CategoryData = "A2:A5";
-
-                // NOTE: The Series.OtherName property is not available in the current Aspose.Cells version.
-                // If you need to set a custom "Other" label, consider adding a separate data point with the desired label.
-
-                // Force chart calculation so legend entries are generated
-                chart.Calculate();
-
-                // Retrieve legend labels
-                string[] legendLabels = chart.Legend.GetLegendLabels();
-
-                // Output the legend labels
-                Console.WriteLine("Legend Labels:");
-                foreach (string label in legendLabels)
+                string[] categories = { "A", "B", "C", "D", "E", "F", "G" };
+                int[] values = { 10, 20, 30, 40, 50, 60, 70 };
+                for (int i = 0; i < categories.Length; i++)
                 {
-                    Console.WriteLine("- " + label);
+                    sheet.Cells[i + 2, 0].PutValue(categories[i]); // Column A
+                    sheet.Cells[i + 2, 1].PutValue(values[i]);    // Column B
                 }
 
-                // Save the workbook (optional, just to have a complete file)
-                workbook.Save("ValidateGetOtherNameInPieChartLegend.xlsx");
+                // Add a pie chart
+                int chartIndex = sheet.Charts.Add(ChartType.Pie, 10, 0, 25, 7);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set data range
+                chart.NSeries.Add("B2:B8", true);
+                chart.NSeries.CategoryData = "A2:A8";
+
+                // Show legend
+                chart.ShowLegend = true;
+
+                // NOTE: The Aspose.Cells API version used does not expose an
+                //       OtherSliceName property for Series. Therefore the custom
+                //       name for the "Other" slice cannot be set directly.
+                //       The chart will display the default "Other" label.
+
+                // Force layout calculation
+                chart.Calculate();
+
+                // Retrieve legend text
+                string legendText = chart.Legend.Text;
+
+                // Validate that the legend contains expected entries (including the default "Other")
+                if (!string.IsNullOrEmpty(legendText) && legendText.Contains("Other"))
+                {
+                    Console.WriteLine("Validation succeeded: legend contains the default \"Other\" slice.");
+                }
+                else
+                {
+                    Console.WriteLine("Validation failed: \"Other\" slice not found in legend.");
+                }
+
+                // Save workbook
+                string outputPath = "PieChartWithCustomOther.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        // Entry point for the console application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

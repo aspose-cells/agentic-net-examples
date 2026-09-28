@@ -1,64 +1,74 @@
-// Title: Automatically update a dynamic named range after inserting rows with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a dynamic named range in column A using an INDEX‑COUNTA formula, insert rows, add data, and call RefreshDynamicArrayFormulas to keep the range address current before saving the workbook.
-// Keywords: Aspose.Cells C# dynamic named range | RefreshDynamicArrayFormulas .NET | update named range after row insertion | INDEX COUNTA named range formula | insert rows Aspose.Cells | auto‑expand named range | Excel automation Aspose.Cells
-// Common Searches: Aspose.Cells keep dynamic named range up to date after inserting rows | RefreshDynamicArrayFormulas usage in C# | auto expand named range with INDEX and COUNTA in Aspose.Cells | C# insert rows and update named range in Excel workbook | Aspose.Cells dynamic range after row insertion
-// Developer Intent: Make a dynamic named range automatically expand to include newly inserted rows in a worksheet.
-// Use Cases: Define a dynamic named range that grows with non‑empty cells in a column using INDEX and COUNTA. | Insert multiple rows at a specific position and have the named range adjust without manual recalculation. | Refresh dynamic array formulas to obtain the updated range address after structural changes.
-// AI Prompts: Write C# code that creates a dynamic named range with INDEX/COUNTA in Aspose.Cells and updates it after inserting rows. | Explain when and why RefreshDynamicArrayFormulas should be called in an Aspose.Cells workbook. | Show how to retrieve the updated address of a dynamic named range after adding rows to a worksheet.
+// Title: Automatically expand an Aspose.Cells named range after inserting rows in a .NET worksheet
+// AI Prompts: Generate C# code that inserts a specified number of rows at a given position and then updates an existing named range using an OFFSET‑COUNTA formula with Aspose.Cells. | Show how to programmatically redefine a workbook's named range to stay dynamic after row insertion, including formula construction and saving the file.
+// Common Searches: Aspose.Cells C# insert rows and keep named range dynamic | How to refresh Excel named range after adding rows using Aspose.Cells .NET | C# Aspose.Cells OFFSET COUNTA formula for expanding named range automatically
+// Tags: Aspose.Cells insert rows dynamic named range | OFFSET COUNTA formula Aspose.Cells | C# update Excel named range after row insertion | Aspose.Cells workbook named range refresh
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to create a dynamic named range in column A using an INDEX‑COUNTA formula, insert rows, add data, and call RefreshDynamicArrayFormulas to keep the range address current before saving the workbook.
-class UpdateDynamicNamedRange
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads or creates a workbook, inserts three rows at a specified index, rebuilds the "MyRange" named range with an OFFSET‑COUNTA formula that expands based on column A, and saves the updated file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
-
-            // Populate column A with initial data (5 rows)
-            for (int i = 0; i < 5; i++)
+            try
             {
-                cells[i, 0].PutValue($"Item {i + 1}");
+                // Define file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Load the workbook; create a new one if the input file does not exist
+                Workbook workbook;
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    // Create a new workbook with a default worksheet
+                    workbook = new Workbook();
+                    workbook.Worksheets[0].Name = "Sheet1";
+                }
+
+                // Get the first worksheet (adjust index or name as needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Insert new rows (e.g., insert 3 rows starting at row index 5 – zero‑based)
+                int insertAtRow = 5;          // Row after which new rows will be inserted
+                int rowsToInsert = 3;
+                sheet.Cells.InsertRows(insertAtRow, rowsToInsert);
+
+                // ----- Update the dynamic named range -----
+                // Assume the named range is called "MyRange"
+                Name namedRange = workbook.Worksheets.Names["MyRange"];
+
+                // If the named range exists, redefine it using a dynamic formula.
+                // Here we use OFFSET together with COUNTA to automatically expand the range
+                // based on the number of non‑empty cells in column A.
+                if (namedRange != null)
+                {
+                    // Build the formula: =OFFSET(Sheet1!$A$2,0,0,COUNTA(Sheet1!$A:$A)-1,1)
+                    // Adjust the start cell ($A$2) and the column (A) as required for your data.
+                    string startCell = "$A$2";
+                    string columnLetter = "A";
+                    string sheetName = sheet.Name; // e.g., "Sheet1"
+                    string dynamicFormula = $"=OFFSET({sheetName}!{startCell},0,0,COUNTA({sheetName}!${columnLetter}:${columnLetter})-1,1)";
+
+                    // Apply the new formula to the named range
+                    namedRange.RefersTo = dynamicFormula;
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Define a dynamic named range that expands with the number of non‑empty rows in column A
-            // Formula: =Sheet1!$A$1:INDEX(Sheet1!$A:$A, COUNTA(Sheet1!$A:$A))
-            int nameIdx = wb.Worksheets.Names.Add("MyDynamicRange");
-            Name dynName = wb.Worksheets.Names[nameIdx];
-            dynName.RefersTo = "=Sheet1!$A$1:INDEX(Sheet1!$A:$A, COUNTA(Sheet1!$A:$A))";
-
-            // Display the initial range address
-            AsposeRange initRange = dynName.GetRange();
-            Console.WriteLine($"Initial range address: {initRange.Address}");
-
-            // Insert three rows at index 2 (third row) and update references
-            ws.Cells.InsertRows(2, 3, true);
-
-            // Add data into the newly inserted rows
-            cells[2, 0].PutValue("Inserted 1");
-            cells[3, 0].PutValue("Inserted 2");
-            cells[4, 0].PutValue("Inserted 3");
-
-            // Refresh dynamic array formulas (required after row insertion)
-            wb.RefreshDynamicArrayFormulas(true);
-
-            // Retrieve and display the updated range address
-            AsposeRange updatedRange = dynName.GetRange();
-            Console.WriteLine($"Updated range address after insertion: {updatedRange.Address}");
-
-            // Save the workbook
-            wb.Save("DynamicNamedRangeDemo.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

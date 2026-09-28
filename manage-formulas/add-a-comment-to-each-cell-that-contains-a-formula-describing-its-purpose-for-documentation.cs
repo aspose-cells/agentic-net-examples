@@ -1,58 +1,72 @@
-// Title: Add comments to every formula cell in an Aspose.Cells workbook using C#
-// Description: Creates a new workbook, populates cells with values and formulas, then scans the used range. For each cell where IsFormula is true, a comment is added via worksheet.Comments.Add, containing the formula text, a brief purpose note, and an author tag. The workbook is saved with the documentation embedded.
-// Keywords: Aspose.Cells C# add comment | document Excel formulas programmatically | iterate used cells Aspose.Cells | auto‑generate cell comments | formula annotation .NET | Excel workbook documentation | C# comment author Aspose
-// Common Searches: how to add comments to formula cells with Aspose.Cells .NET | C# iterate over used range and annotate formulas | Aspose.Cells add note to calculated cells | programmatically document Excel formulas C# | add author to Excel cell comment Aspose
-// Developer Intent: Programmatically attach a descriptive comment to each cell that contains a formula, providing documentation and author attribution.
-// Use Cases: Create an audit trail for financial models by embedding explanatory notes directly in calculated cells. | Enhance readability of complex spreadsheets for end users by automatically generating formula descriptions. | Standardize documentation across exported reports, ensuring every calculated field carries an author‑identified comment.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a custom comment to each formula cell, including the formula string and a concise explanation. | Adapt the example to assign different comment authors based on worksheet names while preserving the formula note. | Design a reusable method that accepts a Workbook and a comment template, then applies comments to all formula cells in the workbook.
+// Title: Add visible documentation comments to every formula cell in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that scans all worksheets in a workbook and attaches a visible comment to each cell that contains a formula, where the comment text includes the exact formula string. | Update the sample program to prepend the cell address (e.g., A1) to the comment text and set the comment author from a variable named commentAuthor. | Create a C# version that extracts all formulas from the source workbook and writes them as comments on a new worksheet called "FormulaDocs" instead of attaching them to the original cells.
+// Common Searches: how to automatically add comments to formula cells using Aspose.Cells in C# | Aspose.Cells C# iterate through all cells and document formulas with comments | add visible comment with formula text to each Excel cell using Aspose.Cells .NET | C# generate documentation for Excel formulas by inserting cell comments via Aspose.Cells | save workbook after adding comments to formula cells with Aspose.Cells
+// Tags: Aspose.Cells insert formula comment | C# loop worksheets Aspose.Cells | Excel formula documentation via cell comments | make cell comments visible Aspose.Cells | save annotated workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsFormulaComments
+// The example loads an input Excel file, iterates through every worksheet and each used cell, and for every cell that contains a formula it creates a visible comment whose note includes the formula text. The comment author is set to "Documentation" and the workbook is saved to the specified output path.
+class Program
 {
-    // Creates a new workbook, populates cells with values and formulas, then scans the used range. For each cell where IsFormula is true, a comment is added via worksheet.Comments.Add, containing the formula text, a brief purpose note, and an author tag. The workbook is saved with the documentation embedded.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Sample data with formulas for demonstration
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["B1"].PutValue(5);
-            cells["B2"].PutValue(15);
-            cells["C1"].Formula = "=SUM(A1:A2)";          // Formula cell
-            cells["C2"].Formula = "=AVERAGE(B1,B2)";     // Formula cell
-            cells["D1"].Formula = "=C1*B1";              // Formula cell
-
-            // Iterate through all used cells to find formulas
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
-                    if (cell.IsFormula) // Check if the cell contains a formula
-                    {
-                        // Add a comment to the cell using the Add(row, column) method
-                        int commentIndex = worksheet.Comments.Add(row, col);
-                        Comment comment = worksheet.Comments[commentIndex];
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-                        // Describe the purpose of the formula (customize as needed)
-                        comment.Note = $"Formula: {cell.Formula} – this cell computes the required value.";
-                        comment.Author = "AutoDoc";
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet worksheet in workbook.Worksheets)
+            {
+                Cells cells = worksheet.Cells;
+
+                // Loop over all used cells in the worksheet
+                foreach (Cell cell in cells)
+                {
+                    // Process only cells that contain a formula
+                    if (cell.IsFormula)
+                    {
+                        // Create a comment describing the formula
+                        string commentText = $"Formula: {cell.Formula}";
+
+                        // Add a new comment to the cell
+                        int commentIndex = worksheet.Comments.Add(cell.Row, cell.Column);
+                        Comment comment = worksheet.Comments[commentIndex];
+                        comment.Author = "Documentation";
+                        comment.Note = commentText;
+                        // Optionally make the comment visible
+                        comment.IsVisible = true;
                     }
                 }
             }
 
-            // Save the workbook with the added comments
-            workbook.Save("FormulaCommentsDemo.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

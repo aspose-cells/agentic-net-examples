@@ -1,68 +1,91 @@
-// Title: Refresh Slicers & Pivot Tables and Export Excel to PDF from MemoryStream using Aspose.Cells (C#)
-// Description: Loads an Excel workbook from a MemoryStream, refreshes every slicer (automatically updating linked pivot tables), forces a full pivot‑table refresh, and saves the result as a PDF into a new MemoryStream—all without touching the file system. Ideal for in‑memory reporting with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | MemoryStream | Excel to PDF | slicer refresh | pivot table refresh | in‑memory conversion | PDF export | Aspose.Cells Slicer | Aspose.Cells PivotTable
-// Common Searches: Aspose.Cells refresh slicer before PDF export | C# convert Excel stream to PDF with updated pivot tables | How to refresh slicer selections programmatically in Aspose.Cells | Export Excel to PDF from MemoryStream without saving to disk | Refresh all slicers in a workbook using Aspose.Cells
-// Developer Intent: Refresh all slicers and pivot tables in a workbook loaded from a MemoryStream and return the updated PDF as a MemoryStream.
-// Use Cases: Web API that receives an Excel template as a byte array, applies slicer filters, and streams a PDF back to the client. | Scheduled service that programmatically sets slicer values, refreshes pivot tables, and generates PDF summaries for email distribution. | Desktop utility that converts user‑selected Excel files to PDF on‑the‑fly, keeping all processing in memory to avoid temporary files.
-// AI Prompts: Generate C# code with Aspose.Cells to load an Excel file from a MemoryStream, refresh all slicers, refresh pivot tables, and save the workbook as a PDF to another MemoryStream. | Explain why Slicer.Refresh also updates linked pivot tables and what additional steps ensure the PDF reflects the latest slicer state. | Provide best‑practice error handling for converting an Excel workbook with slicers to PDF using streams in Aspose.Cells.
+// Title: Refresh all slicers and pivot tables in an Excel workbook loaded from a MemoryStream and export to PDF using Aspose.Cells for .NET
+// AI Prompts: Create a C# method that takes a MemoryStream with an .xlsx file, refreshes every slicer and all pivot tables in the workbook, and returns a PDF as a MemoryStream using Aspose.Cells. | Extend the conversion routine to accept an optional list of slicer names, refresh only those slicers, then save the workbook to a PDF stream with Aspose.Cells.
+// Common Searches: how to refresh slicers in an Excel file before converting to PDF with Aspose.Cells C# | convert Excel workbook from MemoryStream to PDF while updating pivot tables using Aspose.Cells .NET | Aspose.Cells programmatically refresh all slicers C# | save refreshed Excel workbook as PDF without writing an intermediate file Aspose.Cells
+// Tags: Aspose.Cells update slicer selections | Aspose.Cells programmatic pivot table refresh | in-memory Excel to PDF conversion Aspose.Cells | slicer handling before PDF export Aspose.Cells | memory stream workbook processing Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-// Loads an Excel workbook from a MemoryStream, refreshes every slicer (automatically updating linked pivot tables), forces a full pivot‑table refresh, and saves the result as a PDF into a new MemoryStream—all without touching the file system. Ideal for in‑memory reporting with Aspose.Cells for .NET.
+// Loads an Excel workbook from a MemoryStream, refreshes every slicer and all pivot tables, then saves the workbook as a PDF into a new MemoryStream using Aspose.Cells.
 public static class WorkbookProcessor
 {
     /// <param name="excelStream">MemoryStream containing the source Excel file.</param>
     /// <returns>MemoryStream containing the PDF output.</returns>
-    public static MemoryStream ConvertToPdfWithSlicerRefresh(MemoryStream excelStream)
+    public static MemoryStream ConvertToPdfWithRefresh(MemoryStream excelStream)
     {
-        if (excelStream == null)
-            throw new ArgumentNullException(nameof(excelStream));
-
         try
         {
-            // Ensure the stream is positioned at the beginning
-            if (excelStream.CanSeek)
-                excelStream.Position = 0;
+            // Ensure the input stream is positioned at the beginning
+            excelStream.Position = 0;
 
-            // Load the workbook from the provided stream
+            // Load the workbook from the stream
             Workbook workbook = new Workbook(excelStream);
 
-            // Refresh all slicers (if any) to update linked pivot tables
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Refresh slicers (if any) to reflect current data selections.
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                for (int i = 0; i < ws.Slicers.Count; i++)
+                for (int i = 0; i < sheet.Slicers.Count; i++)
                 {
-                    Slicer slicer = ws.Slicers[i];
-                    slicer.Refresh(); // Refreshes the slicer and associated pivot tables
+                    Slicer slicer = sheet.Slicers[i];
+                    slicer.Refresh();
                 }
             }
 
-            // Refresh pivot tables that are not directly linked to slicers
+            // Refresh all pivot tables in the workbook
             workbook.Worksheets.RefreshPivotTables();
 
-            // Save the workbook as PDF into a new memory stream
+            // Save the refreshed workbook as PDF into a new memory stream
             MemoryStream pdfStream = new MemoryStream();
             workbook.Save(pdfStream, SaveFormat.Pdf);
             pdfStream.Position = 0;
-
             return pdfStream;
         }
         catch (Exception ex)
         {
-            // Wrap any exception for caller context
-            throw new InvalidOperationException("Error converting Excel to PDF with slicer refresh.", ex);
+            Console.Error.WriteLine($"Error during conversion: {ex.Message}");
+            throw;
         }
     }
 }
 
-// Dummy entry point to satisfy the compiler
 public class Program
 {
     public static void Main()
     {
-        // Placeholder main method
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        try
+        {
+            if (!File.Exists(inputPath))
+            {
+                Console.Error.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Read the Excel file into a memory stream
+            using (FileStream fileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+            using (MemoryStream excelStream = new MemoryStream())
+            {
+                fileStream.CopyTo(excelStream);
+
+                // Convert to PDF with slicer and pivot refresh
+                MemoryStream pdfStream = WorkbookProcessor.ConvertToPdfWithRefresh(excelStream);
+
+                // Write the PDF to disk
+                using (FileStream outFile = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                {
+                    pdfStream.CopyTo(outFile);
+                }
+
+                Console.WriteLine($"PDF successfully created at: {outputPath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+        }
     }
 }

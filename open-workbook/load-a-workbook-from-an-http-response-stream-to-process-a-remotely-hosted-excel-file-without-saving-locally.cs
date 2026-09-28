@@ -1,10 +1,7 @@
-// Title: Load an Excel workbook from an HTTP response stream with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to use HttpClient to download an Excel file, pass the response stream directly to the Aspose.Cells Workbook constructor, read cell values, and optionally save the workbook to a MemoryStream for in‑memory processing without writing to disk.
-// Keywords: Aspose.Cells | load workbook from stream | C# HttpClient Excel | read remote Excel without file | Workbook constructor stream | in‑memory Excel processing
-// Common Searches: Aspose.Cells open Excel from URL C# | load workbook from HttpResponseMessage stream | read cell A1 from remote Excel using Aspose | process Excel file in memory .NET | download Excel with HttpClient and Aspose.Cells
-// Developer Intent: Load a remote Excel workbook directly from an HTTP response stream for immediate processing without persisting the file.
-// Use Cases: Extract specific cell values from a spreadsheet hosted on an external server. | Convert a downloaded workbook to a MemoryStream for API responses or further transformations. | Integrate on‑the‑fly Excel validation or conversion into a web service that consumes URLs.
-// AI Prompts: Generate C# code that uses Aspose.Cells to open an Excel file from an HttpResponseMessage stream and iterates over all rows in the first worksheet. | Show how to download an Excel file with HttpClient, load it into a Workbook, modify a cell, and return the updated file as a byte array without writing to disk. | Explain best‑practice error handling when loading a workbook from a network stream with Aspose.Cells, including timeout and retry strategies.
+// Title: Load an Excel workbook from an HTTP response stream with Aspose.Cells for .NET without writing to disk
+// AI Prompts: Write C# code that uses HttpClient to fetch a .xlsx file and opens it directly with Aspose.Cells Workbook from the response stream. | Demonstrate how to modify a remotely downloaded Excel workbook in memory and export the result to a MemoryStream using Aspose.Cells. | Show error handling for HTTP failures when loading an Excel file into Aspose.Cells without creating a temporary file.
+// Common Searches: asp.net core load remote xlsx into Aspose.Cells workbook from HttpClient stream | c# read excel file from http response without saving to disk | process downloaded Excel in memory using Aspose.Cells SaveFormat Xlsx | how to use Aspose.Cells to open an Excel file from a network stream | Aspose.Cells load workbook from Stream example c#
+// Tags: load workbook from HttpClient response stream | process remote xlsx in memory Aspose.Cells | save Aspose.Cells workbook to MemoryStream | download excel with HttpClient without file system | Aspose.Cells open workbook from Stream C#
 
 using System;
 using System.IO;
@@ -12,54 +9,52 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-// Demonstrates how to use HttpClient to download an Excel file, pass the response stream directly to the Aspose.Cells Workbook constructor, read cell values, and optionally save the workbook to a MemoryStream for in‑memory processing without writing to disk.
-class LoadWorkbookFromHttpStream
+// The example downloads an .xlsx file via HttpClient, loads it directly into an Aspose.Cells Workbook from the response stream, prints the first worksheet name, and shows how to save the modified workbook to a MemoryStream without touching the file system.
+class Program
 {
-    static async Task Main(string[] args)
+    static async Task Main()
     {
-        // URL of the remote Excel file (replace with a valid URL)
-        string excelUrl = "https://example.com/sample.xlsx";
+        // URL of the remote Excel file
+        const string url = "https://example.com/sample.xlsx";
 
         try
         {
-            // Initialize HttpClient (should be reused in real applications)
-            using var httpClient = new HttpClient();
+            using HttpClient client = new HttpClient();
 
-            // Send GET request and obtain the response stream without saving to disk
-            using HttpResponseMessage response = await httpClient.GetAsync(
-                excelUrl, HttpCompletionOption.ResponseHeadersRead);
-
+            // Send request and verify success status
+            HttpResponseMessage response = await client.GetAsync(url);
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"Failed to download file. Status code: {(int)response.StatusCode} {response.ReasonPhrase}");
+                Console.WriteLine($"Failed to download file. HTTP {(int)response.StatusCode} {response.ReasonPhrase}");
                 return;
             }
 
-            // Read the content as a stream
-            await using Stream httpStream = await response.Content.ReadAsStreamAsync();
+            // Read the content as a stream without saving to disk
+            await using Stream responseStream = await response.Content.ReadAsStreamAsync();
 
-            // Load the workbook directly from the HTTP response stream
-            var workbook = new Workbook(httpStream);
+            // Load the workbook directly from the response stream
+            Workbook workbook = new Workbook(responseStream);
 
-            // Example processing: read the value of cell A1 from the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
+            // Example processing: output the name of the first worksheet
+            Worksheet firstSheet = workbook.Worksheets[0];
+            Console.WriteLine($"First worksheet name: {firstSheet.Name}");
 
-            // Optionally, save the workbook to a memory stream (e.g., for further transmission)
-            await using var memoryStream = new MemoryStream();
+            // Additional processing can be performed here
+            // ...
+
+            // If you need to obtain the modified workbook as bytes without writing to a file,
+            // save it to a MemoryStream
+            await using MemoryStream memoryStream = new MemoryStream();
             workbook.Save(memoryStream, SaveFormat.Xlsx);
-            memoryStream.Position = 0; // Reset for any subsequent reading
-
-            // Example: write the size of the in‑memory workbook
-            Console.WriteLine($"Workbook saved to memory stream, length = {memoryStream.Length} bytes");
+            // memoryStream now contains the Excel file data
         }
         catch (HttpRequestException ex)
         {
             Console.WriteLine($"HTTP request error: {ex.Message}");
         }
-        catch (IOException ex)
+        catch (FileNotFoundException ex)
         {
-            Console.WriteLine($"I/O error: {ex.Message}");
+            Console.WriteLine($"File not found: {ex.Message}");
         }
         catch (Exception ex)
         {

@@ -1,73 +1,52 @@
-// Title: Automatic Page Breaks in Aspose.Cells for .NET Using GetPrintingPageBreaks
-// Description: C# example that creates a workbook, fills 200 rows, defines a print area, sets FitToPagesWide = 1 and FitToPagesTall = 0, retrieves the automatically generated page breaks with GetPrintingPageBreaks, optionally inserts matching horizontal page breaks, and saves the file for preview in Excel.
-// Keywords: Aspose.Cells | automatic page breaks | GetPrintingPageBreaks | FitToPagesTall zero | horizontal page breaks | C# | .NET | print area | Excel pagination | worksheet printing
-// Common Searches: Aspose.Cells get automatic page breaks .NET | How to enable dynamic page breaks in Excel with Aspose.Cells | FitToPagesTall = 0 pagination example | Add horizontal page breaks programmatically Aspose.Cells | Retrieve printed page ranges C# Aspose
-// Developer Intent: Programmatically obtain and apply automatic page breaks based on worksheet content height.
-// Use Cases: Determine the row range for each printed page to split a workbook into separate PDFs. | Insert explicit horizontal page breaks that mirror the automatic pagination before distributing the file. | Adjust print settings to keep the sheet one page wide while allowing the height to break automatically.
-// AI Prompts: Generate C# code that exports each automatically detected page to an individual PDF using Aspose.Cells. | Show how to log the start and end rows of every page break to a text file instead of the console. | Explain how to set custom row heights so that automatic page breaks occur at predetermined rows.
+// Title: Create an Excel workbook in C# with Aspose.Cells that automatically inserts page breaks based on row height
+// AI Prompts: Write C# code using Aspose.Cells to build a worksheet, fill it with data, and configure the PageSetup so Excel adds page breaks automatically when printed. | Show how to set PageSetup.FitToPagesWide = 1 and FitToPagesTall = 0 in Aspose.Cells to achieve dynamic pagination for a generated XLSX file.
+// Common Searches: Aspose.Cells C# set page setup for automatic pagination | How to enable dynamic page breaks in Excel using Aspose.Cells .NET | FitToPagesWide 1 FitToPagesTall 0 example Aspose.Cells | Create Excel file with auto page breaks based on content height C# | Aspose.Cells print layout page breaks configuration
+// Tags: Aspose.Cells page setup auto pagination | C# FitToPagesWide property Aspose.Cells | FitToPagesTall zero dynamic breaks | Generate XLSX with Aspose.Cells | Excel print layout configuration Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AutomaticPageBreakDemo
+namespace AsposeCellsPageBreakDemo
 {
-    // C# example that creates a workbook, fills 200 rows, defines a print area, sets FitToPagesWide = 1 and FitToPagesTall = 0, retrieves the automatically generated page breaks with GetPrintingPageBreaks, optionally inserts matching horizontal page breaks, and saves the file for preview in Excel.
+    // The sample creates a new workbook, renames the first worksheet, populates 200 rows and 10 columns with sample data, configures PageSetup to fit the content to one page width while leaving height unrestricted (FitToPagesWide = 1, FitToPagesTall = 0) so Excel inserts page breaks automatically, and saves the result as AutomaticPageBreaks.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate the worksheet with enough rows to require multiple pages when printed
-            for (int i = 0; i < 200; i++)
+            try
             {
-                // Fill column A with sample text
-                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
-                // Add some extra data to make rows taller (optional)
-                worksheet.Cells[i, 1].PutValue($"Data {i + 1}");
+                // Create a new workbook (or load an existing one if needed)
+                Workbook workbook = new Workbook(); // default workbook with one worksheet
+
+                // Access the first worksheet and rename it
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "Data";
+
+                // Populate the worksheet with sample data
+                for (int row = 0; row < 200; row++)
+                {
+                    for (int col = 0; col < 10; col++)
+                    {
+                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    }
+                }
+
+                // Configure page setup for automatic page breaks
+                PageSetup pageSetup = sheet.PageSetup;
+                // Automatic page breaks are enabled by default; no explicit property needed
+                pageSetup.FitToPagesTall = 0;   // 0 disables fitting to a specific number of pages tall
+                pageSetup.FitToPagesWide = 1;   // fit content to one page width
+
+                // Save the workbook
+                string outputPath = "AutomaticPageBreaks.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
-
-            // Configure page setup:
-            // - Set a print area covering all populated rows
-            // - Allow the height to adjust automatically by setting FitToPagesTall to 0
-            // - Keep width fitting to one page for clarity
-            PageSetup pageSetup = worksheet.PageSetup;
-            pageSetup.PrintArea = "A1:B200";
-            pageSetup.FitToPagesWide = 1;   // one page wide
-            pageSetup.FitToPagesTall = 0;   // height is not forced, automatic page breaks will be used
-
-            // Create print options (default options are sufficient for page break calculation)
-            ImageOrPrintOptions options = new ImageOrPrintOptions();
-
-            // Retrieve automatic page breaks based on the current content and page setup
-            CellArea[] automaticPageBreaks = worksheet.GetPrintingPageBreaks(options);
-
-            // Output information about each automatic page break
-            Console.WriteLine($"Total automatic page breaks detected: {automaticPageBreaks.Length}");
-            for (int i = 0; i < automaticPageBreaks.Length; i++)
+            catch (Exception ex)
             {
-                CellArea area = automaticPageBreaks[i];
-                // Each CellArea represents the range of cells that will be printed on a single page
-                Console.WriteLine($"Page {i + 1}: Starts at Row {area.StartRow + 1}, Column {area.StartColumn + 1} " +
-                                  $"- Ends at Row {area.EndRow + 1}, Column {area.EndColumn + 1}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // (Optional) If you want to make the page breaks explicit in the worksheet,
-            // add horizontal page breaks at the end row of each automatic page area.
-            foreach (CellArea area in automaticPageBreaks)
-            {
-                // Add a horizontal page break after the last row of the page area
-                // The Add method with a single row parameter adds a break at the top-left of that row.
-                worksheet.HorizontalPageBreaks.Add(area.EndRow + 1);
-            }
-
-            // Save the workbook to verify the layout (the file can be opened in Excel to see the page breaks)
-            workbook.Save("AutomaticPageBreakDemo.xlsx");
-
-            Console.WriteLine("Workbook saved. Open 'AutomaticPageBreakDemo.xlsx' to view the automatic page breaks.");
         }
     }
 }

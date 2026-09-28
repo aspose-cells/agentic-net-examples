@@ -1,55 +1,51 @@
-// Title: Add descriptive comments to named ranges in Aspose.Cells using C#
-// Description: Creates a workbook, defines two named ranges (ProductList and PriceList) on a "Data" sheet, attaches purpose‑and‑rule comments via the Name.Comment property, sorts the name collection for faster lookup, and saves the file as NamedRangesWithComments.xlsx.
-// Keywords: Aspose.Cells named range comment C# | set Name.Comment Aspose.Cells | define named range with description .NET | sort defined names Aspose.Cells | save workbook with named range metadata
-// Common Searches: how to add a comment to a named range Aspose.Cells C# | Aspose.Cells set business rule on defined name | sorting named ranges in a workbook Aspose.Cells | retrieve and modify Name.Comment property Aspose.Cells
-// Developer Intent: Attach purpose and validation rules to each defined name in a workbook.
-// Use Cases: Document the ProductList range for sales reporting and enforce a non‑empty rule. | Annotate the PriceList range with a rule that all prices must be positive. | Improve performance by sorting a large collection of named ranges before saving.
-// AI Prompts: Generate C# code that loops through all named ranges in a workbook and assigns comments from a dictionary of descriptions using Aspose.Cells. | Show how to read, update, and persist the Comment of a specific named range in Aspose.Cells for .NET. | Explain a method to validate that every named range comment follows the pattern "Purpose: …; Rule: …" before calling workbook.Save.
+// Title: Add purpose and business‑rule comments to Excel named ranges using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loops through all workbook named ranges and sets a descriptive comment based on each range's name. | Show how to assign business‑rule text to specific named ranges (e.g., SalesData, RegionList, QuarterlyTargets) using the Name.Comment property in Aspose.Cells. | Provide an example that saves the modified workbook after adding comments to named ranges with Aspose.Cells for .NET.
+// Common Searches: how to add comments to named ranges in an Excel file using Aspose.Cells C# | Aspose.Cells set Name.Comment property for specific named ranges | C# iterate workbook.Names and annotate each range with business rules | programmatically document Excel named ranges with purpose text using Aspose.Cells | save workbook after updating named range comments with Aspose.Cells .NET
+// Tags: Aspose.Cells set named range comment | C# annotate Excel named ranges | Aspose.Cells add business rule notes to named ranges | Excel named range documentation with Aspose.Cells | update Name.Comment property Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a workbook, defines two named ranges (ProductList and PriceList) on a "Data" sheet, attaches purpose‑and‑rule comments via the Name.Comment property, sorts the name collection for faster lookup, and saves the file as NamedRangesWithComments.xlsx.
-class AddCommentsToNamedRanges
+// The program loads an existing workbook, iterates through all defined names, assigns purpose‑specific comments (including business rules) to known ranges such as SalesData, RegionList, and QuarterlyTargets, applies a generic comment to others, and saves the updated file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet and give it a meaningful name
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Name = "Data";
+        // Iterate through all defined names (named ranges) in the workbook
+        foreach (Name namedRange in workbook.Worksheets.Names)
+        {
+            // Add a descriptive comment based on the name of the range
+            switch (namedRange.Text)
+            {
+                case "SalesData":
+                    // This range contains raw sales figures for the current fiscal year.
+                    // Business rule: Values must be non‑negative and formatted as currency.
+                    namedRange.Comment = "Contains raw sales figures for the current fiscal year. Values must be non-negative and formatted as currency.";
+                    break;
 
-        // Populate some sample data that will be referenced by named ranges
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Banana");
-        sheet.Cells["B1"].PutValue("Price");
-        sheet.Cells["B2"].PutValue(1.2);
-        sheet.Cells["B3"].PutValue(0.8);
+                case "RegionList":
+                    // List of valid sales regions.
+                    // Business rule: Used for data validation in drop‑down lists.
+                    namedRange.Comment = "List of valid sales regions. Used for data validation in drop-down lists.";
+                    break;
 
-        // Get the collection of defined names in the workbook
-        NameCollection names = workbook.Worksheets.Names;
+                case "QuarterlyTargets":
+                    // Target values for each quarter.
+                    // Business rule: Targets cannot be lower than last year's corresponding quarter.
+                    namedRange.Comment = "Target values for each quarter. Targets cannot be lower than last year's corresponding quarter.";
+                    break;
 
-        // Define a named range for the list of products
-        int prodIndex = names.Add("ProductList");
-        Name productRange = names[prodIndex];
-        productRange.RefersTo = "=Data!$A$2:$A$3";
-        // Add a comment describing purpose and business rule
-        productRange.Comment = "List of products used in sales reports. Must not be empty.";
+                default:
+                    // Generic comment for any other named range.
+                    namedRange.Comment = "Named range for internal calculations.";
+                    break;
+            }
+        }
 
-        // Define a named range for the corresponding prices
-        int priceIndex = names.Add("PriceList");
-        Name priceRange = names[priceIndex];
-        priceRange.RefersTo = "=Data!$B$2:$B$3";
-        // Add a comment describing purpose and business rule
-        priceRange.Comment = "Corresponding prices. Values must be positive numbers.";
-
-        // Sort names for better performance when many names exist
-        workbook.Worksheets.SortNames();
-
-        // Save the workbook with the named ranges and their comments
-        workbook.Save("NamedRangesWithComments.xlsx");
+        // Save the workbook with the added comments
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,47 +1,32 @@
-// Title: Insert 5 rows at row 10 using Aspose.Cells for .NET (C#) and shift existing rows down
-// Description: C# example that creates a workbook, fills rows 1‑15 with sample data, then calls Cells.InsertRows(9, 5) to add five rows at the tenth position (zero‑based index 9). The operation pushes rows 10‑15 downward, after which the new rows are populated and the file is saved as InsertRowsAtPositionTen.xlsx.
-// Keywords: Aspose.Cells insert rows C# | Cells.InsertRows example | add rows at specific index .NET | shift worksheet rows down | Aspose.Cells row insertion | C# Excel automation | programmatic row insertion
-// Common Searches: Aspose.Cells how to insert rows at a specific index | Insert multiple rows in Excel using C# Aspose.Cells | InsertRows method zero based index example | Add rows before row 10 in Aspose.Cells workbook | Shift rows down when inserting rows Aspose.Cells
-// Developer Intent: Add five new rows at worksheet row 10, move existing rows downward, and optionally fill the inserted rows with data.
-// Use Cases: Insert blank rows before a header to accommodate new entries without overwriting existing data. | Expand a table by inserting rows before a totals row while preserving formulas and references. | Generate dynamic reports where the number of detail rows varies and must be inserted at a fixed position.
-// AI Prompts: Write C# code that inserts N rows at a given zero‑based index with Aspose.Cells and copies the formatting from the preceding row. | Explain the effect of Cells.InsertRows on merged cells, formulas, and named ranges in an Aspose.Cells worksheet. | Provide a step‑by‑step guide to insert rows at row 10, shift existing rows, and then populate the new rows with custom values using Aspose.Cells for .NET.
+// Title: Insert five rows at row 10 in an Aspose.Cells worksheet with C# while shifting existing rows down
+// AI Prompts: Write C# code that uses Aspose.Cells to insert a block of five rows at index 9 in a worksheet and then saves the workbook. | Show how to call Worksheet.Cells.InsertRows to add multiple rows at a specific position and keep the original data intact.
+// Common Searches: Aspose.Cells C# insert multiple rows at a specific row index | How to add five rows at row 10 in an Excel file using Aspose.Cells .NET | InsertRows method example for shifting rows down in Aspose.Cells | C# code to insert rows and preserve existing worksheet data with Aspose.Cells | Insert rows at position 10 in workbook using Aspose.Cells API
+// Tags: Aspose.Cells InsertRows API | C# add multiple rows Excel worksheet | shift existing rows down Aspose.Cells | insert rows at specific index .NET | Excel file row insertion using Aspose
 
 using System;
 using Aspose.Cells;
 
-namespace InsertRowsExample
+// // Demonstrates creating a workbook, populating the first column with sample data, inserting five rows at the 10th position (zero‑based index 9) which shifts existing rows downward, and saving the result to InsertRowsResult.xlsx.
+class InsertRowsExample
 {
-    // C# example that creates a workbook, fills rows 1‑15 with sample data, then calls Cells.InsertRows(9, 5) to add five rows at the tenth position (zero‑based index 9). The operation pushes rows 10‑15 downward, after which the new rows are populated and the file is saved as InsertRowsAtPositionTen.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Sample data to illustrate the shift after insertion
+        for (int i = 0; i < 15; i++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate some sample data in rows 1-15 (zero‑based indices 0‑14)
-            for (int row = 0; row < 15; row++)
-            {
-                cells[row, 0].PutValue($"Row {row + 1} Column A");
-                cells[row, 1].PutValue($"Row {row + 1} Column B");
-            }
-
-            // Insert five new rows at position ten (row index 9, zero‑based)
-            // This shifts existing rows 10‑15 down by five rows
-            cells.InsertRows(9, 5);
-
-            // Optionally add data to the newly inserted rows
-            for (int i = 0; i < 5; i++)
-            {
-                int insertedRow = 9 + i;
-                cells[insertedRow, 0].PutValue($"Inserted Row {i + 1} Column A");
-                cells[insertedRow, 1].PutValue($"Inserted Row {i + 1} Column B");
-            }
-
-            // Save the workbook
-            workbook.Save("InsertRowsAtPositionTen.xlsx");
+            worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
         }
+
+        // Insert five rows at position ten (zero‑based index 9)
+        worksheet.Cells.InsertRows(9, 5);
+
+        // Save the workbook
+        workbook.Save("InsertRowsResult.xlsx");
     }
 }

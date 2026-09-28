@@ -1,54 +1,43 @@
-// Title: Convert Excel to PDF without Cell Comments using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, removes all worksheet comments with ClearComments(), and saves the file as a PDF using PdfSaveOptions, resulting in a clean PDF that contains no comment annotations.
-// Keywords: Aspose.Cells | C# | .NET | Excel to PDF | remove comments | ClearComments | PdfSaveOptions | export without comments | batch conversion | PDF generation
-// Common Searches: Aspose.Cells export Excel to PDF without comments | C# remove all comments before PDF conversion | How to clear worksheet comments in Aspose.Cells | Convert workbook to PDF excluding cell comments | PdfSaveOptions hide comments Aspose.Cells
-// Developer Intent: Create a PDF from an Excel workbook while omitting every cell comment.
-// Use Cases: Produce printable reports from financial models without internal comment notes. | Automate bulk conversion of spreadsheets to clean PDFs for client delivery. | Generate documentation from design sheets where comments are for internal use only.
-// AI Prompts: Write C# code that converts an Excel file to PDF with Aspose.Cells, ensuring all comments are excluded. | Show how to modify the example to retain comments on selected worksheets while removing them from others during PDF export. | Suggest best practices for error handling, logging, and performance when converting many workbooks to PDF without comments.
+// Title: Convert an Excel workbook to PDF without rendering cell comments using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a PDF while ensuring cell comments are not included in the output. | Show how to configure PdfSaveOptions in Aspose.Cells to suppress comments during Excel‑to‑PDF conversion. | Create a robust C# example that checks for the source workbook file, applies PdfSaveOptions, and handles exceptions when exporting to PDF without comments. | Demonstrate how to verify that the generated PDF excludes Excel comment annotations using Aspose.Cells.
+// Common Searches: aspnet convert excel file to pdf without comments using aspose.cells | c# export workbook to pdf hide cell comments | pdfsaveoptions commentvisibility false asp.net | how to prevent comment boxes from appearing in pdf generated from excel with aspose | skip annotations when saving xlsx as pdf in c#
+// Tags: Aspose.Cells PDF export exclude comments | C# PdfSaveOptions hide cell annotations | Excel to PDF conversion without comment rendering | file existence validation Aspose.Cells | exception handling workbook to pdf conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, removes all worksheet comments with ClearComments(), and saves the file as a PDF using PdfSaveOptions, resulting in a clean PDF that contains no comment annotations.
-class WorkbookToPdfWithoutComments
+// The example verifies that the input .xlsx file exists, loads it with Aspose.Cells, uses PdfSaveOptions (which by default omit cell comments) to save the workbook as a PDF, and includes error handling for a reliable Excel‑to‑PDF conversion without comment annotations.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            // Path to the input workbook
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook
+            // Load the source workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Remove all comments from each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.ClearComments();
-            }
-
-            // Set PDF save options (default settings)
+            // Configure PDF save options (default settings do not render comments)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Path for the output PDF
-            string outputPath = "output_without_comments.pdf";
-
-            // Save the workbook as PDF
+            // Save the workbook as a PDF file with the specified options
             workbook.Save(outputPath, pdfOptions);
 
-            Console.WriteLine($"Workbook saved to PDF without comments: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
+            // Handle any unexpected errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

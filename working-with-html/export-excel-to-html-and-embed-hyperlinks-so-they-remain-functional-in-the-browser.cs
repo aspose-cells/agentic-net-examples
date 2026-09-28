@@ -1,36 +1,50 @@
-// Title: Export Excel to HTML with clickable hyperlinks using Aspose.Cells for .NET (C#)
-// Description: Learn how to convert an Excel workbook to an HTML page with Aspose.Cells while preserving hyperlinks. The example shows adding a link, configuring HtmlSaveOptions to open links in a new tab (LinkTargetType.Blank) and to use relative URLs (IsFullPathLink = false), then saving the result as a fully functional HTML file.
-// Keywords: Aspose.Cells export Excel to HTML | C# preserve hyperlinks HTML | HtmlSaveOptions LinkTargetType Blank | .NET convert Excel to HTML | relative hyperlink paths Aspose.Cells | open links in new browser tab
-// Common Searches: Aspose.Cells export Excel to HTML with clickable links | How to keep hyperlinks when saving Excel as HTML .NET | HtmlSaveOptions open hyperlink in new tab C# | relative vs absolute links Aspose.Cells HTML export | C# convert spreadsheet to web‑ready HTML
-// Developer Intent: Create an HTML version of an Excel file where all embedded hyperlinks stay active and open in a new browser tab.
-// Use Cases: Generate web‑ready reports that include external resource links. | Publish Excel‑based documentation as HTML with navigation links. | Provide intranet dashboards where cells link to internal pages.
-// AI Prompts: Show me C# code to export an Excel workbook to HTML with functional hyperlinks using Aspose.Cells, opening links in a new tab. | How do I configure HtmlSaveOptions in Aspose.Cells to use relative hyperlink paths and preserve clickability? | Explain the difference between HtmlLinkTargetType.Blank and other target types when saving Excel as HTML.
+// Title: Convert an Excel workbook to HTML with active hyperlinks and embedded images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .xlsx file with Aspose.Cells, configures HtmlSaveOptions to keep hyperlinks clickable, and saves the workbook as an HTML file with images embedded as base64. | Show how to use Aspose.Cells HtmlSaveOptions to export all worksheets to a single HTML page while preserving hyperlink functionality.
+// Common Searches: asp.net convert xlsx to html preserving hyperlink clicks | c# Aspose.Cells export workbook to html with base64 images | how to keep Excel hyperlinks working after saving as html using Aspose.Cells | save multiple worksheets to one html file Aspose.Cells C#
+// Tags: Aspose.Cells HtmlSaveOptions export hyperlinks | C# export Excel to HTML with base64 images | preserve Excel hyperlinks in HTML output | convert multiple worksheets to single HTML page | Aspose.Cells workbook to HTML conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Learn how to convert an Excel workbook to an HTML page with Aspose.Cells while preserving hyperlinks. The example shows adding a link, configuring HtmlSaveOptions to open links in a new tab (LinkTargetType.Blank) and to use relative URLs (IsFullPathLink = false), then saving the result as a fully functional HTML file.
-class ExportExcelToHtml
+// The program checks for the input.xlsx file, loads it with Aspose.Cells, sets HtmlSaveOptions to export all worksheets, embed images as base64, and retain functional hyperlinks, then saves the result as output.html.
+class Program
 {
     static void Main()
     {
-        // Load the source Excel file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
 
-        // Ensure there is a hyperlink in the worksheet (optional example)
-        // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlink address
-        workbook.Worksheets[0].Hyperlinks.Add(0, 0, 1, 1, "https://www.example.com");
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        try
+        {
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Open hyperlinks in a new browser tab/window
-        htmlOptions.LinkTargetType = HtmlLinkTargetType.Blank;
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Export all worksheets (set to true to export only the active sheet)
+                ExportActiveWorksheetOnly = false,
 
-        // Use relative links (default). Set to true if absolute paths are required.
-        htmlOptions.IsFullPathLink = false;
+                // Embed images directly into the HTML as base64 strings
+                ExportImagesAsBase64 = true
+            };
 
-        // Save the workbook as an HTML file with functional hyperlinks
-        workbook.Save("output.html", htmlOptions);
+            // Save the workbook as an HTML file with functional hyperlinks
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

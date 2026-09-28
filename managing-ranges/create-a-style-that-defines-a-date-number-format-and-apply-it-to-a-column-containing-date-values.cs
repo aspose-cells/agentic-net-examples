@@ -1,41 +1,44 @@
-// Title: Apply a Built‑In Date Number Format Style to an Entire Column with Aspose.Cells for .NET (C#)
-// Description: The sample creates a workbook, writes DateTime values into column A, builds a style that uses the built‑in date format ID 14 (m/d/yyyy), sets a StyleFlag so only the number format changes, applies the style to the first column via ApplyColumnStyle, and saves the result as DateColumnStyle.xlsx.
-// Keywords: Aspose.Cells C# date format | ApplyColumnStyle example | StyleFlag number format only | built‑in number format 14 | format whole column Excel | column style Aspose.Cells | default m/d/yyyy style .NET | date styling workbook
-// Common Searches: asp.net apply date format to column aspose.cells | c# apply built‑in number format to entire column | how to use StyleFlag for number format only aspose.cells | applycolumnstyle date column example | set m/d/yyyy format for a column using Aspose.Cells
-// Developer Intent: Display all cells in a column as dates using the standard m/d/yyyy pattern while leaving other formatting untouched.
-// Use Cases: Generate financial reports where every date column must follow a consistent display format before distribution. | Create export files for downstream systems that expect dates in the default Excel short‑date layout. | Standardize date columns across multiple worksheets in an automated workbook generation pipeline.
-// AI Prompts: Write C# code that defines a custom date style and applies it to a specific column with Aspose.Cells, preserving existing cell formatting. | Show how to use StyleFlag to change only the number format for several columns while keeping fonts, borders, and colors unchanged. | Explain step‑by‑step how to assign different built‑in number formats to multiple columns in a workbook using Aspose.Cells for .NET.
+// Title: Create a date number format style and apply it to an entire column with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that builds a Style with a short date number format (built‑in ID 14 or a custom pattern) and applies it to column A using StyleFlag so only the number format changes. | Demonstrate how to apply the same date style to every cell in a column without affecting other cell attributes in an Aspose.Cells workbook.
+// Common Searches: aspocells c# apply built‑in short date format to whole column | how to use StyleFlag to change only number format in Aspose.Cells | set custom date format mm-dd-yyyy for column A using Aspose.Cells .NET | apply same style to entire column in Excel with Aspose.Cells C# example | Aspose.Cells format column as date without altering other cell properties
+// Tags: Aspose.Cells date style column | C# StyleFlag number format only | custom short date format Aspose.Cells | apply style to whole column Excel .NET | built‑in date format ID 14 Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// The sample creates a workbook, writes DateTime values into column A, builds a style that uses the built‑in date format ID 14 (m/d/yyyy), sets a StyleFlag so only the number format changes, applies the style to the first column via ApplyColumnStyle, and saves the result as DateColumnStyle.xlsx.
-class ApplyDateStyleToColumn
+// The program creates a workbook, inserts three DateTime values into column A, defines a style with a short date number format (built‑in ID 14 or a custom pattern), uses StyleFlag to apply only the number format to the entire first column, and saves the file as DateStyleExample.xlsx.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
 
-        // Populate column A with date values
-        cells["A1"].PutValue(new DateTime(2023, 1, 1));
-        cells["A2"].PutValue(new DateTime(2023, 2, 15));
-        cells["A3"].PutValue(new DateTime(2023, 3, 30));
+        // Sample date values in column A (index 0)
+        sheet.Cells["A1"].PutValue(DateTime.Now);
+        sheet.Cells["A2"].PutValue(DateTime.Now.AddDays(1));
+        sheet.Cells["A3"].PutValue(DateTime.Now.AddDays(2));
 
-        // Create a style and set a built‑in date number format (14 = m/d/yyyy)
+        // Create a style for date formatting
         Style dateStyle = workbook.CreateStyle();
-        dateStyle.Number = 14;
 
-        // Define a StyleFlag to apply only the number format
+        // Use built‑in short date format (mm-dd-yyyy)
+        dateStyle.Number = 14; // Built‑in date format ID
+
+        // If a custom format is preferred, uncomment the next line:
+        // dateStyle.Custom = "mm-dd-yyyy";
+
+        // Specify that only the number format should be applied
         StyleFlag flag = new StyleFlag();
         flag.NumberFormat = true;
 
-        // Apply the style to the entire first column (index 0)
-        cells.ApplyColumnStyle(0, dateStyle, flag);
+        // Apply the style to the entire first column (A)
+        sheet.Cells.Columns[0].ApplyStyle(dateStyle, flag);
 
         // Save the workbook
-        workbook.Save("DateColumnStyle.xlsx");
+        workbook.Save("DateStyleExample.xlsx");
     }
 }

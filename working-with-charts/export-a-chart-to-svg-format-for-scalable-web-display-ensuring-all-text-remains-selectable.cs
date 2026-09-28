@@ -1,74 +1,61 @@
-// Title: Export Aspose.Cells Chart to SVG with Selectable Text in C#
-// Description: Creates a workbook, adds a column chart from sample data, configures SvgImageOptions (viewport fit, CSS prefix, WOFF font embedding) and saves the chart as an SVG file where all text remains selectable in browsers.
-// Keywords: Aspose.Cells | C# chart export | SVG output | selectable text SVG | SvgImageOptions | EmbeddedFontType Woff | FitToViewPort | chart CSS prefix | Aspose.Cells ToImage | web‑ready chart
-// Common Searches: Aspose.Cells export chart to SVG C# | how to keep text selectable when saving chart as SVG | C# Aspose.Cells SVG rendering options | embed fonts in SVG chart Aspose.Cells | fit chart to viewport SVG Aspose
-// Developer Intent: Generate an SVG file from an Aspose.Cells chart while preserving selectable text.
-// Use Cases: Render responsive SVG charts for web dashboards. | Embed WOFF fonts in SVG to maintain text accessibility. | Apply a custom CSS prefix to style exported chart elements consistently. | Export workbook charts without rasterizing text for SEO‑friendly graphics.
-// AI Prompts: Show C# code that uses Aspose.Cells to export a chart to SVG with embedded WOFF fonts for selectable text. | Explain how to configure SvgImageOptions to set FitToViewPort and a custom CSS prefix when saving a chart as SVG. | Provide error‑handling best practices for chart-to‑SVG conversion in a .NET application.
+// Title: Export the first chart from an Excel workbook to an SVG file with selectable text using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook, retrieves the first chart on the first worksheet, and saves it as an SVG while keeping the text selectable with Aspose.Cells. | Show how to configure ImageOrPrintOptions.OnePagePerSheet for SVG chart export so the resulting SVG preserves searchable text. | Write a C# routine that loops through all charts in a worksheet and exports each chart to its own SVG file using Aspose.Cells.
+// Common Searches: aspnet export excel chart to svg with selectable text using aspose.cells | c# how to save a chart as scalable vector graphics from a workbook | imageorprintoptions onepagepersheet svg chart export example | export multiple charts from a worksheet to separate svg files asp.net | preserve text layer when converting excel chart to svg asp.net
+// Tags: chart export to SVG Aspose.Cells | ImageOrPrintOptions OnePagePerSheet SVG | selectable text in SVG chart Aspose | C# export Excel chart as scalable vector graphics | multiple chart SVG export Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSvgExport
+// Loads an Excel workbook, accesses the first worksheet's first chart, and exports it to an SVG file using Aspose.Cells with ImageOrPrintOptions.OnePagePerSheet to retain selectable text.
+class ExportChartToSvg
 {
-    // Creates a workbook, adds a column chart from sample data, configures SvgImageOptions (viewport fit, CSS prefix, WOFF font embedding) and saves the chart as an SVG file where all text remains selectable in browsers.
-    public class ExportChartToSvg
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "chart.svg";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["A4"].PutValue("Banana");
-
-                worksheet.Cells["B1"].PutValue("Value");
-                worksheet.Cells["B2"].PutValue(120);
-                worksheet.Cells["B3"].PutValue(80);
-                worksheet.Cells["B4"].PutValue(150);
-
-                // Add a column chart to the worksheet
-                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = worksheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);          // Values
-                chart.NSeries.CategoryData = "A2:A4";     // Categories
-                chart.Title.Text = "Fruit Sales";
-
-                // Configure SVG rendering options
-                SvgImageOptions svgOptions = new SvgImageOptions();
-                svgOptions.ImageType = ImageType.Svg;               // Ensure SVG output
-                svgOptions.FitToViewPort = true;                   // Fit to viewport
-                svgOptions.CssPrefix = "chart-";                   // Optional CSS prefix
-                svgOptions.EmbeddedFontType = SvgEmbeddedFontType.Woff; // Embed font for selectable text
-
-                // Export the chart as an SVG file; text remains selectable because we use SVG format
-                string outputPath = "FruitSalesChart.svg";
-                chart.ToImage(outputPath, svgOptions);
-
-                Console.WriteLine($"Chart exported to SVG: {outputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook containing the chart
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
             }
+
+            // Get the first chart on the worksheet
+            Chart chart = worksheet.Charts[0];
+
+            // Configure image options for SVG output
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // ImageFormat property is optional; SVG is inferred from file extension
+                OnePagePerSheet = true // Required flag for image export
+            };
+
+            // Export the chart to an SVG file
+            chart.ToImage(outputPath, imgOptions);
+            Console.WriteLine($"Chart exported successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point required by the project
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ExportChartToSvg.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

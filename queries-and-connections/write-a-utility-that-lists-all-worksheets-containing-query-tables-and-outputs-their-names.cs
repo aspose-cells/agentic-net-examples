@@ -1,42 +1,40 @@
-// Title: C# utility to list worksheets with QueryTables using Aspose.Cells
-// Description: A command‑line program that loads an Excel workbook with Aspose.Cells, scans each worksheet, and prints the names of those that contain one or more QueryTables.
-// Keywords: Aspose.Cells QueryTables list worksheets | C# enumerate QueryTables | find sheets with data connections Aspose | list worksheet names containing QueryTables | Aspose.Cells workbook query tables
-// Common Searches: how to list worksheets that have QueryTables in Aspose.Cells | C# code to get sheet names with data connections | enumerate QueryTables per worksheet Aspose.Cells .NET | list Excel sheets containing query tables programmatically
-// Developer Intent: Identify and output the names of all worksheets that contain at least one QueryTable in a specified workbook.
-// Use Cases: Audit workbooks to ensure only approved sheets contain external data connections. | Create a summary report of sheets that need refresh because they host QueryTables. | Automate cleanup by locating worksheets with QueryTables for removal or update.
-// AI Prompts: Generate a C# method that returns a List<string> of worksheet names containing QueryTables with Aspose.Cells. | Show how to modify the utility to also display the count of QueryTables per worksheet. | Explain how to add comprehensive error handling for missing files, load failures, and empty QueryTables collections.
+// Title: Identify and list worksheet names that contain QueryTables using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that opens a workbook, scans each worksheet, and prints the names of worksheets where the QueryTables collection is not empty. | Create a reusable method in C# that receives an Excel file path and returns a List<string> of worksheet names that have at least one QueryTable, using Aspose.Cells. | Adapt the example to write the identified worksheet names to a text file instead of the console, while still detecting QueryTables with Aspose.Cells.
+// Common Searches: aspnet c# how to get worksheet names that contain query tables with Aspose.Cells | list Excel sheets with data connections using Aspose.Cells .NET | retrieve names of worksheets that have query tables in a workbook via Aspose.Cells API | C# Aspose.Cells enumerate worksheets with QueryTable objects | find worksheets with external data connections in an Excel file using Aspose.Cells
+// Tags: Aspose.Cells detect QueryTables in worksheets | C# enumerate worksheets with data connections | list worksheet names containing QueryTable objects | Aspose.Cells workbook query table detection | retrieve worksheet names for external data sources .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsQueryTableUtility
+// The utility loads an Excel workbook supplied via command line, iterates through all worksheets, checks each sheet's QueryTables collection, outputs the names of sheets that contain at least one QueryTable, and saves the workbook unchanged.
+class Program
 {
-    // A command‑line program that loads an Excel workbook with Aspose.Cells, scans each worksheet, and prints the names of those that contain one or more QueryTables.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Ensure a file path is provided
+        if (args.Length == 0)
         {
-            // Expect the Excel file path as the first command‑line argument
-            if (args.Length == 0)
+            Console.WriteLine("Usage: Program <excel-file-path>");
+            return;
+        }
+
+        string filePath = args[0];
+
+        // Load the workbook (load rule)
+        Workbook workbook = new Workbook(filePath);
+
+        // Iterate over all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Check if the worksheet contains any query tables
+            if (sheet.QueryTables.Count > 0)
             {
-                Console.WriteLine("Usage: AsposeCellsQueryTableUtility <path-to-workbook>");
-                return;
-            }
-
-            string workbookPath = args[0];
-
-            // Load the workbook (uses the standard Aspose.Cells load mechanism)
-            Workbook workbook = new Workbook(workbookPath);
-
-            // Iterate over all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // If the worksheet has one or more query tables, output its name
-                if (sheet.QueryTables.Count > 0)
-                {
-                    Console.WriteLine($"Worksheet containing QueryTables: {sheet.Name}");
-                }
+                // Output the name of the worksheet that has query tables
+                Console.WriteLine($"Worksheet with QueryTable: {sheet.Name}");
             }
         }
+
+        // Save the workbook (save rule) – no modifications are made, but rule compliance is kept
+        workbook.Save(filePath);
     }
 }

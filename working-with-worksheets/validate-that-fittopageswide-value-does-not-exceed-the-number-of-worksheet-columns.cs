@@ -1,57 +1,45 @@
-// Title: Validate and Adjust FitToPagesWide Based on Worksheet Column Count – Aspose.Cells for .NET
-// Description: Creates a workbook, fills several columns, uses Worksheet.Cells.MaxColumn to get the actual column count, compares it with a desired FitToPagesWide value, caps the setting to the column count, optionally sets FitToPagesTall to 0, and saves the workbook.
-// Keywords: Aspose.Cells | FitToPagesWide | MaxColumn | page setup | column count validation | .NET | C# | Excel printing layout | page scaling | worksheet columns
-// Common Searches: Aspose.Cells validate FitToPagesWide against column count | how to limit FitToPagesWide to actual columns in C# | set FitToPagesWide dynamically using MaxColumn | prevent FitToPagesWide overflow in Aspose.Cells | adjust page setup width based on data columns
-// Developer Intent: Ensure the FitToPagesWide property never exceeds the number of columns that contain data.
-// Use Cases: Avoid truncated prints by capping FitToPagesWide to the real column count before exporting. | Automatically adapt page layout for reports with variable column numbers. | Provide a reusable helper that validates and sets FitToPagesWide for any worksheet in a multi‑sheet workbook.
-// AI Prompts: Generate a C# utility method that receives a Worksheet and a desired FitToPagesWide, checks Worksheet.Cells.MaxColumn, and sets the appropriate PageSetup values. | Create code that logs a warning when the requested FitToPagesWide exceeds the column count and then applies the maximum allowed value using Aspose.Cells. | Write an example that iterates through all worksheets in a workbook, validates each worksheet's FitToPagesWide against its column count, and updates the page setup accordingly.
+// Title: Validate and Correct Worksheet FitToPagesWide Setting According to Column Count with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loops through every worksheet in a workbook, compares PageSetup.FitToPagesWide to the actual number of columns (Cells.MaxColumn+1), logs worksheets where the value is too high, and resets it to the column count. | Generate a C# example that loads an Excel file using Aspose.Cells, checks if FitToPagesWide exceeds the worksheet's column limit, updates the setting to a valid value, and saves the modified file.
+// Common Searches: Aspose.Cells C# how to ensure FitToPagesWide does not exceed worksheet columns | programmatically adjust FitToPagesWide based on MaxColumn in a .NET workbook | check page setup FitToPagesWide against column count before saving Excel with Aspose | C# validate FitToPagesWide setting for each sheet in an Aspose.Cells workbook
+// Tags: validate FitToPagesWide column limit Aspose.Cells | adjust worksheet page setup FitToPagesWide C# | compare FitToPagesWide to Cells.MaxColumn Aspose | Aspose.Cells page setup overflow prevention | C# workbook column count validation
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace FitToPagesWideValidation
+// Loads a workbook, iterates each worksheet, compares PageSetup.FitToPagesWide with the actual column count (Cells.MaxColumn+1), logs any excess, resets FitToPagesWide to the column count when necessary, and saves the updated workbook.
+class FitToPagesWideValidator
 {
-    // Creates a workbook, fills several columns, uses Worksheet.Cells.MaxColumn to get the actual column count, compares it with a desired FitToPagesWide value, caps the setting to the column count, optionally sets FitToPagesTall to 0, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Get the FitToPagesWide setting from the worksheet's PageSetup
+            int fitToPagesWide = sheet.PageSetup.FitToPagesWide;
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Determine the total number of columns in the worksheet.
+            // Excel supports up to 16384 columns (A to XFD). 
+            // If you want to consider only columns that contain data, use MaxColumn + 1.
+            int totalColumns = sheet.Cells.MaxColumn + 1; // zero‑based index + 1
 
-            // Populate some sample data across several columns
-            for (int col = 0; col < 20; col++)
+            // Validate the FitToPagesWide value
+            if (fitToPagesWide > totalColumns)
             {
-                sheet.Cells[0, col].PutValue($"Header {col + 1}");
-                sheet.Cells[1, col].PutValue($"Data {col + 1}");
-            }
-
-            // Desired FitToPagesWide value (example)
-            int desiredFitToPagesWide = 25;
-
-            // Determine the total number of columns that contain data
-            // MaxColumn is zero‑based, so add 1 to get the count
-            int totalColumns = sheet.Cells.MaxColumn + 1;
-
-            // Validate the FitToPagesWide setting
-            if (desiredFitToPagesWide > totalColumns)
-            {
-                Console.WriteLine($"FitToPagesWide ({desiredFitToPagesWide}) exceeds the number of columns ({totalColumns}). Adjusting to {totalColumns}.");
+                Console.WriteLine($"Worksheet \"{sheet.Name}\": FitToPagesWide ({fitToPagesWide}) exceeds the number of columns ({totalColumns}).");
+                // Optionally, adjust the value to a valid range
                 sheet.PageSetup.FitToPagesWide = totalColumns;
+                Console.WriteLine($"Adjusted FitToPagesWide to {totalColumns}.");
             }
             else
             {
-                sheet.PageSetup.FitToPagesWide = desiredFitToPagesWide;
+                Console.WriteLine($"Worksheet \"{sheet.Name}\": FitToPagesWide ({fitToPagesWide}) is within the column limit ({totalColumns}).");
             }
-
-            // Optionally set FitToPagesTall to 0 to let height adjust automatically
-            sheet.PageSetup.FitToPagesTall = 0;
-
-            // Save the workbook
-            workbook.Save("FitToPagesWideValidated.xlsx");
         }
+
+        // Save the workbook if any adjustments were made (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

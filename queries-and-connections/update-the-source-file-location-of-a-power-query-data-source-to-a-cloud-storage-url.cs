@@ -1,32 +1,32 @@
-// Title: C# – Update Power Query connection source to a cloud URL using Aspose.Cells
-// Description: Loads an Excel workbook, finds Power Query connections via the PowerQueryFormula property, sets each connection's SourceFile to a specified cloud storage URL, logs the change, and saves the workbook.
-// Keywords: Aspose.Cells | Power Query | external data connection | C# | cloud storage URL | SourceFile property | update connection path | programmatic Excel | .NET
-// Common Searches: change Power Query source to web URL Aspose.Cells C# | update external connection file path in Excel programmatically | set Power Query SourceFile to cloud storage using .NET | Aspose.Cells modify Power Query connection URL | batch update Power Query data source in multiple workbooks
-// Developer Intent: Replace the local file path of Power Query connections with a cloud storage URL programmatically.
-// Use Cases: Shift on‑premises Excel reports to reference data stored in a cloud bucket without manual edits. | Automate the re‑pointing of dozens of workbooks to a new shared cloud file after a data migration. | Maintain a single source of truth for Power Query data by directing all templates to a centralized cloud location.
-// AI Prompts: Generate C# code that uses Aspose.Cells to set the SourceFile of every Power Query connection in a workbook to a given cloud URL and saves the file. | Explain how to confirm that each Power Query connection was successfully updated to the cloud URL with Aspose.Cells APIs. | Provide error‑handling patterns for missing PowerQueryFormula properties or invalid URLs when updating connections.
+// Title: Update a Power Query connection's source file to a cloud storage URL using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that scans a workbook’s DataConnections, finds Power Query connections, and sets their SourceFile to a given cloud URL. | Show how to log each updated Power Query connection name while changing its source path in an Excel file with Aspose.Cells. | Demonstrate saving the workbook after modifying Power Query connection URLs to a cloud location using Aspose.Cells. | Provide a reusable method that accepts a workbook path and a cloud URL, then updates all Power Query SourceFile properties.
+// Common Searches: Aspose.Cells C# change Power Query connection source to cloud URL | programmatically update external data connection file path in Excel using Aspose.Cells | set SourceFile property for Power Query connections in .xlsx with C# | how to point Power Query source to an online Excel file using Aspose.Cells | iterate workbook.DataConnections and modify Power Query source location in .NET
+// Tags: Power Query source URL Aspose.Cells | update external connection source C# | set SourceFile cloud storage | iterate DataConnections Power Query | modify Power Query file path .NET | Aspose.Cells change connection source
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-// Loads an Excel workbook, finds Power Query connections via the PowerQueryFormula property, sets each connection's SourceFile to a specified cloud storage URL, logs the change, and saves the workbook.
+// The example loads an existing workbook, loops through its DataConnections, identifies Power Query connections via the PowerQueryFormula property, updates each connection’s SourceFile to a specified cloud storage URL, logs the changes, and saves the workbook as a new file.
 class UpdatePowerQuerySource
 {
     static void Main()
     {
-        // Load the workbook that contains the Power Query connection
+        // Load the workbook that contains Power Query connections
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all external data connections in the workbook
+        // Define the new cloud storage URL for the source file
+        string newSourceUrl = "https://mycloudstorage.com/data/newsource.xlsx";
+
+        // Iterate through all external data connections
         foreach (ExternalConnection connection in workbook.DataConnections)
         {
             // Identify Power Query connections by checking the PowerQueryFormula property
             if (connection.PowerQueryFormula != null)
             {
-                // Update the source file location to the desired cloud storage URL
-                connection.SourceFile = "https://mycloudstorage.com/data/sourcefile.xlsx";
-                Console.WriteLine($"Updated SourceFile for connection '{connection.Name}' to cloud URL.");
+                // Update the SourceFile property to point to the cloud URL
+                connection.SourceFile = newSourceUrl;
+                Console.WriteLine($"Updated Power Query connection '{connection.Name}' to new source: {newSourceUrl}");
             }
         }
 

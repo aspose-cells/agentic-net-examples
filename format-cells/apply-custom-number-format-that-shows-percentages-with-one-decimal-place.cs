@@ -1,66 +1,38 @@
-// Title: Apply a Custom Percentage Format (One Decimal) Using Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, writes the value 0.456 to cell A1, defines a style with the custom number format "0.0%" to display percentages with one decimal place, applies the style, and saves the file as PercentageOneDecimalDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | custom number format | percentage format | one decimal place | cell styling | Excel export | formatting percentages
-// Common Searches: Aspose.Cells format cell as percentage with one decimal | C# custom number format string for percentages | how to set percentage format 0.0% in Aspose.Cells | apply custom style to Excel cell using Aspose.Cells .NET
-// Developer Intent: Format a worksheet cell to show a percentage value with a single decimal digit.
-// Use Cases: Financial reports that require ratios displayed as 45.6% instead of 0.456. | Dashboard sheets where all percentage metrics must share a consistent one‑decimal format. | Automated Excel exports that preserve precise percentage representation for analytics.
-// AI Prompts: Generate C# code with Aspose.Cells that applies the custom format "0.0%" to a range of cells. | Show how to change the format to two decimal places or add thousand separators in Aspose.Cells. | Explain the difference between built‑in percentage formats and custom formats in Aspose.Cells.
+// Title: How to format Excel cells as percentages with one decimal place using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a custom style with the format string "0.0%" and apply it to a specific cell range using Aspose.Cells StyleFlag. | Generate an Excel workbook in C# where numeric values are automatically displayed as percentages with one decimal precision. | Save the workbook after applying the percentage style to cells A1 through A3 with Aspose.Cells.
+// Common Searches: Aspose.Cells C# format cells as percentage with one decimal place | custom number format 0.0% using Aspose.Cells .NET | apply number format only to a range with StyleFlag in Aspose.Cells | C# create Excel file showing 12.3% instead of 0.123 using Aspose.Cells
+// Tags: custom percentage number format Aspose.Cells | apply style to cell range Aspose.Cells C# | StyleFlag number format only Aspose.Cells | Excel percentage formatting .NET | Aspose.Cells generate workbook with custom format
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, inserts decimal values, defines a custom style with the format "0.0%" to display percentages with one decimal place, applies this style to the range A1:A3 using a StyleFlag that targets only the number format, and saves the file as PercentagesWithOneDecimal.xlsx.
+class Program
 {
-    // This example creates a workbook, writes the value 0.456 to cell A1, defines a style with the custom number format "0.0%" to display percentages with one decimal place, applies the style, and saves the file as PercentageOneDecimalDemo.xlsx.
-    public class PercentageOneDecimalDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook.
+        Workbook workbook = new Workbook();
 
-                // Put a numeric value (e.g., 45.6%)
-                Cell cell = sheet.Cells["A1"];
-                cell.PutValue(0.456); // 45.6%
+        // Access the first worksheet.
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Create a style with a custom percentage format showing one decimal place
-                Style percentStyle = workbook.CreateStyle();
-                percentStyle.Custom = "0.0%"; // custom format: one decimal place percentage
+        // Put some sample numeric values (e.g., 0.1234 = 12.34%).
+        sheet.Cells["A1"].PutValue(0.1234);
+        sheet.Cells["A2"].PutValue(0.5678);
+        sheet.Cells["A3"].PutValue(0.9);
 
-                // Apply the style to the cell
-                cell.SetStyle(percentStyle);
+        // Define a custom number format that shows percentages with one decimal place.
+        // "0.0%" means the value will be multiplied by 100 and displayed with one decimal.
+        Style percentStyle = workbook.CreateStyle();
+        percentStyle.Custom = "0.0%";
 
-                // Determine output file path
-                string outputFile = "PercentageOneDecimalDemo.xlsx";
+        // Apply the custom style to the range containing the numbers.
+        StyleFlag flag = new StyleFlag();
+        flag.NumberFormat = true; // Apply only the number format part of the style.
+        sheet.Cells.CreateRange("A1:A3").ApplyStyle(percentStyle, flag);
 
-                // Ensure the directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PercentageOneDecimalDemo.Run();
-        }
+        // Save the workbook to a file.
+        workbook.Save("PercentagesWithOneDecimal.xlsx");
     }
 }

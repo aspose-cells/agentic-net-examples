@@ -1,85 +1,84 @@
-// Title: Benchmark Aspose.Cells Chart Rendering Time in C#
-// Description: Creates a workbook with 1,000 rows, adds a column chart, calculates its layout, and uses a Stopwatch to time the chart's rendering to a MemoryStream with ImageOrPrintOptions, then logs the elapsed milliseconds and optionally saves the file.
-// Keywords: Aspose.Cells chart performance | C# chart rendering benchmark | measure rendering time Aspose | Stopwatch chart rendering | render chart to MemoryStream
-// Common Searches: Aspose.Cells how to time chart rendering | C# benchmark chart generation speed | measure Aspose chart render latency | log chart rendering duration .NET
-// Developer Intent: The developer needs to capture and record the time taken to render a complex chart with Aspose.Cells for performance analysis.
-// Use Cases: Identify rendering bottlenecks when generating large spreadsheets. | Include rendering time metrics in automated regression tests. | Monitor chart generation latency in a live reporting service.
-// AI Prompts: Write C# code that records Aspose.Cells chart rendering time for multiple charts and outputs a summary report. | Show how to compare rendering speeds of PNG and JPEG formats for Aspose.Cells charts. | Explain how to integrate chart rendering timing into a CI pipeline using Aspose.Cells.
+// Title: Measure and log the rendering time of a complex line chart using Aspose.Cells for .NET
+// AI Prompts: Create a C# program that fills a worksheet with 1000 rows and 5 data series, adds a line chart, renders it to a 300 DPI PNG image, and prints the rendering duration in milliseconds. | Adapt the example to export the chart as a JPEG at 150 DPI and record the elapsed time in seconds instead of milliseconds. | Extend the code to generate both line and column charts, render each to an image, and compare their rendering times using Stopwatch.
+// Common Searches: aspnet measure Aspose.Cells chart rendering performance | how long does ToImage take for a line chart in Aspose.Cells | benchmark chart export speed Aspose.Cells C# | log chart rendering time with Stopwatch in .NET
+// Tags: chart rendering performance measurement Aspose.Cells | line chart image generation C# | elapsed time measurement .NET | high resolution chart export Aspose.Cells | performance testing complex chart rendering .NET
 
 using System;
 using System.Diagnostics;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// Creates a workbook with 1,000 rows, adds a column chart, calculates its layout, and uses a Stopwatch to time the chart's rendering to a MemoryStream with ImageOrPrintOptions, then logs the elapsed milliseconds and optionally saves the file.
-class ChartRenderPerformance
+// Creates a workbook with 1000 rows of sinusoidal data across five series, adds a line chart, renders it to a 300‑DPI PNG image, and logs the rendering duration in milliseconds using Stopwatch.
+class ChartRenderingPerformance
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate worksheet with a large data set to make the chart complex
-            int dataRows = 1000;
-            worksheet.Cells[0, 0].PutValue("Category");
-            worksheet.Cells[0, 1].PutValue("Value");
-            for (int i = 1; i <= dataRows; i++)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate worksheet with sample data for a complex chart (e.g., 1000 rows, 5 series)
+            int rows = 1000;
+            int seriesCount = 5;
+            for (int i = 0; i < rows; i++)
             {
-                worksheet.Cells[i, 0].PutValue($"Item {i}");
-                worksheet.Cells[i, 1].PutValue(i);
+                // X axis values (e.g., dates or categories)
+                sheet.Cells[i, 0].PutValue(i + 1);
+
+                // Y values for each series
+                for (int s = 0; s < seriesCount; s++)
+                {
+                    sheet.Cells[i, s + 1].PutValue(Math.Sin((i + s) * 0.01) * 100 + s * 20);
+                }
             }
 
-            // Add a chart using the ChartCollection.Add method
-            int chartIdx = worksheet.Charts.Add(ChartType.Column, 5, 0, 30, 10);
-            Chart chart = worksheet.Charts[chartIdx];
+            // Add a line chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 7, 30, 20);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
-            chart.SetChartDataRange($"A1:B{dataRows + 1}", true);
+            // Set chart title
+            chart.Title.Text = "Complex Line Chart Performance Test";
 
-            // Ensure chart layout is calculated before rendering
-            chart.Calculate();
-
-            // Prepare rendering options (single page). Default image format is PNG.
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            // Add series to the chart
+            for (int s = 0; s < seriesCount; s++)
             {
-                OnePagePerSheet = true
+                // Column letters start from B (index 1) for series data
+                char colLetter = (char)('B' + s);
+                int seriesIndex = chart.NSeries.Add($"=Sheet1!${colLetter}$1:${colLetter}${rows}", true);
+                // Set X values (category axis)
+                chart.NSeries[seriesIndex].XValues = $"=Sheet1!$A$1:$A${rows}";
+            }
+
+            // Prepare image options (set resolution; default format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                HorizontalResolution = 300,
+                VerticalResolution = 300
             };
 
-            // Measure rendering time using Stopwatch
-            Stopwatch timer = Stopwatch.StartNew();
+            // Measure rendering time
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
-            // Render the chart to a memory stream (no file output needed for timing)
-            using (MemoryStream ms = new MemoryStream())
-            {
-                chart.ToImage(ms, renderOptions);
-            }
+            // Render chart directly to an image file
+            chart.ToImage("RenderedChart.png", imgOptions);
 
-            timer.Stop();
+            sw.Stop();
 
-            // Log the elapsed time in milliseconds
-            Console.WriteLine($"Chart rendering time: {timer.ElapsedMilliseconds} ms");
+            // Log the duration
+            Console.WriteLine($"Chart rendering time: {sw.ElapsedMilliseconds} ms");
 
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            string outputPath = "ChartPerformance.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the workbook (if needed)
+            workbook.Save("ComplexChartWorkbook.xlsx");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

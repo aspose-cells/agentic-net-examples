@@ -1,91 +1,68 @@
-// Title: C# – Compare Excel workbook size with and without slicers using Aspose.Cells
-// Description: A complete C# example that creates a workbook, adds sample data, builds a pivot table, inserts a slicer, saves the file, removes the slicer, saves a second file, and prints the byte size of each XLSX to show the storage impact of slicers.
-// Keywords: Aspose.Cells slicer size | C# Excel slicer example | compare XLSX file size | remove slicer Aspose.Cells | pivot table slicer impact | Aspose.Cells file size optimization | Excel slicer storage overhead
-// Common Searches: Aspose.Cells C# how to measure file size with slicer | compare Excel workbook size with and without slicer | remove slicer before saving Aspose.Cells workbook | size difference XLSX when adding slicer | C# code to get file size of generated Excel file
-// Developer Intent: Find out how many extra bytes a slicer adds to an XLSX file by saving the same workbook once with the slicer and once without it.
-// Use Cases: Determine whether a slicer fits within attachment size limits before sending a report. | Automate workbook size optimization by stripping slicers when the file exceeds a threshold. | Validate the storage cost of slicers in generated Excel dashboards.
-// AI Prompts: Generate C# code that creates a pivot table, adds a slicer, saves the workbook, removes the slicer, saves again, and outputs the size difference. | Explain how Aspose.Cells stores slicer definitions in an XLSX package and why this affects file size. | Provide a .NET method to compare two workbook files' sizes and log the result in a console application.
+// Title: Measure the XLSX file size difference when saving an Aspose.Cells workbook with and without a slicer in C#
+// AI Prompts: Generate C# code that creates a workbook, adds a ListObject table, inserts a slicer for a column, saves the file, clears all slicers, saves a second file, and prints the byte sizes of both files. | Write a reusable C# method that takes a Worksheet and column index, adds a slicer, saves the workbook twice (with and without the slicer), and returns the size delta in bytes. | Adapt the example to use a pivot table slicer, save the workbook, and output the size difference in kilobytes.
+// Common Searches: how much does a slicer increase the size of an .xlsx file using Aspose.Cells | C# Aspose.Cells example to compare workbook size with slicer versus without | remove all slicers from a worksheet programmatically Aspose.Cells .NET | measure file size impact of adding a slicer to an Excel workbook in C#
+// Tags: Aspose.Cells add slicer to ListObject | C# save workbook with slicer XLSX | Aspose.Cells clear slicers worksheet | XLSX file size impact slicer Aspose | compare workbook size Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Tables;
 using Aspose.Cells.Slicers;
 
 namespace AsposeCellsSlicerSizeComparison
 {
-    // A complete C# example that creates a workbook, adds sample data, builds a pivot table, inserts a slicer, saves the file, removes the slicer, saves a second file, and prints the byte size of each XLSX to show the storage impact of slicers.
+    // // Demonstrates creating a workbook with sample data, adding a table and a slicer, saving the file, clearing all slicers, saving a second file, and printing the byte sizes and their difference.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-                // Populate sample data
-                cells["A1"].Value = "Fruit";
-                cells["B1"].Value = "Year";
-                cells["C1"].Value = "Amount";
+            // Populate sample data
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Value");
+            cells["A2"].PutValue("A");
+            cells["B2"].PutValue(10);
+            cells["A3"].PutValue("B");
+            cells["B3"].PutValue(20);
+            cells["A4"].PutValue("A");
+            cells["B4"].PutValue(30);
+            cells["A5"].PutValue("B");
+            cells["B5"].PutValue(40);
 
-                string[] fruits = { "Apple", "Banana", "Apple", "Banana", "Apple", "Banana" };
-                int[] years = { 2020, 2020, 2021, 2021, 2022, 2022 };
-                int[] amounts = { 100, 150, 200, 250, 300, 350 };
+            // Add a table covering the data range
+            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "SampleTable";
 
-                for (int i = 0; i < fruits.Length; i++)
-                {
-                    cells[i + 1, 0].Value = fruits[i];
-                    cells[i + 1, 1].Value = years[i];
-                    cells[i + 1, 2].Value = amounts[i];
-                }
+            // Add a slicer for the first column of the table
+            // The slicer will be placed at cell D1
+            int slicerIndex = sheet.Slicers.Add(table, table.ListColumns[0], "D1");
+            Slicer slicer = sheet.Slicers[slicerIndex];
+            slicer.Caption = "Category Slicer";
 
-                // Add a pivot table based on the data range
-                PivotTableCollection pivots = sheet.PivotTables;
-                int pivotIndex = pivots.Add("=Sheet1!A1:C7", "E3", "FruitPivot");
-                PivotTable pivot = pivots[pivotIndex];
-                pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-                pivot.AddFieldToArea(PivotFieldType.Column, "Year");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-                pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-                pivot.RefreshData();
-                pivot.CalculateData();
+            // Save workbook with slicer
+            string fileWithSlicer = "WorkbookWithSlicer.xlsx";
+            workbook.Save(fileWithSlicer, SaveFormat.Xlsx);
+            long sizeWithSlicer = new FileInfo(fileWithSlicer).Length;
 
-                // Add a slicer linked to the pivot table (filter by Fruit)
-                // Note: In older Aspose.Cells versions the parameter order is (pivot, destCellName, baseFieldName)
-                SlicerCollection slicers = sheet.Slicers;
-                int slicerIndex = slicers.Add(pivot, "E12", "Fruit"); // destination cell, then field name
-                Slicer slicer = slicers[slicerIndex];
-                slicer.Caption = "Fruit Slicer";
+            // Remove all slicers from the worksheet
+            sheet.Slicers.Clear();
 
-                // Save workbook with slicer
-                string withSlicerPath = "WithSlicer.xlsx";
-                workbook.Save(withSlicerPath, SaveFormat.Xlsx);
+            // Save workbook without slicer
+            string fileWithoutSlicer = "WorkbookWithoutSlicer.xlsx";
+            workbook.Save(fileWithoutSlicer, SaveFormat.Xlsx);
+            long sizeWithoutSlicer = new FileInfo(fileWithoutSlicer).Length;
 
-                // Remove slicer(s) from the worksheet
-                slicers.Clear();
-
-                // Save workbook without slicer
-                string withoutSlicerPath = "WithoutSlicer.xlsx";
-                workbook.Save(withoutSlicerPath, SaveFormat.Xlsx);
-
-                // Get file sizes
-                long sizeWithSlicer = new FileInfo(withSlicerPath).Length;
-                long sizeWithoutSlicer = new FileInfo(withoutSlicerPath).Length;
-
-                // Output comparison
-                Console.WriteLine($"File size with slicer    : {sizeWithSlicer} bytes");
-                Console.WriteLine($"File size without slicer : {sizeWithoutSlicer} bytes");
-                Console.WriteLine($"Size difference          : {sizeWithSlicer - sizeWithoutSlicer} bytes");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Output file sizes and difference
+            Console.WriteLine($"Size with slicer    : {sizeWithSlicer} bytes");
+            Console.WriteLine($"Size without slicer : {sizeWithoutSlicer} bytes");
+            Console.WriteLine($"Difference          : {sizeWithSlicer - sizeWithoutSlicer} bytes");
         }
     }
 }

@@ -1,81 +1,70 @@
-// Title: Aspose.Cells C# – Set a custom Values column header in a PivotTable (DataFieldHeaderName)
-// Description: Shows how to create a workbook, fill it with sample sales data, add a PivotTable, assign 'Product' to rows and 'Sales' to the data area, then rename the default Values column by setting PivotTable.DataFieldHeaderName to a custom string before refreshing and saving the file.
-// Keywords: Aspose.Cells | C# | PivotTable | DataFieldHeaderName | custom values header | rename pivot table column | Excel export | Aspose.Cells for .NET example | pivot table header customization | GitHub code sample
-// Common Searches: Aspose.Cells set custom header for pivot table values column | How to rename Values column in Aspose.Cells PivotTable C# | PivotTable DataFieldHeaderName property example | Change pivot table data caption Aspose.Cells .NET | C# code to customize pivot table header Aspose
-// Developer Intent: Rename the PivotTable values column header to a user‑defined label.
-// Use Cases: Generate a sales report where the data column reads "Total Sales" instead of the generic "Values". | Create a regional performance dashboard with the data field header changed to "Revenue" to align with corporate terminology. | Automate Excel exports that include a pivot table with a dynamic caption such as "Custom Values" defined at runtime.
-// AI Prompts: Write C# code using Aspose.Cells that builds a PivotTable from a range and sets a custom string for the values column header. | Show how to apply the PivotTable.DataFieldHeaderName property to rename the data field caption in an Aspose.Cells workbook. | Provide a step‑by‑step example: create workbook, add sample data, create PivotTable, add row and data fields, customize the values column header, refresh, and save.
+// Title: Changing the values column header of an Aspose.Cells PivotTable with C#
+// AI Prompts: Generate a new workbook, add a PivotTable, and replace the default "Values" caption with a custom label by setting the DataFieldHeaderName property using the Aspose.Cells .NET API (C#). | Update an existing PivotTable in a workbook to rename its data field header to a specific string via the PivotTable.DataFieldHeaderName setter in C#.
+// Common Searches: Aspose.Cells C# change pivot table values column caption | Set custom header for data field in Excel pivot table using Aspose.Cells | Example of setting pivot table data caption in Aspose.Cells .NET | Rename "Values" column in programmatic pivot table Aspose.Cells C# | How to customize pivot table data caption with Aspose.Cells API
+// Tags: Aspose.Cells pivot table custom data caption | C# set pivot table values header | Aspose.Cells modify pivot data field label | Excel pivot table header customization via .NET | Aspose.Cells API rename pivot values column
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, fills it with sample data, adds a PivotTable, assigns a custom caption to the values column using the DataFieldHeaderName property, refreshes and calculates the pivot, and saves the file as PivotTableCustomDataCaption.xlsx.
+class SetPivotDataCaption
 {
-    // Shows how to create a workbook, fill it with sample sales data, add a PivotTable, assign 'Product' to rows and 'Sales' to the data area, then rename the default Values column by setting PivotTable.DataFieldHeaderName to a custom string before refreshing and saving the file.
-    public class SetPivotDataFieldHeaderDemo
+    public static void Run()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Product";
-                sheet.Cells["B1"].Value = "Region";
-                sheet.Cells["C1"].Value = "Sales";
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Region");
+            sheet.Cells["C1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Laptop");
+            sheet.Cells["B2"].PutValue("North");
+            sheet.Cells["C2"].PutValue(1000);
+            sheet.Cells["A3"].PutValue("Laptop");
+            sheet.Cells["B3"].PutValue("South");
+            sheet.Cells["C3"].PutValue(1500);
+            sheet.Cells["A4"].PutValue("Phone");
+            sheet.Cells["B4"].PutValue("North");
+            sheet.Cells["C4"].PutValue(800);
+            sheet.Cells["A5"].PutValue("Phone");
+            sheet.Cells["B5"].PutValue("South");
+            sheet.Cells["C5"].PutValue(1200);
 
-                sheet.Cells["A2"].Value = "Laptop";
-                sheet.Cells["B2"].Value = "North";
-                sheet.Cells["C2"].Value = 1000;
+            // Add a pivot table to the worksheet
+            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                sheet.Cells["A3"].Value = "Laptop";
-                sheet.Cells["B3"].Value = "South";
-                sheet.Cells["C3"].Value = 1500;
+            // Configure the pivot table fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product as row field
+            pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Region as column field
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales as data field
 
-                sheet.Cells["A4"].Value = "Phone";
-                sheet.Cells["B4"].Value = "North";
-                sheet.Cells["C4"].Value = 800;
+            // Set a custom caption for the values (data) column header
+            pivotTable.DataFieldHeaderName = "Custom Values";
 
-                sheet.Cells["A5"].Value = "Phone";
-                sheet.Cells["B5"].Value = "South";
-                sheet.Cells["C5"].Value = 1200;
+            // Refresh and calculate the pivot table to apply changes
+            pivotTable.RefreshData();   // Correct API to refresh pivot cache
+            pivotTable.CalculateData();
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table: rows and data fields
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Set a custom caption for the values column header (data field header)
-                pivotTable.DataFieldHeaderName = "Custom Values";
-
-                // Refresh the pivot cache and calculate the pivot table
-                pivotTable.RefreshData();      // Correct method to refresh cache
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                string outputPath = "PivotTableCustomDataHeader.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook with the customized pivot table
+            workbook.Save("PivotTableCustomDataCaption.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
+}
 
-    public class Program
+class Program
+{
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            SetPivotDataFieldHeaderDemo.Run();
-        }
+        SetPivotDataCaption.Run();
     }
 }

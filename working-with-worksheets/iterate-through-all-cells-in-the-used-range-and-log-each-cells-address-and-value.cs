@@ -1,67 +1,58 @@
-// Title: C# – Enumerate all cells in a worksheet’s used range with Aspose.Cells and log address/value
-// Description: Demonstrates how to create a workbook, fill sample data, obtain an enumerator for the used range via Cells.GetEnumerator(), iterate each Cell, output its address (Name) and value to the console, and finally save the file.
-// Keywords: Aspose.Cells enumerate used range C# | C# iterate worksheet cells Aspose | log cell address Aspose.Cells | Aspose.Cells GetEnumerator example | save workbook after cell iteration | Aspose.Cells console output cells | C# read non‑empty cells Aspose
-// Common Searches: how to loop through used range cells Aspose.Cells .NET | Aspose.Cells get cell address while iterating | C# enumerate all populated cells in Aspose workbook | log each cell value Aspose.Cells console | save workbook after iterating cells Aspose
-// Developer Intent: Iterate over every populated cell in a worksheet’s used range and output its address and value.
-// Use Cases: Debugging: quickly view all non‑empty cells and their contents. | Auditing: generate a log of data entries before further processing. | Export: write cell values to a text or CSV file while preserving the original workbook.
-// AI Prompts: Show a C# Aspose.Cells snippet that iterates the used range and writes each cell’s address and value to a text file. | Provide an example that filters the enumeration to numeric cells only and logs their addresses. | Explain how to modify the loop to output row and column indices instead of the cell’s Name.
+// Title: Read every cell in the used range of an Excel worksheet and print its address and value with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, obtains the worksheet's MaxDisplayRange, and writes each cell's address and value to the console. | Adjust the iteration to skip cells whose Value is null or an empty string, outputting only populated cells. | Extend the sample to export each cell's address and value to a CSV file instead of console output, using Aspose.Cells.
+// Common Searches: C# Aspose.Cells iterate over used range and display cell addresses | How to print each cell value with its address using Aspose.Cells .NET | Aspose.Cells MaxDisplayRange loop example for reading Excel data | Skip empty cells while enumerating worksheet cells with Aspose.Cells | Export cell address and value to CSV using Aspose.Cells in C#
+// Tags: iterate used range cells Aspose.Cells C# | print cell address and value Aspose.Cells | export worksheet data to CSV Aspose.Cells | skip empty cells Aspose.Cells iteration | maxdisplayrange enumeration Aspose.Cells
 
-using System;
-using System.Collections;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// Loads an .xlsx workbook with Aspose.Cells, retrieves the first worksheet's MaxDisplayRange, and iterates through each cell, printing its address (e.g., A1) and value to the console. Includes file existence check and exception handling.
+class Program
 {
-    // Demonstrates how to create a workbook, fill sample data, obtain an enumerator for the used range via Cells.GetEnumerator(), iterate each Cell, output its address (Name) and value to the console, and finally save the file.
-    public class IterateUsedRangeDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to prevent FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate some sample data (optional, demonstrates the iteration)
-                cells["A1"].PutValue("Header");
-                cells["B1"].PutValue("Value");
-                cells["A2"].PutValue(123);
-                cells["B2"].PutValue(DateTime.Now);
-                cells["C3"].PutValue(true);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Get the enumerator for all cells that contain data in the used range
-                IEnumerator enumerator = cells.GetEnumerator();
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Iterate through each cell and log its address (Name) and value
-                while (enumerator.MoveNext())
+            // Get the used range of the worksheet (returns an Aspose.Cells.Range object)
+            Aspose.Cells.Range usedRange = worksheet.Cells.MaxDisplayRange;
+
+            // Determine the start and end indices for rows and columns
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            // Iterate through each cell in the used range
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
                 {
-                    Cell cell = (Cell)enumerator.Current;
-                    // Log cell address and its value (null check for safety)
+                    Cell cell = worksheet.Cells[row, col];
+                    // Output the cell address (e.g., "A1") and its value
                     Console.WriteLine($"{cell.Name}: {cell.Value}");
                 }
-
-                // Determine output file path
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "IterateUsedRangeDemo.xlsx");
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            IterateUsedRangeDemo.Run();
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

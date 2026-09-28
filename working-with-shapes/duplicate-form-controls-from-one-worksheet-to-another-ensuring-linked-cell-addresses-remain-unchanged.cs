@@ -1,16 +1,14 @@
-// Title: Copy a worksheet with its form controls while keeping linked cells unchanged – Aspose.Cells for .NET
-// Description: Shows how to load an Excel workbook, add a duplicate sheet, and copy the source worksheet using CopyOptions.ReferToDestinationSheet = false so that form‑control references remain on the original sheet. The modified workbook is saved as a new file.
-// Keywords: Aspose.Cells | C# worksheet copy | form controls duplication | preserve cell links | CopyOptions | ReferToDestinationSheet | Excel automation | duplicate sheet with shapes | .NET Excel API
-// Common Searches: Aspose.Cells copy worksheet without changing form control links | How to keep form control references when duplicating a sheet in C# | CopyOptions ReferToDestinationSheet example | Duplicate Excel sheet with dropdowns preserving source links | C# copy worksheet drawing objects Aspose.Cells
-// Developer Intent: Create a copy of an existing worksheet that includes all form controls, ensuring the controls still point to cells on the original sheet.
-// Use Cases: Generate per‑user templates that share a single data‑entry range on a master sheet. | Produce multi‑page reports where each page needs the same set of checkboxes and dropdowns, but calculations stay centralized. | Automate workbook setup for different departments while maintaining a single source of truth for linked cell values.
-// AI Prompts: Write C# code with Aspose.Cells to duplicate a worksheet and retain the original form‑control cell references. | Explain the effect of CopyOptions.ReferToDestinationSheet on form control links during a sheet copy operation. | Provide a verification step to confirm that copied form controls still reference cells on the source worksheet.
+// Title: Duplicate Excel form control shapes from one worksheet to another while keeping linked cell addresses unchanged using Aspose.Cells for .NET
+// AI Prompts: Copy all form control shapes from the source worksheet to a target worksheet in a workbook, preserving their linked cell references, using Aspose.Cells C#. | Create a new worksheet when it does not exist and duplicate each shape with the AddCopy method, keeping the original row and column bounds. | Catch shape‑copy exceptions, log any failures, and save the updated workbook to a separate file with Aspose.Cells.
+// Common Searches: Aspose.Cells copy form controls to another sheet without changing linked cells | C# duplicate worksheet shapes preserving cell links using Aspose.Cells | How to use AddCopy to move Excel form controls between worksheets in .NET | Copy form control shapes from first worksheet to second worksheet Aspose.Cells example | Preserve linked cell addresses when copying Excel controls with Aspose.Cells
+// Tags: AddCopy shape method Aspose.Cells .NET | duplicate form control shapes worksheet Aspose.Cells | preserve linked cell references Excel controls | copy shapes between worksheets C# | create target worksheet if missing Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Shows how to load an Excel workbook, add a duplicate sheet, and copy the source worksheet using CopyOptions.ReferToDestinationSheet = false so that form‑control references remain on the original sheet. The modified workbook is saved as a new file.
+// The example loads a workbook, selects the first worksheet as the source, ensures a target worksheet exists (or creates one), then iterates over each shape in the source sheet and copies it to the target sheet using the AddCopy method while retaining the original row/column positions and linked cell addresses. Any copy errors are caught and reported, and the modified workbook is saved to a new file.
 class DuplicateFormControls
 {
     static void Main()
@@ -20,40 +18,44 @@ class DuplicateFormControls
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input file exists
             if (!File.Exists(inputPath))
             {
                 Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the workbook that contains the source worksheet with form controls
+            // Load the workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the source worksheet (change the name as needed)
-            Worksheet sourceSheet = workbook.Worksheets["Source"]; // assume a sheet named "Source"
-            if (sourceSheet == null)
+            // Source worksheet (first worksheet)
+            Worksheet sourceSheet = workbook.Worksheets[0];
+
+            // Target worksheet (second worksheet or create a new one)
+            Worksheet targetSheet = workbook.Worksheets.Count > 1
+                ? workbook.Worksheets[1]
+                : workbook.Worksheets.Add("TargetSheet");
+
+            // Iterate through all shapes in the source worksheet
+            foreach (Shape shape in sourceSheet.Shapes)
             {
-                Console.WriteLine("Source worksheet 'Source' not found.");
-                return;
+                try
+                {
+                    // Copy the shape to the target worksheet preserving its position
+                    targetSheet.Shapes.AddCopy(
+                        shape,
+                        shape.UpperLeftRow,
+                        shape.UpperLeftColumn,
+                        shape.LowerRightRow,
+                        shape.LowerRightColumn);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to copy shape '{shape.Name}': {ex.Message}");
+                }
             }
 
-            // Add a new worksheet that will receive the duplicated controls
-            Worksheet destSheet = workbook.Worksheets.Add("Source_Copy");
-
-            // Configure copy options:
-            // - ReferToDestinationSheet = false ensures that any linked cell references
-            //   (including those used by form controls) continue to point to the original sheet.
-            CopyOptions copyOptions = new CopyOptions
-            {
-                ReferToDestinationSheet = false
-            };
-
-            // Copy the source worksheet's contents, formats, and drawing objects (form controls)
-            // to the destination worksheet using the specified options.
-            destSheet.Copy(sourceSheet, copyOptions);
-
-            // Save the workbook with the duplicated form controls.
+            // Save the workbook with duplicated controls
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }

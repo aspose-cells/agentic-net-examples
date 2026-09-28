@@ -1,51 +1,60 @@
-// Title: Limit Excel Formula Length with Custom Data Validation in Aspose.Cells for .NET
-// Description: Shows how to apply a custom validation rule (LEN(FORMULATEXT(A1))<=50) to cells A1:A10 using Aspose.Cells for C#. Includes user prompts, error alerts, and workbook saving.
-// Keywords: Aspose.Cells | C# data validation | custom validation rule | formula length limit | LEN FORMULATEXT | Excel formula character count | restrict formula size | validation rule .NET
-// Common Searches: Aspose.Cells limit formula characters | C# data validation formula length | How to use FORMULATEXT in Aspose.Cells | Set custom validation for formula size in Excel via code | Validate Excel formula length programmatically
-// Developer Intent: Create a data‑validation rule that blocks formulas exceeding a defined character count.
-// Use Cases: Enforce a maximum formula length in a column where users enter calculations, keeping formulas under 50 characters. | Prevent overly complex formulas in shared workbooks to maintain performance and readability. | Apply corporate standards that cap formula size before the workbook is saved or distributed.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a custom validation limiting formulas to 100 characters for range B2:B20. | Explain how FORMULATEXT and LEN can be combined in an Aspose.Cells Validation to enforce a maximum formula size. | Provide an example of handling validation errors when a formula exceeds the allowed length in Aspose.Cells.
+// Title: Create a custom data validation rule in Aspose.Cells for .NET that limits formula length to 50 characters in cells A1:A100
+// AI Prompts: Generate C# code using Aspose.Cells to add a custom validation that restricts any formula entered in cells A1 through A100 to a maximum of 50 characters, displaying an error dialog when exceeded. | Write an Aspose.Cells example that builds a validation formula with LEN and FORMULATEXT to enforce a formula‑length constraint and saves the workbook as an .xlsx file. | Provide a step‑by‑step C# snippet that creates a workbook, defines a CellArea for A1:A100, sets Validation.Type to Custom, and uses validation.Formula1 = "LEN(FORMULATEXT(A1))<=50".
+// Common Searches: aspnet aspose.cells custom validation to limit formula characters | how to enforce maximum formula length in Excel using Aspose.Cells C# | C# Aspose.Cells LEN FORMULATEXT validation example | restrict formula size for a range with Aspose.Cells data validation | error message for formula length violation Aspose.Cells
+// Tags: custom validation formula length Aspose.Cells | LEN FORMULATEXT constraint C# | apply data validation to range A1:A100 Aspose | formula character limit workbook Aspose.Cells | error alert for formula length Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationExample
+// The example creates a new workbook, defines a custom validation on cells A1:A100 that uses LEN(FORMULATEXT(...)) to ensure formulas do not exceed 50 characters, shows an error message when the limit is breached, and saves the file as FormulaLengthValidation.xlsx.
+class FormulaLengthValidation
 {
-    // Shows how to apply a custom validation rule (LEN(FORMULATEXT(A1))<=50) to cells A1:A10 using Aspose.Cells for C#. Includes user prompts, error alerts, and workbook saving.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Define the maximum allowed length for formulas
+            int maxFormulaLength = 50;
+
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Define the range where the validation will be applied (A1:A10)
-            CellArea validationArea = CellArea.CreateCellArea(0, 0, 9, 0); // rows 0‑9, column 0 (A)
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a new validation to the worksheet
-            int validationIndex = worksheet.Validations.Add(validationArea);
-            Validation validation = worksheet.Validations[validationIndex];
+            // Define the range where the validation will be applied (e.g., A1:A100)
+            CellArea validationRange = new CellArea
+            {
+                StartRow = 0,    // Row 1 (zero‑based index)
+                EndRow = 99,     // Row 100
+                StartColumn = 0, // Column A
+                EndColumn = 0    // Column A
+            };
 
-            // Set validation type to Custom and no operator (the formula itself determines validity)
+            // Add a custom data validation rule to the specified range (lifecycle rule: create)
+            int validationIndex = sheet.Validations.Add(validationRange);
+            Validation validation = sheet.Validations[validationIndex];
+
+            // Set the validation type to Custom
             validation.Type = ValidationType.Custom;
-            validation.Operator = OperatorType.None;
 
-            // Custom formula: ensure the length of the cell's formula does not exceed 50 characters.
-            // FORMULATEXT returns the formula as a string; LEN measures its length.
-            // The relative reference A1 will adjust for each cell in the area.
-            validation.Formula1 = "LEN(FORMULATEXT(A1))<=50";
+            // Get the address of the top‑left cell in the range (e.g., "A1")
+            string topLeftCellAddress = sheet.Cells[validationRange.StartRow, validationRange.StartColumn].Name;
 
-            // Optional: provide user-friendly messages
-            validation.InputTitle = "Formula Length Check";
-            validation.InputMessage = "Enter a formula no longer than 50 characters.";
-            validation.ErrorTitle = "Invalid Formula Length";
-            validation.ErrorMessage = "The formula exceeds the allowed length of 50 characters.";
-            validation.ShowInput = true;
+            // Build the custom formula using FORMULATEXT and LEN
+            validation.Formula1 = $"LEN(FORMULATEXT({topLeftCellAddress}))<={maxFormulaLength}";
+
+            // Optional: display an error message when the rule is violated
             validation.ShowError = true;
+            validation.ErrorTitle = "Formula Too Long";
+            validation.ErrorMessage = $"Formulas must not exceed {maxFormulaLength} characters.";
 
-            // Save the workbook
+            // Save the workbook (lifecycle rule: save)
             workbook.Save("FormulaLengthValidation.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

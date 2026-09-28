@@ -1,65 +1,48 @@
-// Title: Export Aspose.Cells Worksheet to HTML with Embedded CSS (C# .NET)
-// Description: Creates a workbook, adds a product‑price table, applies bold white text on a dark‑blue header, and saves it as an HTML file using HtmlSaveOptions (ExportWorksheetCSSSeparately = false, DisableCss = false, ExcludeUnusedStyles = false) so all cell styles are embedded in the output.
-// Keywords: Aspose.Cells | HTML export | embedded CSS | preserve cell styling | C# .NET | HtmlSaveOptions | ExportWorksheetCSSSeparately | DisableCss | ExcludeUnusedStyles | Windows desktop
-// Common Searches: Aspose.Cells export worksheet to HTML with CSS | C# save Excel as styled HTML Aspose | HtmlSaveOptions embed CSS example | retain cell formatting when converting to HTML | Aspose.Cells HTML output with embedded styles
-// Developer Intent: Generate an HTML document from a workbook that contains all formatting information as embedded CSS, eliminating external style files.
-// Use Cases: Publish a styled price list on a website without separate CSS files. | Provide an on‑the‑fly HTML preview of an Excel report in a .NET application. | Create email‑ready HTML attachments that keep the original spreadsheet appearance.
-// AI Prompts: Write C# code using Aspose.Cells to export a worksheet to HTML with embedded CSS, keeping header font weight and background color. | Show how to configure HtmlSaveOptions (ExportWorksheetCSSSeparately, DisableCss, ExcludeUnusedStyles) for full style retention in HTML output. | Provide a complete example that builds a small data table, applies custom styling, and saves it as an HTML file with embedded CSS on the user's desktop.
+// Title: How to export an Aspose.Cells worksheet to an HTML file with embedded CSS styling in C#
+// AI Prompts: Write C# code that uses Aspose.Cells to generate an HTML document with the stylesheet embedded, so that the original cell formatting (fonts, colors, borders) is retained. | Show how to configure HtmlSaveOptions in Aspose.Cells for .NET to include CSS inside the HTML output instead of creating a separate .css file.
+// Common Searches: C# Aspose.Cells export worksheet to HTML with embedded stylesheet | preserve cell formatting when saving Excel as HTML using Aspose.Cells | Aspose.Cells HtmlSaveOptions embed CSS instead of external file | save Excel worksheet as HTML with styles retained in .NET | export Excel to HTML with internal CSS using Aspose.Cells API
+// Tags: Aspose.Cells HtmlSaveOptions include CSS in HTML | export worksheet to HTML retaining formatting Aspose.Cells | C# generate HTML from Excel with embedded stylesheet Aspose.Cells | preserve cell styles in HTML export Aspose.Cells | HTML output with internal CSS Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace AsposeCellsHtmlExport
+// The program creates a workbook, adds sample data, applies a bold blue header style, configures HtmlSaveOptions to embed CSS directly in the HTML, and saves the worksheet as an HTML file on the desktop.
+class ExportWorksheetToHtml
 {
-    // Creates a workbook, adds a product‑price table, applies bold white text on a dark‑blue header, and saves it as an HTML file using HtmlSaveOptions (ExportWorksheetCSSSeparately = false, DisableCss = false, ExcludeUnusedStyles = false) so all cell styles are embedded in the output.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Populate some data
+        worksheet.Cells["A1"].PutValue("Name");
+        worksheet.Cells["B1"].PutValue("Age");
+        worksheet.Cells["A2"].PutValue("John Doe");
+        worksheet.Cells["B2"].PutValue(30);
 
-            // Populate some data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.25);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.80);
+        // Apply a simple style to demonstrate CSS retention
+        Style headerStyle = worksheet.Cells["A1"].GetStyle();
+        headerStyle.Font.IsBold = true;
+        headerStyle.Font.Color = Color.Blue;
+        worksheet.Cells["A1"].SetStyle(headerStyle);
 
-            // Apply some styling to demonstrate retained CSS
-            Style headerStyle = sheet.Cells["A1"].GetStyle();
-            headerStyle.Font.IsBold = true;
-            headerStyle.Font.Color = System.Drawing.Color.White;
-            headerStyle.ForegroundColor = System.Drawing.Color.DarkBlue;
-            headerStyle.Pattern = BackgroundType.Solid;
-            sheet.Cells["A1"].SetStyle(headerStyle);
-            sheet.Cells["B1"].SetStyle(headerStyle);
+        // Configure HTML save options to embed CSS (default behavior)
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+        saveOptions.ExportWorksheetCSSSeparately = false; // embed CSS in the HTML file
+        saveOptions.DisableCss = false; // ensure CSS is used instead of inline styles only
 
-            // Configure HTML save options to embed CSS (default behavior)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Ensure CSS is embedded in the HTML file
-                ExportWorksheetCSSSeparately = false,
-                // Use CSS (not only inline styles)
-                DisableCss = false,
-                // Keep all styles (optional, ensures no style is omitted)
-                ExcludeUnusedStyles = false
-            };
+        // Define output path (e.g., Desktop)
+        string outputPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            "WorksheetExport.html");
 
-            // Define output path
-            string outputPath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                "WorkbookExport.html");
+        // Save the workbook as an HTML file with embedded CSS
+        workbook.Save(outputPath, saveOptions);
 
-            // Save the workbook as HTML with embedded CSS
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"HTML file with embedded CSS saved to: {outputPath}");
-        }
+        Console.WriteLine("Worksheet exported to HTML with embedded CSS at:");
+        Console.WriteLine(outputPath);
     }
 }

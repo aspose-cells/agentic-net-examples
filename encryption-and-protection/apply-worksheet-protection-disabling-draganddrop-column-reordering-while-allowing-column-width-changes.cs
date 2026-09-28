@@ -1,39 +1,55 @@
-// Title: C# Aspose.Cells – Protect worksheet to block column drag‑and‑drop but allow width changes
-// Description: Creates a workbook, enables column width editing (AllowFormattingColumn) and disables column insertion, deletion, and sorting. The worksheet is then protected with ProtectionType.All and saved as ProtectedWorksheet.xlsx.
-// Keywords: Aspose.Cells worksheet protection C# | disable column drag and drop Aspose.Cells | allow column width changes Aspose.Cells | Prevent column reordering Aspose.Cells | ProtectionType.All column formatting
-// Common Searches: Aspose.Cells stop column reordering but keep resize | C# protect worksheet from column insertion deletion sorting | Enable column width editing while disabling drag‑and‑drop in Aspose.Cells | Worksheet.Protect specific AllowFormattingColumn example
-// Developer Intent: Apply worksheet protection that blocks column reordering via drag‑and‑drop while still permitting users to adjust column widths.
-// Use Cases: Distribute a template where column order must stay fixed but users can resize for readability. | Share a financial report that retains its layout yet lets recipients fit columns to their screens. | Collaborative workbook where structural changes are prohibited but column width customization is allowed.
-// AI Prompts: Provide C# Aspose.Cells code to protect a worksheet, disable column insertion, deletion, and sorting, and keep column width editing enabled. | Show an example using ProtectionType.All with AllowFormattingColumn = true and other column actions set to false. | Explain the impact of AllowFormattingColumn, AllowInsertingColumn, AllowDeletingColumn, and AllowSorting when calling sheet.Protect(ProtectionType.All).
+// Title: Disable column drag‑and‑drop reordering while allowing column width changes using Aspose.Cells worksheet protection in C#
+// AI Prompts: Write C# code with Aspose.Cells that protects a worksheet, disables column drag‑and‑drop reordering, insertion, and deletion, but keeps column width formatting enabled. | Show how to set the AllowFormattingColumn property and related protection flags in Aspose.Cells to block column moving while permitting column resizing, then save the workbook.
+// Common Searches: Aspose.Cells C# protect worksheet prevent column reordering but allow column resizing | How to disable column drag and drop in an Excel sheet using Aspose.Cells | C# Aspose.Cells worksheet protection settings for column operations | Allow column width changes while locking column order with Aspose.Cells | Set worksheet protection without password in Aspose.Cells C#
+// Tags: Aspose.Cells worksheet protection column reordering | C# allow column width formatting Aspose.Cells | disable column insertion deletion Aspose.Cells | protect Excel sheet without password Aspose.Cells | AllowFormattingColumn property Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, enables column width editing (AllowFormattingColumn) and disables column insertion, deletion, and sorting. The worksheet is then protected with ProtectionType.All and saved as ProtectedWorksheet.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads or creates a workbook, accesses the first worksheet, enables column width formatting while disabling column insertion, deletion, row formatting, and sorting, applies full protection without a password, and saves the result as ProtectedSheet.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Load an existing workbook if it exists; otherwise create a new one
+                string inputPath = "input.xlsx";
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
 
-        // Access the worksheet protection settings
-        Protection protection = sheet.Protection;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Allow column formatting (e.g., changing column width)
-        protection.AllowFormattingColumn = true;
+                // Set protection options (use singular property names)
+                worksheet.Protection.AllowFormattingColumn = true;
+                worksheet.Protection.AllowInsertingColumn = false;
+                worksheet.Protection.AllowDeletingColumn = false;
+                worksheet.Protection.AllowFormattingRow = false;
+                worksheet.Protection.AllowSorting = false;
+                // The AllowAutoFilter property is not available in this version of Aspose.Cells; omitted.
 
-        // Disable column drag‑and‑drop reordering by disallowing insertion,
-        // deletion, and sorting of columns
-        protection.AllowInsertingColumn = false;
-        protection.AllowDeletingColumn = false;
-        protection.AllowSorting = false;
+                // Apply protection (no password)
+                worksheet.Protect(ProtectionType.All);
 
-        // Apply protection to the worksheet (all protection types)
-        sheet.Protect(ProtectionType.All);
-
-        // Save the protected workbook
-        workbook.Save("ProtectedWorksheet.xlsx");
+                // Save the protected workbook
+                string outputPath = "ProtectedSheet.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception: {ex.Message}");
+            }
+        }
     }
 }

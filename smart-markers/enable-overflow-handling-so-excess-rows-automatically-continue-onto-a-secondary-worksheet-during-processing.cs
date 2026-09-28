@@ -1,50 +1,57 @@
-// Title: Aspose.Cells for .NET: Auto‑split CSV rows beyond 65,535 into additional worksheets using TxtLoadOptions.ExtendToNextSheet
-// Description: Demonstrates how to load a CSV with 70,000 rows in C# using Aspose.Cells, enable TxtLoadOptions.ExtendToNextSheet, and let the library automatically create a second worksheet for rows that exceed the legacy Excel limit. The workbook is saved as OverflowResult.xlsx.
-// Keywords: Aspose.Cells | TxtLoadOptions | ExtendToNextSheet | C# | .NET | large CSV import | Excel row limit 65535 | multiple worksheets | overflow handling | GitHub example | US developers | Europe developers
-// Common Searches: Aspose.Cells ExtendToNextSheet example C# | How to split CSV rows into new worksheets with Aspose.Cells | Load CSV larger than 65k rows into Excel using .NET | Overflow handling for large CSV files Aspose.Cells | GitHub Aspose.Cells CSV overflow sample
-// Developer Intent: Configure TxtLoadOptions so that rows exceeding Excel's maximum are automatically placed on a new worksheet during CSV import.
-// Use Cases: Import massive CSV logs (>65,535 rows) and let Aspose.Cells generate extra sheets without manual splitting. | Create Excel reports from big data sets where each sheet must stay within Excel's row capacity. | Automate conversion of large delimited files to a multi‑sheet workbook in a .NET service.
-// AI Prompts: Show a C# code snippet that uses TxtLoadOptions.ExtendToNextSheet to divide a 70k‑row CSV into multiple worksheets with Aspose.Cells. | Explain the behavior, limits, and configuration options of ExtendToNextSheet for different delimiters and encodings. | Provide step‑by‑step instructions to verify row counts per worksheet after overflow handling and save the workbook.
+// Title: Import a CSV with over 65,000 rows and automatically split overflow rows onto additional worksheets using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a CSV containing 70,000 rows into an Aspose.Cells Workbook and creates extra worksheets when the Excel row limit is reached by setting TxtLoadOptions.ExtendToNextSheet. | Show how to enable overflow handling for CSV imports in Aspose.Cells so that rows beyond 65,535 are placed on a new sheet automatically.
+// Common Searches: asp.net aspose.cells load csv exceeding 65535 rows | c# TxtLoadOptions ExtendToNextSheet example | how to split large CSV into multiple worksheets with Aspose.Cells | automatic worksheet creation when CSV row count exceeds Excel limit | aspose.cells overflow handling for CSV import
+// Tags: CSV import overflow handling Aspose.Cells | ExtendToNextSheet TxtLoadOptions | automatic worksheet creation for large CSV | exceed Excel row limit Aspose.Cells .NET | split CSV rows across multiple sheets
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// Demonstrates how to load a CSV with 70,000 rows in C# using Aspose.Cells, enable TxtLoadOptions.ExtendToNextSheet, and let the library automatically create a second worksheet for rows that exceed the legacy Excel limit. The workbook is saved as OverflowResult.xlsx.
-class OverflowDemo
+namespace OverflowHandlingDemo
 {
-    static void Main()
+    // The example generates a 70,000‑row CSV in memory, loads it into an Aspose.Cells Workbook with TxtLoadOptions.ExtendToNextSheet enabled, causing rows beyond the 65,535 limit to be placed on a second worksheet, then reports the worksheet count and saves the file as OverflowDemo.xlsx.
+    class Program
     {
-        // Generate CSV data with more rows than the legacy Excel limit (65535 rows)
-        int totalRows = 70000;
-        var sb = new System.Text.StringBuilder();
-        for (int i = 0; i < totalRows; i++)
+        static void Main()
         {
-            sb.AppendLine($"Row{i + 1},Value{i + 1}");
-        }
-        byte[] csvBytes = System.Text.Encoding.UTF8.GetBytes(sb.ToString());
+            // Generate CSV data with more rows than the Excel 2003 limit (65535 rows)
+            const int totalRows = 70000; // exceeds the limit to trigger overflow
+            StringBuilder csvBuilder = new StringBuilder();
 
-        // Enable overflow handling: excess rows will be placed on a new worksheet
-        TxtLoadOptions loadOptions = new TxtLoadOptions
-        {
-            ExtendToNextSheet = true
-        };
+            // Header row
+            csvBuilder.AppendLine("Index,Value");
 
-        // Load the CSV data into a workbook using the specified options
-        using (MemoryStream ms = new MemoryStream(csvBytes))
-        {
-            Workbook workbook = new Workbook(ms, loadOptions);
-
-            // Output information about the created worksheets
-            Console.WriteLine($"Worksheets count: {workbook.Worksheets.Count}");
-            Console.WriteLine($"Rows in first worksheet: {workbook.Worksheets[0].Cells.MaxDataRow + 1}");
-            if (workbook.Worksheets.Count > 1)
+            // Data rows
+            for (int i = 1; i <= totalRows; i++)
             {
-                Console.WriteLine($"Rows in second worksheet: {workbook.Worksheets[1].Cells.MaxDataRow + 1}");
+                csvBuilder.AppendLine($"{i},Data_{i}");
             }
 
-            // Save the result
-            workbook.Save("OverflowResult.xlsx");
+            // Convert CSV string to a memory stream
+            using (MemoryStream csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csvBuilder.ToString())))
+            {
+                // Enable overflow handling so excess rows go to the next worksheet
+                TxtLoadOptions loadOptions = new TxtLoadOptions
+                {
+                    ExtendToNextSheet = true
+                };
+
+                // Load the CSV data into a workbook using the specified options
+                Workbook workbook = new Workbook(csvStream, loadOptions);
+
+                // Output information about the resulting workbook
+                Console.WriteLine($"Number of worksheets created: {workbook.Worksheets.Count}");
+                Console.WriteLine($"Rows in first worksheet: {workbook.Worksheets[0].Cells.MaxDataRow + 1}");
+                if (workbook.Worksheets.Count > 1)
+                {
+                    Console.WriteLine($"Rows in second worksheet: {workbook.Worksheets[1].Cells.MaxDataRow + 1}");
+                }
+
+                // Save the workbook to a file
+                workbook.Save("OverflowDemo.xlsx");
+                Console.WriteLine("Workbook saved as OverflowDemo.xlsx");
+            }
         }
     }
 }

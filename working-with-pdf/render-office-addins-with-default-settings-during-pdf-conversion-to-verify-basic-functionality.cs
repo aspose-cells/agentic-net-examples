@@ -1,43 +1,46 @@
-// Title: Aspose.Cells C# Example: Render Office Add‑In (WebExtension) in PDF with Default Settings
-// Description: Creates a new Workbook, adds a minimal WebExtension (Office Add‑in), attaches it to a WebExtensionShape, and saves the file to PDF using the default PdfSaveOptions. Demonstrates basic add‑in rendering during PDF conversion with Aspose.Cells.
-// Keywords: Aspose.Cells | C# | PDF conversion | WebExtension | Office Add‑in | default PdfSaveOptions | Excel to PDF | render add‑in | sample code | GitHub example
-// Common Searches: Aspose.Cells render Office Add‑in in PDF | C# WebExtension shape to PDF | default PdfSaveOptions for WebExtension | export Excel with add‑in to PDF Aspose | how to include Office Add‑in in PDF using Aspose.Cells
-// Developer Intent: Export an Excel workbook that contains an Office Add‑in to PDF without customizing conversion options.
-// Use Cases: Quick verification that Office Add‑ins appear correctly in PDF output. | Generating documentation PDFs from templates that embed WebExtensions. | Automated testing of add‑in rendering during batch PDF conversions.
-// AI Prompts: Show how to add multiple WebExtension shapes and place each on a separate PDF page with Aspose.Cells. | Explain how to enable or disable Office Add‑in rendering via PdfSaveOptions while keeping default behavior as fallback. | Provide robust error handling for missing WebExtension references during PDF export.
+// Title: Convert Excel to PDF with default settings and verify Office Add‑Ins rendering support using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, validates its existence, and saves it as a PDF using Aspose.Cells with the default PdfSaveOptions. | Show how to attempt enabling Office Add‑Ins rendering during PDF export in Aspose.Cells and provide fallback logic when the RenderOfficeAddIns property is not available. | Write robust error‑handling for a console app that converts Excel to PDF with Aspose.Cells, covering file‑not‑found and generic exception scenarios.
+// Common Searches: c# aspocells export excel workbook to pdf with default options | check workbook file existence before Aspose.Cells PDF conversion | office addins rendering not available in current Aspose.Cells version | example of error handling for Aspose.Cells Excel to PDF conversion | default pdf save settings in Aspose.Cells .NET
+// Tags: Aspose.Cells PDF export default options | C# Excel workbook to PDF Aspose.Cells | Office Add‑Ins support detection Aspose.Cells | validate workbook file presence before conversion | handle missing RenderOfficeAddIns property
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.WebExtensions;
+using Aspose.Cells.Rendering;
 
-// Creates a new Workbook, adds a minimal WebExtension (Office Add‑in), attaches it to a WebExtensionShape, and saves the file to PDF using the default PdfSaveOptions. Demonstrates basic add‑in rendering during PDF conversion with Aspose.Cells.
+// The sample checks that input.xlsx exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions instance with default settings (noting that RenderOfficeAddIns is unavailable in this version), saves the workbook as output.pdf, and includes comprehensive exception handling.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (default creation)
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Add an Office Add‑in (WebExtension) to the workbook
-        WebExtensionCollection webExtensions = workbook.Worksheets.WebExtensions;
-        int extIndex = webExtensions.Add();                     // add a new WebExtension
-        WebExtension webExtension = webExtensions[extIndex];
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Set minimal reference information (default values)
-        webExtension.Reference.Id = "sampleAddIn";
-        webExtension.Reference.StoreName = "SampleStore";
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create a shape that will host the WebExtension
-        ShapeCollection shapes = workbook.Worksheets[0].Shapes;
-        // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
-        Shape shape = shapes.AddShape(MsoDrawingType.WebExtension, 0, 0, 0, 0, 400, 300);
-        WebExtensionShape webExtShape = (WebExtensionShape)shape;
-        webExtShape.WebExtension = webExtension;               // associate the add‑in with the shape
+            // Configure PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Note: RenderOfficeAddIns property is not available in this version of Aspose.Cells.
+            // If needed, upgrade to a newer version that supports this feature.
 
-        // Save the workbook to PDF using default PdfSaveOptions (no custom settings)
-        workbook.Save("OfficeAddIn_Default.pdf", new PdfSaveOptions());
-
-        Console.WriteLine("PDF generated with Office Add‑in using default settings.");
+            // Save the workbook as PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

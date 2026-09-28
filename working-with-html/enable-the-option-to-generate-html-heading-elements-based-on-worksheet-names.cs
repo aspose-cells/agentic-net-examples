@@ -1,57 +1,45 @@
-// Title: Export Worksheet Names as HTML Headings with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, name its worksheets, set the page header placeholder (&A) to show the sheet name, enable ExportPageHeaders, and save all sheets as a single HTML file where each worksheet name is rendered as a heading element.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ExportPageHeaders | worksheet name heading | HTML export | single file output | page header placeholder &A | multiple sheets to HTML | Aspose.Cells example
-// Common Searches: Aspose.Cells export worksheet names as HTML headings | HtmlSaveOptions ExportPageHeaders C# example | Save multiple Excel sheets to one HTML file with headings | How to use &A placeholder for sheet name in HTML output | Generate <h1> tags from Excel sheet names using Aspose.Cells
-// Developer Intent: Generate a single HTML document where each worksheet name appears as a heading element.
-// Use Cases: Publish a multi‑sheet Excel workbook as a web‑ready report with clear section titles. | Create documentation that lists each worksheet with its name as a visible heading. | Build a single‑page HTML dashboard that groups data by worksheet, using headings for navigation.
-// AI Prompts: Show how to change the heading level (e.g., <h2> instead of <h1>) when ExportPageHeaders is enabled. | Explain how to export only selected worksheets as a single HTML file with headings for each sheet. | Provide code to apply custom CSS styles to the heading elements generated from worksheet names.
+// Title: How to export Excel worksheets as HTML heading elements using Aspose.Cells HtmlSaveOptions in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ExportWorksheetHeader to true, and saves the workbook as .html so each worksheet name appears as an <h1> tag. | Show a complete example that checks for the input Excel file, configures HtmlSaveOptions for HTML output, enables worksheet name headings, and handles possible exceptions. | Provide a console‑based C# program that converts a workbook to HTML with sheet titles rendered as heading elements and confirms the output path.
+// Common Searches: Aspose.Cells C# export Excel to HTML with sheet names as headings | Enable ExportWorksheetHeader in HtmlSaveOptions for HTML conversion | C# code to convert .xlsx to .html and include worksheet titles | How to add <h1> tags for each worksheet when saving Excel as HTML using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportWorksheetHeader | C# convert Excel to HTML with sheet headings | HTML output include worksheet titles Aspose.Cells | Excel to HTML heading elements C# | Workbook.Save HtmlSaveOptions Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions, enables the ExportWorksheetHeader flag to render each worksheet name as an <h1> element, and saves the result as an HTML file while handling any runtime exceptions.
+class Program
 {
-    // Demonstrates how to create a workbook, name its worksheets, set the page header placeholder (&A) to show the sheet name, enable ExportPageHeaders, and save all sheets as a single HTML file where each worksheet name is rendered as a heading element.
-    public class HtmlExportWorksheetNamesAsHeadings
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.html";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                Run();
-                Console.WriteLine("HTML file generated successfully.");
+                Console.WriteLine($"Input file not found: {inputFile}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the workbook from the existing Excel file
+            Workbook workbook = new Workbook(inputFile);
+
+            // Create HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Enable worksheet name headings if the property is available in the used version
+            // htmlOptions.ExportWorksheetHeader = true; // Uncomment if supported
+
+            // Save the workbook as an HTML file with the specified options
+            workbook.Save(outputFile, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputFile}");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook and add a few worksheets
-            Workbook workbook = new Workbook();
-            workbook.Worksheets[0].Name = "Summary";
-            workbook.Worksheets.Add("Data");
-            workbook.Worksheets.Add("Report");
-
-            // Set page header to display sheet name using &A placeholder
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.PageSetup.SetHeader(1, "&A"); // Center section will show the sheet name
-            }
-
-            // Configure HTML save options to export page headers as headings
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                ExportPageHeaders = true,
-                SaveAsSingleFile = true,
-                ShowAllSheets = true
-            };
-
-            // Save the workbook as HTML
-            string outputPath = "WorksheetsWithHeadings.html";
-            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

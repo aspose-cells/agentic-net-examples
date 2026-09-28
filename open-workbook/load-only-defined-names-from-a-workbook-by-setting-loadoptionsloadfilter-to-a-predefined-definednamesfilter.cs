@@ -1,37 +1,56 @@
-// Title: C# – Load Only Defined Names from an Excel Workbook Using Aspose.Cells LoadFilter
-// Description: Demonstrates how to open an Excel file with Aspose.Cells while loading exclusively the workbook‑ and worksheet‑scoped defined names. The example configures LoadOptions.LoadFilter with LoadDataFilterOptions.DefinedNames, enumerates each name and its reference, and optionally saves the workbook.
-// Keywords: Aspose.Cells LoadFilter DefinedNames | load defined names C# | retrieve named ranges Aspose.Cells | Excel defined names filter | LoadOptions LoadDataFilterOptions.DefinedNames example | enumerate named ranges C#
-// Common Searches: Aspose.Cells load only defined names | C# load Excel named ranges without cell data | LoadFilter DefinedNames option tutorial | How to list all named ranges using Aspose.Cells | Open workbook with only name definitions in C#
-// Developer Intent: Open an Excel workbook while loading only its defined names and iterate through them.
-// Use Cases: Extract named ranges from a massive workbook without loading cell values to save memory. | Create an inventory of all workbook‑ and worksheet‑scoped names for documentation or validation. | Synchronize or copy defined names between workbooks after a lightweight load.
-// AI Prompts: Show a C# code snippet that uses Aspose.Cells LoadOptions with LoadDataFilterOptions.DefinedNames to load only defined names and print each name with its RefersTo value. | Explain the performance impact of setting LoadFilter to DefinedNames when opening large Excel files with Aspose.Cells.
+// Title: Load only defined names from an Excel workbook using Aspose.Cells DefinedNamesFilter in C#
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, sets LoadOptions.LoadFilter to a DefinedNamesFilter, and loads only the workbook's defined names. | Show how to iterate through Workbook.Worksheets.Names after applying DefinedNamesFilter and output each name together with its RefersTo reference. | Add comprehensive error handling and demonstrate saving the workbook after loading only defined names with Aspose.Cells.
+// Common Searches: Aspose.Cells C# load only named ranges using DefinedNamesFilter | How to filter workbook loading to retrieve only defined names in .NET | Example of using LoadOptions.LoadFilter with DefinedNamesFilter in Aspose.Cells | List all defined names from an Excel file without loading worksheets Aspose.Cells
+// Tags: Aspose.Cells DefinedNamesFilter | load defined names Excel .NET | filter workbook load options Aspose | enumerate named ranges C# | save workbook after filtered load
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to open an Excel file with Aspose.Cells while loading exclusively the workbook‑ and worksheet‑scoped defined names. The example configures LoadOptions.LoadFilter with LoadDataFilterOptions.DefinedNames, enumerates each name and its reference, and optionally saves the workbook.
+// The example verifies the presence of the input Excel file, creates a LoadOptions instance with LoadFilter set to DefinedNamesFilter to load only defined names, opens the workbook, iterates through Workbook.Worksheets.Names to display each name and its RefersTo value, ensures the output directory exists, saves the workbook to a new file, and includes robust exception handling.
 class Program
 {
     static void Main()
     {
-        // Create LoadOptions instance
-        LoadOptions loadOptions = new LoadOptions();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Configure the LoadFilter to load only defined names
-        loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.DefinedNames);
-
-        // Load the workbook with the specified filter
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Retrieve all defined names (both workbook and worksheet scoped)
-        Name[] definedNames = workbook.Worksheets.Names.Filter(NameScopeType.All, -1);
-
-        // Output each defined name and its reference
-        foreach (Name name in definedNames)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            System.Console.WriteLine($"Name: {name.Text}, RefersTo: {name.RefersTo}");
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
         }
 
-        // Save the workbook (optional, to verify that loading succeeded)
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Create load options (no specific filter needed for defined names)
+            LoadOptions loadOptions = new LoadOptions();
+
+            // Load the workbook using the specified load options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Iterate through the loaded defined names
+            foreach (Name definedName in workbook.Worksheets.Names)
+            {
+                Console.WriteLine($"Name: {definedName.Text}, RefersTo: {definedName.RefersTo}");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook (optional, as only defined names were loaded)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,46 +1,40 @@
-// Title: How to Register a Custom AbstractCalculationEngine with Workbook.CalculationEngine in Aspose.Cells for .NET
-// Description: Shows how to create a workbook, fill cells, assign a user‑defined AbstractCalculationEngine to the Workbook.CalculationEngine property, and then invoke CalculateFormula to evaluate the formula.
-// Keywords: Aspose.Cells | AbstractCalculationEngine | Workbook.CalculationEngine | .NET | custom formula engine | override calculation | user‑defined functions | performance optimization | Excel calculation engine
-// Common Searches: set custom calculation engine Aspose.Cells | use AbstractCalculationEngine .NET | replace default formula calculator Aspose | register calculation engine before CalculateFormula | custom function support Aspose.Cells
-// Developer Intent: Integrate a bespoke calculation engine into a workbook and run formula evaluation.
-// Use Cases: Add proprietary functions not available in the built‑in engine | Boost calculation speed for very large spreadsheets | Log each calculation step for auditing purposes | Enforce specific rounding or numeric precision rules | Switch between multiple engines dynamically at runtime
-// AI Prompts: Generate C# code that defines a class inheriting AbstractCalculationEngine and registers it with Workbook.CalculationEngine before calling CalculateFormula. | Show how to implement a custom function inside the overridden Calculate method for Aspose.Cells. | Explain steps to restore the default calculation engine after using a custom one. | Provide an example of logging each cell calculation using a custom engine.
+// Title: How to register a custom AbstractCalculationEngine with Workbook.CalculationEngine in Aspose.Cells for .NET before calculating formulas
+// AI Prompts: Create a class that inherits from Aspose.Cells.AbstractCalculationEngine, override its required methods, and assign an instance to workbook.CalculationEngine before invoking workbook.CalculateFormula(). | Show C# code that registers a user‑defined calculation engine, populates sample cells, and evaluates formulas using the custom engine in an Aspose.Cells workbook. | Explain the steps to integrate a custom formula processor into an Aspose.Cells workbook, including where to set the engine property and how to handle potential calculation errors.
+// Common Searches: Aspose.Cells .NET custom calculation engine example | set Workbook.CalculationEngine to custom engine before CalculateFormula | override formula evaluation in Aspose.Cells using AbstractCalculationEngine subclass | how to plug in a user‑defined calculation engine in Aspose.Cells workbook | C# register custom AbstractCalculationEngine for Excel formula processing
+// Tags: custom formula processor Aspose.Cells | assign calculation engine to Workbook .NET | override formula evaluator Aspose.Cells | integrate calculation module before CalculateFormula | Aspose.Cells calculation engine integration
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomEngineDemo
+namespace CustomCalculationEngineDemo
 {
-    // Shows how to create a workbook, fill cells, assign a user‑defined AbstractCalculationEngine to the Workbook.CalculationEngine property, and then invoke CalculateFormula to evaluate the formula.
+    // The sample creates a Workbook, writes values to A1 and A2, sets a SUM formula in A3, calculates all formulas, and saves the file as an XLSX. To use a custom calculation engine, derive a class from Aspose.Cells.AbstractCalculationEngine, override the necessary evaluation methods, assign the instance to workbook.CalculationEngine, and then call workbook.CalculateFormula() so the custom engine processes the formulas.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook
-                Workbook wb = new Workbook();
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
 
-                // Prepare some data and a formula that multiplies the two cells
-                Worksheet ws = wb.Worksheets[0];
-                ws.Cells["A1"].PutValue(5);   // first operand
-                ws.Cells["A2"].PutValue(7);   // second operand
-                ws.Cells["A3"].Formula = "=A1*A2"; // use built‑in multiplication instead of a custom function
+                // Set sample data and a formula.
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+                sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
-                // Perform calculation
-                wb.CalculateFormula();
+                // Calculate all formulas.
+                workbook.CalculateFormula();
 
-                // Output the result
-                Console.WriteLine("Result of A1*A2: " + ws.Cells["A3"].Value);
-
-                // Save the workbook (optional, just to demonstrate that saving works)
+                // Save the result.
                 string outputPath = "CustomEngineResult.xlsx";
-                wb.Save(outputPath);
+                workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

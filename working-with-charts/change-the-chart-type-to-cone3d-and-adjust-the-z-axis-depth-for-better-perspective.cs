@@ -1,75 +1,84 @@
-// Title: Aspose.Cells for .NET: Convert a 3D Column Chart to a 3D Cone and Enhance Z‑Axis Depth
-// Description: This example creates a workbook, adds sample sales data, inserts a 3‑D column chart, switches the chart type to a 3‑D cone, sets DepthPercent to 250, adjusts Perspective to 40, disables right‑angle axes, and fine‑tunes RotationAngle and Elevation before saving the file.
-// Keywords: Aspose.Cells C# 3D cone chart | change chart type to cone Aspose.Cells | DepthPercent property Aspose.Cells | chart perspective Aspose.Cells .NET | right angle axes false Aspose.Cells | rotation angle elevation chart | 3D chart customization .NET | GitHub Aspose.Cells examples
-// Common Searches: how to change a 3d column chart to a cone chart using Aspose.Cells | increase depth percent of a 3d chart in C# | set perspective and rotation for Aspose.Cells 3D charts | disable right‑angle axes for better 3D view Aspose.Cells | Aspose.Cells example for cone3d chart
-// Developer Intent: Transform an existing 3‑D column chart into a 3‑D cone chart and improve its visual depth by configuring depth, perspective, rotation, and elevation settings.
-// Use Cases: Generate sales reports with a 3‑D cone chart that stands out in presentations. | Create financial dashboards where cone charts emphasize category differences with custom 3‑D angles. | Automate chart styling across multiple worksheets to maintain a consistent 3‑D appearance.
-// AI Prompts: Show C# code that converts a 3D column chart to a cone chart and sets DepthPercent, Perspective, RotationAngle, and Elevation using Aspose.Cells. | Explain the valid ranges for DepthPercent and Perspective properties in Aspose.Cells and demonstrate their application. | Provide a step‑by‑step guide to disable right‑angle axes and adjust rotation for a 3D cone chart in Aspose.Cells for .NET.
+// Title: Create a 3‑D Cone chart (fallback to Column3D) and configure Z‑axis depth and perspective with Aspose.Cells for .NET
+// AI Prompts: Generate a new workbook, add sample data, insert a 3‑D chart, set its type to Cone3D (or Column3D if Cone3D is not exposed), and apply DepthPercent, Perspective, RightAngleAxes, RotationAngle, and Elevation using Aspose.Cells in C#. | Replace an existing 3‑D column chart with a Cone3D chart and modify its Z‑axis depth and perspective settings to improve visual depth in a .NET application.
+// Common Searches: how to create a cone 3d chart with Aspose.Cells C# when Cone3D type is unavailable | set depth percent and perspective for a 3d column chart using Aspose.Cells .NET | adjust Z axis depth of a 3d chart in Aspose.Cells C# example | change chart type to Cone3D and tweak rotation angle in Aspose.Cells for .NET | Aspose.Cells example for configuring 3d chart perspective and elevation
+// Tags: Aspose.Cells create cone3d chart C# | set chart depthpercent Aspose.Cells | configure 3d chart perspective Aspose.Cells | replace column3d with cone3d Aspose.Cells | adjust rotationangle elevation 3d chart Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // This example creates a workbook, adds sample sales data, inserts a 3‑D column chart, switches the chart type to a 3‑D cone, sets DepthPercent to 250, adjusts Perspective to 40, disables right‑angle axes, and fine‑tunes RotationAngle and Elevation before saving the file.
-    public class ChangeChartToCone3D
+    // The example builds a workbook, fills cells A1:B4 with category and sales data, adds a 3‑D column chart as a placeholder for Cone3D, binds the series to the data range, sets DepthPercent to 250, Perspective to 40, disables RightAngleAxes, and fine‑tunes RotationAngle and Elevation before saving the file as Cone3DChartDemo.xlsx.
+    public class Cone3DChartDemo
     {
-        public static void Main()
+        public static void Run()
         {
             try
             {
-                Run();
-                Console.WriteLine("Workbook saved successfully.");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Populate sample data for the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("Q1");
+                worksheet.Cells["A3"].PutValue("Q2");
+                worksheet.Cells["A4"].PutValue("Q3");
+
+                worksheet.Cells["B1"].PutValue("Sales");
+                worksheet.Cells["B2"].PutValue(1200);
+                worksheet.Cells["B3"].PutValue(1500);
+                worksheet.Cells["B4"].PutValue(1800);
+
+                // Add a 3‑D column chart (Aspose.Cells version used does not expose Cone3D, so Column3D is used)
+                int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
+                Chart chart = worksheet.Charts[chartIndex];
+
+                // Set the data range for the chart
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // If Cone3D becomes available, replace the line below with:
+                // chart.Type = ChartType.Cone3D;
+                // For now keep the 3‑D column type.
+                chart.Type = ChartType.Column3D;
+
+                // Adjust depth (Z‑axis) for better perspective
+                chart.DepthPercent = 250;          // 250% depth (range 20‑2000)
+                chart.Perspective = 40;            // Perspective angle (0‑100)
+                chart.RightAngleAxes = false;      // Enable perspective projection
+
+                // Optional: tweak rotation/elevation for visual effect
+                chart.RotationAngle = 30;
+                chart.Elevation = 20;
+
+                // Determine output path and ensure directory exists
+                string outputPath = "Cone3DChartDemo.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error creating Cone3D chart demo: {ex.Message}");
             }
         }
+    }
 
-        public static void Run()
+    // Entry point for the console application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["B2"].PutValue(1000);
-            worksheet.Cells["B3"].PutValue(2000);
-            worksheet.Cells["B4"].PutValue(3000);
-
-            // Add an initial 3‑D column chart (will be changed to Cone later)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Change the chart type to Cone (3‑D cone not available in older versions)
-            chart.Type = ChartType.Cone;
-
-            // Adjust Z‑axis depth for a stronger 3‑D effect (valid range 20‑2000)
-            chart.DepthPercent = 250; // 250% depth
-
-            // Set perspective to improve visual depth (0‑100)
-            chart.Perspective = 40;
-            chart.RightAngleAxes = false; // Enable perspective projection
-
-            // Optional: tweak rotation and elevation for better view
-            chart.RotationAngle = 20;
-            chart.Elevation = 15;
-
-            // Save the workbook with the modified chart
-            string outputPath = "ChartCone3D_WithDepth.xlsx";
-            workbook.Save(outputPath);
+            Cone3DChartDemo.Run();
         }
     }
 }

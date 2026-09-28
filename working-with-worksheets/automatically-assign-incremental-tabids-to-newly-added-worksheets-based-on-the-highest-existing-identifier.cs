@@ -1,45 +1,39 @@
-// Title: C# – Auto‑Increment Worksheet TabId in Aspose.Cells for .NET
-// Description: Demonstrates how to add worksheets to an Aspose.Cells workbook and automatically assign each new sheet a sequential TabId by locating the current maximum TabId and setting the new value to max + 1. The workbook is saved as IncrementalTabIdDemo.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | Worksheet TabId | auto increment TabId | sequential TabId | add worksheet programmatically | unique TabId example | workbook sample code | GitHub Aspose.Cells example
-// Common Searches: Aspose.Cells assign incremental TabId C# | auto increment worksheet TabId .NET | how to set unique TabId for new sheets in Aspose.Cells | C# code to get max TabId across worksheets | sample project for TabId sequencing Aspose.Cells
-// Developer Intent: Add new worksheets and ensure each receives a unique, sequential TabId based on the highest existing identifier.
-// Use Cases: Maintain predictable tab order when generating workbooks dynamically. | Synchronize worksheet IDs with external databases or APIs that expect sequential numbers. | Create user‑friendly Excel files where TabId reflects the creation sequence for easier navigation.
-// AI Prompts: Generate a reusable method GetNextTabId(Workbook wb) that returns the next sequential TabId. | Refactor the loop to use LINQ for finding the maximum TabId in a workbook. | Explain how to detect and resolve duplicate TabId conflicts when inserting worksheets in parallel.
+// Title: How to automatically assign the next TabId to a newly added worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans all worksheets in a Workbook, determines the highest TabId, adds a new worksheet, and sets its TabId to the next integer using Aspose.Cells. | Create a reusable C# method that accepts a Workbook object, adds a worksheet with an incremented TabId based on existing sheets, and returns the newly created worksheet.
+// Common Searches: Aspose.Cells C# find maximum worksheet TabId and assign next value | auto increment TabId when adding new sheet with Aspose.Cells .NET | C# code to set sequential TabId for a newly added worksheet in Aspose.Cells | retrieve highest TabId from workbook and add sheet with next TabId Aspose.Cells
+// Tags: increment TabId Aspose.Cells | max worksheet TabId retrieval .NET | add worksheet sequential TabId | Aspose.Cells workbook TabId management
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to add worksheets to an Aspose.Cells workbook and automatically assign each new sheet a sequential TabId by locating the current maximum TabId and setting the new value to max + 1. The workbook is saved as IncrementalTabIdDemo.xlsx.
+// The example loads an existing workbook, iterates through its worksheets to locate the highest TabId, adds a new worksheet, assigns the new sheet a TabId that is one greater than the maximum, optionally renames the sheet, and saves the updated workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load the existing workbook (replace with your actual file path)
+        var workbook = new Workbook("input.xlsx");
 
-        // Initialize the first worksheet's TabId
-        Worksheet firstSheet = workbook.Worksheets[0];
-        firstSheet.TabId = 1;
-
-        // Add new worksheets and assign incremental TabIds
-        for (int i = 0; i < 3; i++)
+        // Find the highest TabId among all existing worksheets
+        int maxTabId = 0;
+        foreach (Worksheet ws in workbook.Worksheets)
         {
-            // Add a new worksheet with a unique name
-            Worksheet newSheet = workbook.Worksheets.Add($"Sheet_{i + 2}");
-
-            // Find the current maximum TabId among all worksheets
-            int maxTabId = 0;
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                if (ws.TabId > maxTabId)
-                    maxTabId = ws.TabId;
-            }
-
-            // Set the new worksheet's TabId to max + 1
-            newSheet.TabId = maxTabId + 1;
+            // Assuming Worksheet has a TabId property (int)
+            if (ws.TabId > maxTabId)
+                maxTabId = ws.TabId;
         }
 
-        // Save the workbook
-        workbook.Save("IncrementalTabIdDemo.xlsx");
+        // Add a new worksheet to the workbook
+        int newSheetIndex = workbook.Worksheets.Add();
+        Worksheet newSheet = workbook.Worksheets[newSheetIndex];
+
+        // Assign an incremental TabId based on the highest existing identifier
+        newSheet.TabId = maxTabId + 1;
+
+        // Optionally give the new sheet a name
+        newSheet.Name = $"Sheet{newSheetIndex + 1}";
+
+        // Save the workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

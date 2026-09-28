@@ -1,44 +1,49 @@
-// Title: Lock All Shapes Across Worksheets and Export to PDF with Aspose.Cells for .NET
-// Description: C# example that loads a workbook, iterates through every worksheet, sets each shape's IsLocked property to true, applies worksheet protection, and saves the result as a PDF using Aspose.Cells.
-// Keywords: Aspose.Cells lock shapes | protect worksheet C# | export workbook to PDF | batch shape locking .NET | Aspose.Cells PDF conversion | shape security Aspose.Cells
-// Common Searches: how to lock all shapes in an Excel file using Aspose.Cells | C# batch lock shapes before PDF export | protect worksheets and shapes with Aspose.Cells .NET | export protected workbook to PDF Aspose.Cells
-// Developer Intent: Secure every shape in all worksheets and generate a PDF of the protected workbook.
-// Use Cases: Secure financial dashboards by locking chart objects before distributing PDFs. | Preserve template integrity in multi‑sheet reports when archiving as PDF. | Enforce shape protection in regulatory filings generated from Excel workbooks.
-// AI Prompts: Write C# code that locks every shape on each worksheet, protects the sheets, and saves the workbook as a PDF using Aspose.Cells. | Show how to customize PdfSaveOptions while keeping all shapes locked in an Aspose.Cells .NET project.
+// Title: Lock all shapes on every worksheet before exporting the workbook to PDF with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops through each worksheet in a Workbook, sets Shape.IsLocked = true for every shape, and then saves the workbook as a PDF using Aspose.Cells. | Create a reusable C# method that receives an Excel file path, locks all shapes across all sheets, and outputs a PDF where the shapes are protected from editing.
+// Common Searches: Aspose.Cells how to lock every shape in an Excel file before PDF conversion | C# batch lock shapes on all worksheets using Aspose.Cells | prevent editing of shapes when saving Excel as PDF with Aspose.Cells | iterate through worksheets and set Shape.IsLocked property in Aspose.Cells | export workbook to PDF after locking shapes Aspose.Cells .NET
+// Tags: lock shapes Aspose.Cells | batch shape locking C# | export workbook to PDF Aspose.Cells | Shape.IsLocked property usage | iterate worksheets lock shapes
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-namespace AsposeCellsBatchLockAndExport
+// // Loads an Excel workbook, iterates each worksheet to set Shape.IsLocked = true for all shapes, then saves the workbook as a PDF using Aspose.Cells.
+class Program
 {
-    // C# example that loads a workbook, iterates through every worksheet, sets each shape's IsLocked property to true, applies worksheet protection, and saves the result as a PDF using Aspose.Cells.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Lock every shape on the current worksheet
-                foreach (Shape shape in sheet.Shapes)
-                {
-                    shape.IsLocked = true;
-                }
-
-                // Protect the worksheet so that the locked state takes effect
-                sheet.Protect(ProtectionType.All);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Prepare PDF save options (default options are sufficient for this task)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Lock all shapes on every worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    shape.IsLocked = true; // Prevent editing of the shape
+                }
+            }
 
             // Export the workbook to PDF
-            workbook.Save("output.pdf", pdfOptions);
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved as PDF to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

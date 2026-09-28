@@ -1,54 +1,66 @@
-// Title: Rename an Excel Form Control Button and Preserve Its Macro Using Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, finds a Button shape named "OldButtonName" on the first worksheet, saves its MacroName, changes the button's Name to "NewButtonName", re‑applies the saved MacroName to keep the macro link intact, and saves the result as a new file.
-// Keywords: Aspose.Cells | C# | .NET | Excel form control | button rename | MacroName | preserve macro | Button shape | programmatic rename | Excel macro link
-// Common Searches: Rename Excel form control button with Aspose.Cells C# | Keep macro reference when changing button name in .NET | Update Button.Name without losing MacroName using Aspose.Cells | Find and rename button shape in workbook programmatically
-// Developer Intent: Rename a form control button in an Excel workbook while keeping its assigned macro unchanged.
-// Use Cases: Standardize button identifiers across generated workbooks without breaking existing macros. | Refactor legacy Excel templates by renaming controls while maintaining macro connections. | Automate bulk updates of button names in multiple worksheets, ensuring macro functionality remains intact.
-// AI Prompts: Generate C# code with Aspose.Cells that locates a button named 'SubmitBtn', renames it to 'SendBtn', and retains its MacroName. | Explain how to iterate through worksheet shapes to find a specific Button and modify its Name property without affecting the linked macro.
+// Title: Programmatically rename an Excel form control button while keeping its macro reference using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that finds a shape named 'OldButtonName' on the first worksheet and changes its Name to 'NewButtonName' without altering the shape's Macro property. | Show how to iterate through worksheet shapes in Aspose.Cells to rename a specific button and preserve its assigned macro. | Provide a complete example that loads an .xlsx file, renames a form control button, and saves the workbook, ensuring the macro link remains intact.
+// Common Searches: Aspose.Cells C# rename form control button without losing macro | how to change button name in Excel workbook using Aspose.Cells while keeping macro reference | preserve macro assignment when renaming shape in Aspose.Cells .NET | C# code to update Excel button name and retain its macro using Aspose.Cells | rename Excel form control shape programmatically with Aspose.Cells and keep macro link
+// Tags: rename shape Aspose.Cells C# | preserve macro on shape rename Aspose.Cells | modify form control button name .xlsx Aspose.Cells | Aspose.Cells shape properties update | Excel macro link retention Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads a workbook, finds a Button shape named "OldButtonName" on the first worksheet, saves its MacroName, changes the button's Name to "NewButtonName", re‑applies the saved MacroName to keep the macro link intact, and saves the result as a new file.
-class RenameButtonDemo
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, searches the first worksheet for a shape named 'OldButtonName', changes its Name to 'NewButtonName' while the Macro property remains unchanged, and saves the workbook to a new file.
+    class Program
     {
-        // Load an existing workbook that contains a form control button
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Get the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Locate the button by its current name
-        Button button = null;
-        foreach (Shape shape in worksheet.Shapes)
+        static void Main(string[] args)
         {
-            if (shape is Button && shape.Name == "OldButtonName")
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                button = (Button)shape;
-                break;
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Rename the button (or any shape) with the specified old name
+                    if (shape.Name == "OldButtonName")
+                    {
+                        shape.Name = "NewButtonName";
+                        // The assigned macro reference (shape.Macro) is preserved automatically
+                        break; // Exit after renaming the target shape
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        if (button != null)
-        {
-            // Store the existing macro reference
-            string existingMacro = button.MacroName;
-
-            // Rename the button while keeping the macro unchanged
-            button.Name = "NewButtonName";
-
-            // Reassign the macro name to guarantee it is preserved
-            button.MacroName = existingMacro;
-        }
-        else
-        {
-            Console.WriteLine("Button with the specified name was not found.");
-        }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
     }
 }

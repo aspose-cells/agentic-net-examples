@@ -1,23 +1,20 @@
-// Title: Add a SuperTip tooltip to a custom ribbon button in an Excel workbook with Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, defines Ribbon XML that includes a large button with a supertip attribute, assigns the XML to the workbook's RibbonXml property, and saves the file as a macro‑enabled .xlsm to preserve the custom ribbon UI.
-// Keywords: Aspose.Cells | RibbonXml | tooltip | supertip | custom ribbon | C# | Excel workbook | macro-enabled | UI customization
-// Common Searches: Aspose.Cells add tooltip to custom ribbon button | RibbonXml supertip example C# | How to set a tooltip for an Excel custom UI button using Aspose.Cells | Create macro-enabled workbook with custom ribbon and tooltip | C# code for custom ribbon tooltip in Excel
-// Developer Intent: Add a supertip tooltip to a custom ribbon button in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Guide end users by displaying a descriptive tooltip on a custom ribbon button. | Improve accessibility of custom Excel UI elements with concise supertips. | Reuse a RibbonXml template containing tooltips across multiple workbooks for consistent UI hints.
-// AI Prompts: Generate C# code that adds a supertip tooltip to a custom ribbon button in an Aspose.Cells workbook and saves it as .xlsm. | Show how to modify existing RibbonXml to include tooltips for several custom ribbon buttons with Aspose.Cells for .NET. | Explain how to localize the supertip text of a custom ribbon button in an Aspose.Cells workbook. | Provide a step‑by‑step guide to embed a custom ribbon with tooltips into a macro‑enabled Excel file using Aspose.Cells.
+// Title: How to add a supertip tooltip to a custom ribbon button in an Excel .xlsm workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook, defines RibbonXml with a button that includes a supertip attribute, and saves the file as a macro‑enabled .xlsm. | Show how to modify existing RibbonXml to insert a supertip tooltip for a custom ribbon button with Aspose.Cells. | Provide a step‑by‑step example of assigning RibbonXml containing a button with a supertip to a workbook and persisting the ribbon customization.
+// Common Searches: Aspose.Cells C# add supertip to custom ribbon button in .xlsm file | how to set tooltip for Excel ribbon button using RibbonXml property | example of custom ribbon XML with tooltip for macro‑enabled workbook in Aspose.Cells | C# code to create custom ribbon tab with button tooltip in Excel using Aspose.Cells
+// Tags: custom ribbon button supertip Aspose.Cells | RibbonXml tooltip attribute C# | save macro-enabled workbook with ribbon customizations | Aspose.Cells add tooltip to ribbon UI | Excel .xlsm custom ribbon XML example
 
 using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, defines Ribbon XML that includes a large button with a supertip attribute, assigns the XML to the workbook's RibbonXml property, and saves the file as a macro‑enabled .xlsm to preserve the custom ribbon UI.
-class Program
+// The example creates a new Workbook, builds custom ribbon XML that defines a button with a supertip tooltip, assigns the XML to the workbook's RibbonXml property, and saves the workbook as a macro‑enabled .xlsm file to retain the ribbon customization.
+class RibbonTooltipDemo
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Define Ribbon XML with a button that includes a tooltip (supertip)
+        // Define custom ribbon XML with a tooltip (supertip) for the button
         string ribbonXml =
             "<customUI xmlns=\"http://schemas.microsoft.com/office/2006/01/customui\">" +
             "  <ribbon>" +
@@ -31,10 +28,10 @@ class Program
             "  </ribbon>" +
             "</customUI>";
 
-        // Assign the custom Ribbon XML to the workbook
+        // Assign the XML to the workbook's RibbonXml property
         workbook.RibbonXml = ribbonXml;
 
-        // Save the workbook (macro-enabled format to retain Ribbon UI)
+        // Save the workbook (macro-enabled format to retain ribbon customizations)
         workbook.Save("CustomRibbonWithTooltip.xlsm");
     }
 }

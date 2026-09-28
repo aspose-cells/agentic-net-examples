@@ -1,96 +1,85 @@
-// Title: Aspose.Cells for .NET – Apply Dark2 Theme Accent as Default Thin Border to All ListObject Tables
-// Description: C# example that creates a workbook, adds a ListObject table, then loops through every worksheet and each table to apply a thin border style whose ThemeColor is set to the workbook's Accent2 (Dark2) color. Only border formatting is changed, and the workbook is saved with the new styling.
-// Keywords: Aspose.Cells C# table border theme | Dark2 theme accent border | Accent2 thin border Aspose.Cells | apply theme color to ListObject borders | set default table border Aspose.Cells | C# Excel theme color borders | Aspose.Cells style flag borders
-// Common Searches: Aspose.Cells set table border to Dark2 theme color | C# apply theme accent to Excel table borders | How to use ThemeColor Accent2 for ListObject borders in Aspose.Cells | Apply thin borders to all tables in a workbook using Aspose.Cells | Default border color for tables Aspose.Cells .NET
-// Developer Intent: Use Aspose.Cells to make the workbook's Dark2 (Accent2) theme color the default thin border for every ListObject table.
-// Use Cases: Generate reports where all tables share a consistent Dark2 border that matches the workbook theme. | Standardize the appearance of tables across multiple worksheets in automated Excel exports. | Retrofit existing workbooks by programmatically updating each table’s border to the theme’s Accent2 color.
-// AI Prompts: Write C# code with Aspose.Cells that sets the Dark2 (Accent2) theme color as a thin border for all ListObject tables in a workbook. | Show how to change the border color to a different theme accent (e.g., Accent3) while keeping the same thin style. | Explain how to apply the Dark2 border style only to data rows of each table, leaving header borders unchanged.
+// Title: Set the workbook’s Dark2 theme color as the default border for every table (ListObject) using Aspose.Cells for .NET
+// AI Prompts: Extract the Dark2 color from the workbook’s theme and apply it to all four borders of each ListObject range. | Refactor the existing code to replace the hard‑coded black border with the workbook’s Dark2 theme color for all tables across all worksheets. | Create a reusable method that receives a Workbook and automatically styles every table’s borders with the workbook’s Dark2 theme color.
+// Common Searches: Aspose.Cells C# set table border color to workbook theme Dark2 | How to use Excel theme colors for ListObject borders with Aspose.Cells .NET | Apply default border style to all tables in an Excel file using Aspose.Cells | Retrieve Dark2 theme color from workbook and style table borders in C# | Change border color of all tables to theme color in Aspose.Cells
+// Tags: set table border color using workbook theme Aspose.Cells | apply Dark2 theme color to ListObject borders C# | iterate worksheets and tables to style borders Aspose.Cells | style flag all cells for table borders .NET | theme color extraction for cell styling Aspose.Cells
 
 using System;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsThemeBorderDemo
+namespace AsposeCellsExample
 {
-    // C# example that creates a workbook, adds a ListObject table, then loops through every worksheet and each table to apply a thin border style whose ThemeColor is set to the workbook's Accent2 (Dark2) color. Only border formatting is changed, and the workbook is saved with the new styling.
+    // The example loads an existing Excel workbook, obtains the Dark2 color from the workbook’s theme, iterates through every worksheet and each ListObject (table), creates a style that sets the left, right, top, and bottom borders to the Dark2 color, applies this style to the entire table range, and saves the modified workbook.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate some data and create a table (ListObject)
-                sheet.Cells["A1"].PutValue("Header1");
-                sheet.Cells["B1"].PutValue("Header2");
-                sheet.Cells["A2"].PutValue(10);
-                sheet.Cells["B2"].PutValue(20);
-
-                // Add a table that includes the header row
-                int tableIndex = sheet.ListObjects.Add(0, 0, 2, 2, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-
-                // Iterate through all worksheets and their tables
-                foreach (Worksheet ws in workbook.Worksheets)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    foreach (ListObject lo in ws.ListObjects)
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                Workbook workbook;
+                try
+                {
+                    // Load the workbook
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception loadEx)
+                {
+                    Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                    return;
+                }
+
+                // Use a default border color (Black)
+                Color borderColor = Color.Black;
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Iterate through all tables (ListObjects) in the worksheet
+                    foreach (ListObject table in sheet.ListObjects)
                     {
-                        // Build a range that covers the whole table (including header)
-                        int firstRow = lo.StartRow;
-                        int firstCol = lo.StartColumn;
-                        int rowCount = lo.EndRow - lo.StartRow + 1;
-                        int colCount = lo.EndColumn - lo.StartColumn + 1;
-                        AsposeRange tableRange = ws.Cells.CreateRange(firstRow, firstCol, rowCount, colCount);
+                        // Get the data range that the table occupies
+                        Aspose.Cells.Range tableRange = table.DataRange;
 
-                        // Create a new style
+                        // Create a style and set border colors
                         Style style = workbook.CreateStyle();
+                        style.Borders[BorderType.LeftBorder].Color = borderColor;
+                        style.Borders[BorderType.RightBorder].Color = borderColor;
+                        style.Borders[BorderType.TopBorder].Color = borderColor;
+                        style.Borders[BorderType.BottomBorder].Color = borderColor;
 
-                        // Use the theme's Accent2 (Dark2) color for thin borders
-                        ThemeColor dark2Theme = new ThemeColor(ThemeColorType.Accent2, 0);
-                        style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-                        style.Borders[BorderType.TopBorder].ThemeColor = dark2Theme;
-
-                        style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-                        style.Borders[BorderType.BottomBorder].ThemeColor = dark2Theme;
-
-                        style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-                        style.Borders[BorderType.LeftBorder].ThemeColor = dark2Theme;
-
-                        style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-                        style.Borders[BorderType.RightBorder].ThemeColor = dark2Theme;
-
-                        // Apply only border formatting
-                        StyleFlag flag = new StyleFlag { Borders = true };
-
-                        // Apply the style to the table range
+                        // Apply the style to the entire table range
+                        StyleFlag flag = new StyleFlag { All = true };
                         tableRange.ApplyStyle(style, flag);
                     }
                 }
 
-                // Define output file path
-                string outputPath = "TablesWithDark2Border.xlsx";
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                try
                 {
-                    Directory.CreateDirectory(outputDir);
+                    // Save the modified workbook
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to {outputPath}");
                 }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
         }
     }

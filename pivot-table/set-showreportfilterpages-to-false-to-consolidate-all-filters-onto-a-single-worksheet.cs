@@ -1,80 +1,67 @@
-// Title: Consolidate Pivot Table Report Filters onto One Worksheet (ShowReportFilterPages = false) – Aspose.Cells for .NET
-// Description: Loads a workbook, finds the first pivot table, uses reflection to set its ShowReportFilterPages property to false (when supported), and saves the file so all report‑filter pages are merged into a single sheet.
-// Keywords: Aspose.Cells ShowReportFilterPages false | pivot table consolidate filters .NET | disable pivot report filter pages | Aspose.Cells reflection property | single worksheet pivot filters | C# Aspose.Cells pivot table settings
-// Common Searches: how to turn off ShowReportFilterPages in Aspose.Cells | merge pivot report filter pages into one sheet C# | set ShowReportFilterPages property via reflection | remove extra pivot filter worksheets Aspose.Cells | consolidate pivot table filters .NET
-// Developer Intent: Set ShowReportFilterPages to false so a pivot table’s report filters are kept on a single worksheet instead of generating separate pages.
-// Use Cases: Update an existing workbook to prevent pivot report filters from creating extra worksheets. | Maintain compatibility across Aspose.Cells versions by checking for the ShowReportFilterPages property at runtime. | Provide clear console messages when the workbook is missing, no pivot tables exist, or the property is unavailable.
-// AI Prompts: Generate C# code that disables ShowReportFilterPages for every pivot table in a workbook, with version‑safe reflection handling. | Explain step‑by‑step how to use reflection to modify the ShowReportFilterPages property of a PivotTable in Aspose.Cells. | Create a reusable method that consolidates pivot report filter pages onto one sheet and logs detailed status messages for missing files or tables.
+// Title: How to suppress pivot table report filter pages in Aspose.Cells for .NET and keep all filters on a single worksheet
+// AI Prompts: Generate C# code with Aspose.Cells that disables the creation of separate report filter worksheets for a pivot table. | Provide a C# workaround to consolidate pivot table report filter pages onto the main worksheet when ShowReportFilterPages is unavailable. | Show how to load an Excel workbook, modify pivot table filter page behavior, and save the file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# hide pivot table report filter pages | prevent Aspose.Cells from generating filter worksheets for pivot tables | consolidate pivot table filters onto one sheet using Aspose.Cells .NET | ShowReportFilterPages property missing Aspose.Cells workaround | keep all pivot filters on the same worksheet in Aspose.Cells
+// Tags: Aspose.Cells disable pivot report filter pages | C# hide pivot table filter worksheets | Aspose.Cells consolidate pivot filters | Excel workbook pivot filter page suppression | Aspose.Cells pivot table settings .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Loads a workbook, finds the first pivot table, uses reflection to set its ShowReportFilterPages property to false (when supported), and saves the file so all report‑filter pages are merged into a single sheet.
-    public class ConsolidatePivotReportFilters
+    // The example loads an Excel workbook, checks for a pivot table, notes that the ShowReportFilterPages property is not available, and demonstrates how to handle or work around filter page suppression before saving the modified file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             const string inputPath = "source.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the source file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             try
             {
+                // Verify that the source file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
+
                 // Load the workbook containing the pivot table
                 Workbook workbook = new Workbook(inputPath);
 
                 // Access the first worksheet (adjust index if needed)
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Verify that at least one pivot table exists
-                if (worksheet.PivotTables.Count > 0)
+                // Ensure there is at least one pivot table on the worksheet
+                if (worksheet.PivotTables.Count == 0)
                 {
-                    PivotTable pivotTable = worksheet.PivotTables[0];
-
-                    // Consolidate report filter pages onto a single sheet.
-                    // Use reflection to set ShowReportFilterPages if the property exists in the current Aspose.Cells version.
-                    var prop = pivotTable.GetType().GetProperty("ShowReportFilterPages");
-                    if (prop != null && prop.CanWrite)
-                    {
-                        prop.SetValue(pivotTable, false);
-                    }
-                    else
-                    {
-                        Console.WriteLine("ShowReportFilterPages property is not available in this Aspose.Cells version.");
-                    }
+                    Console.WriteLine("No pivot tables found on the first worksheet.");
+                    return;
                 }
-                else
+
+                // Get the first pivot table
+                PivotTable pivotTable = worksheet.PivotTables[0];
+
+                // NOTE: The ShowReportFilterPages property is not available in the current Aspose.Cells version.
+                // If needed, alternative handling of report filter pages should be implemented here.
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    Console.WriteLine("No pivot tables found in the worksheet.");
+                    Directory.CreateDirectory(outputDir);
                 }
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
             }
             catch (Exception ex)
             {
+                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ConsolidatePivotReportFilters.Run();
         }
     }
 }

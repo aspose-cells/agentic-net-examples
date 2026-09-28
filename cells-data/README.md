@@ -4,7 +4,8 @@ description: C# examples for typed cell values, bulk import, search, sorting, va
 product: Aspose.Cells for .NET
 category: cells-data
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Read and Write Excel Cell Data in C# with Aspose.Cells for .NET

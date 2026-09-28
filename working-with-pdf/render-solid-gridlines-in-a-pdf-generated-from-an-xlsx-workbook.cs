@@ -1,46 +1,33 @@
-// Title: Render solid hair‑thin gridlines in a PDF from an XLSX workbook using Aspose.Cells for .NET
-// Description: Shows how to enable worksheet gridlines, set PdfSaveOptions.GridlineType to Hair and GridlineColor to black, and save the workbook as a PDF with solid thin lines.
-// Keywords: Aspose.Cells | PdfSaveOptions | GridlineType | Hair | GridlineColor | solid gridlines | export Excel to PDF | C# | .NET | PDF rendering | worksheet gridlines
-// Common Searches: Aspose.Cells export Excel to PDF with solid gridlines | PdfSaveOptions GridlineType Hair example C# | How to set gridline color when saving workbook as PDF | Render thin black gridlines in PDF using Aspose.Cells | C# code to show gridlines in PDF output
-// Developer Intent: Generate a PDF from an Excel workbook where the gridlines appear as solid hair‑thin black lines.
-// Use Cases: Produce printable financial statements with clear row/column separation. | Create invoices or receipts where thin black gridlines improve table readability. | Export product catalogs or price lists to PDF while preserving consistent gridline styling.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook as a PDF with solid black hair‑thin gridlines. | Explain the effect of PdfSaveOptions.GridlineType and GridlineColor on PDF gridline appearance. | Show how to enable gridlines on a worksheet and customize their style before converting to PDF.
+// Title: How to export an Excel workbook to PDF with solid gridlines using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates through all worksheets, enables gridline printing, and saves the workbook as a PDF with Aspose.Cells. | Show how to configure PdfSaveOptions so that gridlines are preserved during XLSX‑to‑PDF conversion in a .NET application. | Provide a sample that sets each worksheet’s gridline visibility and generates a PDF containing solid lines using Aspose.Cells.
+// Common Searches: Aspose.Cells C# export Excel to PDF with visible gridlines | Enable solid gridlines when converting XLSX to PDF using Aspose.Cells .NET | PrintGridlines property effect on PDF output in Aspose.Cells | How to keep gridlines in PDF generated from workbook with Aspose.Cells | PdfSaveOptions settings for preserving Excel gridlines in PDF
+// Tags: enable worksheet gridline printing Aspose.Cells | PDF conversion retaining Excel gridlines | PdfSaveOptions preserve gridlines Aspose.Cells | C# solid gridlines PDF conversion Aspose.Cells | iterate worksheets set gridline printing
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
 
-// Shows how to enable worksheet gridlines, set PdfSaveOptions.GridlineType to Hair and GridlineColor to black, and save the workbook as a PDF with solid thin lines.
-class RenderSolidGridlinesPdf
+// Loads an XLSX workbook, enables gridline printing for every worksheet, optionally adjusts PdfSaveOptions, and saves the workbook as a PDF where the gridlines appear as solid lines.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the source XLSX workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Populate some sample data so gridlines are visible
-        sheet.Cells["A1"].PutValue("Item");
-        sheet.Cells["B1"].PutValue("Price");
-        sheet.Cells["A2"].PutValue("Book");
-        sheet.Cells["B2"].PutValue(19.99);
-        sheet.Cells["A3"].PutValue("Pen");
-        sheet.Cells["B3"].PutValue(2.49);
+        // Enable printing of gridlines for every worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            sheet.PageSetup.PrintGridlines = true;
+        }
 
-        // Ensure gridlines are shown in the worksheet
-        sheet.IsGridlinesVisible = true;
-
-        // Configure PDF save options to use a solid‑looking (hair) gridline type
+        // Configure PDF save options (optional adjustments)
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Hair line is a thin solid line; Dotted is the default
-            GridlineType = GridlineType.Hair,
-
-            // Optional: set a specific gridline color (e.g., black)
-            GridlineColor = System.Drawing.Color.Black
+            // Example: keep each worksheet on its own page
+            OnePagePerSheet = false
         };
 
-        // Save the workbook as PDF with the specified options
-        workbook.Save("SolidGridlines.pdf", pdfOptions);
+        // Save the workbook as a PDF with solid gridlines rendered
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

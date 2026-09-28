@@ -1,26 +1,25 @@
-// Title: Aspose.Cells for .NET – Hide PivotTable Report Filter Pane (ShowReportFilter = false)
-// Description: Creates a workbook, adds sample data, builds a PivotTable on A1:B5, assigns row and data fields, sets PivotTable.ShowReportFilter = false to hide the report‑filter area, then saves the file.
-// Keywords: Aspose.Cells hide pivot report filter | ShowReportFilter false C# | PivotTable hide filter pane .NET | Aspose.Cells PivotTable display options | remove report filter area Excel | Aspose.Cells PivotTable properties
-// Common Searches: how to hide pivot report filter Aspose.Cells | ShowReportFilter property example C# | disable report filter pane in generated Excel | Aspose.Cells hide PivotTable filter area | C# hide PivotTable report filter
-// Developer Intent: Hide the report‑filter area of a PivotTable generated with Aspose.Cells for .NET.
-// Use Cases: Generate cleaner Excel reports without the filter pane. | Create printable PivotTables that fit page layouts. | Build dashboards where the filter area is unnecessary.
-// AI Prompts: Write C# code using Aspose.Cells to create a PivotTable and set ShowReportFilter = false before saving. | Show an example that adds a row field and a data field to a PivotTable and hides the report filter area. | Demonstrate how to toggle the ShowReportFilter property after refreshing PivotTable data.
+// Title: Hide the report filter area of a PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook, adds a pivot table, and disables the report filter UI by setting ShowReportFilter = false. | Update an existing Aspose.Cells pivot‑table example to turn off the report filter pane without altering row or data fields. | Show how to programmatically hide the report filter section of a PivotTable after refreshing data with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# remove report filter section from generated pivot table | Set ShowReportFilter property to false in Aspose.Cells pivot table example | How to remove report filter area from a PivotTable using Aspose.Cells for .NET | C# Aspose.Cells pivot table UI options hide filter pane | Disable report filter area in Excel pivot table created with Aspose.Cells
+// Tags: Aspose.Cells pivot table ShowReportFilter | hide report filter UI Aspose.Cells | C# pivot table display options Aspose.Cells | Excel pivot table filter pane suppression Aspose.Cells | Aspose.Cells workbook pivot table configuration
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotExample
+namespace AsposeCellsPivotDemo
 {
-    // Creates a workbook, adds sample data, builds a PivotTable on A1:B5, assigns row and data fields, sets PivotTable.ShowReportFilter = false to hide the report‑filter area, then saves the file.
-    class Program
+    // The example creates a new workbook, fills it with sample data, adds a pivot table on range A1:B5, assigns 'Category' as a row field and 'Amount' as a data field, refreshes and calculates the pivot, sets ShowReportFilter to false to hide the filter pane, and saves the file as PivotTable_HideReportFilter.xlsx.
+    class HideReportFilterArea
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Get the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data for the pivot table
@@ -35,24 +34,26 @@ namespace AsposeCellsPivotExample
                 sheet.Cells["A5"].PutValue("Drink");
                 sheet.Cells["B5"].PutValue(70);
 
-                // Add a pivot table based on the data range A1:B5, placed at D3
+                // Add a pivot table based on the data range
                 int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
                 PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Configure fields: Category as row field, Amount as data field
+                // Configure the pivot table fields
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-                // Refresh the pivot cache and calculate the pivot table data
-                pivotTable.RefreshData();
+                // Refresh the pivot cache and calculate the pivot table
+                pivotTable.RefreshData();   // Correct API call
                 pivotTable.CalculateData();
 
-                // Save the workbook
-                workbook.Save("PivotTable_HideReportFilter.xlsx");
+                // Save the workbook to a file
+                string outputPath = "PivotTable_HideReportFilter.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

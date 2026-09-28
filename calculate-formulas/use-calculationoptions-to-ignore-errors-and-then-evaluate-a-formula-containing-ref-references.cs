@@ -1,54 +1,60 @@
-// Title: Ignore #REF! Errors with Aspose.Cells CalculationOptions in C#
-// Description: Demonstrates how to suppress #REF! formula errors in a workbook using Aspose.Cells. The example creates a workbook, adds a value to A1, sets a formula in B1, deletes column A to generate a #REF! reference, configures CalculationOptions.IgnoreError = true, runs workbook.CalculateFormula, and reads the resulting cell value.
-// Keywords: Aspose.Cells | CalculationOptions | IgnoreError | #REF! error handling | C# formula evaluation | .NET spreadsheet API | suppress formula errors | delete column reference | workbook.CalculateFormula | Excel error handling
-// Common Searches: Aspose.Cells ignore #REF! error | CalculationOptions IgnoreError C# example | how to suppress formula errors Aspose.Cells | calculate workbook with invalid references .NET | Aspose.Cells delete column and recalculate
-// Developer Intent: Calculate all formulas in an Aspose.Cells workbook while ignoring #REF! and other formula errors.
-// Use Cases: Processing templates where some references may be removed but the workbook must still be calculated. | Batch converting or analyzing spreadsheets without interruption from broken formulas. | Generating reports that retain error strings (e.g., "#REF!") instead of throwing exceptions.
-// AI Prompts: Show C# code that uses Aspose.Cells CalculationOptions.IgnoreError to evaluate formulas containing #REF! references. | Explain what happens when IgnoreError is true and a formula results in a #REF! error in Aspose.Cells. | Provide a step‑by‑step example of deleting a column, triggering a #REF! error, and then calculating the workbook without raising an exception.
+// Title: Ignore #REF! Errors While Calculating Formulas with Aspose.Cells CalculationOptions in C#
+// AI Prompts: Enable the IgnoreError flag in CalculationOptions and run Workbook.CalculateFormula so that #REF! cells contribute zero to results. | Show how deleting a column creates a #REF! reference and then evaluate the impacted SUM formula using Aspose.Cells. | Retrieve the value of a cell after recalculating the workbook with error‑ignoring enabled in C#.
+// Common Searches: aspocells calculationoptions ignoreerror c# example | how to treat #ref! as zero when calculating Excel formulas in C# | calculate workbook after deleting a column with broken references using Aspose.Cells | c# evaluate SUM formula after column removal with Aspose.Cells | ignore reference errors during formula calculation Aspose.Cells
+// Tags: calculationoptions treat errors as zero aspocells c# | manage broken reference in formula evaluation | delete column to generate ref error aspocells | recalculate workbook formulas with error ignoring | sum formula after column removal aspocells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationOptionsDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to suppress #REF! formula errors in a workbook using Aspose.Cells. The example creates a workbook, adds a value to A1, sets a formula in B1, deletes column A to generate a #REF! reference, configures CalculationOptions.IgnoreError = true, runs workbook.CalculateFormula, and reads the resulting cell value.
-    class Program
+    // Creates a workbook, inserts numeric values, sets a SUM formula, deletes a column to produce a #REF! reference, configures CalculationOptions to ignore errors, recalculates all formulas, and outputs the result where the broken reference is treated as zero.
+    public class IgnoreRefErrorDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Put a value in A1
-            cells["A1"].PutValue(10);
-
-            // Set a formula in B1 that references A1
-            cells["B1"].Formula = "=A1*2";
-
-            // Delete column A to make the reference in B1 invalid (#REF!)
-            sheet.Cells.DeleteColumn(0);
-
-            // At this point B1 contains a formula that refers to a deleted column,
-            // which results in a #REF! error when calculated.
-
-            // Create calculation options and set IgnoreError to true
-            CalculationOptions calcOptions = new CalculationOptions
+            try
             {
-                IgnoreError = true   // Suppress errors during calculation
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-            // Calculate all formulas in the workbook using the options
-            workbook.CalculateFormula(calcOptions);
+                // Populate cells A1 and B1 with numeric values
+                cells["A1"].PutValue(10);
+                cells["B1"].PutValue(20);
 
-            // Output the result of the formula in B1.
-            // With IgnoreError = true, the engine will ignore the #REF! error
-            // and keep the cell's value as the error string "#REF!".
-            Console.WriteLine("Result of B1 after ignoring errors: " + cells["B1"].StringValue);
+                // Set a formula in C1 that references both A1 and B1
+                cells["C1"].Formula = "=SUM(A1:B1)";
 
-            // (Optional) Save the workbook to verify the result in Excel
-            workbook.Save("CalculationOptionsIgnoreErrorDemo.xlsx");
+                // Delete column B (index 1) to turn the reference to B1 into #REF!
+                worksheet.Cells.DeleteColumn(1);
+
+                // Create calculation options that ignore errors such as #REF!
+                CalculationOptions calcOptions = new CalculationOptions
+                {
+                    IgnoreError = true
+                };
+
+                // Calculate all formulas in the workbook using the options
+                workbook.CalculateFormula(calcOptions);
+
+                // Output the result of C1. With IgnoreError = true, the #REF! part is treated as zero.
+                Console.WriteLine("C1 result after ignoring errors: " + cells["C1"].StringValue);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            IgnoreRefErrorDemo.Run();
         }
     }
 }

@@ -1,61 +1,30 @@
-// Title: C# – List Worksheets with >10 Shapes and Export a Summary Report using Aspose.Cells
-// Description: Loads a workbook, scans each worksheet’s ShapeCollection, gathers the names of sheets containing more than ten shapes, writes those names to a new workbook (ComplexSheetsReport.xlsx), and prints the list to the console.
-// Keywords: Aspose.Cells | C# | shape count | worksheet shapes | list worksheets | generate Excel report | shape collection | filter worksheets by shapes | Excel automation | performance audit
-// Common Searches: Aspose.Cells count shapes in worksheet C# | C# find worksheets with many shapes using Aspose | generate Excel report of sheets with high shape count | list worksheets exceeding shape threshold Aspose.Cells | how to audit shape count in Excel with Aspose
-// Developer Intent: Identify worksheets that exceed a shape‑count threshold and create a separate Excel file summarizing those sheet names.
-// Use Cases: Audit a workbook to locate sheets with extensive graphical content before redesign. | Generate a stakeholder report highlighting worksheets that may affect performance due to many shapes. | Add an automated quality‑check step in CI pipelines to flag sheets surpassing a shape limit. | Document complex worksheets for migration or refactoring projects. | Create a quick inventory of graphic‑heavy sheets for resource planning.
-// AI Prompts: Write C# Aspose.Cells code that lists worksheet names where ShapeCollection.Count > 10 and saves the list to a new Excel file. | Show how to modify the snippet to include the exact shape count next to each worksheet name in the report. | Explain how to make the shape threshold and output file path configurable parameters. | Provide a version that logs the worksheet names and counts to a text file instead of the console. | Create a PowerShell script that compiles and runs the C# program, then opens the generated report.
+// Title: Identify Excel worksheets containing more than ten shapes with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that returns a list of worksheet names where the number of shapes exceeds ten. | Create a method that scans an Excel workbook with Aspose.Cells and logs each sheet's name and shape count when the count is greater than ten. | Generate a console application in C# that loads a workbook, iterates worksheets, and prints sheets that contain over ten graphical objects.
+// Common Searches: aspocells c# find worksheets with many shapes | how to list Excel sheets that have over 10 drawings using Aspose.Cells | C# count shapes in each worksheet Aspose.Cells example | filter workbook worksheets by number of shapes .NET | identify Excel worksheets with complex graphics Aspose.Cells
+// Tags: Aspose.Cells worksheet shape enumeration | filter Excel sheets by shape count .NET | detect high shape density in workbook | list worksheets with extensive graphics Aspose.Cells | C# shape count threshold for Excel worksheets
 
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads a workbook, scans each worksheet’s ShapeCollection, gathers the names of sheets containing more than ten shapes, writes those names to a new workbook (ComplexSheetsReport.xlsx), and prints the list to the console.
+// The sample loads an Excel workbook, iterates through every worksheet, counts the shapes on each sheet, and outputs the names of worksheets that have more than ten shapes, highlighting sheets with complex graphical content.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from a file (lifecycle: load)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
-
-        // Collect names of worksheets that contain more than 10 shapes
-        List<string> complexSheets = new List<string>();
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
         // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Worksheet.Shapes returns the ShapeCollection; Count gives the number of shapes
-            if (sheet.Shapes.Count > 10)
+            // Count the number of shapes on the current worksheet
+            int shapeCount = sheet.Shapes.Count;
+
+            // If the worksheet has more than ten shapes, output its name
+            if (shapeCount > 10)
             {
-                complexSheets.Add(sheet.Name);
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" has {shapeCount} shapes (complex graphical content).");
             }
         }
-
-        // Output the result to the console
-        Console.WriteLine("Worksheets with more than 10 shapes:");
-        foreach (string name in complexSheets)
-        {
-            Console.WriteLine("- " + name);
-        }
-
-        // Create a new workbook to store a simple report (lifecycle: create)
-        Workbook report = new Workbook();
-        Worksheet reportSheet = report.Worksheets[0];
-        reportSheet.Name = "ComplexSheets";
-
-        // Write header
-        reportSheet.Cells[0, 0].PutValue("Worksheet Name");
-
-        // Write each worksheet name into the report sheet
-        int row = 1;
-        foreach (string name in complexSheets)
-        {
-            reportSheet.Cells[row, 0].PutValue(name);
-            row++;
-        }
-
-        // Save the report workbook to disk (lifecycle: save)
-        report.Save("ComplexSheetsReport.xlsx");
     }
 }

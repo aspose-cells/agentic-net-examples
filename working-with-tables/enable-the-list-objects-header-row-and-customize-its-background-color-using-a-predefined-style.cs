@@ -1,79 +1,65 @@
-// Title: Show ListObject Header and Apply Custom Background Style with Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample data, inserts a ListObject covering A1:B3, makes the header row visible, defines a solid LightBlue background style, builds a custom TableStyle for the HeaderRow, assigns the style to the table, and saves the file as ListObjectHeaderCustomStyle.xlsx.
-// Keywords: Aspose.Cells ListObject header | custom table header background .NET | show header row Aspose.Cells | programmatic TableStyle Aspose.Cells | C# Excel table styling | solid fill table header Aspose.Cells
-// Common Searches: Aspose.Cells change ListObject header background color | How to enable header row for a table in Aspose.Cells .NET | Create and assign a custom TableStyle in Aspose.Cells | Set solid fill for table header using Aspose.Cells C#
-// Developer Intent: Display the ListObject’s header row and style its background with a custom color programmatically.
-// Use Cases: Brand‑consistent Excel reports with colored table headers | Improve readability of generated spreadsheets by highlighting header rows | Reuse a predefined TableStyle across multiple worksheets in a workbook
-// AI Prompts: Write C# code using Aspose.Cells to add a ListObject, ensure the header row is visible, and apply a LightBlue solid background via a custom TableStyle. | Demonstrate how to create a TableStyle, set the HeaderRow element style, and assign it to a table in Aspose.Cells for .NET. | Show how to define a reusable custom table style and apply it to several worksheets with Aspose.Cells.
+// Title: Show ListObject header row and apply a light‑blue solid background style with bold font using Aspose.Cells for .NET
+// AI Prompts: Create a ListObject table in a worksheet, enable its header row, define a solid light‑blue style with bold text, apply the style to the header row range, and save the workbook as an .xlsx file. | Generate a reusable header style in Aspose.Cells for .NET, apply it to the first row of a ListObject, ensure the header is visible, and export the workbook.
+// Common Searches: asp.net how to display ListObject header row with Aspose.Cells | c# apply custom background color to Excel table header using Aspose.Cells | asp.net set header row style for ListObject table in Excel | c# Aspose.Cells predefined style for table header row | asp.net save workbook with styled ListObject header
+// Tags: Aspose.Cells ListObject header styling | C# solid background for Excel table header | Aspose.Cells predefined style application | C# enable ListObject header row | Aspose.Cells save workbook with styled table
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, adds a ListObject covering cells A1:B3, makes the header row visible, defines a light‑blue solid style with bold font, applies this style to the header row, and saves the file as ListObjectWithCustomHeader.xlsx.
+class Program
 {
-    // Creates a workbook, adds sample data, inserts a ListObject covering A1:B3, makes the header row visible, defines a solid LightBlue background style, builds a custom TableStyle for the HeaderRow, assigns the style to the table, and saves the file as ListObjectHeaderCustomStyle.xlsx.
-    public class ListObjectHeaderCustomStyleDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Populate sample data with a header row
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Price");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["B2"].PutValue(2.5);
-                worksheet.Cells["A3"].PutValue("Banana");
-                worksheet.Cells["B3"].PutValue(1.2);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a list object (table) covering the data range
-                int tableIndex = worksheet.ListObjects.Add("A1", "B3", true);
-                ListObject table = worksheet.ListObjects[tableIndex];
+            // Populate sample data (including header)
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Bananas");
+            sheet.Cells["B3"].PutValue(85);
 
-                // Ensure the header row is visible
-                table.ShowHeaderRow = true;
+            // Define the range for the list object (including header row)
+            int firstRow = 0;        // zero‑based index for row 1
+            int firstColumn = 0;     // zero‑based index for column A
+            int totalRows = 3;       // header + 2 data rows
+            int totalColumns = 2;    // columns A and B
 
-                // Create a custom style for the header row
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.Pattern = BackgroundType.Solid;
-                headerStyle.BackgroundColor = Color.LightBlue;
+            // Add a ListObject (table) to the worksheet; the method returns the index of the added table
+            int listIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject list = sheet.ListObjects[listIndex];
 
-                // Create a new table style and set the HeaderRow element style
-                TableStyleCollection tableStyles = workbook.Worksheets.TableStyles;
-                int styleIndex = tableStyles.AddTableStyle("MyCustomStyle");
-                TableStyle customTableStyle = tableStyles[styleIndex];
-                TableStyleElementCollection elements = customTableStyle.TableStyleElements;
+            // Ensure the header row is visible
+            list.ShowHeaderRow = true;
 
-                // Add HeaderRow element and apply the custom style
-                int elementIndex = elements.Add(TableStyleElementType.HeaderRow);
-                TableStyleElement headerElement = elements[elementIndex];
-                headerElement.SetElementStyle(headerStyle);
+            // Create a predefined style for the header background
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.ForegroundColor = Color.LightBlue;
+            headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.Font.IsBold = true;
 
-                // Assign the custom table style to the list object
-                table.TableStyleName = "MyCustomStyle";
+            // Apply the style to the header row range of the list object
+            AsposeRange headerRange = sheet.Cells.CreateRange(firstRow, firstColumn, 1, totalColumns);
+            StyleFlag flag = new StyleFlag { All = true };
+            headerRange.ApplyStyle(headerStyle, flag);
 
-                // Save the workbook
-                workbook.Save("ListObjectHeaderCustomStyle.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook to a file
+            workbook.Save("ListObjectWithCustomHeader.xlsx");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ListObjectHeaderCustomStyleDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

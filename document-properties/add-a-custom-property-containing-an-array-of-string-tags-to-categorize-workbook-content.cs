@@ -1,50 +1,64 @@
-// Title: C# – Add a 'Tags' custom document property (comma‑separated) to an Aspose.Cells workbook
-// Description: Demonstrates how to create a new Workbook with Aspose.Cells, convert a string[] of tags into a single comma‑separated value, store it in a custom document property named "Tags", and save the file as WorkbookWithTags.xlsx.
-// Keywords: Aspose.Cells C# custom property | Excel workbook tags | add custom document property Aspose | store array as string Excel | metadata tagging Aspose.Cells | comma separated values Excel | C# .NET Excel metadata | GitHub sample Aspose.Cells | global Excel tagging example
-// Common Searches: Aspose.Cells add Tags property C# | store multiple tags in Excel workbook using Aspose | custom document property array Aspose.Cells .NET | how to save tag list in Excel with Aspose.Cells | C# example for Excel metadata tagging
-// Developer Intent: Insert a custom document property called "Tags" that holds a list of tag strings for workbook classification.
-// Use Cases: Label financial statements with tags like Finance, Report, 2023 for easy cataloging. | Enable downstream services to filter Excel files based on tag metadata. | Persist project, department, or version identifiers within the workbook for audit trails.
-// AI Prompts: Write C# code using Aspose.Cells to store tags as a JSON array in a custom property instead of a CSV string. | Show how to read the "Tags" property from a workbook and convert it back to a string[] in C#. | Provide robust error‑handling patterns when adding or updating custom document properties with Aspose.Cells.
+// Title: Add a comma‑separated 'Tags' custom document property to an Aspose.Cells workbook using C#
+// AI Prompts: Create a new Workbook, convert a string array of tags into a single comma‑separated string, and add it as a custom document property named 'Tags' with Aspose.Cells. | Verify that the target output directory exists, create it if missing, then save the workbook to a .xlsx file while handling any exceptions. | Implement error handling for both adding the custom document property and saving the workbook, logging exception details to the console.
+// Common Searches: how to add a custom document property called tags in Aspose.Cells C# | store multiple tag values in a single Excel custom property using Aspose.Cells | Aspose.Cells C# add comma separated metadata to workbook | create workbook and set custom property array workaround Aspose.Cells | ensure output folder exists before saving workbook Aspose.Cells C#
+// Tags: custom document property comma separated values Aspose.Cells | C# workbook tags metadata implementation | add custom property to Excel file using Aspose.Cells | handle custom property addition errors Aspose.Cells | save workbook with custom metadata Aspose.Cells C# | directory creation before workbook save Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTagExample
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a new Workbook with Aspose.Cells, convert a string[] of tags into a single comma‑separated value, store it in a custom document property named "Tags", and save the file as WorkbookWithTags.xlsx.
-    public class AddTagProperty
+    // The example creates a new Workbook, joins a string array of tags into a comma‑separated value, adds it as a custom document property named 'Tags', ensures the output directory exists, and saves the workbook to TaggedWorkbook.xlsx while handling potential errors.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Define an array of tags
-                string[] tags = new string[] { "Finance", "Report", "2023" };
-
-                // Convert the array to a single string (comma‑separated)
+                // Define tags to categorize the workbook content
+                string[] tags = new string[] { "Finance", "Q1", "Report" };
+                // Combine tags into a single string (custom properties do not support arrays directly)
                 string tagsValue = string.Join(",", tags);
 
-                // Add a custom document property named "Tags" with the concatenated string value
-                workbook.CustomDocumentProperties.Add("Tags", tagsValue);
+                // Add a custom document property named "Tags"
+                // Use the overload that accepts name and value (type inferred from the value)
+                try
+                {
+                    workbook.CustomDocumentProperties.Add("Tags", tagsValue);
+                }
+                catch (Exception propEx)
+                {
+                    Console.WriteLine($"Error adding custom property: {propEx.Message}");
+                }
 
-                // Save the workbook to a file
-                workbook.Save("WorkbookWithTags.xlsx");
+                // Define output path and ensure the directory exists (if any)
+                string outputPath = "TaggedWorkbook.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AddTagProperty.Run();
         }
     }
 }

@@ -1,55 +1,57 @@
-// Title: Aspose.Cells for .NET – Add a rectangle shape with a linear two‑color gradient fill (C#)
-// Description: Creates a new workbook, inserts a rectangle shape on the first worksheet, sets the shape's fill to a linear gradient at 45°, applies a horizontal two‑color gradient from LightSkyBlue to DarkBlue, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells C# shape gradient | linear gradient fill Aspose.Cells | two‑color gradient rectangle .NET | GradientFillType.Linear | GradientStyleType.Horizontal | shape fill type gradient | gradient angle Aspose.Cells | add rectangle shape C# | Aspose.Cells gradient example
-// Common Searches: how to add a rectangle shape with linear gradient in Aspose.Cells C# | set two‑color gradient fill for a shape using Aspose.Cells .NET | Aspose.Cells linear gradient angle 45 degrees | apply horizontal gradient to a shape in a workbook | C# code for gradient fill on Aspose.Cells shape
-// Developer Intent: Insert a shape into a worksheet and apply a linear two‑color gradient fill.
-// Use Cases: Create a branded header banner with a LightSkyBlue‑to‑DarkBlue gradient. | Highlight a chart area by overlaying a gradient‑filled rectangle. | Generate report templates where all shapes share a consistent gradient style.
-// AI Prompts: Generate C# code that adds an ellipse shape with a vertical linear gradient from red to orange using Aspose.Cells. | Show how to change the gradient angle and style of an existing shape's fill in an Aspose.Cells workbook. | Provide an example of applying a three‑color gradient to a shape and saving the workbook with Aspose.Cells.
+// Title: Insert a rectangle shape with a horizontal red‑to‑blue two‑color gradient fill into an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to the first worksheet and applies a horizontal red‑to‑blue two‑color gradient using Aspose.Cells. | Create an Excel file where a shape's Fill object is set to Gradient and configured with SetTwoColorGradient for a red‑to‑blue transition in Aspose.Cells .NET. | Save a workbook after configuring a shape's FillType to Gradient and defining a horizontal gradient between Color.Red and Color.Blue.
+// Common Searches: Aspose.Cells C# add rectangle shape with horizontal gradient fill | How to set two‑color gradient on a shape in Aspose.Cells .NET | C# example for gradient fill on Excel shape using Aspose.Cells | Create Excel shape with red to blue gradient using Aspose.Cells API
+// Tags: Aspose.Cells add rectangle shape | Aspose.Cells gradient fill shape | SetTwoColorGradient Aspose.Cells | horizontal gradient fill C# | Excel shape fill type gradient Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsGradientShapeDemo
+// // Creates a new workbook, inserts a rectangle shape at row 2 column 2, applies a horizontal red‑to‑blue two‑color gradient fill, and saves the file as ShapeWithGradient.xlsx.
+class Program
 {
-    // Creates a new workbook, inserts a rectangle shape on the first worksheet, sets the shape's fill to a linear gradient at 45°, applies a horizontal two‑color gradient from LightSkyBlue to DarkBlue, and saves the file as an XLSX document.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape (you can adjust position and size as needed)
-            // Parameters: upper left row, upper left column, top, left, width, height
-            Shape shape = worksheet.Shapes.AddRectangle(2, 1, 50, 50, 200, 100);
+            // Add a rectangle shape at row 2, column 2 with width 200 and height 100
+            var shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,    // upper left row
+                2,    // upper left column
+                0,    // top offset (pixels)
+                0,    // left offset (pixels)
+                100,  // height (pixels)
+                200   // width (pixels)
+            );
 
-            // Set the fill type of the shape to Gradient to enable gradient properties
+            // Enable gradient fill and set a two‑color gradient (red to blue, horizontal)
             shape.Fill.FillType = FillType.Gradient;
+            shape.Fill.SetTwoColorGradient(Color.Red, Color.Blue, GradientStyleType.Horizontal, 0);
 
-            // Obtain the GradientFill object from the shape's fill
-            GradientFill gradientFill = shape.Fill.GradientFill;
+            // Determine output path and ensure the directory exists
+            string outputPath = "ShapeWithGradient.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Define a linear gradient with a specific angle (e.g., 45 degrees)
-            // GradientDirectionType is ignored for linear gradients, but a value must be supplied
-            gradientFill.SetGradient(GradientFillType.Linear, 45.0, GradientDirectionType.FromCenter);
-
-            // Apply a two‑color gradient (e.g., from LightSkyBlue to DarkBlue)
-            // GradientStyleType.Horizontal defines the shading direction for the linear gradient
-            gradientFill.SetTwoColorGradient(
-                Color.LightSkyBlue,   // First color
-                Color.DarkBlue,       // Second color
-                GradientStyleType.Horizontal,
-                1);                   // Variant (1‑4, choose 1 for default)
-
-            // Save the workbook to a file
-            workbook.Save("ShapeWithLinearGradient.xlsx");
-
-            Console.WriteLine("Workbook saved with a shape that has a linear gradient fill.");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

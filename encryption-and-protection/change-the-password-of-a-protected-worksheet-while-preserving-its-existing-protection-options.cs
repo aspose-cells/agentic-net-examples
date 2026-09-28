@@ -1,34 +1,50 @@
-// Title: Change Worksheet Password While Preserving Protection Options – Aspose.Cells for .NET (C#)
-// Description: Load a workbook, access a protected worksheet, and use the Protect method overload (ProtectionType.All, newPassword, oldPassword) to replace the worksheet password without altering any existing protection settings, then save the updated file.
-// Keywords: Aspose.Cells change worksheet password | C# protect worksheet without losing settings | update worksheet password .NET | Preserve worksheet protection options | Protect method overload Aspose.Cells | worksheet password replacement | Aspose.Cells encryption and protection
-// Common Searches: how to change password of a protected worksheet Aspose.Cells | replace worksheet password keep protection settings | Aspose.Cells Protect overload old password new password | C# change worksheet password without losing protection | update worksheet password programmatically Aspose
-// Developer Intent: Replace the password of an already protected worksheet while leaving all current protection flags unchanged.
-// Use Cases: Rotate worksheet passwords for compliance audits without unlocking cells, rows, or columns. | Share a workbook with a new team by assigning a new password but keeping the original protection layout. | Automate bulk password updates across many protected worksheets in a server‑side .NET process.
-// AI Prompts: Provide C# code that changes a protected worksheet's password using Aspose.Cells while retaining all protection options. | Explain the Protect method overload that accepts old and new passwords for a worksheet in Aspose.Cells. | Generate a script to batch‑update worksheet passwords in multiple Excel files with Aspose.Cells for .NET.
+// Title: Change worksheet protection password while retaining existing protection settings in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an existing .xlsx workbook with Aspose.Cells, updates the worksheet's protection password, and saves the file without altering any other protection flags. | Show how to modify only the password of a protected worksheet in Aspose.Cells while preserving its current allowed actions such as editing objects or formatting cells. | Provide a step‑by‑step example that loads a workbook, sets a new worksheet protection password, and writes the result to a new file using Aspose.Cells for .NET.
+// Common Searches: aspnet change worksheet protection password without resetting allowed actions Aspose.Cells | c# update Excel worksheet password keep existing protection options | how to preserve worksheet protection settings when changing password using Aspose.Cells | Aspose.Cells set new worksheet password while keeping protection flags
+// Tags: worksheet protection password change Aspose.Cells | retain existing worksheet protection flags .NET | Excel worksheet password modification Aspose.Cells | Aspose.Cells preserve protection settings on password update | C# set new worksheet protection password
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load a workbook, access a protected worksheet, and use the Protect method overload (ProtectionType.All, newPassword, oldPassword) to replace the worksheet password without altering any existing protection settings, then save the updated file.
-class ChangeWorksheetPassword
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing XLSX workbook, assigns a new password to the first worksheet's protection while keeping all other protection options unchanged, and saves the result to a new file using Aspose.Cells for .NET.
+    class Program
     {
-        // Load the workbook that contains a protected worksheet
-        Workbook workbook = new Workbook("ProtectedWorkbook.xlsx");
+        static void Main(string[] args)
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string newPassword = "NewSecurePassword123";
 
-        // Access the worksheet whose password you want to change
-        Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Define the current (old) password and the new password
-        string oldPassword = "oldPass";
-        string newPassword = "newPass";
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Change the password while keeping all existing protection options intact
-        // The third parameter supplies the old password required for the change
-        worksheet.Protect(ProtectionType.All, newPassword, oldPassword);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook with the updated password
-        workbook.Save("ProtectedWorkbook_Updated.xlsx");
+                // Set the worksheet password while preserving existing protection settings
+                sheet.Protection.Password = newPassword;
+
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

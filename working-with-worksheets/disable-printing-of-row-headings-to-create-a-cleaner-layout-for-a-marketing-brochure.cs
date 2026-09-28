@@ -1,45 +1,25 @@
-// Title: C# – Turn Off Row/Column Headings When Exporting an Aspose.Cells Workbook to PDF
-// Description: The sample builds a new workbook, inserts a few product rows, sets PageSetup.PrintHeadings to false to keep headers out of the printed output, optionally hides the UI headers with IsRowColumnHeadersVisible, and saves the result as a PDF suitable for a clean marketing brochure.
-// Keywords: Aspose.Cells | C# | PrintHeadings | HideHeaders | PDF export | worksheet headings | disable printing headings | Excel to PDF | marketing brochure | PageSetup
-// Common Searches: Aspose.Cells hide row and column headings in PDF | C# disable printing of worksheet headers with Aspose.Cells | PageSetup.PrintHeadings false example | Export Excel to PDF without headers using Aspose | How to remove Excel grid headings in a brochure PDF
-// Developer Intent: Exclude row and column headings from the printed/PDF version of a worksheet and optionally conceal them in the on‑screen view before saving.
-// Use Cases: Create a product catalog PDF that shows only data rows, no Excel headers. | Generate a clean financial summary report for distribution as a brochure. | Produce a marketing flyer from Excel data where UI headers are hidden for a professional look.
-// AI Prompts: Write C# code with Aspose.Cells to suppress row/column headings during PDF export. | Explain the difference between PageSetup.PrintHeadings and IsRowColumnHeadersVisible in Aspose.Cells. | Show how to hide worksheet headers both on screen and in the printed PDF for a brochure layout.
+// Title: Hide row and column headings in printed Excel worksheets using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads an existing .xlsx workbook, sets the worksheet's PageSetup.PrintHeadings to false, and saves the modified file. | Show how to configure the PageSetup of a specific worksheet in Aspose.Cells to prevent row and column headings from appearing in the print output. | Provide a step‑by‑step example that removes Excel print headings to create a cleaner layout for a marketing brochure using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# hide row headings in printed Excel file | disable column and row headings in Excel print preview using Aspose.Cells | how to turn off PrintHeadings property for a worksheet in Aspose.Cells .NET | remove Excel print headings for brochure layout C# Aspose.Cells | Aspose.Cells page setup hide headings when exporting to PDF
+// Tags: Aspose.Cells worksheet PageSetup PrintHeadings | C# hide Excel print headings | disable print headings Aspose.Cells | Excel brochure layout printing settings | Aspose.Cells .xlsx print configuration
 
-using System;
 using Aspose.Cells;
 
-namespace MarketingBrochure
+// // Loads an Excel workbook, disables printing of row and column headings on the first worksheet via PageSetup.PrintHeadings, and saves the updated workbook.
+class Program
 {
-    // The sample builds a new workbook, inserts a few product rows, sets PageSetup.PrintHeadings to false to keep headers out of the printed output, optionally hides the UI headers with IsRowColumnHeadersVisible, and saves the result as a PDF suitable for a clean marketing brochure.
-    class DisableRowHeadingsPrint
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        var workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet (or specify the desired index/name)
+        var worksheet = workbook.Worksheets[0];
 
-            // Populate sample data (optional, for demonstration)
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Price");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(2.5);
-            worksheet.Cells["A3"].PutValue("Orange");
-            worksheet.Cells["B3"].PutValue(1.8);
+        // Disable printing of row and column headings for a cleaner layout
+        worksheet.PageSetup.PrintHeadings = false;
 
-            // Disable printing of row and column headings
-            worksheet.PageSetup.PrintHeadings = false;
-
-            // (Optional) Hide row/column headers in the UI as well
-            worksheet.IsRowColumnHeadersVisible = false;
-
-            // Save the workbook (e.g., as PDF for brochure distribution)
-            workbook.Save("Brochure.pdf", SaveFormat.Pdf);
-
-            Console.WriteLine("Workbook saved with row headings disabled for printing.");
-        }
+        // Save the workbook with the updated setting (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

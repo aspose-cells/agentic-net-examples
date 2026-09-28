@@ -1,48 +1,34 @@
-// Title: C# – Password‑protect workbook structure and block worksheet addition with Aspose.Cells
-// Description: Shows how to create a Workbook, lock its structure using a password, try to insert a new sheet (causing an exception), save the file, reload it, and verify the lock with the IsWorkbookProtectedWithPassword flag.
-// Keywords: Aspose.Cells | C# | Workbook.Protect | ProtectionType.Structure | password protection | prevent adding worksheets | IsWorkbookProtectedWithPassword | Excel workbook security .NET | structure lock | exception handling for protected workbook
-// Common Searches: How to lock Excel workbook structure with a password in C# | Aspose.Cells prevent adding new sheets after protection | Check if a saved workbook is password‑protected using Aspose.Cells | Exception when adding worksheet to a protected workbook | C# code sample for workbook structure protection
-// Developer Intent: Apply a password to the workbook’s structure and confirm that inserting additional worksheets is disallowed.
-// Use Cases: Distribute an Excel file where users cannot modify the sheet layout. | Automated tests that need to ensure protection settings survive a save‑load cycle. | Graceful handling of protection‑related errors in enterprise reporting tools.
-// AI Prompts: Write C# code that uses Aspose.Cells to protect a workbook’s structure with a password, attempts to add a worksheet, and logs the expected error. | Generate a snippet that loads a saved Excel file and programmatically checks the IsWorkbookProtectedWithPassword property. | Explain how to protect only the workbook structure (leaving windows unprotected) and how to catch protection exceptions in Aspose.Cells.
+// Title: Use Aspose.Cells for .NET to password‑protect an Excel workbook and verify that adding a new worksheet is blocked
+// AI Prompts: Apply full workbook protection with a password using workbook.Protect(ProtectionType.All, ...) and then try to add a worksheet, capturing any exception that occurs. | Demonstrate C# exception handling when a password‑protected workbook prevents the insertion of a new sheet with Aspose.Cells.
+// Common Searches: C# Aspose.Cells protect workbook structure and windows with password and prevent new sheets | how to catch exception when adding worksheet to password protected Excel file using Aspose.Cells | Aspose.Cells workbook.Protect all protection types example C# | verify that workbook protection blocks worksheet addition in .NET
+// Tags: Aspose.Cells workbook.Protect with password | prevent worksheet addition after workbook protection | C# exception handling for protected workbook sheet insertion | save password‑protected Excel file Aspose.Cells | protect workbook structure and windows Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsWorkbookProtectionDemo
+// The code creates a new Workbook, applies full protection (structure and windows) with a password via workbook.Protect(ProtectionType.All, "MySecretPassword"), attempts to add a new worksheet inside a try/catch block, reports success or the protection error, and saves the file as ProtectedWorkbook.xlsx.
+class Program
 {
-    // Shows how to create a Workbook, lock its structure using a password, try to insert a new sheet (causing an exception), save the file, reload it, and verify the lock with the IsWorkbookProtectedWithPassword flag.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Apply workbook protection with a password (protect structure and windows)
+        workbook.Protect(ProtectionType.All, "MySecretPassword");
+
+        // Attempt to add a new worksheet to verify the protection restriction
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Protect the workbook structure with a password
-            // This prevents adding, deleting, or renaming worksheets
-            workbook.Protect(ProtectionType.Structure, "MySecretPwd");
-
-            // Attempt to add a new worksheet – should fail because the structure is protected
-            try
-            {
-                workbook.Worksheets.Add();
-                Console.WriteLine("New worksheet added (unexpected).");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unable to add worksheet as expected: " + ex.Message);
-            }
-
-            // Save the protected workbook
-            string filePath = "ProtectedWorkbook.xlsx";
-            workbook.Save(filePath);
-            workbook.Dispose();
-
-            // Load the saved workbook to verify protection status
-            Workbook loadedWorkbook = new Workbook(filePath);
-            Console.WriteLine("IsWorkbookProtectedWithPassword: " + loadedWorkbook.IsWorkbookProtectedWithPassword);
-            loadedWorkbook.Dispose();
+            workbook.Worksheets.Add("NewSheet");
+            Console.WriteLine("Worksheet added successfully - protection may not be enforced for adding sheets.");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to add worksheet due to protection: " + ex.Message);
+        }
+
+        // Save the workbook
+        workbook.Save("ProtectedWorkbook.xlsx");
     }
 }

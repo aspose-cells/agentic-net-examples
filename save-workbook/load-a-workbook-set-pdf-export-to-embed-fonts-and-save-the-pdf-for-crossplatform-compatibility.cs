@@ -1,30 +1,39 @@
-// Title: C# – Save Excel as PDF with Embedded Fonts using Aspose.Cells
-// Description: Load an Excel workbook with Aspose.Cells, set PdfSaveOptions to embed TrueType fonts, apply Identity‑H encoding and default‑font fallback, then save as a PDF that renders consistently on Windows, macOS and Linux.
-// Keywords: Aspose.Cells | C# | PdfSaveOptions | EmbedStandardWindowsFonts | Identity-H | font embedding | Excel to PDF | cross‑platform PDF | PDF export options | preserve fonts
-// Common Searches: Aspose.Cells embed fonts PDF | PdfSaveOptions embed standard windows fonts C# | How to keep fonts when converting Excel to PDF Aspose | Identity-H encoding Aspose.Cells PDF | Cross‑platform PDF from Excel .NET | Save workbook as PDF with font embedding
-// Developer Intent: Create a PDF from an Excel workbook with all fonts embedded so the document looks identical on any platform.
-// Use Cases: Automated generation of PDF reports from Excel templates that retain exact typography on all operating systems. | Production of printable invoices or contracts where missing fonts could cause layout issues for recipients. | Archiving financial statements as PDFs that meet compliance requirements for long‑term readability.
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells and saves it as a PDF with embedded TrueType fonts and Identity‑H encoding. | Explain the effect of each PdfSaveOptions property (EmbedStandardWindowsFonts, FontEncoding, CheckWorkbookDefaultFont) on font handling in the exported PDF. | Provide a step‑by‑step tutorial for configuring Aspose.Cells PDF export to achieve cross‑platform font compatibility. | Troubleshoot why certain custom fonts are not appearing in the PDF after using PdfSaveOptions with font embedding.
+// Title: Export an Excel workbook to PDF with embedded fonts using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures PdfSaveOptions to embed standard Windows TrueType fonts, sets Identity font encoding and a fallback font, then saves the workbook as a PDF. | Demonstrate how to enable font embedding and compatibility checks in Aspose.Cells when converting Excel to PDF for reliable rendering on any platform.
+// Common Searches: Aspose.Cells C# embed fonts in PDF export | How to set default font for PDF conversion with Aspose.Cells | PdfSaveOptions FontEncoding Identity Aspose.Cells example | Enable font compatibility checking when saving Excel as PDF using Aspose.Cells | Generate cross‑platform PDF from Excel with embedded TrueType fonts in .NET
+// Tags: Aspose.Cells PdfSaveOptions embed fonts | C# Aspose.Cells export Excel to PDF | Identity font encoding Aspose.Cells PDF | default font fallback Aspose.Cells PDF | font compatibility check Aspose.Cells PDF
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Load an Excel workbook with Aspose.Cells, set PdfSaveOptions to embed TrueType fonts, apply Identity‑H encoding and default‑font fallback, then save as a PDF that renders consistently on Windows, macOS and Linux.
+// The code loads 'input.xlsx' into an Aspose.Cells Workbook, configures PdfSaveOptions to embed standard Windows TrueType fonts, uses Identity encoding, sets Arial as a default fallback font, enables workbook default font checking and font compatibility verification, and then saves the workbook as 'output.pdf' with all fonts embedded for consistent cross‑platform rendering.
 class Program
 {
     static void Main()
     {
-        // Load an existing Excel workbook
+        // Load the workbook from an existing Excel file
         Workbook workbook = new Workbook("input.xlsx");
 
         // Configure PDF save options to embed fonts for cross‑platform compatibility
         PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.EmbedStandardWindowsFonts = true;          // Embed TrueType fonts
-        pdfOptions.FontEncoding = PdfFontEncoding.Identity; // Use Identity-H encoding for all fonts
-        pdfOptions.CheckWorkbookDefaultFont = true;          // Use workbook's default font when needed
 
-        // Save the workbook as a PDF file with the specified options
+        // Ensure standard Windows TrueType fonts are embedded (default is true, set explicitly)
+        pdfOptions.EmbedStandardWindowsFonts = true;
+
+        // Use Identity encoding for all embedded fonts
+        pdfOptions.FontEncoding = PdfFontEncoding.Identity;
+
+        // Specify a common default font in case cell styles lack proper font information
+        pdfOptions.DefaultFont = "Arial";
+
+        // Attempt to use the workbook's default font first for Unicode characters
+        pdfOptions.CheckWorkbookDefaultFont = true;
+
+        // Keep font compatibility checking enabled for fallback substitution
+        pdfOptions.CheckFontCompatibility = true;
+
+        // Save the workbook as a PDF file with the configured options
         workbook.Save("output.pdf", pdfOptions);
     }
 }

@@ -4,7 +4,8 @@ description: C# examples for Excel comments, notes, threaded comments, authors, 
 product: Aspose.Cells for .NET
 category: comments-and-notes
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Add and Manage Excel Comments in C# with Aspose.Cells for .NET

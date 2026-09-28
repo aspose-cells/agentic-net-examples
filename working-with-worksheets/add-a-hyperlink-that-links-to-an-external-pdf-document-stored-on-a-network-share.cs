@@ -1,39 +1,44 @@
-// Title: Create a UNC‑Path PDF Hyperlink in an Excel Cell with Aspose.Cells for .NET (C#)
-// Description: This C# example uses Aspose.Cells to generate a new workbook, adds a hyperlink in cell A1 that points to a PDF on a network share (\\Server\Share\Document.pdf), sets the display text to "Open PDF", and saves the file as NetworkPdfHyperlink.xlsx. [PDF Link](file://\\Server\Share\Document.pdf)
-// Keywords: Aspose.Cells hyperlink UNC | C# Excel network share link | add PDF hyperlink Aspose.Cells | Worksheet.Hyperlinks.Add example | .NET Excel external document link | Excel cell hyperlink to file server
-// Common Searches: Aspose.Cells add hyperlink to network PDF | C# Excel UNC path hyperlink example | How to link a cell to a file server document | Set hyperlink display text in Aspose.Cells | Save Excel with external PDF link using .NET
-// Developer Intent: Insert a hyperlink in an Excel worksheet cell that opens a PDF located on a corporate network share.
-// Use Cases: Embed quick access to policy documents stored on a file server within generated reports. | Create a catalog where each row links to its corresponding specification PDF on a shared drive. | Distribute Excel dashboards that reference external manuals or guidelines hosted on a network location.
-// AI Prompts: Write C# code with Aspose.Cells to add a UNC‑path hyperlink to a PDF and customize the link text. | Explain security considerations when using Worksheet.Hyperlinks.Add with network shares. | Show how to add multiple cells each linking to different PDFs on a shared server using a loop.
+// Title: Create an Excel workbook with a UNC‑path hyperlink to a PDF file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a network‑share hyperlink pointing to a PDF file into cell B2 of a new worksheet using Aspose.Cells. | Write a C# program that creates an Excel file, inserts the text "Open PDF" in B2, attaches a hyperlink to \\ServerName\SharedFolder\Document.pdf, saves the workbook, and prints the absolute output path. | Produce an Aspose.Cells snippet that adds a UNC address hyperlink, saves the workbook as HyperlinkExample.xlsx, and displays the full file location.
+// Common Searches: Aspose.Cells C# add hyperlink to PDF on a Windows network share (UNC path) | How to insert a UNC path hyperlink into an Excel cell using Aspose.Cells library | C# create Excel file with clickable link to external PDF stored on \\ServerName\SharedFolder
+// Tags: Aspose.Cells create hyperlink with UNC address | C# generate Excel link to PDF on shared network | Hyperlinks.Add usage for external PDF link | Save workbook containing external PDF link using Aspose.Cells | Excel cell hyperlink to PDF in shared directory
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// This C# example uses Aspose.Cells to generate a new workbook, adds a hyperlink in cell A1 that points to a PDF on a network share (\\Server\Share\Document.pdf), sets the display text to "Open PDF", and saves the file as NetworkPdfHyperlink.xlsx. [PDF Link](file://\\Server\Share\Document.pdf)
-class AddNetworkPdfHyperlink
+// The example creates a new workbook, writes "Open PDF" into cell B2, adds a hyperlink that points to a PDF located on a UNC network share, saves the file as HyperlinkExample.xlsx, and outputs the full path of the saved workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define the cell that will contain the hyperlink
-        string cellName = "A1";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // UNC path to the external PDF on a network share
-        string pdfAddress = @"\\Server\Share\Document.pdf";
+            // Set the display text for the hyperlink
+            Cell targetCell = sheet.Cells["B2"];
+            targetCell.PutValue("Open PDF");
 
-        // Add the hyperlink to the specified cell (A1)
-        // Parameters: cell name, rows in range, columns in range, address
-        worksheet.Hyperlinks.Add(cellName, 1, 1, pdfAddress);
+            // UNC path to the external PDF on a network share
+            string pdfPath = @"\\ServerName\SharedFolder\Document.pdf";
 
-        // Set the display text for the hyperlink
-        worksheet.Cells[cellName].PutValue("Open PDF");
-        Hyperlink hyperlink = worksheet.Hyperlinks[0];
-        hyperlink.TextToDisplay = "Open PDF";
+            // Add the hyperlink to cell B2 (zero‑based row/column indices)
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlink address
+            sheet.Hyperlinks.Add(1, 1, 1, 1, pdfPath);
 
-        // Save the workbook
-        workbook.Save("NetworkPdfHyperlink.xlsx");
+            // Save the workbook
+            string outputPath = "HyperlinkExample.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

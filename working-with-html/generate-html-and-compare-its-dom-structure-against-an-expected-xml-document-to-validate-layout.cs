@@ -1,147 +1,149 @@
-// Title: Aspose.Cells C# – Validate generated HTML against an expected XML DOM
-// Description: Creates an Excel workbook, saves it as HTML5 using Aspose.Cells HtmlSaveOptions, loads the output with XmlDocument, defines the target XML structure, and recursively compares both DOM trees to confirm that the HTML table layout, cell IDs and values match the specification. Ideal for automated regression testing of Excel‑to‑HTML conversions.
-// Keywords: Aspose.Cells HTML5 export | C# HtmlSaveOptions | Excel to HTML validation | XmlDocument DOM comparison | recursive XML element match | HTML table layout verification | unit test for Aspose.Cells output | regression testing Excel HTML | C# compare generated HTML with XML | Aspose.Cells workbook to HTML
-// Common Searches: compare Aspose.Cells generated HTML with XML in C# | validate HTML table produced by Aspose.Cells | C# DOM comparison for Excel to HTML conversion | how to test Aspose.Cells HTML output | recursive element comparison XmlDocument C#
-// Developer Intent: Verify that the HTML produced by Aspose.Cells exactly mirrors a predefined XML representation of the desired page structure.
-// Use Cases: Automated verification that each workbook cell appears as a <td> with the correct id and value in the exported HTML. | Regression test that flags any change in HtmlSaveOptions or worksheet data that alters the HTML hierarchy. | Pre‑deployment check ensuring the saved HTML complies with HTML5 standards and the expected DOM layout.
-// AI Prompts: Generate a C# utility that strips whitespace‑only text nodes and normalizes attribute ordering before DOM comparison. | Enhance the CompareElements method to ignore case differences, optional HTML attributes, and empty style attributes. | Show how to configure HtmlSaveOptions to output external CSS files instead of inline styles for easier DOM validation.
+// Title: Generate XHTML from an Aspose.Cells workbook and compare its DOM with an expected XML layout using C#
+// AI Prompts: Write C# code that creates a workbook with Aspose.Cells, saves it as XHTML via HtmlSaveOptions, and loads the result into an XmlDocument from a MemoryStream. | Implement a recursive C# method that walks two XmlNode trees and determines structural equality while ignoring whitespace‑only text nodes and attribute order. | Add logic to read a reference XML file, compare its DOM to the generated XHTML DOM using the recursive method, and output whether the structures match.
+// Common Searches: how to export Aspose.Cells workbook to xhtml and validate the html structure in c# | c# compare generated html dom with expected xml file ignoring whitespace | aspocells htmlsaveoptions xhtml output and xmldocument comparison example | recursive xml node comparison function c# for html validation
+// Tags: Aspose.Cells HTMLSaveOptions XHTML export | C# compare XmlDocument DOM structures | ignore whitespace nodes XML comparison C# | load generated HTML from MemoryStream XmlDocument | validate generated HTML against reference layout C#
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using Aspose.Cells;
+using Aspose.Cells.Rendering; // For HtmlSaveOptions
 
-namespace AsposeCellsHtmlDomValidation
+// The sample creates a simple Aspose.Cells workbook, saves it as XHTML using HtmlSaveOptions, loads the XHTML from a MemoryStream into an XmlDocument, reads an expected XML layout file, and recursively compares the two DOM trees while skipping insignificant whitespace, finally reporting whether the structures match.
+class Program
 {
-    // Creates an Excel workbook, saves it as HTML5 using Aspose.Cells HtmlSaveOptions, loads the output with XmlDocument, defines the target XML structure, and recursively compares both DOM trees to confirm that the HTML table layout, cell IDs and values match the specification. Ideal for automated regression testing of Excel‑to‑HTML conversions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // -------------------------------------------------
+            // 1. Create a simple workbook with sample data
+            // -------------------------------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue("Item1");
+            sheet.Cells["B2"].PutValue(100);
+            sheet.Cells["A3"].PutValue("Item2");
+            sheet.Cells["B3"].PutValue(200);
+
+            // -------------------------------------------------
+            // 2. Save the workbook as XHTML (HTML that is valid XML)
+            // -------------------------------------------------
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // The default HtmlVersion is Xhtml; explicit setting is optional and may not be available in older versions.
+            // htmlOptions.HtmlVersion = HtmlVersion.Xhtml;
+
+            using (MemoryStream htmlStream = new MemoryStream())
             {
-                // ---------- Create a workbook and populate it ----------
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Header");
-                sheet.Cells["A2"].PutValue("Row 1");
-                sheet.Cells["B2"].PutValue(123);
-                sheet.Cells["A3"].PutValue("Row 2");
-                sheet.Cells["B3"].PutValue(456);
+                workbook.Save(htmlStream, htmlOptions);
+                htmlStream.Position = 0; // Reset stream for reading
 
-                // ---------- Configure HTML save options ----------
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    // Save as HTML5 for modern browsers
-                    HtmlVersion = HtmlVersion.Html5,
-                    // Ensure JavaScript compatibility for browsers without JS support
-                    IsJsBrowserCompatible = true,
-                    // Do not embed images as base64 to keep DOM simple
-                    ExportImagesAsBase64 = false
-                };
-
-                // ---------- Save workbook as HTML ----------
-                string htmlPath = "GeneratedOutput.html";
-                workbook.Save(htmlPath, htmlOptions);
-
-                // ---------- Load generated HTML into an XML DOM ----------
-                if (!File.Exists(htmlPath))
-                {
-                    Console.WriteLine("Generated HTML file not found.");
-                    return;
-                }
-
+                // -------------------------------------------------
+                // 3. Load the generated XHTML into an XmlDocument
+                // -------------------------------------------------
                 XmlDocument generatedDoc = new XmlDocument();
-                generatedDoc.Load(htmlPath);
+                generatedDoc.Load(htmlStream);
 
-                // ---------- Load expected XML layout ----------
-                string expectedXmlContent = @"
-                    <html>
-                        <head></head>
-                        <body>
-                            <table>
-                                <tr><td id='A1'>Header</td></tr>
-                                <tr><td id='A2'>Row 1</td><td id='B2'>123</td></tr>
-                                <tr><td id='A3'>Row 2</td><td id='B3'>456</td></tr>
-                            </table>
-                        </body>
-                    </html>";
-                XmlDocument expectedDoc = new XmlDocument();
-                expectedDoc.LoadXml(expectedXmlContent);
-
-                // ---------- Compare DOM structures ----------
-                if (generatedDoc.DocumentElement == null || expectedDoc.DocumentElement == null)
+                // -------------------------------------------------
+                // 4. Load the expected XML layout (provided separately)
+                // -------------------------------------------------
+                const string expectedPath = "expected_layout.xml";
+                if (!File.Exists(expectedPath))
                 {
-                    Console.WriteLine("One of the XML documents is empty.");
+                    Console.WriteLine($"Expected layout file not found: {expectedPath}");
                     return;
                 }
 
-                bool isMatch = CompareElements(generatedDoc.DocumentElement, expectedDoc.DocumentElement);
-                Console.WriteLine(isMatch
-                    ? "Generated HTML matches the expected layout."
-                    : "Generated HTML does NOT match the expected layout.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                XmlDocument expectedDoc = new XmlDocument();
+                expectedDoc.Load(expectedPath);
+
+                // -------------------------------------------------
+                // 5. Compare the two DOM structures
+                // -------------------------------------------------
+                XmlNode genRoot = generatedDoc.DocumentElement;
+                XmlNode expRoot = expectedDoc.DocumentElement;
+
+                if (genRoot == null || expRoot == null)
+                {
+                    Console.WriteLine("One of the XML documents does not have a root element.");
+                    return;
+                }
+
+                bool structuresMatch = CompareNodes(genRoot, expRoot);
+                Console.WriteLine("DOM structures match: " + structuresMatch);
             }
         }
-
-        // Recursively compare two XmlElements.
-        static bool CompareElements(XmlElement htmlElem, XmlElement xmlElem)
+        catch (Exception ex)
         {
-            // Element name must match (case‑insensitive).
-            if (!string.Equals(htmlElem.Name, xmlElem.Name, StringComparison.OrdinalIgnoreCase))
-                return false;
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+    }
 
-            // Compare attributes (ignoring order).
-            if (htmlElem.Attributes.Count != xmlElem.Attributes.Count)
-                return false;
+    // Recursive comparison of two XmlNode trees (ignores whitespace-only text nodes)
+    static bool CompareNodes(XmlNode nodeA, XmlNode nodeB)
+    {
+        if (nodeA == null || nodeB == null)
+            return false;
 
-            foreach (XmlAttribute htmlAttr in htmlElem.Attributes)
+        // Compare node types (Element, Text, etc.)
+        if (nodeA.NodeType != nodeB.NodeType)
+            return false;
+
+        // Compare element names
+        if (nodeA.NodeType == XmlNodeType.Element && nodeA.Name != nodeB.Name)
+            return false;
+
+        // Compare attribute collections
+        XmlAttributeCollection attrsA = nodeA.Attributes;
+        XmlAttributeCollection attrsB = nodeB.Attributes;
+        if ((attrsA?.Count ?? 0) != (attrsB?.Count ?? 0))
+            return false;
+
+        if (attrsA != null)
+        {
+            foreach (XmlAttribute attrA in attrsA)
             {
-                XmlAttribute xmlAttr = xmlElem.Attributes[htmlAttr.Name];
-                if (xmlAttr == null || xmlAttr.Value != htmlAttr.Value)
+                XmlAttribute? attrB = attrsB?[attrA.Name];
+                if (attrB == null || attrA.Value != attrB.Value)
                     return false;
             }
-
-            // Compare child elements count (excluding insignificant text nodes).
-            List<XmlElement> htmlChildren = GetSignificantChildElements(htmlElem);
-            List<XmlElement> xmlChildren = GetSignificantChildElements(xmlElem);
-
-            if (htmlChildren.Count != xmlChildren.Count)
-                return false;
-
-            for (int i = 0; i < htmlChildren.Count; i++)
-            {
-                if (!CompareElements(htmlChildren[i], xmlChildren[i]))
-                    return false;
-            }
-
-            return true;
         }
 
-        // Helper to get element children, ignoring whitespace text nodes.
-        static List<XmlElement> GetSignificantChildElements(XmlElement element)
+        // Prepare child node lists, skipping insignificant whitespace text nodes
+        List<XmlNode> childrenA = GetSignificantChildren(nodeA);
+        List<XmlNode> childrenB = GetSignificantChildren(nodeB);
+        if (childrenA.Count != childrenB.Count)
+            return false;
+
+        // Recursively compare each child pair
+        for (int i = 0; i < childrenA.Count; i++)
         {
-            var list = new List<XmlElement>();
-            foreach (XmlNode child in element.ChildNodes)
-            {
-                if (child.NodeType == XmlNodeType.Element)
-                {
-                    list.Add((XmlElement)child);
-                }
-                else if (child.NodeType == XmlNodeType.Text && !string.IsNullOrWhiteSpace(child.Value))
-                {
-                    // Wrap text nodes in a temporary element for comparison.
-                    XmlDocument tempDoc = new XmlDocument();
-                    XmlElement wrapper = tempDoc.CreateElement("text");
-                    wrapper.InnerText = child.Value.Trim();
-                    list.Add(wrapper);
-                }
-            }
-            return list;
+            if (!CompareNodes(childrenA[i], childrenB[i]))
+                return false;
         }
+
+        // For text nodes, compare trimmed values
+        if (nodeA.NodeType == XmlNodeType.Text)
+        {
+            if (nodeA.Value?.Trim() != nodeB.Value?.Trim())
+                return false;
+        }
+
+        return true;
+    }
+
+    // Helper to retrieve child nodes excluding whitespace-only text nodes
+    static List<XmlNode> GetSignificantChildren(XmlNode node)
+    {
+        var list = new List<XmlNode>();
+        foreach (XmlNode child in node.ChildNodes)
+        {
+            if (child.NodeType == XmlNodeType.Text && string.IsNullOrWhiteSpace(child.Value))
+                continue; // Skip insignificant whitespace
+            list.Add(child);
+        }
+        return list;
     }
 }

@@ -1,39 +1,29 @@
-// Title: C# – Retrieve the calculated value of cell E3 after formula evaluation with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, assign numeric values to A1, B1, and C1, set the formula "=A1+B1*C1" in E3, run workbook.CalculateFormula(), and read the resulting value from sheet.Cells["E3"].Value in a C# console application.
-// Keywords: Aspose.Cells C# | Aspose.Cells .NET formula calculation | retrieve calculated cell value | workbook.CalculateFormula example | read cell E3 value | C# spreadsheet formula evaluation | Aspose.Cells get cell result
-// Common Searches: Aspose.Cells get result of formula after CalculateFormula | C# read value of cell E3 with Aspose.Cells | How to evaluate formulas and fetch cell value in Aspose.Cells .NET | Example of calculating workbook formulas and retrieving a specific cell
-// Developer Intent: Obtain the numeric result of cell E3 after the workbook formulas have been calculated.
-// Use Cases: Display a computed total from a generated spreadsheet directly in a console or UI. | Pass a specific calculated figure (e.g., subtotal, tax) to another service or API. | Log or audit the outcome of financial or statistical formulas embedded in an automated report.
-// AI Prompts: Generate C# code that sets a formula in a cell, runs workbook.CalculateFormula, and returns the computed value using Aspose.Cells. | Show how to retrieve multiple calculated cell values after calling CalculateFormula with Aspose.Cells for .NET. | Explain best practices for casting the Value property of a calculated cell to int, double, or string in Aspose.Cells.
+// Title: Recalculate all formulas in an Excel workbook and print the evaluated value of cell E3 using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an .xlsx file, call Workbook.CalculateFormula, and display the computed value of cell E3 from the first worksheet in C# with Aspose.Cells. | Show how to retrieve the post‑calculation result of cell E3 after forcing formula evaluation in an Aspose.Cells workbook. | Write C# code that opens a workbook, forces a full formula recalculation, reads cell E3’s value, and writes it to the console using Aspose.Cells.
+// Common Searches: Aspose.Cells C# get value of cell E3 after CalculateFormula | how to read evaluated result of a formula cell in Excel using Aspose.Cells .NET | example code to recalculate formulas and read a specific cell value with Aspose.Cells | display final value of E3 after workbook.CalculateFormula in Aspose.Cells C#
+// Tags: calculateformula method Aspose.Cells | read cell value after formula evaluation C# | access specific cell E3 Aspose.Cells | recalculate all formulas .xlsx Aspose.Cells | output evaluated Excel cell result .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to create a workbook, assign numeric values to A1, B1, and C1, set the formula "=A1+B1*C1" in E3, run workbook.CalculateFormula(), and read the resulting value from sheet.Cells["E3"].Value in a C# console application.
+// The program loads an Excel workbook, forces a full formula recalculation with Workbook.CalculateFormula, reads the resulting value of cell E3 from the first worksheet, and writes that final calculated value to the console.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Populate some cells with sample data
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(10);
-        sheet.Cells["C1"].PutValue(15);
-
-        // Set a formula in E3 that uses the above cells
-        // Example formula: =A1 + B1 * C1
-        sheet.Cells["E3"].Formula = "=A1+B1*C1";
-
-        // Calculate all formulas in the workbook
+        // Recalculate all formulas to ensure the latest values
         workbook.CalculateFormula();
 
-        // Retrieve the final calculated value of cell E3
-        object finalValue = sheet.Cells["E3"].Value;
+        // Access cell E3 in the first worksheet
+        Cell e3 = workbook.Worksheets[0].Cells["E3"];
 
-        // Display the result
-        Console.WriteLine("Final calculated value of E3: " + finalValue);
+        // Retrieve the calculated value (handles nulls)
+        string calculatedValue = e3.Value?.ToString() ?? "null";
+
+        // Display the final calculated value of E3
+        Console.WriteLine("Final calculated value of E3: " + calculatedValue);
     }
 }

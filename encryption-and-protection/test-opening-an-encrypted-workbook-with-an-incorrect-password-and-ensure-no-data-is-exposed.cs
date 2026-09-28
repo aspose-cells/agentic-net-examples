@@ -1,54 +1,55 @@
-// Title: Aspose.Cells .NET – Verify encrypted workbook cannot be opened with a wrong password
-// Description: Creates an Excel workbook, protects it with a password, saves it, then attempts to load it using an incorrect password via LoadOptions. The example catches the expected exception, confirms that no cell data is exposed, and demonstrates password validation with FileFormatUtil.VerifyPassword without fully loading the file.
-// Keywords: Aspose.Cells | C# | .NET | encrypted workbook | password protection | LoadOptions wrong password | FileFormatUtil.VerifyPassword | exception handling | data security | Excel file encryption | US developers | European .NET community
-// Common Searches: how to test wrong password on an encrypted Excel file using Aspose.Cells | verify Excel workbook password without opening the file in C# | Aspose.Cells catch exception when loading protected workbook with bad password | prevent data leakage from encrypted Excel when password is incorrect | C# code to check Excel file password validity with Aspose
-// Developer Intent: Ensure that an encrypted Excel workbook remains inaccessible and does not reveal any data when an incorrect password is supplied.
-// Use Cases: Catch the exception thrown by new Workbook(filePath, loadOptions) to block unauthorized access. | Use FileFormatUtil.VerifyPassword to quickly test password validity before loading large workbooks. | Automate security regression tests that confirm encrypted files protect confidential data.
-// AI Prompts: Generate a C# unit test with Aspose.Cells that asserts loading an encrypted workbook with a wrong password throws an exception and returns no cell values. | Show sample code that uses FileFormatUtil.VerifyPassword to programmatically reject an invalid password before opening the workbook. | Create a logging snippet that records a custom error when a workbook fails to open due to an incorrect password while guaranteeing no data is exposed.
+// Title: Test that an encrypted Excel workbook cannot be opened with an incorrect password using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a password‑protected .xlsx file, then attempts to open it using LoadOptions with a wrong password and verifies that a CellsException is thrown. | Show how to implement a C# unit test that asserts loading an encrypted workbook with an invalid password does not expose any cell values.
+// Common Searches: asp.net unit test for loading password protected Excel file with wrong password Aspose.Cells | how to catch CellsException when opening encrypted .xlsx with incorrect password in C# | verify that encrypted workbook prevents data access on invalid password using Aspose.Cells
+// Tags: Aspose.Cells load encrypted workbook with wrong password | C# password protection Excel file Aspose.Cells | CellsException handling for invalid workbook password | unit testing workbook encryption Aspose.Cells | prevent data exposure encrypted XLSX Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Creates an Excel workbook, protects it with a password, saves it, then attempts to load it using an incorrect password via LoadOptions. The example catches the expected exception, confirms that no cell data is exposed, and demonstrates password validation with FileFormatUtil.VerifyPassword without fully loading the file.
-class TestEncryptedWorkbook
+// The example creates an .xlsx workbook, applies a password, saves it, then tries to load it with an incorrect password via LoadOptions. A CellsException is caught to confirm the workbook cannot be opened and no data is exposed, followed by cleanup of the temporary file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some data
+        // Path for the temporary encrypted workbook
+        string filePath = "encrypted.xlsx";
+
+        // ------------------- Create -------------------
+        // Create a new workbook and add some confidential data
         Workbook wb = new Workbook();
-        Worksheet sheet = wb.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Secret Data");
+        Worksheet ws = wb.Worksheets[0];
+        ws.Cells["A1"].PutValue("Secret Data");
 
         // Protect the workbook with a password
         wb.Settings.Password = "correctPassword";
 
         // Save the encrypted workbook
-        string filePath = "encrypted.xlsx";
-        wb.Save(filePath);
+        wb.Save(filePath, SaveFormat.Xlsx);
 
-        // Attempt to open the workbook with an incorrect password
-        LoadOptions loadOptions = new LoadOptions();
+        // ------------------- Load (incorrect password) -------------------
+        // Prepare load options with a wrong password
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
         loadOptions.Password = "wrongPassword";
 
         try
         {
+            // Attempt to open the encrypted workbook using the wrong password
             Workbook wbWrong = new Workbook(filePath, loadOptions);
-            // If loading succeeds, check if data is exposed (it should not)
-            string cellValue = wbWrong.Worksheets[0].Cells["A1"].StringValue;
-            Console.WriteLine("Unexpectedly opened workbook. Cell value: " + cellValue);
-        }
-        catch (Exception ex)
-        {
-            // Expected outcome: loading fails due to wrong password
-            Console.WriteLine("Failed to open workbook with incorrect password: " + ex.Message);
-        }
 
-        // Verify password without loading the entire workbook
-        using (Stream stream = File.OpenRead(filePath))
+            // If no exception is thrown, the workbook was opened incorrectly
+            Console.WriteLine("Test Failed: Workbook opened with an incorrect password.");
+        }
+        catch (CellsException)
         {
-            bool isPasswordValid = FileFormatUtil.VerifyPassword(stream, "wrongPassword");
-            Console.WriteLine("Password verification (should be false): " + isPasswordValid);
+            // Expected outcome: an exception is thrown for a wrong password
+            Console.WriteLine("Test Passed: Unable to open workbook with an incorrect password.");
+            // No data is exposed because the exception prevents access to the workbook contents
+        }
+        finally
+        {
+            // Clean up the temporary file
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
         }
     }
 }

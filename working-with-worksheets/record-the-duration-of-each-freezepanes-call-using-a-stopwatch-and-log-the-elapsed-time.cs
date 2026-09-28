@@ -1,37 +1,64 @@
-// Title: Benchmark FreezePanes Calls in Aspose.Cells for .NET Using Stopwatch
-// Description: C# sample that creates a workbook, times two FreezePanes overloads with System.Diagnostics.Stopwatch, outputs the elapsed milliseconds to the console, and saves the file as FreezePanesTiming.xlsx.
-// Keywords: Aspose.Cells | FreezePanes performance | Stopwatch timing | C# worksheet benchmark | execution time measurement | log FreezePanes duration | .NET performance testing | worksheet freeze panes latency
-// Common Searches: how to time FreezePanes in Aspose.Cells | measure FreezePanes execution C# | benchmark worksheet FreezePanes method | record FreezePanes latency .NET | Aspose.Cells performance testing example
-// Developer Intent: Determine the runtime of each FreezePanes overload and capture the results for performance analysis.
-// Use Cases: Compare the speed of different FreezePanes signatures on large spreadsheets. | Detect performance regressions when updating Aspose.Cells versions. | Integrate FreezePanes timing into automated build or CI pipelines.
-// AI Prompts: Generate a reusable C# method that wraps any worksheet.FreezePanes call and returns the elapsed milliseconds. | Show how to export FreezePanes timing results to a CSV file for later analysis. | Explain how to assert maximum allowed FreezePanes duration in an xUnit test for Aspose.Cells workbooks.
+// Title: How to time each Worksheet.FreezePanes call with Stopwatch and log milliseconds in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses a single Stopwatch to measure the execution time of multiple Worksheet.FreezePanes calls and prints the elapsed milliseconds. | Show how to restart a Stopwatch between successive FreezePanes operations and output each timing result to the console. | Provide an example that benchmarks FreezePanes performance, logs the timings, and saves the workbook to an .xlsx file.
+// Common Searches: C# Aspose.Cells how to measure FreezePanes execution time | using Stopwatch to profile worksheet FreezePanes in .NET | log elapsed time for each FreezePanes call Aspose.Cells example | benchmarking FreezePanes performance with Aspose.Cells C# | record timing of FreezePanes rows and columns Aspose.Cells
+// Tags: worksheet freeze panes timing Aspose.Cells | stopwatch benchmark freeze panes .NET | measure freeze panes performance C# | log freeze panes elapsed time Aspose.Cells | save workbook after freeze panes timing
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// C# sample that creates a workbook, times two FreezePanes overloads with System.Diagnostics.Stopwatch, outputs the elapsed milliseconds to the console, and saves the file as FreezePanesTiming.xlsx.
-class Program
+namespace FreezePanesTimingExample
 {
-    static void Main()
+    // The example creates a workbook, accesses the first worksheet, and uses a single Stopwatch instance to measure and log the elapsed milliseconds for three separate Worksheet.FreezePanes calls (first row, first column, and both). After timing, the workbook is saved as FreezePanesTimingResult.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Record time for the first FreezePanes call
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        worksheet.FreezePanes(3, 3, 3, 3);
-        stopwatch.Stop();
-        Console.WriteLine($"First FreezePanes call duration: {stopwatch.ElapsedMilliseconds} ms");
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Record time for a second FreezePanes call using cell name
-        stopwatch.Restart();
-        worksheet.FreezePanes("E5", 5, 5);
-        stopwatch.Stop();
-        Console.WriteLine($"Second FreezePanes call duration: {stopwatch.ElapsedMilliseconds} ms");
+                // Prepare a stopwatch to measure each FreezePanes call
+                Stopwatch stopwatch = new Stopwatch();
 
-        // Save the workbook
-        workbook.Save("FreezePanesTiming.xlsx");
+                // -------------------------------------------------
+                // First FreezePanes call (freeze the first row)
+                stopwatch.Start(); // Start timing
+                // Freeze the first row (row index 1, column index 0, freeze 1 row, 0 columns)
+                worksheet.FreezePanes(1, 0, 1, 0);
+                stopwatch.Stop(); // Stop timing
+                Console.WriteLine($"FreezePanes(1,0) elapsed: {stopwatch.ElapsedMilliseconds} ms");
+
+                // -------------------------------------------------
+                // Second FreezePanes call (freeze the first column)
+                stopwatch.Restart(); // Restart timing without creating a new instance
+                // Freeze the first column (row index 0, column index 1, freeze 0 rows, 1 column)
+                worksheet.FreezePanes(0, 1, 0, 1);
+                stopwatch.Stop();
+                Console.WriteLine($"FreezePanes(0,1) elapsed: {stopwatch.ElapsedMilliseconds} ms");
+
+                // -------------------------------------------------
+                // Third FreezePanes call (freeze first row and first column)
+                stopwatch.Restart();
+                // Freeze both first row and first column (row index 1, column index 1, freeze 1 row, 1 column)
+                worksheet.FreezePanes(1, 1, 1, 1);
+                stopwatch.Stop();
+                Console.WriteLine($"FreezePanes(1,1) elapsed: {stopwatch.ElapsedMilliseconds} ms");
+
+                // Save the workbook
+                string outputPath = "FreezePanesTimingResult.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

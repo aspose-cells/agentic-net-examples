@@ -1,37 +1,60 @@
-// Title: Change the Password of an Encrypted Excel Workbook with Aspose.Cells for .NET (No Decryption)
-// Description: Demonstrates how to load an already encrypted Excel file using LoadOptions, assign a new password via Settings.Password, and save the workbook so Aspose.Cells re‑encrypts it with the new password while leaving the worksheet data untouched.
-// Keywords: Aspose.Cells change workbook password | update Excel password .NET | re‑encrypt Excel file programmatically | modify workbook encryption Aspose | change Excel file password without decrypting
-// Common Searches: change password of encrypted Excel file Aspose.Cells | Aspose.Cells .NET update workbook password | re‑encrypt Excel workbook with new password | programmatically modify Excel file protection | Aspose.Cells load encrypted workbook password
-// Developer Intent: Replace the existing password of an encrypted Excel workbook with a new one without exposing or decrypting its contents.
-// Use Cases: Rotate passwords for archived reports to comply with security policies while keeping data encrypted. | Batch‑update workbook passwords across a document library without opening each file. | Migrate legacy protected workbooks to a new corporate password standard without data leakage.
-// AI Prompts: Generate C# code using Aspose.Cells that changes the password of an already encrypted Excel workbook without reading its cell data. | Explain how Aspose.Cells re‑encrypts a workbook when Settings.Password is modified after loading with LoadOptions. | Show error‑handling patterns for loading an encrypted workbook with an incorrect password in Aspose.Cells.
+// Title: Replace the opening password of an encrypted Excel workbook using Aspose.Cells for .NET without decrypting the file
+// AI Prompts: Generate C# code that opens a password‑protected .xlsx with Aspose.Cells, assigns a new opening password, and saves the workbook while preserving its encryption. | Show how to use LoadOptions and Workbook.Settings.Password in Aspose.Cells to update an Excel file’s password without recreating the workbook.
+// Common Searches: asp.net change password of encrypted xlsx using aspose.cells loadoptions | c# replace opening password of password protected excel file without decrypting | how to update workbook password in Aspose.Cells without losing data | programmatically modify excel file password with Aspose.Cells .NET
+// Tags: Aspose.Cells change workbook opening password | LoadOptions password protected Excel .NET | Workbook.Settings.Password update | Encrypt Excel file with Aspose.Cells | C# replace .xlsx password without decryption
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to load an already encrypted Excel file using LoadOptions, assign a new password via Settings.Password, and save the workbook so Aspose.Cells re‑encrypts it with the new password while leaving the worksheet data untouched.
-class ChangeWorkbookPassword
+namespace AsposeCellsPasswordExample
 {
-    static void Main()
+    // // Demonstrates creating an Excel workbook, encrypting it with an opening password, loading it using LoadOptions, changing the password via Workbook.Settings.Password, and saving the file again—all with Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook and add some data
-        Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Sensitive Data");
+        static void Main()
+        {
+            try
+            {
+                // 1. Create a new workbook and add sample data
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Hello");
+                sheet.Cells["B1"].PutValue("World");
 
-        // Encrypt the workbook with the initial password
-        wb.Settings.Password = "oldPassword";
-        string encryptedPath = "EncryptedWorkbook.xlsx";
-        wb.Save(encryptedPath);
+                // 2. Set an opening password (encrypt the workbook)
+                workbook.Settings.Password = "oldPass";
 
-        // Load the encrypted workbook using the original password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = "oldPassword";
-        Workbook loadedWb = new Workbook(encryptedPath, loadOptions);
+                // 3. Save the encrypted workbook to disk
+                string filePath = "encrypted.xlsx";
+                workbook.Save(filePath, SaveFormat.Xlsx);
 
-        // Change the password without decrypting the content
-        loadedWb.Settings.Password = "newPassword";
+                // 4. Ensure the file exists before loading
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    return;
+                }
 
-        // Save the workbook; it will be re‑encrypted with the new password
-        loadedWb.Save("WorkbookWithNewPassword.xlsx");
+                // 5. Load the encrypted workbook using the original password
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    Password = "oldPass"
+                };
+                Workbook loadedWorkbook = new Workbook(filePath, loadOptions);
+
+                // 6. Change the password by assigning a new one
+                loadedWorkbook.Settings.Password = "newPass";
+
+                // 7. Save the workbook back, overwriting the original file
+                loadedWorkbook.Save(filePath, SaveFormat.Xlsx);
+
+                Console.WriteLine("Password changed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

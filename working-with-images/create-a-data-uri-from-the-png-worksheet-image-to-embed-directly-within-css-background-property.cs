@@ -1,60 +1,67 @@
-// Title: C# – Convert Aspose.Cells Worksheet to PNG Data URI for CSS Background
-// Description: Render the first worksheet of an Aspose.Cells workbook to a PNG image in memory, encode it as a Base64 data URI, and embed the URI directly in a CSS background‑image rule without creating a separate file.
-// Keywords: Aspose.Cells PNG data URI | C# render worksheet to image | base64 image for CSS background | inline image data URI Aspose | .NET Excel to PNG | embed Excel snapshot in CSS | memory stream image conversion
-// Common Searches: Aspose.Cells render worksheet to PNG data URI C# | how to embed Excel sheet image in CSS background | convert workbook page to base64 string for inline CSS | C# generate data:image/png from Aspose.Cells | inline PNG image from Excel without saving file
-// Developer Intent: Create a PNG data URI from a rendered worksheet and use it as a CSS background image.
-// Use Cases: Display an Excel worksheet snapshot on a web page without hosting an external image file. | Include worksheet graphics in email templates using inline CSS to avoid attachment limits. | Generate self‑contained HTML reports where worksheet images are embedded directly in the markup.
-// AI Prompts: Write a C# method that takes an Aspose.Cells Workbook and returns a data:image/png;base64 string for the first worksheet. | Show how to render a worksheet to a MemoryStream, convert it to Base64, and build a CSS background rule in C#. | Explain techniques to limit memory usage when converting large worksheets to data URIs with Aspose.Cells.
+// Title: Generate a PNG data URI from an Excel worksheet using Aspose.Cells for .NET to embed in a CSS background
+// AI Prompts: Render the first worksheet of an .xlsx file to a PNG image, convert the image bytes to a Base64 string, and output a data:image/png URI for CSS. | Write C# code that uses SheetRender and ImageOrPrintOptions to produce a memory stream, then builds a background-image rule with the resulting data URI. | Show how to handle file‑not‑found and rendering exceptions while creating a CSS background‑image property from an Excel sheet image.
+// Common Searches: how to create a base64 PNG data URI from an Excel sheet with Aspose.Cells in C# | C# Aspose.Cells render worksheet to image and embed in CSS background | convert worksheet image stream to data:image/png for web styling | generate CSS background-image rule from Excel workbook using Aspose.Cells | Aspose.Cells SheetRender ToImage to base64 string example
+// Tags: Aspose.Cells render worksheet to PNG | C# convert memory stream to base64 data URI | embed base64 PNG in CSS background-image | SheetRender ToImage with ImageOrPrintOptions | generate data:image/png URI from Excel workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsDataUriDemo
+// The example loads an Excel file, uses Aspose.Cells SheetRender with default ImageOrPrintOptions to render the first worksheet to a PNG image in a memory stream, converts the image bytes to a Base64 string, builds a data:image/png;base64 URI, and prints a CSS background-image rule containing that URI.
+class Program
 {
-    // Render the first worksheet of an Aspose.Cells workbook to a PNG image in memory, encode it as a Base64 data URI, and embed the URI directly in a CSS background‑image rule without creating a separate file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Get the first worksheet (adjust index if needed)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        try
+        {
+            // Prepare a memory stream for the PNG image
+            using (MemoryStream imageStream = new MemoryStream())
             {
-                // Create a new workbook and add sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Hello");
-                sheet.Cells["B1"].PutValue("World");
+                // Render the worksheet to the memory stream (default format is PNG)
+                SheetRender sheetRender = new SheetRender(worksheet, new ImageOrPrintOptions());
+                sheetRender.ToImage(0, imageStream); // 0 = first page/tab
 
-                // Configure rendering options for PNG output (default format is PNG)
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
+                // Convert the image bytes to a Base64 string
+                string base64 = Convert.ToBase64String(imageStream.ToArray());
 
-                // Render the first worksheet page to a memory stream
-                using (MemoryStream imageStream = new MemoryStream())
-                {
-                    WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
-                    // Render the first sheet directly into the stream as PNG
-                    renderer.ToImage(0, imageStream);
+                // Build the data URI for PNG
+                string dataUri = $"data:image/png;base64,{base64}";
 
-                    // Get the PNG bytes
-                    byte[] pngBytes = imageStream.ToArray();
+                // Example CSS background property using the data URI
+                string cssBackground = $"background-image: url('{dataUri}');";
 
-                    // Convert to Base64 and build the data URI
-                    string base64 = Convert.ToBase64String(pngBytes);
-                    string dataUri = $"data:image/png;base64,{base64}";
-
-                    // Example CSS using the data URI as a background image
-                    string css = $".worksheet-background {{ background-image: url('{dataUri}'); }}";
-
-                    // Output the CSS string
-                    Console.WriteLine("Generated CSS:");
-                    Console.WriteLine(css);
-                }
+                // Output the CSS string
+                Console.WriteLine(cssBackground);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during rendering or conversion: {ex.Message}");
         }
     }
 }

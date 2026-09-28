@@ -1,21 +1,18 @@
-// Title: Aspose.Cells .NET: Set Column Chart Series Data Labels to Inside End Position (C#)
-// Description: Shows how to create a workbook, add a column chart, enable data labels, and place them at the InsideEnd location for clearer visualization using Aspose.Cells for .NET (C#).
-// Keywords: Aspose.Cells | C# | .NET | column chart | data label position | InsideEnd | LabelPositionType | chart series | Excel automation | chart customization
-// Common Searches: How to set InsideEnd data label position in Aspose.Cells column chart | Aspose.Cells C# set chart data labels inside end | Change data label location for column series using Aspose.Cells | Aspose.Cells chart label position example C#
-// Developer Intent: The developer wants to position the data labels of a column‑chart series at the InsideEnd location to improve readability.
-// Use Cases: Generating Excel reports where column values are displayed inside the top of each bar. | Automating workbook creation with charts that show data labels at the InsideEnd position for quick visual analysis. | Customizing chart appearance in .NET applications that use Aspose.Cells to produce professional‑looking spreadsheets.
-// AI Prompts: Provide C# code that sets a column chart series data label position to InsideEnd using Aspose.Cells. | Show an Aspose.Cells example that enables data labels and positions them inside the end of columns. | Explain how to customize chart data label positions, including InsideEnd, for different chart types in Aspose.Cells for .NET.
+// Title: How to set column chart series data labels to InsideEnd position using Aspose.Cells for .NET (C#)
+// AI Prompts: Create an Excel workbook with a column chart and configure the first series to display data labels positioned at the InsideEnd of each column using Aspose.Cells. | Modify an existing Aspose.Cells column chart so that its series data labels are shown inside the column ends for improved readability. | Generate a .xlsx file where a column chart automatically shows values inside the column tops by setting LabelPositionType.InsideEnd on the series data labels.
+// Common Searches: Aspose.Cells C# set column chart data label position to InsideEnd | How to display data labels inside the end of columns in an Excel chart using Aspose.Cells | C# Aspose.Cells example for positioning series data labels inside column ends | Set label position InsideEnd for column chart series with Aspose.Cells .NET
+// Tags: Aspose.Cells column chart data label positioning | C# set label position InsideEnd | Aspose.Cells series data labels inside end | Excel column chart label placement .NET | Aspose.Cells chart customization C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartLabelPosition
+namespace AsposeCellsChartDataLabelPosition
 {
-    // Shows how to create a workbook, add a column chart, enable data labels, and place them at the InsideEnd location for clearer visualization using Aspose.Cells for .NET (C#).
+    // // This C# program creates a workbook, adds sample data, inserts a column chart, enables data labels for the first series, sets the label position to InsideEnd, and saves the file as ColumnChart_With_InsideEndDataLabels.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -41,13 +38,14 @@ namespace AsposeCellsChartLabelPosition
             chart.NSeries.CategoryData = "A2:A4";
 
             // Enable data labels for the first series
-            chart.NSeries[0].DataLabels.ShowValue = true;
+            Series series = chart.NSeries[0];
+            series.DataLabels.ShowValue = true;
 
             // Set data label position to InsideEnd for better readability
-            chart.NSeries[0].DataLabels.Position = LabelPositionType.InsideEnd;
+            series.DataLabels.Position = LabelPositionType.InsideEnd;
 
             // Save the workbook to a file
-            workbook.Save("ColumnChart_With_InsideEndLabels.xlsx");
+            workbook.Save("ColumnChart_With_InsideEndDataLabels.xlsx");
         }
     }
 }

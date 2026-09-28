@@ -1,59 +1,62 @@
-// Title: Refresh Aspose.Cells chart after modifying source cells (C# .NET)
-// Description: Demonstrates how to update cell values, invoke chart.Calculate (or RefreshPivotData for PivotCharts) to sync the visual representation, and save the workbook with the refreshed chart.
-// Keywords: Aspose.Cells chart refresh | chart.Calculate C# | RefreshPivotData Aspose.Cells | update chart data programmatically | .NET workbook chart cache | Aspose.Cells column chart example
-// Common Searches: Aspose.Cells refresh chart after cell change | C# chart.Calculate vs RefreshPivotData | How to update Aspose.Cells chart data | Refresh chart cache in Aspose.Cells .NET
-// Developer Intent: Synchronize a chart with the latest values written to its source range.
-// Use Cases: Change a series of numeric cells and call chart.Calculate to display the new values before saving. | Reload a PivotChart after altering its underlying pivot table using chart.RefreshPivotData. | Perform bulk data edits across worksheets and refresh all linked charts in one pass.
-// AI Prompts: Generate C# code that updates cells and refreshes an Aspose.Cells chart using chart.Calculate. | Explain when to prefer chart.Calculate over chart.RefreshPivotData in Aspose.Cells. | Show how to loop through multiple charts in a workbook and refresh each after bulk data updates.
+// Title: How to refresh an Aspose.Cells column chart after modifying source cells in C#
+// AI Prompts: Update worksheet cell values and invoke chart.Calculate() to refresh a linked column chart using Aspose.Cells in C#. | Programmatically bind a column chart to a range and ensure it reflects new data by recalculating the chart with Aspose.Cells. | Save the workbook after changing chart data and calling the chart's Calculate method in a C# application.
+// Common Searches: Aspose.Cells C# refresh chart after changing cell values | How to recalculate an Excel chart using Aspose.Cells library | C# example for updating chart data source and calling chart.Calculate | Aspose.Cells column chart not updating after cell edit | Refresh Excel chart programmatically with Aspose.Cells in .NET
+// Tags: Aspose.Cells column chart data refresh | recalculate chart after cell update Aspose.Cells | bind chart to range programmatically Aspose.Cells | C# Aspose.Cells chart.Calculate usage | Excel chart refresh using Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartRefreshDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to update cell values, invoke chart.Calculate (or RefreshPivotData for PivotCharts) to sync the visual representation, and save the workbook with the refreshed chart.
-    public class Program
+    // The example creates a new workbook, adds a column chart bound to cells A2:A4 (categories) and B2:B4 (values), updates the values in B2‑B4, calls chart.Calculate() to refresh the chart, and saves the workbook as ChartRefreshed.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate source data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+                // Add initial data that will be used by the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["A4"].PutValue("C");
 
-            // Add a column chart and set its data range
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);          // Values
-            chart.NSeries.CategoryData = "A2:A4";      // Categories
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(20);
+                worksheet.Cells["B4"].PutValue(30);
 
-            // -----------------------------------------------------------------
-            // Update the source cells – the chart should reflect these changes.
-            // -----------------------------------------------------------------
-            sheet.Cells["B2"].PutValue(15);   // Change first value
-            sheet.Cells["B3"].PutValue(25);   // Change second value
-            sheet.Cells["B4"].PutValue(35);   // Change third value
+                // Add a column chart and bind it to the data range
+                int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = worksheet.Charts[chartIndex];
+                chart.NSeries.Add("B2:B4", true);          // Values
+                chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-            // Refresh the chart so that it uses the latest cell values.
-            // For a regular chart, calling Calculate updates its internal cache.
-            chart.Calculate();
+                // Update the source cells – this simulates a data change
+                worksheet.Cells["B2"].PutValue(15);
+                worksheet.Cells["B3"].PutValue(25);
+                worksheet.Cells["B4"].PutValue(35);
 
-            // Alternatively, if the chart is a PivotChart, you would use:
-            // chart.RefreshPivotData();
+                // Refresh the chart so it reflects the updated data
+                chart.Calculate();
 
-            // Save the workbook (the chart now displays the updated data)
-            workbook.Save("ChartRefreshed.xlsx", SaveFormat.Xlsx);
+                // Save the workbook
+                string outputPath = "ChartRefreshed.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

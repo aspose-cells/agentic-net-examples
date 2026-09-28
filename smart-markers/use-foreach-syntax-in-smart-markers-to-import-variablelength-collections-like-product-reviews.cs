@@ -1,65 +1,75 @@
-// Title: C# foreach smart markers for variable‑length collections in Aspose.Cells
-// Description: This example builds an in‑memory workbook template, adds smart markers for a product name and a foreach collection of review texts, binds a product object and a List<Review> to the markers with WorkbookDesigner, processes the markers with LineByLine disabled, and saves the result as ProductReviews.xlsx.
-// Keywords: Aspose.Cells | C# smart markers | foreach smart marker | variable length collection | WorkbookDesigner SetDataSource list | export reviews to Excel | dynamic rows Aspose.Cells | template workbook smart markers
-// Common Searches: Aspose.Cells foreach smart marker example | bind List<T> to smart markers C# | variable length collection in Excel using Aspose.Cells | how to use LineByLine false with smart markers | export product reviews to Excel Aspose
-// Developer Intent: Create an Excel sheet that automatically expands to list all reviews for a given product using foreach smart markers.
-// Use Cases: Generate a product feedback report with a dynamic number of customer comments. | Export order invoices where each order contains a different count of line items. | Produce survey results where respondents may have varying numbers of answers.
-// AI Prompts: Add a review date column to the foreach smart marker and show the updated code. | Show a nested foreach smart marker that lists multiple products, each with its own reviews. | Explain the impact of setting LineByLine = true versus false when processing smart markers.
+// Title: Create an Excel report of product reviews with variable‑length rows using foreach smart markers in Aspose.Cells for .NET
+// AI Prompts: Create an Excel workbook that repeats a template row for every Review item by using the '&=' marker syntax. | Assign a List<Review> to the smart marker name "Reviews" and set WorkbookDesigner.LineByLine to false to enable range smart markers. | Run the smart marker processing and write the populated workbook to a .xlsx file.
+// Common Searches: Aspose.Cells foreach smart marker syntax for repeating rows based on a List<T> | How to bind a collection to a smart marker range in Aspose.Cells .NET | Export product review data to Excel using range smart markers with LineByLine false | Variable length data export example with Aspose.Cells smart markers
+// Tags: range smart markers with variable length data | WorkbookDesigner LineByLine false | bind List<T> to smart marker Aspose.Cells | export product reviews to Excel | smart marker row repetition Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// This example builds an in‑memory workbook template, adds smart markers for a product name and a foreach collection of review texts, binds a product object and a List<Review> to the markers with WorkbookDesigner, processes the markers with LineByLine disabled, and saves the result as ProductReviews.xlsx.
-class Program
+// The example builds a template workbook, defines a foreach smart‑marker row for a collection named Reviews, binds a List<Review> to that marker, configures WorkbookDesigner for range smart markers (LineByLine = false), processes the markers, and saves the result as ProductReviews.xlsx.
+public class Review
 {
-    static void Main()
+    public string Reviewer { get; set; }
+    public string Comment { get; set; }
+    public int Rating { get; set; }
+}
+
+public class Program
+{
+    public static void Main()
     {
-        // Create a template workbook in memory
+        // -------------------------------------------------
+        // 1. Create a template workbook with smart markers
+        // -------------------------------------------------
         Workbook template = new Workbook();
-        Worksheet sheet = template.Worksheets[0];
+        Worksheet ws = template.Worksheets[0];
+        Cells cells = ws.Cells;
 
-        // Add header cells
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Review");
+        // Title
+        cells["A1"].PutValue("Product Reviews");
 
-        // Smart marker for a single product name
-        sheet.Cells["A2"].PutValue("&=Product.Name");
+        // Column headers (row 3)
+        cells["A3"].PutValue("Reviewer");
+        cells["B3"].PutValue("Comment");
+        cells["C3"].PutValue("Rating");
 
-        // Smart marker using foreach syntax to iterate over a variable‑length collection of reviews
-        sheet.Cells["B2"].PutValue("&=Reviews.REVIEW_TEXT");
+        // Smart marker row (row 4) – foreach syntax (&=) repeats this row for each item in the collection
+        cells["A4"].PutValue("&=Reviews.Reviewer");
+        cells["B4"].PutValue("&=Reviews.Comment");
+        cells["C4"].PutValue("&=Reviews.Rating");
 
-        // Define the range that contains the smart markers (required when LineByLine = false)
-        sheet.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
+        // Define the range that contains the smart markers.
+        // When LineByLine = false the designer looks for a range named "_CellsSmartMarkers".
+        ws.Cells.CreateRange("A4:C4").Name = "_CellsSmartMarkers";
 
-        // Prepare data sources
-        var product = new { Name = "SuperWidget" };
-        var reviews = new List<Review>
+        // -------------------------------------------------
+        // 2. Set up the WorkbookDesigner
+        // -------------------------------------------------
+        WorkbookDesigner designer = new WorkbookDesigner
         {
-            new Review { REVIEW_TEXT = "Excellent!" },
-            new Review { REVIEW_TEXT = "Good value." },
-            new Review { REVIEW_TEXT = "Could be better." }
+            Workbook = template,
+            // Use range smart markers (required for foreach syntax with variable‑length data)
+            LineByLine = false
         };
 
-        // Initialize WorkbookDesigner with the template workbook
-        WorkbookDesigner designer = new WorkbookDesigner();
-        designer.Workbook = template;
-        designer.LineByLine = false; // Use range smart markers instead of line‑by‑line processing
+        // -------------------------------------------------
+        // 3. Prepare a variable‑length collection of reviews
+        // -------------------------------------------------
+        List<Review> reviews = new List<Review>
+        {
+            new Review { Reviewer = "Alice",   Comment = "Great product!", Rating = 5 },
+            new Review { Reviewer = "Bob",     Comment = "Good value.",    Rating = 4 },
+            new Review { Reviewer = "Charlie", Comment = "Average.",       Rating = 3 }
+        };
 
-        // Bind data sources to the smart marker names
-        designer.SetDataSource("Product", product);
+        // Bind the collection to the smart marker name "Reviews"
         designer.SetDataSource("Reviews", reviews);
 
-        // Process the smart markers and populate the worksheet
+        // -------------------------------------------------
+        // 4. Process the smart markers and save the result
+        // -------------------------------------------------
         designer.Process();
-
-        // Save the populated workbook
         designer.Workbook.Save("ProductReviews.xlsx");
-    }
-
-    // Simple class representing a product review
-    public class Review
-    {
-        public string REVIEW_TEXT { get; set; }
     }
 }

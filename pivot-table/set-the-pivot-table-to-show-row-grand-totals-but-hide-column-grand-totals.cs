@@ -1,10 +1,7 @@
-// Title: Aspose.Cells C# – Show Row Grand Totals & Hide Column Grand Totals in a Pivot Table
-// Description: Creates a workbook with sample sales data, builds a pivot table on a separate sheet, assigns Product to rows, Region to columns, Sales to values, then enables row grand totals and disables column grand totals before refreshing and saving the file.
-// Keywords: Aspose.Cells pivot table row grand total | Aspose.Cells hide column grand total | C# Aspose.Cells pivot totals visibility | ShowRowGrandTotals Aspose.Cells | ShowColumnGrandTotals false | Aspose.Cells .NET pivot table settings
-// Common Searches: Aspose.Cells C# show only row grand totals in pivot table | how to hide column grand totals using Aspose.Cells | set ShowRowGrandTotals true Aspose.Cells | disable column grand totals Aspose.Cells pivot | pivot table grand total options Aspose.Cells .NET
-// Developer Intent: Configure a pivot table so that row grand totals are displayed while column grand totals are suppressed.
-// Use Cases: Generate a product‑wise sales summary where column totals would clutter the view. | Create a financial report that emphasizes total per row category without column aggregates. | Export an Excel workbook for presentation that needs only row grand totals for clarity.
-// AI Prompts: Write C# code with Aspose.Cells to create a pivot table that shows row grand totals but hides column grand totals. | Demonstrate how to set ShowRowGrandTotals and ShowColumnGrandTotals properties on an Aspose.Cells pivot table. | Explain how to modify an existing Aspose.Cells pivot table to change grand total visibility without rebuilding the table.
+// Title: Enable row grand totals and hide column grand totals in an Aspose.Cells pivot table using C#
+// AI Prompts: Generate C# code with Aspose.Cells that creates a pivot table, sets ShowRowGrandTotals = true and ShowColumnGrandTotals = false, then saves the workbook. | Write a .NET example that adds sample data, defines row, column, and data fields for a pivot table, and configures it to display only row grand totals.
+// Common Searches: how to show only row grand totals in Aspose.Cells pivot table C# | Aspose.Cells hide column grand totals example | C# pivot table ShowRowGrandTotals true ShowColumnGrandTotals false | Aspose.Cells set pivot table grand total visibility programmatically | C# create pivot table with row totals but no column totals using Aspose.Cells
+// Tags: Aspose.Cells pivot table grand total visibility | C# ShowRowGrandTotals property | Aspose.Cells column grand totals off | pivot table row totals only .NET | Aspose.Cells create pivot table programmatically
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotExample
 {
-    // Creates a workbook with sample sales data, builds a pivot table on a separate sheet, assigns Product to rows, Region to columns, Sales to values, then enables row grand totals and disables column grand totals before refreshing and saving the file.
+    // The program creates a workbook, inserts sample data, adds a pivot table on a new sheet, assigns Product as rows, Region as columns, Sales as data, enables row grand totals, disables column grand totals, and saves the file as an .xlsx workbook.
     class Program
     {
         static void Main()
@@ -20,7 +17,7 @@ namespace AsposeCellsPivotExample
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet (data sheet)
+            // Get the first worksheet (data sheet)
             Worksheet dataSheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
@@ -56,17 +53,11 @@ namespace AsposeCellsPivotExample
             pivotTable.AddFieldToArea(PivotFieldType.Column, 1); // Region as column field
             pivotTable.AddFieldToArea(PivotFieldType.Data, 2);   // Sales as data field
 
-            // Set grand total visibility:
-            // Show row grand totals
-            pivotTable.ShowRowGrandTotals = true;
-            // Hide column grand totals
-            pivotTable.ShowColumnGrandTotals = false;
+            // Show row grand totals and hide column grand totals
+            pivotTable.ShowRowGrandTotals = true;   // Enable row grand totals
+            pivotTable.ShowColumnGrandTotals = false; // Disable column grand totals
 
-            // Refresh and calculate the pivot data
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook to a file
+            // Save the workbook
             workbook.Save("PivotTable_RowGrand_HideColumnGrand.xlsx");
         }
     }

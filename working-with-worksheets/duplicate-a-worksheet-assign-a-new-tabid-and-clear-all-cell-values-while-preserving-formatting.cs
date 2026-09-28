@@ -1,45 +1,65 @@
-// Title: Copy a worksheet, set a unique TabId, and clear cell values while preserving formatting – Aspose.Cells for .NET
-// Description: Learn how to duplicate a worksheet in a .xlsx file using Aspose.Cells for .NET, assign a distinct TabId to the copy, and erase all cell contents without affecting styles. The example loads a workbook, uses AddCopy, updates the TabId, clears the used range with ClearContents, and saves the modified file.
-// Keywords: Aspose.Cells copy worksheet C# | set worksheet TabId Aspose.Cells | clear cell values keep formatting | AddCopy method .NET | ClearContents used range | C# Excel workbook manipulation | global Aspose.Cells tutorial
-// Common Searches: Aspose.Cells duplicate sheet and change TabId | How to clear only data in copied worksheet Aspose.Cells | C# copy worksheet keep formatting Aspose.Cells | Assign new TabId to Excel sheet with Aspose.Cells
-// Developer Intent: Programmatically create a worksheet copy, give it a unique TabId, and remove all data while leaving the original formatting untouched.
-// Use Cases: Generate a fresh report template by cloning a styled sheet, assigning a new TabId, and clearing previous entries. | Provide end‑users with a clean worksheet that mirrors a master layout, ensuring consistent formatting across new files. | Prepare a worksheet for API‑driven data import by copying a template sheet, setting a unique TabId to avoid conflicts, and wiping existing values.
-// AI Prompts: Write C# code with Aspose.Cells to copy a worksheet, assign a unique TabId, and clear all cell values while preserving formatting. | Explain why ClearContents removes data but leaves cell styles unchanged in Aspose.Cells. | Suggest alternative ways to generate a unique TabId for a duplicated worksheet using Aspose.Cells.
+// Title: Duplicate a worksheet, assign a new TabId, and clear cell values while preserving formatting using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that copies a worksheet, gives the copy a unique TabId, and clears only the cell contents while keeping all formatting with Aspose.Cells. | Write a .NET method to duplicate a specified sheet, set its TabId to the next highest value, and remove all data without affecting styles using Aspose.Cells.
+// Common Searches: Aspose.Cells copy worksheet and set new TabId in C# | clear worksheet data but keep formatting Aspose.Cells .NET | how to assign a unique TabId to a duplicated sheet using Aspose.Cells
+// Tags: duplicate worksheet with new TabId Aspose.Cells | clear worksheet contents preserving formatting .NET | assign unique TabId to copied sheet Aspose.Cells | copy sheet and reset values without losing styles
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Learn how to duplicate a worksheet in a .xlsx file using Aspose.Cells for .NET, assign a distinct TabId to the copy, and erase all cell contents without affecting styles. The example loads a workbook, uses AddCopy, updates the TabId, clears the used range with ClearContents, and saves the modified file.
-class DuplicateWorksheetDemo
+// The example loads an existing workbook, duplicates the first worksheet, assigns the copy a TabId higher than any existing sheet, clears all cell values while retaining formatting, and saves the result to a new file.
+class Program
 {
     static void Main()
     {
-        // Load the source workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Index of the worksheet to duplicate (e.g., the first sheet)
-        int sourceIndex = 0;
-        Worksheet sourceSheet = workbook.Worksheets[sourceIndex];
-
-        // Duplicate the worksheet using AddCopy (creates a copy with the same content and formatting)
-        int copiedIndex = workbook.Worksheets.AddCopy(sourceIndex);
-        Worksheet copiedSheet = workbook.Worksheets[copiedIndex];
-
-        // Assign a new TabId to the duplicated sheet (ensure it differs from the original)
-        copiedSheet.TabId = copiedSheet.Index + 1000; // any unique integer value
-
-        // Clear all cell values while preserving formatting
-        Cells cells = copiedSheet.Cells;
-        int maxRow = cells.MaxRow;
-        int maxColumn = cells.MaxColumn;
-
-        // If the sheet contains any data, clear the contents of the used range
-        if (maxRow >= 0 && maxColumn >= 0)
+        try
         {
-            cells.ClearContents(0, 0, maxRow, maxColumn);
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the workbook with the duplicated and cleared worksheet
-        workbook.Save("output.xlsx");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Index of the worksheet to duplicate (e.g., first worksheet)
+            int sourceIndex = 0;
+            Worksheet sourceSheet = workbook.Worksheets[sourceIndex];
+
+            // Duplicate the worksheet
+            int newIndex = workbook.Worksheets.AddCopy(sourceIndex);
+            Worksheet duplicatedSheet = workbook.Worksheets[newIndex];
+
+            // Assign a new unique TabId to the duplicated worksheet
+            int maxTabId = 0;
+            foreach (Worksheet ws in workbook.Worksheets)
+            {
+                if (ws.TabId > maxTabId)
+                    maxTabId = ws.TabId;
+            }
+            duplicatedSheet.TabId = maxTabId + 1;
+
+            // Clear all cell values while preserving formatting
+            // Use ClearContents overload that specifies the range to clear
+            int maxRow = duplicatedSheet.Cells.MaxDataRow;
+            int maxColumn = duplicatedSheet.Cells.MaxDataColumn;
+            if (maxRow >= 0 && maxColumn >= 0)
+            {
+                duplicatedSheet.Cells.ClearContents(0, 0, maxRow + 1, maxColumn + 1);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

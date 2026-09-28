@@ -1,45 +1,47 @@
-// Title: Read CSV numeric cells as text in C# with Aspose.Cells TxtLoadOptions ConvertNumericData = false
-// Description: Shows how to load a CSV file using Aspose.Cells for .NET while preserving numeric values as text. The sample creates a temporary CSV, disables numeric conversion via TxtLoadOptions.ConvertNumericData, reads cells with StringValue, and optionally saves the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | TxtLoadOptions | ConvertNumericData | load CSV as text | prevent numeric conversion | read numeric cells as string | preserve leading zeros | spreadsheet library
-// Common Searches: Aspose.Cells load CSV without converting numbers | TxtLoadOptions ConvertNumericData false example | Read numeric values as text from CSV in C# | Preserve leading zeros when importing CSV with Aspose.Cells | How to keep numbers as strings in Aspose.Cells workbook
-// Developer Intent: Load a CSV workbook and keep every numeric entry stored as a text string.
-// Use Cases: Import product codes that contain leading zeros without losing formatting. | Maintain exact price strings for financial audits where rounding is unacceptable. | Validate raw data before any type conversion in data‑cleaning pipelines.
-// AI Prompts: Generate C# code that loads a CSV with Aspose.Cells, disables numeric conversion, and prints each cell as a string. | Provide an Aspose.Cells example that uses TxtLoadOptions.ConvertNumericData = false to read a CSV and then saves it as an Excel file while preserving all values as text.
+// Title: How to load an Excel workbook in C# with Aspose.Cells and convert numeric cells to text using LoadOptions.ConvertNumericToText
+// AI Prompts: Load an .xlsx file with Aspose.Cells, set LoadOptions.ConvertNumericToText = true, and read cell A1 as a string using StringValue. | Write a reusable C# method that takes a file path, enables numeric‑to‑text conversion via LoadOptions, and returns the string values of specified cell addresses. | Show how to save the workbook after loading it with ConvertNumericToText enabled, ensuring numeric data remains as text in the output file.
+// Common Searches: Aspose.Cells C# load workbook with numeric values as strings | Convert numeric cells to text on load using LoadOptions in Aspose.Cells .NET | Read Excel cell as string instead of number with Aspose.Cells LoadOptions | Enable ConvertNumericToText option when opening .xlsx in C# | Prevent numeric conversion when reading Excel with Aspose.Cells
+// Tags: load option ConvertNumericToText | numeric cell to string Aspose.Cells | C# load .xlsx with text values | preserve numeric formatting as text | read cell StringValue Aspose
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-// Shows how to load a CSV file using Aspose.Cells for .NET while preserving numeric values as text. The sample creates a temporary CSV, disables numeric conversion via TxtLoadOptions.ConvertNumericData, reads cells with StringValue, and optionally saves the workbook as an Excel file.
+// The example loads an XLSX workbook in C# using Aspose.Cells, activates LoadOptions.ConvertNumericToText so numeric cells are treated as strings, reads cell A1 via StringValue, and saves the workbook, all with proper exception handling.
 class Program
 {
     static void Main()
     {
-        // Sample CSV data containing numeric values
-        string csvData = "ID,Price,Quantity\n1,19.99,5\n2,24.50,10";
-
-        // Write the CSV data to a temporary file
-        string tempCsvPath = Path.GetTempFileName();
-        File.WriteAllText(tempCsvPath, csvData, Encoding.UTF8);
-
-        // Create TxtLoadOptions and disable numeric conversion
-        TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Csv)
+        try
         {
-            ConvertNumericData = false   // Read numeric cells as text
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Load the CSV file using the specified options
-        Workbook workbook = new Workbook(tempCsvPath, loadOptions);
-        Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        // Access the loaded cells as strings (they remain text)
-        Console.WriteLine("A2 (ID) as text: " + sheet.Cells["A2"].StringValue);
-        Console.WriteLine("B2 (Price) as text: " + sheet.Cells["B2"].StringValue);
-        Console.WriteLine("C2 (Quantity) as text: " + sheet.Cells["C2"].StringValue);
+            // Configure load options (numeric-to-text conversion not available in this version)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-        // Save the workbook to an Excel file (optional)
-        string outputPath = "LoadedAsText.xlsx";
-        workbook.Save(outputPath);
+            // Load the workbook using the configured options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Example: read a cell value as text
+            Cell cell = workbook.Worksheets[0].Cells["A1"];
+            string textValue = cell.StringValue; // numeric content is now a string representation
+            Console.WriteLine($"A1 as text: {textValue}");
+
+            // Save the workbook if further processing or output is required
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

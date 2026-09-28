@@ -1,62 +1,79 @@
-// Title: Export a Specific Worksheet to a 200 DPI JPEG with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, checks a zero‑based worksheet index, sets ImageOrPrintOptions for JPEG with 200 DPI horizontal and vertical resolution, creates a SheetRender for that sheet, and saves the first page as a single‑page JPEG image.
-// Keywords: Aspose.Cells | C# | export worksheet to JPEG | 200 DPI | ImageOrPrintOptions | SheetRender | high‑detail Excel image | specific worksheet index
-// Common Searches: Aspose.Cells render worksheet by index to JPEG | 200 DPI Excel sheet image C# | how to export a single sheet as high resolution JPEG | ImageOrPrintOptions DPI setting Aspose.Cells | SheetRender ToImage example for specific worksheet
-// Developer Intent: Create a detailed JPEG image of a chosen worksheet using a 200 DPI setting.
-// Use Cases: Generate printable previews of a selected sheet for reports. | Provide high‑quality images of a particular worksheet for web portals or documentation. | Automate conversion of targeted sheets from many workbooks into 200 DPI JPEG files.
-// AI Prompts: Write C# code with Aspose.Cells to render worksheet index 5 as a PNG at 300 DPI and save it as 'sheet5.png'. | Explain error handling for invalid worksheet indexes when exporting to JPEG with custom DPI in Aspose.Cells. | Show how to configure ImageOrPrintOptions to produce multi‑page JPEG output instead of a single page.
+// Title: Export a worksheet by zero‑based index to a 200 DPI JPEG image using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, selects a worksheet at index 2, and saves it as a JPEG image at 200 DPI. | Demonstrate how to configure ImageOrPrintOptions for 200 DPI horizontal and vertical resolution and use SheetRender to export a single worksheet page to JPEG. | Create a C# snippet that checks the worksheet index range, creates the output folder if missing, and handles errors while rendering the sheet to a high‑resolution JPEG.
+// Common Searches: Aspose.Cells C# export specific worksheet to JPEG with 200 DPI resolution | How to render an Excel sheet by index as a high‑resolution image in .NET | Set horizontal and vertical DPI when converting Excel worksheet to JPEG using Aspose.Cells | C# code to save the third sheet of an Excel workbook as a 200 DPI JPEG file | Validate worksheet index before exporting to image with Aspose.Cells
+// Tags: Aspose.Cells SheetRender JPEG export | ImageOrPrintOptions DPI configuration | C# high‑resolution Excel to image conversion | Check worksheet range before rendering | Create output directory for image export
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsRenderingDemo
+// The example loads a workbook, verifies the source file and output folder, ensures the requested zero‑based worksheet index is valid, sets ImageOrPrintOptions to 200 DPI horizontal and vertical resolution, creates a SheetRender for the selected worksheet, and renders the first page to a JPEG file.
+class WorksheetToJpeg
 {
-    // Loads an Excel workbook, checks a zero‑based worksheet index, sets ImageOrPrintOptions for JPEG with 200 DPI horizontal and vertical resolution, creates a SheetRender for that sheet, and saves the first page as a single‑page JPEG image.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Path to the source Excel file
-            string sourceFile = "input.xlsx";
+            string sourceFile = @"C:\Input\Workbook.xlsx";
 
-            // Path for the output JPEG image
-            string outputImage = "worksheet_page0_200dpi.jpg";
+            // Verify that the source file exists
+            if (!File.Exists(sourceFile))
+            {
+                Console.WriteLine($"Source file not found: {sourceFile}");
+                return;
+            }
 
             // Index of the worksheet to render (0‑based)
             int worksheetIndex = 2; // example: third worksheet
 
-            // Load the workbook (uses the provided Workbook constructor rule)
-            Workbook workbook = new Workbook(sourceFile);
+            // Path for the output JPEG image
+            string outputFile = @"C:\Output\Worksheet3.jpg";
 
-            // Validate worksheet index
-            if (worksheetIndex < 0 || worksheetIndex >= workbook.Worksheets.Count)
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputFile);
+            if (string.IsNullOrEmpty(outputDir))
             {
-                Console.WriteLine("Invalid worksheet index.");
+                Console.WriteLine("Invalid output path.");
                 return;
             }
 
-            // Get the target worksheet
-            Worksheet sheet = workbook.Worksheets[worksheetIndex];
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Configure image rendering options (uses ImageOrPrintOptions rule)
+            // Load the workbook
+            Workbook workbook = new Workbook(sourceFile);
+
+            // Ensure the requested index is within range
+            if (worksheetIndex < 0 || worksheetIndex >= workbook.Worksheets.Count)
+            {
+                Console.WriteLine("Worksheet index out of range.");
+                return;
+            }
+
+            // Configure rendering options with 200 DPI resolution
             ImageOrPrintOptions options = new ImageOrPrintOptions
             {
-                ImageType = ImageType.Jpeg,          // JPEG output
-                HorizontalResolution = 200,          // 200 DPI horizontal
-                VerticalResolution = 200,            // 200 DPI vertical
-                OnePagePerSheet = true               // Render each sheet as a single page
+                HorizontalResolution = 200,
+                VerticalResolution = 200
+                // Image format is inferred from the output file extension (JPEG)
+                // OnePagePerSheet = true // uncomment to fit the whole sheet on one page
             };
 
-            // Create a SheetRender instance for the selected worksheet (uses SheetRender constructor rule)
-            SheetRender renderer = new SheetRender(sheet, options);
+            // Create a SheetRender object for the target worksheet
+            SheetRender sheetRender = new SheetRender(workbook.Worksheets[worksheetIndex], options);
 
-            // Render the first page of the worksheet to a JPEG file (uses SheetRender.ToImage overload)
-            renderer.ToImage(0, outputImage);
+            // Render the first (and only) page of the worksheet to an image
+            sheetRender.ToImage(0, outputFile);
 
-            Console.WriteLine($"Worksheet {worksheetIndex} rendered to JPEG at {outputImage} with 200 DPI.");
+            Console.WriteLine($"Worksheet {worksheetIndex} rendered to JPEG at {outputFile}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,48 +1,36 @@
-// Title: Save Workbook as CSV with Blank‑Row Separators Using Aspose.Cells TxtSaveOptions (C#)
-// Description: Creates a workbook, inserts data with an empty row, and saves it as a CSV file using TxtSaveOptions. The options set a comma separator, enable KeepSeparatorsForBlankRow, and use UTF‑8 encoding, ensuring that blank rows retain column delimiters.
-// Keywords: Aspose.Cells CSV export | TxtSaveOptions KeepSeparatorsForBlankRow | custom CSV separator C# | UTF-8 CSV Aspose.Cells | preserve blank rows CSV
-// Common Searches: Aspose.Cells keep commas for empty rows CSV | TxtSaveOptions KeepSeparatorsForBlankRow example C# | save Excel as CSV with custom delimiter Aspose | export workbook to CSV preserving blank lines
-// Developer Intent: Export an Excel workbook to CSV while keeping delimiter characters in rows that contain no data.
-// Use Cases: Generating fixed‑width CSV files required by legacy import tools. | Creating data feeds where each row must contain the same number of columns, even when some rows are intentionally empty. | Producing CSV reports that preserve row alignment for downstream processing.
-// AI Prompts: Show how to change TxtSaveOptions to use a semicolon as the CSV separator while keeping blank‑row delimiters. | Provide a C# snippet that reads a CSV saved with KeepSeparatorsForBlankRow and validates the number of commas per row. | Explain the impact of KeepSeparatorsForBlankRow on CSV output when the source workbook contains merged cells.
+// Title: Save an Aspose.Cells workbook to CSV while preserving column separators for blank rows using TxtSaveOptions (C#)
+// AI Prompts: Write C# code that creates a Workbook, adds data with intentional empty rows, and saves it as a CSV using TxtSaveOptions with KeepSeparatorsForBlankRow enabled. | Show how to configure TxtSaveOptions for ASCII encoding, a comma delimiter, and blank‑row separator preservation when exporting to CSV with Aspose.Cells. | Demonstrate exporting an Aspose.Cells workbook to CSV while ensuring separator characters are written for rows that contain no data.
+// Common Searches: how to keep commas for empty rows when saving Excel to CSV with Aspose.Cells C# | Aspose.Cells TxtSaveOptions KeepSeparatorsForBlankRow C# example | save workbook as CSV preserving blank line delimiters Aspose.Cells | C# Aspose.Cells export CSV with custom separator and blank row handling
+// Tags: Aspose.Cells CSV export KeepSeparatorsForBlankRow | TxtSaveOptions custom CSV settings C# | preserve blank row separators Aspose.Cells | ASCII encoding CSV Aspose.Cells | export workbook to CSV blank rows
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvExample
+// The example creates a workbook, inserts values with intentional empty rows, configures TxtSaveOptions to use ASCII encoding, a comma delimiter, and KeepSeparatorsForBlankRow=true, then saves the workbook as output.csv.
+class SaveCsvWithBlankRowSeparators
 {
-    // Creates a workbook, inserts data with an empty row, and saves it as a CSV file using TxtSaveOptions. The options set a comma separator, enable KeepSeparatorsForBlankRow, and use UTF‑8 encoding, ensuring that blank rows retain column delimiters.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get its cells collection
+        Workbook workbook = new Workbook();
+        Cells cells = workbook.Worksheets[0].Cells;
+
+        // Add data with intentional blank rows (rows 1 and 2 are left empty)
+        cells[0, 0].PutValue("a");
+        cells[0, 1].PutValue("b");
+        cells[3, 0].PutValue("c");
+        cells[4, 1].PutValue("d");
+
+        // Configure TxtSaveOptions to keep separators for blank rows
+        TxtSaveOptions saveOptions = new TxtSaveOptions
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Cells cells = workbook.Worksheets[0].Cells;
+            Encoding = Encoding.ASCII,
+            Separator = ',',               // Use comma as CSV delimiter
+            KeepSeparatorsForBlankRow = true
+        };
 
-            // Populate data with intentional blank rows
-            cells[0, 0].PutValue("First");
-            cells[0, 1].PutValue("Row");
-            // Row 1 is left blank
-            cells[2, 0].PutValue("Third");
-            cells[2, 1].PutValue("Row");
-
-            // Configure CSV save options
-            TxtSaveOptions csvOptions = new TxtSaveOptions
-            {
-                // Use comma as separator
-                Separator = ',',
-                // Ensure blank rows retain separators
-                KeepSeparatorsForBlankRow = true,
-                // Use UTF-8 encoding for the output file
-                Encoding = Encoding.UTF8
-            };
-
-            // Save the workbook as CSV with the custom options
-            workbook.Save("output.csv", csvOptions);
-
-            Console.WriteLine("Workbook saved as CSV with separators for blank rows.");
-        }
+        // Save the workbook as CSV using the configured options
+        workbook.Save("output.csv", saveOptions);
     }
 }

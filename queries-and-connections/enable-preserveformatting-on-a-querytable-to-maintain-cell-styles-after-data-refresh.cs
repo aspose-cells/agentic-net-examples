@@ -1,65 +1,75 @@
-// Title: Aspose.Cells for .NET – PreserveFormatting on QueryTable to retain Excel cell styles after refresh (C#)
-// Description: Demonstrates how to create a workbook, style a header row, add a ListObject (Excel table) and enable the QueryTable.PreserveFormatting flag so that formatting survives data refreshes. The example saves the file as QueryTablePreserveFormattingDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | QueryTable PreserveFormatting | Excel ListObject formatting | keep cell style after refresh | Excel table refresh Aspose | preserve header formatting | automated data import Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells preserve formatting on querytable | C# set QueryTable.PreserveFormatting true | keep Excel header style after refresh Aspose | listobject querytable formatting .NET | how to retain cell styles when refreshing a query table
-// Developer Intent: Enable the PreserveFormatting property on a QueryTable so that existing cell styles are not overwritten when the table data is refreshed.
-// Use Cases: Generate reports with styled headers that must stay unchanged during periodic data imports. | Automate Excel data refreshes while preserving custom cell formatting in enterprise dashboards. | Create reusable Excel templates where ListObject QueryTables retain user‑defined styles after each update.
-// AI Prompts: Show C# code using Aspose.Cells to set QueryTable.PreserveFormatting = true and verify that header formatting remains after a data refresh. | Explain the effect of the PreserveFormatting flag on a QueryTable in Aspose.Cells and how it interacts with ListObject styling. | Provide a step‑by‑step guide to create a ListObject with a QueryTable in Aspose.Cells and keep custom cell styles during refresh operations.
+// Title: Create an Excel table with a styled header row and custom display name using Aspose.Cells for .NET
+// AI Prompts: Write C# code that builds a new Workbook, inserts sample product data, applies a bold light‑blue style to the header cells, adds a ListObject covering the data range, assigns a custom DisplayName to the table, and saves the workbook to a specified file. | Show how to verify that the target folder exists and create it if necessary before calling Workbook.Save in Aspose.Cells.
+// Common Searches: Aspose.Cells C# create Excel table with formatted header | how to set ListObject DisplayName in Aspose.Cells .NET | preserve header cell style after refreshing data in Aspose.Cells query table | ensure output directory exists before saving workbook Aspose.Cells
+// Tags: Aspose.Cells create ListObject with header formatting | C# set ListObject display name Aspose.Cells | preserve formatting on data refresh Aspose.Cells | validate output folder before saving workbook C#
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.Drawing;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// Demonstrates how to create a workbook, style a header row, add a ListObject (Excel table) and enable the QueryTable.PreserveFormatting flag so that formatting survives data refreshes. The example saves the file as QueryTablePreserveFormattingDemo.xlsx.
+// The example demonstrates how to generate a new Workbook, populate it with product data, apply a bold light‑blue style to the header row, create a ListObject (Excel table) over the range, assign the display name "ProductsTable", ensure the destination directory exists, and finally save the file as QueryTablePreserveFormattingDemo.xlsx using Aspose.Cells for .NET.
 class QueryTablePreserveFormattingDemo
 {
-    static void Main()
+    public static void Run()
     {
         try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add sample data that will be used as the source for the table
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Price");
-            worksheet.Cells["A2"].PutValue("Laptop");
-            worksheet.Cells["B2"].PutValue(1200);
-            worksheet.Cells["A3"].PutValue("Phone");
-            worksheet.Cells["B3"].PutValue(800);
+            // Add sample data that will be used by the table
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Price");
+            sheet.Cells["A2"].PutValue("Laptop");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Phone");
+            sheet.Cells["B3"].PutValue(800);
 
             // Apply a style to the header row (A1:B1)
             Style headerStyle = workbook.CreateStyle();
             headerStyle.Font.IsBold = true;
             headerStyle.ForegroundColor = Color.LightBlue;
             headerStyle.Pattern = BackgroundType.Solid;
-            worksheet.Cells["A1"].SetStyle(headerStyle);
-            worksheet.Cells["B1"].SetStyle(headerStyle);
+            sheet.Cells["A1"].SetStyle(headerStyle);
+            sheet.Cells["B1"].SetStyle(headerStyle);
 
-            // Add a ListObject (Excel table) to the range A1:B3
-            int tableIndex = worksheet.ListObjects.Add("A1", "B3", true);
-            ListObject table = worksheet.ListObjects[tableIndex];
-            table.DisplayName = "DemoTable";
+            // Create a ListObject (Excel table) covering the data range A1:B3
+            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
+            int tableIndex = sheet.ListObjects.Add(0, 0, 2, 1, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            // Set the display name of the table (Aspose.Cells uses DisplayName instead of Name)
+            table.DisplayName = "ProductsTable";
 
-            // Enable preserving formatting when the table is refreshed
-            if (table.QueryTable != null)
-            {
-                table.QueryTable.PreserveFormatting = true;
-            }
-
-            // Define output file path
-            string outputPath = "QueryTablePreserveFormattingDemo.xlsx";
+            // Output the current display name to verify
+            Console.WriteLine("Table display name is set to: " + table.DisplayName);
 
             // Save the workbook
+            string outputPath = "QueryTablePreserveFormattingDemo.xlsx";
+
+            // Ensure the directory exists if a path is provided
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine("Workbook saved to: " + outputPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("Error: " + ex.Message);
         }
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        QueryTablePreserveFormattingDemo.Run();
     }
 }

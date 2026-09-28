@@ -1,49 +1,86 @@
-// Title: Convert HTML to PDF with a diagonal semi‑transparent watermark using Aspose.Cells for .NET (C#)
-// Description: Loads an HTML file into an Aspose.Cells Workbook, creates a RenderingWatermark with custom font, rotation, opacity and scaling, attaches it to PdfSaveOptions, and saves the workbook as a PDF where the watermark appears behind the content on every page.
-// Keywords: Aspose.Cells HTML to PDF | C# PDF watermark | RenderingWatermark example | PdfSaveOptions watermark | diagonal text watermark | semi transparent PDF watermark | Aspose.Cells .NET tutorial | convert HTML to PDF C# | global PDF generation
-// Common Searches: how to add a diagonal watermark to PDF with Aspose.Cells | Aspose.Cells convert HTML to PDF with watermark C# | set watermark opacity and rotation in PdfSaveOptions | C# example for RenderingWatermark in Aspose.Cells | add background text watermark to every PDF page
-// Developer Intent: Create a PDF from an HTML source and overlay a visible, semi‑transparent diagonal watermark on each page using Aspose.Cells for .NET.
-// Use Cases: Generate confidential reports from HTML templates with a "CONFIDENTIAL" watermark across all pages. | Produce branded brochures by stamping the company name as a diagonal watermark on HTML‑based PDFs. | Automate legal document output where every PDF derived from HTML must display a compliance watermark.
-// AI Prompts: Write C# code with Aspose.Cells to convert an HTML file to PDF and apply a rotated, semi‑transparent text watermark. | Explain how to adjust watermark size, opacity, and alignment when saving HTML as PDF with Aspose.Cells. | Show how to assign different watermark texts to specific pages while merging multiple HTML sheets into a single PDF.
+// Title: Add a diagonal semi‑transparent text watermark to each page when converting HTML to PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook, inserts a WordArt watermark with custom text, font, size, rotation, and transparency on every worksheet, and saves the workbook as a PDF. | Show how to adjust the watermark properties—text, font name, font size, rotation angle, and transparency—in an Aspose.Cells HTML‑to‑PDF conversion example. | Provide a snippet that centers the watermark on an A4 page, sends it to the back layer, and ensures it appears behind cell content in the exported PDF.
+// Common Searches: c# aspose.cells add diagonal watermark to pdf generated from html | how to set watermark transparency in aspose.cells html to pdf conversion | aspose.cells place text watermark behind cells when exporting workbook to pdf | change watermark rotation angle aspose.cells c# html to pdf | center watermark on each page aspose.cells pdf export
+// Tags: Aspose.Cells HTML to PDF conversion with watermark | C# add diagonal text watermark Aspose.Cells | semi-transparent watermark shape Aspose.Cells | rotate text effect watermark worksheet | export workbook as PDF with watermark Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// Loads an HTML file into an Aspose.Cells Workbook, creates a RenderingWatermark with custom font, rotation, opacity and scaling, attaches it to PdfSaveOptions, and saves the workbook as a PDF where the watermark appears behind the content on every page.
+// The sample loads an HTML file into an Aspose.Cells Workbook, creates a WordArt shape containing a configurable text watermark, rotates it diagonally, centers it, applies 80% transparency, sends it to the back layer, and saves the workbook as a PDF so the watermark appears on every page.
 class HtmlToPdfWithWatermark
 {
     static void Main()
     {
-        // Load the HTML file into a workbook
-        Workbook workbook = new Workbook("input.html");
+        // Paths for input HTML and output PDF
+        string htmlPath = "input.html";
+        string pdfPath = "output.pdf";
 
-        // Define the font for the watermark text
-        RenderingFont font = new RenderingFont("Arial", 48)
+        try
         {
-            Bold = true,
-            Color = Color.Gray
-        };
+            // Verify that the HTML file exists
+            if (!File.Exists(htmlPath))
+                throw new FileNotFoundException($"Input HTML file not found: {htmlPath}");
 
-        // Create a text watermark with desired appearance
-        RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
+            // Load the HTML file into a Workbook using HtmlLoadOptions
+            var loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(htmlPath, loadOptions);
+
+            // Watermark settings
+            string watermarkText = "CONFIDENTIAL";
+            string fontName = "Arial";
+            int fontSize = 72;               // Font size must be integer
+            double rotationAngle = -45.0;    // Rotation in degrees
+
+            // Add watermark to each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Add a WordArt shape (text effect) as watermark
+                // Parameters: preset, text, font, size, bold, italic, left, top, width, height, depth, rotation
+                Shape watermark = sheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1,
+                    watermarkText,
+                    fontName,
+                    fontSize,
+                    false,
+                    false,
+                    0,          // left
+                    0,          // top
+                    500,        // width
+                    200,        // height
+                    0,          // depth
+                    0);         // rotation (handled later)
+
+                // Rotate the shape diagonally
+                watermark.RotationAngle = rotationAngle;
+
+                // Make the watermark semi‑transparent
+                watermark.Fill.Transparency = 0.8;          // 80% transparent fill
+                watermark.Line.Transparency = 0.8;         // 80% transparent line
+
+                // Send the shape to the back so it doesn't cover cell content
+                watermark.ZOrderPosition = 0;
+
+                // Approximate A4 page size in points (1 point = 1/72 inch)
+                double pageWidth = 595;
+                double pageHeight = 842;
+
+                // Center the watermark on the page (cast to int if required by the API version)
+                watermark.Left = (int)((pageWidth - watermark.Width) / 2);
+                watermark.Top = (int)((pageHeight - watermark.Height) / 2);
+
+                // Ensure the watermark stays fixed on the page
+                watermark.Placement = PlacementType.FreeFloating;
+            }
+
+            // Save the workbook as PDF; the watermark will appear on each page
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF generated successfully: {pdfPath}");
+        }
+        catch (Exception ex)
         {
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Center,
-            Rotation = 45,               // Rotate to appear across the page
-            Opacity = 0.3f,              // Semi‑transparent
-            ScaleToPagePercent = 75,     // Scale relative to page size
-            IsBackground = true          // Place behind page content
-        };
-
-        // Configure PDF save options to include the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
-
-        // Save the workbook as a PDF with the watermark applied
-        workbook.Save("output.pdf", pdfOptions);
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

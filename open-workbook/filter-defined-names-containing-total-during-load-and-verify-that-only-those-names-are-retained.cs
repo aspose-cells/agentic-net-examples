@@ -1,66 +1,65 @@
-// Title: C# Aspose.Cells: Load Workbook and Keep Only Defined Names Containing “Total”
-// Description: Shows how to use Aspose.Cells LoadOptions with a custom LoadFilter to load only defined names, delete every named range that lacks the word “Total”, confirm the remaining names, and save the filtered workbook.
-// Keywords: Aspose.Cells | C# LoadFilter | defined names | named ranges | filter by keyword | Total named ranges | load workbook | remove named ranges | Excel automation | memory optimization
-// Common Searches: Aspose.Cells load only defined names C# | remove named ranges except those containing a word | filter Excel named ranges by keyword Aspose | verify remaining defined names after LoadFilter | C# load workbook with custom LoadFilter
-// Developer Intent: Load an Excel file, retain only defined names that include the word “Total”, and save the trimmed workbook.
-// Use Cases: Process large financial workbooks while loading only total‑related named ranges to lower memory consumption. | Create a lightweight copy of a template that contains just summary named ranges for downstream reporting. | Validate that a workbook includes required total named ranges before running calculations.
-// AI Prompts: Write a C# LoadFilter subclass for Aspose.Cells that loads only defined names during workbook loading. | Generate C# code that removes all defined names not containing a specified substring after loading an Excel file with Aspose.Cells. | Create a unit test that asserts only names containing "Total" remain after applying the custom LoadFilter and removal logic.
+// Title: Load an Excel workbook using Aspose.Cells for .NET and retain only defined names containing the word "Total"
+// AI Prompts: Load a workbook with Aspose.Cells, iterate through the NameCollection, delete every defined name whose Text does not include the substring "Total" (case‑insensitive), verify the remaining names, and save the file. | Write C# code that filters the defined names in an Excel file so that after loading, only names containing "Total" remain, includes error handling for a missing file and throws an exception if any retained name lacks the keyword.
+// Common Searches: Aspose.Cells C# filter workbook defined names containing specific keyword | How to remove named ranges that do not include 'Total' using Aspose.Cells | Retain only Excel defined names with 'Total' after loading workbook in .NET | Verify defined name substrings in Aspose.Cells after opening a file | C# Aspose.Cells remove unwanted named ranges based on text
+// Tags: Aspose.Cells defined name filtering | C# remove Excel named ranges by keyword | retain named ranges containing Total | NameCollection manipulation Aspose.Cells | verify defined name substring .NET
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to use Aspose.Cells LoadOptions with a custom LoadFilter to load only defined names, delete every named range that lacks the word “Total”, confirm the remaining names, and save the filtered workbook.
+// Loads Input.xlsx with Aspose.Cells, removes every defined name whose Text does not contain the word "Total" (case‑insensitive), validates that all remaining names include the keyword, and saves the workbook as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Input and output file paths
-        string inputFile = "source.xlsx";
-        string outputFile = "filtered.xlsx";
-
-        // Create LoadOptions and assign a custom LoadFilter
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new TotalNamesLoadFilter();
-
-        // Load the workbook using the specified LoadOptions
-        Workbook workbook = new Workbook(inputFile, loadOptions);
-
-        // After loading, remove all defined names that do NOT contain "Total"
-        NameCollection names = workbook.Worksheets.Names;
-        List<string> namesToRemove = new List<string>();
-
-        foreach (Name name in names)
+        try
         {
-            if (!name.Text.Contains("Total", StringComparison.OrdinalIgnoreCase))
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the collection of defined names in the workbook
+            NameCollection definedNames = workbook.Worksheets.Names;
+
+            // Collect the names that do NOT contain "Total"
+            List<string> namesToRemove = new List<string>();
+            foreach (Name definedName in definedNames)
             {
-                namesToRemove.Add(name.Text);
+                // Use the Text property to get the defined name string
+                if (!definedName.Text.Contains("Total", StringComparison.OrdinalIgnoreCase))
+                {
+                    namesToRemove.Add(definedName.Text);
+                }
             }
+
+            // Remove the unwanted defined names from the collection
+            foreach (string name in namesToRemove)
+            {
+                definedNames.Remove(name);
+            }
+
+            // Verification: ensure every remaining defined name contains "Total"
+            foreach (Name definedName in definedNames)
+            {
+                if (!definedName.Text.Contains("Total", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new Exception($"Defined name '{definedName.Text}' does not contain 'Total'.");
+                }
+            }
+
+            // Save the workbook (optional, to persist the filtered defined names)
+            workbook.Save(outputPath);
         }
-
-        if (namesToRemove.Count > 0)
+        catch (Exception ex)
         {
-            names.Remove(namesToRemove.ToArray());
-        }
-
-        // Verify that only names containing "Total" remain
-        Console.WriteLine("Remaining defined names after filtering:");
-        foreach (Name name in names)
-        {
-            Console.WriteLine(name.Text);
-        }
-
-        // Save the filtered workbook
-        workbook.Save(outputFile);
-    }
-
-    // Custom LoadFilter that loads only defined names during workbook loading
-    class TotalNamesLoadFilter : LoadFilter
-    {
-        public override void StartSheet(Worksheet sheet)
-        {
-            // Load only the defined names (other data can be loaded as needed)
-            LoadDataFilterOptions = LoadDataFilterOptions.DefinedNames;
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

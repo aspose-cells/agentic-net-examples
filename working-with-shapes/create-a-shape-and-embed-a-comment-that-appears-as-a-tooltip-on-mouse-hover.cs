@@ -1,44 +1,55 @@
-// Title: Aspose.Cells C# – Insert Rectangle Shape with Hover Tooltip Comment
-// Description: Shows how to create a workbook, add a rectangle shape at cell B2, set its AlternativeText to display a tooltip on hover, attach a comment to the same cell, customize the CommentShape size and colors, and save the result as an .xlsx file.
-// Keywords: Aspose.Cells C# shape tooltip | add rectangle shape Aspose.Cells | Excel hover comment Aspose | AlternativeText shape tooltip | CommentShape customization | C# generate Excel tooltip | Aspose.Cells shape annotation
-// Common Searches: Aspose.Cells add shape with tooltip C# | Set AlternativeText for rectangle shape Aspose.Cells | Customize comment box appearance Aspose.Cells | Display hover tooltip for Excel shape using Aspose | How to attach comment to shape in Aspose.Cells
-// Developer Intent: Create a rectangle shape and bind a comment that appears as a tooltip when the user hovers over the shape in an Excel workbook.
-// Use Cases: Add interactive notes to financial dashboards by linking shapes with hover tooltips. | Provide explanatory tooltips for diagram elements in automatically generated reports. | Style comment boxes attached to shapes for a polished UI in exported Excel files.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a circle shape and a hover tooltip comment, including custom fill and line colors. | Write a method that inserts multiple shapes, each with its own tooltip comment, and saves the workbook. | Explain how the AlternativeText property of a Shape and the CommentShape of a Comment work together to display hover tooltips in Aspose.Cells.
+// Title: Create a rectangle shape with a tooltip comment in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, insert a rectangle shape at row 3 column 3, set its AlternativeText to a custom message, and save the file as ShapeWithComment.xlsx using Aspose.Cells. | Write C# code that adds a free‑floating shape, assigns a tooltip comment via the AlternativeText property, and exports the worksheet to an .xlsx file.
+// Common Searches: Aspose.Cells C# set tooltip for a shape | Add hover comment to Excel shape using .NET | Insert rectangle shape with mouse‑over text in Aspose.Cells | Create Excel workbook with shape tooltip via Aspose.Cells | C# example for shape tooltip in .xlsx file
+// Tags: Aspose.Cells rectangle shape API | shape mouse‑over text implementation | C# configure shape line weight | save workbook with embedded shape | shape placement type configuration
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add a rectangle shape at cell B2, set its AlternativeText to display a tooltip on hover, attach a comment to the same cell, customize the CommentShape size and colors, and save the result as an .xlsx file.
-class ShapeWithCommentTooltip
+// The program creates a new workbook, adds a free‑floating rectangle shape to the first worksheet, sets its AlternativeText property to act as a tooltip comment, and saves the file as ShapeWithComment.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a rectangle shape to the worksheet (positioned at row 2, column 2)
-        // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, width, height
-        Shape rectShape = sheet.Shapes.AddRectangle(1, 1, 0, 0, 120, 60);
-        rectShape.Name = "MyRectangle";
-        rectShape.AlternativeText = "Rectangle shape tooltip";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a comment to cell B2 (row index 1, column index 1)
-        int commentIndex = sheet.Comments.Add(1, 1);
-        Comment comment = sheet.Comments[commentIndex];
-        comment.Note = "This is a tooltip comment displayed on hover.";
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 80, 120);
 
-        // Access the shape that represents the comment box
-        CommentShape commentShape = comment.CommentShape;
-        // Optionally adjust the comment shape size and appearance
-        commentShape.Width = 200;
-        commentShape.Height = 80;
-        commentShape.FillFormat.ForeColor = System.Drawing.Color.LightYellow;
-        commentShape.LineFormat.ForeColor = System.Drawing.Color.DarkGray;
+            // Set basic shape properties
+            shape.Placement = PlacementType.FreeFloating;
+            shape.Line.Weight = 1.0; // Set line weight (thickness)
 
-        // Save the workbook to a file
-        workbook.Save("ShapeWithCommentTooltip.xlsx");
+            // Set tooltip (alternative text) for the shape
+            shape.AlternativeText = "This is a tooltip comment for the shape.";
+
+            // Determine output file path
+            string outputPath = "ShapeWithComment.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

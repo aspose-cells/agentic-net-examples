@@ -1,71 +1,107 @@
-// Title: C# – Import JSON Array into Excel as a Table with Aspose.Cells
-// Description: This example shows how to use Aspose.Cells for .NET to read a JSON array, automatically create column headers from the object fields, and insert each element as a row in an Excel worksheet. By enabling JsonLayoutOptions.ArrayAsTable and calling JsonUtility.ImportData, the code builds a formatted table starting at cell A1 and saves it as an .xlsx file.
-// Keywords: Aspose.Cells | C# JSON to Excel | JsonUtility ImportData | ArrayAsTable | Excel table from JSON | convert JSON array | Aspose.Cells .NET | JSON import C# | Excel automation | US Canada UK sample data
-// Common Searches: Aspose.Cells import JSON array as table | JsonUtility ImportData C# example | Convert JSON to Excel table using .NET | Automatic column creation from JSON with Aspose.Cells | Set JsonLayoutOptions.ArrayAsTable
-// Developer Intent: Create an Excel worksheet where each object in a JSON array becomes a row and each property becomes a column automatically.
-// Use Cases: Turn API‑returned JSON data into an Excel table for quick analysis and reporting. | Migrate legacy JSON files to spreadsheets without manually defining column mappings. | Build a reusable utility that imports dynamic JSON structures into Excel for downstream business processes.
-// AI Prompts: Write C# code that uses Aspose.Cells to import a JSON array into a worksheet as a table with automatic column creation. | Explain how JsonLayoutOptions.ArrayAsTable works and how to change the starting cell for the import. | Suggest error‑handling and performance strategies for importing large JSON payloads with JsonUtility.ImportData.
+// Title: Import a JSON array into an Excel worksheet and create a ListObject table with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses System.Text.Json to deserialize a JSON array into a list of POCO objects and inserts the data with column headers into an Aspose.Cells worksheet. | Show how to define the data range and add a ListObject (Excel table) over it using Aspose.Cells. | Demonstrate applying a built‑in table style, auto‑fitting columns, and saving the workbook with proper exception handling.
+// Common Searches: C# Aspose.Cells import JSON array into Excel table with headers | How to create a ListObject from deserialized JSON data using Aspose.Cells | Aspose.Cells auto fit columns after writing JSON objects to worksheet | Saving workbook to specific folder after adding table in Aspose.Cells C#
+// Tags: JSON deserialization to POCO collection C# | populate Aspose.Cells worksheet from object list | add ListObject table over data range Aspose.Cells | apply built‑in table style to ListObject Aspose.Cells | auto‑fit columns after data import Aspose.Cells | save workbook with exception handling Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Tables;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 
-namespace AsposeCellsJsonImportExample
+// The example creates a new workbook, deserializes a JSON array into a list of Person POCOs, writes column headers and each record to the first worksheet, defines the occupied range, adds a ListObject (Excel table) over that range, optionally applies a built‑in table style, auto‑fits the columns, and saves the file as JsonImport.xlsx with comprehensive error handling.
+class Program
 {
-    // This example shows how to use Aspose.Cells for .NET to read a JSON array, automatically create column headers from the object fields, and insert each element as a row in an Excel worksheet. By enabling JsonLayoutOptions.ArrayAsTable and calling JsonUtility.ImportData, the code builds a formatted table starting at cell A1 and saves it as an .xlsx file.
-    public class JsonToTableImporter
+    // Simple POCO to hold JSON data
+    private class Person
     {
-        public static void Run()
-        {
-            try
-            {
-                // Sample JSON array – each object will become a row in the worksheet
-                string json = @"[
-                    { ""Name"": ""Alice"", ""Age"": 30, ""Country"": ""USA"" },
-                    { ""Name"": ""Bob"",   ""Age"": 25, ""Country"": ""Canada"" },
-                    { ""Name"": ""Carol"", ""Age"": 28, ""Country"": ""UK"" }
-                ]";
-
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Configure layout options to treat the JSON array as a table
-                JsonLayoutOptions options = new JsonLayoutOptions
-                {
-                    ArrayAsTable = true   // Enables automatic column creation and row insertion
-                };
-
-                // Import the JSON data starting at cell A1 (row 0, column 0)
-                JsonUtility.ImportData(json, worksheet.Cells, 0, 0, options);
-
-                // Define output file path
-                string outputPath = "JsonArrayTable.xlsx";
-
-                // Save the workbook to an Excel file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during JSON import or workbook save: {ex.Message}");
-            }
-        }
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;   // avoid nullable warning
+        public int Score { get; set; }
     }
 
-    public class Program
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // JSON data to import
+            string json = @"[
+                { ""Id"": 1, ""Name"": ""Alice"", ""Score"": 85 },
+                { ""Id"": 2, ""Name"": ""Bob"", ""Score"": 92 },
+                { ""Id"": 3, ""Name"": ""Charlie"", ""Score"": 78 }
+            ]";
+
+            // Deserialize JSON into a list of Person objects
+            List<Person> people = JsonSerializer.Deserialize<List<Person>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new List<Person>();
+
+            // Write headers
+            int startRow = 0;
+            int startCol = 0;
+            sheet.Cells[startRow, startCol].PutValue("Id");
+            sheet.Cells[startRow, startCol + 1].PutValue("Name");
+            sheet.Cells[startRow, startCol + 2].PutValue("Score");
+
+            // Write data rows
+            int currentRow = startRow + 1;
+            foreach (var p in people)
+            {
+                sheet.Cells[currentRow, startCol].PutValue(p.Id);
+                sheet.Cells[currentRow, startCol + 1].PutValue(p.Name);
+                sheet.Cells[currentRow, startCol + 2].PutValue(p.Score);
+                currentRow++;
+            }
+
+            // Create a table (ListObject) over the imported range
+            int totalRows = people.Count + 1; // including header
+            int totalCols = 3;
+            // Add returns the index of the created ListObject in older API versions
+            int listIndex = sheet.ListObjects.Add(startRow, startCol, totalRows, totalCols, true);
+            ListObject listObject = sheet.ListObjects[listIndex];
+
+            // Optional: apply a built‑in table style if desired (skip if not supported)
             try
             {
-                JsonToTableImporter.Run();
+                // Example style application (uncomment if your version supports it)
+                // listObject.Style = workbook.TableStyles[TableStyleType.TableStyleMedium2];
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                // Ignore styling errors for older API versions
             }
+
+            // Auto‑fit columns for better appearance
+            sheet.AutoFitColumns();
+
+            // Determine output path and ensure the directory exists
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "JsonImport.xlsx");
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

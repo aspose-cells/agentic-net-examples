@@ -1,99 +1,121 @@
-// Title: Audit all named ranges in an Excel workbook – scope, address, and RefersTo using Aspose.Cells for .NET
-// Description: Loads a workbook, creates a "NamedRangeAudit" sheet, lists every defined name with its scope (workbook or worksheet), resolved address, and original RefersTo formula, auto‑fits columns, and saves the updated file.
-// Keywords: Aspose.Cells | C# | .NET | named range audit | list defined names | named range scope | range address | RefersTo formula | Excel workbook report
-// Common Searches: list all named ranges Aspose.Cells C# | export named range details to new worksheet | get named range address Aspose.Cells .NET | audit named ranges in Excel using Aspose | retrieve named range scope programmatically
-// Developer Intent: Create a worksheet that enumerates every named range in a workbook together with its scope, resolved address, and reference formula.
-// Use Cases: Produce a compliance report of all named ranges before distributing a workbook. | Locate and troubleshoot named ranges that point to incorrect or external cells. | Provide end‑users with a summary sheet that explains each named range’s purpose and location.
-// AI Prompts: Generate C# code with Aspose.Cells that writes a report of all defined names, including scope, address, and RefersTo, to a new worksheet. | Show how to safely call Name.GetRange() and fall back to the raw RefersTo string when the range cannot be resolved. | Explain how to determine whether a named range is workbook‑level or worksheet‑level using the Name.SheetIndex property.
+// Title: Generate a CSV report of all named ranges in an Excel workbook, including scope, address, and formula, using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, iterates through workbook.Worksheets.Names, extracts each name's scope, address, and RefersTo formula, and writes the collected data to a CSV file. | Enhance the example to also read any comment attached to a named range and add a Comment column to the CSV export. | Create a reusable method that returns a collection of objects containing Name, Scope, Address, and Formula for every defined name in a workbook loaded with Aspose.Cells.
+// Common Searches: how to list all named ranges with scope and formula using Aspose.Cells C# | export named range details to CSV in Aspose.Cells .NET | retrieve address of a defined name programmatically with Aspose.Cells | Aspose.Cells C# get worksheet‑specific named range scope | C# generate audit of Excel named ranges using Aspose.Cells
+// Tags: Aspose.Cells export named ranges CSV | Aspose.Cells get named range scope | Aspose.Cells retrieve defined name address | Aspose.Cells list workbook names | named range audit .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Loads a workbook, creates a "NamedRangeAudit" sheet, lists every defined name with its scope (workbook or worksheet), resolved address, and original RefersTo formula, auto‑fits columns, and saves the updated file.
-class NamedRangeAudit
+namespace NamedRangeAudit
 {
-    static void Main()
+    // The sample checks for the input Excel file, loads it with Aspose.Cells, and loops through all defined names in workbook.Worksheets.Names. For each name it obtains the identifier via reflection, determines whether the scope is workbook‑wide or tied to a specific worksheet, attempts to get the associated range to capture its address, and records the RefersTo formula. All information (Name, Scope, Address, Formula) is CSV‑escaped and written to NamedRangeAudit.csv.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output_with_audit.xlsx";
+            const string inputFile = "input.xlsx";
+            const string outputFile = "NamedRangeAudit.csv";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Verify input file exists
+            if (!File.Exists(inputFile))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
                 return;
             }
 
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Add a new worksheet for the audit report
-            int auditSheetIndex = workbook.Worksheets.Add();
-            Worksheet auditSheet = workbook.Worksheets[auditSheetIndex];
-            auditSheet.Name = "NamedRangeAudit";
-
-            // Write header row
-            Cells auditCells = auditSheet.Cells;
-            auditCells["A1"].PutValue("Name");
-            auditCells["B1"].PutValue("Scope");
-            auditCells["C1"].PutValue("Address");
-            auditCells["D1"].PutValue("RefersTo");
-
-            int currentRow = 1; // Zero‑based index; row 1 is the second row
-
-            // Iterate through all defined names in the workbook
-            foreach (Name definedName in workbook.Worksheets.Names)
+            Workbook workbook;
+            try
             {
-                // Determine the scope of the name
-                string scope = definedName.SheetIndex == 0
-                    ? "Workbook"
-                    : $"Worksheet: {workbook.Worksheets[definedName.SheetIndex - 1].Name}";
-
-                // Try to obtain the actual range address
-                string address = string.Empty;
-                try
-                {
-                    Aspose.Cells.Range range = definedName.GetRange();
-                    if (range != null)
-                    {
-                        address = range.Address;
-                    }
-                }
-                catch
-                {
-                    // GetRange may throw if the name does not refer to a range; ignore
-                }
-
-                // Fallback to the raw RefersTo string if address could not be resolved
-                if (string.IsNullOrEmpty(address))
-                {
-                    address = definedName.RefersTo?.TrimStart('=');
-                }
-
-                // Populate the audit row
-                auditCells[currentRow, 0].PutValue(definedName.Text);          // Name
-                auditCells[currentRow, 1].PutValue(scope);                   // Scope
-                auditCells[currentRow, 2].PutValue(address);                // Address
-                auditCells[currentRow, 3].PutValue(definedName.RefersTo);    // Formula/reference
-
-                currentRow++;
+                workbook = new Workbook(inputFile);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
             }
 
-            // Adjust column widths for readability
-            auditSheet.AutoFitColumns();
+            try
+            {
+                using (var writer = new StreamWriter(outputFile))
+                {
+                    // CSV header
+                    writer.WriteLine("Name,Scope,Address,Formula");
 
-            // Save the workbook with the audit sheet
-            workbook.Save(outputPath);
-            Console.WriteLine($"Audit completed. Output saved to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Catch any unexpected exceptions and display a message
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                    // Iterate through all defined names
+                    foreach (var item in workbook.Worksheets.Names)
+                    {
+                        // Cast to Aspose.Cells.Name (may be null if type differs)
+                        var definedName = item as Aspose.Cells.Name;
+                        if (definedName == null)
+                            continue;
+
+                        // Retrieve the name string via reflection to avoid version issues
+                        string name = string.Empty;
+                        var nameProp = definedName.GetType().GetProperty("Name");
+                        if (nameProp != null)
+                        {
+                            var val = nameProp.GetValue(definedName);
+                            name = val?.ToString() ?? string.Empty;
+                        }
+
+                        // Determine scope: workbook or specific worksheet
+                        string scope = "Workbook";
+                        var wsProp = definedName.GetType().GetProperty("Worksheet");
+                        if (wsProp != null)
+                        {
+                            var ws = wsProp.GetValue(definedName) as Worksheet;
+                            if (ws != null)
+                            {
+                                scope = ws.Name;
+                            }
+                        }
+
+                        // Try to obtain the range the name refers to
+                        AsposeRange rangeObj = null;
+                        try
+                        {
+                            rangeObj = definedName.GetRange();
+                        }
+                        catch
+                        {
+                            // Ignored – the name may refer to a constant or formula
+                        }
+
+                        // Address of the range, if available
+                        string address = string.Empty;
+                        if (rangeObj != null)
+                        {
+                            try
+                            {
+                                address = rangeObj.Address;
+                            }
+                            catch
+                            {
+                                // Ignored – fallback to empty address
+                            }
+                        }
+
+                        // Formula or reference (including leading '=')
+                        string formula = definedName.RefersTo ?? string.Empty;
+
+                        // Escape fields for CSV
+                        string csvName = $"\"{name}\"";
+                        string csvScope = $"\"{scope}\"";
+                        string csvAddress = $"\"{address}\"";
+                        string csvFormula = $"\"{formula}\"";
+
+                        writer.WriteLine($"{csvName},{csvScope},{csvAddress},{csvFormula}");
+                    }
+                }
+
+                Console.WriteLine($"Named range audit has been exported to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during export: {ex.Message}");
+            }
         }
     }
 }

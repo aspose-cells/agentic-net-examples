@@ -1,79 +1,54 @@
-// Title: C# – Import DateTime array into Excel and format as HH:mm:ss using Aspose.Cells
-// Description: Creates a workbook, converts timestamp strings to DateTime objects, imports them vertically with Cells.ImportObjectArray, applies a custom "hh:mm:ss" number format via a style, and saves the result as TimestampsFormatted.xlsx.
-// Keywords: Aspose.Cells C# import DateTime array | Excel time format HH:mm:ss | ImportObjectArray timestamp | custom number format Aspose.Cells | save workbook Aspose.Cells .NET
-// Common Searches: Aspose.Cells import DateTime array C# | How to format Excel cells as HH:mm:ss with Aspose.Cells | Apply custom time style after importing timestamps .NET | Cells.ImportObjectArray time formatting example | Save Excel file with formatted timestamps Aspose
-// Developer Intent: Load a collection of timestamps into a worksheet and display only the time component (HH:mm:ss) using Aspose.Cells for .NET.
-// Use Cases: Generate a timesheet by importing raw datetime logs and showing only the time of day. | Export database datetime fields to Excel where the date is irrelevant for analysis. | Create a schedule workbook that lists start times extracted from logs with uniform formatting.
-// AI Prompts: Give C# code that imports an array of DateTime objects into an Aspose.Cells worksheet and formats the cells with the HH:mm:ss custom number format. | Show how to apply a custom time style to a range after using Cells.ImportObjectArray in Aspose.Cells for .NET. | Explain how to ensure the output directory exists before saving a workbook that contains formatted timestamps.
+// Title: Import a DateTime array into an Excel worksheet and format the cells as HH:mm:ss using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a Workbook, imports a DateTime[] into the first worksheet, and applies the "hh:mm:ss" number format to the imported column with Aspose.Cells. | Show how to use ImportTableOptions to set a custom time format while importing a DataTable of timestamps into an Excel file using Aspose.Cells. | Generate a complete C# console program that saves the formatted timestamps to a .xlsx file named TimestampsFormatted.xlsx with Aspose.Cells.
+// Common Searches: asp.net import datetime array into excel and display time as hh:mm:ss using aspose.cells | c# aspose.cells import datatable of timestamps with custom time format | how to set number format hh:mm:ss when importing data with aspose.cells | save timestamps to xlsx with 24‑hour time format using aspose.cells c#
+// Tags: ImportTableOptions time number format | C# Aspose.Cells import DateTime array | format cells hh:mm:ss Excel | save workbook as xlsx Aspose.Cells | DataTable timestamp import Aspose.Cells
 
 using System;
-using System.IO;
-using System.Linq;
+using System.Data;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
 namespace AsposeCellsTimestampImport
 {
-    // Creates a workbook, converts timestamp strings to DateTime objects, imports them vertically with Cells.ImportObjectArray, applies a custom "hh:mm:ss" number format via a style, and saves the result as TimestampsFormatted.xlsx.
-    public class Program
+    // Creates a new Workbook, builds a DataTable with DateTime values, imports it into the first worksheet using ImportTableOptions that specify the "hh:mm:ss" number format, and saves the workbook as TimestampsFormatted.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Prepare a DataTable that holds timestamp values
+            DataTable timeTable = new DataTable();
+            timeTable.Columns.Add("Timestamp", typeof(DateTime));
+
+            // Example timestamps – you can replace these with your own array values
+            DateTime[] timestamps = new DateTime[]
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                new DateTime(2023, 1, 1, 8, 15, 30),
+                new DateTime(2023, 1, 1, 12, 45, 5),
+                new DateTime(2023, 1, 1, 23, 59, 59)
+            };
 
-                // Sample timestamps as strings
-                string[] timestampStrings = new string[]
-                {
-                    "2023-01-01 08:15:30",
-                    "2023-01-01 12:45:05",
-                    "2023-01-01 16:20:55",
-                    "2023-01-01 20:00:00"
-                };
-
-                // Convert the strings to DateTime objects and store them in an object array
-                object[] timestampObjects = timestampStrings
-                    .Select(s => DateTime.Parse(s))
-                    .Cast<object>()
-                    .ToArray();
-
-                // Import the DateTime objects vertically starting at cell A1
-                cells.ImportObjectArray(timestampObjects, 0, 0, true);
-
-                // Create a style that displays time in HH:mm:ss format
-                Style timeStyle = workbook.CreateStyle();
-                timeStyle.Custom = "hh:mm:ss";
-
-                // Apply the style to the imported range (column A)
-                AsposeRange timeRange = cells.CreateRange(0, 0, timestampObjects.Length, 1);
-                StyleFlag flag = new StyleFlag
-                {
-                    NumberFormat = true // Apply only the number format part of the style
-                };
-                timeRange.ApplyStyle(timeStyle, flag);
-
-                // Define output file path
-                string outputPath = "TimestampsFormatted.xlsx";
-
-                // Ensure the directory exists before saving
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
+            foreach (DateTime ts in timestamps)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                timeTable.Rows.Add(ts);
             }
+
+            // Define import options and set the number format for the first (and only) column
+            ImportTableOptions importOptions = new ImportTableOptions
+            {
+                // "hh:mm:ss" displays time in 24‑hour format with leading zeros
+                NumberFormats = new string[] { "hh:mm:ss" },
+                // Optional: show column header if desired
+                IsFieldNameShown = false
+            };
+
+            // Import the DataTable into the worksheet starting at cell A1 (row 0, column 0)
+            worksheet.Cells.ImportData(timeTable, 0, 0, importOptions);
+
+            // Save the workbook
+            workbook.Save("TimestampsFormatted.xlsx");
         }
     }
 }

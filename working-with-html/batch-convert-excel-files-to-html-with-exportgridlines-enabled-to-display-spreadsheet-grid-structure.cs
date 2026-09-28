@@ -1,90 +1,76 @@
-// Title: Batch Convert Excel Files to HTML with Gridlines Using Aspose.Cells (.NET)
-// Description: Scans a folder, loads each .xls, .xlsx, .xlsb, .xlsm, or .csv workbook with the appropriate LoadFormat, and uses Aspose.Cells ConversionUtility together with HtmlSaveOptions (ExportGridLines = true) to generate an HTML file for every workbook in a target directory, while handling missing files and conversion errors.
-// Keywords: Aspose.Cells | C# | .NET | batch Excel to HTML conversion | ExportGridLines | HtmlSaveOptions | ConversionUtility | load format | XLSX to HTML | CSV to HTML | automated spreadsheet export | web preview of Excel
-// Common Searches: Aspose.Cells batch convert Excel to HTML with gridlines | C# convert folder of .xlsx files to HTML preserving cell borders | How to export Excel files as HTML using ExportGridLines | Convert multiple CSV and XLSX files to HTML with Aspose.Cells | Sample code for Aspose.Cells HTMLSaveOptions ExportGridLines
-// Developer Intent: Automatically transform every supported Excel workbook in a directory into an HTML page that shows the original gridlines.
-// Use Cases: Create web‑ready HTML reports from a collection of financial spreadsheets while keeping cell borders visible. | Provide instant HTML previews of uploaded Excel or CSV files in a web portal without requiring Office installations. | Schedule nightly jobs that archive a folder of workbooks as static HTML pages for documentation or compliance purposes.
-// AI Prompts: Show how to add a custom CSS file to HtmlSaveOptions while keeping ExportGridLines enabled. | Modify the batch conversion to skip hidden worksheets during HTML export. | Replace console logging with CSV logging of conversion results using Aspose.Cells.
+// Title: Batch convert multiple Excel (.xls/.xlsx) files to HTML with grid lines using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that scans a directory, loads each .xls or .xlsx workbook with Aspose.Cells, and saves it as an HTML file with grid lines enabled via HtmlSaveOptions.ExportGridLines. | Add robust error handling to skip non‑Excel files, create the output folder if it does not exist, and log success or failure for each conversion. | Generate output HTML filenames that mirror the source workbook names and place all results in a separate output directory.
+// Common Searches: c# aspocells batch convert folder of xls and xlsx to html with grid lines | how to export Excel grid lines to HTML using Aspose.Cells in .NET | save multiple workbooks as HTML with ExportGridLines true Aspose.Cells C# | console app to convert all Excel files in a directory to HTML Aspose.Cells | Aspose.Cells HtmlSaveOptions ExportGridLines example for batch processing
+// Tags: Aspose.Cells batch Excel to HTML conversion | HtmlSaveOptions ExportGridLines | C# console folder processing Aspose.Cells | convert .xls .xlsx to HTML with grid lines | automated Excel to HTML export .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Scans a folder, loads each .xls, .xlsx, .xlsb, .xlsm, or .csv workbook with the appropriate LoadFormat, and uses Aspose.Cells ConversionUtility together with HtmlSaveOptions (ExportGridLines = true) to generate an HTML file for every workbook in a target directory, while handling missing files and conversion errors.
-class BatchExcelToHtml
+namespace ExcelToHtmlBatch
 {
-    static void Main()
+    // A C# console utility iterates over every .xls and .xlsx file in a specified input folder, loads each workbook with Aspose.Cells, and saves it as an HTML document using HtmlSaveOptions with ExportGridLines set to true. The program creates the output directory if needed, skips non‑Excel files, and logs conversion results, producing HTML files that retain the original spreadsheet grid structure.
+    class Program
     {
-        // Folder containing source Excel files
-        string inputFolder = "InputExcels";
-
-        // Folder where HTML files will be saved
-        string outputFolder = "OutputHtml";
-
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Verify the input folder exists
-        if (!Directory.Exists(inputFolder))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input folder '{inputFolder}' does not exist.");
-            return;
-        }
+            // Folder containing the source Excel files
+            string sourceFolder = @"C:\InputExcelFiles";
+            // Folder where the HTML files will be saved
+            string outputFolder = @"C:\OutputHtmlFiles";
 
-        // Get all files in the input folder
-        string[] files = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
-
-        foreach (string sourcePath in files)
-        {
-            // Skip if the file does not exist (safety check)
-            if (!File.Exists(sourcePath))
-                continue;
-
-            string ext = Path.GetExtension(sourcePath).ToLowerInvariant();
-
-            // Process only supported Excel formats
-            if (ext == ".xls" || ext == ".xlsx" || ext == ".xlsb" || ext == ".xlsm" || ext == ".csv")
+            // Verify source folder exists
+            if (!Directory.Exists(sourceFolder))
             {
-                // Determine the appropriate load format
-                LoadFormat loadFormat = GetLoadFormat(ext);
-                LoadOptions loadOptions = new LoadOptions(loadFormat);
+                Console.WriteLine($"Source folder '{sourceFolder}' does not exist.");
+                return;
+            }
 
-                // Configure HTML save options with gridlines enabled
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            // Ensure the output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Get all Excel files in the source folder (supports .xls and .xlsx)
+            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string filePath in excelFiles)
+            {
+                string extension = Path.GetExtension(filePath).ToLowerInvariant();
+                if (extension != ".xls" && extension != ".xlsx")
+                    continue; // Skip non‑Excel files
+
+                // Verify the file still exists before processing
+                if (!File.Exists(filePath))
                 {
-                    ExportGridLines = true
-                };
-
-                // Destination HTML file path
-                string destPath = Path.Combine(outputFolder,
-                    Path.GetFileNameWithoutExtension(sourcePath) + ".html");
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
 
                 try
                 {
-                    // Perform the conversion using Aspose.Cells ConversionUtility
-                    ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-                    Console.WriteLine($"Converted '{sourcePath}' to '{destPath}' with gridlines.");
+                    // Load the workbook
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Configure HTML save options to export grid lines
+                    HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+                    {
+                        ExportGridLines = true // Enable grid lines in the output HTML
+                    };
+
+                    // Determine output HTML file name
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+                    // Save the workbook as HTML with the specified options
+                    workbook.Save(htmlPath, saveOptions);
+
+                    Console.WriteLine($"Converted '{Path.GetFileName(filePath)}' to HTML.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to convert '{sourcePath}': {ex.Message}");
+                    Console.WriteLine($"Error processing '{Path.GetFileName(filePath)}': {ex.Message}");
                 }
             }
-        }
-    }
 
-    // Maps file extensions to Aspose.Cells LoadFormat values
-    static LoadFormat GetLoadFormat(string extension)
-    {
-        switch (extension)
-        {
-            case ".xls":  return LoadFormat.Excel97To2003;
-            case ".xlsx": // .xlsm files are also loaded as Xlsx format
-            case ".xlsm": return LoadFormat.Xlsx;
-            case ".xlsb": return LoadFormat.Xlsb;
-            case ".csv":  return LoadFormat.Csv;
-            default:      return LoadFormat.Auto;
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

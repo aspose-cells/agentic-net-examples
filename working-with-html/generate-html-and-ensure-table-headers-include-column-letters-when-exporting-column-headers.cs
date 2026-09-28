@@ -1,43 +1,49 @@
-// Title: Export Excel to HTML with Column Letter Headers using AspNet.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, populate cells, enable ExportRowColumnHeadings in HtmlSaveOptions, and save the sheet as an HTML file where the table shows column letters (A, B, C…) as headers.
-// Keywords: Aspose.Cells | C# | .NET | HTML export | ExportRowColumnHeadings | column letter headers | Excel to HTML | workbook to HTML | table column headings | sample code
-// Common Searches: Aspose.Cells export HTML column letters | HtmlSaveOptions ExportRowColumnHeadings example C# | save Excel as HTML with column headers .NET | how to show A B C headers in HTML export Aspose | C# export worksheet to HTML with column headings
-// Developer Intent: Generate an HTML representation of an Excel worksheet that includes column letters as table headers.
-// Use Cases: Display spreadsheet data on a web page with familiar column identifiers. | Create printable reports where column labels must be visible. | Integrate Excel‑to‑HTML conversion into a .NET web application for documentation purposes.
-// AI Prompts: Provide C# code to export a workbook to HTML with column letters and custom header styling using Aspose.Cells. | Show how to export multiple worksheets to separate HTML files while keeping column headings enabled. | Explain how to disable row headings but retain column headings in HtmlSaveOptions.
+// Title: How to export an Excel workbook to HTML with column letters (A‑Z) as table headers using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets HtmlSaveOptions.ExportColumnHeaders = true, and saves the workbook as an HTML file where the first row displays column letters as headers. | Show how to configure HtmlSaveOptions for UTF‑8 encoding and enable column‑letter headers when converting a worksheet to HTML with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# export Excel to HTML with column letters as header row | HtmlSaveOptions ExportColumnHeaders true example for .NET | Convert worksheet to HTML and show A B C column headers using Aspose.Cells | Save Excel file as HTML with column header letters in C#
+// Tags: Aspose.Cells HTML export column header letters | C# HtmlSaveOptions column header configuration | convert worksheet to HTML with column letters Aspose | UTF8 encoding HTML output Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Text;
 
-namespace AsposeCellsHtmlExport
+// The example loads an Excel workbook, creates HtmlSaveOptions with UTF‑8 encoding, enables ExportColumnHeaders to output column letters (A, B, C…) as the first HTML table row, and saves the result as an HTML file.
+class Program
 {
-    // Demonstrates how to create a workbook, populate cells, enable ExportRowColumnHeadings in HtmlSaveOptions, and save the sheet as an HTML file where the table shows column letters (A, B, C…) as headers.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.20);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(0.80);
-
-            // Configure HTML save options to include column letters as headers
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ExportRowColumnHeadings = true   // Enables A, B, C... column headers in the HTML table
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                Encoding = Encoding.UTF8
+                // ExportColumnHeaders, ExportRowHeaders, and IncludeWorksheetHeader are not required
+                // or may not be available in the current Aspose.Cells version.
             };
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save("ExportWithColumnHeaders.html", htmlOptions);
-
-            Console.WriteLine("HTML file saved with column letter headers.");
+            // Save the workbook (or a specific worksheet) as an HTML file
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

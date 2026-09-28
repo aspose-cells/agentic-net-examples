@@ -1,45 +1,41 @@
-// Title: Apply Bold Font to Header Row Using Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, insert header values, define a bold font style, limit the change with a StyleFlag, apply the style to the first row via ApplyRowStyle, and save the file as HeaderBold.xlsx.
-// Keywords: Aspose.Cells C# bold header | ApplyRowStyle bold font | StyleFlag FontBold Aspose | Excel header formatting .NET | C# Aspose.Cells style row | Excel bold column headers
-// Common Searches: Aspose.Cells make first row bold C# | C# apply bold style to Excel header Aspose | StyleFlag only bold font Aspose.Cells | How to format header row in Excel using Aspose.Cells .NET | Save workbook with bold headers Aspose
-// Developer Intent: Add a bold font style to the worksheet’s header row.
-// Use Cases: Produce sales reports where column titles stand out for quick scanning. | Export financial statements with emphasized headers to improve readability. | Create a reusable template that automatically formats header rows in bold for data entry forms.
-// AI Prompts: Generate C# code that applies a bold font to multiple header rows with Aspose.Cells. | Explain how to use StyleFlag to change only the FontBold attribute in an Aspose.Cells style. | Provide an example of conditionally bolding header cells based on their text content using Aspose.Cells.
+// Title: How to apply a bold font style to header cells in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a bold Font style and assigns it to the first‑row cells of an Aspose.Cells worksheet. | Write a C# snippet that populates header values and applies the bold style to each header cell before saving the workbook.
+// Common Searches: Aspose.Cells C# set bold font for first row header cells | C# example applying style to specific cells in an Excel workbook with Aspose.Cells | How to create and reuse a bold style for header row using Aspose.Cells .NET
+// Tags: apply bold style to header cells Aspose.Cells | create reusable cell style .NET Aspose.Cells | format first row as header Excel Aspose.Cells | save workbook with styled header Aspose.Cells C#
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsHeaderBoldDemo
+// The program creates a new Workbook, defines a bold Font style, writes header values to the first row, applies the bold style to each header cell, and saves the file as HeaderBold.xlsx.
+class Program
 {
-    // Shows how to create a workbook, insert header values, define a bold font style, limit the change with a StyleFlag, apply the style to the first row via ApplyRowStyle, and save the file as HeaderBold.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Header values to populate
+        string[] headers = { "ID", "Name", "Date" };
+
+        // Create a style with bold font
+        Style boldStyle = workbook.CreateStyle();
+        boldStyle.Font.IsBold = true;
+
+        // Apply the header values and bold style to the first row
+        for (int col = 0; col < headers.Length; col++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Set header text
+            Cell cell = sheet.Cells[0, col];
+            cell.PutValue(headers[col]);
 
-            // Populate header cells (first row) with sample text
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Price");
-            cells["C1"].PutValue("Quantity");
-
-            // Create a style with bold font
-            Style boldStyle = workbook.CreateStyle();
-            boldStyle.Font.IsBold = true;
-
-            // Create a StyleFlag that applies only the FontBold attribute
-            StyleFlag flag = new StyleFlag { FontBold = true };
-
-            // Apply the bold style to the entire first row (row index 0)
-            worksheet.Cells.ApplyRowStyle(0, boldStyle, flag);
-
-            // Save the workbook
-            workbook.Save("HeaderBold.xlsx");
-
-            Console.WriteLine("Header cells have been styled with bold font and saved to HeaderBold.xlsx");
+            // Apply bold style
+            cell.SetStyle(boldStyle);
         }
+
+        // Save the workbook to a file
+        workbook.Save("HeaderBold.xlsx");
     }
 }

@@ -1,69 +1,69 @@
-// Title: C# – Highlight Duplicate Values in Column N with Light Orange Fill Using Aspose.Cells Conditional Formatting
-// Description: Demonstrates how to create a workbook with Aspose.Cells, define a range for column N, add a DuplicateValues conditional‑formatting rule, apply a light orange background to duplicated cells, and save the file as DuplicateValuesHighlight.xlsx.
-// Keywords: Aspose.Cells C# duplicate values | conditional formatting column N | highlight duplicates Excel Aspose | light orange cell fill | Aspose.Cells FormatCondition DuplicateValues | C# Excel conditional formatting example
-// Common Searches: Aspose.Cells highlight duplicate values in a column | C# conditional formatting duplicate values Excel | set orange background for duplicate cells Aspose | how to add DuplicateValues rule with Aspose.Cells | conditional formatting range column N C#
-// Developer Intent: Add a conditional‑formatting rule that marks duplicate entries in column N with a light orange background using Aspose.Cells for .NET.
-// Use Cases: Detect repeated product IDs in an inventory sheet by highlighting duplicates in column N. | Prevent duplicate employee numbers in HR reports with visual cues. | Automatically flag duplicate order numbers in a dynamic dataset where rows are added over time.
-// AI Prompts: Generate C# code that uses Aspose.Cells to apply a DuplicateValues conditional format to column N with a custom light orange fill and saves the workbook. | Create a reusable method that accepts a Worksheet, column index, and Color, then adds duplicate‑value highlighting for all rows in that column. | Explain how to determine the last used row in a worksheet and set the conditional‑formatting area dynamically for column N.
+// Title: How to add conditional formatting that highlights duplicate values in column N with a light orange fill using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to apply a duplicate‑value conditional formatting rule to column N and set a light orange background. | Write a program that creates an Excel workbook, defines column N, adds a duplicate values condition with a solid orange fill, and saves the file. | Update an existing Aspose.Cells worksheet to highlight duplicate entries in column N using a light orange fill style.
+// Common Searches: aspnet how to highlight duplicate entries in column N using Aspose.Cells | C# Aspose.Cells conditional formatting duplicate values orange fill | programmatically set duplicate value rule for column N in Excel with Aspose.Cells .NET | apply light orange background to duplicate cells in a specific column using Aspose.Cells
+// Tags: Aspose.Cells duplicate values conditional formatting | column N conditional formatting Aspose.Cells | light orange fill style Aspose.Cells | C# Excel conditional formatting Aspose.Cells | apply conditional formatting to specific column .NET
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingDemo
+// Creates a new workbook, defines column N as the target range, adds a duplicate‑value conditional formatting rule with a light orange solid fill, and saves the result as HighlightedDuplicates.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook with Aspose.Cells, define a range for column N, add a DuplicateValues conditional‑formatting rule, apply a light orange background to duplicated cells, and save the file as DuplicateValuesHighlight.xlsx.
-    public class HighlightDuplicateValuesInColumnN
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define the range for column N (zero‑based column index 13)
+            CellArea area = new CellArea
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                StartRow = 0,          // Row 1 (zero‑based)
+                EndRow = 1048575,      // Last possible row in Excel
+                StartColumn = 13,      // Column N
+                EndColumn = 13
+            };
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Add a new ConditionalFormatting object to the worksheet
+            int cfIndex = worksheet.ConditionalFormattings.Add();
+            var cf = worksheet.ConditionalFormattings[cfIndex]; // ConditionalFormatting instance
 
-                // Add a new conditional formatting collection
-                int cfIndex = worksheet.ConditionalFormattings.Add();
-                FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
+            // Associate the defined area with the ConditionalFormatting object
+            cf.AddArea(area);
 
-                // Define the range for column N (zero‑based column index 13)
-                // Here we assume rows 0‑1000; adjust as needed for your data size
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 1000,
-                    StartColumn = 13,
-                    EndColumn = 13
-                };
-                fcs.AddArea(area);
+            // Add a condition that highlights duplicate values
+            int conditionIndex = cf.AddCondition(FormatConditionType.DuplicateValues);
+            var condition = cf[conditionIndex]; // FormatCondition instance
 
-                // Add a duplicate‑values condition
-                int conditionIndex = fcs.AddCondition(FormatConditionType.DuplicateValues);
-                FormatCondition duplicateCondition = fcs[conditionIndex];
+            // Create a style with a light orange solid fill
+            Style style = condition.Style;
+            style.ForegroundColor = Color.FromArgb(255, 255, 200, 0); // Light orange
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
 
-                // Set a light orange background for duplicated cells
-                duplicateCondition.Style.BackgroundColor = Color.FromArgb(255, 255, 153); // light orange
+            // Define output file path
+            string outputPath = "HighlightedDuplicates.xlsx";
 
-                // Save the workbook
-                workbook.Save("DuplicateValuesHighlight.xlsx");
-                Console.WriteLine("Workbook saved as DuplicateValuesHighlight.xlsx");
-            }
-            catch (Exception ex)
+            // Ensure the directory for the output file exists (if any)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            HighlightDuplicateValuesInColumnN.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

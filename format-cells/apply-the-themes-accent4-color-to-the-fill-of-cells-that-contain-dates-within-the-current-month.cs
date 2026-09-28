@@ -1,48 +1,91 @@
-// Title: Aspose.Cells .NET – Apply Theme Accent4 Background to Dates in the Current Month with Conditional Formatting
-// Description: C# example that creates a workbook, inserts sample dates, adds a TimePeriod.ThisMonth conditional formatting rule to range A2:A5, and sets the cell background to the workbook’s Accent4 theme color before saving the file.
-// Keywords: Aspose.Cells | C# | conditional formatting | TimePeriod.ThisMonth | theme accent color | Accent4 background | highlight current month dates | Excel automation | cell style | date based formatting
-// Common Searches: Aspose.Cells highlight dates this month | apply theme accent color to cells C# | conditional formatting current month Aspose.Cells | set background theme color in Excel using .NET | how to use TimePeriod.ThisMonth with Aspose.Cells
-// Developer Intent: Automatically shade cells that contain dates falling in the current month using the workbook’s Accent4 theme color.
-// Use Cases: Financial statements where today’s month entries need quick visual identification. | Project timelines that emphasize the current month while preserving corporate theme colors. | Dashboard reports that automatically color‑code current‑month dates for better readability.
-// AI Prompts: Show how to also change the font color to white when the Accent4 background is applied. | Provide code that uses Accent2 for dates in the previous month instead of Accent4. | Explain how to extend the Accent4 rule to additional columns such as B and C.
+// Title: Color cells with dates from the current month using the workbook’s Accent4 theme color in Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, finds cells containing DateTime values matching the current month and year, and applies a solid Accent4 background fill. | Create a reusable method in Aspose.Cells to highlight date cells of the current month by setting the cell style’s ForegroundColor to the Accent4 theme color and saving the workbook.
+// Common Searches: how to highlight Excel cells that contain dates from this month using Aspose.Cells C# | apply theme accent4 fill to date cells in a .NET workbook | Aspose.Cells iterate used range and set background color based on DateTime value | C# change cell style for current month dates in an existing XLSX file | set solid fill color for cells with dates in the current month using Aspose.Cells API
+// Tags: accent4 theme color cell style Aspose.Cells | date cell background fill month-year .NET | iterate worksheet used range Aspose.Cells | assign background pattern to DateTime cells C# | apply foreground color based on month-year Aspose.Cells
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// C# example that creates a workbook, inserts sample dates, adds a TimePeriod.ThisMonth conditional formatting rule to range A2:A5, and sets the cell background to the workbook’s Accent4 theme color before saving the file.
+// The example loads an existing workbook, iterates through each worksheet's used range, checks each cell for a DateTime value, and if the date falls within the current month and year, applies a solid fill using the workbook’s Accent4 theme color before saving the modified file.
 class ApplyAccent4ToCurrentMonthDates
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Sample data: put some dates in column A
-        worksheet.Cells["A1"].PutValue("Date");
-        worksheet.Cells["A2"].PutValue(DateTime.Now);                     // today (this month)
-        worksheet.Cells["A3"].PutValue(DateTime.Now.AddDays(-10));        // this month
-        worksheet.Cells["A4"].PutValue(DateTime.Now.AddMonths(-1));       // last month
-        worksheet.Cells["A5"].PutValue(DateTime.Now.AddMonths(1));        // next month
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Add a conditional formatting collection to the worksheet
-        int cfIndex = worksheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcs = worksheet.ConditionalFormattings[cfIndex];
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-        // Define the range to which the conditional formatting will be applied (A2:A5)
-        CellArea area = new CellArea { StartRow = 1, EndRow = 4, StartColumn = 0, EndColumn = 0 };
-        fcs.AddArea(area);
+        // Use a typical Accent4 theme color (blue)
+        Color accent4Color = Color.FromArgb(0, 112, 192);
 
-        // Add a TimePeriod condition (dates occurring in this month)
-        int conditionIndex = fcs.AddCondition(FormatConditionType.TimePeriod);
-        FormatCondition fc = fcs[conditionIndex];
-        fc.TimePeriod = TimePeriodType.ThisMonth;
+        // Current month and year
+        DateTime now = DateTime.Now;
+        int currentMonth = now.Month;
+        int currentYear = now.Year;
 
-        // Apply the theme's Accent4 color to the cell background using a theme color
-        fc.Style.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent4, 0.0);
+        try
+        {
+            // Process each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Get the used range of the worksheet
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-        // Save the workbook
-        workbook.Save("Accent4_CurrentMonthDates.xlsx");
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                // Iterate through cells in the used range
+                for (int row = startRow; row <= endRow; row++)
+                {
+                    for (int col = startCol; col <= endCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Check for DateTime values
+                        if (cell.Type == CellValueType.IsDateTime && cell.Value is DateTime cellDate)
+                        {
+                            // Apply style if the date is in the current month/year
+                            if (cellDate.Month == currentMonth && cellDate.Year == currentYear)
+                            {
+                                Style style = cell.GetStyle();
+                                style.ForegroundColor = accent4Color;
+                                style.Pattern = BackgroundType.Solid;
+                                cell.SetStyle(style);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred during processing: {ex.Message}");
+        }
     }
 }

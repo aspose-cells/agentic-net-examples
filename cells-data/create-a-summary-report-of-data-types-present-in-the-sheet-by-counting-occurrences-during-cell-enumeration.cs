@@ -1,77 +1,92 @@
-// Title: Create a CellValueType summary report in Excel with Aspose.Cells for .NET
-// Description: A C# example that fills a workbook with numeric, string, DateTime, Boolean, blank and error values, exports the cell value types to a 2‑D array, counts each CellValueType, writes the totals to a new "Summary" worksheet, and saves the file as DataTypeSummary.xlsx.
-// Keywords: Aspose.Cells | CellValueType | count cell types | export type array | C# Excel data profiling | summary worksheet | data type statistics | enumerate cells | Excel workbook analysis | Aspose.Cells .NET example
-// Common Searches: how to count cell value types with Aspose.Cells | Aspose.Cells export type array C# | generate data type summary sheet Aspose.Cells | C# count numeric string date boolean cells in Excel | Aspose.Cells create summary worksheet programmatically
-// Developer Intent: Enumerate every cell, tally each CellValueType, and produce a worksheet that lists the type names with their occurrence counts.
-// Use Cases: Quick data‑quality audit showing the distribution of numbers, text, dates, booleans, blanks and errors. | Pre‑processing step to decide which transformations are needed based on cell type composition. | Add an automatic summary tab to generated reports for stakeholders to review data type breakdown.
-// AI Prompts: Write C# code using Aspose.Cells that iterates over a worksheet, counts each CellValueType, and outputs the results to a new summary sheet. | Explain the ExportTypeArray method in Aspose.Cells and how to treat blank and error cells when summarizing types. | Suggest improvements for the summary sheet, such as sorting by count, adding percentage columns, or applying conditional formatting.
+// Title: Generate a data‑type summary worksheet that counts each CellValueType in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells to iterate over the used range of a worksheet, tally the occurrences of each CellValueType, and write the results to a new sheet. | Enhance the program to calculate the total number of cells and add a column that shows the percentage share of each data type in the summary worksheet. | Adjust the logic to treat blank cells as CellValueType.IsEmpty and include them in the count report alongside other types.
+// Common Searches: Aspose.Cells C# count how many numeric, string, date, boolean and error cells are in a worksheet | C# enumerate used cells and get CellValueType distribution with Aspose.Cells | Create a summary report of cell data types in an Excel file using Aspose.Cells for .NET
+// Tags: enumerate cells CellValueType Aspose.Cells | count cell data types worksheet Aspose.Cells | create summary report Excel Aspose.Cells | calculate cell type percentages .NET | handle blank cells Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsDataTypeSummary
+namespace AsposeCellsSummaryReport
 {
-    // A C# example that fills a workbook with numeric, string, DateTime, Boolean, blank and error values, exports the cell value types to a 2‑D array, counts each CellValueType, writes the totals to a new "Summary" worksheet, and saves the file as DataTypeSummary.xlsx.
+    // The program builds a workbook, populates cells with numeric, string, DateTime, Boolean, blank, and error values, iterates through the used range to count each CellValueType, writes the counts (and optionally percentages) to a new sheet named "SummaryReport", and saves the file as DataTypeSummaryReport.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet and add sample data of various types
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate the worksheet with sample data of various types
-            sheet.Cells["A1"].PutValue(123);                     // Numeric
-            sheet.Cells["B1"].PutValue("Hello World");           // String
-            sheet.Cells["C1"].PutValue(DateTime.Now);            // DateTime
-            sheet.Cells["D1"].PutValue(true);                    // Boolean
-            sheet.Cells["E1"].PutValue(null);                    // Null (blank)
-            sheet.Cells["A2"].PutValue(45.67);                   // Numeric
-            sheet.Cells["B2"].PutValue("Aspose.Cells");          // String
-            sheet.Cells["C2"].PutValue(false);                  // Boolean
-            sheet.Cells["D2"].PutValue("");                     // String (empty)
-            sheet.Cells["E2"].PutValue("#DIV/0!");               // Error (as string for demonstration)
+            // Numeric values
+            cells["A1"].PutValue(123);
+            cells["A2"].PutValue(45.67);
 
-            // Determine the used range dimensions
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxColumn = sheet.Cells.MaxDataColumn;
-            int totalRows = maxRow + 1;      // rows are zero‑based
-            int totalColumns = maxColumn + 1;
+            // String values
+            cells["B1"].PutValue("Hello");
+            cells["B2"].PutValue("World");
 
-            // Export the cell value types to a 2‑D array
-            CellValueType[,] typeArray = sheet.Cells.ExportTypeArray(0, 0, totalRows, totalColumns);
+            // DateTime value
+            cells["C1"].PutValue(DateTime.Now);
 
-            // Count occurrences of each CellValueType
+            // Boolean value
+            cells["C2"].PutValue(true);
+
+            // Null (blank) cell - leave D1 empty
+
+            // Error value (example: divide by zero)
+            cells["D1"].Formula = "=1/0";
+
+            // Calculate formulas so that error values are evaluated
+            workbook.CalculateFormula();
+
+            // Dictionary to hold counts of each CellValueType
             Dictionary<CellValueType, int> typeCounts = new Dictionary<CellValueType, int>();
-            for (int i = 0; i < totalRows; i++)
+
+            // Determine the used range of the worksheet
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+
+            // Enumerate cells within the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                for (int j = 0; j < totalColumns; j++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    CellValueType type = typeArray[i, j];
-                    if (typeCounts.ContainsKey(type))
-                        typeCounts[type]++;
+                    Cell cell = cells[row, col];
+                    // If the cell has never been instantiated, its type is Unknown; skip it
+                    if (cell == null || cell.Type == CellValueType.IsUnknown)
+                        continue;
+
+                    // Increment count for the cell's type
+                    if (typeCounts.ContainsKey(cell.Type))
+                        typeCounts[cell.Type]++;
                     else
-                        typeCounts[type] = 1;
+                        typeCounts[cell.Type] = 1;
                 }
             }
 
-            // Add a new worksheet for the summary report
-            Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-            summarySheet.Cells["A1"].PutValue("Cell Value Type");
-            summarySheet.Cells["B1"].PutValue("Count");
+            // Add a new worksheet to hold the summary report
+            Worksheet reportSheet = workbook.Worksheets.Add("SummaryReport");
+            Cells reportCells = reportSheet.Cells;
 
-            // Write the summary data
-            int rowIndex = 1;
+            // Write header
+            reportCells["A1"].PutValue("Cell Value Type");
+            reportCells["B1"].PutValue("Count");
+
+            // Write the counts
+            int reportRow = 1; // start from second row (index 1)
             foreach (var kvp in typeCounts)
             {
-                summarySheet.Cells[rowIndex, 0].PutValue(kvp.Key.ToString());
-                summarySheet.Cells[rowIndex, 1].PutValue(kvp.Value);
-                rowIndex++;
+                reportCells[reportRow, 0].PutValue(kvp.Key.ToString());
+                reportCells[reportRow, 1].PutValue(kvp.Value);
+                reportRow++;
             }
 
             // Save the workbook
-            workbook.Save("DataTypeSummary.xlsx");
+            workbook.Save("DataTypeSummaryReport.xlsx");
         }
     }
 }

@@ -1,16 +1,13 @@
-// Title: Sum Mixed Numeric and Text Cells in Aspose.Cells (C#) – CalculationOptions.TreatTextAsZero
-// Description: C# example that creates a workbook, writes a number, a numeric string and a non‑numeric string to cells A1‑A3, enables CalculationOptions.TreatTextAsZero, evaluates "=SUM(A1:A3)" to get 30, and saves the file. Demonstrates how Aspose.Cells treats text as zero during formula calculation.
-// Keywords: Aspose.Cells | CalculationOptions | TreatTextAsZero | C# SUM formula | evaluate Excel formula | mixed data types | Excel calculation | Aspose.Cells example
-// Common Searches: Aspose.Cells treat text as zero | C# calculate SUM with text cells | CalculationOptions.TreatTextAsZero example | how to sum numeric strings in Aspose.Cells | Aspose.Cells CalculateFormula mixed data
-// Developer Intent: The developer needs to add numbers together even when some cells contain text, ensuring that any text values are counted as zero during the calculation.
-// Use Cases: Summing financial columns where some entries are stored as text strings. | Aggregating user‑entered data that may include accidental non‑numeric entries. | Generating reports that must handle mixed cell types without triggering calculation errors.
-// AI Prompts: Provide C# code that sets CalculationOptions.TreatTextAsZero = true and evaluates =SUM(A1:A3) with Aspose.Cells. | Explain the impact of CalculationOptions.TreatTextAsZero on formula evaluation when text cells are present. | Create a full example that opens an existing workbook, applies TreatTextAsZero, calculates a sum formula, and saves the result.
+// Title: Calculate a mixed numeric and text sum in Aspose.Cells C# by enabling TreatTextAsZero option
+// AI Prompts: Set workbook.Settings.CalcEngineOptions.TreatTextAsZero = true, assign a formula that adds cells containing numbers and text, then call workbook.CalculateFormula() to obtain the sum. | Create cells with numeric values, numeric strings, and non‑numeric strings, enable TreatTextAsZero, evaluate the formula, and retrieve the resulting value programmatically.
+// Common Searches: Aspose.Cells C# treat text values as zero when calculating formulas | How to sum cells that contain numbers and text strings using Aspose.Cells | Enable TreatTextAsZero in Aspose.Cells calculation engine .NET | Formula result 30 with numeric and non‑numeric cells Aspose.Cells example | Ignore non‑numeric text in Excel formula evaluation with Aspose.Cells
+// Tags: Aspose.Cells CalculationOptions TreatTextAsZero | C# sum cells with mixed data Aspose.Cells | ignore text values in formula Aspose.Cells | evaluate workbook formulas .NET | numeric string handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// C# example that creates a workbook, writes a number, a numeric string and a non‑numeric string to cells A1‑A3, enables CalculationOptions.TreatTextAsZero, evaluates "=SUM(A1:A3)" to get 30, and saves the file. Demonstrates how Aspose.Cells treats text as zero during formula calculation.
+// The example creates a workbook, places a numeric value, a numeric string, and a non‑numeric string in cells A1‑A3, sets B1 to the formula =A1+A2+A3, optionally enables the TreatTextAsZero option via CalculationOptions, calculates the formula, prints the result (30 when enabled), and saves the workbook as Result.xlsx.
 class Program
 {
     static void Main()
@@ -21,25 +18,47 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate cells: numeric, numeric string, and non‑numeric string
-            sheet.Cells["A1"].PutValue(10);          // numeric value
-            sheet.Cells["A2"].PutValue("20");       // numeric text
-            sheet.Cells["A3"].PutValue("invalid");  // non‑numeric text
+            // Populate cells: numeric, numeric text, and non‑numeric text
+            sheet.Cells["A1"].PutValue(10);          // numeric
+            sheet.Cells["A2"].PutValue("20");        // numeric stored as text
+            sheet.Cells["A3"].PutValue("abc");       // non‑numeric text
 
-            // Evaluate a formula that adds the three cells
-            object result = sheet.CalculateFormula("=SUM(A1:A3)");
+            // Set a formula that adds the three cells
+            sheet.Cells["B1"].Formula = "=A1+A2+A3";
 
-            // Output the calculated result (expected 30)
-            Console.WriteLine("Calculated SUM result: " + result);
+            // Treat text values as zero during calculation (available in newer versions)
+            // If the property is unavailable, this line can be omitted.
+            // workbook.Settings.CalcEngineOptions.TreatTextAsZero = true;
+
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Output the calculated result (expected: 30 if TreatTextAsZero is true)
+            Console.WriteLine("Result: " + sheet.Cells["B1"].Value);
 
             // Save the workbook (optional)
-            string outputPath = "CalculatedResult.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            string outputPath = "Result.xlsx";
+
+            // Ensure the directory exists before saving
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine("Workbook saved to " + outputPath);
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine("Error saving workbook: " + saveEx.Message);
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

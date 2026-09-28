@@ -1,59 +1,64 @@
-// Title: Aspose.Cells for .NET – Create a custom totals‑row label that includes the summed value (C#)
-// Description: Demonstrates how to build a workbook, add a ListObject table, enable the totals row, calculate the sum of the "Price" column, read the computed total, and set a custom TotalsRowLabel that concatenates static text (e.g., "Grand Total") with the aggregated amount, then save the file as an .xlsx document.
-// Keywords: Aspose.Cells custom totals row label | C# TotalsRowLabel | ListObject totals calculation | concatenate static text with sum | retrieve table total Aspose.Cells | Excel table Grand Total label | .NET Excel aggregation | Aspose.Cells TotalsCalculation.Sum
-// Common Searches: Aspose.Cells set custom totals row label C# | How to read sum from ListObject totals row | Combine text with calculated total in Excel using Aspose.Cells | C# TotalsRowLabel with dynamic value | Aspose.Cells table totals row custom text
-// Developer Intent: The developer needs to display a dynamic label in the totals row that merges a fixed phrase with the column’s calculated sum.
-// Use Cases: Financial dashboards that show "Grand Total (1234)" in the totals row. | Automated invoice generation where the totals row contains a custom message with the total amount. | Report templates that embed aggregated values inside descriptive labels for clearer presentation.
-// AI Prompts: Generate C# code using Aspose.Cells to set TotalsRowLabel to "Grand Total (value)" where value is the sum of a column. | Explain how to fetch the computed total from a ListObject totals row and embed it in a formatted label string. | Show how to update the custom totals row label after modifying data in the worksheet with Aspose.Cells.
+// Title: Create a custom totals row label that combines static text with a SUM formula using Aspose.Cells ListObject in C#
+// AI Prompts: Generate C# code with Aspose.Cells that adds a ListObject table, enables a totals row, and sets the totals cell formula to concatenate a fixed label and the SUM of a column. | Show how to build the data range address dynamically and apply it in a concatenated text‑and‑SUM formula for the totals row in an Excel workbook using Aspose.Cells. | Demonstrate assigning a custom label to the first column of the totals row while using a formula like "Grand Total: " & SUM(...) in Aspose.Cells for .NET.
+// Common Searches: aspnet how to set a custom label and sum formula in a totals row with Aspose.Cells | c# Aspose.Cells concatenate text with SUM in table totals row | create dynamic data range for totals row formula using Aspose.Cells ListObject | add totals row with custom label in Excel file via Aspose.Cells C# | Aspose.Cells example for custom totals row text and calculation
+// Tags: set totals row formula Aspose.Cells | custom totals row labeling ListObject | concatenate static text with SUM C# | dynamic data range address Aspose.Cells | Excel table totals calculation .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsCustomTotalsLabel
+namespace CustomTotalsLabelDemo
 {
-    // Demonstrates how to build a workbook, add a ListObject table, enable the totals row, calculate the sum of the "Price" column, read the computed total, and set a custom TotalsRowLabel that concatenates static text (e.g., "Grand Total") with the aggregated amount, then save the file as an .xlsx document.
-    public class Program
+    // The sample creates an Excel workbook, inserts product and price data, adds a ListObject table with a totals row, configures the Price column to sum values, builds the data range address dynamically, sets the totals cell formula to "Grand Total: " & SUM(range), assigns a "Totals" label to the first column of the totals row, and saves the file as CustomTotalsLabelDemo.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Price");
+                // Header row
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Price");
 
-                worksheet.Cells["A2"].PutValue("Item1");
-                worksheet.Cells["B2"].PutValue(100);
-                worksheet.Cells["A3"].PutValue("Item2");
-                worksheet.Cells["B3"].PutValue(150);
-                worksheet.Cells["A4"].PutValue("Item3");
-                worksheet.Cells["B4"].PutValue(200);
+                // Data rows
+                sheet.Cells["A2"].PutValue("Item1");
+                sheet.Cells["B2"].PutValue(100);
+                sheet.Cells["A3"].PutValue("Item2");
+                sheet.Cells["B3"].PutValue(150);
+                sheet.Cells["A4"].PutValue("Item3");
+                sheet.Cells["B4"].PutValue(200);
 
-                // Add a table that includes the header and data rows
+                // Add a table that includes the header, data and a totals row
                 // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-                int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
-                ListObject table = worksheet.ListObjects[tableIndex];
+                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
+                ListObject table = sheet.ListObjects[tableIndex];
                 table.ShowTotals = true; // Enable the totals row
 
-                // Configure the totals calculation for the "Price" column (index 1)
+                // Configure the totals calculation for the Price column (index 1)
                 ListColumn priceColumn = table.ListColumns[1];
                 priceColumn.TotalsCalculation = TotalsCalculation.Sum;
 
-                // Determine the totals row index (zero‑based)
+                // Determine the row index of the totals row (zero‑based)
+                // Totals row is placed immediately after the last data row of the table
                 int totalsRowIndex = table.DataRange.FirstRow + table.DataRange.RowCount;
-                // Determine the column index for "Price"
-                int priceColumnIndex = table.DataRange.FirstColumn + 1;
 
-                // Retrieve the computed total value from the totals row
-                double totalValue = worksheet.Cells[totalsRowIndex, priceColumnIndex].DoubleValue;
+                // Build the range address of the data cells in the Price column (e.g., B2:B4)
+                string firstDataCell = sheet.Cells[table.DataRange.FirstRow + 1, 1].Name; // B2
+                string lastDataCell = sheet.Cells[table.DataRange.FirstRow + table.DataRange.RowCount, 1].Name; // B4
+                string dataRange = $"{firstDataCell}:{lastDataCell}";
 
-                // Set a custom label that includes the aggregated total
-                priceColumn.TotalsRowLabel = $"Grand Total ({totalValue})";
+                // Set a formula in the totals cell that concatenates static text with the aggregated sum
+                // Excel formula: ="Grand Total: " & SUM(B2:B4)
+                sheet.Cells[totalsRowIndex, 1].Formula = $"\"Grand Total: \" & SUM({dataRange})";
+
+                // Optionally set a label for the first column in the totals row
+                ListColumn productColumn = table.ListColumns[0];
+                productColumn.TotalsRowLabel = "Totals";
 
                 // Save the workbook
                 workbook.Save("CustomTotalsLabelDemo.xlsx");

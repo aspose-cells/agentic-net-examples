@@ -1,65 +1,55 @@
-// Title: Add a Region Slicer to a Pivot Table with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, inserts Region and Sales data, builds a pivot table, adds a slicer linked to the Region field, applies a visual style and caption, and saves the file as PivotWithRegionSlicer.xlsx. The slicer provides an interactive filter for the pivot.
-// Keywords: aspose.cells slicer c# | pivot table slicer asp.net | region slicer aspose.cells | interactive pivot filter c# | aspose.cells pivot example | c# add slicer to pivot | aspose.cells workbook slicer | pivot table filter control | aspose.cells style slicer | c# excel slicer example
-// Common Searches: how to add a slicer to a pivot table using Aspose.Cells | Aspose.Cells C# region slicer example | set slicer style and caption in Aspose.Cells | interactive pivot table filter with slicer C# | Aspose.Cells add slicer to worksheet
-// Developer Intent: Generate a slicer control linked to a pivot table that lets users filter the Region field interactively.
-// Use Cases: Enable end‑users to click a Region filter directly on the worksheet. | Refresh pivot data automatically when slicer selections change. | Customize the slicer's appearance with predefined styles and captions.
-// AI Prompts: Write C# code to add a slicer for the "Category" field to an existing Aspose.Cells pivot table. | Show how to read the selected items from an Aspose.Cells slicer and programmatically refresh the pivot table. | Explain positioning multiple slicers on a worksheet and applying different visual styles using Aspose.Cells.
+// Title: Create an interactive Region slicer linked to a PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, builds a PivotTable from Region and Sales data, and adds a slicer bound to the Region field with Aspose.Cells. | Demonstrate how to set the slicer style and caption after linking it to a PivotTable in Aspose.Cells. | Show the complete example that saves the workbook containing the PivotTable and its slicer to an .xlsx file.
+// Common Searches: how to add a region slicer to a pivot table using Aspose.Cells C# | Aspose.Cells example linking slicer to pivot table for interactive filtering | customize slicer style and caption in Aspose.Cells .NET workbook
+// Tags: Aspose.Cells add slicer to PivotTable | C# region field slicer Excel | pivot table interactive filter slicer .NET | custom slicer style Aspose.Cells | save workbook with slicer Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsSlicerDemo
+// // Generates a workbook, fills it with Region and Sales data, creates a PivotTable, inserts a slicer linked to the Region field, customizes its style and caption, and saves the file as PivotWithRegionSlicer.xlsx.
+class Program
 {
-    // Creates a workbook, inserts Region and Sales data, builds a pivot table, adds a slicer linked to the Region field, applies a visual style and caption, and saves the file as PivotWithRegionSlicer.xlsx. The slicer provides an interactive filter for the pivot.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-            // Populate sample data with a "Region" field and a "Sales" field
-            sheet.Cells["A1"].Value = "Region";
-            sheet.Cells["B1"].Value = "Sales";
+        // Populate sample data with a Region field
+        cells["A1"].Value = "Region";
+        cells["B1"].Value = "Sales";
+        cells["A2"].Value = "North";
+        cells["B2"].Value = 1200;
+        cells["A3"].Value = "South";
+        cells["B3"].Value = 950;
+        cells["A4"].Value = "East";
+        cells["B4"].Value = 800;
+        cells["A5"].Value = "West";
+        cells["B5"].Value = 1100;
 
-            sheet.Cells["A2"].Value = "North";
-            sheet.Cells["B2"].Value = 1200;
+        // Add a pivot table using the data range
+        int pivotIdx = sheet.PivotTables.Add("A1:B5", "D3", "RegionPivot");
+        PivotTable pivot = sheet.PivotTables[pivotIdx];
 
-            sheet.Cells["A3"].Value = "South";
-            sheet.Cells["B3"].Value = 950;
+        // Configure the pivot table: Region as row field, Sales as data field
+        pivot.AddFieldToArea(PivotFieldType.Row, "Region");
+        pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+        pivot.RefreshData();
+        pivot.CalculateData();
 
-            sheet.Cells["A4"].Value = "East";
-            sheet.Cells["B4"].Value = 780;
+        // Add a slicer linked to the pivot table for interactive Region filtering
+        // Using the overload Add(PivotTable, string destCellName, string baseFieldName)
+        int slicerIdx = sheet.Slicers.Add(pivot, "F3", "Region");
+        Slicer slicer = sheet.Slicers[slicerIdx];
 
-            sheet.Cells["A5"].Value = "West";
-            sheet.Cells["B5"].Value = 1100;
+        // Optional: customize slicer appearance
+        slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
+        slicer.Caption = "Filter by Region";
 
-            sheet.Cells["A6"].Value = "North";
-            sheet.Cells["B6"].Value = 1300;
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-            // Configure the pivot: Region as row field, Sales as data field
-            pivot.AddFieldToArea(PivotFieldType.Row, "Region");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Add a slicer linked to the pivot table for the "Region" field
-            // The slicer will be placed with its upper‑left corner at cell G3
-            int slicerIndex = sheet.Slicers.Add(pivot, "G3", "Region");
-            Slicer slicer = sheet.Slicers[slicerIndex];
-
-            // Optional: set a visual style for the slicer
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
-            slicer.Caption = "Region Filter";
-
-            // Save the workbook to a file
-            workbook.Save("PivotWithRegionSlicer.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("PivotWithRegionSlicer.xlsx");
     }
 }

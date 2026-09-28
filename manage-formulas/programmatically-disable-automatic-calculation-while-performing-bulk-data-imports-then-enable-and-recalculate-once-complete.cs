@@ -1,111 +1,74 @@
-// Title: Disable Automatic Calculation for Bulk Imports and Recalculate with Aspose.Cells for .NET
-// Description: Show how to set FormulaSettings.CalculationMode to Manual, import large data sets efficiently, then restore Automatic mode and recalculate all formulas using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | manual calculation mode | bulk data import | disable automatic calculation | calculate formulas | FormulaSettings | performance optimization | large worksheet | Excel automation
-// Common Searches: Aspose.Cells turn off calculation | bulk import performance Aspose.Cells | manual calculation mode .NET | recalculate workbook after data load Aspose | disable calculate on save Aspose.Cells
-// Developer Intent: Temporarily switch to manual calculation while inserting massive data, then re‑enable automatic mode and evaluate all dependent formulas.
-// Use Cases: Import a 10,000‑row numeric array without triggering per‑cell formula evaluation, then add column‑sum formulas and compute them in one step. | Load external data into a workbook with calculation disabled, enable CalculateOnSave before saving to ensure the file contains evaluated results. | Perform multiple worksheet updates in loops, disable automatic calculation for speed, and finally call Workbook.CalculateFormula() to refresh dependent cells.
-// AI Prompts: Generate C# code that disables automatic calculation in Aspose.Cells, bulk‑imports a large two‑dimensional array, adds formulas, re‑enables calculation, and recalculates before saving. | Explain how FormulaSettings.CalculationMode and CalculateOnSave work together to improve performance during massive data insertion with Aspose.Cells. | Provide best‑practice tips for optimizing memory and speed when inserting millions of cells using Aspose.Cells, including manual calculation handling.
+// Title: How to disable automatic formula calculation during bulk DataTable import and recalculate after import with Aspose.Cells for .NET
+// AI Prompts: Write C# that disables automatic formula evaluation, loads a DataTable into the first worksheet, then re‑enables evaluation and calls CalculateFormula. | Show example code using Aspose.Cells to turn off formula calculation while bulk‑loading rows and then trigger a full recalculation after the load.
+// Common Searches: Aspose.Cells set calculation mode to manual for bulk data import C# | Improve performance when inserting thousands of rows with formulas using Aspose.Cells | Re‑enable automatic calculation after bulk write in Aspose.Cells .NET | Disable formula recalculation during DataTable export to Excel with Aspose.Cells | Calculate all formulas after disabling automatic calculation in Aspose.Cells workbook
+// Tags: manual calculation mode Aspose.Cells | DataTable bulk load Aspose.Cells | full formula recalculation Aspose.Cells | performance optimization Excel export .NET | disable automatic formula evaluation Aspose.Cells
 
 using System;
+using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace BulkImportExample
+// The program creates a new workbook, writes column headers and rows from a DataTable into the first worksheet, forces a full formula recalculation with CalculateFormula, and saves the workbook as BulkImportResult.xlsx.
+class BulkImportExample
 {
-    // Show how to set FormulaSettings.CalculationMode to Manual, import large data sets efficiently, then restore Automatic mode and recalculate all formulas using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet (or add a new one if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // -----------------------------------------------------------------
+            // Bulk data import section
+            // Replace this placeholder with your actual data source (e.g., DataTable, array, etc.)
+            // -----------------------------------------------------------------
+            DataTable data = GetSampleData(); // Example method returning a DataTable
+
+            // Write column headers
+            for (int col = 0; col < data.Columns.Count; col++)
             {
-                // Create a new workbook (lifecycle create)
-                Workbook workbook = new Workbook();
-
-                // Access formula settings
-                FormulaSettings formulaSettings = workbook.Settings.FormulaSettings;
-
-                // Disable automatic calculation during bulk import
-                formulaSettings.CalculationMode = CalcModeType.Manual;
-                // Optional: prevent calculation on save while in manual mode
-                formulaSettings.CalculateOnSave = false;
-
-                // Reference to the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // -------------------------
-                // Bulk data import starts
-                // -------------------------
-
-                // Example: import a large 2‑dimensional array of numeric values
-                int rows = 10000;
-                int cols = 10;
-                object[,] data = new object[rows, cols];
-                for (int r = 0; r < rows; r++)
-                {
-                    for (int c = 0; c < cols; c++)
-                    {
-                        data[r, c] = r * cols + c + 1; // sample data
-                    }
-                }
-
-                // Import the array starting at cell A1 using manual cell assignment
-                for (int r = 0; r < rows; r++)
-                {
-                    for (int c = 0; c < cols; c++)
-                    {
-                        cells[r, c].Value = data[r, c];
-                    }
-                }
-
-                // Example: add some formulas that depend on the imported data
-                // Sum of each column placed in the row after the data
-                for (int c = 0; c < cols; c++)
-                {
-                    // Get column letters (e.g., "A", "AA")
-                    string colLetter = CellIndexToName(0, c);
-                    colLetter = System.Text.RegularExpressions.Regex.Replace(colLetter, @"\d", string.Empty);
-
-                    string startAddr = $"{colLetter}1";
-                    string endAddr = $"{colLetter}{rows}";
-                    cells[rows, c].Formula = $"=SUM({startAddr}:{endAddr})";
-                }
-
-                // -------------------------
-                // Bulk data import ends
-                // -------------------------
-
-                // Re‑enable automatic calculation (or set to desired mode)
-                formulaSettings.CalculationMode = CalcModeType.Automatic;
-                // Enable calculation on save if you want the file to be saved with calculated values
-                formulaSettings.CalculateOnSave = true;
-
-                // Recalculate all formulas now that data import is finished
-                workbook.CalculateFormula();
-
-                // Save the workbook (lifecycle save)
-                workbook.Save("BulkImportResult.xlsx");
+                sheet.Cells[0, col].PutValue(data.Columns[col].ColumnName);
             }
-            catch (Exception ex)
+
+            // Write data rows
+            for (int row = 0; row < data.Rows.Count; row++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                for (int col = 0; col < data.Columns.Count; col++)
+                {
+                    sheet.Cells[row + 1, col].PutValue(data.Rows[row][col]);
+                }
             }
+            // -----------------------------------------------------------------
+
+            // Force a full recalculation of all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Save the workbook to a file
+            string outputPath = "BulkImportResult.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Helper method to convert zero‑based row/column indexes to Excel cell name (e.g., 0,0 -> "A1")
-        private static string CellIndexToName(int row, int column)
+        catch (Exception ex)
         {
-            // Convert column index to letters
-            string colName = "";
-            int dividend = column + 1;
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % 26;
-                colName = Convert.ToChar('A' + modulo) + colName;
-                dividend = (dividend - modulo) / 26;
-            }
-            // Row index is zero‑based, Excel rows start at 1
-            return $"{colName}{row + 1}";
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Sample method to generate a DataTable for demonstration purposes
+    private static DataTable GetSampleData()
+    {
+        DataTable table = new DataTable();
+        table.Columns.Add("Product", typeof(string));
+        table.Columns.Add("Quantity", typeof(int));
+        table.Columns.Add("Price", typeof(double));
+
+        table.Rows.Add("Apple", 120, 0.5);
+        table.Rows.Add("Banana", 85, 0.3);
+        table.Rows.Add("Cherry", 200, 0.2);
+
+        return table;
     }
 }

@@ -1,76 +1,61 @@
-// Title: Read Excel cell values with German (de‑DE) number formatting using Aspose.Cells for .NET
-// Description: Shows how to load an XLSX workbook with Aspose.Cells LoadOptions that set CultureInfo to de‑DE, so numbers using a comma as decimal separator are parsed correctly. The example extracts the numeric value via DoubleValue or by parsing a string cell and also returns the formatted string representation.
-// Keywords: Aspose.Cells | LoadOptions | CultureInfo | de-DE | German number format | comma decimal separator | read numeric cell C# | .NET Excel parsing | culture‑aware Excel reading | Excel workbook loading
-// Common Searches: Aspose.Cells load workbook with German locale | read Excel numbers with comma decimal separator in C# | set CultureInfo for Excel file using Aspose.Cells | parse string cell as double with specific culture Aspose | how to handle locale‑specific number formats in Aspose.Cells
-// Developer Intent: Load an Excel workbook with a defined locale and retrieve numeric values accurately, respecting the locale's decimal separator.
-// Use Cases: Import a German‑formatted spreadsheet and obtain precise double values from cells. | Convert string cells that contain numbers with commas into numeric types using the workbook’s CultureInfo. | Display both the raw double and the locale‑formatted string as they appear in the worksheet.
-// AI Prompts: Generate code to read Excel numbers using French (fr‑FR) culture with Aspose.Cells. | Provide an example that writes a double back to a worksheet while preserving the original comma decimal format. | Explain how to detect the workbook’s default CultureInfo after loading and apply it to custom number formatting.
+// Title: Read a numeric cell with German locale formatting using Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook with Aspose.Cells, assign CultureInfo('de-DE') to workbook.Settings, then retrieve the raw double from a cell and convert it to a culture‑aware string. | Demonstrate how to obtain the displayed text of a cell that uses locale‑specific number formatting by accessing Cell.StringValue after setting the workbook culture. | Show how to format a numeric value according to the workbook’s CultureInfo without altering the underlying double value.
+// Common Searches: Aspose.Cells C# read cell value with German number format | How to set workbook culture to de-DE for numeric parsing in Aspose.Cells | Get displayed text of a formatted Excel cell using Aspose.Cells .NET | Retrieve raw double and formatted string from Excel cell with locale settings | Read locale‑specific numeric cells in Aspose.Cells without losing precision
+// Tags: culture-aware numeric extraction Aspose.Cells | set workbook CultureInfo de-DE | read cell StringValue with locale formatting | format double using workbook settings | load Excel workbook with locale-specific number format
 
 using System;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCultureReadDemo
+namespace AsposeCellsExample
 {
-    // Shows how to load an XLSX workbook with Aspose.Cells LoadOptions that set CultureInfo to de‑DE, so numbers using a comma as decimal separator are parsed correctly. The example extracts the numeric value via DoubleValue or by parsing a string cell and also returns the formatted string representation.
+    // The example loads an Excel file with Aspose.Cells, sets the workbook's CultureInfo to German (de-DE), accesses a specific cell, obtains its raw double value, formats it using the workbook's culture, retrieves the displayed text via StringValue, and prints both the raw and culture‑aware representations.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the Excel file that contains numbers formatted with a comma as decimal separator
-            string inputFile = "sample.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
-            {
-                Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
-                return;
-            }
-
             try
             {
-                // Create LoadOptions and set the culture to German (de-DE) which uses ',' as decimal separator
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                string inputPath = "input.xlsx";
+
+                // Ensure the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    CultureInfo = new CultureInfo("de-DE")
-                };
+                    Console.WriteLine($"File not found: {inputPath}");
+                    return;
+                }
 
-                // Load the workbook using the specified LoadOptions
-                Workbook workbook = new Workbook(inputFile, loadOptions);
+                // Load the workbook from the file
+                Workbook workbook = new Workbook(inputPath);
 
-                // Access the first worksheet and a cell that contains a numeric value
+                // Set the culture that matches the number formatting used in the worksheet (German example)
+                workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+                // Access the first worksheet (index 0)
                 Worksheet sheet = workbook.Worksheets[0];
-                Cell cell = sheet.Cells["A1"]; // Adjust the address as needed
 
-                double numericValue = double.NaN;
-                string formattedValue = string.Empty;
+                // Read a specific cell (e.g., B2) that contains a number formatted with the culture‑specific pattern
+                Cell cell = sheet.Cells["B2"];
 
-                // Retrieve the numeric value in a culture‑aware way
-                if (cell.Type == CellValueType.IsNumeric)
-                {
-                    numericValue = cell.DoubleValue;
-                }
-                else if (cell.Type == CellValueType.IsString)
-                {
-                    // Attempt to parse the string using the specified culture
-                    string raw = cell.StringValue;
-                    if (double.TryParse(raw, NumberStyles.Any, loadOptions.CultureInfo, out double parsed))
-                    {
-                        numericValue = parsed;
-                    }
-                }
+                // Retrieve the raw numeric value (as double) – culture does not affect the underlying value
+                double rawNumber = cell.Value is double d ? d : 0.0;
 
-                // Retrieve the formatted string representation (uses the workbook's culture settings)
-                formattedValue = cell.StringValue;
+                // Convert the numeric value to a string using the workbook's culture settings
+                string formattedNumber = rawNumber.ToString(workbook.Settings.CultureInfo);
 
-                // Output the results
-                Console.WriteLine($"Numeric value (DoubleValue): {numericValue}");
-                Console.WriteLine($"Formatted string (StringValue): {formattedValue}");
+                // Get the displayed text as it appears in Excel (using StringValue which reflects the displayed format)
+                string displayedText = cell.StringValue;
+
+                // Output results
+                Console.WriteLine($"Raw value: {rawNumber}");
+                Console.WriteLine($"Formatted (culture aware): {formattedNumber}");
+                Console.WriteLine($"Displayed text from cell: {displayedText}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

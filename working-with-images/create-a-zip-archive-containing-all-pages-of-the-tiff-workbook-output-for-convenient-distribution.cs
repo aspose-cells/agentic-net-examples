@@ -1,77 +1,97 @@
-// Title: C# – Render Workbook Pages to Separate TIFF Files and Bundle Them into a ZIP Archive with Aspose.Cells
-// Description: This example creates a workbook, fills it with sample data, configures ImageOrPrintOptions for one‑page‑per‑sheet TIFF output, renders each page using WorkbookRender, saves the TIFF files to a folder, and then compresses all images into a single ZIP file using System.IO.Compression. The original workbook is also saved for reference.
-// Keywords: Aspose.Cells TIFF export C# | WorkbookRender one page per sheet | C# zip multiple TIFF files | export Excel pages as TIFF | .NET compress images to ZIP | Aspose.Cells image rendering
-// Common Searches: how to export each Excel sheet page as TIFF with Aspose.Cells | C# render workbook pages to TIFF and zip them | Aspose.Cells OnePagePerSheet TIFF example | compress multiple TIFF images into a ZIP file in .NET | save Excel workbook as individual TIFF files
-// Developer Intent: Generate a TIFF file for every workbook page and combine all TIFFs into a single ZIP archive.
-// Use Cases: Distribute multi‑page Excel reports as a downloadable ZIP of per‑page TIFF images for universal viewing. | Archive printed versions of workbook pages for compliance, storing each page as a high‑resolution TIFF inside a compressed package. | Provide offline analysis of workbook content by bundling scanned pages as separate TIFF files within a ZIP file.
-// AI Prompts: Write C# code that uses Aspose.Cells to render each workbook page to an individual TIFF file and then creates a ZIP archive of those files. | Explain how to automatically delete the temporary TIFF files after the ZIP archive has been created. | Show how to set DPI, compression type, and other TIFF options before adding the images to the ZIP archive with Aspose.Cells.
+// Title: Generate one‑page TIFF images for each worksheet in an Aspose.Cells workbook and package them into a ZIP file using C#
+// AI Prompts: Write C# code that iterates through all worksheets in a Workbook and uses Aspose.Cells SheetRender with ImageOrPrintOptions to save each sheet as a single‑page TIFF file. | Add logic to gather the generated TIFF files and create a ZIP archive with System.IO.Compression, preserving the original file names. | Include error handling that logs rendering failures per sheet, ensures temporary TIFF files are deleted after the ZIP is created, and returns the ZIP archive path.
+// Common Searches: how to export each Excel worksheet to a separate TIFF file with Aspose.Cells in C# | C# create zip file containing multiple TIFF images generated from a workbook | Aspose.Cells one page per sheet TIFF export and compress into archive | remove temporary image files after zipping TIFFs in .NET application
+// Tags: Aspose.Cells worksheet to TIFF conversion C# | create zip archive from TIFF files System.IO.Compression | single‑page TIFF export per sheet Aspose.Cells | temporary directory cleanup after image export .NET | error handling for sheet rendering Aspose.Cells
 
 using System;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsZipTiffExample
+// The example creates a workbook with three sheets, renders each sheet to a single‑page TIFF using Aspose.Cells SheetRender with specified resolution, stores the TIFFs in a temporary folder, compresses all TIFF files into a ZIP archive via System.IO.Compression, deletes the temporary folder, and outputs the path of the generated ZIP file.
+class Program
 {
-    // This example creates a workbook, fills it with sample data, configures ImageOrPrintOptions for one‑page‑per‑sheet TIFF output, renders each page using WorkbookRender, saves the TIFF files to a folder, and then compresses all images into a single ZIP file using System.IO.Compression. The original workbook is also saved for reference.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook and add sample data to three worksheets
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF Pages to ZIP Demo");
-            for (int i = 2; i <= 100; i++)
+            for (int i = 0; i < 3; i++)
             {
-                sheet.Cells[$"A{i}"].PutValue($"Row {i - 1}");
+                Worksheet sheet = workbook.Worksheets[i];
+                sheet.Name = $"Sheet{i + 1}";
+                sheet.Cells["A1"].PutValue($"Data for {sheet.Name}");
+                sheet.Cells["A2"].PutValue(100 + i);
             }
 
-            // Configure image rendering options for TIFF output
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Folder to store temporary TIFF files (one per worksheet)
+            string tempFolder = Path.Combine(Path.GetTempPath(), "TiffPages");
+            Directory.CreateDirectory(tempFolder);
+
+            // Render each worksheet to a single‑page TIFF file
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                ImageType = ImageType.Tiff,          // Output format TIFF
-                OnePagePerSheet = true               // Each page will be a separate image
-            };
-
-            // Initialize the workbook renderer
-            WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
-
-            // Prepare output directory
-            string outputDir = "TiffPages";
-            Directory.CreateDirectory(outputDir);
-
-            // Render each page to an individual TIFF file
-            for (int pageIndex = 0; pageIndex < renderer.PageCount; pageIndex++)
-            {
-                string pageFilePath = Path.Combine(outputDir, $"Page_{pageIndex + 1}.tiff");
-                renderer.ToImage(pageIndex, pageFilePath);
-            }
-
-            // Create a ZIP archive containing all rendered TIFF pages
-            string zipPath = "WorkbookPages.zip";
-            using (FileStream zipStream = new FileStream(zipPath, FileMode.Create))
-            using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Create))
-            {
-                foreach (string filePath in Directory.GetFiles(outputDir, "*.tiff"))
+                try
                 {
-                    // Add each TIFF file to the ZIP archive
-                    archive.CreateEntryFromFile(filePath, Path.GetFileName(filePath));
+                    Worksheet sheet = workbook.Worksheets[i];
+
+                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                    {
+                        // ImageFormat property is optional; format is inferred from file extension
+                        OnePagePerSheet = true,
+                        HorizontalResolution = 200,
+                        VerticalResolution = 200
+                    };
+
+                    SheetRender renderer = new SheetRender(sheet, imgOptions);
+                    string tiffFile = Path.Combine(tempFolder, $"{sheet.Name}.tiff");
+                    renderer.ToImage(0, tiffFile); // Save the first (and only) page
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error rendering sheet '{workbook.Worksheets[i].Name}': {ex.Message}");
                 }
             }
 
-            // Optional: clean up individual TIFF files after zipping
-            // foreach (string file in Directory.GetFiles(outputDir, "*.tiff"))
-            // {
-            //     File.Delete(file);
-            // }
+            // Create a ZIP archive that contains all generated TIFF files
+            string zipPath = Path.Combine(Environment.CurrentDirectory, "WorkbookPages.zip");
+            try
+            {
+                if (File.Exists(zipPath))
+                    File.Delete(zipPath);
 
-            // Save the original workbook for reference
-            workbook.Save("OriginalWorkbook.xlsx", SaveFormat.Xlsx);
+                using (ZipArchive zip = ZipFile.Open(zipPath, ZipArchiveMode.Create))
+                {
+                    foreach (string tiffFile in Directory.GetFiles(tempFolder, "*.tiff"))
+                    {
+                        zip.CreateEntryFromFile(tiffFile, Path.GetFileName(tiffFile));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating ZIP archive: {ex.Message}");
+                return;
+            }
 
-            Console.WriteLine("All pages rendered to TIFF, zipped into 'WorkbookPages.zip', and workbook saved.");
+            // Clean up temporary TIFF files
+            try
+            {
+                if (Directory.Exists(tempFolder))
+                    Directory.Delete(tempFolder, true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error cleaning temporary files: {ex.Message}");
+            }
+
+            Console.WriteLine($"ZIP archive created at: {zipPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

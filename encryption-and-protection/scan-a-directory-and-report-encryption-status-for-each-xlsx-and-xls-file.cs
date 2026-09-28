@@ -1,46 +1,69 @@
-// Title: Detect Encryption of .xlsx and .xls Files in a Folder Using Aspose.Cells for .NET (C#)
-// Description: A console utility that scans a specified directory, filters Excel workbooks (.xlsx, .xls), and uses Aspose.Cells FileFormatUtil.DetectFileFormat to report whether each file is encrypted. It outputs the file name with a true/false flag or an error message for unsupported or corrupted files.
-// Keywords: Aspose.Cells C# encryption detection | FileFormatUtil IsEncrypted | detect password protected Excel | scan folder for encrypted .xlsx | list encrypted Excel files .NET | Excel file encryption status | Aspose.Cells DetectFileFormat
-// Common Searches: C# check if Excel file is password protected Aspose.Cells | how to list encrypted .xls files in a directory using Aspose | detect encrypted workbook with Aspose.Cells .NET | FileFormatUtil DetectFileFormat encryption flag example | scan folder for encrypted Excel workbooks C#
-// Developer Intent: Determine the encryption (password‑protection) state of each Excel workbook in a given folder.
-// Use Cases: Generate a compliance report that separates encrypted from unencrypted workbooks before bulk processing. | Skip or log encrypted files in an automated conversion pipeline that only handles unprotected Excel files. | Capture detection errors for corrupted or unsupported Excel files while scanning a directory. | Perform a security audit of shared drives to identify password‑protected spreadsheets.
-// AI Prompts: Create a C# method that returns a Dictionary<string, bool> mapping Excel file names to their encryption status using Aspose.Cells. | Extend the sample to recursively scan subfolders and export results (file name, encrypted flag, error message) to a CSV file. | Provide best‑practice error handling for FileFormatUtil.DetectFileFormat when processing large batches of Excel files. | Write unit tests that verify encryption detection for both .xlsx and .xls files with and without passwords.
+// Title: Identify encrypted XLSX and XLS workbooks in a folder using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans a given directory, attempts to load each .xlsx or .xls file with Aspose.Cells LoadOptions, and marks the file as encrypted when a CellsException is thrown. | Create a reusable method that returns a dictionary mapping Excel file paths to a boolean indicating password‑protected status, using Aspose.Cells without providing a password. | Enhance the program to log files that cannot be opened due to corruption or unsupported format while still reporting their encryption status.
+// Common Searches: C# how to check if an Excel file is password protected with Aspose.Cells | list encrypted .xlsx files in a directory using Aspose.Cells .NET | detect workbook encryption without password using Aspose.Cells LoadOptions | scan folder for protected Excel workbooks and output status in C# | handle CellsException to identify protected spreadsheets in .NET
+// Tags: detect encrypted Excel workbooks Aspose.Cells | folder scan for .xlsx encryption status .NET | load workbook without password Aspose.Cells | handle CellsException for password‑protected spreadsheets | enumerate Excel file protection using Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionScanner
+// Scans a specified directory, attempts to load each .xlsx or .xls file with Aspose.Cells, catches CellsException to determine if the workbook is password‑protected, and prints the file name with its encryption status while optionally logging corrupt or unsupported files.
+class Program
 {
-    // A console utility that scans a specified directory, filters Excel workbooks (.xlsx, .xls), and uses Aspose.Cells FileFormatUtil.DetectFileFormat to report whether each file is encrypted. It outputs the file name with a true/false flag or an error message for unsupported or corrupted files.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Directory to scan – change as needed or pass as an argument
-            string folderPath = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+        // Set the directory to scan
+        string folderPath = @"C:\Path\To\Directory"; // TODO: change to your folder
 
-            // Get all .xlsx and .xls files in the directory (non‑recursive)
-            string[] excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
-            foreach (string filePath in excelFiles)
+        // Verify that the directory exists
+        if (!Directory.Exists(folderPath))
+        {
+            Console.WriteLine($"Directory not found: {folderPath}");
+            return;
+        }
+
+        // Get all files in the directory (top level only)
+        string[] files = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+
+        foreach (string filePath in files)
+        {
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+
+            // Process only XLSX and XLS files
+            if (extension == ".xlsx" || extension == ".xls")
             {
-                string extension = Path.GetExtension(filePath).ToLowerInvariant();
-                if (extension != ".xlsx" && extension != ".xls")
-                    continue; // Skip non‑Excel files
+                // Ensure the file actually exists before attempting to load
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
+
+                bool isEncrypted = false;
 
                 try
                 {
-                    // Detect file format and encryption status using Aspose.Cells API
-                    FileFormatInfo info = FileFormatUtil.DetectFileFormat(filePath);
-                    bool isEncrypted = info.IsEncrypted;
+                    // Attempt to load the workbook without a password
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+                    Workbook workbook = new Workbook(filePath, loadOptions);
 
-                    Console.WriteLine($"{Path.GetFileName(filePath)} - Encrypted: {isEncrypted}");
+                    // If loading succeeds, the file is not encrypted
+                    isEncrypted = false;
+                }
+                catch (CellsException)
+                {
+                    // Aspose.Cells throws CellsException when the file is password protected
+                    isEncrypted = true;
                 }
                 catch (Exception ex)
                 {
-                    // If detection fails, report the error but continue processing other files
-                    Console.WriteLine($"{Path.GetFileName(filePath)} - Error detecting encryption: {ex.Message}");
+                    // Other unexpected errors (corrupt file, unsupported format, etc.)
+                    Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
+                    continue;
                 }
+
+                // Output the encryption status
+                Console.WriteLine($"{Path.GetFileName(filePath)} : {(isEncrypted ? "Encrypted" : "Not Encrypted")}");
             }
         }
     }

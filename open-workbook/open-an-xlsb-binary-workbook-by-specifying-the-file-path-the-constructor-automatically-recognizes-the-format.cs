@@ -1,68 +1,24 @@
-// Title: Open XLSB Workbook from File Path with Aspose.Cells for .NET
-// Description: Demonstrates loading a binary XLSB workbook by passing its full path to the Aspose.Cells Workbook constructor, which auto‑detects the format. Includes file‑existence validation, basic workbook metadata output, reading cell A1, and robust exception handling.
-// Keywords: Aspose.Cells open XLSB | load binary Excel workbook C# | Workbook constructor format detection | check file existence Aspose.Cells | read cell value XLSB Aspose | C# .NET Excel binary file | exception handling Aspose.Cells
-// Common Searches: how to open xlsb with aspose.cells c# | aspose.cells automatically detect workbook format | read first worksheet name from xlsb file | validate xlsb file exists before loading | c# example loading binary excel workbook
-// Developer Intent: Load an XLSB file from a specified path, verify its presence, and access worksheet and cell data using Aspose.Cells.
-// Use Cases: Open an XLSB workbook and display the total worksheet count and the name of the first sheet. | Read the value of cell A1 from the first worksheet of an XLSB file. | Ensure the XLSB file exists before creating a Workbook instance to avoid runtime errors. | Handle exceptions gracefully when loading a binary Excel workbook.
-// AI Prompts: Generate C# code that opens an XLSB workbook with Aspose.Cells, checks file existence, and prints worksheet details. | Show how to catch and log exceptions while loading a binary Excel file using Aspose.Cells. | Provide an example that reads multiple cell values from the first worksheet of an XLSB workbook with Aspose.Cells.
+// Title: Open an XLSB binary workbook from a file path using Aspose.Cells for .NET
+// AI Prompts: Use the Aspose.Cells Workbook constructor to load an .xlsb file from a given path and retrieve its first worksheet in C#. | Create a C# program that opens a binary Excel workbook (.xlsb) by passing the file location to Aspose.Cells without specifying the format. | Demonstrate automatic format detection when initializing a Workbook object with a path to an .xlsb file in .NET.
+// Common Searches: asp.net how to load .xlsb workbook with Aspose.Cells without setting format | c# Aspose.Cells open binary Excel file from file system | example code for automatic file format detection in Aspose.Cells Workbook constructor | read first worksheet of an .xlsb file using Aspose.Cells in C# | load Excel binary workbook path Aspose.Cells .NET tutorial
+// Tags: load xlsb workbook Aspose.Cells | automatic format detection Aspose.Cells | C# open binary Excel file | Workbook constructor file path | retrieve first worksheet C# | Aspose.Cells .xlsb file handling
 
-using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example shows how to instantiate a Workbook object by providing the file path of an XLSB binary workbook; Aspose.Cells automatically detects the format, and the code then accesses the first worksheet for further processing.
+class Program
 {
-    // Demonstrates loading a binary XLSB workbook by passing its full path to the Aspose.Cells Workbook constructor, which auto‑detects the format. Includes file‑existence validation, basic workbook metadata output, reading cell A1, and robust exception handling.
-    public class OpenXlsbWorkbookDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            // Specify the full path to the XLSB file.
-            string xlsbPath = @"C:\Data\sample.xlsb";
+        // Path to the XLSB binary workbook
+        string filePath = @"C:\Path\To\YourWorkbook.xlsb";
 
-            // Verify that the file exists before attempting to load it.
-            if (!File.Exists(xlsbPath))
-            {
-                Console.WriteLine($"Error: The file \"{xlsbPath}\" was not found.");
-                return;
-            }
+        // The Workbook constructor automatically detects the XLSB format and loads the file
+        Workbook workbook = new Workbook(filePath);
 
-            try
-            {
-                // The Workbook constructor automatically detects the file format (XLSB in this case).
-                Workbook workbook = new Workbook(xlsbPath);
+        // Example: access the first worksheet
+        Worksheet firstSheet = workbook.Worksheets[0];
 
-                // Access the first worksheet to verify that the file was loaded successfully.
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Output some basic information about the loaded workbook.
-                Console.WriteLine($"Workbook loaded from: {xlsbPath}");
-                Console.WriteLine($"Number of worksheets: {workbook.Worksheets.Count}");
-                Console.WriteLine($"First worksheet name: {sheet.Name}");
-
-                // Example: read the value of cell A1 if it exists.
-                if (sheet.Cells["A1"].Value != null)
-                {
-                    Console.WriteLine($"Cell A1 value: {sheet.Cells["A1"].StringValue}");
-                }
-                else
-                {
-                    Console.WriteLine("Cell A1 is empty.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application.
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            OpenXlsbWorkbookDemo.Run();
-        }
+        // Additional processing can be performed here
     }
 }

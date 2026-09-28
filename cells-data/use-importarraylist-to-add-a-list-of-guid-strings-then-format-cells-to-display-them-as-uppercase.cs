@@ -1,47 +1,47 @@
-// Title: Import GUID List into Excel and Convert to Uppercase with Aspose.Cells for .NET
-// Description: Shows how to generate a collection of GUID strings, import them vertically into a worksheet using Cells.ImportArrayList, convert each value to uppercase, and save the workbook as an .xlsx file with Aspose.Cells for .NET.
-// Keywords: ImportArrayList | GUID strings | uppercase cells | Aspose.Cells | C# Excel automation | vertical data import | ArrayList to worksheet | cell value transformation | unique identifier formatting | Excel file generation
-// Common Searches: Aspose.Cells ImportArrayList example | import GUID list into Excel C# | convert cell text to uppercase Aspose.Cells | vertical import of strings Aspose.Cells | C# Aspose.Cells write GUIDs to worksheet
-// Developer Intent: Add a collection of GUID strings to a worksheet and display them in uppercase using Aspose.Cells.
-// Use Cases: Create a tracking sheet where each row contains a unique identifier in a standardized uppercase format. | Generate compliance reports that require GUIDs to be presented in uppercase for readability. | Build a template that automatically populates a column with GUIDs and enforces consistent casing before distribution.
-// AI Prompts: Write C# code that uses Aspose.Cells to import an ArrayList of GUID strings into column A and convert the values to uppercase. | Explain how to apply a style or transformation in Aspose.Cells to display imported GUIDs in uppercase without iterating over each cell. | Show an alternative Aspose.Cells API call that imports a vertical list of strings and forces uppercase formatting during import.
+// Title: Import uppercase GUID strings from an ArrayList into an Excel worksheet and apply a monospaced font using Aspose.Cells for .NET
+// AI Prompts: Generate five GUID values, convert them to uppercase strings, add them to an ArrayList, and call Cells.ImportArrayList to write them vertically starting at cell A1. | Create a Style object with the Consolas font, enable the FontName flag, and apply the style to the range that contains the imported GUIDs. | Save the workbook as GuidUppercase.xlsx after importing the GUID list and applying the custom font style.
+// Common Searches: Aspose.Cells C# import ArrayList of GUIDs vertically into a worksheet | How to set a monospaced font for a range after using ImportArrayList in Aspose.Cells | Create uppercase GUID strings and write them to Excel with Aspose.Cells .NET | Apply custom style to imported cells in an Aspose.Cells workbook
+// Tags: vertical GUID import Aspose.Cells | apply Consolas monospaced font to Excel range | uppercase GUID strings in .NET workbook | style imported cells with custom font Aspose.Cells
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-// Shows how to generate a collection of GUID strings, import them vertically into a worksheet using Cells.ImportArrayList, convert each value to uppercase, and save the workbook as an .xlsx file with Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsGuidExample
 {
-    static void Main()
+    // The program creates a new workbook, generates five uppercase GUID strings, stores them in an ArrayList, imports them vertically into the first worksheet starting at A1 using Cells.ImportArrayList, applies a Consolas monospaced font style to the imported range, and saves the file as GuidUppercase.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet's cells collection
-        Workbook workbook = new Workbook();
-        Cells cells = workbook.Worksheets[0].Cells;
-
-        // Build an ArrayList containing GUID strings
-        ArrayList guidList = new ArrayList();
-        for (int i = 0; i < 5; i++)
+        static void Main()
         {
-            guidList.Add(Guid.NewGuid().ToString());
-        }
+            // Create a new workbook and get the first worksheet's cells collection
+            Workbook workbook = new Workbook();
+            Cells cells = workbook.Worksheets[0].Cells;
 
-        // Import the GUID list vertically starting at cell A1 (row 0, column 0)
-        // Parameters: (ArrayList, firstRow, firstColumn, isVertical)
-        cells.ImportArrayList(guidList, 0, 0, true);
-
-        // Convert each imported GUID to uppercase
-        for (int row = 0; row < guidList.Count; row++)
-        {
-            Cell cell = cells[row, 0];
-            if (cell.Value != null)
+            // Prepare an ArrayList of GUID strings in uppercase
+            ArrayList guidList = new ArrayList();
+            for (int i = 0; i < 5; i++)
             {
-                // Overwrite the cell value with its uppercase representation
-                cell.PutValue(cell.StringValue.ToUpper());
+                // Generate a new GUID, convert to string and make it uppercase
+                guidList.Add(Guid.NewGuid().ToString().ToUpper());
             }
-        }
 
-        // Save the workbook to a file
-        workbook.Save("GuidUppercase.xlsx");
+            // Import the GUID list vertically starting at cell A1 (row 0, column 0)
+            // Parameters: (ArrayList, firstRow, firstColumn, isVertical)
+            cells.ImportArrayList(guidList, 0, 0, true);
+
+            // Optionally, apply a style to the imported range (e.g., set the font to a monospaced type)
+            Style style = workbook.CreateStyle();
+            style.Font.Name = "Consolas";
+            StyleFlag flag = new StyleFlag();
+            flag.FontName = true;
+
+            // Apply the style to the range that contains the GUIDs
+            int lastRow = guidList.Count - 1;
+            cells.CreateRange(0, 0, lastRow + 1, 1).ApplyStyle(style, flag);
+
+            // Save the workbook
+            workbook.Save("GuidUppercase.xlsx");
+        }
     }
 }

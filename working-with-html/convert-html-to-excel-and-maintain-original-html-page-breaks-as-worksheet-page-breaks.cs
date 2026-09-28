@@ -1,66 +1,122 @@
-// Title: C# – Convert HTML to Excel with Aspose.Cells and map <hr> tags to worksheet page breaks
-// Description: Loads an HTML file into an Aspose.Cells workbook, detects every <hr> element, calculates the corresponding row, inserts a horizontal page break at that row, and saves the result as an XLSX file.
-// Keywords: Aspose.Cells HTML to Excel | C# convert HTML to XLSX | preserve <hr> as page break | horizontal page break Aspose.Cells | HTML pagination Excel | worksheet page break from HTML
-// Common Searches: Aspose.Cells convert HTML to Excel with page breaks | C# add worksheet page break for <hr> tag | map HTML horizontal rule to Excel page break | how to keep HTML sections separate when exporting to XLSX | C# detect <hr> in HTML and insert Excel page break
-// Developer Intent: Transform an HTML document into an Excel workbook while converting each <hr> element into a worksheet horizontal page break.
-// Use Cases: Generate printable Excel reports from web pages where <hr> separates sections, ensuring each section starts on a new printed page. | Automate conversion of HTML‑based invoices to Excel while preserving visual separators defined by <hr> tags. | Create Excel versions of online tutorials or documentation that keep chapter breaks for proper pagination.
-// AI Prompts: Improve the algorithm for locating <hr> tags and determining the exact worksheet row, handling different newline styles and nested HTML elements. | Explain how to manage consecutive or nested <hr> tags so Aspose.Cells adds appropriate page breaks without exceeding the data range. | Provide unit‑test examples that verify correct insertion of horizontal page breaks for various HTML inputs containing <hr> elements.
+// Title: Convert an HTML file to Excel (.xlsx) while preserving HTML page‑break elements as worksheet page breaks using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a local HTML document into an Aspose.Cells Workbook, scans the markup for <hr> tags and CSS page‑break directives, and inserts matching horizontal page breaks into the first worksheet. | Show how to map block‑level HTML elements to Excel rows, track the current row index, and add page breaks at the appropriate rows before saving the workbook. | Provide a C# snippet that creates the output directory if it does not exist, saves the workbook as an .xlsx file, and includes error handling for the conversion process.
+// Common Searches: how to keep HTML <hr> page breaks when converting to XLSX with Aspose.Cells in C# | Aspose.Cells C# convert HTML to Excel preserving CSS page-break-before | add worksheet page breaks from HTML markers using Aspose.Cells | detect CSS page-break-after in HTML and apply Excel pagination | C# load HTML into Aspose.Cells workbook and customize pagination
+// Tags: Aspose.Cells HTML to XLSX conversion with pagination | map HTML block elements to Excel rows C# | identify HTML page-break markers Aspose.Cells | load HTML using HtmlLoadOptions Aspose.Cells | save workbook as .xlsx with custom page breaks
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// Loads an HTML file into an Aspose.Cells workbook, detects every <hr> element, calculates the corresponding row, inserts a horizontal page break at that row, and saves the result as an XLSX file.
-class HtmlToExcelConverter
+// The example reads an HTML file, loads it into an Aspose.Cells Workbook, scans the markup for <hr> tags and CSS page‑break directives, adds matching horizontal page breaks to the first worksheet, creates the output folder if needed, and saves the result as an .xlsx file.
+class HtmlToExcelWithPageBreaks
 {
     static void Main()
     {
-        string htmlFile = "input.html";
-        string excelFile = "output.xlsx";
-
         try
         {
+            // Path to the source HTML file
+            string htmlPath = @"C:\Input\source.html";
+
+            // Path to the output Excel file
+            string excelPath = @"C:\Output\result.xlsx";
+
             // Verify that the input HTML file exists
-            if (!File.Exists(htmlFile))
+            if (!File.Exists(htmlPath))
             {
-                Console.WriteLine($"Error: The file '{htmlFile}' was not found.");
+                Console.WriteLine($"Input file not found: {htmlPath}");
                 return;
             }
 
-            // Load the HTML file into a workbook (Aspose.Cells detects the format automatically)
-            Workbook workbook = new Workbook(htmlFile);
-            Worksheet sheet = workbook.Worksheets[0];
+            // Load the HTML content into a string (needed for page‑break detection)
+            string htmlContent = File.ReadAllText(htmlPath);
 
-            // Read the raw HTML text
-            string htmlContent = File.ReadAllText(htmlFile);
-
-            // Find all <hr> tags (case‑insensitive)
-            MatchCollection hrMatches = Regex.Matches(htmlContent, @"<hr\s*/?>", RegexOptions.IgnoreCase);
-
-            foreach (Match match in hrMatches)
+            // -------------------------------------------------
+            // 1. Load the HTML into a new Workbook instance
+            // -------------------------------------------------
+            Workbook workbook;
+            try
             {
-                // Estimate the row where the <hr> appears by counting line‑feed characters before the match
-                int precedingLineFeeds = htmlContent.Substring(0, match.Index).Split('\n').Length - 1;
-                int rowIndex = Math.Max(0, precedingLineFeeds);
-                if (rowIndex > sheet.Cells.MaxDataRow)
-                    rowIndex = sheet.Cells.MaxDataRow;
-
-                // Insert a horizontal page break after the identified row
-                // Use HorizontalPageBreaks collection (available in recent Aspose.Cells versions)
-                sheet.HorizontalPageBreaks.Add(rowIndex);
+                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+                workbook = new Workbook(htmlPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load HTML into workbook: {ex.Message}");
+                return;
             }
 
+            // -------------------------------------------------
+            // 2. Detect HTML page‑break markers and add worksheet page breaks
+            // -------------------------------------------------
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Approximate current Excel row while scanning the HTML content line by line
+            int currentRow = 0;
+
+            // Helper to add a horizontal page break after the specified row
+            void AddPageBreak(int rowIndex)
+            {
+                // Ensure the row index is within a reasonable range
+                if (rowIndex >= 0 && rowIndex <= sheet.Cells.MaxDataRow + 1)
+                {
+                    // Use HorizontalPageBreaks collection (compatible with various Aspose.Cells versions)
+                    sheet.HorizontalPageBreaks.Add(rowIndex);
+                }
+            }
+
+            // Scan the HTML content line by line
+            using (StringReader reader = new StringReader(htmlContent))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string lower = line.ToLowerInvariant();
+
+                    // Detect page‑break markers
+                    bool isPageBreak = lower.Contains("<hr") ||
+                                       lower.Contains("page-break-before:always") ||
+                                       lower.Contains("page-break-after:always");
+
+                    if (isPageBreak)
+                    {
+                        // Add a page break after the current row
+                        AddPageBreak(currentRow);
+                    }
+
+                    // Approximate row advancement:
+                    // Treat block‑level tags as generating a new row.
+                    if (lower.Contains("<p") ||
+                        lower.Contains("<div") ||
+                        lower.Contains("<tr") ||
+                        lower.Contains("<li") ||
+                        lower.Contains("<h1") || lower.Contains("<h2") ||
+                        lower.Contains("<h3") || lower.Contains("<h4") ||
+                        lower.Contains("<h5") || lower.Contains("<h6"))
+                    {
+                        currentRow++;
+                    }
+                    else
+                    {
+                        // Count line breaks within the line's text (if any)
+                        int lineBreaks = line.Split('\n').Length - 1;
+                        currentRow += lineBreaks;
+                    }
+                }
+            }
+
+            // -------------------------------------------------
+            // 3. Save the workbook to an Excel file
+            // -------------------------------------------------
             // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(excelFile);
+            string? outputDir = Path.GetDirectoryName(excelPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
-            // Save the workbook as an Excel file
-            workbook.Save(excelFile, SaveFormat.Xlsx);
-            Console.WriteLine($"Conversion succeeded. Excel file saved as '{excelFile}'.");
+            workbook.Save(excelPath, SaveFormat.Xlsx);
+
+            Console.WriteLine("HTML has been converted to Excel with page breaks preserved.");
         }
         catch (Exception ex)
         {

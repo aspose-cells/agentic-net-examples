@@ -1,83 +1,77 @@
-// Title: Parse currency‑formatted cells to numeric values and write them to the adjacent column with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, inserts currency‑styled strings in column A, reads each cell's displayed text via StringValue, strips common symbols and grouping separators, parses the result using invariant and current cultures to handle US and European formats, and writes the numeric value (or the original text on failure) to column B before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | currency parsing | formatted cell string | StringValue | CultureInfo | double conversion | Excel financial data | locale aware parsing
-// Common Searches: Aspose.Cells read formatted currency string C# | Convert Excel currency text to number with Aspose.Cells | Parse $ and € symbols in Excel cells using .NET | Locale‑aware currency parsing Aspose.Cells example | Write numeric result to adjacent cell in Aspose.Cells
-// Developer Intent: Read a cell’s displayed currency text, remove symbols and separators, convert it to a numeric type, and store the result in the next column for calculations.
-// Use Cases: Transform mixed US/EU currency strings in a worksheet into pure numbers for aggregation or charting. | Import financial reports where values are stored as formatted text and need to be used in formulas. | Provide a fallback that preserves the original text when parsing fails, ensuring data integrity.
-// AI Prompts: Generate Aspose.Cells C# code that extracts a cell's StringValue, removes currency symbols, parses it to double with culture support, and writes the number to the neighboring cell. | Create a reusable method that accepts a Cell object and returns a nullable double after cleaning currency symbols and handling locale‑specific formats. | Suggest improvements to extend the parsing loop for additional symbols, custom formats, and detailed error logging.
+// Title: Parse formatted currency strings in a column and write numeric values to the adjacent column using Aspose.Cells for .NET
+// AI Prompts: Read each cell in column A, strip currency symbols, convert the displayed text to a double, and store the result in column B with Aspose.Cells. | Implement a reusable method that cleans a formatted currency string and parses it using invariant and current culture settings in C#. | Enhance the example to support additional symbols and custom number formats while preserving the original workbook.
+// Common Searches: asp.net parse currency formatted cell to numeric value using Aspose.Cells | c# extract numeric amount from Excel cell showing $ or € with Aspose.Cells | how to write parsed double to adjacent column in an Aspose.Cells workbook | culture-aware currency parsing example for Aspose.Cells .NET
+// Tags: currency string to double Aspose.Cells | parse formatted cell value C# | write numeric result to adjacent column Aspose.Cells | culture-aware number parsing Aspose.Cells | remove currency symbols Aspose.Cells
 
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-// This example creates a workbook, inserts currency‑styled strings in column A, reads each cell's displayed text via StringValue, strips common symbols and grouping separators, parses the result using invariant and current cultures to handle US and European formats, and writes the numeric value (or the original text on failure) to column B before saving the file.
-class CurrencyParsingDemo
+namespace CurrencyParsingExample
 {
-    static void Main()
+    // The program loads an Excel workbook, iterates through each row in column A, retrieves the cell's displayed string, removes common currency symbols and whitespace, attempts to parse the cleaned text to a double using invariant and current culture formats, writes the numeric value to the neighboring cell in column B, and saves the updated workbook.
+    class Program
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook wb = new Workbook();
-        Worksheet ws = wb.Worksheets[0];
-        Cells cells = ws.Cells;
-
-        // Sample data: currency formatted strings in column A
-        cells["A1"].PutValue("$1,234.56");
-        cells["A2"].PutValue("€2.345,67"); // European format with comma decimal
-        cells["A3"].PutValue("£3,210");    // No decimals
-        cells["A4"].PutValue("1234");      // Plain number, no currency
-
-        // Optional: apply a built‑in currency number format to column A for visual consistency
-        Style currencyStyle = wb.CreateStyle();
-        currencyStyle.Number = 164; // Built‑in currency format
-        StyleFlag flag = new StyleFlag();
-        flag.NumberFormat = true;
-        cells["A1"].SetStyle(currencyStyle, flag);
-        cells["A2"].SetStyle(currencyStyle, flag);
-        cells["A3"].SetStyle(currencyStyle, flag);
-        cells["A4"].SetStyle(currencyStyle, flag);
-
-        // Iterate over used rows in column A
-        int maxRow = cells.MaxDataRow;
-        for (int row = 0; row <= maxRow; row++)
+        static void Main()
         {
-            Cell srcCell = cells[row, 0];               // Source cell (column A)
-            string formattedValue = srcCell.StringValue; // Formatted string including currency symbol
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Strip common currency symbols and grouping separators
-            string cleaned = formattedValue
-                .Replace("$", "")
-                .Replace("€", "")
-                .Replace("£", "")
-                .Replace(",", "")
-                .Trim();
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Attempt to parse the cleaned string to a double
-            double numericValue;
-            bool parsed = double.TryParse(
-                cleaned,
-                NumberStyles.Any,
-                CultureInfo.InvariantCulture,
-                out numericValue);
-
-            // If invariant parsing fails, try the current culture (handles cases like "2.345,67")
-            if (!parsed)
+            // Define the range to process (e.g., column A)
+            int maxRow = cells.MaxDataRow;
+            for (int row = 0; row <= maxRow; row++)
             {
-                parsed = double.TryParse(
-                    cleaned,
-                    NumberStyles.Any,
-                    CultureInfo.CurrentCulture,
-                    out numericValue);
+                // Get the cell in column A
+                Cell sourceCell = cells[row, 0];
+
+                // Retrieve the formatted string value (as seen in Excel)
+                string formattedText = sourceCell.StringValue;
+
+                // Attempt to parse currency values (e.g., "$1,234.56", "€1.234,56")
+                // Remove common currency symbols and whitespace
+                string cleaned = formattedText.Replace("$", "")
+                                             .Replace("€", "")
+                                             .Replace("£", "")
+                                             .Replace("¥", "")
+                                             .Replace(" ", "")
+                                             .Trim();
+
+                // Remove grouping separators (commas or periods depending on culture)
+                // First try invariant culture (comma as thousands, dot as decimal)
+                double numericValue;
+                bool parsed = double.TryParse(cleaned,
+                                             NumberStyles.AllowThousands | NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+                                             CultureInfo.InvariantCulture,
+                                             out numericValue);
+
+                // If invariant parsing fails, try current culture (handles cases like "1.234,56")
+                if (!parsed)
+                {
+                    parsed = double.TryParse(cleaned,
+                                            NumberStyles.Any,
+                                            CultureInfo.CurrentCulture,
+                                            out numericValue);
+                }
+
+                // If parsing succeeded, store the numeric value in the adjacent cell (column B)
+                if (parsed)
+                {
+                    Cell targetCell = cells[row, 1];
+                    targetCell.PutValue(numericValue);
+                }
+                else
+                {
+                    // Optionally, you can leave the target cell empty or write an indicator
+                    // cells[row, 1].PutValue("N/A");
+                }
             }
 
-            // Write the result to the adjacent cell in column B
-            Cell destCell = cells[row, 1];
-            if (parsed)
-                destCell.PutValue(numericValue); // Store numeric value for calculations
-            else
-                destCell.PutValue(cleaned);      // Fallback: store the original text
+            // Save the modified workbook
+            workbook.Save("output.xlsx");
         }
-
-        // Save the workbook (lifecycle rule)
-        wb.Save("CurrencyParsingDemo.xlsx");
     }
 }

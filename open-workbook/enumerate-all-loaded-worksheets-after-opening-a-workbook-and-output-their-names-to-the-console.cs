@@ -1,29 +1,24 @@
-// Title: Enumerate all worksheet names in an Excel workbook using Aspose.Cells for .NET (C#)
-// Description: This example shows how to open an existing Excel file with Aspose.Cells, loop through the Workbook.Worksheets collection, and print each Worksheet.Name to the console. No changes are saved, making it ideal for read‑only scenarios.
-// Keywords: Aspose.Cells list worksheets | C# read Excel sheet names | enumerate workbook worksheets .NET | display worksheet names console | Aspose.Cells get sheet titles
-// Common Searches: how to get all sheet names from an Excel file using Aspose.Cells | C# loop through worksheets in a workbook | Aspose.Cells print worksheet names | read Excel worksheet titles without saving
-// Developer Intent: Obtain and show the names of every worksheet contained in a loaded workbook.
-// Use Cases: Verify required worksheets are present before data processing | Create an audit log of all sheet names in a workbook | Dynamically select a worksheet by name after listing available sheets
-// AI Prompts: Generate C# code with Aspose.Cells that lists all worksheet names and includes try‑catch handling for missing or corrupted files. | Provide an example that filters worksheets whose names begin with a given prefix while enumerating the workbook. | Show how to write the list of worksheet names to a text file instead of the console using Aspose.Cells.
+// Title: List all worksheet names from an Excel file using Aspose.Cells for .NET (C#) and print to console
+// AI Prompts: Write a C# console program that opens a .xlsx workbook with Aspose.Cells and prints each worksheet's Name property. | Create a reusable C# method that takes a file path, loads the workbook via Aspose.Cells, and returns a list of worksheet titles. | Show how to loop through the Workbook.Worksheets collection in Aspose.Cells for .NET and output each sheet name to standard output.
+// Common Searches: asp.net console app list worksheet names from Excel using Aspose.Cells | c# code to read all sheet titles from an .xlsx file with Aspose.Cells library | how to enumerate worksheets in a workbook and display their names in C#
+// Tags: Aspose.Cells enumerate workbook worksheets | C# console output Excel sheet names | Aspose.Cells open Excel file | Aspose.Cells worksheet collection traversal | retrieve worksheet Name property
 
 using System;
 using Aspose.Cells;
 
-// This example shows how to open an existing Excel file with Aspose.Cells, loop through the Workbook.Worksheets collection, and print each Worksheet.Name to the console. No changes are saved, making it ideal for read‑only scenarios.
+// // Loads 'input.xlsx' with Aspose.Cells, iterates over workbook.Worksheets, and writes each worksheet's Name to the console.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
+        // Load an existing workbook from file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Enumerate all worksheets and output their names
+        // Iterate through all worksheets in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
+            // Output the name of each worksheet to the console
             Console.WriteLine(sheet.Name);
         }
-
-        // No need to save if only reading; uncomment if you modify and want to save
-        // workbook.Save("output.xlsx");
     }
 }

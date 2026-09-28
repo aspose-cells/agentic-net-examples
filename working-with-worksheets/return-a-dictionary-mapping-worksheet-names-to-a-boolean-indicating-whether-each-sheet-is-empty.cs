@@ -1,76 +1,85 @@
-// Title: C# – Get a Dictionary of Worksheet Names with Empty‑Sheet Flags using Aspose.Cells
-// Description: Sample C# code that loads an Excel workbook with Aspose.Cells for .NET, iterates every worksheet, and marks it as empty when MaxDataRow or MaxDataColumn is –1. The method returns a Dictionary<string, bool> where the key is the sheet name and the value indicates emptiness, with basic error handling and console output.
-// Keywords: Aspose.Cells empty worksheet detection | C# Aspose.Cells GetEmptySheetMap | MaxDataRow MaxDataColumn empty sheet | dictionary of sheet names Aspose | .NET Excel empty sheet check | Aspose.Cells sample code GitHub | Excel worksheet validation C# | detect blank worksheets Aspose.Cells
-// Common Searches: how to check if an Excel sheet is empty with Aspose.Cells | C# get list of empty worksheets in a workbook | Aspose.Cells dictionary of sheet name to empty flag | detect blank worksheets using MaxDataRow | Aspose.Cells sample for empty sheet detection
-// Developer Intent: Identify which worksheets in an Excel file contain no data and return a name‑to‑boolean map.
-// Use Cases: Validate template files and skip completely blank sheets before data import. | Generate a cleanup report that lists empty worksheets for end‑users. | Improve processing speed by ignoring worksheets with no rows or columns of data.
-// AI Prompts: Write C# code with Aspose.Cells that returns a Dictionary<string,bool> indicating empty worksheets based on MaxDataRow and MaxDataColumn. | Explain how MaxDataRow and MaxDataColumn can be used to determine worksheet emptiness in Aspose.Cells for .NET. | Add robust logging and custom exceptions to the GetEmptySheetMap method for production use.
+// Title: How to detect empty worksheets in an Excel file and return a C# dictionary of sheet names using Aspose.Cells
+// AI Prompts: Write a C# method that loads an Excel workbook with Aspose.Cells and returns a Dictionary<string, bool> where each key is a worksheet name and the value is true if the sheet contains no data. | Build a console program that takes a file path argument, calls the method to find empty sheets, and prints each worksheet name followed by "Empty" or "Not Empty".
+// Common Searches: Aspose.Cells C# check if a worksheet is empty | Get list of empty sheets from Excel workbook using Aspose.Cells | C# dictionary of worksheet names to emptiness status Aspose.Cells | Determine empty worksheets by MaxDataRow and MaxDataColumn in Aspose.Cells | How to programmatically find blank worksheets in .xlsx with Aspose.Cells
+// Tags: Aspose.Cells empty worksheet detection | C# identify blank sheets in Excel | MaxDataRow MaxDataColumn emptiness test | Excel workbook sheet emptiness mapping | dictionary of sheet name to empty flag
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Sample C# code that loads an Excel workbook with Aspose.Cells for .NET, iterates every worksheet, and marks it as empty when MaxDataRow or MaxDataColumn is –1. The method returns a Dictionary<string, bool> where the key is the sheet name and the value indicates emptiness, with basic error handling and console output.
-public class WorksheetEmptyChecker
+namespace WorksheetEmptyCheckerApp
 {
-    /// <param name="filePath">Path to the Excel file to be examined.</param>
-    /// <returns>Dictionary where key = worksheet name, value = true if the sheet is empty.</returns>
-    public static Dictionary<string, bool> GetEmptySheetMap(string filePath)
+    // The example loads an Excel file with Aspose.Cells, iterates through each worksheet, uses MaxDataRow and MaxDataColumn to determine if a sheet has no data, and returns a Dictionary<string,bool> mapping worksheet names to true when the sheet is empty.
+    public class WorksheetEmptyChecker
     {
-        var sheetEmptyMap = new Dictionary<string, bool>();
-
-        try
+        /// <param name="filePath">Full path to the Excel file.</param>
+        /// <returns>Dictionary mapping worksheet names to a boolean (true if empty).</returns>
+        public static Dictionary<string, bool> GetEmptySheets(string filePath)
         {
-            // Load the workbook
-            var workbook = new Workbook(filePath);
+            // Ensure the file exists before attempting to load it
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Excel file not found.", filePath);
+
+            Workbook workbook;
+            try
+            {
+                // Load the workbook from the file
+                workbook = new Workbook(filePath);
+            }
+            catch (Exception ex)
+            {
+                // Wrap any loading errors for clearer diagnostics
+                throw new InvalidOperationException("Failed to load workbook.", ex);
+            }
+
+            // Prepare the result dictionary
+            var sheetEmptyMap = new Dictionary<string, bool>();
 
             // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // A sheet is considered empty when it has no used rows or columns.
-                // MaxDataRow and MaxDataColumn return -1 when there is no data.
-                bool isEmpty = sheet.Cells.MaxDataRow < 0 || sheet.Cells.MaxDataColumn < 0;
+                // A sheet is considered empty when there are no cells with data.
+                // MaxDataRow and MaxDataColumn return -1 if the sheet contains no data.
+                bool isEmpty = sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1;
+
+                // Add the result to the dictionary using the sheet's name as the key
                 sheetEmptyMap[sheet.Name] = isEmpty;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error processing workbook: {ex.Message}");
-        }
 
-        return sheetEmptyMap;
+            return sheetEmptyMap;
+        }
     }
-}
 
-public class Program
-{
-    public static void Main(string[] args)
+    internal class Program
     {
-        // Determine the Excel file path (first argument or default)
-        string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
-
-        // Verify that the file exists before attempting to load it
-        if (!File.Exists(filePath))
+        private static void Main(string[] args)
         {
-            Console.WriteLine($"File not found: {filePath}");
-            return;
-        }
-
-        try
-        {
-            // Get the empty sheet map
-            Dictionary<string, bool> result = WorksheetEmptyChecker.GetEmptySheetMap(filePath);
-
-            // Output the results
-            foreach (var kvp in result)
+            // Expect the first argument to be the Excel file path
+            if (args.Length == 0)
             {
-                Console.WriteLine($"{kvp.Key}: {(kvp.Value ? "Empty" : "Not Empty")}");
+                Console.WriteLine("Usage: WorksheetEmptyCheckerApp <excel-file-path>");
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+
+            string filePath = args[0];
+
+            try
+            {
+                var emptySheets = WorksheetEmptyChecker.GetEmptySheets(filePath);
+                foreach (var kvp in emptySheets)
+                {
+                    Console.WriteLine($"Worksheet \"{kvp.Key}\": {(kvp.Value ? "Empty" : "Not Empty")}");
+                }
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.WriteLine($"Error: {fnfEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
         }
     }
 }

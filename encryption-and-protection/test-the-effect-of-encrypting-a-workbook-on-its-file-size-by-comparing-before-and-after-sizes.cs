@@ -1,45 +1,52 @@
-// Title: C# – Measure Workbook Size Change After AES‑128 Encryption with Aspose.Cells
-// Description: Creates an XLSX file, records its size, applies password‑protected AES‑128 encryption via Aspose.Cells, saves the encrypted version, and outputs both sizes to show the encryption overhead.
-// Keywords: Aspose.Cells | C# | .NET | workbook encryption | AES-128 | file size comparison | password protection | Excel size impact | encryption overhead
-// Common Searches: Aspose.Cells how much does AES encryption increase Excel file size | C# compare encrypted vs unencrypted workbook size | measure encryption overhead for Excel files using Aspose.Cells | file size difference after applying password protection in .NET
-// Developer Intent: Find out how password‑protected AES‑128 encryption influences the size of an Excel workbook generated with Aspose.Cells.
-// Use Cases: Benchmark encryption overhead for large reports before deployment. | Validate that encrypted workbooks meet storage‑budget constraints. | Automate size logging for compliance‑driven documents that require password protection.
-// AI Prompts: Generate C# code that encrypts a workbook with AES‑256 using Aspose.Cells and prints the percentage size increase. | Explain how to retrieve the encryption algorithm and compute the exact byte difference between encrypted and original files in Aspose.Cells.
+// Title: Determine how workbook password encryption affects XLSX file size with Aspose.Cells for .NET
+// AI Prompts: Write a C# program using Aspose.Cells that creates a workbook, saves it as an unencrypted XLSX, then sets Workbook.Settings.Password, saves an encrypted copy, and outputs both file sizes. | Extend the program to compute and display the percentage growth of the XLSX file after password protection. | Refactor the example into a reusable method that accepts a password string and returns the size difference between the encrypted and original workbook.
+// Common Searches: how much does Aspose.Cells password encryption increase XLSX size in C# | C# code to get original and encrypted Excel file sizes with Aspose.Cells | measure percentage change of XLSX file after applying workbook password using Aspose.Cells | determine file size impact of Settings.Password on Excel workbook in .NET
+// Tags: Aspose.Cells workbook encryption size measurement | C# XLSX file size before and after encryption | measure encrypted Excel workbook size .NET | compare protected vs unprotected workbook file size
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Creates an XLSX file, records its size, applies password‑protected AES‑128 encryption via Aspose.Cells, saves the encrypted version, and outputs both sizes to show the encryption overhead.
-class WorkbookEncryptionSizeDemo
+// Demonstrates creating a workbook with sample data, saving it as an unencrypted XLSX, applying a password via Workbook.Settings.Password, saving the encrypted file, and printing the original size, encrypted size, and size increase in bytes.
+class WorkbookEncryptionSizeTest
 {
     static void Main()
     {
+        // Path for the original (unencrypted) workbook
+        string originalPath = "original.xlsx";
+        // Path for the encrypted workbook
+        string encryptedPath = "encrypted.xlsx";
+
         // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample data for encryption size test.");
+        Workbook wb = new Workbook();
+        Worksheet sheet = wb.Worksheets[0];
+        // Fill the sheet with data to make the file size noticeable
+        for (int row = 0; row < 1000; row++)
+        {
+            for (int col = 0; col < 20; col++)
+            {
+                sheet.Cells[row, col].PutValue($"R{row}C{col}");
+            }
+        }
 
         // Save the workbook without encryption
-        string unencryptedFile = "Unencrypted.xlsx";
-        workbook.Save(unencryptedFile);
-        long unencryptedSize = new FileInfo(unencryptedFile).Length;
+        wb.Save(originalPath, SaveFormat.Xlsx);
+
+        // Get file size of the unencrypted workbook
+        long originalSize = new FileInfo(originalPath).Length;
 
         // Apply password protection (encryption)
-        workbook.Settings.Password = "myPassword";
-        // Use strong encryption (AES 128) for the workbook
-        workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
+        wb.Settings.Password = "SecretPassword";
 
         // Save the encrypted workbook
-        string encryptedFile = "Encrypted.xlsx";
-        workbook.Save(encryptedFile);
-        long encryptedSize = new FileInfo(encryptedFile).Length;
+        wb.Save(encryptedPath, SaveFormat.Xlsx);
 
-        // Output the file sizes for comparison
-        Console.WriteLine($"Unencrypted file size: {unencryptedSize} bytes");
-        Console.WriteLine($"Encrypted file size: {encryptedSize} bytes");
+        // Get file size of the encrypted workbook
+        long encryptedSize = new FileInfo(encryptedPath).Length;
 
-        // Clean up resources
-        workbook.Dispose();
+        // Output the sizes for comparison
+        Console.WriteLine($"Original (unencrypted) size: {originalSize} bytes");
+        Console.WriteLine($"Encrypted size: {encryptedSize} bytes");
+        Console.WriteLine($"Size increase: {encryptedSize - originalSize} bytes");
     }
 }

@@ -1,92 +1,63 @@
-// Title: Save Each Excel Worksheet as a PNG Image Using Aspose.Cells for .NET
-// Description: This example loads an Excel workbook, sets ImageOrPrintOptions to generate one page per sheet, creates an output directory, loops through all worksheets, and uses SheetRender to export the first page of each sheet to a uniquely named PNG file. Includes basic file‑existence checks and error handling.
-// Keywords: Aspose.Cells PNG export | C# convert Excel sheet to image | ImageOrPrintOptions OnePagePerSheet | SheetRender save worksheet as PNG | batch export Excel worksheets to PNG | .NET Excel to PNG conversion
-// Common Searches: how to export each Excel sheet as PNG in C# | Aspose.Cells render multiple worksheets to images | save workbook worksheets as separate PNG files | C# code to convert Excel worksheets to PNG using Aspose | batch image export of Excel sheets .NET
-// Developer Intent: Generate an individual PNG file for every worksheet in a workbook.
-// Use Cases: Create thumbnail previews of each sheet for a web‑based file explorer. | Archive workbook content as image files for compliance or documentation. | Supply separate chart images to reporting dashboards that require sheet‑level visuals.
-// AI Prompts: Write C# code that opens an Excel file, iterates through its worksheets, and saves each one as a PNG with Aspose.Cells, handling missing files and rendering errors. | Explain how ImageOrPrintOptions.OnePagePerSheet and SheetRender collaborate to produce one PNG per worksheet. | Modify the sample so that each worksheet is saved in its own subfolder named after the sheet, preserving the original file name.
+// Title: Save each worksheet of an Excel workbook as a separate PNG image using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates over all worksheets, and writes each sheet to an individual PNG file using SheetRender. | Show how to configure ImageOrPrintOptions for PNG output in single‑page‑per‑sheet mode and add checks for a missing input file plus per‑sheet error handling. | Provide a sample that logs the worksheet name and the path of the created PNG while gracefully handling rendering exceptions.
+// Common Searches: Aspose.Cells C# export each sheet to separate PNG files | How to loop through worksheets and save as PNG using Aspose.Cells | C# render Excel worksheets to images one page per sheet | ImageOrPrintOptions one page per sheet Aspose.Cells example | Save Excel workbook sheets as individual PNG images in .NET
+// Tags: Aspose.Cells worksheet to PNG conversion | C# iterate workbook worksheets export images | ImageOrPrintOptions PNG single-page mode | SheetRender render sheet as PNG | handle missing Excel file Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+// // This C# program checks for the presence of an input .xlsx file, loads it with Aspose.Cells, sets ImageOrPrintOptions to render each sheet as a single PNG page, iterates through every worksheet, uses SheetRender to create a separate PNG per sheet, and logs successes or any rendering errors.
+class Program
 {
-    // This example loads an Excel workbook, sets ImageOrPrintOptions to generate one page per sheet, creates an output directory, loops through all worksheets, and uses SheetRender to export the first page of each sheet to a uniquely named PNG file. Includes basic file‑existence checks and error handling.
-    public class SaveWorksheetsAsPng
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Path to the input workbook
+            string workbookPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                // Path to the input workbook
-                string workbookPath = "input.xlsx";
-
-                // Verify that the input file exists
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Input file not found: {workbookPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Configure image rendering options: one page per sheet
-                ImageOrPrintOptions options = new ImageOrPrintOptions
-                {
-                    OnePagePerSheet = true
-                    // ImageFormat defaults to PNG; explicit setting omitted to avoid compatibility issues
-                };
-
-                // Ensure the output directory exists
-                string outputDir = "output";
-                Directory.CreateDirectory(outputDir);
-
-                // Iterate through each worksheet and render it to a separate PNG file
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    Worksheet sheet = workbook.Worksheets[i];
-
-                    // Create a SheetRender for the current worksheet with the specified options
-                    SheetRender sheetRender = new SheetRender(sheet, options);
-                    try
-                    {
-                        // Build a filename that includes the sheet index and name
-                        string fileName = $"Sheet_{i + 1}_{sheet.Name}.png";
-                        string filePath = Path.Combine(outputDir, fileName);
-
-                        // Render the first (and only) page of the sheet to the PNG file
-                        sheetRender.ToImage(0, filePath);
-
-                        Console.WriteLine($"Worksheet '{sheet.Name}' saved as PNG: {filePath}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to render sheet '{sheet.Name}': {ex.Message}");
-                    }
-                }
+                Console.WriteLine($"Error: The file '{workbookPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Configure image rendering options (default format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+                OnePagePerSheet = true // Render each sheet as a single page
+            };
+
+            // Iterate through each worksheet and save it as a separate PNG file
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                Worksheet sheet = workbook.Worksheets[i];
+                string sheetName = sheet.Name;
+
+                try
+                {
+                    // Render the worksheet to an image
+                    SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+                    string outputPath = $"{sheetName}.png";
+                    sheetRender.ToImage(0, outputPath);
+                    Console.WriteLine($"Saved sheet '{sheetName}' as '{outputPath}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to render sheet '{sheetName}': {ex.Message}");
+                }
             }
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                SaveWorksheetsAsPng.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

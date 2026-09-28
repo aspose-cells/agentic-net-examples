@@ -1,85 +1,75 @@
-// Title: Create a Transparent Background Series for a Stacked Column Progress Bar Chart with Aspose.Cells for .NET (C#)
-// Description: This example builds an Excel workbook, adds task names and progress values, inserts a stacked column chart, defines a visible progress series and a background series, sets the background series Area.Transparency to 1.0 (100 % transparent) to simulate a progress‑bar effect, optionally colors the progress series, and saves the file as ProgressBarChart.xlsx.
-// Keywords: Aspose.Cells C# transparent series | stacked column progress bar Aspose.Cells | chart series transparency .NET | Excel progress bar chart code | Aspose.Cells chart fill format | C# Excel chart background invisible
-// Common Searches: Aspose.Cells make chart series invisible C# | transparent background series stacked column chart Aspose.Cells | progress bar chart using Aspose.Cells .NET | set series area transparency Aspose.Cells | create Excel progress bar with Aspose.Cells
-// Developer Intent: Hide the background series of a stacked column chart by applying full transparency so only the progress portion remains visible.
-// Use Cases: Display task completion percentages as compact progress bars in financial or project reports. | Design clean dashboards where only the filled portion of each bar is shown. | Generate printable Excel sheets with minimalist progress indicators for status updates.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a stacked column chart and sets the second series Area.Transparency to 1.0 for a progress‑bar effect. | Explain how to configure series fill and transparency in Aspose.Cells to simulate a progress bar chart. | Provide step‑by‑step instructions to add a visible progress series and an invisible background series to a chart using Aspose.Cells for .NET.
+// Title: Make all series in an Excel progress bar chart transparent using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a workbook, locate the first chart, and set each series' FillFormat.Transparency to 1.0 with a solid fill using Aspose.Cells in C#. | Write C# code that iterates over a chart's NSeries collection and applies a fully transparent fill to hide the series in a progress bar chart. | Update an Excel file so that the progress bar chart appears empty by making its series area fill completely transparent via the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# set chart series fill transparency to 100% | how to hide series in an Excel progress bar chart using Aspose.Cells | make chart series invisible Aspose.Cells .NET | transparent fill for chart series Aspose.Cells example | C# code to set series area fill type solid and transparency 1.0 in Excel chart
+// Tags: Aspose.Cells chart series transparent fill | C# set series fill transparency Aspose.Cells | Excel progress bar chart invisible series | Aspose.Cells FillFormat.Transparency example | modify chart series fill type .NET
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
+using Aspose.Cells.Drawing;
 
-namespace ProgressBarChartDemo
+// Loads an existing Excel workbook, accesses the first chart, iterates through each series, sets the series area fill to a solid type with 100 % transparency, and saves the updated workbook.
+class ProgressBarChart
 {
-    // This example builds an Excel workbook, adds task names and progress values, inserts a stacked column chart, defines a visible progress series and a background series, sets the background series Area.Transparency to 1.0 (100 % transparent) to simulate a progress‑bar effect, optionally colors the progress series, and saves the file as ProgressBarChart.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        string inputPath = "ProgressBar.xlsx";
+        string outputPath = "ProgressBar_Updated.xlsx";
+
+        try
         {
-            try
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Sample data for the progress bar chart
-                // Column A – categories, Column B – actual progress values,
-                // Column C – invisible series (used to create the background of the bar)
-                sheet.Cells["A1"].PutValue("Task");
-                sheet.Cells["A2"].PutValue("Task 1");
-                sheet.Cells["A3"].PutValue("Task 2");
-                sheet.Cells["A4"].PutValue("Task 3");
-
-                sheet.Cells["B1"].PutValue("Progress");
-                sheet.Cells["B2"].PutValue(30);
-                sheet.Cells["B3"].PutValue(60);
-                sheet.Cells["B4"].PutValue(90);
-
-                sheet.Cells["C1"].PutValue("Background");
-                // Background values are the maximum value (e.g., 100) for each task
-                sheet.Cells["C2"].PutValue(100);
-                sheet.Cells["C3"].PutValue(100);
-                sheet.Cells["C4"].PutValue(100);
-
-                // Add a stacked column chart (used as a progress bar)
-                int chartIndex = sheet.Charts.Add(ChartType.ColumnStacked, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Add the visible progress series (first series)
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries[0].Name = "Progress";
-
-                // Add the invisible background series (second series)
-                chart.NSeries.Add("C2:C4", true);
-                chart.NSeries[1].Name = "Background";
-
-                // Set category (X) axis data
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Make the background series transparent so only the progress part is visible
-                Series backgroundSeries = chart.NSeries[1];
-                if (backgroundSeries.Area != null)
-                {
-                    backgroundSeries.Area.Transparency = 1.0; // 100% transparent
-                }
-
-                // Optional: give the progress series a solid fill color
-                Series progressSeries = chart.NSeries[0];
-                if (progressSeries.Area != null && progressSeries.Area.FillFormat != null && progressSeries.Area.FillFormat.SolidFill != null)
-                {
-                    progressSeries.Area.FillFormat.SolidFill.Color = Color.Green;
-                }
-
-                // Save the workbook
-                workbook.Save("ProgressBarChart.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
             }
+
+            // Assume the progress bar chart is the first chart on the sheet
+            Chart chart = sheet.Charts[0];
+
+            // Iterate through all series in the chart
+            foreach (Series series in chart.NSeries)
+            {
+                try
+                {
+                    // If the series area exists, make its fill fully transparent
+                    if (series.Area != null && series.Area.FillFormat != null)
+                    {
+                        // Use the modern FillType property
+                        series.Area.FillFormat.FillType = FillType.Solid;
+                        // Set transparency to 100% (fully transparent)
+                        series.Area.FillFormat.Transparency = 1.0;
+                    }
+                }
+                catch (Exception exSeries)
+                {
+                    Console.WriteLine($"Warning: Could not modify series. {exSeries.Message}");
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

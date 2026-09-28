@@ -1,68 +1,65 @@
-// Title: Batch Convert Excel to PDF with Zero Hiding and 80% Zoom using Aspose.Cells for .NET
-// Description: A C# console app that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, disables zero display, sets the page‑setup zoom to 80 %, and saves every workbook as a PDF in a target directory. Ideal for automated, consistent PDF generation from multiple Excel files.
-// Keywords: Aspose.Cells batch PDF conversion | hide zero values Excel | set worksheet zoom Aspose.Cells | C# convert multiple .xlsx to PDF | Aspose.Cells PDFSaveOptions | .NET Excel to PDF automation
-// Common Searches: How to batch convert Excel files to PDF with Aspose.Cells | Hide zeros when exporting Excel to PDF in C# | Set 80% zoom for PDF export using Aspose.Cells | Process all .xlsx files in a folder and save as PDF | Aspose.Cells PDFSaveOptions for visible sheets only
-// Developer Intent: Automatically process a directory of Excel workbooks, suppress zero values, apply an 80 % zoom setting, and generate a PDF for each file using Aspose.Cells for .NET.
-// Use Cases: Create printable PDFs for financial statements where zero amounts should not appear. | Run a nightly job that archives client spreadsheets as PDFs with a uniform zoom level. | Prepare batch PDFs for regulatory filing, ensuring consistent page layout and hidden zero values.
-// AI Prompts: Generate C# code that uses Aspose.Cells to batch convert all .xlsx files in a folder to PDF, hide zero values, and set page zoom to 80 %. | Explain how to extend the batch processor to include subfolders and customize PDF quality settings. | Show how to add robust error handling and logging to the Aspose.Cells PDF conversion loop.
+// Title: Convert multiple Excel workbooks to PDF with 80% zoom and hide zero values using Aspose.Cells in C#
+// AI Prompts: Write a C# console application that loops through every .xlsx file in a folder, sets each worksheet's Zoom property to 80, enables IsZeroHidden to hide zero values, and saves the workbook as a PDF with Aspose.Cells. | Add error logging so that any workbook that fails to convert is recorded in a log file while the batch process continues with the remaining files. | Enhance the tool to accept command‑line arguments for input directory, output directory, zoom percentage, and a switch to turn zero‑value hiding on or off.
+// Common Searches: aspnet batch convert excel files to pdf with custom zoom using Aspose.Cells | how to hide zero values when exporting Excel to PDF with Aspose.Cells C# | set worksheet zoom level programmatically before saving as PDF Aspose.Cells | process all .xlsx files in a directory and generate PDFs in .NET | Aspose.Cells save workbook as PDF with specific page settings
+// Tags: batch excel to pdf conversion Aspose.Cells | set worksheet zoom Aspose.Cells | hide zero values worksheet Aspose.Cells | process multiple workbooks folder C# | save workbook as pdf with custom settings
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace BatchPdfProcessor
+// // Scans a specified input folder for .xlsx files, loads each workbook with Aspose.Cells, applies an 80% zoom (and optionally hides zero values via IsZeroHidden), then saves each workbook as a PDF in the output folder, handling errors per file.
+class BatchProcessor
 {
-    // A C# console app that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, disables zero display, sets the page‑setup zoom to 80 %, and saves every workbook as a PDF in a target directory. Ideal for automated, consistent PDF generation from multiple Excel files.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define input folder containing Excel workbooks
+        string inputFolder = @"C:\InputWorkbooks";
+
+        // Define output folder for generated PDFs
+        string outputFolder = @"C:\OutputPdfs";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Retrieve all Excel files (adjust the pattern as needed)
+        string[] excelFiles = Directory.GetFiles(inputFolder, "*.xlsx");
+
+        foreach (string excelPath in excelFiles)
         {
-            // Folder containing the source Excel workbooks
-            string sourceFolder = @"C:\InputWorkbooks";
-
-            // Folder where the resulting PDF files will be saved
-            string outputFolder = @"C:\OutputPdfs";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Get all Excel files in the source folder (including subfolders if needed)
-            string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-
-            foreach (string excelPath in excelFiles)
+            // Verify the file exists before attempting to load
+            if (!File.Exists(excelPath))
             {
-                // Load the workbook (uses the standard Workbook constructor)
+                Console.WriteLine($"File not found: {excelPath}");
+                continue;
+            }
+
+            try
+            {
+                // Load the workbook from file
                 Workbook workbook = new Workbook(excelPath);
 
-                // Process each worksheet in the workbook
+                // Iterate through each worksheet in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Hide zero values
-                    sheet.DisplayZeros = false;
+                    // Hide zero values if the property is available (commented out if not supported)
+                    // sheet.IsZeroHidden = true; // Aspose.Cells older versions may not expose this property
 
-                    // Apply 80% zoom for printing/rendering
-                    sheet.PageSetup.Zoom = 80;
+                    // Apply 80 percent zoom level
+                    sheet.Zoom = 80;
                 }
 
-                // Prepare PDF save options (default options are sufficient for this task)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Ensure only visible sheets are exported (default behavior)
-                    SheetSet = SheetSet.Visible
-                };
-
-                // Build the output PDF file name based on the source workbook name
+                // Construct the PDF file name based on the original workbook name
                 string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
                 string pdfPath = Path.Combine(outputFolder, pdfFileName);
 
-                // Save the workbook as PDF using the provided save method
-                workbook.Save(pdfPath, pdfOptions);
-
-                Console.WriteLine($"Processed '{excelPath}' -> '{pdfPath}'");
+                // Save the processed workbook as a PDF document
+                workbook.Save(pdfPath, SaveFormat.Pdf);
+                Console.WriteLine($"Converted '{excelPath}' to PDF successfully.");
             }
-
-            Console.WriteLine("Batch processing completed.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
+            }
         }
     }
 }

@@ -1,61 +1,36 @@
-// Title: Aspose.Cells .NET – Insert a Chart Title with Custom Font Size and Color
-// Description: Creates a new workbook, adds sample sales data, inserts a column chart, makes the title visible, sets the title text to "Quarterly Sales", and formats the title with a 16‑point DarkBlue font before saving the file as an Excel workbook.
-// Keywords: Aspose.Cells chart title font size | Aspose.Cells chart title color | C# set chart title Aspose.Cells | customize Excel chart title .NET | format chart title programmatically
-// Common Searches: how to change chart title font size in Aspose.Cells | set chart title color using Aspose.Cells for .NET | add and style chart title in Excel with C# | Aspose.Cells custom chart title formatting
-// Developer Intent: Add a visible chart title to a column chart and style it with a specific font size and color using Aspose.Cells for .NET.
-// Use Cases: Produce sales dashboards where chart titles need consistent branding. | Automate generation of presentation‑ready Excel reports with styled titles. | Enforce corporate style guidelines for chart headings across financial workbooks.
-// AI Prompts: Show me C# code to set the font family, size, and color of a chart title in Aspose.Cells. | How can I make a chart title bold, italic, and add a background color with Aspose.Cells? | Explain how to apply conditional formatting to chart titles based on data values in Aspose.Cells.
+// Title: Add a custom-sized, dark‑blue chart title to a column chart using Aspose.Cells for .NET
+// AI Prompts: Create a column chart from worksheet data and set its title text, font size to 14 points, and color to DarkBlue with Aspose.Cells C#. | Modify an existing Excel chart's title to use a specific font size and color programmatically via the Aspose.Cells .NET API. | Generate a workbook, populate sales data, add a column chart, and apply custom font styling to the chart title in C#.
+// Common Searches: how to change the font size and color of an Excel chart title using Aspose.Cells in C# | Aspose.Cells example for setting chart title style programmatically | C# code to add a dark blue title to a column chart in an Excel file | customize chart title appearance Aspose.Cells .NET tutorial
+// Tags: Aspose.Cells chart title font styling | custom chart title color Aspose.Cells | column chart title customization .NET | Excel chart title formatting C# | programmatic chart title appearance Aspose.Cells
 
-using System;
-using System.Drawing;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
+// Create a new workbook
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook();
 
-// Creates a new workbook, adds sample sales data, inserts a column chart, makes the title visible, sets the title text to "Quarterly Sales", and formats the title with a 16‑point DarkBlue font before saving the file as an Excel workbook.
-class InsertChartTitleCustom
-{
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+// Access the first worksheet
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Month");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B4"].PutValue(180);
+// Populate some sample data for the chart
+sheet.Cells["A1"].PutValue("Month");
+sheet.Cells["B1"].PutValue("Sales");
+sheet.Cells["A2"].PutValue("Jan");
+sheet.Cells["A3"].PutValue("Feb");
+sheet.Cells["A4"].PutValue("Mar");
+sheet.Cells["B2"].PutValue(1200);
+sheet.Cells["B3"].PutValue(1500);
+sheet.Cells["B4"].PutValue(1800);
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = sheet.Charts[chartIndex];
+// Add a column chart (you can change ChartType as needed)
+int chartIndex = sheet.Charts.Add(Aspose.Cells.Charts.ChartType.Column, 5, 0, 20, 10);
+Aspose.Cells.Charts.Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+// Set the data range for the chart series
+chart.NSeries.Add("B2:B4", true);
+chart.NSeries.CategoryData = "A2:A4";
 
-            // Set the chart title text and make it visible
-            chart.Title.Text = "Quarterly Sales";
-            chart.Title.IsVisible = true;
+// Insert a chart title and customize its appearance
+chart.Title.Text = "Quarterly Sales";
+chart.Title.Font.Size = 14;                     // Custom font size
+chart.Title.Font.Color = System.Drawing.Color.DarkBlue; // Custom font color
 
-            // Apply custom font size and color to the title
-            chart.Title.Font.Size = 16;               // Custom font size
-            chart.Title.Font.Color = Color.DarkBlue; // Custom font color
-
-            // Save the workbook with the chart
-            string outputPath = "ChartWithCustomTitle.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
+// Save the workbook to a file
+workbook.Save("ChartWithCustomTitle.xlsx");

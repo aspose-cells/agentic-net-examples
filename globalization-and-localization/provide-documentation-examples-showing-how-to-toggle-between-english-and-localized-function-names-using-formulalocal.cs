@@ -1,88 +1,65 @@
-// Title: Toggle English and German Excel function names with FormulaLocal in Aspose.Cells for .NET
-// Description: Demonstrates how to set a workbook region to Germany, map the English function SUM to the German name SUMME using SettableGlobalizationSettings, and switch between standard Formula and localized FormulaLocal. The example writes sample data, assigns formulas in both languages, recalculates, and saves the workbook, showing bidirectional conversion of formulas.
-// Keywords: Aspose.Cells | FormulaLocal | C# | .NET | Excel localization | German function names | SUMME | SettableGlobalizationSettings | globalization settings | toggle formulas | regional workbook
-// Common Searches: Aspose.Cells FormulaLocal German example | map English SUM to SUMME Aspose.Cells | switch between English and localized formulas .NET | set workbook region Germany Aspose.Cells | bidirectional function name mapping Aspose
-// Developer Intent: The developer needs to convert Excel formulas between English and a localized language (e.g., German) and retrieve both the standard and localized representations using Aspose.Cells.
-// Use Cases: Create workbooks for German‑speaking users while preserving English formulas for internal processing. | Allow end‑users to enter formulas in their native language and automatically translate them to the engine’s standard English syntax. | Generate regional reports that display localized function names when opened in Excel, yet remain compatible with formula evaluation APIs.
-// AI Prompts: Show how to map multiple Excel functions to French equivalents with SettableGlobalizationSettings in Aspose.Cells. | Provide a code snippet that updates the workbook region at runtime and automatically toggles formulas between English and the new locale. | Explain how to retrieve the original English formula after a user entered a localized formula via FormulaLocal.
+// Title: Toggle Excel formulas between English and localized names using Formula and FormulaLocal in Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets Workbook.Settings.CultureInfo to a specific locale, assigns a formula with FormulaLocal, and then reads the equivalent English formula via the Formula property. | Demonstrate how assigning an English formula string to the FormulaLocal property automatically converts the function name to the workbook’s current language. | Create a sample that switches a formula from English to Portuguese (or another locale) and back, then saves the workbook as an XLSX file.
+// Common Searches: Aspose.Cells how to use FormulaLocal to write Portuguese function names | retrieve English version of a localized Excel formula with Aspose.Cells C# | set workbook culture info for localized formulas in Aspose.Cells .NET | convert SUM formula to SOMA automatically using FormulaLocal Aspose.Cells | toggle between English and localized Excel formulas programmatically
+// Tags: Aspose.Cells FormulaLocal localization | C# set workbook CultureInfo Aspose.Cells | convert Excel function name to locale Aspose.Cells | retrieve English formula from localized cell | automatic formula language conversion Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, sets its culture to Portuguese (Brazil), writes formulas using both English (SUM) and localized (SOMA) names, shows how to read each version via the Formula and FormulaLocal properties, demonstrates that assigning an English formula to FormulaLocal automatically translates it to the locale’s function name, and saves the workbook as an XLSX file.
+class Program
 {
-    // Demonstrates how to set a workbook region to Germany, map the English function SUM to the German name SUMME using SettableGlobalizationSettings, and switch between standard Formula and localized FormulaLocal. The example writes sample data, assigns formulas in both languages, recalculates, and saves the workbook, showing bidirectional conversion of formulas.
-    public class ToggleFormulaLocalizationDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Set the workbook culture to Portuguese (Brazil) to demonstrate localized function names
+            workbook.Settings.CultureInfo = new CultureInfo("pt-BR");
+
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // 1. Use English function name (SUM) – stored in the Formula property
+            sheet.Cells["A1"].Formula = "=SUM(10,20)";
+
+            // 2. Use localized function name (SOMA) – stored in the FormulaLocal property
+            // Note: In Portuguese the argument separator is ';'
+            sheet.Cells["A2"].FormulaLocal = "=SOMA(10;20)";
+
+            // 3. Retrieve the English formula from a cell that originally used a localized formula
+            string englishFromLocal = sheet.Cells["A2"].Formula; // Returns "=SUM(10,20)"
+
+            // 4. Retrieve the localized formula from a cell that originally used an English formula
+            string localFromEnglish = sheet.Cells["A1"].FormulaLocal; // Returns "=SOMA(10;20)" in the current locale
+
+            // 5. Toggle: assign the English formula to a new cell using FormulaLocal
+            // Aspose.Cells automatically converts the function name to the localized version
+            sheet.Cells["A3"].FormulaLocal = englishFromLocal; // Cell A3 will contain "=SOMA(10;20)"
+
+            // 6. Toggle: assign the localized formula to a new cell using Formula (English)
+            // Use the previously obtained English formula to avoid separator issues
+            sheet.Cells["A4"].Formula = englishFromLocal; // Cell A4 will contain "=SUM(10,20)"
+
+            // Define output file path
+            string outputPath = "ToggleFormulaLocal.xlsx";
+
+            // Ensure the directory exists (in case a relative path is used)
+            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(directory))
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Set the workbook region to German to demonstrate localization
-                workbook.Settings.Region = CountryCode.Germany;
-
-                // Create customizable globalization settings
-                SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
-
-                // Map the standard English function name "SUM" to the German localized name "SUMME"
-                // bidirectional = true enables automatic reverse mapping
-                gSettings.SetLocalFunctionName("SUM", "SUMME", true);
-
-                // Apply the globalization settings to the workbook
-                workbook.Settings.GlobalizationSettings = gSettings;
-
-                // Populate some sample data for the SUM calculation
-                sheet.Cells["B1"].PutValue(10);
-                sheet.Cells["B2"].PutValue(20);
-                sheet.Cells["B3"].PutValue(30);
-
-                // Access cell A1 and set a formula using the standard (English) name
-                Cell cell = sheet.Cells["A1"];
-                cell.Formula = "=SUM(B1:B3)";
-
-                // Display the formula in both standard and localized forms
-                Console.WriteLine("After setting Formula (English):");
-                Console.WriteLine("Standard Formula   : " + cell.Formula);
-                Console.WriteLine("Localized Formula  : " + cell.FormulaLocal);
-
-                // Now set the formula using the localized (German) name via FormulaLocal
-                cell.FormulaLocal = "=SUMME(B1:B3)";
-
-                // Display the formulas again to show the toggle effect
-                Console.WriteLine("\nAfter setting FormulaLocal (German):");
-                Console.WriteLine("Standard Formula   : " + cell.Formula);
-                Console.WriteLine("Localized Formula  : " + cell.FormulaLocal);
-
-                // Calculate the result to verify both formulas produce the same value
-                workbook.CalculateFormula();
-                Console.WriteLine("\nCalculated Value in A1: " + cell.Value);
-
-                // Save the workbook (lifecycle rule: save)
-                string outputPath = "ToggleFormulaLocalizationDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"\nWorkbook saved to: {outputPath}");
+                Directory.CreateDirectory(directory);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred during execution: " + ex.Message);
-            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Unhandled exception: " + ex.Message);
-            }
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

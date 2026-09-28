@@ -1,37 +1,60 @@
-// Title: Aspose.Cells .NET – Anchor a Shape to a Cell Range with Two‑Cell Anchor (Move & Resize)
-// Description: Demonstrates how to add a rectangle shape, set its AnchorType to TwoCellAnchor, bind it to the B2:D5 range using MoveToRange (zero‑based indices), and configure Placement to MoveAndSize so the shape follows inserted rows or columns.
-// Keywords: Aspose.Cells shape anchor | TwoCellAnchor .NET | shape MoveAndSize | bind shape to cell range | dynamic shape positioning | C# Aspose.Cells example
-// Common Searches: Aspose.Cells bind shape to range | TwoCellAnchor shape Aspose.Cells C# | shape moves when rows inserted Aspose | how to anchor a rectangle to cells in Aspose.Cells | PlacementType.MoveAndSize example
-// Developer Intent: Attach a shape to a specific cell block so it automatically moves and resizes when the worksheet layout changes.
-// Use Cases: Keep a rectangle aligned with B2:D5 after adding rows or columns. | Anchor charts, images, or text boxes to a dynamic range for reporting templates. | Create printable forms where shapes must expand or contract with cell data.
-// AI Prompts: Generate C# code that anchors a shape to B2:D5 using Aspose.Cells and ensures it moves with inserted rows. | Explain the impact of PlacementType.MoveAndSize on a TwoCellAnchor‑bound shape. | Show how to use MoveToRange with zero‑based indices to bind a shape to a cell range in Aspose.Cells.
+// Title: Anchor a rectangle shape to a cell range in Aspose.Cells for .NET so it moves and resizes when rows or columns are inserted
+// AI Prompts: Create a rectangle shape anchored to cells B3:E6, set its Placement to MoveAndSize, and save the workbook using Aspose.Cells for .NET. | Insert a row above the anchor range and a column to the left, then confirm that the shape shifts and resizes automatically. | Adjust the UpperLeftRow, UpperLeftColumn, LowerRightRow, and LowerRightColumn properties of a shape to define a dynamic anchor range. | Wrap the shape‑anchoring code in a try‑catch block to handle potential exceptions in Aspose.Cells.
+// Common Searches: Aspose.Cells C# anchor shape to cell range B3:E6 | move and size shape with inserted rows Aspose.Cells .NET | set shape placement type MoveAndSize Aspose.Cells example | dynamic shape positioning after inserting rows or columns in Aspose.Cells
+// Tags: Aspose.Cells shape anchor to cell range | MoveAndSize placement for Aspose.Cells shapes | C# define shape UpperLeftRow UpperLeftColumn LowerRightRow LowerRightColumn | dynamic shape movement on row insertion Aspose.Cells | rectangle shape anchored to B3:E6 Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle shape, set its AnchorType to TwoCellAnchor, bind it to the B2:D5 range using MoveToRange (zero‑based indices), and configure Placement to MoveAndSize so the shape follows inserted rows or columns.
-class Program
+// The example creates a new workbook, adds a rectangle shape anchored to cells B3:E6, sets its placement to MoveAndSize, inserts a row and a column before the anchored range to demonstrate that the shape moves and resizes automatically, and saves the file as ShapeAnchorDemo.xlsx.
+class ShapeAnchorExample
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-        // Add a rectangle shape to the worksheet
-        Shape shape = worksheet.Shapes.AddRectangle(1, 1, 100, 100, 0, 0);
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Use a two‑cell anchor so the shape is bound to a cell range
-        shape.AnchorType = ShapeAnchorType.TwoCellAnchor;
+            // Add a rectangle shape to the worksheet.
+            // Parameters: shape type, upper left row, upper left column, upper left row offset,
+            // upper left column offset, width (pixels), height (pixels).
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                2,          // upper left row (B3)
+                1,          // upper left column (B3)
+                0,          // row offset
+                0,          // column offset
+                100,        // width in pixels
+                50);        // height in pixels
 
-        // Anchor the shape to the range B2:D5 (rows and columns are zero‑based)
-        shape.MoveToRange(1, 1, 4, 3);
+            // Set the shape's placement so it moves and resizes with the cells it is anchored to.
+            shape.Placement = PlacementType.MoveAndSize;
 
-        // Make the shape move and resize together with the cells
-        shape.Placement = PlacementType.MoveAndSize;
+            // Define the cell range that the shape will be anchored to.
+            // Upper-left corner at cell B3 (row index 2, column index 1)
+            // Lower-right corner at cell E6 (row index 5, column index 4)
+            shape.UpperLeftRow = 2;
+            shape.UpperLeftColumn = 1;
+            shape.LowerRightRow = 5;
+            shape.LowerRightColumn = 4;
 
-        // Save the workbook
-        workbook.Save("ShapeWithRangeAnchor.xlsx");
+            // Optional: Insert a row above the anchor range to demonstrate dynamic movement.
+            sheet.Cells.InsertRows(2, 1); // Insert a row at index 2 (above B3)
+
+            // Optional: Insert a column left of the anchor range to demonstrate dynamic movement.
+            sheet.Cells.InsertColumns(1, 1); // Insert a column at index 1 (left of B column)
+
+            // Save the workbook.
+            workbook.Save("ShapeAnchorDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

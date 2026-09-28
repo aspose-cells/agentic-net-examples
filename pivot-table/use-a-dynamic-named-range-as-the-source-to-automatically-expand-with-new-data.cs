@@ -1,55 +1,57 @@
-// Title: Aspose.Cells for .NET – Create a Dynamic Named Range that Grows with SEQUENCE (C#)
-// Description: Demonstrates how to set a SEQUENCE‑based dynamic array in C1, define a named range that points to the spilled range (C1#), refresh the array after changing the row count, and use the name in calculations such as SUM. The workbook is saved as DynamicNamedRangeDemo.xlsx.
-// Keywords: Aspose.Cells dynamic named range | C# SEQUENCE formula | spilled array reference | RefreshDynamicArrayFormulas | expand named range automatically | Aspose.Cells .NET example | dynamic array # operator
-// Common Searches: Aspose.Cells define named range for spilled array | C# dynamic named range expands with SEQUENCE | Refresh dynamic array after changing source cell Aspose.Cells | How to use C1# reference in Aspose.Cells | Sum values from a dynamic array in Aspose.Cells
-// Developer Intent: Create a named range that automatically adjusts to the size of a SEQUENCE‑generated dynamic array and use it in formulas.
-// Use Cases: Generate a variable‑length list with SEQUENCE and reference it via a named range for aggregation (SUM, AVERAGE, COUNT). | Change the row‑count cell to enlarge or shrink the spill range, then refresh and recalculate dependent formulas. | Save the workbook containing the dynamic named range for downstream reporting or data export.
-// AI Prompts: Show me C# code to create a dynamic named range that points to a spilled SEQUENCE array using Aspose.Cells. | Explain how to refresh dynamic array formulas after updating the source cell in Aspose.Cells for .NET. | Provide examples of using a dynamic named range in SUM, AVERAGE, and COUNT formulas with Aspose.Cells.
+// Title: Use Aspose.Cells for .NET to define a dynamic named range that auto‑expands and link it to a column chart
+// AI Prompts: Generate C# code with Aspose.Cells that creates a named range using OFFSET and COUNTA to automatically include new rows. | Show how to attach the dynamic named range to a column chart and update the chart after adding additional data rows. | Include steps to recalculate workbook formulas and save the workbook after the range expands.
+// Common Searches: Aspose.Cells C# create dynamic named range that grows with added rows | how to bind a dynamic named range to a chart in Aspose.Cells .NET | refresh chart data source after appending rows using Aspose.Cells | recalculate formulas for OFFSET named range in Aspose.Cells workbook | example of using OFFSET and COUNTA for auto‑expanding chart range in C#
+// Tags: dynamic named range OFFSET COUNTA Aspose.Cells | auto expanding chart source C# | recalculate workbook formulas Aspose.Cells | bind named range to column chart .NET | dynamic chart data range Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
+using System;
 
-// Demonstrates how to set a SEQUENCE‑based dynamic array in C1, define a named range that points to the spilled range (C1#), refresh the array after changing the row count, and use the name in calculations such as SUM. The workbook is saved as DynamicNamedRangeDemo.xlsx.
+// // Demonstrates creating a workbook, defining a dynamic named range with OFFSET/COUNTA, adding a column chart that references the range, appending more rows, recalculating formulas, and saving the file.
 class DynamicNamedRangeDemo
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+            Cells cells = ws.Cells;
 
-        // B2 will hold the number of rows for the dynamic array
-        cells["B2"].PutValue(5);
+            // Fill initial data in column A (A1:A5)
+            for (int i = 0; i < 5; i++)
+            {
+                cells[i, 0].PutValue(i + 1);
+            }
 
-        // Set a dynamic array formula in C1 that spills SEQUENCE(B2) rows
-        Cell dynamicCell = cells["C1"];
-        dynamicCell.SetDynamicArrayFormula("=SEQUENCE(B2)", new FormulaParseOptions(), true);
+            // Define a dynamic named range "MyData" that expands with non‑empty cells in column A
+            int nameIdx = wb.Worksheets.Names.Add("MyData");
+            Name dynName = wb.Worksheets.Names[nameIdx];
+            dynName.RefersTo = "=OFFSET(Sheet1!$A$1,0,0,COUNTA(Sheet1!$A:$A),1)";
 
-        // Define a named range that refers to the spilled range (C1#)
-        int nameIndex = workbook.Worksheets.Names.Add("MyDynamicRange");
-        Name dynamicName = workbook.Worksheets.Names[nameIndex];
-        dynamicName.RefersTo = "=Sheet1!C1#";
+            // Create a column chart that uses the dynamic named range as its data source
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart = ws.Charts[chartIdx];
+            chart.NSeries.Add("MyData", true);
+            chart.Title.Text = "Dynamic Data";
 
-        // Calculate formulas and refresh dynamic array spill ranges
-        workbook.CalculateFormula();
-        workbook.RefreshDynamicArrayFormulas(true);
+            // Append more data to column A after the chart is created
+            for (int i = 5; i < 10; i++)
+            {
+                cells[i, 0].PutValue(i + 1);
+            }
 
-        // Use the dynamic named range in a formula (e.g., SUM)
-        cells["E1"].Formula = "=SUM(MyDynamicRange)";
-        workbook.CalculateFormula();
+            // Recalculate formulas so the dynamic named range reflects the new rows
+            wb.CalculateFormula();
 
-        Console.WriteLine("Initial sum of dynamic range: " + cells["E1"].Value);
-
-        // Expand the data by changing B2 (number of rows) to 8
-        cells["B2"].PutValue(8);
-        workbook.CalculateFormula();
-        workbook.RefreshDynamicArrayFormulas(true);
-        workbook.CalculateFormula();
-
-        Console.WriteLine("Sum after expanding dynamic range: " + cells["E1"].Value);
-
-        // Save the workbook
-        workbook.Save("DynamicNamedRangeDemo.xlsx");
+            // Save the workbook
+            string outputPath = "DynamicNamedRangeDemo.xlsx";
+            wb.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
     }
 }

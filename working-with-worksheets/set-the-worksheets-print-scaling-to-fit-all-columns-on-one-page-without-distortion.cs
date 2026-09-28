@@ -1,44 +1,50 @@
-// Title: Set Aspose.Cells worksheet print scaling to fit all columns on one page (C#)
-// Description: Demonstrates how to configure a worksheet's PageSetup in Aspose.Cells for .NET so that the printed output fits all columns on a single page while allowing the row height to scale automatically. Includes sample data generation and saving the workbook.
-// Keywords: Aspose.Cells print scaling | FitToPagesWide | FitToPagesTall | C# worksheet page setup | fit columns on one page | Aspose.Cells page layout | Excel print fit width | .NET Excel printing
-// Common Searches: Aspose.Cells fit all columns on one printed page | C# set worksheet print scaling Aspose.Cells | FitToPagesWide = 1 Aspose.Cells example | How to print Excel sheet without distortion using Aspose.Cells | Aspose.Cells page setup fit width only
-// Developer Intent: Configure the worksheet's print settings so the width fits on one page and the height adjusts automatically.
-// Use Cases: Generating printable reports where horizontal data must stay on a single page. | Creating invoices or statements that need a consistent page width regardless of row count. | Exporting large data tables to Excel with automatic width scaling for clean printing.
-// AI Prompts: Show C# code to set FitToPagesWide = 1 and FitToPagesTall = 0 in Aspose.Cells. | Explain how Aspose.Cells page setup scales columns without distorting rows. | Provide an Aspose.Cells example that fits all worksheet columns on one printed page.
+// Title: Set worksheet print scaling to fit all columns on one page using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a workbook, set the first worksheet's PageSetup.FitToPagesWide to 1 and FitToPagesTall to 0, then save the file. | Write C# code that adjusts the print layout of an existing .xlsx so that columns fit within a single page width while rows may continue onto additional pages, using Aspose.Cells. | Create a .NET program that opens an Excel file, configures the worksheet's print scaling to one-page width without distortion, and outputs the modified workbook.
+// Common Searches: Aspose.Cells C# set worksheet to print all columns on one page width | How to configure FitToPagesWide in Aspose.Cells .NET | Print scaling Excel worksheet to fit columns using Aspose.Cells library | C# Aspose.Cells fit columns to single printed page without affecting rows | Adjust page setup for Excel print layout programmatically with Aspose.Cells
+// Tags: Aspose.Cells column scaling configuration | worksheet page configuration .NET | single-page width column fit C# | Excel workbook scaling preserving layout | programmatic page scaling with Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPrintScalingDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to configure a worksheet's PageSetup in Aspose.Cells for .NET so that the printed output fits all columns on a single page while allowing the row height to scale automatically. Includes sample data generation and saving the workbook.
+    // The program loads an existing Excel workbook, sets the first worksheet's PageSetup to fit all columns on a single printed page width (FitToPagesWide = 1, FitToPagesTall = 0), and saves the updated file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // (Optional) Add some sample data to demonstrate the effect
-            for (int row = 0; row < 20; row++)
+            try
             {
-                for (int col = 0; col < 10; col++)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (index 0)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Fit all columns on one page width; rows can span multiple pages
+                sheet.PageSetup.FitToPagesWide = 1;
+                sheet.PageSetup.FitToPagesTall = 0;
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-
-            // Set the page setup to fit all columns on one page.
-            // FitToPagesWide = 1 means one page wide.
-            // FitToPagesTall = 0 lets the height adjust automatically.
-            worksheet.PageSetup.FitToPagesWide = 1;
-            worksheet.PageSetup.FitToPagesTall = 0;
-
-            // Save the workbook
-            workbook.Save("FitAllColumnsOnePage.xlsx");
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

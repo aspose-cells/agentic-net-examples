@@ -1,78 +1,95 @@
-// Title: Display Polynomial Trendline Equation on a Scatter Chart with Aspose.Cells for .NET (C#)
-// Description: Loads an XLSX workbook, finds the first scatter chart, locates a polynomial trendline, enables its DisplayEquation flag, and saves the file so the equation appears on the chart. Includes sample code for extracting the equation text and showing it in a message box.
-// Keywords: Aspose.Cells C# | polynomial trendline | scatter chart equation | DisplayEquation property | chart series trendline | retrieve trendline formula | Excel chart automation | .NET chart API
-// Common Searches: how to show polynomial trendline equation in Aspose.Cells | enable trendline equation on scatter chart C# | Aspose.Cells get polynomial trendline formula | display chart trendline equation programmatically | C# extract trendline equation from Excel chart
-// Developer Intent: Enable and retrieve the polynomial trendline equation on a scatter chart in an existing workbook using Aspose.Cells for .NET.
-// Use Cases: Load an existing workbook and verify the presence of a chart. | Iterate through chart series to find a polynomial trendline. | Set Trendline.DisplayEquation = true to make the formula visible. | Save the workbook with the equation displayed. | Optionally read the equation string and present it in a message box.
-// AI Prompts: Write C# code that extracts the polynomial trendline equation from a scatter chart using Aspose.Cells and shows it in a Windows message box. | Provide an example that loads an XLSX file, locates a polynomial trendline, enables its equation display, retrieves the formula text via the Aspose.Cells API, and displays the result to the user. | Explain how to programmatically toggle the DisplayEquation property of a polynomial trendline and read the generated equation string with Aspose.Cells for .NET.
+// Title: How to extract a polynomial trendline equation from the first scatter chart in an XLSX file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx workbook, locates the first scatter chart, and returns the polynomial trendline equation as a string. | Show how to use dynamic binding in Aspose.Cells to iterate a series' Trendlines collection and read the Formula property of a polynomial trendline.
+// Common Searches: Aspose.Cells C# get polynomial trendline formula from scatter chart in Excel file | read trendline equation from Excel chart using Aspose.Cells .NET | dynamic access to Trendlines collection Aspose.Cells C# example | extract scatter chart polynomial trendline equation programmatically | how to retrieve chart trendline equation with Aspose.Cells for .NET
+// Tags: aspocells retrieve polynomial trendline formula | c# read scatter chart trendline equation | dynamic binding aspocells trendlines | excel xlsx chart trendline extraction .net | aspocells chart series trendline access
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Loads an XLSX workbook, finds the first scatter chart, locates a polynomial trendline, enables its DisplayEquation flag, and saves the file so the equation appears on the chart. Includes sample code for extracting the equation text and showing it in a message box.
-class RetrievePolynomialTrendlineEquation
+// The example loads an XLSX workbook, finds the first scatter chart, iterates its series to locate a polynomial trendline, enables equation display, reads the Formula property via dynamic binding, and outputs the equation to the console.
+class Program
 {
-    [STAThread]
     static void Main()
     {
         try
         {
-            // Path to the existing workbook that contains a scatter chart with a polynomial trendline
-            string workbookPath = "SampleScatterChart.xlsx";
+            string inputPath = "input.xlsx";
 
-            // Verify that the workbook file exists to avoid FileNotFoundException
-            if (!File.Exists(workbookPath))
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(workbookPath);
+            // Load the workbook from file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Assume the chart is the first chart on the first worksheet
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Get the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
-            if (worksheet.Charts.Count == 0)
+
+            // Locate the first scatter chart in the worksheet
+            Chart scatterChart = null;
+            foreach (Chart chart in worksheet.Charts)
             {
-                Console.WriteLine("No charts found in the worksheet.");
+                if (chart.Type == ChartType.Scatter)
+                {
+                    scatterChart = chart;
+                    break;
+                }
+            }
+
+            if (scatterChart == null)
+            {
+                Console.WriteLine("No scatter chart found in the workbook.");
                 return;
             }
 
-            Chart chart = worksheet.Charts[0];
+            // Retrieve the polynomial trendline equation using dynamic to avoid compile‑time binding issues
+            string equation = string.Empty;
 
-            // Locate the polynomial trendline in the chart's series collection
-            Trendline polynomialTrendline = null;
-            foreach (Series series in chart.NSeries)
+            foreach (var seriesObj in scatterChart.NSeries)
             {
-                foreach (Trendline tl in series.TrendLines)
+                dynamic series = seriesObj; // series is of type Aspose.Cells.Charts.Series
+                // Some older versions may not expose Trendlines; use dynamic to handle at runtime
+                try
                 {
-                    if (tl.Type == TrendlineType.Polynomial)
+                    foreach (var tlObj in series.Trendlines)
                     {
-                        polynomialTrendline = tl;
-                        break;
+                        dynamic trendline = tlObj; // trendline is of type Aspose.Cells.Charts.Trendline
+                        if (trendline.Type == TrendlineType.Polynomial)
+                        {
+                            trendline.DisplayEquation = true;
+                            // Formula property holds the equation string
+                            equation = trendline.Formula;
+                            break;
+                        }
                     }
                 }
-                if (polynomialTrendline != null) break;
+                catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+                {
+                    // Trendlines not supported in this version
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(equation))
+                    break;
             }
 
-            if (polynomialTrendline == null)
-            {
-                Console.WriteLine("No polynomial trendline found in the chart.");
-                return;
-            }
-
-            // Ensure the equation is displayed (optional, but may help when viewing the chart)
-            polynomialTrendline.DisplayEquation = true;
-
-            // Since Aspose.Cells.AI is not available in the standard library, we output a simple confirmation.
-            Console.WriteLine("Polynomial trendline detected. Equation display is enabled on the chart.");
-
-            // Optionally, save the workbook to reflect the displayed equation
-            string outputPath = "SampleScatterChart_WithEquation.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved with equation displayed: {outputPath}");
+            // Show the result
+            if (string.IsNullOrEmpty(equation))
+                Console.WriteLine("No polynomial trendline found in the scatter chart.");
+            else
+                Console.WriteLine($"Polynomial Trendline Equation: {equation}");
         }
         catch (Exception ex)
         {

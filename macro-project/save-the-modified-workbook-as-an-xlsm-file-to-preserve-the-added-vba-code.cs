@@ -1,53 +1,21 @@
-// Title: Save Workbook with VBA Class Module as Macro‑Enabled XLSM using Aspose.Cells for .NET
-// Description: Shows how to create a new Workbook, add a VBA class module called DemoModule containing a HelloWorld macro via Aspose.Cells VbaProject, and save the file as XLSM so the VBA code is preserved.
-// Keywords: Aspose.Cells | C# | .NET | VBA | macro‑enabled workbook | XLSM | VbaProject | add VBA module | save workbook with VBA | programmatic Excel macro
-// Common Searches: add VBA class module with Aspose.Cells | save Excel file as macro enabled XLSM .NET | Aspose.Cells VbaProject example | embed VBA code in workbook using C# | how to preserve VBA when saving with Aspose.Cells
-// Developer Intent: Embed a VBA class module into a new workbook and persist it by saving as a macro‑enabled XLSM file.
-// Use Cases: Create template workbooks that ship with predefined macros for end‑users. | Inject custom VBA functions into financial or reporting spreadsheets before distribution. | Automate generation of macro‑enabled workbooks as part of a CI/CD pipeline for Excel add‑ins.
-// AI Prompts: Generate C# code that adds several VBA modules (standard, class, and form) and saves the workbook as .xlsm with Aspose.Cells. | Explain how to load an existing workbook, modify its VBA code, and re‑save it as a macro‑enabled file using Aspose.Cells. | Show how to set a password on the VBA project and preserve it when saving a macro‑enabled workbook.
+// Title: Saving a modified Excel workbook as an XLSM file while preserving VBA macros with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx workbook, injects VBA modules, and saves it as a macro‑enabled .xlsm using Aspose.Cells. | Show how to use Aspose.Cells SaveFormat.Xlsm to keep an existing VBA project when exporting a workbook.
+// Common Searches: Aspose.Cells C# how to export workbook to macro‑enabled XLSM format | retain VBA code after modifying Excel file with Aspose.Cells | C# example saving workbook with macros using Aspose.Cells SaveFormat.Xlsm | convert .xlsx to .xlsm while keeping macros in .NET | Aspose.Cells preserve VBA project when saving workbook
+// Tags: Aspose.Cells SaveFormat.Xlsm implementation | create macro‑enabled XLSM file with C# | add VBA code to workbook via Aspose.Cells | maintain VBA macros on workbook export | generate XLSM from modified workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaDemo
+// The C# program loads an existing Excel file (input.xlsx) with Aspose.Cells, applies modifications and adds VBA code, then saves the workbook as output.xlsm using SaveFormat.Xlsm to retain the VBA project.
+class Program
 {
-    // Shows how to create a new Workbook, add a VBA class module called DemoModule containing a HelloWorld macro via Aspose.Cells VbaProject, and save the file as XLSM so the VBA code is preserved.
-    public class SaveWorkbookWithVba
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Load an existing workbook (or create a new one)
+        Workbook workbook = new Workbook("input.xlsx");
 
-                // Access the VBA project (creates a project when saved as macro‑enabled)
-                VbaProject vbaProject = workbook.VbaProject;
+        // ... perform modifications and add VBA code to the workbook ...
 
-                // Add a new VBA module of type Class named "DemoModule"
-                int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Class, "DemoModule");
-
-                // Retrieve the added module and set its VBA code
-                VbaModule module = vbaProject.Modules[moduleIndex];
-                module.Codes = "Sub HelloWorld()\r\n    MsgBox \"Hello from VBA!\"\r\nEnd Sub";
-
-                // Save the workbook as a macro‑enabled file to preserve the VBA code
-                workbook.Save("WorkbookWithVba.xlsm", SaveFormat.Xlsm);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SaveWorkbookWithVba.Run();
-        }
+        // Save the workbook as XLSM to preserve the VBA project
+        workbook.Save("output.xlsm", SaveFormat.Xlsm);
     }
 }

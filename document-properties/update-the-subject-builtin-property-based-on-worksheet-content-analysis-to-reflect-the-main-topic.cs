@@ -1,114 +1,67 @@
-// Title: Update Excel Subject Property from Worksheet Content with Aspose.Cells for .NET (C#)
-// Description: C# example that creates or loads a workbook, scans every non‑empty cell, determines the most frequent word (case‑insensitive) as the main topic, assigns it to BuiltInDocumentProperties.Subject (and optionally Title), saves the file, reloads it, and verifies that the metadata is persisted.
-// Keywords: Aspose.Cells | C# Excel metadata | set Subject property | built‑in document properties | Excel content analysis | extract most frequent word | auto‑generate workbook metadata | save and reload Excel file | global Excel automation | US developers
-// Common Searches: How to set Excel Subject property from cell values using Aspose.Cells | C# code to extract main topic of a worksheet and update document metadata | Aspose.Cells example for analyzing worksheet text and setting built‑in properties | Automatically generate Excel metadata based on worksheet content | Determine most common word in Excel sheet with Aspose.Cells
-// Developer Intent: Automatically assign the workbook's Subject built‑in property to the most frequent word found in its worksheet cells.
-// Use Cases: Generate a descriptive Subject for sales or financial reports without manual entry. | Create a reusable routine that enriches Excel files with meaningful metadata after data population. | Validate that document properties survive the save‑load cycle for compliance or archival purposes.
-// AI Prompts: Write a method that scans all non‑empty cells in an Aspose.Cells workbook, returns the most common word, and sets BuiltInDocumentProperties.Subject. | Add robust error handling for cases where the worksheet contains no textual data or only numeric values. | Modify the heuristic to prioritize multi‑word phrases (e.g., "Sales Report") over single words when determining the Subject.
+// Title: Set the Excel workbook Subject built‑in property from the first non‑empty cell in column A using Aspose.Cells for C#
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, reads the first non‑empty string in column A of the first worksheet, assigns that string to the workbook's Subject built‑in document property, and saves the modified file. | Adapt an existing Aspose.Cells program to automatically determine a worksheet's main topic from column A and update the Subject property of the workbook before saving.
+// Common Searches: Aspose.Cells C# set Excel Subject property based on cell value | How to programmatically update built‑in document properties in an Excel file using Aspose.Cells | Read first non‑blank cell in column A and use it as workbook metadata with Aspose.Cells | C# extract topic from first column and assign to Excel Subject built‑in property
+// Tags: Aspose.Cells update workbook Subject metadata | extract first column A value C# | modify Excel built‑in document properties programmatically | read first non‑empty string cell Aspose.Cells | automate Excel metadata based on worksheet content
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// // Loads input.xlsx, finds the first non‑empty string in column A of the first worksheet, assigns that string to the workbook's Subject built‑in document property, and saves the result as output.xlsx.
+class Program
 {
-    // C# example that creates or loads a workbook, scans every non‑empty cell, determines the most frequent word (case‑insensitive) as the main topic, assigns it to BuiltInDocumentProperties.Subject (and optionally Title), saves the file, reloads it, and verifies that the metadata is persisted.
-    public class UpdateSubjectBasedOnContentDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Input workbook path
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate the worksheet with sample data (in a real scenario the workbook would already contain data)
-                sheet.Cells["A1"].PutValue("Sales Report");
-                sheet.Cells["A2"].PutValue("January");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["A3"].PutValue("February");
-                sheet.Cells["B3"].PutValue(1500);
-                sheet.Cells["A4"].PutValue("March");
-                sheet.Cells["B4"].PutValue(1300);
-                sheet.Cells["C1"].PutValue("Report Summary");
-                sheet.Cells["C2"].PutValue("Total sales increased compared to previous month.");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Analyze the worksheet content to determine the main topic
-                // Simple heuristic: find the most frequent word (case‑insensitive) in all non‑empty cells
-                Dictionary<string, int> wordCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-                int maxRow = sheet.Cells.MaxDataRow;
-                int maxCol = sheet.Cells.MaxDataColumn;
+            // Analyze the first worksheet to determine the main topic
+            Worksheet sheet = workbook.Worksheets[0];
+            string mainTopic = "Untitled";
 
-                for (int row = 0; row <= maxRow; row++)
+            // Simple heuristic: first non‑empty string cell in column A
+            for (int row = 0; row <= sheet.Cells.MaxDataRow; row++)
+            {
+                Cell cell = sheet.Cells[row, 0];
+                if (cell != null && cell.Type == CellValueType.IsString && !string.IsNullOrWhiteSpace(cell.StringValue))
                 {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        var cell = sheet.Cells[row, col];
-                        if (cell.Value == null) continue;
-
-                        // Split cell text into words using whitespace and punctuation as delimiters
-                        string[] words = cell.StringValue
-                                             .Split(new char[] { ' ', '\t', '\r', '\n', ',', '.', ';', ':', '!', '?' },
-                                                    StringSplitOptions.RemoveEmptyEntries);
-
-                        foreach (string word in words)
-                        {
-                            if (string.IsNullOrWhiteSpace(word)) continue;
-
-                            if (wordCounts.ContainsKey(word))
-                                wordCounts[word]++;
-                            else
-                                wordCounts[word] = 1;
-                        }
-                    }
-                }
-
-                // Determine the most frequent word; fallback to a default if no words are found
-                string mainTopic = "Untitled Document";
-                if (wordCounts.Count > 0)
-                {
-                    mainTopic = wordCounts.OrderByDescending(kv => kv.Value).First().Key;
-                }
-
-                // Update the built‑in Subject property with the identified main topic
-                workbook.BuiltInDocumentProperties.Subject = mainTopic;
-
-                // Optionally, also set the Title property for completeness
-                workbook.BuiltInDocumentProperties.Title = "Generated Report";
-
-                // Save the workbook to verify the property is stored
-                string outputPath = "DocumentWithSubject.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                // Load the saved workbook to demonstrate that the Subject property was persisted
-                if (File.Exists(outputPath))
-                {
-                    Workbook loadedWorkbook = new Workbook(outputPath);
-                    Console.WriteLine("Subject property set to: " + loadedWorkbook.BuiltInDocumentProperties.Subject);
-                    Console.WriteLine("Title property set to: " + loadedWorkbook.BuiltInDocumentProperties.Title);
-                }
-                else
-                {
-                    Console.WriteLine("Failed to save the workbook. File not found: " + outputPath);
+                    mainTopic = cell.StringValue.Trim();
+                    break;
                 }
             }
-            catch (Exception ex)
+
+            // Update the Subject built‑in property with the derived topic
+            workbook.BuiltInDocumentProperties["Subject"].Value = mainTopic;
+
+            // Output workbook path
+            string outputPath = "output.xlsx";
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            UpdateSubjectBasedOnContentDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

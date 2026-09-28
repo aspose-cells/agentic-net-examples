@@ -1,43 +1,97 @@
-// Title: Abort Excel workbook loading after 10 seconds with Aspose.Cells InterruptMonitor (C#)
-// Description: Shows how to attach a SystemTimeInterruptMonitor to LoadOptions, start a 10‑second timer, and load a workbook. If loading exceeds the limit, the monitor throws an exception that is caught, preventing excessive processing time.
-// Keywords: Aspose.Cells | InterruptMonitor | SystemTimeInterruptMonitor | C# timeout | cancel workbook load | LoadOptions | Excel file loading | time‑limited load | exception handling | large Excel performance
-// Common Searches: Aspose.Cells set timeout for workbook load | C# interrupt monitor abort Excel loading | How to stop loading large Excel file after 10 seconds | LoadOptions InterruptMonitor example | Cancel workbook loading with Aspose.Cells
-// Developer Intent: Implement a 10‑second timeout that aborts workbook loading.
-// Use Cases: Web services that must reject oversized Excel uploads after a short processing window. | Batch import jobs that need to enforce strict execution time limits. | User‑driven cancel operation for long‑running workbook loads in desktop applications.
-// AI Prompts: Generate C# code for a custom InterruptMonitor that logs the interruption before throwing. | Provide a pattern to retry workbook loading with LoadDataOnly after a timeout occurs. | Explain how to combine InterruptMonitor with asynchronous loading in Aspose.Cells.
+// Title: Abort Aspose.Cells workbook loading after 10 seconds with a custom LoadFilter in C#
+// AI Prompts: Write a C# LoadFilter that tracks elapsed time and throws an OperationCanceledException once a specified timeout is exceeded, then apply it via LoadOptions when opening a Workbook. | Show how to catch the timeout exception, log the sheet, row, and column indices at the moment of abort, and optionally save the partially loaded workbook. | Create a reusable method that accepts a timeout value and returns LoadOptions configured with the timeout LoadFilter for any Aspose.Cells workbook load.
+// Common Searches: c# set timeout for Aspose.Cells workbook load to prevent long processing | how to cancel loading of a large Excel file with Aspose.Cells after 10 seconds | using LoadFilter to interrupt Aspose.Cells workbook loading based on elapsed time | exception handling for OperationCanceledException during Aspose.Cells load | best practice for limiting Excel load time with Aspose.Cells in .NET
+// Tags: loadfilter timeout Aspose.Cells | abort workbook load C# | operationcanceledexception Aspose.Cells | loadoptions custom timeout filter | prevent excessive workbook load time
 
 using System;
+using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to attach a SystemTimeInterruptMonitor to LoadOptions, start a 10‑second timer, and load a workbook. If loading exceeds the limit, the monitor throws an exception that is caught, preventing excessive processing time.
+// Custom load filter that aborts loading after a specified time interval.
+// Demonstrates a custom TimeOutLoadFilter derived from LoadFilter that checks elapsed time on each worksheet, cell, and chart load, throwing an OperationCanceledException after 10 seconds. Shows how to attach the filter to LoadOptions, load a workbook with a timeout, and handle the timeout and other exceptions.
+class TimeOutLoadFilter : LoadFilter
+{
+    private readonly Stopwatch _stopwatch;
+    private readonly TimeSpan _maxDuration;
+
+    public TimeOutLoadFilter(TimeSpan maxDuration)
+    {
+        _maxDuration = maxDuration;
+        _stopwatch = Stopwatch.StartNew();
+    }
+
+    // Throws an exception if the allowed time has been exceeded.
+    private void CheckTimeout()
+    {
+        if (_stopwatch.Elapsed > _maxDuration)
+            throw new OperationCanceledException(
+                $"Workbook loading timed out after {_maxDuration.TotalSeconds} seconds.");
+    }
+
+    // Called for each worksheet during loading.
+    public bool ShouldLoadWorksheet(int sheetIndex)
+    {
+        CheckTimeout();
+        return true; // Load the worksheet.
+    }
+
+    // Called for each cell during loading.
+    public bool ShouldLoadCell(int sheetIndex, int row, int column)
+    {
+        CheckTimeout();
+        return true; // Load the cell.
+    }
+
+    // Called for each chart during loading.
+    public bool ShouldLoadChart(int sheetIndex, int chartIndex)
+    {
+        CheckTimeout();
+        return true; // Load the chart.
+    }
+}
+
+// Example usage.
 class Program
 {
     static void Main()
     {
-        // Create an interrupt monitor that will throw an exception when interrupted
-        SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
+        const string inputPath = "LargeWorkbook.xlsx";
 
-        // Assign the monitor to LoadOptions
+        // Verify that the input file exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
+            return;
+        }
+
+        // Create load options and attach the timeout filter (10 seconds).
         LoadOptions loadOptions = new LoadOptions
         {
-            InterruptMonitor = monitor
+            LoadFilter = new TimeOutLoadFilter(TimeSpan.FromSeconds(10))
         };
 
-        // Start monitoring with a 10‑second (10000 ms) time limit
-        monitor.StartMonitor(10000);
+        Workbook workbook = null;
 
         try
         {
-            // Load the workbook using the load options that contain the monitor
-            Workbook workbook = new Workbook("LargeFile.xlsx", loadOptions);
-
-            // If loading completes within the time limit, optionally save the workbook
-            workbook.Save("Result.xlsx");
+            // Load the workbook with the timeout monitoring.
+            workbook = new Workbook(inputPath, loadOptions);
+            Console.WriteLine("Workbook loaded successfully.");
+        }
+        catch (OperationCanceledException ex)
+        {
+            // Loading was aborted due to timeout.
+            Console.WriteLine("Loading aborted: " + ex.Message);
         }
         catch (Exception ex)
         {
-            // Loading was interrupted after exceeding the time limit
-            Console.WriteLine("Loading aborted: " + ex.Message);
+            // Handle other possible loading errors.
+            Console.WriteLine("Error loading workbook: " + ex.Message);
         }
+
+        // Optionally, save the partially loaded workbook or perform further processing.
+        // if (workbook != null)
+        //     workbook.Save("PartialWorkbook.xlsx");
     }
 }

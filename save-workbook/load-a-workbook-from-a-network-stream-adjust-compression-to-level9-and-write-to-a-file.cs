@@ -1,74 +1,57 @@
-// Title: Download Excel via HttpClient, apply OOXML Level 9 compression, and save with Aspose.Cells for .NET
-// Description: Shows how to fetch an .xlsx file from a remote URL using HttpClient, load it into an Aspose.Cells Workbook from a network stream, configure OoxmlSaveOptions.CompressionType to Level9 for maximum OOXML compression, and write the compressed workbook to a local path.
-// Keywords: Aspose.Cells | C# | HttpClient download Excel | network stream workbook | OoxmlSaveOptions | Level9 compression | OOXML compression | save compressed workbook | reduce .xlsx size | Aspose.Cells compression example
-// Common Searches: Aspose.Cells set OoxmlCompressionType Level9 | C# download Excel file and compress with Aspose | How to save workbook from stream with maximum compression | Compress .xlsx using Aspose.Cells .NET | Save workbook with OOXML Level9 compression
-// Developer Intent: The developer wants to retrieve an Excel file from a web URL, compress it using the highest OOXML compression level, and store the smaller file on disk.
-// Use Cases: Archiving large Excel reports to minimize storage costs | Sending compressed workbooks as email attachments | Distributing lightweight Excel files over low‑bandwidth networks | Storing Excel data in cloud storage with reduced size
-// AI Prompts: Generate C# code that downloads an .xlsx file with HttpClient, loads it into an Aspose.Cells Workbook, sets OoxmlSaveOptions.CompressionType to Level9, and saves the compressed file to a specified location. | Explain how OoxmlCompressionType.Level9 affects .xlsx file size and save performance in Aspose.Cells.
+// Title: Download an Excel workbook via HttpClient, set OOXML Level9 compression, and save locally with Aspose.Cells (C#)
+// AI Prompts: Write C# code that uses HttpClient to download an .xlsx file, loads it into an Aspose.Cells Workbook, and saves it with OoxmlSaveOptions.CompressionType set to Level9. | Create error‑handling logic that falls back to creating a new empty Workbook when the download fails, then saves the workbook using maximum OOXML compression. | Show how to configure OoxmlSaveOptions for Level9 compression and pass it to Workbook.Save in Aspose.Cells.
+// Common Searches: aspnet download excel file with HttpClient and save using Aspose.Cells compression level9 | how to apply maximum OOXML compression when saving a workbook in C# Aspose.Cells | fallback to empty workbook if network stream download fails Aspose.Cells example
+// Tags: HttpClient download Excel file Aspose.Cells | Level9 OOXML compression Aspose.Cells | save workbook with maximum compression C# | load workbook from network stream Aspose.Cells | fallback to empty workbook on download error
 
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsCompressionDemo
+// This example downloads an .xlsx file via HttpClient, loads it into an Aspose.Cells Workbook (or creates a new one on failure), configures OoxmlSaveOptions with Level9 compression, and saves the workbook to a local file.
+class LoadCompressSave
 {
-    // Shows how to fetch an .xlsx file from a remote URL using HttpClient, load it into an Aspose.Cells Workbook from a network stream, configure OoxmlSaveOptions.CompressionType to Level9 for maximum OOXML compression, and write the compressed workbook to a local path.
-    class Program
+    static void Main()
     {
-        static async Task Main(string[] args)
+        // URL of the Excel file to download
+        string fileUrl = "https://example.com/sample.xlsx";
+
+        // Destination file path
+        string outputPath = "CompressedOutput.xlsx";
+
+        Workbook workbook = null;
+
+        // Attempt to download the workbook; fall back to a new workbook on failure
+        try
         {
-            // URL of the Excel file to download
-            string fileUrl = "https://example.com/sample.xlsx";
-
-            // Local path where the compressed workbook will be saved
-            string outputPath = "compressed_output.xlsx";
-
-            try
+            using (HttpClient client = new HttpClient())
+            using (Stream networkStream = client.GetStreamAsync(fileUrl).Result)
             {
-                using HttpClient httpClient = new HttpClient();
-
-                // Send request and ensure a successful response
-                using HttpResponseMessage response = await httpClient.GetAsync(fileUrl);
-                response.EnsureSuccessStatusCode();
-
-                // Read the content as a stream
-                await using Stream networkStream = await response.Content.ReadAsStreamAsync();
-
-                // Load the workbook from the network stream
-                using Workbook workbook = new Workbook(networkStream);
-
-                // Configure OOXML save options with maximum compression (Level9)
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-                {
-                    CompressionType = OoxmlCompressionType.Level9
-                };
-
-                // Ensure the output directory exists
-                string directory = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Save the workbook with the specified compression options
-                workbook.Save(outputPath, saveOptions);
-
-                Console.WriteLine($"Workbook downloaded, compressed with Level9, and saved to '{outputPath}'.");
+                workbook = new Workbook(networkStream);
             }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"Error downloading the file: {ex.Message}");
-            }
-            catch (FileNotFoundException ex)
-            {
-                Console.WriteLine($"File not found: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to download workbook: {ex.Message}");
+            Console.WriteLine("Creating a new empty workbook instead.");
+            workbook = new Workbook(); // creates a default workbook with one worksheet
+        }
+
+        // Configure OOXML save options with maximum compression (Level9)
+        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+        {
+            CompressionType = OoxmlCompressionType.Level9
+        };
+
+        // Save the workbook to a file using the configured options
+        try
+        {
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine("Workbook saved to: " + Path.GetFullPath(outputPath));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

@@ -1,32 +1,45 @@
-// Title: Aspose.Cells C# – Create Workbook with Write‑Protection Author & Password
-// Description: Demonstrates how to instantiate a new Workbook, assign a write‑protection author, set a password, optionally recommend read‑only mode, and save the file as a protected Excel workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells write protection | C# protect Excel workbook | set write‑protection author | Excel password protection .NET | RecommendReadOnly Aspose.Cells | save protected workbook
-// Common Searches: Aspose.Cells set workbook write protection author C# | protect Excel file with password using Aspose.Cells | recommend read‑only mode Aspose.Cells workbook | how to add write protection to a new Excel workbook .NET | C# example write protection author Aspose.Cells
-// Developer Intent: Create a fresh Excel workbook and apply write‑protection with a specific author and password, optionally marking it as read‑only.
-// Use Cases: Distribute templates that users can view but not edit, with author attribution for audit trails. | Secure financial or regulatory reports against accidental changes while suggesting read‑only opening. | Provide configuration spreadsheets for internal tools that must remain unchanged unless authorized.
-// AI Prompts: Generate C# code with Aspose.Cells to create a workbook, set WriteProtection.Author to "John Doe", set WriteProtection.Password to "password123", enable RecommendReadOnly, and save as "WriteProtectedWorkbook.xlsx". | Explain the effect of Aspose.Cells WriteProtection settings on Excel behavior and show how to modify or remove the protection programmatically.
+// Title: Create an Excel workbook, assign author metadata, and protect it with a password using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to generate a new workbook, set the Author property, and apply full write protection with a password. | Show how to protect the workbook structure and windows while adding author metadata in Aspose.Cells. | Demonstrate saving the protected workbook to a specified path and automatically creating the output directory if it does not exist.
+// Common Searches: Aspose.Cells C# set workbook author and password protect the file | How to apply write protection to an Excel workbook using Aspose.Cells in .NET | Create a new Excel workbook and protect it with a password with Aspose.Cells for C# | Save Aspose.Cells workbook to a folder that may not exist | Protect workbook structure and windows with password using Aspose.Cells API
+// Tags: Aspose.Cells workbook password protection | Aspose.Cells set author property | C# create protected Excel file with Aspose.Cells | Aspose.Cells auto-create output folder on save | protect workbook structure and windows Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to instantiate a new Workbook, assign a write‑protection author, set a password, optionally recommend read‑only mode, and save the file as a protected Excel workbook using Aspose.Cells for .NET.
-class WriteProtectionDemo
+// // Creates a new Workbook, assigns the Author metadata, applies write protection for all elements with a password, ensures the target directory exists, and saves the file as ProtectedWorkbook.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Set the author for write protection
-        workbook.Settings.WriteProtection.Author = "John Doe";
+            // Set workbook author (optional metadata)
+            workbook.Settings.Author = "Jane Smith";
 
-        // Set the password that protects the workbook from modification
-        workbook.Settings.WriteProtection.Password = "password123";
+            // Apply write protection with password; protects structure and windows
+            workbook.Protect(ProtectionType.All, "MySecurePassword");
 
-        // (Optional) Recommend opening the file as read‑only
-        workbook.Settings.WriteProtection.RecommendReadOnly = true;
+            // Define output file path
+            string outputPath = "ProtectedWorkbook.xlsx";
 
-        // Save the workbook with the write‑protection settings applied
-        workbook.Save("WriteProtectedWorkbook.xlsx");
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the protected workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

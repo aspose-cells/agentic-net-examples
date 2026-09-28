@@ -1,67 +1,82 @@
-// Title: C# – Add Subtotals for Columns M and N Grouped by Column L with Aspose.Cells
-// Description: Creates a workbook, fills columns L (group), M and N (values), defines the range L1:N6, and uses Cells.Subtotal with the SUM function to calculate subtotals for both M and N per group. The file is saved as SubtotalMultipleColumns.xlsx.
-// Keywords: Aspose.Cells subtotal multiple columns | C# Cells.Subtotal example | group by column L Aspose.Cells | sum columns M N Aspose.Cells | subtotal function .NET | Excel subtotal automation C#
-// Common Searches: Aspose.Cells add subtotals for several columns | C# subtotal multiple columns Aspose.Cells | group by column and sum other columns Aspose.Cells | how to use Cells.Subtotal in .NET | subtotal rows by category Aspose.Cells
-// Developer Intent: Generate a worksheet, populate group and numeric data, and apply a single subtotal operation that sums two adjacent columns for each group.
-// Use Cases: Sales report: subtotal quantity (M) and revenue (N) for each region (L). | Inventory summary: subtotal on‑hand and back‑order counts by product category. | Financial ledger: subtotal debit and credit amounts per account type.
-// AI Prompts: Write C# code with Aspose.Cells to subtotal columns D and E grouped by column C. | Explain the totalList parameter in Cells.Subtotal and how to add more columns to the subtotal. | Extend the example to also compute the average of column M for each group.
+// Title: Create grouped SUM subtotals for columns M and N in an Excel sheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to group rows by column L and add SUM subtotals for both columns M and N in a single operation. | Show how to call Cells.Subtotal with a CellArea to subtotal multiple columns, insert page breaks, and place summary rows below each group in Aspose.Cells.
+// Common Searches: aspocells c# subtotal multiple columns example | how to add sum subtotals for two columns in Aspose.Cells | group rows by a column and subtotal other columns using Aspose.Cells .NET | aspocells insert page breaks when creating subtotals | define CellArea for subtotal range Aspose.Cells C#
+// Tags: Aspose.Cells Cells.Subtotal multiple columns | C# subtotal sum two columns Excel | group by column L Aspose.Cells | page break insertion Aspose.Cells subtotal | CellArea range for subtotal Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Creates a workbook, fills columns L (group), M and N (values), defines the range L1:N6, and uses Cells.Subtotal with the SUM function to calculate subtotals for both M and N per group. The file is saved as SubtotalMultipleColumns.xlsx.
-class SubtotalMultipleColumns
+namespace AsposeCellsSubtotalMultipleColumns
 {
-    static void Main()
+    // The example creates a new workbook, fills columns L (group), M (Value1) and N (Value2) with sample data, defines a CellArea covering L1:N6, and calls Cells.Subtotal to group by column L, calculate SUM subtotals for columns M and N, replace existing subtotals, insert page breaks between groups, and place summary rows below each group. The workbook is saved as Subtotal_M_and_N.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Header row (columns L, M, N)
-        cells["L1"].PutValue("Group");   // Column L (index 11)
-        cells["M1"].PutValue("ValueM");  // Column M (index 12)
-        cells["N1"].PutValue("ValueN");  // Column N (index 13)
-
-        // Sample data
-        string[] groups = { "A", "A", "B", "B", "A" };
-        int[,] values = {
-            { 10, 20 },
-            { 15, 25 },
-            { 5, 30 },
-            { 8, 12 },
-            { 20, 10 }
-        };
-
-        // Populate rows starting at row 2 (zero‑based index 1)
-        for (int i = 0; i < groups.Length; i++)
+        static void Main()
         {
-            cells[i + 1, 11].PutValue(groups[i]);          // Column L
-            cells[i + 1, 12].PutValue(values[i, 0]);      // Column M
-            cells[i + 1, 13].PutValue(values[i, 1]);      // Column N
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // ------------------------------------------------------------
+            // Sample data setup
+            // ------------------------------------------------------------
+            // Header row (L = Group, M = Value1, N = Value2)
+            cells["L1"].PutValue("Group");
+            cells["M1"].PutValue("Value1");
+            cells["N1"].PutValue("Value2");
+
+            // Populate some rows with sample data
+            // Group column (L) will be used for grouping
+            string[] groups = { "A", "A", "B", "B", "C", "C" };
+            double[,] values = {
+                { 10, 20 },
+                { 15, 25 },
+                { 30, 40 },
+                { 35, 45 },
+                { 50, 60 },
+                { 55, 65 }
+            };
+
+            for (int i = 0; i < groups.Length; i++)
+            {
+                cells[i + 1, 11].PutValue(groups[i]);          // Column L (index 11)
+                cells[i + 1, 12].PutValue(values[i, 0]);      // Column M (index 12)
+                cells[i + 1, 13].PutValue(values[i, 1]);      // Column N (index 13)
+            }
+
+            // ------------------------------------------------------------
+            // Define the range that includes the header and data rows
+            // Start at L1 (row 0, column 11) and end at N6 (row 5, column 13)
+            // ------------------------------------------------------------
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 11,
+                EndRow = groups.Length,   // includes header row + data rows
+                EndColumn = 13
+            };
+
+            // ------------------------------------------------------------
+            // Apply subtotals:
+            // - Group by column L (zero‑based index 11)
+            // - Use SUM function
+            // - Add subtotals for both columns M (12) and N (13)
+            // - Replace existing subtotals, add page breaks, place summary below data
+            // ------------------------------------------------------------
+            cells.Subtotal(
+                area,
+                11,                                 // groupBy column (L)
+                ConsolidationFunction.Sum,          // subtotal function
+                new int[] { 12, 13 },               // columns to subtotal (M and N)
+                true,                               // replace existing subtotals
+                true,                               // insert page breaks between groups
+                true);                              // place summary rows below each group
+
+            // ------------------------------------------------------------
+            // Save the workbook
+            // ------------------------------------------------------------
+            workbook.Save("Subtotal_M_and_N.xlsx");
         }
-
-        // Define the range that includes the header and all data rows (L1:N6)
-        // StartRow = 0, StartColumn = 11 (L), EndRow = groups.Length, EndColumn = 13 (N)
-        CellArea area = CellArea.CreateCellArea(0, 11, groups.Length, 13);
-
-        // Apply subtotals:
-        // - Group by the first column of the area (Group column L)
-        // - Use SUM function
-        // - Add subtotals for the second and third columns of the area (M and N)
-        // - Replace existing subtotals, insert page breaks, and place summary below data
-        cells.Subtotal(
-            area,
-            0,                                 // groupBy offset within the area
-            ConsolidationFunction.Sum,
-            new int[] { 1, 2 },                // totalList offsets for M and N
-            true,                              // replace existing subtotals
-            true,                              // add page breaks between groups
-            true                               // place summary below data
-        );
-
-        // Save the workbook
-        workbook.Save("SubtotalMultipleColumns.xlsx");
     }
 }

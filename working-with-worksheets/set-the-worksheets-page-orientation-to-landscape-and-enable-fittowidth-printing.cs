@@ -1,33 +1,29 @@
-// Title: C# – Set Worksheet Landscape Orientation and Fit‑to‑Width Printing with Aspose.Cells
-// Description: Creates a new Workbook, accesses the first Worksheet, sets PageSetup.Orientation to Landscape, configures FitToPagesWide = 1 (single‑page width) and FitToPagesTall = 0 (auto height), then saves the file as LandscapeFitWidth.xlsx.
-// Keywords: Aspose.Cells C# landscape orientation | FitToPagesWide example | FitToPagesTall setting | page setup printing Aspose.Cells | Excel print layout .NET | C# Aspose.Cells worksheet print settings | fit to width Excel | Aspose.Cells page orientation | C# Excel landscape PDF | Aspose.Cells sample code
-// Common Searches: Aspose.Cells set landscape orientation C# | fit worksheet to one page width Aspose.Cells | PageSetup properties Aspose.Cells .NET | C# print Excel sheet landscape Aspose | how to use FitToPagesWide in Aspose.Cells
-// Developer Intent: Apply landscape orientation and fit‑to‑width printing to a worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate a landscape PDF report where all columns fit on a single page width for easy reading. | Print an invoice on legal‑size paper in landscape mode while allowing the height to span multiple pages. | Create a printable schedule that stays horizontally on one page but can extend vertically as needed.
-// AI Prompts: Show C# code with Aspose.Cells that sets a worksheet to landscape orientation and fits all columns to one page width. | Explain the PageSetup properties needed for landscape printing and automatic height adjustment in Aspose.Cells. | Provide a step‑by‑step example of combining Landscape orientation with FitToPagesWide = 1 in a .NET workbook.
+// Title: Configure a worksheet to print in landscape orientation and fit to page width with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets the PageSetup.Orientation of a worksheet to Landscape and configures FitToPagesWide = 1 while leaving FitToPagesTall unrestricted using Aspose.Cells. | Provide a concise Aspose.Cells example that prints an Excel sheet in landscape mode and scales the output to a single page wide.
+// Common Searches: Aspose.Cells C# set worksheet print orientation to landscape | how to make Excel sheet fit one page wide using Aspose.Cells | PageSetup FitToPagesWide property example Aspose.Cells .NET | print Excel workbook landscape with fit-to-width scaling Aspose.Cells
+// Tags: PageSetup orientation landscape Aspose.Cells | page width scaling Aspose.Cells .NET | worksheet print configuration C# Aspose.Cells | Excel export landscape Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, accesses the first Worksheet, sets PageSetup.Orientation to Landscape, configures FitToPagesWide = 1 (single‑page width) and FitToPagesTall = 0 (auto height), then saves the file as LandscapeFitWidth.xlsx.
-class SetPageOrientationAndFitWidth
+// // Creates a new workbook, sets the first worksheet's page orientation to landscape, configures the page setup to fit the content to one page wide (height unrestricted), and saves the file as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // {CreateWorkbook}
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set page orientation to Landscape
-        worksheet.PageSetup.Orientation = PageOrientationType.Landscape;
+        // Set page orientation to landscape
+        sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-        // Fit all columns to one page width; let height adjust automatically
-        worksheet.PageSetup.FitToPagesWide = 1;   // one page wide
-        worksheet.PageSetup.FitToPagesTall = 0;   // auto height
+        // Enable fit‑to‑width printing (fit to 1 page wide, unlimited pages tall)
+        sheet.PageSetup.FitToPagesWide = 1;
+        sheet.PageSetup.FitToPagesTall = 0;
 
-        // Save the workbook
-        workbook.Save("LandscapeFitWidth.xlsx");
+        // {SaveWorkbook}
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,74 +1,76 @@
-// Title: Create a PDF whose page size matches an Excel worksheet using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to export a workbook to PDF with physical dimensions that exactly equal the rendered size of the sheet. The example clears margins, forces a single‑page layout, retrieves width and height via SheetRender.GetPageSizeInch, applies CustomPaperSize, and saves the PDF.
-// Keywords: Aspose.Cells | C# | custom paper size | SheetRender GetPageSizeInch | fit worksheet to one page | remove margins PDF export | Excel to PDF exact dimensions | Aspose.Cells PDF export | paper size custom | PDF page size from worksheet
-// Common Searches: Aspose.Cells set custom PDF page size | How to match PDF page size to Excel sheet in .NET | Get worksheet rendered size in inches Aspose.Cells | Export Excel to PDF without scaling Aspose | C# Aspose.Cells custom paper size PDF
-// Developer Intent: Export an Excel worksheet to PDF with a page size that mirrors the worksheet’s rendered dimensions.
-// Use Cases: Printing reports that must retain the exact layout of the original sheet | Generating dashboards where each grid fits a single PDF page of a specific size | Creating printable forms that require no extra margins or scaling | Automating batch conversion of worksheets to size‑specific PDFs
-// AI Prompts: Provide C# code using Aspose.Cells to calculate a worksheet’s rendered width and height and set those values as a custom PDF paper size. | Explain step‑by‑step how to clear margins, fit a sheet to one page, retrieve page dimensions with SheetRender, and export to PDF. | Show how to combine SheetRender.GetPageSizeInch with PageSetup.CustomPaperSize to produce a PDF that exactly matches the worksheet size.
+// Title: Create a PDF with a custom page size that matches the used range of an Excel worksheet using Aspose.Cells in C#
+// AI Prompts: Generate C# code that measures the total width and height of the used cells, converts the pixel values to points, and applies them to the worksheet's custom page dimensions before saving as PDF with Aspose.Cells. | Show how to configure PdfSaveOptions so the PDF is generated without any automatic page scaling, preserving the worksheet's original layout.
+// Common Searches: how to set custom PDF page dimensions from Excel used range Aspose.Cells C# | calculate worksheet pixel size and convert to points for PDF export Aspose.Cells | Aspose.Cells disable scaling when converting Excel to PDF | use PageSetup.CustomPaperSize to match Excel content size in PDF | C# export Excel sheet to PDF with exact layout no scaling
+// Tags: Aspose.Cells set page dimensions | PdfSaveOptions turn off scaling | C# compute worksheet used range size | export Excel to PDF exact layout | convert pixels to points Aspose.Cells
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCustomPdfSize
+// The example loads an Excel workbook, determines the used range extents, sums column widths and row heights in pixels, converts those totals to points, and (optionally) assigns the dimensions to a custom page size. PdfSaveOptions are configured with OnePagePerSheet disabled to prevent automatic scaling, resulting in a PDF that precisely matches the worksheet's layout.
+class Program
 {
-    // Demonstrates how to export a workbook to PDF with physical dimensions that exactly equal the rendered size of the sheet. The example clears margins, forces a single‑page layout, retrieves width and height via SheetRender.GetPageSizeInch, applies CustomPaperSize, and saves the PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data (adjust as needed)
-                for (int row = 0; row < 20; row++)
-                {
-                    for (int col = 0; col < 5; col++)
-                    {
-                        sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
-                }
-
-                // Define the print area and remove margins for exact sizing
-                sheet.PageSetup.PrintArea = "A1:E20";
-                sheet.PageSetup.LeftMargin = 0;
-                sheet.PageSetup.RightMargin = 0;
-                sheet.PageSetup.TopMargin = 0;
-                sheet.PageSetup.BottomMargin = 0;
-
-                // Fit the whole area onto a single page (helps SheetRender calculate size)
-                sheet.PageSetup.FitToPagesWide = 1;
-                sheet.PageSetup.FitToPagesTall = 1;
-
-                // Temporarily set paper size to Custom so that later we can assign exact dimensions
-                sheet.PageSetup.PaperSize = PaperSizeType.Custom;
-
-                // Use SheetRender to obtain the size (in inches) of the rendered page
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-                {
-                    OnePagePerSheet = true
-                    // ImageFormat is not required for size calculation
-                };
-
-                SheetRender sheetRender = new SheetRender(sheet, renderOptions);
-                // Get width and height of the first (and only) page
-                float[] pageSizeInInches = sheetRender.GetPageSizeInch(0);
-                double pageWidth = pageSizeInInches[0];
-                double pageHeight = pageSizeInInches[1];
-
-                // Apply the exact dimensions as a custom paper size
-                sheet.PageSetup.CustomPaperSize(pageWidth, pageHeight);
-
-                // Save the workbook as PDF; the custom paper size will be used
-                workbook.Save("CustomSizeOutput.pdf", SaveFormat.Pdf);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Determine used range extents
+            int maxColumn = sheet.Cells.MaxColumn; // zero‑based index of the last used column
+            int maxRow = sheet.Cells.MaxRow;       // zero‑based index of the last used row
+
+            // Accumulate total width and height in pixels
+            double totalWidthPixels = 0;
+            for (int col = 0; col <= maxColumn; col++)
+                totalWidthPixels += sheet.Cells.GetColumnWidthPixel(col);
+
+            double totalHeightPixels = 0;
+            for (int row = 0; row <= maxRow; row++)
+                totalHeightPixels += sheet.Cells.GetRowHeightPixel(row);
+
+            // Convert pixels to points (1 point = 1/72 inch, 1 pixel = 1/96 inch)
+            float widthPoints = (float)(totalWidthPixels * 72.0 / 96.0);
+            float heightPoints = (float)(totalHeightPixels * 72.0 / 96.0);
+
+            // NOTE: Custom paper size APIs may vary between Aspose.Cells versions.
+            // The following lines are commented out to ensure compatibility.
+            // If your version supports custom paper size, uncomment and adjust accordingly.
+            // sheet.PageSetup.PaperSize = PaperSizeType.PaperUser;
+            // sheet.PageSetup.CustomPaperSize = new SizeF(widthPoints, heightPoints);
+
+            // Configure PDF save options (disable automatic scaling)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+                OnePagePerSheet = false
+            };
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

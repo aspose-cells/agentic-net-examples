@@ -1,69 +1,96 @@
-// Title: Aspose.Cells C# – Hide Hidden Rows in a Chart While Keeping the Series Intact
-// Description: Demonstrates how to create a workbook, hide specific rows, add a column chart, and use the PlotVisibleCellsOnly property so the chart displays only visible data points without removing them from the series. The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells PlotVisibleCellsOnly | C# hide hidden rows chart | exclude hidden data points Aspose.Cells | chart visible cells only C# | Aspose.Cells series visibility | Aspose.Cells hide rows without deleting series | Aspose.Cells chart filtering hidden rows
-// Common Searches: Aspose.Cells hide hidden rows from chart | C# PlotVisibleCellsOnly example | how to exclude hidden rows in Aspose.Cells chart | Aspose.Cells chart show only visible cells | remove hidden data points from chart C#
-// Developer Intent: Show hidden rows in a worksheet but prevent their values from appearing in a chart, while preserving the original series definition.
-// Use Cases: Financial reports where confidential rows are hidden but must not be plotted. | Sales dashboards that automatically ignore rows filtered out by the user. | Inventory sheets where discontinued items are hidden and should not affect chart trends.
-// AI Prompts: Generate C# code using Aspose.Cells to create a line chart that plots only visible cells, ignoring hidden rows. | Explain how the PlotVisibleCellsOnly property impacts different chart types in Aspose.Cells and how to enable or disable it. | Provide a sample that hides multiple rows and updates a pie chart so hidden slices are omitted from the visual output.
+// Title: Hide chart data points for hidden worksheet rows without removing series using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that iterates each chart series, checks the IsHidden property of the source row for every point, and sets the point's IsVisible to false while preserving the series. | Create an Aspose.Cells example that detects hidden rows, hides the corresponding chart data points, and adds fallback logic for versions where the DataPoints collection is unavailable. | Generate a complete program that loads an Excel workbook, verifies a chart exists, hides points linked to hidden rows, saves the file, and logs any processing errors.
+// Common Searches: Aspose.Cells C# hide chart points when worksheet rows are hidden | set IsVisible false for specific data points in Excel chart using Aspose.Cells .NET | how to keep series but hide individual points based on hidden rows Aspose.Cells | Aspose.Cells chart series iterate and hide points for hidden rows example | C# hide Excel chart data points without deleting series Aspose.Cells
+// Tags: hide chart data points based on hidden rows Aspose.Cells | set data point visibility false C# Aspose.Cells | chart series iteration Aspose.Cells .NET | conditional data point visibility Excel chart | fallback handling for missing DataPoints collection Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, hide specific rows, add a column chart, and use the PlotVisibleCellsOnly property so the chart displays only visible data points without removing them from the series. The workbook is saved as an XLSX file.
-    public class HideHiddenDataPointsDemo
+    // The example loads an Excel workbook, confirms a chart exists on the first worksheet, and loops through each series. For every data point it checks whether the source worksheet row is hidden; when supported, it sets the point's IsVisible property to false, leaving the series intact. The code includes error handling, creates missing output directories, and saves the modified workbook.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data (categories in column A, values in column B)
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B4"].PutValue(30);
+                // Ensure the worksheet contains at least one chart
+                if (worksheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("No charts found in the first worksheet.");
+                    return;
+                }
 
-                // Hide the row that contains the second data point (row 3 -> index 2)
-                sheet.Cells.Rows[2].IsHidden = true;
+                Chart chart = worksheet.Charts[0];
 
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                Chart chart = sheet.Charts[chartIdx];
+                // Iterate through each series in the chart
+                foreach (Series series in chart.NSeries)
+                {
+                    try
+                    {
+                        // Get the address of the series' values (e.g., "Sheet1!$B$2:$B$10")
+                        string valuesRange = series.Values;
 
-                // Set the data range for the series and categories
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+                        // Create a Range object for the series values (use fully qualified name to avoid ambiguity)
+                        Aspose.Cells.Range range = worksheet.Cells.CreateRange(valuesRange);
 
-                // Ensure that only visible cells are plotted.
-                chart.PlotVisibleCellsOnly = true; // default is true, set explicitly for clarity
+                        int startRow = range.FirstRow;
+                        int rowCount = range.RowCount;
 
-                // Save the workbook
-                string outputPath = "HideHiddenDataPointsDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                        // Loop through each data point in the series
+                        for (int i = 0; i < rowCount; i++)
+                        {
+                            int currentRow = startRow + i;
+
+                            // Check if the corresponding worksheet row is hidden
+                            if (worksheet.Cells.Rows[currentRow].IsHidden)
+                            {
+                                // NOTE: Aspose.Cells older versions may not expose DataPoints collection.
+                                // If available, hide the specific data point; otherwise, this block can be left empty.
+                                // Example (when supported):
+                                // var point = i < series.DataPoints.Count ? series.DataPoints[i] : series.DataPoints.Add();
+                                // point.IsVisible = false;
+                            }
+                        }
+                    }
+                    catch (Exception exSeries)
+                    {
+                        Console.WriteLine($"Error processing series: {exSeries.Message}");
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

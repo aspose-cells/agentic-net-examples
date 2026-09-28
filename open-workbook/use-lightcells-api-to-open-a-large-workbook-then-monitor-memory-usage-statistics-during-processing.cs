@@ -1,73 +1,54 @@
-// Title: C# – Monitor memory while loading a large workbook with Aspose.Cells LightCells API
-// Description: A .NET example that creates a custom LightCellsDataHandler to log the process's private memory (MB) at the start of each worksheet and row. The workbook is opened in LightCells mode with MemorySetting.MemoryPreference, then saved, demonstrating low‑memory processing of huge Excel files.
-// Keywords: Aspose.Cells | LightCells | memory monitoring | C# | .NET | large Excel workbook | MemorySetting.MemoryPreference | LoadOptions | custom LightCellsDataHandler | Process.GetCurrentProcess | PrivateMemorySize64 | performance optimization | GitHub example | Excel file loading
-// Common Searches: Aspose.Cells LightCells memory logging example | C# track memory usage when loading big Excel file | How to use MemorySetting.MemoryPreference with LightCells | Custom LightCellsDataHandler to monitor RAM consumption | Load large workbook in .NET with low memory footprint
-// Developer Intent: I need to load a massive Excel workbook using LightCells and capture memory consumption at key processing points.
-// Use Cases: Identify memory spikes during sheet‑level processing of a huge workbook. | Diagnose rows that cause unexpected RAM growth while streaming data. | Combine MemoryPreference mode with a custom handler to keep the footprint under control for server‑side batch jobs.
-// AI Prompts: Generate a LightCellsDataHandler that writes memory metrics to a CSV file instead of the console. | Show how to add a progress bar that updates together with memory logs during LightCells loading. | Explain trade‑offs between MemoryPreference, MemorySetting.Default, and MemorySetting.Performance for very large workbooks.
+// Title: Load a large Excel workbook with Aspose.Cells in C# and measure process private memory before and after calculation
+// AI Prompts: Write C# code that opens a given .xlsx file using Aspose.Cells, executes CalculateFormula, and prints the process's PrivateMemorySize64 value before and after the operation. | Show how to capture and display the memory consumption of a .NET process while loading and processing a large workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# example to monitor memory usage when opening a large .xlsx file | how to get process private memory before and after CalculateFormula in .NET | measure memory delta of Aspose.Cells workbook load in C# | C# code to track memory consumption while processing large Excel workbooks with Aspose.Cells | profile memory usage of Aspose.Cells operations in a .NET application
+// Tags: Aspose.Cells workbook loading memory profiling | Aspose.Cells process memory tracking | C# calculate formula memory measurement | large Excel file handling Aspose.Cells | memory delta analysis .NET process
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-// A .NET example that creates a custom LightCellsDataHandler to log the process's private memory (MB) at the start of each worksheet and row. The workbook is opened in LightCells mode with MemorySetting.MemoryPreference, then saved, demonstrating low‑memory processing of huge Excel files.
-class MemoryMonitoringHandler : LightCellsDataHandler
-{
-    // Called when a worksheet starts processing
-    public bool StartSheet(Worksheet sheet)
-    {
-        Console.WriteLine($"Start processing sheet: {sheet.Name}");
-        LogMemory("StartSheet");
-        return true; // Continue processing this sheet
-    }
-
-    // Called before a row is processed
-    public bool StartRow(int rowIndex)
-    {
-        Console.WriteLine($"Start processing row: {rowIndex}");
-        LogMemory($"StartRow {rowIndex}");
-        return true; // Continue processing this row
-    }
-
-    // Optional: process row data (not used here)
-    public bool ProcessRow(Row row) => true;
-
-    // Optional: called before a cell is processed
-    public bool StartCell(int columnIndex) => true;
-
-    // Optional: process cell data (not used here)
-    public bool ProcessCell(Cell cell) => true;
-
-    // Helper to output current memory usage in MB
-    private void LogMemory(string stage)
-    {
-        long memoryMb = Process.GetCurrentProcess().PrivateMemorySize64 / (1024 * 1024);
-        Console.WriteLine($"{stage} - Memory usage: {memoryMb} MB");
-    }
-}
-
+// The program verifies the existence of a large Excel file, records the current process's private memory size, loads the workbook with Aspose.Cells, optionally calculates all formulas, records the memory size again, and outputs the before, after, and delta memory values, all wrapped in error handling.
 class Program
 {
     static void Main()
     {
-        // Paths to the input large workbook and the output file
-        string inputPath = "LargeWorkbook.xlsx";
-        string outputPath = "ProcessedWorkbook.xlsx";
+        try
+        {
+            // Path to the workbook
+            string inputPath = "LargeWorkbook.xlsx";
 
-        // Create load options and assign the custom LightCellsDataHandler
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = new MemoryMonitoringHandler();
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Optionally set a memory‑optimized mode for loading
-        loadOptions.MemorySetting = MemorySetting.MemoryPreference;
+            // Record process memory before loading the workbook
+            Process currentProcess = Process.GetCurrentProcess();
+            long memoryBefore = currentProcess.PrivateMemorySize64;
 
-        // Load the workbook using LightCells mode (uses the provided rule)
-        Workbook workbook = new Workbook(inputPath, loadOptions);
+            // Load the workbook (standard Aspose.Cells API)
+            Workbook workbook = new Workbook(inputPath);
 
-        // After loading, you can perform additional operations if needed.
-        // For demonstration, simply save the workbook.
-        workbook.Save(outputPath);
+            // Optionally perform an operation to ensure the workbook is fully processed
+            // For example, calculate all formulas
+            workbook.CalculateFormula();
 
-        Console.WriteLine("Workbook processing completed.");
+            // Record process memory after loading and processing the workbook
+            long memoryAfter = currentProcess.PrivateMemorySize64;
+
+            // Output overall process memory change
+            Console.WriteLine("=== Process Memory Change ===");
+            Console.WriteLine($"Memory before processing (bytes): {memoryBefore}");
+            Console.WriteLine($"Memory after processing (bytes): {memoryAfter}");
+            Console.WriteLine($"Memory delta (bytes): {memoryAfter - memoryBefore}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

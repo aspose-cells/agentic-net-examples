@@ -1,32 +1,22 @@
-// Title: Open an XLSX workbook from a file using Aspose.Cells for .NET (C#)
-// Description: This example shows how to instantiate a Workbook from a local XLSX file, access the first worksheet, and print its name along with the count of populated rows and columns using Aspose.Cells APIs.
-// Keywords: Aspose.Cells C# load workbook | open Excel file .NET | Workbook constructor file path | first worksheet name Aspose | used rows columns count | read XLSX metadata | Aspose.Cells file I/O
-// Common Searches: Aspose.Cells how to open XLSX file in C# | C# get first sheet name with Aspose.Cells | retrieve used row count Aspose.Cells | display worksheet dimensions Aspose.Cells | load workbook from disk Aspose.Cells example
-// Developer Intent: Open an Excel file and read basic information about its first worksheet.
-// Use Cases: Validate incoming Excel files by checking sheet names and data extents before processing. | Extract workbook metadata to drive dynamic UI elements or reporting templates. | Quickly assess file structure (row/column usage) for conditional logic in data pipelines.
-// AI Prompts: Generate C# code that uses Aspose.Cells to open an XLSX file and output the first worksheet's name, used rows, and used columns. | Create a reusable method that accepts a file path, loads the workbook with Aspose.Cells, and returns an object containing sheet count, first sheet name, and data dimensions. | Explain best practices for handling exceptions and file‑access errors when loading a workbook with Aspose.Cells in C#.
+// Title: Load an XLSX workbook from a file path with Aspose.Cells Workbook in C#
+// AI Prompts: Write C# code that uses Aspose.Cells Workbook to open a .xlsx file from a given path and retrieve the first worksheet. | Show how to instantiate a Workbook object with a file name, then access a specific sheet using Aspose.Cells for .NET.
+// Common Searches: aspnet load xlsx file using Aspose.Cells Workbook constructor | c# read Excel workbook from disk with Aspose.Cells and get first sheet | example of opening an .xlsx file with Aspose.Cells in a console application | how to initialize Aspose.Cells Workbook with a file path in C# | retrieve worksheet after loading workbook using Aspose.Cells .NET
+// Tags: load workbook from file Aspose.Cells C# | read xlsx file Aspose.Cells .NET | access first worksheet Aspose.Cells | initialize Workbook with file path | open Excel workbook Aspose.Cells C#
 
-using System;
 using Aspose.Cells;
 
-// This example shows how to instantiate a Workbook from a local XLSX file, access the first worksheet, and print its name along with the count of populated rows and columns using Aspose.Cells APIs.
-class LoadWorkbookDemo
+// The example shows how to create an Aspose.Cells Workbook object by providing the path to an .xlsx file, then optionally obtain the first worksheet for further processing.
+class Program
 {
     static void Main()
     {
-        // Path to the XLSX file on disk
-        string filePath = "example.xlsx";
+        // Path to the XLSX file to load
+        string filePath = "input.xlsx";
 
-        // Load the workbook using the Workbook(string) constructor
+        // Load the workbook from the specified file
         Workbook workbook = new Workbook(filePath);
 
-        // Access the first worksheet in the loaded workbook
+        // Example: access the first worksheet (optional)
         Worksheet firstSheet = workbook.Worksheets[0];
-
-        // Display basic information about the loaded workbook
-        Console.WriteLine("Workbook loaded successfully.");
-        Console.WriteLine("First worksheet name: " + firstSheet.Name);
-        Console.WriteLine("Used rows: " + (firstSheet.Cells.MaxDataRow + 1));
-        Console.WriteLine("Used columns: " + (firstSheet.Cells.MaxDataColumn + 1));
     }
 }

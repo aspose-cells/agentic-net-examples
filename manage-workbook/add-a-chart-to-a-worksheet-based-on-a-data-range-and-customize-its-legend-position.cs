@@ -1,44 +1,51 @@
-// Title: Add a Column Chart and Position Its Legend at the Bottom with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new workbook, fill cells A1:B5 with sample data, insert a column chart, bind the chart to the range A1:B5, move the legend to the bottom of the chart area, disable overlay, and save the file as ChartWithLegend.xlsx using Aspose.Cells in C#.
-// Keywords: Aspose.Cells C# chart | add column chart Aspose.Cells | set legend position bottom | chart legend overlay false | define chart data range Aspose.Cells | Excel automation .NET | Aspose.Cells chart example | column chart legend placement | Aspose.Cells workbook chart
-// Common Searches: Aspose.Cells add column chart C# | How to move chart legend to bottom Aspose.Cells | Set chart legend not overlay Aspose.Cells .NET | Define chart data range Aspose.Cells C# | Create chart with bottom legend using Aspose.Cells
-// Developer Intent: Generate a column chart from a specified cell range and place its legend below the plot area without covering the chart.
-// Use Cases: Produce quarterly sales reports where a column chart visualizes revenue and the legend appears beneath the chart for clean presentation. | Automate performance dashboards that add charts to multiple worksheets, ensuring each legend is positioned outside the chart to keep data visible. | Create inventory summaries that include a column chart with a bottom legend, maintaining a consistent layout across exported Excel files.
-// AI Prompts: Write C# code with Aspose.Cells to add a line chart from range C1:D10, set the legend to the right side, and prevent overlay. | Show an example that inserts three different chart types into a worksheet and aligns each legend at the top using Aspose.Cells for .NET. | Provide code to load an existing workbook, change an existing chart's legend position to bottom, and disable overlay with Aspose.Cells.
+// Title: Add a column chart from a cell range and set its legend to the right side using Aspose.Cells for .NET
+// AI Prompts: Create a column chart from the range B2:B4 on the first worksheet and move the legend to the right using Aspose.Cells C#. | Generate a chart, bind it to a data range, and customize the legend position to the right side in a .NET workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells how to bind column chart to specific cells in C# | set legend position to right for chart in Aspose.Cells .NET | create chart from data range and customize legend location using Aspose.Cells for .NET | add column chart to worksheet programmatically with Aspose.Cells C# example
+// Tags: Aspose.Cells create column chart from range | Aspose.Cells set chart legend position | Aspose.Cells chart NSeries binding | Aspose.Cells .xlsx chart generation | Aspose.Cells customize chart legend
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-// Demonstrates how to create a new workbook, fill cells A1:B5 with sample data, insert a column chart, bind the chart to the range A1:B5, move the legend to the bottom of the chart area, disable overlay, and save the file as ChartWithLegend.xlsx using Aspose.Cells in C#.
+// The sample creates a new workbook, fills month‑sales data, adds a column chart covering rows 5‑20, binds the series to cells B2:B4, positions the legend on the right side, and saves the file as ChartWithCustomLegend.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 2; i <= 5; i++)
+        try
         {
-            sheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
-            sheet.Cells[$"B{i}"].PutValue((i - 1) * 10);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(130);
+
+            // Add a column chart (positioned from row 5, column 0 to row 20, column 7)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the series (values). Categories are taken from the first column by default.
+            chart.NSeries.Add("B2:B4", true);
+
+            // Customize the legend position (place it on the right side of the chart)
+            chart.Legend.Position = LegendPositionType.Right;
+
+            // Save the workbook to a file
+            workbook.Save("ChartWithCustomLegend.xlsx");
         }
-
-        // Add a column chart to the worksheet (topRow, leftColumn, bottomRow, rightColumn)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 1, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Define the data range for the chart (vertical series)
-        chart.SetChartDataRange("A1:B5", true);
-
-        // Customize the legend: place it at the bottom and ensure it does not overlay the chart
-        chart.Legend.Position = LegendPositionType.Bottom;
-        chart.Legend.IsOverLay = false;
-
-        // Save the workbook with the chart
-        workbook.Save("ChartWithLegend.xlsx", SaveFormat.Xlsx);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

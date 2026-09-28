@@ -1,72 +1,43 @@
-// Title: Aspose.Cells .NET: Move a Shape to Front then Back and Verify Z‑Order
-// Description: Demonstrates how to add overlapping rectangle shapes to a worksheet, bring one shape to the front with ToFrontOrBack(1), immediately send it to the back with ToFrontOrBack(0), and compare the initial and final ZOrderPosition values before saving the workbook.
-// Keywords: Aspose.Cells shape layering | C# ToFrontOrBack method | ZOrderPosition Aspose.Cells | move shape to front .NET | send shape to back Excel | shape Z‑order verification | Aspose.Cells .NET examples
-// Common Searches: Aspose.Cells move shape to front then back | How to change shape Z‑order in Aspose.Cells C# | ToFrontOrBack usage Aspose.Cells | Get shape ZOrderPosition after layering | C# example for shape front back Aspose.Cells
-// Developer Intent: Programmatically adjust a shape’s stacking order—first to the front, then back—and confirm the resulting Z‑order positions.
-// Use Cases: Temporarily highlight a shape for annotation and restore its original layer before exporting the workbook. | Validate that overlapping graphics retain the intended visual hierarchy in automated Excel report generation. | Debug shape layering issues by reading ZOrderPosition before and after layer changes.
-// AI Prompts: Write C# code using Aspose.Cells to bring a shape to the front, then back, and display its ZOrderPosition values. | Explain the impact of ToFrontOrBack(1) and ToFrontOrBack(0) on shape Z‑order in Aspose.Cells. | Provide error‑handling best practices for moving shapes between front and back layers in Aspose.Cells for .NET.
+// Title: Move a rectangle shape to the front layer, then send it to the back layer and verify Z-order using Aspose.Cells for .NET
+// AI Prompts: Create a C# program with Aspose.Cells that adds a rectangle shape, sets its ZOrderPosition to the highest index, then resets it to zero, and prints whether the shape is now the backmost item. | Write code that manipulates a worksheet shape's Z-order by assigning shape.ZOrderPosition = sheet.Shapes.Count-1 followed by shape.ZOrderPosition = 0, then confirms the final order in the Shapes collection.
+// Common Searches: Aspose.Cells C# change shape order front to back example | How to set ZOrderPosition for a shape in Aspose.Cells | Check if a shape is backmost after SendToBack in Aspose.Cells | C# Aspose.Cells move rectangle shape behind other objects
+// Tags: Aspose.Cells shape Z-order adjustment | C# bring shape to front Aspose.Cells | C# send shape to back Aspose.Cells | Aspose.Cells verify shape backmost order
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add overlapping rectangle shapes to a worksheet, bring one shape to the front with ToFrontOrBack(1), immediately send it to the back with ToFrontOrBack(0), and compare the initial and final ZOrderPosition values before saving the workbook.
-public class ShapeFrontBackDemo
+// The example creates a new workbook, adds a rectangle shape, moves it to the front by setting the highest ZOrderPosition, then sends it to the back by resetting the position to zero, verifies that the shape becomes the first item in the worksheet's Shapes collection, and saves the file as ShapeZOrder.xlsx.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
-            Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
+            var shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 100, 50);
+
+            // Bring the shape to the front layer by setting the highest Z-order position
+            shape.ZOrderPosition = sheet.Shapes.Count - 1;
+
+            // Send the shape to the back layer by setting the lowest Z-order position
+            shape.ZOrderPosition = 0;
+
+            // Verify final order: after SendToBack the shape should be the first (backmost) in the collection
+            bool isBackmost = sheet.Shapes[0] == shape;
+            Console.WriteLine("Shape is backmost: " + isBackmost);
+
+            // Save the workbook
+            workbook.Save("ShapeZOrder.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add two overlapping rectangle shapes
-        Shape shape1 = worksheet.Shapes.AddRectangle(5, 5, 100, 100, 0, 0);
-        Shape shape2 = worksheet.Shapes.AddRectangle(20, 20, 100, 100, 0, 0);
-
-        // Record initial Z‑order positions
-        int initialPos1 = shape1.ZOrderPosition;
-        int initialPos2 = shape2.ZOrderPosition;
-
-        try
-        {
-            // Bring shape2 to the front (parameter 1 = front)
-            shape2.ToFrontOrBack(1);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error bringing shape to front: {ex.Message}");
-        }
-
-        try
-        {
-            // Send shape2 to the back (parameter 0 = back)
-            shape2.ToFrontOrBack(0);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error sending shape to back: {ex.Message}");
-        }
-
-        // Record final Z‑order positions to verify the order
-        int finalPos1 = shape1.ZOrderPosition;
-        int finalPos2 = shape2.ZOrderPosition;
-
-        Console.WriteLine($"Initial positions: shape1={initialPos1}, shape2={initialPos2}");
-        Console.WriteLine($"Final positions:   shape1={finalPos1}, shape2={finalPos2}");
-
-        // Save the workbook
-        workbook.Save("ShapeFrontBackDemo.xlsx");
     }
 }

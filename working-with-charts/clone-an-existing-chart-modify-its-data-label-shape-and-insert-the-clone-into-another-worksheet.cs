@@ -1,68 +1,71 @@
-// Title: Clone a Chart, Change Its Data Label Shape, and Insert into Another Worksheet – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add sample data, build a column chart with round‑rect data labels, clone the chart to a new worksheet using ChartShape.AddCopy, change the cloned series' data label shape to an ellipse, and save the file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells chart clone | copy chart to another worksheet | modify data label shape Aspose.Cells | ChartShape AddCopy C# | Aspose.Cells .NET chart example | duplicate chart programmatically | change data label shape ellipse | C# Aspose.Cells chart manipulation
-// Common Searches: Aspose.Cells copy chart to different sheet | How to clone a chart in Aspose.Cells C# | Change data label shape of a chart with Aspose.Cells | ChartShape AddCopy usage example | C# Aspose.Cells duplicate chart and edit labels
-// Developer Intent: Programmatically duplicate an existing chart, alter its data label shape, and place the copy on another worksheet using Aspose.Cells for .NET.
-// Use Cases: Create a summary sheet that mirrors a source chart while applying a distinct label style. | Generate multiple versions of the same chart across worksheets for varied presentation needs. | Automate workbook generation where each sheet requires a chart with customized data label shapes.
-// AI Prompts: Show C# code to clone a chart from one worksheet to another and set the cloned chart's data labels to an ellipse using Aspose.Cells. | Explain how to use ChartShape.AddCopy to duplicate a chart and modify its series properties in Aspose.Cells for .NET. | Provide step‑by‑step instructions for copying a chart, retrieving the cloned Chart object, and changing the data label shape.
+// Title: Clone a column chart, change its data label shape to ellipse, and place the clone on another worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to copy a ChartShape from a source worksheet to a destination worksheet, then set the cloned series DataLabels.ShapeType to Ellipse. | Programmatically duplicate an existing chart on a different sheet with ShapeCollection.AddCopy and modify the cloned chart’s data label shape via DataLabelShapeType.
+// Common Searches: Aspose.Cells C# copy chart to another worksheet and change data label shape | How to duplicate a chart and set data label shape to ellipse in Aspose.Cells | Clone chart object between worksheets using ShapeCollection.AddCopy Aspose.Cells .NET | Change data label shape of a cloned chart in Aspose.Cells C# example
+// Tags: ChartShape AddCopy Aspose.Cells C# | clone chart between worksheets Aspose.Cells | ellipse DataLabelShapeType Aspose.Cells | modify cloned chart series data labels Aspose.Cells | column chart cloning Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // for DataLabelShapeType
 
 namespace AsposeCellsChartCloneDemo
 {
-    // Demonstrates how to create a workbook, add sample data, build a column chart with round‑rect data labels, clone the chart to a new worksheet using ChartShape.AddCopy, change the cloned series' data label shape to an ellipse, and save the file with Aspose.Cells for .NET.
+    // The example creates a workbook with sample data, adds a column chart on a source sheet with rectangular data labels, clones the chart to a destination sheet using ShapeCollection.AddCopy, changes the cloned series' data label shape to an ellipse, and saves the file as ChartCloneWithModifiedDataLabelShape.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (creation rule)
+            // ---------- Create a workbook and populate data ----------
             Workbook workbook = new Workbook();
+            Worksheet srcSheet = workbook.Worksheets[0];
+            srcSheet.Name = "Source";
 
-            // First worksheet – original chart source
-            Worksheet sourceSheet = workbook.Worksheets[0];
+            // Sample data
+            srcSheet.Cells["A1"].PutValue("Category");
+            srcSheet.Cells["B1"].PutValue("Value");
+            srcSheet.Cells["A2"].PutValue("A");
+            srcSheet.Cells["A3"].PutValue("B");
+            srcSheet.Cells["A4"].PutValue("C");
+            srcSheet.Cells["B2"].PutValue(10);
+            srcSheet.Cells["B3"].PutValue(20);
+            srcSheet.Cells["B4"].PutValue(30);
 
-            // Populate sample data for the chart
-            sourceSheet.Cells["A1"].PutValue("Category");
-            sourceSheet.Cells["B1"].PutValue("Value");
-            sourceSheet.Cells["A2"].PutValue("A");
-            sourceSheet.Cells["B2"].PutValue(10);
-            sourceSheet.Cells["A3"].PutValue("B");
-            sourceSheet.Cells["B3"].PutValue(20);
-            sourceSheet.Cells["A4"].PutValue("C");
-            sourceSheet.Cells["B4"].PutValue(30);
+            // ---------- Add a chart to the source sheet ----------
+            int chartIdx = srcSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart srcChart = srcSheet.Charts[chartIdx];
+            srcChart.NSeries.Add("B2:B4", true);
+            srcChart.NSeries.CategoryData = "A2:A4";
 
-            // Add a column chart to the source sheet
-            int chartIndex = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart originalChart = sourceSheet.Charts[chartIndex];
-            originalChart.NSeries.Add("B2:B4", true);
-            originalChart.NSeries.CategoryData = "A2:A4";
+            // Enable data labels for the first series (so we can see shape change later)
+            Series srcSeries = srcChart.NSeries[0];
+            srcSeries.DataLabels.ShowValue = true;
+            srcSeries.DataLabels.ShapeType = DataLabelShapeType.Rect; // initial shape
 
-            // Enable data labels and set their shape type
-            Series series = originalChart.NSeries[0];
-            series.DataLabels.ShowValue = true;
-            series.DataLabels.ShapeType = DataLabelShapeType.RoundRect; // original shape
+            // ---------- Add a destination worksheet ----------
+            Worksheet destSheet = workbook.Worksheets.Add("Destination");
 
-            // Obtain the ChartShape that represents the chart object
-            ChartShape originalChartShape = (ChartShape)originalChart.ChartObject;
+            // ---------- Clone the chart by copying its ChartShape ----------
+            // ChartObject returns the ChartShape that represents the chart on the sheet
+            ChartShape srcChartShape = (ChartShape)srcChart.ChartObject;
 
-            // Add a second worksheet where the cloned chart will be placed
-            Worksheet targetSheet = workbook.Worksheets.Add("ClonedChartSheet");
+            // Use ShapeCollection.AddCopy to copy the chart shape to the destination sheet
+            // Position the cloned chart at rows 5-15 and columns 2-7 (adjust as needed)
+            Shape copiedShape = destSheet.Shapes.AddCopy(srcChartShape, 5, 0, 2, 0);
 
-            // Clone the chart by copying its ChartShape to the target worksheet
-            // Parameters: source shape, top row, top offset (pixels), left column, left offset (pixels)
-            Shape clonedShape = targetSheet.Shapes.AddCopy(originalChartShape, 5, 0, 15, 5);
+            // Cast the copied shape back to ChartShape to access the underlying Chart
+            ChartShape clonedChartShape = (ChartShape)copiedShape;
+            Chart clonedChart = clonedChartShape.Chart;
 
-            // Retrieve the Chart object from the cloned shape
-            Chart clonedChart = ((ChartShape)clonedShape).Chart;
+            // ---------- Modify data label shape of the cloned chart ----------
+            // Ensure the series exists (it will be a copy of the original series)
+            Series clonedSeries = clonedChart.NSeries[0];
+            clonedSeries.DataLabels.ShowValue = true;
+            // Change the shape type, e.g., to Ellipse
+            clonedSeries.DataLabels.ShapeType = DataLabelShapeType.Ellipse;
 
-            // Modify the data label shape of the cloned chart
-            clonedChart.NSeries[0].DataLabels.ShapeType = DataLabelShapeType.Ellipse;
-
-            // Save the workbook (save rule)
-            workbook.Save("ClonedChartDemo.xlsx");
+            // ---------- Save the workbook ----------
+            workbook.Save("ChartCloneWithModifiedDataLabelShape.xlsx");
         }
     }
 }

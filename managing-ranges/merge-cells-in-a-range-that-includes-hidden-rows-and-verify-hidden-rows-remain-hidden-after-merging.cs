@@ -1,52 +1,50 @@
-// Title: Merge Cells Across Hidden Rows and Verify Visibility with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to hide specific rows, merge a cell range that spans those hidden rows, and programmatically confirm that the rows stay hidden after the merge using Aspose.Cells for .NET. The workbook is saved as an example output.
-// Keywords: Aspose.Cells merge hidden rows | C# merge cells across hidden rows | preserve row visibility after merge | verify hidden rows Aspose.Cells | Aspose.Cells hide rows then merge | Excel merge range hidden rows .NET
-// Common Searches: merge cells that include hidden rows Aspose.Cells | does merging keep hidden rows hidden in .NET | check row hidden status after merge C# | Aspose.Cells hide rows and merge range example | how to preserve hidden rows when merging cells
-// Developer Intent: The developer needs to merge a range of cells that contains hidden rows and ensure those rows remain hidden after the operation.
-// Use Cases: Create a report header that spans multiple rows, some of which are hidden for layout, while keeping the hidden rows concealed. | Build a spreadsheet template that merges cells across hidden rows to group data without altering row visibility. | Automate Excel generation and validate that row visibility is unchanged after merging cells for UI consistency.
-// AI Prompts: Generate C# code using Aspose.Cells to merge a range that includes hidden rows and then verify the rows stay hidden. | Explain Aspose.Cells' behavior with hidden rows during a merge and show how to check their hidden status afterward. | Suggest alternative techniques to merge cells without affecting the hidden property of rows in Aspose.Cells for .NET.
+// Title: Merge a cell range that includes hidden rows while preserving the hidden state using Aspose.Cells for .NET
+// AI Prompts: Hide a specific row, merge a vertical range that spans the hidden row with Aspose.Cells, then read the IsHidden flag to confirm it stayed hidden before saving. | Programmatically merge cells A2:A4 in a worksheet, ensure the hidden row remains hidden, and export the workbook to an XLSX file using the Aspose.Cells .NET API. | Create a new workbook, set row 3 as hidden, apply Cells.Merge on rows 2‑4, validate the hidden property, and write the result to disk.
+// Common Searches: Aspose.Cells .NET keep hidden rows after merging a cell range | how to verify hidden row stays hidden when merging cells with Aspose.Cells | C# merge range that contains a hidden row and check IsHidden property | preserve row hidden state during Cells.Merge operation in Aspose.Cells
+// Tags: Aspose.Cells merge range over hidden rows | C# hide row then merge cells | verify hidden row after merge | save workbook with merged hidden rows to XLSX | Cells.Merge hidden row handling
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace MergeHiddenRowsDemo
+// The example creates a workbook, hides row 3, merges cells A2:A4 (which includes the hidden row), checks that the hidden flag of row 3 remains true, and saves the file as MergedHiddenRows.xlsx.
+class Program
 {
-    // Demonstrates how to hide specific rows, merge a cell range that spans those hidden rows, and programmatically confirm that the rows stay hidden after the merge using Aspose.Cells for .NET. The workbook is saved as an example output.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data in rows 0 to 6, columns 0 to 2
-            for (int row = 0; row <= 6; row++)
-            {
-                for (int col = 0; col <= 2; col++)
-                {
-                    cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-            }
+            // Fill some sample data
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue("Row1");
+            sheet.Cells["A3"].PutValue("Row2");
+            sheet.Cells["A4"].PutValue("Row3");
 
-            // Hide rows 2, 3, and 4 (zero‑based indices 2‑4)
-            cells.HideRows(2, 3); // hides rows 2,3,4
+            // Hide row 3 (zero‑based index 2)
+            sheet.Cells.Rows[2].IsHidden = true;
 
-            // Merge a range that includes the hidden rows:
-            // From row 1 (second row) column 0 to row 5 (sixth row) column 2
-            // This range covers rows 1‑5, i.e., includes the hidden rows 2‑4
-            cells.Merge(1, 0, 5, 3); // totalRows = 5, totalColumns = 3
+            // Merge cells A2:A4 (range includes the hidden row)
+            // Parameters: startRow, startColumn, totalRows, totalColumns
+            sheet.Cells.Merge(1, 0, 3, 1);
 
-            // Verify that the hidden rows are still hidden after merging
-            for (int row = 2; row <= 4; row++)
-            {
-                bool isHidden = worksheet.Cells.Rows[row].IsHidden;
-                Console.WriteLine($"Row {row + 1} hidden status after merge: {isHidden}");
-            }
+            // Verify that the hidden row remains hidden after merging
+            bool isRow3StillHidden = sheet.Cells.Rows[2].IsHidden;
+            Console.WriteLine("Row 3 hidden after merge: " + isRow3StillHidden);
 
-            // Save the workbook to demonstrate the result
-            workbook.Save("MergeHiddenRowsDemo.xlsx");
+            // Define output file path
+            string outputPath = "MergedHiddenRows.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,109 +1,71 @@
-// Title: C# – Remove ‘Temp’ VBA Module from All Excel Workbooks in a Folder with Aspose.Cells
-// Description: A C# console utility that scans a directory for Excel files (xls, xlsx, xlsm, xlsb), detects VBA projects, deletes any module named "Temp", and overwrites the original workbooks using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells VBA module removal | C# delete Temp macro | batch Excel VBA cleanup | overwrite Excel workbook after VBA edit | macro‑enabled workbook processing
-// Common Searches: how to delete a specific VBA module from multiple Excel files using Aspose.Cells | batch remove Temp macro from .xlsm files c# | overwrite original Excel files after removing VBA modules .NET | check for macros before editing workbook with Aspose.Cells | remove unwanted VBA code from a folder of workbooks
-// Developer Intent: Delete every VBA module named "Temp" from each workbook in a given folder and save the modified files in place.
-// Use Cases: Clean temporary or debug macros before publishing workbooks to end users. | Automate compliance by stripping prohibited VBA code from archived spreadsheets. | Prepare a batch of macro‑enabled files for migration to a macro‑free environment.
-// AI Prompts: Write C# code with Aspose.Cells that removes a list of VBA modules (e.g., Temp, Debug) from all Excel files in a directory and logs each change. | Enhance the RemoveTempVbaModules example with detailed error handling for read‑only files, permission issues, and corrupted workbooks. | Create a PowerShell wrapper that calls the C# utility to process folders supplied via command‑line arguments.
+// Title: Batch delete VBA modules named "Temp" from .xlsx workbooks and overwrite files using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, removes any VBA module whose name equals "Temp" (case‑insensitive), and saves the workbook back to its original location. | Enhance the program to create a log file that records the name of each workbook processed and indicates whether a "Temp" module was found and removed. | Add robust error handling that detects password‑protected Excel files, skips them, and continues processing the remaining workbooks without aborting.
+// Common Searches: asp.net remove specific VBA module from multiple Excel files programmatically | how to batch delete a macro named Temp in .xlsx using Aspose.Cells C# | skip password protected Excel workbook when iterating with Aspose.Cells library | overwrite original Excel file after VBA cleanup with Aspose.Cells | C# code to remove VBA modules from workbooks in a folder
+// Tags: batch delete VBA module Aspose.Cells | remove Temp macro .xlsx C# | ignore password‑protected workbooks Aspose.Cells | overwrite workbook after VBA removal | iterate workbook files Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+namespace WorkbookProcessor
 {
-    // A C# console utility that scans a directory for Excel files (xls, xlsx, xlsm, xlsb), detects VBA projects, deletes any module named "Temp", and overwrites the original workbooks using Aspose.Cells for .NET.
-    public class RemoveTempVbaModules
+    // Scans a directory for .xlsx files, loads each workbook with Aspose.Cells, deletes any VBA module named "Temp" (case‑insensitive), skips password‑protected files, and saves the modified workbook back to the original file.
+    class Program
     {
-        // Removes VBA modules named "Temp" from each workbook in the specified folder
-        // and saves the modified workbooks, overwriting the original files.
-        public static void Run(string folderPath)
+        static void Main()
         {
-            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
+            // Folder that contains the workbooks to process
+            string folderPath = @"C:\Workbooks";
+
+            if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine("Invalid or non‑existent folder path.");
+                Console.WriteLine($"Folder not found: {folderPath}");
                 return;
             }
 
-            // Get all Excel files in the folder (including macro‑enabled formats)
-            string[] workbookFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+            // Get all Excel files in the folder
+            string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx");
+
             foreach (string filePath in workbookFiles)
             {
-                // Process only known Excel extensions
-                string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm" && ext != ".xlsb")
-                {
-                    continue;
-                }
-
                 if (!File.Exists(filePath))
                 {
-                    Console.WriteLine($"File not found: {Path.GetFileName(filePath)}");
+                    Console.WriteLine($"File not found: {filePath}");
                     continue;
                 }
 
                 try
                 {
-                    // Load the workbook
-                    using (Workbook workbook = new Workbook(filePath))
+                    // Load the workbook (skip if password protected)
+                    Workbook workbook = new Workbook(filePath);
+
+                    // Remove VBA modules named "Temp" (case‑insensitive)
+                    if (workbook.VbaProject != null)
                     {
-                        // Proceed only if the workbook contains macros/VBA project
-                        if (workbook.HasMacro)
+                        var modules = workbook.VbaProject.Modules;
+                        for (int i = modules.Count - 1; i >= 0; i--)
                         {
-                            VbaModuleCollection modules = workbook.VbaProject.Modules;
-
-                            // Check if a module named "Temp" exists
-                            bool tempExists = false;
-                            foreach (VbaModule module in modules)
+                            if (string.Equals(modules[i].Name, "Temp", StringComparison.OrdinalIgnoreCase))
                             {
-                                if (module.Name.Equals("Temp", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    tempExists = true;
-                                    break;
-                                }
+                                modules.RemoveAt(i);
                             }
-
-                            if (tempExists)
-                            {
-                                modules.Remove("Temp");
-                                // Save the workbook, overwriting the original file
-                                workbook.Save(filePath);
-                                Console.WriteLine($"Removed 'Temp' module and saved: {Path.GetFileName(filePath)}");
-                            }
-                            else
-                            {
-                                Console.WriteLine($"No 'Temp' module found in: {Path.GetFileName(filePath)}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Workbook does not contain macros: {Path.GetFileName(filePath)}");
                         }
                     }
+
+                    // Save the modified workbook, overwriting the original file
+                    workbook.Save(filePath);
+                    Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
+                }
+                // Catch password‑protected files (Aspose.Cells throws CellsException with a message containing "Password")
+                catch (CellsException ex) when (ex.Message != null && ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine($"Skipping password‑protected file: {Path.GetFileName(filePath)}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{Path.GetFileName(filePath)}': {ex.Message}");
+                    // Log any other errors and continue processing remaining files
+                    Console.WriteLine($"Error processing {Path.GetFileName(filePath)}: {ex.Message}");
                 }
-            }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                string folderPath = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
-                Console.WriteLine($"Processing folder: {folderPath}");
-                RemoveTempVbaModules.Run(folderPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
             }
         }
     }

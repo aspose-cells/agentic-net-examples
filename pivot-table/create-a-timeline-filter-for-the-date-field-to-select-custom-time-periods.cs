@@ -1,10 +1,7 @@
-// Title: Add a Custom Timeline Filter to a PivotTable Date Field with Aspose.Cells for .NET (C#)
-// Description: Demonstrates creating a workbook, inserting Date and Sales data, building a PivotTable, attaching a Timeline control to the Date field, setting a custom start date (Feb 1 2023) and optionally fixing the view to months, then saving the file.
-// Keywords: Aspose.Cells | C# | PivotTable | Timeline control | custom start date | date filter | Excel automation | timeline level month | add timeline to pivot | Aspose.Cells example
-// Common Searches: Aspose.Cells add timeline to pivot table | C# set custom start date for timeline control | filter PivotTable by date using timeline Aspose.Cells | Aspose.Cells timeline current level month | create interactive date filter in Excel with Aspose.Cells
-// Developer Intent: I need to programmatically add a timeline filter to a PivotTable and define its initial date range using Aspose.Cells for .NET.
-// Use Cases: Enable end‑users to select custom date ranges in an exported Excel report. | Pre‑configure quarterly sales dashboards with a preset timeline start date. | Automate month‑level filtering for financial data before distribution.
-// AI Prompts: Generate C# code to change the timeline view to weeks in Aspose.Cells. | Show how to bind a single timeline to multiple PivotTables in the same workbook. | Explain how to update the selected period of an existing timeline after the workbook is opened.
+// Title: How to add a month-level timeline filter with a custom start date to a Date field in an Aspose.Cells pivot table (C#)
+// AI Prompts: Write C# code that creates a workbook, builds a pivot table from a date column, adds a timeline control linked to that column, sets the timeline’s StartDate to February 1 2023, and configures the level to Month using Aspose.Cells. | Show how to change the timeline granularity from Month to Quarter programmatically in an Aspose.Cells pivot table. | Demonstrate retrieving the Timeline object from a worksheet and updating its StartDate and EndDate to filter the pivot table for any custom date range in C#.
+// Common Searches: aspnet c# add timeline control to pivot table for date filtering with Aspose.Cells | set custom start and end dates on Aspose.Cells timeline to filter pivot data | change timeline level to month or quarter in Aspose.Cells .NET example | how to use Aspose.Cells Timeline API to filter sales data by specific months | Aspose.Cells timeline filter example with DateTime values in C#
+// Tags: Aspose.Cells add timeline to pivot table C# | timeline startdate filter Aspose.Cells | set timeline level month Aspose.Cells | pivot table date field timeline filter .NET | custom date range timeline Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -13,7 +10,7 @@ using Aspose.Cells.Timelines;
 
 namespace AsposeCellsTimelineFilterDemo
 {
-    // Demonstrates creating a workbook, inserting Date and Sales data, building a PivotTable, attaching a Timeline control to the Date field, setting a custom start date (Feb 1 2023) and optionally fixing the view to months, then saving the file.
+    // The sample creates a workbook, fills it with date and sales data, builds a pivot table, adds a timeline linked to the Date field, sets the timeline's start date to February 1 2023, configures the granularity to month, and saves the workbook as TimelineFilterDemo.xlsx.
     public class Program
     {
         public static void Main()
@@ -25,7 +22,7 @@ namespace AsposeCellsTimelineFilterDemo
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // Populate sample data with a Date column and a Sales column
+                // Populate sample data with a Date field and a numeric field
                 cells["A1"].PutValue("Date");
                 cells["B1"].PutValue("Sales");
 
@@ -41,35 +38,40 @@ namespace AsposeCellsTimelineFilterDemo
                 cells["A5"].PutValue(new DateTime(2023, 4, 8));
                 cells["B5"].PutValue(2000);
 
+                cells["A6"].PutValue(new DateTime(2023, 5, 15));
+                cells["B6"].PutValue(2200);
+
                 // Create a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
+                int pivotIndex = sheet.PivotTables.Add("A1:B6", "D2", "SalesPivot");
                 PivotTable pivot = sheet.PivotTables[pivotIndex];
 
-                // Add the Date field to the row area and the Sales field to the data area
+                // Add the Date field to the Row area and the Sales field to the Data area
                 pivot.AddFieldToArea(PivotFieldType.Row, "Date");
                 pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Refresh the pivot cache and calculate the pivot table
-                pivot.RefreshData();          // Correct API call
+                // Refresh the pivot cache and calculate data
+                pivot.RefreshData();
                 pivot.CalculateData();
 
                 // Add a Timeline control linked to the Date field of the pivot table
-                // Place the timeline with its upper‑left corner at cell E1 (row 0, column 4)
-                int timelineIndex = sheet.Timelines.Add(pivot, 0, 4, "Date");
-                Timeline timeline = sheet.Timelines[timelineIndex];
+                // The timeline will be placed with its upper‑left corner at cell E2
+                sheet.Timelines.Add(pivot, "E2", "Date");
+
+                // Retrieve the created Timeline object
+                Timeline timeline = sheet.Timelines[0];
 
                 // Set a custom start date for the timeline (e.g., February 1, 2023)
                 timeline.StartDate = new DateTime(2023, 2, 1);
 
-                // Optionally, set the current level to Month (value 3) so the timeline shows months
-                // timeline.CurrentLevel = 3; // Uncomment if you want to enforce month view
+                // Set the timeline granularity to Month
+                timeline.CurrentLevel = TimelineLevelType.Month;
 
                 // Save the workbook with the timeline filter applied
                 workbook.Save("TimelineFilterDemo.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

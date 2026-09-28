@@ -1,77 +1,111 @@
-// Title: Ungroup WordArt Shapes and Edit TextEffect Individually with Aspose.Cells for .NET (C#)
-// Description: This Aspose.Cells for .NET example creates a workbook, adds two WordArt shapes, groups them, then uses GroupShape.Ungroup to separate the shapes. After ungrouping each WordArt's TextEffect (font, size, bold, italic) is modified independently before saving the file.
-// Keywords: Aspose.Cells | C# | WordArt | Ungroup shapes | GroupShape.Ungroup | TextEffectFormat | shape formatting | Excel API | code example | GitHub
-// Common Searches: Aspose.Cells ungroup WordArt C# | how to edit TextEffect after grouping shapes | GroupShape.Ungroup example Aspose.Cells | modify individual WordArt font properties .NET | Aspose.Cells shape editing tutorial
-// Developer Intent: The developer needs to separate previously grouped WordArt objects so each shape’s TextEffect (font name, size, bold, italic) can be changed independently.
-// Use Cases: Design a spreadsheet layout with grouped WordArt headings, then apply distinct font styles to each heading. | Generate a report where WordArt titles are positioned together for alignment, but require individual styling before export. | Programmatically adjust bold, italic, and font size of separate WordArt shapes after they have been grouped for layout purposes.
-// AI Prompts: Show C# code to ungroup a GroupShape in Aspose.Cells and change the TextEffect of each WordArt shape. | Provide an Aspose.Cells example that groups multiple WordArt objects, then ungroups them to set different font attributes. | Explain how to modify font style, size, and bold/italic settings of individual WordArt after using GroupShape.Ungroup.
+// Title: How to ungroup WordArt GroupShape objects in an Excel workbook and edit each shape’s fill color, text, and rotation using Aspose.Cells for .NET
+// AI Prompts: Load an Excel file with Aspose.Cells, locate all GroupShape objects, call Ungroup on each, then iterate the resulting Shape collection to set FillFormat.ForeColor, update the Text property, and assign a RotationAngle before saving. | Using C#, ungroup WordArt shapes in a worksheet, change each shape’s background color to LightBlue, replace its text with "Updated Text", and rotate it 15 degrees with Aspose.Cells.
+// Common Searches: Aspose.Cells C# ungroup WordArt shapes and change fill color | How to modify individual shape properties after ungrouping in Excel with .NET | Set rotation angle for Excel shapes using Aspose.Cells | Iterate through worksheet Shapes collection after Ungroup in C# | Update text of WordArt shapes in an Excel file with Aspose.Cells
+// Tags: ungroup GroupShape Aspose.Cells .NET | modify shape fill color Aspose.Cells | change WordArt text property C# | apply rotation angle to Excel shape | iterate worksheet shapes after ungroup
 
 using System;
+using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWordArtUngroupDemo
+// The example loads a workbook, scans the first worksheet for GroupShape objects, calls Ungroup to break them into separate shapes, then loops through all shapes to set a light blue fill color, change the text to "Updated Text", apply a 15‑degree rotation, and finally saves the modified workbook.
+class UngroupWordArtExample
 {
-    // This Aspose.Cells for .NET example creates a workbook, adds two WordArt shapes, groups them, then uses GroupShape.Ungroup to separate the shapes. After ungrouping each WordArt's TextEffect (font, size, bold, italic) is modified independently before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            const string inputFile = "GroupedWordArt.xlsx";
+            const string outputFile = "UngroupedWordArt.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
+            }
+
+            // Load the workbook containing the grouped WordArt shapes
+            Workbook workbook = new Workbook(inputFile);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Scan for GroupShape objects and ungroup them
+            for (int i = 0; i < sheet.Shapes.Count; i++)
+            {
+                Shape shape = sheet.Shapes[i];
+
+                if (shape is GroupShape groupShape)
+                {
+                    try
+                    {
+                        // Ungroup the shapes; inner shapes are added to the worksheet's Shapes collection
+                        groupShape.Ungroup();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to ungroup shape at index {i}: {ex.Message}");
+                    }
+
+                    // Restart scanning because the collection has changed
+                    i = -1;
+                }
+            }
+
+            // Modify each individual shape as needed
+            foreach (Shape shape in sheet.Shapes)
+            {
+                // Set fill color if the shape supports FillFormat
+                try
+                {
+                    if (shape.FillFormat != null)
+                    {
+                        shape.FillFormat.ForeColor = Color.LightBlue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to set fill color for shape: {ex.Message}");
+                }
+
+                // Update text for shapes that have a Text property
+                try
+                {
+                    if (!string.IsNullOrEmpty(shape.Text))
+                    {
+                        shape.Text = "Updated Text";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to set text for shape: {ex.Message}");
+                }
+
+                // Set rotation angle (available on the base Shape class)
+                try
+                {
+                    shape.RotationAngle = 15;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to set rotation for shape: {ex.Message}");
+                }
+            }
+
+            // Save the modified workbook
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add two WordArt shapes to the worksheet
-                Shape wordArt1 = worksheet.Shapes.AddWordArt(
-                    PresetWordArtStyle.WordArtStyle1, // preset style
-                    "First WordArt",                  // text
-                    2, 0,                             // upper left row, column
-                    100, 300,                         // height, width (in pixels)
-                    0, 0);                            // row offset, column offset
-
-                Shape wordArt2 = worksheet.Shapes.AddWordArt(
-                    PresetWordArtStyle.WordArtStyle2,
-                    "Second WordArt",
-                    6, 0,
-                    100, 300,
-                    0, 0);
-
-                // Group the two WordArt shapes
-                GroupShape group = worksheet.Shapes.Group(new Shape[] { wordArt1, wordArt2 });
-
-                // Ungroup the shapes so they can be edited individually
-                group.Ungroup();
-
-                // After ungrouping, modify the TextEffect of each WordArt shape independently
-                if (wordArt1.IsWordArt)
-                {
-                    TextEffectFormat effect1 = wordArt1.TextEffect;
-                    effect1.FontBold = true;
-                    effect1.FontItalic = true;
-                    effect1.FontName = "Arial";
-                    effect1.FontSize = 16;
-                    // Underline not supported directly; can be handled via other formatting if needed
-                }
-
-                if (wordArt2.IsWordArt)
-                {
-                    TextEffectFormat effect2 = wordArt2.TextEffect;
-                    effect2.FontBold = false;
-                    effect2.FontItalic = false;
-                    effect2.FontName = "Calibri";
-                    effect2.FontSize = 14;
-                    // Underline not supported directly; can be handled via other formatting if needed
-                }
-
-                // Save the workbook with the modified WordArt shapes
-                workbook.Save("WordArtUngroupedModified.xlsx");
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved as '{outputFile}'.");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

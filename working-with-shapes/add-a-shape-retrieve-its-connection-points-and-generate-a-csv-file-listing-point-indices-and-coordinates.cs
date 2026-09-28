@@ -1,70 +1,71 @@
-// Title: Add a Rectangle Shape, Extract Its Connection Points, and Export to CSV with Aspose.Cells for .NET (C#)
-// Description: This C# example creates a new workbook, inserts a rectangle shape on the first worksheet, retrieves the shape's connection points via GetConnectionPoints(), writes each point's index and X/Y coordinates to a CSV file, and saves the workbook.
-// Keywords: Aspose.Cells | C# shape GetConnectionPoints | export shape coordinates CSV | add rectangle shape Aspose.Cells | connection points array | shape geometry extraction | Aspose.Cells drawing API
-// Common Searches: Aspose.Cells get shape connection points C# | How to export shape connection points to CSV using Aspose.Cells | Add rectangle shape in Aspose.Cells .NET | Retrieve connection point coordinates from Aspose.Cells shape | Save shape data to CSV Aspose.Cells
-// Developer Intent: Create a shape, read its connection points, and write them to a CSV file.
-// Use Cases: Generate a CSV map of shape connection points for downstream diagram validation. | Automate geometry audits by comparing exported points with expected coordinates. | Provide shape coordinate data for custom rendering or reporting tools. | Document worksheet graphics by exporting their connection points alongside workbook content.
-// AI Prompts: Generate C# code that adds a shape to a worksheet using Aspose.Cells, obtains its connection points, and saves them as a CSV file. | Explain the structure of the float[][] returned by GetConnectionPoints and how to interpret each X/Y value. | Extend the CSV output to include the shape type, width, and height in addition to connection points. | Show how to loop through multiple shapes and export all their connection points into a single CSV file.
+// Title: Create a rectangle shape in an Excel worksheet, extract its connection points, and export them to a CSV file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet with Aspose.Cells, calls GetConnectionPoints, and writes each point's index, X and Y values to a CSV file. | Write a reusable C# method that accepts any Aspose.Cells Shape object, retrieves its connection points, and returns the data as a CSV‑formatted string. | Adapt the example to output the shape's connection points as a JSON array instead of a CSV file using Aspose.Cells.
+// Common Searches: how to use Aspose.Cells GetConnectionPoints to list shape coordinates in C# | export rectangle shape connection points to CSV with Aspose.Cells .NET | C# Aspose.Cells example for retrieving shape connection point indices and positions
+// Tags: add rectangle shape Aspose.Cells C# | retrieve shape connection points Aspose.Cells | export shape coordinates to CSV C# | Aspose.Cells GetConnectionPoints example | write connection point data Aspose.Cells
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeConnectionPoints
+// The sample creates a new workbook, inserts a rectangle shape on the first worksheet, obtains its connection points via GetConnectionPoints, writes each point's index and X/Y coordinates to a CSV file, and saves the workbook.
+class Program
 {
-    // This C# example creates a new workbook, inserts a rectangle shape on the first worksheet, retrieves the shape's connection points via GetConnectionPoints(), writes each point's index and X/Y coordinates to a CSV file, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
+
+            // Retrieve the collection of connection points for the shape
+            // Use dynamic to avoid compile‑time dependency on ConnectionPointInfo type
+            var points = shape.GetConnectionPoints();
+
+            // Path for the CSV file that will contain the connection point data
+            string csvPath = "ShapeConnectionPoints.csv";
+
+            // Ensure the directory for the CSV file exists
+            string csvDir = Path.GetDirectoryName(csvPath);
+            if (!string.IsNullOrEmpty(csvDir) && !Directory.Exists(csvDir))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Directory.CreateDirectory(csvDir);
+            }
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: shape type, upper left row, upper left column,
-                // row offset, column offset, height (pixels), width (pixels)
-                Shape shape = worksheet.Shapes.AddShape(
-                    MsoDrawingType.Rectangle, // shape type
-                    1,   // upper left row
-                    0,   // upper left column
-                    0,   // row offset
-                    0,   // column offset
-                    100, // height
-                    200  // width
-                );
+            // Write the connection point data to the CSV file
+            using (StreamWriter writer = new StreamWriter(csvPath))
+            {
+                // Write CSV header
+                writer.WriteLine("Index,X,Y");
 
-                // Retrieve the connection points of the shape
-                float[][] points = shape.GetConnectionPoints();
-
-                // Generate a CSV file with point index and coordinates
-                string csvPath = "ConnectionPoints.csv";
-                using (StreamWriter writer = new StreamWriter(csvPath))
+                // Write each connection point's index and coordinates
+                foreach (dynamic pt in points)
                 {
-                    // Write CSV header
-                    writer.WriteLine("Index,X,Y");
-
-                    // Write each connection point
-                    for (int i = 0; i < points.Length; i++)
-                    {
-                        // points[i][0] = X, points[i][1] = Y
-                        writer.WriteLine($"{i + 1},{points[i][0]},{points[i][1]}");
-                    }
+                    writer.WriteLine($"{pt.Index},{pt.X},{pt.Y}");
                 }
+            }
 
-                // Save the workbook containing the shape
-                string workbookPath = "ShapeWithConnectionPoints.xlsx";
-                workbook.Save(workbookPath);
-                Console.WriteLine($"Workbook saved to '{workbookPath}'.");
-                Console.WriteLine($"Connection points CSV saved to '{csvPath}'.");
-            }
-            catch (Exception ex)
+            // Save the workbook (optional, just to keep the shape in a file)
+            string workbookPath = "ShapeWorkbook.xlsx";
+
+            // Ensure the directory for the workbook exists
+            string wbDir = Path.GetDirectoryName(workbookPath);
+            if (!string.IsNullOrEmpty(wbDir) && !Directory.Exists(wbDir))
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Directory.CreateDirectory(wbDir);
             }
+
+            workbook.Save(workbookPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

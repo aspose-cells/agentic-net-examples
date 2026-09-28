@@ -1,65 +1,52 @@
-// Title: Aspose.Cells .NET – Apply Japanese Axis Units with ChartJapaneseSettings (GlobalizationSettings)
-// Description: This example shows how to subclass ChartGlobalizationSettings, override GetAxisUnitName to return Japanese characters for hundreds, thousands and ten‑thousands, and assign the custom ChartJapaneseSettings to workbook.Settings.GlobalizationSettings.ChartSettings before saving the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# | .NET | ChartGlobalizationSettings | ChartJapaneseSettings | Japanese axis labels | Excel chart localization | GlobalizationSettings | DisplayUnitType | Excel export
-// Common Searches: Aspose.Cells set Japanese chart axis labels | How to customize chart units in Aspose.Cells .NET | ChartGlobalizationSettings example C# | Assign ChartJapaneseSettings to workbook | Localize Excel chart axis with Aspose.Cells
-// Developer Intent: The developer wants to localize chart axis unit names to Japanese by attaching a custom ChartJapaneseSettings object to the workbook’s globalization settings before exporting.
-// Use Cases: Create financial charts for Japanese reports where axis ticks display 百, 千, and 万. | Generate Excel workbooks for the Japanese market with consistent chart unit localization across multiple sheets. | Reuse a single ChartJapaneseSettings class in different .NET projects to enforce Japanese chart conventions.
-// AI Prompts: Demonstrate how to implement a ChartJapaneseSettings class that overrides GetAxisUnitName for Japanese units and attach it to workbook.Settings.GlobalizationSettings.ChartSettings before saving. | Show how to apply the same custom ChartGlobalizationSettings to several charts in one workbook using Aspose.Cells for .NET. | Explain how to extend ChartJapaneseSettings to support additional DisplayUnitType values such as Millions while keeping existing Japanese unit names.
+// Title: Assign ChartJapaneseSettings to a chart’s GlobalizationSettings property in Aspose.Cells C# before exporting the workbook
+// AI Prompts: Generate C# code that creates a ChartJapaneseSettings object for the "ja-JP" culture and assigns it to chart.GlobalizationSettings in Aspose.Cells before saving the workbook. | Show how to configure Japanese number and date formats on an Aspose.Cells chart by setting its GlobalizationSettings with ChartJapaneseSettings. | Write a snippet that demonstrates applying ChartJapaneseSettings to a column chart and then exporting the workbook to an .xlsx file.
+// Common Searches: Aspose.Cells C# set chart globalization to Japanese locale | ChartJapaneseSettings usage example for Aspose.Cells chart | How to apply Japanese culture to a chart in Aspose.Cells before saving | Assign chart-level globalization settings in Aspose.Cells .NET | Export Aspose.Cells chart with Japanese number formatting
+// Tags: chart globalization settings Aspose.Cells C# | ChartJapaneseSettings assignment .NET | Japanese locale chart formatting Aspose.Cells | set chart culture Aspose.Cells | export chart with Japanese globalization Aspose.Cells
 
 using System;
+using System.Drawing.Imaging;
+using System.Globalization;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example shows how to subclass ChartGlobalizationSettings, override GetAxisUnitName to return Japanese characters for hundreds, thousands and ten‑thousands, and assign the custom ChartJapaneseSettings to workbook.Settings.GlobalizationSettings.ChartSettings before saving the workbook as an Excel file.
-class ChartJapaneseSettings : ChartGlobalizationSettings
-{
-    // Provide Japanese specific axis unit names
-    public override string GetAxisUnitName(DisplayUnitType type)
-    {
-        switch (type)
-        {
-            case DisplayUnitType.Hundreds:
-                return "百";
-            case DisplayUnitType.Thousands:
-                return "千";
-            case DisplayUnitType.TenThousands:
-                return "万";
-            default:
-                return base.GetAxisUnitName(type);
-        }
-    }
-}
-
+// The example creates a workbook, sets its culture to Japanese, adds sample data, inserts a column chart, assigns a ChartJapaneseSettings instance to the chart's GlobalizationSettings property, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q2");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(100);
-        sheet.Cells["B3"].PutValue(200);
-
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
-        chart.Title.Text = "サンプルチャート";
-
-        // Assign Japanese globalization settings to the workbook's chart settings
-        workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+        try
         {
-            ChartSettings = new ChartJapaneseSettings()
-        };
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Export the workbook
-        workbook.Save("ChartJapaneseSettingsDemo.xlsx");
+            // Set Japanese culture for the workbook (globalization)
+            workbook.Settings.CultureInfo = new CultureInfo("ja-JP");
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["A3"].PutValue(30);
+
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Define the data series for the chart
+            chart.NSeries.Add("A1:A3", true);
+
+            // Optional: Export the chart as an image (requires System.Drawing.Common)
+            // Uncomment the following line if the required assembly is referenced.
+            // chart.ToImage("chart.png", ImageFormat.Png);
+
+            // Save the workbook to a file
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

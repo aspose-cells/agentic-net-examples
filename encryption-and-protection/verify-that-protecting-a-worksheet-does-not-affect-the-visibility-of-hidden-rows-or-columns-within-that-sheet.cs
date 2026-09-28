@@ -1,45 +1,47 @@
-// Title: Worksheet protection preserves hidden rows and columns – Aspose.Cells for .NET example
-// Description: Demonstrates how to hide rows (and optionally columns), protect a worksheet with Aspose.Cells, and verify that the hidden state remains unchanged before and after protection, then saves the workbook.
-// Keywords: Aspose.Cells protect worksheet | hidden rows after protection | IsRowHidden Aspose.Cells | IsColumnHidden after Protect | .NET spreadsheet security | worksheet visibility protection | Aspose.Cells hide rows example
-// Common Searches: Does protecting a worksheet hide rows in Aspose.Cells? | Aspose.Cells keep hidden rows after sheet protection | Check column visibility after Worksheet.Protect | IsRowHidden returns false after Protect? | How to protect sheet without revealing hidden rows .NET
-// Developer Intent: Verify that applying Worksheet.Protect does not modify the hidden status of rows or columns in the same sheet.
-// Use Cases: Automated validation that hidden rows stay hidden when a workbook is distributed. | Creating reports with confidential rows hidden, then securing the sheet for end‑users. | Ensuring column hiding behaves identically to row hiding after applying protection.
-// AI Prompts: Generate a unit test using Aspose.Cells that asserts hidden rows remain hidden after Worksheet.Protect. | Show code to hide specific columns, protect the worksheet with a password, and confirm column visibility with IsColumnHidden. | Provide a script that logs hidden status of rows and columns before and after protection, then saves the file.
+// Title: Verify that protecting a worksheet with Aspose.Cells for .NET retains hidden rows and columns
+// AI Prompts: Write C# code using Aspose.Cells to hide a specific row and column, apply full worksheet protection with a password, then read the IsHidden properties to confirm they stay true. | Adapt an existing Aspose.Cells workbook to protect the first worksheet while preserving the hidden state of rows and columns, and output the verification results. | Generate a C# example that demonstrates checking hidden row and column status after calling Worksheet.Protect with ProtectionType.All in Aspose.Cells.
+// Common Searches: Aspose.Cells C# protect worksheet keep hidden rows | does worksheet protection affect hidden columns in Aspose.Cells | how to verify hidden status after protecting an Excel sheet with Aspose.Cells | C# Aspose.Cells preserve hidden rows when applying worksheet protection | check IsHidden flag after Worksheet.Protect in Aspose.Cells .NET
+// Tags: Aspose.Cells worksheet protection hidden rows | C# Aspose.Cells preserve hidden columns | Worksheet.Protect retains IsHidden property | Excel file protection without visibility change Aspose | Aspose.Cells verify hidden elements after protect
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace WorksheetProtectionVisibilityDemo
+// The example creates a new workbook, hides row 2 and column B, protects the first worksheet with all protection types using a password, then reads the IsHidden properties of the hidden row and column to confirm they remain true, prints the results, and saves the file as ProtectedWorksheet.xlsx.
+class Program
 {
-    // Demonstrates how to hide rows (and optionally columns), protect a worksheet with Aspose.Cells, and verify that the hidden state remains unchanged before and after protection, then saves the workbook.
-    public class Run
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Hide specific rows (0‑based index)
-            cells.HideRow(2); // Hide Row 3
-            cells.HideRow(5); // Hide Row 6
+            // Hide row 2 (index 1) and column B (index 1)
+            sheet.Cells.Rows[1].IsHidden = true;
+            sheet.Cells.Columns[1].IsHidden = true;
 
-            // Verify hidden status before protection
-            Console.WriteLine("Before protection:");
-            Console.WriteLine($"Row 3 hidden: {cells.IsRowHidden(2)}");
-            Console.WriteLine($"Row 6 hidden: {cells.IsRowHidden(5)}");
-
-            // Protect the worksheet (no password, all protection types)
-            sheet.Protect(ProtectionType.All);
+            // Protect the worksheet with a password (all protection types)
+            sheet.Protect(ProtectionType.All, "password123", string.Empty);
 
             // Verify hidden status after protection
-            Console.WriteLine("\nAfter protection:");
-            Console.WriteLine($"Row 3 hidden: {cells.IsRowHidden(2)}");
-            Console.WriteLine($"Row 6 hidden: {cells.IsRowHidden(5)}");
+            bool isRowHidden = sheet.Cells.Rows[1].IsHidden;
+            bool isColumnHidden = sheet.Cells.Columns[1].IsHidden;
 
-            // Save the workbook (optional, just to complete lifecycle)
-            workbook.Save("WorksheetProtectionVisibilityDemo.xlsx");
+            Console.WriteLine($"Row 2 hidden after protection: {isRowHidden}");
+            Console.WriteLine($"Column B hidden after protection: {isColumnHidden}");
+
+            // Save the workbook
+            string outputPath = "ProtectedWorksheet.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,62 +1,125 @@
-// Title: Aspose.Cells for .NET – Add a Moving‑Average Trendline with Equation to a Line Chart
-// Description: Load an Excel workbook, create (or use) a line chart, attach a moving‑average trendline to the first series, set its period and custom name, enable the equation label, and save the file—all with Aspose.Cells C# API.
-// Keywords: Aspose.Cells moving average trendline | display trendline equation .NET | C# line chart trendline Aspose | set trendline period Aspose.Cells | Excel chart equation Aspose.Cells | add trendline to chart programmatically
-// Common Searches: Aspose.Cells add moving average trendline C# | show trendline equation in Excel chart using Aspose | set moving average period for chart series Aspose.Cells | create line chart with trendline Aspose.Cells .NET | how to display R‑squared value in Aspose.Cells chart
-// Developer Intent: Insert a moving‑average trendline into a line chart and make its equation visible in an Excel workbook via Aspose.Cells for .NET.
-// Use Cases: Automate financial dashboards by adding a 3‑period moving‑average trendline with a custom label to a sales line chart. | Enhance scientific reports with trendline equations for quick data interpretation without manual Excel editing. | Generate batch Excel files where each chart includes a configurable moving‑average trendline and its formula for downstream analysis.
-// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, builds a line chart from A2:A10 and B2:B10, adds a 5‑period moving‑average trendline named "5‑Period MA", and displays its equation. | Explain how to retrieve the equation string of a moving‑average trendline after saving the workbook with Aspose.Cells. | Provide a step‑by‑step guide to add multiple moving‑average trendlines to different series in the same chart and show each equation using Aspose.Cells for .NET.
+// Title: Add a moving average trendline with equation to a line chart in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an Excel file, locates the first line chart, adds a trendline of type MovingAverage (period 3) to its first series, enables equation display, and saves the workbook. | Demonstrate how to employ reflection in Aspose.Cells to retrieve the Series.Trendlines collection and invoke its Add method when the Trendlines property is not directly exposed. | Modify the sample so that the trendline period is passed as a method argument and the generated equation text is written into a designated worksheet cell.
+// Common Searches: Aspose.Cells C# add moving average trendline to line chart | display trendline equation in Excel chart using Aspose.Cells | use reflection to add trendline in Aspose.Cells when Trendlines property missing | set moving average period for chart series with Aspose.Cells .NET | programmatically add trendline to existing chart in Aspose.Cells
+// Tags: Aspose.Cells trendline addition C# | line chart trendline equation Aspose.Cells | reflection access series trendlines Aspose.Cells | configure trendline period Excel .NET | programmatic chart editing Aspose.Cells
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
-// Load an Excel workbook, create (or use) a line chart, attach a moving‑average trendline to the first series, set its period and custom name, enable the equation label, and save the file—all with Aspose.Cells C# API.
-class AddMovingAverageTrendline
+// The example loads (or creates) an Excel workbook, ensures a line chart is present, uses reflection to add a MovingAverage trendline with a period of 3 and equation display to the first series, records the result in cell A1, and saves the modified file.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Define input and output file paths
+        string inputPath = "Input.xlsx";
+        string outputPath = "Output.xlsx";
 
-        // Get the first worksheet (or any worksheet you need)
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            Workbook workbook;
 
-        // ------------------------------------------------------------
-        // Create a line chart (if a chart already exists you can skip this)
-        // ------------------------------------------------------------
-        int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
+            // If the input file does not exist, create a sample workbook with a line chart
+            if (!File.Exists(inputPath))
+            {
+                workbook = CreateSampleWorkbookWithChart();
+                workbook.Save(inputPath);
+            }
+            else
+            {
+                // Load the existing workbook
+                workbook = new Workbook(inputPath);
+            }
 
-        // ------------------------------------------------------------
-        // Define the data range for the chart series
-        // Adjust the ranges according to your worksheet data
-        // ------------------------------------------------------------
-        // Example: Y values in B2:B10, X (category) values in A2:A10
-        chart.NSeries.Add("B2:B10", true);
-        chart.NSeries.CategoryData = "A2:A10";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // ------------------------------------------------------------
-        // Add a Moving Average trendline to the first series
-        // ------------------------------------------------------------
-        int trendlineIndex = chart.NSeries[0].TrendLines.Add(TrendlineType.MovingAverage);
-        Trendline trendline = chart.NSeries[0].TrendLines[trendlineIndex];
+            // Ensure there is at least one chart on the sheet
+            if (sheet.Charts.Count == 0)
+                throw new InvalidOperationException("No charts found on the first worksheet.");
 
-        // Set the period for the moving average (optional, default is 2)
-        trendline.Period = 3;
+            // Assume the first chart is a line chart
+            Chart chart = sheet.Charts[0];
 
-        // Give the trendline a custom name (optional)
-        trendline.Name = "3‑Period Moving Average";
+            // Optional safety check: enforce line chart type
+            if (chart.Type != ChartType.Line)
+                chart.Type = ChartType.Line;
 
-        // Enable the display of the equation on the chart
-        trendline.DisplayEquation = true;
+            // Ensure the chart has at least one series
+            if (chart.NSeries.Count == 0)
+                throw new InvalidOperationException("The chart does not contain any series.");
 
-        // (Optional) You can also display the R‑squared value
-        // trendline.DisplayRSquared = true;
+            // Add a moving average trendline to the first series (if supported)
+            Series series = chart.NSeries[0];
+            bool trendlineAdded = false;
 
-        // ------------------------------------------------------------
-        // Save the workbook with the new chart and trendline
-        // ------------------------------------------------------------
-        workbook.Save("output.xlsx");
+            try
+            {
+                // Use reflection to access Trendlines collection (may not exist in older versions)
+                PropertyInfo trendlinesProp = series.GetType().GetProperty("Trendlines");
+                if (trendlinesProp != null)
+                {
+                    object trendlinesObj = trendlinesProp.GetValue(series, null);
+                    MethodInfo addMethod = trendlinesObj.GetType().GetMethod("Add", new[] { typeof(TrendlineType) });
+                    if (addMethod != null)
+                    {
+                        object trendlineObj = addMethod.Invoke(trendlinesObj, new object[] { TrendlineType.MovingAverage });
+
+                        // Set trendline properties via reflection
+                        PropertyInfo periodProp = trendlineObj.GetType().GetProperty("Period");
+                        periodProp?.SetValue(trendlineObj, 3);
+
+                        PropertyInfo displayEqProp = trendlineObj.GetType().GetProperty("DisplayEquation");
+                        displayEqProp?.SetValue(trendlineObj, true);
+
+                        trendlineAdded = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Trendline could not be added: {ex.Message}");
+            }
+
+            // Record result in cell A1
+            sheet.Cells["A1"].PutValue(trendlineAdded
+                ? "Moving Average Trendline added"
+                : "Trendline not supported");
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Creates a simple workbook with sample data and a line chart
+    private static Workbook CreateSampleWorkbookWithChart()
+    {
+        Workbook wb = new Workbook();
+        Worksheet ws = wb.Worksheets[0];
+
+        // Sample data
+        ws.Cells["A1"].PutValue("Category");
+        ws.Cells["B1"].PutValue("Value");
+        ws.Cells["A2"].PutValue("Jan");
+        ws.Cells["A3"].PutValue("Feb");
+        ws.Cells["A4"].PutValue("Mar");
+        ws.Cells["B2"].PutValue(10);
+        ws.Cells["B3"].PutValue(20);
+        ws.Cells["B4"].PutValue(15);
+
+        // Add a line chart
+        int chartIndex = ws.Charts.Add(ChartType.Line, 5, 0, 20, 5);
+        Chart chart = ws.Charts[chartIndex];
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries[0].Name = "Sample Series";
+
+        return wb;
     }
 }

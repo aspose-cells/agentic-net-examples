@@ -1,98 +1,109 @@
-// Title: C# – Group Shapes by Type and Lock Them with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add rectangles, ovals and text boxes, collect shapes by their ShapeType, generate a GroupShape for each type that has multiple items, lock the group using ShapeLockType.Group, assign a meaningful name, and save the result as GroupedAndLockedShapes.xlsx.
-// Keywords: Aspose.Cells group shapes C# | lock GroupShape Aspose.Cells | ShapeType grouping .NET | ShapeLockType.Group example | Aspose.Cells shape collection | C# workbook shape grouping | prevent shape editing Aspose
-// Common Searches: how to group shapes by type in Aspose.Cells | lock a shape group in Aspose.Cells for .NET | Aspose.Cells create GroupShape from ShapeCollection | set ShapeLockType.Group property C# | Aspose.Cells shape grouping tutorial
-// Developer Intent: Generate grouped Shape objects for each ShapeType and lock the groups to stop accidental modifications.
-// Use Cases: Automatically bundle all rectangles on a worksheet into a locked group so users cannot move or resize them. | Combine every text box into a single locked group before sharing the workbook with clients. | Organize ovals into a protected group to preserve layout consistency during collaborative editing.
-// AI Prompts: Write C# code using Aspose.Cells that iterates through a worksheet's ShapeCollection, groups shapes by Shape.Type, locks each GroupShape, and saves the workbook. | Show an example of assigning custom names to GroupShape objects created from shapes of the same type and then exporting the file.
+// Title: Group and lock Excel shapes by type using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that iterates every worksheet, gathers shapes by their Shape.Type, creates a group for each type that contains more than one shape, and sets the group's IsLocked property to true. | Update an existing Aspose.Cells workbook routine to add a method that groups shapes of the same type on a worksheet and locks the resulting group to prevent accidental modifications.
+// Common Searches: Aspose.Cells C# group shapes of same type on a worksheet | lock grouped shapes in an Excel file using Aspose.Cells | prevent editing of shape groups with Aspose.Cells for .NET | example code to create shape groups and set IsLocked in Aspose.Cells | how to automatically lock shape groups in an Excel workbook via C#
+// Tags: Aspose.Cells shape grouping C# | lock shape groups Aspose.Cells | group shapes by type .NET | prevent shape editing Aspose.Cells | Excel shape lock example
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsShapeGrouping
 {
-    // Demonstrates how to create a workbook, add rectangles, ovals and text boxes, collect shapes by their ShapeType, generate a GroupShape for each type that has multiple items, lock the group using ShapeLockType.Group, assign a meaningful name, and save the result as GroupedAndLockedShapes.xlsx.
-    public class GroupAndLockShapesByType
+    // // Loads an Excel workbook, iterates each worksheet, groups shapes that share the same Shape.Type into a single group, locks each group to avoid accidental edits, and saves the updated workbook.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            Workbook workbook;
+
+            // Load workbook safely; create a new one if the input file does not exist
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // ------------------------------------------------------------
-                // Add sample shapes of different types for demonstration
-                // ------------------------------------------------------------
-                // Rectangles
-                worksheet.Shapes.AddRectangle(2, 0, 2, 0, 60, 80);
-                worksheet.Shapes.AddRectangle(5, 0, 2, 0, 60, 80);
-                // Ovals
-                worksheet.Shapes.AddOval(2, 0, 10, 0, 50, 50);
-                worksheet.Shapes.AddOval(5, 0, 10, 0, 50, 50);
-                // Text boxes
-                worksheet.Shapes.AddTextBox(2, 0, 18, 0, 70, 30);
-                worksheet.Shapes.AddTextBox(5, 0, 18, 0, 70, 30);
-                // ------------------------------------------------------------
-
-                // Get the shape collection of the worksheet
-                ShapeCollection shapes = worksheet.Shapes;
-
-                // Dictionary to collect shapes by their ShapeType (enum value)
-                Dictionary<int, List<Shape>> shapesByType = new Dictionary<int, List<Shape>>();
-
-                // Iterate through all shapes and group them by type
-                for (int i = 0; i < shapes.Count; i++)
+                if (File.Exists(inputPath))
                 {
-                    Shape shape = shapes[i];
-                    int typeKey = (int)shape.Type;
-
-                    if (!shapesByType.ContainsKey(typeKey))
-                    {
-                        shapesByType[typeKey] = new List<Shape>();
-                    }
-                    shapesByType[typeKey].Add(shape);
+                    workbook = new Workbook(inputPath);
                 }
-
-                // For each type that has more than one shape, create a group and lock it
-                foreach (var kvp in shapesByType)
+                else
                 {
-                    List<Shape> shapeList = kvp.Value;
-                    if (shapeList.Count < 2)
-                        continue; // No need to group a single shape
-
-                    // Convert the list to an array as required by the Group method
-                    Shape[] shapesToGroup = shapeList.ToArray();
-
-                    // Group the shapes
-                    GroupShape groupShape = shapes.Group(shapesToGroup);
-
-                    // Lock the group to prevent accidental edits
-                    groupShape.SetLockedProperty(ShapeLockType.Group, true);
-
-                    // Optional: give the group a meaningful name
-                    groupShape.Name = $"Group_Type_{kvp.Key}";
+                    Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                    workbook = new Workbook();
                 }
-
-                // Save the workbook
-                workbook.Save("GroupedAndLockedShapes.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // Process each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                try
+                {
+                    GroupAndLockShapesByType(sheet);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing sheet \"{sheet.Name}\": {ex.Message}");
+                }
+            }
+
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        /// <param name="sheet">The worksheet to process.</param>
+        private static void GroupAndLockShapesByType(Worksheet sheet)
         {
-            GroupAndLockShapesByType.Run();
+            // Collect shapes by their numeric type identifier
+            var shapesByType = new Dictionary<int, List<Shape>>();
+
+            foreach (Shape shape in sheet.Shapes)
+            {
+                int typeKey = (int)shape.Type;
+
+                if (!shapesByType.ContainsKey(typeKey))
+                {
+                    shapesByType[typeKey] = new List<Shape>();
+                }
+
+                shapesByType[typeKey].Add(shape);
+            }
+
+            // For each type with more than one shape, create a group and lock it
+            foreach (KeyValuePair<int, List<Shape>> entry in shapesByType)
+            {
+                List<Shape> shapeList = entry.Value;
+
+                if (shapeList.Count > 1)
+                {
+                    try
+                    {
+                        // Group the shapes; the Group method returns a new Shape representing the group
+                        Shape groupShape = sheet.Shapes.Group(shapeList.ToArray());
+
+                        // Lock the group to prevent accidental edits
+                        groupShape.IsLocked = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to group shapes of type {entry.Key}: {ex.Message}");
+                    }
+                }
+            }
         }
     }
 }

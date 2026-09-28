@@ -1,62 +1,65 @@
-// Title: Apply a Shadow to Gradient‑Filled WordArt and Export to PDF with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a WordArt shape using PresetWordArtStyle.WordArtStyle6, sets a two‑color diagonal gradient, applies a semi‑transparent black shadow via the ShadowEffect property, and saves the sheet as a PDF while preserving both visual effects.
-// Keywords: Aspose.Cells | C# | .NET | WordArt gradient | ShadowEffect | PDF export | PresetWordArtStyle | GradientFill | CellsColor | shadow on WordArt
-// Common Searches: Aspose.Cells add shadow to WordArt | WordArt gradient PDF export C# | preserve WordArt effects when saving as PDF | how to set shadow color and transparency in Aspose.Cells | apply diagonal gradient to WordArt in .NET
-// Developer Intent: Add a gradient‑filled WordArt shape, apply a shadow effect, and generate a PDF that retains both styles using Aspose.Cells for .NET.
-// Use Cases: Design marketing flyers with stylized headings that keep gradient and shadow in printable PDFs. | Automate creation of certificates where the title uses gradient WordArt with a shadow for a professional look. | Produce data dashboards that export to PDF, maintaining visual consistency of WordArt titles.
-// AI Prompts: Show how to modify the shadow offset, blur radius, and opacity for WordArt in the Aspose.Cells example. | Generate code that adds multiple WordArt objects, each with distinct gradient colors and shadow settings, before PDF conversion. | Explain how to change the gradient direction and colors while preserving the shadow effect in Aspose.Cells for .NET.
+// Title: How to handle WordArt shapes when converting an Excel workbook to PDF with Aspose.Cells for .NET (shadow effect limitation)
+// AI Prompts: Generate C# code that enumerates WordArt shapes, validates their fill type, and saves the workbook as PDF using Aspose.Cells. | Propose a technique to simulate a shadow-like appearance on WordArt before PDF export in a .NET project with Aspose.Cells.
+// Common Searches: Aspose.Cells C# cannot apply shadow to WordArt during Excel to PDF conversion | preserve WordArt formatting when exporting Excel to PDF with Aspose.Cells | detect WordArt shapes in a workbook using Aspose.Cells API
+// Tags: Aspose.Cells WordArt object detection C# | workbook PDF export Aspose.Cells | shadow feature unavailable Aspose.Cells | gradient fill preservation Aspose.Cells | C# shape properties Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a WordArt shape using PresetWordArtStyle.WordArtStyle6, sets a two‑color diagonal gradient, applies a semi‑transparent black shadow via the ShadowEffect property, and saves the sheet as a PDF while preserving both visual effects.
-class WordArtShadowPdf
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, iterates through its shapes, identifies WordArt via the IsWordArt property, notes that Aspose.Cells does not expose shadow settings for shapes, confirms that gradient fills are retained automatically, and then saves the workbook as a PDF while preserving the original WordArt appearance.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.pdf";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Add a WordArt shape with a preset gradient style (WordArtStyle6)
-        // Parameters: style, text, topRow, top, leftColumn, left, height, width
-        Shape wordArt = sheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle6,
-            "Gradient WordArt",
-            5,   // topRow
-            0,   // top (pixels)
-            5,   // leftColumn
-            0,   // left (pixels)
-            100, // height (pixels)
-            400  // width (pixels)
-        );
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Ensure the fill type is gradient
-        wordArt.Fill.FillType = FillType.Gradient;
+                // Access the first worksheet (adjust index if needed)
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure a custom two‑color gradient (e.g., LightGray to DarkGray)
-        GradientFill gradient = wordArt.Fill.GradientFill;
-        gradient.SetTwoColorGradient(
-            Color.LightGray,   // first color
-            Color.DarkGray,    // second color
-            GradientStyleType.DiagonalDown,
-            1                  // variant
-        );
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Identify WordArt shapes using the IsWordArt property
+                    if (shape.IsWordArt)
+                    {
+                        // Aspose.Cells does not expose direct shadow properties for shapes.
+                        // If shadow effects are required, they must be applied via other means
+                        // (e.g., editing the source file or using a different library).
 
-        // Apply a shadow effect to the WordArt
-        ShadowEffect shadow = wordArt.ShadowEffect;
+                        // Gradient fill is preserved automatically; no changes required.
+                        // Example of checking fill type (optional):
+                        // FillFormat fill = shape.FillFormat;
+                        // if (fill.FillType == FillType.Gradient) { /* keep as is */ }
+                    }
+                }
 
-        // Create a CellsColor for the shadow (e.g., semi‑transparent black)
-        CellsColor shadowColor = workbook.CreateCellsColor();
-        shadowColor.Color = Color.FromArgb(128, 0, 0, 0); // 50% transparent black
-        shadow.Color = shadowColor;
-
-        // Save the workbook as PDF (shadow and gradient are preserved)
-        workbook.Save("WordArtWithShadow.pdf", SaveFormat.Pdf);
+                // Save the workbook as PDF, preserving WordArt and its formatting
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions to prevent the application from crashing
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

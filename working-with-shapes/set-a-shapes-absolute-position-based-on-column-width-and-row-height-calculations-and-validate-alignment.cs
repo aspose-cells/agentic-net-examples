@@ -1,74 +1,79 @@
-// Title: Set a shape’s absolute position using column width & row height in Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, set custom column width and row height, convert those dimensions to pixels, add a rectangle shape, move it to a target cell, apply pixel offsets for absolute placement, verify the anchored cell, optionally align the shape’s top‑right corner to another cell, and save the file.
-// Keywords: Aspose.Cells shape positioning | pixel offset column width | row height to pixels | MoveToRange shape | shape alignment Aspose.Cells | validate shape cell attachment | C# Aspose.Cells example
-// Common Searches: Aspose.Cells set shape absolute position | convert column width to pixels Aspose.Cells | move shape to specific cell .NET | align shape corners in Excel with Aspose.Cells | check shape row and column after MoveToRange
-// Developer Intent: Place a rectangle shape at a designated cell using pixel offsets derived from column width and row height, then confirm that the shape is anchored to the intended cell.
-// Use Cases: Insert a logo into a header cell with exact left/top offsets for consistent branding across generated reports. | Attach a comment shape to the top‑right corner of a data cell so it moves correctly when rows or columns are resized. | Automate verification of shape anchoring after bulk worksheet processing to ensure layout integrity before publishing.
-// AI Prompts: Generate C# code with Aspose.Cells that places a shape at cell B5 with a 10‑pixel left offset and a 5‑pixel top offset, then checks UpperLeftRow and UpperLeftColumn. | Show how to retrieve a column’s width in pixels and align a shape’s right edge with column C while keeping the shape attached to row 8. | Provide an example of error handling that logs a warning if a shape’s actual cell position differs from the expected row and column after calling MoveToRange.
+// Title: How to position a rectangle shape at cell C4 using column width and row height calculations in Aspose.Cells for .NET
+// AI Prompts: Compute the total pixel width of columns preceding column C, convert the result to points, and assign it to the Shape.Left property to align the shape with the left edge of the cell. | Sum the pixel heights of rows before row 4, convert the sum to points, set Shape.Top, then specify the shape's Width and Height in points before saving the workbook. | Check that the shape's Left and Top values are within a small tolerance of the calculated offsets, and modify the target row or column indices to reposition the shape as needed.
+// Common Searches: Aspose.Cells set shape position based on column index and row index | C# calculate shape left offset using GetColumnWidthPixel Aspose.Cells | Align rectangle shape to specific cell with pixel-to-point conversion in Aspose.Cells | Validate shape alignment tolerance after positioning in Aspose.Cells workbook | Place shape at cell C4 programmatically using Aspose.Cells for .NET
+// Tags: shape positioning using column width Aspose.Cells | pixel to point conversion for shape placement .NET | calculate cumulative row height for shape top offset | rectangle shape alignment validation Aspose.Cells | set shape location by cell index Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapePositionDemo
+// The example creates a workbook, adds a zero‑size rectangle shape, calculates the cumulative pixel widths of columns before column C and pixel heights of rows before row 4, converts these measurements to points, assigns them to the shape's Left and Top properties, sets a fixed width and height, verifies alignment within a small tolerance, and saves the file as ShapePositioned.xlsx.
+class ShapePositionExample
 {
-    // Demonstrates how to create a workbook, set custom column width and row height, convert those dimensions to pixels, add a rectangle shape, move it to a target cell, apply pixel offsets for absolute placement, verify the anchored cell, optionally align the shape’s top‑right corner to another cell, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a rectangle shape with initial size (height, width) set to 0
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                0,   // upper left row
+                0,   // upper left column
+                0,   // top offset (points)
+                0,   // left offset (points)
+                0,   // height (points)
+                0);  // width (points)
+
+            // Target cell for positioning: column C (index 2), row 4 (index 3)
+            int targetColumn = 2; // zero‑based column index
+            int targetRow = 3;    // zero‑based row index
+
+            // Calculate cumulative column width in pixels before the target column
+            double offsetX = 0;
+            for (int col = 0; col < targetColumn; col++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Define target cell (row and column) where the shape's upper‑left corner should be placed
-                int targetRow = 5;      // zero‑based index (row 6 in Excel)
-                int targetColumn = 3;   // zero‑based index (column D in Excel)
-
-                // Set custom width for the target column and height for the target row
-                // (values are in Excel's column width units and points respectively)
-                worksheet.Cells.SetColumnWidth(targetColumn, 20);   // wide column
-                worksheet.Cells.SetRowHeight(targetRow, 30);       // tall row
-
-                // Convert column width and row height to pixels using worksheet helper methods
-                int columnPixelOffset = worksheet.Cells.GetColumnWidthPixel(targetColumn);
-                int rowPixelOffset = worksheet.Cells.GetRowHeightPixel(targetRow);
-
-                // Add a rectangle shape (initially placed at cell A1 with zero offsets)
-                Shape shape = worksheet.Shapes.AddRectangle(0, 0, 0, 100, 50, 0);
-
-                // Move shape to the target cell range (single cell)
-                shape.MoveToRange(targetRow, targetColumn, targetRow, targetColumn);
-
-                // Apply pixel offsets so the shape is positioned absolutely within the cell
-                shape.Left = columnPixelOffset / 2;   // example: half the column width from the left edge
-                shape.Top = rowPixelOffset / 2;       // example: half the row height from the top edge
-
-                // Validate that the shape is attached to the correct cell
-                if (shape.UpperLeftRow == targetRow && shape.UpperLeftColumn == targetColumn)
-                {
-                    Console.WriteLine($"Shape correctly positioned at row {targetRow}, column {targetColumn}.");
-                }
-                else
-                {
-                    Console.WriteLine("Shape positioning mismatch.");
-                }
-
-                // Optionally align the shape's top‑right corner to another cell to demonstrate alignment method
-                shape.AlignTopRightCorner(targetRow, targetColumn + 2); // align to two columns to the right
-
-                // Save the workbook
-                string outputPath = "ShapeAbsolutePositionDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                offsetX += sheet.Cells.GetColumnWidthPixel(col);
             }
-            catch (Exception ex)
+
+            // Calculate cumulative row height in pixels before the target row
+            double offsetY = 0;
+            for (int row = 0; row < targetRow; row++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                offsetY += sheet.Cells.GetRowHeightPixel(row);
             }
+
+            // Convert pixels to points (1 pixel = 0.75 point at 96 DPI)
+            const double pixelsToPoints = 0.75;
+            shape.Left = (int)(offsetX * pixelsToPoints);
+            shape.Top = (int)(offsetY * pixelsToPoints);
+
+            // Set shape size (e.g., 100x50 points)
+            shape.Width = 100;
+            shape.Height = 50;
+
+            // Verify alignment within a small tolerance
+            const double tolerance = 0.01;
+            bool isAligned = Math.Abs(shape.Left - offsetX * pixelsToPoints) < tolerance &&
+                             Math.Abs(shape.Top - offsetY * pixelsToPoints) < tolerance;
+
+            Console.WriteLine(isAligned
+                ? "Shape is correctly aligned."
+                : "Shape alignment mismatch.");
+
+            // Save the workbook
+            string outputPath = "ShapePositioned.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,36 +1,60 @@
-// Title: C# – Set Shape Reflection Size (30%) and Blur Radius (5 pt) with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a rectangle shape, and configure its ReflectionEffect by setting the Size to 30 % and the Blur radius to 5 points, then save the file as an .xlsx document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells reflection effect | C# shape blur radius | Aspose.Cells set reflection size | Aspose.Cells rectangle shape | ReflectionEffect Size property | ReflectionEffect Blur property | Excel shape styling Aspose | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells set shape reflection size C# | How to set blur radius on shape reflection Aspose.Cells | ReflectionEffect Size and Blur in Aspose.Cells for .NET | Apply reflection to rectangle shape using Aspose.Cells | C# Aspose.Cells shape formatting tutorial
-// Developer Intent: Apply a 30 % reflection size and a 5‑point blur radius to a rectangle shape in an Excel workbook programmatically with Aspose.Cells for .NET.
-// Use Cases: Design visually appealing dashboard tiles with subtle reflective effects. | Highlight key metrics in financial reports by adding reflective shapes. | Standardize annotation styling across multiple worksheets by applying uniform reflection settings.
-// AI Prompts: Generate C# code that sets a shape's ReflectionEffect Size to 30 % and Blur to 5 pt using Aspose.Cells. | Explain how to modify additional reflection properties (e.g., transparency, distance) after setting size and blur. | Show how to loop through all shapes on a worksheet and apply the same reflection size and blur settings.
+// Title: How to set a shape's reflection size to 30 points and blur radius to 5 points in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a rectangle shape on a worksheet and apply a reflection effect with a size of 30 points and a blur of 5 points using Aspose.Cells in C#. | Configure the Reflection.Size and Reflection.Blur properties of a shape in an Aspose.Cells workbook to customize its visual appearance.
+// Common Searches: Aspose.Cells C# set shape reflection size to 30 points | How to add blur to shape reflection in Aspose.Cells workbook | C# example for configuring shape reflection properties in Excel with Aspose.Cells | Set reflection blur amount on rectangle shape using Aspose.Cells .NET | Adjust shape visual effects (reflection size, blur) in Aspose.Cells
+// Tags: Aspose.Cells shape reflection size property | Aspose.Cells shape reflection blur property | C# Aspose.Cells add rectangle shape | Aspose.Cells visual effects on Excel shapes | Excel shape reflection customization Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a rectangle shape, and configure its ReflectionEffect by setting the Size to 30 % and the Blur radius to 5 points, then save the file as an .xlsx document using Aspose.Cells for .NET.
+// The example creates a new workbook, adds a rectangle shape to the first worksheet, sets the shape's reflection size to 30 points and blur radius to 5 points, and saves the workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top, left, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,   // upper left row
+                2,   // upper left column
+                0,   // top offset (in points)
+                0,   // left offset (in points)
+                100, // height (in points)
+                200  // width (in points)
+            );
 
-        // Access the reflection effect of the shape
-        ReflectionEffect reflection = shape.Reflection;
+            // Set reflection size to 30 points
+            shape.Reflection.Size = 30;
 
-        // Set reflection size to 30 points (percentage) and blur radius to 5 points
-        reflection.Size = 30;   // end position along the alpha gradient ramp (percentage)
-        reflection.Blur = 5;    // blur radius in points
+            // Set blur amount (the correct property name) to 5 points
+            shape.Reflection.Blur = 5;
 
-        // Save the workbook with the applied reflection effect
-        workbook.Save("ReflectionShapeDemo.xlsx");
+            // Determine output file path
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

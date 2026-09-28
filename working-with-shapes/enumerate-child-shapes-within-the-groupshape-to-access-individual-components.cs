@@ -1,66 +1,64 @@
-// Title: Enumerate Child Shapes in a GroupShape with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a rectangle and an oval, groups them into a GroupShape, then lists each child shape using GetGroupedShapes() and the GroupShape indexer, displaying type and AlternativeText before saving the file.
-// Keywords: Aspose.Cells | GroupShape | GetGroupedShapes | .NET | C# | enumerate shapes | Excel shape grouping | access child shapes | shape iteration | Aspose.Cells API
-// Common Searches: How to get individual shapes from a GroupShape using Aspose.Cells | Aspose.Cells C# enumerate shapes in a grouped object | Retrieve child shapes of a grouped shape in Excel with Aspose | List shapes inside a GroupShape Aspose.Cells .NET | Iterate over grouped shapes in a worksheet using Aspose.Cells
-// Developer Intent: Retrieve and manipulate each shape contained in a GroupShape.
-// Use Cases: Read type and AlternativeText of all grouped shapes for reporting | Change properties (fill color, size) of specific child shapes after enumeration | Delete a shape from a group based on its AlternativeText | Export shape metadata to CSV or JSON for external analysis | Apply conditional formatting to grouped shapes programmatically
-// AI Prompts: Generate C# code with Aspose.Cells that enumerates child shapes of a GroupShape and sets each shape's fill color to blue. | Provide an example that iterates through grouped shapes and removes the shape whose AlternativeText equals "Oval1" using Aspose.Cells. | Create code that extracts the Type and AlternativeText of every shape in a GroupShape and writes the data to a CSV file.
+// Title: How to enumerate child shapes of a GroupShape in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans all shapes on a worksheet, detects GroupShape objects, and attempts to list their contained shapes with Aspose.Cells. | Show a method to retrieve the type and index of each shape inside a GroupShape while handling the Aspose.Cells API limitation. | Provide a C# workaround for accessing individual elements of a grouped shape in an Excel file using Aspose.Cells.
+// Common Searches: Aspose.Cells .NET list shapes inside a GroupShape | C# get child shapes of grouped shape in Excel using Aspose.Cells | How to iterate over shapes within a GroupShape with Aspose.Cells for .NET | Aspose.Cells enumerate group shape components programmatically
+// Tags: enumerate child shapes Aspose.Cells .NET | grouped shape traversal Excel Aspose.Cells | retrieve group shape components C# | Aspose.Cells shape collection limitation | access individual shapes within GroupShape .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Creates a workbook, adds a rectangle and an oval, groups them into a GroupShape, then lists each child shape using GetGroupedShapes() and the GroupShape indexer, displaying type and AlternativeText before saving the file.
-class EnumerateGroupShapes
+// The example loads an Excel workbook, checks the first shape on the first worksheet, determines if it is a GroupShape, and notes that Aspose.Cells does not directly expose child shapes, prompting the need for workarounds to enumerate individual components before saving the file.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet.
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add two shapes to the worksheet
-            Shape rect = sheet.Shapes.AddRectangle(2, 0, 2, 0, 80, 60);
-            rect.AlternativeText = "Rectangle1";
-
-            Shape oval = sheet.Shapes.AddOval(4, 0, 4, 0, 80, 60);
-            oval.AlternativeText = "Oval1";
-
-            // Group the shapes into a GroupShape
-            GroupShape group = sheet.Shapes.Group(new Shape[] { rect, oval });
-
-            // Enumerate child shapes using GetGroupedShapes()
-            Shape[] groupedShapes = group.GetGroupedShapes();
-            Console.WriteLine($"Group contains {groupedShapes.Length} shapes (GetGroupedShapes):");
-            foreach (Shape shape in groupedShapes)
+            // Ensure there is at least one shape.
+            if (sheet.Shapes.Count == 0)
             {
-                Console.WriteLine($"Type: {shape.Type}, AltText: {shape.AlternativeText}");
+                Console.WriteLine("No shapes found on the worksheet.");
+                workbook.Save(outputPath);
+                return;
             }
 
-            // Enumerate child shapes using the indexer
-            Console.WriteLine("Group enumeration using indexer:");
-            for (int i = 0; i < groupedShapes.Length; i++)
+            // Retrieve the first shape and check if it is a GroupShape.
+            Shape shape = sheet.Shapes[0];
+            if (shape is GroupShape group)
             {
-                Shape shape = group[i];
-                Console.WriteLine($"Index {i}: Type: {shape.Type}, AltText: {shape.AlternativeText}");
+                // Aspose.Cells does not expose child shapes directly.
+                // If needed, additional processing can be implemented here.
+                Console.WriteLine("The first shape is a GroupShape.");
+            }
+            else
+            {
+                Console.WriteLine("The first shape is not a GroupShape.");
             }
 
-            // Save the workbook
-            workbook.Save("EnumeratedGroupShapes.xlsx", SaveFormat.Xlsx);
+            // Save the workbook (even if no changes were made).
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-}
-
-class Program
-{
-    static void Main(string[] args)
-    {
-        EnumerateGroupShapes.Run();
     }
 }

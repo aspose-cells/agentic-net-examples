@@ -1,39 +1,70 @@
-// Title: Clone a worksheet in Aspose.Cells (C#) while preserving the original TabId and assigning a new TabId
-// Description: Demonstrates how to create a workbook, set a custom TabId on the source sheet, duplicate the sheet with Workbook.Worksheets.AddCopy, rename the clone, assign a different TabId, and save the result as an Excel file.
-// Keywords: Aspose.Cells | C# | clone worksheet | TabId property | AddCopy | preserve TabId | set TabId on copy | duplicate sheet | .NET Excel API | worksheet copy example
-// Common Searches: How to clone a worksheet in Aspose.Cells and keep its TabId | Assign a new TabId to a copied sheet using Aspose.Cells for .NET | Aspose.Cells AddCopy preserve original TabId | Set TabId for cloned worksheet in C# | Copy worksheet with custom TabId Aspose.Cells
-// Developer Intent: The developer needs to duplicate an existing worksheet, retain the original sheet's TabId, and give the cloned sheet a separate TabId for later identification.
-// Use Cases: Create a master template sheet, clone it for each department, and give each clone a unique TabId to simplify navigation in large workbooks. | Generate periodic report sheets from a base layout while keeping the source TabId unchanged for audit tracking. | Automate the production of multiple worksheets from a single design, assigning sequential TabIds to support API‑driven sheet selection.
-// AI Prompts: Provide C# code that clones a worksheet in Aspose.Cells, preserves the original TabId, and sets a different TabId on the clone. | Explain the behavior of the TabId property when using Workbook.Worksheets.AddCopy to duplicate a sheet. | Show an example that copies several worksheets from a template and assigns distinct TabIds to each new sheet.
+// Title: Clone an Excel worksheet with Aspose.Cells for .NET while preserving its original TabId and assigning a unique new TabId
+// AI Prompts: Create a C# function that uses Aspose.Cells to copy a worksheet, retains the original TabId, and assigns a non‑conflicting TabId to the new sheet. | Develop a reusable utility that clones any worksheet in a .NET workbook and automatically finds the next available TabId.
+// Common Searches: Aspose.Cells C# clone worksheet preserving TabId | set new TabId for copied Excel sheet with Aspose | avoid TabId collisions when duplicating worksheets in .NET | how to generate a free TabId for a cloned worksheet using Aspose.Cells
+// Tags: Aspose.Cells AddCopy worksheet cloning | preserve original TabId on worksheet copy | generate unique TabId for cloned sheet | C# workbook duplicate sheet TabId handling | Aspose.Cells TabId conflict resolution
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to create a workbook, set a custom TabId on the source sheet, duplicate the sheet with Workbook.Worksheets.AddCopy, rename the clone, assign a different TabId, and save the result as an Excel file.
+// The example loads an Excel file, clones the first worksheet using AddCopy, keeps the source TabId, computes a non‑conflicting TabId for the clone, renames the cloned sheet, and saves the workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Access the first worksheet, give it a name and set its TabId
-        Worksheet original = workbook.Worksheets[0];
-        original.Name = "Original";
-        original.TabId = 100; // preserve original TabId
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add some sample data
-        original.Cells["A1"].PutValue("Original sheet");
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Clone the worksheet using AddCopy (by name)
-        int clonedIndex = workbook.Worksheets.AddCopy("Original");
-        Worksheet cloned = workbook.Worksheets[clonedIndex];
-        cloned.Name = "Cloned";
+            // Select the worksheet to clone (e.g., the first worksheet)
+            Worksheet originalSheet = workbook.Worksheets[0];
 
-        // Assign a distinct TabId to the cloned sheet
-        cloned.TabId = 200;
+            // Preserve the original TabId
+            int originalTabId = originalSheet.TabId;
 
-        // Save the workbook
-        workbook.Save("ClonedWorksheetTabIdDemo.xlsx");
+            // Clone the worksheet using AddCopy (returns the index of the new sheet)
+            int clonedIndex = workbook.Worksheets.AddCopy(originalSheet.Index);
+            Worksheet clonedSheet = workbook.Worksheets[clonedIndex];
+            clonedSheet.Name = "Cloned_" + originalSheet.Name;
+
+            // Assign a distinct TabId to the cloned sheet, ensuring no conflict
+            int newTabId = originalTabId + 1;
+            while (TabIdExists(workbook, newTabId))
+            {
+                newTabId++;
+            }
+            clonedSheet.TabId = newTabId;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper method to check if a TabId already exists in the workbook
+    static bool TabIdExists(Workbook wb, int tabId)
+    {
+        foreach (Worksheet ws in wb.Worksheets)
+        {
+            if (ws.TabId == tabId)
+                return true;
+        }
+        return false;
     }
 }

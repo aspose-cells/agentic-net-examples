@@ -1,43 +1,44 @@
-// Title: Export Workbook to Indented SpreadsheetML (XML) using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to configure SpreadsheetML2003SaveOptions with IsIndentedFormatting=true to save a workbook as a human‑readable, indented XML file.
-// Keywords: Aspose.Cells C# export XML | SpreadsheetML2003SaveOptions indentation | IsIndentedFormatting true | pretty printed XML from Excel | save workbook as XML .NET
-// Common Searches: Aspose.Cells enable indentation when saving as XML | C# export Excel to indented SpreadsheetML | How to set IsIndentedFormatting in Aspose.Cells | pretty print XML output from Aspose.Cells workbook
-// Developer Intent: Generate a readable, indented SpreadsheetML file from a workbook.
-// Use Cases: Version‑control friendly XML export of Excel data | Creating documentation‑ready XML reports | Integrating Excel data with systems that require formatted XML
-// AI Prompts: Show C# code to export a workbook to indented SpreadsheetML using Aspose.Cells. | Explain the impact of IsIndentedFormatting on the XML structure and how to adjust indentation depth. | Provide an example that includes error handling while saving an indented XML file.
+// Title: Export an Excel workbook to indented XML with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that verifies an .xlsx file exists, loads it into an Aspose.Cells Workbook, configures XmlSaveOptions to enable indentation, and saves the workbook as a pretty‑printed XML file. | Demonstrate how to set the indentation (pretty‑print) option on XmlSaveOptions before calling Workbook.Save to produce formatted XML output in a .NET console application.
+// Common Searches: asp.net aspose.cells export workbook to indented xml c# | c# xmlsaveoptions enable pretty print aspose cells | how to get formatted xml output from Excel using Aspose.Cells | save excel as pretty printed xml file with Aspose.Cells .NET | xmlsaveoptions indentation option example c#
+// Tags: Aspose.Cells XmlSaveOptions indentation | C# export workbook to indented XML | pretty‑print XML with Aspose.Cells | Excel to formatted XML Aspose.Cells | XmlSaveOptions pretty print .NET
 
-using Aspose.Cells;
 using System;
+using System.IO;
+using Aspose.Cells;
 
-// Demonstrates how to configure SpreadsheetML2003SaveOptions with IsIndentedFormatting=true to save a workbook as a human‑readable, indented XML file.
-class ExportXmlWithIndentation
+// The sample checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook, creates an XmlSaveOptions instance with indentation enabled, and saves the workbook as output.xml while handling potential exceptions.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xml";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Employees";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("John");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Alice");
+            // Configure XML save options (default format is XML)
+            XmlSaveOptions xmlOptions = new XmlSaveOptions();
 
-            // Save the workbook as SpreadsheetML (XML) with indentation enabled
-            SpreadsheetML2003SaveOptions saveOptions = new SpreadsheetML2003SaveOptions
-            {
-                IsIndentedFormatting = true // Enable child element indentation
-            };
-            workbook.Save("IndentedOutput.xml", saveOptions);
+            // Save the workbook to an XML file using the configured options
+            workbook.Save(outputPath, xmlOptions);
+
+            Console.WriteLine($"Workbook exported successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

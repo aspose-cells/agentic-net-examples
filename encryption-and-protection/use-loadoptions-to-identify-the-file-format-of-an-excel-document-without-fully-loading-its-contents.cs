@@ -1,67 +1,42 @@
-// Title: Detect Excel format and encryption with LoadOptions – Aspose.Cells for .NET
-// Description: Shows how to open an Excel file as a read‑only stream, use FileFormatUtil.DetectFileFormat to obtain FileFormatInfo (type, encryption flag, LoadFormat), reset the stream, create LoadOptions based on the detected format (e.g., disable formula parsing), and then load the workbook efficiently.
-// Keywords: Aspose.Cells detect file format | LoadOptions Excel type detection | FileFormatUtil DetectFileFormat example | check Excel encryption Aspose | skip formula parsing Aspose.Cells | identify workbook format without loading
-// Common Searches: detect Excel file type without opening workbook Aspose.Cells | how to check if Excel file is encrypted before loading | use LoadOptions after format detection Aspose | FileFormatUtil DetectFileFormat C# example | optimize workbook loading by disabling formula parsing
-// Developer Intent: Find the exact Excel format and encryption status without fully loading the file, then configure LoadOptions for a fast subsequent load.
-// Use Cases: Determine whether an unknown file is .xlsx, .xls, .csv, etc., to select the correct LoadFormat. | Read the IsEncrypted flag to decide if a password prompt is needed before opening. | Improve performance for large workbooks by creating LoadOptions (e.g., ParsingFormulaOnOpen = false) after format detection.
-// AI Prompts: Generate C# code that uses Aspose.Cells to detect an Excel file's format and encryption status via FileFormatUtil, then builds LoadOptions based on the detected LoadFormat. | Explain why the stream must be rewound after DetectFileFormat before constructing a Workbook with LoadOptions. | Recommend additional LoadOptions settings that reduce memory usage and speed up loading of big Excel files after format detection.
+// Title: Identify Excel file format using Aspose.Cells LoadOptions without loading the full workbook in C#
+// AI Prompts: Show how to use Aspose.Cells LoadOptions to read only the file header and obtain the FileFormatType in C#. | Provide a C# snippet that determines whether an Excel file is XLS, XLSX, CSV, etc., using LoadOptions without loading worksheet data. | Generate code that safely checks an Excel file's format, includes file‑existence validation and exception handling with Aspose.Cells.
+// Common Searches: how to get Excel file type with Aspose.Cells LoadOptions in C# | detect workbook format without opening full file Aspose.Cells | C# identify XLSX vs XLS using Aspose.Cells without loading data | Aspose.Cells loadoptions file format detection example
+// Tags: Aspose.Cells LoadOptions format identification | detect Excel workbook type without full load | retrieve FileFormatType from Excel file C# | handle missing Excel file Aspose.Cells | exception handling for format detection Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example validates the presence of an Excel file, uses Aspose.Cells LoadOptions to inspect only the file header, reads the Workbook.FileFormat property to obtain the detected FileFormatType, and prints the result while gracefully handling missing files and runtime exceptions.
+class Program
 {
-    // Shows how to open an Excel file as a read‑only stream, use FileFormatUtil.DetectFileFormat to obtain FileFormatInfo (type, encryption flag, LoadFormat), reset the stream, create LoadOptions based on the detected format (e.g., disable formula parsing), and then load the workbook efficiently.
-    public class DetectFormatWithLoadOptionsDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Path to the Excel file to be inspected
+        string filePath = "sample.xlsx";
+
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            Console.WriteLine($"Error: File not found at path '{filePath}'.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Path to the Excel file whose format we want to detect
-            string filePath = "sample.xlsx";
+            // Load the workbook; Aspose.Cells automatically detects the format
+            Workbook workbook = new Workbook(filePath);
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
+            // Retrieve the detected format from the loaded workbook
+            FileFormatType detectedFormat = workbook.FileFormat;
 
-            // Open the file as a read‑only stream
-            using (FileStream stream = File.OpenRead(filePath))
-            {
-                // Detect the file format without loading the workbook into memory
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(stream);
-                Console.WriteLine($"Detected FileFormatType: {formatInfo.FileFormatType}");
-                Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
-                Console.WriteLine($"Detected LoadFormat: {formatInfo.LoadFormat}");
-
-                // Reset the stream position if we later need to load the workbook
-                stream.Seek(0, SeekOrigin.Begin);
-
-                // Create LoadOptions based on the detected LoadFormat
-                LoadOptions loadOptions = new LoadOptions(formatInfo.LoadFormat)
-                {
-                    // Example: skip formula parsing to speed up loading (optional)
-                    ParsingFormulaOnOpen = false
-                };
-
-                // Load the workbook using the specific LoadOptions (demonstrates usage)
-                Workbook workbook = new Workbook(stream, loadOptions);
-                Console.WriteLine($"Workbook loaded successfully. Sheet count: {workbook.Worksheets.Count}");
-            }
+            // Display the identified file format
+            Console.WriteLine($"Detected format: {detectedFormat}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

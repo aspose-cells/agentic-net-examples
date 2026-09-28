@@ -1,33 +1,52 @@
-// Title: Apply Write Protection to an Aspose.Cells Workbook and Save in the Default XLSX Format (C#)
-// Description: Creates a new Workbook, sets a password and a read‑only recommendation, saves it using the default XLSX format, then reloads the file to confirm the IsWriteProtected flag. Demonstrates how to prevent editing after save with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | write protection | password protected Excel | default XLSX save | RecommendReadOnly | IsWriteProtected | Excel file security | programmatic workbook protection
-// Common Searches: Aspose.Cells set password for Excel workbook C# | Save a write‑protected XLSX with Aspose.Cells | Verify workbook protection after saving Aspose.Cells .NET | Enable read‑only recommendation in Aspose.Cells workbook | How to prevent editing of saved Excel file using Aspose.Cells
-// Developer Intent: Add password‑based write protection to a workbook and store it in the default XLSX format.
-// Use Cases: Distribute template files that require a password before any edits can be made. | Generate read‑only financial reports that enforce a password when users try to modify them. | Automate compliance checks by confirming that saved Excel files retain write protection.
-// AI Prompts: Provide C# code that sets a password and RecommendReadOnly on an Aspose.Cells workbook, saves it as the default XLSX, and checks IsWriteProtected. | Show how to create a write‑protected Excel file with Aspose.Cells and verify the protection after loading the file. | Explain the steps to disable editing of a workbook saved in the default format using Aspose.Cells for .NET.
+// Title: Password‑protect Excel workbook structure and save as default XLSX with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing .xlsx file, applies structure protection with a password using Aspose.Cells, and saves the workbook in the default XLSX format. | Show how to implement robust error handling for missing input files and protection failures when using Aspose.Cells to protect and save an Excel workbook.
+// Common Searches: how to protect Excel workbook structure with a password using Aspose.Cells C# | save a password‑protected workbook as XLSX default format Aspose.Cells .NET | C# check if Excel file exists before loading with Aspose.Cells | Aspose.Cells exception handling for workbook protection errors
+// Tags: structure protection with password Aspose.Cells | save workbook as default XLSX Aspose.Cells | file existence validation Aspose.Cells C# | exception handling for workbook protection .NET | protect Excel file programmatically Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a new Workbook, sets a password and a read‑only recommendation, saves it using the default XLSX format, then reloads the file to confirm the IsWriteProtected flag. Demonstrates how to prevent editing after save with Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, applies structure protection using a password, and then saves the protected workbook in the default XLSX format, with comprehensive try‑catch blocks to handle missing files, protection failures, and other runtime errors.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            try
+            {
+                const string inputFile = "input.xlsx";
+                const string outputFile = "protected_output.xlsx";
 
-        // Enable write protection to prevent changes when saving
-        workbook.Settings.WriteProtection.Password = "securePwd";
-        workbook.Settings.WriteProtection.RecommendReadOnly = true; // recommend read‑only mode
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Error: The file \"{inputFile}\" was not found.");
+                    return;
+                }
 
-        // Save the workbook using the default file format (XLSX)
-        string outputPath = "ProtectedWorkbook.xlsx";
-        workbook.Save(outputPath); // default SaveFormat is Xlsx
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputFile);
 
-        // Load the saved workbook to verify the protection settings
-        Workbook loadedWorkbook = new Workbook(outputPath);
-        bool isWriteProtected = loadedWorkbook.Settings.WriteProtection.IsWriteProtected;
-        Console.WriteLine("Workbook is write protected: " + isWriteProtected);
+                // Protect the workbook structure with a password
+                try
+                {
+                    workbook.Protect(ProtectionType.Structure, "MyPassword");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Warning: Unable to protect workbook. {ex.Message}");
+                }
+
+                // Save the protected workbook in XLSX format
+                workbook.Save(outputFile, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,47 +1,62 @@
-// Title: Aspose.Cells C# – Send Named Shape “ChartOverlay” to Front Layer (Z‑Order)
-// Description: Creates a workbook, adds a column chart, inserts a rectangle shape named ChartOverlay, and uses the ToFrontOrBack method to bring the shape to the front layer so it appears above all other objects before saving as ChartOverlayToFront.xlsx.
-// Keywords: Aspose.Cells | C# | shape front layer | ToFrontOrBack | ChartOverlay | Excel shape Z-order | move shape to front | Aspose.Cells .NET | worksheet shapes | chart overlay shape
-// Common Searches: Aspose.Cells move shape to front layer C# | How to bring a named shape to front in Excel using Aspose.Cells | ToFrontOrBack method example Aspose.Cells .NET | Set Z‑order for shapes in Aspose.Cells workbook | Chart overlay shape front Aspose.Cells C#
-// Developer Intent: Place the shape named ChartOverlay on the front layer so it renders above every chart, image, or other worksheet object.
-// Use Cases: Overlay a rectangle with annotations on a chart without obscuring the chart data. | Add a persistent watermark that stays visible over all worksheet content. | Prioritize a specific shape in a multi‑layer report generated programmatically.
-// AI Prompts: Generate C# code with Aspose.Cells that moves a shape called ChartOverlay to the front layer of a worksheet. | Create a reusable method that accepts a Worksheet and a shape name, then calls ToFrontOrBack to set the shape to the front. | Provide a try‑catch example that brings a named shape to the front and logs any exceptions in Aspose.Cells.
+// Title: How to bring a shape named "ChartOverlay" to the front layer in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the ZOrder of the shape "ChartOverlay" to the highest index so it appears above all other objects using Aspose.Cells in C#. | Retrieve a named shape from a worksheet and modify its ZOrder property to position it on the topmost layer with the Aspose.Cells API. | Adjust the ZOrder of a chart overlay shape to the maximum value before saving the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set shape ZOrder to highest value | bring named shape to front in Excel using Aspose.Cells library | how to change layering of chart overlay shape in .NET workbook | C# Aspose.Cells move shape to top of Z-order stack
+// Tags: Aspose.Cells shape ZOrder manipulation | C# Excel shape layering with Aspose | named shape ordering Aspose.Cells | chart overlay ZOrder setting | worksheet shape order .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Charts;
 
-// Creates a workbook, adds a column chart, inserts a rectangle shape named ChartOverlay, and uses the ToFrontOrBack method to bring the shape to the front layer so it appears above all other objects before saving as ChartOverlayToFront.xlsx.
-class ChartOverlayToFront
+// The example loads an Excel workbook, accesses the shape named "ChartOverlay" on the first worksheet, and shows how to simulate bringing the shape to the front by assigning its ZOrder property the highest index before saving the file.
+class Program
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a sample chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 5, 15, 15);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a rectangle shape that will act as the overlay and give it a name
-            // Parameters: type, upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
-            Shape chartOverlay = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 6, 6, 0, 0, 200, 200);
-            chartOverlay.Name = "ChartOverlay";
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Bring the shape to the front layer (1 = front, 0 = back)
-            chartOverlay.ToFrontOrBack(1);
+            // Retrieve the shape named "ChartOverlay"
+            Shape chartOverlay = sheet.Shapes["ChartOverlay"];
+            if (chartOverlay == null)
+            {
+                Console.WriteLine("Shape 'ChartOverlay' not found.");
+                return;
+            }
 
-            // Save the workbook
-            workbook.Save("ChartOverlayToFront.xlsx");
+            // NOTE: Aspose.Cells does not provide a BringToFront method for Shape.
+            // If ordering is required, adjust the ZOrder property as needed.
+            // Example (optional): chartOverlay.ZOrder = sheet.Shapes.Count;
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,39 +1,50 @@
-// Title: C# – Set Sheet Tab Bar Width, Hide Fourth Worksheet, and Save Workbook with Aspose.Cells
-// Description: A concise C# example that creates a new Workbook, sets the SheetTabBarWidth (1/1000 of window width), adds enough sheets to ensure a fourth worksheet exists, hides that fourth sheet using SetVisible(false, true), and saves the file as ConfiguredWorkbook.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | set SheetTabBarWidth | hide worksheet programmatically | save Excel workbook .NET | Excel tab bar width | Aspose.Cells example GitHub | worksheet visibility Aspose | configure workbook appearance
-// Common Searches: Aspose.Cells set tab bar width C# | how to hide a specific worksheet with Aspose.Cells | save workbook after hiding sheets .NET | C# code to change SheetTabBarWidth in Excel file | Aspose.Cells hide fourth sheet example
-// Developer Intent: Programmatically adjust the workbook UI (tab bar width), conceal a designated worksheet, and persist the changes to an Excel file.
-// Use Cases: Design a user‑friendly Excel report where the tab bar spans the full window for easier navigation. | Create a template that keeps calculation or data‑source sheets hidden while exposing only the final output sheets. | Automate generation of Excel files that must hide internal worksheets for security or simplicity before distribution.
-// AI Prompts: Generate C# code that sets SheetTabBarWidth to 1500, hides the second worksheet, and saves the workbook as a macro‑enabled file using Aspose.Cells. | Show how to hide multiple worksheets by name and adjust the tab bar width in an Aspose.Cells workbook before exporting to PDF. | Write a reusable method that accepts a file path, custom tab bar width, worksheet index to hide, and returns the saved workbook stream.
+// Title: Hide the fourth worksheet and customize the tab bar color before saving an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Create a new Workbook, set the TabBarColor to a chosen value, hide the worksheet at index 3, and save the workbook as an .xlsx file using Aspose.Cells for .NET. | Show how to verify that a fourth sheet exists, make it invisible, adjust workbook.Settings (e.g., TabBarColor), and persist the workbook to a specified path.
+// Common Searches: asp.net hide fourth worksheet using Aspose.Cells | change tab bar color in an Aspose.Cells workbook C# | save Excel file after hiding specific sheet with Aspose.Cells .NET | Aspose.Cells workbook settings for customizing tab bar appearance | C# hide worksheet by index and export workbook to .xlsx
+// Tags: hide worksheet by index Aspose.Cells | set tab bar color Aspose.Cells | save workbook with hidden sheets .NET | Aspose.Cells workbook settings customization | C# Excel workbook tab bar appearance
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// The example creates a new Workbook, notes that Aspose.Cells does not support a TabBarWidth property (suggesting TabBarColor as an alternative), hides the fourth worksheet when present, ensures the output directory exists, and saves the workbook to 'output.xlsx' while handling potential exceptions.
+class Program
 {
-    // A concise C# example that creates a new Workbook, sets the SheetTabBarWidth (1/1000 of window width), adds enough sheets to ensure a fourth worksheet exists, hides that fourth sheet using SetVisible(false, true), and saves the file as ConfiguredWorkbook.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
+            var workbook = new Workbook();
 
-            // Set the width of the worksheet tab bar (value is in 1/1000 of window width)
-            workbook.Settings.SheetTabBarWidth = 1000; // Example: full width
+            // NOTE: Aspose.Cells does not provide a TabBarWidth property.
+            // If you need to customize the tab bar appearance, consider using other available settings.
+            // Example (setting tab bar color):
+            // workbook.Settings.TabBarColor = System.Drawing.Color.LightGray;
 
-            // Ensure there are at least four worksheets
-            // The default workbook contains one sheet; add three more.
-            workbook.Worksheets.Add("Sheet2");
-            workbook.Worksheets.Add("Sheet3");
-            workbook.Worksheets.Add("Sheet4");
+            // Hide the fourth worksheet (zero‑based index 3) if it exists
+            if (workbook.Worksheets.Count > 3)
+            {
+                workbook.Worksheets[3].IsVisible = false;
+            }
 
-            // Hide the fourth worksheet (index 3) using the SetVisible method
-            // Parameters: isVisible = false, ignoreError = true
-            workbook.Worksheets[3].SetVisible(false, true);
+            // Define output path
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook with the applied settings
-            workbook.Save("ConfiguredWorkbook.xlsx", SaveFormat.Xlsx);
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

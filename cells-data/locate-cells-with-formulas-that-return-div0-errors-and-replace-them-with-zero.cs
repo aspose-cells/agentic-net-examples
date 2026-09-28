@@ -1,10 +1,7 @@
-// Title: Aspose.Cells for .NET – Replace #DIV/0! Errors with Zero in an Excel Workbook
-// Description: Loads a workbook, forces formula recalculation, scans every used cell across all worksheets, detects the #DIV/0! error, substitutes it with the numeric value 0, and saves the cleaned file.
-// Keywords: Aspose.Cells replace DIV/0 error | C# set #DIV/0! to zero | Excel error handling .NET | cell.IsErrorValue Aspose example | remove division by zero Aspose.Cells | Aspose.Cells formula error cleanup | global Excel data sanitization
-// Common Searches: how to change #DIV/0! to 0 using Aspose.Cells | Aspose.Cells replace division by zero error | C# iterate worksheets and fix Excel errors | Aspose.Cells calculate formulas then clean errors | replace Excel error values programmatically .NET
-// Developer Intent: Find and replace cells that contain the #DIV/0! error with a numeric zero.
-// Use Cases: Clean financial reports before sharing so division‑by‑zero cells display 0 instead of an error. | Prepare Excel uploads for ERP systems that reject error values. | Automate batch processing of multiple workbooks to ensure all #DIV/0! cells are numeric.
-// AI Prompts: Show how to replace any Excel error (e.g., #N/A, #VALUE!) with a configurable default using Aspose.Cells. | Add logging that records the address of each cell changed from #DIV/0! to zero. | Explain how to skip the CalculateFormula step when the workbook is already up‑to‑date while still fixing #DIV/0! errors.
+// Title: Replace #DIV/0! errors with zero in all worksheets of an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an XLSX file with Aspose.Cells, forces formula calculation, scans every worksheet for cells containing the #DIV/0! error, and writes 0 into those cells. | Show a method using Aspose.Cells for .NET that iterates the used range of each sheet, detects error values, and replaces division‑by‑zero errors with the numeric value zero before saving the workbook. | Create a console‑application example that opens a workbook, evaluates all formulas, finds cells where Cell.IsErrorValue is true and Cell.StringValue contains "#DIV/0!", and sets the cell value to 0.
+// Common Searches: asp.net aspose.cells replace division by zero error with zero in excel file | c# find #DIV/0! cells in workbook using Aspose.Cells | how to handle #DIV/0! errors when calculating formulas with Aspose.Cells | iterate used range and set zero for error cells Aspose.Cells C# | Aspose.Cells replace error values in Excel worksheets programmatically
+// Tags: Aspose.Cells error value replacement | calculate formulas before error handling Aspose.Cells | iterate used range of worksheets C# | detect #DIV/0! cells Aspose.Cells | set numeric zero for Excel error cells | C# workbook error processing Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,82 +9,73 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Loads a workbook, forces formula recalculation, scans every used cell across all worksheets, detects the #DIV/0! error, substitutes it with the numeric value 0, and saves the cleaned file.
-    public class ReplaceDivZeroWithZero
+    // The example loads an input XLSX file, forces formula calculation, iterates each worksheet's used range, checks every cell for the '#DIV/0!' error, replaces those error cells with the numeric value 0, and saves the modified workbook to a new file.
+    public class ReplaceDivZeroErrors
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Verify input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook;
             try
             {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Ensure all formulas are calculated so error values are up‑to‑date
-            workbook.CalculateFormula();
+                // Ensure all formulas are calculated so that error values are materialized
+                workbook.CalculateFormula();
 
-            // Iterate through each worksheet
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Cells cells = sheet.Cells;
-
-                // Scan the used range of the worksheet
-                int maxRow = cells.MaxRow;
-                int maxCol = cells.MaxColumn;
-
-                for (int row = 0; row <= maxRow; row++)
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    for (int col = 0; col <= maxCol; col++)
-                    {
-                        Cell cell = cells[row, col];
+                    Cells cells = sheet.Cells;
 
-                        // Replace #DIV/0! errors with numeric zero
-                        if (cell.IsErrorValue && cell.StringValue == "#DIV/0!")
+                    // Determine the used range of the worksheet
+                    int maxRow = cells.MaxRow;
+                    int maxColumn = cells.MaxColumn;
+
+                    // Scan every cell within the used range
+                    for (int row = 0; row <= maxRow; row++)
+                    {
+                        for (int col = 0; col <= maxColumn; col++)
                         {
-                            cell.PutValue(0);
+                            Cell cell = cells[row, col];
+
+                            // Check if the cell contains an error value
+                            if (cell.IsErrorValue)
+                            {
+                                // Identify the specific #DIV/0! error by its string representation
+                                if (!string.IsNullOrEmpty(cell.StringValue) && cell.StringValue.Contains("#DIV/0!"))
+                                {
+                                    // Replace the error with zero
+                                    cell.PutValue(0);
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            // Save the modified workbook
-            try
-            {
+                // Save the modified workbook
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+
+        // Entry point required for console application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

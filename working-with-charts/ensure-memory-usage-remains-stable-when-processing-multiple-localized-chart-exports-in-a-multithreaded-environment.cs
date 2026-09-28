@@ -1,106 +1,138 @@
-// Title: C# – Parallel Localized Chart PDF Export with Compact Memory using Aspose.Cells
-// Description: The sample creates a workbook, sets MemorySetting.MemoryPreference for a compact in‑memory model, enables MultiThreadReading, builds a single column chart, and launches a thread for each locale (en‑US, fr‑FR, de‑DE, ja‑JP, es‑ES). Each thread applies its CultureInfo, saves the shared chart as a locale‑named PDF, and signals a CountdownEvent before the workbook is disposed, keeping the memory footprint stable.
-// Keywords: Aspose.Cells | C# chart export | parallel PDF generation | localized chart | MemoryPreference | MultiThreadReading | CountdownEvent | CultureInfo | low memory processing | thread‑safe chart rendering
-// Common Searches: Aspose.Cells export chart to PDF multi thread | C# generate localized chart PDFs with Aspose.Cells | compact memory chart export Aspose.Cells .NET | parallel chart rendering Aspose.Cells example | set MemorySetting.MemoryPreference for chart export
-// Developer Intent: Export a single chart to multiple locale‑specific PDF files concurrently while minimizing memory consumption.
-// Use Cases: Produce sales charts in PDF for English, French, German, Japanese, and Spanish in a single batch to accelerate reporting. | Run high‑volume chart exports on a web server where each request needs its own culture formatting without blowing up RAM. | Process large workbooks with dozens of charts by reusing one chart object and leveraging Aspose.Cells low‑memory settings.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a chart to PDF for a list of locales in parallel, ensuring memory stays low with MemorySetting.MemoryPreference and MultiThreadReading. | Show how to switch the example to FileCache mode for extremely large workbooks while still supporting concurrent locale‑specific exports. | List best practices for disposing Aspose.Cells objects and handling exceptions during multi‑threaded chart PDF generation.
+// Title: Parallel export of localized Excel charts to PNG with stable memory using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads each workbook with LoadOptions.MemorySetting set to MemoryPreference, applies a CultureInfo locale, and exports the first chart to a PNG file inside a Parallel.ForEach loop. | Enhance the parallel chart export method to accept a custom chart index and an output image format (PNG, JPEG) while guaranteeing all Aspose.Cells objects are disposed via using statements. | Add a CancellationToken parameter to ExportCharts so that ongoing chart exports can be cancelled gracefully without leaking memory.
+// Common Searches: how to export Excel chart as PNG in a multithreaded C# application using Aspose.Cells | Aspose.Cells memory preference for processing many workbooks concurrently | set workbook locale for chart titles when exporting images with Aspose.Cells | prevent out-of-memory errors while exporting charts in parallel with Aspose.Cells | parallel.ForEach chart export example Aspose.Cells .NET
+// Tags: multithreaded chart image generation Aspose.Cells | memory‑efficient workbook loading Aspose.Cells | localized chart title Aspose.Cells | chart to PNG conversion C# | using statement resource disposal Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Threading;
+using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsMultiThreadedChartExport
+namespace AsposeCellsExample
 {
-    // The sample creates a workbook, sets MemorySetting.MemoryPreference for a compact in‑memory model, enables MultiThreadReading, builds a single column chart, and launches a thread for each locale (en‑US, fr‑FR, de‑DE, ja‑JP, es‑ES). Each thread applies its CultureInfo, saves the shared chart as a locale‑named PDF, and signals a CountdownEvent before the workbook is disposed, keeping the memory footprint stable.
-    public class Program
+    // The example processes a collection of export requests in parallel, loading each workbook with a memory‑saving setting, applying the requested locale, retrieving or creating the first chart, localizing its title, binding it to a sample data range, and saving the chart as a PNG image, while using 'using' blocks to ensure native resources are released and memory usage stays stable.
+    public class LocalizedChartExporter
     {
-        // Entry point
+        // Represents a request to export a chart for a specific workbook and locale.
+        public class ExportRequest
+        {
+            public string? WorkbookPath { get; set; }      // Path to the source Excel file
+            public string? OutputImagePath { get; set; }   // Path where the chart image will be saved
+            public string? Locale { get; set; }            // Locale identifier (e.g., "en-US", "fr-FR")
+        }
+
+        // Entry point for processing multiple export requests in parallel.
+        public void ExportCharts(IEnumerable<ExportRequest> requests, int maxDegreeOfParallelism = 4)
+        {
+            var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
+
+            Parallel.ForEach(requests, options, request =>
+            {
+                try
+                {
+                    // Validate input parameters.
+                    if (string.IsNullOrWhiteSpace(request?.WorkbookPath) ||
+                        string.IsNullOrWhiteSpace(request?.OutputImagePath) ||
+                        string.IsNullOrWhiteSpace(request?.Locale))
+                    {
+                        Console.WriteLine("Invalid request parameters; skipping.");
+                        return;
+                    }
+
+                    // Ensure the source workbook exists.
+                    if (!File.Exists(request.WorkbookPath))
+                    {
+                        Console.WriteLine($"Workbook not found: {request.WorkbookPath}");
+                        return;
+                    }
+
+                    // Load the workbook with memory‑saving options.
+                    var loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                    {
+                        MemorySetting = MemorySetting.MemoryPreference
+                    };
+
+                    // Use 'using' to guarantee native resources are released.
+                    using (var workbook = new Workbook(request.WorkbookPath, loadOptions))
+                    {
+                        // Apply the requested locale (affects number formats, etc.).
+                        workbook.Settings.CultureInfo = new CultureInfo(request.Locale);
+
+                        // Assume the first worksheet contains the data and chart.
+                        if (workbook.Worksheets.Count == 0)
+                        {
+                            Console.WriteLine("No worksheets found in workbook.");
+                            return;
+                        }
+
+                        var sheet = workbook.Worksheets[0];
+
+                        // Retrieve an existing chart or create a new one.
+                        Chart chart;
+                        if (sheet.Charts.Count > 0)
+                        {
+                            chart = sheet.Charts[0];
+                        }
+                        else
+                        {
+                            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                            chart = sheet.Charts[chartIndex];
+                        }
+
+                        // Localize chart title.
+                        chart.Title.Text = $"Sales Report ({request.Locale})";
+
+                        // Bind chart series to a sample data range (A1:A10 in this example).
+                        int firstRow = 0, lastRow = 9, firstColumn = 0;
+                        chart.NSeries.Clear();
+
+                        // Build a range reference string like "Sheet1!A1:A10".
+                        string startCell = CellsHelper.CellIndexToName(firstRow, firstColumn);
+                        string endCell = CellsHelper.CellIndexToName(lastRow, firstColumn);
+                        string rangeRef = $"{sheet.Name}!{startCell}:{endCell}";
+
+                        chart.NSeries.Add(rangeRef, true);
+                        chart.NSeries[0].Name = sheet.Cells[firstRow, firstColumn].StringValue;
+
+                        // Export the chart to a PNG image file (default format is PNG).
+                        chart.ToImage(request.OutputImagePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing request for workbook '{request?.WorkbookPath}': {ex.Message}");
+                }
+            });
+        }
+    }
+
+    // Simple program entry point to demonstrate usage.
+    public static class Program
+    {
         public static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            var exporter = new LocalizedChartExporter();
 
-            // Use a memory‑efficient mode (compact in‑memory representation)
-            // This reduces the overall memory footprint when many charts are processed.
-            workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
-
-            // Access the first worksheet and fill sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Enable multi‑thread reading on the cells collection.
-            // This allows concurrent read access to cell values while charts are being exported.
-            cells.MultiThreadReading = true;
-
-            // Populate data that will be used by all charts
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Value");
-            for (int i = 2; i <= 6; i++)
+            var requests = new List<LocalizedChartExporter.ExportRequest>
             {
-                cells[$"A{i}"].PutValue($"Item {i - 1}");
-                cells[$"B{i}"].PutValue(i * 10);
-            }
-
-            // Add a single chart that will be reused for all locales.
-            // The chart is created once to avoid repeated allocation of worksheet objects.
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B6", true);
-            chart.NSeries.CategoryData = "A2:A6";
-            chart.Title.Text = "Localized Sales Chart";
-
-            // Define the locales for which the chart will be exported.
-            string[] locales = new[] { "en-US", "fr-FR", "de-DE", "ja-JP", "es-ES" };
-
-            // Use a countdown event to wait for all export threads to finish.
-            CountdownEvent done = new CountdownEvent(locales.Length);
-
-            foreach (string locale in locales)
-            {
-                Thread thread = new Thread(() =>
+                new LocalizedChartExporter.ExportRequest
                 {
-                    try
-                    {
-                        // Set the current thread culture – this influences number/date formatting
-                        // when the chart is rendered.
-                        CultureInfo culture = new CultureInfo(locale);
-                        Thread.CurrentThread.CurrentCulture = culture;
-                        Thread.CurrentThread.CurrentUICulture = culture;
+                    WorkbookPath = "SampleData.xlsx",
+                    OutputImagePath = "Chart_en-US.png",
+                    Locale = "en-US"
+                },
+                new LocalizedChartExporter.ExportRequest
+                {
+                    WorkbookPath = "SampleData.xlsx",
+                    OutputImagePath = "Chart_fr-FR.png",
+                    Locale = "fr-FR"
+                }
+            };
 
-                        // Build a file name that reflects the locale.
-                        string fileName = $"Chart_{locale}.pdf";
-
-                        // Export the chart to PDF. The ToPdf(string) rule is used directly.
-                        chart.ToPdf(fileName);
-
-                        Console.WriteLine($"Exported chart for locale {locale} to {fileName}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error exporting chart for locale {locale}: {ex.Message}");
-                    }
-                    finally
-                    {
-                        // Signal that this thread has finished.
-                        done.Signal();
-                    }
-                });
-
-                // Start the export thread.
-                thread.Start();
-            }
-
-            // Wait until all export threads have completed.
-            done.Wait();
-
-            // Dispose of the workbook to release any temporary files (important when using FileCache mode).
-            workbook.Dispose();
-
-            Console.WriteLine("All chart exports completed. Workbook resources released.");
+            exporter.ExportCharts(requests);
         }
     }
 }

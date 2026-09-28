@@ -1,70 +1,53 @@
-// Title: Cancel Aspose.Cells CalculateFormula with a CancellationToken after a timeout (C#)
-// Description: Demonstrates how to abort a long‑running workbook.CalculateFormula call by assigning a custom InterruptMonitor that checks a CancellationToken. The token is set to cancel after a defined interval, causing Aspose.Cells to throw a CellsException with code Interrupted, which can be caught and handled.
-// Keywords: Aspose.Cells | CalculateFormula | CancellationToken | InterruptMonitor | timeout cancellation | CellsException Interrupted | C# spreadsheet calculation | abort formula evaluation
-// Common Searches: Aspose.Cells cancel CalculateFormula timeout | C# use CancellationToken with Aspose.Cells interrupt monitor | stop long running formula calculation Aspose.Cells | handle CellsException Interrupted | set calculation timeout Aspose.Cells workbook
-// Developer Intent: The developer needs to stop a workbook.CalculateFormula operation if it exceeds a predefined time limit.
-// Use Cases: Prevent UI freeze in a desktop app by cancelling heavy formula processing after a set duration. | Enforce server‑side execution limits for spreadsheet services to avoid runaway tasks. | Provide an API endpoint that lets callers abort calculation via a CancellationToken.
-// AI Prompts: Create a reusable method that runs workbook.CalculateFormula with a configurable timeout and returns true if completed, false if cancelled. | Show logging of calculation start, end, and timeout events while using Aspose.Cells' interrupt monitor. | Write a unit test that verifies CalculateFormula is interrupted when the CancellationToken is cancelled after a short delay.
+// Title: How to abort Aspose.Cells Workbook.CalculateFormula with a timeout using ThreadInterruptMonitor in C#
+// AI Prompts: Generate C# code that configures a ThreadInterruptMonitor with a 2‑second limit, runs Workbook.CalculateFormula, and catches the interruption exception. | Show how to handle a CellsException of type Interrupted after a calculation timeout and continue program execution. | Provide an example of saving the workbook when the calculation is stopped early due to the timeout.
+// Common Searches: Aspose.Cells stop CalculateFormula after 2000 ms in C# | C# ThreadInterruptMonitor example for aborting long Excel calculations | How to handle interrupted calculation exception in Aspose.Cells workbook
+// Tags: Aspose.Cells calculation timeout ThreadInterruptMonitor | Workbook.CalculateFormula interruption handling | catch CellsException Interrupted Aspose.Cells | save partially calculated workbook Aspose.Cells | C# Excel formula evaluation timeout
 
 using System;
-using System.Threading;
 using Aspose.Cells;
 
-// Demonstrates how to abort a long‑running workbook.CalculateFormula call by assigning a custom InterruptMonitor that checks a CancellationToken. The token is set to cancel after a defined interval, causing Aspose.Cells to throw a CellsException with code Interrupted, which can be caught and handled.
-class Program
+// The sample creates a workbook with thousands of simple formulas, attaches a ThreadInterruptMonitor set to a 2000 ms limit, invokes Workbook.CalculateFormula, catches the CellsException when the calculation exceeds the timeout, stops the monitor, and saves the workbook containing whatever results were computed before the interruption.
+class WorkbookCalculationWithTimeout
 {
     static void Main()
     {
-        // Create a new workbook and add sample data with formulas
+        // Create a new workbook and add sample data/formulas
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
         // Populate many rows to make calculation take noticeable time
-        for (int i = 0; i < 2000; i++)
+        for (int i = 0; i < 5000; i++)
         {
-            sheet.Cells[i, 0].PutValue(i);
-            sheet.Cells[i, 1].Formula = $"=A{i}+SUM(A1:A{i})";
+            sheet.Cells[i, 0].PutValue(i);                     // Column A values
+            sheet.Cells[i, 1].Formula = $"=A{i}+1";           // Column B formulas
         }
 
-        // Set up a cancellation token that will be triggered after a timeout
-        using (CancellationTokenSource cts = new CancellationTokenSource())
+        // Create a thread‑based interrupt monitor
+        ThreadInterruptMonitor monitor = new ThreadInterruptMonitor(false);
+        // Assign the monitor to the workbook
+        workbook.InterruptMonitor = monitor;
+
+        // Start the monitor with a time limit (e.g., 2000 ms = 2 seconds)
+        monitor.StartMonitor(2000);
+
+        try
         {
-            // Define timeout (e.g., 1500 milliseconds)
-            cts.CancelAfter(1500);
-
-            // Assign a custom interrupt monitor that checks the token
-            workbook.InterruptMonitor = new CancellationInterruptMonitor(cts.Token);
-
-            try
-            {
-                // Perform formula calculation; it will be interrupted if the token is cancelled
-                workbook.CalculateFormula();
-                Console.WriteLine("Calculation completed successfully.");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-            {
-                Console.WriteLine("Calculation was interrupted due to timeout.");
-            }
+            // Perform calculation; it will be interrupted if it exceeds the time limit
+            workbook.CalculateFormula();
+            Console.WriteLine("Calculation completed successfully.");
+        }
+        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+        {
+            // Handle the interruption caused by the timeout
+            Console.WriteLine("Calculation was interrupted due to timeout.");
+        }
+        finally
+        {
+            // Ensure the monitor is stopped
+            monitor.FinishMonitor();
         }
 
-        // Save the workbook (optional)
+        // Save the workbook (optional, will contain whatever was calculated before interruption)
         workbook.Save("Result.xlsx");
-    }
-
-    // Custom interrupt monitor that uses a CancellationToken to request interruption
-    private class CancellationInterruptMonitor : AbstractInterruptMonitor
-    {
-        private readonly CancellationToken _token;
-
-        public CancellationInterruptMonitor(CancellationToken token)
-        {
-            _token = token;
-        }
-
-        // Return true when the token signals cancellation
-        public override bool IsInterruptionRequested => _token.IsCancellationRequested;
-
-        // Keep default behavior: throw CellsException when interrupted
-        public override bool TerminateWithoutException => false;
     }
 }

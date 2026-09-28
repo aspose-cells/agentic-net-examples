@@ -1,50 +1,51 @@
-// Title: C# – Apply Diagonal Stripe Fill Pattern to Cells with Aspose.Cells
-// Description: Shows how to create a style using BackgroundType.DiagonalStripe, set foreground and background colors, apply the style to a cell range (B2:C4), and save the workbook as an XLSX file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | diagonal stripe fill | BackgroundType.DiagonalStripe | cell background pattern | foreground color | background color | style range formatting | Excel export .NET | cell highlighting
-// Common Searches: Aspose.Cells set diagonal stripe pattern C# | apply fill pattern to a range with Aspose.Cells | how to change cell background colors Aspose.Cells .NET | create striped cell style Aspose.Cells | save workbook after formatting cells Aspose.Cells
-// Developer Intent: The developer wants to highlight a specific range of cells by applying a diagonal‑stripe fill pattern with custom colors using Aspose.Cells for .NET.
-// Use Cases: Visually separate sections in a generated report by adding a striped background to header rows. | Draw attention to cells that exceed a threshold, such as budget overruns, with a contrasting stripe pattern. | Mark total or summary rows in financial statements for quick identification.
-// AI Prompts: Generate C# code that uses Aspose.Cells to apply a diagonal stripe pattern with red stripes on a white background to the range A5:D10. | Create a reusable method that accepts a worksheet, a cell range, foreground and background colors, and applies a diagonal stripe style using Aspose.Cells. | Show an example of applying three different diagonal stripe styles to separate ranges in the same workbook with Aspose.Cells for .NET.
+// Title: How to apply a diagonal stripe fill pattern to a range of cells with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# program that builds a style with a diagonal stripe fill, sets the foreground to Yellow and the background to LightGray, and applies it to cells A1 through B2 in a new workbook. | Generate an Excel file named DiagonalStripeHighlight.xlsx where the specified range is highlighted with yellow diagonal stripes over a light‑gray base using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# apply pattern fill to a range of cells | how to use BackgroundType enumeration for cell styling in Aspose.Cells | set foreground and background colors in Aspose.Cells style object | C# example highlighting cells with custom fill pattern in Excel | apply style to cells A1 to B2 using Aspose.Cells .NET
+// Tags: stripe pattern fill Aspose.Cells C# | set cell style background pattern .NET | cell style color settings Aspose.Cells | apply style to cell range Aspose.Cells | BackgroundType enumeration Aspose.Cells example
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
 
-// Shows how to create a style using BackgroundType.DiagonalStripe, set foreground and background colors, apply the style to a cell range (B2:C4), and save the workbook as an XLSX file with Aspose.Cells for .NET.
-class DiagonalStripeHighlight
+// Creates a new workbook, defines a style with a diagonal stripe fill (yellow stripes on a light‑gray background), applies the style to cells A1‑B2, and saves the file as DiagonalStripeHighlight.xlsx.
+class DiagonalStripeFillExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Sample data (optional, just to have visible cells)
-        sheet.Cells["A1"].PutValue("Item");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["A4"].PutValue("C");
-        sheet.Cells["B4"].PutValue(30);
+        // Example: Fill cells A1 to B2 with diagonal stripe pattern
+        // Define the range
+        CellArea range = CellArea.CreateCellArea("A1", "B2");
 
-        // Create a style with diagonal stripe background pattern
-        Style style = workbook.CreateStyle();
-        style.Pattern = BackgroundType.DiagonalStripe;   // diagonal stripe pattern
-        style.ForegroundColor = Color.Yellow;            // color of the stripes
-        style.BackgroundColor = Color.Blue;              // background color
+        // Create a style object
+        Style stripeStyle = workbook.CreateStyle();
 
-        // Apply the style to the target cells (e.g., B2:C4)
-        for (int row = 1; row <= 3; row++)      // rows 2 to 4 (zero‑based index)
+        // Set the fill pattern to diagonal stripes
+        stripeStyle.Pattern = BackgroundType.DiagonalStripe;
+
+        // Define foreground (stripe) and background colors
+        stripeStyle.ForegroundColor = Color.Yellow;      // Stripe color
+        stripeStyle.BackgroundColor = Color.LightGray;   // Base cell color
+
+        // Apply the style to each cell in the range
+        for (int row = range.StartRow; row <= range.EndRow; row++)
         {
-            for (int col = 1; col <= 2; col++)  // columns B to C
+            for (int col = range.StartColumn; col <= range.EndColumn; col++)
             {
-                sheet.Cells[row, col].SetStyle(style);
+                // Get the cell (creates it if it doesn't exist)
+                Cell cell = sheet.Cells[row, col];
+
+                // Apply the style
+                cell.SetStyle(stripeStyle);
             }
         }
 
-        // Save the workbook
-        workbook.Save("DiagonalStripeHighlight.xlsx", SaveFormat.Xlsx);
+        // Save the workbook to a file
+        workbook.Save("DiagonalStripeHighlight.xlsx");
     }
 }

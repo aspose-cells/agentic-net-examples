@@ -1,34 +1,45 @@
-// Title: C# – Extract VBA Project Description from a Macro‑Enabled .xlsm with Aspose.Cells
-// Description: Loads a macro‑enabled workbook using Aspose.Cells for .NET, checks for a VBA project, and reads the project's Name property (used as the description). The code prints the description or reports that no VBA project exists.
-// Keywords: Aspose.Cells VBA project name | C# read .xlsm macro metadata | extract VBA description Aspose | check workbook.HasMacro | .NET load macro‑enabled Excel
-// Common Searches: How to get VBA project name from an xlsm file in C# | Aspose.Cells read VBA project description | Check if Excel workbook contains macros with Aspose | Retrieve macro project metadata using Aspose.Cells .NET
-// Developer Intent: Read a macro‑enabled Excel file and obtain the VBA project's description (Name) for logging or UI display.
-// Use Cases: Validate uploaded .xlsm files and log their VBA project names before further processing. | Create an inventory of Excel workbooks with associated VBA project descriptions for documentation. | Show the VBA project name in an application UI to inform users about embedded macros.
-// AI Prompts: Generate C# code that opens an .xlsm file with Aspose.Cells, verifies the presence of a VBA project, and returns the project's Name property. | Provide an example that extracts the VBA project description from a workbook and gracefully handles the case where no VBA project is present, using Aspose.Cells for .NET. | Show how to combine VBA project name extraction with other workbook metadata (author, creation date) in a single Aspose.Cells routine.
+// Title: Load a macro-enabled .xlsm workbook and extract the VBA project's Description metadata with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an .xlsm file using Aspose.Cells, verifies a VBA project exists, and prints the project's Description property. | Show how to access Workbook.VbaProject.Description in Aspose.Cells to retrieve VBA project metadata from a macro-enabled Excel file. | Create a reusable C# method that returns the Description string of a VBA project from a given .xlsm workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells read VBA project description from .xlsm in C# | How to get VBA project metadata with Aspose.Cells .NET | C# extract Description property of VBA project in macro-enabled Excel file | Retrieve VBA project properties using Aspose.Cells for .NET | Sample code for reading VBA description from Excel workbook with Aspose.Cells
+// Tags: aspnet aspose.cells read vba description | c# load macro-enabled xlsm workbook | aspose.cells access vba project metadata | extract vba project description .net | workbook.vbaproject description property
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Loads a macro‑enabled workbook using Aspose.Cells for .NET, checks for a VBA project, and reads the project's Name property (used as the description). The code prints the description or reports that no VBA project exists.
+// The example demonstrates how to load a macro-enabled .xlsm workbook with Aspose.Cells for .NET, confirm that a VBA project is present, and read the project's Description property for use as metadata.
 class Program
 {
     static void Main()
     {
-        // Load the macro-enabled workbook from file
-        string filePath = "input.xlsm";
-        Workbook workbook = new Workbook(filePath);
+        try
+        {
+            string filePath = "input.xlsm";
 
-        // Verify that the workbook contains a VBA project
-        if (workbook.HasMacro && workbook.VbaProject != null)
-        {
-            // Extract the VBA project's name (used here as the description)
-            string vbaDescription = workbook.VbaProject.Name;
-            Console.WriteLine("VBA Project Description: " + vbaDescription);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
+
+            // Load the workbook; Aspose.Cells automatically detects the format (including .xlsm)
+            Workbook workbook = new Workbook(filePath);
+
+            // Check for the presence of a VBA project
+            if (workbook.VbaProject != null)
+            {
+                Console.WriteLine("VBA project is present in the workbook.");
+            }
+            else
+            {
+                Console.WriteLine("No VBA project found in the workbook.");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("The loaded workbook does not contain a VBA project.");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

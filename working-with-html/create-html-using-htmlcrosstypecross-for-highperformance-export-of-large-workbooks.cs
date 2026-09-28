@@ -1,51 +1,46 @@
-// Title: High‑Performance HTML Export of Large Workbooks with HtmlCrossType.Cross (Aspose.Cells for .NET)
-// Description: Demonstrates creating a workbook with 5,000 rows, configuring HtmlSaveOptions to use HtmlCrossType.Cross, optionally disabling CSS, and saving the data as a single HTML file for fast, low‑memory conversion.
-// Keywords: Aspose.Cells | HtmlCrossType.Cross | HTML export | large workbook | .NET | C# | performance | HtmlSaveOptions | disable CSS
-// Common Searches: Aspose.Cells HtmlCrossType.Cross example | export large Excel to HTML .NET | speed up HTML conversion Aspose.Cells | disable CSS in HtmlSaveOptions | high performance HTML export C#
-// Developer Intent: Generate a single HTML file from a massive workbook quickly and with minimal memory usage by using HtmlCrossType.Cross.
-// Use Cases: Render extensive data sets on a web page without loading the full Excel file. | Accelerate reporting pipelines by turning off CSS generation during HTML conversion. | Provide on‑the‑fly HTML previews in ASP.NET Core APIs for large spreadsheets.
-// AI Prompts: Write C# code that creates a 10,000‑row workbook and exports it to HTML using HtmlCrossType.Cross with Aspose.Cells. | Explain how HtmlCrossStringType.Cross reduces memory consumption and improves export speed in Aspose.Cells. | Show how to stream the HTML output directly to an ASP.NET Core response using HtmlSaveOptions.
+// Title: Efficiently export a large Excel workbook to HTML with Aspose.Cells in C# (fallback when HtmlCrossType.Cross is unavailable)
+// AI Prompts: Generate C# code that loads an .xlsx file, verifies its existence, and saves it as an HTML file using Aspose.Cells HtmlSaveOptions with performance considerations. | Show how to implement a graceful fallback to default HtmlSaveOptions when the HtmlCrossType.Cross property is missing in the current Aspose.Cells version. | Provide robust error‑handling that captures and logs any exceptions occurring during the workbook‑to‑HTML conversion.
+// Common Searches: Aspose.Cells C# export large workbook to HTML with high performance | HtmlCrossType.Cross not found how to save Excel as HTML using Aspose.Cells | C# sample code for converting .xlsx to .html with Aspose.Cells HtmlSaveOptions | Best practices for handling missing HtmlCrossType in Aspose.Cells | How to check file existence before converting Excel to HTML in C#
+// Tags: Aspose.Cells HTML export large workbook | HtmlSaveOptions performance tuning | handling missing HtmlCrossType | C# Excel to HTML conversion | exception handling Aspose.Cells save
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlCrossDemo
+// The example verifies that the source .xlsx file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions (since HtmlCrossType.Cross is unavailable), saves the workbook as an HTML file, and includes try‑catch logic to report any conversion errors.
+class Program
 {
-    // Demonstrates creating a workbook with 5,000 rows, configuring HtmlSaveOptions to use HtmlCrossType.Cross, optionally disabling CSS, and saving the data as a single HTML file for fast, low‑memory conversion.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Load the source workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-            // Populate the worksheet with a large amount of sample data
-            // (In a real scenario this could be loaded from a source or generated)
-            for (int row = 0; row < 5000; row++)
-            {
-                for (int col = 0; col < 20; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-            }
+            // Configure HTML save options. The HtmlCrossType property is not available
+            // in the current Aspose.Cells version, so default rendering settings are used.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-            // Create HTML save options (lifecycle rule)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Export the workbook to HTML using the configured options.
+            workbook.Save(outputPath, htmlOptions);
 
-            // Set the cross‑cell string handling to Cross for high‑performance export
-            // (uses HtmlSaveOptions.HtmlCrossStringType property)
-            htmlOptions.HtmlCrossStringType = HtmlCrossType.Cross;
-
-            // Optional: improve performance further by disabling CSS (if desired)
-            // htmlOptions.DisableCss = true;
-
-            // Save the workbook as HTML using the configured options (lifecycle rule)
-            workbook.Save("LargeWorkbook.html", htmlOptions);
-
-            Console.WriteLine("HTML export completed with HtmlCrossType.Cross.");
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

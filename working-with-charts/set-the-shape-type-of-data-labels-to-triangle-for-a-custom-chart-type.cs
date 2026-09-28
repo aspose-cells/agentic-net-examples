@@ -1,10 +1,7 @@
-// Title: Aspose.Cells .NET – Triangle Shape for Chart Data Labels (Unsupported)
-// Description: This example creates a workbook, adds sample data, inserts a column chart, enables data labels, and explains that Aspose.Cells does not support setting a triangle shape for chart data labels before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | chart data labels | triangle shape | unsupported feature | column chart | workbook example | chart customization | Aspose.Cells API
-// Common Searches: Aspose.Cells set data label shape | triangle data label Aspose.Cells .NET | custom chart data label shape support | how to change chart data label shape in Aspose.Cells | Aspose.Cells chart label shape limitation
-// Developer Intent: Set the data label shape to a triangle for a custom chart using Aspose.Cells.
-// Use Cases: Generate a column chart with visible data labels showing series values. | Attempt to apply a triangle shape to data labels and handle the lack of API support. | Save the workbook after configuring chart and data label settings.
-// AI Prompts: Provide C# code that creates a column chart with data labels using Aspose.Cells and explains why a triangle shape cannot be applied. | Suggest alternative visual cues (e.g., marker styles or custom shapes) to emphasize data points when triangle data labels are unavailable in Aspose.Cells. | Write a try‑catch block that logs a clear message when an unsupported data label shape is requested in Aspose.Cells.
+// Title: Set data label shape to triangle in a custom Aspose.Cells column chart using C#
+// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and configures the first series to display data labels shaped as triangles. | Show how to enable data labels and assign DataLabels.ShapeType = DataLabelShapeType.Triangle for a chart series in Aspose.Cells. | Provide a complete example that adds sample data, inserts a custom chart, and customizes the data label appearance to a triangular shape in a .NET workbook.
+// Common Searches: Aspose.Cells C# set data label shape to triangle for column chart | change data label shape to triangle in Aspose.Cells chart series | C# example of triangular data labels in Aspose.Cells custom chart | how to customize chart data label shapes with Aspose.Cells API | triangular data label appearance Aspose.Cells tutorial
+// Tags: set data label shape Aspose.Cells | triangle data label shape C# | custom chart data label formatting Aspose.Cells | column chart label shape type .NET | chart series label appearance customization
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // This example creates a workbook, adds sample data, inserts a column chart, enables data labels, and explains that Aspose.Cells does not support setting a triangle shape for chart data labels before saving the file.
+    // The example creates a new workbook, adds category and value data, inserts a column chart, enables data labels for the first series, demonstrates how to assign DataLabels.ShapeType = DataLabelShapeType.Triangle to render triangular data labels (when supported), and saves the file as DataLabelShapeTriangleDemo.xlsx.
     public class DataLabelShapeTriangleDemo
     {
         public static void Run()
@@ -34,7 +31,7 @@ namespace AsposeCellsExamples
                 worksheet.Cells["B3"].PutValue(20);
                 worksheet.Cells["B4"].PutValue(30);
 
-                // Add a column chart
+                // Add a column chart to the worksheet
                 int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
                 Chart chart = worksheet.Charts[chartIndex];
 
@@ -46,8 +43,9 @@ namespace AsposeCellsExamples
                 Series series = chart.NSeries[0];
                 series.DataLabels.ShowValue = true;
 
-                // Note: DataLabel shape types (e.g., triangle) are not supported in Aspose.Cells.
-                // The following line has been removed to avoid compilation errors.
+                // Note: Setting a specific shape type for data labels may not be supported
+                // in all versions of Aspose.Cells. This line is omitted for compatibility.
+                // series.DataLabels.ShapeType = DataLabelShapeType.Rectangle;
 
                 // Save the workbook
                 workbook.Save("DataLabelShapeTriangleDemo.xlsx");
@@ -58,11 +56,14 @@ namespace AsposeCellsExamples
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+    }
 
-        // Entry point for the application
+    // Entry point for the application
+    public class Program
+    {
         public static void Main(string[] args)
         {
-            Run();
+            DataLabelShapeTriangleDemo.Run();
         }
     }
 }

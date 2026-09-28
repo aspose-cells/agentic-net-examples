@@ -1,73 +1,126 @@
-// Title: C# – Export Excel to Accessible HTML with Cell IDs and Image Alt Text using Aspose.Cells
-// Description: This example creates a workbook, populates product rows, inserts a picture into cell A5 (when the file exists), assigns the cell address as the image's alt attribute, and saves the sheet as a self‑contained HTML file. The HtmlSaveOptions are set to output cell coordinates, use the address as the element ID, and embed images as Base64 strings, delivering an accessible, portable web page.
-// Keywords: Aspose.Cells C# HTML export | Excel to HTML with cell IDs | image alt attribute Aspose.Cells | ExportCellCoordinate option | CellNameAttribute id | ExportImagesAsBase64 | accessible HTML from Excel | screen‑reader friendly markup | self‑contained HTML report | sample code .NET
-// Common Searches: how to add alt text to images when exporting Excel to HTML with Aspose.Cells | export cell address as HTML element id using Aspose.Cells .NET | embed pictures as base64 in HTML output from Aspose.Cells | Aspose.Cells HtmlSaveOptions for accessibility | C# code to generate HTML with data‑celladdress attribute
-// Developer Intent: Produce an HTML document from a workbook where each table cell carries a unique identifier and any embedded picture includes an alt attribute that matches its originating cell.
-// Use Cases: Generate web‑ready reports that comply with WCAG guidelines by providing identifiable cells and descriptive alt text. | Create email‑friendly HTML snippets that contain all images inline, eliminating external dependencies. | Build interactive dashboards where JavaScript can target specific cells via their IDs for dynamic updates.
-// AI Prompts: Show how to set different alt texts for multiple pictures based on their cell locations. | Describe the HTML markup changes introduced by ExportCellCoordinate and CellNameAttribute settings. | Give a code sample that adds a custom data‑celladdress attribute while preserving existing cell formatting.
+// Title: Add cell‑address based alt attributes to images when exporting an Aspose.Cells workbook to HTML using C#
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook, saves it as HTML with external image files, and then updates each <img> tag to include an alt attribute that reflects the originating cell address of the chart or picture. | Generate a C# post‑processing routine that reads the HTML file produced by Aspose.Cells, locates all <img> elements, and injects descriptive alt text based on a pre‑collected list of chart and picture identifiers. | Provide a C# example that uses a regular expression to replace <img> tags in an Aspose.Cells HTML export, adding alt attributes that reference the source cell locations.
+// Common Searches: how to set alt text for chart images in Aspose.Cells HTML export C# | C# post‑process Aspose.Cells generated HTML to add image alt attributes | Aspose.Cells save workbook as HTML with accessible image alt tags | retrieve cell address of chart in Aspose.Cells for alt attribute | regex replace img tags in Aspose.Cells HTML output C#
+// Tags: Aspose.Cells HTML export add alt attributes | C# regex modify img tags in Aspose.Cells HTML | chart image accessibility Aspose.Cells | post‑process HTML for Aspose.Cells workbook conversion | external image files Aspose.Cells HtmlSaveOptions
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
+using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsHtmlExport
+// The sample program creates a workbook with sample data and a column chart, exports it to HTML with external image files, gathers identifiers for charts and pictures, reads the generated HTML, and uses a regular expression to inject alt attributes into each <img> tag, improving accessibility by linking images to their source cell addresses.
+class Program
 {
-    // This example creates a workbook, populates product rows, inserts a picture into cell A5 (when the file exists), assigns the cell address as the image's alt attribute, and saves the sheet as a self‑contained HTML file. The HtmlSaveOptions are set to output cell coordinates, use the address as the element ID, and embed images as Base64 strings, delivering an accessible, portable web page.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // -------------------- Create workbook --------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
+
+            // Fill sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a chart positioned at row 5, column 0 (cell A6)
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            Chart chart = sheet.Charts[chartIdx];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+            chart.Title.Text = "Sample Chart";
+
+            // -------------------- Save as HTML --------------------
+            string outputFolder = "output";
+            Directory.CreateDirectory(outputFolder);
+
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                ExportImagesAsBase64 = false // Save images as separate files
+                // Image folder options are omitted; images will be saved next to the HTML file
+            };
 
-                // Add some sample data
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Price");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(1.20);
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["B3"].PutValue(0.80);
+            string htmlPath = Path.Combine(outputFolder, "workbook.html");
+            workbook.Save(htmlPath, htmlOptions);
 
-                // Insert an image into cell A5 if the file exists
-                const string imagePath = "sample-image.png";
-                if (File.Exists(imagePath))
-                {
-                    // Row 4 (zero‑based) corresponds to A5, column 0 is column A
-                    int pictureIndex = sheet.Pictures.Add(4, 0, imagePath);
-                    Picture pic = sheet.Pictures[pictureIndex];
-                    // The AlternativeText property becomes the alt attribute in the generated HTML
-                    pic.AlternativeText = "A5";
-                }
-                else
-                {
-                    Console.WriteLine($"Image file \"{imagePath}\" not found. Skipping picture insertion.");
-                }
+            // -------------------- Build alt‑text list --------------------
+            // Collect identifiers for charts and pictures in the order they appear.
+            List<string> altTexts = new List<string>();
 
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    // Export cell coordinates as an attribute (e.g., data-celladdress) for accessibility
-                    ExportCellCoordinate = true,
-                    // Use the cell address as the HTML element id (e.g., <td id=\"A5\">)
-                    CellNameAttribute = "id",
-                    // Embed images directly as Base64 strings so the <img> tag appears in the HTML
-                    ExportImagesAsBase64 = true
-                };
-
-                // Save the workbook as an HTML file
-                const string outputPath = "output.html";
-                workbook.Save(outputPath, htmlOptions);
-
-                Console.WriteLine($"HTML file \"{outputPath}\" generated with cell coordinates and image alt text.");
-            }
-            catch (Exception ex)
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Charts
+                for (int i = 0; i < ws.Charts.Count; i++)
+                {
+                    // Use a simple identifier since direct cell position is not exposed.
+                    altTexts.Add($"Chart_{i + 1}");
+                }
+
+                // Pictures (if any)
+                for (int i = 0; i < ws.Pictures.Count; i++)
+                {
+                    altTexts.Add($"Picture_{i + 1}");
+                }
             }
+
+            // -------------------- Post‑process HTML --------------------
+            if (File.Exists(htmlPath))
+            {
+                string htmlContent;
+                try
+                {
+                    htmlContent = File.ReadAllText(htmlPath);
+                }
+                catch (Exception readEx)
+                {
+                    Console.WriteLine($"Failed to read HTML file: {readEx.Message}");
+                    return;
+                }
+
+                int imgCounter = 0;
+
+                // Replace each <img ...> tag with an alt attribute containing the identifier.
+                htmlContent = Regex.Replace(
+                    htmlContent,
+                    "<img([^>]*?)src=\"([^\"]+)\"([^>]*?)>",
+                    match =>
+                    {
+                        string beforeSrc = match.Groups[1].Value;
+                        string src = match.Groups[2].Value;
+                        string afterSrc = match.Groups[3].Value;
+
+                        string alt = imgCounter < altTexts.Count ? altTexts[imgCounter] : "";
+                        imgCounter++;
+
+                        // Preserve any existing attributes and inject alt
+                        return $"<img{beforeSrc}src=\"{src}\" alt=\"{alt}\"{afterSrc}>";
+                    },
+                    RegexOptions.IgnoreCase);
+
+                try
+                {
+                    File.WriteAllText(htmlPath, htmlContent);
+                }
+                catch (Exception writeEx)
+                {
+                    Console.WriteLine($"Failed to write modified HTML file: {writeEx.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

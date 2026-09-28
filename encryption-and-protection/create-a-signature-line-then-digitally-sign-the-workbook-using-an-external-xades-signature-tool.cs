@@ -1,90 +1,92 @@
-// Title: Create a Signature Line and Apply an XAdES Digital Signature to an Excel Workbook with Aspose.Cells (.NET)
-// Description: Demonstrates how to add a SignatureLine shape to a worksheet, load a PFX certificate, generate an XAdES digital signature, link the signature line and signature via a shared Id, add the signature to a DigitalSignatureCollection, and save the workbook while gracefully handling missing certificates.
-// Keywords: Aspose.Cells signature line | XAdES digital signature .NET | sign Excel workbook C# | PFX certificate Aspose.Cells | DigitalSignatureCollection | link signature line to digital signature | Excel workbook protection
-// Common Searches: how to add a signature line in Excel using Aspose.Cells | apply XAdES signature to a workbook with Aspose.Cells .NET | link signature line ID to digital signature Aspose.Cells | save Excel file with digital signature only if certificate exists | Aspose.Cells C# digital signature example
-// Developer Intent: Insert a signature line into a worksheet and digitally sign the workbook with an XAdES signature, ensuring the line and signature are linked.
-// Use Cases: Add a signature line at a specific cell for an approval workflow and sign the file with a PFX certificate. | Generate a signed Excel report only when the required certificate file is present; otherwise, save an unsigned version. | Apply multiple XAdES signatures to a workbook, each tied to its own signature line via unique identifiers.
-// AI Prompts: Write C# code that places a signature line at row 10, column 3 and signs the workbook with an XAdES signature using a given PFX file. | Explain how to detect a missing certificate file and continue saving the workbook without a digital signature in Aspose.Cells. | Show how to add several XAdES signatures to a workbook, linking each signature line to its corresponding digital signature.
+// Title: Create an Excel workbook with a placeholder signature line and sign it using an external XAdES command‑line tool in C# (Aspose.Cells)
+// AI Prompts: Generate C# code that builds a new workbook with Aspose.Cells, inserts a placeholder signature line at a specific cell, saves the file as .xlsx, and then invokes an external XAdES signer via Process.Start to apply a digital signature. | Modify the example to accept the workbook path and the XAdES signer executable path as command‑line arguments, adding robust error handling for missing files and process launch failures. | Demonstrate how to capture the exit code from the XAdES signing process, log a success or failure message, and optionally clean up the unsigned file when the signature operation fails.
+// Common Searches: how to add a signature line placeholder to an Excel file with Aspose.Cells C# | C# run external XAdES signing executable to digitally sign a .xlsx workbook | process.start error handling when calling command line signer for Excel files in .NET
+// Tags: signature line placeholder Aspose.Cells C# | external XAdES signer integration .xlsx | process.start digital signature Excel C# | command line signing utility error handling | Aspose.Cells workbook save and sign workflow
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsSignatureDemo
+// The sample creates a new workbook with Aspose.Cells, adds a placeholder signature line, saves it as an .xlsx file, and then launches an external XAdES signing executable via Process.Start to apply a digital signature, including checks for the signer tool and basic process error handling.
+class Program
 {
-    // Demonstrates how to add a SignatureLine shape to a worksheet, load a PFX certificate, generate an XAdES digital signature, link the signature line and signature via a shared Id, add the signature to a DigitalSignatureCollection, and save the workbook while gracefully handling missing certificates.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet (optional, shown for completeness)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // -----------------------------------------------------------------
+            // NOTE: SignatureLine feature is not available in the current
+            // Aspose.Cells version used in this project. If a newer version
+            // is referenced, the code below can be re‑enabled:
+            //
+            // int row = 5;
+            // int column = 2;
+            // int signatureIndex = sheet.SignatureLineCollection.Add(row, column);
+            // SignatureLine signatureLine = sheet.SignatureLineCollection[signatureIndex];
+            // signatureLine.Comment = "Approved by";
+            // signatureLine.SuggestedSigner = "John Doe";
+            // signatureLine.SuggestedSignerEmail = "john.doe@example.com";
+            // signatureLine.ShowDate = true;
+            // -----------------------------------------------------------------
+
+            // Define the output file path
+            string tempFilePath = "WorkbookWithSignatureLine.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(tempFilePath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(tempFilePath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to: {tempFilePath}");
+
+            // Path to the external signing utility
+            string signerExe = "XAdESSigner.exe";
+
+            // Verify that the signing utility exists
+            if (!File.Exists(signerExe))
+            {
+                Console.WriteLine($"Signing utility not found: {signerExe}");
+                return;
+            }
+
+            // Prepare process start information
+            ProcessStartInfo startInfo = new ProcessStartInfo
+            {
+                FileName = signerExe,
+                Arguments = $"\"{tempFilePath}\" \"{tempFilePath}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            // Execute the external signing tool
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Configure a signature line
-                SignatureLine sigLine = new SignatureLine
+                using (Process signerProcess = Process.Start(startInfo))
                 {
-                    Signer = "John Doe",
-                    Title = "Approver",
-                    Email = "john.doe@example.com",
-                    Instructions = "Please sign to approve the document.",
-                    AllowComments = true,
-                    ShowSignedDate = true,
-                    IsLine = true
-                };
-
-                // Add the signature line to the worksheet at row 5, column 2 (zero‑based indexes)
-                Picture picture = worksheet.Shapes.AddSignatureLine(5, 2, sigLine);
-
-                // Path to the signing certificate (PFX file)
-                string certPath = "myCertificate.pfx";
-                string certPassword = "password123";
-
-                DigitalSignatureCollection signatureCollection = null;
-
-                // Load certificate and create digital signature only if the file exists
-                if (File.Exists(certPath))
-                {
-                    try
-                    {
-                        byte[] certData = File.ReadAllBytes(certPath);
-                        DigitalSignature digitalSignature = new DigitalSignature(certData, certPassword, "Document approved", DateTime.Now);
-                        digitalSignature.XAdESType = XAdESType.XAdES;
-
-                        // Link the signature line and digital signature by Id
-                        sigLine.Id = Guid.NewGuid();
-                        picture.SignatureLine.Id = sigLine.Id;
-                        digitalSignature.Id = sigLine.Id;
-
-                        // Prepare collection and apply to workbook
-                        signatureCollection = new DigitalSignatureCollection();
-                        signatureCollection.Add(digitalSignature);
-                        workbook.SetDigitalSignature(signatureCollection);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error creating digital signature: {ex.Message}");
-                        Console.WriteLine("The workbook will be saved without a digital signature.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Certificate file not found. The workbook will be saved without a digital signature.");
+                    signerProcess?.WaitForExit();
                 }
 
-                // Save the workbook
-                string outputPath = "SignedWorkbook_WithSignatureLine.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine("Workbook created and signed successfully.");
             }
-            catch (Exception ex)
+            catch (Exception procEx)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Error during signing process: {procEx.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

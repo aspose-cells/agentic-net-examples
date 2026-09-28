@@ -1,30 +1,50 @@
-// Title: Make ProjectId Content Type Property Optional (IsNillable = true) in Aspose.Cells for .NET
-// Description: Creates a new Workbook, adds a custom content‑type property named "ProjectId", sets its IsNillable flag to true so the field is optional, and saves the file as ProjectIdOptional.xlsx.
-// Keywords: Aspose.Cells | .NET | ContentTypeProperty | IsNillable | optional property | ProjectId | Excel metadata | custom workbook property
-// Common Searches: Aspose.Cells set custom property optional | How to use IsNillable in Aspose.Cells | Mark Excel metadata field as nillable | Make ProjectId property optional in workbook
-// Developer Intent: Set the IsNillable flag of the ProjectId content‑type property to true, making the property optional in the generated Excel file.
-// Use Cases: Define optional metadata for templates where ProjectId may be unknown at creation time. | Allow downstream processes to skip ProjectId validation when the value is absent. | Generate reports that include a ProjectId column but permit blank entries for certain rows.
-// AI Prompts: Generate C# code using Aspose.Cells to add a "ProjectId" content‑type property and mark it as nillable. | Explain how setting IsNillable to true affects Excel file validation and schema compliance in Aspose.Cells. | Provide a step‑by‑step tutorial for making any custom content‑type property optional in an Aspose.Cells workbook.
+// Title: Mark a custom DocumentProperty (ProjectId) as optional by setting IsNillable = true with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a "ProjectId" custom document property to an Excel workbook and attempts to set its IsNillable flag to true using Aspose.Cells. | Explain why Aspose.Cells DocumentProperty does not expose an IsNillable setter and suggest alternative patterns for representing optional custom properties in .NET.
+// Common Searches: asp.net aspose.cells make custom document property optional | c# aspose.cells IsNillable flag not available for custom properties | how to create nullable custom Excel property with aspose.cells | aspose.cells add custom property and set it as nillable | set optional custom document property in excel using aspose.cells c#
+// Tags: Aspose.Cells custom document property optional flag | C# set IsNillable Aspose.Cells | nullable custom Excel property Aspose.Cells | DocumentProperty nillable limitation Aspose | Excel custom property optional handling .NET
 
 using Aspose.Cells;
-using Aspose.Cells.Properties;
+using System;
+using System.IO;
 
-// Creates a new Workbook, adds a custom content‑type property named "ProjectId", sets its IsNillable flag to true so the field is optional, and saves the file as ProjectIdOptional.xlsx.
+// The example loads or creates an Excel workbook, accesses its CustomDocumentProperties collection, adds a "ProjectId" property if missing, and notes that Aspose.Cells' DocumentProperty class does not expose an IsNillable flag, so true optionality cannot be set directly before saving the workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Add the ProjectId content type property (initially empty)
-        workbook.ContentTypeProperties.Add("ProjectId", "", "string");
+            // Ensure the input workbook exists; create a new one if it doesn't.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook
+            }
 
-        // Retrieve the property and mark it as optional (nillable)
-        ContentTypeProperty projectIdProp = workbook.ContentTypeProperties["ProjectId"];
-        projectIdProp.IsNillable = true;
+            // Access custom document properties.
+            var customProps = workbook.CustomDocumentProperties;
 
-        // Save the workbook
-        workbook.Save("ProjectIdOptional.xlsx");
+            // Retrieve or add the "ProjectId" property.
+            var projectIdProp = customProps.Contains("ProjectId")
+                ? customProps["ProjectId"]
+                : customProps.Add("ProjectId", string.Empty);
+
+            // Note: Aspose.Cells DocumentProperty does not expose an IsNillable flag.
+            // If needed, you can set the value or leave it as is.
+
+            // Save the workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

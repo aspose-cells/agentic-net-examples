@@ -1,42 +1,69 @@
-// Title: C# – Add List Data Validation to Column C and Freeze It with Aspose.Cells
-// Description: Creates a new workbook, applies a drop‑down list validation to column C (rows 0‑1000) using Aspose.Cells, freezes the column at cell D1 so the validation stays visible while scrolling, and saves the file as ColumnValidationAndFreeze.xlsx.
-// Keywords: Aspose.Cells C# | Excel data validation list | list validation Aspose.Cells | freeze column Aspose.Cells | FreezePanes C# | CellArea validation | ValidationType.List | Excel automation .NET | drop‑down list Excel C# | Aspose.Cells example
-// Common Searches: Aspose.Cells add drop‑down list to a column C# | How to freeze a column after adding validation with Aspose.Cells | C# code for data validation and freeze panes in Excel | Aspose.Cells freeze panes example | Create list validation in Excel using Aspose.Cells .NET
-// Developer Intent: Generate a worksheet that contains a list‑type validation on column C and keeps that column fixed on screen by freezing panes.
-// Use Cases: Apply a drop‑down list with predefined options to a specific column range. | Ensure the validated column remains visible during horizontal scrolling by freezing panes. | Combine data validation and frozen panes in a single Aspose.Cells workflow before saving the workbook.
-// AI Prompts: Write C# Aspose.Cells code to add a list validation to column B and freeze column B. | Show how to configure Validation.InCellDropDown, InputTitle, and InputMessage, then freeze the column containing the validation. | Provide an Aspose.Cells example that saves an Excel file after applying both data validation and FreezePanes.
+// Title: Create an Excel file with list‑type data validation in column A and freeze that column using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a list‑based data validation with an in‑cell dropdown to the range A1:A100 and then freezes column A using Aspose.Cells. | Generate a .NET program that configures a validation list, sets a custom error title and message, enables the dropdown arrow, and applies FreezePanes to keep the validation column visible while scrolling.
+// Common Searches: how to add a dropdown list validation to column A with Aspose.Cells C# | Aspose.Cells freeze first column after applying data validation | C# example for list validation and FreezePanes in the same worksheet | apply data validation list and freeze panes together using Aspose.Cells for .NET | Aspose.Cells create workbook with validation dropdown and frozen column
+// Tags: Aspose.Cells list‑type validation dropdown C# | Aspose.Cells FreezePanes column A .NET | Aspose.Cells custom validation error message | Aspose.Cells apply validation to range A1:A100 | Aspose.Cells workbook creation with validation and frozen column
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a new workbook, applies a drop‑down list validation to column C (rows 0‑1000) using Aspose.Cells, freezes the column at cell D1 so the validation stays visible while scrolling, and saves the file as ColumnValidationAndFreeze.xlsx.
+// The program creates a new workbook, adds a list‑type data validation with an in‑cell dropdown to cells A1:A100, configures custom error title and message, freezes column A using FreezePanes, and saves the file as DataValidationAndFreeze.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define a validation area that covers column C (index 2) from row 0 to row 1000
-        CellArea validationArea = CellArea.CreateCellArea(0, 2, 1000, 2);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add the validation to the worksheet's validation collection
-        int validationIndex = sheet.Validations.Add(validationArea);
-        Validation validation = sheet.Validations[validationIndex];
+            // Define the range for data validation (e.g., column A, rows 1-100)
+            int firstRow = 0;          // Row index is zero‑based (row 1)
+            int lastRow = 99;          // Row 100
+            int columnIndex = 0;       // Column A
 
-        // Configure the validation as a drop‑down list
-        validation.Type = ValidationType.List;
-        validation.Formula1 = "Option1,Option2,Option3";
-        validation.InCellDropDown = true;
-        validation.ShowInput = true;
-        validation.InputTitle = "Select Option";
-        validation.InputMessage = "Choose one of the listed options.";
+            // Build the Excel address for the validation range (e.g., "A1:A100")
+            string startCell = CellsHelper.CellIndexToName(firstRow, columnIndex);
+            string endCell = CellsHelper.CellIndexToName(lastRow, columnIndex);
 
-        // Freeze columns up to column C so the validation column stays visible while scrolling
-        // Freeze at cell D1 (column index 3) with 0 frozen rows and 1 frozen column
-        sheet.FreezePanes("D1", 0, 1);
+            // Convert the address strings to a CellArea object required by Add()
+            CellArea validationArea = CellArea.CreateCellArea(startCell, endCell);
 
-        // Save the workbook
-        workbook.Save("ColumnValidationAndFreeze.xlsx", SaveFormat.Xlsx);
+            // Add a list‑type validation to the specified range
+            int validationIndex = sheet.Validations.Add(validationArea);
+            Validation validation = sheet.Validations[validationIndex];
+            validation.Type = ValidationType.List;                     // List validation
+            validation.Operator = OperatorType.Equal;                  // Required for list type
+            validation.Formula1 = "\"Option1,Option2,Option3\"";       // Comma‑separated list
+            validation.ShowError = true;                               // Show error dialog
+            validation.ErrorTitle = "Invalid Input";
+            validation.ErrorMessage = "Please select a value from the list.";
+            validation.InCellDropDown = true;                          // Show dropdown arrow (correct property)
+
+            // Freeze the first column (column A) so validation rules stay visible while scrolling
+            // Parameters: row, column, rowOffset, columnOffset
+            // Setting column = 1 freezes columns to the left of column B (i.e., column A)
+            sheet.FreezePanes(0, 1, 0, 0);
+
+            // Save the workbook to a file
+            string outputPath = "DataValidationAndFreeze.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

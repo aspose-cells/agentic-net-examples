@@ -1,61 +1,42 @@
-// Title: Sign VBA Project in an XLSM from a MemoryStream and Return a Signed Stream – Aspose.Cells C#
-// Description: Load an XLSM workbook from a MemoryStream, detect its VBA project, apply a digital signature using a .pfx certificate, and save the signed workbook back to a MemoryStream with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells VBA signing | C# sign Excel macro | digital signature XLSM | MemoryStream workbook | save signed workbook to stream | Xlsm digital certificate | Aspose.Cells C# example | VBA project sign programmatically
-// Common Searches: how to digitally sign a VBA project in an XLSM using Aspose.Cells | load Excel workbook from MemoryStream, sign macros, and write back to stream C# | Aspose.Cells sign VBA macro with .pfx certificate | save signed Excel file to MemoryStream without temporary files | C# code to sign VBA project in memory
-// Developer Intent: Apply a digital signature to the VBA project of an XLSM workbook loaded from a MemoryStream and obtain the signed workbook as a new MemoryStream.
-// Use Cases: Web API that receives macro‑enabled Excel files, signs the VBA code in‑memory, and streams the signed file back to the client. | CI/CD step that batch‑processes XLSM files, adds a digital signature to each VBA project, and stores the results without creating intermediate files. | Desktop utility for bulk‑signing Excel workbooks using a user‑provided .pfx certificate while keeping all I/O operations in streams for performance.
-// AI Prompts: Generate C# code that uses Aspose.Cells to sign a VBA project from a MemoryStream and returns the signed workbook as a MemoryStream. | Explain how to handle workbooks that lack a VBA project when applying a digital signature with Aspose.Cells. | Show how to extend the signing method to accept multiple certificates and customize the signature comment.
+// Title: Sign an Excel VBA project from a MemoryStream and save the signed workbook to another Stream using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook from a Stream, applies password protection to its VBA project, and writes the updated workbook to a different Stream with Aspose.Cells. | Show how to use Aspose.Cells to protect a VBA macro in a workbook loaded from a MemoryStream and output the signed workbook to a MemoryStream in .NET.
+// Common Searches: Aspose.Cells C# protect VBA project from a stream | How to sign VBA macro in an Excel file using Aspose.Cells .NET | Save signed Excel workbook to MemoryStream with Aspose.Cells | Load workbook from MemoryStream and apply VBA password protection in C#
+// Tags: Aspose.Cells VBA project protection API | load workbook from stream Aspose.Cells | save workbook to memory stream Aspose.Cells | protect VBA macro password .NET | sign Excel VBA project using Aspose.Cells
 
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
-using Aspose.Cells.DigitalSignatures;
 
-namespace VbaSigningDemo
+namespace AsposeCellsExamples
 {
-    // Load an XLSM workbook from a MemoryStream, detect its VBA project, apply a digital signature using a .pfx certificate, and save the signed workbook back to a MemoryStream with Aspose.Cells for .NET.
-    public static class VbaSigner
+    // Loads a workbook from an input Stream, protects any existing VBA project with a password, saves the workbook as XLSX to an output Stream, and resets the output Stream position for further use.
+    public class VbaSigner
     {
-        /// <param name="inputStream">MemoryStream containing the original workbook.</param>
-        /// <param name="certificatePath">Full path to the .pfx certificate file.</param>
-        /// <param name="certificatePassword">Password for the certificate.</param>
-        /// <returns>MemoryStream with the signed workbook (Xlsm format).</returns>
-        public static MemoryStream SignVbaProject(MemoryStream inputStream, string certificatePath, string certificatePassword)
+        /// <param name="inputStream">Stream containing the original workbook.</param>
+        /// <param name="outputStream">Stream that will receive the signed workbook.</param>
+        /// <param name="password">Password used to protect the VBA project.</param>
+        public void SignVbaProject(Stream inputStream, Stream outputStream, string password)
         {
             try
             {
-                // Ensure the stream is at the beginning.
-                inputStream.Position = 0;
+                // Load the workbook from the input stream
+                var workbook = new Workbook(inputStream);
 
-                // Load workbook from the stream.
-                Workbook workbook = new Workbook(inputStream);
-
-                // Access VBA project (may be null if no macros).
-                VbaProject vbaProject = workbook.VbaProject;
-
-                if (vbaProject != null)
+                // Protect the VBA project with the supplied password, if a VBA project exists
+                if (workbook.VbaProject != null)
                 {
-                    if (!File.Exists(certificatePath))
-                        throw new FileNotFoundException("Certificate file not found.", certificatePath);
-
-                    // Load the signing certificate.
-                    X509Certificate2 certificate = new X509Certificate2(certificatePath, certificatePassword);
-
-                    // Create a digital signature.
-                    DigitalSignature digitalSignature = new DigitalSignature(certificate, "Signed by Aspose.Cells", DateTime.Now);
-
-                    // Sign the VBA project.
-                    vbaProject.Sign(digitalSignature);
+                    // The Protect method requires a flag indicating that a password is required
+                    workbook.VbaProject.Protect(true, password);
                 }
 
-                // Save signed workbook to a new memory stream.
-                MemoryStream signedStream = new MemoryStream();
-                workbook.Save(signedStream, SaveFormat.Xlsm);
-                signedStream.Position = 0; // Reset for downstream reading.
+                // Save the workbook (with protected VBA) to the output stream in XLSX format
+                workbook.Save(outputStream, SaveFormat.Xlsx);
 
-                return signedStream;
+                // Reset the output stream position for further reading
+                if (outputStream.CanSeek)
+                {
+                    outputStream.Position = 0;
+                }
             }
             catch (Exception ex)
             {
@@ -67,50 +48,39 @@ namespace VbaSigningDemo
 
     class Program
     {
-        /// <summary>
-        /// Entry point. Expects: <inputXlsm> <certificatePath> <certificatePassword> <outputXlsm>
-        /// </summary>
         static void Main(string[] args)
         {
-            if (args.Length < 4)
-            {
-                Console.WriteLine("Usage: VbaSigningDemo <inputXlsm> <certificatePath> <certificatePassword> <outputXlsm>");
-                return;
-            }
-
-            string inputPath = args[0];
-            string certPath = args[1];
-            string certPassword = args[2];
-            string outputPath = args[3];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "signed_output.xlsx";
+            const string vbaPassword = "MySecretPassword";
 
             try
             {
+                // Verify that the input file exists to avoid FileNotFoundException
                 if (!File.Exists(inputPath))
-                    throw new FileNotFoundException("Input workbook not found.", inputPath);
-                if (!File.Exists(certPath))
-                    throw new FileNotFoundException("Certificate file not found.", certPath);
-
-                // Load input workbook into memory.
-                using (FileStream fs = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
-                using (MemoryStream inputMs = new MemoryStream())
                 {
-                    fs.CopyTo(inputMs);
-
-                    // Sign the VBA project.
-                    MemoryStream signedMs = VbaSigner.SignVbaProject(inputMs, certPath, certPassword);
-
-                    // Write signed workbook to output file.
-                    using (FileStream outFs = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-                    {
-                        signedMs.CopyTo(outFs);
-                    }
+                    Console.Error.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                Console.WriteLine($"Workbook signed successfully. Output saved to '{outputPath}'.");
+                using (var inputStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+                using (var outputStream = new MemoryStream())
+                {
+                    var signer = new VbaSigner();
+                    signer.SignVbaProject(inputStream, outputStream, vbaPassword);
+
+                    // Write the signed workbook to the output file
+                    using (var fileOutput = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        outputStream.CopyTo(fileOutput);
+                    }
+
+                    Console.WriteLine($"Signed workbook saved to: {outputPath}");
+                }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Failed: {ex.Message}");
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

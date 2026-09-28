@@ -1,32 +1,57 @@
-// Title: Clone Excel Theme from a Template Workbook with Aspose.Cells for .NET
-// Description: Loads a template file that contains the desired theme, creates a blank workbook, copies the theme using the CopyTheme method, and saves the new workbook with the transferred styling.
-// Keywords: Aspose.Cells CopyTheme | copy Excel theme .NET | apply workbook theme programmatically | transfer Excel theme between workbooks | clone Excel theme Aspose
-// Common Searches: Aspose.Cells copy theme example | how to transfer Excel theme using .NET | copy theme from one workbook to another Aspose | clone workbook theme programmatically
-// Developer Intent: Assign the theme from an existing template workbook to a newly created workbook.
-// Use Cases: Generate blank reports that automatically inherit corporate branding by reusing a master template's theme. | Produce multiple departmental spreadsheets with uniform styling without manually formatting each file. | Automate creation of client‑specific workbooks that must match a supplied template's visual theme.
-// AI Prompts: Show how to copy a theme from a template workbook to a new workbook using Aspose.Cells for .NET, including error handling for missing files. | Provide a code sample that clones a theme and then adds custom cell formatting after the theme is applied. | Explain the differences between using CopyTheme and manually constructing a Theme object in Aspose.Cells.
+// Title: Clone an Excel workbook theme from a template file and assign it to a new workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Transfer the theme of a source .xlsx file to a freshly created Workbook object with Aspose.Cells CopyTheme in C#. | Create an empty workbook, load a template workbook, and programmatically copy its theme before saving the result using Aspose.Cells for .NET. | Implement error‑checked code that verifies a template file, copies its theme to a new workbook, and writes the output with Aspose.Cells.
+// Common Searches: Aspose.Cells C# copy theme from template workbook to new workbook | how to use CopyTheme method in Aspose.Cells .NET example | programmatically duplicate an Excel theme using Aspose.Cells | apply template workbook theme to another file using Aspose.Cells C# | sample code for copying workbook theme in Aspose.Cells for .NET
+// Tags: theme copy operation Aspose.Cells | clone Excel theme with Aspose.Cells | template theme assignment C# | transfer workbook theme Aspose.Cells | Aspose.Cells theme cloning example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThemeCloneDemo
+namespace AsposeCellsThemeClone
 {
-    // Loads a template file that contains the desired theme, creates a blank workbook, copies the theme using the CopyTheme method, and saves the new workbook with the transferred styling.
+    // The example loads a template Excel file, creates an empty workbook, copies the template's theme to the new workbook using the CopyTheme method, ensures the output directory exists, and saves the new workbook with the cloned theme.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the template workbook that contains the desired theme
-            Workbook templateWorkbook = new Workbook("Template.xlsx");
+            try
+            {
+                const string templatePath = "Template.xlsx";
+                const string outputPath = "NewWorkbook.xlsx";
 
-            // Create a new empty workbook
-            Workbook newWorkbook = new Workbook();
+                // Verify that the template file exists to avoid FileNotFoundException
+                if (!File.Exists(templatePath))
+                {
+                    Console.WriteLine($"Template file not found: {templatePath}");
+                    return;
+                }
 
-            // Clone the theme from the template workbook to the new workbook
-            newWorkbook.CopyTheme(templateWorkbook);
+                // Load the template workbook that contains the desired theme
+                Workbook templateWorkbook = new Workbook(templatePath);
 
-            // Save the new workbook with the cloned theme
-            newWorkbook.Save("ClonedThemeWorkbook.xlsx");
+                // Create a new workbook (initially empty)
+                Workbook newWorkbook = new Workbook();
+
+                // Clone the theme from the template workbook to the new workbook
+                // Use CopyTheme method (Theme property is read‑only)
+                newWorkbook.CopyTheme(templateWorkbook);
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the new workbook with the cloned theme
+                newWorkbook.Save(outputPath);
+                Console.WriteLine($"New workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

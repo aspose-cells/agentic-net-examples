@@ -1,100 +1,110 @@
-// Title: C# – Remove WordArt Shapes and Add PDF Watermark with Aspose.Cells
-// Description: Loads an Excel workbook, deletes every WordArt shape from each worksheet, creates a red bold‑italic text watermark using RenderingFont and RenderingWatermark, and saves the workbook as a PDF with the watermark via PdfSaveOptions.
-// Keywords: Aspose.Cells remove WordArt | C# delete WordArt shapes | Aspose.Cells PDF watermark | RenderingWatermark example | Excel to PDF with watermark | Aspose.Cells shape collection | remove WordArt before export | Aspose.Cells C# tutorial
-// Common Searches: how to delete WordArt in Excel using Aspose.Cells | add text watermark when saving workbook to PDF Aspose.Cells | remove all WordArt shapes before PDF conversion C# | Aspose.Cells shape collection remove WordArt example | create diagonal CONFIDENTIAL watermark with Aspose.Cells
-// Developer Intent: Strip all WordArt objects from a workbook and then apply a custom text watermark during PDF export.
-// Use Cases: Prepare confidential reports by removing decorative WordArt and adding a semi‑transparent diagonal watermark. | Standardize batch conversion of Excel files to PDF where WordArt must be excluded for branding consistency. | Automate document sanitization for legal or compliance workflows, ensuring only the watermark remains visible in the final PDF.
-// AI Prompts: Generate C# code that iterates through every worksheet in an Aspose.Cells workbook, removes shapes where IsWordArt is true, and saves the file as a PDF with a red, bold, italic watermark rotated 30°. | Show how to configure RenderingFont and RenderingWatermark for a 48‑pt, 25% opacity watermark using Aspose.Cells. | Explain how to modify the routine to preserve non‑WordArt shapes while still applying the PDF watermark.
+// Title: C# routine to delete all WordArt shapes and add a diagonal CONFIDENTIAL text‑effect watermark to each worksheet using Aspose.Cells
+// AI Prompts: Generate C# code that iterates through every worksheet, removes any shape whose IsWordArt property is true, and then creates a rotated gray text‑effect shape with the text "CONFIDENTIAL" that spans the whole sheet using Aspose.Cells. | Provide a method that clears existing WordArt from an Excel workbook and inserts a diagonal watermark by calling Shape.AddTextEffect, setting rotation, size, and transparency with Aspose.Cells for .NET.
+// Common Searches: aspnet remove wordart shapes from excel worksheet using aspose.cells | how to add diagonal text watermark to all sheets in an excel file with aspose.cells c# | c# delete existing wordart before inserting new watermark in aspose.cells workbook | configure text effect shape size to cover entire worksheet aspose.cells | aspose.cells set shape transparency for watermark in c#
+// Tags: remove WordArt shapes Aspose.Cells C# | add rotated text effect watermark Aspose.Cells | shape removal before watermark insertion Aspose.Cells | adjust text effect dimensions to cover worksheet Aspose.Cells | set shape transparency Aspose.Cells
 
 using System;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace WatermarkApp
+namespace AsposeCellsWatermark
 {
-    // Loads an Excel workbook, deletes every WordArt shape from each worksheet, creates a red bold‑italic text watermark using RenderingFont and RenderingWatermark, and saves the workbook as a PDF with the watermark via PdfSaveOptions.
-    public class WatermarkHelper
-    {
-        /// <param name="inputFile">Path to the source Excel file.</param>
-        /// <param name="outputFile">Path where the PDF with watermark will be saved.</param>
-        /// <param name="watermarkText">Text to be used for the watermark.</param>
-        public static void RemoveWordArtAndAddWatermark(string inputFile, string outputFile, string watermarkText)
-        {
-            try
-            {
-                // Verify input file exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Input file not found: {inputFile}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputFile);
-
-                // Remove WordArt shapes from each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    ShapeCollection shapes = sheet.Shapes;
-                    for (int i = shapes.Count - 1; i >= 0; i--)
-                    {
-                        Shape shape = shapes[i];
-                        if (shape.IsWordArt)
-                        {
-                            shapes.RemoveAt(i);
-                        }
-                    }
-                }
-
-                // Create a rendering font for the watermark
-                RenderingFont font = new RenderingFont("Arial", 48)
-                {
-                    Bold = true,
-                    Italic = true,
-                    Color = Color.Red
-                };
-
-                // Create the text watermark
-                RenderingWatermark watermark = new RenderingWatermark(watermarkText, font)
-                {
-                    Rotation = 30,
-                    Opacity = 0.25f,
-                    IsBackground = true,
-                    HAlignment = TextAlignmentType.Center,
-                    VAlignment = TextAlignmentType.Center,
-                    ScaleToPagePercent = 80
-                };
-
-                // Set the watermark in PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    Watermark = watermark
-                };
-
-                // Save the workbook as PDF with the watermark
-                workbook.Save(outputFile, pdfOptions);
-                Console.WriteLine($"PDF saved with watermark to: {outputFile}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
+    // The program loads an Excel workbook, removes every WordArt shape from each worksheet, adds a diagonal gray "CONFIDENTIAL" text‑effect shape that covers the full sheet, and saves the updated file.
     class Program
     {
         static void Main(string[] args)
         {
-            // Example usage
-            string inputPath = "input.xlsx";
-            string outputPath = "output.pdf";
-            string watermark = "CONFIDENTIAL";
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-            WatermarkHelper.RemoveWordArtAndAddWatermark(inputPath, outputPath, watermark);
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Process each worksheet
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    try
+                    {
+                        // -------------------------------------------------
+                        // Remove all existing WordArt shapes from the sheet
+                        // -------------------------------------------------
+                        for (int i = sheet.Shapes.Count - 1; i >= 0; i--)
+                        {
+                            Shape shape = sheet.Shapes[i];
+                            // Use IsWordArt property to identify WordArt shapes
+                            if (shape.IsWordArt)
+                            {
+                                sheet.Shapes.RemoveAt(i);
+                            }
+                        }
+
+                        // -------------------------------------------------
+                        // Add a new watermark as TextEffect (fallback for WordArt)
+                        // -------------------------------------------------
+                        // Create a text effect shape with the desired text
+                        Shape watermark = sheet.Shapes.AddTextEffect(
+                            MsoPresetTextEffect.TextEffect1, // preset effect
+                            "CONFIDENTIAL",                  // text
+                            "Arial",                         // font name
+                            72,                              // font size
+                            false,                           // bold
+                            false,                           // italic
+                            0,                               // left (pixels)
+                            0,                               // top (pixels)
+                            0,                               // width (will be adjusted later)
+                            0,                               // height (will be adjusted later)
+                            0,                               // anchor row
+                            0);                              // anchor column
+
+                        // Configure visual appearance of the watermark
+                        watermark.RotationAngle = -45;                     // diagonal orientation
+                        watermark.Font.Color = Color.Gray;                // gray color
+                        watermark.Font.Size = 72;                         // large font size
+                        watermark.Fill.Transparency = 0.5;                // 50% transparent
+
+                        // Position the watermark to cover the sheet
+                        int maxColumn = sheet.Cells.MaxColumn + 1;
+                        int maxRow = sheet.Cells.MaxRow + 1;
+                        double columnWidth = sheet.Cells.StandardWidth * 256; // points per column
+                        double rowHeight = sheet.Cells.StandardHeight * 15;   // points per row
+
+                        watermark.Width = (int)(maxColumn * columnWidth);
+                        watermark.Height = (int)(maxRow * rowHeight);
+                        watermark.Top = 0;
+                        watermark.Left = 0;
+                    }
+                    catch (Exception exSheet)
+                    {
+                        Console.WriteLine($"Error processing sheet '{sheet.Name}': {exSheet.Message}");
+                    }
+                }
+
+                // Save the modified workbook
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                }
+                catch (Exception exSave)
+                {
+                    Console.WriteLine($"Failed to save workbook: {exSave.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

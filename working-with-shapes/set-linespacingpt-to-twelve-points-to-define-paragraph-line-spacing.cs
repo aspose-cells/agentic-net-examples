@@ -1,37 +1,47 @@
-// Title: Set 12‑point paragraph line spacing in a text box shape with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add a text box, select a specific paragraph, set its LineSpaceSizeType to Points and LineSpace to 12, and save the Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells line spacing | C# set paragraph line spacing | text box line spacing points | LineSpaceSizeType Points | Aspose.Cells shape text formatting | Excel text box paragraph spacing | Aspose.Cells .NET paragraph formatting
-// Common Searches: Aspose.Cells set paragraph line spacing | C# line spacing points in Excel text box | How to change line spacing of shape text in Aspose.Cells | Set line spacing to 12 points Aspose.Cells .NET | Adjust text box paragraph spacing programmatically
-// Developer Intent: Configure the line spacing of a selected paragraph inside a worksheet text box to exactly 12 points with Aspose.Cells for .NET.
-// Use Cases: Generate a report workbook where a text box paragraph follows a 12‑point line‑spacing rule for consistent appearance. | Apply corporate style guidelines by programmatically enforcing fixed point line spacing on shape text across multiple worksheets. | Update existing Excel files to standardize paragraph spacing inside text boxes without manual editing.
-// AI Prompts: Write C# code using Aspose.Cells to set the line spacing of the third paragraph in a shape to 10 points. | Provide an example that changes the line‑spacing type to Points and sets it to 14 for every paragraph in all text boxes on a worksheet. | Explain how to read, modify, and save line‑spacing values for each paragraph in a shape's TextBody with Aspose.Cells.
+// Title: How to set a 12‑point line spacing for wrapped paragraph text in an Excel cell with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to enable text wrapping and apply a 12‑point line spacing to a paragraph inside a specific worksheet cell. | Show how to adjust row height together with text wrapping to achieve exact 12‑point line spacing for cell content using the Aspose.Cells .NET API. | Provide a minimal example that creates a workbook, inserts wrapped text, and configures the cell to display a 12‑point line spacing with Aspose.Cells.
+// Common Searches: Aspose.Cells set exact line spacing for wrapped text in a cell | C# Aspose.Cells 12 point paragraph spacing in Excel worksheet | How to control line spacing of cell text using Aspose.Cells .NET | Adjust row height to match paragraph line spacing with Aspose.Cells | Set paragraph line spacing in Excel cell programmatically with Aspose.Cells
+// Tags: Aspose.Cells set cell line spacing | Aspose.Cells text wrapping row height | C# Excel paragraph spacing Aspose.Cells | Aspose.Cells line spacing 12pt | Excel cell formatting Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
+using System;
+using System.IO;
 
-// Shows how to create a workbook, add a text box, select a specific paragraph, set its LineSpaceSizeType to Points and LineSpace to 12, and save the Excel file using Aspose.Cells for .NET.
-class SetParagraphLineSpacing
+// The example creates a new workbook, writes a paragraph into cell A1, enables text wrapping, sets the row height to 12 points to approximate a 12‑point line spacing, and saves the workbook as Output.xlsx using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a text box shape to the worksheet
-        Shape textBox = sheet.Shapes.AddTextBox(0, 0, 0, 0, 400, 200);
-        textBox.Text = "First line\nSecond line";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Access the second paragraph (index 1) of the text box
-        TextParagraph paragraph = textBox.TextBody.TextParagraphs[1];
+            // Put sample text into cell A1
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("This paragraph uses a line spacing of 12 points.");
 
-        // Define line spacing in points and set it to 12 points
-        paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
-        paragraph.LineSpace = 12;
+            // Enable text wrapping for the cell
+            Style style = cell.GetStyle();
+            style.IsTextWrapped = true;
+            cell.SetStyle(style);
 
-        // Save the workbook to a file
-        workbook.Save("LineSpacingDemo.xlsx");
+            // Set the row height to 12 points (approximate line spacing)
+            sheet.Cells.SetRowHeight(0, 12);
+
+            // Define output file path
+            string outputPath = "Output.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

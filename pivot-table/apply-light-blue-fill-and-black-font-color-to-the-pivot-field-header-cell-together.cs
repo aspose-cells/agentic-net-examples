@@ -1,79 +1,68 @@
-// Title: Aspose.Cells .NET: Apply Light‑Blue Fill and Black Font to a Pivot Table Header Cell
-// Description: Creates a workbook, adds a simple pivot table, defines a Style with a solid light‑blue background and black font, and uses PivotTable.Format to style the header cell (row 2, column 0) before saving the file.
-// Keywords: Aspose.Cells pivot header style | C# PivotTable.Format | light blue fill Excel | black font pivot header | custom pivot table styling .NET | Aspose.Cells style example
-// Common Searches: Aspose.Cells set pivot header background color C# | format pivot table header cell with custom style | apply solid fill to Excel pivot header using Aspose | change font color of pivot field header in .NET | PivotTable.Format example Aspose.Cells
-// Developer Intent: Add a light‑blue solid fill and black text to a specific pivot table header cell.
-// Use Cases: Highlight row‑field headers in sales dashboards for better visual separation. | Enforce corporate branding by applying a consistent header color scheme across generated reports. | Automate uniform styling of multiple pivot tables in a workbook during batch processing.
-// AI Prompts: Generate C# code that creates a Style with a light‑blue fill and black bold font and applies it to a pivot table header cell using Aspose.Cells. | Show how to style all header cells of an Aspose.Cells PivotTable with a single custom Style. | Explain the parameters of PivotTable.Format and how to locate the header row index for styling.
+// Title: How to apply a light‑blue fill and black font to a pivot table row field header using Aspose.Cells for .NET (C#)
+// AI Prompts: Define a style with a solid light‑blue background and black font, then assign it to the row field header of a pivot table using PivotFormats.FormatArea in Aspose.Cells C#. | Use Workbook.CreateStyle to set background and font colors, and format the pivot field header cell of a generated pivot table.
+// Common Searches: how to change pivot table row header background color in Aspose.Cells C# | formatting pivot field header font color with Aspose.Cells .NET | example of applying custom style to pivot table header cell in C# | Aspose.Cells PivotFormats.FormatArea to style pivot table headers | set solid fill for pivot table header using Aspose.Cells API
+// Tags: Aspose.Cells pivot table header styling | C# PivotFormats.FormatArea example | solid fill for pivot field header | set font color on pivot table header .NET | Workbook.CreateStyle background color Aspose
 
 using System;
 using System.Drawing;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;   // Required for PivotTable and PivotFieldType
+using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotExample
+namespace AsposeCellsPivotHeaderFormatting
 {
-    // Creates a workbook, adds a simple pivot table, defines a Style with a solid light‑blue background and black font, and uses PivotTable.Format to style the header cell (row 2, column 0) before saving the file.
+    // The program creates a workbook, adds sample data, builds a pivot table, defines a style with a light‑blue solid fill and black font, applies this style to the row field header cell via PivotFormats.FormatArea, and saves the file as PivotHeaderFormatted.xlsx.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Sales");
-                worksheet.Cells["A2"].PutValue("Bike");
-                worksheet.Cells["B2"].PutValue(5000);
-                worksheet.Cells["A3"].PutValue("Car");
-                worksheet.Cells["B3"].PutValue(12000);
-                worksheet.Cells["A4"].PutValue("Truck");
-                worksheet.Cells["B4"].PutValue(8000);
+            // Populate sample data for the pivot table
+            sheet.Cells["A1"].Value = "Category";
+            sheet.Cells["B1"].Value = "Amount";
+            sheet.Cells["A2"].Value = "Food";
+            sheet.Cells["B2"].Value = 120;
+            sheet.Cells["A3"].Value = "Drink";
+            sheet.Cells["B3"].Value = 80;
+            sheet.Cells["A4"].Value = "Food";
+            sheet.Cells["B4"].Value = 150;
+            sheet.Cells["A5"].Value = "Drink";
+            sheet.Cells["B5"].Value = 70;
 
-                // Add a pivot table (source range A1:B4, destination top‑left cell D3)
-                int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Add a pivot table
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Add fields to the pivot table (row field and data field)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Add fields: Category as row field, Amount as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-                // Calculate the pivot data so the layout is generated
-                pivotTable.CalculateData();
+            // Calculate the pivot data
+            pivotTable.CalculateData();
 
-                // Create a style: light blue fill and black font color
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.ForegroundColor = Color.LightBlue;   // fill color
-                headerStyle.Pattern = BackgroundType.Solid;      // apply fill
-                headerStyle.Font.Color = Color.Black;            // font color
-                headerStyle.Font.IsBold = true;                  // optional: make it bold
+            // Create a style: light blue fill and black font color
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.BackgroundColor = Color.LightBlue;          // Fill color
+            headerStyle.Pattern = BackgroundType.Solid;            // Apply fill
+            headerStyle.Font.Color = Color.Black;                  // Font color
+            headerStyle.Font.IsBold = true;                        // Optional: make it bold
 
-                // Apply the style to the header cell in the pivot table (row 2, column 0)
-                // Row and column indexes are zero‑based.
-                pivotTable.Format(2, 0, headerStyle);
+            // Apply the style to the row header area (pivot field header cell)
+            // axisType = Row, fieldPosition = 0 (first row field), no subtotal,
+            // selection includes both data and label, not grand totals.
+            pivotTable.PivotFormats.FormatArea(
+                PivotFieldType.Row,          // axis type
+                0,                           // field position (first row field)
+                PivotFieldSubtotalType.None,// subtotal type
+                PivotTableSelectionType.DataAndLabel, // select header cell
+                false,                       // isGrandRow
+                false,                       // isGrandColumn
+                headerStyle);                // style to apply
 
-                // Determine output path and ensure directory exists
-                string outputFile = "PivotHeaderFormatted.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile)) ?? string.Empty;
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputFile);
-                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred while creating the pivot table:");
-                Console.WriteLine(ex.Message);
-            }
+            // Save the workbook
+            workbook.Save("PivotHeaderFormatted.xlsx");
         }
     }
 }

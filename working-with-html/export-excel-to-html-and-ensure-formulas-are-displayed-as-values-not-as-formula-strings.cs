@@ -1,41 +1,44 @@
-// Title: Export Excel to HTML with Calculated Values (no Formula Text) using Aspose.Cells for .NET
-// Description: Shows how to save a workbook as HTML with Aspose.Cells, evaluating formulas (CalculateFormula = true) and suppressing formula strings (ExportFormula = false) so the output displays only the computed results.
-// Keywords: Aspose.Cells | HTML export | CalculateFormula | ExportFormula | C# Excel to HTML | hide formulas | formula results | static HTML report | Aspose.Cells HtmlSaveOptions
-// Common Searches: Aspose.Cells export HTML calculated values | C# save Excel as HTML without formulas | HtmlSaveOptions ExportFormula false | show formula results in HTML Aspose | convert Excel to HTML values only
-// Developer Intent: Create an HTML file from an Excel workbook where formulas are evaluated and only the resulting values are shown.
-// Use Cases: Produce web‑ready reports that display computed numbers without exposing underlying formulas. | Generate static HTML snapshots of spreadsheets for newsletters or documentation. | Publish dashboard pages where Excel calculations appear as plain values for end users.
-// AI Prompts: Write C# code to export each worksheet of a workbook to separate HTML files while keeping calculated values. | Demonstrate how to retain cell styles and number formats in the HTML export while hiding formulas. | Explain how to toggle ExportFormula at runtime based on a user‑selected option in an Aspose.Cells HTML export workflow.
+// Title: Convert an Excel .xlsx file to HTML in C# with Aspose.Cells while rendering formulas as calculated values
+// AI Prompts: Generate C# code that loads a workbook using Aspose.Cells, configures HtmlSaveOptions to output evaluated cell values, and saves the result as an HTML file. | Show how to verify the existence of an input .xlsx file, handle possible errors, and export it to HTML with Aspose.Cells so that formula cells appear as their computed results. | Demonstrate setting Aspose.Cells HtmlSaveOptions to suppress formula strings and produce static HTML that displays only the calculated values.
+// Common Searches: aspnet convert xlsx to html using aspose.cells without showing formulas | c# export excel workbook to html with evaluated formula results | how to hide formula strings when saving Excel as HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions preserve calculated values in HTML output | save workbook as html showing only values not formulas c#
+// Tags: Aspose.Cells HtmlSaveOptions export evaluated values | C# convert xlsx to html Aspose.Cells | Excel to HTML conversion without formula strings | save workbook as html calculated cell values | Aspose.Cells HTML rendering of formulas as values
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlExport
+// A C# example that checks for an input.xlsx file, loads it with Aspose.Cells, uses HtmlSaveOptions (which defaults to writing evaluated values) to convert the workbook to output.html, and includes basic error handling for missing files and runtime exceptions.
+class Program
 {
-    // Shows how to save a workbook as HTML with Aspose.Cells, evaluating formulas (CalculateFormula = true) and suppressing formula strings (ExportFormula = false) so the output displays only the computed results.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and add some data with formulas
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["B1"].PutValue(20);
-            sheet.Cells["C1"].Formula = "=A1+B1"; // Formula to be displayed as value
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Configure HTML save options:
-            // - CalculateFormula = true ensures formulas are evaluated before saving.
-            // - ExportFormula = false prevents the formula text from being written to HTML.
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                CalculateFormula = true,
-                ExportFormula = false
-            };
+        try
+        {
+            // Load the Excel workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook as HTML with the specified options
-            workbook.Save("output.html", htmlOptions);
+            // Configure HTML save options (default exports evaluated values)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            Console.WriteLine("Excel exported to HTML with formulas shown as values.");
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

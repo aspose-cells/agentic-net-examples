@@ -1,62 +1,57 @@
-// Title: C# – Export rows 1‑50 and columns A‑D as a CSV string using Aspose.Cells
-// Description: The sample builds a workbook, populates cells, defines a CellArea for rows 1‑50 and columns A‑D, and applies TxtSaveOptions with SaveFormat.Csv to write only that area to a MemoryStream. The stream is then read as a UTF‑8 string, yielding a CSV without creating a physical file.
-// Keywords: Aspose.Cells | C# | .NET | export selected range CSV | TxtSaveOptions | ExportArea | MemoryStream | CSV string | cell area rows 1-50 | columns A-D
-// Common Searches: Aspose.Cells export specific rows to CSV | C# save worksheet range as CSV string | TxtSaveOptions ExportArea example | How to convert part of a sheet to CSV in .NET | Generate CSV from selected cells Aspose.Cells
-// Developer Intent: Generate a CSV representation of a defined worksheet region directly in memory.
-// Use Cases: Send a CSV excerpt of the first 50 rows via an API response | Create a lightweight CSV report for email without disk I/O | Extract a subset of data from a large workbook for downstream processing
-// AI Prompts: Write C# code that uses Aspose.Cells to export rows 1‑50 and columns A‑D to a CSV string using TxtSaveOptions and MemoryStream. | Explain how the ExportArea property limits CSV output to a specific cell range in Aspose.Cells for .NET. | Show how to change the output encoding when exporting a selected range to CSV with Aspose.Cells.
+// Title: Export rows 1‑50 and columns A‑D from an Aspose.Cells worksheet to a CSV string in C#
+// AI Prompts: Generate C# code that uses Aspose.Cells TxtSaveOptions to export rows 1‑50 and columns A‑D of a worksheet into a CSV string via a MemoryStream. | Show how to configure the ExportArea property for a CSV export and read the result as a UTF‑8 string in Aspose.Cells.
+// Common Searches: Aspose.Cells C# export specific range to CSV string | How to use TxtSaveOptions ExportArea for CSV in Aspose.Cells | C# get CSV output from selected worksheet area using Aspose.Cells | Export first 50 rows and columns A to D to CSV with Aspose.Cells | MemoryStream CSV conversion Aspose.Cells C# example
+// Tags: Aspose.Cells CSV export of cell range | TxtSaveOptions CSV configuration | C# memory stream CSV generation | Selected worksheet area CSV output | Export worksheet subset to CSV
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Saving;   // Required for TxtSaveOptions
 
-// The sample builds a workbook, populates cells, defines a CellArea for rows 1‑50 and columns A‑D, and applies TxtSaveOptions with SaveFormat.Csv to write only that area to a MemoryStream. The stream is then read as a UTF‑8 string, yielding a CSV without creating a physical file.
+// The example creates (or loads) a workbook, defines a TxtSaveOptions object with SaveFormat.Csv, sets ExportArea to rows 1‑50 and columns A‑D, saves the selected area to a MemoryStream, reads the stream as a UTF‑8 string, and outputs the resulting CSV content.
 class ExportRowsColumnsToCsv
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // replace with new Workbook("input.xlsx") if needed
 
-        // ------------------------------------------------------------
-        // Populate sample data (optional – replace with your own data)
-        // ------------------------------------------------------------
-        for (int row = 0; row < 60; row++)          // more than 50 rows to show the limit
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // -----------------------------------------------------------------
+        // Example data – in real scenario the worksheet would already contain data
+        // -----------------------------------------------------------------
+        for (int r = 0; r < 60; r++)
         {
-            for (int col = 0; col < 6; col++)       // more than 4 columns to show the limit
+            for (int c = 0; c < 6; c++)
             {
-                cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                sheet.Cells[r, c].PutValue($"R{r + 1}C{c + 1}");
             }
         }
 
-        // ------------------------------------------------------------
         // Define the export area: rows 1‑50 (index 0‑49) and columns A‑D (index 0‑3)
-        // ------------------------------------------------------------
         TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
         saveOptions.ExportArea = new CellArea
         {
-            StartRow = 0,      // Row 1
-            EndRow = 49,       // Row 50
-            StartColumn = 0,   // Column A
-            EndColumn = 3      // Column D
+            StartRow = 0,      // row 1
+            EndRow = 49,       // row 50
+            StartColumn = 0,   // column A
+            EndColumn = 3      // column D
         };
+        saveOptions.Separator = ',';   // CSV separator
+        saveOptions.Encoding = Encoding.UTF8;
 
-        // ------------------------------------------------------------
-        // Save the defined area to a memory stream in CSV format
-        // ------------------------------------------------------------
+        // Save the selected area to a memory stream
         using (MemoryStream ms = new MemoryStream())
         {
-            workbook.Save(ms, saveOptions);   // Export only the specified area
-            ms.Position = 0;                  // Reset stream position for reading
+            workbook.Save(ms, saveOptions);
+            ms.Position = 0;
 
-            // Convert the stream content to a CSV string (UTF‑8 encoding)
-            string csvString = Encoding.UTF8.GetString(ms.ToArray());
+            // Convert the stream content to a CSV string
+            string csvString = new StreamReader(ms, Encoding.UTF8).ReadToEnd();
 
-            // Output the CSV string (for demonstration)
+            // Output the CSV string (or use it as needed)
             Console.WriteLine(csvString);
         }
     }

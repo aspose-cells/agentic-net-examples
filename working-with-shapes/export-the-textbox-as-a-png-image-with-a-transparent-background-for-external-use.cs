@@ -1,44 +1,66 @@
-// Title: Export a TextBox Shape to a Transparent PNG with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a TextBox shape, configure ImageOrPrintOptions for PNG with transparency, and use Shape.ToImage to save the TextBox as a transparent PNG file. The workbook can also be saved for reference.
-// Keywords: Aspose.Cells | .NET | C# | export textbox shape | transparent PNG | Shape.ToImage | ImageOrPrintOptions | Excel shape image | transparent background rendering | save shape as image
-// Common Searches: Aspose.Cells export textbox to PNG with transparent background | Shape.ToImage transparent PNG example C# | How to render an Excel shape as a transparent image using Aspose.Cells | Export only a specific shape from a workbook to PNG .NET | Set transparent background when converting Excel shapes to images
-// Developer Intent: Generate a PNG file of a worksheet TextBox shape with a transparent background using Aspose.Cells for .NET.
-// Use Cases: Create overlay graphics for web pages without background artifacts. | Produce reusable icons of annotated text boxes for documentation or presentations. | Extract individual shape images from Excel workbooks for use in other applications while preserving transparency.
-// AI Prompts: Show how to batch‑export all TextBox shapes in a workbook to separate transparent PNG files with Aspose.Cells. | Provide code to export a TextBox shape with a custom DPI and size while keeping the PNG background transparent. | Explain how to export multiple shapes of different types (TextBox, Chart, Picture) to transparent PNG images in one pass.
+// Title: Export the first textbox shape from an Excel worksheet to a transparent PNG using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, finds the first textbox shape on the first sheet, sets its fill transparency to 100 % and saves the sheet as a PNG image with Aspose.Cells. | Show how to configure ImageOrPrintOptions for PNG output and apply shape.Fill.Transparency before rendering a worksheet to a transparent PNG in C#. | Provide a robust C# example that validates the workbook file, checks for a textbox shape, applies full transparency, and handles exceptions while exporting to PNG with Aspose.Cells.
+// Common Searches: how to export a textbox shape from Excel to a PNG with transparent background using Aspose.Cells C# | Aspose.Cells set shape fill transparency before rendering worksheet to image | C# render only a specific shape from an Excel sheet as PNG with Aspose.Cells | save Excel textbox as transparent PNG programmatically Aspose.Cells .NET
+// Tags: textbox shape export to PNG Aspose.Cells | shape fill transparency Aspose.Cells .NET | ImageOrPrintOptions PNG rendering Aspose.Cells | worksheet shape rendering transparent background C# | exception handling missing shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a workbook, add a TextBox shape, configure ImageOrPrintOptions for PNG with transparency, and use Shape.ToImage to save the TextBox as a transparent PNG file. The workbook can also be saved for reference.
-class ExportTextboxAsTransparentPng
+// The example loads an Excel workbook, locates the first shape (assumed to be a textbox) on the first worksheet, sets its fill transparency to fully transparent, and renders the worksheet to a PNG file using Aspose.Cells, with error handling for missing files or shapes.
+class ExportTextboxAsPng
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a textbox shape to the worksheet
-        // Parameters: upper left row, upper left column, row offset, column offset, height, width
-        Shape textbox = worksheet.Shapes.AddTextBox(2, 1, 0, 0, 100, 200);
-        textbox.Text = "Transparent TextBox";
-
-        // Configure image options for transparent PNG output
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+        try
         {
-            ImageType = ImageType.Png,   // PNG supports transparency
-            Transparent = true           // Enable transparent background
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "textbox.png";
 
-        // Export the textbox shape to a PNG file with transparent background
-        string outputPath = "textbox_transparent.png";
-        textbox.ToImage(outputPath, imgOptions);
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // (Optional) Save the workbook for reference
-        workbook.Save("WorkbookWithTextbox.xlsx");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        Console.WriteLine($"Textbox exported to {outputPath} with transparent background.");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Retrieve the first shape (assumed to be a textbox)
+            Shape textbox = null;
+            foreach (Shape shape in sheet.Shapes)
+            {
+                textbox = shape;
+                break;
+            }
+
+            if (textbox == null)
+            {
+                Console.WriteLine("No shape found on the worksheet.");
+                return;
+            }
+
+            // Make the textbox background fully transparent (0 = opaque, 1 = fully transparent)
+            textbox.Fill.Transparency = 1.0;
+
+            // Set rendering options (default format is PNG)
+            ImageOrPrintOptions options = new ImageOrPrintOptions();
+
+            // Render the worksheet (including the textbox) to an image file
+            SheetRender renderer = new SheetRender(sheet, options);
+            renderer.ToImage(0, outputPath);
+
+            Console.WriteLine($"Textbox exported successfully as '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

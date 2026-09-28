@@ -1,10 +1,7 @@
-// Title: C# Unit Test: Verify Encrypted Aspose.Cells Workbook Throws CellsException Without Password
-// Description: Sample code that creates a temporary workbook, applies a password, saves it as XLSX, then attempts to load it without the password. The test asserts that Aspose.Cells throws a CellsException and cleans up the temporary file afterwards.
-// Keywords: Aspose.Cells encrypted workbook unit test | C# CellsException password protected Excel | Aspose.Cells open encrypted file without password | Aspose.Cells .NET exception handling | unit test encrypted workbook Aspose | temporary file cleanup C# | XLSX password protection Aspose
-// Common Searches: how to test opening a password protected workbook in Aspose.Cells | assert CellsException when loading encrypted Excel file without password | C# unit test for Aspose.Cells workbook encryption | Aspose.Cells exception for missing password | automated test encrypted workbook Aspose
-// Developer Intent: Confirm that loading an encrypted Aspose.Cells workbook without supplying the correct password raises a CellsException.
-// Use Cases: Continuous‑integration validation that password protection is enforced by Aspose.Cells. | Testing error‑handling paths for applications receiving encrypted Excel files. | Demonstrating proper creation and disposal of temporary encrypted files in automated tests.
-// AI Prompts: Generate an MSTest/NUnit/xUnit test that creates an encrypted workbook with Aspose.Cells, saves it, then opens it without a password and asserts a CellsException is thrown. | Write C# code to capture the CellsException message when opening a password‑protected workbook without providing the password and verify its content. | Provide a reusable helper method that creates a temporary encrypted workbook, runs a test expecting an exception, and deletes the file afterward.
+// Title: C# unit test to verify that opening an encrypted Aspose.Cells workbook without a password throws CellsException
+// AI Prompts: Write an MSTest method that creates a password‑protected workbook, saves it to a MemoryStream, and asserts that constructing a new Workbook from the stream without a password raises a CellsException. | Generate an xUnit test that encrypts an XLSX file using Workbook.Settings.Password, then attempts to load it without credentials and checks for the expected exception type.
+// Common Searches: aspocells test opening password protected xlsx without password throws exception | how to assert error when loading encrypted Excel workbook in C# using Aspose.Cells | unit testing Aspose.Cells encrypted workbook loading failure | C# MSTest for verifying missing password error on encrypted workbook
+// Tags: Aspose.Cells encrypted workbook error handling | C# unit testing password protected Excel | Workbook.Settings.Password usage in tests | verify encrypted XLSX load failure | assert error on workbook open without password
 
 using System;
 using System.IO;
@@ -12,69 +9,49 @@ using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Sample code that creates a temporary workbook, applies a password, saves it as XLSX, then attempts to load it without the password. The test asserts that Aspose.Cells throws a CellsException and cleans up the temporary file afterwards.
-    public class EncryptedWorkbookDemo
+    // // Demonstrates creating a simple workbook, applying a password via Workbook.Settings.Password, saving it to a MemoryStream, and then attempting to load it without providing the password. The code catches the expected CellsException, confirming proper error handling for missing passwords.
+    class Program
     {
-        private const string Password = "Secret123";
-
-        // Creates an encrypted workbook on disk and returns its path
-        private static string CreateEncryptedWorkbook()
+        static void Main()
         {
-            var wb = new Workbook();
-            wb.Worksheets[0].Cells["A1"].PutValue("Encrypted content");
-            wb.Settings.Password = Password;
-
-            string tempFile = Path.Combine(Path.GetTempPath(), $"Encrypted_{Guid.NewGuid()}.xlsx");
-            wb.Save(tempFile, SaveFormat.Xlsx);
-            wb.Dispose();
-
-            return tempFile;
+            OpenEncryptedWorkbookWithoutPassword_ShouldThrowException();
         }
 
-        public static void Main()
+        static void OpenEncryptedWorkbookWithoutPassword_ShouldThrowException()
         {
-            string encryptedFile = null;
-
             try
             {
-                // Arrange
-                encryptedFile = CreateEncryptedWorkbook();
+                // Create a simple workbook with one worksheet and some data
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Test");
 
-                // Ensure the file exists before attempting to load it
-                if (!File.Exists(encryptedFile))
-                    throw new FileNotFoundException("Encrypted workbook not found.", encryptedFile);
+                // Encrypt the workbook with a password
+                workbook.Settings.Password = "SecretPassword";
 
-                // Act & Assert: loading without a password should throw CellsException
-                try
+                // Save the encrypted workbook to a memory stream
+                using (var encryptedStream = new MemoryStream())
                 {
-                    var wb = new Workbook(encryptedFile);
-                    wb.Dispose(); // Should not reach here
-                    Console.WriteLine("Test Failed: Workbook opened without password.");
-                }
-                catch (CellsException ex)
-                {
-                    // Expected outcome
-                    Console.WriteLine($"Test Passed: Caught expected CellsException - {ex.Message}");
+                    workbook.Save(encryptedStream, SaveFormat.Xlsx);
+                    encryptedStream.Position = 0; // Reset stream for reading
+
+                    // Attempt to load the encrypted workbook without providing a password
+                    try
+                    {
+                        var loadedWorkbook = new Workbook(encryptedStream);
+                        Console.WriteLine("Error: Workbook opened without password; an exception was expected.");
+                    }
+                    catch (CellsException ex)
+                    {
+                        // Expected exception for missing password
+                        Console.WriteLine($"Expected exception caught: {ex.Message}");
+                    }
                 }
             }
             catch (Exception ex)
             {
+                // Catch any unexpected errors
                 Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up the temporary file
-                if (!string.IsNullOrEmpty(encryptedFile) && File.Exists(encryptedFile))
-                {
-                    try
-                    {
-                        File.Delete(encryptedFile);
-                    }
-                    catch (Exception delEx)
-                    {
-                        Console.WriteLine($"Failed to delete temporary file: {delEx.Message}");
-                    }
-                }
             }
         }
     }

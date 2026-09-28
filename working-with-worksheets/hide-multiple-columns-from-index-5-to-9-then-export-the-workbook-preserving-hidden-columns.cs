@@ -1,88 +1,53 @@
-// Title: C# – Hide Columns 5‑9 and Export Workbook while Preserving Hidden Columns with Aspose.Cells
-// Description: Creates a workbook, fills a 10 × 12 range, hides columns 5‑9 (F‑J) using Cells.HideColumns, sets ExportTableOptions.PlotVisibleColumns to false, exports the range to a DataTable that includes hidden columns, prints the data, and saves the file with the hidden columns retained.
-// Keywords: Aspose.Cells hide columns | C# hide multiple columns | ExportDataTable hidden columns | ExportTableOptions PlotVisibleColumns | Aspose.Cells workbook export | HideColumns method .NET
-// Common Searches: Aspose.Cells hide columns 5 to 9 | ExportDataTable include hidden columns C# | How to keep hidden columns when exporting with Aspose.Cells | C# hide column range and export to DataTable | Aspose.Cells ExportTableOptions false PlotVisibleColumns
-// Developer Intent: Hide columns 5‑9 in a worksheet and export the data so that hidden columns are included in the output.
-// Use Cases: Generate a report where calculation columns are hidden in Excel but required for backend processing. | Create a template with hidden helper columns, export the full dataset to a database, and keep the hidden columns in the saved file. | Provide end‑users a workbook with concealed columns while still extracting the complete data for analytics.
-// AI Prompts: Write C# code with Aspose.Cells to hide columns F‑J and export the entire range to a DataTable, ensuring hidden columns are included. | Show how to configure ExportTableOptions so ExportDataTable exports hidden columns and adds column headers. | Explain the impact of ExportTableOptions.PlotVisibleColumns on the visibility of columns in ExportDataTable results.
+// Title: Hide columns 5‑9 in an Excel worksheet and export the workbook to PDF while preserving hidden columns with Aspose.Cells for .NET
+// AI Prompts: Load an existing Excel file, conceal columns 5 through 9 on the first worksheet, and save the workbook as a PDF using Aspose.Cells for .NET so the column visibility state is retained in the PDF. | Using C#, hide a range of columns (indices 5‑9) in a worksheet, configure PdfSaveOptions, and export the workbook to PDF while keeping the columns hidden in the output.
+// Common Searches: Aspose.Cells hide specific column range before converting Excel to PDF in C# | C# export Excel to PDF with hidden columns using Aspose.Cells | How to keep hidden columns invisible in PDF output with Aspose.Cells for .NET | Hide columns 5 to 9 in worksheet and save as PDF using Aspose.Cells API | PdfSaveOptions hide columns Aspose.Cells example
+// Tags: column visibility Aspose.Cells C# | PDF export with column visibility control Aspose.Cells | worksheet column range conceal Aspose.Cells | PdfSaveOptions column visibility settings | Excel to PDF conversion Aspose.Cells C#
 
 using System;
-using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook, fills a 10 × 12 range, hides columns 5‑9 (F‑J) using Cells.HideColumns, sets ExportTableOptions.PlotVisibleColumns to false, exports the range to a DataTable that includes hidden columns, prints the data, and saves the file with the hidden columns retained.
-    public class HideColumnsAndExport
+    // Loads 'input.xlsx', conceals columns 5‑9 on the first worksheet, and saves the workbook as 'output.pdf' using PdfSaveOptions, which retains the hidden column state in the generated PDF.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.pdf";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                return;
+            }
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputFile);
 
-                // Access the first worksheet
+                // Access the first worksheet (index 0)
                 Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
 
-                // Populate sample data (10 rows x 12 columns)
-                for (int row = 0; row < 10; row++)
-                {
-                    for (int col = 0; col < 12; col++)
-                    {
-                        cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
-                }
+                // Hide columns 5 through 9 (inclusive)
+                // HideColumns(startColumn, totalColumns) hides a range of columns
+                worksheet.Cells.HideColumns(5, 5); // hides columns 5,6,7,8,9
 
-                // Hide columns with zero‑based indexes 5 through 9 (5 columns total)
-                int startColumn = 5;      // Column F
-                int columnCount = 5;      // Columns F, G, H, I, J
-                cells.HideColumns(startColumn, columnCount);
+                // Prepare PDF save options; hidden columns are omitted by default.
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Prepare export options – keep hidden columns in the export
-                ExportTableOptions exportOptions = new ExportTableOptions
-                {
-                    ExportColumnName = true,          // include header row
-                    PlotVisibleColumns = false        // false => export hidden columns as well
-                };
+                // Save the workbook as PDF
+                workbook.Save(outputFile, pdfOptions);
 
-                // Export the range (first 10 rows, first 12 columns) to a DataTable
-                DataTable exportedTable = cells.ExportDataTable(0, 0, 10, 12, exportOptions);
-
-                // Display exported data to verify hidden columns are present
-                Console.WriteLine("Exported DataTable (including hidden columns):");
-                foreach (DataColumn col in exportedTable.Columns)
-                {
-                    Console.Write($"{col.ColumnName}\t");
-                }
-                Console.WriteLine();
-
-                foreach (DataRow row in exportedTable.Rows)
-                {
-                    foreach (var item in row.ItemArray)
-                    {
-                        Console.Write($"{item}\t");
-                    }
-                    Console.WriteLine();
-                }
-
-                // Save the workbook – hidden columns are retained in the file
-                workbook.Save("HiddenColumnsWorkbook.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook successfully saved to '{outputFile}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            HideColumnsAndExport.Run();
         }
     }
 }

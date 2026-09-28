@@ -1,63 +1,75 @@
-// Title: Apply Light1 Table Style with Alternating Row Stripes in Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, insert a ListObject, set the built‑in TableStyleLight1, enable row‑stripe formatting, and save the file as XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | TableStyleLight1 | row stripes | alternating row background | ListObject | Excel table formatting | SaveFormat.Xlsx | built‑in table style
-// Common Searches: Aspose.Cells TableStyleLight1 C# example | Enable row stripe formatting Aspose.Cells | How to add ListObject with style in .NET | Apply built‑in table style with alternate rows | C# Aspose.Cells alternating row colors
-// Developer Intent: Apply the Light1 built‑in table style and turn on row‑stripe formatting for a worksheet table using Aspose.Cells.
-// Use Cases: Create readable data tables in reports with header shading and alternating row colors. | Generate Excel exports that follow a corporate Light1 theme while improving scanability. | Produce large‑scale spreadsheets where visual row separation aids data analysis.
-// AI Prompts: Generate C# code that adds a ListObject, sets TableStyleLight1, enables ShowTableStyleRowStripes, and saves the workbook with Aspose.Cells. | Explain the impact of ShowTableStyleRowStripes on Excel tables and how it works with built‑in styles in Aspose.Cells. | Provide a step‑by‑step guide to apply Light1 style with alternating row backgrounds in a .NET Excel file.
+// Title: How to shade alternate rows with the Light1 theme color in an Excel table using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to fill every other row of a given range with the Light1 theme background while preserving existing formatting. | Demonstrate how to merge a solid Light1 fill style into the current style of cells in alternating rows of a worksheet using Aspose.Cells.
+// Common Searches: asp.net apply Light1 theme to alternate rows in Excel with Aspose.Cells | c# banded rows using Excel theme colors via Aspose.Cells | how to set every second row background to Light1 in an Aspose.Cells workbook | Aspose.Cells merge new fill style with existing cell style for row banding
+// Tags: Aspose.Cells apply theme color to rows | C# alternate row shading Aspose.Cells | Excel Light1 fill style Aspose.Cells | merge cell style with existing formatting Aspose.Cells | banded rows using Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using System;
+using System.Drawing;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The program loads an existing workbook, defines a rectangular range (A1:D10), creates a solid LightGray fill style as a fallback, iterates through the rows, and for every second row merges this fill with each cell's current style before saving the modified workbook.
+class Program
 {
-    // Shows how to create a workbook, insert a ListObject, set the built‑in TableStyleLight1, enable row‑stripe formatting, and save the file as XLSX using Aspose.Cells for .NET.
-    public class ApplyLight1RowStripes
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the table range (example: A1:D10)
+            int startRow = 0;      // Row 1 (zero‑based)
+            int endRow = 9;        // Row 10
+            int startColumn = 0;   // Column A
+            int endColumn = 3;     // Column D
+
+            // Use a fallback color (LightGray) for alternate rows
+            Color alternateColor = Color.LightGray;
+
+            // Create a style that uses the fallback color as a solid background
+            Style altStyle = workbook.CreateStyle();
+            altStyle.ForegroundColor = alternateColor;
+            altStyle.Pattern = BackgroundType.Solid;
+
+            // Apply the style to alternate rows (e.g., rows 2,4,6,…)
+            for (int row = startRow; row <= endRow; row++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Apply to every second row starting with the second row in the range
+                if ((row - startRow) % 2 == 1)
+                {
+                    for (int col = startColumn; col <= endColumn; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+                        // Preserve other style attributes by merging with the existing style
+                        Style current = cell.GetStyle();
+                        current.ForegroundColor = altStyle.ForegroundColor;
+                        current.Pattern = altStyle.Pattern;
+                        cell.SetStyle(current);
+                    }
+                }
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the table (A1:B5)
-            worksheet.Cells["A1"].PutValue("Name");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("Item1");
-            worksheet.Cells["B2"].PutValue(100);
-            worksheet.Cells["A3"].PutValue("Item2");
-            worksheet.Cells["B3"].PutValue(200);
-            worksheet.Cells["A4"].PutValue("Item3");
-            worksheet.Cells["B4"].PutValue(300);
-            worksheet.Cells["A5"].PutValue("Item4");
-            worksheet.Cells["B5"].PutValue(400);
-
-            // Add a ListObject (table) covering the data range
-            int tableIndex = worksheet.ListObjects.Add("A1", "B5", true);
-            ListObject table = worksheet.ListObjects[tableIndex];
-
-            // Apply the built‑in Light1 table style
-            table.TableStyleType = TableStyleType.TableStyleLight1;
-
-            // Enable row stripe formatting (alternating background)
-            table.ShowTableStyleRowStripes = true;
-
-            // Save the workbook
-            workbook.Save("TableWithLight1RowStripes.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

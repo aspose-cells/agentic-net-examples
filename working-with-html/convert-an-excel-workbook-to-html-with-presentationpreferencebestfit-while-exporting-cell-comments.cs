@@ -1,32 +1,44 @@
-// Title: Convert Excel to HTML with BestFit layout and export comments using Aspose.Cells for .NET
-// Description: Loads an .xlsx workbook, enables HtmlSaveOptions.PresentationPreference for BestFit rendering and IsExportComments to include cell comments, then saves the file as an HTML page that preserves visual formatting and annotations.
-// Keywords: Aspose.Cells | Excel to HTML conversion | BestFit presentation | PresentationPreference | export cell comments | HtmlSaveOptions | .NET | C# | convert xlsx to html | preserve comments in HTML
-// Common Searches: Aspose.Cells convert Excel to HTML with BestFit | Export cell comments when saving workbook as HTML .NET | HtmlSaveOptions PresentationPreference true example | How to keep Excel comments in HTML output using Aspose | BestFit HTML export Aspose.Cells C#
-// Developer Intent: Generate an HTML version of an Excel workbook that uses the BestFit visual style and includes every cell comment.
-// Use Cases: Create web‑ready reports that look like the original spreadsheet and show comment tooltips. | Provide HTML previews of Excel files for documentation portals while retaining annotations. | Embed spreadsheet data with comments into a web application for interactive help or auditing.
-// AI Prompts: Write C# code that converts an Excel workbook to HTML with PresentationPreference set to BestFit and exports all cell comments using Aspose.Cells. | Explain how PresentationPreference and IsExportComments affect the generated HTML and suggest additional HtmlSaveOptions for styling. | Show how to customize the output directory and file naming while preserving comments during HTML conversion with Aspose.Cells.
+// Title: Convert an Excel workbook to HTML with column auto‑fit (PresentationPreference.BestFit) and preserve cell comments using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx workbook, sets HtmlSaveOptions.PresentationPreference to BestFit, enables comment export, and saves the result as an HTML file. | Show a .NET console example that validates the source file, configures column auto‑fit and comment preservation, then writes the HTML output with Aspose.Cells. | Explain the steps to configure Aspose.Cells HtmlSaveOptions for preserving Excel comments and applying best‑fit column sizing during HTML conversion.
+// Common Searches: Aspose.Cells C# best fit column width when saving workbook as HTML | How to export Excel cell comments to HTML using Aspose.Cells | HtmlSaveOptions PresentationPreference BestFit usage example | Convert .xlsx to .html with comments retained Aspose.Cells | Auto‑fit columns in HTML output from Aspose.Cells .NET
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference | HTML export preserve cell comments Aspose.Cells | BestFit column auto‑fit Aspose.Cells HTML | C# Excel to HTML conversion using Aspose.Cells | Aspose.Cells auto‑fit columns during HTML conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an .xlsx workbook, enables HtmlSaveOptions.PresentationPreference for BestFit rendering and IsExportComments to include cell comments, then saves the file as an HTML page that preserves visual formatting and annotations.
+// The sample program verifies that the input.xlsx file exists, loads it into an Aspose.Cells Workbook, creates HtmlSaveOptions with PresentationPreference set to BestFit and ExportCellComments enabled, then saves the workbook as output.html. It includes exception handling to report any errors during the conversion.
 class Program
 {
     static void Main()
     {
-        // Load the source Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Configure HTML save options:
-        // - PresentationPreference = true enables the BestFit (more beautiful) presentation.
-        // - IsExportComments = true ensures that cell comments are included in the HTML output.
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        try
         {
-            PresentationPreference = true,
-            IsExportComments = true
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Save the workbook as an HTML file using the configured options
-        workbook.Save("output.html", htmlOptions);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set up HTML save options with default settings
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Save the workbook as an HTML file using the specified options
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

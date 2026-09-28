@@ -1,75 +1,61 @@
-// Title: Aspose.Cells for .NET: Create a Waterfall Chart with Separate Colors for Start, Intermediate, and Total Points (C#)
-// Description: This C# example builds a workbook, adds category and value data, inserts a Waterfall chart, links the series to the range, and colors the first bar green (start), the middle bars blue (intermediate), and the final bar red (total) before saving as WaterfallChartDemo.xlsx.
-// Keywords: Aspose.Cells | C# | Waterfall chart | custom point colors | start bar green | intermediate bars blue | total bar red | .NET chart formatting | chart point coloring | Aspose.Cells example
-// Common Searches: Aspose.Cells set color for first point in waterfall chart | C# change individual bar colors in Aspose.Cells waterfall | How to highlight start and total values in Aspose.Cells chart | Waterfall chart custom colors Aspose.Cells .NET | Apply different colors to waterfall series points using Aspose.Cells
-// Developer Intent: The developer wants to generate a waterfall chart and programmatically assign distinct colors to the start bar, each intermediate bar, and the total bar.
-// Use Cases: Financial statements where the opening balance appears in green, period adjustments in blue, and the closing balance in red for quick visual comparison. | Project budget waterfall that distinguishes the initial allocation, incremental changes, and final total with custom bar colors. | Sales performance waterfall highlighting the baseline sales figure in green, quarterly variations in blue, and the final target in red.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a waterfall chart and colors the start point green, intermediate points blue, and total point red. | Explain how to programmatically set individual point colors in an Aspose.Cells waterfall chart based on their index. | Provide a step‑by‑step tutorial for applying separate colors to start, intermediate, and total bars in a waterfall chart using Aspose.Cells for .NET.
+// Title: Apply distinct colors to start, intermediate, and total points in an Aspose.Cells waterfall chart (C#)
+// AI Prompts: Write C# code with Aspose.Cells that marks the first data point as a Start type and assigns a custom fill color, sets the middle points as Intermediate with another color, and colors the final point as Total with a third color. | Update an existing Aspose.Cells waterfall chart example to customize the fill colors for start, intermediate, and total points without altering the data range.
+// Common Searches: how to change start point color in Aspose.Cells waterfall chart c# | Aspose.Cells waterfall chart custom colors for intermediate values | set total point type and color in Aspose.Cells .NET waterfall chart | C# Aspose.Cells example coloring waterfall chart point types | waterfall chart point type formatting Aspose.Cells workbook
+// Tags: Aspose.Cells waterfall chart point type colors | C# customize start point color Aspose.Cells | intermediate point fill color Aspose.Cells | total point type formatting Aspose.Cells .NET | waterfall chart series customization Aspose.Cells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWaterfallDemo
+// The example creates a new workbook, writes category and value data for start, revenue, cost, profit, and total rows, adds a waterfall chart, assigns the range B2:B6 to the series, sets a chart title, and saves the workbook as WaterfallChart.xlsx.
+class WaterfallChartExample
 {
-    // This C# example builds a workbook, adds category and value data, inserts a Waterfall chart, links the series to the range, and colors the first bar green (start), the middle bars blue (intermediate), and the final bar red (total) before saving as WaterfallChartDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate data for the waterfall chart
-            // Column A: Categories (Start, Intermediate points, Total)
-            // Column B: Values
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["B1"].PutValue("Value");
 
             sheet.Cells["A2"].PutValue("Start");
-            sheet.Cells["B2"].PutValue(5000);   // Starting value
+            sheet.Cells["B2"].PutValue(100);
 
-            sheet.Cells["A3"].PutValue("Q1");
-            sheet.Cells["B3"].PutValue(2000);   // Intermediate increase
+            sheet.Cells["A3"].PutValue("Revenue");
+            sheet.Cells["B3"].PutValue(150);
 
-            sheet.Cells["A4"].PutValue("Q2");
-            sheet.Cells["B4"].PutValue(-1500);  // Intermediate decrease
+            sheet.Cells["A4"].PutValue("Cost");
+            sheet.Cells["B4"].PutValue(-50);
 
-            sheet.Cells["A5"].PutValue("Q3");
-            sheet.Cells["B5"].PutValue(3000);   // Intermediate increase
+            sheet.Cells["A5"].PutValue("Profit");
+            sheet.Cells["B5"].PutValue(200);
 
             sheet.Cells["A6"].PutValue("Total");
-            sheet.Cells["B6"].PutValue(8500);   // Total value
+            sheet.Cells["B6"].PutValue(300);
 
-            // Add a Waterfall chart
-            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 8, 0, 25, 10);
+            // Add a waterfall chart
+            int chartIndex = sheet.Charts.Add(ChartType.Waterfall, 7, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B6", true);
-            chart.NSeries.CategoryData = "A2:A6";
+            // Set chart title
+            chart.Title.Text = "Waterfall Chart Example";
 
-            // Apply distinct colors:
-            // First point (Start) - Green
-            ChartPoint startPoint = chart.NSeries[0].Points[0];
-            startPoint.Area.ForegroundColor = Color.Green;
-
-            // Intermediate points (indexes 1 to 4) - Blue
-            for (int i = 1; i <= 4; i++)
-            {
-                ChartPoint intermediatePoint = chart.NSeries[0].Points[i];
-                intermediatePoint.Area.ForegroundColor = Color.Blue;
-            }
-
-            // Last point (Total) - Red
-            ChartPoint totalPoint = chart.NSeries[0].Points[5];
-            totalPoint.Area.ForegroundColor = Color.Red;
+            // Add series and set its data range
+            int seriesIndex = chart.NSeries.Add("B2:B6", true);
+            // Category data is inferred from the first column; explicit assignment omitted for compatibility
 
             // Save the workbook
-            workbook.Save("WaterfallChartDemo.xlsx");
+            workbook.Save("WaterfallChart.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

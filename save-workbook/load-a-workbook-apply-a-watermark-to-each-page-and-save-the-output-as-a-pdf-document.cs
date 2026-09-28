@@ -1,68 +1,61 @@
-// Title: Add a diagonal CONFIDENTIAL watermark when saving an Excel workbook to PDF with Aspose.Cells for .NET
-// Description: Loads an .xlsx file, creates a RenderingWatermark with centered alignment, 45° rotation, 30% opacity and 75% page scaling, attaches it to PdfSaveOptions, and saves the workbook as a PDF where the watermark appears behind the content on every page.
-// Keywords: Aspose.Cells | C# | .NET | Excel to PDF | PDF watermark | RenderingWatermark | PdfSaveOptions | diagonal watermark | confidential watermark | background watermark | watermark opacity | watermark scaling
-// Common Searches: Aspose.Cells add diagonal watermark to PDF | C# save Excel as PDF with watermark | RenderingWatermark rotation opacity example | PdfSaveOptions watermark settings Aspose.Cells | how to put CONFIDENTIAL text on each PDF page from Excel
-// Developer Intent: Generate a PDF from an Excel workbook and embed a semi‑transparent diagonal text watermark on every page.
-// Use Cases: Distribute confidential reports with a 'CONFIDENTIAL' label behind the data. | Brand exported PDFs with a company slogan or logo as a background watermark. | Apply legal or compliance notices to spreadsheet PDFs before sharing.
-// AI Prompts: Write C# code using Aspose.Cells to load an .xlsx file and save it as a PDF with a 45° rotated, 30% opaque 'CONFIDENTIAL' watermark behind the content. | Explain how to customize font, rotation, opacity, and scaling of a RenderingWatermark in PdfSaveOptions for Excel‑to‑PDF conversion. | Provide step‑by‑step instructions for adding a background watermark to all pages of a PDF generated from a workbook with Aspose.Cells for .NET.
+// Title: Apply a diagonal semi‑transparent CONFIDENTIAL text watermark to every page while converting an Excel workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, creates a RenderingWatermark with custom font, rotation, opacity, and centering, then saves the workbook as a PDF using PdfSaveOptions. | Show how to set PdfSaveOptions.Watermark to embed a background text watermark on all pages of the PDF generated from a workbook in Aspose.Cells for .NET.
+// Common Searches: how to add a diagonal text watermark to PDF when converting Excel with Aspose.Cells C# | Aspose.Cells C# set watermark opacity and rotation in PdfSaveOptions | add a semi‑transparent diagonal watermark to each PDF page during Excel to PDF conversion with Aspose.Cells | C# code sample for rendering watermark on PDF output from Excel file using Aspose.Cells
+// Tags: Aspose.Cells RenderingWatermark PDF conversion | C# add text watermark to PDF via PdfSaveOptions | Excel to PDF watermark Aspose.Cells | semi-transparent diagonal watermark Aspose.Cells | watermark behind page content C# Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkExample
+namespace AsposeCellsWatermarkDemo
 {
-    // Loads an .xlsx file, creates a RenderingWatermark with centered alignment, 45° rotation, 30% opacity and 75% page scaling, attaches it to PdfSaveOptions, and saves the workbook as a PDF where the watermark appears behind the content on every page.
+    // The example loads 'input.xlsx' into an Aspose.Cells Workbook, defines a blue, bold, italic Calibri font, creates a centered 45-degree semi‑transparent 'CONFIDENTIAL' RenderingWatermark, assigns it to PdfSaveOptions.Watermark, and saves the workbook as 'output_watermark.pdf' with the watermark applied to every PDF page.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Path to the source Excel file
-            string sourceFile = "input.xlsx";
+            string inputPath = "input.xlsx";
 
             // Load the workbook from the file
-            Workbook workbook = new Workbook(sourceFile);
+            Workbook workbook = new Workbook(inputPath);
 
             // Create a font for the watermark text
-            RenderingFont watermarkFont = new RenderingFont("Calibri", 68)
+            RenderingFont font = new RenderingFont("Calibri", 68)
             {
-                Bold = true,
                 Italic = true,
+                Bold = true,
                 Color = Color.Blue
             };
 
             // Create a text watermark with the desired text and font
-            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", watermarkFont)
+            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
             {
                 // Center the watermark on each page
                 HAlignment = TextAlignmentType.Center,
                 VAlignment = TextAlignmentType.Center,
-
-                // Rotate the watermark for a diagonal appearance
+                // Rotate for visual effect
                 Rotation = 45,
-
                 // Set opacity (0 = fully transparent, 1 = fully opaque)
                 Opacity = 0.3f,
-
-                // Scale the watermark relative to the page size (percentage)
+                // Scale watermark relative to page size (percentage)
                 ScaleToPagePercent = 75,
-
                 // Place the watermark behind the page content
                 IsBackground = true
             };
 
-            // Configure PDF save options to include the watermark
+            // Configure PDF save options and assign the watermark
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
                 Watermark = watermark
             };
 
-            // Save the workbook as a PDF with the watermark applied to each page
-            string outputFile = "output_watermark.pdf";
-            workbook.Save(outputFile, pdfOptions);
+            // Save the workbook as a PDF with the watermark applied
+            string outputPath = "output_watermark.pdf";
+            workbook.Save(outputPath, pdfOptions);
 
-            Console.WriteLine($"Workbook saved as PDF with watermark: {outputFile}");
+            Console.WriteLine($"Workbook saved as PDF with watermark to: {outputPath}");
         }
     }
 }

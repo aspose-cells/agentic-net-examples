@@ -1,62 +1,57 @@
-// Title: Load UTF-16 CSV with Asian characters using Aspose.Cells TxtLoadOptions (C#)
-// Description: Shows how to create a TxtLoadOptions object, set Encoding = Encoding.Unicode, load a UTF‑16 CSV that contains Japanese, Korean or Chinese text, read a cell to verify Unicode handling, and save the workbook as XLSX.
-// Keywords: Aspose.Cells | TxtLoadOptions | UTF-16 | Unicode CSV | C# | .NET | Asian characters | Japanese CSV | Korean CSV | Chinese CSV | CSV to XLSX conversion | encoding property
-// Common Searches: Aspose.Cells load UTF-16 CSV | C# read Unicode CSV with Aspose | Import Asian characters CSV .NET | Convert UTF-16 CSV to Excel using Aspose.Cells | TxtLoadOptions encoding example
-// Developer Intent: Import a UTF‑16 encoded CSV that contains Asian Unicode text into an Aspose.Cells Workbook and optionally export it to another format.
-// Use Cases: Preserve Japanese, Korean, or Chinese characters when importing CSV data. | Validate that a specific cell (e.g., A1) contains the expected Unicode string after load. | Batch‑convert UTF‑16 CSV files to XLSX for reporting pipelines. | Handle missing‑file scenarios gracefully during CSV import. | Integrate Unicode CSV ingestion into automated .NET data workflows.
-// AI Prompts: Generate C# code that uses Aspose.Cells TxtLoadOptions to load a UTF‑16 CSV with Japanese text and saves it as XLSX. | Explain how setting TxtLoadOptions.Encoding to Encoding.Unicode ensures correct import of Chinese characters from a CSV file. | Provide a step‑by‑step example for reading a UTF‑16 CSV containing Korean characters, checking cell A1, and handling FileNotFoundException.
+// Title: Read a UTF-16 CSV containing Japanese and Korean characters using TxtLoadOptions in Aspose.Cells for .NET
+// AI Prompts: Configure TxtLoadOptions with Encoding.Unicode, load the CSV file, and output the value of cell A1. | Generate a Unicode-encoded CSV with Japanese and Korean text, then open it using Aspose.Cells specifying the Unicode encoding to verify correct rendering.
+// Common Searches: Aspose.Cells C# load CSV file with UTF-16 encoding for Asian characters | How to specify Unicode encoding when importing a CSV into Aspose.Cells workbook | Reading Japanese and Korean text from a UTF-16 CSV using Aspose.Cells TxtLoadOptions
+// Tags: Custom text encoding for CSV import | Aspose.Cells CSV loading with specific encoding | C# handling Asian characters in CSV files | Workbook load options for text files
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsUtf16Example
 {
-    // Shows how to create a TxtLoadOptions object, set Encoding = Encoding.Unicode, load a UTF‑16 CSV that contains Japanese, Korean or Chinese text, read a cell to verify Unicode handling, and save the workbook as XLSX.
-    public class LoadCsvUtf16Demo
+    // The example creates a UTF-16 CSV file containing Japanese and Korean text if it does not exist, sets TxtLoadOptions.Encoding to Encoding.Unicode, loads the file into an Aspose.Cells Workbook, and prints the value of cell A1 to confirm that Asian characters are read correctly.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            Run();
-        }
-
-        public static void Run()
-        {
-            // Path to the CSV file that is saved with UTF‑16 (Unicode) encoding
+            // Path to the CSV file
             string csvPath = "asian_utf16.csv";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Ensure the CSV file exists; create a sample UTF‑16 file if missing
             if (!File.Exists(csvPath))
             {
-                Console.WriteLine($"Error: The file \"{csvPath}\" was not found.");
-                return;
+                string[] sampleLines =
+                {
+                    "こんにちは,世界",   // Japanese
+                    "안녕하세요,세계"      // Korean
+                };
+                // Write the sample lines using UTF‑16 (Unicode) encoding
+                File.WriteAllLines(csvPath, sampleLines, Encoding.Unicode);
             }
 
             try
             {
-                // Create load options for text files and set the encoding to UTF‑16
+                // Set load options to use UTF‑16 encoding for text files
                 TxtLoadOptions loadOptions = new TxtLoadOptions
                 {
-                    Encoding = Encoding.Unicode // UTF‑16 Little Endian
+                    Encoding = Encoding.Unicode // UTF‑16 LE
                 };
 
-                // Load the CSV file using the specified options
+                // Load the CSV file with the specified options
                 Workbook workbook = new Workbook(csvPath, loadOptions);
 
-                // Access the first worksheet and display a cell that contains Asian characters
+                // Access the first worksheet and its cells
                 Worksheet sheet = workbook.Worksheets[0];
-                Console.WriteLine("A1 value: " + sheet.Cells["A1"].StringValue);
+                Cells cells = sheet.Cells;
 
-                // Save the workbook to another format (e.g., XLSX) to verify the import succeeded
-                string outputPath = "converted.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+                // Display a sample cell value to verify correct loading
+                Console.WriteLine("Cell A1 value: " + cells["A1"].StringValue);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while processing the CSV file:");
-                Console.WriteLine(ex.Message);
+                // Handle any errors that occur during loading or processing
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

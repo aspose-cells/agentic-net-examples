@@ -1,69 +1,79 @@
-// Title: C# – Sync Aspose.Cells CheckBox Shapes with Worksheet Cells (DataTable Example)
-// Description: Shows how to create CheckBox shapes in an Excel workbook with Aspose.Cells for .NET, link each CheckBox to a cell, populate the linked cells from a DataTable, and keep the visual state in sync with the Boolean values.
-// Keywords: Aspose.Cells | C# CheckBox linked cell | Excel checkbox synchronization | DataTable to CheckBox | Aspose.Cells CheckBox example | programmatic checkbox state | Excel form controls .NET
-// Common Searches: Aspose.Cells add checkbox programmatically | link checkbox to cell Aspose.Cells C# | sync checkbox state with Excel cell .NET | create checkboxes from DataTable Aspose | set checkbox value Aspose.Cells
-// Developer Intent: Create Excel checkboxes that automatically reflect and store Boolean values from a DataTable.
-// Use Cases: Generate a settings sheet where each option from a DataTable appears as a labeled checkbox linked to a boolean cell for user toggling. | Build a dynamic Excel form that captures user selections in linked cells, enabling round‑trip data exchange with a .NET DataTable.
-// AI Prompts: Provide C# code to read the checked state of Aspose.Cells CheckBox shapes after a workbook is edited and update a DataTable. | Show how to customize the size and position of CheckBox shapes based on DataTable values using Aspose.Cells for .NET. | Explain how to programmatically change the linked cell of an existing Aspose.Cells CheckBox at runtime.
+// Title: Add a linked CheckBox shape to each data row and bind its checked state to a Boolean column using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates over all worksheet rows, reads the Boolean value from column B, creates a 20 × 20 CheckBox shape in column C, sets the CheckBox.LinkedCell to the same B cell, and saves the workbook. | Generate a C# example that programmatically inserts a CheckBox shape per data row, links each CheckBox to its corresponding Boolean cell, ensures the initial checked state matches the cell value, and writes the result to a new Excel file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# add checkbox shape to each data row and link to cell | loop to insert linked checkboxes in Excel using Aspose.Cells .NET | synchronize Excel checkbox state with a Boolean column via Aspose.Cells | set LinkedCell property for CheckBox shapes in Aspose.Cells C#
+// Tags: checkbox shape insertion Aspose.Cells | checkbox linked cell property Aspose.Cells | bind checkbox state to boolean column Aspose.Cells | row-wise checkbox creation Aspose.Cells | save workbook with linked checkboxes Aspose.Cells
 
 using System;
-using System.Data;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCheckBoxSync
+// The sample loads an existing workbook, walks through each data row starting at row 2, reads the true/false value from column B, adds a 20 × 20 CheckBox shape in column C, links the shape to the same B cell so the checkbox reflects the cell's Boolean value, and saves the updated file.
+class Program
 {
-    // Shows how to create CheckBox shapes in an Excel workbook with Aspose.Cells for .NET, link each CheckBox to a cell, populate the linked cells from a DataTable, and keep the visual state in sync with the Boolean values.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
 
-            // Prepare a sample DataTable with option names and their checked state
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Option", typeof(string));
-            dt.Columns.Add("Checked", typeof(bool));
-
-            dt.Rows.Add("Enable Feature A", true);
-            dt.Rows.Add("Enable Feature B", false);
-            dt.Rows.Add("Enable Feature C", true);
-
-            // Starting row for placing checkboxes (row index is zero‑based)
-            int startRow = 0;
-            int startColumn = 0; // Column A for checkbox text, Column B for linked cell
-
-            // Iterate through the DataTable and create a checkbox for each row
-            for (int i = 0; i < dt.Rows.Count; i++)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Determine the cell address that will be linked to the checkbox
-                // Linked cell will be in column B (index 1) of the current row
-                string linkedCellAddress = CellsHelper.CellIndexToName(1, startRow + i);
-
-                // Add a checkbox to the worksheet
-                // Parameters: topRow, leftColumn, height (pixels), width (pixels)
-                int checkboxIndex = sheet.CheckBoxes.Add(startRow + i, startColumn, 20, 100);
-                CheckBox checkBox = sheet.CheckBoxes[checkboxIndex];
-
-                // Set the display text of the checkbox
-                checkBox.Text = dt.Rows[i]["Option"].ToString();
-
-                // Link the checkbox to the corresponding cell (column B)
-                checkBox.LinkedCell = linkedCellAddress;
-
-                // Initialize the linked cell with the value from the DataTable
-                sheet.Cells[linkedCellAddress].PutValue(dt.Rows[i]["Checked"]);
-
-                // Ensure the checkbox reflects the cell value
-                // When LinkedCell is set, the checkbox state is automatically synchronized,
-                // but we explicitly set the Value property for clarity.
-                checkBox.Value = Convert.ToBoolean(dt.Rows[i]["Checked"]);
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Save the workbook to a file
-            workbook.Save("CheckBoxSyncDemo.xlsx", SaveFormat.Xlsx);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Data starts from the second row (zero‑based index 1)
+            int dataStartRow = 1;
+            int lastDataRow = sheet.Cells.MaxDataRow;
+
+            // Add a linked CheckBox in column C for each data row
+            for (int row = dataStartRow; row <= lastDataRow; row++)
+            {
+                try
+                {
+                    // Read the boolean value from column B
+                    bool isChecked = sheet.Cells[row, 1].BoolValue;
+
+                    // Add a CheckBox shape anchored to column C (index 2)
+                    CheckBox checkBox = sheet.Shapes.AddCheckBox(row, 2, row, 2, 0, 0);
+
+                    // Link the CheckBox to column B of the same row (e.g., "B2")
+                    checkBox.LinkedCell = sheet.Cells[row, 1].Name;
+
+                    // Set the initial checked state of the linked cell
+                    sheet.Cells[row, 1].PutValue(isChecked);
+
+                    // Appearance adjustments
+                    checkBox.Width = 20;
+                    checkBox.Height = 20;
+                }
+                catch (Exception exRow)
+                {
+                    Console.WriteLine($"Warning: Could not add CheckBox to row {row + 1}. {exRow.Message}");
+                }
+            }
+
+            // Ensure output directory exists (if a directory part is present)
+            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

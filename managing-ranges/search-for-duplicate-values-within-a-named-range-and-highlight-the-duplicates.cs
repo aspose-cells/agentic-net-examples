@@ -1,68 +1,84 @@
-// Title: C# – Highlight Duplicate Values in a Named Range with Aspose.Cells Conditional Formatting
-// Description: This Aspose.Cells for .NET example creates a workbook, fills column A with sample data, defines a named range, and adds a DuplicateValues conditional‑formatting rule that colors duplicate cells yellow. The workbook is saved as HighlightedDuplicates.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | conditional formatting | duplicate values | named range | highlight duplicates | Excel automation | CellArea | FormatConditionType.DuplicateValues | sample code
-// Common Searches: Aspose.Cells highlight duplicates C# | Conditional formatting duplicate values .NET | Create named range Aspose.Cells | Apply duplicate value rule Excel using Aspose | C# code to color duplicate cells
-// Developer Intent: The developer wants to automatically detect and visually mark duplicate entries inside a specific named range of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Detect repeated product SKUs in inventory sheets | Identify duplicate customer emails during data import | Flag repeated transaction IDs in financial reports | Assist data‑cleansing by marking duplicate rows | Provide quick visual audit of survey responses
-// AI Prompts: Write C# Aspose.Cells code that creates a named range and applies a DuplicateValues conditional format with a red font and bold style. | Explain how to retrieve the cell addresses of duplicates after the conditional formatting is applied using Aspose.Cells. | Show how to replace the solid yellow fill with a two‑color gradient for duplicate cells in Aspose.Cells. | Give a step‑by‑step guide to export the list of duplicate values to a separate worksheet.
+// Title: Highlight duplicate values in a named range of an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to iterate over a named range, identify cells with duplicate values, and apply a yellow background style to those cells. | Adjust the duplicate‑highlighting example to use a red fill and perform case‑insensitive string comparison when detecting duplicates. | Extend the sample to log the addresses of all duplicate cells to a text file while keeping the visual highlighting intact.
+// Common Searches: asp.net locate duplicate cells inside a defined named range with Aspose.Cells | c# code to mark repeated values in an Excel named range using Aspose.Cells library | apply background color to duplicate entries in a specific range with Aspose.Cells for .NET | save workbook after highlighting duplicate cells in an Excel file using Aspose.Cells
+// Tags: duplicate detection in named range Aspose.Cells | apply background style to duplicate cells C# | map cell values to list for duplicate identification Aspose.Cells | highlight repeated entries Excel workbook Aspose.Cells | create custom style for duplicate highlighting .NET
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// This Aspose.Cells for .NET example creates a workbook, fills column A with sample data, defines a named range, and adds a DuplicateValues conditional‑formatting rule that colors duplicate cells yellow. The workbook is saved as HighlightedDuplicates.xlsx.
-class HighlightDuplicates
+// The example loads an Excel workbook, retrieves a named range called "MyRange", builds a dictionary that maps each distinct cell value to the cells containing it, creates a yellow solid‑fill style, and applies this style to every cell whose value appears more than once. It ensures the output directory exists, saves the modified workbook as a new file, and reports any errors.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data with some duplicate values in column A
-            string[] sampleData = { "Apple", "Banana", "Apple", "Cherry", "Banana", "Date" };
-            for (int i = 0; i < sampleData.Length; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                cells[i, 0].PutValue(sampleData[i]); // A1, A2, ...
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Define a named range that covers the populated cells (A1:A6)
-            AsposeRange namedRange = cells.CreateRange(0, 0, sampleData.Length, 1);
-            namedRange.Name = "MyDataRange";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a conditional formatting rule to highlight duplicate values within the named range
-            int cfIndex = worksheet.ConditionalFormattings.Add(); // create a new conditional formatting collection
-            var conditionalFormatting = worksheet.ConditionalFormattings[cfIndex];
-
-            // Set the area of the conditional formatting to the named range
-            CellArea area = new CellArea
+            // Retrieve the named range (use GetRangeByName)
+            Aspose.Cells.Range namedRange = workbook.Worksheets.GetRangeByName("MyRange");
+            if (namedRange == null)
             {
-                StartRow = namedRange.FirstRow,
-                EndRow = namedRange.FirstRow + namedRange.RowCount - 1,
-                StartColumn = namedRange.FirstColumn,
-                EndColumn = namedRange.FirstColumn + namedRange.ColumnCount - 1
-            };
-            conditionalFormatting.AddArea(area);
+                Console.WriteLine("Named range 'MyRange' not found.");
+                return;
+            }
 
-            // Add a condition of type DuplicateValues
-            int conditionIndex = conditionalFormatting.AddCondition(FormatConditionType.DuplicateValues);
-            var condition = conditionalFormatting[conditionIndex];
+            // Map each distinct value to the list of cells containing it
+            Dictionary<object, List<Cell>> valueMap = new Dictionary<object, List<Cell>>();
 
-            // Define the style to apply to duplicate cells (yellow background)
-            Style duplicateStyle = workbook.CreateStyle();
-            duplicateStyle.ForegroundColor = Color.Yellow;
-            duplicateStyle.Pattern = BackgroundType.Solid;
-            condition.Style = duplicateStyle;
+            foreach (Cell cell in namedRange)
+            {
+                object val = cell.Value;
+                if (val == null) continue; // Skip empty cells
 
-            // Save the workbook with highlighted duplicates
-            string outputPath = "HighlightedDuplicates.xlsx";
+                if (!valueMap.ContainsKey(val))
+                    valueMap[val] = new List<Cell>();
+
+                valueMap[val].Add(cell);
+            }
+
+            // Create a style for highlighting duplicate values
+            Style dupStyle = workbook.CreateStyle();
+            dupStyle.ForegroundColor = Color.Yellow;
+            dupStyle.Pattern = BackgroundType.Solid;
+            StyleFlag styleFlag = new StyleFlag { CellShading = true };
+
+            // Apply the highlight style to cells that have duplicate values
+            foreach (var entry in valueMap)
+            {
+                if (entry.Value.Count > 1) // Duplicate found
+                {
+                    foreach (Cell dupCell in entry.Value)
+                    {
+                        dupCell.SetStyle(dupStyle, styleFlag);
+                    }
+                }
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {

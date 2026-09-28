@@ -1,33 +1,29 @@
-// Title: Apply Cells.Subtotal with Zero‑Based StartRow in Aspose.Cells (C#)
-// Description: Creates a workbook, adds a header and sales rows, defines a CellArea that starts at row 0, and uses Cells.Subtotal to group by the first column (Region) and sum the Sales column. The example also shows how to retrieve the SubtotalSetting before saving the file as SubtotalDemo.xlsx.
-// Keywords: Aspose.Cells | Cells.Subtotal | zero based indexing | C# | CellArea | group by column | sum subtotal | SubtotalSetting | Excel report generation | US developers | India developers
-// Common Searches: Aspose.Cells Cells.Subtotal startRow 0 C# example | how to use zero‑based indexing with Cells.Subtotal | group rows by column and sum values Aspose.Cells | retrieve SubtotalSetting after applying Cells.Subtotal | define CellArea that includes header row Aspose.Cells
-// Developer Intent: Add subtotal rows to an Excel worksheet using Aspose.Cells while correctly handling zero‑based row indices.
-// Use Cases: Create a regional sales summary that automatically inserts subtotal rows for each region. | Validate subtotal configuration programmatically by reading the SubtotalSetting object. | Export a pre‑formatted report with grouped totals for downstream analysis or sharing.
-// AI Prompts: Generate C# code to place subtotal rows above the data instead of below using Aspose.Cells. | Show how to apply multiple subtotal columns (e.g., Sales and Quantity) with different functions in one call. | Explain how to hide or collapse subtotal rows after they are created with Cells.Subtotal.
+// Title: Create a sum subtotal in an Excel worksheet using Aspose.Cells C# with zero‑based start row indexing
+// AI Prompts: Generate C# code that builds a workbook, sets up a header row, populates data, defines a CellArea beginning at row 0, and calls Cells.Subtotal to group by the first column and sum the third column. | Demonstrate how to configure Cells.Subtotal in Aspose.Cells when the start row is zero, including the correct zero‑based EndRow calculation. | Provide a step‑by‑step example of applying a subtotal to the Sales column while grouping by Region using Aspose.Cells with zero‑based row numbers.
+// Common Searches: Aspose.Cells C# subtotal startrow zero based indexing example | How to use Cells.Subtotal with zero‑based row numbers in .NET | C# code to group rows by Region and sum Sales using Aspose.Cells Subtotal | Define CellArea that includes header row for subtotal in Aspose.Cells | Apply sum subtotal on a specific column with Aspose.Cells zero‑based rows
+// Tags: Aspose.Cells Subtotal zero-based indexing | C# define CellArea for subtotal | Aspose.Cells sum subtotal by column | Excel workbook subtotal using Aspose.Cells C# | zero-based row indexing Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsSubtotalDemo
+// The example creates a new workbook, adds a header row and sample data, defines a CellArea that starts at row 0 to include the header, and uses Cells.Subtotal to group by the Region column (first column) while summing the Sales column (third column) with zero‑based indexing. The workbook is saved as SubtotalZeroBasedDemo.xlsx.
+public class SubtotalZeroBasedDemo
 {
-    // Creates a workbook, adds a header and sales rows, defines a CellArea that starts at row 0, and uses Cells.Subtotal to group by the first column (Region) and sum the Sales column. The example also shows how to retrieve the SubtotalSetting before saving the file as SubtotalDemo.xlsx.
-    class Program
+    public static void Run()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (creation rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample data (including header row at index 0)
-            // Header row
-            cells[0, 0].PutValue("Region");   // Column A
-            cells[0, 1].PutValue("Product");  // Column B
-            cells[0, 2].PutValue("Sales");    // Column C
+            // Add header row (zero‑based row index 0)
+            cells["A1"].PutValue("Region");
+            cells["B1"].PutValue("Product");
+            cells["C1"].PutValue("Sales");
 
-            // Data rows start at row index 1 (zero‑based)
+            // Sample data (5 rows)
             object[,] data = new object[,]
             {
                 { "North", "Widget", 5000 },
@@ -37,40 +33,44 @@ namespace AsposeCellsSubtotalDemo
                 { "West",  "Widget", 4500 }
             };
 
-            for (int r = 0; r < data.GetLength(0); r++)
+            // Populate data starting at row index 1 (zero‑based)
+            for (int i = 0; i < data.GetLength(0); i++)
             {
-                for (int c = 0; c < data.GetLength(1); c++)
-                {
-                    // Row index = r + 1 because data starts after header
-                    cells[r + 1, c].PutValue(data[r, c]);
-                }
+                cells[i + 1, 0].PutValue(data[i, 0]); // Region
+                cells[i + 1, 1].PutValue(data[i, 1]); // Product
+                cells[i + 1, 2].PutValue(data[i, 2]); // Sales
             }
 
-            // Define the range that includes the header row (A1:C6)
-            // StartRow = 0 ensures zero‑based indexing is handled correctly
+            // Define the cell area covering header + data.
+            // StartRow = 0 (first row), EndRow = 5 (last data row index)
             CellArea area = new CellArea
             {
                 StartRow = 0,
                 StartColumn = 0,
-                EndRow = data.GetLength(0),   // last data row index (5) because header + 5 data rows = 6 rows total, zero‑based end row = 5
+                EndRow = data.GetLength(0), // 5 (zero‑based index of last row)
                 EndColumn = 2
             };
 
             // Apply subtotal:
-            // - Group by the first column (Region) -> groupBy = 0 (zero‑based)
-            // - Use SUM function
-            // - Add subtotal to the third column (Sales) -> totalList = new int[] { 2 } (zero‑based)
+            // - groupBy: column 0 (Region) – zero‑based index
+            // - function: Sum
+            // - totalList: column 2 (Sales) – zero‑based index
             cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 });
 
-            // Optional: retrieve and display subtotal settings
-            SubtotalSetting setting = cells.RetrieveSubtotalSetting(area);
-            Console.WriteLine($"GroupBy index: {setting.GroupBy}");
-            Console.WriteLine($"Subtotal function: {setting.SubtotalFunction}");
-            Console.WriteLine($"Total columns: {string.Join(",", setting.TotalList)}");
-            Console.WriteLine($"Summary below data: {setting.SummaryBelowData}");
-
-            // Save the workbook (save rule)
-            workbook.Save("SubtotalDemo.xlsx");
+            // Save the workbook
+            workbook.Save("SubtotalZeroBasedDemo.xlsx");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        SubtotalZeroBasedDemo.Run();
     }
 }

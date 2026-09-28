@@ -1,22 +1,19 @@
-// Title: C# – Apply a 30° 3‑D Rotation to a Sparkline Group in Cell G1 using Aspose.Cells
-// Description: Creates a workbook, adds a line sparkline from A1:D1 to G1, overlays a semi‑transparent rectangle shape, sets ThreeDFormat.RotationZ to 30°, and saves the file as SparklineWith3DRotation.xlsx.
-// Keywords: Aspose.Cells | C# | sparkline | 3D rotation | ThreeDFormat | RotationZ | overlay shape | transparent rectangle | Excel sparkline styling | G1 cell
-// Common Searches: Aspose.Cells rotate sparkline 30 degrees C# | how to add 3D format to sparkline Aspose.Cells | overlay shape on sparkline cell Aspose.Cells | transparent shape over sparkline Excel C# | apply ThreeDFormat.RotationZ to sparkline group
-// Developer Intent: Add a line sparkline to G1 and give it a 30° Z‑axis rotation by overlaying a semi‑transparent rectangle shape.
-// Use Cases: Tilt a sparkline on a financial dashboard to create a 3‑D visual effect. | Combine sparkline data with shape styling for richer Excel reports. | Maintain sparkline readability while adding depth through a transparent overlay.
-// AI Prompts: Generate C# code that inserts a line sparkline in cell G1 and rotates it 30 degrees using Aspose.Cells ThreeDFormat. | Show how to overlay a semi‑transparent rectangle on a sparkline cell and configure its RotationZ property. | Explain how to size and set transparency of a shape so the underlying sparkline stays visible after applying 3‑D rotation.
+// Title: Rotate a rectangle shape 30° around the Z‑axis to simulate a sparkline group at cell G1 using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape over cell G1, sets its ThreeDFormat.RotationZ to 30 degrees, and saves the workbook. | Demonstrate how to apply a 30‑degree Z‑axis 3‑D rotation to a shape that represents a sparkline in an Excel file using Aspose.Cells .NET.
+// Common Searches: Aspose.Cells C# rotate shape 30 degrees Z axis | how to set ThreeDFormat.RotationZ for a shape in Aspose.Cells | apply 3D rotation to a sparkline placeholder Excel Aspose.Cells .NET | C# Aspose.Cells add rectangle shape over cell G1 and rotate | example of ThreeDFormat rotationz property in Aspose.Cells
+// Tags: Aspose.Cells shape threeD rotationz | C# Aspose.Cells add rectangle shape | Excel shape 30 degree Z axis rotation | Aspose.Cells 3D formatting example | simulate sparkline with shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSparkline3DExample
+namespace Sparkline3DRotationDemo
 {
-    // Creates a workbook, adds a line sparkline from A1:D1 to G1, overlays a semi‑transparent rectangle shape, sets ThreeDFormat.RotationZ to 30°, and saves the file as SparklineWith3DRotation.xlsx.
+    // The sample creates a new workbook, inserts a rectangle shape over cell G1 to represent a sparkline, applies a 30‑degree Z‑axis rotation via the ThreeDFormat.RotationZ property, and saves the file as Sparkline3DRotationDemo.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
@@ -24,50 +21,37 @@ namespace AsposeCellsSparkline3DExample
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data for the sparkline (A1:D1)
+                // Populate sample data (used only for demonstration; no sparkline API)
                 sheet.Cells["A1"].PutValue(5);
                 sheet.Cells["B1"].PutValue(3);
                 sheet.Cells["C1"].PutValue(8);
                 sheet.Cells["D1"].PutValue(2);
 
-                // Define the location range for the sparkline group (cell G1)
-                CellArea sparklineArea = new CellArea
+                // Demonstrate 3‑D effect by adding a rectangle shape over the area where a sparkline would be
+                // Parameters: type, upper left row, upper left column, lower right row, lower right column, width, height
+                Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 0, 6, 0, 6, 20, 100);
+                ThreeDFormat threeD = shape.ThreeDFormat;
+                threeD.RotationZ = 30; // Rotate the shape 30 degrees around the Z‑axis
+
+                // Prepare output path
+                string outputFile = "Sparkline3DRotationDemo.xlsx";
+                string outputFullPath = Path.GetFullPath(outputFile);
+                string outputDir = Path.GetDirectoryName(outputFullPath);
+
+                // Create directory if needed (outputDir can be null when only a file name is provided)
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    StartRow = 0,   // Row 1 (zero‑based)
-                    EndRow = 0,
-                    StartColumn = 6, // Column G (zero‑based, A=0)
-                    EndColumn = 6
-                };
-
-                // Add a line sparkline group with the data range and location
-                int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, sparklineArea);
-                SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
-
-                // To apply 3‑D formatting, overlay a shape on the same cell and set its ThreeDFormat
-                // The shape will visually represent the 30‑degree rotation.
-                // Add a rectangle shape that covers the G1 cell
-                Shape shape = sheet.Shapes.AddShape(
-                    MsoDrawingType.Rectangle,
-                    0,          // upper left row
-                    6,          // upper left column (G)
-                    0,          // upper left row offset (points)
-                    0,          // upper left column offset (points)
-                    100,        // width in points
-                    20          // height in points
-                );
-
-                // Apply 3‑D rotation of 30 degrees around the Z‑axis
-                shape.ThreeDFormat.RotationZ = 30;
-
-                // Make the shape semi‑transparent so the sparkline remains visible
-                shape.Fill.Transparency = 0.8; // 80% transparent
+                    Directory.CreateDirectory(outputDir);
+                }
 
                 // Save the workbook
-                workbook.Save("SparklineWith3DRotation.xlsx");
+                workbook.Save(outputFullPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputFullPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("An error occurred while creating the workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

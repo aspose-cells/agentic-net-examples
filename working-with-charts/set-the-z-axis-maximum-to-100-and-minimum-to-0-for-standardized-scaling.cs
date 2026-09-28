@@ -1,96 +1,70 @@
-// Title: Set Z‑Axis (Depth Axis) Minimum 0 and Maximum 100 for a 3‑D Column Chart in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a 3‑D clustered column chart, accesses the DepthAxis/ZAxis via reflection, disables automatic scaling, sets MinValue = 0 and MaxValue = 100, and saves the file as ChartZAxisScaling.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | 3D column chart | DepthAxis | ZAxis | axis minimum | axis maximum | fixed scaling | chart axis range | reflection
-// Common Searches: Aspose.Cells set Z axis range C# | How to change depth axis limits in 3D chart Aspose.Cells | C# fix Z axis minimum and maximum Aspose.Cells | Access ZAxis property with reflection Aspose.Cells | Set custom scaling for 3D chart axis .NET
-// Developer Intent: Set the Z‑axis (depth axis) of a 3‑D column chart to a fixed range of 0‑100.
-// Use Cases: Standardize depth scaling across multiple reports for consistent visual comparison. | Enforce business rules that require chart depth values between 0 and 100. | Prepare workbooks for automated distribution where Excel must display a uniform Z‑axis. | Integrate chart generation into a .NET service that outputs Excel files with predefined axis limits.
-// AI Prompts: Generate C# code using Aspose.Cells to set the Z‑axis minimum to 0 and maximum to 100 for a 3‑D column chart, handling both DepthAxis and ZAxis property names. | Explain how to disable automatic scaling and assign custom MinValue and MaxValue to a chart's depth axis in Aspose.Cells for .NET. | Show how to verify the Z‑axis limits after saving the workbook, e.g., by reading the axis properties or opening the file in Excel. | Provide a fallback approach if the chart type does not expose a ZAxis property.
+// Title: Set a fixed Z‑axis range of 0 to 100 for a 3‑D column chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a workbook, add sample data, create a 3‑D column chart, and set its Z‑axis minimum to 0 and maximum to 100 with Aspose.Cells in C#. | Write C# code that builds a 3‑D column chart from a data range and configures the value axis to a static 0‑100 scale using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set Z axis minimum value for 3D column chart | How to fix the value axis range of a 3D chart to 0‑100 in Aspose.Cells | C# example for disabling automatic axis scaling in Aspose.Cells chart | Standardize Z‑axis scaling for 3‑D column chart with Aspose.Cells .NET
+// Tags: Aspose.Cells set Z axis range | 3D column chart value axis scaling C# | disable automatic axis limits Aspose.Cells | chart value axis min max .NET | Aspose.Cells chart scaling example
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
+using Aspose.Cells.Charts;   // Required for Chart, ChartType, Axis
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds a 3‑D clustered column chart, accesses the DepthAxis/ZAxis via reflection, disables automatic scaling, sets MinValue = 0 and MaxValue = 100, and saves the file as ChartZAxisScaling.xlsx.
-    public class SetZAxisScalingDemo
+    // The example creates a new workbook, inserts sample data, adds a 3‑D column chart, disables automatic scaling, and explicitly sets the chart's Z‑axis (value axis) minimum to 0 and maximum to 100 before saving the file as ChartWithStandardizedZAxis.xlsx.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Add sample data for the chart
+                worksheet.Cells["A1"].PutValue("Category");
+                worksheet.Cells["A2"].PutValue("A");
+                worksheet.Cells["A3"].PutValue("B");
+                worksheet.Cells["A4"].PutValue("C");
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
+                worksheet.Cells["B1"].PutValue("Value");
+                worksheet.Cells["B2"].PutValue(10);
+                worksheet.Cells["B3"].PutValue(55);
+                worksheet.Cells["B4"].PutValue(90);
 
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(30);
-            worksheet.Cells["B4"].PutValue(50);
+                // Add a 3‑D column chart
+                int chartIndex = worksheet.Charts.Add(ChartType.Column3D, 5, 0, 20, 8);
+                Chart chart = worksheet.Charts[chartIndex];
 
-            // Add a 3‑D column chart
-            int chartIndex = worksheet.Charts.Add(ChartType.Column3DClustered, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
+                // Set the data source for the chart
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
 
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+                // Configure the value (Z) axis scaling
+                Axis valueAxis = chart.ValueAxis;
+                valueAxis.IsAutomaticMinValue = false; // Disable automatic minimum
+                valueAxis.IsAutomaticMaxValue = false; // Disable automatic maximum
+                valueAxis.MinValue = 0;                // Set minimum to 0
+                valueAxis.MaxValue = 100;              // Set maximum to 100
 
-            // Access the depth (Z) axis via reflection (DepthAxis or ZAxis depending on version)
-            Axis depthAxis = null;
-            var depthProp = chart.GetType().GetProperty("DepthAxis");
-            if (depthProp != null)
-            {
-                depthAxis = depthProp.GetValue(chart) as Axis;
-            }
-            else
-            {
-                var zProp = chart.GetType().GetProperty("ZAxis");
-                if (zProp != null)
+                // Define output file path
+                string outputPath = "ChartWithStandardizedZAxis.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
                 {
-                    depthAxis = zProp.GetValue(chart) as Axis;
+                    Directory.CreateDirectory(outputDir);
                 }
-            }
 
-            // Apply fixed scaling if the axis was found
-            if (depthAxis != null)
-            {
-                depthAxis.IsAutomaticMinValue = false; // Disable automatic minimum
-                depthAxis.IsAutomaticMaxValue = false; // Disable automatic maximum
-                depthAxis.MinValue = 0;                // Set minimum to 0
-                depthAxis.MaxValue = 100;              // Set maximum to 100
-            }
-            else
-            {
-                Console.WriteLine("Depth (Z) axis not available for this chart type.");
-            }
-
-            // Save the workbook
-            string outputPath = "ChartZAxisScaling.xlsx";
-            try
-            {
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine("An error occurred while creating the chart workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
     }

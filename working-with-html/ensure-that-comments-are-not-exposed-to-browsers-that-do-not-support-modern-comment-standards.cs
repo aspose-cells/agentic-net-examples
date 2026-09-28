@@ -1,44 +1,48 @@
-// Title: Aspose.Cells for .NET: Export Excel Comments to HTML with Modern‑Browser‑Only Visibility
-// Description: Learn how to save an Excel workbook as HTML using Aspose.Cells while exporting cell comments that are displayed only in browsers supporting modern comment standards. The example disables down‑level revealed conditional comments and enables comment export, ensuring legacy browsers do not see the notes.
-// Keywords: Aspose.Cells | HtmlSaveOptions | IsExportComments | DisableDownlevelRevealedComments | C# export Excel to HTML | hide comments legacy browsers | modern browser comment visibility | Excel to HTML sample | GitHub Aspose.Cells example | code snippet for HTML export
-// Common Searches: Aspose.Cells hide Excel comments from old browsers | C# export workbook to HTML without conditional comments | DisableDownlevelRevealedComments usage | IsExportComments true Aspose.Cells | Export Excel notes to HTML for modern browsers only
-// Developer Intent: Generate an HTML file from an Excel workbook where cell comments are included for browsers that understand modern comment syntax but are suppressed for legacy browsers.
-// Use Cases: Creating web‑ready financial reports that show cell notes only to up‑to‑date browsers. | Building intranet dashboards where legacy IE versions must not display Excel comments. | Publishing documentation with contextual hints that are invisible to browsers lacking modern comment support.
-// AI Prompts: Write C# code with Aspose.Cells to save a workbook as HTML, enabling comment export while disabling down‑level revealed conditional comments. | Explain the interaction between DisableDownlevelRevealedComments and IsExportComments in Aspose.Cells HTML conversion. | Show how to add multiple cell comments and export them so they appear only in browsers that support modern HTML comment standards.
+// Title: Remove all worksheet comments and export an Excel workbook to HTML using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, clears every comment on each worksheet, and saves the workbook as an HTML file using HtmlSaveOptions. | Show a C# example that verifies the source Excel file exists, deletes all worksheet comments, and exports the workbook to HTML with basic error handling using Aspose.Cells.
+// Common Searches: asp.net remove comments from Excel before exporting to HTML with Aspose.Cells | c# aspose.cells clear worksheet comments then save as html | how to hide Excel comments in HTML output using Aspose.Cells | export xlsx to html without comments asp.net
+// Tags: Aspose.Cells clear worksheet comments C# | Aspose.Cells export workbook to HTML C# | remove Excel comments before HTML conversion Aspose | C# HtmlSaveOptions without comments Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCommentExportDemo
+// The program checks for the input Excel file, loads it with Aspose.Cells, removes all comments from every worksheet, and saves the workbook as an HTML file using default HtmlSaveOptions, while handling potential exceptions.
+class Program
 {
-    // Learn how to save an Excel workbook as HTML using Aspose.Cells while exporting cell comments that are displayed only in browsers supporting modern comment standards. The example disables down‑level revealed conditional comments and enables comment export, ensuring legacy browsers do not see the notes.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Add a comment to cell A1
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.Note = "This comment will be exported only to modern browsers.";
-
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                // Disable downlevel-revealed conditional comments so older browsers won't see the comment
-                DisableDownlevelRevealedComments = true,
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-                // Export comments (so modern browsers receive them)
-                IsExportComments = true
-            };
+            // Load the workbook from the existing Excel file
+            var workbook = new Workbook(inputPath);
 
-            // Save the workbook as HTML with the configured options
-            workbook.Save("output.html", htmlOptions);
+            // Remove all comments so they are not rendered in the HTML output
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.Comments.Clear();
+            }
 
-            Console.WriteLine("Workbook saved to HTML with comments hidden from non‑modern browsers.");
+            // Configure HTML save options (default settings are sufficient)
+            var htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Save the workbook as HTML without comments
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook saved to '{outputPath}' without comments.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

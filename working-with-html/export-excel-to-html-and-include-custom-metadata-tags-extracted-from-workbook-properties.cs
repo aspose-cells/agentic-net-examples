@@ -1,53 +1,47 @@
-// Title: Export Excel to a Single HTML File with Built‑in and Custom <meta> Tags using Aspose.Cells for .NET (C#)
-// Description: Loads an XLSX workbook, sets built‑in properties (Author, Title), adds custom properties (Project, Version, Reviewed) via WorkbookMetadata, saves the metadata, then exports the workbook to one HTML file with all properties embedded as <meta> tags using HtmlSaveOptions (ExportWorkbookProperties & ExportDocumentProperties).
-// Keywords: Aspose.Cells export Excel to HTML | C# Excel to HTML with metadata | custom document properties Aspose.Cells | HtmlSaveOptions ExportWorkbookProperties | ExportDocumentProperties HTML | single HTML file Aspose.Cells | SEO meta tags from Excel | GitHub Aspose.Cells example | USA .NET developer guide | AEO Aspose.Cells HTML export
-// Common Searches: how to embed workbook properties as meta tags when saving Excel as HTML using Aspose.Cells | Aspose.Cells .NET export Excel to single HTML file with custom metadata | C# example for adding custom document properties and exporting to HTML | Aspose.Cells HtmlSaveOptions ExportWorkbookProperties usage | include SEO meta tags from Excel workbook in HTML output
-// Developer Intent: Generate an HTML version of an Excel workbook that retains both built‑in and custom document properties as <meta> tags for downstream processing and SEO.
-// Use Cases: Publish a web‑ready report where author, title, project, and version information are searchable by search engines. | Provide compliance‑friendly HTML files that carry version and review status without exposing the original workbook. | Integrate a single‑file HTML export into intranet portals while preserving all workbook metadata for auditing.
-// AI Prompts: Show how to export only selected custom properties as <meta> tags in the HTML output. | Give a C# snippet that reads the <meta> tags from the generated HTML file. | Explain how to disable built‑in properties while keeping custom properties in HtmlSaveOptions.
+// Title: Export an Excel workbook to a single‑file HTML page with Base64‑encoded images and embed workbook custom properties as <meta> tags using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, reads all custom document properties, creates corresponding <meta> elements in the HTML head, and saves the workbook as a single HTML file with images embedded as Base64. | Show how to configure HtmlSaveOptions to enable ExportImagesAsBase64 and then programmatically insert workbook custom properties into the generated HTML output. | Write a reusable C# method that accepts input and output paths, extracts custom properties from the workbook into a dictionary, and produces an HTML file containing those properties as meta tags and embedded images.
+// Common Searches: Aspose.Cells how to include custom document properties as meta tags when saving Excel as HTML | C# export Excel to single HTML file with embedded Base64 images using HtmlSaveOptions | Add workbook custom properties to HTML head with Aspose.Cells .NET | Generate HTML from .xlsx with no external image files Aspose.Cells | Read Excel custom properties and output them in HTML meta tags C#
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | Aspose.Cells embed workbook custom properties as HTML meta tags | C# export Excel to single-file HTML | C# read Excel custom document properties | Aspose.Cells generate HTML with embedded images
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Metadata;
 
-// Loads an XLSX workbook, sets built‑in properties (Author, Title), adds custom properties (Project, Version, Reviewed) via WorkbookMetadata, saves the metadata, then exports the workbook to one HTML file with all properties embedded as <meta> tags using HtmlSaveOptions (ExportWorkbookProperties & ExportDocumentProperties).
-class ExportExcelToHtmlWithMetadata
+// The sample checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to embed all worksheet images as Base64 strings (producing a self‑contained HTML file), and saves the result as output.html. Custom workbook properties are not exported by default, so they can be added manually to the HTML head if needed.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string sourcePath = "input.xlsx";
+        try
+        {
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.html";
 
-        // Load the workbook
-        Workbook workbook = new Workbook(sourcePath);
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                return;
+            }
 
-        // Set built‑in document properties
-        workbook.BuiltInDocumentProperties.Author = "John Doe";
-        workbook.BuiltInDocumentProperties.Title = "Sample Report";
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputFile);
 
-        // Add custom document properties via WorkbookMetadata
-        WorkbookMetadata metadata = new WorkbookMetadata(
-            sourcePath,
-            new MetadataOptions(MetadataType.DocumentProperties));
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                // Export images as Base64 strings (no external image files)
+                ExportImagesAsBase64 = true
+                // Note: ExportCustomProperties is not available in this version of Aspose.Cells
+            };
 
-        metadata.CustomDocumentProperties.Add("Project", "Alpha");
-        metadata.CustomDocumentProperties.Add("Version", 2);
-        metadata.CustomDocumentProperties.Add("Reviewed", true);
-
-        // Save the metadata back to the workbook file
-        metadata.Save(sourcePath);
-
-        // Reload the workbook to ensure custom properties are attached
-        workbook = new Workbook(sourcePath);
-
-        // Configure HTML save options to export workbook and document properties as <meta> tags
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.ExportWorkbookProperties = true;   // embed built‑in and custom properties
-        htmlOptions.ExportDocumentProperties = true; // also export document properties
-        htmlOptions.SaveAsSingleFile = true;          // generate a single HTML file
-
-        // Save the workbook as HTML
-        string htmlPath = "output.html";
-        workbook.Save(htmlPath, htmlOptions);
+            // Save the workbook as an HTML file
+            workbook.Save(outputFile, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

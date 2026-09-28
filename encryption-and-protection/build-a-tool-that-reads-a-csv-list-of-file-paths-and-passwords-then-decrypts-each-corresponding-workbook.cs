@@ -1,42 +1,44 @@
-// Title: C# Bulk Decrypt Password‑Protected Excel Files from CSV Using Aspose.Cells
-// Description: A console utility that reads a CSV file containing Excel workbook paths and their passwords, loads each protected workbook with Aspose.Cells LoadOptions, clears the password, and overwrites the original file while reporting success or errors.
-// Keywords: Aspose.Cells | C# bulk Excel decryption | remove Excel password .NET | CSV driven workbook unlock | load protected workbook | overwrite Excel file | GitHub example | source code | API usage
-// Common Searches: batch remove password from Excel using Aspose.Cells | C# program to decrypt multiple protected workbooks | read CSV of Excel passwords and unlock files | Aspose.Cells load workbook with password and save unprotected | automate Excel password removal .NET
-// Developer Intent: Read a CSV of file paths and passwords, then programmatically decrypt each protected Excel workbook with Aspose.Cells.
-// Use Cases: Automate nightly decryption of incoming password‑protected reports before data‑pipeline ingestion. | Validate a list of encrypted workbooks and produce unprotected copies for internal analysis. | Provide a bulk decryption tool for compliance teams to remove passwords from archived Excel files on shared drives.
-// AI Prompts: Generate C# code that reads a CSV of Excel file paths and passwords, loads each workbook with Aspose.Cells, clears its password, and saves it back, handling missing files and malformed lines. | Suggest enhancements to log detailed errors and optionally save decrypted files to a separate output folder. | Explain how to preserve original file timestamps after decryption using Aspose.Cells. | Create a GitHub‑ready project structure for this bulk decryption tool, including README and CI configuration.
+// Title: Decrypt multiple password‑protected Excel workbooks from a CSV list using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that reads a CSV file of Excel file paths and passwords, opens each encrypted workbook with Aspose.Cells LoadOptions, clears the password, and saves the workbook back to disk. | Add robust error handling and create a log file that records the timestamp, file path, and success or failure of each decryption attempt. | Enhance the program to detect the workbook format (XLS, XLSX, XLSB) and set the appropriate LoadFormat when loading each encrypted file.
+// Common Searches: how to batch remove passwords from Excel files using Aspose.Cells in C# | C# read CSV of file paths and passwords to decrypt encrypted workbooks | Aspose.Cells load encrypted XLSX with password from list and save unprotected | automate decryption of multiple protected Excel workbooks via command line | process CSV of Excel workbook locations and passwords with Aspose.Cells .NET
+// Tags: batch decrypt Excel workbooks Aspose.Cells | load encrypted workbook with password C# | CSV-driven Excel file decryption .NET | remove password from XLSX using Aspose.Cells | automated Excel protection removal C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorkbookDecryptionTool
+namespace WorkbookDecryptor
 {
-    // A console utility that reads a CSV file containing Excel workbook paths and their passwords, loads each protected workbook with Aspose.Cells LoadOptions, clears the password, and overwrites the original file while reporting success or errors.
+    // A C# console tool reads a CSV where each line contains an Excel workbook path and its password, loads each encrypted workbook with Aspose.Cells LoadOptions, clears the password, and overwrites the original file with the decrypted version, while reporting success or failure for every entry.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the CSV file containing "filePath,password" per line
-            string csvPath = "workbooks.csv";
+            // Expect the first argument to be the path of the CSV file containing workbook paths and passwords.
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Please provide the path to the CSV file as the first argument.");
+                return;
+            }
 
-            // Ensure the CSV file exists
+            string csvPath = args[0];
+
             if (!File.Exists(csvPath))
             {
                 Console.WriteLine($"CSV file not found: {csvPath}");
                 return;
             }
 
-            // Read all lines from the CSV
+            // Read all lines from the CSV file.
             string[] lines = File.ReadAllLines(csvPath);
 
             foreach (string line in lines)
             {
-                // Skip empty lines
+                // Skip empty lines.
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                // Split line into file path and password (comma‑separated)
+                // Each line is expected to be: workbookPath,password
                 string[] parts = line.Split(new[] { ',' }, 2);
                 if (parts.Length != 2)
                 {
@@ -44,34 +46,36 @@ namespace WorkbookDecryptionTool
                     continue;
                 }
 
-                string filePath = parts[0].Trim();
+                string workbookPath = parts[0].Trim();
                 string password = parts[1].Trim();
 
-                // Verify the workbook file exists
-                if (!File.Exists(filePath))
+                if (!File.Exists(workbookPath))
                 {
-                    Console.WriteLine($"Workbook not found: {filePath}");
+                    Console.WriteLine($"Workbook not found: {workbookPath}");
                     continue;
                 }
 
                 try
                 {
-                    // Load the protected workbook using LoadOptions.Password (rule)
-                    LoadOptions loadOptions = new LoadOptions();
-                    loadOptions.Password = password;
-                    Workbook workbook = new Workbook(filePath, loadOptions); // create/load rule
+                    // Load the encrypted workbook using the provided password.
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                    {
+                        Password = password
+                    };
 
-                    // Remove the password protection (set to null)
-                    workbook.Settings.Password = null; // workbooksettings.password rule
+                    Workbook workbook = new Workbook(workbookPath, loadOptions);
 
-                    // Save the workbook, overwriting the original file (save rule)
-                    workbook.Save(filePath);
+                    // Remove the password protection.
+                    workbook.Settings.Password = null; // or string.Empty
 
-                    Console.WriteLine($"Successfully decrypted: {filePath}");
+                    // Overwrite the original file with the decrypted version.
+                    workbook.Save(workbookPath, SaveFormat.Xlsx);
+
+                    Console.WriteLine($"Successfully decrypted: {workbookPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to decrypt {filePath}: {ex.Message}");
+                    Console.WriteLine($"Failed to decrypt {workbookPath}: {ex.Message}");
                 }
             }
         }

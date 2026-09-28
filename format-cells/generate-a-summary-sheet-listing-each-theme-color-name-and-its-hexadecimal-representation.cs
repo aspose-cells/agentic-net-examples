@@ -1,61 +1,55 @@
-// Title: C# – List All Aspose.Cells ThemeColorType Names with Hex Values in Excel
-// Description: Creates a new workbook, adds a "Theme Summary" worksheet, writes headers, iterates through every ThemeColorType (except StyleColor), extracts each theme color with Workbook.GetThemeColor, converts it to a #RRGGBB string, records the name and hex code, auto‑fits columns, and saves the file as ThemeSummary.xlsx.
-// Keywords: Aspose.Cells ThemeColorType list | C# export theme palette | GetThemeColor hex code | .NET Excel theme colors | generate theme summary worksheet
-// Common Searches: list theme colors Aspose.Cells C# | export theme palette to Excel using Aspose | how to get hex values of ThemeColorType | skip StyleColor when extracting theme colors | Aspose.Cells GetThemeColor example
-// Developer Intent: Produce an Excel worksheet that enumerates each ThemeColorType name alongside its hexadecimal representation.
-// Use Cases: Provide designers a quick reference of the workbook's theme palette. | Include the theme palette in brand style guides or documentation. | Validate workbook colors against corporate branding standards.
-// AI Prompts: Generate C# code with Aspose.Cells that writes all ThemeColorType names and #RRGGBB values to a worksheet, excluding StyleColor. | Modify the example to output ARGB hex strings (#AARRGGBB) for each theme color. | Add a column that displays the numeric RGB components (e.g., 255,0,170) next to the hex code.
+// Title: Create an Excel workbook that lists all Aspose.Cells ThemeColorType names with their #RRGGBB hex values in C#
+// AI Prompts: Write C# code using Aspose.Cells to loop through the ThemeColorType enum, retrieve each color with GetThemeColor, format it as a #RRGGBB string, and place the name and hex code into two columns of a new worksheet. | Add header cells "Theme Color Name" and "Hex Value" to the worksheet, auto‑fit the columns, and save the file as ThemeSummary.xlsx. | Implement a method that returns a DataTable containing ThemeColorType names paired with their hexadecimal values, then export that table to an .xlsx file with Aspose.Cells.
+// Common Searches: C# Aspose.Cells how to list all theme colors with hex codes | GetThemeColor enum values to Excel using Aspose.Cells | Export Aspose.Cells theme palette to .xlsx file in C# | Convert Aspose.Cells theme colors to #RRGGBB strings programmatically | Auto fit columns after writing data with Aspose.Cells C#
+// Tags: Aspose.Cells enumerate ThemeColorType to Excel | C# extract theme colors hex values | write theme color summary worksheet | auto‑fit columns Aspose.Cells workbook | save theme palette as xlsx file
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsThemeSummary
+// The program creates a new workbook, adds a worksheet named "Theme Summary", writes headers, iterates over every ThemeColorType enum value, obtains each theme color via GetThemeColor, converts it to a #RRGGBB string, records the name and hex value in two columns, auto‑fits the columns, and saves the result as ThemeSummary.xlsx.
+class ThemeColorSummary
 {
-    // Creates a new workbook, adds a "Theme Summary" worksheet, writes headers, iterates through every ThemeColorType (except StyleColor), extracts each theme color with Workbook.GetThemeColor, converts it to a #RRGGBB string, records the name and hex code, auto‑fits columns, and saves the file as ThemeSummary.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (uses the default theme)
             Workbook workbook = new Workbook();
 
-            // Add a new worksheet for the summary
-            Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            // Add a worksheet to hold the theme color summary
+            int sheetIndex = workbook.Worksheets.Add();
+            Worksheet summarySheet = workbook.Worksheets[sheetIndex];
             summarySheet.Name = "Theme Summary";
 
-            // Write headers
-            summarySheet.Cells["A1"].PutValue("Theme Color Name");
-            summarySheet.Cells["B1"].PutValue("Hexadecimal Value");
+            // Write header titles
+            summarySheet.Cells[0, 0].PutValue("Theme Color Name");
+            summarySheet.Cells[0, 1].PutValue("Hex Value");
 
-            // Get all theme color types (Background1 to FollowedHyperlink)
-            ThemeColorType[] themeTypes = (ThemeColorType[])Enum.GetValues(typeof(ThemeColorType));
-
-            int rowIndex = 1; // zero‑based index; row 1 is the second row (A2, B2)
-
-            foreach (ThemeColorType type in themeTypes)
+            // Iterate through all ThemeColorType values and retrieve their colors
+            int row = 1;
+            foreach (ThemeColorType themeType in Enum.GetValues(typeof(ThemeColorType)))
             {
-                // Skip the StyleColor entry (value 12) as it is not a real theme color
-                if (type == ThemeColorType.StyleColor) continue;
-
-                // Retrieve the theme color from the workbook
-                Color color = workbook.GetThemeColor(type);
-
-                // Convert the color to a hex string (e.g., #FF00AA)
+                Color color = workbook.GetThemeColor(themeType);
                 string hex = $"#{color.R:X2}{color.G:X2}{color.B:X2}";
 
-                // Write the name and hex value to the sheet
-                summarySheet.Cells[rowIndex, 0].PutValue(type.ToString()); // Column A
-                summarySheet.Cells[rowIndex, 1].PutValue(hex);            // Column B
-
-                rowIndex++;
+                summarySheet.Cells[row, 0].PutValue(themeType.ToString());
+                summarySheet.Cells[row, 1].PutValue(hex);
+                row++;
             }
 
             // Auto‑fit columns for better readability
             summarySheet.AutoFitColumns();
 
             // Save the workbook
-            workbook.Save("ThemeSummary.xlsx");
+            string outputPath = "ThemeSummary.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,35 +1,51 @@
-// Title: C# – Add a comment with author to cell A1 using Aspose.Cells for .NET
-// Description: Creates a new Workbook, accesses the first Worksheet, adds a comment to cell A1, sets the note to "Review required before final submission" and the author to "John Doe", then saves the file as CommentAdded.xlsx.
-// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# | add comment to Excel cell | cell comment author | Worksheet comment example | CommentCollection Add | Excel comment via Aspose | set comment text | save workbook with comment
-// Common Searches: How to add a comment with author to a cell using Aspose.Cells C# | Aspose.Cells add note to A1 and set author | C# example for inserting Excel comments with Aspose | Save workbook after adding comments Aspose.Cells | Retrieve comment author from worksheet Aspose.Cells
-// Developer Intent: Insert a comment with author information into cell A1 of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Add reviewer notes to automatically generated reports for stakeholder feedback. | Highlight cells that need data validation or correction, attributing the comment to a specific author. | Create an audit trail by tagging key cells with author names before distribution.
-// AI Prompts: Generate C# code to add a multi‑line, formatted comment to cell B2 with Aspose.Cells. | Show how to retrieve an existing comment from a worksheet and update its author using Aspose.Cells. | Provide a script that iterates through all comments in a worksheet and exports their text and authors to a CSV file.
+// Title: Insert a comment with author into cell A1 of a new Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a fresh Workbook, accesses the first worksheet, adds a comment to cell A1, sets the comment's Author to "AuthorName" and its Note to "Review required before final submission", ensures the output directory exists, and saves the file as Output.xlsx with Aspose.Cells. | Generate a .NET example that demonstrates how to place a reviewer note in the first cell, assign an author name to the comment, and export the workbook to a specified path while handling missing folders, using Aspose.Cells.
+// Common Searches: asp.net insert reviewer note into the first cell with Aspose.Cells | c# Aspose.Cells set comment author and text for a specific worksheet cell | how to ensure output directory exists before saving Excel file with Aspose.Cells | example of saving a workbook as Output.xlsx after adding a comment in C#
+// Tags: add comment to worksheet cell Aspose.Cells C# | assign author to Excel comment Aspose.Cells | create workbook and insert cell note Aspose.Cells | save workbook with folder creation Aspose.Cells .NET
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a new Workbook, accesses the first Worksheet, adds a comment to cell A1, sets the note to "Review required before final submission" and the author to "John Doe", then saves the file as CommentAdded.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program creates a new Workbook, accesses the first worksheet, inserts a comment with author "AuthorName" and note "Review required before final submission" into cell A1, ensures the target directory exists, and saves the workbook as Output.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook (empty workbook)
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a comment to cell A1 using the CommentCollection.Add(string) overload
-        int commentIndex = worksheet.Comments.Add("A1");
-        Comment comment = worksheet.Comments[commentIndex];
+                // Add a comment to cell A1 (row 0, column 0)
+                // The indexer creates the comment if it does not exist
+                Comment comment = sheet.Comments[0, 0];
+                comment.Author = "AuthorName";
+                comment.Note = "Review required before final submission";
 
-        // Set the comment text
-        comment.Note = "Review required before final submission";
+                // Define output file path
+                string outputPath = "Output.xlsx";
 
-        // Set the comment author
-        comment.Author = "John Doe";
+                // Ensure the output directory exists (if a directory part is present)
+                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Save the workbook to a file
-        workbook.Save("CommentAdded.xlsx");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

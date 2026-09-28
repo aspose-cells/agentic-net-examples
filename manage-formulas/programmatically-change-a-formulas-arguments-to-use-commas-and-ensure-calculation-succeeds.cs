@@ -1,50 +1,73 @@
-// Title: Replace ';' with ',' in Excel formulas using Aspose.Cells for .NET and recalculate the workbook
-// Description: Loads a workbook, scans every cell for formulas that use the locale‑specific semicolon argument separator, swaps it for a comma, triggers a full calculation, and saves the corrected file. Ideal for normalizing formulas across regions.
-// Keywords: Aspose.Cells formula separator | C# replace semicolon with comma in Excel formula | locale specific formula delimiter | batch update Excel formulas .NET | recalculate workbook Aspose.Cells | Excel formula delimiter conversion | global Excel compatibility
-// Common Searches: Aspose.Cells change formula delimiter from ; to , | C# fix Excel formula separators programmatically | How to recalculate workbook after editing formulas Aspose | Convert locale specific Excel formulas using Aspose.Cells | Batch replace semicolons in Excel formulas .NET
-// Developer Intent: Programmatically convert semicolon argument separators to commas in all formulas and force workbook recalculation.
-// Use Cases: Standardize formulas after importing spreadsheets from European locales that use ';' as the argument separator. | Prepare a multi‑sheet report for distribution to users with different regional settings. | Automate formula cleanup in a CI pipeline that generates Excel files for downstream analytics.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates through every cell, replaces ';' with ',' in formulas, recalculates, and saves the workbook. | Explain how Aspose.Cells handles locale‑dependent formula delimiters and the safest way to modify them. | Provide a step‑by‑step tutorial for bulk updating Excel formula separators and triggering calculation using Aspose.Cells for .NET.
+// Title: Convert semicolon‑separated Excel formula arguments to commas and recalculate workbook with Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook using Aspose.Cells, replace every ';' in cell formulas with ',', then invoke Workbook.CalculateFormula to update results. | Assign Workbook.Settings.CultureInfo = new CultureInfo("en-US") so that Aspose.Cells parses formulas with comma separators before saving. | Traverse all worksheets and cells, use Cell.IsFormula to identify formulas, modify the Formula string, and finally call Workbook.CalculateFormula.
+// Common Searches: aspnet replace semicolon in Excel formula arguments using Aspose.Cells | how to change formula delimiter from ';' to ',' in Aspose.Cells workbook | recalculate formulas after editing them with Aspose.Cells .NET | set workbook culture to en-US for formula parsing Aspose.Cells | iterate over cells to update formulas in Aspose.Cells example
+// Tags: formula argument separator conversion Aspose.Cells | workbook cultureinfo en-us setting Aspose.Cells | bulk formula update across worksheets Aspose.Cells | recalculate workbook formulas Aspose.Cells | locale-aware formula parsing Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaCommaFix
+// The example loads an Excel file, forces the workbook to use the en-US locale so commas are the argument separator, scans every worksheet and cell, replaces any semicolons in formulas with commas, recalculates all formulas, and saves the updated workbook.
+class Program
 {
-    // Loads a workbook, scans every cell for formulas that use the locale‑specific semicolon argument separator, swaps it for a comma, triggers a full calculation, and saves the corrected file. Ideal for normalizing formulas across regions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Access the first worksheet (you can iterate all worksheets if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Iterate through all used cells and replace semicolon argument separators with commas
-            foreach (Cell cell in cells)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Only process cells that already contain a formula
-                if (!string.IsNullOrEmpty(cell.Formula))
-                {
-                    // Replace locale‑specific ';' with the standard ',' delimiter
-                    string correctedFormula = cell.Formula.Replace(';', ',');
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                    // Update the cell formula only if a change was made
-                    if (correctedFormula != cell.Formula)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Force the workbook to use a culture that expects commas as argument separators
+            workbook.Settings.CultureInfo = new CultureInfo("en-US");
+
+            // Iterate through all worksheets and cells
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        cell.Formula = correctedFormula;
+                        Cell cell = cells[row, col];
+                        // Use IsFormula to check if the cell contains a formula
+                        if (cell.IsFormula)
+                        {
+                            // Replace any semicolons with commas in the formula
+                            string formula = cell.Formula;
+                            if (formula.Contains(";"))
+                            {
+                                cell.Formula = formula.Replace(";", ",");
+                            }
+                        }
                     }
                 }
             }
 
-            // Recalculate all formulas to ensure the workbook reflects the updated formulas
+            // Recalculate all formulas to ensure they evaluate correctly
             workbook.CalculateFormula();
 
             // Save the modified workbook
-            workbook.Save("output.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

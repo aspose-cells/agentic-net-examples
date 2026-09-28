@@ -1,72 +1,85 @@
-// Title: Add a ListBox shape linked to a data‑validation list in Aspose.Cells for .NET
-// Description: Creates a workbook, fills B1‑B3 with options, adds a list‑type validation to A1, inserts a ListBox shape, sets its input range, links it to A1, updates the displayed selection, and saves the file.
-// Keywords: Aspose.Cells ListBox shape | C# data validation linking | shape linked cell Aspose | UpdateSelectedValue method | SetInputRange ListBox | Excel form controls programmatically | .NET workbook shape binding
-// Common Searches: Aspose.Cells bind ListBox to validation list | C# sync shape text with cell value | how to link shape to cell in Aspose.Cells | update ListBox selection from cell Aspose | programmatic data validation with shapes .NET
-// Developer Intent: Generate a ListBox control that reflects a cell’s validation list and stays synchronized with the linked cell.
-// Use Cases: Interactive worksheets where a visual ListBox mirrors a drop‑down cell. | Report templates that display the chosen validation option inside a shape. | Excel‑style forms that automatically update shape text when the underlying cell changes.
-// AI Prompts: Write C# code using Aspose.Cells to add a ListBox shape, set its input range, link it to a validation cell, and keep the displayed text in sync. | Explain the role of SetLinkedCell and UpdateSelectedValue when connecting a shape to a data‑validation list in Aspose.Cells. | Provide step‑by‑step instructions for creating a validation list, inserting a ListBox, and binding the shape to the same range with Aspose.Cells for .NET.
+// Title: Add a rectangle shape that reflects a data‑validation list selection by linking its text to a cell in Aspose.Cells for .NET
+// AI Prompts: Insert a rectangle shape at C3, bind its Text property to cell B2 with a formula, and create a dropdown list in B2 using Aspose.Cells for .NET. | Generate a workbook, populate a source range for a list validation, apply the validation to B2, and configure a shape to display the chosen list item. | Create a shape, set its text formula to reference a validated cell, and save the workbook as an .xlsx file with Aspose.Cells.
+// Common Searches: Aspose.Cells how to link shape text to a cell value | C# add rectangle shape that displays selected dropdown value in Aspose.Cells | set shape text formula to reference a data validation cell using Aspose.Cells .NET | create data validation list and bind it to a shape in an Excel file with Aspose.Cells | display selected option from a list validation inside a shape in .xlsx using Aspose.Cells
+// Tags: add shape linked to cell Aspose.Cells | cell B2 list validation Aspose.Cells | shape text formula reference Aspose.Cells | display dropdown selection in shape .NET | save workbook with linked shape Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeValidationDemo
+namespace AsposeCellsExample
 {
-    // Creates a workbook, fills B1‑B3 with options, adds a list‑type validation to A1, inserts a ListBox shape, sets its input range, links it to A1, updates the displayed selection, and saves the file.
+    // The example creates a new workbook, fills D1:D5 with option values, adds a list validation to cell B2, inserts a rectangle shape at C3, sets the shape's text to the formula =B2 so it updates with the selected dropdown item, applies basic line styling, and saves the file as ShapeLinkedToValidation.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Create a new workbook
+                var workbook = new Workbook();
 
-                // -------------------------------------------------
-                // 1. Prepare the list of options in cells B1:B3
-                // -------------------------------------------------
-                worksheet.Cells["B1"].Value = "Option1";
-                worksheet.Cells["B2"].Value = "Option2";
-                worksheet.Cells["B3"].Value = "Option3";
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
-                // 2. Add data validation to cell A1 that uses the list in B1:B3
-                // -------------------------------------------------
-                // Add a new validation rule (GetValidation returns null if none exists)
-                int validationIndex = worksheet.Validations.Add();
-                Validation validation = worksheet.Validations[validationIndex];
+                // Populate a list of values for the validation (e.g., D1:D5)
+                worksheet.Cells["D1"].PutValue("Option 1");
+                worksheet.Cells["D2"].PutValue("Option 2");
+                worksheet.Cells["D3"].PutValue("Option 3");
+                worksheet.Cells["D4"].PutValue("Option 4");
+                worksheet.Cells["D5"].PutValue("Option 5");
+
+                // Define the cell area for the validation (B2)
+                var validationArea = new CellArea
+                {
+                    StartRow = 1,    // zero‑based row index for B2
+                    StartColumn = 1, // zero‑based column index for B2
+                    EndRow = 1,
+                    EndColumn = 1
+                };
+
+                // Add a data‑validation list to cell B2
+                int validationIndex = worksheet.Validations.Add(validationArea);
+                var validation = worksheet.Validations[validationIndex];
                 validation.Type = ValidationType.List;
-                // Use a range reference for the list items
-                validation.Formula1 = "$B$1:$B$3";
-                validation.InCellDropDown = true; // Show dropdown in the cell
+                validation.InCellDropDown = true;               // Show dropdown arrow
+                validation.Formula1 = "D1:D5";                  // Source range for the list
 
-                // -------------------------------------------------
-                // 3. Add a ListBox shape and link it to the same validation list
-                // -------------------------------------------------
-                // Parameters: upper left row, upper left column, top, left, width, height
-                Shape listBoxShape = worksheet.Shapes.AddListBox(2, 0, 2, 0, 130, 130);
+                // Add a rectangle shape to the worksheet
+                // Parameters: type, upper left row, upper left column, top, left, height, width
+                var shape = worksheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle,
+                    2,    // upper left row (zero‑based, row 3)
+                    2,    // upper left column (zero‑based, column C)
+                    5,    // top offset (pixels)
+                    5,    // left offset (pixels)
+                    50,   // height (pixels)
+                    150); // width (pixels)
 
-                // Fill the ListBox with the same range used for validation
-                listBoxShape.SetInputRange("$B$1:$B$3", false, false);
+                // Set the shape's text to a formula that references cell B2.
+                shape.Text = "=B2";
 
-                // Link the ListBox to cell A1 so its selected value reflects the cell value
-                listBoxShape.SetLinkedCell("$A$1", false, true);
+                // Optional styling for better visibility
+                shape.Line.Weight = 1.0;
+                shape.Line.DashStyle = MsoLineDashStyle.Solid;
 
-                // -------------------------------------------------
-                // 4. Synchronize the shape's displayed text with the linked cell
-                // -------------------------------------------------
-                // This updates the selected item in the ListBox based on the current value of A1
-                listBoxShape.UpdateSelectedValue();
+                // Save the workbook
+                string outputPath = "ShapeLinkedToValidation.xlsx";
 
-                // -------------------------------------------------
-                // 5. Save the workbook
-                // -------------------------------------------------
-                workbook.Save("ShapeLinkedToValidation.xlsx");
+                // Ensure the directory exists (if a directory part is present)
+                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

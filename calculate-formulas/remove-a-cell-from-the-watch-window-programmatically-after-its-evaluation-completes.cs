@@ -1,38 +1,74 @@
-// Title: Remove a Cell Watch After Formula Evaluation with Aspose.Cells for .NET
-// Description: Shows how to add a cell to the worksheet's Watch Window, trigger calculation with CalculateFormula, and then delete the watch programmatically using CellWatches.RemoveAt in C#.
-// Keywords: Aspose.Cells | CellWatches | RemoveAt | watch window | delete cell watch | programmatic watch removal | .NET | C# example | CalculateFormula | workbook automation
-// Common Searches: Aspose.Cells remove watch window cell | CellWatches.RemoveAt C# example | delete watched cell after CalculateFormula | clear watch list Aspose.Cells .NET | watch window API Aspose.Cells
-// Developer Intent: Programmatically delete a cell that was added to the Watch Window once its formula has been evaluated.
-// Use Cases: Clean up specific watches after a batch of calculations to keep the watch list concise. | Dynamically manage watches in iterative simulations—add before a step, remove after the step completes. | Prevent memory growth in long‑running server processes by removing stale watch entries. | Reduce UI clutter in custom reporting tools that expose the Watch Window to end users.
-// AI Prompts: Generate C# code that adds several cell watches and removes each one after its individual calculation finishes. | Provide a method to clear all watches from a worksheet in a single call using Aspose.Cells. | Explain how to retrieve the watch index for a given cell address before calling RemoveAt. | Show how to conditionally remove a watch based on the calculated result value. | Write a unit test that verifies a watch is removed after CalculateFormula runs.
+// Title: How to automatically remove a cell watch from Aspose.Cells after its formula is calculated using C#
+// AI Prompts: Implement a subclass of AbstractCalculationMonitor that detects when a specific cell finishes calculation and calls Worksheet.CellWatches.RemoveAt to delete the watch. | Show how to add a watch to a target cell, assign the custom monitor to CalculationOptions, and invoke Workbook.CalculateFormula so the watch is removed automatically. | Write C# code that captures the watch index and target cell coordinates, then removes the watch inside the AfterCalculate callback.
+// Common Searches: Aspose.Cells C# remove cell watch after formula evaluation | custom calculation monitor to delete cell watch in .NET | programmatically clear Worksheet.CellWatches after calculation | example of using AbstractCalculationMonitor for watch cleanup in Aspose.Cells
+// Tags: Aspose.Cells calculation monitor implementation | Worksheet.CellWatches removal programmatically | C# automatic cell watch cleanup | Aspose.Cells formula evaluation callback | using AbstractCalculationMonitor in .NET
 
 using System;
 using Aspose.Cells;
 
-// Shows how to add a cell to the worksheet's Watch Window, trigger calculation with CalculateFormula, and then delete the watch programmatically using CellWatches.RemoveAt in C#.
-class RemoveCellWatchDemo
+namespace AsposeCellsWatchRemovalDemo
 {
-    static void Main()
+    // Custom calculation monitor to remove a cell watch after its evaluation
+    // The example defines a WatchRemovalMonitor that inherits from AbstractCalculationMonitor. In its AfterCalculate method it checks whether the evaluated cell matches the watched cell (B2) and, if so, removes the watch via Worksheet.CellWatches.RemoveAt. The program creates a workbook, adds a watch to B2, configures CalculationOptions with the custom monitor, runs Workbook.CalculateFormula, and saves the result, demonstrating automatic watch removal after the cell's formula is evaluated.
+    class WatchRemovalMonitor : AbstractCalculationMonitor
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        private readonly Worksheet _worksheet;
+        private readonly int _watchIndex;
+        private readonly int _targetRow;
+        private readonly int _targetColumn;
 
-        // Populate some cells and set a formula in B1
-        sheet.Cells["A1"].PutValue(10);
-        sheet.Cells["A2"].PutValue(20);
-        sheet.Cells["B1"].Formula = "=A1+A2";
+        public WatchRemovalMonitor(Worksheet worksheet, int watchIndex, int targetRow, int targetColumn)
+        {
+            _worksheet = worksheet;
+            _watchIndex = watchIndex;
+            _targetRow = targetRow;
+            _targetColumn = targetColumn;
+        }
 
-        // Add the cell B1 to the Watch Window
-        int watchIndex = sheet.CellWatches.Add("B1");
+        // This method is called after each cell is calculated
+        public override void AfterCalculate(int sheetIndex, int rowIndex, int colIndex)
+        {
+            // Check if the calculated cell is the one we are watching
+            if (sheetIndex == _worksheet.Index && rowIndex == _targetRow && colIndex == _targetColumn)
+            {
+                // Remove the watch from the watch window
+                _worksheet.CellWatches.RemoveAt(_watchIndex);
+                Console.WriteLine($"Cell watch for {_worksheet.Cells[_targetRow, _targetColumn].Name} removed after calculation.");
+            }
+        }
+    }
 
-        // Force calculation so the watch item is evaluated
-        workbook.CalculateFormula();
+    class Program
+    {
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Remove the watched cell after its evaluation completes
-        sheet.CellWatches.RemoveAt(watchIndex);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook
-        workbook.Save("RemoveCellWatchDemo.xlsx");
+            // Put some sample data and formulas
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+            sheet.Cells["B2"].Formula = "=A1+A2"; // Cell to watch
+
+            // Add a watch for cell B2 and get its index in the collection
+            int watchIndex = sheet.CellWatches.Add("B2");
+
+            // Determine row and column indices for B2 (0‑based)
+            int targetRow = sheet.Cells["B2"].Row;      // 1
+            int targetColumn = sheet.Cells["B2"].Column; // 1
+
+            // Set up calculation options with the custom monitor
+            CalculationOptions options = new CalculationOptions();
+            options.CalculationMonitor = new WatchRemovalMonitor(sheet, watchIndex, targetRow, targetColumn);
+
+            // Perform calculation; the monitor will remove the watch after B2 is evaluated
+            workbook.CalculateFormula(options);
+
+            // Save the workbook (output file name can be changed as needed)
+            workbook.Save("WatchRemovalResult.xlsx");
+        }
     }
 }

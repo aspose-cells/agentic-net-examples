@@ -1,66 +1,42 @@
-// Title: Copy rows and recalculate formulas with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add numeric data and a SUM formula, duplicate rows using Cells.CopyRows, run Workbook.CalculateFormula to update dependent formulas, and save the result.
-// Keywords: Aspose.Cells | CopyRows | CalculateFormula | C# | .NET | recalculate formulas | duplicate rows | Excel automation | update formulas after copy
-// Common Searches: Aspose.Cells copy rows C# example | recalculate formulas after copying rows Aspose.Cells | Workbook.CalculateFormula usage | how to duplicate rows with formulas in Aspose.Cells | CopyRows method Aspose.Cells tutorial
-// Developer Intent: Refresh all formulas after rows are duplicated so calculations remain accurate.
-// Use Cases: Copy a summary row containing formulas to another section of the sheet and automatically update totals. | Programmatically replicate a data table with embedded calculations and ensure the new copy reflects correct results. | Build a template that inserts repeated row blocks and uses CalculateFormula to keep aggregate values consistent.
-// AI Prompts: Provide C# code that copies rows with Aspose.Cells and then calls CalculateFormula to refresh dependent formulas. | Show an example of using Cells.CopyRows followed by Workbook.CalculateFormula to keep SUM formulas correct after duplication. | Explain the steps required to ensure formulas recalculate automatically after copying rows in Aspose.Cells for .NET.
+// Title: Copy a worksheet row and automatically recalculate dependent formulas using Aspose.Cells for .NET
+// AI Prompts: Duplicate the first row to a new position and invoke workbook.CalculateFormula() to refresh all dependent formulas in C# with Aspose.Cells. | After copying rows, call RefreshDynamicArrayFormulas(true) to update any spill ranges before saving the workbook programmatically. | Programmatically copy a row, recalculate the sheet, and save the workbook as an .xlsx file using Aspose.Cells in .NET.
+// Common Searches: asp.net aspose.cells copy row and recalculate formulas | c# how to refresh dynamic array formulas after row duplication with Aspose.Cells | recalculate workbook after copying rows using Aspose.Cells .NET | copy rows and update dependent formulas in Excel via Aspose.Cells C#
+// Tags: copy rows workbook.CalculateFormula Aspose.Cells | refresh dynamic array formulas Aspose.Cells C# | row duplication formula update .NET | worksheet row copy recalc formulas
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, fills cells A1‑A3, adds a SUM formula in B1, calculates it, copies the first row to row 5, recalculates all formulas, refreshes any dynamic array formulas, and saves the file as CopyRows_Recalculated.xlsx.
+class Program
 {
-    // Shows how to create a workbook, add numeric data and a SUM formula, duplicate rows using Cells.CopyRows, run Workbook.CalculateFormula to update dependent formulas, and save the result.
-    public class CopyRowsAndRecalculateDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (lifecycle create)
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Populate some data
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["A3"].PutValue(30);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Add a formula that depends on the above cells
+        sheet.Cells["B1"].Formula = "=SUM(A1:A3)";
 
-            // Populate sample data: A1:A3 numbers, B1 formula summing A1:A3
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].PutValue(30);
-            cells["B1"].Formula = "=SUM(A1:A3)";
+        // Initial calculation so the formula has a value
+        workbook.CalculateFormula();
 
-            // Calculate formulas so B1 gets the correct value
-            workbook.CalculateFormula();
+        // Copy the first row (index 0) to row 5 (index 4)
+        // This copies data and formats of the whole row
+        sheet.Cells.CopyRows(sheet.Cells, 0, 4, 1);
 
-            Console.WriteLine("Before copying rows:");
-            Console.WriteLine($"B1 = {cells["B1"].Value}"); // Expected 60
+        // Recalculate after the copy to update any dependent formulas
+        workbook.CalculateFormula();
 
-            // Copy rows 0‑2 (first three rows) to start at row index 5 (Excel row 6)
-            cells.CopyRows(cells, 0, 5, 3);
+        // Refresh dynamic array formulas if any exist (optional but ensures spill ranges are updated)
+        workbook.RefreshDynamicArrayFormulas(true);
 
-            // Recalculate after copying to update formulas in the new rows
-            workbook.CalculateFormula();
-
-            Console.WriteLine("After copying rows and recalculation:");
-            Console.WriteLine($"B1 = {cells["B1"].Value}"); // Should remain 60
-            Console.WriteLine($"B6 = {cells["B6"].Value}"); // Should also be 60 (sum of A6:A8)
-
-            // Save the workbook
-            string outputPath = "CopyRowsRecalculateDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
+        // Save the workbook (lifecycle save)
+        workbook.Save("CopyRows_Recalculated.xlsx");
     }
 }

@@ -1,56 +1,68 @@
-// Title: Aspose.Cells C# – Export Column Chart to PNG with Data Labels Visible
-// Description: Demonstrates how to create a column chart in a workbook, enable value and category data labels, position them outside the columns, calculate the layout, and export the chart to a PNG image while preserving label visibility. The workbook is also saved for future edits.
-// Keywords: Aspose.Cells export chart PNG | C# chart ToImage data labels | preserve data labels Aspose.Cells | column chart PNG export .NET | Aspose.Cells ChartType.Column example | DataLabels.ShowValue C# | DataLabels.ShowCategoryName | Aspose.Cells chart image generation | export chart with labels
-// Common Searches: export Aspose.Cells chart to PNG with labels | keep data labels visible when saving chart as image | Aspose.Cells C# chart ToImage preserving labels | how to show category names on exported chart image | Aspose.Cells column chart PNG export tutorial
-// Developer Intent: Export a chart as a PNG image while ensuring all data labels remain visible.
-// Use Cases: Create a sales chart for dashboards and deliver a ready‑to‑use PNG that includes values and categories. | Generate chart images for web reports where the source workbook stays editable. | Automate batch processing of multiple charts, exporting each to PNG with full label information.
-// AI Prompts: Write C# code using Aspose.Cells to build a line chart, enable data labels, and export it to a high‑resolution PNG while keeping the labels visible. | Explain how to customize data label font, color, and position before calling Chart.ToImage in Aspose.Cells. | Provide a script that iterates through all charts in an Aspose.Cells workbook and saves each as a PNG with data labels preserved.
+// Title: Export an Excel chart to PNG while preserving data label visibility with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a .xlsx workbook, activates value and category name data labels for every series in the first chart, and saves the chart as a PNG file using Aspose.Cells. | Demonstrate how to configure image rendering options and invoke the chart rendering method to produce a PNG image that retains all data labels.
+// Common Searches: Aspose.Cells C# export chart to PNG with data labels shown | How to keep series values visible when converting Excel chart to image | Chart image export preserving category names using Aspose.Cells | C# render Excel chart as PNG while displaying data labels | ImageOrPrintOptions settings for chart-to-image conversion in Aspose.Cells
+// Tags: export chart to PNG Aspose.Cells | enable data labels before chart image rendering | chart image rendering options C# | preserve series values in chart PNG export | ImageOrPrintOptions OnePagePerSheet usage
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a column chart in a workbook, enable value and category data labels, position them outside the columns, calculate the layout, and export the chart to a PNG image while preserving label visibility. The workbook is also saved for future edits.
-class PreserveDataLabelsWhenExportingChart
+// Loads an Excel workbook, turns on value and category name data labels for each series in the first chart, and exports the chart as a PNG image using Aspose.Cells with appropriate rendering options.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "chart.png";
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["A4"].PutValue("Banana");
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(1200);
-        sheet.Cells["B3"].PutValue(800);
-        sheet.Cells["B4"].PutValue(1500);
+            // Load the workbook containing the chart
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add a column chart
-        int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIdx];
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set the data range for the chart
-        chart.SetChartDataRange("A1:B4", true);
+            // Ensure the worksheet has at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        // Enable data labels to show the values on each column
-        Series series = chart.NSeries[0];
-        series.DataLabels.ShowValue = true;          // show numeric values
-        series.DataLabels.ShowCategoryName = true;   // optional: show category names
-        series.DataLabels.Position = LabelPositionType.OutsideEnd; // place labels outside
+            // Access the first chart
+            Chart chart = worksheet.Charts[0];
 
-        // Ensure the chart layout is calculated before rendering
-        chart.Calculate();
+            // Enable data labels for each series and show values
+            foreach (Series series in chart.NSeries)
+            {
+                series.DataLabels.ShowValue = true;
+                series.DataLabels.ShowCategoryName = true;
+            }
 
-        // Export the chart to a PNG image while preserving the data labels
-        chart.ToImage("ChartWithDataLabels.png", ImageType.Png);
+            // Set image options for PNG export (default format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                OnePagePerSheet = true
+            };
 
-        // Optionally save the workbook for reference
-        workbook.Save("ChartWithDataLabels.xlsx");
+            // Render the chart directly to an image file
+            chart.ToImage(outputPath, imgOptions);
+
+            Console.WriteLine($"Chart image saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

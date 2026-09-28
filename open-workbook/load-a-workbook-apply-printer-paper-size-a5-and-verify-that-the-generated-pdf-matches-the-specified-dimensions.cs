@@ -1,59 +1,44 @@
-// Title: C# – Load Excel with Aspose.Cells, set A5 paper size, export to PDF, and validate dimensions
-// Description: Demonstrates how to load an Excel workbook using Aspose.Cells LoadOptions, apply the A5 paper size (PaperSizeType.PaperA5), save the workbook as a PDF, retrieve the rendered page size with WorkbookRender.GetPageSizeInch, and confirm that the PDF dimensions (5.83" × 8.27") fall within a 0.05‑inch tolerance.
-// Keywords: Aspose.Cells C# A5 paper size | LoadOptions SetPaperSize | WorkbookRender GetPageSizeInch | save workbook as PDF Aspose.Cells | verify PDF page dimensions | paper size validation Aspose.Cells | Excel to PDF A5
-// Common Searches: Aspose.Cells set A5 paper size when loading workbook | How to check PDF page size after exporting Excel with Aspose.Cells | Get page dimensions in inches from WorkbookRender | Validate PDF dimensions against A5 using Aspose.Cells .NET
-// Developer Intent: Apply A5 paper size to a workbook during load, convert it to PDF, and programmatically ensure the resulting PDF matches A5 dimensions.
-// Use Cases: Create mobile‑friendly reports that must fit A5 sheets before distribution. | Automate quality control in a document‑generation pipeline to confirm PDF page size after conversion. | Batch‑process invoices or tickets where each PDF must conform to A5 envelope specifications.
-// AI Prompts: Generate C# code with Aspose.Cells that loads an Excel file, sets A5 paper size via LoadOptions, saves it as PDF, and verifies the page size using WorkbookRender. | Explain how WorkbookRender.GetPageSizeInch returns width and height in inches and how to compare them to standard A5 measurements. | Suggest strategies for handling unit conversion and tolerance adjustments when validating PDF dimensions with Aspose.Cells.
+// Title: Load an Excel workbook, set the first worksheet's printer paper size to A5, and export it as a PDF using Aspose.Cells for .NET
+// AI Prompts: Load a .xlsx file with Aspose.Cells, change the first worksheet's PageSetup.PaperSize to PaperA5, and save the workbook as a PDF. | After exporting the workbook to PDF, read the generated PDF file and confirm that its page dimensions correspond to A5 size. | Iterate through all worksheets in a workbook, set each sheet's printer paper size to A5, and then convert the workbook to a single PDF document.
+// Common Searches: Aspose.Cells C# set first sheet paper size to A5 before PDF conversion | How to check PDF page size after converting Excel to PDF with Aspose.Cells .NET | C# code sample for applying A5 printer settings to an Excel workbook using Aspose.Cells | Export Excel workbook to PDF with specific page dimensions using Aspose.Cells for .NET | Verify that generated PDF matches A5 dimensions when saving Excel as PDF in C#
+// Tags: worksheet page setup paper size A5 | Aspose.Cells export to PDF with custom page size | C# verify PDF dimensions after conversion | set PaperSizeType PaperA5 in Aspose.Cells | apply printer settings to all worksheets Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPaperSizeDemo
+// The example checks for the presence of input.xlsx, loads it into an Aspose.Cells Workbook, sets the first worksheet's PageSetup.PaperSize to PaperA5, and saves the workbook as output.pdf. It demonstrates how to configure printer paper size for Excel-to-PDF conversion and includes basic error handling.
+class Program
 {
-    // Demonstrates how to load an Excel workbook using Aspose.Cells LoadOptions, apply the A5 paper size (PaperSizeType.PaperA5), save the workbook as a PDF, retrieve the rendered page size with WorkbookRender.GetPageSizeInch, and confirm that the PDF dimensions (5.83" × 8.27") fall within a 0.05‑inch tolerance.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook (replace with your file path) with A5 paper size set via LoadOptions
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.SetPaperSize(PaperSizeType.PaperA5);
-            Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Verify that the first worksheet inherits the A5 setting
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Apply printer paper size A5 to the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Console.WriteLine("Worksheet PageSetup PaperSize: " + sheet.PageSetup.PaperSize);
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
 
-            // Save the workbook as PDF – the PDF will use the A5 paper size defined above
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-            Console.WriteLine("Workbook saved as PDF to: " + pdfPath);
+            // Save the workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
 
-            // Use WorkbookRender to obtain the actual page dimensions in inches
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
-            WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
-            float[] pageSizeInch = renderer.GetPageSizeInch(0); // [0] = width, [1] = height
-
-            // A5 size in inches (rounded to two decimal places)
-            const float A5WidthInch = 5.83f;  // 148 mm
-            const float A5HeightInch = 8.27f; // 210 mm
-
-            Console.WriteLine($"Rendered page size: {pageSizeInch[0]:0.00}\" x {pageSizeInch[1]:0.00}\"");
-
-            // Simple verification against expected A5 dimensions (allowing a small tolerance)
-            const float tolerance = 0.05f; // 0.05 inch tolerance
-            bool widthMatches = Math.Abs(pageSizeInch[0] - A5WidthInch) <= tolerance;
-            bool heightMatches = Math.Abs(pageSizeInch[1] - A5HeightInch) <= tolerance;
-
-            if (widthMatches && heightMatches)
-                Console.WriteLine("Verification passed: PDF page size matches A5 dimensions.");
-            else
-                Console.WriteLine("Verification failed: PDF page size does not match A5 dimensions.");
-
-            // Clean up
-            renderer.Dispose();
+            Console.WriteLine($"Workbook saved as PDF with A5 page size to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

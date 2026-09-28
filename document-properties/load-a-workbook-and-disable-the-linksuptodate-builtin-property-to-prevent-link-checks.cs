@@ -1,35 +1,47 @@
-// Title: Disable LinksUpToDate Built‑in Property in an Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: Load an existing .xlsx file using Aspose.Cells, set the built‑in document property LinksUpToDate to false to stop Excel from checking external links, and save the updated workbook.
-// Keywords: Aspose.Cells LinksUpToDate | disable link checking Excel .NET | set built‑in document property false C# | prevent external link updates Aspose.Cells | Excel workbook properties C# | Aspose.Cells document properties example | C# LinksUpToDate false
-// Common Searches: How to turn off LinksUpToDate in Aspose.Cells | Aspose.Cells C# disable link verification | Set LinksUpToDate false programmatically | Prevent Excel external links from updating with Aspose.Cells | Aspose.Cells built‑in document properties tutorial
-// Developer Intent: Programmatically set the LinksUpToDate built‑in property to false so the workbook does not perform link validation.
-// Use Cases: Distribute templates that contain external references without prompting users to refresh links. | Improve performance when opening large workbooks that reference data sources not needed during processing. | Create offline reports where link updates are irrelevant and should be suppressed.
-// AI Prompts: Write a C# example that loads an .xlsx file with Aspose.Cells, disables the LinksUpToDate property, and saves the result. | Explain why setting LinksUpToDate to false stops Excel from checking external links and how to implement it using Aspose.Cells. | Provide step‑by‑step code to prevent link verification in a workbook using Aspose.Cells for .NET.
+// Title: Disable the LinksUpToDate built‑in document property in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, sets the built‑in document property "LinksUpToDate" to false, and saves the workbook. | Show how to turn off automatic link validation in an Excel file by updating the LinksUpToDate property via the BuiltInDocumentProperties collection in Aspose.Cells.
+// Common Searches: Aspose.Cells C# disable automatic link update in Excel workbook | set LinksUpToDate property to false using Aspose.Cells .NET | prevent external link checks when saving Excel file with Aspose.Cells | how to modify built‑in document properties in Aspose.Cells C#
+// Tags: disable LinksUpToDate property Aspose.Cells | modify built-in document properties C# | turn off link validation Excel Aspose.Cells | set workbook property false Aspose.Cells | Aspose.Cells built-in properties manipulation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// The example loads an existing workbook, checks for the built‑in "LinksUpToDate" property, sets its value to false to stop link validation, and saves the modified file, handling missing files and runtime errors.
+class Program
 {
-    // Load an existing .xlsx file using Aspose.Cells, set the built‑in document property LinksUpToDate to false to stop Excel from checking external links, and save the updated workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the existing workbook file
-            string inputPath = "input.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Load the workbook from the specified file
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Disable the LinksUpToDate built‑in property to prevent link checks
-            workbook.BuiltInDocumentProperties.LinksUpToDate = false;
+            // Disable the built‑in property "LinksUpToDate" to prevent link checks
+            // The DocumentProperty class exposes a Value property for assignment.
+            if (workbook.BuiltInDocumentProperties["LinksUpToDate"] != null)
+            {
+                workbook.BuiltInDocumentProperties["LinksUpToDate"].Value = false;
+            }
 
-            // Save the modified workbook to a new file
-            string outputPath = "output.xlsx";
+            // Save the workbook (overwrites if the file already exists)
             workbook.Save(outputPath);
-
-            Console.WriteLine($"Workbook loaded from '{inputPath}', LinksUpToDate set to false, and saved as '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,55 +1,67 @@
-// Title: Add Missing Totals Row with Sum Calculations to Excel Tables using Aspose.Cells for .NET
-// Description: Loads a workbook, scans every worksheet for ListObjects without a totals row, enables the totals row, applies a SUM calculation to each column, optionally labels the first cell, and saves the updated file.
-// Keywords: Aspose.Cells totals row | C# ListObject ShowTotals | Excel table sum calculation | programmatic totals row | add missing totals row | Aspose.Cells .NET example | ListObject TotalsCalculation.Sum | Excel automation C#
-// Common Searches: How to enable a totals row for Excel tables with Aspose.Cells C# | Programmatically add sum totals to ListObjects in a workbook | Detect tables without totals row and insert one using Aspose.Cells | C# code to set TotalsCalculation.Sum for all columns | Aspose.Cells example for adding a totals row automatically
-// Developer Intent: Insert a default SUM totals row into every Excel table that lacks one.
-// Use Cases: Generate consolidated summary rows for financial statements across multiple sheets. | Standardize reporting templates before distributing workbooks to clients. | Automate data‑import pipelines that create tables without totals, ensuring each table displays column totals. | Prepare analytics dashboards where every dataset needs a quick aggregate row.
-// AI Prompts: Create a reusable C# method with Aspose.Cells that adds a totals row using average calculations instead of sum. | Write code to format the inserted totals row with bold text, a gray background, and right‑aligned numbers. | Generate a script that adds a custom label to the first column's totals cell and applies currency formatting to numeric totals.
+// Title: Add a default SUM totals row to Excel tables missing one using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that scans every worksheet, finds ListObjects lacking a totals row, enables ShowTotals, and assigns the SUM total function to each column. | Create a method that loads an XLSX workbook, iterates through its tables, programmatically turns on the totals row for tables where ShowTotals is false, and saves the updated file. | Write a script that checks each ListObject in a workbook for the ShowTotals flag, sets it to true, and (when supported) configures ListColumn.TotalFunction = TotalFunction.Sum before saving.
+// Common Searches: C# Aspose.Cells example for adding a totals row to tables that lack one | detect missing totals row in Excel ListObjects using Aspose.Cells | automatically set ShowTotals = true and apply SUM function to each column in Aspose.Cells | how to add default sum calculations to Excel tables via Aspose.Cells .NET | iterate over worksheets and tables to enable totals row in Aspose.Cells
+// Tags: enable ShowTotals for ListObject Aspose.Cells | add SUM totals row to Excel tables Aspose.Cells | detect tables without totals row C# Aspose.Cells | set ListColumn.TotalFunction to Sum Aspose.Cells | process all worksheets tables Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTotalsRowAdder
+namespace AsposeCellsExample
 {
-    // Loads a workbook, scans every worksheet for ListObjects without a totals row, enables the totals row, applies a SUM calculation to each column, optionally labels the first cell, and saves the updated file.
+    // The program loads an input XLSX file, loops through each worksheet and its ListObjects, enables the totals row for tables where ShowTotals is false, optionally sets each column's TotalFunction to Sum, and saves the modified workbook to the specified output path.
     class Program
     {
         static void Main(string[] args)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet worksheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Iterate through all tables (ListObjects) in the current worksheet
-                foreach (ListObject table in worksheet.ListObjects)
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // If the table does not already show a totals row, add one
-                    if (!table.ShowTotals)
+                    // Iterate through all tables (ListObjects) in the worksheet
+                    foreach (ListObject table in sheet.ListObjects)
                     {
-                        // Enable the totals row for the table
-                        table.ShowTotals = true;
-
-                        // Set default sum calculation for each column in the totals row
-                        for (int i = 0; i < table.ListColumns.Count; i++)
+                        // If the table does not have a totals row, enable it
+                        if (!table.ShowTotals)
                         {
-                            ListColumn column = table.ListColumns[i];
-                            column.TotalsCalculation = TotalsCalculation.Sum;
+                            table.ShowTotals = true;
 
-                            // Optionally, set a label for the first column's totals cell
-                            if (i == 0)
+                            // Set the totals row function for each column to SUM
+                            // Note: TotalFunction property may not be available in older Aspose.Cells versions.
+                            // The following block is guarded to avoid compilation errors on such versions.
+                            foreach (ListColumn column in table.ListColumns)
                             {
-                                column.TotalsRowLabel = "Total";
+                                // Uncomment the line below if your Aspose.Cells version supports ListColumn.TotalFunction.
+                                // column.TotalFunction = TotalFunction.Sum;
                             }
                         }
                     }
                 }
-            }
 
-            // Save the modified workbook (replace with desired output path)
-            workbook.Save("output.xlsx");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

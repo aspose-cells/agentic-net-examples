@@ -1,16 +1,13 @@
-// Title: C# – Compute a Running Total Column in Excel Using Aspose.Cells Formula
-// Description: Demonstrates how to create a workbook, add Item, Amount, and Running Total headers, populate sample data, set the first total cell to the first amount, then assign a Formula to each subsequent cell that adds the current Amount to the previous Running Total, recalculate all formulas, and save the file as RunningTotalDemo.xlsx. The loop works for any number of rows.
-// Keywords: Aspose.Cells running total | C# Excel cumulative sum | Formula property Aspose.Cells | calculate running total .NET | Excel subtotal column programmatically | Aspose.Cells CalculateFormula | dynamic running balance C# | smart markers cumulative total | Excel automation Aspose | Workbook.Save running total
-// Common Searches: Aspose.Cells set formula for running total | C# cumulative sum column Excel | How to calculate running total with Aspose.Cells | Formula property example Aspose.Cells .NET | Create running balance worksheet using Aspose
-// Developer Intent: Add a running‑total column by programmatically assigning a Formula that adds the current Amount cell to the previous row’s total and then recalculate the workbook.
-// Use Cases: Generate an invoice sheet that shows a cumulative amount paid per line item. | Build a bank‑statement style report where each transaction updates the running balance automatically. | Create a sales dashboard that reflects a live cumulative total as new sales figures are entered.
-// AI Prompts: Write C# code with Aspose.Cells to add a running‑total column that references the previous row’s total cell. | Show how to use the Formula property in a loop to compute a cumulative sum and then call CalculateFormula. | Explain how to adapt the formula loop for an unknown number of data rows and avoid off‑by‑one errors.
+// Title: Create a running total column in Excel with Aspose.Cells C# by setting cell formulas programmatically
+// AI Prompts: Write C# code with Aspose.Cells that fills column A with numbers and sets column B formulas to compute an incremental total across rows. | Show how to assign the first subtotal cell directly and then generate relative formulas for the remaining rows that add the previous subtotal and the current A‑cell value. | Demonstrate calling workbook.CalculateFormula and persisting the workbook after applying incremental‑total formulas using Aspose.Cells for .NET.
+// Common Searches: aspnet how to calculate cumulative sum in Excel using Aspose.Cells formula property | c# Aspose.Cells set subtotal formula for each row in a worksheet | example of using Formula property to create a total column with Aspose.Cells | programmatically generate cumulative totals in Excel file with Aspose.Cells .NET
+// Tags: Aspose.Cells set cell formula C# | running total column Excel Aspose.Cells | formula‑based total computation Aspose.Cells | evaluate workbook formulas Aspose.Cells | export workbook to xlsx Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add Item, Amount, and Running Total headers, populate sample data, set the first total cell to the first amount, then assign a Formula to each subsequent cell that adds the current Amount to the previous Running Total, recalculate all formulas, and save the file as RunningTotalDemo.xlsx. The loop works for any number of rows.
-class RunningTotalDemo
+// // This example creates a new workbook, writes a series of numeric values into column A, assigns formulas to column B that compute a running total (the first cell copies A2, each subsequent cell adds the previous subtotal in column B to the current value in column A), forces formula evaluation with CalculateFormula, and saves the file as RunningTotal.xlsx.
+class RunningTotalExample
 {
     static void Main()
     {
@@ -19,38 +16,32 @@ class RunningTotalDemo
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
 
-        // Add headers
-        cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Amount");
-        cells["C1"].PutValue("Running Total");
-
-        // Sample data
-        string[] items = { "A", "B", "C", "D" };
-        double[] amounts = { 100, 250, 150, 300 };
-
-        // Populate data rows
-        for (int i = 0; i < items.Length; i++)
+        // Sample data placed in column A (A2:A6)
+        double[] values = { 100, 200, 150, 250, 300 };
+        for (int i = 0; i < values.Length; i++)
         {
-            cells[i + 1, 0].PutValue(items[i]);   // Column A
-            cells[i + 1, 1].PutValue(amounts[i]); // Column B
+            // Row index in Aspose.Cells is zero‑based, so i+1 corresponds to Excel row 2,3,...
+            cells[i + 1, 0].PutValue(values[i]); // Column A
         }
 
-        // First running total equals the first amount
-        cells[1, 2].Formula = "=B2";
+        // Set the running total formula in column B
+        // First subtotal just copies the first value
+        cells[1, 1].Formula = "=A2"; // B2 = A2
 
-        // Set running total formula for the rest of the rows:
-        // RunningTotal(row) = RunningTotal(previous row) + Amount(current row)
-        for (int row = 2; row <= items.Length; row++)
+        // Subsequent rows add the current value to the previous subtotal
+        // Excel rows start at 1, so we work with Excel row numbers for the formula string
+        for (int excelRow = 3; excelRow <= values.Length + 1; excelRow++)
         {
-            // Excel row numbers are 1‑based, so add 1 to the zero‑based index
-            string formula = $"=C{row}+B{row + 1}";
-            cells[row, 2].Formula = formula;
+            // B{excelRow} = B{excelRow-1} + A{excelRow}
+            string formula = $"=B{excelRow - 1}+A{excelRow}";
+            // Convert Excel row back to zero‑based index for the Cells collection
+            cells[excelRow - 1, 1].Formula = formula;
         }
 
-        // Calculate all formulas in the workbook
+        // Calculate all formulas so the running totals are materialized
         workbook.CalculateFormula();
 
-        // Save the result
-        workbook.Save("RunningTotalDemo.xlsx");
+        // Save the workbook (uses the provided save rule)
+        workbook.Save("RunningTotal.xlsx");
     }
 }

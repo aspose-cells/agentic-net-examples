@@ -1,106 +1,94 @@
-// Title: C# – Load Workbook from MemoryStream, Add Chart with Tiled Texture, Render to Image Stream (Aspose.Cells)
-// Description: Creates an XLSX workbook in memory, reloads it from a MemoryStream, inserts a column chart, applies a tiled BlueTissuePaper texture to the plot area, renders the first worksheet to an image stored in another MemoryStream, and finally obtains the workbook as a stream—all without touching the file system.
-// Keywords: Aspose.Cells | C# | MemoryStream workbook | chart texture tiling | render worksheet to image stream | in‑memory Excel processing | no disk I/O | BlueTissuePaper texture | WorkbookRender | ImageOrPrintOptions
-// Common Searches: Aspose.Cells load workbook from MemoryStream C# | apply tiled texture to chart plot area Aspose.Cells | render Excel sheet to image stream without saving file | save workbook to stream instead of file Aspose.Cells | how to use TextureFill.IsTiling in Aspose.Cells
-// Developer Intent: Load an Excel file from a MemoryStream, style a chart with a tiled texture, and generate an image stream without writing any files.
-// Use Cases: Web API that receives an Excel byte array, decorates charts, and returns PNG/JPEG images on the fly. | Server‑less function that processes uploaded workbooks, adds textured visualizations, and streams the result to downstream services. | In‑memory report generation where temporary files are prohibited for security or performance reasons.
-// AI Prompts: Show how to switch the chart texture to another TextureType and toggle tiling at runtime. | Provide code to convert the rendered image MemoryStream to a Base64 string for JSON responses. | Explain how to loop through all worksheets, render each to a separate MemoryStream, and collect the streams in a dictionary.
+// Title: Load an Excel workbook from a MemoryStream and add a tiled background image using Aspose.Cells for .NET without creating a file
+// AI Prompts: Read an Excel file from a byte array with Aspose.Cells, insert a picture that covers the used range as a free‑floating background, and write the modified workbook to a MemoryStream. | Create a tiled texture effect on a worksheet by adding a picture from a stream, set its Placement to FreeFloating, and save the workbook directly to a byte array.
+// Common Searches: aspnet load excel from byte array and set background image programmatically | aspocells add picture behind cells from memory stream | c# apply tiled texture to worksheet without saving file | how to use PlacementType.FreeFloating for worksheet background in Aspose.Cells
+// Tags: load workbook from memory stream Aspose.Cells | add picture as worksheet background Aspose.Cells | freefloating picture placement Aspose.Cells | save workbook to memory stream C# | apply tiled background to worksheet Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-// Creates an XLSX workbook in memory, reloads it from a MemoryStream, inserts a column chart, applies a tiled BlueTissuePaper texture to the plot area, renders the first worksheet to an image stored in another MemoryStream, and finally obtains the workbook as a stream—all without touching the file system.
-public class LoadWorkbookApplyTiledTextureDemo
+// The example loads an Excel workbook from a byte array via MemoryStream, adds a picture that spans the used range and is placed free‑floating to simulate a tiled background, then saves the updated workbook back into a MemoryStream, eliminating any need for disk I/O.
+class Program
 {
-    public static void Main(string[] args)
+    static void Main()
     {
         try
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
-        }
-    }
+            // Example: workbook data and texture image are already available as byte arrays.
+            // In a real scenario these could come from a database, network, etc.
+            byte[] workbookData = GetWorkbookBytes();   // Replace with actual source
+            byte[] textureData  = GetTextureBytes();    // Replace with actual source
 
-    public static void Run()
-    {
-        try
-        {
-            // ------------------------------------------------------------
-            // 1. Create a sample workbook and save it into a memory stream
-            // ------------------------------------------------------------
-            Workbook originalWorkbook = new Workbook();
-            Worksheet originalSheet = originalWorkbook.Worksheets[0];
-            originalSheet.Cells["A1"].PutValue("Sample Data");
-            originalSheet.Cells["A2"].PutValue(123);
-            originalSheet.Cells["A3"].PutValue(456);
-
-            // Save the workbook to a MemoryStream (XLSX format)
-            using (MemoryStream sourceStream = new MemoryStream())
+            // Load the workbook from a memory stream.
+            using (MemoryStream wbStream = new MemoryStream(workbookData))
             {
-                originalWorkbook.Save(sourceStream, SaveFormat.Xlsx);
-                sourceStream.Position = 0; // Reset for reading
+                Workbook workbook = new Workbook(wbStream);
 
-                // ------------------------------------------------------------
-                // 2. Load the workbook from the memory stream
-                // ------------------------------------------------------------
-                Workbook workbook = new Workbook(sourceStream); // uses Workbook(Stream) ctor
-
-                // ------------------------------------------------------------
-                // 3. Add a chart and apply a tiled texture fill
-                // ------------------------------------------------------------
+                // Work with the first worksheet.
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a column chart
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Provide data range for the chart
-                chart.NSeries.Add("A1:A3", true);
-
-                // Set a texture type for the plot area
-                chart.PlotArea.Area.FillFormat.Texture = TextureType.BlueTissuePaper;
-
-                // Enable tiling of the texture
-                chart.PlotArea.Area.FillFormat.TextureFill.IsTiling = true;
-
-                // ------------------------------------------------------------
-                // 4. Render the first page of the workbook to an image stream (no disk I/O)
-                // ------------------------------------------------------------
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                // Add the texture image as a picture that spans the whole used range.
+                // This gives a tiled‑like appearance because the picture is placed behind the cells.
+                using (MemoryStream imgStream = new MemoryStream(textureData))
                 {
-                    OnePagePerSheet = true
-                };
+                    // Determine the range to cover (here we use the maximum display range of the sheet).
+                    int lastRow    = sheet.Cells.MaxDisplayRange.RowCount - 1;
+                    int lastColumn = sheet.Cells.MaxDisplayRange.ColumnCount - 1;
 
-                WorkbookRender renderer = new WorkbookRender(workbook, imgOptions);
+                    // Add the picture and retrieve its index.
+                    int pictureIndex = sheet.Pictures.Add(0, 0, lastRow, lastColumn, imgStream);
+                    Picture picture = sheet.Pictures[pictureIndex];
 
-                using (MemoryStream imageStream = new MemoryStream())
-                {
-                    // Render page 0 (first sheet) to the memory stream
-                    renderer.ToImage(0, imageStream);
-
-                    // Output the size of the generated image
-                    Console.WriteLine($"Rendered image size: {imageStream.Length} bytes");
+                    // Place the picture behind the cells so it behaves like a background.
+                    picture.Placement = PlacementType.FreeFloating;
+                    picture.IsLocked = false; // optional: allow editing without affecting the picture
                 }
 
-                // ------------------------------------------------------------
-                // 5. (Optional) Keep the workbook in memory without saving to disk
-                // ------------------------------------------------------------
-                // Obtain a stream of the workbook itself.
-                MemoryStream workbookStream = workbook.SaveToStream(); // default format (XLSX)
-                Console.WriteLine($"Workbook stream size (XLSX): {workbookStream.Length} bytes");
+                // The workbook now contains the tiled texture and remains in memory.
+                // It can be streamed out, sent over a network, etc., without writing to disk.
+                using (MemoryStream resultStream = new MemoryStream())
+                {
+                    workbook.Save(resultStream, SaveFormat.Xlsx);
+                    // resultStream holds the modified workbook.
+                    // Example: send resultStream.ToArray() to a client or store it as needed.
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during processing: {ex.Message}");
-            throw;
+            // Log or handle exceptions as needed.
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
+    }
+
+    // Placeholder methods to obtain the raw bytes.
+    // Replace these with actual implementations (e.g., reading from a database, API, etc.).
+    static byte[] GetWorkbookBytes()
+    {
+        // For demonstration, create an empty workbook in memory.
+        using (var ms = new MemoryStream())
+        {
+            new Workbook().Save(ms, SaveFormat.Xlsx);
+            return ms.ToArray();
+        }
+    }
+
+    static byte[] GetTextureBytes()
+    {
+        // Return a PNG/JPEG byte array representing the texture.
+        // Here we return a 1x1 transparent PNG as a placeholder.
+        return new byte[]
+        {
+            0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,
+            0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,
+            0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,
+            0x08,0x06,0x00,0x00,0x00,0x1F,0x15,0xC4,
+            0x89,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,
+            0x54,0x78,0x9C,0x63,0x00,0x01,0x00,0x00,
+            0x05,0x00,0x01,0x0D,0x0A,0x2D,0xB4,0x00,
+            0x00,0x00,0x00,0x49,0x45,0x4E,0x44,0xAE,
+            0x42,0x60,0x82
+        };
     }
 }

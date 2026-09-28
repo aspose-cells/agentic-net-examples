@@ -1,61 +1,51 @@
-// Title: Apply a 40% Transparent Outer Shadow Preset to an Excel Shape with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, insert a rectangle shape, retrieve its ShadowEffect, set the PresetShadowType to an outer shadow (OffsetBottom), adjust transparency to 0.4 (40%), and save the result as an .xlsx file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# shape shadow | outer shadow preset | PresetShadowType | OffsetBottom | shadow transparency | Excel shape formatting | Aspose.Cells .NET | apply shadow effect | Excel workbook styling
-// Common Searches: Aspose.Cells add outer shadow to shape | C# set shape shadow transparency Aspose.Cells | How to use PresetShadowType in Aspose.Cells | Apply shadow effect to Excel rectangle using .NET | Set shadow transparency percentage Aspose.Cells
-// Developer Intent: Add an outer shadow preset to a worksheet shape and configure its transparency to 40% using Aspose.Cells for .NET.
-// Use Cases: Enhance Excel reports with subtle depth by applying outer shadows to diagrammatic shapes. | Generate template workbooks that automatically style all shapes with a consistent shadow before distribution. | Prepare workbooks for PDF conversion where shadowed shapes improve visual presentation.
-// AI Prompts: Write C# code with Aspose.Cells that applies the OffsetBottom outer shadow preset and 40% transparency to every shape in a workbook. | Show how to change the shadow preset to OffsetTopRight and set transparency based on a user‑provided percentage. | Create a reusable method that accepts a PresetShadowType and a transparency value, then applies those settings to a given shape.
+// Title: Applying a 40% transparent outer shadow preset to a rectangle shape with Aspose.Cells for .NET – API limitation note
+// AI Prompts: Write C# code that adds a rectangle shape to an Excel worksheet and attempts to set an outer shadow preset with 40% transparency using Aspose.Cells, including error handling for unsupported shadow features. | Suggest a workaround or alternative technique to emulate a semi‑transparent outer shadow on an Excel shape when the Aspose.Cells .NET API does not provide direct shadow properties.
+// Common Searches: how to add outer shadow to a shape in Aspose.Cells using C# | set shadow transparency on Excel shape with Aspose.Cells .NET | Aspose.Cells shape shadow effect not available in current version | C# code to apply preset shadow to rectangle shape in Excel via Aspose.Cells | workaround for missing shape shadow API in Aspose.Cells for .NET
+// Tags: shape outer shadow Aspose.Cells | shadow transparency property .NET Excel | Aspose.Cells rectangle shape formatting | missing shape shadow API Aspose.Cells | Excel shape visual effects Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShadowDemo
+// The sample creates a new workbook, inserts a rectangle shape, and notes that Aspose.Cells for .NET currently lacks a direct API to configure outer shadow effects or transparency, then saves the workbook to 'output.xlsx'.
+class Program
 {
-    // Shows how to create a workbook, insert a rectangle shape, retrieve its ShadowEffect, set the PresetShadowType to an outer shadow (OffsetBottom), adjust transparency to 0.4 (40%), and save the result as an .xlsx file using Aspose.Cells for .NET.
-    public class ApplyOuterShadow
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 150, 100);
+            // Add a rectangle shape to the worksheet.
+            // In recent Aspose.Cells versions AddShape returns a Shape object.
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,   // upper left row
+                1,   // upper left column
+                0,   // upper left row offset (pixels)
+                0,   // upper left column offset (pixels)
+                100, // width (pixels)
+                50   // height (pixels)
+            );
 
-                // Get the shadow effect of the shape
-                ShadowEffect shadow = shape.ShadowEffect;
+            // Note: Shadow configuration is not available in the current Aspose.Cells API version.
+            // If needed, refer to the documentation for the appropriate shadow settings.
 
-                // Apply an outer shadow preset (e.g., OffsetBottom)
-                shadow.PresetType = PresetShadowType.OffsetBottom;
+            // Define output file path
+            string outputPath = "output.xlsx";
 
-                // Set the transparency of the shadow to 40% (0.4)
-                shadow.Transparency = 0.4;
-
-                // Save the workbook to a file
-                string outputPath = "ShapeWithOuterShadow.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ApplyOuterShadow.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

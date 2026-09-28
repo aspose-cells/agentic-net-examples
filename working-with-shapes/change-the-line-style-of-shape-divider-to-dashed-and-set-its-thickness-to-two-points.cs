@@ -1,47 +1,68 @@
-// Title: Aspose.Cells for .NET – Apply Dashed 2‑Point Line Style to a Shape Called "Divider"
-// Description: The sample creates a workbook, inserts a line shape named "Divider", retrieves it by its identifier, changes the line's dash pattern to a dash style and sets the weight to 2 points, then writes the result to Output.xlsx using the Aspose.Cells C# API.
-// Keywords: Aspose.Cells line shape dash style | C# set line weight Aspose.Cells | modify shape properties .NET | add line shape Aspose.Cells | MsoLineDashStyle enumeration | shape line thickness example | format line shape Aspose.Cells | Aspose.Cells shape formatting C# | change line dash pattern Aspose.Cells
-// Common Searches: Aspose.Cells change line dash style C# | Set line weight to 2 points for a shape in Aspose.Cells | Retrieve a shape by name Aspose.Cells .NET | How to format a line shape using Aspose.Cells | C# Aspose.Cells line shape properties example
-// Developer Intent: Configure the "Divider" line shape to use a dashed pattern and a 2‑point thickness.
-// Use Cases: Add a visual separator in an automatically generated report and style it with a dashed 2‑point line for better readability. | Update existing workbooks to enforce a consistent divider appearance across all documents in a corporate template. | Iterate through multiple named line shapes in a worksheet to apply a standard dash style and weight as part of a branding guideline.
-// AI Prompts: Generate C# code with Aspose.Cells that changes a shape's line color to red and sets a solid 1‑point line. | Show how to loop through all line shapes on a worksheet and assign a custom dash pattern and weight using Aspose.Cells. | Explain the steps to retrieve a shape by its name and modify its line properties (dash style, weight, color) in Aspose.Cells for .NET.
+// Title: Set a dashed 2‑point line style for the 'Divider' shape in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, finds the shape named 'Divider' on the first worksheet, and changes its Line.DashStyle to Dash with a weight of 2 points using Aspose.Cells. | Generate a script that updates the border of a specific shape in Excel to a dashed line of 2‑point thickness via the Aspose.Cells Shape.Line properties. | Create a method that searches a worksheet for a shape by name and applies a dashed line style and 2‑point weight using the Aspose.Cells Drawing API in C#.
+// Common Searches: Aspose.Cells C# change shape line dash style to dashed | How to set line weight of a specific shape in Excel with Aspose.Cells | C# code to modify border thickness of a named shape in a workbook | Find shape by name and update its line properties using Aspose.Cells .NET
+// Tags: Aspose.Cells modify shape line style | Aspose.Cells set shape dash pattern | C# adjust Excel shape border thickness | Aspose.Cells Drawing API line properties
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using System.Drawing;
 
-// The sample creates a workbook, inserts a line shape named "Divider", retrieves it by its identifier, changes the line's dash pattern to a dash style and sets the weight to 2 points, then writes the result to Output.xlsx using the Aspose.Cells C# API.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, locates the shape called 'Divider' on the first worksheet, sets its line dash style to dashed and its weight to 2 points, and then saves the updated file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Add a line shape and give it the name "Divider"
-            // Parameters: upper left row, upper left column, lower right row, lower right column, width, height
-            Shape divider = sheet.Shapes.AddLine(1, 0, 5, 0, 200, 0);
-            divider.Name = "Divider";
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+                }
 
-            // Retrieve the shape by its name
-            Shape shape = sheet.Shapes["Divider"];
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Change the line style to dashed
-            shape.Line.DashStyle = MsoLineDashStyle.Dash;
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set the line thickness to 2 points
-            shape.Line.Weight = 2.0;
+                // Locate the shape named "Divider"
+                Shape dividerShape = null;
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape.Name == "Divider")
+                    {
+                        dividerShape = shape;
+                        break;
+                    }
+                }
 
-            // Save the workbook
-            workbook.Save("Output.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // If the shape is found, modify its line style and thickness
+                if (dividerShape != null)
+                {
+                    // Set the line dash style to dashed
+                    dividerShape.Line.DashStyle = MsoLineDashStyle.Dash;
+
+                    // Set the line weight (thickness) to 2 points
+                    dividerShape.Line.Weight = 2.0;
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log or display the exception details
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

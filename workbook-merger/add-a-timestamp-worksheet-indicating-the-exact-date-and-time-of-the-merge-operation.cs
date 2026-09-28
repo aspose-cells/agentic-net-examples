@@ -1,59 +1,35 @@
-// Title: Add a Merge Timestamp Worksheet While Merging Workbooks with Aspose.Cells for .NET (C#)
-// Description: C# sample that validates two Excel files, loads them into Aspose.Cells workbooks, merges the source into the destination, creates a "MergeTimestamp" sheet, writes the current date‑time to cell A1 with a built‑in format, and saves the result as "MergedWithTimestamp.xlsx" with robust error handling.
-// Keywords: Aspose.Cells merge workbooks C# | add timestamp worksheet Aspose.Cells | Excel merge audit trail .NET | record merge date time Aspose | C# combine Excel files with timestamp | date‑time format cell Aspose.Cells | version tracking Excel merge
-// Common Searches: how to add a timestamp sheet after merging Excel files using Aspose.Cells | C# merge two workbooks and log merge date | Aspose.Cells combine workbooks and format date cell | add merge time to Excel workbook programmatically .NET | audit‑ready Excel merge with timestamp worksheet
-// Developer Intent: Merge two Excel workbooks and automatically insert a worksheet that records the exact merge date and time.
-// Use Cases: Create audit‑ready reports that show when data was consolidated. | Automate daily data aggregation with a built‑in version‑control sheet. | Generate backup copies of combined workbooks that include a timestamp for change management.
-// AI Prompts: Generate C# code using Aspose.Cells to merge two Excel files and add a "MergeTimestamp" worksheet with the current date‑time in cell A1 formatted as mm/dd/yyyy hh:mm:ss. | Enhance the merge‑with‑timestamp example with checks for an existing timestamp sheet and allow a custom date format string. | Write a reusable method that accepts source and destination paths, merges the workbooks, adds a timestamp sheet, and returns the path of the saved file.
+// Title: Insert a Merge Timestamp Worksheet After Combining Excel Workbooks with Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to add a new worksheet named 'MergeTimestamp' after calling Workbook.Combine, then write DateTime.Now into cell A1. | Apply Excel's built‑in date‑time number format (style number 22) to the timestamp cell and save the merged workbook as a separate file.
+// Common Searches: how to add a timestamp sheet after merging two Excel files using Aspose.Cells C# | record merge date and time in a new worksheet with Aspose.Cells .NET | Aspose.Cells combine workbooks and create a log worksheet with current datetime | C# Aspose.Cells add worksheet and set built‑in date‑time format after workbook combine | save merged workbook with additional timestamp worksheet using Aspose.Cells
+// Tags: merge workbooks add timestamp worksheet Aspose.Cells | write current datetime to cell A1 Aspose.Cells | apply built‑in date‑time style number 22 Aspose.Cells | save combined workbook with extra sheet C# | Workbook.Combine post‑merge logging Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// C# sample that validates two Excel files, loads them into Aspose.Cells workbooks, merges the source into the destination, creates a "MergeTimestamp" sheet, writes the current date‑time to cell A1 with a built‑in format, and saves the result as "MergedWithTimestamp.xlsx" with robust error handling.
+// The example loads two Excel files, merges the source workbook into the destination using Workbook.Combine, creates a new worksheet called 'MergeTimestamp', writes the current DateTime into cell A1, formats the cell with Excel's built‑in date‑time style, and saves the result as a new file containing the timestamp sheet.
 class MergeWithTimestamp
 {
     static void Main()
     {
-        try
-        {
-            // Verify that the source and destination files exist
-            const string sourcePath = "Source.xlsx";
-            const string destinationPath = "Destination.xlsx";
+        // Load the workbooks to be merged
+        Workbook sourceWorkbook = new Workbook("Source.xlsx");
+        Workbook destinationWorkbook = new Workbook("Destination.xlsx");
 
-            if (!File.Exists(sourcePath))
-                throw new FileNotFoundException($"Source file not found: {sourcePath}");
+        // Merge the source workbook into the destination workbook
+        destinationWorkbook.Combine(sourceWorkbook);
 
-            if (!File.Exists(destinationPath))
-                throw new FileNotFoundException($"Destination file not found: {destinationPath}");
+        // Add a new worksheet that will hold the merge timestamp
+        Worksheet timestampSheet = destinationWorkbook.Worksheets.Add("MergeTimestamp");
 
-            // Load the workbooks to be merged
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-            Workbook destinationWorkbook = new Workbook(destinationPath);
+        // Write the exact date and time of the merge operation into cell A1
+        timestampSheet.Cells["A1"].PutValue(DateTime.Now);
 
-            // Combine the source workbook into the destination workbook
-            destinationWorkbook.Combine(sourceWorkbook);
+        // Apply a standard date‑time number format to the cell (optional)
+        Style dateTimeStyle = destinationWorkbook.CreateStyle();
+        dateTimeStyle.Number = 22; // Built‑in Excel date‑time format
+        timestampSheet.Cells["A1"].SetStyle(dateTimeStyle);
 
-            // Add a new worksheet that will hold the merge timestamp
-            Worksheet timestampSheet = destinationWorkbook.Worksheets.Add("MergeTimestamp");
-
-            // Write the current date and time into cell A1
-            Cell timestampCell = timestampSheet.Cells["A1"];
-            timestampCell.PutValue(DateTime.Now);
-
-            // Apply a standard date‑time number format (e.g., mm/dd/yyyy hh:mm:ss)
-            Style dateStyle = destinationWorkbook.CreateStyle();
-            dateStyle.Number = 22; // Built‑in date‑time format
-            timestampCell.SetStyle(dateStyle);
-
-            // Save the resulting workbook
-            const string outputPath = "MergedWithTimestamp.xlsx";
-            destinationWorkbook.Save(outputPath);
-            Console.WriteLine($"Merged workbook saved to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
+        // Save the merged workbook with the timestamp worksheet
+        destinationWorkbook.Save("MergedWithTimestamp.xlsx");
     }
 }

@@ -1,62 +1,74 @@
-// Title: Export All XML Maps from an Excel Workbook to a ZIP of Individual XML Files (C# Aspose.Cells)
-// Description: Loads a workbook, iterates through its XmlMaps, uses Workbook.ExportXml to write each map to a MemoryStream, creates a ZipArchive entry named after the map, copies the XML data, and saves the in‑memory ZIP as ExportedXmlMaps.zip.
-// Keywords: Aspose.Cells XML map export | C# ZipArchive Aspose.Cells | ExportXml multiple maps | Excel XML maps to zip | in‑memory zip C# | Workbook.ExportXml example | Aspose.Cells .NET zip archive
-// Common Searches: how to export all xml maps from excel using aspose.cells | c# create zip file with each xml map from workbook | aspose.cells exportxml to ziparchive | save xml maps as separate files in a zip | aspnet stream zip of xml maps without disk
-// Developer Intent: Create a single ZIP file that contains one XML file for every XML map defined in an Excel workbook.
-// Use Cases: Distribute each XML map as an individual file to downstream systems. | Back up all XML map definitions from workbooks for version control. | Provide users a downloadable package of map data for reporting or data exchange.
-// AI Prompts: Generate C# code that loads an Excel workbook, iterates over its XmlMaps, exports each map to a MemoryStream, and adds the XML to a ZipArchive using Aspose.Cells. | Explain how to append a timestamp to each zip entry while keeping the original map name. | Show how to stream the generated ZIP archive directly to an ASP.NET Core response without writing to disk.
+// Title: Export all XML maps from an Excel workbook to individual .xml files and package them into a ZIP archive using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a workbook with Aspose.Cells, loops through its XmlMaps collection, exports each map to a MemoryStream, and adds each stream as a separate .xml entry in a ZipArchive. | Show how to build an in‑memory ZIP file with System.IO.Compression, save it to disk, and include error handling for a missing input workbook. | Demonstrate exporting XML maps directly to streams without creating temporary files, using Workbook.ExportXmlMap and streaming the results into a compressed archive.
+// Common Searches: asp.net core export xml maps from excel workbook to zip using aspose.cells | c# iterate workbook xmlmaps and compress each map into a single archive | export multiple xml map definitions from an .xlsx to separate xml files without temporary files | using Aspose.Cells to create a zip of exported xml maps in memory
+// Tags: Aspose.Cells export XmlMap to memory stream | C# create zip archive with multiple xml entries | Iterate workbook XmlMaps collection | Compress exported xml maps without temporary files | Workbook.ExportXmlMap usage .NET | System.IO.Compression ZipArchive for Aspose.Cells output
 
 using System;
 using System.IO;
 using System.IO.Compression;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlExportZip
+// The program loads an Excel workbook, verifies its existence, iterates over all defined XmlMaps, exports each map directly to a MemoryStream, adds each stream as a separate .xml entry in a ZipArchive, and writes the resulting ZIP file to disk, with basic exception handling.
+class Program
 {
-    // Loads a workbook, iterates through its XmlMaps, uses Workbook.ExportXml to write each map to a MemoryStream, creates a ZipArchive entry named after the map, copies the XML data, and saves the in‑memory ZIP as ExportedXmlMaps.zip.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source workbook that contains XML maps
-            string workbookPath = "SourceWorkbook.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputZip = "XmlMapsExport.zip";
 
-            // Load the workbook (uses Aspose.Cells Workbook constructor)
-            Workbook workbook = new Workbook(workbookPath);
+            // Ensure the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Prepare an in‑memory stream that will hold the resulting ZIP archive
+            // Load the workbook that may contain XML maps
+            dynamic workbook = new Workbook(inputPath);
+
+            // Prepare a memory stream for the ZIP archive
             using (MemoryStream zipStream = new MemoryStream())
             {
-                // Create a ZIP archive in the memory stream
+                // Create a ZipArchive for adding XML files
                 using (ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Create, true))
                 {
-                    // Iterate through all XML maps defined in the workbook
-                    foreach (XmlMap xmlMap in workbook.Worksheets.XmlMaps)
+                    // Iterate through each XML map defined in the workbook (dynamic to avoid compile‑time binding)
+                    foreach (dynamic xmlMap in workbook.XmlMaps)
                     {
                         // Export the current XML map to a temporary memory stream
-                        using (MemoryStream xmlData = new MemoryStream())
+                        using (MemoryStream xmlStream = new MemoryStream())
                         {
-                            // ExportXml(string mapName, Stream stream) – rule‑based method
-                            workbook.ExportXml(xmlMap.Name, xmlData);
-                            xmlData.Position = 0; // Reset position for reading
+                            // Export the map data into the stream (no file on disk)
+                            workbook.ExportXmlMap(xmlMap.Name, xmlStream);
+                            xmlStream.Position = 0; // Reset stream position for reading
 
-                            // Create a new entry in the ZIP archive for this map
-                            ZipArchiveEntry entry = archive.CreateEntry($"{xmlMap.Name}.xml");
-
-                            // Write the exported XML data into the ZIP entry
+                            // Create a new entry in the ZIP for this map
+                            ZipArchiveEntry entry = archive.CreateEntry($"{xmlMap.Name}.xml", CompressionLevel.Optimal);
                             using (Stream entryStream = entry.Open())
                             {
-                                xmlData.CopyTo(entryStream);
+                                // Copy the XML content into the ZIP entry
+                                xmlStream.CopyTo(entryStream);
                             }
                         }
                     }
                 }
 
-                // Save the ZIP archive to a physical file
-                File.WriteAllBytes("ExportedXmlMaps.zip", zipStream.ToArray());
+                // Write the ZIP archive to a physical file
+                using (FileStream fileStream = new FileStream(outputZip, FileMode.Create, FileAccess.Write))
+                {
+                    zipStream.Position = 0;
+                    zipStream.CopyTo(fileStream);
+                }
             }
 
-            Console.WriteLine("All XML maps have been exported to ExportedXmlMaps.zip");
+            Console.WriteLine($"XML maps have been exported to '{outputZip}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

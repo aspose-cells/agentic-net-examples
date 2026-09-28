@@ -1,38 +1,38 @@
-// Title: C# – Merge N10:O10, add Subtotal label with SUM formula, recalculate and save using Aspose.Cells
-// Description: Loads an Excel file, merges cells N10:O10 on the first worksheet, writes "Subtotal", inserts the formula =SUM(N1:N9), forces formula evaluation, and saves the updated workbook.
-// Keywords: Aspose.Cells C# merge cells | subtotal label Excel | SUM formula Aspose.Cells | recalculate formulas .NET | save workbook after merge | Excel automation C#
-// Common Searches: Aspose.Cells merge N10 O10 C# | how to add subtotal label with SUM formula using Aspose.Cells | recalculate formulas after merging cells Aspose.Cells .NET | save workbook after inserting formula Aspose.Cells | C# example for merging cells and summing a column in Excel
-// Developer Intent: Merge a specific cell range, place a subtotal label with a SUM formula, evaluate the formula, and save the workbook.
-// Use Cases: Create a subtotal row in a financial report by merging N10:O10, labeling it, and summing N1:N9. | Automate column totals before exporting data to another system. | Generate a consolidated total in an invoice template with a merged label cell and dynamic sum.
-// AI Prompts: Provide C# code that merges cells N10:O10, writes "Subtotal", adds =SUM(N1:N9), recalculates formulas, and saves the file using Aspose.Cells. | Show how to force formula calculation after merging cells and inserting a subtotal in Aspose.Cells for .NET. | Explain how to style the merged subtotal cell (e.g., bold, background color) after adding a SUM formula with Aspose.Cells.
+// Title: Merge cells N10:O10, add a 'Subtotal' label with SUM(N1:N9) formula, and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Merge the range N10:O10 on the first worksheet, set its value to "Subtotal", assign the formula SUM(N1:N9), evaluate all formulas, and save the workbook to a new file with Aspose.Cells in C#. | Load an existing Excel file, combine cells N10 and O10, write a subtotal header, embed a SUM formula that references N1:N9, force formula calculation, and persist the changes using Aspose.Cells for .NET. | Using Aspose.Cells for C#, create a merged cell for a subtotal label, apply a column‑total formula, calculate the result immediately, and export the updated workbook.
+// Common Searches: Aspose.Cells C# merge N10 O10 and insert SUM formula for column total | how to set a subtotal label in a merged cell with Aspose.Cells .NET | force formula evaluation before saving workbook using Aspose.Cells C#
+// Tags: merge cells Aspose.Cells C# | subtotal label formula Aspose.Cells | column sum calculation Aspose.Cells | force formula evaluation Aspose.Cells | save modified workbook Aspose.Cells C#
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Loads an Excel file, merges cells N10:O10 on the first worksheet, writes "Subtotal", inserts the formula =SUM(N1:N9), forces formula evaluation, and saves the updated workbook.
+// The example loads a workbook, merges cells N10:O10 on the first worksheet, writes "Subtotal" in the merged range, assigns a SUM(N1:N9) formula, forces formula calculation, and saves the updated file to a new location using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Paths for input and output files
-        string inputPath = "input.xlsx";
-        string outputPath = "output.xlsx";
+        // Define input and output file paths
+        string inputPath = @"C:\Temp\SourceWorkbook.xlsx";
+        string outputPath = @"C:\Temp\ResultWorkbook.xlsx";
 
         // Load the existing workbook
         Workbook workbook = new Workbook(inputPath);
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Merge cells N10:O10 (row 9, column 13, 1 row, 2 columns)
-        cells.Merge(9, 13, 1, 2);
+        // Access the first worksheet (adjust index if needed)
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set a label in the merged cell (optional)
-        cells["N10"].PutValue("Subtotal");
+        // Merge cells N10:O10 for the subtotal label
+        // N = column 14, O = column 15 (zero‑based index: 13 and 14)
+        sheet.Cells.Merge(9, 13, 1, 2); // Row 9 (10th row), Column 13 (N), 1 row, 2 columns
 
-        // Insert a formula that sums the values in column N from rows 1 to 9
-        cells["N10"].Formula = "=SUM(N1:N9)";
+        // Set the label text in the merged cell
+        sheet.Cells["N10"].PutValue("Subtotal");
 
-        // Recalculate formulas so the sum is evaluated
+        // Calculate the sum of the adjacent column (column N, rows 1‑9) and place the result in the merged cell
+        // The formula will automatically compute the sum when the workbook is opened
+        sheet.Cells["N10"].Formula = "SUM(N1:N9)";
+
+        // Optionally, you can calculate the formula now so the value is stored in the file
         workbook.CalculateFormula();
 
         // Save the modified workbook

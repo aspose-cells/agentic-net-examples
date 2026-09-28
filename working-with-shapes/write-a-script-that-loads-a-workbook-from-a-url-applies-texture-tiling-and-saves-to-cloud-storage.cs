@@ -1,91 +1,79 @@
-// Title: Download an Excel workbook from a URL, apply a tiled texture fill to a shape, and save it with Aspose.Cells (C#)
-// Description: C# example that uses HttpClient to fetch an XLSX file, loads it into Aspose.Cells via a MemoryStream, adds a rectangle shape, sets its FillType to a tiled BlueTissuePaper texture (with TilePicOption scaling and offset), and writes the modified workbook to a file or cloud storage.
-// Keywords: Aspose.Cells download workbook from URL | C# texture fill shape | tiled texture Aspose.Cells | FillType.Texture C# | TilePicOption scaling offset | HttpClient Excel stream | save workbook to cloud storage | Azure Blob Aspose.Cells | async Excel processing .NET | shape fill pattern Excel
-// Common Searches: how to load Excel from a web URL using Aspose.Cells | apply tiled texture fill to a shape in Aspose.Cells C# | save modified workbook to Azure Blob with Aspose.Cells | configure TilePicOption for texture scaling in Aspose.Cells | download and edit Excel file in memory stream C#
-// Developer Intent: The developer needs to retrieve an Excel file over HTTP, add a rectangle shape with a repeated texture pattern, and persist the updated workbook for further use or cloud upload.
-// Use Cases: Automated branding: download a template, overlay a tiled texture on header shapes, then store the file in cloud storage for distribution. | Marketing asset generation: apply a custom patterned fill to shapes after pulling a base workbook from a web service, then deliver the file to a content‑management system. | Batch styling pipeline: fetch multiple Excel reports, enrich them with textured shapes for visual consistency, and save the results to Azure Blob or Amazon S3. | SaaS onboarding: retrieve a starter workbook, programmatically add visual cues using tiled textures, and provide the customized file to end‑users.
-// AI Prompts: Write C# code that downloads an XLSX file from a URL, adds a rectangle with a tiled custom image texture using Aspose.Cells, and uploads the result to Azure Blob Storage. | Refactor the script to use "await using" for all disposable objects, add cancellation support, and replace the built‑in BlueTissuePaper texture with a user‑provided PNG while keeping tiling enabled. | Explain how TilePicOption properties (ScaleX, ScaleY, OffsetX, OffsetY) affect the appearance of a tiled texture fill on a shape in Aspose.Cells, with code snippets for different visual outcomes.
+// Title: Download an Excel workbook from a URL, set a solid background on a cell range, and upload the updated file to cloud storage using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to fetch an .xlsx file from a specified HTTP endpoint, apply a light‑gray solid fill to cells A1:B2, and then send the modified workbook to a cloud storage URL with an HTTP PUT request. | Create a .NET console program that loads an Excel workbook into a MemoryStream via HttpClient, styles a range with a solid background using Aspose.Cells, saves the workbook as Xlsx bytes, and uploads the result to a remote storage service.
+// Common Searches: Aspose.Cells C# download workbook from web URL, apply background color to range, and upload to Azure Blob storage | How to modify an Excel file in memory with Aspose.Cells and send it to Amazon S3 using HTTP PUT in C# | C# example for applying solid fill to cells A1:B2 with Aspose.Cells after downloading the file from a remote server | Upload a processed .xlsx file to cloud storage directly from a .NET application using Aspose.Cells and HttpClient
+// Tags: download Excel workbook with HttpClient Aspose.Cells | apply solid fill to cell range Aspose.Cells | save workbook to memory stream Xlsx | upload .xlsx via HTTP PUT C# | in‑memory Excel manipulation Aspose.Cells .NET
 
 using System;
 using System.IO;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// C# example that uses HttpClient to fetch an XLSX file, loads it into Aspose.Cells via a MemoryStream, adds a rectangle shape, sets its FillType to a tiled BlueTissuePaper texture (with TilePicOption scaling and offset), and writes the modified workbook to a file or cloud storage.
+// Downloads an .xlsx file from a remote URL, applies a light‑gray solid background to cells A1:B2 using Aspose.Cells, saves the workbook to a memory stream as Xlsx, and uploads the resulting file to a cloud storage endpoint via HTTP PUT.
 class Program
 {
-    // Entry point
-    static async Task Main()
+    static void Main()
     {
         try
         {
-            // URL of the source Excel file
-            string excelUrl = "https://example.com/sample.xlsx";
+            // URL of the source workbook
+            string workbookUrl = "https://example.com/source.xlsx";
 
-            // Download the Excel file into a memory stream
+            // URL of the destination (cloud storage) where the workbook will be uploaded
+            string uploadUrl = "https://cloudstorage.example.com/container/target.xlsx";
+
+            // Download the workbook into a byte array using HttpClient
+            byte[] workbookData;
             using (HttpClient httpClient = new HttpClient())
-            using (Stream downloadStream = await httpClient.GetStreamAsync(excelUrl))
-            using (MemoryStream workbookStream = new MemoryStream())
             {
-                // Copy downloaded data to a seekable stream
-                await downloadStream.CopyToAsync(workbookStream);
-                workbookStream.Position = 0; // Reset for reading
+                workbookData = httpClient.GetByteArrayAsync(workbookUrl).Result;
+            }
 
-                // Load workbook from the stream
-                Workbook workbook = new Workbook(workbookStream);
+            // Load the workbook from the downloaded data
+            Workbook workbook;
+            using (MemoryStream ms = new MemoryStream(workbookData))
+            {
+                workbook = new Workbook(ms);
+            }
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // ------------------------------------------------------------
+            // Apply a simple background style to a specific range (A1:B2)
+            // ------------------------------------------------------------
+            // Get the style of the first cell in the range
+            Style style = workbook.Worksheets[0].Cells["A1"].GetStyle();
 
-                // Add a rectangle shape to demonstrate texture tiling
-                // Parameters: upper left row, upper left column, upper left offset, upper left offset, width, height
-                Shape rect = sheet.Shapes.AddRectangle(2, 0, 0, 0, 300, 200);
+            // Set a solid background color (e.g., LightGray)
+            style.Pattern = BackgroundType.Solid;
+            style.ForegroundColor = System.Drawing.Color.LightGray;
 
-                // Set fill type to texture
-                rect.Fill.FillType = FillType.Texture;
+            // Apply the style to the desired range
+            Aspose.Cells.Range range = workbook.Worksheets[0].Cells.CreateRange("A1:B2");
+            range.ApplyStyle(style, new StyleFlag { All = true });
 
-                // Configure texture fill
-                TextureFill textureFill = rect.Fill.TextureFill;
-                textureFill.Type = TextureType.BlueTissuePaper; // Built‑in texture
-                textureFill.IsTiling = true;                    // Enable tiling
+            // Save the modified workbook into a memory stream
+            byte[] modifiedData;
+            using (MemoryStream outStream = new MemoryStream())
+            {
+                workbook.Save(outStream, SaveFormat.Xlsx);
+                modifiedData = outStream.ToArray();
+            }
 
-                // Optional: configure tile picture options (scale, offset, etc.)
-                TilePicOption tileOption = new TilePicOption
+            // Upload the modified workbook to cloud storage using HTTP PUT
+            using (HttpClient client = new HttpClient())
+            {
+                using (ByteArrayContent content = new ByteArrayContent(modifiedData))
                 {
-                    ScaleX = 50,   // 50% horizontal scaling
-                    ScaleY = 50,   // 50% vertical scaling
-                    OffsetX = 10,  // 10 pixels horizontal offset
-                    OffsetY = 10   // 10 pixels vertical offset
-                };
-                textureFill.TilePicOption = tileOption;
-
-                // Save the modified workbook to a memory stream in XLSX format
-                using (MemoryStream outputStream = new MemoryStream())
-                {
-                    workbook.Save(outputStream, SaveFormat.Xlsx);
-                    outputStream.Position = 0; // Reset for further use
-
-                    // Save to local file (ensure the directory exists)
-                    string outputPath = Path.Combine(Environment.CurrentDirectory, "modified.xlsx");
-                    File.WriteAllBytes(outputPath, outputStream.ToArray());
-
-                    Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                    content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    HttpResponseMessage response = client.PutAsync(uploadUrl, content).Result;
+                    response.EnsureSuccessStatusCode();
                 }
             }
-        }
-        catch (HttpRequestException ex)
-        {
-            Console.WriteLine($"Error downloading the Excel file: {ex.Message}");
-        }
-        catch (IOException ex)
-        {
-            Console.WriteLine($"File I/O error: {ex.Message}");
+
+            Console.WriteLine("Workbook processed and uploaded successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

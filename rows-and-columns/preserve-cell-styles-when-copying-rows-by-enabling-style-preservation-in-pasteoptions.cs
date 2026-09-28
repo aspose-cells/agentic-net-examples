@@ -1,16 +1,14 @@
-// Title: Preserve Cell Styles When Copying Rows with Aspose.Cells for .NET
-// Description: Demonstrates how to copy a row from one worksheet to another while retaining its formatting by using CopyRows together with PasteOptions set to PasteType.Formats. The example creates a styled header row, copies it to a new location, copies a data row without formatting, and saves the workbook as PreserveRowStyles.xlsx.
-// Keywords: Aspose.Cells | CopyRows | PasteOptions | .NET | C# | preserve formatting | row style copy | Excel automation | style preservation | PasteType.Formats
-// Common Searches: Aspose.Cells copy row keep formatting | PasteOptions preserve styles Aspose.Cells .NET | CopyRows with PasteType Formats example | How to retain cell style when copying rows in Aspose.Cells | C# copy header row with formatting using Aspose
-// Developer Intent: Copy rows between worksheets while maintaining the original cell formatting.
-// Use Cases: Duplicate a formatted header row in a report workbook without losing its style. | Create a template with styled rows and programmatically insert them into generated spreadsheets. | Separate value-only copying from style-preserving copying in the same automation workflow.
-// AI Prompts: Write C# code that copies multiple rows with their formatting using Aspose.Cells CopyRows and PasteOptions. | Show how to copy a row with values only, then copy another row preserving its style in Aspose.Cells for .NET. | Explain the effect of PasteType.Formats on the CopyRows method in Aspose.Cells.
+// Title: Copy a row from one workbook to another while preserving cell formatting using Aspose.Cells PasteOptions in C#
+// AI Prompts: Write C# code that copies a specific row from a source worksheet to a destination worksheet and keeps all cell styles by setting PasteOptions.PasteType to All. | Show how to configure CopyOptions and PasteOptions in Aspose.Cells to transfer a styled row between workbooks without losing background colors or fonts. | Provide a complete example that creates a source workbook, applies a yellow background style to a row, copies the row to a new workbook, and saves the file while preserving the style.
+// Common Searches: Aspose.Cells C# copy row with formatting between workbooks | how to retain cell background color when copying rows using Aspose.Cells | PasteOptions PasteType.All usage for row copy in .NET | CopyRows method preserving styles Aspose.Cells example | C# Aspose.Cells copy rows without losing style
+// Tags: CopyRows with PasteOptions in Aspose.Cells | preserve cell formatting during row copy | PasteType.All for style retention | C# Aspose.Cells row copy between workbooks | apply background color style Aspose.Cells
 
-using Aspose.Cells;
+using System;
 using System.Drawing;
+using Aspose.Cells;
 
-// Demonstrates how to copy a row from one worksheet to another while retaining its formatting by using CopyRows together with PasteOptions set to PasteType.Formats. The example creates a styled header row, copies it to a new location, copies a data row without formatting, and saves the workbook as PreserveRowStyles.xlsx.
-class PreserveRowStyles
+// The example creates a source workbook, applies a yellow background style to the first row, then uses CopyRows with PasteOptions set to PasteType.All to copy that row into a new workbook while preserving all cell formatting, and finally saves the result as PreserveStyleCopy.xlsx.
+class PreserveRowStyleCopy
 {
     static void Main()
     {
@@ -18,48 +16,40 @@ class PreserveRowStyles
         Workbook srcWorkbook = new Workbook();
         Worksheet srcSheet = srcWorkbook.Worksheets[0];
 
-        // Define a style (yellow background, bold font)
-        Style headerStyle = srcWorkbook.CreateStyle();
-        headerStyle.ForegroundColor = Color.Yellow;
-        headerStyle.Pattern = BackgroundType.Solid;
-        headerStyle.Font.IsBold = true;
+        // Fill some data in the first row
+        srcSheet.Cells["A1"].PutValue("Styled Text");
+        srcSheet.Cells["B1"].PutValue(123);
 
-        // Populate header cells and apply the style
-        srcSheet.Cells["A1"].PutValue("Header1");
-        srcSheet.Cells["B1"].PutValue("Header2");
-        srcSheet.Cells["A1"].SetStyle(headerStyle);
-        srcSheet.Cells["B1"].SetStyle(headerStyle);
+        // Create a style with a yellow background
+        Style rowStyle = srcWorkbook.CreateStyle();
+        rowStyle.ForegroundColor = Color.Yellow;
+        rowStyle.Pattern = BackgroundType.Solid;
 
-        // Add a data row below the header
-        srcSheet.Cells["A2"].PutValue(10);
-        srcSheet.Cells["B2"].PutValue(20);
+        // Apply the style to the range A1:B1 (first row)
+        srcSheet.Cells.CreateRange("A1:B1").SetStyle(rowStyle);
 
-        // Create destination workbook
+        // Create destination workbook where the row will be copied
         Workbook destWorkbook = new Workbook();
         Worksheet destSheet = destWorkbook.Worksheets[0];
 
         // Prepare copy and paste options
-        CopyOptions copyOptions = new CopyOptions(); // default options
+        CopyOptions copyOptions = new CopyOptions(); // default copy options
         PasteOptions pasteOptions = new PasteOptions
         {
-            // Preserve only formatting (styles) when copying rows
-            PasteType = PasteType.Formats
+            // Use PasteType.All to preserve all data, including cell styles
+            PasteType = PasteType.All
         };
 
-        // Copy the header row (row index 0) to destination row index 5,
-        // preserving its style via PasteOptions
+        // Copy the first row from source to destination while preserving styles
         destSheet.Cells.CopyRows(
-            srcSheet.Cells,      // source cells
-            0,                   // source row index
-            5,                   // destination row index
-            1,                   // number of rows to copy
-            copyOptions,        // copy options (default)
-            pasteOptions);      // paste options with style preservation
+            srcSheet.Cells,   // source cells
+            0,                // source row index (first row)
+            0,                // destination row index (first row)
+            1,                // number of rows to copy
+            copyOptions,      // copy options
+            pasteOptions);    // paste options with style preservation
 
-        // Copy the data row without special paste options (values only)
-        destSheet.Cells.CopyRows(srcSheet.Cells, 1, 6, 1);
-
-        // Save the result workbook
-        destWorkbook.Save("PreserveRowStyles.xlsx");
+        // Save the resulting workbook
+        destWorkbook.Save("PreserveStyleCopy.xlsx");
     }
 }

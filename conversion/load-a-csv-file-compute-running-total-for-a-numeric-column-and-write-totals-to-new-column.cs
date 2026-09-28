@@ -1,67 +1,52 @@
-// Title: C# – Compute Running Total from a CSV and Export to XLSX with Aspose.Cells
-// Description: Loads a CSV file into an Aspose.Cells workbook, calculates a cumulative sum for a specified numeric column, inserts the running total into a new column with a header, and saves the result as an XLSX file.
-// Keywords: Aspose.Cells | C# | .NET | Import CSV | running total | cumulative sum | Excel export | SaveFormat.Xlsx | worksheet cells | data transformation | CSV to Excel conversion
-// Common Searches: Aspose.Cells calculate running total from CSV | C# import CSV and add cumulative column using Aspose.Cells | How to create a running total column in Excel with Aspose.Cells .NET | Convert CSV to XLSX and compute cumulative sum Aspose.Cells | Aspose.Cells example for cumulative totals after CSV import
-// Developer Intent: Add a cumulative‑total column to data imported from a CSV file and save the enhanced worksheet as an Excel workbook.
-// Use Cases: Financial statements that show a running balance of revenue or expenses. | Sales dashboards displaying cumulative units sold or revenue over time. | Inventory logs that track a running stock balance after each transaction.
-// AI Prompts: Generate C# code using Aspose.Cells to import a CSV, compute a running total for a given column, and save the workbook as XLSX with the totals in a new column. | Show an Aspose.Cells .NET example that adds a cumulative‑sum column after importing CSV data, handling non‑numeric rows gracefully. | Explain how to find the last used column in an Aspose.Cells worksheet and insert a new column for running totals.
+// Title: Import a CSV file, compute a running total for a numeric column, and export the worksheet to XLSX using Aspose.Cells for .NET
+// AI Prompts: Create C# code that uses Aspose.Cells to import a CSV file, calculate a cumulative sum for a specified numeric column, write the running totals into a new column, and save the workbook as an XLSX file. | Adapt the example to accept a custom delimiter and output the updated data back to a CSV file while still using Aspose.Cells for the calculations.
+// Common Searches: Aspose.Cells C# how to add a cumulative total column to data imported from CSV | C# compute running total for column B after importing CSV with Aspose.Cells | Save modified worksheet as XLSX after processing CSV using Aspose.Cells .NET | Determine last data row in Aspose.Cells when working with imported CSV data
+// Tags: import csv Aspose.Cells C# | calculate running total column Aspose.Cells | write cumulative values to new worksheet column | save workbook as xlsx Aspose.Cells | retrieve last data row Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsRunningTotalExample
+// // Uses Aspose.Cells to import data.csv, computes a running total of the numeric values in column B, writes the totals to column C, and saves the result as output.xlsx.
+class Program
 {
-    // Loads a CSV file into an Aspose.Cells workbook, calculates a cumulative sum for a specified numeric column, inserts the running total into a new column with a header, and saves the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook and get the first worksheet's cells collection
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Path to the source CSV file
+        string csvPath = "data.csv";
+
+        // Import the CSV data starting at cell A1 (row 0, column 0)
+        // Using comma as delimiter and converting numeric strings to numbers
+        cells.ImportCSV(csvPath, ",", true, 0, 0);
+
+        // Assume the numeric column to total is column B (zero‑based index 1)
+        // The running total will be written to column C (zero‑based index 2)
+        int headerRow = 0;               // header is in the first row
+        int dataStartRow = headerRow + 1;
+        double runningTotal = 0;
+
+        // Determine the last row that contains data
+        int lastDataRow = cells.MaxDataRow;
+
+        // Write a header for the new total column
+        cells[headerRow, 2].PutValue("RunningTotal");
+
+        // Compute running total row by row
+        for (int row = dataStartRow; row <= lastDataRow; row++)
         {
-            // Input CSV file path and output Excel file path
-            string csvPath = "input.csv";          // replace with actual CSV file location
-            string outputPath = "output.xlsx";     // desired output file
+            // Retrieve the numeric value from column B; if the cell is empty, treat it as 0
+            double currentValue = cells[row, 1].DoubleValue;
+            runningTotal += currentValue;
 
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet and its cells collection
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Import CSV data starting at cell A1 (row 0, column 0)
-            // Using comma as delimiter, converting numeric data automatically
-            cells.ImportCSV(csvPath, ",", true, 0, 0);   // lifecycle load
-
-            // Determine the column that contains the numeric values for which we want a running total.
-            // For this example we assume the numeric data is in column B (zero‑based index 1).
-            int numericColumnIndex = 1;
-
-            // Determine where to place the running total column: one column after the last used column.
-            int totalColumnIndex = cells.MaxDataColumn + 1;
-
-            // Optional: write a header for the running total column
-            cells[0, totalColumnIndex].PutValue("Running Total");
-
-            double runningSum = 0.0;
-
-            // Iterate over all data rows (starting from row 1 to skip header)
-            for (int row = 1; row <= cells.MaxDataRow; row++)
-            {
-                // Retrieve the value from the numeric column
-                object val = cells[row, numericColumnIndex].Value;
-
-                // Try to convert to double; if conversion fails, treat as zero.
-                double number;
-                if (val != null && double.TryParse(val.ToString(), out number))
-                {
-                    runningSum += number;
-                }
-
-                // Write the running total into the new column
-                cells[row, totalColumnIndex].PutValue(runningSum);
-            }
-
-            // Save the workbook with the new column (lifecycle save)
-            workbook.Save(outputPath, SaveFormat.Xlsx);
+            // Store the running total in column C of the same row
+            cells[row, 2].PutValue(runningTotal);
         }
+
+        // Save the workbook to an XLSX file
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

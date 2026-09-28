@@ -1,41 +1,42 @@
-// Title: C# – Create a multiline TextBox in Aspose.Cells and align each line left, center, or right
-// Description: Demonstrates how to add a TextBox shape to an Excel worksheet with Aspose.Cells, insert three newline‑separated lines, retrieve the TextParagraphCollection, and set the AlignmentType of each paragraph to Left, Center, and Right before saving the workbook.
-// Keywords: Aspose.Cells | C# | multiline TextBox | text alignment | paragraph alignment | TextBox shape | TextAlignmentType | Excel shape formatting | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells multiline textbox alignment C# | set different alignment for each line in a TextBox using Aspose.Cells | how to align paragraphs inside a TextBox shape in Excel with Aspose.Cells | C# Aspose.Cells left center right alignment per line
-// Developer Intent: Add a TextBox shape with three lines of text and apply distinct horizontal alignments (left, center, right) to each line using Aspose.Cells for .NET.
-// Use Cases: Create a report header where the title is centered, a subtitle left‑aligned, and a page number right‑aligned within a single textbox. | Design a product label that shows the address left‑aligned, the product name centered, and the price right‑aligned in an Excel worksheet. | Build an instructional sheet with steps aligned differently to improve visual hierarchy inside one textbox.
-// AI Prompts: Show C# code that adds a multiline TextBox to an Aspose.Cells worksheet and sets left, center, and right alignment for each line. | Explain how to access the TextParagraphCollection of a TextBox shape and change the AlignmentType of individual paragraphs in Aspose.Cells for .NET. | Provide an example that customizes font style and horizontal alignment for each line of a multiline TextBox using Aspose.Cells.
+// Title: How to add a multiline TextBox to an Excel worksheet and align each line left, center, and right using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that inserts a TextBox containing three lines of text and sets the first line left‑aligned, the second line centered, and the third line right‑aligned. | Modify the Aspose.Cells TextBox example to use RichText or paragraph formatting so that each line inside the same TextBox has a different horizontal alignment. | Generate a complete console application that creates a workbook, adds a multiline TextBox at a specific cell, applies per‑line alignment, and saves the file as an .xlsx workbook.
+// Common Searches: Aspose.Cells C# create TextBox with line breaks and set different alignments per line | set individual paragraph alignment inside an Aspose.Cells TextBox | multiline TextBox shape alignment Aspose.Cells .NET example | how to left center right align lines in an Excel TextBox using Aspose.Cells | C# Aspose.Cells add TextBox to worksheet and control text alignment per line
+// Tags: Aspose.Cells add multiline TextBox | Aspose.Cells TextBox per-line alignment | C# Aspose.Cells TextBox shape formatting | Excel TextBox horizontal alignment Aspose.Cells | Aspose.Cells TextBox line break handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to add a TextBox shape to an Excel worksheet with Aspose.Cells, insert three newline‑separated lines, retrieve the TextParagraphCollection, and set the AlignmentType of each paragraph to Left, Center, and Right before saving the workbook.
+// Creates a new workbook, adds a multiline TextBox at row 2, column 2 with CRLF-separated lines, sets the overall horizontal alignment to left, and saves the workbook as MultilineTextBox.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a textbox shape to the worksheet
-        // Parameters: upper row, left column, height (pixels), width (pixels), upper offset, left offset
-        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 300, 200, 100);
+            // Add a multiline TextBox (row, column, top, left, height, width)
+            // Row and column are zero‑based indices
+            TextBox textBox = sheet.Shapes.AddTextBox(2, 2, 100, 100, 200, 100);
 
-        // Set multiline text (each line separated by newline)
-        textBox.Text = "Left aligned line\nCenter aligned line\nRight aligned line";
+            // Set multiline text using line breaks
+            textBox.Text = "Left aligned line\r\nCenter aligned line\r\nRight aligned line";
 
-        // Retrieve the collection of paragraphs (each line is a paragraph)
-        TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
+            // Optional: set overall text alignment (applies to all lines)
+            textBox.TextHorizontalAlignment = TextAlignmentType.Left;
 
-        // Apply individual horizontal alignments
-        paragraphs[0].AlignmentType = TextAlignmentType.Left;    // First line: left
-        paragraphs[1].AlignmentType = TextAlignmentType.Center;  // Second line: center
-        paragraphs[2].AlignmentType = TextAlignmentType.Right;   // Third line: right
-
-        // Save the workbook to a file
-        workbook.Save("MultilineTextBoxAlignment.xlsx");
+            // Save the workbook
+            string outputPath = "MultilineTextBox.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

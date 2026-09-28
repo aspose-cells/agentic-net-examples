@@ -1,37 +1,31 @@
-// Title: Load Excel Workbook from FileStream and Access First Worksheet – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to open an Excel file with `File.OpenRead`, instantiate a `Workbook` using the `Workbook(Stream)` constructor, and retrieve the first worksheet via the `Worksheets` collection. The sample prints the worksheet name to the console.
-// Keywords: Aspose.Cells | C# load workbook from stream | Workbook(Stream) constructor | FileStream Excel .NET | first worksheet access | read Excel file Aspose.Cells | open Excel from MemoryStream | Aspose.Cells example
-// Common Searches: Aspose.Cells open Excel from FileStream C# | Workbook(Stream) constructor usage | Get first worksheet after loading workbook Aspose.Cells | Read Excel file with Aspose.Cells .NET | How to load Excel workbook from stream in C#
-// Developer Intent: Open an Excel workbook via a FileStream and retrieve its first worksheet using Aspose.Cells in C#.
-// Use Cases: Display the name of the first worksheet after a user uploads an Excel file to a web service. | Iterate rows of the first sheet for data import when processing large Excel files from a stream. | Expose worksheet metadata (name, index, visibility) through an API without saving the file to disk.
-// AI Prompts: Generate C# code that loads an Excel workbook from a MemoryStream and prints the first worksheet name using Aspose.Cells. | Show how to add robust error handling when opening an Excel file from a FileStream with Aspose.Cells. | Provide an example that reads cell A1 of the first worksheet after loading a workbook from a stream in Aspose.Cells for .NET.
+// Title: Load an Excel workbook from a FileStream and retrieve the first worksheet using Aspose.Cells for .NET
+// AI Prompts: Read an Excel file from a FileStream, create a Workbook object, and obtain the worksheet at index 0 with Aspose.Cells in C#. | Open a .xlsx file via a stream, access its first worksheet, and print the worksheet name using the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# load workbook from FileStream example | how to get first worksheet from workbook loaded from stream using Aspose.Cells | read Excel file with FileStream and access worksheet index 0 in .NET | C# Aspose.Cells retrieve worksheet name after opening file via stream
+// Tags: load workbook from filestream Aspose.Cells | access first worksheet index 0 Aspose.Cells | read excel file via stream C# | retrieve worksheet name Aspose.Cells | open xlsx using FileStream Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsDemo
+// The program opens "sample.xlsx" with a FileStream, loads it into an Aspose.Cells Workbook, accesses the first worksheet (index 0), and writes the worksheet's name to the console.
+class Program
 {
-    // Demonstrates how to open an Excel file with `File.OpenRead`, instantiate a `Workbook` using the `Workbook(Stream)` constructor, and retrieve the first worksheet via the `Worksheets` collection. The sample prints the worksheet name to the console.
-    class LoadWorkbookFromStream
+    static void Main()
     {
-        static void Main()
+        // Path to the Excel file
+        string filePath = "sample.xlsx";
+
+        // Open a file stream for reading
+        using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
         {
-            // Path to the Excel file to be loaded
-            string filePath = "input.xlsx";
+            // Load the workbook from the stream
+            Workbook workbook = new Workbook(stream);
 
-            // Open a file stream for reading the Excel file
-            using (FileStream stream = File.OpenRead(filePath))
-            {
-                // Load the workbook from the opened stream using the Workbook(Stream) constructor
-                Workbook workbook = new Workbook(stream);
+            // Access the first worksheet (index 0)
+            Worksheet firstWorksheet = workbook.Worksheets[0];
 
-                // Access the first worksheet in the workbook
-                Worksheet firstWorksheet = workbook.Worksheets[0];
-
-                // Example usage: output the name of the first worksheet
-                Console.WriteLine($"First worksheet name: {firstWorksheet.Name}");
-            }
+            // Example usage: output the name of the first worksheet
+            Console.WriteLine("First worksheet name: " + firstWorksheet.Name);
         }
     }
 }

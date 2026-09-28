@@ -1,60 +1,55 @@
-// Title: Batch convert Excel files to HTML with Aspose.Cells (C#) and log errors
-// Description: A C# console utility that scans a given directory for Excel workbooks (.xls, .xlsx, .xlsm, .xlsb, .csv, .ods), converts each file to HTML using Aspose.Cells ConversionUtility with default HtmlSaveOptions, and records any conversion exceptions without stopping the batch run.
-// Keywords: Aspose.Cells batch conversion | Excel to HTML C# | ConversionUtility default options | process multiple Excel formats | log conversion errors | folder based Excel conversion | C# .NET Aspose.Cells example
-// Common Searches: convert all Excel files in a folder to HTML Aspose.Cells | C# batch Excel to HTML code sample | Aspose.Cells ConversionUtility error handling | default HtmlSaveOptions for Excel conversion | how to log failures during batch Excel conversion
-// Developer Intent: Automatically transform every supported Excel workbook in a specified folder into an HTML file using Aspose.Cells while capturing and reporting any conversion failures.
-// Use Cases: Generate web‑ready versions of a large spreadsheet library for intranet publishing. | Create a scheduled command‑line tool that produces HTML reports from nightly‑updated Excel data. | Integrate into CI/CD pipelines to verify that all Excel assets render correctly as HTML without breaking the build.
-// AI Prompts: Write C# code that iterates over a directory, converts each .xls/.xlsx/.xlsm/.xlsb/.csv/.ods file to HTML with Aspose.Cells default HtmlSaveOptions, and logs exceptions to the console. | Show an error‑handling pattern for a batch Excel‑to‑HTML conversion loop that continues processing after a failure and writes detailed messages to a log file. | Explain how to modify the sample to output HTML files to a separate folder while preserving original filenames and maintaining the same error‑logging behavior.
+// Title: Convert a folder of Excel workbooks to HTML with Aspose.Cells for .NET and log conversion errors
+// AI Prompts: Write a C# console application that scans a specified directory for .xls, .xlsx, and .xlsm files, loads each workbook with Aspose.Cells, and saves it as an .html file using the default HtmlSaveOptions. | Enhance the program to accept input and output folder paths via command‑line arguments and automatically create the output directory if it does not exist. | Add robust error handling that catches any exception during loading or saving and writes the offending file name and exception message to the error console or a log file.
+// Common Searches: aspocells c# batch convert excel files to html with error logging | how to process multiple xlsx files and save as html using Aspose.Cells | c# console app convert folder of xls to html and capture conversion failures | default HtmlSaveOptions usage in Aspose.Cells for bulk conversion
+// Tags: Aspose.Cells bulk Excel to HTML conversion | C# folder enumeration for .xls .xlsx .xlsm files | HtmlSaveOptions default settings Aspose.Cells | error handling Aspose.Cells workbook conversion | command line input output paths C# console
 
 using System;
 using System.IO;
-using System.Linq;
-using Aspose.Cells.Utility;
+using Aspose.Cells;
 
-namespace BatchExcelToHtml
+// A C# console program that iterates over all .xls, .xlsx, and .xlsm files in a given input folder, converts each workbook to an HTML file using Aspose.Cells' default HtmlSaveOptions, saves the results to a specified output folder (creating it if needed), and logs any conversion errors to the error stream.
+class ExcelToHtmlBatchConverter
 {
-    // A C# console utility that scans a given directory for Excel workbooks (.xls, .xlsx, .xlsm, .xlsb, .csv, .ods), converts each file to HTML using Aspose.Cells ConversionUtility with default HtmlSaveOptions, and records any conversion exceptions without stopping the batch run.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Input folder containing Excel files (default if not provided)
+        string inputFolder = args.Length > 0 ? args[0] : @"C:\InputExcel";
+
+        // Output folder for generated HTML files (default if not provided)
+        string outputFolder = args.Length > 1 ? args[1] : @"C:\OutputHtml";
+
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Retrieve all files in the input folder
+        string[] allFiles = Directory.GetFiles(inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+
+        foreach (string filePath in allFiles)
         {
-            // Specify the folder containing Excel files.
-            // You can pass the folder path as a command‑line argument or set it directly here.
-            string sourceFolder = args.Length > 0 ? args[0] : @"C:\ExcelFiles";
+            // Process only Excel file extensions
+            string ext = Path.GetExtension(filePath).ToLowerInvariant();
+            if (ext != ".xls" && ext != ".xlsx" && ext != ".xlsm")
+                continue;
 
-            if (!Directory.Exists(sourceFolder))
+            try
             {
-                Console.WriteLine($"Folder does not exist: {sourceFolder}");
-                return;
+                // Load the Excel workbook
+                Workbook workbook = new Workbook(filePath);
+
+                // Determine the HTML output path
+                string htmlFileName = Path.GetFileNameWithoutExtension(filePath) + ".html";
+                string htmlPath = Path.Combine(outputFolder, htmlFileName);
+
+                // Save the workbook as HTML using default HtmlSaveOptions
+                workbook.Save(htmlPath, SaveFormat.Html);
+
+                Console.WriteLine($"Converted: {filePath} -> {htmlPath}");
             }
-
-            // Define the Excel file extensions to process.
-            string[] excelExtensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb", ".csv", ".ods" };
-
-            // Get all files with the supported extensions.
-            var excelFiles = Directory.GetFiles(sourceFolder)
-                                      .Where(f => excelExtensions.Contains(Path.GetExtension(f), StringComparer.OrdinalIgnoreCase));
-
-            foreach (var sourcePath in excelFiles)
+            catch (Exception ex)
             {
-                try
-                {
-                    // Destination HTML file path – same name with .html extension.
-                    string destPath = Path.ChangeExtension(sourcePath, ".html");
-
-                    // Convert using Aspose.Cells ConversionUtility with default options.
-                    ConversionUtility.Convert(sourcePath, destPath);
-
-                    Console.WriteLine($"Converted: {Path.GetFileName(sourcePath)} -> {Path.GetFileName(destPath)}");
-                }
-                catch (Exception ex)
-                {
-                    // Log conversion errors without stopping the batch process.
-                    Console.WriteLine($"Error converting '{Path.GetFileName(sourcePath)}': {ex.Message}");
-                }
+                // Log any conversion errors
+                Console.Error.WriteLine($"Error converting '{filePath}': {ex.Message}");
             }
-
-            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

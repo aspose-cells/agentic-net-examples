@@ -1,98 +1,77 @@
-// Title: Insert Detail Smart Markers and Use DetailSheet to Write Detail Rows to a Separate Worksheet – Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds a master sheet with order smart markers, defines a &Detail.Start/End block, creates a "Detail" worksheet, binds Orders and OrderDetails DataTables, sets WorkbookDesigner.Options.DetailSheet to the new sheet, processes the markers, and saves the populated Excel file.
-// Keywords: Aspose.Cells | C# | smart markers | DetailSheet | WorkbookDesigner | master‑detail report | Excel automation | separate worksheet | detail rows | data binding
-// Common Searches: Aspose.Cells DetailSheet option example | C# master detail smart markers separate sheet | how to use &Detail.Start and &Detail.End in Aspose.Cells | populate detail rows on another worksheet with Aspose.Cells | WorkbookDesigner set DetailSheet property
-// Developer Intent: Add detail smart markers and configure DetailSheet so that detail rows are generated on a dedicated worksheet.
-// Use Cases: Generate an order summary where each order appears on a master sheet and its line items are automatically listed on a "Detail" sheet. | Create a reusable Excel template that separates customers (master) from their purchases (detail) by directing detail blocks to a different worksheet. | Produce multiple master‑detail workbooks programmatically, changing the DetailSheet name to organize data across several sheets.
-// AI Prompts: Show C# code that sets WorkbookDesigner.Options.DetailSheet and processes master‑detail smart markers with Aspose.Cells. | Explain the required layout of &Detail.Start and &Detail.End markers to output detail rows on a separate worksheet. | Provide a step‑by‑step guide for binding DataTables to smart marker names and exporting the result to Excel with master data on one sheet and detail data on another.
+// Title: Create master‑detail Excel file with Aspose.Cells smart markers and the DetailSheet parameter in C#
+// AI Prompts: Write C# code that adds a master worksheet with smart markers, sets the &DetailSheet parameter, and directs repeated rows to a separate "Detail" sheet using Aspose.Cells. | Show how to bind a List<Person> to the smart marker name "Data", define a named range for the markers, and invoke WorkbookDesigner.Process on that range while preserving unknown markers. | Demonstrate saving the workbook to an XLSX file after processing, ensuring the detail rows appear on the designated worksheet.
+// Common Searches: Aspose.Cells C# example using &DetailSheet to write smart marker rows to another worksheet | how to process only a specific smart marker range with WorkbookDesigner in .NET | binding a List<T> to smart markers in Aspose.Cells workbook designer | preserve unrecognized smart markers while processing Aspose.Cells smart markers | generate master‑detail Excel report with smart markers and separate detail sheet in C#
+// Tags: Aspose.Cells smart markers DetailSheet parameter | WorkbookDesigner process named range C# | bind List<T> to smart markers Aspose.Cells | output detail rows to separate worksheet Excel | master detail workbook generation Aspose.Cells
 
 using System;
-using System.Data;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerDetailExample
+// The sample creates a new workbook, adds a master sheet with header smart markers and the &DetailSheet=Detail marker, defines a named range for the markers, binds a List<Person> as the data source, processes only that range while preserving unknown markers, and saves the result to "DetailSmartMarkers.xlsx" where the repeated detail rows are automatically placed on a separate "Detail" worksheet.
+class Program
 {
-    // C# example that creates a workbook, adds a master sheet with order smart markers, defines a &Detail.Start/End block, creates a "Detail" worksheet, binds Orders and OrderDetails DataTables, sets WorkbookDesigner.Options.DetailSheet to the new sheet, processes the markers, and saves the populated Excel file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+
+            // Add a master worksheet that will contain the smart markers
+            Worksheet masterSheet = workbook.Worksheets[0];
+            masterSheet.Name = "Master";
+
+            // Add a separate worksheet that will receive the detail rows
+            Worksheet detailSheet = workbook.Worksheets.Add("Detail");
+
+            // ----- Set up smart markers on the master sheet -----
+            // Header row
+            masterSheet.Cells["A1"].PutValue("Name");
+            masterSheet.Cells["B1"].PutValue("Value");
+
+            // DetailSheet parameter tells the designer to place detail rows on the "Detail" sheet
+            masterSheet.Cells["A2"].PutValue("&DetailSheet=Detail");
+
+            // Smart markers that will be repeated for each data item
+            masterSheet.Cells["A3"].PutValue("&=Data.Name");
+            masterSheet.Cells["B3"].PutValue("&=Data.Value");
+
+            // Define the range that contains the smart markers and give it the required name
+            Aspose.Cells.Range smartMarkerRange = masterSheet.Cells.CreateRange("A2:B3");
+            smartMarkerRange.Name = "_CellsSmartMarkers";
+
+            // ----- Prepare sample data source -----
+            List<Person> persons = new List<Person>
             {
-                // -------------------- Create a new workbook --------------------
-                Workbook workbook = new Workbook();
+                new Person { Name = "Alice", Value = 100 },
+                new Person { Name = "Bob",   Value = 200 },
+                new Person { Name = "Carol", Value = 300 }
+            };
 
-                // -------------------- Prepare the master worksheet --------------------
-                Worksheet masterSheet = workbook.Worksheets[0];
-                masterSheet.Name = "Master";
-
-                // Header row
-                masterSheet.Cells["A1"].PutValue("Order ID");
-                masterSheet.Cells["B1"].PutValue("Order Date");
-
-                // Master data smart markers (will be repeated for each order)
-                masterSheet.Cells["A2"].PutValue("&=Orders.OrderID");
-                masterSheet.Cells["B2"].PutValue("&=Orders.OrderDate");
-
-                // Insert detail smart markers block
-                // The block starts with &Detail.Start and ends with &Detail.End.
-                // The detail rows will be placed on the sheet specified by DetailSheet option.
-                masterSheet.Cells["A4"].PutValue("&Detail.Start");
-                masterSheet.Cells["A5"].PutValue("&=OrderDetails.Product");
-                masterSheet.Cells["B5"].PutValue("&=OrderDetails.Quantity");
-                masterSheet.Cells["A6"].PutValue("&Detail.End");
-
-                // -------------------- Add a separate worksheet for detail rows --------------------
-                Worksheet detailSheet = workbook.Worksheets.Add("Detail");
-                // (Optional) you can put a title or any static content on the detail sheet
-                detailSheet.Cells["A1"].PutValue("Product");
-                detailSheet.Cells["B1"].PutValue("Quantity");
-
-                // -------------------- Prepare sample data sources --------------------
-                // Orders table (master data)
-                DataTable ordersTable = new DataTable("Orders");
-                ordersTable.Columns.Add("OrderID", typeof(int));
-                ordersTable.Columns.Add("OrderDate", typeof(DateTime));
-                ordersTable.Rows.Add(1001, new DateTime(2023, 1, 15));
-                ordersTable.Rows.Add(1002, new DateTime(2023, 2, 20));
-
-                // OrderDetails table (detail data)
-                DataTable detailsTable = new DataTable("OrderDetails");
-                detailsTable.Columns.Add("OrderID", typeof(int)); // foreign key to link with master
-                detailsTable.Columns.Add("Product", typeof(string));
-                detailsTable.Columns.Add("Quantity", typeof(int));
-                detailsTable.Rows.Add(1001, "Apple", 10);
-                detailsTable.Rows.Add(1001, "Banana", 5);
-                detailsTable.Rows.Add(1002, "Orange", 8);
-                detailsTable.Rows.Add(1002, "Grapes", 12);
-
-                // -------------------- Configure WorkbookDesigner --------------------
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-
-                // Bind data sources to the corresponding smart marker names
-                designer.SetDataSource("Orders", ordersTable);
-                designer.SetDataSource("OrderDetails", detailsTable);
-
-                // Set the DetailSheet option to the name of the separate worksheet
-                // Note: The Options property may not be available in older Aspose.Cells versions.
-                // If supported, uncomment the following line:
-                // designer.Options.DetailSheet = "Detail";
-
-                // Process the smart markers (populate data)
-                designer.Process();
-
-                // -------------------- Save the result --------------------
-                string outputPath = "SmartMarkerDetailOutput.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
+            // ----- Configure WorkbookDesigner and process the smart markers -----
+            WorkbookDesigner designer = new WorkbookDesigner
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                Workbook = workbook
+            };
+            // Bind the data source to the name used in the smart markers ("Data")
+            designer.SetDataSource("Data", persons);
+
+            // Process only the defined range (the second parameter 'true' preserves unrecognized markers)
+            designer.Process(smartMarkerRange, true);
+
+            // Save the result (lifecycle: save)
+            workbook.Save("DetailSmartMarkers.xlsx");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Simple data class used as the data source
+    public class Person
+    {
+        public string Name { get; set; } = null!;
+        public int Value { get; set; }
     }
 }

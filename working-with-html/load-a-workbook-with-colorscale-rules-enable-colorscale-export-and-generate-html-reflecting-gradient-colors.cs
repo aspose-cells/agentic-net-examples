@@ -1,64 +1,43 @@
-// Title: C# Example: Export Excel ColorScale Conditional Formatting to HTML with Aspose.Cells
-// Description: Loads an existing workbook (or creates a new one if missing), configures HtmlSaveOptions to keep all styles—including ColorScale gradients—by setting ExportWorksheetCSSSeparately to true and ExcludeUnusedStyles to false, and saves the file as HTML that mirrors the original conditional formatting.
-// Keywords: Aspose.Cells | C# | .NET | ColorScale export | conditional formatting HTML | HtmlSaveOptions | ExportWorksheetCSSSeparately | ExcludeUnusedStyles | Excel to HTML conversion | gradient colors HTML
-// Common Searches: Aspose.Cells export ColorScale to HTML C# | preserve Excel conditional formatting when converting to HTML | HtmlSaveOptions keep gradient colors | export workbook with conditional formatting as HTML | C# code sample for Excel ColorScale HTML export
-// Developer Intent: Create an HTML file that retains Excel ColorScale gradient formatting using Aspose.Cells.
-// Use Cases: Render heat‑map reports as web‑ready HTML pages without losing color gradients. | Automate conversion of Excel dashboards for email newsletters or intranet portals. | Generate a placeholder HTML report when the source Excel file is unavailable.
-// AI Prompts: Show how to enable ColorScale export in Aspose.Cells HtmlSaveOptions and save as HTML. | Provide C# code that loads an Excel file with conditional formatting, preserves gradient colors, and writes the HTML output. | Explain the impact of ExportWorksheetCSSSeparately and ExcludeUnusedStyles on HTML representation of ColorScale rules.
+// Title: Convert an Excel workbook with ColorScale conditional formatting to HTML while preserving gradient colors using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file containing ColorScale conditional formatting and saves it as an HTML file using Aspose.Cells, ensuring the gradient colors are retained. | Show how to configure Aspose.Cells HtmlSaveOptions to export conditional formatting, specifically ColorScale rules, when converting a workbook to HTML in a .NET application.
+// Common Searches: Aspose.Cells preserve ColorScale gradients when exporting Excel to HTML in C# | How to export conditional formatting ColorScale to HTML using Aspose.Cells .NET | C# convert workbook with ColorScale rules to HTML with Aspose.Cells | HtmlSaveOptions settings for keeping Excel color scales in HTML output
+// Tags: Aspose.Cells HtmlSaveOptions export ColorScale | C# Excel to HTML conversion preserving conditional formatting | ColorScale gradient export Aspose.Cells .NET | SaveFormat.Html with conditional formatting | Excel workbook HTML output color scales
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace ColorScaleHtmlExport
+// Loads 'ColorScaleWorkbook.xlsx', applies default HtmlSaveOptions, and saves as 'ColorScaleWorkbook.html' while preserving the ColorScale conditional formatting gradients.
+class Program
 {
-    // Loads an existing workbook (or creates a new one if missing), configures HtmlSaveOptions to keep all styles—including ColorScale gradients—by setting ExportWorksheetCSSSeparately to true and ExcludeUnusedStyles to false, and saves the file as HTML that mirrors the original conditional formatting.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputFile = "ColorScaleWorkbook.xlsx";
+        const string outputFile = "ColorScaleWorkbook.html";
+
+        try
         {
-            // Path to the existing Excel file that already contains ColorScale conditional formatting
-            string inputPath = "ColorScaleTemplate.xlsx";
-
-            Workbook workbook = null;
-
-            try
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                // Load the workbook if the file exists; otherwise create a new workbook
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
-                    Console.WriteLine("Creating a new workbook as a fallback.");
-                    workbook = new Workbook(); // creates a workbook with a default worksheet
-                }
-
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    // Export worksheet CSS separately to preserve conditional formatting styles (including ColorScale gradients)
-                    ExportWorksheetCSSSeparately = true,
-
-                    // Keep all styles in the HTML (useful for round‑trip scenarios)
-                    ExcludeUnusedStyles = false
-                };
-
-                // Define the output HTML file path
-                string outputPath = "ColorScaleOutput.html";
-
-                // Save the workbook as HTML using the configured options
-                workbook.Save(outputPath, htmlOptions);
-
-                Console.WriteLine($"Workbook has been exported to HTML: {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Error: Input file '{inputFile}' not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred during processing:");
-                Console.WriteLine(ex.Message);
-            }
+
+            // Load the workbook that contains ColorScale conditional formatting rules
+            Workbook workbook = new Workbook(inputFile);
+
+            // Configure HTML save options (conditional formatting is exported by default)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Save the workbook as HTML with gradient colors reflected
+            workbook.Save(outputFile, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

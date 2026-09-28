@@ -1,15 +1,12 @@
-// Title: Set Workbook Default Font to Arial 10 for All Cells with Aspose.Cells for .NET (C#)
-// Description: Shows how to modify a workbook’s default style to Arial 10, apply the font to every cell in the first worksheet, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells default font | C# set workbook font | apply style to all cells | Excel default style Arial | StyleFlag All true | Aspose.Cells workbook default style | C# Excel formatting
-// Common Searches: Aspose.Cells set default font | C# change workbook default style | apply Arial font to entire worksheet Aspose.Cells | how to use StyleFlag to format all cells | set default font for new Excel file using Aspose.Cells
-// Developer Intent: Change the workbook’s default font to Arial 10 and ensure every cell uses that font.
-// Use Cases: Create a new workbook where all cells start with Arial 10 before data entry. | Update an existing workbook’s default style to Arial 10 and propagate the change across the first worksheet. | Generate a template that enforces a consistent Arial 10 font for any future worksheets added to the file.
-// AI Prompts: Provide a C# example that sets the default font to Calibri 11 and applies it to all cells with Aspose.Cells. | Show how to change the default style to Times New Roman 12 and propagate it across an entire worksheet using Aspose.Cells for .NET. | Explain the use of StyleFlag to apply multiple formatting attributes to a range of cells in Aspose.Cells.
+// Title: How to set the default workbook font to Arial 10pt and apply it to all cells with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook, sets its default style font to Arial 10pt, and applies this style to every cell in each worksheet, using a 100‑row by 26‑column fallback for empty sheets. | Write a method with Aspose.Cells that defines an Arial 10pt Font style, uses a StyleFlag to apply only the font to the full used range of all worksheets, and saves the workbook.
+// Common Searches: Aspose.Cells C# set workbook default font to Arial 10 | apply a font style to all cells in an Excel file using Aspose.Cells .NET | how to change font for empty worksheets in Aspose.Cells | C# Aspose.Cells apply style to entire sheet including unused rows | set global font for new Excel workbook with Aspose.Cells
+// Tags: default workbook font Aspose.Cells .NET | apply style to entire worksheet Aspose.Cells | StyleFlag font only Aspose.Cells | global Arial 10pt font Excel Aspose | handle empty sheet range Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Shows how to modify a workbook’s default style to Arial 10, apply the font to every cell in the first worksheet, and save the workbook using Aspose.Cells for .NET.
+// The example creates a new Workbook, changes the default style to Arial 10pt, iterates through each worksheet, determines the used range (or defaults to rows 0‑99 and columns 0‑25 for empty sheets), creates a matching style, applies it with a Font‑only StyleFlag, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
@@ -17,31 +14,42 @@ class Program
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // ----- Set the workbook's default font -----
-        // Retrieve the current default style
+        // Set the workbook's default font to Arial, size 10
         Style defaultStyle = workbook.DefaultStyle;
-        // Modify the font properties
         defaultStyle.Font.Name = "Arial";
         defaultStyle.Font.Size = 10;
-        // Assign the modified style back as the workbook's default
         workbook.DefaultStyle = defaultStyle;
 
-        // ----- Apply the default font to all existing cells -----
-        Worksheet sheet = workbook.Worksheets[0];
+        // Apply the default font to all cells in each worksheet
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Determine the range to apply the style (used range or a default area if empty)
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+            if (maxRow < 0 || maxCol < 0)
+            {
+                // Sheet is empty; define a reasonable default area
+                maxRow = 99;   // rows 0-99 (100 rows)
+                maxCol = 25;   // columns 0-25 (A-Z)
+            }
 
-        // Create a style that matches the default font
-        Style style = workbook.CreateStyle();
-        style.Font.Name = "Arial";
-        style.Font.Size = 10;
+            // Create a style with the desired font
+            Style style = workbook.CreateStyle();
+            style.Font.Name = "Arial";
+            style.Font.Size = 10;
 
-        // Create a StyleFlag that indicates all style attributes should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.All = true;
-
-        // Apply the style to the entire worksheet
-        sheet.Cells.ApplyStyle(style, flag);
+            // Apply the style to the entire range
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = maxRow,
+                EndColumn = maxCol
+            };
+            sheet.Cells.ApplyStyle(style, new StyleFlag { Font = true });
+        }
 
         // Save the workbook
-        workbook.Save("DefaultFont.xlsx");
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,70 +1,63 @@
-// Title: Validate PivotTable DataFields before calculation with Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to create a workbook, populate it with date and sales data, add a PivotTable, verify that the PivotTable has at least one data field, automatically insert a default "Sales" field when none exist, refresh the pivot cache, recalculate the pivot values, and save the file.
-// Keywords: Aspose.Cells | PivotTable validation | C# | .NET | DataFields count | Add default data field | RefreshData | CalculateData | Excel automation | pivot cache
-// Common Searches: Aspose.Cells check PivotTable data fields C# | Add default data field to PivotTable Aspose | Validate PivotTable before CalculateData | RefreshData and CalculateData Aspose.Cells example | C# code to ensure PivotTable has a data field
-// Developer Intent: Confirm a PivotTable contains at least one data field before invoking RefreshData and CalculateData.
-// Use Cases: Prevent runtime errors by automatically adding a numeric field when a newly created PivotTable lacks data fields. | Integrate a validation step in automated report generation to guarantee pivot calculations succeed. | Log a warning and insert a fallback data field in dynamic workbook workflows that build PivotTables on the fly.
-// AI Prompts: Generate C# code using Aspose.Cells that checks PivotTable.DataFields.Count and adds a specified field if the collection is empty. | Write a method that logs a message and inserts a default "Sales" data field before calling CalculateData on a PivotTable. | Provide an example of safely refreshing and calculating a PivotTable after ensuring at least one data field is present.
+// Title: How to validate a PivotTable has at least one data field before calling RefreshData with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that checks PivotTable.DataFields.Count and throws a descriptive exception if the count is zero before invoking RefreshData using Aspose.Cells. | Create a .NET method that loads an Excel workbook, ensures the first worksheet's PivotTable contains at least one value field, and only then calls PivotTable.RefreshData. | Write error‑handling logic for Aspose.Cells that logs a clear message and skips RefreshData when a PivotTable lacks data fields.
+// Common Searches: Aspose.Cells C# verify PivotTable contains a value field before RefreshData | Check if PivotTable.DataFields is empty in .NET Excel processing | Prevent RefreshData error when PivotTable has no data fields using Aspose.Cells | C# code sample to validate PivotTable data fields count with Aspose.Cells | How to handle missing data fields in a PivotTable with Aspose.Cells for .NET
+// Tags: aspose.cells pivot-table datafield check | c# refreshdata after pivot validation | excel workbook pivot-table empty datafield handling | aspose.cells verify pivot-table value field | c# validate pivot-table before calculations
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, confirms the first worksheet contains a PivotTable with at least one data field, refreshes the PivotTable only after this validation, and saves the file, providing clear error messages for missing files, absent PivotTables, or empty data fields.
+class Program
 {
-    // This C# example shows how to create a workbook, populate it with date and sales data, add a PivotTable, verify that the PivotTable has at least one data field, automatically insert a default "Sales" field when none exist, refresh the pivot cache, recalculate the pivot values, and save the file.
-    public class PivotTableDataFieldValidationDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample source data for the pivot table
-            worksheet.Cells["A1"].PutValue("Date");
-            worksheet.Cells["B1"].PutValue("Sales");
-            DateTime baseDate = new DateTime(2022, 1, 1);
-            for (int i = 0; i < 10; i++)
+            // Ensure the worksheet contains at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
             {
-                worksheet.Cells[$"A{i + 2}"].PutValue(baseDate.AddDays(i));
-                worksheet.Cells[$"B{i + 2}"].PutValue(100 + i * 20);
+                Console.WriteLine("Error: No PivotTables found on the first worksheet.");
+                return;
             }
 
-            // Add a pivot table based on the source data
-            int pivotIndex = worksheet.PivotTables.Add("A1:B11", "D3", "SalesPivot");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Retrieve the first PivotTable
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Add a row field (Date)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
-
-            // ---- Validation: ensure at least one data field exists before calculations ----
-            // If no data fields are present, add a default one (Sales)
+            // Validate that the PivotTable has at least one data field
             if (pivotTable.DataFields.Count == 0)
             {
-                // Add the "Sales" column as a data field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-                Console.WriteLine("Data field was missing; added default data field 'Sales'.");
+                Console.WriteLine("Error: The PivotTable must contain at least one data field before calculations can be performed.");
+                return;
             }
 
-            // Refresh the pivot cache and calculate the pivot data
-            pivotTable.RefreshData();      // Correct method to refresh cache
-            pivotTable.CalculateData();   // Recalculate pivot values
+            // Refresh the PivotTable data
+            pivotTable.RefreshData();
 
-            // Save the workbook
-            workbook.Save("PivotTableDataFieldValidationDemo.xlsx");
+            // Save the workbook after processing
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

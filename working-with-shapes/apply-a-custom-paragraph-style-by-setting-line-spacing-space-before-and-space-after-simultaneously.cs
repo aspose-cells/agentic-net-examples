@@ -1,64 +1,55 @@
-// Title: C# – Set Line Spacing, Space Before & After for a TextBox Paragraph with Aspose.Cells
-// Description: Demonstrates how to create a workbook, add a textbox shape with two paragraphs, and apply custom line spacing (points), space before, and space after to the second paragraph. The example saves the file, reloads it, and prints the paragraph settings to confirm persistence.
-// Keywords: Aspose.Cells C# paragraph spacing | textbox line spacing Aspose.Cells | SpaceBefore Aspose.Cells | SpaceAfter Aspose.Cells | LineSpaceSizeType Points | Excel shape text formatting | Aspose.Cells paragraph style example | C# Excel textbox paragraph
-// Common Searches: how to set line spacing in a textbox paragraph using Aspose.Cells C# | Aspose.Cells set SpaceBefore and SpaceAfter for a paragraph | C# Aspose.Cells custom paragraph formatting in shapes | apply paragraph spacing to Excel textbox with Aspose.Cells | verify paragraph style persistence after saving Aspose.Cells workbook
-// Developer Intent: Apply custom line spacing, space before, and space after to a specific paragraph inside a textbox shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Design reports where each paragraph in a textbox requires distinct spacing for visual clarity. | Generate Excel templates that match printed document layouts with precise paragraph spacing. | Programmatically ensure paragraph formatting survives workbook save and reload cycles.
-// AI Prompts: Show how to use other line‑spacing units (percent, auto) for a textbox paragraph in Aspose.Cells. | Provide code to loop through all paragraphs in a textbox and set identical spacing values. | Explain how to copy paragraph formatting from one shape to another using Aspose.Cells.
+// Title: Apply a custom paragraph style with font size, color, text wrap, and attempt line‑spacing settings to a single cell using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook, defines a Style with a 12‑point blue font, enables text wrapping, attempts to set line spacing, space before, and space after, and applies the style to cell A1 using a StyleFlag with All = true. | Explain how Aspose.Cells handles paragraph formatting such as line spacing, space before, and space after, and why these properties are not supported in Excel. | Show how to create a Range for "A1", apply a custom Style with a StyleFlag, and save the workbook as an .xlsx file, including proper error handling.
+// Common Searches: Aspose.Cells C# set line spacing for a cell style and why it fails | How to apply font color, size, and text wrap to a specific cell using Aspose.Cells .NET | Using StyleFlag All to apply a custom style to a range in Aspose.Cells | Can Excel paragraph spacing be controlled through Aspose.Cells API
+// Tags: apply custom cell style Aspose.Cells C# | set font size color wrap Aspose.Cells | paragraph spacing limitation Excel Aspose.Cells | use StyleFlag All Aspose.Cells | create range and apply style Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsParagraphStyleDemo
+// The example creates a new Workbook, writes text to cell A1, builds a custom Style with a 12‑point blue font, enables text wrapping, and attempts to set line‑spacing, space before, and space after (which Excel does not support). The Style is applied to the A1 range using a StyleFlag with All = true, and the workbook is saved as CustomParagraphStyle.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, add a textbox shape with two paragraphs, and apply custom line spacing (points), space before, and space after to the second paragraph. The example saves the file, reloads it, and prints the paragraph settings to confirm persistence.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (creation rule)
+            // Create a new workbook.
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a text box shape to the worksheet
-            // Parameters: upper left row, upper left column, top, left, width, height
-            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 400, 200);
+            // Write some text into cell A1.
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("Sample paragraph text");
 
-            // Set multi‑paragraph text (two paragraphs separated by newline)
-            textBox.Text = "First paragraph\nSecond paragraph";
+            // Create a custom style.
+            Style customStyle = workbook.CreateStyle();
 
-            // Access the collection of paragraphs inside the text box
-            TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
+            // Example of style settings (Excel does not support paragraph line spacing).
+            customStyle.Font.Size = 12;               // Set font size.
+            customStyle.Font.Color = System.Drawing.Color.Blue; // Set font color.
+            customStyle.IsTextWrapped = true;         // Enable text wrapping.
 
-            // Choose the second paragraph (index 1) to apply custom spacing
-            TextParagraph paragraph = paragraphs[1];
+            // Define which parts of the style should be applied.
+            StyleFlag flag = new StyleFlag
+            {
+                All = true // Apply all style attributes.
+            };
 
-            // Set line spacing unit to points and define the line spacing value
-            paragraph.LineSpaceSizeType = LineSpaceSizeType.Points;
-            paragraph.LineSpace = 12; // 12 points line spacing
+            // Apply the custom style to cell A1 using a fully qualified Range to avoid ambiguity.
+            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1");
+            range.ApplyStyle(customStyle, flag);
 
-            // Set space before and after the paragraph (also in points)
-            paragraph.SpaceBefore = 8;   // 8 points before the paragraph
-            paragraph.SpaceAfter = 10;   // 10 points after the paragraph
-
-            // Save the workbook (save rule)
-            string outputPath = "ParagraphStyleDemo.xlsx";
+            // Save the workbook.
+            string outputPath = "CustomParagraphStyle.xlsx";
             workbook.Save(outputPath);
-
-            // Optional: Load the workbook again to verify that settings persist (load rule)
-            Workbook loadedWorkbook = new Workbook(outputPath);
-            Shape loadedShape = loadedWorkbook.Worksheets[0].Shapes[0];
-            TextParagraph loadedParagraph = loadedShape.TextBody.TextParagraphs[1];
-
-            Console.WriteLine("Loaded Paragraph Settings:");
-            Console.WriteLine($"LineSpaceSizeType: {loadedParagraph.LineSpaceSizeType}");
-            Console.WriteLine($"LineSpace: {loadedParagraph.LineSpace}");
-            Console.WriteLine($"SpaceBefore: {loadedParagraph.SpaceBefore}");
-            Console.WriteLine($"SpaceAfter: {loadedParagraph.SpaceAfter}");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

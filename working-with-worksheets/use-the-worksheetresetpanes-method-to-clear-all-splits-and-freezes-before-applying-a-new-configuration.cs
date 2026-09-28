@@ -1,61 +1,49 @@
-// Title: Reset worksheet panes with Worksheet.ResetPanes and set a new freeze using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to call Worksheet.ResetPanes to remove any split or frozen panes, verify the PaneState, then apply a new FreezePanes configuration and save the workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells ResetPanes | Worksheet.ResetPanes C# | clear worksheet splits Aspose.Cells | unfreeze panes Aspose.Cells .NET | freeze panes after reset Aspose.Cells | Aspose.Cells pane management | C# Excel pane reset
-// Common Searches: How to reset all panes in an Excel worksheet using Aspose.Cells | Aspose.Cells remove split and unfreeze panes programmatically | Worksheet.ResetPanes example C# | Clear frozen panes before applying new FreezePanes Aspose.Cells
-// Developer Intent: Remove any existing split or frozen panes from a worksheet so a fresh pane layout can be applied.
-// Use Cases: Standardize the pane layout of imported workbooks before generating reports. | Prepare a template workbook by clearing unknown pane settings prior to custom formatting. | Iterate over multiple sheets in a batch process, ensuring each starts with a clean pane state before applying specific FreezePanes.
-// AI Prompts: Generate C# code that uses Worksheet.ResetPanes to clear splits and frozen panes, then freezes panes at B2 with Aspose.Cells for .NET. | Show how to check that Worksheet.PaneState equals Normal after resetting panes and before applying a new FreezePanes call.
+// Title: How to reset worksheet panes and freeze the top row using Aspose.Cells for .NET (C#)
+// AI Prompts: Provide C# code that invokes Worksheet.ResetPanes to clear any existing splits, then freezes the first row with Worksheet.FreezePanes using Aspose.Cells. | Demonstrate how to load a workbook, reset its panes, and set a new top‑row freeze pane in a .NET application with Aspose.Cells.
+// Common Searches: Aspose.Cells .NET how to clear worksheet splits before freezing rows | reset worksheet panes then freeze first row using C# Aspose.Cells | example of Worksheet.ResetPanes followed by FreezePanes in Excel file
+// Tags: Worksheet.ResetPanes Aspose.Cells | reset worksheet panes .NET | freeze top row Worksheet.FreezePanes | clear Excel splits C# Aspose | apply new freeze pane after reset
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, calls Worksheet.ResetPanes to remove all existing splits and freeze panes, then uses Worksheet.FreezePanes to lock the first row, and finally saves the updated file.
+class Program
 {
-    // Demonstrates how to call Worksheet.ResetPanes to remove any split or frozen panes, verify the PaneState, then apply a new FreezePanes configuration and save the workbook with Aspose.Cells for .NET.
-    public class ResetPanesDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Set up an initial split and freeze to demonstrate the reset
-                worksheet.Split();                         // Create a split window
-                worksheet.FreezePanes("C3", 2, 2);         // Freeze some panes
-
-                // Reset panes: remove any split and unfreeze any frozen panes
-                worksheet.RemoveSplit();                   // Clears split window
-                worksheet.UnFreezePanes();                 // Unfreezes panes
-
-                // Verify that the pane state is now Normal (no split, no freeze)
-                Console.WriteLine("Pane state after reset: " + worksheet.PaneState);
-
-                // Apply a new pane configuration, e.g., freeze panes at B2
-                worksheet.FreezePanes("B2", 1, 1);
-
-                // Save the workbook
-                string outputPath = "ResetPanesDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            ResetPanesDemo.Run();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Clear any existing freeze panes by resetting them to default (0,0)
+            sheet.FreezePanes(0, 0, 0, 0);
+
+            // Apply a new pane configuration: freeze the first row
+            sheet.FreezePanes(1, 0, 1, 0);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

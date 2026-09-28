@@ -1,95 +1,50 @@
-// Title: C# Console App to Localize an Aspose.Cells Workbook via User‑Selected Language
-// Description: A console program that prompts the user to choose a target language (USA, Germany, France, or Japan), maps the selection to a CountryCode enum, sets Workbook.Settings.LanguageCode and Workbook.Settings.Region, displays the derived CultureInfo, adds sample date and numeric cells that follow the locale's formatting rules, and saves the workbook as LocalizedWorkbook.xlsx.
-// Keywords: Aspose.Cells | C# workbook localization | CountryCode enum | LanguageCode setting | Region setting | CultureInfo | console application | Excel regional formatting | date format localization | number format localization | user language selection
-// Common Searches: Aspose.Cells set workbook language code C# | How to change workbook region with Aspose.Cells | Console program to apply locale to Excel file using Aspose | C# select country code for Excel localization | Aspose.Cells CultureInfo example
-// Developer Intent: Build a C# console application that lets a user pick a language, applies the corresponding CountryCode to the workbook's LanguageCode and Region, demonstrates locale‑specific formatting, and saves the localized Excel file.
-// Use Cases: Prompt the user for a language choice, convert it to a CountryCode, and configure workbook.Settings.LanguageCode and workbook.Settings.Region before saving. | Show the CultureInfo name derived from the selected CountryCode to verify the applied locale. | Insert sample cells with dates and numbers that automatically adopt the region‑specific formatting of the chosen language. | Extend the solution to support additional locales by mapping new CountryCode values.
-// AI Prompts: Generate C# code that adds comprehensive validation and retry logic for user language selection in an Aspose.Cells localization console app. | Provide examples of customizing date and numeric format strings based on the selected CultureInfo within an Aspose.Cells workbook. | Explain how to programmatically enumerate all available CountryCode values in Aspose.Cells and present them as a dynamic menu for localization.
+// Title: C# console application that prompts for a culture code and localizes an Excel workbook with Aspose.Cells
+// AI Prompts: Write a C# console program that reads a culture identifier from the user, validates it with CultureInfo, assigns it to Workbook.Settings.CultureInfo, and saves the workbook using a filename that includes the culture name. | Modify an existing Aspose.Cells workbook loading routine to accept a user‑provided locale, apply the locale to the workbook's settings, and output the file with a locale‑specific suffix.
+// Common Searches: how to apply a user selected culture to an Excel workbook using Aspose.Cells in C# | C# console ask for language code and save localized Excel file | set Workbook.Settings.CultureInfo based on user input Aspose.Cells | save Excel workbook with locale identifier in filename .NET | validate culture code entered by user in a C# console app
+// Tags: Aspose.Cells set workbook cultureinfo | C# console apply locale to Excel workbook | localize Excel file using CultureInfo | save workbook with locale suffix | validate .NET culture code from input
 
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-namespace WorkbookLocalizationDemo
+namespace WorkbookLocalizationApp
 {
-    // A console program that prompts the user to choose a target language (USA, Germany, France, or Japan), maps the selection to a CountryCode enum, sets Workbook.Settings.LanguageCode and Workbook.Settings.Region, displays the derived CultureInfo, adds sample date and numeric cells that follow the locale's formatting rules, and saves the workbook as LocalizedWorkbook.xlsx.
+    // The example shows a C# console app that prompts the user for a culture code, validates it, loads an Excel workbook with Aspose.Cells, sets the workbook's CultureInfo to the selected locale, and saves the file with the culture name appended to the filename.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Prompt the user to select a target language (culture code)
+            Console.WriteLine("Enter the target language code (e.g., en-US, fr-FR, de-DE):");
+            string languageCode = Console.ReadLine();
+
+            // Validate the entered culture code
+            CultureInfo cultureInfo;
             try
             {
-                // Prompt user to select a target language (CountryCode)
-                Console.WriteLine("Select a target language for the workbook:");
-                Console.WriteLine("1. United States (USA)");
-                Console.WriteLine("2. Germany");
-                Console.WriteLine("3. France");
-                Console.WriteLine("4. Japan");
-                Console.Write("Enter the number of your choice: ");
-
-                string input = Console.ReadLine();
-                CountryCode selectedCode = CountryCode.Default;
-
-                switch (input)
-                {
-                    case "1":
-                        selectedCode = CountryCode.USA;
-                        break;
-                    case "2":
-                        selectedCode = CountryCode.Germany;
-                        break;
-                    case "3":
-                        selectedCode = CountryCode.France;
-                        break;
-                    case "4":
-                        selectedCode = CountryCode.Japan;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid selection. Using default settings.");
-                        break;
-                }
-
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Apply localization settings
-                workbook.Settings.LanguageCode = selectedCode; // UI language
-                workbook.Settings.Region = selectedCode;       // Regional formatting
-
-                // Show the CultureInfo derived from the selected region
-                CultureInfo ci = workbook.Settings.CultureInfo;
-                if (ci != null)
-                {
-                    Console.WriteLine($"CultureInfo for selected region: {ci.Name}");
-                }
-
-                // Add sample data to illustrate formatting
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Name = "Data";
-
-                // Date value (formatted according to region)
-                Cell dateCell = sheet.Cells["A1"];
-                dateCell.PutValue(new DateTime(2023, 12, 31));
-                Style dateStyle = dateCell.GetStyle();
-                dateStyle.Custom = "yyyy-mm-dd";
-                dateCell.SetStyle(dateStyle);
-
-                // Number value (region‑specific separators)
-                Cell numberCell = sheet.Cells["A2"];
-                numberCell.PutValue(1234567.89);
-                Style numberStyle = numberCell.GetStyle();
-                numberStyle.Custom = "#,##0.00";
-                numberCell.SetStyle(numberStyle);
-
-                // Save the workbook
-                string outputPath = "LocalizedWorkbook.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}' with language '{selectedCode}'.");
+                cultureInfo = new CultureInfo(languageCode);
             }
-            catch (Exception ex)
+            catch (CultureNotFoundException)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Invalid culture code. Using invariant culture.");
+                cultureInfo = CultureInfo.InvariantCulture;
             }
+
+            // Load the workbook (replace with your actual file path)
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
+
+            // Apply localization by setting the workbook's culture info
+            workbook.Settings.CultureInfo = cultureInfo;
+
+            // Optionally, you can also set the language for built‑in functions
+            // workbook.Settings.CultureInfo = new CultureInfo(languageCode);
+
+            // Save the localized workbook with a language‑specific file name
+            string outputPath = $"output_{cultureInfo.Name}.xlsx";
+            workbook.Save(outputPath);
+
+            Console.WriteLine($"Workbook saved with localization applied: {outputPath}");
         }
     }
 }

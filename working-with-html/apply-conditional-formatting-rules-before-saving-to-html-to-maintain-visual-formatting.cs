@@ -1,89 +1,65 @@
-// Title: C# – Export Excel to HTML with Conditional Formatting Preserved using Aspose.Cells
-// Description: Shows how to build a workbook, apply a conditional formatting rule (values > 5 highlighted in light‑green), set HtmlSaveOptions to retain merged cells, grid lines and styles, and save the result as HTML while keeping the visual formatting intact with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | conditional formatting | HTML export | HtmlSaveOptions | preserve cell styles | Excel to HTML | grid lines | merged cells | style preservation | programmatic Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells keep conditional formatting in HTML | Export Excel with colors to HTML .NET | HtmlSaveOptions preserve cell styles | C# conditional formatting to HTML | retain merged cells when converting Excel to HTML | Aspose.Cells HTML export example
-// Developer Intent: Add a conditional formatting rule to a worksheet and export it as HTML while maintaining the visual appearance.
-// Use Cases: Generate a web‑ready report where values above a threshold are highlighted. | Publish Excel data to a portal with grid lines and merged‑cell layout intact. | Automate creation of HTML dashboards that reflect Excel conditional styles.
-// AI Prompts: Provide a C# snippet that adds multiple conditional formatting rules and exports the workbook to HTML with Aspose.Cells. | Explain how to embed CSS in the HTML output while preserving conditional formatting using HtmlSaveOptions. | Show how to load an existing .xlsx file, apply a new conditional format, and save it as HTML with visual styles retained.
+// Title: Add red background conditional formatting for values greater than 50 and export the worksheet to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, fills column A with numbers, applies a conditional formatting rule that colors cells red when the value exceeds 50, and saves the workbook as an HTML file while preserving the formatting using Aspose.Cells. | Generate a C# example showing how to define a cell‑value based conditional format (greater than 50) with a solid red background for range A1:A10 and then convert the sheet to HTML via Aspose.Cells.
+// Common Searches: Aspose.Cells preserve conditional formatting when converting Excel to HTML in C# | C# example conditional formatting red background export to HTML using Aspose.Cells | how to apply cell value based conditional formatting before saving as HTML with Aspose.Cells .NET | export workbook to HTML with conditional rules applied in Aspose.Cells
+// Tags: conditional formatting >50 red background Aspose.Cells | export workbook to HTML preserving formatting Aspose.Cells C# | apply cell‑value conditional style range A1:A10 Aspose.Cells | Aspose.Cells HTML conversion with conditional rules | C# conditional formatting before HTML save Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingToHtml
+// Demonstrates creating a workbook, populating column A with numeric data, adding a conditional formatting rule that applies a solid red background to cells with values greater than 50, and saving the worksheet as an HTML file while retaining the formatting using Aspose.Cells for .NET.
+class Program
 {
-    // Shows how to build a workbook, apply a conditional formatting rule (values > 5 highlighted in light‑green), set HtmlSaveOptions to retain merged cells, grid lines and styles, and save the result as HTML while keeping the visual formatting intact with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (lifecycle: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data in column A (A1:A10)
+            for (int i = 0; i < 10; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data (values 1 to 10) in column A
-                for (int i = 0; i < 10; i++)
-                {
-                    sheet.Cells[i, 0].PutValue(i + 1);
-                }
-
-                // Add a conditional formatting rule for the range A1:A10
-                int cfIndex = sheet.ConditionalFormattings.Add(); // create a new CF entry
-                var cf = sheet.ConditionalFormattings[cfIndex];
-
-                // Define the target range using CellArea (A1:A10 => rows 0‑9, column 0)
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    StartColumn = 0,
-                    EndRow = 9,
-                    EndColumn = 0
-                };
-                cf.AddArea(area);
-
-                // Condition: cell value greater than 5
-                int conditionIndex = cf.AddCondition(
-                    FormatConditionType.CellValue,
-                    OperatorType.GreaterThan,
-                    "5",
-                    string.Empty); // second formula not required for this operator
-
-                // Define the style to apply (light green background)
-                Style style = workbook.CreateStyle();
-                style.ForegroundColor = Color.LightGreen;
-                style.Pattern = BackgroundType.Solid;
-                cf[conditionIndex].Style = style;
-
-                // Configure HTML save options to preserve visual formatting
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    MergeAreas = true,                     // Merge merged cells
-                    ExportActiveWorksheetOnly = false,    // Export whole workbook
-                    ExportGridLines = true,                // Include grid lines
-                    DisableCss = false,                    // Keep external CSS
-                    PresentationPreference = true,        // Presentation‑friendly output
-                    PageTitle = "Conditional Formatting Demo"
-                };
-
-                // Determine output path and ensure directory exists
-                string outputPath = "ConditionalFormatting.html";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as HTML
-                workbook.Save(outputPath, htmlOptions);
-                Console.WriteLine($"Workbook saved to '{outputPath}' with conditional formatting preserved.");
+                sheet.Cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
             }
-            catch (Exception ex)
+
+            // Add a conditional formatting collection to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+
+            // Define the range to which the formatting will apply (A1:A10)
+            CellArea area = new CellArea
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+                StartRow = 0,
+                EndRow = 9,
+                StartColumn = 0,
+                EndColumn = 0
+            };
+            cfCollection.AddArea(area);
+
+            // Create a condition: cell value greater than 50
+            int conditionIndex = cfCollection.AddCondition(
+                FormatConditionType.CellValue,
+                OperatorType.GreaterThan,
+                "50",
+                null);
+            FormatCondition condition = cfCollection[conditionIndex];
+
+            // Define the style to apply when the condition is met (red background)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Red;
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
+
+            // Save the workbook as HTML (lifecycle: save)
+            workbook.Save("ConditionalFormattingOutput.html", SaveFormat.Html);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

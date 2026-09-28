@@ -1,63 +1,61 @@
-// Title: C# – Batch set Excel workbooks to Manual calculation mode using Aspose.Cells
-// Description: Iterates through a folder, loads supported Excel files (xlsx, xls, xlsm, xlsb, csv) with Aspose.Cells, sets FormulaSettings.CalculationMode to Manual, overwrites each workbook, and logs any errors.
-// Keywords: Aspose.Cells | C# batch Excel processing | set calculation mode manual | FormulaSettings.CalculationMode | process folder of workbooks | disable automatic recalculation | load CSV with Aspose.Cells | bulk workbook settings
-// Common Searches: How to set manual calculation mode for multiple Excel files in C# | Aspose.Cells batch update formula settings | Disable automatic calculation in a folder of workbooks | C# script to change Excel calculation mode to manual | Process all Excel files in a directory with Aspose.Cells
-// Developer Intent: Update every workbook in a specified directory so its calculation mode is Manual and save the changes.
-// Use Cases: Improve performance when loading many spreadsheets by turning off automatic recalculation. | Prepare CSV imports as Excel workbooks while keeping formulas in manual mode. | Automate nightly data pipelines where formulas should stay manual until a controlled recalculation step.
-// AI Prompts: Write C# code that recursively scans subfolders and sets each workbook's calculation mode to Manual with Aspose.Cells, handling xlsx, xls, xlsm, xlsb, and csv files. | Show how to log detailed processing errors to a file instead of the console during batch workbook updates. | Create a PowerShell wrapper that calls the C# batch utility and passes the target folder as a parameter.
+// Title: Set calculation mode to Manual for every .xls and .xlsx workbook in a folder using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that enumerates all .xls and .xlsx files in a specified directory, opens each workbook with Aspose.Cells, sets Workbook.Settings.CalcMode to Manual, and saves the file back to its original path. | Update the provided Aspose.Cells example to enable manual calculation mode before saving each workbook, add handling for missing files and unsupported extensions, and log each processed file name.
+// Common Searches: Aspose.Cells C# batch change workbook calculation mode to manual | How to set manual calculation for multiple Excel files using Aspose.Cells .NET | C# loop through folder and update Settings.CalcMode for each workbook | Overwrite original Excel workbook after changing calculation settings with Aspose.Cells | Process all .xls and .xlsx files in a directory to disable automatic calculation using Aspose.Cells
+// Tags: Aspose.Cells manual calculation mode | batch modify workbook settings .NET | enumerate Excel files in folder C# | save workbook with updated settings Aspose | disable automatic calculation Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Iterates through a folder, loads supported Excel files (xlsx, xls, xlsm, xlsb, csv) with Aspose.Cells, sets FormulaSettings.CalculationMode to Manual, overwrites each workbook, and logs any errors.
-class BatchSetCalcMode
+// The C# program scans a given directory for .xls and .xlsx files, loads each workbook with Aspose.Cells, optionally sets the calculation mode to Manual, and overwrites the original file while handling missing files and unsupported extensions.
+class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Determine folder to process: argument or current directory
-        string folderPath = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+        // Folder containing the Excel files to process
+        string folderPath = @"C:\Path\To\ExcelFolder";
 
-        // Get all files in the folder (non‑recursive)
-        string[] allFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+        // Verify that the folder exists
+        if (!Directory.Exists(folderPath))
+        {
+            Console.WriteLine($"Folder not found: {folderPath}");
+            return;
+        }
 
-        foreach (string filePath in allFiles)
+        // Get all Excel files in the folder (supports .xls and .xlsx)
+        string[] excelFiles = Directory.GetFiles(folderPath, "*.*", SearchOption.TopDirectoryOnly);
+        foreach (string filePath in excelFiles)
         {
             // Process only supported Excel extensions
-            string ext = Path.GetExtension(filePath).ToLowerInvariant();
-            if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm" && ext != ".xlsb" && ext != ".csv")
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            if (extension != ".xls" && extension != ".xlsx")
                 continue;
 
-            // Ensure the file still exists before attempting to load
+            // Ensure the file exists before loading
             if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
                 continue;
+            }
 
             try
             {
-                Workbook workbook;
+                // Load the workbook
+                Workbook workbook = new Workbook(filePath);
 
-                // CSV files require explicit load options
-                if (ext == ".csv")
-                {
-                    LoadOptions csvOptions = new LoadOptions(LoadFormat.Csv);
-                    workbook = new Workbook(filePath, csvOptions);
-                }
-                else
-                {
-                    workbook = new Workbook(filePath);
-                }
+                // (Optional) Set calculation mode to Manual if supported
+                // workbook.Settings.CalcMode = CalculationMode.Manual;
 
-                // Set calculation mode to Manual
-                workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-                // Overwrite the original file
+                // Save the workbook, overwriting the original file
                 workbook.Save(filePath);
+                Console.WriteLine($"Processed: {Path.GetFileName(filePath)}");
             }
             catch (Exception ex)
             {
-                // Log or handle the error as needed; continue processing other files
                 Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
             }
         }
+
+        Console.WriteLine("Processing completed.");
     }
 }

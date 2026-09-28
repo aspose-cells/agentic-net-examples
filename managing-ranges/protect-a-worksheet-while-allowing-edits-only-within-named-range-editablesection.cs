@@ -1,52 +1,54 @@
-// Title: C# – Protect an Aspose.Cells worksheet while allowing edits only in a named AllowEditRange
-// Description: Creates a new workbook, defines an AllowEditRange called "EditableSection" (cells B2:D10), optionally assigns a password to the range, protects the entire worksheet with all protection types, and saves the file as ProtectedEditableSection.xlsx.
-// Keywords: Aspose.Cells | C# worksheet protection | AllowEditRange | editable range in protected sheet | Excel API password protection | protect sheet except specific cells | Aspose.Cells Protect method | range‑level security | Excel template locking
-// Common Searches: Aspose.Cells protect sheet but keep a range editable | C# AllowEditRange password Aspose.Cells | how to lock all cells except B2:D10 using Aspose.Cells | protect worksheet with editable section Aspose .NET | Aspose.Cells set editable range on protected workbook
-// Developer Intent: Secure the entire worksheet while permitting user edits only within the named range "EditableSection".
-// Use Cases: Distribute a financial model where calculation cells are locked and input cells are editable. | Create a data‑entry template that restricts users to specific fields while preserving formulas. | Generate a report where only the summary section can be modified after the rest of the sheet is protected.
-// AI Prompts: Write C# code with Aspose.Cells to protect a worksheet and define an AllowEditRange named "EditableSection" covering B2:D10, including a password for the range. | Explain how to add multiple AllowEditRanges to a protected worksheet in Aspose.Cells and manage individual passwords. | Show how to programmatically unprotect a sheet, change the coordinates of an existing AllowEditRange, and re‑apply protection using Aspose.Cells.
+// Title: How to protect an Excel worksheet with Aspose.Cells for .NET while keeping only the A1:B2 range editable
+// AI Prompts: Write C# code using Aspose.Cells to lock an entire worksheet with a password but unlock cells A1:B2 for editing. | Show the steps to create an unlocked style, apply it to a specific range, and then call Worksheet.Protect with ProtectionType.All in Aspose.Cells. | Generate a complete example that creates a workbook, defines a named editable range, unlocks it, protects the sheet, and saves the file.
+// Common Searches: Aspose.Cells C# protect worksheet and allow editing only in a specific range | How to unlock cells A1:B2 before applying worksheet protection with Aspose.Cells | C# example for setting password protection on Excel sheet while keeping certain cells editable using Aspose.Cells | Apply unlocked style to a range then protect sheet Aspose.Cells .NET | Worksheet.Protect with ProtectionType.All and unlocked cells Aspose.Cells tutorial
+// Tags: worksheet protection with unlocked range Aspose.Cells | unlock cells A1:B2 using StyleFlag Aspose.Cells | apply password to Excel workbook Aspose.Cells .NET | create unlocked style for specific range Aspose.Cells | protect sheet while allowing edits in defined range C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, unlocks cells A1:B2 by applying an unlocked style, then protects the entire worksheet with a password using Worksheet.Protect, allowing only the specified range to be edited, and saves the file as an .xlsx.
+class Program
 {
-    // Creates a new workbook, defines an AllowEditRange called "EditableSection" (cells B2:D10), optionally assigns a password to the range, protects the entire worksheet with all protection types, and saves the file as ProtectedEditableSection.xlsx.
-    public class ProtectWorksheetWithEditableRange
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created and saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the area that should remain editable (e.g., B2:D10)
-            // Add an allow‑edit range named "EditableSection"
-            // Parameters: name, startRow, startColumn, endRow, endColumn (zero‑based indexes)
-            int editableRangeIndex = worksheet.AllowEditRanges.Add("EditableSection", 1, 1, 9, 3);
-            ProtectedRange editableRange = worksheet.AllowEditRanges[editableRangeIndex];
+            // Define the range A1:B2 that should remain editable (rows 0-1, columns 0-1)
+            Aspose.Cells.Range editableRange = sheet.Cells.CreateRange(0, 0, 2, 2);
 
-            // Optional: set a password for the editable range if you want extra security
-            // editableRange.Password = "rangePassword";
+            // Create a style that unlocks cells
+            Style unlockedStyle = workbook.CreateStyle();
+            unlockedStyle.IsLocked = false;
 
-            // Protect the entire worksheet (all protection types)
-            worksheet.Protect(ProtectionType.All);
+            // Apply the style to the defined range (apply all style attributes)
+            StyleFlag flag = new StyleFlag { All = true };
+            editableRange.ApplyStyle(unlockedStyle, flag);
 
-            // Save the workbook
-            workbook.Save("ProtectedEditableSection.xlsx");
+            // Protect the worksheet while allowing edits only in unlocked cells
+            // The Protect method requires the old password parameter; pass null if not needed
+            sheet.Protect(ProtectionType.All, "YourPassword", null);
+
+            // Save the protected workbook
+            string outputPath = "ProtectedWorkbook.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

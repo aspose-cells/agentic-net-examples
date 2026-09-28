@@ -1,40 +1,30 @@
-// Title: C# – Convert Excel Workbook to Pipe‑Delimited TXT with Aspose.Cells
-// Description: Shows how to create or load a workbook, set TxtSaveOptions.SeparatorString to "|" and Encoding to UTF‑8, and save the file as a pipe‑delimited text document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# TxtSaveOptions | pipe delimited txt | custom delimiter | Excel to TXT conversion | SaveFormat.Txt | UTF-8 encoding | export Excel as pipe separated | Aspose.Cells .NET
-// Common Searches: Aspose.Cells save workbook as pipe delimited txt | C# set custom separator for TxtSaveOptions | How to export Excel to pipe separated file using Aspose | TxtSaveOptions separator string example | Convert .xlsx to .txt with | delimiter in .NET
-// Developer Intent: Create a pipe‑separated text file from an Excel workbook using Aspose.Cells in C#.
-// Use Cases: Feed data to legacy applications that require pipe‑separated values. | Generate UTF‑8 delimited files for data pipelines or third‑party services. | Produce custom‑delimited reports directly from Excel without manual CSV conversion. | Prepare input files for mainframe or ETL tools that expect a ‘|’ delimiter.
-// AI Prompts: Show me how to change the delimiter to a semicolon in the TxtSaveOptions code. | Provide an example that loads an existing .xlsx file and saves it as a pipe‑delimited TXT while preserving formulas. | Explain how to configure TxtSaveOptions to export only selected columns with a custom delimiter. | Give code to include only column headers in the output pipe‑delimited file.
+// Title: How to convert an .xlsx workbook to a pipe‑delimited .txt file with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, sets TxtSaveOptions.SeparatorString to "|", and saves the workbook as a pipe‑separated text file. | Show how to set TxtSaveOptions.Encoding to Encoding.UTF8 and define a custom field delimiter for exporting Excel data to a .txt file with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# export Excel data as pipe delimited text | Set delimiter for TxtSaveOptions when saving workbook as .txt | Convert .xlsx to pipe delimited .txt using Aspose.Cells .NET | How to specify UTF‑8 encoding for text export with Aspose.Cells
+// Tags: Aspose.Cells TxtSaveOptions pipe delimiter | C# generate pipe delimited text from Excel | Aspose.Cells text export encoding option | Save workbook as .txt with custom separator | Excel to pipe delimited file using .NET
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-// Shows how to create or load a workbook, set TxtSaveOptions.SeparatorString to "|" and Encoding to UTF‑8, and save the file as a pipe‑delimited text document using Aspose.Cells for .NET.
-class Program
+// The example loads an Excel workbook with Aspose.Cells, configures TxtSaveOptions to use a pipe (|) as the field separator and UTF‑8 encoding, and saves the workbook as a pipe‑delimited text file.
+class ConvertExcelToPipeDelimited
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the source Excel workbook
+        string sourcePath = "input.xlsx";
+        Workbook workbook = new Workbook(sourcePath);
 
-        // Populate some sample data
-        sheet.Cells["A1"].PutValue("Name");
-        sheet.Cells["B1"].PutValue("Age");
-        sheet.Cells["A2"].PutValue("John");
-        sheet.Cells["B2"].PutValue(30);
-        sheet.Cells["A3"].PutValue("Jane");
-        sheet.Cells["B3"].PutValue(25);
-
-        // Configure text save options with a pipe (|) as the delimiter
-        TxtSaveOptions txtOptions = new TxtSaveOptions();
-        txtOptions.SeparatorString = "|";   // Set custom separator
-        txtOptions.Encoding = Encoding.UTF8; // Optional: set encoding
+        // Set up text save options with a pipe (|) as the delimiter
+        TxtSaveOptions saveOptions = new TxtSaveOptions();
+        saveOptions.SeparatorString = "|";
+        saveOptions.Encoding = Encoding.UTF8; // optional, ensures UTF‑8 output
 
         // Save the workbook as a pipe‑delimited TXT file
-        workbook.Save("output.txt", txtOptions);
+        string destinationPath = "output.txt";
+        workbook.Save(destinationPath, saveOptions);
 
-        Console.WriteLine("Workbook successfully saved as pipe‑delimited TXT.");
+        Console.WriteLine($"Workbook successfully converted to pipe‑delimited text file: {destinationPath}");
     }
 }

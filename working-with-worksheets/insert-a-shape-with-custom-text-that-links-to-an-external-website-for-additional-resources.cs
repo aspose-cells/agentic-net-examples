@@ -1,57 +1,45 @@
-// Title: Add a Rectangle Shape with Custom Text and an External Hyperlink using Aspose.Cells for .NET (C#)
-// Description: This example creates a new workbook, inserts a rectangle shape on the first worksheet, sets the shape's caption to "Visit Aspose Documentation", formats the text in blue and underlined, attaches a hyperlink to https://docs.aspose.com/cells/net/, and saves the file as ShapeWithHyperlink.xlsx.
-// Keywords: Aspose.Cells add shape C# | Excel rectangle shape hyperlink | Aspose.Cells set shape text color | C# Aspose.Cells external link | Insert shape with hyperlink Aspose | Aspose.Cells shape formatting
-// Common Searches: how to add a clickable shape in Excel with Aspose.Cells | Aspose.Cells C# rectangle shape with URL | format shape text and add hyperlink Aspose.Cells | Aspose.Cells add shape and link to website
-// Developer Intent: Generate a rectangle shape, apply custom text styling, and bind an external URL to the shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Create a “Help” button in automated reports that opens the online API guide. | Embed quick‑access links to dashboards or external tools directly within generated workbooks. | Design interactive call‑to‑action shapes in templates that redirect users to web forms or documentation.
-// AI Prompts: Write C# code with Aspose.Cells to insert a rectangle shape, set its caption, apply blue underlined formatting, and add a hyperlink to an external URL. | Explain how to calculate shape position and size based on cell coordinates in Aspose.Cells. | Show how to add multiple shapes, each with a different hyperlink, to the same worksheet using Aspose.Cells for .NET.
+// Title: Add a rectangle shape with custom text and an external hyperlink to an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, insert a rectangle shape at a specific cell, set its displayed text, and attach a hyperlink to https://www.example.com using the Aspose.Cells C# API. | Generate an Excel file where a shape acts as a clickable link by configuring Shape.Text and Shape.Hyperlink.Address with Aspose.Cells in .NET. | Write C# code that adds a rectangle shape to the first worksheet, assigns a custom caption, links it to an external URL, and saves the workbook as an Xlsx file.
+// Common Searches: Aspose.Cells C# add rectangle shape with hyperlink to Excel file | how to set hyperlink on a shape using Aspose.Cells .NET | create clickable shape in Excel with Aspose.Cells API | example of inserting a shape with custom text and link in C# Aspose.Cells
+// Tags: shape insertion with hyperlink Aspose.Cells | custom text on Excel shape .NET | hyperlink property on Aspose.Cells shape | save workbook containing linked shape Xlsx | Aspose.Cells shape API usage example
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The sample creates a new workbook, accesses the first worksheet, adds a rectangle shape at row 1, column 0 with defined dimensions, sets its text to "Click here for more resources", assigns a hyperlink pointing to https://www.example.com, and saves the file as ShapeWithLink.xlsx.
+class Program
 {
-    // This example creates a new workbook, inserts a rectangle shape on the first worksheet, sets the shape's caption to "Visit Aspose Documentation", formats the text in blue and underlined, attaches a hyperlink to https://docs.aspose.com/cells/net/, and saves the file as ShapeWithHyperlink.xlsx.
-    class InsertShapeWithHyperlink
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape to the worksheet
-                // Parameters: shape type, upper left row, upper left column,
-                // upper left row offset (pixels), upper left column offset (pixels),
-                // height (pixels), width (pixels)
-                RectangleShape shape = (RectangleShape)sheet.Shapes.AddShape(
-                    MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
+            // Add a rectangle shape.
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1, 0,                     // upper‑left row and offset
+                1, 0,                     // upper‑left column and offset
+                200, 50);                 // width and height
 
-                // Set custom text for the shape
-                shape.Text = "Visit Aspose Documentation";
+            // Set custom text inside the shape.
+            shape.Text = "Click here for more resources";
 
-                // Add a hyperlink to the shape that points to an external website
-                shape.AddHyperlink("https://docs.aspose.com/cells/net/");
+            // Assign a hyperlink to the shape by setting its Address property.
+            shape.Hyperlink.Address = "https://www.example.com";
 
-                // Format the text: make it blue and underlined
-                shape.Font.Color = Color.Blue;
-                shape.Font.Underline = FontUnderlineType.Single;
-
-                // Save the workbook to a file
-                string outputPath = "ShapeWithHyperlink.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook.
+            string outputPath = "ShapeWithLink.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

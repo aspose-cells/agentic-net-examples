@@ -1,101 +1,89 @@
-// Title: C# – Convert HTML to Excel with Aspose.Cells and keep the body background image as worksheet background
-// Description: A complete C# example that loads an HTML file into an Aspose.Cells Workbook, extracts the <body> background image (from a background attribute or CSS background‑image style), resolves relative paths, inserts the image as a picture on each worksheet, and saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells | HTML to Excel conversion | C# | .NET | worksheet background image | preserve HTML background | LoadOptions Html | SaveFormat Xlsx | regular expression image extraction | batch HTML to XLSX
-// Common Searches: Aspose.Cells keep HTML body background when converting to XLSX | C# add worksheet background picture after loading HTML | extract background-image URL from HTML for Excel workbook | convert HTML to Excel with background image using Aspose.Cells | load HTML with background attribute in Aspose.Cells .NET
-// Developer Intent: Insert the HTML page’s background image into every worksheet of the generated Excel file.
-// Use Cases: Create branded Excel reports that retain a logo or watermark defined as a page background in an HTML template. | Generate printable spreadsheets that visually match a web form by preserving its background image during conversion. | Automate batch conversion of multiple HTML files to Excel while automatically applying detected background images to each worksheet.
-// AI Prompts: Write C# code with Aspose.Cells to load an HTML file, detect the <body> background image (attribute or CSS), and add it as a worksheet background before saving as XLSX. | Explain how to resolve relative image paths when converting HTML to Excel using Aspose.Cells so the picture appears on all worksheets. | Provide a step‑by‑step guide for extracting a background‑image URL from HTML using regular expressions and applying it to a workbook with Aspose.Cells.
+// Title: Convert HTML to an Excel workbook and preserve CSS background images as worksheet backgrounds using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that reads an HTML file, parses the first CSS background‑image URL, loads the HTML into an Aspose.Cells Workbook with HtmlLoadOptions, inserts the image as a picture on every worksheet, and saves the workbook as an XLSX file. | Show how to programmatically set a worksheet background picture in Aspose.Cells after converting HTML to a workbook, handling both absolute and relative image paths.
+// Common Searches: how to keep background image when converting html to excel with Aspose.Cells C# | c# parse CSS background-image URL and apply as worksheet background in Aspose.Cells | Aspose.Cells HtmlLoadOptions preserve CSS background image in generated XLSX | add same picture to all worksheets after loading html file in Aspose.Cells | convert html file to xlsx and set worksheet background picture using .NET
+// Tags: Aspose.Cells HTML to XLSX conversion with background image | C# parse CSS for background-image URL | apply background picture to worksheets Aspose.Cells | use HtmlLoadOptions for HTML import Aspose.Cells | insert image into all worksheets via Pictures.Add
 
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// A complete C# example that loads an HTML file into an Aspose.Cells Workbook, extracts the <body> background image (from a background attribute or CSS background‑image style), resolves relative paths, inserts the image as a picture on each worksheet, and saves the workbook as an XLSX file.
+// The example reads an HTML file, extracts the first CSS background‑image URL (handling relative paths), loads the HTML into an Aspose.Cells Workbook using HtmlLoadOptions, adds the image as a picture anchored at cell A1 on each worksheet, and saves the result as an XLSX workbook.
 class HtmlToExcelWithBackground
 {
     static void Main()
     {
-        // Paths for input HTML and output Excel files
-        string htmlFilePath = "input.html";
-        string excelFilePath = "output.xlsx";
-
         try
         {
-            // Verify that the HTML file exists
-            if (!File.Exists(htmlFilePath))
-            {
-                Console.WriteLine($"HTML file not found: {htmlFilePath}");
-                return;
-            }
+            // Path to the source HTML file
+            string htmlPath = @"C:\Input\sample.html";
 
-            // Load the HTML file into a workbook
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-            Workbook workbook = new Workbook(htmlFilePath, loadOptions);
+            // Path where the resulting Excel file will be saved
+            string excelPath = @"C:\Output\result.xlsx";
 
-            // ------------------------------------------------------------
-            // Extract background image URL from the HTML file (simple approach)
-            // Supports <body background="image.jpg"> or CSS style:
-            //   <body style="background-image:url('image.jpg')">
-            // ------------------------------------------------------------
-            string htmlContent = File.ReadAllText(htmlFilePath);
+            // Verify that the HTML source file exists
+            if (!File.Exists(htmlPath))
+                throw new FileNotFoundException("HTML source file not found.", htmlPath);
+
+            // --------------------------------------------------------------------
+            // 1. Load the HTML content into a string
+            // --------------------------------------------------------------------
+            string htmlContent = File.ReadAllText(htmlPath);
+
+            // --------------------------------------------------------------------
+            // 2. Extract the first background-image URL from the HTML (if any)
+            // --------------------------------------------------------------------
             string bgImagePath = null;
-
-            // Try <body background="...">
-            Match match = Regex.Match(
+            var match = Regex.Match(
                 htmlContent,
-                @"<body[^>]*\sbackground\s*=\s*[""']([^""']+)[""']",
+                @"background-image\s*:\s*url\(['""]?(?<url>[^'"")]+)['""]?\)",
                 RegexOptions.IgnoreCase);
             if (match.Success)
             {
-                bgImagePath = match.Groups[1].Value;
-            }
-            else
-            {
-                // Try CSS background-image in style attribute
-                match = Regex.Match(
-                    htmlContent,
-                    @"<body[^>]*\sstyle\s*=\s*[""'][^""']*background-image\s*:\s*url\(['""]?([^'"")]+)['""]?\)[^""']*[""']",
-                    RegexOptions.IgnoreCase);
-                if (match.Success)
+                bgImagePath = match.Groups["url"].Value;
+                // If the URL is relative, combine it with the HTML file directory
+                if (!Path.IsPathRooted(bgImagePath))
                 {
-                    bgImagePath = match.Groups[1].Value;
+                    string htmlDir = Path.GetDirectoryName(htmlPath) ?? string.Empty;
+                    bgImagePath = Path.GetFullPath(Path.Combine(htmlDir, bgImagePath));
                 }
             }
 
-            // If a background image was found, insert it into each worksheet
-            if (!string.IsNullOrEmpty(bgImagePath))
-            {
-                // Resolve relative paths based on the HTML file location
-                string resolvedPath = Path.IsPathRooted(bgImagePath)
-                    ? bgImagePath
-                    : Path.Combine(Path.GetDirectoryName(htmlFilePath) ?? string.Empty, bgImagePath);
+            // --------------------------------------------------------------------
+            // 3. Load the HTML into a new Workbook instance
+            // --------------------------------------------------------------------
+            // Aspose.Cells loads HTML from a file; write the HTML string to a temp file
+            string tempHtmlPath = Path.GetTempFileName();
+            File.WriteAllText(tempHtmlPath, htmlContent);
+            var loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(tempHtmlPath, loadOptions);
+            File.Delete(tempHtmlPath); // clean up temporary file
 
-                if (File.Exists(resolvedPath))
+            // --------------------------------------------------------------------
+            // 4. If a background image was found, add it as a picture to each worksheet
+            // --------------------------------------------------------------------
+            if (!string.IsNullOrEmpty(bgImagePath) && File.Exists(bgImagePath))
+            {
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        // Insert the image as a picture covering the sheet (top‑left cell 0,0)
-                        sheet.Pictures.Add(0, 0, resolvedPath);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Background image file not found: {resolvedPath}");
+                    // Add the image as a picture anchored at the top‑left corner (cell A1)
+                    sheet.Pictures.Add(0, 0, bgImagePath);
                 }
             }
-            else
-            {
-                Console.WriteLine("No background image detected in the HTML file.");
-            }
 
-            // Save the workbook as an Excel file
-            workbook.Save(excelFilePath, SaveFormat.Xlsx);
-            Console.WriteLine($"Conversion completed. Excel saved to: {excelFilePath}");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(excelPath) ?? string.Empty;
+            if (!Directory.Exists(outputDir) && !string.IsNullOrEmpty(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // --------------------------------------------------------------------
+            // 5. Save the workbook to an Excel file
+            // --------------------------------------------------------------------
+            workbook.Save(excelPath, SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

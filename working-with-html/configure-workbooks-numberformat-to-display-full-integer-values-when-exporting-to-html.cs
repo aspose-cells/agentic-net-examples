@@ -1,38 +1,26 @@
-// Title: Force integer display (no scientific notation) when saving a workbook to HTML with Aspose.Cells for .NET
-// Description: Shows how to apply the built‑in integer format (Number = 1, pattern "0") to a cell range via Style and StyleFlag, then export the workbook as HTML so large numbers are rendered in full without scientific notation.
-// Keywords: Aspose.Cells .NET | C# HTML export | NumberFormat integer | prevent scientific notation | StyleFlag number format | built‑in format 0 | cell styling for HTML | preserve numeric display | export Excel to HTML | global developer guide
-// Common Searches: Aspose.Cells set integer format before HTML export | how to stop scientific notation in HTML output Aspose.Cells | apply built‑in number format 0 to range C# | StyleFlag only number format Aspose.Cells example | save workbook as HTML with full integer values
-// Developer Intent: Apply a plain integer NumberFormat to specific cells so the HTML output shows the complete numeric value.
-// Use Cases: Web reports that must display exact ID or account numbers without scientific notation. | Publishing Excel‑based dashboards to HTML while keeping totals and counts as whole numbers. | Generating product‑code tables for e‑commerce sites where codes are large integers.
-// AI Prompts: Provide C# code that sets the integer NumberFormat ("0") on a range using Aspose.Cells and then saves the workbook as HTML. | Explain how StyleFlag can be used to modify only the number format of cells in Aspose.Cells for .NET. | Show how HtmlSaveOptions respects cell NumberFormat to prevent scientific notation in the generated HTML.
+// Title: Set a workbook’s default style to an integer‑only number format and export it as HTML with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to assign the custom number format "0" to the workbook’s DefaultStyle and then save the workbook as HTML. | Configure HtmlSaveOptions after applying a whole‑number display format to all cells to generate an HTML file without decimal or scientific notation.
+// Common Searches: Aspose.Cells C# export Excel to HTML with integer only number format | How to set default number format to 0 for HTML conversion using Aspose.Cells .NET | Prevent decimals and scientific notation when saving workbook as HTML with Aspose.Cells | Apply custom number format to entire workbook before HTML export in Aspose.Cells | C# Aspose.Cells default style number format for HTML output
+// Tags: default style custom number format Aspose.Cells | HTML export integer number format C# | Aspose.Cells prevent scientific notation HTML | set workbook default style Aspose.Cells .NET | custom number format 0 Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Shows how to apply the built‑in integer format (Number = 1, pattern "0") to a cell range via Style and StyleFlag, then export the workbook as HTML so large numbers are rendered in full without scientific notation.
+// The example loads an Excel workbook, changes its DefaultStyle to use the custom number format "0" (displaying whole integers only), and then saves the workbook as an HTML file with HtmlSaveOptions, ensuring numbers appear without decimals or scientific notation.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Populate cells with integer values that could be displayed in scientific notation by default
-        worksheet.Cells["A1"].PutValue(123456789);
-        worksheet.Cells["A2"].PutValue(9876543210L);
+        // Configure the default style to use a custom number format that shows full integers
+        Style defaultStyle = workbook.DefaultStyle;
+        defaultStyle.Custom = "0"; // Displays numbers without decimals or scientific notation
+        workbook.DefaultStyle = defaultStyle;
 
-        // Create a style that forces integer display (no decimal places)
-        Style integerStyle = workbook.CreateStyle();
-        integerStyle.Number = 1; // Built‑in format "0" (plain integer)
-
-        // Apply the style only to the number format of the target range
-        StyleFlag flag = new StyleFlag();
-        flag.NumberFormat = true;
-        worksheet.Cells.CreateRange("A1:A2").ApplyStyle(integerStyle, flag);
-
-        // Save the workbook as HTML
+        // Save the workbook as HTML with the applied number format
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        workbook.Save("IntegerValues.html", htmlOptions);
+        workbook.Save("output.html", htmlOptions);
     }
 }

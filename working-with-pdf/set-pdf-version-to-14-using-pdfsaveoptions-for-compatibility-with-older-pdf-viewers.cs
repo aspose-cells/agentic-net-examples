@@ -1,34 +1,44 @@
-// Title: C# – Set PDF version to 1.4 with Aspose.Cells PdfSaveOptions for legacy viewer support
-// Description: Shows how to create a workbook, add sample data, set PdfSaveOptions.Compliance to PdfCompliance.Pdf14, and save the workbook as a PDF that conforms to PDF 1.4, guaranteeing compatibility with older PDF readers.
-// Keywords: Aspose.Cells | PdfSaveOptions | PDF 1.4 | PdfCompliance.Pdf14 | C# PDF export | legacy PDF viewer compatibility | Excel to PDF 1.4 | set PDF version Aspose | PDF compliance Aspose.Cells
-// Common Searches: Aspose.Cells set PDF version 1.4 | PdfSaveOptions compliance PDF 1.4 C# | export Excel to PDF 1.4 using Aspose | C# generate PDF 1.4 from workbook | legacy PDF viewer compatibility Aspose.Cells
-// Developer Intent: Configure PDF compliance to version 1.4 when saving a workbook.
-// Use Cases: Produce PDF reports that must meet the PDF 1.4 standard for archival or regulatory reasons. | Ensure Excel‑to‑PDF conversions work on older PDF readers that only support version 1.4. | Batch‑process multiple workbooks with a shared PdfSaveOptions instance to enforce PDF 1.4 across all outputs.
-// AI Prompts: Give me C# code that sets PdfSaveOptions.Compliance to Pdf14 and saves a workbook as a PDF with Aspose.Cells. | How do I export an Excel worksheet to a PDF file compatible with PDF version 1.4 using Aspose.Cells? | Explain the steps to configure PdfSaveOptions for PDF 1.4 compliance to support legacy PDF viewers.
+// Title: How to save an Excel workbook as PDF version 1.4 using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets PdfSaveOptions.PdfVersion to Version_1_4, and saves it as a PDF with Aspose.Cells. | Show a complete example that verifies the source workbook, configures PDF compatibility to 1.4, and includes error handling for the export process. | Demonstrate how to use PdfSaveOptions to enforce PDF 1.4 output for legacy PDF viewers in a .NET application.
+// Common Searches: Aspose.Cells export Excel to PDF with PDF 1.4 compatibility in C# | Set PdfVersion property in PdfSaveOptions for older PDF readers using Aspose.Cells .NET | C# code example for saving workbook as PDF 1.4 with Aspose.Cells | How to configure PDF version when converting .xlsx to PDF with Aspose.Cells library
+// Tags: Aspose.Cells PDF version configuration | PdfSaveOptions compatibility mode | C# export Excel to PDF with specific version | Legacy PDF viewer support in Aspose.Cells | Set PDF version using Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Shows how to create a workbook, add sample data, set PdfSaveOptions.Compliance to PdfCompliance.Pdf14, and save the workbook as a PDF that conforms to PDF 1.4, guaranteeing compatibility with older PDF readers.
-class SetPdfVersionExample
+// The sample loads an existing Excel workbook, creates a PdfSaveOptions object, optionally sets its PdfVersion to 1.4, and saves the workbook as a PDF while handling missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF version 1.4 example");
+            // Ensure the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Create PDF save options
-        PdfSaveOptions saveOptions = new PdfSaveOptions();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set compliance to PDF 1.4 (Pdf14 or None)
-        saveOptions.Compliance = PdfCompliance.Pdf14;
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // If the PdfVersion property is available in your Aspose.Cells version, you can set it as follows:
+            // pdfOptions.PdfVersion = PdfVersion.Version_1_4;
 
-        // Save the workbook as PDF with the specified compliance level
-        workbook.Save("OutputPdf14.pdf", saveOptions);
+            // Save the workbook as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

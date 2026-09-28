@@ -1,44 +1,73 @@
-// Title: Aspose.Cells C# – Get All Shape Connection Points for Arrow and Connector Placement
-// Description: This example creates a new workbook, adds a rectangle shape, calls Shape.GetConnectionPoints() to retrieve the X‑Y coordinates of every connection point, prints each point to the console, and saves the file as ConnectionPointsDemo.xlsx. Use the returned float[][] to calculate precise attachment locations for arrows, connectors, or custom diagram elements.
-// Keywords: Aspose.Cells GetConnectionPoints | C# shape connection points | Excel shape attachment coordinates | Aspose.Cells connector positioning | retrieve shape connection points .NET | diagram arrows Aspose.Cells | Excel drawing API C#
-// Common Searches: Aspose.Cells get shape connection points C# | How to obtain connector points from a shape in Aspose.Cells | Shape.GetConnectionPoints example for .NET | Calculate arrow attachment positions in Excel using Aspose.Cells | Retrieve rectangle connection points Aspose.Cells
-// Developer Intent: Extract the coordinates of every connection point on a shape to determine where arrows or connectors should attach.
-// Use Cases: Loop through the float[][] to draw connector lines between multiple shapes based on the nearest points. | Align SmartArt or flow‑chart elements automatically when generating Excel reports. | Export shape connection data to external diagramming tools for custom rendering.
-// AI Prompts: Generate C# code that adds several shapes and draws connectors between the closest connection points using Aspose.Cells. | Show how to find the nearest connection point between two shapes and create a connector line in a workbook. | Explain how resizing a shape affects its connection points and how to recalculate them with Aspose.Cells.
+// Title: Retrieve all connection points of a named shape and compute their absolute coordinates in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Extract the collection of connection points from a shape named "MyShape" and compute each point's absolute X/Y coordinates in points using the shape's width and height with Aspose.Cells in C#. | Generate C# code that safely checks for a missing shape or an empty connection‑point collection before iterating through GetConnectionPoints. | Create a method that returns a list of objects containing the index, relative X/Y (0‑1) and absolute X/Y (points) for every connection point of any worksheet shape.
+// Common Searches: Aspose.Cells C# get connection points of a drawing shape in Excel | calculate absolute position of shape connection points using shape dimensions Aspose.Cells | how to handle GetConnectionPoints returning null in Aspose.Cells .NET | retrieve index and relative coordinates of shape connectors in an Excel workbook with Aspose.Cells
+// Tags: Aspose.Cells GetConnectionPoints API | C# calculate absolute shape connector coordinates | Excel shape connection point extraction | handling missing shape Aspose.Cells | dynamic shape connection points iteration
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsConnectionPointsDemo
+// The example loads an Excel file, accesses the first worksheet, finds a shape named "MyShape", obtains its connection points via GetConnectionPoints, and for each point calculates absolute X/Y positions (in points) using the shape's width and height, then outputs the index, relative coordinates, and absolute coordinates.
+class Program
 {
-    // This example creates a new workbook, adds a rectangle shape, calls Shape.GetConnectionPoints() to retrieve the X‑Y coordinates of every connection point, prints each point to the console, and saves the file as ConnectionPointsDemo.xlsx. Use the returned float[][] to calculate precise attachment locations for arrows, connectors, or custom diagram elements.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"File not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, top offset, left offset, height, width, shape type
-            Shape shape = worksheet.Shapes.AddRectangle(1, 0, 0, 100, 200, 0);
-
-            // Retrieve all connection points of the shape
-            float[][] connectionPoints = shape.GetConnectionPoints();
-
-            // Output the connection points – these can be used to attach arrows/connectors
-            Console.WriteLine("Connection Points:");
-            for (int i = 0; i < connectionPoints.Length; i++)
+            // Retrieve the shape by its name
+            Shape shape = worksheet.Shapes["MyShape"];
+            if (shape == null)
             {
-                float x = connectionPoints[i][0];
-                float y = connectionPoints[i][1];
-                Console.WriteLine($"Point {i + 1}: X = {x}, Y = {y}");
+                Console.WriteLine("Shape not found.");
+                return;
             }
 
-            // Save the workbook (lifecycle save)
-            workbook.Save("ConnectionPointsDemo.xlsx");
+            // Get the collection of connection points (if any) using dynamic to avoid compile‑time type dependencies
+            dynamic cpCollection = shape.GetConnectionPoints();
+            if (cpCollection == null || cpCollection.Count == 0)
+            {
+                Console.WriteLine("No connection points found for the shape.");
+                return;
+            }
+
+            // Iterate through all connection points of the shape
+            foreach (dynamic cp in cpCollection)
+            {
+                // Index of the connection point
+                int index = cp.Index;
+
+                // Relative positions (0.0 – 1.0) within the shape
+                double relativeX = cp.X;
+                double relativeY = cp.Y;
+
+                // Calculate absolute position in points using shape dimensions
+                double absoluteX = shape.Width * relativeX;
+                double absoluteY = shape.Height * relativeY;
+
+                Console.WriteLine($"Connection Point {index}:");
+                Console.WriteLine($"  Relative Position -> X: {relativeX:F2}, Y: {relativeY:F2}");
+                Console.WriteLine($"  Absolute Position (points) -> X: {absoluteX:F2}, Y: {absoluteY:F2}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

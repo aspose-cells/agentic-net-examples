@@ -1,86 +1,57 @@
-// Title: C# – Access and Refresh the First Pivot Table on a Worksheet with Aspose.Cells
-// Description: Load an existing workbook, select the first worksheet, retrieve its first PivotTable, call RefreshData and CalculateData, then save the updated file. Includes error handling for missing files and empty PivotTable collections.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | first pivot table | refresh pivot data | recalculate pivot | worksheet pivot collection | load workbook | save workbook | example code
-// Common Searches: Aspose.Cells get first pivot table C# | refresh pivot table data using Aspose.Cells | how to recalculate a pivot table in .NET | check for pivot tables on a worksheet Aspose.Cells | C# code to load workbook and refresh pivot
-// Developer Intent: Retrieve the first PivotTable on the first worksheet, refresh its source data, recalculate, and persist the changes.
-// Use Cases: Update pivot data after programmatically modifying the source range. | Ensure pivot totals are current before exporting or printing the workbook. | Validate the presence of a pivot table before running batch processing on multiple worksheets.
-// AI Prompts: Generate C# code that accesses the second pivot table on the third worksheet and applies a filter to a specific field using Aspose.Cells. | Write a method to add a new pivot table to a worksheet, define its data source, and configure row and column fields with Aspose.Cells for .NET. | Provide example code that iterates through all pivot tables in a workbook, refreshes each one, and logs their names.
+// Title: Retrieve the first PivotTable from the first worksheet and refresh it using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a workbook, accesses the first worksheet, obtains the first PivotTable from its PivotTableCollection, and calls RefreshData and CalculateData. | Show an example of iterating over a worksheet's PivotTableCollection in Aspose.Cells and performing a refresh on the pivot table at index 0. | Write a C# snippet that loads an existing Excel file, gets the first PivotTable on the first sheet, refreshes its data source, recalculates, and saves the workbook.
+// Common Searches: asp.net aspose.cells get first pivot table from worksheet | c# refresh pivot table data using Aspose.Cells API | how to access PivotTableCollection and retrieve pivot at index 0 in Aspose.Cells | example code for refreshing a pivot table in Aspose.Cells for .NET | load workbook and refresh first pivot table Aspose.Cells C#
+// Tags: first pivot table retrieval Aspose.Cells | pivot table refresh operation Aspose.Cells | access PivotTableCollection index Aspose.Cells | calculate pivot table data Aspose.Cells | move pivot table position Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+// Demonstrates creating or loading a workbook, adding sample data and a pivot table, then accessing the first worksheet's PivotTableCollection to retrieve the first PivotTable, refresh its data source, recalculate, optionally move it, and finally save the workbook.
+class Program
 {
-    // Load an existing workbook, select the first worksheet, retrieve its first PivotTable, call RefreshData and CalculateData, then save the updated file. Includes error handling for missing files and empty PivotTable collections.
-    public class AccessFirstPivotTable
+    static void Main()
     {
-        public static void Run()
+        // Create a new workbook (or load an existing one with new Workbook("file.xlsx"))
+        Workbook workbook = new Workbook();
+
+        // Access the first worksheet in the workbook
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // OPTIONAL: add sample data and a pivot table so that a pivot table exists.
+        // This block can be removed if the workbook already contains a pivot table.
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["A2"].PutValue("Fruit");
+        worksheet.Cells["A3"].PutValue("Vegetable");
+        worksheet.Cells["B1"].PutValue("Sales");
+        worksheet.Cells["B2"].PutValue(1500);
+        worksheet.Cells["B3"].PutValue(2300);
+
+        // Add a pivot table to the worksheet (index of the new pivot table is returned)
+        int pivotIndex = worksheet.PivotTables.Add("A1:B3", "D5", "SalesPivot");
+        PivotTable createdPivot = worksheet.PivotTables[pivotIndex];
+        createdPivot.AddFieldToArea(PivotFieldType.Row, "Category");
+        createdPivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+        createdPivot.CalculateData();
+
+        // Access the collection of pivot tables on the first worksheet
+        PivotTableCollection pivotTables = worksheet.PivotTables;
+
+        // Ensure there is at least one pivot table before accessing
+        if (pivotTables.Count > 0)
         {
-            const string inputPath = "InputWithPivot.xlsx";
-            const string outputPath = "OutputAfterPivotAccess.xlsx";
+            // Obtain the first pivot table for further operations
+            PivotTable firstPivotTable = pivotTables[0];
 
-            // Verify input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+            // Example operation: refresh and recalculate the pivot table data
+            firstPivotTable.RefreshData();
+            firstPivotTable.CalculateData();
 
-            try
-            {
-                // Load the workbook containing at least one pivot table
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (index 0)
-                Worksheet firstWorksheet = workbook.Worksheets[0];
-
-                // Get the collection of pivot tables on this worksheet
-                PivotTableCollection pivotTables = firstWorksheet.PivotTables;
-
-                if (pivotTables.Count > 0)
-                {
-                    // Retrieve the first pivot table (index 0)
-                    PivotTable firstPivot = pivotTables[0];
-
-                    // Refresh data for the pivot table
-                    firstPivot.RefreshData();
-
-                    // Recalculate the pivot table
-                    firstPivot.CalculateData();
-
-                    // Additional operations on 'firstPivot' can be placed here
-                }
-                else
-                {
-                    Console.WriteLine("No pivot tables found on the first worksheet.");
-                }
-
-                // Save the workbook after modifications
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
-            }
+            // Additional operations can be performed here, e.g., moving the pivot table:
+            // firstPivotTable.MoveTo(10, 2); // moves to row 10, column 2
         }
-    }
 
-    public class Program
-    {
-        // Entry point required for compilation
-        public static void Main(string[] args)
-        {
-            try
-            {
-                AccessFirstPivotTable.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
-        }
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
     }
 }

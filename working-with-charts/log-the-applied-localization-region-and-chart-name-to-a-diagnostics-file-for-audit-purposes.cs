@@ -1,58 +1,92 @@
-// Title: Log workbook regional setting and chart name to a diagnostics file with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, sets its regional setting to Japan, adds a column chart named "SalesChart", saves the file, and appends a UTC timestamped entry containing the workbook's Region property and the chart's Name to a diagnostics.txt file for audit and compliance tracking.
-// Keywords: Aspose.Cells | C# | .NET | workbook region logging | chart name audit | diagnostics file | regional settings Japan | Chart.Name | Settings.Region | File.AppendAllText | timestamped log
-// Common Searches: Aspose.Cells log workbook region to file | record chart name in diagnostics with Aspose.Cells C# | audit Excel chart creation .NET | write localization info to text file using Aspose.Cells | timestamped chart metadata logging C#
-// Developer Intent: Append the workbook's regional setting and the created chart's identifier to a diagnostics file for traceability.
-// Use Cases: Compliance reporting: capture the locale (e.g., Japan) and chart identifier each time a workbook is generated. | Automated pipelines: generate a timestamped audit entry after saving a workbook to monitor regional compliance. | Multi‑workbook monitoring: aggregate diagnostics entries to analyze chart creation patterns across different locales.
-// AI Prompts: Generate a reusable C# method that logs Aspose.Cells workbook Region and Chart.Name to a CSV file with error handling. | Show how to extend the audit log to include chart type, data range, and worksheet name using Aspose.Cells for .NET. | Provide a PowerShell script that reads the diagnostics.txt entries and summarizes chart creation counts per region.
+// Title: Append workbook localization region and chart identifiers to a diagnostics log using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, reads the workbook's CultureInfo, and appends the region name to a diagnostics file. | Develop a method that walks through every worksheet and chart, supplies a fallback name for unnamed charts, and writes worksheet name, chart index, and chart name to a log file.
+// Common Searches: Aspose.Cells how to write workbook culture info to a log file in C# | C# log all chart names from an Excel workbook using Aspose.Cells | record Excel chart index and worksheet name for audit with Aspose.Cells .NET | append diagnostics log with localization region and chart details Aspose.Cells | handle empty chart names when exporting chart information using Aspose.Cells
+// Tags: append workbook cultureinfo to log Aspose.Cells | iterate worksheets and charts Aspose.Cells | log chart index and name .NET | fallback chart name generation Aspose.Cells | create diagnostics file for Excel audit
 
 using System;
+using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example creates a workbook, sets its regional setting to Japan, adds a column chart named "SalesChart", saves the file, and appends a UTC timestamped entry containing the workbook's Region property and the chart's Name to a diagnostics.txt file for audit and compliance tracking.
-class AuditChartCreation
+// The example demonstrates how to load an Excel workbook with Aspose.Cells, retrieve the workbook's applied CultureInfo, and write that region together with each chart's identifier (using a generated fallback when the name is empty) to a diagnostics log file, creating the log directory if necessary.
+class ChartAuditLogger
 {
+    // Path to the Excel file to be processed
+    private const string InputFilePath = @"C:\Data\Report.xlsx";
+
+    // Path to the diagnostics log file
+    private const string LogFilePath = @"C:\Logs\ChartAudit.log";
+
     static void Main()
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        try
+        {
+            // Verify that the input workbook exists
+            if (!File.Exists(InputFilePath))
+            {
+                Console.Error.WriteLine($"Input file not found: {InputFilePath}");
+                return;
+            }
 
-        // Set the regional settings for the workbook (e.g., Japan)
-        wb.Settings.Region = CountryCode.Japan;
+            // Ensure the log directory exists
+            string logDir = Path.GetDirectoryName(LogFilePath);
+            if (!string.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
+            {
+                Directory.CreateDirectory(logDir);
+            }
 
-        // Get the first worksheet
-        Worksheet sheet = wb.Worksheets[0];
+            // Load the workbook inside a safe block
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(InputFilePath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.Error.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-        // Add some sample data for the chart
-        sheet.Cells["A1"].PutValue("Month");
-        sheet.Cells["A2"].PutValue("Jan");
-        sheet.Cells["A3"].PutValue("Feb");
-        sheet.Cells["A4"].PutValue("Mar");
-        sheet.Cells["B1"].PutValue("Sales");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(150);
-        sheet.Cells["B4"].PutValue(180);
+            // Determine the applied localization region (culture)
+            CultureInfo culture = workbook.Settings.CultureInfo;
+            string region = culture?.Name ?? "Invariant";
 
-        // Create a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = sheet.Charts[chartIndex];
+            // Prepare the log file (append if it exists)
+            using (StreamWriter logWriter = new StreamWriter(LogFilePath, append: true))
+            {
+                // Write a header with timestamp
+                logWriter.WriteLine($"--- Audit Log: {DateTime.UtcNow:u} ---");
+                logWriter.WriteLine($"Applied Localization Region: {region}");
+                logWriter.WriteLine();
 
-        // Set chart data range and title
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-        chart.Title.Text = "Quarterly Sales";
+                // Iterate through all worksheets and their charts
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    foreach (Chart chart in sheet.Charts)
+                    {
+                        // Obtain chart index via collection since Chart.Index may not be available
+                        int chartIndex = sheet.Charts.IndexOf(chart);
 
-        // Assign a name to the chart for identification
-        chart.Name = "SalesChart";
+                        // Chart name may be empty; provide a fallback identifier
+                        string chartName = string.IsNullOrEmpty(chart.Name)
+                            ? $"Chart_{chartIndex}"
+                            : chart.Name;
 
-        // Save the workbook (lifecycle rule)
-        wb.Save("AuditChart.xlsx");
+                        // Log the chart name together with its worksheet
+                        logWriter.WriteLine($"Worksheet: {sheet.Name}, Chart Index: {chartIndex}, Chart Name: {chartName}");
+                    }
+                }
 
-        // Log the applied region and chart name to a diagnostics file
-        string diagnosticsPath = "diagnostics.txt";
-        string logEntry = $"Timestamp: {DateTime.UtcNow:u}, Region: {wb.Settings.Region}, ChartName: {chart.Name}";
-        File.AppendAllText(diagnosticsPath, logEntry + Environment.NewLine);
+                logWriter.WriteLine(); // Blank line for readability
+            }
+
+            Console.WriteLine("Chart audit information has been logged successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors to console (could be extended to log file)
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

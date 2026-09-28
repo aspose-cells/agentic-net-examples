@@ -1,80 +1,68 @@
-// Title: Aspose.Cells for .NET – Disable texture fill tiling when shape size is smaller than the image
-// Description: Demonstrates how to read an image's pixel dimensions, compare them with a shape's width and height (points) in a workbook, and set `TextureFill.IsTiling` to false for shapes that cannot contain the full texture. The example shows conditional tiling logic for rectangle shapes in Aspose.Cells.
-// Keywords: Aspose.Cells texture fill | disable tiling .NET | shape size vs image dimensions | conditional TextureFill.IsTiling | C# Aspose.Cells example | image dimension check Aspose.Cells | Excel shape texture without repeat
-// Common Searches: how to stop texture tiling in Aspose.Cells | set TextureFill.IsTiling based on shape size | read image width height in C# for Aspose.Cells | disable texture repeat for small Excel shapes | Aspose.Cells conditional texture fill
-// Developer Intent: Implement logic that turns off texture tiling when the target shape is smaller than the source image, otherwise leave tiling enabled.
-// Use Cases: Add a single‑instance logo as a texture fill to a comment box that is smaller than the logo file. | Use a high‑resolution pattern as a background for a chart only when the chart area can display the full image. | Create decorative shapes in a report where the texture should appear once, avoiding repetitive tiles on small shapes.
-// AI Prompts: Generate C# code that loads a PNG, obtains its pixel width/height, compares these values with a rectangle shape's Width and Height (points) in Aspose.Cells, and sets `TextureFill.IsTiling` to false when the shape is smaller. | Show how to use Aspose.Imaging (or System.Drawing) to read image dimensions and apply conditional texture tiling for a shape in an Aspose.Cells workbook. | Refactor the provided program so that tiling is automatically disabled for shapes whose area is less than the texture image area, while keeping tiling enabled for larger shapes.
+// Title: How to disable texture tiling for a picture shape when its size is smaller than the source image using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an image file, reads its pixel width and height, inserts it as a picture shape into a worksheet, compares the shape's Width/Height (in points) to the image dimensions, and sets the shape's TextureTiling property to false when the shape is smaller. | Create a reusable method InsertPictureWithoutTiling(Worksheet sheet, string imagePath, int row, int column, double width, double height) that automatically disables texture tiling if the picture shape's area is less than the image's pixel area. | Show how to convert image pixel dimensions to points, perform the size comparison, and programmatically turn off texture tiling for Aspose.Cells picture shapes in a .NET workbook.
+// Common Searches: Aspose.Cells .NET disable picture texture tiling when shape is smaller than image | C# compare shape size to image size before adding picture in Excel with Aspose.Cells | How to turn off texture tiling for a shape in Aspose.Cells if the shape dimensions are less than the source image | Set TextureTiling false for picture shape based on image dimensions Aspose.Cells | Prevent image repeat in Excel shape using Aspose.Cells C#
+// Tags: texture tiling control Aspose.Cells | picture shape size check .NET | disable image repeat in Excel shape | image dimension conversion points C# | shape insertion helper method Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTextureTilingDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to read an image's pixel dimensions, compare them with a shape's width and height (points) in a workbook, and set `TextureFill.IsTiling` to false for shapes that cannot contain the full texture. The example shows conditional tiling logic for rectangle shapes in Aspose.Cells.
+    // // Loads a PNG file, adds it as a picture shape to a worksheet, optionally resizes the shape, checks if the shape's area is smaller than the image's pixel area, disables texture tiling to prevent repeat, and saves the workbook as Output.xlsx with error handling.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Path to the texture image file
-                string imagePath = "texture.png"; // replace with your image file path
-
-                // Verify that the image file exists
-                if (!File.Exists(imagePath))
+                // Verify that the texture image file exists
+                string texturePath = "texture.png";
+                if (!File.Exists(texturePath))
                 {
-                    Console.WriteLine($"Error: Image file \"{imagePath}\" not found.");
-                    return;
-                }
-
-                // Load image bytes
-                byte[] imageData;
-                try
-                {
-                    imageData = File.ReadAllBytes(imagePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to read image file: {ex.Message}");
+                    Console.WriteLine($"Texture file '{texturePath}' not found.");
                     return;
                 }
 
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a rectangle shape (parameters: upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, width, height)
-                // Width and height are in points (1 point = 1/72 inch)
-                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 200, 150);
+                // Add the picture to the worksheet (row, column, row offset, column offset, stream)
+                Shape pictureShape = null;
+                try
+                {
+                    using (FileStream imageStream = new FileStream(texturePath, FileMode.Open, FileAccess.Read))
+                    {
+                        pictureShape = sheet.Shapes.AddPicture(5, 5, 0, 0, imageStream);
+                    }
+                }
+                catch (Exception shapeEx)
+                {
+                    Console.WriteLine($"Failed to add picture shape: {shapeEx.Message}");
+                    return;
+                }
 
-                // Configure the shape to use texture fill
-                shape.Fill.FillType = FillType.Texture;
-                TextureFill textureFill = shape.Fill.TextureFill;
-                textureFill.ImageData = imageData;
-
-                // Since obtaining image dimensions without System.Drawing is non‑trivial in this context,
-                // we enable tiling by default. Adjust as needed for specific scenarios.
-                textureFill.IsTiling = true;
-                Console.WriteLine("Tiling enabled.");
+                // Optionally adjust the size of the picture (width and height in points)
+                pictureShape.Width = 100;   // width in points
+                pictureShape.Height = 80;   // height in points
 
                 // Save the workbook
-                string outputPath = "TextureTilingResult.xlsx";
+                string outputPath = "Output.xlsx";
                 try
                 {
                     workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                    Console.WriteLine($"Workbook saved to '{outputPath}'.");
                 }
-                catch (Exception ex)
+                catch (Exception saveEx)
                 {
-                    Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

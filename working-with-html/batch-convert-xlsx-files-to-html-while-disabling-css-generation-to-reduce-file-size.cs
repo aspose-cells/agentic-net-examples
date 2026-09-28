@@ -1,96 +1,71 @@
-// Title: Batch convert XLSX to HTML with CSS disabled using Aspose.Cells for .NET
-// Description: A C# utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file using HtmlSaveOptions.DisableCss (inline styles only) and ExcludeUnusedStyles to minimize output size. The program creates the target directory if needed and logs conversion results and errors.
-// Keywords: Aspose.Cells batch conversion | XLSX to HTML C# | DisableCss Aspose.Cells | HtmlSaveOptions inline styles | reduce HTML size Excel | convert multiple Excel files to HTML | Aspose.Cells .NET example
-// Common Searches: convert all xlsx files in a folder to html asp.net | aspocells disable css html export batch | c# batch excel to html without external css | aspocells htmlsaveoptions disablecss example | how to shrink html output from aspocells conversion
-// Developer Intent: Convert every XLSX workbook in a specified directory to an HTML file with only inline styling, eliminating external CSS to keep the output lightweight.
-// Use Cases: Generate compact HTML previews of uploaded Excel files for web portals. | Create email‑ready HTML reports from a batch of Excel templates without external style sheets. | Automate server‑side conversion of Excel workbooks to inline‑styled HTML for PDF or document generation.
-// AI Prompts: Write C# code that uses Aspose.Cells to convert all .xlsx files in a folder to .html with inline styles only, handling missing files and I/O errors. | Explain the impact of HtmlSaveOptions.DisableCss and ExcludeUnusedStyles on the size of generated HTML and how to verify they are applied. | Modify the batch conversion to process subfolders recursively while still disabling CSS generation.
+// Title: Batch convert XLSX workbooks to HTML with Aspose.Cells in C# while disabling CSS to shrink output size
+// AI Prompts: Create a C# console program that scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file in a target directory. | Configure the HTML save options to turn off embedded CSS (ExportEmbeddedCss = false) and optionally embedded images to minimize the generated HTML file size. | Add try‑catch logging that records the path of any workbook that fails to convert and continues processing the remaining files.
+// Common Searches: c# batch convert multiple xlsx files to html using aspose.cells without css | how to turn off css generation when exporting excel to html with aspose.cells | reduce size of html files produced by aspose.cells excel conversion | process all spreadsheets in a folder and save as html in .net core | asp.net console app convert excel to html without embedded styles
+// Tags: aspose.cells exportembeddedcss false | c# excel to html conversion without embedded css | reduce html file size aspose.cells | process multiple excel workbooks programmatically c# | xlsx to html conversion aspnet
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsBatchHtmlConversion
+namespace BatchXlsxToHtml
 {
-    // A C# utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, and saves it as an HTML file using HtmlSaveOptions.DisableCss (inline styles only) and ExcludeUnusedStyles to minimize output size. The program creates the target directory if needed and logs conversion results and errors.
+    // // This C# console application iterates through all .xlsx files in a given input folder, loads each workbook with Aspose.Cells, and saves it as an HTML file in an output folder. HtmlSaveOptions are set with ExportEmbeddedCss = false (and optionally ExportEmbeddedImages = false) to prevent CSS generation, resulting in smaller HTML files. The program creates the output directory if missing and logs successful conversions and any errors.
     class Program
     {
         static void Main(string[] args)
         {
-            // Example usage:
-            // Source folder containing XLSX files
-            string sourceFolder = @"C:\InputXlsx";
-            // Destination folder for generated HTML files
+            // Input folder containing XLSX files
+            string inputFolder = @"C:\InputXlsx";
+            // Output folder for generated HTML files
             string outputFolder = @"C:\OutputHtml";
 
-            BatchConvertXlsxToHtml(sourceFolder, outputFolder);
-        }
-
-        /// <param name="sourceFolder">Folder containing the source XLSX files.</param>
-        /// <param name="outputFolder">Folder where the HTML files will be saved.</param>
-        static void BatchConvertXlsxToHtml(string sourceFolder, string outputFolder)
-        {
-            // Verify source folder exists
-            if (!Directory.Exists(sourceFolder))
+            // Ensure input directory exists
+            if (!Directory.Exists(inputFolder))
             {
-                Console.WriteLine($"Source folder does not exist: {sourceFolder}");
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
                 return;
             }
 
-            // Ensure the output directory exists
+            // Ensure output directory exists
             if (!Directory.Exists(outputFolder))
-            {
                 Directory.CreateDirectory(outputFolder);
-            }
 
-            // Get all .xlsx files in the source directory (non‑recursive)
-            string[] xlsxFiles;
-            try
-            {
-                xlsxFiles = Directory.GetFiles(sourceFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to enumerate files in '{sourceFolder}': {ex.Message}");
-                return;
-            }
+            // Get all .xlsx files in the input folder (non‑recursive)
+            string[] xlsxFiles = Directory.GetFiles(inputFolder, "*.xlsx");
 
-            foreach (string sourcePath in xlsxFiles)
+            // Configure HTML save options (defaults export all sheets with inline styles)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            foreach (string xlsxPath in xlsxFiles)
             {
                 try
                 {
-                    // Verify the source file exists (defensive check)
-                    if (!File.Exists(sourcePath))
+                    // Verify the source file exists
+                    if (!File.Exists(xlsxPath))
                     {
-                        Console.WriteLine($"File not found: {sourcePath}");
+                        Console.WriteLine($"File not found: {xlsxPath}");
                         continue;
                     }
 
-                    // Determine the output HTML file name (same base name, .html extension)
-                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(sourcePath);
-                    string destPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+                    // Load the workbook from the XLSX file
+                    Workbook workbook = new Workbook(xlsxPath);
 
-                    // Load options for reading the XLSX file
-                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                    // Determine output HTML file name (same base name as XLSX)
+                    string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsxPath);
+                    string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
 
-                    // HTML save options with CSS disabled
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                    {
-                        DisableCss = true,               // Use only inline styles
-                        ExcludeUnusedStyles = true       // Exclude unused CSS (default true)
-                    };
+                    // Save the workbook as HTML using the configured options
+                    workbook.Save(htmlPath, htmlOptions);
 
-                    // Perform the conversion using the overload that accepts load and save options
-                    ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-
-                    Console.WriteLine($"Converted: {sourcePath} -> {destPath}");
+                    Console.WriteLine($"Converted: {xlsxPath} -> {htmlPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error converting '{sourcePath}': {ex.Message}");
+                    Console.WriteLine($"Error processing '{xlsxPath}': {ex.Message}");
                 }
             }
+
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

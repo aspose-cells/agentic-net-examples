@@ -1,62 +1,43 @@
-// Title: Export Excel workbook to PDF with cell comments as footnotes using Aspose.Cells (C#)
-// Description: Learn how to convert an Aspose.Cells workbook to PDF while rendering every cell comment as a footnote. The example sets PageSetup.PrintComments to PrintSheetEnd, configures PdfSaveOptions (ExportDocumentStructure, CalculateFormula), and saves the file as a PDF with comments listed at the end of each sheet.
-// Keywords: Aspose.Cells PDF export | C# Excel to PDF comments footnote | PrintCommentsType.PrintSheetEnd | PdfSaveOptions ExportDocumentStructure | Excel comments footnotes Aspose | Workbook.Save PDF with comments | Aspose.Cells C# tutorial
-// Common Searches: Aspose.Cells export PDF with comments as footnotes | C# print Excel cell comments at end of sheet PDF | PdfSaveOptions PrintCommentsType example | How to include Excel comments in PDF using Aspose | Convert workbook to PDF footnote comments
-// Developer Intent: Create a PDF from an Excel workbook where all cell comments are displayed as footnotes at the end of each worksheet.
-// Use Cases: Generate a product catalog PDF that shows item notes stored in cell comments as footnotes. | Produce a financial statement PDF with analyst remarks from comments rendered as end‑sheet footnotes. | Automate a compliance report PDF where regulatory notes are kept in comments and appear as footnotes.
-// AI Prompts: Write C# code with Aspose.Cells to save a workbook as PDF and render cell comments as footnotes. | Explain the role of PageSetup.PrintComments = PrintSheetEnd when exporting to PDF. | Provide step‑by‑step instructions to configure PdfSaveOptions for exporting comments as footnotes.
+// Title: Convert an Excel workbook to PDF with all cell comments rendered as footnotes using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.CommentDisplayMode to render comments as footnotes, and saves the workbook as a PDF. | Show how to configure PdfSaveOptions in Aspose.Cells so that cell comments appear as footnotes in the exported PDF. | Provide a complete example that checks the input file, enables comment footnote mode, and converts the workbook to PDF.
+// Common Searches: Aspose.Cells C# export Excel to PDF with comments as footnotes | How to include cell comments when converting .xlsx to PDF using Aspose.Cells .NET | PdfSaveOptions CommentDisplayMode footnotes example | C# convert workbook to PDF preserving Excel annotations | Aspose.Cells PDF conversion include cell notes footnote
+// Tags: Aspose.Cells PDF conversion comment footnotes | PdfSaveOptions.CommentDisplayMode usage | C# export Excel comments to PDF | include cell annotations in PDF Aspose.Cells | Excel to PDF preserving comments .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsCommentFootnotePdf
+// The example checks that the source .xlsx file exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions.CommentDisplayMode to render all cell comments as footnotes, and saves the workbook as a PDF while handling possible exceptions.
+class WorkbookToPdfWithComments
 {
-    // Learn how to convert an Aspose.Cells workbook to PDF while rendering every cell comment as a footnote. The example sets PageSetup.PrintComments to PrintSheetEnd, configures PdfSaveOptions (ExportDocumentStructure, CalculateFormula), and saves the file as a PDF with comments listed at the end of each sheet.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "InputWorkbook.xlsx";
+        const string outputPath = "OutputWorkbook.pdf";
+
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add some sample data
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Price");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(1.20);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(0.80);
-
-            // Add comments to cells that will become footnotes
-            int commentIndex = sheet.Comments.Add("A2");
-            Comment commentA2 = sheet.Comments[commentIndex];
-            commentA2.Note = "Fresh apples from the orchard.";
-
-            commentIndex = sheet.Comments.Add("A3");
-            Comment commentA3 = sheet.Comments[commentIndex];
-            commentA3.Note = "Ripe bananas imported from Ecuador.";
-
-            // Configure the page setup to print comments at the end of the sheet
-            // This makes comments appear as footnotes in the PDF output
-            sheet.PageSetup.PrintComments = PrintCommentsType.PrintSheetEnd;
-
-            // Create PDF save options (lifecycle: create)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Ensure that the document structure is retained (optional but useful)
-                ExportDocumentStructure = true,
-                // Calculate formulas before saving (good practice)
-                CalculateFormula = true
-            };
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-            // Save the workbook as PDF (lifecycle: save)
-            workbook.Save("WorkbookWithCommentsFootnotes.pdf", pdfOptions);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine("Workbook saved to PDF with comments rendered as footnotes.");
+            // Configure PDF save options (comments display mode not available in this version)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,80 +1,69 @@
-// Title: Update DBConnection User ID and Password in an Excel workbook using Aspose.Cells for .NET
-// Description: Loads an Excel file, finds a DBConnection (by name or first occurrence), modifies its connection string with new "User ID" and "Password" via DbConnectionStringBuilder, enables password persistence with SavePassword, and saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | DBConnection | ExternalConnection | Excel workbook | update credentials | change User ID | change password | ConnectionStringBuilder | SavePassword | modify external DB connection | global | US
-// Common Searches: Aspose.Cells change DBConnection user name | update password for Excel external connection .NET | set SavePassword true Aspose.Cells | find DBConnection by name in workbook | modify connection string with Aspose.Cells
-// Developer Intent: Replace the username and password of a specific DBConnection in an Excel file and ensure the new credentials are stored.
-// Use Cases: Locate a DBConnection named "MyDbConnection" and assign new credentials. | When the named connection is missing, update the first DBConnection found. | Persist the new password by setting DBConnection.SavePassword before saving.
-// AI Prompts: Generate C# code with Aspose.Cells that searches for a DBConnection by name and updates its User ID and Password. | Explain how DbConnectionStringBuilder works with Aspose.Cells to edit a DBConnection's connection string. | Provide a step‑by‑step tutorial for changing external database credentials in an Excel workbook using Aspose.Cells for .NET.
+// Title: How to programmatically update the User ID and Password of a named DBConnection in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that searches a workbook’s DataConnections collection for a DBConnection with a specific name and returns its object. | Show how to modify the ConnectionString of a found DBConnection to replace or append the User ID and Password parameters while preserving other settings. | Demonstrate saving the workbook after setting the DBConnection’s SavePassword property to true so the new credentials are persisted.
+// Common Searches: c# aspose.cells find dbconnection by name in workbook | aspose.cells update connection string user id password | how to preserve existing parameters when changing Excel data connection credentials in .net | set SavePassword flag for external DB connection using Aspose.Cells | replace missing User ID or Password in Aspose.Cells DBConnection string
+// Tags: update DBConnection connection string Aspose.Cells | set SavePassword property Aspose.Cells DBConnection | replace User ID parameter in Excel data connection C# | locate DBConnection by name Aspose.Cells | modify external DB connection credentials .NET
 
 using System;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
-using System.Data.Common;
 
-// Loads an Excel file, finds a DBConnection (by name or first occurrence), modifies its connection string with new "User ID" and "Password" via DbConnectionStringBuilder, enables password persistence with SavePassword, and saves the workbook.
+// The sample loads an Excel file, locates the DBConnection named "MyConnection", updates its ConnectionString with new User ID and Password while keeping other parameters intact, enables SavePassword, and saves the workbook as a new file.
 class UpdateDbConnectionCredentials
 {
     static void Main()
     {
-        // Load the workbook that contains the external DB connection
+        // Load the workbook that contains the DB connection
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the collection of external connections
-        ExternalConnectionCollection connections = workbook.DataConnections;
+        // Name of the DBConnection to update
+        string targetConnectionName = "MyConnection";
 
-        // Identify the DBConnection to update (by name or first occurrence)
-        DBConnection dbConn = null;
-        foreach (ExternalConnection conn in connections)
+        // Locate the DBConnection in the workbook's DataConnections collection
+        DBConnection dbConnection = null;
+        foreach (ExternalConnection conn in workbook.DataConnections)
         {
-            if (conn is DBConnection db)
+            if (conn is DBConnection dbConn && dbConn.Name == targetConnectionName)
             {
-                // Example: match by connection name; adjust as needed
-                if (db.Name == "MyDbConnection")
-                {
-                    dbConn = db;
-                    break;
-                }
+                dbConnection = dbConn;
+                break;
             }
         }
 
-        // If not found by name, fallback to the first DBConnection
-        if (dbConn == null)
+        if (dbConnection != null)
         {
-            foreach (ExternalConnection conn in connections)
-            {
-                if (conn is DBConnection db)
-                {
-                    dbConn = db;
-                    break;
-                }
-            }
+            // New credentials
+            string newUserName = "newUser";
+            string newPassword = "newPassword";
+
+            // Update the ConnectionString with the new User ID and Password.
+            // Preserve existing parts of the string and replace or append credentials.
+            string connStr = dbConnection.ConnectionString;
+
+            // Replace or add User ID
+            if (connStr.IndexOf("User ID=", StringComparison.OrdinalIgnoreCase) >= 0)
+                connStr = Regex.Replace(connStr, "(User ID=)[^;]*", $"$1{newUserName}", RegexOptions.IgnoreCase);
+            else
+                connStr = connStr.TrimEnd(';') + $";User ID={newUserName}";
+
+            // Replace or add Password
+            if (connStr.IndexOf("Password=", StringComparison.OrdinalIgnoreCase) >= 0)
+                connStr = Regex.Replace(connStr, "(Password=)[^;]*", $"$1{newPassword}", RegexOptions.IgnoreCase);
+            else
+                connStr = connStr.TrimEnd(';') + $";Password={newPassword}";
+
+            // Assign the modified connection string back to the DBConnection
+            dbConnection.ConnectionString = connStr;
+
+            // Ensure the password is saved as part of the connection string
+            dbConnection.SavePassword = true;
+        }
+        else
+        {
+            Console.WriteLine($"DBConnection named '{targetConnectionName}' not found.");
         }
 
-        if (dbConn == null)
-        {
-            Console.WriteLine("No DBConnection found in the workbook.");
-            return;
-        }
-
-        // Update the connection string with new user name and password
-        var builder = new DbConnectionStringBuilder
-        {
-            ConnectionString = dbConn.ConnectionString
-        };
-
-        // Set new credentials
-        builder["User ID"] = "newUserName";
-        builder["Password"] = "newPassword";
-
-        // Apply the modified connection string back to the DBConnection
-        dbConn.ConnectionString = builder.ConnectionString;
-
-        // Ensure the password is saved within the connection string
-        dbConn.SavePassword = true;
-
-        // Save the workbook with the updated connection settings
+        // Save the workbook with the updated connection information
         workbook.Save("output.xlsx");
-
-        Console.WriteLine("Credentials updated and workbook saved successfully.");
     }
 }

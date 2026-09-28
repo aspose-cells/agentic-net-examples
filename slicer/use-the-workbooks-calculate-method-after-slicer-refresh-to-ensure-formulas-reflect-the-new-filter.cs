@@ -1,63 +1,67 @@
-// Title: Recalculate formulas after slicer refresh with Aspose.Cells for .NET
-// Description: Shows how to modify source data, refresh a slicer linked to a pivot table, and call Workbook.CalculateFormula so GETPIVOTDATA formulas reflect the new filter before saving the workbook.
-// Keywords: Aspose.Cells slicer refresh | Workbook.CalculateFormula | GETPIVOTDATA update | pivot table recalculation C# | Aspose.Cells example
-// Common Searches: Aspose.Cells recalculate formulas after slicer refresh | How to use Workbook.CalculateFormula with slicer.Refresh | Update GETPIVOTDATA after changing slicer filter in .NET | Refresh pivot table formulas Aspose.Cells C# | Slicer linked to pivot table Aspose.Cells example
-// Developer Intent: Refresh a slicer and recalculate all workbook formulas so dependent GETPIVOTDATA cells show the latest results.
-// Use Cases: Automated reporting that adjusts totals when a slicer filter changes. | Dynamic dashboards where source data is edited, the slicer is refreshed, and formulas are updated programmatically. | Batch processing of workbooks that require consistent pivot‑table calculations after slicer operations.
-// AI Prompts: Provide C# code using Aspose.Cells to refresh a slicer, then recalculate the workbook so GETPIVOTDATA values are updated. | Generate an example that changes source data, calls slicer.Refresh, and invokes Workbook.CalculateFormula to keep formulas accurate. | Explain why Workbook.CalculateFormula is necessary after slicer.Refresh when using GETPIVOTDATA in Aspose.Cells.
+// Title: Refresh a Pivot Table Slicer and Recalculate Workbook Formulas with Aspose.Cells in C#
+// AI Prompts: Refresh the slicer linked to a pivot table, then invoke workbook.CalculateFormula to update all dependent formulas in an Aspose.Cells workbook using C#. | After modifying source data, call slicer.Refresh followed by workbook.CalculateFormula so that pivot totals and other calculations reflect the new values.
+// Common Searches: Aspose.Cells C# recalculate formulas after slicer refresh | how to update pivot totals when slicer changes using Aspose.Cells | using workbook.CalculateFormula with slicer.Refresh in .NET | example code for slicer.Refresh and formula recalculation Aspose.Cells | C# Aspose.Cells refresh slicer linked to pivot table
+// Tags: slicer linked pivot refresh Aspose.Cells C# | invoke workbook.CalculateFormula after slicer update | update pivot totals via slicer Aspose.Cells | recalculate all workbook formulas C# Aspose.Cells | Aspose.Cells slicer example with pivot table
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-// Shows how to modify source data, refresh a slicer linked to a pivot table, and call Workbook.CalculateFormula so GETPIVOTDATA formulas reflect the new filter before saving the workbook.
+// Demonstrates creating a workbook with sample data, adding a pivot table and a linked slicer, changing source values, refreshing the slicer (which also refreshes the pivot), recalculating all formulas with CalculateFormula, and saving the updated file.
 class SlicerRefreshCalculateDemo
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Create a new workbook and add a data worksheet
-        Workbook wb = new Workbook();
-        Worksheet dataSheet = wb.Worksheets[0];
-        dataSheet.Name = "Data";
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
-        // Populate sample data
+    public static void Run()
+    {
+        // Create a new workbook and add sample data
+        Workbook workbook = new Workbook();
+        Worksheet dataSheet = workbook.Worksheets[0];
         dataSheet.Cells["A1"].PutValue("Product");
         dataSheet.Cells["B1"].PutValue("Sales");
         dataSheet.Cells["A2"].PutValue("Apple");
         dataSheet.Cells["B2"].PutValue(100);
         dataSheet.Cells["A3"].PutValue("Banana");
         dataSheet.Cells["B3"].PutValue(200);
-        dataSheet.Cells["A4"].PutValue("Orange");
-        dataSheet.Cells["B4"].PutValue(150);
+
+        // Add a formula that sums the sales column
+        dataSheet.Cells["C1"].PutValue("TotalSales");
+        dataSheet.Cells["C2"].Formula = "=SUM(B2:B3)";
 
         // Create a pivot table based on the data range
-        Worksheet pivotSheet = wb.Worksheets.Add("Pivot");
-        int pivotIdx = pivotSheet.PivotTables.Add("Data!A1:B4", "C3", "SalesPivot");
-        PivotTable pivot = pivotSheet.PivotTables[pivotIdx];
-        pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Product field
-        pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Sales field
+        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
+        int pivotIndex = pivotSheet.PivotTables.Add("A1:B3", "D3", "PivotTable1");
+        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales
 
-        // Add a formula that retrieves the total sales from the pivot table
-        Worksheet reportSheet = wb.Worksheets.Add("Report");
-        // GETPIVOTDATA will pull the aggregated Sales value from the pivot table
-        reportSheet.Cells["A1"].Formula = "=GETPIVOTDATA(\"Sales\",\"Pivot!$C$3\")";
+        // Add a slicer linked to the pivot table
+        Worksheet slicerSheet = workbook.Worksheets.Add("Slicer");
+        int slicerIndex = slicerSheet.Slicers.Add(pivotTable, "A1", "Product");
+        Slicer slicer = slicerSheet.Slicers[slicerIndex];
 
-        // Add a slicer linked to the pivot table for the Product field
-        Worksheet slicerSheet = wb.Worksheets.Add("Slicer");
-        int slicerIdx = slicerSheet.Slicers.Add(pivot, "A1", "Product");
-        Slicer slicer = slicerSheet.Slicers[slicerIdx];
+        // Modify source data to demonstrate slicer refresh effect
+        dataSheet.Cells["A2"].PutValue("Orange");
+        dataSheet.Cells["B2"].PutValue(150);
 
-        // Modify source data to demonstrate slicer filtering effect
-        dataSheet.Cells["A4"].PutValue("Apple"); // Change "Orange" to "Apple"
-
-        // Refresh the slicer (this also refreshes the associated pivot table)
+        // Refresh the slicer (this also refreshes the pivot table)
         slicer.Refresh();
 
-        // After slicer refresh, recalculate all formulas so that the GETPIVOTDATA result is up‑to‑date
-        wb.CalculateFormula();
+        // Recalculate all formulas in the workbook so that the total reflects the refreshed data
+        workbook.CalculateFormula();
 
-        // Save the workbook (using the standard save method)
-        wb.Save("SlicerRefreshCalculateDemo.xlsx");
+        // Save the workbook
+        workbook.Save("SlicerRefreshCalculateDemo.xlsx");
     }
 }

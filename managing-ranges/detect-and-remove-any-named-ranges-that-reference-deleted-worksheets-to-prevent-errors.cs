@@ -1,103 +1,53 @@
-// Title: C# – Remove Named Ranges That Reference Deleted Worksheets with Aspose.Cells
-// Description: This C# example loads an Excel workbook, optionally deletes a worksheet, scans all defined names, identifies those whose RefersTo points to a missing sheet, removes the invalid named ranges, and saves the cleaned file, preventing runtime errors.
-// Keywords: Aspose.Cells | C# | named range cleanup | invalid named ranges | deleted worksheet | Excel workbook | remove defined names | RefersTo | worksheet removal
-// Common Searches: How to remove named ranges that reference a deleted sheet in Aspose.Cells C# | Aspose.Cells remove invalid defined names after worksheet deletion | C# code to clean up stale named ranges in an Excel workbook | Detect and delete named ranges pointing to non‑existent worksheets Aspose.Cells | Remove named ranges referencing external workbooks with Aspose.Cells
-// Developer Intent: Find and delete any named ranges that refer to worksheets that have been removed from the workbook.
-// Use Cases: After programmatically deleting a worksheet, clean up the workbook by removing named ranges that still reference the deleted sheet to avoid runtime errors. | Validate a workbook before saving by scanning all defined names and discarding those whose RefersTo points to a missing sheet. | Prepare an exported Excel file for third‑party consumption by ensuring no stale named ranges remain after sheet removal.
-// AI Prompts: Write C# code using Aspose.Cells to find and remove named ranges that reference worksheets that no longer exist. | Provide a method that returns a list of invalid named ranges after a worksheet deletion in an Aspose.Cells workbook. | Explain how to safely delete a worksheet and clean up associated named ranges without affecting external references.
+// Title: Remove named ranges that reference missing worksheets in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates the workbook's Names collection, identifies entries whose RefersTo points to a non‑existent sheet, deletes those named ranges, and saves the file. | Show how to safely parse a defined name's RefersTo string, handle quoted sheet names, and remove invalid named ranges after worksheets have been deleted in a .NET application.
+// Common Searches: C# Aspose.Cells how to clean up defined names that point to deleted sheets | programmatically remove broken named ranges from Excel file using Aspose.Cells | detect and delete invalid named ranges after worksheet removal in .NET | Aspose.Cells iterate Names collection backwards to avoid index errors | remove named ranges referencing missing worksheets without throwing exceptions
+// Tags: Aspose.Cells remove invalid named ranges | C# delete defined names with missing worksheet | iterate workbook.Names collection reverse | parse RefersTo sheet reference Aspose.Cells | clean Excel workbook broken named ranges .NET
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The program loads an Excel workbook, walks the Names collection in reverse, extracts each defined name's RefersTo sheet reference (handling quoted names), checks if the worksheet exists, removes the named range when the sheet is absent, and saves the cleaned workbook.
+class Program
 {
-    // This C# example loads an Excel workbook, optionally deletes a worksheet, scans all defined names, identifies those whose RefersTo points to a missing sheet, removes the invalid named ranges, and saves the cleaned file, preventing runtime errors.
-    public class RemoveInvalidNamedRanges
+    static void Main()
     {
-        public static void Run()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Get the collection of all defined names (named ranges)
+        var definedNames = workbook.Worksheets.Names;
+
+        // Iterate backwards so removal does not affect the loop index
+        for (int i = definedNames.Count - 1; i >= 0; i--)
         {
-            try
-            {
-                string inputPath = "input.xlsx";
+            Name name = definedNames[i];
+            string refersTo = name.RefersTo;
 
-                // Ensure the input file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
+            // Skip if the reference string is empty
+            if (string.IsNullOrEmpty(refersTo))
+                continue;
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Remove leading '=' if present
+            if (refersTo.StartsWith("="))
+                refersTo = refersTo.Substring(1);
 
-                // Delete the third worksheet if it exists
-                if (workbook.Worksheets.Count > 2)
-                {
-                    workbook.Worksheets.RemoveAt(2);
-                }
+            // Find the position of '!' which separates sheet name from cell address
+            int exclPos = refersTo.IndexOf('!');
+            if (exclPos <= 0)
+                continue; // Not a standard sheet reference
 
-                // Get all defined names (named ranges)
-                NameCollection names = workbook.Worksheets.Names;
-                List<string> namesToRemove = new List<string>();
+            // Extract the sheet name part
+            string sheetName = refersTo.Substring(0, exclPos);
 
-                // Identify names that reference non‑existent worksheets
-                foreach (Name name in names)
-                {
-                    if (string.IsNullOrEmpty(name.RefersTo))
-                        continue;
+            // Remove surrounding single quotes (used when sheet name contains spaces)
+            if (sheetName.StartsWith("'") && sheetName.EndsWith("'"))
+                sheetName = sheetName.Substring(1, sheetName.Length - 2);
 
-                    // RefersTo format: "=Sheet1!$A$1:$B$5"
-                    string refersTo = name.RefersTo.TrimStart('=');
-                    string[] parts = refersTo.Split('!');
-
-                    if (parts.Length < 2)
-                        continue;
-
-                    string sheetName = parts[0];
-
-                    // Skip external workbook references
-                    if (sheetName.StartsWith("["))
-                        continue;
-
-                    Worksheet ws = workbook.Worksheets[sheetName];
-                    if (ws == null)
-                    {
-                        namesToRemove.Add(name.Text);
-                    }
-                }
-
-                // Remove invalid named ranges
-                if (namesToRemove.Count > 0)
-                {
-                    names.Remove(namesToRemove.ToArray());
-                    Console.WriteLine("Removed the following invalid named ranges:");
-                    foreach (string n in namesToRemove)
-                    {
-                        Console.WriteLine($"- {n}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("No invalid named ranges were found.");
-                }
-
-                // Save the modified workbook
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // If the worksheet does not exist, remove the named range
+            if (workbook.Worksheets[sheetName] == null)
+                definedNames.RemoveAt(i);
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Save the cleaned workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

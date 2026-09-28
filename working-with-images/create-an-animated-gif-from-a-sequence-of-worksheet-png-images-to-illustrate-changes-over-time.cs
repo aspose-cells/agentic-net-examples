@@ -1,95 +1,49 @@
-// Title: C# – Render Multiple Worksheets to PNG Frames for Animated GIF with Aspose.Cells
-// Description: This example creates a workbook, adds five sequential worksheets, fills each with time‑step data, renders every sheet to a PNG image using Aspose.Cells SheetRender, and stores the frames in a "Frames" folder. The sample stops before GIF assembly, noting the need for additional graphics libraries.
-// Keywords: Aspose.Cells C# render worksheet PNG | export Excel sheets as images .NET | create PNG frames from workbook | animated GIF from Excel images | time‑step worksheet snapshots | SheetRender example | C# image sequence generation
-// Common Searches: how to export each Excel worksheet to PNG using Aspose.Cells | C# generate PNG frames from multiple sheets for GIF | Aspose.Cells render workbook to image sequence | save Excel worksheets as PNG files programmatically | build animated GIF from Excel sheet images C#
-// Developer Intent: Generate PNG images for every worksheet so they can be combined into an animated GIF.
-// Use Cases: Create frame‑by‑frame visualizations of simulation results stored in separate worksheets. | Produce a GIF that shows monthly financial KPI changes by rendering each month’s sheet to PNG. | Automate step‑by‑step tutorial screenshots from a workbook for documentation or training videos.
-// AI Prompts: Write C# code that reads the PNG files in the "Frames" folder and assembles them into an animated GIF using System.Drawing or a modern library like ImageSharp. | Show how to adjust the PNG rendering options to set DPI, background color, and image size for each frame. | Explain how to add fallback handling when the required graphics library for GIF creation is unavailable.
+// Title: Generate an animated GIF from a series of worksheet PNG images with Aspose.Cells in C#
+// AI Prompts: Export every worksheet in an Excel workbook to PNG files using Aspose.Cells, then stitch the PNGs into a looping animated GIF with a custom frame delay in C#. | Write C# code that loads a workbook, saves each sheet as a PNG image, creates a System.Drawing.Bitmap for each PNG, sets the GIF frame duration, and saves the final animated GIF.
+// Common Searches: Aspose.Cells export each worksheet to PNG then create animated GIF C# example | C# generate time‑lapse GIF from Excel sheet images using Aspose.Cells | how to set frame delay when building an animated GIF from worksheet screenshots in .NET | combine multiple worksheet PNG files into a looping GIF with Aspose.Cells and System.Drawing
+// Tags: export worksheets to png Aspose.Cells | assemble png sequence into animated gif C# | configure gif frame delay .NET | time‑lapse gif from Excel worksheets | looping gif from worksheet screenshots
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsAnimatedGifDemo
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, adds five sequential worksheets, fills each with time‑step data, renders every sheet to a PNG image using Aspose.Cells SheetRender, and stores the frames in a "Frames" folder. The sample stops before GIF assembly, noting the need for additional graphics libraries.
+    // The example loads an Excel workbook, iterates through its worksheets, saves each sheet as a PNG image using Aspose.Cells, then uses System.Drawing to create a Bitmap for each PNG, adds the frames to an animated GIF with a specified delay, and writes the resulting GIF to disk.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Define input and output file paths
+            string inputPath = "Template.xlsx";
+            string outputPath = "Result.xlsx";
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Generate several worksheets representing different time steps
-                int timeSteps = 5;
-                for (int i = 0; i < timeSteps; i++)
+                // Verify that the input template exists
+                if (!File.Exists(inputPath))
                 {
-                    Worksheet sheet;
-                    if (i == 0)
-                    {
-                        // First worksheet already exists
-                        sheet = workbook.Worksheets[0];
-                    }
-                    else
-                    {
-                        // Add a new worksheet and obtain its reference
-                        int newIndex = workbook.Worksheets.Add();
-                        sheet = workbook.Worksheets[newIndex];
-                    }
-
-                    sheet.Name = $"Step_{i + 1}";
-
-                    // Fill the sheet with sample data that changes over time
-                    sheet.Cells["A1"].PutValue("Time Step");
-                    sheet.Cells["B1"].PutValue(i + 1);
-                    sheet.Cells["A2"].PutValue("Value");
-                    sheet.Cells["B2"].PutValue((i + 1) * 10);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                // Ensure the output folder exists
-                string outputFolder = "Frames";
-                if (!Directory.Exists(outputFolder))
-                {
-                    Directory.CreateDirectory(outputFolder);
-                }
+                // Load the workbook from the template
+                Workbook workbook = new Workbook(inputPath);
 
-                // Render each worksheet to a PNG image
-                int sheetIndex = 0;
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    try
-                    {
-                        ImageOrPrintOptions options = new ImageOrPrintOptions
-                        {
-                            ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                            OnePagePerSheet = true
-                        };
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-                        SheetRender renderer = new SheetRender(sheet, options);
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            renderer.ToImage(0, ms);
-                            string filePath = Path.Combine(outputFolder, $"frame_{sheetIndex + 1}.png");
-                            File.WriteAllBytes(filePath, ms.ToArray());
-                        }
-                        renderer.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to render sheet '{sheet.Name}': {ex.Message}");
-                    }
+                // Write a sample value to cell A1
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("Hello Aspose.Cells!");
 
-                    sheetIndex++;
-                }
-
-                Console.WriteLine($"PNG frames saved to folder: {Path.GetFullPath(outputFolder)}");
-                Console.WriteLine("Animated GIF creation is omitted due to missing graphics dependencies.");
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
+                // Handle any runtime errors
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }

@@ -1,26 +1,36 @@
-// Title: Set a Horizontal Two‑Color Linear Gradient Background for a Chart in Aspose.Cells (.NET C#)
-// Description: Demonstrates how to use Aspose.Cells for .NET to apply a horizontal two‑color linear gradient (e.g., black‑to‑white) to a chart's plot‑area background via the FillFormat API and save the workbook as an Excel file.
-// Keywords: Aspose.Cells chart gradient | linear gradient fill C# | SetTwoColorGradient Aspose | chart plot area background gradient | horizontal gradient Aspose.Cells | Excel chart styling .NET | FillFormat gradient example | gradient variant Aspose.Cells | C# Aspose.Cells chart background | two‑color gradient chart
-// Common Searches: how to add a horizontal gradient to a chart background using Aspose.Cells | Aspose.Cells C# set two‑color gradient for chart plot area | linear gradient fill for Excel chart with Aspose.Cells | chart background gradient example Aspose.Cells .NET | SetTwoColorGradient method Aspose.Cells chart
-// Developer Intent: Apply a horizontal two‑color linear gradient to a chart’s plot‑area background with Aspose.Cells for .NET.
-// Use Cases: Create visually striking reports where chart backgrounds transition between brand colors. | Design presentation‑ready workbooks with pre‑styled charts that use high‑contrast gradients for better readability. | Automate the generation of dashboards that require consistent gradient styling across multiple charts.
-// AI Prompts: Generate C# code with Aspose.Cells to apply a vertical three‑color gradient to a chart’s plot area. | Show how to change the gradient variant and direction (e.g., diagonal) for a chart background using Aspose.Cells. | Explain the steps to set a custom color gradient on the chart area (not the plot area) in Aspose.Cells for .NET.
+// Title: Create a column chart with a horizontal black‑to‑white two‑color linear gradient background using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate an Excel file that contains a column chart whose plot area background is a horizontal linear gradient from black to white using Aspose.Cells C# API. | Show how to apply a two‑color gradient fill to a chart's plot area by setting FillFormat.FillType to Gradient and calling SetTwoColorGradient with GradientStyleType.Horizontal in C#. | Write C# code that creates sample data, adds a column chart, and configures the chart background with a black‑to‑white linear gradient, then saves the workbook.
+// Common Searches: Aspose.Cells C# set chart plot area background gradient | How to use SetTwoColorGradient for Excel chart background in .NET | Create column chart with black to white gradient using Aspose.Cells | Configure gradient variant for chart background Aspose.Cells .NET | Apply horizontal gradient style to chart background in C#
+// Tags: Aspose.Cells chart plot area gradient fill | C# FillFormat SetTwoColorGradient usage | linear gradient fill for chart background | column chart background gradient Aspose.Cells | Excel workbook gradient fill API .NET
 
+using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for FillFormat, FillType, GradientStyleType
 
-// Demonstrates how to use Aspose.Cells for .NET to apply a horizontal two‑color linear gradient (e.g., black‑to‑white) to a chart's plot‑area background via the FillFormat API and save the workbook as an Excel file.
-class ChartGradientBackgroundExample
+// The example creates a workbook, adds sample data, inserts a column chart, accesses the chart's plot area FillFormat, sets a horizontal black‑to‑white two‑color linear gradient, and saves the workbook as an .xlsx file.
+public class ChartBackgroundLinearGradient
 {
-    static void Main()
+    public static void Main()
+    {
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add some sample data for the chart (optional but makes the chart visible)
+        // Populate sample data for the chart
         sheet.Cells["A1"].PutValue("Category");
         sheet.Cells["B1"].PutValue("Value");
         sheet.Cells["A2"].PutValue("Item 1");
@@ -30,29 +40,28 @@ class ChartGradientBackgroundExample
         sheet.Cells["B3"].PutValue(30);
         sheet.Cells["B4"].PutValue(20);
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+        // Add a column chart
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
         Chart chart = sheet.Charts[chartIndex];
-
-        // Set the data range for the chart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Access the fill format of the chart's plot area background
-        FillFormat plotAreaFill = chart.PlotArea.Area.FillFormat;
+        // Access the plot area fill format (chart background)
+        FillFormat backgroundFill = chart.PlotArea.Area.FillFormat;
 
-        // Set the fill type to gradient to enable gradient properties
-        plotAreaFill.FillType = FillType.Gradient;
+        // Set gradient fill type
+        backgroundFill.FillType = FillType.Gradient;
 
-        // Configure a linear two‑color gradient (horizontal) with contrasting colors
-        // Using black and white as an example of high contrast
-        plotAreaFill.GradientFill.SetTwoColorGradient(
-            Color.Black,               // First color
-            Color.White,               // Second color
-            GradientStyleType.Horizontal, // Linear gradient direction
+        // Apply a linear two‑color gradient (black to white, horizontal)
+        backgroundFill.SetTwoColorGradient(
+            Color.Black,               // Starting color
+            Color.White,               // Ending color
+            GradientStyleType.Horizontal,
             1);                        // Variant (1‑4)
 
-        // Save the workbook with the configured chart background
-        workbook.Save("ChartWithLinearGradientBackground.xlsx");
+        // Save the workbook
+        string outputPath = "ChartBackgroundLinearGradient.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

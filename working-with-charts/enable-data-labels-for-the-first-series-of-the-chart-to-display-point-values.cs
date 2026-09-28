@@ -1,42 +1,50 @@
-// Title: Show Point Values with Data Labels on the First Series of an Aspose.Cells Column Chart (C#)
-// Description: Creates a workbook, inserts sample data, adds a column chart, defines the first series, enables DataLabels.ShowValue to display each point's value, recalculates the chart, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells C# chart data labels | enable data labels Aspose.Cells | show point values column chart | Series.DataLabels.ShowValue | Aspose.Cells chart calculation | Excel chart automation .NET
-// Common Searches: Aspose.Cells show data labels on chart series C# | How to display point values in a column chart using Aspose.Cells | Enable data labels for first series Aspose.Cells .NET | Aspose.Cells chart label visibility example
-// Developer Intent: Add data labels to the first series of a column chart so each column displays its numeric value.
-// Use Cases: Financial statements where each column’s amount must be visible without hovering. | Executive dashboards that require immediate insight into individual data points. | Automated report generation that embeds value labels directly on charts for print‑ready Excel files.
-// AI Prompts: Generate C# code with Aspose.Cells to add data labels to all series of a line chart and customize their font. | Write a method that toggles DataLabels.ShowValue for a given series index in an Aspose.Cells chart. | Explain how to position data labels (inside, outside, center) and change their number format after enabling ShowValue.
+// Title: How to enable data labels that display point values for the first series of a column chart in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to turn on ShowValue for the first series of a column chart so each column shows its numeric value. | Add a step to an existing Aspose.Cells workbook that activates data labels for the first series of a chart and then saves the file. | Demonstrate how to calculate a chart after enabling data labels for its first series and export the workbook as an .xlsx file in C#. | Show the minimal Aspose.Cells API calls required to set DataLabels.ShowValue = true on the first series of a chart.
+// Common Searches: Aspose.Cells C# enable data labels for first series of a column chart | How to show values on each column in an Aspose.Cells chart using .NET | Set ShowValue property on chart series with Aspose.Cells API | C# example to display point values in a column chart created by Aspose.Cells | Enable data labels for a specific series in an Aspose.Cells workbook
+// Tags: Aspose.Cells enable data labels first series | column chart series ShowValue .NET | C# chart point values Aspose.Cells | set data labels for chart series Aspose.Cells | calculate and save chart Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsDataLabelsDemo
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, inserts sample data, adds a column chart, defines the first series, enables DataLabels.ShowValue to display each point's value, recalculates the chart, and saves the file as an Excel workbook.
-    class Program
+    // // This example creates a workbook, fills it with sample data, adds a column chart, enables data labels for the first series to display each point's value, calculates the chart, and saves the workbook as an .xlsx file.
+    public class EnableDataLabelsFirstSeries
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
+            // Populate sample data
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("A");
             sheet.Cells["A3"].PutValue("B");
             sheet.Cells["A4"].PutValue("C");
-
-            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["B2"].PutValue(10);
             sheet.Cells["B3"].PutValue(20);
             sheet.Cells["B4"].PutValue(30);
 
-            // Add a column chart to the worksheet
+            // Add a column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add the first series (vertical data range) and set category data
+            // Set data range for the series
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
@@ -44,11 +52,11 @@ namespace AsposeCellsDataLabelsDemo
             Series firstSeries = chart.NSeries[0];
             firstSeries.DataLabels.ShowValue = true;
 
-            // Optional: calculate the chart to ensure labels are rendered correctly
+            // Calculate the chart (optional)
             chart.Calculate();
 
             // Save the workbook
-            workbook.Save("ChartWithDataLabels.xlsx");
+            workbook.Save("EnableDataLabelsFirstSeries.xlsx");
         }
     }
 }

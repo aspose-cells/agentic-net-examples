@@ -1,82 +1,104 @@
-// Title: C# – Generate a separate worksheet for each master‑detail group using Aspose.Cells smart markers with SheetBreak
-// Description: This example demonstrates how to load a template workbook that contains a smart marker with the SheetBreak syntax (e.g., &=Orders:SheetBreak), bind a list of Order objects (master) and their Item collections (detail) to a WorkbookDesigner, enable LineByLine processing, and invoke Process() to create an individual worksheet for every order. The populated workbook is saved as Result.xlsx.
-// Keywords: Aspose.Cells | smart markers | SheetBreak | C# | master‑detail | WorkbookDesigner | LineByLine | generate worksheets per group | template marker syntax | export to Excel
-// Common Searches: Aspose.Cells SheetBreak create separate sheet per group | C# smart markers master detail example | WorkbookDesigner LineByLine true effect | how to bind detail collection for each group in Aspose.Cells | template marker for grouping orders into worksheets
-// Developer Intent: Create a workbook where each master record (order) appears on its own worksheet by using smart marker grouping with SheetBreak syntax.
-// Use Cases: Generate an invoice workbook with one sheet per order and its line items. | Produce a sales report that separates customers into individual worksheets. | Export project plans so each project gets a dedicated Excel sheet with its tasks.
-// AI Prompts: Show how to bind the Items collection dynamically for each Order when using SheetBreak smart markers in Aspose.Cells. | Provide the exact template marker syntax needed to group Orders and Items with a sheet break. | Explain what happens if LineByLine is set to false while using SheetBreak grouping.
+// Title: Create separate worksheets for each order using Aspose.Cells sheet‑break smart marker in C#
+// AI Prompts: Build an Excel template that places the sheet‑break smart marker (&=Orders:SheetBreak) followed by detail markers, bind a List<Order> to the designer, run Process, and generate one worksheet per order. | Write C# code to define master‑detail classes, insert sheet‑break and item markers, invoke the Aspose.Cells designer to populate the workbook, and save the result as an .xlsx file.
+// Common Searches: Aspose.Cells C# sheet break smart marker create worksheet per collection item | How to generate separate Excel sheets for each order using master‑detail smart markers | Split an Excel workbook into multiple sheets with sheet break syntax in Aspose.Cells | C# example of grouping data with smart markers and sheet break for master‑detail
+// Tags: Aspose.Cells sheet break marker | C# generate separate worksheets from collection | Excel .xlsx sheets per order using smart markers | smart marker grouping with sheet break | export order data to individual worksheets
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// This example demonstrates how to load a template workbook that contains a smart marker with the SheetBreak syntax (e.g., &=Orders:SheetBreak), bind a list of Order objects (master) and their Item collections (detail) to a WorkbookDesigner, enable LineByLine processing, and invoke Process() to create an individual worksheet for every order. The populated workbook is saved as Result.xlsx.
-class Program
+namespace SmartMarkerSheetBreakDemo
 {
-    static void Main()
-    {
-        // Load the template workbook that contains smart markers with sheet break syntax
-        // Example marker in the template: &=Orders:SheetBreak
-        Workbook workbook = new Workbook("Template.xlsx");
-
-        // Prepare master‑detail data
-        List<Order> orders = new List<Order>
-        {
-            new Order
-            {
-                OrderId = 1,
-                Customer = "Alice",
-                Items = new List<Item>
-                {
-                    new Item { Product = "Pen",      Quantity = 10 },
-                    new Item { Product = "Notebook", Quantity = 5  }
-                }
-            },
-            new Order
-            {
-                OrderId = 2,
-                Customer = "Bob",
-                Items = new List<Item>
-                {
-                    new Item { Product = "Pencil", Quantity = 20 },
-                    new Item { Product = "Eraser", Quantity = 2  }
-                }
-            }
-        };
-
-        // Set up the WorkbookDesigner
-        WorkbookDesigner designer = new WorkbookDesigner
-        {
-            Workbook = workbook,
-            // When using sheet break syntax the default LineByLine = true works,
-            // but we explicitly set it to true for clarity.
-            LineByLine = true
-        };
-
-        // Bind the master data source (Orders) and the detail data source (Items)
-        designer.SetDataSource("Orders", orders);
-        // The detail source name must match the marker used inside the group (e.g., &Items)
-        designer.SetDataSource("Items", orders[0].Items); // placeholder; actual grouping handled by smart markers
-
-        // Process the smart markers – this will create a separate worksheet for each order group
-        designer.Process();
-
-        // Save the populated workbook
-        workbook.Save("Result.xlsx");
-    }
-
-    // Master data class
+    // Master class representing a group (e.g., an order)
+    // The sample creates a workbook template, adds a sheet‑break smart marker (&=Orders:SheetBreak) and detail markers, binds a List<Order> (master‑detail data) to the Aspose.Cells designer, processes the markers to produce a distinct worksheet for each order, and saves the file as MasterDetail_SheetBreak_Output.xlsx.
     public class Order
     {
         public int OrderId { get; set; }
         public string Customer { get; set; }
-        public List<Item> Items { get; set; }
+        public List<OrderItem> Items { get; set; }
     }
 
-    // Detail data class
-    public class Item
+    // Detail class representing items within a group
+    public class OrderItem
     {
         public string Product { get; set; }
         public int Quantity { get; set; }
+    }
+
+    public class Program
+    {
+        public static void Main()
+        {
+            // -------------------------------------------------
+            // 1. Prepare master‑detail data
+            // -------------------------------------------------
+            var orders = new List<Order>
+            {
+                new Order
+                {
+                    OrderId = 1001,
+                    Customer = "Alice",
+                    Items = new List<OrderItem>
+                    {
+                        new OrderItem { Product = "Apple",  Quantity = 5 },
+                        new OrderItem { Product = "Banana", Quantity = 3 }
+                    }
+                },
+                new Order
+                {
+                    OrderId = 1002,
+                    Customer = "Bob",
+                    Items = new List<OrderItem>
+                    {
+                        new OrderItem { Product = "Orange", Quantity = 2 },
+                        new OrderItem { Product = "Grapes", Quantity = 4 },
+                        new OrderItem { Product = "Mango",  Quantity = 1 }
+                    }
+                }
+            };
+
+            // -------------------------------------------------
+            // 2. Create a workbook template with smart markers
+            // -------------------------------------------------
+            Workbook wb = new Workbook();                     // create workbook
+            Worksheet ws = wb.Worksheets[0];                  // access first sheet
+            Cells cells = ws.Cells;
+
+            // Header for master data
+            cells["A1"].PutValue("Order ID");
+            cells["B1"].PutValue("Customer");
+
+            // Sheet break smart marker – creates a new sheet for each Order
+            // The marker must be placed in a cell that will be processed first.
+            cells["A2"].PutValue("&=Orders:SheetBreak");
+
+            // Header for detail data (will appear on each generated sheet)
+            cells["A3"].PutValue("Product");
+            cells["B3"].PutValue("Quantity");
+
+            // Detail smart markers – repeat for each item in the current Order
+            cells["A4"].PutValue("&=Orders.Items.Product");
+            cells["B4"].PutValue("&=Orders.Items.Quantity");
+
+            // -------------------------------------------------
+            // 3. Set up WorkbookDesigner and bind data source
+            // -------------------------------------------------
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = wb
+            };
+            // Bind the master collection to the name used in smart markers
+            designer.SetDataSource("Orders", orders);
+
+            // -------------------------------------------------
+            // 4. Process the smart markers (creates separate sheets)
+            // -------------------------------------------------
+            designer.Process();   // processes all smart markers in the workbook
+
+            // -------------------------------------------------
+            // 5. Save the result
+            // -------------------------------------------------
+            wb.Save("MasterDetail_SheetBreak_Output.xlsx");
+        }
     }
 }

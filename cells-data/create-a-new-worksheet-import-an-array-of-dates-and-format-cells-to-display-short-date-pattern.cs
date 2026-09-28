@@ -1,66 +1,50 @@
-// Title: Import a DateTime array into a new worksheet and set short‑date format with Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook, adds a worksheet, converts a DateTime[] to object[], imports the dates vertically starting at A1, defines a style with built‑in number format 14 (short date), applies the style via StyleFlag, and saves the file as DateImportShortFormat.xlsx.
-// Keywords: Aspose.Cells import DateTime array | C# short date format Excel | ImportObjectArray Aspose.Cells | built‑in number format 14 | apply date style Aspose.Cells .NET | create worksheet Aspose.Cells | Excel date formatting C#
-// Common Searches: how to import dates into Aspose.Cells worksheet | set short date number format in Aspose.Cells .NET | ImportObjectArray with DateTime values C# | apply built‑in date style to a range Aspose.Cells | C# Aspose.Cells example for date formatting
-// Developer Intent: Load a DateTime[] into a fresh worksheet and display the cells using the short‑date pattern.
-// Use Cases: Generate a transaction ledger where dates are imported from a C# list and shown as concise short dates. | Build a project timeline spreadsheet by importing schedule dates and formatting them for end‑user readability. | Export appointment data from an application to Excel with proper short‑date rendering for reporting.
-// AI Prompts: Provide C# code that uses Aspose.Cells to import a DateTime[] into a worksheet and apply the built‑in short date format (number 14). | Show how to use ImportObjectArray together with CreateStyle and StyleFlag to format dates as short dates in Aspose.Cells for .NET. | Explain step‑by‑step how to create a workbook, import dates vertically, and set only the number format for the imported range.
+// Title: Create a worksheet, import a DateTime array vertically, and format cells with Excel short date pattern using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a new workbook, adds a worksheet, imports a DateTime[] into column A starting at A1, and applies the built‑in short date number format (format 14) to the imported range. | Show how to apply a number‑format style to a specific cell range after importing data with Aspose.Cells in C#. | Adapt the example to import the dates horizontally across row 1 and use a custom date format such as "dd-MMM-yyyy" instead of the built‑in short date.
+// Common Searches: Aspose.Cells C# import DateTime array into worksheet and set short date format | How to apply Excel built‑in short date (format 14) to a range using Aspose.Cells | Import dates vertically starting at A1 with Aspose.Cells .NET | Set number format for imported dates in Aspose.Cells workbook | C# Aspose.Cells example for date array import and formatting
+// Tags: date array import Aspose.Cells | short date number format Aspose.Cells | worksheet creation Aspose.Cells | vertical date import Aspose.Cells | Excel format 14 Aspose.Cells
 
 using System;
-using System.Linq;
 using Aspose.Cells;
 
 namespace AsposeCellsDateImportDemo
 {
-    // C# example that creates a workbook, adds a worksheet, converts a DateTime[] to object[], imports the dates vertically starting at A1, defines a style with built‑in number format 14 (short date), applies the style via StyleFlag, and saves the file as DateImportShortFormat.xlsx.
+    // // This program creates a new workbook, accesses the first worksheet, imports an array of DateTime values vertically starting at A1, applies the built‑in short date number format (format 14) to the imported cells, and saves the workbook as ImportedDatesShortDate.xlsx.
     public class Program
     {
         public static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Prepare an array of DateTime values to import
+            object[] dateArray = new object[]
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                new DateTime(2023, 1, 1),
+                new DateTime(2023, 2, 14),
+                new DateTime(2023, 3, 31),
+                new DateTime(2023, 4, 15),
+                new DateTime(2023, 5, 20)
+            };
 
-                // Prepare an array of DateTime values
-                DateTime[] dateArray = new DateTime[]
-                {
-                    new DateTime(2023, 1, 15),
-                    new DateTime(2023, 2, 20),
-                    new DateTime(2023, 3, 25),
-                    new DateTime(2023, 4, 10)
-                };
+            // Import the dates vertically starting at cell A1 (row 0, column 0)
+            worksheet.Cells.ImportObjectArray(dateArray, 0, 0, true);
 
-                // Convert to object[] because ImportObjectArray expects object[]
-                object[] objArray = dateArray.Cast<object>().ToArray();
+            // Apply short date format to the imported cells
+            int rowsCount = dateArray.Length;
+            // Create a range that covers the imported dates
+            var dateRange = worksheet.Cells.CreateRange(0, 0, rowsCount, 1);
+            // Create a style with short date number format (Excel built‑in format 14)
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Number = 14; // Short date pattern (e.g., m/d/yyyy)
+            // Specify that only the number format should be applied
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
+            // Apply the style to the range
+            dateRange.ApplyStyle(dateStyle, flag);
 
-                // Import the dates vertically starting at cell A1 (row 0, column 0)
-                worksheet.Cells.ImportObjectArray(objArray, 0, 0, true);
-
-                // Apply short date format (built‑in number format 14) to the imported range
-                Style dateStyle = workbook.CreateStyle();
-                dateStyle.Number = 14; // Short date pattern
-
-                StyleFlag styleFlag = new StyleFlag
-                {
-                    NumberFormat = true
-                };
-
-                // Create a range that covers the imported dates
-                int rowCount = dateArray.Length;
-                Aspose.Cells.Range dateRange = worksheet.Cells.CreateRange(0, 0, rowCount, 1);
-                dateRange.ApplyStyle(dateStyle, styleFlag);
-
-                // Save the workbook
-                string outputPath = "DateImportShortFormat.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("ImportedDatesShortDate.xlsx");
         }
     }
 }

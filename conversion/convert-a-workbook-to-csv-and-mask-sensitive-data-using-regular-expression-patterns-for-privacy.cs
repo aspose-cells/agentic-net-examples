@@ -1,83 +1,69 @@
-// Title: Mask Emails & Credit Card Numbers in Excel and Export to CSV with Aspose.Cells (C#)
-// Description: Load an XLSX workbook, run regex patterns to replace email addresses and credit‑card numbers with placeholders, save a temporary masked file, convert it to CSV using Aspose.Cells.Utility.ConversionUtility, and clean up the intermediate file.
-// Keywords: Aspose.Cells | C# | Excel to CSV conversion | mask sensitive data | regex replace in cells | PII redaction | email masking | credit card masking | data privacy | ConversionUtility
-// Common Searches: Aspose.Cells replace email in Excel cells C# | How to mask credit card numbers in Excel before CSV export | Convert masked workbook to CSV using Aspose.Cells | Regex replace all cell values Aspose.Cells .NET | C# code to sanitize Excel data with Aspose.Cells
-// Developer Intent: Redact personal identifiers in an Excel workbook with regex and generate a privacy‑safe CSV file.
-// Use Cases: Prepare customer datasets for external sharing while complying with GDPR or PCI‑DSS. | Automate report pipelines that require PII removal before downstream analytics. | Create a one‑time masked export for auditors without altering the original workbook.
-// AI Prompts: Write C# code that uses Aspose.Cells to replace phone numbers with [PHONE] in every string cell before exporting to CSV. | Show how to add a regex for Social Security numbers to the masking list and generate a pipe‑delimited text file with ConversionUtility. | Explain how to modify the example to keep the original workbook unchanged while producing a masked CSV.
+// Title: Mask emails, credit‑card numbers, and phone numbers in an Excel workbook and export to UTF‑8 CSV using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, scans all string cells, replaces email, credit‑card, and phone patterns using a dictionary of regular expressions, and saves the workbook as a UTF‑8 CSV with a custom separator. | Create a method that iterates over the used range of each worksheet, applies Regex.Replace for each sensitive pattern defined in a map, updates the cell values, and exports the result using TxtSaveOptions to a CSV file.
+// Common Searches: how to replace personal data in Excel cells with placeholders before converting to CSV using Aspose.Cells C# | Aspose.Cells C# mask email addresses in workbook and save as CSV | C# export Excel to CSV while redacting credit card numbers with regular expressions | using Aspose.Cells to anonymize phone numbers in an .xlsx file and generate a CSV file | privacy filtering Excel data during CSV conversion with Aspose.Cells .NET
+// Tags: Aspose.Cells mask sensitive data in Excel | C# regex redaction for workbook cells | TxtSaveOptions CSV export with UTF‑8 encoding | privacy filtering during Excel to CSV conversion | replace email credit‑card phone patterns using Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Load an XLSX workbook, run regex patterns to replace email addresses and credit‑card numbers with placeholders, save a temporary masked file, convert it to CSV using Aspose.Cells.Utility.ConversionUtility, and clean up the intermediate file.
-public class WorkbookToCsvMasking
+// The program loads an input.xlsx workbook with Aspose.Cells, iterates through all used string cells, applies regular‑expression masks for email addresses, credit‑card numbers, and phone numbers, updates the cell values, and then saves the workbook as a UTF‑8 CSV (output.csv) using TxtSaveOptions.
+class WorkbookToCsvMasker
 {
-    // Entry point
-    public static void Main(string[] args)
+    // Define regex patterns and their replacement masks
+    private static readonly Dictionary<string, string> SensitivePatterns = new Dictionary<string, string>
     {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
-    }
+        // Example: mask email addresses
+        { @"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", "[EMAIL]" },
+        // Example: mask credit card numbers (simple pattern)
+        { @"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b", "[CREDIT_CARD]" },
+        // Example: mask phone numbers
+        { @"\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b", "[PHONE]" }
+    };
 
-    // Example usage
-    public static void Run()
+    static void Main(string[] args)
     {
-        // Paths – adjust as needed
-        string sourceFile = "input.xlsx";          // Original workbook
-        string maskedFile = "masked.xlsx";         // Temporary masked workbook
-        string outputCsv = "output.csv";           // Final CSV file
+        // Input and output file paths
+        string inputPath = "input.xlsx";   // Path to the source workbook
+        string outputPath = "output.csv";  // Path for the resulting CSV
 
-        // Verify source file exists to avoid FileNotFoundException
-        if (!File.Exists(sourceFile))
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.Error.WriteLine($"Source file '{sourceFile}' not found.");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
-        // Load the source workbook (lifecycle: create & load)
-        using (Workbook workbook = new Workbook(sourceFile))
+        try
         {
-            // Define regex patterns and replacement values
-            var patterns = new (string pattern, string replacement)[]
-            {
-                (@"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", "[EMAIL]"),
-                (@"\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b", "[CREDIT_CARD]")
-            };
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through all worksheets and cells
+            // Iterate through all worksheets and cells to mask sensitive data
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
 
-                for (int row = 0; row <= maxRow; row++)
+                // Use the used range for performance
+                Aspose.Cells.Range usedRange = cells.MaxDisplayRange;
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    for (int col = startCol; col <= endCol; col++)
                     {
                         Cell cell = cells[row, col];
                         if (cell.Type == CellValueType.IsString)
                         {
                             string original = cell.StringValue;
-                            string masked = original;
-
-                            // Apply each regex pattern
-                            foreach (var (pattern, replacement) in patterns)
-                            {
-                                masked = Regex.Replace(masked, pattern, replacement);
-                            }
-
-                            // If the value changed, write it back
-                            if (!masked.Equals(original))
+                            string masked = MaskSensitiveData(original);
+                            if (!original.Equals(masked))
                             {
                                 cell.PutValue(masked);
                             }
@@ -86,34 +72,36 @@ public class WorkbookToCsvMasking
                 }
             }
 
-            // Save the masked workbook (lifecycle: save)
-            workbook.Save(maskedFile, SaveFormat.Xlsx);
-        }
-
-        // Convert the masked workbook to CSV using the provided ConversionUtility rule
-        if (File.Exists(maskedFile))
-        {
-            ConversionUtility.Convert(maskedFile, outputCsv);
-        }
-        else
-        {
-            Console.Error.WriteLine($"Masked file '{maskedFile}' was not created.");
-            return;
-        }
-
-        // Optional: clean up the temporary masked file
-        try
-        {
-            if (File.Exists(maskedFile))
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                File.Delete(maskedFile);
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook as CSV using TxtSaveOptions
+            TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+            {
+                Encoding = Encoding.UTF8,
+                Separator = ','
+            };
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved as CSV to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Failed to delete temporary file '{maskedFile}': {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
 
-        Console.WriteLine($"Conversion completed. CSV saved to '{outputCsv}'.");
+    // Applies all regex masks to the input text and returns the masked result
+    private static string MaskSensitiveData(string input)
+    {
+        string result = input;
+        foreach (var kvp in SensitivePatterns)
+        {
+            result = Regex.Replace(result, kvp.Key, kvp.Value, RegexOptions.Compiled);
+        }
+        return result;
     }
 }

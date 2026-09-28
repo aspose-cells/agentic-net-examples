@@ -1,17 +1,14 @@
-// Title: Create a staggered column layout in Excel with Aspose.Cells .NET using ImportObjectArray (skip & start offset)
-// Description: This example shows how to build a workbook, define two object arrays, and import each array horizontally while skipping one column between values. The second array starts at column 1, producing an alternating (staggered) column arrangement, then saves the file as StaggeredDataLayout.xlsx.
-// Keywords: Aspose.Cells .NET | ImportObjectArray skip | column offset Excel | staggered data layout | C# Excel automation | skip parameter Aspose.Cells | offset rows Aspose.Cells | horizontal import Excel
-// Common Searches: Aspose.Cells import object array with column skip | how to offset rows for staggered columns in Excel C# | skip columns while importing data with Aspose.Cells | alternating column layout using ImportObjectArray | combine skip and start column in Aspose.Cells
-// Developer Intent: Produce an Excel sheet where each successive row begins one column to the right, using ImportObjectArray’s skip and start‑column arguments to achieve a staggered visual layout.
-// Use Cases: Design side‑by‑side comparison tables where each row is shifted to avoid column overlap. | Generate printable schedules or timetables with offset entries for clearer visual separation. | Create multi‑section reports that visually separate sections by inserting blank columns without adding extra rows.
-// AI Prompts: Demonstrate how to vary the skip value per row while keeping the staggered effect with ImportObjectArray. | Show an example of vertical ImportObjectArray combined with alternating column offsets. | Explain how the optional noAdd flag works together with skip to insert blank cells in Aspose.Cells.
+// Title: Create staggered column layout in Excel with Aspose.Cells ImportObjectArray using alternating skip values in C#
+// AI Prompts: Generate C# code that uses Aspose.Cells Workbook and Worksheet to import object arrays with a skip of 1 column for the first and third rows and a skip of 0 for the second row, then save the file. | Show how to call Cells.ImportObjectArray with different skip arguments to produce a staggered data pattern across multiple rows. | Provide a step‑by‑step example that creates a workbook, imports three rows with alternating column gaps, and writes the result to an .xlsx file.
+// Common Searches: Aspose.Cells C# import object array with column skip parameter | How to create alternating spaced rows in an Excel sheet using Aspose.Cells | ImportObjectArray skip argument for staggered layout in C# | C# Aspose.Cells place data with gaps between columns | Save workbook after importing rows with different skip values Aspose.Cells
+// Tags: ImportObjectArray column skip Aspose.Cells | staggered row layout Excel C# | alternating skip parameter worksheet | Aspose.Cells export to XLSX with spaced cells | C# create gap between columns using ImportObjectArray
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsStaggeredLayout
+namespace StaggeredDataLayoutDemo
 {
-    // This example shows how to build a workbook, define two object arrays, and import each array horizontally while skipping one column between values. The second array starts at column 1, producing an alternating (staggered) column arrangement, then saves the file as StaggeredDataLayout.xlsx.
+    // Demonstrates using Aspose.Cells Cells.ImportObjectArray in C# to insert rows with and without column gaps, creating a staggered layout and saving the workbook as StaggeredDataLayout.xlsx.
     class Program
     {
         static void Main()
@@ -19,23 +16,30 @@ namespace AsposeCellsStaggeredLayout
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Data for the first row (will be placed in columns A, C, E, ...)
-            object[] firstRowData = new object[] { "Name", "Age", "City", "Alice", 30, "New York", "Bob", 25, "Paris" };
+            // Sample data to be placed in alternating rows
+            // Row 0 will have a skip (blank column) between each entry
+            // Row 1 will have no skip (continuous entries)
+            object[] rowWithSkip = new object[] { "A1", "B1", "C1", "D1" };
+            object[] rowWithoutSkip = new object[] { "A2", "B2", "C2", "D2" };
 
-            // Data for the second row (will be placed in columns B, D, F, ...)
-            object[] secondRowData = new object[] { "Name", "Age", "City", "Charlie", 28, "London", "Diana", 32, "Tokyo" };
+            // Import first row starting at A1 (row 0, column 0) horizontally with a skip of 1 column
+            // This creates a staggered layout: A1, C1, E1, G1 ...
+            cells.ImportObjectArray(rowWithSkip, 0, 0, false, 1);
 
-            // Import first row data horizontally, skipping one column between entries
-            // Parameters: data array, start row 0, start column 0, horizontal (false), skip 1 column
-            sheet.Cells.ImportObjectArray(firstRowData, 0, 0, false, 1);
+            // Import second row starting at A2 (row 1, column 0) horizontally with no skip (skip = 0)
+            // This places data in consecutive cells: A2, B2, C2, D2
+            cells.ImportObjectArray(rowWithoutSkip, 1, 0, false, 0);
 
-            // Import second row data horizontally, also skipping one column,
-            // but start from column 1 to achieve the staggered (offset) layout
-            sheet.Cells.ImportObjectArray(secondRowData, 1, 1, false, 1);
+            // Demonstrate a third row that again uses the skip pattern to continue the alternating effect
+            object[] thirdRow = new object[] { "A3", "B3", "C3", "D3" };
+            cells.ImportObjectArray(thirdRow, 2, 0, false, 1);
 
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save("StaggeredDataLayout.xlsx");
+
+            Console.WriteLine("Staggered data layout created successfully.");
         }
     }
 }

@@ -1,36 +1,50 @@
-// Title: Export XLS Workbook with Charts to PDF Using Aspose.Cells (.NET)
-// Description: Loads an .xls workbook that contains charts, enables RefreshChartCache in PdfSaveOptions to refresh chart data, and saves the workbook as a PDF while preserving the visual appearance of all charts.
-// Keywords: Aspose.Cells | .NET | Excel to PDF | XLS charts | RefreshChartCache | PDF conversion | chart rendering | export workbook to PDF | preserve chart images
-// Common Searches: Aspose.Cells export XLS with charts to PDF | How to keep Excel chart images when converting to PDF .NET | RefreshChartCache property usage | Convert legacy .xls files to PDF preserving charts | Aspose.Cells PDFSaveOptions chart rendering
-// Developer Intent: Convert an Excel .xls workbook that includes charts into a PDF while ensuring the charts render correctly.
-// Use Cases: Generate PDF reports from legacy .xls files that contain financial charts. | Batch convert chart‑rich Excel workbooks to PDF for archiving or distribution. | Create PDF invoices or statements where embedded performance charts must appear accurately. | Produce printable PDFs for regulatory submissions that require exact chart fidelity.
-// AI Prompts: Provide a C# snippet that loads an .xls file with multiple chart types and saves it as PDF using Aspose.Cells, with RefreshChartCache enabled. | Explain how the RefreshChartCache property influences chart rendering during PDF export and recommend scenarios for its use. | Show how to combine additional PdfSaveOptions such as page orientation, image quality, and chart cache refresh in a single export.
+// Title: Convert an XLS workbook with embedded charts to PDF while preserving chart quality using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xls file containing charts, configures PdfSaveOptions to retain chart rendering as vector graphics, and saves the workbook as a PDF with Aspose.Cells. | Show how to set OnePagePerSheet and related PDF save options in Aspose.Cells to ensure charts are rendered correctly during Excel‑to‑PDF conversion.
+// Common Searches: asp.net how to export Excel .xls with charts to PDF using Aspose.Cells preserving vector graphics | c# convert workbook containing charts to PDF with chart rendering intact Aspose.Cells | save Excel file with embedded charts as PDF without losing quality Aspose.Cells .NET
+// Tags: Aspose.Cells PDF conversion with chart rendering | C# load XLS workbook and export to PDF | PdfSaveOptions preserve chart vector graphics | Excel to PDF conversion preserving charts .NET | OnePagePerSheet false Aspose.Cells PDF export
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;   // PdfSaveOptions resides in this namespace
+using Aspose.Cells.Rendering;
 
-// Loads an .xls workbook that contains charts, enables RefreshChartCache in PdfSaveOptions to refresh chart data, and saves the workbook as a PDF while preserving the visual appearance of all charts.
-class ExportWorkbookWithChartsToPdf
+// The sample checks for the presence of an input XLS file, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions (including OnePagePerSheet = false) to keep charts rendered as vector graphics, and saves the workbook as a PDF, with error handling for missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file that contains charts
-        string sourceFile = "input.xls";
+        const string inputPath = "input.xls";
+        const string outputPath = "output.pdf";
 
-        // Load the workbook from the file system
-        Workbook workbook = new Workbook(sourceFile);
-
-        // Configure PDF save options to refresh chart cache so charts render correctly
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            RefreshChartCache = true
-        };
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Save the entire workbook as a PDF file
-        string pdfFile = "output.pdf";
-        workbook.Save(pdfFile, pdfOptions);
+        try
+        {
+            // Load the XLS workbook that contains charts
+            Workbook workbook = new Workbook(inputPath);
 
-        Console.WriteLine($"Workbook '{sourceFile}' has been exported to PDF as '{pdfFile}'.");
+            // Configure PDF save options to preserve chart rendering
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Keep each sheet on its own page (optional, adjust as needed)
+                OnePagePerSheet = false
+                // Charts are rendered as vector graphics by default
+            };
+
+            // Export the workbook to PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

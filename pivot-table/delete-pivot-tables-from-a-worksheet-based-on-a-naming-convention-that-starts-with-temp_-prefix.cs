@@ -1,10 +1,7 @@
-// Title: Remove Pivot Tables with "Temp_" Prefix from All Worksheets Using Aspose.Cells for .NET (C#)
-// Description: C# example that loads an Excel workbook with Aspose.Cells, iterates each worksheet, finds PivotTables whose Name begins with "Temp_", safely removes them from the PivotTableCollection, and saves the cleaned file.
-// Keywords: Aspose.Cells | C# | .NET | remove pivot tables | Temp_ prefix | PivotTableCollection | delete temporary pivot tables | Excel automation | programmatic pivot table removal
-// Common Searches: Aspose.Cells delete pivot tables Temp_ prefix | C# remove specific pivot tables from Excel workbook | How to programmatically delete pivot tables using Aspose.Cells | Remove temporary pivot tables with .NET | Iterate worksheets and delete pivot tables by name Aspose
-// Developer Intent: Delete every PivotTable whose name starts with "Temp_" from all worksheets in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Clean up temporary analysis pivot tables before publishing a final report. | Automate removal of placeholder pivot tables generated during data import. | Prepare a workbook for archiving by stripping development‑only pivot tables.
-// AI Prompts: Generate C# code with Aspose.Cells to delete pivot tables that match a name pattern. | Explain how to safely iterate and remove items from a PivotTableCollection in Aspose.Cells. | Show an alternative method to filter and delete pivot tables without backward looping.
+// Title: Remove pivot tables whose names start with "Temp_" from all worksheets in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, iterates every worksheet, and deletes any PivotTable whose Name begins with the prefix "Temp_" before saving the file. | Show how to safely traverse a PivotTableCollection in reverse order to remove matching pivot tables without causing collection modification errors. | Provide a reusable method that accepts input and output file paths and removes temporary pivot tables (prefix "Temp_") from a workbook using Aspose.Cells.
+// Common Searches: aspnet remove pivot tables with specific prefix from workbook | c# aspose.cells delete temporary pivot tables across all sheets | how to iterate pivot table collection backwards in Aspose.Cells | programmatically clean up pivot tables named Temp_* in Excel using Aspose.Cells
+// Tags: aspose.cells delete pivot tables by name prefix | c# remove temporary pivot tables from Excel workbook | pivot table collection reverse iteration aspose.cells | excel workbook cleanup aspose.cells .net | save workbook after pivot table removal aspose.cells
 
 using System;
 using System.IO;
@@ -13,10 +10,10 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsPivotRemoval
 {
-    // C# example that loads an Excel workbook with Aspose.Cells, iterates each worksheet, finds PivotTables whose Name begins with "Temp_", safely removes them from the PivotTableCollection, and saves the cleaned file.
+    // The example loads InputWorkbook.xlsx, loops through each worksheet, and removes any PivotTable whose Name starts with "Temp_" (case‑insensitive) by iterating the PivotTableCollection in reverse. The modified workbook is then saved as OutputWorkbook.xlsx.
     public class RemoveTempPivotTables
     {
-        // Entry point for the application
+        // Entry point required for console application
         public static void Main(string[] args)
         {
             try
@@ -52,13 +49,14 @@ namespace AsposeCellsPivotRemoval
                     // Get the collection of pivot tables on the current worksheet
                     PivotTableCollection pivots = sheet.PivotTables;
 
-                    // Iterate backwards to safely remove items while looping
+                    // Loop backwards to safely remove items while iterating
                     for (int i = pivots.Count - 1; i >= 0; i--)
                     {
                         PivotTable pt = pivots[i];
 
                         // Remove pivot tables whose names start with "Temp_"
-                        if (!string.IsNullOrEmpty(pt.Name) && pt.Name.StartsWith("Temp_"))
+                        if (!string.IsNullOrEmpty(pt.Name) &&
+                            pt.Name.StartsWith("Temp_", StringComparison.OrdinalIgnoreCase))
                         {
                             pivots.Remove(pt);
                         }
@@ -67,7 +65,7 @@ namespace AsposeCellsPivotRemoval
 
                 // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {

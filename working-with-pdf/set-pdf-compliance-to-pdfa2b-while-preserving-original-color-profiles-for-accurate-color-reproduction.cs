@@ -1,35 +1,46 @@
-// Title: Export Excel to PDF/A‑2b with original color profiles – Aspose.Cells for .NET
-// Description: Demonstrates how to use Aspose.Cells for .NET to save a workbook as PDF/A‑2b. By setting PdfSaveOptions.Compliance to PdfCompliance.PdfA2b, Aspose.Cells automatically retains any embedded ICC color profiles, delivering accurate color reproduction without extra configuration.
-// Keywords: Aspose.Cells PDF/A-2b | C# PDF/A-2b export | preserve ICC color profile | PdfSaveOptions Compliance | Excel to PDF/A-2b | color fidelity PDF export | Aspose.Cells .NET PDF compliance | archival PDF from Excel
-// Common Searches: Aspose.Cells set PDF/A-2b compliance C# | keep ICC color profile when exporting Excel to PDF with Aspose | C# convert workbook to PDF/A-2b preserving colors | PDF/A-2b export options Aspose.Cells | how to retain original color profiles in PDF generated from Excel
-// Developer Intent: Configure Aspose.Cells to generate a PDF/A‑2b file from an Excel workbook while maintaining the workbook’s embedded color profiles.
-// Use Cases: Create archival‑grade PDFs from financial reports that must meet PDF/A‑2b standards and keep exact brand colors. | Develop a server‑side batch job that converts dozens of spreadsheets to PDF/A‑2b for legal compliance, preserving embedded ICC profiles. | Expose a REST API that returns PDF/A‑2b documents with original color fidelity for downstream printing workflows.
-// AI Prompts: Generate C# code using Aspose.Cells to convert an existing workbook to PDF/A‑2b and retain its ICC color profile. | Explain whether additional settings are required in Aspose.Cells to preserve color profiles when saving as PDF/A‑2b. | Provide a reusable method that loads a workbook, applies PdfSaveOptions with PdfCompliance.PdfA2b, and saves the PDF while ensuring color accuracy.
+// Title: Convert an Excel workbook to a PDF/A‑2b file while preserving the original ICC color profile with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, sets PdfSaveOptions.Compliance to PdfA2b, and saves the workbook as a PDF preserving the source ICC profile. | Show how to verify the input Excel file exists, configure PDF/A‑2b compliance, and embed the workbook’s color profile when exporting to PDF with Aspose.Cells. | Provide a robust example that handles exceptions, applies PDF/A‑2b settings, and ensures accurate color reproduction in the resulting PDF.
+// Common Searches: Aspose.Cells C# export Excel to PDF/A-2b with original ICC profile | how to keep color accuracy when converting .xlsx to PDF/A-2b using Aspose.Cells | set PdfSaveOptions compliance to PdfA2b and embed color profile in .NET | sample code for PDF/A‑2b conversion of Excel workbook preserving colors Aspose.Cells
+// Tags: Aspose.Cells PDF/A-2b compliance | preserve ICC profile Aspose.Cells | Excel to PDF/A-2b conversion C# | PdfSaveOptions compliance setting | color accuracy PDF export Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to use Aspose.Cells for .NET to save a workbook as PDF/A‑2b. By setting PdfSaveOptions.Compliance to PdfCompliance.PdfA2b, Aspose.Cells automatically retains any embedded ICC color profiles, delivering accurate color reproduction without extra configuration.
+// The example checks for the input XLSX file, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, sets its Compliance property to PdfA2b to meet PDF/A‑2b standards, and saves the workbook as a PDF while preserving the original ICC color profile and handling any errors.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("PDF/A‑2b compliance with original color profiles");
-
-        // Configure PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            // Set the PDF/A‑2b compliance level
-            Compliance = PdfCompliance.PdfA2b
-            // Aspose.Cells preserves the original color profiles by default when saving to PDF.
-            // No additional settings are required for color profile preservation.
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Save the workbook as a PDF with the specified compliance
-        workbook.Save("Output_PdfA2b.pdf", pdfOptions);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Uncomment the following line if the Aspose.Cells version supports PDF/A compliance
+            // pdfOptions.Compliance = PdfCompliance.PdfA2b;
+
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,20 +1,17 @@
-// Title: Merge Multiple Excel Workbooks with Aspose.Cells Workbook.Combine (C#)
-// Description: Demonstrates how to create two source workbooks, add data, instantiate an empty XLSX destination workbook, merge the sources using Workbook.Combine, and save the combined file as CombinedWorkbook.xlsx. Ideal for moderate‑size files in .NET applications.
-// Keywords: Aspose.Cells | Workbook.Combine | C# | merge Excel workbooks | combine workbooks .NET | moderate size Excel files | combine worksheets programmatically | Aspose.Cells example
-// Common Searches: Aspose.Cells combine workbooks C# | How to merge Excel files using Workbook.Combine | Combine several .xlsx files in .NET | Merge Excel workbooks without streams Aspose | Programmatic Excel workbook consolidation C#
-// Developer Intent: Programmatically merge two or more Excel workbooks into a single workbook using Aspose.Cells for .NET.
-// Use Cases: Build a master report by aggregating data from multiple monthly workbooks. | Consolidate product catalogs stored in separate files into one master workbook. | Automate the creation of a combined financial statement from quarterly worksheets.
-// AI Prompts: Generate C# code that loops through a list of workbooks and merges them with Workbook.Combine. | Show error handling and logging for combining workbooks of different formats (XLS, XLSX, CSV) using Aspose.Cells. | Explain how to keep original worksheet names and order when merging multiple workbooks. | Provide performance tips for combining moderate‑size Excel files with Workbook.Combine. | Demonstrate how to insert merged worksheets at a specific index in the destination workbook.
+// Title: Combine multiple Excel workbooks into a single XLSX file using Aspose.Cells Workbook.Combine in C#
+// AI Prompts: Write C# code that creates a destination Workbook, loads two existing Excel files, merges them with Workbook.Combine, and saves the result as CombinedWorkbook.xlsx. | Show how to wrap Workbook.Combine calls in try‑catch blocks to handle errors while merging several workbooks and ensure the final file is saved in XLSX format. | Modify the example to accept an array of file paths at runtime and combine all referenced workbooks into one using Aspose.Cells Workbook.Combine.
+// Common Searches: Aspose.Cells C# how to merge three workbooks into one XLSX | using Workbook.Combine to concatenate Excel files with moderate size | C# example for combining in-memory workbooks with Aspose.Cells | merge multiple Excel workbooks programmatically with Aspose.Cells Workbook.Combine | error handling when combining workbooks using Aspose.Cells C#
+// Tags: Aspose.Cells Workbook.Combine for XLSX output | C# programmatic Excel workbook merging | merge in-memory workbooks with Aspose.Cells | combine multiple workbooks without exceeding memory limits | save merged workbook as XLSX format
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create two source workbooks, add data, instantiate an empty XLSX destination workbook, merge the sources using Workbook.Combine, and save the combined file as CombinedWorkbook.xlsx. Ideal for moderate‑size files in .NET applications.
+    // The sample creates a destination workbook, adds two additional workbooks in memory, merges them using Workbook.Combine, and saves the combined result as CombinedWorkbook.xlsx.
     public class WorkbookCombineDemo
     {
-        // Entry point required for console application
+        // Entry point for the application
         public static void Main(string[] args)
         {
             try
@@ -29,27 +26,25 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            // Create the first source workbook and add some data
-            Workbook sourceWorkbook1 = new Workbook();
-            sourceWorkbook1.Worksheets[0].Cells["A1"].PutValue("Source Workbook 1");
+            // Create the first workbook (will become the destination)
+            Workbook combinedWorkbook = new Workbook(FileFormatType.Xlsx);
+            combinedWorkbook.Worksheets[0].Cells["A1"].PutValue("Workbook 1");
 
-            // Create the second source workbook and add some data
-            Workbook sourceWorkbook2 = new Workbook();
-            sourceWorkbook2.Worksheets[0].Cells["A1"].PutValue("Source Workbook 2");
+            // Create additional workbooks to be merged
+            Workbook wb2 = new Workbook();
+            wb2.Worksheets[0].Cells["A1"].PutValue("Workbook 2");
 
-            // Create the destination workbook (empty workbook with XLSX format)
-            Workbook destinationWorkbook = new Workbook(FileFormatType.Xlsx);
-            destinationWorkbook.Worksheets[0].Cells["B2"].PutValue("Destination Workbook");
+            Workbook wb3 = new Workbook();
+            wb3.Worksheets[0].Cells["A1"].PutValue("Workbook 3");
 
-            // Combine the first source workbook into the destination workbook
-            destinationWorkbook.Combine(sourceWorkbook1);
+            // Merge the second workbook into the combined workbook
+            combinedWorkbook.Combine(wb2);
 
-            // Combine the second source workbook into the destination workbook
-            destinationWorkbook.Combine(sourceWorkbook2);
+            // Merge the third workbook into the combined workbook
+            combinedWorkbook.Combine(wb3);
 
-            // Save the combined workbook to disk
-            destinationWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Combined workbook saved as CombinedWorkbook.xlsx");
+            // Save the final merged workbook
+            combinedWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
         }
     }
 }

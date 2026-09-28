@@ -1,18 +1,14 @@
-// Title: Aspose.Cells for .NET – Create a ListObject (SalesTable) with a calculated column, totals row, and automatic formula propagation (C#)
-// Description: Demonstrates how to build a workbook, define a ListObject named SalesTable, add a totals row that sums the Sales column, set a column formula (DoubleSales = Sales × 2), insert a new row, and let Aspose.Cells automatically propagate the formula before saving the file.
-// Keywords: Aspose.Cells ListObject C# | Create table Aspose.Cells | calculated column formula Aspose.Cells | totals row sum Aspose.Cells | formula propagation ListObject | C# Excel table example | Aspose.Cells add row auto‑fill formula | SalesTable Aspose.Cells
-// Common Searches: Aspose.Cells add totals row to ListObject | Set column formula in Aspose.Cells table | Auto‑expand ListObject with formula C# | Create named table Aspose.Cells .NET | How to sum column in Aspose.Cells table
-// Developer Intent: The developer wants to create a named ListObject, add a calculated column and a totals row that sums a data column, and ensure the formula automatically applies to newly added rows.
-// Use Cases: Generate a sales worksheet where each entry shows double the original sales amount and the table footer provides the total sales. | Maintain calculated columns in dynamic reports without manually copying formulas when new product rows are added. | Export a structured Excel file with a named table and built‑in aggregation for quick data analysis.
-// AI Prompts: Write C# code using Aspose.Cells to create a ListObject called 'SalesTable' with a calculated column that multiplies the 'Sales' field by 2 and a totals row that sums the 'Sales' column. | Explain how Aspose.Cells propagates a column formula in a ListObject when a new row is inserted and how to verify the result programmatically. | Provide troubleshooting steps if the formula does not auto‑fill after adding rows to the ListObject in Aspose.Cells.
+// Title: Create a ListObject named SalesTable, add a Total column with SUM formulas, and dynamically resize the table for new rows using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that defines a ListObject, inserts a new column called "Total" with a row‑wise SUM formula, and expands the table to include the column. | Show how to append a data row to an existing Aspose.Cells ListObject, apply the same SUM formula to the new Total cell, and resize the table to incorporate the added row.
+// Common Searches: Aspose.Cells add calculated Total column to a ListObject in C# | Resize Aspose.Cells ListObject after inserting rows with formulas | C# set SUM formula for each row in an Excel table using Aspose.Cells | How to expand an Aspose.Cells table to include a newly added column | Append rows to a ListObject and propagate formulas with Aspose.Cells .NET
+// Tags: Aspose.Cells ListObject add SUM column | C# resize Aspose.Cells table for new rows | propagate formulas in Aspose.Cells ListObject | dynamic total column generation Aspose.Cells | expand Excel table with Aspose.Cells .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates how to build a workbook, define a ListObject named SalesTable, add a totals row that sums the Sales column, set a column formula (DoubleSales = Sales × 2), insert a new row, and let Aspose.Cells automatically propagate the formula before saving the file.
-class SalesTableDemo
+// The example creates a workbook, defines a ListObject named SalesTable, inserts a 'Total' column with a SUM formula for each existing row, resizes the table to include the new column, adds an additional data row, applies the same SUM formula to the new Total cell, expands the ListObject to cover the new row, and saves the file as SalesTable.xlsx.
+class Program
 {
     static void Main()
     {
@@ -21,50 +17,93 @@ class SalesTableDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Populate sample data with headers
+            // Populate sample data (header + 4 rows)
             sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Item 1");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("Item 2");
-            sheet.Cells["B3"].PutValue(150);
-            sheet.Cells["A4"].PutValue("Item 3");
-            sheet.Cells["B4"].PutValue(200);
+            sheet.Cells["B1"].PutValue("Q1");
+            sheet.Cells["C1"].PutValue("Q2");
+            sheet.Cells["D1"].PutValue("Q3");
 
-            // Write the header for the calculated column
-            sheet.Cells["C1"].PutValue("DoubleSales");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["A5"].PutValue("D");
 
-            // Create a ListObject (table) that covers the data range including the new column
-            // startRow=0, startColumn=0, endRow=4 (last data row), endColumn=2 (includes column C), hasHeaders=true
-            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
-            ListObject salesTable = sheet.ListObjects[tableIndex];
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["B5"].PutValue(40);
 
-            // Give the table a name
+            sheet.Cells["C2"].PutValue(15);
+            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["C4"].PutValue(35);
+            sheet.Cells["C5"].PutValue(45);
+
+            sheet.Cells["D2"].PutValue(20);
+            sheet.Cells["D3"].PutValue(30);
+            sheet.Cells["D4"].PutValue(40);
+            sheet.Cells["D5"].PutValue(50);
+
+            // Define the range for the ListObject (table) – header row + 4 data rows, 4 columns
+            int firstRow = 0;          // zero‑based index for row 1
+            int firstColumn = 0;       // zero‑based index for column A
+            int lastRow = firstRow + 4;    // includes header (row 0) to row 4
+            int lastColumn = firstColumn + 3; // columns A‑D
+
+            // Add the ListObject and name it SalesTable
+            int listIndex = sheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
+            ListObject salesTable = sheet.ListObjects[listIndex];
             salesTable.DisplayName = "SalesTable";
 
-            // Show the totals row
-            salesTable.ShowTotals = true;
+            // Insert a new column for Total (SUM) after the existing columns
+            int totalColumnIndex = lastColumn + 1; // column E (zero‑based)
+            sheet.Cells[firstRow, totalColumnIndex].PutValue("Total");
 
-            // Set the totals calculation for the "Sales" column (index 1) to Sum
-            salesTable.ListColumns[1].TotalsCalculation = TotalsCalculation.Sum;
+            // Set SUM formula for each existing data row
+            for (int r = firstRow + 1; r <= lastRow; r++) // rows 2‑5 (zero‑based 1‑4)
+            {
+                // Formula: =SUM(B2:D2) etc.
+                string startCell = sheet.Cells[r, firstColumn + 1].Name; // B column
+                string endCell = sheet.Cells[r, lastColumn].Name;        // D column
+                sheet.Cells[r, totalColumnIndex].Formula = $"=SUM({startCell}:{endCell})";
+            }
 
-            // Set the formula for the calculated column (index 2) so each cell equals Sales*2
-            salesTable.ListColumns[2].Formula = "=[Sales]*2";
+            // Expand the ListObject to include the new Total column (hasHeaders = true)
+            salesTable.Resize(
+                salesTable.StartRow,
+                salesTable.StartColumn,
+                salesTable.DataRange.RowCount,
+                salesTable.DataRange.ColumnCount + 1,
+                true);
 
-            // Add a new data row; the table will expand automatically and the formula will propagate
-            salesTable.PutCellValue(3, 0, "Item 4");   // Product
-            salesTable.PutCellValue(3, 1, 250);       // Sales
-            // DoubleSales will be calculated as 250*2 = 500
+            // ----- Test propagation -----
+            // Add a new data row below the current table
+            int newRow = salesTable.StartRow + salesTable.DataRange.RowCount; // first empty row after the table
+            sheet.Cells[newRow, firstColumn].PutValue("E"); // Product name
+            sheet.Cells[newRow, firstColumn + 1].PutValue(12); // Q1
+            sheet.Cells[newRow, firstColumn + 2].PutValue(22); // Q2
+            sheet.Cells[newRow, firstColumn + 3].PutValue(32); // Q3
+
+            // Apply the same SUM formula to the Total cell of the new row
+            string startNew = sheet.Cells[newRow, firstColumn + 1].Name; // B column of new row
+            string endNew = sheet.Cells[newRow, lastColumn].Name;        // D column of new row
+            sheet.Cells[newRow, totalColumnIndex].Formula = $"=SUM({startNew}:{endNew})";
+
+            // Resize the ListObject to include the newly added row (hasHeaders = true)
+            salesTable.Resize(
+                salesTable.StartRow,
+                salesTable.StartColumn,
+                salesTable.DataRange.RowCount + 1,
+                salesTable.DataRange.ColumnCount,
+                true);
 
             // Save the workbook
-            string outputPath = "SalesTableDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            workbook.Save("SalesTable.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

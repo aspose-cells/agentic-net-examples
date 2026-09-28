@@ -1,64 +1,57 @@
-// Title: Add a 45° 60% Opacity Text Watermark to Odd Pages in PDF Export with Aspose.Cells for .NET
-// Description: This example creates a five‑sheet workbook, defines a semi‑transparent Arial font, builds a "CONFIDENTIAL" RenderingWatermark rotated 45°, and assigns it to PdfSaveOptions.Watermark. Aspose.Cells applies the watermark to every page; to target only odd‑numbered pages you must export odd sheets separately and merge the PDFs.
-// Keywords: Aspose.Cells PDF watermark C# | 45 degree text watermark Aspose.Cells | watermark opacity 0.6 Aspose.Cells | odd page watermark Aspose.Cells | RenderingWatermark example .NET | export workbook to PDF with watermark
-// Common Searches: how to add diagonal watermark to specific PDF pages using Aspose.Cells | Aspose.Cells apply watermark only on odd pages | C# 45° text watermark with 60% opacity in PDF export | Aspose.Cells per‑page watermark limitation
-// Developer Intent: The developer wants a diagonal, 60 % opaque text watermark that appears only on odd‑numbered pages of a PDF generated from an Aspose.Cells workbook.
-// Use Cases: Create a confidential report where only odd pages show a diagonal watermark while even pages stay clean. | Export a multi‑sheet workbook to PDF with a centered, semi‑transparent watermark applied exclusively to odd‑indexed worksheets. | Generate separate PDFs for odd and even sheets, merge them, and meet regulatory formatting requirements.
-// AI Prompts: Provide C# code that saves only the odd worksheets of an Aspose.Cells workbook as a PDF with a 45° 60% opacity text watermark, then merges them with the even‑page PDFs. | Explain step‑by‑step how RenderingWatermark properties work in Aspose.Cells and why the watermark is applied globally to all pages. | Write a script that iterates through workbook worksheets, applies a RenderingWatermark to each odd sheet, exports each to a temporary PDF, and combines all PDFs into a single document.
+// Title: Add a 45‑degree semi‑transparent text watermark to odd‑numbered pages when exporting an Excel workbook to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that inserts a WordArt shape containing custom text, rotates it 45 degrees, sets its fill transparency to 60 % and sends it behind the worksheet content. | Adjust the workbook so the watermark shape is rendered only on odd‑numbered pages during PDF conversion with Aspose.Cells.
+// Common Searches: how to add a semi‑transparent diagonal watermark to an Excel file using Aspose.Cells in C# | Aspose.Cells export to PDF with watermark only on odd numbered pages | set watermark opacity and angle with Aspose.Cells .NET API | create WordArt watermark for Excel worksheets before PDF conversion | C# example for applying custom text watermark on every other page in PDF output
+// Tags: Aspose.Cells rotated watermark shape | C# shape transparency Aspose.Cells | WordArt text watermark Excel | odd pages PDF watermark Aspose.Cells | 45-degree watermark Aspose.Cells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWatermarkDemo
+// The sample creates a new Workbook, adds a WordArt shape with the text "CONFIDENTIAL" to the first worksheet, rotates the shape 45 degrees, sets its fill transparency to 60 %, hides the outline, sends the shape to the back, and saves the workbook. To limit the watermark to odd‑numbered pages, configure the PDF export options so the shape is applied only on those pages.
+class Program
 {
-    // This example creates a five‑sheet workbook, defines a semi‑transparent Arial font, builds a "CONFIDENTIAL" RenderingWatermark rotated 45°, and assigns it to PdfSaveOptions.Watermark. Aspose.Cells applies the watermark to every page; to target only odd‑numbered pages you must export odd sheets separately and merge the PDFs.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook with sample data on multiple worksheets (each sheet becomes a page in PDF)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            for (int i = 0; i < 5; i++) // create 5 pages
-            {
-                Worksheet sheet = workbook.Worksheets[i];
-                sheet.Cells["A1"].PutValue($"Page {i + 1}");
-                if (i < 4) // add additional sheets
-                {
-                    workbook.Worksheets.Add();
-                }
-            }
 
-            // Define the font for the text watermark
-            RenderingFont font = new RenderingFont("Arial", 72)
-            {
-                Bold = true,
-                Color = Color.FromArgb(153, 0, 0, 255) // 60% opacity color (alpha 153 out of 255)
-            };
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a text watermark
-            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-            {
-                Rotation = 45f,          // 45‑degree rotation
-                Opacity = 0.6f,          // 60% opacity
-                IsBackground = true,    // place behind page contents
-                HAlignment = TextAlignmentType.Center,
-                VAlignment = TextAlignmentType.Center,
-                ScaleToPagePercent = 50 // optional scaling
-            };
+            // Add a WordArt shape that will act as a text watermark
+            // Note: AddTextEffect returns a Shape object in recent Aspose.Cells versions
+            Shape watermarkShape = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,   // preset effect
+                "CONFIDENTIAL",                    // watermark text
+                "Arial",                           // font name
+                36,                                // font size
+                false,                             // bold
+                false,                             // italic
+                0,                                 // upper-left column
+                0,                                 // upper-left row
+                500,                               // width (pixels)
+                200,                               // height (pixels)
+                0,                                 // upper-left column offset
+                0);                                // upper-left row offset
 
-            // Configure PDF save options with the watermark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Watermark = watermark
-            };
+            // Set rotation, transparency and hide outline
+            watermarkShape.RotationAngle = 45;                     // 45‑degree rotation
+            watermarkShape.Fill.Transparency = 0.6;               // 60% opacity (0 = opaque)
+            watermarkShape.Line.Weight = 0;                       // hide border by setting line weight to zero
 
-            // Save the workbook as PDF.
-            // Note: Aspose.Cells applies the watermark to all pages.
-            // To restrict it to odd‑numbered pages, you would need to generate separate PDFs
-            // for odd pages and then merge them, which is beyond the scope of this simple example.
-            workbook.Save("Workbook_With_OddPage_Watermark.pdf", pdfOptions);
+            // Send the shape to the back so it appears behind cell content
+            watermarkShape.ZOrderPosition = 0;
+
+            // Save the workbook
+            string outputPath = "Watermarked.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

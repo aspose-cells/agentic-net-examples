@@ -1,56 +1,61 @@
-// Title: Inject Runtime Variables into Aspose.Cells Smart Markers with WorkbookDesigner.SetDataSource (C#)
-// Description: Demonstrates how to create a workbook, add a variables sheet, place smart markers that reference a runtime variable, assign the variable value using WorkbookDesigner.SetDataSource, process the markers, and save the result. Shows the variable being used directly in a cell value and inside a formula.
-// Keywords: Aspose.Cells | WorkbookDesigner | SetDataSource | smart markers | runtime variable injection | C# Excel automation | dynamic calculations | Excel template variables | discount smart marker | variables worksheet
-// Common Searches: Aspose.Cells set variable for smart markers | C# inject runtime value into Excel smart marker | WorkbookDesigner SetDataSource example | how to use variables worksheet in Aspose.Cells | dynamic discount calculation with smart markers
-// Developer Intent: Assign a value to a smart‑marker variable at runtime so that the marker and any formulas referencing it are evaluated with the supplied data.
-// Use Cases: Replace a placeholder smart marker with a discount rate and apply it in a calculation formula. | Maintain a dedicated "Variables" worksheet, populate multiple parameters (tax, commission, etc.) via SetDataSource, and generate a report with consistent values across sheets. | Create reusable Excel templates where a single variable (e.g., exchange rate) is injected once and automatically propagated to all smart‑marker expressions.
-// AI Prompts: Generate C# code that uses WorkbookDesigner.SetDataSource to inject a "TaxRate" variable into smart markers and recalculate dependent formulas. | Explain the steps to configure VariablesWorksheetName, set several variables, and process smart markers in Aspose.Cells. | Show how to verify that smart‑marker expressions using injected variables produce the expected numeric results after processing.
+// Title: Inject a runtime value into a smart marker variable using Aspose.Cells SetVariable and WorkbookDesigner in C#
+// AI Prompts: Generate C# code that creates a variables worksheet, assigns a runtime string to a smart‑marker variable with SetVariable, and processes the workbook using WorkbookDesigner. | Show the step‑by‑step configuration of the VariablesWorksheetName property, placement of a &=$MyVariable placeholder, injection of a value, and saving of the final .xlsx file. | Explain how Aspose.Cells SetVariable can dynamically replace smart marker variables across sheets in a C# application.
+// Common Searches: Aspose.Cells C# SetVariable smart marker runtime value example | how to use WorkbookDesigner variables worksheet for smart markers in .NET | replace smart marker variable with dynamic data using Aspose.Cells SetVariable | C# code sample for injecting values into smart marker variables before processing | saving workbook after processing smart markers with SetVariable in Aspose.Cells
+// Tags: Aspose.Cells SetVariable smart marker | WorkbookDesigner variables worksheet C# | dynamic smart marker substitution .xlsx | inject runtime value into smart marker | process smart markers with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVariableInjectionDemo
+namespace AsposeCellsSetVariableDemo
 {
-    // Demonstrates how to create a workbook, add a variables sheet, place smart markers that reference a runtime variable, assign the variable value using WorkbookDesigner.SetDataSource, process the markers, and save the result. Shows the variable being used directly in a cell value and inside a formula.
+    // Demonstrates creating a workbook, adding a Variables sheet with a &=$MyVariable placeholder, injecting a runtime value into that cell, configuring WorkbookDesigner to use the variables sheet, adding a Template sheet that references the variable smart marker, processing the markers to substitute the value, and saving the result as an .xlsx file.
     class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a new workbook
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // 2. Add a worksheet that will hold variable definitions (optional, but we set the name)
+                // Add a worksheet that will hold the variable smart marker
                 Worksheet variablesSheet = workbook.Worksheets.Add("Variables");
-                // Placeholder for demonstration (not required for SetDataSource variables)
-                variablesSheet.Cells["A1"].PutValue("Variable Definitions");
+                // Place a placeholder for the variable (required for SetVariable processing)
+                variablesSheet.Cells["A1"].PutValue("&=$MyVariable");
+                // Inject the runtime value directly into the variable cell
+                variablesSheet.Cells["A1"].PutValue("Injected Runtime Value");
 
-                // 3. Add a template worksheet that contains smart markers referencing variables
+                // Initialize WorkbookDesigner with the workbook and specify the variables sheet
+                WorkbookDesigner designer = new WorkbookDesigner(workbook)
+                {
+                    VariablesWorksheetName = "Variables"
+                };
+
+                // Add a template worksheet that uses the variable smart marker
                 Worksheet templateSheet = workbook.Worksheets.Add("Template");
-                // Smart marker that will be replaced by the variable value
-                templateSheet.Cells["A1"].PutValue("&=$Discount");
-                // Use the variable in a formula via a smart marker expression
-                templateSheet.Cells["A2"].Formula = "=100*(&=$Discount)";
+                templateSheet.Cells["A1"].PutValue("&=$MyVariable");
 
-                // 4. Create a WorkbookDesigner and associate it with the workbook
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-                // 5. Specify the worksheet that contains variables (optional, shown for completeness)
-                designer.VariablesWorksheetName = "Variables";
-
-                // 6. Inject runtime variable values using SetDataSource(string, object)
-                designer.SetDataSource("Discount", 0.15); // 15% discount
-
-                // 7. Process the smart markers so that they are replaced with the injected values
+                // Process the smart markers – the variable value will be substituted
                 designer.Process();
 
-                // 8. Save the resulting workbook
-                workbook.Save("VariableInjectionResult.xlsx");
+                // Define output file path
+                string outputPath = "SetVariableDemo.xlsx";
+
+                // Ensure the output directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully at '{Path.GetFullPath(outputPath)}' with SetVariable applied.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

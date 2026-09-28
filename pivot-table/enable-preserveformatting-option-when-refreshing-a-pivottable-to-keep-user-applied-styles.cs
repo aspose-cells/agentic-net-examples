@@ -1,20 +1,16 @@
-// Title: PreserveFormatting for PivotTable in Aspose.Cells .NET – Keep Custom Styles After Refresh
-// Description: Loads a workbook, sets PivotTable.PreserveFormatting = true, applies a bold Arial style with a light‑blue background via FormatAll, refreshes and recalculates the pivot, then saves the file, ensuring user‑defined formatting persists.
-// Keywords: Aspose.Cells | C# | PivotTable PreserveFormatting | RefreshData | FormatAll | custom pivot style | keep formatting after refresh | Excel automation | pivot table styling | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells keep pivot formatting after refresh | Set PreserveFormatting on PivotTable C# | Apply style to entire PivotTable Aspose.Cells | RefreshData without losing pivot styles | PivotTable FormatAll example
-// Developer Intent: Enable the PreserveFormatting flag on a PivotTable so that any user‑applied formatting remains intact when the table is refreshed or recalculated.
-// Use Cases: Automated reporting where branding colors and fonts must survive data refreshes. | Batch processing of workbooks to apply a corporate style to all pivot tables and retain it across updates. | Building a .NET service that refreshes pivot data daily without overwriting custom formatting.
-// AI Prompts: Generate C# code using Aspose.Cells to set PreserveFormatting on a PivotTable, apply a bold Arial style with a light blue background, refresh the data, and save the workbook. | Explain how PreserveFormatting interacts with RefreshData and CalculateData in Aspose.Cells PivotTable processing. | Provide a step‑by‑step tutorial for styling a PivotTable programmatically and preserving the style after multiple refresh cycles in .NET.
+// Title: How to keep user‑applied cell formatting when refreshing a PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an existing .xlsx workbook with Aspose.Cells, sets PivotTable.PreserveCellFormattingOnUpdate to true, refreshes the pivot data, and saves the file. | Show how to update the first PivotTable in a worksheet while preserving all custom cell styles after calling RefreshData and CalculateData with Aspose.Cells. | Demonstrate enabling PreserveCellFormattingOnUpdate for a PivotTable, then refreshing and recalculating the pivot to maintain formatting in a .NET application.
+// Common Searches: Aspose.Cells C# preserve pivot table formatting after RefreshData | How to retain cell styles in a PivotTable when updating data source with Aspose.Cells | Set PreserveCellFormattingOnUpdate property in Aspose.Cells .NET example | Refresh PivotTable without losing custom formatting using Aspose.Cells for .NET
+// Tags: Aspose.Cells pivot formatting preservation | PivotTable PreserveCellFormattingOnUpdate usage | Aspose.Cells refresh pivot data | Aspose.Cells recalculate pivot | Aspose.Cells .NET pivot table update
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using System.Drawing;
 
 namespace AsposeCellsExamples
 {
-    // Loads a workbook, sets PivotTable.PreserveFormatting = true, applies a bold Arial style with a light‑blue background via FormatAll, refreshes and recalculates the pivot, then saves the file, ensuring user‑defined formatting persists.
+    // The example loads 'source.xlsx', checks for a PivotTable, enables PreserveCellFormattingOnUpdate to keep user‑applied styles, refreshes and recalculates the pivot, and saves the result as 'output.xlsx' using Aspose.Cells for .NET.
     public class PivotTablePreserveFormattingDemo
     {
         public static void Main(string[] args)
@@ -31,47 +27,40 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            string inputPath = "source.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the source file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
-                throw new FileNotFoundException($"Input file '{inputPath}' not found.");
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
             try
             {
-                // Load the workbook
+                // Load the workbook containing the pivot table
                 Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
                 // Ensure there is at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                    throw new InvalidOperationException("No pivot tables found in the worksheet.");
+                if (worksheet.PivotTables.Count > 0)
+                {
+                    PivotTable pivotTable = worksheet.PivotTables[0];
 
-                // Get the first pivot table
-                PivotTable pivotTable = worksheet.PivotTables[0];
+                    // Preserve cell formatting when the pivot table is refreshed
+                    pivotTable.PreserveCellFormattingOnUpdate = true;
 
-                // Preserve formatting when the pivot table is refreshed
-                pivotTable.PreserveFormatting = true;
+                    // Refresh the pivot table data source
+                    pivotTable.RefreshData();
 
-                // Create a style for the pivot table data area
-                Style style = workbook.CreateStyle();
-                style.Font.Name = "Arial";
-                style.Font.Size = 10;
-                style.Font.IsBold = true;
-                style.ForegroundColor = Color.LightBlue;
-                style.Pattern = BackgroundType.Solid;
-
-                // Apply the style to the entire pivot table
-                pivotTable.FormatAll(style);
-
-                // Refresh the pivot table data
-                pivotTable.RefreshData();
-
-                // Recalculate the pivot table after refresh
-                pivotTable.CalculateData();
+                    // Recalculate the pivot table to apply refreshed data
+                    pivotTable.CalculateData();
+                }
+                else
+                {
+                    Console.WriteLine("No pivot tables found in the worksheet.");
+                }
 
                 // Save the modified workbook
                 workbook.Save(outputPath, SaveFormat.Xlsx);
@@ -79,9 +68,7 @@ namespace AsposeCellsExamples
             }
             catch (Exception ex)
             {
-                // Handle any errors that occur during processing
-                Console.WriteLine($"Processing error: {ex.Message}");
-                throw;
+                Console.WriteLine($"Runtime error: {ex.Message}");
             }
         }
     }

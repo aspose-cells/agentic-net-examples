@@ -1,81 +1,81 @@
-// Title: Lock Hyperlink‑Colored Cells and Protect Worksheet with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, formats a cell with the default hyperlink blue, adds a hyperlink, scans all used cells, locks any cell whose font color matches the hyperlink theme, applies the locked style flag, protects the worksheet with a password, and saves the file.
-// Keywords: Aspose.Cells lock cells | C# lock cells by font color | protect worksheet Aspose.Cells | hyperlink theme color detection | Excel cell protection .NET
-// Common Searches: How to lock cells that use the hyperlink theme color using Aspose.Cells C# | Aspose.Cells C# lock cells with blue font and protect worksheet | Programmatically protect Excel cells based on font color in .NET | Detect and lock hyperlink cells with Aspose.Cells
-// Developer Intent: Identify cells styled with the default hyperlink font color, set them as locked, and enable worksheet protection so only non‑hyperlink cells stay editable.
-// Use Cases: Generate a read‑only report where hyperlink cells are locked while other data can be edited. | Distribute a workbook that allows users to modify regular cells but prevents changes to linked URLs. | Automate data‑integrity enforcement by locking any cell using the standard hyperlink color before saving.
-// AI Prompts: Write C# code with Aspose.Cells that locks all cells whose font color equals the default hyperlink blue and protects the worksheet with a password. | Show an alternative method to lock hyperlink cells by inspecting the worksheet's Hyperlink collection instead of font color. | Explain how to unlock specific cells after worksheet protection using Aspose.Cells for .NET.
+// Title: Programmatically lock Excel cells styled with the Hyperlink theme color using Aspose.Cells for .NET
+// AI Prompts: Identify cells whose font color matches the default hyperlink blue, set their Style.IsLocked property to true, and protect the worksheet with a password using Aspose.Cells. | Iterate over the used range of each worksheet, apply a locked style to cells using the Hyperlink theme color, then save the workbook as a protected file.
+// Common Searches: Aspose.Cells C# lock cells with hyperlink font color and protect worksheet | How to protect Excel cells that use the default hyperlink blue using Aspose.Cells .NET | Set IsLocked for cells styled with Hyperlink theme in Aspose.Cells workbook | C# code to lock cells based on font color and save protected XLSX with Aspose.Cells
+// Tags: hyperlink theme color cell locking Aspose.Cells | worksheet protection after applying style lock .NET | detect and lock default hyperlink blue cells C# | used range style modification Aspose.Cells
 
 using System;
+using System.IO;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsHyperlinkLockDemo
+// The example loads an existing XLSX workbook, scans each worksheet's used range, locks any cell whose font color equals the default hyperlink blue, protects the sheet with a password, and saves the result as a new protected file.
+class Program
 {
-    // Creates a workbook, formats a cell with the default hyperlink blue, adds a hyperlink, scans all used cells, locks any cell whose font color matches the hyperlink theme, applies the locked style flag, protects the worksheet with a password, and saves the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            // Input and output file paths
+            string inputPath = @"C:\Input\Sample.xlsx";
+            string outputPath = @"C:\Output\Sample_Locked.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Cell A1 – will have Hyperlink theme color (using standard blue)
-                Cell cellA1 = cells["A1"];
-                cellA1.PutValue("Link 1");
-                Style styleA1 = cellA1.GetStyle();
-                styleA1.Font.Color = Color.Blue; // typical hyperlink color
-                cellA1.SetStyle(styleA1);
-                // Add an actual hyperlink (optional, just for demonstration)
-                worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Cell B1 – normal color (will remain editable)
-                Cell cellB1 = cells["B1"];
-                cellB1.PutValue("Normal");
-                Style styleB1 = cellB1.GetStyle();
-                styleB1.Font.Color = Color.Black;
-                cellB1.SetStyle(styleB1);
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Get the used range of the worksheet
+                var usedRange = sheet.Cells.MaxDisplayRange; // Aspose.Cells.Range
 
-                // Iterate through all used cells and lock those that use the Hyperlink color
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
-                for (int row = 0; row <= maxRow; row++)
+                // Determine start/end rows and columns
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startColumn = usedRange.FirstColumn;
+                int endColumn = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                // Loop through each cell in the used range
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    for (int col = startColumn; col <= endColumn; col++)
                     {
-                        Cell curCell = cells[row, col];
-                        if (curCell == null) continue;
+                        Cell cell = sheet.Cells[row, col];
+                        Style style = cell.GetStyle();
 
-                        Style curStyle = curCell.GetStyle();
-
-                        // Check if the font color matches the hyperlink color (blue)
-                        if (curStyle.Font.Color.ToArgb() == Color.Blue.ToArgb())
+                        // Lock cells whose font color is the default hyperlink blue
+                        if (style.Font.Color.ToArgb() == Color.Blue.ToArgb())
                         {
-                            // Lock the cell
-                            curStyle.IsLocked = true;
-                            // Apply the style with the Locked flag enabled
-                            StyleFlag flag = new StyleFlag { Locked = true };
-                            curCell.SetStyle(curStyle, flag);
+                            style.IsLocked = true;
+                            cell.SetStyle(style);
                         }
                     }
                 }
 
-                // Protect the worksheet so that locked cells cannot be edited
-                // Provide an empty oldPassword as required by the overload
-                worksheet.Protect(ProtectionType.All, "securePwd", string.Empty);
+                // Protect the worksheet with a password
+                sheet.Protect(ProtectionType.All, "password", string.Empty);
+            }
 
-                // Save the workbook
-                workbook.Save("HyperlinkLockedCells.xlsx");
-            }
-            catch (Exception ex)
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

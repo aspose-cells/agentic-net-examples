@@ -1,49 +1,61 @@
-// Title: C# Example: Measure Excel Workbook Size Before and After Shape Modification with Aspose.Cells
-// Description: This sample creates a workbook, adds a text‑box shape, saves the file to a memory stream to capture its byte size, updates the shape’s text and calls FitToTextSize, saves again, and outputs the size before, after, and the difference, demonstrating how shape changes affect .xlsx file size.
-// Keywords: Aspose.Cells | .NET | C# | Excel workbook size | shape modification | FitToTextSize | memory stream | file size comparison | text box shape | size difference
-// Common Searches: How to get Excel file size using Aspose.Cells C# | Does changing shape text affect .xlsx size | Measure workbook size before and after shape resize | Aspose.Cells FitToTextSize file size impact | C# code to compare workbook byte length
-// Developer Intent: Determine the byte‑size change of an .xlsx file caused by editing a shape’s content or dimensions with Aspose.Cells.
-// Use Cases: Validate that shape edits keep the workbook within cloud‑storage size limits. | Benchmark the impact of different text lengths in shapes on final file size. | Log size differences automatically when updating shapes across multiple worksheets. | Optimize shape content to reduce overall workbook size in bulk processing.
-// AI Prompts: Write a C# method that returns the workbook size before and after applying FitToTextSize to a shape and prints the difference. | Explain which OpenXML parts grow when a shape’s text is increased and why FitToTextSize can enlarge the .xlsx file. | Provide a loop that iterates over all worksheets, modifies each shape, captures size changes, and writes the results to a CSV file.
+// Title: Measure XLSX workbook size before and after resizing a rectangle shape with Aspose.Cells for .NET
+// AI Prompts: Create a C# console program that adds a rectangle shape to a worksheet, saves the workbook to a MemoryStream, changes the shape's width, height, and text, saves again, and prints the original size, new size, and byte difference. | Implement a reusable method `GetWorkbookSizeDelta(Workbook wb, Action<Shape> modify)` that accepts a workbook and a shape‑modification delegate, saves the workbook twice to MemoryStream, and returns the size delta. | Add comprehensive error handling that catches Aspose.Cells exceptions during shape operations and still reports the size difference.
+// Common Searches: aspnet measure Excel file size change after editing drawing objects with Aspose.Cells | c# get byte length of saved XLSX workbook using MemoryStream Aspose | how much does resizing a shape affect XLSX file size in Aspose.Cells | compare original and modified workbook sizes after shape manipulation in .NET | calculate size delta of Excel file after changing rectangle dimensions with Aspose.Cells
+// Tags: calculate XLSX size delta after shape resize | Aspose.Cells save workbook to MemoryStream for size measurement | measure workbook file size change .NET | rectangle shape dimension modification impact on Excel size | compare original and modified Excel file size Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This sample creates a workbook, adds a text‑box shape, saves the file to a memory stream to capture its byte size, updates the shape’s text and calls FitToTextSize, saves again, and outputs the size before, after, and the difference, demonstrating how shape changes affect .xlsx file size.
-class ShapeSizeDifferenceDemo
+// The program creates a workbook, inserts a rectangle shape, saves it to a MemoryStream, modifies the shape's dimensions and text, saves again, and outputs the original size, modified size, and the byte difference.
+class ShapeSizeComparison
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook wbOriginal = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = wbOriginal.Worksheets[0];
 
-        // Add a text box shape to the worksheet
-        Shape textBox = worksheet.Shapes.AddTextBox(1, 0, 1, 0, 200, 50);
-        textBox.Text = "Initial text";
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, row offset, column offset, height, width
+            Shape rect = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 100, 200);
+            rect.Text = "Original Shape";
 
-        // Save the workbook to a memory stream to capture the size before modification
-        MemoryStream beforeStream = workbook.SaveToStream(); // lifecycle rule
-        long sizeBefore = beforeStream.Length;
+            // Save the original workbook to a memory stream to measure its size
+            using (MemoryStream msOriginal = new MemoryStream())
+            {
+                wbOriginal.Save(msOriginal, SaveFormat.Xlsx);
+                long originalSize = msOriginal.Length;
 
-        // Modify the shape: add more text and adjust size to fit the text
-        textBox.Text += " Adding more content to increase shape size.";
-        textBox.FitToTextSize();
+                // Modify the shape: change its size and text
+                rect.Width = 300;   // increase width
+                rect.Height = 150;  // increase height
+                rect.Text = "Modified Shape";
 
-        // Save the workbook again to capture the size after modification
-        MemoryStream afterStream = workbook.SaveToStream(); // lifecycle rule
-        long sizeAfter = afterStream.Length;
+                // Save the modified workbook to another memory stream
+                using (MemoryStream msModified = new MemoryStream())
+                {
+                    wbOriginal.Save(msModified, SaveFormat.Xlsx);
+                    long modifiedSize = msModified.Length;
 
-        // Output the size information
-        Console.WriteLine($"Size before modification: {sizeBefore} bytes");
-        Console.WriteLine($"Size after modification: {sizeAfter} bytes");
-        Console.WriteLine($"Difference: {sizeAfter - sizeBefore} bytes");
+                    // Calculate size difference
+                    long sizeDifference = modifiedSize - originalSize;
 
-        // Save the final workbook to a file (optional)
-        workbook.Save("ShapeModificationResult.xlsx");
+                    // Output the results
+                    Console.WriteLine($"Original workbook size: {originalSize} bytes");
+                    Console.WriteLine($"Modified workbook size: {modifiedSize} bytes");
+                    Console.WriteLine($"Size difference: {sizeDifference} bytes");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

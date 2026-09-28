@@ -1,171 +1,165 @@
-// Title: Unit tests for Aspose.Cells GetErrorValueString with German and French localization
-// Description: C# example that creates a custom SettableGlobalizationSettings class to map standard Excel error codes to German and French strings, provides a lightweight SimpleAssert helper, and defines comprehensive unit tests verifying default behavior, locale‑specific mappings, and workbook error display after formula calculation.
-// Keywords: Aspose.Cells | GetErrorValueString | unit test | C# | globalization | localization | German error strings | French error strings | custom globalization settings | Excel error codes
-// Common Searches: Aspose.Cells unit test GetErrorValueString German | How to localize Excel error messages in Aspose.Cells | Test custom globalization settings for error strings | C# Aspose.Cells error localization example | Verify localized error display in workbook
-// Developer Intent: Write automated tests that confirm GetErrorValueString returns original or locale‑specific error strings and that a workbook reflects those strings when using custom globalization settings.
-// Use Cases: Ensure the default SettableGlobalizationSettings returns the unchanged Excel error token for each standard error. | Validate that a LocalizedErrorGlobalizationSettings instance returns the correct German mapping for all error codes. | Validate that a LocalizedErrorGlobalizationSettings instance returns the correct French mapping for all error codes. | Confirm that assigning a custom globalization settings object to a Workbook causes cell.DisplayStringValue to show the localized error string after formula evaluation.
-// AI Prompts: Generate additional unit tests for GetErrorValueString covering Spanish and Italian locales using the same pattern. | Refactor SimpleAssert into a reusable NUnit or xUnit assertion class for the Aspose.Cells test suite. | Create a test that verifies GetErrorValueString falls back to the base implementation when a mapping is missing.
+// Title: Create C# unit tests for Aspose.Cells CellsHelper.GetErrorString to verify Excel error strings across en-US, fr-FR, de-DE, ja-JP, and zh-CN locales
+// AI Prompts: Generate an MSTest or NUnit parameterized test that iterates over each Aspose.Cells.ErrorValueType value, sets Thread.CurrentThread.CurrentCulture to a target locale, invokes CellsHelper.GetErrorString via reflection, and asserts the returned string matches the expected localized error text. | Write a reusable test helper method that accepts a culture name and an error enum name, switches the thread culture, calls CellsHelper.GetErrorString, and returns the result for data‑driven verification of all standard Excel error codes.
+// Common Searches: how to unit test Aspose.Cells GetErrorString for different cultures in C# | verify localized Excel error messages with Aspose.Cells .NET | C# test for Aspose.Cells error enum translations across en-US and fr-FR | parameterized unit test for Excel error codes using Aspose.Cells CellsHelper | reflection based testing of Aspose.Cells GetErrorString method
+// Tags: Aspose.Cells GetErrorString localization unit test | C# reflection CellsHelper error string verification | Excel error code culture testing .NET | parameterized Aspose.Cells error enum tests | multilingual Excel error string validation
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Reflection;
+using System.Threading;
 using Aspose.Cells;
 
 namespace AsposeCellsTests
 {
-    // Custom globalization settings that map standard error strings to locale‑specific strings.
-    // C# example that creates a custom SettableGlobalizationSettings class to map standard Excel error codes to German and French strings, provides a lightweight SimpleAssert helper, and defines comprehensive unit tests verifying default behavior, locale‑specific mappings, and workbook error display after formula calculation.
-    public class LocalizedErrorGlobalizationSettings : SettableGlobalizationSettings
-    {
-        private readonly Dictionary<string, string> _errorMap;
-
-        public LocalizedErrorGlobalizationSettings(Dictionary<string, string> errorMap)
-        {
-            _errorMap = errorMap ?? throw new ArgumentNullException(nameof(errorMap));
-        }
-
-        public override string GetErrorValueString(string err)
-        {
-            // Return the localized string if a mapping exists; otherwise fall back to the base implementation.
-            return _errorMap.TryGetValue(err, out var localized) ? localized : base.GetErrorValueString(err);
-        }
-    }
-
-    // Minimal assertion helper to replace NUnit assertions.
-    public static class SimpleAssert
-    {
-        public static void AreEqual(string expected, string actual, string message)
-        {
-            if (!object.Equals(expected, actual))
-                throw new Exception($"Assert Failed: {message} Expected: '{expected}', Actual: '{actual}'.");
-        }
-
-        public static void IsTrue(bool condition, string message)
-        {
-            if (!condition)
-                throw new Exception($"Assert Failed: {message}");
-        }
-    }
-
-    public class GetErrorValueStringTests
-    {
-        // Standard Excel error codes used in the tests.
-        private static readonly string[] StandardErrors =
-        {
-            "#DIV/0!", "#N/A", "#NAME?", "#NULL!", "#NUM!", "#REF!", "#VALUE!", "#GETTING_DATA"
-        };
-
-        // Expected localized strings for German locale.
-        private static readonly Dictionary<string, string> GermanErrorMap = new Dictionary<string, string>
-        {
-            { "#DIV/0!", "#DIV/0!" },
-            { "#N/A", "#NV" },
-            { "#NAME?", "#NAME?" },
-            { "#NULL!", "#NULL!" },
-            { "#NUM!", "#ZAHL!" },
-            { "#REF!", "#BEZUG!" },
-            { "#VALUE!", "#WERT!" },
-            { "#GETTING_DATA", "#DATENWIRDGELEERT" }
-        };
-
-        // Expected localized strings for French locale.
-        private static readonly Dictionary<string, string> FrenchErrorMap = new Dictionary<string, string>
-        {
-            { "#DIV/0!", "#DIV/0!" },
-            { "#N/A", "#N/D" },
-            { "#NAME?", "#NOM?" },
-            { "#NULL!", "#VALEUR!" },
-            { "#NUM!", "#NOMBRE!" },
-            { "#REF!", "#REF!" },
-            { "#VALUE!", "#VALEUR!" },
-            { "#GETTING_DATA", "#RECUPERATION_DONNEES" }
-        };
-
-        public void DefaultSettings_ReturnsOriginalErrorString()
-        {
-            var settings = new SettableGlobalizationSettings();
-
-            foreach (var err in StandardErrors)
-            {
-                string result = settings.GetErrorValueString(err);
-                SimpleAssert.AreEqual(err, result,
-                    $"Default GetErrorValueString should return the original error string for '{err}'.");
-            }
-        }
-
-        public void GermanLocale_ReturnsLocalizedErrorStrings()
-        {
-            var settings = new LocalizedErrorGlobalizationSettings(GermanErrorMap);
-
-            foreach (var err in StandardErrors)
-            {
-                string expected = GermanErrorMap[err];
-                string actual = settings.GetErrorValueString(err);
-                SimpleAssert.AreEqual(expected, actual,
-                    $"German mapping for '{err}' is incorrect.");
-            }
-        }
-
-        public void FrenchLocale_ReturnsLocalizedErrorStrings()
-        {
-            var settings = new LocalizedErrorGlobalizationSettings(FrenchErrorMap);
-
-            foreach (var err in StandardErrors)
-            {
-                string expected = FrenchErrorMap[err];
-                string actual = settings.GetErrorValueString(err);
-                SimpleAssert.AreEqual(expected, actual,
-                    $"French mapping for '{err}' is incorrect.");
-            }
-        }
-
-        public void WorkbookUsesCustomGlobalizationSettings_ForErrorDisplay()
-        {
-            // Use German mapping and assign it to a workbook.
-            var germanSettings = new LocalizedErrorGlobalizationSettings(GermanErrorMap);
-            var workbook = new Workbook();
-            workbook.Settings.GlobalizationSettings = germanSettings;
-            var sheet = workbook.Worksheets[0];
-            var cell = sheet.Cells["A1"];
-
-            // Insert a formula that generates a #DIV/0! error.
-            cell.Formula = "=1/0";
-            workbook.CalculateFormula();
-
-            // Verify that the cell reports an error.
-            SimpleAssert.IsTrue(cell.IsErrorValue, "Cell should be flagged as an error value.");
-
-            // The DisplayStringValue should reflect the localized string from our settings.
-            string display = cell.DisplayStringValue;
-            string expectedLocalized = germanSettings.GetErrorValueString("#DIV/0!");
-            SimpleAssert.AreEqual(expectedLocalized, display,
-                "Cell display string should use the localized error string.");
-        }
-    }
-
+    // The sample uses reflection to locate the Aspose.Cells.ErrorValueType enum and the CellsHelper.GetErrorString method, then runs through a list of locales (en-US, fr-FR, de-DE, ja-JP, zh-CN). For each locale it temporarily sets the thread culture, calls GetErrorString for every standard Excel error enum, and compares the output with a predefined expected string dictionary, reporting pass/fail results for each combination.
     class Program
     {
-        static void Main()
+        // Mapping of Excel error names to their expected string representations per locale
+        private static readonly Dictionary<string, Dictionary<string, string>> ExpectedErrorStrings =
+            new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase)
         {
-            var tests = new GetErrorValueStringTests();
+            {
+                "en-US", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { "NullError", "#NULL!" },
+                    { "Div0", "#DIV/0!" },
+                    { "Value", "#VALUE!" },
+                    { "Ref", "#REF!" },
+                    { "Name", "#NAME?" },
+                    { "Num", "#NUM!" },
+                    { "NA", "#N/A" },
+                    { "GettingData", "#GETTING_DATA" }
+                }
+            },
+            {
+                "fr-FR", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { "NullError", "#NULL!" },
+                    { "Div0", "#DIV/0!" },
+                    { "Value", "#VALEUR!" },
+                    { "Ref", "#REF!" },
+                    { "Name", "#NOM?" },
+                    { "Num", "#NOMBRE!" },
+                    { "NA", "#N/A" },
+                    { "GettingData", "#GETTING_DATA" }
+                }
+            },
+            {
+                "de-DE", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { "NullError", "#NULL!" },
+                    { "Div0", "#DIV/0!" },
+                    { "Value", "#WERT!" },
+                    { "Ref", "#BEZUG!" },
+                    { "Name", "#NAME?" },
+                    { "Num", "#ZAHL!" },
+                    { "NA", "#NV" },
+                    { "GettingData", "#GETTING_DATA" }
+                }
+            },
+            {
+                "ja-JP", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { "NullError", "#NULL!" },
+                    { "Div0", "#DIV/0!" },
+                    { "Value", "#VALUE!" },
+                    { "Ref", "#REF!" },
+                    { "Name", "#NAME?" },
+                    { "Num", "#NUM!" },
+                    { "NA", "#N/A" },
+                    { "GettingData", "#GETTING_DATA" }
+                }
+            },
+            {
+                "zh-CN", new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { "NullError", "#NULL!" },
+                    { "Div0", "#DIV/0!" },
+                    { "Value", "#VALUE!" },
+                    { "Ref", "#REF!" },
+                    { "Name", "#NAME?" },
+                    { "Num", "#NUM!" },
+                    { "NA", "#N/A" },
+                    { "GettingData", "#GETTING_DATA" }
+                }
+            }
+        };
 
-            RunTest(tests.DefaultSettings_ReturnsOriginalErrorString, nameof(tests.DefaultSettings_ReturnsOriginalErrorString));
-            RunTest(tests.GermanLocale_ReturnsLocalizedErrorStrings, nameof(tests.GermanLocale_ReturnsLocalizedErrorStrings));
-            RunTest(tests.FrenchLocale_ReturnsLocalizedErrorStrings, nameof(tests.FrenchLocale_ReturnsLocalizedErrorStrings));
-            RunTest(tests.WorkbookUsesCustomGlobalizationSettings_ForErrorDisplay,
-                nameof(tests.WorkbookUsesCustomGlobalizationSettings_ForErrorDisplay));
-        }
+        // List of locales to test
+        private static readonly string[] Locales = { "en-US", "fr-FR", "de-DE", "ja-JP", "zh-CN" };
 
-        // Executes a test method and reports success or failure.
-        static void RunTest(Action testMethod, string testName)
+        static void Main()
         {
             try
             {
-                testMethod();
-                Console.WriteLine($"{testName}: Passed");
+                // Resolve the Aspose.Cells error enum type via reflection (avoids compile‑time dependency)
+                Type errorEnumType = Type.GetType("Aspose.Cells.ErrorValueType, Aspose.Cells");
+                if (errorEnumType == null)
+                {
+                    Console.WriteLine("Unable to locate Aspose.Cells.ErrorValueType enum. Ensure Aspose.Cells assembly is referenced.");
+                    return;
+                }
+
+                // Locate the GetErrorString method that accepts the enum
+                MethodInfo getErrorStringMethod = typeof(CellsHelper).GetMethod("GetErrorString", new[] { errorEnumType });
+                if (getErrorStringMethod == null)
+                {
+                    Console.WriteLine("CellsHelper.GetErrorString method not found. Ensure the Aspose.Cells version supports this API.");
+                    return;
+                }
+
+                foreach (string localeName in Locales)
+                {
+                    CultureInfo culture = new CultureInfo(localeName);
+
+                    if (!ExpectedErrorStrings.TryGetValue(localeName, out var expectedForLocale))
+                    {
+                        Console.WriteLine($"Missing expected strings for locale {localeName}");
+                        continue;
+                    }
+
+                    // Set thread culture so Aspose.Cells returns locale‑specific strings
+                    CultureInfo originalCulture = Thread.CurrentThread.CurrentCulture;
+                    Thread.CurrentThread.CurrentCulture = culture;
+
+                    foreach (var kvp in expectedForLocale)
+                    {
+                        string errorName = kvp.Key;
+                        string expected = kvp.Value;
+
+                        try
+                        {
+                            // Parse the enum value from its name (case‑insensitive)
+                            object enumValue = Enum.Parse(errorEnumType, errorName, ignoreCase: true);
+
+                            // Invoke CellsHelper.GetErrorString via reflection
+                            string actual = (string)getErrorStringMethod.Invoke(null, new[] { enumValue });
+
+                            if (!string.Equals(actual, expected, StringComparison.Ordinal))
+                            {
+                                Console.WriteLine($"Locale: {localeName}, Error: {errorName} - Expected '{expected}' but got '{actual}'.");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Locale: {localeName}, Error: {errorName} - OK.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Locale: {localeName}, Error: {errorName} - Failed ({ex.Message}).");
+                        }
+                    }
+
+                    // Restore original culture
+                    Thread.CurrentThread.CurrentCulture = originalCulture;
+                }
+
+                Console.WriteLine("All checks completed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{testName}: Failed - {ex.Message}");
+                Console.WriteLine($"Runtime error: {ex.Message}");
             }
         }
     }

@@ -1,45 +1,58 @@
-// Title: C# – Update Aspose.Cells ListObject Header Using PutCellValue with Offsets
-// Description: Demonstrates how to replace placeholder headers in an Aspose.Cells ListObject by calling ListObject.PutCellValue(rowOffset, columnOffset, value) with a row offset of 0 (header row), then synchronizing column names via UpdateColumnName, and finally saving the workbook.
-// Keywords: Aspose.Cells ListObject PutCellValue | C# table header update | Aspose.Cells UpdateColumnName | set ListObject header cell | Aspose.Cells .NET table example
-// Common Searches: Aspose.Cells change ListObject header text | PutCellValue row offset 0 header Aspose.Cells | Update table column names after editing header | C# Aspose.Cells ListObject header example | How to rename Aspose.Cells table columns programmatically
-// Developer Intent: Replace existing table header values by writing new text to specific header cells with PutCellValue and refresh the ListObject column names.
-// Use Cases: Swap placeholder column titles with dynamic names after loading data. | Rename table columns based on user input before exporting a report. | Generate custom report headers that reflect calculated metric names.
-// AI Prompts: Show code that updates a ListObject header cell at column index 2 using PutCellValue with row offset 0, then calls UpdateColumnName. | Create a method that accepts a dictionary of column indexes and header strings and updates the ListObject header row via PutCellValue and UpdateColumnName. | Explain how to verify that ListObject column names have been refreshed after modifying header cells.
+// Title: Changing a ListObject table header cell with PutCellValue row/column offsets in Aspose.Cells for .NET (C#)
+// AI Prompts: Use ListObject.PutCellValue to set the header of the second column in an Aspose.Cells table by specifying row offset 0 and column offset 1. | Create a worksheet, add a ListObject, and modify its header row using row and column offsets in C# with Aspose.Cells. | Replace an existing table column header in an Excel file by calling ListObject.PutCellValue with offset parameters in Aspose.Cells for .NET.
+// Common Searches: asp.net aspose.cells how to update table column header using PutCellValue offsets | c# set ListObject header cell by row and column offset Aspose.Cells example | changing Excel table header programmatically with Aspose.Cells ListObject PutCellValue | Aspose.Cells PutCellValue row offset column offset for table header in .NET | modify ListObject column names after creation using C# Aspose.Cells
+// Tags: ListObject.PutCellValue header offset | Aspose.Cells modify table column header | C# Aspose.Cells table header update | Excel ListObject header cell change | Aspose.Cells row column offset example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates how to replace placeholder headers in an Aspose.Cells ListObject by calling ListObject.PutCellValue(rowOffset, columnOffset, value) with a row offset of 0 (header row), then synchronizing column names via UpdateColumnName, and finally saving the workbook.
+// Demonstrates creating a workbook, adding a ListObject table, and using ListObject.PutCellValue with row and column offsets to change the second column header to "Surname" before saving the file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add some initial data with placeholder headers
-        cells["A1"].PutValue("OldHeader1");
-        cells["B1"].PutValue("OldHeader2");
-        cells["A2"].PutValue(10);
-        cells["B2"].PutValue(20);
+            // Populate some initial data to define the table range
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("John");
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Jane");
 
-        // Create a ListObject (table) that includes the header row.
-        // Parameters: startRow, startColumn, endRow, endColumn, hasHeaders
-        int tableIndex = sheet.ListObjects.Add(0, 0, 1, 1, true);
-        ListObject table = sheet.ListObjects[tableIndex];
+            // Define the range for the ListObject (table) – includes header row
+            int firstRow = 0;          // zero‑based index for row 1 (A1)
+            int firstColumn = 0;       // zero‑based index for column A
+            int totalRows = 3;         // rows A1:B3
+            int totalColumns = 2;      // columns A and B
 
-        // Populate the header cells using row and column offsets.
-        // Row offset 0 refers to the header row of the table.
-        table.PutCellValue(0, 0, "NewHeader1"); // First header cell (A1)
-        table.PutCellValue(0, 1, "NewHeader2"); // Second header cell (B1)
+            // Add the ListObject to the worksheet
+            int listObjectIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
 
-        // Synchronize the ListObject column names with the updated header values.
-        table.UpdateColumnName();
+            ListObject table = sheet.ListObjects[listObjectIndex];
+            table.DisplayName = "MyTable";
 
-        // Save the workbook to a file.
-        workbook.Save("ListObjectHeaderUpdate.xlsx", SaveFormat.Xlsx);
+            // Use PutCellValue with row and column offsets to set a header cell.
+            // Row offset 0 = header row, column offset 1 = second column header.
+            table.PutCellValue(0, 1, "Surname");
+
+            // Save the workbook to a file
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,57 +1,41 @@
-// Title: Aspose.Cells C# – Retrieve validation type and formulas for cell J5
-// Description: C# example that adds a whole‑number validation (10‑20) to J5, uses Worksheet.Cells["J5"].GetValidation() to read the Validation.Type, Formula1 and Formula2, logs them, and saves the workbook.
-// Keywords: Aspose.Cells C# | GetValidation | cell validation | validation type | Formula1 | Formula2 | J5 | Aspose.Cells .NET example | GitHub source code | Aspose.Cells API
-// Common Searches: Aspose.Cells get validation of a cell C# | How to read validation type with Aspose.Cells | Retrieve cell J5 validation formulas Aspose.Cells | Worksheet.Cells GetValidation example | C# Aspose.Cells validation Type and formulas
-// Developer Intent: Read and display the validation settings applied to a specific cell (J5) in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Verify that required data‑validation rules exist before distributing a spreadsheet. | Dynamically adjust UI components based on a cell's validation constraints. | Export validation metadata to audit logs or reporting tools.
-// AI Prompts: Write C# code that loops through a range and prints each cell's validation type, Formula1 and Formula2 using Aspose.Cells. | Show how to modify a Validation object retrieved from a cell (e.g., change operator or formulas) and reapply it. | Explain how to handle null results from GetValidation when a cell has no validation applied.
+// Title: How to retrieve and log the data validation type and formulas of cell J5 with Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel workbook, accesses cell J5, obtains its Validation object, and prints Validation.Type, Validation.Formula1, and Validation.Formula2 to the console using Aspose.Cells. | Show how to verify whether a specific cell has data validation and output its type and formula values in a .NET console application with Aspose.Cells.
+// Common Searches: Aspose.Cells C# read data validation type from a specific cell | Get validation formulas for a target cell using Aspose.Cells .NET | How to determine if a cell contains data validation with Aspose.Cells | Log Excel validation details in a .NET console application
+// Tags: aspocells read cell validation .net | aspocells retrieve validation formulas c# | excel data validation extraction using aspocells | c# console log validation type aspocells | target cell validation aspocells example
 
 using System;
 using Aspose.Cells;
 
-// C# example that adds a whole‑number validation (10‑20) to J5, uses Worksheet.Cells["J5"].GetValidation() to read the Validation.Type, Formula1 and Formula2, logs them, and saves the workbook.
+// // Loads an Excel workbook, accesses cell J5 on the first worksheet, obtains its Validation object (if present), and writes the validation type together with Formula1 and Formula2 to the console.
 class Program
 {
     static void Main()
     {
-        try
+        // Load an existing workbook that contains validation on cell J5.
+        // Replace "input.xlsx" with the actual file path.
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (or change index as needed).
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Get the cell J5.
+        Cell cell = worksheet.Cells["J5"];
+
+        // Retrieve the validation applied to this cell.
+        Validation validation = cell.GetValidation();
+
+        if (validation != null)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Log the validation type.
+            Console.WriteLine("Validation Type: " + validation.Type);
 
-            // Define the cell area (J5) where the validation will be applied
-            // J = column index 9 (0‑based), 5 = row index 4 (0‑based)
-            CellArea validationArea = new CellArea
-            {
-                StartRow = 4,
-                EndRow = 4,
-                StartColumn = 9,
-                EndColumn = 9
-            };
-
-            // Add a validation for the specified area
-            int validationIndex = worksheet.Validations.Add(validationArea);
-            Validation validation = worksheet.Validations[validationIndex];
-            validation.Type = ValidationType.WholeNumber;
-            validation.Operator = OperatorType.Between;
-            validation.Formula1 = "10";
-            validation.Formula2 = "20";
-
-            // Retrieve the validation applied to cell J5
-            Validation retrievedValidation = worksheet.Cells["J5"].GetValidation();
-
-            // Log validation details
-            Console.WriteLine("Validation Type: " + retrievedValidation.Type);
-            Console.WriteLine("Formula1: " + retrievedValidation.Formula1);
-            Console.WriteLine("Formula2: " + retrievedValidation.Formula2);
-
-            // Save the workbook
-            workbook.Save("ValidationJ5.xlsx");
+            // Log the first and second formula values (if any).
+            Console.WriteLine("Formula1: " + validation.Formula1);
+            Console.WriteLine("Formula2: " + validation.Formula2);
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine("No validation applied to cell J5.");
         }
     }
 }

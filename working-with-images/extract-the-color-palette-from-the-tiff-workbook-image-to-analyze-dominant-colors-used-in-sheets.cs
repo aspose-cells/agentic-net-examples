@@ -1,99 +1,100 @@
-// Title: Extract Excel Workbook Color Palette and Render First Worksheet to TIFF using Aspose.Cells for .NET
-// Description: C# example that loads an XLSX file, renders the first worksheet to a TIFF image (LZW compression, 24‑bit), reads the workbook’s full 56‑color palette via Workbook.Colors, retrieves only the colors actually used with CellsHelper.GetUsedColors, prints both collections, and saves the workbook to a new file.
-// Keywords: Aspose.Cells | C# | Excel color palette | Workbook.Colors | CellsHelper.GetUsedColors | render worksheet to TIFF | TIFF LZW compression | 56‑color palette | extract used colors | image rendering | .NET Excel processing
-// Common Searches: Aspose.Cells get workbook palette C# | list used colors in Excel with Aspose | render Excel sheet to TIFF .NET | extract dominant colors from Excel file | how to read 56‑color palette from workbook
-// Developer Intent: Retrieve both the full workbook palette and the subset of colors actually used after converting the first sheet to a TIFF image.
-// Use Cases: Create a TIFF snapshot of a worksheet and compare the full 56‑color palette with the colors that are really applied for visual audits. | Identify dominant or theme colors in an Excel file for UI theming or branding analysis. | Validate that custom cell styles use only approved palette entries before publishing a workbook. | Automate generation of color‑usage reports for large Excel datasets.
-// AI Prompts: Generate C# code with Aspose.Cells that loads an Excel file, renders the first worksheet to a TIFF, and outputs both the complete 56‑color palette and the used colors. | Explain how CellsHelper.GetUsedColors scans a workbook to determine which palette entries are referenced. | Provide a function that calculates the most frequent color in the used‑colors array and returns its ARGB components.
+// Title: Extract and count dominant foreground and background cell colors from an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file using Aspose.Cells, iterates every worksheet and cell, and records each unique System.Drawing.Color from the cell's foreground and background styles together with its occurrence count. | Write a method that orders the collected colors by frequency and prints the ARGB components along with the number of times each color appears. | Add validation to confirm the Excel file exists before processing and display a clear error message if the path is invalid.
+// Common Searches: how to list all cell background colors in an Excel file using Aspose.Cells C# | C# Aspose.Cells count how many times each color is used in a workbook | extract dominant ARGB colors from Excel worksheets with Aspose.Cells .NET | enumerate foreground and background style colors across all sheets in .xlsx using Aspose.Cells | retrieve color palette statistics from Excel workbook programmatically in C#
+// Tags: extract cell style colors Aspose.Cells .NET | count foreground and background colors in Excel workbook | dominant ARGB color analysis using Aspose.Cells | iterate worksheets to collect cell colors C# | track color frequencies Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsColorPaletteExtraction
+// The example loads an Excel workbook with Aspose.Cells, scans every cell in each worksheet, captures non‑transparent foreground and background System.Drawing.Color values, tallies their occurrences in a dictionary, sorts the colors by usage descending, and outputs each ARGB value with its count.
+class Program
 {
-    // C# example that loads an XLSX file, renders the first worksheet to a TIFF image (LZW compression, 24‑bit), reads the workbook’s full 56‑color palette via Workbook.Colors, retrieves only the colors actually used with CellsHelper.GetUsedColors, prints both collections, and saves the workbook to a new file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Paths for input and output files
-            string excelPath = "input.xlsx";
-            string tiffPath = "output.tiff";
-            string savedWorkbookPath = "modified.xlsx";
+            // Path to the source Excel file
+            string excelPath = @"C:\Data\SampleWorkbook.xlsx";
 
-            // Verify that the input Excel file exists
+            // Verify that the file exists to avoid FileNotFoundException
             if (!File.Exists(excelPath))
             {
-                Console.WriteLine($"Error: Input file \"{excelPath}\" not found.");
+                Console.WriteLine($"Error: The file \"{excelPath}\" does not exist.");
                 return;
             }
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(excelPath);
+
+            // Dictionary to hold color usage count across all sheets
+            Dictionary<Color, int> colorUsage = new Dictionary<Color, int>();
+
+            // Iterate through each worksheet
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(excelPath);
+                Worksheet sheet = workbook.Worksheets[i];
+                Cells cells = sheet.Cells;
 
-                // Ensure there is at least one worksheet to render
-                if (workbook.Worksheets.Count == 0)
+                // Determine the used range
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                // Scan each cell in the used range
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    Console.WriteLine("Error: The workbook contains no worksheets.");
-                    return;
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        if (cell == null) continue;
+
+                        // Get the cell style
+                        Style style = cell.GetStyle();
+
+                        // Collect foreground color if set
+                        Color fg = style.ForegroundColor;
+                        if (!fg.IsEmpty && fg.A != 0)
+                            IncrementColorCount(colorUsage, fg);
+
+                        // Collect background color if set
+                        Color bg = style.BackgroundColor;
+                        if (!bg.IsEmpty && bg.A != 0)
+                            IncrementColorCount(colorUsage, bg);
+                    }
                 }
-
-                // ------------------------------------------------------------
-                // Render the first worksheet to a TIFF image file
-                // ------------------------------------------------------------
-                ImageOrPrintOptions options = new ImageOrPrintOptions
-                {
-                    // ImageFormat is implicitly TIFF when using ToTiff, so it can be omitted
-                    TiffCompression = TiffCompression.CompressionLZW,
-                    TiffColorDepth = ColorDepth.Format24bpp,
-                    OnePagePerSheet = true
-                };
-
-                // Create a SheetRender for the first worksheet
-                SheetRender sheetRender = new SheetRender(workbook.Worksheets[0], options);
-
-                // Render all pages of the sheet to the TIFF file (lifecycle rule: save)
-                sheetRender.ToTiff(tiffPath);
-                Console.WriteLine($"Workbook rendered to TIFF: {tiffPath}");
-
-                // ------------------------------------------------------------
-                // Extract the full palette (56 entries) from the workbook
-                // ------------------------------------------------------------
-                Color[] paletteColors = workbook.Colors; // Returns the 56‑entry palette
-
-                Console.WriteLine("\nFull workbook palette (56 colors):");
-                for (int i = 0; i < paletteColors.Length; i++)
-                {
-                    Color c = paletteColors[i];
-                    Console.WriteLine($"Index {i,2}: A={c.A}, R={c.R}, G={c.G}, B={c.B}");
-                }
-
-                // ------------------------------------------------------------
-                // Extract only the colors that are actually used in the workbook
-                // ------------------------------------------------------------
-                Color[] usedColors = CellsHelper.GetUsedColors(workbook);
-
-                Console.WriteLine("\nColors actually used in the workbook:");
-                foreach (Color c in usedColors)
-                {
-                    Console.WriteLine($"A={c.A}, R={c.R}, G={c.G}, B={c.B}");
-                }
-
-                // ------------------------------------------------------------
-                // (Optional) Save the workbook after any modifications
-                // ------------------------------------------------------------
-                workbook.Save(savedWorkbookPath, SaveFormat.Xlsx);
-                Console.WriteLine($"\nWorkbook saved to: {savedWorkbookPath}");
             }
-            catch (Exception ex)
+
+            // Output the collected colors sorted by usage (descending)
+            Console.WriteLine("Dominant colors across all sheets:");
+            foreach (var kvp in SortedByUsage(colorUsage))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Color c = kvp.Key;
+                int count = kvp.Value;
+                Console.WriteLine($"Color ARGB({c.A},{c.R},{c.G},{c.B}) - Used {count} times");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper to increment color count in the dictionary
+    private static void IncrementColorCount(Dictionary<Color, int> dict, Color color)
+    {
+        if (dict.ContainsKey(color))
+            dict[color]++;
+        else
+            dict[color] = 1;
+    }
+
+    // Helper to sort dictionary by value descending
+    private static IEnumerable<KeyValuePair<Color, int>> SortedByUsage(Dictionary<Color, int> dict)
+    {
+        var list = new List<KeyValuePair<Color, int>>(dict);
+        list.Sort((a, b) => b.Value.CompareTo(a.Value));
+        return list;
     }
 }

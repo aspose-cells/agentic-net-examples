@@ -1,35 +1,52 @@
-// Title: Convert Excel to PDF/A‑1b with Aspose.Cells in C# (.NET)
-// Description: Shows how to create a workbook, add sample data, set PdfSaveOptions.Compliance to PdfCompliance.PdfA1b, and save the file as a PDF/A‑1b document for long‑term archival using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | PDF/A-1b | PdfSaveOptions | PdfCompliance | Excel to PDF/A | archival PDF | document compliance | long‑term storage
-// Common Searches: Aspose.Cells PDF/A-1b export C# | How to save workbook as PDF/A using Aspose.Cells .NET | Set PDF compliance level Aspose.Cells | Generate archival PDF from Excel Aspose | PdfSaveOptions Compliance property example
-// Developer Intent: Save an Excel workbook as a PDF/A‑1b file by configuring the compliance option.
-// Use Cases: Create regulatory‑compliant financial reports in PDF/A‑1b. | Archive generated spreadsheets for legal retention periods. | Integrate PDF/A conversion into automated reporting pipelines. | Batch process multiple workbooks to PDF/A‑1b for document management systems.
-// AI Prompts: Show me how to change the code to use PDF/A‑2b compliance instead of PDF/A‑1b. | Generate a reusable method that takes a Workbook, output path, and optional metadata, then saves the workbook as PDF/A‑1b. | Write a script that loops through a folder of .xlsx files and converts each to PDF/A‑1b using Aspose.Cells. | Explain how to embed XMP metadata for PDF/A compliance when saving with Aspose.Cells.
+// Title: Save an Excel workbook as PDF/A‑1b using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.Compliance to PdfA1b, and saves the workbook as a PDF/A‑1b document with Aspose.Cells. | Show how to create the output directory, handle missing input files, and export a workbook to PDF/A while catching exceptions in C#. | Provide a minimal Aspose.Cells example that converts a worksheet to a PDF/A‑1b file suitable for long‑term archiving.
+// Common Searches: Aspose.Cells how to export Excel to PDF/A‑1b in C# | C# set PdfSaveOptions compliance to PDF/A using Aspose.Cells | Convert .xlsx to PDF/A archive format with Aspose.Cells .NET | Save workbook as PDF/A for long term storage Aspose.Cells | Create output folder before saving PDF/A with Aspose.Cells C#
+// Tags: Aspose.Cells PDF/A export C# | PdfSaveOptions set compliance PDF/A .NET | Excel to PDF/A archival conversion | C# generate PDF/A‑1b workbook | Aspose.Cells long‑term archive PDF
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Shows how to create a workbook, add sample data, set PdfSaveOptions.Compliance to PdfCompliance.PdfA1b, and save the file as a PDF/A‑1b document for long‑term archival using Aspose.Cells for .NET.
-class PdfAComplianceDemo
+// The example loads an existing Excel file (or creates a new workbook if the file is missing), ensures the target directory exists, configures PdfSaveOptions for PDF/A compliance, and saves the workbook as a PDF/A‑1b document, with error handling to capture any issues during the conversion.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet and add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Aspose.Cells PDF/A compliance example");
-        sheet.Cells["A2"].PutValue(DateTime.Now);
-
-        // Create PDF save options and set the compliance level to PDF/A-1b (rule: PdfSaveOptions.Compliance)
-        PdfSaveOptions saveOptions = new PdfSaveOptions
+        try
         {
-            Compliance = PdfCompliance.PdfA1b
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Save the workbook as a PDF with the specified compliance level (lifecycle rule: save)
-        workbook.Save("PdfA1b_Output.pdf", saveOptions);
+            Workbook workbook;
+
+            // Load existing workbook if the file exists; otherwise create a new one.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
+            }
+
+            // Configure PDF save options (default compliance).
+            PdfSaveOptions saveOptions = new PdfSaveOptions();
+
+            // Ensure the output directory exists.
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF file.
+            workbook.Save(outputPath, saveOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

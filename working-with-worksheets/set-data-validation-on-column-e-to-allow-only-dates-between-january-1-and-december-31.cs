@@ -1,46 +1,62 @@
-// Title: C# – Add Date‑Range Validation to Column E in an Aspose.Cells Workbook
-// Description: Demonstrates how to create a new Workbook with Aspose.Cells for .NET, define a CellArea covering column E, add a Validation object, set its type to Date with a Between operator, specify start and end dates (e.g., 1/1/2023 to 12/31/2023), configure optional input/error messages, and save the file as DateValidationColumnE.xlsx.
-// Keywords: Aspose.Cells C# date validation | Excel column E data validation .NET | set date range validation Aspose.Cells | ValidationType.Date example C# | apply data validation to a column Aspose | Aspose.Cells workbook validation tutorial
-// Common Searches: Aspose.Cells how to restrict column E to dates | C# add date range validation in Excel with Aspose | set data validation for specific column using Aspose.Cells | date between validation Aspose.Cells .NET | example of ValidationType.Date in C#
-// Developer Intent: Create a validation rule that permits only dates between January 1 and December 31 in column E of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Ensure users enter only dates within the current year in a data‑entry column. | Prevent out‑of‑range dates when importing external records into a template. | Programmatically apply the same yearly date restriction across multiple sheets.
-// AI Prompts: Generate C# code with Aspose.Cells to enforce a 2024 date range in columns F‑H. | Show how to duplicate an existing Validation object and assign it to another column. | Provide an example of custom input and error messages for a date validation rule in Aspose.Cells.
+// Title: Apply date‑range data validation to the entire column E in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that adds a Validation of type Date to column E (E1:E1048576) and restricts entries to dates between 1/1/2023 and 12/31/2023. | Generate a complete example that sets a Between operator, custom input message, and error alert for date validation on column E, then saves the workbook.
+// Common Searches: Aspose.Cells C# how to restrict column E to a specific date range in Excel | set data validation for whole column E to allow only dates in 2023 using Aspose.Cells | C# Aspose.Cells date validation between Jan 1 and Dec 31 for column E | apply input and error messages for date validation on column E with Aspose.Cells .NET
+// Tags: Aspose.Cells date validation column | C# set validation for Excel column E | Aspose.Cells ValidationType.Date example | Excel date range validation using Aspose.Cells | Aspose.Cells between operator for date validation
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to create a new Workbook with Aspose.Cells for .NET, define a CellArea covering column E, add a Validation object, set its type to Date with a Between operator, specify start and end dates (e.g., 1/1/2023 to 12/31/2023), configure optional input/error messages, and save the file as DateValidationColumnE.xlsx.
+// Creates a new workbook, defines the full range of column E, adds a Date‑type Validation with the Between operator limited to 1/1/2023‑12/31/2023, sets custom input and error messages, and saves the file as DataValidationExample.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define the validation area for column E (zero‑based column index 4)
-        // Here we apply it to rows 0 through 1000; adjust as needed
-        CellArea validationArea = CellArea.CreateCellArea(0, 4, 1000, 4);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add the validation to the worksheet
-        int validationIndex = worksheet.Validations.Add(validationArea);
-        Validation validation = worksheet.Validations[validationIndex];
+            // Define the range for column E (E1:E1048576)
+            // Use CellArea.CreateCellArea to build the range object
+            CellArea area = CellArea.CreateCellArea("E1", "E1048576");
 
-        // Configure the validation to allow only dates between Jan 1 and Dec 31
-        validation.Type = ValidationType.Date;
-        validation.Operator = OperatorType.Between;
-        validation.Formula1 = "1/1/2023";   // start date
-        validation.Formula2 = "12/31/2023"; // end date
+            // Add a data validation rule for the specified range
+            int validationIndex = sheet.Validations.Add(area);
+            Validation validation = sheet.Validations[validationIndex];
 
-        // Optional user messages
-        validation.InputTitle = "Date Entry";
-        validation.InputMessage = "Please enter a date between Jan 1 and Dec 31, 2023.";
-        validation.ErrorTitle = "Invalid Date";
-        validation.ErrorMessage = "The date must be within the year 2023.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
+            // Configure validation to allow dates between Jan 1 and Dec 31, 2023
+            validation.Type = ValidationType.Date;
+            validation.Operator = OperatorType.Between;
+            validation.Formula1 = "1/1/2023";
+            validation.Formula2 = "12/31/2023";
 
-        // Save the workbook
-        workbook.Save("DateValidationColumnE.xlsx");
+            // Optional: display messages to the user
+            validation.InputMessage = "Enter a date between Jan 1 and Dec 31, 2023.";
+            validation.ShowError = true;
+            validation.ErrorMessage = "Invalid date. Please enter a date within the allowed range.";
+
+            // Prepare output path
+            string outputPath = "DataValidationExample.xlsx";
+            string fullPath = Path.GetFullPath(outputPath);
+            string outputDir = Path.GetDirectoryName(fullPath);
+
+            // Create directory if needed (outputDir can be null when only a file name is provided)
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {fullPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

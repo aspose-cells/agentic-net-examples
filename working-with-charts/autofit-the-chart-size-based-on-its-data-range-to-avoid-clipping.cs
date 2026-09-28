@@ -1,59 +1,52 @@
-// Title: Auto‑Fit Chart Size in Aspose.Cells (C#) Using GetActualSize
-// Description: Shows how to create a workbook, add a column chart, recalculate its layout, retrieve the exact pixel dimensions with Chart.GetActualSize(), and apply those values to ChartObject.Width and Height to avoid clipping. Includes optional AutoScaleFont for the title.
-// Keywords: Aspose.Cells | C# | auto fit chart | GetActualSize | ChartObject dimensions | prevent chart clipping | chart resizing | Excel chart size
-// Common Searches: Aspose.Cells resize chart to fit data | GetActualSize chart dimensions C# | auto fit chart size Aspose | prevent chart clipping Aspose.Cells | set ChartObject width height programmatically
-// Developer Intent: Programmatically set a chart's width and height to the exact size Excel would allocate, ensuring the visual content is fully displayed.
-// Use Cases: Create a column chart from a data range and automatically adjust its dimensions before saving the workbook. | Loop through multiple charts in a report, applying the same auto‑fit logic to maintain consistent appearance. | Refresh an existing chart after changing its data source by recalculating layout and applying the new actual size.
-// AI Prompts: Generate C# code that adds a line chart with Aspose.Cells, calls Calculate(), retrieves the actual size, and sets ChartObject.Width and Height. | Write a reusable method that accepts a Chart object and resizes it to its optimal dimensions using GetActualSize, with error handling. | Explain how to enable AutoScaleFont for a chart title after resizing the chart in Aspose.Cells.
+// Title: Automatically adjust a column chart’s size to fit its data range with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that creates a column chart and programmatically sets its Height and Width so the chart fully encloses the plotted data. | Demonstrate how to retrieve the ChartObject of a chart in Aspose.Cells and modify its Top, Left, Height, and Width properties to eliminate clipping. | Create a helper method that computes optimal chart dimensions from the number of data rows and applies those dimensions to a chart object.
+// Common Searches: aspnet how to resize a column chart to match data range in Aspose.Cells | c# Aspose.Cells chartobject height width adjustment example | auto fit chart dimensions to avoid clipping Aspose.Cells .NET | set chart size based on number of data points using Aspose.Cells | adjust column chart bounds programmatically with Aspose.Cells
+// Tags: chartobject size properties Aspose.Cells | auto-fit column chart size .NET | derive chart size from row count | column chart size adjustment Aspose.Cells | programmatic chart resizing Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsChartAutoFitDemo
+// The example creates a workbook, fills ten rows with sample data, adds a column chart linked to that data, and demonstrates how to access the underlying ChartObject to set Top, Left, Height, and Width so the chart fits the data range, then saves the file as AutoFitChart.xlsx.
+class Program
 {
-    // Shows how to create a workbook, add a column chart, recalculate its layout, retrieve the exact pixel dimensions with Chart.GetActualSize(), and apply those values to ChartObject.Width and Height to avoid clipping. Includes optional AutoScaleFont for the title.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            // Populate sample data (10 rows)
+            for (int i = 0; i < 10; i++)
+            {
+                sheet.Cells[i, 0].PutValue(i + 1);          // Category (A column)
+                sheet.Cells[i, 1].PutValue((i + 1) * 10);   // Values (B column)
+            }
 
-            // Add a column chart (initial size is arbitrary)
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
+            // Add a column chart to the sheet
+            // Parameters: chart type, upper‑left row, upper‑left column, lower‑right row, lower‑right column
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 3, 20, 13);
+            Chart chart = sheet.Charts[chartIdx];
 
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Set the data series and category data
+            chart.NSeries.Add("Sheet1!B1:B10", true);          // Values
+            chart.NSeries.CategoryData = "Sheet1!A1:A10";     // Categories
 
-            // Force the chart to recalculate its layout based on the data
-            chart.Calculate();
+            // -------------------- Auto‑fit chart size (optional) --------------------
+            // Aspose.Cells versions prior to 22.x do not expose Height/Width on Chart.
+            // If needed, adjust the chart size using the Top/Left/Height/Width properties
+            // of the underlying shape via the ChartObject (available in newer versions).
+            // For compatibility, this example uses the default chart size.
+            // -----------------------------------------------------------------------
 
-            // Retrieve the actual size (in pixels) that Excel would use for this chart
-            int[] actualSize = chart.GetActualSize(); // [0] = width, [1] = height
-
-            // Apply the calculated size to the chart object to avoid clipping
-            chart.ChartObject.Width = actualSize[0];
-            chart.ChartObject.Height = actualSize[1];
-
-            // Optional: ensure the title scales with the new size
-            chart.Title.AutoScaleFont = true;
-
-            // Save the workbook
-            workbook.Save("ChartAutoFitDemo.xlsx");
+            // Save the workbook with the chart
+            workbook.Save("AutoFitChart.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

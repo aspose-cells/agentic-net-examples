@@ -1,45 +1,29 @@
-// Title: Read the QuotePrefix flag of a cell with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, set a leading apostrophe in cell B10, enable the QuotePrefix style, save and reload the file, then read the QuotePrefix property from the cell's style and print the boolean result.
-// Keywords: Aspose.Cells QuotePrefix | C# QuotePrefix property | read cell style Aspose.Cells | leading apostrophe Excel | check QuotePrefix flag | Aspose.Cells get style | QuotePrefix example
-// Common Searches: Aspose.Cells read QuotePrefix | How to get QuotePrefix flag in C# | Check if cell has leading apostrophe using Aspose.Cells | Retrieve cell style QuotePrefix after loading workbook
-// Developer Intent: Retrieve the QuotePrefix boolean flag of a specific cell to determine whether the leading apostrophe formatting is applied.
-// Use Cases: Validate that imported data preserves leading apostrophe formatting by inspecting the QuotePrefix flag after loading a workbook. | Apply conditional formatting only when a cell's QuotePrefix property is true. | Log QuotePrefix status of key cells for audit or debugging during spreadsheet processing.
-// AI Prompts: Generate C# code with Aspose.Cells that reads the QuotePrefix property of cell B10 after opening a workbook. | Explain how to detect a leading apostrophe in a cell using the QuotePrefix style flag in Aspose.Cells for .NET. | Provide a loop that iterates over a range of cells and outputs each cell's QuotePrefix value.
+// Title: Read the QuotePrefix style flag of a cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, accesses a specific cell, and prints its QuotePrefix style flag. | Show how to retrieve and display the QuotePrefix property from a cell's style in a .NET console app using Aspose.Cells. | Provide a snippet that reads the QuotePrefix attribute of cell A1 and writes the boolean result to the console with Aspose.Cells.
+// Common Searches: aspnet read QuotePrefix flag from Excel cell using Aspose.Cells | c# check if a cell has QuotePrefix style with Aspose.Cells library | how to get cell style QuotePrefix property in Aspose.Cells for .NET | retrieve QuotePrefix attribute of cell A1 in an .xlsx workbook using Aspose.Cells | Aspose.Cells example to log QuotePrefix value of a specific cell
+// Tags: Aspose.Cells read cell QuotePrefix | C# retrieve cell style flag | log Excel cell style property Aspose | QuotePrefix attribute .NET | cell style inspection Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsQuotePrefixDemo
+// Loads an Excel workbook, accesses cell A1, reads the QuotePrefix flag from its style, and writes the boolean value to the console.
+class Program
 {
-    // Shows how to create a workbook, set a leading apostrophe in cell B10, enable the QuotePrefix style, save and reload the file, then read the QuotePrefix property from the cell's style and print the boolean result.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();                     // create
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cell cell = worksheet.Cells["B10"];
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Set a value that starts with a single quote
-            cell.PutValue("'12345");
+        // Get the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Enable the QuotePrefix style for the cell
-            Style style = cell.GetStyle();                         // get style
-            style.QuotePrefix = true;
-            cell.SetStyle(style);                                  // apply style
+        // Access the target cell (e.g., A1)
+        Cell cell = worksheet.Cells["A1"];
 
-            // Save the workbook (create a physical file)
-            string filePath = "QuotePrefixDemo.xlsx";
-            workbook.Save(filePath);                               // save
+        // Retrieve the QuotePrefix property from the cell's style
+        bool quotePrefix = cell.GetStyle().QuotePrefix;
 
-            // ---------- Load the workbook ----------
-            Workbook loadedWorkbook = new Workbook(filePath);       // load
-            Cell loadedCell = loadedWorkbook.Worksheets[0].Cells["B10"];
-
-            // Read the QuotePrefix property and log its value
-            bool quotePrefix = loadedCell.GetStyle().QuotePrefix; // read property
-            Console.WriteLine("QuotePrefix is set: " + quotePrefix);
-        }
+        // Log the value to the console
+        Console.WriteLine($"QuotePrefix for cell A1: {quotePrefix}");
     }
 }

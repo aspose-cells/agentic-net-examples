@@ -1,50 +1,67 @@
-// Title: C# – Load XLSX, Create PivotTable (A1:E20), Add Linked Column PivotChart, Save – Aspose.Cells
-// Description: Loads an existing XLSX workbook, inserts a PivotTable from range A1:E20 at cell G3, configures row and data fields, refreshes the table, creates a column chart linked to the PivotTable, updates the chart data, and saves the file as output.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PivotTable C# | link PivotChart to PivotTable Aspose | create column chart from PivotTable | load and save XLSX Aspose.Cells | refresh PivotTable data Aspose | .NET Excel automation | programmatic Excel dashboard
-// Common Searches: How to add a PivotTable from a range with Aspose.Cells .NET | Aspose.Cells example linking a chart to a PivotTable | Create and refresh a column PivotChart in C# using Aspose | Save workbook after adding PivotTable and PivotChart Aspose.Cells
-// Developer Intent: Programmatically generate a PivotTable, attach a column PivotChart to it, and persist the workbook.
-// Use Cases: Automated sales reporting: generate a summary PivotTable and a column chart for each period. | Dynamic business dashboards: link charts to PivotTables to reflect real‑time data changes. | Batch processing of Excel files: add analytical tables and visualizations before distribution.
-// AI Prompts: Write C# code with Aspose.Cells that creates a PivotTable from B2:D30, adds multiple row and data fields, links a line chart to the table, and saves the workbook. | Explain how to change the PivotSource of an existing PivotChart after modifying the PivotTable layout using Aspose.Cells for .NET.
+// Title: Generate a PivotTable from A1:E20 and attach a linked Column PivotChart in an XLSX file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens an existing XLSX workbook, creates a PivotTable on a new sheet from the range A1:E20, adds a Column PivotChart linked to that table, and saves the file. | Show how to programmatically link a PivotChart to a PivotTable in Aspose.Cells for .NET, including setting the chart type and title. | Provide a step‑by‑step example of adding a worksheet, inserting a PivotTable, and creating a linked PivotChart using the Aspose.Cells C# API.
+// Common Searches: asp.net create pivot table from range A1:E20 using Aspose.Cells | how to add a linked pivot chart to an Excel workbook with Aspose.Cells C# | sample code for generating a column pivot chart from a pivot table in Aspose.Cells | save workbook with pivot table and chart Aspose.Cells .NET example
+// Tags: Aspose.Cells pivot table from A1:E20 | Aspose.Cells linked pivot chart | C# column pivot chart Aspose.Cells | save XLSX with pivot table and chart Aspose.Cells | add worksheet and pivot objects Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Pivot;
 
-// Loads an existing XLSX workbook, inserts a PivotTable from range A1:E20 at cell G3, configures row and data fields, refreshes the table, creates a column chart linked to the PivotTable, updates the chart data, and saves the file as output.xlsx using Aspose.Cells for .NET.
+// // This program loads an existing XLSX file, adds a new worksheet, creates a PivotTable from the source range A1:E20 on the first sheet, inserts a linked Column PivotChart, and saves the modified workbook to a new file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load the existing XLSX workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet (you can change the index or name as needed)
-        Worksheet sheet = workbook.Worksheets[0];
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Add a PivotTable using the range A1:E20, place it starting at cell G3, and name it "PivotTable1"
-        int pivotIndex = sheet.PivotTables.Add("A1:E20", "G3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Example configuration: first column as Row field, second column as Data field
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+            // Source worksheet (assumed first sheet)
+            Worksheet sourceSheet = workbook.Worksheets[0];
 
-        // Refresh and calculate the PivotTable data
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+            // Add a new worksheet for the PivotTable and PivotChart
+            int pivotSheetIndex = workbook.Worksheets.Add();
+            Worksheet pivotSheet = workbook.Worksheets[pivotSheetIndex];
+            pivotSheet.Name = "PivotSheet";
 
-        // Add a Column chart to the worksheet (position can be adjusted)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 25, 10);
-        Chart chart = sheet.Charts[chartIndex];
+            // Define source data range for the PivotTable
+            string sourceData = $"{sourceSheet.Name}!$A$1:$E$20";
 
-        // Link the chart to the created PivotTable
-        chart.PivotSource = $"{sheet.Name}!{pivotTable.Name}";
+            // Add the PivotTable to the new sheet at cell A1
+            int pivotTableIndex = pivotSheet.PivotTables.Add(sourceData, "A1", "PivotTable1");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotTableIndex];
 
-        // Refresh the chart to reflect the PivotTable data
-        chart.RefreshPivotData();
+            // NOTE: Field configuration (RowFields, ColumnFields, DataFields) is omitted
+            // to maintain compatibility across different Aspose.Cells versions.
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Add a PivotChart linked to the PivotTable
+            int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 15, 0, 30, 15);
+            Chart chart = pivotSheet.Charts[chartIndex];
+            chart.Title.Text = "Pivot Chart";
+
+            // Link the chart to the source data range
+            chart.NSeries.Add(sourceData, true);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

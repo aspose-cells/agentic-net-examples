@@ -1,46 +1,40 @@
-// Title: Aspose.Cells for .NET – Apply Light Blue Fill and Thin Bottom Border to a Footer Row
-// Description: Demonstrates how to create a workbook, locate the footer row, build a Style with a solid LightBlue background and a thin black bottom border, apply it to the row, and save the file as FooterStyle.xlsx using Aspose.Cells in C#.
-// Keywords: Aspose.Cells style row background | C# light blue fill Aspose.Cells | thin bottom border Aspose.Cells | footer row formatting .NET | apply style to worksheet row | Aspose.Cells GitHub example | Excel row styling C#
-// Common Searches: how to set row background color in Aspose.Cells | add thin bottom border to a row using Aspose.Cells .NET | style footer row in Excel with Aspose.Cells | Aspose.Cells C# example for row styling | apply solid fill to a specific row in Aspose.Cells
-// Developer Intent: Add a light‑blue fill and a thin bottom border to the worksheet’s footer row programmatically.
-// Use Cases: Highlight the total or summary row in financial reports with a distinct background and border. | Create a printable invoice where the final row stands out for quick visual reference. | Standardize footer appearance across multiple sheets in a workbook by reusing a single Style object.
-// AI Prompts: Generate C# code with Aspose.Cells that styles a footer row using a LightBlue solid fill and a thin black bottom border. | Provide a reusable method that accepts a Worksheet and row index, then applies a light blue background and thin bottom border. | Explain how to clone a Style in Aspose.Cells and apply it to several footer rows within the same workbook.
+// Title: Add a light‑blue fill and thin bottom border to a footer row with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to create a style with a solid light‑blue background and a thin black bottom border, then apply it to a designated footer row. | Provide a complete C# example that defines the footer style, assigns it to cells in row 5 (e.g., columns A‑D), and saves the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# set solid light blue fill for a specific row | How to add a thin bottom border to a footer row in Aspose.Cells workbook | C# Aspose.Cells apply custom style to row range and save file | Create footer row style with background color and border using Aspose.Cells .NET | Set cell style for footer row columns A to D Aspose.Cells example
+// Tags: create style with background color Aspose.Cells | apply thin bottom border Aspose.Cells | footer row formatting C# Aspose.Cells | set solid fill for cell range Aspose.Cells .NET | save workbook with styled footer Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace AsposeCellsFooterStyle
+// The program creates a new workbook, defines a style with a solid light‑blue fill and a thin black bottom border, applies this style to cells in the footer row (row 5, columns A‑D), and saves the file as FooterStyle.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, locate the footer row, build a Style with a solid LightBlue background and a thin black bottom border, apply it to the row, and save the file as FooterStyle.xlsx using Aspose.Cells in C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Define the style for the footer row
+        Style footerStyle = workbook.CreateStyle();
+
+        // Light blue fill
+        footerStyle.ForegroundColor = Color.LightBlue;
+        footerStyle.Pattern = BackgroundType.Solid;
+
+        // Thin bottom border
+        footerStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+        footerStyle.Borders[BorderType.BottomBorder].Color = Color.Black;
+
+        // Apply the style to the footer row (example: row index 5, columns A-D)
+        int footerRowIndex = 5;
+        for (int col = 0; col <= 3; col++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Determine the footer row index (for example, one row after the last used row)
-            int footerRowIndex = worksheet.Cells.MaxDataRow + 1;
-
-            // Create a new style
-            Style style = workbook.CreateStyle();
-
-            // Set light blue fill
-            style.BackgroundColor = Color.LightBlue;
-            style.Pattern = BackgroundType.Solid;
-
-            // Set a thin bottom border
-            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.BottomBorder].Color = Color.Black;
-
-            // Apply the style to the footer row
-            Row footerRow = worksheet.Cells.Rows[footerRowIndex];
-            footerRow.SetStyle(style);
-
-            // Save the workbook
-            workbook.Save("FooterStyle.xlsx");
+            Cell cell = sheet.Cells[footerRowIndex, col];
+            cell.SetStyle(footerStyle);
         }
+
+        // Save the workbook
+        workbook.Save("FooterStyle.xlsx");
     }
 }

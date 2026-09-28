@@ -1,51 +1,77 @@
-// Title: Replace linked OLE Word source and set display properties with Aspose.Cells C#
-// Description: Loads an Excel workbook, scans every worksheet for linked OLE objects, changes each object's source file to a new Word document, disables auto‑update, assigns the Word ProgID, shows the object as an icon, adds a custom label, and saves the updated file.
-// Keywords: Aspose.Cells OLE edit | C# change OLE source path | linked OLE Word document | set OLE ProgID | display OLE as icon | update OLE properties | Excel OLE automation
-// Common Searches: how to change OLE source file in Excel using Aspose.Cells | Aspose.Cells set ProgID for Word OLE object C# | display OLE object as icon with custom label Aspose | disable auto update for linked OLE objects Aspose.Cells
-// Developer Intent: Update the file path of linked OLE objects that embed Word documents and modify their visual and update settings in an Excel workbook.
-// Use Cases: Re‑link all embedded Word files in a template before sending to clients. | Prevent OLE objects from refreshing automatically when the workbook opens. | Present embedded documents as icons with meaningful labels for cleaner reports.
-// AI Prompts: Write C# code with Aspose.Cells that iterates through every worksheet, finds linked OLE objects, sets ObjectSourceFullName to a given Word file, disables AutoUpdate, sets ProgID to "Word.Document.12", enables DisplayAsIcon, and assigns a custom label. | Show an example that batch‑updates OLE objects in an Excel file to point to a new document path and changes their display properties using Aspose.Cells.
+// Title: Replace an embedded OLE object with a new Word document and modify its properties using Aspose.Cells for .NET
+// AI Prompts: Load an existing Excel workbook, locate the first OleObject, assign the binary content of a .docx file to its ObjectData, set the Name and IsAutoSize flags, then save the file with Aspose.Cells. | Read a Word document into a byte array and update an OleObject's ObjectData, Name, and IsAutoSize properties in C# using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# replace OLE object source file with a Word document | How to update OleObject Name and AutoSize properties in an Excel workbook using .NET | Change embedded Word file inside an Excel sheet programmatically with Aspose.Cells | Set ObjectData of an OleObject from a .docx file in C# | Replace first OLE object in worksheet and save workbook using Aspose.Cells for .NET
+// Tags: replace OleObject data with docx Aspose.Cells | set OleObject Name and IsAutoSize C# | update embedded Word document in Excel worksheet | load workbook modify OLE object Aspose | assign byte array to OleObject ObjectData
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace OleObjectEditDemo
+// The sample loads 'input.xlsx', finds the first OleObject on the first worksheet, replaces its embedded content with the binary data of 'NewDocument.docx', updates the object's Name and IsAutoSize properties, and saves the modified workbook as 'output.xlsx', handling missing files and runtime errors.
+class Program
 {
-    // Loads an Excel workbook, scans every worksheet for linked OLE objects, changes each object's source file to a new Word document, disables auto‑update, assigns the Word ProgID, shows the object as an icon, adds a custom label, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook that contains OLE objects
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            const string inputPath = "input.xlsx";
+            const string newDocPath = "NewDocument.docx";
+            const string outputPath = "output.xlsx";
 
-            // Define the new Word document path that will replace the current OLE source
-            string newWordPath = @"C:\Documents\NewDocument.docx";
+            // Verify that the required files exist before proceeding
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+            if (!File.Exists(newDocPath))
+                throw new FileNotFoundException($"Source OLE document not found: {newDocPath}");
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one OLE object on the sheet
+            if (sheet.OleObjects.Count > 0)
             {
-                // Iterate through all OLE objects in the current worksheet
-                foreach (OleObject ole in sheet.OleObjects)
-                {
-                    // Update only if the OLE object is linked to a file
-                    if (ole.IsLink)
-                    {
-                        // Change the source file path to the new Word document
-                        ole.ObjectSourceFullName = newWordPath;
+                OleObject ole = sheet.OleObjects[0];
 
-                        // Update additional properties as required
-                        ole.AutoUpdate = false;                     // Disable automatic updates
-                        ole.ProgID = "Word.Document.12";            // Set ProgID for Word documents
-                        ole.DisplayAsIcon = true;                   // Show as an icon
-                        ole.Label = "New Word Document";            // Icon label
-                    }
+                // Replace the OLE object's data with the new Word document
+                try
+                {
+                    byte[] docData = File.ReadAllBytes(newDocPath);
+                    ole.ObjectData = docData;
+                    // The file format is inferred from the data; explicit setting is not required
                 }
+                catch (Exception readEx)
+                {
+                    Console.WriteLine($"Failed to read new document: {readEx.Message}");
+                    throw;
+                }
+
+                // Update additional properties as required
+                ole.Name = "WordDocumentOle";
+                ole.IsAutoSize = true;
+                // ole.IconFile = "icon.ico"; // optionally set a custom icon file
+            }
+            else
+            {
+                Console.WriteLine("No OLE objects found on the worksheet.");
             }
 
             // Save the modified workbook
-            workbook.Save("OutputWorkbook.xlsx");
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                throw;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

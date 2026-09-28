@@ -1,35 +1,26 @@
-// Title: Aspose.Cells for .NET – Access a Worksheet and Retrieve a Cell (B2) in C#
-// Description: C# example that creates a new Workbook, selects the first Worksheet, gets a reference to cell B2, writes "Hello World", prints the cell address and value, and saves the file as AccessCellDemo.xlsx using Aspose.Cells.
-// Keywords: Aspose.Cells get cell by address | C# Aspose.Cells worksheet access | retrieve cell reference Aspose.Cells | write value to cell B2 | save workbook Aspose.Cells .NET | Aspose.Cells cell object | Aspose.Cells sample code
-// Common Searches: Aspose.Cells how to get a cell reference in C# | C# Aspose.Cells access first worksheet | retrieve cell B2 using Aspose.Cells | write data to a specific cell Aspose.Cells .NET | save workbook after editing a cell Aspose.Cells
-// Developer Intent: The developer needs to locate a specific cell within a worksheet, modify its contents, and persist the changes in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Insert a header or label into cell B2 of a newly created workbook. | Read, display, and verify the value of a targeted cell after updating it. | Programmatically generate an Excel file, set values in precise cells, and export the file to disk.
-// AI Prompts: Generate C# code that opens an existing workbook, selects the second worksheet, and writes "Total" to cell C5 with Aspose.Cells. | Show how to loop through a range starting at B2 and apply a numeric format to each cell using Aspose.Cells. | Explain how to retrieve a cell's style, change its font to bold and background color, and then save the workbook with Aspose.Cells.
+// Title: Load an Excel workbook, select a worksheet by name, and retrieve cell B2 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to open a workbook file, choose the worksheet named "Sheet1", and obtain a Cell object for address B2. | Show how to read and print the value of cell B2 after accessing a specific worksheet with Aspose.Cells in a .NET console application. | Provide an example of accessing a worksheet by its name and then referencing a cell by its address using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# example to read cell B2 from a named worksheet | How to open an Excel file and get a specific cell using Aspose.Cells .NET | C# code for selecting worksheet by name and retrieving cell value with Aspose.Cells | Retrieve a cell reference after loading a workbook in Aspose.Cells for .NET | Read Excel cell value from Sheet1 using Aspose.Cells library in C#
+// Tags: load workbook Aspose.Cells C# | select worksheet by name Aspose.Cells | reference cell by address Aspose.Cells | extract cell value Aspose.Cells .NET | Aspose.Cells B2 cell access example
 
 using System;
 using Aspose.Cells;
 
-// C# example that creates a new Workbook, selects the first Worksheet, gets a reference to cell B2, writes "Hello World", prints the cell address and value, and saves the file as AccessCellDemo.xlsx using Aspose.Cells.
-class AccessCellDemo
+// The snippet demonstrates how to load an existing Excel file (input.xlsx) with Aspose.Cells, access the worksheet named "Sheet1", obtain a reference to cell B2, and output its value to the console.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Access the desired worksheet by name (or use index: workbook.Worksheets[0])
+        Worksheet worksheet = workbook.Worksheets["Sheet1"];
 
-        // Obtain a reference to the target cell B2
+        // Obtain a reference to the target cell (e.g., cell B2)
         Cell targetCell = worksheet.Cells["B2"];
 
-        // Put a sample value into the cell
-        targetCell.PutValue("Hello World");
-
-        // Display the cell address and its value
-        Console.WriteLine($"Cell {targetCell.Name} contains: {targetCell.StringValue}");
-
-        // Save the workbook (lifecycle: save)
-        workbook.Save("AccessCellDemo.xlsx");
+        // Example: read the cell's value
+        Console.WriteLine($"Value in {targetCell.Name}: {targetCell.Value}");
     }
 }

@@ -1,36 +1,76 @@
-// Title: Detect Worksheet AllowEditingObject Flag with Aspose.Cells for .NET
-// Description: Loads an Excel file, reads the worksheet's Protection.AllowEditingObject property, logs whether drawing objects can be edited, and saves the workbook unchanged—useful for compliance checks.
-// Keywords: Aspose.Cells worksheet protection | AllowEditingObject C# | Excel object editing permission | read worksheet protection flag | .NET Excel security audit | Aspose.Cells compliance example
-// Common Searches: Aspose.Cells read AllowEditingObject | check if Excel sheet allows editing objects | C# worksheet protection flag Aspose | log worksheet protection settings .NET | Excel security audit with Aspose.Cells
-// Developer Intent: Identify whether a worksheet’s protection permits editing of drawing objects and output the result.
-// Use Cases: Verify that published workbooks block object editing for regulatory compliance. | Generate a quick report of the AllowEditingObject status across all sheets in a workbook. | Skip further processing on sheets that allow object modifications.
-// AI Prompts: Create a C# routine that iterates through every worksheet in a workbook and records the AllowEditingObject value using Aspose.Cells. | Show how to disable object editing on a protected worksheet and save the changes with Aspose.Cells. | Explain how to combine AllowEditingObject with other protection flags to perform a full Excel security audit.
+// Title: Check if an Excel worksheet allows editing objects using Aspose.Cells for .NET and log the result
+// AI Prompts: Write a C# program with Aspose.Cells that opens a workbook, uses reflection to read the Protection.AllowEditObject flag of the first worksheet, and outputs a compliance message. | Create a .NET snippet that loads an .xlsx file, determines whether object editing is permitted on a worksheet via the Protection API, prints the status, and saves the file.
+// Common Searches: Aspose.Cells how to determine if worksheet protection allows object editing in C# | C# read AllowEditObject flag from Excel sheet protection using Aspose | Check worksheet edit objects permission with Aspose.Cells .NET | Log worksheet protection settings for object editing in Aspose.Cells | Reflection get AllowEditObject property Aspose.Cells workbook
+// Tags: Aspose.Cells worksheet protection AllowEditObject | C# reflection read Protection property | detect edit objects permission Excel Aspose | log worksheet protection compliance .NET | save workbook after protection check Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel file, reads the worksheet's Protection.AllowEditingObject property, logs whether drawing objects can be edited, and saves the workbook unchanged—useful for compliance checks.
-class WorksheetProtectionCheck
+// Loads input.xlsx with Aspose.Cells, uses reflection to read the Protection.AllowEditObject flag of the first worksheet, prints whether editing objects is allowed, and saves the workbook to output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet (or specify by index/name)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Ensure the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
+        }
 
-        // Retrieve the protection settings for the worksheet
-        Protection protection = worksheet.Protection;
+        Workbook workbook = null;
+        try
+        {
+            // Load the workbook from the specified file
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-        // Check whether editing of drawing objects is allowed
-        bool allowEditingObject = protection.AllowEditingObject;
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Determine if the worksheet's protection permits editing objects
+        bool allowsEditObjects = false;
+        try
+        {
+            var prop = typeof(Protection).GetProperty("AllowEditObject");
+            if (prop != null && prop.PropertyType == typeof(bool))
+            {
+                allowsEditObjects = (bool)prop.GetValue(sheet.Protection);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error retrieving protection property: {ex.Message}");
+        }
 
         // Log the compliance result
-        Console.WriteLine($"Worksheet \"{worksheet.Name}\" AllowEditingObject: {allowEditingObject}");
+        if (allowsEditObjects)
+        {
+            Console.WriteLine($"Worksheet '{sheet.Name}' allows editing objects.");
+        }
+        else
+        {
+            Console.WriteLine($"Worksheet '{sheet.Name}' does NOT allow editing objects.");
+        }
 
-        // Save the workbook if needed (no modifications made in this example)
-        workbook.Save("output.xlsx");
+        // Save the workbook (no modifications made, but required by lifecycle rules)
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
+        }
     }
 }

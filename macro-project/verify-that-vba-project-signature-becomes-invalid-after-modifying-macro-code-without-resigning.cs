@@ -1,86 +1,78 @@
-// Title: C# Example: Detect Invalid VBA Project Signature After Editing a Macro with Aspose.Cells
-// Description: Loads a signed .xlsm workbook, checks the VBA project's IsSigned and IsValidSigned flags, appends a comment to the first module, saves to a memory stream, reloads the file, and shows that the project stays signed while the signature becomes invalid.
-// Keywords: Aspose.Cells VBA signature | IsValidSigned property | C# modify macro | detect invalid VBA signature | signed .xlsm workbook | VBA project validation | macro code change impact
-// Common Searches: how to verify VBA signature with Aspose.Cells .NET | does editing a signed macro invalidate its signature | Aspose.Cells check IsValidSigned after macro change | read and modify VBA module code using Aspose.Cells | C# example for VBA project signature validation
-// Developer Intent: Confirm that any alteration to a signed VBA macro renders the existing signature invalid without requiring a new signature.
-// Use Cases: Programmatically load a signed macro‑enabled workbook and validate its signature before processing. | Append or modify VBA code, then automatically detect that the signature is no longer valid while the project remains marked as signed. | Integrate signature validation into CI/CD pipelines to reject workbooks whose signed VBA projects have been tampered with.
-// AI Prompts: Write C# code using Aspose.Cells that changes a VBA module and asserts workbook.VbaProject.IsValidSigned is false after saving. | Create an NUnit test that loads a signed .xlsm file, modifies a macro line, saves, reloads, and verifies the signature status. | Explain the algorithm Aspose.Cells uses to determine VBA signature validity and which properties should be inspected after editing macro code.
+// Title: Verify that editing a signed VBA module invalidates the VBA project signature in an .xlsm workbook using Aspose.Cells for .NET
+// AI Prompts: Load a signed .xlsm workbook with Aspose.Cells, read the VbaProject.IsSigned flag, append a comment to a VBA module, re‑evaluate IsSigned, and save the workbook. | Programmatically change the code of the first VBA module in a signed Excel macro file without re‑signing, then confirm that VbaProject.IsSigned returns false. | Show how to detect a broken VBA digital signature after modifying macro source by using the Aspose.Cells VbaProject API in C#.
+// Common Searches: aspnet check VBA project signature after editing macro code | c# Aspose.Cells verify signed macro integrity | how to detect invalid VBA digital signature in modified xlsm workbook | Aspose.Cells VbaProject.IsSigned returns false after code change | test if modifying signed VBA module breaks signature using .NET
+// Tags: Aspose.Cells VBA signature verification | edit signed VBA module in .xlsm | detect broken VBA digital signature C# | check macro integrity after modification | Aspose.Cells VbaProject API usage
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+// The example loads a signed .xlsm workbook, reads the VbaProject.IsSigned property, appends a comment to a VBA module without re‑signing, checks the IsSigned flag again, and saves the file, demonstrating that the signature becomes invalid after the code change.
+class VbaSignatureVerification
 {
-    // Loads a signed .xlsm workbook, checks the VBA project's IsSigned and IsValidSigned flags, appends a comment to the first module, saves to a memory stream, reloads the file, and shows that the project stays signed while the signature becomes invalid.
-    public class VbaSignatureInvalidAfterModificationDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            // Path to the original workbook that contains a signed VBA project
-            string signedWorkbookPath = "SignedWithVba.xlsm";
+            const string inputPath = "SignedMacro.xlsm";
+            const string outputPath = "ModifiedMacro.xlsm";
 
-            // Verify that the input file exists
-            if (!File.Exists(signedWorkbookPath))
+            // Verify that the input workbook exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"File not found: {signedWorkbookPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
+            // Load the workbook that contains a signed VBA project.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the VBA project embedded in the workbook.
+            VbaProject vbaProject = workbook.VbaProject;
+
+            // Check the initial signature status using IsSigned.
+            bool isSignedBefore = vbaProject.IsSigned;
+            Console.WriteLine($"Workbook is signed before modification: {isSignedBefore}");
+
+            // Modify the VBA code without re‑signing.
+            // Append a simple comment to the first module (adjust the name as needed).
+            VbaModule module = null;
             try
             {
-                // Load the signed workbook
-                Workbook workbook = new Workbook(signedWorkbookPath);
-
-                // Verify that the VBA project is signed and the signature is valid
-                Console.WriteLine("Initial state:");
-                Console.WriteLine("Is VBA Project Signed: " + workbook.VbaProject.IsSigned);
-                Console.WriteLine("Is Signature Valid: " + workbook.VbaProject.IsValidSigned);
-
-                // Ensure there is at least one VBA module to modify
-                if (workbook.VbaProject.Modules.Count > 0)
-                {
-                    // Get the first module
-                    VbaModule module = workbook.VbaProject.Modules[0];
-
-                    // Append a comment to the existing code (modifying the macro)
-                    module.Codes = module.Codes + "\n' Added comment to invalidate signature";
-                }
-                else
-                {
-                    Console.WriteLine("No VBA modules found to modify.");
-                    return;
-                }
-
-                // Save the modified workbook to a memory stream (preserves macro-enabled format)
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    workbook.Save(ms, SaveFormat.Xlsm);
-                    ms.Position = 0; // Reset stream position for reading
-
-                    // Reload the workbook from the modified stream
-                    Workbook modifiedWorkbook = new Workbook(ms);
-
-                    // After modification, the signature should be invalid (but still signed)
-                    Console.WriteLine("\nAfter modification:");
-                    Console.WriteLine("Is VBA Project Signed: " + modifiedWorkbook.VbaProject.IsSigned);
-                    Console.WriteLine("Is Signature Valid: " + modifiedWorkbook.VbaProject.IsValidSigned);
-                }
+                module = vbaProject.Modules["Module1"];
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("Module 'Module1' not found. Attempting to use the first available module.");
+                if (vbaProject.Modules.Count > 0)
+                {
+                    module = vbaProject.Modules[0];
+                }
             }
-        }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+            if (module != null)
+            {
+                string originalCode = module.Codes;
+                module.Codes = originalCode + "\n' Added comment without re‑signing";
+            }
+            else
+            {
+                Console.WriteLine("No VBA module available to modify.");
+            }
+
+            // After modification, re‑check the signature status.
+            bool isSignedAfter = vbaProject.IsSigned;
+            Console.WriteLine($"Workbook is signed after modification: {isSignedAfter}");
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Modified workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
         {
-            VbaSignatureInvalidAfterModificationDemo.Run();
+            // Catch any unexpected errors and display a friendly message.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

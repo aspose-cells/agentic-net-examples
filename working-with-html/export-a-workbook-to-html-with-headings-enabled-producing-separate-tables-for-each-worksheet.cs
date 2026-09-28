@@ -1,56 +1,48 @@
-// Title: Export Aspose.Cells Workbook to Separate HTML Files with Row/Column Headings (C#)
-// Description: Demonstrates how to create a workbook with multiple worksheets, enable row and column headings, and save each sheet as an individual HTML file using Aspose.Cells HtmlSaveOptions in .NET.
-// Keywords: Aspose.Cells HTML export | C# export workbook to HTML | row column headings Aspose | multiple HTML files per worksheet | HtmlSaveOptions SaveAsSingleFile false | ExportActiveWorksheetOnly false
-// Common Searches: Aspose.Cells export workbook to HTML with headings | save each worksheet as separate HTML file C# | HtmlSaveOptions ExportRowColumnHeadings example | how to disable single file output Aspose.Cells | export multiple sheets to individual HTML pages
-// Developer Intent: Generate separate HTML files for every worksheet while preserving row and column headers.
-// Use Cases: Create paginated HTML reports where each sheet appears on its own page with full headers. | Provide web‑ready data tables for a multi‑page portal, keeping column and row titles intact. | Export Excel data to HTML for documentation or email distribution, with each worksheet isolated.
-// AI Prompts: Show how to specify an output folder and custom file naming when exporting multiple worksheets to HTML with Aspose.Cells. | Add custom CSS to the generated HTML tables while retaining row and column headings. | Explain how to export only selected worksheets to separate HTML files using HtmlSaveOptions.
+// Title: Export an Excel workbook to HTML with row and column headings, generating a separate table for each worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, configures HtmlSaveOptions to include row and column headings, and saves the workbook so each worksheet appears as its own table in the resulting HTML. | Update an existing Aspose.Cells export routine to produce HTML that shows headers for rows and columns and splits the output into distinct tables per sheet without relying on the deprecated OnePagePerSheet setting.
+// Common Searches: how to export Excel to HTML with row and column headings using Aspose.Cells .NET | Aspose.Cells generate separate HTML tables for each worksheet | C# save workbook as HTML with headings per sheet Aspose | HtmlSaveOptions ExportRowColumnHeadings example Aspose.Cells | convert multi‑sheet Excel to single HTML file with sheet separation Aspose
+// Tags: Aspose.Cells HtmlSaveOptions row column headings | C# export Excel to HTML separate sheets | Aspose.Cells multi‑sheet HTML conversion | HTML export with worksheet separation Aspose | Aspose.Cells workbook to HTML per worksheet
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// The example verifies the input file, loads it into an Aspose.Cells Workbook, sets HtmlSaveOptions.ExportRowColumnHeadings to true, and saves the workbook as a single HTML file where each worksheet is rendered as an independent table, handling any runtime exceptions.
+class Program
 {
-    // Demonstrates how to create a workbook with multiple worksheets, enable row and column headings, and save each sheet as an individual HTML file using Aspose.Cells HtmlSaveOptions in .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Add data to the first worksheet (default sheet)
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "FirstSheet";
-            sheet1.Cells["A1"].PutValue("Header1");
-            sheet1.Cells["B1"].PutValue("Header2");
-            sheet1.Cells["A2"].PutValue("Data1");
-            sheet1.Cells["B2"].PutValue("Data2");
-
-            // Add a second worksheet and populate it
-            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
-            sheet2.Cells["A1"].PutValue("ColA");
-            sheet2.Cells["B1"].PutValue("ColB");
-            sheet2.Cells["A2"].PutValue("Value1");
-            sheet2.Cells["B2"].PutValue("Value2");
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions options = new HtmlSaveOptions
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
             {
-                // Enable export of row and column headings
-                ExportRowColumnHeadings = true,
-
-                // Ensure each worksheet is saved as a separate HTML file (default behavior)
-                SaveAsSingleFile = false,
-
-                // Export all worksheets (not only the active one)
-                ExportActiveWorksheetOnly = false
+                // Use the updated property for exporting row/column headings
+                ExportRowColumnHeadings = true
+                // Note: OnePagePerSheet property is not available in the current API version
             };
 
-            // Save the workbook to HTML.
-            // When SaveAsSingleFile is false, Aspose.Cells creates separate HTML files for each sheet.
-            // The base file name is used as a prefix for each generated file.
-            workbook.Save("WorkbookOutput.html", options);
+            // Save the workbook as an HTML file with the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display an informative message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

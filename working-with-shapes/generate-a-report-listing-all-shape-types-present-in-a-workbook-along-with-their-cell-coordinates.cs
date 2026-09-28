@@ -1,60 +1,83 @@
-// Title: C# – Generate a Shape Report with Types and Cell Coordinates Using Aspose.Cells
-// Description: Loads an Excel workbook, adds a "ShapeReport" worksheet, enumerates every shape on each sheet (except the report), records the shape name, drawing type, upper‑left and lower‑right row/column indices, and saves the workbook with the report.
-// Keywords: Aspose.Cells | C# | list shapes in workbook | shape coordinates | MsoDrawingType | Excel shape report | enumerate drawings | shape metadata export | worksheet shapes | export shape data
-// Common Searches: Aspose.Cells list all shapes in workbook | C# get shape coordinates Excel | How to export shape types with Aspose.Cells | Create shape inventory sheet Aspose.Cells | Retrieve drawing positions from Excel using .NET
-// Developer Intent: Create an automatic worksheet that inventories every shape in a workbook, showing its name, drawing type and the cell range it occupies.
-// Use Cases: Audit and document all drawings in an Excel file. | Validate that shapes stay within designated cell boundaries. | Migrate or refactor spreadsheets by extracting shape metadata. | Generate documentation for template designers. | Support automated testing of Excel layouts.
-// AI Prompts: Write C# code with Aspose.Cells that adds a summary sheet listing each shape’s name, type, and its upper‑left and lower‑right row/column indices for every worksheet. | Modify the example to also record each shape’s width and height in points alongside its coordinates. | Create a version that excludes pictures (or any specific MsoDrawingType) from the shape report. | Generate code that exports the shape report to a CSV file instead of an Excel worksheet. | Provide a script that adds hyperlinks from the report rows back to the original shapes in the workbook.
+// Title: Create a C# console application that lists every shape’s type and its top‑left cell address for each worksheet in an Excel file using Aspose.Cells
+// AI Prompts: Generate a console‑based report that iterates through all worksheets, reads each shape’s Name, Type, UpperLeftRow and UpperLeftColumn, converts the indices to an A1 address, and prints the information. | Write C# code with Aspose.Cells to enumerate shapes on every sheet, capture their type and cell location, and output a formatted table to the standard output. | Modify the sample to write the shape type and cell coordinate data into a CSV file instead of displaying it on the console.
+// Common Searches: Aspose.Cells C# list shape types with cell addresses in each worksheet | How to get the top left cell of a shape using Aspose.Cells .NET | C# program to enumerate Excel shapes and output their positions | Export Aspose.Cells shape information to CSV in .NET
+// Tags: Aspose.Cells enumerate worksheet shapes | Aspose.Cells get shape cell address | C# list Excel shape types | Aspose.Cells shape report console | Aspose.Cells export shape data to CSV
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, adds a "ShapeReport" worksheet, enumerates every shape on each sheet (except the report), records the shape name, drawing type, upper‑left and lower‑right row/column indices, and saves the workbook with the report.
+// Uses Aspose.Cells for .NET to load an Excel workbook, loop through each worksheet, retrieve every shape’s name, type, and upper‑left row/column, convert the indices to an A1 cell reference, and print a formatted report to the console (with optional CSV export).
 class ShapeReport
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Path to the input workbook
+        string workbookPath = "input.xlsx";
 
-        // Add a new worksheet to hold the report
-        int reportIndex = workbook.Worksheets.Add();
-        Worksheet reportSheet = workbook.Worksheets[reportIndex];
-        reportSheet.Name = "ShapeReport";
-
-        // Write header row
-        reportSheet.Cells["A1"].PutValue("Worksheet");
-        reportSheet.Cells["B1"].PutValue("Shape Name");
-        reportSheet.Cells["C1"].PutValue("Shape Type");
-        reportSheet.Cells["D1"].PutValue("Upper Left Row");
-        reportSheet.Cells["E1"].PutValue("Upper Left Column");
-        reportSheet.Cells["F1"].PutValue("Lower Right Row");
-        reportSheet.Cells["G1"].PutValue("Lower Right Column");
-
-        int row = 1; // zero‑based index for the next data row
-
-        // Iterate through all worksheets (except the report sheet itself)
-        foreach (Worksheet ws in workbook.Worksheets)
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(workbookPath))
         {
-            if (ws.Name == "ShapeReport") continue;
-
-            // Iterate through each shape in the current worksheet
-            foreach (Shape shape in ws.Shapes)
-            {
-                // Populate the report with shape details
-                reportSheet.Cells[row, 0].PutValue(ws.Name);
-                reportSheet.Cells[row, 1].PutValue(shape.Name);
-                reportSheet.Cells[row, 2].PutValue(shape.MsoDrawingType.ToString());
-                reportSheet.Cells[row, 3].PutValue(shape.UpperLeftRow);
-                reportSheet.Cells[row, 4].PutValue(shape.UpperLeftColumn);
-                reportSheet.Cells[row, 5].PutValue(shape.LowerRightRow);
-                reportSheet.Cells[row, 6].PutValue(shape.LowerRightColumn);
-                row++;
-            }
+            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+            return;
         }
 
-        // Save the workbook with the generated report
-        workbook.Save("ShapeReport.xlsx");
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Console.WriteLine($"Worksheet: {sheet.Name}");
+
+                // Get the collection of shapes on the current worksheet
+                ShapeCollection shapes = sheet.Shapes;
+
+                // If there are no shapes, indicate that and continue to next sheet
+                if (shapes.Count == 0)
+                {
+                    Console.WriteLine("  No shapes found.");
+                    continue;
+                }
+
+                // Enumerate each shape
+                foreach (Shape shape in shapes)
+                {
+                    try
+                    {
+                        // Determine the shape type as a string
+                        string shapeType = shape.Type.ToString();
+
+                        // Retrieve the top‑left cell coordinates of the shape
+                        int row = shape.UpperLeftRow;          // Upper-left row index (0‑based)
+                        int column = shape.UpperLeftColumn;    // Upper-left column index (0‑based)
+                        string cellAddress = CellsHelper.CellIndexToName(row, column);
+
+                        // Output the shape information
+                        Console.WriteLine($"  Shape Name: {shape.Name}");
+                        Console.WriteLine($"    Type: {shapeType}");
+                        Console.WriteLine($"    Position: {cellAddress}");
+                    }
+                    catch (Exception exShape)
+                    {
+                        // Handle errors related to a specific shape
+                        Console.WriteLine($"  Error processing shape \"{shape.Name}\": {exShape.Message}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Report generation completed.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+
+        // Keep the console window open
+        Console.ReadKey();
     }
 }

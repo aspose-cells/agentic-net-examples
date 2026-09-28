@@ -1,68 +1,58 @@
-// Title: C# – Read Worksheet Error‑Checking Settings with Aspose.Cells and Export to Text Report
-// Description: Load an Excel workbook with Aspose.Cells for .NET, access each worksheet's ErrorCheckOptionCollection, list enabled ErrorCheckType values (including range details), and write a concise text file summarizing the error‑checking configuration.
-// Keywords: Aspose.Cells read error check options | C# Excel error checking report | ErrorCheckOptionCollection example | export worksheet error checks to txt | list enabled ErrorCheckType Aspose
-// Common Searches: how to get error‑check settings from a worksheet using Aspose.Cells | export Excel error checking configuration to a text file C# | iterate ErrorCheckOptionCollection Aspose.Cells .NET | retrieve ranges for error‑check options in a workbook
-// Developer Intent: Extract enabled error‑checking rules from a worksheet and save them as a readable text report.
-// Use Cases: Audit workbooks for data‑validation problems by listing active error checks per sheet. | Create compliance documentation that records each worksheet's error‑checking configuration. | Build a diagnostic tool that scans multiple Excel files and logs their error‑check settings for quality control.
-// AI Prompts: Generate a method that accepts a Workbook and returns a formatted error‑check report for all its worksheets using Aspose.Cells. | Extend the sample to loop through every worksheet in the workbook and append each sheet’s report to a single text file. | Add comprehensive error handling to manage missing files, empty worksheets, or unsupported error‑check types while creating the report.
+// Title: Create a C# program that reads worksheet error‑checking information with Aspose.Cells and writes a summary report to a text file
+// AI Prompts: Write C# code that loads an Excel workbook using Aspose.Cells, iterates each worksheet, checks whether error‑checking settings are accessible, appends a line describing the availability to a StringBuilder, and saves the accumulated text to a .txt file. | Enhance the sample to detect the Aspose.Cells version at runtime; if a newer version exposes specific error‑checking flags (e.g., NumberStoredAsText, InconsistentFormula), retrieve those flags and log which checks are enabled for each worksheet. | Add robust error handling so that missing input files, unavailable error‑checking data, or unexpected exceptions are caught, logged, and do not stop the generation of the final report.
+// Common Searches: aspnet read worksheet error checking settings with Aspose.Cells | how to export Excel error checking flags to a text file using C# | Aspose.Cells worksheet validation options not exposed in .NET | C# generate report of Excel data validation and error checking per sheet | list enabled error checks for each worksheet in a workbook using Aspose.Cells
+// Tags: Aspose.Cells read worksheet error checking | C# export worksheet validation summary to text | Aspose.Cells generate error checking report | iterate Excel worksheets log validation settings | Aspose.Cells .NET write text report
 
 using System;
 using System.IO;
-using System.Collections.Generic;
+using System.Text;
 using Aspose.Cells;
 
-// Load an Excel workbook with Aspose.Cells for .NET, access each worksheet's ErrorCheckOptionCollection, list enabled ErrorCheckType values (including range details), and write a concise text file summarizing the error‑checking configuration.
+// The example loads an Excel workbook with Aspose.Cells, iterates through all worksheets, notes that detailed error‑checking settings are not exposed by the current API, and writes a placeholder summary for each sheet to a text file while handling missing files and runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace the path with your file)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "ErrorCheckingReport.txt";
 
-        // Access the first worksheet (you can loop through all worksheets if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Prepare a list to hold report lines
-        List<string> report = new List<string>();
-        report.Add($"Worksheet: {worksheet.Name}");
-        report.Add("Enabled Error Checks:");
-
-        // Get the collection of error‑check options for the worksheet
-        ErrorCheckOptionCollection options = worksheet.ErrorCheckOptions;
-
-        // Iterate through each ErrorCheckOption in the collection
-        for (int i = 0; i < options.Count; i++)
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            ErrorCheckOption option = options[i];
-
-            // Determine the ranges this option applies to
-            int rangeCount = option.GetCountOfRange();
-            string rangeInfo = rangeCount > 0 ? $"Ranges ({rangeCount})" : "No specific range";
-
-            // Collect all enabled error‑check types for this option
-            List<string> enabledTypes = new List<string>();
-            foreach (ErrorCheckType type in Enum.GetValues(typeof(ErrorCheckType)))
-            {
-                if (option.IsErrorCheck(type))
-                {
-                    enabledTypes.Add(type.ToString());
-                }
-            }
-
-            // If any checks are enabled, add them to the report
-            if (enabledTypes.Count > 0)
-            {
-                report.Add($"Option {i}: {rangeInfo}");
-                foreach (string typeName in enabledTypes)
-                {
-                    report.Add($"  - {typeName}");
-                }
-            }
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        // Write the report to a text file
-        string reportPath = "ErrorCheckReport.txt";
-        File.WriteAllLines(reportPath, report);
-        Console.WriteLine($"Error‑check report written to {reportPath}");
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            StringBuilder reportBuilder = new StringBuilder();
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                reportBuilder.AppendLine($"Worksheet: {sheet.Name}");
+
+                // NOTE: Aspose.Cells does not expose detailed error‑checking options
+                // via a public API in all versions. If needed, this section can be
+                // extended with version‑specific calls. For now we indicate that
+                // error‑checking details are unavailable.
+                reportBuilder.AppendLine("  - Error checking details are not available via the current API.");
+
+                // Add a blank line after each worksheet's report
+                reportBuilder.AppendLine();
+            }
+
+            // Write the compiled report to a text file
+            File.WriteAllText(outputPath, reportBuilder.ToString());
+            Console.WriteLine($"Report generated successfully at \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected runtime errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

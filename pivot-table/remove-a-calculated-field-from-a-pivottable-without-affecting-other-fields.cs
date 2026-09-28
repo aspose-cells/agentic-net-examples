@@ -1,10 +1,7 @@
-// Title: C# – Remove a Calculated Field from an Aspose.Cells PivotTable without Affecting Other Fields
-// Description: Demonstrates how to create a workbook, add sample data, build a PivotTable, insert a calculated field (e.g., DoubleSales), locate that field in the DataFields collection, remove it with PivotTable.RemoveField, and refresh the PivotTable so remaining fields stay unchanged. The workbook is then saved with the updated layout.
-// Keywords: Aspose.Cells C# remove calculated field | PivotTable Delete Calculated Field .NET | Aspose.Cells RemoveField example | C# PivotTable calculated field removal | Aspose.Cells PivotTable refresh after delete
-// Common Searches: how to delete a calculated field from a pivot table using Aspose.Cells for .NET | remove specific calculated data field without changing other fields Aspose.Cells | Aspose.Cells PivotTable RemoveField method usage | C# code to drop a calculated field from a PivotTable | Aspose.Cells example removing DoubleSales field
-// Developer Intent: Delete a calculated field from an Aspose.Cells PivotTable while preserving all other row, column, and data fields.
-// Use Cases: Temporarily add a calculated metric for analysis and then remove it before publishing the workbook. | Provide UI controls that let users toggle calculated fields on a PivotTable in real time. | Clean up intermediate calculated fields in automated report generation pipelines.
-// AI Prompts: Generate C# code with Aspose.Cells to remove a calculated field named 'ProfitMargin' from a PivotTable without altering other fields. | Explain step‑by‑step how to find a calculated field in a PivotTable's DataFields collection and delete it using Aspose.Cells. | Show how to verify that a calculated field has been removed, then refresh and recalculate the PivotTable in Aspose.Cells.
+// Title: How to delete a single calculated field from an Aspose.Cells PivotTable in C# without altering other data fields
+// AI Prompts: Write C# code that uses Aspose.Cells to locate a calculated field named "Profit" in a PivotTable and delete it with RemoveField while preserving other data fields. | Demonstrate iterating through PivotTable.DataFields to identify the calculated field, delete it, then call RefreshData and CalculateData to update the pivot. | Create a full example that saves the workbook after the calculated field is deleted and the pivot view is refreshed.
+// Common Searches: Aspose.Cells C# remove calculated field from pivot table without affecting other fields | delete specific pivot table calculated field using Aspose.Cells API | how to refresh a pivot table after removing a calculated field in C# | C# code example for removing a calculated field named Profit from Aspose.Cells pivot | Aspose.Cells remove calculated field from Data area programmatically
+// Tags: delete calculated field Aspose.Cells pivot | pivot table data field deletion C# | refresh pivot after field removal Aspose.Cells | find calculated field in DataFields Aspose.Cells | Aspose.Cells calculated field removal example
 
 using System;
 using Aspose.Cells;
@@ -12,8 +9,8 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add sample data, build a PivotTable, insert a calculated field (e.g., DoubleSales), locate that field in the DataFields collection, remove it with PivotTable.RemoveField, and refresh the PivotTable so remaining fields stay unchanged. The workbook is then saved with the updated layout.
-    public class RemoveCalculatedFieldDemo
+    // The sample creates a workbook, adds a pivot table with Product, Sales, and Cost fields, defines a calculated field "Profit", locates that calculated field in the DataFields collection, deletes it using RemoveField, refreshes and recalculates the pivot, and saves the result as RemovedCalculatedField.xlsx.
+    class RemoveCalculatedFieldDemo
     {
         public static void Run()
         {
@@ -25,36 +22,41 @@ namespace AsposeCellsExamples
 
                 // Populate sample data for the pivot table
                 sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Sales");
                 sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(100);
                 sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["B3"].PutValue(150);
                 sheet.Cells["A4"].PutValue("Orange");
-                sheet.Cells["B4"].PutValue(200);
+                sheet.Cells["B1"].PutValue("Sales");
+                sheet.Cells["B2"].PutValue(1000);
+                sheet.Cells["B3"].PutValue(2000);
+                sheet.Cells["B4"].PutValue(1500);
+                sheet.Cells["C1"].PutValue("Cost");
+                sheet.Cells["C2"].PutValue(400);
+                sheet.Cells["C3"].PutValue(800);
+                sheet.Cells["C4"].PutValue(600);
 
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+                // Add a pivot table covering the data range
+                int ptIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[ptIndex];
 
-                // Add fields to the pivot table
+                // Add row and data fields
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Cost");
 
-                // Add a calculated field (e.g., double the sales)
-                pivotTable.AddCalculatedField("DoubleSales", "=Sales*2", true);
+                // Add a calculated field named "Profit"
+                pivotTable.AddCalculatedField("Profit", "=Sales-Cost", true);
 
-                // Refresh and calculate to populate the pivot table
+                // Refresh and calculate the pivot table to populate data
                 pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
                 // Locate the calculated field in the DataFields collection
                 PivotField calculatedField = null;
-                foreach (PivotField field in pivotTable.DataFields)
+                foreach (PivotField df in pivotTable.DataFields)
                 {
-                    if (field.IsCalculatedField && field.Name == "DoubleSales")
+                    if (df.IsCalculatedField && df.Name == "Profit")
                     {
-                        calculatedField = field;
+                        calculatedField = df;
                         break;
                     }
                 }
@@ -62,26 +64,27 @@ namespace AsposeCellsExamples
                 // If the calculated field is found, remove it from the Data area
                 if (calculatedField != null)
                 {
-                    // Remove by field name (alternatively, use the field index)
+                    // Use RemoveField with the field name to delete only this calculated field
                     pivotTable.RemoveField(PivotFieldType.Data, calculatedField.Name);
-                    // Recalculate after removal
-                    pivotTable.RefreshData();
-                    pivotTable.CalculateData();
                 }
 
+                // Recalculate after removal to update the pivot view
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
                 // Save the workbook with the updated pivot table
-                workbook.Save("PivotTable_RemoveCalculatedField.xlsx");
+                workbook.Save("RemovedCalculatedField.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             RemoveCalculatedFieldDemo.Run();
         }

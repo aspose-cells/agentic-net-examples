@@ -1,17 +1,14 @@
-// Title: Aspose.Cells for .NET – Apply a Solid Blue Background to a Worksheet Comment via Shape.Fill.ForeColor
-// Description: Creates a workbook, adds a comment to cell A1, retrieves the comment's Shape, enables filling, and sets FillFormat.ForeColor to a blue color, producing a solid blue background before saving the file as an .xlsx document.
-// Keywords: Aspose.Cells comment background color | Shape.Fill.ForeColor .NET | solid blue comment fill | worksheet comment styling | Aspose.Cells FillFormat example
-// Common Searches: how to change comment background color in Aspose.Cells | set blue fill for comment shape Aspose.Cells .NET | apply solid fill to worksheet comment using Shape.Fill.ForeColor | Aspose.Cells comment shape color customization
-// Developer Intent: Add a solid blue fill to a worksheet comment using the Shape.Fill.ForeColor property.
-// Use Cases: Brand report cells with a uniform blue comment background for visual consistency. | Highlight critical notes in generated spreadsheets by applying a distinct color to comments. | Create templates where comments automatically match corporate color guidelines.
-// AI Prompts: Generate code to set a custom RGB value for a comment's background using Shape.Fill.ForeColor in Aspose.Cells for .NET. | Show how to apply a gradient fill to a comment shape instead of a solid color. | Explain how to hide or show a comment's fill without altering its text content.
+// Title: Apply a solid blue background to an Excel comment using Aspose.Cells Shape.FillFormat.ForeColor in C#
+// AI Prompts: Use Shape.FillFormat.ForeColor to set a comment's fill to solid blue in an Aspose.Cells workbook (C#). | Create a comment on a cell and change its background color to blue via the comment's Shape properties with Aspose.Cells. | Save the workbook after applying a blue fill to the comment shape using Aspose.Cells C# API.
+// Common Searches: Aspose.Cells C# set comment background color to blue | How to change Excel comment fill color with Shape.FillFormat.ForeColor | Apply solid fill to comment shape in Aspose.Cells workbook | C# code to make Excel comment have blue background using Aspose.Cells | Enable comment shape fill and set color in Aspose.Cells
+// Tags: comment shape fill color Aspose.Cells | Shape.FillFormat.ForeColor C# | Excel comment solid background Aspose.Cells | set comment shape fill Aspose.Cells | blue fill comment Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a comment to cell A1, retrieves the comment's Shape, enables filling, and sets FillFormat.ForeColor to a blue color, producing a solid blue background before saving the file as an .xlsx document.
+// Creates a workbook, adds a comment to cell A1, enables the comment shape's fill, sets a solid blue background using Shape.FillFormat.ForeColor, and saves the file as CommentBlueBackground.xlsx.
 class ApplyBlueBackgroundToComment
 {
     static void Main()
@@ -25,17 +22,16 @@ class ApplyBlueBackgroundToComment
         Comment comment = worksheet.Comments[commentIndex];
         comment.Note = "This comment has a solid blue background.";
 
-        // Access the shape attached to the comment
+        // Access the shape associated with the comment
         Shape commentShape = comment.CommentShape;
 
         // Ensure the shape's fill is visible
         commentShape.IsFilled = true;
 
-        // Set the fill fore color to solid blue using the FillFormat (obsolete) property
-        // This applies a solid background color to the comment shape
+        // Set a solid blue background using the (obsolete) FillFormat.ForeColor property
         commentShape.FillFormat.ForeColor = Color.Blue;
 
         // Save the workbook
-        workbook.Save("CommentWithBlueBackground.xlsx");
+        workbook.Save("CommentBlueBackground.xlsx");
     }
 }

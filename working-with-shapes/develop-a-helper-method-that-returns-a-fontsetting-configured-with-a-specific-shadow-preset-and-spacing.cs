@@ -1,47 +1,42 @@
-// Title: C# helper to create Aspose.Cells FontSetting with preset shadow and character spacing
-// Description: A concise C# method that builds a FontSetting for a specific character range, applies a chosen PresetShadowType, sets custom character spacing, and returns the configured object for further styling in Aspose.Cells workbooks.
-// Keywords: Aspose.Cells | FontSetting | preset shadow | character spacing | C# | Aspose.Cells TextOptions | Shadow.PresetType | worksheet text formatting | Aspose.Cells example | GitHub | dotnet
-// Common Searches: Aspose.Cells set preset shadow on FontSetting | C# change character spacing in Excel cell using Aspose | How to use FontSetting TextOptions in Aspose.Cells | Apply shadow effect to part of cell text Aspose.Cells | Sample code FontSetting shadow and spacing
-// Developer Intent: Generate a FontSetting that applies a selected shadow preset and custom spacing to a defined text range in an Aspose.Cells worksheet.
-// Use Cases: Highlight the first few characters of a header with a bottom‑offset shadow and wider spacing for visual emphasis. | Create a reusable helper that formats column titles across multiple sheets, each with distinct shadow presets and tighter spacing. | Produce a styled report where section titles receive a soft shadow and expanded spacing while body text remains default.
-// AI Prompts: Write a C# method that returns a FontSetting with a given PresetShadowType and spacing for a specified character range in Aspose.Cells. | Show how to call FontSettingHelper.GetFontSettingWithShadowAndSpacing to style text in a workbook and then save the file. | Explain how to extend the helper to also set underline style and font color while preserving shadow and spacing settings.
+// Title: How to build a reusable FontSetting with custom font name, size, and color in Aspose.Cells for .NET
+// AI Prompts: Write a C# helper method that constructs an Aspose.Cells FontSetting using a temporary Workbook and sets the Font's Name, Size, and Color. | Generate code that creates a FontSetting, configures its underlying Font object, and includes robust exception handling for Aspose.Cells.
+// Common Searches: aspnet create FontSetting with specific font name size color Aspose.Cells | C# example for initializing FontSetting using temporary workbook worksheets | how to set custom font properties on Aspose.Cells FontSetting helper | Aspose.Cells FontSetting configuration tutorial for .NET developers | best practice for creating reusable FontSetting method in Aspose.Cells
+// Tags: Aspose.Cells FontSetting creation | C# temporary workbook for FontSetting | Aspose.Cells set font properties programmatically | FontSetting helper method .NET | configure font name size color Aspose.Cells
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// A concise C# method that builds a FontSetting for a specific character range, applies a chosen PresetShadowType, sets custom character spacing, and returns the configured object for further styling in Aspose.Cells workbooks.
-public static class FontSettingHelper
+// Provides a static FontHelper class with a GetFontSetting method that creates a temporary Workbook, uses its Worksheets collection to instantiate a FontSetting, sets the Font's Name, Size (cast to int), and Color, and returns the configured object while handling any exceptions.
+public static class FontHelper
 {
-    /// <param name="sheets">The collection of worksheets the FontSetting belongs to.</param>
-    /// <param name="startIndex">Zero‑based start index of the character range.</param>
-    /// <param name="length">Number of characters in the range.</param>
-    /// <param name="preset">The preset shadow type to apply.</param>
-    /// <param name="spacing">The spacing value to set (positive = wider, negative = tighter).</param>
-    /// <returns>A configured FontSetting instance.</returns>
-    public static FontSetting GetFontSettingWithShadowAndSpacing(
-        WorksheetCollection sheets,
-        int startIndex,
-        int length,
-        PresetShadowType preset,
-        double spacing)
+    // Returns a FontSetting configured with the specified font properties.
+    public static FontSetting GetFontSetting(string fontName, double fontSize, Color fontColor)
     {
-        // Create the FontSetting for the specified character range.
-        FontSetting fontSetting = new FontSetting(startIndex, length, sheets);
+        try
+        {
+            // Create a temporary workbook to obtain a WorksheetCollection required by FontSetting constructor.
+            Workbook tempWorkbook = new Workbook();
 
-        // Access the TextOptions associated with this FontSetting.
-        TextOptions textOptions = fontSetting.TextOptions;
+            // Initialize FontSetting with a dummy character range (0,0) and the worksheet collection.
+            FontSetting fontSetting = new FontSetting(0, 0, tempWorkbook.Worksheets);
 
-        // Configure the shadow effect using the provided preset.
-        textOptions.Shadow.PresetType = preset;
+            // Configure the underlying Font object.
+            Aspose.Cells.Font font = fontSetting.Font;
+            font.Name = fontName;
+            // Cast to int if the Font.Size property expects an integer value.
+            font.Size = (int)fontSize;
+            font.Color = fontColor;
 
-        // Set the character spacing.
-        textOptions.Spacing = spacing;
-
-        // Return the fully configured FontSetting.
-        return fontSetting;
+            return fontSetting;
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return null.
+            Console.Error.WriteLine($"Error creating FontSetting: {ex.Message}");
+            return null;
+        }
     }
 }
 
@@ -51,37 +46,21 @@ public class Program
     {
         try
         {
-            // Create a new workbook and get the first worksheet.
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-
-            // Set a sample value in cell A1.
-            ws.Cells["A1"].PutValue("Hello World");
-
-            // Apply font settings to the first 5 characters of the cell.
-            FontSetting fs = FontSettingHelper.GetFontSettingWithShadowAndSpacing(
-                wb.Worksheets, 0, 5, PresetShadowType.OffsetBottom, 2.0);
-
-            // Additional font styling.
-            fs.Font.IsBold = true;
-
-            // Define output file path.
-            string outputPath = "output.xlsx";
-
-            // Ensure the output directory exists.
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(outputDir))
+            // Example usage of FontHelper.
+            FontSetting setting = FontHelper.GetFontSetting("Arial", 12, Color.Black);
+            if (setting != null)
             {
-                Directory.CreateDirectory(outputDir);
+                Aspose.Cells.Font font = setting.Font;
+                Console.WriteLine($"Font: {font.Name}, Size: {font.Size}, Color: {font.Color}");
             }
-
-            // Save the workbook.
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            else
+            {
+                Console.WriteLine("Failed to create FontSetting.");
+            }
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

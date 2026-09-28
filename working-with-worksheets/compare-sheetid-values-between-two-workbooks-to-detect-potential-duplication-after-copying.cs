@@ -1,53 +1,74 @@
-// Title: Detect Duplicate Worksheet TabId After Workbook.Copy with Aspose.Cells for .NET
-// Description: Loads a source and a destination workbook, copies all worksheets from the source into the destination using Workbook.Copy, gathers each source worksheet's TabId, scans the merged workbook for matching TabId values, reports any duplicates, and saves the result as a new file.
-// Keywords: Aspose.Cells TabId duplicate detection | compare worksheet IDs .NET | Workbook.Copy duplicate sheets | Aspose.Cells merge workbook check | C# detect duplicate sheet identifiers
-// Common Searches: Aspose.Cells find duplicate worksheet TabId after copy | how to compare sheet IDs between two Excel files in C# | detect duplicate sheets after Workbook.Copy Aspose.Cells | check for conflicting TabId values when merging workbooks | C# Aspose.Cells duplicate sheet identifier example
-// Developer Intent: Identify worksheets that share the same TabId after merging two workbooks to prevent identifier conflicts.
-// Use Cases: Validate that merging workbooks does not create duplicate TabId values before saving. | Log duplicate sheet names and IDs to troubleshoot Excel merging operations. | Ensure unique worksheet identifiers when programmatically consolidating multiple Excel files.
-// AI Prompts: Write C# code with Aspose.Cells that copies a workbook and then lists any worksheets whose TabId already exists in the source workbook. | Show an Aspose.Cells .NET example that verifies unique TabId values after Workbook.Copy and handles duplicates gracefully. | Explain how Aspose.Cells assigns TabId to worksheets and how to renumber or reset them to avoid duplication after a merge.
+// Title: Identify duplicate worksheet Index values across two Excel workbooks with Aspose.Cells in C#
+// AI Prompts: Generate a C# console application that uses Aspose.Cells to load two .xlsx files, collect the Index of each worksheet from the first workbook, and print the names of any worksheets in the second workbook that share the same Index. | Write .NET code that iterates through the Worksheet.Index property of all sheets in two Excel workbooks and outputs a list of potential duplicate sheet IDs.
+// Common Searches: C# Aspose.Cells how to compare worksheet indexes between two workbooks | detect duplicate sheet IDs after copying Excel files using Aspose.Cells | find worksheet index collisions in .NET Excel processing | list worksheets with same Index in two Excel workbooks Aspose.Cells
+// Tags: Aspose.Cells compare worksheet indexes | detect duplicate sheet IDs .NET | worksheet index collision detection Excel | C# compare worksheet Index property
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace SheetIdComparisonDemo
+// // Loads two Excel workbooks with Aspose.Cells, gathers the Index values of all worksheets from the first workbook, then scans the second workbook for worksheets whose Index already exists, reporting any matching sheet names as potential duplicates.
+class SheetIdComparer
 {
-    // Loads a source and a destination workbook, copies all worksheets from the source into the destination using Workbook.Copy, gathers each source worksheet's TabId, scans the merged workbook for matching TabId values, reports any duplicates, and saves the result as a new file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths to the two workbooks to compare
+        string workbookPath1 = "Workbook1.xlsx";
+        string workbookPath2 = "Workbook2.xlsx";
+
+        // Ensure the input files exist
+        if (!File.Exists(workbookPath1))
         {
-            // Paths to the workbooks
-            string sourcePath = "source.xlsx";
-            string destinationPath = "destination.xlsx";
+            Console.WriteLine($"File not found: {workbookPath1}");
+            return;
+        }
+        if (!File.Exists(workbookPath2))
+        {
+            Console.WriteLine($"File not found: {workbookPath2}");
+            return;
+        }
 
-            // Load the source and destination workbooks (using the provided constructor rule)
-            Workbook sourceWorkbook = new Workbook(sourcePath);
-            Workbook destinationWorkbook = new Workbook(destinationPath);
+        try
+        {
+            // Load the workbooks
+            Workbook wb1 = new Workbook(workbookPath1);
+            Workbook wb2 = new Workbook(workbookPath2);
 
-            // Copy the entire source workbook into the destination workbook
-            // (uses the Workbook.Copy(Workbook) rule)
-            destinationWorkbook.Copy(sourceWorkbook);
-
-            // Collect TabId values from the source workbook
-            HashSet<int> sourceTabIds = new HashSet<int>();
-            foreach (Worksheet ws in sourceWorkbook.Worksheets)
+            // Collect all worksheet indexes from the first workbook
+            HashSet<int> sheetIndexesInFirst = new HashSet<int>();
+            foreach (Worksheet ws in wb1.Worksheets)
             {
-                sourceTabIds.Add(ws.TabId);
+                sheetIndexesInFirst.Add(ws.Index);
             }
 
-            // Compare TabId values in the destination workbook against the source set
-            Console.WriteLine("Checking for duplicate Sheet (TabId) values after copy:");
-            foreach (Worksheet ws in destinationWorkbook.Worksheets)
+            // Find worksheets in the second workbook that have duplicate indexes
+            List<string> duplicateSheets = new List<string>();
+            foreach (Worksheet ws in wb2.Worksheets)
             {
-                if (sourceTabIds.Contains(ws.TabId))
+                if (sheetIndexesInFirst.Contains(ws.Index))
                 {
-                    Console.WriteLine($"Duplicate found - Sheet Name: \"{ws.Name}\", TabId: {ws.TabId}");
+                    duplicateSheets.Add(ws.Name);
                 }
             }
 
-            // Save the merged workbook (using the provided Save method)
-            destinationWorkbook.Save("merged_output.xlsx");
+            // Report the results
+            if (duplicateSheets.Count > 0)
+            {
+                Console.WriteLine("Potential duplicate worksheet indexes detected in the following sheets of the second workbook:");
+                foreach (string sheetName in duplicateSheets)
+                {
+                    Console.WriteLine("- " + sheetName);
+                }
+            }
+            else
+            {
+                Console.WriteLine("No duplicate worksheet indexes were found between the two workbooks.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred while processing the workbooks: " + ex.Message);
         }
     }
 }

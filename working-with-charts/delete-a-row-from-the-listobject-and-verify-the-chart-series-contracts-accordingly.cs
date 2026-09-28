@@ -1,10 +1,7 @@
-// Title: Delete a ListObject row and auto‑update linked column chart with Aspose.Cells for .NET
-// Description: This C# example creates a workbook containing a table (ListObject) and a column chart that uses structured references. It deletes a specific data row from the worksheet, then confirms that the table’s row count and the chart series point counts adjust automatically before saving the file.
-// Keywords: Aspose.Cells C# delete ListObject row | update chart series after table row removal | structured reference chart Aspose.Cells | verify column chart points count | Excel table row deletion programmatically
-// Common Searches: Aspose.Cells remove row from table and keep chart synced | C# delete ListObject row and refresh chart series | how to verify chart points after deleting a table row in Aspose.Cells
-// Developer Intent: Remove a data row from a ListObject and ensure the associated chart reflects the new range.
-// Use Cases: Eliminate a quarter’s sales entry from a financial table while the column chart stays accurate. | Clean erroneous rows in a dataset and automatically adjust the visual chart for reporting. | Generate dynamic reports where filtered rows are excluded and the chart must display only remaining data.
-// AI Prompts: Write C# code with Aspose.Cells that deletes a given row from a ListObject and updates all linked chart series. | Explain how structured references in Aspose.Cells react when a table row is removed and how to validate the chart’s point count. | Provide step‑by‑step instructions to confirm that a column chart’s NSeries points match the ListObject row count after a deletion.
+// Title: Delete a row from a ListObject table and automatically shrink the linked column chart series using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to remove a specific data row from a ListObject and have the associated column chart update its series range automatically in C#. | Programmatically delete a worksheet table row with Cells.DeleteRow and verify that the chart's NSeries point count reflects the change using Aspose.Cells for .NET. | Show how deleting a row from a ListObject updates both the table's DataRange and the linked column chart series without manual refresh in C#.
+// Common Searches: aspocells delete row from listobject table and update column chart series | c# remove table row and keep column chart data synchronized using Aspose.Cells | how does Cells.DeleteRow affect chart NSeries in an Aspose.Cells workbook | example of deleting a ListObject row and adjusting chart series in C# | c# aspocells delete worksheet table row and automatically shrink chart series
+// Tags: listobject row deletion auto-updates chart series | aspocells table modification reflects in column chart | c# cells.deleterow listobject chart synchronization | column chart series range adjustment after table row removal | aspocells workbook consistency between table and chart
 
 using System;
 using System.IO;
@@ -12,88 +9,62 @@ using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, defines a ListObject table, adds a column chart linked to the table data, deletes a data row using Cells.DeleteRow (which automatically updates the table), and then confirms that both the table row count and the chart series point count have decreased before saving the file.
+class DeleteRowFromListObjectDemo
 {
-    // This C# example creates a workbook containing a table (ListObject) and a column chart that uses structured references. It deletes a specific data row from the worksheet, then confirms that the table’s row count and the chart series point counts adjust automatically before saving the file.
-    public class DeleteRowFromListObjectAndVerifyChart
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-                // Populate sample data for the table (ListObject)
-                // Header row
-                cells["A1"].PutValue("Category");
-                cells["B1"].PutValue("Series1");
-                cells["C1"].PutValue("Series2");
+            // Populate sample data for a table (ListObject)
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Series1");
+            cells["C1"].PutValue("Series2");
 
-                // Data rows (5 rows)
-                for (int i = 2; i <= 6; i++)
-                {
-                    cells[$"A{i}"].PutValue($"Q{i - 1}");
-                    cells[$"B{i}"].PutValue(100 * (i - 1));
-                    cells[$"C{i}"].PutValue(150 * (i - 1));
-                }
+            cells["A2"].PutValue("Q1"); cells["B2"].PutValue(100); cells["C2"].PutValue(150);
+            cells["A3"].PutValue("Q2"); cells["B3"].PutValue(200); cells["C3"].PutValue(250);
+            cells["A4"].PutValue("Q3"); cells["B4"].PutValue(300); cells["C4"].PutValue(350);
 
-                // Create a ListObject (table) that covers the data range A1:C6
-                int tableIndex = sheet.ListObjects.Add(0, 0, 5, 2, true);
-                ListObject table = sheet.ListObjects[tableIndex];
-                table.ShowHeaderRow = true;
-                table.ShowTableStyleFirstColumn = false;
-                table.ShowTableStyleLastColumn = false;
-                table.TableStyleType = TableStyleType.TableStyleMedium2;
+            // Create a ListObject (table) that covers the data range A1:C4
+            int tableIdx = worksheet.ListObjects.Add(0, 0, 3, 2, true);
+            ListObject table = worksheet.ListObjects[tableIdx];
+            table.ShowHeaderRow = true;
 
-                // Add a column chart that uses the table data
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 10);
-                Chart chart = sheet.Charts[chartIdx];
+            // Add a column chart that uses the table data
+            int chartIdx = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIdx];
 
-                // Use structured references to set series data ranges
-                // Ensure the table has a display name (Aspose.Cells uses DisplayName)
-                string tableName = table.DisplayName;
+            // Set the series data ranges (B2:B4 and C2:C4) and category data (A2:A4)
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.Add("C2:C4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-                chart.NSeries.Add($"{tableName}[Series1]", true);
-                chart.NSeries.Add($"{tableName}[Series2]", true);
-                chart.NSeries.CategoryData = $"{tableName}[Category]";
+            // Display initial point count of the first series
+            Console.WriteLine($"Initial points in first series: {chart.NSeries[0].Points.Count}");
 
-                // Display initial state
-                Console.WriteLine($"Initial row count in table: {table.DataRange.RowCount}");
-                Console.WriteLine($"Initial series count: {chart.NSeries.Count}");
-                Console.WriteLine($"Initial points in first series: {chart.NSeries[0].Points.Count}");
+            // Delete the second data row (Excel row 3, which is index 2 in zero‑based indexing)
+            // This row belongs to the ListObject; deleting it updates the table automatically
+            cells.DeleteRow(2, true);
 
-                // Delete the third data row (index 3 corresponds to Excel row 4)
-                cells.DeleteRow(3, true); // Row index 3 = Excel row 4 (Q3)
+            // Verify that the table now has one fewer data row
+            Console.WriteLine($"Table data rows after deletion: {table.DataRange.RowCount}");
 
-                // Verify that the table has adjusted
-                Console.WriteLine($"\nAfter deletion:");
-                Console.WriteLine($"Row count in table: {table.DataRange.RowCount}");
+            // Verify that the chart series point count reflects the deleted row
+            Console.WriteLine($"Points in first series after deletion: {chart.NSeries[0].Points.Count}");
 
-                // Verify that the chart series still reference the correct number of points
-                Console.WriteLine($"Series count (should remain unchanged): {chart.NSeries.Count}");
-                Console.WriteLine($"Points in first series after deletion: {chart.NSeries[0].Points.Count}");
-
-                // Save the workbook
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "DeleteRowFromListObjectAndVerifyChart.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"\nWorkbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "DeleteRowFromListObjectDemo.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
-    }
-
-    // Entry point for the example
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DeleteRowFromListObjectAndVerifyChart.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

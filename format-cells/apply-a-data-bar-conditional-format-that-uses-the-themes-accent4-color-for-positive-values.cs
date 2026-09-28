@@ -1,75 +1,72 @@
-// Title: Aspose.Cells C# – Apply Data Bar Conditional Formatting with Accent 4 Theme Color
-// Description: Demonstrates how to create a workbook, fill cells A1:A5 with numeric data, add a DataBar conditional format, set the bar color to the theme's Accent 4 (RGB 0,112,192), use automatic minimum and maximum values, display the cell value, and save the file as an XLSX document.
-// Keywords: Aspose.Cells | C# | DataBar | Conditional Formatting | Accent4 | Theme color | positive values | automatic min max | Excel XLSX | cell data bar color
-// Common Searches: Aspose.Cells data bar Accent4 color C# example | how to set theme accent color for data bar in Aspose.Cells | conditional formatting data bar positive values Aspose.Cells .NET | apply automatic min and max to data bar using Aspose.Cells | C# code for data bar conditional format in Excel workbook
-// Developer Intent: Add a DataBar conditional format that uses the workbook’s Accent 4 theme color for positive numbers in a specified range.
-// Use Cases: Show sales performance with blue Accent 4 data bars in a financial report. | Highlight KPI values on a dashboard worksheet using theme‑based data bars. | Create a project‑status spreadsheet where each task’s progress is visualized with Accent 4 bars.
-// AI Prompts: Generate C# Aspose.Cells code to apply a DataBar conditional format with the Accent 4 theme color to range B2:B12, displaying only positive values. | Provide an example that sets DataBar.Color to Theme.Accent4, uses automatic min/max, and shows the cell value in Aspose.Cells. | Explain how to retrieve the exact RGB value of Accent 4 from a workbook’s theme and apply it to a DataBar condition in Aspose.Cells.
+// Title: How to apply a Data Bar conditional format with the workbook’s Accent4 theme color for positive values using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates an Excel workbook, fills column A with numbers, and adds a DataBar conditional formatting rule that uses the workbook’s fourth accent color for positive bars using Aspose.Cells. | Write a .NET snippet that applies a data‑bar conditional format to range A1:A10, sets the bar color to ThemeColorType.Accent4, hides negative bars, and saves the workbook.
+// Common Searches: Aspose.Cells .NET set data bar color to theme accent4 for positive values | How to hide negative data bars and use Accent4 color in Excel with Aspose.Cells | Apply conditional formatting data bar using GetThemeColor in C# | Create data bar conditional format for range A1:A10 in Aspose.Cells | Use ThemeColorType.Accent4 for data bar styling in Aspose.Cells workbook
+// Tags: apply data bar conditional format aspocells | accent4 theme color data bar aspocells | positive values only data bar aspocells | hide negative bars aspocells .net | GetThemeColor usage aspocells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, writes values -5 to 4 into cells A1:A10, defines that range, adds a DataBar conditional formatting rule, sets its color to the workbook’s Accent4 theme color, optionally hides negative bars, displays the cell value beside the bar, and saves the file as DataBarAccent4.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, fill cells A1:A5 with numeric data, add a DataBar conditional format, set the bar color to the theme's Accent 4 (RGB 0,112,192), use automatic minimum and maximum values, display the cell value, and save the file as an XLSX document.
-    public class DataBarAccent4Demo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook.
+            var workbook = new Workbook();
+
+            // Get the first worksheet.
+            var sheet = workbook.Worksheets[0];
+
+            // Populate sample data in column A (some negative, some positive).
+            for (int i = 0; i < 10; i++)
             {
-                Run();
+                sheet.Cells[i, 0].PutValue(i - 5); // Values -5 to 4.
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Define the range that will receive the data‑bar conditional format.
+            var range = sheet.Cells.CreateRange("A1:A10");
 
-            // Populate sample data (both positive and negative values)
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(-5);
-            sheet.Cells["A3"].PutValue(20);
-            sheet.Cells["A4"].PutValue(-15);
-            sheet.Cells["A5"].PutValue(30);
-
-            // Add a conditional formatting collection
+            // Add a new ConditionalFormatting object to the worksheet.
             int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            var cf = sheet.ConditionalFormattings[cfIndex];
 
-            // Define the range for the data bar (A1:A5)
-            CellArea area = new CellArea
+            // Associate the range with the conditional formatting (requires CellArea).
+            var area = new CellArea
             {
-                StartRow = 0,
-                EndRow = 4,
-                StartColumn = 0,
-                EndColumn = 0
+                StartRow = range.FirstRow,
+                StartColumn = range.FirstColumn,
+                EndRow = range.FirstRow + range.RowCount - 1,
+                EndColumn = range.FirstColumn + range.ColumnCount - 1
             };
-            cfCollection.AddArea(area);
+            cf.AddArea(area);
 
-            // Add a DataBar condition
-            int conditionIndex = cfCollection.AddCondition(FormatConditionType.DataBar);
-            FormatCondition condition = cfCollection[conditionIndex];
+            // Add a DataBar condition.
+            int conditionIndex = cf.AddCondition(FormatConditionType.DataBar);
+            var condition = cf[conditionIndex];
+            var dataBar = condition.DataBar;
 
-            // Configure the DataBar
-            DataBar dataBar = condition.DataBar;
-            // Use an approximate Accent4 color (since Theme.Accent4 is not directly accessible)
-            dataBar.Color = Color.FromArgb(0, 112, 192); // Typical Accent4 blue
-            dataBar.MinCfvo.Type = FormatConditionValueType.AutomaticMin;
-            dataBar.MaxCfvo.Type = FormatConditionValueType.AutomaticMax;
+            // Use the theme's Accent4 color for the positive data bar.
+            dataBar.Color = workbook.GetThemeColor(ThemeColorType.Accent4);
+
+            // Hide negative bars (optional – makes the bar appear only for positive values).
+            // If the API version supports NegativeBarColor, uncomment the line below.
+            // dataBar.NegativeBarColor = Color.Transparent;
+
+            // Show the cell value next to the bar.
             dataBar.ShowValue = true;
 
-            // Save the workbook
-            string outputPath = "DataBarAccent4Demo.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Save the workbook.
+            string outputPath = "DataBarAccent4.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

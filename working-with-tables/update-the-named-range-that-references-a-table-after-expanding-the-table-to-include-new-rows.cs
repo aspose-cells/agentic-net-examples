@@ -1,70 +1,105 @@
-// Title: C# – Update a Named Range After Expanding an Aspose.Cells ListObject (Table)
-// Description: Demonstrates how to create a workbook, define a ListObject, add rows, resize the table, refresh the named range with SetRefersTo, and use the range in a SUM formula using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | named range | ListObject resize | SetRefersTo | dynamic range | Excel table expansion | SUM formula | workbook automation | .NET Excel API
-// Common Searches: Aspose.Cells update named range after table resize | C# resize ListObject and refresh named range | SetRefersTo table DataRange Aspose.Cells example | dynamic named range for expanding Excel table .NET | how to recalculate named range after adding rows Aspose
-// Developer Intent: Synchronize a named range with the new size of a ListObject after the table has been expanded.
-// Use Cases: Generate a sales report where the table grows daily and the named range must always reflect the current data for totals. | Create chart data sources that automatically adjust when rows are added to an Excel table. | Build automated workbook templates that add rows, resize tables, and keep dependent formulas accurate without manual updates.
-// AI Prompts: Show C# code to update a named range after resizing an Aspose.Cells ListObject. | Explain how SetRefersTo works with a table's DataRange in Aspose.Cells for .NET. | Provide a step‑by‑step example of adding rows, resizing a table, and refreshing a named range for a SUM formula.
+// Title: Expand an Excel ListObject by adding rows and refresh its named range with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to resize a ListObject named 'Table1' by a specified number of rows and automatically set the RefersTo property of the named range 'MyRange' to the new table address. | After increasing the size of an Excel table, programmatically rebuild the A1‑style address and assign it to an existing workbook named range using C# and Aspose.Cells.
+// Common Searches: C# Aspose.Cells how to add rows to an existing Excel table and keep a named range updated | Resize ListObject and update named range RefersTo with Aspose.Cells .NET | Expand Excel table programmatically and synchronize named range using Aspose.Cells C# example
+// Tags: resize ListObject Aspose.Cells | update named range RefersTo C# | programmatically extend Excel ListObject | synchronize named range with expanded table | Aspose.Cells table expansion example
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Demonstrates how to create a workbook, define a ListObject, add rows, resize the table, refresh the named range with SetRefersTo, and use the range in a SUM formula using Aspose.Cells for .NET.
-class UpdateNamedRangeAfterTableResize
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads a workbook, locates a ListObject called 'Table1', expands it by a defined number of rows using the Resize method, rebuilds the A1‑style address of the resized table, and updates the RefersTo property of the named range 'MyRange' so it points to the new range before saving the file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Populate initial data for the table (5 rows, 2 columns)
-            for (int row = 0; row < 5; row++)
+            try
             {
-                cells[row, 0].PutValue("Item " + (row + 1));
-                cells[row, 1].PutValue((row + 1) * 10);
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Retrieve the table (ListObject) by its name
+                ListObject table = worksheet.ListObjects["Table1"]; // replace with your table name
+                if (table == null)
+                {
+                    Console.WriteLine("Table 'Table1' not found.");
+                    return;
+                }
+
+                // Number of new rows to add to the table
+                int rowsToAdd = 5;
+
+                // Calculate new bottom row index for the table after expansion
+                int startRow = table.StartRow;
+                int startColumn = table.StartColumn;
+                int endRow = table.EndRow;
+                int endColumn = table.EndColumn;
+
+                int newEndRow = endRow + rowsToAdd;
+                int totalRows = newEndRow - startRow + 1;
+                int totalColumns = endColumn - startColumn + 1;
+
+                // Resize the table to include the new rows
+                try
+                {
+                    table.Resize(startRow, startColumn, totalRows, totalColumns, true);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to resize table: {ex.Message}");
+                    return;
+                }
+
+                // Update the named range that references the table (if it exists)
+                try
+                {
+                    Name namedRange = workbook.Worksheets.Names["MyRange"]; // replace with your named range
+                    if (namedRange != null)
+                    {
+                        // Build A1 style address for the table range
+                        string startAddr = CellsHelper.CellIndexToName(table.StartRow, table.StartColumn);
+                        string endAddr = CellsHelper.CellIndexToName(table.EndRow, table.EndColumn);
+                        string tableAddress = $"{startAddr}:{endAddr}";
+
+                        // Set the RefersTo property (include leading '=' and sheet name)
+                        namedRange.RefersTo = $"={worksheet.Name}!{tableAddress}";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to update named range: {ex.Message}");
+                }
+
+                // Ensure output directory exists
+                string outDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                {
+                    Directory.CreateDirectory(outDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Create a table (ListObject) covering the initial data range A1:B5
-            int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.DisplayName = "SalesTable";
-
-            // Create a named range that refers to the table's data range
-            int nameIndex = workbook.Worksheets.Names.Add("SalesTableRange");
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
-            // Set the RefersTo formula to the current data range of the table (no leading '=')
-            namedRange.SetRefersTo(table.DataRange.RefersTo, false, false);
-
-            // Add additional rows to the worksheet (rows 6-10)
-            for (int row = 5; row < 10; row++)
+            catch (Exception ex)
             {
-                cells[row, 0].PutValue("Item " + (row + 1));
-                cells[row, 1].PutValue((row + 1) * 10);
+                Console.WriteLine($"Error: {ex.Message}");
             }
-
-            // Resize the table to include the new rows (now rows 0-9)
-            table.Resize(0, 0, 9, 1, true);
-
-            // Update the named range to point to the expanded table range
-            namedRange.SetRefersTo(table.DataRange.RefersTo, false, false);
-
-            // Demonstrate that the named range works in a formula
-            cells["D1"].Formula = "=SUM(SalesTableRange)";
-            workbook.CalculateFormula();
-
-            // Save the workbook
-            string outputPath = "UpdatedNamedRange.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

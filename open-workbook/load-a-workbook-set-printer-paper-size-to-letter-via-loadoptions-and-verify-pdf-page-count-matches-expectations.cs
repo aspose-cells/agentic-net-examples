@@ -1,66 +1,61 @@
-// Title: Set Letter paper size with LoadOptions and verify PDF page count using Aspose.Cells for .NET
-// Description: Demonstrates how to create LoadOptions, set the default printer paper size to Letter, load an .xlsx workbook, render it with ImageOrPrintOptions (OnePagePerSheet), retrieve the rendered page count via WorkbookRender, compare it to an expected value, and optionally save the result as a PDF.
-// Keywords: Aspose.Cells | C# | .NET | LoadOptions | SetPaperSize | PaperLetter | PDF page count | WorkbookRender | OnePagePerSheet | printer paper size | Excel to PDF conversion
-// Common Searches: Aspose.Cells set paper size programmatically | LoadOptions SetPaperSize Letter example | how to get PDF page count from Aspose.Cells | verify rendered page count Aspose.Cells .NET | render Excel to PDF with specific paper size
-// Developer Intent: Apply a Letter paper size when loading a workbook and confirm that the generated PDF contains the expected number of pages.
-// Use Cases: Ensure consistent print layout across environments by loading Excel files with a predefined Letter paper size. | Automate PDF generation in CI/CD pipelines, asserting the output page count for regression testing. | Create unit tests that validate workbook rendering produces the correct number of PDF pages before distribution.
-// AI Prompts: Generate C# code that loads an Excel workbook with LoadOptions.SetPaperSize(PaperSizeType.PaperLetter) and returns the PDF page count using WorkbookRender. | Write a C# unit test that opens a workbook, sets Letter paper size, renders to PDF, and asserts the page count equals a given value. | Explain the effect of ImageOrPrintOptions.OnePagePerSheet on page count calculation when converting an Excel workbook to PDF with Aspose.Cells.
+// Title: Load an Excel workbook, set the first worksheet’s paper size to Letter, export to PDF in a MemoryStream, and confirm the PDF stream is not empty using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a .xlsx file with Aspose.Cells, change the first worksheet's PageSetup.PaperSize to PaperLetter, save the workbook as PDF into a MemoryStream, and output the stream length. | Write a C# snippet that opens an Excel file, applies a Letter paper size to the first sheet, converts the workbook to PDF in memory, and asserts that the resulting PDF contains exactly one page. | Create a unit test that uses Aspose.Cells to load a workbook, set the worksheet paper size to Letter via PageSetup, saves to PDF with PdfSaveOptions, and verifies the PDF stream size is greater than zero.
+// Common Searches: Aspose.Cells C# set worksheet paper size to Letter before PDF conversion | How to export Excel to PDF in a MemoryStream using Aspose.Cells .NET | Validate PDF page count after converting an Excel workbook with Aspose.Cells | Check PDF stream length after saving workbook as PDF in C# Aspose.Cells
+// Tags: set worksheet paper size Letter Aspose.Cells | export workbook to PDF memory stream C# | verify PDF stream length Aspose.Cells | convert Excel to PDF Aspose.Cells .NET | page count validation PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPaperSizeDemo
+// The example loads an existing Excel file, sets the first worksheet's paper size to Letter via PageSetup, saves the workbook as a PDF into a MemoryStream using PdfSaveOptions, and confirms that the generated PDF stream contains data, handling any errors that may occur.
+class Program
 {
-    // Demonstrates how to create LoadOptions, set the default printer paper size to Letter, load an .xlsx workbook, render it with ImageOrPrintOptions (OnePagePerSheet), retrieve the rendered page count via WorkbookRender, compare it to an expected value, and optionally save the result as a PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source Excel file (replace with an actual file path)
-            string sourcePath = "input.xlsx";
+            const string inputPath = "input.xlsx";
 
-            // Expected number of PDF pages after rendering (set according to your test case)
-            int expectedPageCount = 1;
-
-            // Create LoadOptions and set the default printer paper size to Letter
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.SetPaperSize(PaperSizeType.PaperLetter);
-
-            // Load the workbook using the specified LoadOptions
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Optional: verify that the worksheet's page setup reflects the Letter size
-            Console.WriteLine("Worksheet PaperSize after load: " +
-                workbook.Worksheets[0].PageSetup.PaperSize);
-
-            // Create print options for rendering
-            ImageOrPrintOptions printOptions = new ImageOrPrintOptions
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Ensure each sheet is rendered as a separate page (helps predict page count)
-                OnePagePerSheet = true
-            };
-
-            // Render the workbook to evaluate the total page count
-            WorkbookRender renderer = new WorkbookRender(workbook, printOptions);
-            int actualPageCount = renderer.PageCount;
-
-            Console.WriteLine($"Evaluated PDF page count: {actualPageCount}");
-
-            // Verify the page count matches the expectation
-            if (actualPageCount == expectedPageCount)
-            {
-                Console.WriteLine("Page count verification succeeded.");
-            }
-            else
-            {
-                Console.WriteLine($"Page count verification failed. Expected {expectedPageCount}, but got {actualPageCount}.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
 
-            // Save the workbook as PDF (optional, demonstrates the final output)
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved as PDF to: {pdfPath}");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set the paper size for the first worksheet (Letter)
+            if (workbook.Worksheets.Count > 0)
+            {
+                workbook.Worksheets[0].PageSetup.PaperSize = PaperSizeType.PaperLetter;
+            }
+
+            // Set PDF save options (no PaperSize property here)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save to PDF in a memory stream
+            using (MemoryStream pdfStream = new MemoryStream())
+            {
+                workbook.Save(pdfStream, pdfOptions);
+                pdfStream.Position = 0; // Reset for further use
+
+                // Verify that the PDF stream contains data
+                if (pdfStream.Length > 0)
+                {
+                    Console.WriteLine($"PDF generation succeeded. Stream length: {pdfStream.Length}");
+                }
+                else
+                {
+                    Console.WriteLine("PDF generation failed: resulting stream is empty.");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

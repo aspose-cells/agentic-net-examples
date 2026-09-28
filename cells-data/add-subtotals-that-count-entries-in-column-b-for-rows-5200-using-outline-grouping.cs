@@ -1,17 +1,14 @@
-// Title: C# – Add outline subtotals that count column B (rows 5‑200) with Aspose.Cells for .NET
-// Description: This example creates a workbook, optionally fills rows 5‑200 with group keys in column A and numeric values in column B, defines a CellArea for that range, and uses the Cells.Subtotal method with ConsolidationFunction.Count to insert count subtotals grouped by column B. The outline’s SummaryRowBelow property is set so each subtotal appears below its group, and the file is saved as SubtotalOutlineDemo.xlsx.
-// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# | .NET | subtotal count | outline grouping | Excel subtotal | CellArea | ConsolidationFunction.Count | summary row below | automated Excel report
-// Common Searches: Aspose.Cells count subtotal column B C# | outline grouping subtotal rows 5 to 200 Aspose.Cells | how to add subtotal with summary row below using Aspose.Cells | C# Subtotal method Aspose.Cells example | generate Excel subtotals programmatically .NET
-// Developer Intent: Insert count subtotals for column B (rows 5‑200) using outline grouping and place the summary rows below each detail group.
-// Use Cases: Create a categorized report where each category shows the number of items it contains. | Automate Excel generation for large data sets without manual subtotal entry. | Produce a printable worksheet with outline‑style totals for quick data analysis.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a count subtotal for column B (rows 5‑200) and sets SummaryRowBelow to true. | Explain the parameters of the Cells.Subtotal method for grouping, function selection, and result column. | Show how to customize outline formatting (e.g., collapse/expand) after adding subtotals with Aspose.Cells.
+// Title: Create a count subtotal for column B rows 5‑200 with outline grouping using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a C# program that defines a CellArea covering rows 5‑200 in column B, applies a Count aggregation as a subtotal, and enables an outline with grouped rows, placing the summary row after the detail rows using Aspose.Cells. | Add code to set Worksheet.Outline.SummaryRowBelow = true after creating the subtotal so the total appears beneath the grouped rows. | Save the workbook as an .xlsx file named SubtotalOutline.xlsx after configuring the subtotal and outline settings.
+// Common Searches: Aspose.Cells how to add a count subtotal for a specific column range in C# | C# subtotal rows 5 to 200 column B with outline grouping Aspose.Cells | set summary row below detail rows after subtotal Aspose.Cells .NET | using range definition to apply subtotal function in Aspose.Cells example | outline grouping subtotal count non‑empty cells Aspose.Cells C#
+// Tags: Aspose.Cells C# column B subtotal | outline hierarchy total row placement | range for rows 5 through 200 subtotal | ConsolidationFunction.Count example | Excel workbook subtotal outline C#
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsSubtotalExample
 {
-    // This example creates a workbook, optionally fills rows 5‑200 with group keys in column A and numeric values in column B, defines a CellArea for that range, and uses the Cells.Subtotal method with ConsolidationFunction.Count to insert count subtotals grouped by column B. The outline’s SummaryRowBelow property is set so each subtotal appears below its group, and the file is saved as SubtotalOutlineDemo.xlsx.
+    // The program creates a new workbook, defines a CellArea covering rows 5‑200 in column B, adds a Count subtotal for that range, configures the outline to place the summary row after the detail rows, and saves the file as SubtotalOutline.xlsx.
     class Program
     {
         static void Main()
@@ -21,36 +18,34 @@ namespace AsposeCellsSubtotalExample
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
-            // (Optional) Populate sample data in columns A and B for rows 5‑200
-            // Here we just fill column B with some values; column A can hold group keys
-            for (int row = 4; row <= 199; row++) // zero‑based index: row 5 = 4
-            {
-                // Example group key in column A (could be any string)
-                cells[row, 0].PutValue("Group" + ((row - 4) % 5 + 1));
-                // Value in column B
-                cells[row, 1].PutValue(row);
-            }
+            // ------------------------------------------------------------
+            // Assume that column B (index 1) already contains data from
+            // row 5 (zero‑based index 4) to row 200 (zero‑based index 199).
+            // The following code adds a subtotal that counts the entries
+            // in column B and creates an outline grouping.
+            // ------------------------------------------------------------
 
-            // Define the cell area that includes columns A and B, rows 5‑200
+            // Define the range that contains the data to be subtotaled.
+            // Here we use only column B, but the range can be expanded if needed.
             CellArea area = new CellArea
             {
-                StartRow = 4,      // row 5 (zero‑based)
-                StartColumn = 0,   // column A
-                EndRow = 199,      // row 200 (zero‑based)
-                EndColumn = 1      // column B
+                StartRow = 4,      // Row 5 (zero‑based)
+                EndRow = 199,      // Row 200 (zero‑based)
+                StartColumn = 1,   // Column B (zero‑based)
+                EndColumn = 1      // Column B
             };
 
-            // Add subtotals:
-            // - Group by column B (index 1)
-            // - Use Count function to count entries
-            // - Apply the subtotal to column B (index 1)
-            cells.Subtotal(area, 1, ConsolidationFunction.Count, new int[] { 1 });
+            // Apply subtotal:
+            // - groupBy = 0 because within the defined area the grouping column is the first (and only) column.
+            // - ConsolidationFunction.Count counts the number of non‑empty cells.
+            // - totalList = new int[] { 0 } adds the subtotal for the same column.
+            cells.Subtotal(area, 0, ConsolidationFunction.Count, new int[] { 0 });
 
-            // Ensure the summary row appears below the detail rows in the outline
+            // Configure outline to place the summary row below the detail rows.
             worksheet.Outline.SummaryRowBelow = true;
 
             // Save the workbook
-            workbook.Save("SubtotalOutlineDemo.xlsx");
+            workbook.Save("SubtotalOutline.xlsx");
         }
     }
 }

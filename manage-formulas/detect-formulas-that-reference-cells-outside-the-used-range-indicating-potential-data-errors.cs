@@ -1,102 +1,150 @@
-// Title: Find Excel formulas that reference cells outside the used range using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, determines each worksheet's used range with MaxDataRow/MaxDataColumn, scans all formula cells, examines their precedent areas via GetPrecedents, and flags any reference that lies beyond the used rows or columns (including whole‑row, whole‑column, single‑cell, and range references). The program outputs the offending cell addresses and formulas and can save the workbook.
-// Keywords: Aspose.Cells | .NET | detect out of range formula references | Excel formula validation | used range detection | MaxDataRow | MaxDataColumn | GetPrecedents | precedent area analysis | invalid cell reference | data quality audit | automated Excel checks
-// Common Searches: Aspose.Cells find formulas referencing cells outside used range | detect out‑of‑range precedent areas in Excel with .NET | list formula cells that point to non‑existent rows or columns | validate Excel formulas using Aspose.Cells GetPrecedents | how to flag formulas that reference empty rows in Aspose.Cells
-// Developer Intent: Identify and list all formula cells that reference rows or columns beyond the worksheet's used range.
-// Use Cases: Generate a quality‑control report of potentially erroneous formulas before workbook distribution. | Automate data‑integrity checks in ETL pipelines by flagging formulas that point to empty rows or columns. | Integrate out‑of‑range formula detection into CI/CD builds to prevent publishing faulty spreadsheets.
-// AI Prompts: Create a method that returns a collection of Cell objects whose formulas reference rows or columns beyond MaxDataRow/MaxDataColumn. | Enhance the sample to apply a red background style to each offending cell after detection. | Write a unit test suite that verifies out‑of‑range detection for single‑cell, whole‑row, and whole‑column references.
+// Title: Identify Excel formulas that reference cells outside the worksheet's used range with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to iterate all worksheets, examine each formula cell, and return a collection of formulas that reference cells beyond the worksheet's MaxDisplayRange. | Enhance the detector to also evaluate multi‑cell range references (e.g., A1:B10) and flag those that extend outside the used area. | Create a reusable method that accepts a Workbook object and returns a list of CellInfo objects containing sheet name, cell address, and formula for out‑of‑range references.
+// Common Searches: how to find Excel formulas that point to cells outside the used range using Aspose.Cells C# | C# Aspose.Cells detect formulas referencing non‑existent rows or columns | list formulas with out‑of‑range references in a .xlsx file programmatically | validate worksheet formulas against MaxDisplayRange in .NET
+// Tags: Aspose.Cells detect out‑of‑range formula references | C# validate Excel formulas against used range | MaxDisplayRange cell reference verification | regex parsing Excel cell addresses in .NET | scan workbook for invalid formula cells
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaReferenceCheck
+// The example loads an Excel workbook, obtains each sheet's MaxDisplayRange, scans all formula cells, extracts cell and range references with a regular expression, parses them to zero‑based row/column indices, flags any reference that lies outside the used area, and outputs the sheet name, cell address, and formula for each problematic entry.
+class FormulaOutsideUsedRangeDetector
 {
-    // Loads an Excel workbook, determines each worksheet's used range with MaxDataRow/MaxDataColumn, scans all formula cells, examines their precedent areas via GetPrecedents, and flags any reference that lies beyond the used rows or columns (including whole‑row, whole‑column, single‑cell, and range references). The program outputs the offending cell addresses and formulas and can save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the input workbook
+        string inputPath = "input.xlsx";
+
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Load the workbook (replace with actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // List to hold cells with out‑of‑range references
-            List<Cell> cellsWithInvalidRefs = new List<Cell>();
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+        // List to store information about formulas referencing cells outside the used range
+        List<string> problematicFormulas = new List<string>();
+
+        // Regular expression to capture cell references (e.g., A1, $B$2) and range references (e.g., A1:B2)
+        Regex cellRefRegex = new Regex(@"\$?[A-Za-z]{1,3}\$?\d+", RegexOptions.Compiled);
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            try
             {
-                Cells cells = sheet.Cells;
+                // Determine the used range of the current worksheet
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                int firstRow = usedRange.FirstRow;
+                int firstColumn = usedRange.FirstColumn;
+                int lastRow = usedRange.RowCount > 0 ? firstRow + usedRange.RowCount - 1 : firstRow;
+                int lastColumn = usedRange.ColumnCount > 0 ? firstColumn + usedRange.ColumnCount - 1 : firstColumn;
 
-                // Determine the used range of the worksheet
-                int maxRow = cells.MaxDataRow;      // zero‑based index of last used row
-                int maxCol = cells.MaxDataColumn;   // zero‑based index of last used column
-
-                // Iterate over all cells that contain formulas
-                foreach (Cell cell in cells)
+                // Iterate through all cells that contain formulas
+                foreach (Cell cell in sheet.Cells)
                 {
-                    if (cell.IsFormula)
+                    if (!cell.IsFormula) continue;
+
+                    string formula = cell.Formula;
+                    if (string.IsNullOrEmpty(formula)) continue;
+
+                    bool referencesOutside = false;
+
+                    // Find all cell references within the formula
+                    foreach (Match match in cellRefRegex.Matches(formula))
                     {
-                        // Get all precedent areas referenced by the formula
-                        ReferredAreaCollection precedents = cell.GetPrecedents();
-                        if (precedents == null) continue;
+                        string reference = match.Value;
 
-                        foreach (ReferredArea area in precedents)
+                        // Handle possible range references separated by ':'
+                        string[] parts = reference.Split(':');
+                        foreach (string part in parts)
                         {
-                            // Skip external links – they are not part of the current worksheet's used range
-                            if (area.IsExternalLink) continue;
+                            // Remove any absolute reference symbols ('$')
+                            string cleanPart = part.Replace("$", "");
 
-                            // Check if the referenced area lies outside the used range
-                            bool outOfRange = false;
+                            // Try to parse the cleaned part as a cell address
+                            if (!TryParseCellReference(cleanPart, out int refRow, out int refCol))
+                                continue;
 
-                            // Single cell reference
-                            if (!area.IsArea)
+                            // Check if the referenced cell lies outside the used range
+                            if (refRow < firstRow || refRow > lastRow ||
+                                refCol < firstColumn || refCol > lastColumn)
                             {
-                                if (area.StartRow > maxRow || area.StartColumn > maxCol)
-                                    outOfRange = true;
-                            }
-                            else // Range reference
-                            {
-                                // Entire column reference
-                                if (area.IsEntireColumn)
-                                {
-                                    if (area.StartColumn > maxCol)
-                                        outOfRange = true;
-                                }
-                                // Entire row reference
-                                else if (area.IsEntireRow)
-                                {
-                                    if (area.StartRow > maxRow)
-                                        outOfRange = true;
-                                }
-                                else
-                                {
-                                    // Normal range
-                                    if (area.EndRow > maxRow || area.EndColumn > maxCol)
-                                        outOfRange = true;
-                                }
-                            }
-
-                            if (outOfRange)
-                            {
-                                cellsWithInvalidRefs.Add(cell);
-                                // No need to check other areas for this cell
+                                referencesOutside = true;
                                 break;
                             }
                         }
+
+                        if (referencesOutside) break;
+                    }
+
+                    if (referencesOutside)
+                    {
+                        string info = $"Sheet: {sheet.Name}, Cell: {cell.Name}, Formula: {formula}";
+                        problematicFormulas.Add(info);
                     }
                 }
             }
-
-            // Output results
-            Console.WriteLine("Cells with formulas referencing outside the used range:");
-            foreach (Cell c in cellsWithInvalidRefs)
+            catch (Exception ex)
             {
-                Console.WriteLine($"{c.Name} (Sheet: {c.Worksheet.Name}) -> Formula: {c.Formula}");
+                Console.WriteLine($"Error processing sheet \"{sheet.Name}\": {ex.Message}");
             }
-
-            // Optionally, save the workbook (if any modifications were made)
-            workbook.Save("OutputWorkbook.xlsx");
         }
+
+        // Output the results
+        if (problematicFormulas.Count > 0)
+        {
+            Console.WriteLine("Formulas referencing cells outside the used range:");
+            foreach (string entry in problematicFormulas)
+            {
+                Console.WriteLine(entry);
+            }
+        }
+        else
+        {
+            Console.WriteLine("No formulas reference cells outside the used range.");
+        }
+    }
+
+    // Parses an Excel cell reference (e.g., "B12") into zero‑based row and column indices.
+    private static bool TryParseCellReference(string cellRef, out int row, out int column)
+    {
+        row = -1;
+        column = -1;
+
+        // Match column letters followed by row numbers
+        Match m = Regex.Match(cellRef, @"^([A-Za-z]{1,3})(\d+)$");
+        if (!m.Success) return false;
+
+        string colLetters = m.Groups[1].Value.ToUpper();
+        string rowNumber = m.Groups[2].Value;
+
+        // Convert column letters to a zero‑based index
+        int col = 0;
+        foreach (char c in colLetters)
+        {
+            col = col * 26 + (c - 'A' + 1);
+        }
+        column = col - 1;
+
+        // Convert row number to zero‑based index
+        if (!int.TryParse(rowNumber, out int r)) return false;
+        row = r - 1;
+
+        return true;
     }
 }

@@ -1,75 +1,79 @@
-// Title: Batch Add a WAV OLE Object to All Worksheets with Aspose.Cells for .NET
-// Description: Loads an existing workbook, reads a WAV file once, and inserts it as an OLE object on every sheet at cell E5 (100 × 100 px). Sets ProgID, displays the audio as an icon, and saves the updated file.
-// Keywords: Aspose.Cells OLE object | embed audio Excel C# | batch add OLE to worksheets | WAV file as icon Aspose.Cells | C# Excel automation audio
-// Common Searches: Aspose.Cells add same audio OLE to each worksheet | C# batch embed WAV file in Excel workbook | how to display audio icon in Excel using Aspose | programmatically insert OLE objects on all sheets | set ProgID for WAV OLE object Aspose.Cells
-// Developer Intent: Programmatically embed a single WAV file as an OLE object on every worksheet of an existing Excel workbook.
-// Use Cases: Create a training workbook where each sheet plays the same instruction audio. | Generate multi‑sheet reports that include a uniform audio cue for navigation. | Automate presentation decks stored in Excel, adding a consistent audio clip to each slide.
-// AI Prompts: Show how to change the icon image for the embedded WAV OLE object in Aspose.Cells. | Provide code to place the OLE object at a variable cell address instead of a fixed location. | Explain techniques for minimizing memory usage when embedding large audio files across many worksheets.
+// Title: Batch embed the same WAV audio file as an OLE object into every worksheet using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells Shapes.AddOleObject to insert a WAV file as an OLE object at cell A1 on each worksheet in a workbook. | Create a C# routine that reads a WAV file into a byte array and adds the same OLE object to all sheets, handling missing file errors gracefully. | Save the workbook after batch‑adding the audio OLE shape and ensure the output directory exists.
+// Common Searches: aspnet embed same audio OLE object in all Excel sheets with Aspose.Cells | c# batch add wav ole object to each worksheet in a workbook | how to handle missing wav file when inserting OLE objects using Aspose.Cells | add ole object to multiple worksheets Aspose.Cells example
+// Tags: shapes.addoleobject embed wav c# | audio ole shape batch insertion Aspose.Cells | multiple worksheets ole object insertion | wav file not found handling Aspose.Cells | excel workbook save with ole objects
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace BatchOleObjectAdder
+// The example creates (or loads) a workbook, ensures it has at least three worksheets, reads a WAV file into a byte array, and uses Shapes.AddOleObject to place the same audio OLE object at cell A1 of every worksheet. It handles missing audio files and I/O errors, creates the output directory if needed, and saves the workbook as XLSX.
+class Program
 {
-    // Loads an existing workbook, reads a WAV file once, and inserts it as an OLE object on every sheet at cell E5 (100 × 100 px). Sets ProgID, displays the audio as an icon, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
+
+            // Ensure the workbook has at least three worksheets
+            while (workbook.Worksheets.Count < 3)
+            {
+                workbook.Worksheets.Add($"Sheet{workbook.Worksheets.Count + 1}");
+            }
+
+            // Path to the WAV file that will be embedded as an OLE object
+            string wavFilePath = @"C:\Temp\sound.wav";
+
+            // Verify the WAV file exists before attempting to embed it
+            if (!File.Exists(wavFilePath))
+            {
+                Console.WriteLine($"Warning: WAV file not found at '{wavFilePath}'. OLE objects will not be added.");
+            }
+            else
+            {
+                try
+                {
+                    // Read the WAV file into a byte array for embedding
+                    byte[] oleData = File.ReadAllBytes(wavFilePath);
+
+                    // Add the same WAV OLE object to every worksheet
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // AddOleObject(upperLeftRow, upperLeftColumn, height, width, lowerRightRow, lowerRightColumn, oleObjectData)
+                        // Placing the object at cell A1 (row 0, column 0) with a size of 100x100 points
+                        sheet.Shapes.AddOleObject(0, 0, 100, 100, 0, 0, oleData);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error reading WAV file: {ex.Message}");
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputPath = @"C:\Temp\Output.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
             try
             {
-                const string inputPath = "input.xlsx";
-                const string wavPath = "sample.wav";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input workbook not found: {inputPath}");
-                    return;
-                }
-
-                // Verify that the WAV file exists
-                if (!File.Exists(wavPath))
-                {
-                    Console.WriteLine($"WAV file not found: {wavPath}");
-                    return;
-                }
-
-                // Load the workbook to which the OLE objects will be added
-                Workbook workbook = new Workbook(inputPath);
-
-                // Read the WAV file once – the same data will be used for every worksheet
-                byte[] wavData = File.ReadAllBytes(wavPath);
-
-                // Iterate through all worksheets and add the WAV OLE object
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Add an OLE object placeholder (image data) at row 5, column 5 with size 100x100 pixels
-                    int oleIndex = sheet.OleObjects.Add(5, 5, 100, 100, wavData);
-
-                    // Retrieve the newly added OLE object to set additional properties
-                    OleObject ole = sheet.OleObjects[oleIndex];
-
-                    // Set the actual embedded WAV data
-                    ole.ObjectData = wavData;
-
-                    // Optional: define the ProgID for a WAV file and display it as an icon
-                    ole.ProgID = "WavAudio";
-                    ole.DisplayAsIcon = true;
-                    ole.Label = "Audio Clip";
-                }
-
-                // Save the modified workbook
                 workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

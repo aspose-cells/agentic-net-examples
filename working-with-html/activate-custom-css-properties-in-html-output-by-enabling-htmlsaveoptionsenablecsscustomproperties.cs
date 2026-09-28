@@ -1,48 +1,34 @@
-// Title: C# – Export Aspose.Cells Workbook to HTML Using CSS Custom Properties
-// Description: Demonstrates how to create a workbook, apply formatting, and save it as HTML with HtmlSaveOptions.EnableCssCustomProperties set to true, producing lean CSS‑based styling.
-// Keywords: Aspose.Cells HTML export | EnableCssCustomProperties | C# HtmlSaveOptions | CSS custom properties Aspose | Excel to HTML with variables | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells enable CSS variables in HTML output | HtmlSaveOptions.EnableCssCustomProperties C# example | How to reduce duplicate styles when exporting Excel to HTML | Export workbook to HTML with CSS custom properties Aspose
-// Developer Intent: Activate CSS custom properties for the HTML generated from an Aspose.Cells workbook.
-// Use Cases: Generate lightweight HTML reports from Excel data with reusable style definitions. | Apply cell formatting once and reuse it across multiple elements via CSS variables. | Include images once and reference them through custom properties to minimize HTML size.
-// AI Prompts: Show how to turn off CSS custom properties in Aspose.Cells HTML export. | Provide a C# snippet that assigns a custom CSS class to a range and saves with EnableCssCustomProperties enabled. | Explain the performance impact of using HtmlSaveOptions.EnableCssCustomProperties for large workbooks.
+// Title: Enable CSS custom properties when exporting an Excel workbook to HTML using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that saves an Aspose.Cells workbook as HTML with the EnableCssCustomProperties flag turned on. | Show how to configure HtmlSaveOptions to produce HTML that uses CSS variables for styling in Aspose.Cells. | Convert a populated Excel worksheet to an HTML file while activating custom CSS properties via Aspose.Cells API.
+// Common Searches: Aspose.Cells HtmlSaveOptions EnableCssCustomProperties example C# | How to export Excel to HTML with CSS variables using Aspose.Cells .NET | Enable custom CSS properties in HTML output from Aspose.Cells workbook | Saving workbook as HTML with CSS custom properties in C# Aspose.Cells | Aspose.Cells HTML export with CSS custom properties turned on
+// Tags: Aspose.Cells HtmlSaveOptions CSS custom properties | export workbook to HTML with CSS variables | C# enable CSS custom properties Aspose.Cells | HTML output styling using CSS variables Aspose.Cells | save Excel as HTML using custom CSS properties
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsCustomCssDemo
+// The program creates a workbook, adds sample data, configures HtmlSaveOptions to enable CSS custom properties, and saves the workbook as an HTML file.
+class Program
 {
-    // Demonstrates how to create a workbook, apply formatting, and save it as HTML with HtmlSaveOptions.EnableCssCustomProperties set to true, producing lean CSS‑based styling.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook(); // creates an empty workbook
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+        // Add some data to demonstrate HTML output
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Name");
+        sheet.Cells["B1"].PutValue("Score");
+        sheet.Cells["A2"].PutValue("Alice");
+        sheet.Cells["B2"].PutValue(85);
+        sheet.Cells["A3"].PutValue("Bob");
+        sheet.Cells["B3"].PutValue(92);
 
-            // Add some sample data with formatting
-            sheet.Cells["A1"].PutValue("Hello World");
-            var style = sheet.Cells["A1"].GetStyle();
-            style.Font.IsBold = true;
-            style.Font.Color = System.Drawing.Color.Blue;
-            sheet.Cells["A1"].SetStyle(style);
+        // Configure HTML save options to enable CSS custom properties
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+        saveOptions.EnableCssCustomProperties = true; // activates custom CSS variables in the output
 
-            // Insert an image that will be reused (optional, demonstrates benefit of CSS custom properties)
-            // Ensure you have a valid image file path or use a placeholder image.
-            // int imgIdx = sheet.Pictures.Add(2, 2, "logo.png");
-
-            // Create HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-
-            // Enable CSS custom properties to optimize the HTML output
-            htmlOptions.EnableCssCustomProperties = true;
-
-            // Save the workbook as HTML with the custom CSS property enabled (lifecycle: save)
-            workbook.Save("OutputWithCssCustomProperties.html", htmlOptions);
-
-            Console.WriteLine("HTML file saved with EnableCssCustomProperties = true.");
-        }
+        // Save the workbook as HTML using the configured options
+        workbook.Save("output.html", saveOptions);
     }
 }

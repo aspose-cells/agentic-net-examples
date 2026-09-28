@@ -1,17 +1,14 @@
-// Title: Make Chart Legend Fully Transparent in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, and render the legend completely invisible by setting `chart.Legend.BackgroundMode` to `BackgroundMode.Transparent` and configuring each `LegendEntry` with `IsTextNoFill = true` and a transparent background. The workbook is then saved as an Excel file.
-// Keywords: Aspose.Cells | C# chart legend transparent | BackgroundMode.Transparent | legend entry no fill | transparent Excel legend | Aspose.Cells chart styling | clear legend Aspose.Cells
-// Common Searches: Aspose.Cells make chart legend transparent C# | remove legend background in Excel using Aspose.Cells | set legend entry no fill Aspose.Cells .NET | transparent legend Aspose.Cells example | how to hide chart legend in Aspose.Cells
-// Developer Intent: Render a chart legend and its entries with no visible background or fill in an Aspose.Cells workbook.
-// Use Cases: Design minimalist Excel reports where the legend should not distract from the data. | Overlay charts on images or colored cells without the legend obscuring the view. | Create dashboards that require legends to blend seamlessly with the worksheet background.
-// AI Prompts: Provide C# code using Aspose.Cells to set a chart legend and all legend entries to transparent with no text fill. | Explain step‑by‑step how to apply BackgroundMode.Transparent to a chart legend and its entries in Aspose.Cells for .NET.
+// Title: How to make a chart legend completely transparent in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart and sets the legend background to transparent. | Demonstrate iterating over LegendEntry objects to remove both background and text fill in an Aspose.Cells chart. | Provide a full example that saves the workbook as an .xlsx file with a fully clear legend.
+// Common Searches: Aspose.Cells C# set chart legend background mode to transparent | remove fill from legend entries in Aspose.Cells chart using C# | transparent legend for Excel chart generated with Aspose.Cells .NET | how to make legend entries have no text fill in Aspose.Cells | save workbook with clear legend using Aspose.Cells C#
+// Tags: chart legend background mode transparent Aspose.Cells | legend entry no fill Aspose.Cells C# | Aspose.Cells set legend transparency .xlsx | column chart legend clear background Aspose.Cells | Aspose.Cells legend entry IsTextNoFill
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a workbook, add sample data, insert a column chart, and render the legend completely invisible by setting `chart.Legend.BackgroundMode` to `BackgroundMode.Transparent` and configuring each `LegendEntry` with `IsTextNoFill = true` and a transparent background. The workbook is then saved as an Excel file.
-class TransparentLegendDemo
+// The example creates a workbook, adds sample data, inserts a column chart, sets the chart's Legend.BackgroundMode to Transparent, iterates through each LegendEntry to also set BackgroundMode to Transparent and IsTextNoFill to true, and saves the file as TransparentLegend.xlsx.
+class Program
 {
     static void Main()
     {
@@ -32,17 +29,17 @@ class TransparentLegendDemo
         // Add a column chart
         int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
         Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);          // Values
-        chart.NSeries.CategoryData = "A2:A4";      // Categories
+        chart.NSeries.Add("B2:B4", true);
+        chart.NSeries.CategoryData = "A2:A4";
 
-        // Make the legend background fully transparent
+        // Set the legend background to transparent
         chart.Legend.BackgroundMode = BackgroundMode.Transparent;
 
-        // Ensure each legend entry has no fill (text fill disabled) and also transparent background
+        // Ensure each legend entry has no fill (transparent background and no text fill)
         foreach (LegendEntry entry in chart.Legend.LegendEntries)
         {
-            entry.IsTextNoFill = true;                     // No fill for the text
-            entry.BackgroundMode = BackgroundMode.Transparent; // Transparent entry background
+            entry.BackgroundMode = BackgroundMode.Transparent; // entry background transparent
+            entry.IsTextNoFill = true;                         // text has no fill
         }
 
         // Save the workbook

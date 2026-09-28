@@ -1,10 +1,7 @@
-// Title: List Power Query Formula Names in an Excel Workbook with Aspose.Cells for .NET
-// Description: Loads a workbook, accesses its DataMashup.PowerQueryFormulas collection, prints each formula's Name to the console for verification, handles missing files and empty collections, and saves the workbook to a new file.
-// Keywords: Aspose.Cells PowerQueryFormulas | list Power Query formulas C# | DataMashup enumeration .NET | read Power Query names from Excel | console output Power Query formula names | Aspose.Cells workbook save after read
-// Common Searches: how to get Power Query formula names using Aspose.Cells | C# enumerate DataMashup PowerQueryFormulas | Aspose.Cells list Power Query queries in workbook | check for Power Query formulas before saving Excel file | exception handling Aspose.Cells file not found
-// Developer Intent: Extract and display every Power Query formula name from an Excel file, then persist the workbook.
-// Use Cases: Validate that imported workbooks contain the expected Power Query queries by listing their names. | Debug Power Query connections by outputting formula identifiers before performing refresh operations. | Maintain workbook lifecycle compliance by saving the file after read‑only operations.
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, iterates over DataMashup.PowerQueryFormulas, and writes each formula.Name to the console. | Show how to detect an empty PowerQueryFormulas collection and provide a friendly console message before saving the workbook. | Explain the proper try‑catch pattern for FileNotFoundException and generic errors when loading a workbook and listing Power Query formulas.
+// Title: List Power Query formula names from an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to open a .xlsx file, access its DataMashup, and print each PowerQueryFormula.Name to the console. | Extend the sample to also output the PowerQueryFormula.MExpression together with its name for every formula. | Add robust error handling that checks for missing files, absent DataMashup, and empty PowerQueryFormulas, logging clear messages for each scenario.
+// Common Searches: aspocells c# list power query formulas in workbook | how to get Power Query M code from Excel using Aspose.Cells .NET | retrieve PowerQueryFormula names with Aspose.Cells DataMashup | C# read Power Query formulas from .xlsx file Aspose.Cells | enumerate Power Query formulas in Excel via Aspose.Cells API
+// Tags: list PowerQueryFormula names Aspose.Cells | extract Power Query M expression DataMashup | C# read Power Query formulas from Excel workbook | handle missing DataMashup Aspose.Cells | save workbook after reading Power Query formulas
 
 using System;
 using System.IO;
@@ -13,48 +10,36 @@ using Aspose.Cells.QueryTables;
 
 namespace AsposeCellsExamples
 {
-    // Loads a workbook, accesses its DataMashup.PowerQueryFormulas collection, prints each formula's Name to the console for verification, handles missing files and empty collections, and saves the workbook to a new file.
+    // // Loads an Excel file, accesses its DataMashup, iterates through the PowerQueryFormulas collection, writes each formula's Name to the console, and saves the workbook unchanged.
     public class ListPowerQueryFormulaNames
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
-            const string inputPath = "source.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Ensure the source file exists before attempting to load.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             try
             {
-                // Load the workbook that may contain Power Query formulas.
+                string inputPath = "source.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
+
+                // Load the workbook containing Power Query formulas
                 Workbook workbook = new Workbook(inputPath);
 
-                // Access the DataMashup object which holds the PowerQueryFormulas collection.
+                // Access the DataMashup object
                 DataMashup mashup = workbook.DataMashup;
 
-                // Verify that the collection exists and contains items.
-                if (mashup?.PowerQueryFormulas != null && mashup.PowerQueryFormulas.Count > 0)
+                // Verify that Power Query formulas exist
+                if (mashup != null && mashup.PowerQueryFormulas != null && mashup.PowerQueryFormulas.Count > 0)
                 {
                     Console.WriteLine("Power Query Formula Names:");
-                    // Iterate through each PowerQueryFormula and output its Name.
                     foreach (PowerQueryFormula formula in mashup.PowerQueryFormulas)
                     {
+                        // Output each formula's name
                         Console.WriteLine(formula.Name);
                     }
                 }
@@ -63,18 +48,23 @@ namespace AsposeCellsExamples
                     Console.WriteLine("No Power Query formulas found in the workbook.");
                 }
 
-                // Save the workbook (required by lifecycle rules, even if unchanged).
+                // Save the workbook (no modifications made, but required by lifecycle rules)
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (FileNotFoundException fnfEx)
-            {
-                Console.WriteLine($"File not found: {fnfEx.FileName}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ListPowerQueryFormulaNames.Run();
         }
     }
 }

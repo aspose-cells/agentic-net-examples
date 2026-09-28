@@ -4,7 +4,8 @@ description: Build-validated C# examples for calculating, recalculating, monitor
 product: Aspose.Cells for .NET
 category: calculate-formulas
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Calculate Excel Formulas in C# with Aspose.Cells for .NET

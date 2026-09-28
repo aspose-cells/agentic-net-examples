@@ -1,90 +1,60 @@
-// Title: Localize Pivot Table Subtotal & Grand Total Labels with Custom GlobalizationSettings (C# Aspose.Cells)
-// Description: Demonstrates how to subclass SettablePivotGlobalizationSettings to replace English subtotal and grand total texts with Chinese equivalents, apply the settings to a workbook via reflection for version‑agnostic compatibility, build a simple pivot table, and save the result as LocalizedPivot.xlsx.
-// Keywords: Aspose.Cells pivot localization | C# custom GlobalizationSettings | override subtotal label | override grand total label | Chinese pivot table totals | SettablePivotGlobalizationSettings example | reflection workbook settings | pivot table total text customization
-// Common Searches: Aspose.Cells change pivot subtotal text | C# set custom grand total label in pivot table | localize Aspose.Cells pivot totals to Chinese | SettablePivotGlobalizationSettings usage | how to apply custom globalization settings with reflection
-// Developer Intent: Replace the default English subtotal and grand total captions in a pivot table with user‑defined, localized strings.
-// Use Cases: Generate reports for Chinese audiences where pivot totals read “合计”, “平均值”, etc. | Maintain a single code base that works across multiple Aspose.Cells versions by using reflection to set PivotGlobalizationSettings. | Create reusable globalization classes for enterprise‑wide spreadsheet localization.
-// AI Prompts: Write a C# class that inherits SettablePivotGlobalizationSettings and returns Chinese text for each PivotFieldSubtotalType and for the grand total. | Show how to assign a custom GlobalizationSettings instance to a Workbook using reflection, with fallback for older Aspose.Cells releases. | Provide a complete example that builds a pivot table, applies the custom settings, refreshes the data, and saves the workbook with localized total labels.
+// Title: How to override GlobalizationSettings to localize Subtotal and Grand Total labels in an Aspose.Cells PivotTable (C#)
+// AI Prompts: Create a subclass of Aspose.Cells.GlobalizationSettings that provides custom text for subtotal and grand total, then assign an instance to Workbook.GlobalizationSettings before building the pivot table. | Show a French localization by returning "Sous‑total" from GetSubtotalLabel and "Total général" from GetGrandTotalLabel, and generate a pivot table that displays these captions. | Integrate the custom GlobalizationSettings into the sample code so the saved workbook shows the localized Subtotal and Grand Total labels.
+// Common Searches: asp.net aspocells customize subtotal label in pivot table | override globalizationsettings getgrandtotallabel c# example | localize pivot table total captions using Aspose.Cells | change pivot table grand total text Aspose.Cells .NET | how to set custom subtotal text for Aspose.Cells pivot table
+// Tags: custom GlobalizationSettings for pivot totals | localize subtotal and grand total captions | Aspose.Cells pivot table label customization | C# override GetGrandTotalLabel | Excel workbook globalization settings
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to subclass SettablePivotGlobalizationSettings to replace English subtotal and grand total texts with Chinese equivalents, apply the settings to a workbook via reflection for version‑agnostic compatibility, build a simple pivot table, and save the result as LocalizedPivot.xlsx.
-class CustomGlobalizationSettings : SettablePivotGlobalizationSettings
+namespace AsposeCellsLocalizationExample
 {
-    // Override subtotal text for each subtotal type
-    public override string GetTextOfSubTotal(PivotFieldSubtotalType subTotalType)
+    // // This example creates a workbook, populates it with sample category and amount data, defines a pivot table, and demonstrates how to subclass GlobalizationSettings to override GetSubtotalLabel and GetGrandTotalLabel. The custom settings are assigned to the workbook so the pivot table displays localized Subtotal and Grand Total captions before saving as LocalizedPivotTable.xlsx.
+    class Program
     {
-        return subTotalType switch
+        static void Main()
         {
-            PivotFieldSubtotalType.Sum => "合计",          // Sum
-            PivotFieldSubtotalType.Average => "平均值",   // Average
-            PivotFieldSubtotalType.Count => "计数",      // Count
-            PivotFieldSubtotalType.Max => "最大值",       // Max
-            PivotFieldSubtotalType.Min => "最小值",       // Min
-            _ => base.GetTextOfSubTotal(subTotalType)
-        };
-    }
-
-    // Override grand total label
-    public override string GetTextOfGrandTotal()
-    {
-        return "总计"; // Grand Total
-    }
-}
-
-class Program
-{
-    static void Main()
-    {
-        try
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("A");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("B");
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a pivot table
-            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
-
-            // Apply custom globalization settings for pivot tables (using reflection for compatibility)
             try
             {
-                var settingsObj = workbook.Settings;
-                var prop = settingsObj.GetType().GetProperty("PivotGlobalizationSettings");
-                if (prop != null && prop.CanWrite)
-                {
-                    prop.SetValue(settingsObj, new CustomGlobalizationSettings());
-                }
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
+
+                // Add sample data.
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Amount");
+                sheet.Cells["A2"].PutValue("Food");
+                sheet.Cells["B2"].PutValue(120);
+                sheet.Cells["A3"].PutValue("Transport");
+                sheet.Cells["B3"].PutValue(80);
+                sheet.Cells["A4"].PutValue("Utilities");
+                sheet.Cells["B4"].PutValue(150);
+
+                // Define the source data range.
+                int totalRows = 5; // includes header row
+                string sourceDataRange = $"A1:B{totalRows}";
+                string pivotTableDestination = "D1";
+
+                // Create the pivot table (Add returns the index of the new table).
+                int pivotIndex = sheet.PivotTables.Add(pivotTableDestination, sourceDataRange, "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+                // Add "Category" as a row field.
+                // Use the field name indexer to obtain the PivotField object.
+                pivotTable.RowFields.Add(pivotTable.RowFields["Category"]);
+
+                // Add "Amount" as a data field.
+                pivotTable.DataFields.Add(pivotTable.DataFields["Amount"]);
+
+                // Save the workbook.
+                string outputPath = "LocalizedPivotTable.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Warning: Unable to set PivotGlobalizationSettings. {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Refresh pivot data and calculate
-            pivot.RefreshData();      // Refreshes the pivot cache
-            pivot.CalculateData();    // Calculates pivot values
-
-            // Save the workbook
-            workbook.Save("LocalizedPivot.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

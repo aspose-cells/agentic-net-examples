@@ -1,19 +1,16 @@
-// Title: Aspose.Cells .NET: Set PivotTable DataFieldHeaderName to "Sales Amount"
-// Description: Learn how to create a workbook with sample sales data, add a PivotTable, and programmatically rename the data field header to "Sales Amount" using the DataFieldHeaderName property in Aspose.Cells for C#. The example refreshes and calculates the PivotTable before saving the file.
-// Keywords: Aspose.Cells | .NET | C# | PivotTable | DataFieldHeaderName | custom data caption | Excel automation | sales report pivot | programmatic Excel | global developers
-// Common Searches: Aspose.Cells set PivotTable data caption C# | DataFieldHeaderName property example | rename PivotTable value column Aspose | change pivot table header Aspose.Cells .NET | customize PivotTable column title programmatically
-// Developer Intent: Rename the PivotTable's data column header to a more descriptive label such as "Sales Amount" for clearer reporting.
-// Use Cases: Generate sales dashboards where the values column reads "Sales Amount" instead of the raw field name. | Create multiple PivotTables with metric‑specific captions like "Revenue" or "Units Sold" in automated reports. | Standardize Excel exports for finance teams that require explicit column headings across different regions.
-// AI Prompts: Show C# code using Aspose.Cells to set a PivotTable's DataFieldHeaderName to a custom string and refresh the table. | How can I rename the data field header of an existing PivotTable in a workbook loaded with Aspose.Cells? | Explain the difference between DataFieldHeaderName and other caption properties in Aspose.Cells and give usage examples.
+// Title: Set a custom data field caption (e.g., "Sales Amount") for an Aspose.Cells PivotTable in C#
+// AI Prompts: Generate C# code that creates a PivotTable with Aspose.Cells and assigns a custom caption such as "Sales Amount" to the data field using the appropriate property. | Modify an existing Aspose.Cells PivotTable in C# to rename its data column header programmatically.
+// Common Searches: Aspose.Cells C# how to rename pivot table data field header | set DataFieldHeaderName property for pivot table using Aspose.Cells | change pivot table data caption programmatically in .NET | example of customizing pivot table column name with Aspose.Cells | C# Aspose.Cells pivot table custom data caption tutorial
+// Tags: Aspose.Cells pivot table data caption | C# rename pivot table data field | custom data header for Excel pivot via Aspose | programmatic pivot table column naming .NET | Aspose.Cells set pivot data column title
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace PivotTableDataCaptionExample
+namespace AsposeCellsPivotDemo
 {
-    // Learn how to create a workbook with sample sales data, add a PivotTable, and programmatically rename the data field header to "Sales Amount" using the DataFieldHeaderName property in Aspose.Cells for C#. The example refreshes and calculates the PivotTable before saving the file.
-    class Program
+    // The example creates a new workbook, fills it with sample product, region, and sales data, adds a PivotTable on range A1:C5, assigns Product as rows, Region as columns, and Sales as the data field, then sets the DataFieldHeaderName to "Sales Amount" to provide a clearer column heading, refreshes and calculates the pivot, and finally saves the file as PivotTableWithDataCaption.xlsx.
+    class SetDataCaption
     {
         static void Main()
         {

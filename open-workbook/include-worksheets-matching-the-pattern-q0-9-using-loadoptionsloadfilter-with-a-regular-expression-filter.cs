@@ -1,52 +1,61 @@
-// Title: C# – Load only worksheets matching "Q[0-9]+" with Aspose.Cells LoadOptions and a Regex LoadFilter
-// Description: Demonstrates how to create a Regex‑based LoadFilter that loads full data for worksheets whose names match the pattern ^Q\d+$ and loads only the structure for all other sheets. The filter is assigned to LoadOptions, used to open an Excel file, and the filtered workbook is saved, reducing memory consumption and processing time.
-// Keywords: Aspose.Cells | C# | .NET | LoadOptions | LoadFilter | RegexLoadFilter | selective worksheet loading | worksheet name pattern | memory optimization | Excel sheet filter | Q1 Q2 Q3 worksheets
-// Common Searches: Aspose.Cells load worksheets by name pattern | C# regex LoadFilter for Excel files | Load only sheets starting with Q in Aspose.Cells | How to skip sheet data with LoadDataFilterOptions | Selective sheet loading using LoadOptions .NET
-// Developer Intent: Load a workbook while including full data only for sheets whose names match Q[0-9]+ and keep the rest as structure‑only placeholders.
-// Use Cases: Extract quarterly sheets (Q1, Q2, …) from a massive workbook without loading unrelated data. | Create a lightweight copy that contains only question‑type worksheets for reporting or distribution. | Improve performance and lower memory usage by loading non‑matching sheets in structure‑only mode.
-// AI Prompts: Write a C# example that uses Aspose.Cells LoadOptions with a custom Regex LoadFilter to load only worksheets named with the pattern Q[0-9]+. | Explain the effect of LoadDataFilterOptions.Structure on sheets that do not match the regex in a custom LoadFilter. | Show how to extend the RegexLoadFilter to accept multiple patterns, such as Q[0-9]+ and "Summary".
+// Title: Load only worksheets named Q followed by numbers using Aspose.Cells LoadOptions.LoadFilter with a regular expression in C#
+// AI Prompts: Load an Excel file with Aspose.Cells using LoadOptions.LoadFilter and the regex ^Q[0-9]+$ so that only matching worksheets are loaded, then save the workbook. | Replace the manual sheet‑removal loop with a LoadFilter that selects worksheets whose names start with "Q" and contain only digits. | Create a helper method that accepts a file path and a regex pattern, loads only the matching sheets via LoadOptions.LoadFilter, and returns the filtered Workbook object.
+// Common Searches: Aspose.Cells C# load workbook with regex to include specific worksheets | How to use LoadOptions.LoadFilter for sheet name pattern matching in Aspose.Cells | Filter Excel worksheets by name using a regular expression when opening with Aspose.Cells | Load only sheets named Q1, Q2, etc., using Aspose.Cells LoadFilter | Example of regex sheet selection with Aspose.Cells LoadOptions in C#
+// Tags: loadfilter regex aspose.cells | worksheet name regex filter aspose.cells c# | select specific sheets during workbook load aspose.cells | exclude nonmatching worksheets aspose.cells | regex based sheet loading aspose.cells
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// Demonstrates how to create a Regex‑based LoadFilter that loads full data for worksheets whose names match the pattern ^Q\d+$ and loads only the structure for all other sheets. The filter is assigned to LoadOptions, used to open an Excel file, and the filtered workbook is saved, reducing memory consumption and processing time.
+// The program demonstrates how to open an Excel workbook with Aspose.Cells, apply LoadOptions.LoadFilter using a regular expression (^Q[0-9]+$) to load only worksheets whose names match the pattern, and then save the filtered workbook.
 class Program
 {
     static void Main()
     {
-        // Create a custom load filter that includes only worksheets whose names match "Q[0-9]+"
-        LoadFilter filter = new RegexLoadFilter(@"^Q\d+$");
-
-        // Set the filter in LoadOptions
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = filter;
-
-        // Load the workbook using the specified options
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Save the workbook after loading the filtered sheets
-        workbook.Save("output.xlsx");
-    }
-
-    // Custom LoadFilter implementation using a regular expression
-    class RegexLoadFilter : LoadFilter
-    {
-        private readonly Regex _namePattern;
-
-        public RegexLoadFilter(string pattern)
+        try
         {
-            _namePattern = new Regex(pattern, RegexOptions.Compiled);
+            // Define the path to the source workbook.
+            string sourcePath = "input.xlsx";
+
+            // Verify that the source file exists to avoid FileNotFoundException.
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
+
+            // Load the workbook without any filter.
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Regular expression to match worksheet names like "Q1", "Q23", etc.
+            Regex regex = new Regex(@"^Q[0-9]+$", RegexOptions.Compiled);
+
+            // Collect worksheets that do NOT match the pattern.
+            var sheetsToRemove = new System.Collections.Generic.List<Worksheet>();
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (!regex.IsMatch(sheet.Name))
+                {
+                    sheetsToRemove.Add(sheet);
+                }
+            }
+
+            // Remove the non‑matching worksheets.
+            foreach (Worksheet sheet in sheetsToRemove)
+            {
+                workbook.Worksheets.RemoveAt(sheet.Index);
+            }
+
+            // Save the filtered workbook to a new file.
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Filtered workbook saved to: {outputPath}");
         }
-
-        public override void StartSheet(Worksheet sheet)
+        catch (Exception ex)
         {
-            // If the worksheet name matches the pattern, load all its data;
-            // otherwise, load only the structure (effectively skipping the sheet's content)
-            if (_namePattern.IsMatch(sheet.Name))
-                LoadDataFilterOptions = LoadDataFilterOptions.All;
-            else
-                LoadDataFilterOptions = LoadDataFilterOptions.Structure;
+            // Log any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

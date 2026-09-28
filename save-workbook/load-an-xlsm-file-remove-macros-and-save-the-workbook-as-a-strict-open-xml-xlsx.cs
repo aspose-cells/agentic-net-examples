@@ -1,53 +1,54 @@
-// Title: C# – Remove Macros from XLSM and Save as Strict Open XML XLSX with Aspose.Cells
-// Description: Loads a macro‑enabled XLSM workbook using Aspose.Cells, calls Workbook.RemoveMacro() to strip all VBA code, and saves the clean file as a strict Open XML XLSX. Includes file‑existence checks and exception handling for robust .NET automation.
-// Keywords: Aspose.Cells | C# macro removal | Workbook.RemoveMacro | XLSM to XLSX conversion | strict Open XML | remove VBA | save as Xlsx | .NET Excel automation
-// Common Searches: How to delete VBA macros from XLSM using Aspose.Cells C# | Convert macro‑enabled Excel file to macro‑free XLSX .NET | Aspose.Cells remove macro and save strict Open XML | C# code to strip macros from workbook | Batch remove macros from XLSM files Aspose.Cells
-// Developer Intent: Strip all VBA macros from a macro‑enabled Excel workbook and output a strict Open XML XLSX file with Aspose.Cells for .NET.
-// Use Cases: Sanitize user‑uploaded spreadsheets by removing macros before processing or storage. | Batch‑convert legacy macro‑enabled reports to macro‑free XLSX for archiving or compliance. | Prepare workbooks for environments that only accept strict Open XML formats, ensuring no VBA code remains.
-// AI Prompts: Generate C# code that opens an XLSM file with Aspose.Cells, removes all macros, and saves it as a strict Open XML XLSX, including error handling for missing files. | Explain the behavior of Workbook.RemoveMacro in Aspose.Cells and list the file formats that can be saved after macro removal. | Provide a step‑by‑step guide to iterate over a folder of XLSM files, remove macros from each, and save the results as XLSX using Aspose.Cells for .NET.
+// Title: Remove VBA macros from an XLSM workbook and save it as a strict OpenXML XLSX using Aspose.Cells for .NET
+// AI Prompts: Load a macro‑enabled XLSM file with Aspose.Cells, call Workbook.RemoveMacro to strip all VBA code, and then save the workbook as a strict OpenXML XLSX. | Write C# that verifies the source XLSM exists, removes its macros, and uses SaveFormat.Xlsx to export a macro‑free file.
+// Common Searches: Aspose.Cells C# remove VBA macros from XLSM and save as strict XLSX | How to convert a macro‑enabled Excel file to a macro‑free strict OpenXML format using Aspose.Cells | C# code to load an XLSM, delete macros and export to XLSX with SaveFormat.Xlsx | Remove macros from an Excel workbook programmatically with Aspose.Cells .NET | Save workbook as strict OpenXML XLSX after stripping VBA in ASP.NET
+// Tags: remove VBA macros Aspose.Cells | convert XLSM to strict OpenXML XLSX | save workbook as strict XLSX C# | load macro‑enabled workbook Aspose.Cells | Workbook.RemoveMacro usage
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMacroRemoval
+namespace AsposeCellsExamples
 {
-    // Loads a macro‑enabled XLSM workbook using Aspose.Cells, calls Workbook.RemoveMacro() to strip all VBA code, and saves the clean file as a strict Open XML XLSX. Includes file‑existence checks and exception handling for robust .NET automation.
-    class Program
+    // The example demonstrates loading a macro‑enabled XLSM workbook, checking the source file, removing all VBA macros via Workbook.RemoveMacro, and saving the result as a strict OpenXML XLSX file using SaveFormat.Xlsx.
+    public class RemoveMacroAndSaveStrictXlsx
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            // Path to the source macro‑enabled workbook (XLSM)
-            string sourcePath = "source_with_macros.xlsm";
-
-            // Path for the macro‑free workbook (XLSX)
-            string destinationPath = "macro_free.xlsx";
-
             try
             {
-                // Verify that the source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourcePath}");
-                    return;
-                }
-
-                // Load the workbook from the XLSM file
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Remove all VBA/macros from the workbook
-                workbook.RemoveMacro();
-
-                // Save the cleaned workbook as a strict Open XML XLSX file
-                workbook.Save(destinationPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Macros removed and workbook saved to: {destinationPath}");
+                Run();
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        public static void Run()
+        {
+            // Path to the macro-enabled source file
+            string sourcePath = "input.xlsm";
+
+            // Verify source file exists
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
+
+            // Load the workbook (macro-enabled)
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Remove any VBA macros from the workbook
+            workbook.RemoveMacro();
+
+            // Save the workbook as a macro‑free strict Open XML XLSX file
+            string destPath = "output.xlsx";
+
+            // Save with Xlsx format (strict Open XML)
+            workbook.Save(destPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Macros removed and saved to {destPath}");
         }
     }
 }

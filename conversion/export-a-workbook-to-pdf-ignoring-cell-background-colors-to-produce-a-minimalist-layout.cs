@@ -1,42 +1,44 @@
-// Title: Export Excel to PDF without cell background colors using Aspose.Cells (C#)
-// Description: Demonstrates how to create a workbook, apply a fill color, enable BlackAndWhite printing, and save the result as a minimalist PDF with Aspose.Cells. The BlackAndWhite page‑setup flag strips all cell shading during PDF conversion.
-// Keywords: Aspose.Cells PDF export | C# remove cell fill | BlackAndWhite page setup | minimalist PDF from Excel | ignore background colors Aspose | Excel to PDF conversion settings | Aspose.Cells SaveFormat.Pdf
-// Common Searches: Aspose.Cells export PDF without background colors | C# convert Excel to black‑and‑white PDF | remove cell shading when saving PDF with Aspose | minimal layout PDF from Excel using Aspose.Cells | how to ignore fill colors in Aspose.Cells PDF output
-// Developer Intent: Generate a PDF from an Excel workbook while discarding all cell background colors to achieve a clean, black‑and‑white document.
-// Use Cases: Print‑ready reports that need only text and borders, no color distractions. | Corporate invoices or receipts required in a monochrome PDF format. | Archival documentation where a minimalist, color‑free layout is mandated.
-// AI Prompts: Provide C# code that uses Aspose.Cells to export an Excel sheet to PDF with the BlackAndWhite property so no cell fills appear. | Show an example of creating a minimalist PDF from a workbook, ignoring background colors, with Aspose.Cells SaveFormat.Pdf. | Explain alternative ways to produce a color‑free PDF in Aspose.Cells, such as configuring PdfSaveOptions.
+// Title: Export an Aspose.Cells workbook to a minimalist PDF by disabling cell background colors (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook as PDF while setting PageSetup.BlackAndWhite to true. | Show how to configure PdfSaveOptions to produce a PDF without the document structure and without cell fill colors. | Provide a complete example that creates a styled cell, enables black‑and‑white printing, and exports the sheet to a clean PDF file.
+// Common Searches: Aspose.Cells C# export Excel to PDF without cell fill colors | How to create a black and white PDF from a worksheet using Aspose.Cells | Minimalist PDF output from Aspose.Cells ignoring background colors | PdfSaveOptions settings to remove background shading in Aspose.Cells PDF conversion | PageSetup.BlackAndWhite effect on PDF export in Aspose.Cells .NET
+// Tags: Aspose.Cells PDF export omit cell fills | C# PageSetup.BlackAndWhite for PDF | PdfSaveOptions disable document structure | minimalist PDF layout Aspose.Cells | ignore worksheet background colors PDF
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, apply a fill color, enable BlackAndWhite printing, and save the result as a minimalist PDF with Aspose.Cells. The BlackAndWhite page‑setup flag strips all cell shading during PDF conversion.
+// Creates a workbook, adds sample data, applies a yellow fill to a cell, enables PageSetup.BlackAndWhite to suppress background colors, configures PdfSaveOptions (ExportDocumentStructure = false), and saves the result as MinimalistLayout.pdf, producing a clean black‑and‑white PDF.
 class ExportPdfMinimalist
 {
     static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
         // Populate some sample data
-        sheet.Cells["A1"].PutValue("Header");
-        sheet.Cells["A2"].PutValue("Item 1");
-        sheet.Cells["A3"].PutValue("Item 2");
+        worksheet.Cells["A1"].PutValue("Header");
+        worksheet.Cells["A2"].PutValue("Item 1");
+        worksheet.Cells["A3"].PutValue("Item 2");
 
-        // Apply a background color to demonstrate that it will be ignored
+        // Apply a background color to demonstrate that it will be ignored in the PDF
         Style bgStyle = workbook.CreateStyle();
         bgStyle.ForegroundColor = Color.Yellow;
         bgStyle.Pattern = BackgroundType.Solid;
-        sheet.Cells["A1"].SetStyle(bgStyle);
-        sheet.Cells["A2"].SetStyle(bgStyle);
-        sheet.Cells["A3"].SetStyle(bgStyle);
+        worksheet.Cells["A1"].SetStyle(bgStyle);
 
-        // Enable black‑and‑white printing; this removes cell background colors in the PDF
-        sheet.PageSetup.BlackAndWhite = true;
+        // Set the page to print in black and white.
+        // This causes background colors to be omitted, yielding a minimalist layout.
+        worksheet.PageSetup.BlackAndWhite = true;
 
-        // Save the workbook as a PDF file
-        workbook.Save("MinimalistLayout.pdf", SaveFormat.Pdf);
+        // Create PDF save options (optional customizations can be added here)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Example: do not export the document structure
+            ExportDocumentStructure = false
+        };
+
+        // Save the workbook as a PDF using the specified options
+        workbook.Save("MinimalistLayout.pdf", pdfOptions);
     }
 }

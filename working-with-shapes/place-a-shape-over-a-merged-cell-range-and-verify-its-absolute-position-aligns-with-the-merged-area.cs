@@ -1,18 +1,14 @@
-// Title: Place a Shape Over a Merged Cell Range and Verify Its Position – Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, merges cells B2:D4, adds a rectangle shape, moves it to cover the merged area with MoveToRange, retrieves the merged range via GetMergedRange, compares the shape's UpperLeft/LowerRight coordinates with the range bounds, prints the alignment result, and saves the file.
-// Keywords: Aspose.Cells shape over merged cells | MoveToRange C# | GetMergedRange verification | shape alignment Excel .NET | overlay shape merged range
-// Common Searches: Aspose.Cells align shape with merged cells | C# MoveToRange merged range example | verify shape covers merged area Aspose.Cells | GetMergedRange usage for shapes
-// Developer Intent: Position a shape so it exactly covers a merged cell block and programmatically confirm that the shape’s absolute coordinates match the merged range.
-// Use Cases: Add a banner rectangle over a merged header in an automated report. | Validate that icons or images placed on a template align with merged cells before publishing. | Ensure consistent layout when programmatically overlaying shapes on merged regions in Excel workbooks.
-// AI Prompts: Write C# code using Aspose.Cells to add a rectangle that covers merged cells B2:D4 and check its alignment. | Explain how MoveToRange and GetMergedRange work together to position shapes on merged ranges in Aspose.Cells for .NET. | Show best‑practice error handling when moving shapes onto merged cells with Aspose.Cells.
+// Title: Overlay a rectangle shape on a merged cell range and validate its absolute coordinates using Aspose.Cells for .NET
+// AI Prompts: Calculate the pixel left, top, width, and height of a merged range (e.g., B2:D4) and assign those values to a rectangle shape's Left, Top, Width, and Height properties with Aspose.Cells. | Compare the shape's absolute position properties to the computed merged‑range boundaries and output a boolean indicating whether the shape aligns perfectly.
+// Common Searches: Aspose.Cells .NET how to place a shape exactly over merged cells | C# get pixel dimensions of a merged cell range in Aspose.Cells | verify shape alignment with merged area using Aspose.Cells API | set rectangle shape size to match merged cells B2:D4 Aspose.Cells | calculate left and top offsets for shapes over merged cells in C#
+// Tags: overlay shape on merged cells Aspose.Cells | merged range pixel size calculation .NET | shape absolute positioning Aspose.Cells | rectangle shape size matching merged area | shape alignment check C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using AsposeRange = Aspose.Cells.Range;
 
-// This example creates a workbook, merges cells B2:D4, adds a rectangle shape, moves it to cover the merged area with MoveToRange, retrieves the merged range via GetMergedRange, compares the shape's UpperLeft/LowerRight coordinates with the range bounds, prints the alignment result, and saves the file.
-class ShapeOverMergedCellDemo
+// The example creates a workbook, merges cells B2:D4, adds a rectangle shape, computes the merged range's pixel boundaries, sets the shape's Left, Top, Width, and Height to exactly cover the merged area, verifies the alignment with a boolean check, and saves the file.
+class Program
 {
     static void Main()
     {
@@ -20,43 +16,51 @@ class ShapeOverMergedCellDemo
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the merged range (B2:D4) – zero‑based indices
-            int firstRow = 1;        // B2 row index
-            int firstColumn = 1;     // B2 column index
-            int totalRows = 3;       // rows 2,3,4
-            int totalColumns = 3;    // columns B,C,D
+            // Merge cells B2:D4 (zero‑based indices: rows 1‑3, columns 1‑3)
+            int startRow = 1;      // Row 2
+            int startColumn = 1;   // Column B
+            int totalRows = 3;     // 3 rows (2,3,4)
+            int totalColumns = 3;  // 3 columns (B,C,D)
+            sheet.Cells.Merge(startRow, startColumn, totalRows, totalColumns);
 
-            // Merge the cells
-            cells.Merge(firstRow, firstColumn, totalRows, totalColumns);
+            // Add a rectangle shape (initial size will be overridden)
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 0, 0, 0, 0, 100, 100);
 
-            // Add a rectangle shape (initial position does not matter)
-            Shape shape = worksheet.Shapes.AddRectangle(0, 0, 50, 50, 0, 0);
+            // Calculate pixel boundaries of the merged range
+            int left = 0;
+            for (int c = 0; c < startColumn; c++)
+                left += sheet.Cells.GetColumnWidthPixel(c);
 
-            // Move the shape so that it exactly covers the merged range
-            shape.MoveToRange(
-                firstRow,
-                firstColumn,
-                firstRow + totalRows - 1,
-                firstColumn + totalColumns - 1);
+            int top = 0;
+            for (int r = 0; r < startRow; r++)
+                top += sheet.Cells.GetRowHeightPixel(r);
 
-            // Retrieve the merged range via the top‑left cell
-            Cell topLeftCell = cells[firstRow, firstColumn];
-            AsposeRange mergedRange = topLeftCell.GetMergedRange();
+            int width = 0;
+            for (int c = startColumn; c < startColumn + totalColumns; c++)
+                width += sheet.Cells.GetColumnWidthPixel(c);
+
+            int height = 0;
+            for (int r = startRow; r < startRow + totalRows; r++)
+                height += sheet.Cells.GetRowHeightPixel(r);
+
+            // Position the shape to exactly cover the merged area
+            shape.Left = left;
+            shape.Top = top;
+            shape.Width = width;
+            shape.Height = height;
 
             // Verify that the shape's absolute position matches the merged area
-            bool aligns =
-                shape.UpperLeftRow == mergedRange.FirstRow &&
-                shape.UpperLeftColumn == mergedRange.FirstColumn &&
-                shape.LowerRightRow == mergedRange.FirstRow + mergedRange.RowCount - 1 &&
-                shape.LowerRightColumn == mergedRange.FirstColumn + mergedRange.ColumnCount - 1;
+            bool aligns = Math.Abs(shape.Left - left) < 0.1 &&
+                          Math.Abs(shape.Top - top) < 0.1 &&
+                          Math.Abs(shape.Width - width) < 0.1 &&
+                          Math.Abs(shape.Height - height) < 0.1;
 
             Console.WriteLine("Shape aligns with merged area: " + aligns);
 
-            // Save the workbook
-            workbook.Save("ShapeOverMergedCell.xlsx");
+            // Save the workbook (optional)
+            workbook.Save("MergedShape.xlsx");
         }
         catch (Exception ex)
         {

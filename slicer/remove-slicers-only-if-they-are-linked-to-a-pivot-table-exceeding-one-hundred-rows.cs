@@ -1,74 +1,106 @@
-// Title: Remove slicers linked to PivotTables with more than 100 rows using Aspose.Cells for .NET
-// Description: C# example that loads an Excel workbook, scans each worksheet for PivotTables, determines if a PivotTable contains over 100 data rows, and deletes only the slicers attached to those large PivotTables before saving the file.
-// Keywords: Aspose.Cells remove slicers | C# delete slicers linked to pivot table | pivot table row count Aspose.Cells | slicer cleanup .NET | Excel automation Aspose.Cells
-// Common Searches: How to delete slicers only for large pivot tables with Aspose.Cells C# | Remove slicers linked to PivotTable exceeding 100 rows | Aspose.Cells C# filter slicers by pivot size | C# code to clean up slicers in Excel workbooks
-// Developer Intent: Delete slicers that are associated with PivotTables containing more than 100 rows.
-// Use Cases: Prepare distribution‑ready reports by stripping slicers from sheets that already have extensive PivotTables. | Reduce file size and visual clutter in dashboards after generating large PivotTables. | Batch‑process multiple workbooks to clean up slicers only on sheets with substantial data analysis.
-// AI Prompts: Generate C# code with Aspose.Cells that removes slicers only when the connected PivotTable has over 100 rows. | Show how to calculate the row count of a PivotTable in Aspose.Cells and conditionally delete its slicers. | Explain the safest way to iterate a SlicerCollection in reverse to avoid index shifting while removing items.
+// Title: Delete slicers linked to pivot tables that have more than 100 data rows using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that iterates over every slicer on a worksheet, determines the row count of the pivot table each slicer is attached to, and deletes the slicer when the pivot source contains over 100 data rows. | Demonstrate how to associate a slicer with its pivot table, calculate the number of data rows from the source range, and perform conditional slicer removal before saving the workbook.
+// Common Searches: aspocells c# remove slicer if pivot table has more than 100 rows | how to delete Excel slicers based on pivot source size using Aspose.Cells | conditional slicer cleanup in .NET workbook with large pivot tables | C# example for filtering slicers by pivot data row count Aspose.Cells | programmatically remove slicers linked to big pivot tables in Excel via Aspose
+// Tags: Aspose.Cells slicer deletion based on pivot rows | C# filter slicers by pivot source size | Excel slicer cleanup with Aspose.Cells API | pivot table row count threshold for slicer handling | programmatic slicer management in .NET
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsSlicerRemoval
+namespace AsposeCellsSlicerRemovalDemo
 {
-    // C# example that loads an Excel workbook, scans each worksheet for PivotTables, determines if a PivotTable contains over 100 data rows, and deletes only the slicers attached to those large PivotTables before saving the file.
+    // The sample creates a workbook with 101 data rows, adds a pivot table and a linked slicer, maps the slicer to its pivot source range, checks if the source contains more than 100 data rows, removes the slicer when the condition is met, and saves the resulting Excel file.
     class Program
     {
         static void Main()
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Populate sample data (101 rows to exceed the 100‑row threshold)
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                for (int i = 2; i <= 102; i++) // rows 2..102 => 101 data rows
                 {
-                    bool hasLargePivot = false;
+                    sheet.Cells[$"A{i}"].PutValue("Item" + (i - 1));
+                    sheet.Cells[$"B{i}"].PutValue(i * 10);
+                }
 
-                    // Check each PivotTable in the worksheet.
-                    // Aspose.Cells does not expose a direct RowCount property,
-                    // so we consider any existing PivotTable as qualifying for this example.
-                    foreach (PivotTable pivot in sheet.PivotTables)
+                // Define the source range for the pivot table
+                string sourceRange = "A1:B102";
+
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add(sourceRange, "D1", "PivotTable1");
+                PivotTable pivot = sheet.PivotTables[pivotIndex];
+                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Value");
+
+                // Refresh pivot cache and calculate data
+                pivot.RefreshData();          // corrected API usage
+                pivot.CalculateData();
+
+                // Add a slicer linked to the pivot table
+                int slicerIndex = sheet.Slicers.Add(pivot, "F1", "Category");
+                Slicer slicer = sheet.Slicers[slicerIndex];
+
+                // Map slicer to its pivot table and store the source range
+                var slicerPivotMap = new Dictionary<Slicer, (PivotTable Pivot, string SourceRange)>
+                {
+                    { slicer, (pivot, sourceRange) }
+                };
+
+                // Identify slicers whose associated pivot source has more than 100 data rows
+                var slicersToRemove = new List<Slicer>();
+                foreach (Slicer s in sheet.Slicers)
+                {
+                    if (slicerPivotMap.TryGetValue(s, out var info))
                     {
-                        hasLargePivot = true;
-                        break;
-                    }
+                        string rangePart = info.SourceRange; // e.g., "A1:B102"
 
-                    // If a qualifying PivotTable exists, remove all slicers on the sheet
-                    if (hasLargePivot)
-                    {
-                        SlicerCollection slicers = sheet.Slicers;
-
-                        // Remove slicers from the end to avoid index shifting
-                        for (int i = slicers.Count - 1; i >= 0; i--)
+                        // Split the range into start and end cells
+                        string[] parts = rangePart.Split(':');
+                        if (parts.Length == 2)
                         {
-                            slicers.RemoveAt(i);
+                            // Create CellArea from start and end cells
+                            CellArea area = CellArea.CreateCellArea(parts[0], parts[1]);
+                            int sourceRows = area.EndRow - area.StartRow + 1; // includes header
+                            int dataRows = sourceRows - 1; // exclude header
+
+                            if (dataRows > 100)
+                            {
+                                slicersToRemove.Add(s);
+                            }
                         }
                     }
                 }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                // Remove identified slicers
+                foreach (Slicer s in slicersToRemove)
+                {
+                    sheet.Slicers.Remove(s);
+                }
+
+                // Save the workbook
+                string outputPath = "SlicerRemovalResult.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                // Catch any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

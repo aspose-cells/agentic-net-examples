@@ -1,67 +1,93 @@
-// Title: C# – Lock Specific Columns in an Aspose.Cells Table While Allowing Others to Edit
-// Description: Creates a workbook, adds a ListObject (Excel table) over A1:C3, unlocks every column, then locks the chosen columns (e.g., ID and Score) by setting the IsLocked style flag, protects the worksheet, and saves the file as LockedColumnsDemo.xlsx.
-// Keywords: Aspose.Cells column lock C# | protect worksheet specific columns | unlock all columns Aspose.Cells | Excel table column protection | ListObject column lock
-// Common Searches: lock only certain columns Aspose.Cells C# | protect worksheet but keep some columns editable Aspose.Cells | how to lock columns in an Excel table using Aspose.Cells
-// Developer Intent: Prevent edits to selected columns in a worksheet/table while keeping the remaining columns editable.
-// Use Cases: Restrict changes to ID and Score columns in a data‑entry form, allowing only the Name column to be edited. | Create a read‑only report where calculation columns are locked and input columns stay editable. | Secure financial model formulas while permitting users to modify input cells.
-// AI Prompts: Generate C# code with Aspose.Cells that locks columns B and D in an existing worksheet and leaves other columns unlocked. | Show how to apply column‑level protection to a ListObject and then protect the worksheet using Aspose.Cells. | Explain how to toggle column lock states at runtime based on user selections with Aspose.Cells.
+// Title: How to lock only selected columns in an Excel worksheet using Aspose.Cells for .NET while keeping other cells editable
+// AI Prompts: Write C# code with Aspose.Cells that unlocks the entire sheet, locks columns A and C, and then protects the worksheet with a password. | Show how to create a style with IsLocked = true, apply it to specific column ranges, and protect the worksheet using the Aspose.Cells API. | Generate a complete Aspose.Cells example that creates a workbook, fills sample data, locks chosen columns, and saves the file as an .xlsx.
+// Common Searches: Aspose.Cells C# lock only column A and C while allowing other columns to be edited | protect worksheet with Aspose.Cells but keep some cells unlocked .NET | how to apply locked style to specific columns using Aspose.Cells in C# | C# Aspose.Cells unlock all cells then lock selected columns before saving
+// Tags: Aspose.Cells lock specific columns | worksheet protection with unlocked cells Aspose.Cells | apply locked style to column range C# | selective column locking in Excel using Aspose.Cells | C# Aspose.Cells protect sheet while allowing edits
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using System;
+using System.IO;
+using AsposeRange = Aspose.Cells.Range;
 
-// Creates a workbook, adds a ListObject (Excel table) over A1:C3, unlocks every column, then locks the chosen columns (e.g., ID and Score) by setting the IsLocked style flag, protects the worksheet, and saves the file as LockedColumnsDemo.xlsx.
-class LockSpecificColumns
+// The example creates a new workbook, unlocks every cell, applies a locked style to columns A and C, protects the worksheet with a password, and saves the result as LockedColumns.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook wb = new Workbook();
-        Worksheet sheet = wb.Worksheets[0];
-
-        // Fill some sample data that will become a table
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Name");
-        sheet.Cells["C1"].PutValue("Score");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue("Alice");
-        sheet.Cells["C2"].PutValue(85);
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue("Bob");
-        sheet.Cells["C3"].PutValue(92);
-
-        // Add a ListObject (Excel table) covering the data range
-        int tableIdx = sheet.ListObjects.Add("A1", "C3", true);
-        ListObject table = sheet.ListObjects[tableIdx];
-        table.DisplayName = "DataTable";
-
-        // First unlock all columns so they are editable after protection
-        Style style;
-        StyleFlag flag;
-        for (int i = 0; i <= sheet.Cells.MaxColumn; i++)
+        try
         {
-            style = sheet.Cells.Columns[i].GetStyle();
-            style.IsLocked = false;          // make column unlocked
-            flag = new StyleFlag();
-            flag.Locked = true;               // apply the Locked flag
-            sheet.Cells.Columns[i].ApplyStyle(style, flag);
-        }
+            // Create a new workbook with a default worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define which columns should stay locked (e.g., column 0 and column 2)
-        int[] lockedColumns = new int[] { 0, 2 };
-        foreach (int col in lockedColumns)
+            // Sample data
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Salary");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("John");
+            sheet.Cells["C2"].PutValue(5000);
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Alice");
+            sheet.Cells["C3"].PutValue(6200);
+
+            // ------------------------------------------------------------
+            // Step 1: Unlock all cells in the worksheet
+            // ------------------------------------------------------------
+            Style unlockedStyle = workbook.CreateStyle();
+            unlockedStyle.IsLocked = false; // make cells editable
+            StyleFlag unlockedFlag = new StyleFlag();
+            unlockedFlag.Locked = true; // apply the Locked property
+
+            // Determine used range (fallback values if sheet is empty)
+            int maxRow = sheet.Cells.MaxDataRow >= 0 ? sheet.Cells.MaxDataRow : 1000;
+            int maxCol = sheet.Cells.MaxDataColumn >= 0 ? sheet.Cells.MaxDataColumn : 100;
+
+            // Apply the unlocked style to the whole used range
+            int totalRows = maxRow + 1; // rows are zero‑based
+            int totalCols = maxCol + 1; // columns are zero‑based
+            AsposeRange wholeRange = sheet.Cells.CreateRange(0, 0, totalRows, totalCols);
+            wholeRange.ApplyStyle(unlockedStyle, unlockedFlag);
+
+            // ------------------------------------------------------------
+            // Step 2: Lock specific columns (e.g., Column A and Column C)
+            // ------------------------------------------------------------
+            int[] columnsToLock = new int[] { 0, 2 }; // 0 = A, 2 = C
+
+            Style lockedStyle = workbook.CreateStyle();
+            lockedStyle.IsLocked = true; // lock cells
+            StyleFlag lockedFlag = new StyleFlag();
+            lockedFlag.Locked = true; // apply the Locked property
+
+            foreach (int colIndex in columnsToLock)
+            {
+                // Apply the locked style to the entire column within the used range
+                AsposeRange colRange = sheet.Cells.CreateRange(0, colIndex, totalRows, 1);
+                colRange.ApplyStyle(lockedStyle, lockedFlag);
+            }
+
+            // ------------------------------------------------------------
+            // Step 3: Protect the worksheet so that locked cells cannot be edited
+            // ------------------------------------------------------------
+            sheet.Protect(ProtectionType.All, "StrongPassword123", string.Empty);
+
+            // ------------------------------------------------------------
+            // Step 4: Save the workbook
+            // ------------------------------------------------------------
+            string outputPath = "LockedColumns.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
         {
-            style = sheet.Cells.Columns[col].GetStyle();
-            style.IsLocked = true;           // lock this column
-            flag = new StyleFlag();
-            flag.Locked = true;               // apply the Locked flag
-            sheet.Cells.Columns[col].ApplyStyle(style, flag);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Protect the worksheet; locking takes effect only when protected
-        sheet.Protect(ProtectionType.All);
-
-        // Save the workbook
-        wb.Save("LockedColumnsDemo.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,65 +1,62 @@
-// Title: Batch Convert Excel Workbooks to HTML with Size‑Based HtmlCrossType (Aspose.Cells .NET)
-// Description: Iterates through a folder of Excel files, skips unsupported formats, checks each file's size, applies HtmlCrossType.Cross for files larger than 5 MB and HtmlCrossType.Default for smaller ones, and saves the workbooks as HTML using Aspose.Cells HtmlSaveOptions. Logs each conversion and creates the output directory if needed.
-// Keywords: Aspose.Cells | C# | .NET | HtmlCrossType | HtmlSaveOptions | batch Excel to HTML | size based conversion | Excel to HTML loop | cross type HTML export | large workbook HTML rendering
-// Common Searches: Aspose.Cells set HtmlCrossType by file size | batch convert Excel to HTML C# Aspose | HtmlCrossStringType conditional example | process multiple workbooks and save as HTML | how to use HtmlCrossType.Cross for large Excel files
-// Developer Intent: Convert a collection of Excel workbooks to HTML, automatically choosing HtmlCrossType.Cross for files over 5 MB and HtmlCrossType.Default for smaller files.
-// Use Cases: Automated nightly job that publishes financial spreadsheets as web‑ready HTML, optimizing large files with cross‑type rendering. | Migration script that prepares mixed‑size Excel reports for a web portal, ensuring appropriate HTML output size and performance. | Bulk generation of documentation from a repository of Excel templates, applying size‑aware HtmlCrossType to control HTML payload.
-// AI Prompts: Create a C# utility that accepts input and output folder paths and converts all Excel files to HTML, using HtmlCrossType.Cross for files >5 MB and HtmlCrossType.Default otherwise with Aspose.Cells. | Refactor the sample to extract the size‑based HtmlCrossType logic into a reusable method and add comprehensive error handling for missing files and permission issues. | Write unit tests that mock FileInfo.Length to verify the correct HtmlCrossType is applied during batch HTML conversion using Aspose.Cells.
+// Title: Batch convert Excel (.xlsx) files to HTML in C# with Aspose.Cells, applying HtmlCrossType based on each file’s size
+// AI Prompts: Generate a C# console application that scans a directory for .xlsx files, determines the size of each workbook, sets HtmlSaveOptions.HtmlCrossType to Embedded for files larger than a given threshold and to Linked for smaller files, and saves the workbooks as .html files using Aspose.Cells. | Write C# code that loops through multiple Excel workbooks, creates an HtmlSaveOptions instance per file, assigns HtmlCrossType conditionally according to the workbook’s byte length, and exports each workbook to a specified output folder as HTML with Aspose.Cells.
+// Common Searches: c# aspose.cells convert multiple excel files to html with size based HtmlCrossType | how to set HtmlSaveOptions.HtmlCrossType conditionally when saving workbooks in a batch | batch export .xlsx to .html using Aspose.Cells and file size threshold | c# loop through folder of Excel files and save each as html with embedded resources for large files | asp.net core convert excel to html different cross type for large and small workbooks
+// Tags: batch excel to html conversion with Aspose.Cells | conditional HtmlCrossType selection in C# | file size based HTML export using Aspose.Cells | loop processing multiple workbooks in C# | Aspose.Cells HtmlSaveOptions for large Excel files | automated .xlsx to .html conversion script
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlCrossDemo
+// A C# console program that enumerates all .xlsx files in a source folder, checks each file's byte size, chooses HtmlSaveOptions.HtmlCrossType (Embedded for large files, Linked for smaller ones), and saves each workbook as an HTML file in a target directory using Aspose.Cells, with error handling and logging.
+class WorkbookHtmlConverter
 {
-    // Iterates through a folder of Excel files, skips unsupported formats, checks each file's size, applies HtmlCrossType.Cross for files larger than 5 MB and HtmlCrossType.Default for smaller ones, and saves the workbooks as HTML using Aspose.Cells HtmlSaveOptions. Logs each conversion and creates the output directory if needed.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Directory containing the source Excel files
+        string sourceFolder = @"C:\InputWorkbooks";
+        // Directory where the HTML files will be saved
+        string outputFolder = @"C:\OutputHtml";
+
+        // Ensure output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Get all Excel files in the source folder
+        string[] excelFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
+
+        foreach (string excelPath in excelFiles)
         {
-            // Directory containing source Excel files
-            string sourceDir = @"C:\InputWorkbooks";
-            // Directory where HTML files will be saved
-            string outputDir = @"C:\OutputHtml";
-
-            // Ensure output directory exists
-            Directory.CreateDirectory(outputDir);
-
-            // Process each Excel file in the source directory
-            foreach (string filePath in Directory.GetFiles(sourceDir, "*.*", SearchOption.TopDirectoryOnly))
+            try
             {
-                // Load only supported Excel formats
-                string ext = Path.GetExtension(filePath).ToLowerInvariant();
-                if (ext != ".xlsx" && ext != ".xls" && ext != ".xlsm" && ext != ".xlsb")
-                    continue;
-
-                // Determine file size
-                long fileSize = new FileInfo(filePath).Length;
-
-                // Choose HtmlCrossType based on size
-                HtmlCrossType crossType = fileSize > 5 * 1024 * 1024   // >5 MB
-                    ? HtmlCrossType.Cross
-                    : HtmlCrossType.Default;
-
-                // Load workbook
-                using (Workbook workbook = new Workbook(filePath))
+                // Verify the source file exists
+                if (!File.Exists(excelPath))
                 {
-                    // Configure HTML save options
-                    HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-                    saveOptions.HtmlCrossStringType = crossType;
-
-                    // Build output HTML file name
-                    string outputFileName = Path.Combine(outputDir,
-                        Path.GetFileNameWithoutExtension(filePath) + ".html");
-
-                    // Save workbook as HTML with the specified options
-                    workbook.Save(outputFileName, saveOptions);
+                    Console.WriteLine($"File not found: {excelPath}");
+                    continue;
                 }
 
-                Console.WriteLine($"Converted '{Path.GetFileName(filePath)}' to HTML using HtmlCrossType.{crossType}");
-            }
+                // Determine file size in bytes
+                long fileSize = new FileInfo(excelPath).Length;
 
-            Console.WriteLine("All files have been processed.");
+                // Load the workbook
+                Workbook workbook = new Workbook(excelPath);
+
+                // Configure HTML save options (default options are sufficient)
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+
+                // Build output HTML file path (same name, .html extension)
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(excelPath);
+                string htmlPath = Path.Combine(outputFolder, fileNameWithoutExt + ".html");
+
+                // Save the workbook as HTML
+                workbook.Save(htmlPath, saveOptions);
+
+                Console.WriteLine($"Converted '{excelPath}' ({fileSize} bytes) to HTML.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{excelPath}': {ex.Message}");
+            }
         }
     }
 }

@@ -1,81 +1,57 @@
-// Title: C# Aspose.Cells: Convert formulas in column H to MathML and write to column I
-// Description: A .NET console app that opens an Excel workbook, scans column H for formula cells, safely escapes each formula, wraps it in <math> tags to produce simple MathML, stores the markup in the adjacent column I, and saves the updated file. Ideal for automating spreadsheet‑to‑web content pipelines.
-// Keywords: Aspose.Cells | C# | .NET | MathML generation | Excel formula conversion | column H to column I | XML escape | spreadsheet automation | batch processing | global
-// Common Searches: convert Excel formulas to MathML C# Aspose.Cells | write MathML to adjacent cell in Excel using .NET | Aspose.Cells generate MathML from column H | C# code to export formulas as MathML | how to add MathML markup to Excel workbook
-// Developer Intent: Create MathML for every formula in column H and place the markup in column I of the same worksheet.
-// Use Cases: Embed MathML alongside scientific formulas for web publishing. | Prepare spreadsheets for HTML or PDF export with native MathML support. | Run a nightly job that enriches multiple workbooks with MathML for downstream processing.
-// AI Prompts: Generate C# Aspose.Cells code that reads formulas from column H, escapes them, wraps them in <math> tags, and writes the result to column I with robust error handling. | Suggest improvements to include <mrow> and other MathML elements while preserving the existing loop logic. | Refactor the sample to log rows lacking formulas and skip empty cells efficiently.
+// Title: Convert Excel formulas in column H to MathML and write results to column I using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, iterates through column H, converts each formula to MathML via a helper method, and stores the markup in column I of the same row. | Improve the ConvertFormulaToMathML function to generate proper MathML elements for arithmetic operators and common Excel functions instead of a simple wrapper. | Add robust error handling and logging to skip empty cells, report rows without formulas, and allow the output file path to be specified at runtime.
+// Common Searches: how to export Excel formula as MathML using Aspose.Cells C# | Aspose.Cells iterate column H and write MathML to column I | C# generate MathML from spreadsheet formulas with Aspose.Cells library | convert Excel cell formula to MathML and save in adjacent cell .NET
+// Tags: Aspose.Cells convert formula to MathML | C# write MathML to adjacent Excel column | iterate worksheet cells with Aspose.Cells | save workbook with MathML markup .NET | custom MathML conversion function C#
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace MathMLGenerator
+// The program loads an Excel workbook, scans column H for cells containing formulas, converts each formula to a basic MathML string, writes the MathML into column I of the same row, and saves the updated workbook.
+class Program
 {
-    // A .NET console app that opens an Excel workbook, scans column H for formula cells, safely escapes each formula, wraps it in <math> tags to produce simple MathML, stores the markup in the adjacent column I, and saves the updated file. Ideal for automating spreadsheet‑to‑web content pipelines.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Determine the last used row in the sheet
+        int maxRow = cells.MaxDataRow;
+
+        // Iterate through each row in column H (index 7)
+        for (int row = 0; row <= maxRow; row++)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            Cell formulaCell = cells[row, 7]; // Column H
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Process only cells that contain a formula
+            if (formulaCell.IsFormula)
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
-                return;
-            }
+                string formula = formulaCell.Formula;
 
-            try
-            {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Convert the formula to MathML (simple placeholder conversion)
+                string mathml = ConvertFormulaToMathML(formula);
 
-                // Determine the last used row in the worksheet
-                int lastRow = worksheet.Cells.MaxDataRow;
-
-                // Iterate through each cell in column H (zero‑based index 7)
-                for (int row = 0; row <= lastRow; row++)
-                {
-                    Cell formulaCell = worksheet.Cells[row, 7]; // Column H
-
-                    // Process only cells that contain a formula
-                    if (!string.IsNullOrEmpty(formulaCell.Formula))
-                    {
-                        try
-                        {
-                            // Simple MathML generation: wrap the formula in <math> tags.
-                            // Escape special XML characters to ensure well‑formed output.
-                            string escapedFormula = System.Security.SecurityElement.Escape(formulaCell.Formula);
-                            string mathML = $"<math>{escapedFormula}</math>";
-
-                            // Store the MathML markup in the adjacent cell (column I, index 8)
-                            worksheet.Cells[row, 8].PutValue(mathML);
-                        }
-                        catch (Exception exCell)
-                        {
-                            Console.WriteLine($"Error processing formula at row {row + 1}: {exCell.Message}");
-                        }
-                    }
-                }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Processing completed. Output saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Store the MathML markup in the adjacent cell in column I (index 8)
+                cells[row, 8].PutValue(mathml);
             }
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
+    }
+
+    // Simple placeholder conversion: wraps the formula text in basic MathML tags.
+    static string ConvertFormulaToMathML(string formula)
+    {
+        // Remove leading '=' if present
+        if (formula.StartsWith("="))
+            formula = formula.Substring(1);
+
+        // Escape XML special characters
+        string escaped = System.Security.SecurityElement.Escape(formula);
+
+        // Basic MathML structure
+        return $"<math><mrow>{escaped}</mrow></math>";
     }
 }

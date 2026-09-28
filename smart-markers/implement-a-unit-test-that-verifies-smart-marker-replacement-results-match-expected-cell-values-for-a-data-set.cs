@@ -1,29 +1,68 @@
-// Title: C# Unit Test for Aspose.Cells Smart Marker Replacement – Verify Cell Values
-// Description: Demonstrates how to create a C# unit test that builds a workbook with smart markers, binds a DataTable, processes the markers using WorkbookDesigner, asserts that cells A1‑B2 contain the expected employee names and ages, checks that the marker syntax is removed, and optionally saves the file to a temporary location.
-// Keywords: Aspose.Cells | smart markers | C# unit test | WorkbookDesigner | verify cell values | .NET testing | data binding | Excel automation
-// Common Searches: Aspose.Cells unit test smart markers C# | how to assert smart marker results in .NET | verify workbookdesigner output cells | check smart marker removal after processing | C# test for Excel smart marker replacement
-// Developer Intent: Create an automated test that confirms smart marker processing populates the worksheet with the correct data and eliminates the marker placeholders.
-// Use Cases: Validate that a DataTable bound to the "Employees" smart marker fills A1:B2 with the correct names and ages. | Ensure no residual "&=" syntax remains after WorkbookDesigner processes the workbook. | Confirm the generated workbook can be saved and opened without errors in a CI pipeline.
-// AI Prompts: Generate an MSTest method that uses Aspose.Cells WorkbookDesigner to process smart markers and asserts the resulting cell values and marker removal. | Provide a NUnit test example that binds a DataTable to smart markers, runs the designer, and validates the output cells and absence of "&=" syntax. | Create an xUnit test that processes smart markers in a workbook, checks cells A1‑B2 against expected data, and confirms the workbook can be saved to a temporary file.
+// Title: Create a C# unit test with Aspose.Cells to validate smart marker replacement from a DataTable
+// AI Prompts: Write an MSTest method that builds a workbook, inserts smart markers, binds a DataTable as a data source, processes the markers with WorkbookDesigner, and asserts the expected values in each generated cell. | Generate a NUnit test case that creates a workbook, adds smart markers, sets the DataTable source, runs Process(), and uses Assert.AreEqual to verify cell contents for all rows. | Provide an xUnit test that performs the same smart‑marker workflow, validates each cell value, and optionally saves the workbook to a MemoryStream for further inspection.
+// Common Searches: how to write a unit test for Aspose.Cells smart markers in C# | Aspose.Cells WorkbookDesigner unit test example with DataTable | C# test verifying smart marker values after processing | unit testing Excel smart markers using MSTest NUnit or xUnit | assert cell values in Aspose.Cells after smart marker replacement
+// Tags: Aspose.Cells smart marker unit test | C# WorkbookDesigner data source validation | verify smart marker replacement in Excel | assert cell values after smart marker processing | DataTable to smart marker conversion test
 
 using System;
 using System.Data;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
-namespace AsposeCellsSmartMarkerTests
+namespace AsposeCellsSmartMarkerDemo
 {
-    // Implements a simple execution that verifies smart marker replacement results.
-    // Demonstrates how to create a C# unit test that builds a workbook with smart markers, binds a DataTable, processes the markers using WorkbookDesigner, asserts that cells A1‑B2 contain the expected employee names and ages, checks that the marker syntax is removed, and optionally saves the file to a temporary location.
-    public class SmartMarkerReplacementDemo
+    // Demonstrates how to write a C# unit test that creates a workbook, places smart markers, binds a DataTable as the data source, processes the markers with WorkbookDesigner, and asserts that each resulting cell contains the expected value, optionally saving the workbook to a memory stream.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                RunDemo();
-                Console.WriteLine("Smart marker replacement demo completed successfully.");
+                // ---------- Create a workbook with smart markers ----------
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Insert smart markers in the first row.
+                // "&=Data.Name" and "&=Data.Age" will be replaced by the data source values.
+                cells["A1"].PutValue("&=Data.Name");
+                cells["B1"].PutValue("&=Data.Age");
+
+                // ---------- Prepare the data source ----------
+                DataTable dt = new DataTable("Data");
+                dt.Columns.Add("Name", typeof(string));
+                dt.Columns.Add("Age", typeof(int));
+
+                dt.Rows.Add("Alice", 30);
+                dt.Rows.Add("Bob", 25);
+                dt.Rows.Add("Charlie", 35);
+
+                // ---------- Process smart markers ----------
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                designer.SetDataSource("Data", dt);
+                designer.Process();
+
+                // ---------- Verify the results ----------
+                ValidateCell(cells["A1"], "Alice");
+                ValidateCell(cells["B1"], 30);
+                ValidateCell(cells["A2"], "Bob");
+                ValidateCell(cells["B2"], 25);
+                ValidateCell(cells["A3"], "Charlie");
+                ValidateCell(cells["B3"], 35);
+
+                // ---------- Optional: Save the workbook to a memory stream ----------
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.Save(ms, SaveFormat.Xlsx);
+                    // The stream now contains the generated Excel file.
+                    // No further action needed for this demo.
+                }
+
+                Console.WriteLine("Smart marker replacement test passed successfully.");
             }
             catch (Exception ex)
             {
@@ -31,56 +70,15 @@ namespace AsposeCellsSmartMarkerTests
             }
         }
 
-        private static void RunDemo()
+        // Simple validation helper that throws if the cell value does not match the expected value.
+        private static void ValidateCell(Cell cell, object expected)
         {
-            // ---------- Create a workbook with smart markers ----------
-            Workbook workbook = new Workbook();                         // create workbook
-            Worksheet sheet = workbook.Worksheets[0];                  // get first worksheet
-
-            // Place smart markers in cells. The syntax "&=Table.Column" tells Aspose.Cells to replace with data.
-            sheet.Cells["A1"].PutValue("&=Employees.Name");
-            sheet.Cells["B1"].PutValue("&=Employees.Age");
-
-            // ---------- Prepare data source ----------
-            DataTable dt = new DataTable("Employees");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Age", typeof(int));
-            dt.Rows.Add("John Doe", 30);
-            dt.Rows.Add("Jane Smith", 28);
-
-            // ---------- Set up WorkbookDesigner ----------
-            WorkbookDesigner designer = new WorkbookDesigner
+            object actual = cell.Value;
+            if (!object.Equals(actual, expected))
             {
-                Workbook = workbook
-            };
-            // Bind the DataTable to the smart marker name "Employees"
-            designer.SetDataSource("Employees", dt);
-            // Process the smart markers (populate the worksheet)
-            designer.Process();
-
-            // ---------- Verify replacement results ----------
-            // After processing, the first row (A1,B1) should contain the first data row,
-            // and the second row (A2,B2) should contain the second data row.
-            if (sheet.Cells["A1"].StringValue != "John Doe" ||
-                sheet.Cells["B1"].IntValue != 30 ||
-                sheet.Cells["A2"].StringValue != "Jane Smith" ||
-                sheet.Cells["B2"].IntValue != 28)
-            {
-                throw new InvalidOperationException("Smart marker replacement did not produce expected results.");
+                throw new InvalidOperationException(
+                    $"Validation failed for cell {cell.Name}. Expected: {expected}, Actual: {actual}");
             }
-
-            // ---------- Optional: Ensure no leftover smart markers ----------
-            if (sheet.Cells["A1"].StringValue.Contains("&=") ||
-                sheet.Cells["B1"].StringValue.Contains("&="))
-            {
-                throw new InvalidOperationException("Smart markers were not fully removed after processing.");
-            }
-
-            // ---------- Save workbook (demonstrates usage of save rule) ----------
-            // The file is saved to a temporary location; in real unit tests this may be omitted.
-            string tempPath = Path.GetTempFileName().Replace(".tmp", ".xlsx");
-            workbook.Save(tempPath);
-            Console.WriteLine($"Workbook saved to: {tempPath}");
         }
     }
 }

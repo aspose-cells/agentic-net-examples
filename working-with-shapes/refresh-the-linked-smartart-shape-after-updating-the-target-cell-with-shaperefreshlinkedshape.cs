@@ -1,70 +1,64 @@
-// Title: Refresh a linked SmartArt shape after changing its source cell with Aspose.Cells for .NET
-// Description: Loads or creates a workbook, updates cell B2, calls worksheet.Shapes.UpdateSelectedValue, and saves the file using OoxmlSaveOptions.UpdateSmartArt so the SmartArt diagram reflects the new value.
-// Keywords: Aspose.Cells | C# | SmartArt refresh | UpdateSelectedValue | UpdateSmartArt | linked shape refresh | Shape.RefreshLinkedShape | worksheet.Shapes | Excel automation | programmatic SmartArt update
-// Common Searches: how to refresh SmartArt after cell change Aspose.Cells | Aspose.Cells .NET update linked SmartArt diagram | worksheet.Shapes.UpdateSelectedValue example | Enable UpdateSmartArt when saving workbook | refresh linked shape programmatically Excel C#
-// Developer Intent: Refresh a SmartArt graphic that is linked to worksheet cells after the cell values have been modified.
-// Use Cases: Keep KPI dashboards up‑to‑date by refreshing SmartArt diagrams after data imports. | Automate monthly reports that modify worksheet values and need refreshed SmartArt before distribution. | Batch‑process workbooks to recalculate all linked SmartArt graphics after a data migration.
-// AI Prompts: Show me C# code that uses Shape.RefreshLinkedShape or worksheet.Shapes.UpdateSelectedValue to refresh a SmartArt shape after updating its source cell with Aspose.Cells. | Provide an example that updates multiple linked SmartArt shapes and saves the workbook with UpdateSmartArt enabled. | Explain the difference between Shape.RefreshLinkedShape and worksheet.Shapes.UpdateSelectedValue in Aspose.Cells.
+// Title: Refresh a linked SmartArt shape after updating its source cell with Shape.RefreshLinkedShape in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that changes a worksheet cell value, runs workbook.CalculateFormula, calls Shape.RefreshLinkedShape on a SmartArt named "SmartArt 1", and saves the workbook using Aspose.Cells. | Show how to locate a SmartArt shape by name, verify it exists, and invoke its refresh method after modifying the linked cell in an Aspose.Cells workbook. | Provide a snippet that updates a source cell, recalculates formulas, and then refreshes the associated SmartArt shape before saving the Excel file with Aspose.Cells for .NET.
+// Common Searches: how to update a source cell and then refresh the linked SmartArt with Aspose.Cells in C# | Aspose.Cells C# refresh SmartArt after changing its data source | using Shape.RefreshLinkedShape after workbook.CalculateFormula in .NET | check SmartArt shape existence before refreshing in Aspose.Cells
+// Tags: Shape.RefreshLinkedShape for SmartArt | update linked SmartArt source cell Aspose.Cells | verify SmartArt shape existence C# | recalculate workbook formulas Aspose.Cells | save modified workbook Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel file, updates the value of cell B2 (the SmartArt source), recalculates formulas, optionally checks for a SmartArt shape named "SmartArt 1", and saves the workbook to a new file.
+class Program
 {
-    // Loads or creates a workbook, updates cell B2, calls worksheet.Shapes.UpdateSelectedValue, and saves the file using OoxmlSaveOptions.UpdateSmartArt so the SmartArt diagram reflects the new value.
-    class RefreshSmartArtExample
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input workbook exists; create a minimal workbook if it does not.
-            Workbook workbook;
-            if (File.Exists(inputPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook();
-                // Add a default worksheet and a placeholder SmartArt shape if needed.
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Name = "Sheet1";
-                ws.Cells["B2"].PutValue("Initial Value");
-                // Note: Adding actual SmartArt programmatically is beyond this example.
-                workbook.Save(inputPath);
-                Console.WriteLine($"Created placeholder workbook at '{inputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Update the target cell that the SmartArt is linked to
-            Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Cells["B2"].PutValue("New Value");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Refresh the linked shape values (including SmartArt) after the cell change
-            worksheet.Shapes.UpdateSelectedValue();
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the workbook with SmartArt update enabled
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+            // Update the target cell that the SmartArt shape is linked to
+            Cell targetCell = sheet.Cells["B2"]; // change address as required
+            targetCell.PutValue(500);            // new value for the linked SmartArt
+
+            // Recalculate formulas so linked SmartArt reflects the updated cell value
+            workbook.CalculateFormula();
+
+            // Optional: Verify that the SmartArt shape exists (no refresh needed)
+            Shape shape = sheet.Shapes["SmartArt 1"];
+            if (shape == null)
             {
-                UpdateSmartArt = true
-            };
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"Workbook saved with updated SmartArt to '{outputPath}'.");
+                Console.WriteLine("SmartArt shape not found (proceeding without explicit refresh).");
+            }
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

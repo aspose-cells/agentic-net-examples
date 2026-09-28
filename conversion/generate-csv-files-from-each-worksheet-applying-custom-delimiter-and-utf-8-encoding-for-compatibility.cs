@@ -1,49 +1,61 @@
-// Title: Export All Worksheets to a Single CSV with Custom Delimiter and UTF‑8 Encoding using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook with two sheets, fills them with sample data, configures TxtSaveOptions for CSV (semicolon separator, UTF‑8 encoding, ExportAllSheets=true) and saves the entire workbook as one CSV file.
-// Keywords: Aspose.Cells | C# | .NET | CSV export | custom delimiter | semicolon separator | UTF-8 encoding | ExportAllSheets | TxtSaveOptions | multiple worksheets to single CSV
-// Common Searches: Aspose.Cells export all sheets to one CSV | C# save workbook as CSV with semicolon delimiter | set UTF-8 encoding for CSV export Aspose.Cells | how to use TxtSaveOptions for CSV in .NET | export multiple worksheets to single CSV file
-// Developer Intent: Generate a single CSV file that contains data from every worksheet in a workbook, using a semicolon as the field separator and UTF‑8 character encoding.
-// Use Cases: Consolidate related worksheet data into one CSV for bulk import into analytics platforms. | Produce CSV reports that comply with European locale standards (semicolon delimiter) while preserving Unicode characters. | Automate UTF‑8 encoded CSV generation for downstream web services or APIs.
-// AI Prompts: Show how to export each worksheet to its own CSV file while keeping the semicolon delimiter and UTF‑8 encoding. | Provide an example that uses TxtSaveOptions to create a tab‑delimited CSV with ISO‑8859‑1 encoding. | Explain the impact of setting ExportAllSheets to false and how to select specific worksheets for CSV export.
+// Title: Generate a separate CSV file for each worksheet in an Aspose.Cells workbook using a custom delimiter and UTF-8 encoding (C#)
+// AI Prompts: Write C# code that loops through all worksheets in a Workbook and saves each one as an individual CSV file with a user‑defined separator and UTF‑8 encoding using Aspose.Cells TxtSaveOptions. | Create a reusable method that accepts a workbook path, output folder, delimiter character, and text encoding, then exports every sheet to separate CSV files named after the worksheets. | Adjust the CSV export logic to support any delimiter (comma, semicolon, tab) and any encoding (UTF‑8, UTF‑16) while exporting only the active sheet.
+// Common Searches: Aspose.Cells C# export each worksheet to its own CSV file with semicolon delimiter | how to set custom separator and UTF-8 encoding when saving Excel sheets as CSV using Aspose.Cells | C# loop through workbook worksheets and save as separate CSV files with TxtSaveOptions | generate multiple CSV files from one Excel workbook using Aspose.Cells .NET API
+// Tags: Aspose.Cells TxtSaveOptions CSV export per worksheet | custom delimiter CSV export Aspose.Cells | UTF-8 encoding CSV Aspose.Cells | export workbook sheets to individual CSV files C# | save active worksheet as CSV Aspose.Cells
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-// Creates a workbook with two sheets, fills them with sample data, configures TxtSaveOptions for CSV (semicolon separator, UTF‑8 encoding, ExportAllSheets=true) and saves the entire workbook as one CSV file.
-class ExportWorksheetsToCsv
+namespace AsposeCellsCsvExport
 {
-    static void Main()
+    // The program creates a workbook with two worksheets, iterates over each sheet, sets it as active, configures TxtSaveOptions with a semicolon separator and UTF-8 encoding, and saves the active sheet as a CSV file named after the worksheet.
+    class Program
     {
-        // Create a new workbook and add a second worksheet
-        Workbook workbook = new Workbook();
-        workbook.Worksheets.Add("Sheet2");
+        static void Main()
+        {
+            // Create a workbook and add sample worksheets
+            Workbook workbook = new Workbook();
+            workbook.Worksheets[0].Name = "First";
+            workbook.Worksheets[0].Cells["A1"].PutValue("Name");
+            workbook.Worksheets[0].Cells["B1"].PutValue("Age");
+            workbook.Worksheets[0].Cells["A2"].PutValue("Alice");
+            workbook.Worksheets[0].Cells["B2"].PutValue(30);
 
-        // Populate first worksheet with sample data
-        Worksheet sheet1 = workbook.Worksheets[0];
-        sheet1.Cells["A1"].PutValue("Name");
-        sheet1.Cells["B1"].PutValue("Age");
-        sheet1.Cells["A2"].PutValue("John");
-        sheet1.Cells["B2"].PutValue(30);
-        sheet1.Cells["A3"].PutValue("Jane");
-        sheet1.Cells["B3"].PutValue(25);
+            // Add a second worksheet with different data
+            Worksheet sheet2 = workbook.Worksheets.Add("Second");
+            sheet2.Cells["A1"].PutValue("Product");
+            sheet2.Cells["B1"].PutValue("Price");
+            sheet2.Cells["A2"].PutValue("Apple");
+            sheet2.Cells["B2"].PutValue(1.5);
 
-        // Populate second worksheet with sample data
-        Worksheet sheet2 = workbook.Worksheets[1];
-        sheet2.Cells["A1"].PutValue("Product");
-        sheet2.Cells["B1"].PutValue("Price");
-        sheet2.Cells["A2"].PutValue("Apple");
-        sheet2.Cells["B2"].PutValue(1.5);
-        sheet2.Cells["A3"].PutValue("Banana");
-        sheet2.Cells["B3"].PutValue(0.75);
+            // Define a custom delimiter (e.g., semicolon) and UTF‑8 encoding
+            char customDelimiter = ';';
+            Encoding utf8 = Encoding.UTF8;
 
-        // Configure TxtSaveOptions for CSV export
-        TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
-        saveOptions.Separator = ';' ;               // Custom delimiter
-        saveOptions.Encoding = Encoding.UTF8;       // UTF‑8 encoding
-        saveOptions.ExportAllSheets = true;         // Export every worksheet
+            // Export each worksheet to its own CSV file
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                // Set the current worksheet as active
+                workbook.Worksheets.ActiveSheetIndex = i;
 
-        // Save all worksheets to a single CSV file
-        workbook.Save("AllSheetsOutput.csv", saveOptions);
+                // Configure TxtSaveOptions for CSV export
+                TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
+                {
+                    Separator = customDelimiter,   // custom delimiter
+                    Encoding = utf8,               // UTF‑8 encoding
+                    ExportAllSheets = false        // export only the active sheet
+                };
+
+                // Build output file name based on worksheet name
+                string sheetName = workbook.Worksheets[i].Name;
+                string outputPath = $"{sheetName}.csv";
+
+                // Save the active worksheet as CSV using the configured options
+                workbook.Save(outputPath, saveOptions);
+            }
+
+            Console.WriteLine("CSV files have been generated for each worksheet.");
+        }
     }
 }

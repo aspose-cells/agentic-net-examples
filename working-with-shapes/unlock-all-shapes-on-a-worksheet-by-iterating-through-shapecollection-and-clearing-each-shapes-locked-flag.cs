@@ -1,41 +1,58 @@
-// Title: Unlock All Shapes in an Aspose.Cells Worksheet (C#) – Iterate ShapeCollection and Clear IsLocked
-// Description: Shows how to create a workbook, add sample shapes, retrieve the worksheet's ShapeCollection, loop through each Shape, set its IsLocked property to false, and save the file as UnlockedShapes.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells unlock shapes C# | ShapeCollection iteration | IsLocked property false | unlock Excel shapes programmatically | Aspose.Cells shape protection | C# Aspose.Cells example | unlock worksheet shapes
-// Common Searches: how to unlock all shapes in Aspose.Cells C# | iterate ShapeCollection to remove shape lock | set IsLocked false for Excel shapes using Aspose | C# code to unlock shapes in a workbook | Aspose.Cells unlock shape protection
-// Developer Intent: Programmatically remove the lock from every shape on a worksheet.
-// Use Cases: Prepare a template where end‑users can move or edit shapes freely after the workbook is generated. | Enable dynamic layout adjustments by unlocking shapes before repositioning them in a report. | Remove shape protection prior to exporting to formats that ignore locked‑shape settings.
-// AI Prompts: Generate C# code with Aspose.Cells that unlocks all shapes in a worksheet and saves the workbook. | Explain step‑by‑step how to iterate through a ShapeCollection and set IsLocked = false for each shape. | Provide a concise example that creates a workbook, adds shapes, unlocks them, and writes UnlockedShapes.xlsx.
+// Title: Unlock every shape in an Excel worksheet using Aspose.Cells for .NET by iterating the ShapeCollection
+// AI Prompts: Generate C# code with Aspose.Cells that loads a workbook, loops through all shapes on a worksheet, sets each Shape.IsLocked to false, and saves the updated file. | Show a step‑by‑step example of removing the locked flag from every shape on a specific worksheet using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# unlock all shapes in a worksheet | remove shape protection from an Excel file using Aspose.Cells .NET | iterate through ShapeCollection to set IsLocked false in Aspose.Cells | how to programmatically unlock shapes in an existing Excel workbook with C# | Aspose.Cells example for clearing shape locked property
+// Tags: unlock worksheet shapes Aspose.Cells | iterate ShapeCollection C# | clear Shape.IsLocked property | modify Excel shapes programmatically | save workbook after shape changes Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add sample shapes, retrieve the worksheet's ShapeCollection, loop through each Shape, set its IsLocked property to false, and save the file as UnlockedShapes.xlsx using Aspose.Cells for .NET.
-class UnlockShapesDemo
+// The example loads an existing workbook, iterates over every shape in the first worksheet, sets each shape's IsLocked property to false, and saves the modified workbook to a new file.
+class UnlockShapesExample
 {
     static void Main()
     {
-        // Create a new workbook (using the standard create rule)
-        Workbook workbook = new Workbook();
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add some shapes to demonstrate unlocking (optional)
-        sheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 50);
-        sheet.Shapes.AddOval(5, 0, 5, 0, 80, 80);
-
-        // Get the ShapeCollection from the worksheet
-        ShapeCollection shapes = sheet.Shapes;
-
-        // Iterate through each shape and set its IsLocked property to false
-        for (int i = 0; i < shapes.Count; i++)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Shape shape = shapes[i];
-            shape.IsLocked = false; // Unlock the shape
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Save the workbook (using the standard save rule)
-        workbook.Save("UnlockedShapes.xlsx", SaveFormat.Xlsx);
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (or specify the desired worksheet name/index)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes in the worksheet and unlock them
+            foreach (Shape shape in sheet.Shapes)
+            {
+                // Use the correct property to unlock the shape
+                shape.IsLocked = false;
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

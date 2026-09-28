@@ -1,53 +1,58 @@
-// Title: Assign a line series to the secondary vertical axis (AxisGroup = 2) with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add month‑based data, build a line chart, and move the second series to the secondary Y‑axis by setting its AxisGroup property to 2. The workbook is saved as an Excel file.
-// Keywords: Aspose.Cells secondary axis | C# line chart secondary Y axis | AxisGroup property Aspose.Cells | dual axis chart .NET | plot series on secondary vertical axis | Aspose.Cells chart example | Aspose.Cells US | Aspose.Cells Europe
-// Common Searches: how to use AxisGroup = 2 in Aspose.Cells | Aspose.Cells C# assign chart series to secondary axis | dual‑axis line chart example Aspose.Cells | set secondary vertical axis for series Aspose.Cells .NET | Aspose.Cells chart secondary axis tutorial
-// Developer Intent: Move a specific chart series to the secondary vertical axis by configuring its AxisGroup property.
-// Use Cases: Financial dashboards that display revenue on the primary axis and profit margin on a secondary axis. | Scientific reports where temperature is plotted on the primary axis and humidity on a secondary axis. | Business presentations that compare unit sales (primary) with market share percentage (secondary) in a single line chart.
-// AI Prompts: Generate C# code that assigns a line series to the secondary Y‑axis using AxisGroup = 2 in Aspose.Cells. | Show an Aspose.Cells example of a dual‑axis line chart with one series on each axis. | Explain the difference between PlotOnSecondAxis and AxisGroup when positioning series in Aspose.Cells charts.
+// Title: Assign a line chart series to the secondary vertical axis using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a line chart with two data series in Aspose.Cells and moves the second series to the secondary Y‑axis using the PlotOnSecondAxis property. | Show how to set a custom title for the secondary value axis of a line chart in Aspose.Cells with C#.
+// Common Searches: Aspose.Cells C# line chart secondary Y axis example | how to use PlotOnSecondAxis in Aspose.Cells for .NET | set custom title for secondary axis in Aspose.Cells chart | move chart series to secondary vertical axis Aspose.Cells C# | create line chart with primary and secondary axes using Aspose.Cells
+// Tags: Aspose.Cells PlotOnSecondAxis property | C# line chart secondary axis | Aspose.Cells secondary value axis title | Aspose.Cells chart series secondary axis | Aspose.Cells generate XLSX line chart
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a workbook, add month‑based data, build a line chart, and move the second series to the secondary Y‑axis by setting its AxisGroup property to 2. The workbook is saved as an Excel file.
-class AssignSeriesToSecondaryAxis
+namespace AsposeCellsSecondaryAxisDemo
 {
-    static void Main()
+    // Demonstrates creating a workbook, adding a line chart with two series, assigning the second series to the secondary vertical axis via PlotOnSecondAxis, customizing the secondary axis title, and saving the workbook as an XLSX file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data
-        worksheet.Cells["A1"].PutValue("Month");
-        worksheet.Cells["A2"].PutValue("Jan");
-        worksheet.Cells["A3"].PutValue("Feb");
-        worksheet.Cells["A4"].PutValue("Mar");
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Jan");
+            worksheet.Cells["A3"].PutValue("Feb");
+            worksheet.Cells["A4"].PutValue("Mar");
 
-        worksheet.Cells["B1"].PutValue("Primary");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["B4"].PutValue(30);
+            worksheet.Cells["B1"].PutValue("Primary Series");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["B4"].PutValue(30);
 
-        worksheet.Cells["C1"].PutValue("Secondary");
-        worksheet.Cells["C2"].PutValue(100);
-        worksheet.Cells["C3"].PutValue(200);
-        worksheet.Cells["C4"].PutValue(300);
+            worksheet.Cells["C1"].PutValue("Secondary Series");
+            worksheet.Cells["C2"].PutValue(100);
+            worksheet.Cells["C3"].PutValue(200);
+            worksheet.Cells["C4"].PutValue(300);
 
-        // Add a line chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-        Chart chart = worksheet.Charts[chartIndex];
+            // Add a line chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Add two series: first uses primary axis, second will use secondary axis
-        chart.NSeries.Add("B2:B4", true);   // primary series
-        chart.NSeries.Add("C2:C4", true);   // secondary series
-        chart.NSeries.CategoryData = "A2:A4";
+            // Add two series: first will stay on primary axis, second on secondary axis
+            chart.NSeries.Add("B2:B4", true); // primary series
+            chart.NSeries.Add("C2:C4", true); // secondary series
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Assign the second series to the secondary vertical axis
-        chart.NSeries[1].PlotOnSecondAxis = true;
+            // Assign the second series to the secondary vertical axis
+            // In Aspose.Cells this is done via the PlotOnSecondAxis property
+            chart.NSeries[1].PlotOnSecondAxis = true;
 
-        // Save the workbook
-        workbook.Save("LineSeriesSecondaryAxis.xlsx");
+            // Optionally customize the secondary axis (e.g., title)
+            Axis secondaryAxis = chart.SecondValueAxis;
+            secondaryAxis.Title.Text = "Secondary Axis";
+
+            // Save the workbook to a file
+            workbook.Save("LineSeriesOnSecondaryAxis.xlsx");
+        }
     }
 }

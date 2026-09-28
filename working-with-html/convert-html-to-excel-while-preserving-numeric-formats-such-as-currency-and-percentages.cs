@@ -1,54 +1,68 @@
-// Title: Convert HTML to Excel in C# with Aspose.Cells – Preserve Currency, Percent & Numeric Formats
-// Description: Step‑by‑step example that loads an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions.KeepPrecision, then saves it as XLSX while keeping original currency symbols, percentages, and numeric precision.
-// Keywords: Aspose.Cells | HTML to Excel conversion | C# | KeepPrecision | preserve currency format | preserve percentage format | numeric precision | HtmlLoadOptions | Excel export | financial data conversion
-// Common Searches: Aspose.Cells keepprecision HTML to Excel C# | preserve currency symbols when converting HTML to XLSX | convert HTML percentages to Excel without losing format | load HTML into workbook with numeric precision | C# example HtmlLoadOptions KeepPrecision
-// Developer Intent: Load an HTML document into an Aspose.Cells Workbook and export it as an Excel file while retaining the original numeric formatting such as currency symbols and percentage signs.
-// Use Cases: Transform web‑based financial tables into Excel reports without losing monetary formatting. | Import scraped HTML data containing percentages for analysis in Excel. | Automate conversion of HTML invoices to XLSX while preserving exact currency values.
-// AI Prompts: Show how to also keep date formats when converting HTML to Excel with Aspose.Cells. | Give an example of applying custom number formats after loading HTML with KeepPrecision. | Explain strategies for processing large HTML files efficiently using Aspose.Cells streaming.
+// Title: How to convert an HTML file to Excel in C# with Aspose.Cells while preserving currency and percentage formatting
+// AI Prompts: Load an HTML document using HtmlLoadOptions with ConvertNumericData = true, iterate through all cells, detect strings that end with '%' or start with '$', convert them to numeric values, apply the built‑in percentage (Number = 10) or currency (Number = 164) style, and save the workbook as XLSX. | Extend the cell‑processing loop to also handle numeric strings that use parentheses for negatives or custom symbols, and assign the appropriate built‑in number format via Aspose.Cells styling.
+// Common Searches: Aspose.Cells C# convert HTML to XLSX keep currency symbols | preserve percentage formatting when loading HTML with HtmlLoadOptions | ConvertNumericData option example for HTML to Excel conversion | apply built‑in number formats to cells after importing HTML in Aspose.Cells | C# change string "$1,200" to numeric currency cell in Excel
+// Tags: HtmlLoadOptions ConvertNumericData | HTML to XLSX numeric formatting | currency cell style Aspose.Cells | percentage number format Aspose.Cells | C# cell value conversion after HTML import
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Step‑by‑step example that loads an HTML file into an Aspose.Cells Workbook using HtmlLoadOptions.KeepPrecision, then saves it as XLSX while keeping original currency symbols, percentages, and numeric precision.
+// The example loads an HTML file with HtmlLoadOptions (ConvertNumericData enabled), scans each cell to find string representations of percentages and US dollar amounts, converts those strings to numeric values, applies the built‑in percentage (10) or currency (164) number formats, and saves the result as an XLSX workbook using Aspose.Cells for .NET.
 class HtmlToExcelConverter
 {
     static void Main()
     {
-        // Path to the source HTML file
-        string htmlPath = "input.html";
-
-        // Path for the resulting Excel file
-        string excelPath = "output.xlsx";
-
-        try
+        // Load the HTML file with options that preserve numeric data
+        var loadOptions = new HtmlLoadOptions(LoadFormat.Html)
         {
-            // Verify that the input HTML file exists
-            if (!File.Exists(htmlPath))
+            // Convert numeric strings (e.g., "$123.45", "67%") to numeric cells
+            ConvertNumericData = true
+        };
+        var workbook = new Workbook("input.html", loadOptions);
+
+        // After loading, fine‑tune cells that represent currency or percentages
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        for (int row = 0; row <= cells.MaxDataRow; row++)
+        {
+            for (int col = 0; col <= cells.MaxDataColumn; col++)
             {
-                Console.WriteLine($"Input file not found: {htmlPath}");
-                return;
+                Cell cell = cells[row, col];
+
+                // Process only string cells that may contain formatted numbers
+                if (cell.Type == CellValueType.IsString)
+                {
+                    string text = cell.StringValue.Trim();
+
+                    // Handle percentages (e.g., "45%")
+                    if (text.EndsWith("%"))
+                    {
+                        if (double.TryParse(text.TrimEnd('%'), out double percentValue))
+                        {
+                            cell.PutValue(percentValue / 100); // Store as decimal
+                            Style style = cell.GetStyle();
+                            style.Number = 10; // Built‑in percentage format
+                            cell.SetStyle(style);
+                        }
+                    }
+                    // Handle currency values prefixed with "$" (e.g., "$1,234.56")
+                    else if (text.StartsWith("$"))
+                    {
+                        // Remove currency symbol and any grouping commas
+                        string numericPart = text.Substring(1).Replace(",", "");
+                        if (double.TryParse(numericPart, out double currencyValue))
+                        {
+                            cell.PutValue(currencyValue);
+                            Style style = cell.GetStyle();
+                            style.Number = 164; // Built‑in currency format with "$"
+                            cell.SetStyle(style);
+                        }
+                    }
+                }
             }
-
-            // Load the HTML file with options that preserve numeric precision and formatting
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions
-            {
-                // KeepPrecision ensures that numeric strings (e.g., currency, percentages) are not
-                // truncated or converted to less precise values during loading.
-                KeepPrecision = true
-            };
-
-            // Load the HTML into a workbook
-            Workbook workbook = new Workbook(htmlPath, loadOptions);
-
-            // Save the workbook as an Excel file (XLSX format)
-            workbook.Save(excelPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Conversion completed. Excel file saved to: {excelPath}");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during conversion: {ex.Message}");
-        }
+
+        // Save the workbook as an Excel file
+        workbook.Save("output.xlsx", SaveFormat.Xlsx);
     }
 }

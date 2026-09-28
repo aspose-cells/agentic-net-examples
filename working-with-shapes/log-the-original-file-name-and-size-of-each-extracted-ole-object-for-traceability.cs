@@ -1,71 +1,68 @@
-// Title: Log OLE Object File Name and Size in an Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: This example shows how to open an Excel file, iterate through every worksheet, enumerate each OLE object, capture its original source file name (or a placeholder for embedded objects) and its byte size, output the details to the console for traceability, and finally save the workbook unchanged.
-// Keywords: Aspose.Cells | C# | OLE object logging | Excel OLE source file name | OLE object size | ObjectSourceFullName | ObjectData length | traceability | .NET Excel automation | enumerate OLE objects
-// Common Searches: Aspose.Cells log OLE object name and size | C# get OLE object source file Excel | how to read OLE object data length with Aspose.Cells | enumerate OLE objects in each worksheet .NET | trace embedded OLE objects in Excel file
-// Developer Intent: Record the original file name and byte size of every OLE object in an Excel workbook to create an audit trail.
-// Use Cases: Generate an audit log of all OLE objects before modifying a workbook. | Validate that embedded OLE objects stay within a size threshold. | Produce a report of linked OLE objects and their source files for documentation.
-// AI Prompts: Write C# code using Aspose.Cells that extracts and logs the source file name and data size of each OLE object in an Excel workbook. | Create a method that returns a list of OLE object metadata (worksheet, index, source file, size) from a Workbook object. | Explain how to handle empty ObjectSourceFullName values for embedded OLE objects while logging their details.
+// Title: Log original OLE object file name and byte size while iterating worksheets using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to walk through every worksheet, read each embedded OLE object's Name property and ObjectData length, and output the worksheet name, OLE index, original name, and size in bytes to the console. | Modify the OLE extraction loop to also write each object's binary data to a temporary file named after its original OLE name, while still logging the name and size for traceability. | Add per‑worksheet try/catch blocks that capture exceptions when accessing OLE objects, continue processing remaining sheets, and log the error together with the worksheet and OLE index.
+// Common Searches: how to enumerate OLE objects in an Excel file with Aspose.Cells C# | retrieve embedded OLE object name and size using Aspose.Cells .NET | log OLE object details while extracting from multiple worksheets in C# | Aspose.Cells get byte length of OLE object data in .xlsx | continue processing other sheets when OLE extraction fails Aspose.Cells
+// Tags: enumerate OLE objects Aspose.Cells | log embedded OLE metadata .NET | extract OLE object size C# | retrieve OLE original file name Aspose.Cells | worksheet‑level OLE extraction error handling
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// This example shows how to open an Excel file, iterate through every worksheet, enumerate each OLE object, capture its original source file name (or a placeholder for embedded objects) and its byte size, output the details to the console for traceability, and finally save the workbook unchanged.
+// The program loads an Excel workbook, iterates through each worksheet, and for every embedded OLE object obtains its original Name and binary data length. It logs the worksheet name, OLE index, original name, and size in bytes to the console, with per‑worksheet error handling to ensure processing continues even if an object fails to load.
 class Program
 {
     static void Main()
     {
+        string inputPath = "input.xlsx";
+
+        // Ensure the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Load the workbook that contains OLE objects
+            // Load the workbook from the specified file
             Workbook workbook = new Workbook(inputPath);
 
-            // Iterate through each worksheet in the workbook
-            foreach (Worksheet worksheet in workbook.Worksheets)
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the collection of OLE objects on the current worksheet
-                OleObjectCollection oleObjects = worksheet.OleObjects;
-
-                // Process each OLE object
-                for (int i = 0; i < oleObjects.Count; i++)
+                try
                 {
-                    OleObject ole = oleObjects[i];
+                    // Get the collection of OLE objects on the current worksheet
+                    OleObjectCollection oleObjects = sheet.OleObjects;
 
-                    // Retrieve the original source file name.
-                    // For linked OLE objects use ObjectSourceFullName.
-                    // For embedded objects the property may be empty; use a placeholder.
-                    string sourceFileName = ole.ObjectSourceFullName;
-                    if (string.IsNullOrEmpty(sourceFileName))
+                    // Process each OLE object
+                    for (int i = 0; i < oleObjects.Count; i++)
                     {
-                        sourceFileName = "[Embedded Object]";
+                        OleObject ole = oleObjects[i];
+
+                        // Original name of the OLE object (if available)
+                        string originalName = ole.Name;
+
+                        // Raw binary data of the OLE object
+                        byte[] data = ole.ObjectData; // Correct property to retrieve OLE data
+
+                        // Size of the OLE object in bytes
+                        long size = data != null ? data.Length : 0;
+
+                        // Log the information for traceability
+                        Console.WriteLine($"Worksheet: {sheet.Name}, OLE Index: {i}, Name: {originalName}, Size: {size} bytes");
                     }
-
-                    // Determine the size of the OLE object's data (in bytes)
-                    long dataSize = ole.ObjectData != null ? ole.ObjectData.Length : 0;
-
-                    // Log the information for traceability
-                    Console.WriteLine($"Worksheet: {worksheet.Name}, OLE Index: {i}, Source File: {sourceFileName}, Size: {dataSize} bytes");
+                }
+                catch (Exception exSheet)
+                {
+                    // Handle errors specific to a worksheet without stopping the whole process
+                    Console.WriteLine($"Error processing worksheet '{sheet.Name}': {exSheet.Message}");
                 }
             }
-
-            // Save the workbook (unchanged) to a new file
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors and display a friendly message
+            // Handle any runtime errors gracefully
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

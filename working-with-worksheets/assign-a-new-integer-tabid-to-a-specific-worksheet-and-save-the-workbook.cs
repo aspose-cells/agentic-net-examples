@@ -1,35 +1,26 @@
-// Title: Set Worksheet TabId with Aspose.Cells for .NET and Save the Workbook
-// Description: Demonstrates how to assign a custom integer to the TabId property of a worksheet, save the workbook as an .xlsx file, reload it, and verify that the TabId value persists using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells TabId | set worksheet TabId .NET | Excel TabId property | save workbook Aspose | retrieve TabId after load | C# Aspose.Cells example
-// Common Searches: how to set worksheet TabId using Aspose.Cells | Aspose.Cells save workbook with custom TabId | verify TabId value after reopening Excel file | C# example for TabId property Aspose
-// Developer Intent: Assign a numeric TabId to a specific worksheet and ensure the value is stored in the saved Excel file.
-// Use Cases: Tag worksheets with unique identifiers for internal tracking before export. | Maintain worksheet IDs across sessions to map Excel sheets to database records. | Enable downstream processes to locate worksheets by their persisted TabId.
-// AI Prompts: Write C# code that sets the TabId of the second worksheet to 9876, saves as 'Report.xlsx', and reads the value back for verification. | Show how to loop through all worksheets in a loaded workbook and print each worksheet's TabId using Aspose.Cells for .NET. | Explain best practices for using the TabId property to link Excel worksheets with external metadata when saving and loading files.
+// Title: Assign a custom integer TabId to a specific worksheet and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to set the TabId property of a chosen worksheet to a specific integer and then write the workbook to a new file. | Programmatically change the tab identifier of an existing Excel sheet with Aspose.Cells and persist the changes by saving the workbook. | Update the TabId of a worksheet named 'Sheet1' in an input.xlsx file and export the modified workbook as output.xlsx using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to change worksheet TabId value | set Excel sheet tab identifier programmatically with Aspose.Cells | example of assigning TabId to a worksheet and saving workbook in .NET | modify worksheet TabId property and export new Excel file using Aspose.Cells
+// Tags: worksheet TabId assignment Aspose.Cells | update Excel sheet TabId C# | save workbook after TabId change Aspose.Cells | modify worksheet tab identifier programmatically | Aspose.Cells set TabId property example
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to assign a custom integer to the TabId property of a worksheet, save the workbook as an .xlsx file, reload it, and verify that the TabId value persists using Aspose.Cells for .NET.
-class SetWorksheetTabId
+// The code loads an existing Excel file, sets the TabId of the specified worksheet to a custom integer, and saves the updated workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        // Load an existing workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Access the target worksheet (by name or index)
+        Worksheet worksheet = workbook.Worksheets["Sheet1"]; // replace with your sheet name or use workbook.Worksheets[0]
 
-        // Assign a new TabId value
-        worksheet.TabId = 12345;
+        // Assign a new integer TabId to the worksheet
+        worksheet.TabId = 12345; // set desired TabId value
 
-        // Save the workbook to a file
-        string filePath = "TabIdDemo.xlsx";
-        workbook.Save(filePath);
-
-        // Load the saved workbook to verify the TabId
-        Workbook loadedWorkbook = new Workbook(filePath);
-        Worksheet loadedWorksheet = loadedWorkbook.Worksheets[0];
-        Console.WriteLine("Loaded Worksheet TabId: " + loadedWorksheet.TabId);
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 }

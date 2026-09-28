@@ -1,74 +1,78 @@
-// Title: Copy a Range to a New Workbook and Color the Worksheet Tab Based on Numeric Content (C# Aspose.Cells)
-// Description: Creates a source workbook, fills cells A1:B3, copies that range to D5:E7 in a new workbook, checks the source range for numeric values, sets the destination worksheet tab to green if numbers are found (otherwise red), and saves the file as an XLSX document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells copy range | C# copy range to another workbook | worksheet tab color Aspose.Cells | detect numeric cells Aspose.Cells | range content type detection | preserve formatting when copying ranges | Excel automation C# | set tab color programmatically | Aspose.Cells Range.Copy example
-// Common Searches: How to copy a cell range to a different workbook with Aspose.Cells C# | Set worksheet tab color based on cell values using Aspose.Cells | Detect numeric data in a range with Aspose.Cells .NET | Copy range with formatting and formulas Aspose.Cells | Change Excel sheet tab color programmatically C#
-// Developer Intent: Copy a defined cell range into a new workbook and automatically change the destination worksheet's tab color according to whether the range contains numeric data.
-// Use Cases: Create a summary report where sheets containing numeric metrics are highlighted with a green tab for quick identification. | Automate generation of separate workbooks for data blocks, using red or green tabs to signal textual versus numeric content. | Copy a data block to a template workbook while preserving formulas and styles, then flag the sheet with a colored tab based on the presence of numbers.
-// AI Prompts: Generate C# code with Aspose.Cells that copies a range from one workbook to another and sets the destination worksheet tab to green if any cell is numeric, otherwise red. | Show how to iterate through a copied range in Aspose.Cells to detect numeric values and apply conditional tab colors. | Explain how to preserve formulas, formatting, and cell styles when using Aspose.Cells Range.Copy, then change the worksheet tab color based on the range's data type.
+// Title: Copy a cell range to a new workbook and set the worksheet tab color according to the range’s data type using Aspose.Cells for .NET
+// AI Prompts: Copy the A1:C10 range from an existing workbook into a fresh workbook while preserving values with Aspose.Cells in C#. | Iterate through the copied range, identify whether each cell contains a numeric, string, or DateTime value, and assign the destination worksheet’s TabColor to LightBlue, LightGreen, LightCoral, or LightGray based on the detected content type. | Save the resulting workbook as output.xlsx after the range copy and conditional tab‑coloring steps.
+// Common Searches: Aspose.Cells copy range to another workbook and change worksheet tab color based on cell type | C# detect numeric, text, and date cells in a copied range using Aspose.Cells | set worksheet TabColor conditionally after copying a range in Aspose.Cells .NET | copy range A1:C10 to new workbook and apply tab color coding with Aspose.Cells
+// Tags: copy range to new workbook Aspose.Cells | conditional tab color based on cell type Aspose.Cells | detect numeric string date cells C# Aspose.Cells | set worksheet TabColor programmatically .NET | range content analysis Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRangeCopyDemo
+// The example loads source.xlsx, copies the A1:C10 range to a new workbook, examines each cell to determine if the data is numeric, text, or date, sets the destination worksheet's TabColor (LightBlue, LightGreen, LightCoral, or LightGray) according to the detected content type, and saves the result as output.xlsx.
+class Program
 {
-    // Creates a source workbook, fills cells A1:B3, copies that range to D5:E7 in a new workbook, checks the source range for numeric values, sets the destination worksheet tab to green if numbers are found (otherwise red), and saves the file as an XLSX document using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string sourcePath = "source.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                // ---------- Create source workbook and populate a range ----------
-                Workbook sourceWb = new Workbook();                     // create source workbook
-                Worksheet sourceWs = sourceWb.Worksheets[0];            // get first worksheet
-
-                // Fill some sample data in the source range A1:B3
-                sourceWs.Cells["A1"].PutValue("Item");
-                sourceWs.Cells["B1"].PutValue("Quantity");
-                sourceWs.Cells["A2"].PutValue("Apple");
-                sourceWs.Cells["B2"].PutValue(10);
-                sourceWs.Cells["A3"].PutValue("Banana");
-                sourceWs.Cells["B3"].PutValue(20);
-
-                // Define the source range to be copied
-                Aspose.Cells.Range sourceRange = sourceWs.Cells.CreateRange("A1:B3");
-
-                // ---------- Create destination workbook ----------
-                Workbook destWb = new Workbook();                       // create destination workbook
-                Worksheet destWs = destWb.Worksheets[0];                // get first worksheet
-
-                // Define the destination range where the source range will be copied
-                // Here we start at cell D5, but any address works
-                Aspose.Cells.Range destRange = destWs.Cells.CreateRange("D5:E7");
-
-                // ---------- Copy the range ----------
-                // The Copy method copies data, formulas, formatting, etc. from sourceRange to destRange
-                destRange.Copy(sourceRange);
-
-                // ---------- Determine content type of the source range ----------
-                // Simple logic: if any cell in the range contains a numeric value, treat as "numeric"
-                bool hasNumeric = false;
-                foreach (Cell cell in sourceRange)
-                {
-                    if (cell.Type == CellValueType.IsNumeric)
-                    {
-                        hasNumeric = true;
-                        break;
-                    }
-                }
-
-                // ---------- Set worksheet tab color based on content type ----------
-                // Numeric content -> Green tab, otherwise -> Red tab
-                destWs.TabColor = hasNumeric ? Color.Green : Color.Red;
-
-                // ---------- Save the destination workbook ----------
-                destWb.Save("RangeCopyWithTabColor.xlsx");
+                Console.WriteLine($"Source file \"{sourcePath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook srcWb = new Workbook(sourcePath);
+
+            // Create a new (empty) workbook
+            Workbook destWb = new Workbook();
+
+            // Get the first worksheets from both workbooks
+            Worksheet srcSheet = srcWb.Worksheets[0];
+            Worksheet destSheet = destWb.Worksheets[0];
+
+            // Define the range to copy (adjust as needed)
+            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange("A1:C10");
+
+            // Copy the range to the destination worksheet starting at A1
+            destSheet.Cells.CreateRange("A1").Copy(srcRange);
+
+            // Analyze the content type of the copied range
+            bool hasNumeric = false;
+            bool hasString = false;
+            bool hasDate = false;
+
+            foreach (Cell cell in srcRange)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                if (cell.Type == CellValueType.IsNumeric)
+                    hasNumeric = true;
+                else if (cell.Type == CellValueType.IsString)
+                    hasString = true;
+                else if (cell.Type == CellValueType.IsDateTime)
+                    hasDate = true;
             }
+
+            // Set the worksheet tab color based on the detected content type
+            if (hasNumeric && !hasString && !hasDate)
+                destSheet.TabColor = Color.LightBlue;      // Only numeric values
+            else if (hasString && !hasNumeric && !hasDate)
+                destSheet.TabColor = Color.LightGreen;     // Only text values
+            else if (hasDate && !hasNumeric && !hasString)
+                destSheet.TabColor = Color.LightCoral;     // Only date values
+            else
+                destSheet.TabColor = Color.LightGray;      // Mixed content
+
+            // Save the new workbook
+            destWb.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

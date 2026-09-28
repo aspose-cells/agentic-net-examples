@@ -1,74 +1,61 @@
-// Title: Aspose.Cells .NET: Verify DisableDownlevelRevealedComments Doesn't Break HTML Formatting
-// Description: C# sample that creates a workbook, adds a bold cell and an HTML‑styled comment, saves to HTML with DisableDownlevelRevealedComments true and false, then checks that the comment markup and font-weight:bold remain intact, proving the setting doesn't affect other HTML features.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DisableDownlevelRevealedComments | HTML export .NET | cell comment HTML | bold formatting CSS | C# Aspose.Cells example | HTML validation | downlevel revealed comments | regression testing
-// Common Searches: Aspose.Cells DisableDownlevelRevealedComments effect | check HTML export after disabling downlevel comments | C# validate Aspose.Cells HTML output | does DisableDownlevelRevealedComments remove styles | Aspose.Cells comment HTML markup preservation | how to test HtmlSaveOptions in Aspose.Cells
-// Developer Intent: Confirm that turning off downlevel‑revealed comments does not alter other HTML output such as cell styles.
-// Use Cases: Automated regression test for HTML export when HtmlSaveOptions change | Generate clean HTML reports without conditional comments while keeping formatting | Compare HTML files produced with the flag enabled and disabled for QA | Ensure cell styling persists when comments are hidden in web publishing | Integrate HTML validation into CI/CD pipelines
-// AI Prompts: Write a NUnit test that loads the two HTML files saved with DisableDownlevelRevealedComments true/false and asserts that the comment markup and font-weight:bold are present in both. | Create a PowerShell script to batch‑convert Excel workbooks to HTML with downlevel‑revealed comments disabled and log any missing formatting. | Explain how the DisableDownlevelRevealedComments flag changes the generated HTML for cell comments and why other styles remain unaffected. | Generate a GitHub Actions workflow that runs the validation script after each push. | Provide a step‑by‑step guide to troubleshoot missing CSS when using HtmlSaveOptions in Aspose.Cells.
+// Title: Verify that disabling downlevel revealed comments during HTML export does not affect cell values, formulas, or formatting with Aspose.Cells for .NET
+// AI Prompts: Create C# code that builds a workbook, saves it to HTML with HtmlSaveOptions.DisableDownlevelRevealedComments set to true, reloads the HTML file, and asserts that the original cell values, formulas, and styles are unchanged. | Write a C# unit test using Aspose.Cells that confirms disabling downlevel revealed comments in HTML export preserves data integrity, formula accuracy, and header styling. | Show how to compare the style and formula of cells in the original workbook with those in a workbook loaded from the generated HTML after turning off downlevel revealed comments.
+// Common Searches: Aspose.Cells C# verify HTML export keeps formatting when downlevel revealed comments are disabled | How to test that formulas remain after saving workbook to HTML with DisableDownlevelRevealedComments | C# load HTML saved by Aspose.Cells and compare cell values and styles | Impact of disabling downlevel revealed comments on Aspose.Cells HTML output
+// Tags: Aspose.Cells HTML export disable downlevel comments | preserve cell formatting during HTML conversion | validate formula retention after HTML save | C# workbook reload from generated HTML | check cell values after disabling downlevel revealed comments
 
 using System;
-using System.IO;
+using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlValidation
+// The program creates a workbook, adds numeric data, a SUM formula, and bold blue header styling, saves it to HTML with downlevel revealed comments disabled, reloads the HTML into a new workbook, and verifies that cell values, the formula, and the header formatting remain unchanged.
+class Program
 {
-    // C# sample that creates a workbook, adds a bold cell and an HTML‑styled comment, saves to HTML with DisableDownlevelRevealedComments true and false, then checks that the comment markup and font-weight:bold remain intact, proving the setting doesn't affect other HTML features.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Data";
 
-            // Add sample data
-            sheet.Cells["A1"].PutValue("Cell with comment");
-            sheet.Cells["A2"].PutValue("Bold text");
-            sheet.Cells["A2"].GetStyle().Font.IsBold = true;
+        // Populate cells with data and a formula
+        sheet.Cells["A1"].PutValue("Number");
+        sheet.Cells["A2"].PutValue(10);
+        sheet.Cells["A3"].PutValue(20);
+        sheet.Cells["B1"].PutValue("Sum");
+        sheet.Cells["B2"].Formula = "SUM(A2:A3)";
 
-            // Add a comment to A1 with HTML content
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.HtmlNote = "<font style='color:#FF0000;'>This is a <b>test</b> comment.</font>";
+        // Apply simple formatting (bold blue font) to header cells
+        Style headerStyle = workbook.CreateStyle();
+        headerStyle.Font.Color = Color.Blue;
+        headerStyle.Font.IsBold = true;
+        sheet.Cells["A1"].SetStyle(headerStyle);
+        sheet.Cells["B1"].SetStyle(headerStyle);
 
-            // First save: disable downlevel-revealed comments
-            HtmlSaveOptions optionsDisable = new HtmlSaveOptions();
-            optionsDisable.DisableDownlevelRevealedComments = true;
-            string fileWithoutDownlevel = "output_without_downlevel.html";
-            workbook.Save(fileWithoutDownlevel, optionsDisable);
-            Console.WriteLine($"Saved HTML with DisableDownlevelRevealedComments = true to '{fileWithoutDownlevel}'.");
+        // Save the workbook to HTML with downlevel revealed comments disabled
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+        htmlOptions.DisableDownlevelRevealedComments = true; // Disable the feature
+        string htmlPath = "output.html";
+        workbook.Save(htmlPath, htmlOptions);
 
-            // Second save: keep default (downlevel-revealed comments enabled)
-            HtmlSaveOptions optionsEnable = new HtmlSaveOptions();
-            optionsEnable.DisableDownlevelRevealedComments = false;
-            string fileWithDownlevel = "output_with_downlevel.html";
-            workbook.Save(fileWithDownlevel, optionsEnable);
-            Console.WriteLine($"Saved HTML with DisableDownlevelRevealedComments = false to '{fileWithDownlevel}'.");
+        // Load the generated HTML back into a new workbook
+        Workbook loadedWorkbook = new Workbook(htmlPath);
+        Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
 
-            // Load both HTML files as text for simple validation
-            string htmlWithout = File.ReadAllText(fileWithoutDownlevel);
-            string htmlWith = File.ReadAllText(fileWithDownlevel);
+        // Validate that cell values are unchanged
+        bool valuesMatch = loadedSheet.Cells["A2"].StringValue == "10" &&
+                           loadedSheet.Cells["A3"].StringValue == "20";
 
-            // Verify that the comment text exists in both outputs
-            bool commentInWithout = htmlWithout.Contains("This is a <b>test</b> comment");
-            bool commentInWith = htmlWith.Contains("This is a <b>test</b> comment");
+        // Validate that the formula is preserved
+        bool formulaPreserved = loadedSheet.Cells["B2"].Formula == "SUM(A2:A3)";
 
-            // Verify that the bold formatting of A2 is present (look for 'font-weight:bold')
-            bool boldInWithout = htmlWithout.Contains("font-weight:bold");
-            bool boldInWith = htmlWith.Contains("font-weight:bold");
+        // Validate that formatting (bold and blue font) is still applied
+        Style loadedStyle = loadedSheet.Cells["A1"].GetStyle();
+        bool formattingMatch = loadedStyle.Font.IsBold &&
+                               loadedStyle.Font.Color.ToArgb() == Color.Blue.ToArgb();
 
-            // Output validation results
-            Console.WriteLine("\nValidation Results:");
-            Console.WriteLine($"Comment present when disabled: {commentInWithout}");
-            Console.WriteLine($"Comment present when enabled : {commentInWith}");
-            Console.WriteLine($"Bold formatting preserved when disabled: {boldInWithout}");
-            Console.WriteLine($"Bold formatting preserved when enabled : {boldInWith}");
-
-            // Simple overall check
-            if (commentInWithout && commentInWith && boldInWithout && boldInWith)
-                Console.WriteLine("\nDisabling downlevel-revealed comments does not affect other HTML features.");
-            else
-                Console.WriteLine("\nSome HTML features were affected by the DisableDownlevelRevealedComments setting.");
-        }
+        // Output validation results
+        Console.WriteLine($"Values match: {valuesMatch}");
+        Console.WriteLine($"Formula preserved: {formulaPreserved}");
+        Console.WriteLine($"Formatting preserved: {formattingMatch}");
     }
 }

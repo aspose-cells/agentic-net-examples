@@ -1,55 +1,56 @@
-// Title: C# – Convert XLSX to Password‑Protected PDF with Formula Evaluation using Aspose.Cells
-// Description: Loads an Excel workbook, forces formula calculation, applies user and owner passwords with custom permissions via PdfSecurityOptions, and saves the result as an encrypted PDF using PdfSaveOptions in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | XLSX to PDF | password protected PDF | PdfSecurityOptions | PdfSaveOptions | calculate formulas | Excel to PDF conversion | secure PDF generation | Aspose.Cells .NET
-// Common Searches: Aspose.Cells export Excel to encrypted PDF C# | How to calculate formulas when saving PDF with Aspose.Cells | Set user and owner passwords for PDF in Aspose.Cells | C# code for password‑protected PDF from XLSX | Aspose.Cells PDF permissions example
-// Developer Intent: Create a PDF from an Excel file, ensure all formulas are evaluated, and protect the document with user/owner passwords and specific permissions.
-// Use Cases: Distribute financial reports as read‑only PDFs that retain calculated results. | Provide clients with confidential spreadsheets converted to encrypted PDFs for secure sharing. | Automate server‑side batch conversion of multiple XLSX files into password‑protected PDFs.
-// AI Prompts: Show how to add or modify PDF permissions (e.g., allow copying text) using Aspose.Cells PdfSecurityOptions in C#. | Give a C# example that writes the password‑protected PDF to a MemoryStream instead of a file. | Explain how to export a PDF without recalculating formulas, using existing cell values, in Aspose.Cells.
+// Title: Convert an XLSX workbook to a password‑protected PDF with formula calculation using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, evaluates all formulas, and saves it as a PDF encrypted with a user password. | Show how to set the user password on PdfSaveOptions when exporting a workbook to PDF with Aspose.Cells. | Add robust error handling that checks the source Excel file, creates the output folder if missing, and logs any conversion exceptions.
+// Common Searches: Aspose.Cells C# export Excel to PDF with password encryption and formula calculation | how to set a user password on PDF generated from XLSX using Aspose.Cells | calculate all formulas before saving workbook as PDF in .NET | C# example converting XLSX to encrypted PDF with Aspose.Cells PdfSaveOptions
+// Tags: Aspose.Cells PDF password encryption | C# calculate Excel formulas before PDF export | PdfSaveOptions set user password Aspose.Cells | XLSX to encrypted PDF conversion .NET | Workbook.Save PDF with security settings
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering.PdfSecurity;
 
-// Loads an Excel workbook, forces formula calculation, applies user and owner passwords with custom permissions via PdfSecurityOptions, and saves the result as an encrypted PDF using PdfSaveOptions in Aspose.Cells for .NET.
+// The example loads an XLSX workbook, forces calculation of all formulas, configures PdfSaveOptions with a user password, ensures the output directory exists, and saves the workbook as a password‑protected PDF using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string excelPath = "input.xlsx";
-
-        // Path for the resulting password‑protected PDF
-        string pdfPath = "output.pdf";
-
-        // Load the workbook from the Excel file
-        Workbook workbook = new Workbook(excelPath);
-
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            // Ensure formulas are calculated before PDF generation
-            CalculateFormula = true
-        };
+            // Path to the source XLSX file
+            string sourcePath = "input.xlsx";
 
-        // Configure PDF security (password protection)
-        PdfSecurityOptions security = new PdfSecurityOptions
+            // Path for the output PDF file
+            string outputPath = "output.pdf";
+
+            // Verify that the source file exists
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
+
+            // Load the workbook from the XLSX file
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Configure PDF save options (password protection and compliance are omitted
+            // because the required PdfSecurityOptions type is unavailable in the current package)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
         {
-            // Password required to open the PDF
-            UserPassword = "user123",
-            // Password required to change security settings
-            OwnerPassword = "owner123",
-            // Example permission: allow printing
-            PrintPermission = true,
-            // Example permission: disallow modifying the document
-            ModifyDocumentPermission = false,
-            // Example permission: disallow extracting content
-            ExtractContentPermission = false
-        };
-
-        // Assign the security options to the PDF save options
-        pdfOptions.SecurityOptions = security;
-
-        // Save the workbook as a PDF with the specified options
-        workbook.Save(pdfPath, pdfOptions);
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

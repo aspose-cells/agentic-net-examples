@@ -1,90 +1,44 @@
-// Title: Skip External Resources During PDF Rendering with Aspose.Cells for .NET
-// Description: Demonstrates how to implement a custom IStreamProvider that sets ResourceLoadingType to Skip, assigns it to Workbook.Settings.ResourceProvider, and saves the workbook as PDF/A‑1b. The approach prevents linked images or other external files from being loaded, resulting in faster PDF generation and lower memory consumption.
-// Keywords: Aspose.Cells PDF rendering performance | C# skip external resources | IStreamProvider ResourceLoadingType.Skip | disable linked images Aspose.Cells | PDF/A‑1b export .NET | custom resource provider Aspose.Cells
-// Common Searches: how to prevent external images from loading in Aspose.Cells PDF export | custom IStreamProvider to skip resources Aspose.Cells | Aspose.Cells disable linked file loading during PDF conversion | improve PDF generation speed Aspose.Cells .NET
-// Developer Intent: Avoid loading any external linked files while converting a workbook to PDF to reduce processing time and memory usage.
-// Use Cases: Generate quick PDF previews of large spreadsheets when image files are unavailable. | Create server‑side PDF/A‑1b documents without requiring access to external media assets. | Lower memory footprint in batch PDF conversions that contain many linked pictures.
-// AI Prompts: Show a C# example that uses IStreamProvider to skip external resources when saving a workbook to PDF with Aspose.Cells. | Explain the effect of setting Workbook.Settings.ResourceProvider to a custom provider on PDF rendering speed and resource handling. | Provide step‑by‑step guidance for combining PdfSaveOptions with a SkipResourceProvider for high‑performance PDF/A‑1b generation.
+// Title: How to disable external resource loading in Aspose.Cells PDF conversion for .NET to boost performance
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells and saves it as a PDF while setting PdfSaveOptions.DisableExternalLinks = true to skip external resources. | Demonstrate how to configure PdfSaveOptions in Aspose.Cells for .NET to prevent loading of external hyperlinks, images, or OLE objects during PDF rendering.
+// Common Searches: Aspose.Cells .NET disable external links when saving workbook to PDF | skip external images during Excel to PDF conversion using Aspose.Cells | improve PDF generation speed by turning off external resources in Aspose.Cells | PdfSaveOptions.DisableExternalLinks example C# | how to prevent external hyperlinks from being embedded in PDF with Aspose.Cells
+// Tags: aspocells pdfsaveoptions disableexternallinks | excel to pdf conversion performance aspocells | skip external resources aspocells pdf rendering | c# aspocells pdf generation optimization | disable external hyperlinks aspocells pdfsaveoptions
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
-using Aspose.Cells.Rendering.PdfSecurity;
 
-namespace AsposeCellsPdfRendering
+// The program checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions instance with DisableExternalLinks set to true to block external hyperlinks, images, and OLE objects, and then saves the workbook as a PDF. Exceptions are caught and reported, ensuring a fast and resource‑light PDF conversion.
+class Program
 {
-    // Custom stream provider that skips loading of external resources (e.g., linked images)
-    // Demonstrates how to implement a custom IStreamProvider that sets ResourceLoadingType to Skip, assigns it to Workbook.Settings.ResourceProvider, and saves the workbook as PDF/A‑1b. The approach prevents linked images or other external files from being loaded, resulting in faster PDF generation and lower memory consumption.
-    class SkipResourceProvider : IStreamProvider
+    static void Main()
     {
-        // Called by Aspose.Cells when a linked resource needs to be accessed
-        public void InitStream(StreamProviderOptions options)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Instruct the renderer to skip the resource
-            options.ResourceLoadingType = ResourceLoadingType.Skip;
-            // Provide a null stream so no data is read
-            options.Stream = Stream.Null;
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Called after the resource processing is finished
-        public void CloseStream(StreamProviderOptions options)
+        try
         {
-            // Dispose the stream if it exists
-            options.Stream?.Dispose();
+            // Load the workbook from the existing Excel file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"PDF file successfully created at \"{outputPath}\".");
         }
-    }
-
-    class Program
-    {
-        static void Main()
+        catch (Exception ex)
         {
-            try
-            {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // Add some sample data and a linked picture to demonstrate the effect
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("PDF rendering with external resources disabled.");
-
-                // Insert a picture that references an external file (LinkToFile) if it exists
-                const string externalImagePath = "external_image.jpg";
-                if (File.Exists(externalImagePath))
-                {
-                    int pictureIndex = sheet.Pictures.Add(2, 0, externalImagePath);
-                    sheet.Pictures[pictureIndex].Placement = PlacementType.Move;
-                }
-                else
-                {
-                    Console.WriteLine($"External image '{externalImagePath}' not found. Skipping picture insertion.");
-                }
-
-                // Assign the custom stream provider to skip loading external resources
-                workbook.Settings.ResourceProvider = new SkipResourceProvider();
-
-                // Configure PDF save options (optional customizations)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Embed standard Windows fonts for better compatibility
-                    EmbedStandardWindowsFonts = true,
-                    // Set compliance level
-                    Compliance = PdfCompliance.PdfA1b,
-                    // Ignore rendering errors to avoid interruptions
-                    IgnoreError = true
-                };
-
-                // Save the workbook as PDF; external resources will be skipped, improving performance
-                const string outputPath = "output.pdf";
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"PDF saved with external resources disabled at '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Handle any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

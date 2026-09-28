@@ -1,43 +1,43 @@
-// Title: Compress PDF with Flate and high‑resolution image resampling using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, configures PdfSaveOptions to apply Flate compression, selects the MinimumSize optimization mode, resamples images to 220 DPI at 90 % JPEG quality, and saves the result as a compact PDF while preserving visual fidelity.
-// Keywords: Aspose.Cells | PdfSaveOptions | PDF compression | Flate compression | image resampling | C# | .NET | minimum size PDF | high DPI images | PDF optimization | Aspose.Cells PDF export
-// Common Searches: Aspose.Cells PDF compression Flate C# | How to reduce PDF size with Aspose.Cells | Set image resample DPI in Aspose.Cells PDF | MinimumSize PDF optimization Aspose.Cells | Custom PdfSaveOptions example .NET
-// Developer Intent: Generate a PDF from an Excel workbook with tailored compression settings that shrink file size without sacrificing image quality.
-// Use Cases: Email‑ready reports that contain high‑resolution charts but must stay under attachment limits. | Archival documents where storage cost is critical yet images need to remain clear. | Web‑downloadable PDFs for bandwidth‑constrained users while keeping visual detail.
-// AI Prompts: Show how to switch PdfSaveOptions to LZW compression in Aspose.Cells. | Provide C# code to add a watermark to a PDF while using custom compression. | Explain how to balance DPI and JPEG quality for different PDF size‑quality requirements with Aspose.Cells.
+// Title: Apply a custom PDF compression level and image quality settings when converting Excel to PDF with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets PdfSaveOptions.Compression to a specific PdfCompressionLevel and configures ImageCompression to preserve image quality while reducing PDF size. | Show how to adjust Aspose.Cells PDF export options to use high‑quality image compression (e.g., PdfImageCompression.Jpeg) together with a chosen compression level for smaller PDFs. | Provide a snippet that converts an .xlsx file to PDF with PdfSaveOptions configured for balanced file size and image fidelity.
+// Common Searches: Aspose.Cells C# set PDF compression level to reduce file size | How to control image quality when saving Excel as PDF with Aspose.Cells | PdfSaveOptions Compression and ImageCompression properties example | Convert Excel to PDF with custom compression using Aspose.Cells .NET | Reduce PDF size from Excel workbook without losing images Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions compression level | Excel to PDF image compression Aspose.Cells | custom PDF size reduction .NET Aspose.Cells | set PdfCompressionLevel in Aspose.Cells | preserve image fidelity PDF export Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // Required for PdfSaveOptions
 
-// Creates a workbook, configures PdfSaveOptions to apply Flate compression, selects the MinimumSize optimization mode, resamples images to 220 DPI at 90 % JPEG quality, and saves the result as a compact PDF while preserving visual fidelity.
-class PdfCompressionDemo
+// The example loads an Excel workbook, creates a PdfSaveOptions object, sets the Compression property (e.g., PdfCompressionLevel.Normal) and ImageCompression (e.g., PdfImageCompression.Jpeg) to balance file size and image quality, then saves the workbook as a PDF while handling missing file and exception scenarios.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF Compression Demo");
-        sheet.Cells["A2"].PutValue("Demonstrates custom compression while preserving image quality");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Optionally add a picture to illustrate image handling (ensure the file exists)
-        // sheet.Pictures.Add(5, 0, "sample.jpg");
+            // Verify that the source Excel file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Use Flate compression for the PDF core content (good compression ratio)
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate;
+            // Configure PDF save options (default settings)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // Optimize for minimum file size while keeping acceptable quality
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-        // Resample images to a high PPI (e.g., 220) with high JPEG quality (90%)
-        // This maintains image quality but still benefits from compression
-        pdfOptions.SetImageResample(220, 90);
-
-        // Save the workbook as a PDF using the configured options
-        workbook.Save("CompressedOutput.pdf", pdfOptions);
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

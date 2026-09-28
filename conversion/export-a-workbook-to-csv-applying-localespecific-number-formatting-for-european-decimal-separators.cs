@@ -1,10 +1,7 @@
-// Title: Export Workbook to CSV with European Number Formatting and Semicolon Delimiter (C# Aspose.Cells)
-// Description: Creates a workbook, sets ',' as decimal and '.' as thousands separator, adds sample data, configures TxtSaveOptions with a semicolon separator and DisplayStyle format strategy, then saves the file so numeric values appear in European style (e.g., 12.345,67).
-// Keywords: Aspose.Cells CSV export | European number format | comma decimal separator | semicolon delimiter | TxtSaveOptions | DisplayStyle strategy | C# .NET | locale specific CSV | NumberGroupSeparator | SaveFormat.Csv
-// Common Searches: Aspose.Cells export CSV European format C# | How to set comma as decimal separator in Aspose.Cells | Semicolon delimited CSV with Aspose.Cells | Save Excel as CSV with custom separators .NET | DisplayStyle format strategy for CSV export
-// Developer Intent: Save an Excel workbook as a CSV file that follows European conventions—comma decimal, dot thousands separator—and uses a semicolon as the field delimiter.
-// Use Cases: Generating CSV reports for European markets where numbers must use a comma for decimals. | Creating data files for legacy ERP systems that expect semicolon‑delimited CSV with European numeric formatting. | Automating localized CSV exports from ASP.NET applications without manual string processing.
-// AI Prompts: Show how to change the locale to French (comma decimal, space thousands) while exporting CSV with Aspose.Cells. | Explain how to export each worksheet to a separate CSV file while preserving European number formatting. | Provide code to include date and currency formatting together with the European numeric settings in a CSV export.
+// Title: Export a C# Aspose.Cells workbook to CSV using European number formatting (comma decimal separator and semicolon delimiter)
+// AI Prompts: Generate C# code that creates a workbook, sets NumberDecimalSeparator to ',' and NumberGroupSeparator to '.', applies a custom numeric style "#,##0.00", and saves the file as CSV with ';' separator using TxtSaveOptions. | Show how to configure Aspose.Cells TxtSaveOptions to preserve the cell's display style when exporting to CSV with a European locale. | Write a C# snippet that applies a numeric style to cells and exports the workbook to a semicolon‑delimited CSV file with comma decimal separators.
+// Common Searches: Aspose.Cells C# export to CSV with semicolon delimiter and comma decimal separator | How to set European number format when saving workbook as CSV using Aspose.Cells | Save workbook as CSV preserving cell display style Aspose.Cells .NET | Configure TxtSaveOptions for CSV with custom number formatting in Aspose.Cells | C# Aspose.Cells CSV output using European locale settings
+// Tags: Aspose.Cells CSV export with European locale | TxtSaveOptions semicolon delimiter | NumberDecimalSeparator comma Aspose.Cells | DisplayStyle format strategy CSV | custom numeric format #,##0.00 Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Saving;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, sets ',' as decimal and '.' as thousands separator, adds sample data, configures TxtSaveOptions with a semicolon separator and DisplayStyle format strategy, then saves the file so numeric values appear in European style (e.g., 12.345,67).
+    // The example creates a workbook, configures the number decimal separator to a comma and the group separator to a dot, defines a custom numeric style "#,##0.00", populates sample cells, and saves the workbook as a CSV file using a semicolon field separator while preserving the display style for European number formatting.
     public class ExportWorkbookToCsvWithEuropeanFormatting
     {
         public static void Run()
@@ -22,36 +19,41 @@ namespace AsposeCellsExamples
                 // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Set European number formatting: comma as decimal separator, dot as group separator
+                // Set European locale number formatting (comma as decimal separator, dot as group separator)
                 workbook.Settings.NumberDecimalSeparator = ',';
                 workbook.Settings.NumberGroupSeparator = '.';
 
-                // Add sample numeric data
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Price");
-                sheet.Cells["A2"].PutValue("Laptop");
-                sheet.Cells["B2"].PutValue(12345.67); // Will be formatted as 12.345,67
-                sheet.Cells["A3"].PutValue("Phone");
-                sheet.Cells["B3"].PutValue(987.65);   // Will be formatted as 987,65
+                // Create a style that uses a numeric format with two decimal places
+                Style europeanStyle = workbook.CreateStyle();
+                europeanStyle.Custom = "#,##0.00";
 
-                // Create CSV save options
+                // Populate some sample numeric data and apply the style
+                Worksheet sheet = workbook.Worksheets[0];
+                Cell cellA1 = sheet.Cells["A1"];
+                cellA1.PutValue(12345.6789);
+                cellA1.SetStyle(europeanStyle);
+
+                Cell cellA2 = sheet.Cells["A2"];
+                cellA2.PutValue(9876.5432);
+                cellA2.SetStyle(europeanStyle);
+
+                // Configure CSV save options:
+                // - Use semicolon as field separator (common in Europe when decimal separator is a comma)
+                // - Apply the cell's display style when converting values to text
                 TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
                 {
-                    // Use semicolon as delimiter (common in European CSV files)
                     Separator = ';',
-                    // Export numbers using the display style (applies the workbook's decimal/group separators)
                     FormatStrategy = CellValueFormatStrategy.DisplayStyle
                 };
 
-                // Save the workbook as CSV with the specified options
-                string outputPath = "EuropeanFormattedOutput.csv";
+                // Save the workbook as a CSV file using the configured options
+                string outputPath = "EuropeanNumbers.csv";
                 workbook.Save(outputPath, csvOptions);
-                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during export: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

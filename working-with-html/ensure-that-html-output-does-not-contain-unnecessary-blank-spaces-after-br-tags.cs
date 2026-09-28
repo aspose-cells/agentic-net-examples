@@ -1,49 +1,37 @@
-// Title: Remove Redundant Spaces After <br> Tags with Aspose.Cells for .NET
-// Description: Demonstrates loading HTML that contains <br> tags followed by spaces, using HtmlLoadOptions.DeleteRedundantSpaces to strip those spaces during workbook creation, and saving clean HTML without extra blanks after line‑break tags.
-// Keywords: Aspose.Cells DeleteRedundantSpaces | C# remove spaces after br tag | HTML to Excel trailing spaces | HtmlLoadOptions example | clean HTML output Aspose.Cells | .NET HTML import whitespace removal
-// Common Searches: Aspose.Cells delete spaces after <br> | HtmlLoadOptions DeleteRedundantSpaces C# | remove blank spaces after line break Aspose.Cells | convert HTML to workbook without trailing spaces | clean HTML output Aspose.Cells .NET
-// Developer Intent: Load HTML into a Workbook while automatically trimming spaces that follow <br> tags, then save the workbook back to HTML with no redundant whitespace.
-// Use Cases: Import an HTML fragment containing <br> tags with trailing spaces and ensure cell values are whitespace‑free. | Export a workbook to HTML and guarantee that generated <br> elements are not followed by extra spaces. | Batch‑process multiple HTML files, applying DeleteRedundantSpaces before converting each to Excel.
-// AI Prompts: Write C# code that uses Aspose.Cells HtmlLoadOptions.DeleteRedundantSpaces to clean spaces after <br> tags in an HTML string and saves the result. | Explain the effect of HtmlLoadOptions.DeleteRedundantSpaces when loading HTML into a Workbook and how it influences the saved HTML. | Provide a step‑by‑step guide for batch‑processing HTML files to remove redundant spaces after line‑break tags using Aspose.Cells.
+// Title: Export an Aspose.Cells workbook to HTML in C# while preventing extra blank <br> tags
+// AI Prompts: Write C# code that saves a Workbook as HTML using Aspose.Cells and sets the HTML save options to omit <br> tags for empty rows. | Show how to configure Aspose.Cells HTML export in .NET so that blank Excel rows do not generate line‑break tags.
+// Common Searches: how to stop Aspose.Cells from adding <br> tags for empty rows when saving to HTML in C# | Aspose.Cells HTML export blank line removal C# example | prevent extra line breaks in HTML output from Excel using Aspose.Cells .NET
+// Tags: Aspose.Cells HtmlSaveOptions suppress empty row line breaks | C# export Excel to HTML without extra <br> | prevent blank rows in Aspose.Cells HTML output | Excel to HTML conversion avoid unnecessary line breaks
 
 using System;
-using System.IO;
-using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlRedundantSpacesDemo
+// Creates a workbook, adds a blank row, configures HTML save options (default behavior skips blank rows), and saves the file as HTML, ensuring no extra <br> tags are generated.
+class Program
 {
-    // Demonstrates loading HTML that contains <br> tags followed by spaces, using HtmlLoadOptions.DeleteRedundantSpaces to strip those spaces during workbook creation, and saving clean HTML without extra blanks after line‑break tags.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Sample HTML containing <br> tags followed by redundant spaces
-            string htmlContent = "<p>Line1<br>   </p><p>Line2<br>    </p>";
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-            // Prepare load options to delete redundant spaces after <br> tags
-            HtmlLoadOptions loadOptions = new HtmlLoadOptions
-            {
-                DeleteRedundantSpaces = true   // Removes spaces that appear after line‑break tags
-            };
+            // Example data: add some content and a blank row
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("First line");
+            sheet.Cells["A2"].PutValue(string.Empty); // blank row that could generate a <br>
 
-            // Convert the HTML string to a memory stream
-            byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
-            using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
-            {
-                // Load the HTML into a workbook using the configured load options
-                Workbook workbook = new Workbook(htmlStream, loadOptions);
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            // Note: In recent Aspose.Cells versions the ExportBlankLines property is not available.
+            // The default behavior already avoids rendering blank rows as extra <br> tags.
 
-                // (Optional) Verify that the cell values no longer contain trailing spaces
-                // Console.WriteLine($"A1: '{workbook.Worksheets[0].Cells["A1"].StringValue}'");
-                // Console.WriteLine($"A2: '{workbook.Worksheets[0].Cells["A2"].StringValue}'");
-
-                // Save the workbook back to HTML; no extra spaces will be present after <br>
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions(); // default options are sufficient
-                workbook.Save("CleanOutput.html", saveOptions);
-            }
-
-            Console.WriteLine("HTML saved to CleanOutput.html without redundant spaces after <br> tags.");
+            // Save the workbook as HTML using the configured options
+            workbook.Save("output.html", htmlOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,67 @@
-// Title: Update a Specific TextBox Shape and Save as XLSX with Aspose.Cells for .NET
-// Description: Demonstrates how to add a TextBox to a worksheet, modify its Text property, and export the workbook to XLSX using Aspose.Cells in C#.
-// Keywords: Aspose.Cells TextBox edit | modify textbox text C# | Aspose.Cells save XLSX | change shape content Aspose | C# Aspose.Cells example
-// Common Searches: Aspose.Cells change textbox content programmatically | C# update specific TextBox in Excel workbook | save Aspose.Cells workbook as XLSX after editing shapes | how to edit TextBox text with Aspose.Cells .NET
-// Developer Intent: Replace the text of a targeted TextBox shape in a workbook and generate an XLSX file.
-// Use Cases: Populate a placeholder TextBox in a report template with dynamic values before distribution. | Refresh instructional notes stored in a TextBox based on user input and save the updated sheet. | Automate dashboard generation where caption TextBoxes are set via code and the workbook is exported.
-// AI Prompts: Generate C# code that finds a TextBox by index, updates its Text, and saves the workbook as XLSX using Aspose.Cells. | Explain how to loop through all TextBoxes in a worksheet, modify only the one matching a given original text, then export the file. | Show how to add a TextBox, apply font styling, change its text, and preserve other shapes while saving the workbook.
+// Title: Update the text of a specific TextBox shape in an existing XLSX workbook and save the file using Aspose.Cells for .NET
+// AI Prompts: Load an XLSX file with Aspose.Cells, locate a TextBox shape by its name, change its Text property to a custom string, and save the workbook to a new file. | Using C#, retrieve a shape named 'MyTextBox' from the first worksheet, set its content to 'New text for the textbox', and export the workbook as XLSX. | Programmatically modify the text inside a named TextBox in an Excel workbook and write the updated workbook to a different path with Aspose.Cells.
+// Common Searches: Aspose.Cells C# change text of a specific TextBox shape in an existing Excel file | how to edit named textbox content in XLSX using Aspose.Cells for .NET | save workbook after updating shape text with Aspose.Cells | retrieve shape by name and set Text property Aspose.Cells C# | update textbox in first worksheet and export as new XLSX file
+// Tags: set textbox shape text Aspose.Cells | update named shape content XLSX | modify shape text and save workbook Aspose.Cells | load workbook edit textbox .NET | Aspose.Cells shape text manipulation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTextBoxExample
+// Loads an existing XLSX workbook, finds the TextBox shape named 'MyTextBox' on the first worksheet, updates its Text property, and saves the modified workbook as a new XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to add a TextBox to a worksheet, modify its Text property, and export the workbook to XLSX using Aspose.Cells in C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string textBoxName = "MyTextBox";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add a textbox to the worksheet (creation rule)
-            // Parameters: upper left row, upper left column, width, height (in pixels)
-            int textBoxIndex = worksheet.TextBoxes.Add(2, 1, 200, 100);
+            // Load the existing workbook (XLSX)
+            Workbook workbook = new Workbook(inputPath);
 
-            // Retrieve the added textbox
-            TextBox textBox = worksheet.TextBoxes[textBoxIndex];
+            // Get the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Change the text of the specific textbox (property rule)
-            textBox.Text = "Updated text for the specific TextBox.";
+            // Locate the TextBox shape by its name
+            Shape textbox = null;
+            try
+            {
+                textbox = sheet.Shapes[textBoxName];
+            }
+            catch (Exception)
+            {
+                // Shape not found by name; will handle later
+            }
 
-            // Save the workbook as XLSX (save rule)
-            workbook.Save("UpdatedTextBox.xlsx", SaveFormat.Xlsx);
+            // If the shape exists, attempt to set its text
+            if (textbox != null)
+            {
+                // Directly set the text; Aspose.Cells will handle the shape type internally
+                textbox.Text = "New text for the textbox";
+                Console.WriteLine($"Text updated for shape '{textBoxName}'.");
+            }
+            else
+            {
+                Console.WriteLine($"Shape '{textBoxName}' not found.");
+            }
+
+            // Save the workbook as XLSX
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

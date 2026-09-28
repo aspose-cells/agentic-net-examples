@@ -1,78 +1,77 @@
-// Title: Verify HTML <img> tags are ignored and cell formatting stays unchanged when loading HTML into Aspose.Cells (C#)
-// Description: C# example that loads an HTML string containing <img> tags into an Aspose.Cells workbook, confirms no EmbeddedImage objects are created, and validates that default cell styles (regular font, size 10) are preserved. The program outputs the verification results and saves the workbook.
-// Keywords: Aspose.Cells HTML import ignore images | C# load HTML to Excel without images | verify cell style after HTML load | Aspose.Cells EmbeddedImage detection | HTML <img> tag handling in Aspose.Cells
-// Common Searches: how to prevent images from being imported with Aspose.Cells HTML load | check if <img> tags affect cell formatting in Aspose.Cells | Aspose.Cells ignore img tag when converting HTML to Excel | verify no embedded images after loading HTML in Aspose.Cells | default cell style after HTML import Aspose.Cells
-// Developer Intent: Confirm that image tags in the source HTML are not imported as embedded images and that cell formatting remains at the default settings.
-// Use Cases: Load an HTML snippet containing <img> elements into a Workbook and programmatically ensure no cells contain EmbeddedImage objects. | Iterate through all cells after import to verify that the font remains regular, non‑italic, and size 10. | Save the workbook after verification to demonstrate a successful load without image artifacts.
-// AI Prompts: Write C# code using Aspose.Cells to load HTML with <img> tags and assert that no cells have EmbeddedImage objects. | Create a method that checks each cell's style after loading HTML to ensure the font is not bold, not italic, and size equals 10. | Explain how HtmlLoadOptions can be configured (or left default) to ignore images when importing HTML into an Aspose.Cells workbook.
+// Title: Load HTML with an <img> tag into an Aspose.Cells workbook in C# while ensuring images are ignored and only text is imported
+// AI Prompts: Use Aspose.Cells HtmlLoadOptions to load an HTML string containing an <img> element into a Workbook and confirm that the image is not imported into any cell. | Retrieve the HtmlString of the target cell and verify that it does not contain an <img> tag, then enumerate cells with place‑in‑cell pictures to ensure the count is zero. | After validation, save the workbook as an XLSX file and output the cell value to demonstrate that only the textual content was preserved.
+// Common Searches: c# aspose.cells load html string without embedding images | how to prevent img tags from creating picture cells when importing html in aspose.cells | verify that GetCellsWithPlaceInCellPicture returns zero after html import aspose.cells | check cell HtmlString for image tags using aspose.cells c# | save workbook after html import ensuring only text is kept aspose.cells
+// Tags: htmlloadoptions ignore images aspose.cells | validate cell htmlstring no img tag c# | enumerate place-in-cell pictures aspose.cells | save workbook xlsx after html import c# | import html string to workbook aspose.cells
 
 using System;
 using System.IO;
 using System.Text;
+using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlImageIgnoreDemo
+namespace AsposeCellsHtmlImportDemo
 {
-    // C# example that loads an HTML string containing <img> tags into an Aspose.Cells workbook, confirms no EmbeddedImage objects are created, and validates that default cell styles (regular font, size 10) are preserved. The program outputs the verification results and saves the workbook.
+    // The example loads an HTML string that includes an <img> tag into an Aspose.Cells Workbook using HtmlLoadOptions, confirms that the image is ignored, validates that the cell's HtmlString contains only text, checks that no cells have place‑in‑cell pictures, and saves the result as an XLSX file.
     class Program
     {
         static void Main()
         {
-            // Sample HTML containing an <img> tag and some text.
-            string htmlContent = @"
-                <html>
-                    <body>
-                        <p>Before image <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA'/> after image.</p>
-                        <p>Another paragraph without images.</p>
-                    </body>
-                </html>";
-
-            // Convert the HTML string to a memory stream.
-            byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
-            using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
+            try
             {
-                // Create HTML load options (default options are sufficient for this test).
-                HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+                // Sample HTML containing text and an <img> tag.
+                string htmlContent = "<p>Hello World<img src='image.png' alt='test'></p>";
 
-                // Load the HTML content into a workbook using the provided load rule.
-                Workbook workbook = new Workbook(htmlStream, loadOptions);
-
-                // Access the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Verify that no cell contains an embedded image (i.e., <img> tags are ignored).
-                bool imageTagIgnored = true;
-                foreach (Cell cell in cells)
+                // Convert the HTML string to a memory stream.
+                byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
+                using (MemoryStream htmlStream = new MemoryStream(htmlBytes))
                 {
-                    if (cell.EmbeddedImage != null)
+                    // Load options for HTML. No special options needed; images are ignored.
+                    HtmlLoadOptions loadOptions = new HtmlLoadOptions(LoadFormat.Html);
+
+                    // Load the HTML content into a workbook.
+                    Workbook workbook = new Workbook(htmlStream, loadOptions);
+
+                    // Access the first worksheet and the first cell where the text is placed.
+                    Worksheet worksheet = workbook.Worksheets[0];
+                    Cell cell = worksheet.Cells["A1"];
+
+                    // Verify that the cell contains only the textual part ("Hello World").
+                    Console.WriteLine("Cell A1 value: " + cell.StringValue);
+                    // Expected output: "Hello World"
+
+                    // Ensure that the HTML string stored in the cell does not contain the <img> tag.
+                    string cellHtml = cell.HtmlString;
+                    bool imgTagPresent = cellHtml != null &&
+                                         cellHtml.IndexOf("<img", StringComparison.OrdinalIgnoreCase) >= 0;
+                    Console.WriteLine("Image tag present in cell HTML: " + imgTagPresent);
+                    // Expected output: False
+
+                    // Verify that no cells contain embedded pictures (image tags are ignored).
+                    int pictureCellCount = 0;
+                    IEnumerator enumerator = worksheet.Cells.GetCellsWithPlaceInCellPicture();
+                    while (enumerator.MoveNext())
                     {
-                        imageTagIgnored = false;
-                        Console.WriteLine($"Image found in cell {cell.Name} – image tags were not ignored.");
-                        break;
+                        pictureCellCount++;
+                    }
+                    Console.WriteLine("Number of cells with embedded pictures: " + pictureCellCount);
+                    // Expected output: 0
+
+                    // Save the workbook (ensure the directory exists).
+                    string outputPath = "HtmlImportResult.xlsx";
+                    try
+                    {
+                        workbook.Save(outputPath, SaveFormat.Xlsx);
+                        Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                    }
+                    catch (Exception saveEx)
+                    {
+                        Console.WriteLine("Error saving workbook: " + saveEx.Message);
                     }
                 }
-
-                // Additionally, confirm that cell formatting is not altered by the image tag.
-                // For this simple test we expect default style (no bold, no italic, default font size).
-                bool formattingUnchanged = true;
-                foreach (Cell cell in cells)
-                {
-                    Style style = cell.GetStyle();
-                    if (style.Font.IsBold || style.Font.IsItalic || style.Font.Size != 10) // default size is 10
-                    {
-                        formattingUnchanged = false;
-                        Console.WriteLine($"Formatting changed in cell {cell.Name}.");
-                        break;
-                    }
-                }
-
-                // Output verification results.
-                Console.WriteLine($"Image tags ignored: {imageTagIgnored}");
-                Console.WriteLine($"Cell formatting unchanged: {formattingUnchanged}");
-
-                // Save the workbook to verify that the load succeeded (uses the provided save rule).
-                workbook.Save("HtmlImageIgnoreResult.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
         }
     }

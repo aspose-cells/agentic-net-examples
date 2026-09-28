@@ -1,61 +1,66 @@
-// Title: Refresh a PivotTable after Changing its ConsolidationFunction – Aspose.Cells for .NET (C#)
-// Description: C# sample that creates a workbook, inserts sample data, builds a PivotTable, calculates it, switches the data field's ConsolidationFunction (e.g., Sum → Count), calls RefreshData to update the cache, recalculates with CalculateData, and saves the result.
-// Keywords: Aspose.Cells | PivotTable RefreshData | CalculateData | ConsolidationFunction | change aggregation C# | .NET Excel automation | programmatic pivot refresh | update pivot cache | Sum to Count Aspose.Cells | Excel PivotTable API
-// Common Searches: Aspose.Cells refresh pivot after changing consolidation function | C# change PivotTable aggregation type programmatically | PivotTable.RefreshData vs CalculateData example | How to update pivot cache in Aspose.Cells .NET | Change pivot data field from Sum to Count using Aspose.Cells
-// Developer Intent: Apply a new ConsolidationFunction to a PivotTable and refresh the cache so the aggregated values reflect the change.
-// Use Cases: Generate a financial report, switch the amount field from Sum to Count, and output the updated totals. | Build an interactive dashboard where users select an aggregation (Sum, Count, Average) and the code updates the pivot accordingly. | Process a workbook with multiple pivots, programmatically set each data field to a different function, and ensure all tables display the correct calculations.
-// AI Prompts: Write C# code using Aspose.Cells that changes a PivotTable data field to Average, refreshes the cache, and saves the workbook. | Explain when to call PivotTable.RefreshData() versus PivotTable.CalculateData() in Aspose.Cells. | Provide step‑by‑step instructions to modify a PivotTable's ConsolidationFunction and verify the changes in the saved Excel file.
+// Title: Refresh Aspose.Cells PivotTable after setting ConsolidationFunction to Average using C#
+// AI Prompts: Generate C# code that sets a PivotTable data field's ConsolidationFunction to Average, then refreshes and recalculates the pivot using Aspose.Cells. | Show the sequence of Aspose.Cells API calls required to update a PivotTable after modifying its aggregation function in a .NET workbook. | Provide a complete C# example that creates a workbook, adds a pivot table, changes the data field to use the Average function, and invokes RefreshData and CalculateData.
+// Common Searches: C# Aspose.Cells how to recalculate pivot table after changing consolidation function | RefreshData method usage for Aspose.Cells PivotTable after modifying data field function | Update pivot cache in Aspose.Cells when changing PivotField Function to Average | Aspose.Cells pivot table aggregation change to average and refresh
+// Tags: Aspose.Cells PivotTable RefreshData usage | C# set PivotField ConsolidationFunction to Average | Aspose.Cells recalculate pivot after aggregation change | Refresh pivot cache Aspose.Cells .NET | PivotTable CalculateData after RefreshData
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// C# sample that creates a workbook, inserts sample data, builds a PivotTable, calculates it, switches the data field's ConsolidationFunction (e.g., Sum → Count), calls RefreshData to update the cache, recalculates with CalculateData, and saves the result.
-class RefreshPivotAfterConsolidationChange
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a workbook with sample data, adds a PivotTable, changes the data field's ConsolidationFunction to Average, then calls RefreshData followed by CalculateData to update the pivot cache before saving the file.
+    class RefreshPivotAfterConsolidationChange
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // Create a new workbook and add sample data
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("A");
+            sheet.Cells["B4"].PutValue(30);
 
-            // Populate sample data for the pivot table
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Amount");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["A4"].PutValue("A");
-            worksheet.Cells["B4"].PutValue(30);
+            // Add a pivot table based on the sample data
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Add a pivot table based on the data range
-            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-            // Add a row field (Category) and a data field (Amount)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+            // Configure the pivot table: Category as row field, Amount as data field
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Row field: Category
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Data field: Amount
 
             // Initial calculation to populate the pivot table
             pivotTable.CalculateData();
 
-            // Change the consolidation function of the data field (e.g., from Sum to Count)
-            PivotField dataField = pivotTable.DataFields[0];
-            dataField.Function = ConsolidationFunction.Count;
+            // Change the aggregation of the data field to Average
+            PivotField amountField = pivotTable.DataFields[0];
+            amountField.Function = ConsolidationFunction.Average; // set aggregation
 
             // Refresh the pivot cache and recalculate to reflect the new aggregation
-            pivotTable.RefreshData();          // Correct method to refresh cache
+            pivotTable.RefreshData();      // correct method to refresh pivot cache
             pivotTable.CalculateData();
 
             // Save the workbook with the updated pivot table
-            workbook.Save("PivotConsolidationRefresh.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
+            string outputPath = "PivotRefreshAfterConsolidationChange.xlsx";
+            workbook.Save(outputPath);
         }
     }
 }

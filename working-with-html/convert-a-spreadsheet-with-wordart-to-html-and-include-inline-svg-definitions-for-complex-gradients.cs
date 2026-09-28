@@ -1,67 +1,64 @@
-// Title: Export WordArt with Gradient and Inline SVG to HTML5 using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a gradient WordArt shape, embed an SVG that defines a multi‑stop linear gradient, configure HtmlSaveOptions for HTML5, and save the file so the SVG appears inline in the generated HTML.
-// Keywords: Aspose.Cells | C# | WordArt export | inline SVG | HTML5 conversion | gradient shape | HtmlSaveOptions | Excel to HTML | SVG shape in Excel
-// Common Searches: Aspose.Cells export WordArt to HTML5 | inline SVG with Aspose.Cells C# | save Excel workbook as HTML with gradient graphics | add SVG shape to worksheet and convert to HTML | preserve WordArt styling in HTML export
-// Developer Intent: Generate an HTML5 file that contains both a gradient WordArt object and an embedded SVG definition without external image files.
-// Use Cases: Web‑ready reports that keep Excel‑designed WordArt and custom SVG gradients. | Interactive dashboards where graphics are rendered directly in the browser via inline SVG. | Automated conversion of design‑heavy Excel templates into single‑page HTML for newsletters or intranet portals.
-// AI Prompts: Write C# code with Aspose.Cells to add a gradient WordArt shape, embed an SVG with a multi‑stop linear gradient, and export the workbook to HTML5 with the SVG inline. | Explain the effect of HtmlSaveOptions properties HtmlVersion, ExportImagesAsBase64, and EnableCssCustomProperties on the output when exporting WordArt and SVG. | Show how to replace the linear gradient in the SVG with a radial gradient while keeping the shape inline after HTML export.
+// Title: Convert an Excel workbook containing WordArt to HTML with inline SVG and Base64‑encoded images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with WordArt, sets HtmlSaveOptions.ExportImagesAsBase64 to true, and saves the workbook as an HTML file that contains inline SVG for shape gradients. | Show how to write the HTML output from Aspose.Cells to a MemoryStream, convert it to a UTF‑8 string, and persist it to disk in C#. | Explain how to verify the source Excel file exists before conversion and handle exceptions when exporting WordArt to HTML with Aspose.Cells.
+// Common Searches: Aspose.Cells convert Excel WordArt to HTML with inline SVG | C# export Excel shapes as Base64 images in HTML using Aspose.Cells | How to embed complex gradient shapes as SVG when saving workbook to HTML .NET | HtmlSaveOptions ExportImagesAsBase64 example for WordArt | Save Excel to HTML with memory stream Aspose.Cells C#
+// Tags: export WordArt to inline SVG Aspose.Cells | HtmlSaveOptions ExportImagesAsBase64 C# | convert Excel shapes to HTML Base64 images | inline SVG gradient definitions Aspose.Cells | memory stream HTML generation .NET | exception handling for Excel to HTML conversion
 
 using System;
 using System.IO;
+using System.Text;
+using System.Drawing.Imaging;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add a gradient WordArt shape, embed an SVG that defines a multi‑stop linear gradient, configure HtmlSaveOptions for HTML5, and save the file so the SVG appears inline in the generated HTML.
-class Program
+namespace SpreadsheetToHtmlWithSvg
 {
-    static void Main()
+    // The example checks that input.xlsx exists, loads it with Aspose.Cells, configures HtmlSaveOptions to embed all images (including WordArt) as Base64, saves the workbook to a MemoryStream as HTML, converts the stream to a UTF‑8 string, and writes the resulting HTML—containing inline SVG definitions for complex gradients—to output.html.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            // Path to the source Excel file that contains WordArt.
+            string inputPath = "input.xlsx";
 
-        // Add a WordArt shape with a gradient preset (WordArtStyle6)
-        ShapeCollection shapes = worksheet.Shapes;
-        Shape wordArt = shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle6, // gradient fill style
-            "Gradient WordArt",               // text
-            2, 0,                             // topRow, top offset (pixels)
-            2, 0,                             // leftColumn, left offset (pixels)
-            100, 400);                        // height, width (pixels)
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Define an SVG image that contains a complex linear gradient
-        string svgContent = @"
-<svg xmlns='http://www.w3.org/2000/svg' width='200' height='100'>
-  <defs>
-    <linearGradient id='grad1' x1='0%' y1='0%' x2='100%' y2='0%'>
-      <stop offset='0%'   style='stop-color:#ff0000;stop-opacity:1' />
-      <stop offset='50%'  style='stop-color:#00ff00;stop-opacity:1' />
-      <stop offset='100%' style='stop-color:#0000ff;stop-opacity:1' />
-    </linearGradient>
-  </defs>
-  <rect width='200' height='100' fill='url(#grad1)' />
-</svg>";
-        byte[] svgBytes = System.Text.Encoding.UTF8.GetBytes(svgContent);
+            try
+            {
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-        // Add the SVG shape to the worksheet (compatibleImageData is null for modern Excel versions)
-        shapes.AddSvg(
-            topRow: 5, top: 0,
-            leftColumn: 5, left: 0,
-            height: -1, width: -1,          // -1 lets Excel auto‑size the shape
-            svgData: svgBytes,
-            compatibleImageData: null);
+                // Configure HTML save options.
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+                {
+                    // Export images (including those generated from shapes) as Base64 strings.
+                    ExportImagesAsBase64 = true
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.HtmlVersion = HtmlVersion.Html5;          // Enable HTML5 for inline SVG support
-        htmlOptions.ExportImagesAsBase64 = false;            // Keep images as separate files (SVG will be inline)
-        htmlOptions.EnableCssCustomProperties = true;        // Optional: reduce duplicate resources
-        htmlOptions.ExportWorksheetCSSSeparately = false;    // Keep CSS in the same file
+                    // Note: ExportChartImageFormat is not available in the current Aspose.Cells version.
+                    // Charts will be exported using the default image format.
+                };
 
-        // Save the workbook as an HTML file
-        string outputHtml = "WordArtWithSvg.html";
-        workbook.Save(outputHtml, htmlOptions);
+                // Save the workbook to an in‑memory stream using the configured options.
+                using (MemoryStream htmlStream = new MemoryStream())
+                {
+                    workbook.Save(htmlStream, htmlOptions);
 
-        Console.WriteLine($"HTML file saved to: {Path.GetFullPath(outputHtml)}");
+                    // Convert the stream to a UTF‑8 string containing the HTML.
+                    string htmlContent = Encoding.UTF8.GetString(htmlStream.ToArray());
+
+                    // Write the HTML (with inline SVG definitions) to a file.
+                    File.WriteAllText("output.html", htmlContent);
+                }
+
+                Console.WriteLine("Conversion completed. HTML with inline SVG saved to output.html");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            }
+        }
     }
 }

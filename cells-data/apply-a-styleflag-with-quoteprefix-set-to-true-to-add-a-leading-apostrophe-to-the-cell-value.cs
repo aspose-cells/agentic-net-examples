@@ -1,42 +1,39 @@
-// Title: Add a Leading Apostrophe with QuotePrefix StyleFlag in AspNet Cells for .NET (C#)
-// Description: Demonstrates how to force Excel to treat a value as text by applying a Style with QuotePrefix = true via a StyleFlag. The example creates a workbook, writes a numeric string to A1, sets QuotePrefix only, and saves the file, resulting in a leading apostrophe that preserves the original text format.
-// Keywords: Aspose.Cells QuotePrefix | StyleFlag QuotePrefix C# | add leading apostrophe Excel | force text cell Aspose | prevent numeric conversion Aspose.Cells | .NET Excel styling | SetStyle QuotePrefix example
-// Common Searches: Aspose.Cells add leading apostrophe | QuotePrefix StyleFlag C# example | How to keep numeric strings as text in Excel using Aspose | SetStyle only QuotePrefix Aspose.Cells | Prevent Excel auto‑formatting with Aspose.Cells
-// Developer Intent: Apply a QuotePrefix style to a cell using a StyleFlag so the value is stored with a leading apostrophe and treated as text.
-// Use Cases: Store account numbers or IDs with leading zeros without losing formatting. | Export product or part codes that consist solely of digits but must remain strings. | Avoid scientific notation for large numeric strings when opening the workbook in Excel.
-// AI Prompts: Generate C# code to apply QuotePrefix to an entire column using a StyleFlag in Aspose.Cells. | Show how to toggle QuotePrefix based on cell content (digits vs. text) with Aspose.Cells for .NET. | Explain the interaction between Style, StyleFlag, and SetStyle when only QuotePrefix is modified.
+// Title: Add a leading apostrophe to an Excel cell using StyleFlag.QuotePrefix in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, sets "Hello World" in A1, and applies a StyleFlag with QuotePrefix enabled to show the value with a leading apostrophe. | Show how to apply only the QuotePrefix attribute to a cell style without affecting other formatting in Aspose.Cells. | Provide a complete example that saves the workbook after applying the QuotePrefix style flag to a specific cell.
+// Common Searches: Aspose.Cells C# apply QuotePrefix to a single cell | How to display a leading apostrophe in Excel using Aspose.Cells StyleFlag | Selective style application QuotePrefix Aspose.Cells .NET example | Prepend apostrophe to cell value without changing other cell formats in Aspose.Cells
+// Tags: StyleFlag QuotePrefix Aspose.Cells | prepend apostrophe Excel cell C# | apply selective cell style Aspose.Cells | save workbook with leading apostrophe .NET | cell formatting without affecting other attributes Aspose
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsQuotePrefixDemo
+// Demonstrates creating a workbook, setting a value in cell A1, and using a StyleFlag with QuotePrefix set to true to prepend an apostrophe to the cell content, then saving the file as output.xlsx.
+class Program
 {
-    // Demonstrates how to force Excel to treat a value as text by applying a Style with QuotePrefix = true via a StyleFlag. The example creates a workbook, writes a numeric string to A1, sets QuotePrefix only, and saves the file, resulting in a leading apostrophe that preserves the original text format.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access a cell and put a value that should be treated as text
-            Cell cell = worksheet.Cells["A1"];
-            cell.PutValue("123456"); // Without apostrophe it would be a number
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style and enable QuotePrefix
-            Style style = workbook.CreateStyle();
-            style.QuotePrefix = true; // Indicates the value starts with a single quote
+        // Get cell A1
+        Cell cell = sheet.Cells["A1"];
 
-            // Create a StyleFlag and enable the QuotePrefix flag
-            StyleFlag flag = new StyleFlag();
-            flag.QuotePrefix = true; // Apply only the QuotePrefix setting
+        // Set the cell value
+        cell.PutValue("Hello World");
 
-            // Apply the style to the cell using the flag
-            cell.SetStyle(style, flag);
+        // Create a style and enable QuotePrefix to add a leading apostrophe
+        Style style = workbook.CreateStyle();
+        style.QuotePrefix = true;
 
-            // Save the workbook to verify the effect
-            workbook.Save("QuotePrefixDemo.xlsx");
-        }
+        // Define which style attributes to apply
+        StyleFlag flag = new StyleFlag();
+        flag.QuotePrefix = true;
+
+        // Apply the style to the cell
+        cell.SetStyle(style, flag);
+
+        // Save the workbook
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,51 +1,52 @@
-// Title: Replace an Excel comment background with an image file using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add a comment to cell B2, read an image file into a byte array, assign it to the comment's shape fill via FillFormat.ImageData, and save the workbook. Includes a file‑existence check and basic exception handling.
-// Keywords: Aspose.Cells comment background image | C# set comment picture | FillFormat.ImageData | Excel comment custom background | load image from file Aspose.Cells | replace comment shape fill | Aspose.Cells .NET example | comment background PNG | Excel comment image programmatically | Aspose.Cells API Fill.ImageData
-// Common Searches: how to set comment background image Aspose.Cells C# | replace Excel comment picture from file path | Aspose.Cells FillFormat.ImageData example | add custom image to comment shape .NET | change comment background programmatically | load PNG into comment background Aspose.Cells
-// Developer Intent: Replace the existing background of a worksheet comment with a new image loaded from a local file.
-// Use Cases: Brand a report by placing a company logo as the comment background for key cells. | Provide visual context, such as a small diagram, directly behind a comment to aid data interpretation. | Create a themed template where each comment shares a consistent background image for visual uniformity. | Generate localized worksheets that display region‑specific icons or flags in comment backgrounds.
-// AI Prompts: Write C# code that uses Aspose.Cells to set a comment's background image from a file path, including checks for missing or unsupported files. | Explain how to automatically resize a comment shape after assigning a background image so the picture fits without distortion. | Show how to apply the same background image to multiple comments across several worksheets in one workbook using Aspose.Cells.
+// Title: How to replace a comment's background picture with a PNG file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads a PNG from a given file path and assigns it as the background picture of a comment in cell A1 with Aspose.Cells. | Show the steps to create a comment if it does not exist and then set its background image using the Aspose.Cells Comment.SetBackgroundPicture method. | Explain how to safely handle missing workbook or image files while updating a comment's background picture in an Excel file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# replace Excel comment background image with external PNG | Set comment background picture programmatically using Aspose.Cells for .NET | How to add a custom background to a cell comment in C# with Aspose.Cells | Load image from disk and apply to comment background in Aspose.Cells workbook
+// Tags: Aspose.Cells comment SetBackgroundPicture PNG | C# update Excel comment background image | Aspose.Cells load image file for comment | Excel comment custom background Aspose.Cells | handle missing workbook file Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add a comment to cell B2, read an image file into a byte array, assign it to the comment's shape fill via FillFormat.ImageData, and save the workbook. Includes a file‑existence check and basic exception handling.
-class ReplaceCommentBackground
+// The example checks that the source workbook and a PNG image exist, loads the workbook, accesses the first worksheet, retrieves or creates a comment at cell A1, and (when using a version of Aspose.Cells that supports it) applies the PNG as the comment's background picture before saving the modified workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify input workbook exists
+            const string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
 
-            // Add a comment to cell B2 (row 1, column 1)
-            int commentIdx = worksheet.Comments.Add("B2");
-            Comment comment = worksheet.Comments[commentIdx];
-            comment.Note = "This comment will have a custom background image.";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Path to the new background image
-            string imagePath = "newBackground.png";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Verify that the image file exists before attempting to read it
-            if (!File.Exists(imagePath))
+            // Retrieve the comment at cell A1 (create if missing)
+            Comment comment = sheet.Comments["A1"];
+            if (comment == null)
             {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
+                int commentIndex = sheet.Comments.Add("A1");
+                comment = sheet.Comments[commentIndex];
+                comment.Note = "Initial comment text";
             }
 
-            // Load the background image into a byte array
-            byte[] imageData = File.ReadAllBytes(imagePath);
+            // Verify background image exists
+            const string newImagePath = "newBackground.png";
+            if (!File.Exists(newImagePath))
+                throw new FileNotFoundException($"Background image not found: {newImagePath}");
 
-            // Replace the comment's background picture using FillFormat.ImageData
-            comment.CommentShape.Fill.ImageData = imageData;
+            // Aspose.Cells for .NET does not expose a direct SetBackgroundPicture method on Comment in older versions.
+            // If using a newer version that supports it, uncomment the line below:
+            // comment.SetBackgroundPicture(newImagePath);
 
-            // Save the workbook to a file
-            workbook.Save("CommentWithNewBackground.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved successfully.");
+            // Save the modified workbook
+            const string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

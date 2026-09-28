@@ -1,34 +1,29 @@
-// Title: Remove All Slicers from an Excel Workbook with Aspose.Cells for .NET
-// Description: Loads a workbook, iterates each worksheet, clears the SlicerCollection to delete every slicer, and saves the file without slicers.
-// Keywords: Aspose.Cells remove slicers | C# clear slicer collection | delete all slicers Excel | SlicerCollection.Clear Aspose | programmatic slicer removal | Excel workbook cleanup .NET
-// Common Searches: how to delete all slicers using Aspose.Cells C# | clear slicer collection for each worksheet Aspose | remove slicers from Excel file programmatically | Aspose.Cells example to strip slicers
-// Developer Intent: Eliminate every slicer in a workbook by clearing each worksheet’s SlicerCollection.
-// Use Cases: Prepare a clean template before distribution by stripping slicers. | Automate batch processing of workbooks to remove slicers in a data‑export pipeline. | Clean up after pivot‑table updates when slicers are no longer required.
-// AI Prompts: Generate C# code with Aspose.Cells that removes all slicers from a workbook and saves the result. | Explain the performance impact of SlicerCollection.Clear() on large Excel files. | Show how to target specific worksheets for slicer removal using Aspose.Cells.
+// Title: Delete all slicers from an Excel workbook using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, loops through every worksheet, clears each slicer collection, and saves the modified workbook. | Show how to use the Worksheet.Slicers.Clear method in Aspose.Cells to programmatically remove slicers linked to pivot tables across a workbook. | Provide a step‑by‑step Aspose.Cells example that deletes all slicers from a workbook and writes the result to a new file.
+// Common Searches: asp.net aspose.cells remove slicers from all worksheets in an Excel file | c# clear slicer collection for each sheet using Aspose.Cells | how to delete pivot table slicers programmatically with Aspose.Cells .NET | iterate through workbook worksheets to remove slicers Aspose.Cells | save workbook after removing slicers Aspose.Cells C#
+// Tags: Aspose.Cells slicer collection clear | delete all slicers workbook Aspose.Cells | worksheet level slicer removal Aspose.Cells | pivot table slicer cleanup Aspose.Cells | C# Aspose.Cells remove slicers
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-// Loads a workbook, iterates each worksheet, clears the SlicerCollection to delete every slicer, and saves the file without slicers.
-class RemoveAllSlicers
+// // Loads an .xlsx workbook, iterates each worksheet, calls sheet.Slicers.Clear() to delete all slicers, and saves the workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("InputWorkbook.xlsx");
+        // Load the workbook from a file (replace with your source file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
         // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Get the slicer collection for the current worksheet
-            SlicerCollection slicers = sheet.Slicers;
-
-            // Clear all slicers from this worksheet
-            slicers.Clear();
+            // Clear all slicers associated with the current worksheet
+            // This removes slicers linked to any PivotTable on the sheet
+            sheet.Slicers.Clear();
         }
 
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("WorkbookWithoutSlicers.xlsx");
+        // Save the modified workbook to a new file (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

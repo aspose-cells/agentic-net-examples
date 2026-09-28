@@ -1,55 +1,49 @@
-// Title: C# – Log cell address, type, and value to a text file while enumerating Aspose.Cells worksheet
-// Description: Creates a workbook, adds sample data, then uses the Cells enumerator to walk every cell. For each cell it captures the address (e.g., A1), the data type, and the value, writing them as tab‑separated rows to a text file before saving the workbook.
-// Keywords: Aspose.Cells enumerate cells | log cell address C# | export cell type to file | worksheet audit trail .NET | write cell values text file
-// Common Searches: Aspose.Cells log each cell address and value | C# enumerate worksheet cells and save to txt | how to audit cell data type with Aspose.Cells | export Aspose.Cells cell metadata to a file
-// Developer Intent: Generate a plain‑text audit log that records every cell’s address, data type, and value during worksheet enumeration.
-// Use Cases: Compliance reporting: capture a snapshot of all cell contents before distribution. | Debugging: create a readable dump of cell information to identify unexpected data. | Data pipelines: track transformations by logging cell‑level details during processing.
-// AI Prompts: Write C# code using Aspose.Cells to enumerate all cells in a worksheet and output address, type, and value to a CSV file. | Show how to extend the logger to include row/column indices and safely handle null values. | Explain how to embed this cell‑audit routine into a larger import workflow with error handling and resource cleanup.
+// Title: Create an audit log of each cell’s address, data type, and value while enumerating a worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that iterates over all non‑empty cells in an Aspose.Cells worksheet and writes the cell address, type, and value as a tab‑separated line to a text file. | Modify the enumeration to include empty cells and output the audit information in CSV format instead of TSV. | Add comprehensive try‑catch handling around the StreamWriter and ensure the workbook is saved only after the audit file is successfully closed.
+// Common Searches: how to export cell address, type, and value from Aspose.Cells to a text file in C# | enumerate worksheet cells and create a TSV audit log using Aspose.Cells .NET | C# Aspose.Cells write cell details (address, data type, value) to a log file | log Excel cell metadata during enumeration with Aspose.Cells and StreamWriter | save audit log of populated cells while generating an Excel workbook in C#
+// Tags: Aspose.Cells cell enumeration TSV logging | C# write Excel cell address and type to file | StreamWriter based audit of worksheet cells | Aspose.Cells .NET audit log of populated cells | export cell metadata Aspose.Cells C#
 
 using System;
 using System.Collections;
 using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, adds sample data, then uses the Cells enumerator to walk every cell. For each cell it captures the address (e.g., A1), the data type, and the value, writing them as tab‑separated rows to a text file before saving the workbook.
+// Iterates through all populated cells in the first worksheet, writes each cell's address, data type, and value as a tab‑separated line to CellAuditLog.txt, and then saves the workbook as AuditWorkbook.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (creation rule)
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate some sample data (can be replaced with loading logic)
+        // Populate some sample data (replace with loading logic if needed)
         worksheet.Cells["A1"].PutValue("Hello");
         worksheet.Cells["B1"].PutValue(123);
         worksheet.Cells["A2"].PutValue(DateTime.Now);
 
-        // Path for the audit log file
-        string logFilePath = "CellAuditLog.txt";
-
-        // Open a StreamWriter to write the audit information
-        using (StreamWriter writer = new StreamWriter(logFilePath, false))
+        // Open a text file for writing the audit log
+        using (StreamWriter writer = new StreamWriter("CellAuditLog.txt"))
         {
-            // Get the cells enumerator (enumeration rule)
+            // Get the cells enumerator for the worksheet
             IEnumerator enumerator = worksheet.Cells.GetEnumerator();
 
-            // Iterate through each cell in the worksheet
+            // Iterate through all cells that contain data
             while (enumerator.MoveNext())
             {
                 Cell cell = (Cell)enumerator.Current;
 
-                // Retrieve cell address, data type, and value
-                string address = cell.Name;                     // e.g., "A1"
-                string dataType = cell.Type.ToString();         // e.g., "IsString"
+                // Prepare log information: address, data type, and value
+                string address = cell.Name;                                 // e.g., "A1"
+                string dataType = cell.Type.ToString();                     // e.g., "IsString"
                 string value = cell.Value != null ? cell.Value.ToString() : "null";
 
-                // Write the information to the log file
+                // Write a tab‑separated line to the log file
                 writer.WriteLine($"{address}\t{dataType}\t{value}");
             }
         }
 
-        // Save the workbook (save rule)
-        workbook.Save("AuditedWorkbook.xlsx");
+        // Save the workbook (uses the provided save rule)
+        workbook.Save("AuditWorkbook.xlsx");
     }
 }

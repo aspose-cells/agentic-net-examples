@@ -1,46 +1,62 @@
-// Title: C# – Convert a comma‑delimited CSV to XLSX using Aspose.Cells TxtLoadOptions
-// Description: Demonstrates how to set a comma separator with TxtLoadOptions, load a CSV file into an Aspose.Cells Workbook, and save it as an XLSX workbook in C#.
-// Keywords: Aspose.Cells CSV import C# | TxtLoadOptions separator | load CSV Aspose.Cells | save workbook as XLSX | C# CSV to Excel conversion | Aspose.Cells LoadOptions example | comma‑delimited CSV Aspose | Workbook SaveFormat.Xlsx | Aspose.Cells .NET CSV import
-// Common Searches: Aspose.Cells load CSV with custom delimiter C# | How to convert CSV to XLSX using Aspose.Cells | TxtLoadOptions example for comma separated values | C# code to import CSV and export Excel with Aspose | SaveFormat.Xlsx usage in Aspose.Cells
-// Developer Intent: Import a comma‑separated CSV via TxtLoadOptions and export it as an XLSX workbook.
-// Use Cases: Transform user‑uploaded CSV reports into Excel files for analysis. | Automate batch conversion of multiple CSV files to XLSX in a data pipeline. | Generate Excel output from temporary CSV data created at runtime.
-// AI Prompts: Generate C# code that reads a pipe‑delimited CSV with Aspose.Cells TxtLoadOptions and saves it as XLSX. | Explain how to configure TxtLoadOptions for different delimiters and optimize performance for large CSV files. | Provide a step‑by‑step tutorial for converting CSV to XLSX in a .NET Core console app using Aspose.Cells, including error handling.
+// Title: C# – Load a comma‑separated CSV using Aspose.Cells TxtLoadOptions and save as XLSX
+// AI Prompts: Write C# code that reads a CSV file with TxtLoadOptions (separator ',', ConvertNumericData = true, ConvertDateTimeData = true) and saves it as an XLSX workbook using Aspose.Cells. | Create a method that verifies a CSV file exists, loads it with Aspose.Cells TxtLoadOptions, enables numeric/date conversion, and exports the workbook to XLSX. | Generate error‑handling logic for a CSV‑to‑XLSX conversion in C#, catching missing‑file and other exceptions while using Aspose.Cells.
+// Common Searches: aspnet convert csv file to xlsx using txtloadoptions aspocells c# | how to set comma separator in Aspose.Cells TxtLoadOptions when loading CSV | c# Aspose.Cells load csv with numeric and date conversion and save as xlsx | example code for converting comma delimited csv to excel workbook with Aspose.Cells | handling file not found exception during csv to xlsx conversion aspocells
+// Tags: Aspose.Cells TxtLoadOptions CSV loading | CSV to XLSX conversion C# Aspose.Cells | comma separator configuration Aspose.Cells | numeric and datetime conversion Aspose.Cells | file existence check C# Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvToXlsx
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to set a comma separator with TxtLoadOptions, load a CSV file into an Aspose.Cells Workbook, and save it as an XLSX workbook in C#.
-    class Program
+    // The example checks for a comma‑delimited CSV file, loads it into an Aspose.Cells Workbook with TxtLoadOptions (comma separator, numeric and date conversion enabled), and saves the workbook as an XLSX file, handling missing‑file and other exceptions.
+    public class CsvToXlsxConverter
     {
-        static void Main()
+        public static void Run()
         {
-            // Path to the source CSV file
+            // Path to the source CSV file (comma‑delimited)
             string csvPath = "input.csv";
 
             // Path for the resulting XLSX file
             string xlsxPath = "output.xlsx";
 
-            // Create a sample CSV file (comma‑delimited)
-            File.WriteAllText(csvPath, "Name,Age,Country\nJohn,30,USA\nAlice,25,UK\nBob,35,Canada");
+            // Verify that the CSV file exists to avoid FileNotFoundException
+            if (!File.Exists(csvPath))
+            {
+                Console.WriteLine($"CSV file not found: {csvPath}");
+                return;
+            }
 
-            // ------------------------------------------------------------
-            // Load the CSV file using TxtLoadOptions (comma separator)
-            // ------------------------------------------------------------
-            TxtLoadOptions loadOptions = new TxtLoadOptions();   // rule: TxtLoadOptions constructor
-            loadOptions.Separator = ',';                         // set the CSV delimiter
+            try
+            {
+                // Create TxtLoadOptions for loading a CSV file
+                TxtLoadOptions loadOptions = new TxtLoadOptions
+                {
+                    // Explicitly set the separator to comma (default is also comma)
+                    Separator = ',',
+                    // Enable conversion of numeric and date values
+                    ConvertNumericData = true,
+                    ConvertDateTimeData = true
+                };
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(csvPath, loadOptions); // rule: Workbook(string, LoadOptions)
+                // Load the CSV file into a workbook using the specified load options
+                Workbook workbook = new Workbook(csvPath, loadOptions);
 
-            // ------------------------------------------------------------
-            // Save the workbook as XLSX
-            // ------------------------------------------------------------
-            workbook.Save(xlsxPath, SaveFormat.Xlsx); // rule: Workbook.Save(string, SaveFormat)
+                // Save the workbook as XLSX
+                workbook.Save(xlsxPath, SaveFormat.Xlsx);
 
-            Console.WriteLine($"CSV file '{csvPath}' has been converted to XLSX file '{xlsxPath}'.");
+                Console.WriteLine($"CSV file \"{csvPath}\" has been successfully converted to \"{xlsxPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+            }
+        }
+
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

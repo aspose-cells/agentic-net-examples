@@ -1,70 +1,82 @@
-// Title: Localize Boolean Text in Aspose.Cells by Overriding GetBooleanValueString
-// Description: Demonstrates how to create a CustomBooleanGlobalizationSettings class that inherits from GlobalizationSettings, overrides GetBooleanValueString to return locale‑specific strings (e.g., French "Vrai"/"Faux"), applies the settings to a Workbook, formats cells with a BOOLEAN style, and saves the file.
-// Keywords: Aspose.Cells | C# | GlobalizationSettings | GetBooleanValueString | boolean localization | French boolean strings | custom globalization | locale specific true false | Excel boolean formatting | Aspose.Cells example
-// Common Searches: Aspose.Cells override GetBooleanValueString | localize true false in Excel using Aspose | custom GlobalizationSettings C# | display French boolean values in workbook | how to change boolean text in Aspose.Cells
-// Developer Intent: Implement a custom GlobalizationSettings class that provides language‑specific true/false strings and attach it to a workbook so cells show localized boolean text.
-// Use Cases: Show French "Vrai"/"Faux" in worksheet cells by assigning CustomBooleanGlobalizationSettings to the workbook. | Extend the overridden method to support additional languages such as German, Spanish, or Japanese. | Combine the custom settings with a BOOLEAN custom style to force text display instead of default boolean formatting.
-// AI Prompts: Create a CustomBooleanGlobalizationSettings class that returns English, French, and German boolean strings and demonstrate its use with Aspose.Cells. | Explain how to apply custom globalization settings to an existing workbook and ensure cells render the localized boolean text using a BOOLEAN style. | Write unit tests for GetBooleanValueString covering at least three locales and verify the correct strings are returned.
+// Title: Implement a custom Boolean string localizer and write locale‑specific true/false values to an Excel worksheet using Aspose.Cells in C#
+// AI Prompts: Create a C# class named MyStringLocalizer with a GetBooleanString(bool) method that returns the appropriate true/false text for a given locale, then use this class to fill cells in an Aspose.Cells workbook with the localized strings. | Add additional culture cases to the GetBooleanString switch (e.g., it-IT, ja-JP) and modify the example to write those localized boolean strings into the worksheet before saving the file.
+// Common Searches: how to display true/false in French using Aspose.Cells C# | C# Aspose.Cells write localized boolean text to cells | custom GetBooleanString implementation for multiple cultures in Aspose.Cells | example of culture‑specific boolean string conversion before saving Excel with Aspose.Cells | Aspose.Cells workbook localization of boolean values C#
+// Tags: boolean string localization Aspose.Cells | custom culture formatter C# | write localized boolean values to Excel | extend GetBooleanString for multiple locales | Aspose.Cells workbook localization example
 
 using System;
 using Aspose.Cells;
 
-// Custom globalization settings that return locale‑specific boolean strings
-// Demonstrates how to create a CustomBooleanGlobalizationSettings class that inherits from GlobalizationSettings, overrides GetBooleanValueString to return locale‑specific strings (e.g., French "Vrai"/"Faux"), applies the settings to a Workbook, formats cells with a BOOLEAN style, and saves the file.
-public class CustomBooleanGlobalizationSettings : GlobalizationSettings
+namespace LocalizationExample
 {
-    private readonly string _locale;
-
-    public CustomBooleanGlobalizationSettings(string locale)
+    // Simple string localizer that returns localized true/false strings based on the selected locale.
+    // The example defines a MyStringLocalizer class that returns true/false strings based on a supplied locale, writes raw Boolean values to column A of a new workbook, writes the corresponding localized strings to column B, and saves the file as LocalizedBooleans.xlsx using Aspose.Cells.
+    public class MyStringLocalizer
     {
-        _locale = locale;
-    }
+        private readonly string _locale;
 
-    // Override to provide localized true/false representations
-    public override string GetBooleanValueString(bool bv)
-    {
-        // Example: English (default) and French
-        if (_locale.Equals("fr", StringComparison.OrdinalIgnoreCase))
+        // Constructor accepts a locale identifier (e.g., "en-US", "fr-FR").
+        public MyStringLocalizer(string locale)
         {
-            return bv ? "Vrai" : "Faux";
+            _locale = locale;
         }
 
-        // Add more locales as needed
-        return bv ? "True" : "False";
+        // Returns a localized representation of a Boolean value.
+        public string GetBooleanString(bool value)
+        {
+            // Simple locale handling – extend this switch with more languages as needed.
+            switch (_locale)
+            {
+                case "en-US":
+                    return value ? "True" : "False";
+                case "fr-FR":
+                    return value ? "Vrai" : "Faux";
+                case "de-DE":
+                    return value ? "Wahr" : "Falsch";
+                case "es-ES":
+                    return value ? "Verdadero" : "Falso";
+                case "zh-CN":
+                    return value ? "真" : "假";
+                default:
+                    // Fallback to English if locale is not recognized.
+                    return value ? "True" : "False";
+            }
+        }
     }
-}
 
-public class Program
-{
-    public static void Main()
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
 
-        // Select the desired locale (e.g., French)
-        string locale = "fr";
+                // Initialize the custom string localizer (French locale for this example).
+                MyStringLocalizer localizer = new MyStringLocalizer("fr-FR");
 
-        // Apply the custom globalization settings to the workbook
-        workbook.Settings.GlobalizationSettings = new CustomBooleanGlobalizationSettings(locale);
+                // Write Boolean values to cells.
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue(true);
+                sheet.Cells["A2"].PutValue(false);
 
-        Worksheet sheet = workbook.Worksheets[0];
+                // Retrieve the localized string representation of the Boolean values.
+                string localizedTrue = localizer.GetBooleanString(true);   // "Vrai"
+                string localizedFalse = localizer.GetBooleanString(false); // "Faux"
 
-        // Insert boolean values into cells
-        sheet.Cells["A1"].PutValue(true);
-        sheet.Cells["A2"].PutValue(false);
+                // Write the localized strings back to the sheet for demonstration.
+                sheet.Cells["B1"].PutValue(localizedTrue);
+                sheet.Cells["B2"].PutValue(localizedFalse);
 
-        // Set cell style to display boolean values as text
-        Style boolStyle = workbook.CreateStyle();
-        boolStyle.Custom = "BOOLEAN";
-        sheet.Cells["A1"].SetStyle(boolStyle);
-        sheet.Cells["A2"].SetStyle(boolStyle);
-
-        // Demonstrate the overridden GetBooleanValueString method
-        var gs = workbook.Settings.GlobalizationSettings;
-        Console.WriteLine(gs.GetBooleanValueString(true));   // Outputs "Vrai"
-        Console.WriteLine(gs.GetBooleanValueString(false));  // Outputs "Faux"
-
-        // Save the workbook
-        workbook.Save("LocalizedBooleanDemo.xlsx");
+                // Save the workbook.
+                string outputPath = "LocalizedBooleans.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,40 +1,59 @@
-// Title: Detect and Log Excel Workbook Encryption with Aspose.Cells for .NET
-// Description: C# sample that uses Aspose.Cells FileFormatUtil to determine if an Excel file is password‑protected (IsEncrypted) and writes the file path and encryption flag to the console, enabling quick audit and compliance checks.
-// Keywords: Aspose.Cells | C# | .NET | Excel encryption detection | FileFormatUtil | IsEncrypted | password protected workbook | audit Excel files | compliance reporting | GitHub example | US compliance | EU data protection
-// Common Searches: how to check if an Excel file is encrypted using Aspose.Cells | C# detect password protected workbook without opening it | Aspose.Cells FileFormatUtil IsEncrypted example | log Excel encryption status for compliance | GitHub Aspose.Cells encryption audit sample
-// Developer Intent: Determine whether a given Excel workbook requires a password and record the result for auditing or compliance purposes.
-// Use Cases: Run the method across a folder of workbooks to produce a compliance report of encrypted files. | Integrate the check into CI/CD pipelines to reject builds that contain password‑protected Excel documents. | Replace console output with a structured logger (e.g., NLog, Serilog) while preserving the encryption detection logic.
-// AI Prompts: Generate C# code that scans a directory of Excel files and logs each file's encryption status using Aspose.Cells. | Show how to swap Console.WriteLine with NLog in the encryption audit example. | Explain exception handling for FileFormatUtil.DetectFileFormat when the file is corrupted or unsupported.
+// Title: Check whether an Excel workbook is password‑protected with Aspose.Cells for .NET and log the result
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, catches the CellsException when the file is password‑protected, and prints "Encrypted" or "Not Encrypted" to the console. | Create a .NET console application that verifies a given Excel file exists, attempts to open it without a password via Aspose.Cells, determines its encryption status, and writes the status to a log output.
+// Common Searches: asp.net how to detect password protection on an Excel file using Aspose.Cells | c# Aspose.Cells check if .xlsx is encrypted without providing a password | log encryption status of an Excel workbook with Aspose.Cells in a console app | catch CellsException to determine if an Excel file is password‑protected | determine Excel workbook encryption state using Aspose.Cells for .NET
+// Tags: Aspose.Cells detect encrypted workbook | C# check Excel file password protection | log Excel encryption status .NET | handle CellsException for password‑protected file | audit Excel workbook encryption Aspose
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsAudit
+// The example verifies the existence of a specified .xlsx file, attempts to load it with Aspose.Cells without a password, catches a CellsException containing the word "password" to identify encryption, and outputs the encryption status (Encrypted or Not Encrypted) to the console for auditing purposes.
+class ExcelEncryptionChecker
 {
-    // C# sample that uses Aspose.Cells FileFormatUtil to determine if an Excel file is password‑protected (IsEncrypted) and writes the file path and encryption flag to the console, enabling quick audit and compliance checks.
-    public class EncryptionAuditor
+    static void Main(string[] args)
     {
-        // Detects whether the specified Excel file is encrypted and logs the result.
-        public static void AuditEncryption(string filePath)
+        // Path to the Excel file to be audited
+        string filePath = "sample.xlsx";
+
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
         {
-            // Use Aspose.Cells FileFormatUtil to detect file format and encryption status.
-            FileFormatInfo fileInfo = FileFormatUtil.DetectFileFormat(filePath);
-
-            // The IsEncrypted property indicates if the file requires a password to open.
-            bool isEncrypted = fileInfo.IsEncrypted;
-
-            // Log the encryption status (replace with a proper logging framework if needed).
-            Console.WriteLine($"File: {filePath}");
-            Console.WriteLine($"Is Encrypted: {isEncrypted}");
+            Console.WriteLine($"Error: The file '{filePath}' was not found.");
+            return;
         }
 
-        // Example usage
-        public static void Main()
-        {
-            // Replace with the path to the Excel file you want to audit.
-            string excelFilePath = "sample.xlsx";
+        bool isEncrypted = false;
 
-            AuditEncryption(excelFilePath);
+        try
+        {
+            // Attempt to load the workbook without providing a password
+            Workbook workbook = new Workbook(filePath);
+            // If loading succeeds, the file is not encrypted
+            isEncrypted = false;
         }
+        catch (CellsException ex)
+        {
+            // Aspose.Cells throws a CellsException when the file is password‑protected.
+            // Check the exception message for password‑related text.
+            if (!string.IsNullOrEmpty(ex.Message) &&
+                ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                isEncrypted = true;
+            }
+            else
+            {
+                // Re‑throw unexpected CellsException errors
+                throw;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any other unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return;
+        }
+
+        // Log the encryption status
+        Console.WriteLine($"File '{filePath}' encryption status: {(isEncrypted ? "Encrypted" : "Not Encrypted")}");
     }
 }

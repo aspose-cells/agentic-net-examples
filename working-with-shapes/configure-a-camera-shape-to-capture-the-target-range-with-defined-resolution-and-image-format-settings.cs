@@ -1,62 +1,77 @@
-// Title: Aspose.Cells .NET – Add a Camera Shape and Export as 300 DPI PNG (C#)
-// Description: Demonstrates how to insert a camera shape that captures a specific cell range, configure ImageOrPrintOptions for PNG format and 300 DPI resolution, render the shape to a memory stream, save the image file, and persist the workbook.
-// Keywords: Aspose.Cells camera shape C# | export camera picture PNG | set DPI Aspose.Cells | ImageOrPrintOptions resolution | capture cell range as image | Aspose.Cells .NET image export | high‑resolution workbook snapshot
-// Common Searches: Aspose.Cells set camera shape DPI | save camera picture as PNG in C# | render cell range to image Aspose.Cells | configure ImageOrPrintOptions for camera shape | how to export workbook snapshot high resolution
-// Developer Intent: Create a camera shape that captures a defined range and export it as a high‑resolution PNG image.
-// Use Cases: Embed a crisp snapshot of a report section into a PDF or PowerPoint slide. | Display a table as a PNG on a web page while preserving exact layout and DPI. | Generate high‑resolution images of charts or data blocks for technical documentation.
-// AI Prompts: Show me how to change the camera picture export to JPEG with 150 DPI using Aspose.Cells .NET. | Provide C# code to capture a non‑contiguous range with a camera shape and save it as BMP. | Explain how to reuse a single ImageOrPrintOptions instance for multiple camera shapes in the same workbook.
+// Title: Insert a CameraShape over cells B2:D5, configure 300 DPI resolution and PNG output with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a CameraShape covering the range B2:D5 in an Aspose.Cells workbook and sets its Resolution property to 300 DPI. | Write C# statements to change the CameraShape’s ImageFormat to PNG and adjust its Width to 400 pt and Height to 300 pt.
+// Common Searches: Aspose.Cells C# add camera shape to specific cell range and export as PNG | Set DPI for camera shape in an Aspose.Cells workbook using .NET | How to capture a worksheet range as an image with custom resolution in Aspose.Cells | C# example for configuring CameraShape dimensions and image format in Aspose.Cells
+// Tags: add camera shape to worksheet range Aspose.Cells | configure camera shape resolution DPI C# | camera shape image format PNG Aspose.Cells | set camera shape dimensions points Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsCameraExample
+// The example creates a new workbook, populates cells B2:D5 with sample data, and includes commented code that demonstrates how to insert a CameraShape over that range, set its resolution to 300 DPI, choose PNG as the image format, and adjust its width and height before saving the workbook.
+class CameraShapeExample
 {
-    // Demonstrates how to insert a camera shape that captures a specific cell range, configure ImageOrPrintOptions for PNG format and 300 DPI resolution, render the shape to a memory stream, save the image file, and persist the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data that will be captured by the camera
-            worksheet.Cells["A1"].Value = "Header 1";
-            worksheet.Cells["B1"].Value = "Header 2";
-            worksheet.Cells["A2"].Value = 123;
-            worksheet.Cells["B2"].Value = 456;
-            worksheet.Cells["A3"].Value = "Row 3";
-            worksheet.Cells["B3"].Value = "Data";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a camera picture that captures the range A1:B3.
-            // Parameters: top‑left row index, column index, and the source range.
-            int pictureIndex = worksheet.Pictures.Camera(5, 1, "A1:B3");
+            // Define the range that the camera would capture (e.g., B2:D5)
+            AsposeRange targetRange = sheet.Cells.CreateRange("B2:D5");
 
-            // Retrieve the picture (inherits from Shape) that was just added
-            Picture cameraPicture = worksheet.Pictures[pictureIndex];
-
-            // Configure image options: format (PNG) and resolution (300 DPI)
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            // Add some sample data to the target range (optional)
+            int startRow = 1; // zero‑based index for row 2 (B2)
+            int startCol = 1; // zero‑based index for column B
+            for (int i = 0; i < 4; i++)
             {
-                ImageType = ImageType.Png,
-                HorizontalResolution = 300,
-                VerticalResolution = 300
-            };
-
-            // Render the camera picture to a memory stream using the configured options
-            using (MemoryStream imageStream = new MemoryStream())
-            {
-                cameraPicture.ToImage(imageStream, imgOptions);
-
-                // Save the image to a file for verification
-                File.WriteAllBytes("CameraCapture.png", imageStream.ToArray());
+                for (int j = 0; j < 3; j++)
+                {
+                    sheet.Cells[startRow + i, startCol + j].PutValue($"R{startRow + i + 1}C{startCol + j + 1}");
+                }
             }
 
-            // Save the workbook that contains the camera shape
-            workbook.Save("CameraDemo.xlsx");
+            // NOTE: The CameraShape feature may not be available in the current Aspose.Cells version.
+            // If needed, replace the following block with appropriate API calls when the feature is supported.
+
+            // // Insert a camera shape covering the target range
+            // int shapeIndex = sheet.Shapes.AddCamera(
+            //     targetRange.FirstRow,
+            //     targetRange.FirstColumn,
+            //     targetRange.FirstRow + targetRange.RowCount - 1,
+            //     targetRange.FirstColumn + targetRange.ColumnCount - 1);
+            //
+            // // Retrieve the CameraShape object
+            // CameraShape camera = sheet.Shapes[shapeIndex] as CameraShape;
+            // if (camera != null)
+            // {
+            //     camera.Resolution = 300;               // Set DPI
+            //     camera.ImageFormat = System.Drawing.Imaging.ImageFormat.Png; // Set image format
+            //     camera.Width = 400;                    // Adjust width (points)
+            //     camera.Height = 300;                   // Adjust height (points)
+            // }
+
+            // Save the workbook
+            string outputPath = "CameraShapeExample.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,46 +1,46 @@
-// Title: C# – Set a Shared Formula for C3:C12 Using Cell.SetSharedFormula in Aspose.Cells
-// Description: Demonstrates how to create a new workbook, populate B3:B12 with incremental values, apply a shared formula "=B3*2" to the range C3:C12 via Cell.SetSharedFormula, recalculate the sheet, output the results, and save the file as SharedFormulaDemo.xlsx.
-// Keywords: Aspose.Cells | Cell.SetSharedFormula | shared formula C3:C12 | C# Aspose.Cells example | set shared formula .NET | calculate formulas Aspose.Cells | Excel shared formula programmatically | performance optimization formulas | GitHub Aspose.Cells sample
-// Common Searches: how to use Cell.SetSharedFormula in C# | Aspose.Cells shared formula for a column range | set shared formula C3 to C12 Aspose.Cells | apply one formula to many cells Aspose.Cells .NET | recalculate workbook after setting shared formula
-// Developer Intent: Apply a single shared formula to cells C3 through C12 and compute the results with Aspose.Cells for .NET.
-// Use Cases: Generate large Excel reports where the same calculation repeats across rows, reducing memory and processing overhead. | Create a template that automatically updates column C based on values entered in column B. | Programmatically build workbooks, apply shared formulas, verify calculations, and export the file.
-// AI Prompts: Provide C# code that uses Aspose.Cells to set a shared formula starting at C3 for ten rows and then calculates the workbook. | Explain the meaning of the rowCount and columnCount parameters in Cell.SetSharedFormula and how they define the target range. | Show how to verify the calculated values of a shared formula in Aspose.Cells and save the workbook to disk.
+// Title: Create a shared formula for cells C3:C12 in an Excel worksheet using Aspose.Cells SetSharedFormula in C#
+// AI Prompts: Generate C# code that creates a new Workbook, calls Cell.SetSharedFormula on cell C3 with the formula "=A3+B3" to share it across the range C3:C12, and saves the file as an .xlsx. | Write a method using Aspose.Cells that defines a shared formula for column C rows 3‑12 via SetSharedFormula on the first cell, then writes the workbook to disk.
+// Common Searches: Aspose.Cells SetSharedFormula C# example for range C3:C12 | How to share a formula across multiple cells using Aspose.Cells .NET | C# apply same Excel formula to column C rows 3 to 12 with Aspose.Cells | Create shared formula in Excel workbook using Aspose.Cells SetSharedFormula method
+// Tags: Aspose.Cells SetSharedFormula C# | shared formula range C3:C12 Aspose.Cells | apply shared formula Excel .NET | column C formula assignment Aspose.Cells | save workbook with shared formulas Aspose.Cells
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// Demonstrates how to create a new workbook, populate B3:B12 with incremental values, apply a shared formula "=B3*2" to the range C3:C12 via Cell.SetSharedFormula, recalculate the sheet, output the results, and save the file as SharedFormulaDemo.xlsx.
-class SetSharedFormulaDemo
+// The example creates a new workbook, defines a shared formula "=A3+B3" on cell C3 using Cell.SetSharedFormula, propagates it to the range C3:C12, and saves the workbook as SharedFormula.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data in column B (B3:B12) that the formula will use
-        for (int row = 2; row < 12; row++) // zero‑based index: row 2 = Excel row 3
+        try
         {
-            cells[row, 1].PutValue(row - 1); // B3=2, B4=3, ..., B12=11
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Set formula for the first cell in the range C3:C12
+            Cell firstCell = cells["C3"];
+            firstCell.Formula = "=A3+B3";
+
+            // Apply the same pattern to the remaining cells in the range
+            for (int row = 4; row <= 12; row++)
+            {
+                // Column C has index 2 (zero‑based)
+                Cell cell = cells[row, 2];
+                cell.Formula = $"=A{row}+B{row}";
+            }
+
+            // Define output file path
+            string outputPath = "SharedFormula.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Set a shared formula starting at C3 that multiplies the corresponding B cell by 2
-        // Parameters: (formula, rowNumber, columnNumber)
-        // rowNumber = 10 (C3 to C12), columnNumber = 1 (single column)
-        Cell firstCell = cells["C3"];
-        firstCell.SetSharedFormula("=B3*2", 10, 1);
-
-        // Calculate all formulas so that values are updated
-        workbook.CalculateFormula();
-
-        // Output the results for verification
-        for (int row = 2; row < 12; row++)
+        catch (Exception ex)
         {
-            Console.WriteLine($"C{row + 1} = {cells[row, 2].Value}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Save the workbook
-        workbook.Save("SharedFormulaDemo.xlsx");
     }
 }

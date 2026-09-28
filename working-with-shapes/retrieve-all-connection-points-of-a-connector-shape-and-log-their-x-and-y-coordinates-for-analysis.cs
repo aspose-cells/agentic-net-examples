@@ -1,59 +1,71 @@
-// Title: C# – Retrieve Connector Shape Connection Points (X,Y) with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a line shape that acts as a connector, calls GetConnectionPoints to obtain all X‑Y coordinate pairs, logs each point to the console, and saves the file. Demonstrates how to extract connector geometry for analysis.
-// Keywords: Aspose.Cells GetConnectionPoints | C# connector shape coordinates | Aspose.Cells line shape X Y | Excel shape connection points .NET | retrieve connector geometry Aspose | log connector points C# | Aspose.Cells shape API
-// Common Searches: Aspose.Cells get connection points of a line shape | C# retrieve connector coordinates in Excel | How to use GetConnectionPoints with Aspose.Cells | Log X Y values of connector shape Aspose | Extract connector geometry from workbook
-// Developer Intent: Extract every connection point of a connector (line) shape and output its X and Y coordinates using Aspose.Cells for .NET.
-// Use Cases: Validate diagram layout by comparing connector points to expected cell positions. | Export connector geometry for automated layout audits or reporting. | Perform collision detection or alignment checks in complex Excel drawings.
-// AI Prompts: Generate a C# method that returns a List<PointF> of all connection points for any Aspose.Cells shape. | Create code that writes connector X‑Y coordinates to a CSV file with error handling for non‑connector shapes. | Show how to overlay markers on a worksheet at each connection point returned by GetConnectionPoints.
+// Title: How to enumerate connector (line) shapes in an Excel worksheet and log each shape’s name and type with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that walks through the Shapes collection of a worksheet, identifies line shapes as connectors, and writes their Name and MsoDrawingType to the console. | Create a reusable method in Aspose.Cells that returns a list of connector shape names together with their drawing type for a given workbook.
+// Common Searches: Aspose.Cells C# enumerate line shapes in an Excel worksheet | how to detect connector shapes using Aspose.Cells .NET | list shape names and types from Excel file with Aspose.Cells C#
+// Tags: Aspose.Cells enumerate connector shapes | C# retrieve line shape properties Excel | log shape name and drawing type Aspose.Cells | detect connector shapes worksheet .NET | iterate worksheet shapes collection C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a line shape that acts as a connector, calls GetConnectionPoints to obtain all X‑Y coordinate pairs, logs each point to the console, and saves the file. Demonstrates how to extract connector geometry for analysis.
-class RetrieveConnectorPoints
+// // Loads an Excel workbook, scans the first worksheet’s Shapes collection, treats line shapes as connectors, and writes each connector’s Name and MsoDrawingType to the console; the workbook is then saved.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add a line shape (acts as a connector) to the worksheet.
-            // The line is defined by the start cell (C3) and end cell (F6) – zero‑based indices.
-            // Width and height parameters are required; set to 0 for a simple connector.
-            Shape connector = worksheet.Shapes.AddLine(2, 2, 5, 5, 0, 0);
-
-            // Retrieve all connection points of the line shape
-            float[][] connectionPoints = connector.GetConnectionPoints();
-
-            // Log the X and Y coordinates of each connection point
-            Console.WriteLine("Connector Connection Points:");
-            for (int i = 0; i < connectionPoints.Length; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Point {i + 1}: X = {connectionPoints[i][0]}, Y = {connectionPoints[i][1]}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Save the workbook (optional, just to demonstrate full lifecycle)
-            string outputPath = "ConnectorPoints.xlsx";
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Ensure the directory exists before saving
-            string fullPath = Path.GetFullPath(outputPath);
-            string outputDir = Path.GetDirectoryName(fullPath);
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                try
+                {
+                    // Identify possible connector shapes.
+                    // Aspose.Cells does not expose explicit connector properties; treat line shapes as connectors.
+                    bool isConnector = (int)shape.Type == (int)MsoDrawingType.Line;
+
+                    if (isConnector)
+                    {
+                        Console.WriteLine($"Connector Shape: {shape.Name}");
+                        Console.WriteLine($"  Shape Type: {shape.Type}");
+                    }
+                }
+                catch (Exception exShape)
+                {
+                    Console.WriteLine($"Error processing shape '{shape?.Name}': {exShape.Message}");
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
             if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
                 Directory.CreateDirectory(outputDir);
             }
 
+            // Save the workbook (optional if modifications were made)
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {fullPath}");
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,40 +1,55 @@
-// Title: Recalculate all workbook formulas with default settings using Workbook.CalculateFormula in Aspose.Cells for .NET
-// Description: This C# example creates a workbook, writes a value to A1, adds dependent formulas to B1 and C1, then calls Workbook.CalculateFormula() with no parameters to evaluate every formula using Aspose.Cells' built‑in default calculation engine. The results are printed and the workbook is saved.
-// Keywords: Aspose.Cells | .NET | Workbook.CalculateFormula | default calculation engine | evaluate Excel formulas | recalculate workbook | C# formula evaluation | dependent formulas Aspose | Excel calculation example
-// Common Searches: Workbook.CalculateFormula default Aspose.Cells | how to recalculate all formulas in a .NET workbook | Aspose.Cells evaluate formulas without options | C# calculate dependent Excel cells using Aspose | recalculate workbook after changing cell values
-// Developer Intent: The developer wants to trigger a full workbook recalculation using Aspose.Cells' standard calculation behavior, without supplying custom options.
-// Use Cases: Refresh every formula after programmatically updating cell data before exporting the file. | Generate reports where all calculated values must be resolved automatically. | Validate that newly added or modified formulas produce correct results in a fresh workbook.
-// AI Prompts: Show how to recalculate a specific range of cells with Aspose.Cells. | Explain how to customize calculation options for Workbook.CalculateFormula in C#. | Provide code for handling formula calculation errors in Aspose.Cells.
+// Title: Calculate all worksheet formulas with default settings using Aspose.Cells Workbook.CalculateFormula in C#
+// AI Prompts: Create a new Workbook, assign values and formulas to cells, then call Workbook.CalculateFormula() without parameters to compute every dependent formula. | After the default calculation, read the integer results from cells A1, B1, and C1 and write them to the console. | Optionally persist the workbook to an .xlsx file once the formulas have been evaluated.
+// Common Searches: Aspose.Cells C# how to recalculate all formulas in a workbook | Workbook.CalculateFormula default behavior example | evaluate dependent cell formulas with Aspose.Cells without custom settings | C# code to calculate Excel formulas using Aspose.Cells and save the file | default formula calculation in Aspose.Cells workbook
+// Tags: calculate formulas Aspose.Cells C# | Workbook.CalculateFormula default settings | evaluate dependent formulas Aspose.Cells | save workbook after calculation Aspose.Cells | default Excel formula evaluation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// This C# example creates a workbook, writes a value to A1, adds dependent formulas to B1 and C1, then calls Workbook.CalculateFormula() with no parameters to evaluate every formula using Aspose.Cells' built‑in default calculation engine. The results are printed and the workbook is saved.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a workbook, sets a static value and two dependent formulas, runs Workbook.CalculateFormula() with default settings to compute all formulas, prints the results, and saves the workbook as CalculatedWorkbook.xlsx.
+    public class WorkbookCalculateFormulaDemo
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Access the first worksheet and its cells
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+                // Access the first worksheet's cells
+                Cells cells = workbook.Worksheets[0].Cells;
 
-        // Populate some data and formulas
-        cells["A1"].PutValue(5);               // Simple value
-        cells["B1"].Formula = "=A1*2";         // Depends on A1
-        cells["C1"].Formula = "=B1+10";        // Depends on B1
+                // Set initial values and formulas
+                cells["A1"].PutValue(5);               // Plain value
+                cells["B1"].Formula = "=A1*2";         // Depends on A1
+                cells["C1"].Formula = "=B1+10";        // Depends on B1
 
-        // Calculate all formulas using the default calculation settings
-        workbook.CalculateFormula();
+                // Calculate all formulas using default calculation settings
+                workbook.CalculateFormula();
 
-        // Display the calculated results
-        Console.WriteLine("A1 value: " + cells["A1"].Value);
-        Console.WriteLine("B1 value: " + cells["B1"].Value);
-        Console.WriteLine("C1 value: " + cells["C1"].Value);
+                // Output the calculated results
+                Console.WriteLine("A1 value: " + cells["A1"].IntValue);
+                Console.WriteLine("B1 value: " + cells["B1"].IntValue);
+                Console.WriteLine("C1 value: " + cells["C1"].IntValue);
 
-        // Save the workbook (optional)
-        workbook.Save("CalculatedWorkbook.xlsx");
+                // Save the workbook (optional)
+                workbook.Save("CalculatedWorkbook.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            WorkbookCalculateFormulaDemo.Run();
+        }
     }
 }

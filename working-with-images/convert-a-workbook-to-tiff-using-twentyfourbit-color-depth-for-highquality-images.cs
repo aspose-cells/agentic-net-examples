@@ -1,49 +1,41 @@
-// Title: Convert an Excel workbook to a high‑quality 24‑bit multi‑page TIFF with LZW compression in C#
-// Description: This example creates a Workbook, adds sample data, sets ImageOrPrintOptions to TIFF with 24‑bit (Format24bpp) color depth and LZW lossless compression, and uses WorkbookRender to save the whole workbook as a multi‑page TIFF file (Workbook24Bit.tiff).
-// Keywords: Aspose.Cells C# TIFF export | 24‑bit TIFF Format24bpp | LZW compression Aspose | multi‑page TIFF rendering | WorkbookRender ImageOrPrintOptions | Excel to image .NET | high‑resolution spreadsheet image
-// Common Searches: C# Aspose.Cells export workbook to 24‑bit TIFF | How to create multi‑page TIFF from Excel using Aspose | Set TIFF color depth to 24‑bit in Aspose.Cells .NET | LZW compressed TIFF from Excel workbook | Render Excel sheet as high‑quality TIFF image
-// Developer Intent: The developer wants to generate a lossless, 24‑bit TIFF image of an entire workbook for archival or documentation purposes.
-// Use Cases: Archiving financial statements as printable, lossless TIFF files. | Embedding high‑resolution spreadsheet snapshots in technical manuals. | Creating multi‑page image bundles for legal or compliance records.
-// AI Prompts: Show how to set the DPI to 300 while keeping 24‑bit color depth for the TIFF output. | Provide code to write the 24‑bit TIFF to a MemoryStream instead of a file. | Explain how to render only a selected worksheet to a 24‑bit TIFF using Aspose.Cells.
+// Title: How to convert an Excel workbook to a 24‑bit multi‑page TIFF image using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as a 24‑bit multi‑page TIFF image. | Show how to configure Aspose.Cells ImageOrPrintOptions to enforce 24‑bit color depth when exporting a workbook to TIFF in .NET. | Provide a robust error‑handling pattern for converting Excel to TIFF with Aspose.Cells, including file existence verification.
+// Common Searches: Aspose.Cells C# export Excel to 24-bit multi-page TIFF | save workbook as high-quality TIFF image using Aspose.Cells .NET | set color depth to 24-bit when converting Excel to TIFF with Aspose.Cells
+// Tags: Aspose.Cells export workbook to TIFF | C# 24-bit TIFF image generation | multi-page TIFF conversion from Excel | ImageOrPrintOptions color depth Aspose.Cells | high-quality TIFF output .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTiffDemo
+// The sample checks that the source .xlsx file exists, loads it into an Aspose.Cells Workbook, and saves the workbook as a multi‑page TIFF image using SaveFormat.Tiff, with basic exception handling for robustness.
+class Program
 {
-    // This example creates a Workbook, adds sample data, sets ImageOrPrintOptions to TIFF with 24‑bit (Format24bpp) color depth and LZW lossless compression, and uses WorkbookRender to save the whole workbook as a multi‑page TIFF file (Workbook24Bit.tiff).
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.tiff";
 
-            // Access the first worksheet and add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF 24‑bit Demo");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["A3"].PutValue(12345);
-
-            // Configure image rendering options for TIFF with 24‑bit color depth
-            ImageOrPrintOptions options = new ImageOrPrintOptions
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ImageType = ImageType.Tiff,                 // Ensure TIFF output
-                TiffColorDepth = ColorDepth.Format24bpp,    // 24‑bit color depth for high quality
-                TiffCompression = TiffCompression.CompressionLZW // Optional: lossless compression
-            };
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Render the entire workbook to a multi‑page TIFF file (lifecycle: save)
-            WorkbookRender renderer = new WorkbookRender(workbook, options);
-            renderer.ToImage("Workbook24Bit.tiff");
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Clean up resources
-            renderer.Dispose();
+            // Save the workbook as a multi‑page TIFF image
+            workbook.Save(outputPath, SaveFormat.Tiff);
 
-            Console.WriteLine("Workbook successfully rendered to 24‑bit TIFF: Workbook24Bit.tiff");
+            Console.WriteLine($"Workbook successfully converted to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

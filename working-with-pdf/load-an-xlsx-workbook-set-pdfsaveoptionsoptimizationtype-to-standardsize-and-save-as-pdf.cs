@@ -1,30 +1,47 @@
-// Title: C# – Convert XLSX to PDF with Standard‑size optimization using AspNet.Cells
-// Description: Loads an XLSX workbook, sets PdfSaveOptions.OptimizationType to Standard (high‑quality size), and saves the workbook as a PDF with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | PdfSaveOptions | PdfOptimizationType.Standard | XLSX to PDF C# | .NET Excel to PDF | Standard size PDF | high quality PDF export | Aspose.Cells PDF optimization
-// Common Searches: Aspose.Cells set PDF optimization to Standard | C# convert Excel to PDF with high quality | PdfSaveOptions StandardSize example | How to export XLSX as PDF using Aspose.Cells .NET | Standard PDF size Aspose.Cells
-// Developer Intent: Export an existing Excel workbook to a PDF with Standard‑size (high‑quality) optimization using Aspose.Cells in C#.
-// Use Cases: Generate print‑ready PDF reports from Excel templates while preserving layout fidelity. | Create high‑quality PDF invoices or statements from Excel data for client distribution. | Batch‑process multiple workbooks to PDF with a consistent Standard optimization setting.
-// AI Prompts: Write C# code that loads an Excel workbook and saves it as a PDF using PdfOptimizationType.Standard with Aspose.Cells. | Explain the visual differences between Standard, MinimumSize, and MaximumSize PDF optimization types in Aspose.Cells. | Provide best‑practice error handling when converting Excel files to PDF with specific PdfSaveOptions in C#.
+// Title: Convert an XLSX workbook to PDF with Standard size optimization using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a .xlsx file with Aspose.Cells, sets PdfSaveOptions.OptimizationType to Standard, and saves the result as a PDF file. | Create a .NET example that verifies the Excel file exists, applies standard PDF optimization via PdfSaveOptions, and outputs a PDF using Aspose.Cells.
+// Common Searches: asp.net how to export Excel to PDF with standard optimization using Aspose.Cells | c# set PdfSaveOptions OptimizationType to Standard when converting XLSX to PDF | example code for saving workbook as PDF with standard size in Aspose.Cells | verify file exists before converting Excel to PDF with Aspose.Cells C#
+// Tags: Aspose.Cells PDF optimization Standard | C# Excel to PDF conversion Aspose.Cells | PdfSaveOptions OptimizationType Standard example | Workbook.Save PDF Aspose.Cells | file existence check before Excel conversion C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an XLSX workbook, sets PdfSaveOptions.OptimizationType to Standard (high‑quality size), and saves the workbook as a PDF with Aspose.Cells for .NET.
+// // Loads input.xlsx, checks its existence, configures PdfSaveOptions with OptimizationType = Standard, and saves the workbook as output.pdf using Aspose.Cells.
 class Program
 {
     static void Main()
     {
-        // Load the existing XLSX workbook
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-        // Create PDF save options and set the optimization type to Standard (high quality)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OptimizationType = PdfOptimizationType.Standard;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Save the workbook as a PDF using the specified options
-        string outputFile = "output.pdf";
-        workbook.Save(outputFile, pdfOptions);
+            // Load the XLSX workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options with standard optimization
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                OptimizationType = PdfOptimizationType.Standard
+            };
+
+            // Save the workbook as PDF using the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

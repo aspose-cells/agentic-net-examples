@@ -1,10 +1,7 @@
-// Title: Check if cell K10 has an in‑cell dropdown using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, accesses the first worksheet, reads cell K10, examines its Validation object, and prints whether the Validation.InCellDropDown flag is true. Includes error handling for missing files and absent validation.
-// Keywords: Aspose.Cells | C# | in‑cell dropdown | data validation | Validation.InCellDropDown | Excel | .NET | check dropdown | cell K10 | workbook loading
-// Common Searches: Aspose.Cells detect dropdown in cell | C# check if Excel cell has data validation list | How to read Validation.InCellDropDown property | Determine if cell K10 contains a dropdown using Aspose | Read cell validation with Aspose.Cells .NET
-// Developer Intent: Identify whether cell K10 contains an in‑cell dropdown and output the result.
-// Use Cases: Validate that required dropdowns exist before processing user‑entered data. | Create an inventory of cells that use data‑validation lists for documentation or migration. | Execute conditional business logic only when a specific cell is configured with a dropdown. | Verify template integrity prior to data entry in automated workflows.
-// AI Prompts: Write a reusable method that takes a worksheet and cell address and returns true if the cell has an in‑cell dropdown using Aspose.Cells. | Generate code to scan an entire worksheet and list all cells that contain in‑cell dropdowns. | Add detailed logging to the dropdown‑check program, recording cell address, validation type, and dropdown status. | Convert the console example into an async service method suitable for ASP.NET Core applications.
+// Title: How to determine if cell K10 contains an in‑cell dropdown list using Aspose.Cells for .NET and display the result in the console
+// AI Prompts: Generate a C# console program that loads an Excel file with Aspose.Cells, accesses cell K10, checks its Validation.InCellDropDown property, and writes the boolean outcome to the console. | Write C# code that accepts a cell address as input, uses Aspose.Cells to retrieve the cell's Validation object, and returns whether an in‑cell dropdown is enabled. | Create a reusable method in C# that takes a Worksheet and a cell reference, returns true if the cell has an in‑cell dropdown list via Aspose.Cells, and prints the result.
+// Common Searches: Aspose.Cells C# check if a specific cell has an in‑cell dropdown list | How to read the InCellDropDown property of a cell validation in Aspose.Cells | C# console application to detect dropdown validation in Excel using Aspose.Cells | Aspose.Cells validation dropdown detection example | Determine whether Excel cell K10 contains a data validation list with Aspose.Cells
+// Tags: Aspose.Cells GetValidation InCellDropDown | C# detect Excel cell dropdown list | Aspose.Cells read cell validation | Console output Excel validation result | Check specific cell dropdown Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,56 +9,44 @@ using Aspose.Cells;
 
 namespace AsposeCellsInCellDropdownCheck
 {
-    // Loads an Excel workbook, accesses the first worksheet, reads cell K10, examines its Validation object, and prints whether the Validation.InCellDropDown flag is true. Includes error handling for missing files and absent validation.
+    // The sample loads 'input.xlsx', accesses the first worksheet, retrieves cell K10, obtains its Validation object, evaluates the InCellDropDown flag, and writes the boolean result to the console while handling missing files and exceptions.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            const string inputPath = "input.xlsx";
-
-            // Verify that the input file exists before attempting to load it
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: File not found – {inputPath}");
-                return;
-            }
-
-            Workbook workbook;
             try
             {
-                // Load the workbook
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
-                return;
-            }
+                const string inputPath = "input.xlsx";
 
-            try
-            {
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Get cell K10
-                Cell cell = worksheet.Cells["K10"];
-
-                // Retrieve validation applied to the cell (null if none)
-                Validation validation = cell.GetValidation();
-
-                // Determine whether an in‑cell dropdown is enabled
-                bool hasInCellDropdown = false;
-                if (validation != null)
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    hasInCellDropdown = validation.InCellDropDown;
+                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                    return;
                 }
 
-                // Output the result
-                Console.WriteLine($"Cell K10 uses in‑cell dropdown: {hasInCellDropdown}");
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (or specify the required sheet)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Get the cell K10
+                Cell cell = worksheet.Cells["K10"];
+
+                // Retrieve the validation applied to the cell (may be null)
+                Validation validation = cell.GetValidation();
+
+                // Determine whether the validation displays an in‑cell dropdown
+                bool hasInCellDropdown = validation != null && validation.InCellDropDown;
+
+                // Output the result to the console
+                Console.WriteLine($"Cell K10 uses an in‑cell dropdown: {hasInCellDropdown}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

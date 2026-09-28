@@ -1,60 +1,57 @@
-// Title: C# – Aspose.Cells: Create a workbook with a worksheet for each month and add sample data
-// Description: This Aspose.Cells for .NET example builds a new Workbook, renames the first sheet to "January", adds eleven more worksheets named February‑December, and fills every sheet with a header (Date, Description, Amount) plus five sample rows for the first days of the month. The file is saved as MonthsWorkbook.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | create workbook | add worksheets | month worksheets | rename default sheet | populate cells | sample data | save as xlsx | Excel automation | multiple sheets | monthly template
-// Common Searches: Aspose.Cells add worksheet for each month C# | populate multiple sheets with sample data Aspose.Cells | rename default worksheet Aspose.Cells .NET | save workbook with 12 month sheets Aspose.Cells | example code Aspose.Cells monthly worksheets
-// Developer Intent: Generate an Excel file containing twelve month‑named worksheets, each pre‑filled with a header and sample rows.
-// Use Cases: Build a monthly expense tracker where each month has its own sheet. | Create a test workbook with placeholder data for performance or UI testing. | Generate a calendar‑based data entry template that separates entries by month.
-// AI Prompts: Write C# code using Aspose.Cells to add worksheets named January‑December and insert a header and sample rows into each. | Show how to apply bold formatting to the header row and auto‑fit columns for the month worksheets created with Aspose.Cells. | Explain how to replace the static sample rows with data from a collection or database for each month sheet.
+// Title: Generate an Excel workbook with twelve month‑named worksheets and identical sample tables using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to create a new workbook, clear the default sheet, add worksheets named January through December, insert a header row (Item, Quantity, Price) and three sample data rows into each sheet, then export the file as an .xlsx workbook. | Demonstrate how to iterate over an array of month names in C# with Aspose.Cells to programmatically add and name worksheets, fill each with the same data table, and save the workbook.
+// Common Searches: Aspose.Cells C# create workbook with worksheets for each month | add multiple sheets named January February Aspose.Cells .NET | populate identical tables across many worksheets using Aspose.Cells | remove default sheet and add custom worksheets in Aspose.Cells C# | save Excel file with month tabs using Aspose.Cells for .NET
+// Tags: add month worksheets Aspose.Cells | write header and sample rows Aspose.Cells | clear initial worksheet Aspose.Cells | export to .xlsx using Aspose.Cells | duplicate sample data across sheets Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// This Aspose.Cells for .NET example builds a new Workbook, renames the first sheet to "January", adds eleven more worksheets named February‑December, and fills every sheet with a header (Date, Description, Amount) plus five sample rows for the first days of the month. The file is saved as MonthsWorkbook.xlsx.
+// The example creates a new workbook, clears the default sheet, adds twelve worksheets named after each month, writes a header and three rows of sample item data to every sheet, and saves the result as MonthsWorkbook.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook instance
         Workbook workbook = new Workbook();
 
-        // Month names to be used as worksheet names
+        // Remove the default worksheet that comes with a new workbook
+        workbook.Worksheets.Clear();
+
+        // Array of month names to be used as worksheet names
         string[] months = new string[]
         {
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         };
 
-        // Rename the default worksheet to the first month and populate it
-        Worksheet firstSheet = workbook.Worksheets[0];
-        firstSheet.Name = months[0];
-        PopulateWorksheet(firstSheet, months[0]);
+        // Sample data to populate each worksheet
+        string[] items = { "Item A", "Item B", "Item C" };
+        int[] quantities = { 10, 20, 30 };
+        double[] prices = { 1.5, 2.0, 3.5 };
 
-        // Add remaining months as new worksheets and populate them
-        for (int i = 1; i < months.Length; i++)
+        // Loop through each month, create a worksheet, name it, and fill with sample data
+        for (int i = 0; i < months.Length; i++)
         {
-            Worksheet ws = workbook.Worksheets.Add(months[i]);
-            PopulateWorksheet(ws, months[i]);
+            // Add a new worksheet and get its reference
+            Worksheet sheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            sheet.Name = months[i];
+
+            // Write header row
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["C1"].PutValue("Price");
+
+            // Populate sample rows starting from row 2
+            for (int row = 0; row < items.Length; row++)
+            {
+                int excelRow = row + 2; // Excel rows are 1-indexed
+                sheet.Cells[excelRow - 1, 0].PutValue(items[row]);      // Column A
+                sheet.Cells[excelRow - 1, 1].PutValue(quantities[row]); // Column B
+                sheet.Cells[excelRow - 1, 2].PutValue(prices[row]);     // Column C
+            }
         }
 
         // Save the workbook to a file
-        workbook.Save("MonthsWorkbook.xlsx", SaveFormat.Xlsx);
-    }
-
-    // Adds sample header and data rows to a worksheet
-    static void PopulateWorksheet(Worksheet sheet, string monthName)
-    {
-        // Header row
-        sheet.Cells["A1"].PutValue("Date");
-        sheet.Cells["B1"].PutValue("Description");
-        sheet.Cells["C1"].PutValue("Amount");
-
-        // Sample data rows (first five days of the month)
-        for (int day = 1; day <= 5; day++)
-        {
-            int row = day + 1; // Data starts from row 2
-            sheet.Cells[$"A{row}"].PutValue($"{monthName} {day}");
-            sheet.Cells[$"B{row}"].PutValue($"Sample item {day}");
-            sheet.Cells[$"C{row}"].PutValue(day * 10);
-        }
+        workbook.Save("MonthsWorkbook.xlsx");
     }
 }

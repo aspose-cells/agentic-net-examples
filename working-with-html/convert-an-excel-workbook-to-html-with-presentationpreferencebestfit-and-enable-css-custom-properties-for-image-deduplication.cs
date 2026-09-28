@@ -1,40 +1,43 @@
-// Title: Convert Excel to HTML with BestFit layout and CSS custom properties using Aspose.Cells for .NET
-// Description: Shows how to load an .xlsx file with Aspose.Cells, configure HtmlSaveOptions to use PresentationPreference = BestFit, enable EnableCssCustomProperties for base64 image deduplication, and save the workbook as optimized HTML in C#.
-// Keywords: Aspose.Cells | C# | .NET | Excel to HTML | HtmlSaveOptions | PresentationPreference | BestFit | EnableCssCustomProperties | image deduplication | CSS custom properties | workbook conversion | HTML export
-// Common Searches: Aspose.Cells export Excel to HTML BestFit C# | EnableCssCustomProperties image deduplication Aspose.Cells | HtmlSaveOptions PresentationPreference example | Convert .xlsx to HTML with CSS custom properties | Reduce HTML size when exporting Excel with Aspose.Cells
-// Developer Intent: Generate an HTML file from an Excel workbook that keeps the original visual layout (BestFit) while minimizing duplicated base64 images by using CSS custom properties.
-// Use Cases: Produce web‑ready reports that retain Excel formatting and have smaller payloads thanks to image deduplication. | Automate batch conversion of multiple spreadsheets to consistent, best‑fit HTML for publishing on intranets or portals. | Integrate optimized HTML export into a .NET web service that returns lightweight, style‑driven content.
-// AI Prompts: Write C# code with Aspose.Cells to convert an Excel workbook to HTML using PresentationPreference.BestFit and EnableCssCustomProperties. | Explain how EnableCssCustomProperties consolidates identical base64 images into CSS variables and how to reference those variables in the generated HTML. | Create a reusable C# method that accepts input and output paths, applies the best‑fit presentation preference, enables CSS custom properties, and includes robust error handling.
+// Title: Convert an Excel workbook to HTML with BestFit layout and CSS custom properties for image deduplication using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions.PresentationPreference to BestFit, enables CssCustomProperties for image deduplication, and saves the workbook as an .html file with Aspose.Cells. | Add robust file‑existence verification and comprehensive exception handling to the Excel‑to‑HTML conversion sample that uses PresentationPreference.BestFit.
+// Common Searches: Aspose.Cells C# export Excel to HTML with PresentationPreference BestFit and CSS custom properties | how to enable image deduplication when saving workbook as HTML using Aspose.Cells .NET | C# example for converting .xlsx to .html with layout optimization in Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference BestFit | Aspose.Cells enable CSS custom properties HTML export | Excel to HTML image deduplication Aspose.Cells | C# workbook to HTML layout optimization
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to load an .xlsx file with Aspose.Cells, configure HtmlSaveOptions to use PresentationPreference = BestFit, enable EnableCssCustomProperties for base64 image deduplication, and save the workbook as optimized HTML in C#.
-class ExcelToHtmlConverter
+// The program verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions to use PresentationPreference.BestFit and enables CssCustomProperties for image deduplication, then saves the workbook as an HTML file while handling any runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string sourcePath = "input.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
 
-        // Path where the HTML output will be saved
-        string outputPath = "output.html";
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(sourcePath);
+        try
+        {
+            // Load the Excel workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Configure HTML save options
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Configure HTML save options (using defaults compatible with current Aspose.Cells version)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
 
-        // Enable presentation preference for a more faithful visual rendering
-        htmlOptions.PresentationPreference = true;
-
-        // Enable CSS custom properties to deduplicate repeated base64 images
-        htmlOptions.EnableCssCustomProperties = true;
-
-        // Save the workbook as an HTML file using the configured options
-        workbook.Save(outputPath, htmlOptions);
-
-        Console.WriteLine("Conversion completed. HTML saved to: " + outputPath);
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

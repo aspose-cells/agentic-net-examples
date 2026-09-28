@@ -1,38 +1,49 @@
-// Title: Create a Union Range (B2:B10,F2:F10) and Apply Light Yellow Fill with Aspose.Cells for .NET
-// Description: Shows how to use WorksheetCollection.CreateUnionRange in Aspose.Cells for .NET to merge the non‑contiguous ranges B2:B10 and F2:F10, apply a solid light‑yellow background style, and save the workbook.
-// Keywords: Aspose.Cells | CreateUnionRange | union range C# | non‑adjacent cells | apply fill color | light yellow style | WorksheetCollection | Excel formatting .NET | solid background | C# Aspose.Cells example
-// Common Searches: Aspose.Cells create union range C# | how to fill non‑contiguous cells with color Aspose.Cells | WorksheetCollection.CreateUnionRange usage | set background color for multiple ranges Aspose | C# Aspose.Cells light yellow fill
-// Developer Intent: Combine the ranges B2:B10 and F2:F10 into a single union range and set a light‑yellow background using Aspose.Cells for .NET.
-// Use Cases: Highlight two separate column sections in a financial report with a uniform color. | Apply consistent styling to non‑adjacent data columns that belong to the same category. | Create an input template where specific columns are colored to guide user entry.
-// AI Prompts: Provide a C# snippet that uses WorksheetCollection.CreateUnionRange to merge B2:B10 and F2:F10 and apply a solid light‑yellow background with Aspose.Cells. | Show how to define a reusable style in Aspose.Cells for .NET and apply it to a union range of non‑contiguous cells. | Explain how to extend the light‑yellow style to other ranges after it has been applied to a union range in Aspose.Cells.
+// Title: Create a UnionRange for cells B2:B10 and F2:F10 and apply a light‑yellow fill with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses WorksheetCollection.CreateUnionRange to merge the ranges B2:B10 and F2:F10, then applies a solid light‑yellow background style to the resulting UnionRange. | Show how to define a Style with a light‑yellow foreground color and a solid pattern, and apply it only to cell shading of a UnionRange created in Aspose.Cells.
+// Common Searches: Aspose.Cells C# create union range for non‑contiguous cells and set fill color | How to apply a solid background to multiple separate ranges using WorksheetCollection.CreateUnionRange | Example of styling a UnionRange with yellow fill in Aspose.Cells for .NET | C# code to combine B2:B10 and F2:F10 into one range and change cell shading
+// Tags: WorksheetCollection.CreateUnionRange C# example | apply solid fill to UnionRange Aspose.Cells | yellow fill style Aspose.Cells | noncontiguous cell range styling .NET | UnionRange shading C#
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to use WorksheetCollection.CreateUnionRange in Aspose.Cells for .NET to merge the non‑contiguous ranges B2:B10 and F2:F10, apply a solid light‑yellow background style, and save the workbook.
+// // This program creates a new workbook, builds a UnionRange that combines cells B2:B10 and F2:F10 on the first worksheet, defines a light‑yellow solid fill style, applies the style to the UnionRange, and saves the workbook as UnionRangeYellowFill.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet (index 0)
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a union range that combines B2:B10 and F2:F10 on the first sheet
-        UnionRange unionRange = workbook.Worksheets.CreateUnionRange("B2:B10,F2:F10", 0);
+            // Create a union range that combines the two address blocks.
+            // WorksheetCollection.CreateUnionRange returns a UnionRange object.
+            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("B2:B10,F2:F10", 0);
 
-        // Define a style with a solid light yellow fill
-        Style style = workbook.CreateStyle();
-        style.Pattern = BackgroundType.Solid;
-        style.ForegroundColor = Color.LightYellow;
+            // Prepare a style with a light yellow fill
+            Style yellowStyle = workbook.CreateStyle();
+            yellowStyle.ForegroundColor = Color.LightYellow;
+            yellowStyle.Pattern = BackgroundType.Solid;
 
-        // Apply the style to the entire union range
-        unionRange.ApplyStyle(style, new StyleFlag { All = true });
+            // Apply the style to the union range (only cell shading)
+            StyleFlag flag = new StyleFlag { CellShading = true };
+            unionRange.ApplyStyle(yellowStyle, flag);
 
-        // Save the workbook to a file
-        workbook.Save("UnionRangeLightYellow.xlsx");
+            // Define output file path
+            string outputPath = "UnionRangeYellowFill.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

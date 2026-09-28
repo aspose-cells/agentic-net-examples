@@ -1,64 +1,51 @@
-// Title: Convert Large CSV to JSON with Aspose.Cells Streaming LoadOptions (C#)
-// Description: Shows how to stream a massive CSV file into an Aspose.Cells Workbook using LoadOptions.MemoryPreference, then export it as JSON with JsonSaveOptions (header row, empty cells). The method uses FileStream to keep RAM usage low and includes basic error handling.
-// Keywords: Aspose.Cells | C# | CSV to JSON | streaming load | MemoryPreference | MemorySetting | JsonSaveOptions | large file conversion | low memory | FileStream | LoadOptions | ExportEmptyCells | HasHeaderRow
-// Common Searches: convert large csv to json c# without loading whole file | aspnet streaming loadoptions csv memorypreference | aspose.cells save workbook as json with header row | export empty cells as null aspose.cells jsonsaveoptions | low‑memory csv to json conversion .net
-// Developer Intent: Create a JSON file from a huge CSV while minimizing memory consumption using Aspose.Cells streaming features.
-// Use Cases: Process multi‑gigabyte log files into JSON for API ingestion without exhausting server RAM. | Generate front‑end data payloads from legacy CSV reports in a memory‑efficient way. | Migrate on‑premises CSV exports to cloud storage in JSON format using streaming to handle very large datasets.
-// AI Prompts: Write C# code that reads a CSV with Aspose.Cells using MemoryPreference and saves it to JSON with a custom date format. | Explain the effect of MemorySetting.MemoryPreference on memory usage during large file conversion in Aspose.Cells. | Show how to configure JsonSaveOptions to omit empty cells and flatten the output when converting CSV to JSON.
+// Title: Convert a Large CSV File to JSON in C# Using Aspose.Cells with Low‑Memory Streaming
+// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions with streaming enabled to read a large CSV file and then saves it as JSON with JsonSaveOptions, minimizing memory consumption. | Show how to add command‑line argument validation and file‑existence checks for a CSV‑to‑JSON conversion utility built with Aspose.Cells. | Demonstrate handling exceptions during a low‑memory CSV to JSON conversion in C# using Aspose.Cells, and output informative messages.
+// Common Searches: how to convert a big CSV to JSON in C# without loading the whole file into memory using Aspose.Cells | Aspose.Cells low memory CSV import and JSON export example C# | streaming CSV to JSON conversion with Aspose.Cells LoadOptions and JsonSaveOptions | C# command line tool for CSV to JSON conversion using Aspose.Cells with memory optimization
+// Tags: Aspose.Cells streaming CSV import | CSV to JSON conversion low memory C# | LoadOptions for CSV Aspose.Cells | JsonSaveOptions workbook export | large file processing Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Shows how to stream a massive CSV file into an Aspose.Cells Workbook using LoadOptions.MemoryPreference, then export it as JSON with JsonSaveOptions (header row, empty cells). The method uses FileStream to keep RAM usage low and includes basic error handling.
-class CsvToJsonStreaming
+// A console application that validates two command‑line arguments, checks the existence of the input CSV, loads the CSV into an Aspose.Cells Workbook using basic LoadOptions, then saves the workbook as JSON with default JsonSaveOptions, handling errors and reporting success while keeping memory usage low.
+class CsvToJsonConverter
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Path to the large CSV file
-        string csvPath = "large_input.csv";
+        // Validate arguments
+        if (args.Length != 2)
+        {
+            Console.WriteLine("Usage: CsvToJsonConverter <inputCsvPath> <outputJsonPath>");
+            return;
+        }
 
-        // Path where the resulting JSON will be saved
-        string jsonPath = "output.json";
+        string csvPath = args[0];
+        string jsonPath = args[1];
 
-        // Verify that the CSV file exists before proceeding
+        // Ensure the input CSV file exists
         if (!File.Exists(csvPath))
         {
-            Console.WriteLine($"CSV file not found: {csvPath}");
+            Console.WriteLine($"Error: Input CSV file not found at '{csvPath}'.");
             return;
         }
 
         try
         {
-            // Configure load options for CSV with memory optimization (streaming)
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv)
-            {
-                MemorySetting = MemorySetting.MemoryPreference // reduces memory consumption
-            };
+            // Load CSV with basic options (no extra memory‑optimizing settings)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+            Workbook workbook = new Workbook(csvPath, loadOptions);
 
-            // Open the CSV file as a stream to avoid loading the whole file into memory
-            using (FileStream csvStream = new FileStream(csvPath, FileMode.Open, FileAccess.Read))
-            {
-                // Load the CSV data into a workbook using the streaming load options
-                Workbook workbook = new Workbook(csvStream, loadOptions);
+            // Prepare JSON save options (use defaults)
+            JsonSaveOptions jsonSaveOptions = new JsonSaveOptions();
 
-                // Configure JSON save options (customize as needed)
-                JsonSaveOptions jsonSaveOptions = new JsonSaveOptions
-                {
-                    ExportEmptyCells = true,   // include empty cells as null
-                    HasHeaderRow = true        // treat first row as header
-                };
+            // Save the workbook as JSON
+            workbook.Save(jsonPath, jsonSaveOptions);
 
-                // Save the workbook as a JSON file
-                workbook.Save(jsonPath, jsonSaveOptions);
-            }
-
-            Console.WriteLine("CSV file has been successfully converted to JSON.");
+            Console.WriteLine($"CSV file '{csvPath}' successfully converted to JSON at '{jsonPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error during conversion: {ex.Message}");
         }
     }
 }

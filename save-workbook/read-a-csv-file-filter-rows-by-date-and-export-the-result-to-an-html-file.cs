@@ -1,55 +1,55 @@
-// Title: C# – Filter CSV rows by a specific date with Aspose.Cells AutoFilter and export to HTML
-// Description: This example shows how to load a CSV file into an Aspose.Cells workbook, apply an AutoFilter that keeps only rows matching a given DateTime (using Day grouping), and save the filtered result as an HTML page with all data exported via HtmlSaveOptions.
-// Keywords: Aspose.Cells CSV import | AutoFilter date filter .NET | DateTimeGroupingType.Day | Export workbook to HTML | C# filter CSV by date | HtmlSaveOptions ExportDataOptions.All | Aspose.Cells tutorial
-// Common Searches: Aspose.Cells filter CSV by exact date C# | How to export filtered CSV data to HTML using Aspose.Cells | AutoFilter date grouping example Aspose.Cells .NET | Convert CSV to HTML after applying date filter
-// Developer Intent: Load a CSV file, keep rows that match a target date, and generate an HTML file containing only the filtered records.
-// Use Cases: Create a daily sales snapshot in HTML from a CSV export. | Provide a web‑ready view of log entries for a particular day. | Produce a date‑specific audit report without manual spreadsheet editing.
-// AI Prompts: Generate C# code that filters CSV rows by a date range with Aspose.Cells and saves the output as HTML. | Explain how to extend the AutoFilter to include multiple dates and then export the workbook to PDF. | Show how to style the HTML output (fonts, colors) after applying a date filter using Aspose.Cells.
+// Title: Read a CSV with Aspose.Cells, filter rows by a specific date using AutoFilter, and export the filtered data to HTML in C#
+// AI Prompts: Generate C# code that loads a CSV file into an Aspose.Cells workbook, sets an AutoFilter on column A for a given date, refreshes the filter, and saves the visible rows as an HTML file using HtmlSaveOptions. | Provide a C# example that imports data.csv with Aspose.Cells, applies a day‑level date filter on the first column (e.g., 2023‑01‑15), and writes the filtered worksheet to filtered.html while exporting all data.
+// Common Searches: Aspose.Cells C# filter CSV rows by date and save as HTML | How to use AutoFilter with date criteria on imported CSV in Aspose.Cells .NET | Export filtered worksheet to HTML using Aspose.Cells HtmlSaveOptions | C# code to import CSV, apply date AutoFilter, and generate HTML report with Aspose.Cells | Set date grouping type Day in Aspose.Cells AutoFilter and export result
+// Tags: import csv Aspose.Cells C# | date autofilter Aspose.Cells | htmlsaveoptions export all data Aspose.Cells | filter worksheet rows by date Aspose.Cells | save filtered workbook as html Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// This example shows how to load a CSV file into an Aspose.Cells workbook, apply an AutoFilter that keeps only rows matching a given DateTime (using Day grouping), and save the filtered result as an HTML page with all data exported via HtmlSaveOptions.
-class CsvDateFilterToHtml
+// The program imports a CSV file into an Aspose.Cells workbook, defines an AutoFilter covering the data range, adds a day‑level date filter on the first column, refreshes the filter, and saves the visible rows to an HTML file using HtmlSaveOptions configured to export all data.
+class Program
 {
     static void Main()
     {
-        // Paths for input CSV and output HTML
-        string csvPath = "input.csv";
-        string htmlPath = "output.html";
-
-        // Date to filter (example: keep rows with this exact date)
-        DateTime filterDate = new DateTime(2023, 1, 15);
+        // Path to the source CSV file
+        string csvPath = "data.csv";
 
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
 
-        // Import CSV data (comma‑separated, convert numeric data)
+        // Import CSV data (comma delimiter, convert numeric data)
         cells.ImportCSV(csvPath, ",", true, 0, 0);
 
-        // Determine the used range of the first column (assumed to contain dates)
-        int lastRow = cells.MaxDataRow;                     // zero‑based index of the last row with data
-        sheet.AutoFilter.Range = $"A1:A{lastRow + 1}";      // set autofilter range (including header)
+        // Determine the used range of the worksheet
+        int lastRow = cells.MaxDataRow;      // zero‑based index of the last row with data
+        int lastCol = cells.MaxDataColumn;   // zero‑based index of the last column with data
 
-        // Apply a date filter on the first column (field index 0)
-        // Grouping by Day and specify year, month, day; time parts are set to zero
-        sheet.AutoFilter.AddDateFilter(
+        // Set AutoFilter range to cover the whole data block
+        string range = CellsHelper.CellIndexToName(0, 0) + ":" + CellsHelper.CellIndexToName(lastRow, lastCol);
+        worksheet.AutoFilter.Range = range;
+
+        // Apply a date filter on the first column (index 0)
+        // Example: keep rows where the date equals 2023‑01‑15
+        worksheet.AutoFilter.AddDateFilter(
             fieldIndex: 0,
             dateTimeGroupingType: DateTimeGroupingType.Day,
-            year: filterDate.Year,
-            month: filterDate.Month,
-            day: filterDate.Day,
+            year: 2023,
+            month: 1,
+            day: 15,
             hour: 0,
             minute: 0,
             second: 0);
 
-        // Prepare HTML save options – export all data
+        // Refresh the filter to apply changes
+        worksheet.AutoFilter.Refresh();
+
+        // Prepare HTML save options to export all data
         HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
         htmlOptions.ExportDataOptions = HtmlExportDataOptions.All;
 
-        // Save the filtered workbook as an HTML file
-        workbook.Save(htmlPath, htmlOptions);
+        // Save the filtered result as an HTML file
+        workbook.Save("filtered.html", htmlOptions);
     }
 }

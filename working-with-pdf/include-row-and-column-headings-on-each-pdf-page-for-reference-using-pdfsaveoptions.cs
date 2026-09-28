@@ -1,46 +1,48 @@
-// Title: Include Row and Column Headings on Every PDF Page with Aspose.Cells (C#)
-// Description: Demonstrates how to enable Excel row and column headings for each page of a PDF generated with Aspose.Cells. The example creates a workbook, adds a header row, sets PrintHeadings and PrintTitleRows, applies default PdfSaveOptions, and saves the file as a multi‑page PDF with headings visible on every page.
-// Keywords: Aspose.Cells PDF headings | PrintHeadings C# | repeat header row PDF Aspose | PdfSaveOptions row column headings | Excel to PDF with headings | Aspose.Cells page setup PDF | C# export worksheet to PDF
-// Common Searches: how to print row and column headings in PDF using Aspose.Cells | Aspose.Cells repeat header row on each PDF page C# | enable PrintHeadings for PDF export .NET | Aspose.Cells PdfSaveOptions include headings | C# export large worksheet to PDF with headings
-// Developer Intent: The developer wants every page of the PDF produced from an Excel worksheet to display the worksheet’s row and column headings for easy reference.
-// Use Cases: Create multi‑page reports where each page shows Excel’s row/column labels for quick navigation. | Generate printable invoices or catalogs that retain column headers on every PDF page. | Export large data tables to PDF while keeping the first row as a repeating title across all pages.
-// AI Prompts: Show how to change the font style of printed row and column headings when saving to PDF with Aspose.Cells. | Provide code to add page numbers together with row/column headings in the PDF output using PdfSaveOptions. | Explain how to disable PrintHeadings but still repeat the header row on each PDF page.
+// Title: How to include row and column headings on every PDF page when converting an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, enables printing of row and column headings for each worksheet, and saves the workbook as a PDF using Aspose.Cells PdfSaveOptions. | Show a try‑catch example that checks the existence of the input Excel file, activates worksheet headings, and exports the workbook to PDF with default PdfSaveOptions in a .NET console app. | Demonstrate how to apply page‑setup heading settings to all worksheets before calling Workbook.Save with PdfSaveOptions in a C# application.
+// Common Searches: asp.net convert excel to pdf with row and column headings on each page using aspose.cells | c# enable print headings for pdf export in aspose.cells workbook | how to set worksheet page setup printheadings true before saving as pdf in .net | asp.net core aspose.cells pdfsaveoptions print headings each page | excel to pdf conversion include row numbers and column letters as headings asp.net
+// Tags: Aspose.Cells PDF export with worksheet headings | C# enable row and column headings in PDF conversion | Excel workbook page setup print headings Aspose | PdfSaveOptions default usage Aspose.Cells | Convert .xlsx to PDF including headings .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to enable Excel row and column headings for each page of a PDF generated with Aspose.Cells. The example creates a workbook, adds a header row, sets PrintHeadings and PrintTitleRows, applies default PdfSaveOptions, and saves the file as a multi‑page PDF with headings visible on every page.
-class PdfWithHeadings
+// The program loads an Excel workbook, turns on printing of row and column headings for every worksheet, and saves the file as a PDF using Aspose.Cells with default PdfSaveOptions, ensuring each PDF page shows the worksheet headings.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a header row and some sample data
-        worksheet.Cells["A1"].PutValue("Product");
-        worksheet.Cells["B1"].PutValue("Price");
-        worksheet.Cells["C1"].PutValue("Quantity");
-
-        for (int i = 2; i <= 100; i++)
+        try
         {
-            worksheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
-            worksheet.Cells[$"B{i}"].PutValue(i * 1.5);
-            worksheet.Cells[$"C{i}"].PutValue(i * 10);
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Enable printing of row and column headings for each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                sheet.PageSetup.PrintHeadings = true;
+            }
+
+            // Configure PDF save options (default options are sufficient here)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as a PDF file with the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
         }
-
-        // Enable printing of row and column headings on each page
-        worksheet.PageSetup.PrintHeadings = true;
-
-        // Repeat the header row on every printed page for better reference
-        worksheet.PageSetup.PrintTitleRows = "$1:$1";
-
-        // Create PDF save options (default settings are sufficient)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Save the workbook as a PDF file with headings included
-        workbook.Save("ReportWithHeadings.pdf", pdfOptions);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

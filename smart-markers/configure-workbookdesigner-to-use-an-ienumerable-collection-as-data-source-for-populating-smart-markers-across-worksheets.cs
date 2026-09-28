@@ -1,19 +1,17 @@
-// Title: Bind an IEnumerable<T> to WorkbookDesigner for Smart Markers on Multiple Worksheets (C#)
-// Description: Shows how to use a List<Person> (IEnumerable) as the data source for Aspose.Cells WorkbookDesigner, place smart markers on two sheets, process them, and save the workbook.
-// Keywords: Aspose.Cells | WorkbookDesigner | IEnumerable | C# smart markers | List<T> data source | multiple worksheets | variable smart marker | populate Excel from collection | Aspose.Cells example
-// Common Searches: Aspose.Cells bind List to WorkbookDesigner | smart markers using IEnumerable C# | multiple sheet smart markers Aspose.Cells | variable smart marker first item Aspose | populate Excel with collection Aspose.Cells
-// Developer Intent: Bind an IEnumerable collection to WorkbookDesigner and generate smart‑marker populated worksheets.
-// Use Cases: Create an employee roster sheet by iterating over a List<Person> with smart markers. | Display a specific property (e.g., first employee name) on a summary sheet using a variable smart marker. | Generate a multi‑sheet report workbook from a single data source without manual loops. | Reuse the same collection across several worksheets for consistent data representation.
-// AI Prompts: Write C# code that sets a List<Person> as the data source for WorkbookDesigner and uses smart markers on two worksheets. | Explain the syntax for accessing the first element of a collection in an Aspose.Cells variable smart marker. | Show the steps to process smart markers and save the workbook when using an IEnumerable data source. | Provide troubleshooting tips if smart markers are not populated after binding an IEnumerable to WorkbookDesigner.
+// Title: Bind an IEnumerable<Person> collection to smart markers on multiple worksheets using WorkbookDesigner in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a List<Person>, adds smart marker cells to two worksheets, binds the list to the 'Person' variable with WorkbookDesigner, processes all markers, and saves the workbook as an .xlsx file. | Demonstrate how to configure WorkbookDesigner to accept any IEnumerable data source for smart markers and apply it to every sheet in an Aspose.Cells workbook.
+// Common Searches: asp.net bind IEnumerable to smart markers with WorkbookDesigner Aspose.Cells | populate smart markers on several worksheets from a List<T> in C# | how to set data source for smart markers using a collection in Aspose.Cells .NET | example of processing smart markers across multiple sheets in Aspose.Cells | using WorkbookDesigner to generate Excel reports from an IEnumerable collection
+// Tags: WorkbookDesigner bind IEnumerable data source | smart markers populate multiple worksheets | Aspose.Cells set data source from List<Person> | C# process smart markers across sheets | Excel template generation with smart markers
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsSmartMarkerDemo
 {
     // Simple POCO class that will be used as the data source
-    // Shows how to use a List<Person> (IEnumerable) as the data source for Aspose.Cells WorkbookDesigner, place smart markers on two sheets, process them, and save the workbook.
+    // The example creates a workbook with two worksheets containing smart markers, binds a List<Person> (IEnumerable) to the 'Person' variable via WorkbookDesigner, processes all markers across the sheets, and saves the populated Excel file.
     public class Person
     {
         public string Name { get; set; }
@@ -26,55 +24,67 @@ namespace AsposeCellsSmartMarkerDemo
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                // 1. Prepare sample data as an IEnumerable (List implements IEnumerable)
-                List<Person> people = new List<Person>
+                // Prepare sample data as an IEnumerable (List<Person>)
+                List<Person> persons = new List<Person>
                 {
                     new Person("Alice", 30),
                     new Person("Bob", 45),
                     new Person("Charlie", 28)
                 };
 
-                // 2. Create a new workbook and add two worksheets
+                // Create a new workbook that will act as the template
                 Workbook workbook = new Workbook();
 
-                // First worksheet (default sheet)
+                // -------------------------------------------------
+                // Worksheet 1 – simple smart markers for Name & Age
+                // -------------------------------------------------
                 Worksheet sheet1 = workbook.Worksheets[0];
                 sheet1.Name = "Employees";
 
-                // Add second worksheet and obtain the Worksheet object directly
-                Worksheet sheet2 = workbook.Worksheets.Add("Summary");
-
-                // 3. Insert smart markers into the worksheets
-                // Sheet1 will list each person's Name and Age
+                // Header row
                 sheet1.Cells["A1"].PutValue("Name");
                 sheet1.Cells["B1"].PutValue("Age");
+
+                // Smart markers – the designer will repeat these rows for each Person
                 sheet1.Cells["A2"].PutValue("&=Person.Name");
                 sheet1.Cells["B2"].PutValue("&=Person.Age");
 
-                // Sheet2 will display the first person's name using a variable marker
-                sheet2.Cells["A1"].PutValue("First Employee:");
-                sheet2.Cells["B1"].PutValue("&=$Person[0].Name"); // Access first element directly
+                // -------------------------------------------------
+                // Worksheet 2 – another set of smart markers
+                // -------------------------------------------------
+                int newSheetIndex = workbook.Worksheets.Add();               // Add returns the index of the new sheet
+                Worksheet sheet2 = workbook.Worksheets[newSheetIndex];
+                sheet2.Name = "Summary";
 
-                // 4. Create a WorkbookDesigner and bind the IEnumerable collection
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
-                designer.SetDataSource("Person", people);
+                // Header row
+                sheet2.Cells["A1"].PutValue("Employee");
+                sheet2.Cells["B1"].PutValue("Years");
 
-                // 5. Process the smart markers
+                // Smart markers referencing the same data source
+                sheet2.Cells["A2"].PutValue("&=Person.Name");
+                sheet2.Cells["B2"].PutValue("&=Person.Age");
+
+                // -------------------------------------------------
+                // Configure WorkbookDesigner
+                // -------------------------------------------------
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                // Bind the IEnumerable collection to the smart marker variable "Person"
+                designer.SetDataSource("Person", persons);
+
+                // Process all smart markers in the workbook
                 designer.Process();
 
-                // 6. Save the resulting workbook
-                string outputPath = "SmartMarker_IEnumerable_Output.xlsx";
+                // Save the populated workbook
+                string outputPath = "SmartMarkersFromIEnumerable.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {

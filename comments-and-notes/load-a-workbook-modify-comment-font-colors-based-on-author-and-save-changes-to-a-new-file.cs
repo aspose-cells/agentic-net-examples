@@ -1,56 +1,55 @@
-// Title: Set Excel Comment Font Color by Author with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, walks through every worksheet, reads each comment, selects a font color based on the comment's author, applies the color via the Comment.Font property, and saves the updated file as a new workbook.
-// Keywords: Aspose.Cells | C# | Excel comment font color | comment author color mapping | modify comment style programmatically | Workbook.Save | Comment.Font | iterate worksheet comments
-// Common Searches: Aspose.Cells change comment font color by author | C# set Excel comment color based on author | how to loop through comments with Aspose.Cells | map comment authors to colors in .NET Excel | save workbook after updating comment styles Aspose
-// Developer Intent: Update each Excel comment's font color according to its author and write the changes to a new file.
-// Use Cases: Visually differentiate reviewer notes in a shared spreadsheet by assigning a unique color to each author. | Create an audit trail that highlights comments per contributor before distributing the workbook to stakeholders. | Automate branding rules that require specific authors' comments to appear in designated colors.
-// AI Prompts: Generate C# code using Aspose.Cells that reads a dictionary of author‑color pairs and applies the corresponding font color to every comment. | Show how to change the background fill of comments instead of the font color, based on the comment author. | Explain how to modify additional font attributes (bold, italic, size) for comments while also setting the color with Aspose.Cells.
+// Title: Set comment font color per author in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, loops through every worksheet and each comment, assigns Font.Color based on the comment’s Author, and saves the result to a new file. | Create a helper method that returns a System.Drawing.Color for a given comment author and apply it to all comments in a workbook via Aspose.Cells.
+// Common Searches: c# Aspose.Cells change comment text color according to author | apply unique colors to Excel cell comments per user with Aspose.Cells | loop through all worksheets and update comment colors for each author in .NET | export workbook after modifying comment fonts using Aspose.Cells | sample code mapping comment author to System.Drawing.Color in Aspose.Cells
+// Tags: Aspose.Cells set comment font color by author | C# iterate worksheet comments Aspose.Cells | Aspose.Cells author-based comment color mapping | save modified workbook Aspose.Cells C# | Excel comment color customization Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// Loads an Excel workbook, walks through every worksheet, reads each comment, selects a font color based on the comment's author, applies the color via the Comment.Font property, and saves the updated file as a new workbook.
+// Loads input.xlsx, iterates each worksheet and its comments, determines a font color for each comment based on its Author via a helper method, applies the color, and saves the updated workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (load rule)
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        // Load the existing workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet worksheet in workbook.Worksheets)
         {
-            // Access the comments collection of the worksheet
-            var comments = sheet.Comments;
+            // Access the comments collection of the current worksheet
+            CommentCollection comments = worksheet.Comments;
 
-            // Process each comment
+            // Loop through each comment in the collection
             for (int i = 0; i < comments.Count; i++)
             {
                 Comment comment = comments[i];
 
-                // Determine the font color based on the comment author
+                // Determine the font color based on the comment's author
                 Color authorColor = GetColorForAuthor(comment.Author);
 
-                // Modify the comment's font color (using Comment.Font property)
+                // Apply the determined color to the comment's font
                 comment.Font.Color = authorColor;
             }
         }
 
-        // Save the modified workbook to a new file (save rule)
-        string outputFile = "output.xlsx";
-        workbook.Save(outputFile);
+        // Save the modified workbook to a new file
+        workbook.Save("output.xlsx");
     }
 
     // Helper method to map authors to specific colors
     static Color GetColorForAuthor(string author)
     {
-        // Example mapping: Alice -> Red, Bob -> Green, others -> Blue
-        if (string.Equals(author, "Alice", StringComparison.OrdinalIgnoreCase))
-            return Color.Red;
-        if (string.Equals(author, "Bob", StringComparison.OrdinalIgnoreCase))
+        // Example mapping – customize as needed
+        if (author.Equals("Alice", StringComparison.OrdinalIgnoreCase))
+            return Color.Blue;
+        if (author.Equals("Bob", StringComparison.OrdinalIgnoreCase))
             return Color.Green;
-        return Color.Blue;
+        if (author.Equals("Charlie", StringComparison.OrdinalIgnoreCase))
+            return Color.Orange;
+
+        // Default color for any other author
+        return Color.Red;
     }
 }

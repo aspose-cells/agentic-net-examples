@@ -1,16 +1,13 @@
-// Title: C# – Load an Excel workbook from a file path and access its DataConnections with Aspose.Cells
-// Description: Demonstrates how to verify an Excel file’s existence, load it into an Aspose.Cells Workbook, retrieve the Workbook.DataConnections collection, and output the total number of external data connections while handling possible exceptions.
-// Keywords: Aspose.Cells | C# | load workbook from file | Workbook.DataConnections | external data connections | Excel file existence check | count data connections | error handling Aspose.Cells
-// Common Searches: Aspose.Cells load workbook and list data connections | How to get DataConnections count in C# Excel file | Retrieve external data connections with Aspose.Cells .NET | Check if Excel file exists before loading Aspose.Cells | C# code to access Workbook.DataConnections
-// Developer Intent: Load a workbook from a specified path and obtain its DataConnections collection.
-// Use Cases: Validate that an incoming Excel file contains the required number of external data connections before processing. | Log the count of data connections for auditing or troubleshooting data import pipelines. | Iterate over workbook.DataConnections to inspect each connection’s name, type, or connection string.
-// AI Prompts: Generate C# code that checks for an Excel file, loads it with Aspose.Cells, and prints the DataConnections count. | Show how to enumerate workbook.DataConnections and display each connection’s properties in C#. | Explain best practices for exception handling when accessing DataConnections after loading a workbook with Aspose.Cells.
+// Title: Load an Excel workbook from a file path and list its external data connections using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a specified .xlsx file with Aspose.Cells and prints each external connection name. | Show how to retrieve the DataConnections collection from a Workbook object and display the connection count. | Provide a snippet that iterates over workbook.DataConnections and writes connection details to the console.
+// Common Searches: Aspose.Cells C# get list of external data connections from an existing Excel file | How to read DataConnections collection of a workbook using Aspose.Cells for .NET | C# code sample for enumerating external connections in an .xlsx with Aspose.Cells | Retrieve and display connection names from Excel workbook using Aspose.Cells API
+// Tags: load workbook from file Aspose.Cells C# | enumerate DataConnections collection Aspose.Cells | list external Excel connections .NET | Aspose.Cells workbook.DataConnections usage | print connection names Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.ExternalConnections;
 
-// Demonstrates how to verify an Excel file’s existence, load it into an Aspose.Cells Workbook, retrieve the Workbook.DataConnections collection, and output the total number of external data connections while handling possible exceptions.
+// Demonstrates loading an Excel file via Aspose.Cells, accessing the workbook's DataConnections collection, outputting the total count, and iterating to display each connection's name, with a note on saving changes if needed.
 class Program
 {
     static void Main()
@@ -18,28 +15,23 @@ class Program
         // Path to the Excel file to be loaded
         string filePath = "input.xlsx";
 
-        // Verify that the file exists to avoid FileNotFoundException
-        if (!File.Exists(filePath))
+        // Load the workbook from the specified file (uses Workbook(string) constructor)
+        Workbook workbook = new Workbook(filePath);
+
+        // Get the collection of external data connections in the workbook
+        ExternalConnectionCollection dataConnections = workbook.DataConnections;
+
+        // Display the number of data connections found
+        Console.WriteLine($"DataConnections count: {dataConnections.Count}");
+
+        // Iterate through the connections (if any) and output their names
+        for (int i = 0; i < dataConnections.Count; i++)
         {
-            Console.WriteLine($"File not found: {filePath}");
-            return;
+            ExternalConnection connection = dataConnections[i];
+            Console.WriteLine($"Connection {i + 1}: {connection.Name}");
         }
 
-        try
-        {
-            // Load the workbook from the specified file
-            Workbook workbook = new Workbook(filePath);
-
-            // Get the collection of external data connections
-            var dataConnections = workbook.DataConnections;
-
-            // Display the number of data connections present
-            Console.WriteLine($"DataConnections count: {dataConnections.Count}");
-        }
-        catch (Exception ex)
-        {
-            // Handle any runtime errors gracefully
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // If you modify connections and need to persist changes, you could save:
+        // workbook.Save("output.xlsx");
     }
 }

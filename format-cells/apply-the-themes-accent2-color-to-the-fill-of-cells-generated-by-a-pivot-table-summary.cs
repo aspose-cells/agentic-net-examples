@@ -1,72 +1,105 @@
-// Title: C# – Apply Theme Accent2 Fill to Pivot Table Summary Cells with Aspose.Cells
-// Description: Creates a workbook, adds sample sales data, builds a pivot table, defines a style that uses the workbook's Theme Accent2 color as a solid background, applies the style to the pivot table's DataBodyRange (summary cells), and saves the file.
-// Keywords: Aspose.Cells | C# | PivotTable formatting | Theme Accent2 | BackgroundThemeColor | DataBodyRange | Excel report styling | solid fill | theme color in code | pivot table summary cells
-// Common Searches: Aspose.Cells set theme Accent2 background for pivot table summary | C# apply solid fill to pivot table data area using theme color | How to format pivot table summary cells with Accent2 in Aspose.Cells | Apply theme color to pivot table values .NET | PivotTable DataBodyRange style Aspose.Cells C#
-// Developer Intent: Use the workbook's Accent2 theme color to fill the pivot table's summary cells.
-// Use Cases: Highlight pivot table totals with the corporate Accent2 theme for consistent branding. | Generate automated Excel reports where summarized values are visually distinguished by a theme‑based fill. | Create sales dashboards that apply a solid Accent2 background to pivot data cells for quick data interpretation.
-// AI Prompts: Show how to change the fill to Theme Accent3 for the pivot table summary cells. | Explain how to add a 30% tint to the Accent2 background when formatting pivot data. | Provide code that applies the Accent2 fill to both the data body and grand total rows of a pivot table.
+// Title: Use Aspose.Cells for .NET to fill a PivotTable with the workbook's Accent2 theme color
+// AI Prompts: Generate a pivot table from a data range and apply the workbook's Accent2 theme color as a solid background to every cell in the pivot table using Aspose.Cells. | Obtain the workbook's Accent2 theme color (fallback to LightBlue) and set each pivot table cell's ForegroundColor with a solid pattern via Aspose.Cells in C#. | Iterate over the PivotTable.TableRange1 collection and update each cell's Style to use the retrieved theme color with Aspose.Cells for C#.
+// Common Searches: Aspose.Cells how to set pivot table cell fill to workbook theme accent color in C# | C# apply Excel Accent2 theme color to pivot table using Aspose.Cells | how to get Accent2 theme color from Excel workbook using Aspose.Cells | fill entire pivot table area with solid color programmatically Aspose.Cells | fallback to default color when theme color not available Aspose.Cells pivot table
+// Tags: Aspose.Cells apply theme color to pivot table cells | retrieve Accent2 palette color with Aspose.Cells C# | apply solid fill to pivot table cells Aspose.Cells | use default LightBlue if theme color unavailable Aspose.Cells | style entire pivot table range programmatically
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPivotThemeAccent2
+// The example loads an existing workbook, creates a pivot table on a defined range, retrieves the workbook's Accent2 theme color (using LightBlue as a fallback), and applies that color as a solid fill to every cell within the pivot table's area before saving the updated file.
+class PivotThemeFillExample
 {
-    // Creates a workbook, adds sample sales data, builds a pivot table, defines a style that uses the workbook's Theme Accent2 color as a solid background, applies the style to the pivot table's DataBodyRange (summary cells), and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Region";
-            sheet.Cells["C1"].Value = "Sales";
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            sheet.Cells["A2"].Value = "Food";
-            sheet.Cells["B2"].Value = "North";
-            sheet.Cells["C2"].Value = 1200;
+            // Load the workbook containing source data for the pivot table
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sourceSheet = workbook.Worksheets[0];
 
-            sheet.Cells["A3"].Value = "Food";
-            sheet.Cells["B3"].Value = "South";
-            sheet.Cells["C3"].Value = 850;
+            // Define the source data range for the pivot table
+            int firstDataRow = 0;          // zero‑based index (A1)
+            int firstDataColumn = 0;       // zero‑based index (A)
+            int totalRows = 100;
+            int totalColumns = 5;
 
-            sheet.Cells["A4"].Value = "Drink";
-            sheet.Cells["B4"].Value = "North";
-            sheet.Cells["C4"].Value = 560;
+            CellArea dataSource = new CellArea
+            {
+                StartRow = firstDataRow,
+                StartColumn = firstDataColumn,
+                EndRow = firstDataRow + totalRows - 1,
+                EndColumn = firstDataColumn + totalColumns - 1
+            };
 
-            sheet.Cells["A5"].Value = "Drink";
-            sheet.Cells["B5"].Value = "South";
-            sheet.Cells["C5"].Value = 730;
+            // Define where the pivot table will be placed (e.g., starting at cell H1)
+            int pivotStartRow = 0;   // row index for H1
+            int pivotStartColumn = 7; // column index for H (0‑based)
 
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            // Convert indexes to cell addresses
+            string pivotStartCell = CellsHelper.CellIndexToName(pivotStartRow, pivotStartColumn);
+            string sourceRange = CellsHelper.CellIndexToName(dataSource.StartRow, dataSource.StartColumn) + ":" +
+                                 CellsHelper.CellIndexToName(dataSource.EndRow, dataSource.EndColumn);
 
-            // Configure the pivot fields
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Column, "Region");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Add a new pivot table
+            int pivotIndex = sourceSheet.PivotTables.Add("PivotTable1", pivotStartCell, sourceRange, true);
+            PivotTable pivotTable = sourceSheet.PivotTables[pivotIndex];
 
-            // Calculate the pivot data
-            pivot.CalculateData();
+            // Configure the pivot fields (adjust field indexes according to your data)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Row field – first column
+            pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Column field – second column
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Data field – third column
 
-            // Create a style that uses the theme's Accent2 color for the background fill
-            Style accentStyle = workbook.CreateStyle();
-            accentStyle.Pattern = BackgroundType.Solid;                     // Solid fill
-            accentStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent2, 0); // Accent2, no tint
+            // Refresh the pivot cache and calculate data
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-            // Apply the style to the data (summary) area of the pivot table
-            // DataBodyRange represents the cells that contain the summarized values
-            CellArea dataArea = pivot.DataBodyRange;
-            pivot.Format(dataArea, accentStyle);
+            // Retrieve Accent2 theme color; fallback to LightBlue if unavailable
+            Color accent2Color = Color.LightBlue;
+            try
+            {
+                accent2Color = workbook.GetThemeColor(ThemeColorType.Accent2);
+            }
+            catch
+            {
+                // Keep fallback color
+            }
 
-            // Save the workbook
-            workbook.Save("PivotTable_Accent2_Summary.xlsx");
+            // Get the area occupied by the pivot table (including data cells)
+            CellArea tableArea = pivotTable.TableRange1;
+
+            // Apply the Accent2 fill color to each cell in the pivot table area
+            for (int row = tableArea.StartRow; row <= tableArea.EndRow; row++)
+            {
+                for (int col = tableArea.StartColumn; col <= tableArea.EndColumn; col++)
+                {
+                    Style cellStyle = sourceSheet.Cells[row, col].GetStyle();
+                    cellStyle.ForegroundColor = accent2Color;
+                    cellStyle.Pattern = BackgroundType.Solid;
+                    sourceSheet.Cells[row, col].SetStyle(cellStyle);
+                }
+            }
+
+            // Save the workbook with the styled pivot table
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

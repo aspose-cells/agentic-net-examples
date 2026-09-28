@@ -1,56 +1,79 @@
-// Title: Convert Excel formulas to US English (comma) syntax and validate calculation with Aspose.Cells for .NET
-// Description: Loads an .xlsx file, forces US regional settings so formulas use commas, parses any pending formulas, recalculates the whole workbook, checks each formula cell for errors, reports issues, and saves the corrected file.
-// Keywords: Aspose.Cells convert formulas to US English | comma separator formulas .NET | set workbook region USA | parse and calculate formulas Aspose | validate Excel formula results | batch convert Excel formulas C# | standardize formula syntax Aspose.Cells
-// Common Searches: how to change Excel formula separator to comma using Aspose.Cells | convert workbook formulas to US English syntax C# | validate that all formulas calculate correctly after conversion | set workbook region to USA in Aspose.Cells | parse formulas before calculation Aspose.Cells .NET
-// Developer Intent: Standardize all workbook formulas to US English comma syntax and confirm they evaluate without errors.
-// Use Cases: Update legacy Excel files so formulas follow US English conventions before distribution. | Batch‑process multiple spreadsheets to enforce a consistent comma separator for a US‑based reporting pipeline. | Integrate formula validation into an automated data‑ingestion workflow to catch calculation errors early.
-// AI Prompts: Generate C# code with Aspose.Cells that forces US regional settings, rewrites formulas with commas, recalculates the workbook, and flags any error cells. | Explain the impact of workbook.Settings.Region and workbook.ParseFormulas on formula parsing and calculation in Aspose.Cells. | Provide a step‑by‑step guide to batch convert Excel files to US English formula syntax and verify results using Aspose.Cells.
+// Title: Convert Excel workbook formulas to US English comma syntax and verify calculation results with Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file, set Workbook.Settings.CultureInfo to en-US, recalculate all formulas, and list the addresses of any cells that return error values. | Change the formula locale to US English, execute a full workbook calculation, scan each worksheet for cells whose value starts with '#', and save the updated workbook to a new file.
+// Common Searches: Aspose.Cells how to change formula locale to en-US and recalculate workbook | C# detect formula errors after recalculating Excel file with Aspose.Cells | Convert Excel formulas to use commas instead of semicolons using Aspose.Cells .NET | Validate that all formulas in an Excel workbook calculate without errors in C#
+// Tags: configure workbook cultureinfo en-us Aspose.Cells | run full formula calculation Aspose.Cells | identify cells with # error values Aspose.Cells | convert formula separators to commas Aspose.Cells | save workbook after formula check Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an .xlsx file, forces US regional settings so formulas use commas, parses any pending formulas, recalculates the whole workbook, checks each formula cell for errors, reports issues, and saves the corrected file.
-class ConvertFormulasToEnglishUS
+// The example loads an input.xlsx workbook, sets its CultureInfo to en-US to enforce comma‑separated formulas, recalculates every formula, scans all cells for error values (strings beginning with '#'), reports any issues, and saves the processed workbook as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Set the workbook region to USA to enforce English (US) formula syntax (comma as argument separator)
-        workbook.Settings.Region = CountryCode.USA;
-
-        // Parse any formulas that were set without immediate parsing
-        workbook.ParseFormulas(false);
-
-        // Calculate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // Validate that all formulas were calculated without errors
-        bool hasError = false;
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Cells cells = sheet.Cells;
-            foreach (Cell cell in cells)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                if (cell.IsFormula)
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set formula locale to English (US) with comma separators
+            workbook.Settings.CultureInfo = new CultureInfo("en-US");
+
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Validate that all formulas calculated without errors
+            bool hasError = false;
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                foreach (Cell cell in cells)
                 {
-                    // If the result of a formula is an error, its type will be IsError
-                    if (cell.Type == CellValueType.IsError)
+                    // Check if the cell contains a formula
+                    if (cell.IsFormula)
                     {
-                        hasError = true;
-                        Console.WriteLine($"Error in sheet '{sheet.Name}' cell {cell.Name}: {cell.StringValue}");
+                        // After calculation, an error value is represented as a string starting with '#'
+                        if (cell.Value is string s && s.StartsWith("#"))
+                        {
+                            Console.WriteLine($"Error in sheet '{sheet.Name}' cell {cell.Name}");
+                            hasError = true;
+                        }
                     }
                 }
             }
-        }
 
-        if (!hasError)
+            if (!hasError)
+            {
+                Console.WriteLine("All formulas calculated successfully.");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
         {
-            Console.WriteLine("All formulas calculated successfully.");
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Save the workbook with updated formulas and calculated values
-        workbook.Save("output.xlsx");
     }
 }

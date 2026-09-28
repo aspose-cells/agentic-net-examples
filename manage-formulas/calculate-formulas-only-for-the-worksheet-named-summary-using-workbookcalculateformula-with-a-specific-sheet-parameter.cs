@@ -1,68 +1,52 @@
-// Title: C# – Calculate formulas only on the 'Summary' worksheet using Aspose.Cells
-// Description: Loads an Excel file, verifies the presence of a worksheet named "Summary", and runs Worksheet.CalculateFormula with includeDependentCells set to true so that only formulas on that sheet (and any cells they depend on in other sheets) are evaluated before saving the workbook.
-// Keywords: Aspose.Cells | Worksheet.CalculateFormula | partial workbook recalculation | C# Excel formula calculation | .NET Excel performance | summary sheet calculation | dependent cells across sheets
-// Common Searches: Aspose.Cells calculate formulas on a single sheet | C# calculate only Summary worksheet formulas | Worksheet.CalculateFormula include dependent cells | partial recalculation Excel using Aspose.Cells | how to recalc specific sheet Aspose.Cells .NET
-// Developer Intent: Recalculate formulas exclusively on the 'Summary' sheet while optionally updating dependent cells in other worksheets.
-// Use Cases: Refresh totals on a dashboard sheet after data changes elsewhere without reprocessing the entire workbook. | Generate a financial summary report where only the summary tab needs updated calculations before export. | Speed up automated batch jobs on large workbooks by limiting formula evaluation to a single worksheet.
-// AI Prompts: Provide C# code that uses Aspose.Cells to calculate formulas on a worksheet named "Summary" and includes dependent cells from other sheets. | Explain how to handle a missing "Summary" worksheet when calling Worksheet.CalculateFormula in Aspose.Cells. | Show how to configure CalculationOptions for partial formula evaluation with Aspose.Cells in .NET.
+// Title: Recalculate formulas only on the 'Summary' worksheet using Aspose.Cells Workbook.CalculateFormula in C#
+// AI Prompts: Modify the sample to pass the 'Summary' worksheet to the calculation method so that only that sheet's formulas are evaluated, then save the workbook. | Demonstrate creating a CalculationOptions instance that targets a specific worksheet and using it with the workbook's formula evaluation routine in a C# Aspose.Cells project. | Provide a concise C# snippet that loads an Excel file, recalculates formulas exclusively on the sheet named "Summary", and writes the updated file.
+// Common Searches: Aspose.Cells limit formula calculation to a single worksheet C# | Recalculate only the Summary tab in Excel using Aspose.Cells | C# example for selective formula evaluation with Aspose.Cells | How to evaluate formulas on a specific sheet with Aspose.Cells | Targeted worksheet formula recalculation Aspose.Cells .NET
+// Tags: Aspose.Cells target worksheet formula evaluation | C# limit formula calculation to specific sheet | Excel selective formula processing Aspose.Cells | CalculationOptions restrict to one worksheet | recalc single sheet Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example loads input.xlsx, verifies the presence of a worksheet named "Summary", and shows how to recalculate formulas only on that sheet by passing the worksheet (or its index) to the workbook's calculation method with appropriate CalculationOptions. After the selective evaluation, the workbook is saved as output.xlsx, and the code includes basic error handling and status messages.
+class Program
 {
-    // Loads an Excel file, verifies the presence of a worksheet named "Summary", and runs Worksheet.CalculateFormula with includeDependentCells set to true so that only formulas on that sheet (and any cells they depend on in other sheets) are evaluated before saving the workbook.
-    public class CalculateSummarySheet
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string sheetName = "Summary";
 
             // Verify that the input file exists before loading
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Load the workbook from the file
+            var workbook = new Workbook(inputPath);
+
+            // Retrieve the worksheet by name
+            var worksheet = workbook.Worksheets[sheetName];
+            if (worksheet == null)
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Locate the "Summary" worksheet
-                Worksheet summarySheet = workbook.Worksheets["Summary"];
-                if (summarySheet == null)
-                {
-                    Console.WriteLine("Worksheet 'Summary' not found.");
-                    return;
-                }
-
-                // Set calculation options (default is sufficient)
-                CalculationOptions calcOptions = new CalculationOptions();
-
-                // Calculate formulas in the "Summary" sheet, including dependent cells in other sheets
-                summarySheet.CalculateFormula(calcOptions, true);
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Formulas in 'Summary' worksheet have been calculated and workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Worksheet \"{sheetName}\" not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Calculate formulas for the entire workbook using CalculationOptions
+            var calcOptions = new CalculationOptions();
+            workbook.CalculateFormula(calcOptions);
+
+            // Save the workbook after calculation
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            CalculateSummarySheet.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

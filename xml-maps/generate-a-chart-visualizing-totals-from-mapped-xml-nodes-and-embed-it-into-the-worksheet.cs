@@ -1,49 +1,93 @@
-// Title: Create and embed a column chart from XML‑mapped totals using Aspose.Cells in C#
-// Description: Demonstrates how to build a new workbook, populate cells with totals derived from an XML map, add a column chart (rows 5‑20, columns 0‑8), bind it to the range A1:B4, set a title and legend, force layout calculation, and save the file as TotalsChart.xlsx.
-// Keywords: Aspose.Cells | C# chart example | XML map to Excel | column chart embedding | .NET Excel chart | set chart data range | calculate chart layout | save workbook as XLSX
-// Common Searches: Aspose.Cells create column chart from XML mapped cells | C# embed chart in Excel workbook using Aspose.Cells | How to set chart data range A1:B4 in Aspose.Cells | Calculate chart before saving Aspose.Cells .NET | Generate Excel chart from XML map with Aspose
-// Developer Intent: Generate a column chart from totals extracted via an XML map and embed it directly into the worksheet.
-// Use Cases: Show sales totals imported from an XML file in a visual chart within an automated report. | Build a dashboard that updates its chart automatically when the underlying XML data changes. | Create a printable Excel summary that combines tabular XML data with a chart for quick insight.
-// AI Prompts: Write C# code with Aspose.Cells to create a line chart from XML‑mapped range A1:C10 and embed it in the worksheet. | Show how to bind an Aspose.Cells chart to a dynamic named range that reflects XML map updates. | Explain how to customize colors and data labels for a column chart generated from XML‑derived totals.
+// Title: Generate an Excel column chart from XML‑mapped categories and amounts and embed it in a worksheet using Aspose.Cells for C#
+// AI Prompts: Write C# code that parses an XML string containing Category and Amount elements, writes the data to an Aspose.Cells worksheet, adds a SUM total row, and inserts a column chart below the data. | Show how to use MaxDataRow to calculate a dynamic range for the chart series and set the chart title in an Aspose.Cells workbook. | Demonstrate saving the workbook as an .xlsx file after populating the sheet and embedding the chart.
+// Common Searches: how to create a column chart from XML data using Aspose.Cells in C# | c# Aspose.Cells add total row with SUM formula based on XML‑mapped cells | dynamic chart range using MaxDataRow in Aspose.Cells workbook | embed chart below data rows in Excel file generated with Aspose.Cells C#
+// Tags: Aspose.Cells create column chart from XML data | C# parse XML to populate Excel worksheet | Aspose.Cells add SUM total row | dynamic chart series range MaxDataRow Aspose.Cells | save workbook as .xlsx Aspose.Cells C#
 
+using System;
+using System.IO;
+using System.Xml.Linq;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to build a new workbook, populate cells with totals derived from an XML map, add a column chart (rows 5‑20, columns 0‑8), bind it to the range A1:B4, set a title and legend, force layout calculation, and save the file as TotalsChart.xlsx.
+// The example creates a new workbook, parses a hard‑coded XML string with Category and Amount elements, writes the values to columns A and B, adds header cells, inserts a total label with a SUM formula for the Amount column, creates a column chart positioned below the total row that references the populated data range, and saves the file as ChartFromXml.xlsx using Aspose.Cells for C#.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-        // Populate worksheet with sample totals that would come from mapped XML nodes
-        sheet.Cells["A1"].PutValue("Item");
-        sheet.Cells["B1"].PutValue("Total");
-        sheet.Cells["A2"].PutValue("Item1");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["A3"].PutValue("Item2");
-        sheet.Cells["B3"].PutValue(85);
-        sheet.Cells["A4"].PutValue("Item3");
-        sheet.Cells["B4"].PutValue(150);
+            // Sample XML data
+            string xmlData = @"<Root>
+    <Item>
+        <Category>Food</Category>
+        <Amount>120</Amount>
+    </Item>
+    <Item>
+        <Category>Transport</Category>
+        <Amount>80</Amount>
+    </Item>
+    <Item>
+        <Category>Utilities</Category>
+        <Amount>150</Amount>
+    </Item>
+</Root>";
 
-        // Add a column chart to the worksheet (positioned from row 5, column 0 to row 20, column 8)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Parse XML and write data starting at row 2 (A2, B2, ...)
+            XDocument doc = XDocument.Parse(xmlData);
+            int currentRow = 1; // zero‑based index; row 2 in Excel
+            foreach (var item in doc.Root.Elements("Item"))
+            {
+                string category = item.Element("Category")?.Value ?? string.Empty;
+                string amountStr = item.Element("Amount")?.Value ?? "0";
 
-        // Set the data range for the chart (vertical series)
-        chart.SetChartDataRange("A1:B4", true);
+                sheet.Cells[currentRow, 0].PutValue(category);
+                sheet.Cells[currentRow, 1].PutValue(double.Parse(amountStr));
+                currentRow++;
+            }
 
-        // Configure basic chart properties
-        chart.Title.Text = "Totals from XML Nodes";
-        chart.ShowLegend = true;
+            // Add column headers
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
 
-        // Ensure the chart layout is calculated before saving
-        chart.Calculate();
+            // Determine the last row that contains data (zero‑based)
+            int lastDataRow = sheet.Cells.MaxDataRow; // e.g., 3 for three items (rows 2‑4)
 
-        // Save the workbook with the embedded chart
-        workbook.Save("TotalsChart.xlsx", SaveFormat.Xlsx);
+            // Insert a total label and formula below the data
+            int totalRow = lastDataRow + 2; // leave one empty row
+            sheet.Cells[totalRow, 0].PutValue("Total");
+            sheet.Cells[totalRow, 1].Formula = $"SUM(B2:B{lastDataRow + 1})";
+
+            // Add a column chart below the total row
+            int chartTopRow = totalRow + 2;
+            int chartIndex = sheet.Charts.Add(ChartType.Column, chartTopRow, 0, chartTopRow + 15, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Amount by Category";
+
+            // Define the series: Y‑values from Amount column
+            chart.NSeries.Add($"B2:B{lastDataRow + 1}", true);
+            // Category (X) data is taken from the first column by default; explicit setting is optional.
+            // chart.NSeries[0].CategoryData = $"A2:A{lastDataRow + 1}"; // Not required for basic column chart
+
+            // Save the workbook
+            string outputPath = "ChartFromXml.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

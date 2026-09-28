@@ -1,10 +1,7 @@
-// Title: Validate Comment Transfer When Copying Rows with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds comments to A1 and B2, copies rows 0‑1 to row 5, uses ShapeCollection.CopyCommentsInRange to move the comments, then checks they appear at A6 and B7 before saving.
-// Keywords: Aspose.Cells | CopyRows | CopyCommentsInRange | C# | .NET | comment preservation | row duplication | worksheet comments | CellArea | ShapeCollection
-// Common Searches: Aspose.Cells copy rows with comments | CopyCommentsInRange C# example | Validate copied comments Aspose.Cells | How to preserve comments when copying rows | Copy rows and comments Aspose.Cells .NET
-// Developer Intent: Confirm that cell comments are retained and correctly positioned after rows are copied.
-// Use Cases: Duplicate a range of rows while keeping associated comments for reporting templates. | Migrate data blocks between worksheets and ensure comment integrity. | Automated testing of comment preservation after bulk row operations.
-// AI Prompts: Write C# code that iterates through worksheet.Comments to compare original and copied comment texts after using CopyRows and CopyCommentsInRange. | Create an MSTest unit test that asserts the presence and exact content of comments at the destination cells after copying rows with Aspose.Cells. | Explain why CopyRows alone does not copy comments and how ShapeCollection.CopyCommentsInRange resolves this issue.
+// Title: How to verify that cell comments are preserved when copying rows with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to copy a range of rows and duplicate their comments with ShapeCollection.CopyCommentsInRange, then iterate over the destination cells to assert that each comment's Note matches the source. | Create a C# validation routine that, after copying rows via worksheet.Cells.CopyRows, checks that the Comment.Row property of each copied comment equals the new row index and that the comment text remains unchanged.
+// Common Searches: Aspose.Cells copy rows and keep cell comments .NET example | validate copied comments after worksheet.Cells.CopyRows in C# | ShapeCollection.CopyCommentsInRange how to use for row duplication | check comment note text after copying rows with Aspose.Cells | C# verify comment row index after copying rows in Aspose.Cells
+// Tags: duplicate rows preserving comments Aspose.Cells | ShapeCollection.CopyCommentsInRange usage C# | comment note integrity check Aspose.Cells | verify comment row property after copy | Aspose.Cells comment transfer test
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsCommentCopyValidation
 {
-    // Creates a workbook, adds comments to A1 and B2, copies rows 0‑1 to row 5, uses ShapeCollection.CopyCommentsInRange to move the comments, then checks they appear at A6 and B7 before saving.
+    // // Demonstrates adding comments to cells A1 and A2, copying rows 0‑1 to rows 5‑6, duplicating the associated comments with ShapeCollection.CopyCommentsInRange, and validating that the copied comments retain the original note text and correct row indices.
     class Program
     {
         static void Main()
@@ -25,54 +22,78 @@ namespace AsposeCellsCommentCopyValidation
             // Comment in cell A1 (row 0, column 0)
             int commentIdx1 = worksheet.Comments.Add(0, 0);
             Comment comment1 = worksheet.Comments[commentIdx1];
-            comment1.Note = "Comment on original row 0";
+            comment1.Note = "Original comment in A1";
 
-            // Comment in cell B2 (row 1, column 1)
-            int commentIdx2 = worksheet.Comments.Add(1, 1);
+            // Comment in cell A2 (row 1, column 0)
+            int commentIdx2 = worksheet.Comments.Add(1, 0);
             Comment comment2 = worksheet.Comments[commentIdx2];
-            comment2.Note = "Comment on original row 1";
+            comment2.Note = "Original comment in A2";
 
             // ---------- Define source range ----------
-            // Source range covering rows 0-1 and columns 0-1
             CellArea sourceArea = new CellArea
             {
                 StartRow = 0,
                 StartColumn = 0,
                 EndRow = 1,
-                EndColumn = 1
+                EndColumn = 0   // only column A
             };
 
-            // ---------- Copy rows ----------
-            // Destination start row (e.g., row 5) and column (0)
+            // Destination start row and column (copy to rows 5 and 6, column A)
             int destStartRow = 5;
             int destStartColumn = 0;
 
-            // Copy the rows' data and formats
+            // ---------- Copy rows (data & formats) ----------
+            // Copy rows 0-1 to rows 5-6
             worksheet.Cells.CopyRows(worksheet.Cells, sourceArea.StartRow, destStartRow, sourceArea.EndRow - sourceArea.StartRow + 1);
 
             // ---------- Copy comments ----------
-            // Use ShapeCollection.CopyCommentsInRange to transfer comments
+            // ShapeCollection.CopyCommentsInRange copies comments from source range to destination range
             ShapeCollection shapes = worksheet.Shapes;
             shapes.CopyCommentsInRange(shapes, sourceArea, destStartRow, destStartColumn);
 
             // ---------- Validation ----------
-            // Expected destination cells for the copied comments
-            string destCell1 = CellsHelper.CellIndexToName(destStartRow, sourceArea.StartColumn); // A6
-            string destCell2 = CellsHelper.CellIndexToName(destStartRow + 1, sourceArea.StartColumn + 1); // B7
+            // Expected notes after copy
+            string[] expectedNotes = { "Original comment in A1", "Original comment in A2" };
+            bool allValid = true;
 
-            // Retrieve copied comments
-            Comment copiedComment1 = worksheet.Comments[destCell1];
-            Comment copiedComment2 = worksheet.Comments[destCell2];
+            for (int i = 0; i < expectedNotes.Length; i++)
+            {
+                int srcRow = sourceArea.StartRow + i;
+                int destRow = destStartRow + i;
 
-            // Verify and output results
-            Console.WriteLine($"Original comment at A1: {comment1.Note}");
-            Console.WriteLine($"Copied comment at {destCell1}: {(copiedComment1 != null ? copiedComment1.Note : "Not found")}");
+                // Retrieve comment from destination cell
+                Comment destComment = worksheet.Comments[destRow, destStartColumn];
 
-            Console.WriteLine($"Original comment at B2: {comment2.Note}");
-            Console.WriteLine($"Copied comment at {destCell2}: {(copiedComment2 != null ? copiedComment2.Note : "Not found")}");
+                if (destComment == null)
+                {
+                    Console.WriteLine($"Comment missing at destination cell ({destRow}, {destStartColumn}).");
+                    allValid = false;
+                    continue;
+                }
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("CommentCopyValidation.xlsx");
+                // Compare note text
+                if (destComment.Note == expectedNotes[i])
+                {
+                    Console.WriteLine($"Comment correctly copied to row {destRow}: \"{destComment.Note}\"");
+                }
+                else
+                {
+                    Console.WriteLine($"Comment mismatch at row {destRow}. Expected \"{expectedNotes[i]}\", found \"{destComment.Note}\"");
+                    allValid = false;
+                }
+
+                // Additional check: verify the Row property matches the destination row
+                if (destComment.Row != destRow)
+                {
+                    Console.WriteLine($"Row property mismatch: comment.Row = {destComment.Row}, expected {destRow}");
+                    allValid = false;
+                }
+            }
+
+            Console.WriteLine(allValid ? "All comments transferred correctly." : "Comment transfer validation failed.");
+
+            // Save the workbook (optional, just to visualize the result)
+            workbook.Save("CommentCopyValidationResult.xlsx");
         }
     }
 }

@@ -1,86 +1,85 @@
-// Title: Aspose.Cells .NET: Compare Slicer Selection Before and After Refresh
-// Description: Shows how to record slicer item selections, change a selection, call Slicer.Refresh, and then compare the before‑and‑after states in a workbook with a pivot table using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# slicer refresh | slicer selection state | pivot table slicer | SlicerCacheItem | compare slicer before after | Excel slicer automation | Aspose.Cells API
-// Common Searches: Aspose.Cells compare slicer selection before after refresh | how to check slicer state after Refresh in .NET | retrieve slicer cache items Aspose.Cells C# | preserve slicer selections when refreshing pivot table | debug slicer filtering with Aspose.Cells
-// Developer Intent: Confirm that programmatic changes to slicer selections are reflected correctly after calling Refresh.
-// Use Cases: Automated test to ensure slicer selections survive a pivot table refresh. | Logging differences in slicer item states for debugging filter logic. | Generating a report of selection changes when updating slicer values programmatically.
-// AI Prompts: Write C# code using Aspose.Cells that captures slicer selections, toggles an item, refreshes the slicer, and prints the before‑after comparison. | Create a method that returns a list of slicer items whose Selected property changed after calling Slicer.Refresh in Aspose.Cells for .NET. | Explain how to maintain slicer selections when refreshing a linked pivot table and how to compare the selection states with Aspose.Cells.
+// Title: C# example: capture slicer selection flags, modify them, refresh the slicer, and compare before/after states with Aspose.Cells
+// AI Prompts: Write C# code that iterates through a slicer's SlicerCacheItems, stores each item's Selected property, changes the selection to a specific item, calls slicer.Refresh, then prints which items changed. | Generate an Aspose.Cells .NET snippet that creates a pivot table, adds a linked slicer, toggles slicer selections, refreshes the slicer, and compares the selection flags before and after the refresh.
+// Common Searches: Aspose.Cells how to get slicer selected values before refreshing the pivot table | C# compare slicer cache item selection state before and after slicer.Refresh | track changes in Aspose.Cells slicer selections after modifying cache items | example code for capturing slicer selection flags in Aspose.Cells .NET
+// Tags: Aspose.Cells slicer cache state capture | C# refresh slicer linked to pivot | track slicer selection changes Aspose.Cells | Aspose.Cells slicer selection flag comparison | slicer.Refresh usage example
 
 using System;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
 namespace SlicerRefreshComparisonDemo
 {
-    // Shows how to record slicer item selections, change a selection, call Slicer.Refresh, and then compare the before‑and‑after states in a workbook with a pivot table using Aspose.Cells for C#.
-    class Program
+    // The program creates a workbook, adds sample data, builds a pivot table, and attaches a slicer. It records the Selected flag of each slicer cache item, changes the selection to only the last item, calls slicer.Refresh (which also refreshes the pivot), records the flags again, prints a before/after comparison for each item, and saves the workbook as an XLSX file.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
             // Populate sample data for the pivot table
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["A2"].PutValue("A");
-            dataSheet.Cells["A3"].PutValue("B");
-            dataSheet.Cells["A4"].PutValue("C");
-            dataSheet.Cells["B1"].PutValue("Value");
-            dataSheet.Cells["B2"].PutValue(10);
-            dataSheet.Cells["B3"].PutValue(20);
-            dataSheet.Cells["B4"].PutValue(30);
+            cells["A1"].Value = "Category";
+            cells["A2"].Value = "A";
+            cells["A3"].Value = "B";
+            cells["A4"].Value = "C";
+            cells["B1"].Value = "Value";
+            cells["B2"].Value = 10;
+            cells["B3"].Value = 20;
+            cells["B4"].Value = 30;
 
-            // Add a pivot table based on the data
-            int pivotIdx = dataSheet.PivotTables.Add("A1:B4", "D1", "Pivot1");
-            PivotTable pivot = dataSheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);
+            // Create a pivot table based on the data
+            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Value");
             pivot.RefreshData();
             pivot.CalculateData();
 
             // Add a slicer linked to the pivot table
-            int slicerIdx = dataSheet.Slicers.Add(pivot, "F1", "Category");
-            Slicer slicer = dataSheet.Slicers[slicerIdx];
+            int slicerIdx = sheet.Slicers.Add(pivot, "F1", "Category");
+            Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // Ensure all items are initially selected
+            // -------------------------------------------------
+            // Capture selection states BEFORE Refresh
+            // -------------------------------------------------
+            List<bool> beforeSelection = new List<bool>();
             foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
             {
-                item.Selected = true;
+                beforeSelection.Add(item.Selected);
             }
 
-            // Capture selection states before refresh
-            bool[] beforeRefresh = new bool[slicer.SlicerCache.SlicerCacheItems.Count];
-            for (int i = 0; i < beforeRefresh.Length; i++)
+            // Change selection: select the last item, deselect others
+            for (int i = 0; i < slicer.SlicerCache.SlicerCacheItems.Count; i++)
             {
-                beforeRefresh[i] = slicer.SlicerCache.SlicerCacheItems[i].Selected;
-            }
-
-            // Change selection: deselect the first item, keep others selected
-            if (slicer.SlicerCache.SlicerCacheItems.Count > 0)
-            {
-                slicer.SlicerCache.SlicerCacheItems[0].Selected = false;
+                slicer.SlicerCache.SlicerCacheItems[i].Selected = (i == slicer.SlicerCache.SlicerCacheItems.Count - 1);
             }
 
             // Refresh the slicer (also refreshes the underlying pivot table)
             slicer.Refresh();
 
-            // Capture selection states after refresh
-            bool[] afterRefresh = new bool[slicer.SlicerCache.SlicerCacheItems.Count];
-            for (int i = 0; i < afterRefresh.Length; i++)
+            // -------------------------------------------------
+            // Capture selection states AFTER Refresh
+            // -------------------------------------------------
+            List<bool> afterSelection = new List<bool>();
+            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
             {
-                afterRefresh[i] = slicer.SlicerCache.SlicerCacheItems[i].Selected;
+                afterSelection.Add(item.Selected);
             }
 
-            // Compare and output the differences
-            Console.WriteLine("Comparison of slicer selection states (Before -> After):");
-            for (int i = 0; i < beforeRefresh.Length; i++)
+            // Compare before and after states and output the result
+            Console.WriteLine("Slicer selection state comparison:");
+            for (int i = 0; i < beforeSelection.Count; i++)
             {
-                Console.WriteLine($"Item {i} ('{slicer.SlicerCache.SlicerCacheItems[i].Value}'): {beforeRefresh[i]} -> {afterRefresh[i]}");
+                bool before = beforeSelection[i];
+                bool after = afterSelection[i];
+                Console.WriteLine($"Item {i} (Value: {slicer.SlicerCache.SlicerCacheItems[i].Value}) - Before: {before}, After: {after}, Changed: {before != after}");
             }
 
-            // Save the workbook (required by lifecycle rule)
+            // Save the workbook (using the standard lifecycle rule)
             workbook.Save("SlicerRefreshComparisonDemo.xlsx");
         }
     }

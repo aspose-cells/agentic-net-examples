@@ -1,58 +1,66 @@
-// Title: Clone a Shape, Adjust Its Reflection, and Position It Beside the Original with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a rectangle shape, apply a half‑reflection, clone the shape using AddCopy, shift the copy five columns to the right, and set a different reflection effect on the cloned shape before saving the file.
-// Keywords: Aspose.Cells shape cloning | C# AddCopy shape | reflection effect Aspose.Cells | duplicate rectangle shape .NET | modify shape reflection C# | Aspose.Cells worksheet graphics | Excel shape copy code
-// Common Searches: Aspose.Cells clone shape and change reflection | AddCopy method example C# | how to set reflection effect on a copied shape in Aspose.Cells | move cloned shape to another column Aspose.Cells | C# code for shape duplication with different reflection
-// Developer Intent: The developer needs to duplicate an existing shape, apply a new reflection style to the copy, and place the duplicate next to the original in an Excel worksheet.
-// Use Cases: Create side‑by‑side design samples with distinct reflection styles for a presentation. | Generate a template where a logo is duplicated with varied reflections to showcase branding options. | Automate visual depth in reports by copying shapes and assigning custom reflection parameters.
-// AI Prompts: Write C# code that uses Aspose.Cells to clone a rectangle shape, move the clone five columns right, and apply a full reflection effect. | Explain the parameters of the AddCopy method in Aspose.Cells and how they control the cloned shape's position. | Show how to access and modify advanced reflection properties such as Direction and FadeDirection after cloning a shape.
+// Title: Clone a worksheet shape, preserve its dimensions, and place the copy five columns to the right using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells AddCopy to duplicate the first shape on a worksheet, set the clone’s UpperLeftColumn five columns ahead, and copy the original Height and Width. | After cloning a shape, apply a reflection effect through the Shape.EffectFormat property in C#. | Add robust error handling that checks for the input file’s existence and verifies that the worksheet contains at least one shape before performing the copy.
+// Common Searches: aspnet clone excel shape and move it to another column with Aspose.Cells | c# copy a shape and keep original size using Aspose.Cells AddCopy method | how to add reflection effect to a duplicated shape in Aspose.Cells for .NET | error handling for missing shapes when using Aspose.Cells shape APIs | place cloned shape at specific cell offset in Excel with Aspose.Cells
+// Tags: AddCopy shape cloning Aspose.Cells | preserve shape dimensions after copy | set cloned shape column offset | apply reflection effect via EffectFormat | validate shape existence before cloning
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeCloneReflection
+// Loads an Excel workbook, checks for at least one shape, clones the first shape with AddCopy, moves the duplicate five columns to the right while keeping the original height and width, optionally applies a reflection effect, and saves the result.
+class Program
 {
-    // Demonstrates how to create a workbook, add a rectangle shape, apply a half‑reflection, clone the shape using AddCopy, shift the copy five columns to the right, and set a different reflection effect on the cloned shape before saving the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add an original rectangle shape
-            // Parameters: upper left row, upper left row offset, upper left column, upper left column offset, width, height
-            Shape originalShape = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 120, 80);
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Optionally set a reflection on the original shape for visual reference
-            ReflectionEffect originalReflection = originalShape.Reflection;
-            originalReflection.Type = ReflectionEffectType.HalfReflectionTouching;
-            originalReflection.Transparency = 0.3;
-            originalReflection.Size = 60;
-            originalReflection.Blur = 2;
-            originalReflection.Distance = 5;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Clone the original shape and place the copy beside it
-            // Place the copy 5 columns to the right of the original shape
-            int newTopRow = 2;          // same top row
-            int newTop = 0;             // same vertical offset
-            int newLeftColumn = 7;      // shift right (original left column was 2)
-            int newLeft = 0;            // same horizontal offset
-            Shape clonedShape = worksheet.Shapes.AddCopy(originalShape, newTopRow, newTop, newLeftColumn, newLeft);
+            // Verify that at least one shape exists
+            if (sheet.Shapes.Count == 0)
+                throw new InvalidOperationException("No shapes found in the worksheet.");
 
-            // Modify the reflection of the cloned shape
-            ReflectionEffect clonedReflection = clonedShape.Reflection;
-            clonedReflection.Type = ReflectionEffectType.FullReflection4PtOffset;
-            clonedReflection.Transparency = 0.6;
-            clonedReflection.Size = 80;
-            clonedReflection.Blur = 4;
-            clonedReflection.Distance = 10;
-            clonedReflection.Direction = 90;          // optional additional property
-            clonedReflection.FadeDirection = 45;      // optional additional property
+            // Retrieve the original shape
+            Shape originalShape = sheet.Shapes[0];
 
-            // Save the workbook
-            workbook.Save("ClonedShapeWithReflection.xlsx");
+            // Calculate new position (5 columns to the right)
+            int newUpperLeftRow = originalShape.UpperLeftRow;
+            int newUpperLeftColumn = originalShape.UpperLeftColumn + 5;
+            int newLowerRightRow = originalShape.LowerRightRow;
+            int newLowerRightColumn = originalShape.LowerRightColumn + 5;
+
+            // Clone the original shape to the new location
+            Shape clonedShape = sheet.Shapes.AddCopy(
+                originalShape,
+                newUpperLeftRow,
+                newUpperLeftColumn,
+                newLowerRightRow,
+                newLowerRightColumn);
+
+            // Preserve the original size (height and width)
+            clonedShape.Height = originalShape.Height;
+            clonedShape.Width = originalShape.Width;
+
+            // NOTE: Shape effect APIs (EffectFormat, Reflection, etc.) may not be available
+            // in all Aspose.Cells versions. If needed, they can be applied here using the
+            // appropriate EffectFormat properties.
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

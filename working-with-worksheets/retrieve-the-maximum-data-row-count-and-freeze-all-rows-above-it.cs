@@ -1,43 +1,51 @@
-// Title: C# Aspose.Cells: Retrieve MaxDataRow and Freeze All Upper Rows
-// Description: Shows how to call Cells.MaxDataRow to get the zero‑based index of the final data row, compute the first scrollable row, and use Worksheet.FreezePanes to lock every row above it before saving the workbook as an XLSX file.
-// Keywords: Aspose.Cells MaxDataRow | Worksheet.FreezePanes C# | freeze top rows Excel .NET | dynamic header freeze Aspose | C# Excel row index
-// Common Searches: Aspose.Cells get last data row C# | Freeze rows based on data range Aspose.Cells | Worksheet.FreezePanes example .NET | How to lock header rows dynamically in Excel | MaxDataRow property usage Aspose
-// Developer Intent: Identify the last row containing data and apply a freeze pane that locks all rows above it.
-// Use Cases: Create reports where headers stay visible while scrolling large tables. | Export variable‑size datasets with fixed top rows for better readability. | Implement pagination logic that requires knowledge of the final data row before freezing panes.
-// AI Prompts: Generate C# code using Aspose.Cells to find the last populated row and freeze every row above it. | Explain the parameters of Worksheet.FreezePanes in relation to Cells.MaxDataRow. | Adapt the example to also freeze columns up to the last populated column.
+// Title: Retrieve the last populated row and freeze all rows above it using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing XLSX file with Aspose.Cells, determines the highest row containing data via the Cells.MaxDataRow property, applies Worksheet.FreezePanes to lock rows up to that index, and saves the modified workbook. | Demonstrate combining Worksheet.FreezePanes with Cells.MaxDataRow to lock the upper portion of a sheet in a .NET application. | Provide a .NET snippet that checks for the input file, calculates the maximum data row index, freezes rows from the first row through that index, and writes the result to a new XLSX file.
+// Common Searches: Aspose.Cells C# get index of last row with data and freeze rows above | How to freeze panes up to the last populated row in an Excel workbook using Aspose.Cells for .NET | C# example for using MaxDataRow and FreezePanes to lock top rows in an XLSX file
+// Tags: worksheet last row detection aspose.cells | freezepanes method c# | freeze top rows aspose.cells | excel row freezing .net | input xlsx output xlsx aspose.cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to call Cells.MaxDataRow to get the zero‑based index of the final data row, compute the first scrollable row, and use Worksheet.FreezePanes to lock every row above it before saving the workbook as an XLSX file.
+// // Loads input.xlsx, obtains the index of the final data row via worksheet.Cells.MaxDataRow, freezes all rows from the top through that index using FreezePanes, and saves the result as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Add sample data (replace with your own data loading if needed)
-        cells["A1"].PutValue("Header");
-        cells["A2"].PutValue("Item 1");
-        cells["A3"].PutValue("Item 2");
-        cells["A4"].PutValue("Item 3");
-
-        // Retrieve the maximum data row index (zero‑based). Returns -1 if no data.
-        int maxDataRow = cells.MaxDataRow;
-
-        if (maxDataRow >= 0)
+        try
         {
-            // Freeze all rows up to and including the max data row.
-            // FreezePanes(row, column, freezedRows, freezedColumns)
-            // Split occurs at the first empty row after the data.
-            int splitRow = maxDataRow + 1; // first row that should remain scrollable
-            sheet.FreezePanes(splitRow, 0, splitRow, 0);
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the workbook
-        workbook.Save("FrozenRows.xlsx", SaveFormat.Xlsx);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Retrieve the zero‑based index of the last row that contains data
+            int maxDataRowIndex = worksheet.Cells.MaxDataRow;
+
+            // Freeze all rows above the maximum data row.
+            // FreezePanes(row, column, totalRows, totalColumns) freezes rows up to totalRows-1 and columns up to totalColumns-1.
+            // We freeze rows from 0 to maxDataRowIndex (inclusive) and no columns.
+            worksheet.FreezePanes(maxDataRowIndex + 1, 0, maxDataRowIndex + 1, 0);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log or display the exception details for troubleshooting
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

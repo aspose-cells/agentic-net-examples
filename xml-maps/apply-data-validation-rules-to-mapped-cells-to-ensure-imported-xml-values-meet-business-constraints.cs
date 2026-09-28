@@ -1,72 +1,136 @@
-// Title: C# Sample: Apply Whole‑Number Data Validation to XML‑Mapped Cells Using Aspose.Cells
-// Description: Loads a template workbook with CheckDataValid enabled, imports XML into Sheet1, defines a validation range (A2:A100), adds a whole‑number rule (1‑100) with custom messages, and saves the result. Demonstrates XML mapping combined with data validation in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# data validation | ImportXml Aspose.Cells | CheckDataValid load option | XML mapping validation .NET | whole number validation Aspose | Excel data validation programmatically | Aspose.Cells example GitHub | C# workbook import XML
-// Common Searches: Aspose.Cells add numeric range validation after ImportXml | C# load workbook with data validation enabled Aspose | How to enforce whole number rule on XML‑mapped cells | Aspose.Cells example for XML maps and validation | Validate imported XML values in Excel using Aspose
-// Developer Intent: Add a numeric range validation rule to cells populated from an XML map and ensure the rule is enforced when the workbook is loaded and saved.
-// Use Cases: Guarantee that ID fields imported from XML stay within a permitted range (1‑100). | Prevent users from entering invalid numbers in a pre‑filled template column. | Combine XML mapping with data‑validation to maintain data integrity in automated reporting. | Enable CheckDataValid to let Aspose.Cells raise errors for out‑of‑range values during processing.
-// AI Prompts: Write C# code with Aspose.Cells that imports an XML file into column B (rows 5‑200) and applies a whole‑number validation between 10 and 500, including custom input and error messages. | Explain the interaction between the CheckDataValid load option and data validation in Aspose.Cells, and show how to capture validation failures programmatically.
+// Title: How to add whole-number, list, and custom data validations to XML-mapped cells in an Aspose.Cells workbook using C#
+// AI Prompts: Generate C# code that loads an XML file, maps its rows to a worksheet with Aspose.Cells, and applies a whole-number validation (1‑1000) to column A, a list validation (Option1‑Option2‑Option3) to column B, and a custom validation enforcing exactly five numeric characters in column C. | Show how to modify the custom validation formula for column C so that it accepts exactly six alphanumeric characters instead of five digits, using Aspose.Cells ValidationType.Custom. | Demonstrate saving the validated workbook to both XLSX and PDF formats while preserving all data‑validation rules with Aspose.Cells.
+// Common Searches: aspocells c# add whole number validation to column after XML mapping | list validation dropdown options in Aspose.Cells worksheet imported from XML | custom validation formula fixed length numeric code Aspose.Cells C# example | save Aspose.Cells workbook with data validation to PDF | apply multiple data validations to columns after XML mapping using Aspose.Cells .NET
+// Tags: Aspose.Cells XML mapping with data validation | C# whole-number validation Aspose.Cells | Aspose.Cells list validation dropdown | custom formula validation fixed-length numeric code | save validated workbook as PDF Aspose.Cells
 
 using System;
-using Aspose.Cells;
 using System.IO;
+using System.Xml;
+using Aspose.Cells;
 
-// Loads a template workbook with CheckDataValid enabled, imports XML into Sheet1, defines a validation range (A2:A100), adds a whole‑number rule (1‑100) with custom messages, and saves the result. Demonstrates XML mapping combined with data validation in Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsDataValidationExample
 {
-    static void Main()
+    // The example creates a new workbook, loads rows from Data.xml, writes values to columns A‑C starting at row 2, and adds three validations: whole-number between 1 and 1000 for column A, a predefined list for column B, and a custom formula ensuring exactly five numeric characters for column C. The workbook is then saved as ValidatedData.xlsx with error handling.
+    class Program
     {
-        // Paths for the template workbook, XML source and output workbook
-        string templatePath = "Template.xlsx";
-        string xmlPath = "Data.xml";
-        string outputPath = "Result.xlsx";
-
-        // ------------------------------------------------------------
-        // Load the template workbook with data‑validation checking enabled
-        // ------------------------------------------------------------
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-        loadOptions.CheckDataValid = true;               // enforce validation while loading
-        Workbook workbook = new Workbook(templatePath, loadOptions);
-
-        // ------------------------------------------------------------
-        // Import XML data into the first worksheet starting at cell A1
-        // ------------------------------------------------------------
-        workbook.ImportXml(xmlPath, "Sheet1", 0, 0);
-
-        // ------------------------------------------------------------
-        // Add a data‑validation rule to column A (rows 2‑100)
-        // ------------------------------------------------------------
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Define the cell area that the validation will cover
-        CellArea validationArea = new CellArea
+        static void Main(string[] args)
         {
-            StartRow = 1,    // Row 2 (0‑based index)
-            StartColumn = 0, // Column A
-            EndRow = 99,     // Row 100
-            EndColumn = 0    // Column A
-        };
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add the validation to the worksheet and obtain the Validation object
-        int validationIndex = sheet.Validations.Add(validationArea);
-        Validation validation = sheet.Validations[validationIndex];
+                // Load XML data
+                string xmlPath = "Data.xml";
+                if (!File.Exists(xmlPath))
+                {
+                    Console.WriteLine($"XML file not found: {xmlPath}");
+                    return;
+                }
 
-        // Configure the validation: whole numbers between 1 and 100
-        validation.Type = ValidationType.WholeNumber;
-        validation.Operator = OperatorType.Between;
-        validation.Formula1 = "1";
-        validation.Formula2 = "100";
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(xmlPath);
 
-        // Optional user‑friendly messages
-        validation.InputMessage = "Enter a whole number between 1 and 100.";
-        validation.ErrorMessage = "Value must be between 1 and 100.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
-        validation.IgnoreBlank = true;
-        validation.InCellDropDown = false;
+                // Map XML values to worksheet cells
+                XmlNodeList rowNodes = xmlDoc.SelectNodes("//Rows/Row");
+                int startRowIndex = 1; // Row 2 in Excel (zero‑based)
+                int currentRow = startRowIndex;
 
-        // ------------------------------------------------------------
-        // Save the workbook with the applied validation rules
-        // ------------------------------------------------------------
-        workbook.Save(outputPath);
+                if (rowNodes != null)
+                {
+                    foreach (XmlNode rowNode in rowNodes)
+                    {
+                        // Column A - numeric value
+                        string colAValue = rowNode.SelectSingleNode("ColumnA")?.InnerText ?? string.Empty;
+                        worksheet.Cells[currentRow, 0].PutValue(colAValue);
+
+                        // Column B - list value
+                        string colBValue = rowNode.SelectSingleNode("ColumnB")?.InnerText ?? string.Empty;
+                        worksheet.Cells[currentRow, 1].PutValue(colBValue);
+
+                        // Column C - custom string format
+                        string colCValue = rowNode.SelectSingleNode("ColumnC")?.InnerText ?? string.Empty;
+                        worksheet.Cells[currentRow, 2].PutValue(colCValue);
+
+                        currentRow++;
+                    }
+                }
+
+                int lastDataRow = currentRow - 1; // Index of the last data row
+
+                // ---------- Validation for Column A (Integer between 1 and 1000) ----------
+                CellArea areaA = new CellArea
+                {
+                    StartRow = startRowIndex,
+                    StartColumn = 0,
+                    EndRow = lastDataRow,
+                    EndColumn = 0
+                };
+                int validationIndexA = worksheet.Validations.Add(areaA);
+                Validation validationA = worksheet.Validations[validationIndexA];
+                validationA.Type = Aspose.Cells.ValidationType.WholeNumber;
+                validationA.Operator = OperatorType.Between;
+                validationA.Formula1 = "1";
+                validationA.Formula2 = "1000";
+                validationA.InputTitle = "Enter Integer";
+                validationA.InputMessage = "Please enter a whole number between 1 and 1000.";
+                validationA.ErrorTitle = "Invalid Input";
+                validationA.ErrorMessage = "The value must be an integer between 1 and 1000.";
+                validationA.ShowError = true;
+
+                // ---------- Validation for Column B (List of predefined options) ----------
+                CellArea areaB = new CellArea
+                {
+                    StartRow = startRowIndex,
+                    StartColumn = 1,
+                    EndRow = lastDataRow,
+                    EndColumn = 1
+                };
+                int validationIndexB = worksheet.Validations.Add(areaB);
+                Validation validationB = worksheet.Validations[validationIndexB];
+                validationB.Type = Aspose.Cells.ValidationType.List;
+                validationB.Formula1 = "\"Option1,Option2,Option3\"";
+                validationB.InputTitle = "Select Option";
+                validationB.InputMessage = "Choose one of the allowed options.";
+                validationB.ErrorTitle = "Invalid Selection";
+                validationB.ErrorMessage = "Please select a value from the list.";
+                validationB.ShowError = true;
+
+                // ---------- Validation for Column C (Exactly 5 numeric characters) ----------
+                CellArea areaC = new CellArea
+                {
+                    StartRow = startRowIndex,
+                    StartColumn = 2,
+                    EndRow = lastDataRow,
+                    EndColumn = 2
+                };
+                int validationIndexC = worksheet.Validations.Add(areaC);
+                Validation validationC = worksheet.Validations[validationIndexC];
+                validationC.Type = Aspose.Cells.ValidationType.Custom;
+                validationC.Formula1 = "=AND(LEN(C2)=5, ISNUMBER(VALUE(C2)))";
+                validationC.InputTitle = "Enter Code";
+                validationC.InputMessage = "Enter a 5‑digit numeric code.";
+                validationC.ErrorTitle = "Invalid Code";
+                validationC.ErrorMessage = "The code must be exactly 5 numeric characters.";
+                validationC.ShowError = true;
+
+                // Save the workbook
+                string outputPath = "ValidatedData.xlsx";
+                try
+                {
+                    workbook.Save(outputPath, SaveFormat.Xlsx);
+                    Console.WriteLine($"Workbook saved to {outputPath}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

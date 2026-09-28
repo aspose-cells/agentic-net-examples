@@ -1,73 +1,53 @@
-// Title: Aspose.Cells C# Pivot Table – Show Null Cells as “N/A”
-// Description: C# code that builds a workbook, inserts product‑sales data with null entries, creates a pivot table, and configures it to display “N/A” for any null values by enabling DisplayNullString and setting NullString. The pivot cache is refreshed, data calculated, and the workbook saved as PivotTable_NullAsNA.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | DisplayNullString | NullString | N/A | null handling | Excel export | data analysis
-// Common Searches: Aspose.Cells show N/A for null values | C# pivot table null string Aspose | DisplayNullString property example | Set NullString in Aspose.Cells pivot | Replace empty cells with N/A in Excel using Aspose
-// Developer Intent: Replace empty or null cells in an Aspose.Cells pivot table with the text “N/A” using .NET.
-// Use Cases: Generate an Excel workbook with sample data that includes missing product names or sales figures. | Create a pivot table that summarizes sales by product while presenting missing values as “N/A”. | Apply DisplayNullString = true and NullString = "N/A" to customize null representation, then refresh and calculate the pivot cache before saving.
-// AI Prompts: Write C# code using Aspose.Cells to create a pivot table that displays "N/A" for null entries. | Explain how DisplayNullString and NullString properties work in Aspose.Cells PivotTable objects. | Provide step‑by‑step instructions to refresh and calculate a pivot table after setting a custom null display string in Aspose.Cells.
+// Title: Display "N/A" for null cells in an Aspose.Cells pivot table using C#
+// AI Prompts: Create a C# program that builds a workbook, adds rows with null entries, generates a pivot table, and configures the pivot to show "N/A" for null cells by setting DisplayNullString and NullString. | Show how to enable custom null string handling for a pivot table in Aspose.Cells .NET and save the workbook as an XLSX file.
+// Common Searches: Aspose.Cells pivot table replace blank values with N/A using C# | How to configure null value display in an Aspose.Cells generated pivot | Using DisplayNullString to show N/A in Aspose.Cells pivot tables | C# code sample for null string handling in Aspose.Cells pivot | Aspose.Cells C# pivot table custom null placeholder example
+// Tags: Aspose.Cells pivot null placeholder | C# DisplayNullString Aspose.Cells | Aspose.Cells pivot custom null text | Excel pivot N/A display Aspose | Aspose.Cells workbook null handling
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsNullDisplayDemo
 {
-    // C# code that builds a workbook, inserts product‑sales data with null entries, creates a pivot table, and configures it to display “N/A” for any null values by enabling DisplayNullString and setting NullString. The pivot cache is refreshed, data calculated, and the workbook saved as PivotTable_NullAsNA.xlsx.
-    public class DisplayNullAsNA
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Get the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data with null values
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["A3"].PutValue("Orange");
-                sheet.Cells["B3"].PutValue(1500);
-                sheet.Cells["A4"].PutValue(null);      // Null product name
-                sheet.Cells["B4"].PutValue(null);      // Null sales value
-                sheet.Cells["A5"].PutValue("Banana");
-                sheet.Cells["B5"].PutValue(800);
-
-                // Add a pivot table covering the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table: rows = Product, data = Sales
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
-
-                // Enable custom display for null values and set the desired string
-                pivotTable.DisplayNullString = true;
-                pivotTable.NullString = "N/A";
-
-                // Refresh and calculate the pivot table to apply changes
-                pivotTable.RefreshData();   // Correct method to refresh pivot cache
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("PivotTable_NullAsNA.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
+    // The example creates a workbook, inserts sample data containing null entries, adds a pivot table, enables custom null display by setting DisplayNullString to true and NullString to "N/A", refreshes and calculates the pivot, and saves the file as PivotTable_NullAsNA.xlsx.
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            DisplayNullAsNA.Run();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data with null values
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(1200);
+            sheet.Cells["A3"].PutValue("Orange");
+            sheet.Cells["B3"].PutValue(1500);
+            sheet.Cells["A4"].PutValue(null);      // Null product name
+            sheet.Cells["B4"].PutValue(null);      // Null sales value
+
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+            // Configure the pivot table: rows = Product, data = Sales
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);
+
+            // Enable custom display for null values and set the desired string
+            pivotTable.DisplayNullString = true;
+            pivotTable.NullString = "N/A";
+
+            // Refresh and calculate the pivot table to apply changes
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
+
+            // Save the workbook
+            workbook.Save("PivotTable_NullAsNA.xlsx");
         }
     }
 }

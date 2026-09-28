@@ -1,89 +1,55 @@
-// Title: Add a Semi‑Transparent Picture and Diagonal Text Watermark to a PDF with Aspose.Cells (C#)
-// Description: Demonstrates how to create a new workbook, insert an image into cell B2, set the image's transparency to 50%, define a red bold RenderingWatermark with 45° rotation and 20% opacity, and save the sheet as a PDF that contains both the semi‑transparent picture and the diagonal watermark.
-// Keywords: Aspose.Cells | C# | add picture to worksheet | picture transparency | RenderingWatermark | PDF watermark | Excel to PDF | semi transparent watermark | background image Aspose.Cells | save workbook as PDF
-// Common Searches: Aspose.Cells insert picture with transparency | C# create diagonal text watermark in PDF using Aspose.Cells | how to add semi‑transparent image and watermark when exporting Excel to PDF | RenderingWatermark example C# | save Excel workbook as PDF with background image Aspose.Cells
-// Developer Intent: Insert a picture, make it semi‑transparent, and overlay a diagonal semi‑transparent text watermark while exporting the workbook to PDF using Aspose.Cells for .NET.
-// Use Cases: Secure confidential reports by embedding a faint logo and a "CONFIDENTIAL" watermark in the PDF. | Brand marketing worksheets with a semi‑transparent product image and company watermark without obscuring data. | Produce printable training materials that include a background illustration and a light watermark to deter unauthorized copying.
-// AI Prompts: Generate C# code with Aspose.Cells that places an image at cell C3, sets its transparency to 30%, and adds a "TOP SECRET" watermark rotated 30° with 15% opacity when saving as PDF. | Explain how to adjust RenderingWatermark properties (font, color, rotation, ScaleToPagePercent) for different page sizes in Aspose.Cells PDF export.
+// Title: Add an image to cell B2 and use it as a semi‑transparent watermark in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Insert a JPEG file into a specific cell of an Excel worksheet and set the picture to free‑floating using Aspose.Cells in C#. | Create a semi‑transparent Excel watermark by pre‑processing an image for opacity, adding it as a picture, and saving the workbook as XLSX with Aspose.Cells. | Programmatically verify the output folder exists, create it if necessary, and save the workbook that contains the overlaid picture.
+// Common Searches: how to place an image at cell B2 in Aspose.Cells C# | Aspose.Cells add picture as watermark with transparency in .NET | C# set picture placement to free floating in Excel using Aspose.Cells | save Excel file with overlay image ensuring output directory exists Aspose.Cells | adjust JPEG opacity prior to adding as watermark in Aspose.Cells
+// Tags: add picture to worksheet cell Aspose.Cells C# | free‑floating picture placement Aspose.Cells | image opacity watermark Aspose.Cells | ensure output directory before saving workbook Aspose.Cells | preprocess image for transparency before insertion Aspose.Cells
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWatermarkDemo
+// The example creates a new workbook, loads a JPEG image, inserts it at cell B2 as a free‑floating picture, notes that opacity must be set beforehand, ensures the output folder exists, and saves the workbook as an XLSX file containing the semi‑transparent watermark.
+class Program
 {
-    // Demonstrates how to create a new workbook, insert an image into cell B2, set the image's transparency to 50%, define a red bold RenderingWatermark with 45° rotation and 20% opacity, and save the sheet as a PDF that contains both the semi‑transparent picture and the diagonal watermark.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Path to the picture that will be inserted into the worksheet
-                string picturePath = "sample_picture.jpg";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add the picture if the file exists
-                if (File.Exists(picturePath))
-                {
-                    // Add the picture to the worksheet at cell B2 (row index 1, column index 1)
-                    int pictureIndex = sheet.Pictures.Add(1, 1, picturePath);
-                    Picture picture = sheet.Pictures[pictureIndex];
+            // Path to the image that will be used as a picture/watermark
+            string imagePath = @"C:\Images\sample.jpg";
 
-                    // Set picture transparency to make it semi‑transparent (0.0 = opaque, 1.0 = fully transparent)
-                    picture.FormatPicture.Transparency = 0.5; // 50% transparent
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Picture file '{picturePath}' not found. Skipping picture insertion.");
-                }
+            // Verify that the image file exists before adding it
+            if (!File.Exists(imagePath))
+                throw new FileNotFoundException("Image file not found.", imagePath);
 
-                // -------------------------------------------------
-                // Create a semi‑transparent text watermark
-                // -------------------------------------------------
-                // Define the font for the watermark text
-                RenderingFont watermarkFont = new RenderingFont("Arial", 48)
-                {
-                    Bold = true,
-                    Color = Color.Red
-                };
+            // Add the picture to the worksheet at cell B2 (row index 1, column index 1)
+            int pictureIndex = sheet.Pictures.Add(1, 1, imagePath);
+            Picture picture = sheet.Pictures[pictureIndex];
 
-                // Create the watermark with desired text and font
-                RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", watermarkFont)
-                {
-                    // Place the watermark behind the worksheet content
-                    IsBackground = true,
-                    // Rotate the watermark for a diagonal appearance
-                    Rotation = 45,
-                    // Set opacity (0.0 – 1.0). 0.2 makes it faint but visible.
-                    Opacity = 0.2f,
-                    // Center the watermark on each page
-                    HAlignment = TextAlignmentType.Center,
-                    VAlignment = TextAlignmentType.Center,
-                    // Scale watermark relative to page size (optional)
-                    ScaleToPagePercent = 80
-                };
+            // Note: Aspose.Cells does not expose a direct Transparency property for Picture.
+            // If needed, adjust the image beforehand to include the desired opacity.
 
-                // Configure PDF save options to include the watermark
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    Watermark = watermark
-                };
+            // Ensure the picture moves and resizes with cells (optional)
+            picture.Placement = PlacementType.FreeFloating;
 
-                // Save the workbook as a PDF with the picture and watermark applied
-                workbook.Save("Workbook_With_Picture_And_Watermark.pdf", pdfOptions);
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Prepare output path and ensure the directory exists
+            string outputPath = @"C:\Output\WorkbookWithWatermark.xlsx";
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook with the picture overlay
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

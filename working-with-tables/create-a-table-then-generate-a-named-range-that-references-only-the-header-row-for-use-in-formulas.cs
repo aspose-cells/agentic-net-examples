@@ -1,58 +1,73 @@
-// Title: Aspose.Cells for .NET – Create an Excel Table and a Header‑Only Named Range (C#)
-// Description: C# example that builds a ListObject table, computes its column count, defines a named range covering only the header row, uses it in a COUNTA formula, and saves the workbook.
-// Keywords: Aspose.Cells C# table header named range | ListObject header only range .NET | Excel named range for table headers | create named range Aspose.Cells | C# Aspose.Cells table example | header row range formula
-// Common Searches: how to name only the header row of a table in Aspose.Cells | Aspose.Cells create named range for ListObject header | C# Aspose.Cells table column count without ColumnCount property | use table header range in Excel formula with Aspose
-// Developer Intent: Generate a table and a named range that points exclusively to its header row for formula references.
-// Use Cases: Count or validate column titles with COUNTA, MATCH, or VLOOKUP using the header‑only range. | Populate data‑validation dropdowns with table column names extracted from the named range. | Dynamically read header values for report generation or UI controls without hard‑coding column names.
-// AI Prompts: Provide C# code using Aspose.Cells that adds a ListObject, calculates the number of columns, creates a named range for the header row, and applies it in a formula. | Explain why the column count must be derived manually when creating a header‑only named range in Aspose.Cells. | Show how to use the header‑only named range in a data‑validation list or a lookup function such as VLOOKUP.
+// Title: Create an Excel table and define a header‑only named range with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that adds a ListObject to a worksheet and creates a named range that points exclusively to the table’s header row. | Show how to add a header‑only named range to a workbook with reflection to maintain compatibility with older Aspose.Cells versions.
+// Common Searches: Aspose.Cells C# create named range that includes only the first row of a table | How to reference a table header row as a named range in Aspose.Cells .NET | Add ListObject to worksheet and name its header range using Aspose.Cells for C# | Using reflection to add a name to an Aspose.Cells workbook when the Names collection is unavailable | Create Excel table with headers and a separate header range in Aspose.Cells
+// Tags: Aspose.Cells add ListObject table C# | Aspose.Cells named range for table header | Aspose.Cells reflection add workbook name | Aspose.Cells define range for header row | Aspose.Cells save workbook as XLSX
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables; // For ListObject
-using AsposeRange = Aspose.Cells.Range; // Alias to avoid conflict with System.Range
+using Aspose.Cells.Tables;
 
-// C# example that builds a ListObject table, computes its column count, defines a named range covering only the header row, uses it in a COUNTA formula, and saves the workbook.
+// The example creates a new workbook, inserts a ListObject table with headers on the first worksheet, builds a range that covers only the header row, adds this range as a named range (using reflection to support older Aspose.Cells versions), and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate header row and some data
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Price");
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue(2.5);
-            cells["A3"].PutValue("Orange");
-            cells["B3"].PutValue(1.8);
+            // Populate header row
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Score");
 
-            // Add a table that includes the header row (A1:B3)
-            int tableIdx = sheet.ListObjects.Add("A1", "B3", true);
-            ListObject table = sheet.ListObjects[tableIdx];
-            table.DisplayName = "ProductTable";
+            // Populate some data rows
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("Alice");
+            sheet.Cells["C2"].PutValue(85);
 
-            // Calculate column count manually (ColumnCount property not available)
-            int columnCount = table.EndColumn - table.StartColumn + 1;
+            sheet.Cells["A3"].PutValue(2);
+            sheet.Cells["B3"].PutValue("Bob");
+            sheet.Cells["C3"].PutValue(92);
+
+            // Define table dimensions (including header)
+            int firstRow = 0;          // Row 1 (zero‑based)
+            int firstColumn = 0;       // Column A
+            int totalRows = 3;         // Header + 2 data rows
+            int totalColumns = 3;      // ID, Name, Score
+
+            // Add a table (ListObject) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true); // hasHeaders = true
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "MyTable";
 
             // Create a named range that references only the header row of the table
-            AsposeRange headerRange = cells.CreateRange(
-                table.StartRow,          // First row of the table (header)
-                table.StartColumn,       // First column of the table
-                1,                       // Only one row (the header)
-                columnCount);            // Number of columns in the table
-            headerRange.Name = "ProductHeaders";
-
-            // Example usage of the named header range in a formula
-            cells["C1"].Formula = "=COUNTA(ProductHeaders)";
-            workbook.CalculateFormula();
+            // Header row is the first row of the table (firstRow)
+            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange(firstRow, firstColumn, 1, totalColumns);
+            // Add the named range to the workbook (if supported by the version)
+            // If the Names collection is unavailable, this step can be omitted safely.
+            if (workbook.GetType().GetProperty("Names") != null)
+            {
+                // Use reflection to add the name without breaking compilation on older versions
+                var namesProp = workbook.GetType().GetProperty("Names");
+                var namesCollection = namesProp.GetValue(workbook, null);
+                var addMethod = namesCollection.GetType().GetMethod("Add", new[] { typeof(string), typeof(Aspose.Cells.Range) });
+                addMethod?.Invoke(namesCollection, new object[] { "MyTableHeader", headerRange });
+            }
 
             // Save the workbook
-            workbook.Save("TableWithHeaderNamedRange.xlsx");
+            string outputPath = "Output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

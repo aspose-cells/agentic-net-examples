@@ -1,63 +1,57 @@
-// Title: Aspose.Cells for .NET – Add Group Labels Above Outline Rows (C#)
-// Description: Demonstrates how to create a workbook, group rows, and insert free‑floating label shapes positioned just above each group using Placement, Top and Left properties, then save the file as Excel.
-// Keywords: Aspose.Cells | C# | group rows | outline rows | label shape | label position | Placement property | free floating label | worksheet shapes | Excel automation
-// Common Searches: Aspose.Cells add label above grouped rows | C# place label shape before outline group | set label position in Excel using Aspose.Cells | group rows with headings Aspose.Cells .NET
-// Developer Intent: Add heading labels before each outlined row group in an Excel worksheet.
-// Use Cases: Generate section headers for financial statements with collapsible row groups | Create dynamic report sections where headings stay visible when rows are collapsed | Export Excel files with custom‑styled group titles independent of cell data
-// AI Prompts: Provide C# code that loops through all outline groups and adds a label shape above each, calculating Top and Left values automatically. | Explain the effect of the Placement, Top, and Left properties on label positioning relative to grouped rows in Aspose.Cells. | Show how to style the label (font, background, border) and adjust its size for group headings in a workbook.
+// Title: Insert a free‑floating label shape as a group header above collapsed rows using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that groups a range of rows, sets the outline summary row above the group, and adds a free‑floating label shape as a heading positioned with pixel offsets using Aspose.Cells. | Create an Excel workbook with Aspose.Cells that adds a label shape at a specific cell location, configures PlacementType.FreeFloating, and saves the file.
+// Common Searches: aspnet c# how to add a label shape above a grouped row range in Aspose.Cells | Aspose.Cells place free floating label as group header in Excel | C# group rows and add custom heading label using Aspose.Cells | set pixel offset for label shape in Aspose.Cells workbook | outline summary row above groups Aspose.Cells example
+// Tags: Aspose.Cells free‑floating label placement | C# group rows with custom header label | Excel outline summary row above groups | label shape pixel offset Aspose.Cells | Aspose.Cells add label shape as group heading
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, group rows, and insert free‑floating label shapes positioned just above each group using Placement, Top and Left properties, then save the file as Excel.
-class GroupLabelDemo
+namespace AsposeCellsGroupLabelDemo
 {
-    static void Main()
+    // Demonstrates using Aspose.Cells for .NET to create a workbook, populate sample data, group rows, set the outline summary row above the group, add a free‑floating label shape as a group header, adjust its row/column and pixel offsets, and save the file as GroupLabelDemo.xlsx.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Populate sample data for two groups
-        // Group 1 (rows 0‑2)
-        cells["A1"].PutValue("Group 1 Item 1");
-        cells["B1"].PutValue(10);
-        cells["A2"].PutValue("Group 1 Item 2");
-        cells["B2"].PutValue(20);
-        cells["A3"].PutValue("Group 1 Item 3");
-        cells["B3"].PutValue(30);
+            // Populate sample data (header + 6 rows)
+            cells["A1"].PutValue("Category");
+            cells["B1"].PutValue("Amount");
+            for (int i = 2; i <= 7; i++)
+            {
+                cells[$"A{i}"].PutValue($"Item {i - 1}");
+                cells[$"B{i}"].PutValue((i - 1) * 10);
+            }
 
-        // Group 2 (rows 3‑5)
-        cells["A4"].PutValue("Group 2 Item 1");
-        cells["B4"].PutValue(40);
-        cells["A5"].PutValue("Group 2 Item 2");
-        cells["B5"].PutValue(50);
-        cells["A6"].PutValue("Group 2 Item 3");
-        cells["B6"].PutValue(60);
+            // Group rows 2‑4 (zero‑based indices 1‑3) and hide the detail rows
+            cells.GroupRows(1, 3, true);
 
-        // Create outline groups for the rows
-        cells.GroupRows(0, 2, false); // Group 1
-        cells.GroupRows(3, 5, false); // Group 2
+            // Place the summary row above the grouped rows
+            sheet.Outline.SummaryRowBelow = false;
 
-        // Add a label shape before the first group
-        // Parameters: upperLeftRow, upperLeftColumn, top, left, width, height
-        Label group1Label = worksheet.Shapes.AddLabel(0, 0, 0, 0, 120, 20);
-        group1Label.Text = "Group 1";
-        group1Label.Placement = PlacementType.FreeFloating;
-        // Position the label (pixels) – placed just above the first data row
-        group1Label.Top = 5;
-        group1Label.Left = 5;
+            // Add a label shape that will act as a group heading.
+            // Parameters: upper left row, upper left column, top offset (pixels), left offset (pixels), width, height
+            Label groupLabel = sheet.Shapes.AddLabel(0, 0, 5, 5, 200, 30);
+            groupLabel.Text = "Group 1 – Items 1‑3";
+            groupLabel.Placement = PlacementType.FreeFloating; // Allows precise positioning
+            groupLabel.IsHidden = false;
+            groupLabel.IsLocked = false;
 
-        // Add a label shape before the second group
-        Label group2Label = worksheet.Shapes.AddLabel(3, 0, 0, 0, 120, 20);
-        group2Label.Text = "Group 2";
-        group2Label.Placement = PlacementType.FreeFloating;
-        group2Label.Top = 5;
-        group2Label.Left = 5;
+            // Adjust label position so it appears just above the grouped rows
+            // UpperLeftRow = 0 (row 1), UpperLeftColumn = 0 (column A)
+            groupLabel.UpperLeftRow = 0;
+            groupLabel.UpperLeftColumn = 0;
+            // Optional: fine‑tune pixel offsets
+            groupLabel.Top = 2;   // pixels from the top of the cell
+            groupLabel.Left = 2;  // pixels from the left of the cell
 
-        // Save the workbook
-        workbook.Save("GroupLabelsDemo.xlsx");
+            // Save the workbook
+            workbook.Save("GroupLabelDemo.xlsx");
+        }
     }
 }

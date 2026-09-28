@@ -1,92 +1,139 @@
-// Title: C# Batch Validation of Excel Digital Signatures with Aspose.Cells – Console Summary Report
-// Description: A C# console utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, checks the IsDigitallySigned flag, iterates through the DigitalSignatureCollection, counts valid and invalid signatures, and prints a formatted summary report for every workbook.
-// Keywords: Aspose.Cells digital signature verification | .NET Excel signature batch validation | C# workbook IsDigitallySigned | DigitalSignatureCollection count | console report Excel signatures | automated compliance audit Excel | batch Excel signature check | Aspose.Cells API example | Excel file digital signature status
-// Common Searches: batch verify digital signatures in Excel files using Aspose.Cells | C# code to list valid and invalid signatures for multiple workbooks | how to generate a summary report of Excel digital signatures | Aspose.Cells IsDigitallySigned example for many files | automate Excel signature validation across a folder
-// Developer Intent: Iterate through all .xlsx files in a directory, determine whether each workbook is digitally signed, count valid and invalid signatures, and output a concise console summary.
-// Use Cases: Perform a compliance audit of financial spreadsheets by flagging workbooks with missing or invalid digital signatures. | Schedule a nightly job that logs signature validation results to a file for audit‑trail and regulatory reporting. | Integrate the validation loop into a document‑processing pipeline to automatically reject unsigned or tampered workbooks before further analysis. | Provide a quick console‑based health check for a shared repository of Excel reports before distribution.
-// AI Prompts: Generate code to export the validation results to a CSV or JSON file instead of printing to the console. | Modify the program to also process .xlsm and .xls files and include a timestamp column in the report. | Add comprehensive exception handling for corrupted or password‑protected workbooks and log errors using a structured logger.
+// Title: Validate digital signatures in multiple Excel .xlsx workbooks and generate a CSV summary report with Aspose.Cells for .NET
+// AI Prompts: Load each .xlsx file from a directory using Aspose.Cells, invoke DigitalSignatureCollection.ValidateAllSignatures via reflection, and write the file name, total signatures, valid count, invalid count, and overall status to a CSV file. | Add robust error handling to skip missing files, handle unsupported signature features, and log processing errors while building the signature validation report in C#. | Create a summary text file that records each workbook’s signature validation results, using dynamic iteration over the validation result objects returned by Aspose.Cells.
+// Common Searches: C# Aspose.Cells batch process to validate digital signatures in all Excel files in a folder | How to generate a CSV report of signature validation results for multiple .xlsx workbooks using Aspose.Cells | Using reflection to access DigitalSignatureCollection in Aspose.Cells when checking workbook signatures | Report overall signature status (AllValid, PartialValid, AllInvalid) for a set of Excel files in .NET
+// Tags: Aspose.Cells signature batch validation | C# generate signature summary file | reflection access DigitalSignatureCollection | Excel workbook signature status reporting | validate all signatures Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;
 
-namespace BatchSignatureValidation
+// The C# console application scans a specified folder for .xlsx workbooks, loads each with Aspose.Cells, uses reflection to obtain the DigitalSignatureCollection, validates all signatures, counts total, valid, and invalid signatures, determines an overall status (AllValid, PartialValid, AllInvalid, NoSignature, NotSupported, or Error), and writes these details to a CSV summary file while handling unsupported features and runtime errors.
+class SignatureBatchValidator
 {
-    // Represents the validation result for a single workbook
-    // A C# console utility that scans a folder for .xlsx files, loads each workbook with Aspose.Cells, checks the IsDigitallySigned flag, iterates through the DigitalSignatureCollection, counts valid and invalid signatures, and prints a formatted summary report for every workbook.
-    public class ValidationResult
+    static void Main()
     {
-        public string FileName { get; set; }
-        public bool IsSigned { get; set; }
-        public int ValidSignatureCount { get; set; }
-        public int InvalidSignatureCount { get; set; }
-    }
+        // Folder containing the workbooks to be validated
+        string inputFolder = @"C:\Workbooks";
 
-    public class Program
-    {
-        // Entry point
-        public static void Main(string[] args)
+        // Path for the summary report
+        string reportPath = @"C:\SignatureReport.txt";
+
+        // Ensure the input folder exists
+        if (!Directory.Exists(inputFolder))
         {
-            // Folder containing the workbooks to validate
-            string folderPath = @"C:\Workbooks";
+            Console.WriteLine($"Input folder does not exist: {inputFolder}");
+            return;
+        }
 
-            // Collect validation results
-            List<ValidationResult> results = new List<ValidationResult>();
+        // Retrieve all Excel files in the specified folder
+        string[] files = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            // Process each .xlsx file in the folder
-            foreach (string filePath in Directory.GetFiles(folderPath, "*.xlsx"))
+        // Prepare report header
+        var reportLines = new List<string>
+        {
+            "FileName,TotalSignatures,ValidSignatures,InvalidSignatures,OverallStatus"
+        };
+
+        foreach (string file in files)
+        {
+            try
             {
-                // Load the workbook (uses the provided lifecycle rule)
-                Workbook workbook = new Workbook(filePath);
-
-                // Prepare result object
-                ValidationResult result = new ValidationResult
+                // Verify the file still exists before loading
+                if (!File.Exists(file))
                 {
-                    FileName = Path.GetFileName(filePath),
-                    IsSigned = workbook.IsDigitallySigned,
-                    ValidSignatureCount = 0,
-                    InvalidSignatureCount = 0
-                };
-
-                // If the workbook is digitally signed, inspect each signature
-                if (result.IsSigned)
-                {
-                    DigitalSignatureCollection signatures = workbook.GetDigitalSignature();
-
-                    if (signatures != null)
-                    {
-                        foreach (DigitalSignature signature in signatures)
-                        {
-                            if (signature.IsValid)
-                                result.ValidSignatureCount++;
-                            else
-                                result.InvalidSignatureCount++;
-                        }
-                    }
+                    Console.WriteLine($"File not found (skipped): {file}");
+                    continue;
                 }
 
-                results.Add(result);
-            }
+                // Load the workbook
+                Workbook workbook = new Workbook(file);
 
-            // Generate a simple summary report to the console
-            Console.WriteLine("Batch Digital Signature Validation Report");
-            Console.WriteLine("========================================");
-            Console.WriteLine($"Processed files: {results.Count}");
-            Console.WriteLine();
-
-            foreach (var r in results)
-            {
-                Console.WriteLine($"File: {r.FileName}");
-                Console.WriteLine($"  Signed: {r.IsSigned}");
-                if (r.IsSigned)
+                // Try to obtain the DigitalSignatureCollection via reflection (avoids compile‑time dependency)
+                var sigProp = workbook.GetType().GetProperty("DigitalSignatureCollection");
+                if (sigProp == null)
                 {
-                    Console.WriteLine($"  Valid Signatures   : {r.ValidSignatureCount}");
-                    Console.WriteLine($"  Invalid Signatures : {r.InvalidSignatureCount}");
+                    // Digital signatures not supported in this version
+                    string lineNoSig = $"{Path.GetFileName(file)},0,0,0,NotSupported";
+                    reportLines.Add(lineNoSig);
+                    continue;
                 }
-                Console.WriteLine();
+
+                object signatures = sigProp.GetValue(workbook);
+                if (signatures == null)
+                {
+                    string lineNoSig = $"{Path.GetFileName(file)},0,0,0,NoSignature";
+                    reportLines.Add(lineNoSig);
+                    continue;
+                }
+
+                // Invoke ValidateAllSignatures()
+                var validateMethod = signatures.GetType().GetMethod("ValidateAllSignatures");
+                if (validateMethod == null)
+                {
+                    string lineNoSig = $"{Path.GetFileName(file)},0,0,0,NotSupported";
+                    reportLines.Add(lineNoSig);
+                    continue;
+                }
+
+                object validationResults = validateMethod.Invoke(signatures, null);
+                if (validationResults == null)
+                {
+                    string lineNoSig = $"{Path.GetFileName(file)},0,0,0,NoSignature";
+                    reportLines.Add(lineNoSig);
+                    continue;
+                }
+
+                // Use dynamic to iterate over the result collection
+                dynamic results = validationResults;
+                int total = results.Count;
+                int valid = 0;
+                int invalid = 0;
+
+                foreach (var result in results)
+                {
+                    bool isValid = (bool)result.GetType().GetProperty("IsValid")?.GetValue(result);
+                    if (isValid)
+                        valid++;
+                    else
+                        invalid++;
+                }
+
+                // Determine overall status for the workbook
+                string overallStatus = total == 0 ? "NoSignature"
+                                     : invalid == 0 ? "AllValid"
+                                     : valid == 0 ? "AllInvalid"
+                                     : "PartialValid";
+
+                // Add a line to the report
+                string line = $"{Path.GetFileName(file)},{total},{valid},{invalid},{overallStatus}";
+                reportLines.Add(line);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{file}': {ex.Message}");
+                // Record the error in the report
+                string errorLine = $"{Path.GetFileName(file)},0,0,0,Error";
+                reportLines.Add(errorLine);
+            }
+        }
+
+        try
+        {
+            // Ensure the directory for the report exists
+            string reportDir = Path.GetDirectoryName(reportPath);
+            if (!string.IsNullOrEmpty(reportDir) && !Directory.Exists(reportDir))
+            {
+                Directory.CreateDirectory(reportDir);
+            }
+
+            // Write the summary report to the specified file
+            File.WriteAllLines(reportPath, reportLines);
+            Console.WriteLine($"Signature validation report generated at: {reportPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to write report: {ex.Message}");
         }
     }
 }

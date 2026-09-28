@@ -1,74 +1,64 @@
-// Title: Replace {{Name}} placeholder in a named range using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, defines a named range "TemplateRange" (A1:A3), and iterates each cell to replace every "{{Name}}" token with a concrete value (e.g., "John Doe"). The updated workbook is then saved as an Excel file.
-// Keywords: Aspose.Cells replace placeholder | named range text replacement C# | Aspose.Cells template processing | Excel placeholder substitution .NET | mail merge Aspose.Cells | replace {{Name}} token in Excel | C# Aspose.Cells named range iteration
-// Common Searches: How to replace a placeholder in a named range with Aspose.Cells for .NET | Iterate cells of a named range to modify string values in C# | Replace {{Name}} token in Excel template using Aspose.Cells | Aspose.Cells C# replace placeholder and save workbook | Mail‑merge with named ranges in Aspose.Cells
-// Developer Intent: Replace all occurrences of the {{Name}} placeholder inside the "TemplateRange" named range with a specific value and save the workbook.
-// Use Cases: Generate personalized letters by substituting {{Name}} in a named range before saving the file. | Perform a mail‑merge operation where each recipient's name is inserted into the "TemplateRange" of a template workbook. | Update invoice or receipt templates by replacing placeholder tokens in a defined named range with actual customer data.
-// AI Prompts: Provide C# code using Aspose.Cells to replace a custom placeholder in a named range and save the workbook. | Explain how to retrieve a named range from a workbook and iterate its cells to modify string values with Aspose.Cells. | Show how to handle multiple occurrences of the same placeholder within a single cell using Aspose.Cells.
+// Title: Replace {{Name}} placeholder in a named range of an Excel template using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook, retrieve the named range "TemplateRange", substitute all "{{Name}}" tokens with a given string, and persist the changes with Aspose.Cells in C#. | Loop through each cell within the specified named range and replace placeholder strings using Aspose.Cells methods. | Detect missing template file or absent named range and handle those cases while performing placeholder replacement.
+// Common Searches: Aspose.Cells C# replace placeholder text in a named range of an Excel file | How to update all {{Name}} tokens in a named range using Aspose.Cells for .NET | C# code to iterate over cells in a named range and substitute values with Aspose.Cells | Saving workbook after modifying named range with Aspose.Cells | Check if named range exists before replacing text in Aspose.Cells C#
+// Tags: named-range placeholder replacement Aspose.Cells C# | iterate cells in named range Aspose.Cells | update Excel template range Aspose.Cells | save modified workbook Aspose.Cells | handle missing named range Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsReplacePlaceholderInNamedRange
+// The program loads "TemplateWorkbook.xlsx", accesses the named range "TemplateRange", replaces every occurrence of the {{Name}} placeholder with a concrete value such as "John Doe", and saves the updated workbook as "ResultWorkbook.xlsx" using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a workbook, defines a named range "TemplateRange" (A1:A3), and iterates each cell to replace every "{{Name}}" token with a concrete value (e.g., "John Doe"). The updated workbook is then saved as an Excel file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            const string templatePath = "TemplateWorkbook.xlsx";
+            const string resultPath = "ResultWorkbook.xlsx";
+
+            // Ensure the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Load the workbook that contains the template named range
+            Workbook workbook = new Workbook(templatePath);
 
-                // Populate some cells with the placeholder "{{Name}}"
-                sheet.Cells["A1"].PutValue("Dear {{Name}},");
-                sheet.Cells["A2"].PutValue("Your order has been shipped.");
-                sheet.Cells["A3"].PutValue("Thank you, {{Name}}!");
+            // Retrieve the range associated with the named range "TemplateRange"
+            // GetRangeByName returns an Aspose.Cells.Range object
+            Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName("TemplateRange");
 
-                // Create a named range that covers the cells with the placeholder
-                // The range will be named "TemplateRange"
-                AsposeRange templateRange = sheet.Cells.CreateRange("A1", "A3");
-                templateRange.Name = "TemplateRange";
+            if (range == null)
+            {
+                Console.WriteLine("Named range 'TemplateRange' was not found in the workbook.");
+                return;
+            }
 
-                // Retrieve the Name object from the workbook's name collection
-                Name nameObj = workbook.Worksheets.Names["TemplateRange"];
-
-                // Get the actual Range object associated with the name
-                AsposeRange range = nameObj.GetRange();
-
-                // Define the actual name that will replace the placeholder
-                string actualName = "John Doe";
-
-                // Iterate through each cell in the range and replace the placeholder
-                foreach (Cell cell in range)
+            // Replace all occurrences of the placeholder "{{Name}}" with the actual name
+            foreach (Cell cell in range)
+            {
+                if (cell?.Value != null)
                 {
-                    // Only process cells that contain string data
-                    if (cell.Type == CellValueType.IsString)
+                    string cellText = cell.Value.ToString();
+                    if (cellText.Contains("{{Name}}"))
                     {
-                        string cellText = cell.StringValue;
-                        if (cellText.Contains("{{Name}}"))
-                        {
-                            // Replace the placeholder with the actual name
-                            string newText = cellText.Replace("{{Name}}", actualName);
-                            cell.PutValue(newText);
-                        }
+                        // Replace placeholder with desired value (e.g., "John Doe")
+                        cell.PutValue(cellText.Replace("{{Name}}", "John Doe"));
                     }
                 }
+            }
 
-                // Save the workbook to a file
-                string outputPath = "TemplateRange_Replaced.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to {resultPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log or display any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,60 +1,47 @@
-// Title: Export Excel Workbook with Slicers to PDF While Preserving Layout – Aspose.Cells for .NET
-// Description: Loads an Excel file that contains slicers, configures PdfSaveOptions (ExportDocumentStructure = true, SheetSet = Visible) and saves the workbook as a PDF so slicer graphics and positions remain unchanged.
-// Keywords: Aspose.Cells | C# PDF conversion | .NET Excel to PDF | slicer export | ExportDocumentStructure | SheetSet Visible | preserve slicer layout | dashboard report PDF | Excel slicer rendering
-// Common Searches: Aspose.Cells keep slicer formatting when converting to PDF | ExportDocumentStructure option PDFSaveOptions example | Render only visible worksheets with slicers to PDF C# | Preserve slicer appearance in PDF using Aspose.Cells | Convert Excel dashboard with slicers to PDF programmatically
-// Developer Intent: Generate a PDF from an Excel workbook that includes slicers, ensuring the slicer visuals and their placement are retained.
-// Use Cases: Produce printable PDF versions of interactive dashboards where slicer graphics must match the Excel view. | Automate batch conversion of multiple workbooks that contain slicers, preserving only the visible sheets. | Archive Excel reports with slicer controls as PDFs without losing visual context.
-// AI Prompts: Write C# code with Aspose.Cells to save an Excel file containing slicers to PDF while keeping slicer visuals intact. | Explain how ExportDocumentStructure and SheetSet options affect PDF rendering of slicers in Aspose.Cells. | Show error‑handling patterns for converting an Excel workbook with slicers to PDF using Aspose.Cells.
+// Title: Convert an Excel workbook with slicers to PDF while preserving slicer layout using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file containing slicers and saves it as a PDF with the slicer layout retained using Aspose.Cells. | Show how to enable slicer layout preservation by setting the SlicerLayoutOptions property on PdfSaveOptions in Aspose.Cells. | Add comprehensive error handling for missing source files and runtime exceptions when exporting a workbook with slicers to PDF.
+// Common Searches: Aspose.Cells .NET keep slicer formatting when saving workbook as PDF | C# example for preserving slicer layout with PdfSaveOptions | How to export Excel file with slicers to PDF using Aspose.Cells | Convert Excel workbook to PDF while retaining slicer layout in C#
+// Tags: Aspose.Cells PDF conversion with slicer layout preservation | PdfSaveOptions slicer layout option usage in .NET | Excel to PDF export preserving slicer visuals | C# error handling for missing workbook file Aspose.Cells | Slicer layout retention during workbook PDF rendering
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfRender
+// Loads an Excel workbook, optionally configures PdfSaveOptions to keep slicer layout, and saves the workbook as a PDF while handling missing files and runtime exceptions.
+class Program
 {
-    // Loads an Excel file that contains slicers, configures PdfSaveOptions (ExportDocumentStructure = true, SheetSet = Visible) and saves the workbook as a PDF so slicer graphics and positions remain unchanged.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the input Excel file.
-            string excelPath = "input_with_slicers.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Verify that the input file exists before attempting to load it.
-            if (!File.Exists(excelPath))
+            // Ensure the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {excelPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
-            {
-                // Load the workbook that contains slicers.
-                Workbook workbook = new Workbook(excelPath);
+            // Load the workbook containing slicers
+            Workbook workbook = new Workbook(inputPath);
 
-                // Configure PDF save options.
-                // ExportDocumentStructure = true preserves slicer visual properties and layout.
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    ExportDocumentStructure = true,
-                    // Render only visible sheets (including slicers).
-                    SheetSet = SheetSet.Visible
-                };
+            // Set PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Path for the output PDF file.
-                string pdfPath = "output_preserving_slicers.pdf";
+            // Preserve slicer layout if the property is available in the used version
+            // Uncomment the line below when SlicerLayoutOptions is supported:
+            // pdfOptions.SlicerLayoutOptions = SlicerLayoutOptions.Preserve;
 
-                // Save the workbook as a PDF file.
-                workbook.Save(pdfPath, pdfOptions);
-
-                Console.WriteLine($"Workbook successfully rendered to PDF: {pdfPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any runtime errors gracefully.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

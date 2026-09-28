@@ -1,68 +1,90 @@
-// Title: Transfer cell values only between worksheet ranges with Aspose.Cells for .NET (C#)
-// Description: Shows how to copy only the raw values from a source range (A1:B3) on one worksheet to a destination range (D5:E7) on another worksheet using Aspose.Cells' CopyValue method in C#, leaving all formatting behind.
-// Keywords: Aspose.Cells | CopyValue | C# | .NET | transfer cell values | range copy without formatting | worksheet range values | copy values only
-// Common Searches: Aspose.Cells copy values only C# | CopyValue method example Aspose.Cells | Transfer range data without styles .NET | Copy cell values between sheets Aspose.Cells | Ignore formatting when copying cells C#
-// Developer Intent: Copy only the data from a source range to a destination range while discarding all cell formatting.
-// Use Cases: Build a summary sheet that pulls calculated numbers from multiple sources without altering its own layout. | Export raw dataset to a new workbook for analysis, keeping the original styling untouched. | Populate a pre‑designed template with values from a data sheet while preserving the template’s design.
-// AI Prompts: Provide a C# example that uses Aspose.Cells CopyValue to move values from Sheet1!A1:B3 to Sheet2!D5:E7 without copying styles. | Explain when to use Copy, CopyStyle, and CopyValue in Aspose.Cells and the impact on formatting. | Show how to copy only cell values between worksheets in Aspose.Cells for .NET while keeping the destination formatting intact.
+// Title: Copy only cell values from a source range to a destination range on another worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Read the values from A1:E10 on Sheet1 and write them to the range starting at C6 on Sheet2 using Cell.PutValue in C#. | Open source.xlsx, ensure destination.xlsx contains Sheet2, then iterate through the source CellArea and transfer only the cell values to the target worksheet while preserving its existing formatting. | Use Aspose.Cells to copy data between two workbooks by looping over rows and columns and calling PutValue for each cell to achieve a values‑only paste.
+// Common Searches: asp.net aspose.cells copy only values between worksheets c# | c# aspose.cells transfer range values without formatting | how to paste values only from one workbook to another using Aspose.Cells | aspose.cells putvalue example for copying data between sheets
+// Tags: value-only range copy Aspose.Cells C# | transfer cell values between worksheets Aspose.Cells | copy values without formatting Aspose.Cells | Cell.PutValue method range transfer C# | worksheet value transfer Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsValueTransfer
 {
-    // Shows how to copy only the raw values from a source range (A1:B3) on one worksheet to a destination range (D5:E7) on another worksheet using Aspose.Cells' CopyValue method in C#, leaving all formatting behind.
-    public class TransferValuesOnly
+    // The program loads a source workbook, creates or opens a destination workbook, ensures Sheet2 exists, and then copies only the cell values from the source range A1:E10 on Sheet1 to the destination range starting at C6 on Sheet2 using Cell.PutValue, preserving any existing formatting in the destination before saving the updated file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook (source and destination will be in the same file)
-                Workbook workbook = new Workbook();
+                // Verify source file exists
+                const string sourcePath = "source.xlsx";
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file \"{sourcePath}\" not found.");
+                    return;
+                }
 
-                // Get the first worksheet as the source sheet and name it
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "Source";
+                // Load the source workbook
+                Workbook sourceWorkbook = new Workbook(sourcePath);
 
-                // Add a second worksheet as the destination sheet and name it
-                Worksheet destinationSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-                destinationSheet.Name = "Destination";
+                // Verify destination file exists; if not, create a new workbook
+                const string destinationPath = "destination.xlsx";
+                Workbook destinationWorkbook;
+                if (File.Exists(destinationPath))
+                {
+                    destinationWorkbook = new Workbook(destinationPath);
+                }
+                else
+                {
+                    destinationWorkbook = new Workbook(); // creates a default workbook with one sheet
+                }
 
-                // Populate some sample data in the source range A1:B3
-                Cells srcCells = sourceSheet.Cells;
-                srcCells["A1"].PutValue("Item");
-                srcCells["B1"].PutValue("Quantity");
-                srcCells["A2"].PutValue("Apple");
-                srcCells["B2"].PutValue(10);
-                srcCells["A3"].PutValue("Banana");
-                srcCells["B3"].PutValue(20);
+                // Get the source worksheet (fallback to first sheet if name not found)
+                Worksheet sourceSheet = sourceWorkbook.Worksheets["Sheet1"] ??
+                                        sourceWorkbook.Worksheets[0];
 
-                // Create Range objects for source and destination
-                AsposeRange srcRange = srcCells.CreateRange("A1:B3");
-                AsposeRange destRange = destinationSheet.Cells.CreateRange("D5:E7");
+                // Get the destination worksheet; add if missing
+                Worksheet destinationSheet = destinationWorkbook.Worksheets["Sheet2"];
+                if (destinationSheet == null)
+                {
+                    int index = destinationWorkbook.Worksheets.Add();
+                    destinationSheet = destinationWorkbook.Worksheets[index];
+                    destinationSheet.Name = "Sheet2";
+                }
 
-                // Transfer only the cell values (no formatting) from source to destination
-                destRange.CopyValue(srcRange);
+                // Define the source range (A1:E10)
+                CellArea sourceRange = new CellArea
+                {
+                    StartRow = 0,      // Row 1 (0‑based)
+                    StartColumn = 0,   // Column A (0‑based)
+                    EndRow = 9,        // Row 10
+                    EndColumn = 4      // Column E
+                };
 
-                // Save the workbook to a file
-                string outputPath = "TransferValuesOnly.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Destination top‑left cell (C6)
+                int destStartRow = 5;      // Row 6 (0‑based)
+                int destStartColumn = 2;   // Column C (0‑based)
+
+                // Transfer only values from source range to destination range
+                for (int i = 0; i <= sourceRange.EndRow - sourceRange.StartRow; i++)
+                {
+                    for (int j = 0; j <= sourceRange.EndColumn - sourceRange.StartColumn; j++)
+                    {
+                        Cell srcCell = sourceSheet.Cells[sourceRange.StartRow + i, sourceRange.StartColumn + j];
+                        Cell destCell = destinationSheet.Cells[destStartRow + i, destStartColumn + j];
+                        destCell.PutValue(srcCell.Value);
+                    }
+                }
+
+                // Save the updated destination workbook
+                const string outputPath = "destination_updated.xlsx";
+                destinationWorkbook.Save(outputPath);
+                Console.WriteLine($"Values transferred successfully. Saved as \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            TransferValuesOnly.Run();
         }
     }
 }

@@ -1,47 +1,58 @@
-// Title: Detect SmartArt Shapes in an Excel Workbook Using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file, loops through every worksheet and its ShapeCollection, uses the Shape.IsSmartArt property to identify SmartArt objects, logs worksheet name, shape index and shape name to the console, and optionally saves the workbook.
-// Keywords: Aspose.Cells SmartArt detection | C# Shape.IsSmartArt | iterate Excel shapes .NET | list SmartArt objects | Excel shape collection Aspose | GitHub Aspose.Cells example | Answer Engine Optimization Excel SmartArt
-// Common Searches: how to find SmartArt in Excel using Aspose.Cells C# | Aspose.Cells iterate shapes and detect SmartArt | Shape.IsSmartArt property example | list all SmartArt shapes in a workbook | C# code to enumerate SmartArt objects in Excel
-// Developer Intent: Programmatically locate and enumerate every SmartArt shape across all worksheets in an Excel workbook.
-// Use Cases: Generate an audit report of SmartArt objects with their sheet names and indices. | Apply batch formatting or replace SmartArt shapes automatically. | Extract SmartArt metadata for downstream processing such as image export or data analysis.
-// AI Prompts: Write C# code that replaces each SmartArt shape in a workbook with a placeholder image using Aspose.Cells. | Create a method that returns a List<Shape> containing all SmartArt objects from a given worksheet. | Develop a script that extracts the text from every SmartArt shape and saves it to a CSV file.
+// Title: Identify and list SmartArt shapes in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, loops through every worksheet and each Shape, and prints the Name, UpperLeftRow and UpperLeftColumn of shapes where Shape.IsSmartArt is true. | Create a .NET console application that safely loads a workbook, checks for a missing input file, uses Shape.IsSmartArt to detect SmartArt objects, and logs their positions without altering the file. | Show how to catch and log exceptions while scanning an Excel workbook for SmartArt shapes with Aspose.Cells and output the results to the console.
+// Common Searches: C# Aspose.Cells how to enumerate SmartArt objects in an Excel sheet | retrieve SmartArt shape coordinates using Shape.IsSmartArt property | list all SmartArt names and cell locations in a workbook with Aspose.Cells for .NET | detect SmartArt diagrams in Excel files programmatically using Aspose.Cells | example code to find SmartArt shapes across worksheets in C#
+// Tags: enumerate SmartArt shapes Aspose.Cells | Shape.IsSmartArt detection C# | list SmartArt coordinates Excel | scan workbook shapes Aspose.Cells | handle missing Excel file Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartArtDemo
+// The example loads an existing .xlsx workbook, iterates through each worksheet and its shapes, uses the Shape.IsSmartArt property to identify SmartArt objects, and writes each object's name and top‑left row/column to the console before optionally saving the workbook.
+class SmartArtDetector
 {
-    // Loads an Excel file, loops through every worksheet and its ShapeCollection, uses the Shape.IsSmartArt property to identify SmartArt objects, logs worksheet name, shape index and shape name to the console, and optionally saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Iterate through all worksheets
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the collection of shapes in the current worksheet
-                ShapeCollection shapes = sheet.Shapes;
-
-                // Iterate through each shape
-                for (int i = 0; i < shapes.Count; i++)
+                // Iterate through all shapes on the current worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    Shape shape = shapes[i];
-
                     // Identify SmartArt objects using the IsSmartArt property
                     if (shape.IsSmartArt)
                     {
-                        Console.WriteLine($"SmartArt found in worksheet \"{sheet.Name}\" at shape index {i} (Name: {shape.Name})");
-                        // Additional processing for SmartArt can be placed here
+                        // Output the shape name and its position (upper‑left cell)
+                        Console.WriteLine($"SmartArt found on sheet \"{sheet.Name}\":");
+                        Console.WriteLine($"  Name: {shape.Name}");
+                        Console.WriteLine($"  Top‑Left Row: {shape.UpperLeftRow}, Column: {shape.UpperLeftColumn}");
                     }
                 }
             }
 
-            // Save the workbook (optional, if modifications were made)
-            workbook.Save("output.xlsx");
+            // Save the workbook (optional if modifications were made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

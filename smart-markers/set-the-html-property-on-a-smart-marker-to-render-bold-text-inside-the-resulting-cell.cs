@@ -1,46 +1,55 @@
-// Title: Bold Text via HTML in Aspose.Cells Smart Marker (C#)
-// Description: Demonstrates how to assign an HtmlString containing a <b> tag to a smart marker, bind a DataTable as the data source, process the marker with WorkbookDesigner, and save the workbook as HTML so the merged value appears in bold.
-// Keywords: Aspose.Cells | smart marker | HtmlString | bold text | C# | WorkbookDesigner | HTML export | Excel formatting | data binding | dynamic report
-// Common Searches: Aspose.Cells set smart marker bold | HtmlString smart marker C# example | how to make smart marker output bold | WorkbookDesigner process HTML tags | export Excel to HTML with bold smart markers
-// Developer Intent: Apply HTML formatting to a smart marker so the merged cell displays bold text after processing.
-// Use Cases: Generate HTML reports where specific fields (e.g., names) are emphasized in bold. | Create Excel templates that retain bold styling when exported to HTML via smart markers. | Automate dynamic documents with bold headings or labels using data‑driven smart markers.
-// AI Prompts: Show how to use HtmlString with a smart marker to render bold text in Aspose.Cells for .NET. | Provide a C# example that processes a <b>${Field}</b> smart marker using WorkbookDesigner and saves as HTML. | Explain how to combine HTML tags with smart markers to apply styles such as bold, italic, or color.
+// Title: Render bold HTML text in an Excel cell using Aspose.Cells smart markers (C#)
+// AI Prompts: Write C# code that sets a smart marker's HtmlString to "<b>&=FieldName</b>", binds a DataTable to WorkbookDesigner, processes the marker, and saves the workbook as an .xlsx file. | Show how to use Aspose.Cells WorkbookDesigner to apply HTML bold formatting to a smart marker and generate a spreadsheet with bold text.
+// Common Searches: how to embed <b> tags in a smart marker for Aspose.Cells C# | Aspose.Cells smart marker HtmlString property usage example | process smart markers with HTML content to produce bold text in Excel using C# | C# code sample for binding DataTable to WorkbookDesigner and saving as .xlsx
+// Tags: smart marker html bold Aspose.Cells | WorkbookDesigner set HtmlString C# | export bold text to xlsx via smart markers | bind DataTable to WorkbookDesigner Aspose.Cells | HTML rendering in Excel cells using Aspose.Cells
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to assign an HtmlString containing a <b> tag to a smart marker, bind a DataTable as the data source, process the marker with WorkbookDesigner, and save the workbook as HTML so the merged value appears in bold.
-class SmartMarkerBoldDemo
+namespace SmartMarkerExample
 {
-    static void Main()
+    // The example creates a workbook, assigns "<b>&=Name</b>" to cell A1 via the HtmlString property, supplies a DataTable with a Name column, processes the smart marker with WorkbookDesigner, and saves the result as SmartMarkerBoldOutput.xlsx.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Place a smart marker inside an HTML string.
-            // The <b> tag will make the value rendered in bold after processing.
-            worksheet.Cells["A1"].HtmlString = "<b>${Name}</b>";
+                // Define a smart marker with HTML bold tags in cell A1
+                sheet.Cells["A1"].HtmlString = "<b>&=Name</b>";
 
-            // Prepare a data source for the smart marker
-            DataTable table = new DataTable();
-            table.Columns.Add("Name", typeof(string));
-            table.Rows.Add("John Doe");
+                // Prepare sample data source
+                DataTable dt = new DataTable();
+                dt.Columns.Add("Name", typeof(string));
+                dt.Rows.Add("Bold Text Example");
 
-            // Process the smart marker using WorkbookDesigner (correct API)
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource(table);
-            designer.Process();
+                // Process smart markers
+                WorkbookDesigner designer = new WorkbookDesigner(workbook);
+                designer.SetDataSource(dt);
+                designer.Process();
 
-            // Save the result as an HTML file to see the bold rendering
-            workbook.Save("SmartMarkerBold.html", SaveFormat.Html);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Ensure output directory exists
+                string outputPath = "SmartMarkerBoldOutput.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the resulting workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

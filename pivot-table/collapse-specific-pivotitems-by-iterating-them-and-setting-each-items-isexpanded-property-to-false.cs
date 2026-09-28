@@ -1,19 +1,17 @@
-// Title: C# – Collapse All Row PivotItems in an Aspose.Cells PivotTable (IsDetailHidden = true)
-// Description: A .NET example that creates a workbook, adds sample data, builds a PivotTable, then iterates through each PivotItem of the first row field and sets IsDetailHidden to true, collapsing all row items. The pivot is recalculated and saved as CollapsedPivotItems.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | PivotItem | IsDetailHidden | collapse row items | hide pivot details | programmatic Excel report | sample code | GitHub example | US developers | UK developers | India developers
-// Common Searches: How to collapse all row items in an Aspose.Cells PivotTable using C# | Set IsDetailHidden = true for PivotItems in Aspose.Cells | Iterate PivotItems to hide details in .NET | Programmatically collapse pivot rows with Aspose.Cells | Aspose.Cells PivotTable collapse example GitHub
-// Developer Intent: Programmatically hide the detail rows of every row‑field item in an Aspose.Cells PivotTable using C#.
-// Use Cases: Generate a compact Excel report by collapsing row items before exporting. | Automate dashboard refreshes where pivot details should start hidden for readability. | Apply a consistent collapsed view across multiple PivotTables in a workbook.
-// AI Prompts: Write C# code with Aspose.Cells that iterates over a PivotField's PivotItems and sets IsDetailHidden = true, then recalculates and saves the workbook. | Create a reusable method that collapses all items of a specified row field in a PivotTable and returns the updated Workbook object. | Explain how IsDetailHidden, RefreshData, and CalculateData interact when toggling PivotItem expansion in Aspose.Cells.
+// Title: How to collapse specific row items in an Aspose.Cells pivot table using C# by setting IsDetailHidden
+// AI Prompts: Generate C# code that creates a pivot table with Aspose.Cells, refreshes the data, and collapses each row item by setting PivotItem.IsDetailHidden = true. | Show a C# snippet that iterates over a PivotField's PivotItems in Aspose.Cells and hides their details to collapse the items. | Explain how to programmatically collapse selected pivot items after refreshing the pivot cache in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# collapse row items in pivot table programmatically | Set IsDetailHidden for all PivotItems in Aspose.Cells example | How to hide details of pivot row fields using Aspose.Cells .NET | Iterate PivotItems to collapse them in Aspose.Cells workbook
+// Tags: collapse pivot row items Aspose.Cells C# | PivotItem.IsDetailHidden Aspose.Cells | iterate PivotField items Aspose.Cells | refresh pivot cache Aspose.Cells before collapsing | Aspose.Cells pivot table row field manipulation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace MyAsposeDemo
+namespace AsposeCellsExamples
 {
-    // A .NET example that creates a workbook, adds sample data, builds a PivotTable, then iterates through each PivotItem of the first row field and sets IsDetailHidden to true, collapsing all row items. The pivot is recalculated and saved as CollapsedPivotItems.xlsx.
-    class CollapsePivotItemsDemo
+    // The example creates a workbook, adds sample data, builds a pivot table, refreshes it, then iterates the row field's PivotItems and sets IsDetailHidden to true to collapse each item before saving the file.
+    public class CollapseSpecificPivotItems
     {
         public static void Run()
         {
@@ -35,45 +33,46 @@ namespace MyAsposeDemo
                 sheet.Cells["A5"].PutValue("Vegetable");
                 sheet.Cells["B5"].PutValue(250);
 
-                // Add a pivot table to the worksheet
-                int ptIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[ptIndex];
+                // Add a pivot table based on the data range
+                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Define row and data fields
+                // Add the "Category" field as a row field and "Amount" as a data field
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-                // Refresh data and calculate the pivot table
-                pivotTable.RefreshData();      // Correct API call
+                // Refresh the pivot cache and calculate the pivot table so that items are generated
+                pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // Collapse (hide detail) for each PivotItem in the row field
+                // Collapse each row item by hiding its detail
                 PivotField rowField = pivotTable.RowFields[0];
                 foreach (PivotItem item in rowField.PivotItems)
                 {
                     item.IsDetailHidden = true;
                 }
 
-                // Recalculate after modifying item states
+                // Recalculate after changing the collapse state
                 pivotTable.CalculateData();
 
-                // Save the workbook with collapsed pivot items
+                // Save the workbook
                 string outputPath = "CollapsedPivotItems.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }
 
-    class Program
+    // Entry point for the application
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            CollapsePivotItemsDemo.Run();
+            CollapseSpecificPivotItems.Run();
         }
     }
 }

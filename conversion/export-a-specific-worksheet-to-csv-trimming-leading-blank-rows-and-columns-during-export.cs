@@ -1,40 +1,35 @@
-// Title: C# – Export a Worksheet to CSV with Trimmed Leading Blank Rows/Columns (Aspose.Cells)
-// Description: Loads an Excel workbook, selects a specific worksheet (e.g., the second sheet), and saves it as a CSV file using Aspose.Cells. The TxtSaveOptions are set to TrimLeadingBlankRowAndColumn = true and ExportAllSheets = false, ensuring only the active sheet is exported and any leading empty rows or columns are removed.
-// Keywords: Aspose.Cells CSV export C# | trim leading blank rows Aspose.Cells | export single worksheet to CSV .NET | TxtSaveOptions TrimLeadingBlankRowAndColumn | save active sheet as CSV | Aspose.Cells conversion example
-// Common Searches: Aspose.Cells export specific sheet to CSV | remove leading empty rows when saving CSV with Aspose.Cells | C# TxtSaveOptions CSV trim blank rows and columns | how to export only active worksheet to CSV using Aspose.Cells | Aspose.Cells CSV export without blank rows
-// Developer Intent: Generate a CSV file from a chosen worksheet while automatically discarding leading blank rows and columns.
-// Use Cases: Create clean CSV reports from a particular sheet in a multi‑sheet workbook. | Prepare data for systems that cannot process leading empty rows or columns. | Automate Excel‑to‑CSV conversion where only the active sheet is required.
-// AI Prompts: Write C# code with Aspose.Cells to export the third worksheet of an Excel file to CSV, trimming leading blank rows and columns. | Show how to configure TxtSaveOptions so that only the active sheet is saved as CSV and all other sheets are ignored. | Explain the effect of TrimLeadingBlankRowAndColumn when saving a worksheet to CSV with Aspose.Cells.
+// Title: Export a selected worksheet to CSV with trimmed leading blank rows and columns using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file, activates a specific worksheet, and saves it as a CSV while removing any leading empty rows and columns with Aspose.Cells. | Show how to configure TxtSaveOptions for CSV output, enable TrimLeadingBlankRowAndColumn, and export only the active sheet in a .NET application.
+// Common Searches: Aspose.Cells export only the active sheet to CSV and ignore leading empty rows | C# trim blank rows and columns when saving a worksheet as CSV using Aspose.Cells | How to use TxtSaveOptions to export a single worksheet to CSV in .NET
+// Tags: Aspose.Cells active sheet CSV output | TxtSaveOptions TrimLeadingBlankRowAndColumn usage | C# export single worksheet as CSV | CSV conversion trimming empty rows Aspose.Cells | Save specific worksheet to CSV .NET
 
 using System;
 using Aspose.Cells;
 
-namespace ExportWorksheetToCsv
+// Loads an Excel workbook, activates a chosen worksheet, configures TxtSaveOptions with TrimLeadingBlankRowAndColumn and ExportAllSheets=false, and saves the active sheet as a CSV file.
+class ExportWorksheetToCsv
 {
-    // Loads an Excel workbook, selects a specific worksheet (e.g., the second sheet), and saves it as a CSV file using Aspose.Cells. The TxtSaveOptions are set to TrimLeadingBlankRowAndColumn = true and ExportAllSheets = false, ensuring only the active sheet is exported and any leading empty rows or columns are removed.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook from a file (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Index of the worksheet you want to export (0‑based)
+        int worksheetToExport = 1; // example: second worksheet
+
+        // Set the selected worksheet as the active one
+        workbook.Worksheets.ActiveSheetIndex = worksheetToExport;
+
+        // Configure CSV save options
+        TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Trim leading blank rows and columns like Excel does
+            TrimLeadingBlankRowAndColumn = true,
+            // Export only the active worksheet (default is false, but set explicitly for clarity)
+            ExportAllSheets = false
+        };
 
-            // Optionally, set the worksheet you want to export as the active sheet
-            // For example, export the second worksheet (index 1)
-            workbook.Worksheets.ActiveSheetIndex = 1;
-
-            // Configure CSV (text) save options
-            TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv)
-            {
-                // Trim leading blank rows and columns just like Excel does
-                TrimLeadingBlankRowAndColumn = true,
-
-                // Export only the active worksheet (default behavior, but set explicitly for clarity)
-                ExportAllSheets = false
-            };
-
-            // Save the active worksheet to CSV with the specified options
-            workbook.Save("output_trimmed.csv", saveOptions);
-        }
+        // Save the active worksheet to a CSV file
+        workbook.Save("exported_sheet.csv", csvOptions);
     }
 }

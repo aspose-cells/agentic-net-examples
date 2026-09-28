@@ -1,59 +1,66 @@
-// Title: Export Excel to HTML with Gridlines and Custom TableCssId using Aspose.Cells for .NET
-// Description: Demonstrates how to enable worksheet gridlines, apply thin borders, and configure HtmlSaveOptions (ExportGridLines, TableCssId, ExportSimilarBorderStyle) so the generated HTML retains cell borders and can be styled via a custom CSS ID.
-// Keywords: Aspose.Cells HTML export | ExportGridLines .NET | TableCssId styling | preserve Excel borders HTML | C# Aspose.Cells example | gridlines to HTML | ExportSimilarBorderStyle | custom CSS table ID
-// Common Searches: Aspose.Cells keep gridlines when saving as HTML | How to use TableCssId in HtmlSaveOptions | Export Excel borders to HTML with Aspose.Cells | Enable ExportSimilarBorderStyle for HTML output | C# export workbook to HTML with custom CSS ID
-// Developer Intent: Generate an HTML file from an Excel workbook that keeps gridlines and cell borders and assigns a custom CSS ID to the table for styling.
-// Use Cases: Create web‑ready reports that visually match the original Excel layout. | Integrate exported tables into existing site themes by targeting a specific CSS ID. | Ensure consistent border rendering across browsers with ExportSimilarBorderStyle.
-// AI Prompts: Show how to change TableCssId to 'report-table' while preserving gridlines and borders. | Explain the effect of ExportSimilarBorderStyle on border appearance in Chrome, Firefox, and Edge. | Provide CSS rules that style the table with ID 'custom-table' to highlight cell borders after export.
+// Title: Export an Aspose.Cells workbook to HTML with gridlines enabled and a custom TableCssId for border styling (C#)
+// AI Prompts: Write C# code that creates a workbook, applies thin borders to the used range, and saves it as HTML with gridlines enabled and a custom CSS ID for the table using Aspose.Cells. | Show how to configure Aspose.Cells HTML export options to retain cell borders by turning on gridlines and assigning a table identifier. | Demonstrate exporting an Excel worksheet to HTML while preserving border styling, using Aspose.Cells settings for gridlines and table CSS prefix.
+// Common Searches: how to enable gridlines in Aspose.Cells HTML export C# | Aspose.Cells HtmlSaveOptions custom table id example | preserve Excel cell borders when converting to HTML with Aspose.Cells | export workbook to HTML with custom table identifier using Aspose.Cells | C# Aspose.Cells retain borders in HTML output
+// Tags: Aspose.Cells HtmlSaveOptions ExportGridLines | Aspose.Cells HtmlSaveOptions TableCssId | Aspose.Cells preserve cell borders HTML | Aspose.Cells apply borders used range | Aspose.Cells export workbook to HTML C#
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to enable worksheet gridlines, apply thin borders, and configure HtmlSaveOptions (ExportGridLines, TableCssId, ExportSimilarBorderStyle) so the generated HTML retains cell borders and can be styled via a custom CSS ID.
-class ExportWithGridlines
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Creates a workbook, adds sample data, applies thin black borders to the used range, configures HtmlSaveOptions with gridlines enabled and TableCssId set to "myTable", and saves the workbook as an HTML file, preserving cell borders.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Make gridlines visible in the worksheet
-            sheet.IsGridlinesVisible = true;
-
-            // Add some sample data
-            sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue("Data 1");
-            sheet.Cells["B2"].PutValue("Data 2");
-
-            // Apply a thin border to the range to demonstrate border export
-            Style borderStyle = workbook.CreateStyle();
-            borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-
-            // Apply the style to the range A1:B2
-            Aspose.Cells.Range range = sheet.Cells.CreateRange("A1:B2");
-            StyleFlag flag = new StyleFlag { All = true };
-            range.ApplyStyle(borderStyle, flag);
-
-            // Configure HTML save options
-            HtmlSaveOptions options = new HtmlSaveOptions(SaveFormat.Html)
+            try
             {
-                ExportGridLines = true,               // Export gridlines so cell borders are retained
-                TableCssId = "custom-table",          // Prefix for CSS selectors (e.g., tr, td) within the table
-                ExportSimilarBorderStyle = true       // Use similar border style when browser does not support exact style
-            };
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Save the workbook as HTML using the configured options
-            workbook.Save("Exported.html", options);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate some sample data
+                sheet.Cells["A1"].PutValue("Header 1");
+                sheet.Cells["B1"].PutValue("Header 2");
+                sheet.Cells["A2"].PutValue("Data 1");
+                sheet.Cells["B2"].PutValue("Data 2");
+
+                // Apply a simple style to demonstrate borders
+                Style style = workbook.CreateStyle();
+                style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                style.Borders[BorderType.TopBorder].Color = System.Drawing.Color.Black;
+                style.Borders[BorderType.BottomBorder].Color = System.Drawing.Color.Black;
+                style.Borders[BorderType.LeftBorder].Color = System.Drawing.Color.Black;
+                style.Borders[BorderType.RightBorder].Color = System.Drawing.Color.Black;
+
+                // Apply the style to the used range
+                var usedRange = sheet.Cells.MaxDisplayRange; // Aspose.Cells.Range inferred
+                usedRange.ApplyStyle(style, new StyleFlag() { All = true });
+
+                // Configure HTML save options to enable gridlines and set a CSS ID prefix for the table
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Enable gridlines so that cell borders are retained in the exported HTML
+                    ExportGridLines = true,
+
+                    // Prefix the generated table with a CSS ID to allow custom styling of borders
+                    TableCssId = "myTable"
+                };
+
+                // Save the workbook as HTML using the configured options
+                workbook.Save("ExportedWithGridlines.html", htmlOptions);
+                Console.WriteLine("Workbook exported successfully to ExportedWithGridlines.html");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

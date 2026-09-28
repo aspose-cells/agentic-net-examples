@@ -1,10 +1,7 @@
-// Title: Aspose.Cells for .NET: Bind Chart Data Label Formatting to Source Cells with DataLabels.NumberFormatLinked (C#)
-// Description: Demonstrates how to create a workbook, add a column chart, link data labels to formatted cells, and set DataLabels.NumberFormatLinked = true so the label appearance follows the source cell formatting. The example saves the result as an XLSX file.
-// Keywords: Aspose.Cells | C# chart example | DataLabels.NumberFormatLinked | link data label format to cells | chart data label formatting | Aspose.Cells .NET tutorial | Excel chart series formatting
-// Common Searches: Aspose.Cells set DataLabels.NumberFormatLinked true | link chart data label to cell formatting C# | bind data label number format to source cells Aspose.Cells | chart series data label formatting Aspose.Cells .NET | how to use DataLabels.NumberFormatLinked in Aspose.Cells
-// Developer Intent: Enable DataLabels.NumberFormatLinked for the first chart series so that data label formatting is automatically taken from the linked source cells.
-// Use Cases: Create charts where data labels display values with custom units (e.g., "100 units") stored in a separate column. | Maintain consistent label appearance when cell formatting changes, without manually updating each label. | Generate automated Excel reports with dynamic label formatting linked to source data.
-// AI Prompts: Generate C# code using Aspose.Cells to link chart data label formatting to source cells with DataLabels.NumberFormatLinked. | Explain the impact of setting DataLabels.NumberFormatLinked to true on chart data labels in Aspose.Cells. | Show how updating the number format of linked cells automatically updates chart data labels when NumberFormatLinked is enabled.
+// Title: How to link data label number format to source cells for the first series in an Aspose.Cells column chart (C#)
+// AI Prompts: Write C# code that creates a workbook, adds a column chart, enables data labels for the first series, sets DataLabels.NumberFormatLinked = true, and saves the file. | Show an example of binding a chart series' data label number format to a range of formatted cells using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells set DataLabels.NumberFormatLinked for first series in C# | link chart data label formatting to worksheet cells Aspose.Cells .NET | C# Aspose.Cells column chart data labels use source cell number format | how to bind data label number format to cells in Aspose.Cells chart
+// Tags: Aspose.Cells chart data label formatting binding | C# enable number format linking for chart series | Aspose.Cells column chart series data label settings | link data label number format to source range Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,10 +9,10 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsDemo
 {
-    // Demonstrates how to create a workbook, add a column chart, link data labels to formatted cells, and set DataLabels.NumberFormatLinked = true so the label appearance follows the source cell formatting. The example saves the result as an XLSX file.
+    // Demonstrates creating a workbook, adding a column chart, populating sample data, enabling data labels, linking them to formatted cells, setting DataLabels.NumberFormatLinked = true for the first series, and saving the workbook as an XLSX file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -28,6 +25,7 @@ namespace AsposeCellsDemo
             sheet.Cells["B1"].PutValue("Value");
             sheet.Cells["B2"].PutValue(100);
             sheet.Cells["B3"].PutValue(200);
+            // Formatted values in another column (optional for linking)
             sheet.Cells["C1"].PutValue("Formatted Value");
             sheet.Cells["C2"].PutValue("100 units");
             sheet.Cells["C3"].PutValue("200 units");
@@ -36,17 +34,19 @@ namespace AsposeCellsDemo
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Define the series data range and category labels
-            chart.NSeries.Add("B2:B3", true);
-            chart.NSeries.CategoryData = "A2:A3";
+            // Define the data range for the series and categories
+            chart.NSeries.Add("B2:B3", true);          // Values
+            chart.NSeries.CategoryData = "A2:A3";      // Categories
 
             // Access the first series
             Series firstSeries = chart.NSeries[0];
 
-            // Enable data labels and bind number format to the source cells
+            // Enable data labels and link them to the formatted cells (optional)
             firstSeries.DataLabels.ShowValue = true;
-            firstSeries.DataLabels.LinkedSource = "C2:C3"; // link to formatted cells
-            firstSeries.DataLabels.NumberFormatLinked = true; // bind formatting
+            firstSeries.DataLabels.LinkedSource = "C2:C3";
+
+            // Bind the number format of the data labels to the source cells
+            firstSeries.DataLabels.NumberFormatLinked = true;
 
             // Save the workbook to an XLSX file
             workbook.Save("DataLabelsNumberFormatLinkedDemo.xlsx");

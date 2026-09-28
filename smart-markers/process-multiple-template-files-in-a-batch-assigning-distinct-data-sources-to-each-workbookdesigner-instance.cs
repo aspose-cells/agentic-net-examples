@@ -1,10 +1,7 @@
-// Title: Batch process multiple Excel templates with distinct data sources using Aspose.Cells WorkbookDesigner (C#)
-// Description: Iterates through a list of Excel template files, creates a dedicated DataTable for each, loads or creates the workbook, binds the appropriate table to WorkbookDesigner, processes smart markers, and saves the result. Includes graceful handling of missing templates and runtime errors.
-// Keywords: Aspose.Cells | WorkbookDesigner | C# smart markers | batch Excel generation | multiple templates | SetDataSource | Excel report automation | DataTable binding | template processing loop | error handling
-// Common Searches: Aspose.Cells batch processing multiple templates C# | WorkbookDesigner SetDataSource for each Excel file | how to generate several Excel reports from different data tables | smart markers loop over templates Aspose.Cells | C# code to process multiple Excel templates with WorkbookDesigner
-// Developer Intent: Automatically generate a series of Excel reports by applying a unique DataTable to each corresponding template workbook using WorkbookDesigner.
-// Use Cases: Create an employee directory by binding the Employees DataTable to Template1.xlsx and saving Result1.xlsx. | Produce a product catalog by applying the Products DataTable to Template2.xlsx and outputting Result2.xlsx. | Generate an order summary by linking the Orders DataTable to Template3.xlsx and saving Result3.xlsx.
-// AI Prompts: Add support for a fourth template with its own DataTable and output file. | Implement detailed logging for each workbook's processing steps and errors. | Customize the smart marker delimiters (e.g., {{}} instead of &) for all templates in the batch.
+// Title: Batch processing multiple Excel templates with individual smart‑marker data sources using Aspose.Cells WorkbookDesigner in C#
+// AI Prompts: Generate C# code that loads a list of Excel template files, assigns a distinct DataTable to each WorkbookDesigner, processes smart markers, and writes each workbook to its own output file. | Add error handling so that missing template files are logged and a new blank workbook is created before applying smart markers in the batch loop. | Refactor the example to read template paths, output paths, and JSON‑defined data sources from a configuration file and execute the batch smart‑marker processing.
+// Common Searches: Aspose.Cells batch smart marker processing with different data tables in C# | How to use WorkbookDesigner for multiple workbooks in a loop | Create default workbook when template file not found Aspose.Cells | Assign separate DataTable to each smart marker job using Aspose.Cells | C# example for processing several Excel templates with smart markers
+// Tags: batch smart marker processing Aspose.Cells | WorkbookDesigner per workbook data source | fallback blank workbook Aspose.Cells | process multiple Excel templates C# | save individual processed workbooks | smart marker data source configuration
 
 using System;
 using System.Collections.Generic;
@@ -12,88 +9,82 @@ using System.Data;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchWorkbookDesignerDemo
+// The sample defines a collection of jobs, each containing a template path, an output path, and a DataTable. For each job it loads the template (or creates a blank workbook if the file is missing), initializes a WorkbookDesigner, sets the job‑specific data source, processes smart markers, and saves the result. Sample product and employee tables illustrate distinct data sources per workbook.
+class BatchSmartMarkerProcessor
 {
-    // Iterates through a list of Excel template files, creates a dedicated DataTable for each, loads or creates the workbook, binds the appropriate table to WorkbookDesigner, processes smart markers, and saves the result. Includes graceful handling of missing templates and runtime errors.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define jobs: template path, output path and associated data source
+        var jobs = new List<(string templatePath, string outputPath, DataTable dataSource)>
         {
-            // Define template files and corresponding output files
-            var templates = new[]
+            ("Template1.xlsx", "Result1.xlsx", CreateProductsTable()),
+            ("Template2.xlsx", "Result2.xlsx", CreateEmployeesTable())
+        };
+
+        foreach (var job in jobs)
+        {
+            try
             {
-                new { TemplatePath = "Template1.xlsx", OutputPath = "Result1.xlsx" },
-                new { TemplatePath = "Template2.xlsx", OutputPath = "Result2.xlsx" },
-                new { TemplatePath = "Template3.xlsx", OutputPath = "Result3.xlsx" }
-            };
+                Workbook templateWorkbook;
 
-            // Prepare distinct data sources for each template
-            var dataSources = new List<DataTable>();
-
-            // Data source for Template1
-            var dt1 = new DataTable("Employees");
-            dt1.Columns.Add("Name", typeof(string));
-            dt1.Columns.Add("Age", typeof(int));
-            dt1.Rows.Add("John Doe", 30);
-            dt1.Rows.Add("Jane Smith", 28);
-            dataSources.Add(dt1);
-
-            // Data source for Template2
-            var dt2 = new DataTable("Products");
-            dt2.Columns.Add("ProductID", typeof(int));
-            dt2.Columns.Add("ProductName", typeof(string));
-            dt2.Columns.Add("Price", typeof(decimal));
-            dt2.Rows.Add(101, "Laptop", 1200.50m);
-            dt2.Rows.Add(102, "Smartphone", 799.99m);
-            dataSources.Add(dt2);
-
-            // Data source for Template3
-            var dt3 = new DataTable("Orders");
-            dt3.Columns.Add("OrderID", typeof(int));
-            dt3.Columns.Add("Customer", typeof(string));
-            dt3.Columns.Add("Total", typeof(decimal));
-            dt3.Rows.Add(5001, "Acme Corp", 2500.00m);
-            dt3.Rows.Add(5002, "Globex Inc", 1800.75m);
-            dataSources.Add(dt3);
-
-            // Process each template with its specific data source
-            for (int i = 0; i < templates.Length; i++)
-            {
-                try
+                // Load existing template or create a new blank workbook if the file is missing
+                if (File.Exists(job.templatePath))
                 {
-                    Workbook workbook;
-
-                    // Load the template workbook if it exists; otherwise create a blank workbook
-                    if (File.Exists(templates[i].TemplatePath))
-                    {
-                        workbook = new Workbook(templates[i].TemplatePath);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Warning: Template file '{templates[i].TemplatePath}' not found. Creating a blank workbook.");
-                        workbook = new Workbook(); // creates a new empty workbook
-                    }
-
-                    // Initialize WorkbookDesigner with the loaded workbook
-                    var designer = new WorkbookDesigner(workbook);
-
-                    // Assign the distinct data source (using the table name as the data source name)
-                    // The smart markers in the template should reference this name, e.g., &Employees.Name
-                    designer.SetDataSource(dataSources[i].TableName, dataSources[i]);
-
-                    // Process the smart markers
-                    designer.Process();
-
-                    // Save the processed workbook to the specified output file
-                    designer.Workbook.Save(templates[i].OutputPath);
+                    templateWorkbook = new Workbook(job.templatePath);
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"Error processing template '{templates[i].TemplatePath}': {ex.Message}");
+                    Console.WriteLine($"Template file not found: {job.templatePath}. Creating a blank workbook.");
+                    templateWorkbook = new Workbook(); // creates a default workbook with one worksheet
                 }
+
+                // Initialize designer with the workbook
+                WorkbookDesigner designer = new WorkbookDesigner(templateWorkbook);
+
+                // Assign the data source for this job
+                designer.SetDataSource(job.dataSource);
+
+                // Process smart markers
+                designer.Process();
+
+                // Save the result
+                designer.Workbook.Save(job.outputPath);
+                Console.WriteLine($"Processed and saved: {job.outputPath}");
             }
-
-            Console.WriteLine("Batch processing completed.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing job for template '{job.templatePath}': {ex.Message}");
+            }
         }
+    }
+
+    // Sample data source for the first template
+    static DataTable CreateProductsTable()
+    {
+        DataTable dt = new DataTable("Products");
+        dt.Columns.Add("ProductID", typeof(int));
+        dt.Columns.Add("ProductName", typeof(string));
+        dt.Columns.Add("Price", typeof(decimal));
+
+        dt.Rows.Add(1, "Apple", 0.5m);
+        dt.Rows.Add(2, "Banana", 0.3m);
+        dt.Rows.Add(3, "Cherry", 0.8m);
+
+        return dt;
+    }
+
+    // Sample data source for the second template
+    static DataTable CreateEmployeesTable()
+    {
+        DataTable dt = new DataTable("Employees");
+        dt.Columns.Add("EmployeeID", typeof(int));
+        dt.Columns.Add("Name", typeof(string));
+        dt.Columns.Add("Department", typeof(string));
+
+        dt.Rows.Add(101, "John Doe", "Sales");
+        dt.Rows.Add(102, "Jane Smith", "HR");
+        dt.Rows.Add(103, "Mike Johnson", "IT");
+
+        return dt;
     }
 }

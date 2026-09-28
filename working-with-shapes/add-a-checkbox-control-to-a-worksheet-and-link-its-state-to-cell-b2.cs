@@ -1,15 +1,12 @@
-// Title: C# – Add a CheckBox to an Excel worksheet and link it to cell B2 with Aspose.Cells
-// Description: Demonstrates how to create a new Workbook, insert a CheckBox shape at row 1 column 1, set its caption, bind the checkbox state to cell B2 using the LinkedCell property, define the initial checked value, and save the file as CheckboxLinkedToB2.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells checkbox example | link checkbox to cell | Aspose.Cells C# CheckBox | LinkedCell property | Excel form controls Aspose
-// Common Searches: add checkbox to Excel with Aspose.Cells C# | link checkbox state to a cell using Aspose | set initial value of Aspose.Cells checkbox | read linked cell value from Aspose.Cells checkbox | Aspose.Cells sample code for form controls
-// Developer Intent: Insert a CheckBox shape into a worksheet and bind its checked state to cell B2 programmatically.
-// Use Cases: Create interactive Excel forms where a user’s acceptance updates a flag in B2 for downstream calculations. | Generate templates that toggle optional sections based on the linked checkbox value in B2. | Automate report generation where the presence of a checkbox controls conditional formatting or data inclusion.
-// AI Prompts: Write C# code with Aspose.Cells to place a checkbox at D5 and link it to cell C10. | Show how to retrieve the value of a checkbox's linked cell after opening the workbook with Aspose.Cells. | Explain how to change the checkbox caption and default checked state using Aspose.Cells for .NET.
+// Title: Insert a CheckBox form control at B2 and bind its state to cell B2 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a CheckBox shape to the first worksheet at cell B2, links it to cell B2, sets the linked cell to FALSE, and saves the workbook as an .xlsx file with Aspose.Cells. | Create an Aspose.Cells workbook in C# containing a linked CheckBox positioned at B2, initializing the checkbox as unchecked and persisting the file.
+// Common Searches: Aspose.Cells C# add a checkbox form control to a specific cell | How to link a checkbox to a cell in an Excel file using Aspose.Cells .NET | Set default state of a linked checkbox to false with Aspose.Cells C# | Save an Excel workbook that includes a checkbox shape using Aspose.Cells for .NET
+// Tags: Aspose.Cells add checkbox shape C# | link checkbox to cell Aspose.Cells | initialize linked cell false Aspose.Cells | save workbook with checkbox Aspose.Cells Xlsx | form control checkbox Aspose.Cells .NET
 
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a new Workbook, insert a CheckBox shape at row 1 column 1, set its caption, bind the checkbox state to cell B2 using the LinkedCell property, define the initial checked value, and save the file as CheckboxLinkedToB2.xlsx using Aspose.Cells for .NET.
+// The program creates a new workbook, inserts a CheckBox form control at cell B2, links the CheckBox to cell B2, initializes the linked cell to FALSE (unchecked), and saves the file as CheckBoxExample.xlsx.
 class Program
 {
     static void Main()
@@ -20,21 +17,17 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a checkbox at row 1, column 1 (zero‑based indexes)
-        // Height = 20 pixels, Width = 100 pixels
-        int checkBoxIndex = sheet.CheckBoxes.Add(1, 1, 20, 100);
-        CheckBox checkBox = sheet.CheckBoxes[checkBoxIndex];
+        // Add a CheckBox control at cell B2 (row index 1, column index 1)
+        // Parameters: upperLeftRow, upperLeftColumn, top, left, width, height
+        CheckBox checkBox = sheet.Shapes.AddCheckBox(1, 1, 0, 0, 100, 20);
 
-        // Optional: set the displayed text of the checkbox
-        checkBox.Text = "Accept";
-
-        // Link the checkbox state to cell B2
+        // Link the CheckBox state to cell B2
         checkBox.LinkedCell = "B2";
 
-        // Optional: set the initial checked state
-        checkBox.Value = false;
+        // Set the initial value of B2 (FALSE = unchecked, TRUE = checked)
+        sheet.Cells["B2"].PutValue(false);
 
         // Save the workbook
-        workbook.Save("CheckboxLinkedToB2.xlsx");
+        workbook.Save("CheckBoxExample.xlsx", SaveFormat.Xlsx);
     }
 }

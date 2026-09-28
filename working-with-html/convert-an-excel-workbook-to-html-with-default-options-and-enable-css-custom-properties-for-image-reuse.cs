@@ -1,40 +1,25 @@
-// Title: Convert Excel to HTML with CSS Custom Properties using Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, creates default HtmlSaveOptions, enables EnableCssCustomProperties to reuse images via a single base64 CSS variable, and saves the result as an HTML file.
-// Keywords: Aspose.Cells | Excel to HTML conversion | HtmlSaveOptions | EnableCssCustomProperties | CSS custom properties | base64 image reuse | C# .NET | workbook export | HTML export with images | image optimization
-// Common Searches: Aspose.Cells export Excel to HTML C# | EnableCssCustomProperties example Aspose.Cells | Reuse images with CSS variables in HTML export | Convert .xlsx to HTML with single base64 image | HtmlSaveOptions default settings Aspose.Cells
-// Developer Intent: Export an Excel workbook to HTML while activating CSS custom properties so that embedded images are referenced through a single base64 definition.
-// Use Cases: Generate web‑ready reports from spreadsheets with minimal image duplication. | Create compact HTML email bodies where images are shared via a CSS variable. | Automate batch conversion of multiple workbooks to consistent, lightweight HTML pages.
-// AI Prompts: Show how to specify a custom CSS variable name for the base64 image when EnableCssCustomProperties is true. | Provide code to write the HTML output to a MemoryStream instead of a file while keeping CSS custom properties enabled. | Explain how to combine EnableCssCustomProperties with ExportImagesAsBase64 and other HtmlSaveOptions for advanced HTML export control.
+// Title: Convert an Excel workbook to HTML with embedded Base64 images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and saves it as an HTML file while embedding all worksheet images as data URI strings. | Show how to set the HtmlSaveOptions flag that causes images to be emitted as inline Base64 strings for reuse in the generated HTML. | Provide a minimal example that uses default HtmlSaveOptions settings except for Base64 image export to produce an HTML file from a workbook.
+// Common Searches: Aspose.Cells C# export Excel to HTML with images embedded as Base64 data URIs | How to enable image reuse via CSS custom properties when converting Excel to HTML with Aspose.Cells | Saving a workbook as HTML using default options and Base64 images in .NET | Embedding worksheet pictures in HTML output from Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | C# Excel to HTML conversion with embedded images | default HTML save options Aspose.Cells | CSS custom properties for image reuse Aspose.Cells | save workbook as HTML Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// The program loads an Excel workbook from 'input.xlsx', configures HtmlSaveOptions with ExportImagesAsBase64 set to true to embed worksheet images as Base64 strings, and saves the workbook as 'output.html' using the default HTML conversion settings.
+class Program
 {
-    // Loads an Excel workbook, creates default HtmlSaveOptions, enables EnableCssCustomProperties to reuse images via a single base64 CSS variable, and saves the result as an HTML file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Path to the source Excel file
-            string sourcePath = "input.xlsx";
+        // Load the Excel workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the workbook from the file system
-            Workbook workbook = new Workbook(sourcePath);
+        // Configure HTML save options with default settings
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Create HTML save options with default settings
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        // Enable CSS custom properties for image reuse by embedding images as Base64 strings
+        htmlOptions.ExportImagesAsBase64 = true;
 
-            // Enable CSS custom properties to allow image reuse via a single base64 definition
-            htmlOptions.EnableCssCustomProperties = true;
-
-            // Path for the generated HTML file
-            string outputPath = "output.html";
-
-            // Save the workbook as HTML using the configured options
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook successfully converted to HTML with CSS custom properties enabled: {outputPath}");
-        }
+        // Save the workbook as an HTML file using the configured options
+        workbook.Save("output.html", htmlOptions);
     }
 }

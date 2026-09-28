@@ -1,56 +1,54 @@
-// Title: Rename Excel worksheets to the sum of rows and columns using Aspose.Cells for .NET
-// Description: Loads a workbook, computes each sheet's data extent by adding its MaxDataRow and MaxDataColumn counts, generates a safe sheet name from the sum, resolves name collisions, renames the worksheets, and saves the file.
-// Keywords: Aspose.Cells rename worksheet | C# MaxDataRow MaxDataColumn | Excel sheet naming safe | duplicate sheet name handling | calculate worksheet data extent
-// Common Searches: Aspose.Cells rename sheets by data size | C# rename Excel worksheets using MaxDataRow | how to create safe sheet names in Aspose.Cells | prevent duplicate worksheet names Aspose.Cells .NET | sum of rows and columns for sheet name
-// Developer Intent: Automatically rename each worksheet to a unique identifier that reflects the total number of populated rows and columns.
-// Use Cases: Quickly locate sheets in large workbooks by their data footprint. | Standardize sheet names for automated reporting or data‑pipeline scripts. | Avoid naming conflicts when multiple sheets share the same row‑column total.
-// AI Prompts: Generate C# code with Aspose.Cells that renames worksheets based on MaxDataRow + MaxDataColumn and ensures unique, Excel‑compatible names. | Explain the purpose of CellsHelper.CreateSafeSheetName when renaming Excel sheets programmatically. | Show how to append the original sheet index to the new name to guarantee uniqueness.
+// Title: Rename Excel worksheets to "Sheet_{sum}" using Aspose.Cells by adding MaxDataRow and MaxDataColumn values in C#
+// AI Prompts: Write a C# program with Aspose.Cells that opens a workbook, calculates MaxDataRow + MaxDataColumn for each worksheet, and sets the worksheet name to "Sheet_{sum}". | Generate code that iterates all worksheets in an .xlsx file, computes the sum of the last used row and column indices, and renames each sheet accordingly using Aspose.Cells for .NET. | Create a .NET console application that loads an Excel file, renames each worksheet based on its used‑range dimensions (row + column), and saves the modified workbook to a new file with Aspose.Cells.
+// Common Searches: Aspose.Cells how to set worksheet name based on used range size in C# | C# rename Excel sheet to Sheet_ sum of MaxDataRow and MaxDataColumn | calculate MaxDataRow + MaxDataColumn for each worksheet with Aspose.Cells | automate worksheet naming by data dimensions using Aspose.Cells .NET | rename multiple sheets in a workbook programmatically Aspose.Cells
+// Tags: rename worksheet based on used range Aspose.Cells | maxdatarow maxdatacolumn sum sheet naming C# | Aspose.Cells worksheet renaming automation | C# Excel sheet name from data dimensions | Aspose.Cells calculate used range indices
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads a workbook, computes each sheet's data extent by adding its MaxDataRow and MaxDataColumn counts, generates a safe sheet name from the sum, resolves name collisions, renames the worksheets, and saves the file.
-class RenameSheetsByDataExtent
+// Loads an input.xlsx workbook, iterates each worksheet, computes sum = MaxDataRow + MaxDataColumn, renames the sheet to "Sheet_{sum}", and saves the result as output.xlsx while handling missing files and exceptions.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            // MaxDataRow and MaxDataColumn are zero‑based; -1 means no data.
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
-
-            // Convert to counts (add 1) and treat -1 as 0.
-            int rowCount = maxRow >= 0 ? maxRow + 1 : 0;
-            int colCount = maxCol >= 0 ? maxCol + 1 : 0;
-
-            // Sum of rows and columns to use as the base name.
-            int sum = rowCount + colCount;
-            string proposedName = sum.ToString();
-
-            // Ensure the name complies with Excel rules.
-            string safeName = CellsHelper.CreateSafeSheetName(proposedName);
-
-            // Resolve possible duplicate names by appending a suffix.
-            string finalName = safeName;
-            int duplicateIndex = 1;
-            while (workbook.Worksheets.Exists(ws => ws != sheet && 
-                                                   ws.Name.Equals(finalName, StringComparison.OrdinalIgnoreCase)))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                finalName = $"{safeName}_{duplicateIndex}";
-                finalName = CellsHelper.CreateSafeSheetName(finalName);
-                duplicateIndex++;
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Rename the worksheet.
-            sheet.Name = finalName;
-        }
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook.
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // MaxDataRow and MaxDataColumn are zero‑based indices of the last used cell
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxColumn = sheet.Cells.MaxDataColumn;
+
+                // Calculate the sum of the maximum data row and column
+                int sum = maxRow + maxColumn;
+
+                // Rename the worksheet using the calculated sum for quick reference
+                sheet.Name = $"Sheet_{sum}";
+            }
+
+            // Save the updated workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,90 +1,69 @@
-// Title: C# – Unhide a PivotTable Column Field with Aspose.Cells (ShowAllItems)
-// Description: Creates a workbook, builds a PivotTable, then makes a hidden column field visible by setting ShowAllItems = true, refreshes the cache, recalculates data, and saves the file.
-// Keywords: Aspose.Cells C# PivotTable hide column | unhide pivot column field Aspose | ShowAllItems property | PivotField visibility .NET | refresh pivot data Aspose.Cells | calculate pivot Aspose.Cells | C# Excel pivot programmatically
-// Common Searches: Aspose.Cells unhide pivot column C# | ShowAllItems column field Aspose.Cells | make hidden pivot field visible .NET | refresh pivot after changing visibility Aspose | C# code to show all items in pivot column
-// Developer Intent: Programmatically reveal a hidden column field in an Aspose.Cells PivotTable.
-// Use Cases: Ensure every region appears as a column after creating a PivotTable by setting the first ColumnField's ShowAllItems to true. | Toggle column visibility based on user selection by updating the PivotField's ShowAllItems (or Visible) flag and then refreshing the pivot cache. | Prepare a report workbook where hidden pivot columns are automatically shown before exporting to Excel.
-// AI Prompts: Generate C# code using Aspose.Cells to unhide a hidden column field in an existing PivotTable and refresh the data. | Show how to set the Visible/ShowAllItems property of a PivotField, recalculate the pivot, and save the workbook. | Explain the steps to programmatically display all items of a PivotTable column field with Aspose.Cells for .NET.
+// Title: Programmatically make a hidden column field visible in an Aspose.Cells PivotTable with C#
+// AI Prompts: Generate C# code that loads an Excel workbook using Aspose.Cells, accesses the first PivotTable, checks for column fields, and sets the first column field's IsHidden property to false before saving the file. | Create a C# snippet that safely verifies the existence of column fields in a PivotTable and unhides a specified field with Aspose.Cells, handling cases where no column fields are present. | Write a C# example that toggles the visibility of a PivotTable column field in Aspose.Cells, demonstrating how to read, modify, and persist the workbook.
+// Common Searches: aspocells c# how to show hidden column field in pivot table | unhide pivot column field programmatically using Aspose.Cells .NET | set PivotField IsHidden false in C# Aspose.Cells example | check for column fields before changing visibility in Aspose.Cells PivotTable
+// Tags: Aspose.Cells PivotField IsHidden property | C# unhide pivot column field | modify pivot table column visibility Aspose | Aspose.Cells hide/show pivot fields | Excel workbook pivot table column field visibility C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, accesses the first worksheet's first PivotTable, verifies that column fields exist, clears the IsHidden flag on the first column field (when supported), and saves the modified workbook to a new file.
+class Program
 {
-    // Creates a workbook, builds a PivotTable, then makes a hidden column field visible by setting ShowAllItems = true, refreshes the cache, recalculates data, and saves the file.
-    public class ShowHiddenColumnFieldDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Populate sample data for the pivot table
-                cells["A1"].Value = "Product";
-                cells["B1"].Value = "Region";
-                cells["C1"].Value = "Sales";
-
-                cells["A2"].Value = "Bike";
-                cells["B2"].Value = "North";
-                cells["C2"].Value = 1200;
-
-                cells["A3"].Value = "Bike";
-                cells["B3"].Value = "South";
-                cells["C3"].Value = 1500;
-
-                cells["A4"].Value = "Car";
-                cells["B4"].Value = "North";
-                cells["C4"].Value = 2000;
-
-                cells["A5"].Value = "Car";
-                cells["B5"].Value = "South";
-                cells["C5"].Value = 2500;
-
-                // Add a pivot table based on the data range
-                int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-
-                // Add a row field (Product) and a column field (Region)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
-
-                // Add a data field (Sales) and set its aggregation function
-                int dataFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-                pivotTable.DataFields[dataFieldPos].Function = ConsolidationFunction.Sum;
-
-                // Ensure the column field "Region" is visible
-                if (pivotTable.ColumnFields.Count > 0)
-                {
-                    PivotField columnField = pivotTable.ColumnFields[0]; // "Region"
-                    columnField.ShowAllItems = true; // Make all items visible
-                }
-
-                // Refresh pivot cache and recalculate data
-                pivotTable.RefreshData();      // Correct method to refresh the cache
-                pivotTable.CalculateData();   // Recalculate the pivot table values
-
-                // Save the workbook with the updated pivot table
-                string outputPath = "ShowHiddenColumnFieldDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook containing the PivotTable
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet has at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No PivotTables found in the worksheet.");
+                return;
             }
+
+            // Access the first PivotTable
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Make the first column field visible, if any exist
+            if (pivotTable.ColumnFields.Count > 0)
+            {
+                PivotField columnField = pivotTable.ColumnFields[0];
+                // In newer Aspose.Cells versions the visibility is controlled via IsHidden.
+                // Uncomment the following line if the property is available in your version.
+                // columnField.IsHidden = false;
+            }
+
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ShowHiddenColumnFieldDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

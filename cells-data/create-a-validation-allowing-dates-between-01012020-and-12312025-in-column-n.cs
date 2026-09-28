@@ -1,65 +1,45 @@
-// Title: Aspose.Cells .NET: Add date‑range validation to column N (rows 1‑1000) for 2020‑2025
-// Description: Creates a new workbook, defines a CellArea covering column N (index 13) rows 1‑1000, and adds a Validation of type Date with the Between operator. The rule limits entries to 01/01/2020 – 12/31/2025, includes custom input and error messages, and saves the file as DateValidationColumnN.xlsx.
-// Keywords: Aspose.Cells | C# | date validation | Excel column N | date range 2020 2025 | Data validation API | CellArea | ValidationType.Date | OperatorType.Between | input message | error message
-// Common Searches: Aspose.Cells set date validation for column N | C# add Excel date range validation 2020 to 2025 | How to restrict Excel column to specific dates using Aspose.Cells | Aspose.Cells data validation with custom messages | Create date validation for a column in .NET
-// Developer Intent: Add a data‑validation rule that permits only dates between 01/01/2020 and 12/31/2025 in column N of an Excel worksheet using Aspose.Cells for .NET.
-// Use Cases: Ensure financial reports use only allowed fiscal periods by limiting column N to 2020‑2025 dates. | Prevent entry errors in a data‑entry template where column N stores transaction dates. | Provide users with clear guidance and error feedback when entering dates in Excel files generated programmatically.
-// AI Prompts: Show how to replace the fixed dates with a dynamic range based on the current date in Aspose.Cells. | Generate C# code that applies the same 2020‑2025 date validation to columns N, O, and P. | Explain how to localize the input and error messages for multiple cultures in Aspose.Cells validation.
+// Title: Add date‑range validation (01/01/2020‑12/31/2025) to column N rows 1‑1000 using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a workbook and applies a 'Between' date validation to column N (rows 1‑1000) with lower bound 01/01/2020 and upper bound 12/31/2025. | Show how to configure custom input and error messages for a date validation rule on a specific worksheet column using Aspose.Cells in C#. | Generate a complete example that saves the workbook as an .xlsx file after adding the date validation to column N.
+// Common Searches: Aspose.Cells C# set date validation for column N between 2020 and 2025 | How to restrict Excel column N to dates from Jan 1 2020 to Dec 31 2025 using Aspose.Cells | C# Aspose.Cells add data validation with between operator for a specific column range
+// Tags: Aspose.Cells date validation between dates | C# column N validation Aspose.Cells | CellArea range validation .NET | Excel date range restriction Aspose.Cells | Custom input error messages Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDateValidationExample
 {
-    // Creates a new workbook, defines a CellArea covering column N (index 13) rows 1‑1000, and adds a Validation of type Date with the Between operator. The rule limits entries to 01/01/2020 – 12/31/2025, includes custom input and error messages, and saves the file as DateValidationColumnN.xlsx.
-    public class DateValidationInColumnN
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Define the range for column N (index 13) from row 1 to row 1000
-                // CellArea uses zero‑based indexes: startRow = 0, startColumn = 13, endRow = 999, endColumn = 13
-                CellArea validationArea = CellArea.CreateCellArea(0, 13, 999, 13);
-
-                // Add a new validation to the worksheet for the defined area
-                int validationIndex = worksheet.Validations.Add(validationArea);
-                Validation validation = worksheet.Validations[validationIndex];
-
-                // Configure the validation to allow only dates between 01/01/2020 and 12/31/2025
-                validation.Type = ValidationType.Date;                     // Date validation
-                validation.Operator = OperatorType.Between;               // Between operator
-                validation.Formula1 = "01/01/2020";                       // Lower bound
-                validation.Formula2 = "12/31/2025";                       // Upper bound
-
-                // Optional: user messages
-                validation.InputTitle = "Enter a date";
-                validation.InputMessage = "Date must be between 01/01/2020 and 12/31/2025.";
-                validation.ErrorTitle = "Invalid Date";
-                validation.ErrorMessage = "The entered date is outside the allowed range.";
-                validation.ShowInput = true;
-                validation.ShowError = true;
-
-                // Save the workbook
-                workbook.Save("DateValidationColumnN.xlsx");
-                Console.WriteLine("Workbook saved as DateValidationColumnN.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
+    // Creates a new workbook, defines a CellArea covering rows 1‑1000 of column N, adds a date validation of type 'Between' with bounds 01/01/2020 and 12/31/2025, sets user‑friendly input and error titles/messages, and saves the file as DateValidationColumnN.xlsx.
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            DateValidationInColumnN.Run();
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define the range for column N (index 13) from row 1 to row 1000 (0‑based indices)
+            CellArea dateValidationArea = CellArea.CreateCellArea(0, 13, 999, 13);
+
+            // Add a data validation to the worksheet for the defined area
+            int validationIndex = worksheet.Validations.Add(dateValidationArea);
+            Validation dateValidation = worksheet.Validations[validationIndex];
+
+            // Configure the validation to allow dates between 01/01/2020 and 12/31/2025
+            dateValidation.Type = ValidationType.Date;                     // Date validation type
+            dateValidation.Operator = OperatorType.Between;                // Between operator
+            dateValidation.Formula1 = "01/01/2020";                         // Lower bound
+            dateValidation.Formula2 = "12/31/2025";                         // Upper bound
+
+            // Optional: user-friendly messages
+            dateValidation.InputTitle = "Enter a Date";
+            dateValidation.InputMessage = "Please enter a date between 01/01/2020 and 12/31/2025.";
+            dateValidation.ErrorTitle = "Invalid Date";
+            dateValidation.ErrorMessage = "The date must be within the allowed range.";
+            dateValidation.ShowInput = true;
+            dateValidation.ShowError = true;
+
+            // Save the workbook to a file
+            workbook.Save("DateValidationColumnN.xlsx");
         }
     }
 }

@@ -4,7 +4,8 @@ description: C# examples for creating table and PivotTable slicers, connecting c
 product: Aspose.Cells for .NET
 category: slicer
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Create and Manage Excel Slicers in C# with Aspose.Cells for .NET

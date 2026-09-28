@@ -1,77 +1,75 @@
-// Title: Copy cell style between ranges using MemoryStream in Aspose.Cells for .NET (no file I/O)
-// Description: Demonstrates how to create a source workbook, apply a bold Calibri style with a light‑blue background to range A1:B1, save the workbook to a MemoryStream, load a new workbook from that stream, and copy the formatting to range C1:D1—all in C# without writing any files to disk.
-// Keywords: Aspose.Cells copy style | MemoryStream workbook .NET | range formatting transfer | C# Excel style copy | no disk I/O Aspose.Cells | in‑memory Excel processing | copy cell formatting between ranges
-// Common Searches: Aspose.Cells copy style between ranges without file | load workbook from MemoryStream C# | copy range formatting in memory Aspose.Cells | how to transfer Excel style using streams .NET | copy cell style without saving to disk
-// Developer Intent: Transfer the formatting of one cell range to another by loading workbooks from MemoryStream objects, eliminating any temporary file creation.
-// Use Cases: Generate a styled template in memory and reuse its header format across multiple worksheets. | Build an in‑memory report, then apply the same style to a different sheet without intermediate files. | Process uploaded Excel files in a web API, copying styles between sheets using only streams.
-// AI Prompts: Show C# code that copies a range's style to another range using Aspose.Cells with MemoryStream only. | Provide an Aspose.Cells example for transferring cell formatting between workbooks without creating temporary files. | Explain how SaveToStream and the Workbook(MemoryStream) constructor enable style copying in Aspose.Cells for .NET.
+// Title: Copy cell formatting between two equal-sized ranges after loading a workbook from a memory stream with Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook from a byte array using a MemoryStream and transfer the style from range A1:B2 to range D5:E6 without writing the file to disk. | Validate that the source and destination ranges have identical dimensions, then copy each cell's style from the source range to the destination range entirely in memory using Aspose.Cells.
+// Common Searches: asp.net copy cell style between ranges using Aspose.Cells memory stream | load Excel workbook from byte array and duplicate formatting in Aspose.Cells C# | how to transfer range formatting without saving workbook Aspose.Cells .NET | in‑memory range style copy Aspose.Cells example
+// Tags: copy cell style Aspose.Cells | load workbook from memory stream C# | in-memory range formatting Aspose.Cells | validate equal range dimensions Aspose.Cells
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a source workbook, apply a bold Calibri style with a light‑blue background to range A1:B1, save the workbook to a MemoryStream, load a new workbook from that stream, and copy the formatting to range C1:D1—all in C# without writing any files to disk.
+// The example loads an Excel file from a byte array via a MemoryStream, creates matching source and destination ranges, checks that their sizes match, and copies each cell's style from the source range to the destination range, all without persisting the workbook to disk.
 class Program
 {
     static void Main()
     {
         try
         {
-            // ------------------------------------------------------------
-            // 1. Create a source workbook and apply a style to a range.
-            // ------------------------------------------------------------
-            Workbook srcWorkbook = new Workbook();                     // create new workbook
-            Worksheet srcSheet = srcWorkbook.Worksheets[0];           // get first worksheet
+            // Obtain the Excel file as a byte array (could come from DB, network, etc.)
+            byte[] workbookData = GetWorkbookBytes();
 
-            // Add some sample data
-            srcSheet.Cells["A1"].PutValue("Header");
-            srcSheet.Cells["A2"].PutValue("Data");
-
-            // Define a style
-            Style srcStyle = srcWorkbook.CreateStyle();
-            srcStyle.Font.Name = "Calibri";
-            srcStyle.Font.Size = 12;
-            srcStyle.Font.IsBold = true;
-            srcStyle.ForegroundColor = Color.LightBlue;
-            srcStyle.Pattern = BackgroundType.Solid;
-
-            // Apply the style to source range A1:B1
-            Aspose.Cells.Range srcRange = srcSheet.Cells.CreateRange("A1:B1");
-            srcRange.SetStyle(srcStyle);
-
-            // ------------------------------------------------------------
-            // 2. Save the source workbook to a memory stream (xls format).
-            // ------------------------------------------------------------
-            using (MemoryStream memoryStream = srcWorkbook.SaveToStream())
+            // Load the workbook from a memory stream (no disk I/O)
+            using (MemoryStream ms = new MemoryStream(workbookData))
             {
-                memoryStream.Position = 0; // reset for reading
+                Workbook wb = new Workbook(ms);
 
-                // ------------------------------------------------------------
-                // 3. Load a new workbook from the memory stream.
-                // ------------------------------------------------------------
-                Workbook destWorkbook = new Workbook(memoryStream);
-                Worksheet destSheet = destWorkbook.Worksheets[0];
+                // Access the first worksheet
+                Worksheet ws = wb.Worksheets[0];
 
-                // ------------------------------------------------------------
-                // 4. Create a destination range and copy the style from source.
-                // ------------------------------------------------------------
-                Aspose.Cells.Range destRange = destSheet.Cells.CreateRange("C1:D1"); // same size as source range
-                destRange.CopyStyle(srcRange); // copy style
+                // Define source and destination ranges
+                // Example: copy style from A1:B2 to D5:E6
+                Aspose.Cells.Range srcRange = ws.Cells.CreateRange("A1", "B2");
+                Aspose.Cells.Range destRange = ws.Cells.CreateRange("D5", "E6");
 
-                // ------------------------------------------------------------
-                // 5. (Optional) Save the result to another memory stream – no disk I/O.
-                // ------------------------------------------------------------
-                using (MemoryStream outStream = new MemoryStream())
+                // Ensure both ranges have the same dimensions
+                if (srcRange.RowCount != destRange.RowCount ||
+                    srcRange.ColumnCount != destRange.ColumnCount)
                 {
-                    destWorkbook.Save(outStream, SaveFormat.Xlsx);
-                    // outStream now contains the workbook with the copied style.
+                    throw new InvalidOperationException("Source and destination ranges must be the same size.");
                 }
+
+                // Copy style cell by cell
+                for (int i = 0; i < srcRange.RowCount; i++)
+                {
+                    for (int j = 0; j < srcRange.ColumnCount; j++)
+                    {
+                        Cell srcCell = srcRange[i, j];
+                        Cell destCell = destRange[i, j];
+                        destCell.SetStyle(srcCell.GetStyle());
+                    }
+                }
+
+                // Workbook remains in memory; no saving to disk required
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to provide a sample workbook as a byte array.
+    // Replace with actual source of the Excel file in real usage.
+    static byte[] GetWorkbookBytes()
+    {
+        Workbook tempWb = new Workbook();
+        Worksheet ws = tempWb.Worksheets[0];
+        ws.Cells["A1"].PutValue("Header");
+        ws.Cells["A1"].GetStyle().Font.IsBold = true; // Apply a style to source cell
+
+        using (MemoryStream ms = new MemoryStream())
+        {
+            tempWb.Save(ms, SaveFormat.Xlsx);
+            return ms.ToArray();
         }
     }
 }

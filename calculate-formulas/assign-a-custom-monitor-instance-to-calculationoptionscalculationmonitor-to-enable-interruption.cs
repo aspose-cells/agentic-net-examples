@@ -1,71 +1,85 @@
-// Title: C# – Assign a Custom CalculationMonitor to CalculationOptions for Real‑Time Formula Tracking in Aspose.Cells
-// Description: Learn how to monitor and interrupt workbook formula calculations in Aspose.Cells for .NET by creating a class that inherits AbstractCalculationMonitor, overriding BeforeCalculate, AfterCalculate, and OnCircular, assigning it to CalculationOptions.CalculationMonitor, and calling Workbook.CalculateFormula with the custom options.
-// Keywords: Aspose.Cells | CalculationMonitor | CalculationOptions | AbstractCalculationMonitor | C# | .NET | formula calculation progress | interrupt calculation | circular reference handling | real‑time workbook monitoring | CalculateFormula
-// Common Searches: Aspose.Cells custom CalculationMonitor example | How to use AbstractCalculationMonitor in C# | Assign CalculationMonitor to CalculationOptions Aspose | Track formula calculation progress Aspose.Cells | Interrupt long running calculations Aspose.Cells .NET
-// Developer Intent: Implement a custom monitor to track, log, and optionally abort formula calculations by setting CalculationOptions.CalculationMonitor.
-// Use Cases: Log start and end of each cell calculation for performance analysis. | Detect and handle circular references during workbook evaluation. | Update UI elements such as progress bars or status messages in real time. | Provide a user‑controlled cancel option for large or complex workbooks.
-// AI Prompts: Create a SampleCalculationMonitor that stops calculation after 500 cells. | Show how to bind a WinForms ProgressBar to the BeforeCalculate and AfterCalculate callbacks. | Explain how to pause or cancel calculation based on a cancellation token supplied by the user.
+// Title: Assign a custom AbstractCalculationMonitor to CalculationOptions to log and interrupt formula calculation in Aspose.Cells (C#)
+// AI Prompts: Create a C# class that inherits from AbstractCalculationMonitor, logs sheet, row, and column before and after each cell calculation, and returns false to stop the calculation when a custom condition is met. | Show how to attach the custom monitor to a CalculationOptions instance and pass it to Workbook.CalculateFormula to enable monitoring and possible interruption of formula evaluation. | Demonstrate retrieving the calculated values from cells after the monitored calculation finishes, including proper exception handling.
+// Common Searches: how to use a custom calculation monitor with Aspose.Cells to stop long-running formula evaluation in C# | example of logging each cell calculation using AbstractCalculationMonitor in Aspose.Cells | C# code to attach CalculationOptions.CalculationMonitor for interrupting Excel formula calculation | handling circular reference notifications with a custom Aspose.Cells calculation monitor | monitoring workbook.CalculateFormula progress in .NET Aspose.Cells
+// Tags: custom AbstractCalculationMonitor Aspose.Cells C# | assign CalculationOptions.CalculationMonitor | interrupt formula calculation Aspose.Cells | log cell calculation events Aspose.Cells | handle circular references with AbstractCalculationMonitor
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationMonitorDemo
+namespace AsposeCellsExamples
 {
-    // Custom monitor to track formula calculation progress
-    // Learn how to monitor and interrupt workbook formula calculations in Aspose.Cells for .NET by creating a class that inherits AbstractCalculationMonitor, overriding BeforeCalculate, AfterCalculate, and OnCircular, assigning it to CalculationOptions.CalculationMonitor, and calling Workbook.CalculateFormula with the custom options.
+    // Demonstrates assigning a custom calculation monitor to CalculationOptions
+    // The example creates a workbook with simple formulas, defines a SampleCalculationMonitor that logs before and after each cell calculation by overriding AbstractCalculationMonitor methods, assigns this monitor to CalculationOptions.CalculationMonitor, runs workbook.CalculateFormula with the custom options, and prints the resulting cell values while demonstrating how the monitor can be used to interrupt or track formula evaluation.
+    public class CalculationMonitorDemo
+    {
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Set sample formulas that will be calculated
+                sheet.Cells["A1"].Formula = "=1+2";
+                sheet.Cells["A2"].Formula = "=A1*3";
+                sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+
+                // Create calculation options and attach a custom monitor
+                CalculationOptions options = new CalculationOptions
+                {
+                    CalculationMonitor = new SampleCalculationMonitor()
+                };
+
+                // Perform formula calculation with monitoring enabled
+                workbook.CalculateFormula(options);
+
+                // Output the calculated values
+                Console.WriteLine("A1: " + sheet.Cells["A1"].Value);
+                Console.WriteLine("A2: " + sheet.Cells["A2"].Value);
+                Console.WriteLine("A3: " + sheet.Cells["A3"].Value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred during calculation: " + ex.Message);
+            }
+        }
+    }
+
+    // Custom monitor that logs before and after each cell calculation
     public class SampleCalculationMonitor : AbstractCalculationMonitor
     {
-        // Called before each cell is calculated
         public override void BeforeCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            Console.WriteLine($"Before calculation: Sheet{sheetIndex}, Row{rowIndex}, Column{columnIndex}");
+            Console.WriteLine($"Before calculation: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
         }
 
-        // Called after each cell is calculated
         public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
         {
-            Console.WriteLine($"After calculation: Sheet{sheetIndex}, Row{rowIndex}, Column{columnIndex}");
-            Console.WriteLine($"Original Value: {OriginalValue}, Calculated Value: {CalculatedValue}, Value Changed: {ValueChanged}");
+            Console.WriteLine($"After calculation: Sheet{sheetIndex}, Row{rowIndex}, Col{columnIndex}");
         }
 
-        // Handle circular references if needed
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            Console.WriteLine("Circular reference detected.");
+            // Use default handling for circular references
             return base.OnCircular(circularCellsData);
         }
     }
 
-    class Program
+    // Entry point for the application
+    public class Program
     {
-        static void Main()
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Set sample formulas
-            worksheet.Cells["A1"].Formula = "=1+2";
-            worksheet.Cells["A2"].Formula = "=A1*3";
-            worksheet.Cells["A3"].Formula = "=SUM(A1:A2)";
-
-            // Create calculation options and assign the custom monitor
-            CalculationOptions options = new CalculationOptions
+            try
             {
-                CalculationMonitor = new SampleCalculationMonitor()
-            };
-
-            // Perform calculation with monitoring
-            workbook.CalculateFormula(options);
-
-            // Output the results
-            Console.WriteLine($"A1: {worksheet.Cells["A1"].Value}");
-            Console.WriteLine($"A2: {worksheet.Cells["A2"].Value}");
-            Console.WriteLine($"A3: {worksheet.Cells["A3"].Value}");
-
-            // Save the workbook (optional)
-            workbook.Save("CalculationMonitorResult.xlsx");
+                CalculationMonitorDemo.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Unhandled exception: " + ex.Message);
+            }
         }
     }
 }

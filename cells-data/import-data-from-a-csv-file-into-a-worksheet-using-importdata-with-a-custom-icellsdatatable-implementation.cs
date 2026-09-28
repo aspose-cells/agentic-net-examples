@@ -1,19 +1,17 @@
-// Title: C# – Import CSV into an Aspose.Cells worksheet with a custom ICellsDataTable
-// Description: Read a CSV file, split each line into an object array, build an ICellsDataTable via CellsDataTableFactory, and import the data into the first worksheet using Cells.ImportData. The workbook is then saved as an XLSX file.
-// Keywords: Aspose.Cells | C# | CSV import | ICellsDataTable | ImportData | CellsDataTableFactory | ArrayList | Workbook | ImportTableOptions | Excel generation
-// Common Searches: Aspose.Cells import CSV C# example | How to use ICellsDataTable with ImportData | Create custom ICellsDataTable from collection | Import CSV data into Aspose.Cells worksheet | C# read CSV and load into Excel using Aspose
-// Developer Intent: Load CSV content into an Excel worksheet by converting rows to a custom ICellsDataTable and calling ImportData.
-// Use Cases: Convert a comma‑delimited CSV file into an Excel workbook with a single ImportData call. | Reuse the same ICellsDataTable to populate multiple worksheets in one workbook. | Import CSV data while optionally skipping the header row or customizing column widths via ImportTableOptions.
-// AI Prompts: Generate C# code that reads a semicolon‑delimited CSV, builds an ICellsDataTable, and imports it using custom ImportTableOptions for column widths. | Show how to exclude the first row (header) when creating the ICellsDataTable and then import the remaining rows. | Provide a snippet that imports the same CSV data into three worksheets, each starting at a different cell address.
+// Title: Import CSV file into an Aspose.Cells worksheet using a custom ICellsDataTable in C#
+// AI Prompts: Write C# code that reads a CSV file, parses numeric values, stores each row in an ArrayList, creates an ICellsDataTable via CellsDataTableFactory, and imports it into the first worksheet with ImportData. | Show how to build a custom ICellsDataTable from CSV data and save the resulting workbook as an XLSX file using Aspose.Cells. | Demonstrate configuring ImportTableOptions (default settings) when importing a custom data table into an Aspose.Cells worksheet.
+// Common Searches: c# aspocells import csv using custom icellsdatatable | how to use CellsDataTableFactory to import csv data into an Excel workbook | import csv with numeric conversion to Aspose.Cells worksheet c# | Aspose.Cells ImportData from ArrayList example
+// Tags: custom ICellsDataTable CSV import Aspose.Cells | CellsDataTableFactory usage for worksheet data loading | numeric parsing of CSV fields in C# Excel export | ImportTableOptions default configuration Aspose.Cells | ArrayList source for worksheet ImportData
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvImport
+namespace AsposeCellsCsvImportExample
 {
-    // Read a CSV file, split each line into an object array, build an ICellsDataTable via CellsDataTableFactory, and import the data into the first worksheet using Cells.ImportData. The workbook is then saved as an XLSX file.
+    // The example reads a CSV file, splits each line into fields, converts numeric strings to int or double, stores rows in ArrayLists, creates a custom ICellsDataTable via Workbook.CellsDataTableFactory.GetInstance, imports the table into the first worksheet at cell A1 using Cells.ImportData, and saves the workbook as an XLSX file.
     class Program
     {
         static void Main()
@@ -24,30 +22,45 @@ namespace AsposeCellsCsvImport
             // Read all lines from the CSV file
             string[] lines = File.ReadAllLines(csvPath);
 
-            // Prepare a collection that will hold each row as an object array
+            // Prepare a collection where each item represents a row of the CSV.
+            // Using ArrayList to match the expected type for CellsDataTableFactory.
             ArrayList dataLists = new ArrayList();
 
             foreach (string line in lines)
             {
                 // Split the line by comma (you can change the delimiter if needed)
-                string[] parts = line.Split(',');
+                string[] fields = line.Split(',');
 
-                // Convert the string parts to an object array and add to the collection
-                dataLists.Add(parts);
+                // Convert the string array to an object array and store it in an ArrayList
+                ArrayList row = new ArrayList();
+                foreach (string field in fields)
+                {
+                    // Try to parse numeric values; otherwise keep as string
+                    if (int.TryParse(field, out int intVal))
+                        row.Add(intVal);
+                    else if (double.TryParse(field, out double doubleVal))
+                        row.Add(doubleVal);
+                    else
+                        row.Add(field);
+                }
+
+                dataLists.Add(row);
             }
 
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook (lifecycle: create)
             Workbook workbook = new Workbook();
 
-            // Build an ICellsDataTable from the collection (custom data table)
+            // Build a custom ICellsDataTable from the CSV data (using the factory)
             ICellsDataTable dataTable = workbook.CellsDataTableFactory.GetInstance(dataLists, true);
 
-            // Import the data table into the first worksheet starting at cell A1
+            // Import the custom data table into the first worksheet starting at cell A1
             // ImportTableOptions can be customized; using defaults here
             workbook.Worksheets[0].Cells.ImportData(dataTable, 0, 0, new ImportTableOptions());
 
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("ImportedFromCsv.xlsx");
+            // Save the workbook (lifecycle: save)
+            workbook.Save("ImportedFromCsv.xlsx", SaveFormat.Xlsx);
+
+            Console.WriteLine("CSV data has been imported and saved to 'ImportedFromCsv.xlsx'.");
         }
     }
 }

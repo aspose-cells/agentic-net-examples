@@ -1,10 +1,7 @@
-// Title: Read Excel cell comments with Aspose.Cells LightCells API and export to JSON (C#)
-// Description: Loads an XLSX workbook using Aspose.Cells LightCells, scans every worksheet's used range, extracts each comment's author, note and cell address (A1 notation), and writes the collection to a formatted JSON file while handling missing files and creating the output folder automatically.
-// Keywords: Aspose.Cells LightCells read comments | C# extract Excel comments | export Excel comments to JSON | cell notes extraction Aspose | Aspose.Cells comment API | Excel documentation JSON
-// Common Searches: how to read cell comments with Aspose.Cells C# | export Excel comments as JSON using Aspose | Aspose.Cells LightCells comment extraction example | C# code to list all worksheet comments in JSON
-// Developer Intent: Retrieve every comment from an Excel workbook and save the details (sheet, cell, author, note) into a JSON document.
-// Use Cases: Create a searchable documentation file of all annotations in a financial model. | Migrate legacy Excel comment data into a JSON‑based issue tracker or knowledge base. | Capture a snapshot of worksheet notes before performing bulk data processing.
-// AI Prompts: Generate C# code that uses Aspose.Cells LightCells to read all cell comments and output a JSON array with sheet name, cell address, author, and note. | Add robust error handling for missing input files, permission errors, and empty comment collections when exporting to JSON. | Show how to ensure the output directory exists and format the JSON with indentation for readability.
+// Title: Read Excel cell comments with Aspose.Cells LightCells API and export them to a formatted JSON file using C#
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells LightCells, iterates all worksheets, extracts each cell's comment text, and writes the results to an indented JSON document. | Modify the sample to include the comment author and timestamp in the JSON output while preserving the existing sheet name and address fields. | Create a reusable C# method that accepts a workbook path and returns a JSON string containing comment details (sheet, address, text, author, date) extracted via LightCells.
+// Common Searches: how to extract cell comments from an Excel file using Aspose.Cells LightCells in C# | C# Aspose.Cells read comments and save as JSON for documentation | export Excel worksheet comments to JSON with LightCells API | Aspose.Cells LightCells iterate cells and get comment note in C# | serialize Excel cell notes to JSON file using Aspose.Cells
+// Tags: Aspose.Cells LightCells comment extraction | convert Excel comments to JSON C# | read cell notes Aspose.Cells | serialize worksheet comments | C# workbook comment documentation
 
 using System;
 using System.Collections.Generic;
@@ -12,85 +9,71 @@ using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-// Loads an XLSX workbook using Aspose.Cells LightCells, scans every worksheet's used range, extracts each comment's author, note and cell address (A1 notation), and writes the collection to a formatted JSON file while handling missing files and creating the output folder automatically.
+// Model to hold comment information
+// The example loads an Excel workbook, walks through each worksheet and its used cells, captures any cell comments into a simple model (sheet name, address, and comment text), serializes the collection to an indented JSON string, and writes it to a file, with basic error handling for missing files and runtime exceptions.
+class CommentInfo
+{
+    public string SheetName { get; set; }
+    public string Address { get; set; }
+    public string Text { get; set; }
+}
+
 class Program
 {
     static void Main()
     {
-        // Input Excel file containing comments
-        string inputPath = "CommentsDemo.xlsx";
-
-        // Output JSON file that will store extracted comments
-        string jsonPath = "comments.json";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
         try
         {
-            // Load the workbook (read‑only mode is not required; simply load the file)
-            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "comments.json";
 
-            // Collection to hold comment information
-            var commentInfos = new List<object>();
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Iterate through all worksheets
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Collect comments from all worksheets
+            var comments = new List<CommentInfo>();
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Get the used range of the worksheet
+                // Iterate through all cells that contain data
                 var cells = sheet.Cells;
-                int startRow = cells.MinRow;
-                int startColumn = cells.MinColumn;
-                int endRow = cells.MaxRow;
-                int endColumn = cells.MaxColumn;
+                int maxRow = cells.MaxDataRow;
+                int maxColumn = cells.MaxDataColumn;
 
-                // Iterate through each cell in the used range
-                for (int row = startRow; row <= endRow; row++)
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    for (int col = startColumn; col <= endColumn; col++)
+                    for (int col = 0; col <= maxColumn; col++)
                     {
-                        // Retrieve comment for the current cell (if any)
-                        Comment comment = sheet.Comments[row, col];
-                        if (comment != null)
+                        var cell = cells[row, col];
+                        if (cell?.Comment != null && !string.IsNullOrEmpty(cell.Comment.Note))
                         {
-                            // Convert row/column indices to Excel cell name (e.g., "A1")
-                            string cellName = CellsHelper.CellIndexToName(row, col);
-
-                            // Store desired comment details
-                            commentInfos.Add(new
+                            comments.Add(new CommentInfo
                             {
-                                Sheet = sheet.Name,
-                                Cell = cellName,
-                                Author = comment.Author,
-                                Note = comment.Note
+                                SheetName = sheet.Name,
+                                Address = cell.Name,
+                                Text = cell.Comment.Note
                             });
                         }
                     }
                 }
             }
 
-            // Serialize the comment collection to formatted JSON
-            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(commentInfos, jsonOptions);
+            // Serialize comments to JSON with indentation
+            var json = JsonSerializer.Serialize(comments, new JsonSerializerOptions { WriteIndented = true });
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(jsonPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
-            // Write JSON to the output file
-            File.WriteAllText(jsonPath, json);
-            Console.WriteLine($"Comments extracted successfully to '{jsonPath}'.");
+            // Write JSON to a file
+            File.WriteAllText(outputPath, json);
+            Console.WriteLine($"Comments extracted and saved to {outputPath}");
         }
         catch (Exception ex)
         {
+            // Log unexpected errors
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

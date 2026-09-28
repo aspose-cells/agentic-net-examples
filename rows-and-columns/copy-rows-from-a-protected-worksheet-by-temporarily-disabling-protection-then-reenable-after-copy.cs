@@ -1,51 +1,83 @@
-// Title: Copy Rows in a Protected Worksheet with Aspose.Cells for .NET – Unprotect, Copy, Re‑protect
-// Description: Load a workbook, detect if the first worksheet is locked, temporarily unprotect it with a known password, copy a range of rows using Cells.CopyRows, then restore full protection before saving the file.
-// Keywords: Aspose.Cells copy rows protected sheet | C# unprotect worksheet Aspose.Cells | Cells.CopyRows example | reapply worksheet protection .NET | temporary sheet unprotect Aspose.Cells | protect type all Aspose.Cells | copy rows between indices C# | workbook manipulation Aspose.Cells | protected worksheet operations | Aspose.Cells .NET API
-// Common Searches: how to copy rows from a protected sheet using Aspose.Cells | unprotect worksheet programmatically Aspose.Cells C# | Cells.CopyRows source and destination indices example | re‑apply protection after modifying a worksheet Aspose.Cells | copy rows in a locked Excel file with Aspose.Cells
-// Developer Intent: Temporarily disable protection, copy rows, then restore protection.
-// Use Cases: Duplicate header rows in a locked template while keeping the sheet secured. | Move or replicate data rows in a protected financial report before generating a new version. | Create a copy of specific rows in a password‑protected workbook for audit purposes without altering protection settings.
-// AI Prompts: Generate C# code that uses Aspose.Cells to unprotect a worksheet, copy a set of rows with Cells.CopyRows, and re‑apply full protection. | Explain step‑by‑step how to handle password‑protected worksheets when copying rows in Aspose.Cells for .NET. | Create a reusable method that accepts source row range, destination index, and password to copy rows in a protected sheet using Aspose.Cells.
+// Title: Copy rows from a password‑protected Excel worksheet by temporarily disabling protection using Aspose.Cells for .NET
+// AI Prompts: Write C# code that checks whether a worksheet has a password, removes its protection, copies a specified block of rows to another sheet, and then restores the original protection settings with the same password via Aspose.Cells. | Create a reusable C# method that takes source and destination worksheet names, start row, and row count, automatically handles unprotecting and re‑protecting the source sheet while copying rows using Aspose.Cells.
+// Common Searches: Aspose.Cells how to copy rows from a protected worksheet in C# | temporarily unprotect Excel sheet to copy rows using Aspose.Cells .NET | preserve worksheet password after copying rows with Aspose.Cells | C# copy rows between worksheets while keeping sheet protection | unprotect and protect worksheet programmatically Aspose.Cells example
+// Tags: copy rows Aspose.Cells .NET | unprotect worksheet Aspose.Cells | protect worksheet after copy Aspose.Cells | password protected Excel sheet handling Aspose.Cells | copy rows between worksheets C# Aspose.Cells | temporary worksheet unprotection Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowCopyProtected
+namespace AsposeCellsExamples
 {
-    // Load a workbook, detect if the first worksheet is locked, temporarily unprotect it with a known password, copy a range of rows using Cells.CopyRows, then restore full protection before saving the file.
-    class Program
+    // The example loads an Excel workbook, temporarily removes protection from the first worksheet (handling both password‑protected and unprotected cases), copies a defined range of rows to a newly added worksheet, then reapplies the original protection settings and saves the updated file.
+    public class CopyRowsFromProtectedWorksheet
     {
-        static void Main()
+        public static void Run()
         {
-            // Path to the source workbook (must exist)
-            string inputPath = "input.xlsx";
-            // Path for the resulting workbook
-            string outputPath = "output.xlsx";
-
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet (assumed to be protected)
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Password used for protection (must match the existing one)
-            string password = "pwd";
-
-            // Temporarily remove protection if the sheet is protected
-            if (sheet.IsProtected)
+            try
             {
-                // Unprotect using the known password
-                sheet.Unprotect(password);
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
+
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+                // Load the workbook containing the protected worksheet
+                Workbook workbook = new Workbook(inputPath);
+
+                // Source (protected) worksheet
+                Worksheet sourceSheet = workbook.Worksheets[0];
+
+                // Destination worksheet for copied rows
+                Worksheet destSheet = workbook.Worksheets.Add("CopiedRows");
+
+                // Preserve original protection settings
+                Protection originalProtection = sourceSheet.Protection;
+
+                // Determine if the worksheet is password‑protected
+                bool isPasswordProtected = !string.IsNullOrEmpty(originalProtection.Password);
+                string password = originalProtection.Password;
+
+                // Unprotect the source worksheet
+                if (isPasswordProtected)
+                    sourceSheet.Unprotect(password);
+                else
+                    sourceSheet.Unprotect();
+
+                // Define rows to copy (example: rows 0‑4)
+                int sourceStartRow = 0;   // zero‑based index
+                int rowsToCopy = 5;       // number of rows
+                int destStartRow = 0;     // destination start row
+
+                // Copy rows from source to destination
+                destSheet.Cells.CopyRows(sourceSheet.Cells, sourceStartRow, destStartRow, rowsToCopy);
+
+                // Re‑apply protection to the source worksheet
+                if (isPasswordProtected)
+                    sourceSheet.Protect(ProtectionType.All, password, null);
+                else
+                    sourceSheet.Protect(ProtectionType.All);
+
+                // Restore any additional protection options
+                sourceSheet.Protection.Copy(originalProtection);
+
+                // Save the workbook with the copied rows
+                workbook.Save(outputPath);
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            // Example: copy the first three rows (0,1,2) to start at row index 5 (rows 5,6,7)
-            // CopyRows(sourceCells, sourceRowIndex, destinationRowIndex, rowNumber)
-            sheet.Cells.CopyRows(sheet.Cells, 0, 5, 3);
-
-            // Re‑apply protection with the same password and all protection types
-            sheet.Protect(ProtectionType.All, password, null);
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
+    // Application entry point
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CopyRowsFromProtectedWorksheet.Run();
         }
     }
 }

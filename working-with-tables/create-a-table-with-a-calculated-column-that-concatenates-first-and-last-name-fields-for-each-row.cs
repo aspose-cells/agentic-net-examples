@@ -1,17 +1,14 @@
-// Title: Add a Calculated FullName Column to an Excel Table with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, defines a ListObject with FirstName and LastName fields, expands the table, adds a FullName column, and applies a structured‑reference formula (=[@FirstName] & " " & [@LastName]) so each row automatically concatenates the two name values. The file is saved as an .xlsx document.
-// Keywords: Aspose.Cells | C# | Excel table | ListObject | calculated column | concatenate columns | FullName formula | structured reference | resize table | add column programmatically
-// Common Searches: Aspose.Cells add calculated column | C# concatenate first and last name in Excel table | Resize ListObject and set formula Aspose | Structured reference formula Aspose.Cells | Create FullName column programmatically
-// Developer Intent: Programmatically insert a new column into an Aspose.Cells ListObject and set a formula that joins FirstName and LastName into a FullName value.
-// Use Cases: Generate contact sheets where the full name updates automatically when source fields change. | Build employee export files with a computed FullName column without manual data entry. | Create dynamic reports that keep name concatenations in sync across large datasets.
-// AI Prompts: Show C# code using Aspose.Cells to add a FullName column to an existing Excel table and apply a concatenation formula. | Explain how to resize an Aspose.Cells ListObject and assign a structured‑reference expression for merging two text columns. | Provide a step‑by‑step guide for creating a calculated column that combines FirstName and LastName with a space separator.
+// Title: Add a calculated FullName column to an Excel table that concatenates FirstName and LastName using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a ListObject and sets a formula to join FirstName and LastName into a FullName column. | Show how to use structured references in an Aspose.Cells table to define a derived column that combines two text fields. | Provide a complete example that auto‑fits columns and saves the workbook after adding the calculated column.
+// Common Searches: aspnet aspose.cells create table with derived column concatenating names | c# structured reference formula for full name column in Aspose.Cells | how to set ListObject column formula in Aspose.Cells .NET | auto fit columns and save workbook using Aspose.Cells C# example
+// Tags: Aspose.Cells column formula with structured references | C# add ListObject to worksheet | concatenate text fields in Excel table using Aspose.Cells | auto‑fit columns Aspose.Cells workbook | save workbook as .xlsx C# Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// Creates a new workbook, defines a ListObject with FirstName and LastName fields, expands the table, adds a FullName column, and applies a structured‑reference formula (=[@FirstName] & " " & [@LastName]) so each row automatically concatenates the two name values. The file is saved as an .xlsx document.
+// The program creates a new workbook, inserts a ListObject named PeopleTable with FirstName, LastName, and FullName columns, fills sample data, assigns a structured‑reference formula to the FullName column that joins the first and last names, auto‑fits the columns, and saves the file as PeopleTable.xlsx.
 class Program
 {
     static void Main()
@@ -21,56 +18,64 @@ class Program
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate sample data: FirstName and LastName columns
-            cells["A1"].PutValue("FirstName");
-            cells["B1"].PutValue("LastName");
-            cells["A2"].PutValue("John");
-            cells["B2"].PutValue("Doe");
-            cells["A3"].PutValue("Jane");
-            cells["B3"].PutValue("Smith");
+            // Add headers
+            sheet.Cells["A1"].PutValue("FirstName");
+            sheet.Cells["B1"].PutValue("LastName");
+            sheet.Cells["C1"].PutValue("FullName");
 
-            // Add a ListObject (Excel table) covering the data range A1:B3
-            // Parameters: startRow, startColumn, endRow, endColumn, hasHeaders
-            int tableIndex = sheet.ListObjects.Add(0, 0, 2, 1, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.DisplayName = "People";
-            table.ShowHeaderRow = true;
-            table.ShowTotals = false;
+            // Sample data
+            string[,] data = {
+                { "John", "Doe" },
+                { "Jane", "Smith" },
+                { "Bob", "Johnson" }
+            };
 
-            // Determine current size of the table
-            int rowCount = table.DataRange.RowCount;          // data rows (excluding header)
-            int columnCount = table.DataRange.ColumnCount;    // existing data columns
-
-            // Expand the table to include a new column for the calculated FullName
-            // Resize requires the hasHeaders flag; we keep it true because the table has a header row
-            table.Resize(table.StartRow, table.StartColumn, rowCount, columnCount + 1, true);
-
-            // Access the newly added column (last column in the table)
-            ListColumn fullNameColumn = table.ListColumns[table.ListColumns.Count - 1];
-            fullNameColumn.Name = "FullName";
-
-            // Set the calculated column formula to concatenate FirstName and LastName
-            // Structured reference syntax: =[@FirstName] & " " & [@LastName]
-            fullNameColumn.Formula = "=[@FirstName] & \" \" & [@LastName]";
-
-            // Save the workbook to a file
-            string outputPath = "PeopleTable.xlsx";
-
-            // Ensure the directory exists before saving
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Populate first and last name columns
+            for (int i = 0; i < data.GetLength(0); i++)
             {
-                Directory.CreateDirectory(outputDir);
+                sheet.Cells[i + 1, 0].PutValue(data[i, 0]); // Column A
+                sheet.Cells[i + 1, 1].PutValue(data[i, 1]); // Column B
             }
 
+            // Define the range for the table (including header row)
+            int totalRows = data.GetLength(0) + 1; // header + data rows
+            int totalCols = 3; // FirstName, LastName, FullName
+
+            CellArea tableArea = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = totalRows - 1,      // zero‑based index
+                EndColumn = totalCols - 1    // zero‑based index
+            };
+
+            // Add a ListObject (Excel table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(
+                tableArea.StartRow,
+                tableArea.StartColumn,
+                tableArea.EndRow,
+                tableArea.EndColumn,
+                true);
+
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "PeopleTable";
+
+            // Set formula for the FullName column using structured references
+            // Column index 2 corresponds to the third column (FullName)
+            table.ListColumns[2].Formula = "=[@FirstName] & \" \" & [@LastName]";
+
+            // Auto‑fit columns for better visibility
+            sheet.AutoFitColumns();
+
+            // Save the workbook
+            string outputPath = "PeopleTable.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

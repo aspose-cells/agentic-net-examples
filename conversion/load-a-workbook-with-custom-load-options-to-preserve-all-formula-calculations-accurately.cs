@@ -1,42 +1,35 @@
-// Title: Load Excel workbook with custom LoadOptions to preserve formulas – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to configure Aspose.Cells LoadOptions (ParsingFormulaOnOpen, PreservePaddingSpacesInFormula, KeepUnparsedData, CultureInfo) to load an .xlsx, keep original formula formatting, recalculate all formulas, and save the workbook.
-// Keywords: Aspose.Cells | LoadOptions | ParsingFormulaOnOpen | PreservePaddingSpacesInFormula | KeepUnparsedData | CultureInfo | formula calculation | Excel loading .NET | preserve formula formatting | locale-specific Excel | C#
-// Common Searches: Aspose.Cells load workbook with formula parsing enabled | keep padding spaces in Excel formulas Aspose.Cells | LoadOptions KeepUnparsedData example | set CultureInfo when loading Excel with Aspose.Cells .NET | calculate all formulas after loading workbook Aspose.Cells
-// Developer Intent: Load an Excel file using Aspose.Cells with custom LoadOptions that parse formulas on open, retain spacing/line‑breaks, keep unparsed data, apply a specific CultureInfo, then optionally recalculate and save the workbook.
-// Use Cases: Open a workbook for analysis while preserving the exact formula text (spacing, line breaks). | Ensure all formulas are evaluated immediately after loading to obtain current cell values. | Maintain unparsed data for round‑trip editing without losing hidden or custom information. | Handle locale‑dependent numbers and dates by specifying the appropriate CultureInfo during load. | Modify or recalculate a workbook and save it without altering the original formula layout.
-// AI Prompts: Generate C# code that uses Aspose.Cells LoadOptions to enable ParsingFormulaOnOpen, PreservePaddingSpacesInFormula, KeepUnparsedData, set CultureInfo to 'en-US', calculate all formulas, and save the workbook. | Explain the impact of ParsingFormulaOnOpen, PreservePaddingSpacesInFormula, KeepUnparsedData, and CultureInfo on formula handling in Aspose.Cells. | Provide a step‑by‑step tutorial for loading an Excel file, preserving formula formatting, recalculating formulas, and saving the result with Aspose.Cells for .NET.
+// Title: Load an Excel workbook with custom LoadOptions to preserve formula padding and auto‑parse formulas on open using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells LoadOptions to enable ParsingFormulaOnOpen and PreservePaddingSpacesInFormula, then open an .xlsx file, recalculate its formulas, and save the result. | Create a Workbook with LoadOptions that turn off KeepUnparsedData, keep formula whitespace, force formula parsing at load time, and perform a full formula calculation before saving.
+// Common Searches: Aspose.Cells how to keep spaces inside Excel formulas when loading a workbook | load workbook with ParsingFormulaOnOpen option in C# | disable KeepUnparsedData for faster loading in Aspose.Cells | recalculate all formulas after opening an Excel file with Aspose.Cells | preserve formula line breaks using LoadOptions in Aspose.Cells .NET
+// Tags: custom LoadOptions for workbook loading Aspose.Cells | enable ParsingFormulaOnOpen in LoadOptions | preserve padding spaces in Excel formulas | disable KeepUnparsedData for faster load | recalculate formulas after workbook load
 
 using System;
-using System.Globalization;
 using Aspose.Cells;
 
-// Demonstrates how to configure Aspose.Cells LoadOptions (ParsingFormulaOnOpen, PreservePaddingSpacesInFormula, KeepUnparsedData, CultureInfo) to load an .xlsx, keep original formula formatting, recalculate all formulas, and save the workbook.
+// Demonstrates configuring LoadOptions to parse formulas on opening, preserve whitespace inside formulas, skip storing unparsed data, loading an Excel workbook, recalculating all formulas, and saving the updated file.
 class LoadWorkbookWithCustomOptions
 {
     static void Main()
     {
-        // Create load options and configure them to preserve formula calculations
+        // Create custom load options
         LoadOptions loadOptions = new LoadOptions();
 
-        // Parse formulas when the workbook is opened to ensure they are available for calculation
+        // Parse all formulas when the workbook is opened
         loadOptions.ParsingFormulaOnOpen = true;
 
         // Preserve any padding spaces or line breaks inside formulas
         loadOptions.PreservePaddingSpacesInFormula = true;
 
-        // Keep unparsed data in memory (default is true) – useful when the workbook will be saved later
-        loadOptions.KeepUnparsedData = true;
+        // Do not keep unparsed data in memory (optional, improves performance)
+        loadOptions.KeepUnparsedData = false;
 
-        // Set culture info if the workbook contains locale‑specific data
-        loadOptions.CultureInfo = new CultureInfo("en-US");
-
-        // Load the workbook using the custom load options
+        // Load the workbook using the custom options
         Workbook workbook = new Workbook("input.xlsx", loadOptions);
 
-        // Optionally calculate all formulas to ensure cell values are up‑to‑date
+        // Recalculate formulas to ensure values are up‑to‑date after loading
         workbook.CalculateFormula();
 
-        // Save the workbook after loading and optional calculation
+        // Save the workbook (can be the same file or a new one)
         workbook.Save("output.xlsx");
     }
 }

@@ -1,75 +1,61 @@
-// Title: Delete a Named Range in Aspose.Cells (C#) and Verify Its Removal
-// Description: This example creates a workbook, adds two named ranges (ObsoleteRange and ActiveRange), removes ObsoleteRange using NameCollection.Remove, confirms the deletion with GetRangeByName (returns null), ensures the remaining range is intact, and saves the file.
-// Keywords: Aspose.Cells delete named range C# | remove defined name Aspose.Cells | NameCollection.Remove example | GetRangeByName null check | verify named range deletion
-// Common Searches: how to delete a named range in Aspose.Cells .NET | check if a named range exists after removal Aspose.Cells | remove specific defined name without affecting others
-// Developer Intent: Remove the "ObsoleteRange" named range from a workbook and confirm that it no longer exists while other named ranges stay unchanged.
-// Use Cases: Clean up obsolete named ranges before publishing a spreadsheet. | Delete temporary ranges created during automated data processing. | Validate that a transformation script only removes intended named ranges.
-// AI Prompts: Generate C# code using Aspose.Cells that deletes a named range and returns true if the operation succeeded. | Write a unit test that verifies a specific named range is removed and another remains after calling NameCollection.Remove. | Explain how NameCollection.Remove and GetRangeByName behave when the requested name is missing, including any exceptions or return values.
+// Title: Delete the named range "ObsoleteRange" from an Excel workbook using Aspose.Cells for .NET and verify that it no longer exists
+// AI Prompts: Load an Excel file with Aspose.Cells, remove the named range "ObsoleteRange", and save the workbook to a new file. | After deleting a named range, query the workbook to confirm the range is absent and output a success or failure message.
+// Common Searches: aspocells c# delete specific named range from workbook | how to confirm a named range was removed using Aspose.Cells | remove named range and save workbook with Aspose.Cells .NET | check if a named range exists after deletion in C# Aspose.Cells
+// Tags: Aspose.Cells remove named range | C# verify named range deletion | Aspose.Cells workbook save after range removal | C# Excel named range existence check
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The example loads "input.xlsx", deletes the named range "ObsoleteRange" if present, confirms the range is no longer in the workbook, and saves the result as "output.xlsx" while handling missing files and exceptions.
+class Program
 {
-    // This example creates a workbook, adds two named ranges (ObsoleteRange and ActiveRange), removes ObsoleteRange using NameCollection.Remove, confirms the deletion with GetRangeByName (returns null), ensures the remaining range is intact, and saves the file.
-    public class DeleteNamedRangeDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string rangeName = "ObsoleteRange";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Add a named range that will be deleted later
-                sheet.Cells.CreateRange("A1:B2").Name = "ObsoleteRange";
-
-                // Add another named range to ensure only the target is removed
-                sheet.Cells.CreateRange("C1:D2").Name = "ActiveRange";
-
-                // Get the collection of defined names
-                NameCollection names = workbook.Worksheets.Names;
-
-                // Display count before removal
-                Console.WriteLine("Named ranges count before removal: " + names.Count);
-
-                // Remove the specific named range
-                names.Remove("ObsoleteRange");
-
-                // Verify removal by checking the count and attempting to retrieve the range
-                Console.WriteLine("Named ranges count after removal: " + names.Count);
-
-                // GetRangeByName returns null if the named range does not exist
-                AsposeRange removedRange = workbook.Worksheets.GetRangeByName("ObsoleteRange");
-                Console.WriteLine("ObsoleteRange exists after removal? " + (removedRange != null));
-
-                // Also verify that the other named range still exists
-                AsposeRange remainingRange = workbook.Worksheets.GetRangeByName("ActiveRange");
-                Console.WriteLine("ActiveRange still exists? " + (remainingRange != null));
-
-                // Save the workbook
-                string outputPath = "DeleteNamedRangeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine("Workbook saved to: " + Path.GetFullPath(outputPath));
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Attempt to retrieve the named range
+            Name namedRange = workbook.Worksheets.Names[rangeName];
+
+            // Delete the named range if it exists
+            if (namedRange != null)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // Remove by name (correct API overload)
+                workbook.Worksheets.Names.Remove(rangeName);
+                Console.WriteLine($"Named range \"{rangeName}\" removed.");
             }
+            else
+            {
+                Console.WriteLine($"Named range \"{rangeName}\" does not exist.");
+            }
+
+            // Verify removal
+            bool stillExists = workbook.Worksheets.Names[rangeName] != null;
+            Console.WriteLine(stillExists
+                ? "Named range still exists."
+                : "Named range successfully removed.");
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DeleteNamedRangeDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

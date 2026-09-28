@@ -1,55 +1,54 @@
-// Title: C# – Insert a Picture into an Aspose.Cells Worksheet and Assign a Custom Name
-// Description: Creates a new workbook, adds an image from a file to cell B2, sets the picture's Name property (e.g., "CompanyLogo"), includes file‑existence validation, and saves the file as an XLSX document.
-// Keywords: Aspose.Cells add image C# | set picture name Aspose.Cells | retrieve picture by name .NET | Excel picture insertion Aspose | C# workbook image handling | global
-// Common Searches: how to add an image to an Aspose.Cells worksheet with a name | Aspose.Cells C# picture Name property example | retrieve a shape by Name in Aspose.Cells | error handling for missing picture file Aspose.Cells
-// Developer Intent: Add an image to a worksheet and give it a unique Name so it can be identified later via the Aspose.Cells API.
-// Use Cases: Place a company logo at B2, name it "CompanyLogo", and later replace or hide it programmatically. | Insert a watermark, assign a distinct name, and toggle its visibility based on user settings. | Add a diagram, set a descriptive name, and update the diagram image in future runs without searching by index.
-// AI Prompts: Write C# code using Aspose.Cells to insert a picture from a file path, set its Name property, and handle missing‑file errors. | Show how to locate a picture by its Name in an existing workbook and modify its position or replace the image with Aspose.Cells.
+// Title: Insert a PNG image into an Excel worksheet at cell A1 and set a custom Name property with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to add a picture from a PNG file to cell A1 of a new workbook and assign the picture's Name property to "CompanyLogo". | Create a workbook, insert a PNG image at the top‑left cell, give the picture a descriptive identifier, and save the workbook as XLSX using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to add a picture to a specific cell and name it | set custom name for inserted image in Excel using Aspose.Cells .NET | retrieve picture by Name property in Aspose.Cells workbook | insert PNG logo into Excel worksheet with Aspose.Cells and assign identifier
+// Tags: add picture to worksheet Aspose.Cells C# | picture Name attribute Aspose.Cells | insert PNG into XLSX Aspose.Cells | custom identifier for Excel picture Aspose.Cells | retrieve picture by Name Aspose.Cells API
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, adds an image from a file to cell B2, sets the picture's Name property (e.g., "CompanyLogo"), includes file‑existence validation, and saves the file as an XLSX document.
-class InsertPictureWithName
+// The program creates a new workbook, inserts a PNG image at cell A1, assigns the picture's Name property the value "CompanyLogo", and saves the workbook as an XLSX file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        const string imagePath = "sample.jpg";
-
         try
         {
-            // Verify that the image file exists before attempting to add it
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Path to the image file to be inserted
+            string imagePath = "sample.png"; // Replace with your actual image file path
+
+            // Ensure the image file exists before attempting to insert
             if (!File.Exists(imagePath))
-                throw new FileNotFoundException($"Image file '{imagePath}' was not found.");
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
-            // Add a picture to the worksheet (top-left corner at row 2, column 2)
-            int pictureIndex = worksheet.Pictures.Add(1, 1, imagePath);
-            Picture picture = worksheet.Pictures[pictureIndex];
+            // Insert the picture at cell A1 (row 0, column 0)
+            // The Add method returns the index of the newly added picture
+            int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
 
-            // Assign a descriptive name to the picture for later retrieval
+            // Retrieve the picture object using the returned index
+            Picture picture = sheet.Pictures[pictureIndex];
+
+            // Assign a descriptive name to the picture for later retrieval via API
             picture.Name = "CompanyLogo";
-        }
-        catch (Exception ex)
-        {
-            // Log the error; the workbook will be saved without the picture
-            Console.WriteLine($"Warning: Unable to add picture. {ex.Message}");
-        }
 
-        // Save the workbook
-        try
-        {
-            workbook.Save("PictureWithName.xlsx");
-            Console.WriteLine("Workbook saved successfully.");
+            // Save the workbook (lifecycle rule: save)
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving workbook: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

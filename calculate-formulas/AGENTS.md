@@ -7,7 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: Calculate and recalculate Excel formulas in C# without Microsoft Excel
 primary_apis:
   - Workbook.CalculateFormula

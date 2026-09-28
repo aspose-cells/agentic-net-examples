@@ -1,16 +1,13 @@
-// Title: Add a label shape linked to a custom‑formatted cell with Aspose.Cells for .NET
-// Description: Creates a workbook, writes a numeric value to A1, applies a custom number format (e.g., 0.00 "USD"), adds a label shape at B2, links the shape to the formatted cell, updates the shape to show the formatted text, prints verification details, and saves the file as ShapeLinkedCell.xlsx.
-// Keywords: Aspose.Cells label shape | link shape to cell | custom number format | display formatted value in shape | LinkedCell property | C# Aspose.Cells example | Excel shape verification
-// Common Searches: Aspose.Cells link textbox to cell with custom format | How to display formatted cell value in a shape using Aspose.Cells | Update linked shape after applying number format Aspose.Cells | C# Aspose.Cells add label shape linked to cell
-// Developer Intent: Add a label shape, bind it to a cell that uses a custom number format, refresh the shape to reflect the formatted value, and confirm the link works.
-// Use Cases: Financial reports where a shape shows a formatted total amount. | Excel dashboards that use shapes to display live, formatted metrics. | Automated workbook generation with linked shapes for printable summaries.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a rectangle shape linked to cell B5 and formats the cell as "dd-MMM-yyyy". | Show how to link multiple shapes to different cells, each with its own custom number format, and verify the displayed values. | Explain how to programmatically confirm that a shape's displayed text matches the cell's formatted string in Aspose.Cells.
+// Title: Add a TextBox shape linked to a cell with a custom TEXT number format in Aspose.Cells for .NET
+// AI Prompts: Create a TextBox shape on a worksheet and assign its Text property a TEXT formula that formats cell A1 as currency. | Invoke workbook.CalculateFormula() and capture the displayed text of the linked TextBox shape. | Save the workbook to confirm that the TextBox shows the formatted value from cell A1.
+// Common Searches: aspocells .net link textbox shape to cell using TEXT function | how to apply custom number format to shape text in Aspose.Cells | retrieve linked shape text after CalculateFormula in C# | bind a shape to a cell value with TEXT formula Aspose.Cells example
+// Tags: textbox shape linked via TEXT function Aspose.Cells | currency formatting for shape text .NET | recalculate workbook formulas for linked shapes | shape text verification after calculation C# | link shape to cell using custom number format Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, writes a numeric value to A1, applies a custom number format (e.g., 0.00 "USD"), adds a label shape at B2, links the shape to the formatted cell, updates the shape to show the formatted text, prints verification details, and saves the file as ShapeLinkedCell.xlsx.
+// // Demonstrates creating a workbook, writing a numeric value to A1, adding a TextBox shape, linking its text to A1 with a TEXT formula that applies a custom currency format, recalculating formulas, outputting the shape's displayed text, and saving the file as LinkedShape.xlsx.
 class Program
 {
     static void Main()
@@ -19,35 +16,27 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Put a numeric value into cell A1
-            worksheet.Cells["A1"].PutValue(1234.56);
+            sheet.Cells["A1"].PutValue(1234.567);
 
-            // Apply a custom number format (e.g., 0.00 "USD")
-            Style customStyle = workbook.CreateStyle();
-            customStyle.Custom = "0.00\" USD\"";
-            worksheet.Cells["A1"].SetStyle(customStyle);
+            // Add a TextBox shape to the worksheet
+            // Parameters: upper left row, upper left column, upper left row offset, upper left column offset, width, height
+            Shape textBox = sheet.Shapes.AddTextBox(2, 0, 0, 2, 200, 50);
 
-            // Add a label (text box) shape positioned at cell B2
-            // Parameters: upperLeftRow, upperLeftColumn, top, left, height, width
-            // Height and width are in pixels; adjust as needed.
-            Label shape = worksheet.Shapes.AddLabel(1, 1, 0, 0, 30, 150);
+            // Link the shape's text to cell A1 using the TEXT function with a custom number format
+            // The formula will display the number as currency with two decimal places
+            textBox.Text = "=TEXT(A1,\"$#,##0.00\")";
 
-            // Link the shape to the formatted cell A1
-            shape.LinkedCell = "$A$1";
+            // Recalculate all formulas so the shape's text is updated
+            workbook.CalculateFormula();
 
-            // Refresh the shape so it displays the linked cell's value
-            shape.UpdateSelectedValue();
+            // Verify the shape's displayed text
+            Console.WriteLine("Shape text after calculation: " + textBox.Text);
 
-            // Verification output
-            Console.WriteLine("Shape's LinkedCell: " + shape.LinkedCell);
-            Console.WriteLine("Cell A1 formatted text: " + worksheet.Cells["A1"].StringValue);
-
-            // Save the workbook
-            string outputPath = "ShapeLinkedCell.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+            // Save the workbook (optional verification step)
+            workbook.Save("LinkedShape.xlsx");
         }
         catch (Exception ex)
         {

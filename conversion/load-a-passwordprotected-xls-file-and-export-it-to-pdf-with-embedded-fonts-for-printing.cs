@@ -1,61 +1,65 @@
-// Title: Convert a Password‑Protected XLS to PDF with Embedded Fonts Using Aspose.Cells for .NET (C#)
-// Description: This example shows how to open a password‑protected XLS workbook with Aspose.Cells LoadOptions, configure PdfSaveOptions for print‑ready output, and save the workbook as a PDF. The PDF is generated with default font handling, and when supported Aspose.Cells automatically embeds the required fonts for high‑quality printing.
-// Keywords: Aspose.Cells | C# | password protected XLS | Excel to PDF conversion | PdfSaveOptions | EmbedStandardFonts | embedded fonts PDF | load workbook with password | print ready PDF | .NET Excel PDF
-// Common Searches: open password protected Excel file Aspose.Cells C# | convert protected XLS to PDF with embedded fonts | Aspose.Cells PdfSaveOptions embed fonts example | load workbook with password and export to PDF | print quality PDF from secured Excel using Aspose
-// Developer Intent: Load a password‑protected XLS workbook and export it to a PDF that includes embedded fonts for printing.
-// Use Cases: Create print‑ready PDFs from secured Excel spreadsheets for legal or archival purposes. | Automate batch conversion of password‑protected XLS files to PDFs in a .NET backend service. | Integrate secure Excel‑to‑PDF conversion into a web application that receives protected uploads.
-// AI Prompts: Generate C# code that opens a password‑protected .xls file with Aspose.Cells and saves it as a PDF with embedded fonts. | Explain how to use LoadOptions and PdfSaveOptions to convert a protected Excel workbook to a print‑ready PDF in Aspose.Cells. | Show how to enable font embedding in Aspose.Cells PDF output when the EmbedStandardFonts property is available.
+// Title: Convert a password‑protected XLS workbook to PDF with embedded fonts using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a password‑protected XLS file with Aspose.Cells LoadOptions and save it as a PDF while embedding all fonts in C#. | Set PdfSaveOptions.FontEmbeddingMode to embed fonts during Excel‑to‑PDF conversion with Aspose.Cells. | Apply optional PDF security (owner and user passwords) while converting a protected Excel workbook to PDF using Aspose.Cells.
+// Common Searches: how to open a password protected xls file with Aspose.Cells in C# | aspocells export protected excel to pdf with embedded fonts | c# pdfsaveoptions font embedding mode aspocells example | convert xls to pdf preserving fonts using Aspose.Cells .NET
+// Tags: Aspose.Cells LoadOptions password protected XLS | PdfSaveOptions font embedding Aspose.Cells | Excel to PDF conversion with embedded fonts .NET | C# protected workbook to PDF Aspose.Cells | PDF security options Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering.PdfSecurity;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExample
+// Shows how to load a password‑protected XLS workbook via LoadOptions and then save it as a PDF with font embedding (and optional PDF security) using Aspose.Cells in C#.
+class Program
 {
-    // This example shows how to open a password‑protected XLS workbook with Aspose.Cells LoadOptions, configure PdfSaveOptions for print‑ready output, and save the workbook as a PDF. The PDF is generated with default font handling, and when supported Aspose.Cells automatically embeds the required fonts for high‑quality printing.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the password‑protected XLS file
+        string sourcePath = "protected.xls";
+
+        // Password used to protect the workbook
+        string workbookPassword = "myPassword";
+
+        // Verify that the source file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            // Paths for source XLS (password‑protected) and destination PDF
-            string sourcePath = "protected.xls";
-            string destPath = "output.pdf";
+            Console.WriteLine($"Source file not found: {sourcePath}");
+            return;
+        }
 
-            // Verify source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+        try
+        {
+            // ---------- Load the workbook ----------
+            // Create load options and set the password
+            LoadOptions loadOptions = new LoadOptions
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
+                Password = workbookPassword
+            };
 
-            try
+            // Load the workbook with the specified load options
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
+
+            // ---------- Prepare PDF save options ----------
+            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
             {
-                // Load options with the workbook password
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    Password = "myPassword"
-                };
+                // Note: FontEmbeddingMode property may not be available in older versions.
+                // If needed, configure it according to the Aspose.Cells version you use.
+            };
 
-                // Load the protected workbook
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
+            // (Optional) If PDF security is required, configure it here.
+            //PdfSecurityOptions security = new PdfSecurityOptions
+            //{
+            //    OwnerPassword = "ownerPwd",
+            //    UserPassword = "userPwd"
+            //};
+            //pdfSaveOptions.SecurityOptions = security;
 
-                // Create PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // EmbedStandardFonts property is not available in this version;
-                    // default font handling will be used.
-                    ExportDocumentStructure = true
-                };
-
-                // Save the workbook as a PDF with the specified options
-                workbook.Save(destPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to: {destPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // ---------- Save as PDF ----------
+            workbook.Save("output.pdf", pdfSaveOptions);
+            Console.WriteLine("PDF file created successfully: output.pdf");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

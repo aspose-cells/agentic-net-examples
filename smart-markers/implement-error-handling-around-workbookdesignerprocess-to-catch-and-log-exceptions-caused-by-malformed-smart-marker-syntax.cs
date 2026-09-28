@@ -1,90 +1,72 @@
-// Title: C# – Handle malformed smart marker errors with WorkbookDesigner.Process in Aspose.Cells
-// Description: Shows how to wrap WorkbookDesigner.Process in try‑catch blocks to capture CellsException and generic errors caused by invalid smart marker syntax, log details, and still save the workbook.
-// Keywords: Aspose.Cells | WorkbookDesigner.Process | smart marker error handling | CellsException | C# exception handling | invalid smart marker syntax | log Aspose.Cells errors | save workbook after failure
-// Common Searches: catch CellsException when processing smart markers Aspose.Cells | handle malformed smart marker syntax C# | log errors from WorkbookDesigner.Process | save workbook after smart marker processing error | Aspose.Cells smart marker try catch example
-// Developer Intent: Wrap WorkbookDesigner.Process in try‑catch to detect and log errors from incorrect smart marker syntax while ensuring the workbook can still be saved.
-// Use Cases: Detect and log CellsException when a smart marker is missing the '=' character. | Continue program execution and save the original workbook even if processing fails. | Expose the Aspose.Cells exception code (ex.Code) for troubleshooting smart marker issues.
-// AI Prompts: Generate C# code that adds detailed logging (including stack trace) around WorkbookDesigner.Process for smart marker errors. | Create a reusable method that processes smart markers with exception handling and returns a success flag. | Show how to integrate NLog (or another logging framework) with Aspose.Cells smart marker error handling in C#.
+// Title: Handle and log CellsException when WorkbookDesigner.Process encounters malformed smart markers in Aspose.Cells for .NET
+// AI Prompts: Wrap the call to WorkbookDesigner.Process in a try‑catch that catches CellsException, logs ex.Code and ex.Message, then continues execution. | Add a generic catch block after the specific CellsException handler to record unexpected errors without stopping the workbook save. | Enclose the entire Run method in an outer try‑catch to capture fatal errors and output a concise message before exiting.
+// Common Searches: Aspose.Cells how to catch CellsException from smart marker processing | log invalid smart marker syntax errors in C# using Aspose.Cells | save workbook even when WorkbookDesigner.Process fails | example of nested try‑catch for smart markers Aspose.Cells .NET
+// Tags: smart marker CellsException handling Aspose.Cells | error logging for smart marker processing | detect malformed smart marker syntax | save workbook after processing exception | outer fatal error handling in Aspose.Cells
 
 using System;
-using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerErrorHandling
+namespace AsposeCellsErrorHandlingDemo
 {
-    // Shows how to wrap WorkbookDesigner.Process in try‑catch blocks to capture CellsException and generic errors caused by invalid smart marker syntax, log details, and still save the workbook.
+    // The example creates a workbook, inserts an intentionally malformed smart marker, sets a dummy data source, and processes the markers inside nested try‑catch blocks. It catches CellsException to log its code and message, captures any other exceptions, and ensures the workbook is saved even if processing fails, with an outer fatal‑error handler for the Run method.
     public class SmartMarkerProcessor
     {
         public static void Run()
         {
-            // Create a new workbook (template)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Insert a malformed smart marker (incorrect syntax)
-            // Correct syntax would be like "&=Table.Column", here we omit the "="
-            sheet.Cells["A1"].PutValue("&Table.Column");
-
-            // Set up a simple data source so that processing can be attempted
-            DataTable dt = new DataTable("Table");
-            dt.Columns.Add("Column", typeof(string));
-            dt.Rows.Add("Sample Value");
-
-            // Initialize the WorkbookDesigner and assign the workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-
-            // Bind the data source
-            designer.SetDataSource(dt);
-
-            // Attempt to process the smart markers with error handling
             try
             {
-                designer.Process();
-                Console.WriteLine("Smart markers processed successfully.");
-            }
-            catch (CellsException ex) // Specific Aspose.Cells exception
-            {
-                Console.WriteLine("Aspose.Cells exception occurred during processing:");
-                Console.WriteLine($"Message: {ex.Message}");
-                Console.WriteLine($"Exception Type Code: {ex.Code}");
-            }
-            catch (Exception ex) // General exception fallback
-            {
-                Console.WriteLine("An unexpected error occurred during processing:");
-                Console.WriteLine($"Message: {ex.Message}");
-            }
+                // Create a new workbook (could also be loaded from a template file)
+                Workbook workbook = new Workbook();
 
-            // Save the workbook (even if processing failed, the file will contain the original content)
-            try
-            {
-                workbook.Save("ProcessedWorkbook.xlsx");
-                Console.WriteLine("Workbook saved as 'ProcessedWorkbook.xlsx'.");
+                // Add a worksheet and place a deliberately malformed smart marker
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("&=InvalidSmartMarker"); // malformed syntax
+
+                // Initialize the WorkbookDesigner with the workbook
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+
+                // Example data source (can be any valid source)
+                designer.SetDataSource("Dummy", new string[] { "Value1", "Value2" });
+
+                try
+                {
+                    // Process the smart markers; this may throw if syntax is invalid
+                    designer.Process();
+                }
+                catch (CellsException ex) // Aspose.Cells specific exception
+                {
+                    // Log detailed information about the exception
+                    Console.WriteLine("A CellsException was caught while processing smart markers.");
+                    Console.WriteLine($"Message: {ex.Message}");
+                    Console.WriteLine($"Exception Type Code: {ex.Code}");
+                }
+                catch (Exception ex)
+                {
+                    // Catch any other unexpected exceptions
+                    Console.WriteLine("An unexpected error occurred during processing.");
+                    Console.WriteLine($"Message: {ex.Message}");
+                }
+
+                // Save the workbook (even if processing failed, the workbook may still be saved)
+                workbook.Save("ProcessedOutput.xlsx");
+                Console.WriteLine("Workbook saved as ProcessedOutput.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine("Fatal error in SmartMarkerProcessor.Run:");
+                Console.WriteLine(ex.Message);
             }
         }
     }
 
-    // Entry point for the application
     public class Program
     {
         public static void Main(string[] args)
         {
-            try
-            {
-                SmartMarkerProcessor.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            SmartMarkerProcessor.Run();
         }
     }
 }

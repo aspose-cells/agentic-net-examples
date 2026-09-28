@@ -1,59 +1,74 @@
-// Title: C# Aspose.Cells: Highlight Cells Greater Than a Threshold with Conditional Formatting
-// Description: Creates a new workbook, fills A1:A10 with values 0‑90, sets a threshold of 50, and adds a conditional formatting rule that colors cells orange with black font when their value exceeds the threshold. The workbook is saved as ConditionalFormattingGreaterThan.xlsx.
-// Keywords: Aspose.Cells conditional formatting C# | highlight cells greater than threshold | Aspose.Cells .NET example | conditional formatting orange background | cell value greater than operator | C# Excel automation Aspose
-// Common Searches: Aspose.Cells how to apply conditional formatting for values above a limit | C# conditional formatting greater than threshold Aspose.Cells | set cell background color based on value Aspose.Cells .NET | example of conditional formatting range A1:A10 Aspose
-// Developer Intent: Generate a .NET workbook and apply a conditional formatting rule that highlights cells whose numeric value is greater than a specified threshold.
-// Use Cases: Flag sales figures that exceed a target amount in a financial dashboard. | Mark test scores above the passing grade for quick visual review. | Identify inventory levels that surpass a reorder limit.
-// AI Prompts: Write C# code with Aspose.Cells that colors cells red when values are below a minimum threshold. | Show how to add multiple conditional formatting rules to different ranges in the same worksheet using Aspose.Cells. | Demonstrate changing the font style of cells that meet a conditional formatting condition in Aspose.Cells for .NET.
+// Title: How to apply conditional formatting in Aspose.Cells for .NET to highlight cells with values greater than a specified threshold
+// AI Prompts: Generate C# code using Aspose.Cells that adds a conditional formatting rule to color cells yellow when their numeric value exceeds 50 in the range A1:E10. | Write a method that creates a solid yellow background style and attaches it to a greater‑than condition for a defined CellArea with Aspose.Cells. | Provide a script that saves an Excel workbook after applying a cell‑value based conditional formatting rule with a custom threshold using Aspose.Cells.
+// Common Searches: Aspose.Cells C# conditional formatting cells greater than 50 example | How to set background color for cells exceeding a value using Aspose.Cells .NET | Apply conditional formatting to range A1:E10 in an Aspose.Cells workbook | Saving Excel file after adding conditional formatting with Aspose.Cells C#
+// Tags: Aspose.Cells conditional formatting cell value greater than | C# Aspose.Cells apply conditional formatting range | Aspose.Cells set solid background style | Aspose.Cells save workbook after formatting | Excel conditional formatting threshold Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using System.Drawing;
 
-// Creates a new workbook, fills A1:A10 with values 0‑90, sets a threshold of 50, and adds a conditional formatting rule that colors cells orange with black font when their value exceeds the threshold. The workbook is saved as ConditionalFormattingGreaterThan.xlsx.
-class ConditionalFormattingExample
+// The program creates a new workbook, fills cells with sample numeric data, defines the range A1:E10, adds a conditional formatting rule that highlights cells with values greater than 50 using a solid yellow background, and saves the file as ConditionalFormatting.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data in column A (A1:A10)
-        for (int i = 0; i < 10; i++)
+        try
         {
-            sheet.Cells[i, 0].PutValue(i * 10); // 0,10,20,...,90
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data (optional)
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    sheet.Cells[i, j].PutValue(i * 10 + j);
+                }
+            }
+
+            // Define the range to apply conditional formatting (A1:E10)
+            CellArea area = new CellArea
+            {
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 9,
+                EndColumn = 4
+            };
+
+            // Add a new conditional formatting rule collection
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            var cf = sheet.ConditionalFormattings[cfIndex];
+            cf.AddArea(area);
+
+            // Add condition: cell value > 50
+            int conditionIndex = cf.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
+            var condition = cf[conditionIndex];
+
+            // Create a style for highlighting
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Yellow;
+            style.Pattern = BackgroundType.Solid;
+            condition.Style = style;
+
+            // Determine output file path
+            string outputPath = "ConditionalFormatting.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Define the threshold value
-        double threshold = 50;
-
-        // Add a conditional formatting collection to the worksheet
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-        // Define the range to which the conditional formatting will be applied (A1:A10)
-        CellArea area = new CellArea
+        catch (Exception ex)
         {
-            StartRow = 0,
-            EndRow = 9,
-            StartColumn = 0,
-            EndColumn = 0
-        };
-        fcc.AddArea(area);
-
-        // Add a condition: highlight cells where the value is greater than the threshold
-        int conditionIndex = fcc.AddCondition(
-            FormatConditionType.CellValue,
-            OperatorType.GreaterThan,
-            threshold.ToString(),
-            null);
-        FormatCondition fc = fcc[conditionIndex];
-
-        // Set the formatting style for cells that meet the condition
-        fc.Style.BackgroundColor = Color.Orange;
-        fc.Style.Font.Color = Color.Black;
-
-        // Save the workbook
-        workbook.Save("ConditionalFormattingGreaterThan.xlsx");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

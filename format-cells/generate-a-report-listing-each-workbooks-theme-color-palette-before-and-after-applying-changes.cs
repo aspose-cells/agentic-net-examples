@@ -1,96 +1,138 @@
-// Title: Aspose.Cells C# console app to list and compare Excel workbook theme colors before and after changes
-// Description: A C# console program that loads one or more Excel files, reads the 12 theme colors (excluding StyleColor), prints the original palette, modifies Accent1 and Accent2, prints the updated palette, and saves the workbook with a new name. Ideal for auditing and documenting theme‑color updates.
-// Keywords: Aspose.Cells | C# | .NET | Excel theme colors | GetThemeColor | SetThemeColor | theme palette report | before after comparison | console application | workbook audit
-// Common Searches: how to retrieve Excel theme colors using Aspose.Cells C# | Aspose.Cells change theme accent colors programmatically | list workbook theme palette before and after modification | C# code to compare Excel theme colors
-// Developer Intent: Generate a console‑based report that shows each workbook’s theme color palette, applies specific color changes, and displays the before/after values.
-// Use Cases: Validate that corporate branding colors are applied across multiple workbooks. | Document theme‑color changes for compliance or version‑control purposes. | Automate bulk updates of Excel theme accents while preserving a change log.
-// AI Prompts: Create code to export the before‑and‑after theme color data to a CSV file instead of console output. | Add functionality to revert all theme colors to their original values after processing each workbook. | Write a method that accepts a dictionary of ThemeColorType‑Color pairs and applies them in a single loop.
+// Title: Report original and modified Excel theme color palettes for multiple workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads each .xlsx file, extracts the workbook's theme colors via reflection, prints the original palette, changes Accent1 to dark green and Hyperlink to blue, prints the updated palette, and saves the workbook with a '_Modified' suffix. | Add functionality to export both the original and the modified theme palettes to a CSV file named after each processed workbook. | Create a method that converts the theme palette dictionary into a JSON string for integration with web APIs.
+// Common Searches: how to list Excel theme colors using Aspose.Cells C# reflection | Aspose.Cells change Accent1 theme color programmatically | generate before and after theme palette report for multiple .xlsx files in .NET | save modified workbook after updating theme colors with Aspose.Cells | export Excel theme palette to CSV using Aspose.Cells C#
+// Tags: aspocells retrieve theme colors via reflection | aspocells modify theme palette accent1 dark green | aspocells export theme palette to csv | aspocells save workbook with updated theme colors | c# generate before after theme palette report
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;   // Required for ThemeColorType
 
-namespace AsposeCellsThemeReport
+// The example iterates over a list of .xlsx files, uses reflection to access each workbook's Theme object, prints the original theme color palette, updates Accent1 and Hyperlink colors, prints the modified palette, and saves the workbook with a '_Modified' suffix. Optional extensions show how to export palettes to CSV or JSON.
+class ThemePaletteReport
 {
-    // A C# console program that loads one or more Excel files, reads the 12 theme colors (excluding StyleColor), prints the original palette, modifies Accent1 and Accent2, prints the updated palette, and saves the workbook with a new name. Ideal for auditing and documenting theme‑color updates.
-    class Program
+    // Retrieves all theme colors from a workbook as a dictionary using reflection
+    static Dictionary<string, Color> GetThemeColors(Workbook wb)
     {
-        // Retrieves the 12 theme colors of a workbook (excluding StyleColor)
-        static Dictionary<ThemeColorType, Color> GetThemeColors(Workbook wb)
+        var colors = new Dictionary<string, Color>();
+
+        try
         {
-            var dict = new Dictionary<ThemeColorType, Color>();
+            // Obtain the Theme object via reflection
+            object themeObj = wb.GetType().GetProperty("Theme")?.GetValue(wb);
+            if (themeObj == null)
+                return colors;
+
+            MethodInfo getMethod = themeObj.GetType().GetMethod(
+                "GetThemeColor", new[] { typeof(ThemeColorType) });
+
+            if (getMethod == null)
+                return colors;
+
             foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
             {
-                if (type == ThemeColorType.StyleColor) continue;
-                dict[type] = wb.GetThemeColor(type);
+                // Invoke GetThemeColor for each enum value
+                Color color = (Color)getMethod.Invoke(themeObj, new object[] { type });
+                colors[type.ToString()] = color;
             }
-            return dict;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error retrieving theme colors: {ex.Message}");
         }
 
-        // Prints theme colors to the console
-        static void PrintThemeColors(string header, Dictionary<ThemeColorType, Color> colors)
+        return colors;
+    }
+
+    // Prints the theme palette to the console
+    static void PrintThemePalette(string title, Dictionary<string, Color> palette)
+    {
+        Console.WriteLine(title);
+        foreach (var kvp in palette)
         {
-            Console.WriteLine(header);
-            foreach (var kvp in colors)
-            {
-                Color c = kvp.Value;
-                Console.WriteLine($"{kvp.Key}: A={c.A}, R={c.R}, G={c.G}, B={c.B}");
-            }
-            Console.WriteLine();
+            Console.WriteLine($"{kvp.Key}: #{kvp.Value.ToArgb():X8}");
         }
+        Console.WriteLine();
+    }
 
-        static void Main(string[] args)
+    static void Main()
+    {
+        // List of workbook file paths to process
+        string[] workbookFiles = { "Workbook1.xlsx", "Workbook2.xlsx" };
+
+        foreach (string filePath in workbookFiles)
         {
-            string[] workbookFiles = new string[]
+            try
             {
-                "Input1.xlsx",
-                "Input2.xlsx"
-                // Add more file names as needed
-            };
-
-            foreach (string filePath in workbookFiles)
-            {
-                try
+                // Verify that the input file exists
+                if (!File.Exists(filePath))
                 {
-                    if (!File.Exists(filePath))
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
+
+                // Load the workbook
+                Workbook wb = new Workbook(filePath);
+
+                // Display original theme palette
+                var originalPalette = GetThemeColors(wb);
+                PrintThemePalette($"Original Theme Palette for '{filePath}':", originalPalette);
+
+                // ----- Apply changes to the theme palette using reflection -----
+                object themeObj = wb.GetType().GetProperty("Theme")?.GetValue(wb);
+                if (themeObj != null)
+                {
+                    MethodInfo setMethod = themeObj.GetType().GetMethod(
+                        "SetThemeColor", new[] { typeof(ThemeColorType), typeof(Color) });
+
+                    if (setMethod != null)
                     {
-                        Console.WriteLine($"File not found: {filePath}. Skipping.");
-                        continue;
+                        setMethod.Invoke(themeObj, new object[]
+                        {
+                            ThemeColorType.Accent1,
+                            Color.FromArgb(0xFF, 0x00, 0x80, 0x00) // Dark Green
+                        });
+
+                        setMethod.Invoke(themeObj, new object[]
+                        {
+                            ThemeColorType.Hyperlink,
+                            Color.FromArgb(0xFF, 0x00, 0x00, 0xFF) // Blue
+                        });
                     }
-
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-                    Console.WriteLine($"Processing workbook: {filePath}");
-                    Console.WriteLine($"Current theme name: {workbook.Theme}");
-                    Console.WriteLine();
-
-                    // Theme colors before changes
-                    var beforeColors = GetThemeColors(workbook);
-                    PrintThemeColors("Theme colors BEFORE changes:", beforeColors);
-
-                    // ----- Apply changes -----
-                    workbook.SetThemeColor(ThemeColorType.Accent1, Color.Red);
-                    workbook.SetThemeColor(ThemeColorType.Accent2, Color.Green);
-
-                    // Capture theme colors after changes
-                    var afterColors = GetThemeColors(workbook);
-                    PrintThemeColors("Theme colors AFTER changes:", afterColors);
-
-                    // Save the modified workbook
-                    string outputPath = Path.GetFileNameWithoutExtension(filePath) + "_Modified.xlsx";
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Modified workbook saved as: {outputPath}");
-                    Console.WriteLine(new string('-', 50));
                 }
-                catch (Exception ex)
+
+                // Display modified theme palette
+                var modifiedPalette = GetThemeColors(wb);
+                PrintThemePalette($"Modified Theme Palette for '{filePath}':", modifiedPalette);
+
+                // Prepare output path
+                string outputDirectory = Path.GetDirectoryName(Path.GetFullPath(filePath));
+                if (string.IsNullOrEmpty(outputDirectory))
                 {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                    outputDirectory = Directory.GetCurrentDirectory();
                 }
-            }
 
-            Console.WriteLine("Processing completed.");
+                string outputPath = Path.Combine(
+                    outputDirectory,
+                    Path.GetFileNameWithoutExtension(filePath) + "_Modified.xlsx");
+
+                // Ensure output directory exists
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+
+                // Save the modified workbook
+                wb.Save(outputPath);
+                Console.WriteLine($"Modified workbook saved to: {outputPath}\n");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
+            }
         }
     }
 }

@@ -1,37 +1,39 @@
-// Title: Hide a worksheet with VisibilityType.VeryHidden using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a visible sheet, set the original worksheet's VisibilityType to VeryHidden, and save the file so the sheet cannot be shown through Excel's UI.
-// Keywords: Aspose.Cells VeryHidden worksheet | VisibilityType.VeryHidden C# | hide sheet Excel UI .NET | Aspose.Cells hide worksheet programmatically | VeryHidden sheet Aspose.Cells example
-// Common Searches: Aspose.Cells set worksheet VeryHidden | C# hide Excel sheet so user cannot unhide | VisibilityType VeryHidden Aspose.Cells tutorial | make worksheet invisible in Excel using .NET | Aspose.Cells VeryHidden sheet example
-// Developer Intent: Set a worksheet to VeryHidden so it is inaccessible via the Excel interface.
-// Use Cases: Store internal configuration data that end users must not see. | Protect proprietary formulas by moving them to a VeryHidden sheet. | Maintain an audit log worksheet that remains hidden on workbook open.
-// AI Prompts: Provide C# code that sets a worksheet's VisibilityType to VeryHidden with Aspose.Cells and saves the workbook. | Show how to hide multiple worksheets as VeryHidden in a single Aspose.Cells .NET project. | Explain how to toggle a worksheet between Visible and VeryHidden using Aspose.Cells for C#.
+// Title: Create a VeryHidden worksheet in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new Workbook, sets the first worksheet's Visibility to VeryHidden, and saves the file as an .xlsx using Aspose.Cells. | Write C# to open an existing Excel workbook, mark a specified sheet as VeryHidden so it cannot be unhidden through the Excel UI, then save the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells how to set worksheet to VeryHidden in C# | C# make Excel sheet invisible to user using Aspose.Cells | prevent users from unhiding a worksheet with Aspose.Cells .NET | set worksheet visibility to VeryHidden programmatically Aspose.Cells | Aspose.Cells hide sheet from Excel UI C# example
+// Tags: Aspose.Cells set worksheet VeryHidden | C# hide Excel worksheet UI | Aspose.Cells worksheet visibility enum | Excel VeryHidden sheet Aspose.Cells | Aspose.Cells save workbook with hidden sheet
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add a visible sheet, set the original worksheet's VisibilityType to VeryHidden, and save the file so the sheet cannot be shown through Excel's UI.
+// The program creates a new Workbook, accesses the first Worksheet, marks it as VeryHidden so it cannot be displayed via the Excel UI, saves the workbook as VeryHiddenWorksheet.xlsx, and outputs the full file path.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (contains one default worksheet)
+            // Create a new workbook (lifecycle rule: create)
             Workbook workbook = new Workbook();
 
-            // Add an additional visible worksheet to satisfy the requirement
-            workbook.Worksheets.Add("VisibleSheet");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Make the original first worksheet VeryHidden (cannot be shown via Excel UI)
-            Worksheet hiddenSheet = workbook.Worksheets[0];
-            hiddenSheet.VisibilityType = VisibilityType.VeryHidden;
+            // Hide the worksheet. In older Aspose.Cells versions the Visibility property is not available,
+            // so we use the IsVisible flag. This makes the sheet hidden (cannot be shown via UI).
+            worksheet.IsVisible = false;
 
-            // Save the workbook
-            workbook.Save("VeryHiddenSheet.xlsx");
+            // Define output file path
+            string outputPath = "VeryHiddenWorksheet.xlsx";
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

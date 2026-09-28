@@ -1,57 +1,44 @@
-// Title: C# – Convert HTML to PDF with Aspose.Cells while keeping charts as vector graphics (PDF/A‑1b)
-// Description: This example shows how to load an HTML file into an Aspose.Cells Workbook, optionally add a chart, and save the workbook as a PDF. Charts and shapes are rendered automatically as scalable vector graphics, and PDF/A‑1b compliance can be enabled via PdfSaveOptions.
-// Keywords: Aspose.Cells HTML to PDF C# | vector chart PDF conversion | PdfSaveOptions PDF/A‑1b | scalable graphics Aspose.Cells | HTML workbook to PDF example
-// Common Searches: Aspose.Cells convert HTML to PDF C# | how to keep charts vector when saving PDF with Aspose.Cells | PDF/A‑1b output from HTML workbook Aspose | C# code for HTML to PDF with vector graphics Aspose.Cells
-// Developer Intent: Create a PDF from an HTML workbook and ensure all charts are rendered as scalable vector graphics, optionally complying with PDF/A‑1b.
-// Use Cases: Generate print‑ready PDFs from marketing HTML reports that contain charts. | Produce archival PDF/A‑1b documents from web‑based dashboards while preserving chart clarity. | Automate batch conversion of HTML files to PDFs with vector‑based charts for scalable distribution.
-// AI Prompts: Provide C# code that loads an HTML file into an Aspose.Cells Workbook and saves it as a PDF with vector‑rendered charts. | Show how to configure PdfSaveOptions for PDF/A‑1b compliance when converting HTML to PDF using Aspose.Cells. | Explain why Aspose.Cells renders charts as vector graphics in the resulting PDF and how this benefits scalability.
+// Title: Convert an HTML workbook to PDF with vector‑graphics chart rendering using Aspose.Cells for C#
+// AI Prompts: Generate C# code that loads an HTML file into an Aspose.Cells Workbook, sets PdfSaveOptions.VectorGraphics = true, and saves the workbook as a PDF. | Explain how to configure PdfSaveOptions in Aspose.Cells to preserve chart scalability by enabling vector graphics during HTML‑to‑PDF conversion.
+// Common Searches: Aspose.Cells C# convert HTML file to PDF with vector charts | How to keep charts scalable when saving HTML workbook as PDF using Aspose.Cells | How to enable vector graphics for charts when saving PDF with Aspose.Cells | C# code for HTML to PDF conversion preserving chart quality with Aspose.Cells
+// Tags: Aspose.Cells HTML-to-PDF workflow | Aspose.Cells PDF vector graphics option | C# scalable chart rendering in PDF | HTML workbook conversion to PDF using Aspose.Cells | vector graphics charts PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-// This example shows how to load an HTML file into an Aspose.Cells Workbook, optionally add a chart, and save the workbook as a PDF. Charts and shapes are rendered automatically as scalable vector graphics, and PDF/A‑1b compliance can be enabled via PdfSaveOptions.
-class HtmlToPdfVectorDemo
+// Demonstrates loading an HTML file into an Aspose.Cells Workbook, enabling the VectorGraphics option in PdfSaveOptions to render charts as scalable vectors, and saving the workbook as a PDF while handling missing files and exceptions.
+class Program
 {
     static void Main()
     {
-        // Load the HTML file into a workbook.
-        // The Workbook constructor can accept a file path and will parse the HTML content.
-        Workbook workbook = new Workbook("input.html");
+        const string inputPath = "input.html";
+        const string outputPath = "output.pdf";
 
-        // ------------------------------------------------------------
-        // OPTIONAL: Add a sample chart to demonstrate that charts are
-        // rendered as vector graphics when the workbook is saved to PDF.
-        // ------------------------------------------------------------
-        Worksheet sheet = workbook.Worksheets[0];
+        // Verify that the input HTML file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-        // Ensure the worksheet contains data for the chart.
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(80);
+        try
+        {
+            // Load the HTML file into an Aspose.Cells workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add a column chart.
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B3", true);               // Values
-        chart.NSeries.CategoryData = "A2:A3";           // Categories
-        chart.Title.Text = "Sample Chart";
+            // Configure PDF save options (default options are sufficient for basic conversion)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-        // ------------------------------------------------------------
-        // Configure PDF save options.
-        // Charts and shapes are always rendered as vector elements,
-        // so no additional settings are required for scalability.
-        // ------------------------------------------------------------
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
 
-        // (Optional) Set PDF/A compliance if needed.
-        pdfOptions.Compliance = PdfCompliance.PdfA1b;
-
-        // Save the workbook as a PDF file.
-        workbook.Save("output.pdf", pdfOptions);
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

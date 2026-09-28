@@ -1,61 +1,53 @@
-// Title: Insert an Image and Freeze Rows Above It Using Aspose.Cells for .NET (C#)
-// Description: Shows how to add a picture from a local file to a worksheet, apply FreezePanes to lock all rows above the picture, and save the result as an XLSX workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# image insertion | FreezePanes rows | add picture to Excel worksheet | anchor image in Excel | C# Aspose.Cells workbook save | Excel header logo freeze
-// Common Searches: aspocells insert picture and freeze rows | c# freeze top rows after adding image | keep header logo visible in Excel using Aspose.Cells | freeze panes based on image position aspocells | add jpeg to worksheet and lock rows above
-// Developer Intent: Place a picture in a worksheet and lock the rows above so the image remains visible while scrolling.
-// Use Cases: Add a company logo at the top of a report that stays in view as users scroll through data. | Create a dashboard banner that is anchored to the first rows for consistent branding. | Generate a template with a watermark that should not move when the sheet is scrolled.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a PNG at row 3 column 2 and freezes the first three rows. | Provide an example that adds a JPEG picture to a worksheet and uses FreezePanes to lock rows above the image in Aspose.Cells for .NET. | Show how to load an image from a file path, place it in a worksheet, and freeze rows up to the image's start row using Aspose.Cells.
+// Title: Insert a PNG picture into cell A6 and freeze the rows above it with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to place a PNG image at cell A6 and then freezes the first five rows so the picture stays visible while scrolling. | Create a .NET example that adds a picture to a worksheet, anchors it by freezing the rows above the image, and saves the workbook. | Show how to verify the image file exists, insert it, and apply FreezePanes in Aspose.Cells C#.
+// Common Searches: asp.net insert PNG into specific cell and freeze rows above with Aspose.Cells | C# Aspose.Cells freeze panes after adding a picture to Excel worksheet | keep inserted image fixed while scrolling in Excel using Aspose.Cells .NET | example code to anchor a picture by freezing top rows in Aspose.Cells | how to use FreezePanes to lock rows above an inserted image in C#
+// Tags: insert picture into worksheet Aspose.Cells | freeze top rows using FreezePanes Aspose.Cells | anchor PNG image in Excel .NET | Aspose.Cells picture placement at cell A6 | freeze rows above inserted image C# | save workbook with image Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsImageFreezeDemo
+// The example creates a new workbook, inserts a PNG picture at cell A6, freezes the first five rows so the image remains visible while scrolling, and saves the file as ImageWithFrozenRows.xlsx.
+class InsertImageAndFreezeRows
 {
-    // Shows how to add a picture from a local file to a worksheet, apply FreezePanes to lock all rows above the picture, and save the result as an XLSX workbook with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the position where the image will be placed (top‑left cell)
-                int imageTopRow = 5;      // Row index (0‑based) where the image starts
-                int imageLeftColumn = 1; // Column index (0‑based) where the image starts
+            // Path to the image file to be inserted
+            string imagePath = @"C:\Images\SampleImage.png";
 
-                // Resolve the image file path relative to the executable directory
-                string imagePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sample.jpg");
+            // Verify that the image file exists
+            if (!File.Exists(imagePath))
+                throw new FileNotFoundException("Image file not found.", imagePath);
 
-                // Add the picture if the file exists
-                if (File.Exists(imagePath))
-                {
-                    worksheet.Pictures.Add(imageTopRow, imageLeftColumn, imagePath);
-                }
-                else
-                {
-                    Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
-                }
+            // Insert the image at cell A6 (row index 5, column index 0)
+            int pictureRow = 5;      // zero‑based row index (A6)
+            int pictureColumn = 0;   // zero‑based column index (A)
+            sheet.Pictures.Add(pictureRow, pictureColumn, imagePath);
 
-                // Freeze all rows above the image so it stays visually anchored
-                // FreezePanes(row, column, freezedRows, freezedColumns)
-                // Freeze up to the row where the image starts, no columns are frozen
-                worksheet.FreezePanes(imageTopRow, 0, imageTopRow, 0);
+            // Freeze the first 5 rows (rows 0‑4) so the image stays anchored visually.
+            // Use the overload that specifies the number of rows and columns to freeze.
+            sheet.FreezePanes(pictureRow, 0, pictureRow, 0);
 
-                // Save the workbook
-                string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ImageWithFrozenRows.xlsx");
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Ensure the output directory exists
+            string outputPath = @"C:\Output\ImageWithFrozenRows.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

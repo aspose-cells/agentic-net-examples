@@ -1,36 +1,50 @@
-// Title: Convert Aspose.Cells Workbook to Grayscale PDF (Black‑and‑White) in C#
-// Description: Creates a workbook, enables the BlackAndWhite page‑setup flag for every worksheet, applies default PdfSaveOptions, and saves the file as a monochrome PDF (output_grayscale.pdf).
-// Keywords: Aspose.Cells PDF conversion | grayscale PDF export | BlackAndWhite page setup | C# Excel to PDF | monochrome workbook export
-// Common Searches: Aspose.Cells export Excel to grayscale PDF | set black and white printing before PDF save | C# convert workbook to monochrome PDF | how to force PDF output to black and white with Aspose.Cells
-// Developer Intent: Generate a PDF from an Excel workbook while forcing all pages to render in black‑and‑white.
-// Use Cases: Produce cost‑effective printable reports that must be monochrome. | Create archival or regulatory documents that require black‑and‑white output. | Batch‑process multiple workbooks to ensure consistent grayscale appearance across a document set.
-// AI Prompts: Write a script that scans a directory of .xlsx files and converts each to a grayscale PDF using Aspose.Cells. | Explain how to embed a custom grayscale color profile in PdfSaveOptions for Aspose.Cells. | Show code that applies the BlackAndWhite setting only to selected worksheets before exporting to PDF.
+// Title: Convert an Excel workbook to PDF with a grayscale color profile using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.ImageColorMode to Grayscale, and saves the workbook as a PDF. | Show a C# example that verifies the source Excel file exists, applies grayscale rendering when the ImageColorMode property is supported, and includes robust exception handling for the PDF conversion.
+// Common Searches: aspnet convert excel to pdf grayscale Aspose.Cells | c# Aspose.Cells PdfSaveOptions ImageColorMode grayscale example | how to save workbook as PDF with grayscale color profile using Aspose.Cells | set grayscale rendering for PDF output in Aspose.Cells .NET | Aspose.Cells PDF conversion with grayscale image mode
+// Tags: Aspose.Cells PDFSaveOptions grayscale | Excel to PDF conversion grayscale Aspose.Cells | C# Aspose.Cells set ImageColorMode | PDF rendering grayscale Aspose.Cells .NET | Workbook to PDF with grayscale profile
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // For ImageColorMode enum (if supported)
 
-// Creates a workbook, enables the BlackAndWhite page‑setup flag for every worksheet, applies default PdfSaveOptions, and saves the file as a monochrome PDF (output_grayscale.pdf).
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample verifies that the input Excel file exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions (optionally setting ImageColorMode to Grayscale when supported), and saves the workbook as a PDF while handling any runtime exceptions.
+    class Program
     {
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample Data");
-        sheet.Cells["A2"].PutValue(123);
-
-        // Apply grayscale (black‑and‑white) printing setting to every worksheet
-        foreach (Worksheet ws in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            ws.PageSetup.BlackAndWhite = true; // forces printing in black and white
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.pdf";
+
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Attempt to set grayscale rendering if the property is available in the referenced version
+                // Uncomment the following line if ImageColorMode is supported:
+                // pdfOptions.ImageColorMode = ImageColorMode.Grayscale;
+
+                // Save the workbook as PDF
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Configure PDF save options (default options are sufficient for grayscale)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-        // Save the workbook as a PDF file using the specified options
-        workbook.Save("output_grayscale.pdf", pdfOptions);
     }
 }

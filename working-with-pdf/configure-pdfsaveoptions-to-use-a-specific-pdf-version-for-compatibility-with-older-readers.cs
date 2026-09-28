@@ -1,39 +1,47 @@
-// Title: Configure Aspose.Cells PdfSaveOptions for PDF 1.4 compatibility in C#
-// Description: This C# example creates a workbook, adds sample data, sets PdfSaveOptions.Compliance to PdfCompliance.Pdf14, and saves the file as Output_Pdf14.pdf, ensuring the generated PDF conforms to version 1.4 for legacy reader support.
-// Keywords: Aspose.Cells | PdfSaveOptions | PDF 1.4 | PdfCompliance.Pdf14 | C# PDF export | legacy PDF readers | Excel to PDF conversion | PDF version control
-// Common Searches: Aspose.Cells set PDF version C# | PdfSaveOptions compliance PDF 1.4 example | Export Excel as PDF 1.4 using Aspose.Cells | How to force PDF 1.4 output in .NET
-// Developer Intent: Generate a PDF from an Excel workbook that complies with PDF 1.4 to guarantee compatibility with older PDF viewers.
-// Use Cases: Delivering reports that must open in legacy PDF readers. | Archiving Excel data in a PDF format required by older standards. | Meeting regulatory or contractual mandates that specify PDF 1.4.
-// AI Prompts: Show how to set PdfSaveOptions.Compliance to Pdf13 in Aspose.Cells (C#). | Provide a C# snippet that saves a workbook as PDF/A‑1b using Aspose.Cells. | Explain the differences between PdfCompliance enum values in Aspose.Cells.
+// Title: How to set a specific PDF version or compliance with PdfSaveOptions when converting an Excel workbook to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a Workbook, configures PdfSaveOptions.PdfCompliance to PdfA1b, and saves the workbook as a PDF file. | Show how to use PdfSaveOptions to target PDF 1.5 (PdfCompliance.Pdf15) for older PDF readers when exporting an Excel file to PDF with Aspose.Cells. | Provide an example that checks for the existence of an .xlsx file, creates a new workbook if missing, and then saves it as PDF using a chosen PDF compliance level.
+// Common Searches: Aspose.Cells set PDF/A-1b compliance when saving workbook to PDF C# | PdfSaveOptions PdfCompliance PDF 1.5 example Aspose.Cells .NET | How to export Excel to PDF with a specific PDF version using Aspose.Cells | C# create workbook if missing then save as PDF with PdfSaveOptions | Configure PDF compatibility for older readers Aspose.Cells PdfSaveOptions
+// Tags: Aspose.Cells PdfSaveOptions PdfCompliance | C# export Excel to PDF specific version | PDF/A-1b generation Aspose.Cells | PDF 1.5 compliance Aspose.Cells | fallback workbook creation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfVersionDemo
+// The sample loads an existing Excel file or creates a new workbook when the source is absent, configures PdfSaveOptions (optionally setting PdfCompliance to a desired PDF version such as PDF/A‑1b or PDF 1.5), and saves the workbook as a PDF document compatible with older readers.
+class Program
 {
-    // This C# example creates a workbook, adds sample data, sets PdfSaveOptions.Compliance to PdfCompliance.Pdf14, and saves the file as Output_Pdf14.pdf, ensuring the generated PDF conforms to version 1.4 for legacy reader support.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("PDF version compatibility demo");
+            // Ensure the input file exists; create a blank workbook if it does not.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found. Creating a new workbook.");
+                workbook = new Workbook(); // creates a default workbook with one worksheet
+                workbook.Save(inputPath, SaveFormat.Xlsx);
+            }
 
-            // Create PDF save options (lifecycle: create)
+            // Configure PDF save options (e.g., set PDF version via compliance if needed)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Example: set PDF compliance for broader compatibility (optional)
+            // pdfOptions.PdfCompliance = PdfCompliance.PdfA1b;
 
-            // Set the PDF compliance level to PDF 1.4 for older readers
-            pdfOptions.Compliance = PdfCompliance.Pdf14;
-
-            // Save the workbook as PDF with the specified compliance (lifecycle: save)
-            workbook.Save("Output_Pdf14.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved with PDF 1.4 compliance.");
+            // Save the workbook as PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

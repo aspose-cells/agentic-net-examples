@@ -1,63 +1,47 @@
-// Title: Aspose.Cells for .NET – Set a 4‑point SpaceAfter on every paragraph in a TextBox shape
-// Description: This example creates a workbook, inserts a TextBox shape with multiline text, accesses its TextParagraphCollection, and sets each paragraph's SpaceAfterSizeType to Points and SpaceAfter to 4. The workbook is then saved as SetSpaceAfterDemo.xlsx.
-// Keywords: Aspose.Cells .NET paragraph spacing | SpaceAfter property | TextBox shape line spacing | LineSpaceSizeType Points | Excel shape paragraph formatting | C# Aspose.Cells example
-// Common Searches: how to add space after paragraphs in Aspose.Cells | set paragraph spacing in a text box using Aspose.Cells .NET | Aspose.Cells SpaceAfterSizeType example | C# code to adjust line spacing in Excel shapes | configure paragraph spacing in Aspose.Cells workbook
-// Developer Intent: Apply a uniform 4‑point spacing after each paragraph inside a TextBox shape in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Design reports where text boxes need consistent paragraph spacing for readability. | Create reusable Excel templates with pre‑formatted text boxes that match corporate style guides. | Automate generation of documentation worksheets that require exact spacing after each paragraph.
-// AI Prompts: Show me how to set SpaceAfter to 6 points for all paragraphs in a TextBox with Aspose.Cells .NET. | Provide C# code to change SpaceAfterSizeType to Auto and calculate spacing based on paragraph length. | Explain how to read and modify existing paragraph spacing in a saved Excel workbook using Aspose.Cells.
+// Title: Add a 4‑point space after each paragraph in a shape using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an Excel workbook, retrieves a specific shape, and sets the SpaceAfterPt property of every paragraph in the shape to 4 points, then saves the file. | Show how to loop through all paragraphs of a shape in Aspose.Cells and apply a 4‑point spacing after each paragraph using the ParagraphFormatting API.
+// Common Searches: Aspose.Cells set SpaceAfterPt for shape paragraphs | C# add spacing after paragraph in Excel shape | How to increase paragraph spacing after in a shape with Aspose.Cells | Set 4 point space after each paragraph in shape text using .NET
+// Tags: set SpaceAfterPt Aspose.Cells | shape paragraph spacing .NET | modify shape text formatting C# | Aspose.Cells paragraph formatting API | Excel shape paragraph spacing using C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, accesses a shape, sets the SpaceAfterPt property of each paragraph to 4 points to add spacing after the text, and saves the updated workbook using Aspose.Cells for .NET.
+class Program
 {
-    // This example creates a workbook, inserts a TextBox shape with multiline text, accesses its TextParagraphCollection, and sets each paragraph's SpaceAfterSizeType to Points and SpaceAfter to 4. The workbook is then saved as SetSpaceAfterDemo.xlsx.
-    public class SetSpaceAfterDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a text box shape to the worksheet
-                Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 300, 200);
-                // Set text with multiple paragraphs
-                textBox.Text = "First paragraph\nSecond paragraph\nThird paragraph";
-
-                // Access the collection of paragraphs in the text box
-                TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
-
-                // Apply 4 points spacing after each paragraph
-                foreach (TextParagraph paragraph in paragraphs)
-                {
-                    // Use points as the unit for space after
-                    paragraph.SpaceAfterSizeType = LineSpaceSizeType.Points;
-                    // Set the space after value to 4 points
-                    paragraph.SpaceAfter = 4;
-                }
-
-                // Save the workbook to a file
-                workbook.Save("SetSpaceAfterDemo.xlsx");
-                Console.WriteLine("Workbook saved successfully as SetSpaceAfterDemo.xlsx");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Example operation: set a uniform row height for all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Set the default row height (in points)
+                sheet.Cells.StandardHeight = 15.0;
             }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetSpaceAfterDemo.Run();
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

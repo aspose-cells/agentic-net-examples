@@ -1,41 +1,44 @@
-// Title: C# – Merge cells F12:G12, add thick black border, and save as macro‑enabled XLSM with Aspose.Cells
-// Description: Shows how to create a new workbook using Aspose.Cells for .NET, merge the range F12:G12, apply a thick black border style to the merged cells, and export the result as a macro‑enabled XLSM file.
-// Keywords: Aspose.Cells merge cells C# | thick border style Aspose.Cells | macro enabled XLSM save .NET | cell formatting Aspose.Cells | Excel workbook creation C# | apply borders to merged range | save workbook as XLSM | Aspose.Cells cell style API | C# Excel macro template
-// Common Searches: Aspose.Cells merge F12:G12 C# | add thick border to merged cells Aspose.Cells | save workbook as macro enabled XLSM using .NET | C# code for merging cells and applying borders in Excel | how to create macro enabled file with Aspose.Cells
-// Developer Intent: Create a workbook, merge a specific range, style it with a thick black border, and export it as a macro‑enabled XLSM file.
-// Use Cases: Design a header that spans two columns in a financial report and highlight it with a bold border. | Build a macro‑enabled template where input sections are marked by merged cells with prominent borders for downstream VBA scripts. | Generate a printable invoice where the total amount cell merges two columns and is emphasized with a thick border.
-// AI Prompts: Write C# code that merges cells F12:G12, applies a thick black border, and saves the workbook as an XLSM file using Aspose.Cells. | Explain how to create a reusable Style with thick borders in Aspose.Cells and apply it to multiple merged ranges before saving as a macro‑enabled workbook. | Show how to set border color and line style for all sides of a merged cell range in Aspose.Cells for .NET.
+// Title: Merge cells F12:G12, apply a thick border style, and save as a macro‑enabled XLSM workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that merges the range F12:G12, creates a style with thick borders on all sides, applies the style to the merged range, and saves the workbook as an XLSM file. | Demonstrate how to format a merged cell block with uniform thick borders and export the result as a macro‑enabled spreadsheet using Aspose.Cells in a .NET application.
+// Common Searches: how to merge a specific range and add thick borders using Aspose.Cells in C# | saving a workbook as macro enabled XLSM with Aspose.Cells .NET | apply border style to merged cells F12 G12 Aspose.Cells example | C# Aspose.Cells create styled macro enabled spreadsheet
+// Tags: merge cells Aspose.Cells C# | thick border style Aspose.Cells | save workbook as XLSM Aspose.Cells | styled merged range Aspose.Cells .NET | macro enabled workbook generation Aspose.Cells
 
-using System.Drawing;
+using System;
 using Aspose.Cells;
 
-// Shows how to create a new workbook using Aspose.Cells for .NET, merge the range F12:G12, apply a thick black border style to the merged cells, and export the result as a macro‑enabled XLSM file.
+// // This program creates a new workbook, merges cells F12:G12 on the first worksheet, applies a thick border style to the merged range, and saves the workbook as a macro‑enabled XLSM file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Merge cells F12:G12 (zero‑based row 11, column 5, 1 row, 2 columns)
-        worksheet.Cells.Merge(11, 5, 1, 2);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Create a style with a thick border on all sides
-        Style borderStyle = workbook.CreateStyle();
-        borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
-        borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
-        borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
-        borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
-        borderStyle.Borders[BorderType.TopBorder].Color = Color.Black;
-        borderStyle.Borders[BorderType.BottomBorder].Color = Color.Black;
-        borderStyle.Borders[BorderType.LeftBorder].Color = Color.Black;
-        borderStyle.Borders[BorderType.RightBorder].Color = Color.Black;
+            // Merge cells F12:G12 (row index 11, column index 5)
+            sheet.Cells.Merge(11, 5, 1, 2);
 
-        // Apply the style to the merged cell (upper‑left cell of the range)
-        worksheet.Cells[11, 5].SetStyle(borderStyle);
+            // Create a style with thick borders on all sides
+            Style style = workbook.CreateStyle();
+            style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
+            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
+            style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
+            style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
 
-        // Save the workbook as a macro‑enabled XLSM file
-        workbook.Save("MergedWithBorder.xlsm", SaveFormat.Xlsm);
+            // Apply the style to the merged range
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange("F12:G12");
+            mergedRange.ApplyStyle(style, new StyleFlag() { All = true });
+
+            // Save the workbook as a macro‑enabled XLSM file
+            workbook.Save("output.xlsm", SaveFormat.Xlsm);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,86 +1,61 @@
-// Title: Attempt to copy rows from a password‑protected worksheet range using Aspose.Cells for .NET
-// Description: The example creates a workbook, fills cells A1:B2, defines a protected range with a password, protects the sheet, and then tries to copy those rows to another workbook via Cells.CopyRows. Because the source range is locked, the copy throws an exception, which is caught and displayed.
-// Keywords: Aspose.Cells copy protected range | C# copy rows password protected worksheet | Aspose.Cells Cells.CopyRows exception | protected range copy without password | Aspose.Cells worksheet protection
-// Common Searches: Aspose.Cells copy rows from a locked range | How to copy data from a password‑protected worksheet in .NET | Exception when copying protected range with Aspose.Cells | Copy rows from protected sheet without password Aspose.Cells
-// Developer Intent: Show that copying rows from a worksheet containing a password‑protected range fails when the password is not supplied, and demonstrate proper exception handling.
-// Use Cases: Verify that protected ranges prevent unauthorized data copying. | Capture and log the exception raised by Cells.CopyRows on a locked range. | Inform users that the correct range password is required for copy operations.
-// AI Prompts: Generate C# code that copies rows from a protected worksheet after providing the range password using Aspose.Cells. | Explain how to retrieve and remove a protected range password programmatically before copying data. | Show how to catch the specific exception thrown when copying a password‑protected range without a password.
+// Title: How to copy a password‑protected worksheet to another workbook and handle the exception when the password is omitted using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that protects a worksheet with a password, then attempts to duplicate that sheet into a new workbook without providing the password, and captures the resulting CellsException. | Show how to log the error message returned by Aspose.Cells when AddCopy fails on a protected sheet because the password is missing. | Provide a complete example that saves the original protected workbook and the destination workbook after the failed copy operation.
+// Common Searches: Aspose.Cells .NET copy protected sheet to another workbook without password error | C# exception thrown when adding copy of a password‑protected worksheet using Aspose.Cells | How to handle CellsException for protected worksheet copy in Aspose.Cells | Why does AddCopy fail on a protected worksheet in Aspose.Cells for .NET
+// Tags: addcopy protected worksheet Aspose.Cells | worksheet protection password handling C# | cellsexception protected sheet copy | saving source and destination workbooks Aspose.Cells | copy worksheet without password Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectedRangeCopyDemo
+// Demonstrates protecting a worksheet with a password, attempting to copy it to another workbook without the password, catching the CellsException, and saving both the source and destination workbooks.
+class WorksheetProtectionDemo
 {
-    // The example creates a workbook, fills cells A1:B2, defines a protected range with a password, protects the sheet, and then tries to copy those rows to another workbook via Cells.CopyRows. Because the source range is locked, the copy throws an exception, which is caught and displayed.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
+            // Create the source workbook and add some data
+            Workbook sourceWb = new Workbook();
+            Worksheet sourceWs = sourceWb.Worksheets[0];
+            sourceWs.Name = "ProtectedSheet";
+
+            // Fill some cells with sample data
+            sourceWs.Cells["A1"].PutValue("ID");
+            sourceWs.Cells["B1"].PutValue("Name");
+            sourceWs.Cells["A2"].PutValue(1);
+            sourceWs.Cells["B2"].PutValue("Alice");
+            sourceWs.Cells["A3"].PutValue(2);
+            sourceWs.Cells["B3"].PutValue("Bob");
+
+            // Protect the entire worksheet with a password (oldPassword is not required here)
+            sourceWs.Protect(ProtectionType.All, "mySecretPassword", string.Empty);
+
+            // Save the protected workbook (optional, just for inspection)
+            sourceWb.Save("SourceProtected.xlsx");
+
+            // Create a destination workbook where we will try to copy the protected sheet
+            Workbook destWb = new Workbook();
+
             try
             {
-                // ---------- Create source workbook ----------
-                Workbook srcWb = new Workbook();
-                Worksheet srcSheet = srcWb.Worksheets[0];
-
-                // Fill some data in the range A1:B2
-                srcSheet.Cells["A1"].PutValue("Item");
-                srcSheet.Cells["B1"].PutValue("Quantity");
-                srcSheet.Cells["A2"].PutValue("Apple");
-                srcSheet.Cells["B2"].PutValue(10);
-
-                // Add a protected range covering A1:B2 and set a password
-                int rangeIndex = srcSheet.AllowEditRanges.Add("MyProtectedRange", 0, 0, 1, 1);
-                ProtectedRange protectedRange = srcSheet.AllowEditRanges[rangeIndex];
-                protectedRange.Password = "rangePwd";
-
-                // Protect the entire worksheet (with a password for completeness)
-                srcSheet.Protect(ProtectionType.All, "sheetPwd", null);
-
-                // Save the source workbook (optional, just to visualize)
-                string srcPath = "SourceProtected.xlsx";
-                try
-                {
-                    srcWb.Save(srcPath);
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save source workbook: {saveEx.Message}");
-                }
-
-                // ---------- Attempt to copy the protected range ----------
-                Workbook destWb = new Workbook();
-                Worksheet destSheet = destWb.Worksheets[0];
-
-                try
-                {
-                    // Copy the first two rows (A1:B2) from source to destination.
-                    // Correct overload: CopyRows(destCells, startRow, totalRows, destStartRow)
-                    srcSheet.Cells.CopyRows(destSheet.Cells, 0, 2, 0);
-                    Console.WriteLine("Copy operation succeeded (unexpected).");
-                }
-                catch (Exception copyEx)
-                {
-                    // Expected path: operation fails because the source range is password‑protected
-                    Console.WriteLine("Copy operation failed as expected: " + copyEx.Message);
-                }
-
-                // Save the destination workbook to see the result
-                string destPath = "DestinationAfterCopyAttempt.xlsx";
-                try
-                {
-                    destWb.Save(destPath);
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save destination workbook: {saveEx.Message}");
-                }
+                // Attempt to copy the protected worksheet without providing the password
+                // This operation should fail because the sheet is protected
+                destWb.Worksheets.AddCopy(sourceWs.Name);
+                Console.WriteLine("Worksheet copied successfully (unexpected).");
             }
-            catch (Exception ex)
+            catch (CellsException ex)
             {
-                // General exception handling
-                Console.WriteLine("An error occurred: " + ex.Message);
+                // Expected exception: the sheet is protected and cannot be copied without the password
+                Console.WriteLine("Failed to copy protected worksheet without password:");
+                Console.WriteLine(ex.Message);
             }
+
+            // Save the destination workbook (it will not contain the copied sheet)
+            destWb.Save("Destination.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // General exception handling for unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,10 +1,7 @@
-// Title: C# – Remove Write Protection from a Shared Excel Workbook with Aspose.Cells and Save Unprotected
-// Description: Loads a write‑protected shared workbook, clears the WriteProtection password (or leaves it empty), optionally unprotects the shared workbook, and saves a new copy without any write protection using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# remove write protection | unprotect shared Excel workbook .NET | clear workbook password Aspose.Cells | save Excel file without protection | Workbook.Settings.WriteProtection | Aspose.Cells API example | C# Excel protection removal
-// Common Searches: how to remove write protection from an Excel file using Aspose.Cells | Aspose.Cells unprotect shared workbook programmatically | C# clear Excel workbook password Aspose | remove write protection and save workbook with Aspose.Cells | Aspose.Cells example for disabling write protection
-// Developer Intent: Strip all write protection from a shared Excel workbook and generate an unprotected version using Aspose.Cells for .NET.
-// Use Cases: Automate the de‑protection of shared workbooks before bulk processing or publishing. | Create an unprotected copy of a password‑protected Excel file for downstream systems that cannot handle protection. | Validate and handle missing input files gracefully while removing workbook protection.
-// AI Prompts: Generate C# code with Aspose.Cells that opens a write‑protected shared workbook, removes its write protection, and saves an unprotected copy. | Explain how Workbook.Settings.WriteProtection can be cleared to disable write protection in an Excel file using Aspose.Cells. | Provide robust error‑handling for a routine that checks file existence, removes write protection, and saves the workbook, including logging of exceptions.
+// Title: How to remove write protection from a shared Excel workbook and save an unprotected copy using Aspose.Cells for .NET
+// AI Prompts: Load a shared .xlsx file with Aspose.Cells, call Workbook.Unprotect(string.Empty) to clear any write‑protection, and save the result to a new file path. | In C#, open a protected workbook, catch potential Unprotect exceptions, and write the workbook out without any password using Aspose.Cells.
+// Common Searches: Aspose.Cells C# remove write protection from shared workbook without password | How to unprotect an Excel file programmatically with Aspose.Cells .NET | Save an unprotected copy of a protected .xlsx using Aspose.Cells | C# code to load a shared Excel workbook and disable write protection | Aspose.Cells unprotect workbook when password is unknown
+// Tags: Aspose.Cells workbook unprotect | C# remove Excel write protection | save unprotected .xlsx Aspose.Cells | shared workbook protection .NET | Workbook.Unprotect empty password
 
 using System;
 using System.IO;
@@ -12,56 +9,46 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Loads a write‑protected shared workbook, clears the WriteProtection password (or leaves it empty), optionally unprotects the shared workbook, and saves a new copy without any write protection using Aspose.Cells for .NET.
-    class RemoveWriteProtection
+    // The example verifies the input file, loads the shared workbook with Aspose.Cells, attempts to clear write protection by calling Unprotect with an empty string (safely handling any exception if the workbook is already unprotected), and then saves the workbook to a new location without any password protection.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
-            // Input workbook path (write‑protected shared workbook)
-            string inputPath = "SharedProtectedWorkbook.xlsx";
+            const string inputPath = "SharedWorkbook.xlsx";
+            const string outputPath = "SharedWorkbook_Unprotected.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
+            // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
                 return;
             }
 
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+                // Load the existing shared workbook
+                var workbook = new Workbook(inputPath);
 
-                // Remove write protection if it is enabled
-                if (workbook.Settings.WriteProtection.IsWriteProtected)
+                // Attempt to remove write‑protection (empty password works when no password is set)
+                try
                 {
-                    // Setting an empty password clears the protection
-                    workbook.Settings.WriteProtection.Password = string.Empty;
+                    workbook.Unprotect(string.Empty);
+                }
+                catch (Exception ex)
+                {
+                    // If the workbook is not protected, Unprotect may throw; ignore safely
+                    Console.WriteLine($"Unprotect warning: {ex.Message}");
                 }
 
-                // If the workbook is also a shared workbook and has a password,
-                // uncomment and provide the password to unprotect it:
-                // workbook.UnprotectSharedWorkbook("sharedPassword");
-
-                // Output workbook path (unprotected version)
-                string outputPath = "UnprotectedWorkbook.xlsx";
-
-                // Save the workbook without write protection
+                // Save the workbook without any protection
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
+                // Catch any unexpected errors during processing
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            RemoveWriteProtection.Run();
         }
     }
 }

@@ -1,40 +1,38 @@
-// Title: Convert Excel Workbook to PDF with Embedded Metadata Keywords using Aspose.Cells (C#)
-// Description: Creates a new Workbook, adds sample data, sets built‑in document properties (Title, Subject, Keywords) that become PDF metadata, enables ExportDocumentStructure for searchable PDFs, and saves the workbook as a PDF file.
-// Keywords: Aspose.Cells | C# PDF conversion | Excel to PDF | PDF metadata | document properties | keywords | ExportDocumentStructure | searchable PDF | archive PDF | built‑in document properties
-// Common Searches: Aspose.Cells add PDF keywords C# | How to set PDF metadata when converting Excel with Aspose | ExportDocumentStructure Aspose.Cells PDF | C# convert workbook to PDF with metadata | Set title subject keywords in PDF using Aspose.Cells
-// Developer Intent: Convert an Excel workbook to PDF while embedding title, subject, and keyword metadata for searchable archives.
-// Use Cases: Automated generation of PDF reports with searchable metadata for document management systems. | Compliance‑ready archival of Excel data as PDFs with embedded keywords. | Creating PDFs that can be indexed by enterprise search tools via document structure export. | Batch conversion of multiple workbooks to PDFs with consistent metadata across files.
-// AI Prompts: Write C# code using Aspose.Cells to convert a workbook to PDF and set Title, Subject, and Keywords metadata. | Explain how ExportDocumentStructure improves PDF searchability and show how to enable it in PdfSaveOptions. | Demonstrate adding custom document properties to a PDF generated from a workbook with Aspose.Cells. | Show how to batch process several workbooks to PDF while applying the same metadata fields.
+// Title: How to convert an Excel workbook to PDF and embed custom keyword metadata with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets the 'Keywords' built‑in document property, and saves the workbook as a PDF while preserving the document outline using Aspose.Cells. | Show how to configure PdfSaveOptions to enable ExportDocumentStructure and embed custom keywords before converting a workbook to PDF in C#.
+// Common Searches: aspnet convert excel to pdf with custom pdf metadata aspose.cells | c# set built‑in document properties keywords before saving workbook as pdf | preserve outline exportdocumentstructure pdfsaveoptions aspose cells example
+// Tags: Aspose.Cells set workbook keywords | PdfSaveOptions ExportDocumentStructure | Excel to PDF conversion with metadata | C# embed custom PDF metadata using Aspose | preserve document outline Aspose.Cells PDF
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Creates a new Workbook, adds sample data, sets built‑in document properties (Title, Subject, Keywords) that become PDF metadata, enables ExportDocumentStructure for searchable PDFs, and saves the workbook as a PDF file.
-class Program
+namespace AsposeCellsPdfConversion
 {
-    static void Main()
+    // Loads an Excel workbook, assigns keyword values via BuiltInDocumentProperties, enables ExportDocumentStructure in PdfSaveOptions, and saves the workbook as a PDF.
+    class Program
     {
-        // Create a new workbook (lifecycle create rule)
-        Workbook workbook = new Workbook();
-
-        // Add some sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Sample Data");
-        sheet.Cells["A2"].PutValue(12345);
-
-        // Set built‑in document properties that become PDF keywords/metadata
-        workbook.BuiltInDocumentProperties["Title"].Value = "Sample Workbook PDF";
-        workbook.BuiltInDocumentProperties["Subject"].Value = "Demonstration of PDF conversion with keywords";
-        workbook.BuiltInDocumentProperties["Keywords"].Value = "Aspose, PDF, Sample, Keywords";
-
-        // Configure PDF save options (using the Save(string, SaveOptions) rule)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        static void Main()
         {
-            // Export document structure can help with searchability in some PDF viewers
-            ExportDocumentStructure = true
-        };
+            // Load an existing Excel workbook
+            // (Replace the path with the actual source file)
+            Workbook workbook = new Workbook("input.xlsx");
 
-        // Save the workbook as PDF with the specified options
-        workbook.Save("output.pdf", pdfOptions);
+            // Add keywords to the built‑in document properties.
+            // These keywords become part of the PDF metadata after conversion,
+            // improving searchability in archive systems.
+            workbook.BuiltInDocumentProperties["Keywords"].Value = "Finance,Report,2023,Quarterly";
+
+            // Create PDF save options.
+            // ExportDocumentStructure = true preserves the document outline in the PDF.
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                ExportDocumentStructure = true
+            };
+
+            // Save the workbook as a PDF using the specified options.
+            // (Replace the path with the desired output location)
+            workbook.Save("output.pdf", pdfOptions);
+        }
     }
 }

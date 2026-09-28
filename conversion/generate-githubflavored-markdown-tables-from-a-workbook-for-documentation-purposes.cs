@@ -1,69 +1,75 @@
-// Title: Export Excel Workbook to GitHub‑Flavored Markdown Tables with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, configures MarkdownSaveOptions (first‑row header, space padding, split tables by blank rows, formula evaluation) and saves it as a GitHub‑compatible Markdown file, ideal for README or documentation generation.
-// Keywords: Aspose.Cells | C# | .NET | Excel to Markdown | GitHub‑flavored markdown tables | MarkdownSaveOptions | table header first row | split tables by blank rows | calculate formulas | documentation export
-// Common Searches: Aspose.Cells export Excel to GitHub markdown C# | Convert Excel sheet to markdown table with Aspose.Cells | MarkdownSaveOptions split tables by blank rows example | How to evaluate formulas when saving Excel as markdown | Generate README.md tables from Excel using Aspose.Cells
-// Developer Intent: Create a .md file containing GitHub‑flavored tables from an Excel workbook using Aspose.Cells.
-// Use Cases: Add data tables from Excel reports directly into project README or wiki pages. | Publish calculation results with evaluated formulas to static site generators that accept markdown. | Separate multiple logical tables in a worksheet by blank rows, producing distinct markdown tables for each.
-// AI Prompts: Write a C# method that uses Aspose.Cells to convert an Excel file into a GitHub‑flavored markdown file, using the first row as the header and splitting tables at blank rows. | Show how to add error handling that verifies the source Excel file exists before exporting it to markdown with Aspose.Cells. | Explain the MarkdownSaveOptions settings needed to calculate formulas, align columns with spaces, and split tables by blank rows.
+// Title: Generate separate GitHub‑flavored Markdown files for each worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that loads an .xlsx file, iterates through all worksheets, and saves each worksheet as an individual .md file containing a GitHub‑compatible markdown table, applying Aspose.Cells MarkdownSaveOptions with first‑row headers and formula evaluation. | Create a C# routine that builds a temporary workbook for each sheet, configures MarkdownSaveOptions (space padding, no splitting by blank rows), and exports the sheet to a markdown file named after the worksheet.
+// Common Searches: C# Aspose.Cells export each Excel sheet to separate markdown file | How to save Excel worksheets as GitHub markdown tables with formula calculation in .NET | Aspose.Cells MarkdownSaveOptions settings for per‑worksheet export | Generate .md files from multiple worksheets using Aspose.Cells | Convert Excel workbook to markdown tables programmatically in C#
+// Tags: Aspose.Cells per‑worksheet markdown export | C# MarkdownSaveOptions first‑row header | export Excel sheet to GitHub markdown | temporary workbook sheet copy Aspose.Cells | formula evaluation in markdown conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Markdown;
 
-namespace AsposeCellsDocumentation
+namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, configures MarkdownSaveOptions (first‑row header, space padding, split tables by blank rows, formula evaluation) and saves it as a GitHub‑compatible Markdown file, ideal for README or documentation generation.
-    public class MarkdownTableGenerator
+    // The example loads 'input.xlsx', verifies its presence, iterates over every worksheet, creates a temporary workbook containing only the current sheet, and saves it as a markdown file (e.g., Sheet1.md) using MarkdownSaveOptions configured for first‑row headers, space padding, no table splitting, and formula calculation.
+    public class GenerateMarkdownTables
     {
-        /// <param name="excelPath">Full path to the source Excel file.</param>
-        /// <param name="markdownPath">Full path where the Markdown file will be saved.</param>
-        public static void GenerateMarkdown(string excelPath, string markdownPath)
-        {
-            try
-            {
-                // Verify that the source Excel file exists
-                if (!File.Exists(excelPath))
-                {
-                    Console.WriteLine($"Error: Excel file not found at '{excelPath}'.");
-                    return;
-                }
-
-                // Load the workbook from the specified file
-                Workbook workbook = new Workbook(excelPath);
-
-                // Configure Markdown save options
-                MarkdownSaveOptions saveOptions = new MarkdownSaveOptions
-                {
-                    TableHeaderType = MarkdownTableHeaderType.FirstRow,
-                    AlignColumnPadding = ' ',
-                    SplitTablesByBlankRow = true,
-                    CalculateFormula = true
-                };
-
-                // Save the workbook as a Markdown file
-                workbook.Save(markdownPath, saveOptions);
-                Console.WriteLine($"Markdown file generated at: {markdownPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while generating Markdown: {ex.Message}");
-            }
-        }
-
-        // Example usage
         public static void Main()
         {
             try
             {
-                string sourceExcel = @"C:\Docs\SampleData.xlsx";
-                string outputMarkdown = @"C:\Docs\SampleData.md";
-
-                GenerateMarkdown(sourceExcel, outputMarkdown);
+                Run();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The file '{inputPath}' was not found.");
+
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(inputPath);
+
+            // Common markdown export options
+            MarkdownSaveOptions markdownOptions = new MarkdownSaveOptions
+            {
+                TableHeaderType = MarkdownTableHeaderType.FirstRow,
+                AlignColumnPadding = ' ',
+                SplitTablesByBlankRow = false,
+                CalculateFormula = true
+            };
+
+            // Export each worksheet individually
+            for (int i = 0; i < sourceWorkbook.Worksheets.Count; i++)
+            {
+                try
+                {
+                    Worksheet sheet = sourceWorkbook.Worksheets[i];
+
+                    // Create a temporary workbook containing only the current sheet
+                    Workbook tempWorkbook = new Workbook();
+                    tempWorkbook.Worksheets.Clear();
+
+                    // Add a copy of the current worksheet by name (required overload)
+                    tempWorkbook.Worksheets.AddCopy(sheet.Name);
+
+                    string mdFileName = $"{sheet.Name}.md";
+
+                    // Save the temporary workbook as markdown
+                    tempWorkbook.Save(mdFileName, markdownOptions);
+
+                    Console.WriteLine($"Worksheet '{sheet.Name}' exported to '{mdFileName}'.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to export worksheet index {i}: {ex.Message}");
+                }
             }
         }
     }

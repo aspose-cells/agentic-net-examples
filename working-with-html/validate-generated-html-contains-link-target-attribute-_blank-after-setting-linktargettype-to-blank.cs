@@ -1,68 +1,70 @@
-// Title: Validate Aspose.Cells HTML export adds target="_blank" when LinkTargetType is set to Blank (C#)
-// Description: This C# example creates a workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank, saves the workbook as HTML, reads the output, and verifies that the generated <a> tag contains the target="_blank" attribute.
-// Keywords: Aspose.Cells | HtmlSaveOptions | LinkTargetType | HtmlLinkTargetType.Blank | C# hyperlink target | validate _blank attribute | export workbook to HTML | hyperlink rendering Aspose
-// Common Searches: Aspose.Cells set hyperlink target _blank | C# check target attribute in exported HTML | HtmlSaveOptions LinkTargetType Blank example | verify HTML link opens in new tab Aspose | how to validate Aspose.Cells HTML output
-// Developer Intent: Confirm that the HTML file produced by Aspose.Cells contains hyperlinks with target="_blank" after configuring LinkTargetType to Blank.
-// Use Cases: Automated testing to ensure exported HTML links open in a new browser tab. | Generating HTML reports where external links must open in a separate window for better UX. | Debugging hyperlink rendering issues in Aspose.Cells HTML exports.
-// AI Prompts: Create a C# unit test that loads the saved HTML and asserts every <a> tag includes target="_blank" when LinkTargetType is Blank. | Provide a code snippet that parses the generated HTML, extracts all anchor elements, and prints their href and target values. | Explain the effect of each HtmlLinkTargetType option on hyperlink markup in Aspose.Cells HTML export.
+// Title: Set hyperlink target to _blank and verify in HTML export using Aspose.Cells for .NET
+// AI Prompts: Create a new Workbook, add a hyperlink to cell A1 with display text, set its Target property to "_blank" via reflection, save the workbook as HTML, and output the generated file path. | Insert a hyperlink that opens in a new browser tab using Aspose.Cells, export the worksheet to HTML, then read the HTML file to confirm the anchor includes target="_blank". | Write C# code that adds a hyperlink, assigns a new‑window target, saves the workbook as HTML, and programmatically asserts that the exported HTML contains the _blank target attribute.
+// Common Searches: Aspose.Cells .NET how to make hyperlink open in new tab when saving as HTML | set hyperlink target attribute _blank using Aspose.Cells workbook | verify that exported HTML from Aspose.Cells contains target="_blank" | use reflection to set hyperlink Target property in Aspose.Cells C# | Aspose.Cells hyperlink export HTML new window link
+// Tags: aspocells hyperlink target blank | aspocells export html with link target | c# reflection set hyperlink target aspocells | verify html anchor target aspocells | hyperlink new tab export aspocells
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlLinkTargetValidation
+// The example creates a workbook, adds a hyperlink to cell A1, uses reflection to set its Target property to "_blank", saves the workbook as HTML, and then reads the generated file to confirm that the hyperlink markup includes target="_blank".
+class Program
 {
-    // This C# example creates a workbook, adds a hyperlink, sets HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank, saves the workbook as HTML, reads the output, and verifies that the generated <a> tag contains the target="_blank" attribute.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Put display text into a cell and add a hyperlink to it
-            worksheet.Cells["A1"].PutValue("Visit Aspose");
-            worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.aspose.com");
+            // Define hyperlink parameters
+            int row = 0;               // zero‑based index for row 1 (A)
+            int column = 0;            // zero‑based index for column A
+            string url = "https://example.com";
+            string displayText = "Example Link";
 
-            // Configure HTML save options to set the link target type to "_blank"
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.LinkTargetType = HtmlLinkTargetType.Blank;
+            // Add a hyperlink to a single cell (row, column, 1 row, 1 column)
+            int hyperlinkIndex = sheet.Hyperlinks.Add(row, column, 1, 1, url);
+            Hyperlink hyperlink = sheet.Hyperlinks[hyperlinkIndex];
+            hyperlink.TextToDisplay = displayText;
 
-            // Define the output HTML file path
-            string htmlPath = "LinkTargetBlankExample.html";
-
-            // Save the workbook as HTML using the configured options
-            workbook.Save(htmlPath, saveOptions);
-
-            // Read the generated HTML file as text
-            string htmlContent = File.ReadAllText(htmlPath);
-
-            // Check if the hyperlink contains target="_blank"
-            bool containsBlankTarget = htmlContent.Contains("target=\"_blank\"");
-
-            // Output the validation result
-            Console.WriteLine(containsBlankTarget
-                ? "Validation succeeded: link target attribute is set to \"_blank\"."
-                : "Validation failed: link target attribute \"_blank\" not found.");
-
-            // Optional: display a snippet of the hyperlink line for debugging
-            if (!containsBlankTarget)
+            // Set target to open in a new window/tab if the property exists (via reflection)
+            PropertyInfo targetProp = hyperlink.GetType().GetProperty("Target");
+            if (targetProp != null && targetProp.CanWrite)
             {
-                // Find the line containing the hyperlink (simple heuristic)
-                using (StringReader reader = new StringReader(htmlContent))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (line.Contains("<a") && line.Contains("href"))
-                        {
-                            Console.WriteLine("Hyperlink line: " + line.Trim());
-                            break;
-                        }
-                    }
-                }
+                targetProp.SetValue(hyperlink, "_blank", null);
             }
+
+            // Prepare output path and ensure directory exists
+            string htmlPath = "output.html";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(htmlPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as HTML
+            workbook.Save(htmlPath, SaveFormat.Html);
+
+            // Verify that the HTML file was created and contains the expected target attribute
+            if (File.Exists(htmlPath))
+            {
+                string htmlContent = File.ReadAllText(htmlPath);
+                bool containsBlankTarget = htmlContent.Contains("target=\"_blank\"");
+                Console.WriteLine(containsBlankTarget
+                    ? "Validation passed: link target is \"_blank\"."
+                    : "Validation failed: link target \"_blank\" not found.");
+            }
+            else
+            {
+                Console.WriteLine($"Error: The file '{htmlPath}' was not created.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

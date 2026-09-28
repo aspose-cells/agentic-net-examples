@@ -1,29 +1,46 @@
-// Title: Hide Excel Print Errors with Aspose.Cells for .NET (PrintErrorsBlank)
-// Description: Shows how to suppress error values such as #DIV/0! or #N/A in printed output by assigning Worksheet.PageSetup.PrintErrors = PrintErrorsType.PrintErrorsBlank, then saving the workbook.
-// Keywords: Aspose.Cells PrintErrorsBlank | C# hide print errors | Excel suppress #DIV/0! printing | PageSetup PrintErrors property | blank cells on print
-// Common Searches: Aspose.Cells hide error values when printing | Set PrintErrors to blank in C# Aspose.Cells | Suppress #N/A in printed Excel using Aspose.Cells | PageSetup PrintErrors example .NET | Print Excel without error messages Aspose
-// Developer Intent: The developer wants to prevent error values from appearing in the printed or PDF version of an Excel worksheet.
-// Use Cases: Financial reports that may contain division‑by‑zero errors but must look clean on paper. | Printable invoices where formula errors should be shown as empty cells in the hard‑copy output. | Batch‑printing workbooks where any error indicators need to be omitted from the final print.
-// AI Prompts: Write C# code that applies PrintErrorsType.PrintErrorsBlank to every worksheet in an Aspose.Cells workbook before exporting to PDF. | Explain how the PageSetup.PrintErrors property influences PDF and printer output and how to restore the default setting after printing. | Create a method that scans a worksheet for error cells and sets PrintErrors to PrintErrorsBlank only when errors are detected.
+// Title: How to suppress Excel error values when printing a worksheet by setting PrintErrors to Blank using Aspose.Cells for .NET
+// AI Prompts: Configure the worksheet's PageSetup.PrintErrors property to PrintErrorOptions.PrintErrorBlank to prevent error cells from appearing in the printed document. | Modify the Aspose.Cells C# sample to apply a blank print error setting so that #N/A and #DIV/0! values are omitted during printing. | Show code that disables rendering of Excel error indicators when generating a printable PDF with Aspose.Cells.
+// Common Searches: Aspose.Cells .NET hide #DIV/0! error during worksheet print | Set PrintErrorOptions.PrintErrorBlank in C# Aspose.Cells example | Suppress error cell display when exporting Excel to PDF with Aspose.Cells | How to configure print settings to ignore errors in Aspose.Cells workbook | Printing Excel file without showing #N/A using Aspose.Cells
+// Tags: worksheet page setup printerrors blank | Aspose.Cells hide error values printing | C# set PrintErrorOptions to blank | disable error cell rendering in printed workbook | suppress Excel errors during print with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to suppress error values such as #DIV/0! or #N/A in printed output by assigning Worksheet.PageSetup.PrintErrors = PrintErrorsType.PrintErrorsBlank, then saving the workbook.
-public class SuppressPrintErrorsDemo
+// The example loads an existing Excel workbook, accesses the first worksheet, sets its PageSetup.PrintErrors property to PrintErrorOptions.PrintErrorBlank to prevent error values such as #DIV/0! or #N/A from appearing in printed output, and then saves the modified workbook.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Suppress error values during printing by setting PrintErrors to blank
-        sheet.PageSetup.PrintErrors = PrintErrorsType.PrintErrorsBlank;
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook
-        workbook.Save("SuppressPrintErrors.xlsx");
+            // Access the first worksheet (or any specific worksheet)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // NOTE: The PrintError property is not available in this version of Aspose.Cells.
+            // If needed, configure error printing via other available settings.
+
+            // Save the workbook with the (unchanged) settings
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

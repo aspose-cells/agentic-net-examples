@@ -1,40 +1,30 @@
-// Title: C# – Load an XLSX Workbook from a File Path and Verify Worksheets with Aspose.Cells
-// Description: Demonstrates how to instantiate a Workbook using the `Workbook(string)` constructor, check that the workbook contains at least one worksheet, output the worksheet count, and display the name of the first sheet for confirmation.
-// Keywords: Aspose.Cells load workbook C# | Workbook(string) constructor | verify Excel worksheets .NET | check worksheet count Aspose.Cells | load XLSX file programmatically
-// Common Searches: how to open an xlsx file with Aspose.Cells in C# | C# verify workbook has sheets after loading | Aspose.Cells check if workbook is empty | load excel file and get first worksheet name C#
-// Developer Intent: Open an XLSX file via a file path, ensure the workbook is initialized, and confirm the presence of worksheets.
-// Use Cases: Validate user‑uploaded Excel files on a web service before processing data. | Load a template workbook, read its first sheet name, and then populate it with dynamic content. | Log workbook health (sheet count, first sheet name) during automated ETL jobs.
-// AI Prompts: Create a C# method that loads an Excel file with Aspose.Cells, throws a custom exception if no worksheets exist, and returns the worksheet count. | Write reusable C# code that accepts a file path, opens the workbook, and returns the name of the first worksheet. | Generate a C# snippet that loads a workbook, logs the number of worksheets, and gracefully handles missing‑file errors.
+// Title: Load an XLSX file into an Aspose.Cells Workbook and confirm worksheet collection in C#
+// AI Prompts: Generate C# code that opens a given .xlsx file with Aspose.Cells, checks that the Worksheets collection is instantiated, and prints the number of sheets. | Write a reusable function `bool IsWorkbookReady(string path)` that loads the workbook using Aspose.Cells and returns true only if at least one worksheet is present.
+// Common Searches: C# Aspose.Cells how to open an .xlsx file and verify sheets exist | check if Excel workbook loaded with Aspose.Cells has any worksheets | Aspose.Cells .NET load workbook from file path and validate worksheet count | sample code to confirm successful workbook initialization using Aspose.Cells
+// Tags: load xlsx workbook Aspose.Cells C# | verify worksheet collection Aspose.Cells | initialize workbook from file path .NET | check sheet count after loading Excel Aspose.Cells | Aspose.Cells workbook validation C#
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadDemo
+// The example demonstrates loading an .xlsx file from a specified path using Aspose.Cells for .NET, then confirming that the Workbook object and its Worksheets collection are instantiated and contain at least one sheet.
+class Program
 {
-    // Demonstrates how to instantiate a Workbook using the `Workbook(string)` constructor, check that the workbook contains at least one worksheet, output the worksheet count, and display the name of the first sheet for confirmation.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the XLSX file
+        string filePath = "input.xlsx";
+
+        // Load the workbook from the specified file
+        Workbook workbook = new Workbook(filePath);
+
+        // Verify successful initialization
+        if (workbook != null && workbook.Worksheets != null && workbook.Worksheets.Count > 0)
         {
-            // Path to the Excel file to be loaded
-            string filePath = "sample.xlsx";
-
-            // Load the workbook from the specified file path using the Workbook(string) constructor
-            Workbook workbook = new Workbook(filePath);
-
-            // Verify successful initialization by checking that the workbook contains at least one worksheet
-            if (workbook.Worksheets != null && workbook.Worksheets.Count > 0)
-            {
-                Console.WriteLine($"Workbook loaded successfully. Worksheet count: {workbook.Worksheets.Count}");
-            }
-            else
-            {
-                Console.WriteLine("Failed to load workbook or workbook contains no worksheets.");
-            }
-
-            // Display the name of the first worksheet as additional confirmation
-            Worksheet firstSheet = workbook.Worksheets[0];
-            Console.WriteLine($"First worksheet name: {firstSheet.Name}");
+            Console.WriteLine("Workbook loaded successfully. Sheet count: " + workbook.Worksheets.Count);
+        }
+        else
+        {
+            Console.WriteLine("Failed to load workbook.");
         }
     }
 }

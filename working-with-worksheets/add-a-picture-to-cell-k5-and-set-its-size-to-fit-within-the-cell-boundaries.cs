@@ -1,54 +1,56 @@
-// Title: Add a picture to cell K5 and fit it within the cell using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, verifies a JPEG file, inserts the image into cell K5, sets IsPlacedInCell to keep the picture inside the cell boundaries, and saves the file as PictureInK5.xlsx.
-// Keywords: Aspose.Cells add picture C# | insert image into worksheet cell | IsPlacedInCell property | fit picture to cell boundaries | Aspose.Cells picture placement
-// Common Searches: Aspose.Cells add image to specific cell | C# place picture inside Excel cell | fit picture to cell size Aspose.Cells | set IsPlacedInCell true Aspose.Cells | insert JPEG into Excel cell using Aspose
-// Developer Intent: Insert a JPEG into cell K5 and ensure the image remains confined to the cell's dimensions.
-// Use Cases: Embedding a company logo in a designated cell of a financial report. | Displaying product thumbnails in inventory worksheets. | Adding a signature image to a form cell for electronic approval.
-// AI Prompts: Write C# code with Aspose.Cells that inserts an image into cell K5 and automatically scales it to the cell size. | Show how to adjust picture height and width after enabling IsPlacedInCell in Aspose.Cells. | Provide robust error handling for missing image files when adding a picture to a worksheet with Aspose.Cells.
+// Title: Insert an image into cell K5 and automatically resize it to fit the cell using Aspose.Cells for .NET
+// AI Prompts: Add a PNG picture to worksheet cell K5 and set its Width and Height to the cell's pixel dimensions with Aspose.Cells in C#. | Retrieve the pixel width of column K and the pixel height of row 5, then apply those values to a Picture object so the image fills the cell. | Programmatically place an image in a specific Excel cell and scale it to the cell boundaries using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# insert image into specific cell and fit to cell size | Resize picture to match Excel cell dimensions using Aspose.Cells .NET | Get column width in pixels Aspose.Cells and set picture size | How to add a PNG to cell K5 and auto‑scale it with Aspose.Cells | Fit an image inside an Excel cell programmatically with Aspose.Cells
+// Tags: Aspose.Cells add image to specific cell | Aspose.Cells resize picture to cell size | Aspose.Cells get column width in pixels | Aspose.Cells get row height in pixels | C# scale image to fit Excel cell | Aspose.Cells picture width height properties
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, verifies a JPEG file, inserts the image into cell K5, sets IsPlacedInCell to keep the picture inside the cell boundaries, and saves the file as PictureInK5.xlsx.
-class AddPictureToCell
+// The example loads an existing workbook, verifies the presence of the input Excel file and PNG image, inserts the image into cell K5, obtains the cell's pixel width and height, resizes the picture to those dimensions, and saves the result, handling any errors that may occur.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string imagePath = "image.png";
+            const string outputPath = "output.xlsx";
 
-            // Path to the image file to be inserted
-            string imagePath = "sample.jpg";
-
-            // Verify that the image file exists
+            // Verify required files exist to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
             if (!File.Exists(imagePath))
-            {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
-            }
+                throw new FileNotFoundException($"Image file not found: {imagePath}");
 
-            // Add the picture to cell K5 (row 5, column K)
-            // Row index for row 5 is 4 (zero‑based), column index for column K is 10.
-            // Using the overload that specifies topRow, leftColumn, bottomRow, rightColumn, and file name.
-            int pictureIndex = worksheet.Pictures.Add(4, 10, 4, 10, imagePath);
-            Picture picture = worksheet.Pictures[pictureIndex];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Ensure the picture is placed inside the cell boundaries
-            picture.IsPlacedInCell = true;
+            // Target cell K5 (zero‑based indices: row 4, column 10)
+            int targetRow = 4;
+            int targetColumn = 10;
 
-            // Save the workbook
-            string outputPath = "PictureInK5.xlsx";
+            // Add the picture to the worksheet at the target cell
+            int pictureIndex = sheet.Pictures.Add(targetRow, targetColumn, imagePath);
+            Picture picture = sheet.Pictures[pictureIndex];
+
+            // Retrieve the cell's width and height in pixels
+            double cellWidth = sheet.Cells.GetColumnWidthPixel(targetColumn);
+            double cellHeight = sheet.Cells.GetRowHeightPixel(targetRow);
+
+            // Resize the picture to fit within the cell boundaries
+            picture.Width = (int)cellWidth;
+            picture.Height = (int)cellHeight;
+
+            // Save the modified workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

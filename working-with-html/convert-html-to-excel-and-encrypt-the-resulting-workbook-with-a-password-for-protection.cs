@@ -1,36 +1,44 @@
-// Title: C# – Convert HTML to an Encrypted XLSX Workbook with Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells Workbook, sets a password via workbook.Settings.Password, and saves the workbook as a password‑protected XLSX file. Demonstrates HTML‑to‑Excel conversion and built‑in encryption in .NET.
-// Keywords: Aspose.Cells HTML to Excel conversion | C# encrypt Excel workbook | password protect XLSX .NET | LoadOptions Html Aspose.Cells | Workbook.Settings.Password | secure Excel export from HTML
-// Common Searches: Aspose.Cells convert HTML to password protected XLSX C# | How to encrypt an Excel file generated from HTML using Aspose.Cells | C# code sample for HTML to encrypted Excel conversion | Set workbook password with Aspose.Cells .NET
-// Developer Intent: Generate an Excel file from an HTML source and lock it with a password for secure distribution.
-// Use Cases: Create confidential financial reports by converting HTML templates to protected Excel files. | Export web‑page tables to Excel while complying with data‑privacy regulations. | Produce secure invoices or statements from HTML content for client delivery.
-// AI Prompts: Write C# code that uses Aspose.Cells to load an HTML file, apply a password, and save as an encrypted XLSX. | Explain which Excel formats support password protection in Aspose.Cells and how workbook.Settings.Password works. | Show how to add error handling for LoadOptions when converting HTML to a protected workbook.
+// Title: Convert HTML to an Excel workbook and protect it with a password using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an HTML file into an Aspose.Cells Workbook, assigns an opening password, and saves the result as an XLSX file. | Demonstrate how to configure LoadOptions for HTML format and then apply Workbook.Settings.Password to encrypt the Excel output with Aspose.Cells. | Provide a robust example that checks for the existence of the source HTML file and catches exceptions while creating a password‑protected workbook.
+// Common Searches: asp.net convert html to excel and set opening password with Aspose.Cells | c# Aspose.Cells load html file and protect workbook with password | how to encrypt generated xlsx from html using Aspose.Cells .NET | sample code for password protecting Excel file after HTML conversion in C#
+// Tags: HTML to XLSX conversion Aspose.Cells | Workbook password protection C# | LoadOptions for HTML Aspose.Cells | SaveFormat Xlsx encryption Aspose.Cells | exception handling file existence Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads an HTML file into an Aspose.Cells Workbook, sets a password via workbook.Settings.Password, and saves the workbook as a password‑protected XLSX file. Demonstrates HTML‑to‑Excel conversion and built‑in encryption in .NET.
-class HtmlToExcelEncrypt
+// The program verifies the presence of an input HTML file, loads it into an Aspose.Cells Workbook using HTML LoadOptions, sets an opening password via Workbook.Settings.Password, and saves the workbook as a password‑protected XLSX file, with exception handling for any errors.
+class Program
 {
     static void Main()
     {
-        // Input HTML file path
-        string htmlPath = "input.html";
+        try
+        {
+            const string inputPath = "input.html";
+            const string outputPath = "output.xlsx";
+            const string password = "MySecurePassword";
 
-        // Output Excel file path
-        string excelPath = "output.xlsx";
+            // Verify that the input HTML file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Password to protect the workbook
-        string password = "Secret123";
+            // Load the HTML file into a workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Load the HTML file into a workbook
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Html);
-        Workbook workbook = new Workbook(htmlPath, loadOptions);
+            // Encrypt the workbook with a password (required to open the file)
+            workbook.Settings.Password = password;
 
-        // Apply password protection
-        workbook.Settings.Password = password;
-
-        // Save the workbook as an encrypted Excel file
-        workbook.Save(excelPath, SaveFormat.Xlsx);
+            // Save the workbook as an Excel file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

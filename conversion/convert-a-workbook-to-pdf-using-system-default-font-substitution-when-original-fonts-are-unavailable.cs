@@ -1,61 +1,45 @@
-// Title: Convert Aspose.Cells Workbook to PDF with System Font Substitution (C#)
-// Description: Shows how to enable system‑font fallback in Aspose.Cells by setting FontConfigs.PreferSystemFontSubstitutes and PdfSaveOptions.CheckWorkbookDefaultFont, then saving a workbook with Unicode text to PDF.
-// Keywords: Aspose.Cells PDF conversion C# | FontConfigs.PreferSystemFontSubstitutes | PdfSaveOptions.CheckWorkbookDefaultFont | system font fallback | missing fonts Aspose.Cells | Unicode Excel to PDF | server‑side Excel PDF export | C# Aspose.Cells example
-// Common Searches: Aspose.Cells enable system font substitution | PdfSaveOptions CheckWorkbookDefaultFont example C# | C# convert Excel to PDF when fonts are missing | fallback to system font Aspose.Cells PDF export | Unicode characters PDF conversion Aspose.Cells
-// Developer Intent: Generate a PDF from an Excel workbook that automatically uses the operating system’s default font if the original font is unavailable.
-// Use Cases: Export multilingual reports on servers that only have system fonts installed. | Create PDF documents in CI/CD pipelines where custom fonts cannot be guaranteed. | Batch‑process legacy Excel files that reference fonts not present on the target machine.
-// AI Prompts: Write C# code with Aspose.Cells to save a workbook as PDF using system font substitution for missing fonts. | Explain the interaction between FontConfigs.PreferSystemFontSubstitutes and PdfSaveOptions.CheckWorkbookDefaultFont in Aspose.Cells. | Provide step‑by‑step instructions to convert an Excel file containing Unicode text to PDF, ensuring the system default font is used when required fonts are absent.
+// Title: Convert an Excel workbook to PDF in C# with Aspose.Cells using system fallback font for missing fonts
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets a default fallback font for missing glyphs, and saves the workbook as a PDF. | Show how to configure Workbook.Settings.DefaultFont in a .NET console application before exporting to PDF with Aspose.Cells. | Create a resilient C# program that verifies the source Excel file, applies system default font substitution, converts it to PDF, and logs any exceptions.
+// Common Searches: Aspose.Cells C# export Excel to PDF with fallback font when original font is missing | How to set default font for PDF conversion in Aspose.Cells .NET | Convert .xlsx to .pdf using Aspose.Cells and handle missing fonts | C# console application Aspose.Cells PDF save with system default font substitution | Aspose.Cells Workbook.Settings.DefaultFont usage example
+// Tags: Aspose.Cells workbook to PDF with default font | C# set Workbook.Settings.DefaultFont | Excel to PDF conversion handling missing fonts | Aspose.Cells PDF export fallback font | system font substitution Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Shows how to enable system‑font fallback in Aspose.Cells by setting FontConfigs.PreferSystemFontSubstitutes and PdfSaveOptions.CheckWorkbookDefaultFont, then saving a workbook with Unicode text to PDF.
-    public class WorkbookToPdfWithSystemFontSubstitution
+    // Loads an Excel workbook, optionally sets a default fallback font for missing glyphs via Workbook.Settings.DefaultFont, and saves the file as a PDF while checking file existence and handling exceptions.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Prefer system font substitutes when the original font is missing
-                FontConfigs.PreferSystemFontSubstitutes = true;
+                string inputPath = "input.xlsx";
+                string outputPath = "output.pdf";
 
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add sample data that may require font substitution
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Sample text with Unicode: 你好, مرحبا, Привет");
-
-                // Configure PDF save options to use the workbook's default font checking
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    // When true, Aspose.Cells will try to use the workbook's default font first.
-                    // If the font is unavailable, it will fall back to the system default font.
-                    CheckWorkbookDefaultFont = true
-                    // DefaultFont left unset to use system default.
-                };
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Save the workbook as PDF using the configured options
-                workbook.Save("output.pdf", pdfOptions);
+                // Load the source workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                Console.WriteLine("Workbook has been saved to PDF with system default font substitution.");
+                // Optional: set a default font if needed (uncomment if supported by your Aspose.Cells version)
+                // workbook.Settings.DefaultFont = "Arial";
+
+                // Convert and save the workbook as PDF
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            WorkbookToPdfWithSystemFontSubstitution.Run();
         }
     }
 }

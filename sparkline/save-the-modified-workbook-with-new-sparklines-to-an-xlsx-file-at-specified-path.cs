@@ -1,35 +1,29 @@
-// Title: Create and Save an XLSX Workbook with a Line Sparkline using Aspose.Cells for .NET
-// Description: C# code that creates a Workbook, fills cells A1‑D1 with sample values, inserts a line sparkline into cell E1, turns on markers, and saves the result to a user‑specified path in XLSX format via Aspose.Cells.
-// Keywords: Aspose.Cells | C# | sparkline | line sparkline | Workbook | save XLSX | Excel sparkline programmatically | SparklineGroup | add sparkline | export to XLSX
-// Common Searches: Aspose.Cells add line sparkline C# | save workbook with sparkline Aspose .NET | create sparkline programmatically Aspose.Cells | export sparkline to XLSX using C# | how to use SparklineGroup in Aspose.Cells
-// Developer Intent: Generate an XLSX file that contains a line sparkline placed in a specific cell.
-// Use Cases: Build a sales‑trend report where each row’s data is visualized with a line sparkline and the file is distributed to stakeholders. | Automate a daily financial dashboard that adds sparklines to key metrics and exports the workbook for archiving. | Create a utility that inserts sparklines into existing worksheets, customizes markers, and overwrites the original file with the updated version.
-// AI Prompts: Write C# code that adds a column sparkline for every data row and saves the workbook as XLSX using Aspose.Cells. | Show how to change sparkline colors, line thickness, and marker styles before exporting the file with Aspose.Cells for .NET. | Provide an example that creates multiple SparklineGroup objects on different ranges and saves the workbook to a user‑provided path.
+// Title: Add a line sparkline to cells A1:D1, place it in E1, and save the workbook as XLSX using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a new workbook, populates A1:D1 with values, adds a line‑type sparkline referencing that range, positions the sparkline in cell E1, and saves the file to a given XLSX path with Aspose.Cells. | Demonstrate how to enable markers and adjust other SparklineGroup settings before calling Workbook.Save to generate an XLSX file containing the sparkline using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add line sparkline to a specific cell range and save as .xlsx | How to programmatically create sparkline groups in Excel with Aspose.Cells .NET | Saving an Excel workbook that contains sparkline data using Aspose.Cells C# example | Customize sparkline markers with Aspose.Cells before saving the workbook
+// Tags: create line sparkline Aspose.Cells C# | save workbook as xlsx with sparkline Aspose.Cells | sparklinegroup customization Aspose.Cells | add sparkline to cell range Aspose.Cells | Aspose.Cells generate sparkline programmatically
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# code that creates a Workbook, fills cells A1‑D1 with sample values, inserts a line sparkline into cell E1, turns on markers, and saves the result to a user‑specified path in XLSX format via Aspose.Cells.
-class SparklineWorkbookExample
+// The example creates a new workbook, writes sample numbers to A1:D1, adds a line‑type sparkline that references this range and is placed in cell E1, optionally configures the SparklineGroup (e.g., shows markers), and saves the result as an XLSX file using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a workbook, adds a sparkline, and saves it as XLSX.
-    public static void CreateWorkbookWithSparkline(string outputPath)
+    static void Main()
     {
-        // Initialize a new workbook.
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-
-        // Access the first worksheet.
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for the sparkline (row 1, columns A‑D).
+        // Populate sample data that the sparkline will represent
         sheet.Cells["A1"].PutValue(5);
         sheet.Cells["B1"].PutValue(2);
         sheet.Cells["C1"].PutValue(1);
         sheet.Cells["D1"].PutValue(3);
 
-        // Define the cell area where the sparkline will be placed (cell E1).
-        CellArea sparklineLocation = new CellArea
+        // Define the cell where the sparkline will be placed (E1)
+        CellArea sparkArea = new CellArea
         {
             StartRow = 0,
             EndRow = 0,
@@ -37,26 +31,15 @@ class SparklineWorkbookExample
             EndColumn = 4
         };
 
-        // Add a sparkline group of type Line using the data range A1:D1.
-        int groupIndex = sheet.SparklineGroups.Add(
-            SparklineType.Line,
-            sheet.Name + "!A1:D1",
-            false,
-            sparklineLocation);
-
-        // Optional: customize the sparkline group (e.g., show markers).
+        // Add a line‑type sparkline group that uses the data range A1:D1
+        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, sheet.Name + "!A1:D1", false, sparkArea);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
-        group.ShowMarkers = true;
 
-        // Save the workbook to the specified path in XLSX format.
-        workbook.Save(outputPath, SaveFormat.Xlsx);
-    }
+        // (Optional) Customize sparkline appearance here, e.g.:
+        // group.ShowMarkers = true;
 
-    // Example entry point.
-    static void Main()
-    {
-        string outputFile = "SparklineWorkbook.xlsx";
-        CreateWorkbookWithSparkline(outputFile);
-        Console.WriteLine($"Workbook saved to {outputFile}");
+        // Save the workbook with the new sparkline to an XLSX file
+        string outputPath = @"C:\Temp\SparklineWorkbook.xlsx";
+        workbook.Save(outputPath); // Uses Workbook.Save(string) rule
     }
 }

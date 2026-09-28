@@ -1,72 +1,52 @@
-// Title: Aspose.Cells C# – Retrieve Address and Worksheet of a Global Named Range on Sheet3
-// Description: Shows how to create a workbook, add a sheet named Sheet3, define a global named range (MyGlobalRange) that points to Sheet3!A1:B3, and then use the workbook's Names collection to obtain the Range object, read its address and parent worksheet name, and save the file.
-// Keywords: Aspose.Cells | C# | .NET | global named range | Names collection | GetRange | range address | worksheet name | Sheet3 | Excel automation
-// Common Searches: Aspose.Cells get address of global named range | C# retrieve worksheet of named range using Aspose.Cells | How to read a named range address from workbook Names collection | Aspose.Cells example for global named range on specific sheet | GetRange address Sheet3 Aspose.Cells .NET
-// Developer Intent: Obtain the address and owning worksheet of a global named range defined on Sheet3 via the Aspose.Cells Names collection.
-// Use Cases: Debugging: display the address of a global named range in a console app. | Validation: confirm that a named range points to the expected worksheet. | Pre‑processing: read range metadata before performing calculations or exports.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a global named range on Sheet3 and prints its address and worksheet name. | Explain how to fetch a named range from the workbook's Names collection and retrieve its Range object in Aspose.Cells. | Show a step‑by‑step example of reading the address of a global named range and identifying its parent sheet using Aspose.Cells for .NET.
+// Title: Get the sheet-qualified address of a global named range on Sheet3 using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, accesses a global named range, and prints its full address including the worksheet name. | Demonstrate how to obtain a Range object from workbook.Worksheets.Names and retrieve the address string in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# read full address of a global named range | How to obtain sheet name and cell range from a named range using Aspose.Cells | C# Aspose.Cells get address of named range defined on Sheet3 | Retrieve address of workbook-level named range with Aspose.Cells .NET
+// Tags: Aspose.Cells get named range address | C# workbook global named range retrieval | Aspose.Cells Worksheets.Names GetRange usage | read sheet-qualified range address Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The example loads 'input.xlsx' with Aspose.Cells, accesses the global named range 'MyGlobalRange' via the workbook's Worksheets.Names collection, obtains its Range object, reads the sheet-qualified address (e.g., Sheet3!A1:B2), and prints it, handling missing files or undefined names gracefully.
+class Program
 {
-    // Shows how to create a workbook, add a sheet named Sheet3, define a global named range (MyGlobalRange) that points to Sheet3!A1:B3, and then use the workbook's Names collection to obtain the Range object, read its address and parent worksheet name, and save the file.
-    public class AccessGlobalNamedRangeFromSheet3
+    static void Main()
     {
-        public static void Run()
+        const string filePath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException.
+        if (!File.Exists(filePath))
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add a worksheet named "Sheet3"
-                Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-
-                // Populate some data in Sheet3 (optional, just for demonstration)
-                sheet3.Cells["A1"].PutValue("Item");
-                sheet3.Cells["B1"].PutValue("Quantity");
-                sheet3.Cells["A2"].PutValue("Apple");
-                sheet3.Cells["B2"].PutValue(10);
-                sheet3.Cells["A3"].PutValue("Orange");
-                sheet3.Cells["B3"].PutValue(15);
-
-                // Create a global named range that refers to a range on Sheet3
-                NameCollection names = workbook.Worksheets.Names;
-                int nameIndex = names.Add("MyGlobalRange");
-                Name globalName = names[nameIndex];
-                // Set the reference to Sheet3!A1:B3
-                globalName.RefersTo = "=Sheet3!$A$1:$B$3";
-
-                // Access the global named range using its text
-                Name retrievedName = names["MyGlobalRange"]; // using the string indexer
-                // Get the Range object that the name refers to
-                AsposeRange range = retrievedName.GetRange();
-
-                // Read and display the address of the range
-                Console.WriteLine($"Global named range address: {range.Address}");
-                Console.WriteLine($"Worksheet of the range: {range.Worksheet.Name}");
-
-                // Save the workbook (optional)
-                string outputPath = "AccessGlobalNamedRangeFromSheet3.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"File not found: {filePath}");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            AccessGlobalNamedRangeFromSheet3.Run();
+            // Load the workbook.
+            Workbook workbook = new Workbook(filePath);
+
+            // Access the global named range (defined on any worksheet).
+            Name globalName = workbook.Worksheets.Names["MyGlobalRange"];
+            if (globalName == null)
+            {
+                Console.WriteLine("Named range 'MyGlobalRange' not found.");
+                return;
+            }
+
+            // Retrieve the Range object that the name refers to.
+            Aspose.Cells.Range range = globalName.GetRange();
+
+            // Get the address of the range (e.g., Sheet3!A1:B2).
+            string address = range.Address;
+
+            // Output the address.
+            Console.WriteLine($"Address of global named range 'MyGlobalRange': {address}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully.
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

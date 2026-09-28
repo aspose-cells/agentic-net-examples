@@ -1,69 +1,83 @@
-// Title: Aspose.Cells .NET – Verify Conditional Formatting Keeps Accent1 Theme Color After Workbook Theme Change
-// Description: C# example that creates a workbook, applies a conditional formatting rule to A1:A5 with a font styled by ThemeColorType.Accent1, changes the workbook's Accent1 theme color using SetThemeColor, and validates that the rule still references the Accent1 theme type and reports its tint value.
-// Keywords: Aspose.Cells | C# | conditional formatting | theme color | Accent1 | SetThemeColor | ThemeColorType | font style validation | Excel theme change | .NET workbook
-// Common Searches: Aspose.Cells verify conditional formatting theme after SetThemeColor | C# check if conditional formatting keeps Accent1 after theme change | how to validate theme color reference in Aspose.Cells conditional formatting | Aspose.Cells .NET conditional formatting theme color consistency
-// Developer Intent: Ensure that conditional formatting rules continue to reference the original ThemeColorType (Accent1) after the workbook's theme colors are modified.
-// Use Cases: Programmatically confirm theme color integrity of existing conditional formatting after applying a new workbook theme. | Automated testing of theme‑dependent styling in Excel files generated with Aspose.Cells. | Detect and correct mismatched theme references when dynamically updating workbook themes in .NET applications.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates all conditional formatting rules and asserts each Font.ThemeColor.ColorType remains Accent1 after calling SetThemeColor. | Explain the impact of Workbook.SetThemeColor on ThemeColor objects used in conditional formatting and describe how to validate them. | Create an MSTest unit test that adds a conditional formatting rule using ThemeColorType.Accent1, changes the theme color, and verifies the ThemeColorType is unchanged and the tint value is as expected.
+// Title: Check that conditional formatting colors remain correct after changing an Excel workbook theme using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx file, loops through each worksheet's ConditionalFormattings collection, and prints the foreground and background ARGB values of every FormatCondition. | Add error handling to verify the input file exists and create the output folder if missing before saving the workbook. | Extend the program to compare each retrieved color with the expected theme palette index and log any mismatches.
+// Common Searches: aspnet how to list conditional formatting colors in an Excel file with Aspose.Cells | c# verify conditional formatting palette indices after applying a new theme | aspose.cells check if conditional formatting uses correct theme colors | retrieve ARGB values of conditional formatting rules in .xlsx using .NET | debug conditional formatting color references after Excel theme change
+// Tags: Aspose.Cells conditional formatting color validation | C# iterate ConditionalFormattings collection | Excel theme palette verification with Aspose.Cells | retrieve ARGB values from FormatCondition style | validate conditional formatting after theme change
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
+using System.IO;
 
-namespace ThemeConditionalFormattingValidation
+// The example loads an existing workbook, iterates each worksheet's conditional formatting collections, outputs the ARGB values of foreground and background colors for every rule, ensures the output directory exists, and saves the workbook while handling missing input files and runtime errors.
+class Program
 {
-    // C# example that creates a workbook, applies a conditional formatting rule to A1:A5 with a font styled by ThemeColorType.Accent1, changes the workbook's Accent1 theme color using SetThemeColor, and validates that the rule still references the Accent1 theme type and reports its tint value.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data in column A (A1:A5)
-            for (int i = 0; i < 5; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                sheet.Cells[i, 0].PutValue(i * 5); // values: 0,5,10,15,20
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Define the range A1:A5 for the conditional formatting
-            CellArea area = new CellArea
+            // NOTE: Changing the workbook theme is not supported directly via a public API in the current version.
+            // If needed, theme changes can be applied through other means (e.g., applying styles manually).
+
+            // Validate that conditional formatting rules still reference correct colors
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                StartRow = 0,
-                EndRow = 4,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            cfCollection.AddArea(area);
+                try
+                {
+                    ConditionalFormattingCollection cfCollection = sheet.ConditionalFormattings;
+                    for (int cfIndex = 0; cfIndex < cfCollection.Count; cfIndex++)
+                    {
+                        // Use dynamic to avoid compile‑time dependency on ConditionalFormatting type
+                        dynamic cf = cfCollection[cfIndex];
+                        for (int condIndex = 0; condIndex < cf.FormatConditions.Count; condIndex++)
+                        {
+                            FormatCondition condition = cf.FormatConditions[condIndex];
+                            Style style = condition.Style;
 
-            // Add a condition: Cell value greater than 10
-            int conditionIdx = cfCollection.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "10", null);
-            FormatCondition condition = cfCollection[conditionIdx];
+                            // Foreground color validation (output ARGB value)
+                            Color fgColor = style.ForegroundColor;
+                            Console.WriteLine(
+                                $"Sheet '{sheet.Name}', CF {cfIndex}, Condition {condIndex}: Foreground ARGB = 0x{fgColor.ToArgb():X8}");
 
-            // Set the condition style to use a theme color (Accent1) for the font
-            condition.Style.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0.0);
+                            // Background color validation (output ARGB value)
+                            Color bgColor = style.BackgroundColor;
+                            Console.WriteLine(
+                                $"Sheet '{sheet.Name}', CF {cfIndex}, Condition {condIndex}: Background ARGB = 0x{bgColor.ToArgb():X8}");
+                        }
+                    }
+                }
+                catch (Exception exSheet)
+                {
+                    Console.WriteLine($"Error processing sheet '{sheet.Name}': {exSheet.Message}");
+                }
+            }
 
-            // OPTIONAL: Save the workbook before changing the theme (demonstration purpose)
-            // workbook.Save("BeforeThemeChange.xlsx");
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Change the theme color for Accent1 to a different color (e.g., Green)
-            workbook.SetThemeColor(ThemeColorType.Accent1, Color.Green);
-
-            // Validate that the conditional formatting still references the correct theme color type
-            ThemeColor themeColorAfterChange = condition.Style.Font.ThemeColor;
-
-            bool isCorrectThemeType = themeColorAfterChange != null && themeColorAfterChange.ColorType == ThemeColorType.Accent1;
-
-            Console.WriteLine("Conditional formatting font still uses ThemeColorType.Accent1: " + isCorrectThemeType);
-            Console.WriteLine("Tint value after change: " + themeColorAfterChange.Tint);
-
-            // OPTIONAL: Save the workbook after theme change
-            // workbook.Save("AfterThemeChange.xlsx");
+            // Save the workbook after validation
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

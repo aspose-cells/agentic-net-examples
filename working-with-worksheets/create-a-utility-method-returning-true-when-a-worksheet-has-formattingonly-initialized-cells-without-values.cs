@@ -1,91 +1,85 @@
-// Title: C# Utility to Detect Formatting‑Only Cells in an Aspose.Cells Worksheet
-// Description: A concise C# method that scans the used range of an Aspose.Cells worksheet, identifies cells where a style is applied (IsStyleSet) but the cell contains no value and is not a formula, and returns true as soon as such a formatting‑only cell is found. Ideal for auditing Excel templates and optimizing workbook size.
-// Keywords: Aspose.Cells formatting only cells | C# detect empty styled cells | worksheet IsStyleSet check | Excel template validation .NET | remove style‑only cells Aspose
-// Common Searches: how to find cells with only formatting using Aspose.Cells C# | detect empty cells that have a style applied in a worksheet | C# method to check for formatting‑only cells in Excel | Aspose.Cells identify cells with style but no data
-// Developer Intent: Determine whether any cell in a worksheet has a style applied while lacking a value or formula.
-// Use Cases: Validate Excel templates before distribution to ensure no stray formatting‑only cells remain. | Identify and clean up style‑only cells to reduce file size and improve performance. | Flag worksheets that may cause rendering delays due to excessive formatting without content.
-// AI Prompts: Generate unit tests for HasFormattingOnlyInitializedCells covering styled empty cells, styled cells with data, and formula cells. | Rewrite the method to use Cells.MaxDataRow and Cells.MaxDataColumn for a more efficient scan. | Create a version that returns a list of addresses for all formatting‑only cells instead of a boolean.
+// Title: Identify formatting‑only initialized cells in an Aspose.Cells worksheet using a C# extension method
+// AI Prompts: Write a C# extension method for Aspose.Cells that scans a worksheet's used range and returns true when a cell has a style different from the workbook's default style while its Value is null. | Refactor the extension to return a collection of cell addresses that contain only formatting (non‑default style, no value) instead of a simple boolean. | Create NUnit test cases in C# that validate the extension correctly flags formatting‑only cells and ignores cells that contain data.
+// Common Searches: Aspose.Cells C# how to detect empty cells with custom formatting | C# extension method to find cells that have style but no value in an Excel worksheet | Check worksheet for formatting‑only initialized cells using Aspose.Cells API | Identify cells with non‑default style and no data in Aspose.Cells C# | Determine if a worksheet contains cells that are formatted but not populated in Aspose.Cells
+// Tags: detect formatting‑only cells Aspose.Cells | worksheet style comparison default Aspose.Cells | extension method cell style analysis C# | maxdisplayrange empty cell formatting check | non‑default cell style detection Excel C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetUtilitiesDemo
+// Provides a C# WorksheetExtensions class with a HasFormattingOnlyInitializedCells extension method that iterates over the worksheet's MaxDisplayRange, compares each cell's style to the workbook's default style, and returns true if any cell lacks a value yet has a custom style, enabling detection of formatting‑only initialized cells.
+public static class WorksheetExtensions
 {
-    // A concise C# method that scans the used range of an Aspose.Cells worksheet, identifies cells where a style is applied (IsStyleSet) but the cell contains no value and is not a formula, and returns true as soon as such a formatting‑only cell is found. Ideal for auditing Excel templates and optimizing workbook size.
-    public static class WorksheetUtilities
+    /// <param name="sheet">The worksheet to inspect.</param>
+    /// <returns>True when a formatting‑only initialized cell is found; otherwise false.</returns>
+    public static bool HasFormattingOnlyInitializedCells(this Worksheet sheet)
     {
-        /// <param name="worksheet">The worksheet to inspect.</param>
-        /// <returns>True when a formatting‑only cell is found; otherwise false.</returns>
-        public static bool HasFormattingOnlyInitializedCells(Worksheet worksheet)
+        // Get the default style of the workbook for comparison.
+        Style defaultStyle = sheet.Workbook.DefaultStyle;
+
+        // Determine the used range of the worksheet.
+        // MaxDisplayRange covers the area that has been accessed or formatted.
+        var range = sheet.Cells.MaxDisplayRange;
+        int firstRow = range.FirstRow;
+        int firstColumn = range.FirstColumn;
+        int rowCount = range.RowCount;
+        int columnCount = range.ColumnCount;
+
+        // Iterate through each cell in the used range.
+        for (int i = firstRow; i < firstRow + rowCount; i++)
         {
-            // Access the cells collection of the worksheet.
-            Cells cells = worksheet.Cells;
-
-            // Determine the used range boundaries.
-            int maxRow = cells.MaxRow;
-            int maxColumn = cells.MaxColumn;
-
-            // Iterate through every cell in the used range.
-            for (int row = 0; row <= maxRow; row++)
+            for (int j = firstColumn; j < firstColumn + columnCount; j++)
             {
-                for (int col = 0; col <= maxColumn; col++)
-                {
-                    Cell cell = cells[row, col];
+                Cell cell = sheet.Cells[i, j];
 
-                    // Check if the cell has a style explicitly set.
-                    if (cell.IsStyleSet)
-                    {
-                        // Determine if the cell holds no data.
-                        bool hasNoValue = cell.Type == CellValueType.IsNull ||
-                                          string.IsNullOrEmpty(cell.StringValue);
+                // Skip cells that already contain a value.
+                if (cell.Value != null)
+                    continue;
 
-                        // Exclude cells that contain a formula (even if the result is blank).
-                        if (hasNoValue && !cell.IsFormula)
-                        {
-                            // A formatting‑only cell is found.
-                            return true;
-                        }
-                    }
-                }
+                // Retrieve the cell's style.
+                Style cellStyle = cell.GetStyle();
+
+                // If the style differs from the default, the cell is formatting‑only.
+                if (!cellStyle.Equals(defaultStyle))
+                    return true;
             }
-
-            // No such cells were detected.
-            return false;
         }
+
+        // No formatting‑only cells were found.
+        return false;
     }
+}
 
-    class Program
+public class Program
+{
+    public static void Main(string[] args)
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the Excel file can be passed as a command‑line argument; otherwise use a default name.
-            string filePath = args.Length > 0 ? args[0] : "sample.xlsx";
+            string filePath = "sample.xlsx";
+            Workbook workbook;
 
-            // Prevent FileNotFoundException by checking existence first.
-            if (!File.Exists(filePath))
+            // Load existing workbook if present; otherwise create a new one.
+            if (File.Exists(filePath))
             {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
+                workbook = new Workbook(filePath);
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one worksheet
             }
 
-            try
-            {
-                // Load the workbook from the specified file.
-                Workbook workbook = new Workbook(filePath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Examine each worksheet for formatting‑only cells.
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    bool hasFormattingOnly = WorksheetUtilities.HasFormattingOnlyInitializedCells(sheet);
-                    Console.WriteLine($"Worksheet '{sheet.Name}': Formatting‑only cells present? {hasFormattingOnly}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Catch any runtime errors (e.g., corrupted file, unsupported format).
-                Console.WriteLine($"Error processing file: {ex.Message}");
-            }
+            // Use the extension method to check for formatting‑only initialized cells.
+            bool hasFormattingOnly = sheet.HasFormattingOnlyInitializedCells();
+
+            Console.WriteLine($"Formatting‑only initialized cells found: {hasFormattingOnly}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors.
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

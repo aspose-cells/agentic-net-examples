@@ -1,33 +1,31 @@
-// Title: Export Excel Slicers as Static Images in PDF using Aspose.Cells for .NET
-// Description: Shows how to enable the IsPrintable flag for each slicer in a workbook and then save the file as PDF, resulting in slicers that are rendered as non‑interactive images while keeping their original look.
-// Keywords: Aspose.Cells | C# | Excel slicer PDF | static slicer image | IsPrintable | export to PDF | non‑interactive slicer | save workbook as PDF | slicer rendering | PDF report generation
-// Common Searches: Aspose.Cells render slicer as image PDF | make slicer non‑interactive in PDF C# | set slicer printable property Aspose | export Excel slicer to static PDF | PDF export slicer appearance Aspose.Cells
-// Developer Intent: The developer needs to convert an Excel workbook to PDF while ensuring that slicers are displayed as fixed images rather than interactive controls.
-// Use Cases: Create read‑only PDF dashboards that retain slicer visuals. | Archive Excel reports where slicer interactivity must be removed. | Automate batch conversion of workbooks to PDF with consistent slicer appearance.
-// AI Prompts: Generate C# code with Aspose.Cells that exports a workbook to PDF and renders all slicers as static images. | Explain the effect of the Slicer.IsPrintable property on PDF output and how to apply it across a worksheet. | Recommend additional Aspose.Cells PDF settings to enhance the quality of slicer images in the final document.
+// Title: Convert Excel slicers to static images when saving as PDF with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates through all worksheets, sets each slicer's IsPrintable property to true, and saves the workbook as a PDF using Aspose.Cells. | Show how to ensure slicers are rendered as non‑interactive images in a PDF export with Aspose.Cells for .NET. | Provide a snippet that disables slicer interactivity by marking slicers printable before calling Workbook.Save in PDF format.
+// Common Searches: Aspose.Cells how to export slicers as images in PDF C# | C# make Excel slicer non‑clickable in PDF output using Aspose | set slicer printable flag before saving workbook to PDF with Aspose.Cells | render Excel slicer as static picture in PDF conversion .NET
+// Tags: Aspose.Cells set slicer printable | export slicer to PDF static image | C# disable slicer interactivity Aspose | PDF conversion slicer rendering Aspose.Cells | Excel slicer printable property .NET
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;   // Namespace for slicer objects
+using Aspose.Cells.Slicers;   // Namespace containing the Slicer class
 
-// Shows how to enable the IsPrintable flag for each slicer in a workbook and then save the file as PDF, resulting in slicers that are rendered as non‑interactive images while keeping their original look.
-class RenderSlicerStaticPdf
+// Loads an Excel workbook, marks every slicer as printable, and saves the workbook as a PDF so slicers appear as static, non‑interactive images.
+class Program
 {
     static void Main()
     {
-        // Load the workbook that contains the slicer
+        // Load the source Excel workbook that contains slicers
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Get the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Ensure each slicer is printable so it appears as a static image in the PDF
-        foreach (Slicer slicer in worksheet.Slicers)
+        // Ensure every slicer is marked as printable so it will be rendered in the PDF
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            slicer.IsPrintable = true;
+            foreach (Slicer slicer in sheet.Slicers)
+            {
+                // The IsPrintable property (though obsolete) controls slicer visibility in print/PDF output
+                slicer.IsPrintable = true;
+            }
         }
 
-        // Save the workbook as PDF; slicers will be rendered as non‑interactive images
+        // Save the workbook as a PDF file; slicers will now appear as static images
         workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

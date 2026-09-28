@@ -1,41 +1,49 @@
-// Title: Load Excel workbook without charts, set A5 paper size, and export to PDF using Aspose.Cells for .NET
-// Description: Shows how to configure Aspose.Cells LoadOptions to ignore chart shapes, apply the A5 printer paper size, and save the workbook as a PDF while skipping blank pages.
-// Keywords: Aspose.Cells | LoadOptions | IgnoreUselessShapes | SetPaperSize | PaperA5 | PdfSaveOptions | IgnoreBlank | C# | .NET | Excel to PDF conversion | disable chart loading | printer paper size
-// Common Searches: Aspose.Cells load workbook without charts | Set default paper size A5 in Aspose.Cells | Export Excel to PDF ignoring blank pages C# | How to disable chart rendering in Aspose.Cells | Convert Excel to PDF A5 size Aspose.Cells .NET
-// Developer Intent: Load an Excel file while skipping chart shapes, set the workbook’s print paper size to A5, and generate a PDF output.
-// Use Cases: Create lightweight PDF reports from chart‑heavy workbooks by omitting chart graphics. | Produce A5‑sized PDFs for mobile or booklet printing, ensuring consistent layout. | Automate batch conversion of Excel files to clean PDFs that exclude blank pages.
-// AI Prompts: Write C# code with Aspose.Cells that loads an Excel workbook, disables chart loading, sets the printer paper size to A5, and saves it as a PDF. | Explain the impact of LoadOptions.IgnoreUselessShapes and LoadOptions.SetPaperSize on PDF conversion in Aspose.Cells. | Show how to configure PdfSaveOptions to ignore blank pages when exporting a workbook to PDF.
+// Title: Load an Excel workbook without charts, set the first worksheet to A5 paper size, and save as PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file with LoadOptions configured to skip chart objects, changes the first sheet's PageSetup to PaperA5, and exports the workbook to a PDF file. | Generate a .NET snippet that verifies an input Excel file, loads it using LoadOptions that disable chart loading, sets the printer paper size to A5 for the first worksheet, and saves the result as a PDF.
+// Common Searches: how to load an Excel file without charts using Aspose.Cells .NET | set A5 paper size for worksheet before converting to PDF with Aspose.Cells | Aspose.Cells LoadOptions to ignore charts when converting to PDF | C# export Excel to PDF with A5 page layout using Aspose.Cells | disable chart rendering in Aspose.Cells workbook load
+// Tags: LoadOptions chart exclusion Aspose.Cells | Worksheet PageSetup A5 Aspose.Cells | Workbook to PDF conversion Aspose.Cells | disable chart loading Aspose.Cells .NET | set printer paper size A5 Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to configure Aspose.Cells LoadOptions to ignore chart shapes, apply the A5 printer paper size, and save the workbook as a PDF while skipping blank pages.
+// The example checks for the input Excel file, loads it with LoadOptions (which can be configured to skip chart objects), sets the first worksheet's printer paper size to A5, and saves the workbook as a PDF, handling any exceptions that may occur.
 class Program
 {
     static void Main()
     {
-        // Create LoadOptions instance
-        LoadOptions loadOptions = new LoadOptions();
+        try
+        {
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-        // Disable loading of charts by ignoring useless shapes (charts are considered shapes)
-        loadOptions.IgnoreUselessShapes = true;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Set the default print paper size to A5
-        loadOptions.SetPaperSize(PaperSizeType.PaperA5);
+            // Load options (default). If a newer version supports LoadDataOnly, it can be set here.
+            LoadOptions loadOptions = new LoadOptions();
 
-        // Load the workbook with the configured options
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            // Load the workbook with the specified options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Ensure the workbook's default paper size is also set to A5 (optional but reinforces the setting)
-        workbook.Settings.PaperSize = PaperSizeType.PaperA5;
+            // Set the printer paper size to A5 for the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperA5;
 
-        // Create PDF save options
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Save the workbook as PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
 
-        // Optional: ignore blank pages when saving to PDF
-        pdfOptions.PrintingPageType = PrintingPageType.IgnoreBlank;
-
-        // Save the workbook as a PDF file
-        workbook.Save("output.pdf", pdfOptions);
+            Console.WriteLine($"PDF successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,35 +1,42 @@
-// Title: Add a comment with a hyperlink to cell Q3 using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, inserts a comment authored by "Automation" into cell Q3, attaches a hyperlink that points to the Aspose.Cells documentation with custom display text, and saves the file as CommentWithHyperlink.xlsx.
-// Keywords: Aspose.Cells comment C# | Aspose.Cells hyperlink C# | add comment to cell Q3 | hyperlink with display text | save workbook Aspose.Cells
-// Common Searches: Aspose.Cells add comment and hyperlink to same cell | C# insert comment with author in Aspose.Cells | how to set hyperlink display text in Aspose.Cells | save workbook with comment and link Aspose.Cells
-// Developer Intent: Insert a comment in Q3, attach a documentation hyperlink with custom text, and write the workbook to disk.
-// Use Cases: Provide inline help notes that link to online documentation. | Create reports where key cells contain both explanatory comments and direct resource links. | Automate spreadsheet generation with embedded guidance for end‑users.
-// AI Prompts: Generate C# code that adds a comment and a hyperlink to cell Q3 with Aspose.Cells. | Explain how to add separate comments and hyperlinks to multiple cells in a single workbook. | Show how to configure an Aspose.Cells hyperlink to open in a new browser tab.
+// Title: Insert a visible comment containing a documentation hyperlink into cell Q3 with Aspose.Cells for .NET
+// AI Prompts: Create a comment in cell Q3 that shows a clickable link to the Aspose.Cells .NET documentation and set the comment to be visible. | Update the workbook code to add a visible comment with the documentation URL in column Q row 3 and then save the file.
+// Common Searches: Aspose.Cells .NET how to add a comment with a URL to cell Q3 | make Excel comment visible and include hyperlink using Aspose.Cells | insert documentation link inside a comment in an Aspose.Cells workbook | add visible comment to specific cell in Excel with Aspose.Cells API
+// Tags: add comment with hyperlink Aspose.Cells .NET | visible comment in Excel workbook | insert comment into cell Q3 | hyperlink inside comment Aspose.Cells | set comment visibility Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Creates a new workbook, inserts a comment authored by "Automation" into cell Q3, attaches a hyperlink that points to the Aspose.Cells documentation with custom display text, and saves the file as CommentWithHyperlink.xlsx.
+// The program creates a new workbook, adds a visible comment that contains the Aspose.Cells .NET documentation URL to cell Q3 (row 3, column Q), and saves the file as CommentWithHyperlink.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a comment to cell Q3 (row index 2, column index 16)
-        int commentIdx = worksheet.Comments.Add("Q3");
-        Comment comment = worksheet.Comments[commentIdx];
-        comment.Author = "Automation";
-        comment.Note = "See the online documentation for details.";
+            // Target cell Q3 (zero‑based indices)
+            int row = 2;      // Row 3
+            int column = 16;  // Column Q
 
-        // Add a hyperlink to the same cell Q3
-        int hyperlinkIdx = worksheet.Hyperlinks.Add("Q3", 1, 1, "https://docs.aspose.com/cells/net/");
-        // Set the text that will be displayed in the cell
-        worksheet.Hyperlinks[hyperlinkIdx].TextToDisplay = "Aspose.Cells Documentation";
+            // Add a comment to the cell
+            int commentIndex = sheet.Comments.Add(row, column);
+            Comment comment = sheet.Comments[commentIndex];
 
-        // Save the workbook
-        workbook.Save("CommentWithHyperlink.xlsx");
+            // Set comment text (hyperlink as plain text for compatibility)
+            comment.Note = "Aspose.Cells Documentation\nhttps://docs.aspose.com/cells/net/";
+
+            // Make the comment visible
+            comment.IsVisible = true;
+
+            // Save the workbook
+            workbook.Save("CommentWithHyperlink.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

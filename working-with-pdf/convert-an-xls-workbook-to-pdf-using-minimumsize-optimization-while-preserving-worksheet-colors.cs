@@ -1,34 +1,29 @@
-// Title: Convert XLS to PDF with MinimumSize optimization and retain colors using Aspose.Cells for .NET
-// Description: C# example that loads an XLS workbook, applies PdfSaveOptions with the MinimumSize optimization type, and saves it as a compact PDF while automatically keeping the original worksheet color formatting.
-// Keywords: Aspose.Cells XLS to PDF | MinimumSize PDF optimization | preserve Excel colors PDF | C# PdfSaveOptions | reduce PDF file size Aspose | .NET Excel to PDF conversion | compact PDF generation
-// Common Searches: Aspose.Cells convert XLS to PDF with smallest size | C# keep worksheet colors when saving Excel as PDF | PdfSaveOptions MinimumSize example | how to reduce PDF size from Excel using Aspose | batch convert XLS files to optimized PDFs C#
-// Developer Intent: Generate a PDF from an XLS workbook that is as small as possible while maintaining the workbook’s color scheme.
-// Use Cases: Email‑ready PDF reports from legacy XLS files with minimal attachment size. | Long‑term archival of spreadsheets where visual fidelity and storage efficiency matter. | Server‑side batch processing of multiple XLS workbooks into size‑optimized PDFs.
-// AI Prompts: Show C# code to convert an XLS workbook to a PDF using Aspose.Cells with MinimumSize optimization and color preservation. | Explain how PdfSaveOptions.MinimumSize affects file size and visual quality in Excel‑to‑PDF conversion. | Provide a script that scans a folder of XLS files and creates optimized PDFs while keeping all formatting intact.
+// Title: Convert an XLS workbook to PDF with MinimumSize optimization while preserving worksheet colors using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xls file and saves it as a PDF using Aspose.Cells with PdfSaveOptions configured for MinimumSize to achieve the smallest possible file. | Show how to keep original worksheet background colors intact when exporting an Excel workbook to PDF with Aspose.Cells in a .NET application. | Explain the steps to set PdfOptimizationType.MinimumSize in Aspose.Cells and generate a PDF without altering the workbook's formatting.
+// Common Searches: asp.net convert xls to pdf with minimum file size using aspose.cells | c# preserve cell colors when exporting excel to pdf with aspose | pdfsaveoptions minimumsize optimization asp.net example | how to reduce pdf size from excel conversion asp.net aspose.cells
+// Tags: Aspose.Cells PDF minimum size optimization | XLS to PDF conversion preserving colors | PdfSaveOptions OptimizationType MinimumSize C# | Excel worksheet color retention in PDF export | Aspose.Cells PDF export file size reduction
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // Required for PdfOptimizationType
+using Aspose.Cells.Rendering;
 
-// C# example that loads an XLS workbook, applies PdfSaveOptions with the MinimumSize optimization type, and saves it as a compact PDF while automatically keeping the original worksheet color formatting.
+// // Loads an XLS workbook, applies PdfSaveOptions with OptimizationType.MinimumSize to minimize PDF size while retaining worksheet colors, and saves the result as a PDF using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Path to the source XLS workbook
-        string sourcePath = "input.xls";
+        // Load the source XLS workbook
+        Workbook workbook = new Workbook("input.xls");
 
-        // Desired PDF output path
-        string pdfPath = "output.pdf";
+        // Configure PDF save options for MinimumSize optimization
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Use the smallest file size optimization
+            OptimizationType = PdfOptimizationType.MinimumSize,
+            // Preserve worksheet colors (default behavior, no extra setting required)
+            // Additional settings can be added here if needed
+        };
 
-        // Load the existing XLS workbook
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Configure PDF save options to use MinimumSize optimization
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-        // Save the workbook as PDF; worksheet colors are preserved by default
-        workbook.Save(pdfPath, pdfOptions);
+        // Save the workbook as a PDF file with the specified options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

@@ -1,26 +1,20 @@
-// Title: C# – Sort Excel rows by column U cell background color using Aspose.Cells (.NET) – empty cells last
-// Description: A concise C# example that loads an XLSX file, creates a DataSorter, and orders rows by the fill color of cells in column U (index 20). Cells without a background are treated as lowest priority and appear after colored rows. The code defines the sort range, executes the sort, and saves the workbook.
-// Keywords: Aspose.Cells background color sort | C# Excel sort by cell fill | DataSorter SortOnType.CellColor | column U color sorting .NET | empty cells last Excel sort | Aspose.Cells sort example
-// Common Searches: Aspose.Cells sort rows by cell color C# | How to sort Excel column by background color using .NET | Place empty cells at the bottom when sorting by color Aspose | DataSorter sort on cell fill color example | C# sort column U by fill color Aspose.Cells
-// Developer Intent: Order worksheet rows according to the background color of column U, ensuring that cells with no fill are positioned after all colored rows.
-// Use Cases: Display status‑coded tasks where colored rows appear first and uncolored tasks are listed at the bottom. | Generate a priority report that groups items by highlight color in column U while keeping non‑highlighted entries last. | Prepare a color‑driven export where rows are pre‑sorted for easier visual scanning in downstream tools.
-// AI Prompts: Generate C# code with Aspose.Cells to sort rows by column U background color, moving empty cells to the end. | Show how to configure DataSorter.AddKey for cell‑color sorting with empty cells treated as lowest priority. | Explain how to modify the example to sort descending and place cells without fill at the top.
+// Title: Sort Excel rows by background color in column U with Aspose.Cells for .NET, placing empty cells at the lowest priority
+// AI Prompts: Generate C# code that uses Aspose.Cells DataSorter to order rows based on the fill color of column U, ensuring rows with no fill appear first. | Configure a DataSorter in Aspose.Cells to sort a worksheet range by cell color in column index 20, treating blank cells as the lowest sort priority, then save the workbook.
+// Common Searches: asp.net sort excel rows by background color column U using Aspose.Cells | c# Aspose.Cells DataSorter sort on cell fill color with empty cells first | how to sort a worksheet by cell color in Aspose.Cells C# | sorting Excel sheet by column U color ascending treating no fill as lowest | Aspose.Cells sort range by cell color blank cells lowest priority
+// Tags: Aspose.Cells DataSorter cell color sorting | C# sort rows by column U background color | Excel column U color based sorting .NET | blank cells lowest priority Aspose.Cells sort | DataSorter sort on cell fill color range
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-// A concise C# example that loads an XLSX file, creates a DataSorter, and orders rows by the fill color of cells in column U (index 20). Cells without a background are treated as lowest priority and appear after colored rows. The code defines the sort range, executes the sort, and saves the workbook.
+// The example loads an Excel workbook, creates a DataSorter with headers, adds a sort key on column U (index 20) using SortOnType.CellColor in ascending order so that cells without a fill are considered lowest, defines the full data range, performs the sort, and saves the sorted workbook.
 class BackgroundColorSortExample
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
+        // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
         Worksheet worksheet = workbook.Worksheets[0];
-
-        // Column U index (A=0, B=1, ..., U=20)
-        const int columnU = 20;
 
         // Create a DataSorter instance
         DataSorter sorter = workbook.DataSorter;
@@ -28,20 +22,25 @@ class BackgroundColorSortExample
         // Assume the first row contains headers
         sorter.HasHeaders = true;
 
-        // Add a sort key to sort by cell background color in column U (ascending)
-        // Empty cells (no fill) will be placed after colored cells.
-        sorter.AddKey(columnU, SortOnType.CellColor, SortOrder.Ascending, null);
+        // Add a sort key for column U (index 20) based on cell background color.
+        // Using AddKey with SortOnType.CellColor sorts by any cell color.
+        // Empty cells (no fill) will be treated as the lowest priority in ascending order.
+        sorter.AddKey(20, SortOnType.CellColor, SortOrder.Ascending, null);
 
-        // Determine the range to sort: from the first data row to the last used row in column U
-        int startRow = 0; // includes header row
-        int endRow = worksheet.Cells.MaxDataRow; // last row with any data in the sheet
-        int startColumn = columnU;
-        int endColumn = columnU;
+        // Define the range to sort.
+        // The range should cover all rows that need to be reordered and all columns that belong to the dataset.
+        CellArea area = new CellArea
+        {
+            StartRow = 0,
+            StartColumn = 0,
+            EndRow = worksheet.Cells.MaxDataRow,
+            EndColumn = worksheet.Cells.MaxDataColumn
+        };
 
-        // Perform the sort
-        sorter.Sort(worksheet.Cells, startRow, startColumn, endRow, endColumn);
+        // Perform the sort operation.
+        sorter.Sort(worksheet.Cells, area);
 
-        // Save the sorted workbook
+        // Save the sorted workbook (replace with your desired output path)
         workbook.Save("output.xlsx");
     }
 }

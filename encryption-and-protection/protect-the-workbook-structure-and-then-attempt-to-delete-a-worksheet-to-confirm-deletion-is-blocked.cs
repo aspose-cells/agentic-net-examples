@@ -1,41 +1,44 @@
-// Title: Protect Excel Workbook Structure with Aspose.Cells (C#) and Block Sheet Deletion
-// Description: Demonstrates how to protect a workbook's structure using Aspose.Cells for .NET, attempt to delete a worksheet, catch the resulting exception, and save the protected file.
-// Keywords: Aspose.Cells protect workbook structure | C# workbook structure protection | prevent worksheet deletion Aspose.Cells | Excel file structure lock | Aspose.Cells exception on sheet removal | protect Excel template C#
-// Common Searches: how to lock workbook structure using Aspose.Cells | C# code to stop sheet deletion in Excel | Aspose.Cells protect structure example | exception when removing protected worksheet Aspose.Cells | save protected Excel file with Aspose.Cells
-// Developer Intent: Apply password‑protected structure protection to an Excel workbook and verify that worksheet removal is disallowed.
-// Use Cases: Distribute a template where users cannot add, delete, or reorder sheets. | Create a read‑only report that preserves the original sheet layout. | Programmatically confirm that structure protection is active by handling the deletion exception.
-// AI Prompts: Generate C# code with Aspose.Cells to protect only the workbook structure and show how to catch the exception when a protected sheet is deleted. | Suggest a method to check workbook.IsProtected before attempting to remove a worksheet using Aspose.Cells. | Explain how to unprotect the workbook structure, delete a sheet, and then re‑apply protection in C#.
+// Title: Use Aspose.Cells for .NET to password‑protect workbook structure and verify that sheet removal is prevented
+// AI Prompts: Write C# code that creates a workbook, adds worksheets, applies structure protection with a password using Aspose.Cells, then attempts to delete a sheet and captures the resulting exception. | Show how to handle the error raised when trying to remove a worksheet from a structure‑protected workbook and then save the file as an .xlsx.
+// Common Searches: aspnet protect Excel workbook structure with password using Aspose.Cells | c# prevent worksheet deletion after applying workbook protection Aspose.Cells | how to handle error when removing sheet from a protected workbook in Aspose.Cells | example of using workbook.Protect(ProtectionType.Structure) in C# | verify that structure protection blocks sheet removal with Aspose.Cells
+// Tags: structure protection Aspose.Cells C# | password protect workbook Aspose.Cells | block worksheet deletion Aspose.Cells | handle protected sheet removal error C# | save protected workbook as xlsx Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to protect a workbook's structure using Aspose.Cells for .NET, attempt to delete a worksheet, catch the resulting exception, and save the protected file.
-class ProtectWorkbookStructureDemo
+// The sample creates a workbook with two sheets, applies password‑based structure protection via Aspose.Cells, attempts to delete the first sheet (which triggers an exception), catches and logs the expected error, and finally saves the protected workbook as ProtectedWorkbook.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add extra worksheets
-        Workbook workbook = new Workbook();
-        workbook.Worksheets.Add("Sheet2");
-        workbook.Worksheets.Add("Sheet3");
-
-        // Protect the workbook structure with a password
-        workbook.Protect(ProtectionType.Structure, "pwd123");
-        Console.WriteLine("Workbook structure protected: " + workbook.Settings.IsProtected);
-
-        // Attempt to delete a worksheet (should be blocked)
         try
         {
-            // Try to remove the second worksheet (index 1)
-            workbook.Worksheets.RemoveAt(1);
-            Console.WriteLine("Worksheet removed (unexpected).");
+            // Create a new workbook with two worksheets
+            Workbook workbook = new Workbook();
+            workbook.Worksheets[0].Name = "Sheet1";
+            workbook.Worksheets.Add("Sheet2");
+
+            // Protect the workbook structure with a password
+            workbook.Protect(ProtectionType.Structure, "pwd123");
+
+            // Attempt to delete a worksheet; this should be blocked by the protection
+            try
+            {
+                workbook.Worksheets.RemoveAt(0);
+                Console.WriteLine("Worksheet deleted (unexpected).");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Deletion blocked as expected: " + ex.Message);
+            }
+
+            // Save the workbook
+            workbook.Save("ProtectedWorkbook.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Deletion blocked as expected: " + ex.Message);
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
-
-        // Save the workbook
-        workbook.Save("ProtectedStructureWorkbook.xlsx");
     }
 }

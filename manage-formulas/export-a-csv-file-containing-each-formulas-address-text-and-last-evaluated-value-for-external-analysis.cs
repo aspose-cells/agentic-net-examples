@@ -1,65 +1,67 @@
-// Title: Export Excel formulas with addresses and evaluated values to CSV using Aspose.Cells for .NET (C#)
-// Description: Loads an .xlsx workbook, forces full formula calculation, then iterates all worksheets to capture each formula cell’s A1 address, raw formula text, and the last calculated value. The information is CSV‑escaped and saved to "formulas.csv".
-// Keywords: Aspose.Cells | C# | .NET | export formulas to CSV | Excel formula address | last calculated value | extract cell formulas | calculate workbook formulas | Excel automation | CSV dump of formulas
-// Common Searches: Aspose.Cells export all formulas to CSV C# | How to get formula address and value from Excel using Aspose.Cells | Write Excel formulas and results to a CSV file in .NET | Calculate workbook formulas before exporting with Aspose.Cells | Extract formula metadata from multiple worksheets C#
-// Developer Intent: Generate a CSV file that lists every formula in an Excel workbook together with its cell address and the most recent evaluated result.
-// Use Cases: Audit financial models by providing a complete formula inventory with results. | Supply external reporting or analytics systems with formula metadata and outcomes. | Create a snapshot of spreadsheet calculations for performance benchmarking. | Facilitate regulatory compliance checks that require documented formula logic. | Assist in migrating complex spreadsheets to other platforms by exporting formula details.
-// AI Prompts: Add a column for the worksheet name to each CSV row while preserving address, formula, and value. | Implement robust error handling for missing input files and log cells where value conversion fails. | Write a routine that reads the generated CSV and groups formulas by worksheet for further analysis. | Create a version of the exporter that writes JSON instead of CSV for API consumption. | Enhance the code to skip hidden rows/columns and only export visible formula cells.
+// Title: Export each formula’s sheet‑qualified address, expression, and last calculated value to a CSV file with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, scans all worksheets, and writes every cell containing a formula to a CSV file, including the sheet name, cell address, formula string, and the cell’s last evaluated value. | Add a helper method that correctly escapes commas, double quotes, and line breaks for each CSV field when exporting formula data from Aspose.Cells. | Show how to build a full cell reference that combines the worksheet name and the cell name (e.g., Sheet1!A1) while iterating cells with Aspose.Cells. | Demonstrate writing a CSV header and appending rows for formula address, formula text, and value using StreamWriter in a .NET console application.
+// Common Searches: Aspose.Cells C# export formulas with values to CSV file | How to get formula text and last calculated result from each cell using Aspose.Cells | C# write Excel formula address and result to CSV with proper escaping | Iterate all cells in a workbook and output formulas with sheet name Aspose.Cells | CSV field escaping for commas and quotes when exporting Excel data in .NET
+// Tags: Aspose.Cells formula export CSV | retrieve formula text and evaluated value .NET | CSV escaping commas quotes newlines C# | sheet‑qualified cell address Aspose.Cells | iterate worksheets and cells Aspose.Cells example
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Loads an .xlsx workbook, forces full formula calculation, then iterates all worksheets to capture each formula cell’s A1 address, raw formula text, and the last calculated value. The information is CSV‑escaped and saved to "formulas.csv".
-class ExportFormulasToCsv
+// The example loads an input.xlsx workbook, walks through every worksheet and cell, and writes each formula‑containing cell to formulas.csv. Each CSV row records the sheet‑qualified address (e.g., Sheet1!A1), the formula string, and the last evaluated value, with proper CSV escaping for commas, quotes, and newlines.
+class Program
 {
     static void Main()
     {
-        // Load the workbook (create/load lifecycle)
-        string inputPath = "input.xlsx";
-        Workbook workbook = new Workbook(inputPath);
+        // Load the workbook (adjust the file path as needed)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Calculate all formulas so that each cell has its last evaluated value
-        workbook.CalculateFormula();
-
-        // Prepare CSV file for output
-        string csvPath = "formulas.csv";
-        using (StreamWriter writer = new StreamWriter(csvPath))
+        // Create a CSV file to store formula information
+        using (StreamWriter csvWriter = new StreamWriter("formulas.csv"))
         {
             // Write CSV header
-            writer.WriteLine("Address,Formula,Value");
+            csvWriter.WriteLine("Address,Formula,Value");
 
-            // Iterate through each worksheet
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
 
-                // Iterate through all cells that contain data
+                // Iterate through all cells in the worksheet
                 foreach (Cell cell in cells)
                 {
-                    // Process only cells that contain a formula
-                    if (cell.IsFormula)
+                    // Check if the cell contains a formula
+                    if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        // Cell address in A1 notation
-                        string address = cell.Name;
+                        // Build the full address (including sheet name)
+                        string address = $"{sheet.Name}!{cell.Name}";
 
-                        // Formula text as stored in the cell
+                        // Retrieve the formula text
                         string formula = cell.Formula;
 
-                        // Last evaluated value (converted to string, handling nulls)
+                        // Retrieve the last evaluated value (as string)
                         string value = cell.Value?.ToString() ?? string.Empty;
 
-                        // Escape commas and quotes for CSV compliance
-                        string escapedFormula = $"\"{formula.Replace("\"", "\"\"")}\"";
-                        string escapedValue = $"\"{value.Replace("\"", "\"\"")}\"";
+                        // Escape fields for CSV compliance
+                        address = EscapeCsv(address);
+                        formula = EscapeCsv(formula);
+                        value = EscapeCsv(value);
 
-                        // Write a CSV line
-                        writer.WriteLine($"{address},{escapedFormula},{escapedValue}");
+                        // Write the record to the CSV file
+                        csvWriter.WriteLine($"{address},{formula},{value}");
                     }
                 }
             }
         }
+    }
 
-        Console.WriteLine($"Formulas have been exported to '{csvPath}'.");
+    // Helper method to escape commas, quotes, and newlines in CSV fields
+    static string EscapeCsv(string field)
+    {
+        if (field.Contains(",") || field.Contains("\"") || field.Contains("\n"))
+        {
+            field = field.Replace("\"", "\"\"");
+            return $"\"{field}\"";
+        }
+        return field;
     }
 }

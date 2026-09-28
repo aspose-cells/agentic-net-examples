@@ -1,45 +1,41 @@
-// Title: Copy a Row Between Worksheets Using Cells.CopyRow in Aspose.Cells for .NET (C#)
-// Description: The sample creates a source workbook with header and data rows, then copies the second data row into a new destination workbook using the Cells.CopyRow method and saves both files to demonstrate row transfer.
-// Keywords: Aspose.Cells | Cells.CopyRow | C# | copy row between worksheets | transfer row between workbooks | Excel automation .NET | worksheet row copy | Aspose.Cells example | row index copy | Excel file manipulation
-// Common Searches: Aspose.Cells copy row from one sheet to another | Cells.CopyRow C# example | how to move a row between workbooks using Aspose.Cells | copy row by index Aspose.Cells .NET | transfer Excel row programmatically C#
-// Developer Intent: Move a row from a source worksheet to a destination worksheet with the Cells.CopyRow API.
-// Use Cases: Duplicate a formatted template row into a newly generated report sheet. | Extract a user‑selected data row from an input file and append it to a summary workbook. | Synchronize row layouts across multiple worksheets in a multi‑sheet workbook.
-// AI Prompts: Generate C# code that copies several consecutive rows from one worksheet to another using Cells.CopyRow. | Show how to copy a row while preserving its styles, formulas, and merged cells with Aspose.Cells. | Explain how to adjust row height after copying a row between workbooks in Aspose.Cells.
+// Title: How to copy a specific row from one worksheet to another using Aspose.Cells Cells.CopyRow in C#
+// AI Prompts: Use Aspose.Cells in C# to copy row 0 from a worksheet named "SourceSheet" to a newly created worksheet "DestinationSheet" and save the workbook as an .xlsx file. | Write C# code that transfers a given row index from a source worksheet to a target worksheet in the same workbook using Cells.CopyRow, then persist the changes. | Adapt the sample to copy multiple consecutive rows from the source sheet to the destination sheet with Aspose.Cells for .NET.
+// Common Searches: aspnet copy first row from one sheet to another using Aspose.Cells | C# Aspose.Cells Cells.CopyRow method example for transferring rows | how to duplicate a row between worksheets in an Excel file with Aspose.Cells .NET | copy row between worksheets and save workbook using Aspose.Cells C#
+// Tags: Aspose.Cells Cells.CopyRow usage C# | copy row between worksheets Aspose.Cells | programmatic Excel row transfer .NET | save workbook after copying row Aspose | duplicate row to new worksheet Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// The sample creates a source workbook with header and data rows, then copies the second data row into a new destination workbook using the Cells.CopyRow method and saves both files to demonstrate row transfer.
-class TransferRowExample
+namespace AsposeCellsRowTransfer
 {
-    static void Main()
+    // The example creates a workbook, adds sample data to the first row of a source worksheet, creates a destination worksheet, copies the specified row from the source to the destination using Cells.CopyRow, and saves the result as RowTransferResult.xlsx.
+    class Program
     {
-        // Create a source workbook and add sample data
-        Workbook sourceWorkbook = new Workbook();
-        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-        sourceSheet.Name = "Source";
+        static void Main()
+        {
+            // Create a new workbook which will contain both source and destination worksheets
+            Workbook workbook = new Workbook();
 
-        // Header row
-        sourceSheet.Cells["A1"].PutValue("ID");
-        sourceSheet.Cells["B1"].PutValue("Name");
+            // -------------------- Source Worksheet --------------------
+            // Access the first worksheet (default) and add sample data to the first row
+            Worksheet sourceSheet = workbook.Worksheets[0];
+            sourceSheet.Name = "SourceSheet";
+            Cells sourceCells = sourceSheet.Cells;
+            sourceCells["A1"].PutValue("Item");
+            sourceCells["B1"].PutValue(123);
+            sourceCells["C1"].PutValue(DateTime.Now);
 
-        // Data rows
-        sourceSheet.Cells["A2"].PutValue(1);
-        sourceSheet.Cells["B2"].PutValue("Alice");
-        sourceSheet.Cells["A3"].PutValue(2);
-        sourceSheet.Cells["B3"].PutValue("Bob");
+            // -------------------- Destination Worksheet --------------------
+            // Add a new worksheet to act as the destination
+            Worksheet destSheet = workbook.Worksheets.Add("DestinationSheet");
+            Cells destCells = destSheet.Cells;
 
-        // Create a destination workbook
-        Workbook destinationWorkbook = new Workbook();
-        Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
-        destinationSheet.Name = "Destination";
+            // Copy the entire first row from source to destination (row index 0 -> 0)
+            destCells.CopyRow(sourceCells, 0, 0);
 
-        // Transfer the second row (index 1) from source to the first row (index 0) of destination
-        // Using the Cells.CopyRow method as defined in the Aspose.Cells API
-        destinationSheet.Cells.CopyRow(sourceSheet.Cells, 1, 0);
-
-        // Save the workbooks to verify the result
-        sourceWorkbook.Save("Source.xlsx");
-        destinationWorkbook.Save("Destination.xlsx");
+            // -------------------- Save the Workbook --------------------
+            // Save the result to an Excel file
+            workbook.Save("RowTransferResult.xlsx");
+        }
     }
 }

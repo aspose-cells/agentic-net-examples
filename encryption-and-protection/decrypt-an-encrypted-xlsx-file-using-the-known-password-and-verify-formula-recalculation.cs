@@ -1,91 +1,55 @@
-// Title: Decrypt a Password‑Protected XLSX and Recalculate Formulas with Aspose.Cells for .NET
-// Description: C# sample that checks for an encrypted workbook, creates one if missing, verifies the supplied password using FileFormatUtil.VerifyPassword, opens the file with LoadOptions.Password, forces full formula recalculation, clears the protection flag, and saves an unencrypted copy while handling common exceptions.
-// Keywords: Aspose.Cells decrypt XLSX | password protected Excel .NET | verify Excel password Aspose | calculate formulas Aspose.Cells | remove workbook password C# | load encrypted workbook Aspose | Excel encryption handling | FileFormatUtil.VerifyPassword | LoadOptions.Password example
-// Common Searches: open password protected xlsx with Aspose.Cells | verify Excel file password programmatically | recalculate formulas after decrypting Excel | remove protection from Excel workbook using C# | Aspose.Cells sample for encrypted workbook
-// Developer Intent: Open a protected XLSX, confirm the password, recalculate all formulas, strip the protection, and write an unencrypted file.
-// Use Cases: Automated processing of secured Excel reports that require fresh calculations before distribution. | Batch conversion of encrypted workbooks to plain files while preserving calculated values. | Integration of password verification into a data‑pipeline that validates user‑provided Excel files.
-// AI Prompts: Generate C# code to open an encrypted XLSX with a known password using Aspose.Cells, verify the password, recalculate all formulas, and save the workbook without protection. | Explain the role of FileFormatUtil.VerifyPassword and how LoadOptions.Password enables decryption in Aspose.Cells. | Suggest enhancements to keep cell styles, charts, and pivot tables intact while recalculating formulas after decryption.
+// Title: Decrypt a password‑protected XLSX workbook, recalculate all formulas, and save the result using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an encrypted .xlsx file with a known password via Aspose.Cells LoadOptions, forces full workbook formula calculation, reads a specific cell value, and saves the decrypted workbook. | Generate a C# example that loads a password‑protected Excel file, triggers CalculateFormula, verifies the output of a target cell, and writes the unprotected file to disk using Aspose.Cells.
+// Common Searches: asp.net how to open an encrypted xlsx file with a password and recalculate formulas using Aspose.Cells | c# decrypt password protected Excel workbook and force formula evaluation with Aspose.Cells | example code to load encrypted XLSX, calculate all formulas, and save decrypted copy in C#
+// Tags: load encrypted xlsx with LoadOptions Aspose.Cells | calculate workbook formulas Aspose.Cells | save decrypted workbook as xlsx Aspose.Cells | c# password protected excel decryption Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// C# sample that checks for an encrypted workbook, creates one if missing, verifies the supplied password using FileFormatUtil.VerifyPassword, opens the file with LoadOptions.Password, forces full formula recalculation, clears the protection flag, and saves an unencrypted copy while handling common exceptions.
+// The program checks for an encrypted XLSX file, loads it using LoadOptions with the supplied password, forces calculation of all formulas, reads the value of cell A1 for verification, and saves the decrypted and recalculated workbook to a new file.
 class DecryptAndRecalculate
 {
     static void Main()
     {
-        // Paths for the encrypted and decrypted workbooks
-        string encryptedFilePath = "encrypted.xlsx";
-        string decryptedFilePath = "decrypted.xlsx";
-        string password = "myPassword";
-
         try
         {
-            // Ensure the encrypted workbook exists; if not, create a sample encrypted file
+            // Path to the encrypted XLSX file
+            string encryptedFilePath = "encrypted.xlsx";
+
+            // Verify that the encrypted file exists
             if (!File.Exists(encryptedFilePath))
             {
-                // Create a simple workbook with a formula
-                Workbook sampleWb = new Workbook();
-                Worksheet sheet = sampleWb.Worksheets[0];
-                sheet.Cells["A1"].Formula = "=SUM(1, 2, 3)"; // result should be 6
-
-                // Apply password protection
-                sampleWb.Settings.Password = password;
-
-                // Save the encrypted workbook
-                sampleWb.Save(encryptedFilePath);
-                Console.WriteLine($"Sample encrypted workbook created at: {encryptedFilePath}");
-            }
-
-            // Verify that the supplied password is correct
-            bool isPasswordCorrect;
-            using (Stream stream = File.OpenRead(encryptedFilePath))
-            {
-                isPasswordCorrect = FileFormatUtil.VerifyPassword(stream, password);
-            }
-            Console.WriteLine($"Password verification result: {isPasswordCorrect}");
-
-            if (!isPasswordCorrect)
-            {
-                Console.WriteLine("The provided password is incorrect. Exiting.");
+                Console.WriteLine($"Error: The file \"{encryptedFilePath}\" was not found.");
                 return;
             }
 
-            // Load the encrypted workbook with the password
+            // Known password for the encrypted file
+            string password = "YourPassword";
+
+            // Load the encrypted workbook using LoadOptions with the password
             LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 Password = password
             };
             Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
 
-            // Recalculate all formulas in the workbook
+            // Force calculation of all formulas in the workbook
             workbook.CalculateFormula();
 
-            // Example: display a formula and its calculated value after recalculation
-            Worksheet firstSheet = workbook.Worksheets[0];
-            Cell formulaCell = firstSheet.Cells["A1"];
-            Console.WriteLine($"Formula in A1: {formulaCell.Formula}");
-            Console.WriteLine($"Calculated value in A1: {formulaCell.Value}");
+            // Example verification: read the value of a specific cell after recalculation
+            Worksheet sheet = workbook.Worksheets[0]; // first worksheet
+            Cell targetCell = sheet.Cells["A1"]; // cell to verify
+            Console.WriteLine($"Value of {targetCell.Name} after recalculation: {targetCell.Value}");
 
-            // Remove the encryption password to produce an unprotected copy
-            workbook.Settings.Password = string.Empty;
-
-            // Save the decrypted workbook
-            workbook.Save(decryptedFilePath);
-            Console.WriteLine($"Decrypted workbook saved to: {decryptedFilePath}");
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.WriteLine($"File not found: {fnfEx.FileName}");
-        }
-        catch (CellsException cellsEx)
-        {
-            Console.WriteLine($"Aspose.Cells error: {cellsEx.Message}");
+            // Optionally, save the decrypted and recalculated workbook to a new file
+            string decryptedFilePath = "decrypted.xlsx";
+            workbook.Save(decryptedFilePath, SaveFormat.Xlsx);
+            Console.WriteLine($"Decrypted workbook saved to \"{decryptedFilePath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

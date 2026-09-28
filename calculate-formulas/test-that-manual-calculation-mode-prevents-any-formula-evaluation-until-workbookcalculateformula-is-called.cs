@@ -1,46 +1,47 @@
-// Title: Aspose.Cells C# – Verify Manual Calculation Mode Blocks Automatic Formula Evaluation
-// Description: Demonstrates how to set CalcModeType.Manual in an Aspose.Cells workbook, confirm that a formula (C1 = A1+B1) remains unevaluated until workbook.CalculateFormula is invoked, and then save the file.
-// Keywords: Aspose.Cells manual calculation | CalcModeType.Manual | C# workbook.CalculateFormula | prevent automatic formula evaluation | Aspose.Cells formula settings | manual calc mode test
-// Common Searches: Aspose.Cells set manual calculation mode .NET | formula returns null before CalculateFormula | how to trigger calculation manually in Aspose.Cells | verify manual calc mode persists after save
-// Developer Intent: Confirm that formulas are not calculated automatically when the workbook is in manual mode and are evaluated only after an explicit CalculateFormula call.
-// Use Cases: Unit test to ensure formulas stay unevaluated until manual calculation is requested. | Performance‑critical spreadsheets where calculations are performed on demand. | Saving a workbook with manual mode so that downstream users control when formulas recalculate.
-// AI Prompts: Create an MSTest that asserts cells["C1"].Value is null before CalculateFormula and equals 15 after the call. | Generate C# code to switch a workbook from automatic to manual calculation mode and then recalculate a specific range. | Explain how Aspose.Cells stores the cached result of a formula cell when CalcModeType.Manual is active.
+// Title: How to test that Aspose.Cells manual calculation mode stops automatic formula evaluation until Workbook.CalculateFormula is called (C#)
+// AI Prompts: Create a C# Aspose.Cells workbook, set CalcModeType.Manual, add a formula, and print the cell value before and after invoking Workbook.CalculateFormula. | Show how to disable automatic formula calculation in Aspose.Cells and then explicitly trigger evaluation with Workbook.CalculateFormula, verifying the computed result.
+// Common Searches: Aspose.Cells C# manual calculation mode example showing formula not evaluated automatically | disable automatic formula calculation in Aspose.Cells until CalculateFormula is called | C# Aspose.Cells workbook.CalculateFormula after setting CalcModeType.Manual | testing manual calc mode behavior with formulas in Aspose.Cells .NET | how to verify manual calculation mode prevents formula evaluation in Aspose.Cells
+// Tags: manual calculation mode Aspose.Cells | Workbook.CalculateFormula C# example | disable automatic formula evaluation Aspose.Cells | set CalcModeType.Manual .NET | formula evaluation timing Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to set CalcModeType.Manual in an Aspose.Cells workbook, confirm that a formula (C1 = A1+B1) remains unevaluated until workbook.CalculateFormula is invoked, and then save the file.
-class ManualCalcModeTest
+namespace ManualCalcModeTest
 {
-    static void Main()
+    // The example creates a workbook, places values in A1 and A2, assigns a formula to B1, switches the workbook to manual calculation mode, demonstrates that B1 remains empty before calling Workbook.CalculateFormula, then evaluates the formula to produce 15, prints the before/after values, and saves the file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Add sample data
-        cells["A1"].PutValue(5);
-        cells["B1"].PutValue(10);
+            // Populate some data
+            cells["A1"].PutValue(5);
+            cells["A2"].PutValue(10);
 
-        // Set a formula that depends on the above cells
-        cells["C1"].Formula = "=A1+B1";
+            // Set a formula that depends on the data above
+            cells["B1"].Formula = "=A1+A2";
 
-        // Set calculation mode to Manual – formulas will not be evaluated automatically
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // Set calculation mode to Manual
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
 
-        // Verify that the formula cell has no calculated value yet
-        Console.WriteLine("Before calling CalculateFormula:");
-        Console.WriteLine($"C1 value: {(cells["C1"].Value ?? "null")}");
+            // At this point the formula should NOT be evaluated automatically.
+            // The cell's value will be null (or default) because we haven't called CalculateFormula.
+            Console.WriteLine("Before CalculateFormula:");
+            Console.WriteLine($"B1 value (expected empty): {(cells["B1"].Value ?? "null")}");
 
-        // Manually trigger formula calculation
-        workbook.CalculateFormula();
+            // Explicitly calculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Verify that the formula has now been evaluated
-        Console.WriteLine("After calling CalculateFormula:");
-        Console.WriteLine($"C1 value: {cells["C1"].Value}");
+            // Now the formula should be evaluated and the result should be 15.
+            Console.WriteLine("After CalculateFormula:");
+            Console.WriteLine($"B1 value (expected 15): {cells["B1"].IntValue}");
 
-        // Save the workbook (optional, demonstrates that the mode is persisted)
-        workbook.Save("ManualCalcModeTest.xlsx");
+            // Save the workbook (optional, just to demonstrate saving)
+            workbook.Save("ManualCalcModeTest.xlsx");
+        }
     }
 }

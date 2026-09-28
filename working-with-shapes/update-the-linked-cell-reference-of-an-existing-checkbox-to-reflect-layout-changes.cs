@@ -1,50 +1,74 @@
-// Title: C# – Update the LinkedCell of an Existing CheckBox Shape with Aspose.Cells
-// Description: Loads a workbook, accesses the first worksheet, finds the CheckBox collection, changes the LinkedCell property of a selected CheckBox (e.g., to $C$5), and saves the file. Demonstrates how to keep a CheckBox synchronized with a new cell after layout changes using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | update CheckBox LinkedCell | Excel CheckBox shape | change linked cell programmatically | .NET Excel checkbox example | modify CheckBox reference | Aspose.Cells shape manipulation | linked cell address update
-// Common Searches: Aspose.Cells change linked cell of a CheckBox | C# update CheckBox LinkedCell in Excel file | how to set new linked cell for Excel CheckBox using Aspose | modify CheckBox shape reference after moving rows | Aspose.Cells example for updating CheckBox cell address
-// Developer Intent: Modify the LinkedCell address of an existing CheckBox shape in an Excel workbook.
-// Use Cases: Adjust a CheckBox after inserting or deleting rows/columns so it points to the correct data cell. | Re‑link CheckBox controls when redesigning a worksheet layout to maintain formula integrity. | Batch‑process multiple CheckBoxes in a template to match a new data schema.
-// AI Prompts: Generate C# code that finds a CheckBox by its name in a worksheet and sets its LinkedCell to $D$10 using Aspose.Cells. | Create a method that iterates over all CheckBoxes on a sheet and updates each LinkedCell based on a dictionary of old‑to‑new addresses. | Provide C# error‑handling logic for cases where a CheckBox has no LinkedCell before attempting to update it with Aspose.Cells.
+// Title: Change the linked cell of a CheckBox shape in an existing Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load the workbook, locate the shape named "CheckBox 1" on the first worksheet, assign the linked cell address "C5" to the checkbox, and save the file with Aspose.Cells in C#. | Programmatically modify the cell reference a form‑control CheckBox points to by updating its LinkedCell attribute via the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# set linked cell for a checkbox shape | how to change the cell reference of an Excel form control checkbox using .NET | update checkbox linked cell address in an existing workbook with Aspose.Cells | modify form control checkbox cell link after layout change in Excel C#
+// Tags: Aspose.Cells set CheckBox linked cell | C# update Excel form control cell reference | modify checkbox shape linked cell property | change linked cell address .NET Excel | update CheckBox LinkedCell Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads a workbook, accesses the first worksheet, finds the CheckBox collection, changes the LinkedCell property of a selected CheckBox (e.g., to $C$5), and saves the file. Demonstrates how to keep a CheckBox synchronized with a new cell after layout changes using Aspose.Cells for .NET.
-class UpdateCheckBoxLinkedCell
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel file, finds a CheckBox shape named "CheckBox 1" on the first worksheet, changes its LinkedCell to "C5", and saves the workbook to a new file.
+    class Program
     {
-        // Load an existing workbook that contains a CheckBox
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (adjust index or name as needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Get the collection of CheckBox controls on the worksheet
-        CheckBoxCollection checkBoxes = sheet.CheckBoxes;
-
-        // Ensure there is at least one CheckBox
-        if (checkBoxes.Count == 0)
+        static void Main(string[] args)
         {
-            Console.WriteLine("No CheckBox found on the worksheet.");
-            return;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Get the first worksheet (adjust index or name as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Find the CheckBox shape by its name
+                CheckBox checkBox = null;
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    if (shape.Name == "CheckBox 1" && shape is CheckBox cb)
+                    {
+                        checkBox = cb;
+                        break;
+                    }
+                }
+
+                if (checkBox == null)
+                {
+                    Console.WriteLine("CheckBox named 'CheckBox 1' was not found.");
+                    return;
+                }
+
+                // Update the linked cell reference to the new address (e.g., "C5")
+                checkBox.LinkedCell = "C5";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook with the updated linked cell reference
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-
-        // Example: update the first CheckBox's linked cell
-        // You can also locate a CheckBox by its name or other criteria
-        CheckBox checkBox = checkBoxes[0];
-
-        // New cell address that reflects the layout change
-        string newLinkedCell = "$C$5";
-
-        // Update the LinkedCell property
-        checkBox.LinkedCell = newLinkedCell;
-
-        // Optionally, verify the change
-        Console.WriteLine($"CheckBox linked cell updated to: {checkBox.LinkedCell}");
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
     }
 }

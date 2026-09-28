@@ -1,25 +1,21 @@
-// Title: C# – Serialize Aspose.Cells SparklineGroup Settings to JSON
-// Description: Demonstrates how to create a workbook, add a sparkline group, customize its properties (high/low points, line weight, preset style, colors, etc.), and export the entire worksheet—including the sparkline configuration—to a formatted JSON string using JsonSaveOptions and a memory stream.
-// Keywords: Aspose.Cells | SparklineGroup | JSON serialization | C# | JsonSaveOptions | export sparkline settings | save sparkline configuration | Excel sparkline JSON | Aspose.Cells API | sparkline group properties
-// Common Searches: Aspose.Cells serialize sparkline group to JSON | C# export sparkline settings as JSON | JsonSaveOptions example for sparkline | how to save Aspose.Cells sparkline configuration | convert Excel sparkline group to JSON string
-// Developer Intent: Generate a JSON string that captures a SparklineGroup's configuration for later reuse or sharing.
-// Use Cases: Persist custom sparkline formatting across workbook versions by storing the group settings in JSON. | Distribute a standard sparkline style to multiple reports by applying a saved JSON configuration. | Save sparkline parameters in a database or config file to dynamically render charts in generated Excel files.
-// AI Prompts: Write C# code that reads the JSON produced by JsonSaveOptions and rebuilds the SparklineGroup in a new workbook using Aspose.Cells. | Show how to modify the line weight and colors directly in the exported JSON before re‑importing it. | Explain how to extract only the SparklineGroup section from the worksheet JSON without loading the full workbook.
+// Title: Serialize Aspose.Cells sparkline group configuration to a JSON string using C#
+// AI Prompts: Generate C# code that creates a line sparkline group, customizes its visual properties, and saves the workbook to a JSON string with JsonSaveOptions. | Show how to export only the first worksheet containing a sparkline group to JSON using a MemoryStream in Aspose.Cells for .NET. | Provide a snippet that sets series, high‑point, and low‑point colors for a sparkline group and retrieves the resulting JSON representation.
+// Common Searches: aspnet serialize sparkline group settings to JSON with Aspose.Cells | C# export worksheet containing sparklines to JSON string | how to use JsonSaveOptions to include sparkline colors in JSON output | save Aspose.Cells workbook as compact JSON without empty cells | retrieve JSON string of sparkline configuration from memory stream in .NET
+// Tags: Aspose.Cells sparkline group JSON serialization | C# JsonSaveOptions export worksheet | sparkline group custom colors Aspose.Cells | export workbook to JSON string .NET | line sparkline configuration Aspose.Cells
 
+using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Json;
-using System;
-using System.Drawing;
-using System.IO;
-using System.Text;
 
-// Demonstrates how to create a workbook, add a sparkline group, customize its properties (high/low points, line weight, preset style, colors, etc.), and export the entire worksheet—including the sparkline configuration—to a formatted JSON string using JsonSaveOptions and a memory stream.
+// The example creates a workbook, adds a line sparkline group for range A1:D1, configures high/low/first/last points, markers, line weight, and custom series, high‑point, and low‑point colors, then uses JsonSaveOptions to export only the first worksheet to a compact JSON string via a MemoryStream and prints the result.
 class SparklineGroupJsonSerialization
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
@@ -38,44 +34,54 @@ class SparklineGroupJsonSerialization
             EndColumn = 4
         };
 
-        // Add a sparkline group and a sparkline inside it
+        // Add a sparkline group (Line type) with the data range A1:D1
         int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
-        group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 4);
 
-        // Configure various group settings that we want to serialize
+        // Configure various sparkline group settings
         group.ShowHighPoint = true;
         group.ShowLowPoint = true;
-        group.LineWeight = 1.5;
-        group.PresetStyle = SparklinePresetStyleType.Style3;
-        group.Type = SparklineType.Column;
+        group.ShowFirstPoint = true;
+        group.ShowLastPoint = true;
+        group.ShowMarkers = true;
         group.PlotRightToLeft = false;
-        group.DisplayHidden = true;
+        group.LineWeight = 1.5;
 
         // Set colors using CellsColor objects
         CellsColor seriesColor = workbook.CreateCellsColor();
-        seriesColor.Color = Color.Orange;
+        seriesColor.Color = System.Drawing.Color.Orange;
         group.SeriesColor = seriesColor;
 
         CellsColor highPointColor = workbook.CreateCellsColor();
-        highPointColor.Color = Color.Green;
+        highPointColor.Color = System.Drawing.Color.Green;
         group.HighPointColor = highPointColor;
 
-        // Prepare JSON save options – export the whole sheet with indentation
+        CellsColor lowPointColor = workbook.CreateCellsColor();
+        lowPointColor.Color = System.Drawing.Color.Red;
+        group.LowPointColor = lowPointColor;
+
+        // Serialize the workbook (including the sparkline group) to JSON string
         JsonSaveOptions jsonOptions = new JsonSaveOptions
         {
-            ExportArea = new CellArea { StartRow = 0, EndRow = 0, StartColumn = 0, EndColumn = 5 },
-            ExportAsString = true,
-            Indent = "  "
+            // Export only the first worksheet to keep the JSON concise
+            SheetIndexes = new int[] { 0 },
+            // Export as a JSON object even if there is only one sheet
+            AlwaysExportAsJsonObject = true,
+            // Do not export empty cells as null
+            ExportEmptyCells = false,
+            // No indentation for compact output (optional)
+            Indent = ""
         };
 
-        // Save the workbook to a memory stream as JSON and retrieve the string
         using (MemoryStream ms = new MemoryStream())
         {
+            // Save the workbook to the memory stream using JSON format
             workbook.Save(ms, jsonOptions);
+
+            // Convert the stream content to a UTF‑8 string
             string json = Encoding.UTF8.GetString(ms.ToArray());
 
-            // The JSON string now contains the sparkline group configuration
+            // Output the JSON string (could be stored, transmitted, etc.)
             Console.WriteLine(json);
         }
     }

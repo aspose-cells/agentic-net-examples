@@ -1,98 +1,57 @@
-// Title: C# – Replace Deprecated Excel Functions in a Workbook with Aspose.Cells
-// Description: Loads a workbook, scans every worksheet and used cell, detects formulas that contain a deprecated function (e.g., OLD_FUNC), swaps it with the recommended replacement (NEW_FUNC) case‑insensitively, recalculates all formulas, and saves the updated file.
-// Keywords: Aspose.Cells replace deprecated formula | C# bulk Excel function update | replace OLD_FUNC with NEW_FUNC | Aspose.Cells calculate formulas | .NET Excel formula migration | programmatic Excel function replacement | Aspose.Cells sample code | Excel workbook formula edit C#
-// Common Searches: how to replace a deprecated Excel function using Aspose.Cells C# | bulk update formulas from OLD_FUNC to NEW_FUNC in .NET | Aspose.Cells recalculate workbook after formula changes | C# code to find and replace Excel functions in all cells | Aspose.Cells replace function name in formulas
-// Developer Intent: Swap all occurrences of a removed Excel function with its modern equivalent and refresh calculations programmatically.
-// Use Cases: Modernize legacy spreadsheets that still use obsolete functions before distribution. | Automate bulk conversion of multiple workbooks to the latest Excel standards. | Guarantee correct results after function replacement by invoking CalculateFormula.
-// AI Prompts: Generate C# code with Aspose.Cells to find and replace a specific Excel function across an entire workbook. | Provide a step‑by‑step tutorial for replacing deprecated formulas and recalculating the workbook using Aspose.Cells. | Explain how to perform a case‑insensitive function name replacement in Excel formulas with Aspose.Cells for .NET.
+// Title: How to replace a deprecated Excel function with a new one in every formula across a workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, scans each worksheet's used range, finds formulas containing a specified deprecated function, replaces it with a new function name (case‑insensitive), and saves the updated file. | Generate a reusable method in C# that accepts an input file path, an old Excel function name, and a replacement function name, then updates all formula cells in the workbook using Aspose.Cells. | Create a utility class for Aspose.Cells that iterates through all cells in a workbook, performs a case‑insensitive string replace of an outdated function within formulas, and writes the changes back to a new file.
+// Common Searches: Aspose.Cells replace old Excel function name in formulas C# | C# update deprecated Excel functions across all worksheets using Aspose.Cells | bulk modify formula functions in an Excel file with Aspose.Cells .NET | search and replace function names in Excel formulas programmatically Aspose.Cells | iterate used range and change Excel function name in workbook using Aspose.Cells
+// Tags: replace deprecated function Aspose.Cells | bulk formula update .NET | scan used range Aspose.Cells | case-insensitive formula replace C# | excel workbook function substitution Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, defines the name of a deprecated function and its replacement, then iterates through every worksheet's used cell range. For each cell containing a formula, it performs a case‑insensitive replacement of the old function with the new one and saves the modified workbook.
+class Program
 {
-    // Loads a workbook, scans every worksheet and used cell, detects formulas that contain a deprecated function (e.g., OLD_FUNC), swaps it with the recommended replacement (NEW_FUNC) case‑insensitively, recalculates all formulas, and saves the updated file.
-    public class ReplaceDeprecatedFormulas
+    static void Main()
     {
-        // Define the deprecated function name and its recommended replacement.
-        private const string DeprecatedFunction = "OLD_FUNC";
-        private const string ReplacementFunction = "NEW_FUNC";
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Entry point for the console application.
-        public static void Main(string[] args)
+        // Define the deprecated function name and its recommended replacement
+        const string deprecatedFunction = "OLD_FUNC";
+        const string replacementFunction = "NEW_FUNC";
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
-            {
-                // Default file paths; can be overridden via command‑line arguments.
-                string inputPath = args.Length > 0 ? args[0] : "input.xlsx";
-                string outputPath = args.Length > 1 ? args[1] : "output.xlsx";
+            // Get the used range of cells for the current sheet
+            Cells cells = sheet.Cells;
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-                Run(inputPath, outputPath);
-            }
-            catch (Exception ex)
+            // Scan each cell within the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-        }
-
-        // Core processing method.
-        public static void Run(string inputPath, string outputPath)
-        {
-            // Verify that the input workbook exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            try
-            {
-                // Load the existing workbook.
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets in the workbook.
-                foreach (Worksheet sheet in workbook.Worksheets)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    Cells cells = sheet.Cells;
+                    Cell cell = cells[row, col];
 
-                    // Iterate through all used cells.
-                    foreach (Cell cell in cells)
+                    // Process only cells that contain a formula
+                    if (!string.IsNullOrEmpty(cell.Formula))
                     {
-                        // Process only cells that contain a formula.
-                        if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula))
+                        // If the formula uses the deprecated function, replace it
+                        if (cell.Formula.IndexOf(deprecatedFunction, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            // Check if the formula uses the deprecated function.
-                            if (cell.Formula.IndexOf(DeprecatedFunction, StringComparison.OrdinalIgnoreCase) >= 0)
-                            {
-                                // Replace the deprecated function with the recommended alternative.
-                                string updatedFormula = cell.Formula.Replace(DeprecatedFunction, ReplacementFunction, StringComparison.OrdinalIgnoreCase);
+                            string updatedFormula = cell.Formula.Replace(
+                                deprecatedFunction,
+                                replacementFunction,
+                                StringComparison.OrdinalIgnoreCase);
 
-                                // Assign the updated formula back to the cell.
-                                cell.Formula = updatedFormula;
-                            }
+                            cell.Formula = updatedFormula;
                         }
                     }
                 }
-
-                // Recalculate all formulas after modifications.
-                workbook.CalculateFormula();
-
-                // Ensure the output directory exists.
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the updated workbook.
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing workbook: {ex.Message}");
             }
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

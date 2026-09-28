@@ -1,56 +1,61 @@
-// Title: Merge Multiple JSON Arrays into a Single Smart Marker Data Source with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, place smart markers, merge two JSON array strings into one collection, set the combined JSON as a data source via WorkbookDesigner.SetJsonDataSource, process the markers, and save the resulting Excel file.
-// Keywords: Aspose.Cells | C# | .NET | Smart markers | JSON merge | WorkbookDesigner | SetJsonDataSource | combined JSON data source | Excel automation
-// Common Searches: Aspose.Cells merge JSON arrays | Set JSON data source for smart markers .NET | WorkbookDesigner SetJsonDataSource example | Combine multiple JSON collections in Aspose.Cells | Smart marker data source from merged JSON
-// Developer Intent: Combine several JSON arrays into a single data source that can be consumed by Aspose.Cells smart markers in a C# application.
-// Use Cases: Unify employee and contractor JSON lists into one "People" collection for a single smart‑marker table in a HR report. | Aggregate product catalog fragments before populating an invoice worksheet with smart markers. | Consolidate survey response arrays into a single data source to generate summary charts via smart markers.
-// AI Prompts: Generate C# code that merges three JSON arrays and assigns the result to a smart‑marker data source using Aspose.Cells WorkbookDesigner. | Explain step‑by‑step how WorkbookDesigner.SetJsonDataSource works with a merged JSON string and how to process smart markers in a .NET project. | Provide a robust method to handle empty or null JSON arrays when merging them for a smart‑marker data source in Aspose.Cells.
+// Title: Merge multiple JSON arrays into one collection and use it as a smart‑marker data source with Aspose.Cells in C#
+// AI Prompts: Combine two JSON array strings into a single JSON array and assign it to WorkbookDesigner.SetJsonDataSource for the "People" smart marker. | Create an Excel workbook, place a smart marker that references &=$People.Name, set the merged JSON as the data source, process the markers, and save the workbook. | Show how to handle potential errors while merging JSON arrays and populating smart markers using Aspose.Cells for .NET.
+// Common Searches: c# aspocells merge json arrays for smart marker data source | set json data source for smart markers using WorkbookDesigner in .NET | combine multiple JSON collections into one for Aspose.Cells smart markers | populate smart markers from merged JSON in C#
+// Tags: merge json arrays with Aspose.Cells WorkbookDesigner | setjsondatasource merged collection C# | smart marker json data source merging | excel generation from combined json using Aspose.Cells | c# smart markers multiple json arrays
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsJsonMergeExample
+namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, place smart markers, merge two JSON array strings into one collection, set the combined JSON as a data source via WorkbookDesigner.SetJsonDataSource, process the markers, and save the resulting Excel file.
-    class Program
+    // The example creates a workbook with a smart marker that iterates over a "People" collection, merges two JSON arrays into a single JSON array string, sets this merged JSON as the data source via WorkbookDesigner.SetJsonDataSource, processes the smart markers, and saves the populated Excel file.
+    public class MergeJsonArraysForSmartMarkers
     {
-        static void Main()
+        public static void Main(string[] args)
         {
-            // 1. Create a new workbook (lifecycle create)
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        public static void Run()
+        {
+            // 1. Create a new workbook (template) and add a smart marker.
             Workbook workbook = new Workbook();
-
-            // 2. Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-
-            // 3. Place smart markers that will consume the merged JSON collection
-            //    The marker syntax "&=$DataSource.ColumnName"
+            // Smart marker expects a collection named "People" with a "Name" field.
             sheet.Cells["A1"].PutValue("&=$People.Name");
-            sheet.Cells["B1"].PutValue("&=$People.Age");
 
-            // 4. Prepare two separate JSON arrays
-            string jsonArray1 = "[{\"Name\":\"John\",\"Age\":30}]";
-            string jsonArray2 = "[{\"Name\":\"Jane\",\"Age\":25}]";
+            // 2. Prepare two separate JSON arrays.
+            string jsonArray1 = "[{\"Name\":\"John\"},{\"Name\":\"Jane\"}]";
+            string jsonArray2 = "[{\"Name\":\"Bob\"},{\"Name\":\"Alice\"}]";
 
-            // 5. Merge the arrays into a single JSON array string
-            //    Remove the surrounding brackets and concatenate with a comma
+            // 3. Merge the arrays into a single JSON array.
+            // Remove the surrounding brackets, concatenate with a comma, and wrap again.
             string mergedJson = "[" +
-                jsonArray1.Trim('[', ']') + "," +
-                jsonArray2.Trim('[', ']') +
+                jsonArray1.TrimStart('[').TrimEnd(']') + "," +
+                jsonArray2.TrimStart('[').TrimEnd(']') +
                 "]";
 
-            // 6. Create a WorkbookDesigner and assign the workbook (lifecycle load)
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = workbook;
-
-            // 7. Set the merged JSON as a data source named "People"
-            //    This will be used by the smart markers defined earlier
+            // 4. Set the merged JSON as a data source for the smart marker.
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook
+            };
             designer.SetJsonDataSource("People", mergedJson);
 
-            // 8. Process the smart markers to populate data
+            // 5. Process the smart markers to populate the worksheet.
             designer.Process();
 
-            // 9. Save the resulting workbook (lifecycle save)
-            workbook.Save("MergedJsonSmartMarkers.xlsx");
+            // 6. Save the result.
+            string outputPath = "MergedJsonSmartMarkers.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
     }
 }

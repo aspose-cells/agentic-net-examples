@@ -1,48 +1,63 @@
-// Title: Apply a Project Prefix to Custom XML Part IDs in Aspose.Cells for .NET
-// Description: Demonstrates how to add a custom XML part to an Aspose.Cells workbook, assign a GUID as its ID, prepend a project-specific prefix, save the file, and confirm that the prefixed ID persists after reloading.
-// Keywords: Aspose.Cells | .NET | CustomXmlPart | ID prefix | project identifier | Excel workbook | GUID | XML part naming | add custom XML part | modify custom XML part ID
-// Common Searches: Aspose.Cells add custom XML part with prefixed ID | C# set custom XML part ID prefix in Excel workbook | How to prepend project code to CustomXmlPart ID using Aspose.Cells | Persist custom XML part ID after saving workbook | Rename CustomXmlPart ID in Aspose.Cells .NET
-// Developer Intent: Add a custom XML part to a workbook and prepend a project‑specific string to its identifier.
-// Use Cases: Enforce a uniform naming scheme for all custom XML parts across multiple workbooks. | Embed project metadata directly in the XML part ID for downstream automation. | Validate that the prefixed identifier remains unchanged after the workbook is saved and reopened.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a custom XML part, sets its ID using a given project prefix, saves the workbook, and prints the ID after loading. | Show how to iterate through every CustomXmlPart in a workbook and apply the same project prefix to each part's ID. | Explain the steps to retrieve, modify, and persist the ID of an existing CustomXmlPart in an Aspose.Cells workbook.
+// Title: How to prefix custom XML part names with a project identifier in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Add a project ID prefix to each CustomXmlPart name in a workbook and save the changes with Aspose.Cells in C#. | Iterate through Workbook.CustomXmlParts, verify the prefix is absent, and rename parts only when needed before saving.
+// Common Searches: C# Aspose.Cells rename custom XML parts with project prefix | how to add a prefix to custom XML part names in an Excel file using Aspose.Cells | iterate custom XML parts in a workbook and modify their names before saving | apply naming convention to CustomXmlParts collection Aspose.Cells .NET | prevent duplicate prefix when renaming custom XML parts in Excel workbook
+// Tags: customxmlparts rename Aspose.Cells C# | prefix workbook custom xml parts | apply naming convention to Excel custom XML parts | Aspose.Cells custom XML part management | avoid duplicate prefix custom xml parts
 
-using System;
-using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
+using System;
+using System.IO;
 
-// Demonstrates how to add a custom XML part to an Aspose.Cells workbook, assign a GUID as its ID, prepend a project-specific prefix, save the file, and confirm that the prefixed ID persists after reloading.
-class ApplyCustomXmlPartNamingConvention
+// The example loads an existing Excel workbook, loops through its CustomXmlParts collection, and prepends a specified project identifier to each part's Name only if the prefix is not already present, then saves the updated workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Project identifier to prefix custom XML part IDs
-        const string projectPrefix = "ProjA_";
+        // Paths for input and output workbooks
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Create a new workbook (creation rule)
-        Workbook workbook = new Workbook();
+        // Project identifier to be used as a prefix
+        string projectId = "Proj123";
 
-        // Sample XML data for the custom part
-        string xmlData = "<root><item>Sample</item></root>";
-        byte[] xmlBytes = Encoding.UTF8.GetBytes(xmlData);
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Add the custom XML part to the workbook (add method rule)
-        int partIndex = workbook.CustomXmlParts.Add(xmlBytes, null);
-        CustomXmlPart customPart = workbook.CustomXmlParts[partIndex];
+        try
+        {
+            // Load the workbook (lifecycle: load)
+            Workbook workbook = new Workbook(inputPath);
 
-        // Assign an initial GUID as the ID
-        customPart.ID = Guid.NewGuid().ToString();
+            // Iterate over all custom XML parts and rename them
+            foreach (dynamic xmlPart in workbook.CustomXmlParts)
+            {
+                string originalName = xmlPart.Name;
 
-        // Apply naming convention: prefix the ID with the project identifier
-        customPart.ID = projectPrefix + customPart.ID;
+                // Apply the prefix only if it hasn't been added already
+                if (!originalName.StartsWith(projectId + "_"))
+                {
+                    xmlPart.Name = $"{projectId}_{originalName}";
+                }
+            }
 
-        // Save the workbook (save rule)
-        string outputPath = "CustomXmlPartPrefixed.xlsx";
-        workbook.Save(outputPath);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Load the workbook to verify the prefixed ID (load rule)
-        Workbook loadedWorkbook = new Workbook(outputPath);
-        CustomXmlPart loadedPart = loadedWorkbook.CustomXmlParts[0];
-        Console.WriteLine("Prefixed Custom XML Part ID: " + loadedPart.ID);
+            // Save the workbook with the updated names (lifecycle: save)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

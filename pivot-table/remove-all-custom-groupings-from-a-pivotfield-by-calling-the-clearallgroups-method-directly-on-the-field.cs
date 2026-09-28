@@ -1,48 +1,38 @@
-// Title: ClearAllGroups: Remove All Custom Groupings from Pivot Table Fields with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, finds a pivot table, and calls PivotField.ClearAllGroups on every row and column field to delete custom groupings. The pivot table is then refreshed with CalculateData and the workbook is saved.
-// Keywords: Aspose.Cells ClearAllGroups | C# remove pivot field grouping | Aspose.Cells ungroup pivot table | clear custom groups pivot | refresh pivot after ClearAllGroups | Aspose.Cells .NET pivot API
-// Common Searches: How to clear all groups on a pivot field using Aspose.Cells C# | Aspose.Cells ClearAllGroups example | Remove custom groupings from pivot table rows C# | Refresh pivot table after clearing groups Aspose.Cells | PivotField.ClearAllGroups method usage
-// Developer Intent: Delete every custom grouping applied to a pivot table’s row and column fields by invoking PivotField.ClearAllGroups.
-// Use Cases: Automate cleanup of pivot tables before publishing reports | Prepare workbooks for downstream processing by removing user‑defined groups | Reset pivot table layout programmatically in a batch job | Ensure consistent pivot calculations after ungrouping fields
-// AI Prompts: Generate C# code using Aspose.Cells that iterates through all PivotField objects in a pivot table and calls ClearAllGroups to remove custom groupings. | Explain when to use PivotField.ClearAllGroups versus PivotField.Ungroup in Aspose.Cells with code snippets. | Create a reusable method that clears groups from row and column fields, recalculates the pivot, and saves the workbook.
+// Title: Remove all custom groupings from PivotTable base fields using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# snippet with Aspose.Cells that iterates over every base field of the first pivot table, calls Ungroup on each field, and saves the workbook. | Show how to create a reusable method that accepts an input Excel file path, clears all custom groups from its pivot table fields using Aspose.Cells, and writes the result to an output file. | Demonstrate the steps to verify that a worksheet contains a pivot table before performing Ungroup operations on its fields in Aspose.Cells.
+// Common Searches: C# Aspose.Cells clear grouping on pivot table base fields | how to ungroup all fields in an Excel pivot table using Aspose.Cells .NET | programmatically delete custom groups from pivot fields with Aspose.Cells | remove custom grouping from pivot table base fields Aspose.Cells C#
+// Tags: Aspose.Cells clear pivot field groups | C# ungroup pivot table fields Aspose.Cells | remove custom grouping from pivot base fields .NET | iterate pivot table base fields Aspose.Cells | save modified workbook Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Loads an Excel workbook, finds a pivot table, and calls PivotField.ClearAllGroups on every row and column field to delete custom groupings. The pivot table is then refreshed with CalculateData and the workbook is saved.
-class RemovePivotFieldGroupings
+// The example loads an Excel workbook, checks for a pivot table on the first worksheet, loops through each base field of that pivot table, calls Ungroup to delete any custom grouping, and then saves the updated workbook as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Load the workbook containing the pivot table
+        // Load the workbook that contains the pivot table
         Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (adjust index if needed)
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Ensure there is at least one pivot table
-        if (worksheet.PivotTables.Count == 0)
+        // Ensure there is at least one pivot table in the worksheet
+        if (worksheet.PivotTables.Count > 0)
         {
-            Console.WriteLine("No pivot tables found in the worksheet.");
-            return;
+            // Get the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Iterate through all base fields of the pivot table
+            // BaseFields includes both row and column fields that can be grouped
+            foreach (PivotField field in pivotTable.BaseFields)
+            {
+                // Remove any custom grouping applied to the field
+                // The Ungroup method clears all grouping for the field
+                field.Ungroup();
+            }
         }
-
-        // Access the first pivot table (adjust index if needed)
-        PivotTable pivotTable = worksheet.PivotTables[0];
-
-        // Ungroup all row fields
-        foreach (PivotField rowField in pivotTable.RowFields)
-        {
-            rowField.Ungroup(); // Removes any custom grouping on the field
-        }
-
-        // Ungroup all column fields
-        foreach (PivotField colField in pivotTable.ColumnFields)
-        {
-            colField.Ungroup(); // Removes any custom grouping on the field
-        }
-
-        // Recalculate the pivot table to reflect the changes
-        pivotTable.CalculateData();
 
         // Save the modified workbook
         workbook.Save("output.xlsx");

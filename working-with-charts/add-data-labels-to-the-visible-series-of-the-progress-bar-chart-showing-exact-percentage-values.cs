@@ -1,94 +1,82 @@
-// Title: Aspose.Cells for .NET – Show percentage labels on the visible series of a stacked‑bar progress chart
-// Description: Creates an XLSX workbook, adds task data, builds a stacked bar chart used as a progress bar, makes the "Remaining" series transparent, disables its labels, and configures the "Completed" series to display only the percentage (0 % format) inside each bar.
-// Keywords: Aspose.Cells | .NET | C# | stacked bar chart | progress bar chart | percentage data labels | hide series | transparent series | inside end label | number format 0% | chart customization | Excel automation
-// Common Searches: Aspose.Cells display percentage on stacked bar | C# progress bar chart data label | hide series in Aspose.Cells chart | set label position inside end Aspose.Cells | format chart data label as percent .NET
-// Developer Intent: Add percentage data labels to the visible (completed) series of a stacked‑bar progress chart while hiding the remaining series.
-// Use Cases: Generate a progress‑bar style chart where only the completed portion is visible and each bar shows its completion percent. | Create clean Excel reports by making the unused part of a stacked bar transparent and removing its labels. | Customize label format to ‘0%’ and place it inside the bar for better readability.
-// AI Prompts: Write C# code using Aspose.Cells to create a stacked bar chart, hide the second series, and show only percentage labels on the first series. | How can I format data labels as 0% and position them InsideEnd in an Aspose.Cells chart? | Explain steps to make a series transparent and suppress its data labels while enabling percentage labels on another series with Aspose.Cells for .NET.
+// Title: Add percentage‑only data labels to visible series of a Progress Bar chart using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel file, finds the first chart, and activates data labels that show only the percentage for each visible series with a whole‑number format. | Demonstrate how to loop through a chart's NSeries in Aspose.Cells and set HasDataLabels, DataLabel.ShowPercentage, and NumberFormat properties. | Show a snippet that positions the percentage label at the center of each bar in a progress‑bar style chart with Aspose.Cells.
+// Common Searches: Aspose.Cells enable data labels showing percentage for chart series | C# add percentage labels to visible series in Excel chart with Aspose.Cells | how to format chart data labels as whole number percent in Aspose.Cells | progress bar chart data labels Aspose.Cells .NET
+// Tags: Aspose.Cells enable series percentage data labels | C# suppress raw values in chart labels | apply 0% number format to chart data labels | center-align data label within progress bar segment | enumerate chart NSeries to configure labels
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace ProgressBarChartWithPercentageLabels
+// The program loads a workbook, accesses the first chart, iterates over its series, enables data labels for visible series, shows only the percentage formatted as a whole‑number percent, optionally centers the label inside each bar, and saves the updated file.
+class Program
 {
-    // Creates an XLSX workbook, adds task data, builds a stacked bar chart used as a progress bar, makes the "Remaining" series transparent, disables its labels, and configures the "Completed" series to display only the percentage (0 % format) inside each bar.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "ProgressBar.xlsx";
+        const string outputPath = "ProgressBar_WithLabels.xlsx";
+
+        try
         {
-            try
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for a progress bar (stacked bar) chart
-                // Column A – Category (Task)
-                // Column B – Completed portion (value)
-                // Column C – Remaining portion (value)
-                sheet.Cells["A1"].PutValue("Task");
-                sheet.Cells["B1"].PutValue("Completed");
-                sheet.Cells["C1"].PutValue("Remaining");
-
-                sheet.Cells["A2"].PutValue("Task 1");
-                sheet.Cells["B2"].PutValue(70);
-                sheet.Cells["C2"].PutValue(30);
-
-                sheet.Cells["A3"].PutValue("Task 2");
-                sheet.Cells["B3"].PutValue(45);
-                sheet.Cells["C3"].PutValue(55);
-
-                sheet.Cells["A4"].PutValue("Task 3");
-                sheet.Cells["B4"].PutValue(90);
-                sheet.Cells["C4"].PutValue(10);
-
-                // Add a stacked bar chart (used as a progress bar)
-                // Note: In Aspose.Cells the stacked bar chart type is BarStacked
-                int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 6, 0, 20, 15);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Add the "Completed" series (visible part)
-                int completedSeriesIdx = chart.NSeries.Add("B2:B4", true);
-                // Add the "Remaining" series (invisible part)
-                int remainingSeriesIdx = chart.NSeries.Add("C2:C4", true);
-
-                // Set category (X) axis data
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Hide the "Remaining" series so only the completed part is shown
-                Series remainingSeries = chart.NSeries[remainingSeriesIdx];
-                remainingSeries.Area.ForegroundColor = Color.Transparent; // make bar invisible
-
-                // Disable all data label displays for the remaining series
-                remainingSeries.DataLabels.ShowValue = false;
-                remainingSeries.DataLabels.ShowPercentage = false;
-                remainingSeries.DataLabels.ShowCategoryName = false;
-                remainingSeries.DataLabels.ShowSeriesName = false;
-                remainingSeries.DataLabels.ShowLegendKey = false;
-                // Removed invalid ShowDataLabels property
-
-                // Configure data labels for the visible (completed) series
-                Series completedSeries = chart.NSeries[completedSeriesIdx];
-                completedSeries.DataLabels.ShowPercentage = true;   // Show percentage value
-                completedSeries.DataLabels.ShowValue = false;      // Hide raw value
-                completedSeries.DataLabels.Position = LabelPositionType.InsideEnd; // Position inside the bar
-                completedSeries.DataLabels.NumberFormat = "0%";    // Exact percentage format
-
-                // Optional: set a distinct color for the completed portion
-                completedSeries.Area.ForegroundColor = Color.Green;
-
-                // Save the workbook
-                string outputPath = "ProgressBarChartWithPercentageLabels.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook that contains the Progress Bar chart
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0]; // assume chart is on the first sheet
+
+            // Ensure the sheet contains at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
             }
+
+            // Get the first chart (assumed to be the Progress Bar chart)
+            Chart progressChart = sheet.Charts[0];
+
+            // Iterate through all series in the chart using dynamic to avoid compile‑time type issues
+            foreach (dynamic series in progressChart.NSeries)
+            {
+                try
+                {
+                    // Apply only to series that are visible
+                    if (series.IsVisible)
+                    {
+                        // Enable data labels for this series
+                        series.HasDataLabels = true;
+
+                        // Show only the percentage value
+                        series.DataLabel.ShowPercentage = true;
+                        series.DataLabel.ShowValue = false; // hide raw value if not needed
+
+                        // Format the label as a whole‑number percentage (e.g., 75%)
+                        series.DataLabel.NumberFormat = "0%";
+
+                        // Optional: Position the label inside the bar (centered)
+                        // The Position property expects a ChartDataLabelPosition enum.
+                        // If the enum is unavailable, this line can be omitted or set via integer cast.
+                        // series.DataLabel.Position = Aspose.Cells.Charts.ChartDataLabelPosition.Center;
+                    }
+                }
+                catch (Exception exSeries)
+                {
+                    Console.WriteLine($"Error processing a series: {exSeries.Message}");
+                }
+            }
+
+            // Save the workbook with the updated chart
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors to prevent the application from crashing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

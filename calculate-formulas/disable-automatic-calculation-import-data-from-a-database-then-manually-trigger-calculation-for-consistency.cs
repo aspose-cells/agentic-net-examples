@@ -1,67 +1,86 @@
-// Title: Disable Auto‑Calc, Import DataTable, and Manually Recalculate Formulas with Aspose.Cells for .NET
-// Description: Demonstrates how to set Aspose.Cells calculation mode to Manual, import a DataTable (simulating database rows) into a worksheet with headers, add SUM and SUMPRODUCT formulas, trigger a single Workbook.CalculateFormula call, and save the workbook as XLSX.
-// Keywords: Aspose.Cells manual calculation | CalcModeType.Manual | Workbook.CalculateFormula | ImportData DataTable | ImportTableOptions | C# Excel automation | disable automatic formula evaluation | bulk data import Excel | calculate formulas after import
-// Common Searches: Aspose.Cells turn off automatic calculation .NET | Import DataTable into Excel worksheet using Aspose.Cells | Manual formula evaluation Aspose.Cells C# | CalcModeType.Manual example | Workbook.CalculateFormula after data import
-// Developer Intent: The developer needs to prevent formulas from recalculating while loading data, then evaluate all formulas in one explicit step.
-// Use Cases: Load thousands of rows from a database into a template without triggering per‑row recalculation, then compute totals once. | Create financial or inventory reports where data is staged first and formulas are applied only after the dataset is complete. | Build an Excel export service that inserts external data, keeps formulas dormant, and activates them with a single calculate call before delivering the file.
-// AI Prompts: Show C# code that disables automatic calculation in Aspose.Cells, imports a DataTable with column headers, adds dependent formulas, and calls Workbook.CalculateFormula. | Provide an Aspose.Cells example using ImportTableOptions (IsFieldNameShown, InsertRows) while the workbook is in manual calculation mode. | Explain best practices for bulk importing database rows into an Excel file with Aspose.Cells and performing a one‑time formula evaluation.
+// Title: Disable auto‑calculation, import a DataTable into an Excel worksheet, and manually recalculate formulas using Aspose.Cells in C#
+// AI Prompts: Write C# code that sets Aspose.Cells workbook calculation mode to manual, loads rows from a DataTable into a worksheet, adds a Total column with a formula, and invokes CalculateFormula before saving the file. | Show how to turn off automatic formula evaluation in Aspose.Cells, populate cells from a database‑derived DataTable, assign cell formulas, and trigger a manual recalculation in .NET.
+// Common Searches: how to turn off automatic calculation in Aspose.Cells C# before importing data | import DataTable into Excel worksheet with Aspose.Cells and calculate totals manually | Aspose.Cells manual calculation mode example for database data | C# Aspose.Cells calculate formulas after populating worksheet | disable auto calc and trigger workbook.CalculateFormula in Aspose.Cells
+// Tags: Aspose.Cells manual calculation mode | import DataTable to Excel worksheet Aspose.Cells | assign cell formulas programmatically Aspose.Cells | trigger workbook.CalculateFormula C# | populate Excel from database Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Data;
-using Aspose.Cells;
+using System.IO;
 
-namespace AsposeCellsCalcExample
+// The example creates a Workbook, disables automatic calculation, imports a DataTable into the first worksheet, adds a 'Total' column with formulas referencing Quantity and Price, manually triggers formula evaluation with workbook.CalculateFormula(), and saves the result as Output.xlsx.
+class Program
 {
-    // Demonstrates how to set Aspose.Cells calculation mode to Manual, import a DataTable (simulating database rows) into a worksheet with headers, add SUM and SUMPRODUCT formulas, trigger a single Workbook.CalculateFormula call, and save the workbook as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // ----- Disable automatic calculation -----
-            // Set calculation mode to Manual so formulas are not evaluated automatically
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-            // Optional: ensure formulas are not calculated on open
-            workbook.Settings.FormulaSettings.CalculateOnOpen = false;
-
-            // ----- Simulate importing data from a database -----
-            // In a real scenario you would use a SqlDataReader or similar.
-            // Here we create a DataTable to represent the data source.
-            DataTable dt = new DataTable("Products");
-            dt.Columns.Add("ProductID", typeof(int));
-            dt.Columns.Add("ProductName", typeof(string));
+            // Sample data (replace with actual DB retrieval if needed)
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id", typeof(int));
+            dt.Columns.Add("Name", typeof(string));
             dt.Columns.Add("Quantity", typeof(int));
-            dt.Columns.Add("UnitPrice", typeof(double));
+            dt.Columns.Add("Price", typeof(double));
 
-            dt.Rows.Add(1, "Apple", 50, 0.5);
-            dt.Rows.Add(2, "Banana", 30, 0.3);
-            dt.Rows.Add(3, "Cherry", 20, 1.2);
+            dt.Rows.Add(1, "Product A", 10, 2.5);
+            dt.Rows.Add(2, "Product B", 5, 4.0);
+            dt.Rows.Add(3, "Product C", 8, 3.75);
 
-            // Import the DataTable starting at cell A1 (row 0, column 0)
-            // Use ImportTableOptions to include column headers
-            ImportTableOptions importOptions = new ImportTableOptions
+            // Manually import the DataTable into the worksheet starting at cell A1
+            // Write header
+            for (int col = 0; col < dt.Columns.Count; col++)
             {
-                IsFieldNameShown = true,
-                InsertRows = true
-            };
-            cells.ImportData(dt, 0, 0, importOptions);
+                sheet.Cells[0, col].PutValue(dt.Columns[col].ColumnName);
+            }
 
-            // ----- Add sample formulas that depend on the imported data -----
-            // Total quantity (sum of Quantity column)
-            cells["E2"].Formula = "=SUM(C2:C4)";
-            // Total value (Quantity * UnitPrice)
-            cells["F2"].Formula = "=SUMPRODUCT(C2:C4, D2:D4)";
+            // Write data rows
+            for (int row = 0; row < dt.Rows.Count; row++)
+            {
+                for (int col = 0; col < dt.Columns.Count; col++)
+                {
+                    sheet.Cells[row + 1, col].PutValue(dt.Rows[row][col]);
+                }
+            }
 
-            // ----- Manually trigger calculation -----
-            // Since calculation mode is Manual, we need to call CalculateFormula explicitly.
+            // Add a formula column for Total = Quantity * Price
+            int totalColumnIndex = dt.Columns.Count; // Column after the last data column (E)
+            sheet.Cells[0, totalColumnIndex].PutValue("Total"); // Header
+
+            int startRow = 1; // Data starts after header (0‑based index)
+            int lastDataRow = sheet.Cells.MaxDataRow; // Last row with data
+
+            for (int row = startRow; row <= lastDataRow; row++)
+            {
+                // Build formula referencing Quantity (C) and Price (D) columns
+                string formula = $"=C{row + 1}*D{row + 1}";
+                sheet.Cells[row, totalColumnIndex].Formula = formula;
+            }
+
+            // Manually trigger calculation to evaluate formulas
             workbook.CalculateFormula();
 
-            // ----- Save the workbook -----
-            workbook.Save("ManualCalc_ImportedData.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a file
+            string outputPath = "Output.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

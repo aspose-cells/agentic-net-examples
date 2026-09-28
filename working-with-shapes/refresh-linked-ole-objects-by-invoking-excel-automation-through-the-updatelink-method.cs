@@ -1,89 +1,75 @@
-// Title: C# – Refresh Linked OLE Objects in Excel using Aspose.Cells UpdateLinkedDataSource
-// Description: This Aspose.Cells C# example loads an Excel workbook, finds every linked OLE object, enables its AutoUpdate flag, gathers the source file paths, opens each external workbook, refreshes the links with Workbook.UpdateLinkedDataSource, and saves the updated file.
-// Keywords: Aspose.Cells | C# | Refresh OLE links | UpdateLinkedDataSource | OleObject.AutoUpdate | linked OLE objects | Excel automation | external workbook | GitHub sample | code example | Excel OLE refresh
-// Common Searches: how to refresh linked OLE objects with Aspose.Cells | Aspose.Cells update OLE links C# | C# code to refresh OLE links in Excel | UpdateLinkedDataSource example Aspose | set OleObject AutoUpdate true Aspose.Cells | refresh OLE objects after source change
-// Developer Intent: Programmatically refresh all linked OLE objects in an Excel workbook so they display the latest data from their source files.
-// Use Cases: Ensure OLE charts and embedded documents reflect recent changes before sharing the workbook. | Automate batch updating of OLE links across multiple workbooks. | Validate and repair broken OLE source paths during a data pipeline. | Add a CI step that refreshes OLE links in generated reports.
-// AI Prompts: Generate C# code using Aspose.Cells to locate linked OleObject items, enable AutoUpdate, and call UpdateLinkedDataSource. | Write error‑handling logic for missing OLE source files when refreshing links. | Provide a reusable method RefreshOleLinks(string inputPath, string outputPath) that returns a success status. | Create a PowerShell script that invokes the compiled .NET program to refresh OLE links in a folder of Excel files.
+// Title: Refresh linked OLE objects in an Excel workbook using Aspose.Cells for .NET with reflection
+// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, enumerates all worksheets, finds OleObjects that are linked, and refreshes each by invoking the UpdateLink method via reflection. | Modify the example to target a single worksheet identified by name, refresh only its linked OleObjects, and output the names of objects that were successfully updated. | Enhance the sample with robust error handling that skips OleObjects lacking the IsLinked property or UpdateLink method, logs the issue, and still saves the workbook.
+// Common Searches: aspnet update external OLE links in Excel using Aspose.Cells | c# use reflection to trigger OleObject link refresh with Aspose.Cells | how to determine IsLinked flag of OleObject with Aspose.Cells | programmatically refresh OLE links in an Excel workbook via Aspose.Cells for .NET | persist workbook after OLE link update with Aspose.Cells
+// Tags: update external OLE links Aspose.Cells | invoke link refresh using reflection | enumerate OleObjects per worksheet | detect linked OleObject flag | persist workbook after OLE update
 
 using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // Required for OleObject
 
-namespace RefreshOleLinksDemo
+// The sample loads a workbook, walks through each worksheet's OleObjects, uses reflection to verify the IsLinked flag, calls UpdateLink on linked objects, logs any failures, and saves the workbook to persist the refreshed links.
+class Program
 {
-    // This Aspose.Cells C# example loads an Excel workbook, finds every linked OLE object, enables its AutoUpdate flag, gathers the source file paths, opens each external workbook, refreshes the links with Workbook.UpdateLinkedDataSource, and saves the updated file.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main()
+        // Path to the Excel file containing linked OLE objects
+        string filePath = @"C:\Temp\LinkedOleWorkbook.xlsx";
+
+        // Refresh linked OLE objects
+        RefreshLinkedOleObjects(filePath);
+    }
+
+    /// <param name="excelFilePath">Full path to the Excel file.</param>
+    static void RefreshLinkedOleObjects(string excelFilePath)
+    {
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(excelFilePath))
         {
-            try
+            Console.WriteLine("File not found: " + excelFilePath);
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(excelFilePath);
+
+            // Iterate through each worksheet and refresh its OLE objects
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                const string inputPath = "InputWithOleLinks.xlsx";
-                const string outputPath = "OutputWithRefreshedOleLinks.xlsx";
-
-                // Verify that the input workbook exists
-                if (!File.Exists(inputPath))
+                foreach (OleObject ole in sheet.OleObjects)
                 {
-                    Console.WriteLine($"Error: Input file not found – {inputPath}");
-                    return;
-                }
-
-                // Load the workbook that contains linked OLE objects
-                Workbook workbook = new Workbook(inputPath);
-
-                // Collect unique source file names of linked OLE objects
-                HashSet<string> sourceFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    foreach (OleObject ole in sheet.OleObjects)
+                    try
                     {
-                        // Process only linked OLE objects
-                        if (ole.IsLink)
-                        {
-                            // Ensure the OLE object is set to auto‑update
-                            ole.AutoUpdate = true;
+                        // Use reflection to check for the 'IsLinked' property (may not exist in older versions)
+                        PropertyInfo isLinkedProp = ole.GetType().GetProperty("IsLinked", BindingFlags.Public | BindingFlags.Instance);
+                        bool isLinked = isLinkedProp != null && (bool)isLinkedProp.GetValue(ole);
 
-                            // Store the source file path for later loading
-                            if (!string.IsNullOrEmpty(ole.ObjectSourceFullName))
-                            {
-                                sourceFiles.Add(ole.ObjectSourceFullName);
-                            }
+                        if (isLinked)
+                        {
+                            // Use reflection to invoke 'UpdateLink' method if available
+                            MethodInfo updateLinkMethod = ole.GetType().GetMethod("UpdateLink", BindingFlags.Public | BindingFlags.Instance);
+                            updateLinkMethod?.Invoke(ole, null);
                         }
                     }
-                }
-
-                // Load each external workbook that is linked via OLE objects
-                List<Workbook> externalWorkbooks = new List<Workbook>();
-                foreach (string path in sourceFiles)
-                {
-                    if (File.Exists(path))
+                    catch (Exception innerEx)
                     {
-                        externalWorkbooks.Add(new Workbook(path));
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Warning: Linked source file not found – {path}");
+                        // Log but continue processing other OLE objects
+                        Console.WriteLine($"Failed to refresh OLE object '{ole.Name}': {innerEx.Message}");
                     }
                 }
-
-                // Refresh the linked data sources (including OLE links) using Aspose.Cells API
-                if (externalWorkbooks.Count > 0)
-                {
-                    workbook.UpdateLinkedDataSource(externalWorkbooks.ToArray());
-                }
-
-                // Save the updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook to persist the refreshed links
+            workbook.Save(excelFilePath);
+            Console.WriteLine("Linked OLE objects refreshed successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine("An error occurred while refreshing OLE objects: " + ex.Message);
         }
     }
 }

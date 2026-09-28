@@ -1,58 +1,54 @@
-// Title: Extract a formatted currency string and convert to numeric value with Aspose.Cells for .NET
-// Description: Creates a workbook, writes a numeric amount, applies a custom currency format, retrieves the display string via GetStringValue(CellValueFormatStrategy.DisplayString), strips non‑numeric characters with Regex, and parses the result to a decimal for backend processing before saving the file.
-// Keywords: Aspose.Cells GetStringValue | currency format extraction .NET | CellValueFormatStrategy DisplayString | remove currency symbol C# | regex numeric string conversion | parse decimal from cell value
-// Common Searches: Aspose.Cells get formatted currency string | strip currency symbol from cell value C# | convert cell display string to decimal Aspose | GetStringValue DisplayString example | regex clean numeric string from formatted value
-// Developer Intent: Retrieve a cell's formatted currency text, remove symbols, and convert it to a numeric type for further processing.
-// Use Cases: Call GetStringValue with CellValueFormatStrategy.DisplayString to obtain the cell's visible currency text. | Use a regular expression to eliminate all characters except digits, decimal separators, and sign symbols. | Parse the cleaned string to a decimal with decimal.TryParse for calculations or storage.
-// AI Prompts: Show how to use Aspose.Cells GetStringValue(DisplayString) to get a currency formatted string and convert it to a decimal in C#. | Provide a C# snippet that extracts a formatted monetary value from a worksheet cell, removes currency symbols and grouping separators using Regex, and safely parses it to a decimal.
+// Title: Retrieve a formatted currency string from an Excel cell with GetStringValue(DisplayString) and remove the monetary symbols for decimal conversion using Aspose.Cells for .NET
+// AI Prompts: Demonstrate how to call GetStringValue with the DisplayString strategy to obtain the visible monetary text of a cell and then cleanse it of all non‑numeric characters in C#. | Generate C# code that captures the formatted amount from a worksheet cell, eliminates the currency sign, and converts the cleaned string to a decimal using Aspose.Cells.
+// Common Searches: Aspose.Cells C# get visible currency text from cell without symbol | how to clean formatted Excel monetary value for backend processing | extract numeric portion from custom formatted cell using Aspose.Cells GetStringValue | convert Excel formatted amount to decimal in .NET with Aspose.Cells
+// Tags: GetStringValue DisplayString monetary format | regex cleanse nonnumeric cell value | decimal conversion from formatted cell Aspose.Cells | custom monetary format extraction C# | server side numeric parsing Excel cell
 
 using System;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsCurrencyExample
+namespace AsposeCellsCurrencyProcessing
 {
-    // Creates a workbook, writes a numeric amount, applies a custom currency format, retrieves the display string via GetStringValue(CellValueFormatStrategy.DisplayString), strips non‑numeric characters with Regex, and parses the result to a decimal for backend processing before saving the file.
+    // Shows how to apply a custom currency format to a cell, retrieve the displayed string with GetStringValue(DisplayString), strip out all non‑numeric characters via regex, and parse the result into a decimal for backend use using Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Put a numeric value that represents an amount
-            Cell amountCell = cells["A1"];
-            amountCell.PutValue(1234.56);
+            // Put a numeric value into cell A1
+            Cell cell = cells["A1"];
+            cell.PutValue(1234.56);
 
             // Apply a custom currency format (e.g., $1,234.56)
-            Style currencyStyle = workbook.CreateStyle();
-            currencyStyle.Custom = "$#,##0.00";
-            amountCell.SetStyle(currencyStyle);
+            Style style = cell.GetStyle();
+            style.Custom = "$#,##0.00";
+            cell.SetStyle(style);
 
             // Extract the formatted string including the currency symbol
-            string formattedWithSymbol = amountCell.GetStringValue(CellValueFormatStrategy.DisplayString);
-            Console.WriteLine("Formatted with symbol: " + formattedWithSymbol);
+            // Using DisplayString to get exactly what Excel would show
+            string formattedCurrency = cell.GetStringValue(CellValueFormatStrategy.DisplayString);
+            Console.WriteLine("Formatted (with symbol): " + formattedCurrency);
 
-            // Strip all non‑numeric characters except decimal separator and minus sign
-            string numericString = Regex.Replace(formattedWithSymbol, @"[^\d\.,-]+", "");
-            Console.WriteLine("Numeric string for backend: " + numericString);
+            // Strip all non‑numeric characters (except decimal separator, comma and minus sign)
+            string numericString = Regex.Replace(formattedCurrency, @"[^\d\.,-]+", "");
+            Console.WriteLine("Stripped numeric string: " + numericString);
 
-            // Optionally convert to a decimal for further processing
-            if (decimal.TryParse(numericString, out decimal amount))
+            // Optionally convert to a decimal for backend processing
+            if (decimal.TryParse(numericString, out decimal numericValue))
             {
-                Console.WriteLine("Parsed decimal value: " + amount);
+                Console.WriteLine("Parsed decimal value: " + numericValue);
             }
             else
             {
-                Console.WriteLine("Failed to parse numeric string.");
+                Console.WriteLine("Failed to parse numeric value.");
             }
 
-            // Save the workbook (lifecycle rule: create → save)
-            workbook.Save("CurrencyExample.xlsx");
+            // Save the workbook (optional, just to demonstrate lifecycle)
+            workbook.Save("CurrencyProcessingDemo.xlsx");
         }
     }
 }

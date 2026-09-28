@@ -1,59 +1,61 @@
-// Title: C# – Batch Insert a Company Logo SVG into the Top‑Right Corner of Every Worksheet with Aspose.Cells
-// Description: Loads a workbook, reads a company_logo.svg file, and uses Aspose.Cells' AddSvg method to place the SVG at the first row and a right‑hand column on each worksheet. The shape auto‑sizes and the workbook is saved as output.xlsx.
-// Keywords: Aspose.Cells | C# | AddSvg | insert SVG | company logo | top right corner | batch insert | multiple worksheets | Excel automation | shape placement | Excel workbook | SVG shape | code example | Aspose.Cells for .NET | Excel branding
-// Common Searches: C# Aspose.Cells add SVG to all sheets | How to place a logo in the top‑right of each worksheet using Aspose.Cells | Batch insert picture in Excel workbook Aspose.Cells .NET | AddSvg method example multiple worksheets | Insert company logo SVG Aspose.Cells C#
-// Developer Intent: Add the same SVG logo to the top‑right corner of every worksheet in an Excel workbook.
-// Use Cases: Apply consistent branding to all sheets of a generated report. | Insert a seal or trademark SVG across a multi‑sheet financial model. | Create a reusable template that automatically adds a header logo. | Prepare multi‑sheet invoices with the company logo pre‑placed. | Automate compliance watermark insertion on every worksheet.
-// AI Prompts: Write C# code that loads an SVG file and uses Aspose.Cells to add it as a shape to the top‑right cell of each worksheet, including file‑not‑found handling. | Show how to adjust column index and offset values in AddSvg so the logo aligns with the right margin on sheets of different widths. | Provide an example that saves the workbook in both .xlsx and .xlsb formats after inserting the SVG logo on all worksheets. | Generate a reusable method that accepts a workbook and SVG path, then batches the logo insertion across all worksheets.
+// Title: Batch insert a company logo SVG into the top‑right corner of every worksheet using Aspose.Cells for .NET
+// AI Prompts: Add a free‑floating SVG logo to row 1 and the last used column of each worksheet in a workbook with Aspose.Cells for .NET. | Loop through all worksheets, compute the maximum column index, insert the SVG image, set PlacementType.FreeFloating, and save the updated workbook.
+// Common Searches: how to add the same SVG image to the top right cell of every sheet in an Excel file using Aspose.Cells C# | Aspose.Cells C# place company logo in the first row and last column of each worksheet | determine last used column in Aspose.Cells and insert picture programmatically | batch add free floating SVG picture to all worksheets with Aspose.Cells .NET
+// Tags: Aspose.Cells add SVG picture to worksheets | free floating image placement Aspose.Cells | determine max column Aspose.Cells | batch insert logo Excel workbook C# | picture insertion top right corner Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Loads a workbook, reads a company_logo.svg file, and uses Aspose.Cells' AddSvg method to place the SVG at the first row and a right‑hand column on each worksheet. The shape auto‑sizes and the workbook is saved as output.xlsx.
-class InsertSvgLogo
+// The example loads an existing workbook, checks for a logo.svg file, iterates over every worksheet, finds the last used column, inserts the SVG logo as a free‑floating picture at the first row of that column, and saves the modified workbook as a new file.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (or load an existing one if needed)
-            Workbook workbook = new Workbook();
-
-            // Path to the SVG logo file
-            string svgPath = "company_logo.svg";
-
-            // Verify that the SVG file exists before attempting to read it
-            if (!File.Exists(svgPath))
+            // Verify input workbook exists
+            string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"SVG file not found: {svgPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Load the SVG logo into a byte array
-            byte[] svgData = File.ReadAllBytes(svgPath);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Insert the SVG into the top‑right corner of every worksheet
+            // Path to the SVG logo to be inserted
+            string logoPath = "logo.svg";
+            bool logoExists = File.Exists(logoPath);
+
+            // Loop through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                ShapeCollection shapes = sheet.Shapes;
+                // Determine the index of the last used column (top‑right corner)
+                int lastColumn = sheet.Cells.MaxColumn;
 
-                // Position parameters
-                int topRow = 0;          // first row
-                int top = 0;             // vertical offset
-                int leftColumn = 10;     // column index near the right edge
-                int left = 0;            // horizontal offset
-                int height = -1;         // auto‑size height
-                int width = -1;          // auto‑size width
+                if (logoExists)
+                {
+                    // Insert the SVG picture at the first row (0) and the last column
+                    int pictureIndex = sheet.Pictures.Add(0, lastColumn, logoPath);
 
-                // Add the SVG picture (compatibleImageData is null for newer Excel versions)
-                shapes.AddSvg(topRow, top, leftColumn, left, height, width, svgData, null);
+                    // Adjust picture placement if needed
+                    Picture picture = sheet.Pictures[pictureIndex];
+                    picture.Placement = PlacementType.FreeFloating;
+                    picture.Top = 0;
+                    picture.Left = 0;
+                }
+                else
+                {
+                    Console.WriteLine($"Logo file not found: {logoPath}. Skipping picture insertion for sheet '{sheet.Name}'.");
+                }
             }
 
             // Save the modified workbook
             string outputPath = "output.xlsx";
-            workbook.Save(outputPath);
+            workbook.Save(outputPath, SaveFormat.Xlsx);
             Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)

@@ -1,10 +1,7 @@
-// Title: C# – Add a Calculated Item to a Pivot Table Row Field with Aspose.Cells
-// Description: Learn how to create an Excel workbook in C#, build a simple data set, insert a pivot table, and use Aspose.Cells' PivotField.AddCalculatedItem method to add a custom row item (e.g., "Food_Drink_Total" = Food + Drink). The example refreshes and saves the pivot as an XLSX file.
-// Keywords: Aspose.Cells AddCalculatedItem C# | pivot table calculated item .NET | Aspose.Cells custom pivot row | C# Excel pivot table example | Aspose.Cells calculated field | Add calculated item to pivot table | Aspose.Cells tutorial | Excel pivot custom total
-// Common Searches: Aspose.Cells add calculated item pivot table C# | how to create a calculated row item in Aspose.Cells | C# example for PivotField.AddCalculatedItem | custom total in Aspose.Cells pivot table | Aspose.Cells calculated item expression syntax
-// Developer Intent: Insert a new calculated item into an existing pivot‑table row field by calling AddCalculatedItem with a valid expression.
-// Use Cases: Combine several category entries into a single summarized row for reporting. | Define a reusable custom metric (e.g., sum of specific items) without modifying source data. | Provide dynamic totals that update automatically when the underlying pivot data changes.
-// AI Prompts: Generate C# code that adds a calculated item using an IF statement to a pivot table with Aspose.Cells. | Show how to retrieve and format the value of a calculated item after refreshing the pivot table. | Explain how to use AddCalculatedItem to compute an average of multiple fields in a pivot table.
+// Title: Add a calculated item to a pivot table row field with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, builds a pivot table from a data range, and uses PivotField.AddCalculatedItem to define a new row item that sums two categories. | Show how to refresh and recalculate a pivot table after adding a calculated item using the Aspose.Cells API. | Generate a complete example that saves the workbook with the custom calculated pivot item to an .xlsx file.
+// Common Searches: aspnet add calculated item to pivot table using Aspose.Cells | C# Aspose.Cells PivotField AddCalculatedItem example code | how to sum two row items in an Aspose.Cells pivot table | create custom calculated row item in Excel workbook with Aspose.Cells .NET | Aspose.Cells calculated item expression syntax for pivot tables
+// Tags: Aspose.Cells calculated pivot item API C# | pivot table custom expression in Aspose.Cells | C# generate .xlsx with calculated row item | refresh and calculate pivot after adding item Aspose.Cells | define calculated item for row field Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -12,10 +9,10 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsCalculatedItemDemo
 {
-    // Learn how to create an Excel workbook in C#, build a simple data set, insert a pivot table, and use Aspose.Cells' PivotField.AddCalculatedItem method to add a custom row item (e.g., "Food_Drink_Total" = Food + Drink). The example refreshes and saves the pivot as an XLSX file.
-    class Program
+    // The example creates a new workbook, fills it with sample Category and Amount data, adds a pivot table on range A1:B5, places the Category field in the row area and Amount in the data area, then adds a calculated row item named 'Food_Drink_Total' with the expression '=Food + Drink' using PivotField.AddCalculatedItem, refreshes and calculates the pivot, and finally saves the file as PivotTableWithCalculatedItem.xlsx.
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -45,7 +42,7 @@ namespace AsposeCellsCalculatedItemDemo
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
             // Retrieve the row field (Category) and add a calculated item
-            // The calculated item will sum the values of Food and Drink
+            // The calculated item will sum the values of "Food" and "Drink"
             PivotField categoryField = pivotTable.RowFields[0];
             categoryField.AddCalculatedItem("Food_Drink_Total", "=Food + Drink");
 
@@ -53,8 +50,8 @@ namespace AsposeCellsCalculatedItemDemo
             pivotTable.RefreshData();
             pivotTable.CalculateData();
 
-            // Save the workbook with the calculated item added
-            workbook.Save("PivotTable_With_CalculatedItem.xlsx");
+            // Save the workbook to a file
+            workbook.Save("PivotTableWithCalculatedItem.xlsx");
         }
     }
 }

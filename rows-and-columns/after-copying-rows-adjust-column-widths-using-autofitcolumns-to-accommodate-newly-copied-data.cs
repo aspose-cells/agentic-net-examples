@@ -1,45 +1,58 @@
-// Title: Copy rows and AutoFit column widths using Aspose.Cells for .NET (C#)
-// Description: Shows how to copy every row from a source worksheet to a destination worksheet with Aspose.Cells, then automatically resize the columns to fit the transferred data via AutoFitColumns, and finally save the workbook as an XLSX file.
-// Keywords: Aspose.Cells | CopyRows | AutoFitColumns | C# | .NET | Excel column auto‑fit | copy rows between workbooks | adjust column width | spreadsheet automation | Excel file generation
-// Common Searches: Aspose.Cells copy rows and auto fit columns C# | AutoFitColumns after CopyRows .NET | how to copy all rows to another workbook Aspose.Cells | resize columns after copying rows Aspose.Cells | C# copy worksheet rows and auto size columns
-// Developer Intent: Copy all rows from a source worksheet to a destination worksheet and automatically adjust the destination columns so the copied content fits neatly.
-// Use Cases: Create a report by duplicating template rows and ensuring columns are sized for readability. | Migrate data from a master workbook to a new file while preserving layout and applying auto‑fit for clean presentation. | Consolidate rows from multiple source sheets into one sheet and automatically fit each column for consistent formatting.
-// AI Prompts: Generate C# code with Aspose.Cells that copies rows from one worksheet to another and then calls AutoFitColumns on the target sheet. | Explain the steps required to ensure column widths are correctly auto‑fitted after using CopyRows in Aspose.Cells. | Suggest a scalable approach to copy rows from several source worksheets into a single destination worksheet and auto‑fit columns for each sheet.
+// Title: Copy rows and auto‑fit column widths in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that copies a block of rows to a new position and then calls Worksheet.AutoFitColumns to resize all columns. | Demonstrate how to use Cells.CopyRows followed by Worksheet.AutoFitColumns in Aspose.Cells to duplicate rows and adjust column widths. | Generate a self‑contained example that copies rows 2‑4 to row 6 and automatically fits column widths in an Excel file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# copy rows to another location and autofit columns | How to use Cells.CopyRows and then AutoFitColumns in .NET | C# example for copying rows and adjusting column width with Aspose.Cells | AutoFitColumns after copying rows in Excel using Aspose.Cells for .NET | Resize Excel columns automatically after row duplication with Aspose.Cells
+// Tags: cells.copierows method Aspose.Cells C# | worksheet.autofitcolumns usage Aspose.Cells | excel column width adjustment after row copy | duplicate rows in worksheet Aspose.Cells | auto‑fit columns programmatically Aspose.Cells | copy rows and resize columns .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsCopyRowsAndAutoFit
+namespace AsposeCellsExamples
 {
-    // Shows how to copy every row from a source worksheet to a destination worksheet with Aspose.Cells, then automatically resize the columns to fit the transferred data via AutoFitColumns, and finally save the workbook as an XLSX file.
-    public class Program
+    // The sample creates a workbook, fills cells A1:B4 with sample data, copies rows 2‑4 to start at row 6 using Cells.CopyRows, invokes Worksheet.AutoFitColumns to automatically size the columns for the new data, and saves the result as CopyRowsAndAutoFitColumnsDemo.xlsx.
+    public class CopyRowsAndAutoFitColumnsDemo
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            // Create source workbook and populate some rows
-            Workbook sourceWorkbook = new Workbook();
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-            sourceSheet.Cells["A1"].PutValue("Header");
-            sourceSheet.Cells["B1"].PutValue("Value");
-            sourceSheet.Cells["A2"].PutValue("Row 1");
-            sourceSheet.Cells["B2"].PutValue(12345);
-            sourceSheet.Cells["A3"].PutValue("Row 2");
-            sourceSheet.Cells["B3"].PutValue(67890);
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-            // Create destination workbook where rows will be copied
-            Workbook destinationWorkbook = new Workbook();
-            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+        public static void Run()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // Copy all rows from source to destination using the CopyRows method
-            // sourceRowIndex = 0 (first row), destinationRowIndex = 0, rowNumber = total rows in source
-            int totalRows = sourceSheet.Cells.MaxDisplayRange.RowCount;
-            destinationSheet.Cells.CopyRows(sourceSheet.Cells, 0, 0, totalRows);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Adjust column widths in the destination worksheet to fit the newly copied data
-            destinationSheet.AutoFitColumns();
+            // Populate source rows with sample data
+            cells["A1"].PutValue("Header");
+            cells["B1"].PutValue("Value");
+            cells["A2"].PutValue("Row 1");
+            cells["B2"].PutValue(12345);
+            cells["A3"].PutValue("Row 2");
+            cells["B3"].PutValue(67890);
+            cells["A4"].PutValue("Row 3");
+            cells["B4"].PutValue(11121);
 
-            // Save the result workbook
-            destinationWorkbook.Save("CopiedRows_AutoFitColumns.xlsx");
+            // Copy rows 1-3 (zero‑based indices 1 to 3) to start at row 5
+            // sourceRowIndex = 1, destinationRowIndex = 5, rowNumber = 3
+            cells.CopyRows(cells, 1, 5, 3);
+
+            // After copying, adjust column widths to fit the new data
+            sheet.AutoFitColumns();
+
+            // Save the workbook
+            string outputPath = "CopyRowsAndAutoFitColumnsDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
     }
 }

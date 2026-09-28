@@ -1,66 +1,99 @@
-// Title: Export Excel table to JSON with column headers as keys using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, fill a header row and data rows, define a range, set JsonSaveOptions (HasHeaderRow = true, ExportAsString = false, Indent), and call JsonUtility.ExportRangeToJson to generate a formatted JSON string where each column name becomes a JSON property.
-// Keywords: Aspose.Cells JSON export C# | Export Excel range to JSON | HasHeaderRow true | JsonUtility ExportRangeToJson | pretty printed JSON from worksheet | Excel to JSON with headers | C# Aspose.Cells example
-// Common Searches: Aspose.Cells export range to JSON C# | How to keep column names as keys when converting Excel to JSON | JsonSaveOptions HasHeaderRow usage | Pretty print JSON from Excel worksheet using Aspose.Cells | Export Excel table as JSON string .NET
-// Developer Intent: Create a JSON string from a worksheet table, using the first row as property names and preserving original data types.
-// Use Cases: Return lookup data (e.g., Name, Age, City) from an API in JSON format without losing numeric types. | Generate readable JSON logs or configuration files directly from Excel worksheets. | Provide front‑end applications with structured data extracted from Excel tables.
-// AI Prompts: Write C# code that uses Aspose.Cells to export a selected range to JSON with column headers as keys and pretty‑print indentation. | Explain the impact of JsonSaveOptions properties HasHeaderRow and ExportAsString on the JSON output when exporting an Excel range. | Show how to handle exceptions while exporting a worksheet range to JSON with Aspose.Cells.
+// Title: Export an Excel worksheet to an indented JSON array with column headers as object keys using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, reads the first row as field names, converts each subsequent row into a dictionary while preserving the original cell data types, and returns a formatted JSON string. | Update the example to write the resulting JSON to a file named "output.json" on disk instead of printing it to the console. | Add logic to exclude columns whose header is empty or starts with an underscore, so those columns are omitted from the JSON output.
+// Common Searches: how to convert an Excel sheet to JSON with column names as keys using Aspose.Cells C# | Aspose.Cells export worksheet data to indented JSON string preserving data types | C# read Excel first row as headers and serialize rows to JSON array | ignore empty rows when exporting Excel to JSON with Aspose.Cells | exclude columns with empty or underscore headers in Excel to JSON conversion .NET
+// Tags: Aspose.Cells export worksheet to JSON | C# serialize Excel rows to JSON objects | preserve Excel cell data types in JSON | ignore empty rows in Excel JSON export | filter columns by header name in Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
 
-namespace AsposeCellsJsonExport
+// The sample loads an Excel workbook with Aspose.Cells, extracts column names from the first row, builds a list of dictionaries for each subsequent row while keeping original cell types, skips completely empty rows, serializes the collection to an indented JSON string, and outputs the JSON (or optionally writes it to a file).
+class Program
 {
-    // Demonstrates how to create a workbook, fill a header row and data rows, define a range, set JsonSaveOptions (HasHeaderRow = true, ExportAsString = false, Indent), and call JsonUtility.ExportRangeToJson to generate a formatted JSON string where each column name becomes a JSON property.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Get the first worksheet (you can change the index as needed)
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Access the cells collection
+        Cells cells = sheet.Cells;
+
+        // Determine the used range boundaries
+        int maxRow = cells.MaxDataRow;      // zero‑based index of last row with data
+        int maxCol = cells.MaxDataColumn;   // zero‑based index of last column with data
+
+        // -----------------------------------------------------------------
+        // Read column names from the first row (row index 0)
+        // -----------------------------------------------------------------
+        List<string> headers = new List<string>();
+        for (int col = 0; col <= maxCol; col++)
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate the worksheet with a header row and some data rows
-                cells["A1"].PutValue("Name");
-                cells["B1"].PutValue("Age");
-                cells["C1"].PutValue("City");
-
-                cells["A2"].PutValue("John");
-                cells["B2"].PutValue(30);
-                cells["C2"].PutValue("New York");
-
-                cells["A3"].PutValue("Alice");
-                cells["B3"].PutValue(25);
-                cells["C3"].PutValue("London");
-
-                // Define the range that includes the header and data (A1:C3)
-                Aspose.Cells.Range exportRange = cells.CreateRange("A1:C3");
-
-                // Configure JSON export options:
-                // - HasHeaderRow = true ensures column names become JSON object keys
-                // - ExportAsString = false (default) keeps original data types
-                JsonSaveOptions jsonOptions = new JsonSaveOptions
-                {
-                    HasHeaderRow = true,
-                    ExportAsString = false,
-                    Indent = "  " // optional pretty‑print
-                };
-
-                // Export the range to a JSON string
-                string jsonResult = JsonUtility.ExportRangeToJson(exportRange, jsonOptions);
-
-                // Output the JSON string
-                Console.WriteLine("Exported JSON:");
-                Console.WriteLine(jsonResult);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            string header = cells[0, col].StringValue;
+            // If a header cell is empty, assign a default name
+            if (string.IsNullOrEmpty(header))
+                header = $"Column{col}";
+            headers.Add(header);
         }
+
+        // -----------------------------------------------------------------
+        // Build a list of dictionaries where each dictionary represents a row
+        // -----------------------------------------------------------------
+        List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+
+        // Start from row 1 because row 0 contains headers
+        for (int row = 1; row <= maxRow; row++)
+        {
+            var dict = new Dictionary<string, object>();
+            bool isEmptyRow = true;
+
+            for (int col = 0; col <= maxCol; col++)
+            {
+                Cell cell = cells[row, col];
+                object value = null;
+
+                // Preserve the original data type where possible
+                switch (cell.Type)
+                {
+                    case CellValueType.IsNumeric:
+                        value = cell.DoubleValue;
+                        break;
+                    case CellValueType.IsString:
+                        value = cell.StringValue;
+                        break;
+                    case CellValueType.IsBool:
+                        value = cell.BoolValue;
+                        break;
+                    case CellValueType.IsDateTime:
+                        value = cell.DateTimeValue;
+                        break;
+                    default:
+                        value = cell.Value;
+                        break;
+                }
+
+                // Detect if the row has any non‑empty cell
+                if (value != null && !string.IsNullOrEmpty(value.ToString()))
+                    isEmptyRow = false;
+
+                dict[headers[col]] = value;
+            }
+
+            // Skip rows that are completely empty
+            if (!isEmptyRow)
+                rows.Add(dict);
+        }
+
+        // -----------------------------------------------------------------
+        // Serialize the list to a JSON string, using indented formatting
+        // -----------------------------------------------------------------
+        var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+        string json = JsonSerializer.Serialize(rows, jsonOptions);
+
+        // Output the JSON string (you could also write it to a file)
+        Console.WriteLine(json);
     }
 }

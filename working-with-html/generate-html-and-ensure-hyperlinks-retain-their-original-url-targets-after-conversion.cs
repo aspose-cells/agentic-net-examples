@@ -1,34 +1,44 @@
-// Title: Export Excel to HTML with original hyperlink targets using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, adds an external hyperlink with optional display text, sets HtmlSaveOptions.LinkTargetType to Self so the link keeps its original URL, and saves the workbook as an HTML file.
-// Keywords: Aspose.Cells | HtmlSaveOptions | LinkTargetType | Self | preserve hyperlink | C# | export Excel to HTML | hyperlink target | .NET | workbook HTML conversion
-// Common Searches: Aspose.Cells keep hyperlink target when saving as HTML | HtmlSaveOptions LinkTargetType Self C# example | Export Excel workbook to HTML with original URLs | Set hyperlink display text in Aspose.Cells | C# save workbook as HTML preserving external links
-// Developer Intent: Generate an HTML file from an Excel workbook while ensuring hyperlinks retain their original URLs and open in the same window.
-// Use Cases: Add external links to cells and export the sheet to HTML for web reporting. | Show custom link text in the HTML output without altering the underlying URL. | Control link behavior (same‑window vs. new tab) by configuring HtmlSaveOptions. | Create static HTML dashboards from Excel data that preserve navigation paths.
-// AI Prompts: Provide a C# example that exports an Aspose.Cells workbook to HTML with hyperlinks that keep their original targets. | Explain the effect of HtmlSaveOptions.LinkTargetType = Self on hyperlink behavior in the generated HTML. | Show how to add a hyperlink with custom display text to a cell and retain it during HTML conversion using Aspose.Cells.
+// Title: Convert an Excel .xlsx workbook to HTML while keeping hyperlink URLs intact using Aspose.Cells for .NET
+// AI Prompts: Generate HTML from a .xlsx file with Aspose.Cells, ensuring that each cell hyperlink retains its original URL. | Save a workbook as HTML in C# with HtmlSaveOptions so that all embedded hyperlinks are preserved.
+// Common Searches: Aspose.Cells C# export workbook to HTML preserving hyperlink targets | how to keep Excel cell links when saving as HTML with Aspose.Cells | C# convert xlsx to html retain hyperlink URLs Aspose | HtmlSaveOptions hyperlink preservation Aspose.Cells example | save Excel file as HTML with active links using Aspose.Cells .NET
+// Tags: Aspose.Cells HtmlSaveOptions hyperlink export | C# .xlsx to HTML conversion with links | Excel workbook HTML export retaining URLs | save workbook as HTML preserving hyperlinks | Aspose.Cells HTML output with active hyperlinks
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a new workbook, adds an external hyperlink with optional display text, sets HtmlSaveOptions.LinkTargetType to Self so the link keeps its original URL, and saves the workbook as an HTML file.
+// The program verifies that input.xlsx exists, loads it with Aspose.Cells Workbook, applies HtmlSaveOptions (which export hyperlinks by default), saves the workbook as output.html, and catches any exceptions to display an error message.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
 
-        // Add a hyperlink to cell A1 pointing to an external URL
-        worksheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Set the display text for the hyperlink (optional)
-        worksheet.Cells["A1"].PutValue("Visit Example");
+        try
+        {
+            // Load the Excel workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Configure HTML save options to keep the original hyperlink target (open in the same window)
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-        saveOptions.LinkTargetType = HtmlLinkTargetType.Self; // retains original URL target
+            // Configure HTML save options (hyperlinks are exported by default)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-        // Save the workbook as an HTML file with the specified options
-        workbook.Save("output.html", saveOptions);
+            // Save the workbook as an HTML file with the specified options
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine($"Workbook successfully saved as HTML to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

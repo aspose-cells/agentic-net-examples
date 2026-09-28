@@ -1,54 +1,37 @@
-// Title: Replace a Named Range and Recalculate Formulas with Aspose.Cells for .NET
-// Description: Loads a workbook, changes the RefersTo address of a specified named range, triggers a full formula recalculation, and saves the updated file.
-// Keywords: Aspose.Cells replace named range | update RefersTo address .NET | recalculate formulas Aspose.Cells | modify named range programmatically | C# Aspose.Cells workbook edit
-// Common Searches: how to change a named range address using Aspose.Cells | recalculate all formulas after updating a named range .NET | Aspose.Cells replace OldRange with Sheet1!B1:B5 | C# code to edit named ranges in Excel files
-// Developer Intent: Change an existing named range to a new cell range and refresh all dependent formulas.
-// Use Cases: Redirect a named range after data migration so existing formulas point to the new column. | Adjust a range reference when rows are inserted, keeping financial models accurate. | Swap a range before generating a report to ensure calculations use the latest dataset.
-// AI Prompts: Write C# that verifies a named range exists, creates it if missing, and sets its RefersTo address with Aspose.Cells. | Show how to update several named ranges in one workbook and then call CalculateFormula to refresh dependent cells. | Explain error handling for invalid RefersTo strings when modifying a Name object in Aspose.Cells.
+// Title: Replace an existing named range with a new address and recalculate all formulas using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to change the RefersTo property of a specific named range and then call CalculateFormula before saving the workbook. | Programmatically update a named range to a different cell block and trigger a full formula recalculation in a C# Excel automation script.
+// Common Searches: Aspose.Cells C# change named range reference and recalc workbook | how to update RefersTo of a named range in Aspose.Cells | recalculate formulas after modifying named range with Aspose.Cells .NET | replace Excel named range programmatically using Aspose.Cells for .NET | C# Aspose.Cells update named range address Sheet1!$C$1:$D$2
+// Tags: named range RefersTo update Aspose.Cells | calculate formulas after named range change Aspose.Cells | replace named range address C# | Aspose.Cells workbook modification | Excel named range automation .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsReplaceNamedRange
+// Loads input.xlsx, updates the RefersTo property of the named range "OldRange" to "Sheet1!$C$1:$D$2", recalculates all formulas, and saves the result as output.xlsx.
+class Program
 {
-    // Loads a workbook, changes the RefersTo address of a specified named range, triggers a full formula recalculation, and saves the updated file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Name of the existing named range to be replaced
+        string oldRangeName = "OldRange";
+
+        // New range reference (e.g., Sheet1!$C$1:$D$2)
+        string newRangeReference = "Sheet1!$C$1:$D$2";
+
+        // Retrieve the named range object
+        Name oldName = workbook.Worksheets.Names[oldRangeName];
+        if (oldName != null)
         {
-            // Path to the existing workbook
-            string inputPath = "InputWorkbook.xlsx";
-
-            // Load the workbook from file
-            Workbook workbook = new Workbook(inputPath);
-
-            // Name of the existing named range to be replaced
-            string oldNamedRange = "OldRange";
-
-            // New range address (including sheet name) that will replace the old named range
-            // Example: replace with cells B1:B5 on Sheet1
-            string newRangeAddress = "=Sheet1!$B$1:$B$5";
-
-            // Retrieve the Name object for the old named range
-            Name name = workbook.Worksheets.Names[oldNamedRange];
-
-            if (name != null)
-            {
-                // Update the RefersTo property to point to the new range
-                name.RefersTo = newRangeAddress;
-            }
-            else
-            {
-                Console.WriteLine($"Named range '{oldNamedRange}' not found.");
-                return;
-            }
-
-            // Recalculate all formulas to reflect the changed named range
-            workbook.CalculateFormula();
-
-            // Save the modified workbook
-            string outputPath = "OutputWorkbook.xlsx";
-            workbook.Save(outputPath);
+            // Update the reference of the named range to the new range
+            oldName.RefersTo = newRangeReference;
         }
+
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

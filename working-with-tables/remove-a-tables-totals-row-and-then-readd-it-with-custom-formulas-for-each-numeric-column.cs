@@ -1,70 +1,98 @@
-// Title: Aspose.Cells for .NET – Remove and Re‑add Table Totals Row with Custom SUM & AVERAGE Formulas (C#)
-// Description: C# sample that creates a workbook, adds a ListObject (Excel table), hides its default totals row, then shows the row again and sets custom formulas – SUM for the Quantity column and AVERAGE for the Price column – before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | ListObject | Excel table totals row | remove totals row | custom totals formula | SUM formula Aspose.Cells | AVERAGE formula Aspose.Cells | sample code | GitHub example
-// Common Searches: Aspose.Cells hide table totals row C# | set custom totals formula ListObject Aspose.Cells | remove and add totals row Aspose.Cells .NET | custom SUM and AVERAGE in Excel table using Aspose.Cells | C# example for ListObject custom aggregates
-// Developer Intent: Hide an existing ListObject totals row, then display it again with user‑defined formulas for numeric columns.
-// Use Cases: Generate a sales workbook where the totals row must be rebuilt with specific aggregates after data changes. | Create an Excel export that shows a custom SUM for quantity and an AVERAGE for price in the table footer. | Implement dynamic reporting where the totals row is toggled and customized programmatically.
-// AI Prompts: Write C# code with Aspose.Cells to hide a table totals row and then add a custom SUM formula to the Quantity column. | Show how to apply different custom formulas (SUM, AVERAGE, COUNT) to multiple columns of an Aspose.Cells ListObject. | Explain the steps to toggle ShowTotals and set custom totals row formulas without altering other table settings.
+// Title: Hide an Excel table’s totals row and re‑add it with structured SUM formulas for numeric columns using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that hides a ListObject’s totals row, then shows it again and inserts a SUM formula only for columns that contain numbers. | Create a method that iterates through each column of a worksheet table, detects numeric data types, and assigns a structured reference SUM formula to the totals row. | Write a script that loads an Excel file, validates the presence of a table, toggles the ShowTotals property, and applies custom formulas to the totals row based on column content.
+// Common Searches: aspnet hide table totals row and add sum formulas with Aspose.Cells | how to use structured references for totals row in Aspose.Cells C# | detect numeric columns in Excel table and set SUM formula programmatically | Aspose.Cells toggle ShowTotals and apply custom formulas to totals row
+// Tags: Aspose.Cells hide table totals row | Aspose.Cells add structured SUM to totals row | detect numeric columns ListObject C# | ShowTotals property Aspose.Cells | Excel table totals row custom formulas
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
-using System;
 
-// C# sample that creates a workbook, adds a ListObject (Excel table), hides its default totals row, then shows the row again and sets custom formulas – SUM for the Quantity column and AVERAGE for the Price column – before saving the file.
+// The program loads an Excel workbook, ensures a table exists, hides its totals row, re‑shows it, scans each column to determine if it holds numeric data, and inserts a structured reference SUM formula into the totals row for those columns before saving the file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Populate sample data (header + 3 rows)
-        cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Quantity");
-        cells["C1"].PutValue("Price");
-        cells["D1"].PutValue("Notes");
-
-        string[] items = { "Apple", "Banana", "Orange" };
-        int[] quantities = { 10, 20, 15 };
-        double[] prices = { 0.5, 0.3, 0.6 };
-        string[] notes = { "Fresh", "Ripe", "Citrus" };
-
-        for (int i = 0; i < items.Length; i++)
+        try
         {
-            int row = i + 1; // data starts at row 2 (zero‑based index)
-            cells[row, 0].PutValue(items[i]);
-            cells[row, 1].PutValue(quantities[i]);
-            cells[row, 2].PutValue(prices[i]);
-            cells[row, 3].PutValue(notes[i]);
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure at least one table exists
+            if (worksheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables found on the worksheet.");
+                return;
+            }
+
+            // Work with the first table
+            ListObject table = worksheet.ListObjects[0];
+
+            // 1. Remove existing totals row
+            table.ShowTotals = false;
+
+            // 2. Re‑add totals row
+            table.ShowTotals = true;
+
+            // Totals row index after ShowTotals = true
+            int totalsRowIndex = table.EndRow;
+
+            // Iterate through each column in the table
+            for (int i = 0; i < table.ListColumns.Count; i++)
+            {
+                ListColumn column = table.ListColumns[i];
+
+                // Worksheet column index (zero‑based)
+                int worksheetColumnIndex = table.StartColumn + i;
+
+                // Determine data range rows (excluding header and totals)
+                int firstDataRow = table.DataRange.FirstRow;
+                int lastDataRow = firstDataRow + table.DataRange.RowCount - 1;
+
+                bool isNumeric = false;
+
+                // Scan cells to detect numeric data
+                for (int row = firstDataRow; row <= lastDataRow; row++)
+                {
+                    object cellValue = worksheet.Cells[row, worksheetColumnIndex].Value;
+                    if (cellValue is double || cellValue is int || cellValue is decimal)
+                    {
+                        isNumeric = true;
+                        break;
+                    }
+                }
+
+                if (isNumeric)
+                {
+                    // Set SUM formula using structured reference
+                    string formula = $"=SUM([{column.Name}])";
+                    worksheet.Cells[totalsRowIndex, worksheetColumnIndex].Formula = formula;
+                }
+                else
+                {
+                    // Clear any existing formula for non‑numeric columns
+                    worksheet.Cells[totalsRowIndex, worksheetColumnIndex].Formula = string.Empty;
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        // Add a table that covers the data range (A1:D4)
-        int tableIdx = worksheet.ListObjects.Add(0, 0, items.Length, 3, true);
-        ListObject table = worksheet.ListObjects[tableIdx];
-        table.DisplayName = "SalesTable";
-
-        // Show the totals row initially
-        table.ShowTotals = true;
-
-        // ---- Remove the totals row ----
-        table.ShowTotals = false;
-
-        // ---- Re‑add the totals row with custom formulas ----
-        table.ShowTotals = true;
-
-        // Column "Quantity" (numeric) – custom SUM formula
-        ListColumn qtyColumn = table.ListColumns[1];
-        qtyColumn.TotalsCalculation = TotalsCalculation.Custom;
-        qtyColumn.SetCustomTotalsRowFormula("=SUM([Quantity])", false, false);
-
-        // Column "Price" (numeric) – custom AVERAGE formula
-        ListColumn priceColumn = table.ListColumns[2];
-        priceColumn.TotalsCalculation = TotalsCalculation.Custom;
-        priceColumn.SetCustomTotalsRowFormula("=AVERAGE([Price])", false, false);
-
-        // Save the workbook
-        workbook.Save("TableWithCustomTotals.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,51 +1,52 @@
-// Title: C# – Load an Excel workbook and get the address of range A1:C5 with Aspose.Cells
-// Description: A concise example that checks for an existing Excel file, creates a new workbook if needed, loads the first worksheet, defines the range A1:C5 using Aspose.Cells.Range, reads the Range.Address property, and prints the address string to the console.
-// Keywords: Aspose.Cells | .NET | C# | load workbook | range address | A1:C5 | CreateRange | Range.Address | Excel automation
-// Common Searches: Aspose.Cells get range address C# | How to retrieve A1:C5 address using Aspose.Cells | C# Aspose.Cells create range and read address | Load workbook and obtain range string Aspose.Cells .NET | Aspose.Cells Range.Address property example
-// Developer Intent: Load an Excel file and obtain the textual address of the cell block A1:C5.
-// Use Cases: Log the range address to confirm the target cells before applying formatting or formulas. | Pass the address string to another API that requires a range reference in A1 notation. | Validate that a specific range exists before extracting or processing data.
-// AI Prompts: Show C# code that loads an Excel workbook with Aspose.Cells, creates the range A1:C5, and returns its address. | Provide a robust Aspose.Cells example that handles a missing input file while still retrieving the address of a defined range. | Explain how to use the Range.Address property to get an A1‑style string for any cell block in Aspose.Cells for .NET.
+// Title: Load an Excel workbook and retrieve the address string of range A1:C5 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, creates a range covering cells A1 through C5 on the first worksheet, and prints its address as a string. | Show how to use CellsHelper in Aspose.Cells to convert a range's first row/column and dimensions into the standard A1:C5 address format. | Provide a robust example that checks for file existence, loads the workbook, and extracts the address of any specified range using Aspose.Cells.
+// Common Searches: asp.net aspose.cells get address of cells A1 through C5 in C# | how to convert Aspose.Cells range indices to Excel address string C# | extract address of a selected range from worksheet using Aspose.Cells | C# example for retrieving range address with Aspose.Cells
+// Tags: Aspose.Cells range address extraction | C# Aspose.Cells define custom cell range | Aspose.Cells CellsHelper address conversion | load Excel workbook using Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// A concise example that checks for an existing Excel file, creates a new workbook if needed, loads the first worksheet, defines the range A1:C5 using Aspose.Cells.Range, reads the Range.Address property, and prints the address string to the console.
+// The sample loads 'input.xlsx' with Aspose.Cells, accesses the first worksheet, creates a range covering A1:C5, uses CellsHelper to translate the range's first row/column and size into start and end cell names, builds the address string "A1:C5", and prints it to the console.
 class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
         try
         {
-            string inputPath = "input.xlsx";
+            // Load the Excel workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Ensure the input file exists; if not, create a new workbook.
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                workbook = new Workbook(); // creates a new workbook with a default worksheet
-                workbook.Save(inputPath);   // optionally persist the empty workbook
-            }
+            // Access the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Create a range that covers cells A1 to C5
+            AsposeRange range = sheet.Cells.CreateRange("A1:C5");
 
-            // Create a range that spans from A1 to C5 using Aspose.Cells.Range
-            Aspose.Cells.Range range = worksheet.Cells.CreateRange("A1", "C5");
+            // Build the address string of the range using its properties
+            string startCell = CellsHelper.CellIndexToName(range.FirstRow, range.FirstColumn);
+            string endCell = CellsHelper.CellIndexToName(
+                range.FirstRow + range.RowCount - 1,
+                range.FirstColumn + range.ColumnCount - 1);
+            string address = $"{startCell}:{endCell}";
 
-            // Retrieve the address of the range
-            string address = range.Address;
-
-            // Output the address
-            Console.WriteLine("Range address: " + address);
+            // Display the address
+            Console.WriteLine(address);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

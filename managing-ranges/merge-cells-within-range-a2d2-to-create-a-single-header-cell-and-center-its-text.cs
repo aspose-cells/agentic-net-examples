@@ -1,37 +1,50 @@
-// Title: C# – Merge A2:D2 into a Centered Bold Header with Aspose.Cells for .NET
-// Description: Creates a new workbook, merges cells A2:D2 on the first worksheet, sets the value "Header", applies horizontal and vertical centering with bold formatting, and saves the file as HeaderMerged.xlsx using Aspose.Cells.
-// Keywords: Aspose.Cells merge cells C# | center text merged cell Aspose | bold header Excel Aspose.Cells | C# Excel styling Aspose | .NET Excel header merge
-// Common Searches: Aspose.Cells merge range and center text C# | how to create a centered header in Excel with Aspose.Cells | C# Aspose.Cells set horizontal vertical alignment | merge cells A2:D2 Aspose.Cells example
-// Developer Intent: Generate a single header cell spanning A2:D2, assign text, and apply centered bold styling in a .NET workbook.
-// Use Cases: Building a report template with a title row that spans multiple columns. | Designing an invoice sheet where the invoice title occupies A2:D2 and appears centered and bold. | Creating a dashboard worksheet with a merged header for section headings.
-// AI Prompts: Provide C# code using Aspose.Cells to merge A2:D2, set "Header", and apply centered bold formatting. | Show how to style a merged header cell horizontally and vertically in Aspose.Cells for .NET. | Explain reusing a Style object for multiple merged header cells in an Aspose.Cells workbook.
+// Title: How to merge cells A2:D2 into a single header and center its text with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to merge the range A2:D2, set a header value, and apply both horizontal and vertical center alignment. | Show how to create a style, apply it to a merged cell range, and save the workbook as an .xlsx file with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# merge A2:D2 and center text in the merged cell | C# code to create a header row by merging cells and aligning text with Aspose.Cells | How to apply centered style to a merged range in Aspose.Cells for .NET | Saving a workbook after merging cells and setting header value using Aspose.Cells C#
+// Tags: merge cell range Aspose.Cells C# | center alignment style Aspose.Cells | header row creation Aspose.Cells .xlsx | apply style to merged cells Aspose.Cells
 
+using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Creates a new workbook, merges cells A2:D2 on the first worksheet, sets the value "Header", applies horizontal and vertical centering with bold formatting, and saves the file as HeaderMerged.xlsx using Aspose.Cells.
+// This example creates a new workbook, merges cells A2:D2 on the first worksheet, applies a style that centers the text horizontally and vertically, inserts a header title, and saves the file as MergedHeader.xlsx using Aspose.Cells for .NET.
 class MergeHeaderExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            // Create a new workbook (lifecycle create)
+            Workbook workbook = new Workbook();
 
-        // Merge cells A2:D2 (row index 1, column index 0, 1 row, 4 columns)
-        cells.Merge(1, 0, 1, 4);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the header text in the merged cell
-        cells[1, 0].Value = "Header";
+            // Define the range A2:D2 and merge it into a single cell
+            AsposeRange headerRange = sheet.Cells.CreateRange("A2", "D2");
+            headerRange.Merge();
 
-        // Create a style that centers the text horizontally and vertically
-        Style style = cells[1, 0].GetStyle();
-        style.HorizontalAlignment = TextAlignmentType.Center;
-        style.VerticalAlignment = TextAlignmentType.Center;
-        style.Font.IsBold = true; // optional: make the header bold
-        cells[1, 0].SetStyle(style);
+            // Create a style to center the text horizontally and vertically
+            Style centerStyle = workbook.CreateStyle();
+            centerStyle.HorizontalAlignment = TextAlignmentType.Center;
+            centerStyle.VerticalAlignment = TextAlignmentType.Center;
 
-        // Save the workbook
-        workbook.Save("HeaderMerged.xlsx");
+            // Apply the style to the merged range
+            StyleFlag styleFlag = new StyleFlag
+            {
+                All = true // apply all style attributes
+            };
+            headerRange.ApplyStyle(centerStyle, styleFlag);
+
+            // Optionally set a header text
+            sheet.Cells["A2"].PutValue("Header Title");
+
+            // Save the workbook (lifecycle save)
+            workbook.Save("MergedHeader.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

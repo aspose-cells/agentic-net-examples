@@ -1,84 +1,96 @@
-// Title: Populate an Excel template with smart markers and return a MemoryStream using Aspose.Cells (C#)
-// Description: Shows how to load an Excel template, bind a .NET object to its smart markers with WorkbookDesigner, process the markers, and stream the resulting workbook (XLS/XLSX) without creating intermediate files.
-// Keywords: Aspose.Cells | WorkbookDesigner | smart markers | populate Excel template | C# MemoryStream | Excel report generation | template data binding | stream Excel output | XLSX export | cloud service Excel
-// Common Searches: Aspose.Cells populate template from object C# | WorkbookDesigner SetDataSource example | return Excel file as MemoryStream Aspose | process smart markers without saving file | generate Excel report from JSON using Aspose.Cells
-// Developer Intent: Create a reusable method that loads an Excel template, binds a supplied data object to its smart markers, processes the markers, and returns the filled workbook as a MemoryStream.
-// Use Cases: Serve personalized Excel reports directly from a web API by streaming the workbook to the HTTP response. | Automate invoice generation where order data is bound to a template and the result is attached to an email as a byte array. | Build a serverless function that receives JSON payloads, fills a predefined Excel template, and returns the file stream for downstream processing.
-// AI Prompts: Write a C# function that accepts a list of objects and an .xlsx template, uses Aspose.Cells WorkbookDesigner to fill smart markers for each item, and returns a single MemoryStream with all rows merged. | Enhance the PopulateWorkbook method with detailed error handling for missing template files, absent smart markers, and unsupported data types, returning clear exception messages. | Modify the example to output the workbook in XLSX format instead of XLS while still returning a MemoryStream, and show how to set the appropriate save options.
+// Title: Create a C# method that loads an Excel template, binds any data source with Aspose.Cells smart markers, and returns the populated workbook as a MemoryStream (XLS)
+// AI Prompts: Write a C# function that receives an object (list, DataTable, or custom class) and a file path to an Excel template, uses WorkbookDesigner to set the data source named "Data", processes the smart markers, and returns the result as a MemoryStream. | Show how to invoke the function with a List<Person>, obtain the MemoryStream, and write it to an .xls file on disk. | Explain how to validate the template file path before creating the WorkbookDesigner to avoid FileNotFoundException. | Demonstrate returning the generated MemoryStream from a Web API endpoint for client download.
+// Common Searches: asp.net core return excel file from template using aspose.cells smart markers | c# generate memorystream from excel template with workbookdesigner | how to bind a list of objects to aspose.cells smart markers in a template | save processed aspose.cells workbook to stream instead of file | populate excel template with custom object and get xls stream in .net
+// Tags: aspose.cells workbookdesigner data binding | excel template to memorystream c# | smart markers generate xls stream | c# populate excel template using aspose.cells | return workbook as memorystream after processing markers
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 
-// Shows how to load an Excel template, bind a .NET object to its smart markers with WorkbookDesigner, process the markers, and stream the resulting workbook (XLS/XLSX) without creating intermediate files.
-public static class WorkbookHelper
-{
-    /// <param name="data">The data source object to bind to smart markers in the template.</param>
-    /// <param name="templatePath">Full path to the Excel template file containing smart markers.</param>
-    /// <returns>A MemoryStream containing the populated workbook (XLS format).</returns>
-    public static MemoryStream PopulateWorkbook(object data, string templatePath)
-    {
-        // Ensure the template file exists to avoid FileNotFoundException.
-        if (!File.Exists(templatePath))
-            throw new FileNotFoundException($"Template file not found: {templatePath}");
-
-        // Load the template workbook.
-        Workbook workbook = new Workbook(templatePath);
-
-        // Associate the workbook with a designer for smart marker processing.
-        WorkbookDesigner designer = new WorkbookDesigner
-        {
-            Workbook = workbook
-        };
-
-        // Bind the data source to a marker name (e.g., "Data").
-        designer.SetDataSource("Data", data);
-
-        // Process smart markers.
-        designer.Process();
-
-        // Return the populated workbook as a memory stream (XLS format).
-        return workbook.SaveToStream();
-    }
-}
-
+// The example loads an Excel template, assigns the supplied data object to the smart marker name "Data" via WorkbookDesigner, processes the markers, and returns the filled workbook as a MemoryStream (XLS), which can then be saved to a file or sent to a client.
 public class Program
 {
     public static void Main(string[] args)
     {
         try
         {
-            // Define the path to the template file.
-            string templatePath = "template.xlsx";
+            // Determine template path (default to "Template.xlsx" if not provided)
+            string templatePath = args.Length > 0 ? args[0] : "Template.xlsx";
 
-            // Verify the template exists before proceeding.
+            // Verify that the template file exists to avoid FileNotFoundException
             if (!File.Exists(templatePath))
             {
                 Console.WriteLine($"Template file not found: {templatePath}");
                 return;
             }
 
-            // Example data object matching the smart markers in the template.
-            var data = new
+            // Example data source: a list of Person objects
+            var data = new List<Person>
             {
-                Name = "John Doe",
-                Age = 30,
-                Email = "john.doe@example.com"
+                new Person { Name = "John Doe", Age = 30 },
+                new Person { Name = "Jane Smith", Age = 25 }
             };
 
-            // Populate the workbook.
-            using (MemoryStream resultStream = WorkbookHelper.PopulateWorkbook(data, templatePath))
+            // Generate the workbook using the utility method
+            MemoryStream workbookStream = WorkbookGenerator.GenerateWorkbook(data, templatePath);
+
+            // Save the generated workbook to an output file
+            string outputPath = "Output.xls";
+            using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
             {
-                // Save the result to a file for verification.
-                string outputPath = "output.xls";
-                File.WriteAllBytes(outputPath, resultStream.ToArray());
-                Console.WriteLine($"Workbook generated successfully: {outputPath}");
+                workbookStream.WriteTo(fileStream);
             }
+
+            Console.WriteLine($"Workbook generated successfully: {outputPath}");
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors.
+            // Catch any unexpected errors and display a message
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
+
+// Simple data class used in the example
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+
+public static class WorkbookGenerator
+{
+    /// <param name="data">The data source object (e.g., a list, DataTable, or custom class).</param>
+    /// <param name="templatePath">Full path to the Excel template containing smart markers.</param>
+    /// <returns>A MemoryStream containing the populated workbook (XLS format).</returns>
+    public static MemoryStream GenerateWorkbook(object data, string templatePath)
+    {
+        try
+        {
+            // Load the template workbook from the specified file path.
+            Workbook workbook = new Workbook(templatePath);
+
+            // Initialize the WorkbookDesigner and associate it with the loaded workbook.
+            WorkbookDesigner designer = new WorkbookDesigner
+            {
+                Workbook = workbook
+            };
+
+            // Bind the provided data object to a smart marker name (e.g., "Data").
+            // The template should contain markers like &Data.PropertyName.
+            designer.SetDataSource("Data", data);
+
+            // Process the smart markers to populate the worksheet with data.
+            designer.Process();
+
+            // Save the processed workbook to a memory stream (XLS format) and return it.
+            return workbook.SaveToStream();
+        }
+        catch
+        {
+            // Rethrow the exception to be handled by the caller.
+            throw;
         }
     }
 }

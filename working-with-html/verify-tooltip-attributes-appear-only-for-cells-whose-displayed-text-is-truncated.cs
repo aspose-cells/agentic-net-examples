@@ -1,57 +1,111 @@
-// Title: Aspose.Cells for .NET – Verify HTML tooltips only for truncated cell text
-// Description: This C# example creates a workbook with two cells, narrows the first column to force overflow, enables AddTooltipText in HtmlSaveOptions, saves to HTML, and programmatically checks that a <title> attribute is generated for the overflowed cell (A1) while the fitting cell (B1) remains tooltip‑free.
-// Keywords: Aspose.Cells HTML tooltip | AddTooltipText .NET | truncated cell text tooltip | verify title attribute Aspose | column width overflow Aspose.Cells | C# Aspose.Cells HTML export | unit test tooltip generation | Excel to HTML tooltip overflow
-// Common Searches: Aspose.Cells add tooltip for overflow cells | HTML export tooltip only when text is cut off | C# check title attribute in Aspose.Cells HTML output | verify tooltip generation based on column width Aspose | how to test Aspose.Cells HTML tooltip behavior
-// Developer Intent: Confirm that the generated HTML contains a title attribute exclusively for cells whose displayed content is clipped by column width.
-// Use Cases: Create interactive HTML reports where long values reveal full text on hover while short values stay clean. | Automated regression test to ensure AddTooltipText respects column overflow rules. | Build printable web tables that show tooltips only for truncated entries, improving user experience.
-// AI Prompts: Generate a C# unit test that parses the saved HTML and asserts that only overflowed cells have a title attribute. | Extend the sample to detect truncated cells before saving and assign custom tooltip text for each overflowed cell. | Provide a step‑by‑step guide to validate tooltip behavior across multiple rows and columns with varying widths using Aspose.Cells.
+// Title: Check that Excel cell comments (tooltips) appear only when the cell text is truncated using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that walks through every worksheet and cell, finds cells containing comments, and reports those where the visible text fits within the column width. | Implement a C# helper method that decides if a cell's displayed string is truncated based on column width and wrap settings in Aspose.Cells, then use it to validate tooltip placement.
+// Common Searches: Aspose.Cells how to determine if cell text is cut off by column width in C# | C# verify Excel comment appears only on truncated cells using Aspose.Cells | detect unnecessary tooltips in Excel worksheets with Aspose.Cells .NET | check if cell text is wrapped or truncated before showing tooltip Aspose.Cells | iterate used range and validate comment placement Aspose.Cells C#
+// Tags: cell text truncation detection Aspose.Cells | validate comment tooltip based on column width | check wrap text setting Aspose.Cells | iterate worksheet used range .NET | column width character units Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace TooltipVerificationDemo
+namespace TooltipVerification
 {
-    // This C# example creates a workbook with two cells, narrows the first column to force overflow, enables AddTooltipText in HtmlSaveOptions, saves to HTML, and programmatically checks that a <title> attribute is generated for the overflowed cell (A1) while the fitting cell (B1) remains tooltip‑free.
+    // The example loads an Excel workbook with Aspose.Cells, iterates all worksheets and cells in the used range, and for each cell that has a comment (used as a tooltip) it calls a helper method that compares the cell's string length to the column width (ignoring wrapped cells) to decide if the text is truncated. Cells with comments but non‑truncated text are logged for correction.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                const string inputPath = "input.xlsx";
 
-            // Cell A1: long text that will be truncated
-            cells["A1"].PutValue("This is a very long text that will exceed the column width and should show a tooltip.");
-            // Cell B1: short text that fits the column
-            cells["B1"].PutValue("Short");
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                    return;
+                }
 
-            // Set column widths: narrow for A (causing truncation), wide for B (no truncation)
-            cells.SetColumnWidth(0, 10); // Column A
-            cells.SetColumnWidth(1, 30); // Column B
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options to add tooltip text when data is truncated
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
-            htmlOptions.AddTooltipText = true;
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Get the used range of the worksheet
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
 
-            // Save the workbook to HTML
-            string htmlPath = "TooltipDemo.html";
-            workbook.Save(htmlPath, htmlOptions);
+                    // If the sheet is empty, skip it
+                    if (usedRange == null)
+                        continue;
 
-            // Load the generated HTML as plain text
-            string htmlContent = File.ReadAllText(htmlPath);
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-            // Simple verification:
-            // Look for a tooltip (title attribute) in the cell representing A1
-            bool a1HasTooltip = htmlContent.Contains("<td") && htmlContent.Contains("title=\"This is a very long text");
-            // Look for a tooltip in the cell representing B1 (should not exist)
-            bool b1HasTooltip = htmlContent.Contains("<td") && htmlContent.Contains(">Short</td") && htmlContent.Contains("title=\"Short\"");
+                    // Loop through each cell in the used range
+                    for (int row = startRow; row <= endRow; row++)
+                    {
+                        for (int col = startCol; col <= endCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
 
-            // Output verification results
-            Console.WriteLine("Verification Results:");
-            Console.WriteLine($"A1 tooltip present (expected true): {a1HasTooltip}");
-            Console.WriteLine($"B1 tooltip present (expected false): {b1HasTooltip}");
+                            // Check if the cell has a comment (used as tooltip)
+                            if (cell.Comment != null)
+                            {
+                                // Determine if the cell's displayed text is truncated
+                                bool isTruncated = IsCellTextTruncated(sheet, cell);
+
+                                // If the text is NOT truncated but a tooltip exists, report it
+                                if (!isTruncated)
+                                {
+                                    Console.WriteLine($"Worksheet \"{sheet.Name}\", Cell {cell.Name}: " +
+                                                      "has a tooltip but its text is not truncated.");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Optional: Save the workbook if modifications were made
+                // workbook.Save("output.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+        }
+
+        /// <param name="sheet">The worksheet containing the cell.</param>
+        /// <param name="cell">The cell to evaluate.</param>
+        /// <returns>True if the text is considered truncated; otherwise, false.</returns>
+        private static bool IsCellTextTruncated(Worksheet sheet, Cell cell)
+        {
+            try
+            {
+                // Get the column width in Excel's character units
+                double columnWidthInChars = sheet.Cells.GetColumnWidth(cell.Column);
+
+                // Get the cell's displayed string (ignoring formulas)
+                string cellText = cell.StringValue ?? string.Empty;
+
+                // Empty cells cannot be truncated
+                if (string.IsNullOrEmpty(cellText))
+                    return false;
+
+                // Check if the cell is set to wrap text; wrapped text is not considered truncated
+                bool isWrapped = cell.GetStyle().IsTextWrapped;
+                if (isWrapped)
+                    return false;
+
+                // Simple heuristic: treat as truncated when text length exceeds column width
+                return cellText.Length > Math.Floor(columnWidthInChars);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error evaluating truncation for cell {cell.Name}: {ex.Message}");
+                return false;
+            }
         }
     }
 }

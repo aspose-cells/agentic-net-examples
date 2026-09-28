@@ -1,52 +1,59 @@
-// Title: C# – Merge Multiple Excel Workbooks into a Single PDF While Preserving Sheet Order with Aspose.Cells
-// Description: Loads a collection of Excel files, uses the first workbook as the destination, calls Workbook.Combine to append the remaining worksheets in their original sequence, sets PdfSaveOptions.SheetSet to All, and saves the merged workbook as one PDF. Demonstrates Aspose.Cells for .NET conversion of all sheets to PDF with order retained.
-// Keywords: Aspose.Cells | C# merge Excel workbooks | combine worksheets PDF | PdfSaveOptions SheetSet.All | export all sheets to PDF | preserve sheet order | Aspose.Cells Combine method | Excel to PDF conversion .NET
-// Common Searches: Aspose.Cells combine workbooks C# | merge multiple Excel files into one PDF .NET | preserve worksheet order when exporting to PDF | export all Excel sheets to PDF using Aspose.Cells | C# code to create single PDF from several workbooks
-// Developer Intent: Generate a single PDF that contains every worksheet from multiple Excel workbooks, keeping the original sheet sequence intact.
-// Use Cases: Consolidate monthly financial workbooks into one PDF report with months appearing chronologically. | Combine departmental spreadsheets for an audit packet, ensuring each department's sheet order is maintained. | Create a printable PDF booklet from separate project Excel files, preserving the intended content flow across sheets.
-// AI Prompts: Provide C# code using Aspose.Cells to merge a list of Excel workbooks and export all worksheets to one PDF while keeping the original sheet order. | Explain how PdfSaveOptions.SheetSet = SheetSet.All affects PDF output when converting a combined workbook with Aspose.Cells. | Show how to use Workbook.Combine in Aspose.Cells to append worksheets from multiple workbooks without losing their original sequence.
+// Title: Combine all worksheets of an Excel workbook into a single PDF while keeping the original sheet order using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, configures PdfSaveOptions to merge all worksheets, and saves the output as one PDF preserving the sheet sequence. | Show how to check for the existence of the source Excel file, create the destination folder if needed, and export the workbook to a concatenated PDF without using OnePagePerSheet. | Provide a C# example that sets PdfSaveOptions.OnePagePerSheet = false to produce a single PDF from multiple sheets in their original order.
+// Common Searches: how to export multiple Excel sheets to a single PDF using Aspose.Cells C# | preserve worksheet order when converting an Excel workbook to PDF with Aspose.Cells | Aspose.Cells PdfSaveOptions merge sheets into one PDF .NET | C# convert Excel workbook with many sheets to one PDF file | save Excel workbook as concatenated PDF Aspose.Cells example
+// Tags: Aspose.Cells PDF conversion with sheet concatenation | PdfSaveOptions configuration for multi-sheet PDF | C# preserve worksheet order in PDF export | Excel workbook to single PDF using Aspose.Cells | create output folder before saving PDF in C#
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace MergeWorksheetsToPdf
+// The sample verifies the input .xlsx file, ensures the output directory exists, loads the workbook with Aspose.Cells, sets PdfSaveOptions.OnePagePerSheet to false so all worksheets are concatenated in their original order, and saves the result as a single PDF file.
+class ExcelToPdfMerger
 {
-    // Loads a collection of Excel files, uses the first workbook as the destination, calls Workbook.Combine to append the remaining worksheets in their original sequence, sets PdfSaveOptions.SheetSet to All, and saves the merged workbook as one PDF. Demonstrates Aspose.Cells for .NET conversion of all sheets to PDF with order retained.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source Excel file containing multiple worksheets
+        string excelPath = @"C:\Input\WorkbookWithMultipleSheets.xlsx";
+
+        // Path where the merged PDF will be saved
+        string pdfPath = @"C:\Output\MergedWorkbook.pdf";
+
+        try
         {
-            // Paths of the source Excel files (each may contain one or more worksheets)
-            List<string> sourceFiles = new List<string>
+            // Verify that the input Excel file exists
+            if (!File.Exists(excelPath))
             {
-                "Workbook1.xlsx",
-                "Workbook2.xlsx",
-                "Workbook3.xlsx"
-            };
-
-            // Create the first workbook (will serve as the destination for merging)
-            Workbook mergedWorkbook = new Workbook(sourceFiles[0]); // load first file
-
-            // Combine the remaining workbooks preserving their original sheet order
-            for (int i = 1; i < sourceFiles.Count; i++)
-            {
-                Workbook wb = new Workbook(sourceFiles[i]); // load next file
-                mergedWorkbook.Combine(wb); // append its sheets after existing ones
+                Console.WriteLine($"Input file not found: {excelPath}");
+                return;
             }
 
-            // Prepare PDF save options to include all sheets in their original order
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(pdfPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Load the Excel workbook (preserves original sheet order)
+            Workbook workbook = new Workbook(excelPath);
+
+            // Configure PDF save options
             PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                SheetSet = SheetSet.All // ensures every sheet is rendered in order
+                // Allow sheets to span multiple pages and concatenate them in order
+                OnePagePerSheet = false
+                // Additional options can be set here, e.g., GridlineType, Headings, etc.
             };
 
-            // Save the merged workbook as a single PDF file
-            string outputPdf = "MergedOutput.pdf";
-            mergedWorkbook.Save(outputPdf, pdfOptions);
+            // Save the workbook as a single PDF file using the options
+            workbook.Save(pdfPath, pdfOptions);
 
-            Console.WriteLine($"Merged PDF created successfully at: {outputPdf}");
+            Console.WriteLine("Workbook successfully merged into PDF: " + pdfPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

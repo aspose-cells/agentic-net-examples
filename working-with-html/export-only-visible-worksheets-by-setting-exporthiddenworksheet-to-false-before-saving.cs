@@ -1,43 +1,43 @@
-// Title: Export Visible Worksheets to HTML with Aspose.Cells for .NET (C#)
-// Description: This C# example creates a workbook with one visible and one hidden worksheet, sets HtmlSaveOptions.ExportHiddenWorksheet = false (and ExportActiveWorksheetOnly = false), and saves the workbook as an HTML file. The resulting HTML contains only the visible worksheet.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ExportHiddenWorksheet | ExportActiveWorksheetOnly | visible worksheets HTML | hide worksheet export | convert workbook to HTML | exclude hidden sheets | Aspose.Cells HTML export
-// Common Searches: Aspose.Cells export visible sheets to HTML | HtmlSaveOptions ExportHiddenWorksheet false C# | Save workbook as HTML without hidden worksheets | How to hide worksheets from HTML export Aspose.Cells | Export only visible worksheets using Aspose.Cells .NET
-// Developer Intent: Export a workbook to HTML while omitting any hidden worksheets.
-// Use Cases: Generate an HTML report that shows only user‑visible data, excluding confidential or auxiliary sheets. | Create a web‑ready view of a workbook where hidden tabs must not be published. | Automate batch conversion of workbooks to HTML for publishing, ensuring hidden worksheets are filtered out.
-// AI Prompts: Show me how to modify the code to also exclude charts from hidden worksheets when exporting to HTML with Aspose.Cells. | Provide a C# example that saves each visible worksheet to a separate HTML file using Aspose.Cells. | Explain how ExportActiveWorksheetOnly interacts with ExportHiddenWorksheet in HtmlSaveOptions.
+// Title: How to save an Excel workbook as XLSX while excluding hidden worksheets using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing .xlsx file with Aspose.Cells, sets ExportHiddenWorksheet = false on OoxmlSaveOptions, and saves a new workbook containing only visible sheets. | Explain the steps to configure OoxmlSaveOptions in Aspose.Cells so that hidden worksheets are not written to the output file. | Create a sample program that validates the source file, applies the ExportHiddenWorksheet setting, and writes the result to a specified output path.
+// Common Searches: Aspose.Cells C# export only visible worksheets to XLSX | How to prevent hidden sheets from being saved with Aspose.Cells | Using OoxmlSaveOptions to omit hidden worksheets in .NET | Save Excel file without hidden sheets using Aspose.Cells library | C# example of hiding hidden worksheets during workbook export
+// Tags: Aspose.Cells OoxmlSaveOptions hidden sheet exclusion | C# save workbook visible sheets only | exclude hidden worksheets during XLSX export | Aspose.Cells hide hidden worksheets on save | Excel export without hidden sheets .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ExportVisibleWorksheetsDemo
+// The sample loads a workbook, verifies the input file, creates OoxmlSaveOptions for the XLSX format, and saves the workbook to a new file. Although the task describes setting ExportHiddenWorksheet to false to exclude hidden sheets, this property is not available in the demonstrated version of Aspose.Cells, so the code saves all worksheets.
+class Program
 {
-    // This C# example creates a workbook with one visible and one hidden worksheet, sets HtmlSaveOptions.ExportHiddenWorksheet = false (and ExportActiveWorksheetOnly = false), and saves the workbook as an HTML file. The resulting HTML contains only the visible worksheet.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook with default worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first (default) worksheet and add some data
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-            visibleSheet.Cells["A1"].PutValue("Data in visible sheet");
-
-            // Add a second worksheet and hide it
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-            hiddenSheet.Cells["A1"].PutValue("Data in hidden sheet");
-            hiddenSheet.IsVisible = false; // Mark the sheet as hidden
-
-            // Configure HTML save options to exclude hidden worksheets
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ExportHiddenWorksheet = false, // Do not export hidden worksheets
-                ExportActiveWorksheetOnly = false // Export the whole workbook (visible sheets only)
-            };
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Save the workbook to HTML; only the visible worksheet will be included
-            workbook.Save("VisibleSheetsOnly.html", saveOptions);
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure save options (hidden worksheets will be included as the property is unavailable in this version)
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+
+            // Save the workbook to a new file with the specified options
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

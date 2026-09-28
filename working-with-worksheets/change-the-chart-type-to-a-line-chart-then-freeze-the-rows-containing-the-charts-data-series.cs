@@ -1,69 +1,111 @@
-// Title: Aspose.Cells for .NET: Convert a Column Chart to a Line Chart and Freeze Its Data Rows (C#)
-// Description: A concise C# example that creates a workbook, adds sample data, inserts a column chart, switches the chart type to Line, extracts the first series range, calculates the start and end rows, and freezes those rows with FreezePanes before saving the file.
-// Keywords: Aspose.Cells C# | .NET Excel automation | change chart type Aspose.Cells | line chart Aspose.Cells | freeze rows Excel C# | FreezePanes Aspose.Cells | chart series range extraction | GitHub Aspose.Cells example | Excel dashboard code
-// Common Searches: Aspose.Cells change column chart to line chart C# | How to freeze rows based on chart data range using Aspose.Cells | C# FreezePanes after creating a chart with Aspose.Cells | Extract chart series range Aspose.Cells .NET | Aspose.Cells example for dynamic chart type and row freezing
-// Developer Intent: Update an existing chart to a line type and lock the worksheet rows that contain its data series.
-// Use Cases: Financial reports that display trend lines while keeping the underlying data visible during scrolling. | Interactive Excel dashboards where chart types are switched programmatically and related rows stay in view. | Automated workbook generation that standardizes chart styles and improves navigation in large data sheets.
-// AI Prompts: Generate C# code with Aspose.Cells to convert a column chart to a line chart and freeze rows up to the last row of its first data series. | Provide a reusable method that reads a chart's NSeries range, parses row numbers, and applies FreezePanes on the worksheet. | Explain how to handle multiple chart series when determining which rows to freeze in an Aspose.Cells workbook.
+// Title: Convert a worksheet chart to a line chart and freeze rows containing its data series with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to change the first chart on a worksheet to a line chart and then lock the rows that supply the chart’s series data. | Write C# code that parses chart series ranges, finds the highest row index, and applies FreezePanes to freeze all rows up to that point using Aspose.Cells.
+// Common Searches: how to change a chart to line type and freeze its data rows using Aspose.Cells C# | Aspose.Cells freeze panes based on chart series range in .NET | C# program to convert Excel chart to line chart and lock rows with Aspose.Cells | extract row numbers from chart series values Aspose.Cells C# | freeze rows up to max data row of a chart in Aspose.Cells workbook
+// Tags: Aspose.Cells chart type conversion | Aspose.Cells FreezePanes based on data rows | C# extract rows from chart series | Aspose.Cells worksheet chart manipulation | C# Excel chart data range parsing
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// A concise C# example that creates a workbook, adds sample data, inserts a column chart, switches the chart type to Line, extracts the first series range, calculates the start and end rows, and freezes those rows with FreezePanes before saving the file.
+// The example loads an Excel workbook, verifies a chart exists, changes the first chart to a line chart, parses the series value and X‑value ranges to collect all involved row indices, determines the maximum row, freezes all rows up to that index with FreezePanes, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data (A1:B6)
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 2; i <= 6; i++)
+        try
         {
-            sheet.Cells[i - 1, 0].PutValue("Item " + (i - 1));
-            sheet.Cells[i - 1, 1].PutValue((i - 1) * 10);
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Add a column chart (will be changed later)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 20, 5);
-        Chart chart = sheet.Charts[chartIndex];
-        chart.SetChartDataRange("A1:B6", true);
-
-        // Change the chart type to a line chart
-        chart.Type = ChartType.Line;
-
-        // Determine the rows that contain the chart's data series
-        // Assuming the first series holds the data range
-        string dataRange = chart.NSeries[0].Values; // e.g., "Sheet1!$B$2:$B$6"
-        int startRow = 0, endRow = 0;
-
-        if (!string.IsNullOrEmpty(dataRange))
-        {
-            // Remove sheet name and '$' characters
-            int exclPos = dataRange.IndexOf('!');
-            string rangePart = dataRange.Substring(exclPos + 1).Replace("$", ""); // e.g., "B2:B6"
-            string[] parts = rangePart.Split(':');
-            if (parts.Length == 2)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                startRow = int.Parse(Regex.Match(parts[0], @"\d+").Value);
-                endRow = int.Parse(Regex.Match(parts[1], @"\d+").Value);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-        }
 
-        // Freeze rows up to the last data row (including header)
-        // FreezePanes(row, column, freezedRows, freezedColumns)
-        // Use 0‑based indices; row parameter is the cell where the split occurs
-        if (endRow > 0)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found on the worksheet.");
+                return;
+            }
+
+            // Work with the first chart
+            Chart chart = sheet.Charts[0];
+
+            // Change chart type to Line
+            chart.Type = ChartType.Line;
+
+            // Collect row indices used by the chart's data series
+            HashSet<int> dataRows = new HashSet<int>();
+
+            foreach (var series in chart.NSeries)
+            {
+                if (!string.IsNullOrEmpty(series.Values))
+                    AddRowsFromRange(series.Values, dataRows);
+
+                if (!string.IsNullOrEmpty(series.XValues))
+                    AddRowsFromRange(series.XValues, dataRows);
+            }
+
+            // Freeze rows up to the highest data row (if any)
+            if (dataRows.Count > 0)
+            {
+                int maxRowIndex = -1; // zero‑based
+                foreach (int rowIdx in dataRows)
+                    if (rowIdx > maxRowIndex) maxRowIndex = rowIdx;
+
+                // Freeze rows: use overload with four parameters (row, column, totalRows, totalColumns)
+                sheet.FreezePanes(maxRowIndex + 1, 0, maxRowIndex + 1, 0);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
         {
-            sheet.FreezePanes(endRow, 0, endRow, 0);
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
 
-        // Save the workbook
-        workbook.Save("ChartLineAndFreezeRows.xlsx", SaveFormat.Xlsx);
+    // Parses a range address (e.g., "A2:B10") and adds all row indices (zero‑based) to the set
+    static void AddRowsFromRange(string rangeAddress, HashSet<int> rows)
+    {
+        // Split multi‑area ranges (e.g., "A2:B5,C7:D9")
+        string[] areas = rangeAddress.Split(',');
+
+        foreach (string area in areas)
+        {
+            // Determine start and end cells
+            string[] cells = area.Split(':');
+            string startCell = cells[0];
+            string endCell = cells.Length > 1 ? cells[1] : startCell;
+
+            int startRow = GetRowIndex(startCell);
+            int endRow = GetRowIndex(endCell);
+
+            // Add every row between startRow and endRow (inclusive)
+            for (int r = startRow; r <= endRow; r++)
+                rows.Add(r);
+        }
+    }
+
+    // Converts a cell address like "B12" to a zero‑based row index (12 -> 11)
+    static int GetRowIndex(string cellAddress)
+    {
+        // Remove column letters, keep the numeric part
+        string rowPart = Regex.Replace(cellAddress.ToUpper(), "[A-Z]+", "");
+        if (int.TryParse(rowPart, out int rowNumber))
+            return rowNumber - 1; // zero‑based
+        throw new ArgumentException($"Invalid cell address: {cellAddress}");
     }
 }

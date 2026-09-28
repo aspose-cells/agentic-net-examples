@@ -1,58 +1,101 @@
-// Title: Replace Worksheet Background Image with JPEG Stream in Aspose.Cells for .NET (Preserve Page Setup)
-// Description: Load an existing workbook, read a JPEG file into a byte array, assign it to Worksheet.BackgroundImage, and save the file while keeping all PageSetup settings unchanged.
-// Keywords: Aspose.Cells background image | C# replace worksheet background | Worksheet.BackgroundImage byte array | preserve page setup Aspose.Cells | load JPEG as worksheet background
-// Common Searches: Aspose.Cells change worksheet background without affecting page setup | C# set worksheet background from JPEG stream | replace Excel sheet background image Aspose | keep margins and orientation when updating worksheet background
-// Developer Intent: Swap the current background picture of a worksheet for a new JPEG supplied as a stream, ensuring that page‑setup properties such as margins, orientation, and scaling remain intact.
-// Use Cases: Refresh the visual theme of a template workbook while retaining its print layout. | Add a corporate logo as a background to generated reports without modifying existing print settings. | Rotate seasonal artwork in an existing spreadsheet without disturbing predefined page configurations.
-// AI Prompts: Write C# code using Aspose.Cells to replace a worksheet's background image from a MemoryStream while preserving all PageSetup options. | Show an example that loads a JPEG file into a byte array, sets Worksheet.BackgroundImage, and includes robust error handling for missing files. | Explain how to verify that margins, orientation, and scaling stay the same after changing the worksheet background with Aspose.Cells.
+// Title: Replace an Excel worksheet’s background image with a JPEG byte array while keeping all PageSetup settings using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads a JPEG file into a byte[] and assigns it to Worksheet.BackgroundImage, then restores the original PageSetup properties. | Demonstrate removing the current worksheet background, setting a new JPEG from a stream, and reapplying orientation, margins, and fit‑to‑page settings with Aspose.Cells.
+// Common Searches: Aspose.Cells how to change worksheet background image without affecting page margins | C# replace Excel sheet background with JPEG byte array preserving page setup | set worksheet background image from stream Aspose.Cells .NET example | keep orientation and margins after updating worksheet background in Aspose.Cells
+// Tags: replace worksheet background Aspose.Cells | assign background from byte array C# | retain page setup after background change | load JPEG into Excel worksheet Aspose.Cells | remove current worksheet background prior to new image
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Load an existing workbook, read a JPEG file into a byte array, assign it to Worksheet.BackgroundImage, and save the file while keeping all PageSetup settings unchanged.
-class ReplaceWorksheetBackground
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads a workbook, saves the first worksheet's PageSetup values, clears any existing background, reads a JPEG file into a byte array, assigns it to Worksheet.BackgroundImage, restores the saved PageSetup properties, and saves the updated workbook.
+    class Program
     {
-        // Paths
-        string workbookPath = "input.xlsx";
-        string newImagePath = "newBackground.jpg";
-        string outputPath = "output.xlsx";
-
-        try
+        static void Main(string[] args)
         {
-            // Verify input files exist
-            if (!File.Exists(workbookPath))
-                throw new FileNotFoundException($"Workbook file not found: {workbookPath}");
+            try
+            {
+                const string inputPath = "InputWorkbook.xlsx";
+                const string backgroundPath = "NewBackground.jpg";
+                const string outputPath = "OutputWorkbook.xlsx";
 
-            if (!File.Exists(newImagePath))
-                throw new FileNotFoundException($"Background image file not found: {newImagePath}");
+                // Verify input files exist
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input workbook not found: {inputPath}");
+                    return;
+                }
 
-            // Load the existing workbook (preserves all existing settings, including PageSetup)
-            Workbook workbook = new Workbook(workbookPath);
+                if (!File.Exists(backgroundPath))
+                {
+                    Console.WriteLine($"Background image not found: {backgroundPath}");
+                    return;
+                }
 
-            // Get the worksheet whose background image you want to replace
-            Worksheet worksheet = workbook.Worksheets[0]; // adjust index if needed
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Read the new JPEG image into a byte array
-            byte[] newImageData = File.ReadAllBytes(newImagePath);
+                // Preserve current page‑setup settings
+                PageSetup ps = sheet.PageSetup;
+                var orientation = ps.Orientation;
+                var paperSize = ps.PaperSize;
+                var topMargin = ps.TopMargin;
+                var bottomMargin = ps.BottomMargin;
+                var leftMargin = ps.LeftMargin;
+                var rightMargin = ps.RightMargin;
+                var headerMargin = ps.HeaderMargin;
+                var footerMargin = ps.FooterMargin;
+                var fitToPagesTall = ps.FitToPagesTall;
+                var fitToPagesWide = ps.FitToPagesWide;
 
-            // Replace the worksheet's background image while leaving PageSetup untouched
-            worksheet.BackgroundImage = newImageData;
+                // ---------- Replace the background image ----------
+                // Clear any existing background image
+                sheet.BackgroundImage = null;
 
-            // Save the workbook with the updated background image
-            workbook.Save(outputPath);
+                // Load the new JPEG image into a byte array and assign it
+                try
+                {
+                    byte[] imageBytes;
+                    using (FileStream fs = File.OpenRead(backgroundPath))
+                    {
+                        imageBytes = new byte[fs.Length];
+                        int bytesRead = fs.Read(imageBytes, 0, imageBytes.Length);
+                        if (bytesRead != imageBytes.Length)
+                        {
+                            Console.WriteLine("Failed to read the entire background image file.");
+                            return;
+                        }
+                    }
+                    sheet.BackgroundImage = imageBytes;
+                }
+                catch (Exception imgEx)
+                {
+                    Console.WriteLine($"Error loading background image: {imgEx.Message}");
+                    return;
+                }
 
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"File error: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                // ---------- Re‑apply the preserved page‑setup settings ----------
+                ps.Orientation = orientation;
+                ps.PaperSize = paperSize;
+                ps.TopMargin = topMargin;
+                ps.BottomMargin = bottomMargin;
+                ps.LeftMargin = leftMargin;
+                ps.RightMargin = rightMargin;
+                ps.HeaderMargin = headerMargin;
+                ps.FooterMargin = footerMargin;
+                ps.FitToPagesTall = fitToPagesTall;
+                ps.FitToPagesWide = fitToPagesWide;
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

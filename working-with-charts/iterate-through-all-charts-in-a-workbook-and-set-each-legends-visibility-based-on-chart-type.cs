@@ -1,65 +1,54 @@
-// Title: C# – Hide or Show Chart Legends by Type Across All Worksheets with Aspose.Cells
-// Description: Loads an Excel workbook, iterates through every worksheet and each chart, detects pie‑related chart types (Pie, Pie3D, Doughnut, PieExploded, Pie3DExploded) and sets the ShowLegend property accordingly, then saves the file.
-// Keywords: Aspose.Cells chart legend visibility | C# hide chart legend | iterate charts workbook Aspose | Chart.ShowLegend property | pie chart legend Aspose.Cells | .NET Excel chart automation
-// Common Searches: how to hide legends for pie charts using Aspose.Cells C# | loop through all charts in an Excel workbook and set legend visibility | Aspose.Cells ShowLegend based on chart type | C# programmatically hide chart legends in Excel | Aspose.Cells iterate worksheets charts
-// Developer Intent: Loop through every chart in an Excel workbook and toggle the legend visibility depending on whether the chart is a pie‑type.
-// Use Cases: Remove legends from pie, doughnut, and exploded pie charts while keeping them for column or line charts in a financial dashboard. | Standardize legend settings across multiple sheets before exporting the workbook to PDF or image formats. | Prepare a printable report by suppressing unnecessary legends on pie charts to reduce visual clutter.
-// AI Prompts: Write C# code with Aspose.Cells that iterates all charts in a workbook and hides legends for pie‑related types. | Show how to check ChartType and set the ShowLegend property for each chart in a .NET Excel file. | Explain how to extend the legend‑visibility logic to include additional chart types such as radar, bubble, or scatter.
+// Title: Iterate over all charts in a worksheet and toggle legend visibility by chart type using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loops through every chart in a workbook and disables the legend for pie and 3‑D pie charts while keeping it enabled for all other chart types with Aspose.Cells. | Create a sample that adds a column chart and a pie chart to a worksheet, then uses the Chart.ShowLegend property to set legend visibility conditionally for each chart.
+// Common Searches: Aspose.Cells C# hide legend for pie chart programmatically | how to set chart legend visibility based on chart type in Aspose.Cells | iterate all charts in an Excel workbook and change legend display .NET | Chart.ShowLegend example for conditional formatting Aspose.Cells | C# code to show legends only on non‑pie charts using Aspose.Cells
+// Tags: Chart.ShowLegend property Aspose.Cells | iterate worksheet charts C# | hide legend for pie charts Aspose.Cells | conditional legend visibility by chart type | apply chart formatting in .NET workbook
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartLegendVisibility
+// The program creates sample data, adds a column chart and a pie chart, then iterates through all charts on the first worksheet, turning off the legend for pie and 3‑D pie charts while keeping it on for other chart types, and finally saves the workbook.
+class Program
 {
-    // Loads an Excel workbook, iterates through every worksheet and each chart, detects pie‑related chart types (Pie, Pie3D, Doughnut, PieExploded, Pie3DExploded) and sets the ShowLegend property accordingly, then saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (creation rule)
+        Workbook workbook = new Workbook();
+
+        // Prepare sample data
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["A4"].PutValue("C");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["B4"].PutValue(30);
+
+        // Add a column chart
+        int columnChartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        Chart columnChart = sheet.Charts[columnChartIdx];
+        columnChart.NSeries.Add("B2:B4", true);
+        columnChart.NSeries.CategoryData = "A2:A4";
+
+        // Add a pie chart
+        int pieChartIdx = sheet.Charts.Add(ChartType.Pie, 16, 0, 26, 5);
+        Chart pieChart = sheet.Charts[pieChartIdx];
+        pieChart.NSeries.Add("B2:B4", true);
+        pieChart.NSeries.CategoryData = "A2:A4";
+
+        // Iterate through all charts in the first worksheet
+        foreach (Chart chart in sheet.Charts)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
-
-            try
-            {
-                // Ensure the input file exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Iterate through each chart on the worksheet
-                    foreach (Chart chart in sheet.Charts)
-                    {
-                        // Hide legends for pie‑related charts; show for all other types
-                        bool hideLegend = chart.Type == ChartType.Pie ||
-                                          chart.Type == ChartType.Pie3D ||
-                                          chart.Type == ChartType.Doughnut ||
-                                          chart.Type == ChartType.PieExploded ||
-                                          chart.Type == ChartType.Pie3DExploded;
-
-                        // Apply legend visibility
-                        chart.ShowLegend = !hideLegend;
-                    }
-                }
-
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Catch any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Hide legend for pie charts (including 3‑D pie), show for others
+            if (chart.Type == ChartType.Pie || chart.Type == ChartType.Pie3D)
+                chart.ShowLegend = false; // use Chart.ShowLegend property
+            else
+                chart.ShowLegend = true;
         }
+
+        // Save the workbook (save rule)
+        workbook.Save("ChartsLegendVisibility.xlsx");
     }
 }

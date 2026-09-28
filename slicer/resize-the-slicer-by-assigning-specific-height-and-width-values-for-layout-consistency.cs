@@ -1,58 +1,61 @@
-// Title: Resize an Aspose.Cells Slicer in C# by Setting WidthPt and HeightPt
-// Description: Shows how to create a workbook with a pivot table, add a linked slicer, and programmatically assign specific values to the slicer’s Shape.WidthPt and Shape.HeightPt properties for consistent layout before saving the file.
-// Keywords: Aspose.Cells slicer resize | C# slicer width height | .NET Shape.WidthPt | .NET Shape.HeightPt | pivot table slicer size | adjust Excel slicer dimensions | set slicer width points | set slicer height points | Aspose.Cells programmatic slicer | Excel slicer layout control
-// Common Searches: Aspose.Cells resize slicer C# | Set slicer width points Aspose.Cells .NET | How to change slicer height in Aspose.Cells | Programmatically adjust Excel slicer size using Aspose | Resize pivot table slicer with Aspose.Cells
-// Developer Intent: Assign explicit width and height values to an Aspose.Cells slicer to control its visual size in a generated workbook.
-// Use Cases: Standardize slicer dimensions across a batch of automatically generated reports. | Match slicer size to a corporate Excel template for brand‑consistent dashboards. | Dynamically compute slicer size based on worksheet column widths or screen resolution. | Create printable workbooks where slicers have uniform appearance for better readability.
-// AI Prompts: Write C# code using Aspose.Cells to set a slicer's WidthPt to 150 and HeightPt to 120. | Show an example that adds a slicer to a pivot table and resizes it with Shape properties. | Explain how to access and modify a slicer's Shape object in Aspose.Cells. | Provide guidance on calculating slicer dimensions from worksheet column widths in C#.
+// Title: Resize an Excel slicer and lock its position using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the slicer width to 180 points and height to 120 points, then lock its position in a workbook with Aspose.Cells C#. | Programmatically adjust a pivot table slicer's dimensions and prevent users from moving it using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to change slicer size in points | C# lock slicer position in generated Excel file using Aspose.Cells | Resize pivot table slicer width height Aspose.Cells .NET example | Set slicer dimensions and keep layout consistent Aspose.Cells C#
+// Tags: slicer shape width points Aspose.Cells | slicer shape height points Aspose.Cells | prevent slicer movement Aspose.Cells | pivot table slicer size adjustment .NET | excel slicer layout consistency C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 using Aspose.Cells.Pivot;
 
-// Shows how to create a workbook with a pivot table, add a linked slicer, and programmatically assign specific values to the slicer’s Shape.WidthPt and Shape.HeightPt properties for consistent layout before saving the file.
-class Program
+namespace SlicerResizeDemo
 {
-    static void Main()
+    // Creates a workbook, adds a pivot table, inserts a slicer linked to the "Category" field, resizes the slicer to 180 pt width and 120 pt height, locks its position to prevent user changes, and saves the file as SlicerResized.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Populate sample data for the pivot table
-            worksheet.Cells["A1"].Value = "Category";
-            worksheet.Cells["A2"].Value = "Fruit";
-            worksheet.Cells["A3"].Value = "Fruit";
-            worksheet.Cells["A4"].Value = "Vegetable";
-            worksheet.Cells["B1"].Value = "Sales";
-            worksheet.Cells["B2"].Value = 100;
-            worksheet.Cells["B3"].Value = 150;
-            worksheet.Cells["B4"].Value = 200;
+                // Populate sample data for a pivot table
+                cells["A1"].Value = "Category";
+                cells["B1"].Value = "Amount";
+                cells["A2"].Value = "Fruit";
+                cells["B2"].Value = 120;
+                cells["A3"].Value = "Fruit";
+                cells["B3"].Value = 150;
+                cells["A4"].Value = "Vegetable";
+                cells["B4"].Value = 200;
 
-            // Add a pivot table based on the data range
-            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Add a pivot table based on the data range
+                int pivotIdx = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
+                PivotTable pivot = sheet.PivotTables[pivotIdx];
+                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Add a slicer linked to the pivot table (destCellName first, then field name)
-            int slicerIndex = worksheet.Slicers.Add(pivotTable, "E1", "Category");
-            Slicer slicer = worksheet.Slicers[slicerIndex];
-            slicer.AddPivotConnection(pivotTable);
+                // Add a slicer linked to the pivot table (field name "Category")
+                int slicerIdx = sheet.Slicers.Add(pivot, "Category", "F3");
+                Slicer slicer = sheet.Slicers[slicerIdx];
 
-            // Resize the slicer using the Shape's point-based properties
-            slicer.Shape.WidthPt = 150;   // Set width to 150 points
-            slicer.Shape.HeightPt = 120;  // Set height to 120 points
+                // Resize the slicer using Shape properties (points)
+                slicer.Shape.WidthPt = 180;   // width in points
+                slicer.Shape.HeightPt = 120;  // height in points
 
-            // Save the workbook with the resized slicer
-            workbook.Save("ResizedSlicer.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Optionally lock the slicer position so users cannot move/resize it
+                slicer.LockedPosition = true;
+
+                // Save the workbook
+                workbook.Save("SlicerResized.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

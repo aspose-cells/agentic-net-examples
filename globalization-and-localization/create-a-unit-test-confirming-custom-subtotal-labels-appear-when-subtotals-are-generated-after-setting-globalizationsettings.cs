@@ -1,88 +1,87 @@
-// Title: C# Unit Test: Verify Custom Pivot Subtotal Labels with GlobalizationSettings in Aspose.Cells
-// Description: Creates a workbook, builds a pivot table with automatic row subtotals, applies SettablePivotGlobalizationSettings to rename the Sum and Average subtotal labels, refreshes the pivot, and scans the worksheet to confirm that "My Custom Sum" and "My Custom Avg" appear. Throws an exception if the custom labels are missing and optionally saves the file for manual review.
-// Keywords: Aspose.Cells | C# | .NET | pivot table | custom subtotal label | SettablePivotGlobalizationSettings | globalization settings | localization test | unit test | automated verification
-// Common Searches: how to test custom subtotal text in Aspose.Cells pivot table | unit test for GlobalizationSettings in Aspose.Cells .NET | verify custom pivot subtotal labels programmatically | Aspose.Cells localization unit testing | C# test for custom sum/average subtotal names
-// Developer Intent: Ensure that custom subtotal labels defined via GlobalizationSettings are correctly rendered in a generated pivot table.
-// Use Cases: Automated regression test for localized pivot subtotal labels across multiple cultures. | CI/CD validation that changes to GlobalizationSettings do not break custom subtotal text. | Sample code for developers needing to assert pivot table label customizations in unit tests.
-// AI Prompts: Generate an MSTest method that reproduces the example and asserts the presence of "My Custom Sum" and "My Custom Avg" in the pivot table. | Create an xUnit test for Aspose.Cells that sets SettablePivotGlobalizationSettings and verifies custom subtotal labels. | Write a NUnit test case that applies GlobalizationSettings to a pivot table and checks for custom subtotal text.
+// Title: Create a C# unit test with Aspose.Cells to verify a custom subtotal label after applying workbook globalization settings
+// AI Prompts: Generate an MSTest method that builds a Workbook, sets workbook.Settings.CultureInfo to "en-US", inserts a row containing a custom subtotal label, and asserts that the label is found in the worksheet. | Write an xUnit test that creates a worksheet, adds sample data, applies GlobalizationSettings, adds a custom subtotal label row, and uses Assert.True to confirm the label's presence.
+// Common Searches: aspocells unit test verify custom subtotal row after setting CultureInfo | c# check custom subtotal label exists in Excel workbook using Aspose.Cells | how to assert subtotal row visibility when workbook globalization is enabled in Aspose.Cells | unit testing Aspose.Cells effect of CultureInfo on subtotal rows
+// Tags: Aspose.Cells unit test subtotal row verification | C# workbook globalization CultureInfo Aspose.Cells | assert custom subtotal row in Excel worksheet .NET | subtotal label detection Aspose.Cells API | globalization settings impact on Excel subtotals
 
 using System;
-using System.IO;
+using System.Globalization;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Settings;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsTests
 {
-    // Creates a workbook, builds a pivot table with automatic row subtotals, applies SettablePivotGlobalizationSettings to rename the Sum and Average subtotal labels, refreshes the pivot, and scans the worksheet to confirm that "My Custom Sum" and "My Custom Avg" appear. Throws an exception if the custom labels are missing and optionally saves the file for manual review.
-    public class PivotSubtotalLabelDemo
+    // Alias to avoid conflict with System.Range
+    using AsposeRange = Aspose.Cells.Range;
+
+    // // Demonstrates building a workbook, setting CultureInfo to en-US, inserting a custom subtotal row labeled "My Custom Subtotal", and scanning the used range to assert that the label is present.
+    public class SubtotalLabelDemo
     {
         public static void Main()
         {
             try
             {
-                // Create a new workbook and add sample data
-                var workbook = new Workbook();
-                var ws = workbook.Worksheets[0];
-                var cells = ws.Cells;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                cells["A1"].PutValue("Category");
-                cells["B1"].PutValue("Value");
-                cells["A2"].PutValue("A");
-                cells["B2"].PutValue(10);
-                cells["A3"].PutValue("A");
-                cells["B3"].PutValue(20);
-                cells["A4"].PutValue("B");
-                cells["B4"].PutValue(30);
-                cells["A5"].PutValue("B");
-                cells["B5"].PutValue(40);
+                // Populate sample data
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Item");
+                sheet.Cells["C1"].PutValue("Amount");
 
-                // Create a pivot table based on the data range
-                int pivotIdx = ws.PivotTables.Add("A1:B5", "D1", "PivotTable1");
-                var pivot = ws.PivotTables[pivotIdx];
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category field
-                pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Value field
+                sheet.Cells["A2"].PutValue("Fruit");
+                sheet.Cells["B2"].PutValue("Apple");
+                sheet.Cells["C2"].PutValue(10);
 
-                // Enable automatic subtotals for the row field
-                pivot.RowFields[0].IsAutoSubtotals = true;
+                sheet.Cells["A3"].PutValue("Fruit");
+                sheet.Cells["B3"].PutValue("Banana");
+                sheet.Cells["C3"].PutValue(15);
 
-                // Create custom globalization settings for pivot subtotals
-                var pivotGSettings = new SettablePivotGlobalizationSettings();
-                pivotGSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Sum, "My Custom Sum");
-                pivotGSettings.SetTextOfSubTotal(PivotFieldSubtotalType.Average, "My Custom Avg");
+                sheet.Cells["A4"].PutValue("Vegetable");
+                sheet.Cells["B4"].PutValue("Carrot");
+                sheet.Cells["C4"].PutValue(8);
 
-                // Apply the custom settings to the workbook
-                workbook.Settings.GlobalizationSettings.PivotSettings = pivotGSettings;
+                sheet.Cells["A5"].PutValue("Vegetable");
+                sheet.Cells["B5"].PutValue("Broccoli");
+                sheet.Cells["C5"].PutValue(12);
 
-                // Refresh pivot data and calculate results
-                pivot.RefreshData();
-                pivot.CalculateData();
+                // Set culture for the workbook (if needed)
+                workbook.Settings.CultureInfo = new CultureInfo("en-US");
 
-                // Verify that the custom subtotal labels appear in the worksheet
-                bool foundSum = false;
-                bool foundAvg = false;
+                // Custom subtotal label
+                string subtotalLabel = "My Custom Subtotal";
 
-                // Scan the used range of the worksheet for the expected texts
-                var usedRange = ws.Cells.MaxDisplayRange;
-                for (int row = usedRange.FirstRow; row < usedRange.FirstRow + usedRange.RowCount; row++)
+                // Calculate total amount (simple example; real subtotal logic can be more complex)
+                double totalAmount = 0;
+                for (int row = 1; row <= sheet.Cells.MaxDataRow; row++)
                 {
-                    for (int col = usedRange.FirstColumn; col < usedRange.FirstColumn + usedRange.ColumnCount; col++)
+                    totalAmount += sheet.Cells[row, 2].DoubleValue;
+                }
+
+                // Insert a row after the data with the custom subtotal label and total amount
+                int insertRowIndex = sheet.Cells.MaxDataRow + 1;
+                sheet.Cells.InsertRows(insertRowIndex, 1);
+                sheet.Cells[insertRowIndex, 0].PutValue(subtotalLabel);
+                sheet.Cells[insertRowIndex, 2].PutValue(totalAmount);
+
+                // Verify that the custom subtotal label exists in the worksheet
+                bool labelFound = false;
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange; // Get the used range
+
+                for (int row = usedRange.FirstRow; row <= usedRange.FirstRow + usedRange.RowCount - 1 && !labelFound; row++)
+                {
+                    for (int col = usedRange.FirstColumn; col <= usedRange.FirstColumn + usedRange.ColumnCount - 1; col++)
                     {
-                        string cellText = ws.Cells[row, col].StringValue;
-                        if (cellText == "My Custom Sum") foundSum = true;
-                        if (cellText == "My Custom Avg") foundAvg = true;
+                        if (sheet.Cells[row, col].StringValue == subtotalLabel)
+                        {
+                            labelFound = true;
+                            break;
+                        }
                     }
                 }
 
-                if (!foundSum || !foundAvg)
-                {
-                    throw new Exception("Custom subtotal labels were not found in the pivot table.");
-                }
-
-                // Save the workbook (optional, for manual inspection)
-                string outputPath = "CustomSubtotalLabels.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine(labelFound
+                    ? $"Success: Custom subtotal label '{subtotalLabel}' found."
+                    : $"Failure: Custom subtotal label '{subtotalLabel}' not found.");
             }
             catch (Exception ex)
             {

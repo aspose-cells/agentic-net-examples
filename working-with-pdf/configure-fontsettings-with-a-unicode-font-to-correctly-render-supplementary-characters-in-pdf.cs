@@ -1,44 +1,55 @@
-// Title: Aspose.Cells for .NET – Configure Unicode Font Settings to Render Supplementary Characters in PDF
-// Description: Shows how to assign a global Unicode fallback font (e.g., MS Gothic) and set PdfSaveOptions (DefaultFont, CheckWorkbookDefaultFont, CheckFontCompatibility, FontEncoding=Identity) so emojis, mathematical symbols and other supplementary characters are rendered correctly when a workbook is saved as PDF.
-// Keywords: Aspose.Cells | C# | PDF export | Unicode font | supplementary characters | emoji rendering | PdfSaveOptions | DefaultFont | FontEncoding Identity | font fallback | MS Gothic | workbook to PDF | Unicode support
-// Common Searches: Aspose.Cells render emoji in PDF | set default Unicode font for PDF export Aspose.Cells .NET | supplementary Unicode characters PDF Aspose.Cells | font fallback for unsupported characters Aspose.Cells PDF | PdfSaveOptions Unicode support example
-// Developer Intent: Configure font settings so that PDF output from Aspose.Cells correctly displays supplementary Unicode characters such as emojis and mathematical symbols.
-// Use Cases: Export a spreadsheet containing emojis or special symbols to PDF with accurate visual representation. | Provide a global fallback font for any cell that lacks a compatible typeface during PDF conversion. | Enable Identity font encoding to cover the full Unicode range when saving workbooks as PDFs.
-// AI Prompts: Generate C# code that sets a Unicode fallback font and enables Identity encoding in Aspose.Cells PdfSaveOptions for full Unicode PDF output. | Explain how to configure Aspose.Cells to render supplementary characters (emoji, math alphanumerics) when saving a workbook to PDF.
+// Title: Configure FontSettings with a Unicode font to render supplementary characters (e.g., emoji) in a PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets a Unicode‑compatible font on a cell and saves the workbook as a PDF with Aspose.Cells. | Show how to use FontSettings in Aspose.Cells to ensure supplementary Unicode characters are displayed correctly in PDF output. | Provide a complete Aspose.Cells example that inserts an emoji, applies Arial Unicode MS, and exports the workbook to PDF.
+// Common Searches: Aspose.Cells C# how to display emoji in PDF export | set Unicode font for supplementary characters when saving workbook as PDF with Aspose.Cells | FontSettings configuration for Unicode support in Aspose.Cells PDF generation .NET
+// Tags: FontSettings Unicode font Aspose.Cells PDF | supplementary character rendering Aspose.Cells C# | emoji support in PDF export Aspose.Cells | Arial Unicode MS font for PDF generation Aspose.Cells | cell style font configuration Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Shows how to assign a global Unicode fallback font (e.g., MS Gothic) and set PdfSaveOptions (DefaultFont, CheckWorkbookDefaultFont, CheckFontCompatibility, FontEncoding=Identity) so emojis, mathematical symbols and other supplementary characters are rendered correctly when a workbook is saved as PDF.
-class ConfigureFontSettingsForPdf
+namespace AsposeCellsExample
 {
-    static void Main()
+    // // Example creates a workbook, places an emoji (😀) in cell A1, applies the Arial Unicode MS font via FontSettings to support supplementary Unicode characters, and saves the workbook as a PDF, ensuring correct rendering of the emoji.
+    class Program
     {
-        // Set a global Unicode font that supports supplementary characters (e.g., MS Gothic)
-        FontConfigs.DefaultFontName = "MS Gothic";
-
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add text containing supplementary Unicode characters (emoji, mathematical alphanumerics, etc.)
-        worksheet.Cells["A1"].PutValue("Unicode test: 😀 𝔘𝔫𝔦𝔠𝔬𝔡𝔢");
-
-        // Configure PDF save options to use the default Unicode font
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        static void Main(string[] args)
         {
-            // Font used when a cell does not specify a compatible font
-            DefaultFont = "MS Gothic",
-            // Try workbook's default font first
-            CheckWorkbookDefaultFont = true,
-            // Ensure font compatibility checking is enabled for fallback substitution
-            CheckFontCompatibility = true,
-            // Use Identity encoding to support all Unicode characters
-            FontEncoding = PdfFontEncoding.Identity
-        };
+            try
+            {
+                // Create a new workbook
+                var workbook = new Workbook();
 
-        // Save the workbook as PDF with the configured font settings
-        workbook.Save("UnicodeOutput.pdf", pdfOptions);
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
+
+                // Put a supplementary Unicode character (e.g., 😀) into a cell
+                var cell = worksheet.Cells["A1"];
+                cell.PutValue("😀");
+
+                // Apply a font that supports supplementary characters to the cell
+                var style = cell.GetStyle();
+                style.Font.Name = "Arial Unicode MS";
+                cell.SetStyle(style);
+
+                // Define output file path
+                string outputPath = "SupplementaryCharacters.pdf";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as PDF; the supplementary character will be rendered correctly
+                workbook.Save(outputPath, SaveFormat.Pdf);
+
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
     }
 }

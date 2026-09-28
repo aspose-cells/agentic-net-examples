@@ -1,71 +1,55 @@
-// Title: Aspose.Cells for .NET: Create a Pivot Table with Top Subtotals (ShowSubtotalAtTop)
-// Description: Demonstrates how to build a workbook, populate Category/Product/Sales data, add a pivot table on range A1:C7, place the Category field in the row area, enable automatic subtotals, set ShowSubtotalAtTop = true so summary rows appear before each group, add Sales as a data field, refresh the pivot, and save the file.
-// Keywords: Aspose.Cells | C# pivot table | ShowSubtotalAtTop | top subtotals | automatic subtotals | .NET Excel | pivot subtotal position | Excel report generation | category subtotal top
-// Common Searches: Aspose.Cells set ShowSubtotalAtTop C# | pivot table subtotals at top Aspose.Cells | how to add top subtotals in Aspose.Cells pivot | C# create pivot table with subtotal before group | Aspose.Cells pivot subtotal position example
-// Developer Intent: Create a pivot table and configure its row field to display automatic subtotals before each group (top position).
-// Use Cases: Generate a sales summary where each category’s subtotal appears before its product rows for quick insight. | Produce financial worksheets that group data by category and place summary rows at the start of each group. | Build automated Excel reports that need top‑positioned subtotals for hierarchical data analysis.
-// AI Prompts: Write C# code using Aspose.Cells to create a pivot table from a range and set ShowSubtotalAtTop = true for the row field. | Explain how to enable automatic subtotals and place them before each group in an Aspose.Cells pivot table. | Provide a step‑by‑step guide to add a pivot table, assign row and data fields, and configure top subtotals with Aspose.Cells for .NET.
+// Title: Add summary rows above each category group with SUM using Aspose.Cells Subtotal in C#
+// AI Prompts: Generate C# code that uses Aspose.Cells to insert a summary row before each category group, calculating the sum of the Amount column. | Show how to set the Outline.SummaryRowBelow property so that subtotal rows appear at the top of each group in an Aspose.Cells workbook. | Write a reusable method that takes a worksheet, a data range, and a list of numeric columns, then adds top‑positioned subtotal rows via the Subtotal API.
+// Common Searches: Aspose.Cells C# how to place subtotal rows at the top of grouped data | C# example for adding sum subtotals before each category in an Excel file with Aspose.Cells | Using Subtotal method to create top summary rows for a column range in Aspose.Cells .NET
+// Tags: Aspose.Cells Subtotal top summary rows | C# insert subtotal before group | Excel workbook sum subtotals with Aspose.Cells | outline summary row placement Aspose.Cells | group by column subtotal C# Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using System;
 
-namespace AsposeCellsSubtotalTopDemo
+// // Demonstrates creating a workbook, populating Category and Amount columns, and using Aspose.Cells.Subtotal together with Outline.SummaryRowBelow = false to insert summary rows above each category group using the SUM function.
+class SubtotalTopDemo
 {
-    // Demonstrates how to build a workbook, populate Category/Product/Sales data, add a pivot table on range A1:C7, place the Category field in the row area, enable automatic subtotals, set ShowSubtotalAtTop = true so summary rows appear before each group, add Sales as a data field, refresh the pivot, and save the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate sample data for the pivot table
-            // Columns: Category, Product, Sales
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Product");
-            sheet.Cells["C1"].PutValue("Sales");
+        // Populate sample data (Category and Amount)
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("Amount");
+        worksheet.Cells["A2"].PutValue("A");
+        worksheet.Cells["B2"].PutValue(100);
+        worksheet.Cells["A3"].PutValue("A");
+        worksheet.Cells["B3"].PutValue(150);
+        worksheet.Cells["A4"].PutValue("B");
+        worksheet.Cells["B4"].PutValue(200);
+        worksheet.Cells["A5"].PutValue("B");
+        worksheet.Cells["B5"].PutValue(250);
 
-            object[,] data = new object[,]
-            {
-                { "Bikes", "Mountain", 1200 },
-                { "Bikes", "Road", 1500 },
-                { "Cars", "Sedan", 2000 },
-                { "Cars", "SUV", 2500 },
-                { "Bikes", "Hybrid", 1300 },
-                { "Cars", "Coupe", 2200 }
-            };
+        // Define the range that contains the data
+        CellArea dataArea = CellArea.CreateCellArea("A1", "B5");
 
-            for (int r = 0; r < data.GetLength(0); r++)
-            {
-                for (int c = 0; c < data.GetLength(1); c++)
-                {
-                    sheet.Cells[r + 1, c].PutValue(data[r, c]);
-                }
-            }
+        // Apply subtotals:
+        // - Group by the first column (Category) -> groupBy = 0
+        // - Use SUM function for subtotals
+        // - Subtotal the second column (Amount) -> totalList = new int[] { 1 }
+        // - Replace existing subtotals = true
+        // - Do not insert page breaks between groups = false
+        // - Place summary rows above the detail rows (top) = false
+        worksheet.Cells.Subtotal(
+            dataArea,
+            0,
+            ConsolidationFunction.Sum,
+            new int[] { 1 },
+            true,
+            false,
+            false);
 
-            // Add a pivot table based on the data range A1:C7, place it at E3
-            int pivotIndex = sheet.PivotTables.Add("A1:C7", "E3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+        // Ensure the outline setting also places summary rows above the data
+        worksheet.Outline.SummaryRowBelow = false;
 
-            // Add Category as a row field
-            int rowFieldPos = pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            PivotField rowField = pivotTable.RowFields[rowFieldPos];
-
-            // Configure the row field to show subtotals at the top (summary rows before each group)
-            rowField.ShowSubtotalAtTop = true;   // Insert summary rows before each group
-            rowField.IsAutoSubtotals = true;     // Enable automatic subtotals (e.g., Sum)
-
-            // Add Sales as a data field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Refresh and calculate the pivot table to apply changes
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            workbook.Save("PivotSubtotalTopDemo.xlsx");
-        }
+        // Save the workbook
+        workbook.Save("SubtotalTopDemo.xlsx");
     }
 }

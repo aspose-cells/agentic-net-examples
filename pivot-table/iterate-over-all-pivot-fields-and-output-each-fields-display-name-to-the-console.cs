@@ -1,68 +1,58 @@
-// Title: C# – List All Pivot Table Fields and Their Display Names with Aspose.Cells
-// Description: Creates a workbook, adds sample data, builds a PivotTable, refreshes it, then iterates through the PivotTable.BaseFields collection to print each field’s DisplayName (or Name when empty) to the console. The workbook is saved as a demonstration of field enumeration.
-// Keywords: Aspose.Cells C# pivot table | enumerate PivotTable fields | BaseFields collection | display name of pivot fields | list pivot field names .NET | Aspose.Cells API example | iterate over pivot fields | C# get pivot field display name | Aspose.Cells PivotTable enumeration | print pivot field names
-// Common Searches: How to loop through pivot fields in Aspose.Cells | Get display name of each pivot field C# | Aspose.Cells BaseFields example | Retrieve pivot table field names programmatically | Aspose.Cells enumerate pivot fields .NET
-// Developer Intent: Retrieve and print every pivot field’s display name from a PivotTable.
-// Use Cases: Verify required fields exist before configuring a pivot layout | Populate a UI dropdown with available pivot fields for user selection | Log field names for debugging pivot table setup | Generate documentation of pivot schema automatically | Create dynamic reports that adapt to changing source columns
-// AI Prompts: Write C# code using Aspose.Cells to enumerate all PivotTable fields and output their DisplayName, falling back to Name when DisplayName is empty. | Explain how to access the BaseFields collection of a PivotTable and retrieve both Name and DisplayName properties for each field. | Show how to change the DisplayName of pivot fields after iterating through them in Aspose.Cells for .NET.
+// Title: How to enumerate all pivot table fields and print their display names with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells that creates a workbook, adds a pivot table, refreshes it, and loops through the PivotTable.BaseFields collection to write each field's DisplayName to the console. | Provide a complete example that retrieves the list of pivot field names from an Aspose.Cells PivotTable and outputs them via Console.WriteLine after the pivot data is calculated.
+// Common Searches: aspnet c# get list of pivot table field names using Aspose.Cells | how to loop through BaseFields of a PivotTable in Aspose.Cells .NET | display pivot field display names in console with Aspose.Cells | sample code for iterating pivot fields in Aspose.Cells C#
+// Tags: Aspose.Cells iterate pivot BaseFields C# | pivot table field display name Aspose.Cells | C# console output pivot field names | create and refresh pivot table Aspose.Cells | Aspose.Cells PivotTable enumeration example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotDemo
+// The program creates a workbook, populates sample data, adds and refreshes a pivot table, then iterates over the PivotTable.BaseFields collection, writing each field's DisplayName to the console before saving the file.
+class Program
 {
-    // Creates a workbook, adds sample data, builds a PivotTable, refreshes it, then iterates through the PivotTable.BaseFields collection to print each field’s DisplayName (or Name when empty) to the console. The workbook is saved as a demonstration of field enumeration.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data for the pivot table
+        sheet.Cells["A1"].Value = "Category";
+        sheet.Cells["B1"].Value = "Product";
+        sheet.Cells["C1"].Value = "Sales";
+
+        sheet.Cells["A2"].Value = "Electronics";
+        sheet.Cells["B2"].Value = "Laptop";
+        sheet.Cells["C2"].Value = 1200;
+
+        sheet.Cells["A3"].Value = "Electronics";
+        sheet.Cells["B3"].Value = "Phone";
+        sheet.Cells["C3"].Value = 800;
+
+        sheet.Cells["A4"].Value = "Furniture";
+        sheet.Cells["B4"].Value = "Chair";
+        sheet.Cells["C4"].Value = 150;
+
+        // Add a pivot table to the worksheet
+        int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
+        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+        // Add fields to the pivot table
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+        // Refresh and calculate the pivot table data
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
+
+        // Iterate over all pivot fields (BaseFields) and output each field's display name
+        foreach (PivotField field in pivotTable.BaseFields)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Product";
-            sheet.Cells["C1"].Value = "Sales";
-
-            sheet.Cells["A2"].Value = "Electronics";
-            sheet.Cells["B2"].Value = "Laptop";
-            sheet.Cells["C2"].Value = 1200;
-
-            sheet.Cells["A3"].Value = "Electronics";
-            sheet.Cells["B3"].Value = "Phone";
-            sheet.Cells["C3"].Value = 800;
-
-            sheet.Cells["A4"].Value = "Furniture";
-            sheet.Cells["B4"].Value = "Chair";
-            sheet.Cells["C4"].Value = 150;
-
-            // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "PivotTable1");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-            // Add fields to the pivot table (row, column, data)
-            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
-            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Refresh and calculate the pivot table so that fields are initialized
-            pivotTable.RefreshData();
-            pivotTable.CalculateData();
-
-            // Iterate over all base pivot fields and output each field's display name
-            PivotFieldCollection allFields = pivotTable.BaseFields;
-            Console.WriteLine("Pivot Fields Display Names:");
-            foreach (PivotField field in allFields)
-            {
-                // DisplayName may be empty if not set; fallback to Name
-                string displayName = string.IsNullOrEmpty(field.DisplayName) ? field.Name : field.DisplayName;
-                Console.WriteLine($"- {displayName}");
-            }
-
-            // Save the workbook (optional, just to complete lifecycle)
-            workbook.Save("PivotFieldsDisplayNamesDemo.xlsx");
+            Console.WriteLine(field.DisplayName);
         }
+
+        // Save the workbook
+        workbook.Save("PivotFieldsDisplayNameDemo.xlsx");
     }
 }

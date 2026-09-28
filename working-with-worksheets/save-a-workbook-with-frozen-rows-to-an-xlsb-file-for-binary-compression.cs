@@ -1,15 +1,12 @@
-// Title: Save a Workbook with Frozen Rows to XLSB Using Aspose.Cells (C#)
-// Description: Demonstrates how to create a workbook, freeze the top row with FreezePanes, configure XlsbSaveOptions for binary compression, and save the file as a compact XLSB document.
-// Keywords: Aspose.Cells FreezePanes C# | save workbook as XLSB | XlsbSaveOptions compression | binary Excel file Aspose.Cells | freeze top row XLSB | Aspose.Cells .NET export | compressed XLSB example
-// Common Searches: Aspose.Cells freeze first row and save as XLSB | C# XlsbSaveOptions compression level | How to use FreezePanes with Aspose.Cells | Save workbook to binary XLSB format | Aspose.Cells example for frozen panes and compression
-// Developer Intent: Create a workbook, freeze the header row, and export it as a compressed XLSB file using Aspose.Cells for .NET.
-// Use Cases: Generate a report with a frozen header row and distribute it as a small‑size XLSB file. | Export large data sets with frozen panes while minimizing attachment size. | Programmatically build a template that includes frozen rows and store it in binary format for faster loading.
-// AI Prompts: Write C# code with Aspose.Cells to freeze the first two rows and save the workbook as an XLSB file using maximum compression. | Explain how to adjust the CompressionType in XlsbSaveOptions and when to set ExportAllColumnIndexes. | Provide step‑by‑step instructions to apply FreezePanes with custom row and column parameters before saving to XLSB.
+// Title: Freeze the top row of a worksheet and save the workbook as an XLSB file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook, freezes the first worksheet row, and saves it in XLSB format with Aspose.Cells. | Provide a .NET snippet that applies FreezePanes to lock the header row and exports the file as a binary XLSB workbook. | Write a try‑catch example in C# that builds a worksheet, freezes row 1, and writes the result to an XLSB file using Aspose.Cells.
+// Common Searches: aspnet freeze first row of Excel sheet and export as xlsb using Aspose.Cells | how to use FreezePanes method to lock header row in Aspose.Cells C# | save workbook with frozen panes in binary XLSB format with Aspose.Cells for .NET
+// Tags: freeze panes aspose cells c# | save workbook as xlsb aspose cells | freeze top row xlsb export | binary excel compression aspose | aspnet worksheet freeze header row
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, freeze the top row with FreezePanes, configure XlsbSaveOptions for binary compression, and save the file as a compact XLSB document.
+// The example creates a new Workbook, adds sample data, freezes the top row using FreezePanes(1,0,1,0), and saves the file as a binary XLSB workbook via SaveFormat.Xlsb, with exception handling.
 class Program
 {
     static void Main()
@@ -22,31 +19,22 @@ class Program
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data
+            // Add some sample data (optional)
             sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue("Row 1");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("Row 2");
-            sheet.Cells["B3"].PutValue(200);
+            sheet.Cells["A2"].PutValue("Data 1");
+            sheet.Cells["A3"].PutValue("Data 2");
 
-            // Freeze the first row (rows above row index 1 are frozen)
-            // Use the 4‑parameter overload: totalRows, totalColumns, rowsToFreeze, columnsToFreeze
-            sheet.FreezePanes(0, 0, 1, 0);
+            // Freeze the first row (row index 0) so it stays visible while scrolling
+            // row = 1 (first row after the frozen area), column = 0 (no column freeze)
+            // totalRows = 1 (freeze one row), totalColumns = 0 (no column freeze)
+            sheet.FreezePanes(1, 0, 1, 0);
 
-            // Create XLSB save options (binary compression)
-            XlsbSaveOptions saveOptions = new XlsbSaveOptions
-            {
-                // Optional: specify compression level (default is Level6)
-                CompressionType = OoxmlCompressionType.Level6,
-                ExportAllColumnIndexes = true
-            };
-
-            // Save the workbook as an XLSB file using the save options
-            workbook.Save("FrozenRows.xlsb", saveOptions);
+            // Save the workbook in XLSB format for binary compression
+            workbook.Save("FrozenRowsWorkbook.xlsb", SaveFormat.Xlsb);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

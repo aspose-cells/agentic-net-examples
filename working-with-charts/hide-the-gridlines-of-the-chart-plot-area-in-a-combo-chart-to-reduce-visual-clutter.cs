@@ -1,82 +1,68 @@
-// Title: Aspose.Cells for .NET – Hide Gridlines in a Combo (Column & Line) Chart
-// Description: Creates a workbook, adds sample data, builds a combo chart with column and line series, and disables major and minor gridlines on both value and category axes before saving the file as an XLSX workbook.
-// Keywords: Aspose.Cells hide chart gridlines | combo chart gridlines .NET | disable major gridlines Aspose.Cells | remove minor gridlines chart | C# Aspose.Cells chart formatting | Excel combo chart without gridlines | chart axis visibility Aspose.Cells
-// Common Searches: Aspose.Cells hide gridlines combo chart | C# remove chart gridlines Aspose.Cells | turn off major gridlines in Excel chart using Aspose | hide category axis gridlines Aspose.Cells | disable minor gridlines in combo chart .NET
-// Developer Intent: Programmatically turn off all major and minor gridlines on both value and category axes of a combo (column‑plus‑line) chart using Aspose.Cells for .NET.
-// Use Cases: Generate clean visual charts for dashboards or presentations by removing axis gridlines. | Automate Excel report creation where gridlines obscure data trends. | Prepare charts for PDF or image export with minimal visual clutter. | Apply consistent chart styling across multiple workbooks in a batch process.
-// AI Prompts: Write C# code with Aspose.Cells to create a combo (column + line) chart and hide all major and minor gridlines. | Show how to set ValueAxis.MajorGridLines.IsVisible = false, ValueAxis.MinorGridLines.IsVisible = false, CategoryAxis.MajorGridLines.IsVisible = false, and CategoryAxis.MinorGridLines.IsVisible = false in Aspose.Cells. | Provide an example that adds sample data, builds a combo chart, customizes the title, disables gridlines on both axes, and saves the workbook as XLSX.
+// Title: How to hide major gridlines in a column‑line combo chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# program that creates an Excel workbook, adds sample data, builds a combo chart with a column series and a line series, and disables the major gridlines on both the value and category axes using Aspose.Cells. | Generate code that constructs a combo chart with Aspose.Cells, then sets chart.ValueAxis.MajorGridLines.IsVisible and chart.CategoryAxis.MajorGridLines.IsVisible to false before saving the workbook.
+// Common Searches: asp.net aspose.cells hide major gridlines on combo chart | c# generate Excel combo chart without axis gridlines using Aspose | remove plot area gridlines from column and line chart programmatically Aspose.Cells | how to disable chart gridlines in Aspose.Cells C# example | Aspose.Cells combo chart formatting hide gridlines
+// Tags: Aspose.Cells hide chart gridlines | combo chart without gridlines C# | disable major gridlines chart axis Aspose | Excel chart formatting Aspose.Cells | column line combo chart Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsComboChartGridlinesDemo
+// The example creates a new workbook, populates it with sample data, adds a combo chart that combines a column series and a line series, assigns category labels, hides the major gridlines on both the value and category axes, and saves the file as ComboChart_NoGridlines.xlsx.
+class HideChartGridlines
 {
-    // Creates a workbook, adds sample data, builds a combo chart with column and line series, and disables major and minor gridlines on both value and category axes before saving the file as an XLSX workbook.
-    public class HideChartPlotAreaGridlines
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for a combo chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["B1"].PutValue("Column Series");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the combo chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Series 1");
+            sheet.Cells["C1"].PutValue("Series 2");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+            sheet.Cells["C2"].PutValue(15);
+            sheet.Cells["C3"].PutValue(25);
+            sheet.Cells["C4"].PutValue(35);
 
-            worksheet.Cells["C1"].PutValue("Line Series");
-            worksheet.Cells["C2"].PutValue(15);
-            worksheet.Cells["C3"].PutValue(25);
-            worksheet.Cells["C4"].PutValue(35);
+            // Add a column chart (used as the base for a combo chart)
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Add a Combo chart (Column + Line)
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.Type = ChartType.Column; // Primary chart type
+            // Add first series (Column)
+            int seriesIndex1 = chart.NSeries.Add("B2:B4", true);
+            chart.NSeries[seriesIndex1].Name = "Series 1";
 
-            // Add column series
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries[0].Name = "Column Series";
+            // Add second series (Line)
+            int seriesIndex2 = chart.NSeries.Add("C2:C4", true);
+            chart.NSeries[seriesIndex2].Name = "Series 2";
+            chart.NSeries[seriesIndex2].Type = ChartType.Line;
 
-            // Add line series and set its chart type to Line
-            chart.NSeries.Add("C2:C4", true);
-            chart.NSeries[1].Name = "Line Series";
-            chart.NSeries[1].Type = ChartType.Line;
-            // Note: Secondary axis is optional; omitted for compatibility
+            // Assign categories
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Hide major and minor gridlines on both axes
+            // Hide major gridlines on both axes
             chart.ValueAxis.MajorGridLines.IsVisible = false;
-            chart.ValueAxis.MinorGridLines.IsVisible = false;
             chart.CategoryAxis.MajorGridLines.IsVisible = false;
-            chart.CategoryAxis.MinorGridLines.IsVisible = false;
-
-            // Optional: customize chart title
-            chart.Title.Text = "Combo Chart without Gridlines";
 
             // Save the workbook
-            workbook.Save("ComboChart_NoGridlines.xlsx", SaveFormat.Xlsx);
+            string outputPath = "ComboChart_NoGridlines.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

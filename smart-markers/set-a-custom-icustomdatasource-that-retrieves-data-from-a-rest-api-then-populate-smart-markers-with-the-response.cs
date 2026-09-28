@@ -1,164 +1,145 @@
-// Title: C# Custom ICellsDataTable that pulls JSON from a REST API to fill Aspose.Cells smart markers
-// Description: Demonstrates how to implement a custom ICellsDataTable, fetch a list of Person objects from a REST endpoint (with fallback sample data), bind the data source to WorkbookDesigner, process smart markers (&=$Person.Name, &=$Person.Age, &=$Person.City) and generate an Excel report.
-// Keywords: Aspose.Cells custom data source | ICellsDataTable C# example | smart markers REST API | populate Excel from JSON | WorkbookDesigner SetDataSource | C# HTTP client JSON deserialization | Excel report generation Aspose
-// Common Searches: how to bind REST API data to Aspose.Cells smart markers | implement ICellsDataTable for JSON in .NET | Aspose.Cells custom data source tutorial | C# generate Excel from web service | smart markers with custom data source Aspose
-// Developer Intent: Retrieve JSON data from a web service, expose it through a custom ICellsDataTable, and automatically fill smart markers in an Excel template.
-// Use Cases: Create an employee directory by consuming an HR API and exporting to a formatted workbook. | Generate sales or inventory dashboards that pull live JSON feeds into pre‑designed Excel templates. | Build automated reporting tools that merge external REST data with Aspose.Cells smart markers for scheduled Excel outputs.
-// AI Prompts: Write a C# method that calls a REST endpoint and returns a List<T> suitable for a custom ICellsDataTable. | Explain how to map JSON property names to column names required by Aspose.Cells smart markers when implementing ICellsDataTable. | Provide robust error‑handling patterns for WorkbookDesigner.Process when the external API is unavailable.
+// Title: Use a custom ICellsDataTable to load JSON from a REST API and fill Aspose.Cells smart markers in C#
+// AI Prompts: Write a C# class that implements ICellsDataTable to transform a JSON array retrieved with HttpClient into a tabular source for Aspose.Cells smart markers. | Show how to attach the custom ICellsDataTable to a WorkbookDesigner, place smart markers such as &=$Products.Name, process them, and save the resulting Excel workbook. | Extend the ApiDataSource to handle nested JSON objects and map them to hierarchical smart markers in an Excel template. | Add robust error handling for the HTTP request and fallback to sample JSON while still using the custom data source.
+// Common Searches: how to bind a REST API JSON response to Aspose.Cells smart markers using ICellsDataTable in C# | example of custom data source for smart markers with Aspose.Cells and HttpClient | populate Excel smart markers from dynamic JSON array in Aspose.Cells | C# code to implement ICellsDataTable for API data and use WorkbookDesigner
+// Tags: custom ICellsDataTable JSON API integration | Aspose.Cells smart markers from REST endpoint | WorkbookDesigner bind API data source | populate Excel with smart markers using HttpClient | dynamic JSON data source for Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomDataSourceDemo
+namespace AsposeCellsSmartMarkerDemo
 {
-    // Model representing the JSON objects returned by the REST API
-    // Demonstrates how to implement a custom ICellsDataTable, fetch a list of Person objects from a REST endpoint (with fallback sample data), bind the data source to WorkbookDesigner, process smart markers (&=$Person.Name, &=$Person.Age, &=$Person.City) and generate an Excel report.
-    public class Person
+    // Custom data source that implements ICellsDataTable.
+    // It fetches JSON data from a REST API and exposes it in a tabular form.
+    // The sample defines an ApiDataSource class that implements ICellsDataTable, parses a JSON array returned by an HTTP GET call (or a fallback sample), and exposes rows and columns for smart markers. In Main it fetches JSON via HttpClient, creates a Workbook, inserts smart markers (&=$Products.Id, Name, Price), binds the custom data source to the "Products" marker name using WorkbookDesigner, processes the markers, and saves the populated workbook as SmartMarkerFromApi.xlsx.
+    public class ApiDataSource : ICellsDataTable
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string City { get; set; }
-    }
-
-    // Custom data source implementing ICellsDataTable.
-    // It fetches data from a REST API, stores it locally, and provides
-    // the required members for Aspose.Cells smart markers.
-    public class PersonDataSource : ICellsDataTable
-    {
-        private readonly List<Person> _persons;
+        private readonly List<Dictionary<string, object>> _rows = new List<Dictionary<string, object>>();
+        private readonly string[] _columns;
         private int _currentRow = -1;
 
-        public PersonDataSource(List<Person> persons)
+        // Constructor accepts the JSON array string and extracts column names.
+        public ApiDataSource(string jsonArray)
         {
-            _persons = persons ?? new List<Person>();
-        }
-
-        // Indexer for row/column access (used by smart markers)
-        public object this[int rowIndex, int columnIndex]
-        {
-            get
+            // Parse the JSON array.
+            var jsonDoc = JsonDocument.Parse(jsonArray);
+            foreach (var element in jsonDoc.RootElement.EnumerateArray())
             {
-                var person = _persons[rowIndex];
-                return columnIndex switch
+                var dict = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+                foreach (var property in element.EnumerateObject())
                 {
-                    0 => person.Name,
-                    1 => person.Age,
-                    2 => person.City,
-                    _ => null
-                };
+                    // Store primitive values as strings; otherwise keep raw JSON.
+                    dict[property.Name] = property.Value.ValueKind == JsonValueKind.String
+                        ? property.Value.GetString()
+                        : (object)property.Value.GetRawText();
+                }
+                _rows.Add(dict);
+            }
+
+            // Determine column names from the first row (if any).
+            if (_rows.Count > 0)
+            {
+                var first = _rows[0];
+                var cols = new List<string>(first.Keys);
+                _columns = cols.ToArray();
+            }
+            else
+            {
+                _columns = Array.Empty<string>();
             }
         }
 
-        // Indexer for row access (required by the interface)
-        public object this[int rowIndex] => _persons[rowIndex];
+        // Indexer for row/column access (zero‑based).
+        public object this[int rowIndex, int columnIndex] => _rows[rowIndex][_columns[columnIndex]];
 
-        // Indexer for column name access (used by smart markers)
-        public object this[string columnName]
-        {
-            get
-            {
-                var person = _persons[_currentRow];
-                return columnName switch
-                {
-                    "Name" => person.Name,
-                    "Age" => person.Age,
-                    "City" => person.City,
-                    _ => null
-                };
-            }
-        }
+        // Indexer for row access (returns the whole row object).
+        public object this[int rowIndex] => _rows[rowIndex];
 
-        public int RowCount => _persons.Count;
-        public int ColumnCount => 3; // Name, Age, City
-        public int Count => _persons.Count;
-        public string[] Columns => new[] { "Name", "Age", "City" };
+        // Indexer for column name access (uses the current row pointer).
+        public object this[string columnName] => _rows[_currentRow][columnName];
 
+        public int RowCount => _rows.Count;
+        public int ColumnCount => _columns.Length;
+        public int Count => _rows.Count;
+        public string[] Columns => _columns;
+
+        // Resets the internal pointer before iteration.
         public void BeforeFirst()
         {
             _currentRow = -1;
         }
 
+        // Moves to the next row; returns false when no more rows.
         public bool Next()
         {
             _currentRow++;
-            return _currentRow < _persons.Count;
+            return _currentRow < _rows.Count;
         }
     }
 
     class Program
     {
-        // Asynchronous method to fetch data from a REST endpoint.
-        // Returns sample data if the request fails.
-        private static async Task<List<Person>> FetchPersonsFromApiAsync()
+        static void Main()
         {
-            const string apiUrl = "https://example.com/api/persons"; // replace with real URL
+            const string apiUrl = "https://example.com/api/products";
 
+            string jsonResponse;
+
+            // Attempt to retrieve JSON data from the API; fall back to sample data on failure.
             try
             {
-                using HttpClient client = new HttpClient();
-                HttpResponseMessage response = await client.GetAsync(apiUrl);
-                response.EnsureSuccessStatusCode();
-
-                string json = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Person>>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                }) ?? new List<Person>();
+                using var httpClient = new HttpClient();
+                jsonResponse = httpClient.GetStringAsync(apiUrl).Result;
             }
             catch (Exception ex)
             {
-                // Log the error (could be replaced with a proper logging framework)
-                Console.WriteLine($"Warning: Unable to fetch data from API. {ex.Message}");
-                // Return fallback sample data
-                return new List<Person>
-                {
-                    new Person { Name = "John Doe", Age = 30, City = "New York" },
-                    new Person { Name = "Jane Smith", Age = 25, City = "London" },
-                    new Person { Name = "Carlos Ruiz", Age = 40, City = "Madrid" }
-                };
+                Console.WriteLine($"Failed to fetch data from API: {ex.Message}");
+                // Sample JSON array to demonstrate functionality.
+                jsonResponse = @"[
+                    { ""Id"": ""1"", ""Name"": ""Product A"", ""Price"": ""10.99"" },
+                    { ""Id"": ""2"", ""Name"": ""Product B"", ""Price"": ""15.49"" },
+                    { ""Id"": ""3"", ""Name"": ""Product C"", ""Price"": ""7.25"" }
+                ]";
             }
-        }
 
-        static async Task Main()
-        {
             try
             {
-                // 1. Create a new workbook and add smart markers.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Create a new workbook (or load a template if you have one).
+                var workbook = new Workbook();
 
-                // Header row
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Age");
-                sheet.Cells["C1"].PutValue("City");
+                // Access the first worksheet.
+                var sheet = workbook.Worksheets[0];
 
-                // Smart marker rows (the designer will repeat these rows for each data item)
-                sheet.Cells["A2"].PutValue("&=$Person.Name");
-                sheet.Cells["B2"].PutValue("&=$Person.Age");
-                sheet.Cells["C2"].PutValue("&=$Person.City");
+                // Place smart markers that correspond to the JSON fields.
+                sheet.Cells["A1"].PutValue("&=$Products.Id");
+                sheet.Cells["B1"].PutValue("&=$Products.Name");
+                sheet.Cells["C1"].PutValue("&=$Products.Price");
 
-                // 2. Retrieve data from the REST API (or fallback data).
-                List<Person> persons = await FetchPersonsFromApiAsync();
+                // Create the workbook designer and assign the workbook.
+                var designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
 
-                // 3. Create the custom data source and bind it to the designer.
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource("Person", new PersonDataSource(persons));
+                // Wrap the JSON response in the custom ICellsDataTable implementation.
+                var apiDataSource = new ApiDataSource(jsonResponse);
 
-                // 4. Process smart markers and populate the worksheet.
+                // Bind the custom data source to the smart marker name "Products".
+                designer.SetDataSource("Products", apiDataSource);
+
+                // Process the smart markers and populate the worksheet.
                 designer.Process();
 
-                // 5. Save the result.
-                const string outputPath = "PersonsReport.xlsx";
+                // Save the result.
+                const string outputPath = "SmartMarkerFromApi.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Report generated successfully: {outputPath}");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred during processing: {ex.Message}");
             }
         }
     }

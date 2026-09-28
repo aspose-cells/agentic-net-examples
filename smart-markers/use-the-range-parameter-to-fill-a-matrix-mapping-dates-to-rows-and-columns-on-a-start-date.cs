@@ -1,68 +1,72 @@
-// Title: Fill a Date Matrix in Excel using Aspose.Cells Range (C#)
-// Description: Shows how to generate a 2‑D array of dates from a start date, assign it to an Aspose.Cells Range, and save the result as an Excel workbook.
-// Keywords: Aspose.Cells | C# | Range | date matrix | populate Excel cells | 2D array | date grid | worksheet automation | Excel file generation
-// Common Searches: Aspose.Cells fill range with dates C# | How to assign a 2D array to an Excel range using Aspose | Create a weekly date grid in a worksheet with Aspose.Cells | Populate Excel cells sequentially by row and column offsets | C# code to generate a date matrix in Excel
-// Developer Intent: Create a rectangular block of cells where each cell holds a date incremented by the sum of its row and column positions.
-// Use Cases: Generate a calendar view for a week or month with work‑day columns. | Build a scheduling matrix where dates shift across rows and columns. | Prepare a template for a date‑based heat map or Gantt chart.
-// AI Prompts: Modify the example to use a custom start date and apply a short‑date number format to the filled cells. | Add header rows and columns for days and weeks while still using Range.Value to populate the date matrix. | Show how to apply conditional formatting to highlight weekends after the date matrix is filled.
+// Title: Use Aspose.Cells Range to fill a 6×6 Excel matrix with sequential date headers and calculated values in C#
+// AI Prompts: Write C# code that creates a new workbook with Aspose.Cells, builds a two‑dimensional object array where the first row and column contain consecutive dates starting from a given start date, assigns the array to a Range covering the matrix, and saves the file as an XLSX workbook. | Show how to use Cells.CreateRange and Range.Value in Aspose.Cells to populate a date‑header matrix and fill inner cells with a row‑index × column‑index calculation.
+// Common Searches: aspnet how to create an Excel table with date headers using Aspose.Cells range | c# assign 2d object array to Aspose.Cells range for date matrix | aspocells fill worksheet with sequential dates in first row and column | example of using Aspose.Cells Range.Value to write a date‑header matrix to XLSX | populate Excel matrix with dates and calculated values using Aspose.Cells C#
+// Tags: Aspose.Cells range value assignment | date header matrix Excel C# | populate worksheet with 2d object array | save workbook as XLSX using Aspose.Cells | matrix calculation row index column index
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDateMatrixDemo
 {
-    // Shows how to generate a 2‑D array of dates from a start date, assign it to an Aspose.Cells Range, and save the result as an Excel workbook.
-    public class FillDateMatrixWithRange
+    // The example creates a new workbook, constructs a 6×6 object[,] where the top row and left column contain consecutive dates starting from 2023‑01‑01, fills the remaining cells with the product of their zero‑based row and column indices, assigns the array to a Range that starts at A1, and saves the result as DateMatrix.xlsx.
+    public class Program
     {
         public static void Main()
         {
             try
             {
-                Run();
-                Console.WriteLine("Workbook saved successfully.");
+                // Create a new workbook and get the first worksheet's cells collection
+                Workbook workbook = new Workbook();
+                Cells cells = workbook.Worksheets[0].Cells;
+
+                // Define matrix dimensions (including header row and column)
+                int rowCount = 6;    // 1 header row + 5 data rows
+                int columnCount = 6; // 1 header column + 5 data columns
+
+                // Define the start date for both rows and columns
+                DateTime startDate = new DateTime(2023, 1, 1);
+
+                // Prepare a 2‑dimensional object array to hold dates and sample values
+                object[,] matrix = new object[rowCount, columnCount];
+
+                // Fill top‑left cell (optional label)
+                matrix[0, 0] = "Date\\Date";
+
+                // Fill header row with dates (columns)
+                for (int col = 1; col < columnCount; col++)
+                {
+                    matrix[0, col] = startDate.AddDays(col - 1);
+                }
+
+                // Fill header column with dates (rows) and inner values
+                for (int row = 1; row < rowCount; row++)
+                {
+                    // Row header date
+                    matrix[row, 0] = startDate.AddDays(row - 1);
+
+                    // Fill inner cells with a simple calculation (e.g., row index * column index)
+                    for (int col = 1; col < columnCount; col++)
+                    {
+                        matrix[row, col] = (row - 1) * (col - 1);
+                    }
+                }
+
+                // Create a range that covers the entire matrix starting at A1
+                AsposeRange range = cells.CreateRange(0, 0, rowCount, columnCount);
+
+                // Assign the 2‑D array to the range in one operation
+                range.Value = matrix;
+
+                // Save the workbook
+                string outputPath = "DateMatrix.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet's cells collection
-            Workbook workbook = new Workbook();
-            Cells cells = workbook.Worksheets[0].Cells;
-
-            // Define matrix dimensions and start position (zero‑based indices)
-            int startRow = 0;          // A1
-            int startColumn = 0;       // A1
-            int totalRows = 7;         // e.g., a week
-            int totalColumns = 5;      // e.g., work days
-
-            // Define the start date for the matrix
-            DateTime startDate = new DateTime(2023, 1, 1);
-
-            // Prepare a two‑dimensional array to hold the date values
-            // Each cell will contain a date offset by (row index + column index) days
-            object[,] dateValues = new object[totalRows, totalColumns];
-            for (int i = 0; i < totalRows; i++)
-            {
-                for (int j = 0; j < totalColumns; j++)
-                {
-                    dateValues[i, j] = startDate.AddDays(i + j);
-                }
-            }
-
-            // Create a range that covers the target matrix area
-            AsposeRange matrixRange = cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
-
-            // Assign the prepared 2‑D array to the range; Aspose.Cells will populate each cell
-            matrixRange.Value = dateValues;
-
-            // Save the workbook to verify the result
-            string outputPath = "DateMatrix.xlsx";
-            workbook.Save(outputPath);
         }
     }
 }

@@ -1,50 +1,46 @@
-// Title: C# – Add a Registered Automation Library Reference to a VBA Project with Aspose.Cells
-// Description: Creates a macro‑enabled workbook, accesses its VbaProject, adds a registered reference to the stdole type library via VbaProject.References.AddRegisteredReference, and saves the file as an XLSM workbook.
-// Keywords: Aspose.Cells VBA reference C# | VbaProject.References.AddRegisteredReference | add stdole library Aspose.Cells | macro‑enabled workbook automation | C# Aspose.Cells VBA automation reference
-// Common Searches: how to add a registered type library to a VBA project using Aspose.Cells .NET | Aspose.Cells C# add stdole reference to XLSM workbook | VbaProject References AddRegisteredReference example | save workbook with VBA references Aspose.Cells
-// Developer Intent: Programmatically attach a registered automation type‑library (e.g., stdole) to a workbook’s VBA project and save it as a macro‑enabled file.
-// Use Cases: Enable generated macros to use OLE Automation objects by adding the stdole reference. | Prepare a batch of workbooks with required COM library references before distribution. | Standardize VBA environments across multiple projects by automating reference insertion.
-// AI Prompts: Generate C# code that adds a registered reference to a VBA project using Aspose.Cells, including robust error handling. | Show how to add multiple registered references (such as stdole and Microsoft Office) to a workbook’s VBA project with Aspose.Cells. | Explain how to confirm that a registered reference was successfully added after saving the workbook as an XLSM file.
+// Title: Add a registered library reference to a VBA project in a macro‑enabled workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing .xlsm file with Aspose.Cells, retrieves its VbaProject, and calls References.AddRegisteredReference to add a COM library such as stdole, then saves the workbook preserving macros. | Show how to programmatically insert a registered VBA library reference into a macro‑enabled Excel workbook using the Aspose.Cells VbaProject API in C#. | Demonstrate updating VBA references in a loaded workbook (e.g., adding stdole) with Aspose.Cells and exporting the file as Xlsm.
+// Common Searches: asp.net add stdole reference to VBA project in existing xlsm using Aspose.Cells | C# example for References.AddRegisteredReference in Aspose.Cells VbaProject | how to modify VBA references in a macro‑enabled workbook with Aspose.Cells | Aspose.Cells add registered COM library to VBA project in .xlsm file | preserve macros after adding VBA library reference using Aspose.Cells C#
+// Tags: add registered VBA library reference Aspose.Cells | VbaProject References.AddRegisteredReference C# | modify VBA references in macro-enabled workbook | Aspose.Cells add stdole COM reference | load and save .xlsm with VBA project using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaReferenceDemo
+// Loads an existing .xlsm workbook, accesses its VbaProject, adds a registered library reference (e.g., stdole) via References.AddRegisteredReference, and saves the file as a macro‑enabled workbook.
+class Program
 {
-    // Creates a macro‑enabled workbook, accesses its VbaProject, adds a registered reference to the stdole type library via VbaProject.References.AddRegisteredReference, and saves the file as an XLSM workbook.
-    public class AddRegisteredReferenceExample
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string templatePath = "template.xlsm";
+            const string outputPath = "output.xlsm";
+
+            // Ensure the template file exists; it must contain a VBA project.
+            if (!File.Exists(templatePath))
             {
-                // Create a new workbook (macro-enabled format will be used when saving)
-                Workbook workbook = new Workbook();
-
-                // Access the VBA project associated with the workbook
-                VbaProject vbaProject = workbook.VbaProject;
-
-                // Add a registered reference to an Automation type library (e.g., stdole)
-                vbaProject.References.AddRegisteredReference(
-                    "stdole",
-                    "*\\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\\Windows\\system32\\stdole2.tlb#OLE Automation");
-
-                // Save the workbook as a macro-enabled file
-                workbook.Save("AddedRegisteredReference.xlsm", SaveFormat.Xlsm);
+                Console.WriteLine($"Error: Required template file \"{templatePath}\" not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the workbook that already has a VBA project.
+            Workbook workbook = new Workbook(templatePath);
+
+            // Access the existing VBA project.
+            VbaProject vbaProject = workbook.VbaProject;
+
+            // Add a registered library reference (both name and libid are required).
+            vbaProject.References.AddRegisteredReference("stdole", "stdole");
+
+            // Save as macro‑enabled workbook to retain VBA.
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            AddRegisteredReferenceExample.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

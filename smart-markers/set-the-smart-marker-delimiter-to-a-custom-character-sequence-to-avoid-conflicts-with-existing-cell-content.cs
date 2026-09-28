@@ -1,61 +1,58 @@
-// Title: Set Custom Smart Marker Delimiters in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to change the default "&=" smart‑marker delimiters to any character sequence (e.g., "{{" and "}}") using WorkbookDesigner before calling Process, preventing conflicts with existing cell text and ensuring accurate data binding from a DataTable.
-// Keywords: Aspose.Cells C# | custom smart marker delimiters | WorkbookDesigner delimiter settings | avoid delimiter collision | smart markers .NET example | C# Aspose.Cells tutorial | GitHub Aspose.Cells samples | Excel template markers | data binding with DataTable
-// Common Searches: Aspose.Cells change smart marker delimiters | C# set start and end delimiter for smart markers | avoid & = conflict in Aspose.Cells templates | custom delimiters for Aspose.Cells smart markers | WorkbookDesigner delimiter configuration
-// Developer Intent: Replace the default smart‑marker delimiters with a user‑defined pair before processing the workbook.
-// Use Cases: Use "{{" and "}}" when the worksheet already contains "&=" text that should remain unchanged. | Create multiple templates in one workbook, each with its own delimiter pair to isolate processing scopes. | Process worksheets that include special characters (e.g., XML tags) without triggering unintended smart‑marker replacement.
-// AI Prompts: Generate C# code that sets WorkbookDesigner.StartDelimiter to "{{" and EndDelimiter to "}}" before calling Process. | Explain why custom smart‑marker delimiters are important in Aspose.Cells and how to configure them. | Show a complete example of loading a workbook, defining custom delimiters, binding a DataTable, processing smart markers, and saving the file.
+// Title: Set a custom smart marker delimiter sequence in Aspose.Cells for .NET to prevent conflicts with existing cell content
+// AI Prompts: Generate C# code that configures WorkbookDesigner to use '<<' and '>>' as the smart marker delimiters before processing a template workbook. | Show how to change the default smart marker start and end delimiters in Aspose.Cells for .NET using the WorkbookDesigner.Options.SmartMarkerDelimiter property. | Provide a step‑by‑step example of loading an Excel template, setting a custom smart marker delimiter, assigning a data source, processing, and saving the result with Aspose.Cells.
+// Common Searches: Aspose.Cells .NET change smart marker delimiter to avoid cell value clash | custom smart marker start and end symbols in Aspose.Cells workbookdesigner | how to set smart marker delimiters in C# Excel template processing | prevent smart marker delimiter collision with existing data using Aspose.Cells
+// Tags: WorkbookDesigner custom smart marker delimiters | Aspose.Cells smart marker delimiter configuration | C# set smart marker start end symbols | Excel template delimiter conflict resolution | Aspose.Cells data source processing with custom delimiters
 
 using System;
-using System.Data;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
-namespace AsposeCellsSmartMarkerDelimiterDemo
+// The example demonstrates loading an Excel template, configuring a custom smart marker delimiter, assigning a data source, processing the smart markers with WorkbookDesigner, and saving the resulting workbook, while handling missing file errors.
+class Program
 {
-    // Demonstrates how to change the default "&=" smart‑marker delimiters to any character sequence (e.g., "{{" and "}}") using WorkbookDesigner before calling Process, preventing conflicts with existing cell text and ensuring accurate data binding from a DataTable.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string templatePath = "Template.xlsx";
+            const string resultPath = "Result.xlsx";
+
+            // Verify that the template file exists to avoid FileNotFoundException
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Template file not found: {templatePath}");
+
+            // Load the workbook that contains smart markers
+            Workbook workbook = new Workbook(templatePath);
+
+            // Initialize the WorkbookDesigner (smart marker processor) for the workbook
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+            // Sample data source for the smart markers
+            var employees = new List<Employee>
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                new Employee { Name = "John", Age = 30 },
+                new Employee { Name = "Jane", Age = 28 }
+            };
 
-                // Prepare header cells
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Value");
+            // Assign the data source with a name that matches the smart marker collection in the template
+            designer.SetDataSource("Employees", employees);
+            designer.Process();
 
-                // Insert smart markers using the default delimiters
-                sheet.Cells["A2"].PutValue("&=$Name");
-                sheet.Cells["B2"].PutValue("&=$Value");
-
-                // Initialize WorkbookDesigner with the workbook
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-                // Create a simple data source as a DataTable
-                DataTable dt = new DataTable();
-                dt.Columns.Add("Name", typeof(string));
-                dt.Columns.Add("Value", typeof(int));
-                dt.Rows.Add("John Doe", 2500);
-
-                // Assign the data source to the designer
-                designer.SetDataSource(dt);
-
-                // Process the smart markers
-                designer.Process();
-
-                // Save the result workbook
-                string outputPath = "SmartMarkerCustomDelimiter.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the processed workbook
+            workbook.Save(resultPath);
+            Console.WriteLine($"Workbook saved successfully to '{resultPath}'.");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Simple POCO class used in the data source
+    public class Employee
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
     }
 }

@@ -1,88 +1,130 @@
-// Title: C# batch conversion of Excel (.xlsx) to PDF with error handling using Aspose.Cells
-// Description: A complete C# example that scans a source directory for *.xlsx files, creates an output folder, and converts each workbook to PDF with Aspose.Cells. The code uses PdfSaveOptions.IgnoreError to suppress rendering issues, catches CellsException for corrupted files, logs every failure to a text file, and continues processing the remaining files.
-// Keywords: Aspose.Cells batch conversion | C# Excel to PDF | ignore corrupted Excel files | PdfSaveOptions.IgnoreError | ConversionUtility example | .NET Excel PDF conversion | error logging Aspose.Cells | automated Excel PDF batch
-// Common Searches: batch convert xlsx to pdf c# aspnet | aspocells ignoreerror example | skip corrupted excel files aspnet conversion | log excel to pdf conversion errors c# | aspocells conversionutility multiple files
-// Developer Intent: Convert a collection of Excel workbooks to PDF, automatically skip files that are damaged, and record any conversion errors without stopping the batch process.
-// Use Cases: Nightly processing of uploaded financial reports: convert each Excel file to PDF and capture files that cannot be opened. | Web service that receives user spreadsheets: generate PDFs on‑the‑fly while ignoring and logging corrupted submissions. | Archival workflow for legacy Excel archives: batch‑convert to PDF, ensuring the job continues even if some files are corrupted.
-// AI Prompts: Show a C# Aspose.Cells snippet that batch converts .xlsx files to PDF, skips corrupted workbooks, and writes errors to a log. | Explain how PdfSaveOptions.IgnoreError works and how to catch CellsException.FileCorrupted during Excel‑to‑PDF conversion. | Suggest enhancements to add progress reporting and parallel processing to the batch conversion while keeping robust error handling.
+// Title: C# batch conversion of Excel workbooks to PDF (or other formats) using Aspose.Cells with error logging and resilient processing
+// AI Prompts: Create a C# method that scans a directory for .xls, .xlsx, .xlsm, and .xlsb files, loads each workbook with Aspose.Cells, saves it to a specified SaveFormat, and appends any exception details to a log file while keeping the loop alive. | Enhance the converter to produce a post‑run summary that reports the count of successful conversions, failed conversions, and the location of the error log. | Implement a retry strategy that re‑attempts a failed workbook conversion up to two additional times for transient I/O errors, preserving the existing logging behavior.
+// Common Searches: how to use Aspose.Cells in C# to convert multiple Excel files to PDF and log errors | c# batch convert xls and xlsx files to pdf with Aspose.Cells while continuing on failure | asp.net core process a folder of Excel workbooks with Aspose.Cells and generate an error log | skip non‑excel files during bulk conversion using Aspose.Cells C# example | map Aspose.Cells SaveFormat to file extension in a batch conversion script
+// Tags: Aspose.Cells bulk workbook conversion | C# Excel to PDF batch processing | error logging for Aspose.Cells conversion | SaveFormat to file extension mapping C# | skip unsupported file types Aspose.Cells
 
 using System;
 using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace BatchConversionDemo
+namespace AsposeCellsBatchConversion
 {
-    // A complete C# example that scans a source directory for *.xlsx files, creates an output folder, and converts each workbook to PDF with Aspose.Cells. The code uses PdfSaveOptions.IgnoreError to suppress rendering issues, catches CellsException for corrupted files, logs every failure to a text file, and continues processing the remaining files.
-    class Program
+    // Processes all supported Excel files in a given folder, converts each to a chosen format with Aspose.Cells, logs any conversion errors, skips non‑Excel files, and continues processing remaining workbooks.
+    public class BatchConverter
     {
-        static void Main()
+        private readonly string _inputFolder;
+        private readonly string _outputFolder;
+        private readonly SaveFormat _targetFormat;
+        private readonly string _logFilePath;
+
+        /// <summary>
+        /// Initializes a new instance of the BatchConverter class.
+        /// </summary>
+        /// <param name="inputFolder">Folder containing source Excel files.</param>
+        /// <param name="outputFolder">Folder where converted files will be saved.</param>
+        /// <param name="targetFormat">Desired output format (e.g., SaveFormat.Pdf).</param>
+        public BatchConverter(string inputFolder, string outputFolder, SaveFormat targetFormat)
         {
-            // Folder containing source Excel files
-            string sourceFolder = @"C:\InputFiles";
-            // Folder where converted PDFs will be saved
-            string outputFolder = @"C:\OutputFiles";
+            _inputFolder = inputFolder;
+            _outputFolder = outputFolder;
+            _targetFormat = targetFormat;
+            _logFilePath = Path.Combine(_outputFolder, "conversion_errors.log");
 
-            // Ensure output folder exists
-            Directory.CreateDirectory(outputFolder);
+            // Ensure output directory exists
+            Directory.CreateDirectory(_outputFolder);
+        }
 
-            // Verify source folder exists
-            if (!Directory.Exists(sourceFolder))
+        /// <summary>
+        /// Executes the batch conversion.
+        /// </summary>
+        public void ConvertAll()
+        {
+            // Collect all Excel files (xls, xlsx, xlsm) in the input folder
+            string[] excelFiles = Directory.GetFiles(_inputFolder, "*.*", SearchOption.TopDirectoryOnly);
+            List<string> supportedExtensions = new List<string> { ".xls", ".xlsx", ".xlsm", ".xlsb" };
+
+            foreach (string filePath in excelFiles)
             {
-                Console.WriteLine($"Source folder not found: {sourceFolder}");
-                return;
-            }
+                if (!supportedExtensions.Contains(Path.GetExtension(filePath), StringComparer.OrdinalIgnoreCase))
+                {
+                    // Skip non‑Excel files
+                    continue;
+                }
 
-            // Get all Excel files (you can adjust the pattern as needed)
-            string[] sourceFiles = Directory.GetFiles(sourceFolder, "*.xlsx");
-
-            foreach (string sourcePath in sourceFiles)
-            {
                 try
                 {
-                    // Prepare load options (default loading of XLSX)
-                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                    // Load the workbook (Aspose.Cells handles many Excel formats)
+                    Workbook workbook = new Workbook(filePath);
 
-                    // Prepare save options for PDF and enable error ignoring
-                    PdfSaveOptions saveOptions = new PdfSaveOptions
-                    {
-                        // Hide any rendering errors (shape, image, chart, etc.)
-                        IgnoreError = true
-                    };
+                    // Determine output file name with appropriate extension
+                    string outputFileName = Path.GetFileNameWithoutExtension(filePath) + GetExtensionForFormat(_targetFormat);
+                    string outputPath = Path.Combine(_outputFolder, outputFileName);
 
-                    // Destination file path with .pdf extension
-                    string destPath = Path.Combine(
-                        outputFolder,
-                        Path.GetFileNameWithoutExtension(sourcePath) + ".pdf");
-
-                    // Perform conversion using Aspose.Cells utility
-                    ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-
-                    Console.WriteLine($"Successfully converted: {sourcePath}");
-                }
-                catch (CellsException cex) when (cex.Code == ExceptionType.FileCorrupted)
-                {
-                    // Specific handling for corrupted files
-                    Console.WriteLine($"Corrupted file skipped: {sourcePath}");
-                    LogError(sourcePath, cex);
+                    // Save the workbook in the target format
+                    workbook.Save(outputPath, _targetFormat);
                 }
                 catch (Exception ex)
                 {
-                    // General error handling – log and continue with next file
-                    Console.WriteLine($"Error converting {sourcePath}: {ex.Message}");
-                    LogError(sourcePath, ex);
+                    // Log the error and continue with the next file
+                    LogError(filePath, ex);
                 }
             }
-
-            Console.WriteLine("Batch conversion completed.");
         }
 
-        // Simple logger that appends error information to a text file
-        private static void LogError(string filePath, Exception ex)
+        /// <summary>
+        /// Returns the file extension associated with a given SaveFormat.
+        /// </summary>
+        private string GetExtensionForFormat(SaveFormat format)
         {
-            string logFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConversionErrors.log");
-            string message = $"{DateTime.Now:u} | File: {filePath} | Error: {ex.Message}{Environment.NewLine}";
-            File.AppendAllText(logFile, message);
+            switch (format)
+            {
+                case SaveFormat.Pdf:
+                    return ".pdf";
+                case SaveFormat.Html:
+                    return ".html";
+                case SaveFormat.Csv:
+                    return ".csv";
+                case SaveFormat.Xps:
+                    return ".xps";
+                // Add more mappings as needed
+                default:
+                    return ".out";
+            }
+        }
+
+        /// <summary>
+        /// Appends an error entry to the log file.
+        /// </summary>
+        private void LogError(string filePath, Exception ex)
+        {
+            string message = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] Failed to convert '{filePath}'. Error: {ex.Message}";
+            try
+            {
+                File.AppendAllText(_logFilePath, message + Environment.NewLine);
+            }
+            catch
+            {
+                // If logging fails, fall back to console output
+                Console.Error.WriteLine(message);
+            }
+        }
+    }
+
+    // Example usage
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Adjust these paths as needed
+            string sourceFolder = @"C:\InputExcelFiles";
+            string destinationFolder = @"C:\ConvertedFiles";
+
+            // Create a converter that transforms Excel files to PDF
+            var converter = new BatchConverter(sourceFolder, destinationFolder, SaveFormat.Pdf);
+            converter.ConvertAll();
+
+            Console.WriteLine("Batch conversion completed. Check the log file for any errors.");
         }
     }
 }

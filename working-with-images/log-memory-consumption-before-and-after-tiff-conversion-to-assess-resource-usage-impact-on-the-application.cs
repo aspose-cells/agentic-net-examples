@@ -1,65 +1,36 @@
-// Title: Measure .NET Memory Usage During Worksheet‑to‑TIFF Conversion with Aspose.Cells (C#)
-// Description: A C# console example that creates a workbook, populates 200 rows, sets TIFF rendering options (LZW compression), logs managed heap size with GC.GetTotalMemory before and after calling SheetRender.ToImage, and prints the memory delta. Useful for assessing the resource impact of Excel‑to‑TIFF export in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells TIFF conversion memory | C# GC.GetTotalMemory | measure .NET memory usage | Excel to TIFF performance | worksheet rendering memory profiling | Aspose.Cells image export benchmark
-// Common Searches: how to log memory before and after Aspose.Cells TIFF export | measure memory impact of Excel to TIFF conversion .NET | GC.GetTotalMemory usage with Aspose.Cells rendering | benchmark Aspose.Cells TIFF compression memory | track memory consumption during worksheet image export
-// Developer Intent: Evaluate the amount of managed memory consumed when converting an Excel worksheet to a TIFF image using Aspose.Cells.
-// Use Cases: Profile memory requirements for large workbooks before batch TIFF export. | Detect memory leaks in a long‑running service that repeatedly renders worksheets to images. | Compare memory footprints of different TIFF compression settings (LZW, CCITT, etc.) in Aspose.Cells.
-// AI Prompts: Write a reusable C# method that accepts a Worksheet and ImageOrPrintOptions, logs GC.GetTotalMemory before and after rendering, and returns the memory delta. | Show how to extend the example to record memory usage for each sheet in a multi‑sheet workbook and output a summary report. | Explain how GC.GetTotalMemory works and how to interpret its values when measuring Aspose.Cells image export performance.
+// Title: Logging .NET memory consumption before and after converting an Excel workbook to TIFF using Aspose.Cells (C#)
+// AI Prompts: Write a C# console program that uses GC.GetTotalMemory to record memory usage before loading a workbook, after loading, and after saving it as a TIFF with Aspose.Cells. | Show how to measure and output the managed heap size at each stage of an Excel‑to‑TIFF conversion using Aspose.Cells SaveFormat.Tiff. | Create a snippet that logs memory consumption surrounding the Workbook.Save call for TIFF export in a .NET application.
+// Common Searches: C# how to measure memory usage when converting Excel to TIFF with Aspose.Cells | Aspose.Cells .NET memory profiling during workbook.Save to TIFF | track .NET heap size before and after Excel to image conversion | log GC.GetTotalMemory around Aspose.Cells TIFF export in C# console app
+// Tags: Aspose.Cells workbook.Save TIFF memory profiling | GC.GetTotalMemory memory logging in C# | Excel to TIFF conversion resource usage tracking | measure .NET heap size during image export | log managed memory consumption Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// A C# console example that creates a workbook, populates 200 rows, sets TIFF rendering options (LZW compression), logs managed heap size with GC.GetTotalMemory before and after calling SheetRender.ToImage, and prints the memory delta. Useful for assessing the resource impact of Excel‑to‑TIFF export in Aspose.Cells for .NET.
-class TiffMemoryLogger
+// // Demonstrates loading an Excel file with Aspose.Cells, converting it to a TIFF image, and logging managed heap memory before loading, after loading, and after saving using GC.GetTotalMemory.
+class Program
 {
     static void Main()
     {
-        try
-        {
-            // Create a new workbook and add sample data
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            for (int i = 0; i < 200; i++)
-            {
-                worksheet.Cells[i, 0].PutValue($"Sample row {i}");
-            }
+        // Paths for the source Excel file and the resulting TIFF file
+        string excelPath = "input.xlsx";
+        string tiffPath = "output.tiff";
 
-            // Set up image rendering options for TIFF
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                OnePagePerSheet = true,
-                TiffCompression = TiffCompression.CompressionLZW
-                // ImageFormat is inferred from the output file extension, so it can be omitted
-            };
+        // Log memory usage before loading the workbook
+        long memoryBeforeLoad = GC.GetTotalMemory(true);
+        Console.WriteLine($"Memory before loading workbook: {memoryBeforeLoad / 1024} KB");
 
-            // Capture memory usage before conversion
-            long memoryBefore = GC.GetTotalMemory(true);
-            Console.WriteLine($"Memory before TIFF conversion: {memoryBefore} bytes");
+        // Load the Excel workbook
+        Workbook workbook = new Workbook(excelPath);
 
-            // Prepare output path
-            string outputPath = "worksheet_output.tiff";
+        // Log memory usage after loading the workbook
+        long memoryAfterLoad = GC.GetTotalMemory(true);
+        Console.WriteLine($"Memory after loading workbook: {memoryAfterLoad / 1024} KB");
 
-            // Ensure the output directory exists
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+        // Convert the workbook to TIFF format and save
+        workbook.Save(tiffPath, SaveFormat.Tiff);
 
-            // Render the worksheet to a TIFF file
-            SheetRender renderer = new SheetRender(worksheet, options);
-            renderer.ToImage(0, outputPath);
-
-            // Capture memory usage after conversion
-            long memoryAfter = GC.GetTotalMemory(true);
-            Console.WriteLine($"Memory after TIFF conversion: {memoryAfter} bytes");
-            Console.WriteLine($"Memory delta: {memoryAfter - memoryBefore} bytes");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Log memory usage after TIFF conversion
+        long memoryAfterSave = GC.GetTotalMemory(true);
+        Console.WriteLine($"Memory after TIFF conversion: {memoryAfterSave / 1024} KB");
     }
 }

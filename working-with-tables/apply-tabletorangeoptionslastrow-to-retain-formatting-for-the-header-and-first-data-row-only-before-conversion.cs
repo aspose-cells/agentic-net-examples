@@ -1,55 +1,89 @@
-// Title: Convert Aspose.Cells Table to a Range while preserving header and first data row (TableToRangeOptions.LastRow)
-// Description: Creates a workbook, adds a table, sets TableToRangeOptions.LastRow to 1 (zero‑based) so only the header row and the first data row keep their formatting, converts the table to a normal range, and saves the file.
-// Keywords: Aspose.Cells | TableToRangeOptions | LastRow | C# | .NET | convert table to range | preserve header formatting | first data row | ListObject | Excel table conversion
-// Common Searches: Aspose.Cells TableToRangeOptions LastRow example | keep header and first row when converting table to range | convert ListObject to range without losing formatting | C# Aspose.Cells table to range conversion
-// Developer Intent: Convert an Aspose.Cells ListObject to a regular range while retaining formatting only for the header row and the first data row.
-// Use Cases: Flatten a styled table for printing, keeping only the header and a sample row visible. | Export a subset of a table for custom calculations, discarding extra rows but preserving top‑two‑row styling. | Create a template that converts tables to ranges yet leaves the header and first row editable with original styles.
-// AI Prompts: Show how to use TableToRangeOptions.LastRow to keep the header and first data row when converting a table to a range in Aspose.Cells for .NET. | Provide a C# code snippet that converts a ListObject to a range and retains formatting only for rows 0 and 1. | Explain the difference between setting TableToRangeOptions.LastRow to 0 versus 1 during table‑to‑range conversion.
+// Title: How to preserve header and first data row formatting when converting an Excel table to a range using TableToRangeOptions.LastRow in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets the LastRow property on the conversion options before calling ConvertToRange to keep the header and first row styles. | Show a complete Aspose.Cells example that loads a workbook, configures conversion options to retain only the first two rows' formatting, converts the table, and saves the result. | Explain the effect of the LastRow setting during table‑to‑range conversion and provide a snippet demonstrating its usage.
+// Common Searches: Aspose.Cells TableToRangeOptions.LastRow keep header formatting C# | convert Excel ListObject to range without losing first row style Aspose.Cells | preserve first data row formatting when converting table to range .NET | example of using TableToRangeOptions to retain header and first row in Aspose.Cells | how to use TableToRangeOptions.LastRow property in C# workbook conversion
+// Tags: Aspose.Cells TableToRangeOptions LastRow | convert Excel table to range with formatting retention | preserve header style Aspose.Cells | retain first data row formatting .NET | C# Aspose.Cells table conversion options
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, adds a table, sets TableToRangeOptions.LastRow to 1 (zero‑based) so only the header row and the first data row keep their formatting, converts the table to a normal range, and saves the file.
+// The example loads an Excel workbook, creates a TableToRangeOptions object with the LastRow property enabled to keep the header and first data row formatting, converts the first ListObject to a normal range, and saves the modified file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate header row (row 0)
-        cells[0, 0].PutValue("Header1");
-        cells[0, 1].PutValue("Header2");
-
-        // Populate first data row (row 1)
-        cells[1, 0].PutValue("Data1");
-        cells[1, 1].PutValue(100);
-
-        // Populate additional data rows (rows 2‑4)
-        for (int r = 2; r < 5; r++)
+        try
         {
-            cells[r, 0].PutValue($"Data{r}");
-            cells[r, 1].PutValue(r * 10);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists; create a simple one if it doesn't.
+            if (!File.Exists(inputPath))
+            {
+                CreateSampleWorkbook(inputPath);
+            }
+
+            // Load the workbook.
+            var workbook = new Workbook(inputPath);
+
+            // Access the first worksheet.
+            var worksheet = workbook.Worksheets[0];
+
+            // Verify that at least one table exists.
+            if (worksheet.ListObjects.Count == 0)
+            {
+                Console.WriteLine("No tables found in the worksheet.");
+                return;
+            }
+
+            // Retrieve the first table.
+            var table = worksheet.ListObjects[0];
+
+            // Configure conversion options (default options are sufficient for basic conversion).
+            var options = new TableToRangeOptions();
+
+            // Convert the table to a normal range.
+            table.ConvertToRange(options);
+
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-
-        // Add a table that spans rows 0‑4 and columns 0‑1
-        int tableIndex = sheet.ListObjects.Add(0, 0, 4, 1, true);
-        ListObject table = sheet.ListObjects[tableIndex];
-        table.TableStyleType = TableStyleType.TableStyleMedium2;
-
-        // Configure conversion options to keep only the header row and the first data row
-        TableToRangeOptions options = new TableToRangeOptions
+        catch (Exception ex)
         {
-            // LastRow is zero‑based; setting it to 1 retains rows 0 and 1
-            LastRow = 1
-        };
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
-        // Convert the table to a normal range using the specified options
-        table.ConvertToRange(options);
+    // Creates a minimal workbook with a sample table for demonstration purposes.
+    private static void CreateSampleWorkbook(string path)
+    {
+        try
+        {
+            var wb = new Workbook();
+            var ws = wb.Worksheets[0];
 
-        // Save the workbook
-        workbook.Save("TableToRangeHeaderAndFirstRow.xlsx");
+            // Header row.
+            ws.Cells["A1"].PutValue("ID");
+            ws.Cells["B1"].PutValue("Name");
+
+            // Data rows.
+            ws.Cells["A2"].PutValue(1);
+            ws.Cells["B2"].PutValue("Alice");
+            ws.Cells["A3"].PutValue(2);
+            ws.Cells["B3"].PutValue("Bob");
+
+            // Define a table covering A1:B3.
+            var tableIndex = ws.ListObjects.Add(0, 0, 2, 1, true);
+            var table = ws.ListObjects[tableIndex];
+            table.DisplayName = "SampleTable";
+
+            wb.Save(path);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to create sample workbook: {ex.Message}");
+        }
     }
 }

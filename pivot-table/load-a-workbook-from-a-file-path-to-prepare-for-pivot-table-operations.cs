@@ -1,27 +1,24 @@
-// Title: Load an Excel workbook from a file path using Aspose.Cells for .NET – ready for pivot table work
-// Description: Demonstrates how to instantiate a Workbook object by passing the Excel file path to Aspose.Cells for .NET. The file is read into memory, its worksheets become accessible, and the workbook can immediately be used for creating or modifying pivot tables.
-// Keywords: Aspose.Cells | C# | load workbook | Excel file path | pivot table preparation | Workbook constructor | .NET Excel API | open Excel file
-// Common Searches: Aspose.Cells load workbook from file path C# | how to open an existing Excel file with Aspose.Cells | initialize workbook for pivot tables Aspose.Cells .NET | read Excel file into Aspose.Cells Workbook object | C# Aspose.Cells open workbook for pivot table creation
-// Developer Intent: Open an existing Excel file and create a Workbook instance so that pivot tables can be added or edited programmatically.
-// Use Cases: Load a workbook and verify the number of worksheets before building a pivot table. | Open a file, scan worksheets to locate the data range that will serve as the pivot cache. | Initialize a workbook from disk and pass it to Aspose.Cells pivot‑table APIs to generate a new report.
-// AI Prompts: Generate C# code that adds a pivot table to the first worksheet of a workbook loaded from a file path using Aspose.Cells. | Explain how to catch and handle exceptions when opening an Excel file with Aspose.Cells. | Show how to verify that the source file exists before creating the Workbook object in C#.
+// Title: Load an Excel workbook from a file path with Aspose.Cells for .NET to prepare for pivot table creation
+// AI Prompts: Generate C# code that reads a specified .xlsx file using Aspose.Cells and returns a Workbook instance. | Write a console program that opens an existing Excel workbook with Aspose.Cells, then prints the number of worksheets to confirm the load. | Show how to instantiate an Aspose.Cells Workbook from a file path and verify successful loading before manipulating pivot tables.
+// Common Searches: how to open an existing .xlsx file with Aspose.Cells in a C# console app | Aspose.Cells load workbook from local path for pivot table generation | C# example to read Excel file and get worksheet count using Aspose.Cells | initialize Aspose.Cells workbook before creating pivot tables in .NET
+// Tags: Aspose.Cells retrieve workbook from file | C# prepare workbook for pivot table creation | access Excel worksheets count with Aspose.Cells | validate workbook loading Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to instantiate a Workbook object by passing the Excel file path to Aspose.Cells for .NET. The file is read into memory, its worksheets become accessible, and the workbook can immediately be used for creating or modifying pivot tables.
-class Program
+// // Loads "input.xlsx" into an Aspose.Cells Workbook object and prints the total worksheet count, establishing a base for subsequent pivot table operations.
+class LoadWorkbookForPivot
 {
     static void Main()
     {
-        // Path to the Excel file to be loaded
-        string filePath = "example.xlsx";
+        // Path to the existing Excel file
+        string filePath = "input.xlsx";
 
         // Load the workbook from the specified file path
         Workbook workbook = new Workbook(filePath);
 
         // The workbook is now ready for pivot table operations
-        // Example: display the number of worksheets loaded
-        Console.WriteLine($"Worksheets loaded: {workbook.Worksheets.Count}");
+        // Example: display basic information
+        Console.WriteLine($"Workbook loaded. Worksheets count: {workbook.Worksheets.Count}");
     }
 }

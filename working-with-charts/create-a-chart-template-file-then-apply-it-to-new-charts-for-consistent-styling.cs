@@ -1,79 +1,90 @@
-// Title: Create and Apply a Reusable Chart Template with Aspose.Cells for .NET
-// Description: Demonstrates how to generate a workbook, add sample data, build a column chart, apply a built‑in style, set a custom title, legend, and foreground colors for the plot and chart areas, switch to a 3‑D clustered column while preserving formatting, and save the file as XLSX. The same styling can be saved as a template and reused for other charts to ensure visual consistency.
-// Keywords: Aspose.Cells chart template | C# chart styling | apply built‑in chart style .NET | change chart type preserve formatting | chart area foreground color | plot area color Aspose.Cells | save workbook with chart | reusable Excel chart format | Aspose.Cells example
-// Common Searches: how to create a chart template with Aspose.Cells | apply same style to multiple charts .NET | change chart type without losing formatting Aspose.Cells | set chart area background color using Aspose.Cells | save Excel file with styled chart C#
-// Developer Intent: Generate a styled chart once and reuse its formatting across additional charts, then export the workbook.
-// Use Cases: Produce a column chart from a data range and apply a predefined visual theme. | Define custom foreground colors for chart and plot areas to match corporate branding. | Switch a chart to a different type (e.g., 3‑D clustered column) while retaining all prior styling. | Save the styled workbook as an XLSX file for distribution or further processing.
-// AI Prompts: Show me how to save a chart's formatting as a template file with Aspose.Cells and reuse it for new charts. | Give an example of preserving all style settings when converting a column chart to a 3‑D chart in Aspose.Cells for C#. | Explain how to customize chart area and plot area colors programmatically using Aspose.Cells.
+// Title: Create a reusable chart template workbook and apply its styling to new column charts using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that builds a styled column chart as a template, saves it to a workbook, and then reuses the template's formatting for another chart in a separate workbook with Aspose.Cells. | Show how to programmatically copy a chart's title, font color, plot‑area background, and legend position from a template chart to a new chart that uses different data series in Aspose.Cells. | Provide a .NET example that creates a chart template, binds a new data series to a fresh chart, transfers the template's visual settings, and saves the final workbook.
+// Common Searches: aspnet how to create a chart styling template workbook with Aspose.Cells and reuse it | copy chart title and legend formatting from one workbook to another using C# Aspose.Cells | apply same styling to multiple column charts in Aspose.Cells .NET | example of reusing chart template for different data series in Aspose.Cells
+// Tags: Aspose.Cells chart template styling | duplicate chart formatting C# | reuse chart visual settings Aspose.Cells | column chart template workbook | programmatic chart theme application .NET
 
 using System;
-using System.IO;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartTemplateDemo
+// The example creates a workbook containing a styled column chart that serves as a template, saves it, then opens a second workbook, adds a new column chart, copies the template's title, font color, plot‑area background, and legend position, binds a new data series, and saves the final workbook with the transferred styling.
+class ChartTemplateExample
 {
-    // Demonstrates how to generate a workbook, add sample data, build a column chart, apply a built‑in style, set a custom title, legend, and foreground colors for the plot and chart areas, switch to a 3‑D clustered column while preserving formatting, and save the file as XLSX. The same styling can be saved as a template and reused for other charts to ensure visual consistency.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // -----------------------------------------------------------------
-                // Step 1: Create a workbook and add a chart with desired styling
-                // -----------------------------------------------------------------
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
+            // -------------------------------------------------
+            // 1. Create a workbook that will hold the chart template
+            // -------------------------------------------------
+            Workbook templateWb = new Workbook();
+            Worksheet templateWs = templateWb.Worksheets[0];
 
-                // Sample data for the chart
-                ws.Cells["A1"].PutValue("Category");
-                ws.Cells["A2"].PutValue("X");
-                ws.Cells["A3"].PutValue("Y");
-                ws.Cells["A4"].PutValue("Z");
-                ws.Cells["B1"].PutValue("Value");
-                ws.Cells["B2"].PutValue(15);
-                ws.Cells["B3"].PutValue(25);
-                ws.Cells["B4"].PutValue(35);
+            // Sample data for the template chart
+            templateWs.Cells["A1"].PutValue("Month");
+            templateWs.Cells["B1"].PutValue("Sales");
+            templateWs.Cells["A2"].PutValue("Jan");
+            templateWs.Cells["A3"].PutValue("Feb");
+            templateWs.Cells["A4"].PutValue("Mar");
+            templateWs.Cells["B2"].PutValue(120);
+            templateWs.Cells["B3"].PutValue(150);
+            templateWs.Cells["B4"].PutValue(180);
 
-                // Add a chart
-                int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-                Chart chart = ws.Charts[chartIdx];
+            // Add a column chart that will become the template
+            int tmplChartIdx = templateWs.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart tmplChart = templateWs.Charts[tmplChartIdx];
 
-                // Set data range for the chart
-                chart.SetChartDataRange("A1:B4", false);
+            // Styling the template chart
+            tmplChart.Title.Text = "Quarterly Sales";
+            tmplChart.Title.Font.Color = Color.Blue;
+            tmplChart.PlotArea.Area.ForegroundColor = Color.LightYellow;
+            tmplChart.Legend.Position = LegendPositionType.Right;
 
-                // Apply styling (similar to a template)
-                chart.Style = 7; // Example builtin style
-                chart.Title.Text = "Styled Chart";
-                chart.ShowLegend = true;
-                chart.PlotArea.Area.ForegroundColor = Color.LightYellow;
-                chart.ChartArea.Area.ForegroundColor = Color.LightBlue;
+            // Add a series (placeholder) to the template
+            int seriesIdx = tmplChart.NSeries.Add("B2:B4", true);
+            tmplChart.NSeries[seriesIdx].Name = "Sales";
 
-                // Optionally change the chart type while retaining the styling
-                chart.Type = ChartType.Column3DClustered;
+            // Save the workbook that contains the template chart (optional)
+            templateWb.Save("TemplateWorkbook.xlsx");
 
-                // -----------------------------------------------------------------
-                // Step 2: Save the workbook containing the styled chart
-                // -----------------------------------------------------------------
-                string outputPath = "WorkbookWithStyledChart.xlsx";
+            // -------------------------------------------------
+            // 2. Create a new workbook and apply the saved template styling manually
+            // -------------------------------------------------
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-                // Ensure the directory exists before saving
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
+            // Data for the new chart
+            ws.Cells["A1"].PutValue("Month");
+            ws.Cells["B1"].PutValue("Revenue");
+            ws.Cells["A2"].PutValue("Apr");
+            ws.Cells["A3"].PutValue("May");
+            ws.Cells["A4"].PutValue("Jun");
+            ws.Cells["B2"].PutValue(200);
+            ws.Cells["B3"].PutValue(250);
+            ws.Cells["B4"].PutValue(300);
 
-                wb.Save(outputPath, SaveFormat.Xlsx);
+            // Add an empty chart where the template styling will be applied
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = ws.Charts[chartIdx];
 
-                Console.WriteLine("Chart created and saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Apply the same styling as the template chart
+            chart.Title.Text = tmplChart.Title.Text;
+            chart.Title.Font.Color = tmplChart.Title.Font.Color;
+            chart.PlotArea.Area.ForegroundColor = tmplChart.PlotArea.Area.ForegroundColor;
+            chart.Legend.Position = tmplChart.Legend.Position;
+
+            // Bind the new data to the series (category + values)
+            int newSeriesIdx = chart.NSeries.Add("A2:A4", true); // category data
+            chart.NSeries[newSeriesIdx].Values = "B2:B4";
+            chart.NSeries[newSeriesIdx].Name = "Revenue";
+
+            // Save the final workbook containing the styled chart
+            wb.Save("WorkbookWithStyledChart.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

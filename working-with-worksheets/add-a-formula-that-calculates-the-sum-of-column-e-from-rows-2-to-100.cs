@@ -1,36 +1,30 @@
-// Title: C# – Add SUM(E2:E100) formula and save workbook with Aspose.Cells
-// Description: Demonstrates how to create a new Workbook, set the formula "=SUM(E2:E100)" in a cell, evaluate all formulas, and save the file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# formula | SUM(E2:E100) Aspose | set cell formula .NET | calculate workbook formulas | save workbook Aspose.Cells
-// Common Searches: Aspose.Cells add SUM formula C# | how to set range formula in Aspose.Cells | calculate and save workbook Aspose .NET | C# write SUM(E2:E100) to cell
-// Developer Intent: Insert a SUM formula for cells E2‑E100, compute the result, and persist the workbook.
-// Use Cases: Generate a total row for financial reports that updates automatically. | Summarize sensor readings or measurement data across many rows. | Create a dynamic summary sheet that recalculates totals on each workbook open.
-// AI Prompts: Write C# code with Aspose.Cells to place "=SUM(E2:E100)" in cell F1, calculate the workbook, and save it as an .xlsx file. | Show how to add multiple aggregate formulas (SUM, AVERAGE, COUNT) to different cells using Aspose.Cells and ensure they are evaluated before saving. | Explain how to modify an existing workbook's formula range and recalculate only the affected cells with Aspose.Cells for .NET.
+// Title: Add a SUM formula for cells E2 through E100 and place the result in F1 using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to assign the formula "=SUM(E2:E100)" to cell F1 and then evaluate the workbook. | Create a new workbook, insert a SUM formula for the range E2:E100 into cell F1, calculate the formula, and save the file as XLSX. | Write C# code that programmatically totals column E rows 2‑100, stores the total in cell F1, and persists the workbook with Aspose.Cells.
+// Common Searches: how to add a SUM formula to a specific range in Excel using Aspose.Cells C# | Aspose.Cells set formula '=SUM(E2:E100)' in cell F1 and calculate it | C# program to calculate total of column E rows 2 to 100 with Aspose.Cells and save workbook
+// Tags: Aspose.Cells set cell formula C# | SUM formula insertion Excel .NET | calculate column total Aspose.Cells | evaluate workbook formulas C# | save workbook as XLSX Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaDemo
+// // Creates a workbook, inserts a SUM formula for E2:E100 into F1, evaluates the formula, and saves the result as output.xlsx.
+class Program
 {
-    // Demonstrates how to create a new Workbook, set the formula "=SUM(E2:E100)" in a cell, evaluate all formulas, and save the file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set a formula that sums column E from rows 2 to 100.
-            // The result will be placed in cell F1 (you can choose any cell).
-            worksheet.Cells["F1"].Formula = "=SUM(E2:E100)";
+        // Place the SUM formula in cell F1 (you can choose any cell)
+        Cell formulaCell = sheet.Cells["F1"];
+        formulaCell.Formula = "=SUM(E2:E100)";
 
-            // Calculate all formulas in the workbook so the result is materialized.
-            workbook.CalculateFormula();
+        // Optional: calculate the formula so the result is stored
+        workbook.CalculateFormula();
 
-            // Save the workbook (lifecycle: save)
-            workbook.Save("SumColumnE.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("output.xlsx");
     }
 }

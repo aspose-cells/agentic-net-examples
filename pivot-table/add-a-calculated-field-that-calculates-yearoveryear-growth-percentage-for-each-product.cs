@@ -1,87 +1,72 @@
-// Title: C# – Add a Year‑Over‑Year Growth Calculated Field to an Aspose.Cells Pivot Table
-// Description: This Aspose.Cells for .NET example creates a workbook with product sales for 2022‑2023, builds a pivot table (Product rows, Year columns, Sales sum), adds a calculated field named YoYGrowth, configures it to show the percentage difference from the previous year, formats the result as a two‑decimal percent, refreshes the cache, calculates the data, and saves the file as PivotTable_YearOverYearGrowth.xlsx.
-// Keywords: Aspose.Cells C# pivot table | add calculated field Aspose | year over year growth Excel | YoY percentage difference | ShowValuesAs PivotField | PivotFieldDataDisplayFormat percentage | Excel sales report automation | GitHub Aspose.Cells example | dynamic pivot cache refresh | C# Excel export
-// Common Searches: how to add YoY growth calculated field in Aspose.Cells | Aspose.Cells pivot table show values as percentage difference | C# create pivot table with calculated field | format pivot field as percent Aspose.Cells | refresh pivot cache after adding calculated field
-// Developer Intent: Generate a pivot table in C# and insert a calculated field that displays each product’s year‑over‑year sales growth as a formatted percentage.
-// Use Cases: Produce a quarterly sales dashboard that automatically calculates YoY growth for every product. | Export dynamic Excel reports where new sales data is added and the pivot table updates the growth percentages without manual edits. | Integrate automated financial analysis into a .NET application, showing percentage change between consecutive years.
-// AI Prompts: Write C# code using Aspose.Cells to add a calculated field called 'YoYGrowth' that shows the percentage difference from the previous year in a pivot table. | Explain the steps to configure ShowValuesAs with PivotFieldDataDisplayFormat.PercentageDifferenceFrom for a pivot field in Aspose.Cells. | Provide a snippet that formats a pivot field as a percentage with two decimal places and refreshes the pivot cache after adding a calculated field.
+// Title: Insert a Year‑Over‑Year Growth % Column into an Excel Sheet Using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that adds a new column named "YoY Growth %" and fills each cell with a formula that computes the percentage change between the current year's sales and the previous year's sales for the same product. | Generate an IFERROR‑wrapped SUMIFS expression in Aspose.Cells to calculate year‑over‑year growth and assign it to the newly created column for every data row.
+// Common Searches: asp.net add YoY growth column to existing Excel file using Aspose.Cells | Aspose.Cells C# formula for year over year sales growth per product | how to use SUMIFS in Aspose.Cells to reference previous year values | set cell formula dynamically for each row with Aspose.Cells C#
+// Tags: insert calculated column Aspose.Cells C# | YoY growth percentage formula Aspose.Cells | SUMIFS IFERROR expression Aspose.Cells | set cell formula programmatically .NET Excel | calculate year over year sales growth C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The example loads an existing workbook, inserts a "YoY Growth %" header in a new column, and for each data row assigns an IFERROR‑wrapped SUMIFS formula that calculates the year‑over‑year sales growth for the product, then saves the updated workbook.
+class Program
 {
-    // This Aspose.Cells for .NET example creates a workbook with product sales for 2022‑2023, builds a pivot table (Product rows, Year columns, Sales sum), adds a calculated field named YoYGrowth, configures it to show the percentage difference from the previous year, formats the result as a two‑decimal percent, refreshes the cache, calculates the data, and saves the file as PivotTable_YearOverYearGrowth.xlsx.
-    public class PivotTableYearOverYearGrowth
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data: Product, Year, Sales
-                cells["A1"].Value = "Product";
-                cells["B1"].Value = "Year";
-                cells["C1"].Value = "Sales";
-
-                cells["A2"].Value = "Apple";   cells["B2"].Value = 2022; cells["C2"].Value = 1200;
-                cells["A3"].Value = "Apple";   cells["B3"].Value = 2023; cells["C3"].Value = 1500;
-                cells["A4"].Value = "Banana";  cells["B4"].Value = 2022; cells["C4"].Value = 800;
-                cells["A5"].Value = "Banana";  cells["B5"].Value = 2023; cells["C5"].Value = 950;
-                cells["A6"].Value = "Cherry";  cells["B6"].Value = 2022; cells["C6"].Value = 500;
-                cells["A7"].Value = "Cherry";  cells["B7"].Value = 2023; cells["C7"].Value = 650;
-
-                // Create a pivot table covering the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C7", "E3", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure pivot layout: rows = Product, columns = Year, data = Sales (sum)
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "Year");
-                int salesDataFieldIdx = pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-                PivotField salesDataField = pivotTable.DataFields[salesDataFieldIdx];
-
-                // Add a calculated field that references Sales; YoY will be shown via ShowValuesAs
-                pivotTable.AddCalculatedField("YoYGrowth", "=Sales", true);
-                PivotField yoyField = pivotTable.DataFields[pivotTable.DataFields.Count - 1];
-
-                // Show YoY as percentage difference from the previous year
-                PivotField yearField = pivotTable.ColumnFields[0];
-                int baseFieldIndex = yearField.BaseIndex;
-                yoyField.ShowValuesAs(
-                    PivotFieldDataDisplayFormat.PercentageDifferenceFrom,
-                    baseFieldIndex,
-                    PivotItemPositionType.Previous,
-                    0);
-
-                // Format as percentage with two decimal places
-                yoyField.NumberFormat = "0.00%";
-
-                // Refresh pivot cache and calculate data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                string outputPath = "PivotTable_YearOverYearGrowth.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Define column indexes (zero‑based)
+            int productCol = 0; // Column A
+            int yearCol = 1;    // Column B
+            int salesCol = 2;   // Column C
+            int growthCol = 3;  // Column D (new column)
+
+            // Add header for the YoY Growth % column
+            cells[0, growthCol].PutValue("YoY Growth %");
+
+            // Determine the last row with data (zero‑based)
+            int lastRow = cells.MaxDataRow;
+
+            // Loop through each data row and set the YoY growth formula
+            for (int row = 1; row <= lastRow; row++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Build cell addresses (e.g., A2, B2, C2) using the Cells collection
+                string productCell = cells[row, productCol].Name; // e.g., A2
+                string yearCell = cells[row, yearCol].Name;       // e.g., B2
+                string salesCell = cells[row, salesCol].Name;     // e.g., C2
+
+                // Formula:
+                // IFERROR((CurrentSales - SUMIFS(C:C, A:A, Product, B:B, Year-1)) /
+                //         SUMIFS(C:C, A:A, Product, B:B, Year-1), 0)
+                string formula = $"IFERROR(({salesCell}-SUMIFS(C:C, A:A, {productCell}, B:B, {yearCell}-1))/SUMIFS(C:C, A:A, {productCell}, B:B, {yearCell}-1),0)";
+
+                // Assign the formula to the YoY Growth % cell
+                cells[row, growthCol].Formula = formula;
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        // Entry point for console application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

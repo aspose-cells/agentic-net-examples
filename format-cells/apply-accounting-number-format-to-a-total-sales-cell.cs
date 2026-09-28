@@ -1,42 +1,27 @@
-// Title: Apply Accounting Number Format to a Cell with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, inserts a numeric total‑sales value into B2, retrieves the cell style, sets the built‑in accounting format (Number = 37, pattern "#,##0_);(#,##0)"), reapplies the style, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# accounting format | Excel accounting number format | style.Number 37 | format total sales cell | Aspose.Cells .NET | financial spreadsheet formatting
-// Common Searches: Aspose.Cells apply accounting format C# | style.Number 37 accounting pattern Aspose | format cell as accounting in .NET Excel library | set accounting number format for a single cell using Aspose.Cells | C# code to display negative numbers in parentheses with Aspose
-// Developer Intent: Use Aspose.Cells for .NET to apply the built‑in accounting number format to a specific Excel cell.
-// Use Cases: Present total‑sales figures in financial reports with standard accounting styling. | Generate invoices where negative amounts are shown in parentheses. | Maintain consistent currency formatting across auto‑generated spreadsheets.
-// AI Prompts: Provide C# code to apply the accounting format to an entire column with Aspose.Cells. | Show how to customize the accounting format pattern beyond the built‑in style 37. | Explain how to combine accounting number format with conditional formatting in Aspose.Cells.
+// Title: Apply the built‑in Accounting number format (ID 44) to a total sales cell in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an existing Excel file with Aspose.Cells, sets the Accounting number format (ID 44) on cell B10, and saves the workbook. | Show how to retrieve a cell's style, change its Number property to the built‑in Accounting format, and apply the updated style using Aspose.Cells for .NET. | Demonstrate formatting a total‑sales column as accounting in a spreadsheet and exporting the result to a new file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# change cell B10 style to accounting and export workbook | Example of using Aspose.Cells to format a total‑sales cell as accounting | How to modify number format of a specific Excel cell with Aspose.Cells .NET | Saving Excel after updating cell style with Aspose.Cells in C#
+// Tags: Aspose.Cells set accounting number format C# | apply built‑in number format ID 44 Aspose.Cells | format Excel cell as accounting .NET | save workbook after style change Aspose.Cells | total sales cell accounting style C#
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsAccountingFormatDemo
-{
-    // Creates a workbook, inserts a numeric total‑sales value into B2, retrieves the cell style, sets the built‑in accounting format (Number = 37, pattern "#,##0_);(#,##0)"), reapplies the style, and saves the file as an Excel workbook.
-    public class Program
-    {
-        public static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+ // Load the existing workbook
+ Workbook workbook = new Workbook("SalesReport.xlsx");
 
-            // Put a numeric total sales value into cell B2
-            Cell totalSalesCell = sheet.Cells["B2"];
-            totalSalesCell.PutValue(123456.78);
+ // Access the first worksheet (or specify by name)
+ Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve the cell's current style
-            Style style = totalSalesCell.GetStyle();
+ // Reference the cell that contains the total sales (e.g., B10)
+ Cell totalSalesCell = worksheet.Cells["B10"];
 
-            // Apply the Accounting number format (value 37 corresponds to "#,##0_);(#,##0)")
-            style.Number = 37;
+ // Retrieve the current style of the cell
+ Style accountingStyle = totalSalesCell.GetStyle();
 
-            // Assign the modified style back to the cell
-            totalSalesCell.SetStyle(style);
+ // Apply the built‑in Accounting number format (ID 44)
+ accountingStyle.Number = 44; // Accounting format
 
-            // Save the workbook to a file
-            workbook.Save("TotalSales_AccountingFormat.xlsx");
+ // Set the updated style back to the cell
+ totalSalesCell.SetStyle(accountingStyle);
 
-            Console.WriteLine("Accounting format applied to total sales cell and workbook saved.");
-        }
-    }
-}
+ // Save the workbook with the applied format
+ workbook.Save("SalesReport_Formatted.xlsx");

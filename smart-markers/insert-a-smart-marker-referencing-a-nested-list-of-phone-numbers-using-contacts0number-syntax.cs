@@ -1,10 +1,7 @@
-// Title: Aspose.Cells C# Smart Marker to Retrieve First Contact Phone Number (contacts[0].number)
-// Description: Demonstrates how to place a smart marker "&=contacts[0].number" in cell A1, bind a List&lt;Contact&gt; as the data source named "contacts", process the marker with WorkbookDesigner, and save the populated Excel file.
-// Keywords: Aspose.Cells smart marker | C# Excel smart marker list index | contacts[0].number example | WorkbookDesigner data source List<T> | populate Excel cell from collection | Aspose.Cells tutorial USA | Aspose.Cells GitHub sample
-// Common Searches: Aspose.Cells reference first item in list smart marker | C# smart marker syntax contacts[0].number | How to bind List<Contact> to Aspose.Cells template | Insert phone number using smart marker in Excel | Aspose.Cells smart marker list indexing tutorial
-// Developer Intent: Add a smart marker that pulls the phone number from the first Contact object in a list and generate the Excel workbook.
-// Use Cases: Create a contact sheet that shows a single customer's phone number using a smart marker. | Generate an invoice where the primary client phone number is inserted from a List<Contact> data source. | Build a quick lookup report that displays the first entry of any collection via a smart marker.
-// AI Prompts: Show how to modify the code to iterate over all contacts and write each phone number to successive rows using smart markers. | Provide an example that includes additional fields (e.g., name, email) in the Contact class and uses smart markers for each column. | Explain how to safely handle null or empty phone numbers when using the contacts[0].number smart marker.
+// Title: Insert a smart marker for a nested phone number list (contacts[0].number) using Aspose.Cells WorkbookDesigner in C#
+// AI Prompts: Generate C# code that places the smart marker '&=contacts[0].number' in a worksheet cell, binds a List<Contact> where Contact contains a List<string> of phone numbers, and processes it with WorkbookDesigner. | Demonstrate how to use Aspose.Cells WorkbookDesigner to populate an Excel file from hierarchical data by inserting a smart marker that references the first contact's phone numbers.
+// Common Searches: aspnet how to bind a list of objects with a list property to Aspose.Cells smart markers | example of using contacts[0].number smart marker in Aspose.Cells C# | populate Excel column with multiple phone numbers from nested collection using WorkbookDesigner | Aspose.Cells smart marker syntax for accessing nested list elements in C#
+// Tags: Aspose.Cells WorkbookDesigner nested list | C# smart marker contacts[0].number | bind hierarchical data to Excel Aspose.Cells | populate Excel phone numbers from list of strings | smart marker list of strings Aspose.Cells
 
 using System;
 using System.Collections.Generic;
@@ -13,45 +10,48 @@ using Aspose.Cells.Markup;
 
 namespace AsposeCellsSmartMarkerExample
 {
-    // Simple data class representing a contact with a phone number
-    // Demonstrates how to place a smart marker "&=contacts[0].number" in cell A1, bind a List&lt;Contact&gt; as the data source named "contacts", process the marker with WorkbookDesigner, and save the populated Excel file.
+    // Simple data model: each contact has a list of phone numbers called "number"
+    // // This example creates a workbook, inserts the smart marker '&=contacts[0].number' into cell A1, binds a List<Contact> (each Contact holding a List<string> of phone numbers), processes the marker with WorkbookDesigner, and saves the populated file as SmartMarker_NestedList_Output.xlsx.
     public class Contact
     {
-        public string number { get; set; }
+        public List<string> number { get; set; }
     }
 
     public class Program
     {
         public static void Main()
         {
-            // Create a new workbook (template)
+            // 1. Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Insert a smart marker that references the first contact's phone number
-            // The syntax contacts[0].number accesses the first element of the contacts list
+            // 2. Insert a smart marker that references the first contact's phone numbers list
+            //    The syntax contacts[0].number will be resolved by the designer during processing
             sheet.Cells["A1"].PutValue("&=contacts[0].number");
 
-            // Prepare the data source: a list containing a single Contact object
+            // 3. Prepare sample data: a list of contacts, each with a list of phone numbers
             List<Contact> contacts = new List<Contact>
             {
-                new Contact { number = "555-1234" }
+                new Contact
+                {
+                    number = new List<string> { "123-456-7890", "987-654-3210" }
+                },
+                new Contact
+                {
+                    number = new List<string> { "555-111-2222", "555-333-4444" }
+                }
             };
 
-            // Initialize WorkbookDesigner with the template workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = workbook
-            };
-
-            // Set the data source for the smart marker
+            // 4. Set up the WorkbookDesigner, assign the workbook, and bind the data source
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
             designer.SetDataSource("contacts", contacts);
 
-            // Process the smart markers and populate the cell with the actual data
+            // 5. Process the smart markers to populate the worksheet with data
             designer.Process();
 
-            // Save the resulting workbook
-            designer.Workbook.Save("SmartMarkerNestedListOutput.xlsx");
+            // 6. Save the result
+            workbook.Save("SmartMarker_NestedList_Output.xlsx");
         }
     }
 }

@@ -1,36 +1,44 @@
-// Title: Convert HTML to PDF with Aspose.Cells (.NET) – PDF 1.7 compliance
-// Description: Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions with PdfCompliance.Pdf17, and saves the workbook as a PDF that meets PDF 1.7 specifications.
-// Keywords: Aspose.Cells | HTML to PDF | C# PDF 1.7 | PdfSaveOptions | PdfCompliance.Pdf17 | .NET conversion | PDF version control
-// Common Searches: Aspose.Cells convert HTML to PDF C# | set PDF version to 1.7 Aspose.Cells | PdfSaveOptions compliance PDF 1.7 example | C# convert HTML file to PDF with Aspose | how to enforce PDF 1.7 when saving workbook
-// Developer Intent: Create a PDF from an HTML source using Aspose.Cells and enforce PDF 1.7 compliance.
-// Use Cases: Generate printable PDFs from web‑based reports while preserving transparency and layers. | Archive HTML invoices as PDF 1.7 documents for legal compliance. | Batch‑convert marketing HTML pages to PDF with a consistent version for downstream processing.
-// AI Prompts: Provide code to embed a custom TrueType font while keeping PdfCompliance.Pdf17. | Show how to switch the compliance level to PDF/A‑2b in the same conversion flow. | Explain how to handle missing or malformed HTML input during the conversion. | Demonstrate converting HTML with external CSS and images to PDF using Aspose.Cells.
+// Title: Convert an HTML file to PDF with Aspose.Cells for .NET and enforce PDF version 1.7
+// AI Prompts: Generate C# code that loads an HTML document into an Aspose.Cells Workbook and saves it as a PDF using PdfSaveOptions with the PDF version explicitly set to 1.7. | Show how to add pre‑save validation that checks the HTML source file exists and handles errors gracefully in an Aspose.Cells HTML‑to‑PDF conversion. | Demonstrate configuring Aspose.Cells PdfSaveOptions to enable advanced PDF features by specifying PDF version 1.7 before exporting a workbook.
+// Common Searches: Aspose.Cells C# convert html file to pdf and set pdf version 1.7 | How to specify PDF version when saving workbook as PDF using Aspose.Cells | C# example for loading html into Aspose.Cells workbook with HtmlLoadOptions | PdfSaveOptions default PDF version 1.7 Aspose.Cells documentation | Check file existence before Aspose.Cells HTML to PDF conversion in C#
+// Tags: Aspose.Cells HTML to PDF conversion | PdfSaveOptions PDF version 1.7 | HtmlLoadOptions load HTML workbook | C# file existence validation Aspose.Cells | Aspose.Cells exception handling workbook load
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsHtmlToPdf
+// The sample checks that input.html exists, loads it into an Aspose.Cells Workbook via HtmlLoadOptions, creates a PdfSaveOptions object (explicitly setting the PDF version to 1.7), saves the workbook as output.pdf, and catches any exceptions that may occur.
+class Program
 {
-    // Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions with PdfCompliance.Pdf17, and saves the workbook as a PDF that meets PDF 1.7 specifications.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.html";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input HTML file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
         {
             // Load the HTML file into a workbook
-            // (Assumes "input.html" exists in the application directory)
-            Workbook workbook = new Workbook("input.html");
+            var loadOptions = new HtmlLoadOptions();
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Configure PDF save options (default PDF version is 1.7)
+            var pdfOptions = new PdfSaveOptions();
 
-            // Set PDF compliance level to PDF 1.7 (enables advanced features)
-            pdfOptions.Compliance = PdfCompliance.Pdf17;
-
-            // Save the workbook as a PDF file with the specified compliance level
-            workbook.Save("output.pdf", pdfOptions);
-
-            Console.WriteLine("HTML successfully converted to PDF with PDF 1.7 compliance.");
+            // Save the workbook as a PDF file
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF file successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

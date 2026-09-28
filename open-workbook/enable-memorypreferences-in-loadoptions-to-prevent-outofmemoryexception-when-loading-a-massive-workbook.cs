@@ -1,52 +1,48 @@
-// Title: C# – Load a massive workbook with LoadOptions.MemorySetting = MemoryPreference to prevent OutOfMemoryException (Aspose.Cells)
-// Description: Demonstrates how to enable MemoryPreference in Aspose.Cells LoadOptions for .NET, create a placeholder workbook if the source file is missing, load a large Excel file with reduced memory pressure, display worksheet count, and save the result.
-// Keywords: Aspose.Cells LoadOptions MemoryPreference | MemorySetting MemoryPreference C# | large workbook OutOfMemoryException Aspose | load massive Excel file .NET | Aspose.Cells memory management
-// Common Searches: Aspose.Cells MemoryPreference example | LoadOptions MemorySetting large workbook | prevent OutOfMemoryException Aspose.Cells | C# load big Excel file with low memory usage | Aspose.Cells placeholder workbook if file missing
-// Developer Intent: Enable MemoryPreference in LoadOptions to open a huge Excel workbook without exhausting system memory.
-// Use Cases: Processing multi‑gigabyte Excel files on a server with limited RAM. | Reading large workbooks for analytics while keeping the application responsive. | Automatically creating a placeholder workbook when the target file does not exist, then loading it in memory‑preference mode.
-// AI Prompts: Write C# code that loads an Excel file using Aspose.Cells with LoadOptions.MemorySetting set to MemoryPreference and handles a missing file gracefully. | Show how to configure LoadOptions for MemoryPreference and iterate through worksheets safely in Aspose.Cells. | Explain the impact of MemoryPreference on memory consumption and when to apply it in Aspose.Cells projects.
+// Title: Load a massive XLSX workbook with Aspose.Cells for .NET using LoadOptions.MemorySetting = MemoryPreference to avoid OutOfMemoryException
+// AI Prompts: Write C# code that opens a large .xlsx file with Aspose.Cells, sets LoadOptions.MemorySetting to MemoryPreference, and saves the workbook to a new file. | Show how to verify the input file exists and catch exceptions while loading a huge workbook with memory‑optimized LoadOptions in Aspose.Cells. | Demonstrate configuring LoadOptions for memory‑efficient processing of big Excel spreadsheets in a .NET application using Aspose.Cells.
+// Common Searches: asp.net how to open a huge xlsx file with aspose.cells memorypreference | c# load large excel workbook without outofmemoryexception using aspose cells | set loadoptions memorysetting to memorypreference for massive workbook | asp.net core aspose cells memory optimization when loading big spreadsheets
+// Tags: Aspose.Cells LoadOptions MemoryPreference | load large XLSX workbook memory optimization | prevent OutOfMemoryException Aspose.Cells | C# Aspose.Cells memory‑efficient workbook loading | massive Excel file handling .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to enable MemoryPreference in Aspose.Cells LoadOptions for .NET, create a placeholder workbook if the source file is missing, load a large Excel file with reduced memory pressure, display worksheet count, and save the result.
+// The example checks that a massive XLSX file exists, configures LoadOptions with MemorySetting = MemoryPreference to reduce memory consumption, loads the workbook using these options, optionally processes it, saves the result to a new file, and handles any exceptions gracefully.
 class Program
 {
     static void Main()
     {
-        string inputFile = "massive_workbook.xlsx";
-        string outputFile = "massive_workbook_processed.xlsx";
-
         try
         {
-            // Ensure the input file exists; create a placeholder if it does not.
-            if (!File.Exists(inputFile))
+            string inputPath = "massive_workbook.xlsx";
+            string outputPath = "processed_workbook.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file '{inputFile}' not found. Creating an empty workbook as a placeholder.");
-                var placeholder = new Workbook();
-                placeholder.Save(inputFile, SaveFormat.Xlsx);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Enable memory‑preference mode for large workbooks.
-            var loadOptions = new LoadOptions
+            // Configure load options with memory preference to reduce memory usage
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
                 MemorySetting = MemorySetting.MemoryPreference
             };
 
-            // Load the workbook with the specified options.
-            var workbook = new Workbook(inputFile, loadOptions);
+            // Load the workbook using the configured options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Example operation: display the number of worksheets loaded.
-            Console.WriteLine($"Worksheets loaded: {workbook.Worksheets.Count}");
+            // (Optional) Perform any required operations on the workbook here
 
-            // Save the processed workbook.
-            workbook.Save(outputFile, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved to '{outputFile}'.");
+            // Save the processed workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

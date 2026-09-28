@@ -1,41 +1,42 @@
-// Title: Set Workbook Culture for Locale‑Specific Number Formatting with Aspose.Cells in C#
-// Description: Shows how to assign a CultureInfo (e.g., German de‑DE) to a Workbook's Settings, optionally override decimal and group separators, apply a custom number format, and save the file, enabling locale‑aware number formatting during export.
-// Keywords: Aspose.Cells | C# | workbook culture | CultureInfo | locale number formatting | de-DE | German number format | decimal separator | group separator | custom number format | Excel export
-// Common Searches: Aspose.Cells set workbook culture .NET | C# change number format locale in Excel export | How to use German culture with Aspose.Cells | Set decimal separator in Aspose.Cells workbook | CultureInfo for number formatting Aspose.Cells
-// Developer Intent: Configure the workbook’s culture to control how numbers (and optional properties) are formatted when the file is saved.
-// Use Cases: Generate German‑locale financial reports where commas act as decimal separators and periods as thousand separators. | Create multi‑regional Excel exports that automatically adapt number formatting based on the user’s locale. | Override default separators for legacy systems that require specific symbols. | Apply a culture‑driven custom style to many cells without setting each format individually.
-// AI Prompts: Write C# code that sets the workbook culture to French (fr‑FR) and formats dates and numbers accordingly using Aspose.Cells. | Explain how to detect a user's locale at runtime and switch wb.Settings.CultureInfo in Aspose.Cells. | Show how to export the same workbook in three locales (en‑US, de‑DE, ja‑JP) with appropriate number and date formats.
+// Title: Configure Aspose.Cells workbook to use French (fr-FR) culture for locale‑specific formatting of optional property values during export
+// AI Prompts: Assign a specific CultureInfo (e.g., fr-FR) to Workbook.Settings.CultureInfo so that all date and numeric values are formatted according to that locale when the file is saved. | Create built‑in date and number styles that automatically follow the workbook's culture settings and export the workbook to an XLSX file.
+// Common Searches: how to set cultureinfo for Aspose.Cells workbook export | Aspose.Cells format dates and numbers using French locale | export Excel with locale specific formatting Aspose.Cells .NET | configure workbook settings culture for optional property values Aspose.Cells
+// Tags: Aspose.Cells workbook locale configuration | locale-aware number formatting Aspose.Cells | export Excel with French locale .NET | apply built-in date style using workbook culture | culture-specific optional property export Aspose.Cells
 
 using System;
 using System.Globalization;
 using Aspose.Cells;
 
-// Shows how to assign a CultureInfo (e.g., German de‑DE) to a Workbook's Settings, optionally override decimal and group separators, apply a custom number format, and save the file, enabling locale‑aware number formatting during export.
-class ConfigureWorkbookCulture
+// // This program creates a new workbook, sets its Settings.CultureInfo to French (fr-FR), inserts a date and a number, applies built‑in date and numeric styles that honor the culture, and saves the workbook as ExportedWorkbook.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook wb = new Workbook();
+        // Create a new workbook (lifecycle rule: create)
+        Workbook workbook = new Workbook();
 
-        // Set the workbook to use a specific culture (German - Germany)
-        wb.Settings.CultureInfo = new CultureInfo("de-DE");
+        // Configure the workbook to use a specific culture (e.g., French - France)
+        // This culture will be applied when formatting optional property values during export.
+        workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-        // Optional: explicitly set decimal and group separators (they follow the culture)
-        wb.Settings.NumberDecimalSeparator = ',';
-        wb.Settings.NumberGroupSeparator = '.';
+        // Example data to demonstrate culture-specific formatting
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Add sample data to demonstrate culture-aware formatting
-        Worksheet sheet = wb.Worksheets[0];
-        Cell cell = sheet.Cells["A1"];
-        cell.PutValue(12345.67); // numeric value
+        // Insert a date and a number that will be formatted according to the specified culture
+        cells["A1"].PutValue(DateTime.Now);
+        cells["A2"].PutValue(12345.67);
 
-        // Apply a custom number format; the separators will reflect the set culture
-        Style style = wb.CreateStyle();
-        style.Custom = "#,##0.00";
-        cell.SetStyle(style);
+        // Apply a number format that relies on the workbook's culture settings
+        Style style = workbook.CreateStyle();
+        style.Number = 14; // Built‑in date format
+        cells["A1"].SetStyle(style);
 
-        // Save the workbook
-        wb.Save("CultureConfiguredWorkbook.xlsx");
+        style = workbook.CreateStyle();
+        style.Number = 2; // Built‑in number format with two decimal places
+        cells["A2"].SetStyle(style);
+
+        // Save the workbook (lifecycle rule: save)
+        workbook.Save("ExportedWorkbook.xlsx");
     }
 }

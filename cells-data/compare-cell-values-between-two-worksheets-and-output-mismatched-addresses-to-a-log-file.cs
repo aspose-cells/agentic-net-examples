@@ -1,62 +1,96 @@
-// Title: C# – Compare Two Worksheets with Aspose.Cells and Log Mismatched Cell Addresses
-// Description: Loads an Excel file, compares each cell of the first two worksheets using Aspose.Cells, writes the A1‑style addresses of all mismatched cells to a log file, and saves the workbook.
-// Keywords: Aspose.Cells compare worksheets | C# Excel cell comparison | log mismatched cells | Excel diff report | A1 notation address | null‑safe value comparison | save workbook Aspose
-// Common Searches: Aspose.Cells compare two sheets C# | log cell differences Aspose.Cells | find mismatched cells in Excel using .NET | Excel worksheet diff script | write Excel diff to log file
-// Developer Intent: Detect cells whose values differ between two worksheets and record their addresses for review.
-// Use Cases: Validate data integrity between source and target sheets in an ETL pipeline. | Create a diff report for financial reconciliation by listing changed cells. | Automate quality checks for template compliance by flagging non‑matching values.
-// AI Prompts: Generate a C# method with Aspose.Cells that returns a list of mismatched cell addresses between two worksheets. | Show how to extend the example to include the original and new values beside each address in the log. | Explain how to compare formula results rather than the formula text using Aspose.Cells.
+// Title: Log mismatched cell addresses when comparing two worksheets in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates over the used range of the first two worksheets, compares each cell's string value, and writes any differing addresses and values to a text log. | Adjust the worksheet comparison to ignore case and trim whitespace before logging mismatches, using Aspose.Cells in C#. | Create a variant that exports mismatched cell details to a CSV file instead of a plain‑text log, preserving A1 addresses and values.
+// Common Searches: how to compare two sheets in an Excel workbook with Aspose.Cells C# | write mismatched cell addresses to a log file using Aspose.Cells .NET | Aspose.Cells iterate over used range of multiple worksheets example | C# log differences between worksheets to a text file
+// Tags: compare worksheets Aspose.Cells C# | log cell mismatches to text file | iterate used range Aspose.Cells | export mismatched cells to CSV Aspose.Cells | handle missing workbook file Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel file, compares each cell of the first two worksheets using Aspose.Cells, writes the A1‑style addresses of all mismatched cells to a log file, and saves the workbook.
-class CompareWorksheets
+// The example loads an Excel workbook, verifies that at least two worksheets exist, determines the maximum used rows and columns across the first two sheets, and then iterates through each cell in that combined range. It compares the string values of corresponding cells and writes any mismatched addresses (in A1 notation) together with their values to a log file, while handling missing files and other exceptions gracefully.
+class WorksheetComparer
 {
     static void Main()
     {
-        // Load a workbook that contains the two worksheets to compare
-        Workbook workbook = new Workbook("input.xlsx"); // create/load
-
-        // Access the first two worksheets (index 0 and 1)
-        Worksheet sheet1 = workbook.Worksheets[0];
-        Worksheet sheet2 = workbook.Worksheets[1];
-
-        // Determine the maximum rows and columns that contain data in either sheet
-        int maxRow = Math.Max(sheet1.Cells.MaxDataRow, sheet2.Cells.MaxDataRow);
-        int maxCol = Math.Max(sheet1.Cells.MaxDataColumn, sheet2.Cells.MaxDataColumn);
-
-        // Open a log file to record mismatched cell addresses
-        using (StreamWriter logWriter = new StreamWriter("mismatches.log"))
+        try
         {
-            // Iterate through each cell within the determined range
-            for (int row = 0; row <= maxRow; row++)
+            const string inputPath = "input.xlsx";
+            const string logPath = "mismatch_log.txt";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the workbook containing the two worksheets to compare
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                return;
+            }
+
+            // Ensure there are at least two worksheets
+            if (workbook.Worksheets.Count < 2)
+            {
+                Console.WriteLine("Error: The workbook must contain at least two worksheets.");
+                return;
+            }
+
+            // Get the first two worksheets (adjust indices or names as needed)
+            Worksheet sheetA = workbook.Worksheets[0];
+            Worksheet sheetB = workbook.Worksheets[1];
+
+            // Determine the maximum used rows and columns across both sheets
+            int maxRows = Math.Max(sheetA.Cells.MaxDataRow, sheetB.Cells.MaxDataRow);
+            int maxCols = Math.Max(sheetA.Cells.MaxDataColumn, sheetB.Cells.MaxDataColumn);
+
+            // Prepare the log file (overwrites if it already exists)
+            try
+            {
+                using (StreamWriter logWriter = new StreamWriter(logPath, false))
                 {
-                    // Retrieve cells from both worksheets
-                    Cell cell1 = sheet1.Cells[row, col];
-                    Cell cell2 = sheet2.Cells[row, col];
-
-                    // Get the underlying values (could be null)
-                    object value1 = cell1?.Value;
-                    object value2 = cell2?.Value;
-
-                    // Compare values, handling nulls safely
-                    bool areEqual = (value1 == null && value2 == null) ||
-                                    (value1 != null && value1.Equals(value2));
-
-                    // If values differ, write the cell address (A1 notation) to the log
-                    if (!areEqual)
+                    // Iterate through each cell within the used range
+                    for (int row = 0; row <= maxRows; row++)
                     {
-                        string address = CellsHelper.CellIndexToName(row, col);
-                        logWriter.WriteLine(address);
+                        for (int col = 0; col <= maxCols; col++)
+                        {
+                            // Retrieve cell values from both worksheets
+                            Cell cellA = sheetA.Cells[row, col];
+                            Cell cellB = sheetB.Cells[row, col];
+
+                            // Use string representation for comparison (handles different data types)
+                            string valueA = cellA.StringValue;
+                            string valueB = cellB.StringValue;
+
+                            // If values differ, write the address to the log
+                            if (!string.Equals(valueA, valueB, StringComparison.Ordinal))
+                            {
+                                // Convert zero‑based indices to A1 style address
+                                string address = CellsHelper.CellIndexToName(row, col);
+                                logWriter.WriteLine($"{address}: Sheet1=\"{valueA}\" | Sheet2=\"{valueB}\"");
+                            }
+                        }
                     }
                 }
+
+                Console.WriteLine($"Comparison complete. Mismatched cells logged to '{logPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to write log file: {ex.Message}");
             }
         }
-
-        // Save the workbook (no modifications made, but required by lifecycle rule)
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

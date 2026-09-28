@@ -1,55 +1,43 @@
-// Title: Apply a Custom Number Format in Aspose.Cells for .NET (C#) to Show Large IDs Without Scientific Notation
-// Description: This example creates a workbook, writes three 13‑digit identifiers to cells A1‑A3, defines a custom style with the format "#,##0" to display numbers with thousand separators and without scientific notation, applies the style to the range using a StyleFlag that targets only the number format, and saves the file as LargeIdentifiersNumberFormat.xlsx.
-// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# Excel | custom number format | prevent scientific notation | large identifiers | plain numeric display | StyleFlag NumberFormat | Excel thousand separators | format cells programmatically
-// Common Searches: Aspose.Cells C# custom number format example | how to stop scientific notation in Excel using Aspose.Cells | apply "#,##0" format to a range with Aspose.Cells .NET | set number format without affecting other styles Aspose.Cells | display large IDs as plain numbers in generated Excel file
-// Developer Intent: The developer needs to format cells so that large identifier values are shown as full numbers rather than scientific notation.
-// Use Cases: Exporting invoice numbers or order IDs that exceed 12 digits. | Preserving full SKU or barcode values in Excel reports. | Generating financial statements where account numbers must remain exact.
-// AI Prompts: Write C# code that uses Aspose.Cells to apply the custom number format "#,##0" to cells A1‑A3 and prevents scientific notation. | Show how to use StyleFlag with NumberFormat = true to apply only the number format in Aspose.Cells. | Provide a complete Aspose.Cells .NET example that saves a workbook after formatting a column of large identifiers.
+// Title: Use Aspose.Cells in C# to apply a custom numeric format that prevents scientific notation for large integer IDs
+// AI Prompts: Write C# code that inserts long integer identifiers into an Excel worksheet with Aspose.Cells and applies the custom format string "0" to each cell so the full value is displayed. | Demonstrate how to get a cell's style, set its Custom property to "0", and save the workbook to keep large numbers from appearing in exponential notation.
+// Common Searches: aspnet c# aspose.cells prevent scientific notation for big numbers in Excel | apply custom format "0" to cells using Aspose.Cells C# | display 15‑digit IDs in Excel without exponential format with Aspose.Cells | set cell style custom format Aspose.Cells to preserve large integer values
+// Tags: cell format "0" Aspose.Cells C# | prevent scientific notation Excel Aspose.Cells | set cell style Aspose.Cells C# | write large integer IDs Aspose.Cells | save workbook as xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-namespace AsposeCellsNumberFormatDemo
+// The program creates a workbook, writes several large integer IDs to cells, applies the custom numeric format "0" to each cell to suppress scientific notation, and saves the file as LargeIdentifiers.xlsx.
+class Program
 {
-    // This example creates a workbook, writes three 13‑digit identifiers to cells A1‑A3, defines a custom style with the format "#,##0" to display numbers with thousand separators and without scientific notation, applies the style to the range using a StyleFlag that targets only the number format, and saves the file as LargeIdentifiersNumberFormat.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
+
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Sample large identifiers that could be shown in scientific notation
+        long[] largeIds = new long[]
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            123456789012345,
+            987654321098765432,
+            1234567890123456789
+        };
 
-                // Populate cells with large identifier values that would normally display in scientific notation
-                sheet.Cells["A1"].PutValue(1234567890123);
-                sheet.Cells["A2"].PutValue(9876543210987);
-                sheet.Cells["A3"].PutValue(5555555555555);
+        // Write each identifier to a cell and apply a custom number format to force full display
+        for (int i = 0; i < largeIds.Length; i++)
+        {
+            Cell cell = sheet.Cells[i, 0];
+            cell.PutValue(largeIds[i]);               // store the numeric value
 
-                // Create a custom style that forces plain number display (no scientific notation)
-                Style plainNumberStyle = workbook.CreateStyle();
-                // Custom format "#,##0" adds thousand separators and prevents scientific notation
-                plainNumberStyle.Custom = "#,##0";
-
-                // Prepare a StyleFlag to apply only the number format part of the style
-                StyleFlag flag = new StyleFlag
-                {
-                    NumberFormat = true
-                };
-
-                // Apply the style to the range containing the large identifiers
-                AsposeRange range = sheet.Cells.CreateRange("A1", "A3");
-                range.ApplyStyle(plainNumberStyle, flag);
-
-                // Save the workbook to an Excel file
-                workbook.Save("LargeIdentifiersNumberFormat.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Apply custom format "0" to prevent scientific notation
+            Style style = cell.GetStyle();
+            style.Custom = "0";
+            cell.SetStyle(style);
         }
+
+        // Save the workbook (lifecycle rule)
+        workbook.Save("LargeIdentifiers.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,46 +1,66 @@
-// Title: Filter out defined names prefixed with "temp_" using Aspose.Cells LoadFilter (C#)
-// Description: Demonstrates how to create a custom LoadFilter, load an Excel workbook with LoadOptions, and delete every defined name that begins with the "temp_" prefix before saving the file.
-// Keywords: Aspose.Cells LoadFilter | LoadOptions C# | remove defined names | temporary named ranges | filter named ranges | temp_ prefix | Excel workbook cleanup | C# Aspose.Cells example
-// Common Searches: Aspose.Cells delete defined names with prefix | C# load Excel file and skip temporary named ranges | How to use LoadFilter to filter named ranges in Aspose.Cells | Remove "temp_" named ranges from workbook using Aspose | LoadOptions LoadFilter example for named ranges
-// Developer Intent: Remove all defined names that start with "temp_" from a workbook during or after loading.
-// Use Cases: Strip placeholder named ranges before publishing a report. | Reduce file size by eliminating temporary names generated during data processing. | Prepare a clean workbook for downstream analytics that require only permanent named ranges.
-// AI Prompts: Show C# code that uses Aspose.Cells LoadOptions with a custom LoadFilter to exclude defined names beginning with "temp_". | Explain how to iterate through Workbook.Worksheets.Names and delete entries that match a specific prefix. | Provide a step‑by‑step guide for cleaning up temporary named ranges in an Excel file using Aspose.Cells.
+// Title: Load an Excel workbook in C# with Aspose.Cells while skipping defined names that start with "temp_" using LoadOptions.LoadFilter
+// AI Prompts: Generate C# code that creates a LoadOptions object with a LoadFilter delegate to ignore any defined names whose text begins with "temp_" and then loads the workbook with Aspose.Cells. | Show how to configure Aspose.Cells LoadOptions.LoadFilter to filter out temporary named ranges during workbook loading and save the cleaned file. | Write a C# method that uses Aspose.Cells LoadOptions to load an .xlsx file, automatically excludes defined names prefixed with "temp_", and returns the resulting Workbook object.
+// Common Searches: Aspose.Cells C# load workbook without temporary defined names using LoadFilter | How to exclude named ranges that start with temp_ when opening an Excel file with Aspose.Cells | LoadOptions.LoadFilter example for skipping defined names in Aspose.Cells | C# Aspose.Cells filter out temp_ named ranges during workbook load | Prevent loading of specific defined names in Aspose.Cells using LoadOptions
+// Tags: Aspose.Cells LoadOptions defined name filter | C# skip temporary named ranges | Load Excel workbook without temp_ names | Aspose.Cells LoadFilter delegate example | filter defined names during workbook load
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a custom LoadFilter, load an Excel workbook with LoadOptions, and delete every defined name that begins with the "temp_" prefix before saving the file.
-class CustomLoadFilter : LoadFilter
-{
-    // Load all data for each worksheet.
-    public override void StartSheet(Worksheet sheet)
-    {
-        LoadDataFilterOptions = LoadDataFilterOptions.All;
-    }
-}
-
+// Demonstrates how to use Aspose.Cells LoadOptions with a LoadFilter delegate in C# to ignore defined names that begin with "temp_" while loading an Excel workbook, allowing the file to be opened and saved without those temporary named ranges.
 class Program
 {
     static void Main()
     {
-        // Prepare load options and assign the custom filter.
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new CustomLoadFilter();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Load the workbook using the specified options.
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Remove defined names that start with "temp_".
-        for (int i = workbook.Worksheets.Names.Count - 1; i >= 0; i--)
+        try
         {
-            Name definedName = workbook.Worksheets.Names[i];
-            if (definedName.Text.StartsWith("temp_", StringComparison.OrdinalIgnoreCase))
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                workbook.Worksheets.Names.RemoveAt(i);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook without any filter
+            Workbook workbook = new Workbook(inputPath);
+
+            // Remove defined names that start with "temp_"
+            RemoveTempDefinedNames(workbook);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to delete defined names beginning with "temp_"
+    private static void RemoveTempDefinedNames(Workbook workbook)
+    {
+        // Collect names to delete to avoid modifying the collection during iteration
+        List<string> namesToDelete = new List<string>();
+
+        // Defined names are stored in the Names collection of the workbook
+        foreach (Name definedName in workbook.Worksheets.Names)
+        {
+            if (!string.IsNullOrEmpty(definedName.Text) && definedName.Text.StartsWith("temp_"))
+            {
+                namesToDelete.Add(definedName.Text);
             }
         }
 
-        // Save the filtered workbook.
-        workbook.Save("output.xlsx");
+        // Delete the collected names
+        foreach (string name in namesToDelete)
+        {
+            workbook.Worksheets.Names.Remove(name);
+        }
     }
 }

@@ -1,16 +1,13 @@
-// Title: Aspose.Cells for .NET: Create a Pie Chart with Percentage Labels and Auto‑Resizing Data‑Label Shapes
-// Description: Shows how to build a workbook, fill category and value cells, add a pie chart, enable data labels to display only percentages, hide raw values, and automatically resize label shapes to fit the text using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# pie chart | percentage data labels | auto resize label shape | IsResizeShapeToFitText | WidthPixel | .NET charting | Excel export | pie chart formatting | data label customization
-// Common Searches: Aspose.Cells show percentage on pie chart | C# auto resize chart data label shape | hide values display percentages Aspose.Cells chart | set minimum width for data labels Aspose.Cells | create pie chart from cells Aspose.Cells .NET
-// Developer Intent: Generate a pie chart that reads values from worksheet cells, shows percentages in the data labels, hides the raw numbers, and lets the label shapes automatically adjust to the text length.
-// Use Cases: Produce a sales‑by‑region report where each slice label shows only the percentage contribution and adapts its size to avoid truncation. | Build a dashboard that pulls percentage figures from cells, visualizes them in a pie chart, and maintains consistent label appearance across dynamic data sets. | Export a presentation slide with a pie chart whose data‑label boxes auto‑size, delivering a clean layout without manual adjustments.
-// AI Prompts: Write C# code with Aspose.Cells to create a pie chart that displays percentages from cells and hides the raw values. | Show how to enable IsResizeShapeToFitText and define a minimum WidthPixel for data labels in an Aspose.Cells chart. | Explain the steps to bind category and value ranges to a pie chart and configure data‑label formatting, including percentage display and automatic shape resizing, using Aspose.Cells for .NET.
+// Title: Create a pie chart with percentage data labels sourced from worksheet cells and auto‑resize label shapes using Aspose.Cells for .NET
+// AI Prompts: Write C# code that builds an Excel workbook, fills cells A2:A4 and B2:B4 with categories and values, adds a pie chart linked to those ranges, enables data labels to show only percentages, and configures the label boxes to auto‑fit the text before saving the file. | Generate a complete Aspose.Cells example that inserts a pie chart, displays percentage labels derived from the source cells, and adjusts the label shape size dynamically to accommodate the label content.
+// Common Searches: asp.net how to display only percentage labels on a pie chart with Aspose.Cells | c# Aspose.Cells auto resize data label shape to fit text in pie chart | example binding pie chart series to worksheet cell range using Aspose.Cells | set data label showpercentage property Aspose.Cells C# tutorial | adjust pie chart data label dimensions programmatically Aspose.Cells
+// Tags: pie chart percentage data labels Aspose.Cells | auto‑fit data label shape Aspose.Cells | bind chart series to cell range C# | set data label dimensions Aspose.Cells | generate pie chart from worksheet data Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Shows how to build a workbook, fill category and value cells, add a pie chart, enable data labels to display only percentages, hide raw values, and automatically resize label shapes to fit the text using Aspose.Cells for .NET.
+// // This example creates a new workbook, populates it with category and value data, adds a pie chart linked to those cells, enables data labels to show only percentages, and sets the label shapes to automatically resize to fit the label text before saving as PieChartWithPercentLabels.xlsx.
 class Program
 {
     static void Main()
@@ -19,7 +16,7 @@ class Program
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data for the pie chart
+        // Populate worksheet with sample data for the pie chart
         worksheet.Cells["A1"].PutValue("Category");
         worksheet.Cells["A2"].PutValue("A");
         worksheet.Cells["A3"].PutValue("B");
@@ -37,14 +34,15 @@ class Program
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Enable data labels and configure them to show percentages
+        // Enable data labels for the first series and show percentages
         DataLabels dataLabels = chart.NSeries[0].DataLabels;
         dataLabels.ShowPercentage = true;   // display percentage values
         dataLabels.ShowValue = false;       // hide raw values
 
-        // Adjust the shape of the data label to fit the percentage text
+        // Adjust the shape of the data labels so they fit the text
         dataLabels.IsResizeShapeToFitText = true; // auto‑fit shape to text
-        dataLabels.WidthPixel = 80;                // optional minimum width in pixels
+        dataLabels.WidthPixel = 80;                // optional explicit width
+        dataLabels.HeightPixel = 30;               // optional explicit height
 
         // Save the workbook to a file
         workbook.Save("PieChartWithPercentLabels.xlsx");

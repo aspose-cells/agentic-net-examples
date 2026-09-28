@@ -1,68 +1,56 @@
-// Title: Stream Aspose.Cells HTML Export Bytes Directly to ASP.NET Response for Instant Download
-// Description: Export an Aspose.Cells workbook to HTML in a MemoryStream and write the resulting byte array to an ASP.NET HttpResponse (MVC, Web Forms, or Web API). The guide shows how to set the correct MIME type and Content‑Disposition headers so the browser downloads the HTML file without creating a temporary file on the server.
-// Keywords: Aspose.Cells | HTML export | MemoryStream | ASP.NET response | file download | C# streaming | HttpResponse | FileResult | Web API | Web Forms
-// Common Searches: Aspose.Cells export HTML to HttpResponse | download generated HTML in ASP.NET MVC | write byte[] to ASP.NET response stream | ASP.NET file download from MemoryStream | C# stream Aspose.Cells HTML without temp file
-// Developer Intent: Send the HTML byte array produced by Aspose.Cells to the client as a downloadable file in a single HTTP response.
-// Use Cases: One‑click "Export to HTML" button in an ASP.NET MVC controller that streams the file to the browser. | Web Forms page that generates a workbook on the fly and returns the HTML as an attachment. | Web API endpoint that returns the exported HTML using FileResult or IActionResult without writing to disk.
-// AI Prompts: Create an ASP.NET MVC action that calls ExportWorkbookAsHtml, sets Content‑Type to text/html, adds a Content‑Disposition attachment header, and returns a FileResult. | Show a Web Forms Page_Load example that writes the HTML byte array to Response.OutputStream and ends the response. | Provide a minimal ASP.NET Core Web API method that streams Aspose.Cells HTML bytes as a downloadable file using IActionResult.
+// Title: Stream Aspose.Cells HTML export from a MemoryStream directly to an ASP.NET response for immediate download
+// AI Prompts: Create a C# ASP.NET MVC action that loads a Workbook, saves it as HTML into a MemoryStream, and returns the stream as a downloadable file with correct Content-Type and Content-Disposition headers. | Show how to flush a MemoryStream containing Aspose.Cells HTML output to HttpResponse in ASP.NET Core, ensuring the stream position is reset and the response is properly completed.
+// Common Searches: how to return Aspose.Cells HTML as a file download in ASP.NET | write MemoryStream bytes to HttpResponse in C# without saving to disk | Aspose.Cells export workbook to HTML and stream to browser | set content-disposition header for html attachment in ASP.NET MVC | download generated HTML from Aspose.Cells directly from memory
+// Tags: Aspose.Cells export html to HttpResponse | ASP.NET stream MemoryStream as file download | C# set content-disposition for html attachment | Aspose.Cells save workbook as html without temporary file | ASP.NET Core return MemoryStream result
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Export an Aspose.Cells workbook to HTML in a MemoryStream and write the resulting byte array to an ASP.NET HttpResponse (MVC, Web Forms, or Web API). The guide shows how to set the correct MIME type and Content‑Disposition headers so the browser downloads the HTML file without creating a temporary file on the server.
-public class HtmlExportHelper
+// Demonstrates loading or creating a Workbook, saving it as HTML into a MemoryStream, resetting the stream, and sending the HTML bytes to the client via HttpResponse with appropriate Content-Type and Content-Disposition headers for an immediate download, without writing a temporary file to disk.
+public class ExportHtml
 {
-    // Exports a workbook as an HTML file and returns the HTML bytes.
-    public byte[] ExportWorkbookAsHtml()
+    public void DownloadWorkbookAsHtml()
     {
-        Workbook workbook = null;
         try
         {
-            // Create a new workbook and add some sample data.
-            workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
+            // Load an existing workbook if a template file is present; otherwise create a new one.
+            Workbook workbook;
+            const string templatePath = "template.xlsx";
+            if (File.Exists(templatePath))
+            {
+                workbook = new Workbook(templatePath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                // TODO: populate workbook with data as needed
+            }
 
-            // Save the workbook to a memory stream in HTML format.
-            using (var htmlStream = new MemoryStream())
+            // Save the workbook to a MemoryStream in HTML format.
+            using (MemoryStream htmlStream = new MemoryStream())
             {
                 workbook.Save(htmlStream, SaveFormat.Html);
-                return htmlStream.ToArray(); // Return the generated HTML bytes.
+                // Ensure the stream is positioned at the beginning.
+                htmlStream.Position = 0;
+
+                // Write the HTML bytes to a file.
+                const string outputPath = "Workbook.html";
+                File.WriteAllBytes(outputPath, htmlStream.ToArray());
+
+                Console.WriteLine($"HTML file has been saved to: {Path.GetFullPath(outputPath)}");
             }
         }
         catch (Exception ex)
         {
-            // Wrap and rethrow the exception for caller handling.
-            throw new InvalidOperationException("Failed to export workbook as HTML.", ex);
-        }
-        finally
-        {
-            // Ensure the workbook is properly disposed.
-            workbook?.Dispose();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
-}
 
-public class Program
-{
-    // Entry point required for compilation.
-    public static void Main()
+    // Entry point for the console application.
+    public static void Main(string[] args)
     {
-        try
-        {
-            var helper = new HtmlExportHelper();
-            byte[] htmlBytes = helper.ExportWorkbookAsHtml();
-
-            // Write the HTML bytes to a file for verification.
-            string outputPath = "output.html";
-            File.WriteAllBytes(outputPath, htmlBytes);
-            Console.WriteLine($"HTML exported successfully to {Path.GetFullPath(outputPath)}");
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error: {ex.Message}");
-        }
+        ExportHtml exporter = new ExportHtml();
+        exporter.DownloadWorkbookAsHtml();
     }
 }

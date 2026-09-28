@@ -1,60 +1,81 @@
-// Title: Add Linked Rectangle Shapes to All Worksheets with Aspose.Cells for .NET
-// Description: Creates a new Workbook, adds extra worksheets, writes a summary to cell A1 on each sheet, then iterates through every worksheet to insert a rectangle shape at row 2/column 2, assigns a unique name, links the shape to the sheet’s A1 cell, applies light‑blue fill and dark‑blue border, logs the shape details, and saves the file as WorksheetsWithLinkedShapes.xlsx.
-// Keywords: Aspose.Cells add shape | link shape to cell | iterate worksheets C# | rectangle shape Aspose.Cells | SetLinkedCell example | shape logging Aspose | batch shape insertion | Excel navigation button
-// Common Searches: How to add a rectangle shape to every worksheet with Aspose.Cells | Aspose.Cells set linked cell for a shape in C# | Iterate all worksheets and add named shapes | Aspose.Cells shape formatting and linking example | C# code to create navigation shapes in Excel workbook
-// Developer Intent: Insert a rectangle shape on each worksheet, link it to the sheet’s A1 cell, and output the shape’s name, type, and linked cell.
-// Use Cases: Build a consistent navigation button on each sheet that jumps to a summary section. | Automate branding elements (shapes with corporate colors) across a multi‑sheet report. | Generate a visual dashboard where each worksheet contains a clickable shape linked to its key data cell.
-// AI Prompts: Generate C# code using Aspose.Cells that adds a circle shape to every worksheet, links it to cell B2, sets a green fill, and prints the linked cell address. | Show an example that loops through all worksheets, inserts a rectangle shape, gives each shape a unique name, links it to a specific cell, customizes its colors, and saves the workbook.
+// Title: Add a rectangle shape linking to Summary!A1 on each worksheet of an Excel file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a workbook, loops through every worksheet, inserts a rectangle shape at row 3 column C, sets its hyperlink to Summary!A1, and writes a log entry for each sheet. | Change the example to use an Oval shape instead of a rectangle and point the hyperlink to Summary!B2 while keeping the try‑catch logging structure. | Add a try‑catch around the workbook.Save call that records a custom success or failure message to the console.
+// Common Searches: how to add a shape with hyperlink to each sheet using Aspose.Cells C# | Aspose.Cells iterate worksheets insert rectangle shape linking to summary cell | C# Aspose.Cells add hyperlink shape to Summary!A1 on all worksheets | log shape insertion results when adding shapes to Excel sheets with Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | shape hyperlink to Summary!A1 Aspose.Cells | iterate worksheets insert shape Aspose.Cells | error handling shape insertion Aspose.Cells | log shape addition results C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeLinkDemo
+// The program loads 'input.xlsx', iterates each worksheet, adds a rectangle shape at row 3 column C with a hyperlink to Summary!A1, logs success or failure per sheet, and saves the modified workbook as 'output.xlsx'.
+class Program
 {
-    // Creates a new Workbook, adds extra worksheets, writes a summary to cell A1 on each sheet, then iterates through every worksheet to insert a rectangle shape at row 2/column 2, assigns a unique name, links the shape to the sheet’s A1 cell, applies light‑blue fill and dark‑blue border, logs the shape details, and saves the file as WorksheetsWithLinkedShapes.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook (default worksheet is already added)
-            Workbook workbook = new Workbook();
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Add a couple of extra worksheets for demonstration
-            Worksheet ws1 = workbook.Worksheets.Add("DataSheet1");
-            Worksheet ws2 = workbook.Worksheets.Add("DataSheet2");
-
-            // Populate a summary cell in each worksheet (e.g., A1)
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                sheet.Cells["A1"].PutValue($"Summary of {sheet.Name}");
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Iterate through all worksheets, add a rectangle shape, link it to the summary cell, and log details
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define the target summary cell (e.g., Summary!A1)
+            string summarySheetName = "Summary";
+            string summaryCellAddress = "A1";
+
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Add a rectangle shape (row, top, column, left, height, width)
-                // Placing it at row 2, column 2 with size 100x50 points
-                Shape shape = sheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 50);
+                try
+                {
+                    // Add a rectangle shape to the current worksheet
+                    // Parameters: type, upper‑left row, upper‑left column, top offset, left offset, height, width
+                    Shape shape = sheet.Shapes.AddShape(
+                        MsoDrawingType.Rectangle, // shape type
+                        2,    // upper‑left row (zero‑based, row 3)
+                        2,    // upper‑left column (zero‑based, column C)
+                        0,    // top offset in pixels
+                        0,    // left offset in pixels
+                        100,  // height in points
+                        200   // width in points
+                    );
 
-                // Give the shape a distinctive name
-                shape.Name = $"SummaryShape_{sheet.Index}";
+                    // Configure the hyperlink to point to the summary cell
+                    shape.Hyperlink.Address = $"{summarySheetName}!{summaryCellAddress}";
+                    // Optional: set a screen tip
+                    shape.Hyperlink.ScreenTip = $"Go to {summarySheetName}!{summaryCellAddress}";
 
-                // Link the shape to the summary cell (A1) of the current worksheet
-                // Parameters: cell name, isRowAbsolute, isColumnAbsolute
-                shape.SetLinkedCell("A1", false, false);
+                    // Optionally, give the shape a name or text
+                    shape.Name = $"LinkToSummary_{sheet.Name}";
+                    shape.Text = "Go to Summary";
 
-                // Optionally set some visual properties
-                shape.FillFormat.ForeColor = System.Drawing.Color.LightBlue;
-                shape.LineFormat.ForeColor = System.Drawing.Color.DarkBlue;
-
-                // Log the result
-                string linkedCell = shape.GetLinkedCell(false, false);
-                Console.WriteLine($"Worksheet '{sheet.Name}' (Index {sheet.Index}): Added shape '{shape.Name}' of type {shape.Type} linked to cell '{linkedCell}'.");
+                    // Log the operation
+                    Console.WriteLine($"Added shape to worksheet '{sheet.Name}' linking to '{summarySheetName}!{summaryCellAddress}'.");
+                }
+                catch (Exception exShape)
+                {
+                    Console.WriteLine($"Failed to add shape to worksheet '{sheet.Name}': {exShape.Message}");
+                }
             }
 
-            // Save the workbook to a file
-            workbook.Save("WorksheetsWithLinkedShapes.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

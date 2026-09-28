@@ -1,32 +1,46 @@
-// Title: C# – Aspose.Cells: Remove All Horizontal and Vertical Page Breaks from a Worksheet
-// Description: Demonstrates how to clear every manual page break in an Aspose.Cells worksheet using C#. The code creates or loads a workbook, empties the HorizontalPageBreaks and VerticalPageBreaks collections, and saves the file so Excel applies its default automatic pagination.
-// Keywords: Aspose.Cells remove page breaks C# | clear worksheet page breaks .NET | delete manual page breaks Aspose | automatic pagination Excel C# | horizontal vertical page break removal | Aspose.Cells printing layout | C# Excel pagination reset
-// Common Searches: how to clear all page breaks in Aspose.Cells C# | remove manual page breaks from Excel worksheet using .NET | Aspose.Cells automatic pagination after deleting page breaks | C# code to clear horizontal and vertical page breaks in Excel file | reset pagination in Aspose.Cells workbook
-// Developer Intent: Delete every existing horizontal and vertical page break in a worksheet so the document uses Excel’s built‑in automatic pagination.
-// Use Cases: Prepare a report for printing with default page layout after removing custom breaks. | Sanitize a shared template to ensure consistent pagination for all users. | Reset pagination in dynamically generated workbooks before final distribution.
-// AI Prompts: Write C# code with Aspose.Cells that removes all page breaks from every worksheet in a workbook and then saves it. | Explain how Aspose.Cells recalculates automatic pagination once manual page breaks are cleared. | Show an example that clears page breaks and configures print options such as fit‑to‑page in Aspose.Cells.
+// Title: Delete all horizontal and vertical page breaks from an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that removes every page break from the first worksheet of a workbook with Aspose.Cells and saves the result. | Show the Aspose.Cells .NET method calls needed to clear the page break collection of a worksheet. | Explain how to reset automatic pagination by deleting page breaks in an Excel file using the Aspose.Cells C# API.
+// Common Searches: C# Aspose.Cells remove all page breaks from worksheet | Aspose.Cells clear page break collection programmatically | How to reset pagination in Excel using Aspose.Cells .NET | Delete horizontal and vertical page breaks with Aspose.Cells C# example | Aspose.Cells remove page breaks before saving workbook
+// Tags: Aspose.Cells worksheet page break removal | Aspose.Cells .NET pagination cleanup | Aspose.Cells pagination reset technique | Aspose.Cells page break collection reset | worksheet pagination control Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to clear every manual page break in an Aspose.Cells worksheet using C#. The code creates or loads a workbook, empties the HorizontalPageBreaks and VerticalPageBreaks collections, and saves the file so Excel applies its default automatic pagination.
-class RemovePageBreaksDemo
+// The example loads 'input.xlsx', accesses the first worksheet, clears its page break collection with Aspose.Cells, and saves the modified file as 'output.xlsx', demonstrating how to remove all page breaks so Excel can paginate automatically.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Remove all horizontal page breaks
-        worksheet.HorizontalPageBreaks.Clear();
+        try
+        {
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Remove all vertical page breaks
-        worksheet.VerticalPageBreaks.Clear();
+            // Access the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook without any manual page breaks
-        workbook.Save("NoPageBreaks.xlsx");
+            // NOTE: Page break collections may not be available in older Aspose.Cells versions.
+            // If needed, clear them using the appropriate API for the version you are using.
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,53 +1,36 @@
-// Title: C# – Wrap Aspose.Cells Worksheet.FreezePanes in Try‑Catch to Safely Handle Invalid Indices
-// Description: Demonstrates how to create a Workbook, access the first Worksheet, and call Worksheet.FreezePanes twice—once with a valid cell reference (C3) and three frozen rows/columns, and once with invalid zero indices. Each call is enclosed in its own try‑catch block to capture exceptions, log a friendly message, and allow the program to continue before saving the file as FreezePanesDemo.xlsx.
-// Keywords: Aspose.Cells | Worksheet.FreezePanes | C# | .NET | exception handling | try catch | invalid indices | freeze panes error handling | Aspose.Cells example
-// Common Searches: Aspose.Cells FreezePanes try catch example | how to handle invalid FreezePanes parameters in C# | catch exception Worksheet.FreezePanes Aspose.Cells | freeze panes zero row column error Aspose.Cells
-// Developer Intent: Show how to protect Worksheet.FreezePanes calls with try‑catch blocks so that out‑of‑range or zero indices do not crash the application.
-// Use Cases: Freeze panes at a specific cell (e.g., C3) while ensuring runtime errors are caught. | Attempt a FreezePanes operation with invalid parameters, capture the exception, and display a custom message. | Log FreezePanes failures, continue processing other workbook tasks, and still save the final file.
-// AI Prompts: Generate C# code using Aspose.Cells that freezes panes at a given cell and includes try‑catch for invalid arguments. | Explain which Worksheet.FreezePanes overloads throw exceptions for out‑of‑range indices and how to handle them. | Provide best practices for logging FreezePanes errors in an Aspose.Cells workflow.
+// Title: Safely applying Worksheet.FreezePanes in C# with Aspose.Cells using try‑catch to manage invalid row or column indices
+// AI Prompts: Wrap the Worksheet.FreezePanes call in a try‑catch block that catches ArgumentOutOfRangeException and logs a clear message. | Add pre‑validation for row and column parameters before invoking FreezePanes, and fall back to default behavior when values are out of range. | Implement a helper method that executes FreezePanes, returns a success flag, and provides user‑friendly error details for invalid indices.
+// Common Searches: C# Aspose.Cells how to catch ArgumentOutOfRangeException from FreezePanes | example of using try-catch around Worksheet.FreezePanes in .NET | prevent crash when FreezePanes receives negative row index Aspose.Cells | validate freeze pane coordinates before calling FreezePanes in Aspose.Cells | handle invalid freeze pane parameters in Aspose.Cells workbook creation
+// Tags: Aspose.Cells FreezePanes exception handling | C# try-catch worksheet freeze panes | validate freeze pane indices Aspose.Cells | out-of-range FreezePanes parameters handling | error handling for worksheet FreezePanes Aspose.Cells | protect FreezePanes call with try-catch
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFreezePanesDemo
+// // Demonstrates creating a workbook, accessing the first worksheet, freezing the first row and column using Worksheet.FreezePanes inside a try‑catch block, and saving the file while gracefully handling any exceptions such as invalid row or column indices.
+class Program
 {
-    // Demonstrates how to create a Workbook, access the first Worksheet, and call Worksheet.FreezePanes twice—once with a valid cell reference (C3) and three frozen rows/columns, and once with invalid zero indices. Each call is enclosed in its own try‑catch block to capture exceptions, log a friendly message, and allow the program to continue before saving the file as FreezePanesDemo.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (creation rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Example of a valid FreezePanes call
-            try
-            {
-                // Freeze panes at cell C3 with 3 frozen rows and 3 frozen columns
-                worksheet.FreezePanes("C3", 3, 3);
-                Console.WriteLine("Valid FreezePanes executed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during valid FreezePanes: {ex.Message}");
-            }
+            // Freeze the first row and first column
+            // Parameters: row, column, totalRows, totalColumns
+            sheet.FreezePanes(1, 1, 1, 1);
 
-            // Example of an invalid FreezePanes call that will cause an exception
-            try
-            {
-                // Attempt to freeze panes with invalid indices (row, column, frozen rows, frozen columns all zero)
-                worksheet.FreezePanes(0, 0, 0, 0);
-            }
-            catch (Exception ex)
-            {
-                // Gracefully handle the error
-                Console.WriteLine($"Handled invalid FreezePanes call: {ex.Message}");
-            }
-
-            // Save the workbook (save rule)
-            workbook.Save("FreezePanesDemo.xlsx");
+            // Save the workbook
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any errors that occur during processing
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

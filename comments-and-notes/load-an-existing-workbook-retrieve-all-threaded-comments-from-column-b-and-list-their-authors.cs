@@ -1,60 +1,58 @@
-// Title: C# – List unique threaded comment authors in column B using Aspose.Cells
-// Description: Loads an Excel workbook with Aspose.Cells, scans all used rows in column B, extracts any threaded comments, gathers distinct author names, and prints the list to the console.
-// Keywords: Aspose.Cells | C# | threaded comments | Excel author extraction | column B | unique comment authors | GetThreadedComments | Workbook | Worksheet | HashSet
-// Common Searches: Aspose.Cells get threaded comment authors C# | list distinct comment authors column B Excel | retrieve authors from Excel comments using .NET | how to extract threaded comment authors Aspose.Cells | C# code to read Excel comment authors
-// Developer Intent: Extract and display each unique author of threaded comments located in column B of an Excel worksheet.
-// Use Cases: Create an audit log of users who have left threaded comments in column B before releasing the workbook. | Validate that only approved personnel have commented in column B by comparing extracted names to a whitelist. | Populate a dropdown or filter UI with distinct comment authors from column B for further analysis.
-// AI Prompts: Generate C# code with Aspose.Cells that collects distinct author names from threaded comments in column B of an Excel file. | Show how to export the unique list of comment authors from column B to a CSV using Aspose.Cells. | Explain best practices for handling cells without threaded comments when extracting authors in a .NET application.
+// Title: How to read and display authors of threaded comments in column B of an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# function that opens an existing .xlsx file with Aspose.Cells, scans column B, and returns a list of author names from all threaded comments. | Generate a .NET code snippet that iterates through each cell in column B, extracts any threaded comments via Aspose.Cells, and prints each comment's author to the console. | Create a reusable method in C# that accepts a worksheet and column index, and outputs the row numbers and authors of all threaded comments found in that column using Aspose.Cells.
+// Common Searches: Aspose.Cells C# get threaded comment author names from a specific column | list authors of Excel threaded comments column B using Aspose.Cells | C# iterate over worksheet cells to read threaded comment authors with Aspose.Cells | how to extract threaded comment authors from an .xlsx file in .NET
+// Tags: Aspose.Cells threaded comment author extraction | C# read Excel column B comments Aspose.Cells | enumerate worksheet threaded comments .NET | extract comment authors from .xlsx Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads an Excel workbook with Aspose.Cells, scans all used rows in column B, extracts any threaded comments, gathers distinct author names, and prints the list to the console.
-class ThreadedCommentAuthorsFromColumnB
+namespace ThreadedCommentsDemo
 {
-    static void Main()
+    // Loads input.xlsx, iterates rows in column B, retrieves any threaded comments per cell, and writes each comment's author (or "Unknown Author") to the console.
+    class Program
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("InputWorkbook.xlsx");
-
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Collection to store unique author names
-        HashSet<string> authors = new HashSet<string>();
-
-        // Determine the last used row in the worksheet
-        int lastRow = worksheet.Cells.MaxDataRow;
-
-        // Column B has index 1 (zero‑based)
-        int columnIndex = 1;
-
-        // Iterate through each row in column B
-        for (int row = 0; row <= lastRow; row++)
+        static void Main(string[] args)
         {
-            // Retrieve threaded comments for the current cell (row, column B)
-            ThreadedCommentCollection threadedComments = worksheet.Comments.GetThreadedComments(row, columnIndex);
+            // Load the existing workbook
+            string inputPath = "input.xlsx";
+            Workbook workbook = new Workbook(inputPath);
 
-            // If there are no threaded comments, continue to next row
-            if (threadedComments == null || threadedComments.Count == 0)
-                continue;
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Extract author names from each threaded comment
-            foreach (ThreadedComment comment in threadedComments)
+            // Column B has index 1 (zero‑based)
+            int columnIndex = 1;
+
+            // Get the comments collection of the worksheet
+            CommentCollection comments = worksheet.Comments;
+
+            // Determine the range of rows to inspect.
+            // Using MaxDataRow ensures we cover rows that contain data;
+            // you can adjust this if comments exist beyond data rows.
+            int maxRow = worksheet.Cells.MaxDataRow;
+
+            Console.WriteLine("Threaded comment authors in column B:");
+
+            // Iterate through each row in column B
+            for (int row = 0; row <= maxRow; row++)
             {
-                if (comment?.Author != null && !string.IsNullOrEmpty(comment.Author.Name))
+                // Retrieve threaded comments for the current cell (row, column B)
+                ThreadedCommentCollection threadedComments = comments.GetThreadedComments(row, columnIndex);
+
+                // If there are any threaded comments, list their authors
+                if (threadedComments != null && threadedComments.Count > 0)
                 {
-                    authors.Add(comment.Author.Name);
+                    foreach (ThreadedComment tc in threadedComments)
+                    {
+                        // Author may be null if not set; guard against it
+                        string authorName = tc.Author != null ? tc.Author.Name : "Unknown Author";
+                        Console.WriteLine($"Row {row + 1}: {authorName}");
+                    }
                 }
             }
-        }
 
-        // List all distinct authors found in column B
-        Console.WriteLine("Threaded comment authors in column B:");
-        foreach (string authorName in authors)
-        {
-            Console.WriteLine("- " + authorName);
+            // (Optional) Save the workbook if any modifications were made
+            // workbook.Save("output.xlsx");
         }
     }
 }

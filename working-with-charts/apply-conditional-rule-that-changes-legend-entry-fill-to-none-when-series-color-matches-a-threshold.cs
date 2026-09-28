@@ -1,75 +1,71 @@
-// Title: C# – Conditional Legend Entry Fill in Aspose.Cells Column Chart Based on Series Color
-// Description: Creates a workbook, adds sample data, builds a column chart with two series, assigns explicit colors, defines a threshold color, and sets the legend entry's IsTextNoFill property to true when the series color matches the threshold. The workbook is then saved as an Excel file.
-// Keywords: Aspose.Cells C# chart legend | conditional legend fill | IsTextNoFill property | series color threshold | column chart example | Excel legend formatting | Aspose.Cells sample code
-// Common Searches: Aspose.Cells set legend entry no fill C# | conditional legend formatting based on series color | how to hide legend fill when series is red Aspose.Cells | C# example for chart legend conditional rule | Aspose.Cells chart legend IsTextNoFill usage
-// Developer Intent: Apply a rule that removes the legend entry fill when a series color equals a predefined threshold.
-// Use Cases: Highlight critical series in financial dashboards by hiding their legend fill when they exceed a risk threshold. | Generate automated reports where negative performance values are colored red and their legend entries appear without fill for quick visual scanning. | Create dynamic Excel charts that adapt legend styling based on real‑time color thresholds across multiple data series.
-// AI Prompts: Generate C# code using Aspose.Cells that sets IsTextNoFill on legend entries when the series foreground color matches a given Color. | Show how to loop through chart series in Aspose.Cells and apply a conditional legend fill rule based on a threshold color, then save the workbook. | Explain how to extend the example to support several threshold colors and different legend styling options in Aspose.Cells.
+// Title: How to conditionally remove chart legend entry fill in Aspose.Cells for .NET when the series color exceeds a red‑component threshold
+// AI Prompts: Write C# code using Aspose.Cells that checks the foreground color of a chart series and sets the series' LegendEntry.IsTextNoFill property to true when the red component is greater than a specified value. | Outline the code required to set a legend entry's IsTextNoFill flag when a series color surpasses a given RGB threshold in Aspose.Cells.
+// Common Searches: Aspose.Cells C# hide legend entry fill based on series color | column chart legend fill removal when series color red component exceeds threshold using Aspose.Cells | programmatically control IsTextNoFill for chart legend entry in .NET
+// Tags: conditional legend formatting Aspose.Cells | chart series color threshold .NET | set legend entry no fill C# | column chart legend IsTextNoFill Aspose.Cells | chart legend conditional rule Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, builds a column chart with two series, assigns explicit colors, defines a threshold color, and sets the legend entry's IsTextNoFill property to true when the series color matches the threshold. The workbook is then saved as an Excel file.
-class LegendEntryConditionalFill
+namespace AsposeCellsLegendConditionalDemo
 {
-    static void Main()
+    // The example creates a workbook, adds a column chart with sample data, assigns a custom foreground color to the series, defines a red‑component threshold, and then checks the series color. If the red value exceeds the threshold, it sets the legend entry's IsTextNoFill property to true, otherwise it keeps the default fill, and finally saves the workbook as LegendConditionalDemo.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate sample data
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Q1");
-        sheet.Cells["A3"].PutValue("Q2");
-        sheet.Cells["A4"].PutValue("Q3");
-
-        sheet.Cells["B1"].PutValue("Series1");
-        sheet.Cells["B2"].PutValue(120);
-        sheet.Cells["B3"].PutValue(80);
-        sheet.Cells["B4"].PutValue(150);
-
-        sheet.Cells["C1"].PutValue("Series2");
-        sheet.Cells["C2"].PutValue(60);
-        sheet.Cells["C3"].PutValue(130);
-        sheet.Cells["C4"].PutValue(90);
-
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 15);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Add two series to the chart
-        chart.NSeries.Add("B2:B4", true); // Series 1
-        chart.NSeries.Add("C2:C4", true); // Series 2
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Define a color threshold (example: Red)
-        Color thresholdColor = Color.Red;
-
-        // Assign explicit colors to series for demonstration
-        chart.NSeries[0].Area.ForegroundColor = Color.Red;      // Matches threshold
-        chart.NSeries[1].Area.ForegroundColor = Color.Blue;    // Does not match
-
-        // Iterate through each series and apply conditional rule
-        for (int i = 0; i < chart.NSeries.Count; i++)
+        static void Main()
         {
-            Series series = chart.NSeries[i];
-            // Check if the series foreground color matches the threshold
-            if (series.Area.ForegroundColor.ToArgb() == thresholdColor.ToArgb())
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Populate sample data for the chart
+            // Categories
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Q1");
+            worksheet.Cells["A3"].PutValue("Q2");
+            worksheet.Cells["A4"].PutValue("Q3");
+
+            // Values for the series
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["B2"].PutValue(120);
+            worksheet.Cells["B3"].PutValue(80);
+            worksheet.Cells["B4"].PutValue(150);
+
+            // Add a column chart
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = worksheet.Charts[chartIndex];
+
+            // Bind data to the chart
+            chart.NSeries.Add("B2:B4", true);          // Values
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
+
+            // Set a specific color for the first (and only) series
+            // This color will be used to decide whether to remove the legend fill
+            chart.NSeries[0].Area.ForegroundColor = Color.FromArgb(200, 100, 50); // Example color
+
+            // Define a threshold color (for demonstration we use a simple RGB comparison)
+            // Here we consider the threshold as any color with Red component > 180
+            Color thresholdColor = Color.FromArgb(180, 0, 0);
+
+            // Access the legend entry associated with the series
+            LegendEntry legendEntry = chart.NSeries[0].LegendEntry;
+
+            // Check if the series color meets the threshold condition
+            Color seriesColor = chart.NSeries[0].Area.ForegroundColor;
+            if (seriesColor.R > thresholdColor.R) // Simple threshold logic
             {
-                // Set legend entry text fill to none
-                series.LegendEntry.IsTextNoFill = true;
+                // When condition is met, set the legend entry text to have no fill
+                legendEntry.IsTextNoFill = true;
             }
             else
             {
-                // Ensure normal fill for other entries
-                series.LegendEntry.IsTextNoFill = false;
+                // Otherwise ensure normal fill
+                legendEntry.IsTextNoFill = false;
             }
-        }
 
-        // Save the workbook
-        workbook.Save("LegendEntryConditionalFill.xlsx");
+            // Save the workbook
+            workbook.Save("LegendConditionalDemo.xlsx");
+        }
     }
 }

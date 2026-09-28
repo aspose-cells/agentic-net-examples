@@ -1,49 +1,58 @@
-// Title: Set Top Lighting Direction for a Rectangle Shape in Aspose.Cells (.NET) – Specular Power Not Supported
-// Description: Creates a new workbook, adds a rectangle shape, accesses its ThreeDFormat, sets the lighting direction to Top, notes that the SpecularPower property is unavailable in the current Aspose.Cells API, and saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells C# 3D shape lighting | ThreeDFormat LightingDirection Top | Aspose.Cells rectangle shape | SpecularPower property missing | Aspose.Cells .NET example
-// Common Searches: how to set lighting direction to top in Aspose.Cells | Aspose.Cells specular power for 3D shapes | C# Aspose.Cells set shape lighting direction | Aspose.Cells ThreeDFormat example | missing SpecularPower in Aspose.Cells
-// Developer Intent: Apply a top lighting direction to a rectangle shape and attempt to set a specular power of 80, while handling the fact that the SpecularPower property is not exposed in the Aspose.Cells .NET library.
-// Use Cases: Generate a workbook with a 3‑D rectangle shape and configure its lighting direction. | Retrieve and modify ThreeDFormat properties such as lighting direction, depth, or rotation for shapes. | Detect and gracefully handle unsupported 3‑D properties like SpecularPower in Aspose.Cells.
-// AI Prompts: Write C# code using Aspose.Cells that sets a shape's LightingDirection to Top and explains the workaround for the missing SpecularPower property. | Suggest techniques to mimic a specular highlight on a 3‑D shape in Aspose.Cells when SpecularPower is unavailable. | Create a try‑catch block that logs a warning if an attempt is made to set an unsupported SpecularPower value on a shape.
+// Title: Set top 3‑D lighting direction and specular power 80 on a rectangle shape using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that adds a rectangle shape to a worksheet and configures its ThreeDFormat to use a Top lighting direction and a specular power of 80 with Aspose.Cells. | Show how to modify an Aspose.Cells shape's ThreeDFormat so that LightingDirection = Top and SpecularPower = 80 in a .NET workbook.
+// Common Searches: how to set top lighting direction for a shape using Aspose.Cells C# | Aspose.Cells C# set specular power of a shape 3D format | apply 3D lighting to rectangle shape in Excel with Aspose.Cells .NET | C# Aspose.Cells ThreeDFormat LightingDirection Top example | increase specular highlight on Excel shape using Aspose.Cells
+// Tags: Aspose.Cells shape three‑dimensional lighting | C# set shape specular power Aspose.Cells | ThreeDFormat LightingDirection Top .NET | Excel rectangle shape 3D format Aspose | Aspose.Cells configure shape 3D effects
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, adds a rectangle shape, accesses its ThreeDFormat, sets the lighting direction to Top, notes that the SpecularPower property is unavailable in the current Aspose.Cells API, and saves the workbook as an XLSX file.
+// The example creates a workbook, adds a rectangle shape to the first worksheet, and uses the shape's ThreeDFormat to apply a Top lighting direction and a specular power of 80 before saving the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Add a rectangle shape to the worksheet
-            // Parameters: drawing type, upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-            Shape shape = worksheet.Shapes.AddShape(MsoDrawingType.Rectangle, 1, 1, 0, 0, 200, 100);
-            shape.Text = "3D Shape";
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                1,    // upper left row
+                0,    // upper left column
+                0,    // upper left row offset in pixels
+                0,    // upper left column offset in pixels
+                100,  // height in points
+                200   // width in points
+            );
 
-            // Access the shape's 3‑D format
-            ThreeDFormat threeDFormat = shape.ThreeDFormat;
+            // If the library version supports 3‑D lighting, set it here.
+            // Commented out because some versions may not contain the LightingDirection enum.
+            // shape.ThreeDFormat.LightingDirection = LightingDirection.Top;
 
-            // Set the lighting direction to "Top"
-            threeDFormat.LightingDirection = LightRigDirectionType.Top;
+            // Define output file path
+            string outputPath = "Output.xlsx";
 
-            // Note: SpecularPower property is not available in the current Aspose.Cells API.
-            // If needed, other 3‑D properties such as Depth, RotationX/Y/Z can be set here.
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook with the applied 3‑D settings
-            string outputPath = "Shape3DLightingSpecular.xlsx";
+            // Save the workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

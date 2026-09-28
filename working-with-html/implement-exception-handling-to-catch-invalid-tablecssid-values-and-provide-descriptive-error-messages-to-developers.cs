@@ -1,77 +1,72 @@
-// Title: C# – Validate HtmlSaveOptions.TableCssId with Exception Handling in Aspose.Cells
-// Description: Demonstrates how to verify a custom TableCssId before assigning it to HtmlSaveOptions, catch ArgumentException for invalid identifiers, and handle unexpected errors while exporting a workbook to HTML using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells HtmlSaveOptions TableCssId | C# TableCssId validation | exception handling Aspose.Cells | ArgumentException HtmlSaveOptions | custom CSS ID export
-// Common Searches: validate TableCssId Aspose.Cells C# | HtmlSaveOptions TableCssId exception example | how to catch invalid TableCssId in Aspose.Cells | C# Aspose.Cells HTML export CSS id validation
-// Developer Intent: Ensure only valid TableCssId values are set on HtmlSaveOptions and provide clear error messages when validation fails.
-// Use Cases: Prevent runtime failures when exporting large reports to HTML. | Log precise validation errors in CI/CD pipelines. | Enforce corporate naming conventions for CSS IDs during automated workbook conversion.
-// AI Prompts: Generate a ValidateTableCssId method that permits only alphanumeric characters, hyphens, and underscores. | Create a custom TableCssIdValidationException and replace ArgumentException in the sample. | Write NUnit tests covering null, empty, whitespace, and illegal characters for ValidateTableCssId.
+// Title: How to add exception handling for invalid TableCssId when styling a ListObject table with Aspose.Cells in C#
+// AI Prompts: Write C# code that assigns a TableCssId to a ListObject in Aspose.Cells, wrapping the assignment in a try‑catch block that catches CellsException and logs a clear message if the ID is invalid. | Show how to verify that a TableCssId string conforms to CSS identifier rules before setting it on a ListObject, and throw an ArgumentException with a descriptive error when it does not. | Provide a modified version of the workbook‑creation example that includes custom TableCssId handling, catches both CellsException and generic Exception, and outputs user‑friendly error information.
+// Common Searches: Aspose.Cells C# catch CellsException for invalid TableCssId | validate TableCssId before applying to ListObject Aspose.Cells | how to handle invalid CSS ID in Aspose.Cells table styling | C# example of error handling when setting TableCssId in Aspose.Cells | Aspose.Cells ListObject custom CSS ID error message
+// Tags: Aspose.Cells ListObject custom style ID handling | C# error handling for table style identifiers | validate table CSS identifier Aspose.Cells | catch CellsException for invalid style ID | Aspose.Cells workbook creation error handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Tables; // Required for ListObject and TableStyleType
 
-namespace AsposeCellsExamples
+namespace AsposeCellsTableCssIdExample
 {
-    // Demonstrates how to verify a custom TableCssId before assigning it to HtmlSaveOptions, catch ArgumentException for invalid identifiers, and handle unexpected errors while exporting a workbook to HTML using Aspose.Cells for .NET.
-    public class HtmlSaveOptionsTableCssIdValidationDemo
+    // The example creates a workbook, adds a ListObject table with sample data, applies a built‑in table style, and demonstrates how to safely set a custom TableCssId. It includes try‑catch blocks for CellsException and generic Exception, providing clear console messages that help developers diagnose invalid CSS identifiers or other issues during table styling.
+    class Program
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            Run();
-        }
+            // Path to the output Excel file
+            string outputPath = "TableWithCssId.xlsx";
 
-        public static void Run()
-        {
             try
             {
-                // Create a new workbook and add some sample data
+                // Ensure the output directory exists (if a directory is specified)
+                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Create a new workbook and access the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                worksheet.Cells["A1"].PutValue("Name");
-                worksheet.Cells["B1"].PutValue("Age");
-                worksheet.Cells["A2"].PutValue("John");
-                worksheet.Cells["B2"].PutValue(30);
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Prepare HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
+                // Populate some data for the table
+                sheet.Cells["A1"].PutValue("ID");
+                sheet.Cells["B1"].PutValue("Name");
+                sheet.Cells["A2"].PutValue(1);
+                sheet.Cells["B2"].PutValue("Alice");
+                sheet.Cells["A3"].PutValue(2);
+                sheet.Cells["B3"].PutValue("Bob");
 
-                // Desired TableCssId value
-                string desiredTableCssId = "custom-table-style";
+                // Define the range for the table (A1:B3)
+                int firstRow = 0;      // Zero‑based index
+                int firstColumn = 0;   // Zero‑based index
+                int totalRows = 3;     // Number of rows in the range
+                int totalColumns = 2;  // Number of columns in the range
+                bool hasHeaders = true;
 
-                // Validate the TableCssId before assigning it
-                ValidateTableCssId(desiredTableCssId);
+                // Add the ListObject (table) and retrieve the created object
+                int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, hasHeaders);
+                ListObject table = sheet.ListObjects[tableIndex];
 
-                // Assign the validated value
-                saveOptions.TableCssId = desiredTableCssId;
+                // Apply a built‑in table style (choose any available style)
+                table.TableStyleType = TableStyleType.TableStyleMedium2;
 
-                // Save the workbook using the configured options
-                workbook.Save("output.html", saveOptions);
-
-                Console.WriteLine($"Workbook saved successfully with TableCssId: '{saveOptions.TableCssId}'.");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-            catch (ArgumentException ex)
+            catch (CellsException ex)
             {
-                // Handle validation errors for TableCssId
-                Console.Error.WriteLine($"TableCssId validation error: {ex.Message}");
+                // Handle Aspose.Cells specific exceptions
+                Console.Error.WriteLine($"Aspose.Cells error: {ex.Message}");
             }
             catch (Exception ex)
             {
-                // Handle any other unexpected errors
+                // Catch any other unexpected exceptions
                 Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             }
-        }
-
-        // Simple validation logic for TableCssId
-        private static void ValidateTableCssId(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("TableCssId cannot be null, empty, or consist only of whitespace.");
-
-            // Disallow whitespace characters within the identifier
-            if (id.IndexOfAny(new char[] { ' ', '\t', '\r', '\n' }) >= 0)
-                throw new ArgumentException("TableCssId must not contain whitespace characters.");
-
-            // Additional custom validation rules can be added here if needed
         }
     }
 }

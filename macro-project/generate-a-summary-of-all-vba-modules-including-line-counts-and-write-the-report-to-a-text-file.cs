@@ -1,10 +1,7 @@
-// Title: Aspose.Cells .NET – Create a VBA Module Summary with Line Counts and Export to Text
-// Description: C# code that loads a macro‑enabled Excel workbook with Aspose.Cells, detects a VBA project, enumerates each VbaModule, counts its code lines, formats a concise report (module name, type, line count) and writes the result to a text file. Includes file‑existence checks and robust exception handling.
-// Keywords: Aspose.Cells VBA module summary | C# count VBA lines | export VBA report to text | macro‑enabled workbook analysis | VbaProject module enumeration | .NET Excel VBA statistics | generate VBA code metrics
-// Common Searches: list VBA modules and line counts using Aspose.Cells .NET | how to export VBA module details to a text file in C# | count lines of code in each Excel VBA module | Aspose.Cells generate VBA project report | C# extract VBA module information from workbook
-// Developer Intent: Extract every VBA module from a macro‑enabled workbook, compute the number of code lines per module, and produce a readable text summary.
-// Use Cases: Audit macro complexity by obtaining line‑count statistics for all VBA modules. | Document VBA project structure for version‑control, code reviews, or compliance reporting. | Automate batch processing to generate module metrics across multiple workbooks on a schedule.
-// AI Prompts: Write a C# method that uses Aspose.Cells to return a dictionary of VBA module names and their line counts. | Suggest improvements for logging and error handling in the VBA summary generator, including writing errors to a separate log file. | Show how to modify the report to include module descriptions and export the data as CSV instead of plain text.
+// Title: Generate a VBA modules summary with line counts using Aspose.Cells in C# and save it to a text file
+// AI Prompts: Write C# code that opens an Excel workbook with Aspose.Cells, iterates through each VBA module, counts the lines of code, and writes the module name and line count to a .txt report. | Enhance the utility to add a section that shows the total number of VBA modules and the cumulative line count in the generated summary file. | Modify the program to accept the input workbook path and the output report file path as command‑line arguments.
+// Common Searches: how to extract VBA module names and line counts from an xlsx file using Aspose.Cells C# | C# program to list VBA modules in an Excel workbook and export a summary to a text file | Aspose.Cells count lines of code in each VBA module | generate VBA project report with Aspose.Cells in .NET | save VBA module statistics to a file using C#
+// Tags: Aspose.Cells extract VBA modules | VBA module line count Aspose.Cells | export VBA summary to text file C# | enumerate VBA modules in Excel workbook | C# generate VBA project report
 
 using System;
 using System.IO;
@@ -12,97 +9,79 @@ using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+// The program loads an Excel workbook, checks for a VBA project, counts the lines in each VBA module, builds a summary report with module names and line counts, and writes the report to a text file.
+class VbaSummaryGenerator
 {
-    // C# code that loads a macro‑enabled Excel workbook with Aspose.Cells, detects a VBA project, enumerates each VbaModule, counts its code lines, formats a concise report (module name, type, line count) and writes the result to a text file. Includes file‑existence checks and robust exception handling.
-    public class VbaModulesSummaryGenerator
+    static void Main()
     {
-        /// <param name="workbookPath">Path to the Excel workbook (must be macro‑enabled if it contains VBA).</param>
-        /// <param name="reportPath">Path where the summary text file will be saved.</param>
-        public static void Run(string workbookPath, string reportPath)
+        try
         {
-            try
+            // Input workbook path
+            string inputPath = "input.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Verify that the workbook file exists
-                if (!File.Exists(workbookPath))
-                    throw new FileNotFoundException("Workbook file not found.", workbookPath);
-
-                // Load the workbook from the given file path
-                Workbook workbook = new Workbook(workbookPath);
-
-                // Prepare a StringBuilder to collect the report content
-                StringBuilder reportBuilder = new StringBuilder();
-
-                // Check whether the workbook contains a VBA project
-                if (workbook.VbaProject == null)
-                {
-                    reportBuilder.AppendLine("No VBA project found in the workbook.");
-                }
-                else
-                {
-                    VbaModuleCollection modules = workbook.VbaProject.Modules;
-
-                    // If there are no modules, note that in the report
-                    if (modules.Count == 0)
-                    {
-                        reportBuilder.AppendLine("VBA project exists but contains no modules.");
-                    }
-                    else
-                    {
-                        reportBuilder.AppendLine($"Total VBA modules: {modules.Count}");
-                        reportBuilder.AppendLine();
-
-                        // Iterate through each module and compute line count
-                        for (int i = 0; i < modules.Count; i++)
-                        {
-                            VbaModule module = modules[i];
-                            string moduleName = module.Name ?? $"Module_{i}";
-                            string code = module.Codes ?? string.Empty;
-
-                            // Split on both CRLF and LF to count lines accurately
-                            int lineCount = code.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
-
-                            reportBuilder.AppendLine($"Module Name : {moduleName}");
-                            reportBuilder.AppendLine($"Module Type : {module.Type}");
-                            reportBuilder.AppendLine($"Line Count  : {lineCount}");
-                            reportBuilder.AppendLine(new string('-', 40));
-                        }
-                    }
-                }
-
-                // Write the assembled report to the specified text file
-                File.WriteAllText(reportPath, reportBuilder.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during report generation: {ex.Message}");
-                throw;
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            if (args.Length < 2)
-            {
-                Console.WriteLine("Usage: AsposeCellsRunner <workbookPath> <reportPath>");
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
                 return;
             }
 
-            string workbookPath = args[0];
-            string reportPath = args[1];
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            try
+            // Prepare a StringBuilder to collect the report
+            StringBuilder report = new StringBuilder();
+
+            // Access the VBA project if it exists
+            VbaProject vbaProject = workbook.VbaProject;
+            if (vbaProject == null || vbaProject.Modules.Count == 0)
             {
-                VbaModulesSummaryGenerator.Run(workbookPath, reportPath);
-                Console.WriteLine($"Report successfully generated at: {reportPath}");
+                report.AppendLine("No VBA project or modules found in the workbook.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Unhandled error: {ex.Message}");
+                report.AppendLine("VBA Modules Summary:");
+                report.AppendLine("--------------------");
+
+                // Iterate through each VBA module
+                foreach (VbaModule module in vbaProject.Modules)
+                {
+                    // Get the source code of the module
+                    string code = module.Codes ?? string.Empty;
+
+                    // Count lines (handles both Windows and Unix line endings)
+                    int lineCount = 0;
+                    if (!string.IsNullOrEmpty(code))
+                    {
+                        string[] lines = code.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None);
+                        lineCount = lines.Length;
+                    }
+
+                    // Append module information to the report
+                    report.AppendLine($"Module Name : {module.Name}");
+                    report.AppendLine($"Lines       : {lineCount}");
+                    report.AppendLine();
+                }
             }
+
+            // Output report path
+            string outputPath = "VbaModulesReport.txt";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Write the report to a text file
+            File.WriteAllText(outputPath, report.ToString());
+
+            Console.WriteLine($"VBA summary report generated at: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

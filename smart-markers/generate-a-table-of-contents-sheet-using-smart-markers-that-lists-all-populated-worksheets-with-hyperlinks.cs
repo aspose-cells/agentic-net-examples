@@ -1,85 +1,105 @@
-// Title: Create a TOC worksheet with smart markers and hyperlinks using Aspose.Cells for .NET
-// Description: This example builds an Excel workbook, adds sample data sheets, inserts a Table of Contents sheet at the first position, and uses Aspose.Cells smart markers to automatically list every populated worksheet with a clickable link to its A1 cell. The WorkbookDesigner processes the _CellsSmartMarkers range, generating a dynamic navigation index that excludes the TOC sheet itself.
-// Keywords: Aspose.Cells | smart markers | Table of Contents | Excel TOC | C# .NET | WorkbookDesigner | hyperlink formula | populate sheet list | dynamic index
-// Common Searches: Aspose.Cells smart markers TOC example | C# generate Excel table of contents with hyperlinks | list only non‑empty worksheets using Aspose.Cells | WorkbookDesigner create dynamic index sheet | how to add hyperlink to sheet in Aspose.Cells
-// Developer Intent: Automatically generate a TOC sheet that lists each populated worksheet and provides a clickable link to its first cell.
-// Use Cases: Create a navigation index for workbooks containing many data sheets. | Produce a dynamic report where only sheets with content appear in the TOC. | Offer end‑users quick access to populated worksheets in generated Excel files.
-// AI Prompts: Write C# code with Aspose.Cells to add a TOC worksheet that lists all non‑empty sheets and creates hyperlinks using smart markers. | Explain the role of the _CellsSmartMarkers range when processing a table of contents with WorkbookDesigner. | Suggest how to add sheet order numbers and custom link text to the generated TOC.
+// Title: Create a Table of Contents worksheet with smart markers and internal hyperlinks for each populated sheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a TOC sheet that lists every worksheet containing data and inserts a clickable internal link to cell A1 using Aspose.Cells smart markers. | Write C# code to collect worksheet names and addresses into a DataTable, bind it to WorkbookDesigner, and process the smart markers to populate the Table of Contents. | After processing, add Hyperlink objects to the link column so each entry navigates to its sheet, while skipping the TOC worksheet itself.
+// Common Searches: asp.net generate excel table of contents with hyperlinks using Aspose.Cells smart markers | c# create dynamic sheet index in Excel workbook excluding TOC sheet | how to bind DataTable to WorkbookDesigner for smart marker processing in Aspose.Cells | add internal hyperlink to Excel cell programmatically with Aspose.Cells .NET | list only populated worksheets in Aspose.Cells and create clickable TOC
+// Tags: Aspose.Cells WorkbookDesigner smart markers | C# generate Excel TOC with hyperlinks | populate Table of Contents sheet from DataTable | internal hyperlink address format Excel Aspose | exclude TOC worksheet when building sheet index
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-namespace AsposeCellsTOCExample
+namespace AsposeCellsExamples
 {
-    // This example builds an Excel workbook, adds sample data sheets, inserts a Table of Contents sheet at the first position, and uses Aspose.Cells smart markers to automatically list every populated worksheet with a clickable link to its A1 cell. The WorkbookDesigner processes the _CellsSmartMarkers range, generating a dynamic navigation index that excludes the TOC sheet itself.
-    class Program
+    // The example creates a workbook, adds sample worksheets, builds a DataTable of non‑empty sheet names and internal addresses, binds it to WorkbookDesigner, uses smart markers to fill a 'Table of Contents' sheet, then adds Hyperlink objects to the link column so each entry points to the corresponding sheet, finally saving the file as TableOfContents.xlsx.
+    class TableOfContentsWithSmartMarkers
     {
         static void Main()
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // -----------------------------------------------------------------
+            // Add sample worksheets with some data (for demonstration purposes)
+            // -----------------------------------------------------------------
+            Worksheet sheet1 = workbook.Worksheets[0];
+            sheet1.Name = "Sales";
+            sheet1.Cells["A1"].PutValue("Quarter");
+            sheet1.Cells["B1"].PutValue("Revenue");
+            sheet1.Cells["A2"].PutValue("Q1");
+            sheet1.Cells["B2"].PutValue(120000);
+            sheet1.Cells["A3"].PutValue("Q2");
+            sheet1.Cells["B3"].PutValue(150000);
+
+            Worksheet sheet2 = workbook.Worksheets.Add("Inventory");
+            sheet2.Cells["A1"].PutValue("Item");
+            sheet2.Cells["B1"].PutValue("Quantity");
+            sheet2.Cells["A2"].PutValue("Apples");
+            sheet2.Cells["B2"].PutValue(500);
+            sheet2.Cells["A3"].PutValue("Oranges");
+            sheet2.Cells["B3"].PutValue(300);
+
+            // -----------------------------------------------------------------
+            // Add a Table of Contents (TOC) worksheet
+            // -----------------------------------------------------------------
+            Worksheet tocSheet = workbook.Worksheets.Add("Table of Contents");
+            // Place headers
+            tocSheet.Cells["A1"].PutValue("Sheet Name");
+            tocSheet.Cells["B1"].PutValue("Link");
+
+            // Insert smart markers that will be replaced by the data source
+            // The range starting at A2 will be repeated for each row in the data source
+            tocSheet.Cells["A2"].PutValue("&=Sheets.Name");
+            tocSheet.Cells["B2"].PutValue("&=Sheets.Address");
+
+            // -----------------------------------------------------------------
+            // Build a DataTable containing the names of all populated worksheets
+            // (excluding the TOC sheet itself)
+            // -----------------------------------------------------------------
+            DataTable sheetTable = new DataTable("Sheets");
+            sheetTable.Columns.Add("Name", typeof(string));
+            sheetTable.Columns.Add("Address", typeof(string));
+
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                Worksheet ws = workbook.Worksheets[i];
+                // Skip the TOC sheet
+                if (ws.Name == tocSheet.Name) continue;
 
-                // Add sample worksheets with some data
-                for (int i = 1; i <= 3; i++)
+                // Consider a worksheet "populated" if it has at least one non‑empty cell
+                if (ws.Cells.MaxDataRow >= 0 && ws.Cells.MaxDataColumn >= 0)
                 {
-                    // Add a new worksheet with the specified name
-                    Worksheet ws = workbook.Worksheets.Add($"Sheet{i}");
-                    // Populate a cell to make the sheet "populated"
-                    ws.Cells["A1"].PutValue($"Data in {ws.Name}");
+                    // Internal hyperlink address format: "#'SheetName'!A1"
+                    string address = $"#'{ws.Name}'!A1";
+                    sheetTable.Rows.Add(ws.Name, address);
                 }
-
-                // Insert a Table of Contents (TOC) sheet at the first position
-                Worksheet tocSheet = workbook.Worksheets[0];
-                tocSheet.Name = "TOC";
-
-                // Header for the TOC sheet
-                tocSheet.Cells["A1"].PutValue("Table of Contents");
-                tocSheet.Cells["A2"].PutValue("Sheet Name");
-                tocSheet.Cells["B2"].PutValue("Link");
-
-                // Smart marker rows – these will be expanded by WorkbookDesigner
-                // Column A: sheet name smart marker
-                tocSheet.Cells["A3"].PutValue("&=[Sheets].SheetName");
-                // Column B: hyperlink formula that points to cell A1 of the target sheet
-                tocSheet.Cells["B3"].PutValue("=HYPERLINK(\"#'\" & [Sheets].SheetName & \"'!A1\",\"Go\")");
-
-                // Define the smart marker range (required name: _CellsSmartMarkers)
-                tocSheet.Cells.CreateRange("A3:B3").Name = "_CellsSmartMarkers";
-
-                // Build a DataTable that contains the names of all populated worksheets (excluding the TOC sheet)
-                DataTable sheetTable = new DataTable("Sheets");
-                sheetTable.Columns.Add("SheetName", typeof(string));
-
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    // Skip the TOC sheet itself
-                    if (ws.Name == "TOC")
-                        continue;
-
-                    // Consider a worksheet "populated" if it has at least one non‑empty cell
-                    if (ws.Cells.MaxDataRow >= 0 && ws.Cells.MaxDataColumn >= 0)
-                    {
-                        sheetTable.Rows.Add(ws.Name);
-                    }
-                }
-
-                // Use WorkbookDesigner to process the smart markers with the prepared data source
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource(sheetTable);
-                designer.Process();
-
-                // Save the final workbook
-                string outputPath = "TOC_Output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-            catch (Exception ex)
+
+            // -----------------------------------------------------------------
+            // Use WorkbookDesigner to process the smart markers
+            // -----------------------------------------------------------------
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = workbook;
+            designer.SetDataSource("Sheets", sheetTable);
+            designer.Process();
+
+            // -----------------------------------------------------------------
+            // After processing, add actual hyperlink objects to the "Link" column
+            // -----------------------------------------------------------------
+            // Determine how many rows were filled (excluding header)
+            int dataRows = sheetTable.Rows.Count;
+            for (int row = 2; row < 2 + dataRows; row++)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Read the address that was placed by the smart marker
+                string linkAddress = tocSheet.Cells[row, 1].StringValue; // column B (index 1)
+
+                // Add hyperlink to the cell in column B
+                // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+                tocSheet.Hyperlinks.Add(row, 1, 1, 1, linkAddress);
             }
+
+            // -----------------------------------------------------------------
+            // Save the workbook
+            // -----------------------------------------------------------------
+            workbook.Save("TableOfContents.xlsx");
         }
     }
 }

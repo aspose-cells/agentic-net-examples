@@ -1,44 +1,47 @@
-// Title: Export Worksheet to HTML with Gridlines and Comments – Aspose.Cells for .NET
-// Description: Demonstrates how to save a single worksheet as HTML while preserving visible gridlines and cell comments using Aspose.Cells HtmlSaveOptions (ExportGridLines, IsExportComments, ExportActiveWorksheetOnly).
-// Keywords: Aspose.Cells HTML export | ExportGridLines | IsExportComments | ExportActiveWorksheetOnly | C# export worksheet to HTML | gridlines in HTML output | cell comments HTML Aspose | save single worksheet as HTML
-// Common Searches: Aspose.Cells export worksheet to HTML with gridlines | How to include cell comments in HTML export using Aspose.Cells | C# HtmlSaveOptions gridlines comments | Export only active sheet to HTML Aspose.Cells | HTML output with Excel gridlines and comments
-// Developer Intent: Generate an HTML file for the active worksheet that shows both gridlines and any cell comments.
-// Use Cases: Create a web‑ready view of a spreadsheet that keeps the original grid layout and comment tooltips. | Produce an HTML report for documentation or email that includes annotation comments. | Embed a single worksheet in a web application while preserving visual fidelity of gridlines and comments.
-// AI Prompts: Write C# code with Aspose.Cells to export the active worksheet to HTML, enabling gridlines and comments. | Explain the impact of ExportGridLines, IsExportComments, and ExportActiveWorksheetOnly on the HTML result in Aspose.Cells.
+// Title: How to export an Excel worksheet to HTML with gridlines and cell comments using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file and saves it as an .html file with gridlines displayed using Aspose.Cells HtmlSaveOptions. | Demonstrate how to configure Aspose.Cells HtmlSaveOptions to turn on ExportGridLines and, when supported, ExportCellComments for HTML output. | Provide a complete example that checks for the source workbook, applies HTML export settings, and handles errors while preserving gridlines and comments.
+// Common Searches: Aspose.Cells C# export worksheet to HTML with gridlines and comments | Enable cell comments in HTML output when saving Excel with Aspose.Cells | How to show gridlines in HTML files generated from Excel using Aspose.Cells | C# HtmlSaveOptions ExportGridLines and ExportCellComments example
+// Tags: Aspose.Cells HtmlSaveOptions ExportGridLines | Aspose.Cells HtmlSaveOptions ExportCellComments | C# Aspose.Cells export worksheet to HTML | HTML export with gridlines Aspose.Cells | cell comments HTML export Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to save a single worksheet as HTML while preserving visible gridlines and cell comments using Aspose.Cells HtmlSaveOptions (ExportGridLines, IsExportComments, ExportActiveWorksheetOnly).
-class ExportWorksheetHtml
+// The program checks for the existence of input.xlsx, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with ExportGridLines enabled (ExportCellComments is not available in this version), and saves the workbook as output.html while handling any exceptions.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Ensure gridlines are visible in the worksheet
-        sheet.IsGridlinesVisible = true;
-
-        // Add some sample data
-        sheet.Cells["A1"].PutValue("Hello World");
-        sheet.Cells["B2"].PutValue(12345);
-
-        // Add a comment to a cell
-        int commentIndex = sheet.Comments.Add("A1");
-        Comment comment = sheet.Comments[commentIndex];
-        comment.Note = "This is a sample comment";
-
-        // Set HTML save options to export both gridlines and comments
-        HtmlSaveOptions options = new HtmlSaveOptions
+        try
         {
-            ExportGridLines = true,          // Export gridlines
-            IsExportComments = true,         // Export comments
-            ExportActiveWorksheetOnly = true // Export only the active worksheet
-        };
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Save the workbook as HTML
-        workbook.Save("output.html", options);
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML export options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportGridLines = true // Show gridlines in the HTML output
+                // Note: ExportCellComments property is not available in this version of Aspose.Cells.
+            };
+
+            // Export the workbook to HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

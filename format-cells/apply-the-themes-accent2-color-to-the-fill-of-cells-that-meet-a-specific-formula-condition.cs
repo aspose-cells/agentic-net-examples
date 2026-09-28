@@ -1,68 +1,74 @@
-// Title: C# – Apply Theme Accent2 Fill via Conditional Formatting in Aspose.Cells
-// Description: Creates a workbook, fills A1:A10 with numeric values, adds a Between (30‑70) conditional formatting rule, and sets the cell background to the workbook’s Accent2 theme color using a solid fill before saving the file.
-// Keywords: Aspose.Cells | C# | conditional formatting | theme color | Accent2 | solid fill | cell style | Excel automation | highlight values | between condition
-// Common Searches: Aspose.Cells set conditional formatting theme color | C# conditional formatting Accent2 fill | how to use theme colors in Aspose.Cells | apply solid background based on value range Aspose.Cells | conditional formatting between values C#
-// Developer Intent: Create a conditional formatting rule that fills cells with the workbook’s Accent2 theme color when their values are between 30 and 70.
-// Use Cases: Highlight sales figures that fall within a target range using the corporate Accent2 color for brand consistency. | Mark expense entries between two thresholds in a financial report with a theme‑based fill to draw attention. | Apply a uniform Accent2 background to multiple worksheets that share the same value‑range criteria, ensuring visual consistency across the workbook.
-// AI Prompts: Show how to change the conditional formatting to use the Accent3 theme color instead of Accent2. | Provide code to add a second rule that colors cells outside the 30‑70 range with a different theme color. | Explain how to apply the same Accent2 conditional formatting to non‑contiguous ranges such as A1:A10 and C1:C10.
+// Title: Apply the workbook's Accent2 theme color as a conditional formatting fill based on a formula using Aspose.Cells for .NET
+// AI Prompts: Create a conditional formatting rule for the range A1:A100 that fills cells with the workbook's Accent2 theme color when the formula =A1>10 evaluates to true in C# with Aspose.Cells. | Retrieve the Accent2 color from the workbook's theme and build a solid fill style to assign to a conditional formatting condition using Aspose.Cells. | Save the workbook to a new file after adding the theme‑based conditional formatting rule with Aspose.Cells.
+// Common Searches: aspocells how to use theme accent colors in conditional formatting | c# apply workbook theme Accent2 as fill color for conditional format | retrieve Excel theme color Accent2 with Aspose.Cells .NET | conditional formatting expression A1>10 using theme color in Aspose.Cells | set solid background from workbook theme in Aspose.Cells C#
+// Tags: conditional formatting theme accent color Aspose.Cells | retrieve workbook theme color C# Aspose.Cells | solid fill style for expression condition Aspose.Cells | Excel theme Accent2 fill Aspose.Cells .NET | apply theme‑based conditional format Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, fills A1:A10 with numeric values, adds a Between (30‑70) conditional formatting rule, and sets the cell background to the workbook’s Accent2 theme color using a solid fill before saving the file.
-class ApplyAccent2ConditionalFormatting
+// The program loads an existing Excel file, adds a conditional formatting rule to cells A1:A100 that uses the workbook's Accent2 theme color as a solid fill when the expression A1>10 is true, and saves the result to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data in column A (A1:A10)
-        for (int i = 0; i < 10; i++)
+        try
         {
-            cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the range for conditional formatting (A1:A100)
+            CellArea area = new CellArea
+            {
+                StartRow = 0,      // Row index is zero‑based
+                StartColumn = 0,   // Column A
+                EndRow = 99,       // Row 100 (zero‑based index 99)
+                EndColumn = 0      // Column A
+            };
+
+            // Add a new ConditionalFormatting collection to the worksheet
+            int cfIndex = sheet.ConditionalFormattings.Add();
+
+            // Add the target area to the conditional formatting
+            sheet.ConditionalFormattings[cfIndex].AddArea(area);
+
+            // Add a condition based on a formula (e.g., =A1>10)
+            int conditionIndex = sheet.ConditionalFormattings[cfIndex].AddCondition(FormatConditionType.Expression);
+            FormatCondition condition = sheet.ConditionalFormattings[cfIndex][conditionIndex];
+            condition.Formula1 = "A1>10";
+
+            // Retrieve the theme's Accent2 color (compatible with all versions)
+            Color accent2Color = workbook.GetThemeColor(ThemeColorType.Accent2);
+
+            // Create a style that uses the Accent2 color as a solid fill
+            Style accentStyle = workbook.CreateStyle();
+            accentStyle.ForegroundColor = accent2Color;
+            accentStyle.Pattern = BackgroundType.Solid;
+
+            // Assign the style to the condition
+            condition.Style = accentStyle;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        // Define the range to which the conditional formatting will be applied (A1:A10)
-        CellArea range = new CellArea
+        catch (Exception ex)
         {
-            StartRow = 0,
-            EndRow = 9,
-            StartColumn = 0,
-            EndColumn = 0
-        };
-
-        // Add a new conditional formatting collection
-        int cfIndex = sheet.ConditionalFormattings.Add();
-        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-        fcc.AddArea(range);
-
-        // Add a condition: highlight cells with values between 30 and 70 (inclusive)
-        int conditionIdx = fcc.AddCondition(
-            FormatConditionType.CellValue,
-            OperatorType.Between,
-            "30",
-            "70");
-
-        FormatCondition condition = fcc[conditionIdx];
-
-        // Create a CellsColor that uses the theme's Accent2 color (no tint)
-        CellsColor accent2Color = workbook.CreateCellsColor();
-        accent2Color.ThemeColor = new ThemeColor(ThemeColorType.Accent2, 0);
-
-        // Create a style that uses the Accent2 color as the fill background
-        Style style = workbook.CreateStyle();
-        style.ForegroundColor = accent2Color.Color; // Apply the theme color
-        style.Pattern = BackgroundType.Solid;       // Solid fill
-
-        // Assign the style to the conditional format
-        condition.Style = style;
-
-        // Save the workbook
-        workbook.Save("Accent2ConditionalFormatting.xlsx");
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

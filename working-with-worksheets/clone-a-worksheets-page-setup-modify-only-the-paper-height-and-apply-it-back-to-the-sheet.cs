@@ -1,43 +1,46 @@
-// Title: C# – Clone Worksheet PageSetup, Adjust Paper Height, and Apply to Another Sheet with Aspose.Cells
-// Description: Demonstrates how to copy the full PageSetup from a source worksheet to a target worksheet using Aspose.Cells for .NET, then modify only the paper height while preserving the original width via CustomPaperSize, and finally save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | PageSetup.Copy | Clone worksheet page setup | CustomPaperSize | modify paper height | worksheet printing settings | CopyOptions | page layout automation
-// Common Searches: Aspose.Cells copy page setup between worksheets | change only paper height after cloning page setup C# | custom paper size preserving width Aspose.Cells | how to use PageSetup.Copy and CustomPaperSize | duplicate worksheet layout and adjust paper dimensions
-// Developer Intent: Copy a worksheet’s PageSetup, change just the paper height, and apply the updated layout to another sheet.
-// Use Cases: Generate multi‑sheet reports where all sheets share margins, orientation, and scaling, but each sheet needs a different paper height for varied content length. | Automate the duplication of page‑layout settings across worksheets while customizing printable area without manual re‑configuration. | Create printable forms that inherit a standard layout from a template sheet and then adjust height to accommodate extra rows or graphics.
-// AI Prompts: Write C# code with Aspose.Cells that copies a worksheet’s PageSetup to another sheet and sets a custom paper size keeping the original width while increasing the height. | Explain the interaction between PageSetup.Copy and CustomPaperSize for modifying only the paper height in Aspose.Cells for .NET. | Provide a step‑by‑step tutorial for cloning page layout settings and adjusting paper dimensions without affecting other PageSetup properties.
+// Title: Copy a worksheet's PageSetup, adjust only the paper height, and reassign it using Aspose.Cells for .NET
+// AI Prompts: Write C# code that clones the PageSetup object of a worksheet, changes the paper height to match Letter dimensions, and assigns the modified setup back to the same sheet with Aspose.Cells. | Show how to duplicate all page‑setup settings from one worksheet, modify only the paper height, and apply the updated PageSetup to another worksheet in a .NET workbook.
+// Common Searches: asp.net aspose.cells copy page setup from one sheet to another and change paper size | how to change only the paper height of an Excel worksheet using Aspose.Cells C# | duplicate worksheet page setup settings without losing other properties Aspose.Cells | set paper size to Letter for a specific worksheet while preserving existing page setup Aspose.Cells
+// Tags: clone worksheet page setup Aspose.Cells | modify paper height without affecting other page setup properties | apply copied page setup to another worksheet C# | configure worksheet for Letter paper dimensions Aspose.Cells | duplicate page setup settings between worksheets
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to copy the full PageSetup from a source worksheet to a target worksheet using Aspose.Cells for .NET, then modify only the paper height while preserving the original width via CustomPaperSize, and finally save the workbook.
-class ClonePageSetupModifyPaperHeight
+// The example loads (or creates) a workbook, clones the first worksheet's PageSetup, changes only the paper height to Letter size, reassigns the modified PageSetup to the sheet, and saves the workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add a second worksheet
-        Workbook workbook = new Workbook();
-        workbook.Worksheets.Add();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Source worksheet (the one we will clone from)
-        Worksheet sourceSheet = workbook.Worksheets[0];
-        // Target worksheet (the one we will apply the cloned settings to)
-        Worksheet targetSheet = workbook.Worksheets[1];
+            Workbook workbook;
 
-        // Example: set an initial page setup on the source sheet
-        sourceSheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
+            // Load the workbook if the input file exists; otherwise create a new workbook.
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook(); // default workbook with one worksheet
+            }
 
-        // Clone the entire page setup from source to target
-        targetSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Modify only the paper height on the target sheet
-        // Retrieve the current paper width (read‑only)
-        double currentWidth = targetSheet.PageSetup.PaperWidth;
-        // Define a new height (e.g., increase by 1 inch)
-        double newHeight = targetSheet.PageSetup.PaperHeight + 1.0;
-        // Apply a custom paper size keeping the original width and using the new height
-        targetSheet.PageSetup.CustomPaperSize(currentWidth, newHeight);
+            // Set the paper size to Letter (height = 11 inches). This changes the paper height.
+            sheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
 
-        // Save the workbook with the modified page setup
-        workbook.Save("ClonedPageSetup.xlsx");
+            // Save the modified workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

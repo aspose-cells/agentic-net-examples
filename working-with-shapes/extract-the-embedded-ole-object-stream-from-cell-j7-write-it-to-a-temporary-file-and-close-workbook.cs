@@ -1,63 +1,93 @@
-// Title: Extract an embedded OLE object from cell J7 to a temporary file using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, finds the OleObject whose upper‑left corner is J7, reads its ObjectData byte array, writes the binary stream to a uniquely named file in the system temp folder, and then disposes the workbook.
-// Keywords: Aspose.Cells | C# | OleObject extraction | cell J7 | embedded OLE data | binary stream | temporary file | ObjectData | Excel automation | download OLE content
-// Common Searches: Aspose.Cells get OLE object from specific cell | C# save embedded OLE to temp folder | Extract binary stream of OleObject in Excel | How to write OleObject data to file with Aspose | Retrieve OLE content from worksheet cell J7
-// Developer Intent: Locate the OLE object anchored at J7, pull its raw bytes, and persist them to a short‑lived file.
-// Use Cases: Pull a PDF embedded in a financial report and hand it off to a PDF processor without altering the original workbook. | Export a Word document stored as an OLE object for downstream mail‑merge operations. | Save an OLE‑based chart image to disk for conversion to PNG in a reporting pipeline.
-// AI Prompts: Generate C# code that uses Aspose.Cells to find the OleObject at J7, read its ObjectData, and write the bytes to a uniquely named temporary file with proper error handling. | Create a reusable function that accepts a Worksheet and a cell address, returns the OLE object's byte array, and optionally saves it to a temp location, using Aspose.Cells APIs. | Write a unit test that confirms the extraction routine creates a file in the system temp directory and that the file size matches the OleObject's ObjectData length.
+// Title: Extract an embedded OLE object from cell J7 in an Excel file using Aspose.Cells for .NET and save it as a temporary binary file
+// AI Prompts: Write C# code with Aspose.Cells that finds the OLE object anchored at J7, reads its OleObjectData stream, and writes the bytes to a uniquely named temporary .bin file. | Show how to use reflection in .NET to access the OleObjectData property of an Aspose.Cells OleObject and export the embedded OLE content to disk.
+// Common Searches: aspnet extract OLE object from specific cell in Excel using Aspose.Cells | c# save embedded OLE object from worksheet to temporary file | how to get OleObjectData stream from cell J7 with Aspose.Cells | retrieve binary data of an OLE object in Excel via Aspose.Cells .NET
+// Tags: Aspose.Cells OLE extraction workflow | C# export binary data to temporary storage | Excel cell J7 OLE lookup | using reflection with Aspose.Cells objects | embedded OLE data export
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, finds the OleObject whose upper‑left corner is J7, reads its ObjectData byte array, writes the binary stream to a uniquely named file in the system temp folder, and then disposes the workbook.
-class ExtractOleObject
+// Loads input.xlsx, locates the OLE object anchored at cell J7, uses reflection to obtain its OleObjectData stream, writes the binary data to a uniquely named temporary .bin file, and closes the workbook.
+class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        string workbookPath = "InputWorkbook.xlsx";
-        Workbook workbook = new Workbook(workbookPath);
+        const string inputPath = "input.xlsx";
 
-        // Get the first worksheet (adjust index if needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Target cell J7 -> column index 9 (0‑based), row index 6 (0‑based)
-        int targetColumn = 9;
-        int targetRow = 6;
-
-        // Find the OLE object whose upper‑left corner is at J7
-        OleObject targetOle = null;
-        foreach (OleObject ole in sheet.OleObjects)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            if (ole.UpperLeftColumn == targetColumn && ole.UpperLeftRow == targetRow)
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            using (var workbook = new Workbook(inputPath))
             {
-                targetOle = ole;
-                break;
+                // Get the first worksheet (or specify the required one)
+                var worksheet = workbook.Worksheets[0];
+
+                // J7 => zero‑based row 6, column 9
+                const int targetRow = 6;
+                const int targetColumn = 9;
+
+                // Locate the OLE object anchored at J7
+                OleObject ole = null;
+                foreach (OleObject obj in worksheet.OleObjects)
+                {
+                    if (obj.UpperLeftRow == targetRow && obj.UpperLeftColumn == targetColumn)
+                    {
+                        ole = obj;
+                        break;
+                    }
+                }
+
+                if (ole != null)
+                {
+                    try
+                    {
+                        // Use reflection to access OleObjectData (covers API variations)
+                        var oleDataProp = ole.GetType().GetProperty("OleObjectData");
+                        if (oleDataProp == null)
+                        {
+                            Console.WriteLine("OleObjectData property not found on OleObject.");
+                            return;
+                        }
+
+                        var oleData = oleDataProp.GetValue(ole);
+                        var getDataMethod = oleData?.GetType().GetMethod("GetData");
+                        if (getDataMethod == null)
+                        {
+                            Console.WriteLine("GetData method not found on OleObjectData.");
+                            return;
+                        }
+
+                        // Retrieve the OLE object's binary data
+                        byte[] data = (byte[])getDataMethod.Invoke(oleData, null);
+
+                        // Write the OLE stream to a temporary file
+                        string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".bin");
+                        File.WriteAllBytes(tempFile, data);
+                        Console.WriteLine("OLE object extracted to: " + tempFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to extract OLE data: " + ex.Message);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No OLE object found in cell J7.");
+                }
             }
         }
-
-        if (targetOle == null)
+        catch (Exception ex)
         {
-            Console.WriteLine("No OLE object found at cell J7.");
-            return;
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
-
-        // Retrieve the embedded OLE data as a byte array
-        byte[] oleData = targetOle.ObjectData;
-
-        if (oleData == null || oleData.Length == 0)
-        {
-            Console.WriteLine("The OLE object at J7 does not contain embedded data.");
-            return;
-        }
-
-        // Create a temporary file and write the OLE data to it
-        string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".bin");
-        File.WriteAllBytes(tempFilePath, oleData);
-        Console.WriteLine($"OLE object data extracted to temporary file: {tempFilePath}");
-
-        // Workbook will be released when it goes out of scope
     }
 }

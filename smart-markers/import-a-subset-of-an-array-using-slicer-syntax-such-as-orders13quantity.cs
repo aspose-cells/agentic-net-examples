@@ -1,64 +1,70 @@
-// Title: Import a sliced array segment into Excel with Aspose.Cells C# ImportArray and range operator
-// Description: Demonstrates how to use the C# range operator (e.g., orders[1..4]) to extract a subset of an array, convert it to a primitive array, and import the values vertically into a worksheet using Aspose.Cells Worksheet.Cells.ImportArray.
-// Keywords: Aspose.Cells | ImportArray | C# range operator | array slice | subset import | Excel export C# | smart markers alternative | worksheet.Cells.ImportArray | C# 8.0 | Excel data import
-// Common Searches: Aspose.Cells import sliced array | C# range operator ImportArray example | How to import part of an array into Excel with Aspose | ImportArray with C# 8 range syntax | Excel export only selected collection items Aspose.Cells
-// Developer Intent: Import a specific portion of an in‑memory array into an Excel worksheet using Aspose.Cells.
-// Use Cases: Export only the middle rows of a large dataset to keep reports concise. | Create a dynamic summary sheet that shows a sliding window of values based on user‑selected indices. | Generate Excel files where the data range is calculated at runtime, avoiding the need to load the full collection.
-// AI Prompts: Modify the code to import orders[2..5] into column C starting at C2. | Show how to achieve the same sliced import using Aspose.Cells smart markers instead of ImportArray. | Add validation that the requested slice does not exceed the source array bounds and return a friendly error message.
+// Title: Use slicer syntax to import a range of rows from a ListObject column in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, defines a ListObject named Orders, and sets the formula =Orders[1..3].Quantity in cell D2 to extract the first three quantities. | Create a reusable method that accepts start and end indices, builds a slicer expression for a ListObject column, writes the result to a target range on any worksheet, and saves the workbook. | Show how to pull data from one ListObject into another worksheet by applying a dynamic slicer range, then demonstrate saving the updated workbook.
+// Common Searches: asp.net aspose.cells how to use slicer syntax to get rows 2 to 5 from a table column | c# retrieve specific rows from an Excel table using Aspose.Cells | aspose.cells example extracting subset of a ListObject column in .NET | dynamic range operator for ListObject data with Aspose.Cells C# | import selected rows of a table column into another sheet using Aspose.Cells
+// Tags: Aspose.Cells ListObject range extraction | C# import subset of table column | Excel slicer syntax .NET | dynamic range operator Aspose.Cells | extract table rows using Aspose.Cells API
 
-using Aspose.Cells;
 using System;
-using System.Linq;
+using Aspose.Cells;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-// Demonstrates how to use the C# range operator (e.g., orders[1..4]) to extract a subset of an array, convert it to a primitive array, and import the values vertically into a worksheet using Aspose.Cells Worksheet.Cells.ImportArray.
-public class SubsetImportDemo
+// The program creates a workbook, adds a ListObject named Orders with sample data, applies the slicer formula =Orders[1..3].Quantity to pull the Quantity values of rows 1‑3 into cell D2, and saves the file as OrdersSubset.xlsx.
+class Program
 {
-    public static void Run()
+    static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet and rename it
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Sample data source: an array of Order objects
-            Order[] orders = new Order[]
-            {
-                new Order { Quantity = 5 },
-                new Order { Quantity = 10 },
-                new Order { Quantity = 15 },
-                new Order { Quantity = 20 },
-                new Order { Quantity = 25 }
-            };
+            // Populate sample data for the Orders table
+            // Header row
+            sheet.Cells["A1"].PutValue("OrderID");
+            sheet.Cells["B1"].PutValue("Quantity");
 
-            // Take a subset (indices 1 to 3 inclusive) using range syntax
-            int[] quantitySlice = orders[1..4].Select(o => o.Quantity).ToArray();
+            // Data rows
+            sheet.Cells["A2"].PutValue(101);
+            sheet.Cells["B2"].PutValue(5);
+            sheet.Cells["A3"].PutValue(102);
+            sheet.Cells["B3"].PutValue(8);
+            sheet.Cells["A4"].PutValue(103);
+            sheet.Cells["B4"].PutValue(12);
+            sheet.Cells["A5"].PutValue(104);
+            sheet.Cells["B5"].PutValue(7);
 
-            // Import the sliced quantities vertically starting at cell B2 (row 1, column 1)
-            sheet.Cells.ImportArray(quantitySlice, 1, 1, true);
+            // Define a ListObject (table) named "Orders" covering the data range
+            int firstRow = 0;      // zero‑based index (A1)
+            int firstColumn = 0;
+            int totalRows = 5;     // includes header
+            int totalColumns = 2;
 
-            // Save the workbook
-            string outputPath = "SubsetImportDemo.xlsx";
+            // Add the table and retrieve the ListObject instance
+            int tableIndex = sheet.ListObjects.Add(
+                firstRow,
+                firstColumn,
+                firstRow + totalRows - 1,
+                firstColumn + totalColumns - 1,
+                true);
+            ListObject ordersTable = sheet.ListObjects[tableIndex];
+            ordersTable.DisplayName = "Orders";
+
+            // Use slicer syntax to import a subset of the Quantity column (rows 1 to 3)
+            // Place the result starting at cell D2
+            // The formula uses the slicer syntax: =Orders[1..3].Quantity
+            sheet.Cells["D2"].Formula = "=Orders[1..3].Quantity";
+
+            // Save the workbook to a file
+            string outputPath = "OrdersSubset.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-    }
-
-    // Simple POCO representing an order
-    private class Order
-    {
-        public int Quantity { get; set; }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        SubsetImportDemo.Run();
     }
 }

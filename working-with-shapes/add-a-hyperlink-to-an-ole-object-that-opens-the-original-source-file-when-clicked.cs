@@ -1,68 +1,68 @@
-// Title: How to add a hyperlink to a linked OLE object in an Excel worksheet using Aspose.Cells for .NET (C#)
-// Description: Demonstrates creating a workbook, inserting a linked OLE object that references an existing file, assigning a Hyperlink (address and ScreenTip) to the OleObject, and saving the workbook so the object opens the original document on click.
-// Keywords: Aspose.Cells | C# | .NET | OLE object hyperlink | linked OLE | Excel hyperlink | open source file | Hyperlink.Address | ScreenTip | worksheet OleObjects | Aspose.Cells API
-// Common Searches: Aspose.Cells add hyperlink to OLE object C# | set hyperlink on linked OLE object Aspose.Cells | open original file from OLE object Excel .NET | OleObject Hyperlink example Aspose | C# code to link OLE object with hyperlink
-// Developer Intent: Create a clickable OLE object that launches its source file when the user clicks it.
-// Use Cases: Embed a Word contract as a linked OLE object in a financial report and provide a direct hyperlink for reviewers. | Generate a project tracker where each task includes a linked PDF OLE object with a hyperlink for quick document access. | Automate audit workbooks that insert source spreadsheets as linked OLE objects, each equipped with a hyperlink for auditors to open the original files.
-// AI Prompts: Write C# code with Aspose.Cells to insert a linked OLE object and set a Hyperlink that opens the source file when clicked. | Explain how to test that an OleObject hyperlink works after saving the workbook with Aspose.Cells. | Provide a sample that adds a ScreenTip to an OLE object's hyperlink and saves the workbook to a custom path.
+// Title: Add a hyperlink to an embedded OLE object that opens the source file in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a Word document as an OLE object at cell B2 and set its Hyperlink.Address to the original file path with Aspose.Cells in C#. | Create an Excel workbook, embed any file as an OLE object, attach a clickable hyperlink that opens the source file, and save the workbook using Aspose.Cells for .NET. | Generate code that adds an OLE shape to a worksheet, assigns a file‑system hyperlink to the shape, and verifies the workbook saves correctly.
+// Common Searches: Aspose.Cells C# add hyperlink to OLE shape in Excel | how to make OLE object open original document when clicked using Aspose.Cells | set Hyperlink.Address for OleObject in Aspose.Cells .NET example | embed Word file as OLE object with file link in Excel workbook using Aspose.Cells | C# Aspose.Cells save workbook with hyperlinked OLE object
+// Tags: OleObject hyperlink Aspose.Cells | embed Word as OLE shape C# | Hyperlink.Address property usage | save workbook with OLE link | Excel OLE object file reference
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace OleObjectHyperlinkDemo
+// The example creates a new workbook, embeds a Word document as an OLE object at cell B2, assigns the source file path as a hyperlink to the OLE shape, and saves the workbook as HyperlinkedOle.xlsx.
+class Program
 {
-    // Demonstrates creating a workbook, inserting a linked OLE object that references an existing file, assigning a Hyperlink (address and ScreenTip) to the OleObject, and saving the workbook so the object opens the original document on click.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Path to the source file that will be embedded as an OLE object
+            string sourceFilePath = @"C:\Temp\Sample.docx";
+
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourceFilePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Path to the source file that will be linked and opened on click
-                string sourceFilePath = @"C:\Temp\SampleDocument.docx";
-
-                // Ensure the source file exists before proceeding
-                if (!File.Exists(sourceFilePath))
-                {
-                    Console.WriteLine($"Source file not found: {sourceFilePath}");
-                    return;
-                }
-
-                // Read the source file as a byte array (the OLE object data)
-                byte[] oleData = File.ReadAllBytes(sourceFilePath);
-
-                // Add a linked OLE object to the worksheet
-                int oleIndex = worksheet.OleObjects.Add(
-                    topRow: 5,
-                    leftColumn: 2,
-                    height: 200,
-                    width: 300,
-                    imageData: oleData,
-                    linkedFile: sourceFilePath);
-
-                // Retrieve the added OLE object
-                OleObject oleObject = worksheet.OleObjects[oleIndex];
-
-                // Set hyperlink for the OLE object (read‑only property, modify its members)
-                Hyperlink hyperlink = oleObject.Hyperlink;
-                hyperlink.Address = sourceFilePath;
-                hyperlink.ScreenTip = "Open linked document";
-
-                // Save the workbook
-                string outputPath = "OleObjectWithHyperlink.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Source file not found: {sourceFilePath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Read the source file into a byte array (required by AddOleObject overload)
+            byte[] oleData = File.ReadAllBytes(sourceFilePath);
+
+            // Insert the OLE object at cell B2 (row index 1, column index 1)
+            // Provide row/column offsets (0) and size in points
+            OleObject oleObject = sheet.Shapes.AddOleObject(
+                1,          // upperLeftRow
+                1,          // upperLeftColumn
+                0,          // upperLeftRowOffset
+                0,          // upperLeftColumnOffset
+                100,        // height
+                200,        // width
+                oleData);   // OLE data
+
+            // Add a hyperlink to the OLE object that opens the original source file
+            oleObject.Hyperlink.Address = sourceFilePath;
+
+            // Ensure the output directory exists
+            string outputPath = @"C:\Temp\HyperlinkedOle.xlsx";
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

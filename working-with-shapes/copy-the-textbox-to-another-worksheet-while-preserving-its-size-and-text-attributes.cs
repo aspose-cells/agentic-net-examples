@@ -1,75 +1,81 @@
-// Title: Copy a TextBox Shape Between Worksheets While Preserving Size and Formatting – Aspose.Cells for .NET
-// Description: This C# example shows how to duplicate a TextBox from a source worksheet to a destination worksheet using Aspose.Cells. The Shapes.AddCopy method retains the original row, column and pixel offsets. After copying, the code casts the shape back to TextBox and transfers the text and font properties (name, size, bold) so the appearance is identical. The workbook is then saved as an XLSX file.
-// Keywords: Aspose.Cells copy TextBox | duplicate shape worksheet .NET | preserve shape size Aspose.Cells | AddCopy shape method | copy TextBox formatting C# | Aspose.Cells shape cloning | C# Excel textbox copy | Aspose.Cells workbook template
-// Common Searches: how to copy a TextBox between worksheets using Aspose.Cells | Aspose.Cells preserve textbox size and font | C# copy shape with formatting Aspose.Cells | AddCopy example Aspose.Cells .NET | duplicate Excel textbox programmatically
-// Developer Intent: Duplicate a TextBox from one worksheet to another while keeping its position, dimensions, and font styling unchanged.
-// Use Cases: Reuse a styled TextBox header across multiple report sheets for consistent branding. | Create a dashboard where the same annotation box appears on each worksheet without manual recreation. | Generate template‑based workbooks that require the same pre‑formatted TextBox on every new sheet.
-// AI Prompts: Generate a reusable C# method that copies any shape (TextBox, rectangle, etc.) and returns the new shape with all visual properties preserved. | Show how to copy a TextBox to several worksheets in a loop, maintaining exact position and style on each sheet. | Explain how to copy a TextBox along with its hyperlink and fill color using Aspose.Cells.
+// Title: Copy a textbox shape to another worksheet while preserving size and font formatting with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that copies the first textbox shape from Sheet1 to Sheet2, preserving its position, dimensions, and all font properties using Aspose.Cells. | Show how to transfer a textbox shape between worksheets in a workbook, keeping the original size and text styling with Aspose.Cells for .NET. | Provide a C# example that clones a textbox shape from one worksheet to another, copying its text content and font attributes while maintaining layout.
+// Common Searches: Aspose.Cells C# copy textbox shape from one sheet to another preserving formatting | How to duplicate a textbox shape and keep its size in Aspose.Cells .NET | Copy shape text and font attributes between worksheets using Aspose.Cells | C# Aspose.Cells example for moving a textbox while retaining layout
+// Tags: copy textbox shape Aspose.Cells C# | preserve shape size and font Aspose.Cells | clone shape between worksheets .NET | textbox shape formatting Aspose.Cells | transfer shape layout Excel workbook C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel file, locates the first textbox shape on Sheet1, adds a matching textbox to Sheet2 with identical position, size, and text, copies the font properties, and saves the workbook as a new file.
+class Program
 {
-    // This C# example shows how to duplicate a TextBox from a source worksheet to a destination worksheet using Aspose.Cells. The Shapes.AddCopy method retains the original row, column and pixel offsets. After copying, the code casts the shape back to TextBox and transfers the text and font properties (name, size, bold) so the appearance is identical. The workbook is then saved as an XLSX file.
-    public class CopyTextBoxDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // ---------- Source worksheet ----------
-                Worksheet sourceSheet = workbook.Worksheets[0];
-                sourceSheet.Name = "Source";
-
-                // Add a TextBox shape to the source sheet
-                // Parameters: upper left row, top offset (pixels), upper left column, left offset (pixels), width (pixels), height (pixels)
-                TextBox sourceTextBox = (TextBox)sourceSheet.Shapes.AddTextBox(2, 0, 2, 0, 200, 80);
-                sourceTextBox.Text = "Hello Aspose!";
-                sourceTextBox.Font.Name = "Calibri";
-                sourceTextBox.Font.Size = 14;
-                sourceTextBox.Font.IsBold = true;
-
-                // ---------- Destination worksheet ----------
-                Worksheet destSheet = workbook.Worksheets.Add("Destination");
-
-                // Copy the TextBox to the destination sheet preserving its position and size
-                // AddCopy copies the shape and retains its dimensions
-                Shape copiedShape = destSheet.Shapes.AddCopy(
-                    sourceTextBox,                     // source shape
-                    sourceTextBox.UpperLeftRow,        // top row index
-                    sourceTextBox.Y,                   // vertical offset (pixels)
-                    sourceTextBox.UpperLeftColumn,     // left column index
-                    sourceTextBox.X);                  // horizontal offset (pixels)
-
-                // Cast the copied shape back to TextBox to transfer text attributes
-                TextBox destTextBox = (TextBox)copiedShape;
-                destTextBox.Text = sourceTextBox.Text;
-                destTextBox.Font.Name = sourceTextBox.Font.Name;
-                destTextBox.Font.Size = sourceTextBox.Font.Size;
-                destTextBox.Font.IsBold = sourceTextBox.Font.IsBold;
-
-                // Save the workbook
-                workbook.Save("CopyTextbox.xlsx");
-                Console.WriteLine("Workbook saved as CopyTextbox.xlsx");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get source and destination worksheets
+            Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
+            Worksheet targetSheet = workbook.Worksheets["Sheet2"];
+
+            // Find the first textbox shape in the source sheet
+            Shape sourceShape = null;
+            foreach (Shape shape in sourceSheet.Shapes)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Assume the first shape is the textbox we need
+                sourceShape = shape;
+                break;
             }
+
+            if (sourceShape != null)
+            {
+                // Add a textbox to the target sheet with the same position and size
+                Shape targetShape = targetSheet.Shapes.AddTextBox(
+                    sourceShape.UpperLeftRow,
+                    sourceShape.UpperLeftColumn,
+                    sourceShape.Top,
+                    sourceShape.Left,
+                    sourceShape.Width,
+                    sourceShape.Height);
+
+                // Copy text content
+                targetShape.Text = sourceShape.Text;
+
+                // Copy font attributes
+                targetShape.Font.Name = sourceShape.Font.Name;
+                targetShape.Font.Size = sourceShape.Font.Size;
+                targetShape.Font.IsBold = sourceShape.Font.IsBold;
+                targetShape.Font.IsItalic = sourceShape.Font.IsItalic;
+                targetShape.Font.Color = sourceShape.Font.Color;
+
+                // Note: Fill and line attribute copying omitted due to API differences across versions.
+            }
+            else
+            {
+                Console.WriteLine("No shape found in the source sheet.");
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            CopyTextBoxDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

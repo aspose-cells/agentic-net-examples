@@ -1,27 +1,86 @@
-// Title: C# – Remove All External Links from an Excel Workbook with Aspose.Cells
-// Description: Loads an Excel file, clears every external link (optionally updating formulas to refer to the current workbook), and saves a self‑contained workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# external links | clear external links | remove external references | self-contained Excel file | update formulas after clearing links | Workbook.ExternalLinks.Clear | Excel data connections | .NET Excel security
-// Common Searches: Aspose.Cells remove external links C# | How to clear external references in Excel using .NET | Make Excel workbook self‑contained with Aspose | Workbook.ExternalLinks.Clear example | Delete external data connections programmatically
-// Developer Intent: Delete every external link in a workbook so the file no longer depends on outside sources.
-// Use Cases: Prepare a distribution‑ready workbook that must not contain external data connections. | Enforce compliance by stripping external references from corporate templates. | Automate conversion of user‑uploaded Excel files into secure, self‑contained documents.
-// AI Prompts: Write C# code with Aspose.Cells that lists all external links before removing them. | Show how to call Workbook.Worksheets.ExternalLinks.Clear(false) to keep original formulas unchanged. | Explain how to verify that no external links remain after calling Clear(true).
+// Title: How to remove external links and data connections from an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, deletes every DataConnection object, clears any formula that references another workbook, and saves the result to a new file. | Implement a reusable C# method that accepts input and output paths, strips external links (both data connections and external formulas) from the workbook using Aspose.Cells, and returns a success status.
+// Common Searches: asp.net remove data connections from Excel using aspose.cells | c# clear formulas that reference other workbooks with aspose.cells | how to make an Excel file self-contained with aspose.cells in .net | strip external links from workbook programmatically aspose.cells | delete external data connections and formulas in Excel via C#
+// Tags: Aspose.Cells purge data connections | Aspose.Cells purge external workbook formulas | Aspose.Cells save workbook without external links | C# strip external references from Excel workbook | Aspose.Cells workbook cleanup external references
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Loads an Excel file, clears every external link (optionally updating formulas to refer to the current workbook), and saves a self‑contained workbook using Aspose.Cells for .NET.
-class RemoveExternalLinksDemo
+// The example loads an existing workbook, removes all DataConnection objects, iterates through each worksheet and cell to clear formulas that contain external workbook references, ensures the output directory exists, and saves the modified workbook as a self‑contained file.
+class Program
 {
     static void Main()
     {
-        // Load the workbook from a file
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Remove all external links.
-        // The boolean parameter updates formulas to refer to the current workbook when possible.
-        workbook.Worksheets.ExternalLinks.Clear(true);
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Save the modified workbook to a new file
-        workbook.Save("output.xlsx");
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Clear any external data connections
+            try
+            {
+                if (workbook.DataConnections != null && workbook.DataConnections.Count > 0)
+                {
+                    workbook.DataConnections.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to clear data connections: {ex.Message}");
+            }
+
+            // Remove external references that may still exist inside formulas
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Cell cell in sheet.Cells)
+                {
+                    try
+                    {
+                        if (cell.IsFormula && !string.IsNullOrEmpty(cell.Formula) && cell.Formula.Contains("["))
+                        {
+                            cell.Formula = string.Empty;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Warning: Unable to process cell {cell.Name} on sheet \"{sheet.Name}\": {ex.Message}");
+                    }
+                }
+            }
+
+            // Ensure the output directory exists
+            try
+            {
+                string? outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to create output directory: {ex.Message}");
+            }
+
+            // Save the workbook as a self‑contained file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

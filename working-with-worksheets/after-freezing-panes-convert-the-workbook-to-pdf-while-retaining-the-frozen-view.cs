@@ -1,41 +1,50 @@
-// Title: Freeze panes in Aspose.Cells and export to PDF while preserving the view (C#)
-// Description: Demonstrates how to freeze specific rows and columns in an Aspose.Cells worksheet, enable ExportDocumentStructure, and save the workbook as a PDF so the frozen panes remain visible in the generated document.
-// Keywords: Aspose.Cells FreezePanes PDF | C# export workbook to PDF with frozen panes | PdfSaveOptions ExportDocumentStructure | .NET Aspose.Cells freeze rows columns | preserve frozen view PDF conversion | Aspose.Cells worksheet freeze example
-// Common Searches: keep frozen panes when converting Aspose.Cells workbook to PDF | Aspose.Cells C# export frozen rows and columns to PDF | PdfSaveOptions ExportDocumentStructure example | FreezePanes method PDF output Aspose.Cells | how to retain frozen view in PDF using Aspose.Cells
-// Developer Intent: The developer needs to freeze selected rows/columns in a worksheet and then generate a PDF that maintains the frozen pane layout.
-// Use Cases: Create printable reports where header rows stay fixed in the PDF. | Generate PDF dashboards from Excel files with frozen navigation panes. | Automate Excel‑to‑PDF conversion while preserving layout consistency for documentation.
-// AI Prompts: Show how to change the frozen pane start cell to D4 and still export the PDF with the frozen view retained. | Add page orientation and margin settings to PdfSaveOptions while keeping ExportDocumentStructure enabled. | Explain how ExportDocumentStructure affects PDF output and when it might fail to preserve frozen panes.
+// Title: How to freeze the first row and column in an Aspose.Cells worksheet and export it to PDF while preserving the frozen view (C#)
+// AI Prompts: Freeze the top row and left column of a worksheet, then save the workbook as a PDF using Aspose.Cells for .NET. | Generate a PDF from an Aspose.Cells workbook that maintains the frozen pane layout, configuring PdfSaveOptions in C#. | Adjust the code to force each worksheet onto a single PDF page while keeping the frozen panes intact.
+// Common Searches: Aspose.Cells C# export to PDF keep frozen panes visible | How to preserve freeze panes when converting Excel to PDF with Aspose.Cells | C# sample to freeze first row and column then save as PDF using Aspose.Cells | PdfSaveOptions OnePagePerSheet with frozen panes Aspose.Cells example | Freeze panes before PDF conversion Aspose.Cells .NET tutorial
+// Tags: freeze panes pdf export aspose.cells | aspose.cells pdfsaveoptions frozen view | c# freeze first row column aspose.cells | export worksheet to pdf with frozen panes | onepagepersheet option aspose.cells
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to freeze specific rows and columns in an Aspose.Cells worksheet, enable ExportDocumentStructure, and save the workbook as a PDF so the frozen panes remain visible in the generated document.
+// The example creates a workbook, fills it with sample data, freezes the first row and column, and saves the workbook as a PDF using PdfSaveOptions, ensuring the frozen pane view is retained in the output.
 class FreezePaneToPdf
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate some sample data
-        for (int row = 0; row < 20; row++)
+        try
         {
-            sheet.Cells[row, 0].PutValue($"Row {row + 1}");
-            sheet.Cells[row, 1].PutValue(row * 10);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data
+            for (int row = 0; row < 20; row++)
+            {
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
+            }
+
+            // Freeze the first row and first column (A1 will be the top‑left visible cell)
+            sheet.FreezePanes(1, 1, 1, 1);
+
+            // Set PDF save options (no special flags needed for frozen panes)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Optional: keep each sheet on a single page
+                // OnePagePerSheet = true
+            };
+
+            // Save the workbook as PDF while preserving the frozen view
+            workbook.Save("FrozenPaneOutput.pdf", pdfOptions);
         }
-
-        // Freeze panes at cell C3 (row index 2, column index 2) with 2 rows and 2 columns frozen
-        sheet.FreezePanes(2, 2, 2, 2);
-
-        // Prepare PDF save options (optional settings)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        catch (Exception ex)
         {
-            // Export document structure to keep pane information in the PDF
-            ExportDocumentStructure = true
-        };
-
-        // Save the workbook as PDF; the frozen view is retained in the output
-        workbook.Save("FrozenPaneOutput.pdf", pdfOptions);
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

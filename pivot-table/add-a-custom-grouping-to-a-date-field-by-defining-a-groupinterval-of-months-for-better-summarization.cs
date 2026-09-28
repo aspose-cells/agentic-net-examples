@@ -1,65 +1,89 @@
-// Title: Aspose.Cells C# – Group a Date Field by Month Intervals in a Pivot Table
-// Description: Demonstrates how to create a workbook with date and sales data, add a PivotTable, and use PivotField.GroupBy to group the Date field into one‑month intervals for concise monthly summaries. The example refreshes the pivot and saves the result as an Excel file.
-// Keywords: Aspose.Cells pivot table month grouping | C# PivotField.GroupBy date interval | group dates by month Aspose.Cells | custom date grouping .NET Excel | monthly summary pivot Aspose | Aspose.Cells US developers | Excel pivot date interval C#
-// Common Searches: Aspose.Cells group date column by month C# | PivotField.GroupBy example for monthly intervals | How to create monthly groups in an Aspose.Cells pivot table | C# code to summarize sales by month using Aspose.Cells
-// Developer Intent: The developer needs to aggregate a PivotTable’s Date field into monthly buckets to produce a compact sales summary without adding a separate field.
-// Use Cases: Generate a monthly sales report directly from transaction data. | Build a financial dashboard that rolls up revenue by month. | Prepare data for downstream analytics by consolidating dates into uniform monthly groups.
-// AI Prompts: Write C# code using Aspose.Cells to group a PivotTable Date field into one‑month intervals. | Explain each parameter of PivotField.GroupBy for date grouping and how to keep the grouping in the original field. | Adapt the sample to group dates by quarters or years instead of months.
+// Title: How to group a PivotTable date field by month interval in Aspose.Cells for .NET (C#)
+// AI Prompts: Create a PivotTable, add a date field to the row area, and group it by months with a 1‑month interval using Aspose.Cells in C#. | Apply month‑based grouping to an existing date pivot field without creating a new field, then refresh the pivot cache. | Calculate the PivotTable after month grouping of the OrderDate field and save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# group pivot table date field by month interval | example of month grouping in Aspose.Cells PivotTable using C# | how to set month grouping on a date field in an Aspose.Cells pivot table | refresh pivot cache after grouping dates with Aspose.Cells .NET
+// Tags: Aspose.Cells PivotField.GroupBy method | C# month-based grouping for pivot tables | refresh pivot cache Aspose.Cells | save workbook as xlsx using Aspose.Cells | date row field grouping Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook with date and sales data, add a PivotTable, and use PivotField.GroupBy to group the Date field into one‑month intervals for concise monthly summaries. The example refreshes the pivot and saves the result as an Excel file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a workbook with sample order dates and sales, adds a PivotTable, places the OrderDate field in the row area, groups this date field by months using a 1‑month interval, refreshes and calculates the PivotTable, and saves the result as PivotDateFieldMonthGrouping.xlsx.
+    public class PivotDateFieldMonthGroupingDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Main()
+        {
+            Run();
+        }
 
-        // Populate sample data with a Date column and a Sales column
-        worksheet.Cells["A1"].Value = "Date";
-        worksheet.Cells["B1"].Value = "Sales";
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        worksheet.Cells["A2"].Value = new DateTime(2023, 1, 15);
-        worksheet.Cells["B2"].Value = 1500;
-        worksheet.Cells["A3"].Value = new DateTime(2023, 2, 20);
-        worksheet.Cells["B3"].Value = 2300;
-        worksheet.Cells["A4"].Value = new DateTime(2023, 3, 10);
-        worksheet.Cells["B4"].Value = 3200;
-        worksheet.Cells["A5"].Value = new DateTime(2023, 4, 5);
-        worksheet.Cells["B5"].Value = 4100;
-        worksheet.Cells["A6"].Value = new DateTime(2023, 5, 25);
-        worksheet.Cells["B6"].Value = 5000;
+                // ----- Populate sample data -----
+                // Header row
+                sheet.Cells["A1"].Value = "OrderDate";
+                sheet.Cells["B1"].Value = "Sales";
 
-        // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("A1:B6", "E3", "SalesPivot");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+                // Sample dates (spread across several months) and sales values
+                sheet.Cells["A2"].Value = new DateTime(2023, 1, 15);
+                sheet.Cells["B2"].Value = 1500;
 
-        // Place the Date field in the row area and Sales in the data area
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Date");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                sheet.Cells["A3"].Value = new DateTime(2023, 2, 20);
+                sheet.Cells["B3"].Value = 2300;
 
-        // Retrieve the PivotField that represents the Date column
-        PivotField datePivotField = pivotTable.RowFields[0];
+                sheet.Cells["A4"].Value = new DateTime(2023, 3, 10);
+                sheet.Cells["B4"].Value = 3200;
 
-        // Define grouping parameters: group by months with an interval of 1 month
-        DateTime startDate = new DateTime(2023, 1, 1);
-        DateTime endDate   = new DateTime(2023, 12, 31);
-        PivotGroupByType[] groupTypes = new PivotGroupByType[] { PivotGroupByType.Months };
-        double interval = 1;               // one month per group
-        bool firstAsNewField = false;      // group in place (no new field)
+                sheet.Cells["A5"].Value = new DateTime(2023, 4, 5);
+                sheet.Cells["B5"].Value = 4100;
 
-        // Apply the grouping using the PivotField.GroupBy overload for dates
-        datePivotField.GroupBy(startDate, endDate, groupTypes, interval, firstAsNewField);
+                sheet.Cells["A6"].Value = new DateTime(2023, 5, 25);
+                sheet.Cells["B6"].Value = 5000;
 
-        // Refresh the pivot table to reflect the new grouping
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+                // ----- Create a pivot table -----
+                // Data range A1:B6, place pivot table at C3, name it "SalesPivot"
+                int pivotIndex = sheet.PivotTables.Add("A1:B6", "C3", "SalesPivot");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Save the workbook with the grouped pivot table
-        workbook.Save("GroupedByMonthsPivot.xlsx");
+                // Add the date field to the row area and the sales field to the data area
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "OrderDate");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+                // ----- Group the date field by months -----
+                // Retrieve the date pivot field (first row field)
+                PivotField dateField = pivotTable.RowFields[0];
+
+                // Define the grouping range (cover all dates in the source data)
+                DateTime startDate = new DateTime(2023, 1, 1);
+                DateTime endDate = new DateTime(2023, 12, 31);
+
+                // Specify that we want to group by months
+                PivotGroupByType[] groupTypes = new PivotGroupByType[] { PivotGroupByType.Months };
+
+                // Interval of 1 month, do not create a new field (group in place)
+                double interval = 1.0;
+                bool firstAsNewField = false;
+
+                // Apply grouping using the PivotField.GroupBy overload for date fields
+                dateField.GroupBy(startDate, endDate, groupTypes, interval, firstAsNewField);
+
+                // Refresh the pivot cache and calculate the pivot table to reflect the grouping
+                pivotTable.RefreshData();      // Correct method to refresh cache
+                pivotTable.CalculateData();
+
+                // ----- Save the workbook -----
+                workbook.Save("PivotDateFieldMonthGrouping.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,75 +1,78 @@
-// Title: C# – Check and Add Custom Document Property "ClientName" with Aspose.Cells
-// Description: Loads an Excel workbook (or creates a new one if the file is missing), examines the CustomDocumentProperties collection, adds a "ClientName" property only when it does not already exist, creates the output directory if needed, and saves the workbook.
-// Keywords: Aspose.Cells | C# | CustomDocumentProperties | check custom property | add custom property | Excel metadata | load workbook | save workbook | client name property | Excel automation
-// Common Searches: Aspose.Cells check if custom document property exists | C# add custom property to Excel workbook | How to create or open workbook and manage custom properties with Aspose.Cells | Add missing custom property to Excel file using .NET | Aspose.Cells example for conditional custom property insertion
-// Developer Intent: Identify whether the workbook already contains a custom property named "ClientName" and insert it only if it is absent.
-// Use Cases: Embed client identifiers in report workbooks to maintain traceability without duplicating entries. | Refresh existing Excel templates programmatically while preserving previously set custom properties. | Generate a fresh workbook with a default client name when the source file is unavailable, then continue processing.
-// AI Prompts: Generate C# code with Aspose.Cells that opens an Excel file, checks for a custom property called "ProjectId", and adds it with a specified value only if it does not exist. | Refactor the example to accept the property name and value as method parameters and handle a list of properties in a loop. | Explain best practices for exception handling when working with CustomDocumentProperties in Aspose.Cells and ensure the workbook is saved even if the input file is missing.
+// Title: Load an Excel workbook and add a custom document property "ClientName" only if it does not already exist using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that opens an existing .xlsx file, checks the CustomDocumentProperties collection for a property named 'ClientName', and adds it when missing. | Show how to iterate over workbook.CustomDocumentProperties in Aspose.Cells to avoid creating duplicate custom properties before saving the file. | Provide a C# example that includes comprehensive error handling for loading, modifying, and saving an Excel workbook while safely managing custom document properties.
+// Common Searches: aspnet check if custom document property exists before adding with Aspose.Cells | c# Aspose.Cells add custom property only if not present | how to avoid duplicate custom properties in an Excel workbook using Aspose.Cells | load workbook and manage custom document properties in .NET
+// Tags: conditional addition of custom document property Aspose.Cells | verify custom property existence in Excel C# | prevent duplicate custom property Aspose.Cells | load workbook and manage custom properties .NET | exception handling for Aspose.Cells workbook operations
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The program loads an existing Excel workbook, inspects its CustomDocumentProperties for a property named "ClientName", adds the property with a sample value only if it is absent, and then saves the workbook to a new file, handling missing files and other exceptions gracefully.
+class Program
 {
-    // Loads an Excel workbook (or creates a new one if the file is missing), examines the CustomDocumentProperties collection, adds a "ClientName" property only when it does not already exist, creates the output directory if needed, and saves the workbook.
-    public class CheckAndAddCustomProperty
+    static void Main()
     {
-        public static void Run()
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.xlsx";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(inputFile))
         {
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook.xlsx";
+            Console.WriteLine($"Error: Input file \"{inputFile}\" was not found.");
+            return;
+        }
 
-            try
+        Workbook workbook;
+        try
+        {
+            // Load the workbook from the existing file
+            workbook = new Workbook(inputFile);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        // Access the collection of custom document properties
+        var customProps = workbook.CustomDocumentProperties;
+
+        // Check whether a property named "ClientName" already exists
+        bool clientNameExists = false;
+        foreach (var prop in customProps)
+        {
+            // The collection items expose Name property
+            if (prop.Name == "ClientName")
             {
-                Workbook workbook;
-
-                // Load existing workbook or create a new one if the file is missing
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook();
-                    Console.WriteLine($"Input file '{inputPath}' not found. Created a new workbook.");
-                }
-
-                // Access custom document properties
-                var customProps = workbook.CustomDocumentProperties;
-
-                // Add "ClientName" property if it does not exist
-                if (!customProps.Contains("ClientName"))
-                {
-                    customProps.Add("ClientName", "Acme Corp");
-                    Console.WriteLine("Custom property 'ClientName' added.");
-                }
-                else
-                {
-                    Console.WriteLine("Custom property 'ClientName' already exists.");
-                }
-
-                // Ensure the output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                clientNameExists = true;
+                break;
             }
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        // Add the "ClientName" property only if it does not exist
+        if (!clientNameExists)
         {
-            Run();
+            try
+            {
+                // Example value; replace with actual client name as needed
+                customProps.Add("ClientName", "Acme Corp");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to add custom property: {ex.Message}");
+                // Continue; saving the workbook without the new property is still possible
+            }
+        }
+
+        // Save the workbook to a new file (or overwrite the original)
+        try
+        {
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save workbook: {ex.Message}");
         }
     }
 }

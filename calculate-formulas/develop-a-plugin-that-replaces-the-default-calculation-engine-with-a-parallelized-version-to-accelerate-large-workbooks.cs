@@ -1,116 +1,101 @@
-// Title: Parallel Custom Calculation Engine for Aspose.Cells (C#) – Accelerate Large Workbook Formulas
-// Description: Demonstrates a ParallelCalculationEngine derived from AbstractCalculationEngine that processes the SUM function in parallel using Parallel.For, integrates via CalculationOptions.CustomEngine, and speeds up formula evaluation on a 10,000‑row worksheet.
-// Keywords: Aspose.Cells | custom calculation engine | parallel formula evaluation | C# | .NET | performance optimization | large workbook | SUM function parallelism | CalculationOptions.CustomEngine | multithreaded Excel processing
-// Common Searches: Aspose.Cells custom calculation engine example | parallel formula calculation C# Aspose.Cells | replace default calculation engine Aspose | speed up SUM formula in large workbook | multithreaded Excel calculation .NET
-// Developer Intent: Implement a custom parallel calculation engine to replace Aspose.Cells' default engine and improve formula performance in large workbooks.
-// Use Cases: Compute SUM over tens of thousands of rows with Parallel.For to reduce calculation time. | Plug the ParallelCalculationEngine into CalculationOptions.CustomEngine for whole‑workbook formula evaluation. | Fallback to the built‑in engine for unsupported functions while accelerating supported ones.
-// AI Prompts: Create a ParallelCalculationEngine that also handles AVERAGE and MAX with thread‑safe aggregation. | Show a benchmark comparing the default engine and the parallel engine on a 50,000‑row workbook. | Add robust error handling for non‑numeric cells in ReferredArea when using the parallel engine.
+// Title: Implement a parallel custom calculation engine for Aspose.Cells to speed up SUM formulas in large Excel workbooks (C#)
+// AI Prompts: Write a C# class that derives from Aspose.Cells.AbstractCalculationEngine and uses Parallel.For to compute the SUM function across cell ranges. | Show how to assign the ParallelCalculationEngine to CalculationOptions and call Workbook.CalculateFormula on a large workbook. | Provide code that extends the ParallelCalculationEngine to process AVERAGE and MAX functions concurrently using parallel execution.
+// Common Searches: how to implement a multithreaded SUM function in Aspose.Cells using Parallel.For | replace default formula engine with a custom parallel engine in Aspose.Cells .NET | optimize Workbook.CalculateFormula performance for large Excel files in C#
+// Tags: parallel formula engine Aspose.Cells C# | multithreaded SUM calculation with Parallel.For | configure calculation options for custom engine | large workbook formula performance optimization | extend engine to support AVERAGE and MAX
 
 using System;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace ParallelCalculationEngineDemo
+namespace ParallelCalculationEnginePlugin
 {
-    // Custom calculation engine that processes built‑in functions in parallel
-    // Demonstrates a ParallelCalculationEngine derived from AbstractCalculationEngine that processes the SUM function in parallel using Parallel.For, integrates via CalculationOptions.CustomEngine, and speeds up formula evaluation on a 10,000‑row worksheet.
+    // Custom calculation engine that parallelizes the processing of built‑in functions (e.g., SUM)
+    // The example defines a ParallelCalculationEngine that overrides Aspose.Cells.AbstractCalculationEngine to calculate the SUM function in parallel with Parallel.For, configures CalculationOptions.CustomEngine to use this engine, runs Workbook.CalculateFormula on a large workbook, and saves the calculated result.
     public class ParallelCalculationEngine : AbstractCalculationEngine
     {
-        // Enable processing of built‑in functions (e.g., SUM)
+        // Enable processing of built‑in functions so that this engine gets called for them
         public override bool ProcessBuiltInFunctions => true;
 
-        // No forced recalculation for any function
+        // No special force‑recalculation logic needed
         public override bool ForceRecalculate(string functionName) => false;
 
-        // Core calculation logic
+        // Core calculation method
         public override void Calculate(CalculationData data)
         {
             // Example: parallel implementation for the SUM function
             if (data.FunctionName.Equals("SUM", StringComparison.OrdinalIgnoreCase))
             {
-                double totalSum = 0.0;
-                object syncRoot = new object();
+                double total = 0.0;
+                object sync = new object();
 
-                // Iterate over each parameter passed to SUM
+                // Iterate over each parameter (each can be a range or a scalar)
                 for (int p = 0; p < data.ParamCount; p++)
                 {
-                    // Parameters are usually ReferredArea objects (ranges)
-                    if (data.GetParamValue(p) is ReferredArea area)
+                    object param = data.GetParamValue(p);
+
+                    // If the parameter is a range (ReferredArea), sum its cells in parallel
+                    if (param is ReferredArea area)
                     {
-                        // Parallel loop over rows in the area
                         Parallel.For(area.StartRow, area.EndRow + 1, row =>
                         {
                             double rowSum = 0.0;
                             for (int col = area.StartColumn; col <= area.EndColumn; col++)
                             {
+                                // GetValue expects zero‑based indices relative to the area
                                 object cellVal = area.GetValue(row - area.StartRow, col - area.StartColumn);
                                 if (cellVal != null && double.TryParse(cellVal.ToString(), out double d))
-                                {
                                     rowSum += d;
-                                }
                             }
-                            // Accumulate safely
-                            lock (syncRoot)
-                            {
-                                totalSum += rowSum;
-                            }
+                            // Accumulate row sums safely
+                            lock (sync) { total += rowSum; }
                         });
                     }
-                    else
+                    // If the parameter is a scalar value, add it directly
+                    else if (param != null && double.TryParse(param.ToString(), out double scalar))
                     {
-                        // Handle scalar parameters (e.g., numbers)
-                        object val = data.GetParamValue(p);
-                        if (val != null && double.TryParse(val.ToString(), out double d))
-                        {
-                            totalSum += d;
-                        }
+                        total += scalar;
                     }
                 }
 
                 // Set the calculated result for the SUM function
-                data.CalculatedValue = totalSum;
+                data.CalculatedValue = total;
+                return;
             }
-            // For other functions, let the default engine handle them
+
+            // For other functions, let the default engine handle them (do nothing here)
         }
     }
 
+    public class PluginDemo
+    {
+        public static void Run()
+        {
+            // Load an existing workbook (replace with actual path)
+            Workbook workbook = new Workbook("LargeWorkbook.xlsx");
+
+            // Configure calculation options to use the parallel engine
+            CalculationOptions options = new CalculationOptions
+            {
+                CustomEngine = new ParallelCalculationEngine(),
+                // Keep other options as needed
+                IgnoreError = false,
+                Recursive = true
+            };
+
+            // Perform formula calculation using the custom parallel engine
+            workbook.CalculateFormula(options);
+
+            // Save the workbook after calculation (replace with desired output path)
+            workbook.Save("LargeWorkbook_Calculated.xlsx");
+        }
+    }
+
+    // Entry point for testing
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle: create)
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate a large range of data to demonstrate parallel calculation
-            const int rowCount = 10000;
-            for (int i = 0; i < rowCount; i++)
-            {
-                // Fill column A with incremental numbers
-                sheet.Cells[i, 0].PutValue(i + 1);
-            }
-
-            // Set a formula that sums the entire column A
-            sheet.Cells["B1"].Formula = $"=SUM(A1:A{rowCount})";
-
-            // Configure calculation options with the custom parallel engine
-            CalculationOptions calcOptions = new CalculationOptions
-            {
-                CustomEngine = new ParallelCalculationEngine(),
-                Recursive = true,
-                IgnoreError = false
-            };
-
-            // Calculate all formulas using the custom engine (lifecycle: calculate)
-            workbook.CalculateFormula(calcOptions);
-
-            // Output the result to console for verification
-            Console.WriteLine("Result of SUM(A1:A{0}) = {1}", rowCount, sheet.Cells["B1"].Value);
-
-            // Save the workbook (lifecycle: save)
-            workbook.Save("ParallelCalculationResult.xlsx");
+            PluginDemo.Run();
         }
     }
 }

@@ -1,77 +1,48 @@
-// Title: Fix Corrupted Named Ranges After Worksheet Rename with Aspose.Cells for .NET
-// Description: Demonstrates how to detect named ranges that point to a renamed worksheet, verify sheet existence, and automatically correct the RefersTo formula using Aspose.Cells. The sample creates a workbook, defines a range, renames the sheet, then runs a routine that extracts the sheet name via regex, substitutes a fallback sheet, and logs the changes.
-// Keywords: Aspose.Cells | C# | .NET | named range correction | worksheet rename | corrupted named range | detect invalid reference | update RefersTo formula | regex sheet name extraction | Excel automation | global
-// Common Searches: how to fix named ranges after sheet rename aspnet | detect invalid named range references in Aspose.Cells | update RefersTo when worksheet name changes c# | automatically correct corrupted named ranges in Excel | Aspose.Cells rename worksheet named range fix
-// Developer Intent: Locate named ranges that reference non‑existent sheets and replace them with a valid worksheet name.
-// Use Cases: Repair legacy workbooks where sheet names were changed after the ranges were created. | Integrate into a validation pipeline to ensure all named ranges are usable before data processing. | Provide a quick fix for user‑generated spreadsheets that contain broken range references.
-// AI Prompts: Generate C# code that scans all workbook names in Aspose.Cells and updates any RefersTo formulas pointing to missing sheets. | Create a logging mechanism that records the original and corrected RefersTo strings for each fixed named range. | Rewrite the detection logic to use Workbook.Worksheets.Contains instead of indexer checks.
+// Title: Identify and Fix Corrupted Named Ranges Caused by Worksheet Renaming with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to scan all workbook defined names and replace any RefersTo reference that points to a missing worksheet with a reference to the first worksheet, preserving the original cell address. | Generate a method that validates named ranges in an Excel file and automatically corrects those whose sheet name no longer exists after a rename, using the Aspose.Cells .NET API. | Create a script that loads an .xlsx file, detects named ranges referencing deleted sheets, updates their RefersTo strings to a fallback sheet, and saves the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# fix named range after sheet name change | how to update RefersTo for corrupted named ranges in .NET | detect missing worksheet references in Excel named ranges using Aspose | C# code to reassign named ranges to a default sheet when original sheet is removed | automate correction of named ranges that point to deleted sheets with Aspose.Cells
+// Tags: named range corruption detection Aspose.Cells | refersTo sheet reference correction C# | validate defined names after worksheet rename | fallback sheet assignment for missing named ranges | Aspose.Cells workbook named range repair
 
-using System;
-using System.Text.RegularExpressions;
-using Aspose.Cells;
+// Load the workbook (using the provided load rule)
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx");
 
-namespace NamedRangeCorrectionDemo
+// Build a set of existing worksheet names for quick lookup
+System.Collections.Generic.HashSet<string> sheetNames = new System.Collections.Generic.HashSet<string>();
+foreach (Aspose.Cells.Worksheet sheet in workbook.Worksheets)
 {
-    // Demonstrates how to detect named ranges that point to a renamed worksheet, verify sheet existence, and automatically correct the RefersTo formula using Aspose.Cells. The sample creates a workbook, defines a range, renames the sheet, then runs a routine that extracts the sheet name via regex, substitutes a fallback sheet, and logs the changes.
-    class Program
+    sheetNames.Add(sheet.Name);
+}
+
+// Reference to the first worksheet (used for correction if needed)
+Aspose.Cells.Worksheet firstSheet = workbook.Worksheets[0];
+string firstSheetName = firstSheet.Name;
+
+// Iterate through all defined names (named ranges)
+foreach (Aspose.Cells.Name definedName in workbook.Worksheets.Names)
+{
+    // The RefersTo string is like "=Sheet1!$A$1:$B$2"
+    string refersTo = definedName.RefersTo;
+
+    // Ensure the string contains a sheet reference
+    if (string.IsNullOrEmpty(refersTo) || !refersTo.StartsWith("=") || !refersTo.Contains("!"))
+        continue; // Not a standard range reference, skip
+
+    // Extract the sheet name part (between '=' and '!')
+    int exclPos = refersTo.IndexOf('!');
+    string sheetNameInRef = refersTo.Substring(1, exclPos - 1); // exclude leading '='
+
+    // Check if the referenced sheet still exists
+    if (!sheetNames.Contains(sheetNameInRef))
     {
-        static void Main()
-        {
-            // Create a new workbook and add a worksheet with an initial name
-            Workbook workbook = new Workbook();
-            Worksheet oldSheet = workbook.Worksheets[0];
-            oldSheet.Name = "OldSheet";
+        // The named range is corrupted because its sheet no longer exists
+        // Correct it by pointing to the same cell address on the first worksheet
+        string addressPart = refersTo.Substring(exclPos); // includes '!' and the range
+        string newRefersTo = "=" + firstSheetName + addressPart;
 
-            // Populate some data in the worksheet
-            oldSheet.Cells["A1"].PutValue("Item1");
-            oldSheet.Cells["A2"].PutValue("Item2");
-            oldSheet.Cells["A3"].PutValue("Item3");
-
-            // Create a named range that refers to the original sheet name
-            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-            Name namedRange = workbook.Worksheets.Names[nameIndex];
-            namedRange.RefersTo = "=OldSheet!$A$1:$A$3";
-
-            // Rename the worksheet – this makes the existing named range reference invalid
-            oldSheet.Name = "NewSheet";
-
-            // Detect and correct corrupted named ranges
-            FixCorruptedNamedRanges(workbook);
-
-            // Save the corrected workbook
-            workbook.Save("CorrectedNamedRanges.xlsx");
-        }
-
-        /// <param name="wb">The workbook to process.</param>
-        static void FixCorruptedNamedRanges(Workbook wb)
-        {
-            // Ensure there is at least one worksheet to fallback to
-            if (wb.Worksheets.Count == 0) return;
-            string fallbackSheetName = wb.Worksheets[0].Name;
-
-            foreach (Name name in wb.Worksheets.Names)
-            {
-                string refersTo = name.RefersTo;
-                if (string.IsNullOrEmpty(refersTo)) continue;
-
-                // Extract the sheet name part from a formula like "=SheetName!$A$1:$B$2"
-                Match match = Regex.Match(refersTo, @"^=([^!]+)!");
-                if (!match.Success) continue; // Not a standard sheet reference
-
-                string referencedSheet = match.Groups[1].Value;
-
-                // Check whether the referenced sheet actually exists
-                if (wb.Worksheets[referencedSheet] == null)
-                {
-                    // Replace the missing sheet name with the fallback sheet name
-                    string correctedRefersTo = refersTo.Replace(referencedSheet, fallbackSheetName);
-                    name.RefersTo = correctedRefersTo;
-
-                    Console.WriteLine($"Updated named range '{name.Text}':");
-                    Console.WriteLine($"  Old reference: {refersTo}");
-                    Console.WriteLine($"  New reference: {correctedRefersTo}");
-                }
-            }
-        }
+        // Apply the correction
+        definedName.RefersTo = newRefersTo;
     }
 }
+
+// Save the corrected workbook (using the provided save rule)
+workbook.Save("output.xlsx");

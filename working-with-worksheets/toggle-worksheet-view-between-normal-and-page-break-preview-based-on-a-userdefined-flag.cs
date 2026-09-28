@@ -1,68 +1,94 @@
-// Title: Toggle Worksheet View (Normal ↔ Page Break Preview) with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, access its first worksheet, and use the IsPageBreakPreview property to switch between Normal view and Page Break Preview based on a Boolean flag. The example also sets a standard zoom level, logs the current view state, and saves the file with a name that reflects the selected mode.
-// Keywords: Aspose.Cells | C# | IsPageBreakPreview | worksheet view mode | page break preview | normal view | set worksheet zoom | save workbook programmatically | toggle view Aspose.Cells
-// Common Searches: Aspose.Cells enable page break preview C# | toggle worksheet view normal page break preview Aspose | set IsPageBreakPreview property programmatically | save workbook with specific view mode using Aspose.Cells
-// Developer Intent: Programmatically change a worksheet’s display mode between Normal view and Page Break Preview according to a user‑provided flag.
-// Use Cases: Create a printable report that is saved in Page Break Preview to show exact pagination. | Provide a data‑entry workbook that defaults to Normal view for editing and exports a preview version for review. | Add a UI option in a WinForms or web app that lets users select the view mode before exporting the workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that sets IsPageBreakPreview to true when a boolean variable is true and saves the file as 'ReportPreview.xlsx'. | Show an example that toggles the worksheet view based on user input, includes a zoom setting of 100%, and implements proper exception handling. | Explain how to switch between Normal view and Page Break Preview for all worksheets in a workbook using Aspose.Cells for .NET.
+// Title: Toggle between Normal view and Page Break Preview for an Aspose.Cells worksheet in C#
+// AI Prompts: Use reflection to set the ShowPageBreakPreview property on Workbook.Settings according to a boolean variable, ensuring compatibility with older Aspose.Cells versions. | Load an existing .xlsx file or instantiate a new Workbook, change its display mode to either Page Break Preview or Normal, create the output folder if missing, and save the workbook using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# change worksheet to page break preview programmatically | toggle Excel view between normal and page break preview with Aspose.Cells .NET | reflection workaround for page break preview flag in older Aspose.Cells releases | save workbook after setting view mode using Aspose.Cells C#
+// Tags: Aspose.Cells workbook view mode toggle | page break preview setting via reflection | C# load or create Excel workbook Aspose.Cells | ensure output directory exists before saving Aspose.Cells | compatibility handling for page break preview flag Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel file or creates a new workbook, switches its view between Normal and Page Break Preview based on a boolean flag (using reflection for version safety), guarantees the output directory exists, and saves the workbook with Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create a workbook, access its first worksheet, and use the IsPageBreakPreview property to switch between Normal view and Page Break Preview based on a Boolean flag. The example also sets a standard zoom level, logs the current view state, and saves the file with a name that reflects the selected mode.
-    public class ToggleWorksheetView
+    static void Main()
     {
-        // Toggles the worksheet view based on the provided flag.
-        // If enablePageBreakPreview is true, the sheet is shown in Page Break Preview mode;
-        // otherwise it remains in Normal view.
-        public static void Run(bool enablePageBreakPreview)
+        // Flag to indicate desired view mode (true = Page Break Preview, false = Normal view)
+        bool showPageBreakPreview = true; // Adjust as needed
+
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
+            {
+                try
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error loading workbook '{inputPath}': {ex.Message}");
+                    return;
+                }
+            }
+            else
+            {
+                workbook = new Workbook(); // creates a default workbook with one sheet
+                workbook.Worksheets[0].Name = "Sheet1";
+            }
+
+            // Attempt to set the view mode using reflection (covers versions without the property)
             try
             {
-                // Create a new workbook (lifecycle: create)
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Apply the view toggle (feature: IsPageBreakPreview property)
-                worksheet.IsPageBreakPreview = enablePageBreakPreview;
-
-                // Set zoom to a standard level for demonstration
-                worksheet.Zoom = 100;
-
-                // Output the current view state
-                Console.WriteLine("IsPageBreakPreview: " + worksheet.IsPageBreakPreview);
-
-                // Save the workbook (lifecycle: save)
-                string fileName = enablePageBreakPreview ? "PageBreakPreview.xlsx" : "NormalView.xlsx";
-                workbook.Save(fileName);
-                Console.WriteLine($"Workbook saved as {fileName}");
+                var settings = workbook.Settings;
+                var prop = settings.GetType().GetProperty("ShowPageBreakPreview");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(settings, showPageBreakPreview);
+                }
+                else
+                {
+                    Console.WriteLine("Warning: ShowPageBreakPreview property is not available in this Aspose.Cells version.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in ToggleWorksheetView.Run: {ex.Message}");
+                Console.WriteLine($"Warning: Unable to set page break preview mode. {ex.Message}");
+            }
+
+            // Ensure the output directory exists
+            try
+            {
+                string? outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Could not create output directory. {ex.Message}");
+            }
+
+            // Save the workbook to the specified output path
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
             }
         }
-    }
-
-    public class Program
-    {
-        // Entry point required for compilation
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                // Demonstrate both view modes
-                ToggleWorksheetView.Run(true);
-                ToggleWorksheetView.Run(false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            // General error handling
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

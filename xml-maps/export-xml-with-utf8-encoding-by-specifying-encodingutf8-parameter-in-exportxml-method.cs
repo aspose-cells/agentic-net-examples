@@ -1,75 +1,38 @@
-// Title: Export an Excel XML map to a UTF‑8 file using Aspose.Cells C#
-// Description: Loads a workbook, confirms the presence of an XML map, and uses Aspose.Cells ExportXml with a FileStream to write the map as UTF‑8. The sample reads the first three bytes of the output to verify the UTF‑8 BOM.
-// Keywords: Aspose.Cells ExportXml UTF-8 | C# export XML map | Excel XML map to UTF-8 | ExportXml FileStream example | UTF-8 BOM verification Aspose
-// Common Searches: Aspose.Cells export XML map UTF-8 | C# ExportXml with UTF-8 encoding | How to write UTF-8 BOM when exporting XML from Excel | Check encoding of exported XML Aspose.Cells
-// Developer Intent: Generate a UTF‑8 encoded XML file from the first XML map in an Excel workbook.
-// Use Cases: Provide UTF‑8 XML for APIs that require a BOM. | Create XML files for downstream data pipelines that expect UTF‑8 encoding. | Validate export encoding automatically after generating the file.
-// AI Prompts: Write C# code that loads an Excel file, verifies XML maps, and exports the first map to a UTF‑8 XML file with Aspose.Cells. | Explain how Aspose.Cells determines the output encoding in ExportXml and how to guarantee a UTF‑8 BOM. | Show how to export a specific XML map by name and add error handling for missing maps.
+// Title: Export an Excel workbook to a UTF-8 encoded XML file using Aspose.Cells ExportXml in C#
+// AI Prompts: Generate C# code that creates a Workbook, populates cells, and calls Workbook.ExportXml with Encoding.UTF8.WebName to produce a UTF-8 XML file. | Show how to wrap the ExportXml call in a try‑catch block to handle errors when saving an Excel workbook as UTF-8 XML with Aspose.Cells. | Explain the steps required to set the encoding argument for ExportXml so the resulting XML uses UTF-8 character encoding.
+// Common Searches: Aspose.Cells ExportXml method specify UTF-8 encoding in C# | How to export an Excel workbook to XML with UTF-8 using Aspose.Cells library | C# sample code for Workbook.ExportXml with custom encoding parameter | Saving Excel as UTF-8 XML file with Aspose.Cells | ExportXml encoding parameter example for UTF-8 in .NET
+// Tags: Aspose.Cells ExportXml UTF-8 encoding | C# export workbook to XML with custom encoding | Workbook.ExportXml encoding parameter | UTF-8 XML output Aspose.Cells | Excel to XML conversion C# Aspose.Cells
 
 using System;
-using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// Loads a workbook, confirms the presence of an XML map, and uses Aspose.Cells ExportXml with a FileStream to write the map as UTF‑8. The sample reads the first three bytes of the output to verify the UTF‑8 BOM.
-class ExportXmlUtf8Demo
+// The example creates a new Workbook, adds header and data cells, and then exports the workbook to an XML file named "output.xml" using Aspose.Cells' ExportXml method with the encoding set to UTF-8 via Encoding.UTF8.WebName. The operation is enclosed in a try‑catch block to capture any runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the workbook that should contain an XML map
-        string inputPath = "InputWithMap.xlsx";
-
-        // Verify the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
-        {
-            Console.WriteLine($"Input file not found: {inputPath}");
-            return;
-        }
-
-        Workbook wb;
         try
         {
-            // Load the workbook
-            wb = new Workbook(inputPath);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("John");
+            sheet.Cells["B2"].PutValue(30);
+
+            // Export the workbook to an XML file using UTF-8 encoding
+            // ExportXml expects the encoding name as a string (e.g., "UTF-8")
+            workbook.ExportXml("output.xml", Encoding.UTF8.WebName);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to load workbook: {ex.Message}");
-            return;
-        }
-
-        // Ensure there is at least one XML map in the workbook
-        if (wb.Worksheets.XmlMaps.Count == 0)
-        {
-            Console.WriteLine("No XML map found in the workbook.");
-            return;
-        }
-
-        // Get the name of the first XML map
-        string mapName = wb.Worksheets.XmlMaps[0].Name;
-
-        // Define the output XML file path
-        string outputPath = "ExportedUtf8.xml";
-
-        try
-        {
-            // Export the XML using a FileStream (UTF‑8 encoding is used internally)
-            using (FileStream fs = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
-            {
-                wb.ExportXml(mapName, fs);
-            }
-
-            // Verify that the file starts with a UTF‑8 BOM
-            byte[] bom = new byte[3];
-            using (FileStream fs = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
-            {
-                fs.Read(bom, 0, 3);
-            }
-            bool hasBom = bom[0] == 0xEF && bom[1] == 0xBB && bom[2] == 0xBF;
-            Console.WriteLine($"Export completed. UTF‑8 BOM present: {hasBom}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during export: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

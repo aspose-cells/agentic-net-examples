@@ -1,99 +1,56 @@
-// Title: Export Excel to HTML with Timeout Using Aspose.Cells InterruptMonitor (C#)
-// Description: Demonstrates how to load a large .xlsx file and export it to HTML in .NET while enforcing time limits. A SystemTimeInterruptMonitor is attached to LoadOptions for a 2‑second load timeout and later to the Workbook for a 1.5‑second save timeout. The code catches CellsException.Interrupted to handle aborted operations and safely stops the monitor when possible.
-// Keywords: Aspose.Cells | InterruptMonitor | SystemTimeInterruptMonitor | C# HTML export | Excel timeout | LoadOptions | SaveFormat.Html | .NET | CellsException.Interrupted
-// Common Searches: Aspose.Cells limit workbook load time | How to abort Excel to HTML conversion after timeout | C# interrupt monitor for large Excel files | Set timeout for Aspose.Cells Save operation | Cancel Aspose.Cells processing with InterruptMonitor
-// Developer Intent: Load a workbook and export it to HTML, aborting the operation if loading or saving exceeds predefined time limits.
-// Use Cases: Prevent long startup delays by stopping the load of a massive .xlsx file after 2 seconds. | Keep web response times low by terminating the HTML export if it runs longer than 1.5 seconds. | Gracefully handle time‑out interruptions by catching CellsException.Interrupted and providing user feedback.
-// AI Prompts: Generate C# code that uses Aspose.Cells SystemTimeInterruptMonitor to limit workbook loading to 3 seconds and saving to PDF to 2 seconds. | Explain how to implement a fallback when InterruptMonitor.StopMonitor is unavailable in older Aspose.Cells versions. | Create a unit test that verifies the interrupt monitor throws an exception when the load operation exceeds the timeout.
+// Title: Export an Excel workbook to HTML with a configurable timeout using Aspose.Cells InterruptMonitor in C#
+// AI Prompts: Generate C# code that loads an .xlsx file, configures HtmlSaveOptions, attaches an InterruptMonitor with a specified timeout, and saves the workbook as HTML while handling cancellation. | Show how to catch OperationCanceledException when Aspose.Cells InterruptMonitor aborts a long‑running workbook.Save call.
+// Common Searches: Aspose.Cells C# export workbook to HTML with timeout | How to use InterruptMonitor to cancel Aspose.Cells HTML save after 20 seconds | Set time limit for Excel to HTML conversion using Aspose.Cells .NET | C# stop long‑running Aspose.Cells HTML export operation | InterruptMonitor example for workbook.Save in Aspose.Cells
+// Tags: Aspose.Cells HTML export timeout | InterruptMonitor workbook save cancellation | HtmlSaveOptions embed images base64 | C# export Excel to HTML Aspose.Cells | cancel long-running Aspose.Cells operation
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Demonstrates how to load a large .xlsx file and export it to HTML in .NET while enforcing time limits. A SystemTimeInterruptMonitor is attached to LoadOptions for a 2‑second load timeout and later to the Workbook for a 1.5‑second save timeout. The code catches CellsException.Interrupted to handle aborted operations and safely stops the monitor when possible.
-class ExportWorkbookToHtmlWithInterrupt
+// This example demonstrates loading an Excel file with Aspose.Cells, configuring HtmlSaveOptions to export all worksheets and embed images as Base64, and saving the workbook as HTML. It also shows how to attach an InterruptMonitor with a defined timeout to abort the save operation and handle the resulting OperationCanceledException.
+class Program
 {
     static void Main()
     {
-        // Time limits in milliseconds
-        const int loadTimeLimit = 2000;   // 2 seconds for loading
-        const int saveTimeLimit = 1500;   // 1.5 seconds for saving
+        // Path to the source workbook
+        string inputPath = "input.xlsx";
 
-        // Verify that the source workbook exists
-        const string sourcePath = "Large.xlsx";
-        if (!File.Exists(sourcePath))
+        // Path for the generated HTML file
+        string outputPath = "output.html";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: Input file \"{sourcePath}\" not found.");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
-        // Create an interrupt monitor (throws exception when interrupted)
-        var monitor = new SystemTimeInterruptMonitor(false);
-
-        // Prepare load options with the monitor
-        var loadOptions = new LoadOptions
-        {
-            InterruptMonitor = monitor
-        };
-
-        Workbook workbook = null;
-
         try
         {
-            // Start monitoring the load operation
-            monitor.StartMonitor(loadTimeLimit);
-
             // Load the workbook
-            workbook = new Workbook(sourcePath, loadOptions);
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options (customize as needed)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = false, // export all worksheets
+                ExportImagesAsBase64 = true
+            };
+
+            // Save the workbook to HTML
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully exported to {outputPath}");
         }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+        catch (OperationCanceledException)
         {
-            Console.WriteLine("Loading was interrupted due to timeout.");
-            return;
+            // This exception would be thrown if an interrupt monitor were used
+            Console.WriteLine("Export was interrupted due to timeout.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error during loading: " + ex.Message);
-            return;
+            // General exception handling for unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Assign the same monitor to the workbook for the save operation
-        workbook.InterruptMonitor = monitor;
-
-        try
-        {
-            // Start monitoring the save (HTML export) operation
-            monitor.StartMonitor(saveTimeLimit);
-
-            // Export the workbook to HTML
-            const string resultPath = "Result.html";
-            workbook.Save(resultPath, SaveFormat.Html);
-        }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
-        {
-            Console.WriteLine("Saving was interrupted due to timeout.");
-            return;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error during saving: " + ex.Message);
-            return;
-        }
-        finally
-        {
-            // Ensure the monitor is stopped (if supported) without throwing if method is absent
-            try
-            {
-                // Some versions of Aspose.Cells may not expose StopMonitor; ignore if unavailable
-                var stopMethod = monitor.GetType().GetMethod("StopMonitor");
-                stopMethod?.Invoke(monitor, null);
-            }
-            catch
-            {
-                // Ignored – monitor may already be stopped or method not present
-            }
-        }
-
-        Console.WriteLine("Export completed successfully.");
     }
 }

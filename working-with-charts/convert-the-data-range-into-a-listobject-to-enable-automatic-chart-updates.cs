@@ -1,60 +1,67 @@
-// Title: Convert a Range to a ListObject (Table) and Bind a Column Chart for Auto‑Update – Aspose.Cells for .NET
-// Description: C# example that creates a workbook, fills A1:C5 with headers and data, transforms the range into a ListObject named "SalesTable", adds a column chart, and sets the chart's source to the table's DataRange so the visual refreshes automatically when the table is edited. The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | C# | .NET | ListObject | Excel table | column chart | automatic chart refresh | SetChartDataRange | dynamic chart source | Excel automation
-// Common Searches: Aspose.Cells bind chart to ListObject | convert cell range to table Aspose.Cells C# | auto‑update chart when table changes Aspose.Cells | SetChartDataRange using ListObject.DataRange | create column chart from Excel table Aspose
-// Developer Intent: Create a ListObject from a worksheet range and link a column chart to the table so the chart updates automatically as the table data changes.
-// Use Cases: Sales reporting workbook where new rows added to the table instantly reflect in the column chart. | Interactive dashboard that uses multiple tables as data sources, keeping all charts synchronized with edits. | Exporting a financial model where filtered or sorted table data drives charts without manual range adjustments.
-// AI Prompts: Generate C# code that adds a ListObject to a worksheet and binds a column chart to its DataRange using Aspose.Cells. | Show how to make an Aspose.Cells chart refresh automatically when rows are added to a ListObject. | Explain the steps to set a chart's data source to a table address and ensure dynamic updates in Aspose.Cells for .NET.
+// Title: Create a ListObject from a worksheet range and bind it to a column chart for auto‑updating data in Aspose.Cells C#
+// AI Prompts: Generate C# code that converts cells A1:C5 into a ListObject named SalesTable and links the table’s DataRange to a column chart using Aspose.Cells. | Write a C# snippet that adds a ListObject to a worksheet, sets its display name, creates a column chart, and assigns the chart’s data source to the table so the chart refreshes when the table data changes.
+// Common Searches: aspnet how to create a ListObject from a range and use it as chart source in Aspose.Cells | c# Aspose.Cells column chart automatically updates when ListObject data changes | set chart data range to ListObject DataRange Aspose.Cells example | convert worksheet range to ListObject for dynamic chart in Aspose.Cells .NET
+// Tags: Aspose.Cells ListObject creation C# | Aspose.Cells bind chart to ListObject | Aspose.Cells dynamic chart data source | Aspose.Cells column chart from table | Aspose.Cells auto‑refresh chart with table changes
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Tables;
 
-// C# example that creates a workbook, fills A1:C5 with headers and data, transforms the range into a ListObject named "SalesTable", adds a column chart, and sets the chart's source to the table's DataRange so the visual refreshes automatically when the table is edited. The workbook is saved as an XLSX file.
-class ListObjectChartDemo
+namespace AsposeCellsListObjectChartDemo
 {
-    static void Main()
+    // The program creates a workbook, fills cells A1:C5 with sample data, converts that range into a ListObject named "SalesTable", adds a column chart, sets the chart's data source to the table's DataRange, and saves the file as ListObjectChartDemo.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate sample data with headers (A1:C5)
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Series1");
-        sheet.Cells["C1"].PutValue("Series2");
+            // Populate sample data with headers (A1:C5)
+            // Header row
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["B1"].PutValue("Series1");
+            worksheet.Cells["C1"].PutValue("Series2");
 
-        sheet.Cells["A2"].PutValue("Jan");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["C2"].PutValue(15);
+            // Data rows
+            worksheet.Cells["A2"].PutValue("Jan");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["C2"].PutValue(15);
 
-        sheet.Cells["A3"].PutValue("Feb");
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["C3"].PutValue(25);
+            worksheet.Cells["A3"].PutValue("Feb");
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["C3"].PutValue(25);
 
-        sheet.Cells["A4"].PutValue("Mar");
-        sheet.Cells["B4"].PutValue(30);
-        sheet.Cells["C4"].PutValue(35);
+            worksheet.Cells["A4"].PutValue("Mar");
+            worksheet.Cells["B4"].PutValue(30);
+            worksheet.Cells["C4"].PutValue(35);
 
-        sheet.Cells["A5"].PutValue("Apr");
-        sheet.Cells["B5"].PutValue(40);
-        sheet.Cells["C5"].PutValue(45);
+            worksheet.Cells["A5"].PutValue("Apr");
+            worksheet.Cells["B5"].PutValue(40);
+            worksheet.Cells["C5"].PutValue(45);
 
-        // Convert the range into a ListObject (table) so that chart data updates automatically
-        int tableIndex = sheet.ListObjects.Add("A1", "C5", true);
-        ListObject table = sheet.ListObjects[tableIndex];
-        table.DisplayName = "SalesTable"; // optional: give the table a name
+            // Convert the data range into a ListObject (table) so that charts update automatically
+            // Using the Add(string, string, bool) overload as defined in the rules
+            int tableIndex = worksheet.ListObjects.Add("A1", "C5", true);
+            ListObject table = worksheet.ListObjects[tableIndex];
+            table.DisplayName = "SalesTable";
 
-        // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 20, 5);
-        Chart chart = sheet.Charts[chartIndex];
+            // Add a column chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 7);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Set the chart data range to the table's data range.
-        // Using the table's address ensures the chart reflects any changes to the table.
-        chart.SetChartDataRange(table.DataRange.Address, true);
+            // Set the chart's data range to the table's data range.
+            // The DataRange.Address returns the address string (e.g., "A1:C5").
+            // Using SetChartDataRange(string area, bool isVertical) as defined in the rules.
+            chart.SetChartDataRange(table.DataRange.Address, true);
 
-        // Save the workbook
-        workbook.Save("ListObjectChartDemo.xlsx", SaveFormat.Xlsx);
+            // Optional: give the chart a title
+            chart.Title.Text = "Monthly Sales";
+
+            // Save the workbook
+            workbook.Save("ListObjectChartDemo.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

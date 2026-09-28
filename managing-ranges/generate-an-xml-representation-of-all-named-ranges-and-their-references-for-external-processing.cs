@@ -1,121 +1,52 @@
-// Title: Export All Named Ranges (including external links) to XML with Aspose.Cells for .NET
-// Description: C# example that loads an Excel workbook, enumerates every defined name, extracts its ReferredArea objects (handling external links), builds a well‑formed XML document with escaped attributes for name, sheet, cell or range coordinates, and saves it as NamedRanges.xml.
-// Keywords: Aspose.Cells | .NET | C# | named ranges | XML export | GetReferredAreas | external link | Workbook Names | range address | CellsHelper | code sample
-// Common Searches: Aspose.Cells export named ranges to XML | C# list defined names with external references | Generate XML of workbook named ranges | GetReferredAreas example Aspose.Cells | Save named range addresses as XML in .NET
-// Developer Intent: Create an XML file that lists every named range in a workbook together with its sheet, cell or area coordinates and any external workbook reference.
-// Use Cases: Integrate the XML output into a metadata‑driven reporting pipeline. | Audit workbooks for external links and compliance by parsing the generated file. | Synchronize named range definitions across multiple files by importing the XML data.
-// AI Prompts: Write a parser that reads NamedRanges.xml and returns a dictionary of range names to their addresses or external file references. | Extend the code to add a "SourceWorkbook" attribute on the <NamedRanges> root element. | Add comprehensive error handling that skips missing sheets, logs problematic names, and continues processing.
+// Title: Create an XML file that lists all named ranges and their reference formulas from an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, iterates through workbook.Worksheets.Names, and builds an XML document containing each named range's Name and RefersTo attributes. | Extend the XML output to include the worksheet name where each named range is defined, extracting the sheet information via Aspose.Cells APIs. | Add comprehensive error handling to the program to manage missing input files, empty named‑range collections, and failures when writing the XML document.
+// Common Searches: asp.net c# export excel named ranges to xml using aspose.cells | how to list defined names from an xlsx file with Aspose.Cells .NET | generate xml of named range references from workbook using Aspose.Cells C# | c# retrieve RefersTo formula for each named range in Excel with Aspose.Cells | save named ranges and their sheet references to an xml file in .NET
+// Tags: export named ranges to XML Aspose.Cells | enumerate defined names workbook Aspose.Cells | retrieve RefersTo formula C# | Aspose.Cells generate XML document | C# list Excel named ranges | handle missing workbook file Aspose.Cells
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
+using System.Xml.Linq;
 
-namespace AsposeCellsExamples
+// The program loads an Excel workbook via Aspose.Cells, iterates over all defined names, captures each named range's name and RefersTo formula, creates an XML document with these details, and saves it as NamedRanges.xml.
+class Program
 {
-    // Alias to avoid conflict with System.Range
-    using AsposeRange = Aspose.Cells.Range;
-
-    // C# example that loads an Excel workbook, enumerates every defined name, extracts its ReferredArea objects (handling external links), builds a well‑formed XML document with escaped attributes for name, sheet, cell or range coordinates, and saves it as NamedRanges.xml.
-    class NamedRangesToXml
+    static void Main()
     {
-        public static void Run()
+        // Load the workbook (replace with your actual file path)
+        string workbookPath = "input.xlsx";
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Create the root element for the XML document
+        XElement root = new XElement("NamedRanges");
+
+        // Iterate through all defined names (named ranges) in the workbook
+        foreach (Name definedName in workbook.Worksheets.Names)
         {
-            try
-            {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "NamedRanges.xml";
+            // Name of the range
+            string name = definedName.Text;
 
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                    return;
-                }
+            // Reference formula (e.g., =Sheet1!$A$1:$B$2)
+            string refersTo = definedName.RefersTo;
 
-                // Load the workbook
-                Workbook wb = new Workbook(inputPath);
+            // Build an XML element for this named range
+            XElement rangeElement = new XElement("NamedRange",
+                new XAttribute("Name", name),
+                new XAttribute("RefersTo", refersTo));
 
-                // Prepare XML output
-                StringBuilder xml = new StringBuilder();
-                xml.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-                xml.AppendLine("<NamedRanges>");
-
-                // Iterate through all defined names in the workbook
-                foreach (Name name in wb.Worksheets.Names)
-                {
-                    // Escape the name to be XML‑safe
-                    string escapedName = System.Security.SecurityElement.Escape(name.Text);
-                    xml.AppendLine($"  <NamedRange Name=\"{escapedName}\">");
-
-                    // Get all referred areas (including external links)
-                    ReferredArea[] areas = name.GetReferredAreas(true);
-                    if (areas != null && areas.Length > 0)
-                    {
-                        foreach (ReferredArea area in areas)
-                        {
-                            xml.Append("    <Reference");
-
-                            // External link information
-                            if (area.IsExternalLink)
-                            {
-                                string extFile = System.Security.SecurityElement.Escape(area.ExternalFileName);
-                                xml.Append($" ExternalFile=\"{extFile}\"");
-                            }
-
-                            // Sheet name
-                            string sheet = System.Security.SecurityElement.Escape(area.SheetName);
-                            xml.Append($" Sheet=\"{sheet}\"");
-
-                            // Area or single cell
-                            if (area.IsArea)
-                            {
-                                string start = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                                string end = CellsHelper.CellIndexToName(area.EndRow, area.EndColumn);
-                                xml.Append($" Start=\"{start}\" End=\"{end}\"");
-                            }
-                            else
-                            {
-                                string cell = CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                                xml.Append($" Cell=\"{cell}\"");
-                            }
-
-                            xml.AppendLine(" />");
-                        }
-                    }
-                    else
-                    {
-                        // Fallback: try to get a simple range if no ReferredArea objects are returned
-                        AsposeRange range = name.GetRange();
-                        if (range != null)
-                        {
-                            string address = System.Security.SecurityElement.Escape(range.Address);
-                            xml.AppendLine($"    <Reference Address=\"{address}\" />");
-                        }
-                    }
-
-                    xml.AppendLine("  </NamedRange>");
-                }
-
-                xml.AppendLine("</NamedRanges>");
-
-                // Save the generated XML to a file
-                File.WriteAllText(outputPath, xml.ToString());
-
-                Console.WriteLine($"Named ranges exported to \"{outputPath}\"");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Add the element to the root
+            root.Add(rangeElement);
         }
-    }
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            NamedRangesToXml.Run();
-        }
+        // Assemble the complete XML document
+        XDocument xmlDoc = new XDocument(
+            new XDeclaration("1.0", "utf-8", "yes"),
+            root);
+
+        // Save the XML to a file (replace with desired output path)
+        string xmlOutputPath = "NamedRanges.xml";
+        xmlDoc.Save(xmlOutputPath);
+
+        Console.WriteLine($"XML file with named ranges saved to: {Path.GetFullPath(xmlOutputPath)}");
     }
 }

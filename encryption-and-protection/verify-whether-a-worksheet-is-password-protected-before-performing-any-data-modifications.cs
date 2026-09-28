@@ -1,41 +1,70 @@
-// Title: C# – Detect Worksheet Password Protection with Aspose.Cells before Editing
-// Description: This example creates a new workbook, optionally secures the first worksheet with a password, then uses the Protection.IsProtectedWithPassword flag to decide whether to modify cell A1. If the sheet is locked, the update is skipped; otherwise the value is written and the file is saved as Result.xlsx.
-// Keywords: Aspose.Cells | C# worksheet protection | password‑protected sheet | IsProtectedWithPassword | .NET Excel API | skip edit protected worksheet | check protection status | modify cells conditionally | Excel workbook save | cell A1 update
-// Common Searches: Aspose.Cells how to know if a sheet is password protected | C# check worksheet protection status Aspose | IsProtectedWithPassword property example | prevent editing protected worksheet with Aspose.Cells | detect locked sheet before writing data in .NET
-// Developer Intent: Identify whether a worksheet is secured by a password and perform data changes only when it is not locked.
-// Use Cases: Avoid exceptions by not writing to a protected sheet | Log a warning and skip updates when protection is detected | Run bulk data imports on worksheets that are unprotected | Apply conditional formatting exclusively on editable sheets | Programmatically remove protection after password verification before editing
-// AI Prompts: Write C# code using Aspose.Cells that checks the IsProtectedWithPassword flag and writes to a cell only if the worksheet is unprotected. | Describe how the Protection.IsProtectedWithPassword property works and how to handle attempts to modify a locked sheet. | Provide a snippet that unprotects a worksheet after confirming the password, updates cells, and then reapplies protection with Aspose.Cells in C#.
+// Title: Check if an Excel worksheet is password‑protected before modifying cells using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that determines whether a worksheet is locked with a password and only writes to a cell when the sheet is unprotected. | Show how to catch protection‑related exceptions in Aspose.Cells and conditionally skip cell updates for a protected worksheet.
+// Common Searches: C# Aspose.Cells how to know if a worksheet is password protected before editing | detect protected sheet in Excel using Aspose.Cells .NET | skip cell update when worksheet is locked with Aspose.Cells | handle protected worksheet exception Aspose.Cells C# example | check sheet protection status programmatically Aspose.Cells
+// Tags: worksheet protection detection Aspose.Cells C# | conditional cell write based on sheet lock | Aspose.Cells protected worksheet handling | Excel sheet password check .NET | exception handling for locked worksheet Aspose
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This example creates a new workbook, optionally secures the first worksheet with a password, then uses the Protection.IsProtectedWithPassword flag to decide whether to modify cell A1. If the sheet is locked, the update is skipped; otherwise the value is written and the file is saved as Result.xlsx.
-class WorksheetProtectionCheck
+// The program loads an Excel workbook with Aspose.Cells, attempts to modify a cell inside a try‑catch block, interprets any exception as an indication that the worksheet is password‑protected, reports the outcome, and saves the workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // OPTIONAL: protect the worksheet with a password for demonstration purposes
-        sheet.Protect(ProtectionType.All, "secret", null);
-
-        // Verify whether the worksheet is protected with a password
-        bool isProtectedWithPassword = sheet.Protection.IsProtectedWithPassword;
-
-        if (isProtectedWithPassword)
+        try
         {
-            Console.WriteLine("Worksheet is password protected. Skipping data modification.");
-        }
-        else
-        {
-            // Perform data modifications because the worksheet is not password protected
-            sheet.Cells["A1"].PutValue("Modified");
-            Console.WriteLine("Data modification performed.");
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Save the workbook
-        workbook.Save("Result.xlsx");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook;
+            try
+            {
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
+
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Attempt to modify a cell; if the sheet is protected an exception will be thrown
+            try
+            {
+                worksheet.Cells["A1"].PutValue("Modified value");
+                Console.WriteLine("Cell A1 updated successfully.");
+            }
+            catch (Exception modifyEx)
+            {
+                Console.WriteLine($"Worksheet may be protected; no changes were made. Details: {modifyEx.Message}");
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

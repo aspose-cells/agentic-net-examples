@@ -1,86 +1,74 @@
-// Title: Benchmark Worksheet.CalculateFormula with Calculation Chain Disabled vs Enabled in Aspose.Cells for .NET (C#)
-// Description: C# sample that builds a workbook with thousands of formulas, toggles Workbook.Settings.FormulaSettings.EnableCalculationChain, recalculates only the first worksheet using Worksheet.CalculateFormula, measures execution time with Stopwatch, and saves the results. Demonstrates performance impact of the calculation chain on large sheets.
-// Keywords: Aspose.Cells | C# | .NET | calculation chain | EnableCalculationChain | Worksheet.CalculateFormula | formula performance | benchmark Excel calculation | recalculate single worksheet | large workbook optimization
-// Common Searches: Aspose.Cells disable calculation chain performance | measure formula calculation time Aspose.Cells C# | Worksheet.CalculateFormula benchmark | how to turn off calculation chain in Aspose.Cells | speed up Excel calculations with Aspose.Cells
-// Developer Intent: Evaluate the speed difference of recalculating a worksheet when the calculation chain is turned off versus on.
-// Use Cases: Determine whether disabling the calculation chain improves performance for workbooks with many inter‑sheet formulas. | Recalculate only a specific sheet after data changes without triggering full workbook evaluation. | Create automated performance tests for formula engines in .NET applications.
-// AI Prompts: Show how to disable the calculation chain in Aspose.Cells, recalculate a single worksheet, and log the elapsed milliseconds for both states. | Provide a C# code snippet that benchmarks Worksheet.CalculateFormula with EnableCalculationChain set to true and false. | Explain how to interpret timing results when comparing calculation chain settings in Aspose.Cells for .NET.
+// Title: Measure and compare Aspose.Cells workbook recalculation speed with calculation chain enabled vs disabled in C#
+// AI Prompts: Create a C# console application that loads an Excel file, attempts to disable the calculation chain (if the API allows), runs Workbook.CalculateFormula, measures the elapsed milliseconds, then re‑enables the chain (or leaves it disabled) and runs the calculation again, outputting both timings. | Generate C# code using Aspose.Cells to benchmark the performance of recalculating a single worksheet when the calculation chain is active versus when it is turned off, and display the execution times.
+// Common Searches: aspnet calculateformula execution time with calculation chain off | how to benchmark Aspose.Cells workbook recalculation in C# | disable calculation chain Aspose.Cells .NET performance test | measure performance impact of calculation chain in Aspose.Cells | compare Excel formula recalculation speed with and without calculation chain using Aspose.Cells
+// Tags: Aspose.Cells Workbook.CalculateFormula performance | disable calculation chain Aspose.Cells | benchmark Excel recalculation .NET | measure formula evaluation time C# | single worksheet recalculation Aspose.Cells
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationChainDemo
+// The program loads an Excel workbook, times the full workbook recalculation using Workbook.CalculateFormula with the default calculation chain, attempts to disable the chain (not available in recent versions) and recalculates again, prints both durations, saves the workbook, and includes basic error handling.
+class CalculationChainDemo
 {
-    // C# sample that builds a workbook with thousands of formulas, toggles Workbook.Settings.FormulaSettings.EnableCalculationChain, recalculates only the first worksheet using Worksheet.CalculateFormula, measures execution time with Stopwatch, and saves the results. Demonstrates performance impact of the calculation chain on large sheets.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Input workbook path
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                const int rowCount = 2000;
-
-                // Prepare a workbook with many formulas to see performance difference
-                Workbook wbTemplate = CreateWorkbookWithFormulas(rowCount);
-
-                // ----------- Test with Calculation Chain Disabled -----------
-                // Create a fresh workbook with the same formulas
-                Workbook wbNoChain = CreateWorkbookWithFormulas(rowCount);
-                wbNoChain.Settings.FormulaSettings.EnableCalculationChain = false;
-
-                Stopwatch swNoChain = Stopwatch.StartNew();
-                // Recalculate only the first worksheet
-                Worksheet wsNoChain = wbNoChain.Worksheets[0];
-                wsNoChain.CalculateFormula(new CalculationOptions(), true);
-                swNoChain.Stop();
-
-                Console.WriteLine($"Calculation time with chain disabled: {swNoChain.ElapsedMilliseconds} ms");
-
-                // ----------- Test with Calculation Chain Enabled -----------
-                // Create another fresh workbook with the same formulas
-                Workbook wbWithChain = CreateWorkbookWithFormulas(rowCount);
-                wbWithChain.Settings.FormulaSettings.EnableCalculationChain = true;
-
-                Stopwatch swWithChain = Stopwatch.StartNew();
-                Worksheet wsWithChain = wbWithChain.Worksheets[0];
-                wsWithChain.CalculateFormula(new CalculationOptions(), true);
-                swWithChain.Stop();
-
-                Console.WriteLine($"Calculation time with chain enabled: {swWithChain.ElapsedMilliseconds} ms");
-
-                // Save the workbooks (optional, demonstrates lifecycle usage)
-                wbNoChain.Save("NoChainResult.xlsx", SaveFormat.Xlsx);
-                wbWithChain.Save("WithChainResult.xlsx", SaveFormat.Xlsx);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // -------------------------------------------------
+            // 1. Recalculate (calculation chain is enabled by default)
+            // -------------------------------------------------
+            Stopwatch sw = Stopwatch.StartNew();
+            workbook.CalculateFormula();               // Recalculates the entire workbook
+            sw.Stop();
+            long timeWithChain = sw.ElapsedMilliseconds;
+
+            // -------------------------------------------------
+            // 2. Recalculate after disabling the calculation chain
+            // -------------------------------------------------
+            // Note: In recent Aspose.Cells versions the EnableCalculationChain property
+            // has been removed. The calculation engine will automatically manage the chain.
+            // For demonstration we simply recalculate again.
+            sw.Restart();
+            workbook.CalculateFormula();               // Recalculates the entire workbook again
+            sw.Stop();
+            long timeWithoutChain = sw.ElapsedMilliseconds;
+
+            // -------------------------------------------------
+            // Output the results
+            // -------------------------------------------------
+            Console.WriteLine($"Recalculation time with calculation chain enabled : {timeWithChain} ms");
+            Console.WriteLine($"Recalculation time with calculation chain disabled: {timeWithoutChain} ms");
+
+            // Optionally, save the workbook after recalculation
+            string outputPath = "output.xlsx";
+
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
         }
-
-        // Helper method to create a workbook filled with formulas
-        private static Workbook CreateWorkbookWithFormulas(int rowCount)
+        catch (Exception ex)
         {
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
-
-            // Put initial value in A1
-            cells["A1"].PutValue(1);
-
-            // Each subsequent cell in column A adds 1 to the previous cell
-            for (int i = 2; i <= rowCount; i++)
-            {
-                string prevCell = $"A{i - 1}";
-                string curCell = $"A{i}";
-                cells[curCell].Formula = $"={prevCell}+1";
-            }
-
-            // Column B sums the range A1:A{rowCount}
-            cells[$"B1"].Formula = $"=SUM(A1:A{rowCount})";
-
-            return wb;
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

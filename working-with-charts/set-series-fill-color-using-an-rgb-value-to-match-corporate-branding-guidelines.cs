@@ -1,20 +1,16 @@
-// Title: Set a chart series fill color with an RGB value in Aspose.Cells for .NET
-// Description: Creates a workbook, adds a column chart with sample data, and applies a solid fill to the first series using the RGB values (79, 129, 189). The workbook is saved as SeriesFillColorDemo.xlsx, demonstrating how to match corporate branding colors programmatically.
-// Keywords: Aspose.Cells chart series color | C# set series fill RGB | solid fill format Aspose.Cells | column chart series color .NET | Color.FromArgb Aspose.Cells example | branding colors Excel chart | programmatic chart styling
-// Common Searches: how to change chart series color Aspose.Cells C# | set RGB fill for Excel chart series using Aspose.Cells | apply corporate brand colors to Aspose.Cells charts | solid fill format for chart series .NET | Aspose.Cells example for series fill color
-// Developer Intent: Apply a specific RGB solid fill to the first series of a column chart generated with Aspose.Cells.
-// Use Cases: Enforce corporate brand palettes in automatically generated Excel reports. | Create reusable chart templates with predefined series colors for consistency across dashboards. | Batch‑process workbooks to ensure all charts use the same visual style before distribution.
-// AI Prompts: Generate code that assigns a different RGB color to each series in an Aspose.Cells chart. | Show how to apply a gradient fill to a chart series using Aspose.Cells for .NET. | Explain how to update the fill format of an existing chart series after loading a workbook with Aspose.Cells.
+// Title: Set a specific RGB fill color for a chart series in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a column chart with Aspose.Cells, adds sample data, and assigns the first series a solid fill using Color.FromArgb(79,129,189). | Show how to access a chart series' Area.FillFormat.SolidFill.Color property in Aspose.Cells to apply a corporate branding RGB color. | Demonstrate saving the workbook after customizing the series fill color so the color appears in the generated XLSX file.
+// Common Searches: how to change the fill color of a chart series in Aspose.Cells C# | Aspose.Cells set series solid fill to specific RGB value | C# Aspose.Cells column chart custom series color example | apply corporate branding color to Excel chart series using Aspose.Cells .NET
+// Tags: Aspose.Cells chart series solid fill color | C# set series fill RGB Aspose.Cells | Excel column chart custom series color .NET | Area.FillFormat.SolidFill.Color usage Aspose.Cells | Save workbook with colored chart series Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
 namespace AsposeCellsSeriesFillColorDemo
 {
-    // Creates a workbook, adds a column chart with sample data, and applies a solid fill to the first series using the RGB values (79, 129, 189). The workbook is saved as SeriesFillColorDemo.xlsx, demonstrating how to match corporate branding colors programmatically.
+    // The example creates a new workbook, populates it with sample data, adds a column chart, and sets the first series' fill color to the RGB value (79,129,189) via the Area.FillFormat.SolidFill.Color property, then saves the file as SeriesFillColorDemo.xlsx.
     class Program
     {
         static void Main()
@@ -40,17 +36,21 @@ namespace AsposeCellsSeriesFillColorDemo
                 int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
                 Chart chart = sheet.Charts[chartIndex];
 
-                // Define the series data range
+                // Set the data range for the series
                 chart.NSeries.Add("B2:B4", true);
                 chart.NSeries.CategoryData = "A2:A4";
 
-                // Set the fill color of the first series (RGB: 79,129,189)
+                // Set the fill color of the first series using an RGB value (corporate branding color)
+                Color corporateColor = Color.FromArgb(79, 129, 189);
                 Series series = chart.NSeries[0];
-                series.Area.FillFormat.FillType = FillType.Solid; // Use solid fill
-                series.Area.FillFormat.SolidFill.Color = Color.FromArgb(79, 129, 189);
+
+                // Apply fill color to the series
+                series.Area.FillFormat.SolidFill.Color = corporateColor;
 
                 // Save the workbook
-                workbook.Save("SeriesFillColorDemo.xlsx");
+                string outputPath = "SeriesFillColorDemo.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {

@@ -1,31 +1,16 @@
-// Title: Group Numeric Pivot Field Values into Custom Ranges with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a PivotTable, place a numeric "Amount" field in the row area, and use PivotField.GroupBy to segment the values into custom intervals (0‑10, 10‑20, 20‑30, 30‑40, 40‑60). The example refreshes the pivot cache, recalculates the table, and saves the result as an Excel file.
-// Keywords: Aspose.Cells | C# PivotTable | numeric grouping | custom range grouping | PivotField.GroupBy | .NET Excel API | group rows by interval | Excel pivot custom buckets
-// Common Searches: Aspose.Cells group numeric pivot values | PivotTable custom range grouping .NET | How to use PivotField.GroupBy in C# | Create numeric buckets in Aspose.Cells pivot | Aspose.Cells interval grouping example
-// Developer Intent: Create a PivotTable and group a numeric row field into predefined ranges using Aspose.Cells for .NET.
-// Use Cases: Break down sales amounts into revenue brackets for management reports. | Classify ages into demographic groups within a pivot for market analysis. | Bucket financial figures (e.g., profit ranges) for dashboard visualizations.
-// AI Prompts: Show C# code that uses Aspose.Cells PivotField.GroupBy to group numeric values into custom intervals and refreshes the pivot. | Explain each parameter of the PivotField.GroupBy method and how to apply it without creating a new field. | Generate an Aspose.Cells example that groups a numeric column into ranges 0‑5, 5‑15, 15‑25 in a PivotTable.
+// Title: Group numeric pivot field values into custom intervals (0‑20, 20‑40, 40‑60, 60‑80, 80‑100) using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that builds a pivot table, adds a numeric column as a row field, and groups it into 0‑20, 20‑40, 40‑60, 60‑80, and 80‑100 intervals using the PivotField.GroupBy method. | Show how to change the start, end, and interval arguments of PivotField.GroupBy to create custom range groups for a numeric field in an Excel pivot table with Aspose.Cells. | Demonstrate refreshing and calculating a pivot table after applying custom numeric grouping, then saving the workbook to a file.
+// Common Searches: Aspose.Cells C# group pivot table numeric field into custom ranges | PivotField.GroupBy start end interval parameters example Aspose.Cells | Create Excel pivot table with interval grouping for amount column using Aspose.Cells .NET | Add the same numeric column as data and row field in Aspose.Cells pivot table | Refresh and calculate pivot table after numeric grouping Aspose.Cells
+// Tags: Aspose.Cells pivot field custom range grouping | C# PivotField.GroupBy numeric intervals | Excel pivot table interval grouping Aspose.Cells | Aspose.Cells refresh calculate pivot after grouping | C# generate pivot table with grouped numeric values
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook, add a PivotTable, place a numeric "Amount" field in the row area, and use PivotField.GroupBy to segment the values into custom intervals (0‑10, 10‑20, 20‑30, 30‑40, 40‑60). The example refreshes the pivot cache, recalculates the table, and saves the result as an Excel file.
-class PivotNumericCustomRangeGrouping
+// The example creates a workbook, fills it with category and amount data, adds a pivot table, places the Category field as rows and the Amount field as both data and row fields, then uses PivotField.GroupBy to segment the numeric Amount row field into five custom intervals (0‑20, 20‑40, 40‑60, 60‑80, 80‑100). After refreshing and calculating the pivot, the workbook is saved as GroupedNumericPivot.xlsx.
+class GroupNumericPivotField
 {
-    public static void Main(string[] args)
-    {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
+    static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
@@ -35,41 +20,37 @@ class PivotNumericCustomRangeGrouping
         sheet.Cells["A1"].Value = "Category";
         sheet.Cells["B1"].Value = "Amount";
 
-        sheet.Cells["A2"].Value = "A";
-        sheet.Cells["B2"].Value = 5;
-        sheet.Cells["A3"].Value = "B";
-        sheet.Cells["B3"].Value = 12;
-        sheet.Cells["A4"].Value = "C";
-        sheet.Cells["B4"].Value = 27;
-        sheet.Cells["A5"].Value = "D";
-        sheet.Cells["B5"].Value = 33;
-        sheet.Cells["A6"].Value = "E";
-        sheet.Cells["B6"].Value = 48;
-        sheet.Cells["A7"].Value = "F";
-        sheet.Cells["B7"].Value = 55;
+        string[] categories = { "A", "A", "B", "B", "C", "C", "C", "D", "D", "E" };
+        double[] amounts = { 5, 12, 18, 25, 33, 45, 58, 62, 77, 90 };
 
-        // Create a pivot table based on the data range A1:B7, place it at D3
-        int pivotIdx = sheet.PivotTables.Add("A1:B7", "D3", "SalesPivot");
-        PivotTable pivot = sheet.PivotTables[pivotIdx];
+        for (int i = 0; i < categories.Length; i++)
+        {
+            sheet.Cells[i + 1, 0].Value = categories[i];
+            sheet.Cells[i + 1, 1].Value = amounts[i];
+        }
 
-        // Add the numeric field "Amount" to the row area (this will be grouped)
-        pivot.AddFieldToArea(PivotFieldType.Row, "Amount");
+        // Create a pivot table based on the data range A1:B11 and place it at D3
+        int pivotIndex = sheet.PivotTables.Add("A1:B11", "D3", "SalesPivot");
+        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add the "Category" field to the data area (summarize by count)
-        pivot.AddFieldToArea(PivotFieldType.Data, "Category");
+        // Add Category as a row field and Amount as a data field
+        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+        pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-        // Access the row field that contains numeric values
-        PivotField amountField = pivot.RowFields[0];
+        // Also add Amount as a row field so we can group its numeric values
+        int amountRowFieldIdx = pivotTable.AddFieldToArea(PivotFieldType.Row, "Amount");
+        PivotField amountRowField = pivotTable.RowFields[amountRowFieldIdx];
 
-        // Group numeric values into custom ranges: 0‑10, 10‑20, 20‑30, 30‑40, 40‑60
-        // Parameters: start = 0, end = 60, interval = 10, newField = false (group in place)
-        amountField.GroupBy(0, 60, 10, false);
+        // Group numeric values into custom ranges:
+        // 0‑20, 20‑40, 40‑60, 60‑80, 80‑100
+        // start = 0, end = 100, interval = 20, newField = true (creates a new grouped field)
+        amountRowField.GroupBy(0, 100, 20, true);
 
-        // Refresh the pivot cache and calculate the pivot table to apply the grouping
-        pivot.RefreshData();          // Updated API usage
-        pivot.CalculateData();
+        // Refresh data and calculate the pivot table to apply the grouping
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
         // Save the workbook with the grouped pivot table
-        workbook.Save("PivotNumericCustomRangeGrouping.xlsx");
+        workbook.Save("GroupedNumericPivot.xlsx");
     }
 }

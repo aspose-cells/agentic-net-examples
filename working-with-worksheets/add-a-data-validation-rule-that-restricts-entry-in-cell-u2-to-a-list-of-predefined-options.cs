@@ -1,58 +1,50 @@
-// Title: C# – Add List‑Based Data Validation to Cell U2 with Aspose.Cells for .NET
-// Description: Shows how to create a workbook, target cell U2, apply a List‑type validation containing predefined options, enable the in‑cell drop‑down, and save the file as U2_Validation.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# data validation | ValidationType.List | Excel drop‑down list | cell U2 | restrict cell input | predefined options | Aspose.Cells example | Excel automation | list validation
-// Common Searches: Aspose.Cells add list validation C# | how to create drop‑down in a single Excel cell using Aspose | restrict cell U2 to specific values Aspose.Cells | C# code for ValidationType.List Aspose | Excel data validation with Aspose.Cells .NET
-// Developer Intent: Apply a List validation to cell U2 so that only the specified options can be entered.
-// Use Cases: Design a data‑entry template where users select a category from a drop‑down in U2. | Generate reports that enforce status values (e.g., Approved, Pending, Rejected) via list validation in U2. | Automate workbook creation for surveys, limiting answers in U2 to predefined choices. | Create a financial model that restricts currency codes in U2 to a fixed list.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a list validation to cell U2 containing 'OptionA', 'OptionB', 'OptionC' and saves as 'U2_Validation.xlsx'. | Show how to reference a named range on another worksheet for the validation list instead of a hard‑coded string. | Explain how to customize the error alert (title, message, style) for the list validation on cell U2. | Provide a step‑by‑step guide to enable the in‑cell drop‑down and set a custom input message for cell U2 validation.
+// Title: Add a list‑type data validation dropdown to cell U2 in a new workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a List validation to cell U2, defines options OptionA, OptionB, OptionC, sets a custom error title and message, and saves the workbook as Output.xlsx. | Write a C# snippet using Aspose.Cells to apply a dropdown list validation to cell U2, include an input prompt, configure error handling, and export the file.
+// Common Searches: Aspose.Cells C# how to create a dropdown list validation for a single cell | Set list validation options in cell U2 with Aspose.Cells for .NET | C# Aspose.Cells validation.Formula1 syntax for comma‑separated list values | Customize error title and message for data validation in Aspose.Cells workbook | Add input message to list validation in Aspose.Cells C# example
+// Tags: Aspose.Cells list‑type data validation C# | specific cell validation Aspose.Cells | validation.Formula1 comma‑separated list Aspose.Cells | validation error caption Aspose.Cells | input message configuration Aspose.Cells validation
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationExample
+// The program creates a new workbook, applies a list‑type data validation dropdown to cell U2 with predefined options (OptionA, OptionB, OptionC), configures custom error and input messages, and saves the file as Output.xlsx.
+class Program
 {
-    // Shows how to create a workbook, target cell U2, apply a List‑type validation containing predefined options, enable the in‑cell drop‑down, and save the file as U2_Validation.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Get the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the cell area for the validation (U2)
-                CellArea area = new CellArea
-                {
-                    StartRow = 1,      // Row index is zero‑based (U2 -> row 2)
-                    EndRow = 1,
-                    StartColumn = 20, // Column index is zero‑based (U -> 21st column)
-                    EndColumn = 20
-                };
+            // Define the cell area for U2 (row 2, column U)
+            CellArea area = CellArea.CreateCellArea("U2", "U2");
 
-                // Add a new validation rule for the specified area
-                int validationIndex = worksheet.Validations.Add(area);
-                Validation validation = worksheet.Validations[validationIndex];
+            // Add a data validation rule to the specified cell
+            int validationIndex = sheet.Validations.Add(area);
+            Validation validation = sheet.Validations[validationIndex];
 
-                // Set the validation type to a list of predefined options
-                validation.Type = ValidationType.List;
+            // Set validation type to List and define the allowed options
+            validation.Type = ValidationType.List;
+            // The list of options must be enclosed in double quotes and separated by commas
+            validation.Formula1 = "\"OptionA,OptionB,OptionC\"";
 
-                // Define the allowed values (comma‑separated) and enclose in double quotes
-                validation.Formula1 = "\"OptionA,OptionB,OptionC\"";
+            // Configure error messages
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Entry";
+            validation.ErrorMessage = "Please select a value from the predefined list.";
 
-                // Enable the in‑cell drop‑down list
-                validation.InCellDropDown = true;
+            // Configure input (prompt) message – only InputMessage is available in this API version
+            validation.InputMessage = "Choose one of the allowed options.";
 
-                // Save the workbook
-                workbook.Save("U2_Validation.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("Output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

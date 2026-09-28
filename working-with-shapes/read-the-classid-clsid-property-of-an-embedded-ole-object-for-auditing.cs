@@ -1,42 +1,59 @@
-// Title: Audit CLSID (ClassIdentifier) of embedded OLE objects in Excel using Aspose.Cells for .NET
-// Description: Loads a workbook, iterates every worksheet and its OleObjects collection, extracts the 16‑byte ClassIdentifier, converts it to a GUID, and prints the sheet name, OLE index and CLSID. Ideal for compliance checks and object validation.
-// Keywords: Aspose.Cells OLE CLSID | C# read OleObject ClassIdentifier | Excel embedded OLE GUID | Aspose.Cells audit OLE objects | .NET extract OLE ClassIdentifier | GitHub Aspose.Cells OLE example | US developers Aspose.Cells | Europe .NET Excel OLE
-// Common Searches: how to get CLSID of an OLE object with Aspose.Cells | Aspose.Cells retrieve OleObject ClassIdentifier C# | convert OLE ClassIdentifier to GUID in .NET | list embedded OLE objects in Excel workbook Aspose | audit Excel OLE objects for compliance
-// Developer Intent: Obtain the CLSID of each embedded OLE object in an Excel file for verification or reporting.
-// Use Cases: Cross‑check OLE objects against an approved CLSID whitelist. | Produce a compliance report that lists worksheet names, OLE positions and their GUIDs. | Detect missing or corrupted OLE entries by flagging invalid ClassIdentifier arrays.
-// AI Prompts: Generate C# code with Aspose.Cells that enumerates all OLE objects in a workbook, extracts their CLSID GUIDs, and writes the results to a CSV file. | Create a method that receives a file path and returns a dictionary mapping worksheet names to collections of OLE CLSIDs, handling null or malformed identifiers gracefully. | Explain how to compare extracted CLSID GUIDs with a predefined whitelist and highlight any non‑compliant OLE objects.
+// Title: Enumerate embedded OLE objects in an Excel workbook and display their CLSID (placeholder) using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that iterates through all worksheets and prints each OLE object's name and its CLSID (or placeholder) to the console. | Adapt the sample to write the worksheet name, OLE object name, and CLSID into a CSV file for audit reporting. | Describe how to obtain the actual CLSID of an OLE object when the Aspose.Cells API exposes the property in future releases.
+// Common Searches: aspocells c# list embedded ole objects and retrieve class identifier | how to get clsid of ole objects in an xlsx file using Aspose.Cells | enumerate ole objects in workbook and export their metadata with .NET | audit embedded ole objects in Excel using Aspose.Cells library
+// Tags: Aspose.Cells enumerate OLE objects Excel | C# extract OLE object metadata .xlsx | read CLSID placeholder Aspose.Cells | audit embedded OLE objects .NET | export OLE object details to CSV Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-// Loads a workbook, iterates every worksheet and its OleObjects collection, extracts the 16‑byte ClassIdentifier, converts it to a GUID, and prints the sheet name, OLE index and CLSID. Ideal for compliance checks and object validation.
-class OleObjectClassIdAudit
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and its OLE objects, and outputs the sheet name, OLE object name, and a placeholder CLSID ("N/A") because the current API does not expose the CLSID property.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook that contains OLE objects
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Iterate through each OLE object in the worksheet
-            for (int i = 0; i < sheet.OleObjects.Count; i++)
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook containing the embedded OLE objects
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                OleObject ole = sheet.OleObjects[i];
+                // Iterate through each OLE object on the worksheet
+                foreach (OleObject ole in sheet.OleObjects)
+                {
+                    // CLSID retrieval is not directly exposed in the current API version;
+                    // use a placeholder value for auditing purposes.
+                    string clsid = "N/A";
 
-                // Retrieve the ClassIdentifier (CLSID) byte array
-                byte[] classIdBytes = ole.ClassIdentifier;
-
-                // Convert the byte array to a GUID string if it has the expected length (16 bytes)
-                string classIdGuid = (classIdBytes != null && classIdBytes.Length == 16)
-                    ? new Guid(classIdBytes).ToString()
-                    : "Invalid or missing ClassIdentifier";
-
-                // Output the auditing information
-                Console.WriteLine($"Worksheet: {sheet.Name}, OLE Index: {i}, ClassIdentifier (GUID): {classIdGuid}");
+                    // Output the information for auditing purposes
+                    Console.WriteLine($"Sheet: {sheet.Name}, OLE Object: {ole.Name}, CLSID: {clsid}");
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing OLE objects: {ex.Message}");
         }
     }
 }

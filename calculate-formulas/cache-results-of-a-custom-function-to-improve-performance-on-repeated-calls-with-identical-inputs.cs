@@ -1,168 +1,133 @@
-// Title: Cache Results of a User‑Defined Formula in Aspose.Cells with C#
-// Description: The sample extends Aspose.Cells' AbstractCalculationEngine to memoize the output of a user‑defined formula. A deterministic key derived from all arguments—including range values—is used to store the result in a dictionary. Repeated invocations with identical parameters retrieve the cached value instantly, while changes to unrelated cells do not force recomputation. The workbook demonstrates the behavior with the MYCACHEDFUNC function and a compute‑counter.
-// Keywords: Aspose.Cells | C# memoization | calculation engine | dictionary cache | .NET spreadsheet performance | custom function | ReferredArea serialization | ForceRecalculate | custom engine
-// Common Searches: Aspose.Cells memoize custom formula | C# calculation engine caching example | avoid duplicate evaluation in spreadsheet .NET | how to store function results in Aspose.Cells | performance boost for user‑defined functions Aspose.Cells
-// Developer Intent: Create a caching layer for a user‑defined spreadsheet function in Aspose.Cells to reduce redundant processing.
-// Use Cases: Accelerate workbooks where the same user‑defined formula appears in many cells with the same arguments. | Validate cache effectiveness by monitoring a computation counter before and after recalculation. | Handle range inputs by converting cell contents into a unique identifier for the cache. | Maintain correct results when only non‑dependent cells are modified.
-// AI Prompts: Generate MSTest code that confirms cache hits and that the computation counter does not increase on a second workbook calculation. | Describe how to extend the key builder to include cell addresses for more precise memoization. | Explain how to adjust ForceRecalculate so that only volatile functions bypass the cache. | Provide instructions for adding the CachedEngine to an existing Aspose.Cells solution.
+// Title: Cache results of a custom Excel function using Aspose.Cells C# AbstractCalculationEngine
+// AI Prompts: Create an AbstractCalculationEngine subclass that records MYCACHEFUNC outputs in a Dictionary and returns the cached value during workbook.CalculateFormula. | Generate a unique cache key from scalar and single‑cell range arguments, handling nulls and complex types gracefully. | Wire the custom engine into CalculationOptions, run identical formulas, modify an unrelated cell, and confirm that cached results are reused without recomputation.
+// Common Searches: Aspose.Cells how to implement caching for user defined functions in C# | example of AbstractCalculationEngine with in‑memory dictionary cache | prevent recalculation of custom Excel functions using Aspose.Cells calculation options | performance tip for repeated MYCACHEFUNC calls in Aspose.Cells workbook
+// Tags: custom calculation engine cache | user defined function memoization | Aspose.Cells in‑memory cache | calculation options custom engine | optimize repeated formula evaluation
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace CustomFunctionCachingDemo
+namespace AsposeCellsCustomFunctionCacheDemo
 {
-    // Custom calculation engine that caches results of a user‑defined function.
-    // The sample extends Aspose.Cells' AbstractCalculationEngine to memoize the output of a user‑defined formula. A deterministic key derived from all arguments—including range values—is used to store the result in a dictionary. Repeated invocations with identical parameters retrieve the cached value instantly, while changes to unrelated cells do not force recomputation. The workbook demonstrates the behavior with the MYCACHEDFUNC function and a compute‑counter.
-    public class CachedEngine : AbstractCalculationEngine
+    // Custom calculation engine that caches results of the custom function "MYCACHEFUNC"
+    // The sample defines a CachingEngine class that inherits from AbstractCalculationEngine, builds a string key from MYCACHEFUNC parameters, checks a Dictionary cache for a pre‑computed sum, stores new results, and assigns the cached value to the calculation data. The program applies the function to worksheet cells with identical inputs, changes an unrelated cell, recalculates to demonstrate that cached values persist, and saves the workbook.
+    public class CachingEngine : AbstractCalculationEngine
     {
-        // Simple cache: key = concatenated parameter values, value = calculated result.
-        private readonly Dictionary<string, object> _cache = new Dictionary<string, object>();
+        // Simple in‑memory cache: key = concatenated parameter values, value = calculated result
+        private readonly Dictionary<string, object> _cache = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
-        // Counter to demonstrate how many times the function is actually computed.
-        private int _computeCount = 0;
+        // The engine does not need parameters in array mode
+        public override bool IsParamArrayModeRequired => false;
 
-        // The custom function name we want to cache.
-        private const string FunctionName = "MYCACHEDFUNC";
-
-        // Do not force recalculation for this function – allow caching.
+        // Do not force recalculation for the custom function – allow caching
         public override bool ForceRecalculate(string functionName)
         {
-            return false; // return true only for volatile functions.
+            return false; // return true only for volatile functions
         }
 
+        // Main calculation method
         public override void Calculate(CalculationData data)
         {
-            // Only handle our custom function.
-            if (!string.Equals(data.FunctionName, FunctionName, StringComparison.OrdinalIgnoreCase))
-                return; // let the default engine handle other functions.
+            // We only handle our custom function; other functions fall back to the default engine
+            if (!string.Equals(data.FunctionName, "MYCACHEFUNC", StringComparison.OrdinalIgnoreCase))
+                return;
 
-            // Build a cache key from the function parameters.
-            string key = BuildCacheKey(data);
-
-            // If we have a cached value, return it.
-            if (_cache.TryGetValue(key, out object cachedResult))
+            // Build a cache key from all parameter values
+            var keyParts = new List<string>();
+            for (int i = 0; i < data.ParamCount; i++)
             {
+                // Get the raw parameter value (could be a scalar, ReferredArea, etc.)
+                object param = data.GetParamValue(i);
+
+                // For simplicity, handle scalar values and single‑cell ReferredArea
+                if (param is double d)
+                {
+                    keyParts.Add(d.ToString());
+                }
+                else if (param is ReferredArea area && area.StartRow == area.EndRow && area.StartColumn == area.EndColumn)
+                {
+                    // Single cell – fetch its value
+                    object cellVal = area.GetValue(0, 0);
+                    keyParts.Add(cellVal?.ToString() ?? "null");
+                }
+                else
+                {
+                    // Fallback for complex types – use their string representation
+                    keyParts.Add(param?.ToString() ?? "null");
+                }
+            }
+
+            string cacheKey = string.Join("|", keyParts);
+
+            // Check cache
+            if (_cache.TryGetValue(cacheKey, out object cachedResult))
+            {
+                // Use cached value
                 data.CalculatedValue = cachedResult;
                 return;
             }
 
-            // ----- Actual calculation (executed only when cache miss) -----
-            _computeCount++;
-
-            // Example calculation: sum of all numeric parameters.
+            // Perform the actual calculation (example: sum of all numeric parameters)
             double sum = 0;
-            for (int i = 0; i < data.ParamCount; i++)
+            foreach (string part in keyParts)
             {
-                object param = data.GetParamValue(i);
-
-                // Parameters may be scalar values or ReferredArea objects.
-                if (param is ReferredArea area)
-                {
-                    // For simplicity, take the value at the top‑left cell of the area.
-                    object val = area.GetValue(0, 0);
-                    if (val is double d)
-                        sum += d;
-                    else if (double.TryParse(val?.ToString(), out d))
-                        sum += d;
-                }
-                else if (param is double d)
-                {
-                    sum += d;
-                }
-                else if (double.TryParse(param?.ToString(), out double d2))
-                {
-                    sum += d2;
-                }
+                if (double.TryParse(part, out double val))
+                    sum += val;
             }
 
-            // Store the result in the cache and set it as the function result.
-            _cache[key] = sum;
+            // Store result in cache and set it as the calculated value
+            _cache[cacheKey] = sum;
             data.CalculatedValue = sum;
         }
-
-        // Helper to create a deterministic string key from all parameters.
-        private string BuildCacheKey(CalculationData data)
-        {
-            var parts = new List<string>();
-            for (int i = 0; i < data.ParamCount; i++)
-            {
-                object param = data.GetParamValue(i);
-                if (param is ReferredArea area)
-                {
-                    // Serialize the whole area (row‑major) to capture its content.
-                    for (int r = 0; r <= area.EndRow - area.StartRow; r++)
-                    {
-                        for (int c = 0; c <= area.EndColumn - area.StartColumn; c++)
-                        {
-                            object val = area.GetValue(r, c);
-                            parts.Add(val?.ToString() ?? "null");
-                        }
-                    }
-                }
-                else
-                {
-                    parts.Add(param?.ToString() ?? "null");
-                }
-            }
-            return string.Join("|", parts);
-        }
-
-        // Expose the compute count for demonstration purposes.
-        public int ComputeCount => _computeCount;
     }
 
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and fill some data.
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["B1"].PutValue(10);
-            ws.Cells["B2"].PutValue(20);
-            ws.Cells["B3"].PutValue(30);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Use the custom function in several cells with identical inputs.
-            ws.Cells["A1"].Formula = "=MYCACHEDFUNC(B1)";
-            ws.Cells["A2"].Formula = "=MYCACHEDFUNC(B1)";
-            ws.Cells["A3"].Formula = "=MYCACHEDFUNC(B2)";
-            ws.Cells["A4"].Formula = "=MYCACHEDFUNC(B2)";
-            ws.Cells["A5"].Formula = "=MYCACHEDFUNC(B3)";
+            // Populate some data
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["B1"].PutValue(5);
+            cells["B2"].PutValue(15);
 
-            // Set up calculation options with our cached engine.
-            var engine = new CachedEngine();
+            // Use the custom function in several cells with identical inputs
+            cells["C1"].Formula = "=MYCACHEFUNC(A1, B1)"; // 10 + 5 = 15
+            cells["C2"].Formula = "=MYCACHEFUNC(A1, B1)"; // same inputs – should hit cache
+            cells["C3"].Formula = "=MYCACHEFUNC(A2, B2)"; // 20 + 15 = 35
+            cells["C4"].Formula = "=MYCACHEFUNC(A2, B2)"; // same inputs – should hit cache
+
+            // Set up calculation options with the custom caching engine
             CalculationOptions options = new CalculationOptions
             {
-                CustomEngine = engine
+                CustomEngine = new CachingEngine()
             };
 
-            // First calculation – cache will be populated.
-            wb.CalculateFormula(options);
-            Console.WriteLine("After first calculation:");
-            PrintResults(ws);
-            Console.WriteLine($"Engine performed actual computation {engine.ComputeCount} time(s).");
+            // First calculation – cache will be populated
+            workbook.CalculateFormula(options);
+            Console.WriteLine($"C1 = {cells["C1"].Value} (expected 15)");
+            Console.WriteLine($"C2 = {cells["C2"].Value} (expected 15, cached)");
+            Console.WriteLine($"C3 = {cells["C3"].Value} (expected 35)");
+            Console.WriteLine($"C4 = {cells["C4"].Value} (expected 35, cached)");
 
-            // Change a cell that is NOT used by the formulas to prove cache reuse.
-            ws.Cells["C1"].PutValue(999);
+            // Change an unrelated cell (does not affect cached function)
+            cells["D1"].PutValue(999);
 
-            // Second calculation – cached results should be reused, compute count unchanged.
-            wb.CalculateFormula(options);
-            Console.WriteLine("\nAfter second calculation (no relevant data changed):");
-            PrintResults(ws);
-            Console.WriteLine($"Engine performed actual computation {engine.ComputeCount} time(s).");
+            // Second calculation – cached results should be reused without recomputation
+            workbook.CalculateFormula(options);
+            Console.WriteLine("After modifying unrelated cell D1:");
+            Console.WriteLine($"C1 = {cells["C1"].Value}");
+            Console.WriteLine($"C2 = {cells["C2"].Value}");
+            Console.WriteLine($"C3 = {cells["C3"].Value}");
+            Console.WriteLine($"C4 = {cells["C4"].Value}");
 
-            // Save the workbook.
-            wb.Save("CachedFunctionDemo.xlsx");
-        }
-
-        // Helper to display the values of the cells that use the custom function.
-        private static void PrintResults(Worksheet ws)
-        {
-            for (int row = 0; row < 5; row++)
-            {
-                Console.WriteLine($"A{row + 1} = {ws.Cells[row, 0].Value}");
-            }
+            // Save the workbook
+            workbook.Save("CachingEngineDemo.xlsx");
         }
     }
 }

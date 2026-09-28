@@ -1,40 +1,43 @@
-// Title: Export RTL Text to HTML with Default HtmlSaveOptions – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to enable the DisplayRightToLeft flag on a worksheet, insert Arabic text, and save the workbook as HTML using the out‑of‑the‑box HtmlSaveOptions, preserving right‑to‑left alignment without extra configuration.
-// Keywords: Aspose.Cells HTML export RTL | DisplayRightToLeft C# | default HtmlSaveOptions | Arabic Excel to HTML | right‑to‑left alignment Aspose.Cells | C# Excel to HTML conversion
-// Common Searches: Aspose.Cells save HTML RTL text | How to keep right‑to‑left direction when exporting Excel to HTML | DisplayRightToLeft property HTML output example | Export Arabic worksheet to HTML using Aspose.Cells .NET | Default HtmlSaveOptions RTL support
-// Developer Intent: Generate an HTML file from a workbook that contains right‑to‑left language text while retaining proper text direction using the default save options.
-// Use Cases: Create web‑ready reports for Arabic, Hebrew, or other RTL languages without custom CSS. | Automate batch conversion of Excel files to HTML for multilingual portals. | Produce printable HTML pages that maintain the original worksheet layout and directionality.
-// AI Prompts: Write C# code that saves a workbook with Arabic text to HTML using Aspose.Cells and explain the role of DisplayRightToLeft. | Show how to validate that the exported HTML renders RTL correctly and list the HTML attributes added by default HtmlSaveOptions. | Suggest a way to extend the default HtmlSaveOptions to inject a custom CSS class for RTL cells while keeping built‑in direction handling.
+// Title: Export right-to-left Hebrew text to HTML with Aspose.Cells default HtmlSaveOptions (C#)
+// AI Prompts: Write C# code that inserts Hebrew text into a worksheet cell, applies a RightToLeft text direction and right alignment, and saves the workbook as HTML using the default HtmlSaveOptions. | Show how to keep right-to-left cell formatting when converting an Excel file to HTML with Aspose.Cells without customizing save options. | Create a minimal Aspose.Cells example that demonstrates RTL text direction in the generated HTML output.
+// Common Searches: Aspose.Cells export RTL text to HTML using default HtmlSaveOptions in C# | How to preserve Hebrew right-to-left alignment when saving Excel as HTML with Aspose.Cells | C# convert Excel workbook with Arabic RTL cells to HTML preserving direction | Default HtmlSaveOptions keep text direction Aspose.Cells example
+// Tags: RTL text export to HTML Aspose.Cells C# | HtmlSaveOptions default preserve text direction | TextDirectionType.RightToLeft cell style Aspose.Cells | right-to-left alignment Excel to HTML conversion | Hebrew cell style Aspose.Cells example
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsRtlHtmlExport
+// Creates a workbook, writes Hebrew text into cell A1, sets the cell's TextDirection to RightToLeft and HorizontalAlignment to Right, and saves the workbook as an HTML file using Aspose.Cells default HtmlSaveOptions, preserving the right-to-left alignment in the output.
+class Program
 {
-    // Demonstrates how to enable the DisplayRightToLeft flag on a worksheet, insert Arabic text, and save the workbook as HTML using the out‑of‑the‑box HtmlSaveOptions, preserving right‑to‑left alignment without extra configuration.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (default creation rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Enable right‑to‑left display for the worksheet
-            sheet.DisplayRightToLeft = true;
+            // Insert right-to-left text (e.g., Hebrew) into a cell
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue("שלום"); // "Hello" in Hebrew
 
-            // Put some right‑to‑left text (Arabic example)
-            sheet.Cells["A1"].PutValue("نص من اليمين إلى اليسار");
+            // Configure the cell style for RTL alignment
+            Style style = cell.GetStyle();
+            style.HorizontalAlignment = TextAlignmentType.Right; // Align text to the right
+            style.TextDirection = TextDirectionType.RightToLeft; // Set cell direction to RTL
+            cell.SetStyle(style);
 
-            // Use the default HtmlSaveOptions (no custom options required)
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Use default HtmlSaveOptions (RTL direction is handled by cell style)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
 
-            // Save the workbook as HTML (default save rule)
-            workbook.Save("RtlExport.html", htmlOptions);
-
-            Console.WriteLine("Workbook saved to RtlExport.html with right‑to‑left alignment.");
+            // Save the workbook as an HTML file
+            workbook.Save("RtlOutput.html", saveOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

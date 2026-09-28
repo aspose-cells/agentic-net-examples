@@ -1,50 +1,62 @@
-// Title: Set Custom PDF Page Margins in C# with Aspose.Cells
-// Description: Demonstrates how to define top, bottom, left, and right margins (in centimeters) via Worksheet.PageSetup, apply PdfSaveOptions (including OnePagePerSheet), and export an Excel workbook to a PDF with precise margin control.
-// Keywords: Aspose.Cells PDF margins | C# set page margins Excel to PDF | Worksheet.PageSetup margin cm | PdfSaveOptions OnePagePerSheet | Aspose.Cells .NET export PDF | custom PDF layout C#
-// Common Searches: Aspose.Cells set PDF margins C# | how to change page margins when converting Excel to PDF | PdfSaveOptions margin settings example | OnePagePerSheet Aspose.Cells usage | C# export Excel with custom margins
-// Developer Intent: Apply precise page‑margin values to a PDF generated from an Excel workbook.
-// Use Cases: Create a printable report with a 2 cm top margin for a header banner. | Generate invoices where left/right margins are 1.5 cm to meet standard paper constraints. | Export a single‑sheet financial summary to one PDF page while preserving custom spacing.
-// AI Prompts: Show C# code that sets top, bottom, left, and right margins in centimeters for a PDF created with Aspose.Cells. | Provide an example of using PdfSaveOptions.OnePagePerSheet together with custom margins in Aspose.Cells .NET.
+// Title: Apply 0.5‑inch custom PDF margins to all worksheets when converting an Excel file to PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets 0.5‑inch top, bottom, left, and right margins on every worksheet using Aspose.Cells PageSetup before saving as PDF. | Show how to set header and footer margins to zero and export the workbook to a PDF file with Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells C# set page margins before PDF export | How to define custom PDF margins for each worksheet in Aspose.Cells | Convert Excel to PDF with 0.5 inch margins using Aspose.Cells .NET | PageSetup margin values in points for PDF output with Aspose.Cells | C# Aspose.Cells PDF conversion margin configuration example
+// Tags: Aspose.Cells worksheet page setup | PDF export margin settings .NET | Set page margins in points Aspose.Cells | Excel to PDF conversion margins | C# Aspose.Cells page setup API
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsMarginExample
+namespace AsposeCellsExample
 {
-    // Demonstrates how to define top, bottom, left, and right margins (in centimeters) via Worksheet.PageSetup, apply PdfSaveOptions (including OnePagePerSheet), and export an Excel workbook to a PDF with precise margin control.
+    // The program creates a workbook if missing, iterates through all worksheets, sets 0.5‑inch (36‑point) top, bottom, left, and right margins (header/footer set to zero) via the PageSetup object, and saves the workbook as a PDF using Aspose.Cells.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.pdf";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+                // Ensure the input file exists; create a simple workbook if it does not.
+                if (!File.Exists(inputPath))
+                {
+                    var tempWb = new Workbook();
+                    tempWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+                    tempWb.Save(inputPath);
+                }
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue("Row 1");
-            sheet.Cells["B2"].PutValue(123);
-            sheet.Cells["A3"].PutValue("Row 2");
-            sheet.Cells["B3"].PutValue(456);
+                // Load the source workbook.
+                var workbook = new Workbook(inputPath);
 
-            // Configure custom page margins (values are in centimeters)
-            PageSetup pageSetup = sheet.PageSetup;
-            pageSetup.TopMargin = 2.0;    // 2 cm top margin
-            pageSetup.BottomMargin = 1.0; // 1 cm bottom margin
-            pageSetup.LeftMargin = 1.5;   // 1.5 cm left margin
-            pageSetup.RightMargin = 1.5;  // 1.5 cm right margin
+                // Custom margins in points (1 point = 1/72 inch).
+                const double top = 36;      // 0.5 inch
+                const double bottom = 36;   // 0.5 inch
+                const double left = 36;     // 0.5 inch
+                const double right = 36;    // 0.5 inch
+                const double header = 0;
+                const double footer = 0;
 
-            // Create PDF save options (optional: set OnePagePerSheet to keep layout)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            pdfOptions.OnePagePerSheet = true;
+                // Apply margins to each worksheet.
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    var pageSetup = sheet.PageSetup;
+                    pageSetup.TopMargin = top;
+                    pageSetup.BottomMargin = bottom;
+                    pageSetup.LeftMargin = left;
+                    pageSetup.RightMargin = right;
+                    pageSetup.HeaderMargin = header;
+                    pageSetup.FooterMargin = footer;
+                }
 
-            // Save the workbook to PDF with the custom margins applied
-            workbook.Save("CustomMarginsOutput.pdf", pdfOptions);
-
-            Console.WriteLine("PDF generated with custom page margins.");
+                // Save the workbook as PDF.
+                workbook.Save(outputPath, SaveFormat.Pdf);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

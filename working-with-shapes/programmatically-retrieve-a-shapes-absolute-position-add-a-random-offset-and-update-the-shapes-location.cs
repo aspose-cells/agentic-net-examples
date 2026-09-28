@@ -1,50 +1,66 @@
-// Title: C# – Get and Shift a Shape’s Absolute Position with Aspose.Cells for .NET
-// Description: Demonstrates how to read a shape’s X and Y pixel coordinates, generate a random offset, apply the offset to the shape, and save the updated workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells shape position | C# get shape coordinates | move shape programmatically | random offset Aspose.Cells | shape X Y properties .NET | update Excel shape location
-// Common Searches: how to read shape X Y coordinates Aspose.Cells | move a rectangle shape in Excel with C# | apply random offset to Excel shape using Aspose | change shape location programmatically Aspose.Cells | Aspose.Cells example for shifting shapes
-// Developer Intent: Read a shape’s current absolute coordinates, add a random pixel offset, and write the new position back to the workbook.
-// Use Cases: Scatter multiple shapes randomly to create a dynamic layout. | Add subtle variation to chart annotations each time a report is generated. | Implement a simple jitter effect for visual elements in an automated Excel file.
-// AI Prompts: Write a C# method that takes an Aspose.Cells Shape and a pixel range, applies a random offset within that range to its X and Y properties, and returns the new coordinates. | Generate error‑handling code that prevents a shape from being moved outside the worksheet boundaries when applying offsets. | Create a reusable utility class for retrieving and updating shape positions in Aspose.Cells workbooks.
+// Title: Read a shape’s absolute position, add a random offset, and update its location in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Get the Top and Left values of the first shape on a worksheet, calculate a random shift between -20 and 20 points, and assign the new coordinates to the shape. | Loop through all shapes on a worksheet, apply a random shift within a defined range to each shape’s Top and Left properties, and save the workbook. | Change the shift range to -50 to +50 points, update the shape positions accordingly, and write the result to a new Excel file.
+// Common Searches: Aspose.Cells .NET get shape absolute position in points | C# move Excel shape by random offset using Aspose.Cells | How to change shape Top and Left properties programmatically with Aspose.Cells | Apply random displacement to multiple shapes in a worksheet Aspose.Cells | Save workbook after repositioning shapes Aspose.Cells C#
+// Tags: Aspose.Cells retrieve shape coordinates | Aspose.Cells set shape top left | Aspose.Cells random shape displacement | Aspose.Cells move shapes worksheet | Aspose.Cells update shape position C# | Aspose.Cells save workbook after repositioning
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapePositionExample
+// The example loads an Excel workbook, reads the Top and Left values of the first shape on the first worksheet, adds a random offset between –20 and +20 points, updates the shape’s position, and saves the modified workbook.
+class Program
 {
-    // Demonstrates how to read a shape’s X and Y pixel coordinates, generate a random offset, apply the offset to the shape, and save the updated workbook using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, row offset, column offset, height, width
-            Shape shape = worksheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 100);
+            // Ensure there is at least one shape
+            if (worksheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found in the worksheet.");
+                return;
+            }
 
-            // Retrieve the shape's current absolute position (X and Y are offsets from worksheet borders)
-            int originalX = shape.X;
-            int originalY = shape.Y;
+            // Retrieve the first shape
+            Shape shape = worksheet.Shapes[0];
 
-            Console.WriteLine($"Original Position -> X: {originalX}, Y: {originalY}");
+            // Current absolute position (points)
+            int currentTop = shape.Top;
+            int currentLeft = shape.Left;
 
-            // Generate random offsets (e.g., between -20 and +20 pixels)
+            // Random offset between -20 and +20 points
             Random rnd = new Random();
-            int offsetX = rnd.Next(-20, 21);
-            int offsetY = rnd.Next(-20, 21);
+            int offsetTop = (int)(rnd.NextDouble() * 40 - 20);
+            int offsetLeft = (int)(rnd.NextDouble() * 40 - 20);
 
-            // Apply the random offsets to the shape's position
-            shape.X = originalX + offsetX;
-            shape.Y = originalY + offsetY;
+            // Apply the random offset
+            shape.Top = currentTop + offsetTop;
+            shape.Left = currentLeft + offsetLeft;
 
-            Console.WriteLine($"Offset Applied -> X: {offsetX}, Y: {offsetY}");
-            Console.WriteLine($"New Position -> X: {shape.X}, Y: {shape.Y}");
-
-            // Save the workbook to a file
-            workbook.Save("ShapePositionUpdated.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

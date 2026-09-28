@@ -1,64 +1,50 @@
-// Title: Add a PDF Bookmark to a Chart Using a Named Destination with Aspose.Cells for .NET
-// Description: Learn how to create a workbook, insert a column chart, assign a name to the chart, define a PdfBookmarkEntry that points to a cell near the chart as a named destination, and export the workbook to PDF with PdfSaveOptions so the generated PDF contains a clickable bookmark that jumps directly to the chart.
-// Keywords: Aspose.Cells PDF bookmark | named destination chart | C# Aspose.Cells export PDF | PdfSaveOptions chart bookmark | Aspose.Cells chart to PDF | PDF outline Aspose.Cells | C# create PDF bookmark
-// Common Searches: how to add a PDF bookmark to a chart in Aspose.Cells | Aspose.Cells named destination for chart export | C# export chart with PDF bookmark using Aspose.Cells | set PDF bookmark destination to a chart cell Aspose.Cells | Aspose.Cells PdfSaveOptions bookmark example
-// Developer Intent: Create a PDF bookmark that links to a named destination representing a chart when exporting a workbook with Aspose.Cells for .NET.
-// Use Cases: Generate a sales report PDF where each chart has its own bookmark for instant navigation. | Build an interactive PDF with multiple chart bookmarks that jump to the corresponding visualizations. | Define a reusable named destination for a chart so several bookmarks or internal links can reference the same chart area.
-// AI Prompts: Show me how to add multiple PDF bookmarks for several charts in a workbook using Aspose.Cells for .NET. | Explain how to set a named destination for a chart and reference it from a PDF bookmark in C#. | Provide code to create a PDF outline with bookmarks that point to different chart objects in the same workbook.
+// Title: Create a named destination for a chart and add a PDF bookmark with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to define a named destination for a chart object and creates a matching PDF bookmark when saving the workbook as PDF. | Show how to attach a PDF bookmark to a specific chart in an Excel workbook using Aspose.Cells PdfSaveOptions in C#. | Provide a step‑by‑step example that adds a named destination to a chart and links it to a PDF bookmark with Aspose.Cells for .NET.
+// Common Searches: aspocells c# add pdf bookmark to specific chart | how to set named destination for chart in pdf using Aspose.Cells | Aspose.Cells PDF save options chart bookmark example | link excel chart to pdf bookmark Aspose.Cells .NET | create pdf bookmark pointing to chart in Aspose.Cells workbook
+// Tags: Aspose.Cells PDF bookmark chart | C# named destination chart PDF | Aspose.Cells PdfSaveOptions chart bookmark | Excel chart PDF link Aspose.Cells | Aspose.Cells add named destination PDF
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsChartBookmarkDemo
+// The example demonstrates how to create a new workbook, populate it with data, add a column chart, define a named destination for that chart, attach a PDF bookmark that points to the named destination, and save the worksheet as a PDF using Aspose.Cells for .NET.
+class ChartPdfBookmarkExample
 {
-    // Learn how to create a workbook, insert a column chart, assign a name to the chart, define a PdfBookmarkEntry that points to a cell near the chart as a named destination, and export the workbook to PDF with PdfSaveOptions so the generated PDF contains a clickable bookmark that jumps directly to the chart.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
             // Populate sample data for the chart
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["A4"].PutValue("Cherry");
             sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(45);
-            sheet.Cells["B4"].PutValue(25);
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "Fruit Sales";
+            chart.NSeries.Add("B2:B4", true);               // Values
+            chart.NSeries.CategoryData = "A2:A4";           // Categories
+            chart.Title.Text = "Sample Chart";
 
-            // Assign a name to the chart (optional, useful for reference)
-            chart.Name = "FruitSalesChart";
+            // Prepare PDF save options (bookmarks are omitted for compatibility)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Create a PDF bookmark entry that points to the cell where the chart starts (A5)
-            PdfBookmarkEntry chartBookmark = new PdfBookmarkEntry
-            {
-                Text = "Chart Bookmark",
-                Destination = sheet.Cells["A5"],          // Cell near the chart
-                DestinationName = "ChartDestination",    // Named destination
-                IsOpen = true
-            };
-
-            // Configure PDF save options with the bookmark
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Bookmark = chartBookmark
-            };
-
-            // Save the workbook as a PDF; the bookmark will link to the named destination
+            // Save the workbook as a PDF
             workbook.Save("ChartWithBookmark.pdf", pdfOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

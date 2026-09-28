@@ -1,42 +1,63 @@
-// Title: C# – Read a Shape’s Glow Color with Aspose.Cells and Log to Console
-// Description: Creates a workbook, adds a rectangle shape, applies a purple glow effect, then reads the shape’s Glow.Color (CellsColor) and writes the System.Drawing.Color, ARGB value, and IsShapeColor flag to the console. The workbook can be saved afterward.
-// Keywords: Aspose.Cells read shape glow color | C# shape glow effect | Aspose.Cells Glow.Color property | retrieve shape glow ARGB | shape glow transparency Aspose
-// Common Searches: how to get glow color of a shape in Aspose.Cells C# | Aspose.Cells read shape glow effect | C# retrieve shape glow ARGB value | display shape glow properties console Aspose | Aspose.Cells shape glow color example
-// Developer Intent: Extract the current glow color of a specific shape and output its details to the console.
-// Use Cases: Verify that a shape’s glow matches design specifications during automated testing. | Debug workbook visual styling by logging glow color, ARGB, and shape‑color flag. | Generate a quick report of glow settings for all shapes before publishing a spreadsheet.
-// AI Prompts: Write C# code that loops through every shape in a worksheet and prints each shape’s glow color, ARGB value, size, and transparency using Aspose.Cells. | Explain how to compare a shape’s retrieved glow color with a target System.Drawing.Color and update the glow if they differ. | Show how to export glow color information of all shapes to a JSON file for further analysis.
+// Title: Read and log the glow effect color of a specific shape in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create C# code that opens an .xlsx workbook with Aspose.Cells, verifies a shape’s Glow property, and writes the resulting System.Drawing.Color to the console. | Provide a method in C# using Aspose.Cells that takes a worksheet and shape index, returns the glow property’s color if it exists, and handles cases where the glow is absent. | Show how to access the Glow.Color of a Shape object in Aspose.Cells and output it as a readable string.
+// Common Searches: aspocells c# retrieve glow color from shape in excel file | how to get shape glow using aspocells .net | example code to read glow of an Excel shape with aspocells
+// Tags: aspocells shape glow extraction | c# read excel shape glow attribute | aspocells retrieve shape glow property | excel worksheet shape glow retrieval
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a rectangle shape, applies a purple glow effect, then reads the shape’s Glow.Color (CellsColor) and writes the System.Drawing.Color, ARGB value, and IsShapeColor flag to the console. The workbook can be saved afterward.
-class ReadShapeGlowColor
+// The example loads an .xlsx workbook with Aspose.Cells, accesses the first worksheet, ensures at least one shape exists, checks that the shape has a Glow effect, extracts the Glow.Color as a System.Drawing.Color, and writes the color value to the console, with error handling for missing files, shapes, or glow.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();               // create rule
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
 
-        // Add a rectangle shape (the shape we will inspect)
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Set a glow effect so that there is a color to read
-        shape.Glow.Color = workbook.CreateCellsColor();   // create rule for CellsColor
-        shape.Glow.Color.Color = System.Drawing.Color.Purple;
-        shape.Glow.Size = 10;            // radius in points
-        shape.Glow.Transparency = 0.5;   // 50% transparent
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-        // ----- Read the current glow color -----
-        CellsColor glowColor = shape.Glow.Color;   // access the GlowEffect.Color property
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Log the glow color information to the console
-        Console.WriteLine("Glow Color (System.Drawing.Color): " + glowColor.Color);
-        Console.WriteLine("Glow Color ARGB value: " + glowColor.Argb);
-        Console.WriteLine("IsShapeColor flag: " + glowColor.IsShapeColor);
+            // Verify that the worksheet contains at least one shape
+            if (sheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found in the worksheet.");
+                return;
+            }
 
-        // Save the workbook (optional, demonstrates the save rule)
-        workbook.Save("ReadShapeGlowColor.xlsx");    // save rule
+            // Retrieve the first shape (or replace with a specific index/name as required)
+            Shape shape = sheet.Shapes[0];
+
+            // Ensure the shape has a glow effect
+            if (shape.Glow == null)
+            {
+                Console.WriteLine("The shape does not have a glow effect.");
+                return;
+            }
+
+            // Obtain the glow effect's color (convert CellsColor to System.Drawing.Color)
+            Color glowColor = shape.Glow.Color.Color;
+
+            // Output the glow color to the console
+            Console.WriteLine($"Glow color of the shape: {glowColor}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

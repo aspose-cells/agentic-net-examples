@@ -1,64 +1,57 @@
-// Title: Load a password‑protected Excel workbook with Aspose.Cells for .NET and save it unprotected
-// Description: Shows how to open an encrypted .xlsx file using Aspose.Cells LoadOptions.Password, read a cell to confirm access, remove the opening password, and write a new workbook without protection. Includes file‑existence validation and exception handling.
-// Keywords: Aspose.Cells load password protected workbook | LoadOptions.Password .NET | open encrypted Excel file C# | remove workbook password Aspose.Cells | save unprotected Excel Aspose | C# Aspose.Cells example | Excel file security Aspose
-// Common Searches: How to open a password protected Excel file with Aspose.Cells | Aspose.Cells LoadOptions password example | Remove opening password from Excel using Aspose | Save unprotected copy of protected workbook C# | Aspose.Cells read cell from encrypted workbook
-// Developer Intent: Open a secured Excel file, access its data, and optionally create an unprotected version using Aspose.Cells for .NET.
-// Use Cases: Extract data from a protected report before analysis. | Automate batch de‑cryption of multiple workbooks for downstream processing. | Validate workbook contents before applying updates or adding worksheets.
-// AI Prompts: Generate C# code that opens a password‑protected .xlsx file with Aspose.Cells, reads a specific cell, and handles incorrect passwords gracefully. | Provide a snippet to clear the opening password of a loaded workbook and save it as a new unprotected file using Aspose.Cells. | Explain the steps to verify a protected workbook’s content, remove its password, and export an unencrypted copy in a .NET application.
+// Title: Load a password‑protected Excel workbook with Aspose.Cells LoadOptions in C# and save it unencrypted
+// AI Prompts: Generate C# code that opens a .xlsx file protected with a password using Aspose.Cells LoadOptions.Password, then saves the workbook without a password. | Demonstrate catching the specific CellsException thrown when the password supplied to LoadOptions does not match the workbook's encryption. | Provide an example that checks the source file exists, loads it with the correct password, and writes the unprotected workbook to a new location.
+// Common Searches: aspnet load password protected xlsx using aspose.cells loadoptions c# | how to remove password from excel file programmatically with aspose.cells | c# catch cellsexception invalid password when opening encrypted workbook | aspose.cells load encrypted workbook and save without protection
+// Tags: Aspose.Cells LoadOptions password | load encrypted xlsx C# | unprotect Excel workbook Aspose.Cells | handle CellsException invalid password | save workbook without encryption Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample verifies the presence of a password‑protected Excel file, configures LoadOptions with the correct password, loads the workbook using Aspose.Cells, and saves it to a new file without any password protection while handling both Aspose.Cells‑specific and general exceptions.
+class Program
 {
-    // Shows how to open an encrypted .xlsx file using Aspose.Cells LoadOptions.Password, read a cell to confirm access, remove the opening password, and write a new workbook without protection. Includes file‑existence validation and exception handling.
-    public class LoadPasswordProtectedWorkbook
+    static void Main()
     {
-        public static void Run()
+        // Path to the password‑protected workbook
+        const string inputPath = "protected.xlsx";
+        const string outputPath = "unprotected.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the password‑protected Excel file
-            string filePath = "protected.xlsx";
-
-            // Verify that the source file exists
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Error: File \"{filePath}\" not found.");
-                return;
-            }
-
-            try
-            {
-                // Create LoadOptions and set the password required to open the workbook
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    Password = "test"
-                };
-
-                // Load the workbook using the LoadOptions
-                Workbook workbook = new Workbook(filePath, loadOptions);
-
-                // Verify that the workbook was loaded (e.g., read a cell value)
-                Console.WriteLine("Cell A1 value: " + workbook.Worksheets[0].Cells["A1"].Value);
-
-                // Optional: remove the password protection and save an unprotected copy
-                workbook.Settings.Password = null; // clear the opening password
-                string unprotectedPath = "unprotected.xlsx";
-                workbook.Save(unprotectedPath);
-                Console.WriteLine($"Unprotected workbook saved as \"{unprotectedPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        // Password for the protected workbook
+        string password = "myPassword";
+
+        try
         {
-            LoadPasswordProtectedWorkbook.Run();
+            // Configure load options with the correct password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = password
+            };
+
+            // Load the protected workbook
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // (Optional) Perform any operations on the workbook here
+
+            // Save the workbook without password protection
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (CellsException ex)
+        {
+            // Handles Aspose.Cells specific errors (e.g., invalid password)
+            Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Handles any other unexpected errors
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

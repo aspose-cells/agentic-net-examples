@@ -1,25 +1,35 @@
-// Title: C# Aspose.Cells – Password‑protect Workbook Window (zoom) settings
-// Description: Creates a new Workbook, locks the default view (window) using ProtectionType.Windows with a password, and saves it as ProtectedDefaultView.xlsx.
-// Keywords: Aspose.Cells C# protect window | Excel zoom lock programmatically | Workbook view protection .NET | ProtectionType.Windows password | Secure default view settings
-// Common Searches: Aspose.Cells lock workbook zoom level | C# protect Excel window settings with password | Prevent view changes in Excel using Aspose | How to disable zoom editing in a .NET workbook | Password protect Excel default view options
-// Developer Intent: Apply a password to the workbook’s window settings so the default view (e.g., zoom) cannot be altered by end users.
-// Use Cases: Distribute a template that must always open at a predefined zoom for brand consistency. | Deliver a financial dashboard where layout integrity is critical and view changes are prohibited. | Enforce corporate policy that only authorized staff can modify workbook display options.
-// AI Prompts: Write C# code with Aspose.Cells to lock the workbook window (zoom) using a custom password and save the file. | Explain how to programmatically remove the window protection from a workbook in Aspose.Cells. | Show how to protect both the workbook structure and its window settings in one Aspose.Cells call.
+// Title: How to protect workbook windows (prevent zoom level changes) with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that applies window protection to an Excel workbook, optionally setting a password, using Aspose.Cells. | Illustrate how to lock only the view‑related settings of an existing spreadsheet and save the protected file. | Provide an example of enforcing workbook window protection without supplying a password via Aspose.Cells.
+// Common Searches: Aspose.Cells protect workbook windows to lock zoom level in C# | disable default view changes in an Excel file using .NET | C# protect workbook view settings without password Aspose.Cells
+// Tags: Aspose.Cells Windows protection API | prevent Excel zoom level changes C# | protect workbook view settings Aspose.Cells | disable workbook window modifications .NET | Excel workbook window protection without password
 
+using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, locks the default view (window) using ProtectionType.Windows with a password, and saves it as ProtectedDefaultView.xlsx.
-class ProtectWorkbookDefaultView
+namespace WorkbookProtectionExampleApp
 {
-    static void Main()
+    // The example creates (or loads) an Excel workbook, applies workbook window protection to block changes to default view settings such as zoom level—optionally with a password—and saves the result as "ProtectedWorkbook.xlsx".
+    class WorkbookProtectionExample
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook(); // Use new Workbook("input.xlsx") to load an existing file
 
-        // Protect the workbook's window (default view settings such as zoom level) with a password
-        workbook.Protect(ProtectionType.Windows, "pwd123");
+                // Protect the workbook windows (default view settings such as zoom level) with an optional password
+                workbook.Protect(ProtectionType.Windows, ""); // Empty password disables password protection
 
-        // Save the protected workbook
-        workbook.Save("ProtectedDefaultView.xlsx");
+                // Save the protected workbook
+                string outputPath = "ProtectedWorkbook.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

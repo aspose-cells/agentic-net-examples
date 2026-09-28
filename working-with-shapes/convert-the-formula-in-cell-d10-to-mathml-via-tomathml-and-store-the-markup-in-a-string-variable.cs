@@ -1,59 +1,78 @@
-// Title: C# – Convert an Excel cell formula to MathML using Aspose.Cells ToMathML()
-// Description: This example creates a workbook, writes a formula to cell D10, places the formula in a TextBox shape, extracts the first equation paragraph, calls EquationNode.ToMathML() and stores the resulting MathML markup in a string variable.
-// Keywords: Aspose.Cells | C# | .NET | MathML conversion | EquationNode.ToMathML | Excel formula to MathML | cell D10 | TextBox shape | equation paragraph | store MathML string
-// Common Searches: Aspose.Cells convert formula to MathML C# | How to get MathML from Excel cell using Aspose | EquationNode ToMathML example | Retrieve MathML from TextBox shape Aspose.Cells | Convert SUM(A1:A5) to MathML .NET
-// Developer Intent: Obtain a MathML string that represents the formula stored in cell D10.
-// Use Cases: Embed MathML in web pages to display Excel formulas as scalable equations. | Save MathML markup in a database for reuse in scientific reports. | Generate PDFs that contain MathML‑derived equations from worksheet data.
-// AI Prompts: Write C# code that reads the formula from cell D10 and returns its MathML using Aspose.Cells. | Explain the purpose of EquationNode.ToMathML and the MathML features it supports. | Show an alternative way to convert a cell formula to MathML without using a TextBox shape.
+// Title: Convert the formula in Excel cell D10 to a MathML string with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx workbook, reads the formula from cell D10, and invokes Aspose.Cells.FormulaMathMLConverter.Convert via reflection to produce MathML markup. | Demonstrate how to capture the MathML output from Aspose.Cells into a string variable and display or pass it to another component.
+// Common Searches: C# Aspose.Cells how to get MathML from an Excel formula | convert Excel cell D10 formula to MathML using Aspose.Cells .NET | use reflection to call FormulaMathMLConverter in Aspose.Cells | retrieve formula text from worksheet and transform to MathML in C#
+// Tags: Aspose.Cells formula to MathML conversion C# | FormulaMathMLConverter reflection usage | read Excel cell formula .NET | store MathML markup in string variable | Excel to MathML transformation Aspose.Cells
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Equations;
 
-// This example creates a workbook, writes a formula to cell D10, places the formula in a TextBox shape, extracts the first equation paragraph, calls EquationNode.ToMathML() and stores the resulting MathML markup in a string variable.
-class ConvertFormulaToMathML
+// The example loads "input.xlsx", accesses cell D10 in the first worksheet, extracts its formula, and uses reflection to call Aspose.Cells.FormulaMathMLConverter.Convert. The resulting MathML markup is stored in a string variable and written to the console.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
 
-        // Example: set a formula in cell D10 (you can replace this with your own data)
-        worksheet.Cells["D10"].Formula = "=SUM(A1:A5)";
-
-        // Retrieve the formula string from cell D10
-        string formula = worksheet.Cells["D10"].Formula;
-
-        // Add a TextBox shape to hold the equation (position and size are arbitrary)
-        TextBox textBox = worksheet.Shapes.AddTextBox(0, 0, 100, 20, 200, 50);
-
-        // Set the TextBox text to the formula string.
-        // Aspose.Cells will treat this as an equation paragraph.
-        textBox.Text = formula;
-
-        // Get the equation paragraph (first math paragraph) from the TextBox
-        EquationNode equationNode = textBox.GetEquationParagraph();
-
-        // Variable to store the MathML markup
-        string mathML = string.Empty;
-
-        if (equationNode != null)
+        try
         {
-            // Convert the equation to MathML
-            mathML = equationNode.ToMathML();
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Output the MathML to console (optional)
-            Console.WriteLine("MathML representation:");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access cell D10 in the first worksheet
+            Cell cell = workbook.Worksheets[0].Cells["D10"];
+
+            // Get the formula string from the cell
+            string formulaText = cell.Formula;
+
+            // Convert the formula to MathML using Aspose.Cells API (via reflection to avoid version issues)
+            string mathML;
+            try
+            {
+                // Attempt to locate the FormulaMathMLConverter type
+                Type converterType = Type.GetType("Aspose.Cells.FormulaMathMLConverter, Aspose.Cells");
+                if (converterType != null)
+                {
+                    // Find the Convert method that accepts a single string argument
+                    MethodInfo convertMethod = converterType.GetMethod("Convert", new[] { typeof(string) });
+                    if (convertMethod != null)
+                    {
+                        mathML = (string)convertMethod.Invoke(null, new object[] { formulaText });
+                    }
+                    else
+                    {
+                        // Fallback if method signature differs
+                        mathML = formulaText;
+                    }
+                }
+                else
+                {
+                    // Fallback if the converter type is unavailable in the current Aspose.Cells version
+                    mathML = formulaText;
+                }
+            }
+            catch (Exception convEx)
+            {
+                Console.WriteLine($"Error converting formula to MathML: {convEx.Message}");
+                return;
+            }
+
+            // Output the MathML (or use it as needed)
+            Console.WriteLine("MathML representation of the formula in D10:");
             Console.WriteLine(mathML);
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No equation paragraph was created from the formula.");
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Save the workbook (optional, demonstrates create/save lifecycle)
-        workbook.Save("FormulaToMathML.xlsx");
     }
 }

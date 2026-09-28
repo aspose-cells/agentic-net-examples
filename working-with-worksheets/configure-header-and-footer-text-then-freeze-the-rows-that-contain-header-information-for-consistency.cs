@@ -1,61 +1,61 @@
-// Title: Aspose.Cells C# – Configure Header/Footer, Repeat Title Row, and Freeze Top Row
-// Description: Demonstrates how to add custom left, center, and right sections to the header and footer using PageSetup, repeat the first row on every printed page, and freeze the top row (row 1) at cell A2 in an Excel workbook created with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells header footer C# | Aspose.Cells repeat title rows | Aspose.Cells freeze panes | PageSetup header footer Aspose | Print title rows Aspose.Cells | C# Excel header footer example | freeze first row Aspose.Cells
-// Common Searches: set custom header and footer Aspose.Cells .NET | repeat header row on each printed page Aspose.Cells | freeze top row while scrolling Aspose.Cells C# | Aspose.Cells page setup header footer syntax | how to use FreezePanes in Aspose.Cells
-// Developer Intent: Add a multi‑section header and footer, make row 1 repeat on printed pages, and keep row 1 visible during scrolling in an Excel file using Aspose.Cells for .NET.
-// Use Cases: Generate sales or inventory reports where the file name, report title, and date appear in the header and page numbers with sheet name appear in the footer. | Print large worksheets with the column headings repeated on every page while keeping those headings frozen for on‑screen navigation.
-// AI Prompts: Create C# code with Aspose.Cells that sets left, center, and right header sections, defines matching footer sections, repeats row 1 on each printed page, freezes row 1 at cell A2, and saves the workbook. | Show an Aspose.Cells example that uses PageSetup to configure a header/footer, applies PrintTitleRows = "$1:$1", and calls FreezePanes("A2", 1, 0).
+// Title: Configure custom header and footer sections and freeze the first worksheet row in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that defines left, center, and right header text, defines matching footer text, repeats the first worksheet row on every printed page, and freezes that row. | Show how to combine PageSetup.SetHeader, PageSetup.SetFooter, PageSetup.PrintTitleRows, and Worksheet.FreezePanes to produce a printable report with a locked header row in a .NET workbook.
+// Common Searches: how to add left, center, right sections to page header in Aspose.Cells C# | C# Aspose.Cells freeze top row and repeat header on each printed page | using Aspose.Cells to set print title rows and custom footer in Excel | example of configuring page header/footer and freezing rows with Aspose.Cells for .NET
+// Tags: page header sections Aspose.Cells | page footer sections Aspose.Cells | print title rows configuration Aspose.Cells | freeze panes first row Aspose.Cells | custom header/footer Aspose.Cells .NET | repeat header rows each printed page Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHeaderFooterFreezeDemo
+// Demonstrates creating a workbook, setting left/center/right header and footer text via PageSetup, defining the first row as a print title, freezing that row with FreezePanes, and saving the workbook as an .xlsx file.
+public class HeaderFooterFreezeDemo
 {
-    // Demonstrates how to add custom left, center, and right sections to the header and footer using PageSetup, repeat the first row on every printed page, and freeze the top row (row 1) at cell A2 in an Excel workbook created with Aspose.Cells for .NET.
-    class Program
+    public static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data with a header row
-            worksheet.Cells["A1"].PutValue("Product");
-            worksheet.Cells["B1"].PutValue("Quantity");
-            worksheet.Cells["C1"].PutValue("Price");
-
-            for (int i = 2; i <= 10; i++)
-            {
-                worksheet.Cells[$"A{i}"].PutValue($"Item {i - 1}");
-                worksheet.Cells[$"B{i}"].PutValue(i * 2);
-                worksheet.Cells[$"C{i}"].PutValue(i * 1.5);
-            }
-
-            // Access page setup to configure header and footer
-            PageSetup pageSetup = worksheet.PageSetup;
-
-            // Header: left - file name, center - custom text, right - current date
-            pageSetup.SetHeader(0, "&F");               // Left section
-            pageSetup.SetHeader(1, "Sales Report");     // Center section
-            pageSetup.SetHeader(2, "&D");               // Right section
-
-            // Footer: left - page number, center - empty, right - sheet name
-            pageSetup.SetFooter(0, "Page &P");          // Left section
-            pageSetup.SetFooter(1, "");                 // Center section
-            pageSetup.SetFooter(2, "&A");               // Right section
-
-            // Repeat the first row on each printed page
-            pageSetup.PrintTitleRows = "$1:$1";
-
-            // Freeze the header row (row 1) so it stays visible while scrolling
-            // Freeze at cell A2 with 1 frozen row and 0 frozen columns
-            worksheet.FreezePanes("A2", 1, 0);
-
-            // Save the workbook
-            workbook.Save("HeaderFooterFreezeDemo.xlsx");
+            Run();
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    public static void Run()
+    {
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // ----- Configure Header -----
+        // Left section: file name without path
+        worksheet.PageSetup.SetHeader(0, "&F");
+        // Center section: custom title
+        worksheet.PageSetup.SetHeader(1, "Report Title");
+        // Right section: current date
+        worksheet.PageSetup.SetHeader(2, "&D");
+
+        // ----- Configure Footer -----
+        // Left section: page number
+        worksheet.PageSetup.SetFooter(0, "Page &P");
+        // Center section: (empty)
+        worksheet.PageSetup.SetFooter(1, "");
+        // Right section: sheet name
+        worksheet.PageSetup.SetFooter(2, "&A");
+
+        // ----- Repeat header rows on each printed page -----
+        // Assuming the first row contains the header information
+        worksheet.PageSetup.PrintTitleRows = "$1:$1";
+
+        // ----- Freeze the header row -----
+        // Freeze the first row (row index 1) and all columns.
+        // Row parameter is the first unfrozen row (2), column is the first unfrozen column (1).
+        // freezedRows = 1 (rows above the split), freezedColumns = 0 (no columns frozen).
+        worksheet.FreezePanes(2, 1, 1, 0);
+
+        // Save the workbook
+        string outputPath = "HeaderFooterFreezeDemo.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to '{outputPath}'.");
     }
 }

@@ -1,90 +1,127 @@
-// Title: C# – Auto‑re‑encrypt an Aspose.Cells workbook after each modification
-// Description: Demonstrates how to create a password‑protected workbook, save it, load it with LoadOptions, modify cells, re‑apply the password (or stronger encryption via SetEncryptionOptions), and verify that the file remains encrypted—all in C# using Aspose.Cells.
-// Keywords: Aspose.Cells auto re‑encrypt workbook | C# workbook password encryption | re‑apply password after edit Aspose.Cells | SetEncryptionOptions Aspose.Cells .NET | load encrypted Excel modify save | programmatic Excel encryption C# | secure Aspose.Cells workbook
-// Common Searches: how to re‑encrypt an Aspose.Cells workbook after changes | Aspose.Cells .NET update encrypted workbook | C# set stronger encryption for Excel file with Aspose | verify password protection after saving Aspose.Cells workbook | auto‑re‑encrypt Excel file using Aspose.Cells
-// Developer Intent: Automatically re‑apply password protection to an Aspose.Cells workbook whenever its content is altered.
-// Use Cases: Create a new workbook, protect it with a password, and store it securely. | Open an existing encrypted workbook, edit data, and save it while preserving or upgrading the encryption. | Confirm that a re‑saved workbook still requires the password to open.
-// AI Prompts: Show C# code that automatically re‑encrypts an Aspose.Cells workbook after each cell update, including optional stronger encryption settings. | Provide an example of loading an encrypted Excel file with Aspose.Cells, modifying it, re‑applying the password, and verifying the protection. | Explain how to detect workbook changes in Aspose.Cells and trigger re‑encryption programmatically.
+// Title: How to automatically re‑encrypt an Excel workbook after each modification using Aspose.Cells for .NET
+// AI Prompts: Create a C# wrapper that intercepts any workbook change (cell update, worksheet addition) and re‑applies Workbook.Settings.Password before saving. | Extend the SecureWorkbook class so that it calls the encryption routine automatically after each edit operation. | Show a complete example of loading an encrypted XLSX, modifying data, and saving it while preserving the original password with Aspose.Cells.
+// Common Searches: Aspose.Cells .NET re‑encrypt Excel file after editing without losing password | C# automatically apply password protection when saving a modified workbook with Aspose.Cells | how to preserve workbook encryption when adding worksheets using Aspose.Cells | load encrypted XLSX, change cell value, and save with same password in C# Aspose.Cells
+// Tags: auto re‑encrypt workbook after modification Aspose.Cells | Workbook.Settings.Password encryption C# | save encrypted XLSX with Aspose.Cells | modify protected Excel workbook .NET | secure Excel handling Aspose.Cells wrapper
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving;   // Required for OoxmlSaveOptions (if needed)
 
-namespace AsposeCellsSecurityDemo
+// The SecureWorkbook class loads or creates an XLSX workbook, stores a password, provides methods to edit cells and worksheets, and ensures the workbook is re‑encrypted by setting Workbook.Settings.Password before each Save call, enabling automatic protection after any modification.
+public class SecureWorkbook
 {
-    // Demonstrates how to create a password‑protected workbook, save it, load it with LoadOptions, modify cells, re‑apply the password (or stronger encryption via SetEncryptionOptions), and verify that the file remains encrypted—all in C# using Aspose.Cells.
-    public class AutomaticReEncryptionDemo
+    private Workbook _workbook;
+    private readonly string _password;
+
+    // Load an existing workbook and apply initial encryption
+    public SecureWorkbook(string filePath, string password)
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // -----------------------------------------------------------------
-                // 1. Create a new workbook and set an initial password
-                // -----------------------------------------------------------------
-                Workbook workbook = new Workbook();                     // create
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Original data");
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException($"File not found: {filePath}");
 
-                // Set password to encrypt the workbook
-                string password = "SecurePwd123";
-                workbook.Settings.Password = password;                 // encrypt
-
-                // Save the encrypted workbook
-                string encryptedPath = "EncryptedWorkbook.xlsx";
-                workbook.Save(encryptedPath);                           // save
-
-                // -----------------------------------------------------------------
-                // 2. Load the encrypted workbook, modify it, and re‑encrypt
-                // -----------------------------------------------------------------
-                if (!File.Exists(encryptedPath))
-                    throw new FileNotFoundException($"File not found: {encryptedPath}");
-
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    Password = password                                 // load with password
-                };
-                Workbook loadedWorkbook = new Workbook(encryptedPath, loadOptions); // load
-
-                // Perform some modifications
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-                loadedSheet.Cells["B2"].PutValue("Modified after load");
-
-                // Re‑apply encryption after modification
-                // (re‑setting the password forces re‑encryption)
-                loadedWorkbook.Settings.Password = password;
-
-                // Optionally set stronger encryption options
-                loadedWorkbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-                // Save the re‑encrypted workbook
-                string reEncryptedPath = "ReEncryptedWorkbook.xlsx";
-                loadedWorkbook.Save(reEncryptedPath);                  // save
-
-                // -----------------------------------------------------------------
-                // 3. Verify that the workbook is still encrypted
-                // -----------------------------------------------------------------
-                if (!File.Exists(reEncryptedPath))
-                    throw new FileNotFoundException($"File not found: {reEncryptedPath}");
-
-                LoadOptions verifyOptions = new LoadOptions { Password = password };
-                Workbook verifyWorkbook = new Workbook(reEncryptedPath, verifyOptions);
-                Console.WriteLine("Verification cell value: " +
-                    verifyWorkbook.Worksheets[0].Cells["B2"].Value);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Load encrypted workbook using the provided password
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx) { Password = password };
+            _workbook = new Workbook(filePath, loadOptions);
+            _password = password;
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Failed to load workbook.", ex);
         }
     }
 
-    // Entry point for the application
-    public class Program
+    // Create a new workbook with encryption
+    public SecureWorkbook(string password)
     {
-        public static void Main(string[] args)
+        try
         {
-            AutomaticReEncryptionDemo.Run();
+            _workbook = new Workbook();
+            _password = password;
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Failed to create workbook.", ex);
+        }
+    }
+
+    // Example modification: set a value in a cell
+    public void SetCellValue(string sheetName, int row, int column, object value)
+    {
+        try
+        {
+            Worksheet sheet = _workbook.Worksheets[sheetName];
+            if (sheet == null)
+                throw new ArgumentException($"Sheet '{sheetName}' does not exist.");
+
+            sheet.Cells[row, column].PutValue(value);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Failed to set cell value.", ex);
+        }
+    }
+
+    // Example modification: add a new worksheet
+    public void AddWorksheet(string sheetName)
+    {
+        try
+        {
+            _workbook.Worksheets.Add(sheetName);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Failed to add worksheet.", ex);
+        }
+    }
+
+    // Save the workbook to a file with encryption applied
+    public void Save(string outputPath)
+    {
+        try
+        {
+            // Apply password protection before saving
+            _workbook.Settings.Password = _password;
+
+            // Save as XLSX (encryption is handled by the Settings.Password)
+            _workbook.Save(outputPath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException($"Failed to save workbook to '{outputPath}'.", ex);
+        }
+    }
+
+    // Expose the underlying workbook for advanced operations
+    public Workbook Workbook => _workbook;
+}
+
+// Usage example
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            string password = "StrongPassword123";
+
+            // Create a new encrypted workbook
+            var sb = new SecureWorkbook(password);
+            sb.AddWorksheet("Data");
+            sb.SetCellValue("Data", 0, 0, "Hello");
+            sb.SetCellValue("Data", 1, 0, 12345);
+            sb.Save("EncryptedWorkbook.xlsx");
+
+            // Load an existing encrypted workbook, modify, and re‑save
+            var sbLoaded = new SecureWorkbook("EncryptedWorkbook.xlsx", password);
+            sbLoaded.SetCellValue("Data", 2, 0, DateTime.Now);
+            sbLoaded.Save("EncryptedWorkbook_Modified.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

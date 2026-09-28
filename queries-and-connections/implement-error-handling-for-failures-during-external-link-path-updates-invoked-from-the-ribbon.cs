@@ -1,10 +1,7 @@
-// Title: C# – Robust error handling for updating external link paths via Aspose.Cells ribbon command
-// Description: Loads an Excel workbook, iterates through its ExternalLinkCollection, replaces the folder segment of each link's DataSource, assigns the new path, and saves the file. Each step (load, per‑link update, save) is wrapped in try‑catch blocks that log errors and allow processing to continue when invoked from a ribbon UI.
-// Keywords: Aspose.Cells external link update | C# error handling Excel links | replace DataSource path Aspose | ribbon command workbook save | exception handling external links
-// Common Searches: how to handle exceptions when updating external links in Aspose.Cells | C# replace folder in external link DataSource with try‑catch | save workbook after modifying external links Aspose.Cells | ribbon button update external link paths error handling
-// Developer Intent: Add layered try‑catch logic to safely modify external link paths and persist the workbook without crashing the ribbon UI.
-// Use Cases: Update all external link paths in a workbook while skipping links that cause errors. | Log detailed messages for each failed link update and still save the modified file. | Provide a resilient ribbon‑triggered routine that handles load, per‑link, and save failures separately.
-// AI Prompts: Write C# code that loops through workbook.Worksheets.ExternalLinks, replaces a base folder in each DataSource, and logs index‑specific exceptions. | Show a pattern for loading an Excel file, updating external link paths, and saving it with distinct try‑catch blocks suitable for a ribbon command. | Suggest ways to display per‑link update errors in a UI dialog or write them to a log file when the path replacement fails.
+// Title: Add per‑link error handling when updating external link paths from a ribbon command using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, iterates through workbook.Worksheets.ExternalLinks, replaces each ExternalLink.DataSource with a new folder path, and encloses the load, update, and save operations in try‑catch blocks to capture and log errors. | Create a routine that writes any exception thrown while updating an ExternalLink.DataSource to a log file and then continues processing the remaining links. | Write a validation method that checks whether the transformed external link path exists on disk before assigning it, and throws a custom InvalidExternalLinkPathException if the check fails.
+// Common Searches: how to handle exceptions when modifying external links in an Excel workbook with Aspose.Cells C# | Aspose.Cells update external link DataSource path from ribbon button with error handling | C# sample for batch updating external link paths and logging failures using Aspose.Cells | prevent workbook save failure after external link changes in Aspose.Cells .NET
+// Tags: Aspose.Cells external link path update with error handling | C# try-catch workbook load Aspose.Cells | validate external link DataSource existence .NET | log external link update failures Aspose.Cells | ensure output directory before saving workbook C#
 
 using System;
 using System.IO;
@@ -12,78 +9,109 @@ using Aspose.Cells;
 
 namespace AsposeCellsExternalLinkUpdate
 {
-    // Loads an Excel workbook, iterates through its ExternalLinkCollection, replaces the folder segment of each link's DataSource, assigns the new path, and saves the file. Each step (load, per‑link update, save) is wrapped in try‑catch blocks that log errors and allow processing to continue when invoked from a ribbon UI.
-    public class UpdateExternalLinkPaths
+    // Demonstrates loading a workbook, safely iterating its ExternalLinkCollection, updating each ExternalLink.DataSource with per‑link try‑catch handling, validating new paths, logging any errors, ensuring the output folder exists, saving the workbook, and disposing resources.
+    public class RibbonExternalLinkUpdater
     {
-        public static void Run()
+        /// <param name="inputPath">Path to the workbook to be processed.</param>
+        /// <param name="outputPath">Path where the updated workbook will be saved.</param>
+        public static void Run(string inputPath, string outputPath)
         {
-            const string inputPath = "InputWorkbook.xlsx";
-            const string outputPath = "OutputWorkbook.xlsx";
-
-            // Verify input file exists
+            // Verify input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
+                Console.WriteLine($"Input file not found: '{inputPath}'.");
                 return;
             }
 
-            Workbook workbook;
+            Workbook workbook = null;
+
+            // Load the workbook
             try
             {
-                // Load the workbook
                 workbook = new Workbook(inputPath);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
+                Console.WriteLine($"Failed to load workbook '{inputPath}': {ex.Message}");
                 return;
             }
 
-            // Get the collection of external links
+            // Get the external links collection
             ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
 
-            // Iterate through all external links and update their paths
+            // Iterate through each external link and attempt to update its path
             for (int i = 0; i < externalLinks.Count; i++)
             {
+                ExternalLink link = externalLinks[i];
+                string originalPath = link.DataSource;
+
                 try
                 {
-                    // Example: replace an old base folder with a new one
-                    string oldPath = externalLinks[i].DataSource;
-                    string newPath = oldPath.Replace(@"C:\OldFolder\", @"D:\NewFolder\");
+                    // Example transformation: replace old base folder with new base folder
+                    // Adjust this logic to match the actual path update requirements.
+                    string updatedPath = originalPath.Replace(@"C:\OldFolder\", @"D:\NewFolder\");
 
-                    // Assign the new path
-                    externalLinks[i].DataSource = newPath;
-                    externalLinks[i].OriginalDataSource = newPath;
-
-                    Console.WriteLine($"Link {i} updated successfully: {newPath}");
+                    // If the path actually changes, assign the new value
+                    if (!string.Equals(originalPath, updatedPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        link.DataSource = updatedPath;
+                        Console.WriteLine($"External link {i} path updated from '{originalPath}' to '{updatedPath}'.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"External link {i} path unchanged.");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    // Log the error but continue processing remaining links
-                    Console.WriteLine($"Error updating link at index {i}: {ex.Message}");
+                    // Handle failures for this specific link without aborting the whole process
+                    Console.WriteLine($"Error updating external link at index {i} (original path: '{originalPath}'): {ex.Message}");
                 }
             }
 
+            // Save the workbook
             try
             {
-                // Save the modified workbook
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook to '{outputPath}': {ex.Message}");
+            }
+            finally
+            {
+                // Release resources
+                workbook?.Dispose();
             }
         }
     }
 
-    public class Program
+    // Entry point for the console application
+    public static class Program
     {
         public static void Main(string[] args)
         {
+            // Expecting two arguments: inputPath and outputPath
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: AsposeCellsExternalLinkUpdate <inputPath> <outputPath>");
+                return;
+            }
+
+            string inputPath = args[0];
+            string outputPath = args[1];
+
             try
             {
-                UpdateExternalLinkPaths.Run();
+                RibbonExternalLinkUpdater.Run(inputPath, outputPath);
             }
             catch (Exception ex)
             {

@@ -1,15 +1,12 @@
-// Title: C# Aspose.Cells – Create Workbook, Add “SalesData” Sheet, Populate Monthly Sales, Save as XLSX
-// Description: Shows how to instantiate an Aspose.Cells Workbook in C#, rename the default worksheet to SalesData, add Month and Sales headers, fill rows with sample data, and save the file as SalesReport.xlsx.
-// Keywords: Aspose.Cells | C# | Create Workbook | Add Worksheet | Populate Cells | Save XLSX | Sales data | Excel automation | Write to Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells create workbook C# | How to add worksheet and write data with Aspose.Cells | Save Excel file as XLSX using Aspose.Cells .NET | Write monthly sales data to Excel with Aspose | C# code to generate sales report Excel Aspose.Cells
-// Developer Intent: Generate and save an Excel workbook containing a SalesData worksheet with month‑wise sales figures.
-// Use Cases: Automated monthly sales reporting for finance teams | Preparing data source for Excel chart generation | Exporting sales figures from a .NET application to Excel for downstream BI tools | Creating template‑driven Excel files for client deliveries | Batch generation of sales reports across multiple periods
-// AI Prompts: Add a line chart to the SalesData sheet that plots months versus sales. | Format the header row with bold text, white font, and a dark blue background. | Include a formula that calculates the total sales and place it below the data. | Convert the workbook to CSV while preserving the SalesData sheet. | Modify the code to read month and sales values from a JSON file instead of hard‑coded arrays.
+// Title: Create an Excel workbook with a 'SalesData' worksheet and fill cells A1:C4 with product, region, and sales values using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to instantiate a Workbook, add a worksheet named 'SalesData', write a header row and three rows of product‑region‑sales data into cells A1:C4, and save the file as an XLSX. | Show how to programmatically set cell values for product, region, and sales columns in a new Excel file with Aspose.Cells in a .NET console application. | Demonstrate adding a worksheet, populating it with sample sales records, and exporting the workbook to 'SalesData.xlsx' using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# create workbook and add worksheet named SalesData | populate Excel cells A1 to C4 with sample sales data using Aspose.Cells .NET | how to write header row and data rows in Excel with Aspose.Cells C# | save a new Excel file as XLSX with Aspose.Cells in a console app | C# example for inserting product, region, sales values into an Excel sheet using Aspose.Cells
+// Tags: create workbook Aspose.Cells C# | add worksheet and populate cells Aspose.Cells | write header and data rows Excel Aspose.Cells | save workbook as XLSX Aspose.Cells | sample sales dataset Excel generation C#
 
 using System;
 using Aspose.Cells;
 
-// Shows how to instantiate an Aspose.Cells Workbook in C#, rename the default worksheet to SalesData, add Month and Sales headers, fill rows with sample data, and save the file as SalesReport.xlsx.
+// // Creates a new Excel workbook, adds a 'SalesData' worksheet, writes a header and three rows of product/region/sales data into cells A1:C4, and saves the file as SalesData.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -22,23 +19,24 @@ class Program
         sheet.Name = "SalesData";
 
         // Add header row
-        sheet.Cells["A1"].PutValue("Month");
-        sheet.Cells["B1"].PutValue("Sales");
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Region");
+        sheet.Cells["C1"].PutValue("Sales");
 
-        // Sample sales data
-        string[] months = { "January", "February", "March", "April", "May" };
-        double[] sales = { 12000.5, 15000, 13000, 17000, 16000 };
+        // Populate sample sales data
+        sheet.Cells["A2"].PutValue("Laptop");
+        sheet.Cells["B2"].PutValue("North");
+        sheet.Cells["C2"].PutValue(1200);
 
-        // Populate the worksheet with the data
-        for (int i = 0; i < months.Length; i++)
-        {
-            // Column A (0-indexed) for month names
-            sheet.Cells[i + 2, 0].PutValue(months[i]);
-            // Column B (0-indexed) for sales figures
-            sheet.Cells[i + 2, 1].PutValue(sales[i]);
-        }
+        sheet.Cells["A3"].PutValue("Smartphone");
+        sheet.Cells["B3"].PutValue("South");
+        sheet.Cells["C3"].PutValue(850);
 
-        // Save the workbook to a file in XLSX format
-        workbook.Save("SalesReport.xlsx", SaveFormat.Xlsx);
+        sheet.Cells["A4"].PutValue("Tablet");
+        sheet.Cells["B4"].PutValue("East");
+        sheet.Cells["C4"].PutValue(430);
+
+        // Save the workbook to an XLSX file
+        workbook.Save("SalesData.xlsx", SaveFormat.Xlsx);
     }
 }

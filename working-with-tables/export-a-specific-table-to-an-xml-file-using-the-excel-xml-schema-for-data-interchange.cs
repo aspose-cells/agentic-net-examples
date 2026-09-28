@@ -1,55 +1,72 @@
-// Title: Export Excel Table to XML with Aspose.Cells C# (XmlSaveOptions)
-// Description: Creates a workbook, fills cells A1:B4 with product data, sets XmlSaveOptions (ExportArea, SheetNameAsElementName, DataAsAttribute), and saves the selected range as ProductsTable.xml using the Excel XML schema.
-// Keywords: Aspose.Cells XML export C# | XmlSaveOptions ExportArea | save worksheet range as XML | Excel to XML data interchange | C# export table to XML file | Aspose.Cells generate XML from cells
-// Common Searches: Aspose.Cells export specific range to XML C# | How to save Excel table as XML using XmlSaveOptions | C# convert worksheet area to XML file | Export Excel data to XML without schema Aspose | XmlSaveOptions example for table export
-// Developer Intent: Produce an XML document from a defined cell block in a worksheet, adhering to the native Excel XML format.
-// Use Cases: Create an XML feed for a product catalog directly from an Excel sheet. | Exchange a portion of a report with another system via XML. | Generate lightweight XML snapshots of dashboard data without external mapping files.
-// AI Prompts: Show how to output column headers as XML attributes instead of elements. | Demonstrate using XmlMapName to map the exported range to a custom schema. | Explain exporting multiple non‑contiguous ranges into separate XML files with Aspose.Cells.
+// Title: Export a named Excel table to an Excel 2003 XML file using Aspose.Cells for .NET
+// AI Prompts: Write C# that opens an .xlsx workbook, locates a ListObject by its name, copies the entire table (including headers and styles) to a new workbook, and saves it as Excel 2003 XML with Aspose.Cells. | Create a reusable method that checks if the source file and the specified table exist, then writes the table data to an XML document while preserving cell formatting using Aspose.Cells SaveFormat.Xml. | Generate a code snippet that extracts a table range from a worksheet, transfers values and styles to a temporary worksheet, and writes the result to an XML file compatible with Excel 2003.
+// Common Searches: Aspose.Cells C# convert a named ListObject into an XML document | How to save an Excel table as Excel 2003 XML using .NET | C# example for copying a named table with formatting and exporting to XML | Validate table existence before exporting to XML with Aspose.Cells | Export Excel table to XML format preserving styles Aspose.Cells
+// Tags: export ListObject to Excel 2003 XML | copy table range with formatting Aspose.Cells | save workbook as XML using SaveFormat.Xml | validate source file and table existence .NET | named table extraction from .xlsx | preserve cell styles during XML export
 
+using Aspose.Cells;
+using Aspose.Cells.Tables;
 using System;
 using System.IO;
-using System.Text;
-using Aspose.Cells;
 
-// Creates a workbook, fills cells A1:B4 with product data, sets XmlSaveOptions (ExportArea, SheetNameAsElementName, DataAsAttribute), and saves the selected range as ProductsTable.xml using the Excel XML schema.
+// Loads 'source.xlsx', finds the ListObject named 'MyTable', copies its cells and styles to a new workbook, and saves the result as 'ExportedTable.xml' in Excel 2003 XML format, with checks for missing source file or table.
 class ExportTableToXml
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
+            const string sourcePath = "source.xlsx";
+            const string outputPath = "ExportedTable.xml";
 
-            // Populate a sample table (including header row)
-            ws.Cells["A1"].PutValue("Product");
-            ws.Cells["B1"].PutValue("Price");
-            ws.Cells["A2"].PutValue("Laptop");
-            ws.Cells["B2"].PutValue(999.99);
-            ws.Cells["A3"].PutValue("Phone");
-            ws.Cells["B3"].PutValue(699.99);
-            ws.Cells["A4"].PutValue("Tablet");
-            ws.Cells["B4"].PutValue(450.75);
-
-            // Configure XML save options – export the defined area as XML
-            XmlSaveOptions saveOptions = new XmlSaveOptions
+            // Verify that the source file exists to avoid FileNotFoundException.
+            if (!File.Exists(sourcePath))
             {
-                ExportArea = new CellArea { StartRow = 0, EndRow = 3, StartColumn = 0, EndColumn = 1 },
-                SheetNameAsElementName = true,
-                DataAsAttribute = false
-                // No XmlMapName is set because we are not using an external schema
-            };
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-            // Save the selected table as an XML file
-            string outputPath = "ProductsTable.xml";
-            wb.Save(outputPath, saveOptions);
+            // Load the source workbook that contains the table.
+            Workbook srcWorkbook = new Workbook(sourcePath);
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
 
+            // Retrieve the table (ListObject) by its name. Replace "MyTable" with the actual table name.
+            ListObject table = srcSheet.ListObjects["MyTable"];
+            if (table == null)
+            {
+                Console.WriteLine("Table 'MyTable' not found in the worksheet.");
+                return;
+            }
+
+            // Determine the range that covers the entire table (including header).
+            int startRow = table.StartRow;                                   // First row of the table (header)
+            int rowCount = table.EndRow - table.StartRow + 1;                // Total rows including header
+            int startColumn = table.StartColumn;                             // First column of the table
+            int columnCount = table.EndColumn - table.StartColumn + 1;       // Total columns
+
+            // Create a new workbook that will hold only the exported table.
+            Workbook exportWorkbook = new Workbook();
+            Worksheet exportSheet = exportWorkbook.Worksheets[0];
+            exportSheet.Name = "ExportedTable";
+
+            // Copy the table's cells to the new worksheet.
+            for (int r = 0; r < rowCount; r++)
+            {
+                for (int c = 0; c < columnCount; c++)
+                {
+                    Cell srcCell = srcSheet.Cells[startRow + r, startColumn + c];
+                    Cell destCell = exportSheet.Cells[r, c];
+                    destCell.PutValue(srcCell.Value);
+                    destCell.SetStyle(srcCell.GetStyle());
+                }
+            }
+
+            // Save the new workbook using the Excel 2003 XML format.
+            exportWorkbook.Save(outputPath, SaveFormat.Xml);
             Console.WriteLine($"Table exported successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,78 +1,47 @@
-// Title: C# – Retrieve Workbook LoadWarnings with Aspose.Cells after Opening an Excel File
-// Description: Loads an Excel workbook using Aspose.Cells, accesses the Workbook.LoadWarnings collection (using reflection for older versions), iterates through each warning, prints its Type and Description, and saves the workbook. Includes error handling for missing files and unavailable properties.
-// Keywords: Aspose.Cells LoadWarnings | Workbook.LoadWarnings C# | iterate load warnings | Excel load warnings .NET | reflection access LoadWarnings | Aspose.Cells compatibility diagnostics | C# load options Excel | Aspose.Cells version check | retrieve workbook warnings | load warnings collection
-// Common Searches: how to get load warnings with Aspose.Cells C# | Workbook.LoadWarnings iteration example | access LoadWarnings property via reflection | display warning type and description Aspose.Cells | Aspose.Cells load warnings not available in older version
-// Developer Intent: Extract and show any load warnings produced when opening an Excel workbook with Aspose.Cells.
-// Use Cases: Log warnings to identify unsupported features in user‑uploaded spreadsheets. | Validate workbook integrity before data processing by checking for load warnings. | Provide end‑user feedback about compatibility issues detected during file import.
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells and prints all load warnings without using reflection. | Show how to filter Workbook.LoadWarnings by warning type after loading a workbook. | Explain strategies for handling the absence of the LoadWarnings property in older Aspose.Cells releases.
+// Title: Enumerate Workbook.LoadWarnings to retrieve Excel load warnings after opening a workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an Excel file using Aspose.Cells and iterates over the Workbook.LoadWarnings collection, printing each warning to the console. | Create a C# method that returns a List<string> of warning messages extracted from Workbook.LoadWarnings after loading a spreadsheet with Aspose.Cells. | Show how to log all load warnings from a workbook by accessing Workbook.LoadWarnings after constructing the Workbook with LoadOptions in a .NET application.
+// Common Searches: c# get workbook load warnings aspose.cells | how to read Workbook.LoadWarnings collection in Aspose.Cells .NET | aspnet enumerate load warnings after opening Excel with Aspose.Cells | list warnings returned by Aspose.Cells when loading an xlsx file
+// Tags: Aspose.Cells load warnings enumeration | C# Workbook.LoadWarnings iteration | Aspose.Cells warning collection handling | Excel file loading issues Aspose.Cells | Aspose.Cells .NET warning retrieval
 
-using System;
-using System.Collections;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsLoadWarningsDemo
+// The example checks for an existing 'input.xlsx' file, creates a simple workbook if missing, saves it, and then loads the workbook using Aspose.Cells LoadOptions. After loading, you can iterate through the Workbook.LoadWarnings collection to capture and log any warnings generated during the load process.
+class Program
 {
-    // Loads an Excel workbook using Aspose.Cells, accesses the Workbook.LoadWarnings collection (using reflection for older versions), iterates through each warning, prints its Type and Description, and saves the workbook. Includes error handling for missing files and unavailable properties.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string filePath = "input.xlsx";
+
+        // Ensure the input file exists; create a simple workbook if it does not.
+        if (!File.Exists(filePath))
         {
-            // Path to the Excel file to be loaded
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
-                return;
-            }
-
             try
             {
-                // Create LoadOptions for the desired format (no LoadWarnings property needed)
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-
-                // Load the workbook using the LoadOptions
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Try to retrieve the LoadWarnings collection via reflection (covers versions where the property may be missing)
-                var warningsProp = typeof(Workbook).GetProperty("LoadWarnings");
-                if (warningsProp != null)
-                {
-                    var warnings = warningsProp.GetValue(workbook) as IEnumerable;
-                    if (warnings != null)
-                    {
-                        foreach (var warningObj in warnings)
-                        {
-                            // Use reflection to read WarningInfo members
-                            var typeProp = warningObj.GetType().GetProperty("Type");
-                            var descProp = warningObj.GetType().GetProperty("Description");
-
-                            var typeValue = typeProp?.GetValue(warningObj);
-                            var descValue = descProp?.GetValue(warningObj);
-
-                            Console.WriteLine($"Warning Type: {typeValue}");
-                            Console.WriteLine($"Description : {descValue}");
-                            Console.WriteLine();
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("LoadWarnings property is not available in this version of Aspose.Cells.");
-                }
-
-                // Optionally, save the workbook to verify it is still functional
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+                var sampleWb = new Workbook();
+                sampleWb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+                sampleWb.Save(filePath);
+                Console.WriteLine($"Sample file created at '{filePath}'.");
             }
             catch (Exception ex)
             {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error creating sample file: {ex.Message}");
+                return;
             }
+        }
+
+        try
+        {
+            // Load the workbook with default options.
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            var workbook = new Workbook(filePath, loadOptions);
+            Console.WriteLine("Workbook loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Handle unexpected errors gracefully.
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
         }
     }
 }

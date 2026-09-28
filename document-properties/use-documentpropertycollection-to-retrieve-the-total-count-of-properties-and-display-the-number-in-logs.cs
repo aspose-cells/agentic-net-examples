@@ -1,36 +1,37 @@
-// Title: Count and Log Built‑in & Custom Document Properties with Aspose.Cells for .NET (C#)
-// Description: Creates an empty workbook, reads the BuiltInDocumentProperties and CustomDocumentProperties collections, adds their counts, writes the combined total to the console, and optionally saves the file.
-// Keywords: Aspose.Cells document property count | C# Aspose.Cells BuiltInDocumentProperties | Aspose.Cells CustomDocumentProperties | Workbook property total .NET | log document properties Aspose | Aspose.Cells API count properties | GitHub Aspose.Cells examples C#
-// Common Searches: how to count built‑in document properties Aspose.Cells C# | Aspose.Cells get total custom properties | log workbook property count .NET | Aspose.Cells count properties example | C# retrieve document property collection size
-// Developer Intent: Obtain the combined count of built‑in and custom workbook properties and output it.
-// Use Cases: Verify that a generated spreadsheet contains the expected number of metadata entries before distribution. | Create an audit trail that records property counts for compliance or quality checks. | Trigger conditional logic (e.g., add or prune properties) based on the current total count.
-// AI Prompts: Show code to enumerate each document property after calculating the total count with Aspose.Cells. | Generate a JSON log that includes the total property count plus name/value pairs for all properties. | Explain how to handle scenarios where the property count exceeds a predefined limit in Aspose.Cells.
+// Title: Count and Log Custom Document Properties in an Excel Workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook, adds custom document properties, accesses the CustomDocumentProperties collection, reads its Count, and writes the count to the console with proper try‑catch handling. | Show an Aspose.Cells example that uses DocumentPropertyCollection.Count to determine how many custom properties exist in a workbook and logs the result.
+// Common Searches: aspnet count custom document properties in excel using aspose.cells | how to get total number of custom properties from a workbook with Aspose.Cells C# | retrieve and log workbook custom property count Aspose.Cells .NET
+// Tags: Aspose.Cells workbook custom property count | C# log property collection size Aspose.Cells | DocumentPropertyCollection size retrieval Aspose | error handling for property count Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Creates an empty workbook, reads the BuiltInDocumentProperties and CustomDocumentProperties collections, adds their counts, writes the combined total to the console, and optionally saves the file.
+// The program creates a new Workbook, adds two custom document properties, accesses the CustomDocumentProperties collection, obtains its Count, and outputs the total count to the console inside a try‑catch block.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (empty workbook)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Access the built‑in document properties collection
-        DocumentPropertyCollection builtInProps = workbook.BuiltInDocumentProperties;
+            // Add custom document properties
+            workbook.CustomDocumentProperties.Add("Author", "John Doe");
+            workbook.CustomDocumentProperties.Add("Version", 1);
 
-        // Access the custom document properties collection
-        DocumentPropertyCollection customProps = workbook.Worksheets.CustomDocumentProperties;
+            // Retrieve the collection of custom document properties
+            var properties = workbook.CustomDocumentProperties;
 
-        // Retrieve the total number of properties (built‑in + custom)
-        int totalPropertyCount = builtInProps.Count + customProps.Count;
+            // Get the total count of properties
+            int totalCount = properties.Count;
 
-        // Display the count in the console (log)
-        Console.WriteLine($"Total document properties count: {totalPropertyCount}");
-
-        // Save the workbook (optional, demonstrates lifecycle usage)
-        workbook.Save("DocumentPropertiesCount.xlsx");
+            // Log the count to the console
+            Console.WriteLine($"Total document properties count: {totalCount}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

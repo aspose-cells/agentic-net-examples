@@ -1,80 +1,57 @@
-// Title: C# – Export Worksheet Name, TabId, MaxDataRow, MaxDataColumn & ShapeCount to XML with Aspose.Cells
-// Description: A concise C# example that loads an Excel workbook using Aspose.Cells, iterates over every worksheet, captures the sheet name, TabId, zero‑based MaxDataRow, MaxDataColumn, and the number of shapes, then writes these values as attributes of <Worksheet> nodes inside a <WorkbookSummary> XML file.
-// Keywords: Aspose.Cells XML export | C# worksheet metadata | Excel TabId Aspose | MaxDataRow MaxDataColumn | shape count worksheet | .NET Excel to XML | worksheet summary generation
-// Common Searches: Aspose.Cells generate XML summary of worksheets | C# get TabId, MaxDataRow, MaxDataColumn from Excel | export shape count from Excel sheet using Aspose | write worksheet properties to XML in .NET | how to list all worksheets metadata with Aspose.Cells
-// Developer Intent: Create an XML document that lists each worksheet’s name, TabId, last data row, last data column, and shape count using Aspose.Cells for .NET.
-// Use Cases: Produce a lightweight documentation file for workbook structure audits. | Feed worksheet boundaries and embedded object counts into a data‑pipeline without opening the Excel file. | Compare two workbook versions by generating XML summaries and diffing the results to spot added/removed sheets, data ranges, or shapes.
-// AI Prompts: Generate C# code with Aspose.Cells that writes an XML summary of all worksheets, including Name, TabId, MaxDataRow, MaxDataColumn, and ShapeCount attributes. | Show how to modify XmlWriterSettings to add a custom namespace and XSD schema reference to the WorkbookSummary XML. | Extend the example to include each worksheet’s visibility state (Visible, Hidden, VeryHidden) as an extra XML attribute.
+// Title: Generate an XML summary of each worksheet’s name, TabId, MaxDataRow, MaxDataColumn, and shape count with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells that iterates through all worksheets in a workbook and creates an XML document containing the worksheet Name, TabId, MaxDataRow, MaxDataColumn, and ShapeCount attributes. | Add comprehensive error handling to the worksheet summary generator to detect missing input files, insufficient permissions, and to log the full path of the generated XML file. | Extend the XML output schema to also record the number of charts and embedded pictures present on each worksheet.
+// Common Searches: aspocells export worksheet properties to xml c# | how to get worksheet TabId and shape count with Aspose.Cells | retrieve max data row and column indices from Excel sheet using Aspose.Cells | xml report of all worksheets in a .NET console application | list worksheet metadata including shapes and charts using Aspose.Cells
+// Tags: Aspose.Cells export worksheet metadata to XML | C# retrieve worksheet TabId with Aspose.Cells | Aspose.Cells get MaxDataRow and MaxDataColumn | count worksheet shapes Aspose.Cells | generate XML summary of Excel worksheets .NET | Aspose.Cells include chart count in worksheet report
 
 using System;
 using System.IO;
-using System.Xml;
+using System.Xml.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsSummaryDemo
+// Creates an XML file that lists each worksheet's name, TabId, maximum data row/column indices, and shape count from an input Excel workbook using Aspose.Cells for .NET.
+class WorksheetSummaryGenerator
 {
-    // A concise C# example that loads an Excel workbook using Aspose.Cells, iterates over every worksheet, captures the sheet name, TabId, zero‑based MaxDataRow, MaxDataColumn, and the number of shapes, then writes these values as attributes of <Worksheet> nodes inside a <WorkbookSummary> XML file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Path to the Excel file to process
+        string excelPath = "input.xlsx";
+
+        // Path where the XML summary will be saved
+        string xmlOutputPath = "summary.xml";
+
+        // Load the workbook
+        Workbook workbook = new Workbook(excelPath);
+
+        // Create the root element for the XML document
+        XElement root = new XElement("Worksheets");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Path to the source Excel file
-            string excelPath = "input.xlsx";
+            // Gather required information
+            string name = sheet.Name;
+            int tabId = sheet.TabId;
+            int maxDataRow = sheet.Cells.MaxDataRow;       // Zero‑based index of the last row with data
+            int maxDataColumn = sheet.Cells.MaxDataColumn; // Zero‑based index of the last column with data
+            int shapeCount = sheet.Shapes.Count;
 
-            // Path where the XML summary will be saved
-            string xmlOutputPath = "WorkbookSummary.xml";
+            // Build an XML element for the current worksheet
+            XElement sheetElement = new XElement("Worksheet",
+                new XAttribute("Name", name),
+                new XAttribute("TabId", tabId),
+                new XAttribute("MaxDataRow", maxDataRow),
+                new XAttribute("MaxDataColumn", maxDataColumn),
+                new XAttribute("ShapeCount", shapeCount)
+            );
 
-            GenerateWorkbookSummary(excelPath, xmlOutputPath);
+            // Add the worksheet element to the root
+            root.Add(sheetElement);
         }
 
-        /// <param name="excelPath">Path to the Excel workbook.</param>
-        /// <param name="xmlOutputPath">Path to save the generated XML summary.</param>
-        static void GenerateWorkbookSummary(string excelPath, string xmlOutputPath)
-        {
-            // Load the workbook using Aspose.Cells (lifecycle rule: create/load)
-            Workbook workbook = new Workbook(excelPath);
+        // Create the XDocument and save it to the specified path
+        XDocument doc = new XDocument(new XDeclaration("1.0", "utf-8", "yes"), root);
+        doc.Save(xmlOutputPath);
 
-            // Prepare an XmlWriter with indentation for readability
-            XmlWriterSettings settings = new XmlWriterSettings
-            {
-                Indent = true,
-                IndentChars = "    ",
-                NewLineOnAttributes = false
-            };
-
-            using (XmlWriter writer = XmlWriter.Create(xmlOutputPath, settings))
-            {
-                // Start the root element
-                writer.WriteStartDocument();
-                writer.WriteStartElement("WorkbookSummary");
-
-                // Iterate through all worksheets in the workbook
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Retrieve required properties
-                    string sheetName = sheet.Name;
-                    int tabId = sheet.TabId;
-                    int maxDataRow = sheet.Cells.MaxDataRow;       // Zero‑based index of the last row containing data
-                    int maxDataColumn = sheet.Cells.MaxDataColumn; // Zero‑based index of the last column containing data
-                    int shapeCount = sheet.Shapes.Count;           // Number of drawing shapes (pictures, charts, etc.)
-
-                    // Write a <Worksheet> element with attributes for each property
-                    writer.WriteStartElement("Worksheet");
-                    writer.WriteAttributeString("Name", sheetName);
-                    writer.WriteAttributeString("TabId", tabId.ToString());
-                    writer.WriteAttributeString("MaxDataRow", maxDataRow.ToString());
-                    writer.WriteAttributeString("MaxDataColumn", maxDataColumn.ToString());
-                    writer.WriteAttributeString("ShapeCount", shapeCount.ToString());
-                    writer.WriteEndElement(); // </Worksheet>
-                }
-
-                // Close the root element
-                writer.WriteEndElement(); // </WorkbookSummary>
-                writer.WriteEndDocument();
-            }
-
-            // Optionally, inform the user
-            Console.WriteLine($"Workbook summary saved to '{xmlOutputPath}'.");
-        }
+        Console.WriteLine($"Worksheet summary saved to '{Path.GetFullPath(xmlOutputPath)}'.");
     }
 }

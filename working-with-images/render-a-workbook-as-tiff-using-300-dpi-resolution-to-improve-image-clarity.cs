@@ -1,56 +1,72 @@
-// Title: Export an Aspose.Cells Workbook to a High‑Resolution Multi‑Page TIFF (300 DPI) in C#
-// Description: Creates a workbook, fills sample data, configures ImageOrPrintOptions for TIFF output with 300 DPI horizontal and vertical resolution and LZW compression, then uses WorkbookRender to generate a multi‑page TIFF file.
-// Keywords: Aspose.Cells TIFF export C# | 300 DPI TIFF Aspose | WorkbookRender multi‑page TIFF | ImageOrPrintOptions resolution | LZW compression TIFF .NET | Excel to high‑resolution image | Aspose.Cells render options | C# export Excel as TIFF
-// Common Searches: how to save Aspose.Cells workbook as 300 DPI TIFF | Aspose.Cells render multi‑page TIFF with LZW | C# set horizontal and vertical resolution for TIFF export | export Excel sheet to high‑resolution TIFF using Aspose | Aspose.Cells TIFF compression options
-// Developer Intent: Generate a high‑resolution, multi‑page TIFF image from an Excel workbook using Aspose.Cells in .NET.
-// Use Cases: Print‑ready reports that require 300 DPI TIFF for publishing. | Archiving spreadsheets as lossless TIFF images for compliance. | Creating thumbnail previews of worksheets for document portals.
-// AI Prompts: Show how to render only the second worksheet to a 300 DPI TIFF. | Give code that saves each worksheet as a separate TIFF file with individual DPI settings. | Explain how to switch the TIFF compression to CCITT Group 4 while keeping 300 DPI resolution.
+// Title: Export each worksheet page of an Excel file to separate 300 DPI TIFF images using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, sets ImageOrPrintOptions to 300 dpi, and saves every worksheet page as an individual TIFF file. | Show how to use SheetRender together with ImageOrPrintOptions to generate high‑resolution TIFF images for all sheets and pages in a workbook. | Add error handling that checks for a missing input file and sanitizes worksheet names before creating TIFF output files.
+// Common Searches: Aspose.Cells C# export Excel worksheets to 300 DPI TIFF files | How to render each sheet page as a separate TIFF using Aspose.Cells .NET | Set DPI for TIFF output when converting .xlsx with Aspose.Cells | Generate multi‑page TIFF from Excel workbook with high resolution using Aspose.Cells
+// Tags: Aspose.Cells ImageOrPrintOptions DPI configuration | Aspose.Cells SheetRender multi‑page TIFF export | C# high‑resolution TIFF generation from Excel | safe worksheet name for file output Aspose.Cells | 300 DPI TIFF export from .xlsx using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
+using System.Drawing.Imaging;
 
-namespace AsposeCellsTiffRenderDemo
+// Loads an Excel workbook, configures ImageOrPrintOptions to 300 dpi, iterates through all worksheets and their pages with SheetRender, and saves each page as an individual TIFF file using sanitized sheet names, with basic error handling for missing files.
+class WorkbookToTiff
 {
-    // Creates a workbook, fills sample data, configures ImageOrPrintOptions for TIFF output with 300 DPI horizontal and vertical resolution and LZW compression, then uses WorkbookRender to generate a multi‑page TIFF file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Console.WriteLine($"Input file '{inputPath}' not found.");
+            return;
+        }
 
-            // Populate the worksheet with sample data
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF Rendering Demo");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["B1"].PutValue(12345);
-            sheet.Cells["B2"].PutValue(67890);
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure image rendering options for TIFF output
-            ImageOrPrintOptions options = new ImageOrPrintOptions
+            // Set up image rendering options for TIFF output at 300 DPI
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // Specify TIFF as the output image type
-                ImageType = ImageType.Tiff,
-                // Set resolution to 300 DPI for higher clarity
+                // ImageFormat is inferred from the output file extension, so we omit it
                 HorizontalResolution = 300,
-                VerticalResolution = 300,
-                // Optional: choose a compression method (LZW is lossless)
-                TiffCompression = TiffCompression.CompressionLZW
+                VerticalResolution = 300
             };
 
-            // Create a workbook renderer with the configured options
-            WorkbookRender renderer = new WorkbookRender(workbook, options);
+            // Process each worksheet in the workbook
+            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
+            {
+                Worksheet sheet = workbook.Worksheets[sheetIndex];
 
-            // Render the entire workbook to a multi‑page TIFF file
-            string outputPath = "RenderedWorkbook.tiff";
-            renderer.ToImage(outputPath);
+                // Render the worksheet using the defined options
+                SheetRender sheetRender = new SheetRender(sheet, imgOptions);
 
-            // Clean up resources
-            renderer.Dispose();
+                // Save each page of the worksheet as a separate TIFF file
+                for (int pageIndex = 0; pageIndex < sheetRender.PageCount; pageIndex++)
+                {
+                    // Create a safe file name for the output
+                    string safeSheetName = string.Concat(sheet.Name.Split(Path.GetInvalidFileNameChars()));
+                    string outputFile = $"output_{safeSheetName}_page{pageIndex + 1}.tiff";
 
-            Console.WriteLine($"Workbook successfully rendered to TIFF at: {outputPath}");
+                    try
+                    {
+                        sheetRender.ToImage(pageIndex, outputFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to save page {pageIndex + 1} of sheet '{sheet.Name}': {ex.Message}");
+                    }
+                }
+            }
+
+            Console.WriteLine("Workbook has been rendered to TIFF images at 300 DPI.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

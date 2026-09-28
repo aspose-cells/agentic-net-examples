@@ -1,74 +1,105 @@
-// Title: C# – Detect Header‑Only Worksheets and Flag Them with a Custom Property using Aspose.Cells
-// Description: Loads a workbook, scans each worksheet, and identifies sheets where only the first row contains data. When such a sheet is found, a custom property "NeedsReview" is added and the worksheet name, header row index, and column count are logged before saving the file.
-// Keywords: Aspose.Cells header detection C# | flag worksheet needs review | custom property Aspose.Cells | MaxDataRow MaxDataColumn Excel .NET | identify empty data rows Excel | C# Excel worksheet validation | log worksheet details Aspose.Cells
-// Common Searches: How to find worksheets that only have a header row with Aspose.Cells | Add a custom property to mark Excel sheets for review in .NET | Log name and column count of header‑only worksheets using C# | Detect empty data rows in Excel workbooks with Aspose.Cells
-// Developer Intent: Find worksheets that contain only a header row, mark them for review, and output their key details.
-// Use Cases: Automatically skip or flag sheets that lack data before running analytics pipelines. | Create a pre‑publish audit report listing all header‑only worksheets in a workbook. | Route flagged sheets to a data‑quality team via the "NeedsReview" property.
-// AI Prompts: Generate C# code with Aspose.Cells that scans every worksheet, detects if only row 0 has values, adds a custom property "NeedsReview" set to true, and prints the sheet name and column count. | Show how to use MaxDataRow and MaxDataColumn to determine whether a worksheet consists solely of a header row in Aspose.Cells for .NET. | Explain a workflow that flags header‑only worksheets with a custom property and logs their details for downstream processing.
+// Title: Identify and log Excel worksheets that contain only header rows using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that opens an .xlsx workbook, scans each worksheet, detects sheets where only the first row has data, and writes the sheet names with a timestamp to a text log file. | Create a .NET method that returns a list of worksheet names that have no data beyond the header row and saves a review report to a specified path.
+// Common Searches: Aspose.Cells C# find worksheets with only header row | how to generate a log of Excel sheets that contain only column headings using Aspose.Cells | detect Excel worksheets that have no data rows beyond the first row in .NET | flag header‑only worksheets in an .xlsx file and export a report | C# scan workbook for sheets with only header data and write to text file
+// Tags: Aspose.Cells detect header‑only worksheets | C# scan workbook for empty data rows | generate review log for Excel sheets | log header‑only worksheets .NET | Worksheet MaxDataRow usage Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetHeaderDetection
+namespace WorksheetHeaderChecker
 {
-    // Loads a workbook, scans each worksheet, and identifies sheets where only the first row contains data. When such a sheet is found, a custom property "NeedsReview" is added and the worksheet name, header row index, and column count are logged before saving the file.
+    // The example loads an Excel workbook with Aspose.Cells, iterates through each worksheet, uses MaxDataRow/MaxDataColumn to determine if only the first row contains data, collects those sheet names, and writes a timestamped report to both the console and a text file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.xlsx";
+            // Input Excel file path
+            string inputPath = @"C:\Data\InputWorkbook.xlsx";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
+            // Output log file path
+            string logPath = @"C:\Data\HeaderReviewLog.txt";
 
             try
             {
-                // Load the existing workbook
+                // Verify input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook using Aspose.Cells
                 Workbook workbook = new Workbook(inputPath);
 
-                // Iterate through all worksheets in the workbook
+                // List to hold worksheets that contain only header rows
+                List<string> headerOnlySheets = new List<string>();
+
+                // Iterate through each worksheet in the workbook
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Determine the last row that contains any data (zero‑based index)
-                    int lastDataRow = sheet.Cells.MaxDataRow;
+                    // Determine the last row and column that contain data (zero‑based indices)
+                    int maxDataRow = sheet.Cells.MaxDataRow;
+                    int maxDataColumn = sheet.Cells.MaxDataColumn;
 
-                    // Check if the first row has any non‑empty cells
-                    bool firstRowHasData = false;
-                    for (int col = 0; col <= sheet.Cells.MaxDataColumn; col++)
+                    // Skip completely empty worksheets
+                    if (maxDataRow < 0 || maxDataColumn < 0)
+                        continue;
+
+                    // If the only populated row is the first row (index 0), it's a header‑only sheet
+                    if (maxDataRow == 0)
                     {
-                        if (!string.IsNullOrEmpty(sheet.Cells[0, col].StringValue))
+                        // Verify that the first row actually contains at least one non‑empty cell
+                        bool hasHeaderData = false;
+                        for (int col = 0; col <= maxDataColumn; col++)
                         {
-                            firstRowHasData = true;
-                            break;
+                            Cell cell = sheet.Cells[0, col];
+                            if (cell.Value != null && !string.IsNullOrEmpty(cell.StringValue))
+                            {
+                                hasHeaderData = true;
+                                break;
+                            }
                         }
-                    }
 
-                    // If only the first row contains data, treat it as a header‑only sheet
-                    if (firstRowHasData && lastDataRow == 0)
-                    {
-                        // Flag the worksheet for review using a custom property (value stored as string)
-                        sheet.CustomProperties.Add("NeedsReview", "true");
-
-                        // Log relevant details
-                        Console.WriteLine($"Worksheet \"{sheet.Name}\" contains only header rows.");
-                        Console.WriteLine($"  Header row index: 0");
-                        Console.WriteLine($"  Number of columns with data: {sheet.Cells.MaxDataColumn + 1}");
+                        if (hasHeaderData)
+                            headerOnlySheets.Add(sheet.Name);
                     }
                 }
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+                // Prepare log details
+                List<string> logLines = new List<string>
+                {
+                    $"Report generated on {DateTime.Now}",
+                    $"Total worksheets scanned: {workbook.Worksheets.Count}",
+                    $"Worksheets flagged for header‑only content: {headerOnlySheets.Count}",
+                    string.Empty
+                };
+
+                foreach (string sheetName in headerOnlySheets)
+                {
+                    logLines.Add($"- Worksheet \"{sheetName}\" contains only header rows and requires review.");
+                }
+
+                // Write log to console
+                foreach (string line in logLines)
+                {
+                    Console.WriteLine(line);
+                }
+
+                // Ensure the directory for the log file exists
+                string logDir = Path.GetDirectoryName(logPath);
+                if (!string.IsNullOrEmpty(logDir) && !Directory.Exists(logDir))
+                {
+                    Directory.CreateDirectory(logDir);
+                }
+
+                // Write log to file
+                File.WriteAllLines(logPath, logLines);
             }
             catch (Exception ex)
             {
-                // Catch any unexpected errors and display a message
+                // Catch any unexpected errors and display a friendly message
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

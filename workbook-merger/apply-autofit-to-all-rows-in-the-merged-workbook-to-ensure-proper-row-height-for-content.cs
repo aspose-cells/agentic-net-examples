@@ -1,53 +1,37 @@
-// Title: C# – AutoFitRows on Every Sheet of a Merged Workbook Using Aspose.Cells for .NET
-// Description: Load a merged Excel file (or create a new workbook if missing), iterate through all worksheets, apply AutoFitRows to adjust row heights to the content, and save the result as a new XLSX file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells AutoFitRows C# | auto adjust row height .NET | fit rows all worksheets | merged workbook row height | Aspose.Cells Excel automation
-// Common Searches: auto fit rows in each sheet after merging workbooks Aspose.Cells | C# code to apply AutoFitRows to all worksheets | adjust row height for merged Excel file using Aspose.Cells | Aspose.Cells AutoFitRows example .NET
-// Developer Intent: Automatically resize the height of every row in all worksheets of a merged workbook and persist the changes.
-// Use Cases: Prepare a consolidated report where wrapped text must be fully visible on every sheet before distribution. | Standardize row heights across multiple combined worksheets for printing or PDF conversion. | Create a final Excel package from several sources and ensure each sheet is optimally formatted without manual adjustments.
-// AI Prompts: Generate C# code that loads a workbook, runs AutoFitRows on each worksheet, and saves the file using Aspose.Cells. | Show how to handle a missing source file while applying AutoFitRows to all sheets in a merged workbook with Aspose.Cells for .NET. | Explain the steps to auto‑fit row heights across all worksheets after merging Excel files with Aspose.Cells.
+// Title: AutoFit row heights for all worksheets in a merged Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens a merged Excel file, sets AutoFitterOptions to expand rows that contain merged cells, and calls AutoFitRows on every worksheet. | Update an existing workbook merger sample to include AutoFitRows with OnlyAuto=true so rows with custom heights are left untouched. | Create a script that processes all sheets, applies the auto‑fit operation, and saves the result to a new file name.
+// Common Searches: asp.net how to autofit rows in merged cells after merging workbooks | c# Aspose.Cells AutoFitRows eachline option example | adjust row height for merged cells across all worksheets using Aspose.Cells | auto fit rows only when height not set Aspose.Cells .NET
+// Tags: auto-fit rows Aspose.Cells .NET | AutoFitterOptions eachline merged cells | apply AutoFitRows to all worksheets | row height adjustment after workbook merge | C# Aspose.Cells row height auto-fit
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Loads a merged workbook, configures AutoFitterOptions to expand each line of merged cells while only auto‑fitting rows without custom heights, applies AutoFitRows to every worksheet, and saves the updated workbook to a new file.
+class Program
 {
-    // Load a merged Excel file (or create a new workbook if missing), iterate through all worksheets, apply AutoFitRows to adjust row heights to the content, and save the result as a new XLSX file with Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Load the merged workbook (replace with actual file path)
+        string inputPath = "mergedWorkbook.xlsx";
+        Workbook workbook = new Workbook(inputPath);
+
+        // Configure AutoFitterOptions to handle merged cells correctly
+        AutoFitterOptions options = new AutoFitterOptions
         {
-            string inputPath = "merged.xlsx";
-            string outputPath = "merged_autofit.xlsx";
+            // Expand the height of each row that participates in a merged cell
+            AutoFitMergedCellsType = AutoFitMergedCellsType.EachLine,
+            // Fit only rows that have not been given a custom height
+            OnlyAuto = true
+        };
 
-            Workbook workbook = null;
-
-            try
-            {
-                // Load existing workbook if it exists; otherwise create a new one
-                if (File.Exists(inputPath))
-                {
-                    workbook = new Workbook(inputPath);
-                }
-                else
-                {
-                    workbook = new Workbook(); // creates a workbook with a default sheet
-                }
-
-                // AutoFit rows in each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    sheet.AutoFitRows();
-                }
-
-                // Save the updated workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+        // Apply AutoFitRows to every worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            sheet.AutoFitRows(options);
         }
+
+        // Save the updated workbook
+        string outputPath = "mergedWorkbook_AutoFitRows.xlsx";
+        workbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

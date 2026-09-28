@@ -1,50 +1,62 @@
-// Title: Apply a Global Sans‑Serif Font (Arial) to an Aspose.Cells Workbook in C#
-// Description: Shows how to change the workbook's default style to Arial (12 pt) using Aspose.Cells for .NET, apply the style to a cell, and save the file, providing a quick way to enforce a consistent font across all worksheets.
-// Keywords: Aspose.Cells default font C# | global font scheme Aspose.Cells | set workbook default style .NET | Arial font Excel Aspose | apply sans-serif font workbook | theme font update Aspose.Cells | C# Excel default style | change workbook font programmatically
-// Common Searches: change default font in Aspose.Cells workbook C# | set global font for all cells Aspose.Cells .NET | apply Arial as default style in Excel using Aspose | update theme font scheme in Aspose.Cells C# | C# code to set workbook default font
-// Developer Intent: Configure the workbook so every cell automatically uses a specified sans‑serif font.
-// Use Cases: Create reports that must follow a corporate Arial style without manual formatting. | Build a template workbook where any added data inherits the chosen font. | Generate Excel files for publishing where a consistent sans‑serif appearance is required.
-// AI Prompts: Generate C# code to change an Aspose.Cells workbook’s default font to Helvetica and apply it to existing cells. | Explain how to modify the ThemeFontScheme in Aspose.Cells so both primary and secondary fonts become a custom sans‑serif typeface. | Provide a step‑by‑step guide for setting a global font in an Excel file using Aspose.Cells for .NET without styling each cell individually.
+// Title: Set a sans‑serif default font for an entire Excel workbook and apply it to all existing cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Load a workbook with Aspose.Cells, change its DefaultStyle.Font to "Arial", and propagate the font to every used range in all worksheets. | Write a reusable C# method that takes a font name, updates the workbook’s global font, and applies the style to all cells that already contain data. | Save the modified workbook to a new file after globally setting a sans‑serif font using Aspose.Cells style flags.
+// Common Searches: Aspose.Cells C# change default workbook font to Arial and apply to existing cells | how to set a global sans‑serif font for all worksheets in an Excel file using Aspose.Cells | apply default style font to used range of each sheet with Aspose.Cells .NET | programmatically update Excel theme primary font in C# Aspose.Cells | save workbook after changing default font across all cells Aspose.Cells
+// Tags: default font update Aspose.Cells C# | apply global font style used range | set workbook default style Arial | propagate default style to existing cells | save workbook with modified theme font
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThemeFontSchemeExample
+// The example loads an existing .xlsx file, sets the workbook's DefaultStyle.Font to a sans‑serif type (Arial), iterates through each worksheet to apply this default style to the entire used range using a StyleFlag that targets the font, ensures the output directory exists, and saves the updated workbook to a new file.
+class Program
 {
-    // Shows how to change the workbook's default style to Arial (12 pt) using Aspose.Cells for .NET, apply the style to a cell, and save the file, providing a quick way to enforce a consistent font across all worksheets.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Set the global default font for the workbook
-                workbook.DefaultStyle.Font.Name = "Arial";
-                workbook.DefaultStyle.Font.Size = 12;
-
-                // Create a style that uses the desired font (optional, same as default)
-                Style globalStyle = workbook.CreateStyle();
-                globalStyle.Font.Name = "Arial";
-                globalStyle.Font.Size = 12;
-
-                // Apply the style to a sample cell
-                Worksheet sheet = workbook.Worksheets[0];
-                Cell sampleCell = sheet.Cells["A1"];
-                sampleCell.PutValue("Text using the global sans‑serif theme font");
-                sampleCell.SetStyle(globalStyle);
-
-                // Save the workbook
-                string outputPath = "ThemeFontSchemeUpdated.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set the default (global) font to a sans‑serif font (e.g., Arial)
+            workbook.DefaultStyle.Font.Name = "Arial";
+
+            // Optionally, apply the default style to all existing cells
+            // This ensures the change affects already formatted cells
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Apply the default style to the entire used range of the sheet
+                var usedRange = sheet.Cells.MaxDisplayRange;
+                if (usedRange != null)
+                {
+                    Style defaultStyle = workbook.DefaultStyle;
+                    usedRange.ApplyStyle(defaultStyle, new StyleFlag { Font = true });
+                }
             }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the updated font applied globally
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

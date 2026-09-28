@@ -1,21 +1,19 @@
-// Title: Aspose.Cells .NET – Disable multi‑select in PivotTable filter dialogs with EnableMultipleSelection = false
-// Description: Shows how to create a workbook, populate it with sample sales data, add a PivotTable, and set the PivotTable.EnableMultipleSelection (or AllowMultipleFiltersPerField) property to false so that filter dialogs permit only one item. The code refreshes the cache, calculates the data, and saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells | PivotTable | EnableMultipleSelection | AllowMultipleFiltersPerField | single selection filter | disable multi‑select | .NET | C# | Excel pivot table | filter dialog | Aspose.Cells example
-// Common Searches: Aspose.Cells set EnableMultipleSelection false | disable multi select in PivotTable filter Aspose.Cells | AllowMultipleFiltersPerField false example .NET | single selection filter dialog Aspose.Cells PivotTable | how to restrict PivotTable filters to one choice using Aspose.Cells
-// Developer Intent: Turn off multi‑select in PivotTable filter dialogs to enforce a single‑selection UI.
-// Use Cases: Generate a sales report where users can pick only one category at a time in the PivotTable filter. | Create an interactive dashboard that limits each filter field to a single selection, simplifying data analysis. | Programmatically configure a PivotTable before exporting to ensure compliance with UI guidelines that prohibit multiple selections.
-// AI Prompts: Provide a C# example that creates a PivotTable with Aspose.Cells and disables multi‑select in its filter dialogs using EnableMultipleSelection = false. | Explain the impact of setting AllowMultipleFiltersPerField to false on PivotTable filter behavior in Aspose.Cells. | Show how to refresh and calculate a PivotTable after changing its filter selection mode with Aspose.Cells.
+// Title: How to disable multiple filter selections in an Aspose.Cells PivotTable (C#) by setting AllowMultipleFiltersPerField to false
+// AI Prompts: Generate C# code that builds a workbook, adds sample data, creates a PivotTable with Aspose.Cells, and configures it to allow only one filter choice per field. | Provide the sequence to refresh, calculate, and save the workbook after restricting the PivotTable to a single‑selection mode.
+// Common Searches: Aspose.Cells C# pivot table single selection filter dialog | set AllowMultipleFiltersPerField false Aspose.Cells example | disable multiple filters per field in Aspose.Cells PivotTable | how to enforce single selection in pivot table filters using .NET | Aspose.Cells pivot table filter settings for single choice
+// Tags: Aspose.Cells pivot filter exclusive mode | configure pivot table filter behavior Aspose.Cells | create pivot table Aspose.Cells C# | save workbook as xlsx Aspose.Cells | pivot filter multiple selection toggle
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Pivot; // Required for PivotTable and PivotFieldType
 
 namespace AsposeCellsExamples
 {
-    // Shows how to create a workbook, populate it with sample sales data, add a PivotTable, and set the PivotTable.EnableMultipleSelection (or AllowMultipleFiltersPerField) property to false so that filter dialogs permit only one item. The code refreshes the cache, calculates the data, and saves the workbook as an XLSX file.
-    public class PivotTableEnableMultipleSelectionDemo
+    // Demonstrates creating a workbook, populating sample data, adding a PivotTable with Aspose.Cells for .NET, disabling multiple filter selections by setting AllowMultipleFiltersPerField to false, refreshing and calculating the PivotTable, and saving the result as an .xlsx file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
@@ -44,36 +42,37 @@ namespace AsposeCellsExamples
                 int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
                 PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-                // Add fields to the pivot table
+                // Configure the pivot table fields
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
                 pivotTable.AddFieldToArea(PivotFieldType.Column, "Category");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Enforce single selection behavior in filter dialogs
+                // Enforce single‑selection behavior in filter dialogs
                 pivotTable.AllowMultipleFiltersPerField = false;
 
                 // Refresh and calculate the pivot table to apply changes
-                pivotTable.RefreshData();   // Correct API to refresh cache
+                pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
+                // Define output file path
+                string outputPath = "PivotTable_SingleSelection.xlsx";
+
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 // Save the workbook
-                string outputPath = "PivotTable_EnableMultipleSelection_Demo.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("An error occurred while creating the pivot table workbook:");
+                Console.WriteLine(ex.Message);
             }
-        }
-    }
-
-    // Application entry point
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            PivotTableEnableMultipleSelectionDemo.Run();
         }
     }
 }

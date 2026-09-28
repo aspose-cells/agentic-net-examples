@@ -1,42 +1,43 @@
-// Title: Aspose.Cells for .NET – Set PdfSaveOptions.OptimizationType to MinimumSize and Export XLSX to PDF (C#)
-// Description: Shows how to build an in‑memory Workbook, add sample data, configure PdfSaveOptions with PdfOptimizationType.MinimumSize to prioritize the smallest possible PDF file, and save the workbook as a PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PDF optimization | PdfSaveOptions MinimumSize | PdfOptimizationType.MinimumSize | C# export Excel to PDF | Aspose.Cells reduce PDF size | small PDF output .NET | Excel to PDF compression | minimal PDF file size | Aspose.Cells PDF save options | optimize PDF size C#
-// Common Searches: Aspose.Cells set PDF optimization to MinimumSize C# | How to create smallest PDF from Excel with Aspose.Cells | PdfSaveOptions OptimizationType MinimumSize example | Export XLSX to PDF with reduced file size Aspose.Cells | C# Aspose.Cells PDF compression settings
-// Developer Intent: Export an Excel workbook to PDF while minimizing the resulting file size by using the MinimumSize optimization mode.
-// Use Cases: Generate lightweight PDF reports for email distribution | Create compact PDF invoices in bulk to lower storage and bandwidth costs | Archive Excel worksheets as small PDFs for long‑term retention
-// AI Prompts: Write C# code that sets PdfSaveOptions.OptimizationType to MinimumSize and saves a Workbook as PDF with Aspose.Cells. | Explain the impact of PdfOptimizationType.MinimumSize on PDF quality and file size in Aspose.Cells. | Combine MinimumSize optimization with image compression and font embedding options in PdfSaveOptions.
+// Title: Set PdfSaveOptions.OptimizationType to MinimumSize and convert an XLSX workbook to PDF using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells, configures PdfSaveOptions.OptimizationType to MinimumSize, and saves the workbook as a PDF. | Show how to minimize the generated PDF size when exporting an Excel workbook to PDF by applying the MinimumSize optimization setting in Aspose.Cells.
+// Common Searches: Aspose.Cells C# set PDF optimization type to MinimumSize | How to export Excel to PDF with the smallest file size using Aspose.Cells | PdfSaveOptions MinimumSize example for XLSX to PDF conversion | Reduce PDF size when converting a workbook to PDF in .NET with Aspose.Cells | C# code sample for PdfOptimizationType.MinimumSize in Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions MinimumSize | C# Excel to PDF conversion optimization | PdfOptimizationType MinimumSize usage | reduce PDF size Aspose.Cells | export XLSX as PDF with size reduction
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfOptimizationExample
+// The program verifies that the input XLSX file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, sets its OptimizationType to MinimumSize to produce the smallest possible PDF, saves the workbook as a PDF file, and handles any exceptions that may occur.
+class Program
 {
-    // Shows how to build an in‑memory Workbook, add sample data, configure PdfSaveOptions with PdfOptimizationType.MinimumSize to prioritize the smallest possible PDF file, and save the workbook as a PDF using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (in-memory)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Access the first worksheet and add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells PDF Optimization Example");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-            sheet.Cells["B1"].PutValue(123);
-            sheet.Cells["B2"].PutValue(456);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Create PDF save options
+            // Load the XLSX workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (default optimization)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set the optimization type to MinimumSize (file size is prioritized over print quality)
-            pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-            // Save the workbook as a PDF file using the specified options
-            workbook.Save("OptimizedOutput.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved with OptimizationType = MinimumSize.");
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

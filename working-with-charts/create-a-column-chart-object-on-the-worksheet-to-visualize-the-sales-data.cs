@@ -1,17 +1,13 @@
-// Title: Create a Column Chart with Aspose.Cells for .NET (C#) – Monthly Sales Example
-// Description: C# code that uses Aspose.Cells to build an XLSX workbook, writes month and sales values to A1:B7, inserts a Column chart positioned rows 8‑20 and columns A‑G, sets the data range, adds a chart title and legend, and saves the file as SalesColumnChart.xlsx.
-// Keywords: Aspose.Cells | C# | column chart | Excel chart | sales data | ChartType.Column | SetChartDataRange | SaveFormat.Xlsx | Aspose.Cells example | CreateColumnChart
-// Common Searches: Aspose.Cells add column chart C# | How to set chart data range Aspose.Cells .NET | Create sales chart with Aspose.Cells | Aspose.Cells chart title and legend | Generate Excel column chart programmatically
-// Developer Intent: Create and embed a column chart in an Excel worksheet using Aspose.Cells for .NET to visualize monthly sales figures.
-// Use Cases: Automated generation of monthly sales reports with embedded charts | Building Excel dashboards that include column charts for product performance | Exporting data analysis results to Excel with pre‑formatted visualizations
-// AI Prompts: Generate C# code to add a stacked column chart with two series using Aspose.Cells. | Show how to customize column colors, axis titles, and data labels in an Aspose.Cells chart. | Explain how to modify an existing chart's data range and title after the workbook is saved.
+// Title: Create a column chart for monthly sales data in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that inserts a column chart into a worksheet, uses the range A1:B6 as the data source, and sets the chart title to "Monthly Sales". | Show how to position a column chart on a sheet, define its data range, and save the workbook as an .xlsx file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# example for adding a column chart with a data range | how to set chart title in Aspose.Cells column chart | programmatically create sales column chart in Excel using Aspose.Cells .NET | Aspose.Cells set chart position and size for column chart
+// Tags: Aspose.Cells add column chart | Aspose.Cells set chart data range | Aspose.Cells set chart title | Aspose.Cells save workbook as xlsx | Aspose.Cells define chart location
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# code that uses Aspose.Cells to build an XLSX workbook, writes month and sales values to A1:B7, inserts a Column chart positioned rows 8‑20 and columns A‑G, sets the data range, adds a chart title and legend, and saves the file as SalesColumnChart.xlsx.
-class CreateColumnChart
+// The program creates a new workbook, fills cells A1:B6 with month and sales values, adds a column chart covering that range, sets the chart title to "Monthly Sales", positions the chart on the sheet, and saves the file as SalesChart.xlsx.
+class Program
 {
     static void Main()
     {
@@ -19,14 +15,12 @@ class CreateColumnChart
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample sales data
-        // Header row
+        // Populate worksheet with sample sales data
         sheet.Cells["A1"].PutValue("Month");
         sheet.Cells["B1"].PutValue("Sales");
 
-        // Data rows
-        string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
-        int[] sales = { 12000, 15000, 13000, 17000, 16000, 18000 };
+        string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+        int[] sales = { 1200, 1500, 1100, 1800, 1600 };
 
         for (int i = 0; i < months.Length; i++)
         {
@@ -34,20 +28,17 @@ class CreateColumnChart
             sheet.Cells[i + 2, 1].PutValue(sales[i]);   // Column B
         }
 
-        // Add a column chart to the worksheet
-        // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 7);
+        // Add a column chart to the worksheet (using the Add method rule)
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Define the data range for the chart (including headers)
-        // The second argument 'true' indicates that data is plotted by column
-        chart.SetChartDataRange("A1:B7", true);
+        // Define the data range for the chart (vertical plotting)
+        chart.SetChartDataRange("A1:B6", true);
 
-        // Optional: set chart title and enable legend
+        // Set a title for the chart
         chart.Title.Text = "Monthly Sales";
-        chart.ShowLegend = true;
 
-        // Save the workbook to an XLSX file
-        workbook.Save("SalesColumnChart.xlsx", SaveFormat.Xlsx);
+        // Save the workbook
+        workbook.Save("SalesChart.xlsx", SaveFormat.Xlsx);
     }
 }

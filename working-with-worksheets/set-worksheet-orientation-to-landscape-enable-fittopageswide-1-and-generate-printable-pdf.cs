@@ -1,43 +1,30 @@
-// Title: Aspose.Cells .NET – Landscape worksheet, Fit‑to‑Width = 1, Export Printable PDF
-// Description: Learn how to set a worksheet’s page orientation to landscape, configure PageSetup.FitToPagesWide = 1 (height auto‑adjusts), apply PdfSaveOptions.OnePagePerSheet, and save the workbook as a print‑ready PDF using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells landscape orientation | FitToPagesWide 1 | export worksheet to PDF | PageSetup FitToPagesWide example | PdfSaveOptions OnePagePerSheet | .NET spreadsheet PDF export
-// Common Searches: Aspose.Cells set worksheet to landscape | Fit worksheet width to one page Aspose .NET | How to export PDF with one page per sheet Aspose.Cells | PageSetup FitToPagesWide = 1 example | Printable PDF from Excel using Aspose.Cells
-// Developer Intent: Configure a worksheet for landscape printing, fit its width to a single page, and generate a printable PDF.
-// Use Cases: Create landscape reports that print on a single page per sheet | Export financial statements with consistent one‑page width formatting | Generate printable invoices or receipts where each sheet occupies one PDF page
-// AI Prompts: Show code to set PageSetup.Orientation to Landscape and FitToPagesWide to 1 before saving as PDF with Aspose.Cells. | Provide an Aspose.Cells .NET example that exports a workbook to PDF with OnePagePerSheet enabled and automatic height scaling. | Explain how to adjust FitToPagesTall while keeping FitToPagesWide = 1 for PDF output using Aspose.Cells.
+// Title: Export an Excel worksheet to a landscape-oriented PDF that fits to one page wide using Aspose.Cells for .NET (C#)
+// AI Prompts: Create C# code that configures a worksheet’s PageSetup to landscape, sets FitToPagesWide = 1 and FitToPagesTall = 0, and saves the workbook as a PDF with Aspose.Cells. | Write a C# example that prints an Excel sheet to a single-page-wide PDF in landscape mode using Aspose.Cells PageSetup properties.
+// Common Searches: Aspose.Cells C# set worksheet orientation to landscape and fit to one page wide for PDF export | how to use FitToPagesWide and FitToPagesTall in Aspose.Cells when saving as PDF | export Excel to PDF landscape mode with single-page width using Aspose.Cells .NET | C# Aspose.Cells page setup for printable PDF fitting content to one page wide
+// Tags: landscape orientation page setup Aspose.Cells | FitToPagesWide property PDF export C# | FitToPagesTall automatic height Aspose.Cells | export worksheet to PDF Aspose.Cells | page setup printable PDF .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
 
-// Learn how to set a worksheet’s page orientation to landscape, configure PageSetup.FitToPagesWide = 1 (height auto‑adjusts), apply PdfSaveOptions.OnePagePerSheet, and save the workbook as a print‑ready PDF using Aspose.Cells for .NET.
-class GeneratePdf
+// // This program creates a workbook, sets the first worksheet's orientation to landscape, configures the page setup to fit the content to one page wide (height adjusts automatically), and saves the workbook as a PDF file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook (or load an existing one)
         Workbook workbook = new Workbook();
 
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // (Optional) Add some sample data
-        sheet.Cells["A1"].PutValue("Sample Data");
-        sheet.Cells["B1"].PutValue(123);
-        sheet.Cells["A2"].PutValue("More Data");
-        sheet.Cells["B2"].PutValue(456);
+        // Set page orientation to landscape
+        sheet.PageSetup.Orientation = PageOrientationType.Landscape;
 
-        // Configure page setup
-        PageSetup setup = sheet.PageSetup;
-        setup.Orientation = PageOrientationType.Landscape; // Landscape orientation
-        setup.FitToPagesWide = 1;   // Fit to one page wide
-        setup.FitToPagesTall = 0;   // Height adjusts automatically
-
-        // Set PDF save options (optional: force one page per sheet)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OnePagePerSheet = true;
+        // Fit the worksheet to 1 page wide (height will adjust automatically)
+        sheet.PageSetup.FitToPagesWide = 1;
+        sheet.PageSetup.FitToPagesTall = 0; // 0 means automatic
 
         // Save the workbook as a printable PDF
-        workbook.Save("output.pdf", pdfOptions);
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

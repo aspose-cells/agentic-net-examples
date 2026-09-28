@@ -1,57 +1,44 @@
-// Title: Save a Clean XLSX Workbook and Ensure No printerSettings.bin Using Aspose.Cells for .NET
-// Description: Demonstrates how to create or load a Workbook, optionally remove unused styles, save it as an XLSX file with OoxmlSaveOptions, and programmatically verify that the resulting ZIP package does not contain any printerSettings.bin entries.
-// Keywords: Aspose.Cells C# | save workbook as XLSX | remove printerSettings.bin | OoxmlSaveOptions ClearData | clean Excel package | verify ZIP archive | .NET Excel export | remove unused styles
-// Common Searches: Aspose.Cells remove printerSettings.bin from XLSX | Check XLSX zip for printerSettings.bin C# | Save clean workbook without printer settings Aspose | OoxmlSaveOptions ClearData effect on printer settings | How to verify Excel package contents with Aspose.Cells
-// Developer Intent: The developer needs to export a workbook to XLSX, strip unnecessary data such as printer settings, and confirm that the saved file does not embed any printerSettings.bin files.
-// Use Cases: Prepare Excel reports for distribution while minimizing file size and removing confidential printer configuration. | Integrate a validation step in CI/CD pipelines that flags XLSX files containing printerSettings.bin. | Automate generation of clean workbooks for third‑party consumption where embedded printer settings are prohibited.
-// AI Prompts: Generate C# code with Aspose.Cells that saves a workbook as XLSX and checks the archive for printerSettings.bin entries. | Explain how the ClearData property of OoxmlSaveOptions influences printer settings storage in an XLSX file. | Recommend additional Aspose.Cells save options to reduce file size and ensure no printer configuration data is saved.
+// Title: Save a cleaned Aspose.Cells workbook as XLSX and confirm the package has no printer‑settings .bin files
+// AI Prompts: Generate C# code that saves a Workbook to XLSX using Aspose.Cells and then opens the file as a ZipArchive to detect any entries ending with .bin. | Write a C# routine that validates an exported XLSX file from Aspose.Cells by scanning its ZIP contents for printerSettings.bin and reports success or warning.
+// Common Searches: Aspose.Cells how to save workbook as xlsx and ensure no printerSettings.bin is embedded | C# check for .bin files inside an exported xlsx package using ZipArchive | verify that Aspose.Cells exported Excel file does not contain printer settings binary files | remove printerSettings.bin from Aspose.Cells generated xlsx archive | detect unwanted .bin entries in XLSX created with Aspose.Cells C#
+// Tags: save workbook to xlsx with Aspose.Cells | validate xlsx zip entries for .bin files | detect printerSettings.bin in Aspose.Cells export | c# ziparchive scan xlsx package | remove unwanted binary files from Excel archive
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Aspose.Cells;
 
-namespace AsposeCellsCleanWorkbook
+// The example creates (or loads) a cleaned Workbook, saves it as CleanedWorkbook.xlsx in XLSX format with Aspose.Cells, then opens the file as a ZipArchive and checks for any entries ending with .bin to confirm that printer‑settings files are absent, outputting a success or warning message.
+class Program
 {
-    // Demonstrates how to create or load a Workbook, optionally remove unused styles, save it as an XLSX file with OoxmlSaveOptions, and programmatically verify that the resulting ZIP package does not contain any printerSettings.bin entries.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing cleaned workbook)
+        Workbook workbook = new Workbook(); // replace with your cleaned workbook if needed
+
+        // Define the output file path
+        string outputPath = "CleanedWorkbook.xlsx";
+
+        // Save the workbook as XLSX
+        workbook.Save(outputPath, SaveFormat.Xlsx);
+
+        // Verify that no printer‑settings .bin files exist inside the XLSX package
+        bool hasBinFiles;
+        using (FileStream fs = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
+        using (ZipArchive zip = new ZipArchive(fs, ZipArchiveMode.Read))
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            // Look for any entry ending with .bin (e.g., printerSettings.bin)
+            hasBinFiles = zip.Entries.Any(entry => entry.FullName.EndsWith(".bin", StringComparison.OrdinalIgnoreCase));
+        }
 
-            // Example data – in real scenario the workbook would already contain data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample");
-            sheet.Cells["B2"].PutValue(123);
-
-            // Clean up the workbook: remove unused styles (optional but demonstrates cleaning)
-            workbook.RemoveUnusedStyles();
-
-            // Configure OoxmlSaveOptions – ClearData set to false to keep data,
-            // other options can be adjusted as needed
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-            {
-                ClearData = false
-            };
-
-            // Save the cleaned workbook as XLSX using the provided Save method
-            string outputPath = "cleaned.xlsx";
-            workbook.Save(outputPath, saveOptions);
-
-            // Verify that the saved package does not contain any printerSettings.bin files
-            bool printerBinExists;
-            using (ZipArchive archive = ZipFile.OpenRead(outputPath))
-            {
-                printerBinExists = archive.Entries
-                    .Any(entry => entry.FullName.EndsWith("printerSettings.bin", StringComparison.OrdinalIgnoreCase));
-            }
-
-            Console.WriteLine(printerBinExists
-                ? "Printer settings .bin file was found inside the package."
-                : "No printer settings .bin files exist inside the package.");
+        if (hasBinFiles)
+        {
+            Console.WriteLine("Warning: Printer‑settings .bin files were found in the XLSX package.");
+        }
+        else
+        {
+            Console.WriteLine("Success: No printer‑settings .bin files exist in the XLSX package.");
         }
     }
 }

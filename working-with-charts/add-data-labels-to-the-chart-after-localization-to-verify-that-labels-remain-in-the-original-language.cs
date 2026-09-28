@@ -1,92 +1,69 @@
-// Title: C# – Add Data Labels to an Aspose.Cells Chart After Applying Localization
-// Description: The sample creates a workbook, populates it with category and numeric data, configures chart globalization so the “Other” category appears in Japanese, inserts a column chart, enables value and category data labels, prefixes each point label with Japanese text, and saves the file as DataLabelsAfterLocalization.xlsx. It shows how to confirm that data‑label text remains in the original language after localization.
-// Keywords: Aspose.Cells data labels | chart localization | SettableChartGlobalizationSettings | C# column chart | custom point label | Japanese Other label | verify chart labels | Aspose.Cells .NET example | Excel chart globalization | data label prefix
-// Common Searches: Aspose.Cells add data labels after globalization | C# chart localization with custom Other label | keep data label language after chart globalization | Aspose.Cells verify localized chart labels | set Japanese Other label in Aspose.Cells chart
-// Developer Intent: Create a column chart, apply a Japanese “Other” label via chart globalization, turn on value and category data labels, add a Japanese prefix to each point’s label, and save the workbook to verify the labels stay in the source language.
-// Use Cases: Produce a sales‑report workbook where the “Other” category is shown in Japanese and each column displays both the numeric value and a Japanese‑prefixed label. | Build a localized dashboard that programmatically adds data labels after setting chart globalization, ensuring the labels retain their original language for end‑users. | Automate regression testing of chart localization by assigning custom label text post‑globalization and exporting the workbook for visual inspection.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart, sets the 'Other' category name to Japanese using SettableChartGlobalizationSettings, enables data labels, and adds a Japanese prefix to each point's label. | Explain how Aspose.Cells preserves custom data‑label text after applying chart globalization settings and demonstrate verification by saving the workbook. | Provide a step‑by‑step guide for adding data labels to an Aspose.Cells chart after localization, covering ShowValue, ShowCategoryName, and custom point label text in .NET.
+// Title: Add value and category data labels to the first chart in an Excel workbook while preserving the original language with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, verifies a chart exists, enables ShowValue and ShowCategoryName for each series of the first chart, hides the series name, and saves the workbook. | Show how to add data labels to a localized chart using Aspose.Cells, creating the output folder if it does not already exist. | Provide a snippet that checks the input file, accesses the first worksheet’s chart collection, configures data labels without changing the chart’s language, and writes the result to a new file.
+// Common Searches: how to enable value and category data labels on an existing Excel chart with Aspose.Cells C# | preserve localized chart labels when adding data labels using Aspose.Cells for .NET | C# Aspose.Cells add data labels to first chart in workbook | check chart existence before updating data labels Aspose.Cells example
+// Tags: add data labels to Aspose.Cells chart series | show value and category names in Excel chart C# | preserve original language when updating chart labels | verify chart presence before modifying Aspose.Cells workbook | ensure output directory exists when saving workbook
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// Loads an existing Excel file, accesses the first worksheet's first chart, enables value and category data labels for each series while hiding the series name to keep the original language, creates the output folder if needed, and saves the modified workbook.
+class Program
 {
-    // The sample creates a workbook, populates it with category and numeric data, configures chart globalization so the “Other” category appears in Japanese, inserts a column chart, enables value and category data labels, prefixes each point label with Japanese text, and saves the file as DataLabelsAfterLocalization.xlsx. It shows how to confirm that data‑label text remains in the original language after localization.
-    public class DataLabelsAfterLocalization
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // -------------------------------------------------
-                // 1. Populate sample data for the chart
-                // -------------------------------------------------
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("Alpha");
-                sheet.Cells["A3"].PutValue("Beta");
-                sheet.Cells["A4"].PutValue("Gamma");
-
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["B3"].PutValue(250);
-                sheet.Cells["B4"].PutValue(180);
-
-                // -------------------------------------------------
-                // 2. Apply chart globalization settings (e.g., set "Other" label)
-                // -------------------------------------------------
-                SettableChartGlobalizationSettings globalizationSettings = new SettableChartGlobalizationSettings();
-                // Set a custom name for the "Other" label in the original language (e.g., Japanese)
-                globalizationSettings.SetOtherName("その他"); // "Other" in Japanese
-
-                // -------------------------------------------------
-                // 3. Add a column chart and bind the data
-                // -------------------------------------------------
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
-                Chart chart = sheet.Charts[chartIndex];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // -------------------------------------------------
-                // 4. Enable data labels for each series
-                // -------------------------------------------------
-                foreach (Series series in chart.NSeries)
-                {
-                    series.DataLabels.ShowValue = true;          // Show the numeric value
-                    series.DataLabels.ShowCategoryName = true;   // Show the category name
-
-                    // -------------------------------------------------
-                    // 5. After localization, set custom text for each point
-                    // -------------------------------------------------
-                    foreach (ChartPoint point in series.Points)
-                    {
-                        // Prepend a label in the original language
-                        point.DataLabels.Text = $"元の: {point.YValue}";
-                    }
-                }
-
-                // -------------------------------------------------
-                // 6. Save the workbook
-                // -------------------------------------------------
-                workbook.Save("DataLabelsAfterLocalization.xlsx");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook that contains the chart
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
             }
+
+            // Retrieve the first chart on the sheet
+            Chart chart = sheet.Charts[0];
+
+            // Add data labels to each series
+            foreach (Series series in chart.NSeries)
+            {
+                // Enable data labels and configure visibility
+                series.DataLabels.ShowValue = true;               // Show the data point value
+                series.DataLabels.ShowCategoryName = true;        // Show the category (X‑axis) name
+                series.DataLabels.ShowSeriesName = false;         // Do not show series name (preserves original language)
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DataLabelsAfterLocalization.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

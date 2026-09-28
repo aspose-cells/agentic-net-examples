@@ -1,18 +1,15 @@
-// Title: Benchmark Cells.MaxDataRow vs Cached Values – Impact on Iteration Speed in Aspose.Cells for .NET
-// Description: Creates a 5,000‑row × 100‑column worksheet, fills it with numbers, then measures two loops: one that reads Cells.MaxDataRow/MaxDataColumn on every iteration and another that caches these limits first. The program outputs the elapsed milliseconds for each approach and saves the workbook, illustrating loop‑level performance differences in Aspose.Cells.
-// Keywords: Aspose.Cells performance | MaxDataRow benchmark | MaxDataColumn caching | C# worksheet iteration speed | loop optimization Aspose.Cells | cell access overhead .NET | large worksheet processing | benchmarking Aspose.Cells | iteration time measurement | performance best practice
-// Common Searches: Aspose.Cells benchmark MaxDataRow vs cached | how to improve loop performance in Aspose.Cells | measure Cells.MaxDataColumn overhead | caching MaxDataRow for faster iteration | Aspose.Cells iteration speed test | performance impact of property access in Aspose.Cells loops | optimal way to traverse large worksheets in C#
-// Developer Intent: Evaluate the speed benefit of caching MaxDataRow and MaxDataColumn when iterating over a worksheet.
-// Use Cases: Determine whether caching worksheet limits reduces processing time in bulk data reads. | Validate performance before implementing large‑scale data transformations with Aspose.Cells. | Provide a reference example for high‑throughput cell iteration in .NET applications.
-// AI Prompts: Write C# code that compares iteration time using Cells.MaxDataRow/MaxDataColumn each loop versus cached values in Aspose.Cells. | Explain why accessing MaxDataRow inside a tight loop can degrade performance and suggest caching strategies. | Create a template for reporting benchmark results of the two iteration methods, including interpretation guidelines.
+// Title: Measure Aspose.Cells worksheet iteration performance with and without MaxDataRow/MaxDataColumn limits in C#
+// AI Prompts: Write a C# program that fills an Aspose.Cells worksheet with 5,000 rows and 200 columns, then uses Stopwatch to time a nested loop that iterates only up to Cells.MaxDataRow and Cells.MaxDataColumn. | Add a second timing loop that iterates over the full 5,000 × 200 range, compare the elapsed milliseconds with the limited loop, and print both results.
+// Common Searches: Aspose.Cells C# how long does iterating cells up to MaxDataRow take compared to full range | benchmark worksheet cell traversal using MaxDataColumn limit in Aspose.Cells | performance test for Aspose.Cells iteration with large dataset 5000 rows 200 columns | measure impact of MaxDataRow and MaxDataColumn on loop execution time in C# | compare limited vs full range cell iteration speed Aspose.Cells
+// Tags: Aspose.Cells iteration performance measurement | C# benchmark MaxDataRow MaxDataColumn | cell traversal timing Aspose.Cells | limited range vs full range worksheet iteration | performance testing large worksheet Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsMaxDataImpact
+namespace MaxDataIterationTest
 {
-    // Creates a 5,000‑row × 100‑column worksheet, fills it with numbers, then measures two loops: one that reads Cells.MaxDataRow/MaxDataColumn on every iteration and another that caches these limits first. The program outputs the elapsed milliseconds for each approach and saves the workbook, illustrating loop‑level performance differences in Aspose.Cells.
+    // The example creates a workbook, populates it with 5,000 rows and 200 columns of sample data, then uses Stopwatch to record the time of two nested loops: one bounded by Cells.MaxDataRow/MaxDataColumn and another that iterates over the entire defined range. It prints both elapsed times and saves the workbook, demonstrating how the MaxDataRow/MaxDataColumn limits affect iteration speed.
     class Program
     {
         static void Main()
@@ -22,11 +19,11 @@ namespace AsposeCellsMaxDataImpact
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Define size of test data
-            const int totalRows = 5000;   // number of rows to populate
-            const int totalCols = 100;    // number of columns to populate
+            // Define a relatively large data set
+            const int totalRows = 5000;
+            const int totalCols = 200;
 
-            // Fill the worksheet with sample numeric data
+            // Populate the worksheet with sample data
             for (int r = 0; r < totalRows; r++)
             {
                 for (int c = 0; c < totalCols; c++)
@@ -35,51 +32,47 @@ namespace AsposeCellsMaxDataImpact
                 }
             }
 
-            // -----------------------------------------------------------------
-            // Scenario 1: Use MaxDataRow/MaxDataColumn property inside the loop
-            // (property is evaluated on every iteration, which is costly)
-            // -----------------------------------------------------------------
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
+            // Retrieve the MaxDataRow and MaxDataColumn after data insertion
+            int maxDataRow = cells.MaxDataRow;       // zero‑based index of the last row containing data
+            int maxDataColumn = cells.MaxDataColumn; // zero‑based index of the last column containing data
 
-            for (int r = 0; r <= cells.MaxDataRow; r++)          // property accessed each iteration
+            // -----------------------------------------------------------------
+            // Measure iteration time using MaxDataRow / MaxDataColumn limits
+            // -----------------------------------------------------------------
+            Stopwatch swLimited = new Stopwatch();
+            swLimited.Start();
+
+            for (int r = 0; r <= maxDataRow; r++)
             {
-                for (int c = 0; c <= cells.MaxDataColumn; c++)  // property accessed each iteration
+                for (int c = 0; c <= maxDataColumn; c++)
                 {
-                    // Access the cell value (no further processing needed for timing)
+                    // Access the cell value (no processing needed for timing)
                     var _ = cells[r, c].Value;
                 }
             }
 
-            sw.Stop();
-            long timeWithPropertyEachLoop = sw.ElapsedMilliseconds;
+            swLimited.Stop();
+            Console.WriteLine($"Iteration with limits (rows: {maxDataRow + 1}, cols: {maxDataColumn + 1}) took {swLimited.ElapsedMilliseconds} ms");
 
             // -----------------------------------------------------------------
-            // Scenario 2: Cache MaxDataRow/MaxDataColumn before the loop
-            // (avoids repeated property evaluation)
+            // Measure iteration time without using the limits (full range)
             // -----------------------------------------------------------------
-            int maxRow = cells.MaxDataRow;       // cached once
-            int maxCol = cells.MaxDataColumn;    // cached once
+            Stopwatch swFull = new Stopwatch();
+            swFull.Start();
 
-            sw.Restart();
-
-            for (int r = 0; r <= maxRow; r++)
+            for (int r = 0; r < totalRows; r++)
             {
-                for (int c = 0; c <= maxCol; c++)
+                for (int c = 0; c < totalCols; c++)
                 {
                     var _ = cells[r, c].Value;
                 }
             }
 
-            sw.Stop();
-            long timeWithCachedValues = sw.ElapsedMilliseconds;
+            swFull.Stop();
+            Console.WriteLine($"Iteration without limits (rows: {totalRows}, cols: {totalCols}) took {swFull.ElapsedMilliseconds} ms");
 
-            // Output the measured durations
-            Console.WriteLine($"Iteration with property call each loop: {timeWithPropertyEachLoop} ms");
-            Console.WriteLine($"Iteration with cached MaxDataRow/MaxDataColumn: {timeWithCachedValues} ms");
-
-            // Save the workbook (optional, demonstrates normal save lifecycle)
-            workbook.Save("MaxDataImpactResult.xlsx");
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("MaxDataIterationDemo.xlsx");
         }
     }
 }

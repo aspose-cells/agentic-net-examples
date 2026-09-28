@@ -1,64 +1,58 @@
-// Title: Aspose.Cells for .NET – Set Pie Chart Data Labels from Worksheet Cells (C#)
-// Description: Demonstrates how to create a workbook, populate category, value and label columns, add a pie chart, and configure the series so that data labels are taken from a cell range (ShowCellRange = true, LinkedSource = "C2:C4"). The example also hides the default numeric values, sets the label position to BestFit, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells pie chart data labels | C# ShowCellRange | LinkedSource chart labels | custom pie chart labels from cells | Aspose.Cells .NET chart example | Excel pie chart label from range
-// Common Searches: Aspose.Cells enable label from cells pie chart | C# set pie chart data labels to cell range | ShowCellRange property Aspose.Cells | Link chart labels to worksheet cells .NET | Hide numeric values in Aspose.Cells pie chart
-// Developer Intent: Configure a pie chart so its slice labels are sourced from worksheet cells instead of the default values.
-// Use Cases: Display product colors or codes on each slice by linking to a column of descriptive text. | Create a sales‑by‑region chart where region names are stored separately and update automatically. | Build a reusable reporting template where changing label cells instantly refreshes chart labels without code changes.
-// AI Prompts: Generate C# code with Aspose.Cells to create a doughnut chart whose data labels come from range D2:D5 and hide the numeric values. | Explain the role of ShowCellRange and LinkedSource when customizing chart data labels in Aspose.Cells. | Provide instructions to set the label position to InsideEnd for a bar chart while using cell‑based labels in Aspose.Cells.
+// Title: Enable the "Label Contains – Value From Cells" option for a pie chart and link its data labels to worksheet cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a pie chart with Aspose.Cells and sets the DataLabels.LinkedSource property to a cell range so the labels display custom text from the worksheet. | Show how to activate the "Label Contains – Value From Cells" feature for a pie chart series and configure the chart to avoid overlapping data labels in Aspose.Cells. | Adapt the example to pull label text from a different column or range while keeping the linked‑source behavior for the chart series.
+// Common Searches: Aspose.Cells C# link pie chart data labels to cells | Enable label contains value from cells option for Excel chart using Aspose.Cells | Set DataLabels.LinkedSource property in Aspose.Cells pie chart | Prevent overlapping data labels in Aspose.Cells pie chart | Use custom label column for chart series Aspose.Cells .NET
+// Tags: pie chart data labels linked source Aspose.Cells | enable label contains value from cells Aspose.Cells | prevent overlapping labels pie chart Aspose.Cells | custom label column for chart series Aspose.Cells | Aspose.Cells C# create pie chart from worksheet data
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using System.Drawing;
 
 namespace AsposeCellsPieChartLabelFromCells
 {
-    // Demonstrates how to create a workbook, populate category, value and label columns, add a pie chart, and configure the series so that data labels are taken from a cell range (ShowCellRange = true, LinkedSource = "C2:C4"). The example also hides the default numeric values, sets the label position to BestFit, and saves the file as an Excel workbook.
+    // Demonstrates creating a workbook, adding sample data, inserting a pie chart, and linking its data labels to custom text cells (C2:C4) by enabling the "Label Contains – Value From Cells" option with Aspose.Cells for .NET.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data
+            // Column A – Category names
             sheet.Cells["A1"].PutValue("Category");
             sheet.Cells["A2"].PutValue("Apple");
             sheet.Cells["A3"].PutValue("Banana");
             sheet.Cells["A4"].PutValue("Cherry");
 
+            // Column B – Numeric values for the pie slices
             sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["B3"].PutValue(45);
-            sheet.Cells["B4"].PutValue(25);
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["B4"].PutValue(100);
 
-            // Cells that contain the label text to be shown on the pie slices
+            // Column C – Custom label text that we want the data labels to display
             sheet.Cells["C1"].PutValue("Label");
-            sheet.Cells["C2"].PutValue("Red");
-            sheet.Cells["C3"].PutValue("Yellow");
-            sheet.Cells["C4"].PutValue("Red");
+            sheet.Cells["C2"].PutValue("Apple – 120 units");
+            sheet.Cells["C3"].PutValue("Banana – 80 units");
+            sheet.Cells["C4"].PutValue("Cherry – 100 units");
 
-            // Add a pie chart
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 6, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIndex];
+            // Add a pie chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 10);
+            Chart pieChart = sheet.Charts[chartIdx];
 
-            // Set the data range for the series (values)
-            chart.NSeries.Add("B2:B4", true);
-            // Set the category (optional, not required for label-from-cells)
-            chart.NSeries.CategoryData = "A2:A4";
+            // Add the series (values) and associate category names
+            Series series = pieChart.NSeries[pieChart.NSeries.Add("=Sheet1!$B$2:$B$4", true)];
+            series.XValues = "=Sheet1!$A$2:$A$4";
 
-            // Configure data labels to use values from cells
-            Series series = chart.NSeries[0];
-            series.DataLabels.ShowCellRange = true;          // Enable "Label Contains – Value From Cells"
-            series.DataLabels.LinkedSource = "C2:C4";        // Link labels to the specified cell range
-            series.DataLabels.ShowValue = false;            // Hide the default numeric value
-
-            // Optional: adjust label position for better readability
-            series.DataLabels.Position = LabelPositionType.BestFit;
+            // Enable data labels and link them to the custom label cells (C2:C4)
+            series.DataLabels.ShowValue = true;                 // Show the value (optional when using LinkedSource)
+            series.DataLabels.LinkedSource = "C2:C4";            // Link label text to cells
+            series.DataLabels.NumberFormatLinked = true;        // Keep number format in sync with source cells
+            series.DataLabels.IsNeverOverlap = true;            // Prevent overlapping labels in a pie chart
 
             // Save the workbook
-            workbook.Save("PieChartLabelFromCells.xlsx");
+            workbook.Save("PieChart_LabelFromCells.xlsx");
         }
     }
 }

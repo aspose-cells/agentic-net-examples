@@ -1,74 +1,120 @@
-// Title: Flatten Nested JSON to a Compact File with Aspose.Cells for .NET (C#)
-// Description: This C# console app checks for a file named nested_input.json, creates a sample if it does not exist, loads the JSON into an Aspose.Cells Workbook using JsonLoadOptions, and then saves it as flattened_output.json with JsonSaveOptions configured to remove hierarchy, output a single JSON object, and skip empty rows, resulting in a flat, lightweight JSON document.
-// Keywords: Aspose.Cells | C# JSON flatten | JsonLoadOptions | JsonSaveOptions | ExportNestedStructure false | compact JSON output | flatten hierarchy Aspose | Workbook.Save JSON | nested JSON conversion .NET | skip empty rows JSON
-// Common Searches: C# flatten nested JSON Aspose.Cells | Aspose.Cells JsonSaveOptions ExportNestedStructure example | convert hierarchical JSON to flat JSON .NET | save JSON without nesting using Aspose.Cells | compact JSON file from workbook C#
-// Developer Intent: Read a hierarchical JSON file and produce a flat JSON representation using Aspose.Cells in a .NET application.
-// Use Cases: Prepare employee or product data for APIs that require flat JSON structures. | Create lightweight JSON reports from Excel‑like workbooks while removing empty rows. | Integrate Aspose.Cells into ETL pipelines to transform nested JSON payloads into flat files for downstream systems.
-// AI Prompts: Show a C# snippet that loads a nested JSON into an Aspose.Cells Workbook and saves it as flat JSON with appropriate JsonSaveOptions. | Explain the effect of setting ExportNestedStructure to false on the resulting JSON and how to adjust other options for custom flattening. | Provide performance recommendations for processing large nested JSON files with Aspose.Cells, including memory usage and streaming tips.
+// Title: Flatten nested JSON exported from an Excel workbook using Aspose.Cells in C# and save it as a .json file
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, converts the workbook to a JSON string, recursively flattens the JSON into dot‑separated paths, and writes the flattened result to a .json file. | Write a C# recursive method that takes a System.Text.Json JsonElement and populates a Dictionary<string, object?> with full property paths, handling objects, arrays, and primitive values. | Adjust the flattening routine to use underscore separators for property paths while preserving array index notation, and output the result with System.Text.Json.
+// Common Searches: c# flatten json produced by Aspose.Cells export workbook to json | how to convert nested json from excel to flat key‑value pairs using Aspose.Cells | recursive json flattening with dot notation in .net core | export excel to json and flatten structure with Aspose.Cells library | flatten json arrays to indexed keys in c# using System.Text.Json
+// Tags: Aspose.Cells export workbook to JSON C# | C# recursive JSON flattening | dot‑separated property paths for flattened JSON | flatten JSON arrays with index keys C# | write flattened JSON file using System.Text.Json
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsJsonFlattenDemo
+// The program loads an Excel file via Aspose.Cells, saves the workbook as a JSON string, recursively flattens the nested JSON into dot‑separated keys (including array indices), and writes the flattened JSON to an output file.
+class Program
 {
-    // This C# console app checks for a file named nested_input.json, creates a sample if it does not exist, loads the JSON into an Aspose.Cells Workbook using JsonLoadOptions, and then saves it as flattened_output.json with JsonSaveOptions configured to remove hierarchy, output a single JSON object, and skip empty rows, resulting in a flat, lightweight JSON document.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputExcelPath = "input.xlsx";
+        const string outputJsonPath = "flattened.json";
+
+        try
         {
-            // Paths for input and output JSON files
-            string inputJsonPath = "nested_input.json";
-            string outputJsonPath = "flattened_output.json";
-
-            try
+            // Verify that the input Excel file exists
+            if (!File.Exists(inputExcelPath))
             {
-                // Ensure the input JSON file exists; create a sample if missing
-                if (!File.Exists(inputJsonPath))
+                Console.WriteLine($"Error: Input file '{inputExcelPath}' not found.");
+                return;
+            }
+
+            // Load the workbook using Aspose.Cells
+            var workbook = new Workbook(inputExcelPath);
+
+            // Export workbook to JSON string via a memory stream
+            string jsonContent;
+            using (var ms = new MemoryStream())
+            {
+                var saveOptions = new JsonSaveOptions(); // Correct save options for JSON
+                workbook.Save(ms, saveOptions);
+                ms.Position = 0;
+                using var reader = new StreamReader(ms, Encoding.UTF8);
+                jsonContent = reader.ReadToEnd();
+            }
+
+            // Parse the JSON document
+            using JsonDocument doc = JsonDocument.Parse(jsonContent);
+            JsonElement root = doc.RootElement;
+
+            // Flatten the JSON structure
+            var flatDictionary = new Dictionary<string, object?>();
+            FlattenElement(root, "", flatDictionary);
+
+            // Serialize the flattened dictionary back to JSON
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string flattenedJson = JsonSerializer.Serialize(flatDictionary, options);
+
+            // Write the flattened JSON to the output file
+            File.WriteAllText(outputJsonPath, flattenedJson, Encoding.UTF8);
+
+            Console.WriteLine($"Flattened JSON has been saved to '{outputJsonPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    /// <param name="element">The current JsonElement to process.</param>
+    /// <param name="prefix">The accumulated property path.</param>
+    /// <param name="result">The dictionary collecting flattened key‑value pairs.</param>
+    static void FlattenElement(JsonElement element, string prefix, Dictionary<string, object?> result)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+                foreach (JsonProperty property in element.EnumerateObject())
                 {
-                    string sampleJson = @"{
-  ""Employee"": {
-    ""Name"": ""John Doe"",
-    ""Address"": {
-      ""Street"": ""123 Main St"",
-      ""City"": ""Anytown"",
-      ""Zip"": ""12345""
-    },
-    ""Projects"": [
-      { ""Id"": 1, ""Title"": ""Project A"" },
-      { ""Id"": 2, ""Title"": ""Project B"" }
-    ]
-  }
-}";
-                    File.WriteAllText(inputJsonPath, sampleJson);
-                    Console.WriteLine($"Sample input JSON created at: {Path.GetFullPath(inputJsonPath)}");
+                    string newPrefix = string.IsNullOrEmpty(prefix) ? property.Name : $"{prefix}.{property.Name}";
+                    FlattenElement(property.Value, newPrefix, result);
                 }
+                break;
 
-                // Load the JSON file into a workbook with optional load settings
-                JsonLoadOptions loadOptions = new JsonLoadOptions
+            case JsonValueKind.Array:
+                int index = 0;
+                foreach (JsonElement item in element.EnumerateArray())
                 {
-                    KeptSchema = true // keep original schema (optional)
-                };
+                    string newPrefix = $"{prefix}[{index}]";
+                    FlattenElement(item, newPrefix, result);
+                    index++;
+                }
+                break;
 
-                Workbook workbook = new Workbook(inputJsonPath, loadOptions);
+            case JsonValueKind.String:
+                result[prefix] = element.GetString();
+                break;
 
-                // Configure JSON save options to flatten the hierarchy
-                JsonSaveOptions saveOptions = new JsonSaveOptions
-                {
-                    ExportNestedStructure = false,      // flatten nested objects
-                    AlwaysExportAsJsonObject = true,    // output as JSON object even for single sheet
-                    SkipEmptyRows = true                // omit empty rows for compact output
-                };
+            case JsonValueKind.Number:
+                if (element.TryGetInt64(out long l))
+                    result[prefix] = l;
+                else if (element.TryGetDouble(out double d))
+                    result[prefix] = d;
+                else
+                    result[prefix] = element.GetDecimal();
+                break;
 
-                // Save the flattened JSON
-                workbook.Save(outputJsonPath, saveOptions);
-                Console.WriteLine($"Flattened JSON saved to: {Path.GetFullPath(outputJsonPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                result[prefix] = element.GetBoolean();
+                break;
+
+            case JsonValueKind.Null:
+                result[prefix] = null;
+                break;
+
+            default:
+                // For other kinds (e.g., Undefined), store the raw text
+                result[prefix] = element.GetRawText();
+                break;
         }
     }
 }

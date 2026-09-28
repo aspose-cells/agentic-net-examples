@@ -1,132 +1,154 @@
-// Title: C# – Verify that comments and data‑validation rules persist after decrypting an Excel workbook with Aspose.Cells
-// Description: This example creates a workbook, adds a comment to A1 and a whole‑number validation to A2, encrypts the file with a password, saves it, then reloads it using LoadOptions.Password. After decryption it confirms that the comment’s note and author and the validation’s type, operator, and formulas are unchanged.
-// Keywords: Aspose.Cells decrypt workbook | preserve Excel comments after encryption | data validation after password protection | C# load encrypted Excel file | verify workbook integrity Aspose | LoadOptions.Password example | Excel comment validation C#
-// Common Searches: how to keep comments when opening a password‑protected Excel file with Aspose.Cells | check data validation after decrypting an encrypted workbook in .NET | compare original and decrypted workbook comments Aspose | verify validation rules survive Excel encryption C#
-// Developer Intent: Ensure that a workbook opened with the correct password still contains the exact comment and data‑validation settings that were applied before encryption.
-// Use Cases: Load a password‑protected workbook and assert that the first comment’s Note and Author match the expected values. | Retrieve the validation for cell A2 with GetValidationInCell and confirm that Type, Operator, Formula1, and Formula2 are identical to the original configuration. | Add integrity checks for comments and validations to an automated test suite for protected Excel files.
-// AI Prompts: Write C# code that opens a password‑protected Excel file using Aspose.Cells and asserts that all comments and data‑validation rules are identical to those in the source workbook. | Show how to log detailed differences when a comment’s text, author, or a validation’s properties differ after loading an encrypted workbook. | Create a reusable method that takes the original and decrypted Workbook objects and returns true only if every comment and validation is preserved.
+// Title: Check that a decrypted Excel workbook keeps all original cell comments and data‑validation rules using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an encrypted .xlsx file with a password via Aspose.Cells, decrypts it, and verifies that every comment (text and cell address) matches the corresponding comment in an unencrypted reference workbook. | Create a reusable C# method that takes two Aspose.Cells Workbook objects and returns true only if their comment collections and data‑validation collections are identical across all worksheets. | Generate a C# unit test that loads an original workbook and its password‑protected copy, decrypts the latter, and asserts that comment counts, comment texts, and validation settings are equal.
+// Common Searches: aspnet compare comments between original and password protected Excel file using Aspose.Cells | how to ensure data validation rules are preserved after decrypting an XLSX with Aspose.Cells | C# verify that decrypted workbook retains cell comments and validations | Aspose.Cells load encrypted workbook and compare workbook objects for comment integrity | unit test for comment and validation equality after workbook decryption Aspose.Cells
+// Tags: compare workbook comments Aspose.Cells | validate data validation preservation Aspose.Cells | load encrypted XLSX with password Aspose.Cells | workbook decryption integrity check | comment and validation equality C#
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The program loads an original (unencrypted) workbook and an encrypted workbook, decrypts the latter with a password using Aspose.Cells, then iterates through each worksheet to confirm that comment counts, positions, and texts match, and that all data‑validation rules are identical between the two workbooks.
+class WorkbookValidation
 {
-    // This example creates a workbook, adds a comment to A1 and a whole‑number validation to A2, encrypts the file with a password, saves it, then reloads it using LoadOptions.Password. After decryption it confirms that the comment’s note and author and the validation’s type, operator, and formulas are unchanged.
-    public class DecryptedWorkbookValidationDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            // Paths to the original (unencrypted) and encrypted workbooks
+            string originalPath = "original.xlsx";
+            string encryptedPath = "encrypted.xlsx";
+            string password = "yourPassword";
+
+            // Ensure the files exist before attempting to load them
+            if (!File.Exists(originalPath))
+                throw new FileNotFoundException($"Original workbook not found: {originalPath}");
+            if (!File.Exists(encryptedPath))
+                throw new FileNotFoundException($"Encrypted workbook not found: {encryptedPath}");
+
+            // Load the original workbook (no password needed)
+            Workbook originalWb = new Workbook(originalPath);
+
+            // Load the encrypted workbook using the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Run();
+                Password = password
+            };
+            Workbook decryptedWb = new Workbook(encryptedPath, loadOptions);
+
+            // Validate comments and data validations
+            bool commentsMatch = CompareComments(originalWb, decryptedWb);
+            bool validationsMatch = CompareDataValidations(originalWb, decryptedWb);
+
+            Console.WriteLine($"Comments match: {commentsMatch}");
+            Console.WriteLine($"Data validations match: {validationsMatch}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Compare all comments in both workbooks
+    private static bool CompareComments(Workbook wb1, Workbook wb2)
+    {
+        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
+            return false;
+
+        for (int i = 0; i < wb1.Worksheets.Count; i++)
+        {
+            Worksheet ws1 = wb1.Worksheets[i];
+            Worksheet ws2 = wb2.Worksheets[i];
+
+            // Compare comment counts
+            if (ws1.Comments.Count != ws2.Comments.Count)
+                return false;
+
+            // Build a dictionary of comments from the second workbook for quick lookup
+            Dictionary<string, string> ws2Comments = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (Comment c in ws2.Comments)
+            {
+                // Use row/column to build cell name (e.g., "A1")
+                string cellName = CellsHelper.CellIndexToName(c.Row, c.Column);
+                ws2Comments[cellName] = c.Note;
             }
-            catch (Exception ex)
+
+            // Verify each comment from the first workbook exists and has identical text
+            foreach (Comment c1 in ws1.Comments)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                string cellName = CellsHelper.CellIndexToName(c1.Row, c1.Column);
+                if (!ws2Comments.TryGetValue(cellName, out string note2))
+                    return false;
+
+                if (!string.Equals(c1.Note, note2, StringComparison.Ordinal))
+                    return false;
             }
         }
 
-        public static void Run()
+        return true;
+    }
+
+    // Compare all data validation rules in both workbooks
+    private static bool CompareDataValidations(Workbook wb1, Workbook wb2)
+    {
+        if (wb1.Worksheets.Count != wb2.Worksheets.Count)
+            return false;
+
+        for (int i = 0; i < wb1.Worksheets.Count; i++)
         {
-            // -------------------- Create and configure workbook --------------------
-            // Create a new workbook (lifecycle: create)
-            using (Workbook originalWorkbook = new Workbook())
+            Worksheet ws1 = wb1.Worksheets[i];
+            Worksheet ws2 = wb2.Worksheets[i];
+
+            // Compare validation counts
+            if (ws1.Validations.Count != ws2.Validations.Count)
+                return false;
+
+            // Create a mutable list of validations from the second workbook for one‑to‑one matching
+            List<Aspose.Cells.Validation> ws2Validations = new List<Aspose.Cells.Validation>(ws2.Validations);
+
+            foreach (Aspose.Cells.Validation v1 in ws1.Validations)
             {
-                // Access the first worksheet
-                Worksheet sheet = originalWorkbook.Worksheets[0];
-
-                // ---------- Add a comment ----------
-                // Add a comment to cell A1 and set its properties
-                int commentIndex = sheet.Comments.Add("A1");
-                sheet.Comments[commentIndex].Note = "Original comment text";
-                sheet.Comments[commentIndex].Author = "Original Author";
-
-                // ---------- Add a data validation ----------
-                // Define the cell range for the validation (A2)
-                CellArea area = new CellArea
+                bool matchFound = false;
+                for (int j = 0; j < ws2Validations.Count; j++)
                 {
-                    StartRow = 1,
-                    StartColumn = 0,
-                    EndRow = 1,
-                    EndColumn = 0
-                };
-
-                // Create a validation that allows whole numbers between 10 and 100
-                Validation validation = sheet.Validations[sheet.Validations.Add(area)];
-                validation.Type = ValidationType.WholeNumber;
-                validation.Operator = OperatorType.Between;
-                validation.Formula1 = "10";
-                validation.Formula2 = "100";
-
-                // ---------- Encrypt the workbook ----------
-                // Set a password to protect the workbook (encryption)
-                originalWorkbook.Settings.Password = "SecretPwd";
-
-                // Save the encrypted workbook (lifecycle: save)
-                string encryptedPath = "EncryptedWorkbook.xlsx";
-                originalWorkbook.Save(encryptedPath);
-            }
-
-            // -------------------- Load the encrypted workbook (decrypted) --------------------
-            string encryptedFilePath = "EncryptedWorkbook.xlsx";
-
-            if (!File.Exists(encryptedFilePath))
-            {
-                Console.WriteLine($"File not found: {encryptedFilePath}");
-                return;
-            }
-
-            // Prepare load options with the password
-            LoadOptions loadOptions = new LoadOptions
-            {
-                Password = "SecretPwd"
-            };
-
-            // Load the workbook using the password (lifecycle: load)
-            using (Workbook loadedWorkbook = new Workbook(encryptedFilePath, loadOptions))
-            {
-                Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
-
-                // -------------------- Validate comments --------------------
-                Comment loadedComment = null;
-                bool commentExists = false;
-                string commentNote = null;
-                string commentAuthor = null;
-
-                if (loadedSheet.Comments.Count > 0)
-                {
-                    // Assuming the comment we added is the first one
-                    loadedComment = loadedSheet.Comments[0];
-                    commentExists = loadedComment != null;
-                    if (commentExists)
+                    Aspose.Cells.Validation v2 = ws2Validations[j];
+                    if (ValidationsAreEqual(v1, v2))
                     {
-                        commentNote = loadedComment.Note;
-                        commentAuthor = loadedComment.Author;
+                        matchFound = true;
+                        ws2Validations.RemoveAt(j); // Ensure one‑to‑one matching
+                        break;
                     }
                 }
-
-                // -------------------- Validate data validation --------------------
-                // Retrieve validation for cell A2 (row 1, column 0)
-                Validation loadedValidation = loadedSheet.Validations.GetValidationInCell(1, 0);
-                bool validationExists = loadedValidation != null;
-
-                // -------------------- Output results --------------------
-                Console.WriteLine("Comment verification:");
-                Console.WriteLine($"  Exists: {commentExists}");
-                Console.WriteLine($"  Note matches: {commentNote == "Original comment text"}");
-                Console.WriteLine($"  Author matches: {commentAuthor == "Original Author"}");
-
-                Console.WriteLine("Data validation verification:");
-                Console.WriteLine($"  Exists: {validationExists}");
-                if (validationExists)
-                {
-                    Console.WriteLine($"  Type matches: {loadedValidation.Type == ValidationType.WholeNumber}");
-                    Console.WriteLine($"  Operator matches: {loadedValidation.Operator == OperatorType.Between}");
-                    Console.WriteLine($"  Formula1 matches: {loadedValidation.Formula1 == "10"}");
-                    Console.WriteLine($"  Formula2 matches: {loadedValidation.Formula2 == "100"}");
-                }
+                if (!matchFound)
+                    return false;
             }
         }
+
+        return true;
+    }
+
+    // Helper to compare two Validation objects (area comparison omitted for compatibility)
+    private static bool ValidationsAreEqual(Aspose.Cells.Validation v1, Aspose.Cells.Validation v2)
+    {
+        // Compare validation type, operator, and formulas
+        if (v1.Type != v2.Type ||
+            v1.Operator != v2.Operator ||
+            !string.Equals(v1.Formula1, v2.Formula1, StringComparison.Ordinal) ||
+            !string.Equals(v1.Formula2, v2.Formula2, StringComparison.Ordinal))
+            return false;
+
+        // Compare additional properties that affect behavior
+        if (v1.IgnoreBlank != v2.IgnoreBlank ||
+            v1.InCellDropDown != v2.InCellDropDown ||
+            v1.ShowError != v2.ShowError ||
+            v1.ShowInput != v2.ShowInput)
+            return false;
+
+        // Compare error and input messages (if any)
+        if (!string.Equals(v1.ErrorMessage, v2.ErrorMessage, StringComparison.Ordinal) ||
+            !string.Equals(v1.InputMessage, v2.InputMessage, StringComparison.Ordinal))
+            return false;
+
+        return true;
     }
 }

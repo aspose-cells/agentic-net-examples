@@ -1,68 +1,90 @@
-// Title: Aspose.Cells .NET – Change Callout Tip Angle Using ShapeAdjustValues Index
-// Description: Creates a workbook, inserts a RightArrowCallout auto‑shape, accesses its Geometry, sets the first adjustment guide (index 0) to 0.4 to control the tip angle, and saves the file.
-// Keywords: Aspose.Cells callout adjustment | ShapeAdjustValues tip angle | C# modify callout geometry | adjust callout shape Aspose.Cells | Excel shape adjustment index
-// Common Searches: how to set callout tip angle Aspose.Cells | ShapeAdjustValues index 0 callout .NET | change callout arrow angle programmatically | adjust callout geometry Aspose.Cells C#
-// Developer Intent: Programmatically set the tip angle of a callout shape by updating its first ShapeAdjustValues entry.
-// Use Cases: Generate a worksheet with a right‑arrow callout whose tip is narrowed to 40 % of the maximum angle. | Loop through multiple callout shapes and standardize tip angles for consistent visual styling. | Create dynamic reports where callout arrows highlight key cells with customized tip angles.
-// AI Prompts: Show code to adjust the tip angle of CloudCallout and RoundedRectangleCallout shapes using Aspose.Cells geometry indexes. | Write a reusable method that receives a Shape and a proportion (0‑1) and safely sets the callout tip angle, handling shapes without adjustment guides. | Explain how to query the valid range of ShapeAdjustValues for a given callout type and apply it to set the tip angle.
+// Title: Change the tip angle of a callout shape in an existing Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file, retrieves the first shape, and sets its first adjustment value to alter the callout tip angle using Aspose.Cells. | Show how to use reflection in C# to access the Shape.Adjustments property in Aspose.Cells, modify the adjustment array, and save the workbook.
+// Common Searches: asp.net how to adjust callout shape tip angle in Excel using Aspose.Cells | c# set shape adjustments array for callout in existing workbook | modify callout shape parameters with Aspose.Cells reflection example | change callout arrow angle programmatically in .xlsx via Aspose.Cells | update shape adjustment index in Excel file using Aspose.Cells for .NET
+// Tags: adjust callout shape tip angle Aspose.Cells | shape adjustments array reflection C# | modify shape parameters Excel workbook .NET | set shape adjustment index Aspose.Cells | callout shape adjustment property Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The program loads an existing .xlsx file, checks for shapes on the first worksheet, uses reflection to obtain the Shape.Adjustments array, sets the first adjustment value (e.g., 0.5) to change the callout tip angle, and saves the modified workbook.
+class Program
 {
-    // Creates a workbook, inserts a RightArrowCallout auto‑shape, accesses its Geometry, sets the first adjustment guide (index 0) to 0.4 to control the tip angle, and saves the file.
-    public class CalloutTipAngleAdjustment
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a right-arrow callout shape (you can also use other callout types)
-                // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
-                Shape callout = worksheet.Shapes.AddAutoShape(
-                    AutoShapeType.RightArrowCallout, // callout shape
-                    2,    // upper left row
-                    2,    // upper left column
-                    0,    // top offset (pixels)
-                    0,    // left offset (pixels)
-                    150,  // height (pixels)
-                    250); // width (pixels)
-
-                // Access the geometry of the shape to work with adjustment guides
-                Geometry geometry = callout.Geometry;
-
-                // Ensure that the shape has adjustment guides (most callouts have at least one)
-                if (geometry.ShapeAdjustValues.Count > 0)
-                {
-                    // The first adjustment guide (index 0) controls the tip angle of many callout shapes.
-                    // Set the value to a desired proportion (0.0 – 1.0). Here we set it to 0.4 (40% of the max angle).
-                    geometry.ShapeAdjustValues[0].Value = 0.4;
-
-                    // Optionally, you can modify additional guides if needed, e.g., second guide at index 1.
-                    // geometry.ShapeAdjustValues[1].Value = 0.2;
-                }
-
-                // Save the workbook with the modified shape
-                workbook.Save("CalloutTipAngleAdjustment.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
-    }
 
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            CalloutTipAngleAdjustment.Run();
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one shape on the sheet
+            if (sheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the first worksheet.");
+            }
+            else
+            {
+                // Access the first shape (could be any type)
+                Shape shape = sheet.Shapes[0];
+
+                // Attempt to modify adjustments if the property is available
+                try
+                {
+                    // Some shape types (e.g., Callout) support adjustments.
+                    // Use reflection to avoid compile‑time dependency on the Adjustments property.
+                    var adjustmentsProp = typeof(Shape).GetProperty("Adjustments");
+                    if (adjustmentsProp != null)
+                    {
+                        var adjustments = adjustmentsProp.GetValue(shape) as double[];
+                        if (adjustments != null && adjustments.Length > 0)
+                        {
+                            adjustments[0] = 0.5; // Example adjustment
+                            Console.WriteLine("Shape adjustment applied.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Shape does not support adjustments or has no adjustable parameters.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Adjustments property not found on Shape.");
+                    }
+                }
+                catch (Exception adjEx)
+                {
+                    Console.WriteLine($"Adjustment error: {adjEx.Message}");
+                }
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

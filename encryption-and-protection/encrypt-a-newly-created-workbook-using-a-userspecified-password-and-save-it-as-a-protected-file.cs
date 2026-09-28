@@ -1,44 +1,29 @@
-// Title: Encrypt an Excel workbook with a user‑defined password using Aspose.Cells for .NET (AES‑128)
-// Description: The sample prompts for a password, creates a new Workbook, writes a value to cell A1, sets the password, selects AES‑128 strong encryption, saves the file as EncryptedWorkbook.xlsx, and then reloads it with LoadOptions to verify the protection.
-// Keywords: Aspose.Cells password protection | C# encrypt Excel file | AES 128 encryption Aspose | Workbook.Settings.Password | SetEncryptionOptions | LoadOptions password | protected .xlsx .NET | secure Excel workbook C# | North America developers | European .NET community
-// Common Searches: How to add password protection to an Excel file with Aspose.Cells C# | Set AES‑128 encryption for a workbook in .NET | Open a password‑protected workbook using LoadOptions Aspose | C# code to encrypt and save Excel workbook | Aspose.Cells encrypt workbook example
-// Developer Intent: Apply a user‑entered password and strong encryption to a newly created workbook and store it as a protected Excel file.
-// Use Cases: Generate confidential reports that are automatically locked with a password before distribution. | Implement a secure export feature in a financial application using Aspose.Cells. | Validate encryption by programmatically reopening the saved file with the same password.
-// AI Prompts: Provide C# code that encrypts a new Aspose.Cells workbook with a password and AES‑128, then saves it. | Show how to open a password‑protected Excel file using Aspose.Cells LoadOptions and read a specific cell. | Explain how to change the encryption algorithm or key size for an Aspose.Cells workbook.
+// Title: Encrypt a newly created Excel workbook with a custom password using Aspose.Cells for .NET and save as .xlsx
+// AI Prompts: Generate a C# program that creates a Workbook, assigns a user‑provided string to workbook.Settings.Password, and saves the file as an encrypted .xlsx with Aspose.Cells. | Update the example to read the password from console input, apply it to workbook.Settings.Password, and then write the protected workbook to disk. | Adapt the code to encrypt the workbook as a binary .xlsb file while preserving password protection using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to set a password for opening an Excel file | Encrypt newly created workbook with user defined password using Aspose.Cells .NET | Programmatically save a .xlsx file that requires a password to open using Aspose.Cells | C# example for workbook.Settings.Password property in Aspose.Cells
+// Tags: Aspose.Cells workbook password protection | C# set workbook.Settings.Password | save password protected .xlsx Aspose.Cells | create encrypted Excel file .NET | protect Excel workbook with user password
 
 using System;
 using Aspose.Cells;
 
-// The sample prompts for a password, creates a new Workbook, writes a value to cell A1, sets the password, selects AES‑128 strong encryption, saves the file as EncryptedWorkbook.xlsx, and then reloads it with LoadOptions to verify the protection.
-class EncryptWorkbookDemo
+// // This example creates a new Workbook, adds sample data, assigns a user‑specified password via workbook.Settings.Password to encrypt the file, and saves the protected workbook as ProtectedWorkbook.xlsx in Xlsx format.
+class Program
 {
     static void Main()
     {
-        // Prompt the user for a password to encrypt the workbook
-        Console.Write("Enter password to encrypt workbook: ");
-        string password = Console.ReadLine();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        // Create a new workbook (lifecycle: create)
-        Workbook wb = new Workbook();
+        // (Optional) Add some sample data
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Sample");
+        sheet.Cells["B1"].PutValue("Data");
 
-        // Add some sample data to the first worksheet
-        Worksheet sheet = wb.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Encrypted content");
+        // Set the password that will be required to open the file
+        // This encrypts the workbook using the specified password
+        workbook.Settings.Password = "UserSpecifiedPassword";
 
-        // Set the password that will be required to open the workbook
-        wb.Settings.Password = password;
-
-        // Optionally specify stronger encryption (AES 128-bit)
-        wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-        // Save the encrypted workbook to a file (lifecycle: save)
-        string outputPath = "EncryptedWorkbook.xlsx";
-        wb.Save(outputPath, SaveFormat.Xlsx);
-
-        // Verify that the workbook is encrypted by loading it with the password (lifecycle: load)
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = password;
-        Workbook loadedWb = new Workbook(outputPath, loadOptions);
-        Console.WriteLine("Loaded cell value: " + loadedWb.Worksheets[0].Cells["A1"].StringValue);
+        // Save the encrypted workbook to disk
+        workbook.Save("ProtectedWorkbook.xlsx", SaveFormat.Xlsx);
     }
 }

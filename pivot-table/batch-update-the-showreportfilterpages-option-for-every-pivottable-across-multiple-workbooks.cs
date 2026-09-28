@@ -1,89 +1,81 @@
-// Title: Batch enable ShowReportFilterPage for all PivotTables in multiple Excel files with Aspose.Cells (C#)
-// Description: C# sample that loads a collection of Excel workbooks using Aspose.Cells, iterates every worksheet and PivotTable, calls ShowReportFilterPage for each page field, and saves the modified files to a target folder while handling missing files and runtime errors.
-// Keywords: Aspose.Cells C# pivot table batch update | ShowReportFilterPage programmatically | process multiple Excel workbooks | enable report filter pages | pivot table page fields Aspose | bulk modify Excel pivot settings
-// Common Searches: how to set ShowReportFilterPage for all pivot tables in C# | batch update pivot table report filter pages Aspose.Cells | iterate pivot tables across many workbooks .NET | save modified Excel files after changing pivot settings | Aspose.Cells example for ShowReportFilterPage
-// Developer Intent: Automatically turn on the ShowReportFilterPage option for every page field of each PivotTable in a set of workbooks and write the updated files to a chosen directory.
-// Use Cases: Standardize report‑filter worksheets across a corporate library before distribution. | Prepare workbooks for publishing by ensuring each pivot table creates separate filter pages. | Automate pivot‑table configuration during a data‑migration or ETL process.
-// AI Prompts: Create C# code with Aspose.Cells that enables ShowReportFilterPage for all pivot tables in a folder of Excel files and logs any errors. | Refactor the batch method to run asynchronously and report progress for large numbers of workbooks. | Explain the impact of ShowReportFilterPage on generated worksheets and show how to verify the changes via code.
+// Title: Batch enable ShowReportFilterPages for every PivotTable in multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a list of Excel file paths, iterates through each worksheet and its PivotTable collection, calls ShowReportFilterPage for every page field, and saves the workbook to a specified output directory. | Add logging to the sample so that workbook names without any PivotTables are recorded while performing the batch ShowReportFilterPages update. | Refactor the program to accept the input file list and the output folder as command‑line arguments instead of hard‑coded values.
+// Common Searches: Aspose.Cells how to turn on ShowReportFilterPages for all pivot tables in a batch of workbooks | C# batch processing of Excel files to update pivot table report filter pages | iterate through worksheets and pivot tables with Aspose.Cells to call ShowReportFilterPage | automate pivot table page field settings across multiple .xlsx files using .NET | example code for updating ShowReportFilterPage option in several workbooks with Aspose.Cells
+// Tags: batch update pivot table ShowReportFilterPages Aspose.Cells | iterate worksheets pivot tables C# Aspose | process multiple Excel workbooks Aspose.Cells | automate pivot table page field settings .NET | save updated workbooks with suffix Aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsBatchUpdate
+namespace PivotReportFilterBatchUpdate
 {
-    // C# sample that loads a collection of Excel workbooks using Aspose.Cells, iterates every worksheet and PivotTable, calls ShowReportFilterPage for each page field, and saves the modified files to a target folder while handling missing files and runtime errors.
-    public class PivotReportFilterUpdater
+    // The program loads each workbook from a supplied list, walks through every worksheet and its PivotTable collection, invokes ShowReportFilterPage for each page field to display report filter pages, and saves the modified workbook with an "_Updated" suffix to a target folder.
+    public class Program
     {
-        /// <param name="inputFiles">Full paths of the source workbooks.</param>
-        /// <param name="outputDirectory">Directory where the modified workbooks will be saved.</param>
-        public static void UpdateShowReportFilterPages(string[] inputFiles, string outputDirectory)
+        // Entry point
+        public static void Main(string[] args)
         {
-            // Ensure the output directory exists
-            if (!Directory.Exists(outputDirectory))
-                Directory.CreateDirectory(outputDirectory);
-
-            foreach (string inputFile in inputFiles)
-            {
-                // Verify the source file exists
-                if (!File.Exists(inputFile))
-                {
-                    Console.WriteLine($"Source file not found: {inputFile}");
-                    continue;
-                }
-
-                try
-                {
-                    // Load the workbook from the source file
-                    Workbook workbook = new Workbook(inputFile);
-
-                    // Iterate through all worksheets in the workbook
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        // Access the collection of pivot tables on the current worksheet
-                        PivotTableCollection pivotTables = sheet.PivotTables;
-
-                        // Process each pivot table
-                        foreach (PivotTable pivotTable in pivotTables)
-                        {
-                            // For each page field in the pivot table, generate a separate report filter page
-                            foreach (PivotField pageField in pivotTable.PageFields)
-                            {
-                                pivotTable.ShowReportFilterPage(pageField);
-                            }
-                        }
-                    }
-
-                    // Construct the output file path (preserve original file name)
-                    string outputPath = Path.Combine(outputDirectory, Path.GetFileName(inputFile));
-
-                    // Save the modified workbook
-                    workbook.Save(outputPath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{inputFile}': {ex.Message}");
-                }
-            }
-        }
-
-        // Example usage
-        public static void Main()
-        {
-            // Define source workbook files (could be populated dynamically)
-            string[] sourceFiles = new string[]
+            // Example input: array of workbook file paths to process
+            string[] inputFiles = new string[]
             {
                 @"C:\Data\Workbook1.xlsx",
                 @"C:\Data\Workbook2.xlsx",
                 @"C:\Data\Workbook3.xlsx"
             };
 
-            // Define where the updated workbooks should be saved
-            string destinationFolder = @"C:\Data\UpdatedWorkbooks";
+            // Folder where updated workbooks will be saved
+            string outputFolder = @"C:\Data\Updated";
 
-            // Perform the batch update
-            UpdateShowReportFilterPages(sourceFiles, destinationFolder);
+            // Ensure the output directory exists
+            Directory.CreateDirectory(outputFolder);
+
+            // Process each workbook
+            foreach (string inputPath in inputFiles)
+            {
+                // Verify the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"File not found: {inputPath}");
+                    continue;
+                }
+
+                try
+                {
+                    // Load the workbook
+                    Workbook workbook = new Workbook(inputPath);
+
+                    // Iterate through all worksheets
+                    foreach (Worksheet sheet in workbook.Worksheets)
+                    {
+                        // Access the collection of pivot tables on the worksheet
+                        PivotTableCollection pivots = sheet.PivotTables;
+
+                        // Process each pivot table
+                        foreach (PivotTable pivot in pivots)
+                        {
+                            // Show report filter pages for every page field in the pivot table
+                            foreach (PivotField pageField in pivot.PageFields)
+                            {
+                                // ShowReportFilterPage method
+                                pivot.ShowReportFilterPage(pageField);
+                            }
+                        }
+                    }
+
+                    // Build output file path
+                    string fileName = Path.GetFileNameWithoutExtension(inputPath);
+                    string outputPath = Path.Combine(outputFolder, $"{fileName}_Updated.xlsx");
+
+                    // Save the modified workbook
+                    workbook.Save(outputPath);
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors and continue with the next file
+                    Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
+                }
+            }
 
             Console.WriteLine("Batch update completed.");
         }

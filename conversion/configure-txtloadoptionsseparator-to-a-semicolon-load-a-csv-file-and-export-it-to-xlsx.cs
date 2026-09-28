@@ -1,58 +1,28 @@
-// Title: C# – Convert Semicolon‑Delimited CSV to XLSX with Aspose.Cells TxtLoadOptions
-// Description: Demonstrates how to set TxtLoadOptions.Separator to ';', load a CSV file using Aspose.Cells, and save the workbook as an XLSX document in a single step.
-// Keywords: Aspose.Cells TxtLoadOptions separator | semicolon CSV to XLSX C# | custom delimiter CSV Aspose | load CSV with TxtLoadOptions | save workbook as XLSX | European CSV conversion | Aspose.Cells CSV import example
-// Common Searches: Aspose.Cells set CSV delimiter to semicolon | C# convert CSV with custom separator to Excel | TxtLoadOptions separator usage | How to load semicolon‑separated CSV in .NET | Batch convert CSV files to XLSX with Aspose
-// Developer Intent: Configure a custom CSV delimiter, import the file, and export it as an XLSX workbook.
-// Use Cases: Transform European‑style CSV reports (semicolon‑separated) into Excel for analysis. | Automate nightly conversion of multiple semicolon‑delimited CSV files to XLSX in a CI pipeline. | Read CSV data with a non‑standard delimiter, apply Aspose.Cells formatting, and generate a shareable Excel file.
-// AI Prompts: Generate C# code that uses Aspose.Cells TxtLoadOptions to load a CSV file with a semicolon delimiter and save it as XLSX. | Create a script that scans a directory for *.csv files, converts each using TxtLoadOptions.Separator = ';', and logs conversion results. | Explain how TxtLoadOptions can be configured for different delimiters and how to preserve data types when converting CSV to XLSX with Aspose.Cells.
+// Title: Use TxtLoadOptions to set a semicolon delimiter and convert a CSV file to XLSX with Aspose.Cells for .NET
+// AI Prompts: Load a CSV file with a semicolon delimiter using TxtLoadOptions and save it as an XLSX workbook in C# with Aspose.Cells. | Configure a custom CSV separator, import the data into a Workbook, and export to Excel format programmatically using the Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells how to specify semicolon as CSV delimiter in C# | Convert CSV file that uses ';' as separator to Excel workbook using .NET | C# example for loading CSV with custom separator and saving as .xlsx with Aspose.Cells | TxtLoadOptions separator property usage for semicolon delimited CSV conversion
+// Tags: TxtLoadOptions custom separator | CSV to XLSX conversion Aspose.Cells | custom CSV delimiter .NET | load CSV with Aspose.Cells | save workbook as Xlsx Aspose
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace CsvToXlsx
+// The sample configures TxtLoadOptions.Separator to a semicolon, loads a semicolon‑delimited CSV file into an Aspose.Cells Workbook, and then saves the workbook as an XLSX file.
+class Program
 {
-    // Demonstrates how to set TxtLoadOptions.Separator to ';', load a CSV file using Aspose.Cells, and save the workbook as an XLSX document in a single step.
-    public class CsvToXlsxConverter
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Configure TxtLoadOptions to use semicolon as the CSV separator
+        TxtLoadOptions loadOptions = new TxtLoadOptions();
+        loadOptions.Separator = ';';
 
-        public static void Run()
-        {
-            // Path to the source CSV file
-            string csvPath = "input.csv";
+        // Path to the source CSV file (replace with actual file location)
+        string csvFilePath = "input.csv";
 
-            // Verify input file exists
-            if (!File.Exists(csvPath))
-            {
-                Console.WriteLine($"Input file not found: {csvPath}");
-                return;
-            }
+        // Load the CSV file with the specified load options
+        Workbook workbook = new Workbook(csvFilePath, loadOptions);
 
-            // Create load options and set the separator to semicolon
-            TxtLoadOptions loadOptions = new TxtLoadOptions
-            {
-                Separator = ';'
-            };
-
-            // Load the CSV file using the configured options
-            Workbook workbook = new Workbook(csvPath, loadOptions);
-
-            // Export the loaded workbook to XLSX format
-            string xlsxPath = "output.xlsx";
-            workbook.Save(xlsxPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Conversion completed. Output saved to {xlsxPath}");
-        }
+        // Export the loaded workbook to XLSX format
+        string xlsxFilePath = "output.xlsx";
+        workbook.Save(xlsxFilePath, SaveFormat.Xlsx);
     }
 }

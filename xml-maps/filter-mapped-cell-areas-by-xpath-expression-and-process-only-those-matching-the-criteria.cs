@@ -1,99 +1,125 @@
-// Title: C# – Filter XML‑mapped cells by XPath using Aspose.Cells
-// Description: Demonstrates how to import namespaced XML into a workbook, obtain the XML map collection across Aspose.Cells versions, query for CellArea ranges that match a namespace‑aware XPath, iterate the cells to read values, and save the result.
-// Keywords: Aspose.Cells | C# | .NET | XML map | XPath query | CellArea | namespace aware XML | version‑agnostic API | filter mapped cells | import XML workbook
-// Common Searches: Aspose.Cells query cells by XPath | Get CellArea for XML map element C# | How to filter XML‑mapped ranges in Aspose.Cells | Version‑independent XML map collection Aspose.Cells | Read values of XML‑mapped cells using XPath
-// Developer Intent: Select and process only the worksheet cells linked to a specific XPath in an XML map.
-// Use Cases: Extract values of all <Item> nodes from an imported XML map by iterating over the corresponding CellArea ranges. | Create a report that operates solely on cells mapped to a particular XML element while ignoring unrelated data. | Update or replace values in cells mapped to a given XPath and save the modified workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that imports a namespaced XML file, queries the worksheet for CellArea objects matching a specific XPath, and prints each cell's value. | Show a version‑agnostic method to obtain the XML map collection in Aspose.Cells and filter mapped areas using a namespace‑aware XPath expression. | Explain how to modify the sample to write new data back to the cells that match the XPath and then save the workbook.
+// Title: Highlight cells with a specific StyleID in an Excel workbook using XPath on SpreadsheetML with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, converts it to SpreadsheetML, runs an XPath query to find cells having a given StyleID, and applies a yellow background style to those cells. | Show how to parse the XPath result from the SpreadsheetML XML, build cell addresses, and set a custom style on each matching cell using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# filter cells by XPath and change background color | How to select cells with a specific StyleID using XPath in SpreadsheetML with Aspose.Cells | Apply style to cells based on XML mapping in Aspose.Cells .NET
+// Tags: XPath cell selection Aspose.Cells .NET | apply background style to cells Aspose.Cells | SpreadsheetML conversion Aspose.Cells C# | highlight cells by StyleID Aspose.Cells | C# extract cell addresses from XML Aspose.Cells
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Xml;
 using Aspose.Cells;
 
-// Demonstrates how to import namespaced XML into a workbook, obtain the XML map collection across Aspose.Cells versions, query for CellArea ranges that match a namespace‑aware XPath, iterate the cells to read values, and save the result.
+// The example loads or creates an Excel workbook, converts it to SpreadsheetML in memory, uses an XPath expression to locate cells with a particular StyleID, builds a set of zero‑based cell addresses, creates a yellow background style, applies that style to each matching cell, and saves the modified workbook as a new XLSX file.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Sample XML with a namespace; it will be imported as an XML map
-            string xml = @"<?xml version='1.0' encoding='UTF-8'?>
-                <ns1:Root xmlns:ns1='http://example.com'>
-                    <ns1:Data>
-                        <ns1:Item>Value1</ns1:Item>
-                        <ns1:Item>Value2</ns1:Item>
-                    </ns1:Data>
-                </ns1:Root>";
-
-            // Import the XML into the worksheet starting at cell A1; this creates an XML map
-            workbook.ImportXml(xml, "Sheet1", 0, 0);
-
-            // Access the collection of XML maps (property name may vary by version)
-            // Use XmlMaps if available; otherwise fall back to XmlMapCollection
-            var xmlMapCollection = GetXmlMapCollection(workbook);
-            if (xmlMapCollection == null || xmlMapCollection.Count == 0)
+            // Load workbook; create a new one if the input file does not exist
+            Workbook workbook;
+            if (File.Exists(inputPath))
             {
-                Console.WriteLine("No XML map was created.");
-                return;
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
             }
 
-            // Retrieve the first XML map
-            XmlMap xmlMap = xmlMapCollection[0] as XmlMap;
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the XPath expression to locate the desired XML elements
-            string xpath = "/ns1:Root/ns1:Data/ns1:Item";
-
-            // Query the worksheet for cell areas that are mapped to the specified XPath
-            ArrayList mappedAreas = worksheet.XmlMapQuery(xpath, xmlMap);
-
-            // Process each returned CellArea
-            foreach (CellArea area in mappedAreas)
+            // Convert workbook to SpreadsheetML (XML) in memory
+            XmlDocument xmlDoc = new XmlDocument();
+            using (MemoryStream ms = new MemoryStream())
             {
-                for (int row = area.StartRow; row <= area.EndRow; row++)
+                workbook.Save(ms, SaveFormat.Xml);
+                ms.Position = 0;
+                xmlDoc.Load(ms);
+            }
+
+            // XPath that selects cells with a specific style ID (example)
+            const string xpath = "//Cell[@ss:StyleID='1']";
+
+            // Register SpreadsheetML namespace
+            XmlNamespaceManager nsMgr = new XmlNamespaceManager(xmlDoc.NameTable);
+            nsMgr.AddNamespace("ss", "urn:schemas-microsoft-com:office:spreadsheet");
+
+            // Execute XPath query
+            XmlNodeList matchingNodes = xmlDoc.SelectNodes(xpath, nsMgr);
+
+            // Build a set of cell addresses that match the XPath criteria.
+            // Address format: "R{rowIndex}C{colIndex}" (zero‑based)
+            HashSet<string> matchingAddresses = new HashSet<string>();
+            if (matchingNodes != null)
+            {
+                foreach (XmlNode cellNode in matchingNodes)
                 {
-                    for (int col = area.StartColumn; col <= area.EndColumn; col++)
+                    if (cellNode?.ParentNode == null) continue;
+
+                    XmlNode rowNode = cellNode.ParentNode;
+
+                    int rowIndex = -1;
+                    int colIndex = -1;
+
+                    // Row index (1‑based) from <Row ss:Index="...">
+                    if (rowNode.Attributes != null &&
+                        rowNode.Attributes["ss:Index"] != null &&
+                        int.TryParse(rowNode.Attributes["ss:Index"]?.Value, out int rIdx))
                     {
-                        Cell cell = worksheet.Cells[row, col];
-                        Console.WriteLine($"Cell {cell.Name}: {cell.StringValue}");
+                        rowIndex = rIdx - 1;
+                    }
+
+                    // Column index (1‑based) from <Cell ss:Index="...">
+                    if (cellNode.Attributes != null &&
+                        cellNode.Attributes["ss:Index"] != null &&
+                        int.TryParse(cellNode.Attributes["ss:Index"]?.Value, out int cIdx))
+                    {
+                        colIndex = cIdx - 1;
+                    }
+
+                    // If both indices are available, add the address
+                    if (rowIndex >= 0 && colIndex >= 0)
+                    {
+                        matchingAddresses.Add($"R{rowIndex}C{colIndex}");
                     }
                 }
             }
 
-            // Save the workbook (ensure the directory is writable)
-            string outputPath = "FilteredXmlMap.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            // Prepare a style to apply (yellow background)
+            Style style = workbook.CreateStyle();
+            style.ForegroundColor = Color.Yellow;
+            style.Pattern = BackgroundType.Solid;
+
+            // Apply the style to each matching cell
+            foreach (string address in matchingAddresses)
+            {
+                // Expected format: R{row}C{col}
+                int rPos = address.IndexOf('R');
+                int cPos = address.IndexOf('C');
+                if (rPos == -1 || cPos == -1) continue;
+
+                if (int.TryParse(address.Substring(rPos + 1, cPos - rPos - 1), out int row) &&
+                    int.TryParse(address.Substring(cPos + 1), out int col))
+                {
+                    // Ensure the cell exists (Aspose.Cells creates it on demand)
+                    Cell cell = sheet.Cells[row, col];
+                    cell.SetStyle(style);
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
         }
-    }
-
-    // Helper to obtain the XML map collection compatible with different Aspose.Cells versions
-    private static XmlMapCollection GetXmlMapCollection(Workbook workbook)
-    {
-        // Prefer the XmlMaps property if it exists
-        var type = typeof(Workbook);
-        var prop = type.GetProperty("XmlMaps");
-        if (prop != null)
-        {
-            return prop.GetValue(workbook) as XmlMapCollection;
-        }
-
-        // Fallback to XmlMapCollection property (older versions)
-        prop = type.GetProperty("XmlMapCollection");
-        if (prop != null)
-        {
-            return prop.GetValue(workbook) as XmlMapCollection;
-        }
-
-        return null;
     }
 }

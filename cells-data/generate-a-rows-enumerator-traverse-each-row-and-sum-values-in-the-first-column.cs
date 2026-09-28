@@ -1,20 +1,16 @@
-// Title: Sum numeric values in the first column with Aspose.Cells Row enumerator (C# .NET)
-// Description: Creates a workbook, fills column A with numbers, text and nulls, obtains the RowCollection, uses its enumerator to walk each existing row, extracts the first cell, safely parses numeric values, accumulates a double total, prints the sum and saves the file.
-// Keywords: Aspose.Cells row enumerator C# | iterate rows Aspose.Cells | sum first column Aspose.Cells | calculate column total .NET | handle non‑numeric cells Aspose.Cells | RowCollection enumeration | C# spreadsheet sum column
-// Common Searches: Aspose.Cells iterate rows and sum column | C# sum first column using RowCollection | skip text cells when summing column Aspose.Cells | how to use GetEnumerator with Aspose.Cells rows | calculate column total in .NET spreadsheet library
-// Developer Intent: The developer needs to loop through all rows of a worksheet and compute the sum of numeric entries in the first column while ignoring empty or non‑numeric cells.
-// Use Cases: Generate a sales report and total the amounts listed in column A. | Validate that a column of measurements stays within a defined range. | Add a summary row that displays the aggregated total after data processing.
-// AI Prompts: Show how to change the code to sum values in column B instead of column A. | Provide an example that writes the calculated sum back to cell C1. | Explain how to achieve the same result with LINQ over Aspose.Cells RowCollection.
+// Title: How to enumerate rows with Aspose.Cells for .NET and sum numeric values in the first column
+// AI Prompts: Write C# code that uses Aspose.Cells to obtain a row enumerator from a worksheet and accumulate the numeric values found in column A. | Show a safe way to retrieve the first cell of each row, verify it contains a number, and add it to a total using Aspose.Cells. | Demonstrate printing the calculated sum to the console and saving the workbook to an Excel file after processing.
+// Common Searches: aspocells iterate rows and calculate sum of column A in C# | c# Aspose.Cells get rows enumerator and sum first column values | how to sum numeric cells in first column using Aspose.Cells Rows collection | enumerate worksheet rows with Aspose.Cells and compute column total | Aspose.Cells .NET example summing values in column A
+// Tags: Aspose.Cells row enumeration .NET | sum first column Aspose.Cells | iterate worksheet rows C# | calculate column total Excel Aspose.Cells | Rows.GetEnumerator usage Aspose.Cells
 
 using System;
 using System.Collections;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a workbook, fills column A with numbers, text and nulls, obtains the RowCollection, uses its enumerator to walk each existing row, extracts the first cell, safely parses numeric values, accumulates a double total, prints the sum and saves the file.
-    public class RowSumFirstColumnDemo
+    // The example creates a new workbook, fills cells A1‑A5 with numbers 1 through 5, obtains an IEnumerator for the worksheet's Rows collection, iterates each row, safely retrieves the first cell, checks for a numeric value, adds it to a running total, prints the sum, and saves the workbook as "SumFirstColumn.xlsx".
+    public class SumFirstColumnDemo
     {
         public static void Run()
         {
@@ -23,34 +19,32 @@ namespace AsposeCellsExamples
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
 
                 // Populate sample numeric data in the first column (A)
-                cells["A1"].PutValue(10);
-                cells["A2"].PutValue(20);
-                cells["A3"].PutValue(30);
-                // Add some non‑numeric data to demonstrate safe handling
-                cells["A4"].PutValue("Text");
-                cells["A5"].PutValue(null);
-
-                // Get the RowCollection from the worksheet
-                RowCollection rows = cells.Rows;
-
-                // Obtain an enumerator that iterates through all existing rows
-                IEnumerator enumerator = rows.GetEnumerator();
-
-                double sum = 0.0;
-
-                // Traverse each row and sum the values in the first column (index 0)
-                while (enumerator.MoveNext())
+                for (int i = 0; i < 5; i++)
                 {
-                    Row row = (Row)enumerator.Current;
+                    // Put values 1,2,3,4,5 in cells A1..A5
+                    worksheet.Cells[i, 0].PutValue(i + 1);
+                }
 
-                    // Retrieve the first cell in the row; may be null if the cell does not exist
+                // Initialize sum accumulator
+                double sum = 0;
+
+                // Get an enumerator for the rows collection
+                IEnumerator rowEnumerator = worksheet.Cells.Rows.GetEnumerator();
+
+                // Traverse each row
+                while (rowEnumerator.MoveNext())
+                {
+                    // Cast the current element to Row
+                    Row row = (Row)rowEnumerator.Current;
+
+                    // Get the first cell in the row (column index 0)
                     Cell cell = row.GetCellOrNull(0);
+
+                    // If the cell exists and contains a numeric value, add it to the sum
                     if (cell != null && cell.Value != null)
                     {
-                        // Try to parse the cell value as a double; ignore if parsing fails
                         if (double.TryParse(cell.Value.ToString(), out double value))
                         {
                             sum += value;
@@ -58,16 +52,17 @@ namespace AsposeCellsExamples
                     }
                 }
 
+                // Output the result
                 Console.WriteLine($"Sum of values in the first column: {sum}");
 
-                // Save the workbook (optional, just to demonstrate the save lifecycle)
-                string outputPath = "RowSumFirstColumnDemo.xlsx";
+                // Save the workbook (demonstrates the required save lifecycle)
+                string outputPath = "SumFirstColumn.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
@@ -77,7 +72,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            RowSumFirstColumnDemo.Run();
+            SumFirstColumnDemo.Run();
         }
     }
 }

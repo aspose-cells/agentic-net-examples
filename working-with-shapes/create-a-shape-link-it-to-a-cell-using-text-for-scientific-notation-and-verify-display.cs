@@ -1,51 +1,55 @@
-// Title: Link a TextBox shape to a cell formatted with TEXT() scientific notation in Aspose.Cells for .NET
-// Description: Demonstrates how to place a number in A1, format it as scientific notation with the TEXT function in B1, recalculate the workbook, add a TextBox shape, link the shape to B1 using SetLinkedCell, update the shape's displayed text, and save the file.
-// Keywords: Aspose.Cells | C# | .NET | TextBox shape | linked cell | TEXT function | scientific notation | SetLinkedCell | shape update | formula calculation
-// Common Searches: Aspose.Cells link textbox to cell | display scientific notation in shape | SetLinkedCell parameters C# | update shape text after formula | link shape to TEXT formula Aspose
-// Developer Intent: Create a textbox shape that automatically shows the scientific‑notation string produced by a TEXT formula.
-// Use Cases: Financial or scientific reports where numbers need exponential display inside annotated shapes. | Dynamic dashboards that keep shape captions synchronized with formatted cell values. | Template designs that use linked shapes to reflect locale‑aware formatted data without manual updates.
-// AI Prompts: Generate C# code with Aspose.Cells to add a TextBox, link it to a cell using TEXT() for scientific notation, recalculate, and refresh the shape text. | Explain the effect of the isR1C1 and isLocal flags in SetLinkedCell when linking a shape to an A1‑style address. | Outline steps to verify that a shape linked to a TEXT‑formatted cell displays the correct exponential value after workbook calculation.
+// Title: Add a textbox shape linked to a cell and format its value in scientific notation using the TEXT function with Aspose.Cells for .NET
+// AI Prompts: Insert a TextBox shape at a given row and column, set its Text property to =TEXT(A1,"0.00E+00"), call Workbook.CalculateFormula(), and read back the displayed text from the shape. | Create a shape, bind it to cell A1 with a TEXT formula for scientific notation, recalculate formulas, and programmatically verify the shape shows the formatted value.
+// Common Searches: how to link a textbox shape to a cell and show scientific notation with Aspose.Cells .NET | Aspose.Cells set shape text to =TEXT(A1,"0.00E+00") and recalculate | display numeric cell value in scientific notation inside a shape using Aspose.Cells for C# | Aspose.Cells shape formula binding example for scientific format
+// Tags: textbox shape formula binding Aspose.Cells | scientific notation TEXT function shape | recalculate workbook for shape text Aspose.Cells | save workbook with linked shape .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeLinkExample
+// The example creates a workbook, writes a large number to cell A1, adds a textbox shape at row 2 column 1, assigns the formula =TEXT(A1,"0.00E+00") to the shape, recalculates formulas so the shape displays the number in scientific notation, prints the evaluated text, and saves the file as LinkedShape.xlsx.
+class Program
 {
-    // Demonstrates how to place a number in A1, format it as scientific notation with the TEXT function in B1, recalculate the workbook, add a TextBox shape, link the shape to B1 using SetLinkedCell, update the shape's displayed text, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Put a numeric value in A1
-            worksheet.Cells["A1"].PutValue(12345);
-
-            // Use the TEXT function to format the number in scientific notation in B1
-            worksheet.Cells["B1"].Formula = "TEXT(A1,\"0.00E+00\")";
-
-            // Recalculate formulas so B1 contains the formatted text
-            workbook.CalculateFormula();
+            // Place a numeric value in cell A1
+            worksheet.Cells["A1"].PutValue(123456789.0);
 
             // Add a textbox shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offset (pixels), upper left offset (pixels), width, height
-            TextBox shape = (TextBox)worksheet.Shapes.AddTextBox(2, 2, 0, 0, 200, 30);
+            // Parameters: upper left row, upper left column, top offset, left offset, height, width
+            int upperRow = 2;      // Row index (0‑based)
+            int upperColumn = 1;   // Column index (0‑based)
+            int top = 5;           // Pixels from the top of the cell
+            int left = 5;          // Pixels from the left of the cell
+            int height = 50;       // Height in points
+            int width = 200;       // Width in points
 
-            // Link the shape to cell B1 (the cell with scientific notation text)
-            // isR1C1 = false (A1 style), isLocal = true (locale aware)
-            shape.SetLinkedCell("$B$1", false, true);
+            // AddTextBox returns a Shape; we can work directly with the Shape object
+            Shape shape = worksheet.Shapes.AddTextBox(upperRow, upperColumn, top, left, height, width);
 
-            // Update the shape's displayed value from the linked cell
-            shape.UpdateSelectedValue();
+            // Set the shape to contain a formula that formats the value of A1 in scientific notation
+            // Note: In recent Aspose.Cells versions the IsFormula property is not required;
+            // the shape automatically treats the text as a formula when it starts with '='.
+            shape.Text = "=TEXT(A1,\"0.00E+00\")";
 
-            // Verify the displayed text
-            Console.WriteLine("Shape Text (should be scientific notation): " + shape.Text);
+            // Recalculate formulas so the shape displays the formatted value
+            workbook.CalculateFormula();
 
-            // Save the workbook
-            workbook.Save("ShapeLinkedCellScientificNotation.xlsx");
+            // Output the evaluated text of the shape
+            Console.WriteLine("Textbox displayed text: " + shape.Text); // Expected format like 1.23E+08
+
+            // Save the workbook (optional, demonstrates lifecycle handling)
+            workbook.Save("LinkedShape.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

@@ -1,32 +1,58 @@
-// Title: C# – Set Alternative Text for a TextBox Shape in Aspose.Cells (Accessibility)
-// Description: Creates a workbook, adds a TextBox shape to the first worksheet, assigns descriptive AlternativeText for screen‑reader support, and saves the file as TextboxWithAltText.xlsx.
-// Keywords: Aspose.Cells C# set textbox alt text | AlternativeText property Aspose.Cells | accessibility shapes Aspose.Cells | screen reader textbox Aspose.Cells | add alt description to Excel shape
-// Common Searches: how to add alt text to a textbox in Aspose.Cells | Aspose.Cells alternative text for shapes | C# set accessibility text for Excel textbox | Aspose.Cells screen reader support
-// Developer Intent: Apply the TextBox.AlternativeText property to provide a readable description for screen‑reader users.
-// Use Cases: Provide a summary of chart data inside a textbox for visually impaired readers. | Label a form field in an auto‑generated report with accessible text. | Add instructional guidance to a textbox so screen readers can convey usage directions.
-// AI Prompts: Write C# code using Aspose.Cells that inserts a TextBox and sets its AlternativeText to a custom string. | Explain how Aspose.Cells reads the AlternativeText property for screen readers and any known limitations. | Show a loop that iterates through all TextBox shapes in a workbook and assigns unique alternative text to each.
+// Title: Add a textbox shape with AlternativeText for screen‑reader accessibility using Aspose.Cells in C#
+// AI Prompts: Create an Excel workbook in C# and insert a textbox shape whose AlternativeText property describes the content for screen readers using Aspose.Cells. | Generate a .xlsx file with a textbox shape that includes accessible alternative text via the Aspose.Cells .NET API. | Set the AlternativeText of a TextBox shape in a worksheet to improve accessibility for assistive technologies with Aspose.Cells.
+// Common Searches: how to set alternative text for a textbox shape in Aspose.Cells C# | Aspose.Cells .NET add accessible textbox to Excel worksheet | C# Aspose.Cells AlternativeText property example for shapes | make Excel textbox readable by screen readers using Aspose.Cells | sample code for textbox accessibility in Aspose.Cells workbook
+// Tags: Aspose.Cells set textbox AlternativeText | C# add textbox shape accessibility | Aspose.Cells shape alternative text .NET | Excel textbox screen reader support Aspose | Aspose.Cells workbook save accessible shape
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a TextBox shape to the first worksheet, assigns descriptive AlternativeText for screen‑reader support, and saves the file as TextboxWithAltText.xlsx.
-class SetTextboxAlternativeText
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new Workbook, adds a TextBox shape to the first worksheet, assigns descriptive alternative text to the shape for screen‑reader accessibility, ensures the output directory exists, saves the workbook as AccessibleTextbox.xlsx, and handles any exceptions.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook.
+                Workbook workbook = new Workbook(); // lifecycle: create
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a textbox shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset (pixels), left offset (pixels), height (pixels), width (pixels)
-        TextBox textBox = (TextBox)worksheet.Shapes.AddTextBox(2, 2, 0, 0, 100, 200);
+                // Add a textbox shape to the worksheet.
+                // Overload: AddTextBox(int upperLeftRow, int upperLeftColumn, int lowerRightRow, int lowerRightColumn, int height, int width)
+                TextBox textBox = worksheet.Shapes.AddTextBox(
+                    5,   // upperLeftRow
+                    5,   // upperLeftColumn
+                    10,  // lowerRightRow
+                    10,  // lowerRightColumn
+                    200, // height (in points)
+                    100  // width (in points)
+                );
 
-        // Set the alternative (alt) text for accessibility (screen readers)
-        textBox.AlternativeText = "Summary of the data displayed in this textbox";
+                // Set alternative text for accessibility (screen readers)
+                textBox.AlternativeText = "Summary of the chart data displayed in this textbox.";
 
-        // Save the workbook to a file
-        workbook.Save("TextboxWithAltText.xlsx");
+                // Save the workbook
+                string outputPath = "AccessibleTextbox.xlsx";
+
+                // Ensure the directory exists before saving
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                workbook.Save(outputPath); // lifecycle: save
+
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,61 +1,47 @@
-// Title: Save Aspose.Cells Workbook to HTML with Original Styles and Fallback Font (C#)
-// Description: Demonstrates how to export an Aspose.Cells workbook to HTML while keeping all cell formatting and specifying a default font (e.g., Arial) that Aspose.Cells uses when a cell's font is unavailable on the target system.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DefaultFontName | C# | HTML export | preserve cell styles | fallback font | missing font handling | Excel to HTML | style preservation .NET
-// Common Searches: Aspose.Cells set default font for HTML export | preserve Excel cell formatting when saving as HTML C# | fallback font for unavailable fonts Aspose.Cells | HtmlSaveOptions.ExcludeUnusedStyles effect | export styled workbook to HTML using Aspose.Cells
-// Developer Intent: Export a workbook to HTML, retain every cell's visual style, and automatically replace fonts that are not installed with a defined default font.
-// Use Cases: Create web‑ready reports from Excel files that look identical to the original spreadsheet. | Generate HTML emails or dashboards where the recipient may not have custom fonts installed. | Produce HTML versions of spreadsheets that can be re‑imported without losing style information.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook to HTML, preserving all cell styles and using Arial as a fallback font for missing fonts. | Explain how HtmlSaveOptions.DefaultFontName works and how it affects font substitution during HTML export. | Describe the impact of HtmlSaveOptions.ExcludeUnusedStyles on round‑trip conversion between Excel and HTML.
+// Title: Save an Excel workbook as HTML with original cell styles and Arial fallback font using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, verifies its existence, sets HtmlSaveOptions.DefaultFontName to "Arial", and saves the workbook as HTML while preserving all cell formatting with Aspose.Cells. | Create a C# example showing how to export an Excel workbook to HTML using Aspose.Cells, configuring a default fallback font and keeping the original cell styles intact.
+// Common Searches: Aspose.Cells .NET export Excel to HTML preserving cell formatting | How to set a fallback font when saving a workbook as HTML with Aspose.Cells | C# HtmlSaveOptions DefaultFontName usage example | Convert .xlsx to .html with original styles using Aspose.Cells | Save workbook as HTML with Arial as default font Aspose.Cells C#
+// Tags: Aspose.Cells HtmlSaveOptions DefaultFontName | Excel to HTML conversion preserving styles | C# Aspose.Cells export workbook to HTML | fallback font configuration Aspose.Cells | cell style retention in HTML output Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsHtmlExport
+// The sample checks for the input Excel file, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with DefaultFontName set to "Arial" to provide a fallback when the original font is missing, and saves the workbook as an HTML file while preserving all cell styles.
+class Program
 {
-    // Demonstrates how to export an Aspose.Cells workbook to HTML while keeping all cell formatting and specifying a default font (e.g., Arial) that Aspose.Cells uses when a cell's font is unavailable on the target system.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            string inputPath = "input.xlsx";
+            string outputPath = "output.html";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add sample data with various styles
-            Cell cellA1 = sheet.Cells["A1"];
-            cellA1.PutValue("Styled Text");
-            Style styleA1 = cellA1.GetStyle();
-            styleA1.Font.Name = "Calibri";
-            styleA1.Font.Size = 12;
-            styleA1.Font.Color = Color.Blue;
-            styleA1.Font.IsBold = true;
-            cellA1.SetStyle(styleA1);
-
-            Cell cellB2 = sheet.Cells["B2"];
-            cellB2.PutValue("Another Style");
-            Style styleB2 = cellB2.GetStyle();
-            styleB2.Font.Name = "NonExistentFont"; // This font may not be available on the system
-            styleB2.Font.Size = 14;
-            styleB2.Font.Color = Color.Green;
-            cellB2.SetStyle(styleB2);
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Specify a fallback font when the original font is not available on the system
+                DefaultFontName = "Arial"
+                // Cell styles are exported by default; no explicit ExportCellStyles property needed
+            };
 
-            // Preserve original cell styles (default behavior) and specify a fallback font
-            // When a font is not found, Aspose.Cells will use this default font
-            htmlOptions.DefaultFontName = "Arial";
-
-            // Optional: keep all styles even if they are not used (helps when later importing back)
-            // htmlOptions.ExcludeUnusedStyles = false;
-
-            // Save the workbook as HTML
-            string outputPath = "StyledWorkbook.html";
+            // Save the workbook as an HTML file with the specified options
             workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook saved to HTML at: {outputPath}");
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

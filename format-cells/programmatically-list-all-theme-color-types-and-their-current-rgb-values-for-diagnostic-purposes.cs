@@ -1,37 +1,37 @@
-// Title: List all ThemeColorType values with their ARGB values using Aspose.Cells for .NET
-// Description: Creates a workbook, iterates through every ThemeColorType enum, retrieves each theme color via Workbook.GetThemeColor, prints the ARGB components, and saves the file to satisfy Aspose.Cells lifecycle rules. Ideal for diagnostics and theme verification.
-// Keywords: Aspose.Cells ThemeColorType | C# get theme colors | Excel theme ARGB values | list default theme colors | Workbook.GetThemeColor example
-// Common Searches: Aspose.Cells enumerate ThemeColorType | how to get RGB values of Excel theme colors .NET | list default theme colors with Aspose.Cells | retrieve ARGB of workbook theme colors | diagnostic theme colors Aspose.Cells
-// Developer Intent: Obtain and display the ARGB values for every ThemeColorType in a workbook.
-// Use Cases: Confirm that the default theme matches corporate color standards by printing ARGB codes. | Create a diagnostic report of all theme colors for auditing or troubleshooting. | Log theme color values when debugging unexpected color rendering in generated spreadsheets.
-// AI Prompts: Generate C# code with Aspose.Cells that enumerates ThemeColorType and outputs each color's ARGB values. | Explain why saving the workbook after enumerating theme colors is required in Aspose.Cells. | Show how to format each ThemeColorType's Color as a hexadecimal string for logging purposes.
+// Title: Enumerate every Aspose.Cells ThemeColorType and output its RGB components in C#
+// AI Prompts: Generate C# code that iterates over the ThemeColorType enum and prints each theme color's R, G, B values using Workbook.GetThemeColor. | Show how to create a dictionary that maps ThemeColorType to System.Drawing.Color for diagnostic inspection in Aspose.Cells. | Provide a method that returns a formatted list of strings like "ThemeColorType: R=..., G=..., B=..." from a newly created Workbook.
+// Common Searches: how to get RGB values of all theme colors in Aspose.Cells .NET | C# code to list ThemeColorType enum with corresponding colors | diagnostic script for workbook theme palette using Aspose.Cells | retrieve theme color palette programmatically Aspose.Cells C#
+// Tags: GetThemeColor enumeration C# | ThemeColorType RGB extraction Aspose.Cells | workbook theme palette inspection .NET | Aspose.Cells theme color diagnostics | list theme colors programmatically
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Drawing; // For ThemeColorType enumeration
 
-namespace AsposeCellsThemeColorDiagnostic
+// // Creates a Workbook, loops through every ThemeColorType enum value, obtains each theme color via GetThemeColor, and writes the type together with its R, G, B components to the console.
+class Program
 {
-    // Creates a workbook, iterates through every ThemeColorType enum, retrieves each theme color via Workbook.GetThemeColor, prints the ARGB components, and saves the file to satisfy Aspose.Cells lifecycle rules. Ideal for diagnostics and theme verification.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (uses the default theme)
+            // Create a new workbook (no external file needed)
             Workbook workbook = new Workbook();
 
-            // Loop through every ThemeColorType enum value
-            foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+            // Iterate through all defined theme color types
+            foreach (ThemeColorType colorType in Enum.GetValues(typeof(ThemeColorType)))
             {
-                // Retrieve the current RGB color for the theme type
-                Color color = workbook.GetThemeColor(type);
+                // Retrieve the theme color for the current type
+                Color color = workbook.GetThemeColor(colorType);
 
-                // Display the theme type and its ARGB components
-                Console.WriteLine($"{type} = A:{color.A}, R:{color.R}, G:{color.G}, B:{color.B}");
+                // Output the theme color type and its RGB components
+                Console.WriteLine($"{colorType}: R={color.R}, G={color.G}, B={color.B}");
             }
-
-            // Save the workbook (no modifications are required, but saving satisfies lifecycle rules)
-            workbook.Save("ThemeColorsDiagnostic.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

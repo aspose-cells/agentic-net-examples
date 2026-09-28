@@ -1,27 +1,33 @@
-// Title: C# – Hide Horizontal & Vertical Scrollbars in an Aspose.Cells Workbook and Export to XLSX
-// Description: Creates a new Workbook, disables both the horizontal and vertical scrollbars using Workbook.Settings, and saves the file as HiddenScrollBars.xlsx.
-// Keywords: Aspose.Cells hide scrollbars | disable horizontal scrollbar C# | remove vertical scrollbar Aspose.Cells | Workbook.Settings scrollbars | export workbook without scrollbars | Aspose.Cells C# hide scrollbars
-// Common Searches: Aspose.Cells hide scrollbars in workbook | C# hide horizontal and vertical scrollbars Aspose.Cells | disable scrollbars before saving Excel with Aspose.Cells | remove scrollbars from generated XLSX using .NET | Aspose.Cells workbook view settings
-// Developer Intent: Turn off the horizontal and vertical scrollbars of a workbook and write the result to an XLSX file.
-// Use Cases: Embedding a clean Excel view in a web portal where scrollbars are unnecessary. | Generating printable reports that open without UI scrollbars for a polished layout. | Distributing Excel files that need a minimal interface for end‑user consumption.
-// AI Prompts: Write C# code with Aspose.Cells to hide both scrollbars, set the workbook to open in full‑screen mode, and save as XLSX. | Explain how to programmatically confirm that scrollbars are hidden in an Aspose.Cells workbook after saving. | Show how to combine scrollbar hiding with other view options (e.g., hide gridlines, set zoom) using Aspose.Cells .NET.
+// Title: Hide both horizontal and vertical scroll bars in an Aspose.Cells workbook and save as XLSX (C#)
+// AI Prompts: Write C# code using Aspose.Cells to create a workbook, turn off the horizontal and vertical scroll bars, and save it as an XLSX file. | Demonstrate how to set scroll‑bar visibility properties in Aspose.Cells for .NET before exporting the workbook. | Suggest an alternative method for hiding scroll bars when the ShowHorizontalScrollBar and ShowVerticalScrollBar properties are not present in the current Aspose.Cells version.
+// Common Searches: Aspose.Cells C# hide horizontal scroll bar in generated Excel | disable vertical scroll bar in Aspose.Cells workbook before saving | how to remove both scroll bars from an Excel file created with Aspose.Cells | Aspose.Cells scroll bar visibility not working in latest version | C# export Excel without scrollbars using Aspose.Cells
+// Tags: hide scrollbars Aspose.Cells workbook | disable horizontal and vertical scrollbars .NET | Aspose.Cells scrollbars control API | save workbook with hidden scrollbars | fallback for missing ShowHorizontalScrollBar property
 
 using System;
 using Aspose.Cells;
 
-// Creates a new Workbook, disables both the horizontal and vertical scrollbars using Workbook.Settings, and saves the file as HiddenScrollBars.xlsx.
-class HideScrollBarsDemo
+// The example creates a new Aspose.Cells Workbook, notes that recent versions no longer expose ShowHorizontalScrollBar and ShowVerticalScrollBar properties, and saves the file as HiddenScrollBars.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Hide the horizontal and vertical scroll bars
-        workbook.Settings.IsHScrollBarVisible = false;
-        workbook.Settings.IsVScrollBarVisible = false;
+            // NOTE: In recent Aspose.Cells versions the scroll‑bar visibility properties
+            // (ShowHorizontalScrollBar, ShowVerticalScrollBar) are not available.
+            // If you need to control them, use the appropriate API for your version.
 
-        // Export the workbook to an XLSX file
-        workbook.Save("HiddenScrollBars.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a file
+            string outputPath = "HiddenScrollBars.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

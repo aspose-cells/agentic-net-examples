@@ -1,39 +1,49 @@
-// Title: Lock a rectangle shape in an Excel worksheet with Aspose.Cells for .NET
-// Description: Demonstrates how to add a rectangle shape to the first worksheet, enable its IsLocked flag, set additional lock options (adjust handles, selection), protect the sheet, and save the workbook as LockedShape.xlsx using Aspose.Cells.
-// Keywords: Aspose.Cells shape lock | C# add rectangle shape | Excel shape protection .NET | Set IsLocked Aspose.Cells | Worksheet protect shapes
-// Common Searches: how to lock a shape in Excel using Aspose.Cells | add rectangle and prevent editing Aspose.Cells C# | set locked properties for shapes Aspose.Cells | protect worksheet and lock shapes .NET
-// Developer Intent: Insert a shape and make it immutable when the worksheet is protected.
-// Use Cases: Secure layout elements in financial templates so users cannot move or resize them. | Create a diagram in a shared workbook and lock handles to avoid accidental changes. | Distribute a report with locked graphics while allowing data entry in cells.
-// AI Prompts: Generate code to add an ellipse shape and lock its resizing with Aspose.Cells for .NET. | Show how to lock all shapes on a worksheet and apply selective protection options. | Explain the steps to unlock a shape after removing worksheet protection.
+// Title: Create a rectangle shape in an Excel worksheet and lock it with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds a rectangle shape to the first worksheet of a new workbook and sets its IsLocked property to true using Aspose.Cells. | Write a .NET example that creates an Excel file, inserts a locked rectangle shape with custom text, and saves it as ShapeLocked.xlsx. | Provide a C# snippet that demonstrates how to enable the locked flag on a shape added via sheet.Shapes.AddShape in Aspose.Cells.
+// Common Searches: Aspose.Cells C# add rectangle shape and prevent editing | how to set IsLocked on a shape in Aspose.Cells .NET | example code to lock drawing objects in Excel using Aspose.Cells | create locked shape in Excel workbook with Aspose.Cells for .NET | C# Aspose.Cells shape lock property tutorial
+// Tags: Aspose.Cells add rectangle shape C# | Aspose.Cells set shape IsLocked .NET | lock drawing object Excel Aspose.Cells | create locked shape worksheet C# | Aspose.Cells shape protection example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to add a rectangle shape to the first worksheet, enable its IsLocked flag, set additional lock options (adjust handles, selection), protect the sheet, and save the workbook as LockedShape.xlsx using Aspose.Cells.
+// // Creates a new workbook, adds a rectangle shape to the first worksheet, locks the shape by setting IsLocked = true, assigns custom text, and saves the file as ShapeLocked.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upperLeftRow, top, upperLeftColumn, left, height, width
-        Shape shape = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 100, 200);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Lock the shape so it cannot be modified when the sheet is protected
-        shape.IsLocked = true;
+            // Add a rectangle shape to the worksheet
+            // Parameters: type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2,    // upper left row (zero‑based)
+                2,    // upper left column (zero‑based)
+                0,    // top offset in points
+                0,    // left offset in points
+                100,  // height in points
+                200   // width in points
+            );
 
-        // Optionally lock specific properties (e.g., adjusting handles and selection)
-        shape.SetLockedProperty(ShapeLockType.AdjustHandles, true);
-        shape.SetLockedProperty(ShapeLockType.Selection, true);
+            // Enable the locked property to prevent accidental modifications
+            shape.IsLocked = true;
 
-        // Protect the worksheet to enforce the lock
-        worksheet.Protect(ProtectionType.All);
+            // Optionally set a text for the shape
+            shape.Text = "Locked Shape";
 
-        // Save the workbook
-        workbook.Save("LockedShape.xlsx");
+            // Save the workbook to a file
+            workbook.Save("ShapeLocked.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

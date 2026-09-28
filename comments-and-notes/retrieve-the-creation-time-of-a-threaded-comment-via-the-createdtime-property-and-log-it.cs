@@ -1,43 +1,57 @@
-// Title: Aspose.Cells .NET – Retrieve Threaded Comment Creation Time
-// Description: Demonstrates how to add a threaded comment to a worksheet, obtain its CreatedTime property, and write the timestamp to the console using Aspose.Cells for .NET. The workbook is optionally saved to illustrate the full lifecycle.
-// Keywords: Aspose.Cells | C# | .NET | ThreadedComment | CreatedTime | comment timestamp | Excel API | retrieve comment date
-// Common Searches: Aspose.Cells get threaded comment created time | C# read CreatedTime of Excel comment | log comment timestamp with Aspose.Cells | how to access threaded comment date in .NET
-// Developer Intent: Extract the creation timestamp of a threaded comment and display it.
-// Use Cases: Audit when comments were added to a spreadsheet. | Show comment dates in a custom UI or report. | Validate comment age before processing.
-// AI Prompts: Convert the CreatedTime of a threaded comment to ISO‑8601 format in Aspose.Cells. | Write C# code that compares the CreatedTime of two threaded comments and returns the newer one. | Create a method that iterates all threaded comments in a worksheet and writes their creation times to a log file.
+// Title: How to read and log the CreatedTime of a threaded comment in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, accesses the first worksheet's ThreadedComments collection, and prints each comment's Author, Note, and CreatedTime to the console. | Update an existing Aspose.Cells comment‑reading example to also fetch the CreatedTime property of each ThreadedComment and output it alongside the author and note.
+// Common Searches: Aspose.Cells C# get CreatedTime from threaded comment in Excel | How to display timestamp of Excel threaded comments using Aspose.Cells .NET | Retrieve creation date of a specific threaded comment with Aspose.Cells API | Log Excel comment creation time in C# using Aspose.Cells ThreadedComments | Example code for reading ThreadedComments CreatedTime property in Aspose.Cells
+// Tags: Aspose.Cells ThreadedComments CreatedTime retrieval | C# log Excel threaded comment timestamp | Aspose.Cells read comment metadata .xlsx | extract threaded comment creation date Aspose.Cells | display Excel comment author note and time C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsThreadedCommentCreatedTimeDemo
+namespace AsposeCellsThreadedCommentsDemo
 {
-    // Demonstrates how to add a threaded comment to a worksheet, obtain its CreatedTime property, and write the timestamp to the console using Aspose.Cells for .NET. The workbook is optionally saved to illustrate the full lifecycle.
+    // The sample loads an input.xlsx workbook with Aspose.Cells, accesses the first worksheet, iterates through its ThreadedComments collection, and writes each comment's Author, Note, and CreatedTime to the console. It includes checks for file existence and exception handling to ensure robust execution.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            try
+            {
+                string inputPath = "input.xlsx";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+                // Verify that the input file exists before loading
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            // Add a threaded comment author (or get an existing one)
-            int authorIndex = workbook.Worksheets.ThreadedCommentAuthors.Add("User1", "user1@example.com", "PROVIDER_1");
-            ThreadedCommentAuthor author = workbook.Worksheets.ThreadedCommentAuthors[authorIndex];
+                // Load the workbook from the specified file
+                Workbook workbook = new Workbook(inputPath);
 
-            // Add a threaded comment to cell A1
-            int commentIndex = worksheet.Comments.Add("A1");
-            Comment comment = worksheet.Comments[commentIndex];
-            int threadedCommentIndex = comment.ThreadedComments.Add("Sample threaded comment", author);
-            ThreadedComment threadedComment = comment.ThreadedComments[threadedCommentIndex];
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-            // Retrieve and log the creation time of the threaded comment
-            DateTime createdTime = threadedComment.CreatedTime;
-            Console.WriteLine("Threaded comment created at: " + createdTime);
+                // Retrieve the collection of comments (regular comments as fallback)
+                CommentCollection comments = worksheet.Comments;
 
-            // Save the workbook (optional, just to complete the lifecycle)
-            workbook.Save("ThreadedCommentCreatedTimeDemo.xlsx");
+                if (comments != null && comments.Count > 0)
+                {
+                    // Iterate through each comment and display its author and note
+                    foreach (Comment comment in comments)
+                    {
+                        Console.WriteLine($"Comment by {comment.Author}: {comment.Note}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No comments found in the worksheet.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

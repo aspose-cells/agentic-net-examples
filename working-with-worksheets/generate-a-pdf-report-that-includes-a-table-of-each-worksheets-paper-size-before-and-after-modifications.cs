@@ -1,60 +1,90 @@
-// Title: C# – Generate a PDF report of worksheet paper sizes before and after changes using Aspose.Cells for .NET
-// Description: Creates a source workbook, records each worksheet’s initial PageSetup.PaperSize, changes all sheets to A4, writes the before/after values into a new workbook, and saves it as a PDF containing a three‑column table (Worksheet, Before Paper Size, After Paper Size).
-// Keywords: Aspose.Cells for .NET | C# PDF report | worksheet paper size | PageSetup.PaperSize | before and after paper size | export worksheet layout to PDF | list sheet paper size Aspose.Cells | modify page setup C# | Aspose.Cells SaveFormat.Pdf | automate paper size audit
-// Common Searches: Aspose.Cells generate PDF report of sheet paper sizes | C# capture worksheet PageSetup.PaperSize before change | list original and new paper size for each worksheet Aspose.Cells | export before‑after page setup to PDF using Aspose.Cells | how to change all worksheets to A4 and log sizes
-// Developer Intent: Produce a PDF that lists each worksheet’s original and updated paper size.
-// Use Cases: Audit page‑setup settings across multiple sheets before publishing. | Create a printable summary of layout changes for quality‑control reviews. | Validate that all worksheets conform to a standard paper size in automated pipelines.
-// AI Prompts: Write C# code with Aspose.Cells that records each worksheet’s PaperSize, sets all sheets to A4, and saves a PDF containing a table of the before and after sizes. | Explain how to read PageSetup.PaperSize, modify it, and export a summary workbook to PDF using Aspose.Cells for .NET.
+// Title: Generate a PDF report listing each worksheet’s original and updated paper size using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an Excel workbook, records the PaperSize of every worksheet, changes each sheet to A4, and creates a PDF containing a table of worksheet name, original size, and new size. | Extend the program to also capture each worksheet’s orientation (portrait or landscape) and add that column to the PDF report. | Add comprehensive error handling so that if a worksheet’s page setup cannot be modified, the issue is logged and the PDF generation continues.
+// Common Searches: Aspose.Cells .NET export worksheet paper size changes to a PDF report | C# list Excel sheet page setup properties before and after modification | Create PDF summary of Excel worksheets paper size using Aspose.Cells | Record original and new paper size of each sheet when converting to PDF with Aspose.Cells | Generate a table of worksheet names and paper sizes in a PDF using Aspose.Cells for .NET
+// Tags: Aspose.Cells export worksheet paper size to PDF | C# modify worksheet PageSetup PaperSize | generate PDF report from Excel with Aspose.Cells | record before and after page setup properties | auto-fit columns before saving PDF Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a source workbook, records each worksheet’s initial PageSetup.PaperSize, changes all sheets to A4, writes the before/after values into a new workbook, and saves it as a PDF containing a three‑column table (Worksheet, Before Paper Size, After Paper Size).
-class PaperSizeReport
+// The program loads source.xlsx, iterates through each worksheet to capture its original PaperSize, sets the size to A4, writes the worksheet name with before/after sizes into a new workbook, auto‑fits columns, and saves the result as PaperSizeReport.pdf.
+class PdfReportGenerator
 {
     static void Main()
     {
-        // Create a source workbook with several worksheets
-        Workbook srcWorkbook = new Workbook();
-        srcWorkbook.Worksheets.Add("Sheet2");
-        srcWorkbook.Worksheets.Add("Sheet3");
-
-        // Set initial paper sizes for demonstration purposes
-        srcWorkbook.Worksheets[0].PageSetup.PaperSize = PaperSizeType.PaperLetter;
-        srcWorkbook.Worksheets[1].PageSetup.PaperSize = PaperSizeType.PaperA5;
-        srcWorkbook.Worksheets[2].PageSetup.PaperSize = PaperSizeType.PaperLegal;
-
-        // Create a new workbook that will hold the PDF report
-        Workbook reportWorkbook = new Workbook();
-        Worksheet reportSheet = reportWorkbook.Worksheets[0];
-
-        // Write table headers
-        reportSheet.Cells["A1"].PutValue("Worksheet");
-        reportSheet.Cells["B1"].PutValue("Before Paper Size");
-        reportSheet.Cells["C1"].PutValue("After Paper Size");
-
-        // Iterate through each worksheet, capture paper sizes before and after modification
-        for (int i = 0; i < srcWorkbook.Worksheets.Count; i++)
+        try
         {
-            Worksheet ws = srcWorkbook.Worksheets[i];
+            const string sourcePath = "source.xlsx";
+            const string reportPdfPath = "PaperSizeReport.pdf";
 
-            // Capture the original paper size
-            PaperSizeType beforeSize = ws.PageSetup.PaperSize;
+            // Verify source workbook exists
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-            // Modify the paper size (example: set all to A4)
-            ws.PageSetup.PaperSize = PaperSizeType.PaperA4;
+            // Load the source workbook
+            Workbook sourceWorkbook;
+            try
+            {
+                sourceWorkbook = new Workbook(sourcePath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load source workbook: {ex.Message}");
+                return;
+            }
 
-            // Capture the new paper size
-            PaperSizeType afterSize = ws.PageSetup.PaperSize;
+            // Create a new workbook for the PDF report
+            Workbook reportWorkbook = new Workbook();
+            Worksheet reportSheet = reportWorkbook.Worksheets[0];
+            reportSheet.Name = "PaperSizeReport";
 
-            // Populate the report table
-            int row = i + 2; // Data starts from row 2
-            reportSheet.Cells[row, 0].PutValue(ws.Name);
-            reportSheet.Cells[row, 1].PutValue(beforeSize.ToString());
-            reportSheet.Cells[row, 2].PutValue(afterSize.ToString());
+            // Write table headers
+            reportSheet.Cells["A1"].PutValue("Worksheet");
+            reportSheet.Cells["B1"].PutValue("Paper Size Before");
+            reportSheet.Cells["C1"].PutValue("Paper Size After");
+
+            int reportRow = 1; // zero‑based index; row 1 is the second row
+
+            // Iterate through each worksheet in the source workbook
+            foreach (Worksheet ws in sourceWorkbook.Worksheets)
+            {
+                // Capture paper size before modification
+                string beforeSize = ws.PageSetup.PaperSize.ToString();
+
+                // Modify the paper size (example: set to A4)
+                ws.PageSetup.PaperSize = PaperSizeType.PaperA4;
+
+                // Capture paper size after modification
+                string afterSize = ws.PageSetup.PaperSize.ToString();
+
+                // Write data into the report sheet
+                reportSheet.Cells[reportRow, 0].PutValue(ws.Name);      // Column A
+                reportSheet.Cells[reportRow, 1].PutValue(beforeSize); // Column B
+                reportSheet.Cells[reportRow, 2].PutValue(afterSize);  // Column C
+
+                reportRow++;
+            }
+
+            // Auto‑fit columns for better appearance
+            reportSheet.AutoFitColumns();
+
+            // Save the report workbook as a PDF file
+            try
+            {
+                reportWorkbook.Save(reportPdfPath, SaveFormat.Pdf);
+                Console.WriteLine($"Report saved to {reportPdfPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save PDF report: {ex.Message}");
+            }
         }
-
-        // Save the report workbook as a PDF file
-        reportWorkbook.Save("PaperSizeReport.pdf", SaveFormat.Pdf);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

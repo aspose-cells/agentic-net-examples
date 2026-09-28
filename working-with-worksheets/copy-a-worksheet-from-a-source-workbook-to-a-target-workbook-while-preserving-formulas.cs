@@ -1,39 +1,50 @@
-// Title: Copy a Worksheet to a New Workbook with Formulas Preserved – Aspose.Cells C# Example
-// Description: Demonstrates loading a source workbook, copying its first worksheet into a new workbook using Aspose.Cells' Worksheet.Copy method, retaining all cell values, formats, and formulas, and saving the result as an XLSX file.
-// Keywords: Aspose.Cells | C# worksheet copy | preserve formulas | copy worksheet to new workbook | Worksheet.Copy | Excel automation .NET | duplicate sheet with formulas | Aspose.Cells example
-// Common Searches: Aspose.Cells copy worksheet preserve formulas | C# copy Excel sheet to new file | Worksheet.Copy method example | How to duplicate a sheet with formulas in .NET | Copy sheet between workbooks Aspose.Cells
-// Developer Intent: Copy a worksheet from one workbook to another while keeping all formulas intact.
-// Use Cases: Create per‑client reports by cloning a template sheet into separate workbooks. | Migrate legacy spreadsheet data to a fresh file without breaking calculations. | Archive a calculation sheet by duplicating it into a standalone workbook. | Generate batch workbooks for data analysis while preserving formula logic.
-// AI Prompts: Provide C# code using Aspose.Cells to copy a worksheet from a source workbook to a destination workbook, ensuring formulas are retained. | Show how to copy multiple worksheets with formulas and adjust external references in the target workbook. | Explain how to copy a sheet with formulas and then rename or update named ranges after the copy.
+// Title: Copy a worksheet from one Excel workbook to another while preserving formulas using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to copy the first sheet of source.xlsx into a new workbook target.xlsx, ensuring all cell formulas are retained. | Create an empty workbook, remove its default sheet, and add a copy of a specific worksheet from another workbook with formulas intact using the Aspose.Cells AddCopy method.
+// Common Searches: Aspose.Cells C# copy worksheet to another workbook keep formulas | How to duplicate a sheet with formulas using Aspose.Cells .NET | AddCopy method example preserving formulas in Excel files | Copy first worksheet from source.xlsx to target.xlsx Aspose.Cells
+// Tags: Aspose.Cells AddCopy worksheet copy | copy worksheet with formulas .NET | duplicate Excel sheet to new workbook C# | retain formulas during sheet copy Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetCopyExample
+// The program checks for the existence of source.xlsx (creating an empty workbook if missing), loads it, creates an empty target workbook, copies the first worksheet using the AddCopy method (which retains all formulas), and saves the result as target.xlsx.
+class Program
 {
-    // Demonstrates loading a source workbook, copying its first worksheet into a new workbook using Aspose.Cells' Worksheet.Copy method, retaining all cell values, formats, and formulas, and saving the result as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths to the source and target Excel files
+        string sourcePath = "source.xlsx";
+        string targetPath = "target.xlsx";
+
+        try
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook sourceWorkbook = new Workbook("source.xlsx");
+            // Ensure the source file exists; create an empty workbook if missing
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}. Creating an empty workbook.");
+                var emptyWorkbook = new Workbook();
+                emptyWorkbook.Worksheets[0].Name = "Sheet1";
+                emptyWorkbook.Save(sourcePath);
+            }
 
-            // Get the worksheet you want to copy (first worksheet in this example)
+            // Load the source workbook
+            var sourceWorkbook = new Workbook(sourcePath);
+
+            // Create a new (empty) target workbook and remove the default sheet
+            var targetWorkbook = new Workbook();
+            targetWorkbook.Worksheets.Clear();
+
+            // Copy the first worksheet from the source workbook to the target workbook
             Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            targetWorkbook.Worksheets.AddCopy(sourceSheet.Name);
 
-            // Create a new (empty) destination workbook
-            Workbook destWorkbook = new Workbook();
-
-            // Get the first worksheet of the destination workbook where the copy will be placed
-            Worksheet destSheet = destWorkbook.Worksheets[0];
-
-            // Copy the source worksheet to the destination worksheet.
-            // This method copies cells, formats, and formulas, preserving the original formulas.
-            destSheet.Copy(sourceSheet);
-
-            // Save the destination workbook (replace with your desired output path)
-            destWorkbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Save the target workbook with the copied worksheet
+            targetWorkbook.Save(targetPath);
+            Console.WriteLine($"Target workbook saved to: {targetPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

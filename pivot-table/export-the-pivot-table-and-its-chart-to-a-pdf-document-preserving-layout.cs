@@ -1,22 +1,20 @@
-// Title: Export Pivot Table and Chart to PDF with Layout Preservation using Aspose.Cells for .NET (C#)
-// Description: C# sample that builds a workbook, fills a data sheet, creates a pivot table, adds a column chart based on the pivot range, and saves the result to PDF. PdfSaveOptions are configured with OnePagePerSheet and ExportDocumentStructure to keep each sheet on one page and retain bookmarks.
-// Keywords: Aspose.Cells PDF export | pivot table to PDF C# | export pivot chart Aspose | OnePagePerSheet option | ExportDocumentStructure | .NET workbook to PDF | preserve worksheet layout | C# Aspose.Cells example | GitHub Aspose.Cells pivot chart
-// Common Searches: how to export a pivot table and chart to PDF using Aspose.Cells | Aspose.Cells preserve layout when saving workbook as PDF | C# export pivot chart to PDF one page per sheet | Aspose.Cells PdfSaveOptions for pivot tables | sample code for pivot table PDF export Aspose
-// Developer Intent: Generate a PDF that includes both a pivot table and its associated chart while keeping the original worksheet layout and document structure intact.
-// Use Cases: Financial reporting: bundle pivot analysis and visual chart into a single‑page PDF for stakeholder distribution. | Sales dashboards: automate creation of printable PDFs that show summary tables and charts on one page per sheet. | Regulatory submissions: produce PDF files with bookmarks for easy navigation of workbooks containing pivot tables and charts.
-// AI Prompts: Write C# code with Aspose.Cells to create a pivot table from a data range, add a column chart linked to the pivot, and export the sheet to PDF using OnePagePerSheet and ExportDocumentStructure. | Explain the PdfSaveOptions settings required to keep worksheet layout and bookmarks when exporting a workbook that contains a pivot table and chart. | Troubleshoot why a pivot chart might be missing from the PDF output after using Aspose.Cells in a .NET application.
+// Title: How to export an Excel pivot table with its column chart to a single‑page PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that builds a pivot table from a data range, adds a column chart linked to the pivot data, and saves the worksheet as a PDF with one page per sheet using Aspose.Cells. | Adjust the PDF export options in an Aspose.Cells workbook to enforce landscape orientation, set custom margins, and keep the pivot table and chart layout intact. | Create a reusable C# method that takes a worksheet name and output path, extracts all pivot tables and charts on that sheet, and exports them to a PDF with Aspose.Cells.
+// Common Searches: Aspose.Cells C# export pivot table and chart to PDF single page | How to save an Excel pivot chart as PDF using Aspose.Cells .NET | PdfSaveOptions one page per sheet for pivot tables Aspose.Cells example | C# generate pivot table, add column chart, and convert to PDF with Aspose | Preserve layout of pivot table and chart when converting to PDF with Aspose.Cells
+// Tags: export pivot table to PDF Aspose.Cells | Aspose.Cells PdfSaveOptions one page per sheet | create pivot chart and save as PDF C# | preserve layout Excel to PDF Aspose.Cells | pivot table chart PDF conversion .NET
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Pivot;
+using Aspose.Cells.Rendering;
 
 namespace AsposeCellsPivotChartPdfExport
 {
-    // C# sample that builds a workbook, fills a data sheet, creates a pivot table, adds a column chart based on the pivot range, and saves the result to PDF. PdfSaveOptions are configured with OnePagePerSheet and ExportDocumentStructure to keep each sheet on one page and retain bookmarks.
-    public class ExportPivotAndChart
+    // // Creates a workbook, fills sample data, builds a pivot table with row, column, and data fields, adds a column chart, configures PdfSaveOptions (ExportDocumentStructure, OnePagePerSheet, CalculateFormula), and saves the worksheet containing both the pivot table and chart as a single‑page PDF.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
@@ -31,89 +29,84 @@ namespace AsposeCellsPivotChartPdfExport
 
                 // Header row
                 dataSheet.Cells["A1"].PutValue("Category");
-                dataSheet.Cells["B1"].PutValue("SubCategory");
-                dataSheet.Cells["C1"].PutValue("Amount");
+                dataSheet.Cells["B1"].PutValue("Product");
+                dataSheet.Cells["C1"].PutValue("Quantity");
 
-                // Sample data
-                string[,] sample = {
-                    { "Food", "Fruits", "120" },
-                    { "Food", "Vegetables", "80" },
-                    { "Beverage", "Tea", "50" },
-                    { "Beverage", "Coffee", "70" },
-                    { "Food", "Fruits", "150" },
-                    { "Beverage", "Tea", "30" }
+                // Sample data (object array to hold both strings and integers)
+                object[,] sample = {
+                    {"Fruit", "Apple", 120},
+                    {"Fruit", "Banana", 80},
+                    {"Fruit", "Apple", 150},
+                    {"Vegetable", "Carrot", 200},
+                    {"Vegetable", "Broccoli", 90},
+                    {"Vegetable", "Carrot", 130}
                 };
 
                 for (int i = 0; i < sample.GetLength(0); i++)
                 {
-                    dataSheet.Cells[i + 1, 0].PutValue(sample[i, 0]);
-                    dataSheet.Cells[i + 1, 1].PutValue(sample[i, 1]);
-                    dataSheet.Cells[i + 1, 2].PutValue(Convert.ToDouble(sample[i, 2]));
+                    dataSheet.Cells[i + 1, 0].PutValue(sample[i, 0]); // Category
+                    dataSheet.Cells[i + 1, 1].PutValue(sample[i, 1]); // Product
+                    dataSheet.Cells[i + 1, 2].PutValue(sample[i, 2]); // Quantity
                 }
 
                 // -------------------------------------------------
-                // 2. Add a worksheet for the pivot table
+                // 2. Create a worksheet to host the pivot table
                 // -------------------------------------------------
                 Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-                // Create the pivot table using the data range
+                // Add the pivot table (source range includes header row)
                 int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C7", "A3", "PivotTable1");
                 PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-                // Configure fields: Category (row), SubCategory (column), Amount (data)
+                // Configure fields: Category -> Row, Product -> Column, Quantity -> Data
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Column, "SubCategory");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
 
-                // Optional layout settings
+                // Layout the pivot table in tabular form for better PDF appearance
                 pivotTable.ShowInTabularForm();
-                pivotTable.PrintDrill = true; // show drill indicators when printed
 
-                // Refresh the pivot cache and calculate the pivot table
-                pivotTable.RefreshData();          // correct API to refresh source data
-                pivotTable.CalculateData();        // recalculate after refresh
+                // Refresh pivot cache and calculate data
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
 
                 // -------------------------------------------------
                 // 3. Add a chart that visualizes the pivot table data
                 // -------------------------------------------------
-                // Place the chart on the same pivot sheet, below the pivot table
-                int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 15, 0, 30, 8);
+                // Place the chart below the pivot table
+                int chartIndex = pivotSheet.Charts.Add(ChartType.Column, 20, 0, 35, 8);
                 Chart chart = pivotSheet.Charts[chartIndex];
 
-                // Use the pivot table range as the chart data source
-                CellArea range = pivotTable.TableRange1;
-                string chartRange = CellsHelper.CellIndexToName(range.StartRow, range.StartColumn) + ":" +
-                                    CellsHelper.CellIndexToName(range.EndRow, range.EndColumn);
+                // Add series using the data sheet range (Quantity values)
+                // Categories are taken from the Category column (A) and Product column (B) automatically
+                chart.NSeries.Add("Data!C2:C7", true);
+                chart.NSeries[0].Name = "Quantity";
 
-                // Set the data range for the chart (isVertical = true for column chart)
-                chart.SetChartDataRange(chartRange, true);
-                chart.Title.Text = "Pivot Chart";
+                // Set chart title
+                chart.Title.Text = "Quantity by Category and Product";
 
                 // -------------------------------------------------
                 // 4. Save the workbook (including pivot table and chart) to PDF
                 // -------------------------------------------------
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
-                    // Preserve the layout: each sheet on a single page
+                    // Preserve the document structure (useful for accessibility)
+                    ExportDocumentStructure = true,
+                    // Fit each worksheet onto a single PDF page to keep layout intact
                     OnePagePerSheet = true,
-                    // Export document structure (bookmarks, etc.)
-                    ExportDocumentStructure = true
+                    // Optional: calculate formulas before saving
+                    CalculateFormula = true
                 };
 
-                string outputPath = "PivotTableAndChart.pdf";
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved to {outputPath}");
+                // Save as PDF; the resulting file contains both the pivot table and its chart
+                workbook.Save("PivotTableWithChart.pdf", pdfOptions);
+
+                Console.WriteLine("Pivot table and chart exported to PDF successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

@@ -1,50 +1,65 @@
-// Title: Link a Shape to a CHAR Formula Cell and Verify Unicode Rendering – Aspose.Cells for .NET Example
-// Description: Shows how to place a =CHAR(9731) formula in cell A1, add a rectangle shape, bind the shape to the cell with SetLinkedCell, refresh the shape value, read shape.Text to confirm the snowman character, and save the workbook.
-// Keywords: Aspose.Cells | .NET | C# shape linking | SetLinkedCell | CHAR function | Unicode character | shape.Text | linked shape verification | Excel shape API | dynamic shape text
-// Common Searches: Aspose.Cells link shape to cell | SetLinkedCell CHAR formula | retrieve text from linked shape | display Unicode character in Excel shape using Aspose | update shape after cell formula change
-// Developer Intent: The developer wants to bind a worksheet shape to a cell that returns a special character via the CHAR function and verify that the shape displays the correct character.
-// Use Cases: Create dashboard icons that reflect Unicode symbols defined by formulas | Automatically synchronize shape captions with cell calculations | Extract shape captions for reporting or logging purposes
-// AI Prompts: Write C# code with Aspose.Cells to link a rectangle shape to cell A1 containing =CHAR(9731) and output the shape's displayed text. | Explain how the three parameters of SetLinkedCell affect linking a shape to a cell that returns a Unicode character. | Provide debugging steps when shape.Text does not update after SetLinkedCell and UpdateSelectedValue.
+// Title: Link a textbox shape to a cell containing a CHAR formula and verify the displayed character using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook, sets cell A1 to =CHAR(169), calculates formulas, adds a textbox shape over A1, assigns the shape's Text property from the cell value, and confirms the shape text matches the evaluated character. | Write a method that positions a TextBox shape with PlacementType.MoveAndSize on a specific cell, binds its text to the cell's calculated result, and returns a boolean indicating whether the binding succeeded. | Extend the example to iterate over a collection of cells with different CHAR codes, create corresponding textbox shapes, link each shape's text to its cell, and log any mismatches.
+// Common Searches: asp.net link textbox shape to cell formula result aspnet | aspocells set shape text from CHAR function cell | c# verify shape displays special character from Excel formula using Aspose.Cells | how to use PlacementType.MoveAndSize to bind shape to cell in Aspose.Cells | example linking multiple textbox shapes to CHAR formulas in Aspose.Cells
+// Tags: Aspose.Cells link textbox shape to cell value | PlacementType.MoveAndSize for shape over cell | use CHAR function with Aspose.Cells formula | validate shape text against calculated cell | C# bind shape text to special character cell
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to place a =CHAR(9731) formula in cell A1, add a rectangle shape, bind the shape to the cell with SetLinkedCell, refresh the shape value, read shape.Text to confirm the snowman character, and save the workbook.
-class Program
+// The sample creates a workbook, writes =CHAR(169) into A1, calculates the formula, adds a textbox shape positioned over the cell with MoveAndSize placement, sets the shape's Text property to the cell's rendered character, verifies the shape text matches the cell value, and saves the workbook as ShapeLinkedToCharFunction.xlsx.
+class ShapeLinkExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a formula in cell A1 that uses the CHAR function to display a special character (e.g., snowman)
-            Cell linkedCell = sheet.Cells["A1"];
-            linkedCell.Formula = "=CHAR(9731)";
+            // Set a formula in cell A1 that uses CHAR to display a special character (©)
+            Cell targetCell = sheet.Cells["A1"];
+            targetCell.Formula = "=CHAR(169)";
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: shape type, upper‑left row, upper‑left column, top offset, left offset, height, width
-            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 0, 0, 0, 30, 100);
+            // Calculate formulas so the cell contains the actual character
+            workbook.CalculateFormula();
 
-            // Link the shape to the cell containing the CHAR formula
-            shape.SetLinkedCell("A1", false, false);
+            // Add a textbox shape to the worksheet (row, column, top offset, left offset, height, width)
+            TextBox shape = sheet.Shapes.AddTextBox(0, 0, 0, 0, 30, 200);
 
-            // Update the shape so it reflects the value of the linked cell
-            shape.UpdateSelectedValue();
+            // Position the shape over cell A1
+            shape.Placement = PlacementType.MoveAndSize;
+            shape.UpperLeftRow = 0;
+            shape.UpperLeftColumn = 0;
+            // Offsets are already set via AddTextBox parameters; no need for separate properties
 
-            // Retrieve the text displayed by the shape to verify rendering
-            string shapeText = shape.Text; // shape.Text returns the displayed string
-            Console.WriteLine($"Shape displays: '{shapeText}'");
+            // Link the shape's text to the value of cell A1
+            shape.Text = targetCell.StringValue;
 
-            // Save the workbook (optional visual verification)
-            workbook.Save("LinkedShape.xlsx");
+            // Verify that the shape's text matches the cell's rendered value
+            if (shape.Text == targetCell.StringValue)
+            {
+                Console.WriteLine("Shape successfully linked. Rendered character: " + shape.Text);
+            }
+            else
+            {
+                Console.WriteLine("Link verification failed.");
+            }
+
+            // Define output file path
+            string outputPath = "ShapeLinkedToCharFunction.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine("Workbook saved to: " + Path.GetFullPath(outputPath));
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

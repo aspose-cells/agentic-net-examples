@@ -1,22 +1,18 @@
-// Title: Set a Fabric‑Like (Denim) Texture on a Chart Background with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add sample data, insert a column chart, and apply a predefined Denim texture to the chart area using Aspose.Cells' FillFormat (FillType.Texture, TextureType.Denim) before saving the file.
-// Keywords: Aspose.Cells chart texture | C# chart background texture | TextureType.Denim | FillFormat FillType.Texture | Excel chart styling Aspose | predefined texture fill | .NET chart area fill | Aspose.Cells examples | chart background fabric appearance
-// Common Searches: Aspose.Cells set denim texture on chart background | C# apply fabric texture to Excel chart area | How to use TextureType.Denim with Aspose.Cells | Chart background texture fill Aspose.Cells .NET | Predefined texture fill for charts in Aspose.Cells
-// Developer Intent: Apply a predefined fabric texture to a chart's background area.
-// Use Cases: Design a sales chart with a denim‑styled background to match brand guidelines. | Create presentation‑ready Excel charts that feature a fabric‑like visual effect. | Standardize the look of multiple charts in a workbook by applying the same texture fill.
-// AI Prompts: Show how to change the chart background to another predefined texture such as Wool using Aspose.Cells. | Provide code for applying a custom image as a texture fill to the chart area instead of a built‑in texture. | Explain how to enumerate all available TextureType values programmatically in Aspose.Cells.
+// Title: Apply a fabric‑style texture fill to a chart’s background using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets the ChartArea’s FillFormat.Texture to TextureType.WovenMat and enables tiling with Aspose.Cells. | Demonstrate how to add a column chart, apply a predefined fabric texture to its background, and save the workbook using Aspose.Cells.
+// Common Searches: c# aspose.cells set chartarea texture fill to woven mat | how to enable tiling for chart background texture in Aspose.Cells | apply predefined fabric texture to Excel chart using Aspose.Cells .NET | example of using TextureType.WovenMat for chart background in C# | chart area fill format texture options aspose.cells tutorial
+// Tags: chartarea texture fill aspose.cells | wovenmat texture aspose.cells | chart background tiling aspose.cells | excel chart fabric texture c# | set chartarea fillformat texture aspose.cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, add sample data, insert a column chart, and apply a predefined Denim texture to the chart area using Aspose.Cells' FillFormat (FillType.Texture, TextureType.Denim) before saving the file.
+// The example creates a workbook, adds sample data, inserts a column chart, applies the predefined WovenMat texture to the ChartArea with tiling enabled, and saves the file as ChartWithFabricTexture.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
@@ -38,9 +34,10 @@ class Program
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Apply a predefined texture (fabric-like) to the chart background
-        chart.ChartArea.Area.FillFormat.FillType = FillType.Texture;          // Use texture fill
-        chart.ChartArea.Area.FillFormat.Texture = TextureType.Denim;          // Fabric appearance
+        // Apply a fabric‑like texture to the chart background (ChartArea)
+        chart.ChartArea.Area.FillFormat.Texture = TextureType.WovenMat; // predefined fabric texture
+        // Enable tiling so the texture repeats across the whole area
+        chart.ChartArea.Area.FillFormat.TextureFill.IsTiling = true;
 
         // Save the workbook
         workbook.Save("ChartWithFabricTexture.xlsx");

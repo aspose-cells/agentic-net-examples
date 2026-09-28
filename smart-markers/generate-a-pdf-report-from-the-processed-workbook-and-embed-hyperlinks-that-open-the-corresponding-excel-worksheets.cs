@@ -1,16 +1,12 @@
-// Title: Create a PDF report with worksheet hyperlinks using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to build a two‑sheet Excel workbook, add hyperlinks that point to the same workbook and specific cells, save the workbook as an XLSX file, and export it to PDF while preserving the links by using PdfSaveOptions.ExportDocumentStructure.
-// Keywords: Aspose.Cells PDF hyperlink | C# export Excel to PDF with links | PdfSaveOptions ExportDocumentStructure | embed worksheet hyperlink in PDF | .NET Aspose.Cells example | convert Excel to PDF preserving hyperlinks | hyperlink to sheet in PDF
-// Common Searches: Aspose.Cells keep Excel hyperlinks when converting to PDF | C# add hyperlink to worksheet and export to PDF | PdfSaveOptions retain links in PDF | how to embed sheet link in PDF using Aspose.Cells | export multi‑sheet workbook to PDF with active links
-// Developer Intent: Generate a PDF document from an Excel workbook where each sheet contains a clickable link that opens the corresponding worksheet in the original Excel file.
-// Use Cases: Add a sheet‑specific hyperlink to an Excel workbook and produce a PDF that lets users jump back to the source worksheet. | Create summary and detail worksheets, save them as XLSX, then deliver a PDF version with active navigation links. | Leverage PdfSaveOptions.ExportDocumentStructure to maintain document hierarchy and hyperlink functionality in PDFs generated from Excel files.
-// AI Prompts: Write C# code with Aspose.Cells that adds a hyperlink to each worksheet pointing to the same workbook and cell, then saves the workbook as PDF preserving the links. | Explain how PdfSaveOptions.ExportDocumentStructure affects hyperlink behavior in PDFs created from Excel workbooks. | Provide step‑by‑step instructions to build a summary and details sheet, embed sheet‑specific hyperlinks, and export the workbook to a PDF with clickable links using Aspose.Cells.
+// Title: Generate a PDF report with cross‑sheet navigation hyperlinks using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a workbook with a Summary and Details worksheet, insert hyperlinks that jump to the opposite sheet, calculate formulas, and save the workbook as a PDF while keeping the links active using Aspose.Cells. | Configure PdfSaveOptions.ExportDocumentStructure to true so that hyperlinks are retained in the PDF output. | Add worksheet‑level hyperlinks via the Hyperlinks collection and verify they work after PDF conversion.
+// Common Searches: asp.net aspose.cells add hyperlink to another worksheet and export to pdf | c# preserve Excel worksheet hyperlinks when saving as PDF with Aspose.Cells | how to create cross‑sheet navigation links in a PDF generated from Excel using Aspose.Cells | Aspose.Cells PdfSaveOptions ExportDocumentStructure example in C# | generate PDF report with clickable sheet links using Aspose.Cells for .NET
+// Tags: add worksheet hyperlink Aspose.Cells C# | export workbook to PDF with active links Aspose.Cells | PdfSaveOptions ExportDocumentStructure C# | cross‑sheet navigation links Excel PDF Aspose | calculate formulas before PDF export Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to build a two‑sheet Excel workbook, add hyperlinks that point to the same workbook and specific cells, save the workbook as an XLSX file, and export it to PDF while preserving the links by using PdfSaveOptions.ExportDocumentStructure.
+// The example builds a workbook with Summary and Details sheets, adds hyperlinks that navigate between them, calculates any formulas, sets PdfSaveOptions.ExportDocumentStructure to retain links, and saves the workbook as a PDF where the cross‑sheet hyperlinks remain functional.
 class PdfReportWithHyperlinks
 {
     static void Main()
@@ -18,38 +14,40 @@ class PdfReportWithHyperlinks
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Add a second worksheet
-        int detailsIndex = workbook.Worksheets.Add();
+        // ---------- Sheet 1 : Summary ----------
         Worksheet summarySheet = workbook.Worksheets[0];
-        Worksheet detailsSheet = workbook.Worksheets[detailsIndex];
-
-        // Name the worksheets
         summarySheet.Name = "Summary";
+
+        // Add some content
+        summarySheet.Cells["A1"].PutValue("Click to view Details");
+
+        // Add a hyperlink that points to cell A1 of the Details sheet
+        // Parameters: firstRow, firstColumn, totalRows, totalColumns, address
+        summarySheet.Hyperlinks.Add(0, 0, 1, 1, "Details!A1");
+
+        // ---------- Sheet 2 : Details ----------
+        int detailsIndex = workbook.Worksheets.Add();
+        Worksheet detailsSheet = workbook.Worksheets[detailsIndex];
         detailsSheet.Name = "Details";
 
-        // Populate some sample data
-        summarySheet.Cells["A1"].PutValue("Summary Data");
-        detailsSheet.Cells["A1"].PutValue("Details Data");
+        // Add content to the Details sheet
+        detailsSheet.Cells["A1"].PutValue("Here are the detailed data.");
+        detailsSheet.Cells["A2"].PutValue("Back to Summary");
 
-        // Define the Excel file name that will be referenced by the hyperlinks
-        string excelFileName = "Report.xlsx";
+        // Add a hyperlink that points back to cell A1 of the Summary sheet
+        detailsSheet.Hyperlinks.Add(1, 0, 1, 1, "Summary!A1");
 
-        // Add a hyperlink in each sheet that points to the corresponding sheet in the Excel file
-        // Hyperlink format: "Report.xlsx#SheetName!A1"
-        summarySheet.Hyperlinks.Add(0, 1, 1, 1, $"{excelFileName}#{summarySheet.Name}!A1");
-        detailsSheet.Hyperlinks.Add(0, 1, 1, 1, $"{excelFileName}#{detailsSheet.Name}!A1");
-
-        // Save the workbook as an Excel file (the target of the hyperlinks)
-        workbook.Save(excelFileName, SaveFormat.Xlsx);
+        // Ensure any formulas are calculated before saving
+        workbook.CalculateFormula();
 
         // Configure PDF save options
         PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            ExportDocumentStructure = true, // retain document structure
-            EmbedAttachments = false        // no OLE attachments needed
+            // Export document structure so that hyperlinks are retained in the PDF
+            ExportDocumentStructure = true
         };
 
-        // Save the workbook as a PDF; hyperlinks are preserved in the PDF
+        // Save the workbook as a PDF file; hyperlinks will be embedded in the PDF
         workbook.Save("Report.pdf", pdfOptions);
     }
 }

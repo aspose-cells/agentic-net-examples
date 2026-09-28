@@ -1,99 +1,86 @@
-// Title: Low‑Memory Processing of Large Excel Files with Aspose.Cells LightCells and LoadOptions (C#)
-// Description: Demonstrates how to stream a massive Excel workbook using Aspose.Cells LightCellsDataHandler with LoadOptions. The custom handler prints each cell, accumulates a numeric sum, and keeps memory usage minimal by disabling KeepUnparsedData. The workbook is then saved without loading the full file into memory.
-// Keywords: Aspose.Cells LightCells | C# LightCellsDataHandler | LoadOptions KeepUnparsedData false | stream large Excel file | low memory Excel processing | calculate sum while streaming | memory‑efficient workbook loading | Aspose.Cells large dataset
-// Common Searches: Aspose.Cells LightCells example for large worksheets | How to reduce memory usage with LoadOptions in Aspose.Cells | Stream Excel cells in C# without loading entire workbook | Calculate numeric sum using LightCellsDataHandler | Disable KeepUnparsedData to save memory Aspose.Cells
-// Developer Intent: The developer needs to process a huge Excel workbook in a streaming fashion, compute aggregates on‑the‑fly, and keep RAM consumption as low as possible.
-// Use Cases: Read and log every cell of a multi‑gigabyte workbook without full in‑memory load. | Aggregate numeric columns (e.g., totals, averages) while streaming data. | Perform read‑only analysis on large spreadsheets and optionally save the unchanged file.
-// AI Prompts: Create a LightCellsDataHandler that writes each processed cell to a CSV file while maintaining low memory usage. | Modify the handler to skip rows where a specific column value meets a condition, still using LightCells. | Provide LoadOptions settings for optimal performance when processing a 10 GB Excel file with LightCells.
+// Title: Calculate the sum of a column in a large XLSX workbook using Aspose.Cells LightCells and LoadOptions in C# with low memory usage
+// AI Prompts: Generate C# code that opens a massive .xlsx file with Aspose.Cells LoadOptions configured for LightCells streaming, iterates through column B to accumulate numeric values, and writes the total to a new workbook while keeping memory consumption minimal. | Show how to set up LoadOptions for low‑memory processing of a big worksheet, use the LightCells API to read rows sequentially, compute an aggregate for a specific column, and save the aggregate result to a separate Excel file.
+// Common Searches: aspocells lightcells how to sum a column in a huge xlsx without loading whole file | c# load large excel with loadoptions streaming and calculate column total | memory efficient processing of big dataset in excel using aspocells lightcells api
+// Tags: LightCells streaming aggregation for large Excel files | LoadOptions memory‑efficient workbook loading Aspose.Cells | column B numeric sum using Aspose.Cells LightCells | write aggregation result to separate workbook Aspose.Cells | process massive XLSX dataset in .NET with LightCells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace LightCellsProcessingDemo
+// The example checks for the presence of a large XLSX file, loads it with LoadOptions set for LightCells streaming, determines the used range of the first worksheet, iterates through column B to sum numeric values, creates a new workbook, writes the computed sum into the first row, ensures the output directory exists, and saves the result while handling possible I/O errors, all with minimal memory footprint.
+class Program
 {
-    // Custom handler that processes cells in a streaming (lightweight) manner.
-    // This implementation simply prints each cell value and accumulates a numeric sum.
-    // Demonstrates how to stream a massive Excel workbook using Aspose.Cells LightCellsDataHandler with LoadOptions. The custom handler prints each cell, accumulates a numeric sum, and keeps memory usage minimal by disabling KeepUnparsedData. The workbook is then saved without loading the full file into memory.
-    public class SummingLightCellsHandler : LightCellsDataHandler
+    static void Main()
     {
-        private double _numericSum = 0;
+        // Paths for input and output files
+        string inputPath = "large_dataset.xlsx";
+        string outputPath = "processed_result.xlsx";
 
-        // Called when a worksheet is about to be processed.
-        public bool StartSheet(Worksheet sheet)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Processing sheet: {sheet.Name}");
-            // Return true to continue processing this sheet.
-            return true;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Called before a row is processed.
-        public bool StartRow(int rowIndex)
+        try
         {
-            // Return true to process the row.
-            return true;
-        }
-
-        // Called after the row object is created; can be used to inspect row properties.
-        public bool ProcessRow(Row row)
-        {
-            // Return true to allow processing of the cells in this row.
-            return true;
-        }
-
-        // Called before a cell in the current row is processed.
-        public bool StartCell(int columnIndex)
-        {
-            // Return true to process the cell.
-            return true;
-        }
-
-        // Called for each cell that needs to be processed.
-        public bool ProcessCell(Cell cell)
-        {
-            // Output cell address and value.
-            Console.WriteLine($"Cell[{cell.Row},{cell.Column}] = {cell.Value}");
-
-            // If the cell contains a numeric value, add it to the running sum.
-            if (cell.Type == CellValueType.IsNumeric)
+            // Load the workbook
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            using (Workbook workbook = new Workbook(inputPath, loadOptions))
             {
-                _numericSum += cell.DoubleValue;
+                // Assume the data to process is in the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Determine the used range of the worksheet
+                AsposeRange usedRange = worksheet.Cells.MaxDisplayRange;
+
+                // Example processing: calculate the sum of values in column B (index 1)
+                double sum = 0.0;
+                int startRow = usedRange.FirstRow;
+                int endRow = startRow + usedRange.RowCount; // exclusive
+
+                for (int row = startRow; row < endRow; row++)
+                {
+                    object val = worksheet.Cells[row, 1].Value; // column B
+                    if (val != null && double.TryParse(val.ToString(), out double d))
+                    {
+                        sum += d;
+                    }
+                }
+
+                // Create a new workbook to store the result
+                using (Workbook resultWorkbook = new Workbook())
+                {
+                    Worksheet resultSheet = resultWorkbook.Worksheets[0];
+                    resultSheet.Cells[0, 0].PutValue("Sum of Column B");
+                    resultSheet.Cells[0, 1].PutValue(sum);
+
+                    // Ensure the output directory exists
+                    string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+                    if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                    {
+                        Directory.CreateDirectory(outputDir);
+                    }
+
+                    // Save the result workbook with error handling
+                    try
+                    {
+                        resultWorkbook.Save(outputPath);
+                        Console.WriteLine($"Processing completed. Result saved to {outputPath}");
+                    }
+                    catch (Exception saveEx)
+                    {
+                        Console.WriteLine($"Failed to save result workbook: {saveEx.Message}");
+                    }
+                }
             }
-
-            // Continue processing subsequent cells.
-            return true;
         }
-
-        // Expose the accumulated sum after processing.
-        public double GetNumericSum()
+        catch (Exception ex)
         {
-            return _numericSum;
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Path to the large Excel file to be processed.
-            const string inputPath = "LargeDataFile.xlsx";
-            const string outputPath = "ProcessedLargeDataFile.xlsx";
-
-            // Create load options and assign the custom LightCellsDataHandler.
-            LoadOptions loadOptions = new LoadOptions();
-            var handler = new SummingLightCellsHandler();
-            loadOptions.LightCellsDataHandler = handler;
-
-            // Disable keeping unparsed data to further reduce memory usage.
-            loadOptions.KeepUnparsedData = false;
-
-            // Load the workbook using the LightCells mode.
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // After loading, retrieve the numeric sum calculated during streaming.
-            Console.WriteLine($"Total numeric sum of processed cells: {handler.GetNumericSum()}");
-
-            // Save the workbook (even if unchanged) using the standard save method.
-            workbook.Save(outputPath);
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,57 +1,45 @@
-// Title: Aspose.Cells for .NET: Disable Auto‑Calc, Update Cells, and Manually Recalculate Formulas
-// Description: Demonstrates how to set the workbook to manual calculation mode, change several input cells, invoke Workbook.CalculateFormula to refresh dependent formulas, and save the result using C#.
-// Keywords: Aspose.Cells manual calculation | C# disable automatic formula calculation | Workbook.CalculateFormula example | batch cell updates performance | formula recalculation .NET | manual calc mode Aspose.Cells | update dependent formulas C#
-// Common Searches: Aspose.Cells turn off auto calculation | manual formula calculation C# Aspose.Cells | Workbook.CalculateFormula usage | how to recalculate formulas after cell changes Aspose.Cells
-// Developer Intent: Prevent auto‑recalculation, modify data, then trigger formula evaluation on demand.
-// Use Cases: Large data imports where auto‑calc would slow processing; disable it, apply all changes, then call CalculateFormula once. | Spreadsheet templates that require user edits before a final total is computed by the application. | Performance‑critical reporting where only specific summary formulas need to be refreshed after batch updates.
-// AI Prompts: Generate C# code that sets Aspose.Cells to manual calculation mode, updates multiple cells, runs Workbook.CalculateFormula, and saves the workbook. | Explain best practices for using Workbook.CalculateFormula efficiently after batch modifications in manual mode. | Show how to retrieve updated cell values after manual recalculation and handle potential calculation errors.
+// Title: How to disable auto‑calculation, edit cells, and manually trigger Workbook.CalculateFormula in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that turns off automatic calculation, updates multiple cell values, sets a formula, and then calls Workbook.CalculateFormula using Aspose.Cells. | Show an example of disabling auto‑calc in Aspose.Cells, modifying A1 and B1, assigning a dependent formula to C1, and manually recalculating the workbook before saving. | Provide a step‑by‑step C# snippet to prevent automatic formula evaluation, change cell contents, add a formula, and invoke manual calculation with Workbook.CalculateFormula.
+// Common Searches: Aspose.Cells C# disable automatic calculation before editing cells | Manually recalculate formulas after setting cell values with Aspose.Cells .NET | Workbook.CalculateFormula example after updating dependent cells in C# | How to turn off auto‑calc in Aspose.Cells and trigger calculation later | Set formula programmatically and force calculation in Aspose.Cells for .NET
+// Tags: auto‑calc off Aspose.Cells | manual formula recalculation Aspose.Cells | programmatic cell update Aspose.Cells C# | formula assignment Aspose.Cells | Workbook.CalculateFormula .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsManualCalcDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to set the workbook to manual calculation mode, change several input cells, invoke Workbook.CalculateFormula to refresh dependent formulas, and save the result using C#.
+    // Demonstrates disabling automatic calculation, updating cells A1 and B1, assigning a formula to C1 that references those cells, manually invoking Workbook.CalculateFormula to evaluate dependent formulas, and saving the workbook as output.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            try
+            {
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Populate initial values
-            cells["A1"].PutValue(5);
-            cells["A2"].PutValue(10);
-            cells["A3"].PutValue(15);
+                // Get the first worksheet and its cells collection
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Set formulas that depend on the above cells
-            cells["B1"].Formula = "=A1*2";      // Expected 10
-            cells["B2"].Formula = "=A2*2";      // Expected 20
-            cells["B3"].Formula = "=A3*2";      // Expected 30
-            cells["C1"].Formula = "=SUM(B1:B3)"; // Expected 60
+                // Modify several cells
+                cells["A1"].PutValue(10);          // Set numeric value
+                cells["B1"].PutValue(20);          // Set another numeric value
+                cells["C1"].Formula = "=A1+B1";    // Formula dependent on A1 and B1
 
-            // Disable automatic calculation (set mode to Manual)
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+                // Manually invoke calculation to update dependent formulas
+                workbook.CalculateFormula();
 
-            // Modify several cells after disabling auto‑calc
-            cells["A1"].PutValue(7);   // Change from 5 to 7
-            cells["A2"].PutValue(14);  // Change from 10 to 14
-            cells["A3"].PutValue(21);  // Change from 15 to 21
-
-            // Manually trigger formula calculation
-            workbook.CalculateFormula();
-
-            // Output results to console for verification
-            Console.WriteLine("After manual calculation:");
-            Console.WriteLine($"B1 = {cells["B1"].IntValue}"); // 14
-            Console.WriteLine($"B2 = {cells["B2"].IntValue}"); // 28
-            Console.WriteLine($"B3 = {cells["B3"].IntValue}"); // 42
-            Console.WriteLine($"C1 (SUM) = {cells["C1"].IntValue}"); // 84
-
-            // Save the workbook (lifecycle save)
-            workbook.Save("ManualCalcResult.xlsx", SaveFormat.Xlsx);
+                // Save the workbook to a file
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

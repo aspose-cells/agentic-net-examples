@@ -1,23 +1,19 @@
-// Title: Aspose.Cells for .NET: Set Slicer NumberOfColumns to Arrange Items in Multiple Columns
-// Description: This C# example creates a workbook, builds a pivot table from sample data, adds a slicer linked to the "Category" field, and uses the slicer’s NumberOfColumns property to display items across three columns before saving the file.
-// Keywords: Aspose.Cells | .NET | C# | Excel slicer | NumberOfColumns | multiple columns | pivot table slicer | slicer layout | dashboard design | Excel automation
-// Common Searches: Aspose.Cells set slicer column count | NumberOfColumns property C# example | display slicer items in several columns | multi‑column slicer layout Aspose.Cells | how to arrange slicer items horizontally in .NET
-// Developer Intent: Configure a slicer’s NumberOfColumns property to show its items in a grid rather than a single vertical list.
-// Use Cases: Compact dashboard where slicer items are shown in a three‑column grid to save vertical space. | Excel reports that need a readable slicer layout for many category values. | Dynamic reports that adjust slicer column count based on the number of distinct pivot field entries.
-// AI Prompts: Generate a C# snippet that sets the slicer column count based on the distinct values of a pivot field using Aspose.Cells. | Show how to create multiple slicers with different NumberOfColumns settings in the same workbook. | Explain how to apply custom styles to slicer items after arranging them in multiple columns with Aspose.Cells.
+// Title: Arrange slicer items into multiple columns with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a pivot table, adds a slicer for a field, and sets the slicer’s NumberOfColumns property to 3 using Aspose.Cells. | Show how to customize a slicer’s caption, size, and column layout programmatically in an Aspose.Cells workbook. | Provide a step‑by‑step example of saving an Excel file after configuring a slicer to display items in three columns with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set slicer NumberOfColumns to display items in multiple columns | how to configure slicer layout columns in an Excel workbook using Aspose.Cells for .NET | C# example of adding a slicer to a pivot table and arranging items in three columns with Aspose.Cells | Aspose.Cells slicer column count property usage in .NET | programmatically change slicer item arrangement to multiple columns in C# Excel library
+// Tags: Aspose.Cells slicer NumberOfColumns property | C# configure slicer multiple columns | Aspose.Cells pivot table slicer layout | Excel slicer column arrangement Aspose.Cells | Aspose.Cells workbook slicer customization
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace SlicerColumnsDemo
+namespace SlicerMultipleColumnsDemo
 {
-    // This C# example creates a workbook, builds a pivot table from sample data, adds a slicer linked to the "Category" field, and uses the slicer’s NumberOfColumns property to display items across three columns before saving the file.
+    // The sample creates a workbook, fills it with sample data, builds a pivot table, adds a slicer linked to the 'Category' field, sets the slicer's caption and dimensions, configures the slicer to show items in three columns via the NumberOfColumns property, and saves the result as an .xlsx file.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
@@ -37,20 +33,20 @@ namespace SlicerColumnsDemo
                 cells["B4"].Value = "Carrot";
 
                 // Add a pivot table based on the sample data
-                int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "DemoPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIdx];
+                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
+                PivotTable pivot = sheet.PivotTables[pivotIndex];
                 pivot.AddFieldToArea(PivotFieldType.Row, "Category");
                 pivot.AddFieldToArea(PivotFieldType.Data, "Product");
                 pivot.RefreshData();
                 pivot.CalculateData();
 
                 // Add a slicer linked to the pivot table field "Category"
-                // Note: The correct parameter order is (pivot, destination cell, base field name)
-                int slicerIdx = sheet.Slicers.Add(pivot, "E1", "Category");
-                Slicer slicer = sheet.Slicers[slicerIdx];
+                // Correct argument order: destination cell, then field name
+                int slicerIndex = sheet.Slicers.Add(pivot, "E1", "Category");
+                Slicer slicer = sheet.Slicers[slicerIndex];
 
                 // Set slicer properties (size, caption, etc.)
-                slicer.Caption = "Category Slicer";
+                slicer.Caption = "Product Categories";
                 slicer.TopPixel = 50;
                 slicer.LeftPixel = 50;
                 slicer.HeightPixel = 150;
@@ -59,14 +55,12 @@ namespace SlicerColumnsDemo
                 // Arrange slicer items in multiple columns (e.g., 3 columns)
                 slicer.NumberOfColumns = 3;
 
-                // Save the workbook
-                string outputPath = "SlicerMultipleColumns.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // Save the workbook to a file
+                workbook.Save("SlicerMultipleColumnsDemo.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Error: " + ex.Message);
             }
         }
     }

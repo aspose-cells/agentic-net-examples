@@ -1,38 +1,40 @@
-// Title: Add a Bold RichTextPortion to an Existing Cell with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, writes plain text to cell A1, inserts additional text, and applies bold formatting to the new RichTextPortion using the Characters method before saving the file.
-// Keywords: Aspose.Cells | C# rich text | Bold RichTextPortion | InsertText method | Characters formatting | Excel cell bold text | Aspose.Cells .NET | RichTextPortion formatting | Add bold text to cell
-// Common Searches: Aspose.Cells add bold text to part of a cell | C# insert RichTextPortion and make it bold | How to format a substring in an Excel cell using Aspose.Cells | Apply bold style to specific characters with Aspose.Cells for .NET | Insert text and set font weight in a worksheet cell
-// Developer Intent: Insert a new RichTextPortion into a cell that already contains plain text and set that portion to bold.
-// Use Cases: Create a report header where the label is regular and the key term is bold within the same cell. | Generate an invoice line where the description stays normal but the amount appears in bold after insertion. | Highlight keywords in a paragraph by inserting them as bold RichTextPortions in a single Excel cell.
-// AI Prompts: Show C# code that adds a bold RichTextPortion to an existing cell using Aspose.Cells. | Provide an example of inserting multiple RichTextPortions with different styles (bold, italic, color) into one cell. | Explain how to change the font weight of a specific character range after using InsertText with Aspose.Cells.
+// Title: Add a bold, red RichTextPortion to a specific substring in an Excel cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, writes "Hello Aspose.Cells!" to cell A1, and makes the first five characters bold and red using Aspose.Cells. | Write a reusable method that takes a cell reference, start index, length, and applies bold formatting with a custom color to that text segment via the Aspose.Cells API. | Show how to change the applied bold formatting to italic for a different character range in the same cell using Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to format part of a cell's text as bold and colored | C# code to apply character-level formatting in Excel with Aspose.Cells | Set font style for a substring in an Excel cell using Aspose.Cells .NET API | Apply rich text formatting to specific characters in a worksheet cell Aspose.Cells
+// Tags: apply bold rich text portion Aspose.Cells C# | character-level font color Aspose.Cells .NET | partial text formatting Excel workbook Aspose.Cells | rich text substring styling Excel .NET | set characters formatting Aspose.Cells API
 
 using System;
 using Aspose.Cells;
+using System.Drawing;
 
-// Creates a workbook, writes plain text to cell A1, inserts additional text, and applies bold formatting to the new RichTextPortion using the Characters method before saving the file.
-class Program
+// Demonstrates creating a workbook, inserting plain text into cell A1, and using the Characters method to apply bold and red formatting to a defined substring, then saving the file as BoldRichTextPortion.xlsx.
+class AddBoldRichTextPortion
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
+
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access the target cell and set initial plain text
+        // Target cell
         Cell cell = worksheet.Cells["A1"];
-        string plainText = "Hello ";
-        cell.PutValue(plainText);
 
-        // Text that will be added as a new rich‑text portion
-        string boldPortion = "World";
+        // Set plain text value
+        cell.PutValue("Hello Aspose.Cells!");
 
-        // Insert the new text at the end of the existing content
-        cell.InsertText(plainText.Length, boldPortion);
+        // Define the portion to make bold (e.g., "Hello")
+        int startIndex = 0;               // start at first character
+        int length = 5;                   // length of the portion
 
-        // Apply bold formatting to the inserted portion
-        cell.Characters(plainText.Length, boldPortion.Length).Font.IsBold = true;
+        // Apply bold formatting to the specified portion
+        cell.Characters(startIndex, length).Font.IsBold = true;
+
+        // Optionally, set a different color for visibility
+        cell.Characters(startIndex, length).Font.Color = Color.Red;
 
         // Save the workbook
-        workbook.Save("RichTextBold.xlsx");
+        workbook.Save("BoldRichTextPortion.xlsx");
     }
 }

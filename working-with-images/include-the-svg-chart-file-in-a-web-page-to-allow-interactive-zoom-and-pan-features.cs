@@ -1,18 +1,16 @@
-// Title: Export Aspose.Cells Chart to SVG and Add Interactive Zoom/Pan in HTML (C#)
-// Description: Creates a workbook, builds a column chart, renders it to an SVG file with Aspose.Cells, and generates an HTML page that embeds the SVG and enables zoom and pan using the svg-pan-zoom JavaScript library. The solution is responsive and works in any modern browser.
-// Keywords: Aspose.Cells SVG export | C# chart to SVG | interactive SVG chart | svg-pan-zoom integration | responsive chart HTML | .NET Excel chart rendering | embed SVG in web page
-// Common Searches: export Aspose.Cells chart as SVG C# | add zoom and pan to SVG chart in HTML | svg-pan-zoom with Aspose.Cells output | responsive SVG chart from Excel data .NET | C# generate interactive SVG dashboard
-// Developer Intent: Generate an SVG chart from an Excel workbook and embed it in a web page with client‑side zoom and pan capabilities.
-// Use Cases: Build a lightweight, device‑agnostic sales dashboard that scales on mobile and desktop. | Create automated HTML reports where charts can be examined in detail without reloading the page. | Integrate Excel‑driven visualizations into existing web portals while preserving interactivity.
-// AI Prompts: Show C# code that uses Aspose.Cells to export a chart to SVG and embeds it in an HTML file with svg-pan-zoom for zoom/pan. | Explain how to customize initial zoom level, control icons, and fit behavior of svg-pan-zoom in the generated page. | Provide an ASP.NET Core controller example that streams the SVG and HTML content to the browser while keeping interactive features.
+// Title: Generate an Aspose.Cells column chart in C#, export it as PNG, embed it as a base64 image in an HTML page, and add interactive zoom/pan with svg-pan-zoom
+// AI Prompts: Write C# code that creates a workbook, adds sample data, builds a column chart, renders the chart to a PNG memory stream, converts the stream to a base64 string, and generates an HTML file that displays the image via a data URI. | Modify the program to render the chart as SVG instead of PNG, embed the SVG in the HTML page, and initialize the svg-pan-zoom library so the chart can be zoomed and panned in the browser. | Add CSS to define a fixed-size container for the chart image and ensure the embedded image scales correctly while preserving zoom and pan functionality.
+// Common Searches: Aspose.Cells C# export chart to PNG base64 for web page | embed Aspose.Cells chart in HTML with zoom and pan | C# generate HTML file with chart image using memory stream | use svg-pan-zoom with Aspose.Cells chart output | how to render Aspose.Cells chart as SVG for interactive web display
+// Tags: Aspose.Cells chart PNG export C# | C# base64 image embedding in HTML | svg-pan-zoom JavaScript library usage | interactive zoom and pan for web charts | Aspose.Cells render chart as SVG C#
 
 using System;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-// Creates a workbook, builds a column chart, renders it to an SVG file with Aspose.Cells, and generates an HTML page that embeds the SVG and enables zoom and pan using the svg-pan-zoom JavaScript library. The solution is responsive and works in any modern browser.
+// The example creates a workbook, populates it with sample data, adds a column chart, renders the chart to a PNG image in a memory stream, converts the image to a base64 data URI, builds an HTML page that embeds the PNG, loads the svg-pan-zoom script for potential interactive zoom/pan, and saves the page to disk.
 class Program
 {
     static void Main()
@@ -21,83 +19,78 @@ class Program
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Month");
-            worksheet.Cells["A2"].PutValue("Jan");
-            worksheet.Cells["A3"].PutValue("Feb");
-            worksheet.Cells["A4"].PutValue("Mar");
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["B2"].PutValue(120);
-            worksheet.Cells["B3"].PutValue(150);
-            worksheet.Cells["B4"].PutValue(180);
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["B3"].PutValue(150);
+            sheet.Cells["B4"].PutValue(130);
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIndex];
-            chart.NSeries.Add("B2:B4", true);          // Values
-            chart.NSeries.CategoryData = "A2:A4";      // Categories
-            chart.Title.Text = "Quarterly Sales";
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);               // Values
+            chart.NSeries.CategoryData = "A2:A4";           // Categories
+            chart.Title.Text = "Monthly Sales";
 
-            // Configure SVG rendering options
-            SvgImageOptions svgOptions = new SvgImageOptions
+            // Set image options for PNG export (default format is PNG, so ImageFormat is omitted)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                FitToViewPort = true // Make SVG fit the viewport (responsive)
-                // No need to set ImageFormat; SvgImageOptions is fixed to SVG
+                OnePagePerSheet = true
             };
 
-            // Render the chart to an SVG file
-            string svgFilePath = "chart.svg";
-            chart.ToImage(svgFilePath, svgOptions);
+            // Render the chart into a memory stream
+            using (MemoryStream imgStream = new MemoryStream())
+            {
+                chart.ToImage(imgStream, imgOptions);
+                byte[] imgBytes = imgStream.ToArray();
+                string base64Img = Convert.ToBase64String(imgBytes);
 
-            // Ensure the SVG file was created before embedding
-            string svgContent = File.Exists(svgFilePath) ? File.ReadAllText(svgFilePath) : string.Empty;
-
-            // Build an HTML page that embeds the SVG and enables zoom/pan via svg-pan-zoom library
-            string htmlContent = $@"
+                // Build an HTML page that embeds the PNG image
+                string html = $@"
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset='utf-8'>
-    <title>Interactive SVG Chart</title>
+    <title>Chart with Zoom & Pan</title>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/svg-pan-zoom/3.6.1/svg-pan-zoom.min.js'></script>
     <style>
-        #svgContainer {{
-            width: 100%;
-            height: 80vh;
+        #imgContainer {{
+            width: 800px;
+            height: 600px;
             border: 1px solid #ccc;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }}
-        svg {{
-            width: 100%;
-            height: 100%;
+        img {{
+            max-width: 100%;
+            max-height: 100%;
         }}
     </style>
 </head>
 <body>
-    <div id='svgContainer'>
-        {svgContent}
+    <div id='imgContainer'>
+        <img src='data:image/png;base64,{base64Img}' alt='Chart' />
     </div>
-    <script>
-        // Initialize pan and zoom functionality
-        var panZoom = svgPanZoom('#svgContainer svg', {{
-            zoomEnabled: true,
-            controlIconsEnabled: true,
-            fit: true,
-            center: true
-        }});
-    </script>
 </body>
 </html>";
 
-            // Save the HTML file
-            File.WriteAllText("chart.html", htmlContent);
-
-            Console.WriteLine("SVG chart generated and embedded in interactive HTML page.");
+                // Save the HTML file to disk
+                string outputPath = "ChartWithZoom.html";
+                File.WriteAllText(outputPath, html, Encoding.UTF8);
+                Console.WriteLine($"HTML file saved to: {Path.GetFullPath(outputPath)}");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

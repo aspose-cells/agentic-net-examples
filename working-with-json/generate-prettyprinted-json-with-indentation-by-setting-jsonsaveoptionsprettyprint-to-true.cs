@@ -1,75 +1,39 @@
-// Title: Export Aspose.Cells Workbook to Indented JSON in C# using JsonSaveOptions.PrettyPrint
-// Description: A C# sample that builds an Aspose.Cells workbook, fills cells with sample values, and saves the workbook as a formatted JSON file. By enabling the PrettyPrint option (or applying System.Text.Json WriteIndented), the resulting JSON is automatically indented, making it easy to read and version‑control.
-// Keywords: Aspose.Cells | C# JSON export | JsonSaveOptions PrettyPrint | pretty printed JSON | Excel to JSON | formatted JSON output | .NET Aspose.Cells | save workbook as JSON | indented JSON | System.Text.Json WriteIndented
-// Common Searches: Aspose.Cells pretty print JSON C# | How to save Excel as formatted JSON using Aspose.Cells | JsonSaveOptions PrettyPrint property example | C# export workbook to indented JSON | Aspose.Cells JSON formatting options
-// Developer Intent: Create a human‑readable JSON file directly from an Aspose.Cells workbook without a post‑processing step.
-// Use Cases: Produce a clean JSON report from spreadsheet data for documentation or stakeholder review. | Provide an API‑friendly payload by converting Excel sheets to indented JSON for web services. | Facilitate debugging and Git diffs by storing spreadsheet content in a readable JSON format.
-// AI Prompts: Show how to set JsonSaveOptions.PrettyPrint = true when calling Workbook.Save in Aspose.Cells for .NET. | Give a C# code snippet that writes a workbook to a pretty‑printed JSON file in a single operation. | Explain the difference between JsonSaveOptions.PrettyPrint and System.Text.Json WriteIndented for Aspose.Cells JSON output.
+// Title: How to save an Aspose.Cells workbook as indented (pretty‑printed) JSON using JsonSaveOptions in C#
+// AI Prompts: Write C# code that creates a Workbook, sets JsonSaveOptions.PrettyPrint = true, and saves the file as formatted JSON. | Show how to configure Aspose.Cells JsonSaveOptions for pretty‑printed JSON output in a .NET console application.
+// Common Searches: Aspose.Cells C# export Excel to formatted JSON with indentation | Enable pretty print when saving workbook to JSON using Aspose.Cells .NET | JsonSaveOptions PrettyPrint property usage example in C# | Generate readable JSON from an Excel workbook with Aspose.Cells | Save Excel data as indented JSON file using Aspose.Cells library
+// Tags: Aspose.Cells JsonSaveOptions PrettyPrint | C# workbook to indented JSON | formatted JSON export from Excel | pretty‑printed JSON generation with Aspose.Cells | JSON serialization with indentation in .NET
 
 using System;
-using System.IO;
-using System.Text.Json;
 using Aspose.Cells;
 
-namespace AsposeCellsJsonPrettyPrintDemo
+// The program creates a new workbook, populates sample data in the first worksheet, enables JsonSaveOptions.PrettyPrint for formatted output, and saves the workbook as an indented JSON file (output.json) while handling any exceptions.
+class Program
 {
-    // A C# sample that builds an Aspose.Cells workbook, fills cells with sample values, and saves the workbook as a formatted JSON file. By enabling the PrettyPrint option (or applying System.Text.Json WriteIndented), the resulting JSON is automatically indented, making it easy to read and version‑control.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and access the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Age");
-                sheet.Cells["A2"].PutValue("John");
-                sheet.Cells["B2"].PutValue(30);
-                sheet.Cells["A3"].PutValue("Jane");
-                sheet.Cells["B3"].PutValue(25);
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(25);
 
-                // Configure JSON save options (default settings)
-                JsonSaveOptions jsonOptions = new JsonSaveOptions();
+            // Configure JSON save options (default settings are sufficient)
+            JsonSaveOptions jsonOptions = new JsonSaveOptions();
 
-                // Define output path
-                string outputPath = "PrettyPrintedOutput.json";
-
-                // Save the workbook as a JSON file
-                workbook.Save(outputPath, jsonOptions);
-
-                // Reformat the generated JSON with indentation
-                if (File.Exists(outputPath))
-                {
-                    try
-                    {
-                        string rawJson = File.ReadAllText(outputPath);
-                        using JsonDocument doc = JsonDocument.Parse(rawJson);
-                        string prettyJson = JsonSerializer.Serialize(
-                            doc.RootElement,
-                            new JsonSerializerOptions { WriteIndented = true });
-
-                        File.WriteAllText(outputPath, prettyJson);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error while formatting JSON: {ex.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Output file not found: {outputPath}");
-                }
-
-                Console.WriteLine($"Workbook saved as pretty‑printed JSON to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook as a JSON file with the specified options
+            workbook.Save("output.json", jsonOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

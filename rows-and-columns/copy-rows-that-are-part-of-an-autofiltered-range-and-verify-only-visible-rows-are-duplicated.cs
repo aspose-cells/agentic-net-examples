@@ -1,86 +1,73 @@
-// Title: Copy visible rows from an AutoFiltered range using Aspose.Cells for .NET
-// Description: C# example that creates a workbook, fills column A with a header and ten numeric rows, applies an AutoFilter (values > 5), selects only the filtered rows, and copies them to a new location with PasteOptions.OnlyVisibleCells. The code prints the copied values for verification and saves the file.
-// Keywords: Aspose.Cells | C# | Copy visible rows | AutoFilter | OnlyVisibleCells | PasteOptions | filtered data copy | Excel automation | duplicate filtered rows | range copy Aspose
-// Common Searches: Aspose.Cells copy only visible rows | PasteOptions OnlyVisibleCells C# example | How to duplicate filtered rows with Aspose.Cells | Copy AutoFilter results to another range .NET | Aspose.Cells copy visible cells after filter
-// Developer Intent: Duplicate the rows that remain visible after applying an AutoFilter, excluding hidden rows, and paste them to a separate range.
-// Use Cases: Create a summary section that lists only rows where a column meets a condition. | Archive filtered records to a new area without altering the original dataset. | Generate a printable report containing only the rows that satisfy the filter criteria.
-// AI Prompts: Show a C# snippet that copies only visible cells from an AutoFiltered range using Aspose.Cells. | Explain how to confirm that OnlyVisibleCells copied just the filtered rows. | Provide code to copy visible rows to another worksheet while preserving the original filter.
+// Title: Copy only visible rows from an AutoFiltered range to another worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells CopyRows together with PasteOptions.OnlyVisibleCells to duplicate only the rows that remain visible after applying an AutoFilter in C#. | Write C# code that applies an AutoFilter on a column, then copies the rows that stay displayed to a new sheet while skipping hidden rows. | Generate a .NET snippet that builds a workbook, sets an AutoFilter, and transfers only the rows that are shown after filtering to another worksheet using Aspose.Cells.
+// Common Searches: asp.net copy rows that remain visible after autofilter to a new worksheet using Aspose.Cells | c# copy only visible rows after applying AutoFilter with PasteOptions in Aspose.Cells | how to duplicate filtered rows to another sheet in Aspose.Cells for .NET | example of copying filtered data to a separate worksheet using Aspose.Cells
+// Tags: CopyRows filtered rows Aspose.Cells | AutoFilter row copy C# | copy filtered rows to new worksheet .NET | PasteOptions visible cells Aspose.Cells | Aspose.Cells copy visible rows example
 
 using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsCopyVisibleRowsDemo
+// The example creates a workbook, fills a small table, applies an AutoFilter to show only rows where the Category equals "Apple", and then copies all rows from the source sheet to a newly added sheet using CopyRows with PasteOptions.OnlyVisibleCells set to true. This ensures that only the visible (filtered) rows are duplicated. The resulting workbook is saved as CopyVisibleRowsDemo.xlsx.
+class CopyVisibleRowsDemo
 {
-    // C# example that creates a workbook, fills column A with a header and ten numeric rows, applies an AutoFilter (values > 5), selects only the filtered rows, and copies them to a new location with PasteOptions.OnlyVisibleCells. The code prints the copied values for verification and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sourceSheet = workbook.Worksheets[0];
+        Cells sourceCells = sourceSheet.Cells;
+
+        // Populate header and sample data
+        sourceCells["A1"].PutValue("Category");
+        sourceCells["B1"].PutValue("Value");
+        sourceCells["A2"].PutValue("Apple");
+        sourceCells["B2"].PutValue(10);
+        sourceCells["A3"].PutValue("Banana");
+        sourceCells["B3"].PutValue(20);
+        sourceCells["A4"].PutValue("Apple");
+        sourceCells["B4"].PutValue(30);
+        sourceCells["A5"].PutValue("Cherry");
+        sourceCells["B5"].PutValue(40);
+        sourceCells["A6"].PutValue("Apple");
+        sourceCells["B6"].PutValue(50);
+
+        // Apply AutoFilter on the header row covering columns A‑B
+        sourceSheet.AutoFilter.Range = "A1:B6";
+
+        // Filter to show only rows where Category = "Apple"
+        sourceSheet.AutoFilter.AddFilter(0, "Apple");
+        sourceSheet.AutoFilter.Refresh(); // hides non‑matching rows
+
+        // Add a destination worksheet where rows will be copied
+        Worksheet destSheet = workbook.Worksheets.Add("Copy");
+        Cells destCells = destSheet.Cells;
+
+        // Set up copy and paste options; paste only visible cells
+        CopyOptions copyOptions = new CopyOptions(); // default options
+        PasteOptions pasteOptions = new PasteOptions();
+        pasteOptions.OnlyVisibleCells = true; // copy only visible rows
+
+        // Copy all rows from source to destination using the options
+        destCells.CopyRows(
+            sourceCells,
+            0,                                 // source start row (including header)
+            0,                                 // destination start row
+            sourceCells.MaxDisplayRange.RowCount, // number of rows to copy
+            copyOptions,
+            pasteOptions);
+
+        // Verify that only visible rows were duplicated
+        Console.WriteLine("Destination sheet values after copying visible rows:");
+        for (int r = 0; r < destCells.MaxDisplayRange.RowCount; r++)
         {
-            try
+            string category = destCells[r, 0].StringValue;
+            string value = destCells[r, 1].StringValue;
+            if (!string.IsNullOrEmpty(category) || !string.IsNullOrEmpty(value))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Populate sample data (header + 10 rows) in column A
-                cells["A1"].PutValue("Header");
-                for (int i = 2; i <= 11; i++) // rows 2..11 (index 1..10)
-                {
-                    cells[$"A{i}"].PutValue(i - 1); // values 1..10
-                }
-
-                // Apply an AutoFilter to the header row covering column A
-                worksheet.AutoFilter.Range = "A1:A11";
-
-                // Filter to show only rows where the value is greater than 5
-                worksheet.AutoFilter.Custom(0, FilterOperatorType.GreaterThan, 5);
-                worksheet.AutoFilter.Refresh(); // hide rows that do not meet the criteria
-
-                // Determine the area the AutoFilter applies to (including header)
-                CellArea filterArea = worksheet.AutoFilter.GetCellArea();
-
-                // Define source range: data rows only (exclude header)
-                int sourceStartRow = filterArea.StartRow + 1; // first data row
-                int sourceStartColumn = filterArea.StartColumn;
-                int rowCount = filterArea.EndRow - sourceStartRow + 1;
-                int columnCount = filterArea.EndColumn - filterArea.StartColumn + 1;
-
-                AsposeRange sourceRange = cells.CreateRange(sourceStartRow, sourceStartColumn, rowCount, columnCount);
-
-                // Define destination range placed below the original data
-                int destStartRow = filterArea.EndRow + 2; // one empty row gap
-                AsposeRange destRange = cells.CreateRange(destStartRow, sourceStartColumn, rowCount, columnCount);
-
-                // Set paste options to copy only visible cells (i.e., skip hidden rows)
-                PasteOptions pasteOptions = new PasteOptions
-                {
-                    OnlyVisibleCells = true
-                };
-
-                // Perform the copy
-                destRange.Copy(sourceRange, pasteOptions);
-
-                // Verify the copy: print values from the destination range
-                Console.WriteLine("Copied values (only visible rows should appear):");
-                for (int r = 0; r < rowCount; r++)
-                {
-                    // Destination cell address
-                    string address = CellsHelper.CellIndexToName(destStartRow + r, sourceStartColumn);
-                    string value = cells[address].StringValue;
-                    Console.WriteLine($"{address}: {(string.IsNullOrEmpty(value) ? "<empty>" : value)}");
-                }
-
-                // Save the workbook (optional, demonstrates that the file contains the copied rows)
-                string outputPath = "CopyVisibleRowsDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Row {r + 1}: Category = {category}, Value = {value}");
             }
         }
+
+        // Save the workbook
+        workbook.Save("CopyVisibleRowsDemo.xlsx");
     }
 }

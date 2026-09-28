@@ -1,65 +1,56 @@
-// Title: Export Excel XML Map to a .xml File with Aspose.Cells for .NET
-// Description: Loads an Excel workbook containing XML maps, verifies map presence, and uses Workbook.ExportXml to write the selected map to a separate .xml file while preserving the original schema. Includes basic error handling for missing files or maps.
-// Keywords: Aspose.Cells export XML map | Workbook.ExportXml C# | export XML from Excel | preserve XML schema Aspose | C# export Excel XML map | Aspose.Cells XML map example | save XML map to file
-// Common Searches: how to export xml map from excel using aspose.cells | c# workbook.exportxml preserve schema | aspose.cells export xml map to file | export first xml map in workbook aspose | aspose.cells xml map export example
-// Developer Intent: Generate an external .xml file from an Excel XML map while keeping the map's schema intact.
-// Use Cases: Create a standards‑compliant XML document for data exchange by exporting the workbook's XML map. | Automate validation pipelines that require the original XML schema to remain unchanged. | Integrate Excel‑based data sources into systems that consume XML files, ensuring schema fidelity.
-// AI Prompts: Write C# code with Aspose.Cells to export the XML map named "Orders" from "Data.xlsx" to "Orders.xml" preserving the schema. | Show how to list all XML maps in a workbook and export each to separate XML files with error handling for missing maps. | Provide a robust Aspose.Cells example that checks for the input file, verifies XML map existence, and logs detailed errors during export.
+// Title: Export the first XML map from an Excel workbook to a separate .xml file while preserving its original schema using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens a .xlsx file with Aspose.Cells, verifies the presence of XmlMaps, and calls ExportData on the first map with the keepSchema flag set to true. | Create a method that uses reflection to obtain the XmlMaps collection from a Workbook object and saves the map data to a specified XML file while retaining the original schema. | Develop a console application that checks for an input workbook, handles cases where no XML maps exist, and exports the first XML map to an output .xml file with schema preservation.
+// Common Searches: aspnet c# export xml map from excel workbook preserving schema Aspose.Cells | how to use Aspose.Cells ExportData to keep original XML schema | C# code sample for exporting first XML map in .xlsx to .xml file | Aspose.Cells XmlMaps collection reflection example | export xml map data to external file with schema using Aspose.Cells .NET
+// Tags: asp.net xml map handling Aspose.Cells | dynamic retrieval of XmlMaps collection | save xml map data to external .xml file | retain xml schema layout during export | initial xml map extraction from workbook
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
+using System.Reflection;
 
-namespace AsposeCellsExamples
+// // Loads an Excel workbook, uses reflection to access its XmlMaps collection, checks for available maps, and exports the first XML map's data to a separate .xml file while preserving the original schema structure.
+class Program
 {
-    // Loads an Excel workbook containing XML maps, verifies map presence, and uses Workbook.ExportXml to write the selected map to a separate .xml file while preserving the original schema. Includes basic error handling for missing files or maps.
-    public class ExportXmlMapDemo
+    static void Main()
     {
-        public static void Run()
-        {
-            const string inputFile = "InputWithMap.xlsx";
-            const string outputFile = "ExportedData.xml";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "exportedData.xml";
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputFile))
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook that may contain XML maps
+            Workbook workbook = new Workbook(inputPath);
+
+            // Use reflection to obtain the XmlMaps collection (API may vary by version)
+            PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps", BindingFlags.Public | BindingFlags.Instance);
+            if (xmlMapsProp == null)
             {
-                Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+                Console.WriteLine("The current Aspose.Cells version does not support XML maps.");
                 return;
             }
 
-            try
+            dynamic xmlMaps = xmlMapsProp.GetValue(workbook);
+            if (xmlMaps == null || xmlMaps.Count == 0)
             {
-                // Load the workbook that already contains an XML map
-                Workbook workbook = new Workbook(inputFile);
-
-                // Check if any XML maps are present
-                if (workbook.Worksheets.XmlMaps.Count > 0)
-                {
-                    // Retrieve the first XML map (or any specific one you need)
-                    XmlMap xmlMap = workbook.Worksheets.XmlMaps[0];
-
-                    // Export the XML data linked to this map, preserving the original schema
-                    workbook.ExportXml(xmlMap.Name, outputFile);
-
-                    Console.WriteLine($"XML map exported successfully to \"{outputFile}\"");
-                }
-                else
-                {
-                    Console.WriteLine("No XML map found in the workbook.");
-                }
+                Console.WriteLine("No XML maps are present in the workbook.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Export the first XML map's data to an external XML file.
+            // The second argument (true) preserves the original schema structure.
+            xmlMaps[0].ExportData(outputPath, true);
+            Console.WriteLine($"XML data exported successfully to: {Path.GetFullPath(outputPath)}");
         }
-    }
-
-    internal class Program
-    {
-        private static void Main(string[] args)
+        catch (Exception ex)
         {
-            ExportXmlMapDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

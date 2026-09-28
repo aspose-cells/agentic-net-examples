@@ -1,28 +1,25 @@
-// Title: Handle Out‑of‑Range Column Index in Cells.Subtotal – Aspose.Cells C# Example
-// Description: This C# sample creates a workbook, fills three columns with sample data, defines the data range, and attempts a subtotal using a column index that exceeds the worksheet's width. The call to Cells.Subtotal is wrapped in a try‑catch block that captures the ArgumentOutOfRangeException, logs a friendly message, and then saves the file with its own error handling.
-// Keywords: Aspose.Cells Cells.Subtotal | out of range column index | ArgumentOutOfRangeException C# | exception handling Aspose.Cells | subtotal error handling .NET | validate grouping column Aspose | C# workbook subtotal example
-// Common Searches: Aspose.Cells catch exception for Cells.Subtotal column index | how to handle invalid column index in Cells.Subtotal | C# subtotal out of range error Aspose | prevent crash when using Cells.Subtotal | validate column index before subtotal Aspose.Cells
-// Developer Intent: Prevent a runtime crash by detecting and handling an invalid grouping column index when calling Cells.Subtotal.
-// Use Cases: Check the requested grouping column against worksheet.Columns.Count before invoking Cells.Subtotal. | Wrap Cells.Subtotal in a try‑catch block to log the error and allow the program to continue. | Provide end‑users with a clear message when a subtotal cannot be applied due to an out‑of‑range column.
-// AI Prompts: Generate C# code that verifies a column index is within worksheet bounds before calling Cells.Subtotal and logs a warning if it is not. | Show how to catch ArgumentOutOfRangeException from Cells.Subtotal and write detailed diagnostics to a log file. | Create a reusable method that safely applies a subtotal with configurable grouping columns and includes comprehensive exception handling.
+// Title: Handle out-of-range column index when using Cells.Subtotal in Aspose.Cells for .NET with graceful exception handling
+// AI Prompts: Write C# code that calls Cells.Subtotal inside a try‑catch block and logs the exception if the group‑by column index exceeds the worksheet bounds. | Show how to validate a column index before invoking Cells.Subtotal and fall back to a safe default grouping column in Aspose.Cells. | Create a reusable C# method that adds a subtotal with built‑in error handling for invalid group‑by column indices using Aspose.Cells.
+// Common Searches: Aspose.Cells C# Cells.Subtotal throws exception for column index greater than worksheet columns | how to catch out of range column error when adding subtotal with Aspose.Cells | validate group by column index before calling Cells.Subtotal in .NET | graceful error handling for Cells.Subtotal method in Aspose.Cells example
+// Tags: Cells.Subtotal exception handling C# | out-of-range column index Aspose.Cells | validate group-by column Aspose.Cells | subtotal operation error handling .NET | Excel subtotal with Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsSubtotalExample
 {
-    // This C# sample creates a workbook, fills three columns with sample data, defines the data range, and attempts a subtotal using a column index that exceeds the worksheet's width. The call to Cells.Subtotal is wrapped in a try‑catch block that captures the ArgumentOutOfRangeException, logs a friendly message, and then saves the file with its own error handling.
-    public class SubtotalOutOfRangeDemo
+    // The example creates a workbook, fills it with sample data, defines a range, then attempts to add a subtotal using Cells.Subtotal with an intentionally invalid group‑by column index. The code catches the resulting exception, logs the error, and still saves the workbook.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
-            // Create a new workbook (create rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
             Cells cells = worksheet.Cells;
 
             // Populate sample data (3 columns: A, B, C)
-            cells["A1"].PutValue("Category");
+            cells["A1"].PutValue("Region");
             cells["B1"].PutValue("Product");
             cells["C1"].PutValue("Sales");
 
@@ -35,56 +32,34 @@ namespace AsposeCellsExamples
                 {"West",  "Widget", 4500}
             };
 
-            for (int row = 0; row < data.GetLength(0); row++)
+            for (int i = 0; i < data.GetLength(0); i++)
             {
-                for (int col = 0; col < data.GetLength(1); col++)
-                {
-                    cells[row + 1, col].PutValue(data[row, col]);
-                }
+                cells[i + 1, 0].PutValue(data[i, 0]); // Column A
+                cells[i + 1, 1].PutValue(data[i, 1]); // Column B
+                cells[i + 1, 2].PutValue(data[i, 2]); // Column C
             }
 
-            // Define the cell area that actually contains data (A1:C6)
+            // Define the range that contains the data (A1:C6)
             CellArea area = CellArea.CreateCellArea(0, 0, 5, 2);
 
             try
             {
-                // Attempt to add subtotal using an out‑of‑range column index for grouping (e.g., 10)
-                // This will throw an exception because the worksheet has only 3 columns (0‑2)
-                cells.Subtotal(area, 10, ConsolidationFunction.Sum, new int[] { 2 });
-                Console.WriteLine("Subtotal applied successfully.");
+                // Intentionally use an out‑of‑range column index for grouping (e.g., 10)
+                // The worksheet only has columns 0‑2, so this will throw an exception.
+                int outOfRangeGroupBy = 10;
+
+                // Attempt to add subtotals; the exception will be caught below.
+                cells.Subtotal(area, outOfRangeGroupBy, ConsolidationFunction.Sum, new int[] { 2 });
+                Console.WriteLine("Subtotal added successfully.");
             }
             catch (Exception ex)
             {
-                // Gracefully handle the out‑of‑range error
-                Console.WriteLine($"Handled exception: {ex.Message}");
+                // Handle the out‑of‑range error gracefully
+                Console.WriteLine($"Failed to add subtotal: {ex.Message}");
             }
 
-            try
-            {
-                // Save the workbook (save rule)
-                workbook.Save("SubtotalOutOfRangeDemo.xlsx");
-                Console.WriteLine("Workbook saved as SubtotalOutOfRangeDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving workbook: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point required by the project
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                SubtotalOutOfRangeDemo.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
-            }
+            // Save the workbook (output will be created even if subtotal failed)
+            workbook.Save("SubtotalWithGracefulErrorHandling.xlsx");
         }
     }
 }

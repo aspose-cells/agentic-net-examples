@@ -1,67 +1,44 @@
-// Title: Disable Automatic Formula Recalculation in Aspose.Cells for .NET (C#)
-// Description: Learn how to set Aspose.Cells workbook settings to Manual calculation mode and turn off CalculateOnSave, so formulas stay unevaluated until you call CalculateFormula explicitly.
-// Keywords: Aspose.Cells manual calculation mode | disable auto formula recalculation C# | CalcModeType.Manual Aspose.Cells | prevent formula evaluation on save | Aspose.Cells workbook settings | control formula calculation .NET | performance optimization large spreadsheets | Aspose.Cells CalculateOnSave false
-// Common Searches: Aspose.Cells turn off automatic calculation C# | set workbook to manual calculation mode Aspose | disable formula recalculation on save Aspose.Cells | how to prevent formulas from recalculating in .NET | Aspose.Cells performance manual calc mode
-// Developer Intent: Stop automatic formula evaluation so calculations run only when explicitly triggered.
-// Use Cases: Generate a spreadsheet with thousands of formulas, defer calculation to improve data‑entry speed. | Create a template where formulas must remain untouched until a later processing step. | Export data from an application, save the workbook, and let the end user decide when to recalculate.
-// AI Prompts: Write C# code using Aspose.Cells that creates a workbook, sets CalculationMode to Manual, disables CalculateOnSave, adds sample data with a SUM formula, and saves the file. | Show how to switch a workbook back to automatic calculation after performing custom updates with Aspose.Cells. | Provide an example that reads a workbook saved in manual mode, invokes CalculateFormula, and then saves the evaluated result.
+// Title: Disable automatic formula recalculation and use manual calculation in Aspose.Cells with C#
+// AI Prompts: Generate C# code that sets Aspose.Cells workbook CalculationMode to Manual, disables CalculateOnSave, saves the file without evaluating formulas, then later calls CalculateFormula and saves again. | Explain how to configure Aspose.Cells to skip automatic formula evaluation on save and perform explicit calculation later in a .NET application.
+// Common Searches: Aspose.Cells C# disable automatic formula calculation before saving workbook | set manual calculation mode in Aspose.Cells .NET and recalculate later | prevent formula recalculation on workbook save using Aspose.Cells | how to use Workbook.CalculateFormula after manual calculation mode in C# | Aspose.Cells turn off CalculateOnSave property example
+// Tags: Aspose.Cells manual CalculationMode configuration | disable CalculateOnSave property Aspose.Cells | invoke Workbook.CalculateFormula manually | prevent auto formula recalculation Aspose.Cells | manual formula evaluation workflow C#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// Learn how to set Aspose.Cells workbook settings to Manual calculation mode and turn off CalculateOnSave, so formulas stay unevaluated until you call CalculateFormula explicitly.
-public class DisableAutoRecalcDemo
+namespace DisableAutomaticRecalculationDemo
 {
-    public static void Run()
+    // The example creates a new workbook, adds sample data and a SUM formula, sets Workbook.Settings.FormulaSettings.CalculationMode to Manual and CalculateOnSave to false to stop automatic recalculation, saves the workbook without evaluating formulas, then explicitly calls Workbook.CalculateFormula and saves the updated file.
+    class Program
     {
-        try
+        static void Main()
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Set calculation mode to Manual to prevent automatic recalculation
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Disable recalculation when the workbook is saved
+            // Add sample data and a formula
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["A3"].Formula = "=SUM(A1:A2)";
+
+            // Disable automatic recalculation:
+            // 1. Set calculation mode to Manual
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // 2. Prevent recalculation on save (optional, reinforces manual mode)
             workbook.Settings.FormulaSettings.CalculateOnSave = false;
 
-            // Add sample data and a formula (the formula will not be evaluated automatically)
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+            // Save the workbook without calculating formulas
+            workbook.Save("ManualCalculation.xlsx");
 
-            // Determine output path and ensure directory exists
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ManualCalc.xlsx");
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
+            // At a later point, calculate formulas explicitly if needed
+            workbook.CalculateFormula();
 
-            // Save the workbook; the formula remains unevaluated until CalculateFormula is called explicitly
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during workbook processing: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        try
-        {
-            DisableAutoRecalcDemo.Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unhandled exception: {ex.Message}");
+            // Save the workbook after manual calculation
+            workbook.Save("ManualCalculation_Calculated.xlsx");
         }
     }
 }

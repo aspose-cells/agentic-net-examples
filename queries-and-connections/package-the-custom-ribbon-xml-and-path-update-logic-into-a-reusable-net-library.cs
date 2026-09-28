@@ -1,10 +1,7 @@
-// Title: Aspose.Cells .NET Library to Add or Update Custom Ribbon XML in XLSM Workbooks
-// Description: A reusable C# library that reads a custom Ribbon XML file, assigns it to a new or existing Aspose.Cells Workbook via the RibbonXml property, sets CellsHelper.LibraryPath for relative add‑in resolution, and saves the file as a macro‑enabled XLSM workbook. Includes robust error handling for creation and update scenarios.
-// Keywords: Aspose.Cells RibbonXml | custom ribbon xml .NET | C# Excel macro enabled workbook | CellsHelper LibraryPath | create XLSM with ribbon | update ribbon xml Aspose.Cells | Excel UI customization C# | reusable ribbon helper library
-// Common Searches: how to embed custom ribbon xml in an Excel file using Aspose.Cells | update ribbon xml of an existing .xlsm workbook with Aspose.Cells C# | set CellsHelper.LibraryPath for ribbon add‑ins in Aspose.Cells | Aspose.Cells create workbook with custom ribbon UI | C# library to replace Excel ribbon XML programmatically
-// Developer Intent: Provide a ready‑to‑use .NET helper that injects or replaces a custom Ribbon XML in an Excel workbook and ensures the library path is correctly configured for add‑in references.
-// Use Cases: Generate a corporate‑branded XLSM workbook that ships with a predefined Ribbon UI. | Refresh the Ribbon UI of an existing macro‑enabled workbook after a design overhaul without modifying other content. | Automate the application of a standard Ribbon XML to multiple workbooks in a CI/CD pipeline.
-// AI Prompts: Write NUnit tests for RibbonHelper.CreateWorkbookWithRibbon and RibbonHelper.UpdateWorkbookRibbon covering missing files, invalid paths, and successful execution. | Modify RibbonHelper to accept a raw Ribbon XML string instead of a file path and update the documentation accordingly. | Show how to integrate Serilog into RibbonHelper for detailed error logging while preserving the existing exception flow.
+// Title: Build a .NET class library to create and update Excel workbooks with custom Ribbon XML using Aspose.Cells
+// AI Prompts: Write a C# static method that creates a new Workbook, assigns a RibbonXml string, optionally sets CellsHelper.AltStartPath and CellsHelper.LibraryPath, ensures the output folder exists, and saves the file with Aspose.Cells. | Implement a C# static method that loads an existing .xlsx file, replaces its RibbonXml, updates optional AltStartPath/LibraryPath, creates the destination directory if missing, and saves the modified workbook. | Generate a sample console program that demonstrates calling the library methods to create a workbook with a custom ribbon and to update the ribbon of an existing workbook.
+// Common Searches: how to add custom ribbon UI to an Excel file with Aspose.Cells C# | Aspose.Cells replace RibbonXml in existing workbook programmatically | C# library method for setting AltStartPath and LibraryPath in Aspose.Cells | create reusable .NET component for Excel ribbon customization using Aspose.Cells | save Aspose.Cells workbook to a new folder that may not exist
+// Tags: Aspose.Cells custom ribbon xml integration | C# static library for workbook ribbon manipulation | set AltStartPath CellsHelper Aspose.Cells | replace RibbonXml existing workbook Aspose.Cells | automatic output directory creation Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,128 +9,142 @@ using Aspose.Cells;
 
 namespace CustomRibbonLibrary
 {
-    // A reusable C# library that reads a custom Ribbon XML file, assigns it to a new or existing Aspose.Cells Workbook via the RibbonXml property, sets CellsHelper.LibraryPath for relative add‑in resolution, and saves the file as a macro‑enabled XLSM workbook. Includes robust error handling for creation and update scenarios.
-    public static class RibbonHelper
+    // Provides a reusable .NET class library with two static methods: one to generate a new Excel workbook and embed custom Ribbon XML, and another to load an existing workbook, replace its RibbonXml, optionally configure CellsHelper.AltStartPath and CellsHelper.LibraryPath, ensure the target folder exists, and save the result using Aspose.Cells.
+    public static class RibbonUtility
     {
-        /// <param name="ribbonXmlPath">Full path to the custom Ribbon XML file.</param>
-        /// <param name="outputPath">Full path where the workbook will be saved.</param>
-        public static void CreateWorkbookWithRibbon(string ribbonXmlPath, string outputPath)
+        /// <param name="outputPath">File path where the workbook will be saved.</param>
+        /// <param name="ribbonXml">Custom Ribbon XML string.</param>
+        /// <param name="altStartPath">Optional alternate startup path for external references.</param>
+        /// <param name="libraryPath">Optional library path for external references.</param>
+        public static void CreateWorkbookWithRibbon(string outputPath, string ribbonXml,
+            string? altStartPath = null, string? libraryPath = null)
         {
             try
             {
-                // Validate input paths
-                if (string.IsNullOrEmpty(ribbonXmlPath))
-                    throw new ArgumentException("Ribbon XML path must be provided.", nameof(ribbonXmlPath));
-
-                if (!File.Exists(ribbonXmlPath))
-                    throw new FileNotFoundException("Ribbon XML file not found.", ribbonXmlPath);
-
-                // Read the Ribbon XML content
-                string ribbonXml = File.ReadAllText(ribbonXmlPath);
-
-                // Create a new workbook (Aspose.Cells Workbook)
+                // Create a new workbook.
                 Workbook workbook = new Workbook();
 
-                // Assign the Ribbon XML to the workbook
+                // Set the custom Ribbon XML.
                 workbook.RibbonXml = ribbonXml;
 
-                // Update the library path so that any external references (e.g., add‑ins) can resolve relative paths
-                CellsHelper.LibraryPath = Path.GetDirectoryName(ribbonXmlPath);
+                // Update alternate startup path if supplied.
+                if (!string.IsNullOrEmpty(altStartPath))
+                {
+                    CellsHelper.AltStartPath = altStartPath;
+                }
 
-                // Save the workbook in macro‑enabled format to preserve the Ribbon UI
-                workbook.Save(outputPath, SaveFormat.Xlsm);
+                // Update library path if supplied.
+                if (!string.IsNullOrEmpty(libraryPath))
+                {
+                    CellsHelper.LibraryPath = libraryPath;
+                }
+
+                // Ensure the directory exists.
+                string? directory = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Save the workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook created and saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error creating workbook with ribbon: {ex.Message}");
+                Console.WriteLine($"Error creating workbook: {ex.Message}");
                 throw;
             }
         }
 
         /// <summary>
-        /// Loads an existing workbook, replaces its Ribbon XML with the content from the specified file,
-        /// updates the library path, and saves the workbook back.
+        /// Loads an existing workbook, replaces its Ribbon XML, optionally updates path settings, and saves it.
         /// </summary>
-        /// <param name="workbookPath">Path to the existing workbook.</param>
-        /// <param name="ribbonXmlPath">Path to the new Ribbon XML file.</param>
-        public static void UpdateWorkbookRibbon(string workbookPath, string ribbonXmlPath)
+        /// <param name="existingPath">Path to the existing workbook to load.</param>
+        /// <param name="outputPath">Path where the modified workbook will be saved.</param>
+        /// <param name="newRibbonXml">New Ribbon XML to apply.</param>
+        /// <param name="altStartPath">Optional alternate startup path for external references.</param>
+        /// <param name="libraryPath">Optional library path for external references.</param>
+        public static void UpdateWorkbookRibbon(string existingPath, string outputPath,
+            string newRibbonXml, string? altStartPath = null, string? libraryPath = null)
         {
             try
             {
-                // Validate inputs
-                if (!File.Exists(workbookPath))
-                    throw new FileNotFoundException("Workbook file not found.", workbookPath);
+                // Verify the source file exists.
+                if (!File.Exists(existingPath))
+                {
+                    throw new FileNotFoundException($"The workbook '{existingPath}' does not exist.");
+                }
 
-                if (!File.Exists(ribbonXmlPath))
-                    throw new FileNotFoundException("Ribbon XML file not found.", ribbonXmlPath);
+                // Load the workbook from file.
+                Workbook workbook = new Workbook(existingPath);
 
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+                // Replace the Ribbon XML.
+                workbook.RibbonXml = newRibbonXml;
 
-                // Read new Ribbon XML
-                string ribbonXml = File.ReadAllText(ribbonXmlPath);
+                // Update paths if provided.
+                if (!string.IsNullOrEmpty(altStartPath))
+                {
+                    CellsHelper.AltStartPath = altStartPath;
+                }
 
-                // Set the RibbonXml property
-                workbook.RibbonXml = ribbonXml;
+                if (!string.IsNullOrEmpty(libraryPath))
+                {
+                    CellsHelper.LibraryPath = libraryPath;
+                }
 
-                // Update library path to the directory of the Ribbon XML
-                CellsHelper.LibraryPath = Path.GetDirectoryName(ribbonXmlPath);
+                // Ensure the output directory exists.
+                string? outDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outDir) && !Directory.Exists(outDir))
+                {
+                    Directory.CreateDirectory(outDir);
+                }
 
-                // Save changes (preserve macro‑enabled format if applicable)
-                workbook.Save(workbookPath, SaveFormat.Xlsm);
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook '{existingPath}' updated and saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error updating workbook ribbon: {ex.Message}");
+                Console.WriteLine($"Error updating workbook: {ex.Message}");
                 throw;
             }
         }
     }
 
-    // Simple entry point for demonstration / testing purposes
     internal class Program
     {
         private static void Main(string[] args)
         {
-            try
+            // Sample Ribbon XML (replace with actual XML as needed).
+            string sampleRibbonXml = @"<customUI xmlns='http://schemas.microsoft.com/office/2009/07/customui'>
+  <ribbon>
+    <tabs>
+      <tab id='customTab' label='Custom Tab'>
+        <group id='customGroup' label='Custom Group'>
+          <button id='customButton' label='Click Me' size='large' onAction='OnButtonClick' />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>";
+
+            // Paths for demonstration.
+            string newWorkbookPath = Path.Combine(Environment.CurrentDirectory, "Output", "NewWorkbook.xlsx");
+            string existingWorkbookPath = Path.Combine(Environment.CurrentDirectory, "Input", "ExistingWorkbook.xlsx");
+            string updatedWorkbookPath = Path.Combine(Environment.CurrentDirectory, "Output", "UpdatedWorkbook.xlsx");
+
+            // Create a new workbook with Ribbon XML.
+            RibbonUtility.CreateWorkbookWithRibbon(newWorkbookPath, sampleRibbonXml);
+
+            // Update an existing workbook's Ribbon XML if the source file exists.
+            if (File.Exists(existingWorkbookPath))
             {
-                // Example usage:
-                // args[0] = "create" or "update"
-                // For "create": args[1] = ribbonXmlPath, args[2] = outputPath
-                // For "update": args[1] = workbookPath, args[2] = ribbonXmlPath
-
-                if (args.Length < 3)
-                {
-                    Console.WriteLine("Usage:");
-                    Console.WriteLine("  create <RibbonXmlPath> <OutputWorkbookPath>");
-                    Console.WriteLine("  update <WorkbookPath> <RibbonXmlPath>");
-                    return;
-                }
-
-                string command = args[0].ToLowerInvariant();
-
-                if (command == "create")
-                {
-                    string ribbonXmlPath = args[1];
-                    string outputPath = args[2];
-                    RibbonHelper.CreateWorkbookWithRibbon(ribbonXmlPath, outputPath);
-                    Console.WriteLine($"Workbook created at: {outputPath}");
-                }
-                else if (command == "update")
-                {
-                    string workbookPath = args[1];
-                    string ribbonXmlPath = args[2];
-                    RibbonHelper.UpdateWorkbookRibbon(workbookPath, ribbonXmlPath);
-                    Console.WriteLine($"Workbook updated: {workbookPath}");
-                }
-                else
-                {
-                    Console.WriteLine("Invalid command. Use 'create' or 'update'.");
-                }
+                RibbonUtility.UpdateWorkbookRibbon(existingWorkbookPath, updatedWorkbookPath, sampleRibbonXml);
             }
-            catch (Exception ex)
+            else
             {
-                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"Source workbook '{existingWorkbookPath}' not found. Skipping update.");
             }
         }
     }

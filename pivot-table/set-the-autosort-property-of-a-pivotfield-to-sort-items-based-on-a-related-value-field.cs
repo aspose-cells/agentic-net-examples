@@ -1,57 +1,58 @@
-// Title: Set PivotField AutoSort to order rows by a data field in Aspose.Cells for .NET
-// Description: Creates a workbook with Category and Sales columns, adds a pivot table, assigns Category to the row area and Sales to the data area, then enables AutoSort on the row field to sort ascending by the first data field, recalculates the pivot and saves the workbook.
-// Keywords: Aspose.Cells AutoSort PivotField | C# pivot table sort by value | IsAutoSort property | AutoSortField Aspose.Cells | pivot row field ascending sort .NET
-// Common Searches: Aspose.Cells sort pivot rows by data field | C# set AutoSort on PivotField | How to enable ascending auto‑sort for pivot table rows | Specify data field for pivot field auto sorting Aspose
-// Developer Intent: Activate automatic ascending sorting of a pivot row field based on a selected data field.
-// Use Cases: Generate Excel reports where product categories are displayed from highest to lowest sales. | Create dynamic pivot tables that re‑order rows whenever source data changes. | Automate workbook creation with consistently sorted pivot rows for dashboards.
-// AI Prompts: Show how to configure AutoSort for a PivotField to sort by a specific data field in Aspose.Cells (C#). | Provide a C# example that sorts pivot row items descending using the second data field. | Explain the roles of IsAutoSort, IsAscendSort, and AutoSortField in Aspose.Cells pivot tables.
+// Title: Enable AutoSort on a PivotField to sort row items by a related data field in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that configures IsAutoSort, IsAscendSort, and AutoSortField on a PivotField so the rows are automatically ordered by the first data field in an Aspose.Cells workbook. | Show how to create a pivot table, add a row field and a data field, and apply automatic ascending sorting to the row field based on the data field using Aspose.Cells for .NET. | Provide a complete example that builds a workbook, populates sample Region and Sales data, adds a pivot table, and enables AutoSort for the row field to order regions by sales values.
+// Common Searches: Aspose.Cells C# enable pivot row auto sorting by sales column | How to set AutoSort on a PivotField in Aspose.Cells | Sorting pivot table rows based on a related data field using Aspose.Cells .NET | C# code example for configuring pivot field auto sort in Aspose.Cells | Pivot table row field automatic sorting with Aspose.Cells API
+// Tags: pivotfield auto sort aspnet cells | auto sort field index pivot aspnet | c# aspnet cells pivot row sorting | configure pivot table sorting aspnet | aspnet cells pivot auto sort example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Creates a workbook with Category and Sales columns, adds a pivot table, assigns Category to the row area and Sales to the data area, then enables AutoSort on the row field to sort ascending by the first data field, recalculates the pivot and saves the workbook.
-class SetPivotFieldAutoSort
+namespace AsposeCellsPivotAutoSortDemo
 {
-    static void Main()
+    // The sample creates a workbook with Region and Sales data, builds a pivot table, adds Region as a row field and Sales as a data field, enables automatic ascending sorting on the Region field by setting IsAutoSort, IsAscendSort, and AutoSortField, refreshes and calculates the pivot, and saves the result as PivotFieldAutoSortDemo.xlsx.
+    public class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        public static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-        // Populate sample data for the pivot table
-        cells["A1"].Value = "Category";
-        cells["B1"].Value = "Sales";
-        cells["A2"].Value = "North";
-        cells["B2"].Value = 1000;
-        cells["A3"].Value = "South";
-        cells["B3"].Value = 1500;
-        cells["A4"].Value = "East";
-        cells["B4"].Value = 800;
-        cells["A5"].Value = "West";
-        cells["B5"].Value = 1200;
+            // Populate sample data for the pivot table
+            cells["A1"].Value = "Region";
+            cells["B1"].Value = "Sales";
+            cells["A2"].Value = "North";
+            cells["B2"].Value = 1200;
+            cells["A3"].Value = "South";
+            cells["B3"].Value = 1500;
+            cells["A4"].Value = "East";
+            cells["B4"].Value = 800;
+            cells["A5"].Value = "West";
+            cells["B5"].Value = 1100;
 
-        // Add a pivot table covering the data range
-        int ptIndex = sheet.PivotTables.Add("A1:B5", "E3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[ptIndex];
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add a row field (Category) and a data field (Sales)
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Add the row field (Region) and the data field (Sales)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-        // Retrieve the row field to configure auto‑sorting
-        PivotField rowField = pivotTable.RowFields["Category"]; // alternatively pivotTable.RowFields[0]
+            // Retrieve the row field that will be auto‑sorted
+            PivotField regionField = pivotTable.RowFields["Region"];
 
-        // Enable auto sort, set ascending order, and sort by the first data field (Sales)
-        rowField.IsAutoSort = true;
-        rowField.IsAscendSort = true;
-        rowField.AutoSortField = 0; // 0 = first data field in the pivot table
+            // Enable auto‑sorting, set ascending order, and sort by the first data field (Sales)
+            regionField.IsAutoSort = true;          // Turn on auto sort
+            regionField.IsAscendSort = true;        // Ascending order
+            regionField.AutoSortField = 0;          // Index of the data field to sort by (Sales)
 
-        // Refresh the pivot table data and apply the sorting
-        pivotTable.CalculateData();
+            // Refresh the pivot table data and calculate results
+            pivotTable.RefreshData();
+            pivotTable.CalculateData();
 
-        // Save the workbook with the configured pivot table
-        workbook.Save("PivotFieldAutoSortResult.xlsx");
+            // Save the workbook
+            workbook.Save("PivotFieldAutoSortDemo.xlsx");
+        }
     }
 }

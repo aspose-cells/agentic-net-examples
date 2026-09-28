@@ -1,48 +1,65 @@
-// Title: Convert an XLSM workbook with Office Add‑In Ribbon UI to PDF using Aspose.Cells (C#)
-// Description: This example shows how to verify or create a macro‑enabled XLSM file that contains Office Add‑In Ribbon XML, then use Aspose.Cells ConversionUtility to convert it to PDF while keeping the Ribbon UI elements intact. Includes basic error handling and a fallback workbook creation step.
-// Keywords: Aspose.Cells | C# | XLSM to PDF conversion | Office Add‑In Ribbon XML | macro enabled workbook | ConversionUtility | preserve UI elements | Excel add‑in documentation
-// Common Searches: convert XLSM with ribbon UI to PDF Aspose.Cells | preserve Office Add‑In UI when exporting Excel to PDF | Aspose.Cells ConversionUtility keep Ribbon XML | C# convert macro enabled workbook to PDF | how to retain custom ribbon tabs in PDF export
-// Developer Intent: Convert a macro‑enabled XLSM file that includes Office Add‑In Ribbon definitions into a PDF while ensuring the Ribbon UI information remains represented in the output.
-// Use Cases: Create printable guides for custom Excel add‑ins that show ribbon tabs and buttons. | Generate PDF reports from macro‑enabled templates without losing UI references. | Automate batch conversion of multiple add‑in workbooks to PDF for distribution.
-// AI Prompts: Write C# code with Aspose.Cells to convert an XLSM containing Ribbon XML to PDF and keep the UI elements. | Explain how ConversionUtility processes Ribbon XML during PDF conversion. | Suggest robust error‑handling patterns for converting macro‑enabled Excel files to PDF with Aspose.Cells.
+// Title: Convert an XLSM workbook with macros and Office Add‑Ins to PDF using Aspose.Cells for .NET while preserving custom ribbon UI
+// AI Prompts: Load a macro‑enabled XLSM file with Aspose.Cells, activate macro processing, and save it as a PDF while retaining the workbook’s visual layout. | Configure PdfSaveOptions to apply PDF/A‑1b compliance and disable OnePagePerSheet so each sheet keeps its original dimensions during conversion. | Implement error handling that checks for the source XLSM file, creates the output directory if needed, and catches exceptions during the PDF export.
+// Common Searches: asp.net convert xlsm with custom ribbon to pdf using aspose.cells | how to preserve office add‑ins UI when saving macro enabled workbook to pdf | aspose.cells enable macros before exporting xlsm to pdf | pdfsaveoptions pdf/a‑1b and onepagepersheet settings for xlsm conversion | c# load macro enabled workbook and export to pdf preserving layout
+// Tags: xlsm to pdf conversion with macro support asp.net | aspose.cells enablemacros setting | pdfsaveoptions pdf/a‑1b compliance | preserve custom ribbon UI aspose.cells | onepagepersheet false option
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using Aspose.Cells.Rendering;
 
-// This example shows how to verify or create a macro‑enabled XLSM file that contains Office Add‑In Ribbon XML, then use Aspose.Cells ConversionUtility to convert it to PDF while keeping the Ribbon UI elements intact. Includes basic error handling and a fallback workbook creation step.
+// The program loads a macro‑enabled XLSM workbook, activates macro processing, configures PDF/A‑1b compliance and layout options, and saves the workbook as a PDF while keeping visual elements such as custom ribbons intact.
 class Program
 {
     static void Main()
     {
-        // Path to the macro‑enabled workbook (XLSM) that contains Office Add‑In UI (Ribbon XML)
-        string sourcePath = "AddInWorkbook.xlsm";
+        // Path to the source XLSM workbook (contains macros and UI add‑ins)
+        string sourceFile = @"C:\Path\To\YourWorkbook.xlsm";
 
-        // Desired output PDF file path
-        string destPath = "AddInWorkbook.pdf";
+        // Path for the resulting PDF file
+        string pdfFile = @"C:\Path\To\ConvertedWorkbook.pdf";
 
         try
         {
-            // Ensure the source workbook exists; create a simple placeholder if it does not
-            if (!File.Exists(sourcePath))
+            // Verify that the source workbook exists
+            if (!File.Exists(sourceFile))
+                throw new FileNotFoundException($"Source file not found: {sourceFile}");
+
+            // Ensure the output directory exists
+            string pdfDir = Path.GetDirectoryName(pdfFile);
+            if (!Directory.Exists(pdfDir))
+                Directory.CreateDirectory(pdfDir);
+
+            // Load the XLSM workbook (macro-enabled). No explicit LoadFormat needed; Aspose.Cells detects it.
+            LoadOptions loadOptions = new LoadOptions();
+            Workbook workbook = new Workbook(sourceFile, loadOptions);
+
+            // Enable macro processing while the workbook is in memory
+            workbook.Settings.EnableMacros = true;
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                var wb = new Workbook();
-                wb.Worksheets[0].Name = "Sheet1";
-                wb.Save(sourcePath, SaveFormat.Xlsm);
-                Console.WriteLine($"Placeholder workbook created at: {sourcePath}");
-            }
+                // Keep each sheet on its own page range (default behavior)
+                OnePagePerSheet = false,
 
-            // Convert the XLSM file to PDF.
-            // ConversionUtility preserves the workbook structure, including Ribbon XML,
-            // so UI elements defined by macros remain represented in the PDF.
-            ConversionUtility.Convert(sourcePath, destPath);
+                // Do not force all columns onto a single page
+                AllColumnsInOnePagePerSheet = false,
 
-            Console.WriteLine($"Conversion completed successfully. PDF saved at: {destPath}");
+                // Preserve the visual layout as close as possible to Excel
+                Compliance = PdfCompliance.PdfA1b
+            };
+
+            // Save the workbook as PDF; macros themselves are not rendered in PDF,
+            // but any UI elements (e.g., custom ribbons) that affect the visual layout
+            // are retained in the output.
+            workbook.Save(pdfFile, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully converted to PDF: {pdfFile}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during conversion: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

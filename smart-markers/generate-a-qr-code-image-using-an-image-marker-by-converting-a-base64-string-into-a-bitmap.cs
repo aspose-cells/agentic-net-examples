@@ -1,44 +1,55 @@
-// Title: Insert a QR‑code image from a Base64 string into an Excel cell with Aspose.Cells for .NET
-// Description: Demonstrates how to decode a Base64‑encoded QR‑code PNG, load it into a MemoryStream, and place the image in a specific worksheet cell using Aspose.Cells (C#) before saving as XLSX.
-// Keywords: Aspose.Cells | C# | Base64 to image | QR code Excel | Worksheet.Pictures.Add | MemoryStream image | Insert picture into cell | .NET Excel image marker
-// Common Searches: Aspose.Cells add image from Base64 | C# embed QR code in Excel worksheet | How to use Worksheet.Pictures.Add with a stream | Convert Base64 string to bitmap for Excel | Insert PNG picture into specific cell Aspose.Cells
-// Developer Intent: Place a QR‑code image decoded from a Base64 string into a designated cell of an Excel workbook using Aspose.Cells.
-// Use Cases: Generate sales reports that embed a QR code for each record. | Create printable product label sheets with QR codes directly in Excel. | Automate invoice PDFs by inserting QR‑code payment links as images in the workbook.
-// AI Prompts: Write C# code with Aspose.Cells to decode a Base64 QR‑code and insert it at cell C5. | Show how to resize the inserted QR‑code picture and apply a border using Aspose.Cells. | Provide an example that loops through a list of Base64 QR‑code strings and adds each image to successive rows in an Excel sheet.
+// Title: Insert a QR‑code PNG decoded from a Base64 string into a specific cell of an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Decode the Base64‑encoded PNG, create a MemoryStream, and add the image to cell B3 of the first worksheet using Workbook.Worksheets[0].Pictures.Add. | Set the inserted picture's Width and Height properties to 150 pixels each to control its size. | Save the workbook to a file such as QrCodeWorkbook.xlsx and confirm the file is generated without errors.
+// Common Searches: how to decode a base64 QR code image and place it in an Excel cell using Aspose.Cells C# | Aspose.Cells add picture from memory stream to specific cell | set picture size in Aspose.Cells workbook C# | embed PNG image from base64 string into Excel worksheet with Aspose.Cells | convert base64 string to bitmap for Excel using Aspose.Cells .NET
+// Tags: add base64 decoded image to Aspose.Cells worksheet | embed QR code PNG in Excel using Aspose.Cells | insert picture from MemoryStream Aspose.Cells | resize picture dimensions Aspose.Cells C# | convert base64 to bitmap for Excel workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsQrCodeDemo
+// The example decodes a Base64‑encoded PNG that contains a QR code, creates a MemoryStream, and inserts the image into cell B3 of the first worksheet using Aspose.Cells. The picture is resized to 150 × 150 pixels, and the workbook is saved as QrCodeWorkbook.xlsx.
+class GenerateQrCodeWorkbook
 {
-    // Demonstrates how to decode a Base64‑encoded QR‑code PNG, load it into a MemoryStream, and place the image in a specific worksheet cell using Aspose.Cells (C#) before saving as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Base64 string that represents the QR code image (PNG format in this example)
+            string base64QrImage = "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAAB..."; // TODO: replace with actual Base64 data
+
+            if (string.IsNullOrWhiteSpace(base64QrImage))
+                throw new InvalidOperationException("Base64 QR image data is missing.");
+
+            // Convert Base64 string to a byte array
+            byte[] imageBytes = Convert.FromBase64String(base64QrImage);
+
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Base64 string representing a QR code PNG image.
-            // Replace this string with the actual Base64 data of your QR code.
-            const string qrCodeBase64 = "iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAYAAAB6V+0UAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMi4xMZ8Z3wAAABl0RVh0Q3JlYXRpb24gVGltZQAwOS8yMi8xM5Z6+QAAABV0RVh0U291cmNlAEFzcG9zZSBJbWFnZSBMaWJyYXJ5IEV4YW1wbGUgQ1JYAAAAAElFTkSuQmCC";
-
-            // Convert the Base64 string to a byte array
-            byte[] qrCodeBytes = Convert.FromBase64String(qrCodeBase64);
-
-            // Load the byte array into a memory stream
-            using (MemoryStream imageStream = new MemoryStream(qrCodeBytes))
+            // Add the QR code image to the worksheet directly from the byte stream
+            using (MemoryStream ms = new MemoryStream(imageBytes))
             {
-                // Add the QR code image to the worksheet at cell B2 (row 1, column 1)
-                // The Pictures.Add method accepts a stream containing image data.
-                sheet.Pictures.Add(1, 1, imageStream);
+                int pictureIndex = sheet.Pictures.Add(2, 1, ms); // places image at cell B3
+
+                // Optionally adjust picture size
+                Picture picture = sheet.Pictures[pictureIndex];
+                picture.Width = picture.Height = 150; // example size, adjust as needed
             }
 
-            // Save the workbook to an XLSX file
-            workbook.Save("QrCodeWorkbook.xlsx");
+            // Define output file path
+            string outputPath = "QrCodeWorkbook.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

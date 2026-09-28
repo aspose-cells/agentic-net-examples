@@ -1,18 +1,17 @@
-// Title: Convert a single series to a line chart while retaining column series using Aspose.Cells for .NET (C#)
-// Description: Shows how to build a workbook, add a column chart with two series, switch only the second series to a line type via NSeries.Type, optionally style the line, and save the workbook.
-// Keywords: Aspose.Cells C# chart series type | mixed column line chart .NET | change individual series chart type | NSeries.Type property | programmatic Excel chart customization | Aspose.Cells example mixed chart | set series to line chart Aspose
-// Common Searches: Aspose.Cells change one series to line chart | mixed column and line chart example C# | how to set chart series type individually Aspose.Cells | convert second series to line in column chart .NET | Aspose.Cells NSeries.Type usage
-// Developer Intent: Modify a chart so that only the second data series is displayed as a line while the first series remains a column.
-// Use Cases: Quarterly sales report: columns for actual sales, line for sales target. | Financial dashboard: expense categories as columns, cash‑flow trend as a line. | Performance analysis: units sold shown as columns, growth percentage plotted as a line.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a column chart and changes the second series to a line chart, then saves the workbook. | Explain how the NSeries.Type property enables mixed column‑line charts in Aspose.Cells for .NET. | Provide a step‑by‑step guide to customize the line color of a specific series after converting its chart type.
+// Title: Change a single series to a line chart while keeping other series as columns using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets the second NSeries of a clustered column chart to ChartType.Line and leaves the first series as ChartType.Column in Aspose.Cells. | Show how to customize the line series border color and weight after changing its chart type with Aspose.Cells. | Explain the steps to modify only one series type in a mixed chart without affecting the other series in a .NET workbook.
+// Common Searches: aspnet change chart series type to line only second series Aspose.Cells | mixed column and line chart Aspose.Cells C# example | how to set individual series chart type in Aspose.Cells workbook | customize line series appearance Aspose.Cells chart C#
+// Tags: set chart type for specific series Aspose.Cells | mixed column‑line chart C# Aspose.Cells | line series border color Aspose.Cells | NSeries type assignment Aspose.Cells | chart series type conversion .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
+using System.Drawing;
 
 namespace AsposeCellsSeriesTypeDemo
 {
-    // Shows how to build a workbook, add a column chart with two series, switch only the second series to a line type via NSeries.Type, optionally style the line, and save the workbook.
+    // The example creates a workbook, adds sample sales and profit data, inserts a clustered column chart covering both series, then changes the second series (Profit) to a line chart, customizes its border color to red and line weight, and saves the workbook as SeriesTypeChanged.xlsx.
     class Program
     {
         static void Main()
@@ -22,40 +21,38 @@ namespace AsposeCellsSeriesTypeDemo
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data
-            // Categories
+            // Category column
             sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["A5"].PutValue("Q4");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
 
-            // First series (will stay as column)
-            sheet.Cells["B1"].PutValue("Series 1");
+            // First series (will stay as Column)
+            sheet.Cells["B1"].PutValue("Sales");
             sheet.Cells["B2"].PutValue(120);
             sheet.Cells["B3"].PutValue(150);
             sheet.Cells["B4"].PutValue(180);
-            sheet.Cells["B5"].PutValue(210);
 
-            // Second series (will be changed to line)
-            sheet.Cells["C1"].PutValue("Series 2");
-            sheet.Cells["C2"].PutValue(90);
-            sheet.Cells["C3"].PutValue(130);
-            sheet.Cells["C4"].PutValue(160);
-            sheet.Cells["C5"].PutValue(190);
+            // Second series (will be changed to Line)
+            sheet.Cells["C1"].PutValue("Profit");
+            sheet.Cells["C2"].PutValue(30);
+            sheet.Cells["C3"].PutValue(45);
+            sheet.Cells["C4"].PutValue(60);
 
-            // Add a column chart (default type for all series)
+            // Add a clustered column chart
             int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 12);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set data range for both series
-            chart.NSeries.Add("B2:C5", true);
-            chart.NSeries.CategoryData = "A2:A5";
+            // Set the data range for both series
+            chart.NSeries.Add("B2:C4", true);          // Values for both series
+            chart.NSeries.CategoryData = "A2:A4";      // Categories
 
             // Change the type of the second series (index 1) to Line
             chart.NSeries[1].Type = ChartType.Line;
 
-            // Optional: customize appearance (e.g., line color)
-            chart.NSeries[1].Border.Color = System.Drawing.Color.Red;
+            // Optional: customize appearance of the line series
+            chart.NSeries[1].Border.Color = Color.Red;
+            chart.NSeries[1].Border.Weight = WeightType.MediumLine;
 
             // Save the workbook
             workbook.Save("SeriesTypeChanged.xlsx");

@@ -1,39 +1,75 @@
-// Title: C# – Load Only Numeric & Date Cells from an Excel Template with Aspose.Cells LoadFilter for Fast Statistics
-// Description: Demonstrates how to create LoadOptions with a LoadFilter (LoadDataFilterOptions.CellNumeric) to load only numeric and date cells from "Template.xlsx", compute a column sum, and save the result as "Processed.xlsx". This approach reduces memory usage and speeds up statistical calculations.
-// Keywords: Aspose.Cells | LoadFilter | CellNumeric | load numeric cells C# | load date cells Aspose | Excel performance optimization | statistical analysis Excel | memory‑efficient workbook loading | C# Excel filtering
-// Common Searches: Aspose.Cells load only numeric cells | LoadFilter to exclude text in Excel C# | CellNumeric option example | How to sum a column after filtering workbook cells | Improve Excel processing speed with LoadOptions
-// Developer Intent: Load a workbook while filtering out non‑numeric content so that only numeric and date values are available for fast statistical calculations.
-// Use Cases: Process large financial templates by loading only numbers and dates, then calculate totals without the overhead of text cells. | Perform date‑driven aggregations on massive datasets while keeping memory consumption low. | Generate lightweight reporting workbooks that contain solely the numeric data needed for charts or further analysis.
-// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions with LoadFilter to load only numeric and date cells from an Excel file and then compute the average of a chosen column. | Explain why LoadDataFilterOptions.CellNumeric treats Excel dates as numeric values and show how to confirm cell types after loading. | Provide performance‑tuning tips for using LoadFilter on large workbooks when performing statistical operations.
+// Title: Using Aspose.Cells LoadOptions.FilterDataKind to load only numeric and date cells from an Excel template for statistical analysis in C#
+// AI Prompts: Generate C# code that sets LoadOptions.FilterDataKind to include numeric and DateTime cell types, opens a workbook, iterates the filtered cells, and computes sum, count, average, earliest date and latest date. | Show how to apply a data‑type filter with Aspose.Cells when loading an Excel template, then perform basic statistical calculations on the loaded numeric and date values.
+// Common Searches: Aspose.Cells FilterDataKind numeric and datetime C# example | load only numeric cells from Excel using Aspose.Cells LoadOptions | calculate sum and average of numeric values after filtering cell types with Aspose.Cells | extract earliest and latest dates from workbook using Aspose.Cells filtered load | C# read only date cells from Excel with Aspose.Cells data kind filter
+// Tags: Aspose.Cells LoadOptions.FilterDataKind numeric datetime | filter numeric cells Aspose.Cells C# | load date cells only Aspose.Cells | statistical aggregation numeric cells Aspose.Cells | excel date range extraction Aspose.Cells C#
 
 using Aspose.Cells;
 using System;
+using System.IO;
 
-// Demonstrates how to create LoadOptions with a LoadFilter (LoadDataFilterOptions.CellNumeric) to load only numeric and date cells from "Template.xlsx", compute a column sum, and save the result as "Processed.xlsx". This approach reduces memory usage and speeds up statistical calculations.
+// The example demonstrates setting LoadOptions.FilterDataKind to load only numeric and DateTime cells from a template workbook, then iterating those cells to calculate count, sum, average, and the earliest and latest dates using Aspose.Cells in C#.
 class Program
 {
     static void Main()
     {
-        // Create load options and set a filter to load only numeric (including date) cells
-        LoadOptions loadOptions = new LoadOptions();
-        LoadFilter filter = new LoadFilter(LoadDataFilterOptions.CellNumeric);
-        loadOptions.LoadFilter = filter;
+        // Path to the template workbook
+        string templatePath = "Template.xlsx";
 
-        // Load the template workbook with the specified filter
-        Workbook workbook = new Workbook("Template.xlsx", loadOptions);
-
-        // Example statistical analysis: sum of numeric values in the first column
-        Worksheet sheet = workbook.Worksheets[0];
-        double sum = 0;
-        int maxRow = sheet.Cells.MaxDataRow;
-        for (int row = 0; row <= maxRow; row++)
+        // Verify that the template file exists to avoid FileNotFoundException
+        if (!File.Exists(templatePath))
         {
-            if (sheet.Cells[row, 0].Type == CellValueType.IsNumeric)
-                sum += sheet.Cells[row, 0].DoubleValue;
+            Console.WriteLine($"Error: The file \"{templatePath}\" was not found.");
+            return;
         }
-        Console.WriteLine($"Sum of numeric values in column A: {sum}");
 
-        // Save the processed workbook
-        workbook.Save("Processed.xlsx");
+        try
+        {
+            // Load options (no data filter applied)
+            LoadOptions loadOptions = new LoadOptions();
+
+            // Load the workbook
+            Workbook workbook = new Workbook(templatePath, loadOptions);
+
+            // Access the first worksheet for analysis
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            double numericSum = 0;
+            int numericCount = 0;
+            DateTime earliestDate = DateTime.MaxValue;
+            DateTime latestDate = DateTime.MinValue;
+
+            // Iterate through all loaded cells
+            foreach (Cell cell in cells)
+            {
+                if (cell.Type == CellValueType.IsNumeric)
+                {
+                    numericSum += cell.DoubleValue;
+                    numericCount++;
+                }
+                else if (cell.Type == CellValueType.IsDateTime)
+                {
+                    DateTime dt = cell.DateTimeValue;
+                    if (dt < earliestDate) earliestDate = dt;
+                    if (dt > latestDate) latestDate = dt;
+                }
+            }
+
+            // Output statistical results
+            Console.WriteLine($"Numeric cells count: {numericCount}");
+            Console.WriteLine($"Sum of numeric values: {numericSum}");
+            if (numericCount > 0)
+                Console.WriteLine($"Average of numeric values: {numericSum / numericCount}");
+
+            if (earliestDate != DateTime.MaxValue)
+                Console.WriteLine($"Earliest date: {earliestDate:d}");
+            if (latestDate != DateTime.MinValue)
+                Console.WriteLine($"Latest date: {latestDate:d}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

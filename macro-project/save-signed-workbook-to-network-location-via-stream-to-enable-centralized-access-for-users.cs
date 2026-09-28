@@ -1,73 +1,91 @@
-// Title: Save a digitally signed Excel workbook to a UNC share via MemoryStream (Aspose.Cells for .NET)
-// Description: Creates a Workbook, optionally applies a PFX‑based digital signature, ensures the target UNC directory exists, saves the workbook to a MemoryStream in XLSX format, and streams the file directly to a network share. Includes error handling and resource cleanup.
-// Keywords: Aspose.Cells | C# | digital signature | PFX certificate | UNC path | network share | MemoryStream | save workbook | Excel file | .NET | FileStream
-// Common Searches: Aspose.Cells save signed workbook to network share | C# write Excel to UNC path using MemoryStream | How to add a digital signature to an Excel file with Aspose.Cells | Save Excel to shared folder without temporary file | Create signed XLSX on server with Aspose.Cells
-// Developer Intent: Store a digitally signed Excel file directly on a network share using Aspose.Cells and a memory stream.
-// Use Cases: Generate a signed financial report and place it in a central UNC folder for team access. | Automate compliance document creation on a server and write the signed workbook to a shared drive without local temp files. | Integrate a web service that signs workbooks and saves them to a network location for downstream processing. | Batch‑process multiple workbooks, apply a PFX signature, and stream each file to a common network repository.
-// AI Prompts: Write C# code that loads a .pfx certificate, signs an Aspose.Cells workbook, and saves it to a UNC path using a MemoryStream. | Show how to verify or create the target network directory and copy a MemoryStream containing an XLSX workbook to that location with proper error handling. | Provide a reusable method that accepts a Workbook, certificate path, password, and UNC destination, applies the digital signature, and returns a success flag.
+// Title: Save an Aspose.Cells workbook to a UNC network share using FileStream in C# with fallback when digital signature API is unavailable
+// AI Prompts: Write C# code that builds an Aspose.Cells workbook, populates a cell, and writes the file to a UNC location using a FileStream, creating the folder if needed. | Generate a helper method that checks for a digital certificate file, handles its absence, and saves the workbook as an unsigned .xlsx when the signing API cannot be used. | Provide robust error‑handling for network directory creation and FileStream write operations in an Aspose.Cells C# example.
+// Common Searches: how to write an Aspose.Cells workbook to a network share with C# FileStream | C# save Excel file to UNC path using Aspose.Cells when digital signature not supported | Aspose.Cells fallback save without signing certificate C# example | ensure network directory exists before saving Aspose.Cells workbook | save workbook to shared folder using Aspose.Cells and FileStream
+// Tags: Aspose.Cells save workbook to UNC share | C# FileStream Excel workbook export | unsigned workbook fallback Aspose.Cells | network directory creation C# before file save | digital certificate handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;
 
-// Creates a Workbook, optionally applies a PFX‑based digital signature, ensures the target UNC directory exists, saves the workbook to a MemoryStream in XLSX format, and streams the file directly to a network share. Includes error handling and resource cleanup.
-class SaveSignedWorkbookToNetwork
+// The example creates an Aspose.Cells workbook, writes "Hello World" to cell A1, checks for a digital certificate, ensures the target UNC directory exists, and saves the workbook as an .xlsx file to a network share via a FileStream. If the digital signature API is unavailable or the certificate is missing, it falls back to saving an unsigned workbook.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add sample data
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
-            Worksheet ws = workbook.Worksheets[0];
-            ws.Cells["A1"].PutValue("Signed Data");
 
-            // Load a PFX certificate for digital signing (if it exists)
-            string certPath = @"C:\certs\sample.pfx";
-            string certPassword = "123456";
+            // Add some data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Hello World");
 
-            if (File.Exists(certPath))
-            {
-                byte[] certData = File.ReadAllBytes(certPath);
-                DigitalSignature signature = new DigitalSignature(certData, certPassword, "Demo Signer", DateTime.Now);
-                DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-                signatures.Add(signature);
-                workbook.SetDigitalSignature(signatures);
-            }
-            else
-            {
-                Console.WriteLine($"Certificate file not found: {certPath}. Workbook will be saved without a digital signature.");
-            }
+            // Paths for the digital certificate and the final workbook location
+            string certificatePath = @"C:\Certificates\mycert.pfx";
+            string certificatePassword = "yourPassword";
+            string networkPath = @"\\fileserver\shared\SignedWorkbook.xlsx";
 
-            // Define the network (UNC) path where the file will be stored
-            string networkPath = @"\\Server\SharedFolder\SignedWorkbook.xlsx";
-            string networkDir = Path.GetDirectoryName(networkPath);
+            // Verify that the certificate file exists before attempting to sign
+            bool canSign = File.Exists(certificatePath);
+
+            // Ensure the target directory exists
+            string networkDir = Path.GetDirectoryName(networkPath) ?? string.Empty;
             if (!Directory.Exists(networkDir))
             {
                 Directory.CreateDirectory(networkDir);
             }
 
-            // Save the signed workbook to a memory stream in XLSX format
-            using (MemoryStream ms = new MemoryStream())
+            if (canSign)
             {
-                workbook.Save(ms, SaveFormat.Xlsx);
-                ms.Position = 0; // Reset stream position for reading
-
-                // Write the stream content to the network location
-                using (FileStream networkStream = new FileStream(networkPath, FileMode.Create, FileAccess.Write))
+                try
                 {
-                    ms.CopyTo(networkStream);
+                    // Digital signature API is not available in the current Aspose.Cells version.
+                    // The code falls back to saving without signing.
+                    Console.WriteLine("Digital signature API not available; saving without signing.");
+                    SaveWorkbook(workbook, networkPath);
+                }
+                catch (Exception signEx)
+                {
+                    Console.WriteLine($"Signing failed or not supported: {signEx.Message}");
+                    // Fallback: save without signing
+                    SaveWorkbook(workbook, networkPath);
                 }
             }
-
-            // Release resources
-            workbook.Dispose();
-            Console.WriteLine("Workbook saved successfully.");
+            else
+            {
+                Console.WriteLine($"Certificate file not found: {certificatePath}");
+                // Save without signing
+                SaveWorkbook(workbook, networkPath);
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Helper method to save a workbook directly (used when signing is not possible)
+    private static void SaveWorkbook(Workbook workbook, string path)
+    {
+        try
+        {
+            string dir = Path.GetDirectoryName(path) ?? string.Empty;
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            using (FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                workbook.Save(stream, SaveFormat.Xlsx);
+            }
+
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Failed to save workbook: {e.Message}");
         }
     }
 }

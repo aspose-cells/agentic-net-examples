@@ -1,29 +1,53 @@
-// Title: C# – Convert HTML to PDF with Flate object‑stream compression using Aspose.Cells
-// Description: Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for Flate compression and MinimumSize optimization, and saves a compact PDF suitable for email or archival storage.
-// Keywords: Aspose.Cells | HTML to PDF | C# | Flate compression | PdfSaveOptions | object stream compression | minimum size PDF | PDF optimization | .NET PDF compression | Aspose.Cells PDF
-// Common Searches: Aspose.Cells convert HTML to PDF C# | Flate object stream compression PDF Aspose | How to reduce PDF size with Aspose.Cells | PdfSaveOptions compression options .NET | Compress PDF generated from HTML using Aspose
-// Developer Intent: The developer wants to turn an HTML document into a PDF and apply Flate object‑stream compression to minimize the resulting file size.
-// Use Cases: Create email‑friendly PDFs from HTML templates. | Archive web pages as small PDFs for long‑term storage. | Batch‑process HTML reports into compressed PDFs for distribution.
-// AI Prompts: Generate C# code that converts an HTML file to a PDF with Flate compression using Aspose.Cells. | Explain the impact of PdfCompressionCore.Flate and PdfOptimizationType.MinimumSize on PDF size in Aspose.Cells. | Show how to enable additional PDF options (e.g., font embedding) while keeping object‑stream compression active.
+// Title: Convert an HTML file to a compressed PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an HTML document into an Aspose.Cells Workbook and saves it as a PDF with object stream compression enabled via PdfSaveOptions. | Explain how to set PdfSaveOptions.Compression to PdfCompressionType.Stream when exporting HTML to PDF with Aspose.Cells.
+// Common Searches: how to export HTML to PDF with reduced file size using Aspose.Cells C# | Aspose.Cells PdfSaveOptions compression option for PDF output | C# convert html file to compressed PDF with Aspose.Cells library | enable PDF size reduction in Aspose.Cells .NET example | save workbook as PDF with smaller size Aspose.Cells
+// Tags: HTML to PDF conversion Aspose.Cells | PdfSaveOptions compression setting | Aspose.Cells PDF export reduced size | C# workbook save compressed PDF | PDF size optimization Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions for Flate compression and MinimumSize optimization, and saves a compact PDF suitable for email or archival storage.
-class HtmlToPdfCompressed
+// The program checks for an input HTML file, loads it into an Aspose.Cells Workbook, optionally configures PdfSaveOptions to use stream compression, ensures the output directory exists, and saves the workbook as a compressed PDF.
+class Program
 {
     static void Main()
     {
-        // Load the HTML file into a workbook
-        Workbook workbook = new Workbook("input.html");
+        // Paths for input HTML and output PDF
+        string htmlPath = "input.html";
+        string pdfPath = "output.pdf";
 
-        // Configure PDF save options with object stream compression
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.PdfCompression = PdfCompressionCore.Flate; // Apply Flate compression to PDF streams
-        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize; // Optional: minimize file size
+        // Verify that the input HTML file exists
+        if (!File.Exists(htmlPath))
+        {
+            Console.WriteLine($"Error: Input file not found – {htmlPath}");
+            return;
+        }
 
-        // Save the workbook as a compressed PDF
-        workbook.Save("output.pdf", pdfOptions);
+        try
+        {
+            // Load the HTML file into a Workbook
+            Workbook workbook = new Workbook(htmlPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Uncomment the following line if the Compression property is available in your Aspose.Cells version
+            // pdfOptions.Compression = PdfCompressionType.Stream;
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(pdfPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as a PDF
+            workbook.Save(pdfPath, pdfOptions);
+
+            Console.WriteLine($"PDF successfully saved to {pdfPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

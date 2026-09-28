@@ -1,40 +1,52 @@
-// Title: Import XML data with an XSD map into an Excel workbook using Aspose.Cells Workbook.ImportXml (C#)
-// Description: Demonstrates how to add an XML map from a schema.xsd file to a new Aspose.Cells workbook, import matching data.xml into Sheet1 at cell A1 with Workbook.ImportXml, and save the result as an .xlsx file.
-// Keywords: Aspose.Cells | C# | Workbook.ImportXml | XML map | XSD schema | import XML to Excel | .NET Excel automation | Excel XML import example | global
-// Common Searches: Aspose.Cells add XML map from XSD | Workbook.ImportXml C# example | Import XML into Excel using Aspose.Cells | How to use XSD schema with Aspose.Cells | C# code to map XML to Excel worksheet
-// Developer Intent: Add an XSD‑based XML map to a workbook and import XML data that conforms to the schema into a specific worksheet.
-// Use Cases: Create a fresh workbook, attach an XSD schema as an XML map, and load XML data into the first sheet for reporting. | Validate that the XML map was added correctly by reading its Name and RootElementName before importing. | Reuse the same XML map to import multiple XML files into different sheets or cell ranges within one workbook.
-// AI Prompts: Write C# code that adds an XML map from a .xsd file to an Aspose.Cells workbook and imports a matching .xml file using Workbook.ImportXml. | Explain how to verify XmlMap properties (Name, RootElementName) after adding the map and before importing data. | Provide step‑by‑step instructions for importing XML data into a specific worksheet cell with an XSD schema in Aspose.Cells for .NET.
+// Title: Import an XSD schema as an XML map into an Aspose.Cells workbook with C#
+// AI Prompts: Generate C# code that creates a new Workbook, validates the presence of a .xsd file, and calls Workbook.ImportXml with loadMapOnly set to true to add only the XML map. | Show how to import just the XML map from a schema file and then save the workbook as an .xlsx file using Aspose.Cells. | Provide a C# example that demonstrates checking for the XSD file, importing the map without data, and handling exceptions during the ImportXml operation.
+// Common Searches: c# aspocells import xml map from xsd file without loading data | Workbook.ImportXml loadMapOnly parameter example in C# | how to add an XML schema to a new Excel workbook using Aspose.Cells | verify xsd file exists before calling ImportXml in C# | save workbook after importing XML map with Aspose.Cells
+// Tags: import xml map from xsd Aspose.Cells | Workbook.ImportXml loadMapOnly flag | c# add xml schema to excel workbook | aspose.cells import xml map without data | check xsd file existence before ImportXml
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsXmlMapImportDemo
+// Demonstrates creating a Workbook, ensuring the XSD schema file exists, importing only the XML map using Workbook.ImportXml with the loadMapOnly flag, and saving the workbook to confirm the map was added.
+class Program
 {
-    // Demonstrates how to add an XML map from a schema.xsd file to a new Aspose.Cells workbook, import matching data.xml into Sheet1 at cell A1 with Workbook.ImportXml, and save the result as an .xlsx file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (creation rule)
+            // Create a new empty workbook
             Workbook workbook = new Workbook();
 
-            // Add an XML map to the workbook using the XSD schema file (XmlMapCollection.Add rule)
-            // The XSD file defines the structure of the XML data that will be imported.
-            int mapIndex = workbook.Worksheets.XmlMaps.Add("schema.xsd");
+            // Path to the XSD file that defines the XML map
+            string xsdPath = "schema.xsd";
 
-            // Optionally retrieve the added XmlMap (not required for ImportXml, but useful for verification)
-            XmlMap xmlMap = workbook.Worksheets.XmlMaps[mapIndex];
-            Console.WriteLine($"Added XML map with name: {xmlMap.Name}, root element: {xmlMap.RootElementName}");
+            // Ensure the XSD file exists before attempting to import
+            if (!File.Exists(xsdPath))
+            {
+                Console.WriteLine($"Error: XSD file not found at '{xsdPath}'.");
+                return;
+            }
 
-            // Import XML data into the first worksheet starting at cell A1 (Workbook.ImportXml rule)
-            // The XML file must conform to the previously added XSD schema.
-            workbook.ImportXml("data.xml", "Sheet1", 0, 0);
+            // Import the XML map from the XSD file.
+            // The ImportXml method expects integer flags for loadDataOnly (0 = false) and loadMapOnly (1 = true).
+            workbook.ImportXml(xsdPath, string.Empty, 0, 1);
 
-            // Save the workbook to an Excel file (save rule)
-            workbook.Save("XmlMapImportedWorkbook.xlsx");
+            // (Optional) If you have an XML data file to import using the map, you can do:
+            // string xmlPath = "data.xml";
+            // if (File.Exists(xmlPath))
+            // {
+            //     // Load data (1) without loading the map definition (0)
+            //     workbook.ImportXml(xmlPath, string.Empty, 1, 0);
+            // }
 
-            Console.WriteLine("Workbook saved successfully with imported XML data.");
+            // Save the workbook to verify that the map has been added
+            string outputPath = "WorkbookWithXmlMap.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

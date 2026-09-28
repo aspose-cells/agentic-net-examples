@@ -1,67 +1,81 @@
-// Title: Generate a Dynamic Monthly Sales Report with SUMIFS in C# using Aspose.Cells
-// Description: This C# example creates an Excel workbook, fills column A with random 2023 dates and column B with random sales amounts, lists month numbers in column D, inserts a SUMIFS formula in column E to total sales for each month, evaluates all formulas, and saves the file as MonthlySalesReport.xlsx.
-// Keywords: Aspose.Cells | C# SUMIFS | monthly sales aggregation | dynamic date range formula | Excel .NET report | calculate monthly totals | Aspose.Cells workbook creation | SUMIFS with DATE and EOMONTH | C# Excel automation | generate sales report
-// Common Searches: Aspose.Cells SUMIFS example C# | How to calculate monthly totals with SUMIFS in .NET | C# code for dynamic monthly sales report Excel | Using DATE and EOMONTH in Aspose.Cells formulas | Create Excel workbook with random data C# Aspose.Cells
-// Developer Intent: Programmatically build an Excel file that aggregates sales by month using a SUMIFS formula and saves the result.
-// Use Cases: Generate a sample sales dataset with dates and amounts for testing analytics pipelines. | Automatically compute month‑by‑month totals without manual formula entry. | Export the calculated monthly totals to an .xlsx file for downstream reporting or visualization. | Adapt the same pattern to other time‑based aggregations such as quarterly or yearly summaries.
-// AI Prompts: Show how to extend the SUMIFS formula to include a year parameter for multi‑year reports. | Provide code to format the Monthly Total column as currency and add a line chart of monthly sales. | Explain how to replace the random data generation with data imported from a CSV file while keeping the SUMIFS aggregation.
+// Title: Generate a monthly sales summary with SUMIFS and a month-key column using Aspose.Cells for .NET
+// AI Prompts: Create C# code with Aspose.Cells that adds a helper column converting dates to "yyyy‑MM" strings and inserts a SUMIFS formula to total sales for a specified month and product. | Write a program that builds an Excel workbook, populates sample sales rows, defines input cells for target month and product, applies the SUMIFS aggregation, calculates all formulas, and saves the workbook.
+// Common Searches: Aspose.Cells C# SUMIFS example with date month key | How to calculate monthly sales totals by product using Aspose.Cells | Create dynamic Excel report with SUMIFS and TEXT date conversion in .NET
+// Tags: Aspose.Cells SUMIFS formula | C# Excel date to yyyy-MM column | dynamic sales aggregation .NET | criteria based SUMIFS calculation | Excel helper column TEXT function
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsSumIfsDemo
+// The sample builds a new workbook, inserts sales data, creates a MonthKey helper column using the TEXT function, provides cells for target month and product, applies a SUMIFS formula to aggregate matching sales, evaluates the formulas, and saves the result as MonthlySalesReport.xlsx.
+class Program
 {
-    // This C# example creates an Excel workbook, fills column A with random 2023 dates and column B with random sales amounts, lists month numbers in column D, inserts a SUMIFS formula in column E to total sales for each month, evaluates all formulas, and saves the file as MonthlySalesReport.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // ----- Header Row -----
+        cells["A1"].PutValue("Date");      // Transaction date
+        cells["B1"].PutValue("Product");   // Product name
+        cells["C1"].PutValue("Region");    // Sales region
+        cells["D1"].PutValue("Sales");     // Sales amount
+        cells["E1"].PutValue("MonthKey");  // Helper column: month in yyyy-MM format
+
+        // ----- Sample Data (Rows 2-6) -----
+        // Row 2
+        cells["A2"].PutValue(new DateTime(2023, 9, 5));
+        cells["B2"].PutValue("Widget");
+        cells["C2"].PutValue("North");
+        cells["D2"].PutValue(1200);
+        // Row 3
+        cells["A3"].PutValue(new DateTime(2023, 9, 12));
+        cells["B3"].PutValue("Gadget");
+        cells["C3"].PutValue("South");
+        cells["D3"].PutValue(850);
+        // Row 4
+        cells["A4"].PutValue(new DateTime(2023, 9, 20));
+        cells["B4"].PutValue("Widget");
+        cells["C4"].PutValue("East");
+        cells["D4"].PutValue(950);
+        // Row 5
+        cells["A5"].PutValue(new DateTime(2023, 8, 15));
+        cells["B5"].PutValue("Widget");
+        cells["C5"].PutValue("West");
+        cells["D5"].PutValue(700);
+        // Row 6
+        cells["A6"].PutValue(new DateTime(2023, 9, 30));
+        cells["B6"].PutValue("Widget");
+        cells["C6"].PutValue("North");
+        cells["D6"].PutValue(1100);
+
+        // ----- Populate Helper Column (MonthKey) -----
+        // Formula: =TEXT(A2,"yyyy-MM")
+        for (int row = 2; row <= 6; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data: Column A = Date, Column B = Sales
-            // Dates cover Jan to Dec 2023
-            DateTime startDate = new DateTime(2023, 1, 1);
-            Random rnd = new Random();
-            for (int i = 0; i < 100; i++)
-            {
-                // Random date within the year 2023
-                DateTime date = startDate.AddDays(rnd.Next(0, 365));
-                double sales = rnd.Next(100, 1000); // Random sales amount
-
-                cells[i, 0].PutValue(date); // A column
-                cells[i, 1].PutValue(sales); // B column
-            }
-
-            // Header row
-            cells[0, 0].PutValue("Date");
-            cells[0, 1].PutValue("Sales");
-            cells[0, 3].PutValue("Month");   // D column header
-            cells[0, 4].PutValue("Monthly Total"); // E column header
-
-            // List months 1..12 in column D (starting from row 2)
-            for (int m = 1; m <= 12; m++)
-            {
-                cells[m, 3].PutValue(m); // D2:D13 contain month numbers
-            }
-
-            // Apply SUMIFS formula in column E to aggregate sales per month
-            // Formula uses absolute references for data ranges and concatenates DATE/EOMONTH with month number from column D
-            // Example for row 2 (month 1):
-            // =SUMIFS($B$2:$B$101, $A$2:$A$101, ">="&DATE(2023, D2, 1), $A$2:$A$101, "<="&EOMONTH(DATE(2023, D2, 1),0))
-            for (int row = 1; row <= 12; row++)
-            {
-                string formula = $"=SUMIFS($B$2:$B$101, $A$2:$A$101, \">=\"&DATE(2023, D{row + 1}, 1), $A$2:$A$101, \"<=\"&EOMONTH(DATE(2023, D{row + 1}, 1),0))";
-                cells[row, 4].Formula = formula; // E column
-            }
-
-            // Calculate all formulas so that results are stored in the cells
-            workbook.CalculateFormula();
-
-            // Save the workbook
-            workbook.Save("MonthlySalesReport.xlsx");
+            cells[$"E{row}"].Formula = $"=TEXT(A{row},\"yyyy-MM\")";
         }
+
+        // ----- Criteria Input Cells -----
+        cells["G1"].PutValue("Target Month (yyyy-MM)");
+        cells["G2"].PutValue(DateTime.Now.ToString("yyyy-MM")); // e.g., current month
+        cells["H1"].PutValue("Target Product");
+        cells["H2"].PutValue("Widget");
+
+        // ----- Result Header -----
+        cells["I1"].PutValue("Monthly Sales (SUMIFS)");
+
+        // ----- SUMIFS Formula -----
+        // Sum range: D2:D6 (Sales)
+        // Criteria range 1: E2:E6 (MonthKey) = G2
+        // Criteria range 2: B2:B6 (Product) = H2
+        cells["I2"].Formula = "=SUMIFS(D2:D6, E2:E6, G2, B2:B6, H2)";
+
+        // Calculate all formulas so that I2 contains the aggregated value
+        workbook.CalculateFormula();
+
+        // Save the workbook
+        workbook.Save("MonthlySalesReport.xlsx");
     }
 }

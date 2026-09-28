@@ -1,71 +1,46 @@
-// Title: Lock Formula Cells and Protect Worksheet Using AspNet Cells for .NET (C#)
-// Description: Shows how to create a workbook, insert values and formulas, lock only the formula cells, unlock other cells, apply worksheet protection (with optional password), and save the file with Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# | lock formula cells | worksheet protection | Excel protection .NET | prevent formula editing | IsLocked property | Cell.IsFormula | protect worksheet password | Aspose.Cells example
-// Common Searches: Aspose.Cells lock formula cells C# | protect worksheet while allowing data entry Aspose.Cells | how to lock only formula cells in Excel using .NET | set IsLocked for formula cells Aspose.Cells | Excel file protection Aspose.Cells C#
-// Developer Intent: Programmatically lock cells that contain formulas and protect the worksheet so end users cannot overwrite calculated results.
-// Use Cases: Financial models where calculation results must stay immutable while input cells remain editable. | Spreadsheet templates distributed to clients that require formula protection but allow data entry. | Automated report generation that secures all derived values before sharing the file.
-// AI Prompts: Generate C# code with Aspose.Cells that locks only cells containing formulas, unlocks other cells, applies worksheet protection with a password, and saves the workbook. | Explain how to iterate over a worksheet's used range, detect Cell.IsFormula, set Style.IsLocked accordingly, and protect the sheet in Aspose.Cells. | Provide step‑by‑step guidance for protecting an Aspose.Cells worksheet after locking formula cells, including optional password usage.
+// Title: Lock formula cells and protect worksheets in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates through every worksheet in a Workbook, sets the IsLocked style on cells that contain a formula, and then calls Protect on each sheet with Aspose.Cells. | Create a reusable method `LockFormulaCells(Workbook wb)` that locks all formula‑containing cells and applies full protection to each worksheet before saving. | Write a snippet that loads an existing .xlsx file, locks only the cells with formulas, protects the worksheets, and saves the result using Aspose.Cells for .NET.
+// Common Searches: asp.net lock cells that have formulas with Aspose.Cells | c# protect worksheet after locking formula cells using Aspose.Cells | how to set IsLocked property for formula cells in an Excel workbook with Aspose.Cells | iterate all worksheets and lock formula cells before saving in C# Aspose.Cells
+// Tags: apply IsLocked style to formula cells Aspose.Cells | worksheet protection with Aspose.Cells C# | formula detection and style update Aspose.Cells | secure Excel formulas via style locking C# | bulk cell style modification Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsLockFormulaCells
+// The program loads an existing Excel workbook, walks through each worksheet and cell, applies the IsLocked flag to any cell that contains a formula, protects the worksheet so locked cells cannot be edited, and saves the modified workbook.
+class Program
 {
-    // Shows how to create a workbook, insert values and formulas, lock only the formula cells, unlock other cells, apply worksheet protection (with optional password), and save the file with Aspose.Cells for C#.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Load the existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Get the cells collection of the current worksheet
             Cells cells = sheet.Cells;
 
-            // Populate some sample data
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].PutValue(30);
-
-            // Add formulas in column B
-            cells["B1"].Formula = "=A1*2";
-            cells["B2"].Formula = "=A2*2";
-            cells["B3"].Formula = "=A3*2";
-
-            // Add a formula in C1 for demonstration
-            cells["C1"].Formula = "=SUM(A1:A3)";
-
-            // Iterate through used cells and lock only those that contain formulas
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            // Loop through each cell in the worksheet
+            foreach (Cell cell in cells)
             {
-                for (int col = 0; col <= maxCol; col++)
+                // If the cell contains a formula, lock it
+                if (!string.IsNullOrEmpty(cell.Formula))
                 {
-                    Cell cell = cells[row, col];
+                    // Retrieve the current style of the cell
                     Style style = cell.GetStyle();
 
-                    if (cell.IsFormula)
-                    {
-                        // Lock cells that have formulas
-                        style.IsLocked = true;
-                    }
-                    else
-                    {
-                        // Unlock cells without formulas (optional, makes them editable)
-                        style.IsLocked = false;
-                    }
+                    // Set the IsLocked property to true
+                    style.IsLocked = true;
 
+                    // Apply the updated style back to the cell
                     cell.SetStyle(style);
                 }
             }
 
             // Protect the worksheet so that locked cells cannot be edited
-            // Using a password for demonstration; you can omit the password if not needed
-            sheet.Protect(ProtectionType.All, "securePwd", null);
-
-            // Save the workbook
-            workbook.Save("LockedFormulaCells.xlsx");
+            sheet.Protect(ProtectionType.All);
         }
+
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

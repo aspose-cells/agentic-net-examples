@@ -1,71 +1,67 @@
-// Title: Copy Formatting Only from A1:B5 to C1:D5 with Aspose.Cells (.NET C#)
-// Description: The sample loads (or creates) an Excel workbook, applies a light‑blue solid fill to cells A1:B5, and then moves just the style data to cells C1:D5 using Aspose.Cells' CopyStyle method, leaving any existing values untouched.
-// Keywords: Aspose.Cells C# copy formatting | CopyStyle method | transfer cell style .NET | Excel range style copy | copy only formatting Aspose | range A1:B5 to C1:D5 | apply style without data
-// Common Searches: Aspose.Cells copy only cell style C# | How to use CopyStyle in Aspose.Cells | Copy formatting between ranges in .NET Excel | Transfer Excel range styling without values | C# example for copying styles with Aspose.Cells
-// Developer Intent: Move the visual styling of the source range to the destination range while preserving the destination's cell contents.
-// Use Cases: Standardize header appearance across multiple table sections | Reuse a predefined theme for a new data block without overwriting values | Migrate conditional‑formatting rules to another area of the sheet | Create a template where only styles are propagated to fresh data
-// AI Prompts: Write a C# program that uses Aspose.Cells to copy only the style from range A1:B5 to C1:D5, keeping existing cell values unchanged. | Explain step‑by‑step how the CopyStyle method works in Aspose.Cells and show how to verify that only formatting was transferred.
+// Title: How to copy only the cell formatting from A1:B5 to C1:D5 in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells to copy the style of cells A1:B5 to the range C1:D5 without transferring the cell values. | Implement a C# routine that loads an Excel workbook, creates source and destination ranges, and applies Range.CopyStyle to move only formatting. | Write code that opens input.xlsx, copies formatting from rows 1‑5, columns A‑B to columns C‑D of the same rows, and saves the result as output.xlsx.
+// Common Searches: Aspose.Cells C# copy only cell style from one range to another | Range.CopyStyle example for copying formatting in a .NET Excel workbook | How to transfer formatting without data between A1:B5 and C1:D5 using Aspose.Cells
+// Tags: Aspose.Cells Range.CopyStyle usage | copy cell formatting Excel .NET | transfer styles between ranges C# | load workbook and apply formatting Aspose.Cells | Excel range formatting copy without values
 
 using System;
 using System.IO;
-using System.Drawing;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
+using System.Drawing;
 
-// The sample loads (or creates) an Excel workbook, applies a light‑blue solid fill to cells A1:B5, and then moves just the style data to cells C1:D5 using Aspose.Cells' CopyStyle method, leaving any existing values untouched.
-class CopyFormattingExample
+// Loads input.xlsx (creates a sample file if missing), defines source range A1:B5 and destination range C1:D5, copies only the formatting using Range.CopyStyle, and saves the modified workbook to output.xlsx.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
         try
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
             // Ensure the input file exists; create a simple workbook if it does not.
             if (!File.Exists(inputPath))
             {
-                Workbook tempWb = new Workbook();
-                Worksheet tempWs = tempWb.Worksheets[0];
-                Cells tempCells = tempWs.Cells;
+                var tempWb = new Workbook();
+                var tempWs = tempWb.Worksheets[0];
 
-                // Populate source range with sample data.
-                tempCells["A1"].PutValue("Header1");
-                tempCells["B1"].PutValue("Header2");
-                for (int i = 2; i <= 5; i++)
-                {
-                    tempCells[$"A{i}"].PutValue($"R{i - 1}C1");
-                    tempCells[$"B{i}"].PutValue($"R{i - 1}C2");
-                }
-
-                // Apply a simple style to the source range.
-                Style style = tempWb.CreateStyle();
+                // Populate sample data in A1:B5 and apply a basic style.
+                var style = tempWb.CreateStyle();
                 style.ForegroundColor = Color.LightBlue;
                 style.Pattern = BackgroundType.Solid;
-                Aspose.Cells.Range srcRange = tempCells.CreateRange("A1:B5");
-                srcRange.ApplyStyle(style, new StyleFlag { All = true });
+
+                for (int row = 0; row < 5; row++)
+                {
+                    tempWs.Cells[row, 0].PutValue($"A{row + 1}");
+                    tempWs.Cells[row, 1].PutValue($"B{row + 1}");
+                    tempWs.Cells[row, 0].SetStyle(style);
+                    tempWs.Cells[row, 1].SetStyle(style);
+                }
 
                 tempWb.Save(inputPath);
             }
 
-            // Load the workbook.
+            // Load the workbook from the input file.
             Workbook workbook = new Workbook(inputPath);
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Define source and destination ranges (fully qualified to avoid ambiguity).
-            Aspose.Cells.Range sourceRange = cells.CreateRange("A1:B5");
-            Aspose.Cells.Range destinationRange = cells.CreateRange("C1:D5");
+            // Access the first worksheet.
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define source (A1:B5) and destination (C1:D5) ranges.
+            AsposeRange sourceRange = worksheet.Cells.CreateRange("A1", "B5");
+            AsposeRange destinationRange = worksheet.Cells.CreateRange("C1", "D5");
 
             // Copy only the formatting (styles) from source to destination.
-            destinationRange.CopyStyle(sourceRange);
+            sourceRange.CopyStyle(destinationRange);
 
             // Save the modified workbook.
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+
+            Console.WriteLine($"Workbook processed successfully. Output saved to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,52 +1,50 @@
-// Title: C# – Import enum values with ImportArrayList and display enum names via custom number format in Aspose.Cells
-// Description: Shows how to create an ArrayList of enum integers, import it into a worksheet using ImportArrayList, define a Style with a custom number format that maps 0‑2 to "Unknown", "Active", "Inactive", apply the style to the range, and save the workbook.
-// Keywords: Aspose.Cells | ImportArrayList | enum | custom number format | C# | .NET | Excel export | display enum names | style formatting
-// Common Searches: Aspose.Cells ImportArrayList enum | display enum names in Excel C# | custom number format for enum values Aspose.Cells | map numeric codes to text in Excel using Aspose | C# Aspose.Cells format cells as text
-// Developer Intent: Load enum numeric values into a spreadsheet and format the cells so the corresponding enum names appear instead of numbers.
-// Use Cases: Export a list of status codes to Excel with readable labels. | Create reports where enum columns are shown as text rather than numbers. | Batch import numeric enum data and apply a single style for display. | Generate Excel files from .NET applications without manual mapping.
-// AI Prompts: Generate C# code that uses Aspose.Cells ImportArrayList to insert enum integer values and applies a custom number format to display the enum names. | Show how to build a Style with a custom number format for three enum members and apply it to a range after ImportArrayList. | Explain how to extend the custom number format string for enums with more than three members in Aspose.Cells.
+// Title: Use ImportArrayList to load ColorType enum numeric values and apply a custom number format that displays enum names in an Excel worksheet with Aspose.Cells for .NET
+// AI Prompts: Import a C# ArrayList of ColorType enum integer values into a worksheet using Cells.ImportArrayList, then apply a style that maps each integer to its enum name via a custom number format. | Define a Style object, set its Custom property to a format string that translates numeric enum codes to their textual labels, and assign this style to the cells that were imported. | Write the workbook to disk so the resulting Excel file shows the enum names (Automatic, AutomaticIndex, RGB, IndexedColor, Theme) instead of the numeric codes.
+// Common Searches: how to show enum names instead of numbers in an Excel file generated with Aspose.Cells C# | using ImportArrayList to bring enum values into a worksheet and display them as text | Aspose.Cells custom formatting to convert ColorType numeric codes to readable strings | C# example for mapping enum integer values to text in a saved XLSX with Aspose.Cells
+// Tags: importarraylist enum values c# | enum display format aspnet | colorType enum to text aspose.cells | apply style to imported range aspose.cells | save workbook with enum names aspose.cells
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-enum Status
+namespace AsposeCellsEnumDemo
 {
-    Unknown = 0,
-    Active = 1,
-    Inactive = 2
-}
-
-// Shows how to create an ArrayList of enum integers, import it into a worksheet using ImportArrayList, define a Style with a custom number format that maps 0‑2 to "Unknown", "Active", "Inactive", apply the style to the range, and save the workbook.
-class Program
-{
-    static void Main()
+    // Demonstrates importing the numeric values of the ColorType enum into a worksheet via Cells.ImportArrayList, creating a custom number format that maps each value to its enum name, applying the style to the imported range, and saving the workbook as EnumDisplayDemo.xlsx.
+    class Program
     {
-        // Create a new workbook and get the cells collection
-        Workbook workbook = new Workbook();
-        Cells cells = workbook.Worksheets[0].Cells;
-
-        // Prepare an ArrayList with enum numeric values
-        ArrayList enumValues = new ArrayList();
-        enumValues.Add((int)Status.Unknown);
-        enumValues.Add((int)Status.Active);
-        enumValues.Add((int)Status.Inactive);
-
-        // Import the values vertically starting at cell A1 (row 0, column 0)
-        cells.ImportArrayList(enumValues, 0, 0, true);
-
-        // Create a style with a custom number format that maps numbers to enum names
-        Style enumStyle = workbook.CreateStyle();
-        // Positive;Negative;Zero;Text format sections – we use three sections for 0,1,2
-        enumStyle.Custom = "\"Unknown\";\"Active\";\"Inactive\"";
-
-        // Apply the style to the imported range (A1:A3)
-        for (int i = 0; i < enumValues.Count; i++)
+        static void Main()
         {
-            cells[i, 0].SetStyle(enumStyle);
-        }
+            // Create a new workbook and get the first worksheet's cells collection
+            Workbook workbook = new Workbook();
+            Cells cells = workbook.Worksheets[0].Cells;
 
-        // Save the workbook
-        workbook.Save("EnumDisplay.xlsx");
+            // Prepare an ArrayList containing the numeric values of the ColorType enum
+            ArrayList enumValues = new ArrayList
+            {
+                (int)ColorType.Automatic,
+                (int)ColorType.AutomaticIndex,
+                (int)ColorType.RGB,
+                (int)ColorType.IndexedColor,
+                (int)ColorType.Theme
+            };
+
+            // Import the numeric enum values horizontally starting at cell A1
+            // Parameters: (ArrayList, firstRow, firstColumn, isVertical)
+            cells.ImportArrayList(enumValues, 0, 0, false);
+
+            // Create a style with a custom number format that maps numbers to enum names
+            Style enumStyle = workbook.CreateStyle();
+            // Custom format: [=0]"Automatic";[=1]"AutomaticIndex";[=2]"RGB";[=3]"IndexedColor";[=4]"Theme";General
+            enumStyle.Custom = "[=0]\"Automatic\";[=1]\"AutomaticIndex\";[=2]\"RGB\";[=3]\"IndexedColor\";[=4]\"Theme\";General";
+
+            // Apply the style to the imported range (first row, columns A to E)
+            for (int col = 0; col < enumValues.Count; col++)
+            {
+                cells[0, col].SetStyle(enumStyle);
+            }
+
+            // Save the workbook to a file
+            workbook.Save("EnumDisplayDemo.xlsx");
+        }
     }
 }

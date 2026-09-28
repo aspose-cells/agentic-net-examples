@@ -1,45 +1,38 @@
-// Title: C# – Convert CSV to PDF with exact column alignment using Aspose.Cells
-// Description: This example shows how to load a CSV file, convert it to an intermediate XLSX workbook, auto‑fit the columns, and save the result as a PDF/A‑1b document, ensuring the PDF layout matches the original CSV column widths.
-// Keywords: Aspose.Cells CSV to PDF | C# auto fit columns PDF | preserve column widths Aspose | PDF/A-1b export .NET | CSV to PDF conversion example | Aspose.Cells workbook to PDF | ConversionUtility CSV XLSX
-// Common Searches: how to keep CSV column widths when exporting to PDF with Aspose.Cells | Aspose.Cells C# convert CSV to PDF with PDF/A compliance | auto fit columns before saving workbook as PDF Aspose | preserve formatting CSV to PDF .NET | batch convert CSV files to PDF using Aspose.Cells
-// Developer Intent: Create a PDF from a CSV file while retaining the original column layout.
-// Use Cases: Generate printable reports from CSV exports with exact column alignment. | Produce archival‑ready PDF/A‑1b files from data tables without losing formatting. | Automate large‑scale conversion of CSV datasets to PDFs with consistent layout.
-// AI Prompts: Write C# code that uses Aspose.Cells to convert a CSV file to PDF, auto‑fit columns, and apply PDF/A‑1b compliance. | Explain the role of ConversionUtility.Convert and Worksheet.AutoFitColumns in preserving column alignment during PDF export. | Provide a step‑by‑step guide for batch processing a folder of CSV files into PDFs while maintaining formatting with Aspose.Cells.
+// Title: Convert a CSV file to PDF with column auto‑fit and single‑page width using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads a CSV file with Aspose.Cells, automatically adjusts column widths, configures the worksheet to fit the entire width on one PDF page, and saves the workbook as a PDF. | Explain how to set Aspose.Cells page‑setup properties so that exporting a CSV‑derived worksheet to PDF keeps all columns within a single page width.
+// Common Searches: Aspose.Cells C# auto adjust column widths when converting CSV to PDF | fit worksheet columns to one page width in PDF export using Aspose.Cells | load CSV with LoadOptions and preserve column alignment in PDF with Aspose.Cells .NET | example of setting page setup for single‑page PDF output in Aspose.Cells
+// Tags: CSV to PDF conversion Aspose.Cells C# | adjust column widths Aspose.Cells worksheet | single‑page width PDF export Aspose.Cells | LoadOptions CSV Aspose.Cells .NET | preserve column layout PDF conversion Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using Aspose.Cells.Rendering;
+using System;
 
-// This example shows how to load a CSV file, convert it to an intermediate XLSX workbook, auto‑fit the columns, and save the result as a PDF/A‑1b document, ensuring the PDF layout matches the original CSV column widths.
-class CsvToPdfConverter
+// Loads a CSV file into an Aspose.Cells workbook, automatically adjusts column widths, configures the page setup to fit all columns on one PDF page, and saves the result as a PDF.
+class Program
 {
     static void Main()
     {
-        // Paths for source CSV and intermediate XLSX
+        // Input CSV file path
         string csvPath = "input.csv";
-        string xlsxPath = "intermediate.xlsx";
+
+        // Output PDF file path
         string pdfPath = "output.pdf";
 
-        // 1. Convert CSV to XLSX using the provided ConversionUtility rule
-        // This creates a workbook that matches the CSV data layout.
-        ConversionUtility.Convert(csvPath, xlsxPath);
+        // Load the CSV file into a workbook
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
+        Workbook workbook = new Workbook(csvPath, loadOptions);
 
-        // 2. Load the generated XLSX workbook
-        Workbook workbook = new Workbook(xlsxPath);
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Work with the first worksheet (the CSV data is loaded here)
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // 3. Adjust column widths to fit the imported data.
-        // This ensures the column alignment in the PDF mirrors the source CSV.
-        worksheet.AutoFitColumns();
+        // Auto‑fit all columns so the width matches the source data
+        sheet.AutoFitColumns();
 
-        // 4. Set PDF save options (optional: set compliance level)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.Compliance = PdfCompliance.PdfA1b; // keep PDF/A-1b compliance
+        // Configure page setup to keep all columns on a single page width
+        PageSetup pageSetup = sheet.PageSetup;
+        pageSetup.FitToPagesWide = 1;   // fit all columns to one page width
+        pageSetup.FitToPagesTall = 0;   // allow any number of pages tall
 
-        // 5. Save the workbook as PDF using the provided Save method.
-        workbook.Save(pdfPath, pdfOptions);
-
-        Console.WriteLine($"CSV file '{csvPath}' has been converted to PDF '{pdfPath}' with column alignment preserved.");
+        // Save the workbook as a PDF file
+        workbook.Save(pdfPath, SaveFormat.Pdf);
     }
 }

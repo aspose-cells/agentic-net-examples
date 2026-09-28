@@ -1,61 +1,63 @@
-// Title: Rename an Aspose.Cells ListObject (Excel Table) Using the DisplayName Property – C# Example
-// Description: Demonstrates how to create a workbook with Aspose.Cells for .NET, add a ListObject covering A1:B3, assign a meaningful DisplayName such as "SalesData", and save the file. Shows the programmatic way to rename Excel tables to match project naming conventions.
-// Keywords: Aspose.Cells rename ListObject | C# Excel table DisplayName | change Excel table name programmatically | Aspose.Cells set table identifier | rename Aspose.Cells table .NET
-// Common Searches: how to rename a ListObject in Aspose.Cells C# | set DisplayName for Excel table using Aspose.Cells | Aspose.Cells change table name .NET | rename Excel table programmatically Aspose
-// Developer Intent: Rename a ListObject to a clear, convention‑compliant identifier within an Aspose.Cells workbook.
-// Use Cases: Align generated table names with data‑model entities (e.g., SalesData) before distribution. | Enforce a consistent naming scheme across multiple worksheets for downstream analytics. | Dynamically adjust table identifiers based on user input, configuration files, or localization.
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook, adds a ListObject, and renames the table to "CustomerOrders" using the DisplayName property. | Provide a C# snippet that iterates over all ListObjects in a workbook and renames each according to a pattern like "Tbl_{SheetName}_{Index}" with Aspose.Cells. | Explain how to validate a proposed table name against a naming convention (e.g., PascalCase, max length) before assigning it to ListObject.DisplayName in C#.
+// Title: Rename an Excel table (ListObject) to a project‑standard identifier using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells in C# to assign the DisplayName of the first ListObject to "tblSalesData" and save the workbook. | Programmatically change an Excel table's name to follow project naming conventions with the Aspose.Cells .NET API. | Update the identifier of a worksheet table and persist the changes using Aspose.Cells in a C# console application.
+// Common Searches: Aspose.Cells C# example for setting ListObject DisplayName | how to change ListObject name in an Excel workbook using Aspose.Cells | set custom table identifier in Excel file with Aspose.Cells API | C# code to rename Excel table to tblSalesData via Aspose.Cells | rename worksheet table programmatically with Aspose.Cells for .NET
+// Tags: Aspose.Cells assign table DisplayName | change Excel table name using Aspose.Cells .NET | C# update Excel table naming | Aspose.Cells modify table name in workbook | programmatic Excel table naming with Aspose API
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample loads an existing workbook, accesses the first worksheet, ensures a ListObject is present, assigns a new DisplayName (e.g., tblSalesData) to follow naming conventions, creates the output directory if needed, and saves the modified workbook.
+class Program
 {
-    // Demonstrates how to create a workbook with Aspose.Cells for .NET, add a ListObject covering A1:B3, assign a meaningful DisplayName such as "SalesData", and save the file. Shows the programmatic way to rename Excel tables to match project naming conventions.
-    public class RenameTableDemo
+    static void Main()
     {
-        public static void Run()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the table
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Quantity");
-                worksheet.Cells["A2"].PutValue("Widget");
-                worksheet.Cells["B2"].PutValue(150);
-                worksheet.Cells["A3"].PutValue("Gadget");
-                worksheet.Cells["B3"].PutValue(85);
-
-                // Add a ListObject (table) covering the data range A1:B3
-                int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
-                ListObject table = worksheet.ListObjects[tableIndex];
-
-                // Rename the table
-                table.DisplayName = "SalesData";
-
-                // Save the workbook
-                string outputPath = "RenamedTableDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one table (ListObject)
+            if (sheet.ListObjects.Count == 0)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("No tables (ListObjects) found in the worksheet.");
+                return;
             }
+
+            // Retrieve the first table (ListObject) on the worksheet
+            ListObject table = sheet.ListObjects[0];
+
+            // Rename the table using the correct property (DisplayName)
+            table.DisplayName = "tblSalesData";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RenameTableDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

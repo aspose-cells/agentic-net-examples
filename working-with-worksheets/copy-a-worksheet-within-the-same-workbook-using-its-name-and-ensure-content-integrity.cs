@@ -1,62 +1,80 @@
-// Title: Copy a Worksheet by Name in Aspose.Cells for .NET and Verify Data Integrity
-// Description: Demonstrates how to rename the first sheet, populate it with text, numeric and date values, duplicate the sheet using Worksheets.AddCopy("Original"), rename the copy, compare cell values to ensure identical content, and save the workbook as WorksheetCopyByNameDemo.xlsx.
-// Keywords: Aspose.Cells copy worksheet by name | Worksheets.AddCopy example | C# worksheet duplication | verify copied worksheet data | Aspose.Cells data integrity check | .NET Excel sheet copy
-// Common Searches: Aspose.Cells duplicate worksheet by name | C# copy Excel sheet and keep formulas Aspose.Cells | How to compare original and copied worksheet cells Aspose | AddCopy method usage in Aspose.Cells .NET | Validate worksheet copy content Aspose.Cells
-// Developer Intent: Create an exact copy of an existing worksheet within the same workbook using its name and confirm that all cell values are preserved.
-// Use Cases: Generate a backup of a template sheet before applying transformations. | Produce multiple report tabs by cloning a master worksheet and renaming each instance. | Automated testing to ensure programmatic sheet copies retain text, numbers, dates, and formulas.
-// AI Prompts: Provide C# code that copies a worksheet by its name with Aspose.Cells and checks that the copy matches the original. | Explain how Worksheets.AddCopy returns the index of the new sheet and how to access it. | Show how to compare cell values (string, numeric, date) between two worksheets for integrity verification.
+// Title: Copy a worksheet by its name within the same workbook and verify data integrity using Aspose.Cells for .NET
+// AI Prompts: Locate a worksheet by its name with Aspose.Cells, duplicate it in the same workbook, rename the copy, and save the workbook. | Loop through the used range of the original and copied worksheets to compare each cell value and ensure the copy matches the source. | Add robust error handling for missing input files or nonexistent worksheet names when performing a worksheet copy with Aspose.Cells.
+// Common Searches: Aspose.Cells C# copy worksheet within workbook by sheet name | how to verify that a duplicated sheet has identical data using Aspose.Cells | C# example of Aspose.Cells AddCopy method with data integrity check | duplicate Excel sheet and compare cell values Aspose.Cells .NET
+// Tags: Aspose.Cells AddCopy worksheet duplication | copy worksheet by name .NET | worksheet data integrity verification Aspose.Cells | compare cell values after sheet copy C# | save workbook after sheet duplication Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace WorksheetCopyExample
 {
-    // Demonstrates how to rename the first sheet, populate it with text, numeric and date values, duplicate the sheet using Worksheets.AddCopy("Original"), rename the copy, compare cell values to ensure identical content, and save the workbook as WorksheetCopyByNameDemo.xlsx.
-    public class WorksheetCopyByNameDemo
+    // The example loads an existing Excel file, retrieves a worksheet by its name, creates a copy of that worksheet within the same workbook, renames the copy, iterates over all used cells to confirm that the copied data matches the original, and finally saves the workbook, handling missing files and missing worksheets gracefully.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                Run();
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Retrieve the source worksheet by name
+                string sourceSheetName = "SourceSheetName";
+                Worksheet sourceSheet = workbook.Worksheets[sourceSheetName];
+
+                if (sourceSheet == null)
+                {
+                    throw new Exception($"Worksheet '{sourceSheetName}' not found in the workbook.");
+                }
+
+                // Copy the worksheet within the same workbook
+                int copiedIndex = workbook.Worksheets.AddCopy(sourceSheet.Index);
+                Worksheet copiedSheet = workbook.Worksheets[copiedIndex];
+                copiedSheet.Name = sourceSheetName + "_Copy";
+
+                // Verify that the copied content matches the source
+                bool contentIsIdentical = true;
+                int maxRow = sourceSheet.Cells.MaxDataRow;
+                int maxCol = sourceSheet.Cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow && contentIsIdentical; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        object sourceValue = sourceSheet.Cells[row, col].Value;
+                        object copiedValue = copiedSheet.Cells[row, col].Value;
+
+                        if (!object.Equals(sourceValue, copiedValue))
+                        {
+                            contentIsIdentical = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (!contentIsIdentical)
+                {
+                    throw new Exception("Worksheet copy integrity check failed.");
+                }
+
+                // Save the workbook to the desired output path
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the default first worksheet and rename it to "Original"
-            Worksheet originalSheet = workbook.Worksheets[0];
-            originalSheet.Name = "Original";
-
-            // Populate sample data in the original worksheet
-            originalSheet.Cells["A1"].PutValue("Hello World");
-            originalSheet.Cells["B2"].PutValue(12345);
-            originalSheet.Cells["C3"].PutValue(DateTime.Now);
-
-            // Copy the worksheet by its name using AddCopy(string)
-            int copiedIndex = workbook.Worksheets.AddCopy("Original");
-            Worksheet copiedSheet = workbook.Worksheets[copiedIndex];
-            copiedSheet.Name = "CopyOfOriginal";
-
-            // Verify that the copied worksheet contains the same data as the original
-            bool contentMatches =
-                originalSheet.Cells["A1"].StringValue == copiedSheet.Cells["A1"].StringValue &&
-                originalSheet.Cells["B2"].IntValue == copiedSheet.Cells["B2"].IntValue &&
-                originalSheet.Cells["C3"].DateTimeValue == copiedSheet.Cells["C3"].DateTimeValue;
-
-            Console.WriteLine("Content integrity check: " + (contentMatches ? "Passed" : "Failed"));
-
-            // Save the workbook to a file
-            string outputPath = "WorksheetCopyByNameDemo.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
         }
     }
 }

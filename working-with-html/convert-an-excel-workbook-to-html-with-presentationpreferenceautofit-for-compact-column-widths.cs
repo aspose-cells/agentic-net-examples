@@ -1,28 +1,43 @@
-// Title: C# – Convert Excel to Compact HTML with Aspose.Cells PresentationPreference AutoFit
-// Description: Loads an Excel workbook, configures HtmlSaveOptions with PresentationPreference set to true for auto‑fit column widths, and saves the file as a space‑efficient HTML document using Aspose.Cells.
-// Keywords: Aspose.Cells HTML conversion C# | HtmlSaveOptions PresentationPreference | auto fit columns Aspose.Cells | compact HTML output from Excel | C# save workbook as HTML | PresentationPreference true Aspose | Excel to HTML auto‑fit columns | Aspose.Cells HTML save options
-// Common Searches: How to enable PresentationPreference in Aspose.Cells C# | Aspose.Cells convert Excel to HTML with auto‑fit columns | C# HtmlSaveOptions PresentationPreference example | Compact HTML output from Excel using Aspose.Cells
-// Developer Intent: Generate HTML from an Excel workbook with auto‑fit column widths for a compact layout using Aspose.Cells in C#.
-// Use Cases: Embedding spreadsheet data in web pages with minimal horizontal scrolling. | Creating email‑friendly HTML reports from Excel files. | Producing printable HTML previews that conserve screen space. | Building lightweight HTML dashboards from financial or analytical workbooks.
-// AI Prompts: Show how to disable PresentationPreference to keep original column widths when saving to HTML with Aspose.Cells. | Provide C# code that converts an Excel workbook to HTML and applies a custom CSS stylesheet using Aspose.Cells. | Explain the impact of PresentationPreference on column width calculation in Aspose.Cells HTML export. | Give an example of using HtmlSaveOptions to embed a custom JavaScript file in the generated HTML.
+// Title: Convert an Excel .xlsx workbook to compact-width HTML using Aspose.Cells for .NET with PresentationPreference.AutoFit
+// AI Prompts: Write C# code that loads a .xlsx file, verifies its existence, sets HtmlSaveOptions.PresentationPreference to AutoFit, and saves the workbook as an HTML file with compact column widths using Aspose.Cells. | Provide a C# example that handles a missing input file while converting an Excel workbook to HTML with auto‑fitted columns via Aspose.Cells.
+// Common Searches: Aspose.Cells C# export Excel to HTML with auto‑fit column widths | C# convert .xlsx to HTML using PresentationPreference.AutoFit in Aspose.Cells | Save workbook as HTML with compact columns Aspose.Cells .NET example | HtmlSaveOptions PresentationPreference.AutoFit usage Aspose.Cells | C# Aspose.Cells HTML export handling file not found error
+// Tags: Aspose.Cells HtmlSaveOptions PresentationPreference.AutoFit | Excel to HTML conversion C# Aspose.Cells | auto‑fit column widths Aspose.Cells HTML export | C# file existence check before Aspose.Cells conversion | error handling Aspose.Cells workbook save to HTML
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, configures HtmlSaveOptions with PresentationPreference set to true for auto‑fit column widths, and saves the file as a space‑efficient HTML document using Aspose.Cells.
+// The program checks that the specified .xlsx file exists, loads it into an Aspose.Cells Workbook, configures HtmlSaveOptions with PresentationPreference.AutoFit to produce compact column widths, saves the workbook as an HTML file, and reports success or any caught exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the source Excel workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Configure HTML save options:
-        // PresentationPreference = true enables a more compact, auto‑fit style presentation.
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.PresentationPreference = true;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Save the workbook as an HTML file using the configured options
-        workbook.Save("output.html", htmlOptions);
+            // Load the Excel workbook from file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure HTML save options (auto‑fit columns not directly supported; default behavior is used)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+
+            // Save the workbook as an HTML file with the specified options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

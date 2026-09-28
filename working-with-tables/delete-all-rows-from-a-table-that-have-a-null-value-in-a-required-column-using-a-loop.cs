@@ -1,72 +1,86 @@
-// Title: Aspose.Cells for .NET (C#) – Remove rows where a required column is null or blank
-// Description: The example builds a workbook, fills column A with sample entries, iterates from the last row upward, evaluates each cell in the mandatory column for null, DBNull or an empty string, deletes rows that meet the condition using Cells.DeleteRow, and writes the result to RowsDeleted.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | DeleteRow | null values | empty cells | required column | reverse loop | Excel worksheet | MaxDataRow | data cleanup
-// Common Searches: Aspose.Cells delete rows with null values C# | remove blank rows from Excel worksheet using .NET | loop delete rows where column is empty Aspose.Cells | C# Aspose.Cells delete rows based on required column | how to purge rows with missing data in Excel via Aspose
-// Developer Intent: Programmatically eliminate rows that lack a mandatory value in a specific column.
-// Use Cases: Sanitize imported CSV/Excel data by discarding records missing a key field before further processing. | Generate clean reports where rows without an identifier must be omitted. | Automate validation of Excel sheets in ETL pipelines by removing incomplete rows on the fly.
-// AI Prompts: Generate C# code with Aspose.Cells that deletes rows where column B contains null, DBNull, or an empty string, iterating from the bottom to keep indexes stable. | Show an Aspose.Cells .NET snippet that removes rows with missing mandatory values and saves the workbook as an XLSX file. | Create a reusable method that accepts a Worksheet and a column index, then deletes all rows with null or blank cells in that column using Aspose.Cells.
+// Title: Delete rows with null values in a required column from an Excel ListObject using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, locates a ListObject by name, and removes every row where a specified column contains a null or empty string, then saves the workbook. | Write a reverse‑order loop in C# using Aspose.Cells to safely eliminate worksheet rows that have missing data in a required column of a table. | Adapt the example to eliminate rows based on multiple required columns while keeping the ListObject intact with Aspose.Cells.
+// Common Searches: aspnet delete rows from Excel table where column value is null using Aspose.Cells | c# remove rows with empty cells in a ListObject with Aspose.Cells | how to iterate Excel table rows in reverse and delete rows in Aspose.Cells | Aspose.Cells delete rows based on required column condition in .NET
+// Tags: Aspose.Cells null column row purge | C# ListObject reverse iteration deletion | Excel table required column validation Aspose.Cells | Aspose.Cells workbook save after row cleanup | Aspose.Cells multi‑column row removal
 
-using System;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// // Loads "input.xlsx", finds the ListObject "Table1", identifies the "RequiredColumn", iterates rows in reverse, deletes any worksheet row where that column is null or whitespace, and saves the result to "output.xlsx".
+class Program
 {
-    // The example builds a workbook, fills column A with sample entries, iterates from the last row upward, evaluates each cell in the mandatory column for null, DBNull or an empty string, deletes rows that meet the condition using Cells.DeleteRow, and writes the result to RowsDeleted.xlsx.
-    public class DeleteRowsWithNullInRequiredColumn
+    static void Main()
     {
-        public static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created and rows with null/empty values deleted successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
         }
 
-        public static void Run()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Load the workbook from the input file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Populate sample data (column A is the required column)
-            // Row 0 – Header
-            cells["A1"].PutValue("Name");
-            // Rows with data; some rows have null/empty values in the required column
-            cells["A2"].PutValue("Alice");   // valid
-            cells["A3"].PutValue("");        // null/empty – should be deleted
-            cells["A4"].PutValue("Bob");     // valid
-            cells["A5"].PutValue(null);      // null – should be deleted
-            cells["A6"].PutValue("Charlie"); // valid
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Determine the index of the required column (0‑based, column A)
-            int requiredColumnIndex = 0;
-
-            // Loop from the last data row upwards to avoid index shifting after deletions
-            for (int row = cells.MaxDataRow; row >= 0; row--)
+            // Get the table (ListObject) by its name; replace "Table1" with your actual table name
+            ListObject table = sheet.ListObjects["Table1"];
+            if (table == null)
             {
-                // Retrieve the cell value; it can be null, DBNull, or an empty string
-                object cellValue = cells[row, requiredColumnIndex].Value;
+                Console.WriteLine("Error: Table \"Table1\" not found in the worksheet.");
+                return;
+            }
 
-                // Check for null or empty string (treated as null for this scenario)
-                bool isNullOrEmpty = cellValue == null ||
-                                     (cellValue is string s && string.IsNullOrEmpty(s)) ||
-                                     (cellValue is DBNull);
-
-                if (isNullOrEmpty)
+            // Identify the required column by its header name; replace "RequiredColumn" with the actual column name
+            int requiredColIndex = -1;
+            for (int c = 0; c < table.ListColumns.Count; c++)
+            {
+                if (table.ListColumns[c].Name.Equals("RequiredColumn", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Delete the entire row
-                    cells.DeleteRow(row);
+                    requiredColIndex = c;
+                    break;
                 }
             }
 
-            // Save the workbook to a file
-            workbook.Save("RowsDeleted.xlsx", SaveFormat.Xlsx);
+            if (requiredColIndex == -1)
+            {
+                Console.WriteLine("Error: Column \"RequiredColumn\" not found in the table.");
+                return;
+            }
+
+            // Loop through the data rows of the table in reverse order to safely delete rows
+            for (int i = table.DataRange.RowCount - 1; i >= 0; i--)
+            {
+                // Calculate the absolute cell position for the required column in the current row
+                int rowIndex = table.DataRange.FirstRow + i;
+                int colIndex = table.DataRange.FirstColumn + requiredColIndex;
+
+                // Retrieve the cell
+                Cell cell = sheet.Cells[rowIndex, colIndex];
+
+                // Check if the cell value is null or empty
+                if (cell.Value == null || string.IsNullOrWhiteSpace(cell.StringValue))
+                {
+                    // Delete the entire row from the worksheet (the table will adjust automatically)
+                    sheet.Cells.DeleteRow(rowIndex);
+                }
+            }
+
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

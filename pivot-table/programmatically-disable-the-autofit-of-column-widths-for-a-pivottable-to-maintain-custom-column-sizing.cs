@@ -1,71 +1,78 @@
-// Title: Disable PivotTable Column Auto‑Fit in Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, accesses the first worksheet’s pivot table, sets PivotTable.AutofitColumnWidthOnUpdate to false, refreshes the pivot tables to apply the change, and saves the file so custom column widths are retained.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | AutofitColumnWidthOnUpdate | disable auto fit | column width preservation | refresh pivot tables | Excel automation | programmatic pivot settings
-// Common Searches: Aspose.Cells disable pivot column auto fit | C# set AutofitColumnWidthOnUpdate false | prevent pivot table column width change Aspose | keep custom column widths in pivot table using Aspose.Cells | refresh pivot tables after turning off autofit
-// Developer Intent: Turn off automatic column‑width adjustment for a PivotTable to keep manually defined widths.
-// Use Cases: Generate a report where column widths are predefined, then disable autofit before saving the workbook. | Apply the same setting to every PivotTable across multiple worksheets in a large Excel file. | Integrate the property change into an automated data‑export pipeline that creates pivot tables from raw data.
-// AI Prompts: Write C# code with Aspose.Cells that disables column auto‑fit for all pivot tables in a workbook and refreshes them. | Explain the effect of the AutofitColumnWidthOnUpdate property and list other configurable PivotTable options in Aspose.Cells for .NET. | Provide step‑by‑step instructions to set custom column widths after turning off autofit for a pivot table.
+// Title: How to disable column auto‑fit for an Aspose.Cells PivotTable and set fixed column widths in C#
+// AI Prompts: Write C# code using Aspose.Cells to create a PivotTable, assign manual column widths, and ensure the widths are preserved when the pivot is refreshed. | Show the steps to prevent a PivotTable from automatically adjusting column sizes in Aspose.Cells, including setting column widths and refreshing the pivot.
+// Common Searches: Aspose.Cells keep custom column widths in pivot table after refresh | prevent pivot table column auto‑sizing in C# Aspose.Cells | set manual column width for Aspose.Cells pivot table | how to stop column auto‑fit when updating Aspose.Cells pivot
+// Tags: Aspose.Cells PivotTable column width management | C# Aspose.Cells disable column autofit | manual column sizing for Aspose pivot tables | Aspose.Cells refresh pivot without auto‑fit | fixed column width Aspose.Cells pivot example
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace Example
+namespace AsposeCellsPivotAutoFitDemo
 {
-    // Loads a workbook, accesses the first worksheet’s pivot table, sets PivotTable.AutofitColumnWidthOnUpdate to false, refreshes the pivot tables to apply the change, and saves the file so custom column widths are retained.
-    class DisablePivotAutoFit
+    // The example creates a workbook, adds sample data, builds a PivotTable on a separate sheet, manually sets column widths, disables the AutofitColumnWidthOnUpdate property, refreshes the pivot to retain the custom widths, and saves the file as PivotTable_NoAutoFit.xlsx.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            try
-            {
-                string inputPath = "input.xlsx";
-                string outputPath = "output.xlsx";
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
+            // Access the first worksheet (source data)
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Populate sample data for the pivot table
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Product");
+            dataSheet.Cells["C1"].PutValue("Sales");
 
-                // Ensure the workbook has at least one worksheet
-                if (workbook.Worksheets.Count == 0)
-                {
-                    Console.WriteLine("The workbook contains no worksheets.");
-                    return;
-                }
+            dataSheet.Cells["A2"].PutValue("Electronics");
+            dataSheet.Cells["B2"].PutValue("Laptop");
+            dataSheet.Cells["C2"].PutValue(1200);
 
-                Worksheet worksheet = workbook.Worksheets[0];
+            dataSheet.Cells["A3"].PutValue("Electronics");
+            dataSheet.Cells["B3"].PutValue("Phone");
+            dataSheet.Cells["C3"].PutValue(800);
 
-                // Ensure the worksheet contains at least one pivot table
-                if (worksheet.PivotTables.Count == 0)
-                {
-                    Console.WriteLine("No pivot tables found on the first worksheet.");
-                    return;
-                }
+            dataSheet.Cells["A4"].PutValue("Furniture");
+            dataSheet.Cells["B4"].PutValue("Chair");
+            dataSheet.Cells["C4"].PutValue(150);
 
-                // Retrieve the first pivot table
-                PivotTable pivotTable = worksheet.PivotTables[0];
+            dataSheet.Cells["A5"].PutValue("Furniture");
+            dataSheet.Cells["B5"].PutValue("Table");
+            dataSheet.Cells["C5"].PutValue(300);
 
-                // Disable automatic column width adjustment on update
-                pivotTable.AutofitColumnWidthOnUpdate = false;
+            // Add a new worksheet to host the pivot table
+            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
 
-                // Refresh pivot tables to apply the setting
-                worksheet.RefreshPivotTables();
+            // Create the pivot table using the source range
+            int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:C5", "A3", "SalesPivot");
+            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-                // Save the modified workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Configure pivot fields
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // Calculate the pivot data
+            pivotTable.CalculateData();
+
+            // Manually set column widths to desired values
+            // (example: set first three columns to a fixed width)
+            pivotSheet.Cells.SetColumnWidth(0, 15); // Column A
+            pivotSheet.Cells.SetColumnWidth(1, 20); // Column B
+            pivotSheet.Cells.SetColumnWidth(2, 12); // Column C
+
+            // Disable auto‑fit of column widths on pivot table update
+            pivotTable.AutofitColumnWidthOnUpdate = false;
+
+            // Refresh pivot tables to apply the setting (no auto‑fit will occur)
+            pivotSheet.RefreshPivotTables();
+
+            // Save the workbook
+            workbook.Save("PivotTable_NoAutoFit.xlsx");
+
+            Console.WriteLine("Pivot table created with auto‑fit disabled and custom column widths applied.");
         }
     }
 }

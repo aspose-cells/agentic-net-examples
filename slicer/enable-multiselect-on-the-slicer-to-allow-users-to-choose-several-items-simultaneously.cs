@@ -1,10 +1,7 @@
-// Title: Aspose.Cells for .NET – Enable Multi‑Select on a Pivot Table Slicer (C#)
-// Description: This C# sample builds a workbook with fruit sales data, creates a pivot table, activates multiple‑item selection on the row field by setting the page field’s IsMultipleItemSelectionAllowed property, adds a slicer linked to the Fruit field, programmatically selects the first two items, refreshes the slicer, and saves the file as SlicerMultiSelectDemo.xlsx.
-// Keywords: Aspose.Cells | C# | pivot table slicer | multi‑select slicer | IsMultipleItemSelectionAllowed | programmatic slicer selection | Excel slicer .NET | Aspose.Cells API | slicer cache items
-// Common Searches: Aspose.Cells enable slicer multi select | C# set slicer to allow multiple items | How to programmatically select slicer items Aspose.Cells | Multi‑select pivot slicer Aspose.Cells .NET | Set IsMultipleItemSelectionAllowed property
-// Developer Intent: Configure a slicer so users can pick several items at once and set default selections via code.
-// Use Cases: Allow end‑users to filter a pivot table by multiple fruit categories simultaneously. | Pre‑select Apple and Orange when the workbook opens to display combined sales. | Drive charts and tables in a dashboard where slicer multi‑select controls the data view. | Automate report generation that requires specific slicer filters applied programmatically.
-// AI Prompts: Generate C# code that enables multi‑select on an Aspose.Cells slicer linked to a pivot table. | Show how to set IsMultipleItemSelectionAllowed and pre‑select slicer items using Aspose.Cells for .NET. | Explain the steps to add a slicer, enable multiple selections, and refresh it in a workbook.
+// Title: How to enable multi‑select on an Aspose.Cells slicer linked to a pivot table in C#
+// AI Prompts: Generate C# code that configures a pivot field to allow multiple item selection and links a slicer to it using Aspose.Cells. | Show how to programmatically clear existing selections and pre‑select specific slicer items (e.g., Apple and Orange) with Aspose.Cells for .NET. | Explain the steps to refresh a slicer after modifying its selection state in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells C# enable multi select on slicer for pivot table | set IsMultipleItemSelectionAllowed property Aspose.Cells slicer | preselect items in Aspose.Cells slicer programmatically | refresh slicer after changing selection Aspose.Cells .NET | create slicer linked to pivot field with multiple selection Aspose.Cells
+// Tags: Aspose.Cells slicer multiple item selection | C# pivot table slicer linking | IsMultipleItemSelectionAllowed usage | programmatic slicer cache item selection | slicer refresh method Aspose.Cells
 
 using System;
 using Aspose.Cells;
@@ -13,7 +10,7 @@ using Aspose.Cells.Slicers;
 
 namespace AsposeCellsSlicerMultiSelectDemo
 {
-    // This C# sample builds a workbook with fruit sales data, creates a pivot table, activates multiple‑item selection on the row field by setting the page field’s IsMultipleItemSelectionAllowed property, adds a slicer linked to the Fruit field, programmatically selects the first two items, refreshes the slicer, and saves the file as SlicerMultiSelectDemo.xlsx.
+    // The example creates a workbook, adds sample data and a pivot table, enables multiple item selection on the 'Fruit' pivot field, inserts a slicer linked to that field, clears all selections, pre‑selects 'Apple' and 'Orange', refreshes the slicer, and saves the file as SlicerMultiSelectDemo.xlsx.
     class Program
     {
         static void Main()
@@ -25,49 +22,55 @@ namespace AsposeCellsSlicerMultiSelectDemo
 
             // Populate sample data for the pivot table
             cells["A1"].Value = "Fruit";
-            cells["B1"].Value = "Sales";
+            cells["B1"].Value = "Quantity";
             cells["A2"].Value = "Apple";
-            cells["B2"].Value = 120;
+            cells["B2"].Value = 10;
             cells["A3"].Value = "Orange";
-            cells["B3"].Value = 150;
+            cells["B3"].Value = 15;
             cells["A4"].Value = "Banana";
-            cells["B4"].Value = 90;
+            cells["B4"].Value = 20;
             cells["A5"].Value = "Apple";
-            cells["B5"].Value = 80;
+            cells["B5"].Value = 5;
             cells["A6"].Value = "Orange";
-            cells["B6"].Value = 70;
+            cells["B6"].Value = 8;
 
             // Add a pivot table based on the data range
             int pivotIndex = sheet.PivotTables.Add("A1:B6", "D3", "PivotTable1");
             PivotTable pivot = sheet.PivotTables[pivotIndex];
-            // Row field (the slicer will be based on this field)
+
+            // Add the "Fruit" field to the Row area (this will become the slicer field)
             pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-            // Data field
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            // Add the "Quantity" field to the Data area
+            pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+
+            // Refresh and calculate the pivot table
             pivot.RefreshData();
             pivot.CalculateData();
 
-            // Enable multiple item selection for the page field (required for slicer multi‑select)
-            // The row field automatically becomes a page field when a slicer is added.
-            // Access the first page field and set the property.
-            if (pivot.PageFields.Count > 0)
-            {
-                PivotField pageField = pivot.PageFields[0];
-                pageField.IsMultipleItemSelectionAllowed = true;
-            }
+            // Enable multiple item selection for the page field (the slicer field)
+            // The field appears in PageFields after it is added to the slicer, but we can access it via BaseFields
+            // Here we use the first BaseField (index 0) which corresponds to "Fruit"
+            PivotField fruitField = pivot.BaseFields[0];
+            fruitField.IsMultipleItemSelectionAllowed = true;
 
-            // Add a slicer linked to the "Fruit" field of the pivot table
-            int slicerIndex = sheet.Slicers.Add(pivot, "F3", "Fruit");
+            // Add a slicer linked to the "Fruit" field
+            // Using the overload that takes the field name
+            int slicerIndex = sheet.Slicers.Add(pivot, "E3", "Fruit");
             Slicer slicer = sheet.Slicers[slicerIndex];
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
-            slicer.Caption = "Fruit Slicer";
 
-            // Select multiple items in the slicer (e.g., first two items)
-            for (int i = 0; i < slicer.SlicerCache.SlicerCacheItems.Count; i++)
+            // Optional: pre‑select a couple of items to demonstrate multi‑selection
+            // By default all items are selected; here we deselect all and then select two items
+            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
             {
-                SlicerCacheItem item = slicer.SlicerCache.SlicerCacheItems[i];
-                // Select the first two items, deselect the rest
-                item.Selected = i < 2;
+                item.Selected = false; // clear previous selection
+            }
+            // Select "Apple" and "Orange"
+            foreach (SlicerCacheItem item in slicer.SlicerCache.SlicerCacheItems)
+            {
+                if (item.Value == "Apple" || item.Value == "Orange")
+                {
+                    item.Selected = true;
+                }
             }
 
             // Refresh the slicer to apply the selection changes

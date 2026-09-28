@@ -1,65 +1,68 @@
-// Title: Detect Cells Using ThemeColorIndex (Font, Fill, Background) with Aspose.Cells for .NET
-// Description: A C# sample that loads an Excel workbook, scans every used cell, checks the Style object for Font.ThemeColor, ForegroundThemeColor, or BackgroundThemeColor, and writes the addresses of cells that employ the ThemeColorIndex enumeration to the console.
-// Keywords: Aspose.Cells ThemeColorIndex detection | C# find theme colored cells | Excel theme color audit .NET | list cells with theme font color | check theme fill color Aspose
-// Common Searches: Aspose.Cells how to locate cells with ThemeColorIndex | C# code to list cells using theme colors in Excel | detect theme font or fill color in workbook | search cells for ThemeColor in Aspose.Cells | audit Excel theme colors with .NET
-// Developer Intent: Identify every cell whose style references ThemeColorIndex and output its address.
-// Use Cases: Verify corporate theme colors are applied consistently before publishing a workbook. | Create a report of theme‑based formatting prior to converting to PDF or image formats. | Ensure no theme colors remain when exporting to formats that do not support them.
-// AI Prompts: Generate C# code that collects cell addresses with Font.ThemeColor, ForegroundThemeColor, or BackgroundThemeColor set and stores them in a List<string>. | Optimize the ThemeColor checker to skip rows/columns without formatting and export results to a CSV file. | Explain how to extend the example to capture ThemeColorIndex used in custom styles and include the color type in the output.
+// Title: Identify and log Excel cells that use ThemeColor formatting with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, scans every worksheet, and prints the addresses of cells whose font, foreground, or background style has a non‑default ThemeColor. | Create a reusable method that accepts a Worksheet object and returns a list of cell names where any ThemeColor property (Font.ThemeColor, ForegroundThemeColor, BackgroundThemeColor) is set, then output each cell together with its worksheet name. | Adapt the example to write the detected ThemeColor cell addresses to a CSV file, including columns for worksheet name, cell address, and the specific ThemeColor property that triggered the detection.
+// Common Searches: C# Aspose.Cells how to find cells with theme color formatting in an Excel workbook | list all cells using ThemeColor enum in .xlsx using Aspose.Cells for .NET | detect non-default ThemeColor in cell styles with Aspose.Cells C# example | log addresses of cells that have font or fill theme colors using Aspose.Cells | iterate through worksheets and check ThemeColor properties in Aspose.Cells
+// Tags: Aspose.Cells scan ThemeColor in cell styles | C# detect ThemeColor usage in Excel worksheets | log cell addresses with ThemeColor formatting | enumerate cells using ThemeColor enum Aspose.Cells | extract ThemeColor‑styled cells from .xlsx
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThemeColorChecker
+// The program loads an Excel workbook, iterates through each worksheet and its used cells, checks whether the cell's font, foreground, or background style uses a non‑default ThemeColor, and writes the worksheet name and cell address to the console for every match.
+class Program
 {
-    // A C# sample that loads an Excel workbook, scans every used cell, checks the Style object for Font.ThemeColor, ForegroundThemeColor, or BackgroundThemeColor, and writes the addresses of cells that employ the ThemeColorIndex enumeration to the console.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        const string inputPath = "input.xlsx";
 
-            // Iterate through all worksheets
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: File not found – {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook from the specified file
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Iterate through each worksheet in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
-                // Determine the used range
-                int maxRow = cells.MaxDataRow;
-                int maxCol = cells.MaxDataColumn;
 
-                // Scan each cell within the used range
-                for (int row = 0; row <= maxRow; row++)
+                // Iterate through all used cells in the worksheet
+                foreach (Cell cell in cells)
                 {
-                    for (int col = 0; col <= maxCol; col++)
+                    // Retrieve the cell's style
+                    Style style = cell.GetStyle();
+
+                    // Determine if the cell's fill or font uses a ThemeColor value
+                    bool usesThemeColor =
+                        style.Font.ThemeColor != default(ThemeColor) ||
+                        style.ForegroundThemeColor != default(ThemeColor) ||
+                        style.BackgroundThemeColor != default(ThemeColor);
+
+                    // If a ThemeColor is used, log the cell address
+                    if (usesThemeColor)
                     {
-                        Cell cell = cells[row, col];
-                        // Skip empty cells
-                        if (cell == null || cell.Type == CellValueType.IsNull) continue;
-
-                        Style style = cell.GetStyle();
-
-                        // Check for theme color usage in font
-                        if (style.Font.ThemeColor != null)
-                        {
-                            Console.WriteLine($"Cell {cell.Name} uses ThemeColor in Font (Type: {style.Font.ThemeColor.ColorType})");
-                        }
-
-                        // Check for theme color usage in foreground/background
-                        if (style.ForegroundThemeColor != null)
-                        {
-                            Console.WriteLine($"Cell {cell.Name} uses ThemeColor in Foreground (Type: {style.ForegroundThemeColor.ColorType})");
-                        }
-
-                        if (style.BackgroundThemeColor != null)
-                        {
-                            Console.WriteLine($"Cell {cell.Name} uses ThemeColor in Background (Type: {style.BackgroundThemeColor.ColorType})");
-                        }
+                        Console.WriteLine($"Worksheet: {sheet.Name}, Cell: {cell.Name}");
                     }
                 }
             }
-
-            // Save the workbook (optional, unchanged)
-            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Runtime error: {ex.Message}");
         }
     }
 }

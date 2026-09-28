@@ -1,44 +1,60 @@
-// Title: Unhide All Columns, Show Scrollbars, and Save Workbook with Aspose.Cells for .NET
-// Description: C# example that removes hidden columns from a worksheet, activates horizontal and vertical scrollbars via Workbook.Settings, and saves the modified workbook to a specified file path using Aspose.Cells.
-// Keywords: Aspose.Cells unhide columns C# | Workbook.Settings scrollbars | UnhideColumn method Aspose.Cells | IsColumnHidden loop | save workbook to custom location | Excel column visibility programmatically | C# enable scrollbars Aspose.Cells | export workbook Aspose.Cells | set default column width C# | Aspose.Cells workbook settings
-// Common Searches: How to unhide every column in an Aspose.Cells worksheet using C# | Enable horizontal and vertical scrollbars in an Aspose.Cells workbook | Save an Aspose.Cells workbook to a specific folder after changing settings | Loop through columns to reveal hidden ones with Aspose.Cells | Aspose.Cells C# example for column visibility and scrollbar options
-// Developer Intent: Reveal all hidden columns, turn on both scrollbars, and write the workbook to a chosen file.
-// Use Cases: Prepare a template before distribution by ensuring no columns remain hidden. | Generate reports that require visible scrollbars for better navigation in Excel. | Automate cleanup of temporary workbooks—unhide columns, enable scrollbars, then store them for downstream processing.
-// AI Prompts: Create C# code with Aspose.Cells that iterates through all columns, unhides any that are hidden, and sets a default width. | Show how to activate horizontal and vertical scrollbars in an Aspose.Cells workbook before saving it as an XLSX file. | Provide a complete Aspose.Cells example that hides sample columns, then programmatically unhides them, enables scrollbars, and saves the file to a new location.
+// Title: How to unhide all columns, enable scrollbars, and save a worksheet to a new XLSX file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# example with Aspose.Cells that loads a workbook, makes every column in the first worksheet visible, activates worksheet scrollbars, and saves the file to a specified output path. | Provide Aspose.Cells .NET code that iterates over all used columns, sets Columns.IsHidden to false, creates the destination folder if it does not exist, and exports the workbook as an XLSX file to a different directory.
+// Common Searches: Aspose.Cells C# unhide all columns in worksheet and keep scrollbars visible | save modified Excel workbook to a new folder using Aspose.Cells .NET | how to programmatically enable scrollbars when exporting Excel with Aspose.Cells | C# code to iterate through columns and set IsHidden false in Aspose.Cells | Aspose.Cells example for copying workbook to new location after changing column visibility
+// Tags: column visibility Aspose.Cells C# | set column IsHidden false Aspose.Cells | worksheet scrollbars activation Aspose.Cells | export workbook to different directory Aspose.Cells | ensure output folder exists Aspose.Cells C#
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// C# example that removes hidden columns from a worksheet, activates horizontal and vertical scrollbars via Workbook.Settings, and saves the modified workbook to a specified file path using Aspose.Cells.
+// The sample loads an existing XLSX file, loops through every used column in the first worksheet to set Columns.IsHidden = false, guarantees the target directory exists, and saves the updated workbook to a new location as an XLSX file, handling missing files and runtime errors.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Paths for source workbook and destination workbook
+        string sourcePath = @"C:\Input\workbook.xlsx";
+        string destinationPath = @"C:\Output\workbook_unhidden.xlsx";
 
-        // (Optional) Hide some columns to demonstrate the unhide operation
-        cells.HideColumns(2, 3); // hides columns C, D, E (zero‑based)
-
-        // Unhide all columns in the worksheet
-        // Excel supports up to 256 columns in older formats; using 256 as a safe upper bound
-        for (int col = 0; col < 256; col++)
+        try
         {
-            if (cells.IsColumnHidden(col))
+            // Verify source file exists
+            if (!File.Exists(sourcePath))
             {
-                // Unhide the column and set a default width (e.g., 10 characters)
-                cells.UnhideColumn(col, 10);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Get the first worksheet (modify as needed for other sheets)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Unhide all columns in the worksheet
+            // MaxColumn returns the index of the last used column (0‑based)
+            int maxColumn = sheet.Cells.MaxColumn;
+            for (int col = 0; col <= maxColumn; col++)
+            {
+                // Use the Columns collection to set the IsHidden property
+                sheet.Cells.Columns[col].IsHidden = false;
+            }
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(destinationPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook to a new location
+            workbook.Save(destinationPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to: {destinationPath}");
         }
-
-        // Enable horizontal and vertical scroll bars
-        workbook.Settings.IsHScrollBarVisible = true;
-        workbook.Settings.IsVScrollBarVisible = true;
-
-        // Export (save) the workbook to a new location
-        string outputPath = @"C:\Temp\UnhiddenWorkbook.xlsx";
-        workbook.Save(outputPath, SaveFormat.Xlsx);
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

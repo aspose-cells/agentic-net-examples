@@ -1,68 +1,62 @@
-// Title: Aspose.Cells C# – Build a Column Chart Series from Numeric Cells in a Column
-// Description: Demonstrates how to enumerate a worksheet column, filter numeric cells, construct a non‑contiguous A1‑style range string, and assign it to a column chart series using Aspose.Cells for .NET. Includes optional category data and workbook saving.
-// Keywords: Aspose.Cells chart series C# | column chart from numeric cells | enumerate worksheet column Aspose | non contiguous data range Aspose.Cells | filter numeric values Excel chart | C# Aspose.Cells example
-// Common Searches: Aspose.Cells create chart series from specific cells | C# enumerate column and collect numeric cell addresses | build comma separated range for Aspose.Cells chart | add column chart with only numeric data Aspose | set category data for Aspose.Cells column chart
-// Developer Intent: Create a column chart that uses only the numeric entries from a mixed‑type column by dynamically building the data range.
-// Use Cases: Generate a sales bar chart while ignoring text labels in the source column. | Produce a performance chart from a column that mixes comments and values, displaying only the numbers. | Build a dynamic chart where the data range updates automatically as numeric cells are added or removed.
-// AI Prompts: Write C# code with Aspose.Cells that scans a column, gathers addresses of numeric cells, and adds them as a series to a column chart. | Show how to create a comma‑separated A1‑style range from non‑contiguous numeric cells for an Aspose.Cells chart series. | Explain setting category data for a chart when the series data is assembled from filtered numeric cells.
+// Title: Generate a column chart from only numeric cells in a mixed‑type column using Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates through a worksheet column, selects only numeric cells, builds a comma‑separated address range, and adds it as a series to a column chart with Aspose.Cells. | Create a method that returns a range string of numeric cell addresses and demonstrates using that string to populate NSeries data in an Aspose.Cells chart. | Show how to assign the category axis to a header cell while the data series is built from a dynamically assembled numeric range in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# create column chart using only numeric values from a column | filter non‑numeric cells when building chart series in Aspose.Cells .NET | build range string of specific cell addresses for chart series Aspose.Cells | dynamic data range for column chart from mixed data column Aspose.Cells
+// Tags: numeric cell filtering for chart series Aspose.Cells | dynamic range construction for column chart C# | add column chart with selective data Aspose.Cells | mixed data column handling Aspose.Cells | set chart category to header cell Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartSeriesFromColumn
+// The example creates a new workbook, fills column A with mixed text and numbers, extracts the addresses of numeric cells, builds a comma‑separated range string, adds a column chart, assigns the numeric range as the series data, sets the category axis to the header cell, and saves the file as ChartFromNumericColumn.xlsx.
+class CreateChartFromNumericColumn
 {
-    // Demonstrates how to enumerate a worksheet column, filter numeric cells, construct a non‑contiguous A1‑style range string, and assign it to a column chart series using Aspose.Cells for .NET. Includes optional category data and workbook saving.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Sheet1";
 
-            // Populate column A with mixed data (strings and numbers)
-            sheet.Cells["A1"].PutValue("Header");
-            sheet.Cells["A2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Text");
-            sheet.Cells["A4"].PutValue(25);
-            sheet.Cells["A5"].PutValue(30);
-            sheet.Cells["A6"].PutValue("Another");
-            sheet.Cells["A7"].PutValue(45);
-            sheet.Cells["A8"].PutValue(0);
-            sheet.Cells["A9"].PutValue("End");
-            sheet.Cells["A10"].PutValue(60);
-
-            // Enumerate the column and collect addresses of numeric cells
-            List<string> numericCellAddresses = new List<string>();
-            for (int row = 1; row <= 9; row++) // rows 2..10 (0‑based index)
+            // Populate column A with mixed data (numeric and non‑numeric)
+            string[] data = { "Header", "10", "Apple", "20", "30", "Banana", "40", "50", "Cherry", "60" };
+            for (int i = 0; i < data.Length; i++)
             {
-                Cell cell = sheet.Cells[row, 0]; // column A
+                sheet.Cells[i, 0].PutValue(data[i]);
+            }
+
+            // Collect addresses of numeric cells
+            List<string> numericAddresses = new List<string>();
+            for (int row = 0; row < data.Length; row++)
+            {
+                Cell cell = sheet.Cells[row, 0];
                 if (cell.Type == CellValueType.IsNumeric)
                 {
-                    // Build address in A1 style (e.g., $A$2)
-                    string address = $"${cell.Name}";
-                    numericCellAddresses.Add(address);
+                    numericAddresses.Add(cell.Name);
                 }
             }
 
-            // Build the data range string for the series (comma‑separated list)
-            // Example: =Sheet1!$A$2,$A$4,$A$5,...
-            string dataRange = $"=Sheet1!{string.Join(",", numericCellAddresses)}";
+            // Build the range string for the numeric values (e.g., Sheet1!A2,A4,A5)
+            string numericRange = $"{sheet.Name}!{string.Join(",", numericAddresses)}";
 
             // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
 
             // Add the series using the collected numeric range (vertical orientation)
-            chart.NSeries.Add(dataRange, true);
+            chart.NSeries.Add(numericRange, true);
 
-            // Optionally set category data (e.g., row numbers) for better display
-            chart.NSeries.CategoryData = "=Sheet1!$B$2:$B$10";
+            // Set category data (using the header cell)
+            chart.NSeries.CategoryData = $"{sheet.Name}!A1";
 
             // Save the workbook
             workbook.Save("ChartFromNumericColumn.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

@@ -1,33 +1,33 @@
-// Title: Create a custom view that hides columns G‑J and saves it with Aspose.Cells for .NET
-// Description: This example demonstrates how to generate a new workbook, hide columns G through J on the first worksheet using Cells.HideColumns, and store the configuration as a custom view that can be reopened later. The file is saved as CustomView_HideGtoJ.xlsx.
-// Keywords: Aspose.Cells hide columns C# | Cells.HideColumns example | custom view Excel Aspose | hide column range G-J | save workbook after hiding columns | Aspose.Cells .NET tutorial
-// Common Searches: how to hide columns G to J with Aspose.Cells C# | Aspose.Cells create custom view hide columns | C# hide multiple Excel columns programmatically | save Excel file after hiding columns using Aspose
-// Developer Intent: Hide columns G‑J in a worksheet, preserve the layout as a custom view, and save the workbook.
-// Use Cases: Prepare a printable report that excludes intermediate calculation columns. | Distribute a template where sensitive data columns are hidden by default. | Generate an export file that shows only the final results while keeping raw data hidden.
-// AI Prompts: Generate C# code with Aspose.Cells that hides columns G through J, creates a custom view, and saves the workbook. | Explain step‑by‑step how to use Cells.HideColumns to hide a column range and store it as a reusable view in an Excel file. | Show how to programmatically hide a set of columns and persist the view for later opening using Aspose.Cells for .NET.
+// Title: Hide columns G through J in an Aspose.Cells worksheet and save the workbook (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to hide columns G‑J (indices 6‑9) in the first worksheet and then saves the workbook as an .xlsx file. | Show how to programmatically hide a specific range of columns in an Aspose.Cells workbook and persist the changes to disk.
+// Common Searches: Aspose.Cells C# hide columns G to J and save workbook | How to hide a range of columns in Aspose.Cells .NET | C# Aspose.Cells hide columns by index example | Saving hidden column settings with Aspose.Cells | Aspose.Cells hide columns programmatically and export to Excel
+// Tags: hide columns Aspose.Cells C# | Aspose.Cells column visibility range | Aspose.Cells save workbook with hidden columns | Aspose.Cells hide column indices | Aspose.Cells worksheet column hide example
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// This example demonstrates how to generate a new workbook, hide columns G through J on the first worksheet using Cells.HideColumns, and store the configuration as a custom view that can be reopened later. The file is saved as CustomView_HideGtoJ.xlsx.
+// The sample creates a new Workbook, accesses the first worksheet, hides columns G through J using Cells.HideColumns(6, 4), and saves the file as CustomViewHideColumns.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Hide columns G through J (zero‑based indexes 6,7,8,9)
-            // HideColumns(startColumn, totalColumns) hides a range of columns
-            sheet.Cells.HideColumns(6, 4);
+            // Hide columns G (index 6) through J (index 9)
+            // HideColumns(startColumnIndex, totalColumnsToHide)
+            sheet.Cells.HideColumns(6, 4); // hides columns 6,7,8,9
 
             // Save the workbook
-            string outputPath = "CustomView_HideGtoJ.xlsx";
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            string outputPath = "CustomViewHideColumns.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
         }
         catch (Exception ex)
         {

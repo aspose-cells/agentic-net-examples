@@ -1,10 +1,7 @@
-// Title: C# – Extract Excel array formulas to a JSON file using Aspose.Cells
-// Description: Load an Excel workbook with Aspose.Cells, scan each worksheet for cells where IsArrayFormula is true, collect the formula strings, and serialize them to a formatted JSON array saved to disk.
-// Keywords: Aspose.Cells C# extract array formulas | export Excel formulas to JSON .NET | cell.IsArrayFormula example | C# write JSON file from Excel | Aspose.Cells workbook iteration | GitHub Aspose.Cells sample | Excel array formula extraction | JSON serialization System.Text.Json
-// Common Searches: how to get array formulas from Excel using Aspose.Cells | save extracted formulas as JSON in C# | Aspose.Cells IsArrayFormula property usage | C# convert Excel formulas to JSON array | example code for extracting Excel formulas with Aspose
-// Developer Intent: Retrieve every array‑formula string from an Excel workbook and output them as a JSON array.
-// Use Cases: Generate a catalog of all array formulas in a financial model for documentation. | Migrate spreadsheet logic by exporting array formulas to JSON for analysis or conversion to another platform. | Audit workbooks for unexpected array formulas by comparing the exported list with a compliance whitelist.
-// AI Prompts: Write C# code that opens an Excel file with Aspose.Cells, extracts only array formulas, and returns them as a List<string>. | Modify the sample to include each cell address (e.g., A1) alongside its array formula in the JSON output. | Explain performance‑optimizing techniques for extracting array formulas from large workbooks with Aspose.Cells, including memory‑management tips.
+// Title: Extract distinct array formula strings from an Excel workbook and export them to a JSON file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx workbook with Aspose.Cells, iterates every worksheet, identifies cells where IsArrayFormula is true, and collects each unique formula text into a List<string>. | Create a method that receives a List<string> of formulas and writes it as a pretty‑printed JSON array using System.Text.Json, ensuring the destination folder exists beforehand. | Add comprehensive error handling to the extraction routine to detect missing input files, catch I/O exceptions, and log the count of extracted array formulas.
+// Common Searches: how to get all array formulas from an Excel file with Aspose.Cells in C# | C# Aspose.Cells extract unique formula strings and save as JSON | export Excel array formulas to JSON using .NET | iterate worksheets and check IsArrayFormula property Aspose.Cells example | handle missing workbook file when extracting formulas with Aspose.Cells
+// Tags: Aspose.Cells extract array formulas | C# serialize formulas to JSON | unique Excel formula collection .NET | IsArrayFormula property usage | create output directory before file write
 
 using System;
 using System.Collections.Generic;
@@ -12,55 +9,92 @@ using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
 
-// Load an Excel workbook with Aspose.Cells, scan each worksheet for cells where IsArrayFormula is true, collect the formula strings, and serialize them to a formatted JSON array saved to disk.
-class ExtractArrayFormulas
+// The program loads an Excel workbook via Aspose.Cells, scans all worksheets and used cells, detects cells marked as array formulas (IsArrayFormula), gathers each distinct formula string, and writes the collection as an indented JSON array to a specified file while handling missing input files and ensuring the output directory exists.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel workbook
-        string excelPath = "input.xlsx";
+        // Paths for input Excel and output JSON
+        string inputPath = "input.xlsx";
+        string outputPath = "arrayFormulas.json";
 
-        // Path where the JSON array will be saved
-        string jsonPath = "arrayFormulas.json";
-
-        // Load the workbook (lifecycle rule: load)
-        Workbook workbook = new Workbook(excelPath);
-
-        // List to collect formula strings from array-formula cells
-        List<string> arrayFormulas = new List<string>();
-
-        // Iterate through each worksheet in the workbook
-        foreach (Worksheet sheet in workbook.Worksheets)
+        try
         {
-            Cells cells = sheet.Cells;
-
-            // Determine the used range to limit iteration
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            // Scan every cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col <= maxCol; col++)
-                {
-                    Cell cell = cells[row, col];
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
+            }
 
-                    // Check if the cell contains an array formula
-                    if (cell.IsArrayFormula)
+            // Load the workbook (Aspose.Cells automatically detects the format)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Collection for extracted array formula texts
+            List<string> arrayFormulas = new List<string>();
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Get the used range of the worksheet
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+                // If the worksheet is empty, skip it
+                if (usedRange.RowCount == 0 || usedRange.ColumnCount == 0)
+                    continue;
+
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                // Scan each cell within the used range
+                for (int row = startRow; row <= endRow; row++)
+                {
+                    for (int col = startCol; col <= endCol; col++)
                     {
-                        // Extract the formula text and add it to the list
-                        arrayFormulas.Add(cell.Formula);
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Identify array formulas
+                        if (cell.IsArrayFormula)
+                        {
+                            string formulaText = cell.Formula; // includes leading '='
+
+                            // Optional deduplication
+                            if (!arrayFormulas.Contains(formulaText))
+                            {
+                                arrayFormulas.Add(formulaText);
+                            }
+                        }
                     }
                 }
             }
+
+            // Serialize the list to formatted JSON
+            string json = JsonSerializer.Serialize(arrayFormulas, new JsonSerializerOptions { WriteIndented = true });
+
+            // Ensure the output directory exists
+            try
+            {
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Write JSON to the output file
+                File.WriteAllText(outputPath, json);
+                Console.WriteLine($"Extracted {arrayFormulas.Count} array formulas and saved to '{outputPath}'.");
+            }
+            catch (Exception ioEx)
+            {
+                Console.WriteLine($"Failed to write output file: {ioEx.Message}");
+            }
         }
-
-        // Convert the list of formulas to a JSON array string
-        string json = JsonSerializer.Serialize(arrayFormulas, new JsonSerializerOptions { WriteIndented = true });
-
-        // Save the JSON string to a file (lifecycle rule: save)
-        File.WriteAllText(jsonPath, json);
-
-        Console.WriteLine($"Extracted {arrayFormulas.Count} array formulas and saved to '{jsonPath}'.");
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

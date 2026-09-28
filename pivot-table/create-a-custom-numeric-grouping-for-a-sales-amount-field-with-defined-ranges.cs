@@ -1,83 +1,82 @@
-// Title: Aspose.Cells .NET: Create a Pivot Table with Custom Numeric Grouping for Sales Amounts
-// Description: Demonstrates how to build a workbook, add sample sales data, generate a pivot table, place the Sales field in Row and Data areas, and apply a numeric range grouping (0‑10,000 with a 2,000 interval) using PivotField.GroupBy without creating a new field. The pivot is refreshed, recalculated, and saved as an Excel file.
-// Keywords: Aspose.Cells pivot table numeric grouping | C# custom range grouping | PivotField.GroupBy example | group sales amounts by interval .NET | Aspose.Cells custom numeric range | Excel pivot numeric range grouping | Aspose.Cells .NET tutorial
-// Common Searches: Aspose.Cells how to group numeric field in pivot table | C# pivot table custom range grouping Aspose | Set start end interval for pivot numeric grouping .NET | Apply numeric range grouping without new field Aspose.Cells | Pivot table sales grouping 2000 interval C#
-// Developer Intent: The developer needs to generate a pivot table and apply a custom numeric range grouping to the Sales column programmatically.
-// Use Cases: Summarize sales totals in fixed intervals (0‑1999, 2000‑3999, etc.) for financial dashboards. | Produce a compact report that shows aggregated sales per range without adding extra worksheet columns. | Programmatically adjust grouping intervals to explore different sales distribution views from the same data set.
-// AI Prompts: Show how to change the grouping interval to 5,000 and update the pivot table using Aspose.Cells. | Provide code to list each generated numeric group label after calling GroupBy. | Explain how to create a separate pivot field for the grouped sales values instead of grouping the original field.
+// Title: How to define a custom numeric range grouping for a Sales field in an Aspose.Cells pivot table using C#
+// AI Prompts: Generate C# code that creates a workbook, inserts Region and Sales data, builds a pivot table, and groups the Sales row field into numeric ranges from 0 to 10000 with a 2000 interval using Aspose.Cells. | Write C# to access the PivotField after grouping and print its Start, End, and Interval values with Aspose.Cells.
+// Common Searches: Aspose.Cells C# group pivot table row field by numeric range 0-10000 interval 2000 | How to set custom numeric grouping for sales amounts in an Aspose.Cells pivot table | Retrieve numeric group settings from a pivot field using Aspose.Cells for .NET | Create a pivot table with sales data and custom range groups in C# Aspose.Cells | Aspose.Cells GroupBy method numeric range example C#
+// Tags: Aspose.Cells pivot numeric grouping | C# GroupBy numeric range Aspose.Cells | sales amount range groups pivot | pivot field group settings retrieval | export workbook with custom groups .xlsx
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace CustomNumericGroupingDemo
+namespace AsposeCellsCustomNumericGrouping
 {
-    // Demonstrates how to build a workbook, add sample sales data, generate a pivot table, place the Sales field in Row and Data areas, and apply a numeric range grouping (0‑10,000 with a 2,000 interval) using PivotField.GroupBy without creating a new field. The pivot is refreshed, recalculated, and saved as an Excel file.
+    // The example builds a workbook, adds Region and Sales columns, creates a pivot table, places Sales as a row field and Region as a column field, then applies a numeric grouping from 0 to 10000 with a 2000 interval to the Sales field. After refreshing and calculating the pivot, it prints the grouping parameters (Start, End, Interval) and saves the file as CustomNumericGrouping.xlsx.
     public class Program
     {
         public static void Main()
         {
             try
             {
-                // Create a new workbook and a worksheet for source data
+                // Create a new workbook and add sample data
                 Workbook workbook = new Workbook();
                 Worksheet dataSheet = workbook.Worksheets[0];
                 dataSheet.Name = "Data";
 
-                // Populate sample sales data
-                dataSheet.Cells["A1"].PutValue("Sales");
-                double[] salesValues = { 500, 1500, 2500, 3500, 4500, 5500, 6500, 7500, 8500, 9500 };
-                for (int i = 0; i < salesValues.Length; i++)
+                dataSheet.Cells["A1"].PutValue("Region");
+                dataSheet.Cells["B1"].PutValue("Sales");
+
+                string[] regions = { "North", "South", "East", "West", "North", "South", "East", "West" };
+                double[] sales =   { 1200, 3400, 5600, 7800, 2100, 4300, 6500, 8700 };
+
+                for (int i = 0; i < regions.Length; i++)
                 {
-                    dataSheet.Cells[i + 1, 0].PutValue(salesValues[i]);
+                    dataSheet.Cells[i + 1, 0].PutValue(regions[i]);   // Region column
+                    dataSheet.Cells[i + 1, 1].PutValue(sales[i]);    // Sales column
                 }
 
-                // Add a worksheet to host the pivot table
+                // Add a worksheet for the pivot table
                 Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-                // Create a pivot table based on the sales data range
-                int pivotIndex = pivotSheet.PivotTables.Add("=Data!A1:A11", "A1", "SalesPivot");
+                // Create a pivot table based on the data range
+                int pivotIndex = pivotSheet.PivotTables.Add(
+                    "Data!A1:B9",   // source range (including header)
+                    "A3",           // destination cell in pivot sheet
+                    "SalesPivot"); // pivot table name
+
                 PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-                // Add the Sales field to the Row area
+                // Configure fields
                 pivotTable.AddFieldToArea(PivotFieldType.Row, "Sales");
-
-                // Add the Sales field to the Data area to show sum of each group
+                pivotTable.AddFieldToArea(PivotFieldType.Column, "Region");
                 pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
 
-                // Refresh the pivot table so that fields are materialized
-                pivotTable.RefreshData();
-
-                // Retrieve the pivot field that represents the Sales column
+                // Get the Sales row field and apply custom numeric grouping
                 PivotField salesField = pivotTable.RowFields[0];
+                salesField.GroupBy(0.0, 10000.0, 2000.0, true);
 
-                // Define custom numeric grouping: 0‑9999 with 2000 interval
-                double start = 0.0;
-                double end = 10000.0;
-                double interval = 2000.0;
+                // Refresh and calculate the pivot table
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
 
-                // Apply the numeric range grouping; false indicates we do NOT create a new field
-                salesField.GroupBy(start, end, interval, false);
-
-                // Verify grouping settings (guard against null)
-                if (salesField.GroupSettings is PivotNumbericRangeGroupSettings groupSettings)
+                // Retrieve and display group settings if available
+                var groupSettings = salesField.GroupSettings as PivotNumbericRangeGroupSettings;
+                if (groupSettings != null)
                 {
-                    Console.WriteLine("Numeric grouping applied. Interval = " + groupSettings.Interval);
+                    Console.WriteLine("Numeric grouping created:");
+                    Console.WriteLine($"Start = {groupSettings.Start}");
+                    Console.WriteLine($"End   = {groupSettings.End}");
+                    Console.WriteLine($"Interval = {groupSettings.Interval}");
                 }
                 else
                 {
-                    Console.WriteLine("Grouping settings were not applied.");
+                    Console.WriteLine("Group settings were not created.");
                 }
 
-                // Recalculate the pivot table to reflect grouping
-                pivotTable.CalculateData();
-
-                // Save the workbook with the pivot table and custom grouping
+                // Save the workbook
                 workbook.Save("CustomNumericGrouping.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

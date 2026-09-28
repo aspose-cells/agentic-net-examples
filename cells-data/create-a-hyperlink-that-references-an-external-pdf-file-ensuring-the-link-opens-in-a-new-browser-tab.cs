@@ -1,40 +1,32 @@
-// Title: Insert a PDF hyperlink in Aspose.Cells (C#) and export to HTML with a _blank target
-// Description: Demonstrates how to add a hyperlink to an external PDF in cell A1, set its display text and screen tip, configure HtmlSaveOptions.LinkTargetType to open links in a new browser tab, and save the workbook as an HTML file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PDF hyperlink | C# HtmlSaveOptions LinkTargetType Blank | open hyperlink in new tab | set hyperlink TextToDisplay | set hyperlink ScreenTip | export Excel to HTML Aspose | .NET Aspose.Cells hyperlink example
-// Common Searches: Aspose.Cells add hyperlink to PDF and open in new tab | C# HtmlSaveOptions LinkTargetType Blank example | How to set screen tip for hyperlink in Aspose.Cells | Export Excel workbook to HTML with _blank links | Aspose.Cells create clickable PDF links in worksheet
-// Developer Intent: Add a PDF hyperlink to a worksheet, customize its label and tooltip, and generate HTML where the link opens in a new browser tab.
-// Use Cases: Generate web‑ready reports that reference PDF manuals without leaving the page. | Create an online product catalog where each item links to a downloadable brochure. | Publish Excel‑based dashboards with external documentation links that open in separate tabs.
-// AI Prompts: Write C# code with Aspose.Cells to insert a PDF hyperlink in cell A1, set TextToDisplay and ScreenTip, configure HtmlSaveOptions to use the _blank target, and save as HTML. | Explain the effect of HtmlSaveOptions.LinkTargetType = HtmlLinkTargetType.Blank on hyperlink behavior in exported HTML. | Show how to retrieve a newly added hyperlink from a worksheet and modify its properties using Aspose.Cells.
+// Title: Generate an HTML file with a cell hyperlink to an external PDF that opens in a new browser tab using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to insert a hyperlink to a PDF URL in cell A1 and export the workbook to HTML with the link set to open in a new tab. | Show how to set HtmlSaveOptions.LinkTargetType to HtmlLinkTargetType.Blank so that external links open in a new window when saving a workbook as HTML. | Demonstrate adding a worksheet cell hyperlink and saving the workbook as an HTML file while preserving the hyperlink's target behavior.
+// Common Searches: Aspose.Cells C# add hyperlink to PDF and export as HTML with _blank target | How to make hyperlinks open in a new tab when saving Excel to HTML using Aspose.Cells | Set HtmlLinkTargetType to Blank for external links in Aspose.Cells HTML export | Create HTML link to external PDF from Excel cell using Aspose.Cells .NET
+// Tags: Aspose.Cells PDF hyperlink cell | HtmlSaveOptions target blank | HTML export external links Aspose.Cells | C# set hyperlink new tab | save workbook as HTML Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHyperlinkExample
+// The example creates a new workbook, places a hyperlink in cell A1 that points to an external PDF, configures HtmlSaveOptions.LinkTargetType to Blank so the link opens in a new browser tab, and saves the workbook as an HTML file.
+class CreatePdfHyperlink
 {
-    // Demonstrates how to add a hyperlink to an external PDF in cell A1, set its display text and screen tip, configure HtmlSaveOptions.LinkTargetType to open links in a new browser tab, and save the workbook as an HTML file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a hyperlink to cell A1 that points to an external PDF file
-            // Parameters: cell name, total rows, total columns, address (URL of the PDF)
-            int hyperlinkIndex = worksheet.Hyperlinks.Add("A1", 1, 1, "https://example.com/document.pdf");
+        // Set the display text for the hyperlink
+        sheet.Cells["A1"].PutValue("Open PDF");
 
-            // Retrieve the created hyperlink to set display text and screen tip
-            Hyperlink hyperlink = worksheet.Hyperlinks[hyperlinkIndex];
-            hyperlink.TextToDisplay = "Open PDF Document";
-            hyperlink.ScreenTip = "Click to view the PDF in a new tab";
+        // Add a hyperlink to an external PDF file (opens in a browser)
+        // Parameters: cell name, total rows, total columns, address (URL to PDF)
+        sheet.Hyperlinks.Add("A1", 1, 1, "https://example.com/document.pdf");
 
-            // Configure HTML save options to open links in a new browser tab/window
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.LinkTargetType = HtmlLinkTargetType.Blank; // _blank target
+        // Configure HTML save options to open links in a new tab/window
+        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+        saveOptions.LinkTargetType = HtmlLinkTargetType.Blank; // _blank target
 
-            // Save the workbook as an HTML file using the configured options
-            workbook.Save("HyperlinkToPdf.html", saveOptions);
-        }
+        // Save the workbook as an HTML file with the specified options
+        workbook.Save("PdfLink.html", saveOptions);
     }
 }

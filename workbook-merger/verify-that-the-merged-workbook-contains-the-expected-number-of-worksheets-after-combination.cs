@@ -1,45 +1,50 @@
-// Title: Check worksheet count after merging workbooks with Aspose.Cells for .NET
-// Description: Creates a source workbook with two worksheets and a destination workbook with one worksheet, calculates the expected total sheet count, merges the source into the destination using Workbook.Combine, and verifies that the resulting workbook contains the expected number of worksheets. The sample outputs the verification result and optionally saves the combined file.
-// Keywords: Aspose.Cells | Workbook.Combine | C# | .NET | worksheet count verification | merge workbooks | combined workbook sheets | Excel automation | validate sheet number
-// Common Searches: Aspose.Cells verify worksheet count after combine | C# count worksheets after Workbook.Combine | How to check number of sheets in merged Excel file using Aspose.Cells | Validate merged workbook sheet total .NET | Test workbook combine worksheet count
-// Developer Intent: Confirm that Workbook.Combine adds all source worksheets to the destination, resulting in the correct total sheet count.
-// Use Cases: Automated unit test for workbook merging logic | Pre‑deployment validation of Excel report generation pipelines | Runtime check before saving a combined workbook in a web service | Logging and alerting when worksheet count mismatch occurs | Batch processing of multiple workbooks where sheet count must meet business rules
-// AI Prompts: Generate a reusable C# method that combines two Aspose.Cells Workbook objects and throws an exception if the resulting worksheet count does not equal the sum of the original counts. | Create an NUnit test that builds source and destination workbooks, calls Workbook.Combine, and asserts that the worksheet count matches the expected total. | Write code that logs detailed verification messages and saves the merged workbook only when the worksheet count validation succeeds.
+// Title: Verify worksheet count after combining two Excel workbooks with Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells Workbook.Combine to merge a source workbook into a destination workbook and assert that destWorkbook.Worksheets.Count equals sourceWorkbook.Worksheets.Count plus the original destination sheet count. | Generate C# code that creates two workbooks, combines them with Workbook.Combine, checks that the combined workbook contains the expected number of worksheets, and then saves the result.
+// Common Searches: c# Aspose.Cells how to confirm total number of sheets after using Workbook.Combine | verify worksheet count after merging Excel files with Aspose.Cells .NET | expected vs actual sheet count after workbook combine in Aspose.Cells | Aspose.Cells combine workbooks and validate sheet total programmatically
+// Tags: Aspose.Cells Workbook.Combine worksheet count verification | C# merge Excel workbooks validate sheet total | Aspose.Cells combined workbook save Xlsx | verify merged workbook sheet number .NET
 
 using System;
 using Aspose.Cells;
 
 namespace VerifyCombinedWorkbook
 {
-    // Creates a source workbook with two worksheets and a destination workbook with one worksheet, calculates the expected total sheet count, merges the source into the destination using Workbook.Combine, and verifies that the resulting workbook contains the expected number of worksheets. The sample outputs the verification result and optionally saves the combined file.
+    // The example creates a source workbook with two worksheets and a destination workbook with one worksheet, merges them using Workbook.Combine, validates that the resulting workbook contains the expected total number of worksheets, and saves the combined file as an XLSX document.
     class Program
     {
         static void Main()
         {
-            // Create source workbook with two worksheets
+            // Create source workbook and add two worksheets
             Workbook sourceWorkbook = new Workbook();
+            // Default workbook already has one worksheet at index 0
             sourceWorkbook.Worksheets[0].Name = "SourceSheet1";
+            // Add a second worksheet
             sourceWorkbook.Worksheets.Add("SourceSheet2");
 
-            // Create destination workbook with one worksheet
+            // Create destination workbook and ensure it has one worksheet
             Workbook destWorkbook = new Workbook();
             destWorkbook.Worksheets[0].Name = "DestSheet1";
 
-            // Record expected worksheet count after combination
-            int expectedCount = destWorkbook.Worksheets.Count + sourceWorkbook.Worksheets.Count;
+            // Expected total worksheets after combination
+            int expectedWorksheetCount = sourceWorkbook.Worksheets.Count + destWorkbook.Worksheets.Count;
 
-            // Combine source workbook into destination workbook
+            // Combine the source workbook into the destination workbook
             destWorkbook.Combine(sourceWorkbook);
 
             // Verify the worksheet count
-            int actualCount = destWorkbook.Worksheets.Count;
-            Console.WriteLine($"Expected worksheet count: {expectedCount}");
-            Console.WriteLine($"Actual worksheet count:   {actualCount}");
-            Console.WriteLine(actualCount == expectedCount
-                ? "Verification succeeded: worksheet count matches expected value."
-                : "Verification failed: worksheet count does not match expected value.");
+            int actualWorksheetCount = destWorkbook.Worksheets.Count;
+            Console.WriteLine($"Expected worksheet count: {expectedWorksheetCount}");
+            Console.WriteLine($"Actual worksheet count:   {actualWorksheetCount}");
 
-            // Save the combined workbook (optional)
+            if (actualWorksheetCount == expectedWorksheetCount)
+            {
+                Console.WriteLine("Verification succeeded: worksheet count matches expected value.");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed: worksheet count does not match expected value.");
+            }
+
+            // Save the combined workbook (optional, demonstrates usage of save)
             destWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
         }
     }

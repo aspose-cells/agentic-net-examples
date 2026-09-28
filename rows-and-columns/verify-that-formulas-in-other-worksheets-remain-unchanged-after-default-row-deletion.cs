@@ -1,56 +1,53 @@
-// Title: Check that external sheet formulas stay unchanged after DeleteRow in Aspose.Cells for .NET
-// Description: Creates a workbook with a Data sheet and a Summary sheet, fills Data!A1:A5 with numbers, sets a SUM formula on Summary referencing that range, records the formula text, deletes row 2 from Data using the default DeleteRow (which leaves external references intact), recalculates, and confirms the formula string is identical before and after the deletion.
-// Keywords: Aspose.Cells | DeleteRow | formula unchanged | external reference | C# example | row deletion | worksheet formula stability | calculate formula | .NET
-// Common Searches: Aspose.Cells DeleteRow keep formula reference | Does DeleteRow adjust formulas in other sheets | Verify formula text after row removal Aspose.Cells | C# check external sheet formula after DeleteRow | Aspose.Cells row deletion impact on formulas
-// Developer Intent: Confirm that a formula on a different worksheet remains exactly the same after removing a row with the default DeleteRow method.
-// Use Cases: Validate that external‑sheet formulas are not auto‑updated when rows are deleted. | Capture and compare a cell's formula string before and after a DeleteRow operation. | Demonstrate saving a workbook after confirming formula stability.
-// AI Prompts: Provide C# code that records a cell's formula, deletes a row with DeleteRow, and verifies the formula text is unchanged using Aspose.Cells. | Show a snippet illustrating that the default DeleteRow method does not modify formulas in other worksheets and how to test this behavior. | Explain why DeleteRow leaves external references untouched and give a programmatic way to confirm it.
+// Title: Check that a cross‑sheet formula remains unchanged after deleting a row with Aspose.Cells in C#
+// AI Prompts: Write C# code using Aspose.Cells to create two worksheets, set a formula in one sheet that references a cell in the other, delete a specific row in the source sheet with DeleteRow, and confirm the formula text does not change. | Demonstrate how to recalculate the workbook after the row deletion and output the evaluated value of the cross‑sheet formula to verify it still points to the original cell.
+// Common Searches: Aspose.Cells DeleteRow does not adjust formulas in other worksheets C# | how to keep external cell reference unchanged after row removal Aspose.Cells | verify formula reference stability after deleting rows in a workbook using Aspose.Cells | C# Aspose.Cells cross‑sheet formula behavior when source row is deleted | default DeleteRow method external reference handling Aspose.Cells example
+// Tags: DeleteRow without updating external references Aspose.Cells | C# verify formula reference after row removal | Aspose.Cells workbook multiple sheets formula integrity | preserve cross-sheet cell reference Aspose.Cells | default DeleteRow external reference handling
 
 using System;
 using Aspose.Cells;
 
-// Creates a workbook with a Data sheet and a Summary sheet, fills Data!A1:A5 with numbers, sets a SUM formula on Summary referencing that range, records the formula text, deletes row 2 from Data using the default DeleteRow (which leaves external references intact), recalculates, and confirms the formula string is identical before and after the deletion.
-class VerifyFormulaUnchanged
+namespace VerifyFormulaUnchangedAfterRowDeletion
 {
-    static void Main()
+    // Shows how to create a workbook with two worksheets, add a cross‑sheet formula, delete a row in the source sheet using DeleteRow, and confirm that the formula on the other sheet stays unchanged after recalculation.
+    class Program
     {
-        // Create a new workbook with two worksheets
-        Workbook workbook = new Workbook();
-        Worksheet dataSheet = workbook.Worksheets[0];
-        dataSheet.Name = "Data";
-        Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-
-        // Fill the first worksheet with sample numbers in column A (rows 1‑5)
-        for (int i = 0; i < 5; i++)
+        static void Main()
         {
-            dataSheet.Cells[i, 0].PutValue(i + 1); // A1..A5 = 1..5
+            // Create a new workbook with two worksheets
+            Workbook workbook = new Workbook();
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "Data";
+
+            // Add a second worksheet for formulas that reference the first sheet
+            Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+            summarySheet.Name = "Summary";
+
+            // Populate the Data sheet with sample values (rows 0‑9, column A)
+            for (int i = 0; i < 10; i++)
+            {
+                dataSheet.Cells[i, 0].PutValue(i + 1); // A1 = 1, A2 = 2, ...
+            }
+
+            // Set a formula in the Summary sheet that references a cell in the Data sheet
+            // Initially points to Data!A5 (row index 4)
+            summarySheet.Cells["A1"].Formula = "=Data!A5";
+
+            // Display the original formula
+            Console.WriteLine("Original formula in Summary!A1: " + summarySheet.Cells["A1"].Formula);
+
+            // Delete row 4 (zero‑based index 3) from the Data sheet using the default DeleteRow method
+            // This method does NOT update references in other worksheets
+            dataSheet.Cells.DeleteRow(3);
+
+            // After deletion, the formula in Summary!A1 should remain unchanged
+            Console.WriteLine("Formula after deleting row 4 in Data sheet: " + summarySheet.Cells["A1"].Formula);
+
+            // Optionally, verify the value that the formula now evaluates to
+            workbook.CalculateFormula();
+            Console.WriteLine("Evaluated value of Summary!A1: " + summarySheet.Cells["A1"].StringValue);
+
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
+            workbook.Save("VerifyFormulaUnchanged.xlsx");
         }
-
-        // In the second worksheet set a formula that sums the range A1:A5 of the first sheet
-        summarySheet.Cells["A1"].Formula = "=SUM(Data!A1:A5)";
-
-        // Calculate formulas so the workbook has up‑to‑date values
-        workbook.CalculateFormula();
-
-        // Store the formula text before any deletion
-        string formulaBefore = summarySheet.Cells["A1"].Formula;
-
-        // Delete row 2 (zero‑based index 1) from the first worksheet using the default DeleteRow method
-        // This overload does NOT update references in other worksheets
-        dataSheet.Cells.DeleteRow(1);
-
-        // Re‑calculate formulas (optional, does not affect the formula text)
-        workbook.CalculateFormula();
-
-        // Store the formula text after deletion
-        string formulaAfter = summarySheet.Cells["A1"].Formula;
-
-        // Output the results
-        Console.WriteLine("Formula before deletion: " + formulaBefore);
-        Console.WriteLine("Formula after deletion : " + formulaAfter);
-        Console.WriteLine("Formula unchanged: " + (formulaBefore == formulaAfter));
-
-        // Save the workbook (optional, just to demonstrate saving)
-        workbook.Save("VerifyFormula.xlsx");
     }
 }

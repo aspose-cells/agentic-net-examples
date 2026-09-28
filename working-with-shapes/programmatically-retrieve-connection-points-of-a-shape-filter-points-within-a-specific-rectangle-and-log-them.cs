@@ -1,54 +1,78 @@
-// Title: Aspose.Cells for .NET – Retrieve and Filter Shape Connection Points
-// Description: Creates a workbook, adds a rectangle shape, extracts its connection points with GetConnectionPoints(), filters points that fall inside a user‑defined rectangle, logs the results, and saves the file. Demonstrates spatial analysis of shape anchors in Aspose.Cells.
-// Keywords: Aspose.Cells GetConnectionPoints | shape connection points .NET | filter points by rectangle | log shape coordinates | Aspose.Cells shape API | C# workbook shape handling
-// Common Searches: how to get shape connection points Aspose.Cells | filter shape points within a rectangle C# | Aspose.Cells retrieve connection coordinates | log shape connection points to console | save workbook after processing shape data
-// Developer Intent: Extract all connection points of a worksheet shape, keep only those inside a specified rectangular area, and output the filtered list.
-// Use Cases: Determine which anchor points of a diagram lie within a printable region before exporting. | Create custom anchoring logic by selecting connection points that satisfy spatial constraints. | Debug layout problems by listing all shape points and highlighting those that meet a given area criteria.
-// AI Prompts: Generate C# code using Aspose.Cells to read shape connection points, apply a rectangular filter, and write the matching points to a CSV file. | Explain the structure of the float[][] returned by GetConnectionPoints and show how to convert it to a List<PointF> for further calculations. | Provide an example that iterates over shape connection points and selects those whose distance from a given point is less than a threshold.
+// Title: Retrieve shape connection points and filter them within a rectangle using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, obtains the connection points of each shape on the first worksheet, and prints only the points that lie inside a rectangle defined by left=100, top=100, right=300, bottom=300. | Refactor the example to store the points that satisfy the rectangle condition in a List<PointF> and return that list from a helper method. | Enhance the solution to accept a custom rectangle (left, top, right, bottom) as method parameters and process all worksheets in the workbook, logging matching points for every shape.
+// Common Searches: Aspose.Cells C# get shape connection points and filter by coordinates | filter shape connection points inside a specific rectangle using Aspose.Cells | C# example for retrieving Excel shape connection points with Aspose.Cells | how to iterate over shape connection points in Aspose.Cells for .NET | Aspose.Cells GetConnectionPoints method usage example
+// Tags: Aspose.Cells connection points API | C# rectangle-based shape point filtering | Excel shape geometry extraction using Aspose.Cells | bounding box filtering of shape points in .NET | iterate over shapes in workbook with Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.Drawing; // For PointF
+using System.IO;
 
-// Creates a workbook, adds a rectangle shape, extracts its connection points with GetConnectionPoints(), filters points that fall inside a user‑defined rectangle, logs the results, and saves the file. Demonstrates spatial analysis of shape anchors in Aspose.Cells.
-class RetrieveAndFilterShapeConnectionPoints
+// The program loads an Excel workbook, extracts the connection points of the first shape on the first worksheet, filters points that fall within a 100‑300 coordinate rectangle, logs those points, and saves the workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset, height, width, shape type (0 = rectangle)
-        Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 100, 200, 0);
-
-        // Define the rectangle area for filtering connection points
-        // Example rectangle: X between 10 and 150, Y between 20 and 120
-        float filterLeft = 10f;
-        float filterTop = 20f;
-        float filterRight = 150f;
-        float filterBottom = 120f;
-
-        // Retrieve all connection points of the shape
-        float[][] connectionPoints = shape.GetConnectionPoints();
-
-        // Log all connection points and those that fall within the filter rectangle
-        Console.WriteLine("All Connection Points:");
-        for (int i = 0; i < connectionPoints.Length; i++)
+        try
         {
-            float x = connectionPoints[i][0];
-            float y = connectionPoints[i][1];
-            Console.WriteLine($"Point {i + 1}: X={x}, Y={y}");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Check if the point lies within the specified rectangle
-            if (x >= filterLeft && x <= filterRight && y >= filterTop && y <= filterBottom)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"  -> Point {i + 1} is inside the filter rectangle.");
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
             }
-        }
 
-        // Save the workbook (optional, just to demonstrate lifecycle usage)
-        workbook.Save("FilteredConnectionPoints.xlsx");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one shape on the sheet
+            if (sheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the first worksheet.");
+                return;
+            }
+
+            // Retrieve the first shape
+            Shape shape = sheet.Shapes[0];
+
+            // Get all connection points of the shape (returned as float[][])
+            float[][] rawPoints = shape.GetConnectionPoints();
+
+            // Define the rectangle to filter points (left, top, right, bottom)
+            float rectLeft = 100f;
+            float rectTop = 100f;
+            float rectRight = 300f;
+            float rectBottom = 300f;
+
+            // Iterate through points, filter those inside the rectangle, and log them
+            foreach (float[] pt in rawPoints)
+            {
+                // Each point should contain at least two values: X and Y
+                if (pt.Length < 2) continue;
+
+                float x = pt[0];
+                float y = pt[1];
+
+                if (x >= rectLeft && x <= rectRight && y >= rectTop && y <= rectBottom)
+                {
+                    Console.WriteLine($"Connection point inside rectangle: X = {x}, Y = {y}");
+                }
+            }
+
+            // Save the workbook (even if unchanged) to follow the required pattern
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,49 +1,65 @@
-// Title: Validate Worksheet Protection Password with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook, accesses a worksheet, and uses Aspose.Cells' Worksheet.Protection.VerifyPassword method to determine if a supplied password matches the sheet's protection password, returning a boolean without modifying the file.
-// Keywords: Aspose.Cells | C# | .NET | worksheet protection | verify password | Protection.VerifyPassword | Excel sheet password validation | validate worksheet password | check worksheet protection | Aspose.Cells example | Excel security
-// Common Searches: Aspose.Cells verify worksheet password C# | How to check Excel sheet protection password using Aspose.Cells | C# code to validate worksheet protection password | Worksheet.Protection.VerifyPassword sample | Validate Excel sheet password without opening UI
-// Developer Intent: Determine if a supplied string matches the protection password of a specific worksheet in an Excel workbook using Aspose.Cells.
-// Use Cases: Prompt a user for a password and enable editing only when the worksheet unlocks. | Scan multiple workbooks to flag sheets that are protected with a known password before automated processing. | Expose a REST endpoint that receives a file path and password, returning true/false to indicate worksheet access.
-// AI Prompts: Generate C# code with Aspose.Cells that validates a worksheet's protection password and includes error handling for missing files or unprotected sheets. | Show how to verify the password of the second worksheet (index 1) instead of the first one using Aspose.Cells. | Explain how to retrieve the hashed protection password from a worksheet with Aspose.Cells and compare it manually to a user‑provided password.
+// Title: How to verify a worksheet's protection password in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# method that opens an .xlsx workbook, selects a worksheet by name, and uses Worksheet.Protection.VerifyPassword to return true when the supplied password matches the sheet's protection password. | Build a console application that calls the validator method to determine if a given password can unlock a protected worksheet and outputs the validation result.
+// Common Searches: Aspose.Cells C# verify worksheet protection password programmatically | Check if an Excel sheet is password‑protected using Aspose.Cells .NET | C# code to validate worksheet password before editing with Aspose.Cells
+// Tags: Aspose.Cells worksheet protection verification | C# Worksheet.Protection.VerifyPassword example | load Excel workbook and check sheet password Aspose.Cells | validate worksheet password .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordValidation
+namespace WorksheetPasswordValidatorApp
 {
-    // Loads an Excel workbook, accesses a worksheet, and uses Aspose.Cells' Worksheet.Protection.VerifyPassword method to determine if a supplied password matches the sheet's protection password, returning a boolean without modifying the file.
+    // Provides a static ValidatePassword method that loads a workbook, retrieves a worksheet by name, and calls Worksheet.Protection.VerifyPassword to determine if the supplied password matches the worksheet's protection password, returning false for missing files, missing sheets, or any exception.
     public class WorksheetPasswordValidator
     {
-        /// <param name="filePath">Path to the Excel file.</param>
+        /// <param name="filePath">Full path to the Excel file.</param>
+        /// <param name="sheetName">Name of the worksheet to check.</param>
         /// <param name="password">Password to validate.</param>
-        /// <returns>True if the password is correct; otherwise, false.</returns>
-        public static bool ValidateWorksheetPassword(string filePath, string password)
+        /// <returns>True if the password matches the worksheet's protection password; otherwise false.</returns>
+        public static bool ValidatePassword(string filePath, string sheetName, string password)
         {
-            // Load the workbook (creation/load rule)
-            Workbook workbook = new Workbook(filePath);
+            // Ensure the file exists to avoid FileNotFoundException.
+            if (!File.Exists(filePath))
+                return false;
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            try
+            {
+                // Load the workbook from the specified file.
+                Workbook workbook = new Workbook(filePath);
 
-            // Verify the supplied password against the worksheet's protection password
-            // Uses Protection.VerifyPassword method as defined in the documentation
-            bool isValid = worksheet.Protection.VerifyPassword(password);
+                // Try to get the worksheet by name.
+                Worksheet worksheet = workbook.Worksheets[sheetName];
+                if (worksheet == null)
+                {
+                    // Worksheet not found – cannot validate password.
+                    return false;
+                }
 
-            // No need to modify or save the workbook for validation purposes
-            return isValid;
+                // Verify the supplied password against the worksheet protection.
+                return worksheet.Protection.VerifyPassword(password);
+            }
+            catch (Exception)
+            {
+                // Return false on any exception for safety.
+                return false;
+            }
         }
+    }
 
-        // Example usage
-        public static void Main()
+    // Entry point for console execution.
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            // Path to an existing workbook that has worksheet protection enabled
-            string filePath = "ProtectedWorksheet.xlsx";
+            // Example usage; replace with actual values or command‑line arguments.
+            string filePath = "sample.xlsx";
+            string sheetName = "Sheet1";
+            string password = "myPassword";
 
-            // Password to test
-            string testPassword = "password123";
-
-            bool result = ValidateWorksheetPassword(filePath, testPassword);
-            Console.WriteLine($"Password validation result: {result}");
+            bool isValid = WorksheetPasswordValidator.ValidatePassword(filePath, sheetName, password);
+            Console.WriteLine(isValid
+                ? "Password is valid for the worksheet."
+                : "Password is invalid or worksheet/file not found.");
         }
     }
 }

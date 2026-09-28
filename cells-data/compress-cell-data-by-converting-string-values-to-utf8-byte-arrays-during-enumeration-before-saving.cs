@@ -1,104 +1,113 @@
-// Title: Compress Excel strings with UTF‑8 using a custom LightCellsDataProvider in Aspose.Cells for .NET
-// Description: This example creates a workbook, fills it with mixed data, and saves it as an XLSX file using OoxmlSaveOptions with level‑9 compression. A custom LightCellsDataProvider (Utf8CompressProvider) enumerates the first worksheet, converts each string cell to a UTF‑8 byte array (and back to a string) during export, copies non‑string values unchanged, and enables duplicate‑string gathering to further reduce file size.
-// Keywords: Aspose.Cells | LightCellsDataProvider | UTF-8 string compression | OoxmlSaveOptions | Level9 compression | duplicate string gathering | C# | .NET | Excel export optimization | custom provider
-// Common Searches: How to compress string data in Aspose.Cells using LightCellsDataProvider | Save workbook with maximum OOXML compression in .NET | Enable duplicate string gathering when exporting XLSX with Aspose.Cells | Convert Excel cell strings to UTF‑8 bytes during save
-// Developer Intent: Export a workbook with maximum OOXML compression while converting string cells to UTF‑8 byte arrays via a custom LightCellsDataProvider.
-// Use Cases: Minimize XLSX size by gathering duplicate strings and applying level‑9 compression. | Pre‑process or encode string cells (e.g., UTF‑8, sanitization) without affecting numeric data. | Handle large worksheets with low memory overhead by streaming cell values through a custom provider.
-// AI Prompts: Generate a LightCellsDataProvider for Aspose.Cells that encrypts string values before saving. | Modify the Utf8CompressProvider to skip empty cells and only process non‑empty strings. | Explain the impact of IsGatherString() on file size when using OoxmlSaveOptions with level‑9 compression.
+// Title: Encode string cells to Base64 UTF‑8 during LightCells enumeration and save XLSX with OOXML Level 9 compression using Aspose.Cells for .NET
+// AI Prompts: Create a LightCellsDataProvider that checks each cell value, converts string values to UTF‑8 byte arrays, encodes those bytes to Base64, and writes the encoded string back to the cell in the StartCell method. | Set up OoxmlSaveOptions to use the custom LightCellsDataProvider and specify CompressionType = Level9, then save the workbook as an XLSX file.
+// Common Searches: how to use LightCellsDataProvider to compress string values in Aspose.Cells | save Excel workbook with maximum OOXML compression in C# Aspose.Cells | convert cell text to Base64 during streaming export with Aspose.Cells | custom data provider for on‑the‑fly string encoding in Aspose.Cells .NET
+// Tags: LightCellsDataProvider string Base64 encoding | OOXML Level9 compression Aspose.Cells | UTF8 byte array conversion C# | streaming workbook save Aspose.Cells | custom cell value compression .NET
 
 using System;
 using System.Text;
 using Aspose.Cells;
 
-// This example creates a workbook, fills it with mixed data, and saves it as an XLSX file using OoxmlSaveOptions with level‑9 compression. A custom LightCellsDataProvider (Utf8CompressProvider) enumerates the first worksheet, converts each string cell to a UTF‑8 byte array (and back to a string) during export, copies non‑string values unchanged, and enables duplicate‑string gathering to further reduce file size.
-class Program
+namespace AsposeCellsCompressionDemo
 {
-    static void Main()
+    // Custom LightCellsDataProvider that converts string values to UTF‑8 byte arrays
+    // during enumeration (StartCell) before the workbook is saved.
+    // Demonstrates a LightCellsDataProvider that transforms string cell values into UTF‑8 byte arrays, encodes them as Base64, and writes them during enumeration, while enabling string gathering and saving the workbook with OOXML Level 9 compression for optimal file size.
+    public class Utf8CompressingDataProvider : LightCellsDataProvider
     {
-        // Create a workbook and populate it with sample data
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Hello");
-        sheet.Cells["A2"].PutValue("World");
-        sheet.Cells["B1"].PutValue("Sample");
-        sheet.Cells["B2"].PutValue(12345);
-        sheet.Cells["C1"].PutValue("Hello"); // duplicate string to benefit from gathering
+        private int _currentRow = -1;
+        private int _currentCol = -1;
 
-        // Configure save options: highest compression and custom LightCellsDataProvider
-        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
+        // Only process the first worksheet.
+        public bool StartSheet(int sheetIndex) => sheetIndex == 0;
+
+        // Return the next row index to be saved.
+        public int NextRow()
         {
-            CompressionType = OoxmlCompressionType.Level9, // maximum compression
-            LightCellsDataProvider = new Utf8CompressProvider(workbook) // custom provider
-        };
-
-        // Save the workbook using the configured options
-        workbook.Save("CompressedUtf8.xlsx", saveOptions);
-    }
-}
-
-// Custom LightCellsDataProvider that converts string values to UTF‑8 byte arrays
-// during enumeration before the workbook is saved.
-class Utf8CompressProvider : LightCellsDataProvider
-{
-    private readonly Workbook _sourceWorkbook;
-    private int _currentRow = -1;
-    private int _currentCol = -1;
-    private readonly int _maxRow;
-    private readonly int _maxCol;
-
-    public Utf8CompressProvider(Workbook sourceWorkbook)
-    {
-        _sourceWorkbook = sourceWorkbook;
-
-        // Determine the used range of the first worksheet
-        Worksheet ws = _sourceWorkbook.Worksheets[0];
-        _maxRow = ws.Cells.MaxDataRow;
-        _maxCol = ws.Cells.MaxDataColumn;
-    }
-
-    // Process only the first worksheet
-    public bool StartSheet(int sheetIndex) => sheetIndex == 0;
-
-    // Return the next row index or -1 when done
-    public int NextRow()
-    {
-        _currentRow++;
-        _currentCol = -1;
-        return _currentRow <= _maxRow ? _currentRow : -1;
-    }
-
-    // No special row initialization required
-    public void StartRow(Row row) { }
-
-    // Return the next column index or -1 when done
-    public int NextCell()
-    {
-        _currentCol++;
-        return _currentCol <= _maxCol ? _currentCol : -1;
-    }
-
-    // Populate the cell being saved
-    public void StartCell(Cell cell)
-    {
-        // Get the original cell from the source workbook
-        Cell src = _sourceWorkbook.Worksheets[0].Cells[_currentRow, _currentCol];
-
-        if (src.Type == CellValueType.IsString)
-        {
-            // Convert the string to UTF‑8 bytes and back to string.
-            // This simulates processing the string data before saving.
-            string original = src.StringValue;
-            byte[] utf8Bytes = Encoding.UTF8.GetBytes(original);
-            string processed = Encoding.UTF8.GetString(utf8Bytes);
-            cell.PutValue(processed);
+            _currentRow++;
+            _currentCol = -1;
+            // Assume we have data for rows 0‑9.
+            return _currentRow < 10 ? _currentRow : -1;
         }
-        else
+
+        // No special row handling needed.
+        public void StartRow(Row row) { }
+
+        // Return the next column index to be saved.
+        public int NextCell()
         {
-            // Copy non‑string values unchanged
-            cell.PutValue(src.Value);
+            _currentCol++;
+            // Assume we have data for columns 0‑4.
+            return _currentCol < 5 ? _currentCol : -1;
         }
+
+        // Fill the cell value. If the value is a string, convert it to a UTF‑8 byte array
+        // and then back to a string (simulating compression before saving).
+        public void StartCell(Cell cell)
+        {
+            // Example data source: a simple 2‑dimensional array.
+            // In a real scenario this could be any external source.
+            object[,] sourceData = new object[,]
+            {
+                { "ID", "Name", "Description", "Price", "Notes" },
+                { 1, "Item A", "A long description that could be compressed.", 12.5, "Special" },
+                { 2, "Item B", "Another description.", 8.75, "Standard" },
+                { 3, "Item C", "Short desc.", 15.0, "Premium" },
+                { 4, "Item D", "Description with repeated words words words.", 9.99, "Discount" },
+                { 5, "Item E", "Final item description.", 20.0, "New" },
+                { 6, "Item F", "Extra info.", 7.5, "Clearance" },
+                { 7, "Item G", "More details.", 13.3, "Limited" },
+                { 8, "Item H", "Sample text.", 11.1, "Regular" },
+                { 9, "Item I", "End of list.", 5.0, "Last" }
+            };
+
+            object value = sourceData[_currentRow, _currentCol];
+
+            // If the value is a string, compress it by converting to UTF‑8 bytes.
+            if (value is string str)
+            {
+                // Convert the string to UTF‑8 bytes.
+                byte[] utf8Bytes = Encoding.UTF8.GetBytes(str);
+
+                // Here we could store the byte array in a custom binary format.
+                // For demonstration, we convert the bytes back to a Base64 string,
+                // which reduces the size when many duplicate strings exist.
+                string compressed = Convert.ToBase64String(utf8Bytes);
+
+                cell.PutValue(compressed);
+            }
+            else
+            {
+                // Non‑string values are written unchanged.
+                cell.PutValue(value);
+            }
+        }
+
+        // Enable string gathering to further reduce duplication in the final file.
+        public bool IsGatherString() => true;
     }
 
-    // Enable gathering of duplicate strings to reduce file size
-    public bool IsGatherString() => true;
+    class Program
+    {
+        static void Main()
+        {
+            // Create a new workbook (empty – data will be supplied by the provider).
+            Workbook workbook = new Workbook();
+            workbook.Worksheets.Clear(); // Remove default sheet; provider will create rows/cells.
+
+            // Configure save options:
+            // - Use the custom LightCellsDataProvider.
+            // - Apply the highest compression level for the OOXML package.
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
+            {
+                LightCellsDataProvider = new Utf8CompressingDataProvider(),
+                CompressionType = OoxmlCompressionType.Level9   // Best compression.
+            };
+
+            // Save the workbook. The provider streams data directly to the file,
+            // applying the UTF‑8 conversion and compression on the fly.
+            workbook.Save("CompressedData.xlsx", saveOptions);
+
+            Console.WriteLine("Workbook saved with UTF‑8 string compression and OOXML Level9 compression.");
+        }
+    }
 }

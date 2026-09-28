@@ -1,100 +1,95 @@
-// Title: Render a PivotTable Timeline with Shadow and Transparent PNG in C# using Aspose.Cells
-// Description: Creates a workbook, builds a PivotTable, adds a linked Timeline, applies a semi‑transparent shadow, and exports the Timeline shape as a PNG with a transparent background via Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | Timeline | ShadowEffect | Transparent PNG | PivotTable timeline export | ImageOrPrintOptions | timeline rendering | PNG transparency | Aspose.Cells .NET
-// Common Searches: Aspose.Cells timeline shadow effect C# | export timeline shape to PNG with transparency | how to add shadow to Aspose.Cells timeline | render timeline as image Aspose.Cells .NET | transparent background PNG Aspose.Cells timeline
-// Developer Intent: Produce a PNG image of a PivotTable timeline that includes a configurable shadow and a transparent background using Aspose.Cells for .NET.
-// Use Cases: Embedding timeline graphics with depth effects into web dashboards | Generating transparent PNGs for presentations that need to overlay on varied backgrounds | Automating batch creation of styled timeline images for periodic sales reports
-// AI Prompts: Write C# code to apply a 40% transparent shadow to an Aspose.Cells timeline and save it as a PNG with a transparent background. | Explain how to modify shadow angle, distance, blur, and size for a timeline shape in Aspose.Cells. | Show how to loop through multiple timelines in a workbook and export each to a separate transparent PNG file.
+// Title: Render an Excel timeline with a custom shadow and export it as a transparent PNG using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a pivot table, adds a linked timeline, customizes the timeline's shadow (angle, blur, size, distance, transparency) and saves the worksheet as a PNG with an alpha channel using Aspose.Cells. | Show how to configure ImageOrPrintOptions for PNG transparency and render a worksheet containing a timeline to an image file in C# with Aspose.Cells. | Demonstrate modifying the TimelineShape.ShadowEffect properties before exporting the timeline to a transparent PNG in a .NET application.
+// Common Searches: how to export an Excel timeline as a transparent PNG with Aspose.Cells C# | Aspose.Cells timeline shadow effect customization example | C# render worksheet timeline to PNG with alpha channel | set timeline shape shadow transparency using Aspose.Cells .NET | image rendering options transparent PNG Aspose.Cells timeline
+// Tags: timeline shadow customization Aspose.Cells | transparent PNG export Aspose.Cells | ImageOrPrintOptions PNG transparency .NET | TimelineShape shadow properties C# | pivot table linked timeline Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Timelines;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-namespace TimelineRenderingDemo
+namespace TimelineRenderDemo
 {
-    // Creates a workbook, builds a PivotTable, adds a linked Timeline, applies a semi‑transparent shadow, and exports the Timeline shape as a PNG with a transparent background via Aspose.Cells for .NET.
-    class Program
+    // The example creates a workbook with sample data, builds a pivot table, adds a timeline linked to the date field, customizes the timeline's shadow (angle, blur, size, distance, transparency), sets ImageOrPrintOptions for PNG with a transparent background, and renders the worksheet to a PNG file that preserves the shadow and alpha channel.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate worksheet with sample data (fruit, date, amount)
+            cells[0, 0].Value = "Fruit";
+            cells[0, 1].Value = "Date";
+            cells[0, 2].Value = "Amount";
+
+            cells[1, 0].Value = "Apple";
+            cells[1, 1].Value = new DateTime(2021, 1, 10);
+            cells[1, 2].Value = 120;
+
+            cells[2, 0].Value = "Banana";
+            cells[2, 1].Value = new DateTime(2021, 2, 15);
+            cells[2, 2].Value = 150;
+
+            cells[3, 0].Value = "Cherry";
+            cells[3, 1].Value = new DateTime(2021, 3, 20);
+            cells[3, 2].Value = 180;
+
+            // Apply date style to the date column
+            Style dateStyle = workbook.CreateStyle();
+            dateStyle.Custom = "m/d/yyyy";
+            cells[1, 1].SetStyle(dateStyle);
+            cells[2, 1].SetStyle(dateStyle);
+            cells[3, 1].SetStyle(dateStyle);
+
+            // Create a PivotTable based on the data range
+            PivotTableCollection pivots = sheet.PivotTables;
+            int pivotIdx = pivots.Add("=Sheet1!A1:C4", "E5", "FruitPivot");
+            PivotTable pivot = pivots[pivotIdx];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
+            pivot.AddFieldToArea(PivotFieldType.Column, "Date");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
+            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+            pivot.RefreshData();
+            pivot.CalculateData();
+
+            // Add a Timeline linked to the PivotTable's date field
+            sheet.Timelines.Add(pivot, 15, 0, "Date");
+            Timeline timeline = sheet.Timelines[0];
+
+            // Configure Timeline properties (optional)
+            timeline.Caption = "Sales Timeline";
+            timeline.ShowHeader = true;
+            timeline.ShowHorizontalScrollbar = true;
+            timeline.ShowSelectionLabel = true;
+            timeline.ShowTimeLevel = true;
+
+            // Access the underlying shape to apply shadow effect
+            TimelineShape timelineShape = timeline.Shape;
+            ShadowEffect shadow = timelineShape.ShadowEffect;
+            shadow.Angle = 135;          // direction of the shadow
+            shadow.Blur = 20;            // blur radius
+            shadow.Size = 1.0;           // size multiplier
+            shadow.Distance = 10;        // distance from the shape
+            shadow.Transparency = 0.4;   // 40% transparent shadow
+
+            // Set image rendering options: PNG format with transparent background
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                ImageType = ImageType.Png,
+                Transparent = true   // enable transparent background
+            };
 
-                // Populate sample data with a date column (required for Timeline)
-                cells[0, 0].Value = "Product";
-                cells[0, 1].Value = "Date";
-                cells[0, 2].Value = "Sales";
+            // Render the worksheet (which contains the timeline) to a PNG image
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
+            // Render the first (and only) page to a file
+            renderer.ToImage(0, "TimelineWithShadow.png");
 
-                cells[1, 0].Value = "Apple";
-                cells[1, 1].Value = new DateTime(2022, 1, 15);
-                cells[1, 2].Value = 1200;
-
-                cells[2, 0].Value = "Banana";
-                cells[2, 1].Value = new DateTime(2022, 2, 10);
-                cells[2, 2].Value = 950;
-
-                cells[3, 0].Value = "Cherry";
-                cells[3, 1].Value = new DateTime(2022, 3, 5);
-                cells[3, 2].Value = 780;
-
-                // Create a PivotTable based on the data
-                PivotTableCollection pivots = sheet.PivotTables;
-                int pivotIdx = pivots.Add("=Sheet1!A1:C4", "E5", "SalesPivot");
-                PivotTable pivot = pivots[pivotIdx];
-                pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivot.AddFieldToArea(PivotFieldType.Column, "Date");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-                // Add the date field to the Page (filter) area – required for Timeline
-                pivot.AddFieldToArea(PivotFieldType.Page, "Date");
-                pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // Add a Timeline linked to the PivotTable's date field
-                sheet.Timelines.Add(pivot, 15, 0, "Date");
-                Timeline timeline = sheet.Timelines[0];
-
-                // Access the underlying shape of the Timeline
-                TimelineShape timelineShape = timeline.Shape;
-
-                // Configure shadow effect with desired transparency (e.g., 40% transparent)
-                ShadowEffect shadow = timelineShape.ShadowEffect;
-                shadow.Transparency = 0.4; // 0.0 = opaque, 1.0 = fully transparent
-                shadow.Angle = 135;
-                shadow.Blur = 20;
-                shadow.Size = 1.0;
-                shadow.Distance = 10;
-
-                // Prepare image options: PNG format with transparent background
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                    Transparent = true // Enable transparent background
-                };
-
-                // Render the Timeline shape to a PNG file
-                string outputImagePath = "TimelineWithShadow.png";
-                timelineShape.ToImage(outputImagePath, imgOptions);
-
-                // Optionally save the workbook for reference
-                string workbookPath = "TimelineDemo.xlsx";
-                workbook.Save(workbookPath);
-
-                Console.WriteLine($"Timeline rendered to image: {Path.GetFullPath(outputImagePath)}");
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(workbookPath)}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine("Timeline rendered to PNG with shadow effect and transparency.");
         }
     }
 }

@@ -1,69 +1,95 @@
-// Title: Add Text Over Image Watermark to PDF with Aspose.Cells (C#) – Foreground, Centered on Every Page
-// Description: This example creates a workbook, loads a PNG logo, builds a foreground RenderingWatermark, adds a TextWatermark that sits above the image, centers both on each page, sets opacity and scaling, assigns them to PdfSaveOptions, and saves the result as a PDF with combined watermarks.
-// Keywords: Aspose.Cells PDF watermark C# | image watermark foreground | text watermark over image | RenderingWatermark Aspose.Cells | TextWatermark Aspose.Cells | PdfSaveOptions watermark | .NET PDF watermark sample | centered watermark Aspose.Cells | opacity scaling watermark | multiple watermarks Aspose.Cells
-// Common Searches: how to add text watermark on top of image watermark using Aspose.Cells C# | Aspose.Cells foreground image watermark PDF export | center image and text watermarks on each PDF page Aspose.Cells | combine image and text watermarks in Aspose.Cells PDF | C# Aspose.Cells add multiple watermarks to PDF
-// Developer Intent: Add both an image and a text watermark to a PDF generated from an Aspose.Cells workbook, ensuring the text appears above the image on every page.
-// Use Cases: Corporate reports that need a logo (image) and a confidentiality notice (text) on each page. | Legal documents requiring a seal image with a bold “CONFIDENTIAL” label over it. | Marketing brochures that display a semi‑transparent brand mark plus a tagline on top. | Financial statements where a watermark image is combined with a date stamp text.
-// AI Prompts: Generate C# code using Aspose.Cells to add a centered semi‑transparent image watermark and a red bold text watermark that overlays it on each PDF page. | Show how to configure PdfSaveOptions to apply multiple watermarks (image then text) with correct Z‑order in Aspose.Cells .NET. | Explain how to adjust opacity, rotation, and scaling for both image and text watermarks when exporting a workbook to PDF with Aspose.Cells.
+// Title: Add a PNG background image and diagonal CONFIDENTIAL text watermark (front) to a PDF generated from an Aspose.Cells workbook in C#
+// AI Prompts: Generate C# code using Aspose.Cells to place a PNG image as a background watermark, then overlay a rotated "CONFIDENTIAL" text shape on top, and export the worksheet to PDF. | Modify the watermark example to set the image opacity to 30%, change the text font to Times New Roman, size 80, color red, and keep the text above the image before saving as PDF.
+// Common Searches: how to add image watermark behind worksheet and text watermark in front using Aspose.Cells C# | Aspose.Cells set ZOrderPosition for picture and shape to control watermark layering | save workbook as PDF with diagonal text watermark over background image in C# | Aspose.Cells C# rotate text shape for watermark on PDF export | apply opacity to image watermark in Aspose.Cells before PDF conversion
+// Tags: Aspose.Cells add image watermark behind worksheet | Aspose.Cells overlay text watermark on PDF | C# set ZOrderPosition shape ordering Aspose.Cells | Aspose.Cells rotate text shape watermark | Aspose.Cells export workbook to PDF with watermarks
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-// This example creates a workbook, loads a PNG logo, builds a foreground RenderingWatermark, adds a TextWatermark that sits above the image, centers both on each page, sets opacity and scaling, assigns them to PdfSaveOptions, and saves the result as a PDF with combined watermarks.
-class AddTextAndImageWatermark
+// Demonstrates creating a Workbook, inserting a PNG image as a background watermark, adding a rotated "CONFIDENTIAL" text shape in front, and saving the worksheet as a PDF using Aspose.Cells for .NET.
+class WatermarkPdfExample
 {
     static void Main()
     {
+        Workbook workbook = null;
+
+        // Create workbook and add watermarks
         try
         {
-            // Create a new workbook and add some sample data
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue("Sample data for PDF with watermarks.");
+            workbook = new Workbook();
 
-            // Path to the image that will serve as the base watermark
-            string imagePath = "watermark.png";
-            if (!File.Exists(imagePath))
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Sample data (optional)
+            sheet.Cells["A1"].PutValue("Sample Data");
+            sheet.Cells["A2"].PutValue(12345);
+
+            // -------------------------------------------------
+            // Add image watermark (placed behind the sheet)
+            // -------------------------------------------------
+            string imagePath = "watermarkImage.png";
+
+            if (File.Exists(imagePath))
             {
-                Console.WriteLine($"Image file not found: {imagePath}");
-                return;
+                // Add the picture to the worksheet using the file path
+                int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
+                Picture picture = sheet.Pictures[pictureIndex];
+
+                // Send the picture to the back so other objects appear above it
+                picture.ZOrderPosition = 0; // 0 = back
+            }
+            else
+            {
+                Console.WriteLine($"Image file not found: {imagePath}. Skipping image watermark.");
             }
 
-            // Load the image bytes (no text overlay to avoid System.Drawing dependency)
-            byte[] imageBytes = File.ReadAllBytes(imagePath);
+            // -------------------------------------------------
+            // Add text watermark (placed above the image)
+            // -------------------------------------------------
+            Shape textShape = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "CONFIDENTIAL",
+                "Arial",
+                72,
+                true,
+                false,
+                0,
+                0,
+                500,
+                100,
+                0,
+                0);
 
-            // Create a RenderingWatermark from the image bytes
-            RenderingWatermark watermark = new RenderingWatermark(imageBytes)
-            {
-                // Place the watermark above the page contents (foreground)
-                IsBackground = false,
-                // Center the watermark on each page
-                HAlignment = TextAlignmentType.Center,
-                VAlignment = TextAlignmentType.Center,
-                // No rotation for the image
-                Rotation = 0,
-                // Adjust opacity as needed (0 = fully transparent, 1 = fully opaque)
-                Opacity = 0.5f,
-                // Scale the watermark to fit the page
-                ScaleToPagePercent = 100
-            };
+            // Bring the text shape to the front
+            textShape.ZOrderPosition = 1;
 
-            // Configure PDF save options to use the watermark
-            PdfSaveOptions options = new PdfSaveOptions
-            {
-                Watermark = watermark
-            };
-
-            // Save the workbook as a PDF with the watermark
-            string outputPath = "OutputWithWatermark.pdf";
-            wb.Save(outputPath, options);
-            Console.WriteLine($"PDF saved successfully: {outputPath}");
+            // Optional: diagonal rotation
+            textShape.RotationAngle = -45;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"An error occurred while creating the workbook or adding watermarks: {ex.Message}");
+        }
+
+        // Save the workbook as PDF
+        try
+        {
+            if (workbook != null)
+            {
+                workbook.Save("WatermarkedDocument.pdf", SaveFormat.Pdf);
+                Console.WriteLine("PDF saved successfully as WatermarkedDocument.pdf");
+            }
+            else
+            {
+                Console.WriteLine("Workbook was not created; PDF not saved.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to save PDF: {ex.Message}");
         }
     }
 }

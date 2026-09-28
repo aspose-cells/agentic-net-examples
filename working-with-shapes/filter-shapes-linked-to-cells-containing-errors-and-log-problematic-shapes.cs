@@ -1,56 +1,66 @@
-// Title: Detect and Log Shapes Linked to Error Cells with Aspose.Cells for .NET
-// Description: Loads an Excel file using LoadOptions.IgnoreUselessShapes, scans each worksheet's ShapeCollection, retrieves each shape's linked cell via GetLinkedCell, checks if the cell contains an error (IsErrorValue), and writes the shape name, type and error details to the console before optionally saving the workbook.
-// Keywords: Aspose.Cells shape error detection | C# GetLinkedCell error cell | filter shapes by linked cell value | IgnoreUselessShapes performance | log shapes referencing #N/A or #DIV/0! | Excel shape linked cell validation
-// Common Searches: Aspose.Cells find shapes linked to error cells | C# list shapes with #REF! reference | GetLinkedCell returns error cell Aspose | ignore useless shapes when loading workbook | log shape name and type for error cells
-// Developer Intent: Identify shapes that reference cells with error values and record their identifiers for review or cleanup.
-// Use Cases: Generate a validation report of visual objects pointing to invalid formula results. | Automate removal or reassignment of shapes linked to error cells before publishing a workbook. | Audit workbooks to ensure no graphics are tied to cells showing #DIV/0!, #N/A, or other errors.
-// AI Prompts: Write C# code using Aspose.Cells that deletes shapes whose linked cells contain any error value. | Show how to collect shape IDs linked to error cells into a List<int> for further processing. | Explain how to extend the sample to capture the specific Excel error type (e.g., #VALUE!, #REF!) from the linked cell.
+// Title: Log shapes anchored to error cells in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that scans all shapes on a worksheet, identifies those whose UpperLeftRow/Column points to a cell with CellValueType.IsError, and writes each shape name and cell address to the console. | Create a C# method that returns a List<(string ShapeName, string CellAddress)> containing every shape linked to an error cell in a workbook using Aspose.Cells. | Modify the shape‑iteration loop to capture error‑linked shapes and export the results to a text log file, handling any shape‑processing exceptions gracefully.
+// Common Searches: asp.net c# detect shapes linked to #N/A cells with Aspose.Cells | Aspose.Cells iterate worksheet shapes and find error values in linked cells | C# code to log shape names that are anchored to error cells in Excel using Aspose | filter Excel shapes by cell error type Aspose.Cells .NET example | retrieve shapes pointing to cells with #DIV/0! using Aspose.Cells
+// Tags: iterate worksheet shapes Aspose.Cells | identify shapes linked to error cells C# | export shape‑cell error mapping Aspose.Cells | shape anchor error detection .NET | filter shapes by CellValueType.IsError
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeErrorFilter
+// The example loads an Excel workbook, iterates through all shapes on the first worksheet, checks the cell anchored at each shape's upper‑left corner for an error value (CellValueType.IsError), logs the shape name and cell reference when an error is found, and saves the workbook.
+class Program
 {
-    // Loads an Excel file using LoadOptions.IgnoreUselessShapes, scans each worksheet's ShapeCollection, retrieves each shape's linked cell via GetLinkedCell, checks if the cell contains an error (IsErrorValue), and writes the shape name, type and error details to the console before optionally saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the workbook with options (ignore useless shapes to speed up loading)
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.IgnoreUselessShapes = true;
-            Workbook workbook = new Workbook("input.xlsx", loadOptions);
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                ShapeCollection shapes = sheet.Shapes;
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-                // Examine each shape in the worksheet
-                for (int i = 0; i < shapes.Count; i++)
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes in the worksheet
+            foreach (Shape shape in worksheet.Shapes)
+            {
+                try
                 {
-                    Shape shape = shapes[i];
+                    // Get the cell to which the shape is anchored (top‑left corner)
+                    int row = shape.UpperLeftRow;
+                    int column = shape.UpperLeftColumn;
+                    Cell linkedCell = worksheet.Cells[row, column];
 
-                    // Try to obtain the linked cell address (if any)
-                    string linkedCellAddress = shape.GetLinkedCell(false, false);
-
-                    // If the shape is linked to a cell, check whether that cell contains an error
-                    if (!string.IsNullOrEmpty(linkedCellAddress))
+                    // Check if the linked cell contains an error value
+                    if (linkedCell.Type == CellValueType.IsError)
                     {
-                        Cell linkedCell = sheet.Cells[linkedCellAddress];
-
-                        if (linkedCell.IsErrorValue)
-                        {
-                            // Log the problematic shape information
-                            Console.WriteLine($"Shape '{shape.Name}' (Type={shape.Type}) is linked to error cell '{linkedCellAddress}' with value '{linkedCell.StringValue}'.");
-                        }
+                        // Log the shape name and the problematic cell reference
+                        Console.WriteLine($"Shape '{shape.Name}' is linked to error cell {linkedCell.Name}.");
                     }
+                }
+                catch (Exception exShape)
+                {
+                    // Handle any unexpected errors while processing a shape
+                    Console.WriteLine($"Error processing shape '{shape.Name}': {exShape.Message}");
                 }
             }
 
-            // Save the workbook (unchanged, but could be a different file if needed)
-            workbook.Save("output.xlsx");
+            // Save the workbook (optional, depending on further processing)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

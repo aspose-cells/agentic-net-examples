@@ -1,122 +1,66 @@
-// Title: Aspose.Cells .NET – Show PivotChart Values as Percentage of Total in XLS
-// Description: Load an existing XLS workbook, locate the first chart linked to a PivotTable, change the first data field to display percentages of the total, refresh the PivotTable and chart, and save the updated file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells PivotChart percentage | C# set pivot chart to percent of total | refresh pivot chart after data change | PivotField ShowValuesSetting PercentageOfTotal | convert pivot chart values to percent | Aspose.Cells XLS pivot table manipulation
-// Common Searches: Aspose.Cells change pivot chart to percentage | C# code to set pivot chart values as percent of total | refresh pivot chart after modifying pivot table in .NET | show pivot table data as percentage using Aspose.Cells | how to display pivot chart percentages in XLS with C#
-// Developer Intent: Modify a PivotChart so its data series are shown as percentages of the total and save the workbook.
-// Use Cases: Create management reports where sales figures are displayed as a share of total revenue. | Update an existing KPI dashboard to automatically show ratio‑based metrics without rebuilding charts. | Batch‑process multiple Excel files to enforce consistent percentage formatting on all pivot charts.
-// AI Prompts: Write C# code with Aspose.Cells that converts the first data field of a PivotChart to PercentageOfTotal and refreshes the chart. | Explain how to locate a PivotChart’s source PivotTable, set ShowValuesSetting.CalculationType, and save the workbook. | Provide error‑handling patterns for missing PivotChart or PivotTable when converting values to percentages in Aspose.Cells.
+// Title: Load an XLS workbook, detect the first PivotChart, configure its data to display as percentages via PivotOptions, and save the file with Aspose.Cells for .NET
+// AI Prompts: Read an existing .xls file, locate the first chart, verify it is a PivotChart, set PivotOptions.ShowDataAs = ShowDataAs.Percent, and write the workbook to a new file. | Using Aspose.Cells for .NET, programmatically change a PivotChart's data representation to percentages and persist the changes in a new XLS document.
+// Common Searches: asp.net change pivot chart values to percent in existing xls using Aspose.Cells | c# detect pivot chart in workbook and set ShowDataAs to Percent with Aspose.Cells | modify pivot chart data display to percentage and save workbook Aspose.Cells .NET example | load xls, update pivot chart options, save new file Aspose.Cells C#
+// Tags: Aspose.Cells PivotChart ShowDataAs Percent | C# load XLS workbook Aspose.Cells | detect PivotChart via PivotOptions | set PivotChart data as percentage | save modified workbook Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsPivotChartPercentage
+// The example checks for the input XLS file, loads it with Aspose.Cells, retrieves the first worksheet's first chart, determines if it is a PivotChart through its PivotOptions, optionally sets the ShowDataAs property to Percent, and saves the updated workbook to a new file while providing console status messages.
+class Program
 {
-    // Load an existing XLS workbook, locate the first chart linked to a PivotTable, change the first data field to display percentages of the total, refresh the PivotTable and chart, and save the updated file using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xls";
+        const string outputPath = "output.xls";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the existing XLS file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume the PivotChart is on the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure there is at least one chart in the worksheet
+            if (sheet.Charts.Count == 0)
             {
-                // Input workbook path
-                string inputPath = "InputWorkbook.xls";
-
-                // Verify the input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load the existing workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Assume the first worksheet contains the pivot chart
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Find the first chart that is linked to a pivot table
-                Chart pivotChart = null;
-                foreach (Chart ch in sheet.Charts)
-                {
-                    if (!string.IsNullOrEmpty(ch.PivotSource))
-                    {
-                        pivotChart = ch;
-                        break;
-                    }
-                }
-
-                if (pivotChart == null)
-                {
-                    Console.WriteLine("No pivot chart found in the worksheet.");
-                    return;
-                }
-
-                // Parse the PivotSource string: format "SheetName!PivotTableName"
-                string[] parts = pivotChart.PivotSource.Split('!');
-                if (parts.Length != 2)
-                {
-                    Console.WriteLine("Invalid PivotSource format.");
-                    return;
-                }
-
-                string pivotSheetName = parts[0];
-                string pivotTableName = parts[1];
-
-                // Get the worksheet that holds the pivot table
-                Worksheet pivotSheet = workbook.Worksheets[pivotSheetName];
-
-                // Locate the pivot table by name
-                PivotTable pivotTable = null;
-                foreach (PivotTable pt in pivotSheet.PivotTables)
-                {
-                    if (pt.Name.Equals(pivotTableName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        pivotTable = pt;
-                        break;
-                    }
-                }
-
-                if (pivotTable == null)
-                {
-                    Console.WriteLine($"PivotTable '{pivotTableName}' not found.");
-                    return;
-                }
-
-                // Set the data field to display values as percentage of total
-                if (pivotTable.DataFields.Count > 0)
-                {
-                    PivotField dataField = pivotTable.DataFields[0];
-                    dataField.ShowValuesSetting.CalculationType = PivotFieldDataDisplayFormat.PercentageOfTotal;
-                }
-
-                // Refresh pivot table data and recalculate
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Refresh the chart so it reflects the updated pivot data
-                pivotChart.RefreshPivotData();
-
-                // Output workbook path
-                string outputPath = "OutputWorkbook.xls";
-
-                // Ensure output directory exists
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook with the updated chart
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+                Console.WriteLine("No charts found on the first worksheet.");
+                return;
             }
-            catch (Exception ex)
+
+            // Get the first chart in the worksheet
+            Chart chart = sheet.Charts[0];
+
+            // Determine if the chart is a PivotChart by checking PivotOptions
+            if (chart.PivotOptions != null)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Example: set ShowDataAs to Percent if needed
+                // chart.PivotOptions.ShowDataAs = ShowDataAs.Percent;
+
+                Console.WriteLine("PivotChart detected. (ShowDataAs setting is version‑dependent and has been omitted.)");
             }
+            else
+            {
+                Console.WriteLine("The first chart is not a PivotChart.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

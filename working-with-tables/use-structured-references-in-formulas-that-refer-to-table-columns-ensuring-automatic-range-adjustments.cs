@@ -1,79 +1,107 @@
-// Title: Aspose.Cells .NET – Create Excel Table with Structured Reference Formula that Auto‑Expands
-// Description: A C# example that builds a workbook, converts a data range into a ListObject named "Sales", adds a calculated "Total" column using the structured reference =[@Quantity]*[@Price], inserts an extra row, resizes the table to include the new data, recalculates all formulas, and saves the file as StructuredReferenceDemo.xlsx.
-// Keywords: Aspose.Cells | C# Excel table | ListObject | structured reference formula | calculated column | auto expand table range | Resize ListObject | formula recalculation | Excel table automation | Aspose.Cells .NET
-// Common Searches: structured reference formula Aspose.Cells | add calculated column to ListObject C# | auto expand Excel table after inserting rows Aspose | resize ListObject programmatically | Aspose.Cells calculate formulas | C# create Excel table with ListObject
-// Developer Intent: Create an Excel ListObject, define a calculated column using a structured reference, and have the formula propagate automatically when new rows are added.
-// Use Cases: Generate a “Total” column that multiplies Quantity by Price for each table row via a structured reference. | Append new sales records and let the Total column compute automatically without manual copying. | Programmatically resize the ListObject after inserting rows and trigger a full formula recalculation before saving.
-// AI Prompts: Write C# code with Aspose.Cells that creates a ListObject, adds a calculated column with the formula =[@Quantity]*[@Price], and saves the workbook. | Show how to add a new row to an existing Aspose.Cells table and automatically extend the structured reference formula to the new row. | Explain the steps to resize a ListObject after adding data and force formula recalculation using Aspose.Cells .NET.
+// Title: Add a calculated Total column to an Excel table using structured references and auto‑resize the table with Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that creates a ListObject, adds a 'Total' column using the formula =SalesData[@Quantity]*SalesData[@Price], and saves the workbook. | Demonstrate how to append a new data row and programmatically resize the Aspose.Cells table so the structured‑reference formula propagates to the added row.
+// Common Searches: asp.net aspose.cells add calculated column with structured reference formula | how to expand an Excel ListObject range after inserting rows using Aspose.Cells C# | using table structured references in Aspose.Cells to compute column values | auto adjust Excel table size programmatically with Aspose.Cells .NET | create Excel table and total column in C# Aspose.Cells example
+// Tags: Aspose.Cells calculated column via table structured reference | C# programmatically resize Excel ListObject | Aspose.Cells create ListObject from cell range | auto‑expand Excel table range with Aspose.Cells | total column using table structured reference .NET
 
-using Aspose.Cells;
-using Aspose.Cells.Tables;
 using System;
 using System.IO;
+using Aspose.Cells;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-// A C# example that builds a workbook, converts a data range into a ListObject named "Sales", adds a calculated "Total" column using the structured reference =[@Quantity]*[@Price], inserts an extra row, resizes the table to include the new data, recalculates all formulas, and saves the file as StructuredReferenceDemo.xlsx.
-class StructuredReferenceDemo
+// The sample creates a new workbook, defines a ListObject named 'SalesData' over sample data, adds a 'Total' column whose cells use a structured‑reference formula (=SalesData[@Quantity]*SalesData[@Price]), inserts an extra row, resizes the table to include the new row, and saves the file as StructuredReferenceExample.xlsx.
+class StructuredReferenceExample
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet.
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            Cells cells = ws.Cells;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-            // ----- Populate sample data with headers -----
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data (Header + 4 rows)
+            // Headers: Item, Quantity, Price
             cells["A1"].PutValue("Item");
             cells["B1"].PutValue("Quantity");
             cells["C1"].PutValue("Price");
 
-            string[] items = { "Apple", "Banana", "Cherry" };
-            int[] quantities = { 10, 20, 15 };
-            double[] prices = { 0.5, 0.3, 0.8 };
+            // Sample rows
+            cells["A2"].PutValue("Apple");
+            cells["B2"].PutValue(10);
+            cells["C2"].PutValue(0.5);
 
-            for (int i = 0; i < items.Length; i++)
+            cells["A3"].PutValue("Banana");
+            cells["B3"].PutValue(5);
+            cells["C3"].PutValue(0.3);
+
+            cells["A4"].PutValue("Orange");
+            cells["B4"].PutValue(8);
+            cells["C4"].PutValue(0.4);
+
+            cells["A5"].PutValue("Grape");
+            cells["B5"].PutValue(12);
+            cells["C5"].PutValue(0.6);
+
+            // Define the range that will become a table (including headers)
+            int firstRow = 0;   // zero‑based index for row 1
+            int firstCol = 0;   // column A
+            int totalRows = 5;  // header + 4 data rows
+            int totalCols = 3;  // Item, Quantity, Price
+
+            // Add a ListObject (Excel Table) over the range
+            // The last parameter 'hasHeaders' is true because the first row contains headers
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstCol,
+                                                   firstRow + totalRows - 1,
+                                                   firstCol + totalCols - 1,
+                                                   true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "SalesData";
+            table.ShowHeaderRow = true;
+            // ShowTotalRow property is not available in this version; omitted.
+
+            // Add a new column for Total (Quantity * Price) using a structured reference formula
+            int totalColumnIndex = totalCols; // next column after existing ones (zero‑based)
+
+            // Set header for the new column
+            cells[0, totalColumnIndex].PutValue("Total");
+
+            // Apply structured reference formula to the new column (excluding header)
+            string formula = "=SalesData[@Quantity]*SalesData[@Price]";
+            for (int row = 1; row < totalRows; row++)
             {
-                cells[i + 1, 0].PutValue(items[i]);      // Column A
-                cells[i + 1, 1].PutValue(quantities[i]); // Column B
-                cells[i + 1, 2].PutValue(prices[i]);     // Column C
+                cells[row, totalColumnIndex].Formula = formula;
             }
 
-            // ----- Create a table (ListObject) covering the data range -----
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-            int tableIndex = ws.ListObjects.Add(0, 0, items.Length, 2, true);
-            ListObject table = ws.ListObjects[tableIndex];
-            table.DisplayName = "Sales";
+            // Demonstrate automatic range adjustment:
+            // Add a new data row below the existing table
+            int newRowIndex = firstRow + totalRows; // row index for the new row
+            cells[newRowIndex, 0].PutValue("Mango");
+            cells[newRowIndex, 1].PutValue(7);
+            cells[newRowIndex, 2].PutValue(0.8);
 
-            // ----- Add a new column "Total" to the table -----
-            // Expand the table by one column (hasHeaders = true because the table already has a header row).
-            table.Resize(table.StartRow, table.StartColumn, table.EndRow, table.EndColumn + 1, true);
-            cells[0, 3].PutValue("Total"); // Header for the new column.
+            // Expand the table to include the new row (hasHeaders = true)
+            int newTotalRows = newRowIndex - firstRow + 1; // total rows after adding the new row
+            table.Resize(firstRow, firstCol, newTotalRows, totalCols, true);
 
-            // Set a column formula using a structured reference.
-            // Structured reference syntax: =[@Quantity]*[@Price]
-            int totalColumnIndex = table.ListColumns.Count - 1;
-            table.ListColumns[totalColumnIndex].Formula = "=[@Quantity]*[@Price]";
+            // Save the workbook
+            string outputPath = "StructuredReferenceExample.xlsx";
 
-            // ----- Add a new data row to demonstrate automatic formula propagation -----
-            int newRowIndex = table.EndRow + 1; // Row index just below the current table.
-            cells[newRowIndex, 0].PutValue("Date");
-            cells[newRowIndex, 1].PutValue(5);
-            cells[newRowIndex, 2].PutValue(1.2);
-            // Expand the table to include the new row (hasHeaders = true).
-            table.Resize(table.StartRow, table.StartColumn, newRowIndex, table.EndColumn, true);
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Calculate all formulas so that the "Total" column values are updated.
-            wb.CalculateFormula();
-
-            // Save the workbook.
-            string outputPath = "StructuredReferenceDemo.xlsx";
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

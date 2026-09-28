@@ -1,42 +1,48 @@
-// Title: C# – Freeze the Top Three Rows in an Excel Worksheet with Aspose.Cells
-// Description: Demonstrates how to use Aspose.Cells for .NET to freeze the first three rows of a worksheet (no columns frozen) by calling Worksheet.FreezePanes(3, 0, 3, 0) and saving the result as FreezeTopThreeRows.xlsx.
-// Keywords: Aspose.Cells FreezePanes C# | freeze top rows Excel | C# freeze first three rows | Aspose.Cells worksheet freeze example | Excel freeze panes .NET
-// Common Searches: how to freeze the first three rows using Aspose.Cells | Aspose.Cells C# freeze panes without columns | freeze top rows Excel programmatically .NET | sample code for Worksheet.FreezePanes in C# | Aspose.Cells freeze pane tutorial
-// Developer Intent: Apply a freeze‑pane setting that locks the top three rows while allowing all columns to scroll.
-// Use Cases: Keep header or summary rows visible while scrolling through large reports. | Generate spreadsheets where the first three rows contain titles, dates, and filters that must stay static. | Apply identical row‑freeze settings across multiple worksheets in an automated workbook creation process.
-// AI Prompts: Generate C# code that freezes the first N rows in an Excel file using Aspose.Cells, where N is a variable. | Show how to freeze both rows and columns together with error handling in Aspose.Cells for .NET. | Explain each parameter of Worksheet.FreezePanes and how to remove a freeze‑pane later.
+// Title: How to freeze the top three rows of an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates an Excel workbook with Aspose.Cells, fills it with sample data, and freezes rows 1‑3 while keeping columns scrollable. | Demonstrate using Worksheet.FreezePanes to lock the first three rows in a .xlsx file with Aspose.Cells for .NET. | Show how to apply FreezePanes(3,0,0,0) and then save the workbook so header rows stay visible during navigation.
+// Common Searches: Aspose.Cells C# freeze first three rows of worksheet example | How to keep header rows static while scrolling in Excel using Aspose.Cells .NET | Worksheet.FreezePanes parameters to freeze top rows in C# Aspose.Cells
+// Tags: Aspose.Cells FreezePanes top rows | C# freeze header rows Excel | Aspose.Cells worksheet freeze rows example | Excel .xlsx freeze panes using Aspose.Cells | programmatic row freeze Aspose.Cells .NET
 
 using System;
 using Aspose.Cells;
+using System.IO;
 
-namespace AsposeCellsExample
+// The example creates a new workbook, populates cells with sample data, freezes the first three rows using Worksheet.FreezePanes(3,0,0,0) to keep header rows visible, and saves the file as FrozenTopThreeRows.xlsx.
+class FreezeTopRowsExample
 {
-    // Demonstrates how to use Aspose.Cells for .NET to freeze the first three rows of a worksheet (no columns frozen) by calling Worksheet.FreezePanes(3, 0, 3, 0) and saving the result as FreezeTopThreeRows.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // creates a new workbook with a default worksheet
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Report";
+
+            // Populate some data to visualize the freeze effect
+            for (int row = 0; row < 20; row++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Freeze the top three rows (no columns are frozen)
-                // Parameters: row index, column index, number of frozen rows, number of frozen columns
-                worksheet.FreezePanes(3, 0, 3, 0);
-
-                // Save the workbook to a file
-                string outputPath = "FreezeTopThreeRows.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                for (int col = 0; col < 5; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Freeze the top three rows (rows 0,1,2) while keeping all columns scrollable
+            // FreezePanes(row, column, totalRows, totalColumns)
+            // Setting totalRows and totalColumns to 0 freezes everything above 'row' and left of 'column'
+            sheet.FreezePanes(3, 0, 0, 0); // freezes rows 0-2
+
+            // Save the workbook to a file
+            string outputPath = "FrozenTopThreeRows.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

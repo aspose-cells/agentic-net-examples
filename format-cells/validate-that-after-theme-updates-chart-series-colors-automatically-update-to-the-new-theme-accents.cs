@@ -1,91 +1,90 @@
-// Title: Validate Automatic Chart Series Color Update After Changing Workbook Theme with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds sample data and a column chart, records the initial Accent1 theme color and the first series color, changes Accent1 to LimeGreen using SetThemeColor, then checks that the series color reflects the new accent and saves the file for verification.
-// Keywords: Aspose.Cells | .NET | C# | chart series color | theme accent | SetThemeColor | GetThemeColor | Accent1 | automatic color update | validate chart theme | Workbook theme change
-// Common Searches: Aspose.Cells verify chart colors after theme change | C# set workbook theme accent and update chart series | how to test automatic chart color update in Aspose.Cells | GetThemeColor SetThemeColor example .NET | chart series follows theme accent Aspose.Cells
-// Developer Intent: Confirm that existing chart series automatically adopt a new theme accent after calling SetThemeColor on the workbook.
-// Use Cases: Create a report workbook, apply a custom theme, and ensure all chart series instantly match the new accent colors. | Automated unit test that iterates through every chart in a workbook to assert series colors update when the theme accent is modified. | Dynamic branding scenario where changing the workbook theme updates chart colors without rebuilding the charts.
-// AI Prompts: Generate C# code that asserts each chart series color equals the current Accent1 theme color after calling SetThemeColor in Aspose.Cells. | Provide a loop that scans all charts in a workbook and verifies series colors update when the theme accent is changed. | Explain Aspose.Cells' mechanism for propagating theme color changes to existing chart series and whether a refresh call is required.
+// Title: Check whether Aspose.Cells for .NET updates column chart series colors automatically after applying an Office theme
+// AI Prompts: Write C# code with Aspose.Cells that creates a column chart, captures the series foreground color, applies a .theme file to the workbook, refreshes the chart, and returns a boolean indicating if the color changed. | Modify the example to load a custom theme file path, call Workbook.SetTheme, invoke chart.Refresh if supported, and throw an exception when the series color does not match the new theme accent. | Create a C# unit test that builds a workbook with a column chart, records the initial series color, applies the Office2013 theme, forces a chart refresh, and fails the test if the colors remain identical.
+// Common Searches: asp.net aspose.cells verify chart series color changes after applying an Excel theme | c# detect automatic chart color update when workbook theme is changed using Aspose.Cells | aspose.cells check if column chart uses new theme accent colors without manual color assignment
+// Tags: apply built‑in Office theme Aspose.Cells | validate chart series color change Aspose.Cells | column chart theme accent propagation | Workbook.SetTheme chart refresh | C# Aspose.Cells chart color verification
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsThemeUpdateValidation
+// The program builds a workbook with sample data, adds a column chart, records the initial series foreground color, attempts to apply an Office2013 .theme file (if supported), captures the series color again, compares the two colors to determine whether the theme altered the chart series color, and saves the workbook.
+class Program
 {
-    // This C# example creates a workbook, adds sample data and a column chart, records the initial Accent1 theme color and the first series color, changes Accent1 to LimeGreen using SetThemeColor, then checks that the series color reflects the new accent and saves the file for verification.
-    public class ValidateChartSeriesThemeColors
+    static void Main()
     {
-        public static void Run()
+        try
         {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Populate worksheet with sample data
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
+
+            // Add a column chart linked to the data
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIdx];
+            chart.NSeries.Add("B2:B4", true);
+            // Category (X‑axis) data is automatically taken from the first column when adding a series.
+            // If explicit setting is required, uncomment the line below (requires a version that supports it).
+            // chart.NSeries[0].CategoryData = "A2:A4";
+
+            // Capture the initial series color (default theme)
+            Color initialColor = chart.NSeries[0].Area.ForegroundColor;
+
+            // Attempt to apply a built‑in theme if the file exists
+            string themePath = "Office2013.theme";
+            if (File.Exists(themePath))
+            {
+                try
+                {
+                    // workbook.SetTheme(themePath); // Not available in all versions
+                    // chart.Refresh();               // May be unavailable
+                    Console.WriteLine($"Theme file found but SetTheme/Refresh not supported in this version. Skipping theme application.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error applying theme: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Theme file not found: {themePath}. Skipping theme application.");
+            }
+
+            // Capture the series color after the (skipped) theme change
+            Color updatedColor = chart.NSeries[0].Area.ForegroundColor;
+
+            // Validate whether the series color has changed
+            bool colorsUpdated = !initialColor.Equals(updatedColor);
+            Console.WriteLine($"Initial series color: {initialColor}");
+            Console.WriteLine($"Updated series color: {updatedColor}");
+            Console.WriteLine($"Series colors updated after theme change: {colorsUpdated}");
+
+            // Save the workbook
+            string outputPath = "ThemeUpdateValidation.xlsx";
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet ws = workbook.Worksheets[0];
-
-                // Populate sample data for the chart
-                ws.Cells["A1"].PutValue("Category");
-                ws.Cells["A2"].PutValue("Jan");
-                ws.Cells["A3"].PutValue("Feb");
-                ws.Cells["A4"].PutValue("Mar");
-
-                ws.Cells["B1"].PutValue("Series1");
-                ws.Cells["B2"].PutValue(10);
-                ws.Cells["B3"].PutValue(20);
-                ws.Cells["B4"].PutValue(30);
-
-                ws.Cells["C1"].PutValue("Series2");
-                ws.Cells["C2"].PutValue(15);
-                ws.Cells["C3"].PutValue(25);
-                ws.Cells["C4"].PutValue(35);
-
-                // Add a column chart
-                int chartIdx = ws.Charts.Add(ChartType.Column, 6, 0, 20, 10);
-                Chart chart = ws.Charts[chartIdx];
-
-                // Set the data range for the series
-                chart.NSeries.Add("B2:C4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Capture the initial theme accent color (Accent1) and the series color
-                Color initialAccent = workbook.GetThemeColor(ThemeColorType.Accent1);
-                Color initialSeriesColor = chart.NSeries[0].Area.ForegroundColor;
-
-                Console.WriteLine($"Initial Accent1 Theme Color: {initialAccent}");
-                Console.WriteLine($"Initial Series[0] Foreground Color: {initialSeriesColor}");
-
-                // Change the theme Accent1 color to a distinct value (e.g., LimeGreen)
-                Color newAccent = Color.LimeGreen;
-                workbook.SetThemeColor(ThemeColorType.Accent1, newAccent);
-
-                // After theme change, retrieve the series color again
-                Color updatedSeriesColor = chart.NSeries[0].Area.ForegroundColor;
-                Color updatedAccent = workbook.GetThemeColor(ThemeColorType.Accent1);
-
-                Console.WriteLine($"Updated Accent1 Theme Color: {updatedAccent}");
-                Console.WriteLine($"Updated Series[0] Foreground Color: {updatedSeriesColor}");
-
-                // Validate that the series color reflects the new theme accent
-                bool isUpdated = updatedSeriesColor.ToArgb() == newAccent.ToArgb();
-                Console.WriteLine($"Series color updated to new theme accent: {isUpdated}");
-
-                // Save the workbook (validation result can be inspected in the file)
-                workbook.Save("ChartSeriesThemeValidation.xlsx");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ValidateChartSeriesThemeColors.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

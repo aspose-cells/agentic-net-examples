@@ -1,86 +1,60 @@
-// Title: Aspose.Cells for .NET: Line chart with moving‑average series using a formula column
-// Description: Creates a workbook, fills columns A (categories) and B (values), inserts an AVERAGE formula in column C to compute a 3‑point moving average, forces formula calculation, adds a line chart, binds original and moving‑average series, sets the X‑axis to column A, applies basic formatting, and saves as MovingAverageChart.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | line chart | moving average | formula column | Excel AVERAGE function | chart series from formula | dynamic chart data | calculate rolling average
-// Common Searches: Aspose.Cells line chart with moving average | use formula column as chart series Aspose.Cells .NET | calculate rolling average in Excel with Aspose.Cells | add moving average series to Excel chart C# | chart series from calculated cells Aspose.Cells
-// Developer Intent: Generate a line chart that displays both raw values and a calculated moving‑average series derived from an Excel formula column.
-// Use Cases: Sales or revenue trend reports where a moving average smooths monthly volatility. | Financial dashboards that overlay rolling averages on key performance indicators. | Production or inventory charts that automatically update the average line as new data is added.
-// AI Prompts: Show how to make the moving‑average period configurable at runtime and refresh the chart. | Provide code to style the moving‑average series (e.g., dashed line, custom color) in the generated chart. | Explain how to replace hard‑coded ranges with named ranges for both original and moving‑average series.
+// Title: Generate a line chart with a 3‑point moving average series using formula‑driven cells in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to fill column A with sample values, insert AVERAGE formulas in column B for a 3‑point moving average, and create a line chart that plots both the original data and the calculated moving‑average series. | Demonstrate how to bind a range containing Excel formulas as the data source for a chart series in Aspose.Cells, set series names, and save the workbook.
+// Common Searches: how to add a moving average series to a chart with Aspose.Cells C# | Aspose.Cells line chart using formula cells as data source | C# calculate 3 point moving average with AVERAGE formula in Aspose.Cells | bind calculated range to chart series Aspose.Cells .NET example | create chart with original data and moving average in Aspose.Cells workbook
+// Tags: Aspose.Cells line chart with formula data source | C# moving average calculation using AVERAGE formula | bind calculated cells to chart series Aspose.Cells | create Excel chart with original and moving average data | Aspose.Cells chart series from computed range
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
 
-namespace AsposeCellsMovingAverageChart
+// The example creates a workbook, writes sample numbers to column A, adds 3‑point moving‑average formulas to column B, then builds a line chart that displays the raw data (A1:A10) and the computed moving‑average series (B3:B10). The chart is titled, series are named, and the workbook is saved as MovingAverageChart.xlsx.
+class Program
 {
-    // Creates a workbook, fills columns A (categories) and B (values), inserts an AVERAGE formula in column C to compute a 3‑point moving average, forces formula calculation, adds a line chart, binds original and moving‑average series, sets the X‑axis to column A, applies basic formatting, and saves as MovingAverageChart.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data
-            // Column A: Category (e.g., Month)
-            // Column B: Original values
-            string[] categories = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct" };
-            double[] values = { 120, 150, 130, 170, 160, 180, 200, 190, 210, 230 };
-            int rowCount = categories.Length;
-
-            for (int i = 0; i < rowCount; i++)
+            // Fill sample data in column A (A1:A10)
+            double[] data = { 10, 12, 15, 14, 13, 16, 18, 20, 19, 22 };
+            for (int i = 0; i < data.Length; i++)
             {
-                cells[i + 1, 0].PutValue(categories[i]); // A column (index 0)
-                cells[i + 1, 1].PutValue(values[i]);    // B column (index 1)
+                cells[i, 0].PutValue(data[i]); // Row i, Column 0 (A)
             }
 
-            // Define moving average period
-            int period = 3;
-
-            // Column C will hold the moving average calculated by a formula
-            // For rows where there are not enough previous points, leave the cell empty
-            for (int i = 0; i < rowCount; i++)
+            // Insert moving‑average formulas in column B (B3:B10) – 3‑point moving average
+            for (int row = 2; row < data.Length; row++) // start from third data point (row index 2)
             {
-                int currentRow = i + 1; // Excel rows are 1‑based
-                if (i + 1 >= period)
-                {
-                    // Formula: =AVERAGE(B{row-period+1}:B{row})
-                    string formula = $"=AVERAGE(B{currentRow - period + 1}:B{currentRow})";
-                    cells[currentRow, 2].Formula = formula; // C column (index 2)
-                }
-                else
-                {
-                    cells[currentRow, 2].PutValue(string.Empty);
-                }
+                // Excel formula: =AVERAGE(A{row}:A{row+2})
+                string formula = $"AVERAGE(A{row + 1}:A{row + 3})";
+                cells[row, 1].Formula = formula; // Column B
             }
 
-            // Calculate all formulas so that the moving average values are materialized
-            workbook.CalculateFormula();
-
-            // Add a line chart
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 12, 0, 30, 15);
+            // Add a line chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 25, 10);
             Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Original Data vs. 3‑Point Moving Average";
 
-            // Series 1: Original values (B column)
-            chart.NSeries.Add("B2:B11", true);
-            chart.NSeries[0].Name = "Original";
+            // Series 1 – original data (A1:A10)
+            chart.NSeries.Add("A1:A10", true);
+            chart.NSeries[0].Name = "Original Data";
 
-            // Series 2: Moving average (C column)
-            chart.NSeries.Add("C2:C11", true);
-            chart.NSeries[1].Name = "Moving Average";
+            // Series 2 – moving average (B3:B10)
+            chart.NSeries.Add("B3:B10", true);
+            chart.NSeries[1].Name = "3‑Point Moving Avg";
 
-            // Set category (X) axis data (A column)
-            chart.NSeries.CategoryData = "A2:A11";
-
-            // Optional: format the chart (titles, legend, etc.)
-            chart.Title.Text = "Sales with Moving Average";
-            chart.Legend.Position = LegendPositionType.Bottom;
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("MovingAverageChart.xlsx", SaveFormat.Xlsx);
+            // Save the workbook
+            workbook.Save("MovingAverageChart.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

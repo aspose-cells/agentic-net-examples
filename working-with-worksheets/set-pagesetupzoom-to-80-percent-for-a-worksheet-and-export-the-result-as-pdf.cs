@@ -1,54 +1,29 @@
-// Title: Set Worksheet Zoom to 80% and Export as PDF using Aspose.Cells for .NET
-// Description: Creates a workbook, sets the first worksheet's PageSetup.Zoom to 80 % with percent‑based scaling, and saves the workbook as a PDF. The resulting PDF reflects the specified zoom level.
-// Keywords: Aspose.Cells | C# worksheet zoom | PageSetup.Zoom | IsPercentScale | PDF export | custom page scaling | Aspose.Cells PDF options | .NET spreadsheet to PDF
-// Common Searches: Aspose.Cells set worksheet zoom 80 percent | export worksheet to PDF with custom scaling .NET | PageSetup.IsPercentScale true Aspose.Cells | C# change page zoom before PDF conversion | how to adjust worksheet scaling for PDF output
-// Developer Intent: Apply an 80 % page zoom to a worksheet and generate a PDF file.
-// Use Cases: Print reports where more rows fit on each PDF page by scaling to 80 %. | Create brand‑consistent PDFs with a custom zoom while leaving other sheets at default scaling. | Improve readability of a summary sheet by reducing its zoom before exporting the workbook to PDF.
-// AI Prompts: Generate C# code that sets PageSetup.Zoom to 80% and saves the workbook as a PDF with Aspose.Cells. | Explain how PageSetup.IsPercentScale influences PDF rendering in Aspose.Cells for .NET. | Show an example that exports multiple worksheets, each with a different zoom level, to separate PDF files.
+// Title: How to set worksheet page zoom to 80% with Aspose.Cells for .NET and export to PDF
+// AI Prompts: Apply an 80% zoom to the active sheet's page layout and generate a PDF file using Aspose.Cells in C#. | Adjust the zoom level of several worksheets before creating a combined PDF document in a .NET application. | Change the page scaling factor for PDF export while preserving existing cell data with Aspose.Cells.
+// Common Searches: aspnet set page zoom 80% before exporting Excel to PDF with Aspose.Cells | c# Aspose.Cells change worksheet PageSetup.Zoom for PDF output | how to adjust PDF scaling of Excel sheet using Aspose.Cells .NET | export workbook to PDF with custom zoom level using Aspose.Cells C# example
+// Tags: worksheet zoom setting Aspose.Cells | custom PDF scaling using Aspose.Cells | PageSetup.Zoom API C# | export Excel to PDF with adjusted layout | modify page setup prior to PDF generation
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
 
-namespace AsposeCellsExamples
+// Creates a new workbook, sets the first worksheet's PageSetup.Zoom to 80%, adds optional sample data, and saves the workbook as a PDF file.
+class Program
 {
-    // Creates a workbook, sets the first worksheet's PageSetup.Zoom to 80 % with percent‑based scaling, and saves the workbook as a PDF. The resulting PDF reflects the specified zoom level.
-    public class SetZoomAndExportPdf
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook (default contains one worksheet)
-                Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Set the page scaling (zoom) to 80%
-                worksheet.PageSetup.Zoom = 80;
-                // Ensure the scaling mode is percent‑based
-                worksheet.PageSetup.IsPercentScale = true;
+        // Set the page zoom to 80%
+        sheet.PageSetup.Zoom = 80;
 
-                // Prepare PDF save options (default options are sufficient)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // (Optional) Add some sample data to the worksheet
+        sheet.Cells["A1"].PutValue("Sample data for PDF export");
 
-                // Save the workbook as PDF; the zoom setting will be applied to the output
-                string outputPath = "Worksheet_Zoom80.pdf";
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"Workbook saved as PDF with 80% zoom: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Export the workbook to PDF
+        workbook.Save("Result.pdf", SaveFormat.Pdf);
     }
 }

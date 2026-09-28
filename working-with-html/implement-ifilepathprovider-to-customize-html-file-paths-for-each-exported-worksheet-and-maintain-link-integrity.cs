@@ -1,27 +1,34 @@
-// Title: Custom IFilePathProvider for Aspose.Cells HTML Export – Separate Sheet Files & Preserved Links
-// Description: Demonstrates how to implement IFilePathProvider to generate custom relative paths (e.g., "Sheets/Sheet1.html") for each worksheet when saving a workbook to HTML with Aspose.Cells for .NET. The example configures HtmlSaveOptions to use the provider, export all worksheets, and create full‑path links so inter‑sheet hyperlinks remain functional.
-// Keywords: Aspose.Cells IFilePathProvider | HTML export custom folder | C# Aspose.Cells separate sheet files | preserve inter‑sheet hyperlinks | HtmlSaveOptions IsFullPathLink | export all worksheets to HTML | custom file path provider example | Aspose.Cells HTML link integrity
-// Common Searches: Aspose.Cells custom HTML file path per worksheet | How to keep hyperlinks when exporting workbook to HTML | IFilePathProvider example C# | Save each Excel sheet as separate HTML file Aspose | Full path links Aspose.Cells HTML export
-// Developer Intent: Create a custom IFilePathProvider to control where each worksheet’s HTML file is saved and ensure hyperlink references stay valid.
-// Use Cases: Publish a multi‑sheet workbook as independent HTML pages stored in a dedicated subfolder while maintaining clickable links between sheets. | Automate documentation pipelines that require predictable file names (e.g., SheetName.html) for each worksheet. | Move the main HTML file to a different location without breaking inter‑sheet links by enabling full‑path linking.
-// AI Prompts: Generate C# code that implements IFilePathProvider to save worksheets as "Sheets/<WorksheetName>.html" and configures HtmlSaveOptions for full‑path links. | Show how to export an Aspose.Cells workbook to HTML with ExportActiveWorksheetOnly = false and a custom file path provider, preserving all inter‑sheet hyperlinks. | Explain how to modify the custom file path provider to include a date‑stamp folder (e.g., "Sheets/2024-08-11/Sheet1.html").
+// Title: Use a custom IFilePathProvider to generate safe per‑worksheet HTML file names when exporting a workbook with Aspose.Cells for .NET
+// AI Prompts: Implement a class that inherits IFilePathProvider and returns sanitized file names for each worksheet during HTML export. | Set HtmlSaveOptions.IsFullPathLink to true and assign the custom IFilePathProvider to preserve navigation links between worksheet HTML files. | Modify the export routine to load the workbook, apply the custom file path provider, and save the workbook as a main HTML file with linked worksheet pages.
+// Common Searches: Aspose.Cells how to rename worksheet HTML files during export | C# custom IFilePathProvider example for HTML save options | preserve navigation links between generated HTML pages Aspose.Cells | replace invalid characters in HTML file names when exporting Excel with Aspose.Cells
+// Tags: IFilePathProvider implementation for Aspose.Cells HTML export | per‑worksheet HTML file naming Aspose.Cells | full‑path link preservation Aspose.Cells HTML | sanitize HTML file names .NET | HtmlSaveOptions FilePathProvider configuration
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomPathDemo
+namespace AsposeCellsHtmlExport
 {
-    // Custom implementation of IFilePathProvider.
-    // Generates a relative path for each worksheet HTML file.
-    // Demonstrates how to implement IFilePathProvider to generate custom relative paths (e.g., "Sheets/Sheet1.html") for each worksheet when saving a workbook to HTML with Aspose.Cells for .NET. The example configures HtmlSaveOptions to use the provider, export all worksheets, and create full‑path links so inter‑sheet hyperlinks remain functional.
+    // Custom implementation of IFilePathProvider to control HTML file names per worksheet
+    // Loads an Excel workbook, configures HtmlSaveOptions to export all worksheets with full‑path links, assigns a CustomFilePathProvider that sanitizes each worksheet's HTML file name, and saves the workbook as a main HTML file containing navigation links to the generated per‑worksheet pages.
     public class CustomFilePathProvider : IFilePathProvider
     {
-        // sheetName – name of the worksheet being exported.
-        // Returns a path like "Sheets/Sheet1.html".
-        public string GetFullName(string sheetName)
+        // Called for each generated HTML file; returns a safe file name in the current directory.
+        public string GetFullName(string fileName)
         {
-            // You can customize the folder or naming scheme as needed.
-            return $"Sheets/{sheetName}.html";
+            string safeName = MakeSafeFileName(Path.GetFileNameWithoutExtension(fileName));
+            string extension = Path.GetExtension(fileName);
+            return $"{safeName}{extension}";
+        }
+
+        // Replace invalid file name characters with an underscore.
+        private string MakeSafeFileName(string name)
+        {
+            foreach (char invalidChar in Path.GetInvalidFileNameChars())
+            {
+                name = name.Replace(invalidChar, '_');
+            }
+            return name;
         }
     }
 
@@ -29,29 +36,44 @@ namespace AsposeCellsCustomPathDemo
     {
         static void Main()
         {
-            // Create a workbook with three worksheets.
-            Workbook wb = new Workbook();
-            wb.Worksheets[0].Name = "Summary";
-            wb.Worksheets.Add("Data");
-            wb.Worksheets.Add("Report");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Populate each sheet with sample data.
-            wb.Worksheets["Summary"].Cells["A1"].PutValue("This is the summary sheet.");
-            wb.Worksheets["Data"].Cells["A1"].PutValue("Data sheet content.");
-            wb.Worksheets["Report"].Cells["A1"].PutValue("Report sheet content.");
+            try
+            {
+                // Verify that the input workbook exists.
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
 
-            // Set up HTML save options.
-            HtmlSaveOptions options = new HtmlSaveOptions();
-            // Use the custom file path provider so each worksheet is saved to its own file.
-            options.FilePathProvider = new CustomFilePathProvider();
-            // Export all worksheets (not only the active one) to keep inter‑sheet links.
-            options.ExportActiveWorksheetOnly = false;
-            // Use full path links to ensure references remain valid regardless of location.
-            options.IsFullPathLink = true;
+                // Load the workbook.
+                Workbook workbook = new Workbook(inputPath);
 
-            // Save the workbook to HTML. The main file will be "Workbook.html",
-            // and each worksheet will be saved to the paths returned by the provider.
-            wb.Save("Workbook.html", options);
+                // Configure HTML save options.
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    // Export all worksheets (default behavior).
+                    ExportActiveWorksheetOnly = false,
+
+                    // Preserve relative links between generated HTML files.
+                    IsFullPathLink = true,
+
+                    // Assign the custom file path provider.
+                    FilePathProvider = new CustomFilePathProvider()
+                };
+
+                // Save the workbook as HTML. The main file (output.html) will contain
+                // navigation links to the per‑worksheet files generated by the provider.
+                workbook.Save(outputPath, saveOptions);
+                Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

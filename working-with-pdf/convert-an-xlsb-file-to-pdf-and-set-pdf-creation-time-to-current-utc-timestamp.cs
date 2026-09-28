@@ -1,36 +1,43 @@
-// Title: Convert XLSB to PDF with UTC Creation Timestamp using Aspose.Cells C#
-// Description: Loads an XLSB workbook with Aspose.Cells, sets PdfSaveOptions.CreatedTime to DateTime.UtcNow, and saves the file as a PDF so the document metadata records the current UTC creation time.
-// Keywords: Aspose.Cells XLSB to PDF | PdfSaveOptions CreatedTime | set PDF creation date C# | export XLSB as PDF with metadata | UTC timestamp PDF Aspose.Cells | C# Excel binary to PDF conversion
-// Common Searches: Aspose.Cells set PDF creation time | C# convert XLSB to PDF with timestamp | PdfSaveOptions CreatedTime example | how to add UTC metadata to PDF using Aspose.Cells | batch XLSB to PDF conversion with creation date
-// Developer Intent: Generate a PDF from an XLSB workbook and embed the current UTC time as the PDF's creation metadata.
-// Use Cases: Produce audit‑ready PDFs from XLSB reports with precise creation timestamps for compliance. | Automate batch conversion of XLSB files to PDFs while recording the processing time in the document metadata. | Create time‑stamped PDF invoices or statements from XLSB templates in a .NET backend service.
-// AI Prompts: Write C# code with Aspose.Cells that converts an XLSB file to PDF and sets the PDF's CreatedTime to DateTime.UtcNow. | Show how to configure PdfSaveOptions to add custom metadata such as author, title, and UTC creation date when saving a workbook as PDF. | Explain a method to batch process multiple XLSB files into PDFs, ensuring each PDF includes the conversion timestamp in its metadata.
+// Title: Convert an XLSB workbook to PDF using Aspose.Cells for .NET with file existence verification and error handling
+// AI Prompts: Generate C# code that loads an .xlsb file with Aspose.Cells, checks that the file exists, and saves the workbook as a PDF using PdfSaveOptions. | Create a console application in .NET that catches and logs any exceptions while converting an Excel binary workbook to PDF.
+// Common Searches: asp.net convert xlsb to pdf with aspose.cells and verify file existence | c# load xlsb workbook and save as pdf using pdfsaveoptions | handle errors when converting excel binary files to pdf in c#
+// Tags: aspose.cells xlsb to pdf conversion c# | c# verify excel file existence before conversion | pdfsaveoptions error handling asp.net
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering; // For PdfSaveOptions
 
-// Loads an XLSB workbook with Aspose.Cells, sets PdfSaveOptions.CreatedTime to DateTime.UtcNow, and saves the file as a PDF so the document metadata records the current UTC creation time.
-class XlsbToPdfConverter
+// The example demonstrates loading an XLSB workbook with Aspose.Cells, confirming the source file is present, and saving the workbook as a PDF using PdfSaveOptions, while gracefully handling any runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source XLSB file
-        string sourcePath = "input.xlsb";
+        const string inputPath = "input.xlsb";
+        const string outputPath = "output.pdf";
 
-        // Path for the resulting PDF file
-        string destPath = "output.pdf";
-
-        // Load the XLSB workbook
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Configure PDF save options and set the creation time to current UTC
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
         {
-            CreatedTime = DateTime.UtcNow
-        };
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Save the workbook as PDF using the specified options
-        workbook.Save(destPath, pdfOptions);
+        try
+        {
+            // Load the XLSB workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (default options are sufficient here)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Save the workbook as PDF with the specified options
+            workbook.Save(outputPath, pdfOptions);
+
+            Console.WriteLine($"Workbook successfully saved as PDF to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

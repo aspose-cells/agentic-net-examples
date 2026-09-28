@@ -1,32 +1,25 @@
-// Title: Aspose.Cells C# – Access Worksheet by Zero‑Based Index and Assign to Variable
-// Description: Demonstrates how to create a Workbook, retrieve the first Worksheet using the zero‑based index (workbook.Worksheets[0]), assign it to a Worksheet variable, write a value to cell A1, and save the file as WorksheetByIndex.xlsx.
-// Keywords: Aspose.Cells worksheet index | C# get worksheet by index | Aspose.Cells Worksheets[0] | assign worksheet variable | write cell A1 Aspose.Cells | .NET Aspose.Cells example
-// Common Searches: Aspose.Cells get first worksheet | How to access worksheet by index C# | Aspose.Cells Worksheets collection example | Assign worksheet to variable Aspose.Cells | Write value to cell after retrieving worksheet
-// Developer Intent: Retrieve a worksheet from a workbook using its zero‑based index and store it in a variable for further manipulation.
-// Use Cases: Read data from a specific sheet after selecting it by index. | Update cell values, formulas, or formatting on a sheet obtained via index. | Iterate through all worksheets by index to apply consistent styles or headers. | Export or copy a particular worksheet identified by its position in the workbook.
-// AI Prompts: Generate C# code that opens an existing workbook and accesses the second worksheet by index using Aspose.Cells. | Show how to loop through every worksheet in a workbook by index and set a header row in each sheet with Aspose.Cells. | Provide an example that copies data from a worksheet accessed by index to another worksheet within the same workbook using Aspose.Cells.
+// Title: Load an Excel workbook and retrieve the first worksheet by zero‑based index in C# with Aspose.Cells
+// AI Prompts: Write C# code that opens an existing .xlsx file using Aspose.Cells, accesses the worksheet at index 0, assigns it to a Worksheet variable, and then saves any changes. | Show how to rename a worksheet after obtaining it by zero‑based index and persist the workbook using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# get worksheet at index 0 from workbook | how to access first sheet in an Excel file using Aspose.Cells .NET | retrieve worksheet by zero based index Aspose.Cells example | rename worksheet after loading workbook with Aspose.Cells C# | save changes after modifying worksheet using Aspose.Cells
+// Tags: load workbook and access worksheet by index Aspose.Cells | zero‑based worksheet collection indexing C# | rename worksheet after retrieval Aspose.Cells | save modified workbook Aspose.Cells .NET | worksheet variable assignment Aspose.Cells C#
 
-using System;
 using Aspose.Cells;
 
-namespace WorksheetAccessExample
+// Loads an existing workbook, accesses the first worksheet via its zero‑based index, optionally renames it, and saves the workbook using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to create a Workbook, retrieve the first Worksheet using the zero‑based index (workbook.Worksheets[0]), assign it to a Worksheet variable, write a value to cell A1, and save the file as WorksheetByIndex.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (default contains one worksheet)
-            Workbook workbook = new Workbook();
+        // Load an existing workbook (replace the path with your actual file)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet by its zero‑based index and assign it to a variable
-            Worksheet firstSheet = workbook.Worksheets[0];
+        // Access the worksheet at zero‑based index 0 and assign it to a variable
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Demonstrate that the worksheet is accessible (write a value to cell A1)
-            firstSheet.Cells["A1"].PutValue("Accessed by index");
+        // (Optional) Perform operations on the worksheet, e.g., rename it
+        worksheet.Name = "FirstSheet";
 
-            // Save the workbook to verify the changes
-            workbook.Save("WorksheetByIndex.xlsx");
-        }
+        // Save the workbook to persist any changes (replace the path as needed)
+        workbook.Save("output.xlsx");
     }
 }

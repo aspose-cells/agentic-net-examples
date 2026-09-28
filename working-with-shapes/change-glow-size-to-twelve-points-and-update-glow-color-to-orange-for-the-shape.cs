@@ -1,37 +1,67 @@
-// Title: Set rectangle shape glow to 12 pt and orange color with Aspose.Cells for .NET
-// Description: Creates a new workbook, adds a rectangle shape, applies a 12‑point orange glow, and saves the file as ShapeGlowUpdated.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells shape glow | C# set shape glow size | orange glow Aspose.Cells | rectangle shape formatting .NET | Excel shape effects programmatically
-// Common Searches: Aspose.Cells set shape glow size .NET | change shape glow color to orange C# | add rectangle with glow effect Aspose.Cells | programmatically modify shape glow in Excel | C# example glow size 12 points
-// Developer Intent: Apply a 12‑point orange glow to a rectangle shape in an Excel workbook via Aspose.Cells.
-// Use Cases: Highlight key diagram elements in generated reports with a consistent orange glow. | Enforce brand‑specific visual styling across all worksheets by standardizing shape glow properties. | Create a reusable template where every rectangle automatically receives a 12‑pt orange glow.
-// AI Prompts: Write C# code using Aspose.Cells to set a rectangle shape's glow size to 12 pt and color to orange. | Explain how to update the glow properties of existing shapes in an Excel file with Aspose.Cells. | Provide a method that iterates through all rectangle shapes in a workbook and applies a specified glow size and color.
+// Title: Apply a 12‑point orange glow to the first shape in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx file with Aspose.Cells, locate the first worksheet shape, and set its EffectFormat.Glow.Size to 12 points and Glow.Color to orange, using dynamic binding for version compatibility. | Write C# code that verifies a shape exists in a workbook, adds a 12‑point orange glow via Shape.EffectFormat, and saves the file while gracefully handling missing EffectFormat support.
+// Common Searches: Aspose.Cells C# set shape glow size to 12 points | how to change shape glow color to orange in Excel using Aspose.Cells | apply glow effect to Excel shape with Aspose.Cells .NET dynamic binding | C# code to add orange glow to first shape in workbook using Aspose.Cells | EffectFormat not supported fallback Aspose.Cells shape glow
+// Tags: Aspose.Cells shape glow customization | set glow size points Aspose.Cells | change shape glow color Aspose.Cells | dynamic EffectFormat fallback C# | C# modify Excel shape appearance
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, adds a rectangle shape, applies a 12‑point orange glow, and saves the file as ShapeGlowUpdated.xlsx using Aspose.Cells for .NET.
-class ShapeGlowUpdate
+// The example loads an Excel workbook, checks for at least one shape on the first worksheet, and uses dynamic binding to set the shape's EffectFormat.Glow.Size to 12 points and Glow.Color to orange. It catches a RuntimeBinderException if the EffectFormat property is unavailable, then saves the updated workbook.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 150);
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Set the glow size to 12 points
-        shape.Glow.Size = 12;
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set the glow color to orange
-        CellsColor glowColor = shape.Glow.Color;
-        glowColor.Color = Color.Orange; // Directly assign a System.Drawing.Color
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Save the workbook to a file
-        workbook.Save("ShapeGlowUpdated.xlsx");
+            // Ensure there is at least one shape on the worksheet
+            if (worksheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the worksheet.");
+                return;
+            }
+
+            // Get the first shape (adjust index if you target a specific shape)
+            Shape shape = worksheet.Shapes[0];
+
+            // Attempt to apply glow effect using dynamic to handle versions without EffectFormat
+            try
+            {
+                dynamic dynShape = shape;
+                dynShape.EffectFormat.Glow.Size = 12f;          // Set glow size (points)
+                dynShape.EffectFormat.Glow.Color = Color.Orange; // Set glow color
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                // EffectFormat not supported in this version; skip effect
+                Console.WriteLine("Glow effect not supported in the current Aspose.Cells version.");
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

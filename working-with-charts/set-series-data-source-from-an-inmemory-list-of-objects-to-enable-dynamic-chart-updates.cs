@@ -1,10 +1,7 @@
-// Title: Create a Dynamic Column Chart in Aspose.Cells by Binding an In‑Memory List to Smart Markers
-// Description: This example shows how to populate a worksheet from a C# List<DataPoint> using Aspose.Cells smart markers, process the markers with WorkbookDesigner, calculate the final row count, and bind the resulting cells to a column chart. The chart’s series and category ranges are set programmatically, and the workbook is saved as DynamicChart.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | smart markers | dynamic chart | bind list to worksheet | WorkbookDesigner | NSeries range | Excel chart from collection | in‑memory data source
-// Common Searches: Aspose.Cells bind List<T> to chart | smart markers populate chart data .NET | set chart series range programmatically Aspose.Cells | dynamic Excel chart from in‑memory collection | calculate last row after smart marker processing
-// Developer Intent: Bind an in‑memory collection to a worksheet with smart markers and use the expanded cells as the data source for a chart.
-// Use Cases: Generate Excel reports where chart data reflects a runtime collection size. | Automatically adjust chart series when the underlying list grows or shrinks. | Create reusable templates that populate rows via smart markers and render charts without manual range updates.
-// AI Prompts: Provide C# code that binds a List<DataPoint> to a worksheet using Aspose.Cells WorkbookDesigner and creates a column chart from the expanded cells. | Explain how to compute the last populated row after processing smart markers and set the NSeries values and category ranges dynamically. | Show how to change the chart type or add multiple series from additional in‑memory lists in the same workbook.
+// Title: Generate a dynamic Excel column chart in C# with Aspose.Cells by binding a List<DataItem> as the series source
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook, uses WorkbookDesigner to bind a List<T> to placeholder markers, expands the data, and automatically sets the chart series range. | Show how to determine the last populated row after data expansion and assign the corresponding cell addresses to NSeries.ValueData and NSeries.CategoryData for a column chart. | Demonstrate refreshing an Aspose.Cells chart when the underlying in‑memory collection changes, including re‑processing the designer and updating the series ranges before saving.
+// Common Searches: how to bind a C# List to an Aspose.Cells chart series using placeholders | Aspose.Cells dynamic chart data range from in‑memory collection .NET | C# create Excel column chart with data from POCO list using Aspose.Cells | update Aspose.Cells chart after processing data source programmatically
+// Tags: bind collection to Aspose.Cells chart via designer | expand placeholder markers into worksheet rows | assign chart series ranges programmatically | generate column chart from in‑memory data | save dynamic chart as .xlsx using C#
 
 using System;
 using System.Collections.Generic;
@@ -14,13 +11,13 @@ using Aspose.Cells.Charts;
 namespace AsposeCellsDynamicChart
 {
     // Simple POCO representing a data point
-    // This example shows how to populate a worksheet from a C# List<DataPoint> using Aspose.Cells smart markers, process the markers with WorkbookDesigner, calculate the final row count, and bind the resulting cells to a column chart. The chart’s series and category ranges are set programmatically, and the workbook is saved as DynamicChart.xlsx.
-    public class DataPoint
+    // The example builds a List<DataItem> as an in‑memory data source, employs Aspose.Cells WorkbookDesigner with placeholder markers (&=$Data.Category, &=$Data.Value) to expand the collection into worksheet rows, adds a column chart, calculates the populated range, sets the NSeries value and category ranges, optionally names the series, and saves the workbook as DynamicChartFromList.xlsx.
+    public class DataItem
     {
         public string Category { get; set; }
         public double Value { get; set; }
 
-        public DataPoint(string category, double value)
+        public DataItem(string category, double value)
         {
             Category = category;
             Value = value;
@@ -31,48 +28,65 @@ namespace AsposeCellsDynamicChart
     {
         public static void Main()
         {
-            // 1. Prepare in‑memory data
-            List<DataPoint> data = new List<DataPoint>
+            try
             {
-                new DataPoint("A", 10),
-                new DataPoint("B", 20),
-                new DataPoint("C", 30),
-                new DataPoint("D", 25)
-            };
+                // 1. Prepare in‑memory data source
+                List<DataItem> data = new List<DataItem>
+                {
+                    new DataItem("A", 10),
+                    new DataItem("B", 20),
+                    new DataItem("C", 30),
+                    new DataItem("D", 25)
+                };
 
-            // 2. Create a workbook and a worksheet that will hold the data
-            Workbook workbook = new Workbook();
-            Worksheet dataSheet = workbook.Worksheets[0];
+                // 2. Create a new workbook and place smart markers where data will be expanded
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // 3. Insert smart markers – they will be replaced by the data source at processing time
-            dataSheet.Cells["A1"].PutValue("Category");
-            dataSheet.Cells["B1"].PutValue("Value");
-            dataSheet.Cells["A2"].PutValue("&=$Data.Category"); // smart marker for Category
-            dataSheet.Cells["B2"].PutValue("&=$Data.Value");    // smart marker for Value
+                // Header row
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
 
-            // 4. Bind the in‑memory list to the smart marker name "Data"
-            WorkbookDesigner designer = new WorkbookDesigner(workbook);
-            designer.SetDataSource("Data", data);
-            designer.Process(); // expands the smart markers into actual rows
+                // Smart markers – they will be replaced by the designer with the list contents
+                sheet.Cells["A2"].PutValue("&=$Data.Category");
+                sheet.Cells["B2"].PutValue("&=$Data.Value");
 
-            // 5. Add a chart that uses the populated cells as its data source
-            int chartIndex = dataSheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
-            Chart chart = dataSheet.Charts[chartIndex];
+                // 3. Bind the in‑memory list to the smart marker name "Data"
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                designer.SetDataSource("Data", data);
+                designer.Process(); // expands the smart markers into concrete rows
 
-            // Determine the last row after processing (header + data count)
-            int lastRow = data.Count + 1; // +1 because rows are 1‑based and header occupies row 1
+                // 4. Add a chart that uses the populated range
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Set the series range (values) and category axis range
-            string valuesRange = $"=Sheet1!$B$2:$B${lastRow}";
-            string categoryRange = $"=Sheet1!$A$2:$A${lastRow}";
-            chart.NSeries.Add(valuesRange, true);
-            chart.NSeries.CategoryData = categoryRange;
+                // Determine the last row of data after processing (zero‑based index)
+                int lastRow = sheet.Cells.MaxDataRow; // includes header row
 
-            // Optional: give the chart a title
-            chart.Title.Text = "Dynamic Data Chart";
+                // Build the address strings for values and categories (Excel rows are 1‑based)
+                string valuesRange = $"=Sheet1!$B$2:$B${lastRow + 1}";
+                string categoryRange = $"=Sheet1!$A$2:$A${lastRow + 1}";
 
-            // 6. Save the workbook
-            workbook.Save("DynamicChart.xlsx");
+                // Add series using NSeries.Add (string, bool) rule
+                chart.NSeries.Add(valuesRange, true);
+                // Set category (X‑axis) data
+                chart.NSeries.CategoryData = categoryRange;
+
+                // Optional: give the series a name
+                chart.NSeries[0].Name = "Sample Series";
+
+                // 5. Save the workbook
+                string outputPath = "DynamicChartFromList.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

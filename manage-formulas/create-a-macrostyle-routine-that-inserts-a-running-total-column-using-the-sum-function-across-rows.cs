@@ -1,62 +1,60 @@
-// Title: C# macro‑style routine to add a running total column with SUM formulas using Aspose.Cells
-// Description: Shows how to create a workbook, fill columns A and B with sample data, add a "RunningTotal" header in column C, and programmatically place a cumulative SUM formula (=SUM($B$2:B{row})) in each row before saving as RunningTotalDemo.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | running total column | SUM formula | macro style routine | cumulative total | Excel automation | insert formula programmatically | worksheet calculations
-// Common Searches: Aspose.Cells add running total column C# | How to insert cumulative SUM formula with Aspose.Cells .NET | Macro‑style example for running totals in Excel using Aspose.Cells | Programmatically create running total column in C# workbook | Aspose.Cells formula insertion per row
-// Developer Intent: Add a column that automatically calculates a cumulative total for each row using the SUM function, implemented in C# with Aspose.Cells.
-// Use Cases: Financial statements that display a progressive expense total per line item. | Sales dashboards where each row shows the accumulated revenue up to that point. | Invoice templates that automatically compute a running balance as new items are entered.
-// AI Prompts: Generate a C# method using Aspose.Cells that adds a cumulative total column to any worksheet, handling an arbitrary number of rows. | Provide a macro‑style Aspose.Cells snippet that updates the running total column when additional rows are appended. | Explain how to adjust the running total formula to start from a different column or to incorporate conditional summing in Aspose.Cells.
+// Title: Add a Running Total Column with Cumulative SUM Formulas Using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to insert a new column and fill each cell with a cumulative SUM formula referencing the previous rows. | Show how to programmatically create a cumulative sum column in an Excel worksheet by applying a dynamic SUM range with Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# insert column and apply cumulative SUM formula for running total | How to create a running total column in Excel using Aspose.Cells .NET | C# example for adding a running total column with SUM function in Aspose.Cells workbook | Programmatically calculate cumulative sum per row with Aspose.Cells in .NET
+// Tags: insert column with formula Aspose.Cells .NET | cumulative sum calculation Aspose.Cells | cumulative total column generation C# | Aspose.Cells workbook calculation example | dynamic range SUM in Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
 
-namespace AsposeCellsMacroStyle
+// The example creates a new workbook, fills column A with values 1‑10, inserts column B, adds a "Running Total" header, and assigns each cell in column B a cumulative SUM formula that totals values from column A up to the current row. Formulas are calculated immediately and the workbook is saved as RunningTotal.xlsx.
+class RunningTotalExample
 {
-    // Shows how to create a workbook, fill columns A and B with sample data, add a "RunningTotal" header in column C, and programmatically place a cumulative SUM formula (=SUM($B$2:B{row})) in each row before saving as RunningTotalDemo.xlsx.
-    public class RunningTotalRoutine
+    static void Main()
     {
-        public static void InsertRunningTotal()
+        try
         {
-            // Create a new workbook (creation rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Sample data: Header in A1 and B1
-            cells["A1"].PutValue("Item");
-            cells["B1"].PutValue("Amount");
-
-            // Populate sample rows (A2:B6)
-            string[] items = { "Item1", "Item2", "Item3", "Item4", "Item5" };
-            double[] amounts = { 100, 150, 200, 250, 300 };
-            for (int i = 0; i < items.Length; i++)
+            // Populate sample data in column A (A1:A10)
+            for (int i = 0; i < 10; i++)
             {
-                cells[i + 1, 0].PutValue(items[i]);   // Column A
-                cells[i + 1, 1].PutValue(amounts[i]); // Column B
+                // Values: 1, 2, 3, ... 10
+                sheet.Cells[i, 0].PutValue(i + 1);
             }
 
-            // Add header for Running Total column in C1
-            cells["C1"].PutValue("RunningTotal");
+            // Insert a new column for the running total (column B)
+            // The second parameter indicates whether to copy the style (false = no copy)
+            sheet.Cells.InsertColumn(1, false);
 
-            // Insert running total formula for each data row
-            // Formula: =SUM($B$2:B{currentRow})
-            for (int row = 1; row <= items.Length; row++) // row index is zero‑based
+            // Add header for the running total column
+            sheet.Cells[0, 1].PutValue("Running Total");
+
+            // Apply SUM formula to each cell in the running total column
+            // Formula: =SUM($A$2:A2) for row 2, =SUM($A$2:A3) for row 3, etc.
+            for (int row = 1; row < 10; row++)
             {
-                // Build the address for the end of the range (e.g., B2, B3, ...)
-                string endAddress = CellsHelper.CellIndexToName(row, 1); // column B = index 1
-                string formula = $"=SUM($B$2:{endAddress})";
-                cells[row, 2].Formula = formula; // Column C = index 2
+                string formula = $"=SUM($A$2:A{row + 1})";
+                sheet.Cells[row, 1].Formula = formula;
             }
 
-            // Save the workbook (save rule)
-            workbook.Save("RunningTotalDemo.xlsx");
+            // Calculate the formulas immediately
+            workbook.CalculateFormula();
+
+            // Define output file path
+            string outputPath = "RunningTotal.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Entry point for demonstration
-        public static void Main()
+        catch (Exception ex)
         {
-            InsertRunningTotal();
-            Console.WriteLine("Workbook with running total column created successfully.");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

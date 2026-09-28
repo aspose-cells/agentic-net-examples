@@ -1,46 +1,46 @@
-// Title: C# – Apply a custom style to PivotTable data cells with FormatAll and PreserveFormatting in Aspose.Cells
-// Description: Creates a workbook, adds sample sales data, builds a PivotTable, defines a Calibri bold style with a light‑yellow background, enables PreserveFormatting, and calls FormatAll so only the data cells receive the custom formatting. The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | C# PivotTable style | FormatAll | PreserveFormatting | custom cell style | Excel PivotTable formatting | .NET Excel library | pivot data cell formatting | XLSX report styling | global developers
-// Common Searches: Aspose.Cells format only pivot table data cells | C# FormatAll PreserveFormatting PivotTable | apply custom background to pivot values Aspose | style pivot table data area .NET | Aspose.Cells custom style for pivot table values
-// Developer Intent: Apply a custom cell style exclusively to the data area of a PivotTable using Aspose.Cells for .NET.
-// Use Cases: Generate a sales report where summed amounts are highlighted with bold Calibri text on a light‑yellow background while row headers stay unchanged. | Create a financial workbook that emphasizes aggregated figures by styling only the PivotTable data cells, preserving default header formatting. | Export an Excel file with a PivotTable where data cells have consistent styling for clearer downstream analysis.
-// AI Prompts: Show how to style only the data cells of a PivotTable in Aspose.Cells using FormatAll with PreserveFormatting. | Provide a C# example that creates a custom style, sets PreserveFormatting, and applies it to PivotTable values. | Explain why PreserveFormatting must be true when using FormatAll to affect only the data area of a PivotTable.
+// Title: Apply a custom Calibri bold style with light‑yellow background to PivotTable data cells using FormatAll and PreserveFormatting in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a PivotTable, defines a bold Calibri style with a light‑yellow fill, sets PreserveFormatting to true, and applies the style to the data area using the FormatAll method in Aspose.Cells. | Show how to keep a custom cell style on PivotTable data cells after refreshing the table by calling FormatAll on the PivotTable object with a predefined Style in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells how to style only the values in a PivotTable using C# | Keep PivotTable formatting after data refresh with Aspose.Cells .NET | Example of applying a yellow background to PivotTable data cells in a generated XLSX | C# code to retain formatting and style PivotTable data area in Aspose.Cells | Apply bold Calibri formatting to PivotTable rows with Aspose.Cells library
+// Tags: PivotTable cell formatting Aspose.Cells | PreserveFormatting property Aspose.Cells | C# define Calibri bold style Aspose.Cells | Apply style to pivot table data area XLSX | Aspose.Cells pivot table styling example
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System.Drawing;
 
 namespace PivotTableCustomStyleDemo
 {
-    // Creates a workbook, adds sample sales data, builds a PivotTable, defines a Calibri bold style with a light‑yellow background, enables PreserveFormatting, and calls FormatAll so only the data cells receive the custom formatting. The workbook is saved as an XLSX file.
+    // The sample creates a workbook, adds sample data, builds a PivotTable, defines a bold Calibri style with a light‑yellow background, enables PreserveFormatting, applies the style to all PivotTable cells via FormatAll, and saves the result as an XLSX file, ensuring the custom formatting persists after any refresh.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the pivot table
-            sheet.Cells["A1"].Value = "Category";
-            sheet.Cells["B1"].Value = "Amount";
-            sheet.Cells["A2"].Value = "Food";
-            sheet.Cells["B2"].Value = 120;
-            sheet.Cells["A3"].Value = "Food";
-            sheet.Cells["B3"].Value = 80;
-            sheet.Cells["A4"].Value = "Drink";
-            sheet.Cells["B4"].Value = 150;
-            sheet.Cells["A5"].Value = "Drink";
-            sheet.Cells["B5"].Value = 70;
+            worksheet.Cells["A1"].Value = "Category";
+            worksheet.Cells["B1"].Value = "Amount";
+            worksheet.Cells["A2"].Value = "Food";
+            worksheet.Cells["B2"].Value = 1200;
+            worksheet.Cells["A3"].Value = "Food";
+            worksheet.Cells["B3"].Value = 800;
+            worksheet.Cells["A4"].Value = "Drink";
+            worksheet.Cells["B4"].Value = 500;
+            worksheet.Cells["A5"].Value = "Drink";
+            worksheet.Cells["B5"].Value = 700;
 
             // Add a pivot table based on the data range
-            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
-            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            int pivotIndex = worksheet.PivotTables.Add("A1:B5", "D3", "SalesPivot");
+            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-            // Configure the pivot table: rows = Category, data = Sum of Amount
+            // Configure the pivot table: rows = Category, data = Amount
             pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
             pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
+
+            // Ensure formatting is preserved when the pivot table recalculates
+            pivotTable.PreserveFormatting = true;
 
             // Create a custom style for the data cells
             Style dataStyle = workbook.CreateStyle();
@@ -51,13 +51,12 @@ namespace PivotTableCustomStyleDemo
             dataStyle.Pattern = BackgroundType.Solid;
 
             // Apply the custom style to all cells in the pivot table area
-            // (FormatAll formats the entire pivot table; to affect only data cells,
-            //  ensure PreserveFormatting is true so other areas retain their default formatting)
-            pivotTable.PreserveFormatting = true;
+            // (FormatAll formats the entire pivot table; with PreserveFormatting set,
+            //  the style will be retained for data cells after any refresh)
             pivotTable.FormatAll(dataStyle);
 
             // Save the workbook
-            workbook.Save("PivotTableCustomStyle.xlsx", SaveFormat.Xlsx);
+            workbook.Save("PivotTableDataStyleDemo.xlsx", SaveFormat.Xlsx);
         }
     }
 }

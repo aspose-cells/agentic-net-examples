@@ -1,56 +1,51 @@
-// Title: C# – Unmerge cells C6:E7, recalculate formulas, and save workbook using Aspose.Cells
-// Description: Loads an existing Excel file, accesses the first worksheet, unmerges the merged range C6:E7, triggers a full formula recalculation, and saves the updated workbook. Includes file‑existence check and exception handling for robust automation.
-// Keywords: Aspose.Cells unmerge cells C6:E7 | C# calculate formulas Aspose.Cells | Excel unmerge range .NET | Workbook.CalculateFormula example | Aspose.Cells load and save workbook | unmerge merged cells programmatically | Excel automation C# Aspose
-// Common Searches: how to unmerge a specific range with Aspose.Cells C# | Aspose.Cells recalculate all formulas after unmerge | C# code to split merged cells C6:E7 in Excel | Aspose.Cells unmerge cells and save workbook | calculate formulas after modifying worksheet Aspose
-// Developer Intent: Load an existing Excel workbook, unmerge the merged range C6:E7, recalculate every formula, and write the modified file to a new location.
-// Use Cases: Prepare a template for data import by removing merged cells that break parsing. | Ensure accurate calculations in generated reports after programmatically changing layout. | Clean up workbooks received from external sources where merged cells cause formula errors.
-// AI Prompts: Write C# code with Aspose.Cells that checks for an input file, unmerges range C6:E7, runs CalculateFormula, and saves to a new file with error handling. | Show how to safely call UnMerge() on a range that may already be unmerged, and then recalculate all formulas in the workbook. | Explain best practices for loading, modifying (unmerge), recalculating, and saving Excel files using Aspose.Cells in .NET.
+// Title: Unmerge cells C6:E7, recalculate all formulas, and save the workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to open an Excel file, unmerge the range C6:E7, recalculate every formula, and save the result to a new file. | Show how to combine Aspose.Cells Range.UnMerge and Workbook.CalculateFormula methods in a .NET application. | Provide a C# example that loads a workbook, removes a merged region, forces formula evaluation, and writes the updated workbook back to disk.
+// Common Searches: Aspose.Cells C# unmerge merged cells C6:E7 and recalculate formulas before saving | How to programmatically unmerge a specific range and refresh formulas with Aspose.Cells for .NET | Recalculate workbook formulas after unmerging cells using Aspose.Cells in C# | Save Excel file after unmerging cells with Aspose.Cells .NET API
+// Tags: Aspose.Cells unmerge range C6:E7 | Aspose.Cells recalculate formulas | Aspose.Cells save modified workbook | Aspose.Cells Range.UnMerge example | Aspose.Cells Workbook.CalculateFormula usage
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsUnmergeAndRecalculate
+// The sample loads an existing Excel workbook, accesses the first worksheet, creates a Range object for cells C6:E7, calls UnMerge to split the merged cells, triggers a full formula recalculation with CalculateFormula, and saves the updated workbook to a new file, handling any errors that may occur.
+class Program
 {
-    // Loads an existing Excel file, accesses the first worksheet, unmerges the merged range C6:E7, triggers a full formula recalculation, and saves the updated workbook. Includes file‑existence check and exception handling for robust automation.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Define input and output file paths
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "input.xlsx";
-                const string outputPath = "output.xlsx";
-
-                // Verify that the input file exists before loading
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file '{inputPath}' not found.");
-                    return;
-                }
-
-                // Load the workbook from the input file
-                Workbook workbook = new Workbook(inputPath);
-
-                // Access the first worksheet (index 0)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Create a range representing the merged cells C6:E7 and unmerge them
-                Aspose.Cells.Range mergedRange = worksheet.Cells.CreateRange("C6", "E7");
-                mergedRange.UnMerge();
-
-                // Recalculate all formulas in the workbook
-                workbook.CalculateFormula();
-
-                // Save the modified workbook to the output file
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Unmerge the previously merged range C6:E7 using a Range object
+            AsposeRange mergedRange = sheet.Cells.CreateRange("C6:E7");
+            mergedRange.UnMerge();
+
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

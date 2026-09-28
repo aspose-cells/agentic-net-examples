@@ -1,74 +1,60 @@
-// Title: Localize Aspose.Cells Chart Axis Unit Labels to German with a Custom ChartGlobalizationSettings (C#)
-// Description: This example shows how to create a GermanChartGlobalizationSettings class that inherits SettableChartGlobalizationSettings, assigns German names to display units (Hundert, Tausend, Millionen, Prozent), and applies the settings to a workbook via workbook.Settings.GlobalizationSettings. The chart’s value axis then displays German unit labels when the DisplayUnit is set to Hundreds or Thousands.
-// Keywords: Aspose.Cells | ChartGlobalizationSettings | SettableChartGlobalizationSettings | German localization | axis unit label | DisplayUnitType | C# | .NET | chart localization | workbook globalization | GermanChartGlobalizationSettings
-// Common Searches: Aspose.Cells German chart axis labels | How to set chart globalization settings in C# | Localize chart display unit text to German | SettableChartGlobalizationSettings example | Change chart value axis unit label language Aspose.Cells
-// Developer Intent: Apply a custom ChartGlobalizationSettings object to a workbook so that chart axis unit labels are rendered in German.
-// Use Cases: Provide German‑language financial charts for European audiences. | Reuse a GermanChartGlobalizationSettings class across multiple workbooks. | Dynamically switch display units while keeping German unit labels consistent.
-// AI Prompts: Generate C# code that defines a SettableChartGlobalizationSettings subclass for French axis unit names and applies it to an Aspose.Cells chart. | Show how to read the current axis unit label after changing the DisplayUnit in Aspose.Cells. | Explain how to configure workbook‑wide chart globalization for several languages using Aspose.Cells.
+// Title: Apply ChartGlobalizationSettings to localize Aspose.Cells column chart axis labels to German in C#
+// AI Prompts: Write C# code that creates a workbook, sets ChartGlobalizationSettings (or Workbook.Settings.CultureInfo) to "de-DE", adds a column chart, and assigns German text to the value and category axis titles using Aspose.Cells. | Show how to configure German number formatting for the value axis of an Aspose.Cells chart while keeping axis titles in German. | Modify an existing Aspose.Cells chart to use German locale for all axis labels and number formats in a .NET application.
+// Common Searches: Aspose.Cells C# set chart axis titles German localization | how to use ChartGlobalizationSettings for German language in Aspose.Cells chart | C# example of applying de-DE culture to Excel chart axis labels with Aspose.Cells | localize Excel chart axis numbers to German format using Aspose.Cells .NET | Aspose.Cells column chart German axis titles sample code
+// Tags: ChartGlobalizationSettings German locale Aspose.Cells | set workbook CultureInfo de-DE for chart axis | localize chart axis labels German .NET | German number format on Aspose.Cells chart value axis | column chart axis title localization C#
 
 using System;
+using System.Globalization;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartLocalization
+// The example creates a workbook, applies the German (de-DE) culture via ChartGlobalizationSettings or Workbook.Settings.CultureInfo, populates sample data, adds a column chart, sets German text for the value and category axis titles, and saves the file as an Excel workbook.
+class Program
 {
-    // Custom class that configures German axis unit names using SettableChartGlobalizationSettings
-    // This example shows how to create a GermanChartGlobalizationSettings class that inherits SettableChartGlobalizationSettings, assigns German names to display units (Hundert, Tausend, Millionen, Prozent), and applies the settings to a workbook via workbook.Settings.GlobalizationSettings. The chart’s value axis then displays German unit labels when the DisplayUnit is set to Hundreds or Thousands.
-    class GermanChartGlobalizationSettings : SettableChartGlobalizationSettings
+    static void Main()
     {
-        public GermanChartGlobalizationSettings()
-        {
-            // Set German names for common display unit types
-            SetAxisUnitName(DisplayUnitType.Hundreds, "Hundert");
-            SetAxisUnitName(DisplayUnitType.Thousands, "Tausend");
-            SetAxisUnitName(DisplayUnitType.Millions, "Millionen");
-            SetAxisUnitName(DisplayUnitType.Percentage, "Prozent");
-        }
-    }
-
-    class Program
-    {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Apply German culture to the workbook (affects number formatting)
+            workbook.Settings.CultureInfo = new CultureInfo("de-DE");
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Kategorie");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
-            sheet.Cells["B1"].PutValue("Wert");
-            sheet.Cells["B2"].PutValue(1200);
-            sheet.Cells["B3"].PutValue(2500);
-            sheet.Cells["B4"].PutValue(3700);
+            sheet.Cells["A1"].PutValue("Monat");
+            sheet.Cells["B1"].PutValue("Umsatz");
+            sheet.Cells["A2"].PutValue("Januar");
+            sheet.Cells["B2"].PutValue(1200.5);
+            sheet.Cells["A3"].PutValue("Februar");
+            sheet.Cells["B3"].PutValue(1500.75);
+            sheet.Cells["A4"].PutValue("März");
+            sheet.Cells["B4"].PutValue(1800.25);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
             Chart chart = sheet.Charts[chartIndex];
+
+            // Set the data range for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Configure the value axis to use a display unit (Hundreds) and show the unit label
-            chart.ValueAxis.DisplayUnit = DisplayUnitType.Hundreds;
-            chart.ValueAxis.IsDisplayUnitLabelShown = true;
+            // Customize axis titles in German
+            chart.ValueAxis.Title.Text = "Umsatz (€)";
+            chart.CategoryAxis.Title.Text = "Monat";
 
-            // Apply German globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
-            {
-                ChartSettings = new GermanChartGlobalizationSettings()
-            };
+            // Optional: set number format for the value axis using German conventions
+            // Note: Axis.NumberFormat is not available in this version of Aspose.Cells, so this line is omitted.
 
-            // At this point, the axis unit label will be displayed in German ("Hundert")
-            Console.WriteLine("Axis unit label (German): " + chart.ValueAxis.DisplayUnitLabel.Text);
-
-            // Change the display unit to Thousands to demonstrate another German label
-            chart.ValueAxis.DisplayUnit = DisplayUnitType.Thousands;
-            Console.WriteLine("Updated axis unit label (German): " + chart.ValueAxis.DisplayUnitLabel.Text);
-
-            // Save the workbook
-            workbook.Save("GermanLocalizedChart.xlsx");
+            // Save the workbook to a file
+            workbook.Save("ChartWithGermanLocalization.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

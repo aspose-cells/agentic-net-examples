@@ -1,16 +1,14 @@
-// Title: C# Example: Define and Save a Named Range "SalesData" (B2:D20) with Aspose.Cells
-// Description: Demonstrates how to create a new Workbook, access the first worksheet, build a range covering cells B2 through D20, assign the name "SalesData" to that range, and persist the file as NamedRangeDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# named range | create named range B2:D20 | SalesData range Aspose | C# workbook save with named range | .NET Excel range naming example | Aspose.Cells range API
-// Common Searches: Aspose.Cells how to add a named range in C# | define SalesData range B2 to D20 Aspose.Cells | C# save Excel file with named range using Aspose | Aspose.Cells .NET create named range programmatically
-// Developer Intent: Add a named range called SalesData that spans B2:D20 and write the workbook to disk.
-// Use Cases: Reference SalesData in formulas or chart data sources without hard‑coding cell addresses. | Export the workbook to other platforms that recognize named ranges, preserving the logical grouping of sales data. | Iterate over the SalesData range programmatically for custom validation, transformation, or reporting.
-// AI Prompts: Write C# code with Aspose.Cells that creates a named range 'SalesData' for B2:D20 and then uses it in a SUM formula. | Show how to open an existing workbook, retrieve the 'SalesData' named range, and loop through its cells in C#. | Explain the steps to rename or delete a named range in an Aspose.Cells workbook using .NET.
+// Title: Define a named range "SalesData" for cells B2:D20 in a new workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, add a named range called SalesData that refers to B2:D20 on the first worksheet, and save it as Output.xlsx. | Write C# code that builds the address string for B2:D20, assigns it to the RefersTo property of a named range named SalesData, and writes the workbook to disk.
+// Common Searches: Aspose.Cells C# how to add a named range that points to B2:D20 | C# set RefersTo property for a named range in Aspose.Cells workbook | Create named range SalesData in Aspose.Cells and export to Excel file
+// Tags: Aspose.Cells define named range B2:D20 | C# add named range SalesData | Aspose.Cells set RefersTo property | C# create workbook with named range | Aspose.Cells named range worksheet reference
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a new Workbook, access the first worksheet, build a range covering cells B2 through D20, assign the name "SalesData" to that range, and persist the file as NamedRangeDemo.xlsx using Aspose.Cells for .NET.
-class DefineNamedRange
+// // This example creates a new workbook, defines a named range called SalesData that references cells B2:D20 on the first worksheet, and saves the file as Output.xlsx.
+class Program
 {
     static void Main()
     {
@@ -19,17 +17,31 @@ class DefineNamedRange
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet (default name is "Sheet1")
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a range that covers cells B2:D20 using the Aspose.Cells Range class
-            Aspose.Cells.Range salesRange = worksheet.Cells.CreateRange("B2", "D20");
+            // Define the range B2:D20 (zero‑based indices)
+            int firstRow = 1;      // Row 2
+            int firstColumn = 1;   // Column B
+            int totalRows = 19;    // Rows 2‑20 inclusive
+            int totalColumns = 3;  // Columns B‑D inclusive
 
-            // Assign a name to the range for later reference
-            salesRange.Name = "SalesData";
+            // Build the address string for the range (e.g., 'Sheet1'!$B$2:$D$20)
+            string startCell = CellsHelper.CellIndexToName(firstRow, firstColumn);
+            string endCell = CellsHelper.CellIndexToName(firstRow + totalRows - 1, firstColumn + totalColumns - 1);
+            string rangeAddress = $"='{sheet.Name}'!${startCell}:${endCell}";
 
-            // Save the workbook (the file will contain the named range)
-            workbook.Save("NamedRangeDemo.xlsx");
+            // Add a named range called "SalesData"
+            workbook.Worksheets.Names.Add("SalesData");
+            int nameIndex = workbook.Worksheets.Names.Count - 1;
+            workbook.Worksheets.Names[nameIndex].RefersTo = rangeAddress;
+
+            // Define output file path
+            string outputPath = "Output.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

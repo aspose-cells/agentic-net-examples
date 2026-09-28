@@ -1,17 +1,14 @@
-// Title: Add a dynamic line sparkline with SparklineCollection.Add (range formula) in Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, fill A1:A10, add a line sparkline group, insert a sparkline in B1 that references the range via SparklineCollection.Add, modify the source values, recalculate formulas, and save the file so the sparkline updates automatically.
-// Keywords: Aspose.Cells | C# | .NET | SparklineCollection.Add | dynamic sparkline | range formula | auto‑refresh sparkline | CalculateFormula | Excel visualization
-// Common Searches: Aspose.Cells add sparkline that updates with data | SparklineCollection.Add range string example C# | Refresh sparklines after changing source cells Aspose | Create line sparkline programmatically Aspose.Cells
-// Developer Intent: Insert a line sparkline linked to a cell range that reflects data changes without manual refresh.
-// Use Cases: Show a compact trend line for values in A1:A10 that stays current as the numbers are edited. | Generate several independent sparklines by calling SparklineCollection.Add with different range strings. | Ensure visualizations are up‑to‑date by invoking workbook.CalculateFormula before exporting the workbook.
-// AI Prompts: Provide C# code to add a line sparkline using SparklineCollection.Add with a range string and have it update automatically. | Explain how to recalculate formulas and refresh sparklines in an Aspose.Cells workbook after modifying source data. | Show how to create multiple dynamic sparklines for various data series in Aspose.Cells for .NET.
+// Title: Generate a line sparkline in Aspose.Cells .NET that automatically expands using an INDEX‑COUNTA formula
+// AI Prompts: Create a workbook, add a line sparkline to cell B1, assign its DataRange to an INDEX‑COUNTA formula that references column A, and save the file. | Append extra rows to column A, trigger formula recalculation, and save a second workbook to show the sparkline updating without manual changes.
+// Common Searches: Aspose.Cells set sparkline data range with Excel formula | How to use INDEX and COUNTA for dynamic sparkline range in C# | Automatically update sparkline when adding rows in Aspose.Cells | C# example of formula‑based sparkline that expands with new data | Recalculate formulas after modifying worksheet in Aspose.Cells
+// Tags: set sparkline DataRange with INDEX formula Aspose.Cells | dynamic line sparkline using COUNTA in .NET | SparklineGroup.Add line type Aspose.Cells | recalculate workbook formulas after data append | auto‑expanding sparkline range Excel formula
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to create a workbook, fill A1:A10, add a line sparkline group, insert a sparkline in B1 that references the range via SparklineCollection.Add, modify the source values, recalculate formulas, and save the file so the sparkline updates automatically.
-class SparklineDynamicDemo
+// The sample creates a workbook, fills column A, adds a line sparkline in B1, and sets its DataRange to an INDEX‑COUNTA formula that grows as rows are added. After saving the initial file, more values are appended, formulas are recalculated, and a second file is saved, demonstrating the sparkline automatically reflecting the expanded data range.
+class DynamicSparklineDemo
 {
     static void Main()
     {
@@ -19,33 +16,40 @@ class SparklineDynamicDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data in column A (A1:A10)
-        for (int i = 0; i < 10; i++)
+        // Populate initial data in column A (rows 1‑5)
+        for (int i = 0; i < 5; i++)
         {
-            sheet.Cells[i, 0].PutValue(i + 1); // Values 1..10
+            sheet.Cells[i, 0].PutValue(i + 1); // A1:A5 = 1,2,3,4,5
         }
 
         // Add a sparkline group of type Line
         int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // Add a sparkline that uses the range A1:A10 and places the sparkline in cell B1
-        // SparklineCollection.Add(string dataRange, int row, int column)
-        group.Sparklines.Add("A1:A10", 0, 1); // Row 0 (A1), Column 1 (B)
+        // Add a sparkline at cell B1 (row 0, column 1) with a temporary static range
+        int sparklineIndex = group.Sparklines.Add("A1:A1", 0, 1);
+        Sparkline sparkline = group.Sparklines[sparklineIndex];
 
-        // At this point the sparkline reflects the data in A1:A10.
-        // Modify the source data to demonstrate automatic update.
-        for (int i = 0; i < 10; i++)
+        // Define a formula‑based dynamic range using INDEX and COUNTA.
+        // This range expands automatically as new values are added to column A.
+        string dynamicRange = $"{sheet.Name}!A1:INDEX({sheet.Name}!A:A, COUNTA({sheet.Name}!A:A))";
+
+        // Assign the dynamic range to the sparkline
+        sparkline.DataRange = dynamicRange;
+
+        // Save the workbook after the initial setup
+        workbook.Save("DynamicSparkline_Initial.xlsx");
+
+        // Append more data to column A (rows 6‑10)
+        for (int i = 5; i < 10; i++)
         {
-            // Multiply each value by 2
-            double current = sheet.Cells[i, 0].DoubleValue;
-            sheet.Cells[i, 0].PutValue(current * 2);
+            sheet.Cells[i, 0].PutValue(i + 1); // A6:A10 = 6,7,8,9,10
         }
 
-        // Recalculate formulas (not strictly required for sparklines, but ensures workbook is up‑to‑date)
+        // Recalculate formulas (if any) to ensure the dynamic range reflects new data
         workbook.CalculateFormula();
 
-        // Save the workbook – the sparkline in B1 will display the updated data
-        workbook.Save("DynamicSparklineDemo.xlsx");
+        // Save the workbook again – the sparkline in B1 now reflects the expanded range A1:A10
+        workbook.Save("DynamicSparkline_Updated.xlsx");
     }
 }

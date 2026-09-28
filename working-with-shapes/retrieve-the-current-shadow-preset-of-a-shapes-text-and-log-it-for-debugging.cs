@@ -1,44 +1,63 @@
-// Title: Get and log a shape's shadow preset using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a rectangle shape, assign a shadow preset, save and reload the file, then read the shape's ShadowEffect.PresetType and output it to the console for debugging purposes.
-// Keywords: Aspose.Cells shape shadow preset | C# read ShadowEffect.PresetType | Aspose.Cells debug shadow effect | retrieve shape shadow type .NET | Aspose.Cells shadow enum
-// Common Searches: how to read shape shadow preset Aspose.Cells C# | Aspose.Cells get ShadowEffect.PresetType after saving | log shape shadow preset in .NET | Aspose.Cells retrieve shadow effect enum value | debug shape shadow settings in Excel workbook
-// Developer Intent: Extract the current shadow preset of a worksheet shape and display it for troubleshooting.
-// Use Cases: Verify that a shape's shadow setting survives workbook serialization. | Log shadow presets to diagnose visual inconsistencies in generated reports. | Automated test that compares each shape's actual shadow preset with expected values.
-// AI Prompts: Write C# code that reads a shape's ShadowEffect.PresetType with Aspose.Cells and writes the result to a log file. | Show how to iterate over all shapes in a worksheet and print each shape's name and shadow preset. | Explain how to compare a shape's shadow preset against a target enum value and trigger an alert when they differ.
+// Title: How to read and log a shape's text shadow preset in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, selects the first shape on the first worksheet, and prints its TextEffectFormat.ShadowPreset value to the console. | Create a reusable C# method that iterates over all shapes in a worksheet, safely accesses each shape's TextEffectFormat via dynamic typing, and logs the shadow preset for every shape, handling missing TextEffectFormat support. | Demonstrate how to catch a RuntimeBinderException when the Aspose.Cells version does not expose TextEffectFormat on a shape and output a clear fallback message.
+// Common Searches: aspnet get text shadow preset from shape using Aspose.Cells | c# read shape TextEffectFormat shadow preset in Excel file | how to log shape text effect properties with Aspose.Cells .NET | dynamic access TextEffectFormat on shape Aspose.Cells version compatibility | retrieve shape shadow preset from worksheet with Aspose.Cells
+// Tags: Aspose.Cells read shape TextEffectFormat | C# get shape text shadow preset | log shape text effect properties Aspose.Cells | dynamic TextEffectFormat access Aspose.Cells | handle RuntimeBinderException Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsShadowDemo
+// The sample loads an .xlsx workbook, verifies that at least one shape exists, uses dynamic typing to read the shape's TextEffectFormat.ShadowPreset, writes the preset to the console, and gracefully handles RuntimeBinderException for older Aspose.Cells versions.
+class Program
 {
-    // Demonstrates how to create a workbook, add a rectangle shape, assign a shadow preset, save and reload the file, then read the shape's ShadowEffect.PresetType and output it to the console for debugging purposes.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string filePath = "input.xlsx";
 
-            // Add a rectangle shape
-            Shape shape = sheet.Shapes.AddRectangle(1, 0, 1, 0, 100, 100);
+            // Verify the input file exists to avoid FileNotFoundException
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"File not found: {filePath}");
+                return;
+            }
 
-            // Set a known shadow preset for demonstration
-            shape.ShadowEffect.PresetType = PresetShadowType.OffsetBottom;
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
 
-            // Save the workbook
-            workbook.Save("ShadowDemo.xlsx");
+            // Get the first worksheet (or specify another index/name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Load the workbook back
-            Workbook loadedWorkbook = new Workbook("ShadowDemo.xlsx");
-            Shape loadedShape = loadedWorkbook.Worksheets[0].Shapes[0];
+            // Ensure the worksheet contains at least one shape
+            if (worksheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found in the worksheet.");
+                return;
+            }
 
-            // Retrieve the current shadow preset type
-            PresetShadowType currentPreset = loadedShape.ShadowEffect.PresetType;
+            // Access the first shape (adjust index or use name lookup as required)
+            Shape shape = worksheet.Shapes[0];
 
-            // Log the preset type for debugging
-            Console.WriteLine("Current Shadow Preset: " + currentPreset);
+            try
+            {
+                // Use dynamic to access TextEffectFormat at runtime (avoids compile‑time errors if the property is unavailable in the referenced version)
+                dynamic dynShape = shape;
+                var shadowPreset = dynShape.TextEffectFormat.ShadowPreset;
+
+                // Output the retrieved shadow preset
+                Console.WriteLine($"Text shadow preset: {shadowPreset}");
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                Console.WriteLine("The loaded Aspose.Cells version does not support TextEffectFormat on Shape.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

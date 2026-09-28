@@ -1,75 +1,69 @@
-// Title: Save Aspose.Cells Chart as PNG to a Temporary File and Auto‑Delete in C#
-// Description: Creates a workbook, adds sample data, builds a column chart, generates a unique .png path in the system temp folder, saves the chart with chart.ToImage, reads the image bytes, and reliably deletes the temporary file in a finally block.
-// Keywords: Aspose.Cells chart to PNG | C# temporary file | chart.ToImage | auto delete temp file | export chart image | Aspose.Cells image handling | temporary PNG file C#
-// Common Searches: export Aspose.Cells chart as PNG to temp folder | delete temporary chart image after use C# | save chart to PNG with Aspose.Cells and clean up | generate unique temp file name for chart image | Aspose.Cells chart image cleanup
-// Developer Intent: Generate a PNG image from an Aspose.Cells chart, use it transiently, and ensure the file is removed automatically after processing.
-// Use Cases: Attach a chart image to an email without leaving files on disk. | Upload chart bytes to a web API while guaranteeing no leftover temporary files. | Insert a chart into a PDF report and delete the image file immediately after PDF creation.
-// AI Prompts: Show C# code that saves an Aspose.Cells chart to a temporary PNG file, reads the bytes, and guarantees deletion in a finally block. | Explain how to create a unique temporary file name for a chart image using Path.GetTempPath and Guid in Aspose.Cells. | Provide best practices for managing temporary image files from Aspose.Cells charts in multi‑threaded applications.
+// Title: Render an Aspose.Cells chart to a temporary PNG file and auto‑delete it on application exit (C#)
+// AI Prompts: Write C# code that creates a workbook chart with Aspose.Cells, saves it as a PNG in the system temp folder, and registers a ProcessExit handler to remove the file. | Show how to use ImageOrPrintOptions to export an Aspose.Cells chart to a temporary PNG image and ensure the file is deleted when the program terminates.
+// Common Searches: how to save an Aspose.Cells chart as a PNG in the temp directory using C# | auto delete temporary chart image on program exit Aspose.Cells | C# Aspose.Cells render chart to image and clean up temporary file | using ImageOrPrintOptions to export chart to PNG and schedule deletion | temporary file handling for Aspose.Cells chart images in .NET
+// Tags: Aspose.Cells chart to PNG export | render chart to temporary PNG file | register ProcessExit for temp file deletion C# | ImageOrPrintOptions chart rendering | auto‑delete temporary chart image .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// Creates a workbook, adds sample data, builds a column chart, generates a unique .png path in the system temp folder, saves the chart with chart.ToImage, reads the image bytes, and reliably deletes the temporary file in a finally block.
-class ChartToTempPng
+// The example creates a workbook, populates data, adds a column chart, and uses Aspose.Cells ImageOrPrintOptions to render the chart directly to a PNG file in the system's temporary folder. It then registers a ProcessExit event that deletes the temporary file when the application ends, handling any errors that may occur.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["A3"].PutValue("Orange");
-        worksheet.Cells["A4"].PutValue("Banana");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(1200);
-        worksheet.Cells["B3"].PutValue(800);
-        worksheet.Cells["B4"].PutValue(1500);
-
-        // Add a column chart
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
-
-        // Generate a temporary file name with .png extension
-        string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
-
         try
         {
-            // Save the chart as a PNG image to the temporary file
-            chart.ToImage(tempFilePath, ImageType.Png);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Example processing: read the image bytes (could be sent over network, etc.)
-            byte[] imageBytes = File.ReadAllBytes(tempFilePath);
-            Console.WriteLine($"Chart image saved to temporary file: {tempFilePath}");
-            Console.WriteLine($"Image size: {imageBytes.Length} bytes");
+            // Populate data for the chart
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B4"].PutValue(30);
 
-            // Additional processing with imageBytes can be placed here
-        }
-        finally
-        {
-            // Ensure the temporary file is deleted after processing
-            if (File.Exists(tempFilePath))
+            // Add a column chart
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
+
+            // Prepare image options (default format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+
+            // Generate a temporary file path for the chart image
+            string tempFilePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
+
+            // Render the chart directly to the temporary file
+            chart.ToImage(tempFilePath, imgOptions);
+
+            // Ensure the temporary file is deleted when the process exits
+            AppDomain.CurrentDomain.ProcessExit += (sender, args) =>
             {
                 try
                 {
-                    File.Delete(tempFilePath);
-                    Console.WriteLine("Temporary chart image file deleted.");
+                    if (File.Exists(tempFilePath))
+                        File.Delete(tempFilePath);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"Failed to delete temporary file: {ex.Message}");
+                    // Optionally log deletion errors
                 }
-            }
-        }
+            };
 
-        // Optionally save the workbook if needed
-        // workbook.Save("ChartWorkbook.xlsx");
+            Console.WriteLine("Chart image saved to temporary file: " + tempFilePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

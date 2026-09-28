@@ -1,76 +1,59 @@
-// Title: Aspose.Cells C# – Enable Table AutoFilter and Apply a Contains Filter
-// Description: Creates a workbook, adds a ListObject (Excel table) with product data, turns on the table's AutoFilter, and uses a custom Contains filter to show only rows where the "Product" column includes the substring "Apple". The workbook is then saved as an .xlsx file.
-// Keywords: Aspose.Cells | C# | Excel table AutoFilter | ListObject filter | Contains filter | FilterOperatorType.Contains | .NET spreadsheet filtering | custom text filter Aspose
-// Common Searches: Aspose.Cells enable auto filter on table | C# filter table rows by substring | Apply Contains filter to ListObject Aspose | How to use custom filter with Aspose.Cells | AutoFilter Custom Contains example .NET
-// Developer Intent: Turn on AutoFilter for a worksheet table and restrict visible rows to those whose column value contains a specified text.
-// Use Cases: Show only products that contain a keyword (e.g., "Apple") in a generated catalog. | Create dynamic reports that hide non‑matching rows without manual editing. | Prepare Excel files where end‑users can quickly filter data by typing a substring.
-// AI Prompts: Generate C# code that adds an AutoFilter to an Aspose.Cells ListObject and filters column 0 for rows containing "Apple". | Explain how to use FilterOperatorType.Contains with Aspose.Cells to filter table data by a text fragment. | Provide a step‑by‑step example of applying multiple custom filters (Contains, DoesNotContain) on an Aspose.Cells table.
+// Title: Enable auto‑filter on an Aspose.Cells ListObject and filter rows that contain a specific substring using C#
+// AI Prompts: Write C# code that creates a workbook, adds a ListObject table, enables its header row, and applies an AutoFilter with a '*apple*' wildcard to show only rows where the first column contains 'apple'. | Show how to set a custom text criteria with wildcards on a specific column of an Aspose.Cells table and then save the filtered result as an .xlsx file. | Demonstrate applying a table style, turning on auto‑filter, and using the AutoFilter.Filter method to perform substring matching in an Excel worksheet with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to filter a ListObject by text containing a substring | apply wildcard auto filter to Excel table using Aspose.Cells .NET | filter rows in an Aspose.Cells table where column value includes 'apple' | enable auto filter on Aspose.Cells table and save filtered workbook
+// Tags: Aspose.Cells auto filter ListObject | C# filter Excel table by substring | Aspose.Cells wildcard text criteria | apply table style Aspose.Cells | save filtered workbook .xlsx Aspose
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, defines a ListObject covering A1:B5, enables the header row, applies a table style, and uses AutoFilter.Filter with the wildcard '*apple*' to display only rows whose Name contains 'apple'. The filtered workbook is saved as FilteredTable.xlsx.
+class Program
 {
-    // Creates a workbook, adds a ListObject (Excel table) with product data, turns on the table's AutoFilter, and uses a custom Contains filter to show only rows where the "Product" column includes the substring "Apple". The workbook is then saved as an .xlsx file.
-    public class TableAutoFilterWithContainsDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-            // Populate sample data for the table (header + data rows)
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Apple iPhone");
-            sheet.Cells["B2"].PutValue("Electronics");
-            sheet.Cells["A3"].PutValue("Banana Bread");
-            sheet.Cells["B3"].PutValue("Food");
-            sheet.Cells["A4"].PutValue("Apple MacBook");
-            sheet.Cells["B4"].PutValue("Electronics");
-            sheet.Cells["A5"].PutValue("Cherry Pie");
-            sheet.Cells["B5"].PutValue("Food");
+            // Populate sample data
+            worksheet.Cells["A1"].PutValue("Name");
+            worksheet.Cells["B1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue("Fruit");
+            worksheet.Cells["A3"].PutValue("Banana");
+            worksheet.Cells["B3"].PutValue("Fruit");
+            worksheet.Cells["A4"].PutValue("Carrot");
+            worksheet.Cells["B4"].PutValue("Vegetable");
+            worksheet.Cells["A5"].PutValue("Pineapple");
+            worksheet.Cells["B5"].PutValue("Fruit");
 
-            // Define the range of the table (including header row)
-            int firstRow = 0;   // zero‑based index for row 1
-            int firstCol = 0;   // column A
-            int lastRow  = 4;   // row 5 (zero‑based)
-            int lastCol  = 1;   // column B
+            // Define the range for the table (A1:B5)
+            int firstRow = 0;      // zero‑based index for row 1
+            int firstColumn = 0;   // zero‑based index for column A
+            int totalRows = 5;     // rows 1‑5
+            int totalColumns = 2;  // columns A‑B
 
-            // Add a ListObject (Excel table) covering the data range
-            int tableIndex = sheet.ListObjects.Add(firstRow, firstCol, lastRow, lastCol, true);
-            ListObject table = sheet.ListObjects[tableIndex];
+            // Add a ListObject (table) with headers
+            int tableIndex = worksheet.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+            ListObject table = worksheet.ListObjects[tableIndex];
+            table.ShowHeaderRow = true;
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
 
-            // Enable auto‑filter for the table
-            table.HasAutoFilter = true;
-
-            // Get the AutoFilter object associated with the table
-            AutoFilter autoFilter = table.AutoFilter;
-
-            // Apply a custom filter that shows rows where the "Product" column (index 0)
-            // contains the substring "Apple"
-            autoFilter.Custom(0, FilterOperatorType.Contains, "Apple");
-
-            // Refresh the filter to apply the criteria
-            autoFilter.Refresh();
+            // Apply a filter to show rows where "Name" contains "apple"
+            // Using wildcard pattern "*apple*"
+            table.AutoFilter.Filter(0, "*apple*");
 
             // Save the workbook
-            workbook.Save("TableAutoFilterContainsDemo.xlsx");
+            string outputPath = "FilteredTable.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

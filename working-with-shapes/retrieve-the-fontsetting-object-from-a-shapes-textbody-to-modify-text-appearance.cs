@@ -1,53 +1,60 @@
-// Title: Get and Edit FontSetting of a Shape’s TextBody in Aspose.Cells for .NET
-// Description: Demonstrates how to access a shape’s TextBody, retrieve its FontSettingCollection, modify individual FontSetting objects (e.g., first character or a character range), and save the workbook using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# shape FontSetting | TextBody font formatting | modify shape text font | shape Characters method | .NET spreadsheet API | font color bold italic Aspose
-// Common Searches: Aspose.Cells change font of specific characters in a shape | retrieve FontSettingCollection from a rectangle shape | format part of shape text using Characters method | C# Aspose.Cells set bold color for first character | how to edit shape text font in Aspose.Cells .NET
-// Developer Intent: Extract FontSetting objects from a shape’s TextBody and adjust their font attributes programmatically.
-// Use Cases: Set the first character of a shape’s text to Calibri, 16 pt, blue, and bold. | Apply dark‑red color and italic style to the word "Cells" (characters 7‑12) within the shape. | Iterate through all FontSetting entries to apply conditional formatting such as alternating colors.
-// AI Prompts: Generate C# code with Aspose.Cells that retrieves a shape’s FontSettingCollection and makes the first character blue, bold, and 16 pt. | Show how to use the Characters method to italicize and color a specific substring of a shape’s text in Aspose.Cells for .NET. | Provide an example that loops over each FontSetting in a shape’s TextBody to apply custom formatting based on runtime logic.
+// Title: Retrieve and modify a shape's FontSetting (text body) in an Excel worksheet with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing .xlsx file, locates a shape named 'MyShape' on the first worksheet, accesses its TextBody FontSetting, changes the font color to red, size to 14 pt, makes it bold and applies a single underline, then saves the workbook. | Show how to safely obtain the Font object from a shape's TextBody in Aspose.Cells, adjust color, size, bold, italic, and underline properties, and handle missing shape or file errors.
+// Common Searches: Aspose.Cells C# retrieve FontSetting from shape TextBody | How to change font color and size of a specific shape in Excel using Aspose.Cells | Set bold and underline for shape text in Aspose.Cells .NET example | C# code to modify shape text appearance in an .xlsx workbook with Aspose.Cells | Aspose.Cells shape Font object not found error handling
+// Tags: Aspose.Cells shape FontSetting modification | C# Aspose.Cells retrieve shape font | Excel shape text formatting Aspose.Cells | Aspose.Cells set shape font color size | Aspose.Cells apply underline to shape text | Aspose.Cells handle missing shape exception
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to access a shape’s TextBody, retrieve its FontSettingCollection, modify individual FontSetting objects (e.g., first character or a character range), and save the workbook using Aspose.Cells for C#.
-class RetrieveFontSettingFromShape
+// The example opens an existing workbook, accesses the first worksheet, retrieves a shape named "MyShape", obtains its FontSetting via the shape's Font property, updates the font color to red, size to 14 pt, makes it bold, removes italic, adds a single underline, and saves the modified workbook while handling missing files or shapes.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offsetX, offsetY, width, height
-        Shape shape = sheet.Shapes.AddRectangle(1, 1, 0, 0, 150, 80);
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Set the shape's text
-        shape.Text = "Aspose Cells";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Retrieve the FontSettingCollection from the shape's TextBody
-        FontSettingCollection textBody = shape.TextBody;
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access a specific FontSetting (e.g., the first character)
-        // The collection contains a FontSetting for each character in the text
-        FontSetting firstCharSetting = textBody[0];
+            // Retrieve the shape by name
+            Shape shape = worksheet.Shapes["MyShape"];
+            if (shape == null)
+            {
+                Console.WriteLine("Shape 'MyShape' not found on the worksheet.");
+                return;
+            }
 
-        // Modify the font appearance of the selected characters
-        firstCharSetting.Font.Name = "Calibri";
-        firstCharSetting.Font.Size = 16;
-        firstCharSetting.Font.Color = Color.Blue;
-        firstCharSetting.Font.IsBold = true;
+            // Access the shape's font and modify its appearance
+            Font font = shape.Font;
+            font.Color = Color.Red;               // Font color
+            font.Size = 14;                        // Font size (points)
+            font.IsBold = true;                    // Bold
+            font.IsItalic = false;                 // Italic
+            font.Underline = FontUnderlineType.Single; // Underline
 
-        // Optionally, modify another range using the Characters method
-        // Here we format characters 7 to 12 ("Cells")
-        FontSetting rangeSetting = shape.Characters(7, 5);
-        rangeSetting.Font.Color = Color.DarkRed;
-        rangeSetting.Font.IsItalic = true;
-
-        // Save the workbook
-        workbook.Save("RetrieveFontSettingFromShape.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

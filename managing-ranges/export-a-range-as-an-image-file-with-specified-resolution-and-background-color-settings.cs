@@ -1,63 +1,67 @@
-// Title: Export Excel range as PNG with specified DPI and background using Aspose.Cells for .NET
-// Description: Loads a workbook, selects cells A1:J25 on the first worksheet, configures ImageOrPrintOptions for PNG with 300 dpi horizontal and vertical resolution (white background), converts the range to an image via Range.ToImage, and writes the PNG file to disk.
-// Keywords: Aspose.Cells | C# export range to image | Excel range to PNG | custom DPI | background color | Range.ToImage | ImageOrPrintOptions | .NET
-// Common Searches: Aspose.Cells export specific range to PNG with 300 DPI | How to set image resolution when converting Excel cells to image in C# | Save Excel range as image with white background using Aspose.Cells | Range.ToImage example with custom DPI | Export Excel table as high‑resolution PNG
-// Developer Intent: Generate an image file of a selected cell block with defined resolution and background color settings.
-// Use Cases: Insert high‑resolution snapshots of report sections into PDFs or slide decks. | Create thumbnail previews of data tables for web pages or email newsletters. | Provide a static PNG of a worksheet area for documentation without sharing the original workbook.
-// AI Prompts: Write C# code that exports a worksheet range to a JPEG image at 150 dpi with a transparent background using Aspose.Cells. | Show how to export multiple non‑contiguous ranges to separate PNG files, each with its own DPI and background color. | Explain how to change the background color of an exported range image when using Aspose.Cells in .NET.
+// Title: Export a specific worksheet range to a 300 dpi PNG image using Aspose.Cells for .NET
+// AI Prompts: Write C# code that exports cells A1:B3 from a worksheet to a 300 dpi PNG file with Aspose.Cells. | Demonstrate how to set the worksheet print area and configure ImageOrPrintOptions to render a selected range as an image in Aspose.Cells. | Build a reusable C# method that accepts a range address, DPI value, and output path, then saves the range as a PNG using Aspose.Cells.
+// Common Searches: how to export a cell range to PNG with Aspose.Cells C# | Aspose.Cells set DPI for image export of worksheet range | C# render selected Excel cells as high resolution PNG using Aspose.Cells | using print area to export specific range as image Aspose.Cells | Aspose.Cells ImageOrPrintOptions export range to PNG example
+// Tags: export range to PNG Aspose.Cells | set image DPI Aspose.Cells | configure print area Aspose.Cells | render worksheet range as image C# | high‑resolution Excel image export
 
 using System;
 using System.IO;
-using System.Drawing;                     // For Color (kept for potential future use)
 using Aspose.Cells;
-using Aspose.Cells.Drawing;               // For ImageType
-using Aspose.Cells.Rendering;             // For ImageOrPrintOptions
+using Aspose.Cells.Rendering;
 
-// Loads a workbook, selects cells A1:J25 on the first worksheet, configures ImageOrPrintOptions for PNG with 300 dpi horizontal and vertical resolution (white background), converts the range to an image via Range.ToImage, and writes the PNG file to disk.
+// // Exports the cells A1:B3 of a workbook to a 300 dpi PNG image using Aspose.Cells, configuring the print area and image options before rendering.
 class ExportRangeAsImage
 {
     static void Main()
     {
         try
         {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "range_image.png";
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // empty workbook
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Verify that the input workbook exists
-            if (!File.Exists(inputPath))
+            // Populate some data for demonstration
+            sheet.Cells["A1"].PutValue("Header 1");
+            sheet.Cells["B1"].PutValue("Header 2");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["B2"].PutValue(456);
+            sheet.Cells["A3"].PutValue(789);
+            sheet.Cells["B3"].PutValue(101112);
+
+            // Define the range to export (e.g., A1:B3)
+            string rangeAddress = "A1:B3";
+
+            // Set the print area to the desired range – this tells the renderer which cells to include
+            sheet.PageSetup.PrintArea = rangeAddress;
+
+            // Configure image export options.
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Load the existing workbook
-            Workbook workbook = new Workbook(inputPath);
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Define the range to export (e.g., A1:J25)
-            Aspose.Cells.Range range = worksheet.Cells.CreateRange("A1:J25");
-
-            // Configure image options: PNG format, 300 DPI, white background (default)
-            ImageOrPrintOptions options = new ImageOrPrintOptions
-            {
-                ImageType = ImageType.Png,
+                SaveFormat = SaveFormat.Png,
                 HorizontalResolution = 300,
-                VerticalResolution = 300
-                // BackgroundColor property is not available; PNG default background is white
+                VerticalResolution = 300,
+                OnePagePerSheet = true
+                // BackgroundColor is not available in older versions; the default background will be used.
             };
 
-            // Convert the range to an image (byte array)
-            byte[] imageData = range.ToImage(options);
+            // Create a SheetRender object with the worksheet and the image options
+            SheetRender renderer = new SheetRender(sheet, imgOptions);
 
-            // Save the image to a file
-            File.WriteAllBytes(outputPath, imageData);
-            Console.WriteLine($"Range image saved to \"{outputPath}\".");
+            // Determine output path and ensure the directory exists
+            string outputPath = "ExportedRange.png";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Export the first (and only) page to an image file
+            renderer.ToImage(0, outputPath);
+
+            Console.WriteLine($"Range exported successfully as {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

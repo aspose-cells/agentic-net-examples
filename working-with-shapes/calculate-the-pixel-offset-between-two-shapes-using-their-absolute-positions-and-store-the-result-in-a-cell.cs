@@ -1,54 +1,68 @@
-// Title: Compute pixel offset between two worksheet shapes and write the result to a cell – Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds two rectangle shapes, sets their absolute Left and Top pixel coordinates, calculates the horizontal and vertical differences, derives the Euclidean pixel offset, and stores the distance (plus individual deltas) in cells A1‑A3 before saving the file.
-// Keywords: Aspose.Cells shape offset | pixel distance between shapes | shape Left Top properties | C# calculate shape distance | store calculation in Excel cell | Euclidean offset Aspose.Cells
-// Common Searches: Aspose.Cells get pixel offset of shapes | calculate distance between two shapes in Excel using .NET | write shape offset result to a worksheet cell | how to use Left and Top properties of Aspose.Cells shapes | measure layout spacing with Aspose.Cells
-// Developer Intent: Find the pixel offset between two worksheet shapes and record the value in a cell.
-// Use Cases: Validate spacing between diagram elements by measuring exact pixel gaps. | Generate a report that lists horizontal, vertical, and total pixel distances for annotated objects. | Automate alignment checks, flagging shapes that exceed a predefined offset threshold.
-// AI Prompts: Generate C# code with Aspose.Cells that computes horizontal and vertical pixel differences between two shapes and places the Euclidean distance in cell B5. | Show how to iterate over all shapes in a worksheet, identify the pair with the maximum pixel offset, and write the distance to a summary sheet. | Explain the conversion from shape column/row offsets to absolute pixel coordinates before calculating distance using Aspose.Cells.
+// Title: Calculate horizontal and vertical pixel offsets between two worksheet shapes and store them in cells using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that adds two shapes to a worksheet, converts their point coordinates to pixels, computes the X and Y pixel distance between them, and writes the results to cells A1 and B1 with Aspose.Cells. | Show how to retrieve the absolute pixel positions of two shapes, determine the offset values, and save those offsets into specific Excel cells using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# example to find pixel distance between two shapes on a worksheet | how to write shape position offsets to Excel cells using Aspose.Cells .NET | convert shape coordinates from points to pixels in Aspose.Cells C# | determine X and Y offset of two worksheet shapes with Aspose.Cells | store shape offset values in A1 and B1 using Aspose.Cells for .NET
+// Tags: calculate shape pixel offset Aspose.Cells C# | write shape offset to worksheet cells Aspose.Cells | convert shape points to pixels Aspose.Cells | add rectangle shapes with pixel positioning Aspose.Cells | retrieve absolute shape positions Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeOffsetDemo
+// The example creates a workbook, adds two rectangle shapes at specific point coordinates, converts those coordinates to pixels, computes the horizontal and vertical pixel offsets between the shapes, writes the X offset to cell A1 and the Y offset to cell B1, and saves the file as ShapeOffset.xlsx.
+class Program
 {
-    // This C# example creates a workbook, adds two rectangle shapes, sets their absolute Left and Top pixel coordinates, calculates the horizontal and vertical differences, derives the Euclidean pixel offset, and stores the distance (plus individual deltas) in cells A1‑A3 before saving the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add first rectangle shape at (column 2, row 3) with size 100x50 pixels
-            // Parameters: upper left column, upper left row, upper left offset X, upper left offset Y, width, height
-            Shape shape1 = worksheet.Shapes.AddRectangle(2, 3, 0, 0, 100, 50);
-            // Set explicit pixel positions (optional, demonstrates usage of Left/Top)
-            shape1.Left = 150;   // horizontal offset from left column in pixels
-            shape1.Top = 200;    // vertical offset from top row in pixels
+            // Conversion factor: 1 point = 96/72 = 1.33333 pixels
+            const double pointsToPixels = 96.0 / 72.0;
 
-            // Add second rectangle shape at (column 5, row 6) with size 80x40 pixels
-            Shape shape2 = worksheet.Shapes.AddRectangle(5, 6, 0, 0, 80, 40);
-            shape2.Left = 300;
-            shape2.Top = 350;
+            // Shape dimensions (100 points) converted to pixels
+            int shapeWidthPixels = (int)(100 * pointsToPixels);
+            int shapeHeightPixels = (int)(100 * pointsToPixels);
 
-            // Calculate horizontal and vertical pixel differences
-            int deltaX = shape2.Left - shape1.Left;   // positive if shape2 is to the right of shape1
-            int deltaY = shape2.Top - shape1.Top;    // positive if shape2 is below shape1
+            // Add the first shape (rectangle) at (50 pt, 80 pt)
+            int shape1LeftPixels = (int)(50 * pointsToPixels);
+            int shape1TopPixels = (int)(80 * pointsToPixels);
+            Shape shape1 = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,   // shape type
+                0, 0,                       // upper-left cell (row, column)
+                shape1TopPixels,            // top offset in pixels
+                shape1LeftPixels,           // left offset in pixels
+                shapeHeightPixels,          // height in pixels
+                shapeWidthPixels);          // width in pixels
 
-            // Calculate Euclidean distance (pixel offset) between the two shapes
-            double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+            // Add the second shape. If the Ellipse type is unavailable, use a rectangle as a fallback.
+            int shape2LeftPixels = (int)(200 * pointsToPixels);
+            int shape2TopPixels = (int)(150 * pointsToPixels);
+            Shape shape2 = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,   // fallback shape type (replace with MsoDrawingType.Ellipse if supported)
+                0, 0,
+                shape2TopPixels,
+                shape2LeftPixels,
+                shapeHeightPixels,
+                shapeWidthPixels);
 
-            // Store the calculated distance in cell A1
-            worksheet.Cells["A1"].PutValue(distance);
+            // Calculate the offset between the two shapes in pixels
+            double offsetXPixels = shape2LeftPixels - shape1LeftPixels;
+            double offsetYPixels = shape2TopPixels - shape1TopPixels;
 
-            // Optionally, store individual deltas for reference
-            worksheet.Cells["A2"].PutValue(deltaX); // horizontal offset
-            worksheet.Cells["A3"].PutValue(deltaY); // vertical offset
+            // Store the pixel offsets in cells A1 (X offset) and B1 (Y offset)
+            sheet.Cells["A1"].PutValue(offsetXPixels);
+            sheet.Cells["B1"].PutValue(offsetYPixels);
 
             // Save the workbook
-            workbook.Save("ShapeOffsetResult.xlsx");
+            string outputPath = "ShapeOffset.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

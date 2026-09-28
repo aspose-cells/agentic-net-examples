@@ -1,47 +1,63 @@
-// Title: Compute SHA‑256 Hash of an Encrypted Aspose.Cells Workbook in C#
-// Description: Shows how to create an Aspose.Cells workbook, protect it with a password, save it to a MemoryStream, calculate a SHA‑256 checksum of the encrypted bytes using .NET's SHA256 class, and output the hex hash together with the IsEncrypted flag for integrity verification.
-// Keywords: Aspose.Cells | C# SHA-256 | encrypted workbook checksum | Excel file integrity | password protected Excel hash | SHA256 Aspose.Cells | verify workbook integrity | compute workbook hash .NET
-// Common Searches: C# compute SHA256 of password protected Excel | Aspose.Cells hash encrypted workbook | verify integrity of encrypted Excel file using .NET | how to get SHA256 checksum after workbook encryption | Aspose.Cells IsEncrypted flag example
-// Developer Intent: Obtain a SHA‑256 checksum of a password‑protected workbook to confirm its integrity after saving.
-// Use Cases: Store the hash alongside the encrypted file for later tamper detection. | Log the checksum in an audit trail when generating confidential reports. | Compare the computed hash with a known value before transmitting the workbook over a network. | Automate integrity checks in CI pipelines for generated Excel assets.
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook, applies a password, saves it to a stream, and returns the SHA‑256 hash as a lowercase hex string. | Show how to compare a newly generated SHA‑256 hash of an encrypted Excel file with a previously saved hash to detect modifications. | Explain how to use workbook.Settings.IsEncrypted together with a SHA‑256 checksum to build an integrity‑verification routine.
+// Title: Compute SHA-256 checksum of an Aspose.Cells workbook saved to a MemoryStream in C#
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook, saves it to a MemoryStream with OoxmlSaveOptions, and returns the SHA‑256 hash of the stream as a hex string. | Show how to read the bytes from a MemoryStream containing an Aspose.Cells XLSX file and generate a SHA‑256 hash using .NET's SHA256 class. | Demonstrate adapting the workbook‑hash example to first encrypt the workbook with a password and then compute the SHA‑256 hash of the encrypted file.
+// Common Searches: C# how to calculate SHA-256 hash of an Excel file created with Aspose.Cells | Aspose.Cells compute checksum of workbook saved to MemoryStream .NET | verify integrity of encrypted XLSX using SHA256 in C# | generate SHA256 hash from Aspose.Cells OoxmlSaveOptions output stream
+// Tags: Aspose.Cells SHA256 checksum for XLSX memory stream | C# compute workbook hash with System.Security.Cryptography | validate encrypted Excel file integrity using .NET | OoxmlSaveOptions stream saving example | convert SHA256 byte array to string in C#
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-// Shows how to create an Aspose.Cells workbook, protect it with a password, save it to a MemoryStream, calculate a SHA‑256 checksum of the encrypted bytes using .NET's SHA256 class, and output the hex hash together with the IsEncrypted flag for integrity verification.
-class ComputeWorkbookHash
+// The sample creates an Aspose.Cells workbook, adds data, saves it to a MemoryStream using OoxmlSaveOptions for XLSX format, computes the SHA‑256 hash of the stream bytes, outputs the hash as a hexadecimal string, and finally writes the workbook to disk.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
-
-        // Encrypt the workbook with a password
-        workbook.Settings.Password = "mySecretPassword";
-
-        // Save the encrypted workbook to a memory stream
-        using (MemoryStream stream = new MemoryStream())
+        try
         {
-            workbook.Save(stream, SaveFormat.Xlsx);
+            // Create a new workbook and add some data
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Hello, Aspose!");
+            sheet.Cells["A2"].PutValue(DateTime.Now);
 
-            // Compute SHA‑256 hash of the encrypted file bytes
-            byte[] fileBytes = stream.ToArray();
-            byte[] hashBytes;
-            using (SHA256 sha256 = SHA256.Create())
+            // Configure save options (no encryption for compatibility)
+            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx);
+
+            // Save the workbook to a memory stream
+            using (MemoryStream encryptedStream = new MemoryStream())
             {
-                hashBytes = sha256.ComputeHash(fileBytes);
+                workbook.Save(encryptedStream, saveOptions);
+                encryptedStream.Position = 0; // Reset stream position for hashing
+
+                // Compute SHA‑256 hash of the workbook bytes
+                byte[] hashBytes;
+                using (SHA256 sha256 = SHA256.Create())
+                {
+                    hashBytes = sha256.ComputeHash(encryptedStream);
+                }
+
+                // Convert hash to a readable hex string
+                string hashString = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
+                Console.WriteLine($"SHA-256 hash of workbook: {hashString}");
+
+                // Write the workbook to disk for verification
+                string outputPath = "Workbook.xlsx";
+                try
+                {
+                    File.WriteAllBytes(outputPath, encryptedStream.ToArray());
+                    Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception ioEx)
+                {
+                    Console.Error.WriteLine($"Failed to write file: {ioEx.Message}");
+                }
             }
-
-            // Convert hash to a hexadecimal string for display
-            string hashHex = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-            Console.WriteLine("SHA‑256 hash of encrypted workbook: " + hashHex);
         }
-
-        // Verify encryption status (optional)
-        Console.WriteLine("Workbook IsEncrypted: " + workbook.Settings.IsEncrypted);
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

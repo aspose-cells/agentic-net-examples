@@ -1,88 +1,75 @@
-// Title: Detect Excel format & encryption, then conditionally decrypt with Aspose.Cells (C#)
-// Description: C# sample that uses Aspose.Cells FileFormatUtil to identify a spreadsheet's format and encryption flag, loads the workbook with a password only when needed, auto‑fits the first worksheet's columns, and saves the result as a new file.
-// Keywords: Aspose.Cells file format detection | Excel encryption check C# | load encrypted workbook Aspose | conditional decryption Aspose.Cells | .NET auto fit columns | process mixed‑format spreadsheets | sample code GitHub
-// Common Searches: detect password protected Excel with Aspose.Cells | load encrypted workbook using LoadOptions password | auto detect Excel format before opening | C# example for conditional decryption of spreadsheets | Aspose.Cells sample for mixed file types
-// Developer Intent: Identify a spreadsheet's type and encryption state, then open it with the appropriate credentials before applying any processing.
-// Use Cases: Open user‑uploaded Excel files of unknown type, automatically handle password‑protected workbooks, and apply formatting changes. | Batch‑process a folder containing XLS, XLSX, CSV, and encrypted files without manual format checks. | Integrate format detection and conditional decryption into a web API that returns a cleaned version of the workbook.
-// AI Prompts: Generate C# code that uses Aspose.Cells to detect an Excel file's format and encryption status, then loads it with a password only if encrypted and saves an auto‑fitted copy. | Create a reusable method accepting a file path and optional password, performing format detection, conditional decryption, and column auto‑fit on the first worksheet. | Explain best practices for handling missing files, wrong passwords, and other exceptions when loading encrypted workbooks with Aspose.Cells.
+// Title: Detect Excel file format and conditionally decrypt password‑protected workbooks with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file using Aspose.Cells LoadOptions with LoadFormat.Auto, tries to open it without a password, and if a CellsException occurs, reloads the workbook with a supplied password. | Create a reusable C# method that takes a file path and password, determines whether the workbook is encrypted, and returns an opened Workbook instance ready for further processing. | Show how to read the value of cell A1 after handling possible encryption and then save the workbook to a new file using Aspose.Cells.
+// Common Searches: aspocells c# load excel file with automatic format detection and password fallback | how to open encrypted .xlsx using Aspose.Cells LoadOptions in .NET | detect file format and decrypt Excel workbook programmatically with Aspose.Cells | c# example for handling password protected Excel files with Aspose.Cells
+// Tags: auto format detection LoadOptions Aspose.Cells | conditional workbook decryption C# | open password protected Excel with Aspose.Cells | read cell A1 after workbook decryption .NET | save processed workbook Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// C# sample that uses Aspose.Cells FileFormatUtil to identify a spreadsheet's format and encryption flag, loads the workbook with a password only when needed, auto‑fits the first worksheet's columns, and saves the result as a new file.
-public class DetectAndDecryptDemo
+// The program uses Aspose.Cells to automatically detect the Excel file format, attempts to load the workbook without a password, and if a CellsException indicates encryption, reloads it with the provided password before reading cell A1 and saving the result as a new file.
+class Program
 {
-    // Demonstrates detection of file format and encryption status,
-    // then loads the workbook with or without a password accordingly.
-    public static void Run(string filePath, string password)
+    static void Main()
     {
-        if (!File.Exists(filePath))
+        // Input file path (provide full name with extension)
+        string inputPath = "inputFile.xlsx";
+
+        // Password for encrypted workbooks (if needed)
+        string password = "myPassword";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine($"Error: File not found – \"{filePath}\"");
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        // Load options with automatic format detection
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+        Workbook workbook = null;
+
+        try
+        {
+            // Attempt to load the workbook without a password first
+            workbook = new Workbook(inputPath, loadOptions);
+        }
+        catch (CellsException)
+        {
+            // Workbook may be encrypted; reload using the supplied password
+            loadOptions.Password = password;
+            try
+            {
+                workbook = new Workbook(inputPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load encrypted workbook: {ex.Message}");
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
             return;
         }
 
         try
         {
-            // Detect file format and whether the file is encrypted
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-            Console.WriteLine($"Detected format: {formatInfo.FileFormatType}");
-            Console.WriteLine($"Is encrypted: {formatInfo.IsEncrypted}");
+            // Example processing: read value from first worksheet cell A1
+            Worksheet sheet = workbook.Worksheets[0];
+            string cellValue = sheet.Cells["A1"].StringValue;
+            Console.WriteLine($"Value in A1: {cellValue}");
 
-            Workbook workbook;
+            // (Additional processing can be added here)
 
-            if (formatInfo.IsEncrypted)
-            {
-                // File is encrypted – load it using the supplied password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
-                {
-                    Password = password
-                };
-                workbook = new Workbook(filePath, loadOptions);
-                Console.WriteLine("Workbook loaded with password.");
-            }
-            else
-            {
-                // File is not encrypted – load normally
-                workbook = new Workbook(filePath);
-                Console.WriteLine("Workbook loaded without password.");
-            }
-
-            // Example processing: auto‑fit columns of the first worksheet
-            if (workbook.Worksheets.Count > 0)
-            {
-                workbook.Worksheets[0].AutoFitColumns();
-            }
-
-            // Save the processed workbook to a new file
-            string outputPath = Path.Combine(
-                Path.GetDirectoryName(filePath) ?? string.Empty,
-                "processed_" + Path.GetFileName(filePath));
-            workbook.Save(outputPath);
-            Console.WriteLine($"Processed workbook saved to: {outputPath}");
+            // Save the processed workbook
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved as output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error during processing or saving: {ex.Message}");
         }
-    }
-}
-
-public class Program
-{
-    // Entry point required for compilation
-    public static void Main(string[] args)
-    {
-        if (args.Length < 1)
-        {
-            Console.WriteLine("Usage: <exe> <filePath> [password]");
-            return;
-        }
-
-        string filePath = args[0];
-        string password = args.Length >= 2 ? args[1] : string.Empty;
-
-        DetectAndDecryptDemo.Run(filePath, password);
     }
 }

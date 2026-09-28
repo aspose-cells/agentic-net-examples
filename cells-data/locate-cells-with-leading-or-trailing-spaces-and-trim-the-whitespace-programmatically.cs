@@ -1,17 +1,14 @@
-// Title: Trim Leading and Trailing Spaces from Excel Cells using Aspose.Cells for .NET (C#)
-// Description: Load a workbook, walk the used range of each worksheet, trim leading/trailing spaces from string cells, update only changed values, and save the cleaned file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | trim whitespace | remove spaces from Excel cells | string cell cleanup | Excel data normalization | used range iteration | Aspose.Cells for .NET | Excel workbook trimming
-// Common Searches: Aspose.Cells remove leading spaces C# | trim trailing whitespace in Excel using Aspose | how to clean string values in a workbook with Aspose.Cells | C# code to trim spaces from Excel cells | Aspose.Cells whitespace cleanup example
-// Developer Intent: Programmatically eliminate surrounding spaces from string cells in an Excel workbook with Aspose.Cells for .NET.
-// Use Cases: Sanitize imported CSV data that contains accidental spaces before analysis. | Standardize user‑entered text in spreadsheets to ensure reliable lookups and reporting. | Prepare data for integration with external systems where exact string matching is required.
-// AI Prompts: Write C# code using Aspose.Cells to iterate over all worksheets and trim leading/trailing spaces from every string cell, then save the workbook. | Show how to modify the loop to skip empty rows and process only non‑blank string cells while trimming whitespace. | Explain how to apply the same whitespace‑trimming logic to a specific range or column in a worksheet with Aspose.Cells.
+// Title: How to trim leading and trailing spaces from string cells in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# routine that loads an .xlsx workbook with Aspose.Cells, walks through every used cell, removes surrounding spaces from string values, and writes the cleaned file. | Create a helper method that takes source and destination paths, strips leading and trailing blanks from all text cells in the workbook, and returns the saved file location. | Adjust the sample loop so it only writes back cells whose trimmed text differs from the original, using Aspose.Cells APIs.
+// Common Searches: Aspose.Cells C# remove extra spaces from all string cells in an Excel file | C# code to strip whitespace in Excel worksheet using Aspose.Cells library | How to clean up leading and trailing spaces in Excel cells programmatically with Aspose.Cells | Iterate used range and clean cell text in .NET Aspose.Cells example
+// Tags: trim whitespace Aspose.Cells C# | remove leading and trailing spaces Excel .NET | iterate used range cells Aspose.Cells | string cell cleanup Aspose.Cells | save modified workbook Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsTrimWhitespace
+namespace TrimCellWhitespace
 {
-    // Load a workbook, walk the used range of each worksheet, trim leading/trailing spaces from string cells, update only changed values, and save the cleaned file with Aspose.Cells for .NET.
+    // The program loads an Excel workbook with Aspose.Cells, iterates over the used range, trims leading and trailing spaces from each string cell, updates only cells whose values changed, and saves the cleaned workbook to a new file.
     class Program
     {
         static void Main(string[] args)

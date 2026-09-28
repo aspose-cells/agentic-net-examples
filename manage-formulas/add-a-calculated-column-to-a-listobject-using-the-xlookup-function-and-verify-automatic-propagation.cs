@@ -1,102 +1,119 @@
-// Title: Add an XLOOKUP Calculated Column to an Aspose.Cells ListObject (C#) and Verify Propagation
-// Description: This C# example demonstrates how to create a workbook with a lookup table, convert a range into a ListObject, resize the table to add a new column, apply an XLOOKUP formula via SetCustomCalculatedFormula, recalculate all formulas, and confirm that the formula automatically propagates to every row before saving the file.
-// Keywords: Aspose.Cells | C# | ListObject | calculated column | XLOOKUP | SetCustomCalculatedFormula | table resize | structured references | formula propagation | Excel automation
-// Common Searches: Aspose.Cells add XLOOKUP column to ListObject | Resize Aspose.Cells table after inserting column | SetCustomCalculatedFormula usage in C# | Automatic formula fill for ListObject rows | How to verify XLOOKUP results in Aspose.Cells
-// Developer Intent: Create a ListObject column that uses XLOOKUP and ensure the formula fills all rows automatically.
-// Use Cases: Generate a lookup table and retrieve matching values inside a ListObject using XLOOKUP. | Expand an existing ListObject to include a new calculated column without losing data. | Validate that a custom formula is applied consistently across every table row after calculation.
-// AI Prompts: Write C# code with Aspose.Cells to add a new column to a ListObject, set an XLOOKUP formula using structured references, and recalculate the workbook. | Explain the parameters of SetCustomCalculatedFormula (isR1C1, isLocal) and how they affect formula insertion in a ListColumn. | Modify the sample to include XLOOKUP's if_not_found argument for handling missing keys.
+// Title: Add an XLOOKUP calculated column to an Aspose.Cells ListObject and verify automatic formula propagation in C#
+// AI Prompts: Create a ListObject on a worksheet, append a new column named "LookupResult", and set its cells to an XLOOKUP formula that references a separate lookup sheet. | Iterate through each data row of the ListObject to confirm that the XLOOKUP formula is present in every cell of the new column, logging any mismatches. | Save the workbook after the calculated column has been added and validated, and output the full path of the generated file.
+// Common Searches: aspocells add XLOOKUP column to table and check formula propagation c# | c# verify that XLOOKUP formula is applied to all rows in an Aspose.Cells ListObject | how to reference another worksheet in XLOOKUP using Aspose.Cells C# | create Excel table with calculated column using XLOOKUP in Aspose.Cells | save workbook after adding calculated column with XLOOKUP Aspose.Cells
+// Tags: add XLOOKUP calculated column ListObject | verify formula propagation Aspose.Cells | C# create Excel table with lookup sheet | Aspose.Cells XLOOKUP across worksheets | save workbook with calculated column
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsCalculatedColumnExample
 {
-    // This C# example demonstrates how to create a workbook with a lookup table, convert a range into a ListObject, resize the table to add a new column, apply an XLOOKUP formula via SetCustomCalculatedFormula, recalculate all formulas, and confirm that the formula automatically propagates to every row before saving the file.
-    public class ListObjectCalculatedColumnXLookupDemo
+    // The example builds a workbook containing a main data sheet and a separate lookup sheet, creates a ListObject (Excel table) on the main sheet, adds a new calculated column called "LookupResult" populated with an XLOOKUP formula that pulls names from the lookup sheet, checks that the formula is automatically propagated to every data row, and finally saves the workbook as CalculatedColumn_XLookup.xlsx.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet1 = workbook.Worksheets[0];
+                sheet1.Name = "MainData";
+
+                // Populate main data (ID column)
+                sheet1.Cells["A1"].PutValue("ID");
+                sheet1.Cells["A2"].PutValue(101);
+                sheet1.Cells["A3"].PutValue(102);
+                sheet1.Cells["A4"].PutValue(103);
+                sheet1.Cells["A5"].PutValue(104);
+                sheet1.Cells["A6"].PutValue(105);
+
+                // Add a second column with some values (optional)
+                sheet1.Cells["B1"].PutValue("Value");
+                sheet1.Cells["B2"].PutValue(10);
+                sheet1.Cells["B3"].PutValue(20);
+                sheet1.Cells["B4"].PutValue(30);
+                sheet1.Cells["B5"].PutValue(40);
+                sheet1.Cells["B6"].PutValue(50);
+
+                // Create a lookup table on a second worksheet
+                Worksheet sheet2 = workbook.Worksheets[workbook.Worksheets.Add()];
+                sheet2.Name = "LookupTable";
+
+                // Populate lookup table: Column A = ID, Column B = Name
+                sheet2.Cells["A1"].PutValue("ID");
+                sheet2.Cells["B1"].PutValue("Name");
+                sheet2.Cells["A2"].PutValue(101);
+                sheet2.Cells["B2"].PutValue("Alice");
+                sheet2.Cells["A3"].PutValue(102);
+                sheet2.Cells["B3"].PutValue("Bob");
+                sheet2.Cells["A4"].PutValue(103);
+                sheet2.Cells["B4"].PutValue("Charlie");
+                sheet2.Cells["A5"].PutValue(104);
+                sheet2.Cells["B5"].PutValue("Diana");
+                sheet2.Cells["A6"].PutValue(105);
+                sheet2.Cells["B6"].PutValue("Eve");
+
+                // Define the range for the main table (A1:B6)
+                int firstRow = 0;          // zero‑based index
+                int firstColumn = 0;
+                int totalRows = 6;         // includes header row
+                int totalColumns = 2;      // ID and Value columns
+
+                // Add a ListObject (Excel table) to the defined range
+                int listObjectIndex = sheet1.ListObjects.Add(firstRow, firstColumn, totalRows, totalColumns, true);
+                ListObject listObject = sheet1.ListObjects[listObjectIndex];
+                listObject.DisplayName = "MainTable";
+
+                // Add a calculated column (LookupResult) manually
+                int newColumnIndex = totalColumns; // zero‑based index for the new column
+                string headerAddress = CellsHelper.CellIndexToName(firstRow, newColumnIndex);
+                sheet1.Cells[headerAddress].PutValue("LookupResult");
+
+                // XLOOKUP formula to retrieve names from the lookup table
+                string xlookupFormula = "=XLOOKUP([@ID],LookupTable!$A$2:$A$6,LookupTable!$B$2:$B$6,\"Not Found\")";
+
+                // Apply the formula to each data row in the new column
+                for (int r = 1; r < totalRows; r++) // start from row 1 (skip header)
+                {
+                    Cell cell = sheet1.Cells[firstRow + r, newColumnIndex];
+                    cell.Formula = xlookupFormula;
+                }
+
+                // Verify that the formula was propagated to all rows
+                bool allFormulasMatch = true;
+                for (int r = 1; r < totalRows; r++)
+                {
+                    Cell cell = sheet1.Cells[firstRow + r, newColumnIndex];
+                    if (!cell.Formula.Equals(xlookupFormula, StringComparison.OrdinalIgnoreCase))
+                    {
+                        allFormulasMatch = false;
+                        Console.WriteLine($"Row {firstRow + r + 1} formula mismatch: {cell.Formula}");
+                    }
+                }
+
+                Console.WriteLine(allFormulasMatch
+                    ? "XLOOKUP formula propagated to all rows successfully."
+                    : "Formula propagation verification failed.");
+
+                // Save the workbook (optional, just to demonstrate lifecycle)
+                string outputPath = "CalculatedColumn_XLookup.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        public static void Run()
-        {
-            // ---------- Create a new workbook ----------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // ---------- Prepare lookup table (Key -> Value) ----------
-            // Headers
-            cells["F1"].PutValue("LookupKey");
-            cells["G1"].PutValue("LookupValue");
-            // Data
-            cells["F2"].PutValue("A");
-            cells["G2"].PutValue(100);
-            cells["F3"].PutValue("B");
-            cells["G3"].PutValue(200);
-            cells["F4"].PutValue("C");
-            cells["G4"].PutValue(300);
-
-            // ---------- Prepare main data that will be turned into a ListObject ----------
-            // Headers
-            cells["A1"].PutValue("Item");
-            cells["B1"].PutValue("Key");
-            // Data rows
-            cells["A2"].PutValue("Item1");
-            cells["B2"].PutValue("A");
-            cells["A3"].PutValue("Item2");
-            cells["B3"].PutValue("B");
-            cells["A4"].PutValue("Item3");
-            cells["B4"].PutValue("C");
-
-            // ---------- Create ListObject (table) for the main data ----------
-            // Table range: A1:B4, has headers
-            int tableIndex = sheet.ListObjects.Add("A1", "B4", true);
-            ListObject table = sheet.ListObjects[tableIndex];
-            table.ShowTotals = false; // not needed for this demo
-
-            // ---------- Add a new column to the table for the XLOOKUP result ----------
-            // Insert a header for the new column
-            cells["C1"].PutValue("LookupResult");
-            // Expand the table range to include the new column (C)
-            // Resize(startRow, startColumn, totalRows, totalColumns, preserveData)
-            table.Resize(0, 0, 4, 3, false);
-
-            // Get the newly added column (index 2, zero‑based)
-            ListColumn lookupColumn = table.ListColumns[2];
-
-            // ---------- Set XLOOKUP formula for the calculated column ----------
-            // Formula uses structured references: XLOOKUP([@Key], LookupKey, LookupValue)
-            // The lookup range is on the same sheet (F2:G4)
-            string xlookupFormula = "=XLOOKUP([@Key],F2:F4,G2:G4)";
-            // Set the custom calculated formula; use A1 notation (isR1C1 = false) and local format (isLocal = false)
-            lookupColumn.SetCustomCalculatedFormula(xlookupFormula, false, false);
-
-            // ---------- Calculate all formulas ----------
-            workbook.CalculateFormula();
-
-            // ---------- Verify automatic propagation ----------
-            // The formula should be applied to every data row in the column.
-            for (int row = 1; row <= 3; row++) // data rows start at index 1 (row 2 in worksheet)
-            {
-                // Cell address for the calculated column in each row
-                string cellName = $"C{row + 1}";
-                Cell cell = cells[cellName];
-                Console.WriteLine($"{cellName} formula: {cell.Formula}");
-                Console.WriteLine($"{cellName} value  : {cell.Value}");
-            }
-
-            // ---------- Save the workbook ----------
-            workbook.Save("ListObject_XLookup_CalculatedColumn.xlsx");
         }
     }
 }

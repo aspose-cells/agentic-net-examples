@@ -1,75 +1,71 @@
-// Title: C# Example: Process a Smart‑Marker Range and Transpose Data with Aspose.Cells
-// Description: Shows how to name a smart‑marker range, import a List<Person> via WorkbookDesigner.Process, then transpose the filled range to swap rows and columns and save the workbook.
-// Keywords: Aspose.Cells | smart markers | WorkbookDesigner | Process range | Range.Transpose | C# | .NET | named range | data transpose | swap rows and columns | example | sample code
-// Common Searches: Aspose.Cells process specific smart marker range | transpose smart marker output C# | swap rows and columns after smart marker import | Range.Transpose Aspose.Cells example | how to use WorkbookDesigner with a named range
-// Developer Intent: The developer wants to import data only from a defined smart‑marker range and then rotate the resulting table so that rows become columns and vice‑versa.
-// Use Cases: Import a collection of objects into a worksheet while leaving other sheet content untouched. | Convert a vertical list of names and scores into a horizontal layout after smart‑marker processing. | Create reusable templates that populate data in a specific area and then re‑orient the data for reporting.
-// AI Prompts: Write C# code that defines a named smart‑marker range, processes it with WorkbookDesigner, and transposes the resulting cells. | Explain the effect of Range.Transpose on a smart‑marker output range in Aspose.Cells. | Provide step‑by‑step instructions to set up a smart‑marker range, import a List<T>, and swap rows and columns using Aspose.Cells.
+// Title: Transpose a column‑wise data range and process a named smart‑marker range with WorkbookDesigner in Aspose.Cells for .NET
+// AI Prompts: Transpose the raw range E1:F3, export it to a DataTable, assign it to the "Data" source, and process only the smart‑marker range A2:C2 using WorkbookDesigner. | Create a named smart‑marker range, convert column‑wise source data to rows, bind the resulting DataTable to WorkbookDesigner, and generate the final Excel workbook.
+// Common Searches: asp.net transpose column data for smart markers Aspose.Cells | process only a specific smart marker range with WorkbookDesigner | how to use Range.Transpose with smart markers in Aspose.Cells | convert column‑wise raw data to rows for smart marker import .NET | named range smart markers example Aspose.Cells
+// Tags: range transpose Aspose.Cells | named smart marker range processing | WorkbookDesigner DataTable data source | smart marker import transposed data | excel generation with smart markers .NET
 
 using System;
-using System.Collections.Generic;
+using System.Data;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to name a smart‑marker range, import a List<Person> via WorkbookDesigner.Process, then transpose the filled range to swap rows and columns and save the workbook.
-class Program
+namespace SmartMarkerTransposeDemo
 {
-    static void Main()
+    // The example demonstrates creating a workbook, defining a horizontal smart‑marker layout, naming the marker range, filling raw data column‑wise, transposing that range to row‑wise records, exporting it to a DataTable, binding it to WorkbookDesigner, processing only the named smart‑marker range, and saving the resulting Excel file.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Set up headers
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Score");
-
-            // Place smart markers in a range that will be processed
-            cells["A2"].PutValue("&=$People.Name");
-            cells["B2"].PutValue("&=$People.Score");
-
-            // Define the range that contains the smart markers and give it the special name
-            AsposeRange smartMarkerRange = cells.CreateRange("A2:B2");
-            smartMarkerRange.Name = "_CellsSmartMarkers";
-
-            // Prepare a data source
-            List<Person> people = new List<Person>
+            try
             {
-                new Person { Name = "Alice",   Score = 85 },
-                new Person { Name = "Bob",     Score = 92 },
-                new Person { Name = "Charlie", Score = 78 }
-            };
+                // 1. Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-            // Configure the WorkbookDesigner with the data source
-            WorkbookDesigner designer = new WorkbookDesigner
+                // 2. Set up smart markers in a horizontal layout (one row will be repeated per data item)
+                cells["A2"].PutValue("&=$Data.Name");
+                cells["B2"].PutValue("&=$Data.Age");
+                cells["C2"].PutValue("&=$Data.City");
+
+                // Name the range that holds the smart markers (required for processing)
+                Aspose.Cells.Range smartMarkerRange = cells.CreateRange("A2:C2");
+                smartMarkerRange.Name = "_CellsSmartMarkers";
+
+                // 3. Prepare raw data in a transposed (column‑wise) form.
+                cells["E1"].PutValue("John");
+                cells["E2"].PutValue(30);
+                cells["E3"].PutValue("New York");
+
+                cells["F1"].PutValue("Jane");
+                cells["F2"].PutValue(25);
+                cells["F3"].PutValue("London");
+
+                // Define the range that contains the raw column‑wise data
+                Aspose.Cells.Range rawDataRange = cells.CreateRange("E1:F3");
+
+                // 4. Transpose the raw data so that rows become records (the format expected by smart markers)
+                rawDataRange.Transpose();
+
+                // 5. Export the transposed range to a DataTable
+                DataTable dataTable = rawDataRange.ExportDataTable();
+
+                // 6. Set up the WorkbookDesigner, assign the DataTable as the data source,
+                //    and process only the smart‑marker range.
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+                designer.SetDataSource("Data", dataTable);
+                designer.Process(smartMarkerRange, true);
+
+                // 7. Save the resulting workbook
+                string outputPath = "SmartMarkerTransposeResult.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
             {
-                Workbook = workbook
-            };
-            designer.SetDataSource("People", people);
-
-            // Process only the defined smart‑marker range (true = preserve unrecognized markers)
-            designer.Process(smartMarkerRange, true);
-
-            // After processing, the data occupies A2:B4. Transpose this range to swap rows and columns.
-            AsposeRange dataRange = cells.CreateRange("A2:B4");
-            dataRange.Transpose();
-
-            // Save the final workbook
-            workbook.Save("SmartMarkerTransposeOutput.xlsx");
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    // Simple POCO class used as the data source
-    public class Person
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Score { get; set; }
     }
 }

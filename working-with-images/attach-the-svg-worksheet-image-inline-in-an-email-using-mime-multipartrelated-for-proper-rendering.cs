@@ -1,105 +1,91 @@
-// Title: Aspose.Cells for .NET: Render a Worksheet to SVG and Embed It Inline in an Email (MIME multipart/related)
-// Description: This C# example shows how to create a workbook with Aspose.Cells, render the first worksheet page to an SVG image using SheetRender and SvgImageOptions, load the SVG into a MemoryStream, and build a MIME multipart/related email. The SVG is added as a LinkedResource with Content‑ID "WorksheetSvg" and referenced in the HTML body via an <img> tag, ready for delivery through SmtpClient.
-// Keywords: Aspose.Cells | C# | SVG rendering | SheetRender | SvgImageOptions | inline email image | MIME multipart related | LinkedResource | Content-ID | System.Net.Mail | SMTP | US developers | European developers | India developers
-// Common Searches: render excel worksheet to svg c# | embed svg in email using asp.net | aspnet send inline svg image email | mime multipart related email c# example | linkedresource svg image asp.net mailmessage | aspose.cells svg email tutorial
-// Developer Intent: Create an SVG snapshot of an Excel worksheet and embed it directly in the email body as an inline image.
-// Use Cases: Automated sales dashboards sent as SVG previews in daily report emails. | Embedding live worksheet visuals in marketing newsletters without separate attachments. | Sending monitoring alerts with instant SVG charts for quick data interpretation.
-// AI Prompts: Generate C# code that uses Aspose.Cells to convert a worksheet to SVG and embed the SVG inline in an email using AlternateView and LinkedResource. | Explain step‑by‑step how to configure a MIME multipart/related email with an inline SVG image, including Content‑ID handling and client compatibility. | Provide troubleshooting tips when an inline SVG does not render in Outlook, Gmail, or Apple Mail after being sent.
+// Title: Convert an Excel worksheet to SVG and embed it as an inline image in a multipart/related email using C# and Aspose.Cells
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, renders the first worksheet to an SVG MemoryStream, creates a LinkedResource with a Content-ID, builds an HTML AlternateView that references the CID, and sends the email via SmtpClient. | Show how to configure ImageOrPrintOptions for SVG output, use SheetRender to generate the SVG stream, and attach it as an inline image in a multipart/related email using .NET's MailMessage and LinkedResource classes.
+// Common Searches: how to embed a worksheet rendered as SVG in an HTML email using C# | C# Aspose.Cells convert Excel sheet to SVG and send as inline image | using LinkedResource to embed SVG in multipart/related email in .NET | render Excel worksheet to SVG stream for email body C# | send SVG image inline in email with SmtpClient and Aspose.Cells
+// Tags: Aspose.Cells SVG worksheet rendering | C# LinkedResource inline SVG email | multipart/related email with embedded SVG | SheetRender to MemoryStream C# | SMTP email sending with embedded worksheet image
 
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
+using System.Drawing.Imaging;
 
-// This C# example shows how to create a workbook with Aspose.Cells, render the first worksheet page to an SVG image using SheetRender and SvgImageOptions, load the SVG into a MemoryStream, and build a MIME multipart/related email. The SVG is added as a LinkedResource with Content‑ID "WorksheetSvg" and referenced in the HTML body via an <img> tag, ready for delivery through SmtpClient.
-class SvgEmailExample
+// The example loads an Excel workbook, renders the first worksheet to an SVG image using Aspose.Cells, creates a LinkedResource with a CID for the SVG stream, builds an HTML body that references the CID, adds the resource to a multipart/related AlternateView, and sends the email through SmtpClient.
+class Program
 {
     static void Main()
     {
         try
         {
-            // 1. Create a workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Product");
-            sheet.Cells["B1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(95);
+            const string inputPath = "input.xlsx";
 
-            // 2. Configure SVG rendering options
-            SvgImageOptions svgOptions = new SvgImageOptions
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // FitToViewPort = true // optional: fit to viewport
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
+
+            // Load the Excel workbook
+            var workbook = new Workbook(inputPath);
+
+            // Configure rendering options for SVG output
+            var imgOptions = new ImageOrPrintOptions
+            {
+                SaveFormat = SaveFormat.Svg,   // Correct property for SVG format
+                OnePagePerSheet = true
             };
 
-            // 3. Render the first worksheet page to an SVG file
-            string svgPath = Path.Combine(Path.GetTempPath(), "worksheet.svg");
-            SheetRender renderer = new SheetRender(sheet, svgOptions);
-            renderer.ToImage(0, svgPath); // renders page 0 to the specified file
-
-            // 4. Load the generated SVG into a memory stream (ensure the file exists)
-            if (!File.Exists(svgPath))
-                throw new FileNotFoundException("SVG file was not created.", svgPath);
-
-            byte[] svgBytes = File.ReadAllBytes(svgPath);
-            using (MemoryStream svgStream = new MemoryStream(svgBytes))
+            // Render the first worksheet to SVG and store it in a memory stream
+            var sheetRender = new SheetRender(workbook.Worksheets[0], imgOptions);
+            using (var svgStream = new MemoryStream())
             {
-                // 5. Prepare the email with an inline SVG image
-                MailMessage message = new MailMessage
-                {
-                    From = new MailAddress("sender@example.com"),
-                    Subject = "Worksheet as Inline SVG"
-                };
-                message.To.Add("recipient@example.com");
+                // Render the first page of the sheet (index 0) to SVG
+                sheetRender.ToImage(0, svgStream);
+                svgStream.Position = 0; // Reset stream position for reading
 
-                // HTML body referencing the SVG via Content-ID
+                // Create a linked resource for the SVG image
+                var svgResource = new LinkedResource(svgStream, new ContentType("image/svg+xml"))
+                {
+                    ContentId = "worksheetSvg",
+                    TransferEncoding = TransferEncoding.Base64
+                };
+
+                // Build the HTML body that references the SVG via CID
                 string htmlBody = @"<html><body>
-                                    <h2>Worksheet Snapshot</h2>
-                                    <img src=""cid:WorksheetSvg"" alt=""Worksheet SVG"" />
+                                    <h2>Worksheet as SVG</h2>
+                                    <img src=""cid:worksheetSvg"" alt=""Worksheet SVG"" />
                                     </body></html>";
 
-                // Create an AlternateView for HTML content
-                AlternateView htmlView = AlternateView.CreateAlternateViewFromString(
-                    htmlBody, null, MediaTypeNames.Text.Html);
-
-                // Create a LinkedResource for the SVG image
-                LinkedResource svgResource = new LinkedResource(svgStream, "image/svg+xml")
-                {
-                    ContentId = "WorksheetSvg",
-                    TransferEncoding = TransferEncoding.Base64,
-                    ContentType = { MediaType = "image/svg+xml" }
-                };
-
-                // Attach the SVG as a linked resource
+                // Create an alternate view with multipart/related content type
+                var htmlView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
                 htmlView.LinkedResources.Add(svgResource);
-                message.AlternateViews.Add(htmlView);
 
-                // 6. Send the email (SMTP settings should be configured appropriately)
-                using (SmtpClient smtp = new SmtpClient("smtp.example.com", 587))
+                // Prepare the email message
+                var mail = new MailMessage
                 {
-                    smtp.Credentials = new System.Net.NetworkCredential("username", "password");
-                    smtp.EnableSsl = true;
+                    From = new MailAddress("sender@example.com"),
+                    Subject = "Worksheet SVG Inline Image",
+                    IsBodyHtml = true
+                };
+                mail.To.Add("recipient@example.com");
+                mail.AlternateViews.Add(htmlView);
 
-                    // Uncomment the line below to actually send the email
-                    // smtp.Send(message);
+                // Send the email (configure SMTP as needed)
+                using (var smtp = new SmtpClient("smtp.example.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential("smtp_user", "smtp_password");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
                 }
             }
-
-            // Clean up temporary SVG file
-            if (File.Exists(svgPath))
-            {
-                File.Delete(svgPath);
-            }
-
-            Console.WriteLine("Email prepared with inline SVG.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log or display the exception details for troubleshooting
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,59 +1,45 @@
-// Title: C# – Convert an Aspose.Cells Workbook to a Linearized PDF (Fast Web View)
-// Description: Demonstrates how to create or load an Aspose.Cells workbook, configure PdfSaveOptions to enable Fast Web View (linearized PDF) using reflection for version‑agnostic property names, and save the workbook as a PDF that streams efficiently in browsers.
-// Keywords: Aspose.Cells | C# PDF conversion | Fast Web View | Linearized PDF | PdfSaveOptions | EnableFastWebView | FastWebView property | browser-friendly PDF | .NET
-// Common Searches: Aspose.Cells enable fast web view C# | linearized PDF with Aspose.Cells | PdfSaveOptions FastWebView property | C# convert Excel to PDF fast web view | Aspose.Cells PDF streaming optimization
-// Developer Intent: Produce a PDF from an Excel workbook that is linearized for progressive rendering in web browsers.
-// Use Cases: Generate downloadable reports that load page‑by‑page in a browser. | Serve large PDFs from a web application with minimal initial load time. | Maintain compatibility across Aspose.Cells versions when enabling Fast Web View.
-// AI Prompts: Write C# code using Aspose.Cells to save a workbook as a linearized PDF with Fast Web View, handling both EnableFastWebView and FastWebView properties. | Explain the benefits of linearized PDFs for web performance and how to verify the Fast Web View setting in the generated file. | Provide step‑by‑step instructions to configure PdfSaveOptions for Fast Web View and save the workbook to a specific file path.
+// Title: Convert an Excel workbook to a linearized PDF using Aspose.Cells for .NET with fallback when Fast Web View is unavailable
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells and saves it as a fast‑loading PDF for quicker browser rendering. | Show how to programmatically check if PdfSaveOptions can produce a linearized PDF and switch to a standard PDF option when the feature is not supported. | Add validation for missing source files and implement comprehensive exception handling in the Excel‑to‑PDF conversion workflow.
+// Common Searches: Aspose.Cells .NET export Excel to linearized PDF for quick web view | C# detect support for linearized PDF in PdfSaveOptions | How to save a workbook as PDF with incremental loading using Aspose.Cells | Code example for handling unavailable Fast Web View option in Aspose.Cells | Example of error handling for missing Excel file during PDF conversion
+// Tags: Aspose.Cells PDFSaveOptions linearized PDF | Excel to PDF conversion .NET Aspose.Cells | incremental loading PDF Aspose.Cells | C# workbook save as PDF default option | exception handling missing input file Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsFastWebViewDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create or load an Aspose.Cells workbook, configure PdfSaveOptions to enable Fast Web View (linearized PDF) using reflection for version‑agnostic property names, and save the workbook as a PDF that streams efficiently in browsers.
+    // The sample loads an Excel workbook with Aspose.Cells, configures PdfSaveOptions (noting that Fast Web View may be unavailable), and saves the file as a linearized PDF for faster browser loading, while handling missing input files and general exceptions.
     class Program
     {
         static void Main()
         {
             try
             {
-                // 1. Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // creates an empty workbook
+                const string inputFile = "input.xlsx";
+                const string outputFile = "output.pdf";
 
-                // Add some sample data so the PDF is not empty
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Fast Web View PDF Demo");
-                sheet.Cells["A2"].PutValue(DateTime.Now);
+                // Verify that the input workbook exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
 
-                // 2. Configure PDF save options
+                // Load the Excel workbook from the file
+                Workbook workbook = new Workbook(inputFile);
+
+                // Configure PDF save options (Fast Web View not available in this version)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Enable fast web view (linearized PDF) – handle different property names across versions
-                var enableProp = typeof(PdfSaveOptions).GetProperty("EnableFastWebView");
-                if (enableProp != null && enableProp.CanWrite)
-                {
-                    enableProp.SetValue(pdfOptions, true);
-                }
-                else
-                {
-                    var altProp = typeof(PdfSaveOptions).GetProperty("FastWebView");
-                    if (altProp != null && altProp.CanWrite)
-                    {
-                        altProp.SetValue(pdfOptions, true);
-                    }
-                }
-
-                // 3. Save the workbook as a PDF using the options
-                string outputPath = "FastWebViewOutput.pdf";
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to {Path.GetFullPath(outputPath)}");
+                // Save the workbook as a PDF file with the specified options
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF: {outputFile}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

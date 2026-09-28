@@ -1,74 +1,23 @@
-// Title: Create PDF Outline from Excel Bookmarks using Aspose.Cells ExportDocumentStructure (C#)
-// Description: A C# demo that creates a workbook with three worksheets, defines a root PdfBookmarkEntry and sub‑entries linked to cell A1 of each sheet, enables PdfSaveOptions.ExportDocumentStructure, assigns the bookmark hierarchy, and saves the file as a PDF whose outline mirrors the Excel bookmarks.
-// Keywords: Aspose.Cells | ExportDocumentStructure | PDF bookmarks | C# | PdfSaveOptions | PdfBookmarkEntry | Excel to PDF outline | bookmark hierarchy | save workbook as PDF | Aspose.Cells GitHub example | document structure PDF
-// Common Searches: Aspose.Cells export Excel bookmarks to PDF outline | how to enable ExportDocumentStructure in PdfSaveOptions C# | create PDF bookmark hierarchy from workbook cells | Aspose.Cells PDF outline entries example | preserve sheet navigation when converting Excel to PDF
-// Developer Intent: Generate a PDF from an Excel workbook that includes an expandable bookmark outline linked to specific cells.
-// Use Cases: Add a top‑level PDF bookmark named "Workbook Outline" with child entries for each worksheet. | Link each bookmark to a designated cell (e.g., A1) so clicking the outline jumps to the corresponding sheet. | Control the initial open/closed state of the outline by setting the IsOpen property on PdfBookmarkEntry objects. | Produce PDFs with navigable outlines for reports, manuals, or multi‑sheet dashboards.
-// AI Prompts: Show C# code that builds a nested PDF bookmark structure from an Aspose.Cells workbook and saves it with ExportDocumentStructure enabled. | Explain how PdfSaveOptions.Bookmark works together with ExportDocumentStructure to create PDF outlines. | Give an example of linking PDF bookmarks to cell A1 on different worksheets using Aspose.Cells.
+// Title: How to export Excel workbook bookmarks as PDF outline entries using Aspose.Cells in C#
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.ExportDocumentStructure to true, and saves it as a PDF while preserving the workbook's bookmarks as outline entries. | Describe the configuration steps for Aspose.Cells PdfSaveOptions to retain Excel bookmarks when converting a workbook to PDF in a .NET application.
+// Common Searches: Aspose.Cells C# export Excel bookmarks to PDF outline | PdfSaveOptions ExportDocumentStructure true example | Preserve workbook bookmarks during Excel to PDF conversion using Aspose | How to keep Excel bookmark hierarchy in generated PDF with Aspose.Cells | C# code sample for saving .xlsx as PDF with document structure enabled
+// Tags: Aspose.Cells ExportDocumentStructure flag | retain workbook bookmarks in PDF | C# PdfSaveOptions bookmark export | Excel to PDF outline generation | document structure option Aspose.Cells
 
-using System;
-using System.Collections;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsBookmarkPdfDemo
+// The example loads an Excel workbook, enables the ExportDocumentStructure flag in PdfSaveOptions to export workbook bookmarks as PDF outline entries, and saves the result as a PDF file.
+class Program
 {
-    // A C# demo that creates a workbook with three worksheets, defines a root PdfBookmarkEntry and sub‑entries linked to cell A1 of each sheet, enables PdfSaveOptions.ExportDocumentStructure, assigns the bookmark hierarchy, and saves the file as a PDF whose outline mirrors the Excel bookmarks.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and add three worksheets
-            Workbook workbook = new Workbook();
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
+        // Load the Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Populate cells that will serve as bookmark destinations
-            sheet1.Cells["A1"].PutValue("Content of Sheet1");
-            sheet2.Cells["A1"].PutValue("Content of Sheet2");
-            sheet3.Cells["A1"].PutValue("Content of Sheet3");
+        // Configure PDF save options to export document structure (bookmarks become PDF outline entries)
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.ExportDocumentStructure = true; // Enable bookmark export
 
-            // Create root bookmark entry
-            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
-            {
-                Text = "Workbook Outline",
-                Destination = sheet1.Cells["A1"],
-                IsOpen = true,
-                SubEntry = new ArrayList()
-            };
-
-            // Create sub‑bookmarks for the other sheets
-            PdfBookmarkEntry subBookmark1 = new PdfBookmarkEntry
-            {
-                Text = "Sheet2",
-                Destination = sheet2.Cells["A1"]
-            };
-
-            PdfBookmarkEntry subBookmark2 = new PdfBookmarkEntry
-            {
-                Text = "Sheet3",
-                Destination = sheet3.Cells["A1"]
-            };
-
-            // Add sub‑bookmarks to the root entry
-            rootBookmark.SubEntry.Add(subBookmark1);
-            rootBookmark.SubEntry.Add(subBookmark2);
-
-            // Configure PDF save options:
-            // - ExportDocumentStructure = true enables PDF outline (bookmarks)
-            // - Bookmark = rootBookmark defines the outline hierarchy
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
-            {
-                ExportDocumentStructure = true,
-                Bookmark = rootBookmark
-            };
-
-            // Save the workbook as PDF with the specified options
-            workbook.Save("WorkbookWithBookmarks.pdf", pdfSaveOptions);
-
-            Console.WriteLine("PDF saved with document structure and bookmarks.");
-        }
+        // Save the workbook as a PDF using the configured options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

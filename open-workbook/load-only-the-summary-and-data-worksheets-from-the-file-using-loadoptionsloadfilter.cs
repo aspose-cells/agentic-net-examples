@@ -1,62 +1,59 @@
-// Title: Load only "Summary" and "Data" worksheets with Aspose.Cells LoadFilter in C#
-// Description: Demonstrates a custom LoadFilter that fully loads the "Summary" and "Data" sheets (LoadDataFilterOptions.All) and loads only the structure for all other worksheets (LoadDataFilterOptions.Structure). The filter is applied via LoadOptions, the workbook is opened, sheet cell counts are displayed, and the file is saved.
-// Keywords: Aspose.Cells | LoadFilter | C# | load specific worksheets | partial workbook loading | LoadDataFilterOptions.All | LoadDataFilterOptions.Structure | memory optimization | Excel sheet selection | custom load filter
-// Common Searches: Aspose.Cells load only selected sheets | C# LoadFilter example for specific worksheets | partial workbook loading with LoadOptions | how to skip sheet data in Aspose.Cells | load workbook structure only for some sheets
-// Developer Intent: Open a workbook, fully loading only the "Summary" and "Data" worksheets while loading just the layout of all other sheets.
-// Use Cases: Minimize RAM usage when processing large workbooks by loading full data only for required sheets. | Create a lightweight copy of a file that retains complete data for essential sheets and only the layout for ancillary ones. | Generate reports that need detailed values from "Summary" and "Data" while ignoring cell contents of other worksheets.
-// AI Prompts: Write a C# snippet that uses Aspose.Cells LoadOptions with a custom LoadFilter to fully load "Summary" and "Data" sheets and load only the structure for the rest. | Explain the performance impact of LoadDataFilterOptions.All versus LoadDataFilterOptions.Structure when opening large Excel files with Aspose.Cells. | Show an alternative way to load selected worksheets without a custom LoadFilter, using built‑in Aspose.Cells features.
+// Title: Load only the "Summary" and "Data" worksheets from an Excel file and discard other sheets using Aspose.Cells in C#
+// AI Prompts: Write C# code that opens an XLSX file with Aspose.Cells, retains only the worksheets named "Summary" and "Data", removes all others, and saves the filtered workbook. | Show how to implement a case‑insensitive whitelist of sheet names when processing a workbook with Aspose.Cells, then export the cleaned file. | Create a reusable method that accepts a file path and a collection of sheet names, returns a new Workbook containing only those sheets using Aspose.Cells.
+// Common Searches: Aspose.Cells keep only selected worksheets C# | How to remove unwanted Excel sheets after loading with Aspose.Cells | C# whitelist specific worksheet names when saving workbook Aspose.Cells | Example of discarding all sheets except Summary and Data using Aspose.Cells | Aspose.Cells filter workbook sheets on load without LoadFilter
+// Tags: retain specific worksheets Aspose.Cells | remove unwanted sheets C# Aspose.Cells | case‑insensitive sheet whitelist Aspose.Cells | filter workbook sheets after load Aspose.Cells | save filtered Excel file Aspose.Cells | C# Excel sheet selection Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace LoadSpecificSheetsExample
+// The program checks that the input XLSX file exists, loads it into a Workbook, defines a case‑insensitive set containing "Summary" and "Data", iterates the worksheets collection backward to remove any sheet not in the set, and then saves the filtered workbook to a new file.
+class Program
 {
-    // Custom load filter to load only "Summary" and "Data" worksheets with full data.
-    // Other worksheets will be loaded with only their structure (no cell data).
-    // Demonstrates a custom LoadFilter that fully loads the "Summary" and "Data" sheets (LoadDataFilterOptions.All) and loads only the structure for all other worksheets (LoadDataFilterOptions.Structure). The filter is applied via LoadOptions, the workbook is opened, sheet cell counts are displayed, and the file is saved.
-    public class CustomLoadFilter : LoadFilter
+    static void Main()
     {
-        public override void StartSheet(Worksheet sheet)
+        try
         {
-            // Check the worksheet name and set the appropriate load options.
-            if (sheet.Name == "Summary" || sheet.Name == "Data")
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Load all data for the required sheets.
-                LoadDataFilterOptions = LoadDataFilterOptions.All;
-            }
-            else
-            {
-                // Load only the structure for other sheets (no cell data).
-                LoadDataFilterOptions = LoadDataFilterOptions.Structure;
-            }
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Path to the source workbook.
-            string sourcePath = "input.xlsx";
-
-            // Configure load options with the custom filter.
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LoadFilter = new CustomLoadFilter();
-
-            // Load the workbook using the specified load options.
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Display loaded worksheets and their cell counts.
-            Console.WriteLine("Loaded worksheets:");
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                Console.WriteLine($"- {ws.Name}: Cells count = {ws.Cells.Count}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
 
-            // Save the workbook (optional, to verify the result).
-            string outputPath = "output.xlsx";
+            // Load the workbook without any filter
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define the sheets we want to keep (case‑insensitive)
+            HashSet<string> allowedSheets = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "Summary",
+                "Data"
+            };
+
+            // Remove sheets that are not in the allowed list
+            // Iterate backwards because removing sheets changes the collection index
+            for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+            {
+                Worksheet sheet = workbook.Worksheets[i];
+                if (!allowedSheets.Contains(sheet.Name))
+                {
+                    workbook.Worksheets.RemoveAt(i);
+                }
+            }
+
+            // Save the filtered workbook
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

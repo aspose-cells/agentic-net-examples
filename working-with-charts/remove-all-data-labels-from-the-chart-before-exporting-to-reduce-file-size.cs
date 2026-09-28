@@ -1,10 +1,7 @@
-// Title: C# – Remove All Chart Data Labels with AspNet.Cells to Reduce Workbook Size
-// Description: Demonstrates how to create a workbook, add a column chart, enable data labels for illustration, then delete every label by setting Series.DataLabels.IsDeleted = true, and finally save the file as a compact XLSX.
-// Keywords: Aspose.Cells remove chart data labels | C# delete chart data labels | Aspose.Cells reduce Excel file size | Series.DataLabels.IsDeleted | chart export optimization .NET
-// Common Searches: how to delete data labels from a chart using Aspose.Cells C# | remove chart labels to shrink workbook size | Aspose.Cells Series.DataLabels.IsDeleted example | C# chart data labels removal Aspose | optimize Excel file size by removing chart labels
-// Developer Intent: Eliminate every data label from a chart before saving to minimize the workbook’s size.
-// Use Cases: Generate a clean chart for client distribution without visible values. | Iterate through all series in a multi‑series chart and turn off labels to meet reporting standards. | Compress an Excel file containing many charts by removing unnecessary label data.
-// AI Prompts: Write C# code that removes data labels from all series in an existing Aspose.Cells chart while preserving other formatting. | Explain the effect of setting Series.DataLabels.IsDeleted = true on the saved XLSX file size and when this technique is appropriate. | Show how to selectively delete data labels from specific series in a chart using Aspose.Cells.
+// Title: Remove all data labels from every chart series in an Aspose.Cells workbook using C# to shrink the exported XLSX file
+// AI Prompts: Write C# code that iterates over each worksheet and each chart in an Aspose.Cells workbook, sets Series.DataLabels.IsDeleted = true for every series, and saves the workbook as XLSX. | Show how to disable chart data labels for all series with Aspose.Cells for .NET to minimize the size of the generated Excel file.
+// Common Searches: asp.net remove chart data labels before saving workbook Aspose.Cells | c# delete all data labels from charts in Aspose.Cells to reduce file size | how to hide series data labels in Aspose.Cells chart programmatically | optimize Excel output size by removing chart labels using Aspose.Cells C#
+// Tags: Aspose.Cells chart series label suppression C# | DataLabels.IsDeleted usage Aspose.Cells | reduce exported XLSX size Aspose.Cells | loop through worksheets and charts Aspose.Cells | disable chart data labels programmatically
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add a column chart, enable data labels for illustration, then delete every label by setting Series.DataLabels.IsDeleted = true, and finally save the file as a compact XLSX.
+    // Demonstrates looping through all worksheets and charts in a workbook, marking each series' DataLabels as deleted, and saving the workbook as XLSX, which reduces the resulting file size.
     class RemoveDataLabelsDemo
     {
         static void Main()
@@ -38,21 +35,29 @@ namespace AsposeCellsExamples
             int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data range for the chart
+            // Set the data source for the chart
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
             // Enable data labels initially (optional, just to demonstrate removal)
             chart.NSeries[0].DataLabels.ShowValue = true;
 
-            // Remove all data labels from every series in the chart
-            foreach (Series series in chart.NSeries)
+            // ------------------------------------------------------------
+            // Remove all data labels from every series in every chart
+            // ------------------------------------------------------------
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                // Mark the DataLabels object as deleted – this removes the labels completely
-                series.DataLabels.IsDeleted = true;
+                foreach (Chart ch in ws.Charts)
+                {
+                    foreach (Series ser in ch.NSeries)
+                    {
+                        // Mark the DataLabels object as deleted – this removes all labels
+                        ser.DataLabels.IsDeleted = true;
+                    }
+                }
             }
 
-            // Save the workbook with the chart (data labels removed)
+            // Save the workbook (export)
             workbook.Save("ChartWithoutDataLabels.xlsx", SaveFormat.Xlsx);
         }
     }

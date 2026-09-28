@@ -1,97 +1,137 @@
-// Title: Create an XML Map Summary Sheet – Map Name, Root Element, Linked Cell Count (Aspose.Cells for .NET)
-// Description: The sample builds a new workbook, adds sample data, links cells to a defined XML map, and generates a summary worksheet that lists each XML map’s name, its root element, and the total number of linked cells before saving the file as an Excel workbook.
-// Keywords: Aspose.Cells | XML map | summary worksheet | linked cells count | C# | .NET | Workbook audit | XmlMap API | Excel report generation | data integration automation
-// Common Searches: Aspose.Cells list XML maps in a workbook | How to get root element of an XmlMap using Aspose.Cells | Count cells linked to an XML map in C# | Generate XML map report with Aspose.Cells | Export XML map details to Excel file | Example of XmlMap summary sheet in .NET
-// Developer Intent: Produce a worksheet that reports each XML map’s name, root element, and the number of cells linked to it.
-// Use Cases: Audit XML mappings across a workbook for data‑integration validation. | Create documentation of XML map configurations for stakeholders. | Automate generation of mapping statistics during workbook creation. | Troubleshoot mismatched or missing XML links in complex spreadsheets. | Provide compliance reports that show mapping coverage.
-// AI Prompts: Write C# code with Aspose.Cells that iterates over all XmlMaps in a workbook, calculates the linked‑cell count for each map, and writes the results to a new summary sheet. | Refactor the provided example to compute the linked‑cell total dynamically instead of using a hard‑coded value. | Explain how to retrieve XmlMap objects, access their RootElementName, and enumerate linked cells using the Aspose.Cells API. | Generate a PowerShell script that calls Aspose.Cells to produce the same XML map summary report.
+// Title: Generate an Excel summary of XML maps with root elements and linked cell counts using Aspose.Cells for .NET
+// AI Prompts: Write a C# console application that opens an existing .xlsx workbook, uses reflection to iterate over its Workbook.XmlMaps collection, extracts each map's Name and RootElementName, counts every cell linked to the map across all worksheets via GetXmlMapLinkedCells, and saves the map name, root element, and linked‑cell total into a new workbook called XmlMapSummaryReport.xlsx. | Enhance the XML‑map summary program to also record the worksheet names that contain linked cells for each map and output the expanded data as a CSV file.
+// Common Searches: how to list XML maps in an Excel file using Aspose.Cells C# | C# count cells linked to an XML map in a workbook with Aspose.Cells | Aspose.Cells get root element name of XML map via reflection | generate XML map summary report Excel Aspose.Cells .NET | retrieve XmlMapLinkedCells for each worksheet in Aspose.Cells
+// Tags: Aspose.Cells enumerate XmlMaps collection | C# count linked cells for XML map | export XML map details to Excel workbook | reflection access to XmlMaps in Aspose.Cells | GetXmlMapLinkedCells usage example
 
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Collections;
 using Aspose.Cells;
 
-// The sample builds a new workbook, adds sample data, links cells to a defined XML map, and generates a summary worksheet that lists each XML map’s name, its root element, and the total number of linked cells before saving the file as an Excel workbook.
-class XmlMapSummary
+// The program loads a source .xlsx workbook, uses reflection to obtain the XmlMaps collection, iterates each map to read its Name and RootElementName, counts all cells linked to the map across every worksheet via GetXmlMapLinkedCells, and writes the map name, root element, and linked‑cell count into a new Excel file named XmlMapSummaryReport.xlsx.
+class XmlMapSummaryReport
 {
     static void Main()
     {
+        // Input workbook path
+        string sourcePath = "input.xlsx";
+
+        // Verify that the input file exists
+        if (!File.Exists(sourcePath))
+        {
+            Console.WriteLine($"Error: Input file \"{sourcePath}\" not found.");
+            return;
+        }
+
         try
         {
-            // Create a new workbook and add sample data
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Cells["A1"].PutValue("Name");
-            ws.Cells["B1"].PutValue("Value");
-            ws.Cells["A2"].PutValue("Item1");
-            ws.Cells["B2"].PutValue(100);
-            ws.Cells["A3"].PutValue("Item2");
-            ws.Cells["B3"].PutValue(200);
+            // Load the workbook that may contain XML maps
+            Workbook sourceWorkbook = new Workbook(sourcePath);
 
-            // Simple XML schema definition (kept for reference; not used directly because XmlMap API may be unavailable)
-            string xmlSchema = @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-                                    <xs:element name='Root'>
-                                        <xs:complexType>
-                                            <xs:sequence>
-                                                <xs:element name='Item' maxOccurs='unbounded'>
-                                                    <xs:complexType>
-                                                        <xs:sequence>
-                                                            <xs:element name='Name' type='xs:string'/>
-                                                            <xs:element name='Value' type='xs:integer'/>
-                                                        </xs:sequence>
-                                                    </xs:complexType>
-                                                </xs:element>
-                                            </xs:sequence>
-                                        </xs:complexType>
-                                    </xs:element>
-                                </xs:schema>";
-
-            // Define a simple representation of an XML map (used for summary only)
-            var xmlMaps = new List<(string Name, string RootElementName)>
+            // Use reflection to obtain the XmlMaps collection (may not exist in older versions)
+            var xmlMapsProp = sourceWorkbook.GetType().GetProperty("XmlMaps");
+            if (xmlMapsProp == null)
             {
-                ("SampleMap", "Root")
-            };
-
-            // Link cells to the XML map paths (using the map name)
-            ws.Cells.LinkToXmlMap("SampleMap", 1, 0, "/Root/Item/Name");   // A2
-            ws.Cells.LinkToXmlMap("SampleMap", 1, 1, "/Root/Item/Value"); // B2
-            ws.Cells.LinkToXmlMap("SampleMap", 2, 0, "/Root/Item/Name");   // A3
-            ws.Cells.LinkToXmlMap("SampleMap", 2, 1, "/Root/Item/Value"); // B3
-
-            // Create a worksheet for the summary report
-            Worksheet summary = wb.Worksheets[wb.Worksheets.Add()];
-            summary.Name = "XmlMapSummary";
-            summary.Cells["A1"].PutValue("Map Name");
-            summary.Cells["B1"].PutValue("Root Element");
-            summary.Cells["C1"].PutValue("Linked Cells Count");
-
-            int row = 1;
-
-            // Populate summary using the simple map list
-            foreach (var mapInfo in xmlMaps)
-            {
-                // Since we linked four cells manually, the count is known (2 rows × 2 columns)
-                int linkedCount = 4;
-
-                summary.Cells[row, 0].PutValue(mapInfo.Name);
-                summary.Cells[row, 1].PutValue(mapInfo.RootElementName);
-                summary.Cells[row, 2].PutValue(linkedCount);
-                row++;
+                Console.WriteLine("The loaded workbook does not support XML maps in this Aspose.Cells version.");
+                return;
             }
 
-            // Save the workbook with the summary report
-            try
+            var xmlMapsObj = xmlMapsProp.GetValue(sourceWorkbook) as IEnumerable;
+            if (xmlMapsObj == null)
             {
-                wb.Save("XmlMapSummaryReport.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+                Console.WriteLine("No XML maps found in the workbook.");
+                return;
             }
-            catch (Exception saveEx)
+
+            // Create a new workbook for the summary report
+            Workbook reportWorkbook = new Workbook();
+            Worksheet sheet = reportWorkbook.Worksheets[0];
+            sheet.Name = "XML Map Summary";
+
+            // Write header row
+            sheet.Cells[0, 0].PutValue("XML Map Name");
+            sheet.Cells[0, 1].PutValue("Root Element");
+            sheet.Cells[0, 2].PutValue("Linked Cells Count");
+
+            int reportRow = 1; // start writing data from the second row
+
+            // Iterate through each XML map using reflection
+            foreach (object xmlMap in xmlMapsObj)
             {
-                Console.WriteLine("Error saving workbook: " + saveEx.Message);
+                // Retrieve map name and root element via reflection
+                string mapName = xmlMap.GetType().GetProperty("Name")?.GetValue(xmlMap) as string ?? "N/A";
+                string rootElement = xmlMap.GetType().GetProperty("RootElementName")?.GetValue(xmlMap) as string ?? "N/A";
+
+                int linkedCellCount = 0;
+
+                // Iterate worksheets to count linked cells for the current map
+                foreach (Worksheet ws in sourceWorkbook.Worksheets)
+                {
+                    // Locate the GetXmlMapLinkedCells method (signature may vary)
+                    var method = ws.GetType().GetMethod("GetXmlMapLinkedCells", new Type[] { xmlMap.GetType() });
+                    if (method == null)
+                    {
+                        // Fallback: try overload that accepts a string map name
+                        method = ws.GetType().GetMethod("GetXmlMapLinkedCells", new Type[] { typeof(string) });
+                        if (method != null)
+                        {
+                            var areas = method.Invoke(ws, new object[] { mapName }) as Array;
+                            linkedCellCount += CountCellsInAreas(areas);
+                        }
+                        continue;
+                    }
+
+                    var linkedAreas = method.Invoke(ws, new object[] { xmlMap }) as Array;
+                    linkedCellCount += CountCellsInAreas(linkedAreas);
+                }
+
+                // Write data to the report sheet
+                sheet.Cells[reportRow, 0].PutValue(mapName);
+                sheet.Cells[reportRow, 1].PutValue(rootElement);
+                sheet.Cells[reportRow, 2].PutValue(linkedCellCount);
+                reportRow++;
             }
+
+            // Auto‑fit columns for readability
+            sheet.AutoFitColumns();
+
+            // Output workbook path
+            string reportPath = "XmlMapSummaryReport.xlsx";
+
+            // Save the summary report
+            reportWorkbook.Save(reportPath);
+            Console.WriteLine($"Report saved to \"{reportPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    // Helper method to count cells in an array of CellArea objects (using reflection)
+    private static int CountCellsInAreas(Array areas)
+    {
+        if (areas == null) return 0;
+        int count = 0;
+        foreach (object area in areas)
+        {
+            var startRowProp = area.GetType().GetProperty("StartRow");
+            var endRowProp = area.GetType().GetProperty("EndRow");
+            var startColProp = area.GetType().GetProperty("StartColumn");
+            var endColProp = area.GetType().GetProperty("EndColumn");
+
+            if (startRowProp == null || endRowProp == null || startColProp == null || endColProp == null)
+                continue;
+
+            int startRow = (int)startRowProp.GetValue(area);
+            int endRow = (int)endRowProp.GetValue(area);
+            int startCol = (int)startColProp.GetValue(area);
+            int endCol = (int)endColProp.GetValue(area);
+
+            int rows = endRow - startRow + 1;
+            int cols = endCol - startCol + 1;
+            count += rows * cols;
+        }
+        return count;
     }
 }

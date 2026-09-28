@@ -1,36 +1,41 @@
-// Title: C# – Create Excel Workbook, Add Named Worksheet, Write Cell, and Save as XLSX with Aspose.Cells
-// Description: Demonstrates how to instantiate an Aspose.Cells Workbook in C#, add a worksheet with a custom name, write a value to cell A1, and save the file as an XLSX document.
-// Keywords: Aspose.Cells C# create workbook | Aspose.Cells add worksheet | Aspose.Cells save as xlsx | Aspose.Cells write cell value | Workbook Worksheets.Add | Aspose.Cells .NET example
-// Common Searches: how to create a new Excel workbook with Aspose.Cells C# | add a worksheet with custom name using Aspose.Cells .NET | save Aspose.Cells workbook as xlsx file | write value to cell A1 with Aspose.Cells | Aspose.Cells example for creating template workbook
-// Developer Intent: Generate a new Excel file, add a custom‑named sheet, insert initial data, and save it as XLSX using Aspose.Cells for .NET.
-// Use Cases: Create a blank template with a predefined sheet name for downstream data import. | Automate report generation where each report starts with a header row on a specific worksheet. | Initialize workbooks in a web API before populating them with dynamic content. | Build Excel files for export from a desktop application with a default sheet layout.
-// AI Prompts: Write C# code using Aspose.Cells to create a workbook, add a worksheet named "Data", place "Report" in cell B2, and save as "Report.xlsx". | Show how to add multiple worksheets with custom names, set column widths, and populate header rows before saving the file with Aspose.Cells .NET. | Explain step‑by‑step how to insert values into several cells on a newly added worksheet and then export the workbook as XLSX.
+// Title: Create a new Excel workbook, add a worksheet named "Sheet1", set it active, and save as .xlsx using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to instantiate a Workbook, add a worksheet called "Sheet1", make it the active sheet, and write the file to NewWorkbook.xlsx. | Provide a concise Aspose.Cells example that retrieves the index of a newly added worksheet and assigns it as the workbook's active sheet before saving.
+// Common Searches: asp.net core create excel file with Aspose.Cells and add a specific worksheet | c# Aspose.Cells how to set newly added sheet as active sheet | save newly created workbook as xlsx using Aspose.Cells library | example code for adding a named worksheet in Aspose.Cells C#
+// Tags: create workbook Aspose.Cells C# | insert worksheet with custom name Aspose.Cells | assign active sheet index Aspose.Cells | export workbook as xlsx Aspose.Cells | handle exceptions during workbook generation Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsExample
+// The sample program demonstrates how to create a new Aspose.Cells Workbook in C#, add a worksheet named "Sheet1", obtain its index, set this worksheet as the active sheet, and save the workbook to "NewWorkbook.xlsx" while handling potential exceptions.
+class Program
 {
-    // Demonstrates how to instantiate an Aspose.Cells Workbook in C#, add a worksheet with a custom name, write a value to cell A1, and save the file as an XLSX document.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook instance (default format is Xlsx)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add a new worksheet with a custom name to the workbook
-            // The Add method returns the created Worksheet object
-            Worksheet newSheet = workbook.Worksheets.Add("MyWorksheet");
+            // Add a new worksheet named "Sheet1"
+            Worksheet sheet = workbook.Worksheets.Add("Sheet1");
 
-            // Optionally, put some data into the new worksheet
-            newSheet.Cells["A1"].PutValue("Hello, Aspose.Cells!");
+            // Get the index of the newly added sheet
+            int sheetIndex = sheet.Index;
 
-            // Save the workbook to a file in the current directory
-            // SaveFormat.Xlsx specifies the output file type
-            workbook.Save("MyWorkbook.xlsx", SaveFormat.Xlsx);
+            // Set the newly added sheet as the active sheet (optional)
+            workbook.Worksheets.ActiveSheetIndex = sheetIndex;
 
-            Console.WriteLine("Workbook created and saved successfully.");
+            // Define output file path
+            string outputPath = "NewWorkbook.xlsx";
+
+            // Save the workbook to a file (optional)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

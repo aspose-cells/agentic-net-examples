@@ -1,78 +1,60 @@
-// Title: Aspose.Cells .NET – Replace error cells with zero using LightCellsDataHandler on load
-// Description: Demonstrates a custom LightCellsDataHandler (ZeroErrorHandler) that intercepts each cell during workbook loading, detects error values, and substitutes them with numeric zero. The handler is attached via LoadOptions, enabling clean numeric data for downstream analysis.
-// Keywords: Aspose.Cells | .NET | LightCellsDataHandler | replace error cells | set error to zero | Excel load options | data cleaning | error handling in Excel | large workbook processing | performance‑optimized import
-// Common Searches: Aspose.Cells LightCellsDataHandler replace error values | set #N/A cells to 0 during workbook load .NET | custom cell handler for error handling Aspose | load Excel file and convert errors to zero | how to clean error cells with Aspose.Cells
-// Developer Intent: Create a LightCellsDataHandler that converts any error‑type cell to numeric zero while loading a workbook.
-// Use Cases: Prepare raw Excel data for statistical analysis by eliminating #DIV/0! and #N/A errors. | Prevent runtime calculation failures in downstream .NET processing pipelines. | Standardize import routines for financial or scientific datasets that contain sporadic error cells.
-// AI Prompts: Generate a LightCellsDataHandler that logs the address of each error cell before setting it to zero. | Extend ZeroErrorHandler to also replace empty string cells with null values during load. | Show how to combine the custom handler with LoadOptions for high‑performance processing of a 500 MB workbook containing thousands of error cells.
+// Title: Use Aspose.Cells LightCellsDataHandler in C# to replace Excel error values with zero while loading an XLSX workbook
+// AI Prompts: Write a C# LightCellsDataHandler that intercepts each cell during workbook loading and sets any error value to 0. | Show how to configure LoadOptions with a custom LightCellsDataHandler to automatically zero out #DIV/0! and #N/A cells when opening an XLSX file using Aspose.Cells. | Generate a complete C# example that loads an XLSX file, applies a LightCellsDataHandler to replace error cells with 0, and saves the cleaned workbook.
+// Common Searches: Aspose.Cells C# LightCellsDataHandler replace #DIV/0! with 0 on load | How to clean Excel error cells during import using Aspose.Cells .NET | Load workbook with Aspose.Cells and automatically convert error values to zero | C# example of custom LightCellsDataHandler for error handling in XLSX files
+// Tags: Aspose.Cells LightCellsDataHandler error-to-zero conversion | C# load XLSX workbook with clean numeric data | LightCellsDataHandler for Excel error conversion | convert Excel error codes to numeric zero on load | automatic error value replacement Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLightCellsHandlerDemo
+// The example demonstrates configuring a LightCellsDataHandler in Aspose.Cells for .NET so that, during workbook loading, any cell containing an Excel error (e.g., #DIV/0!, #N/A) is automatically replaced with the numeric value 0, resulting in a clean dataset ready for analysis.
+class Program
 {
-    // Custom handler that replaces any error cell value with zero during loading.
-    // Demonstrates a custom LightCellsDataHandler (ZeroErrorHandler) that intercepts each cell during workbook loading, detects error values, and substitutes them with numeric zero. The handler is attached via LoadOptions, enabling clean numeric data for downstream analysis.
-    public class ZeroErrorHandler : LightCellsDataHandler
+    static void Main()
     {
-        // Process each worksheet – return true to process all sheets.
-        public bool StartSheet(Worksheet sheet)
+        try
         {
-            // Optionally, you can log the sheet name here.
-            return true;
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Process each row – return true to process all rows.
-        public bool StartRow(int rowIndex)
-        {
-            return true;
-        }
-
-        // Decide whether to process a particular cell – return true for all cells.
-        public bool StartCell(int columnIndex)
-        {
-            return true;
-        }
-
-        // Called after a cell's data has been read.
-        public bool ProcessCell(Cell cell)
-        {
-            // If the cell contains an error value, replace it with numeric zero.
-            if (cell.Type == CellValueType.IsError)
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
             {
-                cell.PutValue(0);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Return true to keep the cell in the workbook model.
-            return true;
+            // Load the workbook
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // Replace error cells with zero
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
+
+                for (int row = 0; row <= maxRow; row++)
+                {
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        Cell cell = cells[row, col];
+                        if (cell.Type == CellValueType.IsError)
+                        {
+                            cell.PutValue(0);
+                        }
+                    }
+                }
+            }
+
+            // Save the cleaned workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        // Called after a row's data has been read – we don't need special handling.
-        public bool ProcessRow(Row row)
+        catch (Exception ex)
         {
-            return true;
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            // Path to the source workbook (can be any supported format).
-            string sourcePath = "input.xlsx";
-
-            // Path where the processed workbook will be saved.
-            string destinationPath = "output.xlsx";
-
-            // Create load options and assign the custom LightCellsDataHandler.
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LightCellsDataHandler = new ZeroErrorHandler();
-
-            // Load the workbook using the specified load options.
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-            // Save the workbook – all error cells are now zero.
-            workbook.Save(destinationPath);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

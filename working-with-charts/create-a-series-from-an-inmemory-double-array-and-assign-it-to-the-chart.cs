@@ -1,49 +1,57 @@
-// Title: Add a column chart series from an in‑memory double[] using Aspose.Cells for .NET (C#)
-// Description: Shows how to import a double[] into a worksheet, create a column chart, build the data range address, add the series with NSeries.Add (vertical orientation), and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells | C# | chart series from array | ImportArray double | NSeries.Add | column chart | in‑memory data | Excel export | .NET
-// Common Searches: Aspose.Cells add chart series from double array | Import double[] into Excel chart C# | Create column chart from in‑memory data Aspose.Cells | NSeries.Add vertical data Aspose.Cells | Plot runtime array without writing cells
-// Developer Intent: Create a chart series directly from a double[] at runtime, avoiding manual cell‑by‑cell entry.
-// Use Cases: Generate a sales‑trend column chart from a calculation that returns a double[] | Visualize simulation results stored in a double[] immediately in an Excel chart | Produce a quick sensor‑reading report by importing a double[] and displaying it as a column chart
-// AI Prompts: How can I add multiple series from several double[] arrays to the same chart with Aspose.Cells? | Show code to assign custom category labels from a string[] to a series created from a double[] array. | Explain how to format the column chart (colors, axis titles, data labels) after adding a series from an in‑memory array.
+// Title: Create a column chart from an in‑memory double array and string labels with Aspose.Cells for .NET
+// AI Prompts: Write C# code that imports a double[] into a worksheet, adds a column chart, and sets the series Y‑values to that range using Aspose.Cells. | Show how to import a string[] as category labels and assign it to the chart’s X‑axis in Aspose.Cells. | Modify the example to generate a line chart instead of a column chart while still using in‑memory arrays for data and labels.
+// Common Searches: Aspose.Cells C# create column chart from double array without using a worksheet file | how to bind string array as X axis categories in Aspose.Cells chart | importing in‑memory numeric data into Excel and charting with Aspose.Cells .NET | save Excel workbook with chart built from arrays using Aspose.Cells | C# Aspose.Cells chart series from cell range generated from array
+// Tags: import double array to worksheet Aspose.Cells | add column chart series from cell range C# | bind category axis to string array Aspose.Cells | save workbook with chart as xlsx Aspose.Cells | chart from in‑memory data C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsSeriesFromArray
+namespace AsposeCellsInMemoryArraySeries
 {
-    // Shows how to import a double[] into a worksheet, create a column chart, build the data range address, add the series with NSeries.Add (vertical orientation), and save the workbook as an .xlsx file.
+    // The program creates a new workbook, imports a double[] into column A and a string[] into column B, adds a column chart whose Y‑values come from the double array and X‑axis categories from the string array, then saves the file as InMemoryArraySeries.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // In‑memory double array that will become the series values
-            double[] values = new double[] { 12.5, 23.8, 35.0, 47.6, 58.9 };
+                // In‑memory double array that will become the Y‑values of the chart series
+                double[] yValues = new double[] { 10.5, 20.75, 30.0, 40.25 };
 
-            // Import the array vertically starting at cell A1 (row 0, column 0)
-            // The ImportArray(double[], int, int, bool) rule is used here
-            sheet.Cells.ImportArray(values, 0, 0, true);
+                // Import the double array into column A (0‑based index) vertically starting at cell A1
+                sheet.Cells.ImportArray(yValues, 0, 0, true);
 
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = sheet.Charts[chartIndex];
+                // Optional: create category (X) labels in column B for better readability
+                string[] xLabels = new string[] { "Q1", "Q2", "Q3", "Q4" };
+                sheet.Cells.ImportArray(xLabels, 0, 1, true);
 
-            // Build the address of the imported data range (A1:A5)
-            string dataRange = $"=Sheet1!A1:A{values.Length}";
+                // Add a column chart to the worksheet (positioned from row 5, column 0 to row 15, column 5)
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+                Chart chart = sheet.Charts[chartIndex];
 
-            // Add the series to the chart using the NSeries.Add(string, bool) rule
-            // The second parameter 'true' indicates that the data is arranged vertically
-            chart.NSeries.Add(dataRange, true);
+                // Add a series whose Y‑values are taken from the imported double array (A1:A4)
+                chart.NSeries.Add("=Sheet1!$A$1:$A$4", true);
 
-            // (Optional) Set category labels if desired – here we use simple numeric categories
-            // chart.NSeries.CategoryData = $"=Sheet1!B1:B{values.Length}";
+                // Assign the X‑axis (category) data to the imported string labels (B1:B4)
+                chart.NSeries.CategoryData = "=Sheet1!$B$1:$B$4";
 
-            // Save the workbook
-            workbook.Save("ChartFromDoubleArray.xlsx");
+                // Define output file path
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "InMemoryArraySeries.xlsx");
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

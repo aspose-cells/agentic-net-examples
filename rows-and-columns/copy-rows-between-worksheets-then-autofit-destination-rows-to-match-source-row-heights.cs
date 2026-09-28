@@ -1,55 +1,46 @@
-// Title: Copy rows between worksheets and preserve row height with Aspose.Cells for .NET (C#)
-// Description: This C# example creates a source workbook with rows of different heights, copies the rows and their formatting to a destination workbook using Cells.CopyRows, transfers each row's settings with Row.CopySettings, optionally auto‑fits the rows with AutoFitRows, and saves the result as an Excel file.
-// Keywords: Aspose.Cells copy rows | C# copy worksheet rows | preserve row height Aspose.Cells | Row.CopySettings example | AutoFitRows method | Excel row height transfer .NET | copy rows with formatting | Aspose.Cells tutorial
-// Common Searches: how to copy rows between worksheets in Aspose.Cells | preserve original row height when copying rows Aspose.Cells C# | auto fit rows after copying data Aspose.Cells | copy row settings including height and style Aspose.Cells | Aspose.Cells copy multiple rows and keep formatting
-// Developer Intent: Transfer a block of rows from one worksheet to another while keeping the original row heights and styles, then adjust heights to fit the content.
-// Use Cases: Migrate a formatted template section into a report workbook without losing row layout. | Archive selected rows from a live sheet into a separate file while maintaining visual consistency. | Generate a summary sheet by copying rows from user‑filled sheets, preserving visibility, height, and style.
-// AI Prompts: Write C# code with Aspose.Cells to copy rows 5‑12 from Sheet1 to Sheet2, keep row heights and styles, then auto‑fit the destination rows. | Explain the difference between Row.CopySettings and AutoFitRows in Aspose.Cells and when to use each. | Provide an Aspose.Cells example that copies rows containing merged cells and ensures the destination rows retain the same height.
+// Title: Copy rows from one worksheet to another and auto‑fit row heights using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that copies a range of rows from a source worksheet to a target worksheet with Aspose.Cells and then applies AutoFitRows to the destination rows. | Demonstrate how to preserve custom row heights when transferring rows between two workbooks using Aspose.Cells and ensure the rows are automatically adjusted after the copy.
+// Common Searches: Aspose.Cells C# copy rows from one worksheet to another preserving row height | How to auto‑fit rows after copying them to a different workbook with Aspose.Cells | Copy all rows between workbooks and adjust row heights automatically using Aspose.Cells for .NET
+// Tags: Cells.CopyRows method Aspose.Cells | AutoFitRows after row transfer Aspose.Cells | preserve custom row heights C# Aspose.Cells | copy rows between workbooks .NET | row height synchronization Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using System.Drawing;
 
-// This C# example creates a source workbook with rows of different heights, copies the rows and their formatting to a destination workbook using Cells.CopyRows, transfers each row's settings with Row.CopySettings, optionally auto‑fits the rows with AutoFitRows, and saves the result as an Excel file.
-class CopyRowsAndFitDemo
+namespace AsposeCellsRowCopyAndAutoFit
 {
-    static void Main()
+    // The example creates a source workbook with custom row heights, copies all rows to a new workbook using Cells.CopyRows, calls AutoFitRows on the copied range to ensure proper row height adjustment, and saves the result as RowCopyAutoFitResult.xlsx.
+    public class Program
     {
-        // Create source workbook and set up sample data with custom row heights
-        Workbook srcWb = new Workbook();
-        Worksheet srcSheet = srcWb.Worksheets[0];
-
-        srcSheet.Cells["A1"].PutValue("Short text");
-        srcSheet.Cells["A2"].PutValue("This is a longer piece of text that will require a taller row.");
-        srcSheet.Cells["A3"].PutValue("Another row");
-
-        // Assign different heights to the source rows
-        srcSheet.Cells.Rows[0].Height = 15; // default height
-        srcSheet.Cells.Rows[1].Height = 30; // taller row
-        srcSheet.Cells.Rows[2].Height = 45; // even taller row
-
-        // Create destination workbook
-        Workbook destWb = new Workbook();
-        Worksheet destSheet = destWb.Worksheets[0];
-
-        // Number of rows to copy (here we know it's 3)
-        int rowsToCopy = 3;
-
-        // Copy rows data and formats from source to destination
-        destSheet.Cells.CopyRows(srcSheet.Cells, 0, 0, rowsToCopy);
-
-        // Copy row settings (height, style, visibility) from source rows to destination rows
-        for (int i = 0; i < rowsToCopy; i++)
+        public static void Main()
         {
-            Row srcRow = srcSheet.Cells.Rows[i];
-            Row destRow = destSheet.Cells.Rows[i];
-            destRow.CopySettings(srcRow, true);
+            // ---------- Create source workbook ----------
+            Workbook sourceWorkbook = new Workbook();
+            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+
+            // Populate source sheet with sample data
+            sourceSheet.Cells["A1"].PutValue("First row data");
+            sourceSheet.Cells["A2"].PutValue("Second row data");
+            sourceSheet.Cells["A3"].PutValue("Third row data");
+
+            // Set custom row heights in the source sheet
+            sourceSheet.Cells.Rows[0].Height = 30; // Row 0 height
+            sourceSheet.Cells.Rows[1].Height = 45; // Row 1 height
+            sourceSheet.Cells.Rows[2].Height = 20; // Row 2 height
+
+            // ---------- Create destination workbook ----------
+            Workbook destinationWorkbook = new Workbook();
+            Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
+
+            // Copy all rows from source to destination (starting at row 0)
+            int rowsToCopy = sourceSheet.Cells.MaxDisplayRange.RowCount;
+            destinationSheet.Cells.CopyRows(sourceSheet.Cells, 0, 0, rowsToCopy);
+
+            // Auto‑fit the copied rows in the destination sheet to ensure heights match content
+            // (Row heights were already copied, but AutoFitRows guarantees proper adjustment)
+            destinationSheet.AutoFitRows(0, rowsToCopy - 1);
+
+            // ---------- Save the result ----------
+            destinationWorkbook.Save("RowCopyAutoFitResult.xlsx");
         }
-
-        // Auto‑fit the copied rows in the destination sheet (optional, ensures height matches content)
-        destSheet.AutoFitRows(0, rowsToCopy - 1);
-
-        // Save the resulting workbook
-        destWb.Save("CopiedRowsAutoFit.xlsx");
     }
 }

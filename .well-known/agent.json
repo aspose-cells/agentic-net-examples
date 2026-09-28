@@ -1,7 +1,7 @@
 {
   "name": "Aspose.Cells for .NET Examples Agent",
-  "description": "AI agent that generates, compiles, and validates C# code examples for Aspose.Cells for .NET 26.7.0. 5,394 build-validated examples across 31 categories.",
-  "version": "26.7.0",
+  "description": "AI agent that generates, compiles, and validates C# code examples for Aspose.Cells for .NET 26.8.0 build-validated examples across 31 categories.",
+  "version": "26.8.0",
   "url": "https://github.com/aspose-cells/agentic-net-examples.git",
   "api_base_url": "http://faisalabad-examples-mcp.dynabic.com:7006",
   "mcp_endpoint": "http://faisalabad-examples-mcp.dynabic.com:7006/generate",
@@ -34,7 +34,7 @@
   "product": {
     "name": "Aspose.Cells for .NET",
     "nuget_package": "Aspose.Cells",
-    "nuget_version": "26.7.0",
+    "nuget_version": "26.8.0",
     "target_framework": "net10.0"
   },
   "links": {

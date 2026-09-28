@@ -1,74 +1,74 @@
-// Title: C# – Add WordArt to a Protected Worksheet with Aspose.Cells and Exception Handling
-// Description: Demonstrates how to protect a worksheet for objects, attempt to insert WordArt using ShapeCollection.AddWordArt, and gracefully catch the CellsException (ExceptionType.Shape) when protection blocks the operation. Includes a fallback catch for any other errors and saves the workbook.
-// Keywords: Aspose.Cells C# | AddWordArt protected worksheet | CellsException Shape handling | worksheet protection objects | exception handling Aspose.Cells | try‑catch shape addition | WordArt Aspose.Cells .NET
-// Common Searches: add wordart to a protected sheet aspose.cells | cellsexception shape when adding shape to protected worksheet | how to catch shape errors in aspose.cells c# | protect worksheet objects and insert drawing objects aspose | asp.net example wordart exception handling
-// Developer Intent: Insert WordArt into a worksheet that is locked for objects and handle the resulting shape‑related exception.
-// Use Cases: Add decorative WordArt to a report while the sheet is object‑protected, notifying the user if the operation fails. | Log detailed CellsException information for diagnostics when protection prevents shape creation. | Automatically switch to a plain text box if WordArt cannot be added due to object protection.
-// AI Prompts: Write C# code that adds WordArt to a worksheet protected with ProtectionType.Objects using Aspose.Cells and includes try‑catch for CellsException with ExceptionType.Shape. | Explain why Aspose.Cells throws a CellsException with code Shape when a shape is added to a protected sheet and outline best practices for handling it. | Suggest alternative visual elements that can be added to a protected worksheet without triggering shape protection errors in Aspose.Cells.
+// Title: C# example: Catch exceptions when adding WordArt (TextEffect) to a protected worksheet using Aspose.Cells
+// AI Prompts: Write C# code that protects an Excel worksheet, attempts to insert a WordArt TextEffect shape with Aspose.Cells, and captures any protection‑related exceptions. | Show how to structure nested try‑catch blocks to handle errors both for shape insertion and workbook saving when using Aspose.Cells. | Provide a snippet that logs the exception message when adding a TextEffect to a locked sheet and continues execution.
+// Common Searches: Aspose.Cells C# add WordArt to a locked worksheet and handle exception | how to catch protection error when inserting TextEffect shape with Aspose.Cells | C# try‑catch example for adding WordArt to a protected Excel sheet using Aspose.Cells
+// Tags: add wordart to protected sheet aspocells | aspocells shape insertion exception handling | protect excel sheet before adding shape c# | c# aspocells workbook save error handling | text effect shape on protected sheet aspocells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing; // Required for shape operations
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, protects the first worksheet, then tries to add a WordArt (TextEffect) shape inside a try‑catch block that captures protection‑related errors. It also demonstrates separate error handling for saving the workbook, with an outer catch for any unexpected exceptions.
+class WordArtProtectedSheetExample
 {
-    // Demonstrates how to protect a worksheet for objects, attempt to insert WordArt using ShapeCollection.AddWordArt, and gracefully catch the CellsException (ExceptionType.Shape) when protection blocks the operation. Includes a fallback catch for any other errors and saves the workbook.
-    public class AddWordArtToProtectedWorksheet
+    static void Main()
     {
-        public static void Run()
+        try
         {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "ProtectedSheet";
+
+            // Protect the worksheet (no password for simplicity)
+            sheet.Protect(ProtectionType.All);
+
+            // Attempt to add WordArt (TextEffect) to the protected worksheet
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Protect the worksheet so that drawing objects cannot be edited/added
-                worksheet.Protect(ProtectionType.Objects);
-
-                // Get the shape collection of the worksheet
-                ShapeCollection shapes = worksheet.Shapes;
-
                 // Add WordArt with specified parameters
-                // Parameters: style, text, topRow, top, leftColumn, left, height, width
-                Shape wordArt = shapes.AddWordArt(
-                    PresetWordArtStyle.WordArtStyle1,
-                    "Protected WordArt",
-                    2,      // topRow
-                    0,      // top (pixel offset)
-                    2,      // leftColumn
-                    0,      // left (pixel offset)
-                    100,    // height (pixels)
-                    300     // width (pixels)
-                );
-
+                // Parameters: preset, text, font name, font size, isBold, isItalic,
+                // left, top, width, height, shapeRotation, textRotation
+                sheet.Shapes.AddTextEffect(
+                    MsoPresetTextEffect.TextEffect1,
+                    "Aspose.Cells",
+                    "Arial",
+                    36,
+                    false,
+                    false,
+                    100,
+                    100,
+                    300,
+                    100,
+                    0,
+                    0);
                 Console.WriteLine("WordArt added successfully.");
-
-                // Save the workbook
-                workbook.Save("WordArtProtected.xlsx");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.Shape)
-            {
-                // Handle the specific exception thrown when adding a shape to a protected sheet
-                Console.WriteLine("Failed to add WordArt: " + ex.Message);
-                Console.WriteLine("Exception Type: " + ex.Code);
             }
             catch (Exception ex)
             {
-                // Handle any other unexpected exceptions
-                Console.WriteLine("An unexpected error occurred: " + ex.Message);
+                // Handle any exception thrown due to worksheet protection
+                Console.WriteLine("Error adding WordArt to a protected worksheet:");
+                Console.WriteLine(ex.Message);
+            }
+
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            try
+            {
+                workbook.Save("WordArtProtectedSheet.xlsx");
+                Console.WriteLine("Workbook saved as WordArtProtectedSheet.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error saving workbook:");
+                Console.WriteLine(ex.Message);
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            AddWordArtToProtectedWorksheet.Run();
+            // Catch any unexpected errors
+            Console.WriteLine("Unexpected error:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

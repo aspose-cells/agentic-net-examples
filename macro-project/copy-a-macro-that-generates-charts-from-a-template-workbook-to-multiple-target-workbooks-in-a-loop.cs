@@ -1,112 +1,89 @@
-// Title: Copy VBA chart‑generation macro from a template .xlsm to multiple workbooks using Aspose.Cells for .NET (C#)
-// Description: Loads a macro‑enabled template workbook, iterates through a list of target .xlsm files, copies the entire VBA project with VbaProject.Copy, saves each target as Xlsm to retain the macro, and disposes all workbook objects.
-// Keywords: Aspose.Cells | C# | VBA project copy | macro‑enabled workbook | Xlsm | VbaProject.Copy | chart macro automation | batch macro copy
-// Common Searches: Aspose.Cells copy VBA macro between .xlsm files | C# loop to copy chart macro to multiple workbooks | How to use VbaProject.Copy in Aspose.Cells | Batch copy VBA project to Excel files .NET | Copy macro from template workbook to many files
-// Developer Intent: Duplicate a chart‑creating VBA macro from a template workbook to several macro‑enabled workbooks in a single loop.
-// Use Cases: Distribute a standard chart‑generation macro across monthly report workbooks. | Create new reports on the fly and embed the same macro so every file has identical chart logic. | Update existing workbooks in a folder with the latest VBA macro version in one run.
-// AI Prompts: Write C# code that uses Aspose.Cells to copy a VBA project from a template .xlsm to all .xlsm files in a given directory, with error handling and logging. | Show how to modify the example to copy only selected VBA modules instead of the whole project. | Provide an implementation that records each successful macro copy and captures detailed exceptions when VbaProject.Copy fails.
+// Title: Copy a VBA macro from a macro‑enabled template workbook to multiple Excel files using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .xlsm template, copies its VBA project into each workbook from a list of .xlsx files, and saves the results as .xlsm files with Aspose.Cells. | Write a loop that merges the worksheets of target workbooks into a fresh copy of the macro‑enabled template while preserving the VBA project, and handle missing files gracefully. | Add comprehensive error handling and logging to the macro‑copy process to ensure the VBA code remains intact after each workbook is saved.
+// Common Searches: how to copy VBA macro from a template workbook to several Excel files using Aspose.Cells C# | batch add a macro to multiple .xlsx files and save as .xlsm with Aspose.Cells | preserve VBA project when merging worksheets into a macro‑enabled workbook in .NET | Aspose.Cells example for cloning a workbook and keeping its VBA code | C# loop to process a list of Excel files and attach a macro template
+// Tags: copy VBA project Aspose.Cells | macro‑enabled workbook generation .NET | batch process Excel files Aspose.Cells | merge worksheets into Xlsm using Aspose | preserve VBA when cloning workbook | load macro template Aspose.Cells | save workbook as Xlsm Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsMacroCopyExample
+// The program loads a macro‑enabled .xlsm template, verifies it contains a VBA project, then iterates over a list of target .xlsx files. For each target it creates a fresh copy of the template, clears its original sheets, copies the target's worksheets into the copy, and saves the result as a new .xlsm file, preserving the original macro.
+class Program
 {
-    // Loads a macro‑enabled template workbook, iterates through a list of target .xlsm files, copies the entire VBA project with VbaProject.Copy, saves each target as Xlsm to retain the macro, and disposes all workbook objects.
-    public class MacroCopier
+    static void Main()
     {
-        public static void Run()
+        // Path to the macro‑enabled template workbook
+        string templatePath = "TemplateWithMacro.xlsm";
+
+        // Ensure the template file exists before loading
+        if (!File.Exists(templatePath))
         {
-            // Path to the macro‑enabled template workbook that contains the chart‑generating macro
-            string templatePath = "TemplateWithMacro.xlsm";
+            Console.WriteLine($"Template file not found: {templatePath}");
+            return;
+        }
 
-            // Verify template file exists
-            if (!File.Exists(templatePath))
+        try
+        {
+            // Load the template workbook (must be .xlsm)
+            Workbook templateWorkbook = new Workbook(templatePath);
+
+            // Verify that the template contains a VBA project
+            if (templateWorkbook.VbaProject == null)
             {
-                Console.WriteLine($"Template file not found: {templatePath}");
+                Console.WriteLine("The template workbook does not contain a VBA project.");
                 return;
             }
 
-            Workbook templateWorkbook = null;
-            try
+            // List of target workbooks to which the macro will be added
+            List<string> targetWorkbookPaths = new List<string>
             {
-                // Load the template workbook (must be macro‑enabled)
-                templateWorkbook = new Workbook(templatePath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load template workbook: {ex.Message}");
-                return;
-            }
-
-            // List of target workbook file paths (macro‑enabled extensions)
-            List<string> targetPaths = new List<string>
-            {
-                "Target1.xlsm",
-                "Target2.xlsm",
-                "Target3.xlsm"
+                "Target1.xlsx",
+                "Target2.xlsx",
+                "Target3.xlsx"
             };
 
-            // Loop through each target workbook
-            foreach (string targetPath in targetPaths)
+            foreach (string targetPath in targetWorkbookPaths)
             {
-                Workbook targetWorkbook = null;
-                try
+                // Verify target file existence
+                if (!File.Exists(targetPath))
                 {
-                    // Load existing target workbook or create a new one
-                    if (File.Exists(targetPath))
-                    {
-                        targetWorkbook = new Workbook(targetPath);
-                    }
-                    else
-                    {
-                        targetWorkbook = new Workbook();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loading/creating target workbook '{targetPath}': {ex.Message}");
+                    Console.WriteLine($"Target file not found: {targetPath}");
                     continue;
                 }
 
                 try
                 {
-                    // Copy the VBA project (macro) from the template to the target workbook
-                    targetWorkbook.VbaProject.Copy(templateWorkbook.VbaProject);
+                    // Load the target workbook (may be .xlsx without macros)
+                    Workbook targetWorkbook = new Workbook(targetPath);
 
-                    // Save the target workbook as a macro‑enabled file to preserve the copied macro
-                    targetWorkbook.Save(targetPath, SaveFormat.Xlsm);
-                    Console.WriteLine($"Macro copied and saved to {targetPath}");
+                    // Load a fresh copy of the template for each target to retain the macro
+                    Workbook resultWorkbook = new Workbook(templatePath);
+
+                    // Remove all worksheets from the copied template
+                    resultWorkbook.Worksheets.Clear();
+
+                    // Copy worksheets from the target workbook into the result workbook
+                    foreach (Worksheet ws in targetWorkbook.Worksheets)
+                    {
+                        // AddCopy expects the source worksheet name
+                        resultWorkbook.Worksheets.AddCopy(ws.Name);
+                    }
+
+                    // Save as macro‑enabled workbook (.xlsm) to retain the macro
+                    string outputPath = Path.ChangeExtension(targetPath, ".xlsm");
+                    resultWorkbook.Save(outputPath, SaveFormat.Xlsm);
+                    Console.WriteLine($"Saved macro‑enabled workbook: {outputPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing target '{targetPath}': {ex.Message}");
-                }
-                finally
-                {
-                    targetWorkbook?.Dispose();
+                    Console.WriteLine($"Error processing '{targetPath}': {ex.Message}");
                 }
             }
-
-            // Clean up
-            templateWorkbook?.Dispose();
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            try
-            {
-                MacroCopier.Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Console.WriteLine($"Failed to load template workbook: {ex.Message}");
         }
     }
 }

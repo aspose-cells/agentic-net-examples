@@ -1,10 +1,7 @@
-// Title: C# – Generate Excel Invoice with Line Items, Totals & Company Logo via Aspose.Cells Smart Markers
-// Description: Shows how to create an Excel invoice template using Aspose.Cells smart markers, bind an InvoiceHeader (including a logo image) and a list of InvoiceItem objects, repeat rows for each item, calculate the total with a formula, and save the workbook as an XLSX file.
-// Keywords: Aspose.Cells | smart markers | C# invoice generation | Excel invoice template | logo image insertion | repeating rows | total calculation | WorkbookDesigner | named range | export to PDF
-// Common Searches: Aspose.Cells smart markers invoice example C# | insert image into Excel using Aspose.Cells | repeat rows for line items Aspose.Cells | calculate sum column in generated invoice | create invoice template with WorkbookDesigner
-// Developer Intent: Generate a formatted Excel invoice by populating a smart‑marker template with header fields, a company logo, and a dynamic collection of line items.
-// Use Cases: Automate customer invoicing from order data while preserving brand imagery. | Produce batch invoices for multiple clients using a single reusable template. | Integrate generated invoices into accounting systems with built‑in total calculations. | Export the populated workbook to PDF or other formats for distribution.
-// AI Prompts: Add a tax row after the total in the smart‑marker invoice template. | Provide code to convert the generated invoice workbook to PDF with Aspose.Cells. | Explain how to bind additional data sources, such as a customer address, to the same WorkbookDesigner instance.
+// Title: Create an Excel invoice with dynamic line items, total calculation, and embedded logo using Aspose.Cells smart markers (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells WorkbookDesigner to populate an invoice template with company name, invoice number, date, and a logo image via smart markers. | Show how to define a range smart marker in Aspose.Cells that repeats rows for each invoice item and automatically fills description, quantity, unit price, and amount. | Demonstrate calculating the total amount from a list of invoice items in C# and inserting it into the Excel file using a smart marker.
+// Common Searches: aspnet c# embed logo image in Excel invoice using Aspose.Cells smart markers | aspose.cells repeat rows for a collection with range smart markers c# | generate invoice spreadsheet with totals and line items using Aspose.Cells WorkbookDesigner | c# smart markers image placeholder in Excel template | calculate invoice total in Aspose.Cells template c#
+// Tags: WorkbookDesigner image smart marker | dynamic row replication using smart markers | bind object collection to Excel template C# | invoice total field smart marker | logo image byte array insertion
 
 using System;
 using System.Collections.Generic;
@@ -13,115 +10,103 @@ using Aspose.Cells;
 
 namespace InvoiceGenerator
 {
-    // Data class for invoice header information
-    // Shows how to create an Excel invoice template using Aspose.Cells smart markers, bind an InvoiceHeader (including a logo image) and a list of InvoiceItem objects, repeat rows for each item, calculate the total with a formula, and save the workbook as an XLSX file.
-    public class InvoiceHeader
+    // Data model for invoice
+    // The example builds an Excel workbook, inserts smart markers for static fields (company name, invoice number, date), places an image smart marker for the logo, defines a repeatable range smart marker for line items, binds an InvoiceData object and its Items list to WorkbookDesigner, processes the markers, calculates the total amount, and saves the populated invoice as GeneratedInvoice.xlsx.
+    public class InvoiceData
     {
-        public string? CompanyName { get; set; }
-        public string? InvoiceNumber { get; set; }
-        public DateTime Date { get; set; }
-        public byte[]? Logo { get; set; }   // Image data for the company logo
+        public string CompanyName { get; set; }
+        public string InvoiceNumber { get; set; }
+        public DateTime InvoiceDate { get; set; }
+        public byte[] Logo { get; set; }               // Image data for company logo
+        public List<InvoiceItem> Items { get; set; }   // Collection of line items
+        public decimal TotalAmount { get; set; }       // Calculated total
     }
 
-    // Data class for a single line item
+    // Data model for a line item
     public class InvoiceItem
     {
-        public string? Item { get; set; }
+        public string Description { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
-
-        // Calculated amount (Quantity * Price)
-        public decimal Amount => Quantity * Price;
+        public decimal UnitPrice { get; set; }
+        public decimal Amount => Quantity * UnitPrice;
     }
 
     public class Program
     {
         public static void Main()
         {
-            try
+            // 1. Create a new workbook (template)
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // 2. Place smart markers for static fields
+            sheet.Cells["A1"].PutValue("Company:");
+            sheet.Cells["B1"].PutValue("&=CompanyName");          // Company name
+            sheet.Cells["A2"].PutValue("Invoice #:");           
+            sheet.Cells["B2"].PutValue("&=InvoiceNumber");        // Invoice number
+            sheet.Cells["A3"].PutValue("Date:");
+            sheet.Cells["B3"].PutValue("&=InvoiceDate");          // Invoice date
+
+            // 3. Placeholder for company logo (image smart marker)
+            sheet.Cells["A5"].PutValue("&=$Logo");                // Image marker
+
+            // 4. Header for line items table
+            sheet.Cells["A7"].PutValue("Description");
+            sheet.Cells["B7"].PutValue("Quantity");
+            sheet.Cells["C7"].PutValue("Unit Price");
+            sheet.Cells["D7"].PutValue("Amount");
+
+            // 5. Define a range that will be repeated for each line item
+            //    The range includes the row with smart markers for the item fields
+            //    Name the range "_CellsSmartMarkers" to enable range smart markers
+            sheet.Cells.CreateRange("A8:D18").Name = "_CellsSmartMarkers";
+
+            // 6. Set smart markers inside the range (they will be repeated per item)
+            sheet.Cells["A8"].PutValue("&=$Items.Description");
+            sheet.Cells["B8"].PutValue("&=$Items.Quantity");
+            sheet.Cells["C8"].PutValue("&=$Items.UnitPrice");
+            sheet.Cells["D8"].PutValue("&=$Items.Amount");
+
+            // 7. Place total amount label and smart marker
+            sheet.Cells["C20"].PutValue("Total:");
+            sheet.Cells["D20"].PutValue("&=TotalAmount");
+
+            // 8. Prepare sample data
+            InvoiceData invoice = new InvoiceData
             {
-                // ------------------- Create workbook and template -------------------
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Header section with smart markers
-                cells["A1"].PutValue("Company:");
-                cells["B1"].PutValue("&InvoiceHeader.CompanyName");          // Text marker
-                cells["A2"].PutValue("Invoice #:"); 
-                cells["B2"].PutValue("&InvoiceHeader.InvoiceNumber");       // Text marker
-                cells["A3"].PutValue("Date:");
-                cells["B3"].PutValue("&InvoiceHeader.Date");                // Date marker
-                cells["A1"].PutValue("&=$Logo");                           // Image marker (logo will be placed here)
-
-                // Column titles for line items
-                cells["A5"].PutValue("Item");
-                cells["B5"].PutValue("Quantity");
-                cells["C5"].PutValue("Unit Price");
-                cells["D5"].PutValue("Amount");
-
-                // Row template for line items (will be repeated for each item)
-                cells["A6"].PutValue("&Items.Item");
-                cells["B6"].PutValue("&Items.Quantity");
-                cells["C6"].PutValue("&Items.Price");
-                cells["D6"].PutValue("&Items.Amount");
-
-                // Define the range that contains the repeating row.
-                // The range must be named "_CellsSmartMarkers" when LineByLine is false.
-                Aspose.Cells.Range itemsRange = cells.CreateRange("A6:D6");
-                itemsRange.Name = "_CellsSmartMarkers";
-
-                // Total row (after the items)
-                cells["C10"].PutValue("Total:");
-                cells["D10"].Formula = "SUM(D6:D9)";   // Will sum the generated amount rows
-
-                // ------------------- Prepare data sources -------------------
-                // Load logo image (ensure the file exists at the specified path)
-                byte[]? logoBytes = null;
-                string logoPath = "company_logo.png";
-                if (File.Exists(logoPath))
+                CompanyName = "Acme Corp.",
+                InvoiceNumber = "INV-1001",
+                InvoiceDate = DateTime.Today,
+                // Load logo image bytes (ensure the file exists at the specified path)
+                Logo = File.Exists("logo.png") ? File.ReadAllBytes("logo.png") : new byte[0],
+                Items = new List<InvoiceItem>
                 {
-                    logoBytes = File.ReadAllBytes(logoPath);
+                    new InvoiceItem { Description = "Widget A", Quantity = 5, UnitPrice = 9.99m },
+                    new InvoiceItem { Description = "Widget B", Quantity = 3, UnitPrice = 14.50m },
+                    new InvoiceItem { Description = "Service C", Quantity = 1, UnitPrice = 199.00m }
                 }
+            };
+            // Calculate total amount
+            decimal total = 0;
+            foreach (var item in invoice.Items) total += item.Amount;
+            invoice.TotalAmount = total;
 
-                var header = new InvoiceHeader
-                {
-                    CompanyName = "Acme Corp.",
-                    InvoiceNumber = "INV-1001",
-                    Date = DateTime.Today,
-                    Logo = logoBytes
-                };
-
-                var items = new List<InvoiceItem>
-                {
-                    new InvoiceItem { Item = "Widget A", Quantity = 5, Price = 9.99m },
-                    new InvoiceItem { Item = "Widget B", Quantity = 3, Price = 14.50m },
-                    new InvoiceItem { Item = "Service C", Quantity = 1, Price = 199.00m }
-                };
-
-                // ------------------- Configure WorkbookDesigner -------------------
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                    // LineByLine is obsolete; range smart markers are used via the named range above.
-                };
-
-                // Bind data sources to the smart marker names used in the template
-                designer.SetDataSource("InvoiceHeader", header);
-                designer.SetDataSource("Items", items);
-
-                // Process the smart markers and populate the workbook
-                designer.Process();
-
-                // ------------------- Save the generated invoice -------------------
-                string outputPath = "GeneratedInvoice.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Invoice generated successfully: {outputPath}");
-            }
-            catch (Exception ex)
+            // 9. Initialize WorkbookDesigner with the template workbook
+            WorkbookDesigner designer = new WorkbookDesigner(workbook)
             {
-                Console.Error.WriteLine($"Error generating invoice: {ex.Message}");
-            }
+                // Use range smart markers (LineByLine must be false)
+                LineByLine = false
+            };
+
+            // 10. Bind data sources
+            designer.SetDataSource("Invoice", invoice);          // For static fields and logo
+            designer.SetDataSource("Items", invoice.Items);      // For line items
+
+            // 11. Process smart markers (true = preserve unrecognized markers)
+            designer.Process(true);
+
+            // 12. Save the generated invoice
+            workbook.Save("GeneratedInvoice.xlsx");
         }
     }
 }

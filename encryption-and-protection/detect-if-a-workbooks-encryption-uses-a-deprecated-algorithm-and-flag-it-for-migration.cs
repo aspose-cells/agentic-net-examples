@@ -1,39 +1,105 @@
-// Title: Detect Deprecated Excel Encryption (XOR/Compatible) with Aspose.Cells for .NET
-// Description: Use Aspose.Cells' FileFormatUtil.DetectFileFormat to check if an Excel workbook is encrypted without loading it, then flag files that may rely on the obsolete XOR or Compatible encryption algorithms for migration to stronger protection.
-// Keywords: Aspose.Cells encryption detection | deprecated Excel encryption | XOR encryption Excel | Compatible encryption Excel | FileFormatUtil DetectFileFormat | C# check workbook encryption | Excel security migration .NET | weak encryption upgrade Aspose
-// Common Searches: How to detect deprecated XOR encryption in Excel with Aspose.Cells | Check if an XLSX file uses old Compatible encryption using C# | Aspose.Cells detect encrypted workbook without opening | Identify weak Excel encryption algorithms for migration | C# scan folder for Excel files with obsolete encryption
-// Developer Intent: Determine whether an Excel workbook is encrypted and, if so, flag it for re‑encryption because it might be using the legacy XOR or Compatible algorithms.
-// Use Cases: Quickly verify encryption status of incoming Excel files before processing them. | Generate alerts for security teams to re‑encrypt workbooks that rely on outdated algorithms. | Integrate into automated batch jobs that audit large collections of spreadsheets for compliance.
-// AI Prompts: Write a C# routine that scans a directory, uses Aspose.Cells to detect encrypted Excel files, and lists those that could be using XOR or Compatible encryption. | Provide a method signature that returns true when a workbook is encrypted and suggests migration when the algorithm is deprecated. | Explain the steps to re‑encrypt an Excel file with AES‑256 using Aspose.Cells after detecting a deprecated encryption method.
+// Title: Check for deprecated encryption algorithms in an Excel workbook with Aspose.Cells for .NET and flag for migration
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, detects if it requires a password, and uses reflection to read the Workbook.EncryptionInfo.Algorithm property. | Create a method that evaluates the retrieved algorithm name, logs a warning when it is Xor, RC4, or RC4CryptoAPI, and suggests re‑encrypting the file using AES‑256.
+// Common Searches: aspnet how to determine encryption algorithm of a password protected Excel file using Aspose.Cells | c# detect deprecated RC4 or XOR encryption in Excel workbook with Aspose.Cells | retrieve EncryptionInfo.Algorithm property via reflection Aspose.Cells .NET | flag Excel files using old encryption algorithms for migration to AES256 in C# | check if Excel workbook is encrypted and get algorithm name using Aspose.Cells LoadOptions
+// Tags: identify legacy encryption algorithm Aspose.Cells | read EncryptionInfo.Algorithm via reflection C# | mark workbook with obsolete encryption | recommend AES256 re‑encryption for old Excel files | detect password protected workbook Aspose.Cells
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionCheck
+namespace WorkbookEncryptionChecker
 {
-    // Use Aspose.Cells' FileFormatUtil.DetectFileFormat to check if an Excel workbook is encrypted without loading it, then flag files that may rely on the obsolete XOR or Compatible encryption algorithms for migration to stronger protection.
+    // The sample loads a specified .xlsx file with Aspose.Cells, determines whether it is password‑protected, uses reflection to access the Workbook.EncryptionInfo.Algorithm property, reports the detected algorithm, and issues a warning for deprecated algorithms (Xor, RC4, RC4CryptoAPI) while recommending migration to AES‑256 encryption.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Path to the workbook to be inspected
-            string filePath = "workbook.xlsx";
+            string workbookPath = @"C:\Path\To\Your\Workbook.xlsx";
 
-            // Detect file format and encryption status without opening the workbook
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-
-            // Flag if the workbook is encrypted
-            if (formatInfo.IsEncrypted)
+            // Verify that the file exists to avoid FileNotFoundException
+            if (!File.Exists(workbookPath))
             {
-                // NOTE: Aspose.Cells does not expose the exact encryption algorithm directly.
-                // Deprecated algorithms are XOR and Compatible (Excel 97/2000).
-                // If the workbook is encrypted, further analysis may be required to
-                // determine the algorithm. Here we flag it for migration.
-                Console.WriteLine($"[ALERT] The workbook \"{filePath}\" is encrypted. Verify if it uses a deprecated algorithm (XOR or Compatible) and migrate to a stronger encryption.");
+                Console.WriteLine($"File not found: {workbookPath}");
+                return;
             }
-            else
+
+            try
             {
-                Console.WriteLine($"The workbook \"{filePath}\" is not encrypted.");
+                // Attempt to load the workbook without a password
+                LoadOptions loadOptions = new LoadOptions();
+                Workbook workbook = new Workbook(workbookPath, loadOptions);
+
+                // If loading succeeds, the workbook is not encrypted
+                Console.WriteLine("The workbook is not encrypted.");
+                return;
+            }
+            catch (CellsException ex) when (ex.Message.Contains("password", StringComparison.OrdinalIgnoreCase))
+            {
+                // The exception indicates that a password is required → workbook is encrypted
+                Console.WriteLine("The workbook is encrypted (password protected).");
+
+                // Try to obtain encryption details via reflection (avoids compile‑time dependency on specific API versions)
+                try
+                {
+                    // Load the workbook again, this time allowing Aspose.Cells to expose encryption info
+                    LoadOptions loadOptions = new LoadOptions { Password = "" };
+                    Workbook encryptedWorkbook = new Workbook(workbookPath, loadOptions);
+
+                    // Use reflection to get the EncryptionInfo property
+                    PropertyInfo encInfoProp = typeof(Workbook).GetProperty("EncryptionInfo", BindingFlags.Public | BindingFlags.Instance);
+                    if (encInfoProp != null)
+                    {
+                        object encInfo = encInfoProp.GetValue(encryptedWorkbook);
+                        if (encInfo != null)
+                        {
+                            // Get the Algorithm property from the EncryptionInfo object
+                            PropertyInfo algorithmProp = encInfo.GetType().GetProperty("Algorithm", BindingFlags.Public | BindingFlags.Instance);
+                            object algorithmValue = algorithmProp?.GetValue(encInfo);
+                            string algorithmName = algorithmValue?.ToString() ?? "Unknown";
+
+                            Console.WriteLine($"Encryption algorithm detected: {algorithmName}");
+
+                            // Determine if the algorithm is deprecated (based on name)
+                            bool isDeprecated = algorithmName.Equals("Xor", StringComparison.OrdinalIgnoreCase) ||
+                                                algorithmName.Equals("RC4", StringComparison.OrdinalIgnoreCase) ||
+                                                algorithmName.Equals("RC4CryptoAPI", StringComparison.OrdinalIgnoreCase);
+
+                            if (isDeprecated)
+                            {
+                                Console.WriteLine("WARNING: The workbook uses a deprecated encryption algorithm. " +
+                                                  "Consider re‑encrypting it with a modern algorithm (e.g., AES256).");
+                            }
+                            else
+                            {
+                                Console.WriteLine("The encryption algorithm is up‑to‑date.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unable to retrieve encryption information.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("EncryptionInfo property not available in this Aspose.Cells version.");
+                    }
+                }
+                catch (Exception innerEx)
+                {
+                    Console.WriteLine($"Failed to retrieve encryption details: {innerEx.Message}");
+                }
+            }
+            catch (CellsException ex)
+            {
+                // Handles other Aspose.Cells related errors
+                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // General exception handling
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

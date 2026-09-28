@@ -1,73 +1,44 @@
-// Title: Convert CSV to PDF in C# with Aspose.Cells ConversionUtility
-// Description: Demonstrates how to create a temporary CSV file, validate its presence, load it using LoadOptions (CSV format), convert it to a PDF with PdfSaveOptions via Aspose.Cells ConversionUtility, and clean up the source file—all in a single C# console program.
-// Keywords: Aspose.Cells | C# CSV to PDF | ConversionUtility | PdfSaveOptions | LoadOptions CSV | CSV to PDF conversion example | temporary file cleanup | Aspose.Cells API | office add‑ins rendering | interactive PDF controls
-// Common Searches: Aspose.Cells convert CSV to PDF C# | C# code sample for CSV to PDF using Aspose | How to use ConversionUtility with CSV input | LoadOptions CSV Aspose.Cells example | PdfSaveOptions usage in Aspose.Cells | Delete temporary CSV after conversion C#
-// Developer Intent: The developer needs a quick, reliable way to transform CSV data into a PDF document using Aspose.Cells in a C# application.
-// Use Cases: Generate printable PDF reports directly from exported CSV data. | Automate nightly batch conversion of CSV logs to PDF archives while removing the original files. | Create PDF attachments for email campaigns from dynamically generated CSV content.
-// AI Prompts: Show C# code that adds custom page margins and orientation when converting CSV to PDF with Aspose.Cells. | Explain how to embed clickable hyperlinks or form fields in the PDF generated from a CSV file. | Provide performance tips for converting large CSV files (100k+ rows) to PDF using Aspose.Cells.
+// Title: Convert a CSV file to PDF with Aspose.Cells for .NET while handling missing EnableCellControls for Office Add‑In interactivity
+// AI Prompts: Generate C# code that reads a CSV file using Aspose.Cells LoadOptions, validates the file's existence, and saves it as a PDF with comprehensive exception handling. | Explain why the EnableCellControls property may be unavailable in certain Aspose.Cells releases and suggest workarounds for preserving Office Add‑In interactive controls during PDF export. | Show how to enhance the CSV‑to‑PDF routine to log detailed error information to a file and return an exit status instead of writing messages to the console.
+// Common Searches: Aspose.Cells C# convert CSV to PDF with error handling | How to preserve Office Add‑In controls when exporting a workbook to PDF using Aspose.Cells | EnableCellControls property missing in Aspose.Cells version alternatives | LoadOptions CSV example for Aspose.Cells .NET | Check file existence before converting CSV to PDF with Aspose.Cells
+// Tags: Aspose.Cells CSV to PDF conversion C# | LoadOptions CSV Aspose.Cells | SaveFormat.Pdf Aspose.Cells usage | EnableCellControls unavailable Aspose.Cells | Office Add‑In interactive controls PDF export
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Utility;
-using Aspose.Cells.Saving;
 
-namespace CsvToPdfWithInteractiveControls
+// The example validates the presence of an input CSV file, loads it into an Aspose.Cells Workbook using LoadOptions with LoadFormat.Csv, and saves the workbook as a PDF. It includes try‑catch error handling and notes that the EnableCellControls property for preserving Office Add‑In interactive controls is not available in the referenced Aspose.Cells version.
+class Program
 {
-    // Demonstrates how to create a temporary CSV file, validate its presence, load it using LoadOptions (CSV format), convert it to a PDF with PdfSaveOptions via Aspose.Cells ConversionUtility, and clean up the source file—all in a single C# console program.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Paths for the source CSV and the resulting PDF
-            string csvPath = "sample.csv";
-            string pdfPath = "output.pdf";
+            const string inputPath = "input.csv";
+            const string outputPath = "output.pdf";
 
-            // Create a simple CSV file for demonstration
-            File.WriteAllText(csvPath,
-                "Name,Age,Score\n" +
-                "Alice,30,85\n" +
-                "Bob,25,92\n" +
-                "Charlie,28,78");
-
-            try
+            // Verify that the input CSV file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Verify that the CSV file exists before attempting conversion
-                if (!File.Exists(csvPath))
-                {
-                    throw new FileNotFoundException("The source CSV file was not found.", csvPath);
-                }
-
-                // LoadOptions specify that the source file is a CSV
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
-
-                // SaveOptions for PDF (no special properties needed for this conversion)
-                PdfSaveOptions saveOptions = new PdfSaveOptions();
-
-                // Convert CSV directly to PDF using the utility method
-                ConversionUtility.Convert(csvPath, loadOptions, pdfPath, saveOptions);
-
-                Console.WriteLine($"CSV file successfully converted to PDF: {pdfPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Conversion failed: {ex.Message}");
-            }
-            finally
-            {
-                // Clean up the temporary CSV file
-                if (File.Exists(csvPath))
-                {
-                    try
-                    {
-                        File.Delete(csvPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to delete temporary CSV file: {ex.Message}");
-                    }
-                }
-            }
+
+            // Load the CSV file into a workbook using appropriate load options
+            var loadOptions = new LoadOptions(LoadFormat.Csv);
+            var workbook = new Workbook(inputPath, loadOptions);
+
+            // NOTE: The property to preserve interactive controls (EnableCellControls) is not
+            // available in the referenced Aspose.Cells version, so it is omitted.
+
+            // Save the workbook as a PDF document
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Successfully converted '{inputPath}' to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

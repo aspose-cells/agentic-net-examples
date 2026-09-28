@@ -1,53 +1,60 @@
-// Title: Aspose.Cells .NET: Verify that Range.Address equals "A1:D4" (C#)
-// Description: Creates a workbook, defines a range A1:D4 using Cells.CreateRange, reads the Range.Address property, compares it case‑insensitively with the expected "A1:D4", outputs the result, and optionally saves the file. Demonstrates how to confirm the address format before further processing.
-// Keywords: Aspose.Cells C# range address | Range.Address validation | A1:D4 address check | Aspose.Cells .NET example | verify range address
-// Common Searches: Aspose.Cells verify range address | Range.Address returns A1:D4 | C# Aspose.Cells check range address format | How to get range address in Aspose.Cells | Validate range address Aspose.Cells .NET
-// Developer Intent: Confirm that the Range.Address property returns the exact string "A1:D4" after creating the range.
-// Use Cases: Ensure correct range reference before applying formatting or formulas. | Add a sanity check in automated workbook generation pipelines. | Validate mapping between external data sources and worksheet cells.
-// AI Prompts: Generate a NUnit test that asserts Range.Address is "A1:D4" for a range created with cells.CreateRange. | Show C# code to compare Range.Address case‑insensitively and log detailed differences. | Provide a method that validates the address of a dynamically sized range at runtime using Aspose.Cells.
+// Title: Validate that an Aspose.Cells range returns the A1:D4 address string in C#
+// AI Prompts: Write C# code using Aspose.Cells to create a worksheet, define a range from A1 to D4, fill it with data, and assert that the Range.Address property equals "A1:D4" with a case‑insensitive check. | Show how to retrieve the A1‑style address of an Aspose.Cells range and compare it to an expected value, printing a success or failure message. | Provide a concise Aspose.Cells example that demonstrates verifying the address string of a newly created range.
+// Common Searches: C# Aspose.Cells verify range address is A1:D4 | How to assert Range.Address equals expected string in Aspose.Cells | Check Excel range address format using Aspose.Cells C# example
+// Tags: Aspose.Cells range address validation | C# Aspose.Range.Address comparison | A1 style address check .NET | Excel range address verification | Aspose.Cells create range A1:D4
 
 using System;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Creates a workbook, defines a range A1:D4 using Cells.CreateRange, reads the Range.Address property, compares it case‑insensitively with the expected "A1:D4", outputs the result, and optionally saves the file. Demonstrates how to confirm the address format before further processing.
+// // Demonstrates creating a workbook, defining a range A1:D4 with Aspose.Cells, optionally populating it, retrieving the range's Address property, and confirming it matches the expected "A1:D4" string.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Create a range that spans from A1 to D4 (use fully qualified type to avoid ambiguity)
-            Aspose.Cells.Range range = cells.CreateRange("A1:D4");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Retrieve the address of the created range
-            string actualAddress = range.Address;
+            // Define a range covering cells A1 to D4
+            AsposeRange range = sheet.Cells.CreateRange("A1", "D4");
 
-            // Expected address string
-            string expectedAddress = "A1:D4";
-
-            // Validate that the actual address matches the expected format
-            if (actualAddress.Equals(expectedAddress, StringComparison.OrdinalIgnoreCase))
+            // Fill the range with sample data (optional)
+            int value = 1;
+            for (int row = 0; row < range.RowCount; row++)
             {
-                Console.WriteLine($"Address validation passed: {actualAddress}");
+                for (int col = 0; col < range.ColumnCount; col++)
+                {
+                    range[row, col].PutValue(value++);
+                }
+            }
+
+            // Retrieve the address of the range in A1 style
+            string address = range.Address;
+
+            // Expected address
+            string expected = "A1:D4";
+
+            // Validate the address
+            if (address.Equals(expected, StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"Success: Range address is '{address}'.");
             }
             else
             {
-                Console.WriteLine($"Address validation failed. Expected: {expectedAddress}, Actual: {actualAddress}");
+                Console.WriteLine($"Failure: Expected '{expected}' but got '{address}'.");
             }
 
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            string outputPath = "RangeAddressValidation.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            // Optionally save the workbook (not required for validation)
+            // workbook.Save("output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

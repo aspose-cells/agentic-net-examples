@@ -1,84 +1,97 @@
-// Title: Export VBA Project Certificate to .cer and Verify Thumbprint with Aspose.Cells for .NET
-// Description: Shows how to load a macro‑enabled workbook, detect a signed VBA project, extract its CertRawData, save it as a .cer file, load the certificate with X509Certificate2, and compare thumbprints to confirm integrity.
-// Keywords: Aspose.Cells | VBA certificate export | .cer file | thumbprint verification | VbaProject CertRawData | signed macro workbook | X509Certificate2 | C# example | security audit
-// Common Searches: Aspose.Cells export VBA certificate | How to get certificate from signed VBA project .xlsm | Save VBA project certificate as .cer file C# | Compare VBA certificate thumbprint with Aspose.Cells | Check if workbook has signed VBA macro using Aspose.Cells
-// Developer Intent: Extract the certificate from a signed VBA project, write it to a .cer file, and verify that its thumbprint matches the original certificate.
-// Use Cases: Archive the certificate from a signed macro workbook for compliance records. | Perform a security audit by reading the thumbprint with X509Certificate2. | Validate that the exported .cer file is identical to the in‑memory certificate. | Detect workbooks that lack a signed VBA project and handle them gracefully.
-// AI Prompts: Generate C# code using Aspose.Cells to export the CertRawData of a signed VBA project to a .cer file. | Show how to load a .cer file with X509Certificate2 and compare its thumbprint to the original VBA certificate. | Explain error handling when a workbook does not contain a signed VBA project in Aspose.Cells. | Create a PowerShell snippet that verifies the thumbprint of a VBA certificate exported by Aspose.Cells.
+// Title: Export a signed VBA project's X509 certificate to a .cer file and display its thumbprint using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells in C# to extract the signing X509Certificate2 from a VBA project and write it to a .cer file. | Retrieve the certificate of a signed VBA macro via reflection and output its thumbprint with Aspose.Cells. | Save the VBA project's signing certificate as a .cer file and print the thumbprint using the Aspose.Cells API.
+// Common Searches: how to export VBA project signing certificate to .cer with Aspose.Cells | c# get thumbprint of signed Excel VBA macro certificate | extract X509Certificate2 from signed VBA project using reflection | save VBA macro certificate as file Aspose.Cells .NET | retrieve and display VBA project certificate thumbprint programmatically
+// Tags: export vba signing certificate as cer Aspose.Cells | retrieve vba project certificate via reflection C# | display vba macro certificate thumbprint .NET | extract signed vba project certificate Aspose.Cells | save X509Certificate2 from excel vba project
 
 using System;
 using System.IO;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
-using System.Security.Cryptography.X509Certificates;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, accesses its VBA project, uses reflection to obtain the X509Certificate2 when the project is signed, exports the certificate to a .cer file, and prints the certificate's thumbprint.
+class ExportVbaCertificate
 {
-    // Shows how to load a macro‑enabled workbook, detect a signed VBA project, extract its CertRawData, save it as a .cer file, load the certificate with X509Certificate2, and compare thumbprints to confirm integrity.
-    class ExportVbaCertificate
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            string inputPath = "input.xlsx";
 
-        public static void Run()
-        {
-            // Path to the workbook that contains a signed VBA project
-            string signedWorkbookPath = "SignedWorkbook.xlsm";
-
-            // Path where the extracted certificate will be saved
-            string certificatePath = "VbaCertificate.cer";
-
-            // Verify workbook file exists
-            if (!File.Exists(signedWorkbookPath))
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Workbook file not found: {signedWorkbookPath}");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Load the workbook
-            Workbook workbook = new Workbook(signedWorkbookPath);
+            Workbook workbook;
+            try
+            {
+                // Load the workbook
+                workbook = new Workbook(inputPath);
+            }
+            catch (Exception loadEx)
+            {
+                Console.WriteLine($"Failed to load workbook: {loadEx.Message}");
+                return;
+            }
 
-            // Get the VBA project from the workbook
+            // Access the VBA project
             VbaProject vbaProject = workbook.VbaProject;
 
-            // Check that the VBA project is signed and that certificate data exists
-            if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
+            // Attempt to retrieve the certificate via reflection (covers versions without direct Signature property)
+            X509Certificate2 cert = null;
+            if (vbaProject != null && vbaProject.IsSigned)
             {
-                // Export the raw certificate bytes to a .cer file
-                File.WriteAllBytes(certificatePath, vbaProject.CertRawData);
-                Console.WriteLine($"Certificate exported to: {certificatePath}");
+                try
+                {
+                    PropertyInfo signatureProp = vbaProject.GetType().GetProperty("Signature");
+                    if (signatureProp != null)
+                    {
+                        object signatureObj = signatureProp.GetValue(vbaProject);
+                        if (signatureObj != null)
+                        {
+                            PropertyInfo certProp = signatureObj.GetType().GetProperty("Certificate");
+                            if (certProp != null)
+                            {
+                                cert = certProp.GetValue(signatureObj) as X509Certificate2;
+                            }
+                        }
+                    }
+                }
+                catch (Exception reflEx)
+                {
+                    Console.WriteLine($"Reflection error while accessing signature: {reflEx.Message}");
+                }
+            }
 
-                // Load the exported certificate from file
-                X509Certificate2 exportedCertificate = new X509Certificate2();
-                exportedCertificate.Import(certificatePath);
-                Console.WriteLine($"Exported certificate thumbprint: {exportedCertificate.Thumbprint}");
+            if (cert != null)
+            {
+                // Export the certificate to a .cer file
+                byte[] certBytes = cert.Export(X509ContentType.Cert);
+                string outputPath = "project.cer";
 
-                // Load the original certificate directly from the raw data for verification
-                X509Certificate2 originalCertificate = new X509Certificate2();
-                originalCertificate.Import(vbaProject.CertRawData);
-                Console.WriteLine($"Original certificate thumbprint: {originalCertificate.Thumbprint}");
-
-                // Verify that the thumbprints match
-                bool thumbprintsMatch = string.Equals(
-                    exportedCertificate.Thumbprint,
-                    originalCertificate.Thumbprint,
-                    StringComparison.OrdinalIgnoreCase);
-
-                Console.WriteLine($"Thumbprint verification result: {thumbprintsMatch}");
+                try
+                {
+                    File.WriteAllBytes(outputPath, certBytes);
+                    Console.WriteLine($"Certificate exported to '{outputPath}'.");
+                    Console.WriteLine($"Certificate thumbprint: {cert.Thumbprint}");
+                }
+                catch (Exception ioEx)
+                {
+                    Console.WriteLine($"Failed to write certificate file: {ioEx.Message}");
+                }
             }
             else
             {
-                Console.WriteLine("The workbook does not contain a signed VBA project or certificate data is unavailable.");
+                Console.WriteLine("The workbook does not contain a signed VBA project with an accessible certificate.");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

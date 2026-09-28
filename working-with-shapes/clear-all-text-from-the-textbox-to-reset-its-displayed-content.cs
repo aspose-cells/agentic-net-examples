@@ -1,10 +1,7 @@
-// Title: Clear TextBox Content in an Excel Worksheet using Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a TextBox shape, then empties its Text property to reset the displayed content while preserving size, position, and formatting, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | clear textbox | reset textbox text | empty TextBox | Excel shape | worksheet TextBox | remove text from shape | Aspose.Cells example
-// Common Searches: Aspose.Cells clear textbox text C# | How to empty a TextBox shape in Excel with Aspose.Cells | Reset TextBox content programmatically Aspose.Cells .NET | Remove text from worksheet TextBox using Aspose.Cells
-// Developer Intent: Remove all text from a TextBox shape in an Excel worksheet while keeping its formatting intact.
-// Use Cases: Clear placeholder text after generating a report so the next run starts with a blank box. | Reset a template TextBox before reusing the workbook for new data. | Strip user‑entered notes from a TextBox before exporting the final Excel file. | Prepare a clean workbook for downstream processing by emptying all TextBox contents.
-// AI Prompts: Generate C# code that clears the Text property of every TextBox in an Aspose.Cells workbook without changing size or style. | Show how to empty a specific TextBox by index in a worksheet using Aspose.Cells for .NET. | Provide an Aspose.Cells .NET snippet that clears a TextBox, saves the workbook, and logs the full file path.
+// Title: How to clear text from all textbox shapes in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, iterates over each Shape on a worksheet, sets the Shape.Text property to an empty string for text‑enabled shapes, and saves the modified workbook. | Create a robust Aspose.Cells example that removes the displayed content of every textbox shape, includes try‑catch handling for shapes that do not support text, and writes the result to a specified output path.
+// Common Searches: Aspose.Cells C# clear textbox shape text in Excel file | remove all textbox content from worksheet using Aspose.Cells .NET | iterate over worksheet shapes and reset Text property with Aspose.Cells | how to delete text inside Excel shapes programmatically in C#
+// Tags: empty shape Text property Aspose.Cells | iterate worksheet shapes Aspose.Cells | reset shape text .xlsx C# | skip non‑text shapes Aspose.Cells
 
 using System;
 using System.IO;
@@ -13,42 +10,60 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsExample
 {
-    // Creates a workbook, adds a TextBox shape, then empties its Text property to reset the displayed content while preserving size, position, and formatting, and saves the file.
+    // The program loads an existing Excel workbook, loops through every shape on the first worksheet, empties the Text property of shapes that support text (ignoring others), and saves the cleaned workbook to a new file.
     class Program
     {
         static void Main(string[] args)
         {
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Verify that the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Access the first worksheet
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed)
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Add a textbox at row 1, column 1 with width 200 and height 100 (points)
-                int textBoxIndex = worksheet.TextBoxes.Add(1, 1, 200, 100);
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    try
+                    {
+                        // Clear the displayed text for any shape that supports text
+                        shape.Text = string.Empty;
+                    }
+                    catch (Exception shapeEx)
+                    {
+                        // Log shape-specific errors without stopping the whole process
+                        Console.WriteLine($"Error processing shape: {shapeEx.Message}");
+                    }
+                }
 
-                // Retrieve the added textbox
-                TextBox textBox = worksheet.TextBoxes[textBoxIndex];
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Set initial text (optional demonstration)
-                textBox.Text = "Initial content of the textbox";
-
-                // Clear the text
-                textBox.Text = string.Empty;
-
-                // Define output file path
-                string outputPath = "ClearedTextBox.xlsx";
-
-                // Save the workbook
+                // Save the workbook with the cleared textbox content
                 workbook.Save(outputPath);
-
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Handle any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

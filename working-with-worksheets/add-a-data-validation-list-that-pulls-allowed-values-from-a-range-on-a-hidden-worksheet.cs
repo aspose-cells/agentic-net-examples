@@ -1,73 +1,89 @@
-// Title: Aspose.Cells .NET: Create a data‑validation drop‑down list from a hidden worksheet (C#)
-// Description: This example shows how to programmatically add a hidden worksheet, fill it with option values, and attach a list‑type data validation to cell B2 on a visible sheet. The validation’s Formula1 references the hidden range (HiddenValues!$A$1:$A$5), providing an in‑cell drop‑down while keeping the source list concealed. The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | C# | .NET | data validation | list validation | hidden worksheet | drop‑down list | Excel automation | Formula1 reference | CellArea | validation range | programmatic Excel | Aspose.Cells API
-// Common Searches: Aspose.Cells C# hidden sheet validation list | Create dropdown list from hidden range using Aspose.Cells | Aspose.Cells data validation list formula hidden worksheet | How to hide worksheet and use it for validation in Aspose.Cells | Aspose.Cells list validation reference another sheet
-// Developer Intent: Add a list‑type data validation to a cell that pulls its allowed values from a range on a hidden worksheet.
-// Use Cases: Provide users with a clean data‑entry interface while storing the source list on a hidden sheet to prevent accidental edits. | Build Excel templates where lookup tables are hidden but still drive validation rules for consistent input. | Generate workbooks programmatically that enforce predefined choices without exposing the reference data to end users.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a hidden worksheet, populates it with options, and applies a list validation to a cell referencing that hidden range. | Explain step‑by‑step how to hide a worksheet and reference its cells in a data‑validation formula using Aspose.Cells for .NET. | Show how to modify the validation source range dynamically based on values added to a hidden sheet in Aspose.Cells.
+// Title: Add a list‑type data validation dropdown sourced from a hidden worksheet range using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a hidden worksheet, populates it with allowed values, and applies a list‑type validation to a target range on a visible sheet. | Demonstrate how to build a formula referencing a hidden sheet range for a dropdown validation in Aspose.Cells. | Provide a loop that adds list validation to each cell in a column, using the hidden list length to construct the range address dynamically.
+// Common Searches: how to create a dropdown list in Excel using Aspose.Cells C# from a hidden sheet | Aspose.Cells data validation list referencing another worksheet | C# hide worksheet and use its cells for validation list with Aspose.Cells | set list validation range dynamically based on hidden sheet values in Aspose.Cells | apply data validation to multiple cells with dropdown from hidden sheet using Aspose.Cells .NET
+// Tags: list validation hidden worksheet Aspose.Cells | C# Excel dropdown from hidden sheet Aspose.Cells | dynamic validation range based on hidden list Aspose.Cells | programmatic data validation referencing another sheet .NET | Aspose.Cells create hidden sheet for dropdown list
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, adds a hidden worksheet named "HiddenList" filled with five options, builds a range address for those cells, and applies a list‑type data validation with an in‑cell dropdown to cells B2:B10 on the visible "DataEntry" sheet. The workbook is saved as DataValidationWithHiddenList.xlsx.
+class Program
 {
-    // This example shows how to programmatically add a hidden worksheet, fill it with option values, and attach a list‑type data validation to cell B2 on a visible sheet. The validation’s Formula1 references the hidden range (HiddenValues!$A$1:$A$5), providing an in‑cell drop‑down while keeping the source list concealed. The workbook is saved as an XLSX file.
-    public class ValidationFromHiddenSheet
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // -------------------------------------------------
-            // 1. Prepare the hidden worksheet with allowed values
-            // -------------------------------------------------
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenValues");
-            hiddenSheet.IsVisible = false; // hide the sheet
+            // Get the first (visible) worksheet and rename it
+            Worksheet dataSheet = workbook.Worksheets[0];
+            dataSheet.Name = "DataEntry";
 
-            // Populate the hidden range A1:A5 with list items
-            for (int i = 0; i < 5; i++)
+            // Add a hidden worksheet that will hold the allowed list values
+            int hiddenSheetIndex = workbook.Worksheets.Add();
+            Worksheet hiddenSheet = workbook.Worksheets[hiddenSheetIndex];
+            hiddenSheet.Name = "HiddenList";
+            hiddenSheet.IsVisible = false; // hide the sheet from the user
+
+            // Populate the hidden sheet with the list items (e.g., A1:A5)
+            string[] allowedValues = { "Option1", "Option2", "Option3", "Option4", "Option5" };
+            for (int i = 0; i < allowedValues.Length; i++)
             {
-                hiddenSheet.Cells[i, 0].PutValue($"Option{i + 1}");
+                hiddenSheet.Cells[i, 0].PutValue(allowedValues[i]); // column A
             }
 
-            // -------------------------------------------------
-            // 2. Set up the visible worksheet where validation will be applied
-            // -------------------------------------------------
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "DataEntry";
+            // Build the address of the range that contains the list on the hidden sheet
+            string listRange = $"'{hiddenSheet.Name}'!$A$1:$A${allowedValues.Length}";
 
-            // Define the cell (e.g., B2) that will have the drop‑down list
-            CellArea validationArea = CellArea.CreateCellArea(1, 1, 1, 1); // Row 2, Column 2 (B2)
+            // Define the target range on the visible sheet where the validation will be applied (e.g., B2:B10)
+            int startRow = 1;   // Row 2 (zero‑based index)
+            int endRow = 9;     // Row 10
+            int targetColumn = 1; // Column B (zero‑based index)
 
-            // Add a new validation to the collection for the defined area
-            int validationIndex = visibleSheet.Validations.Add(validationArea);
-            Validation validation = visibleSheet.Validations[validationIndex];
+            // Apply data validation to each cell in the target range
+            for (int row = startRow; row <= endRow; row++)
+            {
+                // Define the cell area for the current cell
+                CellArea area = new CellArea
+                {
+                    StartRow = row,
+                    StartColumn = targetColumn,
+                    EndRow = row,
+                    EndColumn = targetColumn
+                };
 
-            // Configure the validation as a List that references the hidden range
-            validation.Type = ValidationType.List;
-            validation.Formula1 = "HiddenValues!$A$1:$A$5"; // reference to hidden sheet
-            validation.InCellDropDown = true; // show the drop‑down arrow
+                // Add a new validation rule for the defined area (Add returns the index)
+                int validationIndex = dataSheet.Validations.Add(area);
+                Validation validation = dataSheet.Validations[validationIndex];
 
-            // -------------------------------------------------
-            // 3. Save the workbook
-            // -------------------------------------------------
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "DataValidationFromHiddenSheet.xlsx");
+                validation.Type = ValidationType.List;          // List validation
+                validation.Operator = OperatorType.None;
+                validation.Formula1 = listRange;                // Reference to hidden list range
+                validation.InCellDropDown = true;               // Show dropdown arrow
+                validation.ShowError = true;                    // Show error dialog on invalid entry
+                validation.ErrorTitle = "Invalid Selection";
+                validation.ErrorMessage = "Please select a value from the list.";
+                validation.AlertStyle = ValidationAlertType.Stop;
+            }
+
+            // Determine output path and ensure the directory exists
+            string outputPath = "DataValidationWithHiddenList.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

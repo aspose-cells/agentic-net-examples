@@ -1,79 +1,50 @@
-// Title: Create a Pivot Chart Linked to a Pivot Table and Export to ODS with Aspose.Cells for .NET
-// Description: Shows how to build a workbook, add sample data, create a pivot table, generate a column chart linked to that table, configure OdsSaveOptions to keep pivot data, and save the result as an ODS document using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# pivot chart | pivot table ODS export | OdsSaveOptions | pivot chart Aspose | export to ODS | .NET LibreOffice compatibility | chart from pivot table | Aspose.Cells .NET | pivot chart linked to pivot table
-// Common Searches: Aspose.Cells create pivot chart C# | Export pivot table and chart to ODS using Aspose | Set PivotSource for chart Aspose.Cells | Save workbook with pivot tables as ODS | C# OdsSaveOptions include pivot tables | Link chart to pivot table in Aspose.Cells
-// Developer Intent: Generate a pivot chart tied to a pivot table and save the workbook as an ODS file.
-// Use Cases: Produce a financial summary workbook where a pivot table aggregates sales data and a column chart visualizes totals, then export to ODS for LibreOffice sharing. | Automate a reporting pipeline that adds a pivot table and its associated chart to a template workbook and outputs an ODS file for downstream processing. | Create an ODS package containing both pivot data and a linked chart for seamless exchange with open‑source office suites.
-// AI Prompts: Write C# code with Aspose.Cells that creates a pivot table from a range, adds a column chart linked to the pivot table, and saves the workbook as an ODS file preserving the pivot structures. | Explain how to configure OdsSaveOptions in Aspose.Cells to ensure pivot tables and pivot charts are retained when exporting to ODS. | Show the steps to set the PivotSource property of a Chart object to reference a specific pivot table in Aspose.Cells for .NET.
+// Title: Create a pivot table with a linked column chart and export both to an ODS file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that builds a pivot table from a data range, adds a column chart linked via Chart.PivotSource, refreshes the chart data, and saves the workbook as an ODS file while preserving the pivot information. | Change the chart type to a line chart in the existing Aspose.Cells example, keep the pivot‑chart linkage, and export the workbook to ODS. | Add a second numeric field to the pivot table, update the chart series to reflect the new field, and save the workbook to ODS with all pivot data included.
+// Common Searches: how to link a pivot chart to a pivot table using Aspose.Cells C# | export pivot table and chart to ODS format with Aspose.Cells | Aspose.Cells OdsSaveOptions include pivot tables example | create column chart from pivot table programmatically Aspose.Cells | C# sample for saving workbook with pivot chart to ODS
+// Tags: Aspose.Cells pivot table creation C# | Chart.PivotSource linking pivot chart | export workbook to ODS with pivot data | OdsSaveOptions include pivot tables | column chart from pivot table Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Ods; // for OdsSaveOptions
+using Aspose.Cells.Ods;
 
-// Shows how to build a workbook, add sample data, create a pivot table, generate a column chart linked to that table, configure OdsSaveOptions to keep pivot data, and save the result as an ODS document using Aspose.Cells for C#.
-public class PivotChartToOds
+// The example demonstrates how to generate a workbook, populate it with sample data, create a pivot table, add a column chart linked to that pivot via the Chart.PivotSource property, refresh the chart, configure OdsSaveOptions to retain pivot tables, and finally save the workbook as an ODS file.
+class PivotChartToOds
 {
-    public static void Main(string[] args)
-    {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
+    static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Name = "Data";
 
         // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B3"].PutValue(20);
-        worksheet.Cells["A4"].PutValue("A");
-        worksheet.Cells["B4"].PutValue(30);
-        worksheet.Cells["A5"].PutValue("B");
-        worksheet.Cells["B5"].PutValue(40);
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["A2"].PutValue("A");
+        sheet.Cells["B2"].PutValue(10);
+        sheet.Cells["A3"].PutValue("B");
+        sheet.Cells["B3"].PutValue(20);
+        sheet.Cells["A4"].PutValue("A");
+        sheet.Cells["B4"].PutValue(30);
+        sheet.Cells["A5"].PutValue("B");
+        sheet.Cells["B5"].PutValue(40);
 
         // Add a pivot table based on the data range
-        int pivotIndex = worksheet.PivotTables.Add("=A1:B5", "D1", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+        int pivotIndex = sheet.PivotTables.Add("=A1:B5", "D1", "PivotTable1");
+        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
         pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
         pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-        // Add a chart and link it to the pivot table (pivot chart)
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
-        Chart chart = worksheet.Charts[chartIndex];
-        chart.PivotSource = "PivotTable1";   // Set the pivot source for the chart
-        chart.RefreshPivotData();            // Refresh chart data from the pivot table
+        // Add a column chart and link it to the pivot table
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 25, 15);
+        Chart chart = sheet.Charts[chartIndex];
+        chart.PivotSource = "PivotTable1";          // Link chart to the pivot table (Chart.PivotSource rule)
+        chart.RefreshPivotData();                  // Refresh chart data from the pivot table (Chart.RefreshPivotData rule)
 
-        // Prepare ODS save options (include pivot tables)
-        OdsSaveOptions saveOptions = new OdsSaveOptions
-        {
-            IgnorePivotTables = false // Ensure pivot tables are saved
-        };
-
-        // Ensure output directory exists
-        string outputPath = "PivotChartDemo.ods";
-        string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-        if (!Directory.Exists(outputDir))
-        {
-            Directory.CreateDirectory(outputDir);
-        }
-
-        // Save the workbook as an ODS file with the specified options
-        workbook.Save(outputPath, saveOptions);
-        Console.WriteLine($"Workbook saved to {outputPath}");
+        // Save the workbook as ODS, ensuring pivot tables are included
+        OdsSaveOptions saveOptions = new OdsSaveOptions(); // OdsSaveOptions constructor rule
+        saveOptions.IgnorePivotTables = false;              // Include pivot tables in the ODS file
+        workbook.Save("PivotChartDemo.ods", saveOptions);  // Save using the provided save rule
     }
 }

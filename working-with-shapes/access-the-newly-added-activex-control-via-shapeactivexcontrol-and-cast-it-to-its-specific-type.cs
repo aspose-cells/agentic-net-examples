@@ -1,70 +1,51 @@
-// Title: Cast Shape.ActiveXControl to CheckBoxActiveXControl in Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds a CheckBox ActiveX control via Worksheet.Shapes.AddActiveXControl, verifies the shape contains an ActiveXControl, casts it to CheckBoxActiveXControl, reads the Font.Name, updates the Caption, and saves the file.
-// Keywords: Aspose.Cells ActiveXControl cast | CheckBoxActiveXControl C# | Shape.ActiveXControl example | modify ActiveX control properties Aspose.Cells | .NET spreadsheet ActiveX control
-// Common Searches: How to cast Shape.ActiveXControl to a specific type in Aspose.Cells | Change CheckBox caption using Aspose.Cells C# | Read font name of an ActiveX CheckBox in a worksheet | Access ActiveX controls added to Excel with Aspose.Cells
-// Developer Intent: Retrieve a Shape's ActiveXControl, safely cast it to its concrete CheckBoxActiveXControl class, and manipulate its properties.
-// Use Cases: Extract and display the font name of a CheckBox ActiveX control placed on a sheet | Programmatically change the caption of a CheckBox after insertion | Validate the presence of an ActiveX control before casting to prevent runtime errors
-// AI Prompts: Write C# code that adds a ComboBox ActiveX control to a worksheet, accesses it through Shape.ActiveXControl, casts to ComboBoxActiveXControl, and populates its items. | Explain best practices for safely casting Shape.ActiveXControl to a specific control type and handling invalid casts in Aspose.Cells. | Provide a step‑by‑step guide to iterate over all worksheet shapes, detect ActiveX controls, and modify a property based on the control's concrete type.
+// Title: How to retrieve a CheckBox ActiveX control from a worksheet shape and cast it using Shape.ActiveXControl in Aspose.Cells for .NET
+// AI Prompts: Write C# code that obtains the CheckBox added to a worksheet by using the Shape.ActiveXControl member and casts it to a CheckBox object so its Text and Value can be changed. | Show how to loop through all shapes on a worksheet, detect which ones contain ActiveX controls, and safely convert each Shape.ActiveXControl to its concrete control type (e.g., CheckBox, ComboBox) with Aspose.Cells. | Provide an example that updates the caption of a CheckBox ActiveX control after retrieving it via Shape.ActiveXControl, including null‑checking and exception handling.
+// Common Searches: Aspose.Cells retrieve ActiveX CheckBox from worksheet shape C# | How to cast Shape.ActiveXControl to specific control type in Aspose.Cells .NET | Access and modify properties of a CheckBox ActiveX form control using Aspose.Cells API | Enumerate ActiveX controls in Excel sheet with Aspose.Cells and update them | Get ActiveX control object from Shape collection Aspose.Cells example
+// Tags: access ActiveX control through Shape.ActiveXControl Aspose.Cells | convert ActiveXControl object to concrete control type Aspose.Cells | change CheckBox ActiveX attributes Aspose.Cells | list worksheet shapes containing ActiveX controls Aspose.Cells .NET | update ActiveX form control caption using Aspose.Cells API
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.ActiveXControls;
 
-namespace AsposeCellsExamples
+// This example demonstrates adding a CheckBox ActiveX form control to a worksheet, retrieving the control via the shape's ActiveXControl property, casting it to a CheckBox object, modifying its Text and Value, and then saving the workbook.
+class ActiveXControlExample
 {
-    // Creates a workbook, adds a CheckBox ActiveX control via Worksheet.Shapes.AddActiveXControl, verifies the shape contains an ActiveXControl, casts it to CheckBoxActiveXControl, reads the Font.Name, updates the Caption, and saves the file.
-    public class AccessActiveXControlDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a CheckBox form control directly to the worksheet
+            // Parameters: upper left row, upper left column, top offset, left offset, height, width
+            CheckBox checkBox = sheet.Shapes.AddCheckBox(
+                2, // row index (zero‑based)
+                2, // column index (zero‑based)
+                5, // top offset in pixels
+                5, // left offset in pixels
+                20, // height in pixels
+                100 // width in pixels
+            );
+
+            if (checkBox != null)
             {
-                // Create a new workbook and obtain the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Add a CheckBox ActiveX control to the worksheet
-                Shape shape = worksheet.Shapes.AddActiveXControl(
-                    ControlType.CheckBox, // type of control
-                    1,    // top row index
-                    0,    // vertical offset in pixels
-                    1,    // left column index
-                    0,    // horizontal offset in pixels
-                    100,  // width in pixels
-                    30    // height in pixels
-                );
-
-                // Verify that the shape contains an ActiveX control
-                if (shape.ActiveXControl != null)
-                {
-                    // Cast the generic ActiveXControl to its specific CheckBox type
-                    CheckBoxActiveXControl checkBox = (CheckBoxActiveXControl)shape.ActiveXControl;
-
-                    // Access a property specific to CheckBoxActiveXControl (e.g., Font name)
-                    string fontName = checkBox.Font.Name;
-                    Console.WriteLine($"CheckBox font name: {fontName}");
-
-                    // Modify a property specific to the CheckBox control
-                    checkBox.Caption = "I Agree";
-                }
-
-                // Save the workbook to persist the added control
-                workbook.Save("AccessActiveXControlDemo.xlsx");
-                Console.WriteLine("Workbook saved as AccessActiveXControlDemo.xlsx");
+                // Set properties specific to the CheckBox control
+                checkBox.Text = "Accept Terms";
+                checkBox.Value = false; // unchecked by default
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the workbook to a file
+            string outputPath = "ActiveXControlExample.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            AccessActiveXControlDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

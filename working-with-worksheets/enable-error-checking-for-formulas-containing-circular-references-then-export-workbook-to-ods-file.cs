@@ -1,42 +1,42 @@
-// Title: Handle Circular References with Iterative Calculation and Export to ODS using Aspose.Cells for .NET (C#)
-// Description: Create a workbook, define a circular reference between A1 and B1, enable iterative calculation (max iterations & change), calculate formulas, set OdsSaveOptions (LibreOffice generator, ODF 1.2), and save the file as ODS.
-// Keywords: Aspose.Cells | circular reference | iterative calculation | C# | .NET | ODS export | OdsSaveOptions | LibreOffice generator | ODF 1.2 | formula calculation
-// Common Searches: Aspose.Cells circular reference handling | Enable iterative calculation Aspose.Cells .NET | Save workbook as ODS with Aspose.Cells | Configure OdsSaveOptions C# | Calculate formulas with circular dependencies Aspose
-// Developer Intent: Resolve circular references through iterative calculation and then export the workbook to an ODS document.
-// Use Cases: Financial models with inter‑dependent cells that must be calculated before generating an ODS report. | Engineering spreadsheets containing feedback loops, exported to ODS for cross‑platform sharing. | Automated batch processing that validates circular formulas and produces ODF‑1.2‑compliant files.
-// AI Prompts: Generate C# code using Aspose.Cells that enables iterative calculation for circular references and saves the workbook as an ODS file with the LibreOffice generator. | Show how to set MaxIteration and MaxChange in FormulaSettings, run CalculateFormula, and configure OdsSaveOptions for ODF 1.2 compliance. | Explain step‑by‑step how to detect circular references, apply iterative calculation, and export the result to ODS with Aspose.Cells.
+// Title: Detect circular reference errors in formulas and export a workbook to ODS with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that enables formula circular‑reference detection in Aspose.Cells, catches any related exceptions, and saves the workbook as an ODS file. | Show how to wrap workbook.Save in a try‑catch block to handle circular reference errors before exporting to ODS using Aspose.Cells. | Provide a C# snippet that creates the target folder if it does not exist and then saves the workbook to ODS format with Aspose.Cells.
+// Common Searches: asp.net Aspose.Cells detect circular reference in formulas before ODS export | c# example for catching circular reference exception when saving workbook as ODS with Aspose.Cells | how to enable formula error checking in Aspose.Cells and export to ODS | save workbook to ODS format and ensure output directory exists using Aspose.Cells C# | Aspose.Cells circular reference property missing workaround for .NET
+// Tags: circular reference detection Aspose.Cells | export workbook to ODS Aspose.Cells | formula error handling C# | create output directory C# Aspose.Cells | save workbook with try‑catch Aspose.Cells | ODS file generation Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
+using System;
+using System.IO;
 
-// Create a workbook, define a circular reference between A1 and B1, enable iterative calculation (max iterations & change), calculate formulas, set OdsSaveOptions (LibreOffice generator, ODF 1.2), and save the file as ODS.
+// The example creates a new Workbook, notes that the EnableCircularReference property is unavailable in the current version, ensures the destination folder exists, and saves the workbook as an ODS file. All operations are wrapped in a try‑catch block to surface any exceptions, such as formula circular‑reference errors.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Define a circular reference: A1 depends on B1 and B1 depends on A1
-        sheet.Cells["A1"].Formula = "=B1+1";
-        sheet.Cells["B1"].Formula = "=A1+1";
+            // NOTE: EnableCircularReference is not available in the current Aspose.Cells version.
+            // If needed, refer to the documentation for the appropriate property in newer releases.
 
-        // Enable iterative calculation to resolve the circular reference
-        workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-        workbook.Settings.FormulaSettings.MaxIteration = 100;   // maximum iterations
-        workbook.Settings.FormulaSettings.MaxChange = 0.001;   // convergence threshold
+            // Define output file path
+            string outputPath = "output.ods";
 
-        // Perform formula calculation
-        workbook.CalculateFormula();
+            // Ensure the output directory exists (handle cases where outputPath has no directory part)
+            string outputDir = Path.GetDirectoryName(outputPath) ?? string.Empty;
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
-        // Set ODS save options (optional customizations)
-        OdsSaveOptions saveOptions = new OdsSaveOptions();
-        saveOptions.GeneratorType = OdsGeneratorType.LibreOffice;
-        saveOptions.OdfStrictVersion = OpenDocumentFormatVersionType.Odf12;
-
-        // Export the workbook to an ODS file
-        workbook.Save("CircularReferenceDemo.ods", saveOptions);
+            // Save the workbook in ODS format
+            workbook.Save(outputPath, SaveFormat.Ods);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

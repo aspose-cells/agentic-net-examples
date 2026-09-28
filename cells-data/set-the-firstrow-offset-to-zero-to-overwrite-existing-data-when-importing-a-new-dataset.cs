@@ -1,10 +1,7 @@
-// Title: Import a DataTable Overwrite Existing Cells at Row 0 with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to import a DataTable into a worksheet starting at the first row (offset 0) and replace existing content. The example configures ImportTableOptions (ShiftFirstRowDown = false, InsertRows = false, IsFieldNameShown = false) so the new data overwrites cells A1‑A3 without shifting rows or adding headers, then saves the workbook.
-// Keywords: Aspose.Cells import DataTable C# | overwrite existing cells Aspose.Cells | ImportData row offset zero | ShiftFirstRowDown false | InsertRows false | ImportTableOptions overwrite | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells import DataTable without shifting rows | How to overwrite cells when using ImportData in Aspose.Cells | ImportData starting at first row C# | Prevent row insertion on ImportData Aspose.Cells | Replace worksheet data with new DataTable Aspose
-// Developer Intent: Replace the current worksheet content by importing a new DataTable at the first row, overwriting existing cells.
-// Use Cases: Refresh a report template with new data while preserving layout. | Update a dashboard sheet by overwriting previous calculations with fresh results. | Replace old headers and rows in a generated spreadsheet without adding extra rows.
-// AI Prompts: Show C# code to import a DataTable into an Aspose.Cells worksheet at row 0 and overwrite existing cells. | Explain how to set ImportTableOptions to prevent row shifting and insertion during ImportData. | Provide guidance on using ShiftFirstRowDown and InsertRows properties for an overwrite import in Aspose.Cells.
+// Title: Overwrite existing worksheet rows by importing a DataTable with firstRow offset set to zero using Aspose.Cells for .NET
+// AI Prompts: Import a DataTable into a worksheet at row 0 and replace any existing cells using ImportTableOptions. | Configure ImportTableOptions with ShiftFirstRowDown = false and InsertRows = false to ensure overwriting when calling Cells.ImportData. | Save the workbook after the second import so the Excel file contains only the new dataset.
+// Common Searches: how to overwrite Excel sheet data with a new DataTable using Aspose.Cells C# | Aspose.Cells ImportData starting at first row zero overwrite existing rows | set ShiftFirstRowDown false to prevent row shifting during import in Aspose.Cells | reuse ImportTableOptions to replace worksheet content in .NET | C# import DataTable into existing workbook without inserting rows
+// Tags: Aspose.Cells ImportData overwrite rows | ImportTableOptions ShiftFirstRowDown false | InsertRows false Aspose.Cells | DataTable import starting at row zero | replace worksheet content C# Aspose.Cells
 
 using System;
 using System.Data;
@@ -12,58 +9,58 @@ using Aspose.Cells;
 
 namespace AsposeCellsImportOverwriteDemo
 {
-    // Demonstrates how to import a DataTable into a worksheet starting at the first row (offset 0) and replace existing content. The example configures ImportTableOptions (ShiftFirstRowDown = false, InsertRows = false, IsFieldNameShown = false) so the new data overwrites cells A1‑A3 without shifting rows or adding headers, then saves the workbook.
+    // The example creates a workbook, imports an initial DataTable at row 0, then imports a second DataTable using the same ImportTableOptions (ShiftFirstRowDown = false, InsertRows = false) to overwrite the previous content, and finally saves the result to OverwriteImportResult.xlsx.
     class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet's cells collection
-            Workbook workbook = new Workbook();                     // create workbook
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Workbook workbook = new Workbook();
+            Cells cells = workbook.Worksheets[0].Cells;
 
-            // ------------------------------------------------------------
-            // Step 1: Add some existing data that we will later overwrite
-            // ------------------------------------------------------------
-            cells["A1"].PutValue("Old Header");
-            cells["A2"].PutValue("Old Data 1");
-            cells["A3"].PutValue("Old Data 2");
+            // -----------------------------------------------------------------
+            // First import – populate the sheet with initial data (row offset 0)
+            // -----------------------------------------------------------------
+            DataTable initialTable = new DataTable();
+            initialTable.Columns.Add("Product");
+            initialTable.Columns.Add("Quantity", typeof(int));
+            initialTable.Rows.Add("Apple", 10);
+            initialTable.Rows.Add("Banana", 20);
 
-            // ------------------------------------------------------------
-            // Step 2: Prepare a new DataTable to import
-            // ------------------------------------------------------------
-            DataTable newTable = new DataTable();
-            newTable.Columns.Add("Header", typeof(string));
-            newTable.Columns.Add("Value", typeof(string));
-
-            // New data rows (these will replace the old ones)
-            newTable.Rows.Add("New Header", "New Data 1");
-            newTable.Rows.Add("New Header", "New Data 2");
-
-            // ------------------------------------------------------------
-            // Step 3: Configure import options to overwrite existing cells
-            // ------------------------------------------------------------
-            ImportTableOptions importOptions = new ImportTableOptions
+            // Default import options (ShiftFirstRowDown = false, InsertRows = false)
+            ImportTableOptions initialOptions = new ImportTableOptions
             {
-                // Do not shift the first row down; start writing at the exact row we specify
-                ShiftFirstRowDown = false,
-                // Do not insert new rows; write over existing rows
-                InsertRows = false,
-                // Do not write field names (headers) because they are already part of the data rows
-                IsFieldNameShown = false
+                IsFieldNameShown = false,   // Do not import column names
+                ShiftFirstRowDown = false,  // Do not shift the first row down
+                InsertRows = false          // Overwrite existing cells
             };
 
-            // ------------------------------------------------------------
-            // Step 4: Import the new data starting at row 0, column 0 (A1)
-            // ------------------------------------------------------------
-            // Because ShiftFirstRowDown = false and InsertRows = false,
-            // the import will overwrite the cells that already contain "Old Header", etc.
-            cells.ImportData(newTable, 0, 0, importOptions);
+            // Import the initial data starting at row 0, column 0
+            cells.ImportData(initialTable, 0, 0, initialOptions);
 
-            // ------------------------------------------------------------
-            // Step 5: Save the workbook to verify the result
-            // ------------------------------------------------------------
-            workbook.Save("OverwriteImportDemo.xlsx"); // save workbook
+            // ---------------------------------------------------------------
+            // Second import – new dataset should overwrite the previous content
+            // ---------------------------------------------------------------
+            DataTable newTable = new DataTable();
+            newTable.Columns.Add("Product");
+            newTable.Columns.Add("Quantity", typeof(int));
+            newTable.Rows.Add("Orange", 15);
+            newTable.Rows.Add("Grape", 25);
+            newTable.Rows.Add("Mango", 30);
+
+            // Reuse the same options to ensure overwriting (firstRow offset = 0)
+            ImportTableOptions overwriteOptions = new ImportTableOptions
+            {
+                IsFieldNameShown = false,
+                ShiftFirstRowDown = false,
+                InsertRows = false
+            };
+
+            // Import the new data starting again at row 0, column 0
+            cells.ImportData(newTable, 0, 0, overwriteOptions);
+
+            // Save the workbook – the sheet now contains only the new dataset
+            workbook.Save("OverwriteImportResult.xlsx");
         }
     }
 }

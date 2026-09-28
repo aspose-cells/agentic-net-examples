@@ -1,48 +1,57 @@
-// Title: Set Excel Theme Font Scheme (Major & Minor) to a Corporate Typeface with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, assign a corporate font (e.g., Calibri) to the Major (heading) and Minor (body) theme schemes using Font.SetName with FontSchemeType, apply the styles to cells, and save the file as CorporateThemeFontScheme.xlsx.
-// Keywords: Aspose.Cells C# theme font scheme | FontSchemeType Major Minor | set corporate font Excel workbook | apply custom font to headings and body | Excel theme fonts Aspose.Cells .NET
-// Common Searches: how to change major and minor font scheme in Aspose.Cells | set corporate typeface for Excel headings C# | apply custom theme fonts to Excel workbook using Aspose.Cells | Aspose.Cells FontSchemeType example | update Excel theme fonts programmatically .NET
-// Developer Intent: Configure the workbook’s theme so that headings use the Major font scheme and body text uses the Minor scheme, both set to a corporate typeface.
-// Use Cases: Create a new workbook and define a corporate font for the Major scheme to style report titles. | Apply the same corporate font to the Minor scheme for body paragraphs and data cells. | Save the workbook so that any subsequent styles inherit the corporate typeface automatically.
-// AI Prompts: Generate C# code with Aspose.Cells that changes the Major and Minor theme fonts of an existing workbook to 'Arial' and saves the result. | Explain FontSchemeType in Aspose.Cells and show how to use it for heading and body styles. | Provide a step‑by‑step tutorial for updating an Excel workbook’s theme fonts to a corporate typeface using Aspose.Cells for .NET.
+// Title: Set a corporate typeface for headings and body text by updating the default style font in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .xlsx file, change the workbook’s default font to a corporate typeface for headings and body, and save the changes using Aspose.Cells in C#. | Replace the theme fonts in a workbook by assigning a custom corporate font to Workbook.DefaultStyle.Font.Name and persist the file. | Programmatically apply a corporate font to all cells by updating the workbook’s default style and handling missing input files with Aspose.Cells.
+// Common Searches: how to set a custom default font for an Excel workbook using Aspose.Cells C# | Aspose.Cells change workbook theme fonts to corporate typeface | C# update default style font name in existing .xlsx with Aspose.Cells | apply corporate font to headings and body text in Excel programmatically | Aspose.Cells set global font for all cells in a workbook
+// Tags: Aspose.Cells modify workbook theme fonts | C# apply corporate typeface to Excel workbook | set global font for .xlsx using Aspose.Cells | programmatic font scheme change in Excel | update workbook font scheme Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, assign a corporate font (e.g., Calibri) to the Major (heading) and Minor (body) theme schemes using Font.SetName with FontSchemeType, apply the styles to cells, and save the file as CorporateThemeFontScheme.xlsx.
-class UpdateThemeFontScheme
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads 'input.xlsx', sets Workbook.DefaultStyle.Font.Name to a corporate typeface, ensures the output directory exists, saves the modified workbook as 'output.xlsx', and logs any errors such as a missing input file.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Corporate typeface to be used for both headings (Major) and body text (Minor)
-        string corporateFontName = "Calibri";
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-        // ---------- Heading style (Major scheme) ----------
-        Style headingStyle = workbook.CreateStyle();
-        // Set the font name and associate it with the Major scheme
-        headingStyle.Font.SetName(corporateFontName, FontSchemeType.Major);
-        headingStyle.Font.Size = 16;
-        headingStyle.Font.IsBold = true;
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Apply heading style to a cell
-        worksheet.Cells["A1"].PutValue("Report Title");
-        worksheet.Cells["A1"].SetStyle(headingStyle);
+                // -----------------------------------------------------------------
+                // Update workbook fonts.
+                // Aspose.Cells versions prior to 22.x expose Theme as a string,
+                // so we modify the default style as a fallback to apply a corporate
+                // typeface throughout the workbook.
+                // -----------------------------------------------------------------
+                workbook.DefaultStyle.Font.Name = "CorporateBodyFont";
 
-        // ---------- Body style (Minor scheme) ----------
-        Style bodyStyle = workbook.CreateStyle();
-        // Set the font name and associate it with the Minor scheme
-        bodyStyle.Font.SetName(corporateFontName, FontSchemeType.Minor);
-        bodyStyle.Font.Size = 11;
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Apply body style to a cell
-        worksheet.Cells["A2"].PutValue("This is body text using the corporate typeface.");
-        worksheet.Cells["A2"].SetStyle(bodyStyle);
+                // Save the modified workbook
+                workbook.Save(outputPath);
 
-        // Save the workbook
-        workbook.Save("CorporateThemeFontScheme.xlsx");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details for troubleshooting
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

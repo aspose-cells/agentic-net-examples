@@ -1,66 +1,90 @@
-// Title: Copy a VBA module between Excel workbooks using Aspose.Cells for .NET
-// Description: Demonstrates how to create a source workbook, add a procedural VBA module, copy the VbaProject to a new workbook, and retain only the selected module while preserving its code and attributes.
-// Keywords: Aspose.Cells VBA module copy | C# copy VBA macro between workbooks | preserve VBA code Aspose.Cells | VbaProject.Copy example | transfer Excel macro .NET
-// Common Searches: Aspose.Cells copy VBA module C# | how to move a macro from one Excel file to another .NET | retain VBA attributes when copying workbooks | copy specific VBA module with Aspose.Cells
-// Developer Intent: Transfer a single VBA module from a source Excel file to a target file without losing its source code or module properties.
-// Use Cases: Inject a custom macro into generated reports from a template workbook. | Distribute a specific VBA routine across multiple workbooks in an automated pipeline. | Update existing macro-enabled files with a new module while keeping other modules untouched.
-// AI Prompts: Write C# code that uses Aspose.Cells to copy only the "SourceModule" VBA module from one workbook to another, preserving all attributes. | Show an Aspose.Cells .NET example that copies a VbaProject and then removes every module except a given name. | Explain error‑handling strategies for copying VBA modules between Excel files with Aspose.Cells.
+// Title: Copy a specific VBA module from one macro‑enabled Excel workbook to another using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to duplicate a VBA module named "Module1" from a source .xlsm file into a destination .xlsm workbook, preserving all code and attributes. | Insert a new VBA module into an existing macro‑enabled workbook and assign it the code from a module in another workbook using the Aspose.Cells VbaProject API. | Implement robust error handling in C# for missing source/destination files or absent VBA projects when transferring a VBA module between two Excel files with Aspose.Cells.
+// Common Searches: Aspose.Cells C# copy VBA module from one .xlsm to another | How to transfer a VBA module between macro-enabled Excel files using .NET | C# example for duplicating a VBA module with Aspose.Cells VbaProject | Copy VBA code from source workbook to destination workbook Aspose.Cells
+// Tags: Aspose.Cells VbaModule duplication C# | macro-enabled workbook VbaProject manipulation .NET | transfer VBA code between .xlsm files using Aspose.Cells | C# Aspose.Cells insert VbaModule into workbook
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaModuleCopyDemo
+// The program loads a source and a destination macro‑enabled Excel workbook, verifies that both contain VBA projects, locates a module named "Module1" in the source, adds a new module with the same type and name to the destination, copies the source module's code into the new module, and saves the updated workbook as a new .xlsm file, handling missing files and VBA project errors.
+class Program
 {
-    // Demonstrates how to create a source workbook, add a procedural VBA module, copy the VbaProject to a new workbook, and retain only the selected module while preserving its code and attributes.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            string srcPath = "source.xlsm";
+            string destPath = "destination.xlsm"; // Ensure macro‑enabled format
+            string outputPath = "destination_with_module.xlsm";
+
+            // Verify that the required files exist
+            if (!File.Exists(srcPath))
             {
-                // Create source workbook and add a VBA module with some code
-                Workbook sourceWorkbook = new Workbook();
-                int srcModuleIndex = sourceWorkbook.VbaProject.Modules.Add(VbaModuleType.Procedural, "SourceModule");
-                VbaModule sourceModule = sourceWorkbook.VbaProject.Modules[srcModuleIndex];
-                sourceModule.Codes = "Sub SourceMacro()\n    MsgBox \"Hello from source module\"\nEnd Sub";
-
-                // Save the source workbook (optional, just for demonstration)
-                sourceWorkbook.Save("SourceWorkbook.xlsm", SaveFormat.Xlsm);
-
-                // Create destination workbook (empty)
-                Workbook destWorkbook = new Workbook();
-
-                // Copy the entire VBA project from source to destination.
-                destWorkbook.VbaProject.Copy(sourceWorkbook.VbaProject);
-
-                // If only a specific module is needed, remove others after copying.
-                // Collect names of modules to remove to avoid modifying collection during enumeration.
-                List<string> modulesToRemove = new List<string>();
-                foreach (VbaModule module in destWorkbook.VbaProject.Modules)
-                {
-                    if (!module.Name.Equals("SourceModule", StringComparison.OrdinalIgnoreCase))
-                    {
-                        modulesToRemove.Add(module.Name);
-                    }
-                }
-
-                // Remove the unwanted modules.
-                foreach (string moduleName in modulesToRemove)
-                {
-                    destWorkbook.VbaProject.Modules.Remove(moduleName);
-                }
-
-                // Save the destination workbook with the copied VBA module
-                destWorkbook.Save("DestinationWorkbook.xlsm", SaveFormat.Xlsm);
-
-                Console.WriteLine("VBA module copied successfully from source to destination workbook.");
+                Console.WriteLine($"Source file \"{srcPath}\" not found.");
+                return;
             }
-            catch (Exception ex)
+
+            if (!File.Exists(destPath))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Destination file \"{destPath}\" not found.");
+                return;
             }
+
+            // Load the workbooks
+            Workbook srcWorkbook = new Workbook(srcPath);
+            Workbook destWorkbook = new Workbook(destPath);
+
+            // Ensure source workbook contains a VBA project
+            if (srcWorkbook.VbaProject == null)
+            {
+                Console.WriteLine("Source workbook does not contain a VBA project.");
+                return;
+            }
+
+            // Ensure destination workbook contains a VBA project
+            if (destWorkbook.VbaProject == null)
+            {
+                Console.WriteLine("Destination workbook does not contain a VBA project. Cannot add module.");
+                return;
+            }
+
+            // Name of the VBA module to copy
+            string moduleName = "Module1";
+
+            // Retrieve the source module
+            VbaModule srcModule = null;
+            foreach (VbaModule mod in srcWorkbook.VbaProject.Modules)
+            {
+                if (string.Equals(mod.Name, moduleName, StringComparison.OrdinalIgnoreCase))
+                {
+                    srcModule = mod;
+                    break;
+                }
+            }
+
+            if (srcModule == null)
+            {
+                Console.WriteLine($"Module \"{moduleName}\" not found in the source workbook.");
+                return;
+            }
+
+            // Add a new module to the destination workbook (Add returns the index)
+            int newIndex = destWorkbook.VbaProject.Modules.Add(srcModule.Type, srcModule.Name);
+            VbaModule destModule = destWorkbook.VbaProject.Modules[newIndex];
+
+            // Copy the VBA code
+            destModule.Codes = srcModule.Codes;
+
+            // Save the destination workbook as a macro‑enabled file
+            destWorkbook.Save(outputPath, SaveFormat.Xlsm);
+
+            Console.WriteLine($"Module \"{moduleName}\" copied successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

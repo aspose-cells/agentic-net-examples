@@ -1,41 +1,53 @@
-// Title: C# – Insert a Stacked Bar Chart into an Existing XLSX Workbook with Aspose.Cells
-// Description: Load an XLSX file, create a BarStacked chart on the first worksheet, bind it to a cell range, optionally assign a title, and write the updated workbook to a new file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# chart automation | stacked bar chart | BarStacked | load XLSX workbook | add chart programmatically | set chart data source | save Excel file | Excel .NET library | Aspose.Cells example
-// Common Searches: how to add a stacked bar chart with Aspose.Cells C# | Aspose.Cells load existing workbook and insert chart | C# code for BarStacked chart in Excel file | save workbook after creating chart Aspose.Cells | set chart title Aspose.Cells C#
-// Developer Intent: Programmatically place a BarStacked chart into a loaded Excel workbook and persist the modification.
-// Use Cases: Produce a quarterly‑sales visual by overlaying a stacked bar chart on a template report. | Automate monthly KPI dashboards that inject bar‑stacked graphics into pre‑filled worksheets. | Generate multi‑sheet financial summaries where each sheet receives its own stacked bar representation.
-// AI Prompts: Write C# code with Aspose.Cells to open 'report.xlsx', add a BarStacked chart covering A1:C10 on sheet 1, set the title to 'Quarterly Sales', and save as 'report_with_chart.xlsx'. | Explain how to modify the position and dimensions of a BarStacked chart after it has been added using Aspose.Cells in C#. | Show how to bind a stacked bar chart to a dynamic range that expands with new rows, using Aspose.Cells NSeries.
+// Title: Add a stacked bar chart to an existing XLSX workbook using Aspose.Cells for .NET and save the result
+// AI Prompts: Write C# code that opens a specified XLSX file with Aspose.Cells, inserts a BarStacked chart on the first worksheet using a custom data range, sets a chart title, and saves the workbook to a new file. | Adjust the provided Aspose.Cells example to place the stacked bar chart between rows 2‑10 and columns 1‑4 and to use the range C2:D6 as the data source. | Describe how to update the title and series of a stacked bar chart after loading an existing workbook with Aspose.Cells.
+// Common Searches: how to add a stacked bar chart to an existing Excel file using Aspose.Cells C# | Aspose.Cells .NET insert chart into workbook while keeping original data | C# example creating BarStacked chart from range A1:B5 with Aspose.Cells | save workbook after adding chart Aspose.Cells .NET | change chart position in Aspose.Cells after loading an existing workbook
+// Tags: Aspose.Cells stacked bar chart insertion | Aspose.Cells workbook loading | Aspose.Cells chart series definition | Aspose.Cells chart layout configuration | Aspose.Cells workbook export
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an XLSX file, create a BarStacked chart on the first worksheet, bind it to a cell range, optionally assign a title, and write the updated workbook to a new file using Aspose.Cells for .NET.
+// Loads an existing XLSX workbook, adds a BarStacked chart on the first worksheet using range A1:B5, sets the chart title, and saves the modified workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Load the existing XLSX workbook
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);   // uses Workbook(string) constructor
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Access the first worksheet (you can change the index if needed)
-        Worksheet sheet = workbook.Worksheets[0];
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a stacked bar chart to the worksheet
-        // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
-        int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 1, 20, 6);
-        Chart chart = sheet.Charts[chartIndex];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set the data source for the chart
-        // Adjust the range according to the actual data in the workbook
-        chart.NSeries.Add("=Sheet1!$A$1:$B$5", true);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Optional: set a title for the chart
-        chart.Title.Text = "Stacked Bar Chart";
+            // Add a stacked bar chart (upper‑left row, column, lower‑right row, column)
+            int chartIndex = sheet.Charts.Add(ChartType.BarStacked, 5, 0, 15, 5);
+            Chart chart = sheet.Charts[chartIndex];
 
-        // Save the modified workbook
-        string outputFile = "output.xlsx";
-        workbook.Save(outputFile);   // uses Workbook.Save(string) method
+            // Define the data range for the chart (example: A1:B5)
+            chart.NSeries.Add("A1:B5", true);
+
+            // Set chart title
+            chart.Title.Text = "Stacked Bar Chart";
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

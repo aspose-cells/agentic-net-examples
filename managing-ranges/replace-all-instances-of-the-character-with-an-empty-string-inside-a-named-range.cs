@@ -1,78 +1,64 @@
-// Title: Aspose.Cells for .NET – Remove asterisk (*) from every cell in a named range (C#)
-// Description: Creates a workbook, defines a named range (A1:B3), scans each string cell in that range, strips the "*" character, updates only changed cells, and saves the file as ReplaceInNamedRange.xlsx.
-// Keywords: Aspose.Cells C# replace character | remove asterisk named range | Aspose.Cells string replace | C# iterate named range cells | .NET workbook character cleanup | replace * in Excel using Aspose
-// Common Searches: how to delete * from a named range with Aspose.Cells | C# replace specific character in Excel named range | Aspose.Cells remove symbols from cells | iterate over named range and modify text .NET | replace asterisk in worksheet using Aspose
-// Developer Intent: Strip every asterisk (*) from string cells that belong to a specified named range in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Clean CSV imports that use asterisks as delimiters before analysis. | Sanitize user‑generated text in a defined worksheet area. | Prepare data for systems that reject the "*" character.
-// AI Prompts: Generate C# code with Aspose.Cells that removes a given character from all string cells inside a named range. | Create a reusable method: (Workbook workbook, string rangeName, char target) → updates cells accordingly. | Write error‑handling logic for character replacement that skips non‑string cells and logs changes.
+// Title: Remove asterisk characters from all string cells in a specific named range using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans a named range and deletes every "*" character from string cells. | Adapt the sample to replace asterisks with a custom substring while iterating over a named range in an Excel workbook. | Add comprehensive error handling for missing files and undefined named ranges when cleaning characters in a range.
+// Common Searches: aspocells c# remove asterisk from cells in a defined name range | how to clean special characters in a named range using Aspose.Cells .NET | replace * character in Excel named range programmatically with Aspose.Cells | iterate through cells of a named range and update string values in C#
+// Tags: remove asterisk Aspose.Cells named range | string cleanup in Excel range C# | Aspose.Cells replace characters in defined name | iterate cells in named range Aspose.Cells | error handling missing workbook Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsReplaceInNamedRange
+// Loads an Excel workbook, retrieves the named range "MyRange", removes all asterisk characters from string cells within that range, and saves the updated file.
+class ReplaceAsteriskInNamedRange
 {
-    // Creates a workbook, defines a named range (A1:B3), scans each string cell in that range, strips the "*" character, updates only changed cells, and saves the file as ReplaceInNamedRange.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+        string rangeName = "MyRange";
+
+        try
         {
-            try
+            // Verify input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Populate cells with sample data containing the '*' character
-                sheet.Cells["A1"].PutValue("Hello*World");
-                sheet.Cells["A2"].PutValue("Sample*Text");
-                sheet.Cells["A3"].PutValue("NoAsterisk");
-                sheet.Cells["B1"].PutValue("*Start");
-                sheet.Cells["B2"].PutValue("End*");
-                sheet.Cells["B3"].PutValue("Mid*le");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Define a named range that covers A1:B3
-                string rangeAddress = "A1:B3";
-                string rangeName = "MyRange";
+            // Retrieve the range by its defined name
+            Aspose.Cells.Range range = workbook.Worksheets.GetRangeByName(rangeName);
+            if (range == null)
+            {
+                Console.WriteLine($"Named range \"{rangeName}\" not found.");
+                return;
+            }
 
-                // Add the named range to the workbook
-                int nameIndex = workbook.Worksheets.Names.Add(rangeName);
-                workbook.Worksheets.Names[nameIndex].RefersTo = $"=Sheet1!{rangeAddress}";
-
-                // Retrieve the range object by its name
-                AsposeRange namedRange = workbook.Worksheets.GetRangeByName(rangeName);
-
-                // Iterate through each cell in the named range and remove '*'
-                for (int row = namedRange.FirstRow; row <= namedRange.FirstRow + namedRange.RowCount - 1; row++)
+            // Iterate through each cell in the range
+            foreach (Cell cell in range)
+            {
+                // Process only string cells
+                if (cell.Type == CellValueType.IsString)
                 {
-                    for (int col = namedRange.FirstColumn; col <= namedRange.FirstColumn + namedRange.ColumnCount - 1; col++)
+                    string original = cell.StringValue;
+                    string replaced = original.Replace("*", string.Empty);
+                    // Update cell only if a change occurred
+                    if (!original.Equals(replaced))
                     {
-                        Cell cell = sheet.Cells[row, col];
-
-                        // Process only string cells; other types are left unchanged
-                        if (cell.Type == CellValueType.IsString)
-                        {
-                            string original = cell.StringValue;
-                            string replaced = original.Replace("*", string.Empty);
-
-                            // Update the cell only if a change occurred
-                            if (!original.Equals(replaced))
-                            {
-                                cell.PutValue(replaced);
-                            }
-                        }
+                        cell.PutValue(replaced);
                     }
                 }
+            }
 
-                // Save the workbook
-                workbook.Save("ReplaceInNamedRange.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Asterisk characters removed from named range \"{rangeName}\" and saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

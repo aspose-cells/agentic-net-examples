@@ -1,49 +1,72 @@
-// Title: C# – Retrieve Shape Position, Convert Pixels to Centimeters, and Store in Cells with Aspose.Cells
-// Description: Creates a workbook, adds a rectangle shape, reads its absolute Left and Top pixel coordinates, converts them to centimeters using the 2.54 cm/96 DPI factor, writes the metric values to cells, and saves the file.
-// Keywords: Aspose.Cells shape position | pixel to centimeter conversion | C# Aspose.Cells shape coordinates | absolute shape location Excel | store shape metrics in worksheet
-// Common Searches: Aspose.Cells get shape absolute position C# | convert shape pixels to centimeters Aspose.Cells | write shape coordinates to Excel cells | pixel to cm factor Aspose.Cells shapes | Aspose.Cells shape layout measurement
-// Developer Intent: Obtain a shape's pixel‑based Left and Top values, translate them into centimeters, and record the results in specific worksheet cells.
-// Use Cases: Generate a printable layout report that lists each shape's physical position in centimeters. | Validate diagram alignment by comparing metric coordinates against design specifications. | Migrate legacy pixel‑based drawings to metric standards for downstream processing.
-// AI Prompts: Show C# code using Aspose.Cells to read a shape's Left and Top pixel values, convert them to centimeters, and write the results to cells A1:B2. | Explain how to calculate the pixel‑to‑centimeter conversion factor for Aspose.Cells shapes and apply it to multiple shapes. | Provide a loop that iterates over all shapes on a worksheet, converts their positions to centimeters, and creates a summary table in the workbook.
+// Title: Get a shape's absolute position in points, convert to centimeters, and write the coordinates to cells with Aspose.Cells for .NET
+// AI Prompts: Using Aspose.Cells for .NET, load a workbook, find a shape by its name, read its Top and Left properties (points), convert those values to centimeters, and place the X and Y results into cells B1 and B2. | Write C# code that extracts a shape's absolute coordinates, transforms the point measurements to cm using the 72‑point‑per‑inch and 96‑pixel‑per‑inch ratios, and saves the converted values back into the worksheet.
+// Common Searches: Aspose.Cells C# get shape top left position in centimeters | convert shape coordinates from points to cm in Excel using Aspose.Cells | write shape absolute location to specific cells with Aspose.Cells .NET | how to calculate shape position in cm from points in Aspose.Cells | Aspose.Cells retrieve shape position and store in worksheet cells
+// Tags: Aspose.Cells shape top left points to centimeters conversion | C# extract absolute shape coordinates Aspose.Cells | store shape X Y values in worksheet cells Aspose.Cells | convert Excel shape measurements points to cm Aspose.Cells | write shape location into cells B1 B2 using Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsShapePositionDemo
+// The example loads an existing workbook, locates a shape named "MyShape", reads its Top and Left coordinates expressed in points, converts those measurements to centimeters, writes the X (left) value to cell B1 and the Y (top) value to cell B2, and saves the updated file.
+class Program
 {
-    // Creates a workbook, adds a rectangle shape, reads its absolute Left and Top pixel coordinates, converts them to centimeters using the 2.54 cm/96 DPI factor, writes the metric values to cells, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left pixel offset X, upper left pixel offset Y, width in pixels, height in pixels
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 150, 80);
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Retrieve the shape's absolute position in pixels (Left and Top properties are in pixels)
-            int leftPixels = shape.Left;
-            int topPixels = shape.Top;
+            // Retrieve the shape by name (adjust the name as needed)
+            Shape shape = sheet.Shapes["MyShape"];
+            if (shape == null)
+            {
+                Console.WriteLine("Error: Shape \"MyShape\" not found in the worksheet.");
+                return;
+            }
 
-            // Conversion factor: 1 pixel = 2.54 cm / 96 DPI
-            const double pixelToCm = 2.54 / 96.0;
+            // Use Shape.Top and Shape.Left (points) for absolute position
+            double topPoints = shape.Top;   // distance from top of worksheet in points
+            double leftPoints = shape.Left; // distance from left of worksheet in points
 
-            // Convert pixel values to centimeters
-            double leftCm = leftPixels * pixelToCm;
-            double topCm = topPixels * pixelToCm;
+            // Convert points to pixels (1 point = 1/72 inch, 1 inch = 96 pixels)
+            double topPixels = topPoints * 96.0 / 72.0;
+            double leftPixels = leftPoints * 96.0 / 72.0;
 
-            // Store the converted values in cells
-            worksheet.Cells["A1"].PutValue("Left (cm)");
-            worksheet.Cells["B1"].PutValue(leftCm);
-            worksheet.Cells["A2"].PutValue("Top (cm)");
-            worksheet.Cells["B2"].PutValue(topCm);
+            // Convert pixels to centimeters (1 inch = 96 pixels, 1 inch = 2.54 cm)
+            double xCm = leftPixels * 2.54 / 96.0;
+            double yCm = topPixels * 2.54 / 96.0;
 
-            // Save the workbook
-            workbook.Save("ShapePositionInCm.xlsx");
+            // Store the converted values in cells (e.g., B1 for X, B2 for Y)
+            sheet.Cells["B1"].PutValue(xCm);
+            sheet.Cells["B2"].PutValue(yCm);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook with the new data
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

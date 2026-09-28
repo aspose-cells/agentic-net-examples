@@ -1,49 +1,70 @@
-// Title: C# Extension Method IsLockedWordArtWatermark for Aspose.Cells – Detect Locked WordArt Watermarks
-// Description: Defines a ShapeExtensions class with the IsLockedWordArtWatermark extension that returns true only when a Shape is a WordArt object and its IsLocked flag is set. The sample creates a workbook, adds a WordArt watermark, locks it, adds a regular locked shape, and prints the detection results.
-// Keywords: Aspose.Cells | C# | Shape extension | WordArt | watermark detection | IsLocked | IsWordArt | Excel shape | locked watermark | extension method
-// Common Searches: Aspose.Cells check if shape is locked WordArt | C# detect WordArt watermark in Excel using Aspose | IsLockedWordArtWatermark example | How to identify locked WordArt shapes with Aspose.Cells | extension method for shape watermark detection Aspose
-// Developer Intent: Determine whether a given Shape instance represents a locked WordArt watermark.
-// Use Cases: Validate that only WordArt watermarks are locked before protecting a worksheet. | Iterate through all worksheet shapes and apply formatting only to unlocked, non‑watermark objects. | Generate an audit report of every locked WordArt watermark across a workbook.
-// AI Prompts: Write a C# extension method for Aspose.Cells that returns true if a Shape is a locked WordArt watermark. | Show code that loops through all shapes in a worksheet and lists those satisfying IsLockedWordArtWatermark. | Explain how to protect an Excel sheet while keeping locked WordArt watermarks uneditable using Aspose.Cells.
+// Title: How to determine if a shape is a locked WordArt watermark using Aspose.Cells for .NET
+// AI Prompts: Write a C# helper method that returns true when an Aspose.Cells Shape has IsWordArt set, IsLocked set, and its Name or AlternativeText contains the word "watermark". | Generate code that loads an Excel workbook with Aspose.Cells, loops through Worksheet.Shapes, and uses the helper to output which shapes are locked WordArt watermarks. | Create C# unit tests that validate the IsLockedWordArtWatermark function against shapes with different IsWordArt, IsLocked, and watermark keyword combinations.
+// Common Searches: aspnet c# check if Excel shape is a locked WordArt watermark with Aspose.Cells | detect watermark shapes in a workbook using Aspose.Cells Drawing API | filter worksheet shapes by IsWordArt and IsLocked properties in C# | how to use AlternativeText to identify watermarks in Aspose.Cells shapes
+// Tags: shape.IsWordArt locked watermark detection Aspose.Cells | Aspose.Cells shape alternative text keyword search | C# iterate worksheet shapes Aspose.Cells | identify locked WordArt watermark in Excel workbook | custom shape helper function Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Defines a ShapeExtensions class with the IsLockedWordArtWatermark extension that returns true only when a Shape is a WordArt object and its IsLocked flag is set. The sample creates a workbook, adds a WordArt watermark, locks it, adds a regular locked shape, and prints the detection results.
-public static class ShapeExtensions
+// Provides a static ShapeHelper class with an IsLockedWordArtWatermark method that checks a Shape for non‑null, IsWordArt, IsLocked, and the presence of the word "watermark" in its Name or AlternativeText, returning true only when all conditions are met; includes sample code that loads a workbook, iterates over worksheet shapes, and prints the detection result.
+public static class ShapeHelper
 {
-    // Returns true if the shape is a WordArt and is locked (cannot be modified when the sheet is protected)
-    public static bool IsLockedWordArtWatermark(this Shape shape)
+    /// <param name="shape">The shape to evaluate.</param>
+    /// <returns>True if the shape is a locked WordArt watermark; otherwise, false.</returns>
+    public static bool IsLockedWordArtWatermark(Shape shape)
     {
-        if (shape == null) return false;
-        return shape.IsWordArt && shape.IsLocked;
+        if (shape == null)
+            throw new ArgumentNullException(nameof(shape));
+
+        // Check if the shape is a WordArt object.
+        bool isWordArt = shape.IsWordArt;
+
+        // Check if the shape is locked.
+        bool isLocked = shape.IsLocked;
+
+        // Many watermarks are identified by the alternative text or name containing the word "Watermark".
+        // Perform a case‑insensitive search in both properties.
+        string altText = shape.AlternativeText ?? string.Empty;
+        string name = shape.Name ?? string.Empty;
+        bool containsWatermarkKeyword = altText.IndexOf("watermark", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                        name.IndexOf("watermark", StringComparison.OrdinalIgnoreCase) >= 0;
+
+        // The shape is considered a locked WordArt watermark only when all three conditions are met.
+        return isWordArt && isLocked && containsWatermarkKeyword;
     }
 }
 
-class Program
+public static class Program
 {
-    static void Main()
+    public static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Example usage: load a workbook if it exists.
+            string filePath = "sample.xlsx";
 
-        // Add a WordArt shape (commonly used as a watermark)
-        Shape wordArt = worksheet.Shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1,
-            "Sample Watermark",
-            0, 0, 200, 100, 0, 0);
+            if (System.IO.File.Exists(filePath))
+            {
+                Workbook workbook = new Workbook(filePath);
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Lock the WordArt shape
-        wordArt.IsLocked = true;
-
-        // Add a regular rectangle shape for comparison
-        Shape rectangle = worksheet.Shapes.AddRectangle(1, 0, 150, 100, 100, 100);
-        rectangle.IsLocked = true;
-
-        // Use the custom function to check if each shape is a locked WordArt watermark
-        Console.WriteLine("WordArt shape is a locked watermark: " + wordArt.IsLockedWordArtWatermark());
-        Console.WriteLine("Rectangle shape is a locked watermark: " + rectangle.IsLockedWordArtWatermark());
+                // Iterate through all shapes in the worksheet.
+                foreach (Shape shape in worksheet.Shapes)
+                {
+                    bool isWatermark = ShapeHelper.IsLockedWordArtWatermark(shape);
+                    Console.WriteLine($"Shape '{shape.Name}' locked WordArt watermark: {isWatermark}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"File not found: {filePath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors.
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

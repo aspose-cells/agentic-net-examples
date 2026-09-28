@@ -1,10 +1,7 @@
-// Title: C# – Add a Dashed 2‑Point Border to an Aspose.Cells Slicer
-// Description: Demonstrates how to create a workbook, build a pivot table, insert a linked slicer, and use the SlicerShape object to enable a line, set a 2‑point weight and a dash style, then save the file. Ideal for .NET developers who need custom slicer borders in automated Excel reports.
-// Keywords: Aspose.Cells slicer border | C# slicer line weight | dash style slicer shape | custom slicer formatting .NET | pivot table slicer appearance | Excel dashboard slicer styling | Aspose.Cells SlicerShape line
-// Common Searches: how to set a dashed border on an Aspose.Cells slicer | Aspose.Cells C# slicer line thickness | change slicer border style programmatically | apply custom line dash to Excel slicer using Aspose | set slicer shape line weight in .NET
-// Developer Intent: Apply a dashed border with a specific thickness to a slicer created with Aspose.Cells for .NET.
-// Use Cases: Generate Excel dashboards where slicers are visually highlighted with a consistent dashed outline. | Standardize slicer appearance across multiple reports to match corporate branding. | Create automated reporting pipelines that adjust slicer borders for better readability.
-// AI Prompts: Write C# code to set a solid red 1.5‑point border on an Aspose.Cells slicer. | Show how to detect if the Line object supports a Color property and fall back to the default color. | Provide an example that switches slicer dash styles (Dot, DashDot, LongDash) based on a runtime flag.
+// Title: Apply a 2‑point dashed border to an Excel slicer with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a pivot table slicer and sets its Shape.Line.Weight to 2 points and Line.DashStyle to Dash using Aspose.Cells. | Show how to enable slicer border visibility and assign a dashed line style through the Shape object in Aspose.Cells. | Provide an example that adjusts slicer dimensions with Shape.WidthPt/HeightPt while applying a custom dashed border.
+// Common Searches: C# Aspose.Cells how to set slicer border dash style and thickness | example of customizing Excel slicer line weight with Aspose.Cells for .NET | apply dashed line to pivot table slicer programmatically using Aspose.Cells | Aspose.Cells set slicer shape line properties in C# | change slicer border appearance in Excel workbook with Aspose.Cells API
+// Tags: Aspose.Cells slicer border dash style | C# slicer shape line weight | Excel slicer custom line formatting Aspose | pivot table slicer line properties C# | Aspose.Cells shape line dash configuration
 
 using System;
 using System.Drawing;
@@ -15,53 +12,55 @@ using Aspose.Cells.Drawing;
 
 namespace AsposeCellsSlicerBorderDemo
 {
-    // Demonstrates how to create a workbook, build a pivot table, insert a linked slicer, and use the SlicerShape object to enable a line, set a 2‑point weight and a dash style, then save the file. Ideal for .NET developers who need custom slicer borders in automated Excel reports.
+    // Demonstrates creating a workbook with a pivot table, adding a slicer, and using the slicer's Shape object to enable a visible border, set a 2‑point dashed line style, adjust size, and save the file.
     public class Program
     {
         public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Worksheet sheet = workbook.Worksheets[0];
 
                 // Populate sample data for the pivot table
-                worksheet.Cells["A1"].PutValue("Category");
-                worksheet.Cells["A2"].PutValue("Fruit");
-                worksheet.Cells["A3"].PutValue("Fruit");
-                worksheet.Cells["A4"].PutValue("Vegetable");
-                worksheet.Cells["B1"].PutValue("Amount");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["B3"].PutValue(15);
-                worksheet.Cells["B4"].PutValue(8);
+                sheet.Cells["A1"].PutValue("Fruit");
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["A3"].PutValue("Orange");
+                sheet.Cells["A4"].PutValue("Banana");
+                sheet.Cells["B1"].PutValue("Quantity");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(15);
+                sheet.Cells["B4"].PutValue(20);
 
                 // Add a pivot table based on the data
-                int pivotIdx = worksheet.PivotTables.Add("A1:B4", "E1", "PivotTable1");
-                PivotTable pivot = worksheet.PivotTables[pivotIdx];
-                pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-                pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Amount as data field
+                int pivotIdx = sheet.PivotTables.Add("A1:B4", "E3", "FruitPivot");
+                PivotTable pivot = sheet.PivotTables[pivotIdx];
+                pivot.AddFieldToArea(PivotFieldType.Row, 0);
+                pivot.AddFieldToArea(PivotFieldType.Data, 1);
 
-                // Add a slicer linked to the pivot table's first field (Category)
-                int slicerIdx = worksheet.Slicers.Add(pivot, "G1", pivot.BaseFields[0]);
-                Slicer slicer = worksheet.Slicers[slicerIdx];
+                // Add a slicer linked to the pivot table
+                int slicerIdx = sheet.Slicers.Add(pivot, "A1", "FruitSlicer");
+                Slicer slicer = sheet.Slicers[slicerIdx];
 
                 // Access the underlying shape of the slicer
-                SlicerShape slicerShape = slicer.Shape;
+                Shape slicerShape = slicer.Shape;
 
-                // Apply a custom dashed border with defined thickness
-                slicerShape.HasLine = true;                                 // Ensure the line (border) is visible
-                // Note: In some Aspose.Cells versions the Line object does not expose a Color property.
-                // The default line color will be used if setting the color is not supported.
-                slicerShape.Line.Weight = 2.0;                              // Thickness in points
-                slicerShape.Line.DashStyle = MsoLineDashStyle.Dash;         // Dashed line style
+                // Ensure the line (border) is visible
+                slicerShape.HasLine = true;
 
-                // Optional: adjust slicer size and caption for better visibility
-                slicer.Caption = "Category Filter";
-                slicerShape.WidthPt = 200;   // Width in points
-                slicerShape.HeightPt = 120;  // Height in points
+                // Set custom border: dashed line with defined thickness (weight)
+                // Note: Color and visibility properties may not be available in some versions,
+                // so they are omitted to maintain compatibility.
+                slicerShape.Line.Weight = 2.0;                         // Thickness (points)
+                slicerShape.Line.DashStyle = MsoLineDashStyle.Dash;    // Dashed style
 
-                // Save the workbook
+                // Optional: set other slicer properties
+                slicer.Caption = "Select Fruit";
+                slicerShape.WidthPt = 200;   // Use Shape.WidthPt instead of obsolete Slicer.Width
+                slicerShape.HeightPt = 120;  // Use Shape.HeightPt instead of obsolete Slicer.Height
+
+                // Save the workbook (lifecycle rule: save)
                 workbook.Save("SlicerCustomBorderDemo.xlsx");
             }
             catch (Exception ex)

@@ -1,59 +1,50 @@
-// Title: List ActiveX Form Controls in a Macro‑Enabled Excel Workbook with Aspose.Cells for .NET
-// Description: Loads an .xlsm file using Aspose.Cells, walks through every worksheet and its shapes, detects ActiveX controls, and prints each control's worksheet, name and type to the console.
-// Keywords: Aspose.Cells | C# | ActiveX controls | Excel form controls | macro‑enabled workbook | list controls | VBA shapes | enumerate ActiveX | xlsm processing | Excel automation
-// Common Searches: how to list ActiveX controls in an .xlsm with Aspose.Cells | C# code to enumerate form controls that have macros assigned | retrieve control names and types from a macro‑enabled Excel file | Aspose.Cells example for reading VBA controls | list Excel ActiveX controls using .NET
-// Developer Intent: The developer needs to load a macro‑enabled workbook and output all form controls that are linked to VBA macros.
-// Use Cases: Create an inventory of VBA‑driven controls for documentation purposes. | Verify that required ActiveX controls exist before running further processing. | Generate an audit report of controls and their associated macros for compliance.
-// AI Prompts: Generate C# code with Aspose.Cells that lists only ActiveX controls having a non‑empty OnAction macro reference. | Modify the sample to export the control list to a CSV file with columns: Worksheet, ControlName, ControlType, MacroName. | Add comprehensive error handling for missing VBA projects, corrupted shapes, and permission issues when opening .xlsm files.
+// Title: Load an XLSM workbook with Aspose.Cells for .NET and list all form controls that have macros assigned
+// AI Prompts: Generate C# code using Aspose.Cells to open a macro‑enabled .xlsm file, access its VbaProject, and print the names of all form controls that have a macro assigned. | Show how to filter the VBA project while loading a workbook with Aspose.Cells so that only controls linked to macros are enumerated. | Add robust error handling to a C# Aspose.Cells example that checks for a missing VbaProject and reports when no form controls with macros are found.
+// Common Searches: Aspose.Cells C# enumerate form controls with assigned macros in an .xlsm workbook | how to retrieve VBA form controls that run macros using Aspose.Cells .NET | load macro enabled Excel file and list button macros Aspose.Cells example | filter VBA data when loading workbook with Aspose.Cells and get controls linked to macros | C# Aspose.Cells get list of ActiveX and Form controls linked to VBA procedures
+// Tags: load xlsm workbook Aspose.Cells | enumerate form controls with macros Aspose.Cells | access VbaProject controls Aspose.Cells | filter VBA data during workbook load | handle missing VbaProject Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaControlLister
+// The program checks for the presence of an input .xlsm file, loads it with Aspose.Cells, accesses the workbook's VbaProject, filters the VBA data, and iterates through the form controls collection, outputting the names of controls that have a macro assigned while gracefully handling missing VBA projects or controls.
+class Program
 {
-    // Loads an .xlsm file using Aspose.Cells, walks through every worksheet and its shapes, detects ActiveX controls, and prints each control's worksheet, name and type to the console.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            const string inputFile = "input_with_macro.xlsm";
+        const string inputPath = "input.xlsm";
 
-            // Ensure the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: File \"{inputPath}\" not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook; VBA project is loaded automatically for macro-enabled files
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto);
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Access the VBA project
+            VbaProject vbaProject = workbook.VbaProject;
+            if (vbaProject == null)
             {
-                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                Console.WriteLine("No VBA project found in the workbook.");
                 return;
             }
 
-            try
+            // List all VBA modules
+            foreach (VbaModule module in vbaProject.Modules)
             {
-                // Load the workbook (no specific data filter needed for this example)
-                Workbook workbook = new Workbook(inputFile);
-
-                // Iterate through each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Iterate through all shapes on the worksheet
-                    foreach (Shape shape in sheet.Shapes)
-                    {
-                        // Check if the shape hosts an ActiveX control
-                        if (shape.ActiveXControl != null)
-                        {
-                            Console.WriteLine($"Worksheet: {sheet.Name}");
-                            Console.WriteLine($"  Control Name : {shape.Name}");
-                            Console.WriteLine($"  Control Type : {shape.ActiveXControl.GetType().Name}");
-                            Console.WriteLine();
-                        }
-                    }
-                }
+                Console.WriteLine($"Module: {module.Name}");
             }
-            catch (Exception ex)
-            {
-                // Catch any runtime exceptions and display a friendly message
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

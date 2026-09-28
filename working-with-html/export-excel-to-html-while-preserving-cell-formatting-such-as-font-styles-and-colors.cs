@@ -1,50 +1,52 @@
-// Title: Export Excel to HTML with Full Font Styling using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, apply custom font families, sizes, colors, bold and italic styles, configure HtmlSaveOptions (ExportDataOptions.All, ExcludeUnusedStyles = false) and save the file as HTML while preserving every cell's formatting.
-// Keywords: Aspose.Cells HTML export | preserve Excel font styles | C# convert Excel to HTML | HtmlSaveOptions formatting | ExportDataOptions.All example | retain cell colors Aspose .NET | Excel to HTML with CSS | styled HTML report from workbook
-// Common Searches: Aspose.Cells keep font color when exporting to HTML | C# export Excel to HTML preserving bold and italic | HtmlSaveOptions retain all styles Aspose | How to save Excel as styled HTML using .NET | Export Excel worksheet to HTML with original formatting
-// Developer Intent: Generate an HTML file from an Excel workbook that maintains all font attributes (family, size, color, bold, italic) exactly as they appear in the source sheet.
-// Use Cases: Publish a spreadsheet as a web‑ready report that looks identical to the Excel version. | Embed formatted spreadsheet data in emails or documentation without losing visual fidelity. | Provide an on‑the‑fly HTML preview of Excel sheets in a web application, ensuring users see the same styling as in the original file.
-// AI Prompts: Show how to embed CSS inline instead of external files when exporting Excel to HTML with Aspose.Cells. | Provide code to export only a selected worksheet to HTML while keeping its cell formatting. | Explain how to disable CSS generation and output pure HTML with inline style attributes using Aspose.Cells.
+// Title: Convert an Excel workbook to HTML with full cell formatting (fonts, colors, and gridlines) using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .xlsx file (or creates a new workbook when the file is absent) and saves it as an HTML document with Aspose.Cells, preserving font styles, text colors, and gridlines. | Show how to set up Aspose.Cells HtmlSaveOptions to embed worksheet images as Base64 strings and to output all worksheets into one HTML file. | Add comprehensive try‑catch error handling that writes any conversion exceptions to the console.
+// Common Searches: Aspose.Cells C# export Excel workbook to HTML with original text colors | retain cell borders when converting .xlsx to HTML using Aspose.Cells | save Excel as HTML and embed pictures directly in the page with Aspose.Cells | merge all worksheets into a single HTML document with Aspose.Cells .NET | example code for converting Excel to HTML while keeping cell formatting in C#
+// Tags: Aspose.Cells HtmlSaveOptions styling retention | preserve text styling in HTML output | cell border rendering in HTML export | inline image encoding for HTML export Aspose.Cells | combine multiple worksheets into one HTML page
 
-using System.Drawing;
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, apply custom font families, sizes, colors, bold and italic styles, configure HtmlSaveOptions (ExportDataOptions.All, ExcludeUnusedStyles = false) and save the file as HTML while preserving every cell's formatting.
+// The C# program checks for 'input.xlsx', loads it or creates a new workbook with sample data, configures HtmlSaveOptions to export all worksheets, retain gridlines, embed images as Base64, and keep font styles and colors, then saves the result as 'output.html' and logs success or any errors to the console.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Cell A1 with custom font style and color
-        Cell cellA1 = sheet.Cells["A1"];
-        cellA1.PutValue("Hello World");
-        Style styleA1 = cellA1.GetStyle();
-        styleA1.Font.Name = "Arial";
-        styleA1.Font.Size = 12;
-        styleA1.Font.Color = Color.Blue;
-        styleA1.Font.IsBold = true;
-        cellA1.SetStyle(styleA1);
+            // Load the workbook if the file exists; otherwise create a new workbook.
+            Workbook workbook;
+            if (File.Exists(inputPath))
+            {
+                workbook = new Workbook(inputPath);
+            }
+            else
+            {
+                workbook = new Workbook();
+                // Add minimal content to avoid an empty workbook.
+                workbook.Worksheets[0].Cells["A1"].PutValue("Sample Data");
+            }
 
-        // Cell B2 with a different font style and color
-        Cell cellB2 = sheet.Cells["B2"];
-        cellB2.PutValue("Aspose.Cells");
-        Style styleB2 = cellB2.GetStyle();
-        styleB2.Font.Name = "Times New Roman";
-        styleB2.Font.Size = 14;
-        styleB2.Font.Color = Color.Green;
-        styleB2.Font.IsItalic = true;
-        cellB2.SetStyle(styleB2);
+            // Configure HTML save options.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = false, // Export all worksheets.
+                ExportGridLines = true,            // Keep grid lines visible.
+                ExportImagesAsBase64 = true        // Embed images directly in HTML.
+                // Note: ExportColumnHeaders, ExportRowHeaders, and FontEmbeddingMode are not
+                // available in the current Aspose.Cells version and have been omitted.
+            };
 
-        // Configure HTML save options to preserve all formatting
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.ExportDataOptions = HtmlExportDataOptions.All; // export all data
-        htmlOptions.ExcludeUnusedStyles = false; // keep all style definitions
-        // Additional options can be set as needed, e.g., htmlOptions.DisableCss = false;
-
-        // Save the workbook as an HTML file with the specified options
-        workbook.Save("ExportedWorkbook.html", htmlOptions);
+            // Save the workbook as an HTML file.
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

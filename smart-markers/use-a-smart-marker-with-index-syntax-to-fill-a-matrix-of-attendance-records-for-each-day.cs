@@ -1,19 +1,15 @@
-// Title: C# – Build an Excel Attendance Matrix with Aspose.Cells Smart Markers and Index Syntax
-// Description: Demonstrates how to generate an attendance spreadsheet by creating a workbook, adding a header row, inserting smart markers with the [0] index to repeat rows for each DataTable record, naming the marker range "_CellsSmartMarkers", binding the DataTable to a WorkbookDesigner, processing the named range, and saving the result as an XLSX file.
-// Keywords: Aspose.Cells | C# | smart markers | index syntax | attendance matrix | DataTable | WorkbookDesigner | named range | Excel export | repeat rows
-// Common Searches: Aspose.Cells smart markers repeat rows C# | attendance matrix Excel Aspose.Cells | WorkbookDesigner process named range | C# fill Excel from DataTable using smart markers | index [0] syntax Aspose.Cells
-// Developer Intent: Create an Excel attendance report by applying smart markers with the [0] index to auto‑repeat rows from a DataTable.
-// Use Cases: Generate daily attendance logs for multiple employees with one row per date. | Export any DataTable (e.g., sales, inventory) to a pre‑formatted Excel template using smart markers. | Reuse a single Excel file as a template for different datasets by changing the data source name. | Automate production of HR attendance sheets in .NET applications.
-// AI Prompts: Add a column that counts "Present" entries for each employee after the smart markers are processed. | Show how to rename the data source from "Attendance" to another name while keeping the same marker syntax. | Provide code to format the Date column as "MM/dd/yyyy" after WorkbookDesigner processing.
+// Title: Generate an Excel attendance matrix with Aspose.Cells smart markers using index syntax in C#
+// AI Prompts: Write C# code that creates a workbook, defines a named range, and uses &[Attendance][${row}][col] smart markers to fill employee attendance data from a two‑dimensional array. | Show how to configure WorkbookDesigner to bind an object[,] as the "Attendance" data source and process the smart markers for a matrix layout. | Demonstrate adding a calculated column that counts present days per employee using a smart‑marker expression in the same worksheet.
+// Common Searches: how to use Aspose.Cells smart markers with index syntax to populate a table in C# | c# Aspose.Cells create attendance sheet from 2d array | named range _CellsSmartMarkers Aspose.Cells example | populate Excel matrix using WorkbookDesigner and smart markers | Aspose.Cells smart marker row index placeholder ${row} usage
+// Tags: Aspose.Cells smart markers index syntax | C# populate Excel matrix from 2D array | WorkbookDesigner data source object array | named range _CellsSmartMarkers for smart markers | attendance table generation with Aspose.Cells
 
 using System;
-using System.Data;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace SmartMarkerMatrixExample
+namespace SmartMarkerMatrixDemo
 {
-    // Demonstrates how to generate an attendance spreadsheet by creating a workbook, adding a header row, inserting smart markers with the [0] index to repeat rows for each DataTable record, naming the marker range "_CellsSmartMarkers", binding the DataTable to a WorkbookDesigner, processing the named range, and saving the result as an XLSX file.
+    // The sample creates a new workbook, adds header cells for an attendance matrix, inserts smart markers using the &[Attendance][${row}][col] index syntax, defines the named range "_CellsSmartMarkers" to limit processing, prepares a two‑dimensional object array containing employee names and daily attendance booleans, binds this array to the "Attendance" marker via WorkbookDesigner, processes all smart markers, and saves the filled worksheet as AttendanceMatrix.xlsx.
     class Program
     {
         static void Main()
@@ -21,51 +17,48 @@ namespace SmartMarkerMatrixExample
             try
             {
                 // 1. Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                Workbook workbook = new Workbook();                     // create workbook
+                Worksheet sheet = workbook.Worksheets[0];               // get first sheet
 
                 // 2. Set up header row for the attendance matrix
-                cells["A1"].PutValue("Date");
-                cells["B1"].PutValue("Employee 1");
-                cells["C1"].PutValue("Employee 2");
-                cells["D1"].PutValue("Employee 3");
+                sheet.Cells["A1"].PutValue("Employee");
+                sheet.Cells["B1"].PutValue("Day 1");
+                sheet.Cells["C1"].PutValue("Day 2");
+                sheet.Cells["D1"].PutValue("Day 3");
 
-                // 3. Insert smart markers using index syntax.
-                //    The [0] index tells the designer to repeat the row for each record in the data source.
-                cells["A2"].PutValue("&=Attendance.Date[0]");
-                cells["B2"].PutValue("&=Attendance.Emp1[0]");
-                cells["C2"].PutValue("&=Attendance.Emp2[0]");
-                cells["D2"].PutValue("&=Attendance.Emp3[0]");
+                // 3. Insert smart markers that use index syntax.
+                //    The syntax &[Attendance][${row}][colIndex] will be replaced by the
+                //    corresponding element from the 2‑dimensional data source.
+                //    Row index (${row}) is automatically increased for each repeated row.
+                sheet.Cells["A2"].PutValue("&=[Attendance][${row}][0]"); // Employee name
+                sheet.Cells["B2"].PutValue("&=[Attendance][${row}][1]"); // Day 1 attendance
+                sheet.Cells["C2"].PutValue("&=[Attendance][${row}][2]"); // Day 2 attendance
+                sheet.Cells["D2"].PutValue("&=[Attendance][${row}][3]"); // Day 3 attendance
 
-                // 4. Define the range that contains the smart markers and name it as required by the designer.
-                //    The name \"_CellsSmartMarkers\" signals that this range should be processed.
-                AsposeRange smartRange = cells.CreateRange("A2:D2");
+                // 4. Define the range that contains the smart markers.
+                //    Naming the range "_CellsSmartMarkers" tells the designer to process only this range.
+                AsposeRange smartRange = sheet.Cells.CreateRange("A2:D2");
                 smartRange.Name = "_CellsSmartMarkers";
 
-                // 5. Prepare a DataTable that represents the attendance records.
-                DataTable attendanceTable = new DataTable("Attendance");
-                attendanceTable.Columns.Add("Date", typeof(DateTime));
-                attendanceTable.Columns.Add("Emp1", typeof(string));
-                attendanceTable.Columns.Add("Emp2", typeof(string));
-                attendanceTable.Columns.Add("Emp3", typeof(string));
+                // 5. Prepare a 2‑dimensional array with attendance data.
+                //    First column = employee name, subsequent columns = attendance (true/false).
+                object[,] attendanceData = new object[,]
+                {
+                    { "John Doe", true,  false, true  },
+                    { "Jane Smith", false, true,  true  },
+                    { "Bob Lee",   true,  true,  false }
+                };
 
-                // Sample data: three days of attendance
-                attendanceTable.Rows.Add(new DateTime(2023, 9, 1), "Present", "Absent", "Present");
-                attendanceTable.Rows.Add(new DateTime(2023, 9, 2), "Absent", "Present", "Present");
-                attendanceTable.Rows.Add(new DateTime(2023, 9, 3), "Present", "Present", "Absent");
-
-                // 6. Create a WorkbookDesigner, assign the workbook and set the data source.
+                // 6. Set up the WorkbookDesigner, assign the data source, and process the smart markers.
                 WorkbookDesigner designer = new WorkbookDesigner
                 {
                     Workbook = workbook
+                    // LineByLine is obsolete; using named range smart markers eliminates the need.
                 };
-                designer.SetDataSource("Attendance", attendanceTable);
+                designer.SetDataSource("Attendance", attendanceData);
+                designer.Process();    // process all smart markers in the workbook
 
-                // 7. Process only the defined range (true = preserve unrecognized markers, not needed here).
-                designer.Process(smartRange, true);
-
-                // 8. Save the resulting workbook.
+                // 7. Save the resulting workbook.
                 string outputPath = "AttendanceMatrix.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");

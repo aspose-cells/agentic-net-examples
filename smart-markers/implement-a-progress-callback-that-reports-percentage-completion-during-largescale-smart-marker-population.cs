@@ -1,10 +1,7 @@
-// Title: C# Progress Callback for Aspose.Cells Smart Marker Processing (Percentage Completion)
-// Description: Demonstrates how to implement ISmartMarkerCallBack to report the percentage of smart markers processed while populating a workbook with a large DataTable. The callback calculates progress using designer.GetSmartMarkers(), safeguards against division‑by‑zero, writes updates to the console, and integrates with WorkbookDesigner for high‑volume smart marker scenarios.
-// Keywords: Aspose.Cells | Smart Markers | ISmartMarkerCallBack | progress callback | percentage reporting | C# | .NET | WorkbookDesigner | large data source | console progress | smart marker processing | performance monitoring
-// Common Searches: Aspose.Cells smart marker progress callback C# | how to track smart marker processing percentage | ISmartMarkerCallBack example | monitor smart marker population in .NET | report progress during large smart marker fill | Aspose.Cells console progress for smart markers
-// Developer Intent: Add a callback that outputs the percentage of smart markers processed while a workbook is being populated with a massive data set.
-// Use Cases: Show real‑time console progress when processing thousands of smart marker cells. | Integrate the callback with a UI progress bar for desktop applications. | Log percentage updates to a file for audit or performance analysis. | Provide cancellation support based on user input while still reporting progress. | Ensure accurate progress calculation by deriving total markers from GetSmartMarkers and preventing division‑by‑zero errors.
-// AI Prompts: Generate a C# ISmartMarkerCallBack that updates a Windows Forms ProgressBar instead of writing to the console. | Rewrite the callback to append timestamped progress entries to a log file. | Create code that adds cancellation token handling to the smart marker processing loop while preserving percentage updates. | Provide a SignalR hub example that streams progress percentages to a web dashboard during smart marker population. | Write unit tests that verify correct percentage calculation and zero‑division protection in the progress callback.
+// Title: How to implement a smart‑marker progress callback that reports percentage completion in Aspose.Cells for .NET
+// AI Prompts: Create a C# class that implements ISmartMarkerCallBack and writes the current marker index and completion percentage to the console during WorkbookDesigner.Process. | Show C# code to retrieve the total number of smart markers from WorkbookDesigner, assign the custom callback, and invoke the processing of all markers. | Provide a Windows Forms example where the ISmartMarkerCallBack updates a ProgressBar control instead of using Console.WriteLine.
+// Common Searches: Aspose.Cells .NET how to monitor smart marker processing progress | C# get total smart marker count before calling WorkbookDesigner.Process | example of ISmartMarkerCallBack showing percentage completed | display smart marker population progress in a UI using Aspose.Cells | track large smart marker population performance with a callback in Aspose.Cells
+// Tags: ISmartMarkerCallBack percentage progress | WorkbookDesigner smart marker count | smart marker processing callback .NET | Aspose.Cells progress reporting for smart markers | console logging of smart marker population
 
 using System;
 using System.Data;
@@ -12,66 +9,61 @@ using Aspose.Cells;
 
 namespace SmartMarkerProgressDemo
 {
-    // Callback implementation to report progress during smart marker processing
-    // Demonstrates how to implement ISmartMarkerCallBack to report the percentage of smart markers processed while populating a workbook with a large DataTable. The callback calculates progress using designer.GetSmartMarkers(), safeguards against division‑by‑zero, writes updates to the console, and integrates with WorkbookDesigner for high‑volume smart marker scenarios.
+    // Callback implementation that reports percentage completion
+    // Demonstrates implementing ISmartMarkerCallBack to log processed marker count and completion percentage, obtaining the total smart marker count, assigning the callback to WorkbookDesigner, processing the markers, and saving the populated workbook.
     public class SmartMarkerProgressCallback : ISmartMarkerCallBack
     {
         private readonly int _totalMarkers;
-        private int _processedCount;
+        private int _processedMarkers;
 
         public SmartMarkerProgressCallback(int totalMarkers)
         {
             _totalMarkers = totalMarkers > 0 ? totalMarkers : 1; // avoid division by zero
-            _processedCount = 0;
+            _processedMarkers = 0;
         }
 
-        // This method is invoked for each smart marker cell being processed
+        // This method is called by Aspose.Cells for each smart marker processed
         public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
         {
-            _processedCount++;
-
-            // Calculate percentage based on processed cells vs total markers
-            int percent = (int)((double)_processedCount / _totalMarkers * 100);
-            Console.WriteLine($"Processing sheet {sheetIndex}, cell ({rowIndex}, {colIndex}) - Table: {tableName}, Column: {columnName} => {percent}% completed");
+            _processedMarkers++;
+            int percent = (int)((double)_processedMarkers / _totalMarkers * 100);
+            Console.WriteLine($"Processed {_processedMarkers}/{_totalMarkers} ({percent}%) - Sheet:{sheetIndex} Row:{rowIndex} Col:{colIndex} Table:{tableName} Column:{columnName}");
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             // Load the template workbook that contains smart markers
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = new Workbook("SmartMarkerTemplate.xlsx");
+            Workbook templateWorkbook = new Workbook("SmartMarkerTemplate.xlsx");
 
-            // Determine total number of smart markers to process
-            // GetSmartMarkers returns distinct markers; for demonstration we treat this as total work units
-            string[] markers = designer.GetSmartMarkers();
-            int totalMarkers = markers.Length;
+            // Initialize WorkbookDesigner and assign the workbook
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = templateWorkbook;
+
+            // ----- Prepare a sample data source -----
+            DataTable employeeTable = new DataTable("Employees");
+            employeeTable.Columns.Add("Name", typeof(string));
+            employeeTable.Columns.Add("Age", typeof(int));
+            employeeTable.Rows.Add("John Doe", 30);
+            employeeTable.Rows.Add("Jane Smith", 28);
+            employeeTable.Rows.Add("Bob Johnson", 45);
+            // Bind the data source to the designer
+            designer.SetDataSource(employeeTable);
+            // ----------------------------------------
+
+            // Determine total number of smart markers before processing
+            int totalMarkers = designer.GetSmartMarkers().Length;
 
             // Assign the progress callback
             designer.CallBack = new SmartMarkerProgressCallback(totalMarkers);
 
-            // Prepare a large data source (e.g., a DataTable with many rows)
-            DataTable dt = new DataTable("Employees");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Age", typeof(int));
-            dt.Columns.Add("Department", typeof(string));
-
-            // Populate with a large number of rows to simulate a heavy load
-            for (int i = 1; i <= 5000; i++)
-            {
-                dt.Rows.Add($"Employee {i}", 20 + (i % 30), $"Dept {(i % 5) + 1}");
-            }
-
-            // Bind the data source to the designer
-            designer.SetDataSource(dt);
-
-            // Process all smart markers; the callback will report progress
-            designer.Process();
+            // Process all smart markers (true = preserve unrecognized markers)
+            designer.Process(true);
 
             // Save the populated workbook
-            designer.Workbook.Save("SmartMarkerResult.xlsx");
+            designer.Workbook.Save("SmartMarkerPopulated.xlsx");
         }
     }
 }

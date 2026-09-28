@@ -1,116 +1,123 @@
-// Title: Load Runtime Locale from Config and Apply Aspose.Cells Localization in C#
-// Description: Read a locale string from a config.txt file, create the matching CultureInfo, configure Aspose.Cells LoadOptions, set the workbook's UI language via CountryCode, and save the localized Excel file. Includes fallback to invariant culture for unsupported locales.
-// Keywords: Aspose.Cells C# | LoadOptions CultureInfo | runtime locale configuration | Excel workbook localization | CountryCode mapping | CultureInfo fallback | dynamic language settings | config file locale
-// Common Searches: Aspose.Cells load workbook with cultureinfo from config | C# set workbook language code using Aspose.Cells | How to map locale string to Aspose.Cells CountryCode | LoadOptions CultureInfo example Aspose.Cells | Read locale from text file and apply to Excel workbook C#
-// Developer Intent: Read a locale at runtime, convert it to .NET CultureInfo and Aspose.Cells CountryCode, apply these settings to LoadOptions and workbook UI language, and save the localized workbook.
-// Use Cases: Automatically format numbers, dates, and currencies according to a user‑selected region when loading Excel files. | Display workbook UI elements (menus, messages) in the language defined by a configuration file. | Provide a safe fallback to invariant culture for unknown or misspelled locale codes, preventing runtime errors.
-// AI Prompts: Generate C# code that reads a locale from a JSON configuration file and applies it to Aspose.Cells LoadOptions and workbook Settings.LanguageCode. | Extend GetCountryCodeFromLocale to include "pt-BR", "it", and "nl" with appropriate CountryCode values. | Explain best practices for validating and sanitizing locale strings before creating a CultureInfo object in Aspose.Cells.
+// Title: Load localization mappings from a JSON file at runtime and instantiate the appropriate ILocalization implementation using reflection in C#
+// AI Prompts: Write C# code that reads a JSON file containing language‑code to fully‑qualified class name mappings, asks the user for a language code, and creates the matching ILocalization object via reflection. | Update the sample to log an error and automatically fall back to EnglishLocalization when the requested language code is absent or the target type cannot be instantiated. | Enhance the program to scan a folder for additional assemblies, load them at runtime, and instantiate localization classes defined in the JSON mapping.
+// Common Searches: how to map language codes to class names using a JSON file in .NET | create a localization instance from user input at runtime c# | default fallback localization when configuration entry is missing c# | load external localization assemblies dynamically based on a config file
+// Tags: load localization mapping from JSON in C# | instantiate interface implementation via reflection | default language fallback strategy | dynamic assembly discovery for localization | handle missing configuration file errors
 
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.IO;
-using Aspose.Cells;
+using System.Reflection;
+using System.Text.Json;
+using Aspose.Cells; // Aspose.Cells namespace (required by the project)
 
-// Read a locale string from a config.txt file, create the matching CultureInfo, configure Aspose.Cells LoadOptions, set the workbook's UI language via CountryCode, and save the localized Excel file. Includes fallback to invariant culture for unsupported locales.
-static class Config
+// Interface that all localization classes must implement
+public interface ILocalization
 {
-    // Holds the locale string for the application
-    public static string Locale { get; set; } = "en";
+    string GetGreeting();
 }
 
-class Program
+// Example localization implementations
+// Demonstrates loading a JSON configuration that maps language codes to fully‑qualified localization class names, prompting the user for a language, resolving the class with reflection, creating an ILocalization instance, and displaying its greeting. Includes error handling for missing files, JSON parsing issues, and type mismatches, and shows how to add a default fallback and extend to dynamic assembly loading.
+public class EnglishLocalization : ILocalization
 {
-    static void Main()
+    public string GetGreeting() => "Hello!";
+}
+
+public class SpanishLocalization : ILocalization
+{
+    public string GetGreeting() => "¡Hola!";
+}
+
+// Class representing the configuration file structure
+public class LocalizationConfig
+{
+    // Maps a language key (e.g., "en", "es") to the fully‑qualified class name
+    public Dictionary<string, string> Mappings { get; set; }
+}
+
+public class Program
+{
+    // Path to the JSON configuration file (adjust as needed)
+    private const string ConfigFilePath = "localizationConfig.json";
+
+    public static void Main()
     {
-        // Load locale setting from a simple configuration file at runtime
-        string configPath = "config.txt";
-        string locale = "en"; // Default locale
-
-        if (File.Exists(configPath))
-        {
-            // Read the locale code (e.g., "en", "de", "zh-hant") and trim whitespace
-            locale = File.ReadAllText(configPath).Trim();
-        }
-
-        // Assign the loaded locale to the static Config.Locale field
-        Config.Locale = locale;
-
-        // Create a CultureInfo instance based on the locale string
-        CultureInfo culture = GetCultureInfoFromLocale(locale);
-
-        // Prepare LoadOptions with the selected CultureInfo
-        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-        {
-            CultureInfo = culture
-        };
-
-        const string inputFile = "input.xlsx";
-        const string outputFile = "output.xlsx";
-
-        if (!File.Exists(inputFile))
-        {
-            Console.WriteLine($"Input file \"{inputFile}\" not found.");
-            return;
-        }
-
         try
         {
-            // Load an existing workbook using the configured LoadOptions
-            Workbook workbook = new Workbook(inputFile, loadOptions);
+            // 1. Load configuration at runtime
+            LocalizationConfig config = LoadConfiguration(ConfigFilePath);
 
-            // Optionally set the workbook's UI language based on the locale
-            workbook.Settings.LanguageCode = GetCountryCodeFromLocale(locale);
+            // 2. Prompt user for language selection
+            Console.WriteLine("Enter language code (e.g., en, es):");
+            string userInput = Console.ReadLine()?.Trim().ToLower();
 
-            // Save the workbook after applying localization settings
-            workbook.Save(outputFile);
-            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
+            // 3. Resolve the appropriate localization class name
+            if (string.IsNullOrEmpty(userInput) || !config.Mappings.TryGetValue(userInput, out string className))
+            {
+                Console.WriteLine("Unsupported language. Falling back to English.");
+                className = typeof(EnglishLocalization).FullName;
+            }
+
+            // 4. Instantiate the localization class using reflection
+            ILocalization localizationInstance = CreateLocalizationInstance(className);
+
+            // 5. Use the instantiated class
+            Console.WriteLine(localizationInstance.GetGreeting());
+
+            // Example of using Aspose.Cells after localization (optional)
+            // Workbook wb = new Workbook(); // create a new workbook
+            // // ... further Aspose.Cells operations ...
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        catch (JsonException ex)
+        {
+            Console.WriteLine($"Error parsing configuration: {ex.Message}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 
-    // Converts a locale code (e.g., "en", "zh-hant") to a .NET CultureInfo
-    static CultureInfo GetCultureInfoFromLocale(string locale)
+    // Loads the JSON configuration file and deserializes it into LocalizationConfig
+    private static LocalizationConfig LoadConfiguration(string path)
     {
-        try
+        if (!File.Exists(path))
         {
-            // Replace underscores with hyphens to match .NET culture naming
-            string cultureName = locale.Replace('_', '-');
-            return new CultureInfo(cultureName);
+            throw new FileNotFoundException($"Configuration file not found: {path}");
         }
-        catch
+
+        string json = File.ReadAllText(path);
+        var options = new JsonSerializerOptions
         {
-            // Fallback to invariant culture if the locale is not recognized
-            return CultureInfo.InvariantCulture;
-        }
+            PropertyNameCaseInsensitive = true
+        };
+        return JsonSerializer.Deserialize<LocalizationConfig>(json, options);
     }
 
-    // Maps a locale code to the corresponding Aspose.Cells CountryCode enum value
-    static CountryCode GetCountryCodeFromLocale(string locale)
+    // Creates an instance of the class identified by its fully‑qualified name
+    private static ILocalization CreateLocalizationInstance(string fullyQualifiedName)
     {
-        switch (locale)
+        // Load the current assembly (assuming the classes are in the same assembly)
+        Assembly assembly = Assembly.GetExecutingAssembly();
+
+        // Get the Type object for the class name
+        Type type = assembly.GetType(fullyQualifiedName);
+        if (type == null)
         {
-            case "en":
-                return CountryCode.USA;
-            case "de":
-                return CountryCode.Germany;
-            case "fr":
-                return CountryCode.France;
-            case "es":
-                return CountryCode.Spain;
-            case "zh":
-                return CountryCode.China;
-            case "zh-hant":
-                return CountryCode.Taiwan;
-            case "ja":
-                return CountryCode.Japan;
-            case "ru":
-                return CountryCode.Russia;
-            default:
-                // Default to English (USA) if no specific mapping exists
-                return CountryCode.USA;
+            throw new InvalidOperationException($"Type '{fullyQualifiedName}' not found in assembly.");
         }
+
+        // Ensure the type implements ILocalization
+        if (!typeof(ILocalization).IsAssignableFrom(type))
+        {
+            throw new InvalidOperationException($"Type '{fullyQualifiedName}' does not implement ILocalization.");
+        }
+
+        // Create an instance using the default constructor
+        return (ILocalization)Activator.CreateInstance(type);
     }
 }

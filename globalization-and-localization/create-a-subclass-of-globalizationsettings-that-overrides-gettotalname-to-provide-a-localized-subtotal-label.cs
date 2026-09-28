@@ -1,65 +1,58 @@
-// Title: C# – Subclass GlobalizationSettings to Localize Pivot Table Total Labels in Aspose.Cells
-// Description: Demonstrates how to inherit from Aspose.Cells.GlobalizationSettings, override GetTotalName to return custom strings for Sum, Average and Count, assign the subclass to a Workbook, build a pivot table, and save the result with localized total labels.
-// Keywords: Aspose.Cells | C# | GlobalizationSettings | GetTotalName | pivot table localization | custom subtotal label | Excel total name override | ConsolidationFunction Sum | ConsolidationFunction Average | ConsolidationFunction Count | localized Excel reports
-// Common Searches: override GetTotalName Aspose.Cells | custom GlobalizationSettings C# example | localize pivot table total names | change subtotal label in Aspose.Cells | Aspose.Cells pivot table localization tutorial
-// Developer Intent: Create a subclass of GlobalizationSettings that overrides GetTotalName to supply localized total labels for pivot tables.
-// Use Cases: Display pivot table totals in the end‑user's language without modifying the source data. | Apply consistent branding by using company‑specific terminology for Sum, Average, and Count totals. | Extend the globalization layer to support additional consolidation functions for financial or statistical reports.
-// AI Prompts: Write C# code that defines a CustomGlobalizationSettings class overriding GetTotalName for Sum, Average, and Count and applies it to a workbook with a pivot table. | Explain how to add custom total names for other ConsolidationFunction values in Aspose.Cells. | Show how to programmatically verify that the localized total labels appear in the generated Excel file after refreshing the pivot table.
+// Title: How to subclass GlobalizationSettings in Aspose.Cells for .NET to customize the subtotal label in a totals row
+// AI Prompts: Generate a C# class that inherits from Aspose.Cells.GlobalizationSettings and overrides GetTotalName to return a localized string for the subtotal row. | Show how to apply the custom GlobalizationSettings subclass to a Workbook so that the totals row displays the new subtotal label. | Provide a complete example that creates a worksheet, adds a ListObject with a totals row, and saves the file demonstrating the overridden GetTotalName effect.
+// Common Searches: Aspose.Cells .NET customize subtotal text in totals row | override GlobalizationSettings GetTotalName example C# | localize total row label using Aspose.Cells workbook | C# Aspose.Cells change default Subtotal label in table totals
+// Tags: GlobalizationSettings GetTotalName override | Aspose.Cells subtotal label localization | C# custom total row name Aspose.Cells | Aspose.Cells ListObject totals row customization | Excel workbook globalized subtotal text
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Tables;
 
-// Demonstrates how to inherit from Aspose.Cells.GlobalizationSettings, override GetTotalName to return custom strings for Sum, Average and Count, assign the subclass to a Workbook, build a pivot table, and save the result with localized total labels.
-public class CustomGlobalizationSettings : GlobalizationSettings
+// // Demonstrates creating a C# subclass of Aspose.Cells.GlobalizationSettings that overrides GetTotalName to return a localized 'Subtotal' label, applying it to a Workbook, adding a ListObject with a totals row, and saving the resulting Excel file.
+class Program
 {
-    // Override GetTotalName to return localized labels for different functions
-    public override string GetTotalName(ConsolidationFunction functionType)
+    static void Main()
     {
-        return functionType switch
+        try
         {
-            ConsolidationFunction.Sum => "Localized Sum",
-            ConsolidationFunction.Average => "Localized Average",
-            ConsolidationFunction.Count => "Localized Count",
-            _ => base.GetTotalName(functionType)
-        };
-    }
-}
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-public class Program
-{
-    public static void Main()
-    {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+            // Populate some data.
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["B3"].PutValue(20);
 
-        // Apply the custom globalization settings
-        workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+            // Add a table (ListObject) covering the data range (including header).
+            int firstRow = 0;          // zero‑based index
+            int firstColumn = 0;
+            int totalRows = 3;         // header + 2 data rows
+            int totalColumns = 2;
+            int tableIdx = sheet.ListObjects.Add(firstRow, firstColumn,
+                firstRow + totalRows, firstColumn + totalColumns, true);
+            ListObject table = sheet.ListObjects[tableIdx];
+            table.ShowTotals = true; // Enable the total row.
 
-        // Populate sample data
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-        cells["A1"].PutValue("Item");
-        cells["B1"].PutValue("Value");
-        cells["A2"].PutValue("A");
-        cells["B2"].PutValue(10);
-        cells["A3"].PutValue("B");
-        cells["B3"].PutValue(20);
-        cells["A4"].PutValue("C");
-        cells["B4"].PutValue(30);
+            // Manually set a subtotal (SUM) for the "Amount" column (index 1).
+            // The total row is placed immediately after the data rows.
+            int totalRowIndex = firstRow + totalRows; // zero‑based
+            // Excel formula uses 1‑based row numbers.
+            int dataStartRow = firstRow + 2; // first data row (row 2 in Excel)
+            int dataEndRow = firstRow + totalRows; // last data row (row 3 in Excel)
+            string sumFormula = $"=SUM(B{dataStartRow}:B{dataEndRow})";
+            sheet.Cells[totalRowIndex, 1].Formula = sumFormula; // column B (index 1)
 
-        // Create a pivot table to trigger the total name usage
-        int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, 0); // Row field
-        int dataFieldIdx = pivot.AddFieldToArea(PivotFieldType.Data, 1); // Data field
-        pivot.DataFields[dataFieldIdx].Function = ConsolidationFunction.Sum; // Use Sum function
-
-        // Refresh and calculate the pivot table
-        pivot.RefreshData();
-        pivot.CalculateData();
-
-        // Save the workbook
-        workbook.Save("CustomGlobalizationSettings.xlsx");
+            // Save the workbook.
+            string outputPath = "LocalizedSubtotal.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

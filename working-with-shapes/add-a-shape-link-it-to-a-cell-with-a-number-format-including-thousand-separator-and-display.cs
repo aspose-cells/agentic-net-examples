@@ -1,51 +1,62 @@
-// Title: Link a Rectangle Shape to a Cell with Thousand‑Separator Number Format using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, write a numeric value to A1, apply the built‑in "#,##0" format (ID 3) for thousand separators, add a rectangle shape, link the shape to the formatted cell with SetLinkedCell, and save the file as ShapeLinkedWithNumberFormat.xlsx.
-// Keywords: Aspose.Cells C# shape linking | rectangle shape SetLinkedCell | thousand separator number format Aspose.Cells | .NET workbook shape example | link shape to cell value
-// Common Searches: Aspose.Cells link shape to cell C# | apply thousand separator format to cell Aspose.Cells | add rectangle shape and bind to cell value .NET | SetLinkedCell usage examples | format cell with #,##0 and link shape
-// Developer Intent: Create a rectangle shape, bind it to a cell formatted with a thousand‑separator number format, and generate the workbook.
-// Use Cases: Dynamic dashboards where a shape shows a formatted total that updates with the source cell. | Financial reports that display currency amounts in shapes with proper thousand separators. | Invoice templates where a shape reflects a formatted price pulled from a specific cell.
-// AI Prompts: Generate C# code that adds a rectangle shape, formats a cell with "#,##0", links the shape to the cell, and saves the workbook using Aspose.Cells. | Explain how to refresh a linked shape after changing the cell value in an existing Aspose.Cells file. | Show different SetLinkedCell options for linking shapes to cells in Aspose.Cells for .NET.
+// Title: Create a rectangle shape linked to a formatted cell with thousand separators using Aspose.Cells for .NET
+// AI Prompts: Add a rectangle shape to a worksheet and set its Text property to a formula that references cell A1 so the shape shows the cell’s formatted number. | Apply the custom number format "#,##0" to a cell, then save the workbook, ensuring the linked shape updates automatically when the cell value changes.
+// Common Searches: Aspose.Cells C# bind shape text to a cell value with custom number formatting | link rectangle shape to cell A1 and display thousand separator format in Excel using Aspose.Cells | show formatted numeric cell value inside a shape with Aspose.Cells for .NET | automatically update shape text when the linked cell changes Aspose.Cells example
+// Tags: add rectangle shape Aspose.Cells | shape text formula binding Aspose.Cells | apply thousand separator format C# | link shape to cell value Aspose.Cells | save workbook with linked shape .xlsx
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsShapeLinkDemo
+// The example creates a new workbook, writes 1234567 to cell A1, applies the "#,##0" thousand‑separator format, adds a rectangle shape, links the shape’s text to A1 with a formula so the formatted value appears, centers the text, sets the font size, and saves the file as ShapeLinkedToCell.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, write a numeric value to A1, apply the built‑in "#,##0" format (ID 3) for thousand separators, add a rectangle shape, link the shape to the formatted cell with SetLinkedCell, and save the file as ShapeLinkedWithNumberFormat.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Put a numeric value in cell A1
-            Cell cell = worksheet.Cells["A1"];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set a numeric value in cell A1
+            Cell cell = sheet.Cells["A1"];
             cell.PutValue(1234567);
 
-            // Apply a number format with thousand separator (format ID 3 => "#,##0")
+            // Apply number format with thousand separator (e.g., 1,234,567)
             Style style = cell.GetStyle();
-            style.Number = 3; // "#,##0"
+            style.Custom = "#,##0";
             cell.SetStyle(style);
 
             // Add a rectangle shape to the worksheet
-            Shape shape = worksheet.Shapes.AddShape(
-                MsoDrawingType.Rectangle, // shape type
-                2,   // top row index
-                0,   // vertical offset (pixels) from the top row
-                2,   // left column index
-                0,   // horizontal offset (pixels) from the left column
-                100, // height in pixels
-                200  // width in pixels
-            );
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 60, 200);
 
-            // Link the shape's value to cell A1
-            shape.SetLinkedCell("$A$1", false, true);
+            // Link the shape's text to cell A1 using a formula.
+            // The shape will display the formatted value of A1 and update automatically when A1 changes.
+            shape.Text = "=A1";
 
-            // Save the workbook
-            workbook.Save("ShapeLinkedWithNumberFormat.xlsx");
+            // Optional: format the shape's text (font size, alignment, etc.)
+            shape.TextHorizontalAlignment = TextAlignmentType.Center;
+            shape.TextVerticalAlignment = TextAlignmentType.Center;
+            shape.Font.Size = 12;
+
+            // Determine output path and ensure the directory exists
+            string outputPath = "ShapeLinkedToCell.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

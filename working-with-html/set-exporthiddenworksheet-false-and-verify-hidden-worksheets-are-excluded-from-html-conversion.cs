@@ -1,58 +1,37 @@
-// Title: C# – Export Workbook to HTML Without Hidden Worksheets Using Aspose.Cells
-// Description: Shows how to build a workbook with one visible and one hidden sheet, set HtmlSaveOptions.ExportHiddenWorksheet = false to exclude the hidden sheet from the HTML output, read the file to confirm the omission, and then repeat the export with ExportHiddenWorksheet = true for comparison.
-// Keywords: Aspose.Cells | HtmlSaveOptions | ExportHiddenWorksheet | C# .NET | hide worksheet HTML export | exclude hidden sheets | Workbook to HTML | visible worksheets only | Aspose.Cells example
-// Common Searches: Aspose.Cells hide hidden worksheets in HTML | ExportHiddenWorksheet false C# | How to skip hidden sheets when saving as HTML Aspose.Cells | Verify hidden sheet not in HTML output Aspose | Aspose.Cells HtmlSaveOptions ExportActiveWorksheetOnly vs ExportHiddenWorksheet
-// Developer Intent: Export a workbook to HTML while omitting any worksheets that are marked as hidden.
-// Use Cases: Create an HTML report that displays only the data intended for end‑users. | Generate separate public and internal HTML files by toggling the hidden‑sheet export option. | Automate a validation step that ensures hidden worksheets are not rendered in the final HTML.
-// AI Prompts: Write C# code with Aspose.Cells to export a workbook to HTML excluding hidden worksheets and confirm the result. | Provide a C# unit test that asserts ExportHiddenWorksheet = false removes hidden sheet content from the saved HTML file. | Explain the interaction between ExportActiveWorksheetOnly and ExportHiddenWorksheet when converting a workbook to HTML.
+// Title: Exclude hidden worksheets from HTML conversion with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that hides a worksheet, sets HtmlSaveOptions.ExportHiddenWorksheet to false, saves the workbook as HTML, and checks that the hidden sheet name does not appear in the generated file. | Show how to programmatically verify that a hidden worksheet is omitted from the HTML output produced by Aspose.Cells by reading the file content and searching for the sheet name.
+// Common Searches: Aspose.Cells C# export workbook to HTML without hidden sheets | How to prevent hidden worksheets from being saved in HTML using Aspose.Cells | HtmlSaveOptions ExportHiddenWorksheet false example in .NET | Verify hidden worksheet exclusion after HTML conversion with Aspose.Cells | C# code to hide worksheet and exclude it from HTML output Aspose
+// Tags: Aspose.Cells HtmlSaveOptions ExportHiddenWorksheet | C# hide worksheet for HTML export | HTML conversion excluding hidden sheets | verify hidden worksheet omission Aspose.Cells | Aspose.Cells workbook to HTML without hidden worksheets
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExportHiddenWorksheetDemo
+// The example loads an Excel workbook, marks the first worksheet as hidden, configures HtmlSaveOptions.ExportHiddenWorksheet to false, saves the workbook as an HTML file, reads the generated HTML, and confirms that the hidden worksheet's name is not present, demonstrating how to exclude hidden sheets from HTML conversion using Aspose.Cells for .NET.
+class Program
 {
-    // Shows how to build a workbook with one visible and one hidden sheet, set HtmlSaveOptions.ExportHiddenWorksheet = false to exclude the hidden sheet from the HTML output, read the file to confirm the omission, and then repeat the export with ExportHiddenWorksheet = true for comparison.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the default worksheet (visible)
-            Workbook workbook = new Workbook();
-            Worksheet visibleSheet = workbook.Worksheets[0];
-            visibleSheet.Name = "VisibleSheet";
-            visibleSheet.Cells["A1"].PutValue("Data in visible sheet");
+        // Load an existing workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Add a second worksheet and hide it
-            Worksheet hiddenSheet = workbook.Worksheets.Add("HiddenSheet");
-            hiddenSheet.Cells["A1"].PutValue("Data in hidden sheet");
-            hiddenSheet.IsVisible = false; // Mark worksheet as hidden
+        // Ensure the first worksheet is hidden for the test
+        Worksheet hiddenSheet = workbook.Worksheets[0];
+        hiddenSheet.IsVisible = false;
 
-            // Configure HTML save options to exclude hidden worksheets
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
-            {
-                ExportHiddenWorksheet = false, // Do not export hidden worksheets
-                ExportActiveWorksheetOnly = false // Export the whole workbook (visible sheets only)
-            };
+        // Set HTML save options to exclude hidden worksheets
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportHiddenWorksheet = false;
 
-            // Define output path
-            string outputPath = Path.Combine(Environment.CurrentDirectory, "WorkbookWithoutHidden.html");
+        // Save the workbook as HTML
+        string htmlPath = "output.html";
+        workbook.Save(htmlPath, htmlOptions);
 
-            // Save the workbook to HTML; hidden sheet will be omitted
-            workbook.Save(outputPath, saveOptions);
-
-            // Optional: Verify that the hidden worksheet content is not present in the HTML file
-            // (In a real test, you would read the file and assert that "HiddenSheet" or its data is absent)
-            string htmlContent = File.ReadAllText(outputPath);
-            bool hiddenSheetPresent = htmlContent.Contains("HiddenSheet") || htmlContent.Contains("Data in hidden sheet");
-            Console.WriteLine($"Hidden worksheet exported? {(hiddenSheetPresent ? "Yes" : "No")}");
-
-            // For comparison, export with hidden worksheets included
-            saveOptions.ExportHiddenWorksheet = true;
-            string outputPathWithHidden = Path.Combine(Environment.CurrentDirectory, "WorkbookWithHidden.html");
-            workbook.Save(outputPathWithHidden, saveOptions);
-            Console.WriteLine("Export completed. Check the generated HTML files.");
-        }
+        // Verify that the hidden worksheet name does not appear in the generated HTML
+        string htmlContent = File.ReadAllText(htmlPath);
+        bool hiddenSheetPresent = htmlContent.Contains(hiddenSheet.Name);
+        Console.WriteLine(hiddenSheetPresent
+            ? "Hidden worksheet was exported."
+            : "Hidden worksheet correctly excluded from HTML.");
     }
 }

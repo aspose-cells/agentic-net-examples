@@ -1,71 +1,59 @@
-// Title: Aspose.Cells .NET – Retrieve a Chart’s Containing Worksheet (Chart.Worksheet)
-// Description: This example builds a workbook, adds sample data, creates a column chart, and then uses the Chart.Worksheet property to output the chart’s owner sheet name and index for diagnostic logging before saving the file.
-// Keywords: Aspose.Cells Chart.Worksheet | C# get chart parent sheet | Aspose.Cells diagnostic logging | retrieve chart worksheet name .NET | chart worksheet index Aspose | Aspose.Cells example GitHub | US developers Aspose.Cells | global spreadsheet automation
-// Common Searches: Aspose.Cells how to find worksheet of a chart | Chart.Worksheet property usage example | log chart's sheet name in C# Aspose | get chart parent worksheet index Aspose.Cells | debug chart placement Aspose.Cells .NET
-// Developer Intent: Identify the worksheet that hosts a specific chart and record its name and index to aid debugging or reporting workflows.
-// Use Cases: Confirm that automatically generated charts are placed on the intended sheet during report creation. | Iterate over all charts in a workbook and capture each chart’s sheet name and position for troubleshooting layout problems. | Include sheet details in custom log files before exporting charts to PDF or image formats.
-// AI Prompts: Generate C# code that loops through every chart in a workbook and prints the chart’s sheet name and index using Aspose.Cells. | Show how to safely check for a null Chart.Worksheet reference and log an appropriate warning message. | Provide a snippet that records chart‑owner worksheet information to a structured log (JSON or CSV) before saving the workbook.
+// Title: How to get and log a chart's parent worksheet name with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook, retrieves the first chart, accesses its Worksheet property, and prints the worksheet name to the console. | Show an example of using Aspose.Cells Chart.Worksheet to identify the sheet containing a specific chart and log that name for diagnostics. | Provide a snippet that checks for charts on a worksheet, obtains the chart's parent worksheet, and writes the sheet name to the output.
+// Common Searches: Aspose.Cells C# get worksheet name from Chart.Worksheet property | How to log the sheet that contains a chart using Aspose.Cells .NET | Retrieve parent worksheet of a chart in an existing Excel workbook with Aspose.Cells | C# code to print chart's parent worksheet name using Aspose.Cells | Aspose.Cells Chart.Worksheet example for diagnostic logging
+// Tags: Aspose.Cells Chart.Worksheet property | retrieve parent worksheet of chart | log chart container sheet name C# | access chart's worksheet .NET | diagnostic logging of chart parent sheet Aspose.Cells | Excel chart parent worksheet extraction using Aspose.Cells
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel file, verifies that a chart exists, accesses the first chart's parent worksheet via the Chart.Worksheet property, prints the worksheet's Name to the console for diagnostic purposes, and saves the workbook.
+class Program
 {
-    // This example builds a workbook, adds sample data, creates a column chart, and then uses the Chart.Worksheet property to output the chart’s owner sheet name and index for diagnostic logging before saving the file.
-    public class ChartWorksheetDiagnosticDemo
+    static void Main()
     {
-        // Entry point for the console application
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Access the first worksheet and give it a recognizable name
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet worksheet = workbook.Worksheets[0];
-            worksheet.Name = "DataSheet";
 
-            // Populate some sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("A");
-            worksheet.Cells["A3"].PutValue("B");
-            worksheet.Cells["A4"].PutValue("C");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(10);
-            worksheet.Cells["B3"].PutValue(20);
-            worksheet.Cells["B4"].PutValue(30);
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-            Chart chart = worksheet.Charts[chartIndex];
+            // Retrieve the first chart
+            Chart chart = worksheet.Charts[0];
 
-            // Define the data range for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            // Access the chart's parent worksheet via Chart.Worksheet
+            Worksheet parentWorksheet = chart.Worksheet;
 
-            // Access the chart's parent worksheet via Chart.Worksheet and log its details
-            Console.WriteLine("Chart belongs to worksheet: " + chart.Worksheet.Name);
-            Console.WriteLine("Worksheet index: " + chart.Worksheet.Index);
+            // Log the name of the parent worksheet
+            Console.WriteLine($"Chart's parent worksheet name: {parentWorksheet.Name}");
 
-            // Determine output file path
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ChartWorksheetDiagnosticDemo_out.xlsx");
-
-            // Save the workbook
+            // Save the workbook (if any changes were made)
             workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

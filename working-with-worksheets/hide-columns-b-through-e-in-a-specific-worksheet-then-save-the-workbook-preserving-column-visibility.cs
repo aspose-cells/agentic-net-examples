@@ -1,38 +1,46 @@
-// Title: C# – Hide Columns B‑E in an Aspose.Cells Worksheet and Save with Hidden State
-// Description: Creates a new Workbook, accesses the first Worksheet, optionally fills sample data, hides columns B through E using worksheet.Cells.HideColumns(1, 4) (zero‑based indices), and saves the file as HiddenColumns.xlsx while preserving the hidden column visibility.
-// Keywords: Aspose.Cells hide columns C# | HideColumns method | Excel column visibility | C# Aspose.Cells example | Save workbook with hidden columns
-// Common Searches: how to hide columns B to E using Aspose.Cells .NET | Aspose.Cells hide multiple columns by index | save Excel file with hidden columns Aspose | C# hide worksheet columns programmatically
-// Developer Intent: Hide columns B‑E in a worksheet and persist the hidden state when saving the workbook.
-// Use Cases: Prepare a report that omits sensitive data columns before distribution. | Create a template that shows only relevant columns to end‑users while keeping the rest hidden. | Improve readability of large datasets by collapsing auxiliary columns prior to export.
-// AI Prompts: Generate C# code with Aspose.Cells to hide columns C‑G in the second worksheet and save as .xlsb, keeping the columns hidden. | Explain the zero‑based indexing of HideColumns in Aspose.Cells and demonstrate how to unhide columns later in C#.
+// Title: Hide columns B through E in a worksheet and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that loads an existing .xlsx file, hides columns B‑E in the worksheet named 'Sheet1', and writes the result to a new file. | Show how to use Aspose.Cells in C# to conceal a range of columns in a specific worksheet and preserve the hidden state when saving the workbook.
+// Common Searches: Aspose.Cells C# hide columns B to E in a specific worksheet | How to hide a range of columns in Excel using Aspose.Cells for .NET | Preserve hidden columns when saving an Excel workbook with Aspose.Cells | C# code to hide multiple columns in an Aspose.Cells worksheet | Aspose.Cells hide column range and save workbook example
+// Tags: Aspose.Cells hide column range C# | Aspose.Cells column visibility preservation | Aspose.Cells hide columns in worksheet | C# hide Excel columns Aspose.Cells | Aspose.Cells save workbook after column hide | Aspose.Cells worksheet column manipulation
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Creates a new Workbook, accesses the first Worksheet, optionally fills sample data, hides columns B through E using worksheet.Cells.HideColumns(1, 4) (zero‑based indices), and saves the file as HiddenColumns.xlsx while preserving the hidden column visibility.
-class HideColumnsExample
+// Loads 'input.xlsx', hides columns B‑E (indices 1‑4) in the worksheet 'Sheet1' using Worksheet.Cells.HideColumns, and saves the modified workbook as 'output.xlsx', with error handling for missing files and runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet (or specify by name/index)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data (optional, just for illustration)
-        for (int row = 0; row < 10; row++)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            for (int col = 0; col < 10; col++)
-            {
-                worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-            }
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Hide columns B through E (zero‑based indices 1 to 4, total 4 columns)
-        worksheet.Cells.HideColumns(1, 4);
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook while preserving column visibility
-        workbook.Save("HiddenColumns.xlsx", SaveFormat.Xlsx);
+            // Access the specific worksheet (by name or index)
+            Worksheet worksheet = workbook.Worksheets["Sheet1"]; // or workbook.Worksheets[0];
+
+            // Hide columns B through E (indices 1 to 4)
+            worksheet.Cells.HideColumns(1, 4);
+
+            // Save the workbook; column visibility is preserved automatically
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

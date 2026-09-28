@@ -1,10 +1,7 @@
-// Title: Replace SmartArt Text in Excel Using CSV Mapping – Aspose.Cells for .NET
-// Description: This example demonstrates how to load an Excel workbook, read a CSV file that maps SmartArt shape names to new text values, locate SmartArt objects, convert them to grouped shapes, replace matching shape text, and save the file with UpdateSmartArt enabled using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells SmartArt text replacement | C# update SmartArt from CSV | Excel SmartArt shape mapping | replace SmartArt labels programmatically | UpdateSmartArt option Aspose | batch edit SmartArt Excel | CSV driven Excel diagram text change
-// Common Searches: how to change SmartArt text in Excel with Aspose.Cells | C# replace SmartArt shape names using CSV | update Excel SmartArt programmatically .NET | Aspose.Cells map shape name to new text | replace SmartArt labels in bulk Excel
-// Developer Intent: Programmatically replace the text of SmartArt shapes in an Excel workbook based on a CSV file that maps shape names to new values.
-// Use Cases: Localize SmartArt diagrams by applying translated strings from a CSV file. | Populate dynamic data into SmartArt charts for automated report generation. | Apply corporate branding updates across all SmartArt objects in multiple worksheets.
-// AI Prompts: Generate C# code with Aspose.Cells that reads a CSV of shape names and replaces matching SmartArt text, ensuring UpdateSmartArt is set when saving. | Explain the role of GetResultOfSmartArt().GetGroupedShapes() for accessing individual SmartArt elements in Aspose.Cells. | Suggest robust error‑handling strategies for missing files, unmapped shape names, or empty CSV entries when updating SmartArt.
+// Title: Update SmartArt shape text in an Excel workbook using a CSV mapping with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, reads a CSV file of shape names and new texts into a case‑insensitive dictionary, and updates the Text property of any SmartArt shape whose current text matches a key. | Create a robust CSV‑parsing method that handles commas inside values, builds the mapping dictionary, and applies it to modify SmartArt shapes across all worksheets. | Add comprehensive error handling that validates the presence of the workbook and CSV files, creates the output folder when missing, and saves the modified workbook to a target path.
+// Common Searches: how to change SmartArt text in Excel using Aspose.Cells and a CSV file in C# | replace Excel shape names with new values from a mapping file using Aspose.Cells .NET | C# example for iterating worksheet shapes and updating SmartArt text based on CSV data
+// Tags: Aspose.Cells SmartArt text replacement via CSV | Excel shape name mapping with Aspose.Cells | iterate worksheet shapes Aspose.Cells | C# update SmartArt text in .xlsx | load CSV into dictionary for Excel processing
 
 using System;
 using System.Collections.Generic;
@@ -12,86 +9,89 @@ using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The sample validates that both the source workbook and the CSV mapping file exist, loads the workbook with Aspose.Cells, reads the CSV into a case‑insensitive dictionary of shape names to replacement texts, iterates through every worksheet and its shapes, updates the Text property of each SmartArt shape whose current text matches a dictionary key, ensures the output directory is present, and saves the modified workbook to the specified location.
+class Program
 {
-    // This example demonstrates how to load an Excel workbook, read a CSV file that maps SmartArt shape names to new text values, locate SmartArt objects, convert them to grouped shapes, replace matching shape text, and save the file with UpdateSmartArt enabled using Aspose.Cells for .NET.
-    class SmartArtReplaceDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string mappingPath = "mapping.csv";
+            const string outputPath = "output.xlsx";
+
+            // Verify input workbook exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
+
+            // Verify mapping file exists
+            if (!File.Exists(mappingPath))
+                throw new FileNotFoundException($"Mapping CSV not found: {mappingPath}");
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Load the CSV mapping of shape names to new text values
+            Dictionary<string, string> mapping = LoadCsvMapping(mappingPath);
+
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                const string templatePath = "template.xlsx";
-                const string mappingPath = "mapping.csv";
-                const string outputPath = "output.xlsx";
-
-                // Verify required files exist
-                if (!File.Exists(templatePath))
-                    throw new FileNotFoundException($"Template file not found: {templatePath}");
-                if (!File.Exists(mappingPath))
-                    throw new FileNotFoundException($"Mapping file not found: {mappingPath}");
-
-                // Load the source workbook
-                Workbook workbook = new Workbook(templatePath);
-
-                // Load CSV mapping (shape name, new text)
-                var mapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                foreach (var line in File.ReadAllLines(mappingPath))
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    if (string.IsNullOrWhiteSpace(line)) continue;
-                    var parts = line.Split(new[] { ',' }, 2);
-                    if (parts.Length == 2)
+                    // Process only SmartArt shapes (or any shape with text)
+                    if (shape.IsSmartArt)
                     {
-                        var name = parts[0].Trim();
-                        var newText = parts[1].Trim();
-                        mapping[name] = newText;
-                    }
-                }
+                        // Use the shape's text as the key for replacement
+                        string currentText = shape.Text;
 
-                // Iterate through all worksheets and shapes
-                foreach (Worksheet worksheet in workbook.Worksheets)
-                {
-                    foreach (Shape shape in worksheet.Shapes)
-                    {
-                        // Process only SmartArt shapes
-                        if (shape.IsSmartArt)
+                        if (mapping.TryGetValue(currentText, out string newText))
                         {
-                            // Convert SmartArt to grouped shapes
-                            var groupedShapes = shape.GetResultOfSmartArt().GetGroupedShapes();
-
-                            // Replace text of each grouped shape based on the CSV mapping
-                            foreach (Shape smartShape in groupedShapes)
-                            {
-                                if (!string.IsNullOrEmpty(smartShape.Name) &&
-                                    mapping.TryGetValue(smartShape.Name, out string replacement))
-                                {
-                                    smartShape.Text = replacement;
-                                }
-                            }
+                            shape.Text = newText;
                         }
                     }
                 }
+            }
 
-                // Save the workbook with SmartArt update enabled
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
-                {
-                    UpdateSmartArt = true
-                };
-                workbook.Save(outputPath, saveOptions);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 
-    class Program
+    // Helper method to read a CSV file where each line is: ShapeName,NewValue
+    static Dictionary<string, string> LoadCsvMapping(string csvPath)
     {
-        static void Main(string[] args)
+        var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (string line in File.ReadLines(csvPath))
         {
-            SmartArtReplaceDemo.Run();
+            // Skip empty or whitespace-only lines
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+
+            // Split on the first comma to allow commas inside the new value
+            int commaIndex = line.IndexOf(',');
+            if (commaIndex <= 0)
+                continue; // Invalid line format
+
+            string key = line.Substring(0, commaIndex).Trim();
+            string value = line.Substring(commaIndex + 1).Trim();
+
+            if (!string.IsNullOrEmpty(key))
+                dict[key] = value;
         }
+
+        return dict;
     }
 }

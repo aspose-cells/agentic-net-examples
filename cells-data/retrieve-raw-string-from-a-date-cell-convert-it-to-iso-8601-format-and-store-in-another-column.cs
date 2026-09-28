@@ -1,60 +1,68 @@
-// Title: Convert Excel Date Cells to ISO‑8601 Strings and Write to Adjacent Column with Aspose.Cells for .NET
-// Description: Load an Excel workbook using Aspose.Cells, iterate through a source column, detect DateTime cells, format each date with the round‑trip "o" pattern (ISO‑8601), place the formatted string in a target column, copy non‑date values unchanged, and save the updated file.
-// Keywords: Aspose.Cells C# date conversion | Excel ISO 8601 format | convert Excel date to string .NET | write values to another column Aspose | DateTimeValue to ISO string | Excel to JSON date format | C# Excel date handling | Aspose.Cells example | ISO 8601 round‑trip format | load and save workbook Aspose
-// Common Searches: Aspose.Cells convert Excel date to ISO 8601 | C# read Excel date cell and output ISO string | write formatted date to another column using Aspose.Cells | detect DateTime cells in Aspose.Cells | save workbook after modifying cells Aspose | ISO 8601 round‑trip format C# Excel | Aspose.Cells example for date formatting
-// Developer Intent: Read dates from a column, format them as ISO‑8601 strings, and write the results to a neighboring column.
-// Use Cases: Export Excel data to APIs that require ISO‑8601 timestamps | Create audit sheets that show original dates alongside ISO representations | Prepare data for JSON or XML serialization where dates must follow ISO‑8601 | Standardize date formats across regional workbooks | Generate reports that need UTC‑compatible timestamps
-// AI Prompts: Write Aspose.Cells C# code to read dates from column A, convert each to ISO‑8601 using the "o" format, and store in column B, preserving non‑date cells. | Provide a reusable method that accepts a workbook path, source and target column indexes, converts DateTime cells to ISO‑8601 strings, and saves the file. | Explain how to handle time‑zone offsets when formatting Excel dates to ISO‑8601 with Aspose.Cells. | Show how to batch‑process multiple worksheets for date conversion to ISO‑8601. | Demonstrate error handling for cells that are not dates in an Aspose.Cells date‑conversion routine.
+// Title: Read a date from an Excel cell, convert it to ISO 8601 format, and write the string to another column using Aspose.Cells for .NET
+// AI Prompts: Create C# code with Aspose.Cells that extracts a DateTime from cell A1, formats it as an ISO 8601 string, and places the result in cell B1. | Modify the example to loop through all rows in column A, convert each valid date to ISO 8601, and write the output to the same row in column B. | Add error handling that logs a warning and skips rows where the source cell does not contain a parsable date.
+// Common Searches: Aspose.Cells C# convert Excel date cell to ISO 8601 string | How to read a date from an Excel cell and write formatted ISO 8601 string to another column using Aspose.Cells | Parse cell value as DateTime and output ISO 8601 format with Aspose.Cells .NET | Save ISO 8601 date string in Excel workbook using Aspose.Cells for .NET
+// Tags: convert Excel date cell to ISO 8601 Aspose.Cells | read DateTime cell C# Aspose.Cells | write ISO 8601 string to column B Aspose.Cells | skip invalid date rows Aspose.Cells | round‑trip ISO 8601 format .NET Excel
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsDateConversion
 {
-    // Load an Excel workbook using Aspose.Cells, iterate through a source column, detect DateTime cells, format each date with the round‑trip "o" pattern (ISO‑8601), place the formatted string in a target column, copy non‑date values unchanged, and save the updated file.
+    // Loads input.xlsx (creates a sample if missing), reads the date from cell A1, formats it as an ISO 8601 string, writes the string to cell B1, and saves the result as output.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a workbook instance and load an existing Excel file
-            Workbook workbook = new Workbook("input.xlsx"); // load rule
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Define source (date) column index and target column index
-            int sourceColumn = 0; // Column A (zero‑based)
-            int targetColumn = 1; // Column B (zero‑based)
-
-            // Iterate through all used rows in the source column
-            int maxRow = cells.MaxDataRow;
-            for (int row = 0; row <= maxRow; row++)
+            try
             {
-                Cell dateCell = cells[row, sourceColumn];
-
-                // Ensure the cell actually contains a DateTime value
-                if (dateCell.Type == CellValueType.IsDateTime)
+                // Ensure the input file exists; create a sample if missing
+                if (!File.Exists(inputPath))
                 {
-                    // Retrieve the DateTime value
-                    DateTime dt = dateCell.DateTimeValue;
+                    var sampleWb = new Workbook();
+                    sampleWb.Worksheets[0].Cells["A1"].PutValue(DateTime.Now);
+                    sampleWb.Save(inputPath);
+                }
 
-                    // Convert to ISO 8601 string (round‑trip format)
-                    string isoString = dt.ToString("o"); // e.g., 2023-05-15T00:00:00.0000000Z
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+                var worksheet = workbook.Worksheets[0];
+                var sourceCell = worksheet.Cells["A1"];
 
-                    // Store the ISO string in the target column
-                    cells[row, targetColumn].PutValue(isoString);
+                DateTime dateValue;
+
+                // Determine if the cell actually contains a DateTime value
+                if (sourceCell.Type == CellValueType.IsDateTime)
+                {
+                    dateValue = sourceCell.DateTimeValue;
                 }
                 else
                 {
-                    // If the cell is not a DateTime, you may choose to handle it differently.
-                    // Here we simply copy the original string (if any) to the target column.
-                    cells[row, targetColumn].PutValue(dateCell.StringValue);
+                    // Attempt to parse the cell's string representation
+                    if (!DateTime.TryParse(sourceCell.StringValue, out dateValue))
+                    {
+                        Console.WriteLine("Cell A1 does not contain a valid DateTime value.");
+                        return;
+                    }
                 }
-            }
 
-            // Save the modified workbook
-            workbook.Save("output.xlsx"); // save rule
+                // Convert to ISO 8601 (round‑trip) format
+                string iso8601String = dateValue.ToString("o");
+
+                // Store the ISO string in B1
+                worksheet.Cells["B1"].PutValue(iso8601String);
+
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Conversion completed. Output saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

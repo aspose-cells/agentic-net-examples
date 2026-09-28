@@ -1,10 +1,7 @@
-// Title: Validate SVG for Unsupported Elements Before Adding to Aspose.Cells Worksheet (C#)
-// Description: C# example that loads an SVG, parses its XML, checks for Aspose.Cells unsupported tags (script, foreignObject, animate, etc.), and inserts the graphic only when validation succeeds, preventing rendering errors.
-// Keywords: Aspose.Cells SVG validation | C# SVG parsing | unsupported SVG tags | AddSvg ShapeCollection | script tag detection | foreignObject check | Excel workbook SVG | XML validation C# | Aspose.Cells supported elements | batch SVG processing
-// Common Searches: Aspose.Cells validate SVG before AddSvg | C# check unsupported SVG tags Aspose | prevent script tag errors in Aspose.Cells SVG | list of SVG elements supported by Aspose.Cells | validate SVG file for Excel insertion C#
-// Developer Intent: Ensure an SVG does not contain tags that Aspose.Cells cannot render before inserting it into a worksheet.
-// Use Cases: Pre‑process user‑uploaded SVGs to avoid rendering failures in generated Excel files. | Automate batch validation of SVG assets before creating reports with multiple worksheets. | Log offending element names and skip files that contain disallowed tags. | Extend the check to include size limits or empty‑content detection.
-// AI Prompts: Write a C# method that accepts an SVG byte array, returns a bool and a list of Aspose.Cells unsupported element names with a friendly validation message. | Create a C# console application that scans a folder of SVG files, validates each using the provided logic, and adds only the valid graphics to separate worksheets in a new workbook, including error handling and logging.
+// Title: Validate SVG files for unsupported elements before inserting them as pictures into an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write a C# method that loads an SVG file, scans its XML for Aspose.Cells unsupported tags (script, foreignObject, animate, etc.), and returns a list of offending element names. | Show how to open an existing Excel workbook with Aspose.Cells, call the SVG validation method, and add the SVG as a picture only when no disallowed elements are detected. | Create logging code that records each unsupported SVG element found and aborts the picture insertion to avoid rendering failures.
+// Common Searches: how to programmatically check an SVG for script and foreignObject tags before using Aspose.Cells | C# Aspose.Cells validate SVG elements that are not supported for picture insertion | prevent Aspose.Cells rendering errors by filtering unsupported SVG elements | example of inserting an SVG into Excel only after validation with Aspose.Cells .NET | detect and list disallowed SVG tags in a .NET application using Aspose.Cells
+// Tags: svg validation with Aspose.Cells | detect unsupported svg elements in C# | insert svg picture into Excel using Aspose.Cells | prevent svg rendering errors in Aspose.Cells | filter script foreignObject tags from svg
 
 using System;
 using System.Collections.Generic;
@@ -12,108 +9,121 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSvgValidation
+namespace SvgValidationExample
 {
-    // C# example that loads an SVG, parses its XML, checks for Aspose.Cells unsupported tags (script, foreignObject, animate, etc.), and inserts the graphic only when validation succeeds, preventing rendering errors.
+    // The program loads an SVG file, checks it for elements that Aspose.Cells cannot render (such as script, foreignObject, animate, etc.), reports any unsupported tags, and inserts the SVG as a picture into the first worksheet of an Excel workbook only when the validation passes.
     class Program
     {
-        // List of SVG elements that Aspose.Cells does not support and may cause rendering errors
-        private static readonly HashSet<string> UnsupportedSvgElements = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        // List of SVG elements that Aspose.Cells does not support for rendering.
+        private static readonly HashSet<string> UnsupportedElements = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             "script",
             "foreignObject",
             "animate",
-            "set",
             "animateMotion",
             "animateTransform",
-            "animateColor"
+            "set",
+            "metadata"
         };
 
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Path to the SVG file to be inserted
-                const string svgPath = "image.svg";
+                // Path to the Excel file to work with.
+                string workbookPath = "Sample.xlsx";
 
-                // Verify that the SVG file exists before attempting to read it
+                // Path to the SVG file to be inserted.
+                string svgPath = "Image.svg";
+
+                // Verify that the workbook exists.
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Workbook file not found: '{workbookPath}'.");
+                    return;
+                }
+
+                // Verify that the SVG file exists before validation.
                 if (!File.Exists(svgPath))
                 {
-                    Console.WriteLine($"SVG file not found: {svgPath}");
+                    Console.WriteLine($"SVG file not found: '{svgPath}'.");
                     return;
                 }
 
-                // Load the SVG file into a byte array
-                byte[] svgData = File.ReadAllBytes(svgPath);
-
-                // Validate the SVG content before adding it to the worksheet
-                if (!IsSvgSupported(svgData, out string validationMessage))
+                // Validate the SVG before insertion.
+                if (!ValidateSvg(svgPath, out var unsupportedFound))
                 {
-                    Console.WriteLine("SVG validation failed: " + validationMessage);
+                    Console.WriteLine("SVG validation failed. Unsupported elements detected:");
+                    foreach (var elem in unsupportedFound)
+                    {
+                        Console.WriteLine($" - {elem}");
+                    }
                     return;
                 }
 
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                ShapeCollection shapes = worksheet.Shapes;
+                // Load the workbook.
+                Workbook workbook = new Workbook(workbookPath);
 
-                // Add the validated SVG to the worksheet.
-                // Using rows 4‑5 and columns 5‑10 as an example area; Aspose.Cells will size the shape within this range.
-                // Offsets (0,0) are used to position the shape at the top‑left corner of the specified range.
-                shapes.AddSvg(4, 5, 10, 10, 0, 0, svgData, null);
+                // Insert the SVG into the first worksheet at cell A1.
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Save the workbook
-                const string outputPath = "output.xlsx";
+                // Aspose.Cells can add pictures from a stream; the SVG will be rendered as an image.
+                using (FileStream svgStream = new FileStream(svgPath, FileMode.Open, FileAccess.Read))
+                {
+                    // Add picture; Aspose.Cells will handle conversion if supported.
+                    sheet.Pictures.Add(0, 0, svgStream);
+                }
+
+                // Save the workbook with the inserted SVG.
+                string outputPath = "Sample_With_SVG.xlsx";
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully with validated SVG at '{outputPath}'.");
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An unexpected error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
-        /// <param name="svgBytes">Raw SVG file bytes.</param>
-        /// <param name="message">Detailed validation message.</param>
-        /// <returns>True if SVG is supported; otherwise false.</returns>
-        private static bool IsSvgSupported(byte[] svgBytes, out string message)
+        /// <param name="svgFilePath">Full path to the SVG file.</param>
+        /// <param name="unsupportedElements">List of unsupported element names found.</param>
+        /// <returns>True if the SVG does not contain unsupported elements; otherwise false.</returns>
+        private static bool ValidateSvg(string svgFilePath, out List<string> unsupportedElements)
         {
+            unsupportedElements = new List<string>();
+
+            // File existence already checked by caller, but double‑check for safety.
+            if (!File.Exists(svgFilePath))
+            {
+                throw new FileNotFoundException("SVG file not found.", svgFilePath);
+            }
+
+            XDocument svgDoc;
             try
             {
-                // Load SVG XML from the byte array
-                XDocument doc;
-                using (MemoryStream ms = new MemoryStream(svgBytes))
-                {
-                    doc = XDocument.Load(ms);
-                }
-
-                // Search for any unsupported elements in the document
-                var found = doc.Descendants()
-                               .Where(e => UnsupportedSvgElements.Contains(e.Name.LocalName))
-                               .Select(e => e.Name.LocalName)
-                               .Distinct()
-                               .ToList();
-
-                if (found.Any())
-                {
-                    message = "Unsupported SVG elements detected: " + string.Join(", ", found);
-                    return false;
-                }
-
-                // Additional optional checks (e.g., empty SVG) can be added here
-
-                message = "SVG is valid.";
-                return true;
+                svgDoc = XDocument.Load(svgFilePath);
             }
             catch (Exception ex)
             {
-                // XML parsing errors indicate an invalid SVG file
-                message = "Error parsing SVG: " + ex.Message;
-                return false;
+                throw new InvalidOperationException("Failed to load SVG file as XML.", ex);
             }
+
+            // Search for any unsupported elements in the SVG.
+            var allElements = svgDoc.Descendants()
+                                   .Select(e => e.Name.LocalName)
+                                   .Distinct();
+
+            foreach (var elem in allElements)
+            {
+                if (UnsupportedElements.Contains(elem))
+                {
+                    unsupportedElements.Add(elem);
+                }
+            }
+
+            // Return true if no unsupported elements were found.
+            return unsupportedElements.Count == 0;
         }
     }
 }

@@ -1,63 +1,69 @@
-// Title: C# – Export Excel to a Single HTML File with Images Embedded as Base64 using Aspose.Cells
-// Description: Demonstrates how to create a workbook, insert a picture, and save it as one self‑contained HTML document where all images are encoded as Base64 data URIs. Includes error handling for missing image files.
-// Keywords: Aspose.Cells C# HTML export | embed images base64 Aspose.Cells | Save workbook as single HTML | HtmlSaveOptions ExportImagesAsBase64 | Excel to HTML conversion .NET | self‑contained HTML report
-// Common Searches: Aspose.Cells embed picture as base64 in HTML C# | export Excel to single HTML file with inline images | HtmlSaveOptions SaveAsSingleFile example .NET | convert spreadsheet to HTML with embedded images | C# code to embed images in HTML using Aspose.Cells
-// Developer Intent: Generate a standalone HTML version of an Excel workbook where every picture is inlined as a Base64 string, eliminating external image files.
-// Use Cases: Send a complete HTML report via email without attaching separate image files. | Host an offline‑viewable spreadsheet on a static website where all graphics are bundled inside the page. | Create a portable product catalog from Excel where each photo is embedded directly in the HTML.
-// AI Prompts: Show how to loop through a folder and add multiple pictures to a worksheet, then export all of them as Base64 in a single HTML file. | Provide code to compress images before embedding them as Base64 while still using SaveAsSingleFile. | Explain best practices for handling missing or corrupted image files when adding pictures to a worksheet prior to HTML export.
+// Title: Export an Aspose.Cells workbook to a single self‑contained HTML file with embedded Base64 images in C#
+// AI Prompts: Write C# code that creates a workbook, inserts a picture, and saves it as one HTML file with all images encoded as Base64 using Aspose.Cells. | Demonstrate how to set HtmlSaveOptions.ExportImagesAsBase64 and SaveAsSingleFile for exporting a workbook to HTML in C#. | Add a file‑existence check before inserting a picture into a worksheet and then export the workbook to a single HTML page.
+// Common Searches: Aspose.Cells C# export workbook to single HTML file with base64 images | how to embed pictures as Base64 in HTML using Aspose.Cells HtmlSaveOptions | save Excel as self‑contained HTML in .NET without external image files | C# example for ExportImagesAsBase64 and SaveAsSingleFile in Aspose.Cells | convert Excel to one HTML page with embedded images using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions ExportImagesAsBase64 | single file HTML export Aspose.Cells | embed images base64 Aspose.Cells C# | Excel to self-contained HTML Aspose.Cells | picture insertion worksheet Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEmbedImagesBase64
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, insert a picture, and save it as one self‑contained HTML document where all images are encoded as Base64 data URIs. Includes error handling for missing image files.
-    class Program
+    // Shows how to create a workbook, optionally insert an image, and export the workbook as a single HTML file with all pictures embedded as Base64 strings by configuring HtmlSaveOptions.
+    public class EmbedImagesBase64SingleHtml
     {
-        static void Main()
+        public static void Run()
         {
             try
             {
-                // Create a new workbook
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-
-                // Access the first worksheet
                 Worksheet sheet = workbook.Worksheets[0];
+
+                // Add some text to identify the image location
+                sheet.Cells["A1"].PutValue("Image embedded as Base64");
 
                 // Path to the image to embed
                 string imagePath = "example.jpg";
 
-                // Add the image only if the file exists
+                // Verify that the image file exists before adding it
                 if (File.Exists(imagePath))
                 {
-                    // The image will be embedded as a Base64 string in the resulting HTML
-                    sheet.Pictures.Add(0, 0, imagePath);
+                    // Insert the image into the worksheet at row 2, column 0 (C2)
+                    sheet.Pictures.Add(2, 0, imagePath);
                 }
                 else
                 {
-                    Console.WriteLine($"Warning: Image file \"{imagePath}\" not found. Skipping image insertion.");
+                    Console.WriteLine($"Warning: Image file '{imagePath}' not found. Skipping image insertion.");
                 }
 
-                // Configure HTML save options
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                // Set up HTML save options
+                HtmlSaveOptions options = new HtmlSaveOptions
                 {
-                    // Embed images directly as Base64 data URIs
+                    // Export images directly as Base64 strings inside the <img> tags
                     ExportImagesAsBase64 = true,
                     // Save the entire workbook as a single HTML file (no external resources)
                     SaveAsSingleFile = true
                 };
 
-                // Save the workbook as HTML with embedded images
+                // Export the workbook to HTML with the configured options
                 string outputPath = "output.html";
-                workbook.Save(outputPath, htmlOptions);
-
-                Console.WriteLine($"HTML file with embedded Base64 images saved successfully to \"{outputPath}\".");
+                workbook.Save(outputPath, options);
+                Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            EmbedImagesBase64SingleHtml.Run();
         }
     }
 }

@@ -1,51 +1,43 @@
-// Title: C# – Convert HTML with CSS Gradient Backgrounds to PDF using AspNet Aspose.Cells
-// Description: Load an HTML file that contains CSS gradient backgrounds into an Aspose.Cells Workbook, automatically translate the gradients into shape fills, and save the workbook as a PDF while preserving the visual gradient effects.
-// Keywords: Aspose.Cells HTML to PDF | C# convert HTML gradient to PDF | preserve CSS gradients Aspose | SaveFormat.Pdf gradient support | Aspose.Cells workbook HTML import
-// Common Searches: Aspose.Cells keep CSS gradients when exporting HTML to PDF | C# convert HTML with gradient background to PDF | HTML to PDF conversion preserving gradient fills Aspose | How to render CSS gradients in PDF using Aspose.Cells
-// Developer Intent: Convert an HTML document that uses CSS gradient backgrounds into a PDF while retaining the gradient appearance, using Aspose.Cells for .NET.
-// Use Cases: Generate PDF reports from web‑styled HTML templates that rely on gradient backgrounds. | Batch‑process multiple HTML files with gradient styling into archival PDFs. | Expose a REST endpoint that receives HTML content, renders it with Aspose.Cells, and returns a gradient‑preserving PDF.
-// AI Prompts: Write C# code to loop through a folder of *.html files and convert each to a PDF with gradient fills using Aspose.Cells. | Explain how to detect unsupported CSS gradients in Aspose.Cells and replace them with solid colors before PDF export. | Show how to modify the gradient fill parameters of shapes after loading HTML but before saving the workbook as PDF.
+// Title: Convert HTML containing CSS gradient backgrounds to PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an HTML file with CSS gradient background definitions into an Aspose.Cells Workbook using LoadOptions(LoadFormat.Html) and saves it as a PDF while retaining the gradient styling. | Show how to configure Aspose.Cells to preserve CSS gradient fills when converting an HTML document to PDF in a .NET application.
+// Common Searches: how to keep CSS gradient backgrounds when converting HTML to PDF using Aspose.Cells C# | Aspose.Cells HTML to PDF conversion preserving gradient fills example | C# load HTML with gradient backgrounds into workbook and export to PDF Aspose.Cells
+// Tags: Aspose.Cells HTML to PDF conversion with CSS gradients | LoadOptions Html format workbook import | SaveFormat.Pdf preserving stylesheet rendering | C# gradient background export using Aspose.Cells | PDF generation from HTML preserving visual styles
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlToPdf
+namespace AsposeCellsExample
 {
-    // Load an HTML file that contains CSS gradient backgrounds into an Aspose.Cells Workbook, automatically translate the gradients into shape fills, and save the workbook as a PDF while preserving the visual gradient effects.
+    // The example verifies the input HTML file, loads it into an Aspose.Cells Workbook with LoadOptions set to Html format, and then saves the workbook as a PDF using SaveFormat.Pdf, ensuring that CSS gradient backgrounds are retained in the resulting document.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the source HTML file that contains CSS gradient background images
-            string htmlPath = "input.html";
-
-            // Path for the resulting PDF file
-            string pdfPath = "output.pdf";
-
-            // Verify that the input HTML file exists
-            if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Error: Input file not found at '{htmlPath}'.");
-                return;
-            }
+            string inputPath = "input.html";
+            string outputPath = "output.pdf";
 
             try
             {
-                // Load the HTML file into a new workbook instance.
-                // The constructor automatically parses the HTML and converts CSS background images (including gradients)
-                // into corresponding shapes with gradient fills inside the workbook.
-                Workbook workbook = new Workbook(htmlPath);
+                // Verify that the input HTML file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Save the workbook as PDF.
-                // The PDF renderer preserves the gradient fills that were created from the CSS backgrounds.
-                workbook.Save(pdfPath, SaveFormat.Pdf);
+                // Load the HTML content into a workbook using Html load options
+                var loadOptions = new LoadOptions(LoadFormat.Html);
+                var workbook = new Workbook(inputPath, loadOptions);
 
-                Console.WriteLine($"HTML file '{htmlPath}' has been successfully converted to PDF with gradients preserved at '{pdfPath}'.");
+                // Save the workbook as PDF
+                workbook.Save(outputPath, SaveFormat.Pdf);
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred during conversion: {ex.Message}");
+                // Handle any runtime errors
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

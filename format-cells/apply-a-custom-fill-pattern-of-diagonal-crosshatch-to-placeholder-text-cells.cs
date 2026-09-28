@@ -1,65 +1,79 @@
-// Title: C# – Apply Diagonal Crosshatch Fill to Placeholder Cells with Aspose.Cells
-// Description: Shows how to create a workbook, insert placeholder tokens (e.g., {{Name}}, {{Date}}), scan the used range, and apply a diagonal‑crosshatch background (light gray on white) to those cells using Aspose.Cells for .NET, then save the file as an .xlsx.
-// Keywords: Aspose.Cells | C# cell background pattern | diagonal crosshatch fill | placeholder highlighting | Excel template styling | BackgroundType.DiagonalCrosshatch | Aspose.Cells .NET | programmatic cell style
-// Common Searches: Aspose.Cells set diagonal crosshatch pattern | highlight placeholder cells Aspose.Cells C# | apply custom fill pattern to cells Aspose | detect {{}} tokens in Excel with Aspose | change cell background color Aspose.Cells .NET
-// Developer Intent: Programmatically highlight cells that contain {{…}} placeholders by applying a diagonal‑crosshatch fill.
-// Use Cases: Visually distinguish template placeholders before generating reports. | Guide end‑users to edit placeholder cells in an Excel template. | Mark placeholder cells for downstream processing or validation.
-// AI Prompts: Generate C# code using Aspose.Cells that finds cells with {{token}} placeholders and applies a diagonal‑crosshatch background pattern. | Provide an example that iterates over a worksheet, detects placeholder text, and sets both foreground and background colors for a custom fill style. | Explain how to change the pattern type or colors for highlighting placeholders in an existing Aspose.Cells workbook.
+// Title: Apply a diagonal crosshatch fill pattern to cells containing {{placeholder}} text using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx workbook with Aspose.Cells, scans each cell for the "{{" and "}}" markers, creates a Style with BackgroundType.DiagonalCrosshatch, sets LightGray as the foreground color and White as the background color, applies the style to the matching cells, and saves the workbook. | Show a step‑by‑step example of using Aspose.Cells to detect placeholder tokens in a worksheet and assign a diagonal crosshatch background pattern only to those cells.
+// Common Searches: aspocells set diagonal crosshatch pattern for cells with {{placeholder}} tokens | c# aspocells apply custom fill pattern based on cell text content | how to style excel cells containing placeholder markers using Aspose.Cells | aspocells conditional formatting with diagonal crosshatch fill in .NET | c# code to add diagonal crosshatch background to specific Excel cells
+// Tags: aspocells diagonal crosshatch cell style | c# conditional style for placeholder cells | backgroundtype.diagonalcrosshatch usage | apply custom fill pattern to excel cells c# | detect {{placeholder}} tokens with aspocells
 
+using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a workbook, insert placeholder tokens (e.g., {{Name}}, {{Date}}), scan the used range, and apply a diagonal‑crosshatch background (light gray on white) to those cells using Aspose.Cells for .NET, then save the file as an .xlsx.
-class Program
+// The example loads an existing workbook, creates a Style with BackgroundType.DiagonalCrosshatch, LightGray foreground and White background, scans the used range for cells containing "{{...}}" placeholders, applies the style to those cells, and saves the modified file.
+class ApplyDiagonalCrosshatchFill
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample cells containing placeholder text
-        sheet.Cells["A1"].PutValue("{{Name}}");
-        sheet.Cells["B2"].PutValue("{{Date}}");
-        sheet.Cells["C3"].PutValue("Regular Text");
-
-        // Define placeholder delimiters
-        const string placeholderStart = "{{";
-        const string placeholderEnd = "}}";
-
-        // Iterate over the used range of the worksheet
-        Cells cells = sheet.Cells;
-        int maxRow = cells.MaxDataRow;
-        int maxCol = cells.MaxDataColumn;
-
-        for (int row = 0; row <= maxRow; row++)
+        try
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Cell cell = cells[row, col];
-                if (cell.Type == CellValueType.IsString)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create a style with diagonal crosshatch fill pattern
+            Style crosshatchStyle = workbook.CreateStyle();
+            crosshatchStyle.Pattern = BackgroundType.DiagonalCrosshatch; // fill pattern
+            crosshatchStyle.ForegroundColor = Color.LightGray;           // pattern color
+            crosshatchStyle.BackgroundColor = Color.White;              // cell background
+
+            // Determine the used range of the worksheet (use Aspose.Cells.Range to avoid ambiguity)
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            // Apply the style to cells containing placeholders like {{placeholder}}
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
                 {
+                    Cell cell = sheet.Cells[row, col];
                     string text = cell.StringValue;
-                    if (text.Contains(placeholderStart) && text.Contains(placeholderEnd))
+
+                    if (!string.IsNullOrEmpty(text) && text.Contains("{{") && text.Contains("}}"))
                     {
-                        // Retrieve the cell's current style
-                        Style style = cell.GetStyle();
-
-                        // Apply diagonal crosshatch pattern
-                        style.Pattern = BackgroundType.DiagonalCrosshatch;
-
-                        // Set foreground and background colors for the pattern
-                        style.ForegroundColor = Color.LightGray;
-                        style.BackgroundColor = Color.White;
-
-                        // Apply the modified style back to the cell
-                        cell.SetStyle(style);
+                        cell.SetStyle(crosshatchStyle);
                     }
                 }
             }
-        }
 
-        // Save the workbook
-        workbook.Save("PlaceholderPattern.xlsx", SaveFormat.Xlsx);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

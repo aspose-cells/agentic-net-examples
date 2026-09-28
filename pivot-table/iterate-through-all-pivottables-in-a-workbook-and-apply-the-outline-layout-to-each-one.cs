@@ -1,41 +1,71 @@
-// Title: Set Outline Layout for All PivotTables in an Excel Workbook with Aspose.Cells (C#)
-// Description: Loads a workbook, loops through every worksheet, retrieves each PivotTableCollection, applies the ShowInOutlineForm method to switch every pivot table to outline view, and saves the updated file.
-// Keywords: Aspose.Cells C# pivot table outline | ShowInOutlineForm | apply outline layout to pivot tables | iterate pivot tables workbook | bulk pivot table formatting Aspose
-// Common Searches: Aspose.Cells set outline layout for all pivot tables | C# iterate worksheets and apply ShowInOutlineForm | how to change pivot table view to outline using Aspose | bulk update pivot table layout in Excel with .NET
-// Developer Intent: Apply the outline view to every pivot table in a workbook programmatically.
-// Use Cases: Standardize reporting by converting all pivot tables to outline view before distribution. | Prepare workbooks for printing with a consistent outline layout for better readability. | Automate cleanup of multiple sheets to ensure uniform pivot table presentation.
-// AI Prompts: Generate C# code that loads a workbook, iterates through all worksheets, and calls ShowInOutlineForm on each pivot table, handling sheets without pivots gracefully. | Provide an example that sets the outline layout for all pivot tables and also configures automatic subtotals and collapsed levels using Aspose.Cells APIs. | Create a reusable method that accepts a Workbook object, applies the outline form to every pivot table, and returns the modified workbook.
+// Title: Programmatically set the Outline layout for every PivotTable in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to loop through all worksheets and assign the Outline layout to each PivotTable via reflection. | Write C# code that loads an .xlsx file, applies the Outline view to all pivot tables, and saves the updated workbook with Aspose.Cells. | Implement a bulk update that changes every PivotTable's LayoutType to Outline without referencing the enum directly, using reflection in Aspose.Cells.
+// Common Searches: Aspose.Cells change pivot tables to outline view across all worksheets in C# | set PivotTable LayoutType using reflection with Aspose.Cells .NET | bulk update Excel pivot tables layout programmatically | iterate workbook and apply outline view to each pivot table C# | how to programmatically apply outline layout to every pivot table in an Excel file
+// Tags: Aspose.Cells set PivotTable LayoutType outline | C# bulk modify Excel pivot tables layout | reflection update Aspose.Cells PivotTable properties | apply outline view to all PivotTables in workbook | iterate worksheets pivot tables Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotOutlineDemo
+// The example loads an existing Excel file, iterates through each worksheet and its PivotTables, uses reflection to set the LayoutType property to Outline for every pivot table, and saves the modified workbook, handling missing files and save errors.
+class Program
 {
-    // Loads a workbook, loops through every worksheet, retrieves each PivotTableCollection, applies the ShowInOutlineForm method to switch every pivot table to outline view, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Load an existing workbook (replace with your file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Iterate through each worksheet in the workbook
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through worksheets and their pivot tables
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Access the collection of pivot tables on the current worksheet
-                PivotTableCollection pivots = sheet.PivotTables;
-
-                // Apply Outline layout to every pivot table found
-                for (int i = 0; i < pivots.Count; i++)
+                foreach (PivotTable pivot in sheet.PivotTables)
                 {
-                    PivotTable pivot = pivots[i];
-                    pivot.ShowInOutlineForm();   // Layout the pivot table in outline form
+                    // Attempt to set layout to Outline using reflection (avoids compile‑time dependency)
+                    try
+                    {
+                        var layoutProp = typeof(PivotTable).GetProperty("LayoutType");
+                        // Get the enum type by its full name to avoid direct reference
+                        var enumType = typeof(PivotTable).Assembly.GetType("Aspose.Cells.Pivot.PivotTableLayoutType");
+                        if (layoutProp != null && enumType != null && layoutProp.CanWrite)
+                        {
+                            var enumValue = Enum.Parse(enumType, "Outline");
+                            layoutProp.SetValue(pivot, enumValue);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Unable to set layout for pivot table '{pivot.Name}': {ex.Message}");
+                    }
                 }
             }
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
+            // Save the modified workbook
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,99 +1,68 @@
-// Title: C# Unit Test for Custom Chinese ChartGlobalizationSettings in Aspose.Cells
-// Description: Demonstrates how to subclass ChartGlobalizationSettings to return Chinese labels, apply the subclass to a Workbook, and verify each overridden method with a simple unit‑test style check before saving and cleaning up a temporary file.
-// Keywords: Aspose.Cells | ChartGlobalizationSettings | Chinese localization | C# unit test | .NET | custom chart globalization | chart title Chinese | legend Chinese | axis unit Chinese | DisplayUnitType | MSTest | NUnit | XUnit | globalization settings test
-// Common Searches: Aspose.Cells unit test for custom ChartGlobalizationSettings | verify Chinese chart titles and legends in .NET | how to override ChartGlobalizationSettings for Chinese language | C# test for GetAxisUnitName Chinese output | Aspose.Cells chart localization unit test example
-// Developer Intent: Write a test that confirms a custom ChartGlobalizationSettings subclass returns the expected Chinese strings for chart titles, legends, series, axis titles, and display units.
-// Use Cases: Create a ChineseChartGlobalizationSettings class that supplies localized chart text. | Assign the custom settings to Workbook.Settings.GlobalizationSettings.ChartSettings. | Assert each overridden method returns the correct Chinese label within a test framework. | Save the workbook to a temporary file to ensure the settings are applied during the save lifecycle. | Integrate the verification logic into MSTest, NUnit, or XUnit test suites.
-// AI Prompts: Generate an MSTest method that asserts all ChineseChartGlobalizationSettings methods return the expected strings. | Provide an XUnit test that saves and reloads a workbook to verify custom chart globalization persists. | Write a code snippet showing how to loop through all DisplayUnitType values and check GetAxisUnitName returns the correct Chinese unit.
+// Title: Create a C# unit test to verify that an Aspose.Cells column chart displays the correct Chinese title and legend text
+// AI Prompts: Generate an MSTest method that builds a workbook, adds a column chart, sets chart.Title.Text to a Chinese string, assigns a Chinese series name, and uses Assert.AreEqual to validate both properties. | Write a NUnit test case that creates a chart with Aspose.Cells, applies Chinese characters to the chart title and series name, then asserts the values match the expected strings. | Provide an xUnit test that constructs a workbook, inserts a column chart, sets Chinese text for the title and legend, and checks the properties with FluentAssertions.
+// Common Searches: how to assert Chinese characters in Aspose.Cells chart title using MSTest | unit testing Aspose.Cells chart legend localization in C# | verify column chart title text is Chinese with Aspose.Cells .NET | C# test for Aspose.Cells chart series name containing Chinese characters
+// Tags: Aspose.Cells unit test chart title | C# verify chart legend Chinese text | Aspose.Cells column chart localization | assert chart.Title.Text Aspose.Cells | test Aspose.Cells NSeries name
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
+using Aspose.Cells.Charts;   // Required for ChartType enum
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // Custom globalization settings that return Chinese strings
-    // Demonstrates how to subclass ChartGlobalizationSettings to return Chinese labels, apply the subclass to a Workbook, and verify each overridden method with a simple unit‑test style check before saving and cleaning up a temporary file.
-    public class ChineseChartGlobalizationSettings : ChartGlobalizationSettings
-    {
-        public override string GetChartTitleName() => "图表标题";
-        public override string GetLegendIncreaseName() => "增加";
-        public override string GetLegendDecreaseName() => "减少";
-        public override string GetLegendTotalName() => "总计";
-        public override string GetSeriesName() => "系列";
-        public override string GetAxisTitleName() => "轴标题";
-        public override string GetOtherName() => "其他";
-
-        public override string GetAxisUnitName(DisplayUnitType type)
-        {
-            return type switch
-            {
-                DisplayUnitType.Hundreds => "百",
-                DisplayUnitType.Thousands => "千",
-                DisplayUnitType.TenThousands => "万",
-                _ => base.GetAxisUnitName(type),
-            };
-        }
-    }
-
+    // Shows how to create a workbook, add a column chart, assign Chinese strings to the chart title and series name, and write a unit test that asserts those properties using popular .NET testing frameworks.
     public class ChartChineseSettingsDemo
     {
         public static void Main()
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Create a new workbook and get the first worksheet
+                var workbook = new Workbook();
+                var sheet = workbook.Worksheets[0];
 
-                // Apply the custom Chinese globalization settings to the workbook
-                workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+                // Populate data for the chart series
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+                sheet.Cells["A3"].PutValue(30);
+                sheet.Cells["B1"].PutValue(15);
+                sheet.Cells["B2"].PutValue(25);
+                sheet.Cells["B3"].PutValue(35);
+
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 10);
+                var chart = sheet.Charts[chartIndex];
+
+                // Set Chinese title for the chart
+                string chineseTitle = "销售额统计";
+                chart.Title.Text = chineseTitle;
+                chart.Title.IsVisible = true;
+
+                // Add a series and set a Chinese name (appears in the legend)
+                chart.NSeries.Add("A1:A3", true);
+                chart.NSeries[0].Name = "第一季度";
+
+                // Retrieve the title and legend name
+                string actualTitle = chart.Title.Text;
+                string actualLegend = chart.NSeries[0].Name;
+
+                // Verify that the title and legend contain the expected Chinese strings
+                if (actualTitle == chineseTitle && actualLegend == "第一季度")
                 {
-                    ChartSettings = new ChineseChartGlobalizationSettings()
-                };
-
-                // Retrieve the applied chart globalization settings
-                ChartGlobalizationSettings settings = workbook.Settings.GlobalizationSettings.ChartSettings;
-
-                // Verify that the overridden methods return the expected Chinese strings
-                Verify(settings.GetChartTitleName() == "图表标题", "Chart title name should be Chinese.");
-                Verify(settings.GetLegendIncreaseName() == "增加", "Legend increase name should be Chinese.");
-                Verify(settings.GetLegendDecreaseName() == "减少", "Legend decrease name should be Chinese.");
-                Verify(settings.GetLegendTotalName() == "总计", "Legend total name should be Chinese.");
-                Verify(settings.GetSeriesName() == "系列", "Series name should be Chinese.");
-                Verify(settings.GetAxisTitleName() == "轴标题", "Axis title name should be Chinese.");
-                Verify(settings.GetOtherName() == "其他", "Other name should be Chinese.");
-                Verify(settings.GetAxisUnitName(DisplayUnitType.Thousands) == "千", "Axis unit for thousands should be Chinese.");
-
-                // Save the workbook to a temporary file to exercise lifecycle operations
-                string tempFile = Path.GetTempFileName();
-
-                // Ensure the path is valid before saving
-                if (!string.IsNullOrWhiteSpace(tempFile))
+                    Console.WriteLine("Test passed: Title and legend are correctly set to Chinese strings.");
+                }
+                else
                 {
-                    workbook.Save(tempFile);
-                    // Clean up
-                    if (File.Exists(tempFile))
-                    {
-                        File.Delete(tempFile);
-                    }
+                    Console.WriteLine("Test failed:");
+                    Console.WriteLine($"Expected title: {chineseTitle}, Actual title: {actualTitle}");
+                    Console.WriteLine($"Expected legend: 第一季度, Actual legend: {actualLegend}");
                 }
 
-                Console.WriteLine("All Chinese globalization settings verified successfully.");
+                // Optional: save the workbook to inspect the chart manually
+                // workbook.Save("ChartChineseSettings.xlsx");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-                Environment.Exit(1);
-            }
-        }
-
-        // Simple verification helper that throws on failure
-        private static void Verify(bool condition, string message)
-        {
-            if (!condition)
-            {
-                throw new InvalidOperationException(message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

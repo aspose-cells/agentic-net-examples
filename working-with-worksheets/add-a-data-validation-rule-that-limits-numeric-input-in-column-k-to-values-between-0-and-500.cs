@@ -1,51 +1,60 @@
-// Title: C# – Add numeric data validation (0‑500) to column K with Aspose.Cells
-// Description: Creates a new workbook, defines a CellArea for column K (rows 0‑1000), adds a WholeNumber validation with a Between operator, sets the allowed range to 0‑500, configures custom input and error messages, applies a Stop alert style, and saves the file as ColumnKValidation.xlsx.
-// Keywords: Aspose.Cells C# | Excel data validation | numeric range validation | column K validation | whole number 0 to 500 | ValidationType.WholeNumber | OperatorType.Between | validation alert stop | CellArea example | Aspose.Cells workbook
-// Common Searches: Aspose.Cells set numeric range validation | C# restrict Excel column values 0 to 500 | Add data validation to column K using Aspose | Aspose.Cells custom input and error messages | Apply whole number validation in .NET Excel
-// Developer Intent: Add a rule that allows only whole numbers between 0 and 500 in column K of an Excel worksheet.
-// Use Cases: Enforce price limits in a generated financial report. | Prevent out‑of‑range quantities in a user‑filled inventory template. | Guide data entry with custom messages in a survey worksheet. | Ensure data quality in automated Excel exports.
-// AI Prompts: Generate Aspose.Cells C# code to apply a whole‑number validation (0‑500) to column K rows 1‑1000 with custom input and error messages. | Show how to modify the rule to accept decimal values between 0 and 500 using Aspose.Cells. | Provide a C# loop that applies the same numeric range validation to columns K, L, and M.
+// Title: Add numeric range validation (0‑500) to the whole column K with Aspose.Cells for .NET (C#)
+// AI Prompts: Create C# code that applies a whole‑number validation to every cell in column K, limiting entries to values from 0 to 500 and showing custom input and error messages using Aspose.Cells. | Write a C# example that defines a CellArea for column K, adds a between‑operator validation rule, configures the messages, and saves the workbook as an .xlsx file.
+// Common Searches: aspocells c# whole number validation for column K 0 to 500 | apply data validation to an entire Excel column using Aspose.Cells .NET | c# aspocells set custom input and error messages for numeric validation
+// Tags: Aspose.Cells whole number validation column K | C# numeric limits data validation Excel | Aspose.Cells between operator validation | Excel input and error messages with Aspose.Cells
 
+using System;
 using Aspose.Cells;
 
-// Creates a new workbook, defines a CellArea for column K (rows 0‑1000), adds a WholeNumber validation with a Between operator, sets the allowed range to 0‑500, configures custom input and error messages, applies a Stop alert style, and saves the file as ColumnKValidation.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, defines a CellArea that spans all rows of column K, adds a whole‑number validation with a between operator restricting values to 0‑500, sets custom input and error messages, and saves the file as OutputWithValidation.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Define the validation area for column K (zero‑based index 10), rows 0‑1000
-        CellArea area = new CellArea
+        static void Main(string[] args)
         {
-            StartRow = 0,
-            EndRow = 1000,
-            StartColumn = 10,
-            EndColumn = 10
-        };
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Add a validation to the worksheet for the defined area
-        int validationIndex = sheet.Validations.Add(area);
-        Validation validation = sheet.Validations[validationIndex];
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Configure the validation: whole numbers between 0 and 500
-        validation.Type = ValidationType.WholeNumber;
-        validation.Operator = OperatorType.Between;
-        validation.Formula1 = "0";
-        validation.Formula2 = "500";
+                // Define the cell area for column K (zero‑based index 10) across all rows
+                CellArea area = new CellArea
+                {
+                    StartRow = 0,
+                    EndRow = sheet.Cells.MaxRow,   // 1,048,575
+                    StartColumn = 10,              // Column K
+                    EndColumn = 10
+                };
 
-        // Optional user‑friendly messages and alert style
-        validation.InputTitle = "Enter Value";
-        validation.InputMessage = "Please enter a number between 0 and 500.";
-        validation.ErrorTitle = "Invalid Input";
-        validation.ErrorMessage = "The value must be between 0 and 500.";
-        validation.ShowInput = true;
-        validation.ShowError = true;
-        validation.AlertStyle = ValidationAlertType.Stop;
+                // Add a validation rule for the defined area
+                int validationIndex = sheet.Validations.Add(area);
+                Validation validation = sheet.Validations[validationIndex];
 
-        // Save the workbook with the validation applied
-        workbook.Save("ColumnKValidation.xlsx");
+                // Set validation type to whole number and define limits
+                validation.Type = ValidationType.WholeNumber;
+                validation.Operator = OperatorType.Between;
+                validation.Formula1 = "0";   // Lower bound
+                validation.Formula2 = "500"; // Upper bound
+
+                // Input and error messages
+                validation.InputMessage = "Please enter a number between 0 and 500.";
+                validation.ErrorMessage = "The value must be between 0 and 500.";
+                validation.ShowInput = true;   // Show the input message when the cell is selected
+                validation.ShowError = true;   // Show the error message when invalid data is entered
+
+                // Save the workbook
+                string outputPath = "OutputWithValidation.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

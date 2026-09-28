@@ -1,43 +1,33 @@
-// Title: Validate External Connection Credentials Before Saving an Aspose.Cells Workbook (.NET)
-// Description: Shows how to loop through a Workbook’s DataConnections in C#, confirm each ExternalConnection has a non‑empty Credentials value, raise an InvalidOperationException for any missing credentials, and save the workbook only after validation succeeds.
-// Keywords: Aspose.Cells | C# external connection validation | DataConnections credentials | Aspose.Cells .NET | validate workbook external data source | CredentialsMethodType.None | throw exception missing credentials | save workbook after validation
-// Common Searches: Aspose.Cells check external connection credentials | C# validate DataConnections before saving workbook | ensure external data source has credentials in Aspose.Cells | throw error when external connection has no credentials Aspose.Cells | validate external connections in .NET Aspose.Cells
-// Developer Intent: Guarantee that every external connection in a workbook possesses a non‑empty credential setting before invoking Save.
-// Use Cases: Prevent runtime failures by blocking saves of workbooks with unsecured external data connections. | Validate credentials in template workbooks that contain pre‑configured data sources. | Integrate credential checks into automated reporting pipelines that pull data from external systems.
-// AI Prompts: Create a C# method that scans workbook.DataConnections and throws InvalidOperationException if any connection's Credentials equals CredentialsMethodType.None. | Show how to log the names of connections lacking credentials before raising the exception in Aspose.Cells. | Extend the validation to accept only Integrated or Stored credentials and reject all other types.
+// Title: Ensure every external data connection has credentials before saving an Aspose.Cells workbook in C#
+// AI Prompts: Loop through workbook.DataConnections, verify each ExternalConnection.Credentials is not CredentialsMethodType.None, and raise InvalidOperationException with the connection name if a missing credential is found. | Add a pre‑save validation method to an Aspose.Cells C# project that checks all external connections for non‑empty credentials and aborts the Save call when any connection lacks authentication. | Create a utility function that accepts a Workbook, inspects its ExternalConnection objects, and returns a boolean indicating whether all connections have proper credentials, throwing an error otherwise.
+// Common Searches: Aspose.Cells C# verify external connection credentials before workbook.save() | how to throw error when external data connection has no credentials in Aspose.Cells | C# code to validate DataConnections credentials in an Excel file using Aspose | prevent saving Aspose.Cells workbook if any external connection lacks authentication | check for empty credentials in Aspose.Cells external connections C# example
+// Tags: external connection credential validation Aspose.Cells | check DataConnections credentials C# | throw InvalidOperationException missing external credentials | pre‑save external connection check Aspose.Cells | validate external data connections before workbook save
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExternalConnectionValidation
+// // This program creates (or loads) a Workbook, iterates through its DataConnections, throws an InvalidOperationException if any connection's Credentials are set to None, and saves the workbook as ValidatedWorkbook.xlsx.
+class ValidateExternalConnections
 {
-    // Shows how to loop through a Workbook’s DataConnections in C#, confirm each ExternalConnection has a non‑empty Credentials value, raise an InvalidOperationException for any missing credentials, and save the workbook only after validation succeeds.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
+
+        // Iterate through all external connections in the workbook
+        foreach (ExternalConnection connection in workbook.DataConnections)
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
-
-            // Example: add a dummy external connection for demonstration purposes
-            // In real scenarios the workbook would already contain external connections
-            // ExternalConnection connection = workbook.DataConnections.Add("MyConnection", "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=sample.xlsx;", true);
-            // connection.Credentials = CredentialsMethodType.Integrated; // set a non‑empty credential
-
-            // Validate that each external connection has non‑empty credentials before saving
-            foreach (ExternalConnection conn in workbook.DataConnections)
+            // Validate that the connection has credentials set (not the default 'None')
+            if (connection.Credentials == CredentialsMethodType.None)
             {
-                // The Credentials property is an enum; assume CredentialsMethodType.None indicates no credentials
-                if (conn.Credentials == CredentialsMethodType.None)
-                {
-                    throw new InvalidOperationException(
-                        $"External connection \"{conn.Name}\" does not have credentials set.");
-                }
+                // Throw an exception if any connection lacks credentials
+                throw new InvalidOperationException(
+                    $"External connection '{connection.Name}' has empty credentials.");
             }
-
-            // Save the workbook after successful validation
-            workbook.Save("ValidatedWorkbook.xlsx");
         }
+
+        // All connections are valid; save the workbook
+        workbook.Save("ValidatedWorkbook.xlsx");
     }
 }

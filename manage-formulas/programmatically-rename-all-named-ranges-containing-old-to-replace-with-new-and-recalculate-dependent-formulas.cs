@@ -1,49 +1,62 @@
-// Title: C# – Rename Named Ranges Containing “Old” to “New” and Recalculate Formulas with Aspose.Cells
-// Description: This Aspose.Cells for .NET example loads a workbook, scans the NameCollection, replaces the substring “Old” with “New” in each defined name, updates the Name objects (automatically adjusting any formulas that reference them), triggers a full formula recalculation, and saves the modified file.
-// Keywords: Aspose.Cells rename named ranges | C# rename Excel defined names | replace substring in NameCollection | recalculate formulas Aspose.Cells | batch rename Excel named ranges .NET | automatic formula update Aspose.Cells
-// Common Searches: rename named ranges containing 'Old' Aspose.Cells C# | how to change defined names in Excel programmatically .NET | recalculate formulas after renaming named ranges Aspose.Cells | batch update Excel named ranges with Aspose.Cells | replace text in Excel named ranges using C#
-// Developer Intent: Rename every named range that includes "Old" to "New" and refresh all dependent formulas.
-// Use Cases: Standardize legacy named ranges across corporate workbooks | Migrate Excel templates to a new naming convention before deployment | Integrate named‑range renaming into automated build or CI pipelines | Prepare workbooks for localization by updating range identifiers
-// AI Prompts: Write C# code using Aspose.Cells that changes every defined name containing "Temp" to "Current" and then forces a full formula recalculation. | Provide a unit test in C# that confirms formulas reference the new names after a named‑range rename with Aspose.Cells. | Explain how Aspose.Cells automatically updates formula references when the Name.Text property is modified.
+// Title: Rename Excel named ranges containing 'Old' to 'New' and recalculate formulas using Aspose.Cells for .NET
+// AI Prompts: Find all Name objects whose Text includes 'Old', replace the substring with 'New', and then call Workbook.CalculateFormula() to update dependent cells in C# with Aspose.Cells. | Batch rename named ranges by substituting a specific keyword and refresh all formulas in an Excel workbook using the Aspose.Cells .NET API.
+// Common Searches: C# Aspose.Cells rename named ranges that contain a specific word | How to update named range names and recalculate formulas in an Excel file using Aspose.Cells | Batch change part of named range identifiers and refresh formulas with Aspose.Cells for .NET
+// Tags: rename named ranges Aspose.Cells C# | replace substring in Name objects Aspose.Cells | recalculate workbook formulas Aspose.Cells | batch update Excel named ranges .NET
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace RenameNamedRangesDemo
+// Loads an Excel workbook, identifies all named ranges whose name includes 'Old', replaces that part with 'New', recalculates all formulas to reflect the changes, and saves the modified file.
+class RenameNamedRanges
 {
-    // This Aspose.Cells for .NET example loads a workbook, scans the NameCollection, replaces the substring “Old” with “New” in each defined name, updates the Name objects (automatically adjusting any formulas that reference them), triggers a full formula recalculation, and saves the modified file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("InputWorkbook.xlsx");
-
-            // Get the collection of all defined names in the workbook
-            NameCollection names = workbook.Worksheets.Names;
-
-            // Iterate through each name and rename those containing "Old" to "New"
-            for (int i = 0; i < names.Count; i++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Name name = names[i];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Check if the name text includes the substring "Old"
-                if (name.Text != null && name.Text.Contains("Old"))
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Collect names that need to be renamed (avoid modifying collection while iterating)
+            List<Name> namesToRename = new List<Name>();
+            foreach (Name name in workbook.Worksheets.Names)
+            {
+                if (name.Text.Contains("Old"))
                 {
-                    // Create the new name by replacing "Old" with "New"
-                    string newName = name.Text.Replace("Old", "New");
-
-                    // Assign the new name back to the Name object
-                    // This updates the name and automatically adjusts formulas that reference it
-                    name.Text = newName;
+                    namesToRename.Add(name);
                 }
             }
 
-            // Recalculate all formulas so that any dependent calculations reflect the renamed ranges
+            // Rename each collected name
+            foreach (Name name in namesToRename)
+            {
+                string newNameText = name.Text.Replace("Old", "New");
+                name.Text = newNameText; // Directly update the name
+                // Comment is preserved automatically; no additional action required
+            }
+
+            // Recalculate formulas to reflect renamed ranges
             workbook.CalculateFormula();
 
-            // Save the modified workbook (replace with your desired output path)
-            workbook.Save("OutputWorkbook.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

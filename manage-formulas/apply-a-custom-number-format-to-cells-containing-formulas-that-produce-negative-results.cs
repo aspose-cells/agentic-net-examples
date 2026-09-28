@@ -1,67 +1,74 @@
-// Title: Apply a Red Negative Number Format to Formula Cells with Aspose.Cells for .NET
-// Description: Creates a workbook, inserts numeric values and formulas, calculates them, defines a custom format that shows negatives in red, and uses a StyleFlag to apply the format only to formula cells whose evaluated value is negative before saving the file.
-// Keywords: Aspose.Cells | custom number format | negative numbers | formula results | StyleFlag | C# | .NET | workbook styling | apply style to cells
-// Common Searches: Aspose.Cells format negative formula results | apply custom number format to negative values C# | StyleFlag number format example Aspose.Cells | highlight negative numbers in Excel using Aspose.Cells | C# code to style cells with negative formula outcomes
-// Developer Intent: Apply a custom number format that highlights only the negative results of formulas while leaving other cells unchanged.
-// Use Cases: Financial reports where losses are shown in red for quick visual identification. | Audit spreadsheets that automatically flag negative calculated values. | Performance dashboards that emphasize metrics falling below zero without using conditional formatting.
-// AI Prompts: Show how to extend the sample to format zero values in gray. | Provide a solution that uses Aspose.Cells Conditional Formatting to highlight negative results. | Explain how to apply the same custom format to an entire column with a single API call.
+// Title: Apply a red custom number format to formula cells that evaluate to negative values using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, calculates all formulas, scans the used range, and assigns the custom format "#,##0.00;[Red]-#,##0.00" only to formula cells whose result is a negative number. | Show how to retrieve a cell’s evaluated value, verify it is a negative double, and programmatically apply a custom style with Aspose.Cells in a .NET application.
+// Common Searches: Aspose.Cells C# apply red number format only to negative results of formula cells | how to set custom number format for negative values after formula calculation in .NET | iterate over used cells in Excel workbook with Aspose.Cells and format negatives | C# example for conditional number formatting of formula results using Aspose.Cells | apply custom number format to negative numbers without affecting positive cells in Aspose.Cells
+// Tags: custom number format negative values Aspose.Cells | format formula cells based on evaluated result C# | iterate used range set cell style Aspose.Cells | calculate all formulas before applying formatting Aspose | red negative number format Excel C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Creates a workbook, inserts numeric values and formulas, calculates them, defines a custom format that shows negatives in red, and uses a StyleFlag to apply the format only to formula cells whose evaluated value is negative before saving the file.
-class ApplyCustomNumberFormatToNegativeFormulaResults
+// The program loads an Excel workbook, forces calculation of all formulas, iterates through the used cells, and applies the custom red number format "#,##0.00;[Red]-#,##0.00" to any formula cell whose evaluated value is a negative double, then saves the updated file.
+class ApplyCustomNumberFormat
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string customFormat = "#,##0.00;[Red]-#,##0.00";
+
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Populate some cells with values and formulas
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["B1"].Formula = "=A1-A2";   // Result: -10
-            cells["B2"].Formula = "=A2-A1";   // Result: 10
-            cells["C1"].Formula = "=A1*-1";   // Result: -10
-            cells["C2"].Formula = "=A2*2";    // Result: 40
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Calculate all formulas so that cell values are up‑to‑date
+            // Ensure all formulas are calculated
             workbook.CalculateFormula();
 
-            // Define a custom number format that shows negatives in red
-            string customNumberFormat = "_-\"$\"* #,##0.00;[Red]-\"$\"* #,##0.00;_-\"$\"* \"-\"??_;_@_";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a style that contains only the custom number format
-            Style customStyle = workbook.CreateStyle();
-            customStyle.Custom = customNumberFormat;
+            // Determine the used range
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
 
-            // Use a StyleFlag to apply only the number format part of the style
-            StyleFlag numberFormatFlag = new StyleFlag();
-            numberFormatFlag.NumberFormat = true;
-
-            // Iterate through all cells, find those with formulas that evaluate to a negative number,
-            // and apply the custom number format using the flag
-            foreach (Cell cell in cells)
+            // Iterate through used cells
+            for (int row = 0; row <= maxRow; row++)
             {
-                if (cell.IsFormula && cell.Type == CellValueType.IsNumeric && cell.DoubleValue < 0)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    // Apply the style to the single cell range
-                    AsposeRange range = cells.CreateRange(cell.Row, cell.Column, 1, 1);
-                    range.ApplyStyle(customStyle, numberFormatFlag);
+                    Cell cell = sheet.Cells[row, col];
+
+                    // Process only cells that contain a formula
+                    if (cell.IsFormula)
+                    {
+                        // Retrieve the evaluated value of the formula
+                        object value = cell.Value;
+
+                        // Apply custom format if the value is a negative number
+                        if (value is double numericValue && numericValue < 0)
+                        {
+                            Style style = cell.GetStyle();
+                            style.Custom = customFormat;
+                            cell.SetStyle(style);
+                        }
+                    }
                 }
             }
 
-            // Save the workbook
-            workbook.Save("NegativeFormulaNumberFormat.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

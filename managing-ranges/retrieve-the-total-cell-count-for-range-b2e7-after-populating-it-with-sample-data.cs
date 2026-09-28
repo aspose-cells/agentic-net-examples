@@ -1,64 +1,49 @@
-// Title: Aspose.Cells for .NET (C#): Count Cells in Range B2:E7 After Filling Sample Data
-// Description: Creates a new Workbook, defines the range B2:E7 with Aspose.Cells, populates each cell with a position label, calculates total cells using RowCount × ColumnCount, prints the result, and optionally saves the file.
-// Keywords: Aspose.Cells C# count cells in range | retrieve range cell count .NET | RowCount ColumnCount Aspose.Cells | populate Excel range with sample data | B2:E7 cell total Aspose | C# Excel range size calculation | Aspose.Cells CreateRange example | total cells in Excel block
-// Common Searches: how to get number of cells in a specific range using Aspose.Cells | C# example to fill B2:E7 and count cells | Aspose.Cells calculate total cells in range | retrieve cell count after populating range in .NET | count cells in Excel range programmatically
-// Developer Intent: Find out how many cells exist in the B2:E7 block after inserting sample values with Aspose.Cells.
-// Use Cases: Verify that a data block contains the expected number of cells before processing. | Generate a summary report showing how many cells were filled in a dynamic range. | Determine resource allocation for batch operations based on the total populated cells.
-// AI Prompts: Write a C# function using Aspose.Cells that fills any given range with sequential identifiers and returns the total cell count. | Show how to safely compute RowCount × ColumnCount for a range and handle empty or null ranges in Aspose.Cells. | Explain how to modify the example to count only non‑empty cells after the range has been populated.
+// Title: How to compute the total number of cells in a populated B2:E7 range using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that fills the worksheet range B2:E7 with sample data and returns the count of cells in that range using Aspose.Cells. | Show how to create a Range object for B2:E7 with Aspose.Cells, then obtain its RowCount and ColumnCount to calculate the total cells. | Provide a C# snippet that writes values into B2:E7, accesses the range via CreateRange, and prints the total cell count.
+// Common Searches: Aspose.Cells C# count cells in range B2:E7 after writing data | How to get total cells of a specific Excel range using Aspose.Cells .NET | C# example for retrieving RowCount and ColumnCount of a range with Aspose.Cells
+// Tags: Aspose.Cells calculate range cell count | CreateRange method Aspose.Cells C# | populate Excel range with sample data Aspose.Cells | retrieve RowCount ColumnCount Aspose.Cells | C# total cells in Excel range
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, populates cells B2:E7 with sample strings, creates a Range object for that area using CreateRange, calculates the total number of cells by multiplying RowCount and ColumnCount, and prints the result.
+class Program
 {
-    // Creates a new Workbook, defines the range B2:E7 with Aspose.Cells, populates each cell with a position label, calculates total cells using RowCount × ColumnCount, prints the result, and optionally saves the file.
-    public class RetrieveCellCountDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the range B2:E7 (zero‑based indices)
+            int startRow = 1;      // B2 row index
+            int startColumn = 1;   // B2 column index
+            int totalRows = 6;     // rows 2 through 7 inclusive
+            int totalColumns = 4;  // columns B through E inclusive
+
+            // Populate the range with sample data
+            for (int i = 0; i < totalRows; i++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Define the target range B2:E7
-                AsposeRange targetRange = cells.CreateRange("B2", "E7");
-
-                // Populate the range with sample data
-                for (int row = 0; row < targetRange.RowCount; row++)
+                for (int j = 0; j < totalColumns; j++)
                 {
-                    for (int col = 0; col < targetRange.ColumnCount; col++)
-                    {
-                        // Put a simple string value indicating its position
-                        targetRange[row, col].PutValue($"R{row + 1}C{col + 1}");
-                    }
+                    sheet.Cells[startRow + i, startColumn + j].PutValue($"R{i + 2}C{j + 2}");
                 }
-
-                // Calculate total number of cells in the range
-                int totalCellCount = targetRange.RowCount * targetRange.ColumnCount;
-
-                // Output the result
-                Console.WriteLine($"Total cells in range {targetRange.Address}: {totalCellCount}");
-
-                // Save the workbook (optional)
-                workbook.Save("RetrieveCellCountDemo.xlsx");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Create a Range object for B2:E7 using fully qualified name to avoid ambiguity
+            Aspose.Cells.Range range = sheet.Cells.CreateRange(startRow, startColumn, totalRows, totalColumns);
+
+            // Retrieve total cell count in the range
+            int cellCount = range.RowCount * range.ColumnCount;
+
+            // Output the result
+            Console.WriteLine($"Total cell count in range B2:E7: {cellCount}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RetrieveCellCountDemo.Run();
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

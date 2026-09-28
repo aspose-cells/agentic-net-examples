@@ -1,38 +1,43 @@
-// Title: C# – Load XLS, Evaluate Formulas, and Save Encrypted PDF (Owner Password) with Aspose.Cells
-// Description: Load an XLS workbook using Aspose.Cells, trigger formula calculation, apply an owner‑only password via PdfSecurityOptions, and export the result as a protected PDF file.
-// Keywords: Aspose.Cells XLS to PDF | calculate formulas before PDF export | PDF owner password encryption | PdfSaveOptions CalculateFormula | PdfSecurityOptions C# | secure PDF generation from Excel
-// Common Searches: Aspose.Cells export Excel to password protected PDF C# | how to calculate formulas when saving workbook as PDF | set owner password for PDF using Aspose.Cells | encrypt PDF generated from XLS with Aspose.Cells
-// Developer Intent: Create a PDF from an XLS file, ensure all Excel formulas are evaluated, and protect the PDF with an owner password.
-// Use Cases: Generate confidential PDF reports that reflect Excel calculations. | Batch‑convert multiple XLS workbooks into encrypted PDFs for secure distribution. | Produce invoice PDFs from Excel templates while preventing unauthorized editing.
-// AI Prompts: Write C# code with Aspose.Cells to load an .xls file, evaluate all formulas, and save it as a PDF protected by an owner password. | Show how to configure additional PDF permissions (printing, copying) when encrypting a PDF using Aspose.Cells PdfSecurityOptions.
+// Title: Load an XLS workbook, recalculate all formulas, and export to PDF (owner password not supported) with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xls file using Aspose.Cells, runs CalculateFormula, and saves the workbook as a PDF. | Show how to verify the source Excel file exists before converting it to PDF with Aspose.Cells in C#. | Explain how to apply an owner password to a PDF generated from Excel using Aspose.Cells and why older versions lack this feature. | Provide a try‑catch pattern for handling errors during Excel‑to‑PDF conversion with formula evaluation in Aspose.Cells.
+// Common Searches: asp.net calculate formulas in xls before converting to pdf with aspose.cells | c# aspose.cells export excel to pdf with owner password | how to set pdf encryption when saving workbook as pdf using aspose.cells | aspose.cells pdf export formula evaluation example c#
+// Tags: calculate-formulas-aspocells | xls-to-pdf-aspocells | pdf-encryption-aspocells | workbook-save-pdf-aspocells | aspose-cells-formula-evaluation
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering.PdfSecurity;
 
-// Load an XLS workbook using Aspose.Cells, trigger formula calculation, apply an owner‑only password via PdfSecurityOptions, and export the result as a protected PDF file.
+// The example checks that input.xls exists, loads it into an Aspose.Cells Workbook, forces recalculation of all worksheet formulas, and saves the result as output.pdf. Because the Aspose.Cells version used does not expose PDF password protection, the PDF is created without encryption; any runtime errors are caught and logged to the console.
 class Program
 {
     static void Main()
     {
-        // Path to the source XLS file
-        string sourceFile = "input.xls";
+        try
+        {
+            const string inputPath = "input.xls";
+            const string outputPath = "output.pdf";
 
-        // Load the workbook from the XLS file
-        Workbook workbook = new Workbook(sourceFile);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Create PDF save options and enable formula calculation
-        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
-        pdfSaveOptions.CalculateFormula = true; // calculate formulas before saving
+            // Load the XLS file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Set PDF security options with an owner password
-        PdfSecurityOptions securityOptions = new PdfSecurityOptions();
-        securityOptions.OwnerPassword = "ownerPassword123"; // owner password
-        // (optional) you can also set a user password or permissions here
-        pdfSaveOptions.SecurityOptions = securityOptions;
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Save the workbook as an encrypted PDF
-        string outputPdf = "encrypted_output.pdf";
-        workbook.Save(outputPdf, pdfSaveOptions);
+            // Save the workbook as a PDF (no encryption due to API version constraints)
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

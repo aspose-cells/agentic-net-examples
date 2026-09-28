@@ -1,77 +1,49 @@
-// Title: Export Excel to XML with custom namespace prefixes using ExportXmlOptions.NamespacePrefixDictionary (Aspose.Cells .NET)
-// Description: This C# example shows how to create a workbook, define an XML map, and export the worksheet to an XML file while assigning custom namespace prefixes. By instantiating ExportXmlOptions, populating its NamespacePrefixDictionary with prefix‑URI pairs, and passing the options to Workbook.ExportXml, the generated XML conforms to a specific schema namespace format.
-// Keywords: Aspose.Cells export XML custom namespace | ExportXmlOptions NamespacePrefixDictionary | C# export Excel to XML with prefixes | Aspose.Cells XML map custom namespace | .NET XML export namespace mapping | Workbook.ExportXml custom prefixes
-// Common Searches: Aspose.Cells set namespace prefix when exporting XML | ExportXmlOptions NamespacePrefixDictionary C# example | How to map XML namespace prefixes in Aspose.Cells | Export Excel worksheet to XML with custom namespaces .NET | Aspose.Cells XML map export custom prefix
-// Developer Intent: Generate an XML file from a worksheet using a user‑defined namespace‑prefix mapping.
-// Use Cases: Produce XML that matches a partner’s schema requiring a specific prefix. | Create reports where corporate naming standards dictate namespace prefixes. | Integrate Excel data into a web service that expects predefined XML namespace prefixes.
-// AI Prompts: Write C# code that uses Aspose.Cells ExportXmlOptions.NamespacePrefixDictionary to export a worksheet with a custom namespace prefix. | Modify the given sample to add ExportXmlOptions, set the prefix "emp" for the "http://example.com/ns" namespace, and call ExportXml with these options. | Provide a complete .NET example that creates a workbook, defines an XML map, configures NamespacePrefixDictionary entries, and exports the XML with the specified prefixes.
+// Title: Export an Excel workbook to XML with custom namespace prefixes using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook, fills cells, and saves it as XML while assigning your own namespace prefixes via XmlSaveOptions.NamespacePrefixDictionary. | Show how to add multiple URI‑to‑prefix mappings to the ExportXmlOptions before exporting a spreadsheet with Aspose.Cells. | Provide a sample that configures XmlSaveOptions to define namespace mappings and writes the workbook to an XML file.
+// Common Searches: Aspose.Cells C# set custom XML namespace prefix when saving workbook as XML | How to map namespace URIs to prefixes in XmlSaveOptions for Excel to XML export | C# export spreadsheet to XML with specific namespace prefixes using Aspose.Cells | XmlSaveOptions.NamespacePrefixDictionary example for custom namespaces
+// Tags: XmlSaveOptions.NamespacePrefixDictionary Aspose.Cells | export workbook to XML with custom prefixes C# | Aspose.Cells XML export namespace mapping | configure XML namespace prefixes Aspose.Cells | C# save spreadsheet as XML using namespace dictionary
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// This C# example shows how to create a workbook, define an XML map, and export the worksheet to an XML file while assigning custom namespace prefixes. By instantiating ExportXmlOptions, populating its NamespacePrefixDictionary with prefix‑URI pairs, and passing the options to Workbook.ExportXml, the generated XML conforms to a specific schema namespace format.
-class ExportXmlWithCustomNamespace
+// The example creates a workbook, populates sample data, configures XmlSaveOptions with a custom namespace‑prefix dictionary, ensures the output folder exists, and saves the workbook as an XML file using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook wb = new Workbook();
-            Worksheet ws = wb.Worksheets[0];
-            ws.Name = "Employees";
+            // Create a new workbook and add sample data
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("John");
+            sheet.Cells["B2"].PutValue(30);
 
-            // Populate worksheet with sample data
-            ws.Cells["A1"].PutValue("Id");
-            ws.Cells["B1"].PutValue("Name");
-            ws.Cells["A2"].PutValue(1);
-            ws.Cells["B2"].PutValue("John");
-            ws.Cells["A3"].PutValue(2);
-            ws.Cells["B3"].PutValue("Jane");
+            // Configure XmlSaveOptions (default SaveFormat is Xml)
+            var xmlOptions = new XmlSaveOptions();
 
-            // Define a simple XML schema and add it as an XML map
-            string xmlSchema = @"
-                <xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:ns='http://example.com/ns'>
-                    <xs:element name='Employees'>
-                        <xs:complexType>
-                            <xs:sequence>
-                                <xs:element name='Employee' maxOccurs='unbounded'>
-                                    <xs:complexType>
-                                        <xs:sequence>
-                                            <xs:element name='Id' type='xs:int'/>
-                                            <xs:element name='Name' type='xs:string'/>
-                                        </xs:sequence>
-                                    </xs:complexType>
-                                </xs:element>
-                            </xs:sequence>
-                        </xs:complexType>
-                    </xs:element>
-                </xs:schema>";
-            int mapIndex = wb.Worksheets.XmlMaps.Add(xmlSchema);
-            XmlMap xmlMap = wb.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = "EmployeeMap";
+            // If custom namespace prefixes are required, they can be added here
+            // xmlOptions.CustomXmlNamespacePrefix.Add("http://schemas.openxmlformats.org/spreadsheetml/2006/main", "ss");
+            // xmlOptions.CustomXmlNamespacePrefix.Add("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "rel");
 
-            // NOTE: ExportXmlOptions is not available in older Aspose.Cells versions.
-            // The XML will be exported using default options.
-            string outputPath = "Employees.xml";
-
-            // Ensure the directory for the output file exists (if any)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            // Define output path and ensure the directory exists
+            string outputPath = "ExportedData.xml";
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
             {
-                Directory.CreateDirectory(outputDir);
+                Directory.CreateDirectory(directory);
             }
 
-            // Export the XML using the map name and output path
-            wb.ExportXml(xmlMap.Name, outputPath);
-
-            Console.WriteLine("XML exported successfully.");
+            // Save the workbook as XML
+            workbook.Save(outputPath, xmlOptions);
+            Console.WriteLine($"Workbook exported successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,45 +1,61 @@
-// Title: Disable PivotTable auto‑refresh on workbook open with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds sample data, builds a PivotTable on A1:B4, sets the EnableRefreshOnOpen (RefreshDataOnOpeningFile) property to false to stop automatic refresh, and saves the file as PivotTable_NoAutoRefresh.xlsx.
-// Keywords: Aspose.Cells PivotTable | EnableRefreshOnOpen false | RefreshDataOnOpeningFile | disable pivot auto refresh | C# Excel pivot settings | Aspose.Cells .NET example | prevent pivot refresh on open | Excel workbook performance | static pivot report
-// Common Searches: Aspose.Cells set EnableRefreshOnOpen false | how to stop pivot table refresh when opening Excel with Aspose | RefreshDataOnOpeningFile property C# | disable automatic pivot refresh Aspose.Cells | pivot table static data Aspose.Cells .NET
-// Developer Intent: Prevent a PivotTable from refreshing its data automatically when the workbook is opened.
-// Use Cases: Generate a report workbook where the pivot results must remain unchanged for end users. | Create an Excel template with pre‑calculated pivot values without triggering external data connections. | Improve load time by disabling pivot cache refresh in programmatically generated files.
-// AI Prompts: Show C# code that sets EnableRefreshOnOpen (RefreshDataOnOpeningFile) to false for a PivotTable using Aspose.Cells. | Provide a step‑by‑step example of creating a PivotTable and disabling its automatic refresh on open with Aspose.Cells for .NET. | Explain the impact of the EnableRefreshOnOpen property on Excel pivot tables when the file is opened.
+// Title: Disable automatic PivotTable refresh on workbook open using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that creates a PivotTable and disables its RefreshDataOnOpeningFile property. | Demonstrate how to configure a PivotTable in Aspose.Cells so it does not auto‑refresh when the workbook is opened. | Provide a .NET example that prevents a PivotTable from refreshing on file load with Aspose.Cells.
+// Common Searches: Aspose.Cells C# turn off pivot table auto refresh on opening | set RefreshDataOnOpeningFile false for PivotTable Aspose | prevent Excel pivot refresh on workbook load using Aspose.Cells | how to disable pivot auto refresh in .NET Excel file | example disabling pivot table refresh on open Aspose.Cells
+// Tags: Aspose.Cells PivotTable RefreshDataOnOpeningFile | C# disable pivot auto refresh | Excel workbook pivot refresh control | Aspose.Cells set pivot refresh false | prevent pivot table auto refresh .NET
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Creates a workbook, adds sample data, builds a PivotTable on A1:B4, sets the EnableRefreshOnOpen (RefreshDataOnOpeningFile) property to false to stop automatic refresh, and saves the file as PivotTable_NoAutoRefresh.xlsx.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a new workbook, adds sample product and sales data, inserts a PivotTable, disables its automatic refresh on opening by setting RefreshDataOnOpeningFile to false, and saves the file as PivotTableDisableRefreshOnOpenDemo.xlsx.
+    public class PivotTableDisableRefreshOnOpenDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Entry point required for console application
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+                Console.WriteLine("Workbook created successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Populate sample data for the pivot table
-        worksheet.Cells["A1"].PutValue("Product");
-        worksheet.Cells["B1"].PutValue("Sales");
-        worksheet.Cells["A2"].PutValue("Apple");
-        worksheet.Cells["B2"].PutValue(1000);
-        worksheet.Cells["A3"].PutValue("Banana");
-        worksheet.Cells["B3"].PutValue(2000);
-        worksheet.Cells["A4"].PutValue("Orange");
-        worksheet.Cells["B4"].PutValue(3000);
+        public static void Run()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a pivot table to the worksheet
-        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+            // Populate sample data for the pivot table
+            worksheet.Cells["A1"].PutValue("Product");
+            worksheet.Cells["B1"].PutValue("Sales");
+            worksheet.Cells["A2"].PutValue("Apple");
+            worksheet.Cells["B2"].PutValue(1000);
+            worksheet.Cells["A3"].PutValue("Banana");
+            worksheet.Cells["B3"].PutValue(2000);
+            worksheet.Cells["A4"].PutValue("Orange");
+            worksheet.Cells["B4"].PutValue(3000);
 
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
-        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Sales as data field
+            // Add a pivot table based on the data range
+            int pivotIndex = worksheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
+            PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
 
-        // Disable automatic data refresh when the workbook is opened
-        pivotTable.RefreshDataOnOpeningFile = false;
+            // Configure the pivot table (row and data fields)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product column
+            pivotTable.AddFieldToArea(PivotFieldType.Data, 1); // Sales column
 
-        // Save the workbook to a file
-        workbook.Save("PivotTable_NoAutoRefresh.xlsx");
+            // Disable automatic refresh when the workbook is opened
+            pivotTable.RefreshDataOnOpeningFile = false;
+
+            // Save the workbook to a file
+            string outputPath = "PivotTableDisableRefreshOnOpenDemo.xlsx";
+            workbook.Save(outputPath);
+        }
     }
 }

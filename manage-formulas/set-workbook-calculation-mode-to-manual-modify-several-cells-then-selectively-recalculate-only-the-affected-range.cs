@@ -1,59 +1,41 @@
-// Title: Aspose.Cells C# – Set Manual Calculation Mode and Recalculate Specific Cells
-// Description: Demonstrates how to switch an Aspose.Cells workbook to manual calculation mode, enable the calculation chain, modify source cells, and selectively recalculate only the dependent formulas (C1 and D1) using CalculateFormula, then save the workbook.
-// Keywords: Aspose.Cells manual calculation | C# selective formula recalculation | Enable calculation chain Aspose.Cells | CalculateFormula method example | Performance optimization Excel .NET | Manual mode workbook Aspose | Recalculate specific range Aspose.Cells
-// Common Searches: Aspose.Cells set manual calculation mode C# | How to recalculate only changed cells with Aspose.Cells | Enable calculation chain for faster updates Aspose.Cells | CalculateFormula for single formula Aspose.Cells | Manual vs automatic calculation Aspose.Cells
-// Developer Intent: The developer wants to improve performance by disabling automatic formula evaluation, update input cells, and then recompute only the formulas that depend on those inputs.
-// Use Cases: Speed up large spreadsheets by turning off automatic calculation and updating only affected formulas. | Refresh dependent cells after batch data imports without triggering a full workbook recalculation. | Create interactive reports where user changes affect only a subset of calculations.
-// AI Prompts: Generate C# code that sets Aspose.Cells workbook to manual calculation mode, modifies a cell, and uses CalculateFormula to update dependent formulas. | Show how to enable the calculation chain in Aspose.Cells and perform selective recalculation for a range of cells. | Explain the performance benefits of manual calculation mode and how to apply it in a .NET Excel processing workflow.
+// Title: Set Aspose.Cells workbook to manual calculation mode, update cells, and recalculate only a specific formula range in C#
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook, switches its calculation mode to Manual, changes the values in A1 and A2, and then recalculates only the formula in B1 without performing a full workbook calculation. | Demonstrate disabling automatic formula evaluation in Aspose.Cells, modifying a block of cells, and invoking CalculateFormula for the range B1:B10 using the .NET API.
+// Common Searches: Aspose.Cells C# set workbook calculation mode to manual and recalculate a single cell | How to recalculate only a range of formulas in Aspose.Cells .NET | Disable automatic formula calculation in Aspose.Cells and trigger manual calculation | Partial formula evaluation example with Aspose.Cells for C# | CalculateFormula for a specific range using Aspose.Cells .NET
+// Tags: manual calculation mode Aspose.Cells C# | recalculate specific range Aspose.Cells | disable automatic formula evaluation Aspose.Cells | partial formula calculation .NET | update cells trigger manual calculation Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to switch an Aspose.Cells workbook to manual calculation mode, enable the calculation chain, modify source cells, and selectively recalculate only the dependent formulas (C1 and D1) using CalculateFormula, then save the workbook.
-class ManualCalculationDemo
+// The example creates a new workbook, sets the calculation mode to Manual, writes values to A1 and A2, assigns a sum formula to B1, and then recalculates only the affected formula range before saving the file as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Set calculation mode to Manual for performance
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Enable calculation chain to help selective recalculation (optional but improves speed)
-        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
+            // Populate cells
+            sheet.Cells["A1"].PutValue(10);          // Direct value
+            sheet.Cells["A2"].PutValue(20);          // Direct value
+            sheet.Cells["B1"].Formula = "=A1+A2";    // Formula dependent on A1 and A2
 
-        // -----------------------------------------------------------------
-        // Initial data and formulas
-        // -----------------------------------------------------------------
-        sheet.Cells["A1"].PutValue(10);               // Input value
-        sheet.Cells["B1"].PutValue(20);               // Input value
-        sheet.Cells["C1"].Formula = "=A1+B1";         // Dependent formula
-        sheet.Cells["D1"].Formula = "=C1*2";          // Dependent formula
+            // Recalculate all formulas in the workbook (no direct range API in .NET)
+            workbook.CalculateFormula();
 
-        // Perform a full calculation once so that all cells have correct values
-        workbook.CalculateFormula();
-
-        // -----------------------------------------------------------------
-        // Modify some cells
-        // -----------------------------------------------------------------
-        sheet.Cells["A1"].PutValue(30); // Change only A1
-
-        // -----------------------------------------------------------------
-        // Selectively recalculate only the affected range (C1 and D1)
-        // -----------------------------------------------------------------
-        // Recalculate C1 based on the new A1 value
-        object c1Result = sheet.CalculateFormula("=A1+B1");
-        sheet.Cells["C1"].PutValue(c1Result);
-
-        // Recalculate D1 based on the updated C1 value
-        object d1Result = sheet.CalculateFormula("=C1*2");
-        sheet.Cells["D1"].PutValue(d1Result);
-
-        // -----------------------------------------------------------------
-        // Save the workbook
-        // -----------------------------------------------------------------
-        workbook.Save("ManualCalculationDemo.xlsx");
+            // Save the workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

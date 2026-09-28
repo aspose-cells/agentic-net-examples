@@ -1,34 +1,49 @@
-// Title: Set shape text bottom margin to 2 pt in Aspose.Cells for .NET
-// Description: Creates a workbook, adds a rectangle shape, assigns text, sets the TextBody.TextAlignment.BottomMarginPt to 2 points, and saves the file, ensuring the text is not clipped at the bottom.
-// Keywords: Aspose.Cells shape bottom margin | BottomMarginPt .NET | prevent text clipping Excel shape | adjust shape text margin | C# Aspose.Cells example
-// Common Searches: Aspose.Cells set bottom margin for shape text | shape text clipping fix Aspose.Cells | BottomMarginPt property usage | increase bottom margin of Excel shape programmatically | C# example for shape text margins in Aspose.Cells
-// Developer Intent: Apply a 2‑point bottom margin to a shape’s text so the content remains fully visible and is not cut off.
-// Use Cases: Designing report templates where shapes contain captions that must stay within the shape boundaries. | Automating bulk updates of existing worksheets to standardize text margins across all shapes. | Generating dashboards with multiple annotated shapes that require consistent visual spacing.
-// AI Prompts: Generate C# code that sets BottomMarginPt of a shape’s TextBody to a specified value using Aspose.Cells. | Explain the effect of BottomMarginPt on text rendering inside Excel shapes and how to choose an appropriate margin. | Provide a C# loop that iterates through all shapes in a worksheet and sets each shape’s bottom text margin to 2 points.
+// Title: Set worksheet bottom margin to 2 points with Aspose.Cells for .NET to avoid text clipping
+// AI Prompts: Generate C# code that opens an existing Excel file using Aspose.Cells, sets the worksheet PageSetup.BottomMargin to 2 points, and saves the file. | Show how to change the bottom margin of a worksheet to two points in Aspose.Cells to prevent content from being cut off. | Provide a minimal .NET example that adjusts the BottomMargin property of a worksheet before exporting to PDF.
+// Common Searches: Aspose.Cells C# set bottom margin to 2 points to stop clipping | how to change worksheet bottom margin in .NET Excel library | prevent bottom text cut off when printing Excel with Aspose.Cells | adjust page setup margins programmatically using Aspose.Cells | example code for modifying BottomMargin property in Aspose.Cells workbook
+// Tags: Aspose.Cells set bottom margin points | C# Excel worksheet page setup margins | adjust worksheet bottom margin Aspose.Cells | prevent bottom text clipping Excel | modify page layout margins .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Creates a workbook, adds a rectangle shape, assigns text, sets the TextBody.TextAlignment.BottomMarginPt to 2 points, and saves the file, ensuring the text is not clipped at the bottom.
-class SetBottomMarginPt
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing Excel workbook, sets the first worksheet's PageSetup.BottomMargin to 2 points to prevent bottom text clipping, and saves the modified file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset, left offset, height, width
-        Shape shape = worksheet.Shapes.AddRectangle(1, 1, 0, 0, 100, 200);
-        shape.Text = "Sample text with increased bottom margin";
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Set the bottom margin of the shape's text to 2 points
-        shape.TextBody.TextAlignment.BottomMarginPt = 2.0;
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Save the workbook
-        workbook.Save("ShapeWithBottomMargin.xlsx");
+                // Access the first worksheet (or any specific worksheet you need)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Set the bottom margin to 2 points to avoid clipping
+                sheet.PageSetup.BottomMargin = 2;
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

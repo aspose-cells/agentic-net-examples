@@ -1,69 +1,63 @@
-// Title: C# – Remove All Slicers from an Aspose.Cells Workbook and Export to PDF
-// Description: A complete C# example that loads or creates an Excel workbook, iterates through every worksheet, clears all slicers with `Worksheet.Slicers.Clear()`, configures `PdfSaveOptions` to include all visible sheets, and saves the result as a PDF file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | remove slicer | clear slicers | delete slicers | iterate worksheets | PdfSaveOptions | export to PDF | Workbook.Save | Slicers.Clear | Aspose.Cells example | GitHub sample | code snippet
-// Common Searches: how to delete all slicers in Aspose.Cells C# | Aspose.Cells remove slicers before PDF export | clear slicers from every worksheet programmatically | C# Aspose.Cells export workbook to PDF after removing slicers | PdfSaveOptions SheetSet.All example
-// Developer Intent: Programmatically clear every slicer in a workbook and generate a PDF version.
-// Use Cases: Prepare a clean printable PDF of a dashboard by stripping interactive slicers. | Automate batch processing of reports where slicers are not needed in the final PDF. | Integrate slicer removal into a CI pipeline that generates documentation PDFs from Excel templates.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, removes all slicers from each worksheet, and saves the workbook as a PDF. | Explain how to use PdfSaveOptions.SheetSet = SheetSet.All to export every sheet after clearing slicers. | Show error‑handling best practices when deleting slicers and exporting to PDF with Aspose.Cells.
+// Title: Remove all slicers from every worksheet in an Excel file and save the workbook as a PDF using Aspose.Cells for .NET
+// AI Prompts: Load an Excel workbook, iterate over each worksheet, delete every slicer from the worksheet's SlicerCollection, and then save the workbook as a PDF with only visible sheets using PdfSaveOptions. | Using Aspose.Cells for .NET, programmatically clear slicers on all sheets, handle a missing input file gracefully, and generate a PDF output of the cleaned workbook.
+// Common Searches: C# Aspose.Cells delete slicers from all worksheets before PDF conversion | How to remove slicers in an Excel workbook using Aspose.Cells .NET | Export Excel to PDF without slicers using Aspose.Cells | Iterate worksheets and clear SlicerCollection in Aspose.Cells C# example | Aspose.Cells PDF save options to include only visible sheets after removing slicers
+// Tags: remove slicers Aspose.Cells C# | export workbook to PDF Aspose.Cells | clear worksheet SlicerCollection .NET | PdfSaveOptions visible sheets Aspose.Cells | handle missing Excel file Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Tables;   // Required for ListObject
+using Aspose.Cells.Slicers;   // Required for slicer classes
 
-namespace SlicerRemovalAndPdfExport
+namespace DeleteSlicersAndExportPdf
 {
-    // A complete C# example that loads or creates an Excel workbook, iterates through every worksheet, clears all slicers with `Worksheet.Slicers.Clear()`, configures `PdfSaveOptions` to include all visible sheets, and saves the result as a PDF file using Aspose.Cells for .NET.
+    // The sample loads 'input.xlsx', checks for its existence, iterates through every worksheet to delete all slicers by clearing each sheet's SlicerCollection, and then saves the modified workbook as 'output.pdf' using PdfSaveOptions configured to export only visible sheets. Errors such as missing files are caught and reported.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook(); // Replace with new Workbook("input.xlsx") to load an existing file
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.pdf";
 
-                // Example data and slicer creation (optional, for demonstration)
-                Worksheet ws = workbook.Worksheets[0];
-                ws.Cells["A1"].PutValue("Category");
-                ws.Cells["B1"].PutValue("Value");
-                ws.Cells["A2"].PutValue("A");
-                ws.Cells["B2"].PutValue(10);
-                ws.Cells["A3"].PutValue("B");
-                ws.Cells["B3"].PutValue(20);
-
-                // Add a table (ListObject) covering the data range
-                int tableIdx = ws.ListObjects.Add(0, 0, 2, 1, true);
-                ListObject table = ws.ListObjects[tableIdx];
-
-                // Add a slicer linked to the first column of the table
-                ws.Slicers.Add(table, table.ListColumns[0], 1, 3);
-
-                // Iterate all worksheets and delete every slicer
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    // Clear removes all slicers from the worksheet
-                    sheet.Slicers.Clear();
+                    Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                    return;
                 }
 
-                // Prepare PDF save options (optional customizations)
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets and remove any slicers
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    // Access the slicer collection for the current worksheet
+                    SlicerCollection slicers = sheet.Slicers;
+
+                    // Remove all slicers – iterate backwards to avoid index shifting
+                    for (int i = slicers.Count - 1; i >= 0; i--)
+                    {
+                        slicers.RemoveAt(i);
+                    }
+                }
+
+                // Set PDF save options (export all visible sheets)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions
                 {
-                    // Export all visible sheets; default is SheetSet.Visible
-                    SheetSet = SheetSet.All
+                    SheetSet = SheetSet.Visible
                 };
 
-                // Export the modified workbook to PDF
-                string outputPdf = "WorkbookWithoutSlicers.pdf";
-                workbook.Save(outputPdf, pdfOptions);
-                Console.WriteLine($"Workbook saved as PDF: {Path.GetFullPath(outputPdf)}");
+                // Save the modified workbook as a PDF
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                // Log or display the error details
-                Console.WriteLine($"Error: {ex.Message}");
+                // Log any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

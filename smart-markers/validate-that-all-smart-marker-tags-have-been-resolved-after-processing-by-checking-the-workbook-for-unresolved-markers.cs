@@ -1,91 +1,64 @@
-// Title: Detect unresolved Smart Markers after processing a workbook with Aspose.Cells for .NET (C#)
-// Description: Loads a template workbook, binds a DataTable to WorkbookDesigner, runs Process(), calls GetSmartMarkers() to identify any remaining markers, logs the results, and saves the final file.
-// Keywords: Aspose.Cells smart marker validation | C# GetSmartMarkers example | WorkbookDesigner unresolved markers | smart marker resolution .NET | check smart markers after processing
-// Common Searches: Aspose.Cells GetSmartMarkers C# example | how to verify smart markers are resolved | detect unresolved smart markers in Excel using Aspose | smart marker validation after WorkbookDesigner.Process | C# check for remaining smart markers
-// Developer Intent: Confirm that no smart marker tags are left unresolved after WorkbookDesigner.Process runs.
-// Use Cases: Automated quality gate: fail a CI build if GetSmartMarkers returns any items. | Debugging data mismatches by logging each unresolved marker before saving the workbook. | Batch processing of multiple templates where each must be fully resolved before distribution.
-// AI Prompts: Generate C# code that loads an Excel template, binds several DataTables, processes smart markers with WorkbookDesigner, and throws an exception when GetSmartMarkers reports any unresolved tags. | Show how to iterate over GetSmartMarkers results, write each marker to a log file, and continue processing only if the list is empty.
+// Title: Validate that all smart markers are resolved after processing a workbook with Aspose.Cells in C#
+// AI Prompts: After calling WorkbookDesigner.Process, invoke GetSmartMarkers and verify that the returned array is empty. | If any markers are returned by GetSmartMarkers, iterate through the array and log each unresolved marker; otherwise log a success message.
+// Common Searches: how to detect unresolved smart markers after WorkbookDesigner.Process in C# | Aspose.Cells get list of smart markers that were not resolved | C# verify all smart markers are replaced in an Excel template | using GetSmartMarkers to validate smart marker processing in Aspose.Cells | check for missing data fields in Aspose.Cells smart markers
+// Tags: WorkbookDesigner GetSmartMarkers validation | Aspose.Cells smart marker resolution check | C# verify unresolved smart markers | Excel template smart marker processing | detect missing smart marker data Aspose.Cells
 
 using System;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-// Loads a template workbook, binds a DataTable to WorkbookDesigner, runs Process(), calls GetSmartMarkers() to identify any remaining markers, logs the results, and saves the final file.
-public class SmartMarkerValidation
+namespace SmartMarkerValidationDemo
 {
-    public static void Main()
+    // The example creates an Excel workbook with smart markers, processes them using WorkbookDesigner with a DataTable data source, retrieves any remaining markers via GetSmartMarkers, validates that none remain, outputs the result, and saves the processed file.
+    class Program
     {
-        try
+        static void Main()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-        }
-    }
+            // Create a workbook that contains smart markers
+            Workbook templateWorkbook = new Workbook();
+            Worksheet sheet = templateWorkbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-    public static void Run()
-    {
-        const string templatePath = "template.xlsx";
-        const string outputPath = "output.xlsx";
+            // Add smart markers to the template (these will be resolved after processing)
+            cells["A1"].PutValue("&=Employees.Name");
+            cells["A2"].PutValue("&=Employees.Age");
+            // Add an intentional unresolved marker for demonstration
+            cells["A3"].PutValue("&=Employees.UnknownColumn");
 
-        // Verify that the template file exists to avoid FileNotFoundException
-        if (!File.Exists(templatePath))
-        {
-            Console.WriteLine($"Template file not found: {templatePath}");
-            return;
-        }
+            // Initialize WorkbookDesigner with the template workbook
+            WorkbookDesigner designer = new WorkbookDesigner();
+            designer.Workbook = templateWorkbook;
 
-        try
-        {
-            // Load the template workbook that contains smart markers
-            Workbook templateWorkbook = new Workbook(templatePath);
+            // Prepare a simple data source
+            DataTable employeeTable = new DataTable("Employees");
+            employeeTable.Columns.Add("Name", typeof(string));
+            employeeTable.Columns.Add("Age", typeof(int));
+            employeeTable.Rows.Add("John Doe", 30);
+            employeeTable.Rows.Add("Jane Smith", 28);
 
-            // Initialize the WorkbookDesigner with the loaded workbook
-            WorkbookDesigner designer = new WorkbookDesigner
-            {
-                Workbook = templateWorkbook
-            };
-
-            // Create a sample data source (DataTable) for demonstration
-            DataTable dataTable = new DataTable("Employees");
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Age", typeof(int));
-            dataTable.Rows.Add("John Doe", 30);
-            dataTable.Rows.Add("Jane Smith", 28);
-
-            // Bind the data source to the designer
-            designer.SetDataSource(dataTable);
-
-            // Process the smart markers in the workbook
+            // Set the data source and process the smart markers
+            designer.SetDataSource(employeeTable);
             designer.Process();
 
-            // Retrieve any smart markers that remain unresolved after processing
+            // After processing, retrieve any remaining smart markers
             string[] unresolvedMarkers = designer.GetSmartMarkers();
 
-            // Report the validation result
+            // Validate that all smart markers have been resolved
             if (unresolvedMarkers.Length == 0)
             {
-                Console.WriteLine("All smart markers have been resolved.");
+                Console.WriteLine("All smart markers have been successfully resolved.");
             }
             else
             {
-                Console.WriteLine("Unresolved smart markers detected:");
+                Console.WriteLine("Unresolved smart markers found:");
                 foreach (string marker in unresolvedMarkers)
                 {
                     Console.WriteLine(marker);
                 }
             }
 
-            // Save the processed workbook
-            designer.Workbook.Save(outputPath);
-            Console.WriteLine($"Processed workbook saved to: {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during processing: {ex.Message}");
+            // Save the processed workbook (optional)
+            designer.Workbook.Save("ProcessedWorkbook.xlsx");
         }
     }
 }

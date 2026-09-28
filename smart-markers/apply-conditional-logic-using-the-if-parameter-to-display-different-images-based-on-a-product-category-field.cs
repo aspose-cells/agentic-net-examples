@@ -1,75 +1,86 @@
-// Title: Aspose.Cells C# – Conditional Image Insertion Using IF (Smart Markers)
-// Description: Creates an Excel workbook, writes product categories to column A, selects an image for each category with IF‑else logic, inserts the picture into column B, sets PlacementType.MoveAndSize, and saves the file as ProductCategoriesWithImages.xlsx.
-// Keywords: Aspose.Cells conditional image | C# insert picture based on cell value | Excel dynamic image selection .NET | PlacementType.MoveAndSize | smart markers image example
-// Common Searches: Aspose.Cells insert different pictures per row C# | Conditional image rendering in Excel with Aspose | How to use IF to choose images in Aspose.Cells | Smart markers with conditional pictures
-// Developer Intent: Add a picture to each row that corresponds to the product category value in the same row.
-// Use Cases: Product catalog showing category icons beside item names | Inventory list with thumbnail images for each item type | Sales report that visualizes categories using small pictures
-// AI Prompts: Generate Aspose.Cells C# code that uses a switch statement to map categories to images instead of if‑else. | Add robust error handling that logs rows with missing image files when inserting pictures with Aspose.Cells. | Show how to automatically resize inserted pictures to fit cell dimensions while keeping PlacementType.MoveAndSize.
+// Title: Apply IF formulas and Icon Set conditional formatting to show category‑specific icons in an Excel file with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that creates a workbook, adds product and category columns, and inserts an IF formula in a hidden helper column to convert category names to numeric codes. | Write C# that adds an Icon Set conditional formatting to the helper column, assigning a distinct icon to each numeric code (1 = Electronics, 2 = Clothing, 3 = Food). | Provide C# to hide the helper column, configure the icon thresholds, and save the workbook as ProductCategoriesWithIcons.xlsx.
+// Common Searches: aspnet aspose.cells conditional formatting icon set based on IF formula | c# how to display different icons for product categories in Excel using Aspose.Cells | map text category to numeric value with IF function in Aspose.Cells workbook | hide helper column after applying conditional formatting Aspose.Cells C# | set custom icon thresholds in Aspose.Cells conditional formatting C#
+// Tags: conditional formatting icon set aspnet cells | if formula category mapping aspnet cells | suppress helper column visibility aspnet cells | custom icon thresholds aspnet cells | excel workbook category icons c#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
 namespace AsposeCellsConditionalImageDemo
 {
-    // Creates an Excel workbook, writes product categories to column A, selects an image for each category with IF‑else logic, inserts the picture into column B, sets PlacementType.MoveAndSize, and saves the file as ProductCategoriesWithImages.xlsx.
+    // Demonstrates creating an Excel workbook with product and category data, using IF formulas in a hidden helper column to map category text to numeric codes, applying an Icon Set conditional formatting that shows a different icon for each code, hiding the helper column, and saving the file as ProductCategoriesWithIcons.xlsx.
     class Program
     {
         static void Main()
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data: Product name in column A, Category in column B
+            // Category values: "Electronics", "Clothing", "Food"
+            sheet.Cells["A1"].PutValue("Product");
+            sheet.Cells["B1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Laptop");
+            sheet.Cells["B2"].PutValue("Electronics");
+            sheet.Cells["A3"].PutValue("T‑Shirt");
+            sheet.Cells["B3"].PutValue("Clothing");
+            sheet.Cells["A4"].PutValue("Apple");
+            sheet.Cells["B4"].PutValue("Food");
+            sheet.Cells["A5"].PutValue("Headphones");
+            sheet.Cells["B5"].PutValue("Electronics");
+            sheet.Cells["A6"].PutValue("Jeans");
+            sheet.Cells["B6"].PutValue("Clothing");
+            sheet.Cells["A7"].PutValue("Bread");
+            sheet.Cells["B7"].PutValue("Food");
+
+            // Hidden helper column C will contain a numeric code derived from the category
+            // Using IF formulas to map text categories to numbers:
+            // Electronics -> 1, Clothing -> 2, Food -> 3
+            for (int row = 1; row <= 7; row++)
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Sample data: Product Category in column A (0‑based index)
-                string[] categories = { "Electronics", "Clothing", "Food", "Electronics", "Food" };
-                for (int i = 0; i < categories.Length; i++)
-                {
-                    sheet.Cells[i, 0].PutValue(categories[i]); // Column A
-                }
-
-                // Define image files for each category (ensure these files exist in the execution folder)
-                string electronicsImg = "electronics.png";
-                string clothingImg    = "clothing.png";
-                string foodImg        = "food.png";
-
-                // Loop through rows and add the appropriate picture in column B (index 1)
-                for (int row = 0; row < categories.Length; row++)
-                {
-                    string category = sheet.Cells[row, 0].StringValue;
-                    string imgPath = string.Empty;
-
-                    // Conditional logic using IF to select the image based on category
-                    if (category == "Electronics")
-                        imgPath = electronicsImg;
-                    else if (category == "Clothing")
-                        imgPath = clothingImg;
-                    else if (category == "Food")
-                        imgPath = foodImg;
-
-                    // Verify that the image file exists before adding it
-                    if (!string.IsNullOrEmpty(imgPath) && File.Exists(imgPath))
-                    {
-                        // Add picture to the worksheet at the target cell (row, column 1)
-                        int pictureIndex = sheet.Pictures.Add(row, 1, imgPath);
-                        Picture pic = sheet.Pictures[pictureIndex];
-
-                        // Adjust picture placement so it moves and resizes with the cell
-                        pic.Placement = PlacementType.MoveAndSize;
-                        // Width/Height are optional; Aspose will size the picture to the cell when Placement is set.
-                    }
-                }
-
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save("ProductCategoriesWithImages.xlsx");
+                // Formula placed in C(row+1) because rows are zero‑based internally
+                string formula = $"IF(B{row + 1}=\"Electronics\",1,IF(B{row + 1}=\"Clothing\",2,3))";
+                sheet.Cells[row, 2].Formula = formula; // column index 2 = C
             }
-            catch (Exception ex)
+
+            // Apply an Icon Set conditional formatting to the helper column (C2:C8)
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+
+            // Define the range for the conditional formatting
+            CellArea area = new CellArea
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+                StartRow = 1,   // C2
+                EndRow = 7,     // C8
+                StartColumn = 2,
+                EndColumn = 2
+            };
+            fcc.AddArea(area);
+
+            // Add an IconSet condition
+            int conditionIdx = fcc.AddCondition(FormatConditionType.IconSet);
+            FormatCondition iconCondition = fcc[conditionIdx];
+
+            // Use a custom icon set (three icons)
+            // Add three different icons – you can replace the IconSetType values with any icons you prefer
+            iconCondition.IconSet.CfIcons.Add(IconSetType.Arrows3, 0);      // Icon for Electronics
+            iconCondition.IconSet.CfIcons.Add(IconSetType.ArrowsGray3, 1); // Icon for Clothing
+            iconCondition.IconSet.CfIcons.Add(IconSetType.Boxes5, 2);      // Icon for Food
+
+            // Set the thresholds so that:
+            // 1 → first icon, 2 → second icon, 3 → third icon
+            // The thresholds are inclusive; we use numeric values directly.
+            iconCondition.SetFormula1("0", false, false); // lower bound (not used but required)
+            iconCondition.SetFormula2("3", false, false); // upper bound
+            iconCondition.Operator = OperatorType.Between;
+
+            // Hide the helper column so only the icons are visible to the user
+            sheet.Cells.HideColumn(2); // column index 2 = C
+
+            // Save the workbook
+            workbook.Save("ProductCategoriesWithIcons.xlsx");
         }
     }
 }

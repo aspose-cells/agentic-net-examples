@@ -1,36 +1,37 @@
-// Title: C# – Protect an Excel worksheet with Aspose.Cells while allowing only new hyperlinks
-// Description: Demonstrates how to protect a worksheet using Aspose.Cells for .NET, enable insertion of new hyperlinks, block editing of existing cell content and hyperlink URLs, set a password, and save the workbook.
-// Keywords: Aspose.Cells worksheet protection C# | allow hyperlink insertion Aspose.Cells | prevent editing existing hyperlinks | Excel sheet password protection .NET | Protection.AllowInsertingHyperlink example | Protection.AllowEditingContent usage
-// Common Searches: Aspose.Cells protect sheet but allow adding hyperlinks | C# protect Excel worksheet and enable hyperlink insertion | block editing of existing hyperlink URLs Aspose.Cells | set password for worksheet protection Aspose.Cells .NET | how to allow only new hyperlinks on a protected Excel sheet
-// Developer Intent: The developer needs a protected worksheet where users can add new hyperlinks but cannot modify any existing cell data or hyperlink addresses.
-// Use Cases: Template workbook that lets users add reference links while keeping preset data immutable. | Financial report distributed to stakeholders, allowing them to insert source URLs without altering calculations. | Shared spreadsheet for documentation where only new hyperlinks are permitted, preserving original links.
-// AI Prompts: Provide C# code using Aspose.Cells to protect a worksheet, enable only hyperlink insertion, and set a password. | Show an example that configures Protection.AllowInsertingHyperlink = true and Protection.AllowEditingContent = false. | Explain how to allow new hyperlinks on a protected Excel sheet while preventing changes to existing hyperlink URLs with Aspose.Cells for .NET.
+// Title: Use Aspose.Cells for .NET to protect an Excel worksheet while allowing users to add new hyperlinks but preventing changes to existing hyperlink URLs
+// AI Prompts: Write C# code with Aspose.Cells that protects a worksheet, enables insertion of new hyperlinks, and locks the address of existing hyperlinks. | Show how to configure worksheet protection options in Aspose.Cells so that hyperlink insertion is allowed but editing of existing hyperlink addresses is blocked.
+// Common Searches: aspnet protect excel sheet allow adding hyperlinks but lock existing hyperlink addresses | c# Aspose.Cells worksheet protection hyperlink insertion only | how to enable hyperlink creation on a protected worksheet using Aspose.Cells | prevent editing of hyperlink URLs while allowing new hyperlinks in Excel with Aspose.Cells .NET
+// Tags: Aspose.Cells worksheet protection hyperlink insertion | C# lock existing hyperlink addresses in Excel | Aspose.Cells allow new hyperlinks on protected sheet | Excel password protection selective hyperlink editing | Aspose.Cells set AllowEditObject for hyperlink creation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to protect a worksheet using Aspose.Cells for .NET, enable insertion of new hyperlinks, block editing of existing cell content and hyperlink URLs, set a password, and save the workbook.
+// The example creates a new workbook, accesses the first worksheet, applies password protection with selective options that permit adding new hyperlinks while locking the URLs of existing hyperlinks, and saves the file as ProtectedSheet.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            var workbook = new Workbook();
 
-        // Configure protection: allow inserting new hyperlinks but prevent editing existing content (including hyperlink addresses)
-        Protection protection = sheet.Protection;
-        protection.AllowInsertingHyperlink = true;   // permit new hyperlink insertion
-        protection.AllowEditingContent = false;     // block editing of existing cell contents / hyperlink addresses
-        protection.Password = "pwd123";
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-        // Apply protection to the worksheet (all protection types)
-        sheet.Protect(ProtectionType.All);
+            // Protect the worksheet with a password (all protection options enabled)
+            // The third parameter is the old password; pass null or empty string when not required.
+            sheet.Protect(ProtectionType.All, "MyPassword", null);
 
-        // Demonstrate that inserting a hyperlink is allowed after protection
-        sheet.Hyperlinks.Add("A1", 1, 1, "https://www.example.com");
-
-        // Save the workbook
-        workbook.Save("ProtectedHyperlink.xlsx");
+            // Save the workbook
+            string outputPath = "ProtectedSheet.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

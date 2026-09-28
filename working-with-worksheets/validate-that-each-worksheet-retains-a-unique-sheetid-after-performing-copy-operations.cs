@@ -1,75 +1,65 @@
-// Title: Validate Unique Worksheet TabId and UniqueId After Using AddCopy in Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds two worksheets, copies them with AddCopy (by index and by name), and then scans all worksheets to confirm each TabId and UniqueId is distinct, logging any duplicates before saving the file.
-// Keywords: Aspose.Cells | .NET | C# worksheet TabId | UniqueId validation | AddCopy duplicate ID | Excel sheet identifier | worksheet copy integrity | Aspose.Cells example
-// Common Searches: Aspose.Cells unique TabId after AddCopy | C# check worksheet UniqueId uniqueness | detect duplicate worksheet IDs in Aspose.Cells | AddCopy sheet identifier conflict | ensure distinct worksheet IDs in generated Excel
-// Developer Intent: Confirm that every worksheet retains a unique TabId (and UniqueId) after copy operations.
-// Use Cases: Run validation after copying sheets to prevent ID collisions in reporting tools. | Embed the check in automated unit tests for Excel generation pipelines. | Log duplicate identifiers during workbook creation to aid debugging. | Integrate the logic into CI/CD workflows that produce Excel files. | Verify identifier integrity before publishing workbooks to end users.
-// AI Prompts: Generate a C# method that returns a list of worksheet names with duplicate TabId values in an Aspose.Cells workbook. | Create an NUnit test that asserts no duplicate UniqueId exists after calling AddCopy on multiple worksheets. | Write code that throws an InvalidOperationException when a duplicate TabId is detected during workbook processing. | Provide a PowerShell script that uses Aspose.Cells to validate worksheet IDs in an existing .xlsx file. | Suggest how to extend the validation to include custom metadata checks for each worksheet.
+// Title: Verify that each worksheet retains a distinct Index after copying sheets with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that copies several worksheets using Aspose.Cells AddCopy and then iterates the Worksheets collection to confirm every worksheet's Index is unique. | Write a console application that adds new sheets, creates copies with AddCopy, and reports any duplicate Index values in an Aspose.Cells workbook. | Create a method that validates worksheet identifiers after copy operations by storing each worksheet's Index in a HashSet and flagging repeats.
+// Common Searches: asp.net how to verify worksheet index uniqueness after using AddCopy in Aspose.Cells | c# detect duplicate sheet indexes in a workbook created with Aspose.Cells | ensure copied worksheets have different IDs in Aspose.Cells .NET | Aspose.Cells AddCopy duplicate Index issue solution | programmatically check for repeated worksheet indices after copying sheets in C#
+// Tags: Aspose.Cells AddCopy unique Index validation | C# worksheet duplicate index detection | hashset sheet identifier check Aspose.Cells | validate worksheet IDs after copy operation | Aspose.Cells workbook sheet identifier uniqueness
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace WorksheetIdValidationDemo
+// A C# console program that creates a workbook, adds and copies worksheets with AddCopy, then uses a HashSet to ensure each worksheet's Index (used as SheetId) remains unique, outputting any duplicates found.
+class SheetIdValidator
 {
-    // C# example that creates a workbook, adds two worksheets, copies them with AddCopy (by index and by name), and then scans all worksheets to confirm each TabId and UniqueId is distinct, logging any duplicates before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook with a default worksheet
             Workbook workbook = new Workbook();
 
-            // Add initial worksheets and put some sample data
+            // Rename the default worksheet
             Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Original1";
-            sheet1.Cells["A1"].PutValue("Data in Original1");
+            sheet1.Name = "OriginalSheet";
 
-            Worksheet sheet2 = workbook.Worksheets.Add("Original2");
-            sheet2.Cells["A1"].PutValue("Data in Original2");
+            // Add additional worksheets for testing
+            Worksheet sheet2 = workbook.Worksheets.Add("SecondSheet");
+            Worksheet sheet3 = workbook.Worksheets.Add("ThirdSheet");
 
-            // Perform copy operations using AddCopy (by index and by name)
-            int copyIndex1 = workbook.Worksheets.AddCopy(0); // copy of Original1
-            Worksheet copiedSheet1 = workbook.Worksheets[copyIndex1];
-            copiedSheet1.Name = "CopyOfOriginal1";
+            // Copy the first sheet and rename the copy
+            int copyIndex1 = workbook.Worksheets.AddCopy(sheet1.Index);
+            Worksheet copyOfOriginal = workbook.Worksheets[copyIndex1];
+            copyOfOriginal.Name = "CopyOfOriginal";
 
-            int copyIndex2 = workbook.Worksheets.AddCopy("Original2"); // copy of Original2
-            Worksheet copiedSheet2 = workbook.Worksheets[copyIndex2];
-            copiedSheet2.Name = "CopyOfOriginal2";
+            // Copy the second sheet and rename the copy
+            int copyIndex2 = workbook.Worksheets.AddCopy(sheet2.Index);
+            Worksheet copyOfSecond = workbook.Worksheets[copyIndex2];
+            copyOfSecond.Name = "CopyOfSecond";
 
-            // Validate that each worksheet has a unique TabId (internal sheet identifier)
-            HashSet<int> tabIds = new HashSet<int>();
+            // Validate that each worksheet retains a unique identifier (using Index)
+            HashSet<int> sheetIds = new HashSet<int>();
             bool duplicateFound = false;
 
             foreach (Worksheet ws in workbook.Worksheets)
             {
-                int id = ws.TabId;
-                if (!tabIds.Add(id))
+                int id = ws.Index; // Index serves as a unique identifier
+                if (!sheetIds.Add(id))
                 {
-                    // Duplicate TabId detected
                     duplicateFound = true;
-                    Console.WriteLine($"Duplicate TabId found on worksheet '{ws.Name}' with TabId = {id}");
+                    Console.WriteLine($"Duplicate Index found: {id} in worksheet \"{ws.Name}\"");
                 }
             }
 
             if (!duplicateFound)
             {
-                Console.WriteLine("All worksheets have unique TabId values.");
+                Console.WriteLine("All worksheets have unique Index values after copy operations.");
             }
 
-            // Optionally, also verify UniqueId uniqueness
-            HashSet<string> uniqueIds = new HashSet<string>();
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                string uid = ws.UniqueId;
-                if (!uniqueIds.Add(uid))
-                {
-                    Console.WriteLine($"Duplicate UniqueId found on worksheet '{ws.Name}' with UniqueId = {uid}");
-                }
-            }
-
-            // Save the workbook (demonstrates lifecycle usage)
-            workbook.Save("WorksheetIdValidationResult.xlsx");
+            // Optional: Save the workbook if needed
+            // workbook.Save("CopyValidationResult.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

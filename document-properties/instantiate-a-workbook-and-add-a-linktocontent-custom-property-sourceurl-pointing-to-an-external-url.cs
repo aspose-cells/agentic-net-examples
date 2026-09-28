@@ -1,40 +1,47 @@
-// Title: Add a Link‑to‑Content Custom Property “SourceUrl” in Aspose.Cells (C#)
-// Description: Creates a new Workbook, writes an external URL into cell A1, adds a custom document property named SourceUrl that links to that cell using AddLinkToContent, synchronizes the linked value, and saves the file as WorkbookWithLinkedUrl.xlsx.
-// Keywords: Aspose.Cells AddLinkToContent | C# custom document property linked to cell | store URL as workbook property | UpdateLinkedPropertyValue example | Aspose.Cells custom properties tutorial
-// Common Searches: how to add a link‑to‑content custom property in Aspose.Cells .NET | Aspose.Cells C# store cell value as custom document property | synchronize linked custom properties after cell change Aspose.Cells | AddLinkToContent usage sample | retrieve linked custom property value Aspose.Cells
-// Developer Intent: Generate a workbook, place an external URL in a cell, and create a linked custom document property called SourceUrl that reflects the cell’s content.
-// Use Cases: Reference an external data source URL from anywhere in the workbook without hard‑coding it in formulas. | Keep the property value automatically updated when the source cell is edited. | Expose the URL to downstream systems that read document properties instead of parsing worksheet cells.
-// AI Prompts: Write C# code with Aspose.Cells to add a link‑to‑content custom property that points to a cell containing an external URL. | Explain the purpose of UpdateLinkedPropertyValue and when it should be invoked. | Show how to read the value of a linked custom document property from an existing workbook.
+// Title: Add a link-to-content custom document property named SourceUrl to a new Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate a new Workbook, insert a string‑type custom document property called SourceUrl with an external URL, and save the file as Output.xlsx using Aspose.Cells for .NET. | Using Aspose.Cells, create an empty Excel file, add a link-to-content custom property that points to a web resource, and ensure the output directory exists before saving. | Write C# code that adds a custom document property storing a source URL to a workbook's metadata and persists the workbook to disk with Aspose.Cells.
+// Common Searches: how to add a custom document property with a URL in Aspose.Cells C# | Aspose.Cells set link-to-content property in new workbook | store external source link in Excel file metadata using .NET | C# create workbook and add string custom property Aspose.Cells example
+// Tags: add custom document property Aspose.Cells | link-to-content custom property Excel .NET | store external URL in workbook metadata | Aspose.Cells save workbook to .xlsx
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Creates a new Workbook, writes an external URL into cell A1, adds a custom document property named SourceUrl that links to that cell using AddLinkToContent, synchronizes the linked value, and saves the file as WorkbookWithLinkedUrl.xlsx.
-class AddLinkToContentCustomProperty
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new empty Workbook, adds a custom document property named "SourceUrl" containing an external URL string, ensures the output directory exists, saves the workbook as Output.xlsx, and handles any exceptions.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new empty workbook
+                Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+                // Add a custom document property (string type) containing the source URL
+                // The overload without specifying the type defaults to string, which is safe across all Aspose.Cells versions
+                workbook.CustomDocumentProperties.Add("SourceUrl", "https://www.example.com/data");
 
-        // Define the external URL to be stored
-        string externalUrl = "https://www.example.com/data";
+                // Define output file path
+                string outputPath = "Output.xlsx";
 
-        // Place the URL in a cell (A1) – this cell will be the source for the linked property
-        sheet.Cells["A1"].PutValue(externalUrl);
+                // Ensure the directory for the output file exists (if any)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-        // Add a custom document property that links to the content of cell A1
-        // The property name is "SourceUrl" and the source is the cell reference "A1"
-        workbook.CustomDocumentProperties.AddLinkToContent("SourceUrl", "A1");
-
-        // (Optional) Update linked properties to ensure the value is synchronized
-        workbook.CustomDocumentProperties.UpdateLinkedPropertyValue();
-
-        // Save the workbook to a file
-        workbook.Save("WorkbookWithLinkedUrl.xlsx");
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

@@ -1,158 +1,58 @@
-// Title: Copy a chart sheet with formatting and shapes using Aspose.Cells for .NET
-// Description: Loads a source workbook, extracts a chart from a chart sheet, creates a destination workbook, adds a matching chart, copies series data, titles, legends, styles, and any attached shapes, then saves the new file while preserving all visual and data references.
-// Keywords: Aspose.Cells copy chart | duplicate chart sheet .NET | preserve chart formatting Aspose | copy chart shapes Aspose.Cells | chart sheet to new workbook | CopyOptions ReferToDestinationSheet | C# Aspose.Cells chart transfer
-// Common Searches: how to copy a chart sheet with Aspose.Cells | Aspose.Cells copy chart preserving formatting | C# copy chart and attached shapes between workbooks | Aspose.Cells chart sheet duplication example | retain chart data source when moving chart to another sheet
-// Developer Intent: Copy a chart from one chart sheet to another workbook while keeping all series, formatting, and attached shapes intact.
-// Use Cases: Reuse a template chart in multiple generated reports without losing styling or annotations. | Create localized dashboards by cloning a chart with its text boxes and images into separate workbooks. | Migrate legacy Excel charts to new files automatically, preserving data links and visual design.
-// AI Prompts: Write C# code with Aspose.Cells that copies a chart sheet to another workbook, preserving series, titles, legends, styles, and attached shapes. | Explain how CopyOptions.ReferToDestinationSheet updates chart data references during a copy operation in Aspose.Cells. | Provide a step‑by‑step guide to copy several charts from one workbook’s chart sheets to individual sheets in a new workbook using Aspose.Cells for .NET.
+// Title: Copy a chart sheet to a new worksheet while preserving controls and formatting with Aspose.Cells for .NET (C#)
+// AI Prompts: Provide C# code that loads a workbook, uses Worksheets.AddCopy to clone the chart sheet 'ChartSheet1', renames the new sheet to 'ChartSheetCopy', and saves the file, ensuring all chart objects remain intact. | Write a C# console program that validates the existence of a source chart sheet, copies it to a new worksheet, keeps all attached controls and formatting, and includes try‑catch error handling with Aspose.Cells. | Generate a minimal Aspose.Cells example in C# that demonstrates cloning a chart sheet, preserving its formatting, and exporting the result to 'output.xlsx'.
+// Common Searches: Aspose.Cells C# how to duplicate a chart sheet with formatting | copy chart sheet to another worksheet using Aspose.Cells .NET | preserve chart controls when copying chart sheet in Aspose.Cells | example of Worksheets.AddCopy for chart sheets in C#
+// Tags: Worksheets.AddCopy chart sheet operation | chart sheet cloning Aspose.Cells | retain chart formatting during sheet copy | Aspose.Cells preserve chart controls | C# chart sheet copy example
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsChartCopyDemo
+// The sample loads 'source.xlsx', locates the chart sheet named 'ChartSheet1', clones it to a new sheet called 'ChartSheetCopy' using Worksheets.AddCopy, preserves all chart objects and formatting, and saves the workbook as 'output.xlsx' with basic error handling.
+class ChartCopyExample
 {
-    // Loads a source workbook, extracts a chart from a chart sheet, creates a destination workbook, adds a matching chart, copies series data, titles, legends, styles, and any attached shapes, then saves the new file while preserving all visual and data references.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            const string sourcePath = "SourceWithChart.xlsx";
-            const string destPath = "DestinationWithCopiedChart.xlsx";
+            const string sourceFile = "source.xlsx";
+            const string outputFile = "output.xlsx";
 
-            // Verify source file exists
-            if (!File.Exists(sourcePath))
+            // Verify source workbook exists
+            if (!File.Exists(sourceFile))
             {
-                Console.WriteLine($"Source file \"{sourcePath}\" not found.");
+                Console.WriteLine($"Source file \"{sourceFile}\" not found.");
                 return;
             }
 
-            try
+            // Load the existing workbook that contains the source chart sheet
+            Workbook workbook = new Workbook(sourceFile);
+
+            // Find the source chart sheet by name
+            Worksheet sourceChartSheet = workbook.Worksheets["ChartSheet1"];
+            if (sourceChartSheet == null)
             {
-                // Load the source workbook that contains the chart sheet
-                Workbook sourceWorkbook = new Workbook(sourcePath);
-
-                // Create a new (empty) destination workbook
-                Workbook destWorkbook = new Workbook();
-
-                // -----------------------------------------------------------------
-                // 1. Identify the source chart sheet and the chart to be copied
-                // -----------------------------------------------------------------
-                Worksheet sourceChartSheet = sourceWorkbook.Worksheets["ChartSheet1"];
-                if (sourceChartSheet == null || sourceChartSheet.Charts.Count == 0)
-                {
-                    Console.WriteLine("Source chart sheet or chart not found.");
-                    return;
-                }
-                Chart sourceChart = sourceChartSheet.Charts[0];
-
-                // -----------------------------------------------------------------
-                // 2. Add a new worksheet to the destination workbook that will host the copied chart
-                // -----------------------------------------------------------------
-                Worksheet destChartSheet = destWorkbook.Worksheets.Add("CopiedChartSheet");
-
-                // -----------------------------------------------------------------
-                // 3. Prepare copy options so that the chart data source points to the destination sheet
-                // -----------------------------------------------------------------
-                CopyOptions copyOptions = new CopyOptions
-                {
-                    ReferToDestinationSheet = true   // Adjust data source references to the new sheet
-                };
-
-                // -----------------------------------------------------------------
-                // 4. Add a new chart to the destination sheet with the same type and position as the source chart
-                // -----------------------------------------------------------------
-                int destChartIndex = destChartSheet.Charts.Add(
-                    sourceChart.Type,
-                    sourceChart.ChartObject.UpperLeftRow,
-                    sourceChart.ChartObject.UpperLeftColumn,
-                    sourceChart.ChartObject.LowerRightRow,
-                    sourceChart.ChartObject.LowerRightColumn);
-                Chart destChart = destChartSheet.Charts[destChartIndex];
-
-                // -----------------------------------------------------------------
-                // 5. Copy the series (data range) from source to destination
-                // -----------------------------------------------------------------
-                int seriesIdx = 0;
-                foreach (Series srcSeries in sourceChart.NSeries)
-                {
-                    // Add series values formula; orientation set to true (vertical) as a default
-                    destChart.NSeries.Add(srcSeries.Values, true);
-                    // Preserve series name
-                    destChart.NSeries[seriesIdx].Name = srcSeries.Name;
-                    // Preserve X‑values if they are defined separately
-                    if (!string.IsNullOrEmpty(srcSeries.XValues))
-                    {
-                        destChart.NSeries[seriesIdx].XValues = srcSeries.XValues;
-                    }
-                    seriesIdx++;
-                }
-
-                // Copy category (X‑axis) data if it is set separately
-                if (!string.IsNullOrEmpty(sourceChart.NSeries.CategoryData))
-                {
-                    destChart.NSeries.CategoryData = sourceChart.NSeries.CategoryData;
-                }
-
-                // -----------------------------------------------------------------
-                // 6. Copy visual properties (title, legend, style, placement, etc.)
-                // -----------------------------------------------------------------
-                destChart.Title.Text = sourceChart.Title.Text;
-                destChart.Title.Font.Name = sourceChart.Title.Font.Name;
-                destChart.Title.Font.Size = sourceChart.Title.Font.Size;
-                destChart.Title.Font.IsBold = sourceChart.Title.Font.IsBold;
-
-                destChart.Legend.Position = sourceChart.Legend.Position;
-                destChart.Legend.IsOverLay = sourceChart.Legend.IsOverLay;
-
-                destChart.Style = sourceChart.Style;
-                destChart.Placement = sourceChart.Placement;
-                destChart.SizeWithWindow = sourceChart.SizeWithWindow;
-                destChart.ShowLegend = sourceChart.ShowLegend;
-                destChart.ShowDataTable = sourceChart.ShowDataTable;
-                destChart.PlotEmptyCellsType = sourceChart.PlotEmptyCellsType;
-                destChart.DisplayNaAsBlank = sourceChart.DisplayNaAsBlank;
-
-                // -----------------------------------------------------------------
-                // 7. Copy any shapes (e.g., text boxes, pictures) that are attached to the chart
-                // -----------------------------------------------------------------
-                foreach (Shape srcShape in sourceChart.Shapes)
-                {
-                    try
-                    {
-                        // AddCopy copies the shape and keeps the original position relative to the chart.
-                        destChart.Shapes.AddCopy(
-                            srcShape,
-                            srcShape.UpperLeftRow,
-                            srcShape.UpperLeftColumn,
-                            srcShape.LowerRightRow,
-                            srcShape.LowerRightColumn);
-                    }
-                    catch (Exception shapeEx)
-                    {
-                        Console.WriteLine($"Failed to copy shape: {shapeEx.Message}");
-                    }
-                }
-
-                // -----------------------------------------------------------------
-                // 8. Save the destination workbook
-                // -----------------------------------------------------------------
-                // Ensure the directory for the destination file exists
-                string destDir = Path.GetDirectoryName(destPath);
-                if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
-                {
-                    Directory.CreateDirectory(destDir);
-                }
-
-                destWorkbook.Save(destPath);
-                Console.WriteLine("Chart copied successfully.");
+                Console.WriteLine("Source chart sheet \"ChartSheet1\" not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Get the index of the source chart sheet
+            int sourceChartSheetIndex = workbook.Worksheets.IndexOf(sourceChartSheet);
+
+            // Determine a name for the destination chart sheet
+            string destChartSheetName = "ChartSheetCopy";
+
+            // Copy the source chart sheet
+            int destIndex = workbook.Worksheets.AddCopy(sourceChartSheetIndex);
+            Worksheet destChartSheet = workbook.Worksheets[destIndex];
+            destChartSheet.Name = destChartSheetName;
+
+            // Save the workbook with the copied chart sheet
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully as \"{outputFile}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,66 +1,42 @@
-// Title: C# – Retrieve the formula of cell E3 in the second worksheet after deleting two rows with Aspose.Cells
-// Description: This example loads an existing workbook, confirms a second worksheet is present, removes the first row and the subsequent row on that sheet, saves the changes, and then reads the Formula property of cell E3 using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# read cell formula | delete rows Aspose.Cells | second worksheet formula retrieval | E3 formula after row removal | Aspose.Cells .NET example
-// Common Searches: how to get a cell formula after deleting rows in Aspose.Cells | C# Aspose.Cells delete first two rows then read E3 | retrieve updated formula from second sheet with Aspose.Cells | Aspose.Cells example for row deletion and formula extraction
-// Developer Intent: Extract the current formula string of cell E3 on the workbook's second sheet after two rows have been removed.
-// Use Cases: Validate that formulas shift correctly when rows are removed from a financial model. | Log or audit formulas in a template after structural edits. | Programmatically recalculate dependent values by reading adjusted formulas post‑modification.
-// AI Prompts: Generate C# code that deletes the first two rows of the second worksheet and prints the formula of cell E3 using Aspose.Cells. | Explain how row deletions impact cell references in formulas and how Aspose.Cells reflects those changes. | Add robust error handling for missing worksheets, absent formulas, and file‑access issues in the provided Aspose.Cells snippet.
+// Title: Read the updated formula in cell E3 of the second worksheet after deleting two rows with reference updates using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to delete rows 1 and 2 (updating references) and then retrieve the formula from cell E3 on the second worksheet. | Show C# code that removes specific rows while preserving formulas and reads the resulting formula in E3 of the second sheet.
+// Common Searches: Aspose.Cells C# get formula from E3 after deleting rows with updateReference true | How to preserve formulas when deleting rows in a specific worksheet using Aspose.Cells | Read cell formula after row deletions in second worksheet Aspose.Cells .NET | Delete first two rows and retrieve updated formula in Excel file using Aspose.Cells
+// Tags: row deletion preserving formulas Aspose.Cells | read cell formula after row removal .NET | second worksheet formula extraction Aspose.Cells | Aspose.Cells DeleteRow updateReference usage | C# Excel workbook manipulate rows and formulas
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-// This example loads an existing workbook, confirms a second worksheet is present, removes the first row and the subsequent row on that sheet, saves the changes, and then reads the Formula property of cell E3 using Aspose.Cells for .NET.
+// Loads an Excel workbook, accesses the second worksheet, deletes the first row and then the next row while updating cell references, reads the formula from cell E3, prints it, and saves the modified workbook.
 class Program
 {
     static void Main()
     {
-        // Path to the original workbook
-        string inputPath = "input.xlsx";
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Verify that the input file exists
-        if (!File.Exists(inputPath))
+        // Verify that there is a second worksheet
+        if (workbook.Worksheets.Count < 2)
         {
-            Console.WriteLine($"Input file not found: {inputPath}");
+            Console.WriteLine("The workbook must contain at least two worksheets.");
             return;
         }
 
-        try
-        {
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+        // Access the second worksheet (index 1)
+        Worksheet sheet = workbook.Worksheets[1];
+        Cells cells = sheet.Cells;
 
-            // Ensure there is a second worksheet
-            if (workbook.Worksheets.Count < 2)
-            {
-                Console.WriteLine("The workbook does not contain a second worksheet.");
-                return;
-            }
+        // First deletion: delete the first row (index 0) and update references
+        cells.DeleteRow(0, true);
 
-            // Reference to the second worksheet (index 1)
-            Worksheet sheet = workbook.Worksheets[1];
-            Cells cells = sheet.Cells;
+        // Second deletion: delete what is now the second row (originally row 2)
+        cells.DeleteRow(1, true);
 
-            // First deletion: delete the first row (index 0)
-            cells.DeleteRow(0);
+        // After the deletions, read the formula from cell E3 (row 2, column 4)
+        string formula = cells["E3"].Formula;
 
-            // Second deletion: delete the next row (now at index 1 after the first deletion)
-            cells.DeleteRow(1);
+        Console.WriteLine($"Formula in E3 after the second deletion: {formula}");
 
-            // Save the modified workbook to a temporary file
-            string tempPath = "temp_modified.xlsx";
-            workbook.Save(tempPath);
-
-            // Retrieve the formula of cell E3 in the second worksheet
-            // (Using direct cell access instead of CellsAI which may not be available)
-            string formula = sheet.Cells["E3"].Formula;
-
-            // Output the retrieved formula
-            Console.WriteLine($"Formula in E3 of the second worksheet: {formula}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
+        // Save the workbook (optional, depending on whether you need to persist changes)
+        workbook.Save("output.xlsx");
     }
 }

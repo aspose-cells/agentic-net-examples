@@ -1,61 +1,57 @@
-// Title: C# Aspose.Cells – Conditional Formatting to Highlight Cells with QuotePrefix = False
-// Description: This example creates a workbook, inserts values with and without leading apostrophes, defines a conditional‑formatting range (A1:A4), and applies an expression‑based rule using CELL("prefix",A1)="" to detect cells where the QuotePrefix property is false. Matching cells receive a LightYellow solid background and the workbook is saved as QuotePrefixConditionalFormatting.xlsx.
-// Keywords: Aspose.Cells C# conditional formatting | QuotePrefix false detection | Excel CELL prefix formula | highlight cells without leading apostrophe | set cell background color Aspose.Cells | expression based conditional formatting
-// Common Searches: Aspose.Cells conditional formatting QuotePrefix false | C# detect leading apostrophe in Excel cells | apply background color when QuotePrefix is false | CELL function conditional formatting Aspose | how to highlight cells without a quote prefix using Aspose.Cells
-// Developer Intent: Apply a conditional‑formatting rule that colors cells whose QuotePrefix property is false.
-// Use Cases: Flag entries entered without a leading apostrophe for data‑entry validation. | Visually separate raw text from quoted strings in reports. | Enforce consistent formatting by automatically shading cells lacking a QuotePrefix.
-// AI Prompts: Generate C# code with Aspose.Cells that colors cells where QuotePrefix is false using a custom formula. | Suggest an alternative Excel formula for detecting QuotePrefix false in Aspose.Cells conditional formatting. | Explain how to modify the background color, pattern, or range of the conditional formatting rule in the provided example.
+// Title: Apply conditional formatting in Aspose.Cells (.NET) to highlight cells where QuotePrefix is false (no leading single quote)
+// AI Prompts: Generate C# code that creates an expression‑based conditional format in Aspose.Cells to color cells whose first character is not a single quote. | Show how to set a light‑yellow background style for cells with QuotePrefix false using Aspose.Cells conditional formatting. | Write the formula and style configuration needed to highlight non‑prefixed cells in an Aspose.Cells worksheet.
+// Common Searches: Aspose.Cells C# conditional formatting based on QuotePrefix property | How to highlight cells without a leading apostrophe using Aspose.Cells .NET | Expression condition LEFT(A1,1)<>"'" in Aspose.Cells conditional formatting example | Apply background color to cells where QuotePrefix is false in a workbook with Aspose.Cells
+// Tags: formula driven conditional formatting Aspose.Cells C# | cells without QuotePrefix formatting Aspose.Cells | conditional format for non‑prefixed cells .NET | background color style Aspose.Cells conditional format | LEFT function rule Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsConditionalFormattingDemo
+namespace AsposeCellsConditionalFormattingQuotePrefix
 {
-    // This example creates a workbook, inserts values with and without leading apostrophes, defines a conditional‑formatting range (A1:A4), and applies an expression‑based rule using CELL("prefix",A1)="" to detect cells where the QuotePrefix property is false. Matching cells receive a LightYellow solid background and the workbook is saved as QuotePrefixConditionalFormatting.xlsx.
+    // The example creates a workbook, adds sample data (A1 with a leading single quote and A2‑A4 without), defines an expression‑based conditional formatting rule over range A1:A4 that uses the formula LEFT(A1,1)<>"'", applies a light‑yellow background style to cells where the condition is true (QuotePrefix false), and saves the file as QuotePrefixConditionalFormatting.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data
-            // A1 – normal text (QuotePrefix = false)
-            cells["A1"].PutValue("Hello");
-            // A2 – text with leading apostrophe (QuotePrefix = true)
-            cells["A2"].PutValue("'World");
-            // A3 – numeric value (QuotePrefix = false)
-            cells["A3"].PutValue(123);
-            // A4 – numeric value with leading apostrophe (QuotePrefix = true)
-            cells["A4"].PutValue("'456");
+            // Cell with QuotePrefix = true (starts with a single quote)
+            worksheet.Cells["A1"].PutValue("'Prefixed text");
+            // Cells with QuotePrefix = false
+            worksheet.Cells["A2"].PutValue("Normal text 1");
+            worksheet.Cells["A3"].PutValue("Normal text 2");
+            worksheet.Cells["A4"].PutValue("Normal text 3");
 
             // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection fcs = sheet.ConditionalFormattings[cfIndex];
+            int cfIndex = worksheet.ConditionalFormattings.Add();
+            FormatConditionCollection conditions = worksheet.ConditionalFormattings[cfIndex];
 
-            // Define the range to which the formatting will be applied (A1:A4)
+            // Define the range to which the conditional formatting will be applied (A1:A4)
             CellArea area = new CellArea
             {
-                StartRow = 0,
-                EndRow = 3,
+                StartRow = 0,   // Row 0 (A1)
+                EndRow = 3,     // Row 3 (A4)
                 StartColumn = 0,
                 EndColumn = 0
             };
-            fcs.AddArea(area);
+            conditions.AddArea(area);
 
-            // Add an expression‑based condition that evaluates to TRUE when QuotePrefix is FALSE
-            // Excel's CELL("prefix",A1) returns a single quote (') if QuotePrefix is true, otherwise empty.
-            // The formula checks for an empty result, meaning QuotePrefix is false.
-            string formula = "CELL(\"prefix\",A1)=\"\"";
-            int conditionIndex = fcs.AddCondition(FormatConditionType.Expression, OperatorType.None, formula, null);
-            FormatCondition condition = fcs[conditionIndex];
+            // Add an expression‑type condition
+            // The formula checks whether the first character of the cell is NOT a single quote
+            // LEFT(A1,1)<> "'"  -> true when QuotePrefix is false
+            int conditionIndex = conditions.AddCondition(FormatConditionType.Expression);
+            FormatCondition condition = conditions[conditionIndex];
+            condition.Formula1 = "LEFT(A1,1)<>\"'\"";
 
-            // Set a distinct background color for cells that meet the condition
-            condition.Style.BackgroundColor = Color.LightYellow;
-            condition.Style.Pattern = BackgroundType.Solid;
+            // Define the style to apply when the condition is true (e.g., light yellow background)
+            Style highlightStyle = workbook.CreateStyle();
+            highlightStyle.Pattern = BackgroundType.Solid;
+            highlightStyle.ForegroundColor = Color.LightYellow;
+            condition.Style = highlightStyle;
 
             // Save the workbook
             workbook.Save("QuotePrefixConditionalFormatting.xlsx");

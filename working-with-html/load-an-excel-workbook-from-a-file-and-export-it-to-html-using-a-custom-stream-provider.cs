@@ -1,64 +1,78 @@
-// Title: Export Excel to HTML with a Custom IStreamProvider in Aspose.Cells for .NET
-// Description: Loads an Excel workbook, implements a custom IStreamProvider to create file streams for each HTML part, configures HtmlSaveOptions, and saves the workbook as HTML while ensuring the output folder exists.
-// Keywords: Aspose.Cells | IStreamProvider | HtmlSaveOptions | C# export Excel to HTML | custom stream provider | .NET workbook.Save HTML | Excel to HTML with images and CSS | file stream creation | directory creation for HTML export | Aspose.Cells example
-// Common Searches: Aspose.Cells custom IStreamProvider example | How to export Excel to HTML using HtmlSaveOptions | C# save workbook as HTML with custom stream | Create folder for Aspose.Cells HTML export | Export Excel workbook to multiple HTML files
-// Developer Intent: Generate HTML output from an Excel workbook while controlling where each part (HTML, images, CSS) is written via a custom stream provider.
-// Use Cases: Store HTML, images, and CSS in a predefined directory structure for web publishing. | Stream each HTML component directly to cloud storage (e.g., Azure Blob, AWS S3) instead of the local file system. | Create temporary HTML files in a background service, then zip and deliver them to end‑users.
-// AI Prompts: Write a C# method that uses Aspose.Cells to export a workbook to HTML with an IStreamProvider that writes to MemoryStream objects. | Add robust error handling to ExportStreamProvider for missing permissions or invalid paths during HTML export. | Show how to modify ExportStreamProvider to embed CSS inline within the main HTML file rather than generating a separate stylesheet.
+// Title: Save an Excel workbook as HTML with a custom IStreamProvider using Aspose.Cells for .NET
+// AI Prompts: Create a C# program that loads an .xlsx file (or creates a new workbook), implements an IStreamProvider to route HTML resources to a folder, and saves the workbook to a MemoryStream via Aspose.Cells. | Write C# code that extracts the generated HTML bytes from the MemoryStream, ensures the target directory exists, and writes the bytes to a .html file on disk.
+// Common Searches: how to export Excel to HTML with a custom resource folder using Aspose.Cells C# | Aspose.Cells HtmlSaveOptions StreamProvider example .NET | save workbook as HTML to memory stream then to file Aspose.Cells | custom IStreamProvider implementation for HTML resources Aspose.Cells | C# generate HTML from Excel and store images in separate folder Aspose.Cells
+// Tags: Aspose.Cells HTML export with custom stream handling | C# convert generated HTML bytes to file | export Excel workbook to HTML while preserving images | configure HTML export settings for resource folder | using stream provider to write HTML assets
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsStreamProviderDemo
+// Loads an existing .xlsx file (or creates a new workbook), configures HtmlSaveOptions.StreamProvider with a custom IStreamProvider that writes HTML resources to a designated folder, saves the workbook to a MemoryStream, and writes the resulting HTML bytes to output.html.
+class CustomStreamProvider : IStreamProvider
 {
-    // Custom stream provider that creates a file stream for each exported part
-    // Loads an Excel workbook, implements a custom IStreamProvider to create file streams for each HTML part, configures HtmlSaveOptions, and saves the workbook as HTML while ensuring the output folder exists.
-    public class ExportStreamProvider : IStreamProvider
+    private readonly string _resourceFolder;
+
+    public CustomStreamProvider(string resourceFolder)
     {
-        public void InitStream(StreamProviderOptions options)
-        {
-            // Use the default path supplied by Aspose.Cells
-            string path = options.DefaultPath;
-
-            // Ensure the directory exists
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-
-            // Create the file stream that Aspose.Cells will write to
-            options.Stream = File.Create(path);
-        }
-
-        public void CloseStream(StreamProviderOptions options)
-        {
-            // Close the stream if it was created
-            if (options.Stream != null)
-            {
-                options.Stream.Close();
-            }
-        }
+        _resourceFolder = resourceFolder;
+        if (!Directory.Exists(_resourceFolder))
+            Directory.CreateDirectory(_resourceFolder);
     }
 
-    public class Program
+    // Called before any stream operations start
+    public void InitStream(StreamProviderOptions options)
     {
-        public static void Main()
+        // No initialization required for this simple implementation
+    }
+
+    // Provides a stream for a given resource name
+    public Stream GetStream(string name, StreamProviderOptions options)
+    {
+        string filePath = Path.Combine(_resourceFolder, name);
+        return new FileStream(filePath, FileMode.Create, FileAccess.Write);
+    }
+
+    // Called after all stream operations are finished
+    public void CloseStream(StreamProviderOptions options)
+    {
+        // No cleanup required for this simple implementation
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        try
         {
-            // Path to the source Excel workbook
-            string sourcePath = "input.xlsx";
+            // Load the Excel workbook from a file if it exists; otherwise create a new workbook
+            string inputFile = "input.xlsx";
+            Workbook workbook = File.Exists(inputFile) ? new Workbook(inputFile) : new Workbook();
 
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(sourcePath);
+            // Configure HTML save options to use the custom stream provider
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            htmlOptions.StreamProvider = new CustomStreamProvider("HtmlResources");
 
-            // Set up HTML save options with the custom stream provider
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.StreamProvider = new ExportStreamProvider();
+            // Save the workbook as HTML into a memory stream
+            using (MemoryStream htmlStream = new MemoryStream())
+            {
+                workbook.Save(htmlStream, htmlOptions);
 
-            // Destination HTML file (main file)
-            string outputHtml = "output.html";
+                // Ensure the output directory exists
+                string outputPath = "output.html";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                    Directory.CreateDirectory(outputDir);
 
-            // Save the workbook as HTML using the custom provider
-            workbook.Save(outputHtml, saveOptions);
+                // Write the generated HTML to a physical file
+                File.WriteAllBytes(outputPath, htmlStream.ToArray());
+            }
 
-            Console.WriteLine($"Workbook successfully exported to HTML: {outputHtml}");
+            Console.WriteLine("HTML export completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

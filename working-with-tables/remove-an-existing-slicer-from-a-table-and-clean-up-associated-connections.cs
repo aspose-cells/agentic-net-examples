@@ -1,64 +1,69 @@
-// Title: Remove a slicer and its pivot connections using Aspose.Cells for .NET (C#)
-// Description: Loads an existing workbook, accesses the first worksheet, finds the slicer collection, detaches the target slicer from any linked pivot tables, removes the slicer, and saves the updated file.
-// Keywords: Aspose.Cells | C# slicer removal | delete Excel slicer programmatically | pivot table slicer connection | clean up slicer references | remove slicer .NET | Aspose.Cells API slicer
-// Common Searches: how to delete a slicer with Aspose.Cells | remove slicer and pivot connections C# | Aspose.Cells delete slicer from worksheet | clean orphaned slicer references Aspose | programmatic slicer removal .NET
-// Developer Intent: Programmatically delete an existing slicer and clear all its pivot‑table links to prevent orphaned connections.
-// Use Cases: Remove a named slicer (e.g., "RegionSlicer") from a specific sheet while preserving workbook integrity. | Batch‑process a workbook to eliminate every slicer across all worksheets and ensure no residual pivot links remain. | Check a sheet for slicers, safely delete the first one found, and save the modified workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that removes a slicer called 'RegionSlicer' and detaches it from all associated pivot tables. | Create a reusable method to delete all slicers in a workbook and automatically clean up their pivot connections. | Write a snippet that iterates through each worksheet, removes any slicers present, and saves the workbook using Aspose.Cells.
+// Title: How to delete a named slicer from the first worksheet of an Excel file with Aspose.Cells for .NET
+// AI Prompts: Write C# using Aspose.Cells to locate a slicer named 'Slicer1' on the first worksheet, remove it, and save the workbook as a new file. | Show a try‑catch example that verifies the source Excel file exists, deletes the specified slicer, and handles any errors with Aspose.Cells. | Provide code that iterates the worksheet's Slicers collection, removes the matching slicer, and persists the changes to output.xlsx.
+// Common Searches: aspnet remove slicer by name from excel worksheet using Aspose.Cells | c# code to delete Excel slicer and save workbook with Aspose.Cells | how to programmatically find and remove a slicer in an Aspose.Cells workbook | example of cleaning up slicer connections after deletion in Aspose.Cells for .NET | remove specific slicer from first sheet Aspose.Cells C# tutorial
+// Tags: Aspose.Cells delete slicer C# | remove slicer from worksheet Aspose.Cells | slicer cleanup Aspose.Cells .NET | Excel slicer removal using Aspose.Cells | C# Aspose.Cells slicer management | delete slicer connections Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Slicers;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Drawing; // Required for Slicer class
 
-namespace AsposeCellsSlicerRemoval
+// The program loads an Excel file, searches the first worksheet for a slicer named 'Slicer1', removes it if found, and saves the modified workbook to a new file while handling missing files and runtime exceptions.
+class Program
 {
-    // Loads an existing workbook, accesses the first worksheet, finds the slicer collection, detaches the target slicer from any linked pivot tables, removes the slicer, and saves the updated file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            // Load an existing workbook that contains a table, a pivot table and a slicer
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Assume the slicer is on the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Get the slicer collection from the worksheet
-            SlicerCollection slicers = sheet.Slicers;
-
-            // Check that there is at least one slicer
-            if (slicers.Count == 0)
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine("No slicers found on the worksheet.");
+                Console.WriteLine($"Input file '{inputPath}' not found.");
                 return;
             }
 
-            // Retrieve the slicer you want to delete.
-            // Here we take the first slicer; you can also use slicers["SlicerName"] or an index you know.
-            Slicer slicerToRemove = slicers[0];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // If the slicer is linked to a PivotTable, remove the connection first.
-            // This prevents orphaned references after the slicer is deleted.
-            // We iterate through all pivot tables on the worksheet and try to remove the connection.
-            foreach (PivotTable pt in sheet.PivotTables)
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Name of the slicer to be removed
+            string slicerName = "Slicer1";
+
+            // Locate the slicer in the worksheet's slicer collection
+            int slicerIndex = -1;
+            for (int i = 0; i < worksheet.Slicers.Count; i++)
             {
-                try
+                if (worksheet.Slicers[i].Name == slicerName)
                 {
-                    slicerToRemove.RemovePivotConnection(pt);
-                }
-                catch
-                {
-                    // If the slicer is not connected to this pivot table, Ignore.
+                    slicerIndex = i;
+                    break;
                 }
             }
 
-            // Remove the slicer from the collection
-            slicers.Remove(slicerToRemove);
+            if (slicerIndex != -1)
+            {
+                // Remove the slicer from the worksheet
+                worksheet.Slicers.RemoveAt(slicerIndex);
+                Console.WriteLine($"Slicer '{slicerName}' removed.");
+            }
+            else
+            {
+                Console.WriteLine($"Slicer '{slicerName}' not found.");
+            }
 
             // Save the modified workbook
-            workbook.Save("output.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

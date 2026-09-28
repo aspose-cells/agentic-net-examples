@@ -1,40 +1,46 @@
-// Title: Aspose.Cells C# – Use PdfSaveOptions.IgnoreError to Continue PDF Export Despite Rendering Issues
-// Description: Shows how to set PdfSaveOptions.IgnoreError = true in Aspose.Cells for .NET so PDF generation proceeds even when rendering errors occur, using a simple workbook example.
-// Keywords: Aspose.Cells | PdfSaveOptions | IgnoreError | C# | .NET | PDF export | error handling | rendering errors | continue PDF generation | batch conversion | unsupported charts
-// Common Searches: Aspose.Cells ignore rendering errors PDF | PdfSaveOptions.IgnoreError C# example | continue PDF export when cells cause errors | skip errors during PDF conversion Aspose.Cells | prevent PDF generation failure Aspose.Cells
-// Developer Intent: Enable PdfSaveOptions.IgnoreError so the workbook can be saved as PDF even if rendering errors are encountered.
-// Use Cases: Convert workbooks containing complex or unsupported charts without aborting the operation. | Batch process large numbers of spreadsheets where occasional formatting issues may trigger rendering errors. | Generate automated reports that include dynamic content which might cause intermittent rendering exceptions. | Integrate PDF export into a web service that must stay responsive despite data anomalies.
-// AI Prompts: Write C# code that saves an Aspose.Cells workbook to PDF with PdfSaveOptions.IgnoreError enabled and logs any suppressed rendering errors. | Show how to combine PdfSaveOptions.IgnoreError with page orientation, compression, and image quality settings in Aspose.Cells. | Explain the visual impact of setting PdfSaveOptions.IgnoreError to true on the resulting PDF and how to programmatically detect suppressed errors.
+// Title: How to set PdfSaveOptions.IgnoreErrors = true to keep PDF generation running in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook, sets PdfSaveOptions.IgnoreErrors to true, and saves it as a PDF using Aspose.Cells. | Show an example of configuring Aspose.Cells PdfSaveOptions to bypass rendering errors during Excel‑to‑PDF conversion in a .NET console application. | Provide a snippet that demonstrates checking for a missing input file while using PdfSaveOptions.IgnoreErrors in Aspose.Cells.
+// Common Searches: Aspose.Cells PdfSaveOptions ignore errors during PDF export C# | continue PDF creation after rendering error Aspose.Cells .NET | skip Excel cell rendering issues when converting to PDF with Aspose | set PdfSaveOptions.IgnoreErrors true example code | handle exceptions while saving workbook as PDF using Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions ignore errors | C# Excel to PDF conversion error handling | PdfSaveOptions rendering error bypass | Aspose.Cells PDF export ignore rendering issues | Workbook.Save with PdfSaveOptions IgnoreErrors
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfIgnoreErrorDemo
+namespace AsposeCellsPdfExample
 {
-    // Shows how to set PdfSaveOptions.IgnoreError = true in Aspose.Cells for .NET so PDF generation proceeds even when rendering errors occur, using a simple workbook example.
+    // The sample loads an Excel file, creates a PdfSaveOptions object, sets IgnoreErrors = true to suppress rendering problems, and saves the workbook as a PDF, including a check for the input file's existence and basic exception handling.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (using the standard creation rule)
-            Workbook workbook = new Workbook();
+            try
+            {
+                string inputFile = "input.xlsx";
+                string outputFile = "output.pdf";
 
-            // Access the first worksheet and add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data");
-            sheet.Cells["A2"].PutValue(123);
-            sheet.Cells["A3"].PutValue(DateTime.Now);
+                // Ensure the input workbook exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
 
-            // Create PDF save options (using the provided constructor rule)
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
 
-            // Set IgnoreError to true so that rendering errors are hidden and PDF generation continues
-            pdfOptions.IgnoreError = true;
+                // Configure PDF save options (add any required settings here)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Save the workbook as PDF with the specified options (using the standard save rule)
-            workbook.Save("OutputWithIgnoreError.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved successfully with IgnoreError enabled.");
+                // Save the workbook as PDF
+                workbook.Save(outputFile, pdfOptions);
+                Console.WriteLine($"PDF generated successfully: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

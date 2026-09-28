@@ -1,46 +1,41 @@
-// Title: Interrupt Aspose.Cells Calculation for a Specific Cell Using ConditionalInterruptCalculationMonitor (C#)
-// Description: This example shows how to create a custom calculation monitor that overrides BeforeCalculate, calls Interrupt() when a predefined cell address is reached, and attaches the monitor via CalculationOptions to Workbook.CalculateFormula. The resulting CellsException.Interrupted is caught, allowing you to stop formula evaluation for a target cell (e.g., B2) and then save the workbook.
-// Keywords: Aspose.Cells | InterruptMonitor | ConditionalInterruptCalculationMonitor | BeforeCalculate | CalculateFormula interruption | CellsException.Interrupted | C# workbook calculation stop | custom calculation monitor
-// Common Searches: Aspose.Cells stop calculation for a cell | How to use InterruptMonitor in Aspose.Cells .NET | ConditionalInterruptCalculationMonitor example | Catch CellsException.Interrupted during CalculateFormula | Abort formula evaluation in Aspose.Cells
-// Developer Intent: Stop the formula calculation process when a specific cell is about to be evaluated.
-// Use Cases: Terminate calculation when a high‑cost formula is reached. | Prevent runtime errors by halting evaluation of a cell that may cause divide‑by‑zero or overflow. | Implement validation that aborts processing if a key cell fails a business rule. | Improve performance in large workbooks by skipping unwanted calculations.
-// AI Prompts: Generate code to log the sheet, row, and column inside BeforeCalculate before interrupting. | Show how to resume workbook calculation after handling the interruption exception. | Adapt the monitor to interrupt based on a cell's value threshold instead of its address. | Explain how to attach multiple calculation monitors for different cells. | Provide a unit test for ConditionalInterruptCalculationMonitor.
+// Title: Interrupt Aspose.Cells formula calculation at cell B2 with a custom BeforeCalculate monitor in C#
+// AI Prompts: Derive a class from AbstractCalculationMonitor, override BeforeCalculate, and call Interrupt() when the sheet, row, and column match the target cell. | Create an InterruptMonitor, assign it to a Workbook, set CalculationOptions.CalculationMonitor to your custom monitor, and run Workbook.CalculateFormula to stop processing at the specified cell. | Extend the monitor to examine the cell's value and trigger Interrupt() only when a condition (e.g., value > 100) is satisfied.
+// Common Searches: Aspose.Cells C# interrupt calculation when cell B2 is evaluated | How to use AbstractCalculationMonitor to stop formula evaluation in Aspose.Cells | C# example of InterruptMonitor with CalculationOptions in Aspose.Cells | Conditional formula interruption based on cell address Aspose.Cells .NET | Stop workbook calculation at a specific cell using Aspose.Cells API
+// Tags: Aspose.Cells custom calculation monitor | InterruptMonitor usage C# | BeforeCalculate cell address interruption | Conditional formula calculation stop Aspose.Cells | Workbook.CalculateFormula interrupt
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsInterruptDemo
 {
-    // Custom calculation monitor that interrupts when a specific cell is about to be calculated
-    // This example shows how to create a custom calculation monitor that overrides BeforeCalculate, calls Interrupt() when a predefined cell address is reached, and attaches the monitor via CalculationOptions to Workbook.CalculateFormula. The resulting CellsException.Interrupted is caught, allowing you to stop formula evaluation for a target cell (e.g., B2) and then save the workbook.
-    public class ConditionalInterruptCalculationMonitor : AbstractCalculationMonitor
+    // Custom calculation monitor that can interrupt the calculation
+    // The example shows how to halt Aspose.Cells formula calculation at a designated cell (B2) by implementing a ConditionalInterruptMonitor that inherits AbstractCalculationMonitor. The monitor overrides BeforeCalculate, checks the current sheet, row, and column, and calls Interrupt() via an InterruptMonitor. The monitor is attached to the workbook through CalculationOptions, causing Workbook.CalculateFormula to throw an Interrupted exception when the target cell is reached, after which the workbook can be saved or further processed.
+    public class ConditionalInterruptMonitor : AbstractCalculationMonitor
     {
         private readonly InterruptMonitor _interruptMonitor;
         private readonly int _targetSheetIndex;
         private readonly int _targetRowIndex;
         private readonly int _targetColumnIndex;
 
-        public ConditionalInterruptCalculationMonitor(
-            InterruptMonitor interruptMonitor,
-            int targetSheetIndex,
-            int targetRowIndex,
-            int targetColumnIndex)
+        // Constructor receives the interrupt monitor and the cell to watch
+        public ConditionalInterruptMonitor(InterruptMonitor interruptMonitor,
+                                           int sheetIndex, int rowIndex, int columnIndex)
         {
             _interruptMonitor = interruptMonitor;
-            _targetSheetIndex = targetSheetIndex;
-            _targetRowIndex = targetRowIndex;
-            _targetColumnIndex = targetColumnIndex;
+            _targetSheetIndex = sheetIndex;
+            _targetRowIndex = rowIndex;
+            _targetColumnIndex = columnIndex;
         }
 
-        // Called before each cell calculation
+        // Called before each cell is calculated
         public override void BeforeCalculate(int sheetIndex, int rowIndex, int colIndex)
         {
-            // Interrupt when the target cell is about to be calculated
+            // If the current cell matches the predefined address, request interruption
             if (sheetIndex == _targetSheetIndex &&
                 rowIndex == _targetRowIndex &&
                 colIndex == _targetColumnIndex)
             {
+                // Interrupt the ongoing calculation
                 _interruptMonitor.Interrupt();
             }
         }
@@ -52,60 +47,60 @@ namespace AsposeCellsInterruptDemo
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // 1. Create a new workbook (lifecycle rule: create)
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate some data
-                sheet.Cells["A1"].PutValue(5);
-                sheet.Cells["A2"].PutValue(10);
+                // Populate some data and formulas
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+                sheet.Cells["A3"].Formula = "=A1+A2";   // Simple sum
+                sheet.Cells["B2"].Formula = "=A3*2";    // Cell we will monitor (B2)
 
-                // Set a formula in B2 (the cell we want to monitor)
-                sheet.Cells["B2"].Formula = "=A1+A2";
-
-                // Create an interrupt monitor and assign it to the workbook
+                // 2. Set up an interrupt monitor and assign it to the workbook
                 InterruptMonitor interruptMonitor = new InterruptMonitor();
                 workbook.InterruptMonitor = interruptMonitor;
 
-                // Create the custom calculation monitor targeting cell B2 (row 1, column 1, zero‑based)
-                var calcMonitor = new ConditionalInterruptCalculationMonitor(
+                // 3. Create a calculation monitor that interrupts when B2 is about to be calculated
+                // B2 corresponds to row index 1, column index 1 (zero‑based)
+                ConditionalInterruptMonitor calcMonitor = new ConditionalInterruptMonitor(
                     interruptMonitor,
-                    targetSheetIndex: 0,
-                    targetRowIndex: 1,    // B2 row index (zero‑based)
-                    targetColumnIndex: 1); // B2 column index (zero‑based)
+                    sheetIndex: 0,
+                    rowIndex: 1,
+                    columnIndex: 1);
 
-                // Set calculation options with the custom monitor
+                // 4. Configure calculation options to use our monitor
                 CalculationOptions calcOptions = new CalculationOptions
                 {
                     CalculationMonitor = calcMonitor
                 };
 
-                // Perform calculation; expect an interruption when B2 is processed
+                // 5. Perform calculation (the monitor will trigger interruption on B2)
                 try
                 {
                     workbook.CalculateFormula(calcOptions);
-                    Console.WriteLine("Calculation completed without interruption (unexpected).");
+                    Console.WriteLine("Calculation completed without interruption.");
                 }
                 catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
                 {
-                    Console.WriteLine("Calculation was interrupted as intended.");
+                    Console.WriteLine("Calculation was interrupted as expected.");
+                    // No need to change calculation mode; the workbook will remain in its current state.
                 }
 
-                // Ensure the output directory exists
-                string outputPath = "Result.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
+                // 6. Save the workbook (lifecycle rule: save)
+                try
                 {
-                    Directory.CreateDirectory(outputDir);
+                    workbook.Save("InterruptDemo.xlsx");
+                    Console.WriteLine("Workbook saved successfully.");
                 }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
         }
     }

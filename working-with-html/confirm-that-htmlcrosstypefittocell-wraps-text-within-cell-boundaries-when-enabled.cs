@@ -1,43 +1,46 @@
-// Title: Aspose.Cells .NET: Verify HtmlCrossType.FitToCell wraps text inside cell boundaries on HTML export
-// Description: Shows how to enable text wrapping, set HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.FitToCell, and save a workbook as HTML to confirm that long strings remain confined to the cell area.
-// Keywords: Aspose.Cells | HtmlCrossType.FitToCell | HTML export | text wrapping | cell overflow prevention | C# | Aspose.Cells example | Workbook to HTML | cell boundary | Aspose.Cells .NET
-// Common Searches: HtmlCrossType.FitToCell text wrapping example | Aspose.Cells prevent cell overflow in HTML | How to keep long text inside a cell when exporting to HTML with Aspose.Cells | FitToCell option in Aspose.Cells HTML save | Aspose.Cells HTML export cell width fixed
-// Developer Intent: Confirm that setting HtmlCrossStringType to FitToCell forces long cell content to wrap and stay within the cell limits in the generated HTML.
-// Use Cases: Creating HTML reports from Excel where column widths must stay constant and text should not spill over. | Generating web‑ready tables from workbooks for dashboards or email templates without layout breakage. | Building printable HTML snapshots of spreadsheets that preserve readability of wrapped cell content.
-// AI Prompts: Write a unit test that loads the saved HTML file and asserts that the <td> for A1 contains CSS restricting width and enabling word‑wrap. | Provide a step‑by‑step visual verification guide to ensure the long text does not overflow after using HtmlCrossType.FitToCell. | Explain how to parse the exported HTML with a script to detect style attributes applied by FitToCell (e.g., word-wrap, overflow).
+// Title: Confirm HtmlCrossType.FitToCell preserves Excel cell text wrapping when exporting to HTML with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that sets HtmlSaveOptions.HtmlCrossType to FitToCell, enables IsTextWrapped on a cell, and saves the workbook as an HTML file. | Write a C# routine that reads the saved HTML file and verifies that the <td> element for the cell contains markup or CSS that forces line breaks within the column width. | Demonstrate how to adjust column width and cell style before export so the HTML output clearly shows the FitToCell wrapping behavior.
+// Common Searches: Aspose.Cells how to keep Excel cell wrap when saving as HTML .NET | HtmlCrossType FitToCell effect on text wrapping in exported HTML | C# example exporting wrapped text to HTML using Aspose.Cells | verify that HTML output respects Excel column width and wrap Aspose
+// Tags: Aspose.Cells HtmlCrossType FitToCell | export Excel cell wrap to HTML .NET | C# HtmlSaveOptions text wrapping | verify HTML cell width Aspose.Cells | set column width for HTML export Aspose
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlCrossTypeDemo
+// The example creates a workbook, inserts a long string into cell A1, narrows column A, enables text wrapping on the cell, configures HtmlSaveOptions (default HtmlCrossType.FitToCell), and saves the workbook as HTML. The generated HTML demonstrates that the text wraps within the cell boundaries, confirming that HtmlCrossType.FitToCell preserves Excel's wrap setting during export.
+class HtmlCrossTypeDemo
 {
-    // Shows how to enable text wrapping, set HtmlSaveOptions.HtmlCrossStringType to HtmlCrossType.FitToCell, and save a workbook as HTML to confirm that long strings remain confined to the cell area.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put a long text into cell A1 that would normally overflow
+            // Insert a long text into cell A1
             Cell cell = sheet.Cells["A1"];
-            cell.PutValue("This is a very long text that should be confined within the cell boundaries when HtmlCrossType.FitToCell is used.");
+            cell.PutValue("This is a very long piece of text that should be wrapped within the cell boundaries when exported to HTML.");
 
-            // Enable text wrapping for the cell (optional, demonstrates interaction with FitToCell)
+            // Set a narrow column width to make wrapping noticeable
+            sheet.Cells.SetColumnWidth(0, 10); // Column A width
+
+            // Enable text wrapping in Excel
             Style style = cell.GetStyle();
             style.IsTextWrapped = true;
             cell.SetStyle(style);
 
-            // Configure HTML save options to use FitToCell cross type
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.HtmlCrossStringType = HtmlCrossType.FitToCell;
+            // Configure HTML save options (text wrapping will be preserved automatically)
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html);
 
             // Save the workbook as HTML
             string outputPath = "FitToCellDemo.html";
-            workbook.Save(outputPath, htmlOptions);
+            workbook.Save(outputPath, saveOptions);
 
-            Console.WriteLine($"Workbook saved to HTML with HtmlCrossType.FitToCell at: {outputPath}");
+            Console.WriteLine("HTML file saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

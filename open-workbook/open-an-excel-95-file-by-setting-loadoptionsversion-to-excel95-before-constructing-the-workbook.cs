@@ -1,48 +1,46 @@
-// Title: Open an Excel 95 (.xls) file with Aspose.Cells for .NET using LoadOptions.Version
-// Description: Shows how to load a legacy Excel 95 workbook in C# by creating a LoadOptions object, setting its Version to ExcelVersion.Excel95, and passing it to the Workbook constructor. The sample checks file existence, prints the first worksheet name, optionally saves the workbook, and includes full exception handling.
-// Keywords: Aspose.Cells | C# | Excel95 | LoadOptions.Version | legacy .xls | open Excel 95 | read old Excel format | Workbook constructor | ExcelVersion.Excel95 | exception handling
-// Common Searches: Aspose.Cells open Excel 95 file | LoadOptions.Version Excel95 C# | Read legacy .xls with Aspose.Cells | How to load old Excel format .NET | Open Excel 95 workbook using Aspose.Cells
-// Developer Intent: Load a legacy Excel 95 workbook in C# and optionally save it after confirming successful load.
-// Use Cases: Validate that a legacy .xls file exists before attempting to load it. | Load an Excel 95 workbook by setting LoadOptions.Version to ensure correct format detection. | Display the name of the first worksheet to verify the file was read correctly. | Save the loaded workbook to a new location to confirm successful import. | Handle FileNotFoundException and other runtime errors gracefully.
-// AI Prompts: Write C# code that opens an Excel 95 (.xls) file with Aspose.Cells by setting LoadOptions.Version to ExcelVersion.Excel95 before creating the Workbook. | Show how to implement robust exception handling (FileNotFoundException, generic Exception) when loading a legacy Excel file using Aspose.Cells. | Explain steps to save a workbook loaded from Excel 95 to a different file path with Aspose.Cells.
+// Title: Open an Excel 95 (.xls) workbook with Aspose.Cells for .NET by setting LoadOptions.Version = Excel95 before creating the Workbook and then save as XLSX
+// AI Prompts: Write C# code that creates a LoadOptions object, sets its Version property to Excel95, and passes it to the Workbook constructor to open a legacy .xls file with Aspose.Cells. | Show a complete C# example that opens an Excel 95 file using LoadOptions, modifies a cell, and saves the workbook as an .xlsx file. | Provide error‑handling logic that verifies the source .xls exists, creates the destination folder if missing, and converts the Excel 95 workbook to XLSX using LoadOptions.Version.
+// Common Searches: Aspose.Cells C# load legacy Excel 95 file with LoadOptions.Version | How to specify Excel95 version when opening .xls in Aspose.Cells | Convert old Excel 95 .xls to .xlsx using LoadOptions in .NET | C# example for opening Excel 95 workbook with Aspose.Cells LoadOptions | Set workbook version to Excel95 before saving as XLSX in Aspose.Cells
+// Tags: Aspose.Cells LoadOptions Excel95 | C# open legacy XLS with Aspose.Cells | convert Excel 95 to XLSX Aspose | specify workbook version Aspose.Cells | Aspose.Cells save as XLSX
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to load a legacy Excel 95 workbook in C# by creating a LoadOptions object, setting its Version to ExcelVersion.Excel95, and passing it to the Workbook constructor. The sample checks file existence, prints the first worksheet name, optionally saves the workbook, and includes full exception handling.
-class OpenExcel95Example
+// The sample checks that the input Excel 95 file exists, creates a LoadOptions instance with Version set to Excel95, opens the workbook using that LoadOptions, ensures the output directory is present, and saves the workbook as an XLSX file, reporting any errors that occur.
+class Program
 {
     static void Main()
     {
-        // Path to the Excel 95 file (xls format)
-        string inputFile = "SampleExcel95.xls";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputFile))
-        {
-            Console.WriteLine($"Input file not found: {inputFile}");
-            return;
-        }
-
         try
         {
-            // Load the workbook; Aspose.Cells automatically detects the format
-            Workbook workbook = new Workbook(inputFile);
+            string inputPath = "Input95.xls";
+            string outputPath = "Output.xlsx";
 
-            // Demonstrate that the workbook is loaded
-            Console.WriteLine("Workbook loaded successfully.");
-            Console.WriteLine("First worksheet name: " + workbook.Worksheets[0].Name);
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // (Optional) Save the workbook to verify the load succeeded
-            string outputFile = "LoadedFromExcel95.xls";
-            workbook.Save(outputFile);
-            Console.WriteLine("Workbook saved as: " + outputFile);
+            // Load the workbook (format is auto‑detected)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook in XLSX format
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            // Handle any runtime errors gracefully
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

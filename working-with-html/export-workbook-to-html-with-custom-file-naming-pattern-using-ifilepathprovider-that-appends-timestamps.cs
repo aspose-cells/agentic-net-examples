@@ -1,57 +1,72 @@
-// Title: Export Aspose.Cells Workbook to HTML with Timestamped Worksheet Filenames via IFilePathProvider (C#)
-// Description: Demonstrates a custom TimestampFilePathProvider that implements IFilePathProvider, appends a yyyyMMdd_HHmmss suffix to each worksheet name, and assigns it to HtmlSaveOptions.FilePathProvider so that workbook.Save creates separate HTML files with unique timestamped names.
-// Keywords: Aspose.Cells | HTML export | IFilePathProvider | timestamp filename | custom file naming | C# | .NET | HtmlSaveOptions | separate worksheet files | date‑time suffix
-// Common Searches: Aspose.Cells IFilePathProvider example | C# export workbook to HTML with custom file names | Add timestamp to HTML files when saving Aspose.Cells workbook | Save each worksheet as separate HTML file Aspose.Cells | HtmlSaveOptions custom file path provider C#
-// Developer Intent: Export a workbook to HTML where each worksheet is saved as an individual file using a timestamp‑based naming pattern.
-// Use Cases: Automated daily reporting that creates uniquely timestamped HTML snapshots for each sheet. | Archiving multi‑sheet financial models as separate HTML files to support version control and audit trails. | Generating web‑ready worksheet pages without overwriting previous exports by embedding the generation time in the filename.
-// AI Prompts: Write C# code that uses IFilePathProvider to add a custom prefix and a UTC timestamp to worksheet HTML filenames in Aspose.Cells. | Explain how HtmlSaveOptions.FilePathProvider influences the creation of separate HTML files during workbook.Save. | Show how to modify TimestampFilePathProvider to use a different date format, such as yyyy-MM-dd_HH-mm-ss, and to store files in a specific folder.
+// Title: Export an Aspose.Cells workbook to HTML with timestamped filenames using a custom IFilePathProvider in C#
+// AI Prompts: Write C# code that saves a Workbook as HTML with Aspose.Cells, configuring HtmlSaveOptions to use a custom IFilePathProvider that appends a yyyyMMdd_HHmmss timestamp to each generated file. | Demonstrate how to implement IFilePathProvider.GetFilePath to include an optional index suffix and a formatted timestamp for HTML export resource files. | Modify the example to prepend a user-defined prefix to the HTML file name while still applying the timestamp logic in the custom file path provider.
+// Common Searches: Aspose.Cells C# how to add timestamps to HTML export filenames | custom IFilePathProvider example for timestamped HTML files in Aspose.Cells | save Excel workbook as HTML with indexed image files using Aspose.Cells | C# HtmlSaveOptions file naming pattern with date and time stamp | Aspose.Cells export to HTML with custom file path provider and timestamp
+// Tags: Aspose.Cells HtmlSaveOptions custom file naming | timestamped filenames IFilePathProvider C# | HTML export indexed resource files Aspose.Cells | C# workbook to HTML with date-time suffix | custom file path provider for Aspose.Cells HTML export
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportHtml
+// The example implements a CustomFilePathProvider that adds a yyyyMMdd_HHmmss timestamp (and optional index) to filenames generated during HTML export. The provider is assigned to HtmlSaveOptions, a sample workbook is created, and workbook.Save writes the HTML and its resources using the timestamped naming pattern.
+class CustomFilePathProvider : IFilePathProvider
 {
-    // Custom file path provider that appends a timestamp to each worksheet file name.
-    // Demonstrates a custom TimestampFilePathProvider that implements IFilePathProvider, appends a yyyyMMdd_HHmmss suffix to each worksheet name, and assigns it to HtmlSaveOptions.FilePathProvider so that workbook.Save creates separate HTML files with unique timestamped names.
-    public class TimestampFilePathProvider : IFilePathProvider
+    // Generates a file path that includes a timestamp and optional index.
+    public string GetFilePath(string originalFilePath, string fileExtension, int index)
     {
-        public string GetFullName(string sheetName)
-        {
-            // Create a timestamp string (e.g., 20230811_153045).
-            string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            // Return the file name with the timestamp and .html extension.
-            return $"{sheetName}_{timestamp}.html";
-        }
+        // Timestamp format: yyyyMMdd_HHmmss
+        string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+
+        // Extract directory and base file name without extension.
+        string directory = Path.GetDirectoryName(originalFilePath);
+        string baseName = Path.GetFileNameWithoutExtension(originalFilePath);
+
+        // Include index for multiple files (e.g., images) if needed.
+        string indexedPart = index > 0 ? $"_{index}" : string.Empty;
+
+        // Build new file name with timestamp.
+        string newFileName = $"{baseName}_{timestamp}{indexedPart}{fileExtension}";
+
+        // Combine directory and new file name.
+        return Path.Combine(directory, newFileName);
     }
 
-    public class Program
+    // Required by IFilePathProvider – returns the full name for the main HTML file.
+    public string GetFullName(string originalFilePath)
     {
-        public static void Main()
+        // No custom modification needed for the main file; return as‑is.
+        return originalFilePath;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        try
         {
-            // Create a new workbook.
+            // Create a new workbook (or load an existing one).
             Workbook workbook = new Workbook();
 
-            // Populate data in the first worksheet.
-            Worksheet ws1 = workbook.Worksheets[0];
-            ws1.Name = "Report";
-            ws1.Cells["A1"].PutValue("Item");
-            ws1.Cells["B1"].PutValue("Quantity");
-            ws1.Cells["A2"].PutValue("Apples");
-            ws1.Cells["B2"].PutValue(120);
-            ws1.Cells["A3"].PutValue("Oranges");
-            ws1.Cells["B3"].PutValue(85);
+            // Populate the workbook with sample data.
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample");
+            sheet.Cells["B1"].PutValue("Data");
+            sheet.Cells["A2"].PutValue(100);
+            sheet.Cells["B2"].PutValue(200);
 
-            // Add a second worksheet to demonstrate separate file naming.
-            Worksheet ws2 = workbook.Worksheets.Add("Summary");
-            ws2.Cells["A1"].PutValue("Total Items");
-            ws2.Cells["B1"].PutValue(205);
+            // Configure HTML save options with the custom file path provider.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            htmlOptions.FilePathProvider = new CustomFilePathProvider();
 
-            // Configure HTML save options and assign the custom file path provider.
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.FilePathProvider = new TimestampFilePathProvider();
+            // Base output file name (timestamp will be appended by the provider).
+            string outputHtml = "WorkbookExport.html";
 
-            // Save the workbook as HTML. Each worksheet will be saved using the custom naming pattern.
-            workbook.Save("Workbook.html", saveOptions);
+            // Export the workbook to HTML using the custom naming pattern.
+            workbook.Save(outputHtml, htmlOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

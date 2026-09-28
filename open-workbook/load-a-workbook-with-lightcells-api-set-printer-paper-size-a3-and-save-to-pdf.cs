@@ -1,64 +1,25 @@
-// Title: C# – Load Workbook with LightCells API, Set A3 Paper Size, and Export to PDF using Aspose.Cells
-// Description: Demonstrates how to load an existing Excel file with Aspose.Cells LightCells API, configure the default printer and worksheet page‑setup to A3 via LoadOptions, and save the workbook as a PDF document in .NET.
-// Keywords: Aspose.Cells | LightCells API | LoadOptions SetPaperSize | PaperA3 | C# Excel to PDF | Excel page setup A3 | .NET PDF export | Workbook.Save PDF | printer paper size | code example
-// Common Searches: Aspose.Cells LightCells set paper size A3 | C# load Excel with LightCells and export PDF | how to change printer paper size to A3 in Aspose.Cells | save workbook as PDF with A3 layout .NET | set worksheet page setup paper size programmatically
-// Developer Intent: Load an Excel workbook using LightCells, change the printer and worksheet paper size to A3, and generate a PDF file.
-// Use Cases: Create A3‑sized PDF reports from Excel templates for high‑resolution printing. | Batch‑convert multiple Excel files to A3 PDF while preserving layout settings. | Generate printable invoices or catalogs in A3 format directly from workbook data without opening Excel.
-// AI Prompts: Write C# code that loads an Excel file with LightCells API, sets the default printer paper size to A3, updates each worksheet's PageSetup, and saves the result as a PDF. | Explain how LoadOptions.SetPaperSize affects PDF output when using Aspose.Cells LightCells API. | Show how to make the paper size configurable at runtime based on user input in a C# Aspose.Cells application.
+// Title: Load an Excel workbook (using LightCells API), set the first worksheet's printer paper size to A3, and save as PDF with Aspose.Cells for .NET
+// AI Prompts: In C#, open an .xlsx file with Aspose.Cells LightCells API, change the first worksheet's PageSetup.PaperSize to PaperA3, and export the workbook to a PDF document. | Using Aspose.Cells for .NET, load a workbook, set the printer paper size of the first sheet to A3, and save the result as a PDF file.
+// Common Searches: Aspose.Cells C# set worksheet paper size to A3 before PDF conversion | How to change page setup to A3 using LightCells API in Aspose.Cells | Export Excel to PDF with A3 layout using Aspose.Cells for .NET | C# Aspose.Cells set PaperSizeType.PaperA3 and save as PDF | Load large Excel file with LightCells and adjust page setup for PDF output
+// Tags: Aspose.Cells LightCells load workbook | set worksheet paper size A3 | page setup PaperSizeType.PaperA3 C# | export workbook to PDF Aspose.Cells | adjust printer settings before PDF conversion | C# Aspose.Cells PDF export custom page layout
 
 using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+// The example loads an Excel file, sets the first worksheet's printer paper size to A3 via PageSetup, and saves the workbook as a PDF using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to load an existing Excel file with Aspose.Cells LightCells API, configure the default printer and worksheet page‑setup to A3 via LoadOptions, and save the workbook as a PDF document in .NET.
-    public class LightCellsLoadSetPaperSizeAndSavePdf
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Load the workbook (standard loading; LightCells API can be used for large files,
+        // but for setting page setup we need a Workbook object)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        public static void Run()
-        {
-            const string inputPath = "input.xlsx";
-            const string outputPath = "output.pdf";
+        // Set the printer paper size to A3 for the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
 
-            // Verify that the input file exists to avoid FileNotFoundException.
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
-                return;
-            }
-
-            // Prepare load options and set the default paper size to A3.
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.SetPaperSize(PaperSizeType.PaperA3);
-
-            // Load the workbook using LightCells API with the specified load options.
-            Workbook workbook = new Workbook(inputPath, loadOptions);
-
-            // Ensure the workbook's default printer paper size is also set to A3.
-            workbook.Settings.PaperSize = PaperSizeType.PaperA3;
-
-            // Set each worksheet's page setup paper size to A3.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                sheet.PageSetup.PaperSize = PaperSizeType.PaperA3;
-            }
-
-            // Save the workbook as a PDF file.
-            workbook.Save(outputPath, SaveFormat.Pdf);
-            Console.WriteLine($"Workbook saved as PDF to \"{outputPath}\".");
-        }
+        // Save the workbook as PDF
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

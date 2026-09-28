@@ -1,51 +1,62 @@
-// Title: Link Excel cells to XML map elements with Aspose.Cells in C#
-// Description: Shows how to create a workbook, import an XSD as an XML map, assign a friendly name, bind cells A1 and B1 to XML nodes using Cells.LinkToXmlMap, and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells | C# | XML map | LinkToXmlMap | XSD schema | bind cell to XML | import XML to Excel | workbook XML integration | .NET Excel API | XML data binding
-// Common Searches: Aspose.Cells link cell to XML element C# | Add XML map from XSD using Aspose.Cells | Cells.LinkToXmlMap example | Bind Excel cell to XML with Aspose.Cells .NET | Programmatically import XML into Excel workbook
-// Developer Intent: Add an XML map from an XSD file, connect specific worksheet cells to XML nodes, and generate an Excel file that stays synchronized with the XML source.
-// Use Cases: Create a reporting template where cell values automatically reflect XML data fields, enabling live updates when the XML changes. | Build a round‑trip data exchange solution: users edit linked cells in Excel, and the underlying XML is updated on save. | Automate extraction of XML content into a spreadsheet for downstream analysis while preserving the original XML structure.
-// AI Prompts: Generate C# code to load an existing XML file into the workbook after cells have been linked with Cells.LinkToXmlMap. | Show how to modify linked cell values programmatically and export the updated XML back to a file using Aspose.Cells. | Explain handling of XML namespaces in XPath expressions when using Cells.LinkToXmlMap.
+// Title: Load an XML file into an Aspose.Cells workbook, rename the first worksheet, and save as XLSX using C#
+// AI Prompts: Use Aspose.Cells LoadOptions with LoadFormat.Xml to read an XML file into a Workbook, rename the first sheet, and export the result to a .xlsx file in C#. | Write a C# method that verifies an XML data file exists, loads it into a new Workbook via Aspose.Cells, changes the initial worksheet name, and saves the workbook as Excel with proper error handling. | Demonstrate how to convert XML to an Excel workbook while customizing the worksheet title using Aspose.Cells for .NET.
+// Common Searches: asp.net load xml into workbook with aspose.cells and rename sheet | c# aspose.cells import xml data and export to xlsx | how to change worksheet name after loading xml using aspose.cells | using LoadOptions LoadFormat.Xml to convert xml to excel in c# | aspose.cells error handling when loading xml file
+// Tags: aspose.cells loadoptions xml to workbook | c# rename worksheet after xml import | aspose.cells convert xml to xlsx | error handling loading xml with aspose.cells | aspose.cells workbook save as xlsx
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsXmlLinkDemo
+// The sample checks for the presence of a data.xml file, loads its contents into a new Aspose.Cells Workbook using LoadOptions with LoadFormat.Xml, renames the first worksheet to "ImportedData", and saves the workbook as output.xlsx, with comprehensive exception handling for file and runtime errors.
+class Program
 {
-    // Shows how to create a workbook, import an XSD as an XML map, assign a friendly name, bind cells A1 and B1 to XML nodes using Cells.LinkToXmlMap, and save the workbook as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook wb = new Workbook();
+            // Path to the XML file that contains the data to be imported
+            string xmlPath = "data.xml";
 
-            // Path to the XML schema (XSD) that defines the XML structure.
-            // The schema file should exist at the specified location.
-            string schemaPath = "schema.xsd";
+            // Verify that the XML file exists to avoid FileNotFoundException
+            if (!File.Exists(xmlPath))
+            {
+                Console.WriteLine($"Error: XML file \"{xmlPath}\" not found.");
+                return;
+            }
 
-            // Add the XML map to the workbook using the schema file.
-            // The Add method returns the index of the newly added map.
-            int mapIndex = wb.Worksheets.XmlMaps.Add(schemaPath);
+            // Load the XML data into a new workbook using LoadOptions for XML format
+            Workbook workbook;
+            try
+            {
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xml);
+                workbook = new Workbook(xmlPath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading XML data: {ex.Message}");
+                return;
+            }
 
-            // Retrieve the XmlMap object and give it a friendly name.
-            XmlMap xmlMap = wb.Worksheets.XmlMaps[mapIndex];
-            xmlMap.Name = "MyXmlMap";
+            // Rename the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "ImportedData";
 
-            // Get the first worksheet and its cells collection.
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Example: Link cell A1 (row 0, column 0) to an XML element.
-            // Adjust the XPath to match the element you want to bind.
-            string xmlElementPath = "/Root/Item/Name";
-            cells.LinkToXmlMap(xmlMap.Name, 0, 0, xmlElementPath);
-
-            // Example: Link cell B1 (row 0, column 1) to another XML element.
-            string xmlElementPath2 = "/Root/Item/Price";
-            cells.LinkToXmlMap(xmlMap.Name, 0, 1, xmlElementPath2);
-
-            // Save the workbook with the linked XML map.
-            wb.Save("LinkedXmlMapWorkbook.xlsx");
+            // Save the workbook with the imported XML data
+            string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

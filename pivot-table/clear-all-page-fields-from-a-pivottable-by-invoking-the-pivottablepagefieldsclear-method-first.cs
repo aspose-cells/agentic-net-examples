@@ -1,61 +1,56 @@
-// Title: Aspose.Cells C# – Clear All Page Fields from a PivotTable
-// Description: Demonstrates how to create a workbook, add sample data, build a PivotTable with a page (filter) field, remove every page field using PivotTable.PageFields.Clear(), refresh and recalculate the PivotTable, and save the result.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | PageFields.Clear | remove page filters | clear pivot table filters | Aspose.Cells example | programmatic pivot table manipulation | Excel automation
-// Common Searches: Aspose.Cells clear page fields C# | how to remove pivot table page filters with Aspose.Cells | PivotTable.PageFields.Clear example | reset pivot table filters Aspose.Cells .NET | C# code to clear pivot table page fields
-// Developer Intent: Programmatically delete all page (filter) fields from a PivotTable in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Reset a template workbook before generating a new report. | Remove user‑selected page filters to prevent data leakage. | Dynamically rebuild a PivotTable by clearing existing page fields and adding new ones based on runtime criteria.
-// AI Prompts: Show a C# example that clears all page fields from an Aspose.Cells PivotTable and then adds new page fields. | Provide code to check for existing page fields in a PivotTable and safely remove them using Aspose.Cells. | Explain the steps to refresh and recalculate a PivotTable after calling PivotTable.PageFields.Clear in Aspose.Cells.
+// Title: How to clear all page (filter) fields from a PivotTable in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, accesses the first PivotTable, calls PageFields.Clear to remove every page field, and saves the workbook. | Show step‑by‑step how to programmatically reset PivotTable filters in a .NET application using the Aspose.Cells PivotTable API. | Provide a concise example that demonstrates using Aspose.Cells to clear all page fields of a PivotTable before exporting the workbook.
+// Common Searches: aspnet aspose.cells clear pivot table page fields c# | remove all pivot table filters programmatically using Aspose.Cells .NET | c# aspose.cells how to reset pivot table page fields | example code for PivotTable.PageFields.Clear in Aspose.Cells | clear pivot table page filters before saving workbook with Aspose.Cells
+// Tags: Aspose.Cells PivotTable PageFields.Clear | C# remove pivot table page fields | Aspose.Cells reset pivot filters | Excel workbook modify pivot page fields .NET | Aspose.Cells clear pivot filters programmatically
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook, add sample data, build a PivotTable with a page (filter) field, remove every page field using PivotTable.PageFields.Clear(), refresh and recalculate the PivotTable, and save the result.
+// The example loads an existing Excel workbook, retrieves the first worksheet's first PivotTable, clears all page (filter) fields using the PageFields.Clear method, and saves the updated workbook to a new file.
 class ClearPivotTablePageFields
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
 
-        // Populate sample data for the pivot table
-        sheet.Cells["A1"].PutValue("Product");
-        sheet.Cells["B1"].PutValue("Region");
-        sheet.Cells["C1"].PutValue("Sales");
+        try
+        {
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        sheet.Cells["A2"].PutValue("P1");
-        sheet.Cells["B2"].PutValue("North");
-        sheet.Cells["C2"].PutValue(120);
+            // Load the workbook containing the PivotTable
+            Workbook workbook = new Workbook(inputPath);
 
-        sheet.Cells["A3"].PutValue("P2");
-        sheet.Cells["B3"].PutValue("South");
-        sheet.Cells["C3"].PutValue(200);
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        sheet.Cells["A4"].PutValue("P3");
-        sheet.Cells["B4"].PutValue("East");
-        sheet.Cells["C4"].PutValue(150);
+            // Ensure the worksheet contains at least one PivotTable
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTables found in the worksheet.");
+                return;
+            }
 
-        sheet.Cells["A5"].PutValue("P1");
-        sheet.Cells["B5"].PutValue("West");
-        sheet.Cells["C5"].PutValue(180);
+            // Get the first PivotTable (adjust index if required)
+            PivotTable pivotTable = sheet.PivotTables[0];
 
-        // Add a pivot table that includes a page field (Region)
-        int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-        PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+            // Clear all page fields (filters) from the PivotTable
+            pivotTable.PageFields.Clear();
 
-        // Add fields to the pivot table
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Product");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-        pivotTable.AddFieldToArea(PivotFieldType.Page, "Region");
-
-        // Clear all page fields from the pivot table
-        pivotTable.PageFields.Clear();
-
-        // Refresh and recalculate the pivot table after clearing page fields
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
-
-        // Save the workbook
-        workbook.Save("ClearPageFieldsDemo.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

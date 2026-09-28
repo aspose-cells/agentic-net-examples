@@ -1,71 +1,118 @@
-// Title: Load an Excel template (file or stream) and process smart markers with Aspose.Cells for .NET
-// Description: Demonstrates how to load a template workbook (Template.xlsx) from a file path or a MemoryStream, bind a List<Employee> to the WorkbookDesigner, process smart markers, and save the populated result as Result.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells load workbook from stream | smart markers template loading | WorkbookDesigner data source | process smart markers C# | save processed workbook Aspose.Cells | Excel template from MemoryStream | .NET Excel smart markers example
-// Common Searches: load Excel template from MemoryStream Aspose.Cells | Aspose.Cells smart markers file vs stream | WorkbookDesigner load template workbook C# | how to bind List<Employee> to smart markers | process smart markers and save result
-// Developer Intent: Load a template workbook (file or stream), bind data to smart markers, process them, and save the final Excel file.
-// Use Cases: Generate reports from a pre‑designed Excel template stored on disk. | Read a template saved as a byte array in a database, populate it with employee data, and export the result. | Reuse the same loaded workbook with multiple data sets to create batch reports without re‑reading the template file.
-// AI Prompts: Show C# code to load an Excel template from a MemoryStream and process smart markers with Aspose.Cells. | Give an example that reads a template workbook from a byte array, sets a List<Employee> as the smart marker data source, processes the markers, and saves the output. | Explain error handling best practices when loading a template workbook for smart markers in Aspose.Cells.
+// Title: Load an Excel template workbook from a file or MemoryStream and process smart markers with Aspose.Cells in C#
+// AI Prompts: Load a template workbook from a file path, bind a List<Person> to a smart marker using WorkbookDesigner, process the markers, and save the result as an XLSX file. | Read the same Excel template into a MemoryStream, create a Workbook from the stream, apply smart‑marker processing with a POCO data source, and write the output to a separate file. | Add robust error handling for missing template files and load failures when using both file‑based and stream‑based constructors with Aspose.Cells.
+// Common Searches: Aspose.Cells load Excel template from MemoryStream for smart markers C# | how to bind a POCO list to a smart marker using WorkbookDesigner in C# | processing smart markers in a workbook loaded from a file with Aspose.Cells | error handling when loading Excel workbook from stream in Aspose.Cells | save processed smart marker workbook to a new XLSX file using Aspose.Cells C#
+// Tags: file path workbook loading Aspose.Cells C# | memory stream workbook loading Aspose.Cells | WorkbookDesigner smart marker processing | POCO list binding to smart marker | export processed workbook to xlsx
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerDemo
+// The example checks that the Excel template exists, loads it either directly from a file path or via a MemoryStream into an Aspose.Cells Workbook, binds a List<Person> to a smart‑marker named "Person" with WorkbookDesigner, processes all smart markers, and saves each processed workbook to separate XLSX files, demonstrating proper error handling for missing files and load failures.
+public class SmartMarkerExample
 {
-    // Simple data class used as a smart marker data source
-    // Demonstrates how to load a template workbook (Template.xlsx) from a file path or a MemoryStream, bind a List<Employee> to the WorkbookDesigner, process smart markers, and save the populated result as Result.xlsx using Aspose.Cells for .NET.
-    public class Employee
+    public static void Main()
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
+        try
+        {
+            Run();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+        }
     }
 
-    class Program
+    public static void Run()
     {
-        static void Main()
+        const string templatePath = "TemplateSmartMarkers.xlsx";
+
+        // Verify that the template file exists before attempting to load it.
+        if (!File.Exists(templatePath))
         {
-            // ------------------------------------------------------------
-            // 1. Load the Excel template workbook.
-            //    The template file should contain smart markers like
-            //    &Employee.Name and &Employee.Age in the worksheet.
-            // ------------------------------------------------------------
-            Workbook templateWorkbook = new Workbook("Template.xlsx"); // Load from file
-
-            // If you prefer loading from a stream, uncomment the following lines:
-            // byte[] fileBytes = File.ReadAllBytes("Template.xlsx");
-            // using (MemoryStream ms = new MemoryStream(fileBytes))
-            // {
-            //     templateWorkbook = new Workbook(ms); // Load from stream
-            // }
-
-            // ------------------------------------------------------------
-            // 2. Create a WorkbookDesigner and assign the loaded workbook.
-            // ------------------------------------------------------------
-            WorkbookDesigner designer = new WorkbookDesigner();
-            designer.Workbook = templateWorkbook;
-
-            // ------------------------------------------------------------
-            // 3. Prepare the data source that will populate the smart markers.
-            // ------------------------------------------------------------
-            List<Employee> employees = new List<Employee>
-            {
-                new Employee { Name = "John Doe", Age = 30 },
-                new Employee { Name = "Jane Smith", Age = 28 }
-            };
-
-            // Bind the data source to the smart marker name "Employee".
-            designer.SetDataSource("Employee", employees);
-
-            // ------------------------------------------------------------
-            // 4. Process the smart markers to fill the worksheet with data.
-            // ------------------------------------------------------------
-            designer.Process();
-
-            // ------------------------------------------------------------
-            // 5. Save the processed workbook to a new file.
-            // ------------------------------------------------------------
-            designer.Workbook.Save("Result.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine($"Template file \"{templatePath}\" not found.");
+            return;
         }
+
+        // Load the template workbook from a file path.
+        Workbook workbookFromFile;
+        try
+        {
+            workbookFromFile = new Workbook(templatePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook from file: {ex.Message}");
+            return;
+        }
+
+        ProcessSmartMarkers(workbookFromFile);
+        // Save the processed workbook.
+        workbookFromFile.Save("ResultFromFile.xlsx", SaveFormat.Xlsx);
+
+        // Load the same template workbook from a memory stream.
+        using (MemoryStream stream = new MemoryStream())
+        {
+            // Copy the template file into the memory stream.
+            try
+            {
+                using (FileStream fileStream = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
+                {
+                    fileStream.CopyTo(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to read template into stream: {ex.Message}");
+                return;
+            }
+
+            stream.Position = 0; // Reset stream position for reading.
+
+            // Create a Workbook instance using the Stream constructor.
+            Workbook workbookFromStream;
+            try
+            {
+                workbookFromStream = new Workbook(stream);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load workbook from stream: {ex.Message}");
+                return;
+            }
+
+            ProcessSmartMarkers(workbookFromStream);
+            // Save the processed workbook.
+            workbookFromStream.Save("ResultFromStream.xlsx", SaveFormat.Xlsx);
+        }
+    }
+
+    private static void ProcessSmartMarkers(Workbook workbook)
+    {
+        // Initialize WorkbookDesigner and assign the loaded workbook.
+        WorkbookDesigner designer = new WorkbookDesigner
+        {
+            Workbook = workbook
+        };
+
+        // Sample data source for smart markers.
+        List<Person> persons = new List<Person>
+        {
+            new Person { Name = "John Doe", Age = 30 },
+            new Person { Name = "Jane Smith", Age = 28 }
+        };
+
+        // Bind the data source to the marker name "Person".
+        designer.SetDataSource("Person", persons);
+
+        // Process all smart markers in the workbook.
+        designer.Process();
+    }
+
+    // Simple POCO class used as a data source for smart markers.
+    public class Person
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
     }
 }

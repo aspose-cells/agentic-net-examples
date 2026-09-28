@@ -1,30 +1,27 @@
-// Title: Create Excel Workbook with Nested Department‑Employee Data Using Range Smart Markers (C# Aspose.Cells)
-// Description: This example shows how to build an Excel workbook, define a smart‑marker range (A2:C2), map parent (Department.Name) and child (Department.Employees.Name, Department.Employees.Age) fields, name the range _CellsSmartMarkers, bind a List<Department> to WorkbookDesigner, process the markers, and save the expanded sheet as an XLSX file.
-// Keywords: Aspose.Cells | range smart markers | nested collections | C# Excel export | department employee hierarchy | WorkbookDesigner | smart marker range | Excel template | hierarchical data
-// Common Searches: Aspose.Cells range smart markers nested collection | C# generate Excel from parent child list | How to use smart markers with List of objects | Aspose.Cells hierarchical data export example | Range smart markers .NET tutorial
-// Developer Intent: Generate an Excel file that automatically expands rows for a parent‑child object hierarchy using range smart markers.
-// Use Cases: Department‑wise employee directory where each department repeats for every employee. | Payroll or attendance sheets that group staff under their respective departments without manual row duplication. | Project task reports that list tasks and their sub‑tasks in a single template. | Export of any hierarchical business data (e.g., categories and products) to Excel with automatic row expansion.
-// AI Prompts: Add a smart‑marker column that shows the total number of employees per department. | Insert a footer row after each department group that calculates the average age using range smart markers. | Extend the template to include an Employee Position column while preserving the nested hierarchy.
+// Title: Create an Excel workbook from nested Parent‑Child objects using Aspose.Cells smart marker range in C#
+// AI Prompts: Generate a C# program that defines smart markers for a parent collection and its child collection, then uses WorkbookDesigner to fill an Excel sheet with department and employee names. | Demonstrate how to flatten the child list, bind it as a separate data source, assign the name "_CellsSmartMarkers" to the marker range, and call Process to generate the final workbook. | Write code that saves the resulting workbook to a file, handles any exceptions, and prints a confirmation message.
+// Common Searches: Aspose.Cells smart markers nested collections example C# | how to bind parent and child lists to WorkbookDesigner for Excel export | named smart marker range processing with Aspose.Cells | flatten child objects for smart markers Aspose.Cells tutorial | generate Excel file from hierarchical data using smart markers C#
+// Tags: Aspose.Cells WorkbookDesigner bind parent collection | smart marker range naming Aspose.Cells | populate worksheet with hierarchical data C# | process nested collections using smart markers | export object hierarchy to Excel with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsNestedSmartMarkersDemo
+namespace AsposeCellsSmartMarkerNestedExample
 {
-    // Sample data classes representing a nested hierarchy
-    // This example shows how to build an Excel workbook, define a smart‑marker range (A2:C2), map parent (Department.Name) and child (Department.Employees.Name, Department.Employees.Age) fields, name the range _CellsSmartMarkers, bind a List<Department> to WorkbookDesigner, process the markers, and save the expanded sheet as an XLSX file.
-    public class Department
+    // Sample parent class containing a collection of children
+    // The example creates a workbook, places smart markers "&=Parents.Name" and "&=Parents.Children.Name" in a named range, builds a list of Parent objects each with a list of Child objects, flattens the children into a separate collection, binds both collections to a WorkbookDesigner, processes the smart markers to repeat rows for each department and its employees, and saves the result as NestedSmartMarkersOutput.xlsx.
+    public class Parent
     {
-        public string Name { get; set; } = string.Empty;
-        public List<Employee> Employees { get; set; } = new List<Employee>();
+        public string? Name { get; set; }
+        public List<Child>? Children { get; set; }
     }
 
-    public class Employee
+    // Sample child class
+    public class Child
     {
-        public string Name { get; set; } = string.Empty;
-        public int Age { get; set; }
+        public string? Name { get; set; }
     }
 
     public class Program
@@ -33,64 +30,64 @@ namespace AsposeCellsNestedSmartMarkersDemo
         {
             try
             {
-                // 1. Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // 2. Access the first worksheet
+                // 1. Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook(); // lifecycle: create
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // 3. Build the template using range smart markers
+                // 2. Set up smart markers in the worksheet
                 // Header row
-                sheet.Cells["A1"].PutValue("Department");
-                sheet.Cells["B1"].PutValue("Employee Name");
-                sheet.Cells["C1"].PutValue("Employee Age");
+                sheet.Cells["A1"].PutValue("Parent");
+                sheet.Cells["B1"].PutValue("Child");
 
-                // Data rows – smart markers that will be expanded automatically
-                sheet.Cells["A2"].PutValue("&=Department.Name");                 // Parent collection field
-                sheet.Cells["B2"].PutValue("&=Department.Employees.Name");       // Child collection field
-                sheet.Cells["C2"].PutValue("&=Department.Employees.Age");        // Child collection field
+                // Data rows with smart markers
+                // "&=Parents.Name" will repeat for each Parent item
+                // "&=Parents.Children.Name" will repeat for each Child of the current Parent
+                sheet.Cells["A2"].PutValue("&=Parents.Name");
+                sheet.Cells["B2"].PutValue("&=Parents.Children.Name");
 
-                // Name the range that contains the smart markers (required for range smart markers)
-                AsposeRange smartRange = sheet.Cells.CreateRange("A2:C2");
+                // Define the range that contains the smart markers and give it the required name
+                Aspose.Cells.Range smartRange = sheet.Cells.CreateRange("A2:B2");
                 smartRange.Name = "_CellsSmartMarkers";
 
-                // 4. Prepare nested data source
-                List<Department> departments = new List<Department>
+                // 3. Prepare nested data source
+                List<Parent> parents = new List<Parent>
                 {
-                    new Department
+                    new Parent
                     {
-                        Name = "HR",
-                        Employees = new List<Employee>
+                        Name = "Department A",
+                        Children = new List<Child>
                         {
-                            new Employee { Name = "John Doe", Age = 30 },
-                            new Employee { Name = "Jane Smith", Age = 25 }
+                            new Child { Name = "Alice" },
+                            new Child { Name = "Bob" }
                         }
                     },
-                    new Department
+                    new Parent
                     {
-                        Name = "IT",
-                        Employees = new List<Employee>
+                        Name = "Department B",
+                        Children = new List<Child>
                         {
-                            new Employee { Name = "Mike Brown", Age = 35 }
+                            new Child { Name = "Charlie" },
+                            new Child { Name = "Diana" }
                         }
                     }
                 };
 
-                // 5. Create a WorkbookDesigner and assign the workbook
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook
-                };
+                // Flatten child collection for separate data source (required by smart markers)
+                List<Child> allChildren = parents.SelectMany(p => p.Children ?? new List<Child>()).ToList();
 
-                // 6. Set the data source. The name "Department" matches the smart‑marker prefix.
-                designer.SetDataSource("Department", departments);
+                // 4. Initialize WorkbookDesigner and bind data sources
+                WorkbookDesigner designer = new WorkbookDesigner(); // lifecycle: create
+                designer.Workbook = workbook;
+                designer.SetDataSource("Parents", parents);
+                designer.SetDataSource("Children", allChildren);
 
-                // 7. Process the smart markers
-                designer.Process();
+                // 5. Process the smart markers (range is already named, so parameterless Process is sufficient)
+                designer.Process(); // lifecycle: process
 
-                // 8. Save the result
+                // 6. Save the resulting workbook
                 string outputPath = "NestedSmartMarkersOutput.xlsx";
-                workbook.Save(outputPath);
+                workbook.Save(outputPath); // lifecycle: save
+
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)

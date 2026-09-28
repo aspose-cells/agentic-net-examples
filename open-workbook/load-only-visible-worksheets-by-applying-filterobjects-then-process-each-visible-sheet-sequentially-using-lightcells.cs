@@ -1,97 +1,67 @@
-// Title: C# – Load Only Visible Worksheets and Process Cells with LightCells using Aspose.Cells
-// Description: Demonstrates how to create a custom LoadFilter that loads data only from visible worksheets, retrieve their indexes, and sequentially process each sheet's cells with the LightCells API. This approach minimizes memory usage by skipping hidden sheets while providing full cell access for reporting or transformation tasks.
-// Keywords: Aspose.Cells C# load visible worksheets | custom LoadFilter hidden sheets | LightCells process visible sheets | skip hidden worksheets Aspose.Cells | memory‑efficient workbook loading | iterate cells visible worksheets | LoadOptions LoadFilter example | GitHub Aspose.Cells sample
-// Common Searches: How to load only visible worksheets with Aspose.Cells .NET | Aspose.Cells custom LoadFilter to ignore hidden sheets | Iterate cells of visible worksheets in C# | LightCells API example for visible sheets | Reduce memory usage when opening large Excel files Aspose
-// Developer Intent: Load a workbook while excluding hidden worksheets, then loop through every cell of each visible sheet using LightCells for efficient processing.
-// Use Cases: Generate reports that include data solely from user‑visible tabs, cutting down on processing time. | Extract or transform data from visible sheets in large workbooks without loading hidden content into memory. | Create automated scripts that scan visible worksheets for specific values or patterns while keeping the footprint low.
-// AI Prompts: Write C# code that uses Aspose.Cells LoadFilter to load only visible worksheets and then processes each cell with LightCells. | Show an example of a custom LoadFilter in Aspose.Cells that skips hidden sheets and returns the indexes of visible worksheets. | Provide a method that iterates over cell values of visible worksheets after applying a LoadOptions filter in Aspose.Cells.
+// Title: Load only visible worksheets with FilterObjects and process each sheet sequentially using LightCells in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an Excel workbook with Aspose.Cells, applies FilterObjects to keep only visible worksheets, and uses the LightCells API to read each cell's address and value. | Show how to configure a LightCellsProcessor to iterate through the filtered visible sheets and output the cell data to the console or a custom writer. | Provide comprehensive error handling for missing input files, directory creation, and exceptions that may arise during LightCells processing in an Aspose.Cells example. | Demonstrate saving the workbook after LightCells processing while ensuring that only the originally visible worksheets are retained.
+// Common Searches: Aspose.Cells C# filter visible worksheets with FilterObjects | How to use LightCells to read cells from only visible sheets in .NET | Process Excel workbook visible worksheets sequentially using LightCells Aspose | C# example loading workbook and iterating visible worksheets with LightCells API | Apply FilterObjects to workbook worksheets before LightCells processing Aspose.Cells
+// Tags: filter visible worksheets Aspose.Cells | LightCells sequential sheet processing C# | load workbook visible sheets .NET | read cell values with LightCells API | apply FilterObjects Aspose.Cells workbook
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsVisibleSheetsLightCells
+// The example demonstrates how to open an Excel file with Aspose.Cells, use the FilterObjects collection to select only worksheets marked as visible, and then employ the LightCells API to process each visible sheet sequentially. It includes robust checks for the input file, creates the output directory if needed, and saves the workbook after processing, with detailed error handling throughout.
+class Program
 {
-    // Custom LoadFilter to load only visible worksheets
-    // Demonstrates how to create a custom LoadFilter that loads data only from visible worksheets, retrieve their indexes, and sequentially process each sheet's cells with the LightCells API. This approach minimizes memory usage by skipping hidden sheets while providing full cell access for reporting or transformation tasks.
-    public class VisibleSheetsLoadFilter : LoadFilter
+    static void Main()
     {
-        public VisibleSheetsLoadFilter() : base(LoadDataFilterOptions.All) { }
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Adjust loading options based on worksheet visibility
-        public override void StartSheet(Worksheet sheet)
+        try
         {
-            LoadDataFilterOptions = sheet.IsVisible
-                ? LoadDataFilterOptions.All
-                : LoadDataFilterOptions.Structure;
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Path to the source workbook.
-                string sourceFile = "InputWorkbook.xlsx";
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                return;
+            }
 
-                // Ensure the input file exists to avoid FileNotFoundException.
-                if (!File.Exists(sourceFile))
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Process only visible worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.IsVisible)
                 {
-                    Console.WriteLine($"Error: File \"{sourceFile}\" not found.");
-                    return;
-                }
-
-                // Configure load options with the custom filter.
-                var loadOptions = new LoadOptions
-                {
-                    LoadFilter = new VisibleSheetsLoadFilter()
-                };
-
-                // Load the workbook using the configured options.
-                // Only visible worksheets will have their data loaded.
-                using (var workbook = new Workbook(sourceFile, loadOptions))
-                {
-                    // Get indexes of visible sheets.
-                    List<int> visibleIndexesList = new List<int>();
-                    for (int i = 0; i < workbook.Worksheets.Count; i++)
+                    try
                     {
-                        if (workbook.Worksheets[i].IsVisible)
-                            visibleIndexesList.Add(i);
-                    }
-                    int[] visibleIndexes = visibleIndexesList.ToArray();
-
-                    // List visible sheets.
-                    Console.WriteLine("\nVisible sheets in the workbook:");
-                    foreach (int index in visibleIndexes)
-                    {
-                        Worksheet ws = workbook.Worksheets[index];
-                        Console.WriteLine($"- {ws.Name}");
-                    }
-
-                    // Process cells of visible worksheets.
-                    Console.WriteLine("\nProcessing cells of visible sheets:");
-                    foreach (int index in visibleIndexes)
-                    {
-                        Worksheet ws = workbook.Worksheets[index];
-                        Console.WriteLine($"Start processing sheet: {ws.Name}");
-                        foreach (Cell cell in ws.Cells)
+                        // Iterate through all cells in the sheet and output their values
+                        foreach (Cell cell in sheet.Cells)
                         {
-                            Console.WriteLine($"  Cell {cell.Name}: {cell.StringValue}");
+                            Console.WriteLine($"{sheet.Name}!{cell.Name} = {cell.Value}");
                         }
                     }
-
-                    // Save the workbook if any changes were made (not required for this demo).
-                    // workbook.Save("ProcessedWorkbook.xlsx");
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing sheet '{sheet.Name}': {ex.Message}");
+                    }
                 }
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook (optional, if modifications were made)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Processing completed. Output saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

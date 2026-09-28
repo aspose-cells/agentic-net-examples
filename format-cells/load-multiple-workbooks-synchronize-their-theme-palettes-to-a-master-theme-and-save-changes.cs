@@ -1,78 +1,72 @@
-// Title: Batch Synchronize Excel Workbook Themes with Aspose.Cells for .NET
-// Description: Loads a master workbook, iterates through a list of Excel files, copies the master’s theme to each using Aspose.Cells CopyTheme, and saves the changes while gracefully handling missing files.
-// Keywords: Aspose.Cells | CopyTheme | C# | .NET | Excel theme synchronization | batch theme update | master workbook theme | apply Excel theme programmatically | theme palette copy
-// Common Searches: copy Excel theme from one workbook to another Aspose.Cells | batch update Excel theme C# Aspose.Cells | synchronize workbook themes programmatically .NET | apply corporate theme to multiple spreadsheets using Aspose.Cells | automate Excel theme copying C#
-// Developer Intent: Copy a master workbook’s theme to several other Excel files and persist the updates.
-// Use Cases: Enforce corporate branding by applying a single theme to all department spreadsheets in a shared folder. | Refresh legacy reports after a style redesign by batch‑updating their color palettes. | Integrate theme synchronization into a CI/CD pipeline to guarantee consistent visual appearance of generated Excel outputs.
-// AI Prompts: Generate C# code that accepts a master workbook path and an array of target workbook paths, uses Aspose.Cells to copy the master theme to each existing target, skips missing files, and returns a processing summary. | Create a reusable Aspose.Cells method that takes a source Workbook object and a collection of destination Workbook objects, applies CopyTheme to each, logs success or error messages, and saves the results.
+// Title: Batch copy a master theme to multiple Excel .xlsx workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a master workbook and uses Aspose.Cells to transfer its theme to each workbook in a list, then saves the files. | Create a reusable C# method that takes a master workbook path and an IEnumerable of target workbook paths, applies the master theme with Aspose.Cells CopyTheme, and returns a processing summary. | Enhance the theme‑synchronization script to output a CSV log containing file name, success/failure status, and error details for each workbook.
+// Common Searches: Aspose.Cells C# transfer theme from a source workbook to many target workbooks | How to apply the same Excel theme to several .xlsx files using .NET | Batch update Excel workbook themes programmatically with Aspose.Cells | C# script to synchronize Excel theme palettes across multiple workbooks | CopyTheme method example for processing multiple Excel files Aspose.Cells
+// Tags: Aspose.Cells CopyTheme batch processing | C# apply master Excel theme | synchronize Excel theme palettes .NET | programmatic Excel theme copy Aspose.Cells | batch update workbook theme .xlsx
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsThemeSync
+// The example loads a designated master workbook, iterates over a list of other Excel files, copies the master workbook's theme to each using the Aspose.Cells CopyTheme method, saves the changes back to the original files, and handles missing files with console logging.
+class ThemeSynchronizer
 {
-    // Loads a master workbook, iterates through a list of Excel files, copies the master’s theme to each using Aspose.Cells CopyTheme, and saves the changes while gracefully handling missing files.
-    public class ThemeSynchronizer
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Paths to the workbooks to be synchronized
+        List<string> workbookPaths = new List<string>
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            @"C:\Data\MasterWorkbook.xlsx",   // Master workbook containing the desired theme
+            @"C:\Data\Workbook1.xlsx",
+            @"C:\Data\Workbook2.xlsx",
+            @"C:\Data\Workbook3.xlsx"
+        };
 
-        public static void Run()
+        try
         {
-            // Paths of the workbooks to be synchronized.
-            // The first workbook in the list is considered the master theme source.
-            string[] workbookPaths = new string[]
-            {
-                "MasterWorkbook.xlsx",
-                "WorkbookA.xlsx",
-                "WorkbookB.xlsx",
-                "WorkbookC.xlsx"
-            };
-
-            // Verify that the master workbook exists.
+            // Verify that the master workbook exists
             if (!File.Exists(workbookPaths[0]))
             {
                 Console.WriteLine($"Master workbook not found: {workbookPaths[0]}");
                 return;
             }
 
-            // Load the master workbook whose theme will be copied to the others.
-            using (Workbook masterWorkbook = new Workbook(workbookPaths[0]))
+            // Load the master workbook (the first entry in the list)
+            Workbook masterWorkbook = new Workbook(workbookPaths[0]);
+
+            // Iterate over the remaining workbooks and apply the master theme
+            for (int i = 1; i < workbookPaths.Count; i++)
             {
-                // Iterate over the remaining workbooks, copy the master theme, and save them.
-                for (int i = 1; i < workbookPaths.Length; i++)
+                string targetPath = workbookPaths[i];
+
+                // Skip if the target file does not exist
+                if (!File.Exists(targetPath))
                 {
-                    string targetPath = workbookPaths[i];
+                    Console.WriteLine($"Target workbook not found, skipping: {targetPath}");
+                    continue;
+                }
 
-                    // Verify that the target workbook exists before processing.
-                    if (!File.Exists(targetPath))
-                    {
-                        Console.WriteLine($"Target workbook not found, skipping: {targetPath}");
-                        continue;
-                    }
+                try
+                {
+                    // Load the target workbook
+                    Workbook targetWorkbook = new Workbook(targetPath);
 
-                    // Load the target workbook.
-                    using (Workbook targetWorkbook = new Workbook(targetPath))
-                    {
-                        // Copy the theme from the master workbook to the target workbook.
-                        targetWorkbook.CopyTheme(masterWorkbook);
+                    // Copy the theme from the master workbook to the target workbook
+                    targetWorkbook.CopyTheme(masterWorkbook);
 
-                        // Save the updated workbook (overwrites the original file).
-                        targetWorkbook.Save(targetPath);
-                        Console.WriteLine($"Theme synchronized and saved: {targetPath}");
-                    }
+                    // Save the workbook (overwrites the original file)
+                    targetWorkbook.Save(targetPath);
+                    Console.WriteLine($"Theme synchronized for: {targetPath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to synchronize theme for {targetPath}: {ex.Message}");
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

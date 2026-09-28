@@ -1,36 +1,12 @@
-// Title: Override TODAY() with a Custom Calculation Engine in Aspose.Cells for .NET
-// Description: Demonstrates how to register a custom calculation engine via Workbook.Settings.CustomEngine, intercept the built‑in TODAY() function, return a fixed date, flag its invocation, recalculate the workbook, and verify that all formulas use the overridden implementation.
-// Keywords: Aspose.Cells custom engine | override TODAY function | AbstractCalculationEngine C# | Workbook.Settings.CustomEngine | deterministic formula testing | Aspose.Cells .NET example | custom calculation logic | formula interception
-// Common Searches: Aspose.Cells replace TODAY() with fixed date | register custom calculation engine Aspose.Cells .NET | how to intercept built‑in functions in Aspose.Cells | verify custom TODAY implementation in workbook | C# Aspose.Cells custom engine tutorial
-// Developer Intent: Register a custom calculation engine that overrides TODAY() and confirm that every formula uses this implementation.
-// Use Cases: Create repeatable unit tests by fixing TODAY() across all workbook formulas. | Apply organization‑specific date rules by substituting the default TODAY() logic. | Audit or log usage of specific built‑in functions during calculation.
-// AI Prompts: Generate C# code that registers a custom calculation engine via Workbook.Settings.CustomEngine to override TODAY() and then recalculates the workbook. | Write a C# unit test using Aspose.Cells that asserts the custom TODAY implementation is called for each formula in a workbook. | Explain how to extend AbstractCalculationEngine to intercept multiple built‑in functions such as TODAY and NOW, and how to expose an Invoked flag for monitoring.
+// Title: Register a custom calculation engine to override the TODAY function in Aspose.Cells for .NET and validate other formulas
+// AI Prompts: Implement a subclass of AbstractCalculationEngine that returns a fixed date for the TODAY function, assign it to CalculationOptions.CustomEngine, and recalculate the workbook. | Write verification code that prints the values of cells containing TODAY, SUM, and TODAY+5 to confirm only TODAY is overridden while other functions compute normally.
+// Common Searches: asp.net how to replace TODAY function with custom engine in Aspose.Cells | using CalculationOptions.CustomEngine to override specific functions in Aspose.Cells | example of AbstractCalculationEngine for TODAY in Aspose.Cells .NET | validate that custom calculation engine does not affect SUM in Aspose.Cells | register custom engine for workbook formula calculation Aspose.Cells tutorial
+// Tags: custom calculation engine Aspose.Cells | override TODAY function Aspose.Cells | CalculationOptions.CustomEngine example | AbstractCalculationEngine TODAY override | formula recalculation with custom engine .NET
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to register a custom calculation engine via Workbook.Settings.CustomEngine, intercept the built‑in TODAY() function, return a fixed date, flag its invocation, recalculate the workbook, and verify that all formulas use the overridden implementation.
-class CustomTodayEngine : AbstractCalculationEngine
-{
-    // Indicates whether the custom TODAY implementation was used
-    public bool Invoked { get; private set; }
-
-    // Enable processing of built‑in functions so that TODAY can be intercepted
-    public override bool ProcessBuiltInFunctions => true;
-
-    public override void Calculate(CalculationData data)
-    {
-        // Intercept the TODAY function
-        if (data.FunctionName.Equals("TODAY", StringComparison.OrdinalIgnoreCase))
-        {
-            Invoked = true;
-            // Return a fixed date for verification purposes
-            data.CalculatedValue = new DateTime(2000, 1, 1);
-        }
-        // For all other functions let the default engine handle them
-    }
-}
-
+// The example creates a workbook, adds formulas using TODAY and SUM, registers a TodayOverrideEngine via CalculationOptions.CustomEngine, recalculates all formulas, and prints the results to show TODAY returns a fixed date (2000‑01‑01) while other functions like SUM work unchanged, then saves the workbook.
 class Program
 {
     static void Main()
@@ -39,26 +15,50 @@ class Program
         Workbook wb = new Workbook();
         Worksheet ws = wb.Worksheets[0];
 
-        // Place a formula that uses TODAY()
+        // Add formulas that use TODAY and a regular built‑in function
         ws.Cells["A1"].Formula = "=TODAY()";
+        ws.Cells["A2"].Formula = "=SUM(1,2,3)";
+        ws.Cells["A3"].Formula = "=TODAY()+5";
 
-        // Instantiate the custom calculation engine
-        var customEngine = new CustomTodayEngine();
+        // Register the custom calculation engine that overrides TODAY
+        var customEngine = new TodayOverrideEngine();
 
-        // Configure calculation options to use the custom engine
+        // Set calculation options with the custom engine
         CalculationOptions options = new CalculationOptions
         {
             CustomEngine = customEngine
         };
 
-        // Recalculate all formulas in the workbook using the custom engine
+        // Calculate all formulas using the custom engine
         wb.CalculateFormula(options);
 
-        // Output the calculated value and whether the custom TODAY was invoked
-        Console.WriteLine("A1 value (should be 2000‑01‑01): " + ws.Cells["A1"].Value);
-        Console.WriteLine("Custom TODAY invoked: " + customEngine.Invoked);
+        // Verify that TODAY was overridden while other functions work normally
+        Console.WriteLine("A1 (TODAY) = " + ws.Cells["A1"].Value); // Expected: 2000-01-01
+        Console.WriteLine("A2 (SUM)  = " + ws.Cells["A2"].Value); // Expected: 6
+        Console.WriteLine("A3 (TODAY+5) = " + ws.Cells["A3"].Value); // Expected: 2000-01-06
 
-        // Optionally save the workbook to verify the result persists
-        wb.Save("CustomTodayResult.xlsx");
+        // Optional: save the workbook to see the results in Excel
+        wb.Save("CustomTodayEngine.xlsx");
+    }
+
+    // Custom engine that intercepts the TODAY function
+    class TodayOverrideEngine : AbstractCalculationEngine
+    {
+        // Enable processing of built‑in functions so we can handle TODAY
+        public override bool ProcessBuiltInFunctions => true;
+
+        public override void Calculate(CalculationData data)
+        {
+            // Check if the current function is TODAY (case‑insensitive)
+            if (string.Equals(data.FunctionName, "TODAY", StringComparison.OrdinalIgnoreCase))
+            {
+                // Return a fixed date, e.g., 2000‑01‑01
+                data.CalculatedValue = new DateTime(2000, 1, 1);
+                return;
+            }
+
+            // For all other functions let the default engine handle them
+            // No action needed here
+        }
     }
 }

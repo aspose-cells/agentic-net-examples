@@ -1,31 +1,68 @@
-// Title: Insert a Row and Save an XLSX Workbook with Aspose.Cells for .NET
-// Description: Load an existing XLSX file using Aspose.Cells, insert a new row at a specified index with InsertRange (ShiftType.Down), and save the workbook back to XLSX while preserving all data, formulas, formatting, and merged cells.
-// Keywords: Aspose.Cells insert row C# | InsertRange ShiftType.Down | save workbook after row insertion | preserve formulas Aspose.Cells | C# Excel row insertion example | Aspose.Cells .NET save XLSX | Excel geometry changes Aspose
-// Common Searches: How to add a row to an existing Excel file with Aspose.Cells .NET | Saving an Excel workbook after inserting rows without losing data | Aspose.Cells InsertRange example for shifting rows down | C# code to insert a row and keep formatting in XLSX
-// Developer Intent: Add a new row to an existing XLSX workbook and save the file while keeping all original content intact.
-// Use Cases: Insert a header row at the top of a report before exporting to XLSX. | Add a blank separator row within a data table to improve readability without breaking formulas. | Shift schedule rows down to accommodate new entries while preserving cell styles and merged regions.
-// AI Prompts: Generate C# code that inserts multiple rows at a given index using Aspose.Cells and saves the workbook preserving formulas and formatting. | Explain how InsertRange handles merged cells and data validation when inserting a row with Aspose.Cells for .NET. | Show how to insert a row and save the workbook to a MemoryStream instead of a physical file.
+// Title: Save an XLSX workbook after changing column width, row height, and adding a rectangle shape while preserving original data using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing XLSX file with Aspose.Cells, sets column A width to 20 characters, row 1 height to 30 points, inserts a rectangle shape at row 5 column 5 with specific dimensions, and saves the workbook to a new XLSX file while keeping all original content unchanged. | Create a reusable C# method that receives a Workbook, column‑width, row‑height, and shape parameters, applies those geometry changes using Aspose.Cells, and writes the result as an XLSX file without losing any existing worksheet data.
+// Common Searches: aspocells change column width and row height keep original data | c# add rectangle shape to existing workbook and save as xlsx using Aspose.Cells | preserve worksheet content after modifying shape placement with Aspose.Cells | save workbook as xlsx after geometry updates Aspose.Cells .NET
+// Tags: set column width Aspose.Cells | set row height Aspose.Cells | add rectangle shape Aspose.Cells | freefloating shape placement Aspose.Cells | save workbook as xlsx preserving data Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-// Load an existing XLSX file using Aspose.Cells, insert a new row at a specified index with InsertRange (ShiftType.Down), and save the workbook back to XLSX while preserving all data, formulas, formatting, and merged cells.
+// Loads an existing XLSX file, adjusts column A width and row 1 height, inserts a free‑floating rectangle shape with defined size and position, then saves the workbook as a new XLSX file while preserving all original worksheet data.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook (replace with your source file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Example geometry change: insert a new row at index 3 (fourth row)
-        // Define the range that represents the entire row to be shifted down
-        CellArea insertArea = CellArea.CreateCellArea(3, 0, 3, worksheet.Cells.MaxColumn);
-        worksheet.Cells.InsertRange(insertArea, 3, ShiftType.Down, true);
+            // Load the existing workbook (preserves all original data)
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook to XLSX format, preserving all original data
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // ----- Geometry changes -----
+
+            // Change column width (e.g., column A)
+            sheet.Cells.SetColumnWidth(0, 20); // width in characters
+
+            // Change row height (e.g., row 1)
+            sheet.Cells.SetRowHeight(0, 30); // height in points
+
+            // Add a rectangle shape and set its position and size
+            // Parameters: type, upperLeftRow, upperLeftColumn, top, left, height, width
+            Shape rect = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                5,          // upper left row
+                5,          // upper left column
+                100,        // top offset (points)
+                150,        // left offset (points)
+                50,         // height (points)
+                100);       // width (points)
+
+            // Configure shape placement
+            rect.Placement = PlacementType.FreeFloating;
+            rect.Top = 100;   // position from top of the sheet in points
+            rect.Left = 150;  // position from left of the sheet in points
+
+            // ----- Save the workbook -----
+            // Save as XLSX, preserving all original content and the geometry changes made above
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

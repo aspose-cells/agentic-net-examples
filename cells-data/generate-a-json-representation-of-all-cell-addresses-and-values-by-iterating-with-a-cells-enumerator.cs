@@ -1,10 +1,7 @@
-// Title: Export All Worksheet Cells to JSON Using Cells Enumerator in Aspose.Cells for .NET (C#)
-// Description: The sample creates a workbook, adds sample data, obtains an IEnumerator from Worksheet.Cells, iterates each Cell, calls Cell.ToJson to get the cell’s address and value as JSON, combines the results into a JSON array, and prints the final string to the console.
-// Keywords: Aspose.Cells | C# | Cells enumerator | Cell.ToJson | Excel to JSON | export worksheet to JSON | iterate cells .NET | JSON array of cells
-// Common Searches: Aspose.Cells export cells to JSON | How to use Cells.GetEnumerator in C# | Cell.ToJson example Aspose.Cells | Convert Excel worksheet to JSON with Aspose | Generate JSON array of cell addresses Aspose.Cells
-// Developer Intent: Create a JSON array that lists every cell’s address and value by enumerating the Cells collection of a worksheet.
-// Use Cases: Send worksheet data as a JSON payload in a REST API response. | Log all cell contents for debugging or audit trails during workbook processing. | Provide front‑end JavaScript applications with a ready‑to‑use JSON representation of Excel data.
-// AI Prompts: Show how to filter out empty cells before adding them to the JSON array. | Modify the code to write the JSON output to a file instead of the console. | Demonstrate deserializing the generated JSON back into a .NET dictionary of cell addresses and values.
+// Title: Generate a JSON array of populated cell addresses and values by enumerating Aspose.Cells worksheet cells in C#
+// AI Prompts: Write C# code that uses Aspose.Cells to iterate through all non‑empty cells in a worksheet and output each cell's address and value as a JSON object. | Extend the enumeration to include each cell's formula and number format, adding those details to the JSON representation. | Create a reusable C# method that returns a JSON string containing an array of all populated cells from a given Aspose.Cells worksheet.
+// Common Searches: how to export non empty cells from an Aspose.Cells worksheet to JSON in C# | Aspose.Cells C# enumerate cells and get address and value as JSON | C# convert Excel worksheet cells to JSON array using Aspose.Cells enumerator | retrieve cell formulas and formatting with Aspose.Cells and serialize to JSON
+// Tags: Aspose.Cells cell enumeration JSON conversion | C# export worksheet data as JSON with Aspose.Cells | Cell.ToJson for populated cells Aspose.Cells | non‑empty cell address extraction Aspose.Cells C# | serialize Excel cells to JSON using Aspose.Cells
 
 using System;
 using System.Collections;
@@ -13,62 +10,58 @@ using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // The sample creates a workbook, adds sample data, obtains an IEnumerator from Worksheet.Cells, iterates each Cell, calls Cell.ToJson to get the cell’s address and value as JSON, combines the results into a JSON array, and prints the final string to the console.
+    // Demonstrates creating a workbook, populating sample cells, using the Cells enumerator to walk through non‑empty cells, converting each cell to JSON with Cell.ToJson, and assembling the results into a JSON array string.
     public class CellsEnumeratorToJsonDemo
     {
         public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate sample data
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["A2"].PutValue("John");
-            cells["B2"].PutValue(30);
-            cells["A3"].PutValue("Alice");
-            cells["B3"].PutValue(25);
-
-            // Get the enumerator for the Cells collection
-            IEnumerator enumerator = cells.GetEnumerator();
-
-            // Collect JSON representation of each cell
-            List<string> cellJsonList = new List<string>();
-
-            while (enumerator.MoveNext())
-            {
-                // Current item is a Cell
-                Cell cell = (Cell)enumerator.Current;
-
-                // Convert the cell to JSON using the built‑in ToJson method
-                string cellJson = cell.ToJson();
-
-                cellJsonList.Add(cellJson);
-            }
-
-            // Combine individual cell JSON objects into a JSON array
-            string allCellsJson = "[" + string.Join(",", cellJsonList) + "]";
-
-            // Output the resulting JSON
-            Console.WriteLine("All cells JSON:");
-            Console.WriteLine(allCellsJson);
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
             try
             {
-                CellsEnumeratorToJsonDemo.Run();
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
+
+                // Populate some sample data
+                cells["A1"].PutValue(100);
+                cells["B2"].PutValue("Hello");
+                cells["C3"].PutValue(DateTime.Now);
+                cells["D4"].PutValue(3.14);
+
+                // Get the enumerator for the Cells collection
+                IEnumerator enumerator = cells.GetEnumerator();
+
+                // Collect JSON representation of each non‑empty cell
+                List<string> cellJsonList = new List<string>();
+                while (enumerator.MoveNext())
+                {
+                    Cell cell = (Cell)enumerator.Current;
+                    if (cell.Value != null)
+                    {
+                        // Cell.ToJson returns a JSON string for the individual cell
+                        cellJsonList.Add(cell.ToJson());
+                    }
+                }
+
+                // Combine individual cell JSON strings into a JSON array
+                string jsonResult = "[" + string.Join(",", cellJsonList) + "]";
+
+                // Output the final JSON
+                Console.WriteLine(jsonResult);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CellsEnumeratorToJsonDemo.Run();
         }
     }
 }

@@ -4,7 +4,8 @@ description: C# examples for inspecting external connections, updating connectio
 product: Aspose.Cells for .NET
 category: queries-and-connections
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Manage Excel Queries and Data Connections in C# with Aspose.Cells

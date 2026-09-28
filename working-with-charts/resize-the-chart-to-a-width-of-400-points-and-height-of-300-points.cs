@@ -1,16 +1,13 @@
-// Title: Resize an Aspose.Cells chart in C# – set width to 400 pt and height to 300 pt
-// Description: This example creates a workbook, adds sample data, inserts a column chart, and then programmatically sets the chart size by assigning 400 points to ChartObject.Width and 300 points to ChartObject.Height before saving as ResizedChart.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | chart resize | ChartObject.Width | ChartObject.Height | set chart dimensions | Excel chart size | column chart | programmatic chart sizing | Excel automation | point units
-// Common Searches: Aspose.Cells set chart width and height C# | Resize Excel chart to 400 points by 300 points using Aspose | How to change chart size programmatically in .NET | ChartObject.Width and Height examples Aspose.Cells | Adjust Excel chart dimensions with C# code
-// Developer Intent: Set the chart's width to 400 pt and height to 300 pt using Aspose.Cells in a .NET application.
-// Use Cases: Create a column chart with exact dimensions for a standardized report layout. | Generate multiple charts with consistent sizing across automated Excel files. | Fit a chart into a predefined page or dashboard area when building Excel dashboards programmatically.
-// AI Prompts: Show C# code to resize an Aspose.Cells chart to 400 pt × 300 pt. | Explain how ChartObject.Width and ChartObject.Height affect the rendered size of an Excel chart. | Provide a step‑by‑step guide for setting chart dimensions in Aspose.Cells for .NET.
+// Title: How to resize an Aspose.Cells chart to 400 pt width and 300 pt height using C#
+// AI Prompts: Resize an existing chart in an Aspose.Cells workbook to a width of 400 points and a height of 300 points with C# code. | Set the ChartObject.Width and ChartObject.Height properties to specific point values for a column chart in Aspose.Cells.
+// Common Searches: C# Aspose.Cells set chart dimensions in points | How to change Excel chart size programmatically with Aspose.Cells | Aspose.Cells chartobject width height example C# | Resize column chart to 400x300 points using Aspose.Cells
+// Tags: Aspose.Cells chartobject width property | Aspose.Cells chartobject height property | C# set Excel chart size points | column chart size adjustment Aspose.Cells | Aspose.Cells resize chart dimensions
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example creates a workbook, adds sample data, inserts a column chart, and then programmatically sets the chart size by assigning 400 points to ChartObject.Width and 300 points to ChartObject.Height before saving as ResizedChart.xlsx.
+// Creates a workbook, adds sample data, inserts a column chart, sets ChartObject.Width to 400 points and ChartObject.Height to 300 points, and saves the file as ResizedChart.xlsx.
 class ResizeChartExample
 {
     static void Main()
@@ -19,7 +16,7 @@ class ResizeChartExample
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Populate some sample data for the chart
+        // Add sample data for the chart (optional)
         worksheet.Cells["A1"].PutValue("Category");
         worksheet.Cells["A2"].PutValue("A");
         worksheet.Cells["A3"].PutValue("B");
@@ -33,7 +30,7 @@ class ResizeChartExample
         int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
         Chart chart = worksheet.Charts[chartIndex];
 
-        // Set the data range for the chart
+        // Set the data source for the chart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
@@ -41,7 +38,7 @@ class ResizeChartExample
         chart.ChartObject.Width = 400;   // Width in points
         chart.ChartObject.Height = 300;  // Height in points
 
-        // Save the workbook to a file
+        // Save the workbook with the resized chart
         workbook.Save("ResizedChart.xlsx");
     }
 }

@@ -1,26 +1,22 @@
-// Title: Hide Horizontal Gridlines in an Aspose.Cells Scatter Chart – C# Example
-// Description: Demonstrates how to create a workbook, add X/Y data, insert a scatter chart, and turn off both major and minor horizontal (value‑axis) gridlines using Aspose.Cells for .NET, resulting in a cleaner chart saved as an XLSX file.
-// Keywords: Aspose.Cells scatter chart C# | hide chart gridlines Aspose.Cells | disable horizontal gridlines .NET | value axis gridlines Aspose.Cells | chart formatting Aspose.Cells C# | Excel scatter plot gridlines
-// Common Searches: how to hide horizontal gridlines in Aspose.Cells scatter chart C# | Aspose.Cells remove value axis gridlines .NET | disable major and minor gridlines Aspose.Cells chart | C# Aspose.Cells scatter plot without horizontal gridlines | chart formatting hide gridlines Aspose.Cells
-// Developer Intent: Turn off the horizontal (value‑axis) gridlines of a scatter chart to produce a cleaner visual layout.
-// Use Cases: Generate a minimalist scatter plot for data analysis reports. | Create presentation‑ready Excel charts that show only vertical gridlines. | Automate workbook creation where chart clutter is reduced for better readability.
-// AI Prompts: Provide C# code using Aspose.Cells to create a scatter chart and hide the horizontal gridlines while keeping vertical gridlines visible. | Show how to toggle visibility of major and minor gridlines on the value axis of an Aspose.Cells chart in .NET. | Explain step‑by‑step how to customize gridline visibility for different axes in an Aspose.Cells scatter chart.
+// Title: Hide horizontal (category) axis gridlines in a C# Aspose.Cells scatter chart
+// AI Prompts: Generate C# code with Aspose.Cells that creates a scatter chart and sets CategoryAxis.MajorGridLines.IsVisible to false. | Show how to disable both major and minor horizontal gridlines for a scatter plot in Aspose.Cells and then save the workbook. | Provide a step‑by‑step example that builds X/Y sample data, adds a scatter chart, and hides its category axis gridlines using Aspose.Cells.
+// Common Searches: aspocells c# scatter chart hide category axis gridlines | remove horizontal gridlines from Excel scatter plot using Aspose.Cells | how to turn off major gridlines on scatter chart axis in C# | Aspose.Cells hide minor gridlines on chart category axis | C# create scatter chart without horizontal gridlines Aspose.Cells
+// Tags: Aspose.Cells scatter chart hide category axis gridlines | C# chart axis major gridlines visibility | Aspose.Cells disable minor gridlines on chart | Excel scatter plot gridline removal with Aspose.Cells | CategoryAxis gridlines IsVisible false Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
 
 namespace AsposeCellsScatterGridlinesDemo
 {
-    // Demonstrates how to create a workbook, add X/Y data, insert a scatter chart, and turn off both major and minor horizontal (value‑axis) gridlines using Aspose.Cells for .NET, resulting in a cleaner chart saved as an XLSX file.
-    class Program
+    // Creates a workbook, adds X/Y data, generates a scatter chart, hides both major and minor horizontal (category) axis gridlines, and saves the file as ScatterChart_NoHorizontalGridlines.xlsx.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for a scatter chart (X values in column A, Y values in column B)
@@ -34,26 +30,24 @@ namespace AsposeCellsScatterGridlinesDemo
             sheet.Cells["B4"].PutValue(6);
             sheet.Cells["A5"].PutValue(4);
             sheet.Cells["B5"].PutValue(8);
+            sheet.Cells["A6"].PutValue(5);
+            sheet.Cells["B6"].PutValue(10);
 
-            // Add a scatter chart
+            // Add a scatter chart to the worksheet
             int chartIndex = sheet.Charts.Add(ChartType.Scatter, 7, 0, 25, 15);
             Chart chart = sheet.Charts[chartIndex];
 
             // Set the data source for the scatter series (X values, Y values)
-            chart.NSeries.Add("A2:A5", true);
-            chart.NSeries[0].XValues = "A2:A5";
-            chart.NSeries[0].Values = "B2:B5";
+            chart.NSeries.Add("B2:B6", true);          // Y values
+            chart.NSeries[0].XValues = "A2:A6";        // X values
 
-            // Hide horizontal gridlines (major and minor) for a cleaner appearance
-            // Horizontal gridlines are drawn from the value axis (Y axis)
-            chart.ValueAxis.MajorGridLines.IsVisible = false;
-            chart.ValueAxis.MinorGridLines.IsVisible = false;
+            // Hide horizontal (category) axis gridlines for a cleaner look
+            // Major gridlines
+            chart.CategoryAxis.MajorGridLines.IsVisible = false;
+            // Minor gridlines (optional, also hide)
+            chart.CategoryAxis.MinorGridLines.IsVisible = false;
 
-            // Optionally hide vertical gridlines as well
-            // chart.CategoryAxis.MajorGridLines.IsVisible = false;
-            // chart.CategoryAxis.MinorGridLines.IsVisible = false;
-
-            // Save the workbook
+            // Save the workbook to a file
             workbook.Save("ScatterChart_NoHorizontalGridlines.xlsx");
         }
     }

@@ -1,57 +1,48 @@
-// Title: Export Worksheet to Single HTML with Styles & Merged Cells using Aspose.Cells (C#)
-// Description: Demonstrates how to save the active worksheet of an Aspose.Cells workbook as a single HTML file while preserving cell formatting, merged ranges, grid lines, and embedding CSS. The example uses HtmlSaveOptions to control output.
-// Keywords: Aspose.Cells HTML export | C# export worksheet to HTML | preserve merged cells Aspose | cell style HTML Aspose.Cells | HtmlSaveOptions single file | embed CSS Aspose.Cells | grid lines HTML export | Aspose.Cells .NET tutorial
-// Common Searches: Aspose.Cells export worksheet to HTML with merged cells | How to keep cell formatting when saving Excel as HTML in C# | Save Aspose.Cells workbook as one HTML file | Embed CSS in HTML output from Aspose.Cells | Export active sheet only Aspose.Cells HTML
-// Developer Intent: Create an HTML snapshot of the active worksheet that looks identical to the Excel view, including styles and merged cells, in a single file.
-// Use Cases: Generate printable web reports that match the original spreadsheet layout. | Provide a quick, styled preview of a dashboard worksheet on a website. | Attach a fully formatted worksheet snapshot to an email without sending the Excel file.
-// AI Prompts: Show how to modify HtmlSaveOptions to output CSS to an external .css file while preserving merged cells. | Provide code that exports every worksheet in a workbook to separate HTML files, keeping all formatting. | Explain how to include embedded images from the workbook when exporting to HTML with Aspose.Cells.
+// Title: Export a single Excel worksheet to HTML with cell styles and merged cells preserved using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, configures HtmlSaveOptions to export only the active sheet with grid lines, and saves it as an HTML file while keeping all cell formatting and merged ranges using Aspose.Cells. | Show how to set up Aspose.Cells HtmlSaveOptions in a .NET application to retain cell styles and merged cell structures when converting a worksheet to HTML.
+// Common Searches: Aspose.Cells .NET export active worksheet to HTML with original formatting | How to keep merged cells when saving Excel as HTML using Aspose.Cells | C# HtmlSaveOptions preserve cell styles and gridlines in HTML output | Convert specific sheet from XLSX to HTML with Aspose.Cells preserving layout | Save Excel workbook as HTML file while retaining merged ranges Aspose.Cells
+// Tags: HtmlSaveOptions export active worksheet only | preserve cell formatting in HTML conversion Aspose.Cells | merged cell support in Aspose.Cells HTML output | C# export Excel to HTML with gridlines | Aspose.Cells HTMLSaveOptions styling retention
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using System.Drawing;
 
-// Demonstrates how to save the active worksheet of an Aspose.Cells workbook as a single HTML file while preserving cell formatting, merged ranges, grid lines, and embedding CSS. The example uses HtmlSaveOptions to control output.
-class ExportWorksheetToHtml
+// The example loads 'input.xlsx', configures HtmlSaveOptions to export only the active worksheet with grid lines, and saves the result as 'output.html'. Cell styles and merged cell structures are retained automatically by Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-        // Populate data and apply a style to a cell
-        sheet.Cells["A1"].PutValue("Header");
-        Style headerStyle = sheet.Cells["A1"].GetStyle();
-        headerStyle.Font.IsBold = true;
-        headerStyle.ForegroundColor = Color.LightBlue;
-        headerStyle.Pattern = BackgroundType.Solid;
-        sheet.Cells["A1"].SetStyle(headerStyle);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Merge cells A1:C1 to preserve merged cell structure in HTML
-        sheet.Cells.Merge(0, 0, 1, 3); // row 0, column 0, 1 row, 3 columns
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add additional data
-        sheet.Cells["A2"].PutValue("Item");
-        sheet.Cells["B2"].PutValue(123);
-        sheet.Cells["C2"].PutValue(DateTime.Now);
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                ExportActiveWorksheetOnly = true, // Export only the active sheet
+                ExportGridLines = true            // Keep grid lines for visual fidelity
+                // Merged cells and cell styles are exported by default
+            };
 
-        // Configure HTML save options to keep styles and merged cells
-        HtmlSaveOptions options = new HtmlSaveOptions();
-        options.ExportActiveWorksheetOnly = true;          // Export only the active sheet
-        options.ExportWorksheetProperties = true;         // Preserve worksheet properties
-        options.ExportWorksheetCSSSeparately = false;     // Embed CSS in the HTML file
-        options.SaveAsSingleFile = true;                  // Produce a single HTML file
-        options.ExportGridLines = true;                   // Optional: show grid lines
-
-        // Define output path (e.g., Desktop)
-        string outputPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-            "WorksheetExport.html");
-
-        // Save the workbook as HTML using the configured options
-        workbook.Save(outputPath, options);
-
-        Console.WriteLine("Worksheet exported to HTML: " + outputPath);
+            // Save the workbook as an HTML file with the specified options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

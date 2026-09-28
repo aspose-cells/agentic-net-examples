@@ -1,43 +1,61 @@
-// Title: Reformat Excel Dates to ISO 8601 with Aspose.Cells .NET Regex Replace
-// Description: Demonstrates how to use Aspose.Cells for .NET to locate date strings in MM/dd/yyyy or MM-dd-yyyy format across an entire workbook and replace them with ISO 8601 (yyyy‑MM‑dd) using ReplaceOptions with RegexKey enabled.
-// Keywords: Aspose.Cells | .NET | C# | regex date conversion | ISO 8601 Excel | search and replace workbook | ReplaceOptions | regular expression Excel | date format standardization | Excel automation
-// Common Searches: Aspose.Cells replace date format with regex | C# convert MM/dd/yyyy to ISO 8601 in Excel | How to use ReplaceOptions RegexKey in Aspose.Cells | Search and replace dates in all worksheets .NET | Excel date reformatting programmatically
-// Developer Intent: Automatically transform every textual date in a workbook to ISO 8601 format using a single regex replace operation.
-// Use Cases: Standardize dates embedded in report text before distribution | Enable correct chronological sorting and filtering in generated Excel files | Apply a global text transformation without iterating each cell manually | Prepare data for systems that require ISO‑8601 timestamps
-// AI Prompts: Write C# code with Aspose.Cells that finds dates like MM/dd/yyyy or MM-dd-yyyy in any cell and rewrites them as yyyy‑MM‑dd using ReplaceOptions.RegexKey. | Explain step‑by‑step how to configure ReplaceOptions for regex replacement and verify the changes in the saved workbook. | Provide a concise guide to apply a regex‑based date conversion to every worksheet in an existing Excel workbook using Aspose.Cells for .NET.
+// Title: Reformat MM/dd/yyyy date strings to ISO 8601 (yyyy-MM-dd) across all worksheets in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Scan every string cell in a workbook and replace dates matching MM/dd/yyyy with yyyy-MM-dd using Aspose.Cells C#. | Apply a regular expression to convert US‑style dates to ISO 8601 format while iterating through all worksheets in an Excel file. | Update an Excel workbook by bulk‑editing cell values with a regex date transformation and save the result with Aspose.Cells.
+// Common Searches: C# Aspose.Cells replace US date format with ISO 8601 in all sheets | how to use regex to change mm/dd/yyyy to yyyy-mm-dd in an Excel workbook with Aspose | iterate through cells in Aspose.Cells and reformat date strings | bulk update string cells containing dates in .xlsx using Aspose.Cells and C# | convert date strings to ISO 8601 while saving workbook with Aspose.Cells
+// Tags: regex date conversion Aspose.Cells C# | bulk cell string replacement Excel .xlsx | reformat US date strings to ISO 8601 Aspose | iterate worksheets update cell values Aspose.Cells | save modified workbook Aspose.Cells .NET
 
 using System;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// Demonstrates how to use Aspose.Cells for .NET to locate date strings in MM/dd/yyyy or MM-dd-yyyy format across an entire workbook and replace them with ISO 8601 (yyyy‑MM‑dd) using ReplaceOptions with RegexKey enabled.
+// The example loads an Excel workbook, iterates through every worksheet and cell, identifies string cells that match the MM/dd/yyyy pattern, rewrites each matched date to ISO 8601 (yyyy‑MM‑dd) using a regular expression, updates the cell only when a change occurs, and saves the transformed workbook.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        // Load the existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Sample cells containing dates in different textual formats
-        sheet.Cells["A1"].PutValue("Report date: 12/31/2022");
-        sheet.Cells["A2"].PutValue("Event on 01-15-2023");
-        sheet.Cells["A3"].PutValue("No date here");
+        // Define the regex pattern for dates (e.g., MM/dd/yyyy)
+        Regex datePattern = new Regex(@"\b(\d{2})/(\d{2})/(\d{4})\b");
 
-        // Regex pattern to match dates like MM/dd/yyyy or MM-dd-yyyy
-        string pattern = @"\b(\d{2})[/-](\d{2})[/-](\d{4})\b";
-        // Replacement string to convert to ISO 8601 (yyyy-MM-dd)
-        string replacement = "$3-$1-$2";
-
-        // Set replace options to treat the pattern as a regular expression
-        ReplaceOptions options = new ReplaceOptions
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            RegexKey = true
-        };
+            Cells cells = sheet.Cells;
 
-        // Perform the replacement across the entire workbook
-        workbook.Replace(pattern, replacement, options);
+            // Determine the used range to limit iteration
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
 
-        // Save the modified workbook
-        workbook.Save("ReformattedDates.xlsx");
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
+                {
+                    Cell cell = cells[row, col];
+
+                    // Process only string values (skip empty or non‑string cells)
+                    if (cell.Type == CellValueType.IsString)
+                    {
+                        string original = cell.StringValue;
+
+                        // Replace matched dates with ISO 8601 format (yyyy-MM-dd)
+                        string replaced = datePattern.Replace(original, m =>
+                        {
+                            // m.Groups: 1 = month, 2 = day, 3 = year
+                            return $"{m.Groups[3].Value}-{m.Groups[1].Value}-{m.Groups[2].Value}";
+                        });
+
+                        // Update the cell only if a replacement occurred
+                        if (!original.Equals(replaced))
+                        {
+                            cell.PutValue(replaced);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

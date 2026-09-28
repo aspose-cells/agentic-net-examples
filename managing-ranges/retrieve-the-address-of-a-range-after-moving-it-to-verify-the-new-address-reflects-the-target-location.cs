@@ -1,54 +1,44 @@
-// Title: Get Updated Range Address After MoveTo with Aspose.Cells for .NET
-// Description: Creates a workbook, defines a range (A1:B2), moves it one row down using Range.MoveTo, and reads the new Address property to verify the new location, with optional saving of the file.
-// Keywords: Aspose.Cells | C# range MoveTo | range address after move | Range.MoveTo example | Aspose.Cells Get Address | Excel range relocation .NET | Aspose.Cells Address property | C# Aspose.Cells range manipulation
-// Common Searches: Aspose.Cells get range address after moving | C# MoveTo range new address | Aspose.Cells Range.MoveTo returns new location | retrieve updated range address Aspose.Cells | range.Address after MoveTo .NET
-// Developer Intent: Obtain the new address of a cell range after it has been moved with Aspose.Cells.
-// Use Cases: Validate that a MoveTo operation repositioned data by comparing original and new range addresses. | Use the updated Address value to build formulas or references that depend on the moved range. | Log range addresses during automated workbook transformations for debugging and audit trails.
-// AI Prompts: Write C# code that moves a range with Aspose.Cells and prints the updated range address. | Explain how the Range.Address property reflects the new location after calling MoveTo. | Show how to compare original and new range addresses to confirm a successful MoveTo operation.
+// Title: Move a cell range to a new location and read its updated RefersTo address using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells Range.MoveTo to relocate the range A1:B2 to C3 and then output the Range.RefersTo string in C#. | After moving a range with Range.MoveTo, retrieve the RefersTo property to confirm the new address in a .NET workbook.
+// Common Searches: Aspose.Cells C# get address of a range after moving it | How to retrieve new range reference after Range.MoveTo in .NET | C# Aspose.Cells move range to another cell and verify RefersTo | Updated range address after relocating cells with Aspose.Cells
+// Tags: Range.MoveTo method Aspose.Cells | RefersTo property after moving range | relocating cell range .NET | updated range address C# Aspose.Cells | move range and verify address
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsRangeMoveDemo
+// // Demonstrates creating a workbook, filling A1:B2, moving that range to C3 with Range.MoveTo, and reading the RefersTo property to display the range's new address.
+class Program
 {
-    // Creates a workbook, defines a range (A1:B2), moves it one row down using Range.MoveTo, and reads the new Address property to verify the new location, with optional saving of the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Create a sample range (A1:B2) and put some data
-                Aspose.Cells.Range range = cells.CreateRange("A1", "B2");
-                range[0, 0].PutValue("A1");
-                range[0, 1].PutValue("B1");
-                range[1, 0].PutValue("A2");
-                range[1, 1].PutValue("B2");
+            // Fill some data in the source range A1:B2
+            sheet.Cells["A1"].PutValue(1);
+            sheet.Cells["A2"].PutValue(2);
+            sheet.Cells["B1"].PutValue(3);
+            sheet.Cells["B2"].PutValue(4);
 
-                // Display original address
-                Console.WriteLine("Original range address: " + range.Address);
+            // Define the source range (use fully qualified Aspose.Cells.Range to avoid ambiguity)
+            Aspose.Cells.Range sourceRange = sheet.Cells.CreateRange("A1:B2");
 
-                // Move the range down by one row (to A2:B3)
-                range.MoveTo(range.FirstRow + 1, range.FirstColumn);
+            // Move the range to target location C3 (row index 2, column index 2 – zero‑based)
+            sourceRange.MoveTo(2, 2);
 
-                // Retrieve and display the new address after moving
-                string newAddress = range.Address;
-                Console.WriteLine("New range address after MoveTo: " + newAddress);
+            // Retrieve the new address of the moved range
+            string newAddress = sourceRange.RefersTo;
 
-                // Save the workbook (optional, just to verify the move visually)
-                string outputPath = "MovedRangeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Output the new address
+            Console.WriteLine("New address of the moved range: " + newAddress);
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

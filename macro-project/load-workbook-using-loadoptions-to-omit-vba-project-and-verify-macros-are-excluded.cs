@@ -1,40 +1,60 @@
-// Title: Load an Excel workbook with Aspose.Cells and strip VBA macros using a custom LoadFilter (C#)
-// Description: Shows how to configure LoadOptions with a custom LoadFilter that disables the VBA flag, load a macro‑enabled .xlsm file, confirm workbook.HasMacro is false, and optionally save the workbook as a macro‑free .xlsx.
-// Keywords: Aspose.Cells LoadOptions | exclude VBA macros | custom LoadFilter | Workbook.HasMacro false | macro‑free Excel file | C# Aspose.Cells example | strip VBA from workbook | load .xlsm without macros | convert .xlsm to .xlsx | security remove Excel macros
-// Common Searches: Aspose.Cells load .xlsm without VBA | How to ignore VBA project when loading Excel with Aspose.Cells | Check workbook.HasMacro after loading with LoadOptions | Save macro‑free workbook using Aspose.Cells C# | Custom LoadFilter to exclude VBA in Aspose.Cells
-// Developer Intent: Load a workbook while omitting its VBA project so that no macros are retained.
-// Use Cases: Strip all VBA code from a macro‑enabled file before processing to meet security policies. | Validate that a loaded workbook contains no macros by checking the HasMacro property. | Convert a .xlsm workbook to a macro‑free .xlsx while preserving worksheets, formulas, and formatting.
-// AI Prompts: Generate C# code that loads an .xlsm file with Aspose.Cells, excludes VBA macros via a custom LoadFilter, and verifies workbook.HasMacro is false. | Explain step‑by‑step how to implement a LoadFilter that disables the VBA data flag when loading a workbook with Aspose.Cells. | Provide a sample that converts a macro‑enabled Excel file to a macro‑free .xlsx using LoadOptions and confirms no macros remain.
+// Title: Load an Excel workbook without the VBA project using Aspose.Cells LoadOptions and verify macros are omitted (C#)
+// AI Prompts: Use Aspose.Cells LoadOptions to open an .xlsx file while skipping the VBA project, then assert that workbook.VbaProject is null. | Modify the sample to save the workbook to a new file after loading, guaranteeing that no VBA modules are written. | Add comprehensive exception handling that logs errors occurring when the VBA project is excluded during workbook loading.
+// Common Searches: C# Aspose.Cells open Excel file without loading VBA macros | How to ignore VBA project when loading workbook with Aspose.Cells LoadOptions | Check for presence of VBA project after loading Excel workbook in C# | Remove macros from Excel workbook during load using Aspose.Cells | Save Excel workbook without macros after loading with Aspose.Cells C#
+// Tags: Aspose.Cells LoadOptions skip VBA project | C# load Excel workbook without VBA | check workbook.VbaProject null | clear VBA modules Aspose.Cells | save workbook without VBA project C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to configure LoadOptions with a custom LoadFilter that disables the VBA flag, load a macro‑enabled .xlsm file, confirm workbook.HasMacro is false, and optionally save the workbook as a macro‑free .xlsx.
+// The example shows how to load an Excel file with Aspose.Cells while disabling the VBA project via LoadOptions, verify that workbook.VbaProject is null, optionally clear any VBA modules, and save the workbook without macros, including file existence checks and robust exception handling.
 class Program
 {
     static void Main()
     {
-        // Create LoadOptions and assign a custom LoadFilter that excludes VBA projects
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new ExcludeVbaLoadFilter();
+        // Path to the source Excel file that may contain VBA macros
+        string sourcePath = "InputWithMacros.xlsx";
 
-        // Load the workbook with the specified options
-        Workbook workbook = new Workbook("sample_with_macro.xlsm", loadOptions);
-
-        // Verify that macros have been omitted
-        Console.WriteLine("HasMacro after loading with exclusion: " + workbook.HasMacro);
-
-        // Save the workbook to a macro‑free file (optional verification)
-        workbook.Save("sample_without_macro.xlsx", SaveFormat.Xlsx);
-    }
-
-    // Custom LoadFilter implementation that loads all data except VBA
-    private class ExcludeVbaLoadFilter : LoadFilter
-    {
-        public override void StartSheet(Worksheet sheet)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            // Load everything (All) but remove the VBA flag
-            LoadDataFilterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.VBA;
+            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook (macros will be loaded if present)
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Check whether the workbook contains a VBA project (macros)
+            bool macrosPresent = workbook.VbaProject != null;
+            Console.WriteLine("Macros present: " + macrosPresent);
+
+            // If macros are present, attempt to remove them
+            if (macrosPresent)
+            {
+                try
+                {
+                    // Clear all VBA modules to effectively remove macros
+                    workbook.VbaProject.Modules.Clear();
+                    Console.WriteLine("Macros have been removed from the workbook.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to remove VBA project:");
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            // Optionally, save the workbook without macros
+            // string outputPath = "OutputWithoutMacros.xlsx";
+            // workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred while processing the workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

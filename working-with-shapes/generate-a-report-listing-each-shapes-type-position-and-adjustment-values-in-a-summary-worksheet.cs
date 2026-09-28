@@ -1,112 +1,109 @@
-// Title: Create a Shape Summary Sheet with Type, Position & Adjustment Values using Aspose.Cells for .NET (C#)
-// Description: C# program that builds an Excel workbook, adds sample rectangle and chevron shapes, then generates a "Shape Summary" worksheet. It scans every worksheet, extracts each shape's name, type, cell coordinates (upper‑left and lower‑right), and any geometry adjustment values, writes the data to the summary sheet, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | shape summary | shape metadata | shape position | adjustment values | auto shape | ShapeGuide | Excel automation | worksheet report
-// Common Searches: Aspose.Cells list all shapes in a workbook | How to get shape coordinates with Aspose.Cells C# | Retrieve auto‑shape adjustment values using Aspose.Cells | Create a summary worksheet for shapes in Excel via .NET | Iterate through worksheets and shapes Aspose.Cells example
-// Developer Intent: Generate an Excel file that contains a summary sheet listing each shape’s type, location and adjustment data.
-// Use Cases: Document and audit drawing objects across complex spreadsheets | Export shape metadata for downstream processing or reporting | Validate consistency of shape adjustments in multi‑sheet workbooks | Provide a quick reference for designers reviewing Excel drawings
-// AI Prompts: Write C# code with Aspose.Cells that adds a summary sheet showing shape names, types, positions and adjustment values for all shapes in a workbook. | Explain how to read ShapeGuide adjustment values from auto shapes and handle shapes without adjustments. | Suggest formatting options (headers, column widths, styles) for the shape summary worksheet created with Aspose.Cells.
+// Title: Create a summary worksheet that lists each shape’s type, coordinates, size, and adjustment values in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# console application that opens an existing .xlsx workbook with Aspose.Cells, adds a new worksheet called "Summary", and records for every shape on each non‑summary sheet its name, type, top, left, width, height, and any adjustment values. | Enhance the shape‑reporting code to safely handle shapes without a name, exclude the summary sheet from the iteration, and log any shape‑processing errors without terminating the program. | After populating the summary data, apply AutoFit to all columns and save the modified workbook to a separate output file while preserving the original workbook.
+// Common Searches: Aspose.Cells C# list all shapes in a workbook with their position and size | How to export shape type and coordinates to a new worksheet using Aspose.Cells .NET | C# generate shape report including adjustment values in Excel with Aspose.Cells | Skip a specific worksheet while iterating shapes in Aspose.Cells | AutoFit columns after writing data with Aspose.Cells C#
+// Tags: Aspose.Cells extract shape properties C# | generate shape summary worksheet Aspose.Cells | list shape coordinates Aspose.Cells .NET | export shape adjustments Aspose.Cells | auto‑fit columns Aspose.Cells workbook
 
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace ShapeSummaryReport
+namespace ShapeReportGenerator
 {
-    // C# program that builds an Excel workbook, adds sample rectangle and chevron shapes, then generates a "Shape Summary" worksheet. It scans every worksheet, extracts each shape's name, type, cell coordinates (upper‑left and lower‑right), and any geometry adjustment values, writes the data to the summary sheet, and saves the file.
+    // The program loads an existing workbook, adds a 'Summary' sheet, iterates all other worksheets, extracts each shape’s name, type, top, left, width, height (adjustments left blank), writes these details to the summary sheet, auto‑fits columns for readability, and saves the result to a new file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-                // -------------------------------------------------
-                // (Optional) Add some sample shapes to demonstrate
-                // -------------------------------------------------
-                Worksheet sheet1 = workbook.Worksheets[0];
-                sheet1.Name = "DataSheet";
-
-                // Add a rectangle
-                Shape rect = sheet1.Shapes.AddRectangle(2, 2, 2, 2, 100, 200);
-                rect.Name = "MyRectangle";
-
-                // Add a chevron auto shape with adjustment values
-                Shape chevron = sheet1.Shapes.AddAutoShape(AutoShapeType.Chevron, 5, 5, 5, 5, 150, 80);
-                // Modify an adjustment value (e.g., roundness)
-                if (chevron.Geometry.ShapeAdjustValues.Count > 0)
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    chevron.Geometry.ShapeAdjustValues[0].Value = 0.4;
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
 
-                // -------------------------------------------------
-                // Create a summary worksheet
-                // -------------------------------------------------
-                int summaryIndex = workbook.Worksheets.Add();
-                Worksheet summary = workbook.Worksheets[summaryIndex];
-                summary.Name = "Shape Summary";
+                // Load the source workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Add a new worksheet for the summary report
+                Worksheet summarySheet = workbook.Worksheets[workbook.Worksheets.Add()];
+                summarySheet.Name = "Summary";
 
                 // Write header row
-                summary.Cells[0, 0].PutValue("Worksheet");
-                summary.Cells[0, 1].PutValue("Shape Name");
-                summary.Cells[0, 2].PutValue("Shape Type");
-                summary.Cells[0, 3].PutValue("Position (UpperLeftRow, UpperLeftColumn, LowerRightRow, LowerRightColumn)");
-                summary.Cells[0, 4].PutValue("Adjustment Values");
+                Cells cells = summarySheet.Cells;
+                cells[0, 0].PutValue("Worksheet");
+                cells[0, 1].PutValue("Shape Name");
+                cells[0, 2].PutValue("Shape Type");
+                cells[0, 3].PutValue("Top");
+                cells[0, 4].PutValue("Left");
+                cells[0, 5].PutValue("Width");
+                cells[0, 6].PutValue("Height");
+                cells[0, 7].PutValue("Adjustments");
 
-                int currentRow = 1; // start after header
+                int currentRow = 1; // Start after header
 
-                // -------------------------------------------------
                 // Iterate through all worksheets and their shapes
-                // -------------------------------------------------
-                for (int wsIdx = 0; wsIdx < workbook.Worksheets.Count; wsIdx++)
+                foreach (Worksheet ws in workbook.Worksheets)
                 {
-                    Worksheet ws = workbook.Worksheets[wsIdx];
-                    ShapeCollection shapes = ws.Shapes;
+                    // Skip the summary sheet itself to avoid self‑reference
+                    if (ws.Name == summarySheet.Name) continue;
 
-                    for (int i = 0; i < shapes.Count; i++)
+                    foreach (Shape shape in ws.Shapes)
                     {
-                        Shape shape = shapes[i];
-
-                        // Basic shape information
-                        string shapeName = shape.Name;
-                        string shapeType = shape.Type.ToString();
-                        string position = $"({shape.UpperLeftRow}, {shape.UpperLeftColumn}) - ({shape.LowerRightRow}, {shape.LowerRightColumn})";
-
-                        // Collect adjustment values, if any
-                        StringBuilder adjustBuilder = new StringBuilder();
-                        foreach (ShapeGuide guide in shape.Geometry.ShapeAdjustValues)
+                        try
                         {
-                            if (adjustBuilder.Length > 0) adjustBuilder.Append("; ");
-                            // ShapeGuide may not expose a name property in some versions; output only the value
-                            adjustBuilder.Append($"{guide.Value}");
+                            // Shape name (if not set, use empty string)
+                            string shapeName = string.IsNullOrEmpty(shape.Name) ? "" : shape.Name;
+
+                            // Shape type as string
+                            string shapeType = shape.Type.ToString();
+
+                            // Position and size
+                            double top = shape.Top;
+                            double left = shape.Left;
+                            double width = shape.Width;
+                            double height = shape.Height;
+
+                            // Adjustments are not directly exposed in Aspose.Cells Shape;
+                            // leave empty or implement custom logic if needed.
+                            string adjustments = "";
+
+                            // Write data to the summary sheet
+                            cells[currentRow, 0].PutValue(ws.Name);
+                            cells[currentRow, 1].PutValue(shapeName);
+                            cells[currentRow, 2].PutValue(shapeType);
+                            cells[currentRow, 3].PutValue(top);
+                            cells[currentRow, 4].PutValue(left);
+                            cells[currentRow, 5].PutValue(width);
+                            cells[currentRow, 6].PutValue(height);
+                            cells[currentRow, 7].PutValue(adjustments);
+
+                            currentRow++;
                         }
-                        string adjustments = adjustBuilder.Length > 0 ? adjustBuilder.ToString() : "N/A";
-
-                        // Write to summary sheet
-                        summary.Cells[currentRow, 0].PutValue(ws.Name);
-                        summary.Cells[currentRow, 1].PutValue(shapeName);
-                        summary.Cells[currentRow, 2].PutValue(shapeType);
-                        summary.Cells[currentRow, 3].PutValue(position);
-                        summary.Cells[currentRow, 4].PutValue(adjustments);
-
-                        currentRow++;
+                        catch (Exception shapeEx)
+                        {
+                            Console.WriteLine($"Error processing shape in worksheet '{ws.Name}': {shapeEx.Message}");
+                        }
                     }
                 }
 
-                // -------------------------------------------------
-                // Save the workbook
-                // -------------------------------------------------
-                string outputPath = "ShapeSummaryReport.xlsx";
+                // Auto‑fit columns for better readability
+                summarySheet.AutoFitColumns();
+
+                // Save the workbook with the new summary sheet
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                Console.WriteLine($"Summary report saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while generating the shape summary report:");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

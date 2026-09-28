@@ -1,59 +1,73 @@
-// Title: Add a Row to an Aspose.Cells ListObject and Auto‑Recalculate Column Formula (C#)
-// Description: Demonstrates how to create a workbook with a ListObject (table), assign a formula to the Total column, insert a new data row, trigger CalculateFormula, and verify that the formula updates automatically before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | ListObject | Insert row | Table formula | CalculateFormula | auto recalculate | sales table example | programmatic Excel
-// Common Searches: Aspose.Cells add row to ListObject C# | how to keep table formulas after inserting rows Aspose.Cells | auto recalculate column formula in Aspose.Cells table | C# insert row into Excel table using Aspose.Cells | Aspose.Cells CalculateFormula after adding rows
-// Developer Intent: Insert a new data row into a ListObject and have the existing column formula compute automatically.
-// Use Cases: Appending daily sales records while the Total column updates without manual edits. | Expanding a financial ledger programmatically and ensuring derived fields (tax, discount) recalculate. | Generating dynamic reports where rows are added in code and all summary formulas refresh instantly.
-// AI Prompts: Write C# code that adds a row to an Aspose.Cells ListObject and automatically applies the existing Total column formula. | Show how to call workbook.CalculateFormula after inserting rows so that new and existing formulas are evaluated. | Provide an example that verifies the calculated value of a formula in a newly inserted row of an Aspose.Cells table.
+// Title: Insert a new row into an Excel ListObject and automatically recalculate its formula column using Aspose.Cells for .NET
+// AI Prompts: Add a data row to the 'SalesTable' ListObject, set Product, Quantity, and UnitPrice values, then invoke Workbook.CalculateFormula so the Total column is computed for the new entry. | Programmatically insert a row after the last record of an Excel table, let the table expand automatically, and fetch the calculated result of the formula column with Aspose.Cells in C#.
+// Common Searches: C# Aspose.Cells add row to ListObject and keep calculated columns updated | How to expand an Excel table and recalculate formulas after inserting a row with Aspose.Cells | Retrieve formula result for newly inserted row in Excel table using Aspose.Cells .NET | Insert new record into SalesTable and get Total column value programmatically
+// Tags: insert row ListObject Aspose.Cells | auto expand Excel table C# | recalculate formulas workbook.CalculateFormula | retrieve calculated column value Aspose.Cells | populate SalesTable new record
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// Demonstrates how to create a workbook with a ListObject (table), assign a formula to the Total column, insert a new data row, trigger CalculateFormula, and verify that the formula updates automatically before saving the file.
+// The example loads an existing workbook, locates the ListObject named 'SalesTable', inserts a new data row after the current rows, assigns values for Product, Quantity, and UnitPrice, triggers Workbook.CalculateFormula to compute the Total column for the new row, prints the calculated result, and saves the updated file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+        try
+        {
+            const string inputPath = "SalesData.xlsx";
+            const string outputPath = "SalesData_Updated.xlsx";
 
-        // Define table headers
-        cells["A1"].PutValue("ID");
-        cells["B1"].PutValue("Amount");
-        cells["C1"].PutValue("Total");
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add initial data rows
-        cells["A2"].PutValue(1);
-        cells["B2"].PutValue(100);
-        cells["A3"].PutValue(2);
-        cells["B3"].PutValue(150);
+            // Load the existing workbook that contains the SalesTable
+            Workbook workbook = new Workbook(inputPath);
 
-        // Create a ListObject (table) that spans A1:C3
-        int tableIdx = sheet.ListObjects.Add("A1", "C3", true);
-        ListObject salesTable = sheet.ListObjects[tableIdx];
+            // Access the first worksheet (assumed to hold the table)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the formula for the Total column of existing rows
-        // Row offset 1 = first data row (row 2 in the sheet)
-        salesTable.PutCellFormula(1, 2, "=B2*2");
-        // Row offset 2 = second data row (row 3 in the sheet)
-        salesTable.PutCellFormula(2, 2, "=B3*2");
+            // Retrieve the ListObject (table) named "SalesTable"
+            ListObject salesTable = sheet.ListObjects["SalesTable"];
+            if (salesTable == null)
+            {
+                Console.WriteLine("Table 'SalesTable' not found in the worksheet.");
+                return;
+            }
 
-        // Insert a new row into the table using PutCellValue / PutCellFormula
-        // Row offset 3 = third data row (row 4 in the sheet)
-        salesTable.PutCellValue(3, 0, 3);          // ID
-        salesTable.PutCellValue(3, 1, 250);        // Amount
-        salesTable.PutCellFormula(3, 2, "=B4*2"); // Total (formula references the new Amount cell)
+            // Determine the row index where the new row will be inserted (after the last data row)
+            int insertRowIndex = salesTable.DataRange.FirstRow + salesTable.DataRange.RowCount;
 
-        // Recalculate all formulas so the Total column updates automatically
-        workbook.CalculateFormula();
+            // Insert a single new row into the worksheet at the calculated position.
+            // The table will automatically expand to include the new row.
+            sheet.Cells.InsertRows(insertRowIndex, 1);
 
-        // Confirm the formula result for the newly added row
-        Console.WriteLine("New row Total (C4): " + sheet.Cells["C4"].Value); // Expected: 500
+            // Set values for the newly inserted row (except the formula column)
+            // Example column order: Product (0), Quantity (1), UnitPrice (2), Total (3 - formula)
+            int firstDataCol = salesTable.DataRange.FirstColumn;
+            sheet.Cells[insertRowIndex, firstDataCol + 0].PutValue("NewProduct");
+            sheet.Cells[insertRowIndex, firstDataCol + 1].PutValue(10);          // Quantity
+            sheet.Cells[insertRowIndex, firstDataCol + 2].PutValue(15.75);      // UnitPrice
 
-        // Save the workbook
-        workbook.Save("SalesTable.xlsx");
+            // Recalculate all formulas so that the formula column (e.g., Total) updates automatically
+            workbook.CalculateFormula();
+
+            // Verify that the formula column has been calculated for the new row
+            int formulaColIndex = firstDataCol + salesTable.DataRange.ColumnCount - 1; // last column in the table
+            object calculatedValue = sheet.Cells[insertRowIndex, formulaColIndex].Value;
+            Console.WriteLine("Calculated formula result for the new row: " + calculatedValue);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved as '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

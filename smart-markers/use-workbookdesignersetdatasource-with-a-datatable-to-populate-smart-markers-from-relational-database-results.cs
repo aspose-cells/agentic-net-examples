@@ -1,55 +1,54 @@
-// Title: C# – Populate Excel Smart Markers from a DataTable with WorkbookDesigner.SetDataSource (Aspose.Cells)
-// Description: Demonstrates how to create an Excel template, add smart markers like &=Products.ProductID, bind a DataTable named "Products" using WorkbookDesigner.SetDataSource, process the markers, and save the populated workbook as SmartMarkers_Output.xlsx.
-// Keywords: Aspose.Cells | WorkbookDesigner | SetDataSource | DataTable | smart markers | C# Excel export | Excel template binding | relational data to Excel | Aspose.Cells example
-// Common Searches: Aspose.Cells bind DataTable to smart markers | WorkbookDesigner SetDataSource C# example | populate Excel smart markers from database results | smart markers with DataTable Aspose | generate Excel report from relational data Aspose.Cells
-// Developer Intent: Bind a DataTable to smart markers in an Excel template and generate a populated workbook using Aspose.Cells.
-// Use Cases: Create a product catalog by mapping query results to smart markers. | Export invoice line items from a DataTable into a formatted spreadsheet. | Generate any relational query result as a styled Excel report with minimal code.
-// AI Prompts: Provide C# code that uses WorkbookDesigner.SetDataSource with multiple related DataTables and processes smart markers. | Explain how the column names in a DataTable must match the &=TableName.ColumnName syntax for Aspose.Cells smart markers. | List troubleshooting steps when data does not appear after calling SetDataSource and Process.
+// Title: How to populate Excel smart markers from a DataTable using WorkbookDesigner.SetDataSource in Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx template, creates a DataTable with employee records, binds it to the workbook via WorkbookDesigner.SetDataSource, processes the smart markers, and saves the populated file. | Show the step‑by‑step usage of Aspose.Cells WorkbookDesigner to map DataTable columns to smart marker fields and generate a filled Excel workbook in a .NET application.
+// Common Searches: aspnet example using WorkbookDesigner.SetDataSource to fill smart markers from a DataTable | c# populate Excel template smart markers with relational data using Aspose.Cells | how to bind DataTable to smart markers in an Excel file with Aspose.Cells | process smart markers in .xlsx template after setting DataSource in C# | Aspose.Cells tutorial for filling smart markers from database query results
+// Tags: WorkbookDesigner data binding DataTable | populate smart markers Aspose.Cells | C# fill Excel template from relational data | process smart markers .NET | Aspose.Cells bind DataTable to smart markers
 
 using System;
 using System.Data;
+using System.IO;
 using Aspose.Cells;
 
-namespace SmartMarkerDemo
+// The example loads an Excel template that contains smart markers, creates a DataTable with sample employee data, binds the table to the workbook using WorkbookDesigner.SetDataSource, processes the smart markers to replace them with actual values, and saves the resulting workbook as a new file.
+class SmartMarkerExample
 {
-    // Demonstrates how to create an Excel template, add smart markers like &=Products.ProductID, bind a DataTable named "Products" using WorkbookDesigner.SetDataSource, process the markers, and save the populated workbook as SmartMarkers_Output.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // 1. Create a new workbook that will serve as the template.
-            Workbook workbook = new Workbook();
+            const string templatePath = "TemplateWithSmartMarkers.xlsx";
+            const string outputPath = "OutputPopulated.xlsx";
 
-            // 2. Add smart markers to the first worksheet.
-            //    The markers follow the pattern &=TableName.ColumnName.
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("&=Products.ProductID");   // Header marker (optional)
-            sheet.Cells["B1"].PutValue("&=Products.ProductName"); // Header marker (optional)
-            sheet.Cells["C1"].PutValue("&=Products.Price");       // Header marker (optional)
+            // Verify that the template file exists
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Template file not found: {templatePath}");
 
-            // 3. Prepare a DataTable that simulates data retrieved from a relational database.
-            DataTable productTable = new DataTable("Products");
-            productTable.Columns.Add("ProductID", typeof(int));
-            productTable.Columns.Add("ProductName", typeof(string));
-            productTable.Columns.Add("Price", typeof(decimal));
+            // Load the Excel template containing smart markers
+            Workbook workbook = new Workbook(templatePath);
 
-            // Sample rows – in a real scenario these would come from a DB query.
-            productTable.Rows.Add(101, "Laptop", 1200.50m);
-            productTable.Rows.Add(102, "Smartphone", 799.99m);
-            productTable.Rows.Add(103, "Tablet", 450.00m);
+            // Create a sample DataTable to simulate database data
+            DataTable dt = new DataTable();
+            dt.Columns.Add("EmployeeID", typeof(int));
+            dt.Columns.Add("FirstName", typeof(string));
+            dt.Columns.Add("LastName", typeof(string));
+            dt.Columns.Add("Salary", typeof(decimal));
 
-            // 4. Create a WorkbookDesigner and bind the workbook.
+            // Add sample rows
+            dt.Rows.Add(1, "John", "Doe", 55000m);
+            dt.Rows.Add(2, "Jane", "Smith", 62000m);
+            dt.Rows.Add(3, "Bob", "Johnson", 48000m);
+
+            // Bind the DataTable to the smart markers and process them
             WorkbookDesigner designer = new WorkbookDesigner(workbook);
-
-            // 5. Set the DataTable as the data source for the smart markers.
-            //    The table name ("Products") matches the marker prefix used above.
-            designer.SetDataSource(productTable);
-
-            // 6. Process the smart markers – this populates the worksheet with the data.
+            designer.SetDataSource(dt);
             designer.Process();
 
-            // 7. Save the resulting workbook.
-            workbook.Save("SmartMarkers_Output.xlsx");
+            // Save the populated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

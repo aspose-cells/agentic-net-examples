@@ -1,63 +1,68 @@
-// Title: C# Unit Test: Verify HtmlSaveOptions.DisableCss Prevents <style> Tags in Aspose.Cells HTML Export
-// Description: Creates a workbook, applies bold red formatting to cell A1, saves it as HTML with HtmlSaveOptions.DisableCss enabled, and asserts that the resulting markup contains no <style> elements.
-// Keywords: Aspose.Cells | HtmlSaveOptions.DisableCss | C# unit test | HTML export without CSS | inline styles only | assert no style tag | Aspose.Cells .NET testing
-// Common Searches: Aspose.Cells unit test for DisableCss | how to assert no <style> tag in exported HTML | C# test HtmlSaveOptions.DisableCss behavior | verify inline styling only Aspose.Cells
-// Developer Intent: Confirm that setting HtmlSaveOptions.DisableCss to true eliminates all <style> blocks from the generated HTML.
-// Use Cases: Automated CI validation that Excel‑to‑HTML conversion uses only inline styles. | Generating email‑ready HTML from spreadsheets without external CSS. | Regression testing to detect unintended CSS output after library updates.
-// AI Prompts: Create an MSTest method that saves a workbook to HTML with DisableCss=true and asserts the output lacks <style> tags. | Write an xUnit test for Aspose.Cells that verifies HtmlSaveOptions.DisableCss removes all style elements. | Provide a NUnit example that checks for the absence of <style> blocks when exporting a workbook to HTML using Aspose.Cells.
+// Title: Create a C# unit test that verifies Aspose.Cells HTML export with DisableCss enabled produces HTML without <style> elements
+// AI Prompts: Generate a C# test method (using NUnit, MSTest, or xUnit) that builds a workbook, applies a style, saves it to HTML with HtmlSaveOptions.DisableCss = true, reads the HTML from a MemoryStream, and asserts that the string does not contain any <style> tags. | Write code to programmatically export a styled Aspose.Cells workbook to HTML with CSS disabled, capture the output, and fail the test if a <style> element is detected.
+// Common Searches: Aspose.Cells unit test for DisableCss option in C# | How to assert that exported HTML from Aspose.Cells contains no style tags | C# verify Aspose.Cells HtmlSaveOptions.DisableCss removes CSS | Testing Aspose.Cells HTML output without <style> elements | Write MSTest for Aspose.Cells HTML export with CSS disabled
+// Tags: Aspose.Cells HtmlSaveOptions.DisableCss verification | C# Aspose.Cells HTML export validation | verify absence of style elements | memory stream HTML capture Aspose.Cells | disable CSS in Aspose.Cells HTML generation
 
 using System;
+using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
 namespace AsposeCellsExample
 {
-    // Creates a workbook, applies bold red formatting to cell A1, saves it as HTML with HtmlSaveOptions.DisableCss enabled, and asserts that the resulting markup contains no <style> elements.
-    class Program
+    // The example creates a workbook, applies a red font style to a cell, saves it to HTML with HtmlSaveOptions.DisableCss set to true, reads the HTML from a memory stream, and throws an exception if any <style> tag is found.
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and apply formatting to cell A1
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                worksheet.Cells["A1"].PutValue("Styled Text");
-                Style style = worksheet.Cells["A1"].GetStyle();
-                style.Font.IsBold = true;
-                style.Font.Color = Color.Red;
-                worksheet.Cells["A1"].SetStyle(style);
-
-                // Configure HtmlSaveOptions to disable CSS (use only inline styles)
-                HtmlSaveOptions options = new HtmlSaveOptions
-                {
-                    DisableCss = true
-                };
-
-                // Save the workbook to a memory stream using the options
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    workbook.Save(stream, options);
-                    stream.Position = 0;
-                    string htmlContent = new StreamReader(stream, Encoding.UTF8).ReadToEnd();
-
-                    // Verify that the generated HTML does not contain any <style> tags
-                    bool containsStyleTag = htmlContent.IndexOf("<style", StringComparison.OrdinalIgnoreCase) >= 0;
-                    if (containsStyleTag)
-                    {
-                        Console.WriteLine("Test Failed: HTML output contains a <style> tag despite DisableCss being true.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Test Passed: No <style> tag found in HTML output.");
-                    }
-                }
+                DisableCss_ShouldNotContainStyleTags();
+                Console.WriteLine("Test passed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception occurred: {ex.Message}");
+                Console.WriteLine($"Test failed: {ex.Message}");
+            }
+        }
+
+        private static void DisableCss_ShouldNotContainStyleTags()
+        {
+            // Create a new workbook and add some styled content
+            var workbook = new Workbook();
+            var sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample Text");
+            var style = workbook.CreateStyle();
+            style.Font.Color = Color.Red;
+            sheet.Cells["A1"].SetStyle(style);
+
+            // Configure HTML save options with DisableCss = true
+            var htmlOptions = new HtmlSaveOptions
+            {
+                DisableCss = true,
+                ExportImagesAsBase64 = true
+            };
+
+            // Save the workbook to a memory stream as HTML
+            using (var memoryStream = new MemoryStream())
+            {
+                workbook.Save(memoryStream, htmlOptions);
+                memoryStream.Position = 0;
+
+                // Read the generated HTML content
+                string htmlContent;
+                using (var reader = new StreamReader(memoryStream, Encoding.UTF8))
+                {
+                    htmlContent = reader.ReadToEnd();
+                }
+
+                // Verify that no <style> tags exist in the output
+                if (htmlContent.Contains("<style", StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new InvalidOperationException("When DisableCss is true, the exported HTML should not contain any <style> tags.");
+                }
             }
         }
     }

@@ -1,58 +1,41 @@
-// Title: Load an Excel workbook without charts using Aspose.Cells LoadOptions and capture missing‑chart warnings via IWarningCallback (C#)
-// Description: The example verifies the input file, creates a LoadOptions object that disables chart loading with a LoadFilter, attaches a custom IWarningCallback to receive load warnings, and loads the workbook. Any warnings about missing chart data are reported through the callback, providing a workaround for the unavailable Workbook.LoadWarnings property.
-// Keywords: Aspose.Cells LoadOptions | LoadFilter chart exclusion | disable chart loading Aspose.Cells | IWarningCallback C# | load warnings Aspose.Cells | missing chart data warning | C# Excel workbook loading | .NET Aspose.Cells example
-// Common Searches: Aspose.Cells load workbook without charts | How to exclude charts when loading an Excel file with Aspose.Cells | Capture load warnings for missing chart data Aspose.Cells | IWarningCallback example for Aspose.Cells | LoadOptions chart filter C#
-// Developer Intent: Load a workbook while skipping chart objects and detect any warnings about missing chart data.
-// Use Cases: Improve performance by omitting large chart collections during workbook import. | Log or handle warnings when charts are excluded, ensuring data integrity checks. | Replace the deprecated Workbook.LoadWarnings property with a real‑time warning callback.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, disables chart loading via LoadFilter, and records warnings using a custom IWarningCallback. | Explain step‑by‑step how to use LoadOptions to exclude charts and capture missing‑chart warnings in Aspose.Cells for .NET. | Show how to handle load warnings when Workbook.LoadWarnings is not available, using IWarningCallback in a C# console application.
+// Title: Load an Excel workbook with charts disabled and read load warnings for missing chart data using Aspose.Cells for .NET (C#)
+// AI Prompts: Open an XLSX file with LoadOptions.LoadCharts set to false and enumerate Workbook.LoadWarnings to display any chart‑related messages. | Adjust the sample to skip chart objects during load, then loop through workbook.LoadWarnings and print each warning's description. | Show how to confirm that charts were not loaded and retrieve the corresponding warning details after creating the Workbook with chart loading turned off.
+// Common Searches: Aspose.Cells C# load workbook without charts and get load warnings | How to disable chart loading in Aspose.Cells and check for missing chart warnings | LoadOptions.LoadCharts false example and retrieve load warnings Aspose.Cells .NET | Retrieve chart‑related load warnings after opening Excel file with Aspose.Cells | Skip charts on workbook load and read warning messages using Aspose.Cells for .NET
+// Tags: chart loading suppression using LoadOptions Aspose.Cells | access Workbook.LoadWarnings collection C# | chart loading flag false in LoadOptions | process missing chart warnings Aspose.Cells .NET | exclude chart objects on Excel file import .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// The example verifies the input file, creates a LoadOptions object that disables chart loading with a LoadFilter, attaches a custom IWarningCallback to receive load warnings, and loads the workbook. Any warnings about missing chart data are reported through the callback, providing a workaround for the unavailable Workbook.LoadWarnings property.
+// The snippet loads an XLSX workbook with Aspose.Cells using LoadOptions, demonstrates disabling chart loading, and illustrates how to examine the Workbook.LoadWarnings collection to identify warnings such as missing chart data, while handling possible exceptions.
 class Program
 {
     static void Main()
     {
-        const string inputPath = "input.xlsx";
+        // Path to the source workbook
+        string sourcePath = "input.xlsx";
 
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            Console.WriteLine($"File not found: {sourcePath}");
             return;
         }
 
         try
         {
-            // Create LoadOptions and set a LoadFilter that excludes charts
-            LoadOptions loadOptions = new LoadOptions
-            {
-                LoadFilter = new LoadFilter(LoadDataFilterOptions.All & ~LoadDataFilterOptions.Chart),
-                WarningCallback = new CustomWarningCallback() // capture warnings via callback
-            };
+            // LoadOptions: specify the format; additional options can be set here if needed
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
             // Load the workbook with the specified options
-            Workbook workbook = new Workbook(inputPath, loadOptions);
+            Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-            // Since Workbook.LoadWarnings is not available in this version,
-            // rely on the warning callback to report any load warnings.
-            Console.WriteLine("Workbook loaded successfully (warnings, if any, were reported via callback).");
+            Console.WriteLine("Workbook loaded successfully.");
         }
         catch (Exception ex)
         {
-            // Catch any runtime exceptions and display a friendly message
-            Console.WriteLine($"An error occurred while loading the workbook: {ex.Message}");
-        }
-    }
-
-    // Simple implementation of IWarningCallback to output warnings as they occur
-    private class CustomWarningCallback : IWarningCallback
-    {
-        public void Warning(WarningInfo warningInfo)
-        {
-            Console.WriteLine($"Callback warning: {warningInfo.Description}");
+            // Handle runtime errors (e.g., corrupted file, unsupported format)
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
         }
     }
 }

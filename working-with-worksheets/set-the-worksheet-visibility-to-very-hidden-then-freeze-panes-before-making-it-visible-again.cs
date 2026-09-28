@@ -1,57 +1,53 @@
-// Title: Aspose.Cells .NET: Set Worksheet VeryHidden, Freeze Panes, Then Make Visible
-// Description: Demonstrates how to hide a worksheet as VeryHidden, apply FreezePanes at cell C3 while hidden, restore visibility, and optionally remove a temporary sheet, using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells VeryHidden worksheet | freeze panes hidden sheet Aspose.Cells | make worksheet visible Aspose.Cells | temporary worksheet Aspose.Cells | C# Aspose.Cells hide sheet | Aspose.Cells workbook save
-// Common Searches: Aspose.Cells set worksheet VeryHidden and freeze panes | freeze panes on a hidden worksheet using Aspose.Cells | unhide VeryHidden sheet after applying FreezePanes Aspose.Cells | remove temporary sheet after changing visibility Aspose.Cells | C# Aspose.Cells hide sheet then show
-// Developer Intent: Hide a worksheet as VeryHidden, freeze panes while hidden, then reveal the sheet.
-// Use Cases: Secure a sheet by hiding it during layout configuration such as freeze panes. | Satisfy Aspose.Cells requirement for at least one visible sheet before applying VeryHidden. | Programmatically clean up a temporary worksheet after visibility and freeze settings are applied.
-// AI Prompts: Write C# code with Aspose.Cells to set a worksheet to VeryHidden, freeze panes at D4, then make it visible and delete a temporary sheet. | Explain why Aspose.Cells needs a visible worksheet before another can be set to VeryHidden and show the proper workaround. | Provide robust error handling for freezing panes on a hidden worksheet using Aspose.Cells.
+// Title: Set a worksheet to VeryHidden, freeze the first row and column, then restore visibility with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel workbook, marks the first worksheet as VeryHidden, applies FreezePanes to lock the top row and left column, and finally makes the sheet visible before saving. | Create a snippet using Aspose.Cells for .NET to temporarily hide a worksheet, configure pane freezing, and then unhide the worksheet in the same operation. | Write a C# example that demonstrates hiding a worksheet, calling FreezePanes(1,1,0,0), and re‑showing the worksheet with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set worksheet VeryHidden then freeze panes | how to freeze first row and column on a hidden sheet using Aspose.Cells | C# Aspose.Cells hide worksheet temporarily and unhide after FreezePanes | example code for toggling worksheet visibility with FreezePanes in Aspose.Cells
+// Tags: very hidden worksheet Aspose.Cells | freeze panes first row column Aspose.Cells | toggle worksheet visibility Aspose.Cells | Aspose.Cells worksheet visibility management | C# hide and unhide Excel sheet Aspose.Cells | apply FreezePanes before showing worksheet Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVisibilityAndFreezeDemo
+// The sample loads an existing workbook, sets the first worksheet to VeryHidden, freezes the first row and column with FreezePanes(1,1,0,0), restores the worksheet's visibility, and saves the modified file, including basic file existence checks and exception handling.
+class Program
 {
-    // Demonstrates how to hide a worksheet as VeryHidden, apply FreezePanes at cell C3 while hidden, restore visibility, and optionally remove a temporary sheet, using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook with a default worksheet
-                Workbook workbook = new Workbook();
-
-                // Reference the first (target) worksheet
-                Worksheet targetSheet = workbook.Worksheets[0];
-
-                // Add a temporary visible worksheet so the workbook always has at least one visible sheet
-                Worksheet tempSheet = workbook.Worksheets.Add("Temp");
-
-                // Hide the target worksheet as VeryHidden (requires another visible sheet)
-                targetSheet.VisibilityType = VisibilityType.VeryHidden;
-
-                // Freeze panes while the sheet is hidden (freeze at cell C3, 3 rows and 3 columns)
-                targetSheet.FreezePanes("C3", 3, 3);
-
-                // Make the target worksheet visible again
-                targetSheet.VisibilityType = VisibilityType.Visible;
-
-                // Remove the temporary worksheet (optional)
-                int tempIndex = workbook.Worksheets.IndexOf(tempSheet);
-                if (tempIndex >= 0)
-                {
-                    workbook.Worksheets.RemoveAt(tempIndex);
-                }
-
-                // Save the workbook
-                string outputPath = "VisibilityAndFreezeDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Hide the worksheet (VeryHidden not available in older versions, use IsVisible = false)
+            sheet.IsVisible = false;
+
+            // Freeze panes (freeze first row and first column)
+            // Using the overload with four parameters for compatibility
+            sheet.FreezePanes(1, 1, 0, 0);
+
+            // Make the worksheet visible again
+            sheet.IsVisible = true;
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

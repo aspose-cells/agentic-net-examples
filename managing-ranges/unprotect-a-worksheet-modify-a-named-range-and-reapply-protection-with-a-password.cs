@@ -1,87 +1,74 @@
-// Title: Aspose.Cells for .NET – Unprotect Worksheet, Edit Named Range, and Re‑protect with a New Password
-// Description: Load or create an Excel file, unprotect the first sheet using the current password, retrieve the named range "MyRange", change its first cell, then protect the sheet again with a new password and save the workbook.
-// Keywords: Aspose.Cells unprotect worksheet | modify named range C# | protect worksheet with password .NET | update cell in named range programmatically | Excel sheet protection Aspose.Cells | C# Aspose.Cells workbook security
-// Common Searches: how to unprotect an Excel sheet with Aspose.Cells | change value in a named range after unprotecting sheet | re‑apply worksheet protection with a different password using Aspose.Cells | Aspose.Cells example edit protected named range | C# code to unprotect, modify, and protect Excel worksheet
-// Developer Intent: Remove sheet protection, update a cell in a named range, and apply new protection with a different password.
-// Use Cases: Automate data refresh in a specific named range of a secured workbook. | Implement password‑policy changes after programmatic edits to protected sheets. | Integrate Excel updates into a CI/CD pipeline without manual unprotecting.
-// AI Prompts: Write C# code using Aspose.Cells to unprotect a worksheet with a known password, modify the first cell of a named range, and protect the sheet again with a new password. | Show how to safely retrieve and edit a named range after unprotecting a sheet, then re‑apply protection in Aspose.Cells for .NET. | Provide an Aspose.Cells example that creates a workbook with a named range, protects it, and demonstrates the unprotect‑modify‑protect workflow.
+// Title: Unprotect an Excel worksheet, modify a named range, and re‑apply password protection with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to load an .xlsx file, call Unprotect on a worksheet, change the first cell of a named range, then protect the sheet with a password. | Show how to retrieve a named range by name, update its cell values, and re‑enable full worksheet protection with a custom password in Aspose.Cells. | Provide a step‑by‑step example that unprotects a protected sheet, edits a defined name, and saves the workbook while preserving protection settings.
+// Common Searches: Aspose.Cells C# unprotect worksheet, edit named range, and protect again | how to change a named range value in a protected Excel file using Aspose.Cells | C# code to remove worksheet protection, update MyRange, and set password with Aspose.Cells | example of worksheet.Protect with password after modifying named range in Aspose.Cells | unprotect and protect Excel sheet programmatically with Aspose.Cells .NET
+// Tags: worksheet unprotect Aspose.Cells C# | named range update Aspose.Cells | worksheet protect password Aspose.Cells | Aspose.Cells modify protected sheet | C# Aspose.Cells named range edit
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// // Loads 'input.xlsx', removes protection from the first worksheet, updates the first cell of the named range 'MyRange' to "Updated Value", reapplies full protection with password "MySecurePassword", and saves the result as 'output.xlsx' using Aspose.Cells for .NET.
+class Program
 {
-    // Load or create an Excel file, unprotect the first sheet using the current password, retrieve the named range "MyRange", change its first cell, then protect the sheet again with a new password and save the workbook.
-    public class UnprotectModifyProtectDemo
+    static void Main()
     {
-        // Entry point required for the console application
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             const string inputPath = "input.xlsx";
             const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists; if not, create a minimal workbook with a named range
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                var wb = new Workbook();
-                var ws = wb.Worksheets[0];
-                ws.Name = "Sheet1";
-
-                // Populate some data
-                ws.Cells["A1"].PutValue("Original Value");
-
-                // Create a named range "MyRange" covering A1
-                int index = wb.Worksheets.Names.Add("MyRange");
-                wb.Worksheets.Names[index].RefersTo = "Sheet1!$A$1";
-
-                // Protect the sheet with the old password for demonstration
-                ws.Protect(ProtectionType.All, "oldPassword", null);
-
-                wb.Save(inputPath);
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
 
             // Load the existing workbook
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
+            // Access the first worksheet (adjust index or name as needed)
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Unprotect the worksheet using the existing password
-            worksheet.Unprotect("oldPassword");
+            // -------------------------------------------------
+            // 1. Unprotect the worksheet (if it is protected)
+            // -------------------------------------------------
+            worksheet.Unprotect();
 
-            // Retrieve the named range "MyRange"
+            // -------------------------------------------------
+            // 2. Modify a named range
+            // -------------------------------------------------
+            // Retrieve the named range by its name (e.g., "MyRange")
             Name namedRange = workbook.Worksheets.Names["MyRange"];
             if (namedRange != null)
             {
-                // Get the actual range object (fully qualified to avoid ambiguity)
-                Aspose.Cells.Range range = namedRange.GetRange();
+                // Create a Range object that points to the cells referenced by the named range
+                Aspose.Cells.Range range = worksheet.Cells.CreateRange(namedRange.RefersTo);
 
-                // Modify the first cell of the range if it exists
-                if (range != null && range.RowCount > 0 && range.ColumnCount > 0)
-                {
-                    range[0, 0].PutValue("Modified Value");
-                }
+                // Example modification: set a new value in the first cell of the range
+                range[0, 0].PutValue("Updated Value");
+            }
+            else
+            {
+                Console.WriteLine("Named range 'MyRange' not found.");
             }
 
-            // Re‑apply protection with a new password
-            worksheet.Protect(ProtectionType.All, "newPassword", null);
+            // -------------------------------------------------
+            // 3. Re‑apply protection with a password
+            // -------------------------------------------------
+            // Protect the worksheet with all protection types and a password
+            worksheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
 
+            // -------------------------------------------------
             // Save the modified workbook
+            // -------------------------------------------------
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

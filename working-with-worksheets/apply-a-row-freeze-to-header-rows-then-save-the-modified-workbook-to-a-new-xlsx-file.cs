@@ -1,29 +1,48 @@
-// Title: Freeze Header Row and Save as New XLSX with Aspose.Cells for .NET (C#)
-// Description: Load an existing workbook, freeze the first row of the first worksheet using FreezePanes, and save the result to a new XLSX file.
-// Keywords: Aspose.Cells FreezePanes C# | freeze header row Excel .NET | save workbook new file Aspose | freeze first row Aspose.Cells | C# Excel freeze panes
-// Common Searches: Aspose.Cells freeze top row C# | how to freeze header row in Excel using Aspose | save workbook after FreezePanes Aspose.Cells | C# code to freeze first row and export XLSX | Aspose.Cells FreezePanes example
-// Developer Intent: Apply a row freeze to the header row of the first worksheet and write the modified workbook to a new XLSX file.
-// Use Cases: Create scroll‑friendly reports where column headings stay visible. | Prepare downloadable Excel exports for web apps with locked header rows. | Build reusable templates that automatically freeze the first row before distribution.
-// AI Prompts: Generate C# code to freeze the first two rows of a worksheet with Aspose.Cells. | Show how to freeze both the first row and first column, then save the workbook as XLSX. | Explain how to remove frozen panes from a workbook using Aspose.Cells for .NET.
+// Title: Freeze the header row of an existing XLSX workbook using Aspose.Cells for .NET and save it as a new file
+// AI Prompts: Write C# code with Aspose.Cells to freeze the first worksheet row and save the workbook to a different XLSX file. | Create a .NET program that loads an Excel file, applies FreezePanes to the top row, and writes the result to a new workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells C# freeze top row and save as new workbook | How to apply FreezePanes to header row in a .NET Excel file | C# program to freeze first row of an existing XLSX using Aspose.Cells
+// Tags: Aspose.Cells FreezePanes header row | C# freeze first row Excel workbook | save modified workbook as new XLSX Aspose.Cells | load existing XLSX apply row freeze .NET | worksheet FreezePanes example C#
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an existing workbook, freeze the first row of the first worksheet using FreezePanes, and save the result to a new XLSX file.
+// Loads input.xlsx, freezes the top row of the first worksheet with FreezePanes, and saves the updated workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-        // Freeze the first row (header) by splitting at cell A2
-        // This freezes 1 row and 0 columns
-        worksheet.FreezePanes("A2", 1, 0);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook to a new file
-        workbook.Save("output.xlsx");
+            // Get the first worksheet (or specify the desired sheet index/name)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Freeze the top row (header). FreezePanes(row, column, totalRows, totalColumns)
+            // row = 1 (rows above 1 are frozen), column = 0 (no columns frozen),
+            // totalRows = 1 (freeze one row), totalColumns = 0 (no columns frozen)
+            sheet.FreezePanes(1, 0, 1, 0);
+
+            // Save the modified workbook to a new XLSX file
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

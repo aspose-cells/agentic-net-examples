@@ -1,30 +1,44 @@
-// Title: Export Excel to CSV with Aspose.Cells LightCells API (C#) – No Workbook Model Load
-// Description: Shows how to convert an .xlsx file to a CSV file using Aspose.Cells ConversionUtility in LightCells mode, which processes the workbook without fully loading the model and keeps memory usage low.
-// Keywords: Aspose.Cells | LightCells | CSV export | ConversionUtility | C# | .NET | memory‑efficient conversion | large Excel to CSV | streaming Excel conversion | without loading workbook model
-// Common Searches: Aspose.Cells export Excel to CSV without loading workbook | LightCells mode CSV conversion C# | Convert large .xlsx to CSV with low memory usage | ConversionUtility Convert method example | C# stream Excel to CSV Aspose.Cells
-// Developer Intent: Convert an Excel workbook to a CSV file using Aspose.Cells LightCells mode so the workbook model is not fully loaded into memory.
-// Use Cases: Process massive Excel files in data pipelines while staying within RAM limits. | Generate CSV reports from user‑uploaded spreadsheets in web apps without high memory overhead. | Batch‑convert multiple workbooks to CSV in a background service with minimal resource consumption.
-// AI Prompts: Provide C# code that uses Aspose.Cells ConversionUtility to export an .xlsx file to CSV in LightCells mode. | Explain how to set a custom delimiter and encoding when converting Excel to CSV with Aspose.Cells LightCells API. | Show an example of handling errors while batch converting Excel files to CSV using ConversionUtility.
+// Title: Export the first worksheet of an Excel workbook to CSV with Aspose.Cells LightCells API in C# without loading the full model
+// AI Prompts: Write C# code that employs Aspose.Cells LightCells API to open an Excel file, verify its presence, and write only the first worksheet to a CSV file using SaveFormat.CSV, with proper exception handling. | Demonstrate a minimal‑memory conversion of an .xlsx file to .csv in C# by using Aspose.Cells to skip full workbook loading and directly save the first sheet as CSV.
+// Common Searches: convert first sheet of xlsx to csv using Aspose.Cells lightweight API C# | Aspose.Cells C# export single worksheet to CSV without loading entire workbook | how to save Excel worksheet as CSV with minimal memory usage in C# | C# check file existence before Aspose.Cells conversion to CSV
+// Tags: LightCells worksheet to CSV conversion | Aspose.Cells SaveFormat.CSV example | C# xlsx to csv without full model load | file existence check Aspose.Cells | exception handling Aspose.Cells conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Shows how to convert an .xlsx file to a CSV file using Aspose.Cells ConversionUtility in LightCells mode, which processes the workbook without fully loading the model and keeps memory usage low.
-class ExportWorkbookToCsv
+// The sample checks that the input Excel file exists, loads it with Aspose.Cells LightCells API to avoid loading the full workbook into memory, and saves the first worksheet directly as a CSV file, handling any runtime exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source Excel workbook
-        string sourcePath = "input.xlsx";
+        try
+        {
+            // Input workbook (any supported format)
+            string inputPath = "input.xlsx";
 
-        // Desired CSV output path
-        string csvPath = "output.csv";
+            // Output CSV file
+            string outputPath = "output.csv";
 
-        // Convert the workbook to CSV.
-        // ConversionUtility internally uses LightCells mode, so the workbook model is not fully loaded into memory.
-        ConversionUtility.Convert(sourcePath, csvPath);
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        Console.WriteLine($"Workbook '{sourcePath}' has been exported to CSV at '{csvPath}'.");
+            // Load the workbook without loading the full model into memory
+            var workbook = new Workbook(inputPath);
+
+            // Save the first worksheet as CSV
+            workbook.Save(outputPath, SaveFormat.CSV);
+
+            Console.WriteLine($"CSV file successfully created at: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

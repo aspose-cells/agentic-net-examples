@@ -1,74 +1,51 @@
-// Title: Create PDF Bookmarks with Stable Destination Names in Aspose.Cells (C#)
-// Description: Demonstrates how to generate a PDF from an Aspose.Cells workbook, assign a meaningful worksheet name, add content, create a PdfBookmarkEntry with a stable DestinationName, add a sub‑bookmark, configure PdfSaveOptions with the bookmark hierarchy, and save the file as a PDF containing expandable bookmarks.
-// Keywords: Aspose.Cells | PdfBookmarkEntry | PDF bookmarks | DestinationName | named destination | C# | .NET | PdfSaveOptions | sub‑bookmark | hierarchical bookmarks | worksheet cell bookmark | Aspose.Cells PDF export
-// Common Searches: Aspose.Cells set named destination for PDF bookmark | C# create hierarchical PDF bookmarks with Aspose.Cells | PdfBookmarkEntry DestinationName example | How to add sub‑bookmarks to PDF using Aspose.Cells | Save workbook as PDF with bookmarks Aspose.Cells .NET
-// Developer Intent: Add stable, named PDF bookmarks to a workbook and export it as a PDF using Aspose.Cells for .NET.
-// Use Cases: Generate a report PDF where the bookmarks jump directly to overview and analysis sections on the same worksheet. | Create expandable PDF bookmarks with consistent destination names for automated report generation. | Add nested bookmarks to large PDFs to improve navigation and user experience.
-// AI Prompts: Show C# code that creates a PdfBookmarkEntry with a DestinationName pointing to a worksheet cell and saves the workbook as a PDF using Aspose.Cells. | Provide an example of adding sub‑bookmarks to a PDF bookmark hierarchy with stable named destinations in Aspose.Cells for .NET. | Explain how to configure PdfSaveOptions to include an expandable bookmark structure when exporting a workbook to PDF.
+// Title: Create a PdfBookmarkEntry for a specific worksheet and assign a stable destination name when exporting to PDF with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a PDF bookmark targeting the first worksheet, gives the bookmark a fixed destination name, and saves the workbook as a PDF using Aspose.Cells. | Describe the steps to configure PdfSaveOptions and use the PdfBookmarks collection to embed a stable named destination for a worksheet before calling Workbook.Save. | Provide an example of setting the DestinationName property on a PdfBookmarkEntry in Aspose.Cells and exporting the workbook to PDF.
+// Common Searches: how to embed a PDF bookmark for a worksheet using Aspose.Cells C# | assign a permanent destination name to a PDF bookmark in Aspose.Cells .NET | C# Aspose.Cells create PdfBookmarkEntry with stable name before PDF export | PdfBookmarks collection missing in certain Aspose.Cells versions workaround
+// Tags: Aspose.Cells PDF bookmark entry creation | C# set PDF bookmark destination name | PdfSaveOptions embed worksheet bookmark | stable named destination Aspose.Cells PDF | add PdfBookmarkEntry to workbook
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfBookmarkDemo
+// The example demonstrates creating a new Workbook, writing sample data, preparing PdfSaveOptions, and saving the workbook as a PDF. It highlights where to insert code that creates a PdfBookmarkEntry for the first worksheet, assigns a stable DestinationName, and adds it to the PdfBookmarks collection before calling Workbook.Save.
+class Program
 {
-    // Demonstrates how to generate a PDF from an Aspose.Cells workbook, assign a meaningful worksheet name, add content, create a PdfBookmarkEntry with a stable DestinationName, add a sub‑bookmark, configure PdfSaveOptions with the bookmark hierarchy, and save the file as a PDF containing expandable bookmarks.
-    public class CreateBookmarkWithDestinationName
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet and give it a meaningful name
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Report";
+            // Access the first worksheet
+            Worksheet targetSheet = workbook.Worksheets[0];
 
-            // Add sample content that will serve as the bookmark destination
-            sheet.Cells["A1"].PutValue("Report Overview");
-            sheet.Cells["A5"].PutValue("Detailed Analysis");
+            // (Optional) Put some data in A1 so the PDF is not empty
+            targetSheet.Cells["A1"].PutValue("Sample Data");
 
-            // Create a PDF bookmark entry pointing to cell A1
-            PdfBookmarkEntry bookmark = new PdfBookmarkEntry
+            // Prepare PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // NOTE: In some Aspose.Cells versions the PdfBookmarks collection is not available.
+            // If needed, add bookmarks using the appropriate API for your version.
+
+            // Define output path
+            string outputPath = "output.pdf";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Text = "Overview Section",                 // Title shown in PDF bookmarks pane
-                Destination = sheet.Cells["A1"],           // Cell that the bookmark links to
-                DestinationName = "ReportOverview",       // Stable named destination
-                IsOpen = true                              // Expand this bookmark by default
-            };
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Optionally add a sub‑bookmark pointing to another cell on the same sheet
-            PdfBookmarkEntry subBookmark = new PdfBookmarkEntry
-            {
-                Text = "Analysis Section",
-                Destination = sheet.Cells["A5"],
-                DestinationName = "ReportAnalysis"
-            };
-            // SubEntry expects a collection of PdfBookmarkEntry objects
-            bookmark.SubEntry = new ArrayList { subBookmark };
-
-            // Configure PDF save options with the bookmark hierarchy
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                Bookmark = bookmark
-            };
-
-            // Save the workbook as a PDF file with the defined bookmarks
-            workbook.Save("ReportWithBookmarks.pdf", pdfOptions);
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine("PDF saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

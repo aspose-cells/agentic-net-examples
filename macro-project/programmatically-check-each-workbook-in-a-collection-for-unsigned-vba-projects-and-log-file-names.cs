@@ -1,90 +1,74 @@
-// Title: C# batch scan for unsigned VBA projects in Excel workbooks with Aspose.Cells
-// Description: A C# utility that iterates over a list of Excel files, loads each workbook with Aspose.Cells, checks for macro presence, evaluates the VbaProject.IsSigned flag, and logs the paths of workbooks that contain unsigned VBA projects. The program also reports files without macros, handles missing files, and captures processing errors.
-// Keywords: Aspose.Cells unsigned VBA detection | C# batch macro signing check | Excel workbook VbaProject.IsSigned | detect unsigned macros .NET | security audit Excel macros | macro signing compliance | CI pipeline VBA validation | list Excel files without signed VBA | Aspose.Cells macro security
-// Common Searches: how to find unsigned VBA projects in Excel using Aspose.Cells | C# code to list workbooks with unsigned macros | batch check macro signing status in .NET | Aspose.Cells detect unsigned VBA projects | scan multiple Excel files for unsigned macros
-// Developer Intent: Locate Excel workbooks that contain VBA projects lacking a digital signature and output their file names.
-// Use Cases: Security audit to flag macro‑enabled files before distribution | Compliance reporting of unsigned VBA projects across a document repository | Automated validation step in CI/CD pipelines to prevent unsigned macros from being released
-// AI Prompts: Create a method that returns a List<string> of paths with unsigned VBA projects instead of writing to the console. | Modify the program to export unsigned workbook details to a CSV file with columns for file path, signing status, and timestamp. | Add recursive directory traversal to discover all Excel files and apply the unsigned VBA check automatically.
+// Title: Scan a collection of Excel workbooks and list those with unsigned VBA projects using Aspose.Cells in C#
+// AI Prompts: Write a C# method that accepts an IEnumerable of Excel file paths, loads each workbook with Aspose.Cells, checks the VbaProject.IsSigned flag, and returns the paths where a VBA project exists but is not signed. | Enhance the method to handle missing files gracefully, output a warning for each absent file, and log any exceptions thrown while loading a workbook without stopping the overall scan. | Adapt the scanner so that instead of returning a list, it appends each identified unsigned‑VBA workbook path to a log file with a timestamp, creating the log if it does not exist.
+// Common Searches: how to use Aspose.Cells in C# to find Excel files with unsigned VBA macros | C# code to iterate over multiple .xlsm files and check VBA project signature with Aspose | detect unsigned VBA projects in a batch of workbooks using Aspose.Cells library | list Excel workbooks that contain unsigned macro projects in .NET | Aspose.Cells VBA IsSigned property example for scanning directories
+// Tags: batch scan Excel workbooks for unsigned VBA using Aspose.Cells | C# Aspose.Cells VBA project signature check | detect unsigned macro projects in .xlsm files | enumerate Excel files and evaluate VbaProject.IsSigned | log unsigned VBA workbooks in .NET application
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsVbaCheck
+namespace VbaProjectChecker
 {
-    // A C# utility that iterates over a list of Excel files, loads each workbook with Aspose.Cells, checks for macro presence, evaluates the VbaProject.IsSigned flag, and logs the paths of workbooks that contain unsigned VBA projects. The program also reports files without macros, handles missing files, and captures processing errors.
-    public class UnsignedVbaChecker
+    // Scans a set of Excel file paths, loads each workbook with Aspose.Cells, and returns (or logs) the full paths of those containing a VBA project whose IsSigned property is false, while safely handling missing files and load errors.
+    public class UnsignedVbaScanner
     {
-        /// <param name="workbookPaths">Collection of full file paths to Excel workbooks.</param>
-        public static void Run(IEnumerable<string> workbookPaths)
+        /// <param name="workbookFiles">Collection of full file paths to Excel workbooks.</param>
+        /// <returns>List of file names (with full path) that have an unsigned VBA project.</returns>
+        public static List<string> GetWorkbooksWithUnsignedVba(IEnumerable<string> workbookFiles)
         {
-            foreach (string path in workbookPaths)
+            var unsignedWorkbooks = new List<string>();
+
+            foreach (var filePath in workbookFiles)
             {
+                // Ensure the file exists before attempting to load.
+                if (!File.Exists(filePath))
+                {
+                    Console.WriteLine($"File not found: {filePath}");
+                    continue;
+                }
+
                 try
                 {
-                    // Verify that the file exists before attempting to load
-                    if (!File.Exists(path))
+                    // Load the workbook using Aspose.Cells.
+                    var workbook = new Workbook(filePath);
+
+                    // Check if the workbook contains a VBA project.
+                    var vbaProject = workbook.VbaProject;
+
+                    // If a VBA project exists and it is not signed, record the file name.
+                    if (vbaProject != null && !vbaProject.IsSigned)
                     {
-                        Console.WriteLine($"File not found: {path}");
-                        continue;
-                    }
-
-                    // Load the workbook from the file system
-                    Workbook workbook = new Workbook(path);
-
-                    // Determine whether the workbook contains any VBA/macros
-                    if (workbook.HasMacro)
-                    {
-                        // Access the VBA project associated with the workbook
-                        VbaProject vbaProject = workbook.VbaProject;
-
-                        // Check the signing status; IsSigned is true when the project is signed
-                        bool isSigned = vbaProject.IsSigned;
-
-                        if (!isSigned)
-                        {
-                            // Log the file name of the workbook with an unsigned VBA project
-                            Console.WriteLine($"Unsigned VBA project detected: {path}");
-                        }
-                    }
-                    else
-                    {
-                        // Optional: log workbooks that do not contain any VBA at all
-                        Console.WriteLine($"No VBA macro present: {path}");
+                        unsignedWorkbooks.Add(filePath);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Log any unexpected errors for the current file
-                    Console.WriteLine($"Error processing '{path}': {ex.Message}");
+                    // Log any loading errors but continue processing other files.
+                    Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
                 }
             }
-        }
-    }
 
-    public class Program
-    {
-        // Entry point required for compilation
+            return unsignedWorkbooks;
+        }
+
+        // Example usage.
         public static void Main(string[] args)
         {
-            try
+            // Example collection of workbook file paths.
+            var workbookPaths = new List<string>
             {
-                // If no arguments are provided, display usage information
-                if (args == null || args.Length == 0)
-                {
-                    Console.WriteLine("Usage: AsposeCellsVbaCheck <full_path_to_excel_file1> [<full_path_to_excel_file2> ...]");
-                    return;
-                }
+                @"C:\Workbooks\Report1.xlsx",
+                @"C:\Workbooks\Report2.xlsm",
+                @"C:\Workbooks\Report3.xlsb"
+            };
 
-                // Run the unsigned VBA checker on the supplied file paths
-                UnsignedVbaChecker.Run(args);
-            }
-            catch (Exception ex)
+            var unsignedFiles = GetWorkbooksWithUnsignedVba(workbookPaths);
+
+            Console.WriteLine("Workbooks with unsigned VBA projects:");
+            foreach (var file in unsignedFiles)
             {
-                // Catch any unexpected errors at the top level
-                Console.WriteLine($"Fatal error: {ex.Message}");
+                Console.WriteLine(file);
             }
         }
     }

@@ -1,18 +1,17 @@
-// Title: Aspose.Cells C# – Combo chart with secondary Y‑axis and cell‑linked data labels
-// Description: Demonstrates how to create a workbook, add a column‑line combo chart, plot the line series on a secondary Y‑axis, configure axis limits and title, and display data labels that are linked to a worksheet cell range with custom font styling, then save the file.
-// Keywords: Aspose.Cells combo chart secondary axis | C# secondary Y axis chart | cell linked data labels Aspose.Cells | Aspose.Cells line series on secondary axis | custom axis limits Aspose.Cells | Aspose.Cells chart formatting | Excel combo chart Aspose.Cells .NET
-// Common Searches: Aspose.Cells add secondary axis to combo chart C# | show data labels from cells on secondary series Aspose.Cells | configure secondary Y axis range and title Aspose.Cells | convert column chart to combo chart Aspose.Cells .NET | link chart data labels to worksheet cells Aspose.Cells
-// Developer Intent: Create a combo chart with a secondary Y‑axis and bind the secondary series' data labels to cells.
-// Use Cases: Build a column‑line combo chart where the line series uses a different scale (e.g., units vs. quantity). | Display custom text such as "5k units" from a worksheet column next to each point of the secondary series. | Set secondary axis title, minimum, maximum, and major unit values while applying bold dark‑blue font to the linked labels.
-// AI Prompts: Generate C# Aspose.Cells code that adds a secondary Y‑axis to a combo chart and links the secondary series' data labels to a specified cell range. | Show how to configure axis titles, min/max values, and custom font styling for data labels on a secondary axis in Aspose.Cells. | Provide an example of converting a column chart to a combo chart by changing the second series to a line type and plotting it on the secondary axis using Aspose.Cells for .NET.
+// Title: Create a column‑line combo chart with a secondary axis and cell‑linked data labels using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to create a column‑line combo chart, set the second series as a line plotted on the secondary vertical axis, and link its data labels to a range of worksheet cells. | Demonstrate configuring the secondary value axis range, title, and custom font styling for data labels sourced from cells in an Aspose.Cells chart.
+// Common Searches: Aspose.Cells C# create combo chart with secondary Y axis and cell‑based data labels | link data labels to cell range in secondary axis line series Aspose.Cells | set secondary value axis properties for line series in Aspose.Cells chart | column and line series combo chart with custom label formatting using Aspose.Cells .NET | how to plot profit series on secondary axis in Excel using Aspose.Cells C#
+// Tags: combined column line chart secondary axis Aspose.Cells C# | line series cell‑linked data labels Aspose.Cells | secondary axis scaling Aspose.Cells | cell range label formatting Aspose.Cells | column and line series chart Aspose.Cells .NET
 
-using System.Drawing;
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Drawing;
+using System.Drawing;
 
-namespace AsposeCellsComboChartExample
+namespace AsposeCellsComboChartSecondaryAxis
 {
-    // Demonstrates how to create a workbook, add a column‑line combo chart, plot the line series on a secondary Y‑axis, configure axis limits and title, and display data labels that are linked to a worksheet cell range with custom font styling, then save the file.
+    // The example creates a workbook, adds month, sales, profit, and label data, builds a column‑line combo chart, moves the profit series to a secondary vertical axis, configures the secondary axis range and title, links the profit series' data labels to cells D2:D4 with custom font styling, and saves the file as an Excel workbook.
     class Program
     {
         static void Main()
@@ -21,67 +20,77 @@ namespace AsposeCellsComboChartExample
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // ---------- Populate worksheet data ----------
-            // Category labels
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+            // -------------------------------------------------
+            // Populate sample data
+            // -------------------------------------------------
+            // Primary categories
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["A2"].PutValue("Jan");
+            sheet.Cells["A3"].PutValue("Feb");
+            sheet.Cells["A4"].PutValue("Mar");
 
-            // Primary series values (plotted on primary Y axis)
-            sheet.Cells["B1"].PutValue("Primary Series");
+            // Primary series (Column)
+            sheet.Cells["B1"].PutValue("Sales");
             sheet.Cells["B2"].PutValue(120);
             sheet.Cells["B3"].PutValue(150);
             sheet.Cells["B4"].PutValue(180);
 
-            // Secondary series values (plotted on secondary Y axis)
-            sheet.Cells["C1"].PutValue("Secondary Series");
-            sheet.Cells["C2"].PutValue(5000);
-            sheet.Cells["C3"].PutValue(3000);
-            sheet.Cells["C4"].PutValue(1000);
+            // Secondary series (Line) – values will be shown on secondary axis
+            sheet.Cells["C1"].PutValue("Profit");
+            sheet.Cells["C2"].PutValue(30);
+            sheet.Cells["C3"].PutValue(45);
+            sheet.Cells["C4"].PutValue(55);
 
-            // Labels for secondary series (will be shown as data labels)
-            sheet.Cells["D1"].PutValue("Sec Labels");
-            sheet.Cells["D2"].PutValue("5k units");
-            sheet.Cells["D3"].PutValue("3k units");
-            sheet.Cells["D4"].PutValue("1k units");
+            // Data labels for secondary series (taken from cells D2:D4)
+            sheet.Cells["D1"].PutValue("Profit Label");
+            sheet.Cells["D2"].PutValue("30k");
+            sheet.Cells["D3"].PutValue("45k");
+            sheet.Cells["D4"].PutValue("55k");
 
-            // ---------- Add a combo chart ----------
-            // Create a column chart; later we will change the second series to a line type
+            // -------------------------------------------------
+            // Add a combo chart (Column + Line)
+            // -------------------------------------------------
+            // Add a chart of type Column; later we will change the second series to Line
             int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 25, 15);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add primary series (column)
+            // First series – Column (primary axis)
             chart.NSeries.Add("B2:B4", true);
-            // Add secondary series (line)
+            // Second series – initially Column, will be changed to Line
             chart.NSeries.Add("C2:C4", true);
+
             // Set category (X) axis data
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Change the second series to a line type to create a combo effect
-            chart.NSeries[1].Type = ChartType.Line;
-
-            // Plot the second series on the secondary Y axis
-            chart.NSeries[1].PlotOnSecondAxis = true;
-
-            // ---------- Configure secondary Y axis ----------
-            Axis secondaryAxis = chart.SecondValueAxis;
-            secondaryAxis.Title.Text = "Secondary Axis (Units)";
-            secondaryAxis.MinValue = 0;
-            secondaryAxis.MaxValue = 6000;
-            secondaryAxis.MajorUnit = 1000;
-
-            // ---------- Show data labels for the secondary series ----------
-            // Enable data labels and link them to the range D2:D4
+            // -------------------------------------------------
+            // Configure the second series as Line and plot on secondary axis
+            // -------------------------------------------------
             Series secondarySeries = chart.NSeries[1];
-            secondarySeries.DataLabels.ShowCellRange = true;
-            secondarySeries.DataLabels.LinkedSource = "D2:D4";
-            // Optional: customize label appearance
-            secondarySeries.DataLabels.Font.Color = Color.DarkBlue;
-            secondarySeries.DataLabels.Font.IsBold = true;
+            secondarySeries.Type = ChartType.Line;               // Change series type to Line
+            secondarySeries.PlotOnSecondAxis = true;             // Plot on secondary Y axis
 
-            // Save the workbook with the chart
-            workbook.Save("ComboChart_With_SecondaryAxis.xlsx");
+            // -------------------------------------------------
+            // Customize secondary value axis (optional)
+            // -------------------------------------------------
+            Axis secValueAxis = chart.SecondValueAxis;
+            secValueAxis.Title.Text = "Profit (k)";
+            secValueAxis.MinValue = 0;
+            secValueAxis.MaxValue = 60;
+            secValueAxis.MajorUnit = 10;
+
+            // -------------------------------------------------
+            // Show data labels for the secondary series using cell range
+            // -------------------------------------------------
+            secondarySeries.DataLabels.ShowCellRange = true;     // Use cell range for labels
+            secondarySeries.DataLabels.LinkedSource = "D2:D4";   // Cells containing label text
+            secondarySeries.DataLabels.Font.Color = Color.DarkGreen;
+            secondarySeries.DataLabels.Font.IsBold = true;
+            secondarySeries.DataLabels.Position = LabelPositionType.OutsideEnd;
+
+            // -------------------------------------------------
+            // Save the workbook
+            // -------------------------------------------------
+            workbook.Save("ComboChart_SecondaryAxis_WithCellLabels.xlsx");
         }
     }
 }

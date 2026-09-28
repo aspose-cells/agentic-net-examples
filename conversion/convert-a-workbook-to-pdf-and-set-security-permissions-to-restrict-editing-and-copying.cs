@@ -1,52 +1,38 @@
-// Title: Convert Excel to Secured PDF (password, no edit/copy) with Aspose.Cells C#
-// Description: Shows how to load an Excel workbook with Aspose.Cells, set PdfSaveOptions and PdfSecurityOptions (owner/user passwords, disable modify and extract, enable printing) and save the file as a protected PDF.
-// Keywords: Aspose.Cells | C# | Excel to PDF | PDF password protection | PdfSecurityOptions | disable editing PDF | disable copying PDF | owner password | user password | print permission | .NET PDF security | convert workbook to PDF
-// Common Searches: Aspose.Cells set PDF password C# | How to prevent editing in PDF generated from Excel using Aspose | Disable copy in PDF with Aspose.Cells | Aspose.Cells PDF security options example | Convert Excel to read‑only PDF .NET | Add owner and user passwords to PDF with Aspose.Cells
-// Developer Intent: The developer wants to convert an Excel workbook to a PDF and apply security settings that block editing and copying while optionally allowing printing.
-// Use Cases: Distribute financial reports that can be viewed and printed but not altered or extracted. | Protect confidential spreadsheets with passwords before sharing with external partners. | Automate batch conversion of multiple workbooks into read‑only PDFs with consistent security policies.
-// AI Prompts: Generate C# code using Aspose.Cells to convert an Excel file to PDF with owner and user passwords, disabling edit and copy permissions. | Explain how to modify PdfSecurityOptions to allow only printing while restricting all other actions. | Provide a loop example that applies the same PDF security settings to a list of workbooks.
+// Title: Convert an Excel workbook to a secured PDF with password protection and disabled editing and copying using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, applies PdfSecurityOptions to set owner and user passwords, enables printing, and disables modify and extract content permissions, then saves the workbook as a PDF. | Show how to configure PdfSaveOptions.SecurityOptions in Aspose.Cells to create a PDF that prevents editing, copying, and page assembly while still allowing printing.
+// Common Searches: Aspose.Cells C# export Excel to PDF with password and restrict editing | How to disable copy and modify permissions when saving workbook as PDF using Aspose.Cells | Set PDF security options in Aspose.Cells .NET to allow printing only
+// Tags: Aspose.Cells PdfSecurityOptions configuration | C# export Excel to secured PDF | PdfSaveOptions owner password Aspose.Cells | disable modify permission Aspose.Cells PDF | restrict content extraction Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering.PdfSecurity;
 
-namespace AsposeCellsPdfSecurityDemo
+// // Loads an Excel workbook, configures PdfSecurityOptions with owner and user passwords, enables printing, disables editing, content extraction, and page assembly, then saves the workbook as a protected PDF using Aspose.Cells.
+class ConvertWorkbookToSecuredPdf
 {
-    // Shows how to load an Excel workbook with Aspose.Cells, set PdfSaveOptions and PdfSecurityOptions (owner/user passwords, disable modify and extract, enable printing) and save the file as a protected PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load the source Excel workbook
-            // Replace "input.xlsx" with the path to your source file
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load the source Excel workbook
+        string sourcePath = "input.xlsx";
+        Workbook workbook = new Workbook(sourcePath);
 
-            // Create PDF save options
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
+        // Create PDF save options
+        PdfSaveOptions pdfSaveOptions = new PdfSaveOptions();
 
-            // Create and configure PDF security options
-            PdfSecurityOptions securityOptions = new PdfSecurityOptions
-            {
-                // Owner password allows full control over the PDF
-                OwnerPassword = "ownerPassword123",
-                // User password is required to open the PDF
-                UserPassword = "userPassword123",
-                // Disallow modifying the document (editing)
-                ModifyDocumentPermission = false,
-                // Disallow extracting content (copying)
-                ExtractContentPermission = false,
-                // Optionally allow printing
-                PrintPermission = true
-            };
+        // Configure security options to restrict editing and copying
+        PdfSecurityOptions securityOptions = new PdfSecurityOptions();
+        securityOptions.OwnerPassword = "ownerPass";
+        securityOptions.UserPassword = "userPass";
+        securityOptions.PrintPermission = true;                 // allow printing
+        securityOptions.ModifyDocumentPermission = false;      // disallow editing
+        securityOptions.ExtractContentPermission = false;      // disallow copying
+        securityOptions.AssembleDocumentPermission = false;    // disallow page manipulation
 
-            // Assign the security options to the PDF save options
-            pdfSaveOptions.SecurityOptions = securityOptions;
+        // Assign the security options to the PDF save options
+        pdfSaveOptions.SecurityOptions = securityOptions;
 
-            // Save the workbook as a secured PDF
-            // Replace "output.pdf" with the desired output path
-            workbook.Save("output.pdf", pdfSaveOptions);
-
-            Console.WriteLine("Workbook has been converted to a secured PDF.");
-        }
+        // Save the workbook as a secured PDF
+        string outputPath = "output.pdf";
+        workbook.Save(outputPath, pdfSaveOptions);
     }
 }

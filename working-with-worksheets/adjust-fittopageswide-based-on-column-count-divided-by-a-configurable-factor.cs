@@ -1,66 +1,29 @@
-// Title: C# – Dynamically Set FitToPagesWide in Aspose.Cells Using Column Count
-// Description: Creates a workbook, populates sample columns, computes the used column count, divides it by a configurable factor, rounds up, and assigns the result to PageSetup.FitToPagesWide while keeping FitToPagesTall automatic, then saves the file.
-// Keywords: Aspose.Cells | FitToPagesWide | dynamic page scaling | C# | .NET | column count | print layout | configurable factor | PageSetup | Excel export
-// Common Searches: Aspose.Cells set FitToPagesWide programmatically | calculate pages wide from used columns C# | dynamic print scaling based on column count | configure FitToPagesWide factor Aspose.Cells | auto adjust worksheet width for printing
-// Developer Intent: Automatically compute and apply the FitToPagesWide value from the worksheet's used columns divided by a user‑defined factor.
-// Use Cases: Print large reports where the number of columns varies, ensuring a consistent number of columns per page. | Generate invoices or catalogs with a flexible column layout while controlling page width without manual tweaks. | Export dashboards to Excel and automatically adapt the print layout to the current column count for optimal pagination.
-// AI Prompts: Show C# code that reads the MaxColumn of an Aspose.Cells worksheet, divides it by a configurable factor, rounds up, and sets PageSetup.FitToPagesWide. | Explain how to keep FitToPagesTall automatic while dynamically adjusting FitToPagesWide in Aspose.Cells. | Provide a complete example that creates a workbook, fills sample data, computes pages wide, applies the setting, and saves the file.
+// Title: Set worksheet FitToPagesWide dynamically from column count using a configurable divisor with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads the used column range of a worksheet, divides it by a user‑defined factor, rounds up, and assigns the result to PageSetup.FitToPagesWide while keeping FitToPagesTall set to zero. | Show how to expose the page‑width scaling factor as a runtime parameter when printing an Excel file with Aspose.Cells. | Create a reusable method that takes a Workbook and a divisor, computes the required pages wide based on MaxColumn, updates the worksheet's page setup, and saves the file.
+// Common Searches: how to calculate FitToPagesWide from column count in Aspose.Cells C# | Aspose.Cells set print scaling based on number of columns and custom factor | C# dynamic page width for Excel printing using divisor Aspose.Cells | adjust worksheet FitToPagesWide automatically according to used columns .NET
+// Tags: Aspose.Cells FitToPagesWide calculation | worksheet page setup scaling factor | C# column count based print layout | dynamic page width divisor Aspose.Cells | Excel printing FitToPagesTall zero .NET
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace Example
-{
-    // Creates a workbook, populates sample columns, computes the used column count, divides it by a configurable factor, rounds up, and assigns the result to PageSetup.FitToPagesWide while keeping FitToPagesTall automatic, then saves the file.
-    public class AdjustFitToPagesWide
-    {
-        public static void Run()
-        {
-            try
-            {
-                // Configurable factor that determines how many columns fit on one page
-                int factor = 5;
+// Load the workbook (replace with your actual file path)
+var workbook = new Workbook("input.xlsx");
 
-                // Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+// Configurable factor to divide the column count
+double factor = 2.0; // Adjust this value as needed
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+// Access the first worksheet (or specify the desired index)
+var worksheet = workbook.Worksheets[0];
 
-                // Sample data: fill 20 columns to illustrate the calculation
-                for (int col = 0; col < 20; col++)
-                {
-                    sheet.Cells[0, col].PutValue($"Header {col + 1}");
-                    sheet.Cells[1, col].PutValue($"Data {col + 1}");
-                }
+// Determine the number of columns that contain data
+int columnCount = worksheet.Cells.MaxColumn + 1; // MaxColumn is zero‑based
 
-                // Determine the number of used columns (MaxColumn is zero‑based)
-                int usedColumns = sheet.Cells.MaxColumn + 1;
+// Calculate the number of pages wide, rounding up to ensure all columns fit
+int pagesWide = (int)Math.Ceiling(columnCount / factor);
 
-                // Calculate the number of pages wide: columns divided by factor, rounded up
-                int pagesWide = (int)Math.Ceiling((double)usedColumns / factor);
-                if (pagesWide < 1) pagesWide = 1; // Ensure at least one page
+// Apply the FitToPagesWide setting; set FitToPagesTall to 0 to let height adjust automatically
+worksheet.PageSetup.FitToPagesWide = pagesWide;
+worksheet.PageSetup.FitToPagesTall = 0;
 
-                // Apply the page setup settings
-                PageSetup setup = sheet.PageSetup;
-                setup.FitToPagesWide = pagesWide; // Adjust based on column count
-                setup.FitToPagesTall = 0;         // Let height adjust automatically
-
-                // Save the workbook (lifecycle rule: save)
-                workbook.Save("AdjustedFitToPagesWide.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            AdjustFitToPagesWide.Run();
-        }
-    }
-}
+// Save the modified workbook (replace with your desired output path)
+workbook.Save("output.xlsx");

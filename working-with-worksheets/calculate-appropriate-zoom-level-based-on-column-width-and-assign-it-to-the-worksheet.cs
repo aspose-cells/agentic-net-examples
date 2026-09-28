@@ -1,46 +1,42 @@
-// Title: Set Worksheet Zoom Dynamically from Column Width with Aspose.Cells for .NET
-// Description: Demonstrates how to read a column's width, compute a proportional zoom level (100 % up to 20 characters, lower for wider columns), clamp the value between 10 % and 400 %, apply it to the worksheet, and save the workbook as ZoomBasedOnColumnWidth.xlsx.
-// Keywords: Aspose.Cells worksheet zoom | column width to zoom conversion | dynamic Excel zoom .NET | set zoom programmatically | zoom range 10 400 percent
-// Common Searches: Aspose.Cells set zoom based on column width | calculate Excel zoom from column size .NET | limit worksheet zoom to 10-400 percent Aspose | auto-adjust Excel view using column width
-// Developer Intent: Compute an appropriate zoom percentage from a column's width and assign it to the worksheet.
-// Use Cases: Fit wide data on screen by reducing zoom when a column exceeds a threshold. | Enforce minimum and maximum zoom levels for consistent report appearance. | Create Excel files where the initial view adapts to the size of a key column.
-// AI Prompts: Generate a reusable method that takes a worksheet and column index, calculates the zoom level based on the column width, and applies it while respecting the 10‑400 % limits. | Refactor the sample to support any column, add error handling for invalid widths, and return the applied zoom value. | Explain Aspose.Cells' column width unit (character count) and how it influences the zoom calculation logic.
+// Title: Calculate worksheet zoom percentage from column width and set it with Aspose.Cells in C#
+// AI Prompts: Given a column width expressed in characters, compute the corresponding zoom percentage (bounded between 10% and 400%) and assign it to the worksheet's Zoom property using Aspose.Cells in C#. | Programmatically adjust an Excel worksheet's view so that a desired number of characters fits within the visible area by calculating and setting the appropriate Zoom value with Aspose.Cells.
+// Common Searches: how to calculate Excel zoom level from column width using Aspose.Cells C# | set worksheet Zoom property based on column character width in .NET | Aspose.Cells adjust zoom to display specific number of characters in a column | C# compute zoom percentage to fit column width in generated Excel file
+// Tags: calculate worksheet zoom from column width Aspose.Cells | set worksheet zoom programmatically .NET Excel | column width to zoom conversion C# | adjust Excel view to fit column characters Aspose.Cells | clamp zoom percentage 10-400 Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to read a column's width, compute a proportional zoom level (100 % up to 20 characters, lower for wider columns), clamp the value between 10 % and 400 %, apply it to the worksheet, and save the workbook as ZoomBasedOnColumnWidth.xlsx.
+// The example creates a workbook, sets column A width to 30 characters, calculates a zoom level so that 20 characters are visible, clamps the zoom between 10% and 400%, applies the zoom to the worksheet, and saves the file as ZoomAdjusted.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (lifecycle rule: create)
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Set a specific column width (e.g., column A to 30 characters)
-        cells.SetColumnWidth(0, 30);
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Retrieve the actual column width
-        double columnWidth = cells.GetColumnWidth(0);
+        // Example: set a specific column width (in characters) for demonstration
+        // In a real scenario, the column width might already be set or read from data
+        int columnIndex = 0; // Column A
+        double columnWidth = 30.0; // Width in characters
+        sheet.Cells.SetColumnWidth(columnIndex, columnWidth);
 
-        // Calculate a zoom level based on the column width.
-        // Example logic: keep zoom at 100% for widths up to 20 characters,
-        // and reduce proportionally for wider columns.
-        int zoom = 100;
-        if (columnWidth > 20)
-        {
-            zoom = (int)(100 * 20 / columnWidth);
-        }
+        // Desired visible width in characters (you can adjust this value as needed)
+        double desiredVisibleWidth = 20.0;
 
-        // Ensure the zoom value stays within the allowed range (10% - 400%)
-        zoom = Math.Max(10, Math.Min(400, zoom));
+        // Calculate zoom level: (desired width / actual column width) * 100
+        // Aspose.Cells expects zoom as an integer percentage (10% to 400%)
+        double rawZoom = (desiredVisibleWidth / columnWidth) * 100.0;
 
-        // Apply the calculated zoom to the worksheet
-        worksheet.Zoom = zoom;
+        // Clamp zoom to valid range
+        int zoom = (int)Math.Max(10, Math.Min(400, Math.Round(rawZoom)));
 
-        // Save the workbook
-        workbook.Save("ZoomBasedOnColumnWidth.xlsx");
+        // Assign the calculated zoom level to the worksheet (feature rule)
+        sheet.Zoom = zoom;
+
+        // Save the workbook (lifecycle rule: save)
+        workbook.Save("ZoomAdjusted.xlsx");
     }
 }

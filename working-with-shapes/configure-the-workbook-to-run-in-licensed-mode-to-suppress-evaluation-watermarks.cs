@@ -1,70 +1,56 @@
-// Title: C# – Apply Aspose.Cells .NET License to Suppress Evaluation Watermarks and Save Workbook
-// Description: Demonstrates how to load an Aspose.Cells .NET license file, activate it with License.SetLicense, verify the activation via Workbook.IsLicensed, create a simple workbook, and save it as an Excel file without evaluation watermarks. Includes error handling for missing license files and I/O failures.
-// Keywords: Aspose.Cells | .NET | C# | license | SetLicense | IsLicensed | remove watermark | evaluation watermark | save workbook | Excel file
-// Common Searches: how to apply Aspose.Cells license in C# | remove Aspose.Cells evaluation watermark | Aspose.Cells SetLicense example | check if Aspose.Cells license is active | save licensed workbook with Aspose.Cells
-// Developer Intent: Activate an Aspose.Cells .NET license to generate a watermark‑free workbook and persist it to disk.
-// Use Cases: Load a .lic file from a known path and call License.SetLicense to enable full functionality. | Confirm licensing status with Workbook.IsLicensed before performing any spreadsheet operations. | Create and populate a workbook even when the license file is absent, logging the condition without crashing. | Save the workbook to a specified location while handling file‑system exceptions.
-// AI Prompts: Generate C# code that reads an Aspose.Cells license from an embedded resource, applies it, and checks the license status. | Show a robust pattern for applying an Aspose.Cells .NET license with fallback logic when the license file cannot be found.
+// Title: How to apply an Aspose.Cells license in C# to eliminate evaluation watermarks before creating a Workbook
+// AI Prompts: Write a C# method that receives a file path, verifies the Aspose.Cells .lic file exists, and applies the license using the License class. | Create a try‑catch block in C# that loads an Aspose.Cells license from a specified location and logs success or error details to the console. | Generate sample code that sets the Aspose.Cells license before any Workbook instantiation to ensure the workbook runs in licensed mode.
+// Common Searches: c# set Aspose.Cells license before workbook creation to remove evaluation watermark | how to programmatically verify Aspose.Cells license file existence in .NET | apply Aspose.Cells .lic file in console application and suppress evaluation message | Aspose.Cells licensing example for C# console projects
+// Tags: Aspose.Cells License.SetLicense C# | suppress Aspose.Cells evaluation watermark | check license file existence .NET | apply license before Workbook instantiation | exception handling Aspose.Cells license loading
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to load an Aspose.Cells .NET license file, activate it with License.SetLicense, verify the activation via Workbook.IsLicensed, create a simple workbook, and save it as an Excel file without evaluation watermarks. Includes error handling for missing license files and I/O failures.
-public class LicensedWorkbookDemo
+namespace AsposeCellsLicenseDemo
 {
-    public static void Main(string[] args)
+    // Demonstrates loading an Aspose.Cells license from a given path, verifying the file exists, applying it via the License class, and handling errors so that workbooks run in licensed mode without evaluation watermarks.
+    public class WorkbookLicenseConfigurator
     {
-        try
+        public static void ApplyLicense()
         {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            try
+            {
+                // Path to the Aspose.Cells license file
+                string licensePath = @"C:\Path\To\Aspose.Cells.lic";
+
+                // Verify that the license file is present to avoid FileNotFoundException
+                if (!File.Exists(licensePath))
+                {
+                    Console.WriteLine($"License file not found at: {licensePath}");
+                    return;
+                }
+
+                // Initialize the Aspose.Cells license object and apply the license
+                var license = new License();
+                license.SetLicense(licensePath);
+                Console.WriteLine("Aspose.Cells license applied successfully.");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors during license application
+                Console.WriteLine($"Error applying Aspose.Cells license: {ex.Message}");
+            }
         }
     }
 
-    public static void Run()
+    public class Program
     {
-        // Apply the Aspose.Cells license to suppress evaluation watermarks
-        try
+        /// <summary>
+        /// Entry point of the application.
+        /// </summary>
+        public static void Main(string[] args)
         {
-            string licensePath = "Aspose.Cells.NET.lic";
-            if (File.Exists(licensePath))
-            {
-                License license = new License();
-                license.SetLicense(licensePath);
-                Console.WriteLine("License applied successfully.");
-            }
-            else
-            {
-                Console.WriteLine("License file not found. Continuing without a license.");
-            }
-        }
-        catch (Exception licEx)
-        {
-            Console.WriteLine($"License error: {licEx.Message}");
-        }
+            // Apply the Aspose.Cells license before any workbook operations
+            WorkbookLicenseConfigurator.ApplyLicense();
 
-        // Verify that the license has been applied
-        Console.WriteLine($"IsLicensed: {new Workbook().IsLicensed}");
-
-        // Create a new workbook and add some sample data
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Name = "Sheet1";
-        workbook.Worksheets[0].Cells[0, 0].PutValue("Licensed Workbook");
-
-        // Save the workbook to disk
-        try
-        {
-            string outputPath = "LicensedWorkbook.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
-        }
-        catch (Exception saveEx)
-        {
-            Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            // Additional workbook processing can be placed here
+            Console.WriteLine("Program execution completed.");
         }
     }
 }

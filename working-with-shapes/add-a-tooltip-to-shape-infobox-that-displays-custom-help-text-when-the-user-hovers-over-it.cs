@@ -1,33 +1,54 @@
-// Title: Add a Tooltip to a TextBox (InfoBox) Shape in Excel using Aspose.Cells for .NET
-// Description: This example creates a new Workbook, inserts a TextBox shape that serves as an InfoBox, assigns custom help text via the AlternativeText property (displayed as a tooltip on hover), and saves the file as InfoBoxWithTooltip.xlsx.
-// Keywords: Aspose.Cells | C# tooltip shape | Excel AlternativeText | InfoBox tooltip | Add TextBox shape | screen tip Aspose | shape hover text | .NET Excel tooltip | shape tooltip property | Aspose.Cells .NET
-// Common Searches: Aspose.Cells set tooltip for shape | How to add screen tip to TextBox in Excel with C# | AlternativeText property example Aspose.Cells | Display help text on hover in Excel workbook | Add InfoBox with tooltip using Aspose.Cells
-// Developer Intent: Add a custom hover tooltip with help text to a TextBox (InfoBox) shape in an Excel workbook.
-// Use Cases: Provide on‑sheet help for data‑entry forms | Explain chart elements in interactive dashboards | Offer inline documentation for complex spreadsheets | Guide users through report navigation with brief notes | Show contextual tips for icons or images in Excel
-// AI Prompts: Write C# code that updates the AlternativeText of an existing shape in an Aspose.Cells workbook. | Explain the difference between AlternativeText and comments for Excel shapes in Aspose.Cells and how each appears in the UI. | Show how to read, modify, and persist a shape’s tooltip after loading a workbook from disk.
+// Title: Add a custom hover tooltip to a TextBox shape (InfoBox) in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, insert a TextBox named InfoBox on the first worksheet, set its AlternativeText to a custom help message, and save the file. | Generate an Excel file where a TextBox shape displays a tooltip on mouse hover, using Aspose.Cells for .NET. | Assign alternative text to a worksheet shape to act as a hover tooltip and persist the workbook.
+// Common Searches: how to set a tooltip for a textbox shape in Excel using Aspose.Cells C# | Aspose.Cells add alternative text to shape for hover help | C# Aspose.Cells create textbox with hover tooltip in workbook | set shape AlternativeText property Aspose.Cells .NET example | display custom help text on Excel shape hover Aspose.Cells
+// Tags: Aspose.Cells shape alternative text tooltip | Excel textbox hover tooltip .NET | add tooltip to worksheet shape Aspose.Cells | save workbook with shape tooltip .NET | C# Aspose.Cells create textbox shape
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// This example creates a new Workbook, inserts a TextBox shape that serves as an InfoBox, assigns custom help text via the AlternativeText property (displayed as a tooltip on hover), and saves the file as InfoBoxWithTooltip.xlsx.
-class AddTooltipToInfoBox
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program creates a new workbook, adds a TextBox shape named 'InfoBox' to the first worksheet, sets its AlternativeText property to provide a custom hover tooltip, and saves the workbook as 'InfoBoxWithTooltip.xlsx'.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Add a textbox shape that will act as the InfoBox
-        // Parameters: upper left row, upper left column, top offset, left offset, height, width
-        TextBox infoBox = (TextBox)sheet.Shapes.AddTextBox(2, 1, 0, 0, 100, 200);
-        infoBox.Text = "InfoBox";
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Set the tooltip (screen tip) that appears when the user hovers over the shape
-        infoBox.AlternativeText = "Custom help text displayed on hover";
+                // Add a TextBox shape named "InfoBox"
+                // Parameters: upperLeftRow, upperLeftColumn, topOffset, leftOffset, height, width
+                TextBox infoBox = worksheet.Shapes.AddTextBox(1, 1, 0, 0, 200, 100);
+                infoBox.Name = "InfoBox";
 
-        // Save the workbook
-        workbook.Save("InfoBoxWithTooltip.xlsx");
+                // Set the tooltip (alternative text) that appears on hover
+                infoBox.AlternativeText = "This is a custom help text displayed when you hover over the InfoBox.";
+
+                // Define output file path
+                string outputPath = "InfoBoxWithTooltip.xlsx";
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

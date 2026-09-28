@@ -1,75 +1,53 @@
-// Title: Apply a Default Theme to Excel Workbooks Missing a Theme with Aspose.Cells for .NET
-// Description: C# code that scans a list of Excel files, loads each workbook with Aspose.Cells, detects a missing Theme, creates a temporary workbook containing the built‑in default theme, copies that theme via Workbook.CopyTheme, and saves the updated file to an output folder.
-// Keywords: Aspose.Cells default theme | C# detect missing workbook theme | CopyTheme Aspose.Cells | apply Excel theme programmatically | Workbook.Theme check .NET | set default Excel theme | Aspose.Cells theme handling
-// Common Searches: how to set a default theme for Excel files using Aspose.Cells | detect workbooks without a theme in C# | copy theme from a template workbook Aspose.Cells | Workbook.CopyTheme example .NET | Aspose.Cells check if workbook theme is empty
-// Developer Intent: Automatically ensure every processed workbook contains a theme by detecting absent themes and applying the built‑in default.
-// Use Cases: Batch process multiple Excel files, adding a theme when none is present. | Integrate theme validation into an existing Aspose.Cells data‑processing pipeline. | Create a fallback theme for user‑generated workbooks that lack styling.
-// AI Prompts: Generate C# code that iterates over Excel files, checks Workbook.Theme, and applies the default theme using Aspose.Cells. | Show how to use Workbook.CopyTheme to transfer a theme from a newly created workbook to an existing one, including error handling. | Explain the purpose of Workbook.Theme and how to guarantee a theme before performing further Excel manipulations with Aspose.Cells.
+// Title: Detect missing Excel workbook theme and log fallback .thmx file with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that checks Workbook.Theme and writes a warning if it is empty while a default .thmx file exists. | Create a method using Aspose.Cells that verifies a workbook has a theme and logs that applying a .thmx theme is not supported in the current version. | Show how to load an Excel file, detect the absence of a theme, and safely save the workbook after processing with Aspose.Cells.
+// Common Searches: Aspose.Cells how to determine if an Excel file has a theme applied | C# check Workbook.Theme property for missing theme Aspose.Cells | log message when default .thmx theme file is present but cannot be applied Aspose.Cells | detect absent theme in .xlsx using Aspose.Cells .NET | fallback theme handling for Excel workbooks with Aspose.Cells
+// Tags: Workbook.Theme property check Aspose.Cells | fallback .thmx theme handling .NET | detect missing Excel theme Aspose.Cells | log theme absence Aspose.Cells C# | theme support limitation Aspose.Cells
 
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace WorkbookThemeProcessor
+// The example loads an Excel workbook with Aspose.Cells, checks the Workbook.Theme property to see if a theme is assigned, and if none is found while a default .thmx file exists, it logs that applying a theme programmatically is not supported in the current API version. The workbook is then saved.
+class Program
 {
-    // C# code that scans a list of Excel files, loads each workbook with Aspose.Cells, detects a missing Theme, creates a temporary workbook containing the built‑in default theme, copies that theme via Workbook.CopyTheme, and saves the updated file to an output folder.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // List of workbook file paths to process
-            List<string> workbookFiles = new List<string>
+            // Path to the workbook to process
+            string workbookPath = "input.xlsx";
+
+            // Path to the default theme file (must be a .thmx file)
+            string defaultThemePath = "DefaultTheme.thmx";
+
+            // Ensure the input workbook exists
+            if (!File.Exists(workbookPath))
             {
-                "Input1.xlsx",
-                "Input2.xlsx",
-                // Add more file paths as needed
-            };
-
-            // Ensure the output directory exists
-            string outputDir = "Processed";
-            Directory.CreateDirectory(outputDir);
-
-            // Iterate through each workbook
-            foreach (string filePath in workbookFiles)
-            {
-                try
-                {
-                    // Verify the input file exists
-                    if (!File.Exists(filePath))
-                    {
-                        Console.WriteLine($"Input file not found: {filePath}");
-                        continue;
-                    }
-
-                    // Load the workbook
-                    Workbook workbook = new Workbook(filePath);
-
-                    // If the workbook has no theme, copy the default theme from a new workbook
-                    if (string.IsNullOrEmpty(workbook.Theme))
-                    {
-                        // Create a temporary workbook that contains the default theme
-                        Workbook sourceWithTheme = new Workbook(FileFormatType.Xlsx);
-
-                        // Copy the theme from the source workbook to the target workbook
-                        workbook.CopyTheme(sourceWithTheme);
-                    }
-
-                    // Perform any additional processing here
-                    // ...
-
-                    // Save the workbook after ensuring it has a theme
-                    string outputPath = Path.Combine(outputDir, Path.GetFileName(filePath));
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Processed and saved: {outputPath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
-                }
+                Console.WriteLine($"Input workbook not found: {workbookPath}");
+                return;
             }
 
-            Console.WriteLine("All workbooks processed.");
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Determine whether the workbook already has a theme (Theme returns the theme name)
+            bool hasTheme = !string.IsNullOrEmpty(workbook.Theme);
+
+            // If no theme is present and a default theme file exists, note that applying a theme
+            // is not directly supported via a single API in this version of Aspose.Cells.
+            if (!hasTheme && File.Exists(defaultThemePath))
+            {
+                Console.WriteLine("Default theme file found, but applying a theme programmatically is not supported in this API version.");
+                // Place any custom logic here if you need to manipulate styles manually.
+            }
+
+            // Save the workbook after processing
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved as output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

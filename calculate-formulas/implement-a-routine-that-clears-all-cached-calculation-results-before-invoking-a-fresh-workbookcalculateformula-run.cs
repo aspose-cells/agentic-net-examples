@@ -1,17 +1,14 @@
-// Title: Clear Formula Cache and Force Full Recalculation with Aspose.Cells for .NET
-// Description: Load a workbook, enable ForceFullCalculation to discard cached results, run Workbook.CalculateFormula for a fresh evaluation, reset the flag, and save the updated file.
-// Keywords: Aspose.Cells | C# | .NET | clear formula cache | ForceFullCalculation | full workbook recalculation | CalculateFormula fresh run | reset cached calculations
-// Common Searches: Aspose.Cells clear cached calculations | ForceFullCalculation example C# | recalculate all formulas after data change Aspose.Cells | how to reset formula cache in .NET workbook | full calculation mode Aspose.Cells
-// Developer Intent: Discard any stored formula results and trigger a complete recomputation of all workbook formulas.
-// Use Cases: Refresh formulas after bulk data updates to ensure accurate totals. | Eliminate stale values in automated reporting pipelines. | Guarantee correct calculations when workbook is reused across multiple processing runs.
-// AI Prompts: Show me C# code that clears the formula cache and forces a full recalculation using Aspose.Cells. | Explain when to use ForceFullCalculation and its performance impact in Aspose.Cells. | Provide a step‑by‑step guide to toggle ForceFullCalculation, run CalculateFormula, and restore default settings.
+// Title: Clear cached formula values and force a full recalculation of an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# method that sets Workbook.Settings.FormulaSettings.ForceFullCalculation to true, runs CalculateFormula, then restores the flag using Aspose.Cells. | Show how to invalidate the internal formula cache before saving an Excel workbook with Aspose.Cells in .NET. | Generate example code that loads an .xlsx file, forces a complete recomputation of all formulas, and writes the updated workbook back.
+// Common Searches: Aspose.Cells .NET force full workbook calculation ignoring cached values | C# clear cached formula results before CalculateFormula with Aspose.Cells | How to recalculate all formulas from scratch in an Excel file using Aspose.Cells
+// Tags: enable ForceFullCalculation Aspose.Cells | clear cached formula values C# | Aspose.Cells fresh CalculateFormula execution | reset FormulaSettings after full calculation | recompute all formulas from scratch .NET
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Load a workbook, enable ForceFullCalculation to discard cached results, run Workbook.CalculateFormula for a fresh evaluation, reset the flag, and save the updated file.
+    // The example loads an Excel workbook, enables ForceFullCalculation to discard any cached formula results, executes CalculateFormula to recompute all formulas, optionally resets the flag, and saves the workbook with the newly calculated values.
     public class ClearCacheAndRecalculate
     {
         /// <param name="inputPath">Path to the source workbook.</param>
@@ -21,14 +18,15 @@ namespace AsposeCellsExamples
             // Load the workbook (lifecycle rule: load)
             Workbook workbook = new Workbook(inputPath);
 
-            // Enable full calculation to discard any cached results.
-            // This forces all formulas to be recomputed on the next CalculateFormula call.
+            // Ensure that all formulas are recalculated from scratch.
+            // Setting ForceFullCalculation to true forces a full calculation
+            // and ignores any previously cached values.
             workbook.Settings.FormulaSettings.ForceFullCalculation = true;
 
-            // Perform the calculation (fresh run)
+            // Perform the calculation (lifecycle rule: calculate)
             workbook.CalculateFormula();
 
-            // Optionally reset the flag if further operations should use default behavior.
+            // Optional: reset the flag if you don't want the workbook to retain this setting.
             workbook.Settings.FormulaSettings.ForceFullCalculation = false;
 
             // Save the workbook (lifecycle rule: save)
@@ -38,12 +36,12 @@ namespace AsposeCellsExamples
         // Example usage
         public static void Main()
         {
-            string sourceFile = "input.xlsx";
-            string resultFile = "output.xlsx";
+            string inputFile = "input.xlsx";
+            string outputFile = "output_recalculated.xlsx";
 
-            Run(sourceFile, resultFile);
+            Run(inputFile, outputFile);
 
-            Console.WriteLine("Workbook recalculated and saved to: " + resultFile);
+            Console.WriteLine("Workbook recalculated and saved to: " + outputFile);
         }
     }
 }

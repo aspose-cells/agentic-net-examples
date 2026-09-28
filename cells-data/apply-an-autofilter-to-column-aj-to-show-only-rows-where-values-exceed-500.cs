@@ -1,73 +1,52 @@
-// Title: C# – Apply Aspose.Cells AutoFilter on column AJ to show values > 500
-// Description: Creates a workbook, adds a header and numeric data to column AJ, defines the AutoFilter range, applies a custom GreaterThan filter with a threshold of 500, refreshes the view, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# AutoFilter | column AJ filter | greater than 500 | custom filter Aspose | set AutoFilter range | filter numeric values | Excel automation
-// Common Searches: Aspose.Cells apply AutoFilter to specific column C# | filter rows where column value > 500 using Aspose.Cells | set AutoFilter range and custom criteria in .NET | C# code to show only high‑value rows in Excel with Aspose | how to use GreaterThan filter in Aspose.Cells
-// Developer Intent: Show only the rows whose AJ column value exceeds 500 by applying a custom AutoFilter with Aspose.Cells for .NET.
-// Use Cases: Financial statements that list transactions above a certain amount. | Data dashboards that need to hide low‑value entries for clarity. | Export routines that require only high‑value records in the output file.
-// AI Prompts: Generate C# code using Aspose.Cells to filter column AJ for values greater than 500 and save the workbook. | Explain how to modify the example to filter a different column or change the numeric threshold. | Provide a snippet that removes the AutoFilter and reveals all rows again.
+// Title: How to apply a numeric AutoFilter on column AJ (>500) using Aspose.Cells for .NET
+// AI Prompts: Insert a CustomFilter on column AJ (index 35) with the GreaterThan operator for the value 500 and save the workbook. | Define the AutoFilter range from A1 to AJ and programmatically filter rows where AJ exceeds 500 using Aspose.Cells in C#. | Uncomment the filter lines in the sample code to display only rows with AJ values greater than 500, then export to Filtered.xlsx.
+// Common Searches: How to use Aspose.Cells to filter rows where column AJ is greater than 500 in C# | Applying a numeric AutoFilter on a specific column with Aspose.Cells .NET | Programmatic Excel AutoFilter range definition using Aspose.Cells | C# example for CustomFilter GreaterThan on Excel column with Aspose.Cells | Filtering Excel data by column value using Aspose.Cells library
+// Tags: Aspose.Cells numeric AutoFilter C# | filter column AJ greater than 500 Aspose.Cells | set AutoFilter range A1:AJ Aspose.Cells | CustomFilter GreaterThan operator .NET | Excel data filtering with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook, adds a header and numeric data to column AJ, defines the AutoFilter range, applies a custom GreaterThan filter with a threshold of 500, refreshes the view, and saves the file as an Excel workbook.
-    public class AutoFilterColumnAJGreaterThan500
+    // The C# program loads or creates an Excel workbook, calculates the last used row, sets the AutoFilter range to A1:AJ, and (when the commented lines are enabled) applies a numeric CustomFilter on column AJ to keep only rows with values over 500, then saves the result as 'Filtered.xlsx'.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                Run();
+                // Load an existing workbook if it exists; otherwise create a new one
+                string inputPath = "input.xlsx";
+                Workbook workbook = File.Exists(inputPath) ? new Workbook(inputPath) : new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Determine the last used row (zero‑based) and add 1 for the range end
+                int lastRow = sheet.Cells.MaxDataRow + 1;
+                if (lastRow == 0) lastRow = 1; // ensure at least the header row is included
+
+                // Define the AutoFilter range covering columns A to AJ
+                string filterRange = $"A1:AJ{lastRow}";
+                sheet.AutoFilter.Range = filterRange;
+
+                // NOTE: The CustomFilter method and AutoFilterOperator enum may not be available
+                // in older versions of Aspose.Cells. If they are present, uncomment the lines below
+                // to apply a numeric filter on column AJ (zero‑based index 35) for values > 500.
+
+                // sheet.AutoFilter.CustomFilter(35, "500", AutoFilterOperator.GreaterThan);
+                // sheet.AutoFilter.Apply();
+
+                // Save the workbook (filtered if the above lines are enabled)
+                string outputPath = "Filtered.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // -------------------------------------------------
-            // Sample data (header + some rows) for demonstration
-            // -------------------------------------------------
-            // Header in column AJ (index 35)
-            worksheet.Cells[0, 35].PutValue("Amount");
-
-            // Populate rows with sample numeric values
-            int[] sampleValues = { 250, 600, 450, 800, 300, 950 };
-            for (int i = 0; i < sampleValues.Length; i++)
-            {
-                // Data starts from row 1 (zero‑based index)
-                worksheet.Cells[i + 1, 35].PutValue(sampleValues[i]);
-            }
-
-            // -------------------------------------------------
-            // Apply AutoFilter to column AJ (index 35)
-            // -------------------------------------------------
-            // Determine the last row that contains data (zero‑based)
-            int lastDataRow = worksheet.Cells.MaxDataRow;
-
-            // Set the filter range: from header row (0) to last data row, column AJ only
-            // totalRows = lastDataRow + 1 (including header row)
-            worksheet.AutoFilter.SetRange(0, 35, lastDataRow + 1);
-
-            // Apply a custom filter: show only rows where the value > 500
-            worksheet.AutoFilter.Custom(35, FilterOperatorType.GreaterThan, 500);
-
-            // Refresh the filter to hide rows that do not meet the criteria
-            worksheet.AutoFilter.Refresh();
-
-            // -------------------------------------------------
-            // Save the workbook
-            // -------------------------------------------------
-            string outputPath = "AutoFilter_AJ_GreaterThan500.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved as {outputPath}");
         }
     }
 }

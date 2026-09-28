@@ -1,37 +1,35 @@
-// Title: Count Worksheets Containing Shapes with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel workbook using Aspose.Cells, iterates through each worksheet, checks the Shapes collection, increments a counter for sheets with one or more shapes, and outputs the total number of worksheets that contain shapes.
-// Keywords: Aspose.Cells | C# | count worksheets with shapes | Shapes collection | worksheet shape detection | Excel workbook analysis | Aspose.Cells API
-// Common Searches: how to count sheets with shapes Aspose.Cells | C# get number of worksheets that have drawings | Aspose.Cells count worksheets containing images | retrieve worksheets that contain shapes .NET | Excel workbook shape count using Aspose
-// Developer Intent: Determine how many worksheets in a workbook contain at least one shape.
-// Use Cases: Create a summary report showing how many sheets include diagrams, pictures, or other drawing objects. | Validate a template by confirming required shapes are present on specific worksheets before further processing. | Filter and process only those worksheets that contain shapes when exporting to another format.
-// AI Prompts: Generate C# code with Aspose.Cells that lists the names of all worksheets that have at least one shape. | Provide a snippet that counts worksheets with shapes and logs their indices to the console using Aspose.Cells for .NET. | Show how to copy only the worksheets containing shapes into a new workbook with Aspose.Cells.
+// Title: How to count the number of worksheets that contain shapes in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write a C# function that loads an .xlsx file with Aspose.Cells and returns the count of worksheets that have at least one shape. | Show how to iterate through a Workbook's Worksheets collection and increment a counter when the Shapes collection size is greater than zero. | Provide sample code that prints the names of all sheets containing shapes and then displays the total number of such sheets.
+// Common Searches: Aspose.Cells .NET how to find worksheets that include drawings or charts | C# get number of Excel sheets with any shape objects using Aspose.Cells API | sample code to list Excel worksheet names that contain shapes with Aspose.Cells | determine which worksheets in a workbook have shape collections populated in C#
+// Tags: worksheet shape detection Aspose.Cells | count sheets with drawings .NET | enumerate shapes per worksheet using Aspose.Cells | Excel workbook shape analysis C# | report worksheets containing graphics Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Loads an Excel workbook using Aspose.Cells, iterates through each worksheet, checks the Shapes collection, increments a counter for sheets with one or more shapes, and outputs the total number of worksheets that contain shapes.
+// // Loads an Excel file with Aspose.Cells, loops through each worksheet, checks the Shapes collection count, increments a counter for worksheets that have shapes, and writes the total count (and optionally the sheet names) to the console.
 class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Load an existing workbook (replace the path with your actual file)
-        string workbookPath = "input.xlsx";
-        Workbook workbook = new Workbook(workbookPath); // uses the provided load constructor
+        // Path to the workbook file (modify as needed)
+        string filePath = "input.xlsx";
+
+        // Load the workbook from the specified file
+        Workbook workbook = new Workbook(filePath);
 
         int worksheetsWithShapes = 0;
 
-        // Iterate through all worksheets in the workbook
+        // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // The Shapes collection is available on each worksheet.
-            // If the count is greater than zero, this worksheet contains at least one shape.
+            // Check if the worksheet contains any shapes
             if (sheet.Shapes.Count > 0)
             {
                 worksheetsWithShapes++;
             }
         }
 
-        // Output the result
+        // Print the count of worksheets that contain shapes
         Console.WriteLine($"Worksheets containing shapes: {worksheetsWithShapes}");
     }
 }

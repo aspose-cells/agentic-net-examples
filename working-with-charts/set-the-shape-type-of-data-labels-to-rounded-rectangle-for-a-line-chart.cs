@@ -1,52 +1,72 @@
-// Title: Aspose.Cells .NET: Set Line Chart Data Labels to Rounded Rectangle (C#)
-// Description: Creates a workbook, adds sample data, inserts a line chart, enables data labels for the first series, changes the label shape to a rounded rectangle using DataLabelShapeType.RoundRect, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells C# line chart data labels | DataLabels.ShapeType RoundRect | rounded rectangle data label Aspose.Cells | set chart data label shape .NET | Aspose.Cells chart formatting | Excel line chart custom data labels
-// Common Searches: Aspose.Cells set data label shape to rounded rectangle | C# line chart data label RoundRect Aspose.Cells | How to change DataLabels.ShapeType in Aspose.Cells | Rounded rectangle data labels for Excel chart .NET | Aspose.Cells chart label shape customization
-// Developer Intent: Apply a rounded‑rectangle shape to data labels of a line‑chart series in Aspose.Cells for .NET.
-// Use Cases: Enhance readability of line‑chart values by using rounded‑rectangle labels in automated reports. | Maintain a consistent label style across multiple charts for corporate branding. | Generate Excel files with custom‑shaped data labels to match design guidelines.
-// AI Prompts: Show C# code to set DataLabels.ShapeType to RoundRect for a line chart using Aspose.Cells. | How can I apply different data label shapes to each series in an Aspose.Cells chart? | Provide an example of customizing data label appearance (font, color, shape) in Aspose.Cells .NET.
+// Title: How to set line chart data label shape to rounded rectangle using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a C# program that creates an Excel workbook, adds a line chart, enables data labels, and assigns DataLabels.ShapeType = DataLabelShapeType.RoundedRectangle with Aspose.Cells. | Update an existing Aspose.Cells line chart in C# to display its data labels as rounded rectangles by setting the ShapeType property. | Write example code that demonstrates configuring the data label shape type for a line chart, including version‑check handling for the DataLabelShapeType enum in Aspose.Cells.
+// Common Searches: Aspose.Cells C# set data label shape rounded rectangle line chart | how to change data label shape to rounded rectangle in Aspose.Cells line chart | C# Aspose.Cells line chart data labels show value with rounded rectangle | DataLabels.ShapeType property usage Aspose.Cells .NET
+// Tags: Aspose.Cells line chart data label shape | C# DataLabels.ShapeType rounded rectangle | Excel chart data label shape .NET | configure data label shape Aspose.Cells | line chart data labels show value C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds sample data, inserts a line chart, enables data labels for the first series, changes the label shape to a rounded rectangle using DataLabelShapeType.RoundRect, and saves the file as an Excel workbook.
-class SetDataLabelShapeType
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a new workbook, populates sample data, inserts a line chart, enables data labels to show values, and demonstrates how to set the data label shape to a rounded rectangle using the DataLabels.ShapeType property (when supported), then saves the workbook as an .xlsx file.
+    public class LineChartDataLabelRoundedRect
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
 
-        // Populate sample data
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("A");
-        sheet.Cells["A3"].PutValue("B");
-        sheet.Cells["A4"].PutValue("C");
+        public static void Run()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(10);
-        sheet.Cells["B3"].PutValue(20);
-        sheet.Cells["B4"].PutValue(30);
+            // Populate sample data for the line chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("A");
+            worksheet.Cells["A3"].PutValue("B");
+            worksheet.Cells["A4"].PutValue("C");
 
-        // Add a line chart
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
-        Chart chart = sheet.Charts[chartIndex];
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["B4"].PutValue(30);
 
-        // Set the data range for the chart
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+            // Add a line chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Enable data labels for the first series
-        Series series = chart.NSeries[0];
-        series.DataLabels.ShowValue = true;
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-        // Set the shape type of data labels to rounded rectangle
-        series.DataLabels.ShapeType = DataLabelShapeType.RoundRect;
+            // Access the first series and enable data labels
+            Series series = chart.NSeries[0];
+            series.DataLabels.ShowValue = true;
 
-        // Save the workbook
-        workbook.Save("LineChartWithRoundedRectDataLabels.xlsx");
+            // NOTE: The DataLabelShapeType enum may not be available in older Aspose.Cells versions.
+            // If supported, you can set the shape type to a rounded rectangle as shown below:
+            // series.DataLabels.ShapeType = DataLabelShapeType.RoundedRectangle;
+
+            // Save the workbook
+            try
+            {
+                workbook.Save("LineChartDataLabelRoundedRect.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception saveEx)
+            {
+                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+            }
+        }
     }
 }

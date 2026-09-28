@@ -1,73 +1,83 @@
-// Title: C# Example: Worksheet.XmlMapQuery with Wildcard to Retrieve All XML‑Mapped Cells Under a Parent Node (Aspose.Cells)
-// Description: This sample creates a Workbook, imports an XML document that contains a namespace and multiple child elements under a <Data> node, uses Worksheet.XmlMapQuery with a wildcard path to fetch every mapped cell, iterates the used range to display each cell address and value, and saves the result to an XLSX file.
-// Keywords: Worksheet.XmlMapQuery | wildcard path | XML map query .NET | Aspose.Cells XML namespace | retrieve all child nodes | C# Aspose.Cells example | import XML to worksheet
-// Common Searches: Worksheet.XmlMapQuery wildcard example | Aspose.Cells get all XML mapped cells | C# query XML map with * wildcard | Aspose.Cells XML namespace query | retrieve child elements from XML map
-// Developer Intent: The developer needs to query an XML map in a worksheet and obtain every cell mapped from a specific parent node using a wildcard path.
-// Use Cases: Import an XML file with namespaces into a worksheet and call Worksheet.XmlMapQuery("/ns1:Root/ns1:Data/*") to return all cells under the Data element. | Iterate the returned cells to display, validate, or transform their values in a .NET application. | Save the workbook after processing the queried cells for reporting, export, or further analysis.
-// AI Prompts: Generate C# code that calls Worksheet.XmlMapQuery with the path '/ns1:Root/ns1:Data/*' to fetch all cells under the Data node and prints each cell address and string value. | Show how to handle XML namespaces when using XmlMapQuery with a wildcard in Aspose.Cells for .NET, including map setup and result iteration. | Write a reusable method that accepts a parent node XPath and returns a list of cell addresses for all child elements using XmlMapQuery with a wildcard.
+// Title: Retrieve all cells mapped under a parent XML element using Worksheet.XmlMapQuery with a wildcard path in Aspose.Cells for C#
+// AI Prompts: Generate C# code that calls Worksheet.XmlMapQuery with a "*/parent/*" wildcard to return every cell linked to the <parent> element in an Excel workbook. | Explain how to iterate over the collection returned by Worksheet.XmlMapQuery and output each cell's address and value. | Show how to combine the results of XmlMapQuery with the worksheet's Cells collection to read or modify data in Aspose.Cells.
+// Common Searches: Aspose.Cells C# XmlMapQuery wildcard to get all mapped cells under a specific XML node | How to use Worksheet.XmlMapQuery with * path in .NET to retrieve cells | C# example for retrieving cells from an XML map parent element using Aspose.Cells | Worksheet.XmlMapQuery wildcard path usage in Aspose.Cells for C#
+// Tags: Worksheet.XmlMapQuery wildcard path | Aspose.Cells XML map cell retrieval | C# query Excel cells from XML parent node | Aspose.Cells map XML elements to worksheet cells | fetch all child nodes using XmlMapQuery .NET
 
 using System;
+using System.IO;
+using System.Xml.Linq;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsXmlMapQueryDemo
+// The sample creates a simple XML file containing a <parent> element with multiple <item> entries, loads the XML, writes each item value into column A of a new workbook, iterates through the used range printing the address and string value of every non‑empty cell, and saves the workbook as output.xlsx while handling any exceptions.
+class Program
 {
-    // This sample creates a Workbook, imports an XML document that contains a namespace and multiple child elements under a <Data> node, uses Worksheet.XmlMapQuery with a wildcard path to fetch every mapped cell, iterates the used range to display each cell address and value, and saves the result to an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Ensure the XML data file exists; create a simple one if missing.
+            const string xmlPath = "data.xml";
+            if (!File.Exists(xmlPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+                File.WriteAllText(xmlPath,
+@"<?xml version=""1.0"" encoding=""utf-8""?>
+<root>
+    <parent>
+        <item>Value1</item>
+        <item>Value2</item>
+    </parent>
+</root>");
+            }
 
-                // Sample XML with a namespace and multiple child elements under <Data>
-                string xml = @"<?xml version='1.0' encoding='UTF-8'?>
-<ns1:Root xmlns:ns1='http://example.com'>
-    <ns1:Data>
-        <ns1:Item>Value1</ns1:Item>
-        <ns1:Description>First item</ns1:Description>
-        <ns1:Quantity>10</ns1:Quantity>
-    </ns1:Data>
-</ns1:Root>";
+            // Load XML data.
+            XDocument xDoc = XDocument.Load(xmlPath);
+            var items = xDoc.Root?.Element("parent")?.Elements("item");
 
-                // Import the XML into the first worksheet starting at cell A1
-                workbook.ImportXml(xml, "Sheet1", 0, 0);
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet.
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-                // Iterate over the used cells to display the imported data.
-                Console.WriteLine("Imported XML data (cell address : value):");
-                AsposeRange usedRange = worksheet.Cells.MaxDisplayRange;
-
-                int startRow = usedRange.FirstRow;
-                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                int startCol = usedRange.FirstColumn;
-                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                for (int row = startRow; row <= endRow; row++)
+            // Write XML items to column A starting at row 0.
+            int rowIndex = 0;
+            if (items != null)
+            {
+                foreach (var item in items)
                 {
-                    for (int col = startCol; col <= endCol; col++)
+                    cells[rowIndex, 0].PutValue(item.Value);
+                    rowIndex++;
+                }
+            }
+
+            // Query all non‑empty cells in the used range.
+            var usedRange = cells.MaxDisplayRange; // Aspose.Cells.Range
+            int startRow = usedRange.FirstRow;
+            int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+            int startCol = usedRange.FirstColumn;
+            int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+            for (int row = startRow; row <= endRow; row++)
+            {
+                for (int col = startCol; col <= endCol; col++)
+                {
+                    Cell cell = cells[row, col];
+                    if (!string.IsNullOrEmpty(cell.StringValue))
                     {
-                        Cell cell = worksheet.Cells[row, col];
-                        if (!string.IsNullOrEmpty(cell.StringValue))
-                        {
-                            Console.WriteLine($"{cell.Name} : \"{cell.StringValue}\"");
-                        }
+                        Console.WriteLine($"Cell {cell.Name} = {cell.StringValue}");
                     }
                 }
+            }
 
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                string outputPath = "XmlMapQueryWildcardDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook (optional).
+            const string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,82 +1,80 @@
-// Title: C# – Load Korean‑culture Excel workbook with IgnoreMissingFonts and render charts using Aspose.Cells
-// Description: The sample checks for the input XLSX file, creates LoadOptions with CultureInfo "ko‑KR" and IgnoreMissingFonts enabled, sets a font substitute (Arial → Malgun Gothic), loads the workbook, configures ImageOrPrintOptions to use Malgun Gothic as the default font, and iterates through all worksheets to export each chart as a PNG image while handling errors gracefully.
-// Keywords: Aspose.Cells | C# | LoadOptions | IgnoreMissingFonts | Korean CultureInfo | font substitution | Malgun Gothic | Arial fallback | Chart.ToImage | export chart PNG | Excel chart rendering | globalization | localization
-// Common Searches: Aspose.Cells ignore missing fonts Korean | C# load Excel with Korean locale Aspose | set font substitutes in Aspose.Cells | export all Excel charts to PNG C# | render charts with Korean text Aspose.Cells
-// Developer Intent: Load an Excel workbook using Korean locale, ignore missing fonts, apply a fallback font, and generate PNG images for every chart.
-// Use Cases: Create localized chart images for Korean dashboards without installing the original fonts. | Batch‑convert Excel charts to web‑ready PNG files while preserving Korean characters. | Implement a fallback‑font strategy to ensure consistent chart appearance when source fonts are unavailable.
-// AI Prompts: Show how to enable IgnoreMissingFonts in LoadOptions while keeping Korean CultureInfo and font substitution. | Provide a code snippet that saves each rendered chart into a subfolder named after its worksheet. | Explain how to change ImageOrPrintOptions to output JPEG instead of PNG for chart rendering.
+// Title: Load a Korean‑localized Excel workbook with missing‑font suppression and export its charts to PNG using Aspose.Cells for .NET
+// AI Prompts: Load a .xlsx file with Aspose.Cells, set LoadOptions.IgnoreMissingFonts = true, apply Korean CultureInfo to the thread, and save each worksheet chart as a PNG file. | Create a C# method that accepts an Excel path, configures LoadOptions to suppress missing fonts, sets the current culture to ko‑KR, renders all charts to PNG images, and returns the list of generated filenames. | Adjust existing Aspose.Cells code to handle missing fonts gracefully when loading a Korean workbook and batch‑export every chart to separate PNG files.
+// Common Searches: Aspose.Cells C# missing font suppression for Korean workbook loading | Export Excel charts to PNG after setting CultureInfo to ko‑KR with Aspose.Cells | How to configure LoadOptions to bypass missing fonts in Aspose.Cells .NET | Render charts from a Korean localized Excel file using Aspose.Cells | Aspose.Cells chart rendering fails due to missing fonts Korean locale
+// Tags: missing-font suppression loadoptions aspnet | korean locale workbook loading aspnet | excel chart export png aspnet | chart rendering font fallback aspnet | aspocells load without font errors
 
 using System;
 using System.Globalization;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-// The sample checks for the input XLSX file, creates LoadOptions with CultureInfo "ko‑KR" and IgnoreMissingFonts enabled, sets a font substitute (Arial → Malgun Gothic), loads the workbook, configures ImageOrPrintOptions to use Malgun Gothic as the default font, and iterates through all worksheets to export each chart as a PNG image while handling errors gracefully.
+// The example shows how to set the current thread to Korean (ko‑KR) culture, configure Aspose.Cells LoadOptions with IgnoreMissingFonts = true to prevent font‑related errors, load an Excel workbook, iterate through all worksheets, render each chart to a PNG image, and optionally save the workbook, with comprehensive error handling.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the input workbook.
-            const string inputPath = "input.xlsx";
+            // Set Korean culture for the current thread
+            CultureInfo korean = new CultureInfo("ko-KR");
+            System.Threading.Thread.CurrentThread.CurrentCulture = korean;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = korean;
 
-            // Verify that the input file exists to avoid FileNotFoundException.
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Configure load options with Korean culture and font substitution.
-            LoadOptions loadOptions = new LoadOptions
-            {
-                CultureInfo = new CultureInfo("ko-KR")
-            };
-            IndividualFontConfigs fontConfigs = new IndividualFontConfigs();
-            fontConfigs.SetFontSubstitutes("Arial", new[] { "Malgun Gothic" });
-            loadOptions.FontConfigs = fontConfigs;
-
-            // Load the workbook.
+            // Load the workbook
+            LoadOptions loadOptions = new LoadOptions();
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Prepare image rendering options for charts.
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-            {
-                // Use the workbook's default font first; helps when characters are Unicode.
-                CheckWorkbookDefaultFont = true,
-                // Specify a Korean font to ensure proper rendering of Korean text.
-                DefaultFont = "Malgun Gothic"
-                // Image format defaults to PNG, so no explicit setting required.
-            };
-
-            // Iterate through worksheets and render each chart.
+            // Iterate through all worksheets and render each chart to an image
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                int chartCounter = 0;
                 foreach (Chart chart in sheet.Charts)
                 {
-                    chartCounter++;
                     try
                     {
-                        // Render the chart to an image using the Chart.ToImage method.
-                        string outputFile = $"{sheet.Name}_Chart{chartCounter}.png";
-                        chart.ToImage(outputFile, imgOptions);
-                        Console.WriteLine($"Chart rendered to: {outputFile}");
+                        // Create a unique file name for each chart image
+                        string chartIdentifier = !string.IsNullOrEmpty(chart.Name)
+                            ? chart.Name
+                            : $"Chart_{sheet.Name}_{chart.GetHashCode()}";
+
+                        string imagePath = $"{chartIdentifier}.png";
+
+                        // Render the chart to a PNG image (default format)
+                        chart.ToImage(imagePath);
+                        Console.WriteLine($"Chart saved as {imagePath}");
                     }
-                    catch (Exception ex)
+                    catch (Exception exChart)
                     {
-                        Console.WriteLine($"Failed to render chart on sheet \"{sheet.Name}\": {ex.Message}");
+                        Console.WriteLine($"Failed to render chart on sheet '{sheet.Name}': {exChart.Message}");
                     }
                 }
+            }
+
+            // Optionally save the workbook after processing
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Processing completed. Workbook saved as {outputPath}");
+            }
+            catch (Exception exSave)
+            {
+                Console.WriteLine($"Failed to save workbook: {exSave.Message}");
             }
         }
         catch (Exception ex)
         {
-            // Log any unexpected errors.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

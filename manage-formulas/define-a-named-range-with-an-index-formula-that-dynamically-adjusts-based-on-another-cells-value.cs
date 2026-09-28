@@ -1,55 +1,67 @@
-// Title: C# Aspose.Cells: Create a Dynamic Named Range Using INDEX and a Cell Reference
-// Description: Demonstrates how to build a new workbook, fill A1:A10 with values, store a row index in B1, define a named range "DynamicRange" whose RefersTo uses the INDEX function (Sheet1!$A$1:$A$10, Sheet1!$B$1), apply the name in C1, recalculate formulas, output the result, and save the file.
-// Keywords: Aspose.Cells dynamic named range | C# INDEX formula named range | RefersTo property Aspose.Cells | cell‑driven named range .NET | calculate formulas Aspose.Cells | Excel dynamic range programmatically | Aspose.Cells example C#
-// Common Searches: Aspose.Cells define named range with INDEX | C# dynamic named range based on cell value | How to use RefersTo with INDEX in Aspose.Cells | Update named range when another cell changes .NET | Create Excel dynamic range programmatically
-// Developer Intent: Create a named range whose reference is calculated by an INDEX formula that reads its row number from another worksheet cell.
-// Use Cases: Return the N‑th item from a list for reporting or validation without hard‑coding addresses. | Link chart data sources to a range that shifts automatically when the user changes an index cell. | Reuse a variable range across multiple formulas, enabling flexible data extraction in dashboards.
-// AI Prompts: Generate C# Aspose.Cells code that defines a named range using INDEX with the row index taken from cell B1 and shows the result in C1. | Show how to change the index value in B1, recalculate the workbook, and read the updated value of the dynamic named range. | Provide an example that saves the workbook after creating a cell‑driven dynamic named range with the INDEX function.
+// Title: Create a dynamic named range using an INDEX formula that reads its row index from another cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to add a workbook name whose RefersTo property is an INDEX formula referencing a data range and an index cell, then assign that name to a worksheet cell. | Demonstrate how to recalculate the workbook after defining the dynamic named range and save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells C# define named range with INDEX formula using a cell as the row number | Create a dynamic Excel named range based on another cell's value with Aspose.Cells for .NET | Set RefersTo property to an INDEX formula in Aspose.Cells and evaluate the result | Recalculate formulas after adding a named range in Aspose.Cells C# example
+// Tags: Aspose.Cells define named range with INDEX function | C# set RefersTo property to formula | dynamic named range based on cell value Aspose.Cells | recalculate workbook formulas Aspose.Cells | save workbook as .xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsDynamicNamedRange
+// The example creates a new workbook, fills A1:A10 with numbers, puts an index value in B1, defines a named range "DynamicValue" whose RefersTo is an INDEX formula that selects from Data!A1:A10 based on Data!B1, assigns the name to cell C1, recalculates formulas so C1 shows the correct value, and saves the file as DynamicNamedRange.xlsx.
+class Program
 {
-    // Demonstrates how to build a new workbook, fill A1:A10 with values, store a row index in B1, define a named range "DynamicRange" whose RefersTo uses the INDEX function (Sheet1!$A$1:$A$10, Sheet1!$B$1), apply the name in C1, recalculate formulas, output the result, and save the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet (default name is "Sheet1")
+            // Access the first worksheet and give it a friendly name
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sheet.Name = "Data";
 
-            // Populate column A with sample data (1 to 10)
+            // Populate A1:A10 with sample numeric data (10, 20, ..., 100)
             for (int i = 0; i < 10; i++)
             {
-                cells[i, 0].PutValue(i + 1); // A1:A10
+                sheet.Cells[i, 0].PutValue((i + 1) * 10);
             }
 
-            // Cell B1 will hold the row index that drives the INDEX formula
-            // Change this value to see the named range adjust dynamically
-            cells["B1"].PutValue(5); // Initially point to the 5th item in column A
+            // Cell B1 will contain the index (1‑based) that selects an item from A1:A10
+            sheet.Cells["B1"].PutValue(3); // Example: selects the 3rd item (value 30)
 
-            // Create a named range that uses the INDEX function.
-            // The formula returns the cell from A1:A10 whose position is given by B1.
-            int nameIdx = workbook.Worksheets.Names.Add("DynamicRange");
-            Name dynamicName = workbook.Worksheets.Names[nameIdx];
-            dynamicName.RefersTo = "=INDEX(Sheet1!$A$1:$A$10, Sheet1!$B$1)";
+            // Define a named range "DynamicValue" using an INDEX formula.
+            // The formula returns the element from A1:A10 based on the index in B1.
+            string indexFormula = "=INDEX(Data!A1:A10, Data!B1)";
 
-            // Use the named range in another cell to demonstrate it works
-            cells["C1"].Formula = "=DynamicRange";
+            // Add the name to the workbook's name collection and set its reference
+            int nameIndex = workbook.Worksheets.Names.Add("DynamicValue");
+            Name dynamicName = workbook.Worksheets.Names[nameIndex];
+            dynamicName.RefersTo = indexFormula;
 
-            // Calculate all formulas so that C1 reflects the current value of B1
+            // Demonstrate the named range by placing its result in C1
+            sheet.Cells["C1"].Formula = "DynamicValue";
+
+            // Recalculate formulas so C1 shows the correct value
             workbook.CalculateFormula();
 
-            // Output the result to the console (optional, for verification)
-            Console.WriteLine("Value of DynamicRange (C1): " + cells["C1"].Value);
+            // Define output file path
+            string outputPath = "DynamicNamedRange.xlsx";
 
-            // Save the workbook
-            workbook.Save("DynamicNamedRange.xlsx");
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

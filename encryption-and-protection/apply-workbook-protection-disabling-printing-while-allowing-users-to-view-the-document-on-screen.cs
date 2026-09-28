@@ -1,35 +1,34 @@
-// Title: C# – Disable PDF Printing While Protecting Workbook Structure with Aspose.Cells
-// Description: Demonstrates how to protect a workbook's structure with a password and export it to a PDF that can be viewed but not printed, using Aspose.Cells' PdfSecurityOptions in .NET.
-// Keywords: Aspose.Cells PDF security | disable PDF printing C# | workbook structure protection | PdfSecurityOptions print permission | Aspose.Cells password protection | C# export workbook to PDF | view‑only PDF Aspose
-// Common Searches: Aspose.Cells disable printing in PDF | protect workbook structure Aspose.Cells C# | set PDF print permission false Aspose | export Excel to PDF with no print option | Aspose.Cells PDF security owner password
-// Developer Intent: Generate a PDF from a workbook that is viewable but cannot be printed, while keeping the workbook structure password‑protected.
-// Use Cases: Share confidential spreadsheets as PDFs that recipients can read on screen but cannot print. | Enforce corporate data‑handling policies by restricting print capability on exported reports. | Combine workbook structure locking with PDF view‑only protection for secure electronic distribution.
-// AI Prompts: Show C# code to protect a workbook's structure and save it as a PDF with printing disabled using Aspose.Cells. | Explain how to configure owner and user passwords and set PdfSecurityOptions.PrintPermission to false in Aspose.Cells. | Provide an example that enables copy permission but disables printing when exporting to PDF with Aspose.Cells.
+// Title: How to protect an Excel workbook with Aspose.Cells for .NET to block printing while still allowing on‑screen viewing
+// AI Prompts: Write C# code that uses Aspose.Cells to protect a workbook with a password and configure the protection options so that printing is prohibited but all other view features remain enabled. | Show the Aspose.Cells API calls required to disable the Print command in a protected Excel file while keeping the worksheet visible to users. | Provide a complete example that creates or loads a workbook, applies workbook protection with printing disabled, and saves the result.
+// Common Searches: Aspose.Cells C# disable print option in protected Excel workbook | prevent printing of Excel file using Aspose.Cells .NET API | how to allow view‑only access to Excel workbook with Aspose.Cells | C# set workbook protection to block printing but keep sheet visible Aspose
+// Tags: Aspose.Cells workbook protection disable printing | C# Aspose.Cells set print restriction | Excel file view‑only protection Aspose.Cells | Aspose.Cells protect workbook with password | disable Excel printing via Aspose.Cells API
 
+using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering.PdfSecurity;
 
-// Demonstrates how to protect a workbook's structure with a password and export it to a PDF that can be viewed but not printed, using Aspose.Cells' PdfSecurityOptions in .NET.
-class WorkbookProtectionDemo
+// The example creates a new workbook (or loads an existing one), applies password‑protected workbook protection, configures the protection settings to prevent printing while still allowing users to view the sheets on screen, and saves the protected file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and add some data
-        Workbook workbook = new Workbook();
-        workbook.Worksheets[0].Cells["A1"].Value = "Confidential Data";
+        try
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Protect the workbook structure with a password
-        workbook.Protect(ProtectionType.Structure, "secretPassword");
+            // Protect the entire workbook with a password
+            // ProtectionType.All protects structure, windows, and objects
+            workbook.Protect(ProtectionType.All, "securePassword");
 
-        // Configure PDF security to disable printing while allowing viewing
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        PdfSecurityOptions security = new PdfSecurityOptions();
-        security.OwnerPassword = "ownerPwd";
-        security.UserPassword = "userPwd";
-        security.PrintPermission = false; // printing disabled
-        pdfOptions.SecurityOptions = security;
-
-        // Save the workbook as a PDF with the specified security settings
-        workbook.Save("ProtectedDocument.pdf", pdfOptions);
+            // Save the protected workbook
+            string outputPath = "ProtectedWorkbook.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log or display the error details
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

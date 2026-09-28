@@ -1,61 +1,51 @@
-// Title: Trim whitespace from all string cells in a CSV with Aspose.Cells for .NET
-// Description: Load a CSV file using Aspose.Cells' TxtLoadOptions, iterate through every used cell, trim leading and trailing spaces from string values, update changed cells, and save the cleaned data back to CSV with TxtSaveOptions (comma separator, optional blank‑row/column trimming).
-// Keywords: Aspose.Cells CSV trim | remove whitespace CSV .NET | trim string cells Aspose.Cells | CsvTrimExample C# | TxtLoadOptions TxtSaveOptions | clean CSV Aspose.Cells | trim leading blank rows columns CSV
-// Common Searches: how to trim spaces from CSV cells using Aspose.Cells | Aspose.Cells remove whitespace from string values in CSV | save cleaned CSV after trimming cells Aspose.Cells .NET | trim all string cells in a CSV file C# | Aspose.Cells CSV whitespace cleanup example
-// Developer Intent: Remove leading and trailing spaces from every string cell in a CSV file and write the sanitized content to a new CSV.
-// Use Cases: Sanitize user‑uploaded CSVs before bulk import to prevent mismatched keys. | Prepare legacy CSV exports for reporting tools that are sensitive to extra spaces. | Normalize data for downstream analytics pipelines that require consistent string values.
-// AI Prompts: Create C# code that logs each cell's original and trimmed value when a change occurs. | Show how to modify the example to trim only leading spaces while keeping trailing spaces. | Provide a version that processes all worksheets in the workbook instead of just the first one.
+// Title: Trim whitespace from all string cells in a CSV using Aspose.Cells for .NET and save the cleaned file
+// AI Prompts: Load a CSV file with Aspose.Cells, iterate through each cell, replace string values with their Trim() result, and write the workbook to a new CSV. | Configure TxtSaveOptions to drop empty leading rows/columns and trailing blank cells while exporting the cleaned worksheet as CSV.
+// Common Searches: Aspose.Cells .NET how to remove spaces from string values in a CSV workbook | C# trim whitespace in all cells when processing CSV with Aspose.Cells | Save CSV with Aspose.Cells while eliminating blank rows and trailing empty cells | Iterate over cells in Aspose.Cells to clean data before exporting to CSV | Load CSV using LoadOptions and clean string fields in C#
+// Tags: remove surrounding spaces from CSV cells Aspose.Cells | LoadOptions CSV import Aspose.Cells .NET | TxtSaveOptions eliminate empty rows columns CSV | cell iteration data sanitization Aspose.Cells | save cleaned worksheet as CSV Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace CsvTrimExample
 {
-    // Load a CSV file using Aspose.Cells' TxtLoadOptions, iterate through every used cell, trim leading and trailing spaces from string values, update changed cells, and save the cleaned data back to CSV with TxtSaveOptions (comma separator, optional blank‑row/column trimming).
+    // The program loads an input CSV with Aspose.Cells, walks through every used cell, trims leading and trailing whitespace from string cells, and saves the cleaned worksheet to a new CSV using TxtSaveOptions that also discard empty leading rows/columns and trailing blank cells.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Input and output CSV file paths
+            // Paths for input and output CSV files
             string inputCsvPath = "input.csv";
-            string outputCsvPath = "output_trimmed.csv";
+            string outputCsvPath = "output.csv";
 
-            // Load CSV with default TxtLoadOptions (separator is comma by default)
-            TxtLoadOptions loadOptions = new TxtLoadOptions();
+            // Load the CSV file using LoadOptions with CSV format
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
             Workbook workbook = new Workbook(inputCsvPath, loadOptions);
 
             // Get the first worksheet's cells collection
             Cells cells = workbook.Worksheets[0].Cells;
 
-            // Iterate over all used cells and trim whitespace from string values
+            // Iterate through all used cells and trim whitespace from string values
             foreach (Cell cell in cells)
             {
                 if (cell.Type == CellValueType.IsString)
                 {
-                    string original = cell.StringValue;
-                    string trimmed = original.Trim();
-
-                    // Update the cell only if trimming changed the value
-                    if (!string.Equals(original, trimmed, StringComparison.Ordinal))
-                    {
-                        cell.PutValue(trimmed);
-                    }
+                    // Trim leading and trailing whitespace and put the trimmed value back
+                    string trimmed = cell.StringValue.Trim();
+                    cell.PutValue(trimmed);
                 }
             }
 
-            // Prepare save options for CSV output
+            // Prepare CSV save options (default separator is comma)
             TxtSaveOptions saveOptions = new TxtSaveOptions
             {
                 // Ensure leading blank rows/columns are trimmed (optional)
                 TrimLeadingBlankRowAndColumn = true,
-                // Use comma as separator
-                Separator = ','
+                // Ensure trailing blank cells are trimmed (optional)
+                TrimTailingBlankCells = true
             };
 
-            // Save the cleaned workbook as CSV
+            // Save the cleaned data back to CSV
             workbook.Save(outputCsvPath, saveOptions);
-
-            Console.WriteLine("CSV file has been trimmed and saved to: " + outputCsvPath);
         }
     }
 }

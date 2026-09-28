@@ -1,82 +1,69 @@
-// Title: Export a Chart to PDF with a Custom 8.5 × 11 in Page Size Using Aspose.Cells for .NET
-// Description: This example creates a workbook, adds a column chart from sample data, and uses the Chart.ToPdf method to generate a PDF named ChartCustomSize.pdf. The PDF page is set to 8.5 × 11 inches (letter size) and the chart is centered horizontally and vertically with PageLayoutAlignmentType.Center.
-// Keywords: Aspose.Cells export chart to PDF | Chart.ToPdf custom page size | 8.5 x 11 inch PDF | center chart on PDF page | Aspose.Cells C# example | .NET chart to PDF | letter size PDF Aspose.Cells | PageLayoutAlignmentType Center | export Excel chart as PDF | custom PDF dimensions Aspose
-// Common Searches: Aspose.Cells export chart to PDF with specific size | How to set PDF page width and height in Chart.ToPdf | Center chart on a PDF page using Aspose.Cells | C# code for exporting Excel chart to letter‑size PDF | Custom page layout for chart PDF in Aspose.Cells
-// Developer Intent: Generate a PDF file that contains a worksheet chart sized to 8.5 × 11 inches and centered on the page.
-// Use Cases: Produce printable reports where each chart fills a standard letter‑size page. | Create PDF invoices or statements that embed a centered sales chart. | Automate batch conversion of multiple Excel charts to uniformly sized PDFs.
-// AI Prompts: Show how to modify the code for landscape orientation with an 11 × 8.5 in page. | Give an example that saves the chart as PDF and then merges it with other PDFs using Aspose.PDF. | Explain the effect of different PageLayoutAlignmentType values such as TopLeft, BottomRight, and Center when exporting a chart.
+// Title: Export a column chart from Aspose.Cells to a PDF with an 8.5 × 11 inch custom page size using C#
+// AI Prompts: Write C# code that creates a column chart with Aspose.Cells and saves only the chart to a PDF using an 8.5 × 11 inch page and centered alignment. | Show how to export an Aspose.Cells chart to PDF in landscape orientation while specifying custom page dimensions in C#. | Provide a C# example that iterates through all charts in a workbook and exports each one to a separate PDF file with its own custom page size.
+// Common Searches: Aspose.Cells C# export chart to PDF with custom 8.5x11 page size | How to set page dimensions when using Chart.ToPdf in Aspose.Cells | Center a chart on a PDF page using Aspose.Cells ToPdf method | Export only a chart, not the worksheet, to PDF with Aspose.Cells | Change PDF orientation for a chart exported with Aspose.Cells C#
+// Tags: Aspose.Cells ToPdf chart custom page dimensions | C# export chart as PDF centered alignment | column chart PDF generation Aspose.Cells | chart-only PDF output Aspose.Cells | set PDF orientation for Aspose.Cells chart
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsChartToPdf
 {
-    // This example creates a workbook, adds a column chart from sample data, and uses the Chart.ToPdf method to generate a PDF named ChartCustomSize.pdf. The PDF page is set to 8.5 × 11 inches (letter size) and the chart is centered horizontally and vertically with PageLayoutAlignmentType.Center.
-    public class ExportChartToPdfCustomSize
+    // The example creates a workbook, adds sample data, inserts a column chart, and then uses Chart.ToPdf to export the chart alone to a PDF file named ChartCustomSize.pdf with an 8.5 × 11 inch page, centered horizontally and vertically.
+    public class ExportChartPdf
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Chart exported to PDF successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
         public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Fruits");
-            worksheet.Cells["A3"].PutValue("Vegetables");
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(50);
-            worksheet.Cells["B3"].PutValue(30);
-
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data range for the chart
-            chart.NSeries.Add("B2:B3", true);          // Values
-            chart.NSeries.CategoryData = "A2:A3";      // Categories
-
-            // Define output PDF path
-            string outputPath = "ChartCustomSize.pdf";
-
-            // Ensure the output directory exists (handle possible null from GetDirectoryName)
-            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
-            if (!Directory.Exists(outputDir))
-            {
-                Directory.CreateDirectory(outputDir);
-            }
-
             try
             {
-                // Export the chart to a PDF file with a custom page size (8.5 × 11 inches)
-                // and center the chart horizontally and vertically.
-                chart.ToPdf(
-                    outputPath,
-                    8.5f,   // width in inches (float)
-                    11f,    // height in inches (float)
-                    PageLayoutAlignmentType.Center,
-                    PageLayoutAlignmentType.Center);
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data for the chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("Fruits");
+                sheet.Cells["A3"].PutValue("Vegetables");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["B2"].PutValue(50);
+                sheet.Cells["B3"].PutValue(30);
+
+                // Add a column chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set the data source for the chart
+                chart.NSeries.Add("B2:B3", true);
+                chart.NSeries.CategoryData = "A2:A3";
+
+                // Define output PDF file path
+                string outputPath = "ChartCustomSize.pdf";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Export the chart to a PDF with custom page size and centered alignment
+                chart.ToPdf(outputPath, 8.5f, 11f,
+                    PageLayoutAlignmentType.Center, PageLayoutAlignmentType.Center);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to export chart to PDF: {ex.Message}");
-                throw;
+                Console.WriteLine($"Error exporting chart to PDF: {ex.Message}");
             }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            ExportChartPdf.Run();
         }
     }
 }

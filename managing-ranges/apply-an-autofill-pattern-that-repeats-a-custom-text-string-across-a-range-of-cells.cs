@@ -1,57 +1,48 @@
-// Title: Repeat a custom text string across a cell range with Aspose.Cells AutoFill in C#
-// Description: Creates a workbook, writes a custom string to A1, defines A1 as the source range and A2:A11 as the target range, then uses AutoFill with AutoFillType.Copy to duplicate the text across the target cells and saves the file.
-// Keywords: Aspose.Cells | AutoFill | AutoFillType.Copy | C# | .NET | repeat text across cells | fill range with custom string | Excel automation | workbook | cells range
-// Common Searches: Aspose.Cells repeat same text in a column | AutoFill copy single cell value to range C# | How to fill A2:A10 with text from A1 using Aspose.Cells | C# Aspose.Cells autofill custom string vertically | Copy cell value to multiple cells Aspose.Cells .NET
-// Developer Intent: Copy a single cell's text value into a larger range using Aspose.Cells AutoFill.
-// Use Cases: Populate a label column in a generated report where every row needs the same heading. | Create a template that automatically inserts a warning or instruction text into each data entry row. | Initialize a worksheet with a repeated note for user guidance across many rows.
-// AI Prompts: Show how to modify the code to autofill the custom text horizontally across cells B1:G1. | Provide an example that uses AutoFillType.FillSeries to add sequential numbers after the custom text in a column. | Explain how to set up an AutoFill pattern that alternates two different strings across a range of cells.
+// Title: Use Aspose.Cells for .NET to autofill a custom string down a column (A1:A15)
+// AI Prompts: Generate C# code that writes a given text to cell A1 and uses Aspose.Cells AutoFill to copy it through cells A1 to A15. | Show how to create source and destination Range objects and apply AutoFillType.Copy to repeat a value across a column in an Excel workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# autofill same value from A1 to A15 example | How to copy a single cell value to a range using AutoFillType.Copy in Aspose.Cells .NET | Repeat custom string in an Excel column with Aspose.Cells AutoFill in C#
+// Tags: Aspose.Cells AutoFillType.Copy usage | C# repeat value across Excel range with Aspose.Cells | Create source and destination Range Aspose.Cells | populate Excel column with identical text Aspose.Cells | Aspose.Cells autofill custom string to column
 
 using System;
 using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The program creates a new workbook, writes a custom string to cell A1, defines source and destination ranges (A1 and A1:A15), applies AutoFill with AutoFillType.Copy to repeat the string down the column, and saves the file as AutofillCustomText.xlsx.
+class Program
 {
-    // Creates a workbook, writes a custom string to A1, defines A1 as the source range and A2:A11 as the target range, then uses AutoFill with AutoFillType.Copy to duplicate the text across the target cells and saves the file.
-    public class AutoFillCustomTextDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
 
-            // Define the custom text to repeat
-            string customText = "Sample Text";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Put the custom text into a single source cell (A1)
-            cells["A1"].PutValue(customText);
+            // Custom text to repeat
+            string customText = "MyCustomString";
 
-            // Create the source range that contains the text (A1)
-            AsposeRange sourceRange = cells.CreateRange("A1");
+            // Place the custom text in the starting cell (A1)
+            sheet.Cells["A1"].PutValue(customText);
 
-            // Define the target range where the text should be repeated (A2:A11)
-            AsposeRange targetRange = cells.CreateRange("A2:A11");
+            // Define the source range (the cell with the initial value)
+            AsposeRange sourceRange = sheet.Cells.CreateRange("A1", "A1");
 
-            // Use AutoFill with the Copy type to repeat the text across the target range
-            sourceRange.AutoFill(targetRange, AutoFillType.Copy);
+            // Define the destination range where the pattern will be repeated (A1:A15)
+            AsposeRange destinationRange = sheet.Cells.CreateRange("A1", "A15");
+
+            // Apply autofill to copy the custom text across the destination range
+            sourceRange.AutoFill(destinationRange, AutoFillType.Copy);
 
             // Save the workbook to a file
-            workbook.Save("AutoFillCustomTextDemo.xlsx");
+            string outputPath = "AutofillCustomText.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

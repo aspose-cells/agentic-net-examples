@@ -1,43 +1,56 @@
-// Title: Generate an HTML <img> tag for a PNG snapshot of an Excel worksheet using Aspose.Cells for .NET (C#)
-// Description: The sample creates a workbook, fills cells, configures ImageOrPrintOptions for PNG, renders the first worksheet to a PNG file with SheetRender, and outputs an HTML <img> tag that references the saved image.
-// Keywords: Aspose.Cells | C# export Excel to PNG | SheetRender PNG | ImageOrPrintOptions | HTML img tag from worksheet | Excel image embedding | web page Excel snapshot
-// Common Searches: Aspose.Cells convert worksheet to PNG C# | how to create HTML img tag for Excel image using Aspose | render Excel sheet as PNG and embed in web page | C# generate PNG from workbook and display in HTML | export Excel to image for web display Aspose.Cells
-// Developer Intent: Export a worksheet as a PNG file and produce ready‑to‑use HTML markup that displays the image.
-// Use Cases: Show a static view of spreadsheet data on a website without requiring Excel. | Include worksheet snapshots in email newsletters or documentation. | Create printable reports where the layout must stay consistent across browsers.
-// AI Prompts: Write C# code with Aspose.Cells that saves the first worksheet as a PNG and prints an <img> tag referencing the file. | Explain the role of ImageOrPrintOptions and SheetRender when converting an Excel sheet to a PNG image. | Show how to customize the generated <img> tag with attributes such as width, height, alt text, and CSS classes.
+// Title: Export an Excel worksheet to PNG and output an HTML <img> tag using Aspose.Cells in C#
+// AI Prompts: Create C# code that loads an Excel workbook, uses Aspose.Cells SheetRender to save the first worksheet as a PNG file, and writes the resulting <img> element to the console. | Update the sample to set a custom alt attribute and reference the PNG with a relative URL in the generated <img> markup. | Add a verification step that confirms the PNG file was created before emitting the <img> element.
+// Common Searches: how to use Aspose.Cells SheetRender in C# to convert an Excel sheet to a PNG image | c# reference a PNG file generated from an Excel worksheet in a web page with Aspose.Cells | check that a PNG file exists after rendering a worksheet before outputting markup in C#
+// Tags: png export of worksheet via Aspose.Cells | onepagepersheet option in ImageOrPrintOptions | c# generate img element for exported worksheet image | check file existence after Aspose.Cells rendering | convert excel sheet to image with Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-// The sample creates a workbook, fills cells, configures ImageOrPrintOptions for PNG, renders the first worksheet to a PNG file with SheetRender, and outputs an HTML <img> tag that references the saved image.
+// Loads input.xlsx, renders the first worksheet to Sheet1.png using Aspose.Cells, verifies the PNG file, and prints an HTML <img> tag that references the generated image.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and access the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputImage = "Sheet1.png";
 
-        // Populate some sample data
-        worksheet.Cells["A1"].PutValue("Hello");
-        worksheet.Cells["B1"].PutValue("World");
-        worksheet.Cells["A2"].PutValue(123);
-        worksheet.Cells["B2"].PutValue(456);
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-        // Configure image rendering options for PNG output
-        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
-        imgOptions.ImageType = ImageType.Png;          // PNG format
-        imgOptions.OnePagePerSheet = true;             // Render each sheet as a single page
+        try
+        {
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
 
-        // Render the worksheet to a PNG file using SheetRender
-        SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
-        string pngFileName = "worksheet.png";
-        sheetRender.ToImage(0, pngFileName);           // Save first (and only) page as PNG
+            // Get the first worksheet (index 0)
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Generate an HTML <img> tag that references the saved PNG file
-        string htmlImgTag = $"<img src=\"{pngFileName}\" alt=\"Worksheet Image\" />";
-        Console.WriteLine(htmlImgTag);
+            // Set up image export options (default format is PNG)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                OnePagePerSheet = true // Export the whole sheet on one page
+            };
+
+            // Create a renderer for the worksheet with the defined options
+            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+
+            // Export the first (and only) page of the worksheet to a PNG file
+            sheetRender.ToImage(0, outputImage);
+
+            // Generate an HTML <img> tag that references the saved PNG file
+            string imgTag = $"<img src=\"{outputImage}\" alt=\"Worksheet Image\" />";
+            Console.WriteLine(imgTag);
+        }
+        catch (Exception ex)
+        {
+            // Output any runtime errors for debugging purposes
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

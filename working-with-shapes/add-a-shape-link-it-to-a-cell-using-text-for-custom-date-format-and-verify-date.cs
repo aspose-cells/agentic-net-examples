@@ -1,16 +1,15 @@
-// Title: Link a Rectangle Shape to a Cell with Custom Date Formatting and Validate the Date using Aspose.Cells for .NET
-// Description: Demonstrates how to insert the current date into cell B2, apply the custom format "dd-mmm-yyyy", add a rectangle shape, link the shape to the formatted cell, refresh the displayed value, verify that the linked cell holds a DateTime object, and save the workbook as ShapeLinkedDate.xlsx.
-// Keywords: Aspose.Cells | .NET | shape linked cell | custom date format | DateTime validation | rectangle shape | Excel shape linking | SetLinkedCell | UpdateSelectedValue | Aspose.Cells example
-// Common Searches: Aspose.Cells link shape to cell with date | apply custom date format to Excel cell using Aspose.Cells | verify DateTime value of linked cell in Aspose.Cells | add rectangle shape and bind it to a cell in .NET | refresh shape text after linking to a cell
-// Developer Intent: Create a rectangle shape that displays a custom‑formatted date from a linked cell and confirm the cell contains a valid DateTime value.
-// Use Cases: Generate a report where a shape shows the generation date in a specific format. | Build an interactive dashboard with shapes that automatically reflect date changes in linked cells. | Validate imported worksheet data by checking that linked cells hold proper DateTime types before further processing.
-// AI Prompts: Write C# code with Aspose.Cells to add a rectangle shape, link it to cell B2, format the cell as dd-mmm-yyyy, update the shape's text, and confirm the linked value is a DateTime. | Show an example that inserts the current date into a cell, applies a custom date format, links a shape to that cell, refreshes the shape, and saves the workbook. | Explain how to use SetLinkedCell and UpdateSelectedValue to bind a shape to a date cell and how to verify the cell's data type in Aspose.Cells for .NET.
+// Title: Add a rectangle shape linked to cell A1 via TEXT function for a custom date format and verify the shape text as a date using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that inserts a rectangle shape into a worksheet, sets its Text property to =TEXT(A1,"yyyy-MM-dd"), runs workbook.CalculateFormula(), and determines whether the shape's displayed text can be parsed into a valid DateTime. | Write a .NET example that writes today's date to cell A1, applies a standard date number format, links a rectangle shape's text to that cell using the TEXT function with a custom format, and validates the resulting string as a proper date.
+// Common Searches: how to link a shape to a cell using TEXT formula in Aspose.Cells C# | validate shape text as date after linking to worksheet cell with Aspose.Cells | Aspose.Cells add rectangle shape and display formatted date from a cell | C# calculate formulas for shape text linked to a cell in Aspose.Cells
+// Tags: Aspose.Cells add rectangle shape | shape text linked to cell using TEXT function | custom date format in shape text | validate displayed date from shape .NET | calculate formulas for linked shape Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to insert the current date into cell B2, apply the custom format "dd-mmm-yyyy", add a rectangle shape, link the shape to the formatted cell, refresh the displayed value, verify that the linked cell holds a DateTime object, and save the workbook as ShapeLinkedDate.xlsx.
+// Demonstrates creating a workbook, inserting today's date into cell A1 with a standard number format, adding a rectangle shape, linking its Text property to the cell using the TEXT function for a yyyy-MM-dd format, calculating formulas, retrieving and validating the shape's text as a date, and saving the workbook.
 class Program
 {
     static void Main()
@@ -21,45 +20,62 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Put the current date into cell B2
-            Cell dateCell = sheet.Cells["B2"];
-            dateCell.PutValue(DateTime.Now);
+            // Put a date value into cell A1
+            DateTime today = DateTime.Today;
+            Cell cell = sheet.Cells["A1"];
+            cell.PutValue(today);
 
-            // Apply custom date format "dd-mmm-yyyy" to the cell
-            Style style = workbook.CreateStyle();
-            style.Custom = "dd-mmm-yyyy";
-            StyleFlag flag = new StyleFlag();
-            flag.NumberFormat = true; // enable number format changes
-            dateCell.SetStyle(style, flag);
+            // Apply a standard date number format (Number format ID 14)
+            Style style = cell.GetStyle();
+            style.Number = 14;
+            cell.SetStyle(style);
 
-            // Add a rectangle shape (acts as a text box)
-            // Parameters: upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, width, height
-            RectangleShape shape = sheet.Shapes.AddRectangle(5, 2, 8, 6, 100, 50);
-            shape.Text = "Date:"; // initial placeholder text
+            // Add a rectangle shape to the worksheet
+            // Parameters: type, upperLeftRow, upperLeftColumn, upperLeftRowOffset, upperLeftColumnOffset, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                5, 5, 0, 0, 50, 200);
 
-            // Link the shape to cell B2 and refresh displayed value
-            shape.SetLinkedCell("$B$2", false, true);
-            shape.UpdateSelectedValue();
+            // Link the shape's text to cell A1 using TEXT with a custom date format
+            shape.Text = "=TEXT(A1,\"yyyy-MM-dd\")";
 
-            // Verify that the linked cell contains a DateTime value
-            object linkedValue = dateCell.Value;
-            if (linkedValue is DateTime dt)
+            // Calculate all formulas so the shape displays the formatted date
+            workbook.CalculateFormula();
+
+            // Retrieve the displayed text from the shape
+            string shapeText = shape.Text;
+
+            // Verify that the shape text is a valid date in the expected format
+            bool isValid = DateTime.TryParseExact(
+                shapeText,
+                "yyyy-MM-dd",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime parsedDate);
+
+            Console.WriteLine($"Shape text: {shapeText}");
+            Console.WriteLine($"Is valid date: {isValid}");
+            if (isValid)
             {
-                Console.WriteLine("Linked cell contains a valid date: " + dt.ToString("dd-MMM-yyyy"));
-            }
-            else
-            {
-                Console.WriteLine("Linked cell does not contain a date.");
+                Console.WriteLine($"Parsed date: {parsedDate:d}");
             }
 
-            // Save the workbook
+            // Save the workbook (optional)
             string outputPath = "ShapeLinkedDate.xlsx";
+
+            // Ensure the directory exists before saving
+            string directory = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

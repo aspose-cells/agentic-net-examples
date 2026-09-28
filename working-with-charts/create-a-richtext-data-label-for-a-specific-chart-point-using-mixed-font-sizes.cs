@@ -1,10 +1,7 @@
-// Title: C# – Add a Rich‑Text Data Label with Mixed Font Sizes to a Chart Point using Aspose.Cells
-// Description: This example shows how to create a workbook, insert a column chart, enable a data label for the first point of the first series, and apply rich‑text formatting to the label – larger blue font for the word "High" and smaller red font for the value "10" – before saving the file as RichTextDataLabel.xlsx.
-// Keywords: Aspose.Cells | Aspose.Cells for .NET | C# chart data label | rich text data label | mixed font size chart label | chart point custom label | DataLabels Characters method | Excel chart formatting Aspose | font color chart label | Aspose.Cells example
-// Common Searches: Aspose.Cells set different font sizes in a chart data label | How to apply rich‑text to a specific chart point label in .NET | Change color of characters in Excel chart data label using Aspose | C# code for mixed‑style data label on column chart | Aspose.Cells chart point label custom formatting
-// Developer Intent: Format parts of a chart point's data label with distinct font sizes and colors using Aspose.Cells for .NET.
-// Use Cases: Highlight a keyword (e.g., "High") in a data label with a larger, colored font while keeping the numeric value smaller for visual emphasis. | Create multi‑style annotations on chart points to separate text and numbers within the same label. | Design threshold indicators in column charts where the label combines formatted text and values for better readability.
-// AI Prompts: Generate C# code that creates a column chart with Aspose.Cells and applies mixed font sizes and colors to specific characters of a data label. | Show how to use the DataLabels.Characters method to set bold, italic, and color for separate text segments of a chart point label in Aspose.Cells. | Provide an Aspose.Cells .NET snippet that formats a chart point label with "High" in 14‑pt blue and "10" in 10‑pt red.
+// Title: Create a mixed‑font rich‑text data label for a specific chart point using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that adds a column chart, enables a data label on the first point, and formats the label text so that the word “Value:” appears in 12‑pt blue font while the numeric value appears in 20‑pt red bold font. | Show how to use the Characters method to apply different font sizes, colors, and bold styling to separate character ranges within a chart point’s data label in Aspose.Cells. | Provide the complete example that saves the workbook after applying the rich‑text formatting to the chart point label.
+// Common Searches: Aspose.Cells C# format part of a chart data label with different font sizes | how to apply rich text styling to a single point label in an Aspose.Cells column chart | set blue text for label prefix and red bold number in Aspose.Cells chart label | C# Aspose.Cells mixed font colors and sizes in chart point data label example
+// Tags: apply mixed font sizes to chart point label Aspose.Cells | character range formatting in Aspose.Cells chart data label | set font color and bold for chart label segment Aspose.Cells | column chart data label rich text styling Aspose.Cells | custom label text for individual chart point C#
 
 using System;
 using System.Drawing;
@@ -13,50 +10,53 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsRichTextDataLabel
 {
-    // This example shows how to create a workbook, insert a column chart, enable a data label for the first point of the first series, and apply rich‑text formatting to the label – larger blue font for the word "High" and smaller red font for the value "10" – before saving the file as RichTextDataLabel.xlsx.
+    // The example creates a workbook, adds a column chart with sample data, enables a data label on the first chart point, and uses the Characters method to apply different font sizes, colors, and bold styling to specific text segments before saving the file as RichTextDataLabel.xlsx.
     public class Program
     {
         public static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet worksheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("A");
+            worksheet.Cells["A3"].PutValue("B");
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["B3"].PutValue(20);
 
             // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIndex];
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
 
             // Set the data range for the series
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
 
-            // Access the first point of the first series
-            ChartPoint point = chart.NSeries[0].Points[0];
+            // Access the first series and its first point
+            Series series = chart.NSeries[0];
+            ChartPoint point = series.Points[0];
 
             // Enable data label for this point and set custom text
-            point.DataLabels.ShowValue = true;
-            point.DataLabels.Text = "High10";
+            DataLabels dataLabel = point.DataLabels;
+            dataLabel.ShowValue = true;
+            dataLabel.Text = "Value:10";
 
-            // Apply rich‑text formatting:
-            //   - Characters 0‑3 ("High") will have larger font size (14)
-            //   - Characters 4‑5 ("10") will have smaller font size (10)
-            point.DataLabels.Characters(0, 4).Font.Size = 14;   // "High"
-            point.DataLabels.Characters(4, 2).Font.Size = 10;   // "10"
+            // Apply mixed font sizes:
+            // "Value:" (characters 0-5) – size 12, blue
+            dataLabel.Characters(0, 5).Font.Size = 12;
+            dataLabel.Characters(0, 5).Font.Color = Color.Blue;
 
-            // Optionally set different colors for demonstration
-            point.DataLabels.Characters(0, 4).Font.Color = Color.Blue;
-            point.DataLabels.Characters(4, 2).Font.Color = Color.Red;
+            // "10" (characters 6-7) – size 20, red, bold
+            dataLabel.Characters(6, 2).Font.Size = 20;
+            dataLabel.Characters(6, 2).Font.Color = Color.Red;
+            dataLabel.Characters(6, 2).Font.IsBold = true;
+
+            // Apply the font settings to all child nodes of the data label
+            dataLabel.ApplyFont();
 
             // Save the workbook
             workbook.Save("RichTextDataLabel.xlsx");

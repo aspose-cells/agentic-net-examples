@@ -1,49 +1,78 @@
-// Title: C# – Remove Blank Columns from an Excel Workbook and Export to JSON with Aspose.Cells
-// Description: Load an XLSX file using Aspose.Cells for .NET, delete columns that are completely empty, configure JsonSaveOptions to skip empty rows, omit null cells, and treat the first row as a header, then save the cleaned worksheet as a compact JSON file.
-// Keywords: Aspose.Cells C# remove blank columns | Excel to JSON .NET | JsonSaveOptions SkipEmptyRows | delete empty columns Aspose.Cells | export worksheet as JSON | clean Excel data before JSON conversion
-// Common Searches: how to delete blank columns in Excel with Aspose.Cells | export cleaned Excel sheet to JSON C# | skip empty rows when saving Excel as JSON | Aspose.Cells remove empty columns before JSON export | C# convert Excel to JSON without empty columns
-// Developer Intent: Load an Excel workbook, eliminate any columns that contain no data, and serialize the remaining content to a JSON file using Aspose.Cells for .NET.
-// Use Cases: Prepare spreadsheet data for web APIs by stripping unused columns and generating lightweight JSON payloads. | Create front‑end data sources for JavaScript charts where only populated columns are needed. | Reduce storage and transmission size of Excel‑derived JSON by omitting blank columns and rows.
-// AI Prompts: Show how to also delete blank rows after removing empty columns with Aspose.Cells. | Give a C# example that deserializes the exported JSON into strongly‑typed objects using Newtonsoft.Json. | Explain how to include cell formatting (e.g., number formats) in the JSON output with JsonSaveOptions.
+// Title: Remove empty columns from an XLS workbook and export the cleaned data to JSON using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xls file with Aspose.Cells, scans each worksheet for columns that contain only blank or whitespace cells, deletes those columns, and then exports the workbook to a JSON file. | Adjust the column‑deletion routine to ignore hidden columns while still using JsonSaveOptions to write the cleaned workbook to JSON. | Add logging that records the indexes of removed columns for each worksheet before saving the workbook as JSON with Aspose.Cells.
+// Common Searches: Aspose.Cells C# remove columns that are completely empty from an XLS file | How to export a cleaned Excel sheet to JSON using Aspose.Cells .NET | C# code to delete blank columns in each worksheet before saving as JSON with Aspose.Cells | Using JsonSaveOptions to convert an XLS workbook to JSON after column cleanup | Detect and delete empty columns in Aspose.Cells workbook programmatically
+// Tags: delete empty columns Aspose.Cells | json export Aspose.Cells | xls workbook processing C# | column cleanup before JSON conversion | JsonSaveOptions usage
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-// Load an XLSX file using Aspose.Cells for .NET, delete columns that are completely empty, configure JsonSaveOptions to skip empty rows, omit null cells, and treat the first row as a header, then save the cleaned worksheet as a compact JSON file.
+// // Loads an .xls workbook, removes any columns that consist solely of empty or whitespace cells from each worksheet, and saves the cleaned data to a JSON file using Aspose.Cells JsonSaveOptions.
 class Program
 {
     static void Main()
     {
-        // Path to the source Excel file
-        string inputPath = "input.xlsx";
-
-        // Load the workbook from the file
-        Workbook workbook = new Workbook(inputPath);
-
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Remove all columns that are completely blank
-        worksheet.Cells.DeleteBlankColumns();
-
-        // Configure JSON export options
-        JsonSaveOptions jsonOptions = new JsonSaveOptions
+        try
         {
-            // Skip rows that are empty after column cleanup
-            SkipEmptyRows = true,
-            // Do not export empty cells as null (optional)
-            ExportEmptyCells = false,
-            // Treat the first row as header (optional, adjust as required)
-            HasHeaderRow = true
-        };
+            const string inputPath = "input.xls";
+            const string outputPath = "output.json";
 
-        // Path for the resulting JSON file
-        string outputPath = "output.json";
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Save the cleaned workbook as JSON using the configured options
-        workbook.Save(outputPath, jsonOptions);
+            // Load the XLS workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        Console.WriteLine("Workbook cleaned and exported to JSON successfully.");
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                Cells cells = sheet.Cells;
+
+                // Determine the used range dimensions
+                int maxColumn = cells.MaxColumn + 1; // total number of columns used
+                int maxRow = cells.MaxRow + 1;       // total number of rows used
+
+                List<int> emptyColumns = new List<int>();
+
+                // Identify columns where every cell is empty or whitespace
+                for (int col = 0; col < maxColumn; col++)
+                {
+                    bool isEmpty = true;
+                    for (int row = 0; row < maxRow; row++)
+                    {
+                        object value = cells[row, col].Value;
+                        if (value != null && !string.IsNullOrWhiteSpace(value.ToString()))
+                        {
+                            isEmpty = false;
+                            break;
+                        }
+                    }
+                    if (isEmpty)
+                    {
+                        emptyColumns.Add(col);
+                    }
+                }
+
+                // Delete empty columns starting from the rightmost to keep indices correct
+                for (int i = emptyColumns.Count - 1; i >= 0; i--)
+                {
+                    cells.DeleteColumn(emptyColumns[i]);
+                }
+            }
+
+            // Export the cleaned workbook to JSON format using JsonSaveOptions
+            JsonSaveOptions jsonOptions = new JsonSaveOptions();
+            workbook.Save(outputPath, jsonOptions);
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

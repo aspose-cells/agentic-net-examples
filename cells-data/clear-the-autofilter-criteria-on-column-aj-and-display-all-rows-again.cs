@@ -1,69 +1,35 @@
-// Title: Clear AutoFilter on column AJ and show all rows with Aspose.Cells for .NET
-// Description: Loads an Excel file, ensures the AutoFilter range includes column AJ, calls worksheet.AutoFilter.ShowAll() and Refresh() to remove filter criteria, then saves the workbook with every row visible.
-// Keywords: Aspose.Cells | .NET | Clear AutoFilter | ShowAll | AutoFilter.Refresh | column AJ | remove Excel filter | display all rows | reset worksheet filter | Excel automation
-// Common Searches: Aspose.Cells clear filter column AJ | How to show all rows after AutoFilter in C# | Reset Excel AutoFilter programmatically | Aspose.Cells ShowAll example | Remove specific column filter with Aspose.Cells
-// Developer Intent: Remove any AutoFilter criteria applied to column AJ and make every worksheet row visible.
-// Use Cases: Prepare a report workbook for distribution by clearing hidden rows caused by filters. | Ensure data export includes the full dataset after temporary filtering. | Programmatically reset worksheet filters before performing bulk calculations or chart generation.
-// AI Prompts: Generate C# code using Aspose.Cells to clear the AutoFilter on column AJ while keeping other filters intact. | Explain how worksheet.AutoFilter.ShowAll() and Refresh() work together when resetting filters. | Show how to verify or set an AutoFilter range before calling ShowAll in Aspose.Cells.
+// Title: Clear the AutoFilter on column AJ and reveal all rows using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells in C# to remove the AutoFilter from column AJ and refresh the worksheet so all hidden rows become visible. | Programmatically delete the filter criteria applied to column index 35 with Aspose.Cells, then save the workbook without any active filters. | Write C# code that calls Worksheet.AutoFilter.RemoveFilter for column AJ, invokes Refresh, and exports the result as an .xlsx file.
+// Common Searches: Aspose.Cells C# how to remove AutoFilter from a specific column and show hidden rows | clear filter on column AJ in Excel using Aspose.Cells .NET | refresh worksheet after deleting AutoFilter criteria with Aspose.Cells C# example | remove column filter programmatically Aspose.Cells and unhide rows | Aspose.Cells remove AutoFilter criteria column index 35
+// Tags: Aspose.Cells remove column filter C# | remove AutoFilter from column AJ Aspose.Cells | unhide rows after clearing Excel filter Aspose | refresh worksheet AutoFilter Aspose.Cells | Excel column index 35 filter removal .NET
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace ClearAutoFilterOnColumnAJ
 {
-    // Loads an Excel file, ensures the AutoFilter range includes column AJ, calls worksheet.AutoFilter.ShowAll() and Refresh() to remove filter criteria, then saves the workbook with every row visible.
-    public class ClearAutoFilterOnColumnAJ
+    // The C# program loads an Excel workbook, removes any AutoFilter applied to column AJ (index 35) using Worksheet.AutoFilter.RemoveFilter, refreshes the filter to unhide all rows, and saves the updated file.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook.xlsx";
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            try
-            {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Access the first worksheet (adjust index if needed)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
+            // Column AJ corresponds to index 35 (0‑based)
+            int columnIndexAJ = 35;
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+            // Remove any filter applied to column AJ
+            worksheet.AutoFilter.RemoveFilter(columnIndexAJ);
 
-                // Ensure an AutoFilter range is defined (optional)
-                if (string.IsNullOrEmpty(worksheet.AutoFilter?.Range))
-                {
-                    worksheet.AutoFilter.Range = "A1:AJ100";
-                }
+            // Refresh the autofilter to apply the change and unhide rows
+            worksheet.AutoFilter.Refresh();
 
-                // Clear all filter criteria (including column AJ)
-                worksheet.AutoFilter.ShowAll();
-
-                // Refresh to apply changes (optional after ShowAll)
-                worksheet.AutoFilter.Refresh();
-
-                // Save the modified workbook
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ClearAutoFilterOnColumnAJ.Run();
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
     }
 }

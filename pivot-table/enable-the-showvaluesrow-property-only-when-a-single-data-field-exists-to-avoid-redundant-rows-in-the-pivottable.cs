@@ -1,10 +1,7 @@
-// Title: Aspose.Cells C# – Enable ShowValuesRow Only When a PivotTable Has One Data Field
-// Description: Demonstrates how to create a workbook, add a pivot table, and programmatically turn on the ShowValuesRow flag only if the pivot contains a single data field, preventing an unnecessary values row in the generated Excel file.
-// Keywords: Aspose.Cells ShowValuesRow | C# pivot table conditional formatting | single data field pivot | Hide extra values row Aspose | PivotTable.DataFields count | Excel report automation .NET
-// Common Searches: set ShowValuesRow for one data field Aspose.Cells | C# pivot table hide values row when multiple fields | Aspose.Cells conditional ShowValuesRow example | how to enable ShowValuesRow based on DataFields count | avoid redundant values row in Excel pivot using Aspose
-// Developer Intent: Activate the ShowValuesRow property of a PivotTable only when the table contains exactly one data field.
-// Use Cases: Generate compact Excel reports where the values row appears only for a sole metric. | Automatically suppress the values row when additional measures (e.g., Quantity, Profit) are added to the pivot. | Create dynamic dashboards that adjust layout based on the number of data fields present.
-// AI Prompts: Write C# code with Aspose.Cells that adds a pivot table and sets ShowValuesRow to true only when DataFields.Count equals 1. | Explain how to check the count of data fields in a PivotTable and toggle ShowValuesRow accordingly in .NET. | Provide a step‑by‑step guide to prevent duplicate values rows in an Aspose.Cells pivot table based on field count.
+// Title: Enable ShowValuesRow in an Aspose.Cells PivotTable only when a single data field is present (C#)
+// AI Prompts: Write C# code using Aspose.Cells that creates a pivot table and sets PivotTable.ShowValuesRow to true only if the pivot contains exactly one data field. | Adapt an existing Aspose.Cells pivot table example to dynamically toggle the ShowValuesRow property based on the DataFields count at runtime.
+// Common Searches: Aspose.Cells how to turn on ShowValuesRow for a pivot table with one data field | C# set ShowValuesRow property conditionally in Aspose.Cells pivot | Enable values row in Excel pivot only when there is a single data field using Aspose.Cells | Aspose.Cells pivot table hide values row when multiple data fields are added | Check DataFields count before enabling ShowValuesRow in Aspose.Cells .NET
+// Tags: Aspose.Cells pivot ShowValuesRow conditional | C# pivot table data field count | Aspose.Cells enable values row dynamically | Excel pivot hide values row multiple fields | Aspose.Cells .NET pivot table settings
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // Demonstrates how to create a workbook, add a pivot table, and programmatically turn on the ShowValuesRow flag only if the pivot contains a single data field, preventing an unnecessary values row in the generated Excel file.
+    // The example creates a workbook, fills it with sample data, adds a pivot table with Category rows, Product columns, and Sales as the data field (optionally a second field), refreshes and calculates the pivot, then enables ShowValuesRow only when exactly one data field exists, and finally saves the workbook as an .xlsx file.
     public class PivotTableShowValuesRowConditionalDemo
     {
         public static void Main(string[] args)
@@ -29,66 +26,79 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data
+            cells["A1"].Value = "Category";
+            cells["B1"].Value = "Product";
+            cells["C1"].Value = "Sales";
+            cells["D1"].Value = "Quantity";
+
+            cells["A2"].Value = "Fruit";
+            cells["B2"].Value = "Apple";
+            cells["C2"].Value = 1200;
+            cells["D2"].Value = 10;
+
+            cells["A3"].Value = "Fruit";
+            cells["B3"].Value = "Orange";
+            cells["C3"].Value = 1500;
+            cells["D3"].Value = 15;
+
+            cells["A4"].Value = "Vegetable";
+            cells["B4"].Value = "Carrot";
+            cells["C4"].Value = 800;
+            cells["D4"].Value = 8;
+
+            // Add a pivot table covering the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:D4", "F3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
+
+            // Add fields: Category as row, Product as column, Sales as data
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Column, "Product");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // OPTIONAL: Add a second data field to demonstrate the conditional logic
+            // Comment out the line below if you want only a single data field.
+            // pivotTable.AddFieldToArea(PivotFieldType.Data, "Quantity");
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate sample data for the pivot table
-                cells["A1"].Value = "Category";
-                cells["B1"].Value = "Product";
-                cells["C1"].Value = "Sales";
-
-                cells["A2"].Value = "Fruit";
-                cells["B2"].Value = "Apple";
-                cells["C2"].Value = 120;
-
-                cells["A3"].Value = "Fruit";
-                cells["B3"].Value = "Orange";
-                cells["C3"].Value = 150;
-
-                cells["A4"].Value = "Vegetable";
-                cells["B4"].Value = "Carrot";
-                cells["C4"].Value = 80;
-
-                cells["A5"].Value = "Vegetable";
-                cells["B5"].Value = "Potato";
-                cells["C5"].Value = 90;
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table: Category as row, Sales as data
-                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-                // Refresh data and calculate the pivot table
-                pivotTable.RefreshData();      // Correct API to refresh the cache
+                // Refresh the pivot cache and calculate data
+                pivotTable.RefreshData();
                 pivotTable.CalculateData();
-
-                // Enable ShowValuesRow only when there is a single data field
-                if (pivotTable.DataFields.Count == 1)
-                {
-                    pivotTable.ShowValuesRow = true;
-                    Console.WriteLine("ShowValuesRow enabled (single data field).");
-                }
-                else
-                {
-                    pivotTable.ShowValuesRow = false;
-                    Console.WriteLine("ShowValuesRow disabled (multiple data fields).");
-                }
-
-                // Save the workbook
-                string outputPath = "PivotTableShowValuesRowConditionalDemo.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
+                Console.WriteLine($"Pivot refresh error: {ex.Message}");
+                return;
+            }
+
+            // Enable ShowValuesRow only when there is exactly one data field
+            if (pivotTable.DataFields.Count == 1)
+            {
+                pivotTable.ShowValuesRow = true;
+                Console.WriteLine("ShowValuesRow enabled (single data field).");
+            }
+            else
+            {
+                pivotTable.ShowValuesRow = false;
+                Console.WriteLine("ShowValuesRow disabled (multiple data fields).");
+            }
+
+            // Save the workbook
+            string outputPath = "PivotTableShowValuesRowConditionalDemo.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Save error: {ex.Message}");
             }
         }
     }

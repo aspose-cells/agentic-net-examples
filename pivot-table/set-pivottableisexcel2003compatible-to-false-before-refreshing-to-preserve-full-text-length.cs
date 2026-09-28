@@ -1,91 +1,53 @@
-// Title: Preserve Long Text in Aspose.Cells PivotTable by Turning Off Excel 2003 Compatibility (C#)
-// Description: Demonstrates creating a workbook with descriptions longer than 255 characters, building a pivot table, setting PivotTable.IsExcel2003Compatible = false before RefreshData, and saving the file so the full text appears in the pivot results.
-// Keywords: Aspose.Cells C# pivot table | IsExcel2003Compatible false | long text truncation Excel 2003 | RefreshData Aspose.Cells | CalculateData pivot | preserve string length pivot | .NET Excel API | pivot cache refresh | Excel 2003 compatibility flag | Aspose.Cells example
-// Common Searches: Aspose.Cells keep full text in pivot table | disable Excel 2003 compatibility before RefreshData | pivot table string limit 255 characters C# | how to stop text truncation in Aspose.Cells pivot | set IsExcel2003Compatible property Aspose.Cells
-// Developer Intent: The developer needs to disable Excel 2003 compatibility on a PivotTable so that long string values are not cut off when the pivot cache is refreshed.
-// Use Cases: Generate product catalogs where descriptions exceed 255 characters and must appear completely in a pivot view. | Export detailed customer comments to Excel and retain the full comment text in pivot reports. | Build analytical dashboards that include verbose fields without losing data due to legacy limits.
-// AI Prompts: Show C# code that creates an Aspose.Cells pivot table with long text fields and disables Excel 2003 compatibility. | Explain why PivotTable.IsExcel2003Compatible affects string truncation and how to avoid it in Aspose.Cells. | Provide a step‑by‑step guide to refresh a pivot cache after setting IsExcel2003Compatible = false.
+// Title: Disable Excel 2003 compatibility for an Aspose.Cells PivotTable in .NET to retain full text length
+// AI Prompts: Generate C# code that creates a workbook, adds a data range with text longer than 255 characters, builds a PivotTable, sets IsExcel2003Compatible = false, refreshes and saves the file. | Show how to prevent 255‑character truncation in an Aspose.Cells PivotTable by disabling Excel 2003 compatibility before calling RefreshData. | Provide a step‑by‑step example of configuring PivotTable.IsExcel2003Compatible in a .NET application and exporting the result to an .xlsx file.
+// Common Searches: Aspose.Cells C# set PivotTable.IsExcel2003Compatible false to avoid text cut off | how to keep long description values in Aspose.Cells pivot table | disable Excel 2003 compatibility for pivot cache refresh Aspose.Cells .NET | prevent 255 character limit in Aspose.Cells pivot tables | example of preserving long text in PivotTable using Aspose.Cells for .NET
+// Tags: pivot table disable Excel2003 compatibility Aspose.Cells .NET | IsExcel2003Compatible property usage in C# | preserve long text in Aspose.Cells pivot cache | refresh pivot data after disabling compatibility | export pivot table with full text length .xlsx | Aspose.Cells pivot table long description handling
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, adds source data containing a 300‑character description, builds a PivotTable on a separate sheet, disables Excel 2003 compatibility by setting IsExcel2003Compatible to false, refreshes and calculates the pivot cache, and saves the workbook as PivotExcel2003Compatibility.xlsx, ensuring the full text is retained.
+class SetPivotExcel2003Compatibility
 {
-    // Demonstrates creating a workbook with descriptions longer than 255 characters, building a pivot table, setting PivotTable.IsExcel2003Compatible = false before RefreshData, and saving the file so the full text appears in the pivot results.
-    public class PivotTableExcel2003CompatibilityDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Prepare source data worksheet
+        Worksheet dataSheet = workbook.Worksheets[0];
+        dataSheet.Name = "Data";
+        dataSheet.Cells["A1"].Value = "Product";
+        dataSheet.Cells["B1"].Value = "Description";
 
-            // Get the first worksheet and add sample data
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
+        // Add a row with a description longer than 255 characters
+        dataSheet.Cells["A2"].Value = "Item1";
+        dataSheet.Cells["B2"].Value = new string('X', 300); // 300‑character text
 
-            // Header row
-            dataSheet.Cells["A1"].Value = "Product";
-            dataSheet.Cells["B1"].Value = "Description";
+        // Add a worksheet that will contain the pivot table
+        Worksheet pivotSheet = workbook.Worksheets.Add("Pivot");
 
-            // Row 2 – short description
-            dataSheet.Cells["A2"].Value = "Product1";
-            dataSheet.Cells["B2"].Value = "Short description";
+        // Create a pivot table:
+        //   source range: Data!A1:B2
+        //   destination cell: A4 (row index 3, column index 0, zero‑based)
+        //   table name: "PivotTable1"
+        //   useSameSource = false, isXlsClassic = false
+        int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B2", 3, 0, "PivotTable1", false, false);
+        PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
 
-            // Row 3 – very long description (exceeds 255 characters)
-            dataSheet.Cells["A3"].Value = "Product2";
-            dataSheet.Cells["B3"].Value = new string('X', 300); // 300‑character string
+        // Configure the pivot fields
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Product as row field
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Description as data field
 
-            // Add a new worksheet to host the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+        // Disable Excel 2003 compatibility so the long text is not truncated
+        pivotTable.IsExcel2003Compatible = false;
 
-            // Create the pivot table (source range A1:B3, destination cell A5)
-            int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:B3", "A5", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+        // Refresh the pivot cache and calculate the results
+        pivotTable.RefreshData();
+        pivotTable.CalculateData();
 
-            // Add fields: Product as row, Description as data
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);    // Column 0 – Product
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 1);   // Column 1 – Description
-
-            // Disable Excel 2003 compatibility to keep full text length
-            pivotTable.IsExcel2003Compatible = false;
-
-            // Refresh the pivot cache and calculate the results
-            pivotTable.RefreshData();      // Correct API to refresh pivot cache
-            pivotTable.CalculateData();
-
-            // Save the workbook
-            string outputPath = "PivotTableExcel2003CompatibilityDemo.xlsx";
-
-            try
-            {
-                // Ensure the directory exists
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("PivotExcel2003Compatibility.xlsx");
     }
 }

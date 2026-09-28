@@ -1,56 +1,74 @@
-// Title: Log macro assignments (worksheet, control ID, macro name) with Aspose.Cells for .NET
-// Description: C# sample that creates a macro‑enabled workbook, adds rectangle and oval shapes with assigned macros, then iterates every worksheet and shape to print the worksheet name, shape Name (used as control ID), and MacroName. The workbook is saved as an .xlsm file.
-// Keywords: Aspose.Cells | C# macro logging | shape MacroName | worksheet name retrieval | control ID Excel | macro‑enabled workbook | iterate shapes Aspose.Cells | log Excel macros
-// Common Searches: Aspose.Cells log shape macros | how to get macro name from shape in .NET | list all macro‑linked controls in Excel workbook | retrieve worksheet and shape IDs with Aspose.Cells | save macro‑enabled file after logging assignments
-// Developer Intent: Extract and display each shape’s macro assignment together with its worksheet and control identifier.
-// Use Cases: Generate a console audit of every macro‑linked control before publishing the workbook. | Validate that interactive shapes on all sheets have associated macros for quality checks. | Create a compliance log of worksheet, control ID, and macro name for downstream reporting.
-// AI Prompts: Write C# code using Aspose.Cells to enumerate all worksheets and shapes, outputting worksheet name, shape Name, and MacroName. | Show how to filter out shapes without a MacroName and log only those with assigned macros. | Provide an example that saves the workbook as .xlsm after logging macro assignments, ensuring EnableMacros is true.
+// Title: Log macro assignments of button controls in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that iterates all worksheets, finds Button shapes, reads their Macro property via dynamic binding, and writes worksheet name, button name, and macro name to a text file. | Create a C# routine that expands the macro logger to also include ComboBox controls and outputs the results in CSV format using Aspose.Cells. | Write C# error‑handling logic for an Aspose.Cells macro logger that skips shapes without a Macro property while still recording successful button assignments.
+// Common Searches: how to retrieve macro name from Excel button using Aspose.Cells C# | Aspose.Cells log button control macro assignments to file | C# iterate worksheet shapes and get Macro property with Aspose.Cells | save Excel macro mapping (worksheet, control, macro) using Aspose.Cells .NET | dynamic access to Macro property for button shapes in Aspose.Cells
+// Tags: Aspose.Cells retrieve button macro property | C# log Excel control assignments | write macro mapping to text file Aspose.Cells | dynamic macro access Aspose.Cells .NET | error handling shape processing Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
 
-namespace AsposeCellsMacroLogging
+// The example loads an Excel workbook with Aspose.Cells, walks through each worksheet and its shapes, identifies Button controls, reads the assigned Macro via dynamic binding, and writes a log entry containing the worksheet name, button name (control ID), and macro name to a text file while handling shape‑specific errors.
+class MacroLogger
 {
-    // C# sample that creates a macro‑enabled workbook, adds rectangle and oval shapes with assigned macros, then iterates every worksheet and shape to print the worksheet name, shape Name (used as control ID), and MacroName. The workbook is saved as an .xlsm file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string logPath = "MacroAssignmentsLog.txt";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Enable macros in the workbook settings (optional but good practice)
-            workbook.Settings.EnableMacros = true;
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet and give it a friendly name
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "DataSheet";
-
-            // Add a rectangle shape and assign a macro to it
-            Shape shape1 = sheet.Shapes.AddRectangle(1, 1, 120, 30, 0, 0);
-            shape1.Name = "btnCalculate";               // Control ID
-            shape1.MacroName = "CalculateValues()";     // Macro assignment
-
-            // Add another shape with a macro
-            Shape shape2 = sheet.Shapes.AddOval(5, 5, 100, 40, 0, 0);
-            shape2.Name = "btnExport";
-            shape2.MacroName = "ExportData()";
-
-            // Log detailed information about each macro assignment
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Create a log file to store macro assignment details
+            using (StreamWriter logWriter = new StreamWriter(logPath))
             {
-                foreach (Shape shp in ws.Shapes)
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    if (!string.IsNullOrEmpty(shp.MacroName))
+                    // Iterate through each shape (control) on the worksheet
+                    foreach (Shape shape in sheet.Shapes)
                     {
-                        Console.WriteLine($"Worksheet: {ws.Name}, Control ID: {shp.Name}, Macro: {shp.MacroName}");
+                        try
+                        {
+                            // Check if the shape is a Button control
+                            if (shape is Button)
+                            {
+                                // Use dynamic to access the Macro property (avoids compile‑time binding issues)
+                                dynamic btn = shape;
+                                string macro = btn.Macro as string;
+
+                                if (!string.IsNullOrEmpty(macro))
+                                {
+                                    string logEntry = $"Worksheet: {sheet.Name}, Control ID: {btn.Name}, Macro: {macro}";
+                                    Console.WriteLine(logEntry);
+                                    logWriter.WriteLine(logEntry);
+                                }
+                            }
+                        }
+                        catch (Exception exShape)
+                        {
+                            // Log shape‑specific errors without stopping the whole process
+                            Console.WriteLine($"Error processing shape \"{shape.Name}\": {exShape.Message}");
+                        }
                     }
                 }
             }
 
-            // Save the workbook (macro-enabled format)
-            workbook.Save("MacroAssignmentLogDemo.xlsm", SaveFormat.Xlsm);
+            Console.WriteLine($"Macro assignment log has been saved to \"{logPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

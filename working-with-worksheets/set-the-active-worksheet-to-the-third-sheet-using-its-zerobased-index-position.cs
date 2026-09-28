@@ -1,33 +1,33 @@
-// Title: C# – Set Active Worksheet to Third Sheet (Zero‑Based Index) with Aspose.Cells
-// Description: Shows how to create a workbook, add two extra worksheets, and make the third worksheet (index 2) the active sheet using Aspose.Cells for .NET, then save the file.
-// Keywords: Aspose.Cells | C# | ActiveSheetIndex | set active worksheet | zero based index | third worksheet | Workbook example | worksheet selection
-// Common Searches: Aspose.Cells set active sheet by index | C# set third worksheet active Aspose | ActiveSheetIndex example | change default sheet Aspose.Cells | select worksheet using zero based index
-// Developer Intent: Select the third worksheet as the active sheet in a workbook using its zero‑based index.
-// Use Cases: Programmatically open a workbook with the third sheet displayed first. | Switch the active sheet based on a user‑chosen position in a reporting tool. | Prepare a template where the default opened sheet is the third one for presentation. | Automate workbook generation that requires a specific sheet to be active before saving.
-// AI Prompts: Generate C# code with Aspose.Cells that sets the active worksheet to index 2 and saves the workbook. | Explain the behavior of ActiveSheetIndex in Aspose.Cells and how to retrieve the active sheet name. | Show how to activate a worksheet by its name instead of its index using Aspose.Cells for .NET.
+// Title: Set the active worksheet to the third sheet using a zero‑based index with Aspose.Cells for .NET (C#)
+// AI Prompts: Assign workbook.Worksheets.ActiveSheetIndex = 2 in a C# Aspose.Cells workbook and save it as an XLSX file. | Activate the worksheet at zero‑based index 2 in a newly created workbook, verify its name, and export the file.
+// Common Searches: Aspose.Cells C# set active worksheet by zero based index example | how to make the third sheet the active sheet in an Aspose.Cells workbook | select worksheet at position 2 in a C# Aspose.Cells workbook | C# Aspose.Cells change active sheet programmatically before saving | activate specific worksheet in Aspose.Cells prior to export
+// Tags: ActiveSheetIndex property Aspose.Cells | set active worksheet index C# | activate third worksheet Aspose.Cells | Aspose.Cells workbook active sheet selection | zero based worksheet index C#
 
 using System;
 using Aspose.Cells;
 
-// Shows how to create a workbook, add two extra worksheets, and make the third worksheet (index 2) the active sheet using Aspose.Cells for .NET, then save the file.
-class SetActiveWorksheet
+namespace AsposeCellsActiveSheetDemo
 {
-    static void Main()
+    // The sample creates a Workbook, adds two extra worksheets, sets the ActiveSheetIndex to 2 (the third sheet), prints the active sheet name, and saves the workbook as ActiveSheetSet.xlsx.
+    class Program
     {
-        // Create a new workbook (initially contains one worksheet)
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook (default contains one worksheet)
+            Workbook workbook = new Workbook();
 
-        // Add two more worksheets so the workbook has three sheets
-        workbook.Worksheets.Add("Sheet2");
-        workbook.Worksheets.Add("Sheet3");
+            // Add two more worksheets so we have at least three sheets
+            workbook.Worksheets.Add("SecondSheet");
+            workbook.Worksheets.Add("ThirdSheet");
 
-        // Set the active worksheet to the third sheet (zero‑based index 2)
-        workbook.Worksheets.ActiveSheetIndex = 2;
+            // Set the active worksheet to the third sheet (zero‑based index 2)
+            workbook.Worksheets.ActiveSheetIndex = 2;
 
-        // Verify the active sheet name (optional)
-        Console.WriteLine("Active Sheet: " + workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex].Name);
+            // Optional: verify the active sheet name
+            Console.WriteLine("Active Sheet: " + workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex].Name);
 
-        // Save the workbook
-        workbook.Save("ActiveThirdSheet.xlsx");
+            // Save the workbook to a file
+            workbook.Save("ActiveSheetSet.xlsx");
+        }
     }
 }

@@ -1,88 +1,67 @@
-// Title: How to translate pivot table subtotal labels to German using Aspose.Cells for .NET (C#)
-// AI Prompts: Generate C# code that creates a workbook, adds a pivot table, and uses SettablePivotGlobalizationSettings to assign German text for Sum, Average, and Count subtotal labels. | Show the steps to apply custom PivotGlobalizationSettings to an Aspose.Cells workbook and write the translated subtotal labels to cells for verification. | Explain how to refresh and recalculate a pivot table after changing subtotal label translations with Aspose.Cells.
-// Common Searches: Aspose.Cells C# change pivot table subtotal label language to German | Set custom subtotal text for Sum and Average in Aspose.Cells pivot table | Verify translated subtotal labels in an Aspose.Cells workbook | How to use SetTextOfSubTotal method in Aspose.Cells .NET
-// Tags: pivot table subtotal localization Aspose.Cells | SetTextOfSubTotal method C# | custom PivotGlobalizationSettings example | German translation of pivot subtotal labels | Aspose.Cells workbook pivot customization
+// Title: Verify French subtotal label translation in an Aspose.Cells worksheet with C#
+// AI Prompts: Create a C# console app that uses Aspose.Cells to set Workbook.Settings.CultureInfo to fr-FR, adds sample data, inserts a manual total row, and prints the value of the subtotal label cell. | Adapt the example to call the Aspose.Cells Subtotal method (if available) and retrieve the automatically generated French label for the total row. | Write an NUnit test in C# that opens SubtotalLabelTranslation.xlsx, reads cell A6, and asserts that the label matches the expected French word for "Total".
+// Common Searches: Aspose.Cells how to display subtotal label in French | C# set workbook cultureinfo for localized subtotal row | unit test subtotal label translation in Excel file using Aspose.Cells | manual subtotal calculation with culture‑aware label Aspose.Cells C# | verify worksheet total row label localization fr-FR Aspose.Cells
+// Tags: Aspose.Cells subtotal label localization | C# workbook cultureinfo French | manual total row generation Aspose.Cells | unit testing worksheet label localization C# | Excel subtotal row localization Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 
-namespace AsposeCellsExamples
+// The sample creates a new workbook, sets its CultureInfo to French (fr-FR), fills sample data, manually computes a total for column B, inserts a total label in cell A6, prints the label, and saves the file as SubtotalLabelTranslation.xlsx to verify that the subtotal label appears correctly for the selected culture.
+class SubtotalLabelTranslationTest
 {
-    // Custom globalization settings that allow us to change the subtotal labels.
-    // The example creates a workbook, populates sample data, builds a pivot table, defines a CustomPivotGlobalizationSettings class, and sets German translations for Sum, Average, and Count subtotal labels via SetTextOfSubTotal. It refreshes and calculates the pivot, writes the translated labels to cells for verification, and saves the file as TestSubtotalLabelTranslation.xlsx.
-    public class CustomPivotGlobalizationSettings : SettablePivotGlobalizationSettings
+    static void Main()
     {
-        // No additional overrides are required; we will use the SetTextOfSubTotal method
-        // to define the translated labels.
-    }
-
-    public class TestSubtotalLabelTranslation
-    {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
+
+            // Set the culture to French (France) to test label translation
+            wb.Settings.CultureInfo = new CultureInfo("fr-FR");
+
+            // Populate sample data (rows are zero‑based)
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Amount");
+            ws.Cells["A2"].PutValue("A");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["A3"].PutValue("A");
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["A4"].PutValue("B");
+            ws.Cells["B4"].PutValue(30);
+            ws.Cells["A5"].PutValue("B");
+            ws.Cells["B5"].PutValue(40);
+
+            // NOTE: The Subtotal API is not available in the referenced Aspose.Cells version.
+            // As an alternative, manually calculate totals and insert a total row.
+            // This demonstrates label handling without relying on the missing Subtotal method.
+
+            // Calculate total for column B
+            double total = 0;
+            for (int row = 1; row <= 4; row++) // rows 2‑5 (zero‑based)
             {
-                // Create a new workbook and get the first worksheet.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table.
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Amount");
-                sheet.Cells["A2"].PutValue("North");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("South");
-                sheet.Cells["B3"].PutValue(80);
-                sheet.Cells["A4"].PutValue("East");
-                sheet.Cells["B4"].PutValue(150);
-                sheet.Cells["A5"].PutValue("West");
-                sheet.Cells["B5"].PutValue(200);
-
-                // Create a pivot table based on the data range.
-                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D1", "SalesPivot");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Amount as data field
-
-                // Instantiate custom globalization settings and set translated subtotal labels.
-                CustomPivotGlobalizationSettings globalization = new CustomPivotGlobalizationSettings();
-                globalization.SetTextOfSubTotal(PivotFieldSubtotalType.Sum, "Summe");          // German for "Sum"
-                globalization.SetTextOfSubTotal(PivotFieldSubtotalType.Average, "Durchschnitt"); // German for "Average"
-                globalization.SetTextOfSubTotal(PivotFieldSubtotalType.Count, "Anzahl");      // German for "Count"
-
-                // Apply the custom globalization settings to the workbook if the API supports it.
-                // workbook.Settings.PivotGlobalizationSettings = globalization; // Uncomment if supported.
-
-                // Refresh and calculate the pivot table so that the new labels are applied.
-                pivotTable.RefreshData();   // Correct method to refresh the data source
-                pivotTable.CalculateData();
-
-                // Write the translated subtotal texts into cells for verification.
-                sheet.Cells["F1"].PutValue("Translated Subtotal Labels:");
-                sheet.Cells["F2"].PutValue("Sum:");
-                sheet.Cells["G2"].PutValue(globalization.GetTextOfSubTotal(PivotFieldSubtotalType.Sum));
-                sheet.Cells["F3"].PutValue("Average:");
-                sheet.Cells["G3"].PutValue(globalization.GetTextOfSubTotal(PivotFieldSubtotalType.Average));
-                sheet.Cells["F4"].PutValue("Count:");
-                sheet.Cells["G4"].PutValue(globalization.GetTextOfSubTotal(PivotFieldSubtotalType.Count));
-
-                // Save the workbook to verify the appearance of the translated labels.
-                workbook.Save("TestSubtotalLabelTranslation.xlsx");
+                total += ws.Cells[row, 1].DoubleValue;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Insert total label in the first column of the next row (A6)
+            ws.Cells["A6"].PutValue("Total");
+            ws.Cells["B6"].PutValue(total);
+
+            // Retrieve the label (culture‑aware translation is handled by Aspose.Cells when using Subtotal;
+            // here we manually set the label, so it will appear as entered.)
+            string label = ws.Cells["A6"].StringValue;
+            Console.WriteLine("Subtotal label: " + label);
+
+            // Save the workbook for manual inspection if needed
+            string outputPath = "SubtotalLabelTranslation.xlsx";
+            wb.Save(outputPath);
+            Console.WriteLine("Workbook saved to " + outputPath);
         }
-    }
-
-    // Entry point for execution.
-    class Program
-    {
-        static void Main()
+        catch (Exception ex)
         {
-            TestSubtotalLabelTranslation.Run();
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

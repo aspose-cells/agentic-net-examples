@@ -1,68 +1,74 @@
-// Title: Consolidate Built‑In Document Properties from Multiple Excel Workbooks into a Summary Sheet with Aspose.Cells (C#)
-// Description: A C# example that loads several Excel files, extracts each workbook's built‑in document properties, and writes the workbook name, property name, and value to a new worksheet. The script handles missing files, logs errors, creates the output folder if needed, and saves a single summary workbook.
-// Keywords: Aspose.Cells | C# | built-in document properties | Excel metadata extraction | aggregate workbook properties | summary report Excel | batch process Excel files | extract Excel metadata .NET | consolidate Excel properties | Aspose.Cells example
-// Common Searches: how to extract built‑in properties from multiple Excel files using Aspose.Cells | C# code to create a summary workbook of Excel metadata | combine document properties of several workbooks into one sheet | Aspose.Cells aggregate workbook properties example | generate audit report of Excel file metadata in .NET
-// Developer Intent: Collect the built‑in document properties from a set of Excel workbooks and write them into a single consolidated report workbook.
-// Use Cases: Audit a collection of financial spreadsheets by listing author, creation date, and other metadata in one file. | Prepare a compliance checklist that shows key property values across all departmental workbooks. | Provide a quick overview of Excel file metadata before migrating a batch of spreadsheets to a new platform.
-// AI Prompts: Generate C# code with Aspose.Cells that reads built‑in document properties from a list of Excel files and writes them to a summary sheet with columns Workbook, Property, Value. | Explain how to add robust error handling for missing files and load failures when aggregating Excel metadata with Aspose.Cells. | Show how to format the summary worksheet (bold header, auto‑fit columns, freeze top row) after populating the aggregated properties.
+// Title: Create a C# console app to consolidate built-in document properties from multiple Excel workbooks into a single report using Aspose.Cells
+// AI Prompts: Generate a C# console application that loads a collection of .xlsx files, reads each workbook's BuiltInDocumentProperties via Aspose.Cells, and writes the source file name, property name, and property value into a new worksheet. | Extend the program to also capture each workbook's custom document properties and include them in the same aggregated report. | Add robust logging that records missing files and any exceptions encountered while processing the workbooks, and ensure the output directory is created automatically. | Implement column auto‑fit and apply a bold header style to the aggregated properties sheet for better readability.
+// Common Searches: aspnet read built-in document properties from multiple Excel files and combine into one report | c# Aspose.Cells aggregate workbook metadata into a summary spreadsheet | how to list all built-in properties of several .xlsx files using Aspose.Cells | generate consolidated Excel file with property name and value for a collection of workbooks in .NET | skip missing Excel files while extracting document properties with Aspose.Cells
+// Tags: Aspose.Cells read document property set | C# create unified Excel property workbook | auto-size columns in generated sheet | skip non-existent source files gracefully | apply bold header row to report sheet
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// A C# example that loads several Excel files, extracts each workbook's built‑in document properties, and writes the workbook name, property name, and value to a new worksheet. The script handles missing files, logs errors, creates the output folder if needed, and saves a single summary workbook.
-class SummaryReportGenerator
+namespace BuiltInPropertiesAggregator
 {
-    static void Main()
+    // The program iterates over a list of Excel file paths, loads each workbook with Aspose.Cells, extracts every built-in document property, and writes the source file name, property name, and its value into a new worksheet. It then auto-fits columns, adds a styled header, and saves the consolidated workbook as a summary report.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Paths of the workbooks to aggregate built‑in properties from
-            string[] sourceFiles = new string[]
+            try
             {
-                @"C:\Data\Workbook1.xlsx",
-                @"C:\Data\Workbook2.xlsx",
-                @"C:\Data\Workbook3.xlsx"
-            };
+                // List of source workbook file paths to aggregate
+                var sourceFiles = new List<string>
+                {
+                    @"C:\Data\Workbook1.xlsx",
+                    @"C:\Data\Workbook2.xlsx",
+                    @"C:\Data\Workbook3.xlsx"
+                    // Add more file paths as needed
+                };
 
-            // Create a new workbook that will hold the summary report
-            using (Workbook summaryWorkbook = new Workbook())
-            {
-                Worksheet sheet = summaryWorkbook.Worksheets[0];
+                // Create a new workbook that will hold the consolidated report
+                var reportWorkbook = new Workbook();
+                var reportSheet = reportWorkbook.Worksheets[0];
+                reportSheet.Name = "BuiltInProperties";
 
                 // Write header row
-                sheet.Cells[0, 0].PutValue("Workbook");
-                sheet.Cells[0, 1].PutValue("Property");
-                sheet.Cells[0, 2].PutValue("Value");
+                reportSheet.Cells[0, 0].PutValue("Source Workbook");
+                reportSheet.Cells[0, 1].PutValue("Property Name");
+                reportSheet.Cells[0, 2].PutValue("Property Value");
 
-                int currentRow = 1; // start after header (zero‑based index)
+                int currentRow = 1; // Start writing data from the second row
 
-                foreach (string filePath in sourceFiles)
+                foreach (var filePath in sourceFiles)
                 {
-                    // Verify source file exists to avoid FileNotFoundException
+                    // Verify that the source file exists
                     if (!File.Exists(filePath))
                     {
-                        Console.WriteLine($"Source file not found: {filePath}");
+                        Console.WriteLine($"Warning: File not found – {filePath}. Skipping.");
                         continue;
                     }
 
                     try
                     {
-                        // Load each source workbook inside a using block for proper disposal
-                        using (Workbook srcWorkbook = new Workbook(filePath))
-                        {
-                            // Get a friendly name for the workbook (file name only)
-                            string workbookName = Path.GetFileName(filePath);
+                        // Load each source workbook
+                        var srcWorkbook = new Workbook(filePath);
 
-                            // Iterate through all built‑in document properties
-                            foreach (var prop in srcWorkbook.BuiltInDocumentProperties)
-                            {
-                                // Write workbook name, property name and its value into the summary sheet
-                                sheet.Cells[currentRow, 0].PutValue(workbookName);
-                                sheet.Cells[currentRow, 1].PutValue(prop.Name);
-                                sheet.Cells[currentRow, 2].PutValue(prop.Value?.ToString() ?? string.Empty);
-                                currentRow++;
-                            }
+                        // Access built‑in document properties
+                        var properties = srcWorkbook.BuiltInDocumentProperties;
+
+                        // Iterate through all built‑in properties
+                        foreach (var prop in properties)
+                        {
+                            // Write source workbook name (without full path)
+                            reportSheet.Cells[currentRow, 0].PutValue(Path.GetFileName(filePath));
+
+                            // Write property name
+                            reportSheet.Cells[currentRow, 1].PutValue(prop.Name);
+
+                            // Write property value as string (handle nulls)
+                            string valueStr = prop.Value != null ? prop.Value.ToString() : string.Empty;
+                            reportSheet.Cells[currentRow, 2].PutValue(valueStr);
+
+                            currentRow++;
                         }
                     }
                     catch (Exception ex)
@@ -71,23 +77,25 @@ class SummaryReportGenerator
                     }
                 }
 
+                // Auto‑fit columns for better readability
+                reportSheet.AutoFitColumns();
+
                 // Ensure the output directory exists
-                string outputPath = @"C:\Data\SummaryReport.xlsx";
-                string? outputDir = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                string reportPath = @"C:\Data\BuiltInPropertiesReport.xlsx";
+                string? reportDir = Path.GetDirectoryName(reportPath);
+                if (!string.IsNullOrEmpty(reportDir) && !Directory.Exists(reportDir))
                 {
-                    Directory.CreateDirectory(outputDir);
+                    Directory.CreateDirectory(reportDir);
                 }
 
-                // Save the consolidated summary workbook
-                summaryWorkbook.Save(outputPath);
+                // Save the consolidated report
+                reportWorkbook.Save(reportPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Report generated successfully at: {reportPath}");
             }
-
-            Console.WriteLine("Summary report generated successfully.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

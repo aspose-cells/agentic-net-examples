@@ -1,38 +1,61 @@
-// Title: Aspose.Cells for .NET (C#): Center Text Horizontally & Vertically in a Shape
-// Description: Creates a workbook, adds a rectangle shape, assigns "Centered Text", and sets TextHorizontalAlignment and TextVerticalAlignment to TextAlignmentType.Center before saving as ShapeCenteredAlignment.xlsx.
-// Keywords: Aspose.Cells | C# shape text alignment | center text in shape | TextHorizontalAlignment | TextVerticalAlignment | .NET spreadsheet shape | rectangle shape alignment | Aspose.Cells example
-// Common Searches: Aspose.Cells center text in shape C# | how to align shape text vertically Aspose.Cells | set horizontal and vertical alignment for shape text .NET | Aspose.Cells shape text alignment sample
-// Developer Intent: Apply both horizontal and vertical centering to the text of a worksheet shape.
-// Use Cases: Add a labeled rectangle with centered caption for a report header. | Generate flow‑chart elements where each shape’s label must be perfectly centered. | Create dashboard widgets that display annotations centered inside shapes.
-// AI Prompts: Show C# code to center shape text horizontally and vertically using Aspose.Cells. | Give an Aspose.Cells example that adds a rectangle, centers its text, and saves the file. | Explain the TextAlignmentType options for shapes in Aspose.Cells and when to use Center.
+// Title: Center text horizontally and vertically in a specific shape using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook, locate a shape by index or name, and set its TextHorizontalAlignment and TextVerticalAlignment properties to Center with Aspose.Cells in C#. | Programmatically align the text inside a shape to the middle on both axes, then save the updated workbook using Aspose.Cells for .NET. | Retrieve the first shape on the first worksheet, apply centered alignment for both horizontal and vertical text, and write the changes to a new file with Aspose.Cells.
+// Common Searches: aspnet aspose.cells set shape text alignment to center | c# aspose.cells align shape text horizontally and vertically | how to center text inside an Excel shape using Aspose.Cells library | aspose.cells change text alignment of a shape programmatically | example code for TextHorizontalAlignment and TextVerticalAlignment in C#
+// Tags: Aspose.Cells shape alignment settings | Aspose.Cells shape text positioning | Excel shape formatting with Aspose | C# modify shape properties Aspose.Cells | Aspose.Cells text alignment API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a workbook, adds a rectangle shape, assigns "Centered Text", and sets TextHorizontalAlignment and TextVerticalAlignment to TextAlignmentType.Center before saving as ShapeCenteredAlignment.xlsx.
-class ShapeAlignmentExample
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program loads an existing Excel file, accesses the first shape on the first worksheet, sets its TextHorizontalAlignment and TextVerticalAlignment to Center, and saves the modified workbook to a new file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            try
+            {
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 100, 200, 0);
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-        // Set the shape's text
-        shape.Text = "Centered Text";
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-        // Align text horizontally to center
-        shape.TextHorizontalAlignment = TextAlignmentType.Center;
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Align text vertically to middle (center)
-        shape.TextVerticalAlignment = TextAlignmentType.Center;
+                // Ensure there is at least one shape in the worksheet
+                if (worksheet.Shapes.Count == 0)
+                {
+                    Console.WriteLine("No shapes found in the worksheet.");
+                    return;
+                }
 
-        // Save the workbook
-        workbook.Save("ShapeCenteredAlignment.xlsx");
+                // Retrieve the first shape (or you could use a specific name)
+                Shape shape = worksheet.Shapes[0];
+
+                // Set horizontal and vertical text alignment to center
+                shape.TextHorizontalAlignment = TextAlignmentType.Center;
+                shape.TextVerticalAlignment = TextAlignmentType.Center;
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

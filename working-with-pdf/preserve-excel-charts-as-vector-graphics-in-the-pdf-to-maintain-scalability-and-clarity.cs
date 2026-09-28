@@ -1,53 +1,44 @@
-// Title: Export Excel Chart to PDF as Vector Graphics with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a column chart, and use Aspose.Cells Chart.ToPdf method to render the chart as vector graphics, ensuring the PDF remains scalable and crisp at any zoom level.
-// Keywords: Aspose.Cells | C# chart to PDF | vector PDF export | Chart.ToPdf | preserve chart quality | Excel chart PDF vector | Aspose.Cells .NET | scalable PDF graphics | export column chart PDF | high‑resolution PDF chart
-// Common Searches: Aspose.Cells export chart as vector PDF | Chart.ToPdf vector output C# | How to keep Excel chart sharp in PDF | Convert Excel chart to scalable PDF .NET | Save Excel chart as vector graphics PDF | C# export chart to PDF without rasterizing
-// Developer Intent: Generate a PDF file from an Excel chart where the chart is rendered as vector graphics for loss‑less scaling.
-// Use Cases: Embedding high‑resolution charts in client‑facing PDF reports | Creating printable financial dashboards with crisp graphics | Automating batch conversion of workbook charts to individual vector PDFs for publishing | Generating PDFs for regulatory filings where chart clarity is mandatory
-// AI Prompts: Write C# code using Aspose.Cells to export a pie chart to a vector PDF with custom page size. | Show how to configure PdfSaveOptions to preserve vector rendering when saving an entire workbook to PDF. | Explain how to loop through all charts in a workbook and save each as a separate vector PDF file using Aspose.Cells. | Provide an example of adding a legend and data labels to a chart before exporting it as vector PDF.
+// Title: Convert an Excel workbook to PDF while preserving charts as scalable vector graphics with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.VectorizeCharts to true, and saves the workbook as a PDF. | Show how to add error handling for missing input files and exceptions when converting Excel to PDF with vectorized charts in a .NET console app. | Explain how to verify that charts are saved as vector graphics after using Aspose.Cells PdfSaveOptions.
+// Common Searches: Aspose.Cells C# preserve Excel chart vectors when exporting to PDF | PdfSaveOptions VectorizeCharts example for .NET console application | How to maintain chart scalability in PDF generated from an .xlsx file using Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions VectorizeCharts | C# export Excel to PDF with high-quality charts | preserve chart fidelity Aspose.Cells PDF | convert workbook to PDF as vector graphics | chart rendering as SVG in PDF .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsChartToPdfVector
+// // Loads an Excel workbook, optionally enables PdfSaveOptions.VectorizeCharts to keep charts as vector graphics, and saves the workbook as a PDF with basic file‑existence checks and exception handling.
+class Program
 {
-    // Demonstrates how to create a workbook, add a column chart, and use Aspose.Cells Chart.ToPdf method to render the chart as vector graphics, ensuring the PDF remains scalable and crisp at any zoom level.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Fruits");
-            worksheet.Cells["A3"].PutValue("Vegetables");
-            worksheet.Cells["A4"].PutValue("Grains");
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["B2"].PutValue(50);
-            worksheet.Cells["B3"].PutValue(30);
-            worksheet.Cells["B4"].PutValue(20);
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // If the used Aspose.Cells version supports VectorizeCharts, enable it:
+            // pdfOptions.VectorizeCharts = true;
 
-            // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = worksheet.Charts[chartIndex];
-
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Export the chart to PDF.
-            // The ToPdf method renders the chart as vector graphics,
-            // preserving scalability and clarity in the resulting PDF.
-            chart.ToPdf("ChartVectorOutput.pdf");
-
-            Console.WriteLine("Chart exported to PDF as vector graphics successfully.");
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

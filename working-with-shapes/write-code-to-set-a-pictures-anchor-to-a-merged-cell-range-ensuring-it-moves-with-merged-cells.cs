@@ -1,66 +1,73 @@
-// Title: C# – Anchor an Image to a Merged Cell Range and Enable MoveAndSize with Aspise.Cells
-// Description: The sample builds a workbook, merges cells B2:D4, adds a PNG picture, marks it as placed in a cell, sets its placement to MoveAndSize, positions it over the merged block via picture.MoveToRange, and writes the result to PictureAnchoredToMergedCell.xlsx.
-// Keywords: Aspose.Cells C# picture anchor | merged cells image placement | MoveAndSize placement type | IsPlacedInCell property | picture.MoveToRange example | Excel picture positioning programmatically | Aspose.Cells picture handling | C# Excel image merge | dynamic image alignment in Excel | Aspose.Cells API picture
-// Common Searches: Aspose.Cells anchor image to merged cells C# | how to make picture move and resize with merged range in .NET | set picture placement MoveAndSize Aspose.Cells | C# picture.MoveToRange merged block example | IsPlacedInCell usage Aspose.Cells
-// Developer Intent: Insert an image so it stays aligned with a merged block and automatically moves or resizes when the underlying rows or columns change.
-// Use Cases: Add a company logo to a merged header that expands with column width adjustments. | Place a snapshot of a chart inside a merged reporting area, preserving layout after data updates. | Embed a watermark that remains correctly positioned when users edit row heights or column widths.
-// AI Prompts: Generate C# code using Aspose.Cells to anchor a PNG to the merged range B2:D4 and enable MoveAndSize behavior. | Explain the impact of IsPlacedInCell and Placement properties on picture dynamics in an Excel worksheet. | Show how to programmatically confirm that a picture is anchored to a merged area after saving the workbook.
+// Title: How to anchor a picture to a merged cell range and make it move and resize with the cells using Aspose.Cells for .NET
+// AI Prompts: Insert a PNG image into a worksheet, anchor it to a merged range B2:D4, and set its Placement to MoveAndSize with Aspose.Cells. | Compute the total pixel width and height of a merged cell block and apply those dimensions to a Picture object. | Resize a picture so it exactly fills a merged cell area and automatically moves and scales when the merged cells are resized.
+// Common Searches: Aspose.Cells C# anchor image to merged cells B2:D4 | Set picture placement to MoveAndSize for a merged range in a .NET workbook | Calculate pixel size of merged cells using Aspose.Cells | Resize picture to fit merged cell block in Aspose.Cells for C#
+// Tags: picture placement moveandsize merged cells | merged cell pixel size calculation aspnet | add png picture to merged cell block aspose.cells | resize picture to fill merged area c# | image anchoring merged block aspose.cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, merges cells B2:D4, inserts a PNG picture anchored at the start of the merged range, sets its Placement to MoveAndSize, calculates the combined pixel dimensions of the merged cells, resizes the picture to fill the merged area, and saves the file as MergedCellPicture.xlsx.
+class Program
 {
-    // The sample builds a workbook, merges cells B2:D4, adds a PNG picture, marks it as placed in a cell, sets its placement to MoveAndSize, positions it over the merged block via picture.MoveToRange, and writes the result to PictureAnchoredToMergedCell.xlsx.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                PictureAnchorToMergedCell.Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-    public class PictureAnchorToMergedCell
-    {
-        public static void Run()
-        {
-            // Verify that the image file exists to avoid FileNotFoundException
-            const string imagePath = "sample.png";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define merged range B2:D4 (zero‑based indices)
+            int startRow = 1;      // B2
+            int startColumn = 1;   // column B
+            int totalRows = 3;     // rows 2‑4
+            int totalColumns = 3;  // columns B‑D
+
+            // Merge the cells
+            sheet.Cells.Merge(startRow, startColumn, totalRows, totalColumns);
+
+            // Path to the image file
+            string imagePath = "sample.png";
+
+            // Ensure the image file exists
             if (!File.Exists(imagePath))
                 throw new FileNotFoundException($"Image file not found: {imagePath}");
 
-            // Create a new workbook and get the first worksheet
-            var workbook = new Workbook();
-            var worksheet = workbook.Worksheets[0];
+            // Add the picture to the worksheet
+            using (FileStream imgStream = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+            {
+                int pictureIndex = sheet.Pictures.Add(startRow, startColumn, imgStream);
+                Picture picture = sheet.Pictures[pictureIndex];
 
-            // Define and merge the cell range B2:D4 (rows 1‑3, columns 1‑3 zero‑based)
-            worksheet.Cells.Merge(1, 1, 3, 3);
+                // Make the picture move and size with the merged cells
+                picture.Placement = PlacementType.MoveAndSize;
 
-            // Add the picture to the worksheet; initial position is top‑left cell (A1)
-            int pictureIndex = worksheet.Pictures.Add(0, 0, imagePath);
-            var picture = worksheet.Pictures[pictureIndex];
+                // Calculate total width and height of the merged range in pixels
+                double totalWidth = 0;
+                for (int col = startColumn; col < startColumn + totalColumns; col++)
+                    totalWidth += sheet.Cells.GetColumnWidthPixel(col);
 
-            // Anchor the picture to cells and make it move/size with the merged range
-            picture.IsPlacedInCell = true;                     // anchor to cells
-            picture.Placement = PlacementType.MoveAndSize;    // move and resize with cells
+                double totalHeight = 0;
+                for (int row = startRow; row < startRow + totalRows; row++)
+                    totalHeight += sheet.Cells.GetRowHeightPixel(row);
 
-            // Anchor the picture to the merged cell range B2:D4
-            // MoveToRange(topRow, leftColumn, bottomRow, rightColumn) – zero‑based indices
-            picture.MoveToRange(1, 1, 3, 3);
+                // Resize the picture to fit the merged area
+                picture.Width = (int)totalWidth;
+                picture.Height = (int)totalHeight;
+            }
 
             // Save the workbook
-            const string outputPath = "PictureAnchoredToMergedCell.xlsx";
+            string outputPath = "MergedCellPicture.xlsx";
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

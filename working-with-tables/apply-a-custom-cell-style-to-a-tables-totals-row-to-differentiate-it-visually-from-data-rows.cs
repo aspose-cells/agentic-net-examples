@@ -1,83 +1,115 @@
-// Title: C# Example: Apply a Custom Totals Row Style to an Aspose.Cells Table
-// Description: Creates a workbook, adds a ListObject table with a summed totals row, defines a TableStyle that gives the totals row a light‑gray background, bold dark‑blue font, applies the style, and saves the file.
-// Keywords: Aspose.Cells | C# | custom totals row style | TableStyle | ListObject | TableStyleElement TotalRow | background color totals row | bold font totals row | Excel table totals formatting | Aspose.Cells example
-// Common Searches: Aspose.Cells change totals row style | C# set totals row background Aspose | How to format totals row in Aspose.Cells table | Create custom TableStyle for totals row .NET | Aspose.Cells sample totals row formatting
-// Developer Intent: Style the totals row of a ListObject table so it stands out visually.
-// Use Cases: Financial reports where the grand‑total row must be highlighted. | Inventory worksheets that need a distinct summary row. | Sales dashboards applying corporate brand colors to total rows. | Automated invoice generation with a clearly marked total line. | Multi‑sheet workbooks requiring consistent totals‑row formatting.
-// AI Prompts: Write C# code using Aspose.Cells to create a TableStyle that formats the totals row with a light gray background and bold dark blue font. | Show how to apply the same custom totals‑row style to multiple tables in a workbook. | Explain how to modify the totals‑row style after the table has been created or after the workbook is saved. | Provide a step‑by‑step guide to add a totals row, set a sum calculation, and style it with Aspose.Cells. | Generate a GitHub‑ready snippet that demonstrates creating, styling, and saving a table with a custom totals row.
+// Title: How to apply a custom style to the totals row of an Aspose.Cells ListObject table in C#
+// AI Prompts: Write C# code with Aspose.Cells that creates a worksheet, adds a ListObject table, enables the totals row, inserts SUM formulas, and applies a style featuring a light‑gray fill, bold dark‑blue font, and a thin bottom border to each totals cell. | Show how to build a reusable Style object in Aspose.Cells and assign it to every cell of a table's totals row after the row has been generated.
+// Common Searches: aspnet c# apply custom formatting to totals row of an Excel table using Aspose.Cells | set background color and font style for totals row in Aspose.Cells ListObject | how to add bottom border to totals row cells in Aspose.Cells C# example | Aspose.Cells style totals row after enabling ShowTotals | C# code to style totals row of a table with light gray fill and dark blue bold text
+// Tags: Aspose.Cells ListObject totals row styling | C# apply custom style to Excel table totals row | Aspose.Cells set cell background color and font | Excel table totals row formatting with Aspose.Cells | Create and style totals row in Aspose.Cells workbook
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, adds a ListObject table with a summed totals row, defines a TableStyle that gives the totals row a light‑gray background, bold dark‑blue font, applies the style, and saves the file.
-class ApplyCustomTotalsRowStyle
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a new workbook, adds a ListObject table with sample product data, enables the totals row, inserts SUM formulas for Quantity and Price, defines a custom Style with a light‑gray background, bold dark‑blue font, and a thin black bottom border, applies this style to each cell in the totals row, and saves the file as TableWithStyledTotalsRow.xlsx.
+    class ApplyTotalsRowStyle
     {
-        try
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Populate header row
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Price");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate data rows
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue(10);
-            cells["A3"].PutValue("Orange");
-            cells["B3"].PutValue(15);
-            cells["A4"].PutValue("Banana");
-            cells["B4"].PutValue(12);
+                // Populate sample data (A1:C5)
+                sheet.Cells["A1"].PutValue("Product");
+                sheet.Cells["B1"].PutValue("Quantity");
+                sheet.Cells["C1"].PutValue("Price");
 
-            // Add a table that includes the data range
-            int tableIndex = worksheet.ListObjects.Add(0, 0, 4, 1, true);
-            ListObject table = worksheet.ListObjects[tableIndex];
-            // Set a display name for the table (Name property is not available in this version)
-            table.DisplayName = "ProductsTable";
+                sheet.Cells["A2"].PutValue("Apple");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["C2"].PutValue(0.5);
 
-            // Show totals row and set a sum calculation for the Price column
-            table.ShowTotals = true;
-            ListColumn priceColumn = table.ListColumns[1]; // second column (Price)
-            priceColumn.TotalsCalculation = TotalsCalculation.Sum;
-            priceColumn.TotalsRowLabel = "Grand Total";
+                sheet.Cells["A3"].PutValue("Banana");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["C3"].PutValue(0.3);
 
-            // -----------------------------------------------------------------
-            // Create a custom style for the totals row
-            // -----------------------------------------------------------------
-            Style totalsRowStyle = workbook.CreateStyle();
-            totalsRowStyle.Pattern = BackgroundType.Solid;
-            totalsRowStyle.ForegroundColor = Color.LightGray; // background color
-            totalsRowStyle.Font.IsBold = true;                // bold font
-            totalsRowStyle.Font.Color = Color.DarkBlue;       // font color
+                sheet.Cells["A4"].PutValue("Orange");
+                sheet.Cells["B4"].PutValue(15);
+                sheet.Cells["C4"].PutValue(0.4);
 
-            // -----------------------------------------------------------------
-            // Create a custom table style and assign the totals row style to it
-            // -----------------------------------------------------------------
-            string customStyleName = "CustomTotalsStyle";
-            TableStyleCollection tableStyles = workbook.Worksheets.TableStyles;
-            int styleIdx = tableStyles.AddTableStyle(customStyleName);
-            TableStyle customTableStyle = tableStyles[styleIdx];
+                sheet.Cells["A5"].PutValue("Grape");
+                sheet.Cells["B5"].PutValue(12);
+                sheet.Cells["C5"].PutValue(0.6);
 
-            // Add the TotalRow element and set its style
-            int elementIdx = customTableStyle.TableStyleElements.Add(TableStyleElementType.TotalRow);
-            TableStyleElement totalRowElement = customTableStyle.TableStyleElements[elementIdx];
-            totalRowElement.SetElementStyle(totalsRowStyle);
+                // Define the range for the table (including header row)
+                int firstRow = 0;   // zero‑based index for row 1
+                int firstCol = 0;   // column A
+                int totalRows = 5;  // header + 4 data rows
+                int totalCols = 3;  // columns A‑C
 
-            // Apply the custom table style to the table
-            table.TableStyleName = customStyleName;
+                // Add a ListObject (table) to the worksheet
+                int tableIndex = sheet.ListObjects.Add(firstRow, firstCol,
+                    firstRow + totalRows - 1, firstCol + totalCols - 1, true);
+                ListObject table = sheet.ListObjects[tableIndex];
 
-            // Save the workbook
-            workbook.Save("TableWithCustomTotalsRowStyle.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+                // Enable the totals row
+                table.ShowTotals = true;
+
+                // Compute the index of the totals row (it is placed after the data rows)
+                int totalsRowIndex = firstRow + totalRows; // zero‑based
+
+                // Set the label for the first column in the totals row
+                sheet.Cells[totalsRowIndex, firstCol].PutValue("Total");
+
+                // Set SUM formulas for Quantity and Price columns
+                // Quantity column (B)
+                string qtyStart = sheet.Cells[firstRow + 1, firstCol + 1].Name; // B2
+                string qtyEnd = sheet.Cells[firstRow + totalRows - 1, firstCol + 1].Name; // B5
+                sheet.Cells[totalsRowIndex, firstCol + 1].Formula = $"=SUM({qtyStart}:{qtyEnd})";
+
+                // Price column (C)
+                string priceStart = sheet.Cells[firstRow + 1, firstCol + 2].Name; // C2
+                string priceEnd = sheet.Cells[firstRow + totalRows - 1, firstCol + 2].Name; // C5
+                sheet.Cells[totalsRowIndex, firstCol + 2].Formula = $"=SUM({priceStart}:{priceEnd})";
+
+                // Create a custom style for the totals row
+                Style totalsStyle = workbook.CreateStyle();
+                totalsStyle.ForegroundColor = Color.LightGray;          // background color
+                totalsStyle.Pattern = BackgroundType.Solid;
+                totalsStyle.Font.IsBold = true;                         // bold font
+                totalsStyle.Font.Color = Color.DarkBlue;                // font color
+                totalsStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                totalsStyle.Borders[BorderType.BottomBorder].Color = Color.Black;
+
+                // Apply the custom style to each cell in the totals row
+                for (int col = firstCol; col < firstCol + totalCols; col++)
+                {
+                    Cell totalCell = sheet.Cells[totalsRowIndex, col];
+                    totalCell.SetStyle(totalsStyle);
+                }
+
+                // Define output file path
+                string outputPath = "TableWithStyledTotalsRow.xlsx";
+
+                // Ensure the directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
     }
 }

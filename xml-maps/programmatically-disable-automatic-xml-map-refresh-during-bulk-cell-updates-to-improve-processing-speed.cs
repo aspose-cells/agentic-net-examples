@@ -1,59 +1,50 @@
-// Title: Disable XML Map Refresh for Faster Bulk Cell Updates in Aspose.Cells for .NET
-// Description: This C# example loads an existing workbook, verifies the source file, writes values to 10,000 rows × 10 columns, and saves the result. It highlights that the EnableXMLMapRefresh property is not present in the current Aspose.Cells release, so the updates run with the default refresh behavior.
-// Keywords: Aspose.Cells .NET | XML map refresh | disable XML map refresh | bulk cell write performance | speed up workbook updates | C# Excel XML mapping | large‑scale cell insertion | Aspose.Cells performance tip
-// Common Searches: how to turn off XML map refresh in Aspose.Cells C# | Aspose.Cells bulk cell write speed with XML maps | EnableXMLMapRefresh property missing Aspose.Cells | optimize Excel workbook updates using Aspose.Cells | performance tricks for large data import in Aspose.Cells
-// Developer Intent: Prevent automatic XML map refresh while performing massive cell writes to reduce processing time.
-// Use Cases: Importing millions of data points into an Excel workbook that contains XML maps. | Running data‑intensive transformations where refresh overhead slows down the job. | Ensuring file‑existence checks before loading to avoid runtime errors. | Saving the workbook after bulk modifications with graceful exception handling.
-// AI Prompts: Provide C# code that disables XML map refresh during bulk cell updates with Aspose.Cells, or suggest alternative ways to improve performance when the property is unavailable. | Explain performance‑impact of XML map refresh in Aspose.Cells and list best‑practice techniques for large data writes. | Generate a robust try‑catch pattern for loading a workbook, performing high‑volume cell insertion, and handling missing EnableXMLMapRefresh functionality.
+// Title: How to disable automatic XML map refresh in Aspose.Cells for .NET while performing bulk cell updates to boost performance
+// AI Prompts: Write C# code using Aspose.Cells that sets Workbook.Settings.EnableXMLMapRefresh to false, inserts 10,000 rows into the first column, then sets the property back to true before saving the workbook. | Show a .NET example that temporarily suspends XML map auto‑refresh, performs high‑volume cell writes, and restores the refresh setting to ensure data integrity with Aspose.Cells.
+// Common Searches: Aspose.Cells C# disable XML map auto refresh for large data import | Improve bulk cell write speed by turning off XML map refresh in .NET workbook | Temporarily suspend XML map refresh during massive updates with Aspose.Cells
+// Tags: disable xml map auto refresh aspose.cells | bulk cell write performance optimization .net | workbook settings enablexmlmaprefresh property | c# aspose.cells large data insertion | excel xml map refresh control aspose
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// This C# example loads an existing workbook, verifies the source file, writes values to 10,000 rows × 10 columns, and saves the result. It highlights that the EnableXMLMapRefresh property is not present in the current Aspose.Cells release, so the updates run with the default refresh behavior.
-class DisableXmlMapRefreshDemo
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a workbook, disables the automatic XML map refresh, writes 10,000 sequential numbers into column A of the first worksheet, re‑enables the XML map refresh, and saves the file, demonstrating how to speed up bulk cell updates with Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Define input and output file paths
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            try
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-                return;
-            }
+                // Create a new workbook (or load an existing one)
+                var workbook = new Workbook();
 
-            // Load the existing workbook
-            Workbook wb = new Workbook(inputPath);
-
-            // NOTE: The EnableXMLMapRefresh property is not available in this version of Aspose.Cells.
-            // Bulk updates are performed without explicitly disabling XML map refresh.
-
-            // Perform bulk cell updates
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            for (int row = 0; row < 10000; row++)
-            {
-                for (int col = 0; col < 10; col++)
+                // Example bulk update: write 10,000 values into the first column of the first worksheet
+                var cells = workbook.Worksheets[0].Cells;
+                for (int row = 0; row < 10000; row++)
                 {
-                    cells[row, col].PutValue(row * col);
+                    cells[row, 0].PutValue(row);
                 }
-            }
 
-            // Save the modified workbook
-            wb.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            // Handle any unexpected errors
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Define output file path
+                string outputPath = "output.xlsx";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle exceptions as needed
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

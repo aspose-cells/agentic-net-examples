@@ -1,40 +1,62 @@
-// Title: Copy worksheet page setup and set left margin to 0.5 inches with Aspose.Cells for .NET (C#)
-// Description: C# example that creates a workbook with two worksheets, configures the source sheet’s page setup (paper size, orientation, left margin), copies the entire page setup to a second sheet using Worksheet.PageSetup.Copy, then overrides the left margin to 0.5 inches before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | copy page setup | worksheet left margin | 0.5 inches | PageSetup.Copy | CopyOptions | Excel printing | modify margins programmatically
-// Common Searches: Aspose.Cells copy page setup C# | set left margin 0.5 inches Aspose.Cells | change worksheet margin after copying page setup | copy page setup between worksheets .NET | adjust left margin for printing Aspose.Cells
-// Developer Intent: Copy a worksheet’s page setup to another sheet and then change the destination sheet’s left margin to 0.5 inches.
-// Use Cases: Generate multi‑sheet reports where all sheets share the same paper size and orientation, but specific sheets need a narrower left margin for binding. | Automate creation of printable Excel files that reuse a base page setup while customizing margins per sheet to fit more content. | Standardize page layout across worksheets in a workbook and then fine‑tune the left margin for sheets that require different printable widths.
-// AI Prompts: Show C# code that copies a worksheet’s page setup with Aspose.Cells and sets the destination left margin to 0.5 inches. | Provide an Aspose.Cells .NET example that uses Worksheet.PageSetup.Copy and then updates only the LeftMarginInch property. | Explain how to preserve all page‑setup settings while overriding the left margin after copying between worksheets in Aspose.Cells.
+// Title: Copy worksheet page setup and set left margin to 0.5 inches with Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to duplicate the PageSetup from Sheet1 to Sheet2 and then set the destination sheet's left margin to 0.5 inches in C#. | Copy the entire page layout of a source worksheet to another worksheet and adjust the left printing margin to half an inch using the Aspose.Cells API. | Programmatically transfer page setup between worksheets and modify the left margin value to 0.5 inches in a .NET workbook.
+// Common Searches: Aspose.Cells copy page setup from one worksheet to another C# | how to change left margin to 0.5 inches after copying page setup Aspose.Cells | C# set worksheet left printing margin using Aspose.Cells PageSetup | copy page layout between sheets and adjust margins Aspose.Cells example
+// Tags: worksheet page setup copy Aspose.Cells | set left margin inches Aspose.Cells | modify printing margins C# workbook | copy page layout between worksheets .NET | adjust worksheet left margin after copy
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsPageSetupExample
+// The example loads an existing workbook, copies the PageSetup from a source worksheet to a destination worksheet using Aspose.Cells, sets the destination's left margin to 0.5 inches, and saves the modified file.
+class Program
 {
-    // C# example that creates a workbook with two worksheets, configures the source sheet’s page setup (paper size, orientation, left margin), copies the entire page setup to a second sheet using Worksheet.PageSetup.Copy, then overrides the left margin to 0.5 inches before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook with two worksheets
-            Workbook workbook = new Workbook();
-            workbook.Worksheets.Add(); // Adds a second worksheet (index 1)
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Configure page setup for the source worksheet (index 0)
-            Worksheet sourceSheet = workbook.Worksheets[0];
-            sourceSheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
-            sourceSheet.PageSetup.Orientation = PageOrientationType.Portrait;
-            sourceSheet.PageSetup.LeftMarginInch = 1.0; // Example original left margin
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Copy page setup from source worksheet to destination worksheet (index 1)
-            Worksheet destSheet = workbook.Worksheets[1];
-            destSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
+            // Get the source worksheet (the one with the original page setup)
+            Worksheet sourceSheet = workbook.Worksheets["Sheet1"]; // adjust name if needed
+            if (sourceSheet == null)
+            {
+                Console.WriteLine("Error: Source worksheet \"Sheet1\" not found.");
+                return;
+            }
+
+            // Get the destination worksheet (the one to receive the page setup)
+            Worksheet destinationSheet = workbook.Worksheets["Sheet2"]; // adjust name if needed
+            if (destinationSheet == null)
+            {
+                Console.WriteLine("Error: Destination worksheet \"Sheet2\" not found.");
+                return;
+            }
+
+            // Copy the entire page setup from the source to the destination worksheet
+            // Provide a CopyOptions instance as required by the API
+            destinationSheet.PageSetup.Copy(sourceSheet.PageSetup, new CopyOptions());
 
             // Modify the left margin of the destination worksheet to 0.5 inches
-            destSheet.PageSetup.LeftMarginInch = 0.5;
+            destinationSheet.PageSetup.LeftMargin = 0.5;
 
-            // Save the workbook to a file
-            workbook.Save("PageSetupCopyAndMarginModified.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

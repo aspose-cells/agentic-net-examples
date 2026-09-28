@@ -1,63 +1,68 @@
-// Title: C# – Render Excel worksheet to TIFF and attach to email with Aspose.Cells
-// Description: Shows how to create a workbook, render the first worksheet to a single‑page TIFF using Aspose.Cells, load it into a MemoryStream, and add it as an image/tiff attachment to a System.Net.Mail MailMessage ready for SMTP sending.
-// Keywords: Aspose.Cells | C# TIFF rendering | Excel to TIFF | MailMessage attachment | MemoryStream email | SheetRender | ImageOrPrintOptions | System.Net.Mail | SMTP attachment | no temporary file
-// Common Searches: convert Excel worksheet to TIFF in C# | attach generated TIFF to email without saving file | Aspose.Cells render sheet as TIFF stream | C# send Excel snapshot as image attachment | System.Net.Mail attach MemoryStream
-// Developer Intent: Create a TIFF image of an Excel sheet and embed it directly in an email message without creating a physical file.
-// Use Cases: Automated reporting: email a one‑page TIFF of a financial summary to stakeholders. | Alert system: send a spreadsheet snapshot as an image attachment in notification emails. | Compliance archive: deliver Excel data as a non‑editable TIFF via SMTP.
-// AI Prompts: Generate C# code that uses Aspose.Cells to render a worksheet to a TIFF MemoryStream and attaches it to a MailMessage. | Provide an example of emailing an Excel sheet as a TIFF image without writing the file to disk, using Aspose.Cells and System.Net.Mail. | Explain how to configure ImageOrPrintOptions for a single‑page TIFF, render with SheetRender, reset the stream, and create an Attachment for SMTP delivery.
+// Title: Attach a converted TIFF file to an email and send it with C# System.Net.Mail and SmtpClient
+// AI Prompts: Generate a C# console program that checks for the existence of a .tif file, creates a MailMessage, adds the file as an Attachment with MIME type image/tiff, and sends it through an SSL‑enabled SmtpClient. | Modify the email‑sending code to log detailed errors when the TIFF file is missing or the SMTP transmission fails, and ensure all disposable objects are correctly disposed. | Extend the example to read SMTP configuration (host, port, credentials, SSL) from an appsettings.json file and attach multiple TIFF files from a folder.
+// Common Searches: C# code to email a .tif image using System.Net.Mail | how to set MIME type image/tiff for an email attachment in .NET | sending multiple TIFF files as email attachments with SmtpClient in C# | validate file path before attaching image to MailMessage in C# | configure SSL SMTP client for sending image attachments in .NET Core
+// Tags: C# MailMessage attach TIFF | System.Net.Mail set image/tiff MIME | SmtpClient SSL send image attachment | validate TIFF file existence before email | read SMTP settings from appsettings.json C#
 
 using System;
-using System.IO;
+using System.Net;
 using System.Net.Mail;
-using Aspose.Cells;
-using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
+using System.IO;
 
-// Shows how to create a workbook, render the first worksheet to a single‑page TIFF using Aspose.Cells, load it into a MemoryStream, and add it as an image/tiff attachment to a System.Net.Mail MailMessage ready for SMTP sending.
-class Program
+// The example verifies that a converted TIFF file exists, creates a MailMessage with sender, recipient, subject, and body, attaches the TIFF file while explicitly setting its MIME type to image/tiff, configures an SSL‑enabled SmtpClient with credentials, sends the email, handles missing‑file and transmission errors, and disposes all resources. Optional enhancements include loading SMTP settings from configuration and attaching multiple TIFF files.
+class EmailSender
 {
     static void Main()
     {
-        // Create a new workbook and access the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Path to the TIFF image that was created earlier
+        string tiffFilePath = @"C:\Images\ConvertedImage.tif";
 
-        // Add sample content to the worksheet
-        worksheet.Cells["A1"].PutValue("Aspose.Cells TIFF Email Demo");
-
-        // Configure image rendering options for TIFF
-        ImageOrPrintOptions options = new ImageOrPrintOptions
+        // Verify that the file exists before attempting to attach it
+        if (!File.Exists(tiffFilePath))
         {
-            OnePagePerSheet = true,
-            ImageType = ImageType.Tiff
+            Console.WriteLine("TIFF file not found: " + tiffFilePath);
+            return;
+        }
+
+        // Create a new mail message
+        MailMessage message = new MailMessage();
+
+        // Set sender and recipient addresses
+        message.From = new MailAddress("sender@example.com");
+        message.To.Add(new MailAddress("recipient@example.com"));
+
+        // Set subject and body
+        message.Subject = "Converted TIFF Image Attachment";
+        message.Body = "Please find the converted TIFF image attached.";
+
+        // Attach the TIFF file
+        Attachment tiffAttachment = new Attachment(tiffFilePath);
+        // Optionally set the MIME type explicitly
+        tiffAttachment.ContentType.MediaType = "image/tiff";
+        message.Attachments.Add(tiffAttachment);
+
+        // Configure the SMTP client (adjust host, port, and credentials as needed)
+        SmtpClient smtpClient = new SmtpClient("smtp.example.com", 587)
+        {
+            EnableSsl = true,
+            Credentials = new NetworkCredential("smtp_user", "smtp_password")
         };
 
-        // Render the worksheet to a TIFF image using a memory stream
-        using (MemoryStream tiffStream = new MemoryStream())
+        try
         {
-            SheetRender renderer = new SheetRender(worksheet, options);
-            renderer.ToTiff(tiffStream); // Uses the provided ToTiff(Stream) rule
-
-            // Reset the stream position before reading
-            tiffStream.Position = 0;
-
-            // Create an email message
-            MailMessage mail = new MailMessage
-            {
-                From = new MailAddress("sender@example.com"),
-                Subject = "Worksheet as TIFF attachment",
-                Body = "Please find the attached TIFF image of the worksheet."
-            };
-            mail.To.Add("recipient@example.com");
-
-            // Attach the TIFF image from the memory stream
-            Attachment attachment = new Attachment(tiffStream, "Worksheet.tiff", "image/tiff");
-            mail.Attachments.Add(attachment);
-
-            // Optional: send the email using an SMTP client (configure as needed)
-            // SmtpClient client = new SmtpClient("smtp.example.com");
-            // client.Credentials = new System.Net.NetworkCredential("username", "password");
-            // client.Send(mail);
+            // Send the email
+            smtpClient.Send(message);
+            Console.WriteLine("Email sent successfully with TIFF attachment.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error sending email: " + ex.Message);
+        }
+        finally
+        {
+            // Clean up resources
+            tiffAttachment.Dispose();
+            message.Dispose();
+            smtpClient.Dispose();
         }
     }
 }

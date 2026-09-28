@@ -1,42 +1,84 @@
-// Title: Apply a 45° Dark Gray Shadow (10 pt distance) to a Rectangle Shape in Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add a rectangle shape, and configure its ShadowEffect—setting the angle to 45°, distance to 10 points, and color to dark gray—using Aspose.Cells for .NET, then save the Excel file.
-// Keywords: Aspose.Cells | C# | .NET | Excel shape shadow | ShadowEffect | rectangle shape | shadow angle | shadow distance | shadow color | dark gray shadow | 45 degree shadow | programmatic Excel styling | Aspose.Cells API
-// Common Searches: Aspose.Cells set shape shadow angle | C# Aspose.Cells shadow distance | change shape shadow color Aspose.Cells | apply shadow to rectangle in Excel using Aspose.Cells | Aspose.Cells shadow effect example
-// Developer Intent: Create a rectangle shape in a worksheet and apply a shadow with a 45° angle, 10‑point offset, and dark gray color via the Aspose.Cells API.
-// Use Cases: Enhance visual hierarchy in automated Excel reports by adding depth to annotation shapes. | Programmatically style diagram elements to match corporate branding in exported workbooks. | Highlight key data points in dashboards by applying consistent shadow effects to shapes.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a circle shape and applies a 30° angle, 5‑point distance, light‑blue shadow. | Explain how to adjust shadow blur and transparency for shapes using Aspose.Cells for .NET. | Provide a step‑by‑step guide to assign different shadow colors to multiple shapes on the same worksheet.
+// Title: Create a rectangle shape with a 45‑degree dark‑gray outer shadow (10 pt distance) in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code that adds a rectangle shape to a worksheet and applies an outer shadow with a 45° direction, 10‑point distance, and dark gray color using Aspose.Cells, handling version differences via reflection. | Show how to access the Shape.Shadow property via reflection and set its Type, Direction, Distance, Color, and Visible fields for a shape in Aspose.Cells. | Demonstrate saving the workbook after configuring the shadow effect on a shape with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set outer shadow direction 45 degrees on rectangle shape | how to configure shadow distance and color for shapes in Aspose.Cells .NET | using reflection to set shape shadow properties across Aspose.Cells versions | apply dark gray outer shadow to an Excel shape with Aspose.Cells API
+// Tags: Aspose.Cells shape outer shadow configuration | C# set shape shadow direction distance color | reflection based Shape.Shadow property access Aspose.Cells | Excel workbook shape shadow effect .NET | Aspose.Cells rectangle shape styling
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to create a workbook, add a rectangle shape, and configure its ShadowEffect—setting the angle to 45°, distance to 10 points, and color to dark gray—using Aspose.Cells for .NET, then save the Excel file.
-class ConfigureShadowEffect
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example creates a new workbook, adds a rectangle shape to the first worksheet, sets its fill and line colors, and uses reflection to safely access the Shape.Shadow property. It configures the shadow as an outer shadow with a 45‑degree direction, 10‑point distance, dark gray color, and makes it visible before saving the file as ShadowEffect.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Add a rectangle shape to the worksheet
-        // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-        Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 100);
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access the shape's shadow effect
-        ShadowEffect shadow = shape.ShadowEffect;
+                // Add a rectangle shape to the worksheet
+                Shape shape = worksheet.Shapes.AddShape(
+                    MsoDrawingType.Rectangle, // shape type
+                    1,   // upper left row
+                    1,   // upper left column
+                    0,   // top offset (in points)
+                    0,   // left offset (in points)
+                    120, // width (in points)
+                    60   // height (in points)
+                );
 
-        // Set the required shadow properties
-        shadow.Angle = 45;               // 45 degree angle
-        shadow.Distance = 10;            // 10 points distance
+                // Set fill and line colors using the correct APIs
+                shape.FillFormat.ForeColor = Color.LightBlue;
+                shape.LineFormat.ForeColor = Color.DarkBlue;
 
-        // Create a CellsColor for dark gray and assign it to the shadow
-        CellsColor darkGray = workbook.CreateCellsColor();
-        darkGray.Color = Color.DarkGray; // System.Drawing.Color.DarkGray
-        shadow.Color = darkGray;
+                // Attempt to configure shadow effect via reflection (compatible with multiple versions)
+                var shadowProp = typeof(Shape).GetProperty("Shadow");
+                if (shadowProp != null)
+                {
+                    var shadow = shadowProp.GetValue(shape);
+                    if (shadow != null)
+                    {
+                        // Set shadow type if the property exists
+                        var typeProp = shadow.GetType().GetProperty("Type");
+                        if (typeProp != null && Enum.IsDefined(typeProp.PropertyType, "OuterShadow"))
+                        {
+                            typeProp.SetValue(shadow, Enum.Parse(typeProp.PropertyType, "OuterShadow"));
+                        }
 
-        // Save the workbook to a file
-        workbook.Save("ShadowEffectDemo.xlsx");
+                        // Set other shadow properties if they exist
+                        var directionProp = shadow.GetType().GetProperty("Direction");
+                        directionProp?.SetValue(shadow, 45);
+
+                        var distanceProp = shadow.GetType().GetProperty("Distance");
+                        distanceProp?.SetValue(shadow, 10);
+
+                        var colorProp = shadow.GetType().GetProperty("Color");
+                        colorProp?.SetValue(shadow, Color.DarkGray);
+
+                        var visibleProp = shadow.GetType().GetProperty("Visible");
+                        visibleProp?.SetValue(shadow, true);
+                    }
+                }
+
+                // Define output file path
+                string outputPath = "ShadowEffect.xlsx";
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
+        }
     }
 }

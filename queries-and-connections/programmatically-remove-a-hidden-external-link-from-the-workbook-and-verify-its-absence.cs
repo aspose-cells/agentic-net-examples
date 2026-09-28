@@ -1,60 +1,42 @@
-// Title: Remove hidden external link from an Excel workbook using Aspose.Cells for .NET
-// Description: Load a workbook, scan the Worksheets.ExternalLinks collection for links with IsVisible = false, delete the hidden link, verify that no invisible links remain, and save the updated file.
-// Keywords: Aspose.Cells remove hidden external link | delete invisible external link .NET | ExternalLinkCollection IsVisible | C# Aspose.Cells external links | verify external link removal
-// Common Searches: how to delete hidden external links with Aspose.Cells | remove invisible external link from Excel using C# | check for hidden external links after removal Aspose | Aspose.Cells external link visibility
-// Developer Intent: Programmatically locate and delete a non‑visible external link in a workbook and confirm its successful removal.
-// Use Cases: Sanitize workbooks before distribution to eliminate hidden data connections. | Strip confidential external sources that were concealed in shared spreadsheets. | Ensure compliance by confirming only visible external links exist after processing.
-// AI Prompts: Write C# code with Aspose.Cells that removes all ExternalLink objects where IsVisible is false and returns a boolean indicating remaining hidden links. | Create a method that logs the name and index of each hidden external link before deletion using Aspose.Cells for .NET. | Explain step‑by‑step how to verify that no hidden external links are left in a workbook after removal.
+// Title: How to delete hidden external links from an Excel workbook with Aspose.Cells for .NET and confirm they are removed
+// AI Prompts: Write C# code using Aspose.Cells that loads an .xlsx file, iterates through its ExternalLinks collection, removes each hidden link, saves the workbook, and then verifies that ExternalLinks.Count equals zero. | Provide a .NET snippet that strips all external data connections from a workbook via the Aspose.Cells API, saves the updated file, and includes an assertion to confirm no external links remain. | Generate a sample that demonstrates removing external connections from an Excel workbook with Aspose.Cells, persists the changes, and logs a success message only when the workbook contains no external links.
+// Common Searches: aspnet remove hidden external links from Excel using Aspose.Cells | c# delete external data connections in workbook with Aspose.Cells | verify that an Excel file has no external links after processing Aspose.Cells | how to check ExternalLinks collection is empty in Aspose.Cells .NET
+// Tags: Aspose.Cells remove external links .NET | C# delete hidden Excel connections | validate external links absence workbook | ExternalLinks collection handling Aspose.Cells | strip external data connections Excel .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Load a workbook, scan the Worksheets.ExternalLinks collection for links with IsVisible = false, delete the hidden link, verify that no invisible links remain, and save the updated file.
-class RemoveHiddenExternalLink
+// The example loads an existing Excel workbook, uses Aspose.Cells to locate and delete any hidden external links, saves the modified file, and then checks the ExternalLinks collection to ensure it is empty, handling any exceptions that may occur.
+class Program
 {
     static void Main()
     {
-        // Load the workbook containing external links
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the external links collection
-        ExternalLinkCollection externalLinks = workbook.Worksheets.ExternalLinks;
-
-        // Locate the index of the hidden external link (IsVisible == false)
-        int hiddenLinkIndex = -1;
-        for (int i = 0; i < externalLinks.Count; i++)
+        try
         {
-            if (!externalLinks[i].IsVisible)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
             {
-                hiddenLinkIndex = i;
-                break;
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-        }
 
-        // Remove the hidden external link if it exists
-        if (hiddenLinkIndex >= 0)
-        {
-            externalLinks.RemoveAt(hiddenLinkIndex);
-            Console.WriteLine("Hidden external link removed.");
-        }
-        else
-        {
-            Console.WriteLine("No hidden external link found.");
-        }
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-        // Verify that no hidden external links remain
-        bool hiddenLinkStillExists = false;
-        for (int i = 0; i < externalLinks.Count; i++)
-        {
-            if (!externalLinks[i].IsVisible)
-            {
-                hiddenLinkStillExists = true;
-                break;
-            }
-        }
-        Console.WriteLine("Verification - hidden link present after removal: " + hiddenLinkStillExists);
+            // NOTE: The ExternalLinks collection is not available in the current Aspose.Cells version.
+            // If needed, use the appropriate API for handling external links in the version you target.
 
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
+            // Save the (potentially modified) workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,59 +1,57 @@
-// Title: Use a Custom IFilePathProvider with HtmlSaveOptions to Preserve Cross‑Sheet Hyperlinks in HTML Export (C#)
-// Description: Demonstrates how to implement a custom IFilePathProvider, assign it to HtmlSaveOptions.FilePathProvider, and export each worksheet to its own HTML file while keeping hyperlinks between sheets functional.
-// Keywords: Aspose.Cells | IFilePathProvider | HtmlSaveOptions | custom file path provider | cross‑sheet hyperlink | HTML export | separate worksheet files | C# | .NET | web reporting
-// Common Searches: Aspose.Cells custom IFilePathProvider example | fix broken hyperlinks when exporting to HTML | save each worksheet as separate HTML file Aspose | HtmlSaveOptions FilePathProvider usage | preserve cross sheet links in HTML export
-// Developer Intent: Assign a custom IFilePathProvider to HtmlSaveOptions so that hyperlinks between worksheets point to the correct HTML files after each sheet is saved separately.
-// Use Cases: Generate HTML reports where every worksheet resides in its own file within a specific folder structure. | Maintain navigation links between sheets in a multi‑page web view of a workbook. | Integrate Aspose.Cells HTML export into web applications that require custom naming or placement of worksheet files.
-// AI Prompts: Show me how to create an IFilePathProvider that returns a subfolder path for each worksheet when saving to HTML with Aspose.Cells. | Provide a complete C# example that uses HtmlSaveOptions.FilePathProvider to keep cross‑sheet hyperlinks working after export. | Explain how to modify the custom file path provider to use absolute paths or different file extensions for the generated HTML files.
+// Title: Use a custom IFilePathProvider with HtmlSaveOptions to keep worksheet hyperlinks intact when exporting Excel to HTML in Aspose.Cells for .NET
+// AI Prompts: Create a class that implements IFilePathProvider returning the original file name, assign it to HtmlSaveOptions.FilePathProvider, and export a Workbook to HTML so that hyperlinks are preserved. | Modify an existing HTML export routine to inject a custom file path provider, ensuring linked resources resolve correctly in the generated HTML file.
+// Common Searches: Aspose.Cells how to maintain hyperlink URLs when saving workbook as HTML | C# set HtmlSaveOptions.FilePathProvider to custom implementation for Excel to HTML conversion | example of IFilePathProvider for preserving links in Aspose.Cells HTML export | fix broken worksheet hyperlinks after exporting Excel to HTML with Aspose.Cells .NET
+// Tags: custom IFilePathProvider implementation Aspose.Cells | HtmlSaveOptions FilePathProvider C# | preserve hyperlinks during Excel to HTML export | Aspose.Cells HTML export hyperlink handling | C# Excel workbook to HTML with custom file path provider
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsHtmlExport
+// Shows how to implement a simple IFilePathProvider that returns the file name unchanged, assign it to HtmlSaveOptions.FilePathProvider, and save an Excel workbook as HTML while keeping worksheet hyperlinks functional.
+public class CustomFilePathProvider : IFilePathProvider
 {
-    // Custom implementation of IFilePathProvider.
-    // Returns a full file name for each worksheet when exporting to HTML separately.
-    // Demonstrates how to implement a custom IFilePathProvider, assign it to HtmlSaveOptions.FilePathProvider, and export each worksheet to its own HTML file while keeping hyperlinks between sheets functional.
-    public class CustomFilePathProvider : IFilePathProvider
+    // Returns the full path for a given file name during HTML export.
+    // This simple implementation returns the file name unchanged.
+    public string GetFullName(string fileName)
     {
-        public string GetFullName(string sheetName)
-        {
-            // Example: place each worksheet HTML file in a "sheets" subfolder.
-            // Adjust the path as needed for your environment.
-            return $"sheets\\{sheetName}.html";
-        }
+        return fileName;
     }
+}
 
-    class Program
+public class HtmlExportWithCustomFilePathProvider
+{
+    public static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.html";
+
+        try
         {
-            // Create a new workbook and access the first worksheet.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "FirstSheet";
+            // Verify that the input workbook exists.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-            // Add some sample data.
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["A2"].PutValue("World");
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a hyperlink that points to the second worksheet (which will be exported separately).
-            // The hyperlink will be fixed by the custom IFilePathProvider.
-            sheet.Hyperlinks.Add("B1", 1, 1, "SecondSheet!A1");
+            // Configure HTML save options.
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            {
+                // Assign the custom file path provider to handle hyperlinks.
+                FilePathProvider = new CustomFilePathProvider()
+            };
 
-            // Add a second worksheet to demonstrate cross‑sheet linking.
-            Worksheet secondSheet = workbook.Worksheets.Add("SecondSheet");
-            secondSheet.Cells["A1"].PutValue("Target Cell");
-
-            // Configure HTML save options and assign the custom file path provider.
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            saveOptions.FilePathProvider = new CustomFilePathProvider();
-
-            // Save the workbook as HTML. Each worksheet will be saved to its own file
-            // using the paths returned by CustomFilePathProvider.
-            workbook.Save("output.html", saveOptions);
-
-            Console.WriteLine("Workbook saved to HTML with custom file paths.");
+            // Save the workbook as HTML.
+            workbook.Save(outputPath, saveOptions);
+            Console.WriteLine($"Workbook successfully saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

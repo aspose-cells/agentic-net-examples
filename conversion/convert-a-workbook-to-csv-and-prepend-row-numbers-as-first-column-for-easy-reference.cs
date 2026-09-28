@@ -1,43 +1,40 @@
-// Title: Add Row Numbers to an Excel Sheet and Export as CSV using Aspose.Cells for .NET
-// Description: A concise C# example that loads an existing workbook, inserts a new left‑most column, fills it with 1‑based row numbers up to the worksheet's MaxDataRow, and saves the result directly as a CSV file with Aspose.Cells.
-// Keywords: Aspose.Cells | C# | .NET | Excel to CSV conversion | add row numbers | insert first column | MaxDataRow | CSV export | worksheet manipulation | row index column
-// Common Searches: Aspose.Cells add leading row number column before CSV export | C# insert column at position 0 in Excel worksheet | How to write row numbers to Excel using Aspose.Cells | Export Excel to CSV with row index column .NET | Determine last data row in Aspose.Cells and number rows
-// Developer Intent: Insert a sequential row‑number column at the start of a worksheet and generate a CSV file that includes this identifier.
-// Use Cases: Create CSV reports that retain a reference to the original Excel row numbers. | Provide a unique identifier for each line when importing data into systems that require a primary key. | Generate debug‑friendly CSV dumps where row ordering is explicitly shown.
-// AI Prompts: Generate C# code with Aspose.Cells that inserts a first column, populates it with 1‑based row numbers, and saves the sheet as CSV. | Explain how Cells.MaxDataRow can be used to limit row‑number insertion to rows that contain data. | Suggest a way to skip completely empty rows while adding the row‑number column before exporting to CSV.
+// Title: Add a leftmost row-number column to an Excel sheet and export it as CSV using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an .xlsx file, inserts a new column at the very beginning, writes sequential numbers (1,2,3…) into that column, and writes the result out as a CSV using Aspose.Cells. | Produce a .NET snippet that adds an index column to the left side of the first worksheet, populates it with row identifiers, and saves the workbook in CSV format. | Generate a program that numbers every populated row, places the numbers in column A, and converts the workbook to a CSV file with Aspose.Cells.
+// Common Searches: Aspose.Cells how to insert a column at position 0 before CSV export in C# | C# convert Excel workbook to CSV while adding a leading row number column using Aspose.Cells | add sequential row index to Excel sheet and save as CSV with Aspose.Cells .NET | prepend row numbers column to first worksheet then export to CSV Aspose.Cells example | save xlsx as csv with custom leftmost column in C# Aspose.Cells
+// Tags: insert leftmost column Aspose.Cells | sequential row numbering Excel C# | save as CSV after column insertion Aspose.Cells | prepend row index column .NET | row number column generation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// A concise C# example that loads an existing workbook, inserts a new left‑most column, fills it with 1‑based row numbers up to the worksheet's MaxDataRow, and saves the result directly as a CSV file with Aspose.Cells.
+// The example loads an existing workbook, inserts a new column at the very left, fills that column with sequential row numbers starting at 1 for all populated rows, and then saves the modified worksheet as a CSV file using Aspose.Cells for .NET.
 class WorkbookToCsvWithRowNumbers
 {
     static void Main()
     {
         // Paths for source workbook and destination CSV
         string sourcePath = "input.xlsx";
-        string destinationPath = "output.csv";
+        string destPath = "output.csv";
 
-        // Load the existing workbook (create + load lifecycle)
+        // Load the existing workbook
         Workbook workbook = new Workbook(sourcePath);
 
-        // Work with the first worksheet
+        // Access the first worksheet
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
         // Insert a new column at the very left (index 0)
         cells.InsertColumn(0);
 
-        // Determine the last row that contains data
-        int lastDataRow = cells.MaxDataRow;
+        // Determine the number of rows that contain data (including header)
+        int totalRows = cells.MaxDataRow + 1;
 
-        // Populate the new first column with row numbers (1‑based)
-        for (int row = 0; row <= lastDataRow; row++)
+        // Populate the new column with sequential row numbers starting from 1
+        for (int row = 0; row < totalRows; row++)
         {
             cells[row, 0].PutValue(row + 1);
         }
 
-        // Save the modified workbook as CSV (save lifecycle)
-        workbook.Save(destinationPath, SaveFormat.Csv);
+        // Save the modified workbook as CSV
+        workbook.Save(destPath, SaveFormat.Csv);
     }
 }

@@ -1,35 +1,35 @@
-// Title: C# Example – Convert a TSV Workbook to HTML with External CSS using Aspose.Cells
-// Description: Demonstrates how to load a tab‑separated values (TSV) file into an Aspose.Cells Workbook, configure HtmlSaveOptions to export worksheet CSS as a separate stylesheet, and save the workbook as an HTML page.
-// Keywords: Aspose.Cells TSV to HTML | C# load TSV file | HtmlSaveOptions external CSS | Export worksheet CSS separately | Convert TSV to web page | Aspose.Cells .NET example | TSV to HTML conversion
-// Common Searches: Aspose.Cells load TSV in C# | Save workbook as HTML with separate CSS using Aspose.Cells | Export all worksheets to HTML Aspose.Cells .NET | TSV to HTML conversion sample code | How to generate external CSS when saving HTML with Aspose.Cells
-// Developer Intent: Load a TSV file into a workbook and export it as an HTML page that references an external CSS stylesheet.
-// Use Cases: Create web‑ready reports from TSV data while keeping styling in a maintainable external CSS file. | Publish multi‑worksheet documentation generated from TSV sources with a single shared stylesheet. | Automate batch conversion of TSV datasets to HTML pages for website deployment with centralized style management.
-// AI Prompts: Generate C# code that uses Aspose.Cells to read a TSV file and save it as HTML with an external CSS file. | Show how to set HtmlSaveOptions.ExportWorksheetCSSSeparately to true and export all worksheets to HTML. | Explain how to modify the example to embed CSS inline instead of exporting it separately.
+// Title: Convert a TSV workbook to HTML with an external CSS file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .tsv file with Aspose.Cells LoadOptions and saves it as an HTML document while exporting the worksheet CSS to a separate stylesheet. | Show how to configure HtmlSaveOptions to create an external CSS file and automatically create the output folder when converting a TSV workbook to HTML. | Write a console application that reads a tab‑separated values workbook and outputs both an HTML page and its accompanying CSS file using Aspose.Cells.
+// Common Searches: asp.net convert tsv file to html with external css using aspose.cells | c# load tab separated values workbook and export html with separate stylesheet | htmlsaveoptions exportworksheetcssseparately example for tsv conversion | how to generate css file when saving workbook as html in aspose.cells c# | aspose.cells create output directory automatically when saving html
+// Tags: TSV to HTML conversion Aspose.Cells | HtmlSaveOptions ExportWorksheetCSSSeparately | LoadOptions TSV format C# | Separate CSS generation Aspose.Cells | Create output directory on save
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to load a tab‑separated values (TSV) file into an Aspose.Cells Workbook, configure HtmlSaveOptions to export worksheet CSS as a separate stylesheet, and save the workbook as an HTML page.
-class Program
+// // Loads a TSV workbook with LoadOptions, then saves it as HTML using HtmlSaveOptions with ExportWorksheetCSSSeparately=true, generating an external CSS file and creating the output folder if needed.
+class TsvToHtmlWithExternalCss
 {
     static void Main()
     {
-        // Path to the source TSV file
-        string tsvFile = "input.tsv";
+        // Input TSV file path
+        string inputTsvPath = "input.tsv";
 
-        // Load the TSV file into a workbook
-        LoadOptions loadOpts = new LoadOptions(LoadFormat.Tsv);
-        Workbook workbook = new Workbook(tsvFile, loadOpts);
+        // Output HTML file path (CSS will be generated alongside this file)
+        string outputHtmlPath = "output.html";
 
-        // Configure HTML save options to export CSS as a separate file
-        HtmlSaveOptions htmlOpts = new HtmlSaveOptions();
-        htmlOpts.ExportWorksheetCSSSeparately = true;   // external CSS
-        htmlOpts.ExportActiveWorksheetOnly = false;    // export all worksheets (optional)
+        // Load the TSV workbook using LoadOptions for TSV format
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
+        Workbook workbook = new Workbook(inputTsvPath, loadOptions);
 
-        // Save the workbook as an HTML page
-        string htmlFile = "output.html";
-        workbook.Save(htmlFile, htmlOpts);
+        // Configure HTML save options to export worksheet CSS separately
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportWorksheetCSSSeparately = true; // creates external CSS file
+        htmlOptions.CreateDirectory = true; // auto‑create output folder if needed
 
-        Console.WriteLine($"HTML page saved to: {htmlFile}");
+        // Save the workbook as HTML; Aspose.Cells will generate an accompanying CSS file
+        workbook.Save(outputHtmlPath, htmlOptions);
+
+        Console.WriteLine("HTML file saved to: " + Path.GetFullPath(outputHtmlPath));
     }
 }

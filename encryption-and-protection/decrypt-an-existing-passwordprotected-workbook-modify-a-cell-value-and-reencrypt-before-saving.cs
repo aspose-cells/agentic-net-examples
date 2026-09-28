@@ -1,41 +1,39 @@
-// Title: C# – Open, Edit, and Re‑encrypt a Password‑Protected Excel Workbook with Aspose.Cells
-// Description: Shows how to load a password‑protected .xlsx using Aspose.Cells LoadOptions, change a cell value, assign a new password via Workbook.Settings.Password, and save the workbook encrypted.
-// Keywords: Aspose.Cells | C# password protected Excel | load encrypted workbook | modify cell Aspose.Cells | re‑encrypt workbook | Workbook.Settings.Password | LoadOptions.Password | Excel encryption .NET | code example | GitHub sample
-// Common Searches: open password protected Excel file Aspose.Cells C# | change cell value in encrypted workbook Aspose | re‑encrypt Excel workbook after editing .NET | load and save protected XLSX with different passwords | Aspose.Cells example for workbook encryption
-// Developer Intent: Load a protected Excel file, update a cell, and save it with a (new) password using Aspose.Cells for .NET.
-// Use Cases: Automate updates to confidential reports stored in encrypted Excel files while preserving security. | Rotate workbook passwords after data corrections or periodic policy changes. | Batch‑process multiple protected workbooks to apply a standard password after modifications.
-// AI Prompts: Write C# code with Aspose.Cells to open an encrypted .xlsx, change cell C5, and save it using a different password. | Explain the encryption workflow in Aspose.Cells and which properties control opening and saving passwords. | Provide a try‑catch example that handles an invalid opening password when loading a workbook with Aspose.Cells.
+// Title: Decrypt a password‑protected Excel workbook, edit a cell, and re‑encrypt it with a new password using Aspose.Cells for .NET (C#)
+// AI Prompts: Show C# code that opens an encrypted .xlsx file with Aspose.Cells, updates cell A1 on the first worksheet, and saves the workbook using a different password. | Explain how to use LoadOptions to load a password‑protected workbook, change a cell value, set Workbook.Settings.Password, and write the file back encrypted with Aspose.Cells.
+// Common Searches: C# Aspose.Cells load encrypted xlsx and change cell value | how to change password of an Excel file using Aspose.Cells .NET | update cell in password protected workbook and save with new password Aspose.Cells | Aspose.Cells decrypt workbook, modify data, re‑encrypt in C# example
+// Tags: load encrypted xlsx with LoadOptions Aspose.Cells | modify cell value in protected workbook C# | set workbook password using Workbook.Settings Aspose.Cells | re‑encrypt Excel file after editing Aspose.Cells | Aspose.Cells password protection workflow .NET
 
 using System;
 using Aspose.Cells;
 
-// Shows how to load a password‑protected .xlsx using Aspose.Cells LoadOptions, change a cell value, assign a new password via Workbook.Settings.Password, and save the workbook encrypted.
+// Loads a password‑protected XLSX file via LoadOptions, updates cell A1 on the first worksheet, assigns a new password through Workbook.Settings.Password, and saves the workbook encrypted.
 class Program
 {
     static void Main()
     {
         // Path to the existing password‑protected workbook
-        string inputFile = "protected_workbook.xlsx";
+        string inputPath = "protected.xlsx";
 
-        // Password required to open the workbook
+        // Password used to open the workbook
         string openPassword = "oldPassword";
 
-        // Password to apply after modification (can be same as openPassword)
-        string newPassword = "newPassword";
+        // Load the workbook with the password
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+        {
+            Password = openPassword
+        };
+        Workbook workbook = new Workbook(inputPath, loadOptions);
 
-        // Load the workbook with the opening password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = openPassword;
-        Workbook workbook = new Workbook(inputFile, loadOptions);
+        // Modify a cell value (e.g., Sheet1!A1)
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Updated Value");
 
-        // Modify a cell value (example: cell B2 on the first worksheet)
-        workbook.Worksheets[0].Cells["B2"].PutValue("Updated value");
+        // Set a new password for re‑encryption (can be the same as the original)
+        string savePassword = "newPassword";
+        workbook.Settings.Password = savePassword;
 
-        // Re‑encrypt the workbook with the new password
-        workbook.Settings.Password = newPassword;
-
-        // Save the modified and re‑encrypted workbook
-        string outputFile = "modified_protected_workbook.xlsx";
-        workbook.Save(outputFile);
+        // Save the workbook with the new encryption
+        string outputPath = "protected_modified.xlsx";
+        workbook.Save(outputPath);
     }
 }

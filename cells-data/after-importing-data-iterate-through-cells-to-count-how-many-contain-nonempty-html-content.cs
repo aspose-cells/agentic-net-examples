@@ -1,78 +1,61 @@
-// Title: C# – Count non‑empty HTML cells after importing a DataTable with Aspose.Cells
-// Description: The sample builds a DataTable with plain text and HTML strings, imports it into an Aspose.Cells workbook using ImportData with IsHtmlString enabled, iterates through every cell, detects strings that contain HTML tags, tallies the matches, and saves the workbook.
-// Keywords: Aspose.Cells | C# | HTML cell count | ImportData IsHtmlString | worksheet cell iteration | detect HTML tags | non‑empty HTML | DataTable import | cell value check
-// Common Searches: Aspose.Cells count HTML cells C# | How to detect HTML strings in worksheet cells after ImportData | C# iterate cells to find HTML tags Aspose | ImportData IsHtmlString count cells | Aspose.Cells example counting HTML content
-// Developer Intent: Find out how many cells contain non‑empty HTML after a DataTable import.
-// Use Cases: Verify that HTML strings were imported correctly before rendering. | Create a summary of cells that require HTML rendering or special formatting. | Highlight or filter rows based on the presence of HTML tags in their cells.
-// AI Prompts: Generate C# code with Aspose.Cells that counts cells containing HTML tags after importing a DataTable. | Show how to modify the loop to collect cell addresses of HTML‑containing cells instead of only counting them. | Explain how to use Worksheet.Cells.Find or a regular expression to locate HTML content more efficiently.
+// Title: Count non‑empty HTML cells after importing a DataTable into an Aspose.Cells worksheet (C#)
+// AI Prompts: Write C# code that imports a DataTable with HTML strings into an Aspose.Cells worksheet and returns the number of cells containing HTML tags. | Modify the cell enumeration loop to increment a counter only when the cell's string value includes both '<' and '>' characters. | Add code to log the address (e.g., A1, B2) of each cell that contains HTML content while counting them.
+// Common Searches: how to detect HTML strings in worksheet cells using Aspose.Cells for .NET | C# Aspose.Cells import DataTable with HTML and count cells containing tags | enumerate cells in Aspose.Cells workbook and check for non‑empty HTML content | Aspose.Cells count cells that have HTML markup after ImportData | sample code for counting HTML cells in a worksheet with Aspose.Cells C#
+// Tags: import DataTable as HTML strings Aspose.Cells | enumerate worksheet cells Aspose.Cells C# | detect HTML markup in cell values Aspose.Cells | count cells containing HTML tags C# | Aspose.Cells cell iteration HTML detection
 
 using System;
 using System.Data;
-using System.IO;
+using System.Collections;
 using Aspose.Cells;
 
 namespace AsposeCellsHtmlCountDemo
 {
-    // The sample builds a DataTable with plain text and HTML strings, imports it into an Aspose.Cells workbook using ImportData with IsHtmlString enabled, iterates through every cell, detects strings that contain HTML tags, tallies the matches, and saves the workbook.
+    // Demonstrates importing a DataTable with HTML strings into an Aspose.Cells worksheet, iterating all cells, counting those whose values contain both '<' and '>' characters, optionally logging their addresses, and saving the workbook.
     class Program
     {
         static void Main()
         {
-            try
+            // Prepare a DataTable with sample HTML content
+            DataTable table = new DataTable();
+            table.Columns.Add("ID");
+            table.Columns.Add("Content");
+            table.Columns.Add("Time");
+
+            table.Rows.Add("1", "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
+            table.Rows.Add("2", "Plain text", "3:45 PM");
+            table.Rows.Add("3", "<b>Bold Text</b>", "4:00 PM");
+
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Import the DataTable with HTML strings recognized
+            worksheet.Cells.ImportData(table, 0, 0, new ImportTableOptions
             {
-                // Create a sample DataTable with HTML content
-                DataTable table = new DataTable();
-                table.Columns.Add("ID");
-                table.Columns.Add("Content");
-                table.Columns.Add("Time");
+                IsFieldNameShown = true,
+                IsHtmlString = true,
+                NumberFormats = new string[] { null, null, "h:mm AM/PM" }
+            });
 
-                table.Rows.Add("1", "<a href='https://www.example.com'>Example Link</a>", "2:30 PM");
-                table.Rows.Add("2", "Plain text", "3:45 PM");
-                table.Rows.Add("3", "<b>Bold Text</b>", "4:00 PM");
-
-                // Create a new workbook and import the DataTable with HTML flag set
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                worksheet.Cells.ImportData(table, 0, 0, new ImportTableOptions
+            // Iterate through all cells and count those containing non‑empty HTML
+            int htmlCellCount = 0;
+            IEnumerator enumerator = worksheet.Cells.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                Cell cell = (Cell)enumerator.Current;
+                // Get the cell value as string (if any)
+                string value = cell.Value?.ToString();
+                // Consider it HTML if it contains at least one opening and closing tag
+                if (!string.IsNullOrEmpty(value) && value.Contains("<") && value.Contains(">"))
                 {
-                    IsFieldNameShown = true,
-                    IsHtmlString = true,
-                    // Use empty strings instead of null for non‑nullable entries
-                    NumberFormats = new string[] { "", "", "h:mm AM/PM" }
-                });
-
-                // Count cells that contain non‑empty HTML
-                long htmlCellCount = 0;
-                foreach (Cell cell in worksheet.Cells)
-                {
-                    if (cell.Value != null && cell.Value is string str && !string.IsNullOrWhiteSpace(str))
-                    {
-                        if (str.Contains("<") && str.Contains(">"))
-                        {
-                            htmlCellCount++;
-                        }
-                    }
-                }
-
-                Console.WriteLine($"Number of cells containing non‑empty HTML content: {htmlCellCount}");
-
-                // Save the workbook safely
-                string outputPath = "HtmlContentCountDemo.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                    htmlCellCount++;
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            Console.WriteLine($"Number of cells containing non‑empty HTML content: {htmlCellCount}");
+
+            // Save the workbook (optional, demonstrates lifecycle usage)
+            workbook.Save("HtmlContentCountDemo.xlsx");
         }
     }
 }

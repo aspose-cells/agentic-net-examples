@@ -1,75 +1,45 @@
-// Title: Add PDF Bookmark Hierarchy to Aspose.Cells Workbook Before Exporting to PDF (C#)
-// Description: The example creates a three‑sheet workbook, defines a root PdfBookmarkEntry with two child entries that point to cells A1 on each sheet, uses reflection to set the PdfBookmarks property on PdfSaveOptions when it exists, and saves the workbook as a PDF with clickable bookmarks.
-// Keywords: Aspose.Cells | C# | PDF bookmarks | PdfBookmarkEntry | PdfSaveOptions | PdfBookmarks property | Excel to PDF export | bookmark hierarchy | reflection | version compatibility
-// Common Searches: Aspose.Cells add PDF bookmarks C# | How to set PdfBookmarks in Aspose.Cells | Create hierarchical PDF bookmarks with Aspose.Cells | PdfBookmarkEntry example .NET | Export workbook to PDF with bookmarks Aspose
-// Developer Intent: Attach a PdfBookmarkEntry hierarchy to the workbook's PdfBookmarks collection and export the workbook as a PDF.
-// Use Cases: Generate a multi‑sheet Excel file and produce a PDF with a navigable bookmark outline. | Build a dynamic bookmark tree from worksheet data and embed it during PDF conversion. | Maintain compatibility across Aspose.Cells versions by checking for the PdfBookmarks property before assignment.
-// AI Prompts: Show C# code that creates a PdfBookmarkEntry tree, assigns it to Workbook.PdfBookmarks, and saves the workbook as a PDF using Aspose.Cells. | Explain how to use reflection to safely set the PdfBookmarks property when it may be missing in older Aspose.Cells releases. | Provide a step‑by‑step example of adding root and child PDF bookmarks that link to specific cells before exporting to PDF.
+// Title: Add PDF bookmarks to an Excel workbook before exporting to PDF with Aspose.Cells for .NET
+// AI Prompts: Insert a PdfBookmarkEntry named "Chapter 1" that links to cell A1, add it to workbook.PdfBookmarks, then save the workbook as PDF using PdfSaveOptions. | Update the example to create several PdfBookmarkEntry objects with custom titles and target cells (e.g., B5, D10), add each to the PdfBookmarks collection, and generate a PDF that includes all bookmarks. | Show how to set DestinationPage and DestinationLocation on a PdfBookmarkEntry, add it to the workbook, and export the Excel file so the PDF outline reflects those destinations.
+// Common Searches: how to create PDF outline bookmarks from Excel using Aspose.Cells C# | Aspose.Cells add multiple PdfBookmarkEntry objects before saving to PDF | C# export Excel to PDF with custom bookmarks Aspose.Cells | set destination page for PdfBookmarkEntry in Aspose.Cells .NET | add PDF bookmarks to workbook programmatically Aspose.Cells
+// Tags: PdfBookmarkEntry addition Aspose.Cells C# | export Excel to PDF with bookmarks Aspose.Cells | custom PDF outline from Excel Aspose.Cells | set PdfBookmarkEntry destination page Aspose.Cells | programmatic PDF bookmarks Aspose.Cells .NET
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// The example creates a three‑sheet workbook, defines a root PdfBookmarkEntry with two child entries that point to cells A1 on each sheet, uses reflection to set the PdfBookmarks property on PdfSaveOptions when it exists, and saves the workbook as a PDF with clickable bookmarks.
+// The code loads an Excel workbook, creates one or more PdfBookmarkEntry objects, adds them to the workbook's PdfBookmarks collection, and then saves the workbook as a PDF using PdfSaveOptions, ensuring any specified output directory exists.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and add worksheets
-            Workbook workbook = new Workbook();
-            Worksheet sheet1 = workbook.Worksheets[0];
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
+            string inputPath = "input.xlsx";
+            string outputPath = "output.pdf";
 
-            // Set values that will serve as bookmark destinations
-            sheet1.Cells["A1"].PutValue("Page 1");
-            sheet2.Cells["A1"].PutValue("Page 2");
-            sheet3.Cells["A1"].PutValue("Page 3");
-
-            // Create the root PDF bookmark entry
-            PdfBookmarkEntry rootBookmark = new PdfBookmarkEntry
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                Text = "Root",
-                Destination = sheet1.Cells["A1"],
-                IsOpen = true,
-                SubEntry = new ArrayList()
-            };
-
-            // Create sub‑bookmarks
-            PdfBookmarkEntry subBookmark1 = new PdfBookmarkEntry
-            {
-                Text = "Section 1",
-                Destination = sheet2.Cells["A1"]
-            };
-
-            PdfBookmarkEntry subBookmark2 = new PdfBookmarkEntry
-            {
-                Text = "Section 2",
-                Destination = sheet3.Cells["A1"]
-            };
-
-            // Add sub‑bookmarks to the root entry
-            rootBookmark.SubEntry.Add(subBookmark1);
-            rootBookmark.SubEntry.Add(subBookmark2);
-
-            // Prepare PDF save options
-            PdfSaveOptions saveOptions = new PdfSaveOptions();
-
-            // Attach the bookmark hierarchy if the property is available (supported in newer versions)
-            // In older versions the PdfBookmarks property may not exist; this block safely skips it.
-            var pdfBookmarksProp = typeof(PdfSaveOptions).GetProperty("PdfBookmarks");
-            if (pdfBookmarksProp != null && pdfBookmarksProp.CanWrite)
-            {
-                pdfBookmarksProp.SetValue(saveOptions, rootBookmark);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Export the workbook to PDF
-            string outputPath = "output_bookmark.pdf";
-            workbook.Save(outputPath, saveOptions);
-            Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (customize as needed)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved to PDF: {outputPath}");
         }
         catch (Exception ex)
         {

@@ -1,39 +1,49 @@
-// Title: Load an Excel workbook from a file path and list worksheet names – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a Workbook object from a local Excel file, retrieve the Workbook.Worksheets collection, iterate through each Worksheet to output its name, and properly dispose the workbook to free resources.
-// Keywords: Aspose.Cells load workbook C# | open Excel file by path .NET | access worksheets collection Aspose.Cells | enumerate worksheet names C# | dispose Workbook Aspose.Cells | C# Excel automation | global .NET developers | US .NET Excel processing
-// Common Searches: How to open an existing Excel file with Aspose.Cells in C# | Aspose.Cells get list of sheet names from workbook | C# code to iterate worksheets after loading workbook | Best way to release Aspose.Cells Workbook resources
-// Developer Intent: Open a local Excel file, read its worksheets collection, and loop through the sheets to obtain their names.
-// Use Cases: Populate a dropdown with all sheet names after a user uploads an Excel file. | Verify required worksheets (e.g., "Data" and "Summary") exist before data extraction. | Create an audit log of worksheet names for compliance reporting.
-// AI Prompts: Write C# code that loads an Excel workbook from a given file path, accesses the Worksheets collection, and prints each worksheet name using Aspose.Cells. | Explain memory‑management best practices for disposing Aspose.Cells Workbook objects in a high‑throughput .NET service. | Generate a unit test that confirms the workbook loads correctly and the expected worksheet names are returned.
+// Title: Load an Excel workbook from a file path and list all worksheet names with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to open an Excel file from a specified path, creates a new workbook if the file does not exist, and prints each worksheet's name to the console. | Show how to safely load a workbook, handle missing files by initializing a default workbook, and iterate over the Worksheets collection to display sheet names using Aspose.Cells in .NET.
+// Common Searches: aspnet c# how to open an existing Excel file with Aspose.Cells and get worksheet names | aspose.cells load workbook from path and create new workbook when file missing | c# enumerate worksheets collection after loading workbook using Aspose.Cells | handle FileNotFoundException with Aspose.Cells by creating default workbook
+// Tags: load workbook from file path Aspose.Cells | create default workbook when file missing Aspose.Cells | iterate worksheets collection C# Aspose.Cells | list worksheet names Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadExample
+namespace SampleApp
 {
-    // Demonstrates how to create a Workbook object from a local Excel file, retrieve the Workbook.Worksheets collection, iterate through each Worksheet to output its name, and properly dispose the workbook to free resources.
+    // The sample loads an Excel workbook from a given file path using Aspose.Cells for .NET, creates a default workbook if the file is absent, then iterates through the Worksheets collection and writes each sheet name to the console, with basic exception handling.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the existing Excel file
-            string filePath = "input.xlsx";
+            string filePath = @"C:\Data\SampleWorkbook.xlsx";
 
-            // Load the workbook from the specified file path using the string constructor
-            Workbook workbook = new Workbook(filePath);
-
-            // Access the worksheets collection
-            WorksheetCollection worksheets = workbook.Worksheets;
-
-            // Example: iterate through all worksheets and print their names
-            for (int i = 0; i < worksheets.Count; i++)
+            try
             {
-                Worksheet sheet = worksheets[i];
-                Console.WriteLine($"Worksheet {i}: {sheet.Name}");
-            }
+                Workbook workbook;
 
-            // Optional: clean up resources
-            workbook.Dispose();
+                // Load existing workbook or create a new one if the file is missing
+                if (File.Exists(filePath))
+                {
+                    workbook = new Workbook(filePath);
+                }
+                else
+                {
+                    workbook = new Workbook(); // creates a default workbook with one sheet
+                    workbook.Save(filePath);   // optional: persist for future runs
+                }
+
+                // Access worksheets collection
+                WorksheetCollection worksheets = workbook.Worksheets;
+
+                // Output each worksheet name
+                foreach (Worksheet sheet in worksheets)
+                {
+                    Console.WriteLine(sheet.Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

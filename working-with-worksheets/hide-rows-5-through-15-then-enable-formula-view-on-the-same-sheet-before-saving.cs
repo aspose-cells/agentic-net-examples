@@ -1,39 +1,50 @@
-// Title: C# – Hide Rows 5‑15 and Show Formulas in an Aspose.Cells Worksheet
-// Description: Creates a new workbook, inserts sample data and a formula, hides rows 5‑15 with Cells.HideRows, enables worksheet.ShowFormulas to display formulas instead of results, and saves the file as HiddenRows_ShowFormulas.xlsx.
-// Keywords: Aspose.Cells hide rows C# | ShowFormulas property | display formulas Aspose.Cells | hide specific rows .NET | Excel row visibility | Aspose.Cells workbook save
-// Common Searches: Aspose.Cells hide rows 5 to 15 C# | How to enable formula view in Aspose.Cells | Hide multiple rows and show formulas in .NET Excel | Aspose.Cells hide rows and display formulas before saving
-// Developer Intent: Hide rows 5‑15 and turn on formula view before saving the workbook.
-// Use Cases: Prepare a financial report where input rows are concealed but calculation formulas stay visible for auditors. | Generate a template that hides raw data rows while exposing the underlying formulas to end‑users. | Distribute an Excel file with selected rows hidden and formulas displayed to simplify review and reduce accidental edits.
-// AI Prompts: Provide C# code using Aspose.Cells to hide rows 5‑15 and set ShowFormulas = true before saving. | Show how to conceal a range of rows and toggle formula display in an Aspose.Cells worksheet. | Explain the steps to hide specific rows and enable formula view without altering existing cell values in a .NET workbook.
+// Title: How to hide rows 5‑15 and enable formula view in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# program using Aspose.Cells that conceals rows 5‑15 in the first worksheet, activates the formula‑display mode for the sheet, and writes the result to a new Excel file. | Update an existing Aspose.Cells workbook so that rows 5‑15 become hidden and the workbook is set to show formulas instead of calculated values before saving.
+// Common Searches: Aspose.Cells hide rows 5‑15 and show formulas in C# | Enable formula view after hiding rows with Aspose.Cells .NET | C# Aspose.Cells set workbook to display formulas | How to hide a range of rows and view formulas using Aspose.Cells | Aspose.Cells hide specific rows then turn on ShowFormula property
+// Tags: hide rows Aspose.Cells C# | show formulas Aspose.Cells workbook | Aspose.Cells row visibility control | Aspose.Cells ShowFormula property .NET | C# Excel worksheet row hiding and formula display
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHideRowsAndShowFormulas
+// The example loads an existing Excel file with Aspose.Cells, hides rows 5‑15 in the first worksheet by calling Cells.HideRow for each zero‑based index, sets the workbook’s ShowFormula setting to true so formulas are displayed instead of values, and saves the modified workbook to a new file, handling missing input files and exceptions.
+class Program
 {
-    // Creates a new workbook, inserts sample data and a formula, hides rows 5‑15 with Cells.HideRows, enables worksheet.ShowFormulas to display formulas instead of results, and saves the file as HiddenRows_ShowFormulas.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Example data with a formula (optional, just to illustrate ShowFormulas)
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].Formula = "=A1+A2"; // Formula cell
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Hide rows 5 through 15 (zero‑based index: start at 4, hide 11 rows)
-            cells.HideRows(4, 11);
+            // Load the workbook from the input file
+            var workbook = new Workbook(inputPath);
 
-            // Enable formula view on the worksheet
-            worksheet.ShowFormulas = true;
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Save the workbook
-            workbook.Save("HiddenRows_ShowFormulas.xlsx");
+            // Hide rows 5 through 15 (Excel rows are 1‑based, Aspose.Cells rows are 0‑based)
+            for (int rowIndex = 4; rowIndex <= 14; rowIndex++)
+            {
+                // HideRow takes a single argument (row index)
+                sheet.Cells.HideRow(rowIndex);
+            }
+
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a message
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

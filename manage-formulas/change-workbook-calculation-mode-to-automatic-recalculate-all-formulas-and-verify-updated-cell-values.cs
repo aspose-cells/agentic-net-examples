@@ -1,43 +1,47 @@
-// Title: Aspose.Cells .NET – Switch Workbook to Automatic Calculation, Recalculate All Formulas, and Verify Cell Values
-// Description: Demonstrates how to change a workbook's calculation mode to Automatic using Aspose.Cells for .NET, trigger a full recalculation with CalculateFormula, read the updated cell values, and save the workbook.
-// Keywords: Aspose.Cells automatic calculation | Workbook.CalculateFormula .NET | set calculation mode Aspose.Cells | recalculate formulas C# | verify formula results Aspose.Cells | Aspose.Cells workbook settings | C# Excel formula evaluation
-// Common Searches: Aspose.Cells change calculation mode to automatic | How to recalculate all formulas in Aspose.Cells | Read updated cell values after CalculateFormula | Aspose.Cells verify formula output programmatically | C# set workbook calculation mode Aspose.Cells
-// Developer Intent: The developer needs to enable automatic calculation for a workbook, force a full formula recompute, and confirm that the resulting cell values are correct before saving.
-// Use Cases: Ensure all dependent formulas are up‑to‑date when exporting a workbook. | Programmatically recalculate after modifying input cells in a data‑processing pipeline. | Validate formula results in automated tests or CI builds.
-// AI Prompts: Generate C# code that sets the workbook calculation mode to Manual, updates a cell, then forces a recalculation with Aspose.Cells. | Provide a unit‑test method that asserts expected values of formula cells after calling workbook.CalculateFormula. | Explain how to capture and handle calculation errors when using workbook.CalculateFormula in Aspose.Cells.
+// Title: Set workbook to Automatic calculation mode, recalculate all formulas, and read updated cell values using Aspose.Cells for .NET
+// AI Prompts: Load an Excel file, assign Workbook.Settings.CalculationMode = CalculationModeType.Automatic, invoke workbook.CalculateFormula(), then output the value of cell A1. | Switch the workbook to automatic calculation, trigger a full formula refresh, and verify the result of a dependent cell before saving. | Programmatically enable automatic evaluation, recalculate the entire sheet, and retrieve the refreshed value of a target cell to confirm the update.
+// Common Searches: C# Aspose.Cells how to turn on automatic formula evaluation and refresh all cells | recalculate workbook formulas after changing calculation settings with Aspose.Cells | retrieve updated value of a cell after calling CalculateFormula in Aspose.Cells .NET | save modified workbook after enabling automatic calculation using Aspose.Cells
+// Tags: Workbook.Settings.CalculationMode Automatic Aspose.Cells | recalculate all formulas using Aspose.Cells API | read cell value after formula evaluation Aspose.Cells | save updated workbook to XLSX Aspose.Cells | handle workbook load errors Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to change a workbook's calculation mode to Automatic using Aspose.Cells for .NET, trigger a full recalculation with CalculateFormula, read the updated cell values, and save the workbook.
+// The example loads an Excel workbook, switches the calculation mode to Automatic, recalculates every formula, reads the refreshed value of cell A1, and saves the updated file, with proper exception handling.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle create rule)
-        Workbook workbook = new Workbook();
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Access the first worksheet and its cells
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+            // Verify that the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Populate sample data and formulas
-        cells["A1"].PutValue(5);               // Simple value
-        cells["B1"].Formula = "=A1*2";         // Depends on A1
-        cells["C1"].Formula = "=B1+10";        // Depends on B1
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-        // Change calculation mode to Automatic (FormulaSettings.CalculationMode)
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-        // Recalculate all formulas in the workbook
-        workbook.CalculateFormula();
+            // Example: read the value of cell A1 after recalculation
+            var worksheet = workbook.Worksheets[0];
+            var cell = worksheet.Cells["A1"];
+            Console.WriteLine($"A1 value after recalculation: {cell.Value}");
 
-        // Verify that the cell values have been updated
-        Console.WriteLine("A1 value: " + cells["A1"].Value); // Expected: 5
-        Console.WriteLine("B1 value: " + cells["B1"].Value); // Expected: 10
-        Console.WriteLine("C1 value: " + cells["C1"].Value); // Expected: 20
-
-        // Save the workbook (lifecycle save rule)
-        workbook.Save("UpdatedWorkbook.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

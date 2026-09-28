@@ -1,55 +1,58 @@
-// Title: Aspose.Cells .NET: Set width of columns D‑F to 20 characters using Range.EntireColumn
-// Description: Creates a workbook, defines the range D:F, accesses its EntireColumn property, sets each column's width to 20 characters, and saves the file as Columns_D_to_F_Width_20.xlsx.
-// Keywords: Aspose.Cells | .NET | C# | Range EntireColumn | set column width | columns D-F | Excel column sizing | CreateRange D:F
-// Common Searches: Aspose.Cells set column width D to F | Range.EntireColumn column width C# example | How to change multiple column widths with Aspose.Cells | C# Excel column width 20 characters Aspose
-// Developer Intent: Apply a uniform width of 20 characters to columns D, E, and F in an Excel workbook via Aspose.Cells.
-// Use Cases: Formatting report columns for consistent appearance. | Preparing header rows before data insertion to ensure alignment. | Reusing column‑width logic across several worksheets in automated Excel generation.
-// AI Prompts: Write C# code that sets columns G‑I to a width of 25 characters using Aspose.Cells Range.EntireColumn. | Compare Range.EntireColumn.ColumnWidth with setting Cells.ColumnWidth individually for multiple columns in Aspose.Cells. | Provide a step‑by‑step tutorial to create a range for columns A‑C and set their width to 15 characters with Aspose.Cells for .NET.
+// Title: How to set column width to 20 characters for columns D through F using Range.EntireColumn in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a range for columns D‑F, accesses the EntireColumn property, and sets each column width to 20 characters with Aspose.Cells. | Demonstrate adjusting multiple column widths in an Excel workbook by iterating over the columns returned from Range.EntireColumn in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set width of columns D to F to 20 characters | Using Range.EntireColumn to change column width in a .NET Excel file | How to apply the same column width to several columns with Aspose.Cells | C# example for setting column width for a range of columns in Excel using Aspose.Cells | Adjust column width for multiple columns programmatically with Aspose.Cells .NET
+// Tags: range.entirecolumn column width aspose.cells | adjust multiple column widths c# aspose.cells | select columns d-f aspose.cells | excel column width 20 characters aspose | create range d1:f1 aspose.cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Creates a new workbook, defines a range covering columns D‑F, uses the EntireColumn property to reference the full columns, loops through each column to set its width to 20 characters, and saves the file as Output.xlsx.
+class Program
 {
-    // Creates a workbook, defines the range D:F, accesses its EntireColumn property, sets each column's width to 20 characters, and saves the file as Columns_D_to_F_Width_20.xlsx.
-    public class SetColumnWidthUsingEntireColumn
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            var workbook = new Workbook();
+
+            // Get the first worksheet
+            var worksheet = workbook.Worksheets[0];
+
+            // Create a range that covers columns D through F (row 1 is used as a reference)
+            var range = worksheet.Cells.CreateRange("D1:F1");
+
+            // Use EntireColumn to refer to the whole columns of the range
+            var columnsRange = range.EntireColumn;
+
+            // Determine start and end column indexes
+            int startCol = columnsRange.FirstColumn;
+            int endCol = startCol + columnsRange.ColumnCount - 1;
+
+            // Set each column width to 20 characters
+            for (int col = startCol; col <= endCol; col++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Create a range that covers columns D through F (columns 3 to 5, zero‑based)
-                Aspose.Cells.Range range = worksheet.Cells.CreateRange("D:F");
-
-                // Get the entire columns for the range
-                Aspose.Cells.Range entireColumns = range.EntireColumn;
-
-                // Set the width of each column in the range to 20 characters
-                entireColumns.ColumnWidth = 20.0;
-
-                // Save the workbook
-                string outputPath = "Columns_D_to_F_Width_20.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                worksheet.Cells.SetColumnWidth(col, 20);
             }
-            catch (Exception ex)
+
+            // Define output file path
+            string outputPath = "Output.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            SetColumnWidthUsingEntireColumn.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

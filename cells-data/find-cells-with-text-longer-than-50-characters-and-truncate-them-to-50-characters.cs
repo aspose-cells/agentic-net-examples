@@ -1,53 +1,27 @@
-// Title: C# – Truncate Excel Cell Text Over 50 Characters with Aspose.Cells
-// Description: Load an Excel workbook, scan each worksheet's used range, detect string cells longer than 50 characters, truncate the text to 50 characters while preserving formatting, and save the updated file.
-// Keywords: Aspose.Cells truncate text | C# limit cell string length | Excel cell text cut off | Aspose.Cells used range iteration | save modified workbook Aspose.Cells | .NET Excel string trimming | cell value length check
-// Common Searches: how to cut cell text to 50 characters using Aspose.Cells | Aspose.Cells truncate long strings in Excel | C# iterate used cells and modify values Aspose | remove characters beyond 50 in Excel cells .NET | save workbook after editing cell strings Aspose.Cells
-// Developer Intent: Find and shorten any cell string that exceeds 50 characters, then write the changes back to a new Excel file.
-// Use Cases: Process a large spreadsheet and ensure all textual entries fit a 50‑character limit. | Efficiently modify only populated cells by using MaxDataRow/MaxDataColumn. | Maintain original cell formatting while trimming overly long text.
-// AI Prompts: Generate C# code with Aspose.Cells that truncates cell strings longer than a given length and saves the workbook. | Show how to loop through the used range of each worksheet and conditionally edit cell values. | Explain how to keep cell formatting intact when shortening text with Aspose.Cells.
+// Title: How to truncate Excel cell strings longer than 50 characters using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, scans every used cell, and replaces any string longer than 50 characters with its first 50 characters. | Create a C# routine using Aspose.Cells to iterate all worksheets, detect string cells exceeding 50 characters, truncate them to 50 characters, and save the updated file.
+// Common Searches: Aspose.Cells C# truncate cell text to specific length | limit Excel cell string length to 50 characters with Aspose.Cells | C# iterate through all cells in workbook and shorten long strings using Aspose | how to cut off text in Excel cells after 50 characters programmatically | Aspose.Cells replace long string values in cells with substring
+// Tags: truncate cell string Aspose.Cells C# | limit Excel cell text length .NET | iterate worksheets Aspose.Cells truncate | substring cell value Aspose.Cells | process used range Aspose.Cells C#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace TruncateLongCellText
 {
-    // Load an Excel workbook, scan each worksheet's used range, detect string cells longer than 50 characters, truncate the text to 50 characters while preserving formatting, and save the updated file.
-    public class TruncateLongTextDemo
+    // C# program that loads an Excel workbook with Aspose.Cells, walks through every worksheet and used cell, truncates any string longer than 50 characters to exactly 50 characters, and saves the modified workbook.
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
-
-            // Verify input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook (lifecycle: load)
-            Workbook workbook = new Workbook(inputPath);
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Iterate through all worksheets
             foreach (Worksheet sheet in workbook.Worksheets)
             {
                 Cells cells = sheet.Cells;
 
-                // Determine the used range to avoid scanning empty cells
+                // Determine the used range of the worksheet
                 int maxRow = cells.MaxDataRow;
                 int maxCol = cells.MaxDataColumn;
 
@@ -62,10 +36,9 @@ namespace AsposeCellsExamples
                         if (cell.Type == CellValueType.IsString)
                         {
                             string text = cell.StringValue;
-
-                            // If the text length exceeds 50 characters, truncate it
-                            if (!string.IsNullOrEmpty(text) && text.Length > 50)
+                            if (text != null && text.Length > 50)
                             {
+                                // Truncate to the first 50 characters
                                 string truncated = text.Substring(0, 50);
                                 cell.PutValue(truncated);
                             }
@@ -74,18 +47,8 @@ namespace AsposeCellsExamples
                 }
             }
 
-            // Save the modified workbook (lifecycle: save)
-            string outputPath = "output_truncated.xlsx";
-
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception saveEx)
-            {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
-            }
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("output.xlsx");
         }
     }
 }

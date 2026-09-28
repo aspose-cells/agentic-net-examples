@@ -1,63 +1,67 @@
-// Title: C# Example: Hide and Unhide an Excel Column with Aspose.Cells for .NET Based on User Input
-// Description: Demonstrates how to create a workbook, add data to column B, hide the column using Cells.HideColumn, save the file, prompt the user, reload the workbook, unhide the column with Cells.UnhideColumn (default width), and save the updated file. Ideal for interactive Excel generation where column visibility is controlled at runtime.
-// Keywords: Aspose.Cells | C# | .NET | HideColumn | UnhideColumn | Excel column visibility | programmatic hide column | user driven unhide | workbook save and load | sample code | GitHub example
-// Common Searches: hide column in Excel using Aspose.Cells C# | unhide hidden column after saving workbook Aspose.Cells | prompt user to reveal hidden column Aspose.Cells .NET | Aspose.Cells hide column then unhide example | C# code to toggle column visibility in Excel
-// Developer Intent: Hide column B in a workbook, persist the change, then optionally unhide it after a user confirms.
-// Use Cases: Protect sensitive data by hiding columns until a user authorizes viewing. | Create templates with helper columns that can be revealed on demand. | Temporarily hide processing columns during automation and restore them before distribution.
-// AI Prompts: Show how to hide multiple columns and later unhide them conditionally with Aspose.Cells for .NET. | Provide a C# snippet that hides a column, saves the workbook, and reloads it to unhide based on a boolean flag. | Explain how to retain original column widths when unhiding a column using Aspose.Cells.
+// Title: Hide a column in an Excel worksheet and later unhide it with a specific width using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a new workbook, hide column B, and save it as HiddenColumn.xlsx with Aspose.Cells. | Load HiddenColumn.xlsx, unhide column B with a width of 10 characters, and save the result as UnhiddenColumn.xlsx using Aspose.Cells. | Write C# code that checks a user‑triggered flag and, if true, unhides a previously hidden column while setting its width via Aspose.Cells.
+// Common Searches: Aspose.Cells C# hide column and later unhide with width | how to programmatically hide a column in Excel using Aspose.Cells .NET | unhide hidden column and set column width in Aspose.Cells C# example | conditional column visibility based on user input Aspose.Cells
+// Tags: Aspose.Cells hide column example | Aspose.Cells unhide column with width | C# Excel column visibility Aspose.Cells | conditional column show hide Aspose.Cells .NET | set column width on unhide Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add data to column B, hide the column using Cells.HideColumn, save the file, prompt the user, reload the workbook, unhide the column with Cells.UnhideColumn (default width), and save the updated file. Ideal for interactive Excel generation where column visibility is controlled at runtime.
-public class HideUnhideColumnDemo
+// The sample creates a workbook, hides column B, saves it, then conditionally loads the file, unhides column B with a width of 10 characters, and saves the updated workbook.
+class ColumnVisibilityDemo
 {
-    public static void Main()
+    static void Main()
     {
-        // ---------- Create ----------
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Add sample data to column B (zero‑based index 1)
-        cells["B1"].PutValue("Hidden Column Header");
-        cells["B2"].PutValue(123);
-        cells["B3"].PutValue(456);
-
-        // Hide column B
-        cells.HideColumn(1);
-
-        // ---------- Save ----------
-        // Save the workbook after hiding the column
-        string hiddenFile = "HiddenColumnDemo.xlsx";
-        workbook.Save(hiddenFile);
-        Console.WriteLine($"Column B hidden and workbook saved to '{hiddenFile}'.");
-
-        // ---------- User Interaction ----------
-        // Ask the user whether to unhide the column
-        Console.Write("Do you want to unhide column B? (y/n): ");
-        string response = Console.ReadLine();
-
-        if (!string.IsNullOrEmpty(response) && response.Trim().ToLower() == "y")
+        try
         {
-            // ---------- Load ----------
-            // Load the previously saved workbook
-            Workbook loadedWorkbook = new Workbook(hiddenFile);
-            Cells loadedCells = loadedWorkbook.Worksheets[0].Cells;
+            // Create a new workbook with a default worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Unhide column B with standard width (-1 uses default width)
-            loadedCells.UnhideColumn(1, -1);
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Email");
+            sheet.Cells["A2"].PutValue(1);
+            sheet.Cells["B2"].PutValue("John Doe");
+            sheet.Cells["C2"].PutValue("john.doe@example.com");
 
-            // ---------- Save ----------
-            // Save the workbook after unhiding the column
-            string unhiddenFile = "UnhiddenColumnDemo.xlsx";
-            loadedWorkbook.Save(unhiddenFile);
-            Console.WriteLine($"Column B unhidden and workbook saved to '{unhiddenFile}'.");
+            // Hide column B (zero‑based index 1)
+            sheet.Cells.HideColumn(1);
+
+            // Save the workbook with the hidden column
+            string hiddenPath = "HiddenColumn.xlsx";
+            workbook.Save(hiddenPath);
+
+            // -------------------------------------------------
+            // Later: based on user interaction criteria, unhide the column
+            bool userRequestedUnhide = true; // Simulated UI condition
+
+            if (userRequestedUnhide)
+            {
+                // Ensure the file exists before loading
+                if (!File.Exists(hiddenPath))
+                {
+                    Console.WriteLine($"File not found: {hiddenPath}");
+                    return;
+                }
+
+                // Load the workbook that contains the hidden column
+                Workbook wbToUnhide = new Workbook(hiddenPath);
+                Worksheet ws = wbToUnhide.Worksheets[0];
+
+                // Unhide column B (index 1) and set a default width (e.g., 10 characters)
+                ws.Cells.UnhideColumn(1, 10);
+
+                // Save the updated workbook
+                string unhiddenPath = "UnhiddenColumn.xlsx";
+                wbToUnhide.Save(unhiddenPath);
+                Console.WriteLine($"Column B unhidden and saved to {unhiddenPath}");
+            }
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("Column B remains hidden.");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

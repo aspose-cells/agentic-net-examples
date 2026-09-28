@@ -1,72 +1,60 @@
-// Title: Aspose.Cells .NET – Delete Specified Slicers from an Excel Workbook
-// Description: A C# sample that loads an Excel file with Aspose.Cells, accesses the slicer collection on the first worksheet, loops through a predefined list of slicer names, removes each found slicer, logs successes or missing items, catches unexpected errors, and saves the updated workbook to a new file.
-// Keywords: Aspose.Cells | C# | Excel slicer removal | delete slicer by name | slicer collection | batch slicer delete | Aspose.Cells .NET example
-// Common Searches: how to delete specific slicers using Aspose.Cells for .NET | C# code to remove slicers from an Excel worksheet | Aspose.Cells remove slicer collection items | batch delete Excel slicers by name | Aspose.Cells slicer management tutorial
-// Developer Intent: Programmatically eliminate selected slicers from a workbook and write the changes back to disk.
-// Use Cases: Strip out development‑only slicers before publishing a workbook to end users. | Clear stale slicer filters after an automated data refresh. | Process multiple workbooks in a pipeline to purge a known set of slicers.
-// AI Prompts: Generate C# code with Aspose.Cells that iterates over a list of slicer names, removes each if present, logs the outcome, and saves the workbook. | Show how to safely handle missing slicers and unexpected exceptions when deleting slicers in an Excel file using Aspose.Cells. | Provide a concise explanation of the Aspose.Cells SlicerCollection API for removing slicers by name.
+// Title: Remove specified slicers from all worksheets in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, iterates every worksheet, and deletes slicers whose names are listed in a string array, handling missing slicers without throwing. | Add console output that logs whether each named slicer was removed or not found, then save the modified workbook to a new file.
+// Common Searches: how to delete slicer by name using Aspose.Cells C# | remove multiple slicers from an Excel workbook programmatically Aspose.Cells | iterate worksheets and remove slicers Aspose.Cells example | log slicer removal results in C# Aspose.Cells
+// Tags: slicer removal worksheet Aspose.Cells | batch delete slicers by name C# | log slicer deletion results Aspose.Cells | save workbook after slicer removal Aspose.Cells | handle missing slicer exception Aspose.Cells
 
 using System;
-using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
 namespace SlicerRemovalDemo
 {
-    // A C# sample that loads an Excel file with Aspose.Cells, accesses the slicer collection on the first worksheet, loops through a predefined list of slicer names, removes each found slicer, logs successes or missing items, catches unexpected errors, and saves the updated workbook to a new file.
+    // The program loads an existing workbook, loops through each worksheet, attempts to retrieve slicers by the names defined in an array, removes any found slicers while logging success or not‑found messages, and finally saves the updated workbook.
     class Program
     {
         static void Main()
         {
-            // Path to the workbook that contains slicers
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook.xlsx";
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("InputWorkbook.xlsx");
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputPath);
+            // Define the slicer names to be removed
+            string[] slicerNamesToRemove = { "Slicer1", "Slicer2", "Slicer3" };
 
-            // Assume slicers are on the first worksheet (adjust as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Get the slicer collection for the worksheet
-            SlicerCollection slicers = worksheet.Slicers;
-
-            // List of slicer names to be removed
-            List<string> slicerNamesToRemove = new List<string>
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                "Slicer1",
-                "Slicer2",
-                "Slicer3"
-            };
+                // Get the slicer collection for the current worksheet
+                SlicerCollection slicers = sheet.Slicers;
 
-            foreach (string slicerName in slicerNamesToRemove)
-            {
-                try
+                // Process each slicer name
+                foreach (string slicerName in slicerNamesToRemove)
                 {
-                    // Retrieve the slicer by its name using the string indexer
-                    Slicer slicer = slicers[slicerName];
+                    try
+                    {
+                        // Attempt to retrieve the slicer by its name
+                        Slicer slicer = slicers[slicerName];
 
-                    if (slicer != null)
-                    {
-                        // Remove the slicer from the collection
-                        slicers.Remove(slicer);
-                        Console.WriteLine($"Removed slicer: {slicerName}");
+                        if (slicer != null)
+                        {
+                            // Remove the slicer from the collection
+                            slicers.Remove(slicer);
+                            Console.WriteLine($"Removed slicer '{slicerName}' from worksheet '{sheet.Name}'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Slicer '{slicerName}' not found in worksheet '{sheet.Name}'.");
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine($"Slicer not found: {slicerName}");
+                        // Indexer throws if the slicer name does not exist
+                        Console.WriteLine($"Slicer '{slicerName}' not found in worksheet '{sheet.Name}'. Exception: {ex.Message}");
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Log any unexpected errors during removal
-                    Console.WriteLine($"Error removing slicer '{slicerName}': {ex.Message}");
                 }
             }
 
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to: {outputPath}");
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("OutputWorkbook.xlsx");
         }
     }
 }

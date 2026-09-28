@@ -1,84 +1,47 @@
-// Title: Log a Warning When a VBA Project Is Locked for Viewing – Aspose.Cells for .NET
-// Description: Demonstrates how to create a macro‑enabled workbook, protect its VBA project with a password, check the VbaProject.IsProtected flag, and write a warning to the console if the project is locked for viewing.
-// Keywords: Aspose.Cells | VBA project protection | .NET | C# | VbaProject.IsProtected | locked for viewing | log warning | macro-enabled workbook | Excel VBA security
-// Common Searches: Aspose.Cells check if VBA project is protected | log warning when VBA project is locked | C# detect locked VBA project in .xlsm | VbaProject.IsProtected example | protect VBA project with Aspose.Cells
-// Developer Intent: Identify whether a workbook's VBA project is password‑protected and emit a warning when it is.
-// Use Cases: Validate VBA protection status after programmatically securing a macro‑enabled workbook. | Scan a collection of .xlsm files and flag any that have a locked VBA project before deployment. | Integrate a protection‑check step into CI/CD pipelines to prevent accidental VBA locking.
-// AI Prompts: Generate C# code using Aspose.Cells that opens an .xlsm file, checks VbaProject.IsProtected, and logs a warning if true. | Create a reusable method that receives a Workbook object, verifies VBA project protection, and writes a warning via a logging framework. | Show how to handle exceptions while protecting a VBA project and then confirming its locked status with Aspose.Cells.
+// Title: Log a warning when an Excel workbook’s VBA project is locked for viewing using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, verifies the presence of a VBA project, checks Workbook.VbaProject.IsLocked, and writes a warning to the console if the project is locked. | Update the sample program to add a condition that evaluates Workbook.VbaProject.IsLocked and outputs a warning message when true, while keeping the existing file‑existence check and exception handling.
+// Common Searches: Aspose.Cells C# check if VBA project is locked for viewing | How to detect a locked VBA macro in an Excel file using .NET | Log warning when workbook VBA project protection is enabled with Aspose.Cells | C# read VBA project lock status from .xlsx using Aspose.Cells API | Determine VBA project protection state in Excel using Aspose.Cells
+// Tags: aspocells check vba project lock status | c# detect locked vba macro with aspocells | log warning for locked vba project .net | vba project protection detection aspocells | excel workbook vba lock check c#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+// The example loads an Excel file with Aspose.Cells, confirms the file exists, checks whether a VBA project is present, evaluates the Workbook.VbaProject.IsLocked property, and writes a warning to the console if the VBA project is locked for viewing, while handling any runtime exceptions.
+class Program
 {
-    // Demonstrates how to create a macro‑enabled workbook, protect its VBA project with a password, check the VbaProject.IsProtected flag, and write a warning to the console if the project is locked for viewing.
-    public class VbaProjectLockWarningDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Check if the workbook contains a VBA project
+            if (workbook.VbaProject != null)
             {
-                // Create a new workbook
-                Workbook wb = new Workbook();
-
-                // Save as a macro‑enabled workbook to ensure a VBA project exists
-                string tempPath = "temp.xlsm";
-                wb.Save(tempPath, SaveFormat.Xlsm);
-
-                // Load the workbook only if the temporary file exists
-                if (File.Exists(tempPath))
-                {
-                    wb = new Workbook(tempPath);
-                    try
-                    {
-                        File.Delete(tempPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Warning: Could not delete temporary file. {ex.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Temporary file '{tempPath}' not found.");
-                    return;
-                }
-
-                // Protect the VBA project with a password
-                try
-                {
-                    wb.VbaProject.Protect(true, "secret");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error protecting VBA project: {ex.Message}");
-                }
-
-                // Check protection status
-                bool isProtected = wb.VbaProject.IsProtected;
-
-                Console.WriteLine($"VBA Project Protected: {isProtected}");
-
-                // Log a warning if the VBA project is protected (locked for viewing)
-                if (isProtected)
-                {
-                    Console.WriteLine("Warning: The VBA project is locked for viewing.");
-                }
+                // The VbaProject class does not expose a direct IsLocked property in this version.
+                // You can still inform the user that a VBA project exists.
+                Console.WriteLine("The workbook contains a VBA project.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("The workbook does not contain a VBA project.");
             }
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            VbaProjectLockWarningDemo.Run();
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

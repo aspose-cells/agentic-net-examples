@@ -1,46 +1,42 @@
-// Title: C# – Sort Column D Descending with Aspose.Cells DataSorter (Preserve Row Groups)
-// Description: Loads a workbook, defines the A‑D range, sets HasHeaders, adds a descending sort key for column D via DataSorter.AddKey, sorts the range while keeping each row’s other columns aligned, and saves the sorted file.
-// Keywords: Aspose.Cells | C# | DataSorter | AddKey | sort descending | column D | preserve row grouping | Excel sorting example | header row | workbook
-// Common Searches: Aspose.Cells sort column D descending C# | DataSorter AddKey preserve row grouping | C# sort Excel range with header Aspose | How to sort Excel column descending using Aspose.Cells | Sort Excel sheet while keeping rows together C#
-// Developer Intent: Sort column D in descending order without breaking the association of the other columns in each record.
-// Use Cases: Rank sales figures by amount (column D) while keeping product details (columns A‑C) together. | Order a product catalog by price descending without separating SKU, name, and description. | Generate a leaderboard where scores (column D) are sorted high‑to‑low while preserving each participant’s full record.
-// AI Prompts: Create C# code that uses Aspose.Cells DataSorter to sort column D descending and keep the rest of the row intact, with an optional header row. | Explain the role of AddKey in Aspose.Cells sorting and show how to extend the sample to sort multiple columns with mixed orders. | Show how to detect the last data row dynamically, perform the descending sort on column D, and write the workbook to a memory stream instead of a file.
+// Title: How to sort an Excel worksheet by column D in descending order while keeping existing row groups using Aspose.Cells for .NET
+// AI Prompts: Sort the full used range of a workbook by column D in descending order with Aspose.Cells DataSorter, ensuring any collapsed row groups remain intact. | Add a secondary sort key to the DataSorter so the data is first ordered by column D descending then by column A ascending, without breaking the original grouping layout. | Modify the example to treat the first row as a header and perform a descending sort on column D while preserving the row‑group hierarchy.
+// Common Searches: Aspose.Cells C# sort worksheet column D descending keep row groups | DataSorter AddKey descending column example without breaking grouped rows | How to maintain Excel row grouping when sorting data with Aspose.Cells .NET
+// Tags: Aspose.Cells DataSorter descending column sort | preserve Excel row grouping Aspose.Cells | C# sort worksheet by column D using DataSorter | sort entire used range without header Aspose.Cells | add secondary sort key DataSorter .NET
 
 using System;
 using Aspose.Cells;
 
-// Loads a workbook, defines the A‑D range, sets HasHeaders, adds a descending sort key for column D via DataSorter.AddKey, sorts the range while keeping each row’s other columns aligned, and saves the sorted file.
+// The sample loads an Excel file, creates a DataSorter with HasHeaders set to false, adds a descending sort key for column D (index 3), defines a CellArea covering the used range, sorts the worksheet while keeping any existing row groups intact, and saves the result.
 class SortColumnDDescending
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
+        // Load the workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
         Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Define the range to sort.
-        // Assuming data starts at row 1 (index 0) and spans columns A to D (indices 0‑3).
-        // Adjust EndRow and EndColumn as needed for your data size.
-        int startRow = 0;          // first row (including header if present)
-        int startColumn = 0;       // column A
-        int endRow = cells.MaxDataRow;   // last row with data
-        int endColumn = 3;         // column D (zero‑based index)
-
-        // Get the DataSorter object from the workbook
+        // Create a DataSorter instance
         DataSorter sorter = workbook.DataSorter;
 
-        // If the range has a header row, set this property accordingly
-        sorter.HasHeaders = true; // set to false if there is no header
+        // No header row in this example (set to true if the first row contains headers)
+        sorter.HasHeaders = false;
 
-        // Add a sort key for column D (index 3) with descending order.
-        // This preserves the original grouping of rows because only the key column is used for sorting.
+        // Add a sort key for column D (zero‑based index 3) with descending order
         sorter.AddKey(3, SortOrder.Descending);
 
-        // Perform the sort on the defined range
-        sorter.Sort(cells, startRow, startColumn, endRow, endColumn);
+        // Define the range to be sorted: from the first used row/column to the last used row/column
+        CellArea sortArea = new CellArea
+        {
+            StartRow = 0,
+            StartColumn = 0,
+            EndRow = worksheet.Cells.MaxDataRow,
+            EndColumn = worksheet.Cells.MaxDataColumn
+        };
+
+        // Perform the sort; original row grouping (if any) is preserved because the whole range is sorted based on column D
+        sorter.Sort(worksheet.Cells, sortArea);
 
         // Save the sorted workbook (replace with your desired output path)
-        workbook.Save("sorted.xlsx");
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,59 +1,68 @@
-// Title: C# AspNet: Rename an Excel Named Range and Update All Formula References with Aspose.Cells
-// Description: Loads an Excel file, finds the defined name "OldName", captures its RefersTo address, changes the name to "NewName", scans every worksheet to replace the old name in formulas, restores the original range reference, and saves the modified workbook.
-// Keywords: Aspose.Cells rename named range C# | update formula references Aspose.Cells | change defined name programmatically | preserve RefersTo property | .NET Excel named range manipulation | bulk formula update Aspose.Cells
-// Common Searches: how to rename a named range in Aspose.Cells .NET | replace old named range in all formulas using C# | preserve RefersTo while renaming Excel defined name | bulk update of named range references Aspose.Cells
-// Developer Intent: Change the name of an existing Excel named range from "OldName" to "NewName" and automatically adjust every formula that references the old name.
-// Use Cases: Standardize naming conventions after data model redesign without breaking dependent formulas. | Migrate legacy workbooks that use outdated named ranges to a new schema in an automated pipeline. | Synchronize workbook naming standards across multiple regional offices while keeping calculations intact.
-// AI Prompts: Generate C# code with Aspose.Cells that renames a named range and rewrites all formula references in a workbook. | Explain how to keep the RefersTo address unchanged when renaming a defined name using Aspose.Cells. | Create a reusable Aspose.Cells method that accepts oldName and newName parameters, renames the range, and updates formulas across all worksheets.
+// Title: Rename a named range and automatically update all formula references in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Change the defined name 'OldName' to 'NewName' and replace every occurrence of the old name in formulas throughout the workbook with Aspose.Cells. | Iterate over all worksheets and cells to detect formulas containing a specific named range and substitute the old range name with a new one using C# and Aspose.Cells. | Programmatically rename a named range, refresh dependent formulas in the Excel file, and save the updated workbook with Aspose.Cells for .NET.
+// Common Searches: C# Aspose.Cells rename named range and update formulas in entire workbook | How to replace a defined name in all Excel formulas using Aspose.Cells .NET | Aspose.Cells iterate cells to modify formula references after renaming a range | Update Excel formula references after changing a named range with Aspose.Cells C#
+// Tags: named range Text property Aspose.Cells | formula reference update Aspose.Cells | worksheet cell iteration Aspose.Cells | save workbook after modifications Aspose.Cells | Aspose.Cells defined name manipulation C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel file, finds the defined name "OldName", captures its RefersTo address, changes the name to "NewName", scans every worksheet to replace the old name in formulas, restores the original range reference, and saves the modified workbook.
+// The example loads an Excel workbook, locates the named range "OldName" in the NameCollection, changes its Text property to "NewName", then scans every worksheet and cell to replace occurrences of the old name in formulas before saving the modified workbook.
 class RenameNamedRange
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.xlsx";
+        const string oldName = "OldName";
+        const string newName = "NewName";
 
-        // Locate the named range with the old name
-        Name oldName = null;
-        foreach (Name name in workbook.Worksheets.Names)
+        try
         {
-            if (name.Text == "OldName")
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                oldName = name;
-                break;
+                Console.WriteLine($"Error: Input file \"{inputFile}\" not found.");
+                return;
             }
-        }
 
-        if (oldName != null)
-        {
-            // Preserve the original reference (e.g., "=Sheet1!$A$1:$A$10")
-            string originalRefersTo = oldName.RefersTo;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputFile);
 
-            // Rename the defined name
-            oldName.Text = "NewName";
+            // Access the collection of defined names (named ranges)
+            NameCollection names = workbook.Worksheets.Names;
 
-            // Update all formulas that reference the old name
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Find the named range with the old name
+            Name definedName = names[oldName];
+            if (definedName != null)
             {
-                Cells cells = sheet.Cells;
-                foreach (Cell cell in cells)
+                // Rename the defined name (use Text property)
+                definedName.Text = newName;
+
+                // Update all formula references that use the old name
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    if (!string.IsNullOrEmpty(cell.Formula) && cell.Formula.Contains("OldName"))
+                    foreach (Cell cell in sheet.Cells)
                     {
-                        cell.Formula = cell.Formula.Replace("OldName", "NewName");
+                        if (cell.IsFormula && cell.Formula.Contains(oldName))
+                        {
+                            cell.Formula = cell.Formula.Replace(oldName, newName);
+                        }
                     }
                 }
             }
+            else
+            {
+                Console.WriteLine($"Warning: Named range \"{oldName}\" not found.");
+            }
 
-            // Optionally, ensure the renamed name still points to the same range
-            oldName.RefersTo = originalRefersTo;
+            // Save the workbook with the changes
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to \"{outputFile}\".");
         }
-
-        // Save the modified workbook (replace with your desired output path)
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

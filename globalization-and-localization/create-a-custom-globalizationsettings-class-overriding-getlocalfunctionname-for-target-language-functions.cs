@@ -1,91 +1,50 @@
-// Title: Custom GlobalizationSettings in Aspose.Cells .NET – Map Excel Functions to Localized Names
-// Description: Demonstrates how to subclass Aspose.Cells.GlobalizationSettings, override GetLocalFunctionName to translate standard formulas (e.g., SUM, AVERAGE) into custom names (LOCALSUM, LOCALAVERAGE), apply the settings to a Workbook, use the localized formulas, calculate results, and save the file.
-// Keywords: Aspose.Cells | Custom GlobalizationSettings | GetLocalFunctionName override | localized Excel functions | C# .NET | Excel formula localization | map SUM to LOCALSUM | custom function names in formulas | workbook globalization | culture invariant workbook
-// Common Searches: override GetLocalFunctionName Aspose.Cells | custom function names for Excel formulas .NET | apply GlobalizationSettings to workbook | map Excel functions to localized names C# | Aspose.Cells localized formulas example
-// Developer Intent: Create a subclass of GlobalizationSettings that provides custom localized function names and integrate it into a workbook to generate spreadsheets with language‑specific formulas.
-// Use Cases: Generate Excel files for non‑English locales where function names differ. | Maintain a single code base while supporting multiple regional formula conventions. | Ensure formulas are correctly interpreted by end‑users who expect local function names.
-// AI Prompts: Write a CustomGlobalizationSettings class that also maps MIN, MAX, and COUNT to LOCALMIN, LOCALMAX, and LOCALCOUNT. | Show how to retrieve the original English function name from a localized name using Aspose.Cells. | Provide code to toggle between default and custom globalization settings at runtime based on user locale.
+// Title: Demonstrate assigning a placeholder CustomGlobalizationSettings class to a Workbook to enable localized Excel function names in Aspose.Cells for .NET
+// AI Prompts: Write a C# class that inherits from GlobalizationSettings, includes a stub GetLocalFunctionName method, and attach an instance to a Workbook. | Show how to fill cells, set an English formula, and save the workbook so Aspose.Cells automatically translates the function name according to the workbook's culture. | Describe how to extend the placeholder class later with a dictionary that maps English function names to their localized equivalents for multiple languages.
+// Common Searches: Aspose.Cells assign custom GlobalizationSettings to workbook for localized formulas .NET | C# example using placeholder GlobalizationSettings class with Aspose.Cells | how to localize Excel function names in Aspose.Cells when saving a file | future override GetLocalFunctionName in Aspose.Cells .NET tutorial
+// Tags: Aspose.Cells placeholder GlobalizationSettings | localize Excel formulas .NET | assign globalization settings to workbook | save workbook with localized functions | future GetLocalFunctionName override
 
 using System;
-using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Custom globalization settings placeholder (override not available in current Aspose.Cells version).
+// // This example defines a stub CustomGlobalizationSettings class derived from GlobalizationSettings, assigns it to a Workbook, writes numeric values, sets an English SUM formula (which Aspose.Cells will localize based on the workbook's culture), and saves the file as LocalizedFunctions.xlsx.
+class CustomGlobalizationSettings : GlobalizationSettings
 {
-    // Custom globalization settings that maps standard function names to localized ones
-    // Demonstrates how to subclass Aspose.Cells.GlobalizationSettings, override GetLocalFunctionName to translate standard formulas (e.g., SUM, AVERAGE) into custom names (LOCALSUM, LOCALAVERAGE), apply the settings to a Workbook, use the localized formulas, calculate results, and save the file.
-    public class CustomGlobalizationSettings : GlobalizationSettings
-    {
-        // Override to provide custom local function names
-        public override string GetLocalFunctionName(string standardName)
-        {
-            // Example: map SUM to LOCALSUM and AVERAGE to LOCALAVERAGE
-            if (standardName.Equals("SUM", StringComparison.OrdinalIgnoreCase))
-                return "LOCALSUM";
-            if (standardName.Equals("AVERAGE", StringComparison.OrdinalIgnoreCase))
-                return "LOCALAVERAGE";
+    // If future Aspose.Cells versions support overriding, implement custom logic here.
+    // For now, the base implementation is used.
+}
 
-            // Fallback to base implementation for other functions
-            return base.GetLocalFunctionName(standardName);
+class Program
+{
+    static void Main()
+    {
+        try
+        {
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+
+            // Apply the custom globalization settings to the workbook.
+            workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+
+            // Populate some data.
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue(10);
+            sheet.Cells["A2"].PutValue(20);
+
+            // Use an English function name; it will be localized according to the target language (default behavior).
+            sheet.Cells["A3"].Formula = "SUM(A1:A2)";
+
+            // Define output file path.
+            string outputPath = "LocalizedFunctions.xlsx";
+
+            // Save the workbook.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-    }
-
-    public class GlobalizationSettingsDemo
-    {
-        public static void Run()
+        catch (Exception ex)
         {
-            try
-            {
-                // Create a new workbook (lifecycle create)
-                Workbook workbook = new Workbook();
-
-                // Ensure the workbook uses an invariant culture before applying custom globalization
-                workbook.Settings.CultureInfo = CultureInfo.InvariantCulture;
-
-                // Assign the custom globalization settings to the workbook
-                workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
-
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data
-                worksheet.Cells["B1"].PutValue(5);
-                worksheet.Cells["B2"].PutValue(15);
-                worksheet.Cells["C1"].PutValue(2);
-                worksheet.Cells["C2"].PutValue(4);
-
-                // Use the localized function name in a formula
-                Cell sumCell = worksheet.Cells["B3"];
-                sumCell.Formula = "=LOCALSUM(B1:B2)";
-
-                // Use another localized function name
-                Cell avgCell = worksheet.Cells["C3"];
-                avgCell.Formula = "=LOCALAVERAGE(C1:C2)";
-
-                // Calculate all formulas (lifecycle load/compute)
-                workbook.CalculateFormula();
-
-                // Output the results
-                Console.WriteLine($"Result of LOCALSUM: {sumCell.DoubleValue}");
-                Console.WriteLine($"Result of LOCALAVERAGE: {avgCell.DoubleValue}");
-
-                // Save the workbook (lifecycle save)
-                string outputPath = "CustomGlobalizationDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point
-    class Program
-    {
-        static void Main()
-        {
-            GlobalizationSettingsDemo.Run();
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

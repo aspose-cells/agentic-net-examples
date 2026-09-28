@@ -1,114 +1,83 @@
-// Title: Aspose.Cells .NET example: Generate a worksheet‑wise report of original and custom paper dimensions
-// Description: C# code that creates a workbook with three sheets, reads each sheet's built‑in PaperWidth and PaperHeight, changes every sheet to a 6 × 8 in custom size, records the new dimensions, and writes a "Summary" worksheet listing the sheet name, original width/height, and modified width/height before saving as PaperSizeReport.xlsx.
-// Keywords: Aspose.Cells | C# | Worksheet paper size | PaperWidth | PaperHeight | CustomPaperSize | PageSetup | Excel summary report | Workbook automation | Aspose.Cells example
-// Common Searches: how to get worksheet paper dimensions with Aspose.Cells | Aspose.Cells change all sheets to custom paper size | create summary sheet with original and new page setup values Aspose.Cells | C# Aspose.Cells report paper width and height per worksheet | Aspose.Cells skip summary worksheet during iteration
-// Developer Intent: Log each worksheet's original page dimensions, apply a uniform 6 × 8 in custom paper size, and output both sets of values to a new "Summary" sheet in the same workbook.
-// Use Cases: Audit existing worksheets before enforcing a standard paper size across a workbook. | Generate compliance documentation that shows before‑and‑after page dimensions for each sheet. | Automate batch processing to standardize paper size while preserving a change log for downstream review.
-// AI Prompts: Write C# Aspose.Cells code that iterates through all worksheets, captures PaperWidth and PaperHeight, sets a custom 6x8‑inch paper size, and adds a "Summary" sheet with the collected data. | Show how to round the original and modified dimensions to two decimal places and save the workbook as PaperSizeReport.xlsx. | Explain how to exclude a worksheet named "Summary" from the iteration to prevent it from being modified.
+// Title: Generate an Excel summary worksheet that lists each sheet’s original and updated paper size using Aspose.Cells for C#
+// AI Prompts: Write a C# console program with Aspose.Cells that loops through every worksheet, records the current PageSetup.PaperSize, changes it to PaperA4, and adds a new worksheet named "Summary" containing the sheet name, original size, and new size. | Enhance the program to also read the PageSetup.Orientation (portrait or landscape) for each worksheet and include this orientation column in the summary sheet. | Add code that writes the same summary data to a CSV file while still saving the updated Excel workbook.
+// Common Searches: aspocells c# how to list original paper size of each worksheet before changing to A4 | c# Aspose.Cells create summary sheet with before and after page setup values | record page setup paper dimensions for multiple worksheets using Aspose.Cells | export worksheet paper size report to CSV with Aspose.Cells C#
+// Tags: Aspose.Cells worksheet paper size report | C# capture original PageSetup.PaperSize | Aspose.Cells set worksheets to PaperA4 | create summary sheet with before after page setup | export Aspose.Cells summary to CSV
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsPaperSizeReport
+namespace PaperDimensionReport
 {
-    // C# code that creates a workbook with three sheets, reads each sheet's built‑in PaperWidth and PaperHeight, changes every sheet to a 6 × 8 in custom size, records the new dimensions, and writes a "Summary" worksheet listing the sheet name, original width/height, and modified width/height before saving as PaperSizeReport.xlsx.
+    // Creates a workbook with three worksheets, records each sheet's initial PageSetup.PaperSize, changes all sheets to A4, adds a "Summary" worksheet that lists the sheet name, original size, and modified size, auto‑fits the columns, and saves the file as PaperDimensionReport.xlsx.
     class Program
     {
-        // Simple data holder for dimensions
-        class PaperDimensions
+        static void Main(string[] args)
         {
-            public string SheetName { get; set; }
-            public double OriginalWidth { get; set; }
-            public double OriginalHeight { get; set; }
-            public double ModifiedWidth { get; set; }
-            public double ModifiedHeight { get; set; }
-        }
-
-        static void Main()
-        {
-            // -------------------------------------------------
-            // 1. Create a new workbook and add sample worksheets
-            // -------------------------------------------------
-            Workbook workbook = new Workbook(); // create workbook
-            // Ensure we have at least three worksheets for demonstration
-            Worksheet sheet1 = workbook.Worksheets[0];
-            sheet1.Name = "Sheet1";
-            Worksheet sheet2 = workbook.Worksheets.Add("Sheet2");
-            Worksheet sheet3 = workbook.Worksheets.Add("Sheet3");
-
-            // Set different initial paper sizes for each sheet
-            sheet1.PageSetup.PaperSize = PaperSizeType.PaperLetter;          // 8.5 x 11 in
-            sheet2.PageSetup.PaperSize = PaperSizeType.PaperLegal;          // 8.5 x 14 in
-            sheet3.PageSetup.PaperSize = PaperSizeType.PaperA5;             // 148 x 210 mm (~5.83 x 8.27 in)
-
-            // -------------------------------------------------
-            // 2. Capture original dimensions, modify paper size,
-            //    and capture modified dimensions
-            // -------------------------------------------------
-            List<PaperDimensions> reportData = new List<PaperDimensions>();
-
-            // Iterate over all worksheets except the summary sheet (which does not exist yet)
-            foreach (Worksheet ws in workbook.Worksheets)
+            try
             {
-                // Skip any sheet that will be used for the report later
-                if (ws.Name.Equals("Summary", StringComparison.OrdinalIgnoreCase))
-                    continue;
+                // Create a new workbook with three worksheets for demonstration
+                Workbook workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+                workbook.Worksheets.Add("Sheet2");
+                workbook.Worksheets.Add("Sheet3");
 
-                PageSetup ps = ws.PageSetup;
+                // List to hold original and modified paper sizes for each worksheet
+                var reportData = new List<(string SheetName, string OriginalSize, string ModifiedSize)>();
 
-                // Record original dimensions (in inches)
-                double originalWidth = ps.PaperWidth;
-                double originalHeight = ps.PaperHeight;
-
-                // Modify the paper size:
-                // For demonstration, set a custom size of 6 inches x 8 inches for every sheet
-                ps.CustomPaperSize(6.0, 8.0);
-
-                // Record modified dimensions
-                double modifiedWidth = ps.PaperWidth;
-                double modifiedHeight = ps.PaperHeight;
-
-                // Store the data
-                reportData.Add(new PaperDimensions
+                // Iterate through each worksheet, capture original size, modify it, then capture new size
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    SheetName = ws.Name,
-                    OriginalWidth = originalWidth,
-                    OriginalHeight = originalHeight,
-                    ModifiedWidth = modifiedWidth,
-                    ModifiedHeight = modifiedHeight
-                });
+                    // Skip the summary sheet if it already exists
+                    if (sheet.Name.Equals("Summary", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    // Capture original paper size as string
+                    string originalSize = sheet.PageSetup.PaperSize.ToString();
+
+                    // Example modification: set all sheets to A4 size
+                    sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
+
+                    // Capture modified paper size as string
+                    string modifiedSize = sheet.PageSetup.PaperSize.ToString();
+
+                    // Store data for the report
+                    reportData.Add((sheet.Name, originalSize, modifiedSize));
+                }
+
+                // Add a new worksheet for the summary report
+                int summaryIndex = workbook.Worksheets.Add();
+                Worksheet summarySheet = workbook.Worksheets[summaryIndex];
+                summarySheet.Name = "Summary";
+
+                // Write headers
+                Cells cells = summarySheet.Cells;
+                cells["A1"].PutValue("Worksheet");
+                cells["B1"].PutValue("Original Paper Size");
+                cells["C1"].PutValue("Modified Paper Size");
+
+                // Populate report rows
+                int rowIndex = 1; // zero‑based index; row 1 is the second row (A2, B2, C2)
+                foreach (var entry in reportData)
+                {
+                    cells[rowIndex, 0].PutValue(entry.SheetName);
+                    cells[rowIndex, 1].PutValue(entry.OriginalSize);
+                    cells[rowIndex, 2].PutValue(entry.ModifiedSize);
+                    rowIndex++;
+                }
+
+                // Auto‑fit columns for better readability
+                summarySheet.AutoFitColumns();
+
+                // Save the workbook
+                string outputPath = "PaperDimensionReport.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Report saved to '{outputPath}'.");
             }
-
-            // -------------------------------------------------
-            // 3. Create a summary worksheet and populate it
-            // -------------------------------------------------
-            Worksheet summarySheet = workbook.Worksheets.Add("Summary");
-            Cells cells = summarySheet.Cells;
-
-            // Write header row
-            cells["A1"].PutValue("Worksheet");
-            cells["B1"].PutValue("Original Width (in)");
-            cells["C1"].PutValue("Original Height (in)");
-            cells["D1"].PutValue("Modified Width (in)");
-            cells["E1"].PutValue("Modified Height (in)");
-
-            // Populate rows
-            int rowIndex = 1; // zero‑based index; row 1 is the second row (after header)
-            foreach (var data in reportData)
+            catch (Exception ex)
             {
-                cells[rowIndex, 0].PutValue(data.SheetName);
-                cells[rowIndex, 1].PutValue(Math.Round(data.OriginalWidth, 2));
-                cells[rowIndex, 2].PutValue(Math.Round(data.OriginalHeight, 2));
-                cells[rowIndex, 3].PutValue(Math.Round(data.ModifiedWidth, 2));
-                cells[rowIndex, 4].PutValue(Math.Round(data.ModifiedHeight, 2));
-                rowIndex++;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // -------------------------------------------------
-            // 4. Save the workbook
-            // -------------------------------------------------
-            workbook.Save("PaperSizeReport.xlsx");
         }
     }
 }

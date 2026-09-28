@@ -1,48 +1,31 @@
-// Title: Export Workbook to PDF with Preserved XML Map Layout using AspNet.Cells C#
-// Description: Demonstrates how to save an Aspose.Cells workbook as a PDF while keeping the visual appearance of XML‑mapped cells by enabling the ExportDocumentStructure option and optionally calculating formulas.
-// Keywords: Aspose.Cells PDF export C# | PdfSaveOptions ExportDocumentStructure | preserve XML map layout PDF | workbook to PDF with visual structure | C# Aspose.Cells export mapped cells | calculate formulas before PDF save | Aspose.Cells PDF conversion example
-// Common Searches: Aspose.Cells keep XML map visual when saving to PDF | PdfSaveOptions ExportDocumentStructure C# example | export workbook to PDF preserving cell layout | how to calculate formulas before PDF export Aspose.Cells | C# code to convert spreadsheet with XML map to PDF
-// Developer Intent: Generate a PDF from a workbook that retains the exact visual layout of cells linked to an XML map.
-// Use Cases: Create printable reports from spreadsheets that contain XML‑mapped data without losing the mapping view. | Produce compliance‑ready PDFs where calculated formulas and cell positioning must match the original worksheet. | Automate batch conversion of multiple mapped workbooks to PDFs while preserving each document’s visual fidelity.
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook with an XML map to PDF, ensuring the visual structure is retained. | Explain the impact of PdfSaveOptions.ExportDocumentStructure on the resulting PDF and when to enable it. | Show how to trigger formula calculation before saving a workbook as PDF with Aspose.Cells in C#.
+// Title: Export an Excel workbook to PDF while preserving the visual layout of mapped cells using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file containing XML maps and saves it as a PDF, keeping original column widths, row heights, and applying PDF/A‑1b compliance with Aspose.Cells. | Demonstrate how to set up PdfSaveOptions in Aspose.Cells to prevent page scaling and retain the exact worksheet appearance when converting to PDF.
+// Common Searches: how to keep original column widths when converting Excel to PDF with Aspose.Cells .NET | Aspose.Cells preserve row height and column width during PDF export | export workbook with XML maps to PDF preserving layout Aspose.Cells | set PDF/A compliance while saving Excel as PDF using Aspose.Cells C# | disable one‑page‑per‑sheet scaling in Aspose.Cells PDF conversion
+// Tags: Aspose.Cells PDF export preserve layout | PdfSaveOptions column width retention | Excel to PDF conversion PDF/A compliance | XML maps visual fidelity Aspose.Cells | C# workbook Save as PDF preserving formatting
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExportDemo
+// The example loads an Excel workbook (including any XML maps), configures PdfSaveOptions to disable automatic scaling, retain original column widths and row heights, and enforce PDF/A‑1b compliance, then saves the workbook as a PDF that mirrors the original visual representation.
+class Program
 {
-    // Demonstrates how to save an Aspose.Cells workbook as a PDF while keeping the visual appearance of XML‑mapped cells by enabling the ExportDocumentStructure option and optionally calculating formulas.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        // Load the existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Configure PDF save options to keep the visual layout of cells and data
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            // Create a new workbook (lifecycle rule)
-            Workbook workbook = new Workbook();
+            // Preserve the original column widths and row heights
+            AllColumnsInOnePagePerSheet = false,
+            OnePagePerSheet = false,
+            // Optional: set PDF/A compliance if needed
+            Compliance = PdfCompliance.PdfA1b
+        };
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate some sample data (including an XML map scenario if needed)
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("Alice");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Bob");
-
-            // Create PDF save options and enable document structure export
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                ExportDocumentStructure = true   // Preserve visual representation of mapped cells
-            };
-
-            // Ensure formulas are calculated before saving (optional but recommended)
-            workbook.CalculateFormula();
-
-            // Save the workbook to PDF using the provided Save method (lifecycle rule)
-            workbook.Save("MappedWorkbook.pdf", pdfOptions);
-
-            Console.WriteLine("Workbook exported to PDF with document structure preserved.");
-        }
+        // Export the workbook to PDF while preserving its visual representation
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

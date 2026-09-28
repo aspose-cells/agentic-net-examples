@@ -1,97 +1,87 @@
-// Title: Read encrypted Excel workbook metadata and export to JSON with Aspose.Cells for .NET
-// Description: C# sample that opens a password‑protected .xlsx using Aspose.Cells MetadataOptions, extracts both built‑in and custom document properties via WorkbookMetadata, and writes the collected data to a formatted JSON file.
-// Keywords: Aspose.Cells encrypted workbook | C# read password protected Excel metadata | WorkbookMetadata password option | extract document properties Aspose.Cells | save Excel metadata to JSON | MetadataOptions example .NET | Excel file encryption Aspose | built‑in and custom properties extraction | Aspose.Cells JSON serialization
-// Common Searches: How to read metadata from a password‑protected Excel file using Aspose.Cells | Aspose.Cells C# extract document properties from encrypted workbook | Export Excel workbook properties to JSON in .NET | Load encrypted workbook metadata without opening the file | Aspose.Cells MetadataOptions password example
-// Developer Intent: Open a password‑protected Excel workbook, retrieve its built‑in and custom document properties, and save the information as a JSON file.
-// Use Cases: Create compliance reports by exporting properties of protected workbooks to a central JSON store. | Maintain an audit trail of encrypted Excel files by archiving their metadata. | Migrate custom and built‑in properties from password‑locked spreadsheets to a metadata management system.
-// AI Prompts: Generate C# code that uses Aspose.Cells to open a password‑protected .xlsx and collect all document properties into dictionaries. | Show how to serialize the extracted workbook metadata to a pretty‑printed JSON file with System.Text.Json. | Explain best practices for handling FileNotFoundException, CellsException, and generic errors when loading encrypted workbooks with Aspose.Cells.
+// Title: Read a password‑protected Excel workbook, extract built‑in and custom document properties, and export them to a formatted JSON file using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells LoadOptions with a password to open a protected Excel workbook, retrieve all built‑in and custom document properties from the Workbook object, and serialize the collected data to an indented JSON string. | Write C# code that checks for the source file, creates the output directory if needed, and saves the extracted Excel metadata as a pretty‑printed JSON file at a given path.
+// Common Searches: how to extract document properties from a password protected Excel file using Aspose.Cells in C# | Aspose.Cells load encrypted workbook and read custom properties | save Excel workbook metadata to JSON with .NET | C# code to open encrypted .xlsx with password and export metadata | retrieve built‑in document properties from a protected workbook using Aspose.Cells
+// Tags: Aspose.Cells load encrypted workbook password | extract built-in document properties Aspose.Cells | read custom document properties Excel .NET | serialize workbook metadata to JSON C# | ensure output directory exists before writing JSON
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Metadata;
-using Aspose.Cells.Properties;
 
-// C# sample that opens a password‑protected .xlsx using Aspose.Cells MetadataOptions, extracts both built‑in and custom document properties via WorkbookMetadata, and writes the collected data to a formatted JSON file.
-class ExtractEncryptedWorkbookMetadata
+namespace WorkbookMetadataExtractor
 {
-    static void Main()
+    // The example verifies the encrypted Excel file exists, loads it with the supplied password via LoadOptions, gathers both built‑in and custom document properties from the Workbook, serializes the metadata into an indented JSON string, creates the output folder if necessary, and writes the JSON to the specified file path.
+    class Program
     {
-        // Path to the encrypted workbook and its password
-        string workbookPath = "encrypted_workbook.xlsx";
-        string workbookPassword = "mySecretPassword";
-
-        try
+        static void Main()
         {
-            // Ensure the workbook exists; if not, create a simple encrypted workbook for demo purposes
-            if (!File.Exists(workbookPath))
+            // Path to the encrypted Excel file
+            string inputPath = @"C:\Data\EncryptedWorkbook.xlsx";
+
+            // Password for the encrypted workbook
+            string password = "YourPassword";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook with a single sheet and some data
-                var wb = new Workbook();
-                wb.Worksheets[0].Cells["A1"].PutValue("Sample Data");
-
-                // Set workbook password for encryption
-                wb.Settings.Password = workbookPassword;
-
-                // Save the encrypted workbook
-                wb.Save(workbookPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Created encrypted workbook at '{workbookPath}'.");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Configure metadata options to load document properties and provide the password
-            var metadataOptions = new MetadataOptions(MetadataType.DocumentProperties)
+            try
             {
-                Password = workbookPassword
-            };
+                // Load the workbook with the password
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    Password = password
+                };
+                Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Load the workbook metadata using the provided constructor
-            var metadata = new WorkbookMetadata(workbookPath, metadataOptions);
+                // Prepare a dictionary to hold metadata
+                var metadata = new Dictionary<string, object>();
 
-            // Prepare containers for built‑in and custom properties
-            var builtInProps = new Dictionary<string, object>();
-            var customProps = new Dictionary<string, object>();
+                // Extract built‑in document properties via Workbook.BuiltInDocumentProperties
+                var props = workbook.BuiltInDocumentProperties;
+                metadata["Author"] = props.Author;
+                metadata["Title"] = props.Title;
+                metadata["Subject"] = props.Subject;
+                metadata["Keywords"] = props.Keywords;
+                metadata["Comments"] = props.Comments;
+                metadata["CreatedTime"] = props.CreatedTime;
+                metadata["LastModifiedTime"] = props.LastSavedTime;
+                metadata["Company"] = props.Company;
 
-            // Extract built‑in document properties
-            foreach (DocumentProperty prop in metadata.BuiltInDocumentProperties)
-            {
-                builtInProps[prop.Name] = prop.Value ?? string.Empty;
+                // Extract custom document properties
+                var customDict = new Dictionary<string, object>();
+                foreach (var prop in workbook.CustomDocumentProperties)
+                {
+                    customDict[prop.Name] = prop.Value;
+                }
+                metadata["CustomProperties"] = customDict;
+
+                // Serialize metadata to JSON
+                string jsonOutput = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
+
+                // Path to the output JSON file
+                string outputPath = @"C:\Data\WorkbookMetadata.json";
+
+                // Ensure the output directory exists
+                string? outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save JSON to file
+                File.WriteAllText(outputPath, jsonOutput);
+
+                Console.WriteLine("Metadata extracted and saved to JSON successfully.");
             }
-
-            // Extract custom document properties
-            foreach (DocumentProperty prop in metadata.CustomDocumentProperties)
+            catch (Exception ex)
             {
-                customProps[prop.Name] = prop.Value ?? string.Empty;
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-
-            // Combine both sections into a single object for JSON serialization
-            var allMetadata = new
-            {
-                BuiltIn = builtInProps,
-                Custom = customProps
-            };
-
-            // Serialize to JSON (indented for readability)
-            string json = JsonSerializer.Serialize(allMetadata, new JsonSerializerOptions { WriteIndented = true });
-
-            // Save the JSON to a file
-            string jsonPath = "workbook_metadata.json";
-            File.WriteAllText(jsonPath, json);
-
-            Console.WriteLine($"Metadata extracted and saved to '{jsonPath}'.");
-        }
-        catch (FileNotFoundException fnfEx)
-        {
-            Console.WriteLine($"File not found: {fnfEx.FileName}");
-        }
-        catch (CellsException cellsEx)
-        {
-            Console.WriteLine($"Aspose.Cells error: {cellsEx.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

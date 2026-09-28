@@ -1,10 +1,7 @@
-// Title: Aspose.Cells C# – Add a checksum column per row by hashing concatenated cell values
-// Description: The sample builds a workbook, fills it with sample data, inserts a "Checksum" header, walks through every row using the Rows enumerator, joins the text of each non‑null cell, creates an integer hash with GetHashCode, places the result in the first free column of that row, and writes the file to disk.
-// Keywords: Aspose.Cells | C# | row checksum | hash code | concatenate cells | enumerate rows | Excel data integrity | SHA‑256 alternative | checksum column | GetHashCode | worksheet validation | global
-// Common Searches: how to generate a checksum for each Excel row using Aspose.Cells C# | store hash of row data in a new column with Aspose.Cells | skip header row while computing row hash in .NET | determine last used column in Aspose.Cells to add extra data | verify row integrity in an exported workbook
-// Developer Intent: Create a per‑row hash from cell contents and write it to a new column in the same sheet.
-// Use Cases: Validate that exported data has not been altered by comparing saved hashes with freshly computed ones. | Detect row‑level modifications in a worksheet for audit or synchronization processes. | Generate deterministic identifiers for rows to support deduplication or fast look‑ups.
-// AI Prompts: Write C# code with Aspose.Cells that computes a SHA‑256 hash of all cell values in each row and saves it in a new column. | Show how to exclude the header row and ignore empty cells when building a row‑level checksum in Aspose.Cells. | Explain a method to read back the checksum column later and flag rows whose current hash differs from the stored value.
+// Title: Create a checksum column for each row in an Excel sheet using Aspose.Cells for .NET by concatenating cell values and applying GetHashCode
+// AI Prompts: Generate C# code that loops through all rows with Aspose.Cells, builds a pipe‑delimited string of each row’s cell values, calculates an integer hash with GetHashCode, and writes the result to the next empty column. | Show how to add a reusable method that accepts a Row object and returns a checksum based on concatenated cell contents using Aspose.Cells. | Demonstrate saving the workbook after inserting the computed checksum column into an existing Excel file with Aspose.Cells.
+// Common Searches: aspnet compute checksum for each Excel row using Aspose.Cells | how to add a hash column to a worksheet with Aspose.Cells C# | concatenate row values and generate GetHashCode in Aspose.Cells | enumerate rows and write calculated checksum to new column in Excel via .NET | example of per‑row checksum generation with Aspose.Cells library
+// Tags: row checksum Aspose.Cells | concatenate cell values hash .NET | add checksum column Excel | enumerate rows Aspose.Cells API | compute row hash C#
 
 using System;
 using System.Collections;
@@ -13,7 +10,7 @@ using Aspose.Cells;
 
 namespace AsposeCellsChecksumDemo
 {
-    // The sample builds a workbook, fills it with sample data, inserts a "Checksum" header, walks through every row using the Rows enumerator, joins the text of each non‑null cell, creates an integer hash with GetHashCode, places the result in the first free column of that row, and writes the file to disk.
+    // The program creates a workbook, fills it with sample data, iterates each row using Aspose.Cells, concatenates the cell values with a delimiter, computes an integer checksum via GetHashCode, writes the checksum into the next empty column of the row, and saves the file as ChecksumDemo.xlsx.
     class Program
     {
         static void Main()
@@ -23,33 +20,26 @@ namespace AsposeCellsChecksumDemo
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Populate sample data (including a header row)
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["C1"].PutValue("Country");
+            // Populate sample data (3 rows, 3 columns)
+            cells["A1"].PutValue("John");
+            cells["B1"].PutValue(28);
+            cells["C1"].PutValue("Engineer");
 
-            cells["A2"].PutValue("John");
-            cells["B2"].PutValue(30);
-            cells["C2"].PutValue("USA");
+            cells["A2"].PutValue("Alice");
+            cells["B2"].PutValue(34);
+            cells["C2"].PutValue("Manager");
 
-            cells["A3"].PutValue("Alice");
-            cells["B3"].PutValue(25);
-            cells["C3"].PutValue("UK");
+            cells["A3"].PutValue("Bob");
+            cells["B3"].PutValue(22);
+            cells["C3"].PutValue("Analyst");
 
-            // Add a header for the checksum column
-            cells["D1"].PutValue("Checksum");
-
-            // Iterate through each row using the RowCollection enumerator
+            // Enumerate through each row in the worksheet
             IEnumerator rowEnum = sheet.Cells.Rows.GetEnumerator();
             while (rowEnum.MoveNext())
             {
                 Row row = (Row)rowEnum.Current;
 
-                // Skip the header row (index 0) if you don't want to checksum it
-                // Uncomment the following line to skip:
-                // if (row.Index == 0) continue;
-
-                // Concatenate string representations of all cells in the row
+                // Build a concatenated string of all cell values in the current row
                 StringBuilder sb = new StringBuilder();
                 IEnumerator cellEnum = row.GetEnumerator();
                 while (cellEnum.MoveNext())
@@ -58,20 +48,21 @@ namespace AsposeCellsChecksumDemo
                     if (cell != null && cell.Value != null)
                     {
                         sb.Append(cell.Value.ToString());
+                        sb.Append("|"); // delimiter to avoid accidental merging
                     }
                 }
 
-                // Compute a hash code from the concatenated string
+                // Compute a simple hash code from the concatenated string
                 int checksum = sb.ToString().GetHashCode();
 
                 // Determine the column index for the checksum (after the last existing cell)
-                int checksumCol = row.LastCell != null ? row.LastCell.Column + 1 : 0;
+                int checksumColumn = row.LastCell != null ? row.LastCell.Column + 1 : 0;
 
-                // Write the checksum value into the cell
-                cells[row.Index, checksumCol].PutValue(checksum);
+                // Write the checksum into the determined cell
+                row[checksumColumn].PutValue(checksum);
             }
 
-            // Save the workbook
+            // Save the workbook with the checksum column added
             workbook.Save("ChecksumDemo.xlsx");
         }
     }

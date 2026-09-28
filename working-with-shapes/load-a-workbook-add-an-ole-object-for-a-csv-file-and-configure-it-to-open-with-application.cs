@@ -1,81 +1,61 @@
-// Title: Embed CSV as OLE Object in Excel Workbook using Aspose.Cells for .NET
-// Description: Loads an existing .xlsx file, reads a CSV into a byte array, creates a tiny transparent PNG placeholder, adds an OLE object to the first worksheet, embeds the CSV (non‑linked), sets ProgID to Excel.CSV, enables AutoLoad, and saves the result.
-// Keywords: Aspose.Cells | C# OLE object | embed CSV in Excel | ProgID Excel.CSV | AutoLoad OLE | placeholder image | .NET Excel automation | OleObject Add | CSV embedded workbook
-// Common Searches: How to embed a CSV file as an OLE object with Aspose.Cells .NET | Aspose.Cells set ProgID to Excel.CSV for OLE objects | C# add OLE object to worksheet and auto‑load CSV | Embedding non‑linked CSV in Excel using Aspose.Cells | Create Excel file with embedded CSV using Aspose.Cells
-// Developer Intent: Add a CSV file as an embedded OLE object that opens automatically in Excel.
-// Use Cases: Generate a report workbook that contains a CSV data source for quick viewing or editing. | Distribute a single Excel file that carries its CSV attachment, eliminating separate downloads. | Automate archival of CSV datasets inside Excel files for compliance or data‑exchange workflows.
-// AI Prompts: Write C# code with Aspose.Cells to embed a CSV as an OLE object, using a transparent PNG placeholder and setting ProgID to Excel.CSV. | Show how to add an OLE object to a worksheet, embed binary CSV data, enable AutoLoad, and save the workbook in Aspose.Cells. | Explain the steps to configure an OLE object in Aspose.Cells so the embedded CSV opens automatically when the workbook is opened.
+// Title: Insert a CSV file as an OLE object at cell B2 of an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Embed a CSV file into an existing workbook as an OLE object positioned at B2 with custom height and width using Aspose.Cells. | Read a CSV into a byte array and add it as an OleObject to the first worksheet of a .xlsx file with Aspose.Cells for .NET. | Create and configure an OleObject from a CSV file, set its dimensions in points, and save the updated workbook with Aspose.Cells.
+// Common Searches: how to add a csv as an ole object to a specific cell using Aspose.Cells C# | Aspose.Cells embed csv file into worksheet as oleobject example | set oleobject size in points when inserting into Excel with Aspose.Cells | load workbook and insert oleobject from byte array Aspose.Cells .NET | save workbook after adding ole object from csv using Aspose.Cells
+// Tags: aspocells add oleobject from csv | embed csv as oleobject in worksheet | oleobject dimensions points aspocells | load workbook insert oleobject c# | byte array oleobject aspocells | excel oleobject placement cell b2
 
+using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing; // Required for OleObject
 
-namespace AsposeCellsOleObjectDemo
+// The program loads an existing Excel workbook, reads a CSV file into a byte array, inserts the CSV as an OLE object at cell B2 with specified height and width, and saves the modified workbook as output.xlsx.
+class Program
 {
-    // Loads an existing .xlsx file, reads a CSV into a byte array, creates a tiny transparent PNG placeholder, adds an OLE object to the first worksheet, embeds the CSV (non‑linked), sets ProgID to Excel.CSV, enables AutoLoad, and saves the result.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                // Input workbook path
-                string workbookPath = "input.xlsx";
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"Workbook file not found: {workbookPath}");
-                    return;
-                }
+            // Verify that the input workbook exists
+            const string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input workbook not found: {inputPath}");
 
-                // Load the workbook
-                Workbook workbook = new Workbook(workbookPath);
+            // Verify that the CSV file exists
+            const string csvFilePath = "data.csv";
+            if (!File.Exists(csvFilePath))
+                throw new FileNotFoundException($"CSV file not found: {csvFilePath}");
 
-                // First worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // CSV file to embed
-                string csvFilePath = "data.csv";
-                if (!File.Exists(csvFilePath))
-                {
-                    Console.WriteLine($"CSV file not found: {csvFilePath}");
-                    return;
-                }
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Read CSV bytes
-                byte[] csvData = File.ReadAllBytes(csvFilePath);
+            // Read CSV file into a byte array (required by OleObjects.Add overload)
+            byte[] oleData = File.ReadAllBytes(csvFilePath);
 
-                // Minimal 1x1 PNG placeholder image (transparent)
-                byte[] placeholderImage = Convert.FromBase64String(
-                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK5cAAAAASUVORK5CYII=");
+            // Add the OLE object (CSV) to the worksheet.
+            // Parameters: start row, start column, height (points), width (points), source data as byte[]
+            // Row and column are zero‑based; here we place it at cell B2 (row 1, column 1)
+            int oleIndex = sheet.OleObjects.Add(
+                1,                     // upper left row
+                1,                     // upper left column
+                200,                   // height in points
+                100,                   // width in points
+                oleData);              // source data
 
-                // Add OLE object with placeholder image
-                int oleIndex = sheet.OleObjects.Add(5, 5, 200, 200, placeholderImage);
-                OleObject ole = sheet.OleObjects[oleIndex];
+            // Retrieve the added OleObject if further manipulation is needed
+            OleObject oleObject = sheet.OleObjects[oleIndex];
 
-                // Embed CSV data (not linked)
-                ole.SetEmbeddedObject(false, csvData, Path.GetFileName(csvFilePath), false, "CSV Data");
-
-                // Set ProgID so Excel opens it as CSV
-                ole.ProgID = "Excel.CSV";
-
-                // Auto load when workbook opens
-                ole.AutoLoad = true;
-
-                // Save the modified workbook
-                string outputPath = "output.xlsx";
-                workbook.Save(outputPath);
-
-                Console.WriteLine($"Workbook saved with embedded CSV OLE object at '{outputPath}'.");
-            }
-            catch (CellsException ex)
-            {
-                Console.WriteLine($"Aspose.Cells error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            // Save the modified workbook
+            const string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log any errors that occur during processing
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

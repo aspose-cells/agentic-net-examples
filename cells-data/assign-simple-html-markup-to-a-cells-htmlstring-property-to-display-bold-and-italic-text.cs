@@ -1,33 +1,26 @@
-// Title: Set bold and italic HTML markup in an Excel cell with Aspose.Cells for .NET
-// Description: Demonstrates how to assign an HTML string containing <b> and <i> tags to a worksheet cell using the HtmlString property, then save the workbook as XLSX.
-// Keywords: Aspose.Cells | .NET | HtmlString | HTML formatting | bold text | italic text | C# example | Excel cell styling
-// Common Searches: Aspose.Cells HtmlString bold italic | C# set HTML in Excel cell Aspose | How to use HtmlString property in Aspose.Cells | Apply HTML tags to Excel cell with Aspose.Cells | Display formatted text in Excel using Aspose.Cells
-// Developer Intent: Apply HTML markup to a cell so the displayed value shows bold and italic formatting.
-// Use Cases: Create report headers with mixed styling without manual cell formatting. | Export data where certain keywords need emphasis directly from HTML sources. | Build templates that render HTML‑styled content in Excel worksheets.
-// AI Prompts: Show a C# example that adds underline and color HTML tags to a cell using Aspose.Cells HtmlString. | Explain how to load an HTML string from a database and assign it to a worksheet cell with HtmlString.
+// Title: Assign bold and italic HTML markup to a cell using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook, sets the HtmlString of cell A1 to include <b> and <i> tags, and saves the file as XLSX with Aspose.Cells. | Demonstrate how to use the Aspose.Cells HtmlString property to render bold and italic HTML text inside an Excel worksheet cell in a .NET application.
+// Common Searches: Aspose.Cells C# how to display bold and italic text in an Excel cell using HtmlString | example of setting HtmlString property for a worksheet cell in .NET | render HTML tags inside Excel cells with Aspose.Cells library | save Excel file with HTML-formatted cell content using Aspose.Cells C#
+// Tags: Aspose.Cells HtmlString usage | C# set HTML content in Excel cell | format cell bold italic with Aspose | save workbook as XLSX with HTML markup | Excel cell HTML rendering .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlStringDemo
+// Creates a workbook, assigns bold and italic HTML markup to cell A1 via the HtmlString property, and saves the result as BoldItalicDemo.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates how to assign an HTML string containing <b> and <i> tags to a worksheet cell using the HtmlString property, then save the workbook as XLSX.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook instance
-            Workbook workbook = new Workbook();
+        // Create a new workbook instance
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Access the first worksheet in the workbook
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Assign HTML markup to cell A1.
-            // The markup includes bold (<b>) and italic (<i>) tags.
-            worksheet.Cells["A1"].HtmlString = "This is <b>bold</b> and <i>italic</i> text";
+        // Assign HTML markup to cell A1 to display bold and italic text
+        worksheet.Cells["A1"].HtmlString = "This is <b>bold</b> and <i>italic</i> text";
 
-            // Save the workbook to an XLSX file
-            workbook.Save("HtmlStringDemo.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook to an XLSX file
+        workbook.Save("BoldItalicDemo.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,31 +1,29 @@
-// Title: Add an External Hyperlink to Cell H2 with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, accesses the first worksheet, adds a hyperlink to cell H2 that points to https://example.com, sets the display text to "Example Site", and saves the file as Hyperlink_H2.xlsx. Useful for embedding reference links in generated Excel reports.
-// Keywords: Aspose.Cells | C# | .NET | Excel hyperlink | cell H2 | Hyperlinks.Add | external link | save workbook
-// Common Searches: Aspose.Cells add hyperlink to specific cell | C# add external link to Excel cell H2 | How to set display text for Aspose.Cells hyperlink | Save workbook after inserting hyperlink Aspose.Cells
-// Developer Intent: Insert an external URL into cell H2 and define its visible text using Aspose.Cells for .NET.
-// Use Cases: Include a reference URL in automated financial statements. | Provide quick access to source documentation from data export files. | Add help‑desk links to template workbooks for end‑user guidance.
-// AI Prompts: Show how to add multiple hyperlinks to different cells with Aspose.Cells for .NET. | Explain how to update the address and display text of an existing hyperlink in a workbook. | Generate code that adds a hyperlink with a tooltip using Aspose.Cells.
+// Title: How to add an external hyperlink to cell H2 in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new workbook, puts the text "Example" in cell H2, and attaches a hyperlink to https://example.com using Aspose.Cells. | Show the exact Aspose.Cells Hyperlinks.Add call needed to link cell H2 (row 1, column 7) to an external website in a .NET application. | Provide a complete C# snippet that saves an Excel file with a clickable link in H2 pointing to https://example.com.
+// Common Searches: Aspose.Cells C# add hyperlink to a specific cell | How to create an external URL link in Excel using Aspose.Cells .NET | C# Hyperlinks.Add method example for linking a cell to a website
+// Tags: Aspose.Cells Hyperlinks.Add external URL | C# add hyperlink to Excel cell | hyperlink Excel cell using Aspose.Cells | Excel file with clickable link Aspose.Cells | link external website in workbook Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// Creates a new workbook, accesses the first worksheet, adds a hyperlink to cell H2 that points to https://example.com, sets the display text to "Example Site", and saves the file as Hyperlink_H2.xlsx. Useful for embedding reference links in generated Excel reports.
+// The example creates a new workbook, writes "Example" into cell H2, adds a hyperlink that points to https://example.com on that cell using the Hyperlinks.Add method, and saves the file as HyperlinkExample.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a hyperlink to cell H2 that points to https://example.com
-        worksheet.Hyperlinks.Add("H2", 1, 1, "https://example.com");
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the display text for the hyperlink (optional)
-        int hyperlinkIndex = worksheet.Hyperlinks.Count - 1;
-        worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Example Site";
+        // Set display text in cell H2
+        sheet.Cells["H2"].PutValue("Example");
+
+        // Add a hyperlink to cell H2 (row index 1, column index 7) pointing to the external website
+        // Parameters: firstRow, firstColumn, totalRows, totalColumns, hyperlink
+        sheet.Hyperlinks.Add(1, 7, 1, 1, "https://example.com");
 
         // Save the workbook
-        workbook.Save("Hyperlink_H2.xlsx");
+        workbook.Save("HyperlinkExample.xlsx");
     }
 }

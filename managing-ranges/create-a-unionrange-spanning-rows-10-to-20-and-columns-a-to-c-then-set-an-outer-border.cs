@@ -1,34 +1,47 @@
-// Title: Aspose.Cells .NET – Create UnionRange A10:C20 and Apply a Thin Black Outline Border
-// Description: Demonstrates how to instantiate a Workbook, define a UnionRange that spans rows 10‑20 and columns A‑C on the first worksheet, set a thin black outer border for the range, and save the file as UnionRangeWithBorder.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells UnionRange | C# UnionRange border | outline border Aspose.Cells | A10:C20 range | thin black border .NET | create union range Aspose | Excel border programmatically | Aspose.Cells workbook save
-// Common Searches: How to create a UnionRange A10:C20 in Aspose.Cells C# | Set outline border for a UnionRange using Aspose.Cells | Apply thin black border to a specific cell range in .NET | Aspose.Cells example for UnionRange borders | Save workbook after adding range border Aspose
-// Developer Intent: Define a UnionRange covering A10:C20 and add a thin black outer border.
-// Use Cases: Design a report section with a highlighted block by outlining the data range. | Visually separate a table area in a spreadsheet before exporting to PDF. | Create a printable area with a clear border to improve document layout.
-// AI Prompts: Generate C# code to create a UnionRange A10:C20 with a thick red outline border using Aspose.Cells. | Show how to set different border styles for each side of a UnionRange in Aspose.Cells .NET. | Explain how to combine conditional formatting with outline borders on a UnionRange.
+// Title: Create a UnionRange for rows 10‑20 and columns A‑C and add a thick outer border using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a UnionRange spanning rows 10 to 20 and columns A to C, then applies a thick border on all four sides of the range. | Show how to use Style and StyleFlag in Aspose.Cells to format the outer border of a specific cell range in an Excel workbook.
+// Common Searches: asp.net aspose.cells how to define a union range covering rows 10 through 20 and columns A to C | apply thick outer border to a specific range in Excel using Aspose.Cells C# | set borders for a multi‑cell range with Aspose.Cells StyleFlag example | create and style a range A1:C11 in Aspose.Cells .NET | Aspose.Cells C# add border to UnionRange
+// Tags: create union range Aspose.Cells | apply thick border Aspose.Cells | styleflag range formatting Aspose.Cells | excel range border formatting .NET | unionrange border styling C#
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsUnionRangeBorderDemo
+// Creates a new workbook, defines a UnionRange covering rows 10‑20 and columns A‑C, applies a thick border on all sides using a Style and StyleFlag, saves the file as UnionRangeWithBorder.xlsx, and prints a success message.
+class Program
 {
-    // Demonstrates how to instantiate a Workbook, define a UnionRange that spans rows 10‑20 and columns A‑C on the first worksheet, set a thin black outer border for the range, and save the file as UnionRangeWithBorder.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Create a UnionRange that spans rows 10‑20 and columns A‑C (address "A10:C20")
-            // The second parameter is the worksheet index (0 for the first sheet)
-            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("A10:C20", 0);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Apply a thin black outline border to the entire union range
-            unionRange.SetOutlineBorders(CellBorderType.Thin, Color.Black);
+            // Define a UnionRange covering rows 10 to 20 (indices 9‑19) and columns A to C (indices 0‑2)
+            // Total rows = 11 (20‑10+1), total columns = 3
+            Aspose.Cells.Range unionRange = sheet.Cells.CreateRange(9, 0, 11, 3);
 
-            // Save the workbook to a file
-            workbook.Save("UnionRangeWithBorder.xlsx");
+            // Create a style for the outer border
+            Style borderStyle = workbook.CreateStyle();
+            borderStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thick;
+            borderStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thick;
+            borderStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
+            borderStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thick;
+
+            // Apply the style to the range
+            StyleFlag flag = new StyleFlag { All = true };
+            unionRange.ApplyStyle(borderStyle, flag);
+
+            // Save the workbook
+            string outputPath = "UnionRangeWithBorder.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

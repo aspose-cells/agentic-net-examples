@@ -1,63 +1,66 @@
-// Title: Convert Password‑Protected Excel to HTML with Aspose.Cells for .NET
-// Description: A C# example that checks the existence of an encrypted .xlsx file, verifies the supplied password using FileFormatUtil.VerifyPassword, loads the workbook with LoadOptions, and saves it as an HTML document via SaveFormat.Html, with graceful error handling for missing files or wrong passwords.
-// Keywords: Aspose.Cells | .NET | encrypted workbook | verify password | password protected Excel | convert to HTML | LoadOptions | FileFormatUtil | C# example | save as HTML
-// Common Searches: Aspose.Cells open password protected Excel file | verify Excel workbook password before loading Aspose.Cells | convert encrypted .xlsx to HTML C# | Aspose.Cells load options password example | how to export protected Excel to HTML using Aspose
-// Developer Intent: Validate the Excel file password and export the protected workbook to HTML.
-// Use Cases: Check a user‑provided password before generating an HTML preview of a secured spreadsheet. | Batch‑process multiple password‑protected Excel files, confirming each password and converting them to HTML for web publishing. | Display a clear error message when the supplied password is incorrect while attempting the conversion.
-// AI Prompts: Generate C# code that uses Aspose.Cells to verify a password for an encrypted .xlsx file and, if valid, saves the workbook as HTML. | Explain best practices for handling incorrect passwords when converting a protected Excel workbook to HTML with Aspose.Cells. | Show how to iterate over a folder of encrypted Excel files, verify each password, and convert each file to HTML using Aspose.Cells in C#.
+// Title: Decrypt a password‑protected XLSX workbook and save it as HTML using Aspose.Cells for .NET
+// AI Prompts: Create a C# routine that uses Aspose.Cells LoadOptions to open an encrypted .xlsx with a supplied password and then saves the workbook as an HTML file. | Show how to catch a CellsException when the provided password is wrong while loading a protected workbook with Aspose.Cells. | Demonstrate configuring HtmlSaveOptions and exporting a successfully decrypted workbook to HTML, including file‑I/O error handling.
+// Common Searches: asp.net load encrypted excel workbook using Aspose.Cells and generate html output | c# Aspose.Cells decrypt protected xlsx and export to html | asp.net handle incorrect password error when opening protected Excel with Aspose.Cells | save workbook as html after verifying password using Aspose.Cells
+// Tags: load encrypted xlsx with password Aspose.Cells | export workbook to html Aspose.Cells | handle CellsException incorrect password | HtmlSaveOptions configuration Aspose.Cells | verify workbook password before saving
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // A C# example that checks the existence of an encrypted .xlsx file, verifies the supplied password using FileFormatUtil.VerifyPassword, loads the workbook with LoadOptions, and saves it as an HTML document via SaveFormat.Html, with graceful error handling for missing files or wrong passwords.
-    class EncryptedWorkbookToHtml
+    // The example verifies that an encrypted XLSX file exists, loads it with the correct password via LoadOptions, catches password‑related errors, and then converts the decrypted workbook to an HTML document using HtmlSaveOptions, with comprehensive exception handling for both loading and saving steps.
+    class Program
     {
         static void Main()
         {
+            // Paths and password
+            string inputPath = "encrypted.xlsx";
+            string password = "myPassword";
+            string outputPath = "output.html";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load options with password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = password
+            };
+
+            Workbook workbook = null;
             try
             {
-                // Path to the encrypted workbook and the password to open it
-                string encryptedFilePath = "encrypted.xlsx";
-                string password = "myPassword";
-
-                // Verify that the file exists
-                if (!File.Exists(encryptedFilePath))
-                {
-                    Console.WriteLine($"File not found: {encryptedFilePath}");
-                    return;
-                }
-
-                // Verify the password before loading the workbook
-                bool passwordIsCorrect;
-                using (FileStream stream = File.OpenRead(encryptedFilePath))
-                {
-                    passwordIsCorrect = FileFormatUtil.VerifyPassword(stream, password);
-                }
-
-                if (!passwordIsCorrect)
-                {
-                    Console.WriteLine("The provided password is incorrect.");
-                    return;
-                }
-
-                // Load the encrypted workbook using LoadOptions with the verified password
-                LoadOptions loadOptions = new LoadOptions
-                {
-                    Password = password
-                };
-                Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
-
-                // Convert the workbook to HTML format
-                string htmlOutputPath = "output.html";
-                workbook.Save(htmlOutputPath, SaveFormat.Html);
-                Console.WriteLine($"Workbook successfully saved as HTML: {htmlOutputPath}");
+                // Attempt to load the encrypted workbook
+                workbook = new Workbook(inputPath, loadOptions);
+                Console.WriteLine("Password verified and workbook loaded successfully.");
+            }
+            catch (CellsException ex)
+            {
+                // Handle incorrect password or other loading issues
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                return;
+            }
+
+            try
+            {
+                // Convert the workbook to HTML
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook converted to HTML at: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving HTML: {ex.Message}");
             }
         }
     }

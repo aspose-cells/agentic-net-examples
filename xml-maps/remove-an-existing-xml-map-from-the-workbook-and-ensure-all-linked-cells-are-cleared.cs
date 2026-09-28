@@ -1,82 +1,108 @@
-// Title: Remove XML Maps and Clear Linked Cells in Excel with Aspose.Cells for .NET (C#)
-// Description: Load a workbook, erase values of cells bound to XML maps, clear the XmlMapCollection, and save the file without any XML mappings using Aspose.Cells for C#.
-// Keywords: Aspose.Cells XML map removal | C# clear cells linked to XML map | delete XML maps from Excel workbook | Aspose.Cells clear used range | remove XmlMapCollection programmatically | Excel XML map cleanup .NET
-// Common Searches: how to delete xml map in Aspose.Cells C# | clear cells bound to xml map using Aspose.Cells | remove all xml maps from an Excel file programmatically | Aspose.Cells example for xml map removal | C# code to purge xml maps from workbook
-// Developer Intent: Programmatically eliminate every XML map from a workbook and reset the contents of cells that were previously bound to those maps.
-// Use Cases: Sanitizing a template before reuse by stripping XML bindings and emptying data cells. | Preparing Excel files for distribution to users who do not require XML data connections. | Batch processing multiple workbooks to remove XML maps and clear associated cell values.
-// AI Prompts: Generate C# code with Aspose.Cells that removes all XML maps from a workbook and clears the values of every used cell. | Explain how to iterate through worksheets, obtain the used range, clear cell contents, and then call XmlMapCollection.Clear() in Aspose.Cells. | Provide a modification to the sample that only clears cells belonging to a specific XML map instead of the entire used range.
+// Title: How to remove an XML map and clear its linked cells in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file, locates the XML map called 'MyXmlMap' via the XmlMaps collection, invokes ClearAllLinkedCells, deletes the map, and saves the workbook. | Generate a C# example that uses reflection to access the XmlMaps property in Aspose.Cells, safely clears all cells linked to a specific XML map, removes the map, and handles cases where the library version lacks XML map support. | Create a C# snippet that checks for XML map support, clears linked cells of a named map, removes the map from the workbook, and writes the result to a new file.
+// Common Searches: c# aspocells delete specific xml map and clear linked cells | how to clear all linked cells after removing an xml map with Aspose.Cells | using reflection to access XmlMaps collection in Aspose.Cells .NET | aspocells version check for xml map support before deletion | remove xml map named MyXmlMap from Excel workbook using Aspose.Cells
+// Tags: aspocells delete xml map c# | aspocells clear linked cells xml map | xml map deletion via reflection aspocells | aspocells xmlmaps collection compatibility | c# xml map removal aspocells
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsXmlMapRemovalDemo
+// This C# example loads an Excel workbook, uses reflection to obtain the XmlMaps collection, finds the XML map named 'MyXmlMap', attempts to clear all cells linked to that map with ClearAllLinkedCells, removes the map, and saves the workbook, while handling versions of Aspose.Cells that may not support XML maps.
+class Program
 {
-    // Load a workbook, erase values of cells bound to XML maps, clear the XmlMapCollection, and save the file without any XML mappings using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string xmlMapName = "MyXmlMap";
+
+            // Verify input file existence
+            if (!File.Exists(inputPath))
             {
-                const string inputPath = "InputWithXmlMap.xlsx";
-                const string outputPath = "OutputWithoutXmlMap.xlsx";
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Verify that the input workbook exists to avoid FileNotFoundException
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
+            // Load workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Load an existing workbook that contains XML maps
-                Workbook workbook = new Workbook(inputPath);
-
-                // Store reference to the XmlMap collection
-                XmlMapCollection xmlMaps = workbook.Worksheets.XmlMaps;
-
-                // If there are any XML maps, remove them
-                if (xmlMaps.Count > 0)
-                {
-                    // Iterate through each worksheet and clear cells that were linked to any XML map
-                    foreach (Worksheet sheet in workbook.Worksheets)
-                    {
-                        // Get the used range of the worksheet
-                        AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
-
-                        // If the worksheet is empty, skip clearing
-                        if (usedRange == null || usedRange.RowCount == 0 || usedRange.ColumnCount == 0)
-                            continue;
-
-                        int startRow = usedRange.FirstRow;
-                        int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
-                        int startCol = usedRange.FirstColumn;
-                        int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
-
-                        // Loop through each cell in the used range and clear its value
-                        for (int row = startRow; row <= endRow; row++)
-                        {
-                            for (int col = startCol; col <= endCol; col++)
-                            {
-                                sheet.Cells[row, col].PutValue(string.Empty);
-                            }
-                        }
-                    }
-
-                    // Remove all XML maps from the workbook
-                    xmlMaps.Clear();
-                }
-
-                // Save the modified workbook
+            // Use reflection to obtain XmlMaps collection (may not be present in older versions)
+            PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps", BindingFlags.Public | BindingFlags.Instance);
+            if (xmlMapsProp == null)
+            {
+                Console.WriteLine("The loaded Aspose.Cells version does not support XML maps.");
+                // Save workbook unchanged and exit
+                EnsureOutputDirectory(outputPath);
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved without XML maps to: {outputPath}");
+                Console.WriteLine($"Workbook saved to: {outputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            object xmlMapsObj = xmlMapsProp.GetValue(workbook);
+            if (xmlMapsObj == null)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Failed to retrieve XML maps collection.");
+                return;
             }
+
+            dynamic xmlMaps = xmlMapsObj; // Use dynamic for runtime member access
+            int mapIndex = -1;
+
+            // Locate the XML map by name
+            for (int i = 0; i < xmlMaps.Count; i++)
+            {
+                dynamic map = xmlMaps[i];
+                if (map.Name != null && map.Name.Equals(xmlMapName, StringComparison.OrdinalIgnoreCase))
+                {
+                    mapIndex = i;
+                    break;
+                }
+            }
+
+            // If found, clear linked cells and remove the map
+            if (mapIndex != -1)
+            {
+                dynamic map = xmlMaps[mapIndex];
+                // Clear linked cells (method may be unavailable; guard with try-catch)
+                try
+                {
+                    map.ClearAllLinkedCells();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to clear linked cells: {ex.Message}");
+                }
+
+                // Remove the map
+                xmlMaps.RemoveAt(mapIndex);
+                Console.WriteLine($"XML map \"{xmlMapName}\" removed successfully.");
+            }
+            else
+            {
+                Console.WriteLine($"XML map \"{xmlMapName}\" not found.");
+            }
+
+            // Ensure output directory exists and save workbook
+            EnsureOutputDirectory(outputPath);
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Helper to create output directory if needed
+    private static void EnsureOutputDirectory(string outputPath)
+    {
+        string outputDir = Path.GetDirectoryName(outputPath);
+        if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+        {
+            Directory.CreateDirectory(outputDir);
         }
     }
 }

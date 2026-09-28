@@ -1,36 +1,45 @@
-// Title: Add a Linked Picture from a URL in Aspose.Cells for .NET (IsLink = true, no embedding)
-// Description: Creates a new workbook, inserts a picture that references an external image URL using AddLinkedPicture, sets IsLink to true so the image data stays external, and saves the file as a lightweight Excel document.
-// Keywords: Aspose.Cells linked picture | AddLinkedPicture .NET | IsLink true | external image URL Excel | prevent image embedding | lightweight workbook | dynamic logo Excel
-// Common Searches: Aspose.Cells add picture from URL without embedding | How to set IsLink for a picture in Aspose.Cells | Create Excel file with linked images .NET | Save workbook with external images Aspose.Cells
-// Developer Intent: Insert an image that points to an online source and keep it as a reference rather than embedding the binary data in the Excel file.
-// Use Cases: Generate reports that pull logos from a CDN, keeping file size minimal. | Build templates where end‑users can change image URLs without re‑saving binary data. | Create dashboards that automatically reflect updates to external graphics.
-// AI Prompts: Show C# code to add a linked picture from a URL in Aspose.Cells and confirm the picture is not embedded. | Explain how to verify that linked pictures have IsLink = true and Data is null after insertion. | Describe workbook save options that preserve external image links in Aspose.Cells.
+// Title: Insert a linked picture from a remote URL into an Excel worksheet using Aspose.Cells for .NET without embedding the image data
+// AI Prompts: Add a picture to cell A1 that references an external image URL and keep it linked rather than embedding the file. | Create an Excel workbook, place a linked external image with specific width and height, and save it as .xlsx using Aspose.Cells for .NET. | Ensure the picture's IsLinked property is set to true so the workbook does not store the image bytes.
+// Common Searches: asp.net insert linked picture from web URL using Aspose.Cells | how to add external image to Excel without embedding with Aspose.Cells C# | set picture IsLinked property true in Aspose.Cells example | Aspose.Cells picture dimensions and external link C#
+// Tags: insert linked picture Aspose.Cells | external image URL Excel .NET | disable image embedding Aspose.Cells | IsLinked property picture C# | picture size Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
 
-// Creates a new workbook, inserts a picture that references an external image URL using AddLinkedPicture, sets IsLink to true so the image data stays external, and saves the file as a lightweight Excel document.
+// // Creates a new workbook, adds a picture that links to an external URL at cell A1, sets its width and height, ensures IsLinked is true so the image data is not embedded, and saves the file as LinkedPicture.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // URL of the image to be linked
-        string imageUrl = "https://example.com/sample.jpg";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a linked picture to the worksheet (row, column, height, width, source URL)
-        Picture linkedPicture = worksheet.Shapes.AddLinkedPicture(1, 1, 100, 100, imageUrl);
+            // URL of the image to link
+            string imageUrl = "https://example.com/image.png";
 
-        // Explicitly set the picture as linked (IsLink = true)
-        linkedPicture.IsLink = true;
+            // Add a picture at cell A1 (row 0, column 0) using the URL.
+            // The Add method returns the index of the newly added picture.
+            int pictureIndex = sheet.Pictures.Add(0, 0, imageUrl);
 
-        // At this point the picture data is not embedded; linkedPicture.Data should be null
+            // Retrieve the picture object
+            Picture linkedPicture = sheet.Pictures[pictureIndex];
 
-        // Save the workbook
-        workbook.Save("LinkedPicture.xlsx");
+            // Optionally set size (in pixels)
+            linkedPicture.Width = 200;
+            linkedPicture.Height = 150;
+
+            // Save the workbook to a file
+            workbook.Save("LinkedPicture.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

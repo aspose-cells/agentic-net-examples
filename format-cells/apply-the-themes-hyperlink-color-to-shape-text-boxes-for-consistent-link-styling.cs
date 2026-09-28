@@ -1,63 +1,64 @@
-// Title: Apply Workbook Theme Hyperlink Color to TextBox Shape Text with Aspose.Cells for .NET
-// Description: Demonstrates how to retrieve the workbook's theme hyperlink color using GetThemeColor, create a style with that color, and apply it to all characters of a TextBox shape via StyleFlag and FormatCharacters. The example adds a clickable TextBox and saves the workbook.
-// Keywords: Aspose.Cells C# | TextBox shape hyperlink color | GetThemeColor Hyperlink | StyleFlag FontColor | FormatCharacters Aspose.Cells | apply theme color to shape text | Excel shape formatting .NET | hyperlink styling in workbook | theme based text color Aspose | programmatic Excel hyperlink theme
-// Common Searches: Aspose.Cells set hyperlink color for TextBox shape | How to use workbook theme hyperlink color in C# | Format TextBox characters with theme color Aspose.Cells | GetThemeColor Hyperlink example .NET | Apply StyleFlag to shape text in Aspose.Cells
-// Developer Intent: The developer wants to color the text inside a TextBox shape using the workbook’s theme hyperlink color for consistent link styling.
-// Use Cases: Generate reports where TextBox links automatically match the workbook’s hyperlink theme. | Create interactive dashboards with clickable TextBox shapes that follow the document’s color scheme. | Batch‑apply theme‑based hyperlink colors to multiple shape texts across a workbook.
-// AI Prompts: Write C# code that loops through all TextBox shapes in a workbook and applies the theme hyperlink color to their text using Aspose.Cells. | Show how to retrieve the visited‑hyperlink theme color and use it for shape text styling in Aspose.Cells for .NET. | Explain the use of StyleFlag with FormatCharacters to change only the font color of a TextBox while preserving other formatting.
+// Title: Set TextBox AutoShape font color to the workbook's hyperlink theme color using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells in C# to iterate all worksheets and change the font color of every TextBox AutoShape to the workbook's hyperlink theme color. | Apply the default hyperlink blue color to shape text boxes in an Excel file with Aspose.Cells while preserving the workbook's theme.
+// Common Searches: c# aspose.cells change textbox shape font to hyperlink color | how to apply Excel hyperlink theme color to AutoShape text using Aspose.Cells | set shape text color based on workbook theme in Aspose.Cells .NET | update TextBox AutoShape font color to match hyperlink style programmatically
+// Tags: Aspose.Cells set textbox font color | hyperlink theme color for shape text | iterate worksheets shapes C# | apply workbook theme to AutoShape text | Excel hyperlink style Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to retrieve the workbook's theme hyperlink color using GetThemeColor, create a style with that color, and apply it to all characters of a TextBox shape via StyleFlag and FormatCharacters. The example adds a clickable TextBox and saves the workbook.
-class ApplyThemeHyperlinkColorToTextBox
+// Loads an Excel workbook, iterates through each worksheet and its shapes, and sets the font color of any TextBox AutoShape to the workbook's hyperlink theme color (default blue) before saving the file.
+class Program
 {
     static void Main()
     {
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
         try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Default hyperlink color (blue)
+            Color hyperlinkColor = Color.Blue;
 
-            // Add a TextBox shape to the worksheet
-            // Parameters: upper left row, upper left column, top, left, width, height
-            TextBox textBox = sheet.Shapes.AddTextBox(2, 2, 50, 100, 200, 60);
-
-            // Set sample text in the TextBox
-            textBox.Text = "Visit Aspose";
-
-            // Add a hyperlink to the entire shape (optional)
-            textBox.AddHyperlink("https://www.aspose.com");
-
-            // Retrieve the theme's hyperlink color
-            Color themeHyperlinkColor = workbook.GetThemeColor(ThemeColorType.Hyperlink);
-
-            // Create a Font object with the desired color
-            Style style = workbook.CreateStyle();
-            Font hyperlinkFont = style.Font;
-            hyperlinkFont.Color = themeHyperlinkColor;
-
-            // Define a StyleFlag indicating that only the font color should be changed
-            StyleFlag flag = new StyleFlag
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                FontColor = true
-            };
+                // Iterate through all shapes on the worksheet
+                foreach (Shape shape in sheet.Shapes)
+                {
+                    // Process only TextBox AutoShape types
+                    if (shape.AutoShapeType == AutoShapeType.TextBox)
+                    {
+                        // Apply the hyperlink color to the shape's text font
+                        var font = shape.Font;
+                        if (font != null)
+                        {
+                            font.Color = hyperlinkColor;
+                        }
+                    }
+                }
+            }
 
-            // Apply the font color to all characters in the TextBox
-            int textLength = textBox.Text.Length;
-            textBox.FormatCharacters(0, textLength, hyperlinkFont, flag);
-
-            // Save the workbook
-            workbook.Save("HyperlinkStyledTextBox.xlsx");
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

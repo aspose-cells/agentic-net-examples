@@ -1,43 +1,70 @@
-// Title: C# – Apply a Uniform Chart Color Palette to All Charts and Save as XLS with Aspose.Cells
-// Description: Load an XLSX workbook, loop through each worksheet and chart, apply a chosen ChartColorPaletteType to all series via Chart.NSeries.ChangeColors, then export the file as an Excel 97‑2003 XLS using XlsSaveOptions.MatchColor to map colors to the 56‑color palette.
-// Keywords: Aspose.Cells | C# chart color palette | ChartColorPaletteType | Chart.NSeries.ChangeColors | save as XLS | XlsSaveOptions MatchColor | uniform chart styling | Excel 97-2003 export | batch chart formatting | legacy Excel compatibility
-// Common Searches: Aspose.Cells set same chart colors for all worksheets | How to change chart palette in C# Aspose.Cells | Save XLSX with charts to XLS preserving colors | Chart.NSeries.ChangeColors example | Map chart colors to 56‑color palette Aspose
-// Developer Intent: Apply a single color palette to every chart in a workbook and export the workbook to the legacy XLS format while keeping chart colors consistent.
-// Use Cases: Standardize chart appearance across a multi‑sheet report before distributing to clients using older Excel versions. | Batch‑process corporate workbooks to enforce a company‑wide chart color scheme. | Convert modern XLSX files with charts to XLS for compatibility with legacy systems, ensuring colors map to the 56‑color palette.
-// AI Prompts: Generate C# code that loads an XLSX file, applies a specific ChartColorPaletteType to all charts using Aspose.Cells, and saves the result as XLS with MatchColor enabled. | Explain how Chart.NSeries.ChangeColors works in Aspose.Cells and advise on selecting an appropriate ChartColorPaletteType for uniform styling. | Provide a step‑by‑step tutorial for converting an XLSX workbook containing charts to XLS while preserving chart colors with Aspose.Cells.
+// Title: Apply a uniform custom color palette to all chart series in every worksheet of an Excel workbook using Aspose.Cells for .NET and save as XLSX
+// AI Prompts: Load an existing .xlsx file with Aspose.Cells for .NET, define a custom Color[] palette, iterate through each worksheet and chart, assign each series' Area.ForegroundColor and Border.Color from the palette, then save the workbook as a new .xlsx file. | Write a C# method that takes input and output paths, opens the workbook, applies a predefined six‑color palette to every chart series across all worksheets using Aspose.Cells, and returns the location of the saved file. | Create a script that verifies an Excel file's existence, opens it with Aspose.Cells, updates all chart series to use matching fill and border colors from a custom palette, handles any exceptions, and writes the modified workbook back to disk.
+// Common Searches: how to change chart series colors for all worksheets using Aspose.Cells in C# | apply same color scheme to multiple charts in an Excel file with Aspose.Cells .NET | set custom palette for chart series programmatically Aspose.Cells | C# code to iterate over charts and update series fill color in a workbook | save workbook after modifying chart colors with Aspose.Cells for .NET
+// Tags: Aspose.Cells set chart series color | C# apply custom chart palette | iterate worksheets charts Aspose.Cells | save workbook as XLSX Aspose.Cells | uniform chart color scheme .NET
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an XLSX workbook, loop through each worksheet and chart, apply a chosen ChartColorPaletteType to all series via Chart.NSeries.ChangeColors, then export the file as an Excel 97‑2003 XLS using XlsSaveOptions.MatchColor to map colors to the 56‑color palette.
-class ApplyUniformChartPalette
+// The example loads an existing XLSX workbook, defines a six‑color custom palette, loops through every worksheet and each chart within, sets each series' fill and border colors from the palette, and saves the updated workbook as a new XLSX file.
+class UniformChartColorPalette
 {
     static void Main()
     {
-        // Load the existing workbook (replace the path with your source file)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Choose a chart color palette type (using the first enum value as a generic example)
-        ChartColorPaletteType paletteType = (ChartColorPaletteType)0;
-
-        // Apply the selected palette to every chart in every worksheet
-        foreach (Worksheet ws in workbook.Worksheets)
+        try
         {
-            foreach (Chart chart in ws.Charts)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Change the colors of all series in the chart
-                chart.NSeries.ChangeColors(paletteType);
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define a uniform custom color palette
+            Color[] customPalette = new Color[]
+            {
+                Color.FromArgb(0x4F81BD), // Blue
+                Color.FromArgb(0xC0504D), // Red
+                Color.FromArgb(0x9BBB59), // Green
+                Color.FromArgb(0x8064A2), // Purple
+                Color.FromArgb(0x4BACC6), // Cyan
+                Color.FromArgb(0xF79646)  // Orange
+            };
+
+            // Apply the custom palette to every series in every chart
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
+                {
+                    int colorIdx = 0;
+                    foreach (Series series in chart.NSeries)
+                    {
+                        // Set the series fill color using the Area's ForegroundColor
+                        series.Area.ForegroundColor = customPalette[colorIdx % customPalette.Length];
+                        // Optionally set the border color to match
+                        series.Border.Color = customPalette[colorIdx % customPalette.Length];
+                        colorIdx++;
+                    }
+                }
+            }
+
+            // Save the workbook in XLSX format
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
-
-        // Configure save options for the Excel 97‑2003 format
-        XlsSaveOptions saveOptions = new XlsSaveOptions
+        catch (Exception ex)
         {
-            MatchColor = true // map colors to the 56‑color palette
-        };
-
-        // Save the workbook as an XLS file
-        workbook.Save("output.xls", saveOptions);
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

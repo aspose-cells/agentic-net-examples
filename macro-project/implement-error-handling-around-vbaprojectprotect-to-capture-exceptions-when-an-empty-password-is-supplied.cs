@@ -1,50 +1,60 @@
-// Title: Handle Empty‑Password Exception for Aspose.Cells VbaProject.Protect (C#)
-// Description: Demonstrates how to protect a VBA project in a macro‑enabled workbook using Aspose.Cells, catch the exception thrown when an empty password is supplied, and continue processing by saving the workbook.
-// Keywords: Aspose.Cells VbaProject.Protect | empty password exception | C# VBA project protection | try‑catch Aspose.Cells | macro‑enabled workbook error handling
-// Common Searches: Aspose.Cells protect VBA project with empty password | exception thrown by VbaProject.Protect when password is blank | C# catch error for VBA project protection Aspose.Cells | how to handle empty password in VbaProject.Protect | sample code for VBA project protection error handling
-// Developer Intent: Capture and manage the exception raised by VbaProject.Protect when the password argument is empty.
-// Use Cases: Validate password input before calling Protect to avoid runtime failures. | Wrap the Protect call in a try‑catch block to log details and keep the workflow alive. | Ensure the workbook is saved after handling the exception, preserving normal file lifecycle.
-// AI Prompts: Write C# code that checks for a null or empty password before invoking workbook.VbaProject.Protect and returns a custom error message. | Provide a try‑catch example that logs the exception message and stack trace when VbaProject.Protect fails due to a missing password, then saves the workbook. | Create a reusable C# method that safely protects a VBA project with Aspose.Cells, handling empty‑password scenarios and indicating success or failure.
+// Title: Implement try‑catch around VbaProject.Protect to handle empty password errors in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that wraps workbook.VbaProject.Protect in a try‑catch block and logs the exception when an empty password is supplied. | Create a helper method that checks the password string before calling VbaProject.Protect and throws a custom error if the password is blank, using Aspose.Cells.
+// Common Searches: Aspose.Cells C# protect VBA project with empty password throws exception | how to catch error from VbaProject.Protect when password is blank in .NET | C# try catch for Aspose.Cells VBA project protection failure | handling Aspose.Cells VbaProject.Protect invalid password exception
+// Tags: Aspose.Cells VBA project protection exception handling | C# try-catch Aspose.Cells VbaProject.Protect | empty password error Aspose.Cells VBA | protect VBA project without password .NET | error handling workbook VbaProject.Protect
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using System;
+using System.IO;
 
-namespace AsposeCellsVbaProtectionDemo
+// The example loads an existing workbook or creates a new one, then attempts to protect its VBA project with an empty password. The Protect call is enclosed in a try‑catch block to capture and display any exceptions, ensuring robust error handling before saving the workbook.
+class Program
 {
-    // Demonstrates how to protect a VBA project in a macro‑enabled workbook using Aspose.Cells, catch the exception thrown when an empty password is supplied, and continue processing by saving the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        Workbook workbook = null;
+
+        // Load existing workbook or create a new one if the file is missing
+        try
         {
-            // Create a new workbook (macro-enabled format will be used when saving)
-            Workbook workbook = new Workbook();
-
-            // Ensure the VBA project exists by saving as a macro-enabled workbook and reloading
-            string tempPath = "temp.xlsm";
-            workbook.Save(tempPath, SaveFormat.Xlsm);
-            workbook = new Workbook(tempPath);
-            System.IO.File.Delete(tempPath);
-
-            // Attempt to protect the VBA project with an empty password
-            try
+            if (File.Exists(inputPath))
             {
-                // According to the API, when islockedForViewing is true, password must not be null or empty.
-                // Supplying an empty string should raise an exception.
-                workbook.VbaProject.Protect(true, string.Empty);
-                Console.WriteLine("VBA project protected successfully (unexpected).");
+                workbook = new Workbook(inputPath);
             }
-            catch (Exception ex)
+            else
             {
-                // Capture and display the exception details
-                Console.WriteLine("Exception caught while protecting VBA project with empty password:");
-                Console.WriteLine(ex.Message);
+                workbook = new Workbook(); // creates a default workbook
+                Console.WriteLine($"Input file \"{inputPath}\" not found. A new workbook has been created.");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-            // Save the workbook (even if protection failed) to demonstrate normal lifecycle handling
-            string outputPath = "VbaProjectProtectionResult.xlsm";
-            workbook.Save(outputPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        // Protect the VBA project (read‑only flag set to false, empty password)
+        try
+        {
+            workbook.VbaProject.Protect(false, "");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error protecting VBA project: {ex.Message}");
+        }
+
+        // Save the workbook
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

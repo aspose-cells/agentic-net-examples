@@ -1,81 +1,67 @@
-// Title: Export Workbook with Overlapping Conditional Formatting to HTML – Aspose.Cells for .NET
-// Description: Creates a workbook, fills column A with numbers, adds two overlapping conditional‑formatting rules (yellow for 15‑45, orange for >30), configures HtmlSaveOptions to keep all styles and export CSS separately, and saves the result as an HTML file that shows both rules.
-// Keywords: Aspose.Cells | C# | conditional formatting | HTML export | overlapping rules | HtmlSaveOptions | ExportWorksheetCSSSeparately | ExcludeUnusedStyles | Excel to HTML | style preservation
-// Common Searches: Aspose.Cells export overlapping conditional formatting to HTML | preserve multiple conditional formats in HTML output .NET | HtmlSaveOptions ExportWorksheetCSSSeparately example | how to keep all conditional formatting rules when saving as HTML | C# Aspose.Cells conditional formatting HTML export
-// Developer Intent: Generate an HTML file from a workbook while ensuring that every overlapping conditional‑formatting rule is retained in the output.
-// Use Cases: Produce an HTML report that visually reflects two overlapping formatting rules on numeric data. | Separate conditional‑formatting CSS into its own file for easier inspection or customization. | Debug or document Excel styling by preserving all conditional formats in the HTML conversion.
-// AI Prompts: Write C# code with Aspose.Cells that exports a workbook containing overlapping conditional‑formatting rules to HTML, showing both styles. | Explain the impact of HtmlSaveOptions properties ExportWorksheetCSSSeparately and ExcludeUnusedStyles on overlapping conditional formats in the generated HTML. | Demonstrate how to adjust the StopIfTrue property to control rule precedence when exporting conditional formatting with Aspose.Cells.
+// Title: Export an Excel workbook with overlapping conditional formatting rules to HTML using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds two overlapping conditional formatting rules to the same cell range and saves the workbook as an HTML file with Aspose.Cells. | Demonstrate how to keep both conditional formatting styles when converting an Excel workbook to HTML in a .NET application.
+// Common Searches: how to export Excel to HTML with multiple conditional formatting rules using Aspose.Cells C# | Aspose.Cells preserve overlapping conditional formats when saving as HTML | C# Aspose.Cells export conditional formatting range A1:A10 to HTML
+// Tags: export workbook with overlapping conditional formatting to HTML | Aspose.Cells conditional formatting HTML conversion | C# add multiple conditional format rules | save Excel as HTML preserving conditional styles | conditional formatting range A1:A10 Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-namespace AsposeCellsConditionalFormattingHtml
+// Creates a workbook, applies two overlapping conditional formatting rules (greater than 50 and less than 20) to cells A1:A10, and exports the workbook to HTML while retaining both formatting rules using Aspose.Cells for .NET.
+class ConditionalFormattingExport
 {
-    // Creates a workbook, fills column A with numbers, adds two overlapping conditional‑formatting rules (yellow for 15‑45, orange for >30), configures HtmlSaveOptions to keep all styles and export CSS separately, and saves the result as an HTML file that shows both rules.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample numeric data in column A (A1:A10)
+            // Populate sample data in range A1:A10
             for (int i = 0; i < 10; i++)
             {
-                sheet.Cells[i, 0].PutValue(i * 10); // 0,10,20,...,90
+                cells[i, 0].PutValue(i * 10); // Values: 0,10,20,...,90
             }
 
-            // Add a conditional formatting collection to the worksheet
-            int cfIndex = sheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
+            // Define the range to which the conditional formats will be applied
+            CellArea formatRange = CellArea.CreateCellArea("A1", "A10");
 
-            // Define the range that both rules will apply to (A1:A10)
-            CellArea area = new CellArea
-            {
-                StartRow = 0,
-                EndRow = 9,
-                StartColumn = 0,
-                EndColumn = 0
-            };
-            cfCollection.AddArea(area);
+            // First conditional format: highlight cells > 50 with light green background
+            int index1 = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcc1 = sheet.ConditionalFormattings[index1];
+            fcc1.AddArea(formatRange);
+            FormatCondition condition1 = fcc1[0];
+            condition1.Type = FormatConditionType.CellValue;
+            condition1.Operator = OperatorType.GreaterThan;
+            condition1.Formula1 = "50";
+            condition1.Style = workbook.CreateStyle();
+            condition1.Style.ForegroundColor = Color.LightGreen;
+            condition1.Style.Pattern = BackgroundType.Solid;
 
-            // First rule: values between 15 and 45 -> yellow background
-            int condIdx1 = cfCollection.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.Between,
-                "15",
-                "45");
-            FormatCondition cond1 = cfCollection[condIdx1];
-            cond1.Style.BackgroundColor = Color.Yellow;
-            cond1.StopIfTrue = false; // allow lower‑priority rules to be evaluated
+            // Second conditional format: highlight cells < 20 with light coral background
+            int index2 = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection fcc2 = sheet.ConditionalFormattings[index2];
+            fcc2.AddArea(formatRange);
+            FormatCondition condition2 = fcc2[0];
+            condition2.Type = FormatConditionType.CellValue;
+            condition2.Operator = OperatorType.LessThan; // Correct enum value
+            condition2.Formula1 = "20";
+            condition2.Style = workbook.CreateStyle();
+            condition2.Style.ForegroundColor = Color.LightCoral;
+            condition2.Style.Pattern = BackgroundType.Solid;
 
-            // Second rule: values greater than 30 -> orange background
-            // This overlaps with the first rule for values 31‑45
-            int condIdx2 = cfCollection.AddCondition(
-                FormatConditionType.CellValue,
-                OperatorType.GreaterThan,
-                "30",
-                null);
-            FormatCondition cond2 = cfCollection[condIdx2];
-            cond2.Style.BackgroundColor = Color.Orange;
-            cond2.StopIfTrue = false;
+            // Save the workbook as HTML (conditional formatting is exported by default)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+            workbook.Save("ConditionalFormatting.html", htmlOptions);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export CSS separately so that conditional formatting styles are clearly visible
-                ExportWorksheetCSSSeparately = true,
-                // Keep all generated styles (including those from overlapping rules)
-                ExcludeUnusedStyles = false
-            };
-
-            // Save the workbook as HTML
-            string outputPath = "ConditionalFormattingOverlap.html";
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook saved to HTML at: {outputPath}");
+            Console.WriteLine("Workbook exported to ConditionalFormatting.html with overlapping conditional formats.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,59 +1,53 @@
-// Title: C# – Log Each Worksheet’s Automatic Paper Size with Aspose.Cells
-// Description: Loads an Excel workbook using Aspose.Cells for .NET, iterates through all worksheets, reads the PageSetup.IsAutomaticPaperSize flag, and writes the sheet name, index and status to the console while handling missing files and runtime exceptions.
-// Keywords: Aspose.Cells | C# workbook load | PageSetup.IsAutomaticPaperSize | worksheet automatic paper size | log worksheet page setup | iterate worksheets Aspose | Excel printing settings | console output C#
-// Common Searches: Aspose.Cells read automatic paper size | C# get worksheet page setup properties | check IsAutomaticPaperSize for all sheets | log Excel sheet paper size using Aspose | print configuration audit Aspose.Cells
-// Developer Intent: Load an existing Excel file and display whether each worksheet has the automatic paper‑size option enabled.
-// Use Cases: Audit printing configuration before batch printing by confirming automatic paper size for every sheet. | Generate a compliance report of page‑setup flags across all worksheets. | Debug inconsistent page sizes in multi‑sheet workbooks. | Trigger conditional modifications to page setup based on the automatic‑size flag.
-// AI Prompts: Write a method that disables PageSetup.IsAutomaticPaperSize for all worksheets in a loaded workbook using Aspose.Cells. | Show how to export the worksheet name, index, and automatic paper size flag to a CSV file instead of the console. | Provide enhanced error handling for workbook loading that distinguishes file‑not‑found, unsupported format, and permission‑denied scenarios.
+// Title: Load an Excel workbook with Aspose.Cells for .NET and log each worksheet’s paper size setting
+// AI Prompts: Write C# code that opens a given .xlsx file using Aspose.Cells, iterates through all worksheets, and prints each worksheet’s name together with its PageSetup.PaperSize value. | Show how to add error handling for missing files and workbook‑load failures while retrieving and logging the paper size of every worksheet in a console application.
+// Common Searches: Aspose.Cells C# get worksheet paper size setting from an Excel workbook | Enumerate worksheets and display their paper size values using Aspose.Cells .NET | Console application to list each sheet’s name and paper size with Aspose.Cells | Detect automatic paper size for worksheets when loading an .xlsx file with Aspose.Cells
+// Tags: Aspose.Cells load workbook and read worksheet page setup | C# retrieve worksheet PaperSize using Aspose.Cells | enumerate worksheets and log paper size Aspose.Cells | handle missing Excel file Aspose.Cells .NET | error handling workbook loading Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The program checks that 'input.xlsx' exists, loads it with Aspose.Cells, iterates through every worksheet, reads the PageSetup.PaperSize property, and writes each worksheet name and its paper size to the console, with robust error handling for missing files and load failures.
+class Program
 {
-    // Loads an Excel workbook using Aspose.Cells for .NET, iterates through all worksheets, reads the PageSetup.IsAutomaticPaperSize flag, and writes the sheet name, index and status to the console while handling missing files and runtime exceptions.
-    public class AutomaticPaperSizeLogger
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the input workbook
-            string filePath = "input.xlsx";
+            Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+            return;
+        }
 
-            // Verify that the file exists before attempting to load it
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Error: The file '{filePath}' was not found.");
-                return;
-            }
+        Workbook workbook;
+        try
+        {
+            // Load the Excel workbook from the specified file
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-            try
+        try
+        {
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the workbook from the specified file
-                Workbook workbook = new Workbook(filePath);
+                // Retrieve the paper size setting for the worksheet
+                PaperSizeType paperSize = sheet.PageSetup.PaperSize;
 
-                // Iterate through each worksheet and log its automatic paper size status
-                for (int i = 0; i < workbook.Worksheets.Count; i++)
-                {
-                    Worksheet sheet = workbook.Worksheets[i];
-                    bool isAutomatic = sheet.PageSetup.IsAutomaticPaperSize;
-                    Console.WriteLine($"Worksheet '{sheet.Name}' (Index {i}) - Automatic Paper Size: {isAutomatic}");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors during processing
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Log the worksheet name and its paper size
+                Console.WriteLine($"Worksheet '{sheet.Name}': Paper Size = {paperSize}");
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            AutomaticPaperSizeLogger.Run();
+            Console.WriteLine($"Runtime error: {ex.Message}");
         }
     }
 }

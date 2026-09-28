@@ -1,71 +1,42 @@
-// Title: Load workbook with LoadOptions.FilterVbaProject to skip unsigned VBA macros (Aspose.Cells .NET)
-// Description: Demonstrates how to import an .xlsm file using Aspose.Cells, detect whether its VBA project is signed, automatically remove unsigned macros, and save the result as a macro‑free .xlsx.
-// Keywords: Aspose.Cells LoadOptions.FilterVbaProject | remove unsigned VBA macros C# | Workbook.HasMacro check | VbaProject.IsSigned | convert .xlsm to .xlsx without macros | secure Excel import Aspose | macro stripping Aspose.Cells
-// Common Searches: Aspose.Cells ignore unsigned macros on load | How to filter VBA project when loading workbook in .NET | Remove unsigned macros automatically Aspose | LoadOptions.FilterVbaProject example C# | Securely import macro‑enabled Excel files Aspose
-// Developer Intent: Import an Excel workbook while automatically discarding any unsigned VBA macros for security or conversion purposes.
-// Use Cases: Sanitize user‑uploaded .xlsm files before processing to prevent execution of unsigned code. | Batch‑convert macro‑enabled workbooks to .xlsx, preserving only signed macros. | Create a secure ETL pipeline that strips unsigned VBA projects during data ingestion.
-// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions.FilterVbaProject to load a workbook and exclude unsigned VBA projects. | Show how to check workbook.VbaProject.IsSigned and call workbook.RemoveMacro() when the project is not signed. | Provide an Aspose.Cells example that automatically ignores unsigned macros on import and saves the file as .xlsx.
+// Title: Convert an XLSM file to XLSX and strip VBA macros with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that verifies an .xlsm file exists, loads it with Aspose.Cells, and saves it as .xlsx to remove all VBA macros. | Show how to use Aspose.Cells Workbook.Save to export a macro‑enabled Excel workbook to a macro‑free XLSX format with proper exception handling. | Provide an example that loads an XLSM workbook, checks for errors, and converts it to XLSX while ensuring macros are discarded.
+// Common Searches: Aspose.Cells C# convert macro enabled xlsm to xlsx without preserving VBA | How to remove VBA macros when saving an Excel workbook as XLSX using Aspose.Cells | C# code to load an .xlsm file and export to .xlsx stripping all macros Aspose.Cells | Save workbook as XLSX to discard macros Aspose.Cells .NET example
+// Tags: convert xlsm to xlsx Aspose.Cells C# | remove VBA macros Aspose.Cells Workbook.Save | load macro enabled workbook Aspose.Cells | error handling file existence Aspose.Cells | macro‑free Excel export Aspose.Cells .NET
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsMacroFilterDemo
+// The sample checks that the input XLSM file exists, loads it with Aspose.Cells Workbook, and saves it as an XLSX file, which automatically removes any VBA macros, while handling possible exceptions.
+class Program
 {
-    // Demonstrates how to import an .xlsm file using Aspose.Cells, detect whether its VBA project is signed, automatically remove unsigned macros, and save the result as a macro‑free .xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsm";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Path to the source workbook (may contain signed or unsigned macros)
-            string sourcePath = "input_with_macros.xlsm";
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Error: The file '{sourcePath}' was not found.");
-                return;
-            }
+        try
+        {
+            // Load the workbook; saving as Xlsx will automatically discard VBA macros
+            Workbook workbook = new Workbook(inputPath);
 
-            try
-            {
-                // Prepare load options (no custom filter needed for default behavior)
-                LoadOptions loadOptions = new LoadOptions();
+            // Place for any additional workbook processing logic
 
-                // Load the workbook using the load options
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-                // Check if the workbook contains any VBA project
-                if (workbook.HasMacro)
-                {
-                    // Determine whether the VBA project is signed
-                    bool isSigned = workbook.VbaProject.IsSigned;
-
-                    // If the VBA project is not signed, remove all macros
-                    if (!isSigned)
-                    {
-                        workbook.RemoveMacro();
-                        Console.WriteLine("Unsigned macros were removed during import.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Workbook contains a signed VBA project; macros are retained.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Workbook does not contain any macros.");
-                }
-
-                // Save the resulting workbook (macro‑free if unsigned macros were removed)
-                string outputPath = "output_without_unsigned_macros.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook without macros
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime exceptions (e.g., loading/saving errors)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

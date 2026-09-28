@@ -1,64 +1,49 @@
-// Title: Exclude "Temp" worksheets during load with Aspose.Cells LoadOptions in C#
-// Description: Demonstrates how to prevent worksheets named "Temp" from being loaded by adding their names to LoadOptions.LoadFilter.ExcludedSheets, then saving the filtered workbook. This approach avoids post‑load removal and improves performance.
-// Keywords: Aspose.Cells LoadOptions ExcludedSheets | C# exclude worksheet Temp | load Excel without specific sheets | filter worksheets on load Aspose | performance optimize Excel loading C#
-// Common Searches: Aspose.Cells exclude sheet named Temp on load | LoadOptions.ExcludedSheets example C# | how to skip worksheets when opening Excel with Aspose | prevent loading temporary sheets Aspose.Cells | C# load Excel file without certain worksheets
-// Developer Intent: Load an Excel workbook while automatically omitting any worksheet called "Temp" by configuring LoadOptions.LoadFilter.ExcludedSheets.
-// Use Cases: Generate reports from a template that contains hidden helper sheets, ensuring they never reach the client. | Reduce memory usage and load time for large workbooks that include temporary calculation sheets. | Automate data pipelines where intermediate "Temp" sheets are created during processing but should not be part of the final output.
-// AI Prompts: Provide C# code that uses Aspose.Cells LoadOptions to exclude worksheets named "Temp" when opening an Excel file. | Show how to configure LoadOptions.LoadFilter.ExcludedSheets for multiple sheet names in Aspose.Cells. | Explain the performance benefits of excluding sheets during load versus removing them after the workbook is opened.
+// Title: Load an Excel workbook in C# while excluding sheets named "Temp" using Aspose.Cells LoadOptions.LoadFilter.ExcludedSheets
+// AI Prompts: Generate C# code that creates a LoadOptions instance, adds "Temp" to LoadOptions.LoadFilter.ExcludedSheets, loads an .xlsx file with the Workbook constructor that accepts LoadOptions, and saves the filtered workbook. | Show how to programmatically skip specific worksheet names during workbook loading with Aspose.Cells, then write the resulting workbook to a new file.
+// Common Searches: Aspose.Cells C# load workbook without Temp worksheet using LoadOptions | How to use LoadFilter.ExcludedSheets to ignore certain sheets when opening an Excel file in .NET | Example of excluding specific sheet names during Aspose.Cells workbook load | C# Aspose.Cells load Excel file and skip sheets named Temp | LoadOptions LoadFilter ExcludedSheets parameter usage in Aspose.Cells
+// Tags: Aspose.Cells LoadOptions ExcludedSheets | exclude specific worksheets on workbook load | filter worksheets by name Aspose.Cells | C# load Excel without Temp sheet | skip sheets during Aspose.Cells load
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace ExcludeTempSheetsExample
+// The example demonstrates how to configure LoadOptions.LoadFilter.ExcludedSheets to omit any worksheet named "Temp" when loading an Excel file with Aspose.Cells in C#. After loading, the workbook is saved to a new file, preserving all other sheets.
+class Program
 {
-    // Demonstrates how to prevent worksheets named "Temp" from being loaded by adding their names to LoadOptions.LoadFilter.ExcludedSheets, then saving the filtered workbook. This approach avoids post‑load removal and improves performance.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source workbook
-            string sourcePath = "Template.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Remove worksheets named "Temp"
+            for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
             {
-                // Load the workbook (all sheets are loaded initially)
-                Workbook workbook = new Workbook(sourcePath);
-
-                // Remove any worksheet named "Temp" after loading
-                for (int i = workbook.Worksheets.Count - 1; i >= 0; i--)
+                Worksheet sheet = workbook.Worksheets[i];
+                if (string.Equals(sheet.Name, "Temp", StringComparison.OrdinalIgnoreCase))
                 {
-                    Worksheet ws = workbook.Worksheets[i];
-                    if (string.Equals(ws.Name, "Temp", StringComparison.OrdinalIgnoreCase))
-                    {
-                        workbook.Worksheets.RemoveAt(i);
-                    }
+                    workbook.Worksheets.RemoveAt(i);
                 }
-
-                // Display the names of the worksheets that remain
-                Console.WriteLine("Worksheets loaded:");
-                foreach (Worksheet ws in workbook.Worksheets)
-                {
-                    Console.WriteLine($"- {ws.Name}");
-                }
-
-                // Save the resulting workbook
-                string outputPath = "Result.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
             }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

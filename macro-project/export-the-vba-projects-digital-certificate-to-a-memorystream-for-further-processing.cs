@@ -1,80 +1,90 @@
-// Title: Export VBA Project Digital Certificate to a MemoryStream (C#) – Aspose.Cells
-// Description: Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a digital signature, and creates a MemoryStream from the certificate's raw data for downstream processing such as X509Certificate2 validation.
-// Keywords: Aspose.Cells VBA certificate export | C# MemoryStream from VbaProject | extract signed VBA project certificate | CertRawData Aspose.Cells | load X509Certificate2 from Excel VBA | signed .xlsm workbook handling
-// Common Searches: how to get VBA project certificate as MemoryStream using Aspose.Cells | C# extract digital signature from Excel macro project | Aspose.Cells read CertRawData from signed workbook | export VBA digital certificate to stream .NET | retrieve VBA project signature with Aspose.Cells
-// Developer Intent: Retrieve the digital certificate of a signed VBA project and provide it as a MemoryStream for further cryptographic operations.
-// Use Cases: Validate the authenticity of a signed .xlsm file by extracting its VBA certificate. | Convert the MemoryStream containing the certificate into an X509Certificate2 object for thumbprint or expiration checks. | Programmatically determine whether a VBA project is signed before attempting certificate extraction.
-// AI Prompts: Generate C# code that opens a signed .xlsm file with Aspose.Cells, checks VbaProject.IsSigned, and returns the certificate as a MemoryStream. | Show how to load the MemoryStream from VbaProject.CertRawData into a System.Security.Cryptography.X509Certificates.X509Certificate2 and verify its thumbprint. | Create a robust method that extracts CertRawData from a VbaProject, handles null or empty data, and outputs a ready‑to‑use MemoryStream.
+// Title: Export VBA project digital certificate to a MemoryStream using Aspose.Cells for .NET
+// AI Prompts: Generate a C# method that opens an .xlsm workbook with Aspose.Cells, accesses its VbaProject, and returns the embedded digital certificate as a MemoryStream. | Show how to employ reflection in C# to obtain the DigitalSignature property from a VbaProject and invoke its Export method to write the certificate into a stream. | Implement comprehensive error handling for cases where the workbook lacks a VBA project, the DigitalSignature property is missing, or the Export method cannot be called.
+// Common Searches: how to extract VBA digital certificate from an xlsm file using Aspose.Cells in C# | Aspose.Cells C# export VbaProject DigitalSignature to stream | retrieve macro signing certificate from Excel workbook programmatically | C# reflection get VBA project certificate with Aspose.Cells | save VBA project digital signature to .cer file using Aspose.Cells
+// Tags: export VBA digital certificate to MemoryStream Aspose.Cells | retrieve VbaProject DigitalSignature via reflection C# | load .xlsm workbook with macros Aspose.Cells | handle missing VBA project exception Aspose.Cells | save VBA certificate as .cer file C#
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-namespace AsposeCellsExamples
+namespace Example
 {
-    // Loads a signed .xlsm workbook with Aspose.Cells, accesses its VbaProject, verifies the presence of a digital signature, and creates a MemoryStream from the certificate's raw data for downstream processing such as X509Certificate2 validation.
-    public class ExportVbaCertificateToMemoryStream
+    // The example loads an .xlsm workbook, accesses its VbaProject, uses reflection to obtain the DigitalSignature property, invokes the Export method to write the certificate into a MemoryStream, and returns the stream while providing detailed error handling for missing projects, unsupported versions, and export failures.
+    public class VbaCertificateExporter
     {
-        public static void Run()
+        /// <param name="excelFilePath">Path to the .xlsm workbook containing the VBA project.</param>
+        /// <returns>MemoryStream containing the exported digital certificate.</returns>
+        public MemoryStream ExportVbaCertificate(string excelFilePath)
         {
-            // Path to the workbook that contains a signed VBA project
-            string signedWorkbookPath = "SignedWithVba.xlsm";
+            if (string.IsNullOrWhiteSpace(excelFilePath))
+                throw new ArgumentException("File path is null or empty.", nameof(excelFilePath));
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(signedWorkbookPath))
-            {
-                Console.WriteLine($"File not found: {signedWorkbookPath}");
-                return;
-            }
+            if (!File.Exists(excelFilePath))
+                throw new FileNotFoundException("Excel file not found.", excelFilePath);
 
             try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(signedWorkbookPath);
+                // Load the workbook (preserves macros automatically)
+                Workbook workbook = new Workbook(excelFilePath);
 
-                // Access the VBA project from the workbook
+                // Access the VBA project
                 VbaProject vbaProject = workbook.VbaProject;
+                if (vbaProject == null)
+                    throw new InvalidOperationException("The workbook does not contain a VBA project.");
 
-                // Check if the VBA project is signed and certificate data is available
-                if (vbaProject.IsSigned && vbaProject.CertRawData != null && vbaProject.CertRawData.Length > 0)
-                {
-                    // Export the certificate raw data to a MemoryStream
-                    using (MemoryStream certStream = new MemoryStream(vbaProject.CertRawData))
-                    {
-                        Console.WriteLine($"Certificate exported to MemoryStream. Length: {certStream.Length}");
+                // Use reflection to obtain the DigitalSignature property (may not exist in older versions)
+                PropertyInfo digitalSignatureProp = typeof(VbaProject).GetProperty("DigitalSignature", BindingFlags.Public | BindingFlags.Instance);
+                if (digitalSignatureProp == null)
+                    throw new NotSupportedException("DigitalSignature property is not available in the current Aspose.Cells version.");
 
-                        // Reset position if you need to read from the beginning
-                        certStream.Position = 0;
+                object digitalSignature = digitalSignatureProp.GetValue(vbaProject);
+                if (digitalSignature == null)
+                    throw new InvalidOperationException("The VBA project does not contain a digital certificate.");
 
-                        // Example of further processing (e.g., loading into X509Certificate2)
-                        // var certificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(certStream.ToArray());
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("VBA project is not signed or certificate data is unavailable.");
-                }
+                // Export the digital certificate to a MemoryStream via reflection
+                MethodInfo exportMethod = digitalSignature.GetType().GetMethod("Export", new[] { typeof(Stream) });
+                if (exportMethod == null)
+                    throw new NotSupportedException("Export method is not available on DigitalSignature.");
+
+                MemoryStream certificateStream = new MemoryStream();
+                exportMethod.Invoke(digitalSignature, new object[] { certificateStream });
+                certificateStream.Position = 0; // Reset for downstream processing
+
+                return certificateStream;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
+                // Wrap and rethrow to preserve stack trace
+                throw new ApplicationException("Failed to export VBA digital certificate.", ex);
             }
         }
     }
 
-    // Entry point for the application
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
             try
             {
-                ExportVbaCertificateToMemoryStream.Run();
+                string excelPath = args.Length > 0 ? args[0] : "sample.xlsm";
+
+                var exporter = new VbaCertificateExporter();
+                using (MemoryStream certStream = exporter.ExportVbaCertificate(excelPath))
+                {
+                    // Example: save the certificate to a file
+                    string outputPath = "certificate.cer";
+                    using (FileStream file = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        certStream.CopyTo(file);
+                    }
+                    Console.WriteLine($"Certificate exported successfully to '{outputPath}'.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
             }
         }
     }

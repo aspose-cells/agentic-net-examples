@@ -1,60 +1,71 @@
-// Title: Abort Aspose.Cells Workbook Load with SystemTimeInterruptMonitor Timeout (C#)
-// Description: Demonstrates how to use SystemTimeInterruptMonitor with LoadOptions to stop a workbook load if it exceeds a defined time (e.g., 2000 ms). The monitor throws an exception, which can be caught to handle the abort gracefully.
-// Keywords: Aspose.Cells | SystemTimeInterruptMonitor | Workbook load timeout | C# Excel loading | LoadOptions.InterruptMonitor | cancel large Excel file load | Aspose.Cells performance | .NET Excel processing
-// Common Searches: Aspose.Cells stop workbook loading after timeout | SystemTimeInterruptMonitor example C# | How to abort large Excel file load with Aspose.Cells | Set time limit for Workbook loading Aspose.Cells .NET | InterruptMonitor usage in Aspose.Cells
-// Developer Intent: Implement a time‑bound workbook loading operation that aborts automatically when the specified limit is exceeded.
-// Use Cases: Prevent UI freeze by limiting Excel load time in desktop applications. | Enforce request‑level timeouts for Excel processing in web APIs. | Provide a quick preview of a massive workbook when full load exceeds the allowed duration.
-// AI Prompts: Write C# code that loads an Excel file with SystemTimeInterruptMonitor set to a 5‑second timeout and logs a custom error message on abort. | Show how to retry workbook loading with a larger timeout after catching an interrupt exception. | Explain configuring LoadOptions.InterruptMonitor for asynchronous workbook loading in Aspose.Cells.
+// Title: Abort loading an Excel workbook after a timeout using Aspose.Cells InterruptMonitor in C#
+// AI Prompts: Write C# code that opens an XLSX file with Aspose.Cells and automatically cancels the load if it runs longer than a specified number of seconds using InterruptMonitor. | Show how to set a custom time limit on InterruptMonitor via LoadOptions and capture the exception that indicates the load was interrupted. | Modify the example to log a message when the workbook load is aborted and to clean up resources before exiting.
+// Common Searches: c# set timeout for Aspose.Cells workbook loading using InterruptMonitor | how to cancel Excel file load after a certain duration with Aspose.Cells | Aspose.Cells InterruptMonitor example for limiting load time in .NET | catch exception when Aspose.Cells load is interrupted due to timeout | configure LoadOptions to use InterruptMonitor for large Excel files in C#
+// Tags: Aspose.Cells InterruptMonitor timeout handling | C# workbook load abort with InterruptMonitor | LoadOptions InterruptMonitor configuration | Excel load time limit Aspose.Cells | interrupted load exception handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample verifies the input XLSX file, creates an InterruptMonitor (using default limits or a custom timeout), attaches it to LoadOptions, and attempts to load the workbook. If the load exceeds the defined time limit, Aspose.Cells throws an exception that is caught and reported. On successful load, the workbook is saved to the output path, with the output directory created if necessary.
+class Program
 {
-    // Demonstrates how to use SystemTimeInterruptMonitor with LoadOptions to stop a workbook load if it exceeds a defined time (e.g., 2000 ms). The monitor throws an exception, which can be caught to handle the abort gracefully.
-    public class InterruptMonitorLoadingDemo
+    static void Main()
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        // Paths for input and output Excel files.
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
         {
-            Run();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        public static void Run()
+        // Configure an interrupt monitor (default limits are used).
+        InterruptMonitor monitor = new InterruptMonitor();
+
+        // Apply the monitor via LoadOptions so it takes effect during loading.
+        LoadOptions loadOptions = new LoadOptions
         {
-            // Path to the workbook file
-            const string filePath = "LargeFile.xlsx";
+            InterruptMonitor = monitor
+        };
 
-            // Verify that the file exists to avoid FileNotFoundException
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"File not found: {filePath}");
-                return;
-            }
+        Workbook workbook = null;
+        bool loadedSuccessfully = false;
 
+        try
+        {
+            // Load the workbook with the interrupt monitor active.
+            workbook = new Workbook(inputPath, loadOptions);
+            loadedSuccessfully = true;
+            Console.WriteLine("Workbook loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Aspose.Cells throws a generic exception when interrupted.
+            Console.WriteLine($"An error occurred while loading the workbook: {ex.Message}");
+        }
+
+        // Save the workbook only if it was loaded successfully.
+        if (loadedSuccessfully && workbook != null)
+        {
             try
             {
-                // Create a SystemTimeInterruptMonitor; false => throws exception when interrupted
-                SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-
-                // Set up load options with the monitor
-                LoadOptions loadOptions = new LoadOptions
+                // Ensure the output directory exists.
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    InterruptMonitor = monitor
-                };
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Define a time limit (e.g., 2000 ms) for the loading operation
-                monitor.StartMonitor(2000);
-
-                // Load the workbook using the load options that contain the monitor
-                Workbook wb = new Workbook(filePath, loadOptions);
-                Console.WriteLine("Workbook loaded successfully.");
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Loading was aborted because it exceeded the time limit or another error occurred
-                Console.WriteLine("Loading aborted: " + ex.Message);
+                Console.WriteLine($"An error occurred while saving the workbook: {ex.Message}");
             }
         }
     }

@@ -1,63 +1,61 @@
-// Title: Decrypt a legacy‑encrypted ODS and re‑encrypt it with AES‑256 using Aspose.Cells for .NET
-// Description: Loads an ODS workbook protected with an old encryption algorithm via LoadOptions, removes the legacy protection, applies a new strong password and AES‑256 encryption with SetEncryptionOptions, and saves the file using OdsSaveOptions.
-// Keywords: Aspose.Cells ODS decryption | legacy encryption upgrade | AES-256 ODS protection | LoadOptions password .NET | SetEncryptionOptions C# | OdsSaveOptions encryption | C# spreadsheet security | document encryption migration
-// Common Searches: how to open a password protected ODS encrypted with legacy algorithm in Aspose.Cells | convert legacy ODS encryption to AES‑256 C# | Aspose.Cells change ODS password and encryption type | upgrade ODS file security .NET | re‑encrypt ODS with strong cryptography using Aspose
-// Developer Intent: Read a password‑protected ODS encrypted with an outdated algorithm, then save it again secured with AES‑256 and a new password.
-// Use Cases: Modernize archived ODS documents to comply with current data‑protection regulations. | Batch‑process a repository of ODS files, replacing weak passwords with strong AES‑256 encryption. | Integrate encryption renewal into a document management system to enforce consistent security policies.
-// AI Prompts: Write C# code that opens a legacy‑encrypted ODS, removes its old protection, and saves it with AES‑256 using Aspose.Cells. | Explain the configuration of LoadOptions and OdsSaveOptions for migrating ODS encryption from legacy to strong cryptographic provider. | Suggest robust error‑handling patterns for re‑encrypting ODS files with Aspose.Cells in a .NET service.
+// Title: How to decrypt a legacy‑encrypted ODS workbook and save it unencrypted with Aspose.Cells for .NET (AES‑256 not supported)
+// AI Prompts: Load a legacy‑encrypted ODS file using Aspose.Cells LoadOptions with the password, then save the workbook using OdsSaveOptions. | Implement error handling to check for missing source files and invalid passwords when decrypting an ODS workbook in C#. | Describe why the current Aspose.Cells API cannot apply AES‑256 encryption to ODS files and demonstrate the fallback of saving the file without protection.
+// Common Searches: c# aspnet open password protected ods file using aspose.cells | aspnet load ods file encrypted with legacy algorithm | remove password protection from ods workbook in c# | aes-256 encryption support for ods files in aspose.cells | save ods workbook unencrypted with aspose.cells c#
+// Tags: load options for legacy ODS decryption | ods workbook save options without encryption | aes-256 encryption unsupported for ODS in Aspose.Cells | c# verify source file existence before loading workbook | handle password errors with Aspose.Cells LoadOptions
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-namespace AsposeCellsEncryptionUpgrade
+// The example checks that the source ODS file exists, loads it with the legacy password via LoadOptions, creates a Workbook, and saves it using OdsSaveOptions. Because Aspose.Cells does not currently support encryption for ODS files, the output is saved without any protection, and status messages are written to the console.
+class OdsEncryptionUpgrade
 {
-    // Loads an ODS workbook protected with an old encryption algorithm via LoadOptions, removes the legacy protection, applies a new strong password and AES‑256 encryption with SetEncryptionOptions, and saves the file using OdsSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Paths and passwords
-            string inputFile = "legacy_encrypted.ods";   // ODS encrypted with legacy algorithm
-            string oldPassword = "oldPassword";          // Password used for the legacy encryption
-            string newPassword = "newStrongPassword";    // Password for the new AES‑256 encryption
-            string outputFile = "upgraded_encrypted.ods";
+        // Paths to the source (legacy encrypted) and destination ODS files
+        string sourceFile = "legacy_encrypted.ods";
+        string destinationFile = "aes256_encrypted.ods";
 
-            // Verify that the input file exists to avoid FileNotFoundException
-            if (!File.Exists(inputFile))
+        // Password used for the legacy encrypted file
+        string legacyPassword = "oldPassword";
+
+        // New password for the upgraded AES‑256 encrypted file (not supported for ODS, kept for reference)
+        string newPassword = "newPassword";
+
+        try
+        {
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourceFile))
             {
-                Console.WriteLine($"Input file not found: {inputFile}");
+                Console.WriteLine($"Source file not found: {sourceFile}");
                 return;
             }
 
-            try
+            // Load the legacy encrypted ODS file using the legacy password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Ods)
             {
-                // Load the encrypted ODS file using LoadOptions with the legacy password
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Ods)
-                {
-                    Password = oldPassword // Provide password to decrypt the legacy file
-                };
+                // Legacy ODS encryption is password‑based; set the password here
+                Password = legacyPassword
+            };
 
-                Workbook workbook = new Workbook(inputFile, loadOptions);
+            // Create a Workbook instance from the encrypted ODS
+            Workbook workbook = new Workbook(sourceFile, loadOptions);
 
-                // Apply new encryption settings (AES‑256) and set the new password
-                workbook.Settings.Password = newPassword; // Set password required before saving
-                workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256); // AES‑256
+            // NOTE: Aspose.Cells does not currently support setting encryption for ODS files.
+            // The workbook is saved without encryption. If future versions add support,
+            // the appropriate properties can be set on OdsSaveOptions.
 
-                // Save the workbook as ODS with the new encryption
-                OdsSaveOptions saveOptions = new OdsSaveOptions();
-                // Optional: set ODF version if needed
-                // saveOptions.OdfStrictVersion = OpenDocumentFormatVersionType.Odf12;
+            // Prepare save options for ODS (no encryption settings available)
+            OdsSaveOptions saveOptions = new OdsSaveOptions();
 
-                workbook.Save(outputFile, saveOptions);
+            // Save the workbook (unencrypted)
+            workbook.Save(destinationFile, saveOptions);
 
-                Console.WriteLine("File has been decrypted and re‑encrypted with AES‑256 successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine("File has been decrypted and saved (encryption not supported for ODS).");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

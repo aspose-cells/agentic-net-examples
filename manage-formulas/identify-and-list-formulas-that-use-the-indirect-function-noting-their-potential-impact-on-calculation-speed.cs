@@ -1,68 +1,77 @@
-// Title: C# – Scan Excel workbook for INDIRECT formulas and evaluate performance with Aspose.Cells
-// Description: Loads an Excel file, enables the calculation chain, runs an initial calculation, then walks every used cell in each worksheet. Formulas containing the volatile INDIRECT function are collected, displayed with sheet name and address, and a note explains how INDIRECT forces full recalculations that can degrade speed in large workbooks.
-// Keywords: Aspose.Cells INDIRECT scan C# | detect volatile Excel functions .NET | list INDIRECT formulas programmatically | Excel calculation performance INDIRECT | C# workbook formula analysis
-// Common Searches: How to find INDIRECT formulas using Aspose.Cells | Identify volatile functions in a .NET Excel workbook | Performance impact of INDIRECT in large spreadsheets | C# code to list cells with INDIRECT
-// Developer Intent: Locate every formula that uses INDIRECT and understand its effect on workbook recalculation speed.
-// Use Cases: Create an audit report of all INDIRECT formulas before optimizing a workbook. | Prioritize refactoring of volatile functions to improve calculation time in enterprise spreadsheets. | Export cells with INDIRECT to a CSV for review by business analysts.
-// AI Prompts: Generate C# Aspose.Cells code that extracts all INDIRECT formulas and writes them to a CSV file. | Explain how disabling the calculation chain influences scanning speed for volatile functions in Aspose.Cells. | Suggest alternatives to INDIRECT for faster recalculation in large Excel workbooks.
+// Title: Detect and list all INDIRECT formulas in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that opens a workbook, scans every worksheet, and returns a collection of cell addresses and formulas where the formula contains the INDIRECT function. | Create a method in C# that groups found INDIRECT formulas by worksheet and prints the count of such formulas per sheet. | Generate a reusable utility that identifies any volatile functions (e.g., INDIRECT, OFFSET) in an Excel file and outputs their locations and formulas.
+// Common Searches: aspocells c# find cells with INDIRECT function in excel | how to list volatile formulas like INDIRECT using Aspose.Cells .NET | detect performance‑heavy INDIRECT formulas in large Excel workbooks programmatically | C# scan workbook for indirect references and get cell addresses | Aspose.Cells example to enumerate formulas containing INDIRECT
+// Tags: Aspose.Cells enumerate INDIRECT formulas | C# detect volatile Excel functions | identify indirect references in Excel via .NET | optimize workbook performance by reducing volatile formulas | list cells containing INDIRECT using Aspose.Cells
 
 using System;
-using Aspose.Cells;
 using System.Collections.Generic;
+using System.IO;
+using Aspose.Cells;
 
-// Loads an Excel file, enables the calculation chain, runs an initial calculation, then walks every used cell in each worksheet. Formulas containing the volatile INDIRECT function are collected, displayed with sheet name and address, and a note explains how INDIRECT forces full recalculations that can degrade speed in large workbooks.
-class IndirectFormulaScanner
+namespace AsposeCellsIndirectFinder
 {
-    static void Main()
+    // The example loads an Excel file with Aspose.Cells, iterates through each worksheet's used range, captures the sheet name, cell address, and formula for any cell whose formula includes the INDIRECT function, stores these details, and prints them while noting that INDIRECT is a volatile function that can degrade calculation speed in large workbooks.
+    class Program
     {
-        // Load an existing workbook (replace the path with your file)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Enable calculation chain to improve subsequent dependent queries (optional)
-        workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-
-        // Perform an initial calculation so that all formulas are parsed
-        workbook.CalculateFormula();
-
-        // Collect formulas that contain the INDIRECT function
-        List<string> indirectFormulas = new List<string>();
-
-        // Iterate through every worksheet and its used cells
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            Cells cells = sheet.Cells;
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+            // Path to the Excel file to be analyzed
+            string inputFile = "input.xlsx";
 
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"Error: File not found - {inputFile}");
+                return;
+            }
+
+            try
+            {
+                // Load the workbook using Aspose.Cells
+                Workbook workbook = new Workbook(inputFile);
+
+                // List to hold information about cells using INDIRECT
+                List<string> indirectFormulas = new List<string>();
+
+                // Iterate through all worksheets
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.IsFormula)
+                    // Get the used range of the worksheet
+                    Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+                    // Iterate through each cell in the used range
+                    foreach (Cell cell in usedRange)
                     {
-                        string formula = cell.Formula;
-                        if (!string.IsNullOrEmpty(formula) &&
-                            formula.IndexOf("INDIRECT", StringComparison.OrdinalIgnoreCase) >= 0)
+                        // Check if the cell contains a formula
+                        if (!string.IsNullOrEmpty(cell.Formula))
                         {
-                            indirectFormulas.Add($"{sheet.Name}!{cell.Name}: {formula}");
+                            // Identify formulas that use the INDIRECT function (case‑insensitive)
+                            if (cell.Formula.IndexOf("INDIRECT", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                // Record the cell address, sheet name, and formula
+                                string info = $"Sheet: {sheet.Name}, Cell: {cell.Name}, Formula: {cell.Formula}";
+                                indirectFormulas.Add(info);
+                            }
                         }
                     }
                 }
+
+                // Output the results
+                Console.WriteLine("Formulas using INDIRECT function:");
+                foreach (string entry in indirectFormulas)
+                {
+                    Console.WriteLine(entry);
+                }
+
+                // Note on performance impact:
+                // The INDIRECT function is volatile; it forces Excel to recalculate the formula
+                // whenever any cell changes, which can significantly degrade calculation speed
+                // in large workbooks. Identifying and minimizing its use can improve performance.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Output the list of INDIRECT formulas
-        Console.WriteLine("Formulas using INDIRECT:");
-        foreach (string entry in indirectFormulas)
-        {
-            Console.WriteLine(entry);
-        }
-
-        // Explain the performance impact of INDIRECT
-        Console.WriteLine("\nPerformance note: INDIRECT is a volatile function. Any change in the workbook forces a full recalculation, which can significantly slow down calculation on large workbooks.");
-
-        // Save the workbook (no changes made, but required by lifecycle rules)
-        workbook.Save("output.xlsx");
     }
 }

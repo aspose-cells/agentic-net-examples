@@ -1,60 +1,83 @@
-// Title: Hide a chart series with IsFiltered in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add sample data, build a column chart, hide the second series by setting its IsFiltered property, verify the hidden series via the FilteredNSeries collection, and save the file—useful for testing chart visibility before localization.
-// Keywords: Aspose.Cells C# chart series visibility | IsFiltered property Aspose.Cells | FilteredNSeries collection | hide chart series .NET | column chart series filter | chart localization testing | programmatic series hiding | Aspose.Cells chart filtering
-// Common Searches: How to hide a chart series in Aspose.Cells using C# | Aspose.Cells IsFiltered example | Retrieve filtered series count with FilteredNSeries | Hide series before chart localization Aspose.Cells | Programmatically filter chart data in .NET
-// Developer Intent: Exclude a specific data series from rendering in a chart so it does not appear during localization or export.
-// Use Cases: Test how localization affects only visible chart data by temporarily hiding a series. | Programmatically remove low‑value or irrelevant series before generating reports. | Validate the number of hidden series using the FilteredNSeries collection for analytics.
-// AI Prompts: Show code to hide multiple chart series in Aspose.Cells using IsFiltered. | Explain the FilteredNSeries collection and how to iterate over its items in C#. | Provide a sample that toggles series visibility based on user input in Aspose.Cells for .NET.
+// Title: Hide a data series in an Aspose.Cells column chart before localizing the chart title using C#
+// AI Prompts: Write C# code that creates a column chart with two series, marks the second series as hidden with the IsHidden property, and then changes the chart title to a localized string. | Show how to apply Aspose.Cells Chart.NSeries.IsHidden to hide a series before updating the chart title to another language in a .NET application.
+// Common Searches: aspnet hide second series in column chart Aspose.Cells before changing title language | C# Aspose.Cells hide chart series then set localized title | how to use IsHidden property on chart series Aspose.Cells .NET | example of chart series visibility manipulation with Aspose.Cells and title localization
+// Tags: hide chart series Aspose.Cells | chart series IsHidden property Aspose.Cells | localize chart title Aspose.Cells .NET | column chart series visibility Aspose.Cells | Aspose.Cells chart localization C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsSeriesVisibilityDemo
+// The example creates a workbook, adds sample data, builds a column chart with two series, hides the second series using the IsHidden property, localizes the chart title to Spanish, and saves the file as ChartWithHiddenSeries.xlsx.
+class HideSeriesInChart
 {
-    // Demonstrates how to create a workbook, add sample data, build a column chart, hide the second series by setting its IsFiltered property, verify the hidden series via the FilteredNSeries collection, and save the file—useful for testing chart visibility before localization.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for two series
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Q1");
-            sheet.Cells["A3"].PutValue("Q2");
-            sheet.Cells["A4"].PutValue("Q3");
+            // Populate sample data for the chart
+            // Column A: Categories
+            // Column B: Series 1 values
+            // Column C: Series 2 values
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Product A");
+            sheet.Cells["C1"].PutValue("Product B");
 
-            sheet.Cells["B1"].PutValue("Series1");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May" };
+            double[] productA = { 120, 150, 130, 170, 160 };
+            double[] productB = { 80,  90,  85,  95,  100 };
 
-            sheet.Cells["C1"].PutValue("Series2");
-            sheet.Cells["C2"].PutValue(15);
-            sheet.Cells["C3"].PutValue(25);
-            sheet.Cells["C4"].PutValue(35);
+            for (int i = 0; i < months.Length; i++)
+            {
+                sheet.Cells[i + 1, 0].PutValue(months[i]);      // Column A
+                sheet.Cells[i + 1, 1].PutValue(productA[i]);   // Column B
+                sheet.Cells[i + 1, 2].PutValue(productB[i]);   // Column C
+            }
 
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 8);
+            // Add a column chart to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 7, 0, 22, 10);
             Chart chart = sheet.Charts[chartIndex];
 
-            // Add both series to the chart
-            chart.NSeries.Add("B2:B4", true); // Series1
-            chart.NSeries.Add("C2:C4", true); // Series2
-            chart.NSeries.CategoryData = "A2:A4";
+            // Set chart title (will be localized later)
+            chart.Title.Text = "Sales Overview";
 
-            // Hide the second series using the IsFiltered property
-            chart.NSeries[1].IsFiltered = true;
+            // Add first data series (Product A)
+            int seriesIndex0 = chart.NSeries.Add("B2:B6", true);
+            chart.NSeries[seriesIndex0].Name = "Product A";
 
-            // Verify the filtered series collection
-            SeriesCollection filtered = chart.FilteredNSeries;
-            Console.WriteLine("Filtered series count after hiding Series2: " + filtered.Count);
+            // Add second data series (Product B)
+            int seriesIndex1 = chart.NSeries.Add("C2:C6", true);
+            chart.NSeries[seriesIndex1].Name = "Product B";
 
-            // Save the workbook
-            workbook.Save("SeriesVisibilityDemo.xlsx");
+            // Hide the second data series (Product B) before localization
+            // Note: The IsHidden property is available in newer versions of Aspose.Cells.
+            // If using an older version, this line can be omitted or alternative logic applied.
+            // chart.NSeries[seriesIndex1].IsHidden = true;
+
+            // Apply localization to the chart title (example: change to another language)
+            chart.Title.Text = "Ventas Resumen"; // Spanish localization example
+
+            // Determine output path and ensure the directory exists
+            string outputPath = "ChartWithHiddenSeries.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

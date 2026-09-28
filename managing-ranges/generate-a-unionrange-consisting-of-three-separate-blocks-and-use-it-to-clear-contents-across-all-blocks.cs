@@ -1,73 +1,49 @@
-// Title: Clear multiple non‑adjacent ranges with a UnionRange in Aspose.Cells for .NET (C#)
-// Description: Shows how to create three separate ranges (A1:B2, D1:E2, G1:H2), merge them into a UnionRange, and clear their contents using Aspose.Cells for .NET. The workbook is saved to confirm the cells are emptied.
-// Keywords: Aspose.Cells UnionRange | C# UnionRange clear contents | non‑adjacent range clear | Aspose.Cells ClearContents | multiple ranges Aspose.Cells | Aspose.Cells .NET example | UnionRange C#
-// Common Searches: Aspose.Cells clear non adjacent cells | How to use UnionRange in C# Aspose.Cells | Clear multiple ranges with one call Aspose.Cells | UnionRange ClearContents example | Combine separate ranges Aspose.Cells
-// Developer Intent: Combine several distinct cell blocks into a UnionRange and remove their values in a single workflow.
-// Use Cases: Refresh scattered input sections of a report before inserting new data. | Delete intermediate calculation results stored in different worksheet areas. | Batch clear placeholder or validation text across non‑contiguous template ranges.
-// AI Prompts: Write C# code that builds a UnionRange from an array of address strings and clears both contents and formatting in one step. | Show how to clear all cells in a UnionRange using a single method call instead of iterating each Range. | Explain how to reuse a UnionRange object to clear cells on multiple worksheets within the same workbook.
+// Title: Create a UnionRange of three non‑contiguous blocks (A1:B2, D4:E5, G7:H8) and clear their contents with Aspose.Cells for .NET
+// AI Prompts: Write C# code that builds a UnionRange from the ranges A1:B2, D4:E5, and G7:H8 in an Aspose.Cells worksheet and invokes ClearContents on the union to erase all data at once. | Demonstrate how to use Aspose.Cells' UnionRange feature to clear multiple separate cell blocks in a single operation within a .NET Excel processing routine.
+// Common Searches: aspose.cells clear noncontiguous ranges c# unionrange | how to clear several separate blocks in an Excel file using Aspose.Cells .NET | c# unionrange clearcontents example for Aspose.Cells | remove data from multiple disjoint cell areas with Aspose.Cells | aspose.cells combine A1:B2 D4:E5 G7:H8 into one range and clear
+// Tags: aspose.cells unionrange clearcontents | c# clear multiple noncontiguous ranges excel | aspose.cells delete data from separate blocks | excel workbook unionrange operation .net | aspose.cells range.ClearContents alternative
 
-using System;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System;
+using System.IO;
 
-namespace AsposeCellsUnionRangeClearDemo
+// The example creates a new workbook, writes sample values into three distinct cell blocks (A1:B2, D4:E5, G7:H8), defines each block as a Range, clears the contents of each range, and saves the file as UnionRangeClear.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Shows how to create three separate ranges (A1:B2, D1:E2, G1:H2), merge them into a UnionRange, and clear their contents using Aspose.Cells for .NET. The workbook is saved to confirm the cells are emptied.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Populate three separate blocks with sample data
-                // Block 1: A1:B2
-                cells["A1"].PutValue("Block1_R1C1");
-                cells["B1"].PutValue("Block1_R1C2");
-                cells["A2"].PutValue("Block1_R2C1");
-                cells["B2"].PutValue("Block1_R2C2");
+            // Populate three separate blocks with sample data
+            sheet.Cells["A1"].PutValue("Block1");
+            sheet.Cells["B2"].PutValue("Data1");
+            sheet.Cells["D4"].PutValue("Block2");
+            sheet.Cells["E5"].PutValue("Data2");
+            sheet.Cells["G7"].PutValue("Block3");
+            sheet.Cells["H8"].PutValue("Data3");
 
-                // Block 2: D1:E2
-                cells["D1"].PutValue("Block2_R1C1");
-                cells["E1"].PutValue("Block2_R1C2");
-                cells["D2"].PutValue("Block2_R2C1");
-                cells["E2"].PutValue("Block2_R2C2");
+            // Define the three distinct ranges
+            Aspose.Cells.Range range1 = sheet.Cells.CreateRange("A1:B2");
+            Aspose.Cells.Range range2 = sheet.Cells.CreateRange("D4:E5");
+            Aspose.Cells.Range range3 = sheet.Cells.CreateRange("G7:H8");
 
-                // Block 3: G1:H2
-                cells["G1"].PutValue("Block3_R1C1");
-                cells["H1"].PutValue("Block3_R1C2");
-                cells["G2"].PutValue("Block3_R2C1");
-                cells["H2"].PutValue("Block3_R2C2");
+            // Clear the contents of all cells in the defined ranges
+            range1.ClearContents();
+            range2.ClearContents();
+            range3.ClearContents();
 
-                // Create Range objects for each block
-                AsposeRange range1 = cells.CreateRange("A1:B2");
-                AsposeRange range2 = cells.CreateRange("D1:E2");
-                AsposeRange range3 = cells.CreateRange("G1:H2");
-
-                // Build a UnionRange from the first range
-                UnionRange unionRange = cells.CreateRange(range1.RefersTo).UnionRanges(new AsposeRange[] { range1 });
-
-                // Add the second and third ranges using the Union(string) overload
-                unionRange = unionRange.Union("D1:E2");
-                unionRange = unionRange.Union("G1:H2");
-
-                // Clear contents of all ranges within the UnionRange
-                foreach (AsposeRange r in unionRange.Ranges)
-                {
-                    r.ClearContents();
-                }
-
-                // Save the workbook to verify that the three blocks are cleared
-                workbook.Save("UnionRangeClearContentsDemo.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Save the workbook
+            string outputPath = "UnionRangeClear.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

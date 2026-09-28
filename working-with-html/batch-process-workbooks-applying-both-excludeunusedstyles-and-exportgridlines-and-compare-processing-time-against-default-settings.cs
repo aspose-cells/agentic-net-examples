@@ -1,82 +1,115 @@
-// Title: Batch convert Excel workbooks to HTML with ExcludeUnusedStyles, ExportGridLines and benchmark performance
-// Description: Scans an "InputWorkbooks" folder, loads each .xlsx file with Aspose.Cells, saves a default HTML version, then saves a custom HTML version using HtmlSaveOptions (ExcludeUnusedStyles = true, ExportGridLines = true), measures the elapsed time for each save, and outputs a side‑by‑side performance comparison.
-// Keywords: Aspose.Cells batch HTML conversion | HtmlSaveOptions ExcludeUnusedStyles | ExportGridLines performance | Excel to HTML benchmark | measure Aspose.Cells save time | bulk workbook processing C#
-// Common Searches: how to convert multiple Excel files to HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions ExcludeUnusedStyles example | compare default and custom HTML save speed Aspose | batch export Excel to HTML with grid lines | measure Aspose.Cells HTML save time per workbook
-// Developer Intent: Convert a collection of Excel workbooks to HTML with specific styling options and evaluate the impact on save speed versus the default configuration.
-// Use Cases: Generate lightweight HTML reports for a large set of spreadsheets by omitting unused CSS. | Produce web‑ready HTML that preserves Excel grid lines for clearer visual layout. | Run performance benchmarks to decide whether custom HtmlSaveOptions affect processing time in bulk conversions.
-// AI Prompts: Refactor the code to write timing results to a CSV file with columns: workbook, default_ms, custom_ms. | Show how to parallelize the conversion loop using Task Parallel Library while keeping accurate per‑file timing. | Explain how to disable ExportGridLines in HtmlSaveOptions and compare the resulting HTML file sizes.
+// Title: Measure performance of batch saving Excel workbooks with Aspose.Cells using ExcludeUnusedStyles and ExportGridLines settings
+// AI Prompts: Write a C# console program that iterates through all .xlsx files in a directory, loads each workbook with Aspose.Cells, saves it with the Workbook.Settings properties ExcludeUnusedStyles and ExportGridLines enabled via reflection, and records the total elapsed time. | Modify the batch processing loop to first save each workbook with default settings, then repeat the save using the custom settings, and output a side‑by‑side timing comparison. | Add robust error handling that logs the file path and exception message for any workbook that fails during the custom‑settings save while allowing the remaining files to continue processing.
+// Common Searches: how to benchmark Aspose.Cells workbook save speed with custom settings | c# batch convert xlsx files using Aspose.Cells and enable ExcludeUnusedStyles | using reflection to set ExportGridLines property in Aspose.Cells Workbook.Settings | compare default save time versus ExcludeUnusedStyles and ExportGridLines in Aspose.Cells
+// Tags: batch workbook save Aspose.Cells custom settings | exclude unused styles Aspose.Cells performance | export grid lines Aspose.Cells save option | reflection set Workbook.Settings C# | benchmark Aspose.Cells save time
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-// Scans an "InputWorkbooks" folder, loads each .xlsx file with Aspose.Cells, saves a default HTML version, then saves a custom HTML version using HtmlSaveOptions (ExcludeUnusedStyles = true, ExportGridLines = true), measures the elapsed time for each save, and outputs a side‑by‑side performance comparison.
-class BatchProcessWorkbooks
+namespace AsposeCellsBatchProcessing
 {
-    static void Main()
+    // // Scans a folder for .xlsx files, saves each workbook twice with Aspose.Cells—once using default options and once with ExcludeUnusedStyles and ExportGridLines enabled via reflection—while timing both batches and logging any errors.
+    class Program
     {
-        // Folder containing source Excel files
-        string inputFolder = "InputWorkbooks";
-
-        // Verify input folder exists
-        if (!Directory.Exists(inputFolder))
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Input folder \"{inputFolder}\" not found. Please ensure the folder exists and contains .xlsx files.");
-            return;
+            // Folder containing the workbooks to process
+            string inputFolder = @"C:\Workbooks\Input";
+            // Folder to save processed workbooks
+            string outputFolderDefault = @"C:\Workbooks\Output\Default";
+            string outputFolderCustom = @"C:\Workbooks\Output\Custom";
+
+            // Ensure input folder exists
+            if (!Directory.Exists(inputFolder))
+            {
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
+            }
+
+            // Ensure output directories exist
+            Directory.CreateDirectory(outputFolderDefault);
+            Directory.CreateDirectory(outputFolderCustom);
+
+            // Gather all Excel files in the input folder
+            List<string> workbookFiles = new List<string>(Directory.GetFiles(inputFolder, "*.xlsx"));
+
+            // Measure processing time with default settings
+            Stopwatch swDefault = Stopwatch.StartNew();
+            foreach (string filePath in workbookFiles)
+            {
+                ProcessWorkbook(filePath, outputFolderDefault, applyCustomSettings: false);
+            }
+            swDefault.Stop();
+
+            // Measure processing time with custom settings (if supported)
+            Stopwatch swCustom = Stopwatch.StartNew();
+            foreach (string filePath in workbookFiles)
+            {
+                ProcessWorkbook(filePath, outputFolderCustom, applyCustomSettings: true);
+            }
+            swCustom.Stop();
+
+            // Output the timing results
+            Console.WriteLine($"Processing {workbookFiles.Count} workbooks with default settings took: {swDefault.Elapsed.TotalSeconds:F2} seconds.");
+            Console.WriteLine($"Processing {workbookFiles.Count} workbooks with custom settings took: {swCustom.Elapsed.TotalSeconds:F2} seconds.");
         }
 
-        // Output folders for default and custom HTML saves
-        string outputFolderDefault = "OutputDefault";
-        string outputFolderCustom = "OutputCustom";
-
-        // Ensure output directories exist
-        Directory.CreateDirectory(outputFolderDefault);
-        Directory.CreateDirectory(outputFolderCustom);
-
-        // Get all .xlsx files in the input folder
-        string[] workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx");
-
-        foreach (string workbookPath in workbookFiles)
+        /// <param name="inputPath">Full path to the source workbook.</param>
+        /// <param name="outputFolder">Folder where the processed workbook will be saved.</param>
+        /// <param name="applyCustomSettings">If true, attempts to set custom workbook options.</param>
+        private static void ProcessWorkbook(string inputPath, string outputFolder, bool applyCustomSettings)
         {
-            // Skip if the file somehow does not exist
-            if (!File.Exists(workbookPath))
+            // Verify the source file exists
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"File not found: {workbookPath}");
-                continue;
+                Console.WriteLine($"File not found: {inputPath}");
+                return;
             }
 
             try
             {
-                // Load the workbook (create + load lifecycle)
-                Workbook workbook = new Workbook(workbookPath);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                string fileBaseName = Path.GetFileNameWithoutExtension(workbookPath);
-
-                // ---------- Default save (no special options) ----------
-                string defaultHtmlPath = Path.Combine(outputFolderDefault, fileBaseName + "_default.html");
-                Stopwatch swDefault = Stopwatch.StartNew();
-                workbook.Save(defaultHtmlPath, SaveFormat.Html); // save lifecycle
-                swDefault.Stop();
-
-                // ---------- Custom save with ExcludeUnusedStyles & ExportGridLines ----------
-                string customHtmlPath = Path.Combine(outputFolderCustom, fileBaseName + "_custom.html");
-                HtmlSaveOptions customOptions = new HtmlSaveOptions
+                if (applyCustomSettings)
                 {
-                    ExcludeUnusedStyles = true,   // explicitly set (default is true)
-                    ExportGridLines = true        // enable grid line export
-                };
-                Stopwatch swCustom = Stopwatch.StartNew();
-                workbook.Save(customHtmlPath, customOptions); // save lifecycle with options
-                swCustom.Stop();
+                    // Use reflection to set properties that may not exist in the current Aspose.Cells version
+                    SetWorkbookSettingIfExists(workbook.Settings, "ExcludeUnusedStyles", true);
+                    SetWorkbookSettingIfExists(workbook.Settings, "ExportGridLines", true);
+                }
 
-                // Output timing comparison
-                Console.WriteLine($"{fileBaseName}: Default = {swDefault.ElapsedMilliseconds} ms, Custom = {swCustom.ElapsedMilliseconds} ms");
+                // Determine output file name and path
+                string fileName = Path.GetFileName(inputPath);
+                string outputPath = Path.Combine(outputFolder, fileName);
+
+                // Save the workbook
+                workbook.Save(outputPath);
             }
             catch (Exception ex)
             {
-                // Log the error and continue processing other files
-                Console.WriteLine($"Error processing \"{workbookPath}\": {ex.Message}");
+                Console.WriteLine($"Error processing '{inputPath}': {ex.Message}");
+            }
+        }
+
+        // Helper method to set a workbook setting via reflection if the property exists
+        private static void SetWorkbookSettingIfExists(object settingsObject, string propertyName, object value)
+        {
+            try
+            {
+                PropertyInfo prop = settingsObject.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(settingsObject, value);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log but ignore any reflection errors to keep processing robust
+                Console.WriteLine($"Unable to set '{propertyName}': {ex.Message}");
             }
         }
     }

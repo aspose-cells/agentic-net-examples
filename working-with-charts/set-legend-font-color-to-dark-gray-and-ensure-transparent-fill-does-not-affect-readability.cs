@@ -1,16 +1,13 @@
-// Title: Aspose.Cells C# – Set Chart Legend Font to Dark Gray with Transparent Background
-// Description: Create a workbook, add a column chart, display the legend, and programmatically set each legend entry's font color to DarkGray while keeping the legend background transparent and the text readable using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells legend font color | chart legend dark gray C# | transparent legend background Aspose | LegendEntry formatting Aspose.Cells | C# Aspose.Cells chart customization | set legend text fill Aspose | Aspose.Cells chart styling
-// Common Searches: how to change legend font color in Aspose.Cells | transparent chart legend Aspose.Cells C# | set legend entry font color dark gray Aspose | Aspose.Cells legend background transparent | customize chart legend text fill Aspose
-// Developer Intent: The developer needs to modify a chart's legend so the text appears in dark gray while the legend background stays transparent, ensuring the text remains legible.
-// Use Cases: Standardize legend appearance across corporate reports generated with Aspose.Cells. | Overlay charts on colored slides or dashboards where a transparent legend improves visual integration. | Apply consistent legend styling to multiple charts in a workbook via automated code.
-// AI Prompts: Generate C# code with Aspose.Cells that sets each legend entry's font color to DarkGray and makes the legend background transparent without losing readability. | Show how to loop through Chart.Legend.LegendEntries to apply Font.Color, BackgroundMode, and IsTextNoFill settings in Aspose.Cells. | Explain the role of LegendEntry.IsTextNoFill and BackgroundMode.Transparent for readable transparent legends in Aspose.Cells charts.
+// Title: Set chart legend entry font to dark gray and make legend background opaque using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that creates a column chart and changes every legend entry’s font color to DarkGray while keeping the text fill enabled. | Update an existing Aspose.Cells chart so the legend text is non‑transparent and the legend’s background mode is set to Opaque for improved readability.
+// Common Searches: how to change legend entry font color to dark gray in Aspose.Cells .NET | Aspose.Cells make chart legend background opaque | prevent transparent legend text in Excel chart using Aspose.Cells C# | set legend entry formatting dark gray font Aspose.Cells example
+// Tags: legend entry font color Aspose.Cells | opaque legend background Aspose.Cells | chart legend text fill Aspose.Cells | disable legend transparency Aspose.Cells | column chart legend formatting .NET
 
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Create a workbook, add a column chart, display the legend, and programmatically set each legend entry's font color to DarkGray while keeping the legend background transparent and the text readable using Aspose.Cells for .NET.
+// The example creates a workbook, adds sample data, inserts a column chart, enables the legend, then iterates through each LegendEntry to set the font color to DarkGray, ensures the text fill is not transparent, and makes the legend background opaque before saving the file as LegendFontDarkGray.xlsx.
 class SetLegendFontColor
 {
     static void Main()
@@ -24,30 +21,31 @@ class SetLegendFontColor
         sheet.Cells["A2"].PutValue("Q1");
         sheet.Cells["A3"].PutValue("Q2");
         sheet.Cells["A4"].PutValue("Q3");
-
-        sheet.Cells["B1"].PutValue("Series 1");
-        sheet.Cells["B2"].PutValue(30);
-        sheet.Cells["B3"].PutValue(50);
-        sheet.Cells["B4"].PutValue(70);
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(120);
+        sheet.Cells["B3"].PutValue(150);
+        sheet.Cells["B4"].PutValue(90);
 
         // Add a column chart
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 10);
         Chart chart = sheet.Charts[chartIndex];
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Ensure the legend is displayed
+        // Ensure the legend is visible
         chart.ShowLegend = true;
 
-        // Iterate through each legend entry and set the desired properties
+        // Iterate through all legend entries and apply the required formatting
         foreach (LegendEntry entry in chart.Legend.LegendEntries)
         {
-            // Set font color to dark gray
+            // Set the font color to dark gray
             entry.Font.Color = Color.DarkGray;
 
-            // Keep background transparent but ensure text fill is applied
-            entry.BackgroundMode = BackgroundMode.Transparent;
-            entry.IsTextNoFill = false; // text will have fill, preserving readability
+            // Ensure the text has a fill (not transparent) so it remains readable
+            entry.IsTextNoFill = false;
+
+            // Make the background opaque to avoid transparency issues
+            entry.BackgroundMode = BackgroundMode.Opaque;
         }
 
         // Save the workbook

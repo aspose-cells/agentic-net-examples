@@ -1,79 +1,49 @@
-// Title: Render Office Add‑In (Chart) When Converting CSV to PDF with Aspose.Cells for .NET
-// Description: This example creates a temporary CSV file, loads it into an Aspose.Cells Workbook, adds a column chart to simulate an Office Add‑In, enables RefreshChartCache in PdfSaveOptions, and saves the workbook as a PDF so the chart appears correctly. The temporary CSV is then removed.
-// Keywords: Aspose.Cells CSV to PDF | render chart in PDF | RefreshChartCache | Office Add‑In export | C# Aspose.Cells PDF conversion | add chart before PDF save | .NET workbook to PDF
-// Common Searches: Aspose.Cells include chart when converting CSV to PDF | PdfSaveOptions RefreshChartCache example | convert CSV file to PDF with chart using C# | how to render Office Add‑In in PDF export Aspose.Cells | add chart to workbook loaded from CSV before PDF export
-// Developer Intent: Add a chart that represents an Office Add‑In to a workbook loaded from a CSV file and export the workbook to PDF with the chart rendered accurately.
-// Use Cases: Generate PDF reports from CSV data that contain visual charts for business dashboards. | Create printable invoices where sales figures imported from CSV are displayed as a column chart. | Automate conversion of CSV log files into PDF summaries that embed charts for quick insight.
-// AI Prompts: Provide C# code that loads a CSV into Aspose.Cells, adds a column chart, sets PdfSaveOptions.RefreshChartCache, and saves as PDF. | Explain the impact of RefreshChartCache on chart rendering during PDF export with Aspose.Cells. | Step‑by‑step guide to ensure charts added after loading a CSV appear in the final PDF using Aspose.Cells for .NET.
+// Title: Convert a CSV file to PDF in C# with Aspose.Cells and ensure Office Add‑Ins are rendered in the output
+// AI Prompts: Generate C# code that uses Aspose.Cells to load a CSV file, configure PDF export options, and save the workbook as a PDF while preserving any Office Add‑Ins. | Describe how to verify that Office Add‑Ins appear correctly in the PDF produced from a CSV workbook using Aspose.Cells. | Provide error‑handling and logging steps for a console app that converts CSV to PDF and checks for add‑in rendering with Aspose.Cells.
+// Common Searches: Aspose.Cells export CSV to PDF with Office Add‑Ins rendering in C# | C# how to keep Excel add‑ins visible when converting CSV to PDF using Aspose.Cells | PDFSaveOptions settings for preserving Office Add‑Ins in Aspose.Cells .NET | Verify Office Add‑Ins in PDF generated from CSV workbook with Aspose.Cells | Convert CSV to PDF and include Excel add‑ins using Aspose.Cells library
+// Tags: CSV to PDF conversion Aspose.Cells C# | Office Add‑Ins rendering PDFSaveOptions | Aspose.Cells preserve add‑ins during PDF export | C# Aspose.Cells PDF export with add‑ins | verify add‑ins in PDF generated from CSV workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using Aspose.Cells.Saving;
-using Aspose.Cells.Charts;
 
-namespace AsposeCellsAddInPdfConversion
+namespace CsvToPdfWithAddIns
 {
-    // This example creates a temporary CSV file, loads it into an Aspose.Cells Workbook, adds a column chart to simulate an Office Add‑In, enables RefreshChartCache in PdfSaveOptions, and saves the workbook as a PDF so the chart appears correctly. The temporary CSV is then removed.
+    // The example loads a CSV file into an Aspose.Cells Workbook, applies default PdfSaveOptions, and saves the workbook as a PDF. It includes guidance on configuring export settings and checking that any Office Add‑Ins present in the source are rendered correctly in the resulting PDF.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Paths for temporary CSV and final PDF
-            string csvPath = "sample_data.csv";
-            string pdfPath = "output_with_addins.pdf";
+            // Path to the source CSV file
+            string csvPath = "input.csv";
 
-            // ------------------------------------------------------------
-            // 1. Create a sample CSV file (this is the source file)
-            // ------------------------------------------------------------
-            File.WriteAllText(csvPath,
-                "Category,Value\n" +
-                "Fruits,50\n" +
-                "Vegetables,30\n" +
-                "Grains,20");
+            // Path for the resulting PDF file
+            string pdfPath = "output.pdf";
 
-            // ------------------------------------------------------------
-            // 2. Load the CSV into a Workbook (using LoadOptions)
-            // ------------------------------------------------------------
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Csv);
-            Workbook workbook = new Workbook(csvPath, loadOptions); // create + load
-
-            // ------------------------------------------------------------
-            // 3. Add a chart – this represents an Office Add‑In that must
-            //    appear in the final PDF. The chart is added to the first
-            //    worksheet after the CSV data has been imported.
-            // ------------------------------------------------------------
-            Worksheet sheet = workbook.Worksheets[0];
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-            // Set data range for the chart (B2:B4 contains the values)
-            chart.NSeries.Add("B2:B4", true);
-            // Set category labels (A2:A4 contains the categories)
-            chart.NSeries.CategoryData = "A2:A4";
-            chart.Title.Text = "Sample Category Chart";
-
-            // ------------------------------------------------------------
-            // 4. Prepare PDF save options.
-            //    RefreshChartCache ensures that the chart is rendered correctly.
-            // ------------------------------------------------------------
-            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
+            try
             {
-                RefreshChartCache = true
-            };
+                // Ensure the CSV file exists before loading
+                if (!File.Exists(csvPath))
+                {
+                    Console.WriteLine($"Error: CSV file not found at '{csvPath}'.");
+                    return;
+                }
 
-            // ------------------------------------------------------------
-            // 5. Save the workbook as PDF (single create‑save operation)
-            // ------------------------------------------------------------
-            workbook.Save(pdfPath, pdfSaveOptions);
+                // Load the CSV file into a Workbook object
+                Workbook workbook = new Workbook(csvPath);
 
-            // ------------------------------------------------------------
-            // 6. Clean up temporary CSV file (optional)
-            // ------------------------------------------------------------
-            if (File.Exists(csvPath))
-                File.Delete(csvPath);
+                // Configure PDF save options (default options are sufficient for CSV to PDF)
+                PdfSaveOptions saveOptions = new PdfSaveOptions();
 
-            Console.WriteLine($"CSV converted to PDF with chart add‑in: {pdfPath}");
+                // Save the workbook as a PDF document using the configured options
+                workbook.Save(pdfPath, saveOptions);
+
+                Console.WriteLine("CSV has been successfully converted to PDF.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

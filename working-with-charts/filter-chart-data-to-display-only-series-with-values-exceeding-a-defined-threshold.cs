@@ -1,102 +1,109 @@
-// Title: Filter chart series by numeric threshold with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a column chart, and hide any series whose values never exceed a defined threshold. The example uses the Series.IsFiltered property and shows how to count filtered series before saving the file.
-// Keywords: Aspose.Cells chart filtering C# | hide chart series Aspose.Cells | Series.IsFiltered property | threshold based chart series | .NET Excel chart example | filter NSeries Aspose | Excel chart automation C# | dynamic chart series visibility
-// Common Searches: Aspose.Cells hide chart series below a threshold | C# filter column chart series by value | How to use Series.IsFiltered in Aspose.Cells | Remove low‑value series from Excel chart programmatically | Aspose.Cells chart series conditional display
-// Developer Intent: Show only those chart series that contain at least one data point greater than a specified numeric limit.
-// Use Cases: Sales dashboards that automatically omit products with sales below target. | KPI reports where only metrics surpassing risk thresholds appear in charts. | Monthly performance sheets that exclude insignificant data series without manual editing.
-// AI Prompts: Generate C# code using Aspose.Cells to hide chart series whose all values are below a given threshold. | Explain the role of the IsFiltered property for chart series and how to retrieve the filtered series count after applying a threshold. | Provide a pattern for making the threshold user‑configurable and re‑applying the filter without recreating the chart.
+// Title: C# example: Remove Excel chart series whose maximum value is below a threshold using Aspose.Cells
+// AI Prompts: Write C# code with Aspose.Cells that iterates over a chart's NSeries, calculates each series' maximum cell value, and deletes the series if the max is less than a specified threshold. | Show how to create a column chart from a data range in Aspose.Cells and then filter out any series that do not meet a minimum value requirement. | Provide a C# snippet that loads an existing workbook, adds a chart, and programmatically removes series whose highest data point is under 50 using Aspose.Cells.
+// Common Searches: Aspose.Cells C# filter chart series by maximum cell value | Remove low-value series from an Excel column chart using Aspose.Cells | Loop through chart series in Aspose.Cells and delete those below a threshold | C# keep only chart series with values greater than 50 in an Excel workbook
+// Tags: filter chart series based on value Aspose.Cells C# | remove chart series by threshold Aspose.Cells | process NSeries Aspose.Cells | max value condition for chart series Aspose.Cells | column chart data range Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsChartFiltering
+// The program loads Input.xlsx, adds a column chart on the 'Data' worksheet, evaluates the maximum value of each series, removes any series whose maximum does not exceed 50, and saves the modified workbook as Output.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, add a column chart, and hide any series whose values never exceed a defined threshold. The example uses the Series.IsFiltered property and shows how to count filtered series before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "Input.xlsx";
+            const string outputPath = "Output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Populate sample data: three series (B, C, D) with numeric values
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["A3"].PutValue("B");
-                sheet.Cells["A4"].PutValue("C");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                sheet.Cells["B1"].PutValue("Series1");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["B3"].PutValue(20);
-                sheet.Cells["B4"].PutValue(30);
+            // Access the worksheet that contains the source data
+            Worksheet dataSheet = workbook.Worksheets["Data"];
+            if (dataSheet == null)
+            {
+                Console.WriteLine("Worksheet \"Data\" not found.");
+                return;
+            }
 
-                sheet.Cells["C1"].PutValue("Series2");
-                sheet.Cells["C2"].PutValue(5);
-                sheet.Cells["C3"].PutValue(15);
-                sheet.Cells["C4"].PutValue(25);
+            // Add a column chart to the worksheet
+            int chartIdx = dataSheet.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = dataSheet.Charts[chartIdx];
 
-                sheet.Cells["D1"].PutValue("Series3");
-                sheet.Cells["D2"].PutValue(40);
-                sheet.Cells["D3"].PutValue(50);
-                sheet.Cells["D4"].PutValue(60);
+            // Define the data ranges
+            chart.NSeries.Add("Data!$B$2:$D$10", true);               // series values
+            chart.NSeries.CategoryData = "Data!$A$2:$A$10";          // categories
 
-                // Add a column chart
-                int chartIdx = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 8);
-                Chart chart = sheet.Charts[chartIdx];
+            // Threshold: only series whose maximum value exceeds this will be kept
+            double threshold = 50.0;
 
-                // Add each series to the chart
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.Add("C2:C4", true);
-                chart.NSeries.Add("D2:D4", true);
-                chart.NSeries.CategoryData = "A2:A4";
+            // Iterate through the series in reverse order so we can safely remove items
+            for (int i = chart.NSeries.Count - 1; i >= 0; i--)
+            {
+                var series = chart.NSeries[i];
 
-                // Define the threshold: only series containing a value > 25 will be shown
-                double threshold = 25.0;
+                // Get the cell range that holds the series values (strip sheet name if present)
+                string seriesRange = series.Values; // e.g., "Data!$B$2:$B$10"
+                string address = seriesRange.Contains("!") ? seriesRange.Split('!')[1] : seriesRange;
 
-                // Iterate through each series and filter out those that do not exceed the threshold
-                for (int i = 0; i < chart.NSeries.Count; i++)
+                AsposeRange range;
+                try
                 {
-                    Series series = chart.NSeries[i];
-                    // Get the range string that holds the series values (e.g., "B2:B4")
-                    string rangeStr = series.Values;
+                    range = dataSheet.Cells.CreateRange(address);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to create range \"{address}\": {ex.Message}");
+                    continue;
+                }
 
-                    // Create a range object to access individual cells
-                    AsposeRange range = sheet.Cells.CreateRange(rangeStr);
-
-                    bool exceedsThreshold = false;
-                    foreach (Cell cell in range)
+                // Determine the maximum value in the series
+                double maxValue = double.MinValue;
+                foreach (Cell cell in range)
+                {
+                    if (cell.Value is double d)
                     {
-                        // Ensure the cell contains a numeric value before comparison
-                        if (cell.Type == CellValueType.IsNumeric && cell.DoubleValue > threshold)
-                        {
-                            exceedsThreshold = true;
-                            break;
-                        }
+                        if (d > maxValue) maxValue = d;
                     }
-
-                    // If no value exceeds the threshold, hide the series
-                    if (!exceedsThreshold)
+                    else if (cell.Value is int iVal)
                     {
-                        series.IsFiltered = true;
+                        double d2 = iVal;
+                        if (d2 > maxValue) maxValue = d2;
                     }
                 }
 
-                // Optional: display count of filtered series
-                Console.WriteLine("Filtered series count: " + chart.FilteredNSeries.Count);
+                // Remove the series if its maximum does not exceed the threshold
+                if (maxValue <= threshold)
+                {
+                    chart.NSeries.RemoveAt(i);
+                }
+            }
 
-                // Save the workbook
-                workbook.Save("ChartFilteredByThreshold.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
+            // Save the workbook with the filtered chart
+            try
+            {
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"Failed to save workbook: {ex.Message}");
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,42 +1,53 @@
-// Title: C# – Validate VBA Project Password Length Before Using Aspose.Cells Protect
-// Description: Demonstrates how to create a macro‑enabled workbook, enforce a configurable minimum password length, and call Workbook.VbaProject.Protect only when the password meets the requirement, then save the file as .xlsm.
-// Keywords: Aspose.Cells | C# VBA project protection | password length validation | minimum password requirement | macro‑enabled workbook | Workbook.VbaProject.Protect | XLSM file generation | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells validate VBA password length | C# protect VBA project only if password is long enough | how to enforce minimum password for VBA project in Aspose.Cells | protect macro workbook with password validation .NET | sample code for Workbook.VbaProject.Protect password check
-// Developer Intent: Check that a VBA project password satisfies a minimum length before invoking the Protect method in Aspose.Cells.
-// Use Cases: Enforcing security policy by rejecting short passwords when protecting a VBA project. | Automating workbook creation where the VBA project is locked only after successful password validation. | Providing user feedback and aborting protection when the password does not meet length criteria.
-// AI Prompts: Write C# code using Aspose.Cells that verifies a VBA project password meets a configurable minimum length before calling Protect. | Show how to handle an invalid‑password scenario when protecting a VBA project in a macro‑enabled workbook with Aspose.Cells. | Generate a logging example that records a warning and skips VBA project protection if the password is too short.
+// Title: C# Example: Validate Minimum Length of VBA Project Password Before Using Workbook.VbaProject.Protect with Aspose.Cells
+// AI Prompts: Check the VBA project password length and raise an ArgumentException if it is shorter than the required minimum before calling workbook.VbaProject.Protect. | Add a configurable constant for the minimum password length and enforce it when protecting a VBA project in a C# Aspose.Cells workbook. | Implement a pre‑protect validation that ensures the password is not null or empty and meets the length rule, then protect the VBA project with the verified password.
+// Common Searches: how to enforce a minimum password length when protecting a VBA project with Aspose.Cells in C# | C# Aspose.Cells validate VBA project password before calling Protect method | example of checking VBA password length prior to workbook.VbaProject.Protect | throw exception for short VBA password using Aspose.Cells API | configure minimum VBA password length in Aspose.Cells C# code
+// Tags: VbaProject.Protect password validation C# | enforce password length rule Aspose.Cells | C# workbook VBA protection password check | Aspose.Cells argumentexception invalid VBA password | configure VBA password length Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to create a macro‑enabled workbook, enforce a configurable minimum password length, and call Workbook.VbaProject.Protect only when the password meets the requirement, then save the file as .xlsm.
-class VbaProjectPasswordValidationDemo
+// The code loads an Excel workbook, verifies that the VBA project password meets a configurable minimum length, throws an ArgumentException if the rule is violated, protects the VBA project with the valid password using Workbook.VbaProject.Protect, and saves the updated file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (this also creates a VBA project)
-        Workbook workbook = new Workbook();
-        // Ensure there is at least one worksheet so the VBA project is initialized
-        workbook.Worksheets.Add();
-
-        // Define the password to protect the VBA project
-        string password = "MySecurePwd123";
-        // Minimum required length for the password
-        int minLength = 8;
-
-        // Validate password length before calling Protect
-        if (string.IsNullOrEmpty(password) || password.Length < minLength)
+        try
         {
-            Console.WriteLine($"Password must be at least {minLength} characters long.");
-            return; // Abort protection if the password does not meet the requirement
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Define the VBA project password
+            string vbaPassword = "mySecretPwd";
+
+            // Minimum password length requirement
+            const int minLength = 8;
+
+            // Validate password length
+            if (string.IsNullOrEmpty(vbaPassword) || vbaPassword.Length < minLength)
+                throw new ArgumentException($"VBA project password must be at least {minLength} characters long.");
+
+            // Protect the VBA project if it exists
+            if (workbook.VbaProject != null)
+            {
+                // false = not read‑only; provide password to protect the project
+                workbook.VbaProject.Protect(false, vbaPassword);
+            }
+
+            // Save the workbook with the protected VBA project
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-
-        // Protect the VBA project and lock it for viewing (set to true as an example)
-        bool lockForViewing = true;
-        workbook.VbaProject.Protect(lockForViewing, password);
-
-        // Save the workbook as a macro-enabled file
-        workbook.Save("ProtectedVbaProject.xlsm", SaveFormat.Xlsm);
-        Console.WriteLine("VBA project protected successfully.");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

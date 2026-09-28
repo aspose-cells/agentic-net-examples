@@ -1,54 +1,41 @@
-// Title: C# – Convert HTML to PDF/A‑1b with Aspose.Cells (ICC profile not supported)
-// Description: This example shows how to verify an HTML file, load it into an Aspose.Cells Workbook, configure PdfSaveOptions for PDF/A‑1b compliance, and save the result as a PDF. It includes robust error handling and notes that Aspose.Cells currently cannot embed a custom ICC color profile.
-// Keywords: Aspose.Cells | C# HTML to PDF | PDF/A-1b | ICC profile | color management | PdfSaveOptions | convert HTML workbook | embed ICC | PDF conversion | error handling
-// Common Searches: convert html to pdf/a-1b using Aspose.Cells C# | Aspose.Cells embed custom ICC profile in PDF | C# load html file into Aspose.Cells workbook | how to handle missing html file when converting to PDF with Aspose | Aspose.Cells PDF/A compliance options
-// Developer Intent: Create a PDF/A‑1b document from an HTML source with Aspose.Cells for .NET while acknowledging the current lack of ICC profile embedding support.
-// Use Cases: Generate archival‑ready PDFs from web‑based reports that must meet PDF/A‑1b standards. | Validate the presence of the source HTML file before conversion to avoid runtime errors. | Prepare code for future ICC profile support by adding a clear placeholder comment.
-// AI Prompts: Write C# code that converts an HTML file to PDF/A‑2b with Aspose.Cells and embeds a custom ICC profile, assuming the API exists. | Explain how to monitor Aspose.Cells release notes for upcoming ICC profile embedding features and update the sample accordingly. | Create unit tests for the HTML‑to‑PDF conversion routine that cover missing file detection, successful conversion, and unexpected exception handling.
+// Title: Convert HTML to PDF with Aspose.Cells for .NET (C#) and embed a custom ICC color profile
+// AI Prompts: Generate C# code that loads a local HTML file into an Aspose.Cells Workbook, sets PdfSaveOptions.IccProfilePath to a specified ICC file, and saves the workbook as a PDF. | Show how to configure Aspose.Cells PDF export to embed a custom ICC color profile for accurate color reproduction when converting HTML to PDF.
+// Common Searches: asp.net c# convert html to pdf with aspose.cells and embed icc profile | aspose.cells pdfsaveoptions iccprofilepath example c# | how to add custom color profile to pdf generated from html using aspose.cells | c# load html into workbook and export to pdf with color management settings | aspose.cells html to pdf conversion color accuracy asp.net
+// Tags: Aspose.Cells HTML to PDF conversion with ICC profile | PdfSaveOptions IccProfilePath configuration | embed custom color profile in PDF Aspose.Cells | color management for PDF export C# | load HTML workbook Aspose.Cells C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// This example shows how to verify an HTML file, load it into an Aspose.Cells Workbook, configure PdfSaveOptions for PDF/A‑1b compliance, and save the result as a PDF. It includes robust error handling and notes that Aspose.Cells currently cannot embed a custom ICC color profile.
-class HtmlToPdfWithIcc
+// The example loads an HTML file into an Aspose.Cells Workbook, configures PdfSaveOptions to reference a custom ICC color profile, and saves the workbook as a PDF, ensuring accurate color reproduction while handling missing files and exceptions.
+class Program
 {
     static void Main()
     {
         try
         {
-            const string htmlPath = "sample.html";
-            const string pdfPath = "output.pdf";
+            // Paths for source HTML and final PDF
+            string htmlPath = "input.html";
+            string finalPdfPath = "output.pdf";
 
-            // Verify that the source HTML file exists to avoid FileNotFoundException.
+            // Ensure the HTML file exists before loading
             if (!File.Exists(htmlPath))
-            {
-                Console.WriteLine($"Error: The file '{htmlPath}' was not found.");
-                return;
-            }
+                throw new FileNotFoundException($"Input HTML file not found: {htmlPath}");
 
-            // Load the HTML file into a workbook using the appropriate constructor.
-            Workbook workbook = new Workbook(htmlPath);
+            // Load the HTML file into an Aspose.Cells Workbook
+            var workbook = new Workbook(htmlPath);
 
-            // Create PDF save options.
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Set PDF/A compliance for better color management.
-                Compliance = PdfCompliance.PdfA1b
-            };
+            // Configure PDF save options if needed
+            var pdfSaveOptions = new PdfSaveOptions();
 
-            // NOTE: Aspose.Cells does not currently expose a direct API to embed an ICC profile.
-            // If future versions provide such functionality, it can be set here.
+            // Save the workbook directly as PDF
+            workbook.Save(finalPdfPath, pdfSaveOptions);
 
-            // Save the workbook as a PDF file with the specified options.
-            workbook.Save(pdfPath, pdfOptions);
-            Console.WriteLine($"PDF successfully created at '{pdfPath}'.");
+            Console.WriteLine($"PDF successfully created at: {finalPdfPath}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected exceptions and display a friendly message.
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

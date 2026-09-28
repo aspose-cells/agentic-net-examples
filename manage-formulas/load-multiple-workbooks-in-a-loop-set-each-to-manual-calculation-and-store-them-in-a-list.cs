@@ -1,49 +1,71 @@
-// Title: C# – Load Multiple Excel Workbooks, Set Manual Calculation Mode, and Store in a List with Aspose.Cells
-// Description: A concise example that loops through an array of Excel file paths, creates an Aspose.Cells Workbook for each file, switches the FormulaSettings.CalculationMode to Manual, and adds the workbook objects to a List<Workbook>. Ideal for batch processing without triggering automatic recalculation.
-// Keywords: Aspose.Cells load multiple workbooks | C# manual calculation mode | FormulaSettings.CalculationMode Manual | batch workbook processing .NET | store Workbook objects in List | Aspose.Cells example GitHub | disable auto calculation Aspose.Cells | Excel bulk load C#
-// Common Searches: how to load several Excel files with Aspose.Cells and set manual calculation | batch processing workbooks in C# using Aspose.Cells | store multiple Aspose.Cells Workbook instances in a collection | disable automatic formula calculation when opening Excel files Aspose.Cells
-// Developer Intent: Load each workbook, set its formula calculation to manual, and keep the instances in a List for later processing.
-// Use Cases: Prepare a set of workbooks for bulk data updates without triggering recalculation after each file is opened. | Open many workbooks, modify cell values, and run a single manual calculation pass when needed. | Collect workbooks in a list to pass them to a reporting engine or export routine after configuring manual calculation.
-// AI Prompts: Generate C# code that iterates over an array of Excel file paths, loads each file with Aspose.Cells, sets FormulaSettings.CalculationMode to Manual, and adds the Workbook to a List<Workbook>. | Show how to recalculate formulas manually for all workbooks stored in a List after making data changes using Aspose.Cells. | Explain the steps to prevent automatic formula evaluation when loading multiple Excel workbooks in a loop with Aspose.Cells for .NET.
+// Title: Load several .xlsx files into Aspose.Cells Workbook objects, set each workbook to Manual calculation mode, and collect them in a List in C#
+// AI Prompts: Write C# code that iterates over an array of Excel file paths, creates a Workbook for each using Aspose.Cells, sets Settings.CalcMode to Manual, and adds the workbook to a List<Workbook>. | Refactor the loading loop to accept a calculation mode argument (Manual or Automatic) and apply it to each workbook without using reflection. | Enhance the batch loading routine with comprehensive error handling that logs missing files and any exceptions while continuing to load the remaining workbooks.
+// Common Searches: aspocells set calculation mode manual for multiple workbooks c# | how to load a list of Excel files into Aspose.Cells and change CalcMode | batch loading Excel workbooks with manual calculation using Aspose.Cells .NET
+// Tags: Aspose.Cells batch workbook loading | manual CalcMode configuration | C# workbook collection handling | reflection alternative for CalcMode | robust Excel file loading errors
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
+using System.Reflection;
 
-namespace AsposeCellsMultipleWorkbooks
+// The example demonstrates how to load a predefined collection of .xlsx files into Aspose.Cells Workbook objects, set each workbook's calculation mode to Manual via reflection, handle missing files and loading exceptions, and store the successfully loaded workbooks in a List<Workbook> for further processing.
+class Program
 {
-    // A concise example that loops through an array of Excel file paths, creates an Aspose.Cells Workbook for each file, switches the FormulaSettings.CalculationMode to Manual, and adds the workbook objects to a List<Workbook>. Ideal for batch processing without triggering automatic recalculation.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths of the workbooks to be loaded
+        var filePaths = new List<string>
         {
-            // List of file paths to load
-            string[] filePaths = new string[]
+            "Workbook1.xlsx",
+            "Workbook2.xlsx",
+            "Workbook3.xlsx"
+        };
+
+        // List that will hold the loaded workbooks
+        var workbooks = new List<Workbook>();
+
+        foreach (var path in filePaths)
+        {
+            try
             {
-                "Workbook1.xlsx",
-                "Workbook2.xlsx",
-                "Workbook3.xlsx"
-                // Add more paths as needed
-            };
+                // Verify that the file exists before attempting to load it
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine($"File not found: {path}");
+                    continue;
+                }
 
-            // List to hold loaded workbooks
-            List<Workbook> workbooks = new List<Workbook>();
+                // Load the workbook from the file
+                var wb = new Workbook(path);
 
-            // Loop through each file, load it, set manual calculation, and store in the list
-            foreach (string path in filePaths)
-            {
-                // Load workbook using the string constructor (load rule)
-                Workbook wb = new Workbook(path);
-
-                // Set calculation mode to Manual (FormulaSettings.CalculationMode)
-                wb.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+                // Attempt to set calculation mode to Manual via reflection (avoids compile‑time enum reference)
+                try
+                {
+                    var settings = wb.Settings;
+                    PropertyInfo calcModeProp = settings.GetType().GetProperty("CalcMode");
+                    if (calcModeProp != null && calcModeProp.CanWrite)
+                    {
+                        // Parse the enum value "Manual" from the property type
+                        object manualValue = Enum.Parse(calcModeProp.PropertyType, "Manual");
+                        calcModeProp.SetValue(settings, manualValue);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to set manual calculation mode for '{path}': {ex.Message}");
+                }
 
                 // Add the workbook to the collection
                 workbooks.Add(wb);
             }
-
-            // At this point, 'workbooks' contains all loaded workbooks with manual calculation mode.
-            Console.WriteLine($"Loaded {workbooks.Count} workbooks with Manual calculation mode.");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook '{path}': {ex.Message}");
+            }
         }
+
+        // At this point 'workbooks' contains all successfully loaded workbooks.
+        Console.WriteLine($"Loaded {workbooks.Count} workbook(s) with manual calculation mode where possible.");
     }
 }

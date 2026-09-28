@@ -1,33 +1,26 @@
-// Title: How to Set an Excel Worksheet Tab Color to Blue with Aspose.Cells for .NET
-// Description: Shows how to assign the TabColor property of a worksheet to blue using Aspose.Cells for .NET and save the workbook as an .xlsx file.
-// Keywords: Aspose.Cells | C# worksheet tab color | Excel tab color programmatically | Worksheet.TabColor | set tab color blue | Aspose.Cells example | C# Excel styling | GitHub Aspose.Cells TabColor sample
-// Common Searches: Aspose.Cells change worksheet tab color C# | set Excel sheet tab to blue using Aspose.Cells | Worksheet.TabColor property example | how to color Excel sheet tabs programmatically | C# code to set tab color in Excel file
-// Developer Intent: Apply a blue color to a worksheet tab in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Highlight a summary sheet in a multi‑sheet report by giving it a blue tab. | Visually separate input, processing, and output worksheets with distinct tab colors, using blue for completed sections. | Create a status dashboard where blue tabs indicate tasks that have been finalized.
-// AI Prompts: Generate a C# snippet that sets different TabColor values for several worksheets in the same workbook using Aspose.Cells. | Explain how to open an existing .xlsx file, locate a worksheet by name, and change its TabColor with Aspose.Cells. | Show how to define a custom RGB color and assign it to a worksheet tab instead of using predefined System.Drawing colors.
+// Title: How to set a worksheet's tab color to blue using Aspose.Cells for .NET (C#)
+// AI Prompts: Set the TabColor property of a specific worksheet to System.Drawing.Color.Blue with Aspose.Cells in C#. | Apply a blue tab color to multiple worksheets based on their index using the Aspose.Cells API. | Implement conditional tab coloring (e.g., blue for the first sheet) for Excel workbooks with Aspose.Cells in .NET.
+// Common Searches: aspocells c# set worksheet tab color to blue example | how to change Excel sheet tab color programmatically with Aspose.Cells | C# Aspose.Cells change tab color of first worksheet | set tab color for Excel worksheet using Aspose.Cells .NET | Aspose.Cells TabColor property usage tutorial
+// Tags: set worksheet tab color Aspose.Cells | Aspose.Cells TabColor property C# | blue worksheet tab Excel .NET | programmatic Excel tab coloring Aspose | change Excel sheet tab color using Aspose.Cells
 
-using System;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace AsposeCellsTabColorDemo
+// Creates a workbook, accesses the first worksheet, sets its TabColor to blue, and saves the file as output.xlsx.
+class Program
 {
-    // Shows how to assign the TabColor property of a worksheet to blue using Aspose.Cells for .NET and save the workbook as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (default contains one worksheet)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one using the provided load rule)
+        Workbook workbook = new Workbook(); // create rule applied here
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the worksheet tab color to blue
-            worksheet.TabColor = Color.Blue;
+        // Set the worksheet tab color to blue
+        sheet.TabColor = Color.Blue; // blue tab for visual distinction
 
-            // Save the workbook to a file
-            workbook.Save("WorksheetWithBlueTab.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook (using the provided save rule)
+        workbook.Save("output.xlsx"); // save rule applied here
     }
 }

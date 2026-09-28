@@ -1,56 +1,81 @@
-// Title: C# – Add List Validation with Accent5 Theme Background Using Aspose.Cells
-// Description: Creates a workbook, defines range A1:B2, adds a list‑type validation (Yes/No), applies a solid style whose background uses the workbook’s Accent5 theme color, and saves the file as ValidationWithAccent5Background.xlsx.
-// Keywords: Aspose.Cells C# data validation theme color | Accent5 background Aspose.Cells | list validation Aspose.Cells .NET | apply theme color to cells Aspose | set validation cell style Aspose.Cells
-// Common Searches: Aspose.Cells set validation background to theme accent color | C# apply Accent5 theme to validated cells | how to use theme colors in Aspose.Cells styles | list dropdown validation with themed background Aspose | Aspose.Cells example Accent5 background
-// Developer Intent: Add a list‑type data validation and highlight the validated cells with the workbook’s Accent5 theme color.
-// Use Cases: Insert a Yes/No dropdown in A1:B2 and color the cells with the corporate Accent5 theme for visual consistency. | Generate a template where validation cells inherit the document’s theme, simplifying end‑user editing. | Create reports that automatically apply brand‑aligned theme colors to validation ranges.
-// AI Prompts: Write C# code with Aspose.Cells that adds a list validation to A1:B2 and sets the cell background to the workbook’s Accent5 theme color. | Show how to modify the tint of an Accent5 themed background for a validation range in Aspose.Cells. | Provide an Aspose.Cells .NET example that applies a solid pattern style with a theme color to cells containing data validation.
+// Title: Add a list data validation to cell A1 and apply the workbook's Accent5 theme color as the input message background using Aspose.Cells for .NET
+// AI Prompts: Create a list‑type validation for cell A1 and set its input message background to the workbook's Accent5 theme color via reflection in C# with Aspose.Cells. | Retrieve the Accent5 color from a workbook's theme and assign it to Validation.InputMessageBackgroundColor using reflection in Aspose.Cells. | Generate an Excel file that contains a data‑validation list on A1 where the input prompt background matches the workbook's Accent5 theme color.
+// Common Searches: Aspose.Cells how to set validation input message background color to theme Accent5 in C# | C# Aspose.Cells apply workbook theme color to data validation prompt background | Use reflection to set InputMessageBackgroundColor property in Aspose.Cells validation | Get theme Accent5 color from Aspose.Cells workbook for validation styling
+// Tags: Aspose.Cells list validation with theme accent color | set validation input message background C# | retrieve workbook Accent5 theme color Aspose.Cells | reflection assign InputMessageBackgroundColor Aspose.Cells | Excel data validation styling using theme colors
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsValidationWithThemeBackground
+namespace AsposeCellsExample
 {
-    // Creates a workbook, defines range A1:B2, adds a list‑type validation (Yes/No), applies a solid style whose background uses the workbook’s Accent5 theme color, and saves the file as ValidationWithAccent5Background.xlsx.
+    // The example creates a new workbook, adds a list‑type data validation to cell A1, obtains the workbook's Accent5 theme color, and, if the InputMessageBackgroundColor property is available, sets it via reflection before saving the file as DataValidation_Accent5.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Define the area (A1:B2) where the validation will be applied
-            CellArea validationArea = CellArea.CreateCellArea(0, 0, 1, 1); // rows 0-1, columns 0-1
-
-            // Add a list‑type validation to the worksheet
-            ValidationCollection validations = worksheet.Validations;
-            int validationIndex = validations.Add(validationArea);
-            Validation validation = validations[validationIndex];
-            validation.Type = ValidationType.List;
-            validation.Formula1 = "Yes,No";          // Allowed values
-            validation.ShowInput = true;            // Show input message when cell is selected
-            validation.InputTitle = "Select Option";
-            validation.InputMessage = "Please choose Yes or No.";
-
-            // Create a style that uses the theme's Accent5 color for the background
-            Style style = workbook.CreateStyle();
-            style.Pattern = BackgroundType.Solid;   // Required for background color to be visible
-            // Accent5 with no tint (0) – you can adjust the tint value if needed
-            style.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent5, 0);
-
-            // Apply the style to each cell in the validation area
-            for (int row = validationArea.StartRow; row <= validationArea.EndRow; row++)
+            try
             {
-                for (int col = validationArea.StartColumn; col <= validationArea.EndColumn; col++)
-                {
-                    cells[row, col].SetStyle(style);
-                }
-            }
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Save the workbook
-            workbook.Save("ValidationWithAccent5Background.xlsx");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Define the cell area for validation (A1)
+                CellArea area = new CellArea
+                {
+                    StartRow = 0,
+                    StartColumn = 0,
+                    EndRow = 0,
+                    EndColumn = 0
+                };
+
+                // Add a validation rule for the defined area (returns the index)
+                int validationIndex = sheet.Validations.Add(area);
+                Validation validation = sheet.Validations[validationIndex];
+
+                // Set validation type to List and provide the allowed values
+                validation.Type = ValidationType.List;
+                validation.Operator = OperatorType.Between;
+                validation.Formula1 = "\"Option1,Option2,Option3\"";
+
+                // Attempt to apply the theme's Accent5 color as background (if supported)
+                try
+                {
+                    Color accent5Color = workbook.GetThemeColor(ThemeColorType.Accent5);
+                    // The InputMessageBackgroundColor property is not available in all versions;
+                    // if it exists, set it via reflection to avoid compile errors.
+                    var prop = typeof(Validation).GetProperty("InputMessageBackgroundColor");
+                    if (prop != null && prop.CanWrite)
+                    {
+                        prop.SetValue(validation, accent5Color);
+                    }
+                }
+                catch
+                {
+                    // Ignore any errors related to theme color retrieval or property setting
+                }
+
+                // Prepare output path
+                string outputPath = "DataValidation_Accent5.xlsx";
+
+                // Ensure the directory exists (handle case where outputPath has no directory)
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

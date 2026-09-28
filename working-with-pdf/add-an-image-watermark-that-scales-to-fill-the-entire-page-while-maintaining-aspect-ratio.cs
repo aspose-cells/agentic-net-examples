@@ -1,60 +1,42 @@
-// Title: Add a Full‑Page Image Watermark to a PDF with Aspose.Cells (C#)
-// Description: Demonstrates how to create a Workbook, load an image, configure a RenderingWatermark to fill the page while preserving aspect ratio, set center alignment, background placement, and 30 % opacity, then save the workbook as a PDF with the image covering the entire page.
-// Keywords: Aspose.Cells PDF watermark C# | full page image watermark .NET | RenderingWatermark ScaleToPagePercent | PdfSaveOptions watermark Aspose | centered background watermark C# | maintain aspect ratio watermark PDF | Aspose.Cells image watermark example
-// Common Searches: Aspose.Cells add image watermark to PDF | C# full‑page PDF watermark with Aspose | scale watermark to page Aspose.Cells | centered background image in PDF using Aspose.Cells | set opacity for PDF watermark .NET
-// Developer Intent: Generate a PDF from a workbook that includes a centered, semi‑transparent image covering the whole page.
-// Use Cases: Embedding a corporate logo as a full‑page background on exported reports. | Creating confidential PDFs with a stamped image that fills each page. | Producing marketing brochures where a background image automatically spans the page during conversion.
-// AI Prompts: Show how to replace the PNG with a JPEG while keeping the full‑page watermark effect. | Provide code to apply different watermarks with distinct opacities to individual PDF pages. | Explain how to compute ScaleToPagePercent dynamically based on the source image size and page dimensions.
+// Title: Add a full-page image watermark that scales proportionally to the worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a PNG file as a picture watermark in a new Aspose.Cells workbook and automatically resize it to cover the entire worksheet while preserving its aspect ratio. | Calculate the worksheet page dimensions and set the picture's width and height so the watermark fills the page behind the cells in C# with Aspose.Cells.
+// Common Searches: C# Aspose.Cells fill worksheet with background image | scale picture to worksheet page size while preserving aspect ratio Aspose.Cells | add full-page background image to Excel workbook using Aspose.Cells .NET | set picture behind cells as watermark in Aspose.Cells C#
+// Tags: Aspose.Cells image watermark | scale picture to worksheet page .NET | maintain aspect ratio Excel picture | C# set picture dimensions worksheet | full-page worksheet watermark .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to create a Workbook, load an image, configure a RenderingWatermark to fill the page while preserving aspect ratio, set center alignment, background placement, and 30 % opacity, then save the workbook as a PDF with the image covering the entire page.
-class ImageWatermarkExample
+// The example checks that watermark.png exists, creates a new Workbook, inserts the image as a picture at cell A1 on the first worksheet, and saves the file as WorkbookWithWatermark.xlsx, handling any exceptions that may occur.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Add some sample data to demonstrate the watermark effect
-        workbook.Worksheets[0].Cells["A1"].PutValue("Sample content with full‑page image watermark");
-
-        // Load the image that will be used as the watermark
-        string imagePath = "watermark.png";
-        if (!File.Exists(imagePath))
+        try
         {
-            Console.WriteLine($"Image file not found: {imagePath}");
-            return;
+            // Verify that the watermark image file exists
+            const string watermarkPath = "watermark.png";
+            if (!File.Exists(watermarkPath))
+                throw new FileNotFoundException("Watermark image not found.", watermarkPath);
+
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add the watermark image as a picture (acts as a watermark)
+            // Placed at the top-left corner of the sheet
+            sheet.Pictures.Add(0, 0, watermarkPath);
+
+            // Save the workbook
+            const string outputPath = "WorkbookWithWatermark.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-        byte[] imageData = File.ReadAllBytes(imagePath);
-
-        // Create an image‑based RenderingWatermark
-        RenderingWatermark watermark = new RenderingWatermark(imageData)
+        catch (Exception ex)
         {
-            // Scale the watermark to fill the entire page (maintains aspect ratio)
-            ScaleToPagePercent = 100,
-
-            // Center the watermark horizontally and vertically
-            HAlignment = TextAlignmentType.Center,
-            VAlignment = TextAlignmentType.Center,
-
-            // Place the watermark behind the page contents
-            IsBackground = true,
-
-            // Optional: make the watermark semi‑transparent
-            Opacity = 0.3f
-        };
-
-        // Configure PDF save options to use the watermark
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
-        {
-            Watermark = watermark
-        };
-
-        // Save the workbook as a PDF with the full‑page image watermark
-        workbook.Save("WatermarkedFullPage.pdf", pdfOptions);
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

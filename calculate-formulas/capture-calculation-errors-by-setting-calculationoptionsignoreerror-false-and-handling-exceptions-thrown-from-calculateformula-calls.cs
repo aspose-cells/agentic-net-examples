@@ -1,61 +1,69 @@
-// Title: Capture Aspose.Cells formula errors in C# by setting CalculationOptions.IgnoreError = false
-// Description: Shows how to insert an invalid Excel formula, disable error suppression with CalculationOptions.IgnoreError, call Workbook.CalculateFormula inside a try‑catch to catch the exception, then re‑run the calculation with errors ignored and read the resulting cell value.
-// Keywords: Aspose.Cells | C# | CalculateFormula | CalculationOptions | IgnoreError | formula error handling | exception handling | Excel formula validation | workbook.CalculateFormula | error capture
-// Common Searches: Aspose.Cells catch calculation exception | CalculateFormula throws error when IgnoreError false | how to handle invalid Excel formula Aspose.Cells .NET | disable error ignoring in Aspose.Cells calculation | retrieve error message from workbook.CalculateFormula
-// Developer Intent: Detect and manage formula calculation failures by turning off error suppression in Aspose.Cells.
-// Use Cases: Validate all formulas in an uploaded workbook and abort processing on the first error. | Provide a strict calculation mode for end‑users that surfaces the exact cause of a formula failure. | Switch between tolerant and strict calculation at runtime based on user preferences or configuration.
-// AI Prompts: Write C# code that logs the full stack trace when Workbook.CalculateFormula throws an exception with CalculationOptions.IgnoreError set to false. | Explain how to toggle CalculationOptions.IgnoreError in a .NET microservice that processes Excel files using Aspose.Cells. | Create a retry pattern that fixes a formula after catching the exception, then recalculates the workbook.
+// Title: How to capture formula calculation errors in Aspose.Cells for .NET by disabling IgnoreError and handling exceptions
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, sets CalculationOptions.IgnoreError to false, runs Workbook.CalculateFormula, and logs any thrown exceptions. | Show an example of handling load, calculation, and save failures when processing a workbook using Aspose.Cells calculation options that do not ignore errors.
+// Common Searches: Aspose.Cells calculate formula without ignoring errors and capture exception details | C# Aspose.Cells CalculationOptions.IgnoreError false example | How to log formula evaluation errors when using Workbook.CalculateFormula in .NET | Detect and handle Excel formula errors with Aspose.Cells calculation engine
+// Tags: Aspose.Cells calculation options ignoreerror false | C# Aspose.Cells formula error handling | Workbook.CalculateFormula exception capture | Excel workbook load and save error handling with Aspose.Cells | disable ignoreerror in Aspose.Cells calculation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCalculationErrorDemo
+// The sample loads an Excel file using Aspose.Cells, configures CalculationOptions to disable error ignoring, executes Workbook.CalculateFormula inside a try‑catch block to capture any formula evaluation errors, and then saves the workbook while reporting load, calculation, and save failures.
+class CalculationErrorCapture
 {
-    // Shows how to insert an invalid Excel formula, disable error suppression with CalculationOptions.IgnoreError, call Workbook.CalculateFormula inside a try‑catch to catch the exception, then re‑run the calculation with errors ignored and read the resulting cell value.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists before attempting to load it
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-            // Set a formula that will cause a calculation error (non‑existent function)
-            cells["A1"].Formula = "=NONEXISTENTFUNC(1,2)";
+        Workbook workbook = null;
+        try
+        {
+            // Load the existing workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to load workbook:");
+            Console.WriteLine(ex.Message);
+            return;
+        }
 
-            // Prepare calculation options with IgnoreError set to false
-            CalculationOptions options = new CalculationOptions
-            {
-                IgnoreError = false   // Do not ignore errors – an exception will be thrown
-            };
+        // Configure calculation options (do NOT ignore errors)
+        var calcOptions = new CalculationOptions
+        {
+            IgnoreError = false
+        };
 
-            // Attempt to calculate formulas and capture any errors
-            try
-            {
-                workbook.CalculateFormula(options);
-                Console.WriteLine("Calculation completed without errors (unexpected).");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Caught calculation error as expected: " + ex.Message);
-            }
+        try
+        {
+            // Perform formula calculation with the specified options
+            workbook.CalculateFormula(calcOptions);
+            Console.WriteLine("Calculation completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Capture and display calculation errors
+            Console.WriteLine("Calculation error captured:");
+            Console.WriteLine(ex.Message);
+        }
 
-            // Now calculate again, this time ignoring errors
-            options.IgnoreError = true;   // Suppress errors
-            try
-            {
-                workbook.CalculateFormula(options);
-                Console.WriteLine("Calculation completed while ignoring errors.");
-            }
-            catch (Exception ex)
-            {
-                // This block should not be reached when IgnoreError = true
-                Console.WriteLine("Unexpected error: " + ex.Message);
-            }
-
-            // Optionally, display the resulting value in the cell (will be the error string)
-            Console.WriteLine("Cell A1 value after ignoring errors: " + cells["A1"].StringValue);
+        try
+        {
+            // Save the workbook to the desired output path
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to save workbook:");
+            Console.WriteLine(ex.Message);
         }
     }
 }

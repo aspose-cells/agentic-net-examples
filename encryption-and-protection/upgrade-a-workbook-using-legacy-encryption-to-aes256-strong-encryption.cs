@@ -1,58 +1,47 @@
-// Title: Convert a legacy‑encrypted .xls to AES‑256 protected .xlsx using Aspose.Cells for .NET
-// Description: This example demonstrates how to open a password‑protected .xls workbook that uses an old XOR‑style encryption, assign a new password, switch to the StrongCryptographicProvider with a 256‑bit key, and save the file as an .xlsx with AES‑256 protection. The code uses LoadOptions for the original password and Workbook.SetEncryptionOptions for the upgrade, helping meet modern security and compliance requirements (e.g., GDPR, US SOX).
-// Keywords: Aspose.Cells | C# | AES-256 encryption | StrongCryptographicProvider | legacy Excel encryption | XOR encrypted .xls | Workbook.SetEncryptionOptions | upgrade workbook encryption | password protected Excel | convert .xls to .xlsx | encryption migration | GDPR compliance
-// Common Searches: how to change old XOR encrypted Excel file to AES‑256 with Aspose.Cells | Aspose.Cells upgrade legacy encryption to StrongCryptographicProvider | C# load encrypted .xls and save as .xlsx with AES‑256 | convert Excel97To2003 password protection to modern encryption | batch upgrade legacy encrypted workbooks Aspose.Cells
-// Developer Intent: Migrate a workbook protected with legacy encryption to strong AES‑256 encryption.
-// Use Cases: Modernize archived .xls files that use weak XOR encryption for regulatory compliance. | Automate bulk conversion of password‑protected legacy workbooks to AES‑256 secured .xlsx files. | Replace an outdated password scheme with a new strong password while preserving workbook data.
-// AI Prompts: Generate C# code that opens a legacy‑encrypted .xls with a password, re‑encrypts it using AES‑256, and saves it as .xlsx using Aspose.Cells. | Explain the role of LoadOptions and SetEncryptionOptions when upgrading Excel workbook encryption in Aspose.Cells. | Create a reusable method: (string srcPath, string oldPwd, string newPwd, string destPath) → AES‑256 encrypted workbook.
+// Title: Re‑encrypt a legacy‑protected Excel .xlsx workbook to AES‑256 using Aspose.Cells for .NET
+// AI Prompts: Load an existing .xlsx file that uses legacy encryption, supply the old password, assign a new password, and save the file so Aspose.Cells applies AES‑256 encryption. | Check that the source workbook file exists before loading it, then re‑encrypt it with a stronger password while handling possible load or save errors. | Implement exception handling for incorrect old passwords, missing files, or I/O issues during the upgrade to AES‑256 encryption.
+// Common Searches: asp.net how to convert a password‑protected Excel file from legacy encryption to AES‑256 with Aspose.Cells | c# code to re‑encrypt an existing .xlsx using a new password and AES‑256 encryption | aspose.cells load workbook with old password and save with stronger encryption | upgrade legacy encrypted Excel workbook to AES‑256 in .net
+// Tags: re‑encrypt Excel workbook AES‑256 Aspose.Cells | load workbook with password LoadOptions C# | set workbook password Workbook.Settings C# | upgrade legacy Excel encryption .NET | strong encryption for .xlsx Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Saving; // For OoxmlSaveOptions if needed in future
 
-// This example demonstrates how to open a password‑protected .xls workbook that uses an old XOR‑style encryption, assign a new password, switch to the StrongCryptographicProvider with a 256‑bit key, and save the file as an .xlsx with AES‑256 protection. The code uses LoadOptions for the original password and Workbook.SetEncryptionOptions for the upgrade, helping meet modern security and compliance requirements (e.g., GDPR, US SOX).
-class UpgradeEncryption
+// The program loads a legacy‑encrypted XLSX file using the original password, assigns a new password via Workbook.Settings, and saves it; Aspose.Cells automatically encrypts the output with AES‑256.
+class Program
 {
     static void Main()
     {
-        // Path to the workbook that uses legacy encryption (e.g., XOR, compatible, etc.)
-        string legacyFilePath = "legacy_encrypted.xls";
+        // Paths to the source and destination workbooks
+        string inputPath = "legacy_encrypted.xlsx";
+        string outputPath = "aes256_encrypted.xlsx";
 
-        // Password required to open the legacy encrypted workbook
-        string legacyPassword = "oldPassword";
+        // Password used for the legacy‑encrypted workbook
+        string oldPassword = "oldPassword";
+
+        // Password to apply for the new encrypted workbook
+        string newPassword = "newPassword";
 
         try
         {
-            // Ensure the legacy file exists; if not, create a simple workbook with legacy encryption
-            if (!File.Exists(legacyFilePath))
-            {
-                var tempWorkbook = new Workbook();
-                tempWorkbook.Worksheets[0].Cells["A1"].PutValue("Sample data");
-                tempWorkbook.Settings.Password = legacyPassword; // legacy encryption for .xls
-                tempWorkbook.Save(legacyFilePath, SaveFormat.Excel97To2003);
-            }
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Load the legacy encrypted workbook using LoadOptions with the password
-            var loadOptions = new LoadOptions
+            // Load the workbook with the legacy password
+            var loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                Password = legacyPassword
+                Password = oldPassword
             };
-            var workbook = new Workbook(legacyFilePath, loadOptions);
+            var workbook = new Workbook(inputPath, loadOptions);
 
-            // Define a new password for the upgraded workbook (can be the same or different)
-            string newPassword = "newStrongPassword";
-
-            // Assign the new password to the workbook settings
+            // Apply a new password for the workbook (encryption)
             workbook.Settings.Password = newPassword;
 
-            // Upgrade encryption to AES‑256 (StrongCryptographicProvider with 256‑bit key)
-            workbook.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
-
-            // Save the workbook with the upgraded encryption
-            string upgradedFilePath = "upgraded_encrypted.xlsx";
-            workbook.Save(upgradedFilePath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook upgraded and saved to '{upgradedFilePath}'.");
+            // Save the workbook; Aspose.Cells will encrypt it using the password.
+            // The default encryption for .xlsx files is AES‑256 in recent versions.
+            workbook.Save(outputPath, SaveFormat.Xlsx);
         }
         catch (Exception ex)
         {

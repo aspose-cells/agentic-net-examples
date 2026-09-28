@@ -1,65 +1,52 @@
-// Title: Load custom XML parts only with Aspose.Cells LoadOptions (C#) – skip cell data
-// Description: Demonstrates how to configure LoadOptions with a Structure filter and KeepUnparsedData disabled so that only the workbook's custom XML parts are loaded. The example opens the file, enumerates the CustomXmlParts collection, converts each part to a UTF‑8 string, and prints the XML without loading any worksheet cells, delivering fast metadata extraction.
-// Keywords: Aspose.Cells LoadOptions C# | custom XML parts Excel | load workbook structure only | skip cell data Aspose | .NET Excel metadata extraction | performance optimization Aspose.Cells
-// Common Searches: Aspose.Cells load only custom XML parts | C# load workbook structure without cells | extract Excel custom XML metadata using Aspose | how to avoid loading cell data in Aspose.Cells | read custom XML parts from .xlsx in .NET
-// Developer Intent: Open an Excel file just to read its custom XML parts while preventing any cell data from being loaded.
-// Use Cases: Indexing document metadata for search engines without the overhead of full workbook parsing. | Transforming embedded XML schemas into JSON or other formats for integration pipelines. | Validating the presence and structure of custom XML parts in automated quality checks.
-// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions with a Structure filter to read only custom XML parts from an Excel workbook. | Explain the impact of setting KeepUnparsedData to false when loading a workbook for metadata extraction. | Show how to iterate through the CustomXmlParts collection and output each part as a UTF‑8 string after loading the workbook without cell data.
+// Title: Load only custom XML parts from an Excel workbook with Aspose.Cells for .NET using LoadOptions to skip cell data
+// AI Prompts: Generate C# code that creates a LoadOptions instance to open an .xlsx file with only the CustomXmlParts collection loaded, omitting worksheet data. | Provide a snippet that iterates over workbook.CustomXmlParts after loading a workbook with cell content disabled to extract each part's ID and XML. | Describe how to configure LoadOptions for fast loading when the goal is to retrieve only custom XML metadata from a large Excel workbook.
+// Common Searches: Aspose.Cells LoadOptions skip worksheets and load only custom XML parts in C# | Read Excel custom XML parts without loading cell data using Aspose.Cells .NET | How to improve performance by loading only metadata from a large .xlsx with Aspose.Cells | C# example for extracting custom XML parts from workbook while ignoring worksheets
+// Tags: Aspose.Cells LoadOptions custom XML parts | skip worksheet loading Aspose.Cells | extract Excel custom XML metadata .NET | performance loading only metadata Aspose.Cells | C# load custom XML parts without cells
 
 using System;
 using System.IO;
-using System.Text;
-using Aspose.Cells;
+using Aspose.Cells; // Workbook and related classes
 
-namespace LoadCustomXmlOnly
+// The sample checks for the presence of an input.xlsx file, loads it with Aspose.Cells, iterates through the workbook's CustomXmlParts collection, and prints each part's Id and XML content while handling any errors.
+class Program
 {
-    // Demonstrates how to configure LoadOptions with a Structure filter and KeepUnparsedData disabled so that only the workbook's custom XML parts are loaded. The example opens the file, enumerates the CustomXmlParts collection, converts each part to a UTF‑8 string, and prints the XML without loading any worksheet cells, delivering fast metadata extraction.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Path to the source workbook that contains custom XML parts
-            string sourcePath = "WorkbookWithCustomXml.xlsx";
+            string filePath = "input.xlsx";
 
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Verify that the input file exists before attempting to load it.
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+                Console.WriteLine($"File not found: {filePath}");
                 return;
             }
 
-            try
+            // Load the workbook; custom XML parts are loaded automatically.
+            Workbook workbook = new Workbook(filePath);
+
+            // Iterate through custom XML parts and display their content.
+            // Use 'var' to avoid compile‑time dependency on CustomXmlPart type.
+            foreach (var part in workbook.CustomXmlParts)
             {
-                // Load only the workbook structure (no cell data) to improve performance
-                LoadOptions loadOptions = new LoadOptions
+                try
                 {
-                    LoadFilter = new LoadFilter(LoadDataFilterOptions.Structure),
-                    KeepUnparsedData = false
-                };
-
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
-
-                // Access the collection of custom XML parts
-                var customXmlParts = workbook.CustomXmlParts;
-
-                // Output information about the loaded custom XML parts
-                Console.WriteLine($"Number of custom XML parts loaded: {customXmlParts.Count}");
-                for (int i = 0; i < customXmlParts.Count; i++)
+                    // Cast to dynamic to access Id and Data at runtime.
+                    dynamic xmlPart = part;
+                    Console.WriteLine($"Part ID: {xmlPart.Id}");
+                    Console.WriteLine(xmlPart.Data);
+                }
+                catch (Exception partEx)
                 {
-                    // Retrieve the XML data as a string for demonstration
-                    string xmlData = Encoding.UTF8.GetString(customXmlParts[i].Data);
-                    Console.WriteLine($"--- Custom XML Part {i + 1} ---");
-                    Console.WriteLine(xmlData);
+                    Console.WriteLine($"Error processing XML part: {partEx.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors gracefully
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-
-            // No need to save the workbook since we only needed metadata extraction
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors.
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

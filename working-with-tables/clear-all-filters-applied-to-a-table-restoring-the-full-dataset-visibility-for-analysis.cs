@@ -1,57 +1,73 @@
-// Title: Clear all filters from an Aspose.Cells ListObject (table) in C# – restore full row visibility
-// Description: This example creates a workbook, adds a ListObject with an auto‑filter, applies a filter on the "Category" column, then removes the filter using RemoveAutoFilter, checks HasAutoFilter and IsRowHidden to confirm that every row is visible, and saves the file.
-// Keywords: Aspose.Cells Clear Table Filters C# | RemoveAutoFilter Aspose.Cells | Aspose.Cells ListObject reset filter | C# Aspose.Cells hide rows | Aspose.Cells table auto filter removal | .NET Aspose.Cells filter clear
-// Common Searches: Aspose.Cells remove table filter C# | How to clear auto filter in Aspose.Cells ListObject | Reset filters in Aspose.Cells worksheet | Show hidden rows after filter Aspose.Cells | C# Aspose.Cells RemoveAutoFilter example
-// Developer Intent: Remove the auto‑filter from a ListObject so that all rows become visible again.
-// Use Cases: After programmatically filtering a table for analysis, clear the filter before saving or exporting the workbook. | Implement a "Reset Filters" button in a .NET application that uses Aspose.Cells to toggle table visibility for end users. | Reveal hidden rows prior to operations that require the complete dataset, such as chart generation or data export.
-// AI Prompts: Generate C# code with Aspose.Cells that creates a ListObject, applies a filter on the "Category" column, then clears all filters using RemoveAutoFilter and verifies row visibility. | Explain the difference between ListObject.RemoveAutoFilter and manually clearing filter criteria in Aspose.Cells. | Provide a step‑by‑step guide to add a "Reset Filters" feature in a WinForms app using Aspose.Cells.
+// Title: Clear all AutoFilter criteria from a ListObject (Excel table) using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, retrieves the first ListObject, removes every AutoFilter condition, refreshes the worksheet filter, and saves the workbook with Aspose.Cells. | Show a .NET example that programmatically resets all filter columns of an Excel table (ListObject) and persists the changes using Aspose.Cells.
+// Common Searches: Aspose.Cells C# clear filters on Excel ListObject | remove all AutoFilter criteria from a worksheet table using Aspose.Cells .NET | reset Excel table filters programmatically with Aspose.Cells | how to refresh worksheet autofilter after clearing filters in C#
+// Tags: clear ListObject autofilter Aspose.Cells | reset Excel table filters C# | Aspose.Cells refresh worksheet autofilter | save workbook after filter removal .NET | programmatic table filter management Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// This example creates a workbook, adds a ListObject with an auto‑filter, applies a filter on the "Category" column, then removes the filter using RemoveAutoFilter, checks HasAutoFilter and IsRowHidden to confirm that every row is visible, and saves the file.
-class ClearTableFilters
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an Excel workbook, accesses the first ListObject on the first worksheet, clears any AutoFilter criteria by emptying the FilterColumns collection, refreshes the worksheet AutoFilter, and saves the modified file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-        // Populate sample data with a header row
-        sheet.Cells["A1"].PutValue("ID");
-        sheet.Cells["B1"].PutValue("Category");
-        sheet.Cells["C1"].PutValue("Amount");
-        sheet.Cells["A2"].PutValue(1);
-        sheet.Cells["B2"].PutValue("Food");
-        sheet.Cells["C2"].PutValue(100);
-        sheet.Cells["A3"].PutValue(2);
-        sheet.Cells["B3"].PutValue("Drink");
-        sheet.Cells["C3"].PutValue(50);
-        sheet.Cells["A4"].PutValue(3);
-        sheet.Cells["B4"].PutValue("Food");
-        sheet.Cells["C4"].PutValue(150);
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                    return;
+                }
 
-        // Add a ListObject (table) that includes an auto‑filter by default
-        int tableIndex = sheet.ListObjects.Add(0, 0, 3, 2, true);
-        ListObject table = sheet.ListObjects[tableIndex];
+                // Load the workbook containing the table with filters
+                Workbook workbook = new Workbook(inputPath);
 
-        // Apply a filter to the "Category" column (index 1) to show only "Food"
-        table.AutoFilter.AddFilter(1, "Food");
-        table.AutoFilter.Refresh();
+                // Access the first worksheet (adjust index or name as needed)
+                Worksheet worksheet = workbook.Worksheets[0];
 
-        // Demonstrate that rows not matching the filter are hidden
-        Console.WriteLine("Row 3 hidden after filter: " + sheet.Cells.IsRowHidden(2)); // Row index 2 = Excel row 3
+                // Retrieve the first table (ListObject) on the worksheet
+                if (worksheet.ListObjects.Count == 0)
+                {
+                    Console.WriteLine("No tables (ListObjects) found on the worksheet.");
+                    return;
+                }
 
-        // Clear all filters from the table, restoring full visibility
-        table.RemoveAutoFilter();
+                ListObject table = worksheet.ListObjects[0];
 
-        // Verify that the auto‑filter has been removed and all rows are visible
-        Console.WriteLine("HasAutoFilter after removal: " + table.HasAutoFilter);
-        Console.WriteLine("Row 3 hidden after clearing filters: " + sheet.Cells.IsRowHidden(2));
+                // Clear any filter criteria applied to the table
+                if (table.AutoFilter != null)
+                {
+                    // Remove all filter columns
+                    table.AutoFilter.FilterColumns.Clear();
 
-        // Save the workbook
-        workbook.Save("ClearTableFilters.xlsx");
+                    // Refresh the worksheet's autofilter to display all rows
+                    worksheet.AutoFilter.Refresh();
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook; the table will now display all rows without any filters
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            }
+            catch (Exception ex)
+            {
+                // Catch any unexpected exceptions and display a friendly message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

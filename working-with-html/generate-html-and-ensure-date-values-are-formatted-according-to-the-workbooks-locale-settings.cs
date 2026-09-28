@@ -1,48 +1,49 @@
-// Title: C# – Export Aspose.Cells Workbook to HTML with Locale‑Aware Date Formatting
-// Description: Demonstrates how to create a workbook, assign a regional setting (e.g., United Kingdom), insert a DateTime value, apply the built‑in short date style, configure HtmlSaveOptions for full data export and HTML5 output, and save the file as HTML so that dates are rendered according to the workbook’s locale.
-// Keywords: Aspose.Cells | C# | HTML export | locale date format | workbook region | HtmlSaveOptions | Html5 output | United Kingdom regional settings | short date style | regional formatting
-// Common Searches: Aspose.Cells export HTML date format UK | C# set workbook region for HTML output | How to format dates by locale when saving as HTML with Aspose.Cells | HtmlSaveOptions regional settings example | Export spreadsheet to HTML with localized dates
-// Developer Intent: Create an HTML representation of a workbook where every date cell respects the workbook’s regional settings.
-// Use Cases: Publish a web‑based financial report that automatically shows dates in the target audience’s local format. | Generate localized HTML invoices where the date appears in the format defined by the workbook’s region. | Provide an online spreadsheet preview that preserves regional date conventions without additional client‑side scripting.
-// AI Prompts: Write C# code using Aspose.Cells to export a workbook to HTML with dates formatted according to the workbook’s Region property. | Show how to change the workbook’s regional setting to French (France) and save it as HTML so dates appear in the French short date format. | Explain how HtmlSaveOptions interacts with workbook regional settings to produce locale‑specific date strings in the HTML output.
+// Title: Export an Excel workbook to HTML with locale-specific date formatting using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, assigns Workbook.Settings.CultureInfo to a target locale (e.g., fr-FR), and saves the workbook as HTML so that all date cells appear in the locale's format. | Update existing Aspose.Cells HTML export logic to verify the source file, apply a custom CultureInfo, and implement robust exception handling while preserving regional date formatting in the generated HTML.
+// Common Searches: how to export Excel to HTML with culture-specific dates using Aspose.Cells .NET | Aspose.Cells C# set workbook cultureinfo before HtmlSaveOptions | preserve regional date format when converting .xlsx to .html with Aspose.Cells | C# Aspose.Cells export to HTML respecting workbook locale settings | set workbook Settings.CultureInfo for date formatting in HTML output Aspose.Cells
+// Tags: aspocells export excel to html with cultureinfo | c# workbook settings cultureinfo date formatting | htmlsaveoptions locale based date rendering | aspocells missing workbook file handling | regional date formatting aspocells html export
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, assign a regional setting (e.g., United Kingdom), insert a DateTime value, apply the built‑in short date style, configure HtmlSaveOptions for full data export and HTML5 output, and save the file as HTML so that dates are rendered according to the workbook’s locale.
-class GenerateHtmlWithLocaleDate
+// Loads 'input.xlsx', sets Workbook.Settings.CultureInfo to 'en-US', and saves it as 'output.html' via HtmlSaveOptions, ensuring dates are formatted according to the workbook's locale; includes file‑existence verification and exception handling.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        const string inputFile = "input.xlsx";
+        const string outputFile = "output.html";
 
-        // Set the workbook's regional settings (example: United Kingdom)
-        workbook.Settings.Region = CountryCode.UnitedKingdom;
-
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Insert a date value into cell A1
-        worksheet.Cells["A1"].PutValue(new DateTime(2023, 12, 31));
-
-        // Apply a built‑in date format (number format 14) which respects the region setting
-        Style dateStyle = worksheet.Cells["A1"].GetStyle();
-        dateStyle.Number = 14; // Built‑in short date format
-        worksheet.Cells["A1"].SetStyle(dateStyle);
-
-        // Configure HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions
+        // Verify that the input workbook exists to avoid FileNotFoundException.
+        if (!File.Exists(inputFile))
         {
-            // Export all data (including styles and formatting)
-            ExportDataOptions = HtmlExportDataOptions.All,
-            // Use HTML5 standard for the output
-            HtmlVersion = HtmlVersion.Html5,
-            // No need to calculate formulas for this example
-            CalculateFormula = false
-        };
+            Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+            return;
+        }
 
-        // Save the workbook as an HTML file; the date will be formatted according to the workbook's locale
-        workbook.Save("output.html", saveOptions);
+        try
+        {
+            // Load the workbook from the specified file.
+            Workbook workbook = new Workbook(inputFile);
+
+            // Set the workbook's locale (culture) to control date formatting.
+            // Replace "en-US" with the desired locale identifier.
+            workbook.Settings.CultureInfo = new CultureInfo("en-US");
+
+            // Configure HTML save options. No explicit ExportDateTimeFormat property is required;
+            // the workbook's CultureInfo setting controls date rendering.
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+
+            // Save the workbook as an HTML file using the configured options.
+            workbook.Save(outputFile, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during loading or saving.
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

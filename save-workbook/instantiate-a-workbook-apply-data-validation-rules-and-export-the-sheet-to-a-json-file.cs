@@ -1,59 +1,74 @@
-// Title: C# – Create an Excel workbook with list validation and export it to JSON using Aspose.Cells
-// Description: This example shows how to build a new Workbook, fill cells A1:B4 with sample data, apply a list‑based validation to column B (B2‑B10) with a drop‑down list, configure JsonSaveOptions (nested hierarchy, skip empty rows, header row), and save the worksheet as output.json.
-// Keywords: Aspose.Cells C# export to JSON | list validation Excel Aspose | JsonSaveOptions nested JSON | skip empty rows JSON export | Excel header row to JSON | .NET workbook validation example | Aspose.Cells data validation list
-// Common Searches: Aspose.Cells add list validation C# | export Excel sheet to JSON with Aspose.Cells | JsonSaveOptions ExportNestedStructure example | how to skip empty rows when saving JSON from Excel | C# code to create workbook and save as JSON
-// Developer Intent: Create a workbook, enforce a dropdown list on a column, and generate a JSON file with hierarchical structure and clean data.
-// Use Cases: Transform an Excel template with validated dropdowns into a JSON payload for a web API. | Produce a compact JSON representation of a worksheet for front‑end consumption, preserving column headers and removing blank rows. | Generate parent‑child JSON data from Excel while ensuring input values conform to a predefined list.
-// AI Prompts: Generate C# code that adds a list validation to column C and exports the sheet to JSON with ExportNestedStructure disabled. | Show how to read the output.json file produced by Aspose.Cells and deserialize it into a List<T> in .NET. | Explain how to modify JsonSaveOptions to include cell formulas and comments in the exported JSON.
+// Title: Create an Excel workbook, add list‑type data validation to a column, and export the sheet as indented JSON using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a new Workbook, fills it with sample rows, applies a list‑type validation to column A, and saves the first worksheet as a formatted JSON file with headers using Aspose.Cells. | Demonstrate how to set up JsonSaveOptions to export a single‑sheet workbook as a JSON object, include empty cells as null, and indent the output for readability.
+// Common Searches: asp.net add list validation to Excel column with Aspose.Cells | how to export an Aspose.Cells worksheet to pretty printed JSON in C# | Aspose.Cells JsonSaveOptions export empty cells as null example | C# save workbook with data validation as JSON file using Aspose.Cells | configure header row handling when converting Excel to JSON with Aspose.Cells
+// Tags: list validation Aspose.Cells | export worksheet to JSON Aspose.Cells | JsonSaveOptions indentation | header row handling JSON Aspose.Cells | apply data validation before JSON export
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-// This example shows how to build a new Workbook, fill cells A1:B4 with sample data, apply a list‑based validation to column B (B2‑B10) with a drop‑down list, configure JsonSaveOptions (nested hierarchy, skip empty rows, header row), and save the worksheet as output.json.
-class Program
+namespace AsposeCellsJsonExportDemo
 {
-    static void Main()
+    // Shows how to instantiate a Workbook, populate sample data, add a list‑type validation to column A, configure JsonSaveOptions (header row, object output, empty cells as null, indentation), and save the sheet as a formatted JSON file.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Populate some sample data with a header row
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Item");
-        sheet.Cells["A2"].PutValue("Fruit");
-        sheet.Cells["B2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Fruit");
-        sheet.Cells["B3"].PutValue("Banana");
-        sheet.Cells["A4"].PutValue("Vegetable");
-        sheet.Cells["B4"].PutValue("Carrot");
-
-        // Add a list‑type data validation to column B (Item)
-        Validation validation = sheet.Validations[sheet.Validations.Add()];
-        validation.Type = ValidationType.List;          // List validation
-        validation.InCellDropDown = true;               // Show drop‑down arrow
-        validation.Formula1 = "Apple,Banana,Carrot,Tomato"; // Allowed values
-
-        // Apply the validation to cells B2:B10
-        CellArea area = new CellArea
+        static void Main(string[] args)
         {
-            StartRow = 1,    // Row index is zero‑based (B2)
-            StartColumn = 1, // Column B
-            EndRow = 9,      // B10
-            EndColumn = 1
-        };
-        validation.AddArea(area);
+            // 1. Instantiate a new workbook
+            Workbook workbook = new Workbook();
 
-        // Configure JSON save options
-        JsonSaveOptions saveOptions = new JsonSaveOptions
-        {
-            ExportNestedStructure = true, // Export as parent‑child hierarchy
-            SkipEmptyRows = true,         // Omit empty rows
-            HasHeaderRow = true           // First row contains headers
-        };
+            // 2. Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook as a JSON file using the configured options
-        string outputPath = "output.json";
-        workbook.Save(outputPath, saveOptions);
+            // 3. Populate some sample data (including a header row)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Fruits");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Vegetables");
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["A4"].PutValue("Beverages");
+            sheet.Cells["B4"].PutValue(45);
+
+            // 4. Add a data validation rule (list validation) to column A (Category)
+            //    The allowed values are: Fruits, Vegetables, Beverages
+            ValidationCollection validations = sheet.Validations;
+            int validationIndex = validations.Add();                     // create a new validation
+            Validation validation = validations[validationIndex];        // retrieve the validation object
+
+            // Set validation type to List and provide the comma‑separated list of allowed values
+            validation.Type = ValidationType.List;
+            validation.InCellDropDown = true;                           // show drop‑down arrow
+            validation.Formula1 = "Fruits,Vegetables,Beverages";
+
+            // Apply the validation to the range A2:A4 (rows 2‑4 in column A)
+            CellArea area = new CellArea
+            {
+                StartRow = 1,      // zero‑based index, row 2
+                EndRow = 3,        // row 4
+                StartColumn = 0,   // column A
+                EndColumn = 0
+            };
+            validation.AddArea(area);
+
+            // 5. Configure JSON save options
+            JsonSaveOptions jsonOptions = new JsonSaveOptions
+            {
+                // Export the data as a JSON object (since we have a single sheet)
+                AlwaysExportAsJsonObject = true,
+                // Treat the first row as header names
+                HasHeaderRow = true,
+                // Export empty cells as null (optional)
+                ExportEmptyCells = true,
+                // Indent the output for readability
+                Indent = "  "
+            };
+
+            // 6. Save the workbook as a JSON file
+            string outputPath = "WorkbookWithValidation.json";
+            workbook.Save(outputPath, jsonOptions);
+
+            Console.WriteLine($"Workbook saved to JSON file: {outputPath}");
+        }
     }
 }

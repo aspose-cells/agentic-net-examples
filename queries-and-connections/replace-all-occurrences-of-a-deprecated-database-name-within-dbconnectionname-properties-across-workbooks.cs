@@ -1,60 +1,90 @@
-// Title: Replace Deprecated DBConnection Name in Excel Workbooks with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, iterates through its DataConnections, identifies DBConnection objects, and substitutes a specified old database name with a new one in the DBConnection.Name property before saving the file.
-// Keywords: Aspose.Cells | C# | DBConnection | replace connection name | external data connections | Excel workbook | .NET | update database name | bulk rename connections | data source migration
-// Common Searches: how to rename DBConnection in an Excel file using Aspose.Cells | replace old database name in workbook connections .NET | update DBConnection.Name property across all connections | Aspose.Cells change external data source name | bulk edit Excel connection names programmatically
-// Developer Intent: Programmatically change every DBConnection.Name in a workbook to replace a deprecated database identifier with a new one.
-// Use Cases: Migrate legacy reports to a new database by updating connection names automatically. | Run a batch job that processes multiple Excel files and aligns their DBConnection names with a refreshed data source. | Integrate a validation step in CI/CD pipelines to enforce naming standards for external data connections.
-// AI Prompts: Generate C# code using Aspose.Cells that scans a workbook's DataConnections and replaces a given old database name with a new one in DBConnection.Name. | Provide a robust version of the DBConnection rename routine with error handling, logging, and a summary of changed connections. | Create a script that iterates over a folder of Excel files and applies the database name replacement to each workbook using Aspose.Cells.
+// Title: How to replace a deprecated database name in DBConnection.Name for all external data connections in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file with Aspose.Cells, iterates through workbook.DataConnections, and substitutes a given deprecated database name with a new one in each DBConnection.Name property. | Create a reusable C# method that takes inputPath, outputPath, oldDbName, and newDbName, then updates all DBConnection.Name values in the workbook's external connections and saves the file.
+// Common Searches: Aspose.Cells replace old database name in external connections C# | C# update DBConnection Name property for all data connections in Excel file | How to rename deprecated DB name in Excel workbook using Aspose.Cells | Programmatically change database identifier in workbook data connections .NET
+// Tags: replace DBConnection Name Aspose.Cells C# | update external data connections Excel Aspose.Cells | modify workbook data connections .NET | bulk rename database identifier in Excel workbook | Aspose.Cells change DBConnection property programmatically
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
 namespace AsposeCellsExamples
 {
-    // Loads an Excel workbook, iterates through its DataConnections, identifies DBConnection objects, and substitutes a specified old database name with a new one in the DBConnection.Name property before saving the file.
+    // The example loads an Excel workbook with Aspose.Cells, accesses its DataConnections collection, iterates over each DBConnection, substitutes any occurrence of a deprecated database name in the Name property with a new name, and saves the updated workbook to a specified location.
     public class ReplaceDeprecatedDbNameInConnections
     {
-        /// <param name="inputFilePath">Path to the source workbook.</param>
-        /// <param name="outputFilePath">Path where the modified workbook will be saved.</param>
+        /// <param name="inputFile">Path to the source workbook.</param>
+        /// <param name="outputFile">Path where the updated workbook will be saved.</param>
         /// <param name="oldDbName">Deprecated database name to be replaced.</param>
-        /// <param name="newDbName">New database name to use.</param>
-        public static void Run(string inputFilePath, string outputFilePath, string oldDbName, string newDbName)
+        /// <param name="newDbName">New database name to substitute.</param>
+        public static void Run(string inputFile, string outputFile, string oldDbName, string newDbName)
         {
-            // Load the workbook (lifecycle rule: use provided load mechanism)
-            Workbook workbook = new Workbook(inputFilePath);
-
-            // Access the collection of external data connections
-            ExternalConnectionCollection connections = workbook.DataConnections;
-
-            // Iterate through each connection
-            foreach (ExternalConnection connection in connections)
+            try
             {
-                // Process only DBConnection instances
-                if (connection is DBConnection dbConn)
+                // Verify that the input workbook exists.
+                if (!File.Exists(inputFile))
                 {
-                    // Replace the deprecated name in the connection's Name property
-                    if (!string.IsNullOrEmpty(dbConn.Name) && dbConn.Name.Contains(oldDbName))
+                    Console.Error.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the workbook from the specified file.
+                Workbook workbook = new Workbook(inputFile);
+
+                // Access the collection of external data connections.
+                ExternalConnectionCollection connections = workbook.DataConnections;
+
+                // Iterate through each connection.
+                foreach (ExternalConnection connection in connections)
+                {
+                    // Process only DBConnection instances.
+                    if (connection is DBConnection dbConn)
                     {
-                        dbConn.Name = dbConn.Name.Replace(oldDbName, newDbName);
+                        // Ensure the Name property is not null before replacement.
+                        if (!string.IsNullOrEmpty(dbConn.Name))
+                        {
+                            // Replace all occurrences of the deprecated name with the new name.
+                            dbConn.Name = dbConn.Name.Replace(oldDbName, newDbName);
+                        }
                     }
                 }
+
+                // Ensure the output directory exists.
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook to the desired output location.
+                workbook.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    internal class Program
+    {
+        // Entry point for the console application.
+        private static void Main(string[] args)
+        {
+            // Expected arguments: inputFile outputFile oldDbName newDbName
+            if (args.Length != 4)
+            {
+                Console.WriteLine("Usage: ReplaceDeprecatedDbNameInConnections <inputFile> <outputFile> <oldDbName> <newDbName>");
+                return;
             }
 
-            // Save the modified workbook (lifecycle rule: use provided save mechanism)
-            workbook.Save(outputFilePath);
-        }
+            string inputFile = args[0];
+            string outputFile = args[1];
+            string oldDbName = args[2];
+            string newDbName = args[3];
 
-        // Example usage
-        public static void Main()
-        {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-            string deprecatedName = "OldDatabase";
-            string updatedName = "NewDatabase";
-
-            Run(inputPath, outputPath, deprecatedName, updatedName);
-            Console.WriteLine("Database name replacement completed.");
+            ReplaceDeprecatedDbNameInConnections.Run(inputFile, outputFile, oldDbName, newDbName);
         }
     }
 }

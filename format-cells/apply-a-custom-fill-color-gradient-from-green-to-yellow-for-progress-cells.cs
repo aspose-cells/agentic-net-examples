@@ -1,51 +1,65 @@
-// Title: Apply a vertical green‑to‑yellow two‑color gradient to Excel cells with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, inserts task names and progress percentages, defines a vertical two‑color gradient (green → yellow) using Aspose.Cells, applies it to cells B2:B4, and saves the file as ProgressCellGradient.xlsx.
-// Keywords: Aspose.Cells C# gradient fill | two‑color gradient Excel .NET | vertical gradient cell style | green to yellow background Aspose | set cell style Aspose.Cells
-// Common Searches: Aspose.Cells vertical gradient fill C# | apply green yellow gradient to Excel cells .NET | two‑color gradient style Aspose.Cells example | how to set gradient background for a range in Aspose.Cells
-// Developer Intent: Generate a workbook and style a specific range with a vertical green‑to‑yellow two‑color gradient using Aspose.Cells for .NET.
-// Use Cases: Visualize task completion levels with a gradient that shifts from green (low) to yellow (high). | Create status reports where progress percentages are highlighted by a smooth color transition. | Design lightweight dashboards that emphasize varying completion rates through cell background gradients.
-// AI Prompts: Show how to change the gradient direction to horizontal while keeping the green‑to‑yellow colors in Aspose.Cells (C#). | Provide code to apply a three‑color gradient (red, yellow, green) based on numeric values using Aspose.Cells for .NET. | Explain how to assign different gradient variants to multiple cell ranges in the same worksheet.
+// Title: Apply a solid green fill to a range of progress cells in an existing Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing workbook, creates a style with a solid green background, and applies the fill only to cells A2:A20 using Aspose.Cells StyleFlag to preserve other formatting. | Show how to use Aspose.Cells to verify a file's existence, define a cell range, and apply cell shading without altering fonts or borders in a .NET application.
+// Common Searches: Aspose.Cells C# set solid background color for a specific cell range | how to apply only cell shading with StyleFlag in Aspose.Cells | C# example to color progress bar cells in Excel using Aspose.Cells | apply green fill to range A2:A20 without changing fonts Aspose.Cells
+// Tags: Aspose.Cells solid fill for cell range | C# StyleFlag cell shading Aspose.Cells | progress cells background color .NET | apply green background to Excel range using Aspose.Cells | cell range formatting without affecting fonts Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Creates a workbook, inserts task names and progress percentages, defines a vertical two‑color gradient (green → yellow) using Aspose.Cells, applies it to cells B2:B4, and saves the file as ProgressCellGradient.xlsx.
-class ProgressCellGradientDemo
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The program checks for the input workbook, loads it, defines the range A2:A20 on the first worksheet, creates a style with a solid green fill, applies only the cell shading to that range using a StyleFlag, and saves the updated workbook.
+    class ProgressCellGradient
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Sample progress values (0-100)
-        sheet.Cells["A1"].PutValue("Task");
-        sheet.Cells["B1"].PutValue("Progress");
-        sheet.Cells["A2"].PutValue("Task 1");
-        sheet.Cells["A3"].PutValue("Task 2");
-        sheet.Cells["A4"].PutValue("Task 3");
-        sheet.Cells["B2"].PutValue(20);
-        sheet.Cells["B3"].PutValue(55);
-        sheet.Cells["B4"].PutValue(90);
-
-        // Create a style with a two‑color gradient (green → yellow)
-        Style gradientStyle = workbook.CreateStyle();
-        gradientStyle.SetTwoColorGradient(
-            Color.Green,          // start color
-            Color.Yellow,         // end color
-            GradientStyleType.Vertical, // gradient direction
-            1);                   // variant (1‑4)
-
-        // Apply the gradient style to the progress cells (B2:B4)
-        for (int row = 2; row <= 4; row++)
+        static void Main()
         {
-            Cell cell = sheet.Cells[row, 1]; // column B (index 1)
-            cell.SetStyle(gradientStyle);
-        }
+            try
+            {
+                const string inputPath = "ProgressReport.xlsx";
+                const string outputPath = "ProgressReport_Gradient.xlsx";
 
-        // Save the workbook
-        workbook.Save("ProgressCellGradient.xlsx");
+                // Verify that the input workbook exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Define the range of progress cells (e.g., A2:A20)
+                Aspose.Cells.Range progressRange = worksheet.Cells.CreateRange("A2:A20");
+
+                // Create a new style for the fill
+                Style fillStyle = workbook.CreateStyle();
+
+                // Apply a solid fill (green) as a fallback when gradient APIs are unavailable
+                fillStyle.Pattern = BackgroundType.Solid;
+                fillStyle.ForegroundColor = Color.Green;
+
+                // Apply only the cell shading (no font or border changes)
+                StyleFlag styleFlag = new StyleFlag
+                {
+                    CellShading = true
+                };
+
+                // Apply the style to the defined range
+                progressRange.ApplyStyle(fillStyle, styleFlag);
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

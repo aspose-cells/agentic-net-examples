@@ -1,23 +1,19 @@
-// Title: C# – Deselect Pivot Table Slicer Items by Keyword with Aspose.Cells
-// Description: Shows how to build a workbook, add a pivot table and a linked slicer, then walk through the slicer's SlicerCacheItems to unselect any item whose value matches a supplied keyword (case‑insensitive). The slicer is refreshed and the workbook saved.
-// Keywords: Aspose.Cells | C# slicer | pivot table slicer | SlicerCacheItem | deselect slicer item | keyword filter | case insensitive selection | programmatic slicer | Excel automation | Aspose.Cells API
-// Common Searches: Aspose.Cells deselect slicer item C# | How to unselect slicer values in Aspose.Cells | Iterate SlicerCacheItems Aspose.Cells | Remove specific slicer selection programmatically | Case‑insensitive slicer filter Aspose.Cells
-// Developer Intent: Remove slicer selections that match a specific text value in a pivot‑table slicer using Aspose.Cells for .NET.
-// Use Cases: Generate reports that automatically exclude a particular category (e.g., a fruit) without manual interaction. | Automate data cleansing by programmatically turning off unwanted slicer options before publishing. | Create dynamic dashboards where slicer selections are preset based on business rules. | Prepare workbooks for distribution with sensitive items hidden via slicer deselection.
-// AI Prompts: Write C# code with Aspose.Cells to loop through a slicer's SlicerCacheItems and set Selected = false for items equal to a supplied keyword, ignoring case. | Show how to refresh a slicer after changing its cache items in Aspose.Cells. | Explain the steps to link a slicer to a pivot table field and programmatically filter its items by string value in C#.
+// Title: Deselect Excel slicer items that match a given keyword using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads a workbook, refreshes slicer caches, and sets Selected = false for any slicer cache item whose Value matches a given keyword. | Create a method that walks through each worksheet and slicer, clears the selection of entries whose label is "Apple", refreshes the slicer, and saves the updated file. | Generate a script that programmatically changes slicer selections based on a keyword and writes the result to a new Excel workbook using Aspose.Cells.
+// Common Searches: how to filter slicer entries by text using Aspose.Cells C# | C# code to unselect specific slicer values in Excel | programmatically clear slicer selection for a given keyword with Aspose.Cells | iterate through slicer cache items and change selection in .NET | Aspose.Cells example to modify slicer selections based on a string
+// Tags: Aspose.Cells deselect slicer items | C# loop over slicer cache items | slicer cache refresh Aspose.Cells | Excel slicer selection programmatic | unselect slicer entries by keyword
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to build a workbook, add a pivot table and a linked slicer, then walk through the slicer's SlicerCacheItems to unselect any item whose value matches a supplied keyword (case‑insensitive). The slicer is refreshed and the workbook saved.
+    // // Loads an Excel workbook, refreshes all slicer caches, iterates through each worksheet and slicer, deselects any slicer cache item whose value equals the keyword "Apple", refreshes the slicer, and saves the modified workbook.
     public class DeselectSlicerItemsByKeyword
     {
-        // Entry point for the application
-        public static void Main()
+        public static void Main(string[] args)
         {
             try
             {
@@ -31,55 +27,51 @@ namespace AsposeCellsExamples
 
         public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Populate sample data for a pivot table
-            cells["A1"].Value = "Fruit";
-            cells["A2"].Value = "Apple";
-            cells["A3"].Value = "Orange";
-            cells["A4"].Value = "Banana";
-            cells["A5"].Value = "Apple";
-            cells["B1"].Value = "Quantity";
-            cells["B2"].Value = 10;
-            cells["B3"].Value = 20;
-            cells["B4"].Value = 15;
-            cells["B5"].Value = 12;
+            // Verify input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B5", "D1", "FruitPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
-            pivot.RefreshData();
-            pivot.CalculateData();
+            // Load the workbook that contains the slicer
+            Workbook workbook = new Workbook(inputPath);
 
-            // Add a slicer linked to the "Fruit" field of the pivot table
-            SlicerCollection slicers = sheet.Slicers;
-            int slicerIdx = slicers.Add(pivot, "Fruit", "FruitSlicer");
-            Slicer slicer = slicers[slicerIdx];
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
+            // Refresh all slicer caches
+            workbook.RefreshAll();
 
-            // Define the keyword for which items should be deselected
+            // Keyword of items to be deselected
             string keyword = "Apple";
 
-            // Deselect slicer items that match the keyword (case‑insensitive)
-            SlicerCacheItemCollection cacheItems = slicer.SlicerCache.SlicerCacheItems;
-            foreach (SlicerCacheItem item in cacheItems)
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                if (string.Equals(item.Value, keyword, StringComparison.OrdinalIgnoreCase))
+                // Iterate through each slicer on the worksheet
+                foreach (Slicer slicer in sheet.Slicers)
                 {
-                    item.Selected = false;
+                    // Get the collection of slicer cache items
+                    SlicerCacheItemCollection items = slicer.SlicerCache.SlicerCacheItems;
+
+                    // Deselect items whose label matches the keyword
+                    foreach (SlicerCacheItem item in items)
+                    {
+                        if (item.Value == keyword)
+                        {
+                            item.Selected = false;
+                        }
+                    }
+
+                    // Refresh the slicer to apply the changes
+                    slicer.Refresh();
                 }
             }
 
-            // Refresh the slicer to apply the selection changes
-            slicer.Refresh();
-
-            // Save the workbook
-            workbook.Save("DeselectSlicerItemsByKeyword.xlsx");
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
     }
 }

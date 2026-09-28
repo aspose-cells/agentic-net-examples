@@ -1,66 +1,47 @@
-// Title: Aspose.Cells .NET: Define a Named Range that References an External Workbook
-// Description: This example shows how to create a secondary workbook, save it, add an external link to a primary workbook, define an external name, and then create a named range in the primary workbook that points to the external range using the syntax ='[ExternalData.xlsx]DataSheet'!$A$1:$A$3. The named range is used in a SUM formula, calculation options are set with LinkedDataSources, the formula is evaluated, and both workbooks are saved.
-// Keywords: Aspose.Cells | .NET | C# | external named range | cross workbook formula | Excel external reference | linked data sources | calculate external formulas | named range syntax | external link Aspose.Cells
-// Common Searches: Aspose.Cells create named range to external workbook | C# external link formula Aspose.Cells | how to sum range from another Excel file using Aspose.Cells | set LinkedDataSources for external workbook calculation | reference cells in another file with Aspose.Cells
-// Developer Intent: Create a named range in a workbook that points to a range in a different workbook and use it in a formula.
-// Use Cases: Build a reporting workbook that aggregates values from a shared data file without opening the source file. | Perform financial calculations on quarterly figures stored in separate workbooks via a single named range. | Consolidate sensor data from multiple Excel files into a master sheet for real‑time analysis.
-// AI Prompts: Generate C# code using Aspose.Cells to create an external workbook, add an external link, define a named range that references the external range, and calculate a SUM formula. | Explain how to configure CalculationOptions.LinkedDataSources to include external workbooks for formula evaluation in Aspose.Cells. | Provide steps to update the reference of a cross‑file named range when the source workbook name or sheet name changes.
+// Title: Define an external named range that points to another workbook and use it in a SUM formula with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code using Aspose.Cells to add a named range whose RefersTo points to a range in a separate Excel file, then place a SUM formula that references that named range. | Show how to build the external reference string for a Name object, assign it, and save the workbook that contains the external named range.
+// Common Searches: asp.net cells create named range referencing another workbook | c# aspose.cells external named range formula example | how to set RefersTo property for external range in Aspose.Cells | using external workbook range in SUM formula with Aspose.Cells C#
+// Tags: Aspose.Cells external named range definition | C# add RefersTo external reference | cross‑workbook range formula Aspose.Cells | named range external workbook Excel | SUM formula using external named range
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// This example shows how to create a secondary workbook, save it, add an external link to a primary workbook, define an external name, and then create a named range in the primary workbook that points to the external range using the syntax ='[ExternalData.xlsx]DataSheet'!$A$1:$A$3. The named range is used in a SUM formula, calculation options are set with LinkedDataSources, the formula is evaluated, and both workbooks are saved.
-class CrossFileNamedRangeDemo
+// C# program that creates a new workbook, defines a named range pointing to cells A1:C10 in an external file (Data.xlsx) via the RefersTo property, inserts a SUM formula referencing that named range, and saves the workbook as MainWorkbook.xlsx.
+class Program
 {
     static void Main()
     {
-        // ---------- Create external workbook ----------
-        Workbook externalWb = new Workbook();
-        Worksheet extSheet = externalWb.Worksheets[0];
-        extSheet.Name = "DataSheet";
+        try
+        {
+            // Create a new workbook that will hold the external named range definition
+            Workbook mainWb = new Workbook();
 
-        // Populate some data in the external workbook
-        extSheet.Cells["A1"].PutValue(10);
-        extSheet.Cells["A2"].PutValue(20);
-        extSheet.Cells["A3"].PutValue(30);
+            // Define the external reference string.
+            // Format: '[ExternalFile.xlsx]SheetName'!$StartCell:$EndCell
+            // Example assumes the external workbook is "Data.xlsx" in the same directory.
+            string externalRef = "'[Data.xlsx]Sheet1'!$A$1:$C$10";
 
-        // Save the external workbook to a physical file (required for external linking)
-        string externalPath = "ExternalData.xlsx";
-        externalWb.Save(externalPath);
+            // Add a named range with the given name.
+            // The RefersTo property is set separately to avoid overload issues.
+            int nameIndex = mainWb.Worksheets.Names.Add("ExternalData");
+            Name externalName = mainWb.Worksheets.Names[nameIndex];
+            externalName.RefersTo = externalRef;
 
-        // ---------- Create main workbook ----------
-        Workbook mainWb = new Workbook();
-        Worksheet mainSheet = mainWb.Worksheets[0];
-        mainSheet.Name = "MainSheet";
+            Console.WriteLine($"Created named range: {externalName.Text} -> {externalName.RefersTo}");
 
-        // Add an external link that points to the external workbook
-        string[] sheetNames = new string[] { extSheet.Name };
-        int linkIndex = mainWb.Worksheets.ExternalLinks.Add(externalPath, sheetNames);
-        ExternalLink extLink = mainWb.Worksheets.ExternalLinks[linkIndex];
+            // Example usage: place a formula that references the external named range
+            Worksheet ws = mainWb.Worksheets[0];
+            ws.Cells["A1"].Formula = "=SUM(ExternalData)";
 
-        // Add an external name inside the external link (optional, shows how to name the range)
-        extLink.AddExternalName("ExtRange", "=DataSheet!$A$1:$A$3");
-
-        // Create a named range in the main workbook that references the external range
-        int nameIdx = mainWb.Worksheets.Names.Add("CrossFileRange");
-        Name crossName = mainWb.Worksheets.Names[nameIdx];
-        // The RefersTo string uses the external reference syntax
-        crossName.RefersTo = "='[ExternalData.xlsx]DataSheet'!$A$1:$A$3";
-
-        // Use the named range in a formula inside the main workbook
-        mainSheet.Cells["B1"].Formula = "=SUM(CrossFileRange)";
-
-        // Configure calculation options to include the external workbook as a linked data source
-        CalculationOptions calcOptions = new CalculationOptions();
-        calcOptions.LinkedDataSources = new Workbook[] { externalWb };
-
-        // Calculate formulas using the configured options
-        mainWb.CalculateFormula(calcOptions);
-
-        // Output the result of the cross‑file formula
-        Console.WriteLine("Sum of external range: " + mainSheet.Cells["B1"].Value);
-
-        // Save the main workbook
-        mainWb.Save("MainWithCrossFileNamedRange.xlsx");
+            // Save the workbook containing the external named range
+            string outputPath = "MainWorkbook.xlsx";
+            mainWb.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

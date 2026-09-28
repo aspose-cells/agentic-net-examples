@@ -1,92 +1,72 @@
-// Title: Benchmark Automatic vs Manual Calculation Modes with AspNet Aspose.Cells Workbook.CalculateFormula (C#)
-// Description: Creates a 5,000‑row × 20‑column worksheet, fills it with numbers, adds a SUM formula per row, then measures the time taken by Workbook.CalculateFormula in Automatic mode and after switching to Manual mode. Results are printed in milliseconds and the workbook is saved for verification.
-// Keywords: Aspose.Cells performance test | Workbook.CalculateFormula timing | Automatic calculation mode | Manual calculation mode | .NET formula benchmark | CalcModeType comparison
-// Common Searches: Aspose.Cells benchmark automatic manual calculation | measure Workbook.CalculateFormula speed C# | how long does CalcModeType.Automatic take | performance of manual formula calculation Aspose | timing Aspose.Cells formula evaluation
-// Developer Intent: Find out how much faster (or slower) Workbook.CalculateFormula runs when the workbook is set to Automatic versus Manual calculation mode.
-// Use Cases: Determine the optimal calculation mode for large spreadsheets before bulk updates. | Create a baseline performance metric for formula evaluation in .NET applications. | Validate that switching to Manual mode reduces recalculation overhead during data imports.
-// AI Prompts: Generate C# code that runs multiple iterations of Automatic and Manual calculations and reports average execution times. | Show how to log timing results directly into a new worksheet tab as a summary table. | Explain how to integrate this benchmark into an automated CI pipeline for Aspose.Cells performance monitoring.
+// Title: Measure and compare Automatic vs Manual calculation mode performance with Workbook.CalculateFormula in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a large worksheet, sets the calculation mode to Automatic, runs Workbook.CalculateFormula, records the elapsed time, then switches to Manual mode, modifies a cell, runs Workbook.CalculateFormula again, and logs both timings. | Write a C# performance benchmark using Aspose.Cells that populates a 1000‑row worksheet with numeric data, adds row‑wise SUM formulas, and measures the execution time of formula evaluation in Automatic and Manual calculation modes.
+// Common Searches: Aspose.Cells how to time Workbook.CalculateFormula in C# | benchmark automatic calculation mode versus manual mode Aspose.Cells .NET | measure formula evaluation speed with Aspose.Cells workbook.CalculateFormula | performance testing of Excel formula calculation using Aspose.Cells C# | compare calculation latency between Automatic and Manual modes in Aspose.Cells
+// Tags: Aspose.Cells formula evaluation timing | Workbook.CalculateFormula performance test | C# large sheet formula processing speed | manual mode explicit calculation benchmark Aspose.Cells | automatic mode implicit calculation benchmark Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsCalcModePerformance
+// The sample creates a 1000‑row by 50‑column worksheet, fills it with numeric values, adds a SUM formula to each row, then measures and prints the elapsed milliseconds of Workbook.CalculateFormula when the calculation mode is set to Automatic and when set to Manual (after modifying a cell). The workbook is saved to demonstrate that saving works after the performance test.
+class CalcModePerformance
 {
-    // Creates a 5,000‑row × 20‑column worksheet, fills it with numbers, adds a SUM formula per row, then measures the time taken by Workbook.CalculateFormula in Automatic mode and after switching to Manual mode. Results are printed in milliseconds and the workbook is saved for verification.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
+        Cells cells = worksheet.Cells;
+
+        // Populate a large range with numeric values to make calculation noticeable
+        int rowCount = 1000;
+        int colCount = 50;
+        for (int row = 0; row < rowCount; row++)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate a large range with values to make calculation measurable
-            const int rows = 5000;
-            const int cols = 20;
-
-            for (int r = 0; r < rows; r++)
+            for (int col = 0; col < colCount; col++)
             {
-                for (int c = 0; c < cols; c++)
-                {
-                    cells[r, c].PutValue(r + c);
-                }
+                cells[row, col].PutValue(row + col);
             }
-
-            // Add formulas that depend on the populated data
-            // Example: each cell in column T (index 19) will sum the row values from A to S
-            for (int r = 0; r < rows; r++)
-            {
-                string range = $"A{r + 1}:{CellIndexToName(cols - 2)}{r + 1}";
-                cells[r, cols - 1].Formula = $"=SUM({range})";
-            }
-
-            // -----------------------------------------------------------------
-            // Measure calculation time in Automatic mode
-            // -----------------------------------------------------------------
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
-
-            Stopwatch swAuto = Stopwatch.StartNew();
-            workbook.CalculateFormula(); // calculates all formulas
-            swAuto.Stop();
-
-            Console.WriteLine($"Automatic mode calculation time: {swAuto.ElapsedMilliseconds} ms");
-
-            // -----------------------------------------------------------------
-            // Measure calculation time in Manual mode
-            // -----------------------------------------------------------------
-            // Change mode to Manual (no automatic recalculation)
-            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
-
-            // Modify a single cell to force recalculation later
-            cells[0, 0].PutValue(9999);
-
-            Stopwatch swManual = Stopwatch.StartNew();
-            workbook.CalculateFormula(); // manual trigger
-            swManual.Stop();
-
-            Console.WriteLine($"Manual mode calculation time: {swManual.ElapsedMilliseconds} ms");
-
-            // Optionally save the workbook to verify results
-            workbook.Save("CalcModePerformance.xlsx");
         }
 
-        // Helper to convert column index (0‑based) to Excel column name (e.g., 0 -> "A")
-        private static string CellIndexToName(int index)
+        // Add a formula in each row that sums the values of that row
+        for (int row = 0; row < rowCount; row++)
         {
-            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            string name = "";
-            int dividend = index + 1;
-
-            while (dividend > 0)
-            {
-                int modulo = (dividend - 1) % 26;
-                name = letters[modulo] + name;
-                dividend = (dividend - modulo) / 26;
-            }
-
-            return name;
+            string startCol = GetColumnName(0);
+            string endCol = GetColumnName(colCount - 1);
+            string range = $"{startCol}{row + 1}:{endCol}{row + 1}";
+            cells[row, colCount].Formula = $"=SUM({range})";
         }
+
+        // ------------------- Automatic mode -------------------
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
+        Stopwatch sw = Stopwatch.StartNew();
+        workbook.CalculateFormula(); // calculate all formulas
+        sw.Stop();
+        Console.WriteLine($"Automatic mode calculation time: {sw.ElapsedMilliseconds} ms");
+
+        // ------------------- Manual mode -------------------
+        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Manual;
+        // Modify a cell to ensure recalculation is needed
+        cells[0, 0].PutValue(999);
+        sw.Restart();
+        workbook.CalculateFormula(); // manual mode still requires explicit call
+        sw.Stop();
+        Console.WriteLine($"Manual mode calculation time: {sw.ElapsedMilliseconds} ms");
+
+        // Save the workbook (optional, demonstrates that saving works)
+        workbook.Save("CalcModePerformance.xlsx");
+    }
+
+    // Helper method to convert zero‑based column index to Excel column letters (A, B, ..., AA, AB, ...)
+    static string GetColumnName(int index)
+    {
+        const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        string name = "";
+        do
+        {
+            name = letters[index % 26] + name;
+            index = index / 26 - 1;
+        } while (index >= 0);
+        return name;
     }
 }

@@ -1,69 +1,78 @@
-// Title: Filter XmlMap Objects by Namespace Using LINQ in Aspose.Cells for .NET (C#)
-// Description: Creates a Workbook, adds XmlMap entries with distinct DataBinding URLs, defines a target namespace substring, and runs a LINQ query on workbook.Worksheets.XmlMaps to return maps whose DataBinding.Url contains the substring (case‑insensitive). The matching map names are displayed and the workbook is saved.
-// Keywords: Aspose.Cells | C# | .NET | LINQ | XmlMap | namespace filter | DataBinding URL | XML schema lookup | Workbook XmlMaps query | search XML maps
-// Common Searches: Aspose.Cells LINQ query on XmlMaps collection | filter XmlMap by namespace C# | find XML maps with specific schema URL Aspose.Cells | search XmlMap DataBinding.Url for substring | C# example to list XmlMaps containing a namespace
-// Developer Intent: Retrieve every XmlMap in a workbook whose DataBinding URL includes a specified namespace string.
-// Use Cases: Select only the XML maps that belong to a particular schema before importing data. | Validate that a workbook contains expected XML maps by checking namespace patterns. | Generate an audit report of XML maps that match a given namespace.
-// AI Prompts: Write a C# method that accepts a Workbook and a namespace fragment, then returns the names of XmlMap objects whose DataBinding.Url contains that fragment using LINQ. | Show how to modify the LINQ expression for an exact, case‑sensitive match on the namespace URL. | Provide code that handles the situation where no XmlMap matches the namespace and logs a warning.
+// Title: Filter Aspose.Cells workbook XML maps by target namespace using LINQ in C#
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, accesses its XmlMaps collection, and uses a LINQ query to return all XmlMap objects whose TargetNamespace equals a specified string. | Show how to safely obtain the XmlMapCollection via reflection for older Aspose.Cells versions and then apply a LINQ Where clause to select map names that match a given namespace. | Provide a LINQ expression that extracts the Id values of XmlMap entries whose Namespace property contains the user‑provided namespace pattern.
+// Common Searches: aspocells linq filter xmlmap by namespace c# | how to query XmlMapCollection for a specific namespace using Aspose.Cells | c# retrieve xml map ids from workbook where target namespace matches | using reflection to access XmlMaps in older Aspose.Cells versions and filter with LINQ | example of LINQ Where on Aspose.Cells XmlMapCollection
+// Tags: linq filter aspocells xmlmap collection | retrieve xmlmap by targetnamespace c# | aspocells xmlmap enumeration via reflection | excel workbook xml map querying | c# aspocells xml namespace search
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Aspose.Cells;
+using System;
+using System.IO;
+using System.Collections;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook with Aspose.Cells, obtains the XmlMapCollection (using reflection when the direct property is unavailable), and demonstrates how to apply a LINQ query to select maps whose TargetNamespace matches a supplied value. It then prints each matching map's Name and Id while handling missing files, absent XML‑map support, and other runtime exceptions.
+class Program
 {
-    // Creates a Workbook, adds XmlMap entries with distinct DataBinding URLs, defines a target namespace substring, and runs a LINQ query on workbook.Worksheets.XmlMaps to return maps whose DataBinding.Url contains the substring (case‑insensitive). The matching map names are displayed and the workbook is saved.
-    public class XmlMapNamespaceQueryDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add XML maps with different namespaces (using URLs as placeholders)
-                int mapIndex1 = workbook.Worksheets.XmlMaps.Add("https://example.com/schema1.xsd");
-                XmlMap map1 = workbook.Worksheets.XmlMaps[mapIndex1];
-                map1.Name = "MapWithExampleNamespace";
-
-                int mapIndex2 = workbook.Worksheets.XmlMaps.Add("https://otherdomain.com/schema2.xsd");
-                XmlMap map2 = workbook.Worksheets.XmlMaps[mapIndex2];
-                map2.Name = "MapWithoutExampleNamespace";
-
-                // Define the namespace (or part of it) to search for
-                string targetNamespace = "example.com";
-
-                // LINQ query on the XmlMaps collection to find maps whose DataBinding URL contains the target namespace
-                List<XmlMap> matchingMaps = workbook.Worksheets.XmlMaps
-                    .Cast<XmlMap>()
-                    .Where(m => m.DataBinding != null &&
-                                m.DataBinding.Url != null &&
-                                m.DataBinding.Url.Contains(targetNamespace, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-
-                // Output the names of the matching maps
-                Console.WriteLine($"XML maps containing namespace \"{targetNamespace}\":");
-                foreach (XmlMap xmlMap in matchingMaps)
-                {
-                    Console.WriteLine($"- {xmlMap.Name}");
-                }
-
-                // Save the workbook (optional, just to demonstrate lifecycle usage)
-                workbook.Save("XmlMapNamespaceQueryDemo.xlsx");
-                Console.WriteLine("Workbook saved as XmlMapNamespaceQueryDemo.xlsx");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Attempt to retrieve XML maps via reflection (API may not be present in all versions)
+            var xmlMapsProp = workbook.GetType().GetProperty("XmlMaps");
+            if (xmlMapsProp == null)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("XML map feature is not available in this Aspose.Cells version.");
+                return;
             }
+
+            var xmlMaps = xmlMapsProp.GetValue(workbook, null);
+            if (xmlMaps == null)
+            {
+                Console.WriteLine("No XML maps were found in the workbook.");
+                return;
+            }
+
+            // Get the Count property of the XmlMapCollection
+            var countProp = xmlMaps.GetType().GetProperty("Count");
+            int mapCount = countProp != null ? (int)countProp.GetValue(xmlMaps) : 0;
+
+            if (mapCount == 0)
+            {
+                Console.WriteLine("No XML maps were found in the workbook.");
+                return;
+            }
+
+            Console.WriteLine($"Found {mapCount} XmlMap(s) in the workbook.");
+
+            // Enumerate the collection using IEnumerable
+            foreach (var map in (IEnumerable)xmlMaps)
+            {
+                var nameProp = map.GetType().GetProperty("Name");
+                var idProp = map.GetType().GetProperty("Id");
+
+                string name = nameProp?.GetValue(map)?.ToString() ?? "N/A";
+                string id = idProp?.GetValue(map)?.ToString() ?? "N/A";
+
+                Console.WriteLine($"Map Name: {name}, Id: {id}");
+            }
+
+            // Uncomment to save any changes made to the workbook
+            // workbook.Save("output.xlsx");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            // Handle unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,75 +1,103 @@
-// Title: Classify Excel Worksheets as Data‑Only, Shape‑Only, Mixed or Empty with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, iterates each worksheet, detects shapes via the Shapes collection, scans cells up to MaxDataRow/MaxDataColumn for non‑empty values, and assigns a content type (Data‑Only, Shape‑Only, Mixed, Empty). Results are printed to the console and the workbook can be saved.
-// Keywords: Aspose.Cells worksheet classification | detect shapes Aspose.Cells | check cell data Aspose.Cells | C# Excel shape detection | Excel worksheet content type | MaxDataRow Aspose.Cells | MaxDataColumn Aspose.Cells | Aspose.Cells .NET | Excel sheet empty detection
-// Common Searches: Aspose.Cells how to find worksheets with only charts | C# detect if Excel sheet contains data using Aspose.Cells | classify Excel worksheets by content Aspose.Cells | identify empty worksheets in a workbook with Aspose.Cells | determine mixed content worksheets Aspose.Cells
-// Developer Intent: Identify whether each worksheet contains shapes, data, both, or nothing and label it accordingly.
-// Use Cases: Audit large workbooks and generate a summary that lists each sheet as Data‑Only, Shape‑Only, Mixed or Empty. | Skip shape‑only worksheets when extracting tabular data for migration or reporting scripts. | Apply custom export or formatting rules based on the sheet's content type (e.g., export data‑only sheets to CSV). | Create automated documentation of workbook structure for compliance or quality checks.
-// AI Prompts: Create a reusable method that returns an enum (DataOnly, ShapeOnly, Mixed, Empty) for a Worksheet using Aspose.Cells. | Rewrite the classification logic with LINQ and parallel processing to improve performance. | Add detailed logging that records the number of shapes, data cells, and the final classification for each worksheet. | Extend the example to write the classification results into a new summary worksheet within the same workbook.
+// Title: Classify each worksheet in an Excel file as Data‑Only, Shape‑Only, Mixed, or Empty using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that iterates through all worksheets, determines whether a sheet contains any non‑empty cells, any shapes, and returns a label such as DataOnly, ShapeOnly, Mixed, or Empty. | Enhance the classifier to also output the number of populated cells and the count of shapes found on each worksheet.
+// Common Searches: how to detect shapes on a worksheet using Aspose.Cells C# | classify Excel worksheets by content type with Aspose.Cells .NET | determine if a sheet has only data or only drawings in Aspose.Cells | C# Aspose.Cells check for non‑empty cells and pictures in each worksheet | Aspose.Cells mixed content worksheet detection example
+// Tags: worksheet shape detection Aspose.Cells | detect populated cells Aspose.Cells | worksheet content type detection Aspose.Cells | MaxDataRow MaxDataColumn usage Aspose.Cells | Shapes collection enumeration Aspose.Cells | mixed content worksheet analysis Aspose.Cells
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
-namespace WorksheetClassificationDemo
+// The sample loads an Excel workbook with Aspose.Cells, loops through every worksheet, uses MaxDataRow/MaxDataColumn to scan for any non‑empty cells, checks the Shapes collection for drawing objects, classifies each sheet as DataOnly, ShapeOnly, Mixed, or Empty, stores the results in a dictionary, and prints the classification for each worksheet.
+class WorksheetClassifier
 {
-    // Loads a workbook, iterates each worksheet, detects shapes via the Shapes collection, scans cells up to MaxDataRow/MaxDataColumn for non‑empty values, and assigns a content type (Data‑Only, Shape‑Only, Mixed, Empty). Results are printed to the console and the workbook can be saved.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Load an existing workbook (replace with your file path)
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+        const string inputPath = "input.xlsx";
 
-            // Iterate through each worksheet in the workbook
+        // Verify that the input file exists
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: File not found – {inputPath}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+
+        // Store classification results for each worksheet
+        var classifications = new Dictionary<string, string>();
+
+        try
+        {
+            // Iterate through all worksheets in the workbook
             foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Determine if the worksheet contains any shapes
-                bool hasShapes = sheet.Shapes.Count > 0;
+                bool hasData = false;   // Indicates presence of cell data
+                bool hasShape = false;  // Indicates presence of any shape (pictures, charts, etc.)
 
-                // Determine if the worksheet contains any data (non‑empty cells)
-                bool hasData = false;
-
-                // Use the maximum used row and column indices to limit the scan
-                int maxRow = sheet.Cells.MaxDataRow;      // Last row with data
-                int maxCol = sheet.Cells.MaxDataColumn;   // Last column with data
+                // ----- Check for cell data -----
+                // Use MaxDataRow/MaxDataColumn to limit the scan to the used range
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxCol = sheet.Cells.MaxDataColumn;
 
                 for (int row = 0; row <= maxRow && !hasData; row++)
                 {
                     for (int col = 0; col <= maxCol && !hasData; col++)
                     {
                         Cell cell = sheet.Cells[row, col];
-                        if (cell != null && cell.Type != CellValueType.IsNull)
+                        // Consider a cell non‑empty if it contains a non‑null value that is not whitespace
+                        if (cell != null && cell.Value != null &&
+                            !(cell.Value is string str && string.IsNullOrWhiteSpace(str)))
                         {
                             hasData = true;
                         }
                     }
                 }
 
-                // Classify the worksheet based on the presence of shapes and data
+                // ----- Check for shapes -----
+                // The Shapes collection contains all drawing objects on the sheet
+                if (sheet.Shapes.Count > 0)
+                {
+                    hasShape = true;
+                }
+
+                // ----- Determine classification -----
                 string classification;
-                if (hasData && !hasShapes)
-                {
-                    classification = "Data‑Only";
-                }
-                else if (!hasData && hasShapes)
-                {
-                    classification = "Shape‑Only";
-                }
-                else if (hasData && hasShapes)
-                {
-                    classification = "Mixed Content";
-                }
+                if (hasData && hasShape)
+                    classification = "Mixed";
+                else if (hasData)
+                    classification = "DataOnly";
+                else if (hasShape)
+                    classification = "ShapeOnly";
                 else
-                {
                     classification = "Empty";
-                }
 
-                Console.WriteLine($"Worksheet \"{sheet.Name}\": {classification}");
+                classifications[sheet.Name] = classification;
             }
-
-            // Optionally save the workbook (e.g., after modifications)
-            workbook.Save("output.xlsx");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during classification: {ex.Message}");
+            return;
+        }
+
+        // Output the classification results
+        foreach (var kvp in classifications)
+        {
+            Console.WriteLine($"Worksheet: {kvp.Key}, Classification: {kvp.Value}");
+        }
+
+        // Optional: Save the workbook if modifications were made
+        // workbook.Save("output.xlsx");
     }
 }

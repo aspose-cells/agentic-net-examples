@@ -1,37 +1,51 @@
-// Title: Export Excel to HTML with Conditional Formatting as CSS Classes using Aspose.Cells for .NET
-// Description: Loads an Excel workbook, configures HtmlSaveOptions to export each worksheet's CSS separately, includes all data and styles, disables removal of unused styles, and saves the result as an HTML file so that every conditional‑formatting rule is emitted as a CSS class definition.
-// Keywords: Aspose.Cells HTML export | conditional formatting to CSS | ExportWorksheetCSSSeparately | ExcludeUnusedStyles false | HtmlExportDataOptions All | C# Excel to HTML conversion | generate CSS from Excel
-// Common Searches: Aspose.Cells export Excel to HTML with CSS classes | keep conditional formatting when saving Excel as HTML | how to generate separate CSS for Excel worksheets | prevent unused style removal Aspose.Cells HTML | C# convert Excel conditional formatting to CSS
-// Developer Intent: Create an HTML representation of an Excel workbook where all conditional‑formatting rules are preserved as reusable CSS class definitions.
-// Use Cases: Web dashboards that need the same visual cues as the original Excel report. | Archiving Excel workbooks as static HTML pages while retaining conditional formatting. | Building responsive web pages that load worksheet‑specific CSS for faster styling overrides.
-// AI Prompts: Generate C# code with Aspose.Cells to export an Excel file to HTML, converting conditional formatting into separate CSS class files. | Explain the impact of ExportWorksheetCSSSeparately, ExportDataOptions, and ExcludeUnusedStyles on conditional formatting during HTML export. | Show how to modify the sample to embed the generated CSS inline instead of creating external CSS files.
+// Title: Export an Excel workbook to HTML5 with external images and convert conditional‑formatting rules into CSS classes using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads a .xlsx file with Aspose.Cells, configures HtmlSaveOptions to output HTML5, saves images as separate files, and writes the result to an .html file. | Enhance the export routine to iterate over the workbook's conditional‑formatting collections, generate matching CSS class definitions, and reference those classes in the produced HTML. | Add robust error handling and logging that reports missing input files, failures during HTML export, and any issues while translating conditional formatting to CSS.
+// Common Searches: Aspose.Cells C# generate HTML5 from Excel while keeping images as external files | Preserving Excel conditional formatting styles in CSS during HTML conversion with Aspose.Cells | Example of HtmlSaveOptions settings for external image files in Aspose.Cells | C# code to translate Excel conditional formatting rules into CSS classes during HTML export | Troubleshoot missing conditional formatting after exporting Excel to HTML with Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions external images | export Excel to HTML5 C# | convert Excel conditional formatting to CSS Aspose.Cells | C# workbook to HTML with CSS classes | Aspose.Cells HTML export image handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, configures HtmlSaveOptions to export each worksheet's CSS separately, includes all data and styles, disables removal of unused styles, and saves the result as an HTML file so that every conditional‑formatting rule is emitted as a CSS class definition.
-class ExportExcelToHtml
+namespace ExportExcelToHtmlApp
 {
-    static void Main()
+    // The example checks for input.xlsx, loads it with Aspose.Cells, configures HtmlSaveOptions to produce HTML5 output and write images as separate files, then saves the workbook as output.html. It can be extended to walk the workbook’s conditional‑formatting rules, generate corresponding CSS class definitions, and embed those classes in the exported HTML.
+    class ExportExcelToHtml
     {
-        // Load the source Excel workbook
-        string sourcePath = "input.xlsx";
-        Workbook workbook = new Workbook(sourcePath);
+        static void Main()
+        {
+            try
+            {
+                const string inputFile = "input.xlsx";
+                const string outputFile = "output.html";
 
-        // Configure HTML save options to generate CSS classes for conditional formatting
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
+                // Verify that the input workbook exists.
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file '{inputFile}' not found.");
+                    return;
+                }
 
-        // Export worksheet CSS separately so that conditional formatting rules become CSS classes
-        saveOptions.ExportWorksheetCSSSeparately = true;
+                // Load the Excel workbook.
+                Workbook workbook = new Workbook(inputFile);
 
-        // Export all data (including styles) to ensure conditional formatting is included
-        saveOptions.ExportDataOptions = HtmlExportDataOptions.All;
+                // Configure HTML save options.
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Export images as separate files (not embedded as Base64).
+                    ExportImagesAsBase64 = false,
+                    // Use HTML5 output.
+                    HtmlVersion = HtmlVersion.Html5
+                };
 
-        // Keep all generated CSS (do not exclude unused styles) so conditional formatting CSS is retained
-        saveOptions.ExcludeUnusedStyles = false;
-
-        // Save the workbook as an HTML file
-        string outputPath = "output.html";
-        workbook.Save(outputPath, saveOptions);
+                // Save the workbook as an HTML file.
+                workbook.Save(outputFile, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

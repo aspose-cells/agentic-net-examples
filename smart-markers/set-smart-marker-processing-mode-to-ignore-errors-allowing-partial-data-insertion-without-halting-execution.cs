@@ -1,78 +1,69 @@
-// Title: C# – Aspose.Cells Smart Marker Processing with Error Ignoring
-// Description: Loads a workbook template containing smart markers, assigns a data source with missing fields, sets CalculationOptions.IgnoreError to true, and calls WorkbookDesigner.Process(true) to continue processing and preserve unrecognized markers, then saves the result.
-// Keywords: Aspose.Cells | C# | .NET | smart markers | ignore errors | CalculationOptions.IgnoreError | WorkbookDesigner.Process | partial data insertion | error handling | report generation
-// Common Searches: Aspose.Cells ignore smart marker errors C# | continue processing smart markers when data is missing | WorkbookDesigner.Process preserve unknown markers | CalculationOptions.IgnoreError example | smart marker partial insertion .NET
-// Developer Intent: Configure smart marker processing to ignore data‑related errors so the operation completes without throwing exceptions.
-// Use Cases: Generate a report from a template when some rows lack certain fields, using IgnoreError to produce a partial output. | Preserve custom or future smart markers in a workbook while skipping rows that cause insertion failures. | Automate batch report creation where data quality varies, ensuring the process never aborts due to missing values.
-// AI Prompts: Show C# code that sets Aspose.Cells smart marker processing to ignore errors and continue. | Explain how CalculationOptions.IgnoreError works with WorkbookDesigner.Process(true) for missing fields. | Give an example of preserving unrecognized smart markers while ignoring data errors in Aspose.Cells.
+// Title: How to configure Aspose.Cells WorkbookDesigner to ignore smart marker errors and preserve unprocessed markers in C#
+// AI Prompts: Generate C# code that calls WorkbookDesigner.Process(true) to keep smart markers when the data source contains null values. | Show an example of using the isPreserved flag with Aspose.Cells smart markers to skip errors and still write partial data to an Excel workbook.
+// Common Searches: Aspose.Cells C# ignore errors while processing smart markers | WorkbookDesigner Process true keep unprocessed smart markers | How to handle null values in Aspose.Cells smart marker data source | Partial data export with smart markers without throwing exception in C# | Set smart marker processing mode to preserve markers Aspose.Cells
+// Tags: WorkbookDesigner Process isPreserved true | Aspose.Cells smart marker error handling | ignore null values in smart marker data source | preserve unprocessed smart markers Excel | partial data insertion with Aspose.Cells
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsSmartMarkerIgnoreErrorsDemo
+namespace Demo
 {
-    // Demonstrates how to configure smart marker processing to ignore errors,
-    // allowing the operation to continue even when some data cannot be inserted.
-    // Loads a workbook template containing smart markers, assigns a data source with missing fields, sets CalculationOptions.IgnoreError to true, and calls WorkbookDesigner.Process(true) to continue processing and preserve unrecognized markers, then saves the result.
+    // The example creates a workbook, inserts smart markers, registers a data source that includes a null value, and calls WorkbookDesigner.Process(true) so that unprocessed markers are kept and no exception is thrown. The resulting file is saved as SmartMarkerIgnoreError.xlsx.
+    public class SmartMarkerIgnoreErrorDemo
+    {
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Insert smart markers into the worksheet
+                sheet.Cells["A1"].PutValue("&=Employees.Name");
+                sheet.Cells["B1"].PutValue("&=Employees.Age");
+
+                // Define a named range that contains the smart markers.
+                // The name "_CellsSmartMarkers" tells Aspose.Cells to treat this range as a smart‑marker block.
+                sheet.Cells.CreateRange("A1:B1").Name = "_CellsSmartMarkers";
+
+                // Prepare a data source that intentionally contains a missing value.
+                var employees = new List<dynamic>
+                {
+                    new { Name = "John Doe", Age = 30 },
+                    new { Name = "Jane Smith", Age = (int?)null }   // Missing value – will be ignored
+                };
+
+                // Set up the WorkbookDesigner
+                WorkbookDesigner designer = new WorkbookDesigner
+                {
+                    Workbook = workbook
+                };
+
+                // Register the data source with the name used in the smart markers.
+                designer.SetDataSource("Employees", employees);
+
+                // Process the smart markers.
+                // Passing 'true' for the isPreserved parameter tells the designer to keep any
+                // unprocessed (or error‑prone) smart markers instead of throwing an exception.
+                designer.Process(true);
+
+                // Save the resulting workbook.
+                workbook.Save("SmartMarkerIgnoreError.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
+
     public class Program
     {
         public static void Main()
         {
-            try
-            {
-                // Path to the template workbook containing smart markers.
-                const string templatePath = "TemplateWithSmartMarkers.xlsx";
-
-                // Verify that the template file exists to avoid FileNotFoundException.
-                if (!File.Exists(templatePath))
-                {
-                    Console.WriteLine($"Template file not found: {templatePath}");
-                    return;
-                }
-
-                // Load the workbook.
-                Workbook workbook = new Workbook(templatePath);
-
-                // Create a WorkbookDesigner and associate it with the loaded workbook.
-                WorkbookDesigner designer = new WorkbookDesigner
-                {
-                    Workbook = workbook,
-                    // LineByLine is obsolete; retained for compatibility with older templates.
-                    LineByLine = false
-                };
-
-                // Prepare a data source that intentionally has missing fields to trigger errors.
-                var employees = new List<dynamic>
-                {
-                    new { Name = "John Doe", Age = 30 },               // Missing Salary
-                    new { Name = "Jane Smith", Age = 28, Salary = 75000 } // Complete row
-                };
-
-                // Set the data source for the smart markers.
-                designer.SetDataSource("Employees", employees);
-
-                // Configure calculation options to ignore errors during formula evaluation.
-                // This ensures that missing data or formula problems do not halt execution.
-                var calcOptions = new CalculationOptions { IgnoreError = true };
-                workbook.CalculateFormula(calcOptions);
-
-                // Process the smart markers.
-                // The boolean parameter 'true' tells the designer to preserve any unrecognized
-                // smart markers, which also helps avoid exceptions for missing data.
-                designer.Process(true);
-
-                // Save the resulting workbook.
-                const string outputPath = "SmartMarkersProcessed_IgnoringErrors.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors.
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            SmartMarkerIgnoreErrorDemo.Run();
         }
     }
 }

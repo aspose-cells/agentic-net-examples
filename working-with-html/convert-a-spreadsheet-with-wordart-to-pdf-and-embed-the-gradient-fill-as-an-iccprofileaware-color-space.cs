@@ -1,75 +1,52 @@
-// Title: Export WordArt with Gradient Fill to PDF/A‑1b and Embed ICC‑Aware Color Profile using Aspose.Cells (C#)
-// Description: Demonstrates how to create a workbook, add a WordArt shape with a vertical two‑color gradient, and save it as a PDF/A‑1b file. The PdfSaveOptions embed standard Windows fonts and include the ICC color profile so the gradient renders accurately on any device.
-// Keywords: Aspose.Cells C# | WordArt gradient | PDF export | PDF/A-1b | ICC color profile | EmbedStandardWindowsFonts | FillFormat gradient | PresetWordArtStyle | gradient fill PDF | color fidelity Aspose.Cells
-// Common Searches: Aspose.Cells add WordArt with gradient and export to PDF | how to embed ICC profile when saving PDF with Aspose.Cells | save workbook as PDF/A-1b with gradient colors | C# Aspose.Cells gradient fill WordArt PDF | preserve gradient colors in PDF using Aspose.Cells
-// Developer Intent: Generate a PDF/A‑1b document that contains a WordArt heading with a vertical gradient, ensuring the gradient colors are stored in an ICC‑aware color space.
-// Use Cases: Create marketing brochures where WordArt headings keep exact brand gradients in archived PDFs. | Produce compliance‑ready reports (PDF/A‑1b) that retain color fidelity for decorative text. | Export spreadsheets with decorative WordArt to PDF while guaranteeing consistent appearance across printers and screens.
-// AI Prompts: Show C# code to apply a custom two‑color gradient to a WordArt shape before saving as PDF with Aspose.Cells. | Explain how PdfSaveOptions can embed an ICC profile for gradient fills in Aspose.Cells. | Provide an example that converts a workbook containing multiple WordArt objects with different gradients to a PDF/A‑2b file.
+// Title: How to convert an Excel file with WordArt gradient fill to PDF/A‑1b while embedding an ICC profile using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx workbook, sets PdfSaveOptions.Compliance to PdfA1b to embed the standard ICC profile, and saves the workbook as a PDF preserving the WordArt gradient fill. | Show a step‑by‑step example of using Aspose.Cells to export an Excel worksheet containing WordArt with gradient shading to a PDF/A‑1b document that includes an embedded ICC color profile.
+// Common Searches: Aspose.Cells export Excel WordArt gradient to PDF/A with ICC profile in C# | C# save workbook as PDF/A‑1b preserving gradient fill of WordArt | embed ICC color profile when converting Excel to PDF using Aspose.Cells | PDF/A compliance for WordArt gradient colors Aspose.Cells .NET example
+// Tags: Aspose.Cells PDF/A conversion with WordArt gradient | embed ICC profile in PDF generated from Excel | preserve gradient fill during Excel to PDF export | PdfSaveOptions.Compliance PdfA1b C# | convert Excel workbook to PDF/A1b using .NET
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWordArtToPdf
+namespace Example
 {
-    // Demonstrates how to create a workbook, add a WordArt shape with a vertical two‑color gradient, and save it as a PDF/A‑1b file. The PdfSaveOptions embed standard Windows fonts and include the ICC color profile so the gradient renders accurately on any device.
+    // The sample checks for the input .xlsx file, loads it with Aspose.Cells, configures PdfSaveOptions.Compliance to PdfA1b (which forces embedding of the standard ICC profile), and saves the workbook as a PDF/A‑1b document, ensuring the WordArt gradient fill is retained.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // -----------------------------------------------------------------
-            // Add a WordArt shape with a preset style that already contains a
-            // gradient fill (WordArtStyle7 – Gradient Fill - Blue, Accent 1,
-            // Reflection). The parameters are: style, text, topRow, top,
-            // leftColumn, left, height, width.
-            // -----------------------------------------------------------------
-            Shape wordArt = sheet.Shapes.AddWordArt(
-                PresetWordArtStyle.WordArtStyle7,
-                "Aspose.Cells WordArt",
-                2,          // topRow
-                10,         // top (pixels)
-                2,          // leftColumn
-                10,         // left (pixels)
-                100,        // height (pixels)
-                400);       // width (pixels)
-
-            // -----------------------------------------------------------------
-            // Customize the gradient fill of the WordArt.
-            // First, set the fill type to Gradient, then obtain the FillFormat
-            // and apply a two‑color gradient (e.g., from LightBlue to DarkBlue).
-            // -----------------------------------------------------------------
-            wordArt.Fill.FillType = FillType.Gradient;
-            FillFormat fill = wordArt.Fill;
-            fill.SetTwoColorGradient(
-                Color.LightBlue,          // first gradient color
-                Color.DarkBlue,           // second gradient color
-                GradientStyleType.Vertical,
-                1);                       // variant (1‑4)
-
-            // -----------------------------------------------------------------
-            // Prepare PDF save options.
-            // EmbedStandardWindowsFonts ensures that the fonts used in the
-            // WordArt are embedded in the PDF, which also embeds the color
-            // profile information required for ICC‑aware rendering.
-            // -----------------------------------------------------------------
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            try
             {
-                EmbedStandardWindowsFonts = true,   // embed fonts (helps with color profile)
-                Compliance = PdfCompliance.PdfA1b   // optional: PDF/A‑1b compliance
-            };
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.pdf";
 
-            // Save the workbook (including the WordArt) as a PDF file
-            workbook.Save("WordArtWithGradient.pdf", pdfOptions);
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            Console.WriteLine("PDF generated successfully with WordArt gradient fill.");
+                // Load the Excel workbook that contains WordArt with gradient fill
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure PDF save options
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // PDF/A compliance forces embedding of an ICC profile, preserving color fidelity
+                    Compliance = PdfCompliance.PdfA1b
+                    // The EmbedStandardPdfFonts property is not available in this version of Aspose.Cells
+                };
+
+                // Save the workbook as PDF; the gradient fill of the WordArt will be retained
+                workbook.Save(outputPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

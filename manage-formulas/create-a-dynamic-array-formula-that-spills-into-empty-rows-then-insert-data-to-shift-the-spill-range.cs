@@ -1,52 +1,41 @@
-// Title: Set and Shift a SEQUENCE Dynamic Array Formula with Row Insertion Using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, put a control value in B1, assign the dynamic array formula =SEQUENCE(B1) to A1, calculate and refresh the spill, insert rows to move the spilled range, change B1 to enlarge the array, refresh again, and save the file. Illustrates programmatic handling of dynamic‑array spills and their repositioning in C#.
-// Keywords: Aspose.Cells | dynamic array | SEQUENCE formula | spill range | insert rows | refresh formulas | C# | .NET | Workbook manipulation | CalculateFormula | RefreshDynamicArrayFormulas
-// Common Searches: How to create a SEQUENCE dynamic array that spills into rows with Aspose.Cells | How to shift a spilled dynamic array by inserting rows in Aspose.Cells for .NET | How to expand a SEQUENCE array after row insertion using Aspose.Cells | Refresh dynamic array formulas after changing a control cell in Aspose.Cells
-// Developer Intent: Create a SEQUENCE dynamic array that spills vertically, insert rows to shift the spilled range, then enlarge the array by updating the control cell and refreshing formulas.
-// Use Cases: Generate a numbered list that automatically grows when the control cell value changes. | Insert rows into a report while keeping a spilled dynamic array correctly positioned. | Adjust the size of a dynamic array after data insertion without rewriting the formula.
-// AI Prompts: Write C# code with Aspose.Cells to set =SEQUENCE(B1) in A1, insert rows to move the spill, update B1, and refresh the formulas. | Provide an example that expands a spilled SEQUENCE array after inserting rows by changing the control cell and calling RefreshDynamicArrayFormulas. | Explain why CalculateFormula and RefreshDynamicArrayFormulas are needed when managing dynamic array spills in Aspose.Cells.
+// Title: Insert a row to shift a SEQUENCE dynamic array spill and recalculate formulas using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that writes a =SEQUENCE(5) formula in A1, saves the workbook, inserts a new row at position 2, recalculates, and saves the modified file. | Show how to preserve a spilled dynamic array when inserting rows in an Excel worksheet using Aspose.Cells, including updating the spill range after recalculation. | Provide a C# example that adds custom data to an inserted row while keeping the SEQUENCE array formula intact and correctly shifted.
+// Common Searches: how to shift a spilled SEQUENCE array after inserting rows with Aspose.Cells .NET | C# Aspose.Cells insert row and keep dynamic array spill range updated | recalculate dynamic array formulas after row insertion using Aspose.Cells
+// Tags: Aspose.Cells insert rows dynamic array spill | C# SEQUENCE function spill handling | recalculate formulas after row insertion Aspose.Cells | save workbook after shifting dynamic array | dynamic array spill range management .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsDynamicArrayDemo
+// // This program creates a new workbook, places a =SEQUENCE(5) formula in cell A1 (spilling to A1:A5), saves the file, inserts a row at Excel row 2 to move the spill to A2:A6, adds a custom value in the inserted row, recalculates formulas to update the spill range, and saves the updated workbook.
+class Program
 {
-    // Shows how to create a workbook, put a control value in B1, assign the dynamic array formula =SEQUENCE(B1) to A1, calculate and refresh the spill, insert rows to move the spilled range, change B1 to enlarge the array, refresh again, and save the file. Illustrates programmatic handling of dynamic‑array spills and their repositioning in C#.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // 2. Put a value that will control the size of the dynamic array
-            //    B1 = 3 means the SEQUENCE formula will spill into 3 rows (A1:A3)
-            cells["B1"].PutValue(3);
+        // Place a dynamic array formula in A1 that spills into 5 rows (A1:A5)
+        // The SEQUENCE function generates a vertical array of numbers 1 to 5
+        sheet.Cells["A1"].Formula = "=SEQUENCE(5)";
 
-            // 3. Set a dynamic array formula in A1 that spills based on B1
-            //    The formula will generate a vertical sequence of numbers
-            Cell startCell = cells["A1"];
-            startCell.SetDynamicArrayFormula("=SEQUENCE(B1)", new FormulaParseOptions(), true);
+        // Evaluate the formula so the spill range is populated
+        workbook.CalculateFormula();
 
-            // 4. Calculate formulas and refresh dynamic array formulas so the spill occurs
-            workbook.CalculateFormula();
-            workbook.RefreshDynamicArrayFormulas(true);
+        // Save the workbook with the initial spill range
+        workbook.Save("DynamicArraySpill.xlsx");
 
-            // 5. Insert two empty rows at row index 1 (i.e., between rows 1 and 2)
-            //    This shifts the existing spilled range (A1:A3) down by two rows
-            cells.InsertRows(1, 2, true); // rowIndex = 1 (second row), totalRows = 2
+        // Insert a new row at index 1 (Excel row 2) to shift the spill range down
+        // This will cause the spilled values to move down one row (A2:A6)
+        sheet.Cells.InsertRows(1, 1);
 
-            // 6. Update the controlling value to expand the spill range
-            //    Now B1 = 5, so the formula should spill into five rows (A1:A5)
-            cells["B1"].PutValue(5);
+        // Optionally add some data in the newly inserted row
+        sheet.Cells["A2"].PutValue("Inserted Row");
 
-            // 7. Refresh dynamic array formulas again to recalculate the spill area
-            workbook.RefreshDynamicArrayFormulas(true);
+        // Recalculate formulas after the row insertion to update the spill range
+        workbook.CalculateFormula();
 
-            // 8. Save the workbook to verify the result
-            workbook.Save("DynamicArraySpillShiftDemo.xlsx");
-        }
+        // Save the workbook after shifting the spill range
+        workbook.Save("DynamicArraySpill_Shifted.xlsx");
     }
 }

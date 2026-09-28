@@ -1,65 +1,62 @@
-// Title: Find cells with formulas that reference a named range using Aspose.Cells FindOptions (C#)
-// Description: This example creates a workbook, defines a named range "MyRange" (A1:A3), adds formulas that use the range, and demonstrates how to configure FindOptions (LookInType.OnlyFormulas, LookAtType.Contains) to locate every cell whose formula contains the named range. The code iterates through the matches, prints each cell address and formula, and saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | FindOptions | OnlyFormulas | LookAtType.Contains | named range | formula search | cell find | workbook audit | Aspose.Cells Find method
-// Common Searches: Aspose.Cells find cells referencing a named range | FindOptions OnlyFormulas example C# | search formulas for a specific name in Aspose.Cells | how to locate cells that use a named range with Aspose.Cells | C# code to find formulas containing MyRange
-// Developer Intent: Identify all cells whose formulas reference a particular named range.
-// Use Cases: Audit a workbook to list every cell that uses a given named range before restructuring data. | Validate consistency of named‑range references across multiple worksheets. | Programmatically replace an outdated named range with a new one throughout a workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that finds all cells whose formulas contain the named range "MyRange" and replaces it with "NewRange". | Explain how to set FindOptions to search only within formulas for a specific string in Aspose.Cells. | Create a method that returns a list of cell addresses that reference a supplied named range using Aspose.Cells for .NET.
+// Title: Find cells whose formulas reference a specific named range using Aspose.Cells FindOptions in C#
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, configures FindOptions to search within formulas, and prints the addresses of all cells that contain a given named range. | Demonstrate how to loop through every formula cell that references a particular named range by using FindOptions with LookInType.Formulas and LookAtType.Contains. | Create a reusable method that accepts a workbook path and a named range, and returns a list of cell addresses where the range is referenced in formulas.
+// Common Searches: asp.net find cells that reference a named range using aspose.cells FindOptions | c# search Excel formulas for a specific named range with Aspose.Cells | how to locate all formula cells containing a particular named range in a workbook using Aspose | using FindOptions to detect named range references in Excel formulas C#
+// Tags: FindOptions search formulas Aspose.Cells | locate formula cells referencing named range C# | search Excel formulas for specific text Aspose | iterate cells with named range reference Aspose.Cells | lookup named range in formula cells using FindOptions
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace FindFormulasReferencingNamedRange
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, defines a named range "MyRange" (A1:A3), adds formulas that use the range, and demonstrates how to configure FindOptions (LookInType.OnlyFormulas, LookAtType.Contains) to locate every cell whose formula contains the named range. The code iterates through the matches, prints each cell address and formula, and saves the workbook.
+    // The example loads an Excel file, sets FindOptions to look only in formulas with a Contains match, and iterates through every cell whose formula references the specified named range, outputting each cell's address. Optional saving of the workbook is shown.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "Input.xlsx";
+            const string namedRange = "MyNamedRange";
 
-            // Populate some data in A1:A3
-            cells["A1"].PutValue(10);
-            cells["A2"].PutValue(20);
-            cells["A3"].PutValue(30);
-
-            // Create a named range called "MyRange" that refers to A1:A3
-            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-            Name myRange = workbook.Worksheets.Names[nameIndex];
-            myRange.RefersTo = "=Sheet1!$A$1:$A$3";
-
-            // Add formulas that reference the named range
-            cells["B1"].Formula = "=SUM(MyRange)";
-            cells["B2"].Formula = "=AVERAGE(MyRange)";
-            cells["C1"].Formula = "=MAX(MyRange)";
-            // A formula that does NOT reference the named range (for contrast)
-            cells["D1"].Formula = "=SUM(A1:A3)";
-
-            // Set up FindOptions to search only within formulas and look for the name "MyRange"
-            FindOptions options = new FindOptions
+            try
             {
-                LookInType = LookInType.OnlyFormulas,   // Search only formula text
-                LookAtType = LookAtType.Contains        // Name can appear anywhere in the formula
-            };
+                // Ensure the input workbook exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Error: File '{inputPath}' not found.");
+                    return;
+                }
 
-            // Perform the first search
-            Cell previous = null;
-            Cell found = sheet.Cells.Find("MyRange", previous, options);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            Console.WriteLine("Cells whose formulas reference the named range \"MyRange\":");
-            while (found != null)
-            {
-                Console.WriteLine($"- {found.Name} : {found.Formula}");
-                // Continue searching from the cell after the current one
-                previous = found;
-                found = sheet.Cells.Find("MyRange", previous, options);
+                // Get the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Configure FindOptions to search within formulas and look for the named range text
+                FindOptions findOptions = new FindOptions
+                {
+                    LookInType = LookInType.Formulas,      // Search only in formulas
+                    LookAtType = LookAtType.Contains       // Match if the formula contains the text
+                };
+
+                // Find the first cell that contains the named range in its formula
+                Cell cell = worksheet.Cells.Find(namedRange, null, findOptions);
+
+                // Iterate through all matching cells
+                while (cell != null)
+                {
+                    Console.WriteLine($"Cell {cell.Name} contains a formula referencing '{namedRange}'.");
+                    // Find the next occurrence after the current cell
+                    cell = worksheet.Cells.Find(namedRange, cell, findOptions);
+                }
+
+                // (Optional) Save the workbook if any modifications were made
+                // workbook.Save("Output.xlsx");
             }
-
-            // Save the workbook (optional, demonstrates lifecycle rule usage)
-            workbook.Save("FormulasReferencingMyRange.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -1,16 +1,13 @@
-// Title: Create line sparklines for rows 1‑20 in column U with Aspose.Cells for .NET (C#)
-// Description: C# code that builds a 20 × 20 table, adds a line‑type SparklineGroup, inserts a sparkline for each row (data range A‑T) into column U, and saves the workbook as BatchSparklines.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | sparkline | line sparkline | batch sparklines | SparklineGroup | add sparklines programmatically | Excel automation | generate sparklines | worksheet
-// Common Searches: Aspose.Cells add sparklines to each row | C# batch create sparklines in Excel | how to generate line sparklines with Aspose.Cells | programmatically add sparkline group .NET | create sparkline for multiple rows Aspose
-// Developer Intent: Insert a line sparkline for every row of a 20‑row range, using that row’s A‑T values, and place the sparkline in column U.
-// Use Cases: Show monthly sales trends for 20 products, with each product’s data in columns A‑T and a sparkline in column U. | Display sensor‑reading trends for 20 devices, where each row holds sequential measurements and the adjacent sparkline provides a quick visual cue. | Build a KPI dashboard that automatically adds sparklines for each category row to illustrate performance without manual charting. | Create a financial report that visualizes 20 fiscal periods, using sparklines to compare month‑over‑month changes side‑by‑side.
-// AI Prompts: Generate C# code that adds column‑type sparklines for rows 1‑30 using data range B‑U and saves the file. | Modify the example to use SparklineType.Column, set custom marker colors, and enable axis display. | Explain how to change the line color, weight, and transparency of sparklines after they have been added to a worksheet.
+// Title: Batch create line sparklines for rows 1‑20 in Excel using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to add a SparklineGroup of type Line and inserts a sparkline for each of the first 20 rows, pulling data from columns A‑D and placing the sparkline in column E. | Write a script that populates rows 1‑20 with sample numeric values, then programmatically creates sparklines for each row using the ranges A1:D1, A2:D2, …, and saves the workbook as an .xlsx file. | Provide a step‑by‑step example showing how to loop through worksheet rows and call SparklineGroup.Sparklines.Add for batch sparkline creation with Aspose.Cells.
+// Common Searches: Aspose.Cells C# how to add a sparkline for each row in a worksheet | batch generate line sparklines for rows 1 to 20 using .NET | programmatically create sparklines from row data range A:D in Excel with Aspose | save Excel file with sparklines using Aspose.Cells for .NET | C# example of SparklineGroup.Add for multiple rows
+// Tags: batch add line sparklines Aspose.Cells C# | populate worksheet rows for sparkline data Aspose.Cells | create SparklineGroup programmatically .NET | add sparklines to column E Aspose.Cells | save workbook with sparklines .xlsx Aspose
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# code that builds a 20 × 20 table, adds a line‑type SparklineGroup, inserts a sparkline for each row (data range A‑T) into column U, and saves the workbook as BatchSparklines.xlsx.
+// The example creates a new workbook, fills rows 1‑20 (columns A‑D) with sample numeric data, adds a line SparklineGroup, then loops through each row to add a sparkline that references the row's A‑D range and places it in column E. Finally, the workbook is saved as BatchSparklines.xlsx.
 class BatchSparklineDemo
 {
     static void Main()
@@ -19,32 +16,41 @@ class BatchSparklineDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data for rows 1‑20, columns A‑T (0‑19)
-        for (int row = 0; row < 20; row++)
+        // ------------------------------------------------------------
+        // Populate sample data for rows 1‑20, columns A‑D (4 columns)
+        // ------------------------------------------------------------
+        for (int row = 0; row < 20; row++)          // zero‑based index
         {
-            for (int col = 0; col < 20; col++)
+            for (int col = 0; col < 4; col++)       // columns A‑D
             {
-                // Example data: (row + 1) * (col + 1)
+                // Example data: (row index + 1) * (col index + 1)
                 sheet.Cells[row, col].PutValue((row + 1) * (col + 1));
             }
         }
 
-        // Add a sparkline group of type Line (no initial sparklines)
+        // ------------------------------------------------------------
+        // Add a SparklineGroup of type Line (you can change the type)
+        // ------------------------------------------------------------
         int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // For each row, add a sparkline that uses the data range A‑T of that row
-        // and places the sparkline in column U (index 20)
+        // ------------------------------------------------------------
+        // Batch create sparklines for rows 1‑20.
+        // Each sparkline uses the data range of its own row (A‑D)
+        // and is placed in column E (zero‑based index 4) of the same row.
+        // ------------------------------------------------------------
         for (int row = 0; row < 20; row++)
         {
-            string dataRange = $"A{row + 1}:T{row + 1}";
-            int sparklineRow = row;      // zero‑based row index for the sparkline location
-            int sparklineColumn = 20;    // column U (zero‑based)
+            // Build the data range string for the current row, e.g., "A1:D1"
+            string dataRange = $"A{row + 1}:D{row + 1}";
 
-            group.Sparklines.Add(dataRange, sparklineRow, sparklineColumn);
+            // Add the sparkline: dataRange, row index, column index (E = 4)
+            group.Sparklines.Add(dataRange, row, 4);
         }
 
-        // Save the workbook
+        // ------------------------------------------------------------
+        // Save the workbook with the created sparklines
+        // ------------------------------------------------------------
         workbook.Save("BatchSparklines.xlsx");
     }
 }

@@ -1,45 +1,56 @@
-// Title: Load an Excel workbook with Aspose.Cells while preserving formatting and disabling formula evaluation (LoadOptions)
-// Description: Shows C# code that creates a LoadOptions object, sets ParsingFormulaOnOpen = false, loads an XLSX file without calculating formulas, keeps the original cell styles, displays the raw formula/value of A1, and saves the workbook.
-// Keywords: Aspose.Cells LoadOptions | ParsingFormulaOnOpen | preserve cell formatting | disable formula calculation | load workbook without evaluating formulas | C# Excel loading example | .NET Aspose.Cells raw formulas | keep original styles Aspose | Excel template loading | skip formula parsing
-// Common Searches: Aspose.Cells load workbook without calculating formulas | How to keep original formatting when opening Excel with Aspose | ParsingFormulaOnOpen C# example | LoadOptions preserve cell styles Aspose.Cells | Open Excel file as raw data Aspose .NET
-// Developer Intent: Open an Excel file with Aspose.Cells, retain every original cell style, and prevent any formula from being evaluated during the load operation.
-// Use Cases: Load a pre‑formatted template, modify only data cells, and save without altering existing formulas or styles. | Extract raw formula strings for auditing or migration while leaving the workbook unchanged. | Read a workbook in a data‑processing pipeline where calculation results are irrelevant but formatting must stay intact.
-// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells, sets ParsingFormulaOnOpen to false, and saves it preserving all formatting. | Explain how to read raw formulas from a workbook after disabling formula parsing with LoadOptions. | Combine LoadOptions with other Aspose.Cells settings to maintain number formats, conditional formatting, and cell styles while skipping calculations.
+// Title: Load an Excel workbook in C# with Aspose.Cells preserving cell formatting and disabling formula evaluation using LoadOptions
+// AI Prompts: Write C# code that uses Aspose.Cells LoadOptions to open an .xlsx file, keep all cell styles unchanged, and prevent any formulas from being calculated before saving. | Show how to verify that an Excel file exists, then load it with LoadOptions so formatting is retained and formulas remain unevaluated, and finally save the result to a new file. | Demonstrate using Aspose.Cells LoadOptions to load a workbook without triggering formula calculation, then export the workbook while preserving the original formatting.
+// Common Searches: Aspose.Cells C# load workbook without evaluating formulas and keep original formatting | How to preserve cell styles when opening Excel file with LoadOptions in .NET | Load Excel file with Aspose.Cells while skipping formula calculation | C# example for loading .xlsx and saving with unchanged formatting using Aspose.Cells | Using LoadOptions to ignore formula results in Aspose.Cells workbook
+// Tags: preserve formatting on workbook open Aspose.Cells | skip formula calculation with LoadOptions | export workbook retaining original styles .NET | verify Excel file existence before loading Aspose.Cells | load xlsx using LoadOptions C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadOptionsDemo
+namespace AsposeCellsExample
 {
-    // Shows C# code that creates a LoadOptions object, sets ParsingFormulaOnOpen = false, loads an XLSX file without calculating formulas, keeps the original cell styles, displays the raw formula/value of A1, and saves the workbook.
+    // // This program checks for the presence of input.xlsx, loads it with LoadOptions (Xlsx format) which retains cell formatting and leaves formulas unevaluated, and then saves the result as output_preserved.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Path to the source workbook
             string sourcePath = "input.xlsx";
 
-            // Create LoadOptions instance
-            LoadOptions loadOptions = new LoadOptions();
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Error: The file '{sourcePath}' was not found.");
+                return;
+            }
 
-            // Do not parse formulas on load – this keeps the original formula strings
-            // and prevents calculation of their results.
-            loadOptions.ParsingFormulaOnOpen = false;
+            try
+            {
+                // Configure LoadOptions (formulas are loaded but not evaluated by default)
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
 
-            // Load the workbook with the specified options.
-            // This preserves original cell formatting and skips formula evaluation.
-            Workbook workbook = new Workbook(sourcePath, loadOptions);
+                // Load the workbook with the specified options
+                Workbook workbook = new Workbook(sourcePath, loadOptions);
 
-            // Example: display a formula and its (unchanged) value in the first worksheet.
-            Worksheet sheet = workbook.Worksheets[0];
-            Cell cell = sheet.Cells["A1"];
-            Console.WriteLine("Cell A1 Formula: " + cell.Formula);
-            Console.WriteLine("Cell A1 Value (raw): " + cell.Value);
+                // Path for the output workbook
+                string outputPath = "output_preserved.xlsx";
 
-            // Save the workbook to a new file.
-            string outputPath = "output_preserve_format.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+                try
+                {
+                    // Save the workbook; formatting is preserved and formulas remain unevaluated
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Error saving workbook: {saveEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Catch any runtime exceptions and display the error message
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

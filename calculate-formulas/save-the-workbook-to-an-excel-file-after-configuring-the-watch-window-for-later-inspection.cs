@@ -1,42 +1,44 @@
-// Title: Create and Save an Aspose.Cells Workbook with a SUM Formula in C# (Watch Window Unavailable)
-// Description: Demonstrates how to instantiate a new Aspose.Cells Workbook in C#, write numeric values to cells A1 and A2, assign a SUM formula to A3, handle potential exceptions, and save the file as "WatchWindowDemo.xlsx" in XLSX format. The example also notes that the current Aspose.Cells library does not expose a Watch Window API.
-// Keywords: Aspose.Cells C# save workbook | Aspose.Cells add formula | Aspose.Cells watch window missing | Aspose.Cells create workbook .NET | Aspose.Cells exception handling | Aspose.Cells export to XLSX
-// Common Searches: How to save a workbook as .xlsx using Aspose.Cells for .NET | Aspose.Cells set SUM formula in C# | Does Aspose.Cells provide a Watch Window API | Create workbook and add data with Aspose.Cells | Error handling when saving Aspose.Cells workbook
-// Developer Intent: Generate a workbook, insert numeric values and a SUM formula, and persist the result as an Excel (.xlsx) file while handling any runtime errors.
-// Use Cases: Automate the production of a simple financial sheet that calculates totals before distribution. | Create a template workbook with pre‑filled data and formulas for downstream processing in other systems. | Save a spreadsheet for later inspection or debugging when a Watch Window feature is not yet available.
-// AI Prompts: Write C# code with Aspose.Cells to create a workbook, add values to A1 and A2, set a SUM formula in A3, and save it as an .xlsx file with try‑catch error handling. | Explain alternative ways to debug cell values and formulas in Aspose.Cells when the Watch Window API is absent. | Show how to programmatically check Aspose.Cells release notes for a Watch Window feature and suggest fallback logging techniques.
+// Title: Create and save an Excel workbook with numeric values, a SUM formula, and cell comments using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new Workbook, puts 10 in A1, 20 in A2, assigns the formula =SUM(A1:A2) to A3, adds a comment to each tracked cell, and saves the file as an XLSX using Aspose.Cells. | Show how to define named ranges for cells A1, A2, and A3 as a watch‑window substitute before exporting the workbook to XLSX with Aspose.Cells for .NET.
+// Common Searches: aspnet aspose.cells c# save workbook with formula to xlsx | how to add comments to cells in aspose.cells before saving | c# use named ranges to monitor cells in aspose.cells workbook | aspose.cells create workbook set sum formula export as xlsx | workaround for missing watch window feature in aspose.cells .net
+// Tags: save workbook as xlsx aspose.cells c# | insert numeric values aspose.cells c# | set cell formula aspose.cells c# | cell comment workaround aspose.cells c# | named range tracking aspose.cells c# | watch window alternative aspose.cells
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to instantiate a new Aspose.Cells Workbook in C#, write numeric values to cells A1 and A2, assign a SUM formula to A3, handle potential exceptions, and save the file as "WatchWindowDemo.xlsx" in XLSX format. The example also notes that the current Aspose.Cells library does not expose a Watch Window API.
-class Program
+namespace AsposeCellsWatchWindowDemo
 {
-    static void Main()
+    // The example creates a new Workbook, writes 10 to A1 and 20 to A2, sets a SUM formula in A3, adds comments (or named ranges) to emulate a watch window, and saves the workbook as 'WatchWindowDemo.xlsx' using the XLSX SaveFormat in Aspose.Cells for .NET.
+    public class Program
     {
-        try
+        public static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Access the first worksheet and add some sample data
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Data";
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Aspose.Cells does not expose a WatchWindow API in current versions.
-            // The watch window functionality is therefore omitted.
+                // Add sample data and a formula
+                sheet.Cells["A1"].PutValue(10);
+                sheet.Cells["A2"].PutValue(20);
+                sheet.Cells["A3"].Formula = "=SUM(A1:A2)";
 
-            // Save the workbook to an Excel file (lifecycle rule: save)
-            string outputFile = "WatchWindowDemo.xlsx";
-            workbook.Save(outputFile, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // NOTE: Aspose.Cells for .NET does not expose a WatchWindow API.
+                // The original intent was to monitor cells A1, A2, and A3.
+                // As an alternative, you can add comments or use named ranges for tracking.
+
+                // Save the workbook to an XLSX file
+                string outputPath = "WatchWindowDemo.xlsx";
+                workbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

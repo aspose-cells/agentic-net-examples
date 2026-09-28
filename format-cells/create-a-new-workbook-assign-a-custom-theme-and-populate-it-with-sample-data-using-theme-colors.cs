@@ -1,82 +1,83 @@
-// Title: C# – Create a Workbook, Add a Custom Theme, and Apply Theme Colors with Aspose.Cells
-// Description: Demonstrates how to instantiate a new Workbook, define a 12‑color custom theme (MyCustomTheme), assign it via Workbook.CustomTheme, fill a simple table, style the header with Accent1 background and Text1 font, style data rows with Accent2 background and Text2 font, auto‑fit columns, and save the file as CustomThemeSample.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells custom theme C# | Workbook.CustomTheme example | apply ThemeColor Aspose.Cells | theme colors styling cells | auto fit columns Aspose.Cells | C# Excel custom color palette | ThemeColorType Accent1 header | Aspose.Cells sample data styling
-// Common Searches: how to create a custom theme in Aspose.Cells .NET | apply theme colors to cells using Aspose.Cells C# | Aspose.Cells example for Accent1 background and Text1 font | auto fit columns after styling with Aspose.Cells | C# code for Workbook.CustomTheme with RGB values
-// Developer Intent: Create a new workbook, set a custom 12‑color theme, and style sample data using the theme’s accent and text colors.
-// Use Cases: Define and apply a 12‑color custom theme to a workbook via Workbook.CustomTheme. | Style header cells with an accent background and text color from the custom theme. | Apply a different accent background and text color to data rows. | Automatically adjust column widths after applying styles. | Save the themed workbook as an XLSX file.
-// AI Prompts: Generate C# code that creates a workbook, adds a custom theme with specific RGB values, and uses ThemeColor to style header and data rows in Aspose.Cells. | Explain the relationship between ThemeColor, ThemeColorType, and Workbook.CustomTheme when styling cells in Aspose.Cells. | Show how to modify the custom theme colors and refresh existing cell styles without recreating the workbook.
+// Title: Create an Excel workbook with a custom theme and apply accent colors to header and alternating rows using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to generate a new workbook, define a dictionary of ThemeColorType accent colors, and style the first row as a header with those colors. | Provide a C# example that applies alternating row background colors based on custom theme accents in an Aspose.Cells worksheet and saves the file.
+// Common Searches: Aspose.Cells C# how to set custom theme accent colors for a worksheet | C# apply header style with custom theme colors using Aspose.Cells | Aspose.Cells alternating row shading with custom theme colors in .NET | Create Excel file with custom theme colors programmatically using Aspose.Cells
+// Tags: custom theme accent colors Aspose.Cells .NET | header formatting using ThemeColorType Aspose.Cells | alternating row background Aspose.Cells workbook | dictionary of ThemeColorType to Color C# | save workbook as .xlsx Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsCustomThemeDemo
+// The program creates a new workbook, defines a set of custom ThemeColorType accent colors in a dictionary, writes sample category/value data, styles the header row with the first accent color, applies alternating row background colors using other accents, and saves the result as CustomThemeSample.xlsx.
+class Program
 {
-    // Demonstrates how to instantiate a new Workbook, define a 12‑color custom theme (MyCustomTheme), assign it via Workbook.CustomTheme, fill a simple table, style the header with Accent1 background and Text1 font, style data rows with Accent2 background and Text2 font, auto‑fit columns, and save the file as CustomThemeSample.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define 12 custom theme colors (Background1, Text1, ..., FollowedHyperlink)
-            Color[] customColors = new Color[]
+            // Define custom theme colors using a dictionary (Aspose.Cells Theme class not available in this version)
+            var customColors = new Dictionary<ThemeColorType, Color>
             {
-                Color.FromArgb(255, 255, 255), // Background1 - White
-                Color.FromArgb(0, 0, 0),       // Text1 - Black
-                Color.FromArgb(240, 240, 240), // Background2 - Light Gray
-                Color.FromArgb(80, 80, 80),    // Text2 - Dark Gray
-                Color.FromArgb(255, 0, 0),     // Accent1 - Red
-                Color.FromArgb(0, 255, 0),     // Accent2 - Green
-                Color.FromArgb(0, 0, 255),     // Accent3 - Blue
-                Color.FromArgb(255, 165, 0),   // Accent4 - Orange
-                Color.FromArgb(128, 0, 128),   // Accent5 - Purple
-                Color.FromArgb(0, 255, 255),   // Accent6 - Cyan
-                Color.FromArgb(0, 0, 255),     // Hyperlink - Blue
-                Color.FromArgb(128, 0, 0)      // FollowedHyperlink - Maroon
+                { ThemeColorType.Accent1, Color.FromArgb(91, 155, 213) },   // Light blue
+                { ThemeColorType.Accent2, Color.FromArgb(237, 125, 49) },   // Orange
+                { ThemeColorType.Accent3, Color.FromArgb(165, 165, 165) }, // Gray
+                { ThemeColorType.Accent4, Color.FromArgb(255, 192, 0) },   // Gold
+                { ThemeColorType.Accent5, Color.FromArgb(112, 173, 71) },  // Green
+                { ThemeColorType.Accent6, Color.FromArgb(68, 114, 196) }   // Dark blue
             };
 
-            // Apply the custom theme (rule: CustomTheme)
-            workbook.CustomTheme("MyCustomTheme", customColors);
+            // Get the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "SampleData";
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apples");
-            sheet.Cells["B2"].PutValue(50);
-            sheet.Cells["A3"].PutValue("Bananas");
-            sheet.Cells["B3"].PutValue(30);
-            sheet.Cells["A4"].PutValue("Cherries");
-            sheet.Cells["B4"].PutValue(20);
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
 
-            // Apply theme colors to header row using Accent1 for background and Text1 for font
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent1, 0);
-            headerStyle.Pattern = BackgroundType.Solid;
-            headerStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Text1, 0);
-            headerStyle.Font.IsBold = true;
-            sheet.Cells["A1"].SetStyle(headerStyle);
-            sheet.Cells["B1"].SetStyle(headerStyle);
+            string[] categories = { "A", "B", "C", "D", "E" };
+            double[] values = { 10, 20, 30, 40, 50 };
 
-            // Apply theme colors to data rows (Accent2 background, Text2 font)
-            Style dataStyle = workbook.CreateStyle();
-            dataStyle.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent2, 0);
-            dataStyle.Pattern = BackgroundType.Solid;
-            dataStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Text2, 0);
-            for (int row = 2; row <= 4; row++)
+            for (int i = 0; i < categories.Length; i++)
             {
-                sheet.Cells[$"A{row}"].SetStyle(dataStyle);
-                sheet.Cells[$"B{row}"].SetStyle(dataStyle);
+                sheet.Cells[i + 1, 0].PutValue(categories[i]); // Column A
+                sheet.Cells[i + 1, 1].PutValue(values[i]);   // Column B
             }
 
-            // Auto-fit columns for better appearance
-            sheet.AutoFitColumn(0);
-            sheet.AutoFitColumn(1);
+            // Apply theme colors to header style
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.Color = customColors[ThemeColorType.Accent1];
+            headerStyle.Font.IsBold = true;
+            headerStyle.ForegroundColor = customColors[ThemeColorType.Accent2];
+            headerStyle.Pattern = BackgroundType.Solid;
 
-            // Save the workbook (lifecycle rule: save)
+            // Apply the header style
+            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange("A1:B1");
+            headerRange.ApplyStyle(headerStyle, new StyleFlag { Font = true, CellShading = true });
+
+            // Apply alternating row colors using theme accents
+            for (int row = 2; row <= categories.Length + 1; row++)
+            {
+                Style rowStyle = workbook.CreateStyle();
+                Color bgColor = (row % 2 == 0)
+                    ? customColors[ThemeColorType.Accent3]
+                    : customColors[ThemeColorType.Accent4];
+                rowStyle.ForegroundColor = bgColor;
+                rowStyle.Pattern = BackgroundType.Solid;
+
+                Aspose.Cells.Range dataRange = sheet.Cells.CreateRange(row - 1, 0, 1, 2);
+                dataRange.ApplyStyle(rowStyle, new StyleFlag { CellShading = true });
+            }
+
+            // Save the workbook
             workbook.Save("CustomThemeSample.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,17 +1,14 @@
-// Title: Retrieve a currency‑formatted string with GetStringValue (DisplayString) in Aspose.Cells for .NET
-// Description: Demonstrates how to place a numeric value in a worksheet, apply the built‑in currency style (Number format ID 4), extract the formatted text using GetStringValue with the DisplayString strategy, and compose a readable report line that includes the currency symbol. The example also shows writing the line to other cells and saving the workbook.
-// Keywords: Aspose.Cells GetStringValue | DisplayString strategy | currency format .NET | CellValueFormatStrategy example | formatted cell value report | C# Aspose.Cells currency | Excel currency symbol extraction
-// Common Searches: Aspose.Cells get cell value with currency symbol | GetStringValue DisplayString C# example | How to format numbers as currency in Aspose.Cells | Create report line from formatted Excel cell | Retrieve formatted value from worksheet cell
-// Developer Intent: Extract a cell’s currency‑formatted text and embed it in a human‑readable report string.
-// Use Cases: Generate a sales summary line that shows the amount with the correct currency symbol. | Insert a formatted monetary value into another cell for documentation or further calculations. | Save a workbook after adding a user‑friendly report line that reflects cell styling.
-// AI Prompts: Show how to use Aspose.Cells GetStringValue with CellValueFormatStrategy.DisplayString to obtain a currency‑formatted string in C#. | Provide a C# snippet that applies the built‑in currency style to a cell, reads the formatted value, and writes a report line to another cell. | Explain combining GetStringValue, formatting, and string interpolation to create a readable sales report in Aspose.Cells for .NET.
+// Title: Create a currency‑formatted report line in C# using Aspose.Cells GetStringValue with DisplayString
+// AI Prompts: Write C# code that sets a cell to the built‑in currency number format, calls GetStringValue with CellValueFormatStrategy.DisplayString, and concatenates the result into a readable report string. | Show how to retrieve a cell's formatted value including the currency symbol using Aspose.Cells and embed it with another cell's text in a single output line. | Demonstrate using GetStringValue(DisplayString) to obtain a locale‑aware currency string and combine it with product information for console output.
+// Common Searches: Aspose.Cells C# get cell value with currency symbol using GetStringValue | How to format price as currency and read it back as string in Aspose.Cells .NET | C# Aspose.Cells DisplayString strategy for formatted monetary values | Create a report line with product name and formatted price in Aspose.Cells workbook | Retrieve formatted cell value including currency sign in Aspose.Cells API
+// Tags: GetStringValue DisplayString currency formatting | apply built-in currency number format Aspose.Cells | concatenate cell StringValue with formatted price C# | Aspose.Cells formatted monetary value retrieval | report line generation using Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsReportDemo
 {
-    // Demonstrates how to place a numeric value in a worksheet, apply the built‑in currency style (Number format ID 4), extract the formatted text using GetStringValue with the DisplayString strategy, and compose a readable report line that includes the currency symbol. The example also shows writing the line to other cells and saving the workbook.
+    // // Applies the built‑in currency number format to a cell, retrieves the formatted value with GetStringValue using the DisplayString strategy, builds a console report line that combines the product name and the currency‑formatted price, and saves the workbook.
     class Program
     {
         static void Main()
@@ -19,32 +16,31 @@ namespace AsposeCellsReportDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Target cell that will hold the numeric value
-            Cell amountCell = sheet.Cells["B2"];
-            // Put a numeric value (e.g., total sales)
-            amountCell.PutValue(1234.56);
+            // Put product name in A1
+            Cell productCell = cells["A1"];
+            productCell.PutValue("Laptop");
 
-            // Apply a built‑in currency format (Number format ID 4 = "$#,##0.00")
-            Style currencyStyle = amountCell.GetStyle();
-            currencyStyle.Number = 4; // Currency format
-            amountCell.SetStyle(currencyStyle);
+            // Put price value in B1
+            Cell priceCell = cells["B1"];
+            priceCell.PutValue(999.99);
 
-            // Retrieve the formatted string using GetStringValue with DisplayString strategy
-            // This includes the currency symbol and respects the cell's style.
-            string formattedAmount = amountCell.GetStringValue(CellValueFormatStrategy.DisplayString);
+            // Apply built‑in currency format (Number = 4) to the price cell
+            Style priceStyle = priceCell.GetStyle();
+            priceStyle.Number = 4; // Currency format
+            priceCell.SetStyle(priceStyle);
 
-            // Build a user‑friendly report line
-            string reportLine = $"Total Sales: {formattedAmount}";
+            // Retrieve the formatted price string using GetStringValue with DisplayString strategy
+            string formattedPrice = priceCell.GetStringValue(CellValueFormatStrategy.DisplayString);
 
-            // Output the report line to the console
+            // Build a user‑friendly report line that includes the currency symbol
+            string reportLine = $"Product: {productCell.StringValue}, Price: {formattedPrice}";
+
+            // Output the report line
             Console.WriteLine(reportLine);
 
-            // Optionally, write the report line into another cell for demonstration
-            sheet.Cells["A2"].PutValue("Report:");
-            sheet.Cells["A3"].PutValue(reportLine);
-
-            // Save the workbook (lifecycle rule: use provided save method)
+            // Optionally save the workbook (uses the standard create/save lifecycle)
             workbook.Save("ReportDemo.xlsx");
         }
     }

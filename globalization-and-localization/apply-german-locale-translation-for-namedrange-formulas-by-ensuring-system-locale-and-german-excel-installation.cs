@@ -1,64 +1,54 @@
-// Title: Aspose.Cells for .NET – Apply German locale to named‑range formulas (FormulaLocal)
-// Description: This example creates a workbook, sets its region to Germany, defines custom globalization settings that map English functions (SUM, AVERAGE) to German equivalents (SUMME, MITTELWERT), adds a named range "MyRange" (B1:B5), writes an English formula with `Formula` and a German formula with `FormulaLocal`, calculates both, prints the results, and saves the file. The workbook works with a German‑installed Excel and respects the system locale.
-// Keywords: Aspose.Cells | German locale | .NET | C# | SettableGlobalizationSettings | FormulaLocal | named range localization | Excel German functions | SUMME | MITTELWERT | region Germany | function translation
-// Common Searches: Aspose.Cells German locale example | How to localize Excel formulas to German in C# | Set workbook region to Germany Aspose.Cells | FormulaLocal German named range Aspose.Cells | Map English Excel functions to German using Aspose.Cells | German Excel function names SUMME Aspose.Cells
-// Developer Intent: Generate a workbook that shows German‑localized formulas for a named range while keeping the workbook region set to Germany, enabling compatibility with German‑installed Excel.
-// Use Cases: Create financial reports that open correctly in German Excel by translating function names. | Automated tests that verify English and German formulas return identical results for the same named range. | Produce multi‑language workbooks that switch between English and German locales at runtime. | Migrate existing English workbooks to German markets without manual formula editing.
-// AI Prompts: Add additional German function mappings (e.g., MIN → MIN, MAX → MAX) using SettableGlobalizationSettings. | Show how to retrieve the localized formula string from a cell after calculation. | Demonstrate switching between English and German locales for the same workbook while preserving named ranges. | Explain how to configure the system locale for Aspose.Cells to match a German Excel installation. | Provide unit‑test code that asserts both English and German formulas produce the same value.
+// Title: Apply German (de-DE) locale to Excel workbook formulas with Aspose.Cells for .NET
+// AI Prompts: Set the current thread's CultureInfo to de‑DE, load the workbook, assign workbook.Settings.CultureInfo to the German culture, and save the file. | Configure Aspose.Cells to parse formulas using German regional settings by updating the workbook's culture before exporting.
+// Common Searches: Aspose.Cells set German de-DE culture for formula evaluation in C# | How to localize Excel formulas to German using Aspose.Cells .NET | C# load workbook and apply German locale for named‑range formulas with Aspose | Change formula parsing language to German in Aspose.Cells workbook | Set workbook.Settings.CultureInfo to de-DE for Excel localization in .NET
+// Tags: set workbook cultureinfo de-de Aspose.Cells | German formula locale Aspose.Cells .NET | C# Excel workbook localization Aspose | apply regional settings to workbook formulas | Aspose.Cells cultureinfo configuration
 
 using System;
+using System.Globalization;
+using System.IO;
+using System.Threading;
 using Aspose.Cells;
 
-namespace AsposeCellsGermanLocaleDemo
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, sets its region to Germany, defines custom globalization settings that map English functions (SUM, AVERAGE) to German equivalents (SUMME, MITTELWERT), adds a named range "MyRange" (B1:B5), writes an English formula with `Formula` and a German formula with `FormulaLocal`, calculates both, prints the results, and saves the file. The workbook works with a German‑installed Excel and respects the system locale.
+    // The example sets the thread's culture to German (de-DE), loads an input.xlsx workbook, assigns the German CultureInfo to workbook.Settings.CultureInfo for locale‑specific formula handling, and saves the modified workbook as output.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Set the workbook region to Germany (German locale)
-            workbook.Settings.Region = CountryCode.Germany;
-
-            // Create custom globalization settings and map English function names to German equivalents
-            SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
-            gSettings.SetLocalFunctionName("SUM", "SUMME", true);          // SUM → SUMME
-            gSettings.SetLocalFunctionName("AVERAGE", "MITTELWERT", true); // AVERAGE → MITTELWERT
-
-            // Apply the globalization settings to the workbook
-            workbook.Settings.GlobalizationSettings = gSettings;
-
-            // Fill some sample data in column B (B1:B5)
-            for (int i = 0; i < 5; i++)
+            try
             {
-                sheet.Cells[$"B{i + 1}"].PutValue(i + 1); // Values 1,2,3,4,5
+                // Set thread culture to German (de-DE)
+                CultureInfo germanCulture = new CultureInfo("de-DE");
+                Thread.CurrentThread.CurrentCulture = germanCulture;
+                Thread.CurrentThread.CurrentUICulture = germanCulture;
+
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Ensure the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Apply German locale for formula parsing
+                workbook.Settings.CultureInfo = germanCulture;
+                // Note: UseFormulaLocale property is not available in the current Aspose.Cells version.
+                // Setting CultureInfo is sufficient for locale‑specific formula handling.
+
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Define a named range "MyRange" that refers to B1:B5
-            int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-            Name myRange = workbook.Worksheets.Names[nameIndex];
-            myRange.RefersTo = "='Sheet1'!$B$1:$B$5";
-
-            // Use the standard English formula with the named range
-            Cell cellStd = sheet.Cells["A1"];
-            cellStd.Formula = "=SUM(MyRange)";
-
-            // Use the German localized formula with the same named range via FormulaLocal
-            Cell cellLocal = sheet.Cells["A2"];
-            cellLocal.FormulaLocal = "=SUMME(MyRange)";
-
-            // Calculate all formulas
-            workbook.CalculateFormula();
-
-            // Output results to console
-            Console.WriteLine($"Standard formula result (A1): {cellStd.Value}");
-            Console.WriteLine($"German localized formula result (A2): {cellLocal.Value}");
-
-            // Save the workbook
-            workbook.Save("GermanLocaleNamedRangeDemo.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

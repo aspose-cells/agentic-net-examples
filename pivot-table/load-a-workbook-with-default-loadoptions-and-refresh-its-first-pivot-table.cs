@@ -1,36 +1,47 @@
-// Title: C# Example: Load Workbook with Default LoadOptions and Refresh the First Pivot Table using Aspose.Cells
-// Description: Demonstrates how to load an Excel workbook with Aspose.Cells' default LoadOptions, detect the first worksheet's pivot tables, refresh the data source, recalculate the pivot, and optionally save the updated file.
-// Keywords: Aspose.Cells | C# pivot table refresh | LoadOptions | refresh first pivot table | calculate pivot data | Excel workbook load | programmatic pivot update | default LoadOptions | pivot table API | Aspose.Cells example
-// Common Searches: Aspose.Cells refresh pivot table C# | load Excel workbook with default options Aspose | how to refresh first pivot table using Aspose.Cells | C# code to refresh pivot tables after loading workbook | Aspose.Cells example refresh pivot data
-// Developer Intent: Refresh the first pivot table after loading a workbook with default options.
-// Use Cases: Update pivot data after external source changes before saving the workbook. | Automate pivot refresh in batch processing of multiple Excel files. | Validate pivot calculations during data transformation pipelines. | Integrate pivot refresh into server‑side reporting services.
-// AI Prompts: Write C# code that loads an Excel file with default LoadOptions and refreshes every pivot table in all worksheets using Aspose.Cells. | Show how to handle worksheets that contain no pivot tables while performing a refresh with Aspose.Cells. | Explain exception handling for PivotTable.RefreshData and CalculateData methods in Aspose.Cells. | Provide a GitHub‑style README snippet describing this example, its prerequisites, and how to run it.
+// Title: Refresh the first pivot table in an Excel workbook using Aspose.Cells for .NET with default LoadOptions
+// AI Prompts: Load an .xlsx file with Aspose.Cells default LoadOptions, locate the initial pivot table on the first worksheet, call RefreshData and CalculateData, and then save the workbook. | Generate C# code that checks for a pivot table on the first sheet, refreshes its source data, recalculates the pivot, and writes the result to a new file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# refresh first pivot table after loading workbook | how to use LoadOptions to open workbook and update pivot table with Aspose.Cells | programmatically refresh pivot table data in Excel using Aspose.Cells .NET | C# example for RefreshData and CalculateData on a pivot table with Aspose.Cells | saving workbook after pivot table refresh using Aspose.Cells for .NET
+// Tags: Aspose.Cells refresh pivot table C# | default LoadOptions workbook load Aspose.Cells | pivot table RefreshData method .NET | pivot table CalculateData operation Aspose.Cells | persist workbook after pivot refresh Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Demonstrates how to load an Excel workbook with Aspose.Cells' default LoadOptions, detect the first worksheet's pivot tables, refresh the data source, recalculate the pivot, and optionally save the updated file.
-class Program
+// The program loads 'input.xlsx' with default LoadOptions, accesses the first worksheet, verifies a pivot table exists, refreshes its data via RefreshData(), recalculates it with CalculateData(), and saves the modified workbook as 'output.xlsx'.
+class RefreshFirstPivotTable
 {
     static void Main()
     {
-        // Path to the workbook to be loaded
+        // Path to the source workbook
         string inputPath = "input.xlsx";
 
         // Load the workbook with default LoadOptions
         LoadOptions loadOptions = new LoadOptions();               // default options
         Workbook workbook = new Workbook(inputPath, loadOptions); // load with options
 
-        // Refresh the first pivot table if it exists
-        if (workbook.Worksheets[0].PivotTables.Count > 0)
+        // Access the first worksheet (index 0)
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Ensure there is at least one pivot table
+        if (worksheet.PivotTables.Count > 0)
         {
-            PivotTable firstPivot = workbook.Worksheets[0].PivotTables[0];
-            firstPivot.RefreshData();      // refresh data from the source
-            firstPivot.CalculateData();    // recalculate the pivot after refresh (optional)
+            // Get the first pivot table
+            PivotTable pivotTable = worksheet.PivotTables[0];
+
+            // Refresh the pivot table data
+            pivotTable.RefreshData();
+
+            // Optionally recalculate the pivot table after refresh
+            pivotTable.CalculateData();
+        }
+        else
+        {
+            Console.WriteLine("No pivot tables found in the first worksheet.");
         }
 
-        // Save the updated workbook (optional)
-        workbook.Save("output.xlsx");
+        // Save the workbook (optional)
+        string outputPath = "output.xlsx";
+        workbook.Save(outputPath);
+        Console.WriteLine($"Workbook saved to {outputPath}");
     }
 }

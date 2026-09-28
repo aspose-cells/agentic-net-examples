@@ -1,67 +1,66 @@
-// Title: Apply Built‑In Table Style and Preserve Header Formatting with Aspose.Cells (.NET)
-// Description: Creates a workbook, formats the header row with bold light‑yellow style, adds a ListObject over the data range, assigns the built‑in TableStyleMedium2, calls ApplyStyleToRange to keep the custom header intact, optionally shows first/last column styling, and saves the file as an .xlsx workbook.
-// Keywords: Aspose.Cells | .NET | C# | apply built‑in table style | preserve cell formatting | ListObject TableStyleName | TableStyleMedium2 | ApplyStyleToRange | custom header style | Excel table styling
-// Common Searches: Aspose.Cells apply table style without losing custom header | preserve cell styles when using ListObject table style .NET | how to keep header formatting after applying TableStyleMedium2 | ApplyStyleToRange example Aspose.Cells C# | show first and last column styling in Aspose.Cells table
-// Developer Intent: Apply a predefined table style to a ListObject while retaining any manually set cell styles.
-// Use Cases: Generate a worksheet, style the header row, add a table, and apply TableStyleMedium2 without overwriting the header. | Enable visual emphasis on the first and last columns of a styled table. | Export the workbook so the final file shows both the built‑in table appearance and the custom header formatting.
-// AI Prompts: Show C# code that uses Aspose.Cells to apply a built‑in table style to a ListObject while preserving a custom header style. | Generate an example that sets TableStyleMedium2, calls ApplyStyleToRange, and toggles ShowTableStyleFirstColumn/ShowTableStyleLastColumn. | Explain the difference between setting TableStyleName directly and using ApplyStyleToRange for keeping existing cell formatting.
+// Title: Apply a built‑in TableStyleMedium2 to an Aspose.Cells ListObject while preserving existing cell formatting in C#
+// AI Prompts: Generate C# code that creates a worksheet, fills cells A1:B3 with sample data, converts the range into a ListObject, and sets its TableStyleType to TableStyleMedium2 using Aspose.Cells. | Write a C# snippet that applies a predefined Excel table style to an Aspose.Cells ListObject without altering the original cell formats. | Provide C# code to save the styled workbook as an .xlsx file, ensuring the output directory is created if it does not already exist.
+// Common Searches: how to set TableStyleMedium2 for an Excel table created with Aspose.Cells in C# | preserving cell formatting when applying a table style with Aspose.Cells | Aspose.Cells C# add ListObject and apply built‑in table style | save Aspose.Cells workbook to a specific folder and create folder if missing | apply predefined table style to ListObject without losing header formatting Aspose
+// Tags: apply TableStyleMedium2 to ListObject Aspose.Cells | preserve cell formatting when styling Excel table C# | create ListObject from range Aspose.Cells | save workbook to .xlsx with directory creation Aspose.Cells | use TableStyleType enum Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsTableStyleDemo
+// Demonstrates creating a workbook, adding sample data, converting range A1:B3 into a ListObject, applying the built‑in TableStyleMedium2 style while keeping original cell formatting, and saving the file with automatic output folder creation.
+class Program
 {
-    // Creates a workbook, formats the header row with bold light‑yellow style, adds a ListObject over the data range, assigns the built‑in TableStyleMedium2, calls ApplyStyleToRange to keep the custom header intact, optionally shows first/last column styling, and saves the file as an .xlsx workbook.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            var workbook = new Workbook();
 
-            // Populate sample data (header + 5 rows, 4 columns)
-            for (int col = 0; col < 4; col++)
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
+
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(25);
+
+            // Define the range that will become a table (A1:B3)
+            var tableRange = sheet.Cells.CreateRange("A1:B3");
+
+            // Add a ListObject (Excel table) based on the defined range, indicating that the first row has headers
+            int tableIndex = sheet.ListObjects.Add(
+                tableRange.FirstRow,
+                tableRange.FirstColumn,
+                tableRange.RowCount,
+                tableRange.ColumnCount,
+                true);
+
+            var table = sheet.ListObjects[tableIndex];
+
+            // Apply a predefined table style (e.g., TableStyleMedium2)
+            table.TableStyleType = TableStyleType.TableStyleMedium2;
+
+            // Save the workbook to a file
+            string outputFile = "StyledTable.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputFile));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                cells[0, col].PutValue($"Header {col + 1}");
-                // Apply a distinct style to the header to demonstrate preservation
-                Style headerStyle = workbook.CreateStyle();
-                headerStyle.Font.IsBold = true;
-                headerStyle.ForegroundColor = System.Drawing.Color.LightYellow;
-                headerStyle.Pattern = BackgroundType.Solid;
-                cells[0, col].SetStyle(headerStyle);
+                Directory.CreateDirectory(outputDir);
             }
 
-            for (int row = 1; row <= 5; row++)
-            {
-                for (int col = 0; col < 4; col++)
-                {
-                    cells[row, col].PutValue(row * (col + 1));
-                }
-            }
-
-            // Add a table (ListObject) covering the data range
-            int tableIndex = sheet.ListObjects.Add(0, 0, 5, 3, true);
-            ListObject table = sheet.ListObjects[tableIndex];
-
-            // Retrieve a built‑in table style (e.g., Medium2)
-            TableStyle builtinStyle = workbook.Worksheets.TableStyles.GetBuiltinTableStyle(TableStyleType.TableStyleMedium2);
-
-            // Apply the built‑in style to the table
-            table.TableStyleName = builtinStyle.Name;
-
-            // Preserve original formatting (e.g., header style) by applying the style only to the table range
-            // without overwriting explicitly set cell styles.
-            table.ApplyStyleToRange();
-
-            // Optional: show first column style if needed
-            table.ShowTableStyleFirstColumn = true;
-            table.ShowTableStyleLastColumn = true;
-
-            // Save the workbook
-            workbook.Save("PredefinedTableStylePreserved.xlsx");
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputFile)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

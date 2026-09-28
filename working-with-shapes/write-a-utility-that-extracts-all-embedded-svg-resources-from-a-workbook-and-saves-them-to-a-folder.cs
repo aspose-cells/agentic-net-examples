@@ -1,93 +1,146 @@
-// Title: C# utility to extract embedded SVG pictures from an Excel workbook with Aspose.Cells and save them to a folder
-// Description: A ready‑to‑run C# example that loads an Excel workbook, scans every worksheet for picture shapes, and uses Aspose.Cells' ImageOrPrintOptions (ImageType.Svg) to export each picture as an SVG file. The utility creates the target directory, names files by sheet and shape index, and handles errors gracefully.
-// Keywords: Aspose.Cells SVG extraction | C# export Excel picture to SVG | extract embedded images from workbook | save Excel shapes as SVG files | Aspose.Cells ImageOrPrintOptions SVG | .NET Excel SVG utility | batch convert Excel pictures to SVG | GitHub Aspose.Cells SVG extractor
-// Common Searches: how to export Excel pictures as SVG using Aspose.Cells | C# code to extract all SVG images from a workbook | save embedded Excel shapes to SVG folder .NET | Aspose.Cells extract SVG from multiple sheets | sample program to convert Excel pictures to SVG
-// Developer Intent: Programmatically locate every picture shape in an Excel workbook and write each one as an individual SVG file to a user‑specified directory.
-// Use Cases: Create web‑ready vector assets from Excel charts stored as picture shapes. | Automate archival of vector graphics embedded in financial or engineering reports. | Generate SVG resources from template workbooks for UI rendering in .NET applications. | Batch‑process a library of workbooks to produce SVG assets for documentation pipelines.
-// AI Prompts: Write a method that scans an Aspose.Cells Workbook for picture shapes and saves each as an SVG file with a name that includes the worksheet name and shape index. | Extend the SvgExtractor to log the original shape name, dimensions, and output path to a CSV file for audit purposes. | Create a PowerShell script that calls the SvgExtractor for every .xlsx file in a directory and stores the resulting SVGs in matching subfolders. | Modify the utility to also export chart objects as SVG using Aspose.Cells' ToImage method.
+// Title: C# utility to extract all embedded SVG images from an Excel workbook using Aspose.Cells and save them to a folder
+// AI Prompts: Write a C# console program that opens an Excel file with Aspose.Cells, walks through each worksheet, and exports any SVG picture or shape to a user‑specified output directory. | Implement reflection in C# to read the ImageFormatType or raw ImageData of Aspose.Cells Picture and Shape objects, determine whether the content is SVG, and then write the SVG bytes to disk. | Create logic that assigns sequential filenames (e.g., svg_0.svg, svg_1.svg) to each extracted SVG and prints the total count of SVG resources after processing the workbook.
+// Common Searches: how to export embedded svg images from an Excel file using Aspose.Cells in C# | C# code to extract svg pictures from worksheets with Aspose.Cells | save svg resources from an Aspose.Cells workbook to a folder | detect svg shape in Aspose.Cells and write to file
+// Tags: Aspose.Cells SVG extraction | C# workbook image export | picture and shape iteration Aspose.Cells | reflection based image type detection | sequential naming of exported SVGs
 
 using System;
 using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsUtilities
+// A C# console utility that loads an Excel workbook via Aspose.Cells, iterates through each worksheet's pictures and shapes, uses reflection to identify SVG content (by ImageFormatType or byte signature), and saves each SVG as a sequentially named .svg file in a specified output folder, reporting the total number extracted.
+class SvgExtractor
 {
-    // A ready‑to‑run C# example that loads an Excel workbook, scans every worksheet for picture shapes, and uses Aspose.Cells' ImageOrPrintOptions (ImageType.Svg) to export each picture as an SVG file. The utility creates the target directory, names files by sheet and shape index, and handles errors gracefully.
-    public static class SvgExtractor
+    static void Main(string[] args)
     {
-        /// <param name="workbookPath">Full path to the source workbook.</param>
-        /// <param name="outputFolder">Folder where extracted SVG files will be saved.</param>
-        public static void Extract(string workbookPath, string outputFolder)
+        // Expect two arguments: path to the workbook and output folder
+        if (args.Length < 2)
         {
-            try
+            Console.WriteLine("Usage: SvgExtractor <workbookPath> <outputFolder>");
+            return;
+        }
+
+        string workbookPath = args[0];
+        string outputFolder = args[1];
+
+        // Verify that the workbook file exists
+        if (!File.Exists(workbookPath))
+        {
+            Console.WriteLine($"Error: Workbook file not found at \"{workbookPath}\".");
+            return;
+        }
+
+        // Ensure the output directory exists
+        try
+        {
+            Directory.CreateDirectory(outputFolder);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to create output directory: {ex.Message}");
+            return;
+        }
+
+        Workbook workbook;
+        try
+        {
+            // Load the workbook
+            workbook = new Workbook(workbookPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        int svgIndex = 0;
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // ----- Extract SVGs stored as pictures -----
+            foreach (Picture picture in sheet.Pictures)
             {
-                // Verify that the workbook file exists.
-                if (!File.Exists(workbookPath))
+                try
                 {
-                    Console.WriteLine($"Workbook file not found: {workbookPath}");
-                    return;
-                }
+                    // Use reflection to safely access ImageFormatType (may not exist in older versions)
+                    PropertyInfo formatProp = picture.GetType().GetProperty("ImageFormatType");
+                    bool isSvg = false;
 
-                // Ensure the output directory exists.
-                Directory.CreateDirectory(outputFolder);
-
-                // Load the workbook from the provided file path.
-                using (Workbook workbook = new Workbook(workbookPath))
-                {
-                    // Iterate through each worksheet in the workbook.
-                    foreach (Worksheet sheet in workbook.Worksheets)
+                    if (formatProp != null)
                     {
-                        ShapeCollection shapes = sheet.Shapes;
+                        object formatValue = formatProp.GetValue(picture);
+                        // Compare with the enum name "Svg" if possible
+                        if (formatValue != null && formatValue.ToString().Equals("Svg", StringComparison.OrdinalIgnoreCase))
+                            isSvg = true;
+                    }
 
-                        // Examine each shape.
-                        for (int i = 0; i < shapes.Count; i++)
+                    // Fallback: inspect raw bytes for SVG signature if format info unavailable
+                    PropertyInfo dataProp = picture.GetType().GetProperty("ImageData");
+                    if (dataProp != null)
+                    {
+                        object imgDataObj = dataProp.GetValue(picture);
+                        MethodInfo toByteArray = imgDataObj?.GetType().GetMethod("ToByteArray");
+                        byte[] bytes = toByteArray?.Invoke(imgDataObj, null) as byte[];
+
+                        if (bytes != null && bytes.Length > 0)
                         {
-                            // Only process picture shapes.
-                            if (shapes[i] is Picture picture)
+                            if (!isSvg)
                             {
-                                // Export the picture as an SVG file.
-                                string fileName = $"Sheet{sheet.Index}_Shape{i}.svg";
-                                string outputPath = Path.Combine(outputFolder, fileName);
+                                // Simple check for SVG content
+                                string header = System.Text.Encoding.UTF8.GetString(bytes, 0, Math.Min(100, bytes.Length));
+                                isSvg = header.Contains("<svg", StringComparison.OrdinalIgnoreCase);
+                            }
 
-                                // Configure rendering options for SVG output.
-                                ImageOrPrintOptions options = new ImageOrPrintOptions
-                                {
-                                    ImageType = ImageType.Svg
-                                };
-
-                                try
-                                {
-                                    picture.ToImage(outputPath, options);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine($"Failed to export shape {i} on sheet {sheet.Name}: {ex.Message}");
-                                }
+                            if (isSvg)
+                            {
+                                string fileName = $"svg_{svgIndex++}.svg";
+                                string filePath = Path.Combine(outputFolder, fileName);
+                                File.WriteAllBytes(filePath, bytes);
                             }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing picture in sheet \"{sheet.Name}\": {ex.Message}");
+                }
             }
-            catch (Exception ex)
+
+            // ----- Extract SVGs stored as shapes (if supported) -----
+            foreach (Shape shape in sheet.Shapes)
             {
-                Console.WriteLine($"An error occurred during SVG extraction: {ex.Message}");
+                try
+                {
+                    // Attempt to retrieve image data via reflection
+                    PropertyInfo dataProp = shape.GetType().GetProperty("ImageData");
+                    if (dataProp != null)
+                    {
+                        object imgDataObj = dataProp.GetValue(shape);
+                        MethodInfo toByteArray = imgDataObj?.GetType().GetMethod("ToByteArray");
+                        byte[] bytes = toByteArray?.Invoke(imgDataObj, null) as byte[];
+
+                        if (bytes != null && bytes.Length > 0)
+                        {
+                            // Simple SVG detection
+                            string header = System.Text.Encoding.UTF8.GetString(bytes, 0, Math.Min(100, bytes.Length));
+                            if (header.Contains("<svg", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string fileName = $"svg_{svgIndex++}.svg";
+                                string filePath = Path.Combine(outputFolder, fileName);
+                                File.WriteAllBytes(filePath, bytes);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing shape in sheet \"{sheet.Name}\": {ex.Message}");
+                }
             }
         }
-    }
 
-    // Example usage
-    class Program
-    {
-        static void Main()
-        {
-            string sourceWorkbook = @"C:\Data\SampleWorkbook.xlsx";
-            string svgOutputFolder = @"C:\Data\ExtractedSvgs";
-
-            SvgExtractor.Extract(sourceWorkbook, svgOutputFolder);
-
-            Console.WriteLine("SVG extraction completed.");
-        }
+        Console.WriteLine($"Extraction complete. {svgIndex} SVG resource(s) saved to \"{outputFolder}\".");
     }
 }

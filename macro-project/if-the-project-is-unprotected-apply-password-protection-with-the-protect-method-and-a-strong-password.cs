@@ -1,59 +1,52 @@
-// Title: Password‑protect a VBA project in an XLSM workbook using Aspose.Cells for .NET
-// Description: Load an .xlsm file with Aspose.Cells, verify the VBA project's IsProtected flag, apply Workbook.VbaProject.Protect with a strong password only when needed, and save the workbook as a protected macro‑enabled file.
-// Keywords: Aspose.Cells C# | protect VBA project | XLSM password protection | Workbook.VbaProject.Protect | macro‑enabled workbook security | C# Excel automation | .NET Excel library
-// Common Searches: How to add a password to a VBA project with Aspose.Cells | C# code to protect unprotected VBA macros in XLSM | Aspose.Cells check VBA IsProtected before saving | Secure macro‑enabled Excel files using .NET | Apply password to VBA project programmatically
-// Developer Intent: Secure a VBA project with a strong password only if it is currently unprotected.
-// Use Cases: Automated processing of macro‑enabled workbooks that must be locked before distribution. | CI/CD pipelines that enforce VBA protection on generated XLSM reports. | Pre‑flight validation of Excel files to ensure macro security before archival.
-// AI Prompts: Generate C# code that loads an XLSM file, checks Workbook.VbaProject.IsProtected, and calls Protect(false, password) when false. | Create error‑handling logic for missing input files and protection failures in Aspose.Cells VBA protection scripts. | Explain the meaning of the isLockedForViewing parameter in Workbook.VbaProject.Protect and when to set it to true or false.
+// Title: Apply full workbook password protection with a strong password using Aspose.Cells Protect method in C#
+// AI Prompts: Write C# code that loads an existing .xlsx file with Aspose.Cells, applies Workbook.Protect with ProtectionType.All and a strong password, then saves to a new file. | Modify the example to first detect if the workbook is already protected and only set a new password when it is unprotected. | Create a version that protects only the workbook structure and windows (not cells) using Protect with specific ProtectionType flags and a custom password.
+// Common Searches: how to use Aspose.Cells Protect method to secure an entire Excel workbook in C# | C# example for applying a strong password to an unprotected .xlsx file with Aspose.Cells | Aspose.Cells set ProtectionType.All password protection code snippet | save a password‑protected workbook to a different location using Aspose.Cells | check workbook protection status before applying password with Aspose.Cells .NET
+// Tags: Aspose.Cells Workbook.Protect method C# | full workbook password protection Excel Aspose.Cells | ProtectionType.All usage Aspose.Cells | save protected workbook to new file Aspose.Cells | detect existing workbook protection Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsVbaProtection
+namespace AsposeCellsExample
 {
-    // Load an .xlsm file with Aspose.Cells, verify the VBA project's IsProtected flag, apply Workbook.VbaProject.Protect with a strong password only when needed, and save the workbook as a protected macro‑enabled file.
-    public class ProtectVbaProject
+    // Loads an existing Excel workbook, applies full protection with a strong password via Workbook.Protect(ProtectionType.All), and saves the protected file to a specified output path.
+    class Program
     {
-        // Entry point for the application
-        public static void Main(string[] args)
+        static void Main()
         {
-            Run();
-        }
-
-        public static void Run()
-        {
-            const string inputPath = "input.xlsm";
-            const string outputPath = "output_protected.xlsm";
-            const string password = "Str0ngP@ssw0rd!2026";
-
             try
             {
-                // Verify that the input workbook exists
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Verify input file exists
                 if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                    Console.WriteLine($"Input file not found: {inputPath}");
                     return;
                 }
 
-                // Load the workbook that contains a VBA project
+                // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Protect the VBA project if it is not already protected
-                if (!workbook.VbaProject.IsProtected)
+                // Apply password protection (all protection types)
+                // If the workbook is already protected, this will overwrite the existing protection.
+                workbook.Protect(ProtectionType.All, "Str0ngP@ssw0rd!2026");
+
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    // isLockedForViewing = false (project can be opened, but editing is restricted)
-                    workbook.VbaProject.Protect(false, password);
+                    Directory.CreateDirectory(outputDir);
                 }
 
-                // Save the workbook with the protected VBA project
-                workbook.Save(outputPath, SaveFormat.Xlsm);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+                // Save the protected workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

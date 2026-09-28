@@ -1,40 +1,43 @@
-// Title: Aspose.Cells for .NET: Merge X1:Y3, apply Euro custom format, and save as ODS
-// Description: Creates a new workbook, merges cells X1:Y3, sets the custom number format "#,##0.00 €" on the merged cell, configures OdsSaveOptions for the LibreOffice generator, and saves the file as MergedFormatted.ods.
-// Keywords: Aspose.Cells | C# | .NET | merge cells | X1:Y3 | custom number format | Euro currency | ODS export | OdsSaveOptions | LibreOffice generator | merged cell styling
-// Common Searches: How to merge cells X1 to Y3 in Aspose.Cells C# | Set Euro currency format "#,##0.00 €" on merged cells with Aspose.Cells | Save Aspose.Cells workbook as ODS using LibreOffice generator | Apply custom number format to a merged range in .NET spreadsheet | Aspose.Cells example for merged header with Euro format in ODS
-// Developer Intent: Create an ODS spreadsheet with a merged header (X1:Y3) formatted in Euro currency.
-// Use Cases: Generating financial report headers that span multiple columns and display amounts in Euro before sharing with LibreOffice users. | Automating invoice templates where the title cell is merged and styled with a Euro currency pattern for cross‑platform compatibility. | Building spreadsheet export features that require merged cells with custom currency formatting for multinational accounting systems. | Preparing dashboard labels where a merged cell serves as a localized Euro‑denominated heading.
-// AI Prompts: Provide C# code using Aspose.Cells to merge the range X1:Y3, apply the custom number format "#,##0.00 €" to the merged cell, and save the workbook as an ODS file with the LibreOffice generator. | Show how to style the upper‑left cell of a merged range with a Euro currency format and persist the style when exporting to ODS using Aspose.Cells for .NET. | Explain the steps to configure OdsSaveOptions for LibreOffice compatibility while merging cells and setting a custom currency format in Aspose.Cells.
+// Title: How to merge cells X1:Y3, apply a custom Euro currency format, and save as ODS using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a new workbook, merges the range X1:Y3, applies the custom number format '#,##0.00 €' to the merged cells, and saves the file in OpenDocument Spreadsheet (ODS) format with Aspose.Cells. | Write a C# example that uses Aspose.Cells to merge a specific cell block, set a Euro currency custom format on that range, and export the workbook as an ODS file.
+// Common Searches: Aspose.Cells C# merge specific cells and set custom currency format | Save merged cells with Euro format to ODS using Aspose.Cells | C# example for applying '#,##0.00 €' number format to a merged range in Aspose.Cells | How to export a workbook with formatted merged cells to OpenDocument Spreadsheet in .NET
+// Tags: merge cells range Aspose.Cells C# | custom number format Euro Aspose.Cells | export workbook to ODS Aspose.Cells | apply style to merged range Aspose.Cells | open document spreadsheet format Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Ods;
 
-// Creates a new workbook, merges cells X1:Y3, sets the custom number format "#,##0.00 €" on the merged cell, configures OdsSaveOptions for the LibreOffice generator, and saves the file as MergedFormatted.ods.
+// Creates a new workbook, merges cells X1:Y3, applies the custom Euro currency number format '#,##0.00 €' to the merged range, and saves the file as an ODS document using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Merge cells X1:Y3 (zero‑based indices: row 0, column 23 for X; span 3 rows, 2 columns)
-        worksheet.Cells.Merge(0, 23, 3, 2);
-
-        // Apply a custom number format to the merged cell (upper‑left cell of the range)
-        Cell mergedCell = worksheet.Cells["X1"];
-        // Use a custom format that includes the Euro symbol
-        mergedCell.GetStyle().Custom = "#,##0.00 €";
-        mergedCell.SetStyle(mergedCell.GetStyle());
-
-        // Prepare ODS save options
-        OdsSaveOptions saveOptions = new OdsSaveOptions
+        try
         {
-            GeneratorType = OdsGeneratorType.LibreOffice
-        };
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Save the workbook as ODS
-        workbook.Save("MergedFormatted.ods", saveOptions);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Merge cells X1:Y3 (zero‑based indices: rows 0‑2, columns 23‑24)
+            sheet.Cells.Merge(0, 23, 3, 2);
+
+            // Create a style with the custom number format '#,##0.00 €'
+            Style customStyle = workbook.CreateStyle();
+            customStyle.Custom = "#,##0.00 €";
+
+            // Apply the style to the merged range
+            Aspose.Cells.Range mergedRange = sheet.Cells.CreateRange(0, 23, 3, 2);
+            StyleFlag flag = new StyleFlag();
+            flag.NumberFormat = true;
+            mergedRange.ApplyStyle(customStyle, flag);
+
+            // Save the workbook as ODS
+            workbook.Save("MergedCells.ods", SaveFormat.Ods);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,77 +1,82 @@
-// Title: Log enumeration timestamps for worksheet rows using Aspose.Cells for .NET
-// Description: Creates a workbook, fills five rows, then runs three GetEnumerator passes (normal, reversed, synchronized) over worksheet rows. Each pass logs start and end times and prints the duration, enabling performance comparison of different enumerator configurations.
-// Keywords: Aspose.Cells row enumeration | enumeration timing .NET | worksheet performance logging | GetEnumerator reverse order | synchronized enumerator Aspose.Cells | C# performance measurement
-// Common Searches: measure row enumeration time Aspose.Cells | log start and end timestamps GetEnumerator Aspose.Cells | performance comparison of Aspose.Cells enumerators | how to time worksheet row iteration in C#
-// Developer Intent: Capture start and end timestamps for each worksheet row enumeration to evaluate the speed of normal, reversed, and synchronized GetEnumerator configurations.
-// Use Cases: Establish a baseline execution time for normal‑order, non‑synchronized row enumeration. | Compare the speed of reversed‑order enumeration against the baseline. | Determine the overhead introduced by a synchronized enumerator in normal order.
-// AI Prompts: Generate C# code that logs start and end times for each worksheet row enumeration using Aspose.Cells, including reverse and synchronized options. | Explain how to analyze the duration output to compare performance of different GetEnumerator settings in Aspose.Cells. | Suggest best practices for minimizing overhead when timing row enumeration in Aspose.Cells.
+// Title: Log enumeration start/end timestamps to benchmark rows, cells, and range iteration in Aspose.Cells for .NET
+// AI Prompts: Write C# code that iterates over Worksheet.Cells.Rows, Worksheet.Cells, and a specific Range while printing ISO‑8601 start and end timestamps and the elapsed milliseconds for each enumeration using Aspose.Cells. | Create a reusable method that accepts any IEnumerator from Aspose.Cells, records DateTime.Now before and after the loop, and returns the elapsed time in milliseconds. | Demonstrate how to save the workbook after the enumeration passes and display the logged timing information in the console.
+// Common Searches: how to measure enumeration time of rows in Aspose.Cells C# | log start and end timestamps for cell range iteration using Aspose.Cells .NET | benchmark Worksheet.Cells.GetEnumerator performance Aspose.Cells | record enumeration duration for Aspose.Cells range A1:B100 in C# | track performance of Aspose.Cells enumeration across multiple passes
+// Tags: Aspose.Cells enumeration timing | row iteration performance measurement | cell collection duration logging | range enumeration benchmark .NET | C# Aspose.Cells performance logging
 
 using System;
 using System.Collections;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsPerformanceLog
+// The sample creates a workbook, fills 100 rows with data, and uses a helper method to log ISO‑8601 start and end timestamps plus elapsed milliseconds for enumerating rows, all cells, and the A1:B100 range, then saves the workbook.
+class EnumerationPerformanceLogger
 {
-    // Creates a workbook, fills five rows, then runs three GetEnumerator passes (normal, reversed, synchronized) over worksheet rows. Each pass logs start and end times and prints the duration, enabling performance comparison of different enumerator configurations.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Populate some sample data in the first 5 rows
-            for (int i = 0; i < 5; i++)
+            // Populate sample data (100 rows, 2 columns)
+            for (int i = 0; i < 100; i++)
             {
-                Row row = worksheet.Cells.Rows[i];
-                row[0].PutValue($"Row {i + 1}");
-                row[1].PutValue(i * 10);
+                worksheet.Cells[i, 0].PutValue($"Row {i + 1}");
+                worksheet.Cells[i, 1].PutValue(i);
             }
 
-            // First enumeration pass: normal order, non‑synchronized enumerator
-            LogEnumerationPass(
-                () => worksheet.Cells.Rows.GetEnumerator(),
-                "Normal order (non‑synchronized)");
+            // First enumeration: iterate over all rows
+            LogEnumeration("Rows", worksheet.Cells.Rows.GetEnumerator());
 
-            // Second enumeration pass: reversed order, non‑synchronized enumerator
-            LogEnumerationPass(
-                () => worksheet.Cells.Rows.GetEnumerator(true, false),
-                "Reversed order (non‑synchronized)");
+            // Second enumeration: iterate over all cells in the worksheet
+            LogEnumeration("Cells", worksheet.Cells.GetEnumerator());
 
-            // Third enumeration pass: normal order, synchronized enumerator
-            LogEnumerationPass(
-                () => worksheet.Cells.Rows.GetEnumerator(false, true),
-                "Normal order (synchronized)");
+            // Third enumeration: iterate over a specific range (A1:B100)
+            AsposeRange range = worksheet.Cells.CreateRange("A1:B100");
+            LogEnumeration("Range", range.GetEnumerator());
 
-            // Save the workbook (using standard save logic)
-            workbook.Save("PerformanceLogDemo.xlsx");
+            // Save the workbook (standard save operation)
+            string outputPath = "EnumerationPerformance.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
         }
-
-        /// <param name="enumeratorFactory">A function that returns a fresh IEnumerator for the collection.</param>
-        /// <param name="description">Description of the enumeration pass.</param>
-        private static void LogEnumerationPass(Func<IEnumerator> enumeratorFactory, string description)
+        catch (Exception ex)
         {
-            Console.WriteLine($"--- {description} ---");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
 
+    // Helper method that logs start/end timestamps and duration of an enumeration pass
+    static void LogEnumeration(string collectionName, IEnumerator enumerator)
+    {
+        try
+        {
             DateTime startTime = DateTime.Now;
-            Console.WriteLine($"Start: {startTime:O}");
-
-            IEnumerator enumerator = enumeratorFactory();
+            Console.WriteLine($"{collectionName} enumeration started at {startTime:O}");
 
             while (enumerator.MoveNext())
             {
-                // Access the current element to ensure the enumerator advances.
-                // In this demo we simply cast to Row; real logic can be placed here.
-                Row currentRow = enumerator.Current as Row;
-                // Optional: perform lightweight operation to avoid compiler optimizations removing the loop.
-                if (currentRow != null && currentRow.Index >= 0) { /* no-op */ }
+                // Access the current element to ensure the enumerator advances
+                var current = enumerator.Current;
             }
 
             DateTime endTime = DateTime.Now;
-            Console.WriteLine($"End:   {endTime:O}");
-            Console.WriteLine($"Duration: {(endTime - startTime).TotalMilliseconds} ms");
-            Console.WriteLine();
+            Console.WriteLine($"{collectionName} enumeration ended at {endTime:O}");
+
+            double durationMs = (endTime - startTime).TotalMilliseconds;
+            Console.WriteLine($"{collectionName} duration: {durationMs} ms");
+            Console.WriteLine(); // Blank line for readability
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Enumeration error for {collectionName}: {ex.Message}");
         }
     }
 }

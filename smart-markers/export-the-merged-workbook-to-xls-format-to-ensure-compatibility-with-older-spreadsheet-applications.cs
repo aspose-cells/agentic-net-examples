@@ -1,39 +1,79 @@
-// Title: Export a merged Aspose.Cells workbook to XLS (Excel 97‑2003) with C#
-// Description: Demonstrates how to create or load a merged workbook, configure XlsSaveOptions, and save it as an Excel 97‑2003 (XLS) file for legacy spreadsheet compatibility using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells export XLS | C# XlsSaveOptions | Excel 97-2003 compatibility | merged workbook to XLS | legacy Excel export | Aspose.Cells .NET example
-// Common Searches: save Aspose.Cells workbook as XLS in C# | export merged workbook to Excel 97-2003 format | XlsSaveOptions example Aspose.Cells | convert .xlsx to .xls using Aspose.Cells | C# code for backward‑compatible Excel export
-// Developer Intent: Generate an XLS file from a merged workbook to support older Excel versions.
-// Use Cases: Produce a single report that combines data from several worksheets and deliver it to users still on Excel 2003. | Automate archival of merged workbooks in XLS format for long‑term storage in environments without newer Office suites. | Distribute programmatically created financial statements to clients who require the legacy Excel file type.
-// AI Prompts: Write C# code that loads an existing merged workbook, applies XlsSaveOptions, and saves it as an XLS file while handling I/O exceptions. | Explain step‑by‑step how to configure XlsSaveOptions for maximum compatibility when exporting a workbook that contains smart markers. | Create a sample that merges multiple worksheets into one workbook and then exports the result to XLS using Aspose.Cells in .NET.
+// Title: Export a merged Aspose.Cells workbook to Excel 97‑2003 (XLS) with compatibility options in C#
+// AI Prompts: Write C# code that loads a workbook, configures XlsSaveOptions (MatchColor, ValidateMergedAreas, MergeAreas, SortNames), and saves it as an XLS file. | Show how to use Aspose.Cells XlsSaveOptions to preserve the 56‑color palette and validate merged cells when exporting to Excel 97‑2003. | Create a console application that accepts input and output paths, loads a merged workbook, and exports it to legacy XLS format with full compatibility settings.
+// Common Searches: aspnet export merged workbook to xls using Aspose.Cells | c# XlsSaveOptions preserve colors validate merged areas | how to save Excel 97-2003 file with merged cells using Aspose.Cells | legacy xls export settings Aspose.Cells C# | convert .xlsx to .xls preserving merged cells Aspose.Cells
+// Tags: merged workbook export XLS Aspose.Cells | XlsSaveOptions MatchColor ValidateMergedAreas | preserve 56‑color palette Aspose.Cells | legacy Excel 97‑2003 compatibility C# | console application Aspose.Cells XLS export
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExportToXls
+namespace ExportExample
 {
-    // Demonstrates how to create or load a merged workbook, configure XlsSaveOptions, and save it as an Excel 97‑2003 (XLS) file for legacy spreadsheet compatibility using Aspose.Cells for .NET.
-    class Program
+    // Uses Aspose.Cells XlsSaveOptions to save a merged workbook as an Excel 97‑2003 XLS file, preserving colors, validating merged areas, merging conditional formatting, and sorting defined names for legacy compatibility.
+    public class ExportToXls
     {
+        // Exports a merged workbook to the legacy XLS format.
+        public void Export(Workbook mergedWorkbook, string outputFilePath)
+        {
+            try
+            {
+                // Create save options for Excel 97‑2003 (XLS) files.
+                XlsSaveOptions saveOptions = new XlsSaveOptions
+                {
+                    MatchColor = true,               // Preserve original colors within the 56‑color palette.
+                    ValidateMergedAreas = true,      // Validate merged cells before saving.
+                    MergeAreas = true,               // Merge conditional formatting and validation areas.
+                    SortNames = true                 // Sort defined names for compatibility.
+                };
+
+                // Save the workbook using the specified options.
+                mergedWorkbook.Save(outputFilePath, saveOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error exporting to XLS: {ex.Message}");
+                throw;
+            }
+        }
+    }
+
+    public class Program
+    {
+        // Entry point for the console application.
         static void Main(string[] args)
         {
-            // Create or load the merged workbook.
-            // For demonstration, we create a new workbook and add some data.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("John");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Jane");
-            sheet.Cells["B3"].PutValue(25);
+            // Expect input and output file paths as arguments.
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: ExportToXls <inputWorkbookPath> <outputXlsPath>");
+                return;
+            }
 
-            // Initialize XlsSaveOptions for Excel 97-2003 format.
-            XlsSaveOptions saveOptions = new XlsSaveOptions();
+            string inputPath = args[0];
+            string outputPath = args[1];
 
-            // Save the workbook as an XLS file using the save options.
-            workbook.Save("MergedWorkbook.xls", saveOptions);
+            // Verify that the input file exists.
+            if (!File.Exists(inputPath))
+            {
+                Console.Error.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            Console.WriteLine("Workbook exported successfully to XLS format.");
+            try
+            {
+                // Load the source workbook.
+                Workbook mergedWorkbook = new Workbook(inputPath);
+
+                // Export to XLS.
+                ExportToXls exporter = new ExportToXls();
+                exporter.Export(mergedWorkbook, outputPath);
+
+                Console.WriteLine($"Workbook exported successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            }
         }
     }
 }

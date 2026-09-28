@@ -1,42 +1,38 @@
-// Title: C# Aspose.Cells Example: Use IFERROR to Return a Default Value on Division‑by‑Zero
-// Description: This sample creates a workbook, writes 100 to A1 and 0 to B1, then sets C1 to the formula =IFERROR(A1/B1, "N/A"). The IFERROR function replaces the #DIV/0! error with "N/A", the workbook calculates the formula, prints the result, and saves the file as IFERRORDemo.xlsx.
-// Keywords: Aspose.Cells IFERROR C# | handle division by zero Aspose.Cells | Excel IFERROR formula .NET | conditional formula Aspose.Cells | C# set Excel formula with Aspose | error handling in Excel using Aspose.Cells | Aspose.Cells calculate formulas | save workbook Aspose.Cells
-// Common Searches: Aspose.Cells IFERROR example | C# avoid #DIV/0! error with Aspose.Cells | how to use IFERROR in Aspose.Cells .NET | set default value for Excel errors using Aspose | calculate formulas after applying IFERROR in C#
-// Developer Intent: Insert an IFERROR formula so that a division‑by‑zero operation returns a specified fallback value.
-// Use Cases: Replace #DIV/0! with "N/A" when computing ratios between cells. | Provide a safe default for any calculation that might generate an error, keeping reports clean. | Automate error‑proof Excel report generation by applying IFERROR to critical formulas.
-// AI Prompts: Generate C# code with Aspose.Cells that applies =IFERROR(A1/B1, "N/A") and reads the result as a string. | Show how to apply IFERROR to a range of cells, calculate all formulas, and save the workbook using Aspose.Cells for .NET. | Explain how to customize the fallback value in an IFERROR formula when using Aspose.Cells in C#.
+// Title: Insert an IFERROR division formula with a default value into an Aspose.Cells worksheet using C#
+// AI Prompts: Generate C# code that creates a new Aspose.Cells workbook, writes 10 to A1, 0 to B1, sets C1 formula to =IFERROR(A1/B1, "N/A"), calculates the sheet, and saves it as ConditionalFormula.xlsx. | Show how to apply an IFERROR expression to a cell in Aspose.Cells so that any division‑by‑zero error returns a custom text value. | Demonstrate programmatic evaluation of an IFERROR formula after inserting it into a worksheet with Aspose.Cells for .NET.
+// Common Searches: how to use IFERROR in Aspose.Cells C# to avoid #DIV/0! errors | Aspose.Cells C# set default text for Excel formula errors | example of inserting conditional formula with IFERROR and saving workbook in .NET
+// Tags: Aspose.Cells IFERROR formula C# | division by zero handling Aspose.Cells | calculate workbook formulas Aspose.Cells | save Excel file Aspose.Cells C# | set cell formula programmatically Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsIFERRORDemo
+namespace AsposeCellsExample
 {
-    // This sample creates a workbook, writes 100 to A1 and 0 to B1, then sets C1 to the formula =IFERROR(A1/B1, "N/A"). The IFERROR function replaces the #DIV/0! error with "N/A", the workbook calculates the formula, prints the result, and saves the file as IFERRORDemo.xlsx.
+    // Creates a workbook with numerator and denominator values, applies an IFERROR formula that returns "N/A" on division by zero, forces calculation, and saves the file using Aspose.Cells for C#.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Set numerator and denominator values
-            cells["A1"].PutValue(100);   // Numerator
-            cells["B1"].PutValue(0);     // Denominator (will cause division by zero)
+            // Populate sample data
+            cells["A1"].PutValue(10);   // Numerator
+            cells["B1"].PutValue(0);    // Denominator (zero to trigger division by zero)
 
-            // Apply IFERROR to return a default value when division by zero occurs
-            // If A1/B1 results in an error, the cell will display "N/A"
+            // Set a formula using IFERROR to handle division by zero.
+            // If A1/B1 results in an error, the cell will display the default value "N/A".
             cells["C1"].Formula = "=IFERROR(A1/B1, \"N/A\")";
 
-            // Calculate all formulas in the workbook
+            // Optionally calculate the formula immediately
             workbook.CalculateFormula();
 
-            // Display the result of the conditional formula
-            Console.WriteLine("Result in C1: " + cells["C1"].StringValue);
-
-            // Save the workbook (optional)
-            workbook.Save("IFERRORDemo.xlsx");
+            // Save the workbook to a file
+            workbook.Save("ConditionalFormula.xlsx");
         }
     }
 }

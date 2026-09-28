@@ -1,38 +1,59 @@
-// Title: C# – Set HtmlSaveOptions.PageTitle to Excel filename when converting to HTML with Aspose.Cells
-// Description: Load an Excel workbook using Aspose.Cells, assign the source file name to HtmlSaveOptions.PageTitle, and save the workbook as an HTML file so the generated <title> tag matches the original spreadsheet name.
-// Keywords: Aspose.Cells | HtmlSaveOptions.PageTitle | C# Excel to HTML | set HTML title from filename | .NET spreadsheet conversion | Excel workbook HTML export | SEO friendly HTML title
-// Common Searches: Aspose.Cells set HTML page title from Excel file name | C# HtmlSaveOptions PageTitle example | convert .xlsx to .html with original filename as title | how to change <title> tag when saving Excel as HTML using Aspose | Aspose.Cells .NET HTML export filename title
-// Developer Intent: Assign the workbook's file name to HtmlSaveOptions.PageTitle before saving the workbook as an HTML document.
-// Use Cases: Generate HTML reports where the browser tab shows the source Excel name for easy identification. | Batch‑process a folder of spreadsheets, automatically using each file's name as the HTML page title. | Create SEO‑optimized web pages from spreadsheets by embedding the original filename in the <title> element.
-// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, sets HtmlSaveOptions.PageTitle to the workbook's filename, and saves it as HTML. | Provide a script that iterates over all .xlsx files in a directory, converts each to .html with Aspose.Cells, and sets the HTML <title> to the corresponding file name. | Explain the impact of HtmlSaveOptions.PageTitle on the generated HTML and why using the workbook filename improves usability and SEO.
+// Title: Set HtmlSaveOptions.PageTitle to the workbook filename when exporting Excel to HTML with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an Excel file using Aspose.Cells, assigns HtmlSaveOptions.PageTitle to the workbook's file name, and saves the workbook as an HTML document. | Write C# that verifies the existence of the source Excel file, creates a simple workbook if it is missing, then exports it to HTML with the page title derived from the source file name. | Show how to construct the output HTML file path by replacing the source workbook’s extension with .html and pass it to Workbook.Save with the configured HtmlSaveOptions.
+// Common Searches: aspnet set html page title from excel filename using aspose.cells | c# export workbook to html with dynamic title based on file name | how to use HtmlSaveOptions.PageTitle property in Aspose.Cells .NET | fallback create workbook when source excel missing then save as html Aspose.Cells | change excel file extension to html path c# Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions.PageTitle | export Excel to HTML C# | dynamic HTML title from workbook filename | fallback workbook creation Aspose.Cells | generate HTML file path from Excel path C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Load an Excel workbook using Aspose.Cells, assign the source file name to HtmlSaveOptions.PageTitle, and save the workbook as an HTML file so the generated <title> tag matches the original spreadsheet name.
-class Program
+// C# example that loads an existing Excel file (or creates a minimal workbook if the file is absent), sets HtmlSaveOptions.PageTitle to the workbook's filename, and saves the workbook as an HTML file with that title.
+class HtmlExportWithTitle
 {
-    static void Main(string[] args)
+    static void Main()
     {
         // Path to the source Excel file
-        string excelPath = "input.xlsx";
+        string excelPath = @"C:\Data\Report.xlsx";
 
-        // Load the workbook from the specified file
-        Workbook workbook = new Workbook(excelPath);
+        try
+        {
+            Workbook workbook;
 
-        // Create HTML save options using the default constructor
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+            // Ensure the source file exists; if not, create a simple workbook
+            if (File.Exists(excelPath))
+            {
+                workbook = new Workbook(excelPath);
+            }
+            else
+            {
+                // Create a new workbook with a sample sheet
+                workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Name = "SampleSheet";
+                sheet.Cells["A1"].PutValue("This is a generated workbook because the source file was not found.");
+                // Save the generated workbook so subsequent runs can use it
+                Directory.CreateDirectory(Path.GetDirectoryName(excelPath));
+                workbook.Save(excelPath);
+            }
 
-        // Set the HTML page title to the workbook's file name (including extension)
-        htmlOptions.PageTitle = Path.GetFileName(excelPath);
+            // Configure HTML save options
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+            {
+                // Set the page title to the workbook's filename (including extension)
+                PageTitle = Path.GetFileName(excelPath)
+            };
 
-        // Determine the output HTML file path (same name with .html extension)
-        string htmlPath = Path.ChangeExtension(excelPath, ".html");
+            // Define the output HTML file path
+            string htmlPath = Path.ChangeExtension(excelPath, ".html");
 
-        // Save the workbook as an HTML file with the specified page title
-        workbook.Save(htmlPath, htmlOptions);
+            // Save the workbook as HTML using the configured options
+            workbook.Save(htmlPath, htmlOptions);
 
-        Console.WriteLine($"HTML file saved to '{htmlPath}' with page title '{htmlOptions.PageTitle}'.");
+            Console.WriteLine($"Workbook successfully exported to HTML: {htmlPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during export: {ex.Message}");
+        }
     }
 }

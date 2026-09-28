@@ -1,87 +1,110 @@
-// Title: Map Quarterly Results to a Pre‑Formatted Financial Statement with Aspose.Cells Range.CopyValue (C#)
-// Description: Creates a new workbook, defines a financial‑statement template with quarter headers and row labels, loads a List<double[]> of revenue, cost and profit into a hidden source range (A11), copies the values to the visible range B2:E4 using Range.CopyValue, and saves the file as FinancialStatement.xlsx.
-// Keywords: Aspose.Cells Range.CopyValue C# | populate financial statement Aspose.Cells | copy hidden source range to visible range | map List<double[]> to Excel cells | quarterly report automation Aspose | C# Excel data mapping Aspose.Cells | financial report generation .NET
-// Common Searches: Aspose.Cells copy values from hidden range C# | How to map a collection to a pre‑formatted Excel layout using Aspose.Cells | Range.CopyValue example for financial statements | C# load List<double[]> into Excel with Aspose.Cells | Create and hide source range Aspose.Cells smart markers
-// Developer Intent: Copy a collection of quarterly financial results into a pre‑designed Excel statement by using a hidden source range and the Range.CopyValue method.
-// Use Cases: Automatically fill quarterly revenue, cost, and profit rows in a standard financial‑statement template. | Reuse a single hidden data block to populate multiple report sections without manual cell references. | Integrate dynamic Excel generation into reporting pipelines that consume in‑memory collections.
-// AI Prompts: Write C# code that uses Aspose.Cells Range.CopyValue to transfer a List<double[]> into a predefined financial‑statement layout. | Explain how to create a hidden source range, populate it with data, and copy it to a visible destination range using Aspose.Cells in .NET. | Suggest performance‑optimised patterns and error‑handling best practices for copying large ranges with Aspose.Cells.
+// Title: Use Aspose.Cells Range to bulk‑insert quarterly revenue data into a pre‑formatted financial statement worksheet (C#)
+// AI Prompts: Write C# code that creates a workbook, adds a header row, and uses Cells.CreateRange to assign a two‑dimensional array of quarterly revenue values to the worksheet in a single operation. | Generate a method that accepts a List<QuarterlyResult>, fills the year column, inserts the quarterly numbers via a Range.Value assignment, adds a SUM formula for each row to compute the total, and saves the workbook. | Extend the example to include a cumulative total column that sums the yearly totals across all years using Aspose.Cells formulas.
+// Common Searches: how to bulk load a list of objects into Excel using Aspose.Cells CreateRange C# | populate a financial statement template with quarterly data using Aspose.Cells | add row‑wise SUM formulas after inserting data with Aspose.Cells Range | map collection to Excel cells with a single Range.Value assignment in C# | calculate totals per row in Aspose.Cells after bulk data insertion
+// Tags: Aspose.Cells CreateRange bulk assignment | C# map quarterly results to Excel worksheet | row total calculation with SUM formula Aspose.Cells | automate financial statement layout Excel | populate Excel header row using Aspose.Cells
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
 namespace FinancialStatementMapping
 {
-    // Creates a new workbook, defines a financial‑statement template with quarter headers and row labels, loads a List<double[]> of revenue, cost and profit into a hidden source range (A11), copies the values to the visible range B2:E4 using Range.CopyValue, and saves the file as FinancialStatement.xlsx.
-    class Program
+    // Simple model for quarterly results of a given year
+    // Demonstrates creating a workbook, building a header row, using Aspose.Cells.Range to bulk‑insert quarterly revenue values, writing the year column, adding per‑row SUM formulas for totals, recalculating formulas, and saving the file as FinancialStatement.xlsx.
+    public class QuarterlyResult
     {
-        static void Main()
+        public int Year { get; set; }
+        public double[] Quarters { get; set; } = new double[4]; // Q1..Q4
+    }
+
+    public class Program
+    {
+        public static void Main()
         {
             try
             {
-                // 1. Create a new workbook (lifecycle rule: create)
+                // Sample data: quarterly revenues for three years
+                List<QuarterlyResult> data = new List<QuarterlyResult>
+                {
+                    new QuarterlyResult { Year = 2021, Quarters = new double[] { 12000, 15000, 13000, 16000 } },
+                    new QuarterlyResult { Year = 2022, Quarters = new double[] { 14000, 15500, 14500, 17000 } },
+                    new QuarterlyResult { Year = 2023, Quarters = new double[] { 15000, 16500, 15500, 18000 } }
+                };
+
+                // -------------------------------------------------
+                // 1. Create a new workbook (lifecycle rule)
+                // -------------------------------------------------
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
                 Cells cells = sheet.Cells;
 
-                // 2. Define the layout of the financial statement
-                //    Row 1: Headers for quarters
+                // -------------------------------------------------
+                // 2. Build the pre‑formatted layout
+                // -------------------------------------------------
+                // Header row
+                cells["A1"].PutValue("Year");
                 cells["B1"].PutValue("Q1");
                 cells["C1"].PutValue("Q2");
                 cells["D1"].PutValue("Q3");
                 cells["E1"].PutValue("Q4");
+                cells["F1"].PutValue("Total");
 
-                //    Column A: Row labels
-                cells["A2"].PutValue("Revenue");
-                cells["A3"].PutValue("Cost");
-                cells["A4"].PutValue("Profit");
+                // Apply a simple style to the header (optional)
+                Style headerStyle = workbook.CreateStyle();
+                headerStyle.Font.IsBold = true;
+                headerStyle.ForegroundColor = System.Drawing.Color.LightGray;
+                headerStyle.Pattern = BackgroundType.Solid;
+                cells.CreateRange("A1", "F1").SetStyle(headerStyle);
 
-                // 3. Prepare a collection of quarterly results.
-                //    Each inner array represents a row (Revenue, Cost, Profit) for Q1‑Q4.
-                List<double[]> quarterlyResults = new List<double[]>
+                // -------------------------------------------------
+                // 3. Map the collection into the worksheet using Range
+                // -------------------------------------------------
+                // Prepare a 2‑dimensional object array for the quarterly values
+                object[][] quarterValues = new object[data.Count][];
+                for (int i = 0; i < data.Count; i++)
                 {
-                    new double[] { 150000, 180000, 210000, 240000 }, // Revenue
-                    new double[] {  90000, 110000, 130000, 150000 }, // Cost
-                    new double[] {  60000,  70000,  80000,  90000 }  // Profit
-                };
-
-                // 4. Create a hidden source range where we will load the collection.
-                //    Start at row 11 (index 10) column A (index 0) – this area is not visible in the final report.
-                int srcStartRow = 10;   // zero‑based index
-                int srcStartCol = 0;
-                int rowCount = quarterlyResults.Count;      // 3 rows
-                int colCount = quarterlyResults[0].Length; // 4 columns
-
-                AsposeRange srcRange = cells.CreateRange(srcStartRow, srcStartCol, rowCount, colCount);
-
-                // Fill the source range with data from the collection.
-                for (int r = 0; r < rowCount; r++)
-                {
-                    for (int c = 0; c < colCount; c++)
+                    quarterValues[i] = new object[4];
+                    for (int q = 0; q < 4; q++)
                     {
-                        srcRange[r, c].PutValue(quarterlyResults[r][c]);
+                        quarterValues[i][q] = data[i].Quarters[q];
                     }
                 }
 
-                // 5. Define the destination range that matches the pre‑formatted layout.
-                //    It starts at cell B2 (row index 1, column index 1) and has the same dimensions.
-                int destStartRow = 1; // B2 row
-                int destStartCol = 1; // B2 column
-                AsposeRange destRange = cells.CreateRange(destStartRow, destStartCol, rowCount, colCount);
+                // Destination range for the quarterly numbers (starts at B2)
+                // firstRow = 1 (zero‑based, i.e., row 2), firstColumn = 1 (column B)
+                // totalRows = data.Count, totalColumns = 4
+                Aspose.Cells.Range destQuarterRange = cells.CreateRange(1, 1, data.Count, 4);
+                // Set the whole block in one operation
+                destQuarterRange.Value = quarterValues;
 
-                // 6. Map the source range into the destination range using the Range.CopyValue method.
-                destRange.CopyValue(srcRange);
+                // Write the year column separately (simple loop)
+                for (int i = 0; i < data.Count; i++)
+                {
+                    cells[i + 1, 0].PutValue(data[i].Year); // Column A
+                }
 
-                // 7. Save the workbook (lifecycle rule: save)
-                string outputPath = "FinancialStatement.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // -------------------------------------------------
+                // 4. Calculate totals per row using a formula
+                // -------------------------------------------------
+                // The total column starts at column F (index 5)
+                for (int i = 0; i < data.Count; i++)
+                {
+                    // Formula: =SUM(Bx:Ex) where x = row index + 2 (because rows are 1‑based in Excel)
+                    int excelRow = i + 2;
+                    cells[i + 1, 5].Formula = $"=SUM(B{excelRow}:E{excelRow})";
+                }
+
+                // Recalculate to materialize the totals
+                workbook.CalculateFormula();
+
+                // -------------------------------------------------
+                // 5. Save the workbook (lifecycle rule)
+                // -------------------------------------------------
+                workbook.Save("FinancialStatement.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

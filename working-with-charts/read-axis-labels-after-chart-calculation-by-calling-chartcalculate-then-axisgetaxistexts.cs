@@ -1,16 +1,13 @@
-// Title: Read Axis Labels After Chart.Calculate with Aspose.Cells (C#)
-// Description: Creates a workbook, adds sample data, inserts a column chart, calls Chart.Calculate to generate axis ticks, then uses ValueAxis.GetAxisTexts() and CategoryAxis.GetAxisTexts() to retrieve the automatically computed value and category labels. The labels are printed to the console and the workbook is saved.
-// Keywords: Aspose.Cells chart axis labels | Chart.Calculate GetAxisTexts C# | retrieve value axis texts Aspose.Cells | category axis tick labels after calculation | Aspose.Cells GetAxisTexts example
-// Common Searches: how to get value axis labels from Aspose.Cells chart | Aspose.Cells GetAxisTexts after Chart.Calculate | C# read category axis tick marks Aspose.Cells | extract generated axis texts from a .NET chart
-// Developer Intent: Obtain the automatically generated value and category axis labels of a chart after invoking Chart.Calculate.
-// Use Cases: Verify axis labeling during automated testing. | Export chart tick labels to a report or logging system. | Drive dynamic formatting or annotation based on calculated labels.
-// AI Prompts: Generate C# code that builds a line chart with Aspose.Cells, runs Chart.Calculate, and returns both value and category axis texts as string arrays. | Explain the relationship between Chart.Calculate and axis label generation in Aspose.Cells, and how GetAxisTexts extracts those labels. | Provide a step‑by‑step tutorial for extracting axis labels from any Aspose.Cells chart type after calculation using .NET.
+// Title: Use Aspose.Cells in C# to calculate a chart and read generated value and category axis labels
+// AI Prompts: Generate C# code that builds a column chart with Aspose.Cells, calls Chart.Calculate(), and returns the array of strings from ValueAxis.GetAxisTexts(). | Write a C# snippet that extracts both value and category axis texts from a calculated Aspose.Cells chart using GetAxisTexts() and prints them. | Show how to save a workbook after retrieving calculated axis labels from a chart in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells how to get value axis labels after chart.Calculate in C# | C# Aspose.Cells retrieve category axis texts from a chart | example of using GetAxisTexts with Aspose.Cells chart objects | read calculated axis labels from column chart Aspose.Cells .NET | Chart.Calculate then ValueAxis.GetAxisTexts Aspose.Cells sample
+// Tags: Chart.Calculate axis label extraction Aspose.Cells | ValueAxis.GetAxisTexts C# | CategoryAxis.GetAxisTexts Aspose.Cells | column chart axis labels .NET | retrieve chart axis texts Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a column chart, calls Chart.Calculate to generate axis ticks, then uses ValueAxis.GetAxisTexts() and CategoryAxis.GetAxisTexts() to retrieve the automatically computed value and category labels. The labels are printed to the console and the workbook is saved.
+// The example creates a workbook, adds sample data, inserts a column chart, calls Chart.Calculate() to generate axis labels, then uses ValueAxis.GetAxisTexts() and CategoryAxis.GetAxisTexts() to obtain the calculated labels, prints them, and saves the workbook.
 class Program
 {
     static void Main()
@@ -37,13 +34,13 @@ class Program
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Calculate the chart to generate axis labels
+        // Calculate the chart so that axis labels are generated
         chart.Calculate();
 
-        // Retrieve the generated labels for the value axis
+        // Retrieve the calculated labels for the value axis
         string[] valueAxisLabels = chart.ValueAxis.GetAxisTexts();
 
-        // Retrieve the generated labels for the category axis
+        // Retrieve the calculated labels for the category axis
         string[] categoryAxisLabels = chart.CategoryAxis.GetAxisTexts();
 
         // Output the axis labels to the console
@@ -59,7 +56,7 @@ class Program
             Console.WriteLine(label);
         }
 
-        // Save the workbook (optional)
+        // Save the workbook (optional, demonstrates lifecycle usage)
         workbook.Save("AxisLabelsDemo.xlsx");
     }
 }

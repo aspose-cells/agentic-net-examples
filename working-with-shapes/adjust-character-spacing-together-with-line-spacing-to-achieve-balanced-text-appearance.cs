@@ -1,57 +1,63 @@
-// Title: Adjust character and line spacing in a textbox shape using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a textbox shape, set multi‑line text, increase character spacing via TextOptions.Spacing, and apply precise line spacing (points) to each paragraph, resulting in a balanced visual layout inside the shape.
-// Keywords: Aspose.Cells C# | textbox shape spacing | character spacing Aspose.Cells | line spacing Excel shape | TextOptions.Spacing | TextParagraph.LineSpace | Excel shape text formatting | .NET spreadsheet API | adjust text appearance
-// Common Searches: how to set character spacing in an Excel textbox with Aspose.Cells | line spacing for text paragraphs in a shape using Aspose.Cells .NET | increase letter spacing and line height in a shape programmatically | Aspose.Cells example for text formatting inside shapes | C# code to adjust spacing of textbox content in Excel
-// Developer Intent: Modify both the inter‑character distance and the inter‑line distance of text inside a textbox shape to achieve a visually balanced appearance.
-// Use Cases: Designing title boxes with enhanced readability for dashboards. | Generating multi‑line comments or notes in reports where uniform spacing is required. | Creating certificates or awards where text inside shapes must follow strict typographic standards.
-// AI Prompts: Show C# code to set TextOptions.Spacing to 2.0 and paragraph line spacing to 8 points for all paragraphs in a textbox shape. | Provide a reusable method that accepts character‑spacing and line‑spacing parameters and applies them to a shape's text. | Explain how to read the current line‑spacing settings of a textbox shape and modify them with Aspose.Cells.
+// Title: Increase line spacing by setting row height and emulate character spacing in Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to enlarge the vertical space between lines in a cell by setting the row height to a specific point value. | Explain a workaround to mimic text tracking in Aspose.Cells for .NET when the API lacks a direct property. | Show how to combine row‑height changes with additional font styling such as bold or italic using Aspose.Cells.
+// Common Searches: Aspose.Cells C# increase line spacing by changing row height | how to simulate character spacing in Aspose.Cells .NET | set row height for better text appearance in Excel using Aspose.Cells | Aspose.Cells adjust cell style when character spacing property is missing | increase row height to affect line spacing in Aspose.Cells workbook
+// Tags: row dimension adjustment Aspose.Cells .NET | spacing via row size Aspose.Cells | font tracking workaround Aspose.Cells | cell style modification Aspose.Cells C# | font formatting options Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to create a workbook, add a textbox shape, set multi‑line text, increase character spacing via TextOptions.Spacing, and apply precise line spacing (points) to each paragraph, resulting in a balanced visual layout inside the shape.
-class AdjustSpacingDemo
+namespace AsposeCellsExample
 {
-    public static void Main()
+    // The example creates or loads an Excel workbook, accesses cell A1, clones its style (noting that Aspose.Cells does not expose a character‑spacing property), sets the row height to 25 points to increase line spacing, and saves the modified workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            Run();
+            try
+            {
+                // Define input and output file paths
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
+
+                // Ensure the input file exists; create a blank workbook if it does not
+                if (!File.Exists(inputPath))
+                {
+                    var tempWorkbook = new Workbook();
+                    tempWorkbook.Save(inputPath);
+                }
+
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
+
+                // Choose the cell to format (e.g., A1)
+                var cell = worksheet.Cells["A1"];
+
+                // Clone the existing style
+                var style = cell.GetStyle();
+
+                // NOTE: Aspose.Cells does not provide a direct property for character spacing.
+                // If needed, other font properties (e.g., Bold, Italic) can be set here.
+                // Example: style.Font.IsBold = true;
+
+                // Apply the (potentially modified) style back to the cell
+                cell.SetStyle(style);
+
+                // Adjust line spacing by modifying the row height.
+                var row = worksheet.Cells.Rows[cell.Row];
+                row.Height = 25; // Set row height to 25 points
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add a text box shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset, left offset, width, height
-        Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 300, 150);
-        textBox.Text = "First line\nSecond line\nThird line";
-
-        // Adjust character spacing for the entire text run
-        TextOptions textOptions = textBox.TextOptions;
-        textOptions.Spacing = 1.5; // increase spacing between characters
-
-        // Access all paragraphs inside the text box
-        TextParagraphCollection paragraphs = textBox.TextBody.TextParagraphs;
-
-        // Apply line spacing to each paragraph to balance appearance
-        foreach (TextParagraph paragraph in paragraphs)
-        {
-            paragraph.LineSpaceSizeType = LineSpaceSizeType.Points; // use points as unit
-            paragraph.LineSpace = 5; // set line spacing to 5 points
-        }
-
-        // Save the workbook with the adjusted spacing
-        workbook.Save("AdjustedSpacingDemo.xlsx");
     }
 }

@@ -1,77 +1,87 @@
-// Title: Open an Encrypted ODS Workbook in Read‑Only Mode, Verify Its Password, and Extract Cell Values with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to confirm a password using FileFormatUtil.VerifyPassword, load a password‑protected ODS file with OdsLoadOptions in read‑only mode, and iterate over the populated range of the first worksheet to output non‑null cell values. Includes basic error handling for missing files and invalid passwords.
-// Keywords: Aspose.Cells | C# | .NET | ODS | encrypted ODS | password protected ODS | verify ODS password | OdsLoadOptions | read‑only workbook | extract cell values | FileFormatUtil VerifyPassword
-// Common Searches: C# open password protected ODS file Aspose.Cells | verify ODS workbook password before loading | read data from encrypted ODS spreadsheet .NET | Aspose.Cells OdsLoadOptions password example | how to check ODS file password C#
-// Developer Intent: The developer needs to open a password‑protected ODS file without modifying it, ensure the supplied password is correct, and read the worksheet’s data.
-// Use Cases: Validate a user‑entered password before processing a secured ODS report. | Extract values from a protected ODS template for calculations or reporting while keeping the source file read‑only. | Log all populated cells from an encrypted ODS workbook for audit or debugging purposes.
-// AI Prompts: Generate C# code that uses Aspose.Cells to verify a password, load an encrypted ODS file in read‑only mode, and print each non‑null cell value. | Explain best practices for handling incorrect passwords and missing files when opening a password‑protected ODS workbook with Aspose.Cells. | Show how to retrieve the maximum data row and column of a worksheet after loading an ODS file with OdsLoadOptions.
+// Title: Read a password‑protected ODS spreadsheet in read‑only mode with Aspose.Cells for .NET and extract non‑empty cell values
+// AI Prompts: Generate C# code that creates a LoadOptions object with a password, opens an encrypted ODS workbook in read‑only mode using Aspose.Cells, and prints each populated cell. | Provide an example that catches the specific CellsException thrown for an incorrect password when opening a protected ODS file with Aspose.Cells. | Show how to traverse all worksheets of a password‑protected ODS spreadsheet and retrieve the address and string value of every non‑null cell using Aspose.Cells.
+// Common Searches: asp.net open encrypted ods workbook using aspose.cells password | c# read only access to password protected ods spreadsheet Aspose.Cells | catch incorrect password exception when loading ODS file with Aspose.Cells | extract populated cells from protected ODS file in .NET
+// Tags: load encrypted ODS with Aspose.Cells LoadOptions | verify ODS password Aspose.Cells .NET | read‑only ODS workbook extraction C# | iterate used range cells Aspose.Cells | handle CellsException password error
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to confirm a password using FileFormatUtil.VerifyPassword, load a password‑protected ODS file with OdsLoadOptions in read‑only mode, and iterate over the populated range of the first worksheet to output non‑null cell values. Includes basic error handling for missing files and invalid passwords.
-class LoadEncryptedOds
+// The sample verifies the encrypted ODS file exists, sets the password via LoadOptions, loads the workbook in read‑only mode with Aspose.Cells, catches password‑related CellsException, then iterates each worksheet's used range and outputs the address and string value of every non‑empty cell.
+class Program
 {
     static void Main()
     {
-        // Path to the encrypted ODS file and its password
+        // Path to the encrypted ODS file
         string filePath = "encrypted_file.ods";
-        string password = "myPassword";
 
-        // Verify that the file exists before proceeding
+        // Verify that the file exists to avoid FileNotFoundException
         if (!File.Exists(filePath))
         {
             Console.WriteLine($"File not found: {filePath}");
             return;
         }
 
+        // Password to open the file
+        string password = "myPassword";
+
+        // Load options: specify ODS format and password
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Ods)
+        {
+            Password = password
+        };
+
+        Workbook workbook;
         try
         {
-            // Verify the password before attempting to load the workbook
-            bool isPasswordValid;
-            using (FileStream stream = File.OpenRead(filePath))
+            // Load the workbook with the provided password
+            workbook = new Workbook(filePath, loadOptions);
+        }
+        catch (CellsException ex)
+        {
+            // Aspose.Cells throws CellsException for password errors and other issues
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Iterate through each worksheet and extract cell values
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                isPasswordValid = FileFormatUtil.VerifyPassword(stream, password);
-            }
-            Console.WriteLine($"Password verification result: {isPasswordValid}");
+                Console.WriteLine($"Worksheet: {sheet.Name}");
 
-            if (!isPasswordValid)
-            {
-                Console.WriteLine("Invalid password. Unable to open the workbook.");
-                return;
-            }
+                // Determine the used range of the worksheet
+                var usedRange = sheet.Cells.MaxDisplayRange; // Use var to avoid ambiguity with System.Range
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
 
-            // Load the ODS file with the provided password using OdsLoadOptions
-            OdsLoadOptions loadOptions = new OdsLoadOptions
-            {
-                Password = password // set password for loading
-            };
-
-            Workbook workbook = new Workbook(filePath, loadOptions); // read‑only load
-
-            // Extract and display cell values from the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
-            {
-                for (int col = 0; col <= maxCol; col++)
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    var value = cells[row, col].Value;
-                    if (value != null)
+                    for (int col = startCol; col <= endCol; col++)
                     {
-                        Console.WriteLine($"Cell {cells[row, col].Name}: {value}");
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Skip empty cells
+                        if (cell.Type != CellValueType.IsNull)
+                        {
+                            // Output cell address and its string representation
+                            Console.WriteLine($"Cell {cell.Name}: {cell.StringValue}");
+                        }
                     }
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error processing workbook: {ex.Message}");
         }
     }
 }

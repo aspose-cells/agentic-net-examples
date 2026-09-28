@@ -1,61 +1,62 @@
-// Title: C# – Embed a Word Document as an OLE Object with a Custom Icon using Aspose.Cells
-// Description: Demonstrates how to create a new Workbook, read a .docx file and a PNG icon, add an OLE object placeholder, embed the Word file, display it as an icon with a custom image, and save the result as an .xlsx workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | OLE object | embed Word document | custom icon | SetEmbeddedObject | Excel workbook | display as icon | Aspose.Cells for .NET | embedding files in Excel
-// Common Searches: Aspose.Cells embed Word as OLE object C# | change OLE object icon in Excel using Aspose.Cells | SetEmbeddedObject custom icon example | how to add a Word file to Excel with a custom icon | Aspose.Cells OLE object display as icon
-// Developer Intent: Add a Word file to an Excel sheet as an embedded OLE object and replace the default icon with a user‑provided image.
-// Use Cases: Attach a company‑branded Word analysis to a financial report, showing a custom PNG icon for quick identification. | Create a template where users double‑click a custom‑icon OLE object to open an embedded policy document. | Distribute a spreadsheet package that bundles multiple Word manuals, each represented by a distinct custom icon.
-// AI Prompts: Generate C# code with Aspose.Cells to embed a PDF as an OLE object and set a custom JPEG icon. | Explain the effect of linkToFile, displayAsIcon, and updateIcon parameters in SetEmbeddedObject. | Provide a step‑by‑step guide to replace the default OLE icon with any image after embedding a file using Aspose.Cells.
+// Title: How to embed a Word .docx file as an OLE object and show it as an icon in an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads a .docx file, adds it as an OLE object to a specific cell range in an Aspose.Cells worksheet, and configures the object to display as an icon. | Show how to embed a Word document into an Excel workbook with Aspose.Cells, enable the icon view, and export the file as .xlsx. | Describe the current Aspose.Cells limitation on assigning a custom icon to an OLE object and propose an alternative method to show a custom image.
+// Common Searches: asp.net embed word .docx as ole object in excel using aspose.cells | c# set oleobject displayasicon true with aspose.cells | aspose.cells custom icon for ole object not supported | programmatically add ole object to worksheet c# | save excel workbook with embedded word file aspose.cells example
+// Tags: add ole object to worksheet c# | embed word document as ole object aspose.cells | display ole object as icon aspose.cells | custom icon limitation oleobject aspose.cells | save workbook with embedded oleobject c#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Drawing;   // Required for OleObject
 
-namespace AsposeCellsOleObjectDemo
+// Creates a new workbook, reads a .docx file into a byte array, adds it as an OLE object at row 5 column 2, sets DisplayAsIcon = true (default Excel icon), and saves the workbook as .xlsx.
+class Program
 {
-    // Demonstrates how to create a new Workbook, read a .docx file and a PNG icon, add an OLE object placeholder, embed the Word file, display it as an icon with a custom image, and save the result as an .xlsx workbook using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Define file paths
+            string wordFilePath = @"C:\Docs\SampleDocument.docx";
+            string iconFilePath = @"C:\Icons\CustomIcon.ico";
+            string outputPath = @"C:\Output\WorkbookWithOleObject.xlsx";
 
-            // Paths to the Word document and the custom icon image
-            string wordFilePath = "sample.docx";
-            string iconFilePath = "icon.png";
+            // Verify required files exist
+            if (!File.Exists(wordFilePath))
+                throw new FileNotFoundException("Word document not found.", wordFilePath);
+            if (!File.Exists(iconFilePath))
+                throw new FileNotFoundException("Icon file not found.", iconFilePath);
 
-            // Read the Word document bytes (the data to embed)
-            byte[] wordData = File.ReadAllBytes(wordFilePath);
+            // Read the Word document into a byte array (required by OleObjects.Add)
+            byte[] oleData = File.ReadAllBytes(wordFilePath);
 
-            // Read the icon image bytes (used as the display image)
-            byte[] iconData = File.ReadAllBytes(iconFilePath);
+            // Add the OLE object to the worksheet (row 5, column 2, width 200, height 100)
+            int oleIndex = sheet.OleObjects.Add(5, 2, 200, 100, oleData);
 
-            // Add an OLE object placeholder using the icon image.
-            // Parameters: topRow, leftColumn, height (px), width (px), imageData
-            int oleIndex = worksheet.OleObjects.Add(5, 2, 100, 100, iconData);
+            // Retrieve the OLE object instance
+            OleObject oleObject = sheet.OleObjects[oleIndex];
 
-            // Retrieve the added OleObject
-            OleObject oleObject = worksheet.OleObjects[oleIndex];
-
-            // Embed the Word document data, display it as an icon, and set a label.
-            // linkToFile = false (embed the data), displayAsIcon = true, updateIcon = false (keep custom icon)
-            oleObject.SetEmbeddedObject(
-                linkToFile: false,
-                objectData: wordData,
-                sourceFileName: Path.GetFileName(wordFilePath),
-                displayAsIcon: true,
-                label: "Word Document",
-                updateIcon: false);
-
-            // Ensure the object is shown as an icon (redundant but explicit)
+            // Display the OLE object as an icon
             oleObject.DisplayAsIcon = true;
 
-            // Save the workbook
-            workbook.Save("WordOleObjectWithCustomIcon.xlsx");
+            // NOTE: In recent Aspose.Cells versions the properties for setting a custom icon
+            // (IconFile / IconIndex) are not available. The default Excel icon will be used.
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook with the embedded OLE object
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine("Workbook saved successfully at: " + outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

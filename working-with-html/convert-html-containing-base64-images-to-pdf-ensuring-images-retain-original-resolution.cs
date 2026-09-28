@@ -1,35 +1,86 @@
-// Title: C# – Convert HTML with Base64 images to high‑resolution PDF using Aspose.Cells
-// Description: Load an HTML file that embeds Base64‑encoded images into an Aspose.Cells Workbook, configure PdfSaveOptions.SetImageResample(300, 100) for 300 PPI and full JPEG quality, and save as PDF so the images keep their native resolution.
-// Keywords: Aspose.Cells HTML to PDF | Base64 images PDF C# | SetImageResample | high resolution PDF conversion | preserve image quality Aspose.Cells | C# PDF generation from HTML
-// Common Searches: Aspose.Cells keep image resolution when converting HTML to PDF | SetImageResample example C# | Convert HTML with embedded Base64 images to PDF | high‑quality PDF from HTML using Aspose.Cells | C# Aspose.Cells PDFSaveOptions image resample
-// Developer Intent: Create a PDF from an HTML document that contains Base64‑encoded images without degrading image quality.
-// Use Cases: Generate print‑ready PDFs from marketing emails that embed images as Base64. | Produce PDF reports from HTML templates with chart graphics encoded in Base64, ensuring crisp visuals. | Batch‑process HTML invoices containing Base64 logos to PDFs while maintaining logo clarity.
-// AI Prompts: Write C# code with Aspose.Cells to load an HTML file containing Base64 images and export it to a PDF at 300 PPI and JPEG quality 100. | Explain how PdfSaveOptions.SetImageResample affects image scaling and how to adjust its parameters for different resolution needs. | Provide a step‑by‑step guide for batch converting multiple HTML files with Base64 images to high‑resolution PDFs using Aspose.Cells.
+// Title: Convert HTML with embedded base64 images to a high‑resolution PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that reads an HTML file containing base64‑encoded images, loads it into an Aspose.Cells Workbook via HtmlLoadOptions, and saves it as a PDF while preserving the original image resolution. | Show how to configure PdfSaveOptions in Aspose.Cells to maintain lossless image quality when converting HTML to PDF. | Demonstrate loading HTML content from a MemoryStream instead of a file path for Aspose.Cells HTML‑to‑PDF conversion.
+// Common Searches: asp.net convert html with base64 images to pdf using aspose.cells | keep original image resolution when saving html to pdf with aspose.cells c# | load html string into workbook memory stream aspose.cells example | pdfsaveoptions image quality settings aspose.cells c#
+// Tags: Aspose.Cells HTML to PDF conversion | base64 image handling Aspose.Cells | preserve image resolution PDF save options | HTML content ingestion using MemoryStream Aspose.Cells | high‑quality PDF generation Aspose.Cells
 
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Saving;
 
 namespace AsposeCellsHtmlToPdf
 {
-    // Load an HTML file that embeds Base64‑encoded images into an Aspose.Cells Workbook, configure PdfSaveOptions.SetImageResample(300, 100) for 300 PPI and full JPEG quality, and save as PDF so the images keep their native resolution.
+    // // This program reads an HTML file that may contain base64‑encoded images, loads the content into an Aspose.Cells Workbook using HtmlLoadOptions, and saves the workbook as a PDF. Default PdfSaveOptions preserve the original image resolution, and the code includes error handling for missing files, read/write exceptions, and ensures the output directory exists before saving.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Load the HTML file that contains Base64‑encoded images.
-            // The Workbook constructor automatically detects the format.
-            Workbook workbook = new Workbook("input.html");
+            // Path to the input HTML file
+            string htmlPath = "input.html";
 
-            // Create PDF save options.
+            // Verify that the HTML file exists
+            if (!File.Exists(htmlPath))
+            {
+                Console.WriteLine($"Error: The file \"{htmlPath}\" was not found.");
+                return;
+            }
+
+            string htmlContent;
+            try
+            {
+                // Load the HTML content (may contain base64‑encoded images)
+                htmlContent = File.ReadAllText(htmlPath);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading HTML file: {ex.Message}");
+                return;
+            }
+
+            // Workbook instance that will hold the loaded HTML
+            Workbook workbook = null;
+
+            try
+            {
+                // Convert HTML string to a memory stream
+                byte[] htmlBytes = Encoding.UTF8.GetBytes(htmlContent);
+                using (MemoryStream ms = new MemoryStream(htmlBytes))
+                {
+                    // Load HTML into the workbook using HtmlLoadOptions
+                    HtmlLoadOptions loadOptions = new HtmlLoadOptions();
+                    workbook = new Workbook(ms, loadOptions);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading HTML into workbook: {ex.Message}");
+                return;
+            }
+
+            // Prepare PDF save options (default options preserve image quality)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set a high PPI (e.g., 300) and maximum JPEG quality (100) so that
-            // images are not down‑sampled and retain their original resolution.
-            pdfOptions.SetImageResample(300, 100);
+            // Path to the output PDF file
+            string pdfPath = "output.pdf";
 
-            // Save the workbook as a PDF file.
-            workbook.Save("output.pdf", pdfOptions);
+            try
+            {
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(pdfPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as a PDF file
+                workbook.Save(pdfPath, pdfOptions);
+                Console.WriteLine($"PDF successfully saved to \"{pdfPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving PDF: {ex.Message}");
+            }
         }
     }
 }

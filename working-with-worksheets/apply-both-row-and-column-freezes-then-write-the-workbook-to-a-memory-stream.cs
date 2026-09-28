@@ -1,38 +1,39 @@
-// Title: Freeze rows and columns and export an Aspose.Cells workbook to a MemoryStream in C#
-// Description: Creates a new Workbook, freezes the first two rows and three columns using FreezePanes, saves the workbook to a MemoryStream with SaveToStream, resets the stream position, and writes the stream to a file while handling directory creation and errors.
-// Keywords: Aspose.Cells FreezePanes C# | freeze rows columns Aspose.Cells | save workbook to MemoryStream | Aspose.Cells SaveToStream example | export Excel to stream .NET | write MemoryStream to file C# | Aspose.Cells worksheet freeze panes
-// Common Searches: Aspose.Cells freeze both rows and columns | How to save Aspose.Cells workbook to MemoryStream | C# example for FreezePanes with Aspose.Cells | Write Aspose.Cells MemoryStream to disk | Export frozen Excel sheet from Aspose.Cells
-// Developer Intent: Apply row and column freeze panes to a worksheet and obtain the resulting workbook as a MemoryStream for further processing or file output.
-// Use Cases: Generate a report with header rows and columns locked, then stream the file directly to a web client. | Create an Excel attachment in memory, apply FreezePanes, and send it via email without intermediate files. | Build a workbook in a background service, freeze panes for readability, and write the MemoryStream to a dynamically created folder.
-// AI Prompts: Show C# code that freezes the first 2 rows and 3 columns in an Aspose.Cells worksheet and returns a MemoryStream. | Demonstrate how to write the MemoryStream from Aspose.Cells.SaveToStream to a file, ensuring the target directory exists. | Explain how to send an Aspose.Cells workbook with frozen panes as an HTTP response using the MemoryStream.
+// Title: Freeze the first row and column in an Aspose.Cells workbook and retrieve the XLSX as a MemoryStream (C#)
+// AI Prompts: Write a C# method that creates a new Aspose.Cells Workbook, applies FreezePanes to lock the top row and leftmost column, and returns the workbook saved as an XLSX MemoryStream. | Demonstrate how to combine Aspose.Cells FreezePanes with Workbook.Save to output a frozen worksheet directly to a MemoryStream without writing a file.
+// Common Searches: how to freeze top row and left column with Aspose.Cells and get a MemoryStream in C# | Aspose.Cells C# save frozen worksheet to stream instead of file | example of using FreezePanes and SaveFormat.Xlsx to return a MemoryStream
+// Tags: Aspose.Cells FreezePanes row column lock | save workbook to XLSX MemoryStream C# | export frozen worksheet to stream Aspose.Cells | C# create workbook with frozen panes using Aspose | memory stream output for Aspose.Cells workbook
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Creates a new Workbook, freezes the first two rows and three columns using FreezePanes, saves the workbook to a MemoryStream with SaveToStream, resets the stream position, and writes the stream to a file while handling directory creation and errors.
-public class FreezeAndSaveDemo
+// Creates a new Workbook, freezes the first row and column (B2 as the top‑left scrollable cell), saves it in XLSX format to a MemoryStream, and returns the stream.
+public class FreezeAndSaveExample
 {
-    // Applies row and column freezes and returns the workbook as a memory stream.
-    public static MemoryStream Run()
+    public MemoryStream CreateWorkbookWithFreeze()
     {
-        // Create a new workbook (default format is XLSX).
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Get the first worksheet.
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Freeze the first 2 rows and the first 3 columns.
-        // Parameters: row index, column index, number of frozen rows, number of frozen columns.
-        worksheet.FreezePanes(2, 3, 2, 3);
+            // Freeze first row and first column (cell B2 is the top‑left of the scrollable area)
+            sheet.FreezePanes(1, 1, 0, 0);
 
-        // Save the workbook to a MemoryStream.
-        MemoryStream stream = workbook.SaveToStream();
-
-        // Reset the stream position for any subsequent reading.
-        stream.Position = 0;
-
-        return stream;
+            // Save the workbook to a memory stream in XLSX format
+            MemoryStream stream = new MemoryStream();
+            workbook.Save(stream, SaveFormat.Xlsx);
+            stream.Position = 0;
+            return stream;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating workbook: {ex.Message}");
+            throw;
+        }
     }
 }
 
@@ -42,27 +43,18 @@ public class Program
     {
         try
         {
-            using (MemoryStream ms = FreezeAndSaveDemo.Run())
+            FreezeAndSaveExample example = new FreezeAndSaveExample();
+            using (MemoryStream ms = example.CreateWorkbookWithFreeze())
             {
-                // Define output file path.
-                string outputPath = "FreezeAndSaveDemo.xls";
-
-                // Ensure the directory exists.
-                string directory = Path.GetDirectoryName(outputPath);
-                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                // Write the memory stream to a file.
+                // Write the stream to a file for verification
+                string outputPath = "FrozenWorkbook.xlsx";
                 File.WriteAllBytes(outputPath, ms.ToArray());
-
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Unhandled exception: {ex.Message}");
         }
     }
 }

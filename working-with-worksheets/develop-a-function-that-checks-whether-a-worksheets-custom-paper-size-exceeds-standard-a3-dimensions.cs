@@ -1,81 +1,73 @@
-// Title: C# – Detect if a Worksheet’s Custom Paper Size Exceeds A3 Using Aspose.Cells
-// Description: Provides a C# helper method that reads a worksheet’s PageSetup, confirms the PaperSize is set to Custom, and returns true when the PaperWidth or PaperHeight (in inches) is larger than the A3 limits (≈11.69 × 16.54 in). Includes sample code that sets custom sizes, runs the check, and saves the workbook.
-// Keywords: Aspose.Cells | C# | custom paper size | A3 dimensions | Worksheet PageSetup | PaperWidth | PaperHeight | PaperSizeType.Custom | Print layout validation | CustomPaperSize method
-// Common Searches: Aspose.Cells check custom paper size larger than A3 | C# function to compare worksheet page size with A3 | How to detect oversized custom paper in Aspose.Cells | Validate print area against A3 using Aspose.Cells for .NET | IsCustomPaperSizeExceedsA3 example
-// Developer Intent: Determine programmatically whether a worksheet’s custom paper dimensions exceed the standard A3 size.
-// Use Cases: Prevent printer errors by flagging worksheets whose custom size is larger than A3 before exporting to PDF. | Enforce corporate print‑size policies when generating automated reports with Aspose.Cells. | Log a warning or automatically adjust scaling/orientation when an oversized custom page is detected.
-// AI Prompts: Generate unit tests for IsCustomPaperSizeExceedsA3 covering sizes below, equal to, and above A3. | Write a C# snippet that logs a warning and switches to portrait orientation if the custom paper size exceeds A3. | Create a PowerShell script that scans all worksheets in a workbook and reports any that exceed A3 dimensions using the provided helper.
+// Title: Check if a worksheet’s custom paper size is larger than standard A3 using Aspose.Cells for .NET
+// AI Prompts: Write a C# function that returns true when the worksheet's PageSetup.PaperWidth or PaperHeight exceeds the A3 size in points, using Aspose.Cells. | Generate code that first verifies the PageSetup.PaperSize is set to Custom, then compares the custom dimensions to the A3 limits and handles any exceptions gracefully. | Provide a complete example that loads an Excel workbook, calls the size‑checking method on the first worksheet, and prints whether the custom paper size is larger than A3.
+// Common Searches: Aspose.Cells how to determine if worksheet custom paper size exceeds A3 | C# compare PageSetup.PaperWidth to A3 dimensions in points | detect oversized custom print size in Excel using Aspose.Cells .NET | validate worksheet print setup size against standard A3 with Aspose.Cells | check if Excel worksheet custom paper size is larger than A3 programmatically
+// Tags: custom paper size exceeds A3 Aspose.Cells | worksheet page setup size comparison .NET | detect oversized print dimensions C# | validate worksheet print area Aspose.Cells | compare PageSetup.PaperWidth to A3 points
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// A C# utility that inspects a worksheet's PageSetup. If the PaperSize is set to Custom, it compares the PaperWidth and PaperHeight (in points) against the standard A3 dimensions (~842 × 1190 points) and returns a boolean, with safe exception handling and a usage example.
+public class PaperSizeChecker
 {
-    // Provides a C# helper method that reads a worksheet’s PageSetup, confirms the PaperSize is set to Custom, and returns true when the PaperWidth or PaperHeight (in inches) is larger than the A3 limits (≈11.69 × 16.54 in). Includes sample code that sets custom sizes, runs the check, and saves the workbook.
-    public static class PaperSizeHelper
+    // A3 dimensions in points (1 point = 1/72 inch)
+    private const double A3WidthPoints = 297.0 * 72.0 / 25.4;   // ≈ 842.0 points
+    private const double A3HeightPoints = 420.0 * 72.0 / 25.4; // ≈ 1190.5 points
+
+    /// <param name="worksheet">The worksheet to examine.</param>
+    /// <returns>True if custom size exceeds A3; otherwise false.</returns>
+    public static bool IsCustomPaperSizeExceedsA3(Worksheet worksheet)
     {
-        // A3 size in inches (1 inch = 25.4 mm)
-        private const double A3WidthInInches = 297.0 / 25.4;   // ≈ 11.6929
-        private const double A3HeightInInches = 420.0 / 25.4; // ≈ 16.5354
-
-        /// <param name="worksheet">The worksheet to examine.</param>
-        /// <returns>True if the custom size exceeds A3; otherwise false.</returns>
-        public static bool IsCustomPaperSizeExceedsA3(Worksheet worksheet)
+        try
         {
-            if (worksheet == null) throw new ArgumentNullException(nameof(worksheet));
-
+            // Access the page setup of the worksheet
             PageSetup pageSetup = worksheet.PageSetup;
 
-            // The paper size must be set to Custom to have a user‑defined size.
-            if (pageSetup.PaperSize != PaperSizeType.Custom)
-                return false; // Not a custom size, cannot exceed A3 by definition.
+            // If the paper size is not set to Custom, there is no custom size to compare
+            // Use string comparison to avoid direct enum reference (compatible with all versions)
+            if (!pageSetup.PaperSize.ToString().Equals("Custom", StringComparison.OrdinalIgnoreCase))
+                return false;
 
-            // PaperWidth and PaperHeight are read‑only properties that reflect the current size in inches,
-            // taking the page orientation into account.
-            double width = pageSetup.PaperWidth;
-            double height = pageSetup.PaperHeight;
+            // Retrieve custom width and height (in points)
+            double customWidth = pageSetup.PaperWidth;
+            double customHeight = pageSetup.PaperHeight;
 
-            // Compare both dimensions with A3 limits.
-            // If either dimension is larger, the custom size exceeds A3.
-            return width > A3WidthInInches || height > A3HeightInInches;
+            // Compare with A3 dimensions
+            return customWidth > A3WidthPoints || customHeight > A3HeightPoints;
         }
-
-        // Example usage
-        public static void Run()
+        catch (Exception ex)
         {
-            // Create a new workbook and get the first worksheet.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Set a custom paper size (e.g., 12 x 18 inches) which exceeds A3.
-            sheet.PageSetup.PaperSize = PaperSizeType.Custom;
-            sheet.PageSetup.CustomPaperSize(12.0, 18.0);
-
-            bool exceeds = IsCustomPaperSizeExceedsA3(sheet);
-            Console.WriteLine($"Custom paper size exceeds A3: {exceeds}");
-
-            // Change to a size within A3 limits (e.g., 10 x 14 inches).
-            sheet.PageSetup.CustomPaperSize(10.0, 14.0);
-            exceeds = IsCustomPaperSizeExceedsA3(sheet);
-            Console.WriteLine($"Custom paper size exceeds A3 after change: {exceeds}");
-
-            // Save the workbook (optional, just to demonstrate lifecycle usage).
-            workbook.Save("PaperSizeCheckResult.xlsx");
+            // Log and treat any error as non‑exceeding to keep the method safe
+            Console.WriteLine($"Error while checking paper size: {ex.Message}");
+            return false;
         }
     }
 
-    public class Program
+    // Example usage
+    public static void Main()
     {
-        public static void Main()
+        const string inputPath = "input.xlsx";
+
+        try
         {
-            try
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                PaperSizeHelper.Run();
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            bool exceedsA3 = IsCustomPaperSizeExceedsA3(sheet);
+            Console.WriteLine($"Custom paper size exceeds A3: {exceedsA3}");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

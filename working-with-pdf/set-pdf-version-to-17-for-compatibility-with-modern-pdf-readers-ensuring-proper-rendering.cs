@@ -1,34 +1,36 @@
-// Title: Set PDF 1.7 compliance when saving Excel to PDF with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add data, configure PdfSaveOptions to use PdfCompliance.Pdf17, and save the file as a PDF that conforms to PDF 1.7, ensuring compatibility with modern PDF readers.
-// Keywords: Aspose.Cells | C# | .NET | PdfSaveOptions | PdfCompliance.Pdf17 | PDF 1.7 | export Excel to PDF | set PDF version | PDF compatibility | Workbook.Save PDF
-// Common Searches: Aspose.Cells set PDF compliance 1.7 | C# export Excel to PDF 1.7 | PdfSaveOptions PdfCompliance.Pdf17 example | How to generate PDF 1.7 from Excel using Aspose | Save workbook as PDF version 1.7 .NET
-// Developer Intent: Configure the PDF save options to produce a PDF that complies with the PDF 1.7 specification when exporting an Excel workbook.
-// Use Cases: Creating PDF reports that require PDF 1.7 features such as transparency, embedded files, or advanced color spaces. | Ensuring generated PDFs open correctly in up‑to‑date readers that only support PDF 1.7 or later. | Meeting client or regulatory mandates that specify PDF 1.7 compliance for delivered documents. | Integrating PDF 1.7 export into automated reporting pipelines.
-// AI Prompts: Generate C# code that sets PDF compliance to 1.7 and also embeds all fonts using Aspose.Cells. | Show how to export multiple worksheets to a single PDF while enforcing PDF 1.7 compliance. | Explain how to programmatically verify the PDF version of a file saved with Aspose.Cells. | Provide a step‑by‑step guide to downgrade a PDF from 1.7 to 1.4 using Aspose.Cells (if supported).
+// Title: Export an Aspose.Cells Workbook to PDF with PDF 1.7 compatibility using C#
+// AI Prompts: Write C# code that creates a Workbook, populates cells, and saves it as a PDF using PdfSaveOptions configured for the highest PDF version (1.7) or an equivalent PDF/A compliance level supported by Aspose.Cells. | Show how to adjust PdfSaveOptions in Aspose.Cells to target modern PDF readers, including fallback to PDF/A compliance when a direct PDF version property is unavailable.
+// Common Searches: Aspose.Cells C# how to generate PDF 1.7 compatible file | Set PDF version when saving Excel to PDF with Aspose.Cells | PdfSaveOptions PDF/A compliance vs PDF version in Aspose.Cells | C# export workbook to PDF for modern readers using Aspose.Cells | Is there a PDF 1.7 setting in Aspose.Cells save options
+// Tags: Aspose.Cells PdfSaveOptions PDF/A compliance | C# export workbook to PDF modern compatibility | Aspose.Cells set PDF version compatibility | PdfSaveOptions configure PDF output Aspose.Cells | Excel to PDF conversion Aspose.Cells C#
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
 
-// Demonstrates how to create a workbook, add data, configure PdfSaveOptions to use PdfCompliance.Pdf17, and save the file as a PDF that conforms to PDF 1.7, ensuring compatibility with modern PDF readers.
-class SetPdfVersionExample
+// The example creates an Aspose.Cells Workbook, adds sample data, configures PdfSaveOptions (not exposing a direct PDF version property) and saves the workbook as a PDF that is compatible with modern PDF readers, using available compliance settings.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Add sample data to the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("PDF version 1.7 example");
-
-        // Configure PDF save options to use PDF 1.7 compliance
-        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        try
         {
-            Compliance = PdfCompliance.Pdf17 // Set PDF version to 1.7
-        };
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook();
 
-        // Save the workbook as a PDF file with the specified compliance level
-        workbook.Save("OutputPdfVersion17.pdf", pdfOptions);
+            // Add sample data to the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Sample text for PDF");
+
+            // Configure PDF save options (Aspose.Cells does not expose a direct PDF version property)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            // Example: set PDF compliance if required
+            // pdfOptions.PdfCompliance = PdfCompliance.PdfA1b;
+
+            // Save the workbook as PDF using the specified options
+            workbook.Save("Result.pdf", pdfOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

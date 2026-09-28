@@ -1,70 +1,63 @@
-// Title: Map Nested JSON to Excel with Smart Markers – Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a Workbook, insert smart markers that reference nested JSON properties using dot notation, define a named range for a repeating collection, bind the JSON string via SetJsonDataSource, process the markers, and save the populated file as an XLSX document.
-// Keywords: Aspose.Cells | C# | .NET | smart markers | nested JSON | JSON to Excel | SetJsonDataSource | WorkbookDesigner | repeatable range | Excel automation
-// Common Searches: Aspose.Cells smart markers nested JSON example | C# map JSON object to Excel cells | populate Excel table from JSON array using Aspose | dot notation smart markers Aspose.Cells | repeat rows for JSON collection in Excel C#
-// Developer Intent: Bind a hierarchical JSON document to an Excel workbook and fill cells with smart markers, including a dynamic table for array items.
-// Use Cases: Insert employee name, street, and city into cells A1‑A3 using dot‑notation markers. | Generate a project list where each row repeats for every entry in Employee.Projects, showing title and budget. | Save the final workbook as JsonSmartMarkerOutput.xlsx after processing.
-// AI Prompts: Write C# code that binds a nested JSON string to Aspose.Cells WorkbookDesigner and applies smart markers for both single values and a repeating collection. | Explain how to create a named smart‑marker range that expands for each element in a JSON array. | Provide debugging steps when smart markers return empty cells for nested JSON properties.
+// Title: Use Aspose.Cells Smart Markers in C# to Populate an Excel Workbook from Nested JSON Employee Data
+// AI Prompts: Write C# code that creates an Aspose.Cells workbook, places smart markers for Employee.Name, Employee.Age, Employee.Address.City, and Employee.Address.ZipCode, binds a hierarchical JSON string as a data source with WorkbookDesigner, processes the markers, and saves the result as an Excel file. | Show how to configure WorkbookDesigner with a JSON data source and apply smart‑marker syntax for nested object properties to generate a populated Excel report in C#.
+// Common Searches: Aspose.Cells C# example for mapping nested JSON objects to Excel using smart markers | How to bind hierarchical JSON to smart markers in an Aspose.Cells workbook | C# populate Excel cells with Employee.Address.City from JSON via WorkbookDesigner | Smart marker syntax for nested properties in Aspose.Cells C# tutorial
+// Tags: Aspose.Cells WorkbookDesigner JSON data source | smart markers nested object mapping | populate Excel from JSON hierarchy C# | Excel report generation from employee JSON Aspose.Cells | C# smart marker syntax for nested properties
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsJsonSmartMarkerDemo
 {
-    // Demonstrates how to create a Workbook, insert smart markers that reference nested JSON properties using dot notation, define a named range for a repeating collection, bind the JSON string via SetJsonDataSource, process the markers, and save the populated file as an XLSX document.
+    // The sample creates a new workbook, inserts smart markers that reference nested JSON fields (Employee.Name, Employee.Age, Employee.Address.City, Employee.Address.ZipCode), sets a JSON string as the data source named "Data" using WorkbookDesigner, processes the markers to replace them with actual values, and saves the populated workbook as EmployeeReport.xlsx.
     class Program
     {
         static void Main()
         {
-            // 1. Create a new workbook (lifecycle: create)
+            // 1. Create a new workbook (template)
             Workbook workbook = new Workbook();
 
             // 2. Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // 3. Insert smart markers that reference nested JSON properties
-            //    The "$" prefix indicates a smart marker; nested properties are accessed with dot notation.
-            sheet.Cells["A1"].PutValue("&=$DataSource.Employee.Name");
-            sheet.Cells["A2"].PutValue("&=$DataSource.Employee.Address.Street");
-            sheet.Cells["A3"].PutValue("&=$DataSource.Employee.Address.City");
-            // Example of a collection (Projects). The marker will repeat for each item in the array.
-            // Define a range that will be processed as a table of smart markers.
-            sheet.Cells["A5"].PutValue("Project Title");
-            sheet.Cells["B5"].PutValue("Budget");
-            // Mark the start of the repeating range
-            sheet.Cells.CreateRange("A6:B6").Name = "_CellsSmartMarkers";
-            sheet.Cells["A6"].PutValue("&=$DataSource.Employee.Projects.Title");
-            sheet.Cells["B6"].PutValue("&=$DataSource.Employee.Projects.Budget");
+            // 3. Place smart markers that reference nested JSON properties
+            //    The JSON will contain an object "Employee" with nested "Address"
+            //    Marker syntax: &=$Data.Employee.Name   -> top‑level property
+            //    Marker syntax: &=$Data.Employee.Address.City -> nested property
+            sheet.Cells["A1"].PutValue("Name:");
+            sheet.Cells["B1"].PutValue("&=$Data.Employee.Name");
+            sheet.Cells["A2"].PutValue("Age:");
+            sheet.Cells["B2"].PutValue("&=$Data.Employee.Age");
+            sheet.Cells["A3"].PutValue("City:");
+            sheet.Cells["B3"].PutValue("&=$Data.Employee.Address.City");
+            sheet.Cells["A4"].PutValue("Zip:");
+            sheet.Cells["B4"].PutValue("&=$Data.Employee.Address.ZipCode");
 
-            // 4. Prepare JSON data with nested objects and an array
+            // 4. Prepare JSON data that matches the smart marker hierarchy
             string json = @"
             {
                 ""Employee"": {
                     ""Name"": ""John Doe"",
+                    ""Age"": 35,
                     ""Address"": {
-                        ""Street"": ""123 Main St"",
-                        ""City"": ""New York""
-                    },
-                    ""Projects"": [
-                        { ""Title"": ""Project Alpha"", ""Budget"": 1500 },
-                        { ""Title"": ""Project Beta"",  ""Budget"": 3000 }
-                    ]
+                        ""City"": ""New York"",
+                        ""ZipCode"": ""10001""
+                    }
                 }
             }";
 
-            // 5. Initialize WorkbookDesigner and bind the JSON data source (rule: SetJsonDataSource)
+            // 5. Create a WorkbookDesigner, assign the workbook and set the JSON data source
             WorkbookDesigner designer = new WorkbookDesigner
             {
                 Workbook = workbook
             };
-            // The first parameter is the name used in smart markers (DataSource in this case)
-            designer.SetJsonDataSource("DataSource", json);
+            // The first parameter is the name of the data source; it can be any identifier.
+            designer.SetJsonDataSource("Data", json);
 
-            // 6. Process the smart markers to populate the cells (rule: Process)
+            // 6. Process the smart markers – this will replace the markers with actual values
             designer.Process();
 
-            // 7. Save the populated workbook (lifecycle: save)
-            workbook.Save("JsonSmartMarkerOutput.xlsx");
+            // 7. Save the populated workbook
+            workbook.Save("EmployeeReport.xlsx");
         }
     }
 }

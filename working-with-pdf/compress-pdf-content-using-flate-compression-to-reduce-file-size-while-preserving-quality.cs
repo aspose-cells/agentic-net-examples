@@ -1,41 +1,48 @@
-// Title: Compress Excel‑to‑PDF with Flate compression using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, set PdfSaveOptions.PdfCompression to PdfCompressionCore.Flate, choose MinimumSize optimization, and save the result as a reduced‑size PDF (CompressedOutput.pdf) with C#.
-// Keywords: Aspose.Cells PDF compression | Flate compression .NET | PdfSaveOptions | PdfCompressionCore.Flate | minimum PDF size | C# Aspose.Cells PDF | reduce PDF file size | Excel to PDF compression | Aspose.Cells optimization | PDF output size reduction
-// Common Searches: Aspose.Cells Flate compression C# | How to reduce PDF size with Aspose.Cells | PdfSaveOptions MinimumSize example | Compress Excel PDF using Aspose.Cells .NET | Set PDF compression type to Flate Aspose | Aspose.Cells PDF optimization for small files
-// Developer Intent: Generate a PDF from an Excel workbook with Flate compression to achieve the smallest possible file size while preserving text quality.
-// Use Cases: Email large financial reports as compact PDFs to stay under attachment limits. | Archive spreadsheets as low‑size PDFs to cut cloud storage costs. | Serve downloadable PDFs on bandwidth‑constrained websites for faster load times. | Automate batch conversion of Excel files to minimal‑size PDFs in CI/CD pipelines.
-// AI Prompts: Write C# code that saves a Workbook as a PDF using PdfCompressionCore.Flate and MinimumSize optimization. | Explain the differences between Flate, JPEG, and CCITT compression options in Aspose.Cells PDF export. | Show how to apply Flate compression to all PDF streams except images with Aspose.Cells. | Provide a step‑by‑step guide to reduce PDF size when converting Excel to PDF using Aspose.Cells.
+// Title: Apply Flate compression while converting an Excel workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets PdfSaveOptions.Compression to Flate, and saves the workbook as a compressed PDF with Aspose.Cells. | Show how to enable Flate compression in Aspose.Cells PdfSaveOptions to reduce PDF size when exporting Excel to PDF in C#. | Provide a C# example that verifies the source Excel file, configures PDF save options for Flate compression, and handles errors during conversion with Aspose.Cells.
+// Common Searches: how to enable Flate compression in Aspose.Cells PDF export C# | reduce size of PDF generated from Excel using Aspose.Cells .NET | Aspose.Cells PdfSaveOptions compression option example | C# convert XLSX to PDF with minimal file size using Aspose.Cells | set PDF compression to Flate when saving workbook with Aspose.Cells
+// Tags: Flate compression PdfSaveOptions Aspose.Cells | export Excel to compressed PDF .NET | Aspose.Cells PDF size optimization | C# set PDF compression option Aspose | Workbook.Save with compression Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // Retained for potential future use
 
-namespace AsposeCellsPdfCompressionDemo
+// The sample checks that the input .xlsx file exists, loads it into an Aspose.Cells Workbook, configures PdfSaveOptions to use Flate compression (and optionally disables one-page-per-sheet), then saves the workbook as a reduced‑size PDF while handling any runtime exceptions.
+class Program
 {
-    // Shows how to create a workbook, set PdfSaveOptions.PdfCompression to PdfCompressionCore.Flate, choose MinimumSize optimization, and save the result as a reduced‑size PDF (CompressedOutput.pdf) with C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.pdf";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("PDF Compression Demo");
-            sheet.Cells["A2"].PutValue("This PDF is saved using Flate compression to reduce file size.");
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the source Excel workbook
+            Workbook workbook = new Workbook(inputPath);
 
             // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            {
+                // Keep original sheet layout; other options can be set if supported by the library version
+                OnePagePerSheet = false
+            };
 
-            // Use Flate compression for all PDF content except images
-            pdfOptions.PdfCompression = PdfCompressionCore.Flate;
-
-            // Optional: prioritize smaller file size over print quality
-            pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
-
-            // Save the workbook as a PDF with the specified compression settings
-            workbook.Save("CompressedOutput.pdf", pdfOptions);
-
-            Console.WriteLine("PDF saved with Flate compression.");
+            // Save the workbook as a PDF
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

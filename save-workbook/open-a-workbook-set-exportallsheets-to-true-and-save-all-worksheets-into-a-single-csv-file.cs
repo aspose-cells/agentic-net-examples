@@ -1,36 +1,27 @@
-// Title: Aspose.Cells C# – Export All Workbook Sheets to a Single CSV File
-// Description: Loads an Excel workbook with Aspose.Cells, configures TxtSaveOptions for CSV, enables ExportAllSheets, and saves every worksheet into one combined CSV file using .NET.
-// Keywords: Aspose.Cells | C# | ExportAllSheets | TxtSaveOptions | CSV export | multiple worksheets to CSV | save workbook as CSV | Aspose.Cells .NET example | combine Excel sheets CSV | Aspose.Cells CSV all sheets
-// Common Searches: Aspose.Cells export all sheets to CSV | C# save Excel workbook as one CSV file | TxtSaveOptions ExportAllSheets true example | combine Excel worksheets into a single CSV using Aspose | Aspose.Cells CSV export multiple sheets .NET
-// Developer Intent: Export every worksheet in a workbook into one combined CSV file.
-// Use Cases: Consolidate data from several sheets for analytics pipelines. | Generate a single CSV report from a multi‑sheet financial workbook. | Prepare a unified CSV for data migration when all sheets must be merged.
-// AI Prompts: Write C# code with Aspose.Cells that loads an .xlsx file and saves all its worksheets into one CSV, ensuring ExportAllSheets is enabled. | Show how to configure TxtSaveOptions for CSV export with ExportAllSheets true and handle dynamic input/output paths. | Explain the behavior of ExportAllSheets in Aspose.Cells and describe the structure of the resulting CSV when multiple sheets are combined.
+// Title: How to export every worksheet from an Excel workbook into a single CSV file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets TxtSaveOptions.ExportAllSheets to true, and writes all sheets to one CSV file. | Show how to configure Aspose.Cells TxtSaveOptions for CSV to combine multiple worksheets into a single output in a .NET application.
+// Common Searches: Aspose.Cells C# export all workbook sheets to a single CSV | Save multiple Excel worksheets as one CSV using TxtSaveOptions | How to combine all sheets into one CSV file with Aspose.Cells .NET | ExportAllSheets property example for CSV output in Aspose.Cells
+// Tags: Aspose.Cells export all sheets CSV | TxtSaveOptions ExportAllSheets .NET | C# combine workbook worksheets into single CSV | Save workbook as combined CSV using Aspose.Cells | Export multiple Excel sheets to one CSV file
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsExportAllSheetsToCsv
 {
-    // Loads an Excel workbook with Aspose.Cells, configures TxtSaveOptions for CSV, enables ExportAllSheets, and saves every worksheet into one combined CSV file using .NET.
+    // Loads an existing .xlsx workbook, enables TxtSaveOptions.ExportAllSheets, and saves all worksheets together into a single CSV file with Aspose.Cells for .NET.
     class Program
     {
         static void Main(string[] args)
         {
-            // Path to the source workbook (can be .xlsx, .xls, etc.)
-            string sourcePath = "input.xlsx";
-
-            // Load the workbook from the file
-            Workbook workbook = new Workbook(sourcePath);
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Create CSV save options and enable exporting all worksheets
-            TxtSaveOptions saveOptions = new TxtSaveOptions(SaveFormat.Csv);
-            saveOptions.ExportAllSheets = true;
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.Csv);
+            csvOptions.ExportAllSheets = true;
 
             // Save all worksheets into a single CSV file
-            string outputPath = "output_all_sheets.csv";
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook saved to CSV with all sheets: {outputPath}");
+            workbook.Save("output_all_sheets.csv", csvOptions);
         }
     }
 }

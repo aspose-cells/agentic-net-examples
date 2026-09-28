@@ -1,55 +1,75 @@
-// Title: C# – Add a Centered Arial Text Watermark (30 pt, 50 % Opacity) to PDF with Aspose.Cells
-// Description: Demonstrates how to create a Workbook, define an Arial 30‑point RenderingFont, build a RenderingWatermark with the text "CONFIDENTIAL", center it horizontally and vertically, set 50 % opacity, place it behind the page content, attach the watermark to PdfSaveOptions, and save the workbook as a PDF that displays the centered watermark.
-// Keywords: Aspose.Cells | C# | .NET PDF watermark | centered text watermark | Arial 30pt | opacity 0.5 | RenderingWatermark | PdfSaveOptions | background watermark | workbook to PDF
-// Common Searches: Aspose.Cells add centered watermark to PDF | C# set watermark opacity Aspose.Cells | How to use RenderingWatermark with Arial font | Save workbook as PDF with background text watermark | Center text watermark in PDF using Aspose.Cells .NET
-// Developer Intent: Generate a PDF from a workbook that includes a centered, semi‑transparent Arial text watermark.
-// Use Cases: Mark confidential reports with a discreet background label before sharing. | Brand marketing PDFs by embedding the company name as a centered watermark. | Apply a legal disclaimer watermark to invoices to satisfy compliance rules.
-// AI Prompts: Write C# code with Aspose.Cells to add a diagonal red watermark at 70 % opacity to a PDF. | Show how to assign different watermarks to each worksheet when exporting them as separate PDFs. | Explain how to calculate watermark position dynamically based on page dimensions in Aspose.Cells.
+// Title: Add a centered Arial 30‑point text watermark with 50% opacity to an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Write C# using Aspose.Cells to place a WordArt shape with Arial 30 pt text as a semi‑transparent watermark on the first worksheet. | Show how to size the watermark shape to the worksheet page dimensions and rotate it -45° for a diagonal effect. | Demonstrate modifying the watermark’s opacity, font, or rotation without affecting other worksheet content.
+// Common Searches: Aspose.Cells C# add semi transparent text watermark to Excel worksheet | fit watermark shape to entire page size in Aspose.Cells workbook | rotate Aspose.Cells text effect -45 degrees for diagonal watermark | change watermark opacity to 50% using Aspose.Cells shape transparency
+// Tags: add semi transparent text watermark Aspose.Cells | fit watermark shape to worksheet page Aspose.Cells | apply diagonal rotation to text effect Aspose.Cells | set shape fill transparency Aspose.Cells | use Arial 30pt font for Excel watermark Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsWatermarkDemo
+// // Loads an existing workbook, creates a WordArt shape with Arial 30 pt text, sizes it to the page, sets 50 % opacity, rotates -45°, sends it to the back, and saves the updated file.
+class Program
 {
-    // Demonstrates how to create a Workbook, define an Arial 30‑point RenderingFont, build a RenderingWatermark with the text "CONFIDENTIAL", center it horizontally and vertically, set 50 % opacity, place it behind the page content, attach the watermark to PdfSaveOptions, and save the workbook as a PDF that displays the centered watermark.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-            // Optional: add some sample data to visualize the watermark effect
-            sheet.Cells["A1"].PutValue("Sample content for watermark demonstration.");
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-            // Create a RenderingFont with Arial, 30‑point size
-            RenderingFont font = new RenderingFont("Arial", 30);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Create a text watermark using the font
-            RenderingWatermark watermark = new RenderingWatermark("CONFIDENTIAL", font)
-            {
-                // Center the watermark horizontally and vertically
-                HAlignment = TextAlignmentType.Center,
-                VAlignment = TextAlignmentType.Center,
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-                // Set opacity to 50%
-                Opacity = 0.5f,
+            // Add a text shape (WordArt) to act as a watermark
+            // Parameters: preset effect, text, font name, font size, bold, italic,
+            // left, top, width, height, anchor row, anchor column
+            Shape watermarkShape = worksheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,
+                "Sample Watermark",
+                "Arial",
+                30,
+                false,
+                false,
+                0,
+                0,
+                500,
+                100,
+                0,
+                0);
 
-                // Place the watermark behind the page contents (optional)
-                IsBackground = true
-            };
+            // Position the shape to cover the whole page
+            watermarkShape.Placement = PlacementType.FreeFloating;
+            watermarkShape.Left = 0;
+            watermarkShape.Top = 0;
 
-            // Configure PDF save options with the watermark
-            PdfSaveOptions saveOptions = new PdfSaveOptions
-            {
-                Watermark = watermark
-            };
+            // Convert paper size from inches to points (1 inch = 72 points) and cast to int
+            watermarkShape.Width = (int)(worksheet.PageSetup.PaperWidth * 72);
+            watermarkShape.Height = (int)(worksheet.PageSetup.PaperHeight * 72);
 
-            // Save the workbook as PDF with the centered watermark
-            workbook.Save("CenteredWatermark.pdf", saveOptions);
+            // Set transparency (0 = opaque, 1 = fully transparent)
+            watermarkShape.Fill.Transparency = 0.5; // 50% opacity
+
+            // Rotate the watermark for diagonal appearance
+            watermarkShape.RotationAngle = -45;
+
+            // Send the shape to the back by setting the lowest Z-order position
+            watermarkShape.ZOrderPosition = 0;
+
+            // Save the workbook with the watermark applied
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

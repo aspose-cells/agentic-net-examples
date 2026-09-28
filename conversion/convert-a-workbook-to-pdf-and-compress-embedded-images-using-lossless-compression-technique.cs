@@ -1,39 +1,33 @@
-// Title: C# – Convert Excel to PDF with lossless image compression using Aspose.Cells
-// Description: Load an Excel workbook, enable automatic picture compression, set PdfSaveOptions to Flate compression and MinimumSize optimization, and save the file as a PDF where embedded images are compressed without quality loss.
-// Keywords: Aspose.Cells | C# PDF conversion | lossless image compression | AutoCompressPictures | PdfSaveOptions | Flate compression | MinimumSize optimization | Excel to PDF | embedded images | file size reduction
-// Common Searches: Aspose.Cells convert xlsx to pdf lossless | C# enable auto picture compression Aspose.Cells | PdfSaveOptions Flate compression example | How to reduce PDF size with Aspose.Cells | MinimumSize optimization Aspose.Cells PDF export
-// Developer Intent: Create a PDF from an Excel workbook while preserving image quality through lossless compression.
-// Use Cases: Generate high‑fidelity PDF reports from financial spreadsheets that contain charts and photos. | Archive Excel workbooks as compact PDFs for document management systems without degrading image clarity. | Provide downloadable PDFs on a web portal where image detail must remain intact while keeping file size low.
-// AI Prompts: Write C# code that converts an .xlsx file to PDF using Aspose.Cells with lossless image compression. | Explain the effect of PdfCompression.Flate and PdfOptimizationType.MinimumSize on embedded images in a PDF. | Provide a step‑by‑step tutorial for configuring PdfSaveOptions to achieve lossless compression of pictures in an Excel‑to‑PDF conversion.
+// Title: How to convert an Excel workbook to PDF while applying lossless image compression with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an .xlsx file, enables the workbook's AutoCompressPictures setting, configures PdfSaveOptions to use Flate compression and MinimumSize optimization, and saves the workbook as a PDF. | Show how to set PdfCompressionCore.Flate and PdfOptimizationType.MinimumSize in Aspose.Cells to produce a PDF whose embedded images are losslessly compressed.
+// Common Searches: C# Aspose.Cells how to enable lossless picture compression when saving Excel as PDF | Save workbook to PDF with smallest file size using Flate compression in Aspose.Cells | Effect of AutoCompressPictures property on PDF image size in Aspose.Cells | PdfSaveOptions example for minimum size PDF in .NET | Compress embedded images in PDF generated from .xlsx using Aspose.Cells
+// Tags: Aspose.Cells AutoCompressPictures setting | PdfSaveOptions Flate compression .NET | Workbook to PDF minimum size optimization | C# lossless PDF image compression | Excel to PDF embedded image compression Aspose
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfCompressionDemo
+// // Loads an Excel workbook, activates automatic lossless picture compression, configures PDF save options with Flate compression and minimum‑size optimization, and saves the output as a compressed PDF.
+class Program
 {
-    // Load an Excel workbook, enable automatic picture compression, set PdfSaveOptions to Flate compression and MinimumSize optimization, and save the file as a PDF where embedded images are compressed without quality loss.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Load an existing workbook (replace with your source file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Optional: enable automatic picture compression inside the workbook
-            workbook.Settings.AutoCompressPictures = true;
+        // Enable automatic lossless compression of pictures inside the workbook
+        workbook.Settings.AutoCompressPictures = true;
 
-            // Configure PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        // Configure PDF save options
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Use lossless Flate compression for PDF content (excluding images)
-            pdfOptions.PdfCompression = PdfCompressionCore.Flate;
+        // Use a lossless compression algorithm for PDF content (Flate = ZIP)
+        pdfOptions.PdfCompression = PdfCompressionCore.Flate;
 
-            // Optimize for minimum file size (helps compress embedded images losslessly)
-            pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
+        // Optimize the PDF for minimum file size (helps compress embedded images)
+        pdfOptions.OptimizationType = PdfOptimizationType.MinimumSize;
 
-            // Save the workbook as a PDF with the specified compression settings
-            workbook.Save("output_compressed.pdf", pdfOptions);
-        }
+        // Save the workbook as a PDF with the specified options
+        workbook.Save("output.pdf", pdfOptions);
     }
 }

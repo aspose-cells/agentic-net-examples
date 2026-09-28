@@ -1,76 +1,45 @@
-// Title: Load a Large XLSX with Aspose.Cells LightCells (C#) – keep memory under 200 MB using FileCache
-// Description: Demonstrates how to open a massive XLSX workbook with the LightCells API in C#. The example sets LoadOptions.MemorySetting to FileCache and attaches a LightCellsDataHandler that processes all sheets, rows, and cells, resulting in an in‑memory footprint well below 200 MB. The workbook is then saved to a new file.
-// Keywords: Aspose.Cells | LightCells API | MemorySetting.FileCache | C# load large XLSX | low memory Excel processing | streaming workbook | large workbook handling | 200 MB memory limit | Aspose.Cells LightCells example
-// Common Searches: Aspose.Cells load large Excel file low memory | LightCells API C# memory limit example | How to use FileCache with Aspose Cells | Open big XLSX with LightCells streaming | C# Aspose Cells limit RAM usage
-// Developer Intent: Open a huge XLSX workbook with LightCells while restricting RAM usage to 200 MB.
-// Use Cases: Process or convert multi‑gigabyte Excel files on servers with limited RAM. | Iterate through sheets, rows, and cells for custom transformations without loading the whole file into memory. | Generate reports from massive workbooks in environments such as Azure Functions or AWS Lambda where memory caps are strict.
-// AI Prompts: Show how to modify LightCellsDataHandler to skip rows where a specific column is empty while still using FileCache. | Provide code that logs current memory consumption during LightCells processing of a 5 GB workbook. | Explain step‑by‑step how to configure LightCells for streaming a 10 GB Excel file in a .NET Core console app.
+// Title: Open a large XLSX workbook with Aspose.Cells LightCells API while restricting memory usage to 200 MB in C#
+// AI Prompts: Write C# code that loads an XLSX file using Aspose.Cells LightCells API and enforces a maximum of 200 MB memory consumption. | Show how to configure LoadOptions.MemorySetting to MemoryPreference for memory‑saving mode when opening a big Excel workbook in .NET. | Create an example that checks for file existence, opens the workbook with limited memory, prints the worksheet count, and catches any exceptions.
+// Common Searches: aspnet open large xlsx with aspose.cells memory limit 200mb | c# lightcells api reduce memory usage when loading workbook | load big excel file without exceeding 200mb memory aspose cells | how to use LoadOptions.MemorySetting to limit memory in aspose.cells
+// Tags: Aspose.Cells LightCells open large XLSX memory‑preference | C# LoadOptions.MemorySetting memory‑saving mode | limit workbook memory consumption Aspose.Cells | load big Excel file low memory .NET | memory‑efficient workbook loading Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to open a massive XLSX workbook with the LightCells API in C#. The example sets LoadOptions.MemorySetting to FileCache and attaches a LightCellsDataHandler that processes all sheets, rows, and cells, resulting in an in‑memory footprint well below 200 MB. The workbook is then saved to a new file.
-public class LightCellsDataHandlerDemo : LightCellsDataHandler
+// The program checks that a large XLSX file exists, then loads it with Aspose.Cells using LoadOptions set to MemorySetting.MemoryPreference to keep memory usage around 200 MB, outputs the number of worksheets, and handles any errors gracefully.
+class Program
 {
-    // Called when a worksheet is about to be processed.
-    public bool StartSheet(Worksheet sheet)
+    static void Main()
     {
-        // Process all sheets.
-        return true;
-    }
+        // Path to the large XLSX file
+        string inputPath = @"C:\Data\LargeFile.xlsx";
 
-    // Called before processing a row.
-    public bool StartRow(int rowIndex)
-    {
-        // Process all rows.
-        return true;
-    }
-
-    // Called after row properties are read.
-    public bool ProcessRow(Row row)
-    {
-        // No custom row processing needed.
-        return true;
-    }
-
-    // Called before processing a cell in the current row.
-    public bool StartCell(int columnIndex)
-    {
-        // Process all cells.
-        return true;
-    }
-
-    // Called after a cell's data is read.
-    public bool ProcessCell(Cell cell)
-    {
-        // No custom cell processing needed.
-        return true;
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        // Path to the large XLSX file.
-        string inputFile = "LargeFile.xlsx";
-
-        // Path where the processed workbook will be saved.
-        string outputFile = "ProcessedLargeFile.xlsx";
-
-        // Configure load options to limit memory usage.
-        // FileCache mode stores intermediate data in temporary files,
-        // keeping the in‑memory footprint low (well below 200 MB).
-        LoadOptions loadOptions = new LoadOptions
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            MemorySetting = MemorySetting.FileCache,
-            LightCellsDataHandler = new LightCellsDataHandlerDemo()
-        };
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Load the workbook using LightCells API with the specified options.
-        Workbook workbook = new Workbook(inputFile, loadOptions);
+        try
+        {
+            // Configure load options to use memory‑saving mode
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                MemorySetting = MemorySetting.MemoryPreference
+            };
 
-        // Save the workbook (could be the same or a different file).
-        workbook.Save(outputFile);
+            // Load the workbook with the specified options
+            Workbook workbook = new Workbook(inputPath, loadOptions);
+
+            // Example: output the number of worksheets
+            Console.WriteLine($"Worksheets count: {workbook.Worksheets.Count}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

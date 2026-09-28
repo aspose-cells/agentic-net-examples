@@ -1,37 +1,35 @@
-// Title: C# – AutoFit all rows in an Aspose.Cells worksheet (startRow 0 to MaxDataRow)
-// Description: Creates a Workbook, optionally adds sample text, determines the last populated row with MaxDataRow, calls Worksheet.AutoFitRows(0, maxRow) to resize every row to its content, and saves the file as AutoFitAllRows.xlsx.
-// Keywords: Aspose.Cells AutoFitRows C# | auto fit rows Aspose .NET | adjust row height programmatically | MaxDataRow worksheet | Excel row auto‑size example | Aspose.Cells row height | C# Excel automation
-// Common Searches: Aspose.Cells AutoFitRows all rows example | C# auto‑fit rows from first to last data row | How to resize rows automatically in Aspose.Cells | Get MaxDataRow and auto‑fit rows Aspose .NET | AutoFitRows startRow 0 endRow MaxDataRow
-// Developer Intent: Resize every row that contains data so its height matches the cell content.
-// Use Cases: Generating reports where wrapped text must be fully visible without manual formatting. | Exporting dynamic data to Excel and ensuring rows are sized correctly before distribution. | Building a template that adds rows programmatically and automatically adjusts their heights.
-// AI Prompts: Show a C# snippet that auto‑fits rows from row 0 to the last populated row using Aspose.Cells, handling an empty worksheet gracefully. | Write a reusable method that accepts a Worksheet and applies AutoFitRows to all rows, including error handling for MaxDataRow = -1. | Explain how AutoFitRows works with wrapped text, merged cells, and custom row heights in Aspose.Cells.
+// Title: How to auto‑fit every row in an Aspose.Cells worksheet from the first to the last populated row using C#
+// AI Prompts: Write C# code that creates a new Aspose.Cells workbook, adds sample data, determines the last occupied row with Cells.MaxDataRow, and calls the AutoFitRows method from row 0 through that index. | Provide a step‑by‑step example of using Aspose.Cells in .NET to automatically resize the height of all rows by supplying the first row and the maximum data row to the auto‑fit API.
+// Common Searches: Aspose.Cells C# auto fit rows from first to last data row | Worksheet.AutoFitRows startRow 0 endRow MaxDataRow sample code | C# adjust row height for entire worksheet using Aspose.Cells | determine last populated row in Aspose.Cells before auto‑fitting rows
+// Tags: Aspose.Cells auto‑fit rows range | C# MaxDataRow row height adjustment | auto‑fit all worksheet rows .NET | adjust Excel row height Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// Creates a Workbook, optionally adds sample text, determines the last populated row with MaxDataRow, calls Worksheet.AutoFitRows(0, maxRow) to resize every row to its content, and saves the file as AutoFitAllRows.xlsx.
-class AutoFitAllRows
+namespace AutoFitRowsExample
 {
-    static void Main()
+    // The program creates a new workbook, populates a few cells with varying text, retrieves the zero‑based index of the last row that contains data via Cells.MaxDataRow, auto‑fits rows from index 0 to that row using AutoFitRows, and saves the file as AutoFitRowsResult.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Populate some sample data so that rows have content to autofit
+            worksheet.Cells["A1"].PutValue("Short text");
+            worksheet.Cells["A2"].PutValue("This is a longer piece of text that should cause the row height to increase when autofitted.");
+            worksheet.Cells["A3"].PutValue("Another line with\nmultiple line breaks\nto test row height adjustment.");
 
-        // Sample data – this part can be omitted if the worksheet already has content
-        sheet.Cells["A1"].PutValue("First row with a long text that should cause the row to expand when auto‑fitted.");
-        sheet.Cells["A2"].PutValue("Second row");
-        sheet.Cells["A3"].PutValue("Third row with\nmultiple lines\nto test auto‑fit.");
+            // Determine the last row that contains data
+            int maxRow = worksheet.Cells.MaxDataRow; // zero‑based index of the last used row
 
-        // Determine the index of the last row that contains data (zero‑based)
-        int maxRow = sheet.Cells.MaxDataRow;
+            // Auto‑fit all rows from the first (0) to the last used row
+            worksheet.AutoFitRows(0, maxRow);
 
-        // Auto‑fit all rows from the first row (0) to the last data row
-        sheet.AutoFitRows(0, maxRow);
-
-        // Save the workbook
-        workbook.Save("AutoFitAllRows.xlsx");
+            // Save the workbook to a file
+            workbook.Save("AutoFitRowsResult.xlsx", SaveFormat.Xlsx);
+        }
     }
 }

@@ -1,92 +1,78 @@
-// Title: Aspose.Cells .NET: Create a Named Range from a Filtered Table and Apply Subtotal
-// Description: Demonstrates how to build a workbook, add sample sales data, set an AutoFilter on A1:C6, capture the filtered CellArea, define a named range "FilteredData", and use Cells.Subtotal to group by Category and sum Sales with page breaks and a summary row.
-// Keywords: Aspose.Cells named range from AutoFilter | C# subtotal method Aspose.Cells | filter area named range .NET | grouped subtotals Aspose.Cells | AutoFilter Subtotal example | Aspose.Cells Subtotal function | create named range programmatically | Excel subtotal with Aspose.Cells
-// Common Searches: Aspose.Cells create named range after applying AutoFilter | How to use Subtotal method on filtered data in C# | Define named range for filtered rows Aspose.Cells .NET | Apply SUM subtotal by category using Aspose.Cells | Add page breaks with Subtotal in Aspose.Cells
-// Developer Intent: Generate a named range that references the filtered portion of a table and use it to produce grouped SUM subtotals via the Cells.Subtotal API.
-// Use Cases: Produce category‑wise sales totals after the user filters data. | Create printable reports that insert page breaks between each group. | Reuse the "FilteredData" range in charts, formulas, or pivot tables.
-// AI Prompts: Write C# code with Aspose.Cells to define a named range from an AutoFilter area and apply a SUM subtotal on the Sales column grouped by Category. | Extend the example to add a COUNT subtotal for the Product column while preserving the existing named range. | Show how to reference the "FilteredData" named range in a formula on another worksheet.
+// Title: Create a named range for the visible rows of a filtered ListObject and use it in a SUBTOTAL formula with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that builds a ListObject, applies an AutoFilter, defines a workbook‑level named range that points to the visible Amount cells, and inserts a SUBTOTAL(9, ...) formula referencing that range. | Show how to generate a SUBTOTAL calculation for only the displayed rows of a table by creating a structured named range after filtering, then assign the formula to a cell in a .NET Excel workbook.
+// Common Searches: aspnet create named range for filtered table column using Aspose.Cells | c# subtotal formula for visible rows after applying AutoFilter with Aspose.Cells | aspose.cells structured reference for filtered ListObject in SUBTOTAL | generate Excel workbook in C# that sums only filtered data using a named range
+// Tags: Aspose.Cells define named range from filtered ListObject | C# SUBTOTAL formula with structured reference | Aspose.Cells AutoFilter visible rows subtotal | Excel workbook named range for filtered column .NET | Aspose.Cells ListObject subtotal calculation
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, adds sample Category and Amount data, converts the range into a ListObject named "SalesData", filters the table to show only rows where Category equals "A", defines a workbook‑level named range that includes the visible Amount cells, inserts a SUBTOTAL(9, ...) formula that references this named range, and saves the file as FilteredTableWithSubtotal.xlsx.
+class Program
 {
-    // Demonstrates how to build a workbook, add sample sales data, set an AutoFilter on A1:C6, capture the filtered CellArea, define a named range "FilteredData", and use Cells.Subtotal to group by Category and sum Sales with page breaks and a summary row.
-    public class NamedRangeFilteredSubtotalDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            sheet.Name = "Sheet1";
 
-            // Populate sample data (including header)
-            // Header: Category, Product, Sales
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Product");
-            cells["C1"].PutValue("Sales");
+            // Populate sample data (a simple table with Category and Amount)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
 
-            object[,] data = new object[,]
+            string[,] data = new string[,]
             {
-                {"North", "Widget", 5000},
-                {"North", "Gadget", 3000},
-                {"South", "Widget", 6000},
-                {"South", "Gadget", 4000},
-                {"West",  "Widget", 4500}
+                { "A", "100" },
+                { "B", "200" },
+                { "A", "150" },
+                { "C", "300" },
+                { "B", "250" }
             };
 
-            for (int i = 0; i < data.GetLength(0); i++)
+            int rows = data.GetLength(0);
+            for (int i = 0; i < rows; i++)
             {
-                cells[i + 1, 0].PutValue(data[i, 0]); // Column A
-                cells[i + 1, 1].PutValue(data[i, 1]); // Column B
-                cells[i + 1, 2].PutValue(data[i, 2]); // Column C
+                sheet.Cells[i + 1, 0].PutValue(data[i, 0]); // Category column (A)
+                sheet.Cells[i + 1, 1].PutValue(Convert.ToDouble(data[i, 1])); // Amount column (B)
             }
 
-            // Apply an AutoFilter to the data range (A1:C6)
-            // SetRange(startRow, startColumn, totalColumns)
-            // startRow = 0 (row 1), startColumn = 0 (column A), totalColumns = 3 (A,B,C)
-            sheet.AutoFilter.SetRange(0, 0, 3);
+            // Convert the range into a table (ListObject)
+            int totalRows = rows + 1; // include header row
+            int totalCols = 2;        // Category and Amount
+            int tableIndex = sheet.ListObjects.Add(0, 0, totalRows, totalCols, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "SalesData"; // Set table name
+            table.ShowHeaderRow = true;
+            table.ShowTableStyleFirstColumn = false;
+            table.ShowTableStyleLastColumn = false;
+            table.TableStyleType = TableStyleType.TableStyleMedium2;
 
-            // Retrieve the actual CellArea where the filter is applied
-            CellArea filterArea = sheet.AutoFilter.GetCellArea();
+            // Apply an AutoFilter to show only rows where Category = "A"
+            table.AutoFilter.Filter(0, "A"); // 0 = first column of the table (Category)
 
-            // Create a named range that refers to the filtered area
-            int rowCount = filterArea.EndRow - filterArea.StartRow + 1;
-            int colCount = filterArea.EndColumn - filterArea.StartColumn + 1;
-            Aspose.Cells.Range filteredRange = cells.CreateRange(filterArea.StartRow, filterArea.StartColumn, rowCount, colCount);
-            filteredRange.Name = "FilteredData";
+            // Insert a SUBTOTAL formula that sums the visible (filtered) amounts
+            sheet.Cells["D1"].PutValue("Subtotal of Visible Amounts:");
+            sheet.Cells["E1"].Formula = "=SUBTOTAL(9, SalesData[Amount])";
 
-            // Use the Subtotal method on the same area
-            // Group by the first column (Category) -> index 0
-            // Apply SUM to the Sales column (index 2)
-            // Replace existing subtotals, add page breaks, place summary below data
-            cells.Subtotal(
-                filterArea,
-                0,                                 // groupBy column index
-                ConsolidationFunction.Sum,         // subtotal function
-                new int[] { 2 },                   // columns to subtotal
-                true,                              // replace existing subtotals
-                true,                              // add page breaks between groups
-                true                               // place summary below data
-            );
+            // Ensure output directory exists
+            string outputPath = "FilteredTableWithSubtotal.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            string outputPath = "NamedRangeFilteredSubtotalDemo.xlsx";
             workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

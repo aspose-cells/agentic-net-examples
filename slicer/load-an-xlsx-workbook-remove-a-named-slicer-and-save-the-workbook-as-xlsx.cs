@@ -1,50 +1,65 @@
-// Title: C# – Remove a Named Slicer from an XLSX Workbook using Aspose.Cells and Save
-// Description: Loads an existing XLSX file with Aspose.Cells, finds a slicer named "MySlicer" in the first worksheet, removes it from the SlicerCollection, and saves the updated workbook as a new XLSX document.
-// Keywords: Aspose.Cells | C# | .NET | remove slicer | delete Excel slicer | XLSX workbook | SlicerCollection | programmatic Excel | sample code | GitHub example
-// Common Searches: how to delete a slicer in Excel using Aspose.Cells C# | remove named slicer from XLSX with Aspose.Cells .NET | Aspose.Cells code to delete slicer programmatically | C# example for removing Excel slicer and saving workbook | Aspose.Cells slicer removal sample on GitHub
-// Developer Intent: Programmatically delete a specific slicer from an existing XLSX workbook and write the changes back to disk.
-// Use Cases: Strip temporary slicers before distributing a report. | Automate cleanup of dynamically added slicers in batch‑processed workbooks. | Prepare a clean version of a dashboard by removing obsolete slicer controls.
-// AI Prompts: Generate C# code that uses Aspose.Cells to locate and remove a slicer named "MySlicer" from an XLSX file. | Explain how to safely handle the situation when the specified slicer does not exist in the workbook. | Show a step‑by‑step example of loading a workbook, iterating the SlicerCollection, deleting a slicer, and saving the file.
+// Title: Remove a specific named slicer from an XLSX workbook using Aspose.Cells for .NET and save the updated file
+// AI Prompts: Write C# code that loads an existing XLSX file with Aspose.Cells, searches every worksheet for a slicer whose Name equals "MySlicer", deletes that slicer from the worksheet’s SlicerCollection, and saves the workbook to a new file. | Demonstrate how to iterate backward through a SlicerCollection in Aspose.Cells, remove a matching slicer safely, and handle a missing input file scenario in C#.
+// Common Searches: aspnet delete slicer by name from Excel file using Aspose.Cells | C# code to delete a specific slicer from all sheets in an XLSX workbook | how to programmatically delete a slicer called MySlicer with Aspose.Cells | Aspose.Cells .NET remove slicer from workbook and save changes | iterate worksheets to find and delete slicer in Excel using Aspose.Cells C#
+// Tags: aspocells remove slicer c# | named slicer deletion xlsx aspocells | slicercollection remove method .net | iterate worksheets aspocells slicer | save workbook after slicer removal aspocells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
 
-// Loads an existing XLSX file with Aspose.Cells, finds a slicer named "MySlicer" in the first worksheet, removes it from the SlicerCollection, and saves the updated workbook as a new XLSX document.
-class RemoveSlicerDemo
+// The example loads input.xlsx with Aspose.Cells, checks each worksheet for a slicer named "MySlicer", removes the matching slicer from the worksheet's SlicerCollection, and saves the modified workbook as output.xlsx, with error handling for missing files and other exceptions.
+public class RemoveNamedSlicer
 {
-    static void Main()
+    public static void Run()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the worksheet that contains the slicer (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Get the slicer collection from the worksheet
-        SlicerCollection slicers = worksheet.Slicers;
-
-        // Name of the slicer to be removed
-        string slicerName = "MySlicer";
-
-        // Locate the slicer by its name
-        Slicer slicerToRemove = null;
-        foreach (Slicer slicer in slicers)
+        try
         {
-            if (slicer.Name == slicerName)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string slicerName = "MySlicer";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                slicerToRemove = slicer;
-                break;
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
             }
-        }
 
-        // Remove the slicer if it was found
-        if (slicerToRemove != null)
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Search all worksheets for the slicer with the specified name
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                SlicerCollection slicers = sheet.Slicers;
+
+                // Iterate backwards to safely remove items
+                for (int i = slicers.Count - 1; i >= 0; i--)
+                {
+                    Slicer slicer = slicers[i];
+                    if (slicer.Name == slicerName)
+                    {
+                        slicers.Remove(slicer);
+                        // Assuming slicer names are unique, exit the loops
+                        break;
+                    }
+                }
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
         {
-            slicers.Remove(slicerToRemove);
+            Console.WriteLine($"Error: {ex.Message}");
         }
+    }
 
-        // Save the modified workbook as XLSX
-        workbook.Save("output.xlsx");
+    // Entry point required for compilation
+    public static void Main()
+    {
+        Run();
     }
 }

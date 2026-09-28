@@ -1,35 +1,39 @@
-// Title: Freeze Top Row and First Two Columns in Excel with Aspose.Cells for .NET (C#)
-// Description: Shows how to call worksheet.FreezePanes(1, 2, 1, 2) in Aspose.Cells for .NET to lock the first row and the first two columns, keeping headers visible while scrolling, and saves the file as FreezeTopRowFirstTwoColumns.xlsx.
-// Keywords: Aspose.Cells FreezePanes C# | freeze top row Aspose.Cells | freeze first two columns Excel | lock header row Aspose.Cells | C# Excel freeze panes | Aspose.Cells worksheet freeze | freeze panes method parameters
-// Common Searches: Aspose.Cells freeze top row C# example | how to freeze first two columns using Aspose.Cells | C# freeze panes Excel Aspose.Cells tutorial | freeze panes method Aspose.Cells documentation | keep header row visible Aspose.Cells workbook
-// Developer Intent: Freeze the first row and the first two columns of a worksheet so header information remains visible during scrolling.
-// Use Cases: Financial reports where the date row and account columns must stay in view. | Data‑entry templates that require the title row and identifier columns to be fixed. | Exported analytics dashboards where column headings and key IDs need constant visibility. | Large inventory sheets where product codes (first two columns) and headers are essential while navigating.
-// AI Prompts: Generate C# code to freeze a custom range of rows and columns with Aspose.Cells. | Explain how the four parameters of FreezePanes map to split positions for variable worksheet sizes. | Provide an example that unfreezes panes, then refreezes a different set of rows and columns using Aspose.Cells. | Show how to apply FreezePanes to multiple worksheets in a single workbook programmatically.
+// Title: How to freeze the first row and the first two columns in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a workbook with Aspose.Cells, applies FreezePanes to lock the first row and the first two columns, and saves the file as an .xlsx document. | Show how to use Worksheet.FreezePanes in Aspose.Cells to keep header rows and columns A‑B visible while scrolling in a newly generated Excel worksheet.
+// Common Searches: Aspose.Cells C# freeze top row and first two columns example | C# Aspose.Cells FreezePanes to keep header row visible while scrolling | How to lock columns A and B and row 1 in an Excel workbook using Aspose.Cells .NET | Freeze panes for headers in generated Excel file with Aspose.Cells C#
+// Tags: Aspose.Cells FreezePanes C# | freeze header row Excel Aspose.Cells | lock first two columns Aspose.Cells .NET | generate workbook with frozen panes Aspose.Cells | Excel .xlsx frozen headers Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace FreezePanesExample
+// // Creates a new workbook, freezes row 1 and columns A‑B using Worksheet.FreezePanes, saves it as FrozenHeaders.xlsx, and prints the full output path.
+class Program
 {
-    // Shows how to call worksheet.FreezePanes(1, 2, 1, 2) in Aspose.Cells for .NET to lock the first row and the first two columns, keeping headers visible while scrolling, and saves the file as FreezeTopRowFirstTwoColumns.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the top row (row index 0) and the first two columns (column indices 0 and 1)
-            // FreezePanes(row, column, freezedRows, freezedColumns)
-            // Row = 1 (second row) and Column = 2 (third column) define the split position.
-            // freezedRows = 1 (freeze first row), freezedColumns = 2 (freeze first two columns)
-            worksheet.FreezePanes(1, 2, 1, 2);
+            // Freeze the top row (row index 1) and the first two columns (column index 2)
+            // Parameters: row, column, totalRows, totalColumns
+            sheet.FreezePanes(1, 2, 1, 2);
 
-            // Save the workbook
-            workbook.Save("FreezeTopRowFirstTwoColumns.xlsx");
+            // Define output file path
+            string outputPath = "FrozenHeaders.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

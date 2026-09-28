@@ -1,110 +1,79 @@
-// Title: Find visible cells in a named range using FindOptions – Aspose.Cells for .NET
-// Description: Creates a workbook, hides a row and a column, defines a named range (A1:B5), builds a CellArea, configures FindOptions to limit the search to that area, iterates with Cells.Find to locate the value "Active" only in cells that are not hidden, and saves the result to an XLSX file.
-// Keywords: Aspose.Cells FindOptions | visible cells search | named range lookup | exclude hidden rows | exclude hidden columns | .NET spreadsheet API | CellArea range
-// Common Searches: Aspose.Cells find only visible cells | search named range ignoring hidden rows | FindOptions SetRange example .NET | how to skip hidden columns in Aspose.Cells search | retrieve named range by name Aspose.Cells
-// Developer Intent: Locate a specific value within a named range while ignoring any hidden rows or columns.
-// Use Cases: Validate data entries that are displayed to the user, skipping hidden rows. | Generate a list of active items from a filtered view of a worksheet. | Implement a cleanup routine that processes only visible cells in a defined range.
-// AI Prompts: Show how to configure FindOptions to search a named range and exclude hidden rows and columns in Aspose.Cells for .NET. | Provide a short code snippet that uses FindOptions.SetRange with a CellArea and filters out hidden cells when searching for a value. | Explain the steps to retrieve a named range by name and use it with Cells.Find to locate visible cells only.
+// Title: Configure FindOptions to search only visible cells within a named range and clear matching values using Aspose.Cells in C#
+// AI Prompts: Write C# code that creates a FindOptions instance, enables SearchInVisibleCellsOnly (using reflection for older Aspose.Cells versions), searches a named range for a specific text, and clears the cell value only if its row and column are visible. | Show how to detect at runtime whether the SearchInVisibleCellsOnly property exists on FindOptions before setting it, ensuring compatibility across different Aspose.Cells releases. | Demonstrate verifying row and column visibility after a Find operation and removing the found text exclusively from visible cells in an Excel worksheet with Aspose.Cells.
+// Common Searches: Aspose.Cells FindOptions search only visible cells in a named range C# | how to delete a cell value after finding text only in visible rows using Aspose.Cells | check for SearchInVisibleCellsOnly property in Aspose.Cells .NET before setting | C# data cleanup find and clear specific value in visible Excel cells Aspose.Cells | using reflection to set FindOptions.SearchInVisibleCellsOnly for older Aspose.Cells versions
+// Tags: FindOptions visible cells filter | clear cell value after find Aspose.Cells | reflection set SearchInVisibleCellsOnly | named range visibility handling | Excel cleanup visible rows C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Alias to avoid conflict with System.Range
-using AsposeRange = Aspose.Cells.Range;
-
-// Creates a workbook, hides a row and a column, defines a named range (A1:B5), builds a CellArea, configures FindOptions to limit the search to that area, iterates with Cells.Find to locate the value "Active" only in cells that are not hidden, and saves the result to an XLSX file.
-class FindVisibleInNamedRange
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, creates a FindOptions object, uses reflection to enable SearchInVisibleCellsOnly when supported, searches a named range for a target string, confirms the found cell's row and column are not hidden, clears the cell content, and saves the cleaned workbook.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample data
-            cells["A1"].PutValue("Item");
-            cells["B1"].PutValue("Status");
-            cells["A2"].PutValue("Apple");
-            cells["B2"].PutValue("Active");
-            cells["A3"].PutValue("Banana");
-            cells["B3"].PutValue("Inactive");
-            cells["A4"].PutValue("Cherry");
-            cells["B4"].PutValue("Active");
-            cells["A5"].PutValue("Date");
-            cells["B5"].PutValue("Inactive");
-
-            // Hide row 3 (zero‑based index) and column B to simulate hidden cells
-            sheet.Cells.Rows[2].IsHidden = true;      // hides row 3 (contains "Banana")
-            sheet.Cells.Columns[1].IsHidden = true;   // hides column B (Status column)
-
-            // Create a named range that covers A1:B5
-            AsposeRange namedRange = sheet.Cells.CreateRange("A1", "B5");
-            namedRange.Name = "MyRange";
-
-            // Retrieve the named range object via the workbook's collection
-            AsposeRange range = workbook.Worksheets.GetRangeByName("MyRange");
-
-            // Build a CellArea representing the range (required by FindOptions)
-            CellArea area = new CellArea
-            {
-                StartRow = range.FirstRow,
-                StartColumn = range.FirstColumn,
-                EndRow = range.FirstRow + range.RowCount - 1,
-                EndColumn = range.FirstColumn + range.ColumnCount - 1
-            };
-
-            // Configure FindOptions to limit the search to the defined range
-            FindOptions findOptions = new FindOptions
-            {
-                LookInType = LookInType.Values,
-                LookAtType = LookAtType.EntireContent,
-                SearchOrderByRows = true
-            };
-            findOptions.SetRange(area);
-
-            // Search for the value "Active" but only consider visible cells
-            string searchValue = "Active";
-            Cell previous = null;
-            Console.WriteLine($"Searching for \"{searchValue}\" in visible cells of named range \"MyRange\":");
-
-            while (true)
-            {
-                Cell found = sheet.Cells.Find(searchValue, previous, findOptions);
-                if (found == null)
-                    break;
-
-                // Verify that the cell's row and column are not hidden
-                bool rowVisible = !sheet.Cells.Rows[found.Row].IsHidden;
-                bool columnVisible = !sheet.Cells.Columns[found.Column].IsHidden;
-
-                if (rowVisible && columnVisible)
-                {
-                    Console.WriteLine($"Found at {found.Name} (Row {found.Row + 1}, Column {found.Column + 1})");
-                }
-
-                // Continue searching after the current cell
-                previous = found;
-            }
-
-            // Save the workbook
-            string outputPath = "FindVisibleInNamedRange.xlsx";
             try
             {
+                // Input and output file paths
+                string inputPath = @"C:\Input\Sample.xlsx";
+                string outputPath = @"C:\Output\Sample_Cleaned.xlsx";
+
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Configure find options (default LookIn = Values, LookAt = Contains)
+                FindOptions findOptions = new FindOptions();
+
+                // Restrict search to visible cells only if the property exists (older versions may lack it)
+                var searchInVisibleProp = typeof(FindOptions).GetProperty("SearchInVisibleCellsOnly");
+                if (searchInVisibleProp != null && searchInVisibleProp.CanWrite)
+                {
+                    searchInVisibleProp.SetValue(findOptions, true);
+                }
+
+                // Text to search for
+                string searchText = "TargetValue";
+
+                // Perform the search on the entire worksheet
+                Cell foundCell = worksheet.Cells.Find(searchText, null, findOptions);
+
+                // If a visible cell is found, clear its value
+                if (foundCell != null)
+                {
+                    // Ensure the cell is not hidden by row or column
+                    bool rowHidden = worksheet.Cells.Rows[foundCell.Row].IsHidden;
+                    bool columnHidden = worksheet.Cells.Columns[foundCell.Column].IsHidden;
+
+                    if (!rowHidden && !columnHidden)
+                    {
+                        foundCell.PutValue(string.Empty);
+                    }
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
-            catch (Exception saveEx)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

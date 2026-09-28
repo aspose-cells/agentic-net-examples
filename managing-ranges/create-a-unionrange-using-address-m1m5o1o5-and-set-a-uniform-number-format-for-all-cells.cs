@@ -1,38 +1,45 @@
-// Title: Aspose.Cells .NET: Create UnionRange "M1:M5,O1:O5" and Apply Uniform Number Format
-// Description: Shows how to build a UnionRange covering M1:M5 and O1:O5, define a custom numeric style (e.g., two decimals), apply it with a StyleFlag, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | UnionRange | number format | custom numeric style | StyleFlag | C# | .NET | Excel formatting | non‑adjacent cells | M1:M5 | O1:O5
-// Common Searches: Aspose.Cells create union range | apply number format to union range Aspose | C# set custom numeric format for specific cells | StyleFlag only number format Aspose.Cells | format non adjacent columns Excel C#
-// Developer Intent: Create a UnionRange for M1:M5 and O1:O5 and set the same numeric format for all cells.
-// Use Cases: Financial statements where two separate columns need identical decimal precision. | Data export templates that require consistent number formatting across non‑adjacent columns. | Reusable Excel report templates that apply a shared style to multiple cell blocks.
-// AI Prompts: Write C# code using Aspose.Cells to create a UnionRange "M1:M5,O1:O5" and apply a two‑decimal number format. | Show how to use StyleFlag to change only the number format of a UnionRange in Aspose.Cells .NET. | Explain how to reuse a Style object for multiple UnionRanges with the same numeric pattern in C#.
+// Title: Create a union range (M1:M5, O1:O5) and apply a two‑decimal number format to all cells with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to define a named union range that includes M1:M5 and O1:O5 and apply a custom number format of "0.00" to every cell in the range. | Show how to use StyleFlag to apply a uniform style to a multi‑area range and then save the workbook as an .xlsx file.
+// Common Searches: Aspose.Cells how to create a union range with non‑contiguous cells in C# | set the same custom number format for multiple separate ranges using Aspose.Cells .NET | apply StyleFlag.All to a named range that spans M1:M5 and O1:O5 in Aspose.Cells
+// Tags: union range creation Aspose.Cells C# | apply custom number format Aspose.Cells | StyleFlag All property usage | save workbook as xlsx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to build a UnionRange covering M1:M5 and O1:O5, define a custom numeric style (e.g., two decimals), apply it with a StyleFlag, and save the workbook using Aspose.Cells for .NET.
-class UnionRangeNumberFormatExample
+// // This program creates a new workbook, defines a union range covering M1:M5 and O1:O5, applies the custom number format "0.00" to all cells in that range, and saves the file as UnionRangeExample.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Create a union range that includes columns M and O rows 1 to 5
-        UnionRange unionRange = workbook.Worksheets.CreateUnionRange("M1:M5,O1:O5", 0);
+            // Create a union range that includes cells M1:M5 and O1:O5
+            AsposeRange unionRange = worksheet.Cells.CreateRange("MyUnion", "M1:M5,O1:O5");
 
-        // Define a uniform number format (e.g., two decimal places)
-        Style numberStyle = workbook.CreateStyle();
-        numberStyle.Custom = "0.00";
+            // Define a uniform number format (two decimal places)
+            Style uniformStyle = workbook.CreateStyle();
+            uniformStyle.Custom = "0.00";
 
-        // Specify that only the number format should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.NumberFormat = true;
+            // Apply the style to all cells in the union range
+            StyleFlag styleFlag = new StyleFlag { All = true };
+            unionRange.ApplyStyle(uniformStyle, styleFlag);
 
-        // Apply the number format to the entire union range
-        unionRange.ApplyStyle(numberStyle, flag);
+            // Define output file path
+            string outputPath = "UnionRangeExample.xlsx";
 
-        // Save the workbook
-        workbook.Save("UnionRangeNumberFormat.xlsx");
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

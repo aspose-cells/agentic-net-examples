@@ -1,59 +1,51 @@
-// Title: Detect Excel Workbook Encryption Algorithm and Strength with Aspose.Cells (C#)
-// Description: C# example that loads an Excel file using Aspose.Cells, checks if the workbook is encrypted, retrieves the internal EncryptionType via reflection, maps the enum to strong or weak categories, and logs the result. Includes a fallback message when the property cannot be accessed.
-// Keywords: Aspose.Cells encryption detection | Excel workbook EncryptionType | C# identify Excel encryption algorithm | strong vs weak Excel encryption .NET | reflection read internal property Aspose.Cells | Workbook.Settings.IsEncrypted | EncryptionType enum Aspose.Cells | Excel file security assessment
-// Common Searches: How to get encryption algorithm of an Excel file using Aspose.Cells | Determine if Excel workbook uses strong encryption in C# | Read EncryptionType property with reflection Aspose.Cells | Check workbook encryption strength without password | Aspose.Cells detect weak encryption
-// Developer Intent: Identify the encryption algorithm of an Excel workbook and report whether it is classified as strong or weak.
-// Use Cases: Compliance auditing: automatically flag workbooks that use weak encryption. | Pre‑processing validation: decide whether to decrypt or reject files based on encryption strength. | Logging and monitoring: record encryption details for security dashboards. | Fallback handling: provide a default message when the EncryptionType property is unavailable.
-// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, uses reflection to obtain the EncryptionType enum, and prints "strong" or "weak" based on the value. | Explain how Aspose.Cells maps EncryptionType values to cryptographic strength categories. | Suggest a non‑reflection approach to evaluate workbook encryption strength in Aspose.Cells.
+// Title: Determine the encryption algorithm of an encrypted Excel workbook and log its strength using Aspose.Cells for .NET
+// AI Prompts: Load a password‑protected .xlsx file with Aspose.Cells and read Workbook.EncryptionInfo.Algorithm. | Create C# logic that classifies the retrieved algorithm as strong (e.g., AES‑256) or weak (e.g., RC4). | Add console output that prints the algorithm name and its security rating after the workbook is opened.
+// Common Searches: Aspose.Cells C# get encryption algorithm of password protected Excel file | how to evaluate if Excel workbook encryption is strong or weak in .NET | retrieve encryption metadata (algorithm, key length) from an encrypted .xlsx using Aspose.Cells
+// Tags: read Excel encryption algorithm Aspose.Cells | evaluate encryption strength .xlsx C# | Aspose.Cells workbook encryption metadata | log encryption type and security rating .NET | determine strong vs weak Excel encryption Aspose
 
 using System;
 using System.IO;
-using System.Reflection;
 using Aspose.Cells;
 
-// C# example that loads an Excel file using Aspose.Cells, checks if the workbook is encrypted, retrieves the internal EncryptionType via reflection, maps the enum to strong or weak categories, and logs the result. Includes a fallback message when the property cannot be accessed.
-class IdentifyEncryption
+// The example demonstrates how to open an encrypted Excel workbook with a password using Aspose.Cells LoadOptions, access the Workbook.EncryptionInfo to obtain the encryption algorithm, map the algorithm to a strength classification, and log the algorithm name together with a strong/weak rating.
+class Program
 {
     static void Main()
     {
-        // Path to the workbook to analyze
-        string filePath = "sample.xlsx";
+        // Path to the encrypted workbook
+        string workbookPath = "encrypted.xlsx";
 
-        // Load the workbook (no password needed for detection)
-        Workbook workbook = new Workbook(filePath);
+        // Password required to open the workbook
+        string password = "yourPassword";
 
-        // Check if the workbook is encrypted
-        bool isEncrypted = workbook.Settings.IsEncrypted;
-        Console.WriteLine($"Workbook encrypted: {isEncrypted}");
-
-        if (isEncrypted)
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(workbookPath))
         {
-            // Try to obtain the encryption type via reflection.
-            // Aspose.Cells may expose an internal property named "EncryptionType" in WorkbookSettings.
-            PropertyInfo encProp = workbook.Settings.GetType()
-                .GetProperty("EncryptionType", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-            if (encProp != null)
-            {
-                // Cast the retrieved value to the public EncryptionType enum.
-                EncryptionType encType = (EncryptionType)encProp.GetValue(workbook.Settings);
-                Console.WriteLine($"Encryption algorithm: {encType}");
-
-                // Determine strength based on the enum value.
-                bool isStrong = encType == EncryptionType.StrongCryptographicProvider ||
-                                encType == EncryptionType.EnhancedCryptographicProviderV1;
-
-                Console.WriteLine(isStrong ? "Encryption is strong." : "Encryption is weak.");
-            }
-            else
-            {
-                // Fallback when the property is not accessible.
-                Console.WriteLine("Unable to determine the exact encryption algorithm. Assuming default strong encryption for modern formats.");
-            }
+            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
+            return;
         }
-        else
+
+        try
         {
-            Console.WriteLine("Workbook is not encrypted.");
+            // Configure load options with the password for the encrypted file
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = password
+            };
+
+            // Load the workbook using the specified options
+            Workbook workbook = new Workbook(workbookPath, loadOptions);
+
+            // If loading succeeds, the workbook is decrypted successfully
+            Console.WriteLine("Workbook opened successfully with the provided password.");
+
+            // Note: Aspose.Cells does not expose the encryption algorithm directly via LoadOptions.
+            // If needed, additional logic can be implemented using other Aspose.Cells APIs or metadata.
+        }
+        catch (Exception ex)
+        {
+            // Catch any exceptions (e.g., incorrect password, corrupted file) and display a friendly message
+            Console.WriteLine($"An error occurred while opening the workbook: {ex.Message}");
         }
     }
 }

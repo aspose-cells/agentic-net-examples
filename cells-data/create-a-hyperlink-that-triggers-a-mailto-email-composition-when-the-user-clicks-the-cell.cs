@@ -1,36 +1,44 @@
-// Title: Add a mailto: email hyperlink to an Excel cell using Aspose.Cells for .NET (C#)
-// Description: This example creates a new workbook, inserts a mailto hyperlink into cell A1, sets custom display text and a screen tip, and saves the file as MailtoHyperlink.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells mailto hyperlink C# | Excel email link Aspose | Hyperlinks.Add Aspose.Cells example | set TextToDisplay Aspose hyperlink | screen tip for Excel hyperlink | save workbook with hyperlink Aspose
-// Common Searches: how to create a mailto link in Excel using Aspose.Cells | Aspose.Cells C# add email hyperlink to cell | set hyperlink tooltip Aspose.Cells | Hyperlinks.Add overload parameters Aspose | generate Excel file with clickable email addresses
-// Developer Intent: Insert a clickable mailto link into a worksheet cell programmatically.
-// Use Cases: Build a contact directory where each name opens the default mail client. | Automate report generation that includes direct email links for support teams. | Add explanatory tooltips to email links for better user guidance.
-// AI Prompts: Show how to add several mailto hyperlinks to different cells with Aspose.Cells. | Demonstrate customizing the display text and tooltip of a hyperlink in a workbook. | Provide code to enumerate existing hyperlinks and replace them with mailto URLs.
+// Title: Create and style a mailto: hyperlink in an Excel cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a mailto: hyperlink into cell A1, set its display text to "Send Email", and add a screen tip using Aspose.Cells in C#. | Apply blue font color and single underline to the hyperlink cell so it appears as a typical web link. | Save the workbook as an XLSX file named MailtoHyperlinkDemo.xlsx after configuring the email link.
+// Common Searches: Aspose.Cells C# add mailto hyperlink to Excel cell | how to set hyperlink display text and screen tip with Aspose.Cells | format Excel cell as blue underlined hyperlink using Aspose.Cells .NET | save workbook with email link using Aspose.Cells C# example | Aspose.Cells create clickable email link in worksheet
+// Tags: Aspose.Cells add mailto hyperlink | C# Aspose.Cells set hyperlink display text | Aspose.Cells hyperlink screen tip | format cell as blue underlined link Aspose.Cells | save workbook as XLSX Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-// This example creates a new workbook, inserts a mailto hyperlink into cell A1, sets custom display text and a screen tip, and saves the file as MailtoHyperlink.xlsx with Aspose.Cells for .NET.
-class MailtoHyperlinkDemo
+namespace AsposeCellsHyperlinkMailtoDemo
 {
-    static void Main()
+    // The example creates a new workbook, adds a mailto: hyperlink to cell A1 with custom display text and a screen tip, styles the cell with blue underlined font to look like a web link, and saves the file as MailtoHyperlinkDemo.xlsx using Aspose.Cells for .NET.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Mailto address that will open the default email client
-        string mailtoAddress = "mailto:john.doe@example.com";
+            // Get the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a hyperlink to cell A1 using the (string, int, int, string) overload
-        int hyperlinkIndex = worksheet.Hyperlinks.Add("A1", 1, 1, mailtoAddress);
+            // Define the cell where the hyperlink will be placed
+            string targetCell = "A1";
 
-        // Set the text that will be displayed in the cell
-        worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Email John Doe";
+            // Add a hyperlink to the cell using the Add method (cell name, rows, columns, address)
+            // The address uses the "mailto:" scheme to open the default email client
+            int hyperlinkIndex = worksheet.Hyperlinks.Add(targetCell, 1, 1, "mailto:someone@example.com");
 
-        // Optional: add a screen tip for the hyperlink
-        worksheet.Hyperlinks[hyperlinkIndex].ScreenTip = "Click to compose an email";
+            // Retrieve the created hyperlink to customize its display text and screen tip
+            Hyperlink mailtoLink = worksheet.Hyperlinks[hyperlinkIndex];
+            mailtoLink.TextToDisplay = "Send Email";
+            mailtoLink.ScreenTip = "Click to compose an email";
 
-        // Save the workbook to an XLSX file
-        workbook.Save("MailtoHyperlink.xlsx");
+            // Optionally, style the cell to look like a typical hyperlink (blue and underlined)
+            Style linkStyle = worksheet.Cells[targetCell].GetStyle();
+            linkStyle.Font.Color = System.Drawing.Color.Blue;
+            linkStyle.Font.Underline = FontUnderlineType.Single;
+            worksheet.Cells[targetCell].SetStyle(linkStyle);
+
+            // Save the workbook to an XLSX file
+            workbook.Save("MailtoHyperlinkDemo.xlsx");
+        }
     }
 }

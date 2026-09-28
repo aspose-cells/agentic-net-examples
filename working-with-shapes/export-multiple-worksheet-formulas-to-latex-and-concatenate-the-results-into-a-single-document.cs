@@ -1,62 +1,54 @@
-// Title: Export Excel Formulas to LaTeX and Merge into One Sheet with Aspose.Cells for .NET (C#)
-// Description: Loads an Excel file, scans all populated cells across worksheets, creates a temporary LaTeX equation shape for each formula using AddLaTeXEquation, converts the shape to a LaTeX string via EquationNode.ToLaTeX(), appends the cell reference and LaTeX code to a StringBuilder, writes the combined output to a new worksheet, and saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | LaTeX export | Excel formula to LaTeX | AddLaTeXEquation | EquationNode ToLaTeX | concatenate LaTeX equations | multiple worksheets | export to new worksheet | save workbook with LaTeX
-// Common Searches: Aspose.Cells export formulas to LaTeX C# | Convert Excel formulas to LaTeX with Aspose | Combine LaTeX equations from all sheets into one document | AddLaTeXEquation example Aspose.Cells | Save LaTeX output in a new worksheet
-// Developer Intent: Extract every formula in a workbook, convert each to LaTeX, and concatenate the results into a single worksheet.
-// Use Cases: Create a LaTeX‑based audit report that lists all calculations from a financial model. | Generate a single LaTeX file for scientific papers by pulling formulas from multiple experiment sheets. | Automate documentation of spreadsheet logic for compliance teams by exporting formulas as LaTeX.
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate over all worksheets, convert each cell formula to LaTeX with AddLaTeXEquation, and collect the results into one worksheet. | Show how to retrieve a LaTeX string from an EquationNode after adding a LaTeX equation shape. | Explain how to skip empty or non‑formula cells when exporting workbook formulas to LaTeX with Aspose.Cells.
+// Title: Export formulas from every worksheet in an Excel workbook to a combined LaTeX document using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, iterates all worksheets, extracts each cell's formula, escapes LaTeX special characters, and writes the formulas with cell references into a single .tex file. | Demonstrate how to concatenate formulas from multiple sheets into one LaTeX file, adding worksheet comments and wrapping each formula in math mode, using the Aspose.Cells API.
+// Common Searches: C# Aspose.Cells export all cell formulas to LaTeX file | How to write Excel formulas to a .tex document with Aspose.Cells | Iterate worksheets and extract formulas for LaTeX output in .NET | Escape underscores when converting Excel formulas to LaTeX using C# | Combine formulas from multiple Excel sheets into one LaTeX file
+// Tags: export formulas to LaTeX Aspose.Cells | iterate worksheets Aspose.Cells C# | write .tex file from Excel formulas | LaTeX escaping for Excel formulas C# | concatenate sheet formulas into single LaTeX document
 
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Equations;
 using System;
+using System.IO;
 using System.Text;
+using Aspose.Cells;
 
-// Loads an Excel file, scans all populated cells across worksheets, creates a temporary LaTeX equation shape for each formula using AddLaTeXEquation, converts the shape to a LaTeX string via EquationNode.ToLaTeX(), appends the cell reference and LaTeX code to a StringBuilder, writes the combined output to a new worksheet, and saves the workbook.
-class ExportFormulasToLaTeX
+// // Loads an Excel workbook, walks through each worksheet and cell containing a formula, escapes LaTeX characters, wraps formulas in math mode with cell references, and writes the aggregated output to a single .tex file.
+class ExportFormulasToLatex
 {
     static void Main()
     {
-        // Load the source workbook
+        // Load the workbook from a file (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Collect LaTeX representations of all formulas
+        // StringBuilder to accumulate LaTeX content
         StringBuilder latexBuilder = new StringBuilder();
 
-        int maxRow = cells.MaxDataRow;
-        int maxCol = cells.MaxDataColumn;
-
-        for (int row = 0; row <= maxRow; row++)
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Add a comment indicating the worksheet name
+            latexBuilder.AppendLine($"% Worksheet: {sheet.Name}");
+
+            // Iterate through all cells that contain formulas
+            foreach (Cell cell in sheet.Cells)
             {
-                Cell cell = cells[row, col];
                 if (!string.IsNullOrEmpty(cell.Formula))
                 {
-                    // Use the formula string as LaTeX input for a temporary equation shape
-                    TextBox eqShape = worksheet.Shapes.AddLaTeXEquation(
-                        topRow: row, top: 0,
-                        leftColumn: col, left: 0,
-                        height: 20, width: 200,
-                        latex: cell.Formula);
+                    // Retrieve the formula string
+                    string formula = cell.Formula;
 
-                    // Retrieve the equation node and convert it to LaTeX
-                    EquationNode eqNode = eqShape.GetEquationParagraph();
-                    string latex = eqNode.ToLaTeX();
+                    // Basic LaTeX escaping (underscore is common in formulas)
+                    formula = formula.Replace("_", "\\_");
 
-                    // Append the cell reference and its LaTeX expression
-                    latexBuilder.AppendLine($"{cell.Name}: {latex}");
+                    // Append the formula wrapped in math mode, with cell reference for clarity
+                    latexBuilder.AppendLine($"Cell {cell.Name}: ${formula}$");
                 }
             }
+
+            // Add a blank line between worksheets
+            latexBuilder.AppendLine();
         }
 
-        // Create a new worksheet to store the concatenated LaTeX output
-        Worksheet resultSheet = workbook.Worksheets.Add("LaTeXExport");
-        resultSheet.Cells[0, 0].PutValue(latexBuilder.ToString());
+        // Write the concatenated LaTeX to a .tex file
+        File.WriteAllText("output.tex", latexBuilder.ToString());
 
-        // Save the workbook with the exported LaTeX content
-        workbook.Save("output_with_latex.xlsx");
+        // Optional: inform the user that the operation completed
+        Console.WriteLine("Formulas exported to LaTeX successfully.");
     }
 }

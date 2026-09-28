@@ -1,48 +1,35 @@
-// Title: Load a Workbook from a FileStream, Edit Cells, Recalculate Formulas, and Save with Aspose.Cells for .NET
-// Description: This C# example demonstrates how to open an XLSX file via a read‑only FileStream, create a Workbook, modify cell values and formulas, invoke Workbook.CalculateFormula to refresh all calculations, display the result, and save the updated workbook to a new file.
-// Keywords: Aspose.Cells load workbook from stream | C# Workbook.CalculateFormula | edit cell value Aspose.Cells | set cell formula Aspose.Cells | save workbook after calculation | Aspose.Cells file stream example | .NET Excel formula recalculation
-// Common Searches: How to load an Excel file from a FileStream using Aspose.Cells | Aspose.Cells C# recalculate formulas after editing cells | Save workbook after calling Workbook.CalculateFormula | Example of setting a formula programmatically with Aspose.Cells | Manual calculation mode Aspose.Cells .NET
-// Developer Intent: Load an Excel workbook from a stream, change cell contents, manually recalculate all formulas, and write the modified file back to disk.
-// Use Cases: Process an uploaded Excel file received as a stream in a web API, update input cells, recalculate dependent formulas, and return the revised workbook. | Generate reports from a template stored in memory by inserting parameters, triggering a full formula refresh, and exporting the final document. | Batch‑process multiple workbooks in a background service: stream each file, apply bulk updates, invoke manual calculation for performance, and save the results.
-// AI Prompts: Provide a C# snippet that reads an Excel file from a MemoryStream, sets several formulas, calls Workbook.CalculateFormula, and saves the file. | Explain how to disable automatic calculation in Aspose.Cells, perform bulk cell updates, and then manually invoke Workbook.CalculateFormula for optimal speed. | Show how to capture the calculated value of a cell after calling Workbook.CalculateFormula in Aspose.Cells.
+// Title: Load an Excel workbook from a FileStream, change cell values, recalculate all formulas, and save as a new XLSX with Aspose.Cells for .NET
+// AI Prompts: Read an existing XLSX file via FileStream, set cell A1 to 10, assign a formula to B1 that multiplies A1 by 2, invoke Workbook.CalculateFormula to update all dependent cells, and write the workbook to output.xlsx using Aspose.Cells in C#. | Using Aspose.Cells for .NET, open a workbook from a stream, modify cell contents and formulas, trigger full workbook recalculation, then save the updated file in XLSX format.
+// Common Searches: Aspose.Cells C# load workbook from FileStream and recalculate formulas | How to update cell values and formulas then save workbook with Aspose.Cells | Programmatically trigger full formula calculation after editing cells in Aspose.Cells | Saving modified Excel file to a new location after calling Workbook.CalculateFormula in .NET
+// Tags: load workbook from filestream Aspose.Cells | set cell value and formula C# | recalculate all formulas Workbook.CalculateFormula | save workbook as xlsx Aspose.Cells | modify worksheet cells programmatically
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaRecalcDemo
+// The example opens input.xlsx via FileStream, loads it into a Workbook, sets A1 to 10, assigns B1 a formula '=A1*2', recalculates all formulas with Workbook.CalculateFormula, and saves the result as output.xlsx.
+class Program
 {
-    // This C# example demonstrates how to open an XLSX file via a read‑only FileStream, create a Workbook, modify cell values and formulas, invoke Workbook.CalculateFormula to refresh all calculations, display the result, and save the updated workbook to a new file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Open an existing Excel file as a stream
+        using (FileStream fileStream = new FileStream("input.xlsx", FileMode.Open, FileAccess.Read))
         {
-            // Path to the source Excel file
-            string inputPath = "input.xlsx";
+            // Load the workbook from the stream (Workbook(Stream) constructor)
+            Workbook workbook = new Workbook(fileStream);
 
-            // Open the file as a read‑only stream
-            using (FileStream inputStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
-            {
-                // Load the workbook from the stream (uses the Workbook(Stream) constructor)
-                Workbook workbook = new Workbook(inputStream);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+            // Modify some cells
+            sheet.Cells["A1"].PutValue(10);          // Set a numeric value
+            sheet.Cells["B1"].Formula = "=A1*2";     // Set a formula that depends on A1
 
-                // Modify cells: set a value in B1 and a formula in A1 that references B1
-                cells["B1"].PutValue(42);
-                cells["A1"].Formula = "=B1";
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-                // Recalculate all formulas in the workbook
-                workbook.CalculateFormula();
-
-                // Optionally display the calculated result
-                Console.WriteLine("Calculated value of A1: " + cells["A1"].Value);
-
-                // Save the updated workbook to a new file
-                workbook.Save("output.xlsx", SaveFormat.Xlsx);
-            }
+            // Save the updated workbook to a new file
+            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
     }
 }

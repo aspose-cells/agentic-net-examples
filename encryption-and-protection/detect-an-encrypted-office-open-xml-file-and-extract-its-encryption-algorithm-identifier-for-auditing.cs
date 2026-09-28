@@ -1,23 +1,27 @@
-// Title: Detect encrypted OOXML Excel file and identify its encryption algorithm using Aspose.Cells for .NET
-// Description: This C# example shows how to verify a workbook's existence, detect whether an .xlsx file is encrypted with Aspose.Cells' FileFormatUtil, prompt for a password, and attempt to open the file via LoadOptions. It reports the encryption status and highlights that Aspose.Cells does not expose the encryption algorithm identifier directly, guiding auditors toward alternative strategies.
-// Keywords: Aspose.Cells | C# | .xlsx encryption detection | OOXML encryption algorithm | FileFormatUtil IsEncrypted | LoadOptions password | audit Excel encryption | encryption algorithm identifier | detect encrypted workbook | Excel security audit
-// Common Searches: How to check if an .xlsx file is encrypted with Aspose.Cells | Retrieve encryption algorithm of an encrypted Excel workbook in C# | Detect encrypted Office Open XML file using Aspose.Cells | Audit Excel file encryption with .NET | Aspose.Cells encryption algorithm identifier
-// Developer Intent: Determine whether an Excel .xlsx file is encrypted and obtain its encryption algorithm identifier for compliance auditing.
-// Use Cases: Validate incoming Excel documents for encryption before processing in an automated workflow. | Prompt users for a password, attempt to open an encrypted workbook, and handle invalid passwords gracefully. | Document the limitation that Aspose.Cells does not expose the encryption algorithm identifier, and suggest alternative auditing approaches.
-// AI Prompts: Write C# code with Aspose.Cells that detects if an .xlsx file is encrypted and returns the encryption algorithm identifier for audit purposes. | Create a method that loads an encrypted OOXML workbook using a supplied password and extracts the encryption algorithm name, handling cases where the API lacks direct support. | Suggest a strategy to audit the encryption algorithm of an encrypted Excel file when Aspose.Cells cannot retrieve it directly.
+// Title: C# – Detect encrypted XLSX workbook and examine encryption algorithm exposure using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that loads an XLSX file with Aspose.Cells LoadOptions and returns true if the workbook is encrypted. | Create C# code that catches a CellsException indicating a required password, logs that the file is encrypted, and notes that the encryption algorithm identifier is not exposed by Aspose.Cells. | Develop a reusable C# utility that accepts a file path, determines whether the Office Open XML workbook is password‑protected with Aspose.Cells, and outputs the encryption algorithm OID when available, otherwise reports that the algorithm cannot be retrieved.
+// Common Searches: how to programmatically check if an xlsx file is password protected using Aspose.Cells in C# | Aspose.Cells detect encrypted Excel workbook and retrieve encryption algorithm OID | C# load encrypted XLSX with Aspose.Cells without providing a password | retrieve encryption details of Office Open XML workbook using Aspose.Cells .NET
+// Tags: Aspose.Cells detect encrypted XLSX | Aspose.Cells LoadOptions password protection | C# read encryption status of Office Open XML workbook | audit Excel encryption algorithm .NET | handle CellsException for encrypted workbook
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// This C# example shows how to verify a workbook's existence, detect whether an .xlsx file is encrypted with Aspose.Cells' FileFormatUtil, prompt for a password, and attempt to open the file via LoadOptions. It reports the encryption status and highlights that Aspose.Cells does not expose the encryption algorithm identifier directly, guiding auditors toward alternative strategies.
-class EncryptionAudit
+// The sample accepts a file path, verifies the XLSX exists, and attempts to open it with Aspose.Cells LoadOptions. Successful load means the workbook is not encrypted; a CellsException containing "Password" indicates encryption. The code notes that the current Aspose.Cells API does not expose the encryption algorithm identifier, which is useful information for auditing purposes.
+class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        string filePath = "encrypted.xlsx";
+        // Expect a file path argument.
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Please provide the path to the XLSX file as an argument.");
+            return;
+        }
 
-        // Verify that the file exists before proceeding
+        string filePath = args[0];
+
+        // Ensure the file exists before attempting to load it.
         if (!File.Exists(filePath))
         {
             Console.WriteLine($"File not found: {filePath}");
@@ -26,51 +30,31 @@ class EncryptionAudit
 
         try
         {
-            // Detect file format and encryption status
-            FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-            Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
-
-            if (!formatInfo.IsEncrypted)
-            {
-                Console.WriteLine("The file is not encrypted.");
-                return;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error detecting file format: {ex.Message}");
-            return;
-        }
-
-        // Prompt user for the password
-        Console.Write("Enter password to open the workbook: ");
-        string password = Console.ReadLine() ?? string.Empty;
-
-        try
-        {
-            // Load workbook with the supplied password
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
-            {
-                Password = password
-            };
+            // Attempt to load the workbook without a password.
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
             Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // Aspose.Cells does not expose the encryption algorithm directly after loading.
-            // Indicate that the workbook was opened successfully.
-            Console.WriteLine("Workbook opened successfully.");
+            // If loading succeeds, the workbook is not encrypted.
+            Console.WriteLine("The file is not encrypted.");
         }
-        catch (Exception ex)
+        catch (CellsException ex)
         {
-            // Handle invalid password or other loading errors
-            if (!string.IsNullOrEmpty(ex.Message) &&
-                ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+            // If the exception message indicates a password is required, treat it as encrypted.
+            if (ex.Message != null && ex.Message.IndexOf("Password", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                Console.WriteLine("Invalid password provided.");
+                Console.WriteLine("The file is encrypted.");
+                // Encryption details (algorithm, etc.) are not exposed directly in this version of Aspose.Cells.
             }
             else
             {
-                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                // Other CellsException types.
+                Console.WriteLine($"CellsException: {ex.Message}");
             }
+        }
+        catch (Exception e)
+        {
+            // General exception handling for unexpected errors.
+            Console.WriteLine($"Error: {e.Message}");
         }
     }
 }

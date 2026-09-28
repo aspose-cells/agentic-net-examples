@@ -1,52 +1,96 @@
-// Title: Aspose.Cells C# – Export Custom Document Properties to a Metadata Worksheet
-// Description: Load an Excel file with Aspose.Cells for .NET, read its custom document properties, create a new sheet named "Metadata", list each property name and value, and save the updated workbook.
-// Keywords: Aspose.Cells read custom properties | C# export Excel metadata | custom document properties worksheet | Aspose.Cells create metadata sheet | write custom properties to Excel
-// Common Searches: how to export custom document properties using Aspose.Cells | Aspose.Cells .NET create metadata tab from workbook properties | C# list custom Excel properties in a new sheet | Aspose.Cells read and write custom document properties
-// Developer Intent: Read a workbook’s custom document properties and write them to a newly added "Metadata" worksheet.
-// Use Cases: Generate a quick reference sheet of all custom properties for audit trails. | Provide downstream processes with a standardized metadata tab for configuration values. | Export property data before sharing the file so recipients can view custom settings without opening the properties dialog.
-// AI Prompts: Generate C# code with Aspose.Cells that reads every custom document property from a workbook and writes name/value pairs to a new worksheet called "Metadata". | Show how to extend the utility to include built‑in document properties alongside custom ones in the same metadata sheet. | Explain how to format non‑string property values (dates, numbers, booleans) correctly when writing them to cells with Aspose.Cells.
+// Title: Read custom document properties from an Excel workbook and export them to a "Metadata" worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, iterates over its CustomDocumentProperties collection, creates (or clears) a worksheet named "Metadata", and writes each property's name and value into two columns. | Extend the program to also list built‑in document properties (Author, Title, etc.) together with custom properties in the same metadata sheet. | Add functionality that saves the generated "Metadata" worksheet as a separate CSV file while leaving the original workbook unchanged.
+// Common Searches: aspnet read custom document properties from Excel using Aspose.Cells | c# generate a metadata worksheet with workbook properties Aspose.Cells | how to export Excel custom properties to a new worksheet in .NET | save custom document properties to CSV with Aspose.Cells C#
+// Tags: metadata extraction from Excel using Aspose.Cells | generate metadata worksheet in .xlsx with C# | populate worksheet cells with property values Aspose.Cells | auto‑fit columns after writing data Aspose.Cells | export worksheet to CSV with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-namespace AsposeCellsMetadataUtility
+namespace WorkbookMetadataUtility
 {
-    // Load an Excel file with Aspose.Cells for .NET, read its custom document properties, create a new sheet named "Metadata", list each property name and value, and save the updated workbook.
+    // The utility loads an existing Excel file, retrieves its custom document properties, creates or clears a worksheet named "Metadata", writes each property's name and value into two columns, auto‑fits the columns for readability, and saves the updated workbook to a new file.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Path to the source workbook that contains custom document properties
-            string sourcePath = "input.xlsx";
+            // Paths for source and output workbooks
+            string sourcePath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
 
-            // Load the workbook (lifecycle: use provided constructor)
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Access the collection of custom document properties
-            CustomDocumentPropertyCollection customProps = workbook.CustomDocumentProperties;
-
-            // Add a new worksheet to hold the metadata
-            int metaSheetIndex = workbook.Worksheets.Add();
-            Worksheet metaSheet = workbook.Worksheets[metaSheetIndex];
-            metaSheet.Name = "Metadata";
-
-            // Write header row
-            metaSheet.Cells["A1"].PutValue("Property Name");
-            metaSheet.Cells["B1"].PutValue("Value");
-
-            // Populate the worksheet with each custom property (Name in column A, Value in column B)
-            for (int i = 0; i < customProps.Count; i++)
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                DocumentProperty prop = customProps[i];
-                // Row index in Cells is zero‑based; add 1 for header offset
-                int row = i + 1;
-                metaSheet.Cells[row, 0].PutValue(prop.Name);
-                metaSheet.Cells[row, 1].PutValue(prop.Value);
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
             }
 
-            // Save the modified workbook (lifecycle: use provided Save method)
-            workbook.Save("output.xlsx");
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(sourcePath);
+
+                // Access custom document properties collection
+                var customProps = workbook.CustomDocumentProperties;
+
+                // Find existing "Metadata" worksheet or create a new one
+                Worksheet metadataSheet = null;
+                foreach (Worksheet ws in workbook.Worksheets)
+                {
+                    if (ws.Name.Equals("Metadata", StringComparison.OrdinalIgnoreCase))
+                    {
+                        metadataSheet = ws;
+                        break;
+                    }
+                }
+
+                if (metadataSheet == null)
+                {
+                    // Add a new worksheet named "Metadata"
+                    int sheetIndex = workbook.Worksheets.Add();
+                    metadataSheet = workbook.Worksheets[sheetIndex];
+                    metadataSheet.Name = "Metadata";
+                }
+                else
+                {
+                    // Clear all existing cells in the sheet
+                    metadataSheet.Cells.Clear();
+                }
+
+                // Write header titles
+                metadataSheet.Cells[0, 0].PutValue("Property Name");
+                metadataSheet.Cells[0, 1].PutValue("Value");
+
+                // Populate the sheet with custom property name/value pairs
+                int rowIndex = 1; // Start after header row
+                foreach (var prop in customProps)
+                {
+                    // Property name
+                    metadataSheet.Cells[rowIndex, 0].PutValue(prop.Name);
+                    // Property value (convert to string for safety)
+                    metadataSheet.Cells[rowIndex, 1].PutValue(prop.Value?.ToString() ?? string.Empty);
+                    rowIndex++;
+                }
+
+                // Auto‑fit columns for better readability
+                metadataSheet.AutoFitColumns();
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook with the new "Metadata" sheet
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any runtime exceptions gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

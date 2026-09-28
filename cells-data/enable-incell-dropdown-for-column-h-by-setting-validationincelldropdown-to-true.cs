@@ -1,53 +1,49 @@
-// Title: Add In‑Cell Dropdown to Column H (H1:H1000) with Aspose.Cells for .NET
-// Description: Creates a new workbook, defines the range H1:H1000, adds a list validation with the options "Option1,Option2,Option3", enables the in‑cell dropdown via Validation.InCellDropDown, and saves the file as InCellDropdownColumnH.xlsx.
-// Keywords: Aspose.Cells | C# Excel dropdown | Validation.InCellDropDown | list validation | column H dropdown | Excel data validation .NET | in‑cell list | Aspose.Cells example | Excel template dropdown | C# workbook validation
-// Common Searches: Aspose.Cells add dropdown to column H | C# set Validation.InCellDropDown | list validation H1:H1000 Aspose.Cells | how to create in‑cell dropdown Excel using Aspose.Cells | Aspose.Cells validation list example C#
-// Developer Intent: Add an in‑cell dropdown list to cells H1:H1000 in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Generate a template where users select predefined options in column H via a dropdown. | Enforce data‑entry rules for a report by applying list validation with an in‑cell dropdown to a specific column. | Provide a reusable method that applies list validation with a dropdown to any column range based on supplied options.
-// AI Prompts: Write a C# method that takes a worksheet, column index, start row, end row, and a list of strings, and adds a list validation with an in‑cell dropdown using Aspose.Cells. | Explain how the Validation.InCellDropDown property works in Aspose.Cells and how to disable the dropdown while keeping the list validation active. | Provide example code to load an existing workbook, apply an in‑cell dropdown to column H based on values from another worksheet, and save the file.
+// Title: Create an in‑cell dropdown list for rows 1‑100 in column H using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that defines a CellArea covering rows 1‑100 in column H, adds a List‑type validation with the values Option1, Option2, Option3, sets Validation.InCellDropDown to true, and saves the workbook. | Write a C# snippet using Aspose.Cells to apply an in‑cell dropdown to column H (rows 1‑100) by configuring Validation.Type = List and enabling the dropdown.
+// Common Searches: Aspose.Cells C# add dropdown list to column H rows 1 to 100 | How to enable in‑cell dropdown for a specific column using Aspose.Cells .NET | Set list validation with InCellDropDown property in Aspose.Cells workbook | Create Excel dropdown in column H with Aspose.Cells C# example | Aspose.Cells validation for column H range 1‑100 list values
+// Tags: Aspose.Cells list validation column H | C# Aspose.Cells enable in‑cell dropdown | Aspose.Cells Validation.InCellDropDown property | Define CellArea for column range Aspose.Cells | Excel dropdown list generation Aspose.Cells C#
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
 namespace AsposeCellsExamples
 {
-    // Creates a new workbook, defines the range H1:H1000, adds a list validation with the options "Option1,Option2,Option3", enables the in‑cell dropdown via Validation.InCellDropDown, and saves the file as InCellDropdownColumnH.xlsx.
-    public class InCellDropdownForColumnHDemo
+    // The example creates a new workbook, defines a CellArea covering rows 1‑100 in column H, adds a list‑type validation with three options, enables the InCellDropDown property, and saves the file as ColumnH_InCellDropdown.xlsx.
+    public class EnableInCellDropdownForColumnH
     {
         public static void Run()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
+                // Create a new workbook
                 Workbook workbook = new Workbook();
+
+                // Get the first worksheet
                 Worksheet worksheet = workbook.Worksheets[0];
 
-                // Define the validation area for column H (zero‑based index 7) rows 0‑999 (H1:H1000)
+                // Define the validation area for column H (index 7), rows 1 to 100 (0‑based indices)
                 CellArea area = new CellArea
                 {
-                    StartRow = 0,
-                    EndRow = 999,
-                    StartColumn = 7,
+                    StartRow = 0,      // Row 1
+                    EndRow = 99,       // Row 100
+                    StartColumn = 7,   // Column H
                     EndColumn = 7
                 };
 
-                // Add a new validation to the worksheet
-                ValidationCollection validations = worksheet.Validations;
-                int validationIndex = validations.Add(area);
-                Validation validation = validations[validationIndex];
+                // Add a new validation to the worksheet for the defined area
+                int validationIndex = worksheet.Validations.Add(area);
+                Validation validation = worksheet.Validations[validationIndex];
 
-                // Set validation type to List and provide the list of acceptable values
+                // Set the validation type to List and provide the list of acceptable values
                 validation.Type = ValidationType.List;
-                validation.Formula1 = "\"Option1,Option2,Option3\"";
+                validation.Formula1 = "Option1,Option2,Option3";
 
                 // Enable the in‑cell drop‑down list
                 validation.InCellDropDown = true;
 
-                // Save the workbook
-                string outputPath = "InCellDropdownColumnH.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                // Save the workbook to a file
+                workbook.Save("ColumnH_InCellDropdown.xlsx");
+                Console.WriteLine("Workbook saved successfully as ColumnH_InCellDropdown.xlsx");
             }
             catch (Exception ex)
             {
@@ -61,7 +57,7 @@ namespace AsposeCellsExamples
     {
         public static void Main(string[] args)
         {
-            InCellDropdownForColumnHDemo.Run();
+            EnableInCellDropdownForColumnH.Run();
         }
     }
 }

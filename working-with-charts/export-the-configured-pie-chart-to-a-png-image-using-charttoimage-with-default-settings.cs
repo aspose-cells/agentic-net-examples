@@ -1,50 +1,57 @@
-// Title: Export Pie Chart to PNG Using Aspose.Cells Chart.ToImage in C#
-// Description: Creates a workbook, fills cells A1:B4 with categories and values, adds a pie chart, sets its data range (including headers), and saves the chart as a PNG file with Chart.ToImage default settings. The workbook is also saved for reference.
-// Keywords: Aspose.Cells | C# | .NET | Chart.ToImage | export chart to PNG | pie chart image | Excel chart to image | Aspose.Cells example | save chart as PNG | default export settings | Aspose.Cells API
-// Common Searches: Aspose.Cells export pie chart to PNG C# | Chart.ToImage default settings example | How to save Excel chart as PNG using Aspose.Cells | C# Aspose.Cells chart image export | Export chart without options Aspose.Cells
-// Developer Intent: Export the configured pie chart to a PNG image using Chart.ToImage with default settings.
-// Use Cases: Generate PNG snapshots of pie charts for web dashboards | Attach chart images to automated email reports | Batch extract charts from multiple workbooks as PNG files for documentation
-// AI Prompts: Write C# code to export a line chart to JPEG using Aspose.Cells Chart.ToImage with default options. | Show how to iterate through all charts in a workbook and save each as a PNG file using Aspose.Cells. | Explain how to customize image resolution and dimensions when exporting charts with Chart.ToImage in Aspose.Cells.
+// Title: Export a pie chart from an Excel workbook to a PNG file using Aspose.Cells Chart.ToImage in C#
+// AI Prompts: Write C# code that opens an Excel file, selects the first chart (assumed to be a pie chart), and saves it as a PNG using Aspose.Cells Chart.ToImage with default ImageOrPrintOptions. | Show how to use ImageOrPrintOptions together with Chart.ToImage to render any Excel chart to a PNG image in a .NET application.
+// Common Searches: c# aspose.cells export first chart in workbook to png | how to render an Excel pie chart as a PNG using Aspose.Cells Chart.ToImage | asp.net save Excel chart to image with default settings Aspose.Cells
+// Tags: Aspose.Cells Chart.ToImage PNG export | C# export Excel chart to image | ImageOrPrintOptions default configuration | render pie chart as PNG Aspose.Cells | export workbook chart to PNG .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
+using System;
+using System.IO;
 
-// Creates a workbook, fills cells A1:B4 with categories and values, adds a pie chart, sets its data range (including headers), and saves the chart as a PNG file with Chart.ToImage default settings. The workbook is also saved for reference.
-class ExportPieChartToPng
+// The example loads 'input.xlsx', accesses the first worksheet, retrieves the first chart (expected to be a pie chart), and uses Aspose.Cells' Chart.ToImage method with default ImageOrPrintOptions to generate 'pieChart.png'. It includes checks for missing files and absent charts, and reports success or errors to the console.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "pieChart.png";
 
-        // Populate sample data for the pie chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Apple");
-        sheet.Cells["A3"].PutValue("Orange");
-        sheet.Cells["A4"].PutValue("Banana");
+            // Verify the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(1200);
-        sheet.Cells["B3"].PutValue(800);
-        sheet.Cells["B4"].PutValue(1500);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add a pie chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
-        Chart pieChart = sheet.Charts[chartIndex];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Set the data range for the chart (including headers)
-        pieChart.SetChartDataRange("A1:B4", true);
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
 
-        // Export the chart to a PNG image using default settings
-        // The file extension determines the image format (PNG)
-        pieChart.ToImage("PieChart.png", ImageType.Png);
+            // Retrieve the first chart (assumed to be a pie chart)
+            Chart pieChart = sheet.Charts[0];
 
-        // Optionally, save the workbook for reference
-        workbook.Save("WorkbookWithPieChart.xlsx");
+            // Set image export options (default format is PNG)
+            ImageOrPrintOptions options = new ImageOrPrintOptions();
 
-        Console.WriteLine("Pie chart exported to PieChart.png successfully.");
+            // Export the chart to a PNG image
+            pieChart.ToImage(outputPath, options);
+            Console.WriteLine($"Chart exported successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,19 +1,15 @@
-// Title: C# – Apply a custom style (font, fill, borders) to a UnionRange of two non‑adjacent ranges using Aspose.Cells
-// Description: Demonstrates how to create a workbook, define two separate ranges (A1:B2 and C3:D4), merge them with UnionRanges, build a Style with Calibri bold white font, dark‑blue solid fill, and thin yellow borders, and apply that style to the combined range before saving the file.
-// Keywords: Aspose.Cells | C# | UnionRange | custom cell style | font formatting | cell fill | border styling | non‑adjacent ranges | Excel automation .NET | Style object | range union example
-// Common Searches: Aspose.Cells apply style to multiple ranges | How to style a UnionRange in C# | Set borders for non‑contiguous cells Aspose.Cells | Create custom cell style Aspose.Cells .NET | UnionRanges method example
-// Developer Intent: Create a single visual style and apply it to the area formed by two distinct cell ranges.
-// Use Cases: Highlight related sections of a report that are located in separate blocks of a worksheet. | Give consistent header formatting to multiple tables that are not contiguous. | Visually group cells across different areas for easier navigation or printing.
-// AI Prompts: Generate C# code that unions the ranges A1:B2 and C3:D4 and applies a style with red borders and light gray fill using Aspose.Cells. | Show how to create a custom style with italic font and apply it to a UnionRange consisting of three separate ranges in a workbook. | Explain how to change the border color of an existing UnionRange style after it has been applied in Aspose.Cells.
+// Title: Apply a custom style with font, fill, and borders to a UnionRange of two non‑contiguous ranges using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Style with Arial 12 pt blue bold font, light‑yellow fill, and thin black borders, then applies it to a UnionRange formed from ranges A1:B2 and D4:E5 in an Aspose.Cells workbook. | Show how to combine two separate cell ranges into a UnionRange and format the combined area with a predefined Style using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to style non‑contiguous cells with a single custom style | C# create UnionRange and apply formatting in Aspose.Cells workbook | apply font fill and border style to multiple ranges Aspose.Cells .NET example
+// Tags: custom style creation Aspose.Cells .NET | unionrange formatting Aspose.Cells | apply style to noncontiguous ranges C# | cell border and fill settings Aspose.Cells | styleflag all true Aspose.Cells example
 
-using Aspose.Cells;
 using System;
 using System.Drawing;
-
-// Alias to avoid conflict with System.Range introduced in C# 8.0
+using System.IO;
+using Aspose.Cells;
 using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to create a workbook, define two separate ranges (A1:B2 and C3:D4), merge them with UnionRanges, build a Style with Calibri bold white font, dark‑blue solid fill, and thin yellow borders, and apply that style to the combined range before saving the file.
+// Demonstrates creating a reusable Style (Arial 12 pt blue bold font, light‑yellow background, thin black borders), forming a UnionRange from A1:B2 and D4:E5, applying the style with a StyleFlag, and saving the workbook as an .xlsx file.
 class Program
 {
     static void Main()
@@ -24,47 +20,61 @@ class Program
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data in the two ranges
-            sheet.Cells["A1"].PutValue("First");
-            sheet.Cells["B2"].PutValue(123);
-            sheet.Cells["C3"].PutValue("Second");
-            sheet.Cells["D4"].PutValue(456);
+            // Sample data (optional, just to have visible cells)
+            sheet.Cells["A1"].PutValue("Item1");
+            sheet.Cells["B2"].PutValue("Item2");
+            sheet.Cells["D4"].PutValue("Item3");
+            sheet.Cells["E5"].PutValue("Item4");
 
-            // Define the two ranges to be united
-            AsposeRange range1 = sheet.Cells.CreateRange("A1:B2");
-            AsposeRange range2 = sheet.Cells.CreateRange("C3:D4");
-
-            // Create a UnionRange that combines the two ranges
-            UnionRange union = range1.UnionRanges(new AsposeRange[] { range2 });
-
-            // Create a custom style with font, fill, and borders
-            Style style = workbook.CreateStyle();
+            // -----------------------------
+            // Create a custom style
+            // -----------------------------
+            Style customStyle = workbook.CreateStyle();
 
             // Font settings
-            style.Font.Name = "Calibri";
-            style.Font.Size = 12;
-            style.Font.IsBold = true;
-            style.Font.Color = Color.White;
+            customStyle.Font.Name = "Arial";
+            customStyle.Font.Size = 12;
+            customStyle.Font.Color = Color.Blue;
+            customStyle.Font.IsBold = true;
 
-            // Fill settings
-            style.ForegroundColor = Color.DarkBlue;
-            style.Pattern = BackgroundType.Solid;
+            // Fill settings (solid light yellow background)
+            customStyle.ForegroundColor = Color.LightYellow;
+            customStyle.Pattern = BackgroundType.Solid;
 
-            // Border settings (top, bottom, left, right)
-            style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.TopBorder].Color = Color.Yellow;
-            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.BottomBorder].Color = Color.Yellow;
-            style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.LeftBorder].Color = Color.Yellow;
-            style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
-            style.Borders[BorderType.RightBorder].Color = Color.Yellow;
+            // Border settings (thin black border on all sides)
+            foreach (BorderType bt in new[] { BorderType.TopBorder, BorderType.BottomBorder, BorderType.LeftBorder, BorderType.RightBorder })
+            {
+                customStyle.Borders[bt].LineStyle = CellBorderType.Thin;
+                customStyle.Borders[bt].Color = Color.Black;
+            }
+
+            // -----------------------------
+            // Define two ranges and union them
+            // -----------------------------
+            AsposeRange range1 = sheet.Cells.CreateRange("A1:B2");
+            AsposeRange range2 = sheet.Cells.CreateRange("D4:E5");
+
+            // Union of the two ranges (returns UnionRange)
+            UnionRange unionRange = range1.UnionRanges(new[] { range2 });
 
             // Apply the custom style to the union range
-            union.SetStyle(style);
+            StyleFlag flag = new StyleFlag { All = true };
+            unionRange.ApplyStyle(customStyle, flag);
 
-            // Save the workbook to visualize the result
-            workbook.Save("UnionRangeCustomStyle.xlsx");
+            // -----------------------------
+            // Save the workbook
+            // -----------------------------
+            string outputPath = "StyledRanges.xlsx";
+
+            // Ensure the directory exists before saving
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {

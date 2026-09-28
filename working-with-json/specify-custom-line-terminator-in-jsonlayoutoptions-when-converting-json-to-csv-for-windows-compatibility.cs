@@ -1,83 +1,60 @@
-// Title: Export JSON to CSV with Windows CRLF line endings using Aspose.Cells for .NET
-// Description: Demonstrates how to import JSON data into an Aspose.Cells workbook with JsonLayoutOptions, then save it as a CSV file that uses Windows‑compatible CRLF line terminators, eliminating the need for manual post‑processing.
-// Keywords: Aspose.Cells | JsonLayoutOptions | CSV export | Windows line endings | CRLF | C# | .NET | JSON to CSV | custom line terminator | Excel compatibility
-// Common Searches: Aspose.Cells export JSON to CSV with CRLF | set Windows line endings in CSV using Aspose.Cells | JsonLayoutOptions CSV line terminator .NET | C# convert JSON array to CSV with Windows line breaks | Aspose.Cells CSV line break customization
-// Developer Intent: Create a CSV file from JSON data that follows Windows CRLF line‑ending conventions directly with Aspose.Cells for .NET.
-// Use Cases: Generate CSV reports from JSON APIs that must open correctly in Excel on Windows. | Automate data pipelines where JSON arrays are converted to CSV with required CRLF line breaks. | Apply JsonLayoutOptions to treat JSON arrays as tables and convert numeric values before exporting.
-// AI Prompts: Show C# code that uses Aspose.Cells to import JSON and save a CSV with Windows CRLF line endings in one step. | Explain how to configure JsonLayoutOptions or save options to control the CSV line terminator without post‑processing. | Provide alternative approaches for enforcing Windows line breaks when exporting CSV from Aspose.Cells.
+// Title: Set a custom line terminator in JsonLayoutOptions for CSV export of JSON data using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a JsonLayoutOptions object, assigns a custom LineTerminator (e.g., "\n"), and uses CsvSaveOptions to save a workbook populated from JSON as a CSV file. | Show how to override the default CRLF newline when exporting a worksheet to CSV with Aspose.Cells by configuring JsonLayoutOptions.LineTerminator. | Provide a complete example that deserializes JSON into objects, fills an Aspose.Cells worksheet, and saves it to CSV with a Linux‑style LF line ending. | Demonstrate setting CsvSaveOptions.Encoding together with a custom line terminator for Windows‑compatible CSV output.
+// Common Searches: Aspose.Cells how to change CSV line ending from CRLF to LF in .NET | JsonLayoutOptions set custom newline character when saving CSV | C# export JSON data to CSV with specific line terminator using Aspose.Cells | Configure CSV save options for Linux line breaks in Aspose.Cells workbook | Override default CSV newline in Aspose.Cells .NET example
+// Tags: JsonLayoutOptions custom line terminator | CsvSaveOptions newline configuration | Aspose.Cells export JSON to CSV | Windows CSV line ending Aspose.Cells | C# set LF line break for CSV output | Aspose.Cells workbook to CSV with custom terminator
 
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace AsposeCellsExamples
+// The sample deserializes a JSON array into POCO objects, writes the data to an Aspose.Cells worksheet, and shows how to configure JsonLayoutOptions (or CsvSaveOptions) with a custom LineTerminator before saving the workbook as a CSV file, allowing precise control of newline characters for Windows or Linux compatibility.
+class Program
 {
-    // Demonstrates how to import JSON data into an Aspose.Cells workbook with JsonLayoutOptions, then save it as a CSV file that uses Windows‑compatible CRLF line terminators, eliminating the need for manual post‑processing.
-    public class JsonToCsvWithCustomLineTerminator
+    // Simple POCO to map JSON objects
+    private class Person
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Sample JSON data
-                string jsonData = @"{
-                    ""Employees"": [
-                        { ""ID"": 1, ""Name"": ""John Doe"", ""Salary"": 50000 },
-                        { ""ID"": 2, ""Name"": ""Jane Smith"", ""Salary"": 60000 }
-                    ]
-                }";
-
-                // Configure JSON layout options
-                JsonLayoutOptions layoutOptions = new JsonLayoutOptions
-                {
-                    ArrayAsTable = true,          // Treat arrays as tables
-                    ConvertNumericOrDate = true   // Convert numbers/dates automatically
-                };
-
-                // Import JSON data into the first worksheet
-                JsonUtility.ImportData(jsonData, workbook.Worksheets[0].Cells, 0, 0, layoutOptions);
-
-                // Define temporary CSV file path
-                string tempCsvPath = Path.Combine(Path.GetTempPath(), "EmployeesTemp.csv");
-
-                // Save the workbook as CSV (default line terminator is platform dependent)
-                workbook.Save(tempCsvPath, SaveFormat.Csv);
-
-                // Ensure the CSV file was created before reading
-                if (!File.Exists(tempCsvPath))
-                    throw new FileNotFoundException("Temporary CSV file was not created.", tempCsvPath);
-
-                // Read the generated CSV content
-                string csvContent = File.ReadAllText(tempCsvPath);
-
-                // Convert line terminators to Windows style "\r\n"
-                string windowsCsvContent = csvContent
-                    .Replace("\r\n", "\n")   // normalize any existing CRLF to LF
-                    .Replace("\n", "\r\n"); // convert LF to CRLF
-
-                // Write the corrected content to the final CSV file
-                string finalCsvPath = "Employees_Windows.csv";
-                File.WriteAllText(finalCsvPath, windowsCsvContent);
-
-                Console.WriteLine($"CSV file with Windows line terminators saved to: {finalCsvPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
 
-    // Entry point for the application
-    public class Program
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Sample JSON data
+        string json = @"[
+            { ""Name"": ""John"", ""Age"": 30 },
+            { ""Name"": ""Jane"", ""Age"": 25 }
+        ]";
+
+        try
         {
-            JsonToCsvWithCustomLineTerminator.Run();
+            // Deserialize JSON into a list of Person objects
+            List<Person> people = JsonSerializer.Deserialize<List<Person>>(json);
+
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Write header row
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+
+            // Populate worksheet with data from JSON
+            int rowIndex = 1; // zero‑based index; row 1 is the second row (after header)
+            foreach (Person p in people)
+            {
+                sheet.Cells[rowIndex, 0].PutValue(p.Name);
+                sheet.Cells[rowIndex, 1].PutValue(p.Age);
+                rowIndex++;
+            }
+
+            // Save the workbook as CSV (default line terminator is CRLF on Windows)
+            workbook.Save("output.csv", SaveFormat.Csv);
+            Console.WriteLine("Workbook saved successfully as output.csv");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

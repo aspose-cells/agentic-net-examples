@@ -1,66 +1,69 @@
-// Title: C# – Refresh All PivotTables in an Aspose.Cells Workbook After Bulk Data Changes
-// Description: Loads a workbook, modifies source cells, iterates through each worksheet with a foreach loop, calls RefreshPivotTables to update every pivot table, and saves the result. Demonstrates error handling and best practices for bulk data updates.
-// Keywords: Aspose.Cells | RefreshPivotTables | C# pivot table refresh | bulk data update | foreach loop Excel | update all pivot tables | Excel automation | global | US
-// Common Searches: how to refresh all pivot tables in Aspose.Cells C# | foreach loop refresh pivot tables workbook | bulk data change refresh pivot tables Aspose | programmatically update pivot tables after data edit | Aspose.Cells refresh all pivots example
-// Developer Intent: Programmatically refresh every PivotTable in a workbook after making bulk data modifications.
-// Use Cases: Automated monthly reports where source data is altered and all pivot tables must reflect the new values before export. | Data import routines that change many cells and require immediate pivot table updates across multiple worksheets. | Scheduled Excel processing jobs that need to ensure pivot tables stay synchronized with dynamic data sources.
-// AI Prompts: Write C# code using Aspose.Cells to change a range of cells and then refresh all pivot tables in each worksheet. | Show how to add robust exception handling around RefreshPivotTables calls after bulk data updates. | Provide an example that refreshes pivot tables only in worksheets whose names start with "Sales" using Aspose.Cells.
+// Title: Refresh every PivotTable in an Excel workbook after bulk data changes using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, iterates through all worksheets, and updates each PivotTable's cache and recalculates its data. | Demonstrate how to handle missing input files and save the workbook after programmatically refreshing all PivotTables with Aspose.Cells.
+// Common Searches: how to programmatically refresh all pivot tables in an Excel file using Aspose.Cells C# | Aspose.Cells loop through worksheets to update pivot caches after data import | C# example for RefreshData and CalculateData on multiple PivotTables in a workbook | save workbook after bulk pivot table refresh with Aspose.Cells for .NET | error handling when refreshing pivot tables in Aspose.Cells
+// Tags: refresh pivot tables Aspose.Cells C# | iterate worksheets pivot tables Aspose.Cells | pivotcache RefreshData Aspose.Cells | calculate pivot data Aspose.Cells | save workbook after pivot refresh Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot; // Required for PivotTable and PivotCache classes
 
-namespace AsposeCellsExamples
+// The sample loads an existing Excel workbook, loops through each worksheet and each PivotTable, calls RefreshData and CalculateData to update the cache and recalculate values, then saves the modified file while handling missing files and runtime errors.
+class RefreshPivotTables
 {
-    // Loads a workbook, modifies source cells, iterates through each worksheet with a foreach loop, calls RefreshPivotTables to update every pivot table, and saves the result. Demonstrates error handling and best practices for bulk data updates.
-    public class RefreshAllPivotTablesDemo
+    static void Main()
     {
-        public static void Run()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            string inputPath = "InputData.xlsx";
-            string outputPath = "RefreshedPivotTables.xlsx";
-
-            try
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Verify input file exists
-                if (!File.Exists(inputPath))
-                {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
-                }
-
-                // Load workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Example bulk data changes
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Cells["B2"].PutValue(1500);
-                dataSheet.Cells["B3"].PutValue(2500);
-                dataSheet.Cells["B4"].PutValue(3500);
-
-                // Refresh all PivotTables in each worksheet
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    sheet.RefreshPivotTables();
-                }
-
-                // Save updated workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Iterate through each PivotTable in the worksheet
+                foreach (PivotTable pivotTable in sheet.PivotTables)
+                {
+                    try
+                    {
+                        // Refresh the underlying PivotCache (correct API)
+                        pivotTable.RefreshData();
+
+                        // Recalculate the PivotTable values
+                        pivotTable.CalculateData();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error refreshing pivot table '{pivotTable.Name}' on sheet '{sheet.Name}': {ex.Message}");
+                    }
+                }
             }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            RefreshAllPivotTablesDemo.Run();
+            // Handle any runtime exceptions
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

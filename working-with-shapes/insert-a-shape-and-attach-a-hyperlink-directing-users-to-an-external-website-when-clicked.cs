@@ -1,37 +1,50 @@
-// Title: Add a Rectangle Shape with an External Hyperlink in Excel using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new Workbook, insert a rectangle shape at row 2/column 2, attach an external URL (https://www.example.com/) to the shape with AddHyperlink, and save the file as ShapeWithExternalHyperlink.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# shape hyperlink | Excel rectangle shape link | Add clickable shape Aspose.Cells | external URL shape .NET | C# Aspose.Cells tutorial | Excel hyperlink shape example
-// Common Searches: Aspose.Cells add hyperlink to shape C# | Create clickable rectangle in Excel with Aspose | How to link a shape to a website using Aspose.Cells | C# code for shape hyperlink in Excel workbook
-// Developer Intent: Insert a shape into a worksheet and bind it to an external web address.
-// Use Cases: Add a company logo that opens the corporate site when clicked. | Create a call‑to‑action button linking to a marketing landing page. | Provide a quick‑access icon that launches an online help portal.
-// AI Prompts: Write C# code with Aspose.Cells to add a circular shape that opens https://www.example.com/ when clicked. | Show how to set a shape’s hyperlink to open in a new browser tab using Aspose.Cells for .NET. | Give an example of adding multiple shapes, each with a different external URL, in the same worksheet.
+// Title: Insert a rectangle shape with a clickable hyperlink to an external website using Aspose.Cells for .NET
+// AI Prompts: Create a new workbook, add a rectangle shape at row 2 column 2, set its text to "Visit Aspose", and assign a hyperlink to https://www.aspose.com using Aspose.Cells in C#. | Generate an Excel file that contains a rectangle shape linked to an external URL and save it as an .xlsx file with Aspose.Cells for .NET. | Programmatically place a shape on a worksheet, attach an external hyperlink to the shape, and export the workbook using the Aspose.Cells API in C#.
+// Common Searches: how to add a rectangle shape with a hyperlink in an Excel workbook using Aspose.Cells C# | Aspose.Cells example for linking a shape to an external website | C# code to insert a shape and set a clickable URL in Excel with Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | shape hyperlink Aspose.Cells | save workbook with shape hyperlink Xlsx | Aspose.Cells shape insertion example | hyperlinked shape Excel C#
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsHyperlinkExample
+// The program creates a new workbook, inserts a rectangle shape at row 2 column 2, sets its text to "Visit Aspose", assigns a hyperlink to https://www.aspose.com, and saves the file as ShapeWithHyperlink.xlsx.
+class Program
 {
-    // Demonstrates how to create a new Workbook, insert a rectangle shape at row 2/column 2, attach an external URL (https://www.example.com/) to the shape with AddHyperlink, and save the file as ShapeWithExternalHyperlink.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet (row, column, width, height, upper left row, upper left column)
-            // Here we place the shape at row 2, column 2 with a size of 100x100 pixels
-            Shape shape = worksheet.Shapes.AddRectangle(2, 2, 100, 100, 0, 0);
+            // Insert a rectangle shape at position (row 2, column 2) with size 100x50 points
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle, // shape type
+                2, // upper left row (zero‑based)
+                2, // upper left column (zero‑based)
+                0, // top offset in points
+                0, // left offset in points
+                50, // height in points
+                100); // width in points
 
-            // Attach a hyperlink to the shape that points to an external website
-            shape.AddHyperlink("https://www.example.com/");
+            // Set the text displayed inside the shape
+            shape.Text = "Visit Aspose";
+
+            // Attach a hyperlink that opens an external website when the shape is clicked
+            shape.Hyperlink.Address = "https://www.aspose.com";
 
             // Save the workbook to a file
-            workbook.Save("ShapeWithExternalHyperlink.xlsx");
+            string outputPath = "ShapeWithHyperlink.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
         }
     }
 }

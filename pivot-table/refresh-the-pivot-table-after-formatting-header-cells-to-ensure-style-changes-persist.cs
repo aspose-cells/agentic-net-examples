@@ -1,79 +1,71 @@
-// Title: Refresh Aspose.Cells Pivot Table After Header Formatting in C# (.NET)
-// Description: Demonstrates how to load a workbook, enable PreserveFormatting, apply a bold white‑on‑dark‑blue style to a pivot table header using PivotTable.Format, refresh the pivot with Worksheet.RefreshPivotTables, and save the updated file. Ensures custom header styles persist after a data refresh.
-// Keywords: Aspose.Cells | C# pivot table refresh | PreserveFormatting property | PivotTable.Format header style | Worksheet.RefreshPivotTables | custom pivot header styling | .NET Excel pivot table | Aspose.Cells example
-// Common Searches: how to keep pivot table header style after refresh Aspose.Cells | Aspose.Cells PreserveFormatting example C# | refresh pivot tables without losing formatting | apply custom style to pivot table header Aspose.Cells | Worksheet.RefreshPivotTables usage
-// Developer Intent: Refresh a pivot table while preserving any custom header formatting applied through Aspose.Cells.
-// Use Cases: Apply a bold white font on a dark blue background to a pivot table header and ensure the style survives a refresh. | Set PreserveFormatting = true before calling RefreshPivotTables to retain all custom pivot styles. | Load an existing workbook, verify the presence of a pivot table, style its header rows, refresh the pivot, and save the result.
-// AI Prompts: Generate C# code that formats a pivot table header with a custom style and refreshes the pivot while preserving the formatting using Aspose.Cells. | Explain the interaction between PreserveFormatting and Worksheet.RefreshPivotTables in Aspose.Cells for .NET. | Create a snippet that checks for pivot tables, applies a custom style to multiple header rows, refreshes them, and saves the workbook.
+// Title: How to preserve custom header formatting when refreshing an Aspose.Cells pivot table in C#
+// AI Prompts: Create a pivot table from a data range, apply a bold Arial style with a light‑gray background to the column header, enable PreserveFormatting, and refresh the pivot tables using Aspose.Cells for .NET. | Programmatically format a pivot table header cell, set PreserveFormatting = true, then call worksheet.RefreshPivotTables() to keep the style after recalculation in C#.
+// Common Searches: Aspose.Cells C# keep pivot table header style after RefreshPivotTables | preserve pivot table formatting when updating data with Aspose.Cells | how to set PreserveFormatting for pivot tables in Aspose.Cells .NET | refresh pivot tables without losing custom header colors Aspose.Cells | apply custom style to pivot table header and maintain after refresh C#
+// Tags: Aspose.Cells pivot table header styling | maintain header style after pivot refresh | C# Aspose.Cells RefreshPivotTables usage | pivot table PreserveFormatting property .NET | format pivot table column header programmatically
 
 using System;
-using System.Drawing;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System.Drawing;
 
-// Demonstrates how to load a workbook, enable PreserveFormatting, apply a bold white‑on‑dark‑blue style to a pivot table header using PivotTable.Format, refresh the pivot with Worksheet.RefreshPivotTables, and save the updated file. Ensures custom header styles persist after a data refresh.
-class RefreshPivotAfterHeaderFormatting
+namespace AsposeCellsPivotRefreshDemo
 {
-    static void Main(string[] args)
+    // The example creates a workbook, adds sample data, builds a pivot table, formats the Category header with a bold Arial font and light‑gray background, enables PreserveFormatting, refreshes all pivot tables in the worksheet, and saves the result as PivotTableHeaderFormatted.xlsx.
+    public class Program
     {
-        Run();
-    }
-
-    public static void Run()
-    {
-        const string inputPath = "input.xlsx";
-        const string outputPath = "output.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(inputPath))
+        public static void Main()
         {
-            Console.WriteLine($"Input file \"{inputPath}\" not found.");
-            return;
-        }
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        try
-        {
-            // Load the workbook that contains the pivot table
-            Workbook workbook = new Workbook(inputPath);
+            // Populate sample source data for the pivot table
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Fruit");
+            sheet.Cells["B2"].PutValue(120);
+            sheet.Cells["A3"].PutValue("Vegetable");
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["A4"].PutValue("Fruit");
+            sheet.Cells["B4"].PutValue(150);
+            sheet.Cells["A5"].PutValue("Vegetable");
+            sheet.Cells["B5"].PutValue(70);
 
-            // Access the first worksheet (adjust index if needed)
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Add a pivot table based on the source data
+            int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "PivotTable1");
+            PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-            // Ensure there is at least one pivot table
-            if (worksheet.PivotTables.Count == 0)
-            {
-                Console.WriteLine("No pivot tables found in the worksheet.");
-                return;
-            }
+            // Configure the pivot table (row field and data field)
+            pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+            pivotTable.AddFieldToArea(PivotFieldType.Data, "Amount");
 
-            // Get the first pivot table
-            PivotTable pivotTable = worksheet.PivotTables[0];
+            // Calculate data so the pivot table is populated
+            pivotTable.CalculateData();
 
-            // Preserve formatting when the pivot table is refreshed
-            pivotTable.PreserveFormatting = true;
-
-            // Create a style for the header cells
+            // ------------------------------------------------------------
+            // Format the header cell of the pivot table
+            // Header cell coordinates are based on the pivot table's own grid.
+            // Row index 1 (first data row after the pivot title) and column 0
+            // correspond to the column header for the "Category" field.
+            // ------------------------------------------------------------
             Style headerStyle = workbook.CreateStyle();
+            headerStyle.Font.Name = "Arial";
+            headerStyle.Font.Size = 12;
             headerStyle.Font.IsBold = true;
-            headerStyle.Font.Color = Color.White;
-            headerStyle.ForegroundColor = Color.DarkBlue;
+            headerStyle.ForegroundColor = Color.LightGray;
             headerStyle.Pattern = BackgroundType.Solid;
 
-            // Apply the style to a header cell (row 0, column 0 in pivot table coordinates)
-            // Adjust the row/column indices as needed for your specific layout
-            pivotTable.Format(0, 0, headerStyle);
+            // Apply the style to the header cell (row 1, column 0 in pivot coordinates)
+            pivotTable.Format(1, 0, headerStyle);
 
-            // Refresh the pivot table so that the formatting is retained
-            worksheet.RefreshPivotTables();
+            // Ensure that formatting is preserved when the pivot table is refreshed
+            pivotTable.PreserveFormatting = true;
 
-            // Save the modified workbook
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Refresh all pivot tables in the worksheet so that the style persists
+            sheet.RefreshPivotTables();
+
+            // Save the workbook
+            workbook.Save("PivotTableHeaderFormatted.xlsx", SaveFormat.Xlsx);
         }
     }
 }

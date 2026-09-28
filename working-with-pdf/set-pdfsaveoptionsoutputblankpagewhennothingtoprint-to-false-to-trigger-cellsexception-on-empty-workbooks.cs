@@ -1,58 +1,39 @@
-// Title: Aspose.Cells C# – Disable Blank PDF Page and Trigger CellsException for Empty Workbooks
-// Description: A C# sample that builds a workbook with no printable sheets, sets PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false, and saves it as PDF. With no visible data, Aspose.Cells throws a CellsException, which the code captures, allowing developers to detect and block blank PDF output.
-// Keywords: Aspose.Cells | PdfSaveOptions | OutputBlankPageWhenNothingToPrint | CellsException | empty workbook PDF | C# PDF export | prevent blank page | Aspose.Cells PDF exception | Excel to PDF conversion .NET | Aspose.Cells example GitHub
-// Common Searches: Aspose.Cells throw exception when saving empty workbook to PDF | PdfSaveOptions OutputBlankPageWhenNothingToPrint false example | how to stop blank page generation in Aspose.Cells PDF export | catch CellsException for empty Excel workbook PDF conversion | C# Aspose.Cells PDF save options for empty worksheets
-// Developer Intent: Configure PdfSaveOptions so that saving a workbook without printable content raises a CellsException instead of producing a blank PDF.
-// Use Cases: Validate workbook content before PDF conversion and abort if nothing is printable. | Add error handling in automated reporting services to prevent empty PDF files. | Implement a safeguard in web APIs that convert Excel files to PDF, ensuring an exception is raised for fully hidden or empty sheets.
-// AI Prompts: Write C# code that sets PdfSaveOptions.OutputBlankPageWhenNothingToPrint = false and catches the CellsException when an empty workbook is saved as PDF using Aspose.Cells. | Explain the effect of OutputBlankPageWhenNothingToPrint on PDF output in Aspose.Cells and describe best practices for handling the resulting CellsException. | Create unit tests in C# that verify a CellsException is thrown when OutputBlankPageWhenNothingToPrint is false and the workbook has no visible data.
+// Title: Trigger CellsException by saving an empty Aspose.Cells workbook to PDF with OutputBlankPageWhenNothingToPrint set to false
+// AI Prompts: Generate C# code that creates a workbook without worksheets, sets PdfSaveOptions.OutputBlankPageWhenNothingToPrint = false, attempts to save to PDF, and catches the resulting CellsException. | Explain how to configure Aspose.Cells PDF export to suppress blank-page generation and cause an exception for empty workbooks in .NET.
+// Common Searches: Aspose.Cells how to prevent blank page when exporting empty workbook to PDF | PdfSaveOptions OutputBlankPageWhenNothingToPrint false cause exception | C# catch CellsException for empty workbook PDF conversion | Saving empty workbook to PDF throws CellsException Aspose.Cells
+// Tags: PdfSaveOptions disable blank page Aspose.Cells | empty workbook PDF export exception | CellsException handling Aspose.Cells PDF | Aspose.Cells PDF conversion error handling | C# Aspose.Cells output blank page setting
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExample
+// // Demonstrates creating an empty Workbook, configuring PdfSaveOptions to not output a blank page, attempting to save to PDF, and catching the resulting CellsException.
+class Program
 {
-    // A C# sample that builds a workbook with no printable sheets, sets PdfSaveOptions.OutputBlankPageWhenNothingToPrint to false, and saves it as PDF. With no visible data, Aspose.Cells throws a CellsException, which the code captures, allowing developers to detect and block blank PDF output.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create an empty workbook (no worksheets added)
+        Workbook workbook = new Workbook();
+
+        // Configure PDF save options to NOT output a blank page when nothing is printed
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
+        pdfOptions.OutputBlankPageWhenNothingToPrint = false; // This will cause a CellsException for empty workbooks
+
+        try
         {
-            // Create a new empty workbook
-            Workbook workbook = new Workbook();
-
-            // Add a second worksheet so we can hide the original one
-            Worksheet hiddenSheet = workbook.Worksheets[0];
-            Worksheet visibleSheet = workbook.Worksheets[workbook.Worksheets.Add()];
-
-            // Hide the first worksheet to simulate a workbook with nothing to print
-            hiddenSheet.IsVisible = false;
-
-            // The second worksheet remains visible but contains no data
-
-            // Configure PDF save options: do NOT output a blank page when nothing to print
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                OutputBlankPageWhenNothingToPrint = false
-            };
-
-            try
-            {
-                // Attempt to save the workbook as PDF.
-                // With OutputBlankPageWhenNothingToPrint set to false,
-                // Aspose.Cells will not generate a blank page for an empty visible sheet.
-                workbook.Save("EmptyWorkbook.pdf", pdfOptions);
-                Console.WriteLine("PDF saved successfully.");
-            }
-            catch (CellsException ex)
-            {
-                // Handle any CellsException that may occur
-                Console.WriteLine($"CellsException caught: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any other unexpected exceptions
-                Console.WriteLine($"Unexpected exception: {ex.Message}");
-            }
+            // Attempt to save the empty workbook to PDF
+            workbook.Save("EmptyWorkbook.pdf", pdfOptions);
+            Console.WriteLine("PDF saved successfully (unexpected).");
+        }
+        catch (CellsException ex)
+        {
+            // Expected exception due to empty workbook and OutputBlankPageWhenNothingToPrint = false
+            Console.WriteLine($"CellsException caught as expected: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Any other unexpected exceptions
+            Console.WriteLine($"Unexpected exception: {ex.Message}");
         }
     }
 }

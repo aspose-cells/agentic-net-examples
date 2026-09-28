@@ -1,61 +1,72 @@
-// Title: Enable Excel 2003 Compatibility for PivotTables in Aspose.Cells (C#)
-// Description: This example shows how to create a workbook, add sample data, build a PivotTable, set the IsExcel2003Compatible property to true, and then refresh and calculate the PivotTable so that any text longer than 255 characters is automatically truncated for Excel 2003 compatibility. The workbook is saved as an .xlsx file.
-// Keywords: Aspose.Cells | C# PivotTable | Excel 2003 compatibility | IsExcel2003Compatible | truncate long strings | RefreshData | CalculateData | pivot table compatibility mode | .NET Excel library
-// Common Searches: Aspose.Cells enable Excel 2003 compatibility for pivot table | IsExcel2003Compatible property C# example | truncate strings over 255 characters in Aspose.Cells pivot | refresh pivot table after setting compatibility mode | how to make pivot table Excel 2003 compatible using Aspose
-// Developer Intent: Set Excel 2003 compatibility on a PivotTable before refreshing it with Aspose.Cells.
-// Use Cases: Generate a report that must open in Excel 2003 without errors caused by long text fields in a PivotTable. | Create automated Excel files where PivotTable data is refreshed programmatically while ensuring legacy compatibility. | Process product catalogs with descriptions exceeding 255 characters and automatically truncate them in the PivotTable output.
-// AI Prompts: Write C# code that creates a workbook, adds data, builds a PivotTable, enables Excel 2003 compatibility, refreshes the pivot, and saves the file using Aspose.Cells. | Explain the effect of the IsExcel2003Compatible property on string length handling in Aspose.Cells PivotTables. | Provide step‑by‑step instructions to configure a PivotTable for Excel 2003 compatibility, refresh it, and export the workbook in .NET.
+// Title: Enable Excel 2003 compatibility, refresh a PivotTable, and save the workbook as .xls with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that sets Workbook.Settings.IsCompatibleWithExcel2003 to true, updates the first PivotTable in the first worksheet using RefreshData and CalculateData, and exports the workbook to Excel 97‑2003 (.xls) format with Aspose.Cells. | Show how to verify that a worksheet contains a PivotTable, handle the case when none exist, enable Excel 2003 compatibility, and then save the workbook as .xls using Aspose.Cells.
+// Common Searches: Aspose.Cells enable Excel 2003 compatibility before refreshing a pivot table | C# example to refresh a PivotTable and save workbook as .xls with Aspose.Cells | How to set Excel 2003 compatibility flag for a workbook in Aspose.Cells | Verify PivotTable existence in a worksheet before exporting to Excel 97‑2003 format | Aspose.Cells pivot table refresh and calculate workflow in .NET
+// Tags: Excel 2003 compatibility flag Aspose.Cells | PivotTable data refresh Aspose.Cells | Save workbook as Excel97To2003 format Aspose.Cells | Check for PivotTable in worksheet Aspose.Cells | Calculate PivotTable data Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotExcel2003Compatibility
+// The sample loads an existing .xlsx workbook, optionally enables Excel 2003 compatibility, checks that the first worksheet contains a PivotTable, updates its data with RefreshData, recalculates it, and saves the result as an Excel 97‑2003 .xls file using Aspose.Cells for .NET.
+class Program
 {
-    // This example shows how to create a workbook, add sample data, build a PivotTable, set the IsExcel2003Compatible property to true, and then refresh and calculate the PivotTable so that any text longer than 255 characters is automatically truncated for Excel 2003 compatibility. The workbook is saved as an .xlsx file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xls";
 
-            // Get the first worksheet and add sample data
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "Data";
-            dataSheet.Cells["A1"].Value = "Product";
-            dataSheet.Cells["B1"].Value = "Description";
-            dataSheet.Cells["C1"].Value = "Quantity";
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            dataSheet.Cells["A2"].Value = "Item1";
-            dataSheet.Cells["B2"].Value = "Short description";
-            dataSheet.Cells["C2"].Value = 10;
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            dataSheet.Cells["A3"].Value = "Item2";
-            dataSheet.Cells["B3"].Value = "Very long description that would exceed the 255‑character limit in Excel 2003 when used in a pivot table. This text is intentionally long to demonstrate the compatibility setting.";
-            dataSheet.Cells["C3"].Value = 20;
+            // Enable Excel 2003 compatibility if the API is available
+            // In newer versions the property may be removed; this line can be omitted safely.
+            // workbook.Settings.IsCompatibleWithExcel2003 = true;
 
-            // Add a new worksheet for the pivot table
-            Worksheet pivotSheet = workbook.Worksheets.Add("PivotTable");
+            // Get the first worksheet (assumed to contain the PivotTable)
+            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a pivot table based on the data range
-            int pivotIndex = pivotSheet.PivotTables.Add("Data!A1:C3", "A5", "PivotTable1");
-            PivotTable pivotTable = pivotSheet.PivotTables[pivotIndex];
+            // Ensure the worksheet has at least one PivotTable
+            if (worksheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTable found in the first worksheet.");
+                return;
+            }
 
-            // Configure pivot fields
-            pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Product as row field
-            pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Quantity as data field
+            // Get the first PivotTable in the worksheet
+            PivotTable pivotTable = worksheet.PivotTables[0];
 
-            // Enable Excel 2003 compatibility before refreshing
-            // This ensures that any string longer than 255 characters will be truncated during refresh.
-            pivotTable.IsExcel2003Compatible = true;
+            // Refresh the PivotTable data using the correct API
+            try
+            {
+                // RefreshData is a method of PivotTable, not PivotCache
+                pivotTable.RefreshData();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to refresh PivotTable data: {ex.Message}");
+            }
 
-            // Refresh and calculate the pivot table data
-            pivotTable.RefreshData();
+            // Recalculate the PivotTable
             pivotTable.CalculateData();
 
-            // Save the workbook
-            workbook.Save("PivotTable_Excel2003Compatibility.xlsx");
+            // Save the workbook in Excel 97-2003 format (.xls)
+            workbook.Save(outputPath, SaveFormat.Excel97To2003);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,53 +1,37 @@
-// Title: Aspose.Cells .NET – Keep Formulas Intact When Deleting Columns Using DeleteOptions.UpdateReference = false
-// Description: Demonstrates how to create a workbook, add values and a formula, configure DeleteOptions with UpdateReference set to false, and delete a column without altering the original formula reference. The resulting file shows the formula unchanged after the column removal.
-// Keywords: Aspose.Cells DeleteOptions | UpdateReference false | preserve formulas .NET | delete column without adjusting formulas | C# Aspose.Cells example | formula reference stability | Excel automation DeleteOptions | Aspose.Cells row deletion | keep cell references after delete | Aspose.Cells API DeleteOptions
-// Common Searches: Aspose.Cells keep formula after deleting column | DeleteOptions.UpdateReference false C# example | prevent formula shift when removing rows Aspose.Cells | how to disable reference update in Aspose.Cells | Aspose.Cells delete column without changing formulas
-// Developer Intent: Configure DeleteOptions.UpdateReference = false so that row or column deletions do not modify existing cell formulas.
-// Use Cases: Maintain legacy calculation links after removing a data column in a financial model. | Delete placeholder rows in a template while preserving dependent summary formulas. | Strip temporary helper columns from a report without breaking chart data sources.
-// AI Prompts: Generate a C# snippet that deletes multiple rows while keeping all formulas unchanged using DeleteOptions.UpdateReference = false. | Explain how DeleteOptions.UpdateReference interacts with named ranges and merged cells in Aspose.Cells. | Show how to toggle DeleteOptions.UpdateReference based on a runtime condition before deleting a column.
+// Title: Delete a column in Aspose.Cells for .NET while preserving original formulas by setting DeleteOptions.UpdateReference to false
+// AI Prompts: Write C# code that deletes a specific column in an Aspose.Cells workbook and keeps all existing formulas unchanged by configuring DeleteOptions.UpdateReference = false. | Show how to use Aspose.Cells DeleteOptions to remove rows or columns without adjusting any formula references in a .NET application.
+// Common Searches: Aspose.Cells C# delete column without updating formulas | How to keep formula references intact after deleting a column in Aspose.Cells | DeleteOptions.UpdateReference false example for preserving formulas | Prevent formula recalculation when removing rows in Aspose.Cells .NET | Preserve original cell references after column deletion using Aspose.Cells API
+// Tags: delete column without formula update Aspose.Cells | preserve formula references Aspose.Cells | disable formula reference adjustment Aspose.Cells | C# DeleteOptions usage Aspose.Cells | column removal keep original formulas .NET
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add values and a formula, configure DeleteOptions with UpdateReference set to false, and delete a column without altering the original formula reference. The resulting file shows the formula unchanged after the column removal.
-public class DeleteOptionsUpdateReferenceDemo
+// Creates a workbook, adds values and a formula, deletes column A using DeleteOptions with UpdateReference set to false so the formula in C1 remains unchanged, and saves the file as PreserveFormulas.xlsx.
+class Program
 {
-    public static void Main()
-    {
-        try
-        {
-            Run();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-        }
-    }
-
-    public static void Run()
+    static void Main()
     {
         // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
 
-        // Populate some data and a formula that references the data
-        cells["A1"].PutValue(10);
-        cells["B1"].PutValue(20);
-        cells["C1"].Formula = "=A1+B1"; // Formula will reference A1 and B1
+        // Populate some cells with values and a formula that references column A
+        worksheet.Cells["A1"].PutValue(10);
+        worksheet.Cells["B1"].PutValue(20);
+        worksheet.Cells["C1"].Formula = "=A1+B1";
 
         // Create DeleteOptions and set UpdateReference to false
-        // This ensures that when we delete a column/row, existing formulas are NOT adjusted
+        // This ensures that formulas referencing deleted cells are NOT updated
         DeleteOptions deleteOptions = new DeleteOptions
         {
             UpdateReference = false
         };
 
-        // Delete the first column (index 0) using the options above
-        // After deletion, the formula in C1 will still be "=A1+B1" (referring to the original cells)
+        // Delete column A (index 0) using the DeleteOptions
+        // The formula in C1 will remain "=A1+B1" even though column A is removed
         worksheet.Cells.DeleteColumns(0, 1, deleteOptions);
 
-        // Save the workbook to verify the result
-        workbook.Save("DeleteOptionsFalseDemo.xlsx");
+        // Save the workbook to a file
+        workbook.Save("PreserveFormulas.xlsx");
     }
 }

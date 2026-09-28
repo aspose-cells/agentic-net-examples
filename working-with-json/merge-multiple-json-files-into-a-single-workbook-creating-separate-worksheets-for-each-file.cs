@@ -1,73 +1,137 @@
-// Title: C# – Merge Multiple JSON Files into a Single Excel Workbook with Separate Worksheets using Aspose.Cells
-// Description: A concise C# example that loads a list of JSON files into temporary workbooks with JsonLoadOptions.MultipleWorksheets, combines them into one destination workbook, and saves the result as an XLSX file. The code handles missing files and load errors, making it ideal for consolidating JSON reports, API responses, or log data into distinct Excel sheets.
-// Keywords: Aspose.Cells | C# | .NET | JSON to Excel | merge JSON files | multiple worksheets | JsonLoadOptions | Combine workbooks | SaveFormat.Xlsx | data consolidation | Excel automation | API response export | log file analysis
-// Common Searches: merge several JSON files into one Excel workbook Aspose.Cells | Aspose.Cells JsonLoadOptions MultipleWorksheets C# example | combine JSON data into separate Excel sheets using .NET | how to load multiple JSON files as worksheets with Aspose.Cells | C# code to consolidate JSON reports into a single XLSX file
-// Developer Intent: Create one Excel workbook where each provided JSON file appears on its own worksheet.
-// Use Cases: Aggregate daily JSON reports into a master workbook for cross‑day comparison. | Export multiple API response payloads, each on a separate sheet, for stakeholder review. | Combine JSON‑formatted log files into a single Excel file to simplify auditing and filtering.
-// AI Prompts: Generate C# code that reads an array of JSON file paths and merges them into a single workbook, placing each top‑level array on a separate worksheet with Aspose.Cells. | Explain how JsonLoadOptions.MultipleWorksheets influences worksheet creation when loading JSON files in Aspose.Cells.
+// Title: Combine multiple JSON files into a single Excel workbook with separate worksheets using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that scans a directory for *.json files, creates a new worksheet in an Aspose.Cells workbook for each file, and names the worksheet after the source filename. | Write a method that receives a JSON array string and populates an Aspose.Cells worksheet with column headers derived from the first object and data rows for each element. | Provide C# logic to save the populated Aspose.Cells workbook as an XLSX file to a given output path, creating the output folder if it does not exist.
+// Common Searches: c# aspocells read all json files in a folder and export each to a separate worksheet | how to create a new worksheet for each json file using Aspose.Cells .NET | import json array into Excel with Aspose.Cells and auto‑fit columns | merge multiple json datasets into one Excel workbook with Aspose.Cells C# example | aspocells convert json files to xlsx with worksheet names from filenames
+// Tags: aspocells import json array to worksheet | aspocells create workbook from multiple json files | aspocells auto‑fit columns after json import | c# convert json files to xlsx using Aspose.Cells | aspocells generate worksheet names from filenames
 
 using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Text.Json;
 using Aspose.Cells;
 
-namespace AsposeCellsJsonMergeDemo
+// The example scans a specified folder for *.json files, creates a new Aspose.Cells Workbook, adds a worksheet for each file named after the file (without extension), parses each JSON array to write column headers and rows, auto‑fits columns, and finally saves the combined workbook as an XLSX file.
+class JsonToWorkbookMerger
 {
-    // A concise C# example that loads a list of JSON files into temporary workbooks with JsonLoadOptions.MultipleWorksheets, combines them into one destination workbook, and saves the result as an XLSX file. The code handles missing files and load errors, making it ideal for consolidating JSON reports, API responses, or log data into distinct Excel sheets.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Paths of the JSON files to be merged
-            string[] jsonFiles = new string[]
+            // Folder containing the JSON files
+            string jsonFolderPath = @"C:\Data\JsonFiles";
+
+            // Verify the JSON folder exists
+            if (!Directory.Exists(jsonFolderPath))
             {
-                "data1.json",
-                "data2.json",
-                "data3.json"
-            };
+                Console.WriteLine($"JSON folder not found: {jsonFolderPath}");
+                return;
+            }
 
-            // Destination workbook that will contain all worksheets
-            Workbook mergedWorkbook = new Workbook();
+            // Output Excel file path
+            string outputExcelPath = @"C:\Data\MergedWorkbook.xlsx";
 
-            // Load each JSON file into a temporary workbook and combine it
-            foreach (string jsonPath in jsonFiles)
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputExcelPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                if (!File.Exists(jsonPath))
-                {
-                    Console.WriteLine($"File not found: {jsonPath}. Skipping.");
-                    continue;
-                }
+                Directory.CreateDirectory(outputDir);
+            }
 
+            // Create a new empty workbook
+            Workbook workbook = new Workbook();
+
+            // Get all JSON files in the specified folder
+            string[] jsonFiles = Directory.GetFiles(jsonFolderPath, "*.json");
+
+            foreach (string jsonFilePath in jsonFiles)
+            {
                 try
                 {
-                    // Load options – set MultipleWorksheets to true if the JSON contains
-                    // multiple top‑level array nodes and you want each array on its own sheet.
-                    JsonLoadOptions loadOptions = new JsonLoadOptions
-                    {
-                        MultipleWorksheets = true
-                    };
+                    // Read the JSON content from the file
+                    string jsonContent = File.ReadAllText(jsonFilePath);
 
-                    // Load the JSON file into a workbook using the options
-                    Workbook tempWorkbook = new Workbook(jsonPath, loadOptions);
+                    // Add a new worksheet for this JSON file
+                    Worksheet sheet = workbook.Worksheets[workbook.Worksheets.Add()];
+                    sheet.Name = Path.GetFileNameWithoutExtension(jsonFilePath);
 
-                    // Combine the temporary workbook into the destination workbook
-                    mergedWorkbook.Combine(tempWorkbook);
+                    // Import JSON data into the worksheet
+                    ImportJsonToWorksheet(jsonContent, sheet);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing '{jsonPath}': {ex.Message}");
+                    Console.WriteLine($"Failed to process '{jsonFilePath}': {ex.Message}");
                 }
             }
 
-            try
-            {
-                // Save the merged workbook to an XLSX file
-                mergedWorkbook.Save("MergedJsonWorkbook.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("All JSON files have been merged into 'MergedJsonWorkbook.xlsx'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save merged workbook: {ex.Message}");
-            }
+            // Save the merged workbook to the specified path
+            workbook.Save(outputExcelPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputExcelPath}");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Parses JSON (expected to be an array of objects) and writes it to the worksheet.
+    private static void ImportJsonToWorksheet(string jsonContent, Worksheet sheet)
+    {
+        using JsonDocument doc = JsonDocument.Parse(jsonContent);
+        JsonElement root = doc.RootElement;
+
+        if (root.ValueKind != JsonValueKind.Array)
+        {
+            throw new InvalidOperationException("Root JSON element must be an array of objects.");
+        }
+
+        // Collect headers from the first object
+        List<string> headers = new List<string>();
+        foreach (JsonProperty prop in root[0].EnumerateObject())
+        {
+            headers.Add(prop.Name);
+        }
+
+        // Write headers (first row)
+        for (int col = 0; col < headers.Count; col++)
+        {
+            sheet.Cells[0, col].PutValue(headers[col]);
+        }
+
+        // Write data rows
+        int rowIndex = 1;
+        foreach (JsonElement element in root.EnumerateArray())
+        {
+            for (int col = 0; col < headers.Count; col++)
+            {
+                string header = headers[col];
+                if (element.TryGetProperty(header, out JsonElement valueElement))
+                {
+                    object value = GetJsonValue(valueElement);
+                    sheet.Cells[rowIndex, col].PutValue(value);
+                }
+                else
+                {
+                    sheet.Cells[rowIndex, col].PutValue(string.Empty);
+                }
+            }
+            rowIndex++;
+        }
+
+        // Auto-fit columns for better appearance
+        sheet.AutoFitColumns();
+    }
+
+    // Converts a JsonElement to a .NET primitive suitable for Aspose.Cells.
+    private static object GetJsonValue(JsonElement element)
+    {
+        return element.ValueKind switch
+        {
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => element.TryGetInt64(out long l) ? (object)l :
+                                     element.TryGetDouble(out double d) ? d : element.GetRawText(),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => null,
+            _ => element.GetRawText()
+        };
     }
 }

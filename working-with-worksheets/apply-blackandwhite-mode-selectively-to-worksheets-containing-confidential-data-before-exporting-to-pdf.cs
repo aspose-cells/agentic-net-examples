@@ -1,86 +1,31 @@
-// Title: Apply Black‑and‑White Printing to Confidential Worksheets and Export to PDF with Aspose.Cells for .NET
-// Description: Demonstrates how to flag worksheets whose names contain "Confidential" with PageSetup.BlackAndWhite, keep other sheets in color, configure PdfSaveOptions (e.g., ignore blank pages), and save the workbook as a single PDF where confidential data appears in grayscale.
-// Keywords: Aspose.Cells black and white worksheet | conditional PDF export .NET | PageSetup.BlackAndWhite property | export confidential sheets to PDF | ignore blank pages Aspose.Cells | grayscale PDF Aspose.Cells | C# workbook PDF conversion | selective worksheet formatting
-// Common Searches: how to set black and white mode for specific sheets in Aspose.Cells | export confidential worksheets as grayscale PDF using C# | Aspose.Cells conditional PageSetup settings before PDF save | ignore empty pages when saving workbook to PDF Aspose.Cells
-// Developer Intent: Set a grayscale printing mode only on confidential worksheets and generate a PDF that mixes black‑and‑white and color pages.
-// Use Cases: Mark worksheets with "Confidential" in the title as black‑and‑white while leaving public sheets in color, then create a combined PDF. | Load an existing workbook, apply PageSetup.BlackAndWhite based on a custom list of confidential sheet names, and export with PdfSaveOptions.PrintingPageType = IgnoreBlank. | Generate reports where sensitive data is visually de‑emphasized (grayscale) without affecting the visual style of non‑confidential sections.
-// AI Prompts: Write C# code using Aspose.Cells to set PageSetup.BlackAndWhite = true for worksheets whose name contains a confidentiality keyword and save the workbook as a PDF. | Show how to configure PdfSaveOptions to ignore blank pages while exporting a workbook that contains both color and grayscale worksheets. | Explain how to read a list of confidential worksheet names from an external source, apply the black‑and‑white setting, and export the result to PDF with Aspose.Cells.
+// Title: Apply black‑and‑white page setup to confidential worksheets before exporting to PDF with Aspose.Cells for .NET
+// AI Prompts: Set the Worksheet.PageSetup.BlackAndWhite property to true for any sheet whose name contains 'Confidential' and then save the workbook as a PDF. | Modify the worksheet iteration to detect a naming pattern and enable grayscale printing only for those sheets before calling Workbook.Save with SaveFormat.Pdf.
+// Common Searches: Aspose.Cells set black and white mode for specific worksheets before PDF export | apply black‑and‑white page setup to confidential Excel tabs using .NET | conditional page setup per worksheet when saving workbook as PDF with Aspose.Cells | export selected worksheets in black‑and‑white with Aspose.Cells .NET | how to filter worksheets by name for PDF generation in Aspose.Cells
+// Tags: black‑and‑white page setup per worksheet | conditional worksheet PDF export Aspose.Cells | confidential sheet filtering .NET | apply printing options to selected worksheets | page setup property BlackAndWhite usage
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using System;
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, iterates through each worksheet, checks if the sheet name contains "Confidential", enables the BlackAndWhite page‑setup flag for those sheets, and then saves the entire workbook as a PDF.
+class Program
 {
-    // Demonstrates how to flag worksheets whose names contain "Confidential" with PageSetup.BlackAndWhite, keep other sheets in color, configure PdfSaveOptions (e.g., ignore blank pages), and save the workbook as a single PDF where confidential data appears in grayscale.
-    public class ConfidentialBlackAndWhitePdfExport
+    static void Main()
     {
-        public static void Run()
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            // Check if the worksheet is marked as confidential (e.g., name contains "Confidential")
+            if (sheet.Name.IndexOf("Confidential", StringComparison.OrdinalIgnoreCase) >= 0)
             {
-                // Create a new workbook (or load an existing one)
-                Workbook workbook = new Workbook();
-
-                // -------------------------------------------------
-                // Sample data: add three worksheets, two of them are confidential
-                // -------------------------------------------------
-                Worksheet ws1 = workbook.Worksheets[0];
-                ws1.Name = "Summary";
-                ws1.Cells["A1"].PutValue("Public Data");
-
-                Worksheet wsConf1 = workbook.Worksheets.Add("Confidential_Q1");
-                wsConf1.Cells["A1"].PutValue("Secret Data Q1");
-
-                Worksheet wsConf2 = workbook.Worksheets.Add("Confidential_Q2");
-                wsConf2.Cells["A1"].PutValue("Secret Data Q2");
-
-                // -------------------------------------------------
-                // Apply black‑and‑white printing mode only to confidential sheets
-                // -------------------------------------------------
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Define your own criteria for confidentiality.
-                    // Here we treat any sheet whose name contains "Confidential" as confidential.
-                    if (sheet.Name.IndexOf("Confidential", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        // Set the BlackAndWhite property to true for printing.
-                        sheet.PageSetup.BlackAndWhite = true;
-                    }
-                    else
-                    {
-                        // Ensure non‑confidential sheets retain their original color mode.
-                        sheet.PageSetup.BlackAndWhite = false;
-                    }
-                }
-
-                // -------------------------------------------------
-                // Prepare PDF save options (you can customize further if needed)
-                // -------------------------------------------------
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Example: ignore blank pages to keep the PDF tidy
-                    PrintingPageType = PrintingPageType.IgnoreBlank
-                };
-
-                // -------------------------------------------------
-                // Export the workbook to PDF. Only the confidential sheets will be rendered in black‑and‑white.
-                // -------------------------------------------------
-                string outputPath = "ConfidentialReport.pdf";
-                workbook.Save(outputPath, pdfOptions);
-
-                Console.WriteLine($"Workbook exported to PDF at: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Apply black‑and‑white mode for printing this sheet
+                sheet.PageSetup.BlackAndWhite = true;
             }
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
-        }
+        // Export the workbook to PDF
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

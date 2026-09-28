@@ -1,19 +1,16 @@
-// Title: C# – Loop PivotTable fields and format header cells by display name with Aspose.Cells
-// Description: This example creates a workbook, builds a pivot table from sample data, refreshes the cache, and then iterates through Row, Column, and Data fields. For each field it retrieves the header cell using GetCellByDisplayName and applies a light‑yellow background with bold text before saving the file.
-// Keywords: Aspose.Cells C# | PivotTable GetCellByDisplayName | format pivot header cells | loop pivot fields .NET | apply style to Excel pivot headers | Excel automation Aspose | pivot table formatting code | C# Excel pivot styling
-// Common Searches: Aspose.Cells retrieve pivot header by display name | C# format pivot table header cells | loop through PivotTable.RowFields in .NET | apply background color to pivot headers Aspose | GetCellByDisplayName example C#
-// Developer Intent: Automatically style all pivot table header cells (row, column, data) by looping through fields and using their display names.
-// Use Cases: Consistently apply branding colors to pivot headers without hard‑coding cell addresses. | Dynamically highlight newly added fields after a pivot refresh. | Generate Excel reports where header styling adapts to any set of pivot fields.
-// AI Prompts: Show C# code that loops through PivotTable.RowFields, ColumnFields, and DataFields and formats each header cell using GetCellByDisplayName in Aspose.Cells. | Provide an Aspose.Cells example that refreshes a pivot cache, retrieves header cells by display name, and applies a custom style.
+// Title: Loop through pivot table fields and style their header cells by display name with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that iterates over every RowField and DataField of an Aspose.Cells PivotTable, retrieves each header cell using GetCellByDisplayName, and applies a bold blue font style. | Show how to prepend a custom prefix to each pivot table header cell while applying a styled format programmatically in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# get pivot table header cell by its display name | How to style row field headers in an Aspose.Cells pivot table | Programmatically change pivot table header text in a .NET workbook | Loop over pivot table data fields to apply formatting with Aspose.Cells | Set font color and boldness for pivot table headers using Aspose.Cells API
+// Tags: pivot table header styling Aspose.Cells | iterate pivot fields by display name C# | set font color and weight for pivot headers | customize pivot header text programmatically | Aspose.Cells GetCellByDisplayName usage
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
 namespace AsposeCellsExamples
 {
-    // This example creates a workbook, builds a pivot table from sample data, refreshes the cache, and then iterates through Row, Column, and Data fields. For each field it retrieves the header cell using GetCellByDisplayName and applies a light‑yellow background with bold text before saving the file.
+    // The example creates a workbook, adds sample data, builds a pivot table, then loops through its RowFields and DataFields, retrieves each header cell via GetCellByDisplayName, applies a bold blue font style (optionally prefixing the header text), and saves the result as FormattedPivotHeaders.xlsx.
     public class RetrieveAndFormatPivotFieldHeaders
     {
         public static void Run()
@@ -24,101 +21,76 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
 
-                // -------------------------------------------------
                 // Populate sample data for the pivot table
-                // -------------------------------------------------
                 sheet.Cells["A1"].Value = "Category";
-                sheet.Cells["B1"].Value = "Product";
-                sheet.Cells["C1"].Value = "Sales";
+                sheet.Cells["B1"].Value = "Value";
+                sheet.Cells["A2"].Value = "A";
+                sheet.Cells["B2"].Value = 10;
+                sheet.Cells["A3"].Value = "B";
+                sheet.Cells["B3"].Value = 20;
+                sheet.Cells["A4"].Value = "C";
+                sheet.Cells["B4"].Value = 30;
 
-                sheet.Cells["A2"].Value = "North";
-                sheet.Cells["B2"].Value = "Apple";
-                sheet.Cells["C2"].Value = 1200;
-
-                sheet.Cells["A3"].Value = "North";
-                sheet.Cells["B3"].Value = "Banana";
-                sheet.Cells["C3"].Value = 800;
-
-                sheet.Cells["A4"].Value = "South";
-                sheet.Cells["B4"].Value = "Apple";
-                sheet.Cells["C4"].Value = 1500;
-
-                sheet.Cells["A5"].Value = "South";
-                sheet.Cells["B5"].Value = "Banana";
-                sheet.Cells["C5"].Value = 700;
-
-                // -------------------------------------------------
-                // Create a pivot table
-                // -------------------------------------------------
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "SalesPivot");
+                // Add a pivot table
+                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
                 PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
                 // Add fields to the pivot table
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Category
-                pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Product
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
+                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Category as row field
+                pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Value as data field
 
-                // Refresh and calculate to build the pivot structure
-                pivotTable.RefreshData();   // Correct API to refresh pivot cache
+                // Refresh and calculate the pivot table
+                pivotTable.RefreshData();
                 pivotTable.CalculateData();
 
-                // -------------------------------------------------
-                // Helper method to format a cell
-                // -------------------------------------------------
-                void ApplyFormatting(Cell cell)
-                {
-                    if (cell == null) return;
+                // Create a style that will be applied to the header cells
+                Style headerStyle = workbook.CreateStyle();
+                headerStyle.Font.IsBold = true;
+                headerStyle.Font.Color = System.Drawing.Color.Blue;
 
-                    Style style = cell.GetStyle();
-                    style.ForegroundColor = Color.LightYellow;
-                    style.Pattern = BackgroundType.Solid;
-                    style.Font.IsBold = true;
-                    cell.SetStyle(style);
-                }
-
-                // -------------------------------------------------
-                // Process Row fields
-                // -------------------------------------------------
-                foreach (PivotField rowField in pivotTable.RowFields)
+                // Format data field headers
+                for (int i = 0; i < pivotTable.DataFields.Count; i++)
                 {
-                    string displayName = rowField.DisplayName;
+                    string displayName = pivotTable.DataFields[i].DisplayName;
                     Cell headerCell = pivotTable.GetCellByDisplayName(displayName);
-                    ApplyFormatting(headerCell);
+                    if (headerCell != null)
+                    {
+                        headerCell.SetStyle(headerStyle);
+                        headerCell.PutValue($"[Header] {displayName}");
+                    }
                 }
 
-                // -------------------------------------------------
-                // Process Column fields
-                // -------------------------------------------------
-                foreach (PivotField colField in pivotTable.ColumnFields)
+                // Format row field headers
+                for (int i = 0; i < pivotTable.RowFields.Count; i++)
                 {
-                    string displayName = colField.DisplayName;
+                    string displayName = pivotTable.RowFields[i].DisplayName;
                     Cell headerCell = pivotTable.GetCellByDisplayName(displayName);
-                    ApplyFormatting(headerCell);
+                    if (headerCell != null)
+                    {
+                        headerCell.SetStyle(headerStyle);
+                    }
                 }
 
-                // -------------------------------------------------
-                // Process Data fields
-                // -------------------------------------------------
-                foreach (PivotField dataField in pivotTable.DataFields)
-                {
-                    string displayName = dataField.DisplayName;
-                    Cell headerCell = pivotTable.GetCellByDisplayName(displayName);
-                    ApplyFormatting(headerCell);
-                }
-
-                // -------------------------------------------------
                 // Save the workbook
-                // -------------------------------------------------
-                workbook.Save("PivotFieldHeadersFormatted.xlsx");
+                string outputPath = "FormattedPivotHeaders.xlsx";
+                try
+                {
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }
 
-    // Entry point for the application
+    // Entry point required for console execution
     public class Program
     {
         public static void Main(string[] args)

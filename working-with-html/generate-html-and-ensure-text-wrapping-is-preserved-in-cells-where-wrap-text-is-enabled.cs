@@ -1,49 +1,45 @@
-// Title: C# – Export Excel to HTML with Preserved Text Wrapping Using Aspose.Cells
-// Description: Demonstrates how to create a workbook, insert a long string, enable text wrapping via a style and StyleFlag, set column width, configure HtmlSaveOptions (HideOverflowWrappedText = false, FormatDataIgnoreColumnWidth = false), and save the file as HTML so that wrapped text appears correctly in the browser.
-// Keywords: Aspose.Cells HTML export C# | preserve text wrapping Excel to HTML | HtmlSaveOptions HideOverflowWrappedText | wrap text style Aspose.Cells | C# Excel to HTML conversion | column width HTML wrap Aspose | Aspose.Cells .NET HTML output | export wrapped cells to HTML | Excel cell wrap HTML rendering
-// Common Searches: how to keep text wrapping when saving Excel as HTML with Aspose.Cells | Aspose.Cells HtmlSaveOptions show wrapped text in HTML | C# export cell with wrap text to HTML | prevent overflow hidden for wrapped cells Aspose HTML export | preserve Excel cell line breaks in HTML output | set column width for HTML wrap Aspose.Cells
-// Developer Intent: Generate an HTML file from an Excel workbook where cells that have text‑wrap enabled retain their line breaks and are fully visible in the rendered page.
-// Use Cases: Web‑based reports that need multi‑line descriptions to display exactly as in Excel. | Exporting data sheets with comments or notes that rely on cell wrapping for readability. | Creating HTML invoices or catalogs where product details must wrap within table cells without truncation.
-// AI Prompts: Show me how to add a custom CSS class to wrapped cells when exporting to HTML with Aspose.Cells. | Provide code to export multiple worksheets to a single HTML file while preserving text wrapping on all cells. | Explain how to adjust HtmlSaveOptions to control column width and prevent overflow for wrapped text in the generated HTML.
+// Title: How to export an Excel worksheet to HTML with cell text wrapping preserved using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook, writes a long string to a cell, enables text wrapping via the Style.IsTextWrapped property, adjusts column width and row height, and saves the worksheet as HTML with the wrap retained. | Demonstrate how to configure HtmlSaveOptions to export only the active worksheet while keeping the cell's wrap settings intact in the generated HTML file.
+// Common Searches: Aspose.Cells C# preserve cell wrap when saving as HTML | export Excel to HTML with text wrap enabled using Aspose.Cells | how to keep text wrapping in HTML output from Aspose.Cells workbook | set column width and row height for wrapped text in Aspose.Cells HTML export
+// Tags: export worksheet to HTML with text wrap Aspose.Cells | Style.IsTextWrapped property C# | HtmlSaveOptions ExportActiveWorksheetOnly | adjust column width for wrapped text Aspose.Cells | auto fit row height HTML export Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Demonstrates how to create a workbook, insert a long string, enable text wrapping via a style and StyleFlag, set column width, configure HtmlSaveOptions (HideOverflowWrappedText = false, FormatDataIgnoreColumnWidth = false), and save the file as HTML so that wrapped text appears correctly in the browser.
-class HtmlWrapDemo
+// The example creates a new workbook, inserts a long string into cell A1, enables text wrapping via the Style.IsTextWrapped flag, sets column width and row height to showcase wrapping, configures HtmlSaveOptions to export only the active sheet, and saves the result as an HTML file where the cell's wrap setting is retained.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Access the first worksheet and its cells collection
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Insert a long text into cell A1
-        cells["A1"].PutValue("This is a very long text that should wrap inside the cell when exported to HTML. It demonstrates how wrap text is preserved.");
+        // Put a long text into cell A1
+        Cell cell = sheet.Cells["A1"];
+        cell.PutValue("This is a very long piece of text that should wrap inside the cell when the workbook is exported to HTML.");
 
-        // Create a style with text wrapping enabled
-        Style wrapStyle = workbook.CreateStyle();
-        wrapStyle.IsTextWrapped = true;
+        // Enable text wrapping for the cell
+        Style style = cell.GetStyle();
+        style.IsTextWrapped = true;
+        cell.SetStyle(style);
 
-        // Use a StyleFlag to apply only the wrap text setting
-        StyleFlag flag = new StyleFlag();
-        flag.WrapText = true;
+        // Adjust column width to make wrapping visible
+        sheet.Cells.SetColumnWidth(0, 20); // Column A width
 
-        // Apply the wrapping style to cell A1
-        cells["A1"].SetStyle(wrapStyle, flag);
+        // Optionally set row height (auto‑fit can also be used)
+        sheet.Cells.SetRowHeight(0, 40);
 
-        // Set column width to force the text to wrap
-        cells.SetColumnWidth(0, 15); // width in characters
+        // Prepare HTML save options
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+        {
+            // Export only the active worksheet (optional)
+            ExportActiveWorksheetOnly = true
+        };
 
-        // Configure HTML save options to keep wrapped text visible
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.HideOverflowWrappedText = false;          // do not hide overflow
-        htmlOptions.FormatDataIgnoreColumnWidth = false;     // respect column width like Excel
-
-        // Save the workbook as an HTML file
-        workbook.Save("WrappedTextOutput.html", htmlOptions);
+        // Save the workbook as HTML; wrap settings are preserved in the generated HTML
+        workbook.Save("output.html", htmlOptions);
     }
 }

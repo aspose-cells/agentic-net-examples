@@ -1,96 +1,87 @@
-// Title: Validate Chart Data Range for Empty Cells Before Creating a Column Chart – Aspose.Cells for .NET
-// Description: C# example that creates a workbook, inserts sample data with a deliberate blank cell, checks the series range for null values using a custom IsRangeWithoutEmptyCells method (Range.IsBlank and cell‑by‑cell inspection), aborts chart creation if any cell is empty, otherwise adds a column chart, sets series and category ranges, applies PlotEmptyCellsType.NotPlotted, and saves the file as ValidatedChart.xlsx.
-// Keywords: Aspose.Cells chart validation | C# empty cells range check | Range.IsBlank Aspose.Cells | prevent chart creation blank data | PlotEmptyCellsType NotPlotted | column chart Aspose.Cells .NET | worksheet range null detection | Aspose.Cells example C#
-// Common Searches: Aspose.Cells check for empty cells before adding a chart | C# validate series range does not contain blanks Aspose.Cells | how to skip chart generation when data contains null values | detect blank cells in worksheet range Aspose.Cells .NET | set PlotEmptyCellsType after range validation
-// Developer Intent: Confirm that every cell in the chart's data series is populated before generating the chart to avoid errors or unwanted empty points.
-// Use Cases: Abort chart creation when any cell in the series range is empty, preventing runtime exceptions. | Automatically apply PlotEmptyCellsType.NotPlotted only after the data range is verified as complete. | Log or display a warning message and skip chart generation if missing values are detected.
-// AI Prompts: Write a C# method using Aspose.Cells that returns true only if a given worksheet range contains no empty cells. | Generate Aspose.Cells code that creates a line chart after confirming both series and category ranges are free of null values. | Show how to handle missing data in a chart by validating the range first and then setting PlotEmptyCellsType to NotPlotted.
+// Title: How to check for empty cells in a worksheet range before generating a column chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Iterate over a specified CellArea in a workbook and abort chart creation if any cell is null or empty, using the Aspose.Cells C# API. | Create a column chart only after confirming that every cell in the source range contains a value, then save the workbook with Aspose.Cells. | Add pre‑chart validation that logs the address of the first blank cell and prevents adding NSeries to the chart in C#.
+// Common Searches: C# Aspose.Cells verify that a range has no blank cells before adding a chart | How to skip chart generation in Aspose.Cells when source data contains empty values | Check Excel range for null or empty strings using Aspose.Cells API | Prevent Aspose.Cells column chart from using incomplete data in .NET
+// Tags: Aspose.Cells validate chart data range | C# check empty cells before chart creation | Aspose.Cells column chart from non‑empty range | Excel workbook range integrity Aspose.Cells | pre‑chart validation Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsChartValidation
+// The example loads an existing workbook, defines a cell range (A1:B5), scans the range for null or empty cells, aborts chart creation if a blank is found (logging its address), otherwise adds a column chart using the validated range, sets a title, and saves the workbook as Output.xlsx.
+class ChartGenerator
 {
-    // C# example that creates a workbook, inserts sample data with a deliberate blank cell, checks the series range for null values using a custom IsRangeWithoutEmptyCells method (Range.IsBlank and cell‑by‑cell inspection), aborts chart creation if any cell is empty, otherwise adds a column chart, sets series and category ranges, applies PlotEmptyCellsType.NotPlotted, and saves the file as ValidatedChart.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "Input.xlsx";
+
+            // Ensure the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (creation rule)
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data with an empty cell in the series range
-                sheet.Cells["A1"].PutValue("Category");
-                sheet.Cells["B1"].PutValue("Value");
-                sheet.Cells["A2"].PutValue("A");
-                sheet.Cells["B2"].PutValue(10);
-                sheet.Cells["A3"].PutValue("B");
-                // B3 is intentionally left empty
-                sheet.Cells["A4"].PutValue("C");
-                sheet.Cells["B4"].PutValue(30);
-
-                // Define the data range for the chart series
-                string seriesRange = "B2:B4";
-
-                // Validate that the defined range does not contain empty cells
-                if (IsRangeWithoutEmptyCells(sheet, seriesRange))
-                {
-                    // Add a chart (lifecycle rule: creation and later saving)
-                    int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-                    Chart chart = sheet.Charts[chartIndex];
-
-                    // Set the series data range
-                    chart.NSeries.Add(seriesRange, true);
-                    chart.NSeries.CategoryData = "A2:A4";
-
-                    // Optional: define how to handle empty cells (not needed after validation)
-                    chart.PlotEmptyCellsType = PlotEmptyCellsType.NotPlotted;
-                }
-                else
-                {
-                    Console.WriteLine($"The range \"{seriesRange}\" contains empty cells. Chart creation aborted.");
-                }
-
-                // Save the workbook (save rule)
-                workbook.Save("ValidatedChart.xlsx", SaveFormat.Xlsx);
-                Console.WriteLine("Workbook saved as ValidatedChart.xlsx");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define the data range for the chart (A1:B5)
+            CellArea dataRange = new CellArea
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                StartRow = 0,
+                StartColumn = 0,
+                EndRow = 4,
+                EndColumn = 1
+            };
+
+            // Validate that the range does not contain empty cells
+            bool hasEmpty = false;
+            for (int row = dataRange.StartRow; row <= dataRange.EndRow && !hasEmpty; row++)
+            {
+                for (int col = dataRange.StartColumn; col <= dataRange.EndColumn; col++)
+                {
+                    Cell cell = sheet.Cells[row, col];
+                    if (cell.Value == null || string.IsNullOrEmpty(cell.StringValue))
+                    {
+                        hasEmpty = true;
+                        Console.WriteLine($"Empty cell found at {cell.Name}.");
+                        break;
+                    }
+                }
             }
+
+            if (hasEmpty)
+            {
+                Console.WriteLine("Chart generation aborted due to empty cells in the data range.");
+                return;
+            }
+
+            // Create a column chart positioned from row 5, column 0 to row 20, column 5
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Build the address string for the range (e.g., "A1:B5")
+            string startAddress = CellsHelper.CellIndexToName(dataRange.StartRow, dataRange.StartColumn);
+            string endAddress = CellsHelper.CellIndexToName(dataRange.EndRow, dataRange.EndColumn);
+            string rangeAddress = $"{startAddress}:{endAddress}";
+
+            // Set the chart's data source to the validated range
+            chart.NSeries.Add(rangeAddress, true);
+
+            // Optional: set chart title
+            chart.Title.Text = "Sample Column Chart";
+
+            // Save the workbook with the new chart
+            string outputPath = "Output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Chart created and workbook saved to {outputPath}.");
         }
-
-        static bool IsRangeWithoutEmptyCells(Worksheet sheet, string rangeAddress)
+        catch (Exception ex)
         {
-            // Create a Range object for the address using the Aspose.Cells alias to avoid ambiguity
-            AsposeRange range = sheet.Cells.CreateRange(rangeAddress);
-
-            // If the whole range is blank, it definitely contains empty cells
-            if (range.IsBlank())
-                return false;
-
-            // Iterate through each cell in the range to detect blanks
-            for (int row = 0; row < range.RowCount; row++)
-            {
-                for (int col = 0; col < range.ColumnCount; col++)
-                {
-                    int actualRow = range.FirstRow + row;
-                    int actualCol = range.FirstColumn + col;
-
-                    // A cell is considered empty if its value is null
-                    if (sheet.Cells[actualRow, actualCol].Value == null)
-                        return false;
-                }
-            }
-
-            // No empty cells found
-            return true;
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,34 +1,61 @@
-// Title: C# – Remove All Sparklines from an Excel Worksheet with Aspose.Cells for .NET
-// Description: Demonstrates how to load or create a workbook, access the first worksheet, iterate through each SparklineGroup, clear its Sparklines collection, and save the file without any sparklines using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells clear sparklines | C# remove all sparklines | SparklineGroup Clear method | delete Excel sparklines .NET | Aspose.Cells SparklineGroup example
-// Common Searches: how to clear sparklines with Aspose.Cells C# | remove all sparkline groups from Excel using .NET | Aspose.Cells delete sparklines programmatically | C# code to strip sparklines from a worksheet
-// Developer Intent: Eliminate every sparkline on the active worksheet programmatically.
-// Use Cases: Strip visual sparklines from a template before distributing it to clients. | Comply with data‑privacy policies by removing trend indicators that could expose sensitive information. | Reset a sheet's sparklines so new ones can be generated from refreshed data.
-// AI Prompts: Write C# code that uses Aspose.Cells to clear all sparklines from the first worksheet and save the workbook. | Explain how to loop through SparklineGroup objects in Aspose.Cells and remove their sparklines without altering other sheet content. | Show the steps to load an existing Excel file, delete every sparkline on sheet 1, and write the result using Aspose.Cells for .NET.
+// Title: Remove all sparklines from a worksheet with Aspose.Cells C# by clearing each SparklineGroup
+// AI Prompts: Generate C# code that loads a workbook, iterates through every SparklineGroup on the active sheet, and calls Clear on each group's Sparklines collection. | Show how to delete every sparkline in an Aspose.Cells worksheet while preserving other data, then save the workbook to a new file. | Provide a snippet that adds a sample sparkline group, clears all sparklines, and exports the result as an XLSX file.
+// Common Searches: Aspose.Cells C# remove all sparklines from a worksheet | clear sparklines in each SparklineGroup using Aspose.Cells API | C# code to delete sparkline groups in an Excel file with Aspose.Cells | how to clear Sparkline collection in Aspose.Cells without losing worksheet data
+// Tags: SparklineGroup.Sparklines.Clear C# | Aspose.Cells remove sparkline groups | clear sparklines collection Aspose.Cells | Excel workbook sparkline deletion C# | Aspose.Cells workbook save after sparkline clear
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to load or create a workbook, access the first worksheet, iterate through each SparklineGroup, clear its Sparklines collection, and save the file without any sparklines using Aspose.Cells for .NET.
-class RemoveAllSparklines
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates (or loads) a workbook, optionally adds a sparkline group, then iterates over all SparklineGroup objects on the first worksheet and calls the Clear method on each group's Sparklines collection. Finally, it saves the workbook as RemovedAllSparklines.xlsx, leaving the worksheet without any sparklines.
+    public class RemoveAllSparklines
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // Replace with new Workbook("input.xlsx") to load
-
-        // Get the first worksheet (active worksheet)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Iterate through each SparklineGroup in the worksheet
-        foreach (SparklineGroup group in sheet.SparklineGroups)
+        // Entry point for the console application
+        public static void Main(string[] args)
         {
-            // Clear all sparklines within the current group
-            group.Sparklines.Clear();
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
-        // Save the workbook after removing sparklines
-        workbook.Save("output_without_sparklines.xlsx");
+        public static void Run()
+        {
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // create
+
+            // Access the first worksheet (active worksheet)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Example: add a sparkline group so we have something to clear
+            // This part can be omitted if the worksheet already contains sparklines
+            CellArea sparklineLocation = new CellArea
+            {
+                StartColumn = 4,
+                EndColumn = 4,
+                StartRow = 0,
+                EndRow = 0
+            };
+            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, sparklineLocation);
+            SparklineGroup exampleGroup = sheet.SparklineGroups[groupIndex];
+            exampleGroup.Sparklines.Add($"{sheet.Name}!A1:D1", 0, 4);
+
+            // Iterate through each SparklineGroup in the worksheet
+            // and clear its SparklineCollection using the Clear method
+            foreach (SparklineGroup group in sheet.SparklineGroups)
+            {
+                // Clear all sparklines within the current group
+                group.Sparklines.Clear();
+            }
+
+            // Save the workbook with the sparklines removed
+            workbook.Save("RemovedAllSparklines.xlsx"); // save
+        }
     }
 }

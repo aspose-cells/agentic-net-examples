@@ -1,108 +1,93 @@
-// Title: Export Invalid Data‑Validation Rows to an Error Sheet with Aspose.Cells for .NET
-// Description: Demonstrates how to add a whole‑number validation (10‑20) to a column, iterate through the data rows, copy the header and any rows that break the rule to a new worksheet called ErrorReport, and save the workbook.
-// Keywords: Aspose.Cells | C# | Excel data validation | export invalid rows | error report worksheet | CopyRows method | filter rows by validation | Aspose.Cells .NET example
-// Common Searches: Aspose.Cells copy rows that fail validation | C# generate error report for Excel validation | How to export rows outside validation range using Aspose.Cells | Aspose.Cells filter invalid data rows | Create error sheet for data validation in .NET
-// Developer Intent: Generate an Excel workbook that isolates rows not satisfying a specified data‑validation rule into a separate error‑report worksheet.
-// Use Cases: Audit entries that fall outside an allowed numeric range by moving them to an error sheet. | Provide users with a concise list of invalid rows for correction or review. | Automate creation of validation‑based error reports in server‑side .NET applications.
-// AI Prompts: Write C# code using Aspose.Cells that adds a whole‑number validation (10‑20) to column B, scans rows B2:B5, and copies rows violating the rule to a new worksheet named "ErrorReport". | Explain step‑by‑step how to create an error‑report sheet in Aspose.Cells by applying data validation, iterating over cells, and using CopyRows to transfer invalid rows. | Generate a complete .NET example that produces an Excel file with a data sheet and an error sheet containing only rows with invalid Quantity values.
+// Title: How to copy rows that fail a whole-number validation into a separate worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that iterates through a worksheet, evaluates each cell against a numeric range validation, and moves the entire row to a new sheet named "ValidationErrors". | Demonstrate building an error‑report worksheet that lists all rows where the Age column is outside the 10‑20 range by using Aspose.Cells validation APIs.
+// Common Searches: Aspose.Cells .NET copy rows with invalid numeric values to another worksheet | C# create validation error report sheet using Aspose.Cells | How to filter rows based on data validation and export them in Aspose.Cells | Export rows that do not meet whole number validation to a new sheet in Aspose.Cells | Generate Excel error log for failed data validation with Aspose.Cells C#
+// Tags: export rows with validation errors Aspose.Cells | generate error report worksheet C# | filter worksheet rows by numeric validation Aspose.Cells | create validation error sheet .NET | copy invalid data to new Excel sheet Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsErrorReport
+namespace AsposeCellsErrorReporting
 {
-    // Demonstrates how to add a whole‑number validation (10‑20) to a column, iterate through the data rows, copy the header and any rows that break the rule to a new worksheet called ErrorReport, and save the workbook.
+    // The example creates a workbook, adds sample data with an Age column, applies a whole-number validation (10‑20) to that column, scans each data row, and copies any row that violates the rule to a newly added worksheet named "ValidationErrors" before saving the file as ValidationErrorReport.xlsx.
     class Program
     {
         static void Main()
         {
-            try
+            // -------------------- Create workbook and populate data --------------------
+            Workbook workbook = new Workbook();                     // create workbook
+            Worksheet dataSheet = workbook.Worksheets[0];          // first worksheet
+
+            // Header
+            dataSheet.Cells["A1"].PutValue("Age");
+            dataSheet.Cells["B1"].PutValue("Name");
+
+            // Sample data (some values violate the validation rule)
+            dataSheet.Cells["A2"].PutValue(15);   // valid
+            dataSheet.Cells["B2"].PutValue("John");
+            dataSheet.Cells["A3"].PutValue(5);    // invalid (less than 10)
+            dataSheet.Cells["B3"].PutValue("Alice");
+            dataSheet.Cells["A4"].PutValue(25);   // invalid (greater than 20)
+            dataSheet.Cells["B4"].PutValue("Bob");
+            dataSheet.Cells["A5"].PutValue(18);   // valid
+            dataSheet.Cells["B5"].PutValue("Eve");
+
+            // -------------------- Add data validation (Whole number between 10 and 20) --------------------
+            int validationIndex = dataSheet.Validations.Add();
+            Validation validation = dataSheet.Validations[validationIndex];
+            validation.Type = ValidationType.WholeNumber;
+            validation.Operator = OperatorType.Between;
+            validation.Formula1 = "10";
+            validation.Formula2 = "20";
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid Age";
+            validation.ErrorMessage = "Age must be between 10 and 20.";
+            // Apply validation to column A (excluding header)
+            validation.AddArea(new CellArea { StartRow = 1, StartColumn = 0, EndRow = dataSheet.Cells.MaxDataRow, EndColumn = 0 });
+
+            // -------------------- Create a worksheet for error reporting --------------------
+            Worksheet errorSheet = workbook.Worksheets.Add("ValidationErrors");
+            int errorRow = 0; // start writing from the first row in the error sheet
+
+            // Copy header to error sheet
+            for (int col = 0; col <= dataSheet.Cells.MaxDataColumn; col++)
             {
-                // -------------------------------------------------
-                // 1. Create a new workbook and get the first sheet
-                // -------------------------------------------------
-                Workbook workbook = new Workbook();
-                Worksheet dataSheet = workbook.Worksheets[0];
-                dataSheet.Name = "Data";
+                errorSheet.Cells[errorRow, col].Value = dataSheet.Cells[0, col].Value;
+            }
+            errorRow++; // move to next row after header
 
-                // -------------------------------------------------
-                // 2. Populate sample data (some rows will violate validation)
-                // -------------------------------------------------
-                // Header
-                dataSheet.Cells["A1"].PutValue("ID");
-                dataSheet.Cells["B1"].PutValue("Quantity");
+            // -------------------- Scan rows and copy those that fail validation --------------------
+            for (int row = 1; row <= dataSheet.Cells.MaxDataRow; row++)
+            {
+                // Retrieve the cell that has validation (column A)
+                Cell ageCell = dataSheet.Cells[row, 0];
 
-                // Valid rows
-                dataSheet.Cells["A2"].PutValue(1);
-                dataSheet.Cells["B2"].PutValue(15);   // within 10‑20
-
-                dataSheet.Cells["A3"].PutValue(2);
-                dataSheet.Cells["B3"].PutValue(8);    // below 10 → invalid
-
-                dataSheet.Cells["A4"].PutValue(3);
-                dataSheet.Cells["B4"].PutValue(25);   // above 20 → invalid
-
-                dataSheet.Cells["A5"].PutValue(4);
-                dataSheet.Cells["B5"].PutValue(12);   // valid
-
-                // -------------------------------------------------
-                // 3. Add a data‑validation rule: whole number between 10 and 20
-                // -------------------------------------------------
-                Validation validation = dataSheet.Validations[dataSheet.Validations.Add(new CellArea
+                // Perform manual validation check (since Aspose.Cells does not expose a direct method)
+                bool isValid = true;
+                if (ageCell.Type == CellValueType.IsNumeric)
                 {
-                    StartRow = 1,   // B2 (zero‑based)
-                    StartColumn = 1,
-                    EndRow = 4,     // B5
-                    EndColumn = 1
-                })];
-                validation.Type = ValidationType.WholeNumber;
-                validation.Operator = OperatorType.Between;
-                validation.Formula1 = "10";
-                validation.Formula2 = "20";
-                validation.ShowError = true; // show error message when invalid data entered
-
-                // -------------------------------------------------
-                // 4. Create a new worksheet to hold error rows
-                // -------------------------------------------------
-                Worksheet errorSheet = workbook.Worksheets.Add("ErrorReport");
-
-                // Copy header row to the error sheet (row 0)
-                // Use the overload that copies between worksheets
-                errorSheet.Cells.CopyRows(dataSheet.Cells, 0, 1, 0, null);
-
-                // Keep track of the next row index in the error sheet (start after header)
-                int errorRowIndex = 1;
-
-                // -------------------------------------------------
-                // 5. Manually check each data row against the validation rule
-                // -------------------------------------------------
-                for (int row = 1; row <= 4; row++) // rows B2:B5 (zero‑based)
+                    double age = ageCell.DoubleValue;
+                    if (age < 10 || age > 20)
+                        isValid = false;
+                }
+                else
                 {
-                    Cell qtyCell = dataSheet.Cells[row, 1]; // column B
-                    if (qtyCell.Type != CellValueType.IsNumeric)
-                        continue; // skip non‑numeric values
-
-                    double qty = qtyCell.DoubleValue;
-                    if (qty < 10 || qty > 20) // violates the rule
-                    {
-                        // Copy the entire offending row to the error sheet
-                        errorSheet.Cells.CopyRows(dataSheet.Cells, row, 1, errorRowIndex, null);
-                        errorRowIndex++;
-                    }
+                    // Non‑numeric values are also considered invalid for this rule
+                    isValid = false;
                 }
 
-                // -------------------------------------------------
-                // 6. Save the workbook
-                // -------------------------------------------------
-                string outputPath = "ErrorReportDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+                // If validation fails, copy the entire row to the error sheet
+                if (!isValid)
+                {
+                    for (int col = 0; col <= dataSheet.Cells.MaxDataColumn; col++)
+                    {
+                        errorSheet.Cells[errorRow, col].Value = dataSheet.Cells[row, col].Value;
+                    }
+                    errorRow++;
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // -------------------- Save the workbook --------------------
+            workbook.Save("ValidationErrorReport.xlsx"); // save workbook
         }
     }
 }

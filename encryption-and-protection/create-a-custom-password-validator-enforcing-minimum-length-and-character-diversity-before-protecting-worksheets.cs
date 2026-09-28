@@ -1,77 +1,90 @@
-// Title: C# Custom Password Validator for Aspose.Cells Worksheet Protection (Min Length & Complexity)
-// Description: Demonstrates how to enforce a minimum 8‑character length and require at least three of four character groups (uppercase, lowercase, digit, special) using regular expressions. The validator runs before assigning the password to the worksheet's Protection object, then the sheet is protected with ProtectionType.All, the password is verified with VerifyPassword, and the workbook is saved as an Excel file.
-// Keywords: Aspose.Cells password validation | C# worksheet protection | Excel password complexity | custom password validator .NET | Protect worksheet Aspose.Cells | VerifyPassword C# | regex password rules | Excel security Aspose
-// Common Searches: how to enforce password complexity with Aspose.Cells C# | validate Excel worksheet password before Protect method | Aspose.Cells verify worksheet protection password | custom password rules for Excel sheet protection .NET | C# regex password validator for Aspose.Cells
-// Developer Intent: Ensure that the password used for worksheet protection meets defined length and character‑type requirements before applying protection with Aspose.Cells.
-// Use Cases: Validate user‑entered passwords against strength rules before calling sheet.Protect to avoid weak protection. | Apply a strong, pre‑validated password while configuring granular worksheet protection options (allow/deny actions). | Programmatically confirm that the saved workbook’s protection password satisfies the complexity policy using VerifyPassword.
-// AI Prompts: Create a reusable C# method that checks password strength (minimum 8 characters, at least three of uppercase, lowercase, digit, special) for Aspose.Cells worksheet protection. | Show how to integrate the custom password validator into an existing Aspose.Cells workflow and return a clear error message when validation fails. | Write unit tests in C# for the IsValidPassword method covering all combinations of character categories and edge cases.
+// Title: Implement a custom password validator and protect Excel worksheets using Aspose.Cells for .NET
+// AI Prompts: Write a C# method that checks a password for minimum length, uppercase, lowercase, digit, and special character, then use it to call Worksheet.Protect(ProtectionType.All, password, string.Empty). | Refactor the example to loop through every worksheet in a workbook, applying the same validated password protection, and expose the complexity rules (min length, required character sets) as configurable parameters. | Show how to catch the ArgumentException thrown by the validator and log a clear error message before attempting to protect the worksheet.
+// Common Searches: c# Aspose.Cells enforce password complexity before worksheet protection | how to validate Excel sheet password strength using Aspose.Cells .NET | protect multiple worksheets with a strong password in Aspose.Cells | custom password policy implementation for Aspose.Cells workbook protection | Aspose.Cells Protect method with custom validator example
+// Tags: custom password validator Aspose.Cells | worksheet protection with password policy .NET | Aspose.Cells Protect method password enforcement | Excel workbook password complexity .NET | C# password strength check for Excel sheets
 
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsPasswordValidator
+// The sample creates or loads an Excel workbook, validates each password using a custom method that enforces minimum length, uppercase, lowercase, digit, and special character requirements, then protects the worksheet(s) with Aspose.Cells' Protect method (ProtectionType.All) and saves the protected files.
+class Program
 {
-    // Demonstrates how to enforce a minimum 8‑character length and require at least three of four character groups (uppercase, lowercase, digit, special) using regular expressions. The validator runs before assigning the password to the worksheet's Protection object, then the sheet is protected with ProtectionType.All, the password is verified with VerifyPassword, and the workbook is saved as an Excel file.
-    class Program
+    static void Main()
     {
-        // Validates that the password meets minimum length and character diversity requirements.
-        // Minimum length: 8 characters.
-        // Must contain at least three of the following categories:
-        //   - Uppercase letters
-        //   - Lowercase letters
-        //   - Digits
-        //   - Special characters
-        static bool IsValidPassword(string password)
+        try
         {
-            if (string.IsNullOrEmpty(password) || password.Length < 8)
-                return false;
+            // ---------- Create a new workbook (create rule) ----------
+            var newWorkbook = new Workbook(); // create rule
+            var newSheet = newWorkbook.Worksheets[0];
+            string newPassword = "Str0ng!Pass";
 
-            int categories = 0;
-            if (Regex.IsMatch(password, @"[A-Z]")) categories++; // Uppercase
-            if (Regex.IsMatch(password, @"[a-z]")) categories++; // Lowercase
-            if (Regex.IsMatch(password, @"\d")) categories++;    // Digit
-            if (Regex.IsMatch(password, @"[\W_]")) categories++; // Special
+            // Validate and protect the new worksheet
+            ValidatePassword(newPassword);
+            // Protect the worksheet with a password (all protection types)
+            // The third parameter is the old password; use empty string for a new protection
+            newSheet.Protect(ProtectionType.All, newPassword, string.Empty);
 
-            return categories >= 3;
+            // Save the newly created and protected workbook (save rule)
+            newWorkbook.Save("NewProtectedWorkbook.xlsx"); // save rule
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating new workbook: {ex.Message}");
         }
 
-        static void Main(string[] args)
+        try
         {
-            // Example password to be used for worksheet protection
-            string password = "Str0ng!Pass";
-
-            // Validate password before applying protection
-            if (!IsValidPassword(password))
+            // Ensure the template file exists; create a simple one if missing
+            const string templatePath = "Template.xlsx";
+            if (!File.Exists(templatePath))
             {
-                Console.WriteLine("Password does not meet the required complexity rules.");
-                return;
+                var tempWb = new Workbook();
+                tempWb.Worksheets[0].Name = "TemplateSheet";
+                tempWb.Save(templatePath);
             }
 
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // ---------- Load an existing workbook (load rule) ----------
+            var loadedWorkbook = new Workbook(templatePath); // load rule
+            var loadedSheet = loadedWorkbook.Worksheets[0];
+            string loadedPassword = "An0ther#Pass";
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Validate and protect the loaded worksheet
+            ValidatePassword(loadedPassword);
+            // Protect the worksheet with a password (all protection types)
+            loadedSheet.Protect(ProtectionType.All, loadedPassword, string.Empty);
 
-            // Configure worksheet protection options
-            Protection protection = sheet.Protection;
-            protection.AllowDeletingColumn = false;
-            protection.AllowDeletingRow = false;
-            protection.AllowFormattingCell = true;
-            protection.AllowInsertingRow = true;
-            protection.AllowSelectingLockedCell = true;
-            protection.Password = password; // Set the validated password
-
-            // Protect the worksheet with all protection types using the password
-            sheet.Protect(ProtectionType.All, password, null);
-
-            // Verify that the password works using VerifyPassword
-            bool isCorrect = sheet.Protection.VerifyPassword(password);
-            Console.WriteLine($"Password verification result: {isCorrect}");
-
-            // Save the workbook
-            workbook.Save("ProtectedWorksheet.xlsx");
+            // Save the loaded and protected workbook (save rule)
+            loadedWorkbook.Save("LoadedProtectedWorkbook.xlsx"); // save rule
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing loaded workbook: {ex.Message}");
+        }
+    }
+
+    // Custom password validator enforcing minimum length and character diversity
+    static void ValidatePassword(string password)
+    {
+        const int minLength = 8;
+        if (string.IsNullOrEmpty(password) || password.Length < minLength)
+            throw new ArgumentException($"Password must be at least {minLength} characters long.");
+
+        // At least one uppercase letter
+        if (!Regex.IsMatch(password, @"[A-Z]"))
+            throw new ArgumentException("Password must contain at least one uppercase letter.");
+
+        // At least one lowercase letter
+        if (!Regex.IsMatch(password, @"[a-z]"))
+            throw new ArgumentException("Password must contain at least one lowercase letter.");
+
+        // At least one digit
+        if (!Regex.IsMatch(password, @"\d"))
+            throw new ArgumentException("Password must contain at least one digit.");
+
+        // At least one special character (non-word character)
+        if (!Regex.IsMatch(password, @"[\W_]"))
+            throw new ArgumentException("Password must contain at least one special character.");
     }
 }

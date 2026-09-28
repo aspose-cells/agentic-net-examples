@@ -1,65 +1,35 @@
-// Title: Read Cell.Value After Formula Calculation with CustomCalculationMonitor in Aspose.Cells for .NET
-// Description: Shows how to attach a CustomCalculationMonitor to a workbook, run Workbook.CalculateFormula, and read the Cell.Value of a formula cell to verify the evaluated result. The C# example logs original and new values and demonstrates re‑calculation after source data changes.
-// Keywords: Aspose.Cells | C# | .NET | CustomCalculationMonitor | AbstractCalculationMonitor | Workbook.CalculateFormula | Cell.Value | formula evaluation | read calculated value | monitor cell changes
-// Common Searches: Aspose.Cells read calculated cell value | CustomCalculationMonitor example C# | How to get formula result after CalculateFormula | Verify formula evaluation Aspose.Cells .NET | Log cell value changes during calculation
-// Developer Intent: Retrieve the Cell.Value after invoking Workbook.CalculateFormula to confirm that a formula has been evaluated correctly.
-// Use Cases: Audit spreadsheet modifications by logging original and new values for each calculated cell. | Automated unit tests that compare Cell.Value with expected outcomes after formula evaluation. | Trigger downstream business logic when source cells change, using the monitor to capture updated values.
-// AI Prompts: Generate C# code that uses CustomCalculationMonitor to log OriginalValue and CalculatedValue for each cell during Aspose.Cells calculation. | Provide a snippet that reads Cell.Value after Workbook.CalculateFormula and asserts it equals a specified number. | Explain how to reuse a calculation monitor to track formula updates when source data is modified in Aspose.Cells.
+// Title: Read the evaluated value of a specific cell after recalculating formulas with Aspose.Cells for .NET (C#)
+// AI Prompts: Recalculate all formulas in an Excel workbook and return the value of cell A1 using Aspose.Cells in C#. | Retrieve the computed result of any cell after invoking Workbook.CalculateFormula with Aspose.Cells for .NET. | Load a workbook, trigger formula calculation, and read the evaluated Cell.Value without opening Excel.
+// Common Searches: Aspose.Cells C# read cell value after Workbook.CalculateFormula | How to get evaluated result of an Excel formula using Aspose.Cells for .NET | Retrieve calculated value of cell A1 after recalculating workbook with Aspose.Cells | C# Aspose.Cells get formula evaluation result programmatically
+// Tags: calculate workbook formulas Aspose.Cells | read evaluated cell value C# | access Cell.Value after CalculateFormula | retrieve formula result Aspose.Cells .NET | load and recalculate Excel workbook C#
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsFormulaMonitorDemo
+// Loads an Excel workbook, recalculates all formulas with Workbook.CalculateFormula, reads the evaluated value of a specified cell via Cell.Value, outputs the result, and optionally saves the workbook.
+public class FormulaEvaluator
 {
-    // Custom monitor to capture calculation details for each cell
-    // Shows how to attach a CustomCalculationMonitor to a workbook, run Workbook.CalculateFormula, and read the Cell.Value of a formula cell to verify the evaluated result. The C# example logs original and new values and demonstrates re‑calculation after source data changes.
-    public class CustomCalculationMonitor : AbstractCalculationMonitor
+    public static void Main()
     {
-        // This method is called after each cell is calculated
-        public override void AfterCalculate(int sheetIndex, int rowIndex, int columnIndex)
-        {
-            // Check if the cell's value actually changed during calculation
-            if (ValueChanged)
-            {
-                // OriginalValue – value before calculation
-                // CalculatedValue – newly calculated value (the one we want to confirm)
-                Console.WriteLine($"Cell ({rowIndex}, {columnIndex}) changed from [{OriginalValue}] to [{CalculatedValue}]");
-            }
-        }
-    }
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
 
-    class Program
-    {
-        static void Main()
-        {
-            // 1. Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Recalculate all formulas in the workbook
+        workbook.CalculateFormula();
 
-            // 2. Set up sample data and formulas
-            //    A1 = 10 (plain value)
-            //    A2 = =A1*3 (formula that depends on A1)
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].Formula = "=A1*3";
+        // Get the first worksheet (or specify by name/index)
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // 3. Attach the custom calculation monitor
-            CustomCalculationMonitor monitor = new CustomCalculationMonitor();
-            CalculationOptions options = new CalculationOptions
-            {
-                CalculationMonitor = monitor
-            };
+        // Access the cell you want to check (e.g., A1)
+        Cell cell = worksheet.Cells["A1"]; // change address as needed
 
-            // 4. Trigger calculation – the monitor will output change information
-            workbook.CalculateFormula(options);
+        // Read the calculated value after formula evaluation
+        object calculatedValue = cell.Value;
 
-            // 5. After calculation, read the cell's Value property to confirm the result
-            Cell resultCell = sheet.Cells["A2"];
-            Console.WriteLine($"After calculation, cell A2 Value = {resultCell.Value}");
+        // Output the result to the console
+        Console.WriteLine($"Calculated value of {cell.Name}: {calculatedValue}");
 
-            // 6. (Optional) Change the source value and recalculate to see the monitor fire again
-            sheet.Cells["A1"].PutValue(20);
-            workbook.CalculateFormula(options);
-            Console.WriteLine($"After second calculation, cell A2 Value = {resultCell.Value}");
-        }
+        // Optionally save the workbook after calculation
+        workbook.Save("output.xlsx");
     }
 }

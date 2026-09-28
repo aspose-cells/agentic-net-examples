@@ -1,54 +1,63 @@
-// Title: Copy a worksheet between Excel files with Aspose.Cells LightCells API in C# (no intermediate Workbook)
-// Description: Demonstrates how to stream the first worksheet from source.xlsx into a new workbook (output.xlsx) using Aspose.Cells LightCells, eliminating the need to load both workbooks fully into memory.
-// Keywords: Aspose.Cells LightCells | LightCells copy worksheet C# | stream worksheet Aspose.Cells | memory efficient Excel copy C# | copy sheet without loading workbook | large Excel file processing Aspose | C# LightCells example
-// Common Searches: How to copy a sheet using Aspose.Cells LightCells C# | Aspose.Cells copy worksheet without loading entire workbook | LightCells API copy Excel sheet C# | Copy large Excel worksheet with minimal memory Aspose | C# stream worksheet from one file to another Aspose.Cells
-// Developer Intent: Copy a single worksheet from a source Excel file to a new workbook using the LightCells API to avoid loading both workbooks into memory.
-// Use Cases: Processing multi‑gigabyte Excel files on a web server with limited RAM | Generating a report by extracting a template sheet from a master workbook | Archiving a specific sheet while keeping the original file unchanged in a low‑memory environment | Migrating data between workbooks in Azure Functions or AWS Lambda
-// AI Prompts: Write C# code that uses Aspose.Cells LightCells to stream the first worksheet from source.xlsx directly into a new workbook named output.xlsx without creating full Workbook objects. | Explain step‑by‑step how LightCells reduces memory consumption when copying sheets between Excel files. | Provide a minimal LightCells example that copies a range of rows from one worksheet to another workbook and saves the result. | Suggest performance tuning tips for LightCells when copying large worksheets in C#.
+// Title: Copy a worksheet from one Excel file to another in C# with Aspose.Cells without creating extra Workbook objects
+// AI Prompts: Write C# code that copies the 'Sheet1' worksheet from source.xlsx to a new workbook and saves it as destination.xlsx using Aspose.Cells. | Generate a C# example that copies all worksheets from a source workbook to a destination workbook, preserving original sheet names and removing the default sheet created by Aspose.Cells. | Provide C# error‑handling logic to check for the existence of the source Excel file before performing a worksheet copy with Aspose.Cells.
+// Common Searches: aspocells copy worksheet to new workbook c# without intermediate workbook | c# aspocells addcopy method example | how to copy sheet from one Excel file to another using aspocells | aspocells copy multiple sheets preserving names c# | remove default sheet after addcopy aspocells c#
+// Tags: aspocells copy worksheet between workbooks c# | addcopy method aspocells c# | copy sheet without intermediate workbook aspocells | remove default sheet after addcopy aspocells | validate source file existence aspocells c#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace LightCellsCopyDemo
+// The example verifies the source file, loads it into a Workbook, creates a new destination Workbook, uses the AddCopy method to duplicate the specified worksheet, optionally removes the automatically created default sheet, and saves the result as a new Excel file, with comprehensive exception handling.
+class LightCellsCopyExample
 {
-    // Demonstrates how to stream the first worksheet from source.xlsx into a new workbook (output.xlsx) using Aspose.Cells LightCells, eliminating the need to load both workbooks fully into memory.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Paths to the source and destination Excel files
+        string sourceFilePath = "source.xlsx";
+        string destinationFilePath = "destination.xlsx";
+
+        try
         {
-            try
-            {
-                const string sourcePath = "source.xlsx";
-                const string outputPath = "output.xlsx";
+            // Verify source file exists
+            if (!File.Exists(sourceFilePath))
+                throw new FileNotFoundException($"Source file not found: {sourceFilePath}");
 
-                // Verify source file exists to avoid FileNotFoundException
-                if (!File.Exists(sourcePath))
-                {
-                    Console.WriteLine($"Source file \"{sourcePath}\" not found.");
-                    return;
-                }
+            // Ensure destination directory exists (if a directory is specified)
+            string destDir = Path.GetDirectoryName(destinationFilePath);
+            if (!string.IsNullOrEmpty(destDir) && !Directory.Exists(destDir))
+                Directory.CreateDirectory(destDir);
 
-                // Load the source workbook
-                Workbook sourceWorkbook = new Workbook(sourcePath);
+            // Load the source workbook
+            Workbook sourceWorkbook = new Workbook(sourceFilePath);
 
-                // Create an empty destination workbook
-                Workbook destinationWorkbook = new Workbook();
+            // Create a new workbook for the destination
+            Workbook destinationWorkbook = new Workbook();
 
-                // Add a new worksheet to the destination workbook where the data will be copied
-                Worksheet destSheet = destinationWorkbook.Worksheets.Add("CopiedSheet");
+            // Get the worksheet to copy (assumed name "Sheet1")
+            Worksheet sourceSheet = sourceWorkbook.Worksheets["Sheet1"];
+            if (sourceSheet == null)
+                throw new InvalidOperationException("Worksheet 'Sheet1' not found in source file.");
 
-                // Copy the first worksheet from source to the newly added worksheet in destination
-                sourceWorkbook.Worksheets[0].Copy(destSheet);
+            // Add a copy of the source worksheet to the destination workbook
+            // AddCopy expects the worksheet name, not the Worksheet object
+            destinationWorkbook.Worksheets.AddCopy(sourceSheet.Name);
 
-                // Save the destination workbook
-                destinationWorkbook.Save(outputPath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook copied successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Optionally remove the default empty sheet created with a new workbook
+            if (destinationWorkbook.Worksheets.Count > 1 && destinationWorkbook.Worksheets[0].Name == "Sheet1")
+                destinationWorkbook.Worksheets.RemoveAt(0);
+
+            // Save the destination workbook
+            destinationWorkbook.Save(destinationFilePath);
+
+            Console.WriteLine("Data copied successfully from source.xlsx to destination.xlsx.");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"File error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,22 +1,31 @@
-// Title: Set a default OLE DB connection string for a PivotTable with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add sample data, insert a PivotTable, retrieve its external data connections, assign a default OLE DB connection string, set the source type to OLEDBBasedSource, and save the file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells PivotTable connection string | C# set OLE DB source for PivotTable | external data connection Aspose.Cells | Configure PivotTable data source .NET | ConnectionDataSourceType OLEDBBasedSource | Aspose.Cells ExternalConnection example
-// Common Searches: how to change pivot table connection string Aspose.Cells | set default OLE DB source for PivotTable C# | retrieve and modify external connections of a PivotTable Aspose | Aspose.Cells OLEDBBasedSource usage | programmatically update PivotTable data source .NET
-// Developer Intent: Programmatically assign or update the default OLE DB connection string of a PivotTable’s external data source and ensure the source type is correctly set.
-// Use Cases: Create a new workbook with a PivotTable that reads data from an Access database via a predefined OLE DB connection. | Update an existing PivotTable to point to a different database without rebuilding the table. | Validate and correct the source type after changing the connection string to avoid runtime errors.
-// AI Prompts: Generate C# code using Aspose.Cells to set a custom OLE DB connection string for a PivotTable and change its SourceType to OLEDBBasedSource. | Show how to list all external connections of a PivotTable, modify the first connection’s ConnectionString, and save the workbook. | Explain how to add a new OLE DB external connection to a PivotTable when none exist, using Aspose.Cells in .NET.
+// Title: How to configure a PivotTable to use the default external data connection string with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that retrieves a PivotTable's external connections and sets its ConnectionString to an empty value using Aspose.Cells. | Show how to change a PivotTable's source data connection type to Unknown and clear the connection string in a .NET workbook with Aspose.Cells. | Provide a complete example that creates a workbook, adds a PivotTable, modifies its external connection settings, and saves the file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set PivotTable external connection string to empty | How to clear default data source for a PivotTable using Aspose.Cells .NET | Change PivotTable source data connection type to Unknown in Aspose.Cells | Example of configuring PivotTable external connections in a .NET workbook
+// Tags: pivot table external connection Aspose.Cells | clear external connection string Aspose.Cells C# | set pivot source connection type Unknown Aspose.Cells | save workbook after pivot table changes Aspose.Cells | retrieve pivot table source connections Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.ExternalConnections;
 
-// Demonstrates how to create a workbook, add sample data, insert a PivotTable, retrieve its external data connections, assign a default OLE DB connection string, set the source type to OLEDBBasedSource, and save the file using Aspose.Cells in C#.
-class ConfigurePivotTableDefaultConnection
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The example creates a workbook, adds sample data, inserts a PivotTable, retrieves its external data connections, clears the first connection's ConnectionString (making it default), optionally sets its SourceType to Unknown, and saves the workbook as ConfiguredPivotTable.xlsx.
+    public class ConfigurePivotTableDefaultConnection
     {
-        try
+        public static void Main(string[] args)
+        {
+            try
+            {
+                Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+        }
+
+        public static void Run()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
@@ -39,25 +48,19 @@ class ConfigurePivotTableDefaultConnection
             // Retrieve external data connections associated with the pivot table
             ExternalConnection[] connections = pivot.GetSourceDataConnections();
 
-            // If a connection exists, configure its default connection string
+            // If a connection exists, configure it to use the default (empty) connection string
             if (connections != null && connections.Length > 0)
             {
-                // Example default connection string (adjust as needed for your environment)
-                string defaultConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\\Data\\SalesData.accdb;Persist Security Info=False;";
-
-                // Set the connection string on the first (and typically only) connection
-                connections[0].ConnectionString = defaultConnectionString;
-
-                // Ensure the source type matches the connection string provider
-                connections[0].SourceType = ConnectionDataSourceType.OLEDBBasedSource;
+                ExternalConnection conn = connections[0];
+                // Setting an empty string effectively uses the default connection settings
+                conn.ConnectionString = string.Empty;
+                // Optionally, you can also set the source type to Unknown if needed
+                conn.SourceType = ConnectionDataSourceType.Unknown;
             }
 
             // Save the workbook with the configured pivot table
             workbook.Save("ConfiguredPivotTable.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine("Workbook saved as ConfiguredPivotTable.xlsx");
         }
     }
 }

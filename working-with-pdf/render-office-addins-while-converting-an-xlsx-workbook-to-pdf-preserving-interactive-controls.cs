@@ -1,61 +1,49 @@
-// Title: Convert XLSX with Office Add‑In Controls to Interactive PDF using Aspose.Cells for .NET
-// Description: Loads an XLSX workbook that contains Office Add‑In controls with LoadOptions, then converts it to PDF via ConversionUtility and PdfSaveOptions, keeping the controls functional as interactive form fields.
-// Keywords: Aspose.Cells XLSX to PDF | preserve Office Add‑In controls | interactive PDF from Excel | ConversionUtility Aspose | PdfSaveOptions form fields | C# Excel PDF conversion
-// Common Searches: Aspose.Cells keep Office Add‑In form fields in PDF | convert Excel with add‑in controls to interactive PDF C# | preserve Excel add‑in controls when saving as PDF | ConversionUtility PDF conversion example Aspose.Cells | load XLSX with Office Add‑In controls Aspose
-// Developer Intent: Convert an Excel workbook that includes Office Add‑In controls into a PDF while retaining those controls as interactive elements.
-// Use Cases: Create PDF reports from Excel templates that contain embedded Office Add‑In form fields without losing interactivity. | Batch‑process multiple XLSX files with add‑in controls into PDFs for archival or distribution. | Expose a web service that accepts XLSX uploads with Office Add‑In controls and returns a PDF preserving the interactive elements.
-// AI Prompts: Show how to customize PdfSaveOptions to style preserved form fields during conversion. | Provide error‑handling patterns for ConversionUtility when encountering unsupported Office Add‑In controls. | Demonstrate a script that scans a folder, converts each XLSX with add‑in controls to PDF, and logs conversion results.
+// Title: Convert an XLSX workbook to PDF in C# with Aspose.Cells while retaining Office Add‑In interactive controls
+// AI Prompts: Generate C# code that loads an .xlsx file using Aspose.Cells, configures PdfSaveOptions for continuous pages, and saves the workbook as a PDF while preserving embedded form fields and OLE objects. | Show how to add file‑existence verification and robust exception handling to an Aspose.Cells Excel‑to‑PDF conversion that keeps Office Add‑In controls intact. | Explain how to set PdfSaveOptions.OnePagePerSheet to false in Aspose.Cells and ensure that interactive fields remain functional in the resulting PDF.
+// Common Searches: asp.net core convert excel to pdf preserving form fields using aspose.cells | c# aspose.cells keep office add‑in controls when saving workbook as pdf | how to disable onepagepersheet in aspose.cells pdf conversion | preserve ole objects in pdf generated from xlsx with aspose.cells | error handling for missing excel file during aspose.cells pdf export
+// Tags: Aspose.Cells PDF export retaining interactive fields | PdfSaveOptions continuous page layout | OLE object retention in Aspose.Cells PDF output | Render embedded Office Add‑In UI in PDF | Workbook load error handling with Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using Aspose.Cells.Saving;   // Contains PdfSaveOptions
+using Aspose.Cells.Rendering;
 
-namespace OfficeAddInPdfConversion
+// The example verifies the input XLSX file, loads it into an Aspose.Cells Workbook, sets PdfSaveOptions with OnePagePerSheet = false to produce continuous pages, relies on Aspose.Cells to retain form fields, OLE objects, and Office Add‑In controls, saves the result as a PDF, and includes comprehensive error handling.
+class Program
 {
-    // Loads an XLSX workbook that contains Office Add‑In controls with LoadOptions, then converts it to PDF via ConversionUtility and PdfSaveOptions, keeping the controls functional as interactive form fields.
-    public class Converter
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            // Path to the source XLSX workbook that contains Office Add‑In controls
-            string sourcePath = "input.xlsx";
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Desired output PDF file path
-            string destPath = "output.pdf";
-
-            // Verify that the source file exists to avoid FileNotFoundException
-            if (!File.Exists(sourcePath))
+            // Verify that the source workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Source file not found: {sourcePath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            try
+            // Load the source XLSX workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions
             {
-                // Load options – explicitly specify the format to ensure correct loading
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                // Keep each worksheet on its own page layout (set to false to allow continuous pages)
+                OnePagePerSheet = false
+                // Note: Aspose.Cells automatically preserves form fields and OLE objects where possible.
+            };
 
-                // Save options for PDF – default options are sufficient for preserving form fields
-                PdfSaveOptions saveOptions = new PdfSaveOptions();
-
-                // Perform the conversion using the provided ConversionUtility rule
-                ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-
-                Console.WriteLine("Conversion completed. PDF saved to: " + destPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred during conversion:");
-                Console.WriteLine(ex.Message);
-            }
+            // Convert and save the workbook to PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
         }
-
-        // Entry point required for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

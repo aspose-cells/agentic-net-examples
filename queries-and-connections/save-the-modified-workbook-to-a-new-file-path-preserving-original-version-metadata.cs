@@ -1,47 +1,62 @@
-// Title: Preserve Original Document Properties When Saving a Modified Excel Workbook with AspNet Aspose.Cells
-// Description: Load an existing XLSX file, modify its content, and save it as a new workbook while retaining the source file's version, author, creation date, and custom properties. The example demonstrates using Aspose.Cells' MetadataOptions and WorkbookMetadata classes to copy document properties from the original workbook to the new file in C#.
-// Keywords: Aspose.Cells preserve document properties | C# copy Excel metadata | WorkbookMetadata Aspose.Cells | MetadataOptions document properties | save modified workbook with original metadata | .NET Excel version information | retain author creation date Excel | copy custom properties Aspose.Cells
-// Common Searches: how to keep original document properties when saving an edited Excel file using Aspose.Cells | copy metadata from one workbook to another Aspose.Cells .NET | preserve version information after modifying XLSX with Aspose.Cells | Aspose.Cells retain author and creation date on save | C# preserve custom Excel properties after edit
-// Developer Intent: Save an edited Excel workbook while retaining all original document and version metadata.
-// Use Cases: Update a template workbook and generate a new copy that maintains the original author, creation date, and custom compliance fields. | Run batch modifications on multiple Excel files while preserving each file's audit‑trail metadata for regulatory reporting. | Create versioned backups after applying business logic, ensuring the backup inherits the source file's version number and property values.
-// AI Prompts: Generate C# code that loads an XLSX with Aspose.Cells, changes specific cells, and saves it to a new file while copying all original document properties using MetadataOptions and WorkbookMetadata. | Explain step‑by‑step how to transfer version and custom metadata from a source workbook to a destination workbook in Aspose.Cells for .NET, including required namespaces and object initialization.
+// Title: Save a modified Excel workbook while preserving the original document properties using Aspose.Cells for .NET
+// AI Prompts: Load an existing .xlsx file with Aspose.Cells, change a cell value, and save it to a new path while keeping the source workbook’s document properties intact. | Use WorkbookMetadata and MetadataOptions to copy the original Excel file’s metadata to a newly saved workbook after making edits in C#.
+// Common Searches: how to retain original Excel document properties after editing with Aspose.Cells in C# | Aspose.Cells copy workbook metadata to a new file after modifications | preserve custom properties when saving a modified .xlsx using Aspose.Cells for .NET | C# example for saving workbook with original metadata using Aspose.Cells Metadata API | save modified Excel file without losing built‑in properties Aspose.Cells
+// Tags: preserve workbook document properties Aspose.Cells | copy Excel metadata C# Aspose.Cells | save modified workbook with original metadata | WorkbookMetadata usage Aspose.Cells | retain custom document properties .NET Excel
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Metadata;
 
-namespace AsposeCellsMetadataPreserveDemo
+namespace PreserveMetadataDemoApp
 {
-    // Load an existing XLSX file, modify its content, and save it as a new workbook while retaining the source file's version, author, creation date, and custom properties. The example demonstrates using Aspose.Cells' MetadataOptions and WorkbookMetadata classes to copy document properties from the original workbook to the new file in C#.
-    public class Program
+    // The sample loads "original.xlsx", updates cell A1, saves the changes to "modified.xlsx", then reads the source workbook's document properties via WorkbookMetadata and writes them to the new file, ensuring the original metadata is preserved.
+    class PreserveMetadataDemo
     {
-        public static void Main()
+        public static void Run()
         {
-            // Paths for the original workbook and the new workbook
             string sourcePath = "original.xlsx";
-            string destinationPath = "modified.xlsx";
+            string destPath = "modified.xlsx";
 
-            // Load the original workbook
-            Workbook workbook = new Workbook(sourcePath);
+            try
+            {
+                // Verify source file exists
+                if (!File.Exists(sourcePath))
+                {
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
+                }
 
-            // Example modification: change a cell value
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Modified content");
+                // Load the original workbook
+                Workbook workbook = new Workbook(sourcePath);
 
-            // Save the modified workbook to the new file (preserves format)
-            workbook.Save(destinationPath, SaveFormat.Xlsx);
+                // Example modification: change the value of cell A1 in the first worksheet
+                workbook.Worksheets[0].Cells["A1"].PutValue("Modified content");
 
-            // Preserve the original version metadata (document properties)
-            // Create MetadataOptions for document properties
-            MetadataOptions metadataOptions = new MetadataOptions(MetadataType.DocumentProperties);
+                // Save the modified workbook (preserves format)
+                workbook.Save(destPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Workbook saved to {destPath}");
 
-            // Load metadata from the original workbook
-            WorkbookMetadata metadata = new WorkbookMetadata(sourcePath, metadataOptions);
+                // Load original workbook's metadata (document properties)
+                MetadataOptions metaOptions = new MetadataOptions(MetadataType.DocumentProperties);
+                WorkbookMetadata originalMetadata = new WorkbookMetadata(sourcePath, metaOptions);
 
-            // Save the metadata to the new workbook file
-            metadata.Save(destinationPath);
+                // Save metadata to the new file
+                originalMetadata.Save(destPath);
+                Console.WriteLine("Metadata preserved in the modified workbook.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+    }
 
-            Console.WriteLine("Workbook saved with original metadata preserved.");
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            PreserveMetadataDemo.Run();
         }
     }
 }

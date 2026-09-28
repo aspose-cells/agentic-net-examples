@@ -1,82 +1,77 @@
-// Title: Cancel Long‑Running TIFF Export with Aspose.Cells InterruptMonitor and CancellationToken in C#
-// Description: Demonstrates how to abort a time‑consuming TIFF conversion in Aspose.Cells by linking a CancellationToken to an InterruptMonitor, handling the CellsException Interrupted, and cleaning up resources.
-// Keywords: Aspose.Cells TIFF cancellation | InterruptMonitor C# | CancellationToken Aspose.Cells | abort image export .NET | stop long running sheet render | CellsException Interrupted handling | C# workbook to TIFF cancel | Aspose.Cells rendering cancellation | user‑initiated abort TIFF conversion | aspose.cells cancel token example
-// Common Searches: how to cancel TIFF export in Aspose.Cells | use CancellationToken with InterruptMonitor Aspose.Cells | abort long running sheet rendering C# | stop Aspose.Cells image conversion on user request | catch CellsException Interrupted Aspose.Cells
-// Developer Intent: Implement a CancellationToken that triggers InterruptMonitor to stop a TIFF conversion in Aspose.Cells.
-// Use Cases: Provide a cancel button in a desktop UI that instantly stops massive worksheet‑to‑TIFF export. | Release server resources in a web API when a client aborts a TIFF report request. | Enforce a maximum processing time for TIFF generation and abort if the limit is exceeded.
-// AI Prompts: Show how to connect a UI cancel button to the CancellationToken that interrupts Aspose.Cells rendering. | Create a reusable async method that converts a worksheet to TIFF and accepts a CancellationToken for aborting. | Explain the proper pattern for catching CellsException.Interrupted and disposing streams after cancellation.
+// Title: Implement a CancellationToken to abort a long‑running Aspose.Cells Excel‑to‑TIFF conversion in C#
+// AI Prompts: Add a CancellationToken argument to the async ConvertToTiffAsync method and invoke token.ThrowIfCancellationRequested before calling workbook.Save. | In Main, create a CancellationTokenSource, start a helper task that cancels after a user‑defined timeout or input, and wrap the conversion call in a try‑catch for OperationCanceledException. | Execute the workbook.Save operation inside Task.Run, passing the cancellation token so the save can be interrupted safely.
+// Common Searches: how to use CancellationToken with Aspose.Cells SaveFormat.Tiff in .NET | cancel long running Excel to TIFF conversion using Aspose.Cells | abort Aspose.Cells workbook.Save when user presses cancel button | async Excel to TIFF export with timeout and cancellation token C# | handle OperationCanceledException during Aspose.Cells image export
+// Tags: cancellation support Aspose.Cells TIFF export | async workbook.Save with token .NET | user‑initiated abort of long running conversion | background task cancellation for Excel to image | operationcanceledexception handling Aspose.Cells
 
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Demonstrates how to abort a time‑consuming TIFF conversion in Aspose.Cells by linking a CancellationToken to an InterruptMonitor, handling the CellsException Interrupted, and cleaning up resources.
+// The sample loads an Excel workbook with Aspose.Cells, converts it to a TIFF image on a background thread, and uses a CancellationTokenSource that can be triggered by user input or a timeout. The conversion respects the token, allowing the operation to be cancelled and handling OperationCanceledException along with other possible errors.
 class Program
 {
-    static void Main()
+    static async Task Main(string[] args)
     {
+        // Paths for source workbook and target TIFF file
+        string inputPath = "input.xlsx";
+        string outputPath = "output.tiff";
+
+        // Ensure the source file exists before proceeding
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Source file not found: {inputPath}");
+            return;
+        }
+
+        // Create a cancellation token source that can be triggered by the user
+        using var cts = new CancellationTokenSource();
+
+        // Example: automatically cancel after 5 seconds (replace with real user input handling)
+        _ = Task.Run(() =>
+        {
+            Thread.Sleep(5000);
+            cts.Cancel(); // user requested termination
+        });
+
         try
         {
-            // Create a workbook with a large amount of data to make TIFF conversion time‑consuming.
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            for (int i = 0; i < 20000; i++)
-            {
-                sheet.Cells[i, 0].PutValue($"Row {i}");
-            }
-
-            // Create an interrupt monitor and assign it to the workbook.
-            InterruptMonitor monitor = new InterruptMonitor();
-            workbook.InterruptMonitor = monitor;
-
-            // Set up a cancellation token that the user can trigger.
-            using (CancellationTokenSource cts = new CancellationTokenSource())
-            {
-                // When cancellation is requested, interrupt the current operation.
-                cts.Token.Register(() =>
-                {
-                    Console.WriteLine("Cancellation requested – interrupting TIFF conversion.");
-                    monitor.Interrupt();
-                });
-
-                // Simulate a user requesting cancellation after 2 seconds.
-                Task.Run(() =>
-                {
-                    Thread.Sleep(2000);
-                    cts.Cancel();
-                });
-
-                // Configure rendering options for TIFF output.
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
-                {
-                    SaveFormat = SaveFormat.Tiff,
-                    OnePagePerSheet = false
-                };
-
-                // Create the sheet renderer.
-                SheetRender renderer = new SheetRender(sheet, renderOptions);
-
-                // Render the worksheet to a TIFF file using a stream.
-                using (FileStream tiffStream = new FileStream("output.tiff", FileMode.Create, FileAccess.Write, FileShare.None))
-                {
-                    Console.WriteLine("Starting TIFF conversion...");
-                    renderer.ToImage(0, tiffStream); // Render all pages into a single TIFF.
-                    Console.WriteLine("TIFF conversion completed successfully.");
-                }
-            }
+            // Perform the conversion respecting the cancellation token
+            await ConvertToTiffAsync(inputPath, outputPath, cts.Token);
+            Console.WriteLine("TIFF conversion completed successfully.");
         }
-        catch (CellsException ex) when (ex.Code == ExceptionType.Interrupted)
+        catch (OperationCanceledException)
         {
-            // The operation was aborted by the interrupt monitor.
-            Console.WriteLine("TIFF conversion was aborted due to cancellation.");
+            Console.WriteLine("TIFF conversion was cancelled by the user.");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"File not found: {ex.FileName}");
         }
         catch (Exception ex)
         {
-            // Handle any other unexpected errors.
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    static Task ConvertToTiffAsync(string sourceFile, string targetFile, CancellationToken token)
+    {
+        // Run the conversion on a background thread so it can be cancelled
+        return Task.Run(() =>
+        {
+            // Verify source file exists
+            if (!File.Exists(sourceFile))
+                throw new FileNotFoundException("Source workbook not found.", sourceFile);
+
+            // Load the workbook (lifecycle rule: load)
+            var workbook = new Workbook(sourceFile);
+
+            // Check for cancellation before the potentially long save operation
+            token.ThrowIfCancellationRequested();
+
+            // Save the workbook as TIFF (lifecycle rule: save)
+            workbook.Save(targetFile, SaveFormat.Tiff);
+        }, token);
     }
 }

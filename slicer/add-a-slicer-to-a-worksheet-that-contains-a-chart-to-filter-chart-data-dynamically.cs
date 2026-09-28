@@ -1,10 +1,7 @@
-// Title: Add a slicer to a pivot‑based chart in C# using Aspose.Cells for .NET
-// Description: Creates a workbook, fills it with fruit‑sales data, builds a pivot table, generates a column chart linked to the pivot, inserts a slicer for the "Fruit" field, and saves the file as ChartWithSlicer.xlsx. The slicer updates the chart automatically when selections change.
-// Keywords: Aspose.Cells slicer example | C# pivot chart slicer | dynamic chart filtering .NET | add slicer to Excel chart programmatically | Aspose.Cells pivot table chart | Excel slicer API C# | interactive dashboard Aspose.Cells
-// Common Searches: how to add a slicer to a pivot chart with Aspose.Cells | C# code for slicer linked to pivot table | Aspose.Cells example chart with slicer | filter chart data using slicer in .NET | Aspose.Cells dynamic dashboard tutorial
-// Developer Intent: Programmatically attach a slicer to a pivot table so that a linked chart refreshes when the slicer selection changes.
-// Use Cases: Create an interactive sales dashboard where users filter fruit categories via a slicer and see the chart update instantly. | Generate Excel reports that combine pivot tables, charts, and slicers for on‑the‑fly data exploration. | Build a reusable utility that adds a pivot table, chart, and associated slicers to any worksheet for dynamic analysis.
-// AI Prompts: Generate C# code with Aspose.Cells to add a slicer for the "Year" field to an existing pivot chart and apply a custom style. | Explain how to force a chart to refresh after a slicer selection changes in Aspose.Cells for .NET. | Write a method that creates a pivot table, a column chart, and multiple slicers for different fields in a workbook.
+// Title: How to add a slicer linked to a pivot table for dynamic chart filtering using Aspose.Cells in C#
+// AI Prompts: Generate C# code with Aspose.Cells that creates sample data, a pivot table, a column chart, and inserts a slicer linked to the pivot table to filter the chart. | Show how to position a slicer at a specific cell, set its caption, and apply a light style using the Aspose.Cells API. | Provide a complete example that saves the workbook as an XLSX file after adding the slicer and chart.
+// Common Searches: aspnet add slicer to Excel workbook using Aspose.Cells C# example | link slicer to pivot table to control chart data with Aspose.Cells .NET | set slicer caption and style programmatically in Aspose.Cells C# | create pivot table and column chart then add slicer for dynamic filtering Aspose.Cells | save workbook with slicer and chart as XLSX using Aspose.Cells C#
+// Tags: Aspose.Cells add slicer to pivot table | Aspose.Cells link slicer to chart | C# create column chart from range Aspose.Cells | Aspose.Cells set slicer caption and style | Aspose.Cells save workbook as XLSX
 
 using System;
 using Aspose.Cells;
@@ -12,57 +9,62 @@ using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Slicers;
 
-// Creates a workbook, fills it with fruit‑sales data, builds a pivot table, generates a column chart linked to the pivot, inserts a slicer for the "Fruit" field, and saves the file as ChartWithSlicer.xlsx. The slicer updates the chart automatically when selections change.
+// Demonstrates using Aspose.Cells for .NET (C#) to create sample data, build a pivot table, generate a column chart, add a slicer linked to the pivot table, set its caption and style, and save the workbook as an XLSX file.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data
-        cells["A1"].PutValue("Fruit");
-        cells["B1"].PutValue("Year");
-        cells["C1"].PutValue("Amount");
-
-        string[] fruits = { "Apple", "Banana", "Apple", "Banana", "Apple", "Banana" };
-        int[] years   = { 2020,   2020,    2021,   2021,    2022,   2022 };
-        int[] amounts = { 50,    70,      60,     80,      55,     85 };
-
-        for (int i = 0; i < fruits.Length; i++)
+        try
         {
-            cells[i + 1, 0].PutValue(fruits[i]);
-            cells[i + 1, 1].PutValue(years[i]);
-            cells[i + 1, 2].PutValue(amounts[i]);
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // Populate sample data for the chart and pivot table
+            cells["A1"].PutValue("Fruit");
+            cells["B1"].PutValue("Sales");
+
+            string[] fruits = { "Apple", "Banana", "Apple", "Banana", "Cherry" };
+            int[] sales = { 120, 150, 130, 170, 200 };
+
+            for (int i = 0; i < fruits.Length; i++)
+            {
+                cells[i + 2, 0].PutValue(fruits[i]);   // Column A
+                cells[i + 2, 1].PutValue(sales[i]);   // Column B
+            }
+
+            // Add a pivot table based on the data range
+            int pivotIndex = sheet.PivotTables.Add("A1:B6", "D1", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+            pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
+
+            // Refresh pivot cache and calculate data
+            pivot.RefreshData();
+            pivot.CalculateData();
+
+            // Add a chart that uses the source data range (A2:B6) as its data source
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 0, 3, 20, 15);
+            Chart chart = sheet.Charts[chartIndex];
+            string dataRangeFormula = $"'{sheet.Name}'!$A$2:$B$6";
+            chart.NSeries.Add(dataRangeFormula, true);
+            chart.Title.Text = "Sales by Fruit";
+
+            // Add a slicer linked to the pivot table to filter the chart dynamically
+            SlicerCollection slicers = sheet.Slicers;
+            int slicerIndex = slicers.Add(pivot, "F1", "Fruit"); // Place slicer at cell F1
+            Slicer slicer = slicers[slicerIndex];
+            slicer.Caption = "Fruit Filter";
+            slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
+
+            // Save the workbook
+            workbook.Save("SlicerChartDemo.xlsx", SaveFormat.Xlsx);
         }
-
-        // Add a pivot table based on the data
-        int pivotIndex = sheet.PivotTables.Add("A1:C7", "E2", "Pivot1");
-        PivotTable pivot = sheet.PivotTables[pivotIndex];
-        pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-        pivot.AddFieldToArea(PivotFieldType.Column, "Year");
-        pivot.AddFieldToArea(PivotFieldType.Data, "Amount");
-        pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-        pivot.RefreshData();
-        pivot.CalculateData();
-
-        // Add a chart that uses the pivot table as its source
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 10);
-        Chart chart = sheet.Charts[chartIndex];
-        // The chart will automatically pick up the pivot table data
-        chart.NSeries.Add(pivot.Name + "!Data", true);
-        chart.Title.Text = "Sales by Fruit and Year";
-
-        // Add a slicer linked to the pivot table for the "Fruit" field
-        SlicerCollection slicers = sheet.Slicers;
-        int slicerIndex = slicers.Add(pivot, "E12", "Fruit");
-        Slicer slicer = slicers[slicerIndex];
-        slicer.Caption = "Fruit Filter";
-        slicer.StyleType = SlicerStyleType.SlicerStyleLight2;
-
-        // Save the workbook
-        workbook.Save("ChartWithSlicer.xlsx", SaveFormat.Xlsx);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

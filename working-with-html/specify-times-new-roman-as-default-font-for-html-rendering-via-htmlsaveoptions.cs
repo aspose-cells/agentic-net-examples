@@ -1,40 +1,45 @@
-// Title: Aspose.Cells for .NET – Set Times New Roman as Default Font in HTML Export
-// Description: Shows how to assign "Times New Roman" to HtmlSaveOptions.DefaultFontName and save a Workbook as HTML, ensuring cells without explicit font settings use the specified typeface.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DefaultFontName | Times New Roman | HTML export | C# | Excel to HTML | set default font | workbook.Save | .NET
-// Common Searches: Aspose.Cells set default HTML font | HtmlSaveOptions DefaultFontName C# example | Export Excel to HTML Times New Roman | Change default font in Aspose.Cells HTML output | C# Aspose.Cells HTML export font setting
-// Developer Intent: Configure Aspose.Cells to use Times New Roman as the fallback font when converting a workbook to HTML.
-// Use Cases: Create web‑ready reports from Excel files that match corporate typography. | Publish spreadsheets on intranet portals where a uniform font simplifies CSS maintenance. | Generate HTML snapshots of data sheets for email distribution with a consistent appearance.
-// AI Prompts: Write C# code that reads a font name from appsettings.json and applies it as the default font for HTML export using Aspose.Cells. | Explain the impact of HtmlSaveOptions.DefaultFontName on generated CSS and how to override it for individual cells. | Provide a step‑by‑step guide to change the default HTML font to Arial in an Aspose.Cells .NET project.
+// Title: How to set Times New Roman as the default font when exporting an Excel workbook to HTML using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets HtmlSaveOptions.DefaultFontName to "Times New Roman", and saves the workbook as an HTML document with Aspose.Cells. | Show a .NET example that configures the HTML export options to apply a custom default font for Excel-to-HTML conversion using Aspose.Cells.
+// Common Searches: Aspose.Cells C# export Excel to HTML with Times New Roman as default font | How to change the default font for HTML conversion in Aspose.Cells .NET | HtmlSaveOptions DefaultFontName usage example for Excel to HTML | Set default font for HTML output when saving a workbook with Aspose.Cells
+// Tags: Aspose.Cells HTML export default font | C# HtmlSaveOptions custom font | Excel to HTML conversion with specific font | set default font Aspose.Cells .NET | HtmlSaveOptions default font property
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlDefaultFontDemo
+// Loads input.xlsx, configures HtmlSaveOptions.DefaultFontName to "Times New Roman", and saves the workbook as output.html using Aspose.Cells.
+class Program
 {
-    // Shows how to assign "Times New Roman" to HtmlSaveOptions.DefaultFontName and save a Workbook as HTML, ensuring cells without explicit font settings use the specified typeface.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook (lifecycle create)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Add some sample data to demonstrate the font rendering
-            worksheet.Cells["A1"].PutValue("Sample text with default font");
-            worksheet.Cells["A2"].PutValue("Another line of text");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options and set the default font to Times New Roman
+            // Configure HTML save options to use "Times New Roman" as the default font
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
             htmlOptions.DefaultFontName = "Times New Roman";
 
-            // Save the workbook as HTML using the configured options (lifecycle save)
-            string outputPath = "output.html";
+            // Save the workbook as HTML with the specified default font
             workbook.Save(outputPath, htmlOptions);
 
-            Console.WriteLine($"HTML file saved to '{outputPath}' with default font '{htmlOptions.DefaultFontName}'.");
+            Console.WriteLine($"Workbook successfully saved as HTML to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

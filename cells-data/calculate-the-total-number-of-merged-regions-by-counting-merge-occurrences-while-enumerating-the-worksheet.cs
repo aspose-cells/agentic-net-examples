@@ -1,69 +1,66 @@
-// Title: How to count merged regions in an Aspose.Cells worksheet using C#
-// Description: This example creates a workbook, adds three merged ranges, then scans the used rows and columns. By calling Cell.GetMergedRange() and counting only cells that match the range's FirstRow and FirstColumn, it returns the exact number of distinct merged regions and saves the file.
-// Keywords: Aspose.Cells | C# | count merged regions | GetMergedRange | merged cells enumeration | worksheet merged areas | .NET spreadsheet
-// Common Searches: count merged cells Aspose.Cells C# | how to get number of merged ranges Aspose.Cells | Aspose.Cells GetMergedRange count example | C# enumerate merged regions in Excel workbook | Aspose.Cells merged area count tutorial
-// Developer Intent: Retrieve the total number of distinct merged regions present in a worksheet.
-// Use Cases: Validate that a template contains the expected merged‑cell layout before processing. | Generate a summary report of merged region counts for spreadsheet auditing. | Identify merged areas to apply special handling when exporting data to other formats.
-// AI Prompts: Write C# code with Aspose.Cells that counts merged regions without double‑counting. | Explain why checking FirstRow and FirstColumn of GetMergedRange prevents duplicate counts. | Show how to list the address of each merged region after counting them.
+// Title: Count distinct merged cell regions in an Aspose.Cells worksheet using C#
+// AI Prompts: Write C# code that scans a worksheet with Aspose.Cells, uses GetMergedRange for each cell, and returns the number of unique merged areas. | Create a method that collects the first‑row/first‑column coordinates of every merged range into a HashSet and prints the total merged region count. | Modify the example to handle an arbitrary number of merged ranges and output the distinct merged region total without double‑counting.
+// Common Searches: C# Aspose.Cells how to get total number of merged regions in a worksheet | count unique merged cells using GetMergedRange Aspose.Cells | determine distinct merged areas in Excel file with Aspose.Cells C# | enumerate used cells and identify merged ranges Aspose.Cells example | calculate merged region count programmatically Aspose.Cells
+// Tags: count merged regions Aspose.Cells | GetMergedRange enumeration worksheet | unique merged area identifiers HashSet | Aspose.Cells merged range detection C# | calculate distinct merged cells Excel workbook
 
-using System;
 using Aspose.Cells;
+using System;
+using System.Collections.Generic;
+
+// Alias to avoid conflict with System.Range introduced in C# 8.0
 using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, merges several ranges, iterates over the used cells, uses GetMergedRange to detect merged areas, stores each area's top‑left coordinates in a HashSet to ensure uniqueness, prints the total number of distinct merged regions, and saves the file.
+class Program
 {
-    // This example creates a workbook, adds three merged ranges, then scans the used rows and columns. By calling Cell.GetMergedRange() and counting only cells that match the range's FirstRow and FirstColumn, it returns the exact number of distinct merged regions and saves the file.
-    public class CountMergedRegionsDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
+
+            // Sample merged regions
+            cells.Merge(0, 0, 2, 2); // A1:B2
+            cells.Merge(3, 1, 3, 3); // B4:D6
+            cells.Merge(6, 0, 1, 5); // A7:F7
+
+            // HashSet to store unique identifiers of merged regions (top‑left cell coordinates)
+            HashSet<string> mergedRegions = new HashSet<string>();
+
+            // Enumerate cells within the used range of the worksheet
+            int maxRow = cells.MaxDataRow;
+            int maxCol = cells.MaxDataColumn;
+            for (int row = 0; row <= maxRow; row++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
-
-                // Add some merged ranges for demonstration
-                cells.Merge(0, 0, 2, 2); // A1:B2
-                cells.Merge(3, 1, 3, 3); // B4:D6
-                cells.Merge(7, 5, 1, 4); // F8:I8
-
-                int mergedRegionCount = 0;
-
-                // Enumerate cells up to the last used row/column
-                for (int row = 0; row <= cells.MaxDataRow; row++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    for (int col = 0; col <= cells.MaxDataColumn; col++)
+                    Cell cell = cells[row, col];
+                    // GetMergedRange returns null if the cell is not part of a merged area
+                    AsposeRange mergedRange = cell.GetMergedRange();
+                    if (mergedRange != null)
                     {
-                        Cell cell = cells[row, col];
-                        AsposeRange mergedRange = cell.GetMergedRange();
-
-                        // Count only the top‑left cell of each merged area
-                        if (mergedRange != null &&
-                            mergedRange.FirstRow == row &&
-                            mergedRange.FirstColumn == col)
-                        {
-                            mergedRegionCount++;
-                        }
+                        // Use the first row and column of the merged area as a unique key
+                        string key = $"{mergedRange.FirstRow}_{mergedRange.FirstColumn}";
+                        mergedRegions.Add(key);
                     }
                 }
-
-                Console.WriteLine($"Total number of merged regions: {mergedRegionCount}");
-
-                // Save the workbook (optional)
-                workbook.Save("CountMergedRegionsDemo.xlsx");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Output the total number of merged regions found
+            Console.WriteLine($"Total merged regions: {mergedRegions.Count}");
+
+            // Save the workbook (optional, just to demonstrate lifecycle usage)
+            string outputPath = "MergedRegionsCount.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
         }
-
-        // Entry point for the application
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

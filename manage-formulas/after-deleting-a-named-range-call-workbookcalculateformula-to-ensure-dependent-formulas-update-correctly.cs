@@ -1,66 +1,64 @@
-// Title: Aspose.Cells .NET: Delete a Named Range and Recalculate Formulas
-// Description: C# example that creates a workbook, defines a named range, uses it in a SUM formula, removes the named range, calls Workbook.CalculateFormula to refresh dependent cells, and saves the file. Demonstrates proper cleanup of named ranges and formula updates with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | .NET | delete named range | Workbook.CalculateFormula | update dependent formulas | named range removal | Excel automation | Aspose.Cells API
-// Common Searches: Aspose.Cells delete named range C# | How to refresh formulas after removing a named range in Aspose.Cells | Workbook.CalculateFormula after name removal | C# code to remove named range and recalculate | Aspose.Cells named range cleanup
-// Developer Intent: Remove a specific named range from a workbook and trigger a full formula recalculation so that any cells referencing the range reflect the change.
-// Use Cases: Eliminate temporary named ranges before publishing a report | Automate cleanup of legacy named ranges in generated spreadsheets | Ensure summary totals stay accurate after programmatically deleting a range | Prepare workbooks for third‑party systems that do not support custom names
-// AI Prompts: Write C# code using Aspose.Cells to delete a named range called 'MyRange' and then call Workbook.CalculateFormula to update all dependent cells. | Show how to handle the case where the named range might not exist before removal, with proper exception handling. | Explain the impact of Workbook.CalculateFormula on performance when called after multiple named‑range deletions.
+// Title: How to delete a named range and recalculate dependent formulas in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that checks if a named range exists in a workbook, removes it, calls Workbook.CalculateFormula, and saves the file using Aspose.Cells. | Show a step‑by‑step example of loading an .xlsx file, deleting a specific named range, triggering full formula recalculation, and writing the result with Aspose.Cells in a .NET console application. | Provide a minimal Aspose.Cells snippet that removes a range named "MyRange" and ensures all formulas referencing that range are updated by invoking CalculateFormula.
+// Common Searches: aspnet remove named range from Excel file and recalculate formulas | c# Aspose.Cells delete named range then update dependent cells | how to force formula recalculation after deleting a named range in Aspose.Cells | sample code for Workbook.CalculateFormula after range removal | checking existence of a named range before deletion using Aspose.Cells
+// Tags: delete named range Aspose.Cells C# | Workbook.CalculateFormula after range removal | named range existence check Aspose.Cells | recalculate dependent formulas .NET Excel library | Aspose.Cells remove range and update formulas
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The example loads an existing .xlsx workbook, verifies whether a named range called "MyRange" exists, removes that range from the workbook's Names collection, invokes Workbook.CalculateFormula to refresh any formulas that depended on the deleted range, and saves the updated workbook to a new file.
+class Program
 {
-    // C# example that creates a workbook, defines a named range, uses it in a SUM formula, removes the named range, calls Workbook.CalculateFormula to refresh dependent cells, and saves the file. Demonstrates proper cleanup of named ranges and formula updates with Aspose.Cells for .NET.
-    public class DeleteNamedRangeAndRecalculate
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+            const string rangeName = "MyRange";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate some data in cells A1:A3
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["A3"].PutValue(30);
+            // Load the workbook from the input file
+            var workbook = new Workbook(inputPath);
 
-                // Create a named range "MyRange" that refers to A1:A3
-                int nameIndex = workbook.Worksheets.Names.Add("MyRange");
-                workbook.Worksheets.Names[nameIndex].RefersTo = "=Sheet1!$A$1:$A$3";
+            // Access the collection of named ranges
+            var names = workbook.Worksheets.Names;
+            var name = names[rangeName];
 
-                // Use the named range in a formula (sum of the range)
-                sheet.Cells["D1"].Formula = "=SUM(MyRange)";
-
-                // Calculate formulas before removing the named range (optional)
-                workbook.CalculateFormula();
+            if (name != null)
+            {
+                // Retrieve the actual Range object using the name
+                AsposeRange namedRange = workbook.Worksheets.GetRangeByName(rangeName);
+                // (namedRange can be used here if further processing is needed)
 
                 // Remove the named range from the workbook
-                workbook.Worksheets.Names.Remove("MyRange");
-
-                // Recalculate formulas so that dependent cells update correctly
-                workbook.CalculateFormula();
-
-                // Define output file path
-                string outputPath = "DeletedNamedRange.xlsx";
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+                names.Remove(rangeName);
+                Console.WriteLine($"Named range \"{rangeName}\" removed.");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Named range \"{rangeName}\" does not exist.");
             }
-        }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+            // Recalculate all formulas so that dependent cells are updated
+            workbook.CalculateFormula();
+
+            // Save the modified workbook to the output file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
         {
-            Run();
+            // Log any unexpected errors
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,47 +1,65 @@
-// Title: C# – Load an Excel workbook without charts using Aspose.Cells LoadFilter and verify chart count
-// Description: Demonstrates how to create a custom LoadFilter that disables chart loading, open an XLSX file with LoadOptions, iterate through each worksheet to confirm the chart collection is empty, and properly dispose the workbook.
-// Keywords: Aspose.Cells LoadFilter exclude charts | C# load workbook without charts | LoadOptions chart exclusion | Verify worksheet chart count Aspose | Excel performance chart removal | LoadDataFilterOptions Chart | Aspose.Cells custom LoadFilter example
-// Common Searches: how to load excel file without charts using aspose.cells | asp.net exclude charts when loading workbook | c# check worksheet chart count after loading | aspocells loadoptions chart filter | remove chart objects during workbook load
-// Developer Intent: Load an Excel workbook while omitting all chart objects and confirm that each worksheet contains zero charts.
-// Use Cases: Speed up processing of large workbooks when charts are irrelevant. | Validate that a template file is chart‑free before applying data updates. | Prepare workbooks for server‑side calculations without rendering overhead.
-// AI Prompts: Show me a C# example of a custom LoadFilter in Aspose.Cells that excludes charts and prints the chart count for each worksheet. | Give an alternative method to strip charts from a workbook after it has been loaded with Aspose.Cells. | Explain how LoadDataFilterOptions can be combined to load only data and skip charts in Aspose.Cells.
+// Title: Load an Excel workbook with Aspose.Cells for .NET, delete all charts from every worksheet, and confirm zero charts remain
+// AI Prompts: Generate C# code that opens an .xlsx file using Aspose.Cells, clears the Charts collection on each worksheet, and prints a message indicating whether any charts are left. | Write a method that takes a file path, loads the workbook with Aspose.Cells, removes all chart objects from all worksheets, and returns true only if the workbook contains no charts after the operation.
+// Common Searches: Aspose.Cells C# remove charts from workbook and check chart count | How to clear chart collections on each worksheet using Aspose.Cells .NET | Verify that an Excel file loaded with Aspose.Cells has zero charts | C# load Excel workbook without loading chart objects Aspose.Cells | Aspose.Cells example to delete all charts and validate removal
+// Tags: Aspose.Cells clear worksheet charts C# | Aspose.Cells verify zero charts .NET | load Excel workbook without chart objects Aspose.Cells | remove chart collections from Excel worksheets C# | chart count validation using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a custom LoadFilter that disables chart loading, open an XLSX file with LoadOptions, iterate through each worksheet to confirm the chart collection is empty, and properly dispose the workbook.
+// // Loads an Excel file with Aspose.Cells, clears all chart objects from each worksheet, and verifies that every worksheet ends up with zero charts, outputting the verification result.
 class Program
 {
     static void Main()
     {
-        // Create LoadOptions and assign a custom LoadFilter that excludes charts
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.LoadFilter = new ExcludeChartLoadFilter();
+        // Path to the source workbook
+        string sourcePath = "input.xlsx";
 
-        // Load the workbook with the specified options
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Verify that each worksheet contains zero charts
-        foreach (Worksheet sheet in workbook.Worksheets)
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(sourcePath))
         {
-            Console.WriteLine($"Worksheet '{sheet.Name}' chart count: {sheet.Charts.Count}");
-            if (sheet.Charts.Count != 0)
-            {
-                Console.WriteLine("Warning: Charts were not excluded from this worksheet.");
-            }
+            Console.WriteLine($"Error: The file \"{sourcePath}\" was not found.");
+            return;
         }
 
-        // Clean up
-        workbook.Dispose();
-    }
-
-    // Custom LoadFilter implementation to exclude chart objects during loading
-    private class ExcludeChartLoadFilter : LoadFilter
-    {
-        public override void StartSheet(Worksheet sheet)
+        try
         {
-            // Load all data except charts
-            this.LoadDataFilterOptions = LoadDataFilterOptions.All & ~LoadDataFilterOptions.Chart;
+            // Load the workbook (default LoadOptions)
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Remove all chart objects from each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.Charts.Count > 0)
+                {
+                    sheet.Charts.Clear();
+                }
+            }
+
+            // Verify that each worksheet now contains zero charts
+            bool allSheetsHaveNoCharts = true;
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.Charts.Count > 0)
+                {
+                    allSheetsHaveNoCharts = false;
+                    Console.WriteLine($"Worksheet \"{sheet.Name}\" still contains {sheet.Charts.Count} chart(s).");
+                }
+            }
+
+            if (allSheetsHaveNoCharts)
+            {
+                Console.WriteLine("Verification passed: all worksheets contain zero charts.");
+            }
+            else
+            {
+                Console.WriteLine("Verification failed: some worksheets still contain charts.");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

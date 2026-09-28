@@ -1,57 +1,97 @@
-// Title: Benchmark opening time of an AES‑256 encrypted Excel workbook with Aspose.Cells for .NET
-// Description: This example creates a workbook, writes sample data, applies a strong password with AES‑256 encryption (StrongCryptographicProvider), saves the file, confirms the encryption flag, loads the workbook using the password while measuring the elapsed time, and validates the encryption status and password via FileFormatUtil.
-// Keywords: Aspose.Cells AES 256 encryption | C# benchmark encrypted Excel load time | password protected workbook performance | FileFormatUtil verify password | detect encrypted Excel file | StrongCryptographicProvider | Excel encryption speed .NET | measure workbook opening time
-// Common Searches: how to encrypt Excel file with AES‑256 using Aspose.Cells | measure load time of password‑protected workbook in C# | check if Excel file is encrypted with Aspose.Cells | benchmark opening speed of encrypted .xlsx | verify password of encrypted Excel using Aspose.Cells
-// Developer Intent: Confirm that an Excel workbook encrypted with a strong password opens quickly when loaded with Aspose.Cells.
-// Use Cases: Create and save an Excel workbook with AES‑256 encryption and a strong password. | Load the encrypted workbook with the correct password while timing the operation. | Validate encryption status and password correctness using FileFormatUtil.
-// AI Prompts: Generate C# code that logs the opening duration of an AES‑256 encrypted workbook and compares it to a configurable performance threshold. | Show how to encrypt the same workbook with different EncryptionType values and produce a table of opening times for each. | Provide a method that retries opening an encrypted workbook with exponential back‑off when the initial load exceeds a specified time limit.
+// Title: How to benchmark opening speed of a strongly password‑protected XLSX workbook using Aspose.Cells in C#
+// AI Prompts: Create a C# program that generates an XLSX file, applies a strong opening password with Aspose.Cells, saves it, then reloads the file using LoadOptions while measuring the elapsed milliseconds. | Write C# code that opens an existing password‑protected Excel workbook with Aspose.Cells, times the decryption process, and verifies that a specific cell contains the expected value.
+// Common Searches: aspocells benchmark opening time for password protected xlsx in .net core | c# measure decryption speed of encrypted excel workbook using aspocells | how to test load performance of strong password protected workbook with aspocells | performance impact of workbook encryption in aspocells .net | load encrypted xlsx with password and get elapsed time using aspocells
+// Tags: Aspose.Cells encrypted workbook load performance | C# timing password‑protected XLSX opening | LoadOptions password decryption benchmark | data integrity check after Aspose.Cells decryption | Excel opening latency measurement using Aspose.Cells
 
 using System;
 using System.Diagnostics;
 using System.IO;
 using Aspose.Cells;
 
-// This example creates a workbook, writes sample data, applies a strong password with AES‑256 encryption (StrongCryptographicProvider), saves the file, confirms the encryption flag, loads the workbook using the password while measuring the elapsed time, and validates the encryption status and password via FileFormatUtil.
-class ValidateEncryptedWorkbook
+// Demonstrates creating an XLSX workbook, protecting it with a strong password via Aspose.Cells, saving it, then loading it with LoadOptions while timing the operation and confirming cell data integrity.
+class WorkbookEncryptionValidation
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
-        Workbook wb = new Workbook();
-        wb.Worksheets[0].Cells["A1"].PutValue("Sensitive data");
-
-        // Apply a strong password to the workbook
-        wb.Settings.Password = "Str0ngP@ssw0rd!";
-
-        // Set strong encryption options (AES 256-bit)
-        wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 256);
-
-        // Save the encrypted workbook
+        // Path for the workbook file
         string filePath = "EncryptedWorkbook.xlsx";
-        wb.Save(filePath);
 
-        // Confirm that the workbook reports being encrypted
-        Console.WriteLine("Workbook Settings.IsEncrypted: " + wb.Settings.IsEncrypted);
+        // Strong password to encrypt the workbook
+        string strongPassword = "S3cureP@ssw0rd!2026";
 
-        // Load the encrypted workbook with the password and measure opening time
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = "Str0ngP@ssw0rd!";
-
-        Stopwatch sw = Stopwatch.StartNew();
-        Workbook loadedWb = new Workbook(filePath, loadOptions);
-        sw.Stop();
-
-        Console.WriteLine("Time to open encrypted workbook (ms): " + sw.ElapsedMilliseconds);
-
-        // Verify encryption status via FileFormatInfo
-        FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(filePath);
-        Console.WriteLine("FileFormatInfo.IsEncrypted: " + formatInfo.IsEncrypted);
-
-        // Validate the password using FileFormatUtil.VerifyPassword
-        using (Stream stream = File.OpenRead(filePath))
+        try
         {
-            bool isPasswordValid = FileFormatUtil.VerifyPassword(stream, "Str0ngP@ssw0rd!");
-            Console.WriteLine("Password verification (FileFormatUtil): " + isPasswordValid);
+            // -------------------------
+            // Create a new workbook and add sample data
+            // -------------------------
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Populate some sample data to simulate a realistic workbook
+            for (int row = 0; row < 1000; row++)
+            {
+                for (int col = 0; col < 10; col++)
+                {
+                    sheet.Cells[row, col].PutValue($"R{row}C{col}");
+                }
+            }
+
+            // -------------------------
+            // Apply encryption settings (password protection)
+            // -------------------------
+            workbook.Settings.Password = strongPassword; // opening password
+
+            // Protect the workbook (structure and windows)
+            workbook.Protect(ProtectionType.All, strongPassword);
+
+            // Save the encrypted workbook
+            workbook.Save(filePath, SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during workbook creation/saving: {ex.Message}");
+            return;
+        }
+
+        // -------------------------
+        // Validate opening speed of the encrypted workbook
+        // -------------------------
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
+
+        try
+        {
+            // Ensure the file exists before attempting to load
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Encrypted workbook file not found.", filePath);
+
+            // Load the workbook with the password
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                Password = strongPassword
+            };
+            Workbook loadedWorkbook = new Workbook(filePath, loadOptions);
+
+            sw.Stop();
+
+            // Output the elapsed time in milliseconds
+            Console.WriteLine($"Time to open encrypted workbook: {sw.ElapsedMilliseconds} ms");
+
+            // Simple validation: ensure the workbook opened without exception and contains expected data
+            if (loadedWorkbook.Worksheets[0].Cells[0, 0].StringValue == "R0C0")
+            {
+                Console.WriteLine("Workbook opened successfully and data integrity verified.");
+            }
+            else
+            {
+                Console.WriteLine("Data verification failed.");
+            }
+        }
+        catch (Exception ex)
+        {
+            sw.Stop();
+            Console.WriteLine($"Error during workbook loading/validation: {ex.Message}");
         }
     }
 }

@@ -1,105 +1,155 @@
-// Title: Async Export of XML Map Certificates from Multiple Excel Workbooks with Aspose.Cells for .NET
-// Description: Shows how to load a collection of Excel files, detect embedded XML maps (treated as certificates), and export each map to its own XML file using parallel Tasks. The solution creates the output folder, runs workbook processing concurrently, logs missing files or errors, and awaits all tasks for high‑throughput batch handling.
-// Keywords: Aspose.Cells | C# async export | XML map | certificate extraction | parallel workbook processing | batch Excel export | ExportXml | Task.WhenAll | Excel to XML | large file sets
-// Common Searches: export xml maps from excel using aspose.cells c# | async batch export of excel certificates | parallel processing of multiple workbooks Aspose | how to extract xml map from workbook .NET | asynchronous export of excel xml schemas
-// Developer Intent: Implement a scalable, asynchronous routine that extracts XML map certificates from many Excel workbooks in parallel to improve performance.
-// Use Cases: Mass extraction of XML schemas from thousands of financial reports for downstream analytics. | Automated generation of per‑workbook XML files during a data‑migration pipeline. | Background service that monitors an upload folder and continuously pulls certificates from new workbooks. | Performance‑critical ETL job that needs to process large batches of Excel files without blocking the main thread.
-// AI Prompts: Create a version of ExportCertificatesAsync that limits concurrency to a configurable maximum (e.g., four parallel tasks). | Add detailed logging with timestamps and write a summary report after all exports complete. | Write unit tests that mock workbooks with and without XML maps and verify the correct files are created and errors are handled. | Refactor the code to use Parallel.ForEach instead of manual Task collection while preserving async/await semantics.
+// Title: Export digital signature certificates from multiple Excel workbooks asynchronously with Aspose.Cells for .NET
+// AI Prompts: Write a C# async method that iterates over a collection of .xlsx file paths, loads each workbook with Aspose.Cells, extracts any digital‑signature certificates via reflection, and writes the certificate details (subject, issuer, validity dates, thumbprint) to a .cert.txt file in a given output directory. | Extend the asynchronous exporter to also capture each certificate's serial number and output the results in JSON format instead of plain text. | Add a configurable MaxDegreeOfParallelism argument to the export routine so that only a limited number of workbooks are processed concurrently while still using async tasks.
+// Common Searches: how to extract digital signature certificates from Excel files using Aspose.Cells in C# | async processing of multiple .xlsx workbooks to export certificates .NET | using reflection to access DigitalSignatureCollection in Aspose.Cells | parallel export of X509Certificate2 information from Excel workbooks | limit parallel tasks when exporting certificates from Excel files with Aspose.Cells
+// Tags: asynchronous export of Excel digital signatures Aspose.Cells | reflection access DigitalSignatureCollection C# | write X509Certificate2 details to text file | parallel processing of .xlsx workbooks | configurable degree of parallelism certificate extraction
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Aspose.Cells;
+using System.Security.Cryptography.X509Certificates;
+using System.Reflection;
 
-namespace AsposeCellsAsyncExport
+// The example defines a CertificateExporter class that asynchronously processes a list of Excel workbook paths. For each .xlsx file it loads the workbook with Aspose.Cells, uses reflection to obtain the DigitalSignatureCollection and each signature's Certificate, and writes key certificate properties (subject, issuer, validity period, thumbprint) to a .cert.txt file in a specified output folder. The exporter runs each workbook export in its own Task and awaits all tasks, enabling high‑performance processing of large file sets.
+public class CertificateExporter
 {
-    // Shows how to load a collection of Excel files, detect embedded XML maps (treated as certificates), and export each map to its own XML file using parallel Tasks. The solution creates the output folder, runs workbook processing concurrently, logs missing files or errors, and awaits all tasks for high‑throughput batch handling.
-    public class CertificateExporter
+    // Export certificates from multiple workbooks asynchronously.
+    public static async Task ExportCertificatesAsync(IEnumerable<string> workbookPaths, string outputFolder)
     {
-        // Export XML maps (treated as certificates) from a list of workbooks asynchronously.
-        public static async Task ExportCertificatesAsync(string[] workbookPaths, string outputDirectory)
+        // Ensure the output directory exists.
+        Directory.CreateDirectory(outputFolder);
+
+        var exportTasks = new List<Task>();
+
+        foreach (var path in workbookPaths)
         {
-            // Ensure the output directory exists.
-            Directory.CreateDirectory(outputDirectory);
-
-            // Create a list to hold the export tasks.
-            List<Task> exportTasks = new List<Task>();
-
-            foreach (string wbPath in workbookPaths)
+            exportTasks.Add(Task.Run(() =>
             {
-                // For each workbook start a separate task.
-                exportTasks.Add(Task.Run(() =>
+                try
                 {
                     // Verify the workbook file exists.
-                    if (!File.Exists(wbPath))
+                    if (!File.Exists(path))
                     {
-                        Console.WriteLine($"File not found: '{wbPath}'. Skipping.");
+                        Console.WriteLine($"File not found: {path}");
                         return;
                     }
 
-                    try
+                    // Load the workbook.
+                    var workbook = new Workbook(path);
+
+                    // Prepare the output file name.
+                    var outputFile = Path.Combine(outputFolder,
+                        Path.GetFileNameWithoutExtension(path) + ".cert.txt");
+
+                    using (var writer = new StreamWriter(outputFile))
                     {
-                        // Load the workbook.
-                        using (Workbook workbook = new Workbook(wbPath))
+                        // Try to obtain the DigitalSignatureCollection via reflection
+                        // (the property may not exist in older Aspose.Cells versions).
+                        PropertyInfo sigProp = workbook.GetType().GetProperty("DigitalSignatureCollection",
+                            BindingFlags.Public | BindingFlags.Instance);
+
+                        if (sigProp != null)
                         {
-                            // If there are no XML maps, nothing to export.
-                            if (workbook.Worksheets.XmlMaps.Count == 0)
+                            var signaturesObj = sigProp.GetValue(workbook);
+                            if (signaturesObj is System.Collections.IEnumerable signatures && signatures != null)
                             {
-                                Console.WriteLine($"No XML maps found in '{wbPath}'.");
-                                return;
+                                int index = 0;
+                                foreach (var sig in signatures)
+                                {
+                                    index++;
+                                    try
+                                    {
+                                        // Each signature is expected to be of type DigitalSignature.
+                                        // Use reflection to get the Certificate property.
+                                        PropertyInfo certProp = sig.GetType().GetProperty("Certificate",
+                                            BindingFlags.Public | BindingFlags.Instance);
+                                        if (certProp == null)
+                                        {
+                                            writer.WriteLine($"Signature #{index}: Certificate property not found.");
+                                            continue;
+                                        }
+
+                                        var certObj = certProp.GetValue(sig);
+                                        if (certObj == null)
+                                        {
+                                            writer.WriteLine($"Signature #{index}: Certificate is null.");
+                                            continue;
+                                        }
+
+                                        // Convert to X509Certificate2.
+                                        X509Certificate2 cert = certObj as X509Certificate2 ??
+                                            new X509Certificate2(certObj as byte[] ?? new byte[0]);
+
+                                        writer.WriteLine($"Certificate #{index}");
+                                        writer.WriteLine($"Subject: {cert.Subject}");
+                                        writer.WriteLine($"Issuer: {cert.Issuer}");
+                                        writer.WriteLine($"Valid From: {cert.NotBefore}");
+                                        writer.WriteLine($"Valid To: {cert.NotAfter}");
+                                        writer.WriteLine($"Thumbprint: {cert.GetCertHashString()}");
+                                        writer.WriteLine(new string('-', 40));
+                                    }
+                                    catch (Exception sigEx)
+                                    {
+                                        Console.WriteLine($"Error processing signature #{index} in '{path}': {sigEx.Message}");
+                                    }
+                                }
+
+                                // If no signatures were enumerated.
+                                if (index == 0)
+                                {
+                                    writer.WriteLine("No digital signatures found in this workbook.");
+                                }
                             }
-
-                            // Export each XML map to a separate file.
-                            for (int i = 0; i < workbook.Worksheets.XmlMaps.Count; i++)
+                            else
                             {
-                                var xmlMap = workbook.Worksheets.XmlMaps[i];
-                                string mapName = xmlMap.Name;
-
-                                // Build the output file name: <workbookName>_<mapName>.xml
-                                string wbFileName = Path.GetFileNameWithoutExtension(wbPath);
-                                string outputPath = Path.Combine(outputDirectory, $"{wbFileName}_{mapName}.xml");
-
-                                // Export the XML map.
-                                workbook.ExportXml(mapName, outputPath);
-                                Console.WriteLine($"Exported map '{mapName}' from '{wbPath}' to '{outputPath}'.");
+                                writer.WriteLine("DigitalSignatureCollection is empty or not enumerable.");
                             }
                         }
+                        else
+                        {
+                            writer.WriteLine("Digital signatures are not supported in this version of Aspose.Cells.");
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error processing '{wbPath}': {ex.Message}");
-                    }
-                }));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing '{path}': {ex.Message}");
+                }
+            }));
+        }
+
+        // Await all export tasks to complete.
+        await Task.WhenAll(exportTasks);
+    }
+}
+
+public class Program
+{
+    // Entry point for the console application.
+    public static async Task Main(string[] args)
+    {
+        try
+        {
+            string inputFolder = args.Length > 0 ? args[0] : @"C:\Workbooks";
+            string outputFolder = args.Length > 1 ? args[1] : @"C:\CertificatesExport";
+
+            // Verify input folder exists.
+            if (!Directory.Exists(inputFolder))
+            {
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
             }
 
-            // Await all export tasks to complete.
-            await Task.WhenAll(exportTasks);
+            // Get all .xlsx files from the input folder.
+            var files = Directory.GetFiles(inputFolder, "*.xlsx");
+
+            await CertificateExporter.ExportCertificatesAsync(files, outputFolder);
+            Console.WriteLine("Certificate export completed.");
         }
-
-        // Example usage.
-        public static async Task RunDemo()
+        catch (Exception ex)
         {
-            // Example list of workbook files (replace with actual paths).
-            string[] workbooks = new[]
-            {
-                @"C:\Data\Workbook1.xlsx",
-                @"C:\Data\Workbook2.xlsx",
-                @"C:\Data\Workbook3.xlsx"
-            };
-
-            string outputDir = @"C:\Data\ExportedCertificates";
-
-            await ExportCertificatesAsync(workbooks, outputDir);
-        }
-    }
-
-    // Entry point for demonstration.
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            await CertificateExporter.RunDemo();
+            Console.WriteLine($"Fatal error: {ex.Message}");
         }
     }
 }

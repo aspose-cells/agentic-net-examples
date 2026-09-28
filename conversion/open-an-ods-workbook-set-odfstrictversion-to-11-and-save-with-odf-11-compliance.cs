@@ -1,29 +1,30 @@
-// Title: Save ODS with ODF 1.1 Strict Compliance using Aspose.Cells for .NET
-// Description: Load an existing ODS workbook, set the OdfStrictVersion to Odf11 via OdsSaveOptions, and save the file to meet ODF 1.1 strict specifications with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells OdsSaveOptions | OdfStrictVersion Odf11 | ODF 1.1 strict compliance | C# save ODS as ODF 1.1 | convert Excel to ODS 1.1 | Aspose.Cells ODS export
-// Common Searches: Aspose.Cells set OdfStrictVersion to Odf11 | save ODS file with ODF 1.1 strict mode C# | how to enforce ODF 1.1 compliance using Aspose.Cells | OdsSaveOptions OdfStrictVersion example | export workbook to ODS 1.1 strict with .NET
-// Developer Intent: The developer needs to open an ODS workbook, enforce ODF 1.1 strict version, and write the result as a compliant ODS file.
-// Use Cases: Produce ODS reports that must pass ODF 1.1 strict validation for enterprise document workflows. | Batch‑upgrade legacy ODS files to ODF 1.1 strict format before archiving or distribution. | Generate regulatory or government submissions where ODF 1.1 strict compliance is mandatory.
-// AI Prompts: Generate C# code that loads an ODS file, sets OdfStrictVersion to Odf11, and saves it with Aspose.Cells. | Explain the differences between OdfStrictVersion values and their effect on the resulting ODS file. | Create a C# loop that processes a folder of Excel files, converting each to an ODS file with ODF 1.1 strict compliance.
+// Title: Open an ODS workbook, set ODF 1.1 strict version, and save it with Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .ods file, configure OdsSaveOptions with OdfStrictVersion = Odf11, and save the workbook using Aspose.Cells in C#. | Create OdsSaveOptions for ODF 1.1 strict compliance and apply it when exporting a loaded workbook with Aspose.Cells for .NET. | Demonstrate setting the OdfStrictVersion property to Odf11 before saving an ODS workbook in C#.
+// Common Searches: Aspose.Cells C# set OdfStrictVersion to Odf11 when saving ODS | How to enforce ODF 1.1 strict compliance in an ODS file using Aspose.Cells for .NET | C# example for loading an ODS workbook and saving with ODF 1.1 strict version | OdsSaveOptions OdfStrictVersion property usage in Aspose.Cells .NET | Convert ODS to ODF 1.1 strict format with Aspose.Cells C# code
+// Tags: Aspose.Cells OdsSaveOptions OdfStrictVersion | C# ODS strict ODF 1.1 export | OpenDocumentFormatVersionType Odf11 example | save ODS with ODF 1.1 compliance Aspose.Cells | load and save ODS workbook .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Ods;
 
-// Load an existing ODS workbook, set the OdfStrictVersion to Odf11 via OdsSaveOptions, and save the file to meet ODF 1.1 strict specifications with Aspose.Cells for .NET.
+// Loads an existing ODS workbook, sets the OdfStrictVersion to ODF 1.1 via OdsSaveOptions, and saves the file as a strict‑compliant ODS document using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Load the existing ODS workbook
+        // Path to the source ODS workbook
         string inputPath = "input.ods";
+
+        // Load the existing ODS workbook
         Workbook workbook = new Workbook(inputPath);
 
-        // Create ODS save options and set the ODF strict version to 1.1
+        // Create ODS save options
         OdsSaveOptions saveOptions = new OdsSaveOptions();
+
+        // Set the ODF version to strict 1.1 compliance
         saveOptions.OdfStrictVersion = OpenDocumentFormatVersionType.Odf11;
 
-        // Save the workbook with ODF 1.1 compliance
+        // Save the workbook with the specified ODF 1.1 compliance
         string outputPath = "output_strict11.ods";
         workbook.Save(outputPath, saveOptions);
     }

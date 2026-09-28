@@ -1,65 +1,52 @@
-// Title: C# Split Worksheet into Panes and Freeze Top Rows with Aspose.Cells
-// Description: Demonstrates how to create a new workbook, populate 100 rows, split the worksheet into four panes, freeze the first five rows, set the bottom pane to start at row 11, and save the result as SplitAndFreezeDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# split panes | Aspose.Cells freeze panes | split view frozen header .NET | FreezePanes with Split in Aspose.Cells | worksheet split and freeze example | C# Excel pane manipulation
-// Common Searches: Aspose.Cells split worksheet into panes C# | freeze top rows while keeping split panes Aspose.Cells | set first visible row of bottom pane Aspose.Cells | how to combine Split and FreezePanes in .NET | split view with frozen header Aspose.Cells
-// Developer Intent: Create a worksheet that shows a split view and keeps the top rows fixed for easier navigation in a large dataset.
-// Use Cases: Display large tables with a frozen header while allowing independent scrolling of lower sections. | Build Excel dashboards where summary rows remain visible across multiple panes. | Navigate to a specific data block by positioning the bottom pane at a chosen row after freezing the header.
-// AI Prompts: Write C# code using Aspose.Cells to split a worksheet into four panes, freeze the first five rows, and set the bottom pane to start at row 11. | Explain the FreezePanes parameters and how they interact with Split in Aspose.Cells. | Provide a step‑by‑step tutorial for adjusting the first visible row of the bottom pane after splitting and freezing.
+// Title: Create a split view with frozen top rows using Aspose.Cells SplitPanes and FreezePanes in C#
+// AI Prompts: Write C# code that inserts a vertical split pane at row 2, freezes the first two rows of a worksheet with Aspose.Cells, and saves the file as an .xlsx workbook. | Show how to fill a worksheet with sample data, apply FreezePanes to lock header rows, and set a split pane for independent scrolling using Aspose.Cells for .NET. | Demonstrate combining the SplitPanes and FreezePanes methods to produce a split view with frozen header rows and export the result to Excel.
+// Common Searches: Aspose.Cells C# split pane and freeze top rows example | How to freeze header rows while using split panes in Aspose.Cells .NET | C# code to create a split view with frozen rows in an Excel workbook using Aspose.Cells | Set vertical split and freeze first two rows with Aspose.Cells for .NET
+// Tags: Aspose.Cells FreezePanes SplitPanes C# | split pane frozen header rows .NET | Excel workbook split view Aspose.Cells | populate worksheet sample data Aspose.Cells | save workbook as xlsx Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a new workbook, populates 100 rows by 20 columns with sample data, applies a vertical split pane and freezes the top two rows, then saves the file as SplitFreezeExample.xlsx.
+class Program
 {
-    // Demonstrates how to create a new workbook, populate 100 rows, split the worksheet into four panes, freeze the first five rows, set the bottom pane to start at row 11, and save the result as SplitAndFreezeDemo.xlsx using Aspose.Cells for .NET.
-    public class SplitAndFreezeDemo
+    static void Main()
     {
-        // Entry point required for console application
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-            // Populate the worksheet with sample data to demonstrate scrolling
+            // Populate the worksheet with sample data
             for (int row = 0; row < 100; row++)
             {
-                for (int col = 0; col < 10; col++)
+                for (int col = 0; col < 20; col++)
                 {
-                    sheet.Cells[row, col].Value = $"R{row + 1}C{col + 1}";
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
-            // Split the window into four panes (no parameters needed)
-            sheet.Split();
+            // Freeze the top 2 rows in the upper pane
+            // Parameters: first unfrozen row, first unfrozen column, left column, top row
+            sheet.FreezePanes(2, 0, 0, 0);
 
-            // Freeze the top 5 rows while keeping the split panes
-            // Parameters: row index, column index, number of frozen rows, number of frozen columns
-            // Here we freeze rows 0‑4 (5 rows) and no columns
-            sheet.FreezePanes(5, 0, 5, 0);
-
-            // Optionally adjust the visible part of the bottom pane
-            PaneCollection panes = sheet.GetPanes();
-            panes.FirstVisibleRowOfBottomPane = 10; // start showing row 11 in the bottom pane
+            // Determine output path and ensure the directory exists
+            string outputPath = "SplitFreezeExample.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            string outputPath = "SplitAndFreezeDemo.xlsx";
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

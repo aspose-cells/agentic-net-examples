@@ -1,62 +1,92 @@
-// Title: Bulk Convert Excel Dates to Japanese Era (Heisei, Reiwa) with Aspose.Cells for .NET
-// Description: Loads a workbook, sets its region to Japan, defines a custom "ggge" number format for Japanese eras, creates a style, scans the used range and applies the style to every DateTime cell, then saves the file so dates appear as "平成31年4月30日" or "令和1年5月1日".
-// Keywords: Aspose.Cells | C# | Japanese era formatting | ggge pattern | bulk date conversion | Excel region Japan | locale-aware dates | Heisei | Reiwa | globalization | localization
-// Common Searches: Aspose.Cells format dates with Japanese era | C# apply Japanese era style to all Excel date cells | set workbook region to Japan Aspose.Cells | ggge custom number format example | convert Gregorian dates to Japanese era in .NET
-// Developer Intent: Automatically apply the appropriate Japanese era format to every DateTime cell during bulk Excel processing.
-// Use Cases: Localize financial reports by converting Gregorian dates to era notation across an entire workbook. | Prepare a Japanese‑language version of a template where all date columns must display Heisei or Reiwa eras. | Run a batch job that standardizes date formatting for multiple Excel files before distribution to Japanese stakeholders.
-// AI Prompts: Generate C# code using Aspose.Cells that sets the workbook region to Japan and applies a "ggge" era format to all DateTime cells. | Explain how the "ggge" pattern selects the correct Japanese era based on the year in Aspose.Cells custom formats. | Provide troubleshooting steps when Japanese era formatting does not appear after applying the custom style.
+// Title: Automatically replace Gregorian dates with Japanese era strings in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, scans every cell for DateTime values, converts each date to the appropriate Japanese era (Meiji, Taisho, Showa, Heisei, Reiwa) using a lookup of era start dates, writes the era string back as text, and saves the workbook. | Create a reusable C# method that receives a DateTime and returns a formatted Japanese era string (e.g., "R3/04/01"), then apply this method to all date cells in a worksheet loaded with Aspose.Cells while preserving text formatting.
+// Common Searches: Aspose.Cells C# bulk convert Excel dates to Japanese era format | How to map Gregorian dates to Japanese era in a spreadsheet using .NET | Replace date cells with era strings in an Excel file programmatically | C# iterate over used range in Aspose.Cells and change date format to era | Japanese era conversion for Excel dates with Aspose.Cells library
+// Tags: bulk date conversion to Japanese era using Aspose.Cells | Japanese era formatting for Excel cells in .NET | replace DateTime cells with era strings Aspose.Cells | era lookup based on Gregorian year C# | text style assignment for converted dates Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Settings;
 
-namespace AsposeCellsJapaneseEraDemo
+// The example loads an input.xlsx workbook with Aspose.Cells, iterates through the used range, detects DateTime cells, converts each date to the correct Japanese era string (e.g., "R3/04/01") based on predefined era start dates, writes the result back as text with a text number format, and saves the modified workbook to output.xlsx.
+class JapaneseEraDateConverter
 {
-    // Loads a workbook, sets its region to Japan, defines a custom "ggge" number format for Japanese eras, creates a style, scans the used range and applies the style to every DateTime cell, then saves the file so dates appear as "平成31年4月30日" or "令和1年5月1日".
-    class Program
+    // Mapping of Japanese eras with their start dates
+    private static readonly (string Era, DateTime Start)[] Eras = new (string, DateTime)[]
     {
-        static void Main()
+        ("M", new DateTime(1868, 9, 8)),   // Meiji
+        ("T", new DateTime(1912, 7, 30)),  // Taisho
+        ("S", new DateTime(1926, 12, 25)), // Showa
+        ("H", new DateTime(1989, 1, 8)),   // Heisei
+        ("R", new DateTime(2019, 5, 1))    // Reiwa
+    };
+
+    // Convert a Gregorian date to Japanese era string (e.g., "R3/04/01")
+    private static string ConvertToJapaneseEra(DateTime date)
+    {
+        // Find the era that the date belongs to (latest start date <= date)
+        for (int i = Eras.Length - 1; i >= 0; i--)
         {
-            // Load an existing workbook (bulk conversion source)
-            // Replace "input.xlsx" with the path to your source workbook
-            Workbook workbook = new Workbook("input.xlsx");
-
-            // Set the workbook region to Japan so that Japanese era formatting is recognized
-            workbook.Settings.Region = CountryCode.Japan;
-
-            // Define a custom number format that displays dates using Japanese eras
-            // Example format: "平成31年4月30日" or "令和1年5月1日"
-            // The format string uses the "ggge" pattern for era name and year.
-            string japaneseEraFormat = "[$-ja-JP]ggge\"年\"M\"月\"d\"日\"";
-
-            // Create a style with the custom format
-            Style eraStyle = workbook.CreateStyle();
-            eraStyle.Custom = japaneseEraFormat;
-
-            // Apply the style to all cells that contain DateTime values
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Iterate through used range
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
-
-            for (int row = 0; row <= maxRow; row++)
+            if (date >= Eras[i].Start)
             {
-                for (int col = 0; col <= maxCol; col++)
+                int eraYear = date.Year - Eras[i].Start.Year + 1;
+                // Japanese era year 1 is often written as "1" (not "0")
+                return $"{Eras[i].Era}{eraYear}/{date.Month:D2}/{date.Day:D2}";
+            }
+        }
+
+        // If date is before Meiji era, return the original Gregorian representation
+        return date.ToString("yyyy/MM/dd");
+    }
+
+    static void Main()
+    {
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Ensure the input file exists before loading
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook (load rule)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Assume processing the first worksheet; adjust as needed
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Get the used range of cells
+            Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+
+            // Iterate through each cell in the used range
+            foreach (Cell cell in usedRange)
+            {
+                // Check if the cell contains a date value
+                if (cell.Type == CellValueType.IsDateTime)
                 {
-                    Cell cell = cells[row, col];
-                    if (cell.Type == CellValueType.IsDateTime)
-                    {
-                        // Apply the Japanese era style
-                        cell.SetStyle(eraStyle);
-                    }
+                    DateTime originalDate = cell.DateTimeValue;
+                    // Convert to Japanese era format
+                    string eraString = ConvertToJapaneseEra(originalDate);
+                    // Replace cell value with the era string
+                    cell.PutValue(eraString);
+                    // Set the style to Text to preserve formatting
+                    Style style = cell.GetStyle();
+                    style.Number = 49; // Text format
+                    cell.SetStyle(style);
                 }
             }
 
-            // Save the workbook with converted dates
-            // Replace "output.xlsx" with the desired output path
-            workbook.Save("output.xlsx");
+            // Save the modified workbook (save rule)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

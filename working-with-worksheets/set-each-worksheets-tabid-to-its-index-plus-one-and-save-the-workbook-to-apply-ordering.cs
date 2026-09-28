@@ -1,58 +1,27 @@
-// Title: Set Worksheet TabId Sequentially and Save Workbook with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, adds extra sheets, sets each worksheet's TabId to its zero‑based Index + 1, prints the assigned IDs, and saves the file so the tab order is persisted.
-// Keywords: Aspose.Cells TabId C# | set worksheet TabId | worksheet tab order Aspose | Aspose.Cells save workbook | C# Excel tab ordering | Worksheet.Index property | Excel TabId property
-// Common Searches: Aspose.Cells set TabId C# | How to change worksheet tab order programmatically | Worksheet.TabId property example | Save workbook after modifying TabId Aspose | C# set Excel sheet TabId Aspose.Cells
-// Developer Intent: Assign each worksheet a TabId equal to its index + 1 and save the workbook to make the tab order permanent.
-// Use Cases: Generate multi‑sheet reports where the visual tab sequence must match processing logic. | Prepare workbooks for downstream systems that reference sheets by TabId rather than by name. | Integrate with UI components that display worksheet tabs based on TabId values.
-// AI Prompts: Write C# code using Aspose.Cells to iterate through all worksheets, set TabId = Index + 1, and save the workbook as XLSX. | Explain the difference between Worksheet.Index and Worksheet.TabId in Aspose.Cells and why a Save call is required after changing TabId. | Add robust error handling and logging for setting TabId and saving the workbook, including output of each assigned TabId. | Create a unit test that verifies TabId values are sequential after running the SetWorksheetTabIds example.
+// Title: Assign sequential TabId values to each worksheet and save the workbook with Aspose.Cells for .NET
+// AI Prompts: Iterate through all worksheets, set their TabId to the worksheet index plus one, and save the file using Aspose.Cells in C#. | Reorder Excel sheet tabs by updating the TabId property (1‑based) for each worksheet and write the modified workbook to a new file.
+// Common Searches: Aspose.Cells how to change worksheet TabId programmatically in C# | set Excel sheet tab order using TabId property with .NET | C# code to assign sequential TabId to worksheets in an existing workbook | save workbook after modifying TabId values with Aspose.Cells | update Excel tab identifiers for multiple sheets using Aspose.Cells API
+// Tags: worksheet TabId assignment Aspose.Cells | Excel sheet tab ordering C# | apply TabId changes Aspose.Cells | save workbook after TabId update .NET | manage sheet tab identifiers Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsExamples
+// // Loads an Excel workbook, assigns each worksheet a 1‑based TabId to define tab order, and saves the updated workbook to a new file.
+class Program
 {
-    // Creates a workbook, adds extra sheets, sets each worksheet's TabId to its zero‑based Index + 1, prints the assigned IDs, and saves the file so the tab order is persisted.
-    public class SetWorksheetTabIds
+    static void Main()
     {
-        public static void Run()
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Set each worksheet's TabId to its index plus one
+        for (int i = 0; i < workbook.Worksheets.Count; i++)
         {
-            try
-            {
-                // Create a new workbook (default contains one worksheet)
-                Workbook workbook = new Workbook();
-
-                // Add additional worksheets for demonstration
-                workbook.Worksheets.Add("Sheet2");
-                workbook.Worksheets.Add("Sheet3");
-
-                // Iterate through all worksheets and set TabId = Index + 1
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    // Worksheet.Index is zero‑based, TabId expects a positive identifier
-                    sheet.TabId = sheet.Index + 1;
-                    // Optional: display the assigned TabId
-                    Console.WriteLine($"Worksheet \"{sheet.Name}\" assigned TabId: {sheet.TabId}");
-                }
-
-                // Save the workbook to apply the TabId changes
-                string outputPath = "WorkbookWithTabIds.xlsx";
-                workbook.Save(outputPath, SaveFormat.Xlsx);
-
-                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Worksheet sheet = workbook.Worksheets[i];
+            sheet.TabId = i + 1; // TabId is 1‑based
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetWorksheetTabIds.Run();
-        }
+        // Save the workbook to apply the new ordering
+        workbook.Save("output.xlsx");
     }
 }

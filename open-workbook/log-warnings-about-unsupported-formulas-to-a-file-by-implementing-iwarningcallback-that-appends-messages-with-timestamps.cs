@@ -1,10 +1,7 @@
-// Title: Log Aspose.Cells formula warnings to a file with timestamps using IWarningCallback (C#)
-// Description: Shows how to implement a custom IWarningCallback in Aspose.Cells for .NET that writes each warning—type, description, and a timestamp—to a chosen log file. The sample assigns the callback, forces a warning with an unsupported function, runs workbook calculation, and saves both the workbook and the log.
-// Keywords: Aspose.Cells IWarningCallback | C# warning log | timestamped warning file | unsupported formula warning | Aspose.Cells workbook calculation | log file Aspose.Cells | Excel warning callback .NET | formula error logging C#
-// Common Searches: how to log Aspose.Cells warnings to a text file | IWarningCallback example C# | save formula warnings with timestamps Aspose.Cells | capture unsupported function warnings in .NET | Aspose.Cells warning callback tutorial
-// Developer Intent: Create a .NET IWarningCallback that appends each Aspose.Cells warning, including its type and description, to a log file with a date‑time stamp.
-// Use Cases: Record warnings from unsupported Excel functions for post‑run analysis. | Maintain an audit trail of workbook calculation issues in automated reporting pipelines. | Provide developers with a searchable log to troubleshoot formula errors during batch processing.
-// AI Prompts: Generate a C# class that implements Aspose.Cells IWarningCallback and writes warnings with timestamps to a specified file. | Demonstrate how to attach a custom warning callback to Workbook.Settings.WarningCallback and trigger it using an unsupported formula. | Write a script that reads the generated warnings.log and groups warnings by type after workbook processing.
+// Title: Log unsupported formula warnings to a file using Aspose.Cells IWarningCallback in C#
+// AI Prompts: Write a C# class that implements Aspose.Cells.IWarningCallback and appends each warning description with a UTC timestamp to a specified log file. | Show how to configure LoadOptions to use the custom warning callback when opening an Excel workbook with Aspose.Cells. | Demonstrate thread‑safe file appending and automatic creation of the log directory inside the warning callback implementation.
+// Common Searches: c# Aspose.Cells capture unsupported formula warnings to a log file | how to implement IWarningCallback for warning logging in Aspose.Cells | timestamped warning entries when loading workbook with Aspose.Cells | thread‑safe warning logger for Aspose.Cells load options | save workbook after attaching custom warning callback Aspose.Cells
+// Tags: Aspose.Cells IWarningCallback logging | unsupported formula warning handling | UTC timestamped warning entries | thread‑safe file append C# | custom warning callback load options
 
 using System;
 using System.IO;
@@ -12,51 +9,95 @@ using Aspose.Cells;
 
 namespace AsposeCellsWarningLogger
 {
-    // Custom warning callback that logs warnings to a file with timestamps
-    // Shows how to implement a custom IWarningCallback in Aspose.Cells for .NET that writes each warning—type, description, and a timestamp—to a chosen log file. The sample assigns the callback, forces a warning with an unsupported function, runs workbook calculation, and saves both the workbook and the log.
-    public class FileLoggingWarningCallback : IWarningCallback
+    // Implements IWarningCallback to capture warnings during workbook operations.
+    // Implements IWarningCallback to capture warnings during workbook loading, writes each warning with a UTC timestamp to a log file, ensures the log directory exists, uses a lock for thread‑safe appending, and demonstrates loading and saving a workbook with the callback attached.
+    public class FileWarningCallback : IWarningCallback
     {
         private readonly string _logFilePath;
 
-        public FileLoggingWarningCallback(string logFilePath)
+        public FileWarningCallback(string logFilePath)
         {
             _logFilePath = logFilePath;
         }
 
-        public void Warning(WarningInfo warningInfo)
+        // This method is called by Aspose.Cells whenever a warning occurs.
+        public void Warning(WarningInfo info)
         {
-            // Build log entry with timestamp, warning type and description
-            string logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} | Type: {warningInfo.Type} | Description: {warningInfo.Description}";
-            // Append the entry to the log file
-            File.AppendAllText(_logFilePath, logEntry + Environment.NewLine);
+            // Build a log entry with a UTC timestamp and the warning description.
+            string logEntry = $"{DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} - {info.Description}{Environment.NewLine}";
+
+            // Ensure the directory exists.
+            try
+            {
+                string dir = Path.GetDirectoryName(_logFilePath);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+
+                // Append the entry to the log file. Using a lock to avoid race conditions in multithreaded scenarios.
+                lock (this)
+                {
+                    File.AppendAllText(_logFilePath, logEntry);
+                }
+            }
+            catch
+            {
+                // Swallow any logging exceptions to avoid breaking the main workflow.
+            }
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
-            // Path for the warning log file
-            string logPath = "warnings.log";
+            // Path to the Excel file to be loaded.
+            string inputFile = "input.xlsx";
 
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Path to the warning log file.
+            string warningLogFile = "warnings.log";
 
-            // Set the custom warning callback
-            workbook.Settings.WarningCallback = new FileLoggingWarningCallback(logPath);
+            // Verify that the input file exists.
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file '{inputFile}' not found.");
+                return;
+            }
 
-            // Insert a formula that is likely to generate a warning (unsupported function)
-            sheet.Cells["A1"].Formula = "=UNSUPPORTEDFUNC(B1)";
+            // Set up load options and attach the warning callback.
+            LoadOptions loadOptions = new LoadOptions
+            {
+                WarningCallback = new FileWarningCallback(warningLogFile)
+            };
 
-            // Perform a calculation to trigger the warning
-            workbook.CalculateFormula();
+            Workbook workbook = null;
 
-            // Save the workbook (any additional warnings during save will also be logged)
-            workbook.Save("Output.xlsx");
+            try
+            {
+                // Load the workbook; any unsupported formulas will trigger the callback.
+                workbook = new Workbook(inputFile, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading workbook: {ex.Message}");
+                return;
+            }
 
-            // Optional: inform the user that processing is complete
-            Console.WriteLine("Workbook saved. Warnings (if any) have been logged to " + logPath);
+            // (Optional) Perform any workbook processing here.
+
+            // Save the workbook to a new file to demonstrate the full lifecycle.
+            string outputFile = "output.xlsx";
+
+            try
+            {
+                workbook?.Save(outputFile);
+                Console.WriteLine($"Workbook saved successfully to '{outputFile}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
         }
     }
 }

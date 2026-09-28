@@ -1,39 +1,38 @@
-// Title: C# – Merge B2:D2 and Center Text Horizontally with Aspose.Cells
-// Description: This example creates a new workbook, merges the range B2:D2 on the first worksheet, inserts "Centered Text", applies a horizontal‑center alignment, and saves the file as MergedCells_B2_D2.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | Excel merge cells | B2:D2 merge | horizontal alignment | center text | worksheet style | save workbook | .NET Excel library
-// Common Searches: Aspose.Cells merge B2 D2 C# | center text in merged Excel cells .NET | how to set horizontal alignment after merging cells Aspose | C# code to merge cells and center content in Excel | Aspose.Cells example merge range and align
-// Developer Intent: The developer needs to combine cells B2 through D2 into a single merged cell and align the contained text to the horizontal center.
-// Use Cases: Generate a report header that spans columns B‑D with a centered title. | Create a table section label that occupies multiple columns and appears centered. | Design a reusable Excel template where headings are merged and centrally aligned for consistent layout.
-// AI Prompts: Write C# code using Aspose.Cells to merge cells A1:C1, make the text bold, and center it both horizontally and vertically. | Show how to merge any range of cells in a worksheet and apply custom styles, including background color and alignment, with Aspose.Cells for .NET. | Provide an Aspose.Cells example that merges cells, inserts a value, and sets horizontal and vertical alignment in one step.
+// Title: How to merge cells B2:D2 and horizontally center text using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that merges the range B2:D2 on the first worksheet and sets the horizontal alignment of the merged cell to Center. | Show how to apply a style to a merged cell in Aspose.Cells, including setting TextAlignmentType.Center for the merged range B2:D2. | Create a .NET example that merges a row of cells, writes a value into the merged area, and saves the workbook as an .xlsx file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# merge B2:D2 and center text horizontally | how to set horizontal alignment for merged cells in Aspose.Cells .NET | C# example merging cells and applying center alignment with Aspose.Cells library
+// Tags: Aspose.Cells merge cell range C# | Aspose.Cells set horizontal alignment | center text in merged Excel cells .NET | apply style to merged range Aspose | save merged cells workbook as .xlsx
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace MergeCellsExample
+// This C# example creates a new workbook, merges cells B2 through D2 on the first worksheet, centers the text horizontally in the merged cell, writes a sample value, and saves the file as MergedCells.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // This example creates a new workbook, merges the range B2:D2 on the first worksheet, inserts "Centered Text", applies a horizontal‑center alignment, and saves the file as MergedCells_B2_D2.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Merge cells B2 (row 1, column 1) through D2 (row 1, column 3)
-            // Parameters: firstRow (0‑based), firstColumn (0‑based), totalRows (1‑based), totalColumns (1‑based)
-            worksheet.Cells.Merge(firstRow: 1, firstColumn: 1, totalRows: 1, totalColumns: 3);
+        // Access the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Optional: put some text into the merged cell
-            worksheet.Cells[1, 1].PutValue("Centered Text");
+        // Merge cells B2 through D2 (row 1, columns 1 to 3)
+        sheet.Cells.Merge(1, 1, 1, 3);
 
-            // Retrieve the style of the merged cell and set horizontal alignment to Center
-            Style style = worksheet.Cells[1, 1].GetStyle();
-            style.HorizontalAlignment = TextAlignmentType.Center;
-            worksheet.Cells[1, 1].SetStyle(style);
+        // Get the style of the merged cell (top‑left cell B2)
+        Style style = sheet.Cells["B2"].GetStyle();
 
-            // Save the workbook to a file
-            workbook.Save("MergedCells_B2_D2.xlsx");
-        }
+        // Center the text horizontally
+        style.HorizontalAlignment = TextAlignmentType.Center;
+
+        // Apply the style back to the merged cell
+        sheet.Cells["B2"].SetStyle(style);
+
+        // Example text to show centering
+        sheet.Cells["B2"].PutValue("Merged and Centered");
+
+        // Save the workbook
+        workbook.Save("MergedCells.xlsx");
     }
 }

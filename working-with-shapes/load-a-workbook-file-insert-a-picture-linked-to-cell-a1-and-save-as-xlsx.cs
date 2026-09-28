@@ -1,34 +1,55 @@
-// Title: C# – Aspose.Cells: Add a Linked Image to Cell A1 and Export as XLSX
-// Description: Loads an existing workbook, accesses the first worksheet, inserts a linked picture (100 × 100 px) anchored to cell A1, and saves the result as an XLSX document using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | AddLinkedPicture | linked image Excel C# | anchor picture cell A1 | save workbook XLSX | Shapes API | dynamic logo Excel | C# Excel image linking
-// Common Searches: Aspose.Cells add linked picture C# | Insert image into Excel cell programmatically .NET | How to anchor a picture to a specific cell with Aspose.Cells | Save workbook after adding shape Aspose.Cells | C# code to link external image in Excel
-// Developer Intent: Insert a linked picture at cell A1 of an existing workbook and generate a new XLSX file.
-// Use Cases: Automatic logo updates when the source file changes | Template‑driven reports with placeholder images | Invoices that display product photos linked to external files | Dashboards that pull the latest charts from image files
-// AI Prompts: Generate C# code to place a linked picture in cell B2 with width 150 px and height 80 px using Aspose.Cells. | Show how to replace an existing linked picture while keeping its anchor cell. | Explain error handling for missing image files when calling AddLinkedPicture. | Provide a method to batch‑insert linked images into a range of cells.
+// Title: Load an existing XLSX workbook, insert a PNG picture into cell A1 with MoveAndSize placement, and save the file using Aspose.Cells for .NET
+// AI Prompts: Load a workbook from a file, add a PNG image to cell A1 of the first worksheet, set the picture's Placement to MoveAndSize, and save the result as a new XLSX file. | Insert a linked picture into the top‑left cell of an Excel sheet and ensure it resizes with rows and columns using Aspose.Cells in C#. | Check that the source workbook and image exist, embed the image at A1, adjust its placement, and export the modified workbook to XLSX with Aspose.Cells.
+// Common Searches: Aspose.Cells C# add image to specific cell and keep it linked | how to set picture placement MoveAndSize when inserting picture with Aspose.Cells | save workbook after embedding PNG picture in cell A1 using Aspose.Cells for .NET | load existing Excel file and insert picture at A1 with Aspose.Cells API | C# Aspose.Cells insert picture and preserve size on row column changes
+// Tags: insert picture into cell A1 Aspose.Cells | picture placement MoveAndSize C# | load workbook and embed PNG Aspose.Cells | save workbook as XLSX with image Aspose.Cells | linked image in Excel cell .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads an existing workbook, accesses the first worksheet, inserts a linked picture (100 × 100 px) anchored to cell A1, and saves the result as an XLSX document using Aspose.Cells for .NET.
+// The program loads input.xlsx, verifies image.png exists, inserts the PNG into cell A1 of the first worksheet with MoveAndSize placement, and saves the updated workbook as output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
+        try
+        {
+            const string inputPath = "input.xlsx";
+            const string imagePath = "image.png";
+            const string outputPath = "output.xlsx";
 
-        // Get the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Ensure required files exist
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Path to the image that will be linked (replace with your actual image path)
-        string imagePath = "sample.jpg";
+            if (!File.Exists(imagePath))
+            {
+                Console.WriteLine($"Image file not found: {imagePath}");
+                return;
+            }
 
-        // Add a linked picture anchored to cell A1 (row index 0, column index 0)
-        // Height and width are specified in pixels
-        worksheet.Shapes.AddLinkedPicture(0, 0, 100, 100, imagePath);
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Save the modified workbook as XLSX
-        workbook.Save("output.xlsx", SaveFormat.Xlsx);
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add picture to cell A1 (row 0, column 0) and set its placement
+            int pictureIndex = sheet.Pictures.Add(0, 0, imagePath);
+            Picture picture = sheet.Pictures[pictureIndex];
+            picture.Placement = PlacementType.MoveAndSize;
+
+            // Save the workbook as XLSX
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

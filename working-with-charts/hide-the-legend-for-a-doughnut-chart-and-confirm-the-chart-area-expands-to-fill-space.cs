@@ -1,16 +1,14 @@
-// Title: Hide Legend in a Doughnut Chart and Auto‑Expand Chart Area with Aspose.Cells for .NET
-// Description: Creates a workbook, adds sample data, inserts a doughnut chart, disables its legend, and saves the file so the plot area automatically fills the space previously occupied by the legend.
-// Keywords: Aspose.Cells hide legend | doughnut chart legend removal .NET | auto expand chart area Aspose | chart layout customization C# | Aspose.Cells doughnut chart example
-// Common Searches: how to hide legend in a doughnut chart using Aspose.Cells | does removing legend enlarge chart area in Excel with Aspose | Aspose.Cells ShowLegend false doughnut chart | adjust chart size after hiding legend Aspose.Cells C# | programmatically remove chart legend in .NET
-// Developer Intent: Disable the legend of a doughnut chart so the chart area expands to occupy the freed space.
-// Use Cases: Generate clean‑looking doughnut charts for dashboards where a legend is redundant. | Create multiple charts in a report with legends turned off, letting each chart use the full allocated region. | Validate that the plot area grows after setting ShowLegend to false for dynamic layout adjustments.
-// AI Prompts: Write C# code with Aspose.Cells that hides a doughnut chart legend and verifies the plot area expands. | Show how to compare chart dimensions before and after disabling the legend in Aspose.Cells. | Explain steps to reposition and resize a doughnut chart after removing its legend using Aspose.Cells for .NET.
+// Title: Hide the legend of a doughnut chart and let the chart area automatically expand with Aspose.Cells for .NET
+// AI Prompts: Generate a new workbook, insert sample data, create a doughnut chart, set ShowLegend to false, and save as an .xlsx file using Aspose.Cells in C#. | Locate an existing doughnut chart in a worksheet, set its ShowLegend property to false so the chart area fills the space, and print the legend state to the console. | Write C# code that adds a doughnut chart, disables the legend display, and verifies the chart layout expands automatically with Aspose.Cells.
+// Common Searches: Aspose.Cells C# hide legend on doughnut chart and expand chart area | How to remove legend from a doughnut chart using Aspose.Cells for .NET | Chart.ShowLegend false effect on layout in Aspose.Cells | Resize doughnut chart automatically after hiding legend in C# | Programmatically hide legend in Excel doughnut chart with Aspose.Cells
+// Tags: Aspose.Cells hide chart legend | doughnut chart layout adjustment Aspose.Cells | chart.ShowLegend property C# | auto expand chart area after legend removal | Aspose.Cells generate doughnut chart without legend
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds sample data, inserts a doughnut chart, disables its legend, and saves the file so the plot area automatically fills the space previously occupied by the legend.
-class HideLegendDoughnutChart
+// The example creates a workbook, adds sample data, builds a doughnut chart, disables its legend by setting ShowLegend to false (causing the chart area to expand), prints the legend visibility status, and saves the file as DoughnutChart_NoLegend.xlsx.
+class HideDoughnutLegend
 {
     static void Main()
     {
@@ -36,10 +34,13 @@ class HideLegendDoughnutChart
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Hide the legend so the chart area can expand to fill the space
+        // Hide the legend; the chart area will automatically expand to use the freed space
         chart.ShowLegend = false;
 
-        // Save the workbook with the modified chart
+        // Verify that the legend is hidden (optional)
+        Console.WriteLine("Legend visible? " + chart.ShowLegend);
+
+        // Save the workbook
         workbook.Save("DoughnutChart_NoLegend.xlsx");
     }
 }

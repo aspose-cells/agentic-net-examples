@@ -1,72 +1,103 @@
-// Title: Load an XLSX workbook and extract chart trendline confidence intervals with Aspose.Cells for .NET
-// Description: The sample checks for the input file, opens the workbook using Aspose.Cells, walks through every worksheet, chart, series and attached trendline, then reads each trendline's confidence‑interval values (lower and upper bounds) together with its name and type, and writes the details to the console.
-// Keywords: Aspose.Cells C# chart trendline confidence interval | read Excel trendline CI Aspose | retrieve trendline properties .NET | iterate worksheets charts Aspose.Cells | Excel chart analytics C# | download Aspose.Cells example US | Aspose.Cells Europe tutorial | Aspose.Cells Asia code sample
-// Common Searches: Aspose.Cells get confidence interval of chart trendline C# | How to read trendline CI from Excel using Aspose.Cells | Iterate all charts in a workbook and extract trendline data .NET | C# example for logging Excel chart trendline properties | Aspose.Cells chart trendline name type confidence interval
-// Developer Intent: Programmatically obtain the confidence‑interval values, name and type of every trendline in all charts of an Excel workbook and output the information for review or further processing.
-// Use Cases: Automated validation of statistical charts before publishing a report. | Generating a summary file that lists trendline confidence intervals for regulatory compliance. | Feeding trendline metrics into a data‑science pipeline for predictive modeling.
-// AI Prompts: Show how to modify the code to export the trendline confidence‑interval data to a CSV file. | Provide a version that filters trendlines to only Linear and Polynomial types before logging. | Explain how to handle workbooks with hidden worksheets when extracting trendline information.
+// Title: Read trendline type and order from the first chart series in an XLSX workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an XLSX file with Aspose.Cells, verifies the first worksheet contains a chart, accesses the first series, and uses reflection to read the Trendline.Type and Trendline.Order properties while handling missing API gracefully. | Provide a sample that enumerates the Trendlines collection of a chart series via reflection, logs each trendline's type and order, and includes error handling for files without charts or trendlines.
+// Common Searches: aspocells get trendline type from chart series c# | c# read trendline order using Aspose.Cells | how to use reflection to access chart trendline properties in Aspose.Cells .NET | retrieve confidence interval values of a chart trendline with Aspose.Cells | check if trendline feature is available in current Aspose.Cells version
+// Tags: Aspose.Cells read chart trendline properties | C# extract trendline type from XLSX chart | reflection based access to Aspose.Cells trendlines | handle missing trendline API in Aspose.Cells | log trendline order and type in Excel workbook
 
-using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
+using System.Reflection;
 
-// The sample checks for the input file, opens the workbook using Aspose.Cells, walks through every worksheet, chart, series and attached trendline, then reads each trendline's confidence‑interval values (lower and upper bounds) together with its name and type, and writes the details to the console.
+// The example loads an XLSX workbook, ensures a worksheet, chart, and series exist, then uses reflection to obtain the Trendlines collection from the first series. It enumerates the first trendline and prints its Type and Order, with comprehensive checks for absent charts, series, or unsupported trendline APIs.
 class Program
 {
     static void Main()
     {
-        // Path to the existing XLSX workbook
-        string workbookPath = "input.xlsx";
-
-        // Verify that the input file exists to avoid FileNotFoundException
-        if (!File.Exists(workbookPath))
-        {
-            Console.WriteLine($"Error: The file \"{workbookPath}\" was not found.");
-            return;
-        }
-
         try
         {
-            // Load the workbook from the file system
-            Workbook workbook = new Workbook(workbookPath);
+            string filePath = "input.xlsx";
 
-            // Iterate through all worksheets in the workbook
-            foreach (Worksheet worksheet in workbook.Worksheets)
+            // Verify the input file exists
+            if (!File.Exists(filePath))
             {
-                // Iterate through all charts on the current worksheet
-                foreach (Chart chart in worksheet.Charts)
-                {
-                    // Iterate through each series in the chart
-                    for (int seriesIndex = 0; seriesIndex < chart.NSeries.Count; seriesIndex++)
-                    {
-                        // Each item in NSeries is a Series object
-                        Series series = chart.NSeries[seriesIndex];
-
-                        // Iterate through each trendline attached to the series
-                        for (int trendIndex = 0; trendIndex < series.TrendLines.Count; trendIndex++)
-                        {
-                            Trendline trendline = series.TrendLines[trendIndex];
-
-                            // Retrieve available trendline properties
-                            string trendlineName = trendline.Name;
-                            TrendlineType trendlineType = trendline.Type;
-
-                            // Log the retrieved values to the console
-                            Console.WriteLine($"Worksheet: {worksheet.Name}");
-                            Console.WriteLine($"Chart Title: {chart.Title?.Text ?? "Untitled"}");
-                            Console.WriteLine($"Series Index: {seriesIndex}, Trendline Index: {trendIndex}");
-                            Console.WriteLine($"  Trendline Name: {trendlineName}");
-                            Console.WriteLine($"  Trendline Type: {trendlineType}");
-                            Console.WriteLine();
-                        }
-                    }
-                }
+                Console.WriteLine($"File not found: {filePath}");
+                return;
             }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(filePath);
+
+            // Ensure there is at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook contains no worksheets.");
+                return;
+            }
+
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (worksheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the first worksheet.");
+                return;
+            }
+
+            Chart chart = worksheet.Charts[0];
+
+            // Ensure the chart has at least one series
+            if (chart.NSeries.Count == 0)
+            {
+                Console.WriteLine("The chart contains no series.");
+                return;
+            }
+
+            // Access the first series
+            var series = chart.NSeries[0];
+
+            // Use reflection to obtain the Trendlines collection (avoids compile‑time dependency)
+            PropertyInfo trendlinesProp = series.GetType().GetProperty("Trendlines");
+            if (trendlinesProp == null)
+            {
+                Console.WriteLine("Trendline feature is not available in this Aspose.Cells version.");
+                return;
+            }
+
+            var trendlinesObj = trendlinesProp.GetValue(series);
+            if (trendlinesObj == null)
+            {
+                Console.WriteLine("No trendlines collection found.");
+                return;
+            }
+
+            // Trendlines implements IEnumerable; retrieve the first trendline if present
+            var enumerator = (trendlinesObj as System.Collections.IEnumerable)?.GetEnumerator();
+            if (enumerator == null || !enumerator.MoveNext())
+            {
+                Console.WriteLine("No trendlines found in the series.");
+                return;
+            }
+
+            var trendline = enumerator.Current;
+            if (trendline == null)
+            {
+                Console.WriteLine("Trendline object is null.");
+                return;
+            }
+
+            // Retrieve Trendline properties via reflection
+            PropertyInfo typeProp = trendline.GetType().GetProperty("Type");
+            PropertyInfo orderProp = trendline.GetType().GetProperty("Order");
+
+            var typeValue = typeProp?.GetValue(trendline);
+            var orderValue = orderProp?.GetValue(trendline);
+
+            Console.WriteLine($"Trendline Type: {typeValue}");
+            Console.WriteLine($"Trendline Order: {orderValue}");
         }
         catch (Exception ex)
         {
-            // Catch any unexpected errors during processing
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

@@ -1,16 +1,12 @@
-// Title: Set a DateAxis (TimeScale) for the Category Axis in an Aspose.Cells Line Chart (C#)
-// Description: Creates a workbook, adds date values to column A and numeric values to column B, builds a line chart, binds the series and category ranges, then converts the X‑axis to a DateAxis by setting CategoryType to TimeScale and configuring BaseUnitScale and MajorUnit for monthly intervals before saving as XLSX.
-// Keywords: Aspose.Cells DateAxis | CategoryType TimeScale C# | line chart time‑scale axis | BaseUnitScale months | Aspose.Cells chart axis configuration | C# Excel chart date axis
-// Common Searches: Aspose.Cells set category axis to DateAxis .NET | How to use TimeScale axis in Aspose.Cells chart | C# line chart with monthly dates on X‑axis | Configure BaseUnitScale and MajorUnit in Aspose.Cells
-// Developer Intent: Convert the chart’s category axis to a time‑based DateAxis so that date values are rendered correctly on the X‑axis.
-// Use Cases: Monthly sales trend line chart with dates on the X‑axis. | Project timeline visualization where milestones align to calendar dates. | Financial performance chart that automatically groups data by months or years.
-// AI Prompts: Show a complete C# example that sets CategoryAxis.CategoryType to TimeScale and defines monthly BaseUnitScale and MajorUnit in Aspose.Cells. | Explain how to bind worksheet date cells to a chart’s CategoryData and then switch the axis to a DateAxis. | Describe how to change the time unit (days, months, years) of a DateAxis in Aspose.Cells and its impact on chart rendering.
+// Title: Create a line chart with a DateAxis (TimeScale) and monthly base units using Aspose.Cells for .NET
+// AI Prompts: Generate a C# workbook that adds a line chart, assigns date values to the X‑axis, and sets the category axis to TimeScale with months as the base unit. | Modify an existing Aspose.Cells chart to display dates on the category axis by changing CategoryType to TimeScale and configuring BaseUnitScale to months. | Produce sample code that saves an XLSX file containing a line chart where the X‑axis is a DateAxis formatted for monthly intervals.
+// Common Searches: aspnet how to set chart category axis to dates using Aspose.Cells | Aspose.Cells line chart time series X axis month scale | C# change chart CategoryType to TimeScale in Excel workbook | set BaseUnitScale months for date axis Aspose.Cells chart | display monthly date axis in Aspose.Cells line chart
+// Tags: Aspose.Cells set CategoryAxis to TimeScale | Aspose.Cells line chart DateAxis months | C# chart category type DateAxis example | Aspose.Cells base unit scale months | Aspose.Cells time series chart configuration
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, adds date values to column A and numeric values to column B, builds a line chart, binds the series and category ranges, then converts the X‑axis to a DateAxis by setting CategoryType to TimeScale and configuring BaseUnitScale and MajorUnit for monthly intervals before saving as XLSX.
+// The example creates a new workbook, fills column A with DateTime values and column B with numeric data, adds a line chart, links the series to the data ranges, changes the category axis to a TimeScale (DateAxis), sets the base unit scale to months, and saves the file as DateAxisChart.xlsx.
 class Program
 {
     static void Main()
@@ -21,7 +17,7 @@ class Program
         // Access the first worksheet
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Add date (X‑axis) and numeric (Y‑axis) data
+        // Populate worksheet with date‑based data
         sheet.Cells["A1"].PutValue("Date");
         sheet.Cells["B1"].PutValue("Value");
         sheet.Cells["A2"].PutValue(new DateTime(2024, 1, 1));
@@ -31,23 +27,21 @@ class Program
         sheet.Cells["A4"].PutValue(new DateTime(2024, 3, 1));
         sheet.Cells["B4"].PutValue(30);
 
-        // Add a line chart
-        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 25, 10);
+        // Add a line chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Set the series data and the category (X‑axis) data
+        // Set the data range for the series and the category (X) axis
         chart.NSeries.Add("B2:B4", true);
         chart.NSeries.CategoryData = "A2:A4";
 
-        // Change the category axis to a time‑based axis (DateAxis)
+        // Change the category axis type to DateAxis (TimeScale) for proper time‑based display
         chart.CategoryAxis.CategoryType = CategoryType.TimeScale;
 
-        // Optional: configure the time unit (e.g., months) and major unit interval
+        // Optional: define the base unit scale (e.g., months) for the date axis
         chart.CategoryAxis.BaseUnitScale = TimeUnit.Months;
-        chart.CategoryAxis.MajorUnitScale = TimeUnit.Months;
-        chart.CategoryAxis.MajorUnit = 1;
 
         // Save the workbook
-        workbook.Save("TimeBasedChart.xlsx", SaveFormat.Xlsx);
+        workbook.Save("DateAxisChart.xlsx", SaveFormat.Xlsx);
     }
 }

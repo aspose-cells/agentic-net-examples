@@ -1,16 +1,13 @@
-// Title: Aspose.Cells for .NET – Set Red High‑Point Marker on a Line Sparkline in Cell H3 (C#)
-// Description: C# example that creates a workbook, adds a line sparkline for range A1:D1, places it in H3, enables markers, highlights the high point and colors that marker red, then saves the file as SparklineHighPointMarker_H3.xlsx.
-// Keywords: Aspose.Cells sparkline high point color | C# line sparkline red marker | set sparkline marker color Aspose.Cells | .NET sparkline custom marker | sparkline high point highlight
-// Common Searches: Aspose.Cells change high‑point marker color C# | add line sparkline to cell H3 Aspose.Cells | show high point in sparkline .NET | customize sparkline markers Aspose.Cells | red high‑point sparkline example
-// Developer Intent: Add a line sparkline to H3 and display its highest value with a red marker.
-// Use Cases: Financial dashboards that flag peak values in red for instant visual cues. | Automated reporting where each trend line highlights its maximum point. | Data‑quality sheets that use red high‑point markers to identify outliers.
-// AI Prompts: Generate C# code using Aspose.Cells to insert a line sparkline in cell H3, turn on markers, show the high point, and set the high‑point marker color to red. | Explain how to customize sparkline marker colors (high‑point, low‑point, negative) with Aspose.Cells for .NET. | Provide step‑by‑step instructions for creating a sparkline group, adding a sparkline, enabling markers, and applying a red high‑point marker in a workbook.
+// Title: How to add a line sparkline to cell H3 and set the high‑point marker color to red using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a line sparkline in cell H3 that references range A3:D3, enable markers, highlight the high point, and set its marker color to red with Aspose.Cells in C#. | Generate sample data in row 3, add a sparkline group, configure ShowHighPoint and HighPointColor properties, and save the workbook as an XLSX file using Aspose.Cells. | Write C# code that applies a red high‑point marker to a line sparkline placed in H3 of a worksheet with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set red color for high point marker in a line sparkline | How to place a sparkline in cell H3 and highlight the highest value using Aspose.Cells | C# example for adding a line sparkline with markers and custom high‑point color | Saving a workbook with a sparkline that has red high‑point markers in Aspose.Cells .NET
+// Tags: Aspose.Cells line sparkline high‑point color | C# set sparkline high point marker red | Aspose.Cells add sparkline to specific cell | C# configure sparkline markers in XLSX workbook | Aspose.Cells sparkline group properties
 
 using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// C# example that creates a workbook, adds a line sparkline for range A1:D1, places it in H3, enables markers, highlights the high point and colors that marker red, then saves the file as SparklineHighPointMarker_H3.xlsx.
+// The sample creates a new workbook, fills cells A3:D3 with data, adds a line sparkline to cell H3, enables markers, highlights the highest point, sets the high‑point marker color to red, and saves the file as SparklineHighPointMarker.xlsx.
 class SparklineHighPointMarkerDemo
 {
     static void Main()
@@ -19,38 +16,38 @@ class SparklineHighPointMarkerDemo
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
 
-        // Sample data for the sparkline (A1:D1)
-        sheet.Cells["A1"].PutValue(5);
-        sheet.Cells["B1"].PutValue(2);
-        sheet.Cells["C1"].PutValue(8);
-        sheet.Cells["D1"].PutValue(3);
+        // Populate sample data for the sparkline (row 3, columns A to D)
+        sheet.Cells["A3"].PutValue(5);
+        sheet.Cells["B3"].PutValue(2);
+        sheet.Cells["C3"].PutValue(8);
+        sheet.Cells["D3"].PutValue(3);
 
-        // Define the location of the sparkline: cell H3 (column 7, row 2)
+        // Define the location of the sparkline (cell H3)
         CellArea sparklineLocation = new CellArea
         {
-            StartColumn = 7, // H
+            StartColumn = 7, // Column H (0‑based index)
             EndColumn = 7,
-            StartRow = 2,    // 3rd row (zero‑based)
+            StartRow = 2,    // Row 3 (0‑based index)
             EndRow = 2
         };
 
-        // Add a line sparkline group using the data range A1:D1
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, sparklineLocation);
+        // Add a line sparkline group that uses the data range A3:D3 and places the sparkline in H3
+        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A3:D3", false, sparklineLocation);
         SparklineGroup group = sheet.SparklineGroups[groupIndex];
 
-        // Add the sparkline to the group (the same data range)
-        group.Sparklines.Add(sheet.Name + "!A1:D1", 0, 7);
+        // Add the sparkline to the group (required for the group to contain an item)
+        group.Sparklines.Add(sheet.Name + "!A3:D3", 2, 7);
 
-        // Enable markers and high‑point highlighting
+        // Enable markers and highlight the highest points
         group.ShowMarkers = true;
         group.ShowHighPoint = true;
 
         // Set the high‑point marker color to red
-        CellsColor highPointColor = workbook.CreateCellsColor();
-        highPointColor.Color = Color.Red;
-        group.HighPointColor = highPointColor;
+        CellsColor redColor = workbook.CreateCellsColor();
+        redColor.Color = Color.Red;
+        group.HighPointColor = redColor;
 
         // Save the workbook
-        workbook.Save("SparklineHighPointMarker_H3.xlsx", SaveFormat.Xlsx);
+        workbook.Save("SparklineHighPointMarker.xlsx", SaveFormat.Xlsx);
     }
 }

@@ -1,73 +1,66 @@
-// Title: Batch load SVG icons into Excel rows starting at row 10 with Aspose.Cells (C#)
-// Description: C# program that scans a folder for *.svg files, creates a new workbook, and inserts each SVG as a picture into column A of the first worksheet. Icons are placed in consecutive rows beginning with Excel row 10, and the workbook is saved as an .xlsx file.
-// Keywords: Aspose.Cells C# add SVG picture | load SVG icons batch | insert SVG into Excel rows | Aspose.Cells shape collection | add picture from stream | Excel row 10 | batch import SVG files | C# file system iterate SVG | save workbook as xlsx
-// Common Searches: Aspose.Cells add SVG picture to worksheet | C# load multiple SVG files into Excel | Insert SVG icons into successive rows | Batch import SVG icons with Aspose.Cells | Place SVG images in column A starting at row 10
-// Developer Intent: Read every SVG file in a directory and place it as a picture in a new row of the worksheet, beginning with row 10.
-// Use Cases: Generate an icon catalog for a design system directly in Excel. | Create an inventory sheet where each product is represented by its SVG icon. | Prepare a visual asset list for documentation or marketing materials. | Automate a slide‑deck data source by mapping SVG thumbnails to rows. | Build a printable price list that includes product icons.
-// AI Prompts: Provide C# Aspose.Cells code that reads all *.svg files from a directory and adds each as a picture to column A, beginning at row 10, with automatic row increment. | Extend the sample to resize each SVG to 64 px height while preserving aspect ratio. | Add logging and exception handling for missing or corrupted SVG files, and skip files that cannot be loaded. | Modify the code to place icons in a user‑specified column instead of column A. | Create a PowerShell wrapper that invokes the compiled program for a given folder path.
+// Title: Load SVG icons from a folder and insert each into successive rows starting at row 10 using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that enumerates all *.svg files in a directory and adds each as a picture to column A, beginning at Excel row 10 and moving down one row per icon. | Include logic to create the target output folder if it does not exist and save the workbook as an XLSX file to a given path.
+// Common Searches: aspnet c# insert multiple svg images into Excel rows starting at row 10 | how to batch add pictures from a folder to an Aspose.Cells worksheet | Aspose.Cells load all svg files from directory into column A | C# save workbook after adding images and ensure output directory exists | place icons in successive rows in Excel using Aspose.Cells API
+// Tags: add svg pictures to worksheet Aspose.Cells | batch insert images into Excel rows C# | create output directory before saving workbook | populate column A with icons starting at row 10 | enumerate files from folder Aspose.Cells picture insertion
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// C# program that scans a folder for *.svg files, creates a new workbook, and inserts each SVG as a picture into column A of the first worksheet. Icons are placed in consecutive rows beginning with Excel row 10, and the workbook is saved as an .xlsx file.
-class LoadSvgIconsIntoWorksheet
+// The example scans a specified folder for SVG files, creates a new workbook, and inserts each SVG as a picture into column A starting at Excel row 10, advancing one row per icon. It also ensures the output directory exists before saving the workbook as an XLSX file.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Path to the folder containing SVG files
-            string svgFolderPath = @"C:\Icons";
+            // Folder containing the SVG icons
+            string folderPath = @"C:\Icons";
 
-            // Verify that the folder exists to avoid DirectoryNotFoundException
-            if (!Directory.Exists(svgFolderPath))
+            // Verify the source folder exists
+            if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine($"Folder not found: {svgFolderPath}");
+                Console.WriteLine($"Source folder not found: {folderPath}");
                 return;
             }
 
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            ShapeCollection shapes = worksheet.Shapes;
 
-            // Starting row (zero‑based index). Row 10 in Excel is index 9.
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Excel rows are zero‑based in Aspose.Cells.
+            // Row 10 in Excel corresponds to index 9.
             int currentRow = 9;
             int columnIndex = 0; // Column A
 
-            // Iterate through all SVG files in the specified folder
-            foreach (string svgFile in Directory.GetFiles(svgFolderPath, "*.svg"))
+            // Retrieve all SVG files from the folder
+            string[] svgFiles = Directory.GetFiles(folderPath, "*.svg");
+
+            foreach (string svgPath in svgFiles)
             {
-                // Ensure the SVG file exists before attempting to read it
-                if (!File.Exists(svgFile))
+                // Open the SVG file as a stream and insert it into the worksheet
+                using (FileStream stream = new FileStream(svgPath, FileMode.Open, FileAccess.Read))
                 {
-                    Console.WriteLine($"File not found: {svgFile}");
-                    continue;
+                    sheet.Pictures.Add(currentRow, columnIndex, stream);
                 }
 
-                try
-                {
-                    // Open the SVG file as a stream and add it as a picture
-                    using (FileStream svgStream = File.OpenRead(svgFile))
-                    {
-                        shapes.AddPicture(currentRow, columnIndex, currentRow, columnIndex, svgStream);
-                    }
+                // Advance to the next row for the subsequent icon
+                currentRow++;
+            }
 
-                    // Move to the next row for the subsequent icon
-                    currentRow++;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to add picture from '{svgFile}': {ex.Message}");
-                }
+            // Ensure the output directory exists
+            string outputPath = @"C:\Output\IconsWorkbook.xlsx";
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook to a file
-            string outputPath = "IconsWorkbook.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to {Path.GetFullPath(outputPath)}");
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
         }
         catch (Exception ex)
         {

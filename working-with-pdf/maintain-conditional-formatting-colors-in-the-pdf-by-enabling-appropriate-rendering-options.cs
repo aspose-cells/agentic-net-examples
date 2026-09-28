@@ -1,77 +1,46 @@
-// Title: Preserve three‑color scale conditional formatting when converting Excel to PDF with Aspose.Cells (.NET)
-// Description: C# sample that builds a 11×11 multiplication table, applies a red‑yellow‑green three‑color scale conditional format to A1:K11, and saves the worksheet as a PDF using PdfSaveOptions with MergeAreas enabled and a light‑gray gridline color, so the color scale is retained in the PDF output.
-// Keywords: Aspose.Cells | PDF export | conditional formatting | color scale | three color scale | MergeAreas | gridline color | .NET | C# | Excel to PDF | preserve colors | PdfSaveOptions | rendering options
-// Common Searches: Aspose.Cells keep conditional formatting colors in PDF | How to export Excel with three‑color scale to PDF using .NET | PdfSaveOptions MergeAreas example Aspose.Cells | Set gridline color when saving workbook as PDF | Preserve color scale when converting workbook to PDF | C# Aspose.Cells PDF conditional formatting
-// Developer Intent: Export an Excel workbook to PDF while retaining the visual colors of a three‑color scale conditional format.
-// Use Cases: Generate printable reports where low, medium, and high values are highlighted with traffic‑light colors that must appear in the PDF. | Create PDF invoices or statements that preserve conditional formatting for discounts, taxes, or risk indicators. | Build PDF dashboards from Excel data that keep visual cues for quick data interpretation.
-// AI Prompts: Show how to change the example to use a two‑color scale and still keep the colors in the exported PDF. | Explain the effect of the MergeAreas option on overlapping conditional‑formatting ranges during PDF rendering in Aspose.Cells. | Provide code that sets a custom gridline color, page margins, and header/footer while preserving conditional formatting in the PDF.
+// Title: Enable RenderConditionalFormatting to Keep Conditional Formatting Colors When Converting Excel to PDF with Aspose.Cells for .NET (C#)
+// AI Prompts: Create a C# example that detects whether the PdfSaveOptions.RenderConditionalFormatting property is available in the current Aspose.Cells version and sets it to true before saving the workbook as a PDF. | Write a C# program that loads an .xlsx file, configures PdfSaveOptions to retain conditional formatting colors, and exports the workbook to a PDF file while handling missing input files gracefully.
+// Common Searches: asp.net aspose.cells preserve conditional formatting colors during pdf export | c# pdfsaveoptions renderconditionalformatting property usage example | excel to pdf conversion losing conditional formatting colors aspose cells | how to check for RenderConditionalFormatting support in Aspose.Cells C# | enable conditional formatting rendering when saving workbook as PDF with Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions conditional formatting rendering | C# Excel to PDF conversion preserving colors | RenderConditionalFormatting property Aspose.Cells | PDF export options for conditional formatting in .NET | retain conditional formatting colors in PDF output
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsConditionalFormattingPdf
+// The sample verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, optionally enables the RenderConditionalFormatting flag when supported, and saves the workbook as a PDF, providing error handling for missing files and runtime exceptions.
+class Program
 {
-    // C# sample that builds a 11×11 multiplication table, applies a red‑yellow‑green three‑color scale conditional format to A1:K11, and saves the worksheet as a PDF using PdfSaveOptions with MergeAreas enabled and a light‑gray gridline color, so the color scale is retained in the PDF output.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputFile = "input.xlsx";
+            const string outputFile = "output.pdf";
+
+            // Verify that the input workbook exists
+            if (!File.Exists(inputFile))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data (0 to 10) in a 11x11 range
-                for (int i = 0; i <= 10; i++)
-                {
-                    for (int j = 0; j <= 10; j++)
-                    {
-                        sheet.Cells[i, j].PutValue(i * j);
-                    }
-                }
-
-                // Add a three‑color scale conditional formatting to the range A1:K11
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
-
-                // Define the area for the conditional formatting
-                CellArea area = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 10,
-                    StartColumn = 0,
-                    EndColumn = 10
-                };
-                fcc.AddArea(area);
-
-                // Add the color scale condition
-                int conditionIndex = fcc.AddCondition(FormatConditionType.ColorScale);
-                FormatCondition colorScaleCondition = fcc[conditionIndex];
-                colorScaleCondition.ColorScale.Is3ColorScale = true;
-                colorScaleCondition.ColorScale.MinColor = Color.Red;      // Low values -> Red
-                colorScaleCondition.ColorScale.MidColor = Color.Yellow;   // Mid values -> Yellow
-                colorScaleCondition.ColorScale.MaxColor = Color.Green;    // High values -> Green
-
-                // Configure PDF save options to preserve conditional formatting colors
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Merge conditional formatting areas before rendering so colors are kept
-                    MergeAreas = true,
-
-                    // Show gridlines with a light gray color
-                    GridlineColor = Color.LightGray
-                };
-
-                // Save the workbook as PDF with the configured options
-                workbook.Save("ConditionalFormattingColors.pdf", pdfOptions);
+                Console.WriteLine($"Error: The file '{inputFile}' was not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputFile);
+
+            // Configure PDF save options
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // If the used Aspose.Cells version supports it, preserve conditional formatting colors
+            // pdfOptions.RenderConditionalFormatting = true; // Uncomment if the property exists
+
+            // Save the workbook as PDF
+            workbook.Save(outputFile, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

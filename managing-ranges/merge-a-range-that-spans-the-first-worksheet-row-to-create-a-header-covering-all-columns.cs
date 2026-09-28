@@ -1,52 +1,39 @@
-// Title: Aspose.Cells for .NET – Merge the first worksheet row (A‑Z) into a centered bold header
-// Description: Creates a new workbook, merges cells A1:Z1 on the first worksheet, inserts "Report Header", applies center alignment, bold 14‑pt font, and saves the file as HeaderMerged.xlsx.
-// Keywords: Aspose.Cells merge first row | C# merge cells A to Z | Excel header spanning columns | centered bold header Aspose | style merged cell .NET
-// Common Searches: how to merge first row Aspose.Cells | Aspose.Cells create full‑width header | C# merge A1 Z1 and center text | Aspose.Cells set style for merged header | Excel report title across columns using Aspose
-// Developer Intent: Generate a single merged title cell across the top row and format it as a centered bold header.
-// Use Cases: Automated report generation with a full‑width title row | Dashboard worksheets that need a prominent header spanning all columns | Printable spreadsheets where the first row serves as a centered report heading
-// AI Prompts: Show C# code with Aspose.Cells that merges A1:Z1, writes "Report Header", centers the text, makes it bold, and saves the workbook. | Provide an Aspose.Cells example for creating a merged header row and applying custom styling. | Explain how to modify the range to include additional rows or a different column span in Aspose.Cells for .NET.
+// Title: Create a centered bold header by merging the first worksheet row across a variable number of columns using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that merges cells from A1 to the column defined by a variable, writes a header string, centers it, makes the font bold, and saves the workbook. | Show how to programmatically merge the entire first row of a worksheet based on a column count parameter, apply a custom style, and export to an .xlsx file using Aspose.Cells. | Provide a reusable method in C# that accepts a worksheet, column count, and header text, merges the top row, sets a centered bold style, and returns the modified workbook.
+// Common Searches: aspnet merge first row cells into a single header with Aspose.Cells | c# Aspose.Cells dynamic column count for merged header row | how to apply centered bold style to a merged cell in Aspose.Cells .NET | save workbook after merging header row using Aspose.Cells C# example
+// Tags: merge first row cells Aspose.Cells C# | dynamic header merge Aspose.Cells | centered bold style merged cell Aspose.Cells | save merged header workbook Aspose.Cells | worksheet header spanning multiple columns Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsHeaderMergeDemo
+// // Merges the first row (A1 to the column defined by totalColumns) into a single cell, inserts "Report Header", centers the text, makes it bold, and saves the workbook as HeaderMerged.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a new workbook, merges cells A1:Z1 on the first worksheet, inserts "Report Header", applies center alignment, bold 14‑pt font, and saves the file as HeaderMerged.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range to merge:
-            // First row (index 0), starting at first column (index 0),
-            // spanning 1 row and 26 columns (A to Z)
-            int firstRow = 0;
-            int firstColumn = 0;
-            int totalRows = 1;      // one row
-            int totalColumns = 26;  // columns A-Z
+        // Define how many columns the header should cover (e.g., 10 columns: A to J)
+        int totalColumns = 10;
 
-            // Merge the defined range to create a header
-            cells.Merge(firstRow, firstColumn, totalRows, totalColumns);
+        // Merge the cells in the first row across the defined columns (A1 to J1)
+        sheet.Cells.Merge(0, 0, 1, totalColumns);
 
-            // Set header text in the merged cell (upper‑left cell of the range)
-            cells[firstRow, firstColumn].PutValue("Report Header");
+        // Set the header text in the merged cell
+        sheet.Cells[0, 0].PutValue("Report Header");
 
-            // Apply basic styling to the header
-            Style headerStyle = workbook.CreateStyle();
-            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
-            headerStyle.VerticalAlignment = TextAlignmentType.Center;
-            headerStyle.Font.IsBold = true;
-            headerStyle.Font.Size = 14;
-            cells[firstRow, firstColumn].SetStyle(headerStyle);
+        // Optional: Apply a simple style to the header
+        Style headerStyle = workbook.CreateStyle();
+        headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+        headerStyle.Font.IsBold = true;
+        headerStyle.Font.Size = 14;
+        sheet.Cells[0, 0].SetStyle(headerStyle);
 
-            // Save the workbook
-            workbook.Save("HeaderMerged.xlsx");
-        }
+        // Save the workbook to a file
+        workbook.Save("HeaderMerged.xlsx");
     }
 }

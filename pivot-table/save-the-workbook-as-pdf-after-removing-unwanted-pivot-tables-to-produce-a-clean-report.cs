@@ -1,31 +1,23 @@
-// Title: C# – Remove All Pivot Tables and Export Workbook to PDF with Aspose.Cells
-// Description: Loads an Excel file, clears every pivot table on all worksheets using Workbook.Worksheets.ClearPivottables(), sets PdfSaveOptions (including IgnoreError), and saves the cleaned workbook as a PDF document.
-// Keywords: Aspose.Cells clear pivot tables | C# remove pivot tables Excel | export workbook to PDF Aspose.Cells | .NET PDF save options | IgnoreError PDF export | clean PDF report from Excel | Aspose.Cells pivot table removal
-// Common Searches: how to delete all pivot tables before PDF export using Aspose.Cells | Aspose.Cells .NET remove pivot tables and save as PDF | PdfSaveOptions.IgnoreError effect on Excel to PDF conversion | clear pivot tables programmatically C# Aspose | generate clean PDF report from Excel with Aspose.Cells
-// Developer Intent: Strip every pivot table from an Excel workbook and generate a PDF without those elements.
-// Use Cases: Produce regulatory‑compliant PDFs by eliminating pivot tables that may cause rendering issues. | Batch‑process multiple workbooks to remove pivot tables before archiving them as PDFs. | Create a clean, printable report from a template workbook that contains hidden pivot tables.
-// AI Prompts: Write C# code that removes pivot tables only from selected worksheets and saves the file as a PDF with custom page margins using Aspose.Cells. | Explain the role of PdfSaveOptions.IgnoreError when exporting Excel files that contain unsupported pivot features. | Show how to iterate through worksheets, delete specific pivot tables, and then export the workbook to a password‑protected PDF.
+// Title: Remove all pivot tables from an Excel workbook and save the cleaned report as a PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, deletes every pivot table in all worksheets using Aspose.Cells, and then saves the result as a PDF. | Show how to use the Worksheets.ClearPivottables method in Aspose.Cells to clean a workbook before exporting it to PDF. | Provide a step‑by‑step example that programmatically clears pivot tables from a workbook and performs PDF conversion with Aspose.Cells for .NET.
+// Common Searches: aspnet remove pivot tables from Excel workbook before PDF export | c# Aspose.Cells clear all pivot tables and convert to PDF | how to delete pivot tables in every sheet using Aspose.Cells | export cleaned Excel file to PDF after removing pivot tables with Aspose.Cells | Aspose.Cells Worksheets.ClearPivottables usage example
+// Tags: clear pivot tables Aspose.Cells | Worksheets.ClearPivottables method | export workbook to PDF Aspose.Cells | remove pivot tables C# | PDF conversion after pivot cleanup
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-// Loads an Excel file, clears every pivot table on all worksheets using Workbook.Worksheets.ClearPivottables(), sets PdfSaveOptions (including IgnoreError), and saves the cleaned workbook as a PDF document.
-class CleanPdfReport
+// The code loads 'input.xlsx', calls Worksheets.ClearPivottables() to delete all pivot tables across every worksheet, and then saves the cleaned workbook as 'clean_report.pdf' using the PDF save format.
+class Program
 {
     static void Main()
     {
-        // Load the workbook that contains pivot tables
+        // Load the existing workbook that contains pivot tables
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Remove all pivot tables from every worksheet
+        // Remove all pivot tables from every worksheet to clean the report
         workbook.Worksheets.ClearPivottables();
 
-        // Configure PDF save options (optional: ignore rendering errors)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.IgnoreError = true;
-
-        // Save the cleaned workbook as a PDF file
-        workbook.Save("CleanReport.pdf", pdfOptions);
+        // Save the cleaned workbook as a PDF document
+        workbook.Save("clean_report.pdf", SaveFormat.Pdf);
     }
 }

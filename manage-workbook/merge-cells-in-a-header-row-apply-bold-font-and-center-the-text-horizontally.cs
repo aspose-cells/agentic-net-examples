@@ -1,44 +1,38 @@
-// Title: Merge cells, apply bold font, and center text in a header row with Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, merges cells A1‑D1 on the first worksheet, inserts a header title, sets the font to bold, aligns the text horizontally to the center, and saves the file as MergedHeader.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells merge cells C# | header row formatting Aspose.Cells | bold font Aspose.Cells | center alignment merged cells | save workbook Aspose.Cells .NET
-// Common Searches: Aspose.Cells merge cells and center text C# | how to make header bold and centered with Aspose.Cells | C# code for merged header row Aspose.Cells
-// Developer Intent: Create a merged header row, make its text bold and horizontally centered, then save the workbook.
-// Use Cases: Generating a report with a bold, centered title that spans multiple columns. | Designing an invoice template where the company name header merges across columns and uses consistent styling. | Building a dashboard worksheet with section titles formatted as merged, bold, centered headers.
-// AI Prompts: Show C# code to merge cells A1 to D1, set the text bold, and center it using Aspose.Cells. | Provide an Aspose.Cells example that formats a merged header cell with larger font size, bold weight, and center alignment. | Explain how to create a reusable style for multiple merged header rows in Aspose.Cells for .NET.
+// Title: How to merge header cells, set bold font, and center text horizontally in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that merges cells A1 through D1, applies a bold font style with horizontal center alignment, and saves the workbook as an .xlsx file. | Show how to create a Style object in Aspose.Cells, enable Font.IsBold, set HorizontalAlignment to Center, and apply the style to a merged range in a worksheet. | Provide a concise example that builds a new workbook, merges the first‑row cells, formats the header text, and outputs the file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# merge first row cells and apply bold centered header style | How to set bold font and center alignment on a merged range with Aspose.Cells .NET | C# example for creating a merged header row in an Excel file using Aspose.Cells
+// Tags: merge cells A1:D1 Aspose.Cells C# | bold text styling Aspose.Cells | horizontal center alignment Aspose.Cells | header row formatting Aspose.Cells .NET | export workbook to XLSX Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, merges cells A1‑D1 on the first worksheet, inserts a header title, sets the font to bold, aligns the text horizontally to the center, and saves the file as MergedHeader.xlsx using Aspose.Cells for .NET.
-class MergeHeaderExample
+// Creates a new workbook, merges cells A1:D1, sets a bold font with horizontal center alignment on the merged range, and saves the file as output.xlsx using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
-        // Merge cells in the first row (A1:D1)
-        // Parameters: firstRow, firstColumn, totalRows, totalColumns
-        cells.Merge(0, 0, 1, 4);
+        // Put header text in the first cell
+        cells["A1"].PutValue("Header Title");
 
-        // Set the header text in the merged cell
-        cells[0, 0].PutValue("Header Title");
+        // Merge cells A1:D1 (first row, columns 1 to 4)
+        cells.Merge(0, 0, 1, 4); // row index, column index, total rows, total columns
 
-        // Retrieve the style of the merged cell
-        Style style = cells[0, 0].GetStyle();
+        // Create a style with bold font and centered horizontal alignment
+        Style headerStyle = workbook.CreateStyle();
+        headerStyle.Font.IsBold = true;
+        headerStyle.HorizontalAlignment = TextAlignmentType.Center;
 
-        // Apply bold font
-        style.Font.IsBold = true;
-
-        // Center the text horizontally
-        style.HorizontalAlignment = TextAlignmentType.Center;
-
-        // Apply the modified style back to the merged cell
-        cells[0, 0].SetStyle(style);
+        // Apply the style to the merged range (style applied to the first cell of the range)
+        StyleFlag flag = new StyleFlag();
+        flag.All = true;
+        cells["A1"].SetStyle(headerStyle, flag);
 
         // Save the workbook to a file
-        workbook.Save("MergedHeader.xlsx");
+        workbook.Save("output.xlsx");
     }
 }

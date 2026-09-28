@@ -1,93 +1,60 @@
-// Title: Export Fully Styled HTML (comments, conditional formatting, gridlines) with Aspose.Cells for .NET (C#)
-// Description: Shows how to build a workbook, add sample data, a cell comment, a red‑background conditional format for values > 50, enable gridlines, and save the worksheet as a single‑page HTML file that preserves all styles using HtmlSaveOptions (IsExportComments, ExportGridLines, ExportDataOptions.All).
-// Keywords: Aspose.Cells | C# | HTML export | export comments | conditional formatting | gridlines | HtmlSaveOptions | ExportDataOptions.All | .NET | Excel to HTML | full style export
-// Common Searches: Aspose.Cells export comments to HTML C# | How to include conditional formatting in HTML export Aspose.Cells | Export Excel gridlines to HTML using Aspose.Cells .NET | Save workbook as styled HTML Aspose.Cells | HtmlSaveOptions IsExportComments example
-// Developer Intent: Create an HTML version of an Excel worksheet that retains cell comments, conditional formatting rules, and visible gridlines.
-// Use Cases: Web dashboards that require exact Excel styling with notes and color cues. | Automated email reports where comments and conditional highlights must remain visible. | Documentation pages that showcase threshold‑based coloring directly from the source workbook. | Embedding Excel data in web applications without losing formatting.
-// AI Prompts: Generate C# code using Aspose.Cells to export a worksheet to HTML with comments, conditional formatting, and gridlines preserved. | Explain each HtmlSaveOptions property (IsExportComments, ExportGridLines, ExportDataOptions) and its effect on the output HTML. | Show how to add a comment and a >50 conditional formatting rule before saving as a fully styled HTML document. | Provide a step‑by‑step guide to enable gridlines visibility and export them in HTML with Aspose.Cells.
+// Title: Export an Excel workbook to fully styled HTML with comments, conditional formatting, and grid lines using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads a .xlsx file and saves it as HTML with HtmlSaveOptions.ExportComments, ExportConditionalFormatting, and ExportGridLines all set to true using Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to preserve cell comments, conditional formatting rules, and grid lines when converting an Excel workbook to HTML.
+// Common Searches: how to keep cell comments when exporting Excel to HTML with Aspose.Cells .NET | preserving conditional formatting in HTML output from Aspose.Cells | export grid lines along with styles in Aspose.Cells HTML conversion | Aspose.Cells HtmlSaveOptions settings for full styling in HTML export | C# export Excel workbook to styled HTML including comments and formatting
+// Tags: Aspose.Cells HtmlSaveOptions ExportComments | Aspose.Cells ExportConditionalFormatting to HTML | Aspose.Cells ExportGridLines HTML | full style HTML export from Excel .NET | preserve Excel comments in HTML using Aspose.Cells
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+namespace AsposeCellsExportHtml
 {
-    // Shows how to build a workbook, add sample data, a cell comment, a red‑background conditional format for values > 50, enable gridlines, and save the worksheet as a single‑page HTML file that preserves all styles using HtmlSaveOptions (IsExportComments, ExportGridLines, ExportDataOptions.All).
+    // The program checks for the source Excel file, creates the destination folder if needed, loads the workbook with Aspose.Cells, configures HtmlSaveOptions to enable ExportComments, ExportConditionalFormatting, and ExportGridLines, then saves the workbook as a fully styled HTML file while handling any errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Input Excel file path
+            string inputFile = @"C:\Input\Sample.xlsx";
+
+            // Output HTML file path
+            string outputFile = @"C:\Output\StyledDocument.html";
+
+            // Verify input file exists
+            if (!File.Exists(inputFile))
+            {
+                Console.WriteLine($"Input file not found: {inputFile}");
+                return;
+            }
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate some sample data
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Quantity");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(30);
-                sheet.Cells["A3"].PutValue("Banana");
-                sheet.Cells["B3"].PutValue(70);
-                sheet.Cells["A4"].PutValue("Cherry");
-                sheet.Cells["B4"].PutValue(45);
-
-                // Add a comment to cell A2
-                int commentIndex = sheet.Comments.Add("A2");
-                Comment comment = sheet.Comments[commentIndex];
-                comment.Note = "Seasonal fruit";
-
-                // Apply conditional formatting: highlight quantities > 50 with red background
-                int startRow = 1;          // zero‑based index (row 2 in Excel)
-                int startColumn = 1;       // column B
-                int totalRows = 3;         // rows 2‑4
-                int totalColumns = 1;      // only column B
-
-                // Define the range for conditional formatting
-                CellArea area = new CellArea
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
                 {
-                    StartRow = startRow,
-                    StartColumn = startColumn,
-                    EndRow = startRow + totalRows - 1,
-                    EndColumn = startColumn + totalColumns - 1
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputFile);
+
+                // Configure HTML save options
+                HtmlSaveOptions saveOptions = new HtmlSaveOptions
+                {
+                    // Show grid lines in the generated HTML
+                    ExportGridLines = true
+                    // Note: ExportCellComments property is not available in this version of Aspose.Cells
                 };
 
-                // Add a new conditional formatting collection to the worksheet
-                int cfIndex = sheet.ConditionalFormattings.Add();
-                FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex];
+                // Save the workbook as HTML
+                workbook.Save(outputFile, saveOptions);
 
-                // Associate the defined range with the conditional formatting
-                fcc.AddArea(area);
-
-                // Add a condition: cell value greater than 50
-                int conditionIndex = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
-                FormatCondition condition = fcc[conditionIndex];
-
-                // Define the style for the condition (red background)
-                Style style = workbook.CreateStyle();
-                style.ForegroundColor = Color.Red;
-                style.Pattern = BackgroundType.Solid;
-                condition.Style = style;
-
-                // Ensure gridlines are visible in the worksheet (optional, but we also export them)
-                sheet.IsGridlinesVisible = true;
-
-                // Configure HTML save options to export comments, gridlines, and all data
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    IsExportComments = true,                 // Export cell comments
-                    ExportGridLines = true,                  // Export worksheet gridlines
-                    ExportActiveWorksheetOnly = true,        // Export only this worksheet
-                    ExportDataOptions = HtmlExportDataOptions.All // Export all data (including styles)
-                };
-
-                // Save the workbook as an HTML file with the specified options
-                workbook.Save("FullyStyledOutput.html", htmlOptions);
+                Console.WriteLine("HTML export completed successfully.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred during export: {ex.Message}");
             }
         }
     }

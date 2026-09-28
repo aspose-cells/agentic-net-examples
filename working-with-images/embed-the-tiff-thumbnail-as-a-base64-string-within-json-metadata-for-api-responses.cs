@@ -1,65 +1,61 @@
-// Title: C# – Generate a Base64‑encoded TIFF thumbnail from an Aspose.Cells worksheet and embed it in JSON for API responses
-// Description: Creates a Workbook, adds optional content, renders the first worksheet to a single‑page TIFF using SheetRender, converts the TIFF bytes to a Base64 string, and serializes a JSON object with a "thumbnail" property that can be returned from a .NET Web API without writing any files to disk.
-// Keywords: Aspose.Cells C# | SheetRender TIFF | Base64 thumbnail | JSON API response | Excel preview image | memory stream rendering | REST service thumbnail | Aspose.Cells example GitHub | C# image to Base64 | Excel to JSON metadata
-// Common Searches: Aspose.Cells generate TIFF thumbnail C# | convert worksheet image to Base64 string | return Excel preview as JSON in .NET | SheetRender ToTiff memory stream example | embed Base64 image in API response | C# create Excel thumbnail for web UI
-// Developer Intent: Produce a Base64‑encoded TIFF preview of an Excel worksheet and include it in a JSON payload for a web API.
-// Use Cases: Provide a lightweight preview of uploaded Excel files in a document‑management portal. | Send a Base64 thumbnail to a JavaScript front‑end for instant display without separate image files. | Cache JSON metadata with the thumbnail to avoid re‑rendering the worksheet on each request.
-// AI Prompts: Write C# code that uses Aspose.Cells to render a worksheet to a PNG thumbnail, encode it to Base64, and add it to a JSON API response. | Show how to extend the JSON output with worksheet name, row count, and column count alongside the Base64 TIFF thumbnail. | Create a unit test that verifies the Base64 string generated from SheetRender.ToTiff can be decoded back to a valid TIFF image and matches an expected size.
+// Title: C# – Create a base64‑encoded TIFF thumbnail from an Excel workbook and embed it in JSON metadata with Aspose.Cells
+// AI Prompts: Write C# code that loads an .xlsx file using Aspose.Cells, converts the workbook to a TIFF image in a MemoryStream, encodes the image to a base64 string, and returns a JSON object containing the file name, generation timestamp, format, and the base64 thumbnail. | Extend the program to accept a command‑line argument specifying the thumbnail format (TIFF, PNG, or JPEG) and update the JSON metadata with the selected format and corresponding base64 image. | Add robust error handling that catches missing input files or conversion failures and outputs a JSON error object with a message, error code, and optional stack trace.
+// Common Searches: aspnet core return excel thumbnail as base64 json using aspose.cells | c# convert excel workbook to tiff in memory and embed in json response | how to generate excel file thumbnail for api output with aspose.cells | serialize tiff image to base64 string in c# for json metadata
+// Tags: Aspose.Cells convert workbook to TIFF in memory | C# base64 encode TIFF thumbnail | JSON metadata with embedded image data | Excel file thumbnail generation for API | SaveFormat.Tiff usage in Aspose.Cells | MemoryStream image conversion C#
 
 using System;
 using System.IO;
 using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsThumbnailJson
+// The sample loads an Excel workbook, saves it as a TIFF image directly into a MemoryStream using Aspose.Cells, converts the TIFF bytes to a base64 string, and builds a formatted JSON object that includes the original file name, UTC generation timestamp, thumbnail format, and the base64‑encoded thumbnail.
+class Program
 {
-    // Creates a Workbook, adds optional content, renders the first worksheet to a single‑page TIFF using SheetRender, converts the TIFF bytes to a Base64 string, and serializes a JSON object with a "thumbnail" property that can be returned from a .NET Web API without writing any files to disk.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+            Console.Error.WriteLine($"Error: File '{inputPath}' not found.");
+            return;
+        }
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-            // Add some sample content (optional, just to have visible data)
-            worksheet.Cells["A1"].PutValue("Thumbnail Example");
-
-            // Configure rendering options (single page per sheet)
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            // Convert the workbook to a TIFF image in memory (acts as a thumbnail)
+            string base64Tiff;
+            using (var ms = new MemoryStream())
             {
-                OnePagePerSheet = true
+                // Save as TIFF; you can adjust the page count or scaling if needed
+                workbook.Save(ms, SaveFormat.Tiff);
+                byte[] tiffBytes = ms.ToArray();
+                base64Tiff = Convert.ToBase64String(tiffBytes);
+            }
+
+            // Build JSON metadata containing the base64 TIFF thumbnail
+            var metadata = new
+            {
+                FileName = Path.GetFileName(inputPath),
+                GeneratedOn = DateTime.UtcNow,
+                ThumbnailFormat = "tiff",
+                ThumbnailBase64 = base64Tiff
             };
 
-            // Initialize SheetRender with the worksheet and options
-            SheetRender sheetRenderer = new SheetRender(worksheet, renderOptions);
+            // Serialize to JSON string with indentation
+            string json = JsonSerializer.Serialize(metadata, new JsonSerializerOptions { WriteIndented = true });
 
-            // Render the worksheet to a TIFF image in a memory stream (rule: ToTiff(Stream))
-            using (MemoryStream tiffStream = new MemoryStream())
-            {
-                sheetRenderer.ToTiff(tiffStream);
-
-                // Get the TIFF bytes from the stream
-                byte[] tiffBytes = tiffStream.ToArray();
-
-                // Convert the TIFF bytes to a Base64 string
-                string base64Thumbnail = Convert.ToBase64String(tiffBytes);
-
-                // Build JSON metadata containing the Base64 thumbnail
-                var metadata = new
-                {
-                    thumbnail = base64Thumbnail
-                };
-
-                // Serialize the metadata to JSON
-                string json = JsonSerializer.Serialize(metadata);
-
-                // Output the JSON (could be returned from an API endpoint)
-                Console.WriteLine(json);
-            }
+            // Output JSON
+            Console.WriteLine(json);
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and output an error message
+            Console.Error.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

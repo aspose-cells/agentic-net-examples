@@ -1,106 +1,118 @@
-// Title: C# – Create a Named Range Excluding Hidden Rows Using a Filtered Address with Aspose.Cells
-// Description: Demonstrates how to build a workbook, apply an AutoFilter, collect the addresses of visible (non‑hidden) rows, combine them into a comma‑separated address, assign that address to a named range, use the name in a SUM formula, and save the file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells named range visible rows | exclude hidden rows Aspose.Cells | C# filtered address Excel | AutoFilter visible rows Aspose | Aspose.Cells sum visible data | .NET create named range | Excel named range hidden rows
-// Common Searches: Aspose.Cells create named range from filtered rows | C# named range that skips hidden rows | How to reference only visible rows in a named range using Aspose.Cells | Build filtered address for named range in .NET | Sum visible rows after AutoFilter Aspose.Cells
-// Developer Intent: Generate a named range that references only rows visible after an AutoFilter is applied.
-// Use Cases: Automated reporting that needs to aggregate data from filtered rows only. | Dynamic dashboards where hidden rows must be excluded from calculations. | Exporting workbooks with custom named ranges for downstream analytics.
-// AI Prompts: Write C# code with Aspose.Cells to create a named range that includes only visible rows after applying an AutoFilter. | Show how to iterate worksheet rows, detect hidden rows, build a comma‑separated filtered address, and assign it to Name.RefersTo. | Explain how to use the created named range in an Excel formula (e.g., SUM) and calculate the result with Aspose.Cells.
+// Title: Define a named range that references only visible rows using a filtered address in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that iterates through a column, skips hidden rows, builds a cell address list, and assigns it to a workbook named range. | Write a method that takes start and end cells, returns the addresses of all non‑hidden rows after an AutoFilter, and uses the result to set the RefersTo property of a workbook name.
+// Common Searches: Aspose.Cells C# create named range that excludes hidden rows after applying AutoFilter | How to get addresses of visible cells in a filtered column using Aspose.Cells | C# build cell address list for visible rows in an Excel worksheet | Define a workbook name that points only to non‑hidden rows with Aspose.Cells .NET | Retrieve visible row addresses from AutoFilter and set a named range in Aspose.Cells
+// Tags: Aspose.Cells named range from filtered rows | C# generate visible cell address list | AutoFilter skip hidden rows Aspose.Cells | Workbook Names.RefersTo set dynamic range | Excel .xlsx create named range programmatically
 
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace Example
 {
-    // Demonstrates how to build a workbook, apply an AutoFilter, collect the addresses of visible (non‑hidden) rows, combine them into a comma‑separated address, assign that address to a named range, use the name in a SUM formula, and save the file with Aspose.Cells for .NET.
-    public class NamedRangeExcludingHiddenRows
+    // The example creates a workbook, populates column A, hides specific rows, applies an AutoFilter, builds a comma‑separated address of the visible cells, adds a named range "VisibleValues" that points to that address, and saves the file as FilteredNamedRange.xlsx.
+    class Program
     {
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data with a header row
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["A4"].PutValue("Apple");
-            sheet.Cells["B4"].PutValue(30);
-            sheet.Cells["A5"].PutValue("Cherry");
-            sheet.Cells["B5"].PutValue(40);
-            sheet.Cells["A6"].PutValue("Apple");
-            sheet.Cells["B6"].PutValue(50);
-
-            // Apply an AutoFilter to the header row covering columns A and B
-            sheet.AutoFilter.Range = "A1:B6";
-
-            // Filter to show only rows where Column A = "Apple"
-            sheet.AutoFilter.AddFilter(0, "Apple");
-            sheet.AutoFilter.Refresh();
-
-            // Build an address that includes only the visible (non‑hidden) rows
-            List<string> visibleRanges = new List<string>();
-            int startRow = -1;
-            int totalRows = sheet.Cells.MaxDataRow; // last row with data (zero‑based)
-
-            for (int row = 1; row <= totalRows; row++) // start from row 2 (index 1) – data rows
-            {
-                if (!sheet.Cells.IsRowHidden(row))
-                {
-                    if (startRow == -1)
-                        startRow = row; // begin a new visible block
-                }
-                else
-                {
-                    if (startRow != -1)
-                    {
-                        // End of a visible block – add its address
-                        visibleRanges.Add($"'{sheet.Name}'!A{startRow + 1}:B{row}");
-                        startRow = -1;
-                    }
-                }
-            }
-
-            // Add the last block if it ends at the bottom of the data
-            if (startRow != -1)
-                visibleRanges.Add($"'{sheet.Name}'!A{startRow + 1}:B{totalRows + 1}");
-
-            // Join the individual blocks into a single address (comma‑separated)
-            string filteredAddress = string.Join(",", visibleRanges);
-
-            // Create a named range that refers to the filtered (visible) address
-            int nameIndex = workbook.Worksheets.Names.Add("VisibleAppleRows");
-            Name visibleName = workbook.Worksheets.Names[nameIndex];
-            visibleName.RefersTo = "=" + filteredAddress; // e.g., =Sheet1!A2:B2,Sheet1!A4:B4,...
-
-            // Demonstrate usage: sum the values in column B of the visible rows
-            sheet.Cells["D1"].Formula = $"=SUM({visibleName.Text})";
-            workbook.CalculateFormula();
-
-            Console.WriteLine($"Named range '{visibleName.Text}' refers to: {visibleName.RefersTo}");
-            Console.WriteLine($"Sum of visible rows (column B): {sheet.Cells["D1"].Value}");
-
-            // Save the workbook
-            workbook.Save("NamedRangeExcludingHiddenRows.xlsx");
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                NamedRangeExcludingHiddenRows.Run();
+                // Create a new workbook
+                Workbook workbook = new Workbook();
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Populate sample data with a header
+                sheet.Cells["A1"].PutValue("Value");
+                for (int i = 2; i <= 10; i++)
+                {
+                    sheet.Cells[$"A{i}"].PutValue(i - 1);
+                }
+
+                // Hide specific rows (zero‑based index)
+                sheet.Cells.Rows[3].IsHidden = true; // hides row 4
+                sheet.Cells.Rows[6].IsHidden = true; // hides row 7
+
+                // Apply AutoFilter to the range
+                sheet.AutoFilter.Range = "A1:A10";
+                sheet.AutoFilter.Refresh();
+
+                // Build address of visible (non‑hidden) cells manually
+                string filteredAddress = GetVisibleRange(sheet, "A1", "A10");
+
+                // Add a named range that points to the visible cells
+                int nameIdx = workbook.Worksheets.Names.Add("VisibleValues");
+                // RefersTo must be a formula string, e.g., =Sheet1!A2,A3,...
+                workbook.Worksheets.Names[nameIdx].RefersTo = $"={sheet.Name}!{filteredAddress}";
+
+                // Save the workbook
+                string outputPath = "FilteredNamedRange.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+
+        // Constructs a comma‑separated address of visible rows within the specified column range
+        private static string GetVisibleRange(Worksheet sheet, string startCell, string endCell)
+        {
+            int startRow = CellReferenceHelper.CellNameToRow(startCell);
+            int endRow = CellReferenceHelper.CellNameToRow(endCell);
+            string columnName = CellReferenceHelper.ColumnIndexToName(CellReferenceHelper.CellNameToColumn(startCell));
+
+            var sb = new StringBuilder();
+            bool first = true;
+            for (int row = startRow; row <= endRow; row++)
+            {
+                // Skip hidden rows
+                if (sheet.Cells.Rows[row].IsHidden)
+                    continue;
+
+                if (!first)
+                    sb.Append(",");
+                sb.Append($"{columnName}{row + 1}");
+                first = false;
+            }
+            return sb.ToString();
+        }
+    }
+
+    // Helper for converting between cell references and indices
+    internal static class CellReferenceHelper
+    {
+        public static int CellNameToRow(string cellName)
+        {
+            string rowPart = Regex.Match(cellName, @"\d+").Value;
+            return int.Parse(rowPart) - 1; // zero‑based
+        }
+
+        public static int CellNameToColumn(string cellName)
+        {
+            string colPart = Regex.Match(cellName, @"[A-Za-z]+").Value.ToUpper();
+            int sum = 0;
+            foreach (char c in colPart)
+            {
+                sum = sum * 26 + (c - 'A' + 1);
+            }
+            return sum - 1; // zero‑based
+        }
+
+        public static string ColumnIndexToName(int index)
+        {
+            index++; // convert to 1‑based
+            string name = "";
+            while (index > 0)
+            {
+                int rem = (index - 1) % 26;
+                name = (char)('A' + rem) + name;
+                index = (index - 1) / 26;
+            }
+            return name;
         }
     }
 }

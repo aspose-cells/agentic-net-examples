@@ -1,80 +1,38 @@
-// Title: Replace TODAY() formulas with a static date using Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, scans every worksheet and used cell, detects formulas that contain TODAY(), substitutes each with a supplied snapshot DateTime (e.g., 2023‑08‑15) via PutValue, and saves the modified file.
-// Keywords: Aspose.Cells | C# | replace TODAY formula | static date | snapshot date | volatile function | Excel automation | cell iteration | Workbook.Save | date substitution
-// Common Searches: Aspose.Cells replace TODAY() with fixed date | C# replace volatile TODAY function in Excel | How to set static date in Excel using Aspose.Cells | Iterate cells and modify formulas Aspose.Cells | Save workbook after changing formulas .NET
-// Developer Intent: Replace every TODAY() formula in a workbook with a developer‑provided static date.
-// Use Cases: Archive a workbook for audit trails by freezing all TODAY() calculations to a known snapshot date. | Generate financial reports that must retain the same reporting date across multiple distributions. | Batch‑process a set of Excel files to eliminate volatile date functions before publishing.
-// AI Prompts: Write C# code with Aspose.Cells that scans all worksheets, replaces any TODAY() formula with a given DateTime, and saves the workbook. | Show how to log each cell address and its original formula while converting TODAY() to a static date using Aspose.Cells. | Explain how to apply culture‑specific date formatting when inserting a snapshot date with Aspose.Cells PutValue.
+// Title: Replace TODAY() formulas with a static snapshot date in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel file with Aspose.Cells, locate cells whose formula contains TODAY(), and set those cells to a provided DateTime snapshot. | Traverse all worksheets and cells in a workbook, replace any TODAY() function in formulas with a fixed date value, then save the updated file. | Programmatically convert dynamic TODAY() formulas to constant dates using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# replace TODAY() function with a specific date | How to convert dynamic TODAY() formulas to static dates in an .xlsx using .NET | C# code example for substituting TODAY() formulas with a snapshot date in Excel | Replace Excel TODAY() formulas with constant date programmatically Aspose.Cells | Iterate through worksheets and replace TODAY() formulas with fixed date in C#
+// Tags: replace TODAY() formula Aspose.Cells | static snapshot date Excel C# | Aspose.Cells formula manipulation | iterate worksheets Aspose.Cells | convert dynamic date function to constant .xlsx
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an Excel workbook, scans every cell for formulas containing TODAY(), replaces those formulas with a predefined snapshot DateTime, and saves the modified file using Aspose.Cells for .NET.
+class Program
 {
-    // Loads a workbook, scans every worksheet and used cell, detects formulas that contain TODAY(), substitutes each with a supplied snapshot DateTime (e.g., 2023‑08‑15) via PutValue, and saves the modified file.
-    public class ReplaceTodayWithStaticDate
+    static void Main()
     {
-        public static void Run()
+        // Define the snapshot date that will replace TODAY()
+        DateTime snapshotDate = new DateTime(2023, 10, 1); // adjust as needed
+
+        // Load the workbook (use the provided load rule)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            try
+            // Iterate through all used cells in the worksheet
+            foreach (Cell cell in sheet.Cells)
             {
-                // Path to the source workbook
-                string inputPath = "input.xlsx";
-
-                // Path to the resulting workbook
-                string outputPath = "output.xlsx";
-
-                // Snapshot date to replace TODAY() with (e.g., 2023‑08‑15)
-                DateTime snapshotDate = new DateTime(2023, 8, 15);
-
-                // Verify that the input file exists
-                if (!File.Exists(inputPath))
+                // Check if the cell contains a formula that uses TODAY()
+                if (cell.IsFormula && cell.Formula.IndexOf("TODAY()", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    Console.WriteLine($"Input file not found: {inputPath}");
-                    return;
+                    // Replace the formula with the static snapshot date value
+                    cell.PutValue(snapshotDate);
                 }
-
-                // Load the workbook (lifecycle rule: load)
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    Cells cells = sheet.Cells;
-
-                    // Loop through all used cells
-                    foreach (Cell cell in cells)
-                    {
-                        // Check if the cell contains a formula that uses TODAY()
-                        if (cell.IsFormula &&
-                            !string.IsNullOrEmpty(cell.Formula) &&
-                            cell.Formula.IndexOf("TODAY()", StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            // Replace the formula with the static snapshot date
-                            cell.PutValue(snapshotDate);
-                        }
-                    }
-                }
-
-                // Save the modified workbook (lifecycle rule: save)
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ReplaceTodayWithStaticDate.Run();
-        }
+        // Save the modified workbook (use the provided save rule)
+        workbook.Save("output.xlsx");
     }
 }

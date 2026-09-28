@@ -1,105 +1,49 @@
-// Title: Export Excel with Smart Markers, Charts & Images to PDF using Aspose.Cells for .NET
-// Description: Load an Excel template that contains smart markers, charts, and embedded images, bind a collection of Product objects, process the markers, and save the workbook as a PDF. PdfSaveOptions with ExportDocumentStructure and CalculateFormula ensure that charts, graphics, and calculated values are retained in the PDF output.
-// Keywords: Aspose.Cells PDF export | smart markers to PDF | preserve charts Aspose.Cells | export images to PDF .NET | PdfSaveOptions ExportDocumentStructure | CalculateFormula PDF | C# Excel to PDF conversion | Aspose.Cells WorkbookDesigner | Excel template PDF generation
-// Common Searches: How to export an Excel file with smart markers and charts to PDF using Aspose.Cells | Aspose.Cells preserve images and formulas when saving as PDF | C# code for PDF export with smart markers | PdfSaveOptions settings for chart retention | Export Excel workbook to PDF with Aspose.Cells .NET
-// Developer Intent: Create a PDF from a smart‑marker populated workbook that keeps all charts, images, and calculated formulas intact.
-// Use Cases: Generate product catalogs by filling an Excel template with product names, prices, and photos, then export the result to a printable PDF. | Automate reporting where charts are driven by smart markers and must appear unchanged in the final PDF document. | Integrate PDF generation into a .NET application while ensuring formulas are recalculated and document structure is preserved.
-// AI Prompts: Write C# code that loads an Excel template with smart markers, binds a list of objects containing image byte arrays, processes the markers, and saves the workbook as a PDF preserving charts and formulas using Aspose.Cells. | Explain the impact of PdfSaveOptions properties ExportDocumentStructure and CalculateFormula on PDF output for workbooks that contain smart markers and charts. | Provide troubleshooting steps for missing images or incorrect chart data when exporting a smart‑marker populated workbook to PDF with Aspose.Cells.
+// Title: Export a smart‑marker driven Excel workbook with charts to PDF using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel template containing smart markers and embedded charts, binds a DataTable as the data source, processes the smart markers, and saves the workbook as a PDF while keeping the charts intact. | Show how to configure PdfSaveOptions with ExportDocumentStructure = true and CalculateFormula = true to retain chart graphics and evaluate formulas when exporting a smart‑marker workbook to PDF using Aspose.Cells. | Explain the steps to use WorkbookDesigner to fill a smart‑marker template, update chart data ranges, and then generate a PDF file that includes all graphics.
+// Common Searches: how to keep charts when exporting an Aspose.Cells workbook with smart markers to PDF | C# Aspose.Cells PdfSaveOptions ExportDocumentStructure example for smart markers | populate Excel smart marker template from DataTable and save as PDF with graphics | export smart marker driven workbook to PDF preserving document structure Aspose.Cells | convert Excel file with charts to PDF using Aspose.Cells without losing images
+// Tags: smart marker workbook PDF export preserving charts | Aspose.Cells PdfSaveOptions ExportDocumentStructure usage | populate smart marker template from DataTable C# | convert Excel with charts to PDF Aspose.Cells | process smart markers before PDF generation
 
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExport
+// Loads an Excel template that contains smart markers and charts, fills it with a DataTable via WorkbookDesigner, processes the markers to update chart data, configures PdfSaveOptions to retain document structure and calculate formulas, and saves the result as a PDF with all graphics preserved.
+class ExportWorkbookToPdf
 {
-    // Sample data class for smart markers
-    // Load an Excel template that contains smart markers, charts, and embedded images, bind a collection of Product objects, process the markers, and save the workbook as a PDF. PdfSaveOptions with ExportDocumentStructure and CalculateFormula ensure that charts, graphics, and calculated values are retained in the PDF output.
-    public class Product
+    static void Main()
     {
-        public string? Name { get; set; }
-        public double Price { get; set; }
-        public byte[]? Image { get; set; }
-    }
+        // Load a workbook that contains smart markers and charts.
+        // The template can be created beforehand with markers like &amp;=Products.Name etc.
+        Workbook workbook = new Workbook("TemplateWithSmartMarkers.xlsx");
 
-    public class ExportWorkbookToPdf
-    {
-        public static void Run()
+        // -------------------- Prepare data source --------------------
+        // Example data table that matches the smart marker names used in the template.
+        DataTable products = new DataTable("Products");
+        products.Columns.Add("Name", typeof(string));
+        products.Columns.Add("Quantity", typeof(int));
+
+        // Populate the table with sample data.
+        products.Rows.Add("Apple", 50);
+        products.Rows.Add("Banana", 30);
+        products.Rows.Add("Cherry", 20);
+
+        // -------------------- Process smart markers --------------------
+        // Attach the data source to the workbook designer and populate the template.
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource(products);
+        designer.Process(); // fills cells, updates chart data ranges, etc.
+
+        // -------------------- Configure PDF save options --------------------
+        // ExportDocumentStructure ensures that charts and other graphics are retained.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
         {
-            try
-            {
-                const string templatePath = "Template.xlsx";
-                const string outputPath = "Output.pdf";
-
-                // Verify template file exists
-                if (!File.Exists(templatePath))
-                    throw new FileNotFoundException($"Template file not found: {templatePath}");
-
-                // Load the Excel template that contains smart markers and charts
-                Workbook workbook = new Workbook(templatePath);
-
-                // Prepare data source for smart markers
-                List<Product> products = new List<Product>
-                {
-                    CreateProduct("Apple", "apple.jpg"),
-                    CreateProduct("Banana", "banana.jpg"),
-                    CreateProduct("Cherry", "cherry.jpg")
-                };
-
-                // Initialize WorkbookDesigner, bind data source and process smart markers
-                WorkbookDesigner designer = new WorkbookDesigner(workbook);
-                designer.SetDataSource("Products", products);
-                designer.Process(); // populates smart markers, updates charts/graphics
-
-                // Configure PDF save options to preserve document structure and calculate formulas
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    ExportDocumentStructure = true,
-                    CalculateFormula = true
-                };
-
-                // Save the populated workbook as PDF (charts and graphics are retained)
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error during PDF export: {ex.Message}");
-            }
-        }
-
-        // Helper method to create a Product instance with image validation
-        private static Product CreateProduct(string name, string imageFileName)
-        {
-            if (!File.Exists(imageFileName))
-                throw new FileNotFoundException($"Image file not found: {imageFileName}");
-
-            return new Product
-            {
-                Name = name,
-                Price = GetPriceForProduct(name),
-                Image = File.ReadAllBytes(imageFileName)
-            };
-        }
-
-        // Simple price lookup (could be replaced with real logic)
-        private static double GetPriceForProduct(string name) => name switch
-        {
-            "Apple" => 1.20,
-            "Banana" => 0.80,
-            "Cherry" => 2.50,
-            _ => 0.0
+            ExportDocumentStructure = true,
+            CalculateFormula = true // calculate any formulas before saving
         };
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ExportWorkbookToPdf.Run();
-        }
+        // -------------------- Save as PDF --------------------
+        // Use the provided Save method that accepts SaveOptions.
+        workbook.Save("Result.pdf", pdfOptions);
     }
 }

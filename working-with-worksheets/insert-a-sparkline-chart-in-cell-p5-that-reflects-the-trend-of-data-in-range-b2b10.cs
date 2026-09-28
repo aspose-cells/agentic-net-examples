@@ -1,32 +1,53 @@
-// Title: C# – Insert a Line Sparkline in Cell P5 from Range B2:B10 using Aspose.Cells
-// Description: Creates a new workbook, adds a line‑type SparklineGroup to the first worksheet, places a sparkline that references B2:B10 into cell P5, and saves the file as SparklineInCell.xlsx.
-// Keywords: Aspose.Cells C# sparkline | line sparkline cell P5 | sparkline range B2:B10 | add sparkline programmatically | Excel sparkline Aspose
-// Common Searches: how to add a sparkline to a single cell with Aspose.Cells | C# sparkline from B2 to B10 placed in P5 | Aspose.Cells create line sparkline in Excel | insert sparkline chart into worksheet cell using .NET
-// Developer Intent: Add a line sparkline to cell P5 that visualizes the values in B2:B10.
-// Use Cases: Show a compact trend line next to a data table in a dashboard. | Automate sparklines for many rows by iterating over cell coordinates. | Include visual trend indicators in generated Excel reports.
-// AI Prompts: Generate code to add multiple sparklines for different ranges in adjacent cells with Aspose.Cells. | Show how to customize sparkline color, weight, and markers after creation. | Explain how to retrieve an existing SparklineGroup and change its source data range.
+// Title: Insert a line sparkline in cell P5 from range B2:B10 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new workbook, defines a SparklineGroup of type Line for the range B2:B10, places it in cell P5, enables markers, first‑point and last‑point visibility, and saves the file as an .xlsx. | Show how to obtain the index of a newly added SparklineGroup, adjust its ShowMarkers, ShowFirstPoint, and ShowLastPoint properties, and persist the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells C# add line sparkline to a single cell | Create sparkline in Excel using Aspose.Cells from a vertical range | C# example for inserting sparkline in cell P5 with Aspose.Cells | How to enable markers, first point, and last point on an Aspose.Cells sparkline | Saving workbook after adding sparkline with Aspose.Cells .NET
+// Tags: Aspose.Cells sparkline insertion | C# SparklineGroup appearance settings | Insert sparkline into specific worksheet cell | Generate Excel sparkline from data range B2:B10 | Aspose.Cells workbook save with sparkline
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a new workbook, adds a line‑type SparklineGroup to the first worksheet, places a sparkline that references B2:B10 into cell P5, and saves the file as SparklineInCell.xlsx.
-class SparklineInCell
+// The sample creates a new workbook, adds a line sparkline that references cells B2:B10 to cell P5, turns on markers as well as first‑point and last‑point highlights, and saves the result as SparklineExample.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a sparkline group of type Line
-        int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line);
-        SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a sparkline that uses the data range B2:B10
-        // Place the sparkline in cell P5 (zero‑based row 4, column 15)
-        sparklineGroup.Sparklines.Add("B2:B10", 4, 15);
+            // Define the data range for the sparkline
+            string dataRange = "B2:B10";
 
-        // Save the workbook
-        workbook.Save("SparklineInCell.xlsx");
+            // Define the location cell for the sparkline (P5)
+            // Create a CellArea that represents a single cell (P5)
+            CellArea location = CellArea.CreateCellArea("P5", "P5");
+
+            // Add a line sparkline group (isVertical = false)
+            // The Add method returns the index of the created group
+            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, dataRange, false, location);
+            SparklineGroup sparklineGroup = sheet.SparklineGroups[groupIndex];
+
+            // Optional: customize sparkline appearance
+            sparklineGroup.ShowMarkers = true;
+            sparklineGroup.ShowFirstPoint = true;
+            sparklineGroup.ShowLastPoint = true;
+
+            // Define output file path
+            string outputPath = "SparklineExample.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

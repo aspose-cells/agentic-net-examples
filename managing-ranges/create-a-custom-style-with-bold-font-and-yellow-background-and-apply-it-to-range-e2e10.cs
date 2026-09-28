@@ -1,44 +1,51 @@
-// Title: Aspose.Cells .NET – Apply Bold Font and Yellow Background Style to Range E2:E10
-// Description: Create a custom Style with a bold typeface and solid yellow fill, then apply it to cells E2 through E10 in a new workbook using Aspose.Cells for .NET and save as StyledRange.xlsx.
-// Keywords: Aspose.Cells C# style | custom cell style Aspose.Cells | bold font yellow background | apply style to range | E2:E10 formatting | Aspose.Cells .NET example | Workbook styling C# | range SetStyle Aspose
-// Common Searches: how to set bold and yellow style for a range in Aspose.Cells | Aspose.Cells apply custom style to multiple cells | C# Aspose.Cells set background color for column range | create and reuse style in Aspose.Cells workbook
-// Developer Intent: Define a bold, yellow‑filled style and apply it to the cell range E2:E10 in a workbook.
-// Use Cases: Highlight a column of key metrics in a financial dashboard. | Mark required input cells in a data‑entry template. | Create a reusable header style for generated reports.
-// AI Prompts: Write C# code with Aspose.Cells that creates a bold, yellow style and applies it to E2:E10. | Show how to store the custom style in a variable and reuse it on other ranges in the same workbook. | Explain how to add a thin black border to the existing bold‑yellow style while keeping the same range application.
+// Title: Apply a bold font and yellow background style to cells E2‑E10 using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a style with bold text and a solid yellow fill in Aspose.Cells, then applies it to the range E2:E10. | Show how to configure a StyleFlag to apply only font boldness and cell shading when styling a specific range in an Aspose.Cells workbook. | Provide the steps to save the workbook after applying the custom style to the selected cells.
+// Common Searches: asp.net aspose.cells set bold font and yellow background for range E2:E10 | c# aspose.cells apply custom style to specific cells | using StyleFlag to limit style attributes in Aspose.Cells | create solid fill style with bold text in Aspose.Cells .NET | how to save workbook after styling cells with Aspose.Cells
+// Tags: apply custom style to cell range Aspose.Cells | bold font solid yellow fill Aspose.Cells | StyleFlag font bold cell shading .NET | create and apply style to E2:E10 Aspose.Cells | save workbook after styling Aspose.Cells
 
 using System;
-using Aspose.Cells;
 using System.Drawing;
+using Aspose.Cells;
+using AsposeRange = Aspose.Cells.Range;
 
-// Create a custom Style with a bold typeface and solid yellow fill, then apply it to cells E2 through E10 in a new workbook using Aspose.Cells for .NET and save as StyledRange.xlsx.
+// The program creates a new workbook, defines a custom style with bold text and a solid yellow background, uses a StyleFlag to apply only font boldness and cell shading, applies the style to cells E2 through E10 on the first worksheet, and saves the file as StyledRange.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a custom style: bold font and yellow background
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Create a custom style with bold font and yellow background
             Style customStyle = workbook.CreateStyle();
-            customStyle.Font.IsBold = true;                     // Bold font
-            customStyle.Pattern = BackgroundType.Solid;         // Enable solid fill
-            customStyle.ForegroundColor = Color.Yellow;         // Yellow background
+            customStyle.Font.IsBold = true;
+            customStyle.ForegroundColor = Color.Yellow;
+            customStyle.Pattern = BackgroundType.Solid;
 
-            // Define the target range E2:E10 (use Aspose.Cells.Range to avoid conflict with System.Range)
-            Aspose.Cells.Range targetRange = worksheet.Cells.CreateRange("E2", "E10");
+            // Define which style attributes to apply
+            StyleFlag flag = new StyleFlag
+            {
+                FontBold = true,
+                CellShading = true
+            };
 
-            // Apply the custom style to the entire range
-            targetRange.SetStyle(customStyle);
+            // Apply the style to the range E2:E10
+            AsposeRange range = sheet.Cells.CreateRange("E2", "E10");
+            range.ApplyStyle(customStyle, flag);
 
-            // Save the workbook to a file
-            workbook.Save("StyledRange.xlsx");
+            // Save the workbook
+            string outputPath = "StyledRange.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

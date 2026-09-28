@@ -1,39 +1,55 @@
-// Title: Conditional Workbook Structure Protection (>10 Sheets) with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add multiple worksheets, evaluate the sheet count, and apply a password to the workbook's structure only when more than ten sheets are present, then save the file as XLSX.
-// Keywords: Aspose.Cells conditional protection | C# protect workbook structure | password based on sheet count | Excel workbook security threshold | Aspose.Cells example protect if >10 sheets
-// Common Searches: Aspose.Cells protect workbook only when sheet count exceeds 10 | C# conditional Excel password protection Aspose | apply structure password if workbook has many worksheets | how to lock Excel workbook based on number of sheets in .NET
-// Developer Intent: Apply a password to the workbook's structure only when the workbook contains more than ten worksheets.
-// Use Cases: Enforce policy that large workbooks (over ten tabs) must be locked to prevent accidental edits. | Automatically secure generated financial or reporting workbooks that exceed a sheet‑count threshold before distribution. | Implement dynamic protection in a macro‑driven project that creates variable numbers of worksheets.
-// AI Prompts: Generate code that reads the protection password from a configuration file and applies it only when the worksheet count is greater than a configurable limit. | Show how to log a message indicating whether the workbook was protected based on its sheet count. | Explain how to protect both the workbook structure and windows conditionally, using a threshold defined in app settings.
+// Title: Apply password protection to an Excel workbook with Aspose.Cells in C# only when it contains more than ten worksheets
+// AI Prompts: Write a C# program using Aspose.Cells that opens an .xlsx file, checks if workbook.Worksheets.Count exceeds 10, and calls workbook.Protect(ProtectionType.All, password) before saving. | Update an existing Aspose.Cells console application to add a conditional block that applies a strong password to the workbook only when the sheet count is greater than ten. | Create a .NET snippet that validates the input path, ensures the output directory exists, and conditionally protects the workbook based on the number of worksheets.
+// Common Searches: aspocells protect workbook when sheet count greater than ten c# | conditional workbook password protection aspnet aspocells | how to apply Aspose.Cells workbook.Protect only for large Excel files | c# check number of worksheets before encrypting Excel with Aspose.Cells
+// Tags: Aspose.Cells conditional workbook protection | C# workbook.Protect based on worksheet count | protect Excel file with password using Aspose.Cells | check worksheet count before applying protection | save protected workbook to new file Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, add multiple worksheets, evaluate the sheet count, and apply a password to the workbook's structure only when more than ten sheets are present, then save the file as XLSX.
-class Program
+// // Loads an existing .xlsx file, verifies the worksheet count, applies password protection with ProtectionType.All only when more than ten sheets are present, and saves the protected workbook to a new location.
+class WorkbookProtection
 {
     static void Main()
     {
-        // Create a new workbook instance
-        Workbook workbook = new Workbook();
+        // Define input and output file paths
+        string inputPath = @"C:\Input\Sample.xlsx";
+        string outputPath = @"C:\Output\Sample_Protected.xlsx";
 
-        // Add worksheets so the workbook has more than ten sheets (for demonstration)
-        for (int i = 0; i < 12; i++)
+        // Verify that the input workbook exists
+        if (!File.Exists(inputPath))
         {
-            workbook.Worksheets.Add();
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
         }
 
-        // Apply password protection only when the workbook contains more than ten worksheets
-        if (workbook.Worksheets.Count > 10)
+        try
         {
-            // Protect the workbook's structure with a password
-            workbook.Protect(ProtectionType.Structure, "StrongPassword!123");
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Apply password protection if the workbook has more than ten worksheets
+            if (workbook.Worksheets.Count > 10)
+            {
+                string password = "StrongPassword123";
+                // Protect the entire workbook with the specified password
+                workbook.Protect(ProtectionType.All, password);
+            }
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the protected workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
-
-        // Save the workbook to a file
-        workbook.Save("ProtectedIfMoreThanTen.xlsx", SaveFormat.Xlsx);
-
-        // Release resources
-        workbook.Dispose();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

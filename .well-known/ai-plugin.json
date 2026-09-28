@@ -2,8 +2,8 @@
   "schema_version": "v1",
   "name_for_human": "Aspose.Cells for .NET Examples",
   "name_for_model": "aspose_cells_net_examples",
-  "description_for_human": "AI-generated, compile-validated C# examples for Aspose.Cells for .NET 26.7.0. Browse 5,394 verified examples across 31 categories.",
-  "description_for_model": "Aspose.Cells for .NET code-example provider. Use this plugin to generate and look up working, compile-validated C# code samples for spreadsheet automation, workbook creation, formulas, charts, conversion, protection, and data processing. Examples target net10.0 and use Aspose.Cells 26.7.0.",
+  "description_for_human": "AI-generated, compile-validated C# examples for Aspose.Cells for .NET 26.8.0. Browse verified examples across 31 categories.",
+  "description_for_model": "Aspose.Cells for .NET code-example provider. Use this plugin to generate and look up working, compile-validated C# code samples for spreadsheet automation, workbook creation, formulas, charts, conversion, protection, and data processing. Examples target net10.0 and use Aspose.Cells 26.8.0.",
   "auth": {
     "type": "none"
   },

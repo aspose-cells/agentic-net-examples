@@ -1,39 +1,53 @@
-// Title: Aspose.Cells for .NET – Set custom reflection (size 40, blur 3, distance 6) on a rectangle shape
-// Description: C# sample that creates a workbook, inserts a rectangle shape, and shows how to apply a reflection effect with specific size, blur, and distance values using Aspose.Cells. It also notes that Shape.EffectOptions is unavailable in older releases and advises upgrading to a version that supports shape effects.
-// Keywords: Aspose.Cells reflection effect | C# rectangle shape reflection | Shape.EffectOptions | custom reflection preset | size 40 blur 3 distance 6 | Excel shape visual effects | Aspose.Cells .NET version support
-// Common Searches: Aspose.Cells apply reflection to shape | set reflection size blur distance Aspose.Cells | Shape.EffectOptions availability .NET | add visual effects to Excel shapes using Aspose.Cells | upgrade Aspose.Cells for shape effects
-// Developer Intent: Implement a reflection effect with size 40, blur 3, and distance 6 on a rectangle shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Create a formatted report where shapes need a reflective highlight for visual emphasis. | Programmatically check whether the installed Aspose.Cells library includes Shape.EffectOptions before attempting to apply effects. | Migrate legacy code to a newer Aspose.Cells version to enable custom reflection presets on worksheet shapes.
-// AI Prompts: Write C# code that adds a rectangle to a worksheet and applies a reflection effect with size 40, blur 3, distance 6 using Aspose.Cells, including version‑check logic. | Explain how to detect the presence of Shape.EffectOptions in Aspose.Cells and provide fallback handling when the feature is missing. | Suggest alternative .NET libraries or techniques for adding reflection or shadow effects to Excel shapes when Aspose.Cells does not support them.
+// Title: Add a picture to cell C3 and apply a custom reflection (size 40%, blur 3, distance 6 points) using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert an image into a worksheet cell and configure its Reflection.Size, Reflection.Blur, and Reflection.Distance properties with Aspose.Cells in C#. | Show how to set a custom reflection effect on a picture shape in an Excel file using the Aspose.Cells .NET API. | Create a new workbook, add a PNG to cell C3, and apply a 40% size, 3‑point blur, and 6‑point distance reflection using Aspose.Cells.
+// Common Searches: aspnet c# how to add picture to Excel cell with Aspose.Cells and set reflection properties | set custom reflection size blur distance for picture shape in Aspose.Cells | Aspose.Cells picture reflection example C# | apply reflection effect to image in Excel using Aspose.Cells .NET
+// Tags: Aspose.Cells picture reflection configuration | C# add image to Excel cell Aspose.Cells | custom reflection preset Aspose.Cells API | set reflection size blur distance .NET Excel | Excel shape effects Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// C# sample that creates a workbook, inserts a rectangle shape, and shows how to apply a reflection effect with specific size, blur, and distance values using Aspose.Cells. It also notes that Shape.EffectOptions is unavailable in older releases and advises upgrading to a version that supports shape effects.
+// The program creates a new workbook, inserts a PNG image into cell C3, applies a reflection effect with 40% size, blur radius of 3, and distance of 6 points, and saves the file as output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape to the worksheet
-            // Parameters: upper left row, upper left column, top, left, width, height
-            Shape rectangle = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 150, 100);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // NOTE: Shape effects (e.g., reflection) are not available in the current Aspose.Cells version.
-            // If needed, upgrade to a version that supports Shape.EffectOptions.
+            // Path to the image file
+            string imagePath = "input.png";
+
+            // Ensure the image file exists before adding it
+            if (File.Exists(imagePath))
+            {
+                // Add the picture to cell C3 (row index 2, column index 2)
+                int pictureIndex = sheet.Pictures.Add(2, 2, imagePath);
+                Picture picture = sheet.Pictures[pictureIndex];
+
+                // Apply custom reflection settings
+                picture.Reflection.Size = 40;      // size in percentage
+                picture.Reflection.Blur = 3;       // blur radius
+                picture.Reflection.Distance = 6;  // distance in points
+            }
+            else
+            {
+                Console.WriteLine($"Image file not found: {imagePath}. Skipping picture insertion.");
+            }
 
             // Save the workbook
-            workbook.Save("CustomReflection.xlsx");
+            workbook.Save("output.xlsx");
+            Console.WriteLine("Workbook saved successfully as output.xlsx.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

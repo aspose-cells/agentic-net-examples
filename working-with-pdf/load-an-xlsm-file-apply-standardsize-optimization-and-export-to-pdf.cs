@@ -1,34 +1,41 @@
-// Title: C# – Convert XLSM to PDF with Standard (high‑print) Optimization using Aspose.Cells for .NET
-// Description: Loads a macro‑enabled Excel workbook, sets PdfSaveOptions.OptimizationType to Standard for high‑print quality, and saves it as a PDF. Demonstrates Aspose.Cells PDF export with optimal rendering.
-// Keywords: Aspose.Cells | C# | XLSM to PDF | PdfSaveOptions | Standard optimization | high print quality | macro-enabled Excel | PDF export .NET | Aspose.Cells PDF optimization | convert Excel to PDF C#
-// Common Searches: Aspose.Cells convert XLSM to PDF C# | Standard PDF optimization Aspose.Cells example | How to export macro‑enabled Excel as PDF using .NET | PdfSaveOptions OptimizationType Standard sample code | C# code to save Excel workbook as high‑quality PDF
-// Developer Intent: Load a macro‑enabled Excel file, apply the Standard PDF optimization, and generate a PDF document with Aspose.Cells.
-// Use Cases: Produce print‑ready PDFs from financial models that contain macros. | Automate batch conversion of XLSM reports to high‑quality PDFs for archival. | Create compliance‑grade PDFs with consistent rendering across platforms. | Integrate PDF export into a .NET web service that receives XLSM uploads.
-// AI Prompts: Generate C# code that opens an .xlsm workbook with Aspose.Cells, sets PdfSaveOptions.OptimizationType to Standard, and saves it as a PDF, including error handling. | Show how to combine Standard optimization with other PdfSaveOptions such as ImageQuality, PageCountMode, and embedded fonts. | Write a script that scans a directory, converts each .xlsm file to PDF using Standard optimization, and logs the results.
+// Title: How to convert a macro-enabled XLSM workbook to PDF in C# using Aspose.Cells
+// AI Prompts: Generate C# code that checks for an .xlsm file, loads it with Aspose.Cells Workbook, and saves it as a PDF with proper exception handling. | Show a console application example that validates the input path before converting a macro-enabled Excel file to PDF using Aspose.Cells. | Provide a minimal Aspose.Cells workflow in C# for reading an XLSM workbook and exporting it to PDF format.
+// Common Searches: c# aspnet convert macro enabled xlsm to pdf using aspose.cells library | how to verify excel file exists before saving as pdf with aspose.cells | asp.net console app export xlsm workbook to pdf with error handling | aspose.cells save workbook as pdf without losing macros | sample code for converting xlsm to pdf in .NET
+// Tags: aspose.cells xlsm to pdf conversion | c# workbook save as pdf with aspose.cells | file existence check before aspose.cells export | asp.net console pdf export from macro-enabled excel | exception handling for aspose.cells pdf save
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Loads a macro‑enabled Excel workbook, sets PdfSaveOptions.OptimizationType to Standard for high‑print quality, and saves it as a PDF. Demonstrates Aspose.Cells PDF export with optimal rendering.
+// A C# console program that verifies the presence of an input.xlsm file, loads it into an Aspose.Cells Workbook, and saves the workbook as output.pdf using the Pdf SaveFormat, while handling any runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Path to the source XLSM file
-        string sourceFile = "input.xlsm";
+        try
+        {
+            const string inputPath = "input.xlsm";
+            const string outputPath = "output.pdf";
 
-        // Load the workbook (XLSM format)
-        Workbook workbook = new Workbook(sourceFile);
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
+            }
 
-        // Create PDF save options and set the optimization type to Standard (high print quality)
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.OptimizationType = PdfOptimizationType.Standard;
+            // Load the XLSM workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Path for the resulting PDF file
-        string pdfFile = "output.pdf";
+            // Export the workbook to PDF
+            workbook.Save(outputPath, SaveFormat.Pdf);
 
-        // Save the workbook as PDF using the specified options
-        workbook.Save(pdfFile, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

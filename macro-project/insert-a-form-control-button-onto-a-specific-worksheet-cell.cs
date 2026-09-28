@@ -1,32 +1,59 @@
-// Title: Insert a Form Control button into a specific worksheet cell using Aspose.Cells for .NET (C#)
-// Description: The sample creates a workbook, selects the first sheet, and adds a Form Control button anchored to cell B2 via Shapes.AddButton, specifying row/column indices and pixel offsets. It sets the button's caption and name, optionally links a macro, and saves the result as FormButton.xlsx.
-// Keywords: Aspose.Cells | C# AddButton | Form Control button | Excel button macro | anchor button to cell | Shapes.AddButton | programmatic Excel UI | worksheet button placement
-// Common Searches: Aspose.Cells add button to cell | C# place Form Control button in Excel | assign macro to Aspose.Cells button | Shapes.AddButton method parameters | create interactive Excel button with Aspose.Cells
-// Developer Intent: Programmatically embed a Form Control button at a defined cell location in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Add a clickable button to a generated report that launches a predefined macro when the file is opened. | Position a UI element on a dashboard sheet to trigger a data refresh routine. | Build automated Excel forms where each button executes custom downstream logic.
-// AI Prompts: Generate C# code to place a Form Control button in cell C5 and bind it to a macro named RefreshData using Aspose.Cells. | Explain each parameter of Shapes.AddButton and how to calculate pixel offsets for exact placement. | Create a script that adds multiple buttons across a range, each with a unique name and macro, with Aspose.Cells for .NET.
+// Title: Insert a Form Control button into cell B3 of an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Insert a Form Control button at row 2, column 1 (cell B3), set its height to 30 px, width to 100 px, label it "Click Me", and save the workbook as FormControlButton.xlsx using Aspose.Cells for .NET. | Programmatically create a new workbook, ensure the target directory exists, add a button shape with custom offsets, assign text, and write the file to disk with the Aspose.Cells C# API.
+// Common Searches: Aspose.Cells how to add a form control button to cell B3 in C# | C# Aspose.Cells place a button at a specific row and column | Setting button text and size when inserting a form control with Aspose.Cells | Saving an Excel file that contains a button using Aspose.Cells .NET | Creating a new workbook and adding a clickable button programmatically with Aspose.Cells
+// Tags: aspocells button shape insertion | aspocells button placement by cell coordinates | aspocells set button caption and dimensions | aspocells workbook save with controls | aspocells ensure output folder exists
 
+using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// The sample creates a workbook, selects the first sheet, and adds a Form Control button anchored to cell B2 via Shapes.AddButton, specifying row/column indices and pixel offsets. It sets the button's caption and name, optionally links a macro, and saves the result as FormButton.xlsx.
-class InsertFormButton
+// The example creates a new Workbook, accesses the first Worksheet, defines cell B3 (row index 2, column index 1), adds a Form Control button shape with a height of 30 px and width of 100 px, sets the caption to "Click Me", ensures the output directory exists, saves the file as FormControlButton.xlsx, and handles any exceptions.
+class InsertFormControlButton
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
 
-        // Add a Form Control button anchored to cell B2 (row index 1, column index 1)
-        // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height, width
-        Button button = sheet.Shapes.AddButton(1, 0, 1, 0, 30, 100);
-        button.Text = "Press Me";
-        button.Name = "MyButton";
-        // Optional: assign a macro to the button
-        // button.MacroName = "MyMacro";
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Save the workbook
-        workbook.Save("FormButton.xlsx");
+            // Define the target cell (e.g., B3 -> row index 2, column index 1)
+            int targetRow = 2;      // zero‑based row index
+            int targetColumn = 1;   // zero‑based column index
+
+            // Add a button shape to the worksheet.
+            // Parameters: upper‑left row, upper‑left column,
+            // top offset, left offset, height (pixels), width (pixels)
+            Button button = sheet.Shapes.AddButton(
+                targetRow, targetColumn,
+                0, 0,
+                30,   // height
+                100); // width
+
+            // Set the button caption
+            button.Text = "Click Me";
+
+            // Define output file path
+            string outputPath = "FormControlButton.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file (lifecycle rule: save)
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

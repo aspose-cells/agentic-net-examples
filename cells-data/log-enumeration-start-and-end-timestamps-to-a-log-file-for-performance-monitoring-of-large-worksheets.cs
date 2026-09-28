@@ -1,83 +1,69 @@
-// Title: C# – Log worksheet enumeration timestamps with AspNet.Cells for large workbook performance
-// Description: Demonstrates how to open a massive Excel file using Aspose.Cells, record the start and end times of worksheet enumeration, log per‑sheet row/column counts, calculate elapsed milliseconds, and append the data to a performance log file while optionally saving a copy of the workbook.
-// Keywords: Aspose.Cells worksheet enumeration timing | C# log Excel processing performance | measure workbook enumeration duration | SystemTimeInterruptMonitor usage | log large Excel file performance
-// Common Searches: log worksheet enumeration start end time Aspose.Cells C# | measure Excel workbook processing time with Aspose | SystemTimeInterruptMonitor example for performance monitoring | append performance data to text file in C# | track large workbook enumeration duration
-// Developer Intent: Record the start and end timestamps of worksheet enumeration to a log file for performance analysis of large Excel workbooks.
-// Use Cases: Identify bottlenecks by measuring how long worksheet enumeration takes in massive workbooks. | Capture per‑sheet used rows and columns for reporting and capacity planning. | Maintain a persistent log across runs to monitor performance trends over time. | Combine enumeration timing with SystemTimeInterruptMonitor to avoid interruptions during long operations.
-// AI Prompts: Create C# code that uses Aspose.Cells to enumerate all worksheets, log start/end timestamps, and write elapsed time to a text file. | Show how to integrate SystemTimeInterruptMonitor with LoadOptions for uninterrupted performance measurement in Aspose.Cells. | Provide an example that logs each sheet's used rows and columns while appending overall enumeration metrics to a persistent log.
+// Title: Log enumeration start and end timestamps for each worksheet in a large Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Create C# code that opens an .xlsx file with Aspose.Cells, loops through all worksheets, and writes each sheet's enumeration start and finish times to a log file. | Modify the enumeration loop to capture the total row and column count processed per worksheet and append these metrics to the same log. | Add logic to record the overall workbook processing duration and include it at the end of the log file.
+// Common Searches: aspnet log worksheet enumeration time Aspose.Cells large workbook | how to measure sheet processing duration with Aspose.Cells in C# | record start and end timestamps for each Excel sheet using Aspose.Cells .NET | performance logging of cell enumeration across worksheets Aspose.Cells
+// Tags: Aspose.Cells worksheet enumeration timing log | log sheet processing timestamps C# | measure Excel worksheet performance Aspose | record worksheet enumeration duration .NET | large workbook cell enumeration monitoring
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to open a massive Excel file using Aspose.Cells, record the start and end times of worksheet enumeration, log per‑sheet row/column counts, calculate elapsed milliseconds, and append the data to a performance log file while optionally saving a copy of the workbook.
+// The example loads a large Excel workbook with Aspose.Cells, iterates through each worksheet, and writes the start time, end time, and duration of cell enumeration for every sheet to a text file, enabling performance monitoring of worksheet processing.
 class WorksheetEnumerationLogger
 {
     static void Main()
     {
-        // Paths for input, output and log files
-        string inputPath = "LargeWorkbook.xlsx";
-        string outputPath = "LargeWorkbook_Processed.xlsx";
-        string logPath = "PerformanceLog.txt";
+        // Path to the large workbook to be processed
+        string workbookPath = "LargeWorkbook.xlsx";
 
-        // Verify that the input workbook exists before proceeding
-        if (!File.Exists(inputPath))
+        // Path to the log file where timestamps will be recorded
+        string logPath = "EnumerationLog.txt";
+
+        // Initialize the log file (overwrite if it already exists)
+        using (var initLog = new StreamWriter(logPath, false))
         {
-            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
-            return;
+            initLog.WriteLine($"Enumeration started at {DateTime.Now:O}");
         }
 
-        try
+        // Load the workbook (standard loading; can be replaced with LoadOptions for large files)
+        Workbook workbook = new Workbook(workbookPath);
+
+        // Open the log file for appending timestamps during enumeration
+        using (var logWriter = new StreamWriter(logPath, true))
         {
-            // Ensure the directory for the output file exists
-            string outputDir = Path.GetDirectoryName(outputPath);
-            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
-                Directory.CreateDirectory(outputDir);
-
-            // Open the log file in append mode
-            using (StreamWriter logWriter = new StreamWriter(logPath, true))
+            // Iterate through each worksheet in the workbook
+            for (int sheetIndex = 0; sheetIndex < workbook.Worksheets.Count; sheetIndex++)
             {
-                logWriter.WriteLine("=== Worksheet Enumeration Log: {0} ===", DateTime.Now);
+                Worksheet sheet = workbook.Worksheets[sheetIndex];
 
-                // Prepare a SystemTimeInterruptMonitor (optional – used for precise timing)
-                SystemTimeInterruptMonitor monitor = new SystemTimeInterruptMonitor(false);
-                LoadOptions loadOptions = new LoadOptions
+                // Record start time for the current worksheet
+                DateTime sheetStart = DateTime.Now;
+                logWriter.WriteLine($"Sheet {sheetIndex} ('{sheet.Name}') enumeration start: {sheetStart:O}");
+
+                // Access the Cells collection to enumerate rows and columns
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;       // Highest row index containing data
+                int maxCol = cells.MaxDataColumn;    // Highest column index containing data
+
+                // Simple enumeration of all cells that have data
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    InterruptMonitor = monitor
-                };
-                monitor.StartMonitor(int.MaxValue); // high limit to avoid interruption
-
-                // Load the workbook with the monitor‑enabled options
-                Workbook workbook = new Workbook(inputPath, loadOptions);
-
-                // Record enumeration start time
-                DateTime enumStart = DateTime.Now;
-                logWriter.WriteLine("Enumeration Start: {0:O}", enumStart);
-
-                // Enumerate worksheets and perform a lightweight operation
-                foreach (Worksheet sheet in workbook.Worksheets)
-                {
-                    int usedRows = sheet.Cells.MaxDataRow + 1;
-                    int usedCols = sheet.Cells.MaxDataColumn + 1;
-                    logWriter.WriteLine("Sheet \"{0}\" - UsedRows: {1}, UsedCols: {2}",
-                                        sheet.Name, usedRows, usedCols);
+                    for (int col = 0; col <= maxCol; col++)
+                    {
+                        // Access the cell; reading its value avoids heavy processing
+                        Cell cell = cells[row, col];
+                        var value = cell.Value;
+                    }
                 }
 
-                // Record enumeration end time and elapsed duration
-                DateTime enumEnd = DateTime.Now;
-                logWriter.WriteLine("Enumeration End:   {0:O}", enumEnd);
-                TimeSpan elapsed = enumEnd - enumStart;
-                logWriter.WriteLine("Total Enumeration Time: {0} ms", elapsed.TotalMilliseconds);
-                logWriter.WriteLine(); // blank line for readability
+                // Record end time for the current worksheet
+                DateTime sheetEnd = DateTime.Now;
+                logWriter.WriteLine($"Sheet {sheetIndex} ('{sheet.Name}') enumeration end: {sheetEnd:O}");
+                logWriter.WriteLine($"Sheet {sheetIndex} duration (ms): {(sheetEnd - sheetStart).TotalMilliseconds}");
             }
 
-            // Save the workbook (optional – here we simply copy it)
-            Workbook wbToSave = new Workbook(inputPath);
-            wbToSave.Save(outputPath);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            // Record overall completion time
+            DateTime overallEnd = DateTime.Now;
+            logWriter.WriteLine($"Enumeration finished at {overallEnd:O}");
         }
     }
 }

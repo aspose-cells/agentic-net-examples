@@ -1,15 +1,12 @@
-// Title: Load SXC Workbook, Rename Active Sheet, and Export to CSV with Aspose.Cells for .NET
-// Description: Demonstrates how to open an OpenDocument Spreadsheet (SXC) using Aspose.Cells, rename the currently active worksheet, and save only that sheet as a CSV file in C#.
-// Keywords: Aspose.Cells C# | load SXC workbook | rename active worksheet | export to CSV | SaveFormat.Csv | .NET spreadsheet conversion | OpenDocument to CSV
-// Common Searches: Aspose.Cells rename active sheet after loading SXC | Convert SXC file to CSV with Aspose.Cells .NET | C# code to change worksheet name and save as CSV | How to export only the active worksheet to CSV using Aspose.Cells
-// Developer Intent: Rename the active worksheet of an SXC workbook and save it as a CSV file.
-// Use Cases: Standardize sheet names before converting OpenDocument spreadsheets to CSV for downstream processing. | Automate batch conversion of SXC files to CSV with custom worksheet titles. | Integrate CSV export of a specific sheet into data pipelines that require named sheets.
-// AI Prompts: Generate C# code that loads an SXC file with Aspose.Cells, renames the active worksheet, and saves it as CSV. | Explain step‑by‑step how to export only the active sheet of a workbook to CSV using Aspose.Cells for .NET.
+// Title: Load an SXC workbook, rename the active worksheet, and export it to CSV using Aspose.Cells for .NET
+// AI Prompts: Open a .sxc file with Aspose.Cells, change the name of the currently active worksheet, and save that sheet as a .csv file in C#. | Using Aspose.Cells for .NET, load an SXC workbook, assign a new name to the active sheet, and export the first worksheet to CSV format. | Show how to rename the active worksheet after loading an SXC workbook and then convert the workbook to a CSV file with Aspose.Cells.
+// Common Searches: C# Aspose.Cells rename active sheet after loading SXC and export to CSV | Convert first worksheet of an SXC workbook to CSV after renaming it using Aspose.Cells .NET | How to change worksheet name in an SXC file before saving as CSV with Aspose.Cells
+// Tags: Aspose.Cells load SXC file | active sheet rename operation Aspose.Cells | worksheet to CSV conversion Aspose.Cells | SaveFormat.Csv parameter usage Aspose.Cells | modify worksheet name prior to CSV export .NET
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to open an OpenDocument Spreadsheet (SXC) using Aspose.Cells, rename the currently active worksheet, and save only that sheet as a CSV file in C#.
+// // Loads an SXC workbook, renames the active worksheet to "RenamedSheet", and saves the first worksheet as a CSV file using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
@@ -17,19 +14,19 @@ class Program
         // Path to the source SXC workbook
         string sourcePath = "input.sxc";
 
-        // Load the workbook from the SXC file
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Get the currently active worksheet and rename it
-        Worksheet activeSheet = workbook.Worksheets[workbook.Worksheets.ActiveSheetIndex];
-        activeSheet.Name = "RenamedSheet";
-
-        // Define the output CSV file path
+        // Path for the exported CSV file
         string csvPath = "output.csv";
 
-        // Save the workbook (the active sheet) as a CSV file
-        workbook.Save(csvPath, SaveFormat.Csv);
+        // Load the SXC workbook from file
+        Workbook workbook = new Workbook(sourcePath);
 
-        Console.WriteLine("Workbook loaded, worksheet renamed, and saved as CSV.");
+        // Get the index of the active worksheet
+        int activeIndex = workbook.Worksheets.ActiveSheetIndex;
+
+        // Rename the active worksheet
+        workbook.Worksheets[activeIndex].Name = "RenamedSheet";
+
+        // Export the workbook (first sheet) to CSV format
+        workbook.Save(csvPath, SaveFormat.Csv);
     }
 }

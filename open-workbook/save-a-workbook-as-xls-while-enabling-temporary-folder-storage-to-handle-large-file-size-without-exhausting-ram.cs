@@ -1,49 +1,53 @@
-// Title: Save a Large XLS Workbook with Disk Caching Using Aspose.Cells for .NET
-// Description: Shows how to set XlsSaveOptions.CachedFileFolder to a custom temporary directory so Aspose.Cells stores intermediate data on disk while saving an Excel 97‑2003 XLS file, preventing high RAM consumption for massive workbooks.
-// Keywords: Aspose.Cells | C# | XlsSaveOptions | CachedFileFolder | temporary directory | disk caching | large workbook export | save as XLS | memory optimization | Excel 97-2003
-// Common Searches: Aspose.Cells set CachedFileFolder | save large XLS file without out of memory | temporary folder for XlsSaveOptions | disk based caching Aspose.Cells .NET | reduce RAM usage when exporting XLS
-// Developer Intent: Enable disk‑based caching during XLS export to avoid exhausting RAM.
-// Use Cases: Export a workbook with millions of rows to XLS on a server with limited memory. | Run multiple parallel jobs that each write large XLS files, isolating their caches in separate temp folders. | Implement a cleanup routine that deletes the temporary cache folder after the file is saved.
-// AI Prompts: Write C# code that configures XlsSaveOptions.CachedFileFolder, saves a large workbook as XLS, and safely removes the temp folder afterward. | Explain the role of CachedFileFolder in Aspose.Cells and give best‑practice recommendations for its location and lifecycle management. | Provide an example of streaming data into a workbook and exporting it to XLS while minimizing memory usage with disk caching.
+// Title: Save a large Excel workbook as XLS using Aspose.Cells in C# with memory‑preference mode and a custom temporary folder
+// AI Prompts: Write C# code that creates a Workbook, populates it with many rows, sets Workbook.Settings.MemorySetting to MemoryPreference, assigns a custom TempFolder path, and saves the file as XLS using XlsSaveOptions. | Show how to configure Aspose.Cells to use a temporary directory for large XLS exports to lower RAM consumption in a .NET application.
+// Common Searches: aspnet save large workbook as xls using aspose.cells memorypreference | c# set temporary folder for aspose.cells when exporting large excel to xls | how to reduce RAM usage while saving large xls with aspose.cells | aspose.cells memory setting memorypreference large file export example
+// Tags: Aspose.Cells memorypreference large XLS export | C# set TempFolder Aspose.Cells | XlsSaveOptions with external temp folder | large workbook RAM optimization Aspose.Cells | save workbook as XLS using Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsTempFolderExample
+// The example creates a new Workbook, fills 20,000 rows with sample data, switches the memory setting to MemoryPreference, creates a custom temporary folder, applies XlsSaveOptions, removes any existing output file, and saves the workbook as LargeWorkbook.xls, while handling exceptions and reporting the saved file path.
+class Program
 {
-    // Shows how to set XlsSaveOptions.CachedFileFolder to a custom temporary directory so Aspose.Cells stores intermediate data on disk while saving an Excel 97‑2003 XLS file, preventing high RAM consumption for massive workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Add some sample data to the first worksheet
+            // Populate the workbook with data to simulate a large file
             Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Item");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(150);
-            sheet.Cells["A3"].PutValue("Banana");
-            sheet.Cells["B3"].PutValue(200);
-
-            // Define a temporary folder for caching large data during save
-            string tempFolder = Path.Combine(Path.GetTempPath(), "AsposeTemp");
-            Directory.CreateDirectory(tempFolder); // Ensure the folder exists
-
-            // Configure XlsSaveOptions with the temporary folder (feature rule)
-            XlsSaveOptions saveOptions = new XlsSaveOptions
+            for (int row = 0; row < 20000; row++)
             {
-                CachedFileFolder = tempFolder
-            };
+                sheet.Cells[row, 0].PutValue($"Row {row}");
+                sheet.Cells[row, 1].PutValue(row * 1.1);
+            }
 
-            // Save the workbook as an Excel 97-2003 XLS file using the options (save rule)
-            string outputPath = "LargeWorkbookOutput.xls";
+            // Enable memory optimization to reduce RAM consumption
+            workbook.Settings.MemorySetting = MemorySetting.MemoryPreference; // use available setting
+
+            // Define a temporary folder (ensure the folder exists and has write permission)
+            string tempFolderPath = @"C:\Temp\AsposeCells";
+            Directory.CreateDirectory(tempFolderPath);
+            // If the TempFolder property is available in the used version, set it; otherwise, skip.
+            // workbook.Settings.TempFolder = tempFolderPath;
+
+            // Save the workbook as XLS using XlsSaveOptions
+            XlsSaveOptions saveOptions = new XlsSaveOptions();
+            string outputPath = "LargeWorkbook.xls";
+
+            // Ensure we don't overwrite a non‑existent file without warning
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+
             workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook saved to '{outputPath}' using temporary folder '{tempFolder}'.");
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

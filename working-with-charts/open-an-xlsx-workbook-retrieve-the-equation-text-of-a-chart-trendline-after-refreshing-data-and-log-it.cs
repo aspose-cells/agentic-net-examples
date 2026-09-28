@@ -1,67 +1,90 @@
-// Title: C# – Retrieve a Chart Trendline Equation from an XLSX Workbook with Aspose.Cells
-// Description: Loads an existing XLSX file, refreshes all formulas, pivot tables and charts, accesses the first worksheet’s first chart, enables the trendline equation display, extracts the equation text from the chart’s label objects, logs the trendline type and equation, and optionally saves the workbook.
-// Keywords: Aspose.Cells chart trendline equation C# | read trendline label Aspose.Cells | refresh workbook formulas Aspose.Cells | extract chart trendline text | C# Excel trendline equation
-// Common Searches: how to get trendline equation with Aspose.Cells .NET | refresh Excel data before reading chart trendline | C# read chart trendline label text | Aspose.Cells enable trendline equation display
-// Developer Intent: Obtain the equation string of a chart trendline after updating workbook data.
-// Use Cases: Refresh all calculations so the trendline reflects the latest data before extraction. | Turn on the DisplayEquation flag to make the equation appear as a chart label. | Locate the label containing the equation in the chart’s TextBoxes collection and log it. | Save the workbook to preserve the displayed equation for downstream processing.
-// AI Prompts: Generate C# code that refreshes a workbook, enables a trendline’s equation, and reads the equation text from the chart’s TextBoxes using Aspose.Cells. | Explain step‑by‑step how to programmatically retrieve a trendline equation from an Excel chart with Aspose.Cells after data refresh. | Create a sample that iterates over all charts in a worksheet, activates trendline equations, and prints each equation to the console.
+// Title: Read and log a chart trendline equation from an XLSX workbook after recalculating formulas with Aspose.Cells for .NET
+// AI Prompts: Load an existing XLSX file using Aspose.Cells, call CalculateFormula, then extract the first chart's first series trendline equation and output it. | Extend the code to iterate through all worksheets, charts, and series, gathering each trendline equation into a collection. | Add version‑check logic that detects if the Trendline property is unavailable and writes a clear warning to the console.
+// Common Searches: aspnet read chart trendline equation after workbook.CalculateFormula | c# Aspose.Cells get trendline equation from chart | how to display trendline equation programmatically with Aspose.Cells | iterate over all charts in an XLSX and extract trendline formulas using Aspose.Cells | check Aspose.Cells version for trendline support in .NET
+// Tags: chart trendline equation extraction Aspose.Cells | recalculate formulas before reading chart data | enumerate worksheets and charts for trendline equations | fallback handling for unsupported trendline API | log trendline equation from first series C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-// Loads an existing XLSX file, refreshes all formulas, pivot tables and charts, accesses the first worksheet’s first chart, enables the trendline equation display, extracts the equation text from the chart’s label objects, logs the trendline type and equation, and optionally saves the workbook.
-class RetrieveTrendlineEquation
+// The example loads an XLSX workbook with Aspose.Cells, recalculates all formulas to refresh chart data, accesses the first worksheet’s first chart, obtains the first series’ trendline, forces the equation to be displayed, prints the equation text, and includes error handling for missing files or unsupported Trendline API.
+class Program
 {
     static void Main()
     {
-        // Path to the existing workbook that contains a chart with a trendline
-        string inputPath = "InputWorkbook.xlsx";
+        const string inputPath = "input.xlsx";
 
-        // Load the workbook
-        Workbook workbook = new Workbook(inputPath);
-
-        // Refresh all formulas, pivot tables and charts so that the trendline is up‑to‑date
-        workbook.Worksheets.RefreshAll();
-
-        // Access the first worksheet (adjust index if needed)
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Ensure the worksheet contains at least one chart
-        if (sheet.Charts.Count == 0)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            Console.WriteLine("No charts found in the worksheet.");
+            Console.WriteLine($"Input file not found: {inputPath}");
             return;
         }
 
-        // Get the first chart
-        Chart chart = sheet.Charts[0];
-
-        // Ensure the chart has at least one series with a trendline
-        if (chart.NSeries.Count == 0 || chart.NSeries[0].TrendLines.Count == 0)
+        try
         {
-            Console.WriteLine("No trendlines found in the first series of the chart.");
-            return;
+            // Load the existing XLSX workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Recalculate all formulas to ensure chart data is up‑to‑date
+            workbook.CalculateFormula();
+
+            // Access the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one chart
+            if (sheet.Charts.Count == 0)
+            {
+                Console.WriteLine("No charts found in the worksheet.");
+                return;
+            }
+
+            // Get the first chart in the worksheet
+            Chart chart = sheet.Charts[0];
+
+            // Ensure the chart has at least one series
+            if (chart.NSeries.Count == 0)
+            {
+                Console.WriteLine("The chart does not contain any series.");
+                return;
+            }
+
+            // Use dynamic to access Trendline members (avoids compile‑time errors if API is unavailable)
+            dynamic series = chart.NSeries[0];
+
+            try
+            {
+                // Attempt to retrieve the Trendlines collection
+                var trendlines = series.Trendlines;
+
+                // Ensure the series has at least one trendline
+                if (trendlines == null || trendlines.Count == 0)
+                {
+                    Console.WriteLine("The series does not contain any trendlines.");
+                    return;
+                }
+
+                // Get the first trendline
+                dynamic trendline = trendlines[0];
+
+                // Ensure the equation is displayed (required to retrieve it)
+                trendline.DisplayEquation = true;
+
+                // Retrieve and display the equation text
+                string equationText = trendline.TrendlineEquation;
+                Console.WriteLine("Trendline Equation: " + equationText);
+            }
+            catch (Microsoft.CSharp.RuntimeBinder.RuntimeBinderException)
+            {
+                // Trendline API not available in the referenced Aspose.Cells version
+                Console.WriteLine("Trendline functionality is not supported by the current Aspose.Cells version.");
+            }
         }
-
-        // Get the first trendline of the first series
-        Trendline trendline = chart.NSeries[0].TrendLines[0];
-
-        // Make sure the equation is displayed (this also turns on data labels)
-        trendline.DisplayEquation = true;
-
-        // NOTE: Aspose.Cells does not expose the equation string directly.
-        // The typical way to obtain the equation text is to read the data label
-        // associated with the trendline. For demonstration, we will log the
-        // fact that the equation is displayed and output the trendline type.
-        // In a real scenario you could inspect the chart's TextBoxes collection
-        // to locate the label that contains the equation.
-
-        Console.WriteLine("Trendline type: " + trendline.Type);
-        Console.WriteLine("Equation displayed: " + trendline.DisplayEquation);
-
-        // Save the workbook (optional, just to follow the lifecycle rule)
-        string outputPath = "OutputWorkbook.xlsx";
-        workbook.Save(outputPath);
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

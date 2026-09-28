@@ -1,10 +1,7 @@
-// Title: Save a Workbook with a Customized Column Chart to XLSX using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, populate quarterly sales data, add a column chart, customize its title and legend, and save the file as an XLSX document with Aspose.Cells for C#.
-// Keywords: Aspose.Cells save XLSX | C# column chart Aspose.Cells | customize chart title legend Aspose.Cells | export chart to Excel .NET | Aspose.Cells workbook with chart
-// Common Searches: Aspose.Cells save workbook with chart to XLSX | C# create column chart and export to Excel | how to set chart title and legend in Aspose.Cells | save Aspose.Cells workbook as .xlsx file | programmatically add and save chart using Aspose.Cells
-// Developer Intent: Save a workbook that contains a customized column chart as an XLSX file.
-// Use Cases: Generate a quarterly sales report with a column chart and distribute it as an Excel file. | Automate the creation of performance charts in a scheduled .NET job and persist them for later editing. | Build a template workbook, inject a chart programmatically, and save it for downstream users.
-// AI Prompts: Write C# code with Aspose.Cells to add a line chart, format axes, and save the workbook as XLSX. | Show how to export a workbook containing multiple charts into separate XLSX files using Aspose.Cells. | Explain the steps to change chart title font size and legend position before saving the workbook with Aspose.Cells.
+// Title: Save a workbook with a customized column chart as an XLSX file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a column chart, sets its title, and saves the workbook to an XLSX file with Aspose.Cells. | Write a .NET console example that adds sample data, builds a chart, and calls Workbook.Save with SaveFormat.Xlsx. | Show how to export a chart‑enhanced Excel workbook to .xlsx using the Aspose.Cells API.
+// Common Searches: how to save an Aspose.Cells workbook that contains a chart to xlsx in C# | Aspose.Cells example for exporting a column chart to an Excel file | C# code to create a chart and write it to an .xlsx file with Aspose.Cells
+// Tags: Aspose.Cells save workbook with chart to XLSX | C# create column chart Aspose.Cells | Workbook.Save using SaveFormat.Xlsx Aspose.Cells | set chart title Aspose.Cells C# | export chart‑enhanced Excel file .NET
 
 using System;
 using Aspose.Cells;
@@ -12,42 +9,38 @@ using Aspose.Cells.Charts;
 
 namespace AsposeCellsChartSaveDemo
 {
-    // Demonstrates how to create a workbook, populate quarterly sales data, add a column chart, customize its title and legend, and save the file as an XLSX document with Aspose.Cells for C#.
-    public class Program
+    // Demonstrates creating a new workbook, adding sample data, inserting a column chart with a title, and saving the file as CustomizedChart.xlsx (XLSX) using Aspose.Cells for .NET.
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Create a new workbook
+            // Initialize a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate sample data for the chart
-            worksheet.Cells["A1"].PutValue("Category");
-            worksheet.Cells["A2"].PutValue("Q1");
-            worksheet.Cells["A3"].PutValue("Q2");
-            worksheet.Cells["A4"].PutValue("Q3");
-            worksheet.Cells["A5"].PutValue("Q4");
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["A3"].PutValue("Bananas");
+            sheet.Cells["A4"].PutValue("Cherries");
 
-            worksheet.Cells["B1"].PutValue("Sales");
-            worksheet.Cells["B2"].PutValue(120);
-            worksheet.Cells["B3"].PutValue(150);
-            worksheet.Cells["B4"].PutValue(180);
-            worksheet.Cells["B5"].PutValue(200);
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["B3"].PutValue(45);
+            sheet.Cells["B4"].PutValue(25);
 
             // Add a column chart to the worksheet
-            int chartIndex = worksheet.Charts.Add(ChartType.Column, 7, 0, 20, 10);
-            Chart chart = worksheet.Charts[chartIndex];
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 6, 0, 20, 10);
+            Chart chart = sheet.Charts[chartIndex];
 
-            // Set the data source for the chart
-            chart.NSeries.Add("B2:B5", true);               // Values
-            chart.NSeries.CategoryData = "A2:A5";           // Categories
+            // Set the data range for the chart
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Customize the chart (example: set title and legend position)
-            chart.Title.Text = "Quarterly Sales";
-            chart.Title.Font.Size = 14;
-            chart.Legend.Position = LegendPositionType.Bottom;
+            // Customize the chart (example: set title)
+            chart.Title.Text = "Fruit Sales";
 
             // Save the workbook with the customized chart to XLSX format
             workbook.Save("CustomizedChart.xlsx", SaveFormat.Xlsx);

@@ -1,53 +1,53 @@
-// Title: Export Excel to Compact HTML with Comments using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, add a cell comment, and save it as compact HTML with minimal CSS by enabling ExcludeUnusedStyles, including comments with IsExportComments, and generating separate files via SaveAsSingleFile = false.
-// Keywords: Aspose.Cells HTML export | ExcludeUnusedStyles | IsExportComments | compact HTML output | SaveAsSingleFile false | C# Excel to HTML | cell comments in HTML | Aspose.Cells HtmlSaveOptions
-// Common Searches: Aspose.Cells export HTML with comments C# | How to exclude unused styles when saving Excel as HTML | Generate lightweight HTML from workbook using Aspose.Cells | Save Excel as multiple HTML files Aspose.Cells | Include cell comments in HTML export Aspose.Cells
-// Developer Intent: Produce an HTML representation of a workbook that retains cell comments while stripping unused CSS and avoiding a single‑file bundle.
-// Use Cases: Web preview of spreadsheets with visible comments and reduced file size. | Documentation generation where only necessary styles are embedded. | Creating separate HTML pages per worksheet for modular web deployment.
-// AI Prompts: Show C# code that saves an Aspose.Cells workbook to HTML with ExcludeUnusedStyles and IsExportComments enabled. | Provide an example of exporting Excel to compact multi‑file HTML while preserving cell comments using Aspose.Cells.
+// Title: Convert an Excel workbook to compact HTML with unused styles removed and cell comments included using Aspose.Cells for .NET
+// AI Prompts: Write C# that loads an .xlsx file, enables HtmlSaveOptions.ExcludeUnusedStyles and HtmlSaveOptions.IsExportComments, and saves the workbook as an HTML file. | Update existing Aspose.Cells code to generate a minimal HTML file that keeps cell comments while stripping out any unused CSS styles.
+// Common Searches: how to export Excel comments to HTML with Aspose.Cells .NET | Aspose.Cells HtmlSaveOptions exclude unused styles example | save workbook as compact HTML with comments using Aspose.Cells | reduce HTML file size when converting Excel to HTML Aspose.Cells | C# Aspose.Cells export Excel to HTML without extra CSS
+// Tags: HtmlSaveOptions.ExcludeUnusedStyles usage | export cell comments Aspose.Cells HTML | compact HTML output Excel conversion .NET | remove unused CSS styles Aspose.Cells HTML export | optimize HTML size Aspose.Cells workbook
 
 using System;
-using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, add a cell comment, and save it as compact HTML with minimal CSS by enabling ExcludeUnusedStyles, including comments with IsExportComments, and generating separate files via SaveAsSingleFile = false.
+    // The program loads 'input.xlsx', configures HtmlSaveOptions to exclude unused styles and export cell comments, then saves the workbook as a compact 'output.html' while handling missing files and runtime errors.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add sample data
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
-
-            // Add a comment to cell A1
-            int commentIndex = sheet.Comments.Add("A1");
-            Comment comment = sheet.Comments[commentIndex];
-            comment.Note = "This is a sample comment";
-
-            // Configure HTML save options:
-            // - ExcludeUnusedStyles = true (default) to keep HTML compact
-            // - IsExportComments = true to include comments in the output
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions
+            try
             {
-                ExcludeUnusedStyles = true,
-                IsExportComments = true,
-                // Ensure the output is not saved as a single file (default behavior)
-                SaveAsSingleFile = false
-            };
+                string inputPath = "input.xlsx";
+                string outputPath = "output.html";
 
-            // Save the workbook as HTML
-            string outputPath = "output.html";
-            workbook.Save(outputPath, saveOptions);
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-            Console.WriteLine($"Workbook saved to {outputPath} with compact styles and comments exported.");
+                // Load the workbook from the input file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure HTML save options
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    // Exclude unused styles to reduce file size
+                    ExcludeUnusedStyles = true,
+                    // Export cell comments into the HTML output
+                    IsExportComments = true
+                    // Note: HtmlFormattingOptions property is not available in this version of Aspose.Cells
+                };
+
+                // Save the workbook as a compact HTML file with comments
+                workbook.Save(outputPath, htmlOptions);
+                Console.WriteLine($"Workbook successfully saved to {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

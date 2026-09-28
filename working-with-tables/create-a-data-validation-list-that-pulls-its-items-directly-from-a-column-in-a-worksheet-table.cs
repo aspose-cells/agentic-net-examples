@@ -1,59 +1,80 @@
-// Title: Create a data‑validation drop‑down list from an Excel table column using Aspose.Cells for .NET
-// Description: This example builds a one‑column table (OptionsTable) in a new workbook, defines cell B1 as the validation area, adds a List‑type validation with InCellDropDown enabled, and sets Validation.Formula1 to the structured reference "OptionsTable[Options]" so the drop‑down items are sourced directly from the table column. The workbook is then saved as DataValidationFromTable.xlsx.
-// Keywords: Aspose.Cells data validation | C# Excel drop‑down list | structured reference validation | ListObject validation Aspose | Excel table column data validation .NET | Aspose.Cells ListObject example | create drop‑down from table column
-// Common Searches: Aspose.Cells create data validation list from table column | C# add drop‑down list using structured reference | How to bind Excel validation to ListObject column Aspose | Set in‑cell dropdown from table with Aspose.Cells | Reference table column in Validation.Formula1 C#
-// Developer Intent: Add a drop‑down validation to a cell that pulls its items from a column of an Excel table.
-// Use Cases: Provide users with a selectable list that updates automatically when the table data changes. | Apply the same table‑based validation to multiple cells or an entire range. | Maintain a single source of truth for option values by storing them in a ListObject.
-// AI Prompts: Generate C# code that creates a data‑validation list referencing a ListObject column with Aspose.Cells. | Show how to apply a table‑based drop‑down validation to a range of cells in Aspose.Cells for .NET. | Explain the syntax of a structured reference for Validation.Formula1 in Aspose.Cells.
+// Title: Create a data‑validation drop‑down in a cell that references a ListObject column using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells to define a ListObject table and attach a list‑type validation to cell C2 using the structured reference =ItemsTable[Item]. | Show how to configure Validation properties such as InCellDropDown, ErrorTitle, and ErrorMessage for a table‑based drop‑down list in an Excel workbook.
+// Common Searches: aspnet aspocells add data validation list from table column c# | how to use structured reference for data validation in Aspose.Cells | C# Aspose.Cells create drop down list that reads values from ListObject | Aspose.Cells validation formula referencing worksheet table column | example of adding data validation to a specific cell using Aspose.Cells .NET
+// Tags: Aspose.Cells list validation from ListObject column | C# add data validation list to cell | structured reference formula in Aspose.Cells | Excel table column drop‑down using Aspose.Cells | Aspose.Cells create ListObject table
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-// This example builds a one‑column table (OptionsTable) in a new workbook, defines cell B1 as the validation area, adds a List‑type validation with InCellDropDown enabled, and sets Validation.Formula1 to the structured reference "OptionsTable[Options]" so the drop‑down items are sourced directly from the table column. The workbook is then saved as DataValidationFromTable.xlsx.
-class DataValidationFromTable
+// The example creates a new workbook, defines a one‑column ListObject named ItemsTable, and adds a list‑type data validation to cell C2. The validation uses the structured reference =ItemsTable[Item] to populate the drop‑down, includes an error message, and saves the file as DataValidationFromTable.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Access the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
             // Populate data that will become the table (column A)
-            worksheet.Cells["A1"].PutValue("Options");   // Header
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["A4"].PutValue("Cherry");
-            worksheet.Cells["A5"].PutValue("Date");
+            sheet.Cells["A1"].PutValue("Item");   // Header
+            sheet.Cells["A2"].PutValue("Apple");
+            sheet.Cells["A3"].PutValue("Banana");
+            sheet.Cells["A4"].PutValue("Cherry");
+            sheet.Cells["A5"].PutValue("Date");
 
-            // Add a ListObject (Excel table) that covers the range A1:A5
-            int tableIdx = worksheet.ListObjects.Add("A1", "A5", true);
-            ListObject table = worksheet.ListObjects[tableIdx];
-            table.DisplayName = "OptionsTable"; // Optional: give the table a friendly name
+            // Define a table (ListObject) over the range A1:A5
+            int firstRow = 0;      // zero‑based index for row 1
+            int firstColumn = 0;   // zero‑based index for column A
+            int totalRows = 5;
+            int totalColumns = 1;
+            // hasHeaders = true because the first row contains column name
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstColumn,
+                                                   firstRow + totalRows - 1,
+                                                   firstColumn + totalColumns - 1,
+                                                   true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "ItemsTable";   // Structured table name
+            table.ShowTotals = false;           // No totals row
 
-            // Define the cell (B1) where the drop‑down list will appear
-            CellArea validationArea = new CellArea
+            // Add data‑validation list to cell C2 that pulls values from the table column
+            // Structured reference syntax: =ItemsTable[Item]
+            ValidationCollection validations = sheet.Validations;
+
+            // Define the cell area for C2 (row index 1, column index 2)
+            CellArea area = new CellArea
             {
-                StartRow = 0,      // Row 1 (zero‑based)
-                StartColumn = 1,   // Column B (zero‑based)
-                EndRow = 0,
-                EndColumn = 1
+                StartRow = 1,
+                StartColumn = 2,
+                EndRow = 1,
+                EndColumn = 2
             };
-
-            // Add a validation object to the worksheet for the defined area
-            int validationIdx = worksheet.Validations.Add(validationArea);
-            Validation validation = worksheet.Validations[validationIdx];
-
-            // Configure the validation as a List that references the table column
+            int validationIndex = validations.Add(area);
+            Validation validation = validations[validationIndex];
             validation.Type = ValidationType.List;
+            validation.Formula1 = "=ItemsTable[Item]";   // Reference to the table column
             validation.InCellDropDown = true;
-            // Structured reference to the table column "Options"
-            validation.Formula1 = "OptionsTable[Options]";
+            validation.ShowError = true;
+            validation.ErrorTitle = "Invalid selection";
+            validation.ErrorMessage = "Please select a value from the list.";
+
+            // Ensure output directory exists
+            string outputPath = "DataValidationFromTable.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            workbook.Save("DataValidationFromTable.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {

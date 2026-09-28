@@ -1,63 +1,59 @@
-// Title: C# – Export IFERROR Formulas to a Review Worksheet with Aspose.Cells
-// Description: Loads an Excel workbook, scans a worksheet for cells whose formulas contain the IFERROR function, records each cell address and formula, creates a new sheet named "IFERROR Review", writes the collected data with headers, and saves the updated file.
-// Keywords: Aspose.Cells | C# | IFERROR extraction | export formulas | Excel automation | list cell formulas | review worksheet | error‑handling formulas | cell address lookup | Excel .NET library
-// Common Searches: Aspose.Cells find IFERROR formulas C# | export cells with IFERROR to another sheet | list IFERROR formula addresses using .NET | create review worksheet for error handling formulas | scan workbook for specific function Aspose.Cells
-// Developer Intent: Collect every IFERROR formula from a source sheet and write its address and expression to a new worksheet for review.
-// Use Cases: Audit a workbook to locate all error‑handling formulas before publishing. | Generate a documentation report that shows where IFERROR is used and its exact syntax. | Identify formulas that may require optimization or replacement by summarizing them on a separate sheet. | Prepare a training example that demonstrates error handling across the workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that extracts all IFERROR formulas and writes their addresses and expressions to a new worksheet. | Modify the sample to also include the evaluated result of each IFERROR formula in the review sheet. | Create a reusable method that returns a DataTable of cell addresses and IFERROR formulas for any given worksheet. | Write a script that scans all worksheets in a workbook for IFERROR usage and consolidates the findings into one summary sheet.
+// Title: Export IFERROR formulas from an Excel workbook to a review worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that scans every worksheet, finds cells whose formula contains IFERROR, and writes the sheet name, cell address, and formula to a newly added worksheet called "IFERROR Review". | Update the script to also capture the evaluated result of each IFERROR formula and include it as an additional column in the review sheet.
+// Common Searches: aspnet aspocells find IFERROR formulas in workbook | c# extract cells containing IFERROR using Aspose.Cells | how to list error‑handling formulas from an Excel file with Aspose.Cells .NET | save locations of IFERROR formulas to a new sheet in Aspose.Cells | filter workbook formulas by function name Aspose.Cells C#
+// Tags: extract IFERROR formulas Aspose.Cells | list formula cells by function .NET | create review worksheet Aspose.Cells | export formula metadata to new sheet C# | filter cells with error handling function Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-// Loads an Excel workbook, scans a worksheet for cells whose formulas contain the IFERROR function, records each cell address and formula, creates a new sheet named "IFERROR Review", writes the collected data with headers, and saves the updated file.
+// The program loads an Excel workbook, iterates through all worksheets and cells to locate formulas containing the IFERROR function, records each occurrence's sheet name, cell address, and formula, writes this information to a newly added worksheet named "IFERROR Review", and saves the updated workbook.
 class ExportIfErrorFormulas
 {
     static void Main()
     {
-        // Load the existing workbook
+        // Load the existing workbook (replace with your actual file path)
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Choose the worksheet to scan (here the first one)
-        Worksheet sourceSheet = workbook.Worksheets[0];
-        Cells sourceCells = sourceSheet.Cells;
+        // List to hold information about cells containing IFERROR
+        List<(string SheetName, string CellName, string Formula)> ifErrorCells = new List<(string, string, string)>();
 
-        // Collect addresses and formulas that contain IFERROR
-        List<Tuple<string, string>> ifErrorFormulas = new List<Tuple<string, string>>();
-
-        int maxRow = sourceCells.MaxDataRow;
-        int maxCol = sourceCells.MaxDataColumn;
-
-        for (int row = 0; row <= maxRow; row++)
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Iterate through all cells that have formulas
+            foreach (Cell cell in sheet.Cells)
             {
-                Cell cell = sourceCells[row, col];
-                if (!string.IsNullOrEmpty(cell.Formula) &&
+                if (cell.IsFormula && cell.Formula != null &&
                     cell.Formula.IndexOf("IFERROR", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    // cell.Name returns the address in A1 style
-                    ifErrorFormulas.Add(Tuple.Create(cell.Name, cell.Formula));
+                    // Store sheet name, cell name (e.g., A1), and the formula text
+                    ifErrorCells.Add((sheet.Name, cell.Name, cell.Formula));
                 }
             }
         }
 
         // Add a new worksheet to hold the review list
-        Worksheet reviewSheet = workbook.Worksheets.Add("IFERROR Review");
-        Cells reviewCells = reviewSheet.Cells;
+        int reviewSheetIndex = workbook.Worksheets.Add();
+        Worksheet reviewSheet = workbook.Worksheets[reviewSheetIndex];
+        reviewSheet.Name = "IFERROR Review";
 
-        // Write header
-        reviewCells["A1"].PutValue("Cell Address");
-        reviewCells["B1"].PutValue("Formula");
+        // Write header row
+        reviewSheet.Cells["A1"].PutValue("Worksheet");
+        reviewSheet.Cells["B1"].PutValue("Cell");
+        reviewSheet.Cells["C1"].PutValue("Formula");
 
-        // Write each collected formula
-        for (int i = 0; i < ifErrorFormulas.Count; i++)
+        // Populate the review sheet with collected data
+        int currentRow = 2; // Start after header
+        foreach (var entry in ifErrorCells)
         {
-            reviewCells[i + 1, 0].PutValue(ifErrorFormulas[i].Item1); // Address
-            reviewCells[i + 1, 1].PutValue(ifErrorFormulas[i].Item2); // Formula
+            reviewSheet.Cells[currentRow, 0].PutValue(entry.SheetName);   // Column A
+            reviewSheet.Cells[currentRow, 1].PutValue(entry.CellName);   // Column B
+            reviewSheet.Cells[currentRow, 2].PutValue(entry.Formula);    // Column C
+            currentRow++;
         }
 
-        // Save the workbook with the new worksheet
+        // Save the workbook with the new worksheet (replace with desired output path)
         workbook.Save("output.xlsx");
     }
 }

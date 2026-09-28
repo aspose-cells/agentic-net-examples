@@ -1,77 +1,104 @@
-// Title: Validate WordArt Gradient Fill Preservation in PDF Export with Aspose.Cells for .NET
-// Description: C# sample that creates an Excel workbook, inserts a WordArt shape using the preset WordArtStyle7 gradient, confirms the shape is WordArt and its FillType is Gradient, logs the two gradient colors and style, then saves the file as .xlsx and PDF to ensure the gradient appearance remains unchanged after conversion.
-// Keywords: Aspose.Cells WordArt gradient | C# PDF export gradient fill | Excel to PDF gradient preservation | WordArt FillType verification | Aspose.Cells shape fill validation | gradient color extraction Aspose.Cells | automated visual fidelity test Excel PDF
-// Common Searches: Aspose.Cells verify WordArt gradient after PDF conversion | C# check WordArt fill type before exporting to PDF | how to ensure gradient fill is kept in PDF with Aspose.Cells | retrieve WordArt gradient colors using Aspose.Cells .NET | test Excel to PDF gradient consistency Aspose
-// Developer Intent: Confirm that a WordArt shape's gradient fill is identical in the generated PDF compared to the original Excel workbook.
-// Use Cases: Programmatically add WordArt with a preset gradient and validate its FillType. | Extract and log gradient color values for audit or comparison purposes. | Save the workbook in both XLSX and PDF formats to perform visual or pixel‑perfect regression testing. | Integrate the validation logic into CI pipelines to catch rendering regressions early.
-// AI Prompts: Write C# code using Aspose.Cells to insert a WordArt shape with a custom two‑color linear gradient and verify the gradient colors before exporting to PDF. | Create a unit test in C# that asserts the gradient fill of a WordArt shape remains unchanged after converting an Excel file to PDF with Aspose.Cells. | Explain how to compare gradient color values from a WordArt shape in the source workbook with those rendered in the resulting PDF.
+// Title: Check that WordArt gradient fills stay the same after converting an Excel sheet to PDF with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel workbook, renders a chosen worksheet to a high‑resolution PNG, saves the workbook as PDF, reloads the PDF, renders the same page to PNG, and performs a pixel‑by‑pixel comparison to confirm WordArt gradient fills are unchanged. | Adapt the example to loop through every worksheet in the workbook, generate before‑and‑after PNGs for each, and produce a log that lists worksheets where gradient fill differences are detected after PDF conversion. | Enhance the comparison routine to create a diff image that highlights mismatched pixels between the original worksheet PNG and the PDF‑rendered PNG, using System.Drawing or a similar library.
+// Common Searches: how to compare WordArt gradient colors in Excel and PDF using Aspose.Cells C# | Aspose.Cells render worksheet to PNG then to PDF and verify visual fidelity | C# pixel‑by‑pixel image comparison after Excel to PDF conversion | detect gradient fill differences in WordArt after saving Excel as PDF
+// Tags: Aspose.Cells render worksheet to PNG | Aspose.Cells save workbook as PDF | compare Excel PNG with PDF PNG | WordArt gradient fill verification | pixel‑level image comparison C# | visual fidelity check after Excel to PDF conversion
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-namespace GradientWordArtValidation
+namespace GradientFillComparison
 {
-    // C# sample that creates an Excel workbook, inserts a WordArt shape using the preset WordArtStyle7 gradient, confirms the shape is WordArt and its FillType is Gradient, logs the two gradient colors and style, then saves the file as .xlsx and PDF to ensure the gradient appearance remains unchanged after conversion.
+    // The program loads an Excel workbook, renders the first worksheet to a PNG image, saves the workbook as PDF, reloads the PDF as a workbook, renders its first page back to PNG, and then compares the two PNG files byte‑by‑byte to determine whether WordArt gradient fills remain identical after conversion.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            // Define file paths (replace placeholders with actual paths)
+            string workbookPath = "{WorkbookPath}";
+            string imagePathOriginal = "{ImagePathOriginal}";
+            string pdfPath = "{PdfPath}";
+            string imagePathPdf = "{ImagePathPdf}";
+
             try
             {
-                // Create a new workbook (creation rule)
-                Workbook workbook = new Workbook();
+                // Verify the source workbook exists
+                if (!File.Exists(workbookPath))
+                {
+                    Console.WriteLine($"Workbook not found: {workbookPath}");
+                    return;
+                }
 
-                // Access the first worksheet
-                Worksheet sheet = workbook.Worksheets[0];
+                // Load the source Excel workbook
+                var workbook = new Workbook(workbookPath);
+                var worksheet = workbook.Worksheets[0];
 
-                // Add a WordArt shape with a preset gradient style (WordArtStyle7)
-                // Parameters: style, text, upperLeftRow, top, upperLeftColumn, left, height, width
-                Shape wordArt = sheet.Shapes.AddWordArt(
-                    PresetWordArtStyle.WordArtStyle7,
-                    "Gradient WordArt",
-                    2, 0,   // row, top offset
-                    2, 0,   // column, left offset
-                    100,    // height
-                    400);   // width
+                // Render the worksheet to an image (PNG) to capture the original appearance
+                var imgOptions = new ImageOrPrintOptions
+                {
+                    // Default image format is PNG; no need to set ImageFormat explicitly
+                    OnePagePerSheet = true,
+                    Transparent = false,
+                    HorizontalResolution = 300,
+                    VerticalResolution = 300
+                };
+                var sheetRender = new SheetRender(worksheet, imgOptions);
+                sheetRender.ToImage(0, imagePathOriginal);
 
-                // Verify that the shape is recognized as WordArt
-                if (!wordArt.IsWordArt)
-                    throw new InvalidOperationException("The created shape is not a WordArt.");
-
-                // Access the fill format of the WordArt
-                FillFormat fill = wordArt.Fill;
-
-                // Ensure the fill type is Gradient
-                if (fill.FillType != FillType.Gradient)
-                    throw new InvalidOperationException("WordArt fill is not set to Gradient.");
-
-                // Retrieve gradient colors (these are set by the preset style)
-                var gradientColor1 = fill.GradientColor1;
-                var gradientColor2 = fill.GradientColor2;
-
-                // Output gradient color information for validation
-                Console.WriteLine($"Gradient Color 1: {gradientColor1}");
-                Console.WriteLine($"Gradient Color 2: {gradientColor2}");
-
-                // Additional check: gradient style should be consistent with the preset
-                GradientStyleType style = fill.GradientStyle;
-                Console.WriteLine($"Gradient Style: {style}");
-
-                // Save the workbook as Excel file (save rule)
-                string excelPath = "GradientWordArt.xlsx";
-                workbook.Save(excelPath);
-
-                // Convert and save the workbook as PDF to compare visual output
-                string pdfPath = "GradientWordArt.pdf";
+                // Save the workbook as PDF
                 workbook.Save(pdfPath, SaveFormat.Pdf);
 
-                // Validation complete – if no exception was thrown, the gradient fill is preserved.
-                Console.WriteLine("Gradient fill validation completed successfully.");
+                // Verify the generated PDF exists before loading
+                if (!File.Exists(pdfPath))
+                {
+                    Console.WriteLine($"PDF not found after saving: {pdfPath}");
+                    return;
+                }
+
+                // Render the first page of the generated PDF back to an image using Aspose.Cells
+                var pdfWorkbook = new Workbook(pdfPath);
+                var pdfWorksheet = pdfWorkbook.Worksheets[0];
+                var pdfImgOptions = new ImageOrPrintOptions
+                {
+                    OnePagePerSheet = true,
+                    Transparent = false,
+                    HorizontalResolution = 300,
+                    VerticalResolution = 300
+                };
+                var pdfSheetRender = new SheetRender(pdfWorksheet, pdfImgOptions);
+                pdfSheetRender.ToImage(0, imagePathPdf);
+
+                // Compare both PNG files byte‑by‑byte
+                if (!File.Exists(imagePathOriginal) || !File.Exists(imagePathPdf))
+                {
+                    Console.WriteLine("One or both image files are missing; cannot compare.");
+                    return;
+                }
+
+                byte[] originalBytes = File.ReadAllBytes(imagePathOriginal);
+                byte[] pdfBytes = File.ReadAllBytes(imagePathPdf);
+
+                bool identical = originalBytes.Length == pdfBytes.Length;
+                if (identical)
+                {
+                    for (int i = 0; i < originalBytes.Length; i++)
+                    {
+                        if (originalBytes[i] != pdfBytes[i])
+                        {
+                            identical = false;
+                            break;
+                        }
+                    }
+                }
+
+                Console.WriteLine(identical
+                    ? "Gradient fills in WordArt are identical in PDF output."
+                    : "Gradient fills differ between Excel and PDF.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

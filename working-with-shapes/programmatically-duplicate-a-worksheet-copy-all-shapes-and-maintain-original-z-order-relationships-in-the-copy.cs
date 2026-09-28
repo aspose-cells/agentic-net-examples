@@ -1,40 +1,23 @@
-// Title: Copy a worksheet with all shapes and preserve Z‑order using Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, duplicates a worksheet with AddCopy, iterates through the source sheet's Shapes collection, adds each shape to the new sheet at the same cell coordinates, and copies the original ZOrderPosition to keep the stacking order before saving the file.
-// Keywords: Aspose.Cells | C# | .NET | duplicate worksheet | copy worksheet with shapes | preserve Z‑order | AddCopy | Shape ZOrderPosition | Excel drawing objects | Workbook example
-// Common Searches: Aspose.Cells copy worksheet with shapes | preserve shape Z‑order when duplicating Excel sheet | C# duplicate sheet and keep drawing order Aspose.Cells | AddCopy shapes ZOrderPosition example | how to clone a worksheet with charts and images in Aspose.Cells
-// Developer Intent: Create an exact copy of a worksheet that includes every shape and retains the original layering order.
-// Use Cases: Generate client‑specific reports by cloning a template sheet that contains positioned charts and logos. | Automate monthly dashboards where the visual hierarchy of graphics must stay unchanged across copies. | Back up complex worksheets with layered images, text boxes, and charts without losing their Z‑order.
-// AI Prompts: Show C# code to duplicate an Excel worksheet with all shapes while keeping Z‑order using Aspose.Cells. | Explain how to copy shapes and preserve their ZOrderPosition after worksheet duplication in Aspose.Cells for .NET. | Provide a step‑by‑step guide to verify that shape stacking order is identical in the original and copied sheets.
+// Title: How to duplicate an Excel worksheet with all shapes and keep their Z‑order using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells Worksheet.Copy to create a copy of 'Sheet1' named 'Sheet1_Copy' while retaining the original Z‑order of every shape. | Programmatically clone a worksheet in C# so that cells, formats, and shape layering are identical to the source sheet. | Generate a new worksheet that mirrors an existing one and preserves drawing order of embedded shapes when saving the workbook with Aspose.Cells.
+// Common Searches: Aspose.Cells copy worksheet with shapes preserving Z order C# | duplicate Excel sheet and keep shape layering using .NET library | clone worksheet including drawings and maintain Z‑order Aspose.Cells | Worksheet.Copy retains shape order example Aspose.Cells
+// Tags: Worksheet.Copy preserving shape Z-order | duplicate worksheet with drawings Aspose.Cells | clone Excel sheet maintaining shape layering C# | copy sheet including shapes Aspose.Cells .NET | preserve drawing order when copying worksheet
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The example loads source.xlsx, uses Worksheet.Copy to duplicate the 'Sheet1' worksheet into a new sheet named 'Sheet1_Copy', preserving cells, formats, and all shapes with their original Z‑order, and then saves the workbook as output.xlsx.
+class Program
 {
-    // Loads a workbook, duplicates a worksheet with AddCopy, iterates through the source sheet's Shapes collection, adds each shape to the new sheet at the same cell coordinates, and copies the original ZOrderPosition to keep the stacking order before saving the file.
-    public class WorksheetDuplicateWithShapes
+    static void Main()
     {
-        // Entry point required by the project
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+            string sourcePath = "source.xlsx";
+            string outputPath = "output.xlsx";
 
-        public static void Run()
-        {
-            const string sourcePath = "SourceWorkbook.xlsx";
-            const string outputPath = "WorkbookWithDuplicatedSheet.xlsx";
-
-            // Verify that the source workbook exists
+            // Ensure the source file exists
             if (!File.Exists(sourcePath))
             {
                 Console.WriteLine($"Source file not found: {sourcePath}");
@@ -44,37 +27,27 @@ namespace AsposeCellsExamples
             // Load the source workbook
             Workbook workbook = new Workbook(sourcePath);
 
-            // Get the worksheet to be duplicated
-            Worksheet sourceSheet = workbook.Worksheets["Sheet1"];
-            if (sourceSheet == null)
+            // Get the worksheet to duplicate
+            Worksheet srcSheet = workbook.Worksheets["Sheet1"];
+            if (srcSheet == null)
             {
                 Console.WriteLine("Worksheet 'Sheet1' not found.");
                 return;
             }
 
-            // Duplicate the worksheet (copies cells, formats, and drawing objects)
-            int copiedIndex = workbook.Worksheets.AddCopy(sourceSheet.Name);
-            Worksheet copiedSheet = workbook.Worksheets[copiedIndex];
-            copiedSheet.Name = sourceSheet.Name + "_Copy";
+            // Add a new worksheet for the copy
+            Worksheet destSheet = workbook.Worksheets.Add("Sheet1_Copy");
 
-            // Copy each shape preserving its Z‑order
-            foreach (Shape srcShape in sourceSheet.Shapes)
-            {
-                // Add a copy of the shape to the new worksheet at the same position
-                Shape newShape = copiedSheet.Shapes.AddCopy(
-                    srcShape,
-                    srcShape.UpperLeftRow,
-                    srcShape.UpperLeftColumn,
-                    srcShape.Height,
-                    srcShape.Width);
+            // Copy the entire sheet (cells, formats, shapes, etc.) preserving Z‑order
+            srcSheet.Copy(destSheet);
 
-                // Preserve the original Z‑order position
-                newShape.ZOrderPosition = srcShape.ZOrderPosition;
-            }
-
-            // Save the workbook with the duplicated sheet
+            // Save the workbook with the duplicated worksheet
             workbook.Save(outputPath);
             Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

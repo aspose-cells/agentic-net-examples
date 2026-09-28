@@ -1,98 +1,75 @@
-// Title: Aspose.Cells for .NET – Add and customize data labels on a Stock Open‑High‑Low‑Close chart
-// Description: C# example that creates a workbook, fills it with OHLC data, inserts a StockOpenHighLowClose chart, enables data labels, positions them above each point, and replaces the default label with a custom text showing the high and low values (e.g., "H:120 L:80"). The workbook is saved as an XLSX file.
-// Keywords: Aspose.Cells | C# stock chart | Open‑High‑Low‑Close chart | custom data labels | show high low values | data label position above points | Excel chart labeling | .NET chart series formatting | financial chart automation
-// Common Searches: Aspose.Cells display high low values on stock chart | C# add data labels to StockOpenHighLowClose chart | customize stock chart labels Aspose.Cells .NET | set data label position above points Aspose.Cells | replace default label with custom text in Aspose.Cells chart
-// Developer Intent: Create a stock chart and configure its series to show a custom label that combines the high and low values for each data point.
-// Use Cases: Generate financial reports with OHLC data where each point on a stock chart displays "H:{high} L:{low}" for quick visual analysis. | Update an existing Excel workbook programmatically to improve readability of stock charts by adding concise high/low labels. | Automate Excel chart creation for trading dashboards, positioning labels above points to avoid overlap with the chart grid.
-// AI Prompts: Write C# code using Aspose.Cells to insert a StockOpenHighLowClose chart and set data labels that show "H:{high} L:{low}" for each point. | Show how to loop through series points in an Aspose.Cells stock chart and assign a custom label while hiding the default value. | Explain how to change the data label position to above the points for a stock chart series in Aspose.Cells for .NET.
+// Title: How to enable data labels showing high and low values on a Stock Open‑High‑Low‑Close chart with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a StockOpenHighLowClose chart from worksheet data and turn on data labels that display the high and low values for each point using Aspose.Cells in C#. | Configure the Series.DataLabels.ShowValue property to true for a stock chart series so the Excel file created with Aspose.Cells shows value labels.
+// Common Searches: Aspose.Cells C# add data labels to stock chart high low values | show high and low values on StockOpenHighLowClose chart using Aspose.Cells | enable value labels for OHLC chart in .NET Excel library | C# Aspose.Cells series data labels ShowValue example | how to display high low labels on Excel stock chart programmatically
+// Tags: Aspose.Cells StockOpenHighLowClose data labels | Series.DataLabels.ShowValue C# | Excel stock chart value labels Aspose.Cells | C# generate OHLC chart with Aspose.Cells | enable high low labels in Excel chart .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, fills it with sample stock data, adds a StockOpenHighLowClose chart referencing the Open, High, Low, and Close columns, enables data labels by setting Series.DataLabels.ShowValue to true, and saves the workbook as an Excel file.
+class Program
 {
-    // C# example that creates a workbook, fills it with OHLC data, inserts a StockOpenHighLowClose chart, enables data labels, positions them above each point, and replaces the default label with a custom text showing the high and low values (e.g., "H:120 L:80"). The workbook is saved as an XLSX file.
-    public class StockChartDataLabelsDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for a stock chart
-            // Column A: Date (category)
-            // Column B: High values
-            // Column C: Low values
-            // Column D: Open values
-            // Column E: Close values
+            // Get the first worksheet and name it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Fill header row
             sheet.Cells["A1"].PutValue("Date");
-            sheet.Cells["B1"].PutValue("High");
-            sheet.Cells["C1"].PutValue("Low");
-            sheet.Cells["D1"].PutValue("Open");
+            sheet.Cells["B1"].PutValue("Open");
+            sheet.Cells["C1"].PutValue("High");
+            sheet.Cells["D1"].PutValue("Low");
             sheet.Cells["E1"].PutValue("Close");
 
-            sheet.Cells["A2"].PutValue("Jan");
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["C2"].PutValue(80);
-            sheet.Cells["D2"].PutValue(100);
-            sheet.Cells["E2"].PutValue(110);
-
-            sheet.Cells["A3"].PutValue("Feb");
-            sheet.Cells["B3"].PutValue(130);
-            sheet.Cells["C3"].PutValue(85);
-            sheet.Cells["D3"].PutValue(115);
-            sheet.Cells["E3"].PutValue(120);
-
-            sheet.Cells["A4"].PutValue("Mar");
-            sheet.Cells["B4"].PutValue(125);
-            sheet.Cells["C4"].PutValue(90);
-            sheet.Cells["D4"].PutValue(110);
-            sheet.Cells["E4"].PutValue(115);
-
-            // Add a stock chart (Open‑High‑Low‑Close)
-            int chartIndex = sheet.Charts.Add(ChartType.StockOpenHighLowClose, 6, 0, 20, 15);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the data range for the stock series (Open, High, Low, Close)
-            chart.NSeries.Add("B2:E4", true);
-            // Set category (X‑axis) data – the dates
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Access the first (and only) series
-            Series series = chart.NSeries[0];
-
-            // Enable data labels for the series
-            series.DataLabels.ShowValue = true; // Show the numeric values
-            series.DataLabels.Position = LabelPositionType.Above; // Position labels above the points
-
-            // Customize each point's label to show High and Low values
-            for (int i = 0; i < series.Points.Count; i++)
+            // Populate sample stock data
+            DateTime startDate = new DateTime(2023, 1, 1);
+            for (int i = 0; i < 5; i++)
             {
-                // Retrieve High and Low values for the current point
-                double high = sheet.Cells[i + 1, 1].DoubleValue; // B column (High)
-                double low = sheet.Cells[i + 1, 2].DoubleValue;  // C column (Low)
+                sheet.Cells[i + 1, 0].PutValue(startDate.AddDays(i)); // Date
+                sheet.Cells[i + 1, 1].PutValue(100 + i * 2);          // Open
+                sheet.Cells[i + 1, 2].PutValue(105 + i * 2);          // High
+                sheet.Cells[i + 1, 3].PutValue(95 + i * 2);           // Low
+                sheet.Cells[i + 1, 4].PutValue(102 + i * 2);          // Close
+            }
 
-                // Compose custom label text
-                series.Points[i].DataLabels.Text = $"H:{high} L:{low}";
-                series.Points[i].DataLabels.ShowValue = false; // Hide default value, use custom text
+            // Add a Stock chart (Open-High-Low-Close) to the worksheet
+            int chartIndex = sheet.Charts.Add(ChartType.StockOpenHighLowClose, 7, 0, 25, 10);
+            Chart chart = sheet.Charts[chartIndex];
+            chart.Title.Text = "Sample Stock Chart";
+
+            // Add a series that uses Open, High, Low, Close columns
+            int seriesIndex = chart.NSeries.Add("Data!$B$2:$E$6", true);
+            Series series = chart.NSeries[seriesIndex];
+
+            // Enable data labels (show values)
+            // Note: In recent Aspose.Cells versions, setting ShowValue is sufficient.
+            series.DataLabels.ShowValue = true; // Shows the data values (high/low for stock chart)
+
+            // Define output file path
+            string outputPath = "StockChartWithDataLabels.xlsx";
+
+            // Ensure the directory exists before saving (if a directory is specified)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
             }
 
             // Save the workbook
-            workbook.Save("StockChartDataLabelsDemo.xlsx", SaveFormat.Xlsx);
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

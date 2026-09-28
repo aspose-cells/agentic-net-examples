@@ -1,49 +1,37 @@
-// Title: Set Landscape Page Orientation and Freeze Header Row with Aspose.Cells for .NET
-// Description: Creates a new workbook, switches the first worksheet to landscape mode, freezes the top row, repeats that header on every printed page, adds sample data, and saves the file as CustomOrientation_FreezeHeader.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | page orientation | landscape orientation | freeze panes | freeze header row | print title rows | worksheet layout | Excel export
-// Common Searches: Aspose.Cells set landscape orientation C# | How to freeze the first row in Aspose.Cells | Repeat header row on each printed page Aspose.Cells | Freeze panes and set page orientation Aspose.Cells .NET
-// Developer Intent: Apply a landscape orientation to a worksheet, freeze the first row, and ensure the header repeats on every printed page.
-// Use Cases: Printable reports where the column headings must stay visible while scrolling and appear on each page. | Presentation‑ready spreadsheets that require a landscape layout with a persistent header for quick reference. | Invoices or statements that span multiple pages and need the title row repeated on every sheet.
-// AI Prompts: Generate Aspose.Cells code to set portrait orientation, freeze the first two rows, and repeat them on printed pages. | Show how to configure custom margins, page orientation, and repeat both title rows and columns using Aspose.Cells for .NET. | Explain the FreezePanes parameters in Aspose.Cells with examples for freezing rows, columns, or a combination of both.
+// Title: Set worksheet to landscape orientation and freeze the top header row using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that creates a workbook, sets the first worksheet to landscape page orientation, freezes the first row, and saves the file as .xlsx. | Write a C# snippet that applies a custom page layout (landscape) to a worksheet, then locks the header row with FreezePanes before exporting the workbook.
+// Common Searches: Aspose.Cells C# set worksheet page orientation to landscape and freeze header row | how to freeze top row after changing page setup with Aspose.Cells .NET | C# example for landscape orientation and frozen panes using Aspose.Cells
+// Tags: Aspose.Cells set worksheet landscape orientation | Aspose.Cells freeze first row panes | Aspose.Cells page setup orientation C# | Aspose.Cells freeze panes header row .NET | Aspose.Cells export workbook to xlsx custom layout
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, switches the first worksheet to landscape mode, freezes the top row, repeats that header on every printed page, adds sample data, and saves the file as CustomOrientation_FreezeHeader.xlsx.
+// Creates a new workbook, changes the first worksheet to landscape orientation, freezes the first row, and saves the result as Output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // -------------------------------------------------
-        // Set a custom page orientation (Landscape)
-        // -------------------------------------------------
-        worksheet.PageSetup.Orientation = PageOrientationType.Landscape;
-
-        // -------------------------------------------------
-        // Freeze the header row (first row) so it stays visible
-        // -------------------------------------------------
-        // Freeze panes at cell A2: this freezes the first row (row index 1)
-        worksheet.FreezePanes("A2", 1, 0);
-
-        // Also repeat the header row on each printed page
-        worksheet.PageSetup.PrintTitleRows = "$1:$1";
-
-        // -------------------------------------------------
-        // Add some sample data to demonstrate the effect
-        // -------------------------------------------------
-        worksheet.Cells["A1"].PutValue("Header");
-        for (int i = 2; i <= 30; i++)
+        try
         {
-            worksheet.Cells[$"A{i}"].PutValue($"Data row {i - 1}");
-        }
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Save the workbook
-        workbook.Save("CustomOrientation_FreezeHeader.xlsx");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Set custom page orientation (Landscape)
+            sheet.PageSetup.Orientation = PageOrientationType.Landscape;
+
+            // Freeze the header row (first row)
+            // FreezePanes(row, column, totalRows, totalColumns) freezes rows above and columns left of the specified cell.
+            sheet.FreezePanes(1, 0, 1, 0); // Freeze first row
+
+            // Save the workbook
+            workbook.Save("Output.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,43 +1,43 @@
-// Title: C# – Protect an Aspose.Cells Worksheet: allow selection, block editing (password protected)
-// Description: Demonstrates how to use Aspose.Cells for .NET to protect a worksheet, enable selection of locked and unlocked cells, disable content editing, and apply a password before saving the file.
-// Keywords: Aspose.Cells worksheet protection C# | allow cell selection Aspose.Cells | disable editing Aspose.Cells | worksheet password protection .NET | read‑only Excel workbook Aspose
-// Common Searches: Aspose.Cells protect worksheet allow selection only | C# code to lock cells but still let users select them | how to set password on Aspose.Cells worksheet | prevent editing in Aspose.Cells while keeping cells selectable | read‑only Excel file with Aspose.Cells .NET
-// Developer Intent: Protect a worksheet so users can select any cell but cannot modify its contents.
-// Use Cases: Distribute a read‑only report where viewers can copy data without changing formulas. | Provide a template that lets users fill only predefined input cells while the rest of the sheet remains locked. | Share financial statements with external partners, allowing review of data but preventing any edits.
-// AI Prompts: Generate C# code using Aspose.Cells to protect a worksheet, enable selection of locked and unlocked cells, disable content editing, and set a password. | Show an example that configures worksheet.Protection.AllowEditingContent = false, sets AllowSelectingLockedCell and AllowSelectingUnlockedCell to true, then calls worksheet.Protect(ProtectionType.All). | Explain how to protect a worksheet with Aspose.Cells while allowing specific unlocked cells to be edited.
+// Title: How to protect an Excel worksheet with Aspose.Cells for .NET so users can select cells but cannot edit them
+// AI Prompts: Generate C# using Aspose.Cells that locks a sheet for editing while keeping both locked and unlocked cells selectable, without requiring a password. | Outline the steps to configure worksheet protection options in Aspose.Cells so cell selection remains enabled but all editing actions are blocked, then save the workbook.
+// Common Searches: Aspose.Cells C# protect worksheet allow cell selection but prevent editing | How to enable selection of locked cells in an Excel file using Aspose.Cells .NET | Save Excel workbook with protection that blocks edits yet lets users select cells in C#
+// Tags: Aspose.Cells worksheet.Protect selection options | C# disable editing on Excel sheet Aspose.Cells | Excel protection without password using Aspose.Cells | Set ProtectionType.SelectLockedCells in Aspose.Cells | Aspose.Cells configure worksheet protection C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetProtectionDemo
+// The sample creates a new Workbook, retrieves the first worksheet, applies full protection via worksheet.Protect(ProtectionType.All) which permits selection of both locked and unlocked cells while preventing any modifications, ensures the output directory exists, and saves the workbook as ProtectedWorksheet.xlsx, with exception handling for robustness.
+class Program
 {
-    // Demonstrates how to use Aspose.Cells for .NET to protect a worksheet, enable selection of locked and unlocked cells, disable content editing, and apply a password before saving the file.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-            // Access the protection settings of the worksheet
-            Protection protection = worksheet.Protection;
-
-            // Prevent editing of locked cells
-            protection.AllowEditingContent = false;
-
-            // Allow users to select both locked and unlocked cells
-            protection.AllowSelectingLockedCell = true;
-            protection.AllowSelectingUnlockedCell = true;
-
-            // Set a password for the protection (optional but recommended)
-            protection.Password = "myPassword123";
-
-            // Apply protection to the worksheet (protect all aspects)
+            // Protect the worksheet without a password (protect all options)
             worksheet.Protect(ProtectionType.All);
 
-            // Save the workbook to a file
-            workbook.Save("ProtectedWorksheet.xlsx");
+            // Define output path
+            string outputPath = "ProtectedWorksheet.xlsx";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the protected workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

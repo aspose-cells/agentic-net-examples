@@ -1,64 +1,90 @@
-// Title: C# – List Excel worksheets that use Light1 (Background1) theme background with Aspose.Cells
-// Description: Load a workbook, scan each worksheet’s used cells, detect the Light1 (Background1) theme background via Style.BackgroundThemeColor, and output the names of worksheets that contain at least one such cell.
-// Keywords: Aspose.Cells C# list worksheets | Light1 theme background Excel | Background1 theme color detection | ThemeColorType.Background1 Aspose | scan Excel cells for theme color | retrieve worksheet names by style
-// Common Searches: how to find worksheets with Light1 background using Aspose.Cells | C# code to list sheets that contain Background1 themed cells | search Excel workbook for cells with theme background color | Aspose.Cells detect theme color in cells | list worksheets by cell style Aspose .NET
-// Developer Intent: Return the names of all worksheets that contain at least one cell styled with the Light1 (Background1) theme background.
-// Use Cases: Create an audit report of sheets that need theme‑color cleanup before publishing. | Target further processing (e.g., conditional formatting) only on sheets already using the Light1 background. | Automate documentation of worksheets that rely on the default Background1 theme color.
-// AI Prompts: Generate C# code with Aspose.Cells that enumerates worksheet names containing any cell whose BackgroundThemeColor is ThemeColorType.Background1. | Explain a performance‑optimized method to locate Light1‑themed cells in large Excel files using Aspose.Cells. | Suggest an alternative technique to identify worksheets with Background1 theme cells without iterating every cell individually.
+// Title: List worksheet names that contain cells with the Light1 theme background using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells that returns every worksheet name where at least one cell has BackgroundThemeColor set to Light1. | Create a function that scans the used range of each sheet in a workbook and collects sheet names that contain any Light1‑themed background cells. | Extend the example to also output the cell addresses of Light1 background cells while still providing the list of matching worksheets.
+// Common Searches: asp.net find Excel worksheets with Light1 theme background using Aspose.Cells | c# Aspose.Cells list sheets that contain cells colored Light1 | how to detect Light1 background color in cells across all worksheets with Aspose.Cells | retrieve worksheet names having Light1 theme fill in a .xlsx file using C#
+// Tags: enumerate worksheets by cell background theme Aspose.Cells | search used range for Light1 theme color C# | retrieve sheet names with specific theme background Aspose.Cells | detect Light1 background cells in Excel workbook .NET | filter worksheets based on cell style theme Aspose
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using System.Drawing;
 
-// Load a workbook, scan each worksheet’s used cells, detect the Light1 (Background1) theme background via Style.BackgroundThemeColor, and output the names of worksheets that contain at least one such cell.
-class ListWorksheetsWithLight1Background
+// The program loads an Excel workbook, iterates through each worksheet's used range, checks each cell's BackgroundThemeColor for the value Light1, collects the names of worksheets that contain at least one such cell, and prints the resulting list.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // List to hold worksheet names that contain cells with Light1 (Background1) theme background
-        List<string> worksheetsWithLight1 = new List<string>();
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet worksheet in workbook.Worksheets)
+        try
         {
-            bool containsLight1 = false;
+            const string inputPath = "input.xlsx";
 
-            // Iterate through all used cells in the worksheet
-            foreach (Cell cell in worksheet.Cells)
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Get the style of the current cell
-                Style style = cell.GetStyle();
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-                // Retrieve the background theme color (if any)
-                ThemeColor bgTheme = style.BackgroundThemeColor;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Check if the background theme color is Background1 (Light1)
-                if (bgTheme != null && bgTheme.ColorType == ThemeColorType.Background1)
+            // List to hold names of worksheets that contain cells with Light1 theme background
+            List<string> sheetsWithLight1 = new List<string>();
+
+            // Iterate through each worksheet in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                bool found = false;
+
+                // Get the maximum used row and column to limit the search area
+                int maxRow = sheet.Cells.MaxDataRow;
+                int maxColumn = sheet.Cells.MaxDataColumn;
+
+                // If the sheet is empty, skip it
+                if (maxRow < 0 || maxColumn < 0)
+                    continue;
+
+                // Scan cells within the used range
+                for (int row = 0; row <= maxRow && !found; row++)
                 {
-                    containsLight1 = true;
-                    break; // No need to check further cells in this worksheet
+                    for (int col = 0; col <= maxColumn && !found; col++)
+                    {
+                        try
+                        {
+                            Cell cell = sheet.Cells[row, col];
+                            Style style = cell.GetStyle();
+
+                            // Compare the background theme color name with "Light1"
+                            if (style.BackgroundThemeColor.ToString() == "Light1")
+                            {
+                                found = true;
+                            }
+                        }
+                        catch (Exception exCell)
+                        {
+                            // Log cell-level errors but continue processing
+                            Console.WriteLine($"Warning: Unable to process cell [{row}, {col}] in sheet \"{sheet.Name}\": {exCell.Message}");
+                        }
+                    }
+                }
+
+                // If a matching cell was found, add the worksheet name to the result list
+                if (found)
+                {
+                    sheetsWithLight1.Add(sheet.Name);
                 }
             }
 
-            // If the worksheet contains at least one such cell, add its name to the list
-            if (containsLight1)
+            // Output the worksheet names
+            Console.WriteLine("Worksheets containing cells with Light1 theme background:");
+            foreach (string name in sheetsWithLight1)
             {
-                worksheetsWithLight1.Add(worksheet.Name);
+                Console.WriteLine(name);
             }
         }
-
-        // Output the names of worksheets that meet the criteria
-        Console.WriteLine("Worksheets containing cells with Light1 (Background1) theme background:");
-        foreach (string name in worksheetsWithLight1)
+        catch (Exception ex)
         {
-            Console.WriteLine(name);
+            // Catch any unexpected exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Optionally, save the workbook if any modifications were made
-        workbook.Save("output.xlsx");
     }
 }

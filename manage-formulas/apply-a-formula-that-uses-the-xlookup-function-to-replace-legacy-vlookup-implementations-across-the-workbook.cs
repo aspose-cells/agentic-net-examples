@@ -1,101 +1,88 @@
-// Title: Bulk replace VLOOKUP with XLOOKUP in Excel workbooks using Aspose.Cells for .NET
-// Description: Loads an Excel file (or creates a sample workbook), scans every worksheet for cells that contain the VLOOKUP function, swaps the function name to XLOOKUP while keeping the original arguments, recalculates all formulas, and saves the updated workbook. Demonstrates FindOptions for formula‑only search and shows error handling in C#.
-// Keywords: Aspose.Cells | C# | .NET | XLOOKUP | VLOOKUP | Excel formula conversion | bulk formula update | FindOptions OnlyFormulas | Excel automation | legacy lookup replacement | Excel 365 compatibility | programmatic workbook editing
-// Common Searches: replace VLOOKUP with XLOOKUP using Aspose.Cells | search and modify Excel formulas in .NET | bulk update lookup functions in multiple worksheets | convert legacy VLOOKUP to XLOOKUP programmatically | Aspose.Cells find formulas only option
-// Developer Intent: Programmatically change every VLOOKUP formula in a workbook to an XLOOKUP formula with Aspose.Cells.
-// Use Cases: Modernize legacy spreadsheets before sharing with users of newer Excel versions. | Automate bulk migration of lookup functions across large document libraries. | Ensure accurate calculations after conversion by triggering a full workbook recalculation.
-// AI Prompts: Generate C# code that locates all VLOOKUP formulas in an Excel workbook and replaces them with XLOOKUP using Aspose.Cells. | Create a robust routine that parses VLOOKUP arguments and builds equivalent XLOOKUP syntax, handling optional parameters and errors. | Show an example that builds a sample workbook, inserts a VLOOKUP formula, converts it to XLOOKUP, recalculates, and saves the file.
+// Title: Replace VLOOKUP formulas with XLOOKUP in every worksheet of an Excel file using Aspose.Cells for .NET
+// AI Prompts: Load an .xlsx workbook with Aspose.Cells, loop through all worksheets, find cells that contain VLOOKUP, and rewrite each formula to an XLOOKUP expression in C#. | Use a regular expression to extract the lookup value, table array, and column index from a VLOOKUP formula, build the matching XLOOKUP syntax, and assign it back to the cell via the Aspose.Cells API. | After converting all lookup formulas, save the updated workbook to a new file while preserving the original formatting and data.
+// Common Searches: how to convert VLOOKUP to XLOOKUP programmatically with Aspose.Cells C# | replace legacy lookup formulas in all sheets using Aspose.Cells .NET | regex extract arguments from Excel formula in C# Aspose.Cells example | bulk update Excel formulas across workbook using Aspose.Cells library
+// Tags: Aspose.Cells replace VLOOKUP with XLOOKUP | C# bulk formula transformation Excel workbook | regex parse Excel formula arguments .NET | update cell formulas across worksheets Aspose.Cells | save modified workbook Aspose.Cells .xlsx
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using System.Text.RegularExpressions;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Loads an Excel file (or creates a sample workbook), scans every worksheet for cells that contain the VLOOKUP function, swaps the function name to XLOOKUP while keeping the original arguments, recalculates all formulas, and saves the updated workbook. Demonstrates FindOptions for formula‑only search and shows error handling in C#.
-    public class ReplaceVlookupWithXlookup
+    // The example loads an input .xlsx file, iterates through every worksheet and cell, detects VLOOKUP formulas, extracts their arguments with a regular expression, constructs equivalent XLOOKUP formulas, replaces the original formulas, and saves the workbook to a new file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            string inputPath = "InputWorkbook.xlsx";
+            string outputPath = "OutputWorkbook.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
             try
             {
-                // Input workbook path
-                string inputPath = "LegacyVlookupWorkbook.xlsx";
-
-                // Ensure the input file exists; create a sample workbook if missing
-                if (!File.Exists(inputPath))
-                {
-                    Workbook sampleWb = new Workbook();
-                    Worksheet ws = sampleWb.Worksheets[0];
-                    ws.Name = "SampleSheet";
-
-                    // Add sample data
-                    ws.Cells["A1"].PutValue("Key");
-                    ws.Cells["B1"].PutValue("Value");
-                    ws.Cells["A2"].PutValue("Item1");
-                    ws.Cells["B2"].PutValue(100);
-                    ws.Cells["A3"].PutValue("Item2");
-                    ws.Cells["B3"].PutValue(200);
-
-                    // Add a VLOOKUP formula that will be replaced
-                    ws.Cells["C2"].Formula = "=VLOOKUP(A2,A1:B3,2,FALSE)";
-
-                    sampleWb.Save(inputPath);
-                }
-
-                // Load the existing workbook
+                // Load the workbook
                 Workbook workbook = new Workbook(inputPath);
 
-                // Define find options to search only in formulas and allow partial matches
-                FindOptions findOptions = new FindOptions
-                {
-                    LookInType = LookInType.OnlyFormulas,
-                    LookAtType = LookAtType.Contains
-                };
-
-                // Iterate through each worksheet in the workbook
+                // Iterate through all worksheets
                 foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    // Find the first occurrence of a VLOOKUP formula
-                    Cell foundCell = sheet.Cells.Find("VLOOKUP", null, findOptions);
-
-                    // Continue searching until no more VLOOKUP formulas are found
-                    while (foundCell != null)
+                    Cells cells = sheet.Cells;
+                    foreach (Cell cell in cells)
                     {
-                        // Get the original formula
-                        string originalFormula = foundCell.Formula;
+                        // Process only cells that contain formulas
+                        if (cell.IsFormula)
+                        {
+                            string formula = cell.Formula;
 
-                        // Simple conversion: replace the function name while keeping the argument list
-                        string updatedFormula = originalFormula.Replace("VLOOKUP(", "XLOOKUP(");
+                            // Look for VLOOKUP usage
+                            if (formula.IndexOf("VLOOKUP", StringComparison.OrdinalIgnoreCase) >= 0)
+                            {
+                                Match match = Regex.Match(
+                                    formula,
+                                    @"VLOOKUP\s*\(\s*(?<args>.+?)\s*\)",
+                                    RegexOptions.IgnoreCase);
 
-                        // Apply the new formula to the cell
-                        foundCell.Formula = updatedFormula;
+                                if (match.Success)
+                                {
+                                    // Split arguments (simple split works for typical VLOOKUP)
+                                    string[] formulaArgs = match.Groups["args"].Value.Split(',');
 
-                        // Search for the next VLOOKUP formula starting after the current cell
-                        foundCell = sheet.Cells.Find("VLOOKUP", foundCell, findOptions);
+                                    if (formulaArgs.Length >= 3)
+                                    {
+                                        for (int i = 0; i < formulaArgs.Length; i++)
+                                            formulaArgs[i] = formulaArgs[i].Trim();
+
+                                        string lookupValue = formulaArgs[0];
+                                        string tableArray = formulaArgs[1];
+                                        string colIndexNum = formulaArgs[2];
+
+                                        // Build equivalent XLOOKUP formula
+                                        string xlookupFormula = $"=XLOOKUP({lookupValue},INDEX({tableArray},0,1),INDEX({tableArray},0,{colIndexNum}),\"\",0,1)";
+
+                                        // Replace the old VLOOKUP formula
+                                        cell.Formula = xlookupFormula;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                // Recalculate all formulas to ensure the new XLOOKUP functions are evaluated
-                workbook.CalculateFormula();
-
                 // Save the modified workbook
-                string outputPath = "WorkbookWithXlookup.xlsx";
                 workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ReplaceVlookupWithXlookup.Run();
         }
     }
 }

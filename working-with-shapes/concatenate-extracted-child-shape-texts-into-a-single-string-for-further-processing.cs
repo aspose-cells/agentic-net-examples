@@ -1,72 +1,67 @@
-// Title: Extract and Concatenate Text from All Shapes (including grouped) in an Excel Worksheet – Aspose.Cells for .NET (C#)
-// Description: Loads a workbook, walks through every shape on the first worksheet, recursively reads text from group shapes and their children (preferring TextBody.Text, falling back to Shape.Text), builds a single space‑separated string, prints it, and saves the file.
-// Keywords: Aspose.Cells | C# | shape text extraction | grouped shapes | concatenate shape texts | Excel worksheet shapes | TextBody | Shape.Text | StringBuilder | Excel automation
-// Common Searches: Aspose.Cells get text from grouped shapes | C# concatenate all shape texts in Excel | How to read shape TextBody with Aspose.Cells | Iterate worksheet shapes Aspose.Cells .NET | Extract shape comments from Excel using Aspose
-// Developer Intent: Retrieve the textual content of every shape on a worksheet—including nested shapes in groups—and combine it into one string.
-// Use Cases: Generate a summary of all annotations, labels, and comments embedded in worksheet shapes for reporting. | Create a searchable index of shape content for document management or compliance audits. | Feed the combined text into downstream processes such as language detection, keyword extraction, or AI summarization.
-// AI Prompts: Write a C# method that extracts text from every shape in a worksheet using Aspose.Cells, handling grouped shapes, and returns a concatenated string. | Modify the sample to separate each shape's text with a newline instead of a space. | Explain why TextBody.Text should be prioritized over Shape.Text when reading shape content with Aspose.Cells.
+// Title: Extract and concatenate text from every shape, including grouped shapes, in an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, walks through all worksheets, extracts the Text property from each shape (including TextBox and grouped shapes), and returns a single concatenated string. | Create a reusable method that accepts a Shape object and a StringBuilder, appends any available text from TextBox or generic shapes, and correctly processes shapes inside a group. | Generate a console application example that demonstrates how to collect shape texts from multiple worksheets, combine them using StringBuilder, and output the result.
+// Common Searches: how to get text from all shapes in an Excel file using Aspose.Cells C# | concatenate grouped shape text in Aspose.Cells .NET workbook | C# iterate over worksheet shapes and read their Text property Aspose.Cells | extract textbox and autoshape contents from Excel with Aspose.Cells | combine shape texts from multiple sheets into one string Aspose.Cells
+// Tags: shape text extraction Aspose.Cells | concatenate Excel shape contents .NET | grouped shape text retrieval C# | iterate worksheet shapes Aspose.Cells | StringBuilder aggregation of shape text
 
-using System;
-using System.Text;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.IO;
+using System.Text;
 
-// Loads a workbook, walks through every shape on the first worksheet, recursively reads text from group shapes and their children (preferring TextBody.Text, falling back to Shape.Text), builds a single space‑separated string, prints it, and saves the file.
-class ConcatenateShapeTexts
+// // Loads an Excel workbook, iterates through each worksheet and its shapes, extracts text from TextBox and other shapes (including those inside groups), appends the texts to a StringBuilder, and prints the concatenated result.
+class Program
 {
     static void Main()
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // StringBuilder to accumulate texts from all shapes
-        StringBuilder concatenated = new StringBuilder();
-
-        // Iterate through each shape on the worksheet
-        foreach (Shape shape in worksheet.Shapes)
+        try
         {
-            // If the shape is a group, process its child shapes
-            if (shape is GroupShape groupShape)
+            const string inputPath = "input.xlsx";
+
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                foreach (Shape childShape in groupShape.GetGroupedShapes())
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+            var sb = new StringBuilder();
+
+            // Iterate through each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate through each shape on the worksheet
+                foreach (Shape shape in sheet.Shapes)
                 {
-                    AppendShapeText(childShape, concatenated);
+                    // Append text from the shape (including group shapes if they contain text)
+                    AppendShapeText(shape, sb);
                 }
             }
-            else
-            {
-                AppendShapeText(shape, concatenated);
-            }
+
+            // Concatenated result
+            string concatenatedText = sb.ToString();
+            Console.WriteLine(concatenatedText);
         }
-
-        // Resulting concatenated string
-        string result = concatenated.ToString().Trim();
-        Console.WriteLine("Concatenated Shape Texts: " + result);
-
-        // Save the workbook if any modifications were made
-        workbook.Save("output.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 
-    // Helper method to extract text from a shape and append it to the StringBuilder
-    private static void AppendShapeText(Shape shape, StringBuilder sb)
+    // Extracts text from supported shape types and appends it to the StringBuilder
+    static void AppendShapeText(Shape shape, StringBuilder sb)
     {
-        // Prefer TextBody.Text (rich text) if available; otherwise use Shape.Text
-        string text = null;
-
-        if (shape.TextBody != null && !string.IsNullOrEmpty(shape.TextBody.Text))
+        // TextBox shapes contain a Text property
+        if (shape is TextBox textbox)
         {
-            text = shape.TextBody.Text;
+            sb.Append(textbox.Text);
         }
+        // Other shapes (e.g., AutoShape) expose text via the generic Text property
         else if (!string.IsNullOrEmpty(shape.Text))
         {
-            text = shape.Text;
-        }
-
-        if (!string.IsNullOrEmpty(text))
-        {
-            sb.Append(text);
-            sb.Append(" "); // Add a space as a separator between shape texts
+            sb.Append(shape.Text);
         }
     }
 }

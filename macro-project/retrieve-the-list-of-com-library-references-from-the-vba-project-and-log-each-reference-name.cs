@@ -1,39 +1,63 @@
-// Title: List COM Library References in a VBA Project of an XLSM Workbook with Aspose.Cells for .NET
-// Description: Loads a macro‑enabled workbook, verifies the presence of a VBA project, accesses its VbaProjectReferenceCollection, and prints each reference name to the console.
-// Keywords: Aspose.Cells | VBA references | COM libraries | XLSM | C# | .NET | enumerate VBA references | Workbook.VbaProject | extract reference names | Excel macro automation
-// Common Searches: Aspose.Cells get VBA reference names | C# list COM references in .xlsm | how to read VBA project references with Aspose | enumerate VBA libraries in Excel workbook .NET | retrieve VBA reference collection Aspose.Cells
-// Developer Intent: Obtain the names of every COM reference defined in the VBA project of a macro‑enabled Excel file.
-// Use Cases: Confirm required COM libraries are available before executing macros. | Create a reference inventory for documentation or audit purposes. | Identify missing or broken references across a batch of macro workbooks.
-// AI Prompts: Generate C# code using Aspose.Cells that extracts all VBA reference names from a workbook and writes them to a text file. | Show how to filter the VBA references by GUID and log only those matching a specific pattern. | Provide an example that gracefully handles workbooks without a VBA project and logs an appropriate message.
+// Title: How to list COM references in an Excel VBA project using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, accesses its VbaProject, and prints each COM reference name. | Show how to safely loop through the VbaProject.References collection using dynamic typing and handle errors in a .NET console application.
+// Common Searches: c# aspocells list vba project com libraries | how to read VBA reference names from an Excel file using Aspose.Cells | enumerate VBA references in a workbook with .NET | retrieve COM reference list from Excel VBA project in C#
+// Tags: Aspose.Cells VbaProject reference extraction | C# read VBA COM library names | dynamic VBA reference handling C# | Excel VBA project reference list .NET | read VBA library names with Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// Loads a macro‑enabled workbook, verifies the presence of a VBA project, accesses its VbaProjectReferenceCollection, and prints each reference name to the console.
+// The example loads an Excel workbook with Aspose.Cells, checks for an embedded VBA project, and iterates through its VbaProject.References collection. Using dynamic typing, it prints each reference's Name while gracefully handling any errors.
 class Program
 {
     static void Main()
     {
-        // Load a macro-enabled workbook that contains a VBA project
-        Workbook workbook = new Workbook("input.xlsm");
-
-        // Check if the workbook has a VBA project
-        if (workbook.VbaProject != null)
+        try
         {
-            // Get the collection of VBA references
-            VbaProjectReferenceCollection references = workbook.VbaProject.References;
+            string inputPath = "input.xlsx";
 
-            // Log each reference name
-            for (int i = 0; i < references.Count; i++)
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                VbaProjectReference reference = references[i];
-                Console.WriteLine($"Reference {i + 1}: {reference.Name}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the VBA project contained in the workbook
+            VbaProject vbaProject = workbook.VbaProject;
+
+            if (vbaProject != null)
+            {
+                // Iterate through all references in the VBA project
+                foreach (object reference in vbaProject.References)
+                {
+                    try
+                    {
+                        // Use dynamic to access the Name property without needing the exact type at compile time
+                        dynamic refDyn = reference;
+                        Console.WriteLine(refDyn.Name);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to read reference: {ex.Message}");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No VBA project found in the workbook.");
+            }
+
+            // If you need to save any changes, uncomment the line below
+            // workbook.Save("output.xlsx");
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("The workbook does not contain a VBA project.");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

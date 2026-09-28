@@ -1,37 +1,35 @@
-// Title: C# – Set Multiline Comments Built‑In Document Property in Aspose.Cells Workbook
-// Description: Demonstrates how to create a new Aspose.Cells workbook, access its BuiltInDocumentPropertyCollection, assign a multiline string to the Comments property using Environment.NewLine (including author and date), display the value, and save the file as an .xlsx document.
-// Keywords: Aspose.Cells | C# | set Comments property | built‑in document properties | multiline comments | Environment.NewLine | Excel metadata | Workbook comments | .NET Excel library | Aspose.Cells example
-// Common Searches: Aspose.Cells set multiline Comments property C# | How to add line breaks to workbook Comments in Aspose.Cells | C# built‑in document properties Aspose.Cells example | Save custom notes in Excel file using Aspose.Cells | Aspose.Cells Comments metadata with date and author
-// Developer Intent: Add a detailed, multiline comment to a workbook’s built‑in Comments property and persist it in the saved Excel file.
-// Use Cases: Include audit‑trail notes (author, date, purpose) directly in the workbook metadata. | Provide end‑users with multi‑line documentation or usage instructions embedded in the file. | Store version‑specific remarks for automatically generated reports without altering worksheet content.
-// AI Prompts: Generate C# code that reads the Comments built‑in property from an existing Aspose.Cells workbook and appends additional lines. | Show how to set other built‑in properties (Title, Subject, Keywords) together with a multiline Comments field in one snippet. | Explain how to preserve Unicode characters and line‑break formatting when exporting the Comments property to Excel with Aspose.Cells.
+// Title: Add a multiline Comments built‑in document property to an Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate a new Workbook, compose a multiline string that includes the current date, assign it to the built‑in Comments property, and save the file as an .xlsx. | Open an existing .xlsx file, update its Comments built‑in document property with a dynamic multi‑line note, and rewrite the workbook using Aspose.Cells in C#. | Write C# code that writes a multi‑line description into the Comments built‑in property, saves the workbook, and then reads back the property to confirm the content.
+// Common Searches: Aspose.Cells C# set multiline Comments built‑in document property with current date | how to add notes to Excel built‑in properties using Aspose.Cells .NET | update workbook Comments property programmatically in C# Aspose.Cells | store multi‑line description in Excel metadata Aspose.Cells example
+// Tags: set built‑in Comments property Aspose.Cells | multiline workbook description .NET | dynamic date in Excel Comments property | Aspose.Cells document metadata usage | C# write Excel built‑in properties
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
 
-// Demonstrates how to create a new Aspose.Cells workbook, access its BuiltInDocumentPropertyCollection, assign a multiline string to the Comments property using Environment.NewLine (including author and date), display the value, and save the file as an .xlsx document.
-class SetWorkbookComments
+// // Creates a workbook, builds a multiline string with a timestamp, assigns it to the built‑in Comments document property, and saves the workbook as WorkbookWithComments.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (lifecycle rule)
+            Workbook workbook = new Workbook();
 
-        // Access the built‑in document properties
-        BuiltInDocumentPropertyCollection properties = workbook.BuiltInDocumentProperties;
+            // Multiline description for the Comments built‑in property
+            string comments = @"This workbook contains the quarterly sales data.
+Generated on: " + DateTime.Now.ToString("yyyy-MM-dd") + @"
+Please review the charts and pivot tables for insights.";
 
-        // Set the Comments property with a multiline description
-        properties.Comments = "This workbook was generated programmatically." + Environment.NewLine +
-                             "It contains sample data for demonstration purposes." + Environment.NewLine +
-                             "Author: John Doe" + Environment.NewLine +
-                             "Date: " + DateTime.Now.ToString("yyyy-MM-dd");
+            // Set the built‑in Comments property (feature rule)
+            workbook.BuiltInDocumentProperties["Comments"].Value = comments;
 
-        // Optionally display the comments to verify
-        Console.WriteLine("Workbook Comments:");
-        Console.WriteLine(properties.Comments);
-
-        // Save the workbook (lifecycle: save)
-        workbook.Save("WorkbookWithComments.xlsx");
+            // Save the workbook (lifecycle rule)
+            workbook.Save("WorkbookWithComments.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

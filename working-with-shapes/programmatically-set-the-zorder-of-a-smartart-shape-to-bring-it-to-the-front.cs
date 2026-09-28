@@ -1,76 +1,55 @@
-// Title: How to bring a SmartArt shape to the front (Z‑order) with Aspose.Cells for .NET
-// Description: Loads or creates an Excel workbook, finds the first SmartArtShape, calls SmartArtShape.ToFrontOrBack(1) to move it forward in the Z‑order, and saves the file.
-// Keywords: Aspose.Cells | .NET | C# | SmartArt | Z-order | bring shape to front | ToFrontOrBack | Excel shape layering | shape ordering | Aspose.Cells SmartArt
-// Common Searches: Aspose.Cells move SmartArt forward | C# set Z order of Excel shape | bring SmartArt to front using Aspose.Cells | SmartArt ToFrontOrBack example | change shape layering in Excel with Aspose.Cells
-// Developer Intent: Adjust the Z‑order of a SmartArt shape so it appears above other worksheet objects.
-// Use Cases: Update an existing workbook so a specific SmartArt diagram overlays charts or images. | Add new SmartArt to a generated report and ensure it renders on top of all other shapes. | Process multiple worksheets in a workbook, bringing every SmartArt shape forward for consistent visual hierarchy. | Combine Z‑order changes with further shape formatting (color, size) after reordering.
-// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells and moves a selected SmartArt shape to the front. | Write a method that accepts a Worksheet object and brings all SmartArtShape objects to the front using ToFrontOrBack. | Explain the purpose of the integer parameter in SmartArtShape.ToFrontOrBack and how different values affect Z‑order.
+// Title: How to bring a SmartArt shape to the front in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an existing .xlsx file with Aspose.Cells, finds the first SmartArt shape on a worksheet, sets its ZOrderPosition to the topmost layer, and saves the workbook. | Show a step‑by‑step example of iterating through worksheet.Shapes, detecting IsSmartArt, and changing the shape's Z‑order so it renders above all other objects. | Provide a reusable C# method that accepts a workbook and a shape identifier, then moves the specified SmartArt shape to the front using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set SmartArt ZOrderPosition to front of other shapes | How to change the layer order of a SmartArt object in an Excel file with Aspose.Cells | C# code to bring a specific shape to the top in an Excel worksheet using Aspose.Cells | Move SmartArt shape to front programmatically in .NET Excel library
+// Tags: Aspose.Cells set SmartArt ZOrderPosition | C# move Excel shape to front | worksheet shape ordering Aspose.Cells | modify SmartArt layer order .NET | Excel shape Z‑order manipulation C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsSmartArtZOrder
+// The example loads a workbook, scans the worksheet's Shapes collection for a SmartArt object, sets its ZOrderPosition to 0 (the frontmost layer), and saves the updated file.
+class Program
 {
-    // Loads or creates an Excel workbook, finds the first SmartArtShape, calls SmartArtShape.ToFrontOrBack(1) to move it forward in the Z‑order, and saves the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"The input file '{inputPath}' was not found.");
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Iterate through all shapes on the worksheet
+            foreach (Shape shape in worksheet.Shapes)
             {
-                // Path to a template workbook that already contains a SmartArt shape.
-                const string templatePath = "SmartArtTemplate.xlsx";
-
-                Workbook workbook;
-
-                if (File.Exists(templatePath))
+                // Identify the SmartArt shape using the IsSmartArt property
+                if (shape.IsSmartArt)
                 {
-                    // Load the template workbook.
-                    workbook = new Workbook(templatePath);
-                }
-                else
-                {
-                    // If the template is missing, create a new workbook and add a placeholder shape.
-                    workbook = new Workbook();
-                    Worksheet ws = workbook.Worksheets[0];
-                    // Add a simple rectangle as a fallback (cannot add SmartArt directly in older versions).
-                    ws.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 300, 200);
-                }
+                    // Bring the SmartArt shape to the front by setting its Z‑order position
+                    // Lower ZOrderPosition values are rendered in front of higher values
+                    shape.ZOrderPosition = 0;
 
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Locate the first SmartArt shape in the worksheet.
-                SmartArtShape smartArt = null;
-                foreach (Shape shape in worksheet.Shapes)
-                {
-                    if (shape is SmartArtShape sa)
-                    {
-                        smartArt = sa;
-                        break;
-                    }
+                    // If only one SmartArt needs to be processed, exit the loop
+                    break;
                 }
-
-                if (smartArt != null)
-                {
-                    // Bring the SmartArt shape one position forward in the Z‑order.
-                    smartArt.ToFrontOrBack(1);
-                }
-                else
-                {
-                    Console.WriteLine("No SmartArt shape found in the worksheet.");
-                }
-
-                // Save the workbook.
-                const string outputPath = "SmartArtZOrderDemo.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            // Log or display the exception details as needed
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

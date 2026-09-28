@@ -1,73 +1,70 @@
-// Title: Benchmark RemoveUnusedStyles Performance in Aspose.Cells C# Across Workbook Sizes
-// Description: C# sample that creates workbooks with 500, 2,000 and 5,000 rows, assigns a distinct style to each row, deletes half of the rows to leave many styles unused, then measures the elapsed time and style count before and after calling Workbook.RemoveUnusedStyles().
-// Keywords: Aspose.Cells RemoveUnusedStyles benchmark | style cleanup performance .NET | measure Aspose.Cells style removal time | Workbook.RemoveUnusedStyles scaling | C# Aspose.Cells performance testing
-// Common Searches: How fast is RemoveUnusedStyles on large Aspose.Cells workbooks | Aspose.Cells style removal benchmark C# | Performance of Workbook.RemoveUnusedStyles with many rows | Timing unused style cleanup in Aspose.Cells | Scale of RemoveUnusedStyles execution time
-// Developer Intent: Assess how the execution time of Workbook.RemoveUnusedStyles varies with the number of rows and styles in a workbook.
-// Use Cases: Validate that style cleanup meets latency requirements for automated report generation. | Compare removal times for small, medium, and large spreadsheets before production deployment. | Identify whether additional optimization is needed when handling workbooks with thousands of unique styles.
-// AI Prompts: Generate a reusable C# helper that runs RemoveUnusedStyles on a Workbook and returns the elapsed milliseconds. | Extend the benchmark to record peak memory usage during style removal. | Explain which workbook characteristics (row count, style count, formula complexity) most affect RemoveUnusedStyles performance and how to interpret the results.
+// Title: Measure how Workbook.RemoveUnusedStyles scales with increasing numbers of unused styles in C# using Aspose.Cells
+// AI Prompts: Generate a C# console application that creates a workbook, adds a configurable number of unused styles, applies a few used styles, and records the elapsed milliseconds of Workbook.RemoveUnusedStyles(). | Write a script that iterates over style counts (e.g., 1000, 5000, 10000, 20000), builds a workbook for each count, invokes RemoveUnusedStyles, and prints the performance results to the console. | Create a performance benchmark that varies the number of styles in an Aspose.Cells workbook, calls Workbook.RemoveUnusedStyles, and logs the timing data for each iteration.
+// Common Searches: c# benchmark Aspose.Cells RemoveUnusedStyles performance with thousands of styles | how does RemoveUnusedStyles execution time grow with workbook size in Aspose.Cells | measure time to clean up unused styles in large Excel workbook using Aspose.Cells C# | performance testing of Aspose.Cells style removal for 10k and 20k styles
+// Tags: Aspose.Cells remove unused styles performance benchmark | C# workbook style cleanup timing | measure RemoveUnusedStyles scaling behavior | large workbook unused style removal Aspose.Cells | performance test for Aspose.Cells style count
 
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsStyleBenchmark
+// The example creates workbooks with 1,000, 5,000, 10,000 and 20,000 unused styles, applies a few default styles to a 10x10 cell range, then measures and prints the milliseconds required for Workbook.RemoveUnusedStyles() for each style count, illustrating the scaling behavior of the cleanup operation.
+class RemoveUnusedStylesBenchmark
 {
-    // C# sample that creates workbooks with 500, 2,000 and 5,000 rows, assigns a distinct style to each row, deletes half of the rows to leave many styles unused, then measures the elapsed time and style count before and after calling Workbook.RemoveUnusedStyles().
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Define different workbook sizes (number of rows to populate)
-            int[] rowCounts = new int[] { 500, 2000, 5000 };
+            // Different numbers of styles to add (simulating varying workbook sizes)
+            int[] styleCounts = new int[] { 1000, 5000, 10000, 20000 };
 
-            foreach (int rowCount in rowCounts)
+            foreach (int count in styleCounts)
             {
-                // Create a new workbook
-                Workbook wb = new Workbook();
-                Worksheet sheet = wb.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate cells with unique styles
-                for (int i = 0; i < rowCount; i++)
+                try
                 {
-                    // Put a simple value
-                    cells[i, 0].PutValue($"Row {i + 1}");
+                    // Create a new workbook
+                    Workbook workbook = new Workbook();
 
-                    // Create a distinct style for each row
-                    Style style = wb.CreateStyle();
-                    style.Font.Size = 10 + (i % 20);               // Vary font size
-                    style.Font.IsBold = (i % 2 == 0);              // Alternate bold
-                    style.Font.Color = System.Drawing.Color.FromArgb(255, (i * 5) % 256, (i * 3) % 256);
-                    cells[i, 0].SetStyle(style);
+                    // Add a large number of unused styles to the workbook
+                    for (int i = 0; i < count; i++)
+                    {
+                        // Create a new style based on the default style
+                        Style newStyle = workbook.CreateStyle();
+                        newStyle.Font.Color = (i % 2 == 0) ? Color.Red : Color.Blue;
+                        newStyle.Font.Size = 10 + (i % 5);
+                        // No need to explicitly add to the collection; CreateStyle registers it.
+                    }
+
+                    // Apply a few styles to cells so that some styles are used
+                    Worksheet sheet = workbook.Worksheets[0];
+                    for (int row = 0; row < 10; row++)
+                    {
+                        for (int col = 0; col < 10; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
+                            cell.PutValue($"R{row}C{col}");
+                            // Apply the default style for simplicity
+                            cell.SetStyle(workbook.DefaultStyle);
+                        }
+                    }
+
+                    // Measure the time required to remove unused styles
+                    Stopwatch sw = Stopwatch.StartNew();
+                    workbook.RemoveUnusedStyles();
+                    sw.Stop();
+
+                    // Output the result
+                    Console.WriteLine($"Styles added: {count}, Time to remove unused styles: {sw.ElapsedMilliseconds} ms");
                 }
-
-                // Record style count before any removal
-                int styleCountBefore = wb.CountOfStylesInPool;
-
-                // Delete half of the rows to make many styles unused
-                int rowsToDelete = rowCount / 2;
-                sheet.Cells.DeleteRows(rowsToDelete, rowsToDelete);
-
-                // Benchmark RemoveUnusedStyles
-                Stopwatch sw = Stopwatch.StartNew();
-                wb.RemoveUnusedStyles();
-                sw.Stop();
-
-                // Record style count after removal
-                int styleCountAfter = wb.CountOfStylesInPool;
-
-                // Output results
-                Console.WriteLine($"Rows: {rowCount}");
-                Console.WriteLine($"  Styles before removal: {styleCountBefore}");
-                Console.WriteLine($"  Styles after removal:  {styleCountAfter}");
-                Console.WriteLine($"  Time to remove unused styles: {sw.ElapsedMilliseconds} ms");
-                Console.WriteLine();
-
-                // Optional: save the workbook for manual inspection (not required for benchmark)
-                string fileName = $"Benchmark_{rowCount}_Rows.xlsx";
-                wb.Save(fileName);
-                wb.Dispose();
+                catch (Exception innerEx)
+                {
+                    Console.WriteLine($"Error processing count {count}: {innerEx.Message}");
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

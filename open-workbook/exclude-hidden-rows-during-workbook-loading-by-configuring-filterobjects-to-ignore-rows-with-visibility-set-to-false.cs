@@ -1,46 +1,59 @@
-// Title: C# Load Excel Workbook with Aspose.Cells and Skip Hidden Rows (AutoFilter)
-// Description: Demonstrates how to configure Aspose.Cells LoadOptions with AutoFilter to ignore rows hidden by an existing filter when opening an Excel file, then iterate only visible rows and optionally save the workbook.
-// Keywords: Aspose.Cells LoadOptions AutoFilter | C# skip hidden rows Excel | Aspose.Cells ignore filtered rows | .NET read visible rows Excel | Cells.IsRowHidden example | load workbook without hidden rows
-// Common Searches: Aspose.Cells load workbook without hidden rows | C# hide filtered rows when reading Excel | How to ignore AutoFilter hidden rows in Aspose.Cells | Read only visible rows from Excel using Aspose.Cells .NET | LoadOptions.AutoFilter usage example
-// Developer Intent: Open an Excel file with Aspose.Cells, automatically exclude rows hidden by an AutoFilter, and process only the visible data rows.
-// Use Cases: Extract data from a filtered sheet while ignoring hidden rows. | Export or copy only visible rows to another workbook. | Run calculations or analytics on rows that meet the filter criteria.
-// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, enables AutoFilter, and iterates only over rows that are not hidden. | Show how to use LoadOptions.AutoFilter and Cells.IsRowHidden to skip filtered‑out rows in a .NET application. | Explain the steps to configure Aspose.Cells so hidden rows are excluded during workbook loading.
+// Title: How to exclude hidden rows from an XLSX workbook when loading with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, iterates every worksheet, deletes rows where Row.IsHidden is true, and saves the result to a new file. | Create a reusable method that takes input and output paths, validates the source file, loads the workbook using LoadOptions, removes hidden rows in reverse order to preserve indices, and returns a success flag. | Write a script that logs each hidden row removed per worksheet while processing an Excel workbook with Aspose.Cells, then writes the cleaned workbook to a specified destination.
+// Common Searches: aspnet load excel file ignore hidden rows aspose.cells | c# aspose.cells remove hidden rows before saving workbook | how to filter out hidden rows when opening an xlsx with Aspose.Cells | exclude hidden rows during workbook load using Aspose.Cells .NET | remove hidden rows from Excel using Aspose.Cells LoadOptions
+// Tags: remove hidden rows Aspose.Cells | Aspose.Cells load workbook without hidden rows | C# delete hidden rows Excel | Row.IsHidden Aspose.Cells | LoadOptions Xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Demonstrates how to configure Aspose.Cells LoadOptions with AutoFilter to ignore rows hidden by an existing filter when opening an Excel file, then iterate only visible rows and optionally save the workbook.
+// The example checks that the source XLSX file exists, loads it with Aspose.Cells LoadOptions, iterates each worksheet, removes rows flagged as hidden by evaluating Row.IsHidden (processing rows in reverse order to avoid index shifts), and saves the cleaned workbook to a new file.
 class Program
 {
     static void Main()
     {
-        // Create load options and enable AutoFilter.
-        // This tells Aspose.Cells to apply any existing autofilter
-        // in the source file and hide rows that do not meet the filter criteria.
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.AutoFilter = true;
+        // Paths for the source and destination files
+        string inputFile = "input.xlsx";
+        string outputFile = "output.xlsx";
 
-        // Load the workbook with the specified options.
-        // Hidden rows (as determined by the autofilter) will be ignored.
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
-
-        // Access the first worksheet.
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Iterate through all rows that contain data.
-        // Process only rows that are not hidden.
-        int maxRow = cells.MaxDataRow;
-        for (int rowIndex = 0; rowIndex <= maxRow; rowIndex++)
+        try
         {
-            if (!cells.IsRowHidden(rowIndex))
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputFile))
             {
-                // Example processing: output the value of the first column.
-                Console.WriteLine($"Row {rowIndex + 1}: {cells[rowIndex, 0].StringValue}");
+                Console.WriteLine($"Input file not found: {inputFile}");
+                return;
             }
-        }
 
-        // Save the workbook if further actions are required.
-        workbook.Save("output.xlsx");
+            // LoadOptions: configure the loader (no FilterObjects property in Aspose.Cells)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+
+            // Load the workbook with the configured options
+            Workbook workbook = new Workbook(inputFile, loadOptions);
+
+            // Remove any rows that are hidden after loading
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Iterate from the last row to the first to safely remove rows
+                for (int rowIndex = sheet.Cells.MaxDataRow; rowIndex >= sheet.Cells.MinDataRow; rowIndex--)
+                {
+                    Row row = sheet.Cells.Rows[rowIndex];
+                    if (row.IsHidden)
+                    {
+                        // Remove the hidden row by index
+                        sheet.Cells.Rows.RemoveAt(rowIndex);
+                    }
+                }
+            }
+
+            // Save the cleaned workbook
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved successfully to {outputFile}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

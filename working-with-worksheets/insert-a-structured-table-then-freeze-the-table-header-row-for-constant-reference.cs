@@ -1,47 +1,87 @@
-// Title: C# – Add a Structured Table and Freeze Its Header Row with Aspose.Cells for .NET
-// Description: This example creates a new workbook, writes header and sample data to A1:C3, inserts a ListObject table with a built‑in style, freezes the first row (header) using FreezePanes at cell A2, and saves the result as TableWithFrozenHeader.xlsx.
-// Keywords: Aspose.Cells C# table example | Add ListObject Aspose.Cells | Freeze header row Aspose.Cells | FreezePanes C# Aspose.Cells | styled Excel table .NET | Aspose.Cells sample code | GitHub Aspose.Cells worksheet
-// Common Searches: how to add a ListObject table in Aspose.Cells for .NET | freeze first row in Excel using Aspose.Cells C# | Aspose.Cells example for table style and FreezePanes | C# code to create a structured table and freeze header | Aspose.Cells tutorial freeze panes with table
-// Developer Intent: Generate an Excel worksheet, convert a range into a styled ListObject table, and keep the header row visible while scrolling.
-// Use Cases: Building financial reports where column titles must stay in view for large data sets. | Exporting dashboard metrics to Excel with automatic table formatting and a frozen top row. | Creating data‑entry templates that apply a table style and lock the header for easier navigation.
-// AI Prompts: Show C# code to insert a ListObject table into a range and freeze the header row with Aspose.Cells. | Provide an Aspose.Cells example that applies a medium table style and uses FreezePanes at cell A2. | Explain the interaction between ListObject tables and FreezePanes in Aspose.Cells for .NET, including any constraints.
+// Title: Create a structured ListObject table from a 2‑D array and freeze its header row using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that populates a worksheet from a two‑dimensional string array and converts the range into a ListObject table. | Add a built‑in style to the ListObject, assign a custom display name, and save the workbook as an .xlsx file. | Configure the worksheet to freeze the table’s header row so it stays visible while scrolling.
+// Common Searches: how to add a ListObject table from an array with Aspose.Cells C# | freeze first row of an Excel sheet using Aspose.Cells .NET | apply built‑in table style to a structured table in Aspose.Cells | set display name for ListObject table Aspose.Cells example | save workbook with frozen panes Aspose.Cells C#
+// Tags: Aspose.Cells ListObject creation from 2D array | freeze panes for table header Aspose.Cells | assign built‑in style to ListObject Aspose.Cells | set ListObject display name Aspose.Cells | save workbook with frozen panes Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
 
-// This example creates a new workbook, writes header and sample data to A1:C3, inserts a ListObject table with a built‑in style, freezes the first row (header) using FreezePanes at cell A2, and saves the result as TableWithFrozenHeader.xlsx.
+// // This program creates a new workbook, writes a 2‑dimensional string array to the first worksheet, defines the range as a ListObject table named SalesTable, applies a medium built‑in style, freezes the header row by setting freeze panes at row 1, and saves the file as StructuredTableWithFrozenHeader.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data (including header row)
-        worksheet.Cells["A1"].PutValue("Header1");
-        worksheet.Cells["B1"].PutValue("Header2");
-        worksheet.Cells["C1"].PutValue("Header3");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-        worksheet.Cells["A2"].PutValue(10);
-        worksheet.Cells["B2"].PutValue(20);
-        worksheet.Cells["C2"].PutValue(30);
+            // Sample data including header row
+            string[,] data = new string[,]
+            {
+                { "ID", "Name", "Quantity", "Price" },
+                { "1", "Apple", "50", "0.5" },
+                { "2", "Banana", "30", "0.3" },
+                { "3", "Orange", "20", "0.6" },
+                { "4", "Grape", "40", "0.8" }
+            };
 
-        worksheet.Cells["A3"].PutValue(40);
-        worksheet.Cells["B3"].PutValue(50);
-        worksheet.Cells["C3"].PutValue(60);
+            // Insert data into the worksheet starting at cell A1
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                for (int j = 0; j < data.GetLength(1); j++)
+                {
+                    sheet.Cells[i, j].PutValue(data[i, j]);
+                }
+            }
 
-        // Add a structured table (ListObject) covering the range A1:C3 with headers
-        int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 2, true);
-        ListObject table = worksheet.ListObjects[tableIndex];
-        table.TableStyleType = TableStyleType.TableStyleMedium2; // optional styling
+            // Define the range that will become the structured table
+            int firstRow = 0;
+            int firstCol = 0;
+            int totalRows = data.GetLength(0);
+            int totalCols = data.GetLength(1);
+            CellArea tableArea = new CellArea
+            {
+                StartRow = firstRow,
+                StartColumn = firstCol,
+                EndRow = firstRow + totalRows - 1,
+                EndColumn = firstCol + totalCols - 1
+            };
 
-        // Freeze the header row so it stays visible while scrolling
-        // Freeze at cell A2 (row index 1) with 1 frozen row and 0 frozen columns
-        worksheet.FreezePanes("A2", 1, 0);
+            // Add a ListObject (structured table) to the defined range
+            int tableIndex = sheet.ListObjects.Add(
+                tableArea.StartRow,
+                tableArea.StartColumn,
+                tableArea.EndRow,
+                tableArea.EndColumn,
+                true);
+            ListObject table = sheet.ListObjects[tableIndex];
 
-        // Save the workbook
-        workbook.Save("TableWithFrozenHeader.xlsx");
+            // Set display name for the table (Name property may not be available in older versions)
+            table.DisplayName = "SalesTable";
+
+            // Show header row (default is true) and hide total row
+            table.ShowHeaderRow = true;
+            // Total row is hidden by default; no need to set ShowTotalRow if unavailable
+
+            // Apply a built‑in style
+            table.TableStyleType = TableStyleType.TableStyleMedium9;
+
+            // Freeze the header row so it remains visible while scrolling
+            // Freeze panes at row index 1 (second row) and column index 0 (first column)
+            sheet.FreezePanes(1, 0, 1, 0);
+
+            // Save the workbook
+            workbook.Save("StructuredTableWithFrozenHeader.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

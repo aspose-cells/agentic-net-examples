@@ -1,73 +1,58 @@
-// Title: Delete Columns Left of Freeze Pane and Apply FreezePanes with Aspose.Cells (C#)
-// Description: Creates a workbook, fills columns A‑E, removes all columns before a specified index, then freezes the first row and the new first column using FreezePanes. Optionally sets the first visible column of the right pane and saves the file.
-// Keywords: Aspose.Cells C# delete columns | FreezePanes after column removal | Aspose.Cells set FirstVisibleColumnOfRightPane | C# Excel freeze rows and columns | Aspose.Cells worksheet manipulation
-// Common Searches: Aspose.Cells delete columns before freeze pane | How to use FreezePanes after removing columns in .NET | Set first visible column of right pane Aspose.Cells | C# freeze top row and left column after column deletion | Aspose.Cells example FreezePanes with updated index
-// Developer Intent: Remove unwanted columns and then correctly apply FreezePanes at the new column position using Aspose.Cells for .NET.
-// Use Cases: Eliminate preceding columns so a target column becomes the leftmost visible column, then freeze it with the header row. | Maintain header visibility while scrolling horizontally and vertically after column cleanup. | Control which column appears first in the scrollable right pane by setting FirstVisibleColumnOfRightPane. | Generate an Excel file with a customized freeze layout for reporting or dashboard purposes.
-// AI Prompts: Write C# code that deletes columns left of a given index and then calls FreezePanes with the adjusted column index using Aspose.Cells. | Explain how to configure FirstVisibleColumnOfRightPane after applying FreezePanes in an Aspose.Cells workbook. | Provide best‑practice error handling for column deletion and FreezePanes operations in Aspose.Cells C# examples.
+// Title: Delete columns left of a target column and then freeze the first column using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an Excel workbook, remove columns 0 through N‑1, then apply FreezePanes at row 0, column 1 with Aspose.Cells in C#. | Write C# code that deletes all columns preceding column D and then freezes the first visible column using Aspose.Cells. | Create a script that trims left‑hand columns from a worksheet and sets a column‑only freeze pane without affecting rows, leveraging the Aspose.Cells FreezePanes overload.
+// Common Searches: Aspose.Cells C# delete columns before a specific index and then set freeze pane on first column | How to remove left side columns and keep only column D visible while freezing column A with Aspose.Cells | C# example for deleting columns 0-2 and applying FreezePanes(0,1) using Aspose.Cells | Freeze pane after column deletion Aspose.Cells .NET tutorial
+// Tags: delete columns before freeze pane Aspose.Cells C# | freeze panes column only Aspose.Cells | Aspose.Cells worksheet column removal | Aspose.Cells FreezePanes overload C# | Excel column deletion and freeze pane .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel file, deletes all columns to the left of a specified index, freezes the first column with FreezePanes, and saves the modified workbook.
+class Program
 {
-    // Creates a workbook, fills columns A‑E, removes all columns before a specified index, then freezes the first row and the new first column using FreezePanes. Optionally sets the first visible column of the right pane and saves the file.
-    public class FreezePanesAfterDeleteColumns
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-                // Populate sample data in columns A‑E
-                for (int col = 0; col < 5; col++)
-                {
-                    sheet.Cells[0, col].PutValue($"Header {(char)('A' + col)}");
-                    sheet.Cells[1, col].PutValue(col + 1);
-                }
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+                throw new FileNotFoundException($"Input file not found: {inputPath}");
 
-                // Desired freeze column (0‑based). Example: freeze at column D (index 3)
-                int desiredFreezeColumn = 3;
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
 
-                // Delete all columns to the left of the desired freeze column
-                if (desiredFreezeColumn > 0)
-                {
-                    // DeleteColumns(startIndex, totalColumns, updateReference)
-                    sheet.Cells.DeleteColumns(0, desiredFreezeColumn, true);
-                }
+            // Get the first worksheet
+            var worksheet = workbook.Worksheets[0];
 
-                // After deletion the column we want to freeze becomes index 0
-                int freezeRow = 1;      // Freeze first row (row index 1 = second row)
-                int freezeColumn = 0;   // Freeze first column after deletion
+            // Define the column index where you want the freeze pane to start (0‑based)
+            // Example: freeze at column D (index 3)
+            int originalFreezeColumn = 3;
 
-                // Apply freeze panes
-                // FreezePanes(row, column, freezedRows, freezedColumns)
-                sheet.FreezePanes(freezeRow, freezeColumn, freezeRow, freezeColumn);
+            // Delete all columns to the left of the desired freeze area
+            // This removes columns 0 through originalFreezeColumn‑1
+            // The third argument (true) ensures that only the column data is removed
+            worksheet.Cells.DeleteColumns(0, originalFreezeColumn, true);
 
-                // Optional: adjust the first visible column of the right pane
-                PaneCollection panes = sheet.GetPanes();
-                panes.FirstVisibleColumnOfRightPane = 1;
+            // Freeze panes at the first row (no row freeze) and first column
+            // Use the overload with four parameters (row, column, totalRows, totalColumns)
+            // Setting totalRows and totalColumns to 0 freezes only the specified column.
+            worksheet.FreezePanes(0, 1, 0, 0);
 
-                // Save the workbook
-                string outputPath = "FreezeAfterDeleteColumns.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            FreezePanesAfterDeleteColumns.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

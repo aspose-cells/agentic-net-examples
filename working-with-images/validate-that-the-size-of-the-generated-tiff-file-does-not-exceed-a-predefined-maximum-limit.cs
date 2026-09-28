@@ -1,99 +1,60 @@
-// Title: Validate TIFF Output Size with Aspose.Cells for .NET (C#)
-// Description: Creates a workbook, fills it with sample data, renders the first worksheet to a TIFF stream using LZW compression at 150 dpi, checks the stream length against a 5 MB limit, throws an exception if the limit is exceeded, and saves the file when the size is acceptable.
-// Keywords: Aspose.Cells TIFF size check | C# validate TIFF file size | limit TIFF output Aspose | render worksheet to TIFF .NET | TIFF compression LZW Aspose.Cells
-// Common Searches: Aspose.Cells how to limit TIFF file size in C# | check TIFF size after rendering with Aspose.Cells | C# code to validate generated TIFF does not exceed 5 MB | prevent oversized TIFF export using Aspose.Cells
-// Developer Intent: Ensure the TIFF image generated from a worksheet stays within a predefined size constraint before persisting it.
-// Use Cases: Avoid email attachment rejections caused by large TIFF exports. | Enforce storage quotas in document management systems by rejecting oversized TIFFs. | Optimize export settings (resolution, compression) to meet size limits for regulatory compliance.
-// AI Prompts: Write C# code with Aspose.Cells that renders a worksheet to a TIFF stream and raises an error if the stream exceeds 5 MB. | Suggest ImageOrPrintOptions adjustments (resolution, compression) to reduce TIFF size below a target threshold. | Create a unit test that verifies the TIFF size validation logic for a workbook with many rows.
+// Title: Check that a TIFF image generated from an Excel workbook does not exceed a 5 MB limit using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, saves it as a TIFF with Aspose.Cells, and throws an exception if the saved file size exceeds a configurable byte limit. | Add logic to automatically delete the TIFF file when its size is larger than the defined maximum after the Aspose.Cells export. | Modify the example to log the actual file size and the allowed limit, returning a boolean that indicates whether the TIFF meets the size requirement.
+// Common Searches: Aspose.Cells .NET how to enforce maximum TIFF file size after export | C# verify size of TIFF saved from Excel workbook using Aspose.Cells | prevent oversized TIFF image when converting Excel to image with Aspose.Cells | check file size of generated TIFF in C# Aspose.Cells example
+// Tags: Aspose.Cells save workbook as TIFF size limit | C# validate TIFF file size after export | maximum TIFF file size check Aspose.Cells | file size verification for generated TIFF .NET | configure TIFF size threshold Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsTiffSizeValidation
+// The program creates a simple workbook, exports it to a TIFF image with Aspose.Cells, then checks the resulting file size against a 5 MB threshold, reporting success or an error and optionally handling oversized files.
+class Program
 {
-    // Creates a workbook, fills it with sample data, renders the first worksheet to a TIFF stream using LZW compression at 150 dpi, checks the stream length against a 5 MB limit, throws an exception if the limit is exceeded, and saves the file when the size is acceptable.
-    class Program
+    static void Main()
     {
-        // Maximum allowed TIFF file size (5 MB)
-        private const long MaxTiffSizeBytes = 5 * 1024 * 1024; // 5,242,880 bytes
-
-        static void Main()
+        try
         {
-            try
+            // Maximum allowed TIFF file size (5 MB)
+            const long MaxTiffSizeBytes = 5 * 1024 * 1024;
+
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate some sample data
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["A3"].PutValue(456);
+
+            // Path for the generated TIFF file
+            string tiffPath = "output.tiff";
+
+            // Save the workbook as a TIFF image (one page per sheet by default)
+            workbook.Save(tiffPath, SaveFormat.Tiff);
+
+            // Verify that the file was created
+            if (!File.Exists(tiffPath))
             {
-                // Create a new workbook and obtain the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate worksheet with sample data
-                worksheet.Cells["A1"].PutValue("Aspose.Cells TIFF Size Validation Demo");
-                for (int row = 2; row <= 100; row++)
-                {
-                    worksheet.Cells[row - 1, 0].PutValue($"Row {row}");
-                    worksheet.Cells[row - 1, 1].PutValue(row * 10);
-                }
-
-                // Configure rendering options for TIFF output
-                ImageOrPrintOptions options = new ImageOrPrintOptions
-                {
-                    // ImageFormat property is not required for ToTiff; remove invalid assignment
-                    TiffCompression = TiffCompression.CompressionLZW, // LZW compression
-                    HorizontalResolution = 150,
-                    VerticalResolution = 150,
-                    OnePagePerSheet = true // Single page per sheet
-                };
-
-                // Render the worksheet to a TIFF image in memory
-                SheetRender renderer = new SheetRender(worksheet, options);
-                using (MemoryStream tiffStream = new MemoryStream())
-                {
-                    try
-                    {
-                        renderer.ToTiff(tiffStream);
-                    }
-                    catch (Exception renderEx)
-                    {
-                        Console.WriteLine($"Rendering failed: {renderEx.Message}");
-                        return;
-                    }
-
-                    long tiffSize = tiffStream.Length;
-                    Console.WriteLine($"Generated TIFF size: {tiffSize} bytes");
-
-                    if (tiffSize > MaxTiffSizeBytes)
-                    {
-                        Console.WriteLine($"Error: TIFF size exceeds the maximum allowed limit of {MaxTiffSizeBytes} bytes.");
-                        throw new InvalidOperationException("Generated TIFF file is too large.");
-                    }
-
-                    // Save TIFF to disk if size is acceptable
-                    string outputPath = "output_valid.tiff";
-
-                    // Ensure target directory exists
-                    string directory = Path.GetDirectoryName(outputPath);
-                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                    {
-                        Directory.CreateDirectory(directory);
-                    }
-
-                    try
-                    {
-                        File.WriteAllBytes(outputPath, tiffStream.ToArray());
-                        Console.WriteLine($"TIFF file saved successfully to '{outputPath}'.");
-                    }
-                    catch (Exception ioEx)
-                    {
-                        Console.WriteLine($"Failed to write TIFF file: {ioEx.Message}");
-                    }
-                }
+                Console.WriteLine("Error: TIFF file was not created.");
+                return;
             }
-            catch (Exception ex)
+
+            // Check the file size
+            FileInfo fileInfo = new FileInfo(tiffPath);
+            if (fileInfo.Length > MaxTiffSizeBytes)
             {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: TIFF size {fileInfo.Length} bytes exceeds the limit of {MaxTiffSizeBytes} bytes.");
+                // Optional: delete the oversized file
+                // File.Delete(tiffPath);
             }
+            else
+            {
+                Console.WriteLine($"TIFF saved successfully. Size: {fileInfo.Length} bytes.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

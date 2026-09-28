@@ -1,62 +1,61 @@
-// Title: Batch convert Excel workbooks to HTML with conditional hidden‑sheet exclusion using Aspose.Cells for .NET
-// Description: Iterates through a folder of .xlsx files, detects worksheets whose name contains "confidential" (case‑insensitive), and saves each workbook as HTML. The HtmlSaveOptions.ExportHiddenWorksheet flag is set to false only for workbooks that contain a confidential sheet, otherwise hidden sheets are included.
-// Keywords: Aspose.Cells HTML export | ExportHiddenWorksheet conditional | batch Excel to HTML .NET | skip hidden worksheets confidential | C# Aspose.Cells example | process multiple workbooks | global Excel conversion | regional data privacy export
-// Common Searches: Aspose.Cells export hidden worksheets based on sheet name | batch convert xlsx to html and hide confidential sheets | C# conditional ExportHiddenWorksheet option | how to exclude hidden sheets when exporting Excel to HTML | automate Excel to HTML conversion with privacy rules
-// Developer Intent: Convert a collection of Excel files to HTML, disabling hidden‑sheet export only for workbooks that contain a worksheet named "confidential".
-// Use Cases: Publish public HTML reports from a shared drive while automatically protecting hidden confidential data. | Nightly automation that transforms financial models to web‑ready format, preserving helper sheets unless a confidential tab is present. | Client‑side conversion service that delivers HTML versions of uploaded workbooks, omitting hidden sheets for privacy‑sensitive files.
-// AI Prompts: Generate C# code with Aspose.Cells that batch converts .xlsx files to HTML, turning off ExportHiddenWorksheet when any worksheet name includes "confidential". | Add robust logging and error handling to the batch export program, recording files where hidden worksheets were excluded. | Create unit tests that verify ExportHiddenWorksheet is false only when a confidential worksheet exists in the workbook.
+// Title: Batch hide confidential worksheets in multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Generate a C# console application that scans a directory for .xlsx files, loads each workbook with Aspose.Cells, hides any worksheet whose name contains the word “confidential” (case‑insensitive), and saves the modified files to a separate output folder. | Write a .NET script that processes all Excel files in a given folder, sets Worksheet.IsVisible = false for sheets matching a confidential keyword, handles missing files and exceptions, and logs the processing results.
+// Common Searches: C# Aspose.Cells hide worksheets containing a specific keyword in batch | How to process multiple Excel files and hide confidential sheets with Aspose.Cells | Automate hiding of confidential worksheets across many workbooks using .NET | Aspose.Cells hide sheet by name while saving multiple workbooks
+// Tags: batch hide confidential worksheets Aspose.Cells | process multiple .xlsx workbooks C# | set worksheet IsVisible false Aspose.Cells | hide sheets by name keyword .NET | automate Excel workbook privacy Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchExportHiddenWorksheets
+// The example enumerates all .xlsx files in a source folder, loads each workbook with Aspose.Cells, marks any worksheet whose name includes the word "confidential" (case‑insensitive) as invisible, and saves the updated workbook to a target directory, creating the directory if needed and logging any errors encountered.
+class BatchWorkbookProcessor
 {
-    // Iterates through a folder of .xlsx files, detects worksheets whose name contains "confidential" (case‑insensitive), and saves each workbook as HTML. The HtmlSaveOptions.ExportHiddenWorksheet flag is set to false only for workbooks that contain a confidential sheet, otherwise hidden sheets are included.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main()
+        // Input and output directories
+        string inputFolder = @"C:\InputWorkbooks";
+        string outputFolder = @"C:\OutputWorkbooks";
+
+        // Ensure output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Get all Excel files in the input folder
+        string[] files = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
+
+        foreach (string inputPath in files)
         {
-            // Folder containing source Excel workbooks
-            string sourceFolder = @"C:\InputWorkbooks";
-
-            // Folder where the HTML files will be saved
-            string outputFolder = @"C:\ExportedHtml";
-
-            // Ensure the output directory exists
-            Directory.CreateDirectory(outputFolder);
-
-            // Process each Excel file in the source folder
-            foreach (string filePath in Directory.GetFiles(sourceFolder, "*.xlsx"))
+            try
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Determine if any worksheet name contains the word "confidential" (case‑insensitive)
-                bool containsConfidential = false;
-                foreach (Worksheet ws in workbook.Worksheets)
+                // Verify the file exists before loading
+                if (!File.Exists(inputPath))
                 {
-                    if (ws.Name.IndexOf("confidential", StringComparison.OrdinalIgnoreCase) >= 0)
+                    Console.WriteLine($"File not found: {inputPath}");
+                    continue;
+                }
+
+                // Load workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Hide confidential worksheets (if any)
+                foreach (Worksheet sheet in workbook.Worksheets)
+                {
+                    if (sheet.Name.IndexOf("confidential", StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        containsConfidential = true;
-                        break;
+                        sheet.IsVisible = false; // hide the sheet
                     }
                 }
 
-                // Configure HTML save options
-                HtmlSaveOptions saveOptions = new HtmlSaveOptions
-                {
-                    // Export hidden worksheets only when the workbook does NOT contain confidential sheets
-                    ExportHiddenWorksheet = !containsConfidential
-                };
+                // Build output file path
+                string fileName = Path.GetFileName(inputPath);
+                string outputPath = Path.Combine(outputFolder, fileName);
 
-                // Build the output HTML file path
-                string outputFile = Path.Combine(
-                    outputFolder,
-                    Path.GetFileNameWithoutExtension(filePath) + ".html");
-
-                // Save the workbook as HTML using the configured options
-                workbook.Save(outputFile, saveOptions);
+                // Save workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Processed and saved: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{inputPath}': {ex.Message}");
             }
         }
     }

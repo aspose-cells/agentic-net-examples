@@ -1,16 +1,13 @@
-// Title: Insert Current Date with a Smart Tag Using TODAY() in Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, add a smart tag to cell A1, assign the "date" smart tag type, set the cell formula to =TODAY() so the date updates automatically, and save the file as SmartTagWithToday.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | smart tag | TODAY() function | C# | .NET | insert current date | Excel automation | smart markers | dynamic date formula | worksheet smart tag
-// Common Searches: Aspose.Cells add smart tag with TODAY() | C# set cell formula to TODAY() in Aspose.Cells | how to use smart tags for dates in Excel with Aspose | dynamic date smart marker Aspose.Cells .NET | create workbook with smart tag that shows today's date
-// Developer Intent: Add a smart tag that automatically displays the current date by applying the TODAY() formula to a cell.
-// Use Cases: Generate report templates where the header shows the opening date that refreshes on each view. | Automate invoice sheets that stamp the creation date without manual entry. | Build export routines that add a summary cell reflecting the current processing date.
-// AI Prompts: Write C# code using Aspose.Cells to add a smart tag to cell B2 that inserts the current date with the TODAY() function. | Explain how smart tags and formulas can be combined in Aspose.Cells to display dynamic values such as the current date. | Provide example with robust error handling for adding a date smart tag and setting the TODAY() formula in an Aspose.Cells workbook.
+// Title: Insert the current date with a smart tag using the TODAY() formula in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, adds a smart tag to cell A1, assigns the =TODAY() formula, and saves the file as an .xlsx. | Generate a snippet showing how to configure SmartTagSetting and SmartTagCollection to display today's date via a smart marker in Aspose.Cells. | Provide an example that applies a "date" smart tag with the TODAY() function and exports the workbook using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add smart tag that shows today's date | how to use TODAY() formula with smart markers in Aspose.Cells .NET | create Excel file with dynamic date using smart tag in C# Aspose.Cells | smart tag insert current date Aspose.Cells example
+// Tags: smart tag add date Aspose.Cells C# | set cell formula TODAY() Aspose.Cells | configure SmartTagSetting Aspose.Cells | dynamic date insertion Excel Aspose.Cells | save workbook with smart marker .xlsx
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Markup;
 
-// Demonstrates how to create a workbook, add a smart tag to cell A1, assign the "date" smart tag type, set the cell formula to =TODAY() so the date updates automatically, and save the file as SmartTagWithToday.xlsx using Aspose.Cells for .NET.
+// Demonstrates creating a workbook, adding a 'date' smart tag to cell A1, setting its formula to =TODAY() for dynamic current‑date display, and saving the result as SmartTagWithToday.xlsx.
 class Program
 {
     static void Main()
@@ -23,14 +20,14 @@ class Program
 
             // Add a smart tag to cell A1 (row 0, column 0)
             SmartTagSetting smartTagSetting = worksheet.SmartTagSetting;
-            smartTagSetting.Add(0, 0); // index not needed further
+            smartTagSetting.Add(0, 0); // Add(int row, int column)
 
             // Retrieve the SmartTagCollection for the cell and add a "date" smart tag
             SmartTagCollection smartTagCollection = smartTagSetting[0, 0];
-            smartTagCollection.Add("urn:schemas-microsoft-com:office:smarttags", "date");
+            smartTagCollection.Add("urn:schemas-microsoft-com:office:smarttags", "date"); // Add(string uri, string name)
 
-            // Insert the current date using the TODAY() function
-            worksheet.Cells["A1"].Formula = "=TODAY()";
+            // Set the cell formula to TODAY() so it displays the current date
+            worksheet.Cells[0, 0].Formula = "=TODAY()";
 
             // Save the workbook
             workbook.Save("SmartTagWithToday.xlsx");

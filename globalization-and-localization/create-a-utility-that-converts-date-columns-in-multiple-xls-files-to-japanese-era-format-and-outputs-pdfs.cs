@@ -1,114 +1,87 @@
-// Title: C# Batch Convert Excel Date Columns to Japanese Era and Export PDFs using Aspose.Cells
-// Description: A console utility that scans a folder for .xls/.xlsx workbooks, sets the workbook region to Japan, applies a custom Japanese‑era number format to any column whose first non‑blank cell is a date, saves a temporary XLSX, converts it to PDF with Aspose.Cells ConversionUtility, and cleans up the temporary file.
-// Keywords: Aspose.Cells | C# | .NET | Japanese era date format | Excel to PDF batch conversion | custom number format | region Japan | date column styling | automation | ConversionUtility
-// Common Searches: format Excel dates as Japanese era using Aspose.Cells | batch convert XLSX to PDF C# Aspose | apply custom number format to whole column Aspose.Cells | set workbook region to Japan for date formatting | convert multiple Excel files to PDF programmatically
-// Developer Intent: Process a collection of Excel files, convert any date columns to the Japanese era notation, and generate corresponding PDF documents automatically.
-// Use Cases: Modernize legacy Japanese financial spreadsheets by delivering PDFs with era‑based dates for regulatory compliance. | Run a nightly job that formats date columns in newly generated reports and publishes PDF versions for archiving. | Integrate into a CI/CD pipeline to guarantee that all exported PDFs from Excel sources use the correct Japanese calendar representation.
-// AI Prompts: Generate C# code that detects date columns in an Excel workbook and applies a Japanese‑era custom format with Aspose.Cells. | Refactor the batch utility to use async I/O and parallel processing for handling thousands of files efficiently. | Explain how to modify the custom format string to show the era name in English or to support other locale‑specific date patterns.
+// Title: Batch convert XLS workbooks to PDF while converting all date cells to Japanese era format using Aspose.Cells for .NET
+// AI Prompts: Write C# code that scans a directory for *.xls files, loads each workbook with Aspose.Cells, sets the workbook culture to ja-JP, formats every DateTime cell using the pattern ggge年M月d日, and saves the workbook as a PDF in a target folder. | Generate a .NET utility that iterates through all worksheets and cells of multiple Excel files, converts date values to Japanese era notation, and exports each file to PDF with Aspose.Cells, ensuring folders exist and handling errors.
+// Common Searches: how to batch convert xls files to pdf with Japanese era dates using Aspose.Cells .NET | apply Japanese era custom number format to all date cells in Excel workbook C# | set workbook culture to ja-JP for PDF export with Aspose.Cells | convert multiple Excel files to PDF while changing date format to era in C# | Aspose.Cells example for formatting dates as ggge年M月d日 and saving as PDF
+// Tags: Aspose.Cells batch XLS to PDF conversion | Japanese era date formatting Aspose.Cells | ggge年M月d日 custom number format | Workbook CultureInfo ja-JP setting | Iterate worksheets cells for date conversion C#
 
 using System;
 using System.IO;
+using System.Globalization;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-namespace DateColumnJapaneseEraConverter
+namespace DateToJapaneseEraPdf
 {
-    // A console utility that scans a folder for .xls/.xlsx workbooks, sets the workbook region to Japan, applies a custom Japanese‑era number format to any column whose first non‑blank cell is a date, saves a temporary XLSX, converts it to PDF with Aspose.Cells ConversionUtility, and cleans up the temporary file.
+    // The example scans a specified input folder for .xls files, loads each workbook with Aspose.Cells, sets the workbook culture to Japanese (ja-JP), applies the era pattern ggge年M月d日 to every cell containing a DateTime value, and saves the modified workbook as a PDF in an output folder, with basic error handling for missing files and folder creation.
     class Program
     {
         static void Main(string[] args)
         {
-            // Input folder containing Excel files (XLS/XLSX)
-            string inputFolder = @"C:\InputExcelFiles";
-            // Output folder where PDFs will be saved
-            string outputFolder = @"C:\OutputPdfFiles";
+            // Folder containing the source XLS files
+            string inputFolder = @"C:\Input";
 
-            // Ensure input folder exists
+            // Folder where the resulting PDFs will be saved
+            string outputFolder = @"C:\Output";
+
+            // Verify input folder exists
             if (!Directory.Exists(inputFolder))
             {
-                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                Console.WriteLine($"Input folder not found: {inputFolder}");
                 return;
             }
 
             // Ensure output directory exists
-            if (!Directory.Exists(outputFolder))
-                Directory.CreateDirectory(outputFolder);
+            Directory.CreateDirectory(outputFolder);
 
-            ProcessFolder(inputFolder, outputFolder);
-        }
-
-        static void ProcessFolder(string inputFolder, string outputFolder)
-        {
-            // Get all Excel files (both .xls and .xlsx) in the folder
-            string[] excelFiles = Directory.GetFiles(inputFolder, "*.xls*");
-
-            foreach (string excelPath in excelFiles)
+            // Process each XLS file in the input folder
+            foreach (string xlsPath in Directory.GetFiles(inputFolder, "*.xls"))
             {
+                // Guard against missing file (should not happen with GetFiles)
+                if (!File.Exists(xlsPath))
+                {
+                    Console.WriteLine($"File not found, skipping: {xlsPath}");
+                    continue;
+                }
+
                 try
                 {
-                    if (!File.Exists(excelPath))
-                    {
-                        Console.WriteLine($"File not found: {excelPath}");
-                        continue;
-                    }
-
                     // Load the workbook
-                    Workbook workbook = new Workbook(excelPath);
+                    Workbook workbook = new Workbook(xlsPath);
 
-                    // Set workbook region to Japan to ensure Japanese calendar is used
-                    workbook.Settings.Region = CountryCode.Japan;
+                    // Set culture to Japanese to enable era formatting
+                    workbook.Settings.CultureInfo = new CultureInfo("ja-JP");
 
-                    // Define the Japanese era custom number format
-                    // Example format: "ggge年M月d日" (e.g., "令和3年5月12日")
-                    string japaneseEraFormat = "[$-ja-JP]ggge年M月d日";
-
-                    // Create a style with the custom format
-                    Style eraStyle = workbook.CreateStyle();
-                    eraStyle.Custom = japaneseEraFormat;
-
-                    // Apply the style to each column that contains date values
+                    // Iterate through all worksheets
                     foreach (Worksheet sheet in workbook.Worksheets)
                     {
-                        // Determine the maximum column used in the sheet
-                        int maxColumn = sheet.Cells.MaxColumn;
-
-                        for (int col = 0; col <= maxColumn; col++)
+                        // Iterate through all used cells in the worksheet
+                        foreach (Cell cell in sheet.Cells)
                         {
-                            // Find the first non‑blank cell in the column
-                            int firstDataRow = sheet.Cells.GetFirstDataRow(col);
-                            if (firstDataRow < 0) continue; // Column is empty
-
-                            // Check if the first data cell is a date
-                            Cell firstCell = sheet.Cells[firstDataRow, col];
-                            if (firstCell.Type == CellValueType.IsDateTime)
+                            // Check if the cell contains a DateTime value
+                            if (cell.Value is DateTime)
                             {
-                                // Apply the Japanese era style to the whole column
-                                StyleFlag flag = new StyleFlag();
-                                flag.NumberFormat = true; // enable custom number format
-                                sheet.Cells.ApplyColumnStyle(col, eraStyle, flag);
+                                // Retrieve the cell's style
+                                Style style = cell.GetStyle();
+
+                                // Apply Japanese era custom number format (e.g., "ggge年M月d日")
+                                style.Custom = "ggge\"年\"M\"月\"d\"日\"";
+
+                                // Assign the modified style back to the cell
+                                cell.SetStyle(style);
                             }
                         }
                     }
 
-                    // Save the modified workbook to a temporary XLSX file
-                    string tempXlsxPath = Path.Combine(outputFolder,
-                        Path.GetFileNameWithoutExtension(excelPath) + "_era.xlsx");
-                    workbook.Save(tempXlsxPath, SaveFormat.Xlsx);
+                    // Build the output PDF file path
+                    string pdfFileName = Path.GetFileNameWithoutExtension(xlsPath) + ".pdf";
+                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
 
-                    // Convert the temporary XLSX file to PDF using ConversionUtility
-                    string pdfPath = Path.Combine(outputFolder,
-                        Path.GetFileNameWithoutExtension(excelPath) + ".pdf");
-                    ConversionUtility.Convert(tempXlsxPath, pdfPath);
+                    // Save the workbook as PDF
+                    workbook.Save(pdfPath, SaveFormat.Pdf);
 
-                    // Optionally delete the temporary XLSX file
-                    if (File.Exists(tempXlsxPath))
-                        File.Delete(tempXlsxPath);
-
-                    Console.WriteLine($"Processed '{excelPath}' -> '{pdfPath}'");
+                    Console.WriteLine($"Converted '{xlsPath}' to PDF successfully.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{excelPath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{xlsPath}': {ex.Message}");
                 }
             }
         }

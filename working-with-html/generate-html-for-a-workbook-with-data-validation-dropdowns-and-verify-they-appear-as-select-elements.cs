@@ -1,51 +1,84 @@
-// Title: Export Excel List Validation as HTML <select> using Aspose.Cells for .NET
-// Description: Creates a workbook, adds a List‑type data‑validation to cell A1, enables the in‑cell dropdown, saves the sheet as HTML, and verifies that the output contains a <select> element.
-// Keywords: Aspose.Cells | C# | HTML export | data validation list | in‑cell dropdown | select element | Excel to HTML conversion | validation rendering
-// Common Searches: Aspose.Cells export data validation as dropdown | HTML <select> from Excel list validation C# | verify select tag in Aspose.Cells HTML output | how to render Excel dropdown in HTML with Aspose | C# generate HTML with data‑validation list
-// Developer Intent: Generate an HTML file from an Excel workbook that preserves a List‑type validation as a functional <select> control and programmatically confirm its presence.
-// Use Cases: Publish Excel worksheets with interactive dropdowns on web pages. | Automated regression tests to ensure data‑validation lists are rendered correctly in HTML exports. | Create static reports that retain user‑selectable options originally defined in Excel.
-// AI Prompts: Write C# code with Aspose.Cells to add a List validation to cell B2, enable the in‑cell dropdown, export to HTML, and assert that a <select> tag exists in the output. | Explain how HtmlSaveOptions and HtmlExportDataOptions affect the rendering of Excel data‑validation lists as <select> elements in the generated HTML. | Provide a step‑by‑step guide to verify that an HTML file produced by Aspose.Cells includes the expected <select> element for a given validation.
+// Title: Generate HTML from a C# Aspose.Cells workbook with list‑validation dropdowns and verify the <select> element appears
+// AI Prompts: Write C# code that uses Aspose.Cells to add a list‑type data validation to a cell range, save the workbook as HTML, and programmatically confirm the output contains a <select> tag. | Show how to create a dropdown list in cells C1:C5 referencing A1:A3, export the sheet to HTML, and assert that the generated HTML includes a <select> element.
+// Common Searches: Aspose.Cells C# export worksheet with data validation list to HTML | how to render Excel dropdown as <select> in HTML using Aspose.Cells | verify dropdown rendering in Aspose.Cells HTML output C# | save workbook with list validation as HTML file Aspose.Cells .NET | C# example for data validation dropdown to HTML conversion Aspose.Cells
+// Tags: Aspose.Cells list validation HTML export | C# data validation dropdown to HTML | render Excel dropdown as select tag | verify generated HTML contains select element | SaveFormat.Html workbook conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// Creates a workbook, adds a List‑type data‑validation to cell A1, enables the in‑cell dropdown, saves the sheet as HTML, and verifies that the output contains a <select> element.
-class DataValidationHtmlDemo
+namespace AsposeCellsDataValidationHtmlDemo
 {
-    static void Main()
+    // Demonstrates creating a workbook, adding a list‑type data validation to cells C1:C5 referencing A1:A3, saving the workbook as HTML with Aspose.Cells, and checking the resulting file for a <select> element to confirm proper dropdown rendering.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main(string[] args)
+        {
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-        // Define a cell area for the validation (cell A1)
-        CellArea area = CellArea.CreateCellArea(0, 0, 0, 0);
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a validation to the worksheet
-        ValidationCollection validations = sheet.Validations;
-        int index = validations.Add(area);
-        Validation validation = validations[index];
+                // Populate a list of values that will be used for the dropdown (e.g., A1:A3)
+                sheet.Cells["A1"].PutValue("Option 1");
+                sheet.Cells["A2"].PutValue("Option 2");
+                sheet.Cells["A3"].PutValue("Option 3");
 
-        // Set validation type to List and provide comma‑separated values
-        validation.Type = ValidationType.List;
-        validation.Formula1 = "Option1,Option2,Option3";
+                // Define the range where the dropdown should appear (e.g., C1:C5)
+                // Use CellArea to specify the target cells
+                CellArea dropdownArea = new CellArea
+                {
+                    StartRow = 0,   // C1 (row 0)
+                    EndRow = 4,     // C5 (row 4)
+                    StartColumn = 2, // column C (index 2)
+                    EndColumn = 2
+                };
 
-        // Enable the in‑cell dropdown so it will be rendered as a <select> element in HTML
-        validation.InCellDropDown = true;
+                // Add a list validation for the specified area
+                int validationIndex = sheet.Validations.Add(dropdownArea);
+                Validation validation = sheet.Validations[validationIndex];
+                validation.Type = ValidationType.List;               // set validation type
+                validation.Formula1 = "=$A$1:$A$3";                  // source list range
+                validation.ShowError = true;
+                validation.ErrorTitle = "Invalid Selection";
+                validation.ErrorMessage = "Please select a value from the list.";
 
-        // Save the workbook to HTML
-        string htmlPath = "DataValidationDemo.html";
-        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-        htmlOptions.ExportDataOptions = HtmlExportDataOptions.All; // export full data
-        workbook.Save(htmlPath, htmlOptions);
+                // Prepare output HTML path
+                string htmlPath = "WorkbookWithDropdown.html";
+                string htmlDir = Path.GetDirectoryName(htmlPath);
+                if (!string.IsNullOrEmpty(htmlDir) && !Directory.Exists(htmlDir))
+                {
+                    Directory.CreateDirectory(htmlDir);
+                }
 
-        // Verify that the generated HTML contains a <select> element
-        string htmlContent = File.ReadAllText(htmlPath);
-        bool containsSelect = htmlContent.IndexOf("<select", StringComparison.OrdinalIgnoreCase) >= 0;
+                // Save the workbook as HTML
+                workbook.Save(htmlPath, SaveFormat.Html);
 
-        Console.WriteLine("HTML file generated at: " + Path.GetFullPath(htmlPath));
-        Console.WriteLine("Contains <select> element for dropdown: " + (containsSelect ? "Yes" : "No"));
+                // Verify that the generated HTML contains a <select> element (Aspose.Cells renders dropdowns as <select>)
+                if (File.Exists(htmlPath))
+                {
+                    string htmlContent = File.ReadAllText(htmlPath);
+                    if (htmlContent.IndexOf("<select", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        Console.WriteLine("Verification succeeded: <select> element found in the HTML output.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Verification failed: <select> element not found in the HTML output.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Error: HTML file '{htmlPath}' was not created.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

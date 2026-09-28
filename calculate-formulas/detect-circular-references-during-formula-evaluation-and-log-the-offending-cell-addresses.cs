@@ -1,74 +1,63 @@
-// Title: C# Custom CalculationMonitor to Detect and Log Circular References in Aspose.Cells
-// Description: Shows how to subclass AbstractCalculationMonitor, override OnCircular to enumerate offending cells, build their addresses, and log them while using CalculationOptions with workbook.CalculateFormula. Includes optional workbook save.
-// Keywords: Aspose.Cells | C# | .NET | circular reference detection | AbstractCalculationMonitor | OnCircular | formula calculation | cell address logging | CalculationOptions | Excel automation
-// Common Searches: Aspose.Cells detect circular reference C# | Custom CalculationMonitor example | Log circular reference cells Aspose.Cells | How to use AbstractCalculationMonitor .NET | Workbook.CalculateFormula circular reference
-// Developer Intent: Create a custom CalculationMonitor that captures and logs cells involved in circular references during formula evaluation.
-// Use Cases: Debug spreadsheets with inter‑dependent formulas by listing offending cells. | Prevent calculation errors before saving a workbook. | Integrate circular‑reference logging into automated Excel processing pipelines. | Collect circular cell addresses for reporting or corrective scripts.
-// AI Prompts: Generate a C# class extending AbstractCalculationMonitor that records circular reference cell addresses to a file. | Demonstrate configuring CalculationOptions with a custom monitor and invoking workbook.CalculateFormula to detect circular references. | Explain how to modify OnCircular to return a list of cell addresses instead of printing them.
+// Title: How to Detect and Log Circular References in Excel Formulas Using Aspose.Cells C# Calculation Monitor
+// AI Prompts: Create a C# class that inherits from AbstractCalculationMonitor and writes each cell address involved in a circular reference to the console. | Configure CalculationOptions with the custom monitor and enable recursive calculation to capture circular formula loops during workbook.CalculateFormula. | Adjust the monitor to abort the calculation by returning false when a circular reference is encountered.
+// Common Searches: Aspose.Cells C# example for detecting circular references during formula calculation | log cells that cause circular reference error using Aspose.Cells calculation monitor | how to use AbstractCalculationMonitor to handle circular formulas in a workbook | C# workbook.CalculateFormula circular reference detection Aspose.Cells
+// Tags: Aspose.Cells custom calculation monitor | circular reference detection Aspose.Cells | log offending cells C# Aspose.Cells | recursive formula calculation Aspose.Cells | Excel workbook circular formula handling
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace CircularReferenceDemo
+namespace CircularReferenceDetectionDemo
 {
-    // Custom monitor to detect and log circular references during calculation
-    // Shows how to subclass AbstractCalculationMonitor, override OnCircular to enumerate offending cells, build their addresses, and log them while using CalculationOptions with workbook.CalculateFormula. Includes optional workbook save.
+    // Custom monitor to capture circular reference information
+    // Demonstrates a custom CircularReferenceMonitor derived from AbstractCalculationMonitor that logs the addresses of cells participating in a circular reference (e.g., A1↔B1) during workbook.CalculateFormula, with CalculationOptions configured for recursive evaluation and optional continuation or abort behavior.
     public class CircularReferenceMonitor : AbstractCalculationMonitor
     {
-        private readonly Workbook _workbook;
-
-        public CircularReferenceMonitor(Workbook workbook)
-        {
-            _workbook = workbook;
-        }
-
-        // Called when the calculation engine finds a circular reference
+        // This method is called when the calculation engine detects a circular reference
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            Console.WriteLine("Circular reference detected. Offending cells:");
+            Console.WriteLine("Circular reference detected! Offending cells:");
 
+            // Iterate through the cells involved in the circular reference
             while (circularCellsData.MoveNext())
             {
-                // The items are CalculationCell objects; use reflection to obtain their properties
-                object calcCell = circularCellsData.Current;
-                var type = calcCell.GetType();
-
-                int row = (int)type.GetProperty("Row").GetValue(calcCell);
-                int column = (int)type.GetProperty("Column").GetValue(calcCell);
-                int sheetIndex = (int)type.GetProperty("SheetIndex").GetValue(calcCell);
-
-                // Build the cell address (e.g., Sheet1!A1)
-                string address = $"{_workbook.Worksheets[sheetIndex].Name}!{CellsHelper.CellIndexToName(row, column)}";
-                Console.WriteLine(address);
+                // The enumerated object represents a cell participating in the circular loop.
+                // Its ToString() implementation provides a readable address (e.g., "Sheet1!A1").
+                Console.WriteLine($" - {circularCellsData.Current}");
             }
 
-            // Return true to let the engine continue calculation for these cells
+            // Return true to let the engine continue processing (or false to stop).
+            // Here we allow the engine to continue with default handling.
             return true;
         }
     }
 
-    class Program
+    public class Program
     {
-        static void Main()
+        public static void Main()
         {
-            // Create a new workbook and set up a circular reference scenario
+            // Create a new workbook
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            sheet.Cells["A1"].Formula = "=B1";
-            sheet.Cells["B1"].Formula = "=A1";
+            // Set up a simple circular reference scenario:
+            // A1 depends on B1, and B1 depends on A1
+            cells["A1"].Formula = "=B1";
+            cells["B1"].Formula = "=A1";
 
             // Configure calculation options with the custom monitor
-            CalculationOptions options = new CalculationOptions
+            CalculationOptions calcOptions = new CalculationOptions
             {
-                CalculationMonitor = new CircularReferenceMonitor(workbook)
+                CalculationMonitor = new CircularReferenceMonitor(),
+                // Optional: you can control recursion or iterative calculation here
+                Recursive = true
             };
 
-            // Perform formula calculation; the monitor will log any circular references
-            workbook.CalculateFormula(options);
+            // Perform formula calculation; the monitor will be invoked automatically
+            workbook.CalculateFormula(calcOptions);
 
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
+            // Save the workbook (optional, just to demonstrate lifecycle compliance)
             workbook.Save("CircularReferenceDemo.xlsx");
         }
     }

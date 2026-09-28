@@ -1,76 +1,76 @@
-// Title: Clone a Chart, Adjust Its Secondary Axis, and Insert the Copy into a New Worksheet – Aspose.Cells for .NET (C#)
-// Description: This example demonstrates how to create a workbook with sample data, add a column chart that uses a secondary value axis, clone the worksheet containing the chart, retrieve the cloned chart, customize its secondary axis title, minimum, maximum and major unit, optionally reposition the chart on the new sheet, and save the result as an Excel file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells chart clone C# | secondary axis Aspose.Cells | copy worksheet with chart .NET | duplicate Excel chart C# | move chart Aspose.Cells | Chart.Move method | AddCopy worksheet Aspose.Cells | C# Excel chart secondary value axis
-// Common Searches: Aspose.Cells clone chart C# | How to copy a worksheet that contains a chart in Aspose.Cells | Change secondary axis of a cloned chart Aspose.Cells | Move chart to another sheet using Aspose.Cells for .NET | Set secondary axis range for Excel chart with Aspose.Cells
-// Developer Intent: The developer wants to duplicate an existing chart, modify its secondary axis settings, and place the duplicated chart on a separate worksheet using Aspose.Cells for .NET.
-// Use Cases: Create a report that shows the original chart and a version with a different secondary axis scale on separate sheets for side‑by‑side comparison. | Automate the replication of charts across multiple worksheets while customizing each copy’s secondary axis title and range to match distinct data sets. | Build a template workbook that copies a chart to a new sheet, repositions it, and applies a tailored secondary axis configuration for downstream processing.
-// AI Prompts: Generate C# code with Aspose.Cells that clones a chart from one worksheet, changes the secondary axis title, min, max, and major unit, and inserts the clone into a new sheet. | Show how to copy a worksheet containing a chart, retrieve the duplicated chart, adjust its secondary axis parameters, and move the chart to a different location on the target sheet using Aspose.Cells for .NET. | Explain step‑by‑step how to duplicate a chart, customize its secondary value axis range, and save the workbook with the modified chart in Aspose.Cells (C#).
+// Title: Clone a chart, adjust its secondary axis, and place the clone on a new worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that copies a worksheet containing a chart, retrieves the cloned chart, updates the secondary value axis title, minimum, maximum, and major unit, then saves the workbook. | Show how to duplicate a chart by cloning its worksheet with Aspose.Cells, modify the cloned chart's secondary axis properties, and export the result to an .xlsx file. | Provide a step‑by‑step example that creates a column chart with a secondary axis, clones the worksheet, changes the secondary axis settings of the cloned chart, and writes the workbook to disk.
+// Common Searches: how to clone a chart and change secondary axis in Aspose.Cells C# | Aspose.Cells copy worksheet with chart and modify secondary value axis programmatically | C# example for duplicating a chart and setting secondary axis range using Aspose.Cells
+// Tags: aspose.cells chart duplication | secondary axis configuration aspose.cells | worksheet copy with embedded chart aspose.cells | c# adjust secondary value axis | export workbook with modified chart aspose.cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// This example demonstrates how to create a workbook with sample data, add a column chart that uses a secondary value axis, clone the worksheet containing the chart, retrieve the cloned chart, customize its secondary axis title, minimum, maximum and major unit, optionally reposition the chart on the new sheet, and save the result as an Excel file using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsChartCloneExample
 {
-    static void Main()
+    // The example creates a workbook, adds sample data, builds a column chart with a secondary value axis, clones the worksheet (including the chart), updates the cloned chart's secondary axis title and range, and saves the file as ClonedChartWithModifiedSecondaryAxis.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sourceSheet = workbook.Worksheets[0];
-        sourceSheet.Name = "Source";
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sourceSheet = workbook.Worksheets[0];
 
-        // Populate sample data for the chart
-        sourceSheet.Cells["A1"].PutValue("Category");
-        sourceSheet.Cells["A2"].PutValue("A");
-        sourceSheet.Cells["A3"].PutValue("B");
-        sourceSheet.Cells["A4"].PutValue("C");
+            // Populate sample data for the chart
+            sourceSheet.Cells["A1"].PutValue("Category");
+            sourceSheet.Cells["A2"].PutValue("A");
+            sourceSheet.Cells["A3"].PutValue("B");
+            sourceSheet.Cells["A4"].PutValue("C");
 
-        sourceSheet.Cells["B1"].PutValue("Series 1");
-        sourceSheet.Cells["B2"].PutValue(100);
-        sourceSheet.Cells["B3"].PutValue(200);
-        sourceSheet.Cells["B4"].PutValue(300);
+            sourceSheet.Cells["B1"].PutValue("Series 1");
+            sourceSheet.Cells["B2"].PutValue(100);
+            sourceSheet.Cells["B3"].PutValue(200);
+            sourceSheet.Cells["B4"].PutValue(300);
 
-        sourceSheet.Cells["C1"].PutValue("Series 2");
-        sourceSheet.Cells["C2"].PutValue(5000);
-        sourceSheet.Cells["C3"].PutValue(3000);
-        sourceSheet.Cells["C4"].PutValue(1000);
+            sourceSheet.Cells["C1"].PutValue("Series 2");
+            sourceSheet.Cells["C2"].PutValue(5000);
+            sourceSheet.Cells["C3"].PutValue(3000);
+            sourceSheet.Cells["C4"].PutValue(1000);
 
-        // Add the original chart
-        int chartIndex = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart originalChart = sourceSheet.Charts[chartIndex];
-        originalChart.NSeries.Add("B2:B4", true);
-        originalChart.NSeries.Add("C2:C4", true);
-        originalChart.NSeries.CategoryData = "A2:A4";
+            // Add a chart to the source worksheet
+            int chartIdx = sourceSheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart sourceChart = sourceSheet.Charts[chartIdx];
 
-        // Plot the second series on the secondary value axis
-        originalChart.NSeries[1].PlotOnSecondAxis = true;
+            // Set chart data
+            sourceChart.NSeries.Add("B2:B4", true);
+            sourceChart.NSeries.Add("C2:C4", true);
+            sourceChart.NSeries.CategoryData = "A2:A4";
 
-        // Configure the secondary axis of the original chart (optional)
-        Axis originalSecAxis = originalChart.SecondValueAxis;
-        originalSecAxis.Title.Text = "Original Secondary Axis";
-        originalSecAxis.MinValue = 0;
-        originalSecAxis.MaxValue = 6000;
-        originalSecAxis.MajorUnit = 1000;
+            // Plot the second series on the secondary value axis
+            sourceChart.NSeries[1].PlotOnSecondAxis = true;
 
-        // Clone the chart by copying the entire worksheet that contains it
-        int copiedSheetIndex = workbook.Worksheets.AddCopy("Source"); // uses AddCopy(string) rule
-        Worksheet clonedSheet = workbook.Worksheets[copiedSheetIndex];
-        clonedSheet.Name = "ClonedChartSheet";
+            // Configure the secondary value axis of the original chart (optional)
+            Axis originalSecondAxis = sourceChart.SecondValueAxis;
+            originalSecondAxis.Title.Text = "Original Secondary Axis";
+            originalSecondAxis.MinValue = 0;
+            originalSecondAxis.MaxValue = 6000;
+            originalSecondAxis.MajorUnit = 1000;
 
-        // Retrieve the cloned chart (same index as in the source sheet)
-        Chart clonedChart = clonedSheet.Charts[chartIndex];
+            // -----------------------------------------------------------------
+            // Clone the worksheet (which also clones the chart) using AddCopy
+            // -----------------------------------------------------------------
+            int clonedSheetIdx = workbook.Worksheets.AddCopy(0); // copy the first worksheet
+            Worksheet clonedSheet = workbook.Worksheets[clonedSheetIdx];
 
-        // Modify the secondary axis settings of the cloned chart
-        Axis clonedSecAxis = clonedChart.SecondValueAxis;
-        clonedSecAxis.Title.Text = "Cloned Secondary Axis";
-        clonedSecAxis.MinValue = 0;
-        clonedSecAxis.MaxValue = 8000;
-        clonedSecAxis.MajorUnit = 2000;
+            // Retrieve the cloned chart (it will have the same index as in the source sheet)
+            Chart clonedChart = clonedSheet.Charts[chartIdx];
 
-        // Optionally reposition the cloned chart on the new sheet
-        clonedChart.Move(5, 10, 20, 18); // uses Chart.Move method
+            // Modify secondary axis settings of the cloned chart
+            Axis clonedSecondAxis = clonedChart.SecondValueAxis;
+            clonedSecondAxis.Title.Text = "Cloned Secondary Axis";
+            clonedSecondAxis.MinValue = 0;
+            clonedSecondAxis.MaxValue = 5000;
+            clonedSecondAxis.MajorUnit = 1000;
 
-        // Save the workbook (uses the provided save rule)
-        workbook.Save("ClonedChartDemo.xlsx");
+            // Save the workbook with the original and cloned charts
+            workbook.Save("ClonedChartWithModifiedSecondaryAxis.xlsx");
+        }
     }
 }

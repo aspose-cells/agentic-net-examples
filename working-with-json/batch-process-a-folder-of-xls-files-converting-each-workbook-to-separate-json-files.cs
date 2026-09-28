@@ -1,78 +1,64 @@
-// Title: C# Batch Convert Excel Files in a Folder to Individual JSON Using Aspose.Cells .NET
-// Description: A console utility that checks a folder path, enumerates all *.xls and *.xlsx files, loads each workbook with Aspose.Cells, and saves it as a separate JSON file using default JsonSaveOptions. The program writes progress messages to the console and isolates errors per file.
-// Keywords: Aspose.Cells | C# | .NET | Excel to JSON conversion | batch export Excel files | process folder of XLSX | JsonSaveOptions | automate Excel JSON export | convert multiple workbooks | console app
-// Common Searches: how to batch convert Excel to JSON C# Aspose.Cells | C# code to export all .xls files in a directory as JSON | Aspose.Cells JsonSaveOptions example for multiple workbooks | automate folder processing of Excel files to JSON | convert a folder of Excel spreadsheets to JSON using .NET
-// Developer Intent: Programmatically transform every Excel workbook in a specified directory into its own JSON file.
-// Use Cases: Create JSON feeds from a collection of legacy Excel reports for API consumption. | Generate version‑controlled JSON snapshots of financial spreadsheets for audit trails. | Schedule nightly export of daily Excel logs to JSON for downstream analytics pipelines.
-// AI Prompts: Add recursive sub‑folder traversal to the batch converter and preserve the original folder hierarchy in the JSON output. | Customize JsonSaveOptions to export only selected worksheets or to format dates in ISO 8601. | Replace console logging with a structured log file (e.g., JSON or CSV) that records success and error details for each processed workbook.
+// Title: Convert every XLS workbook in a directory to a separate JSON file using Aspose.Cells in C#
+// AI Prompts: Write a C# console program that scans a given folder for *.xls files, loads each workbook with Aspose.Cells, and saves it as a JSON file with the same name. | Modify the batch converter to also handle *.xlsx files and include each worksheet’s name as a property in the generated JSON. | Add robust error handling and a log file that records successful conversions and any failures during the XLS‑to‑JSON batch process.
+// Common Searches: C# batch convert all .xls files in a folder to JSON with Aspose.Cells | How to export multiple Excel workbooks to separate JSON files using .NET | Aspose.Cells SaveFormat.Json example for processing a directory of Excel files | Automate conversion of a folder of legacy XLS spreadsheets to JSON in C# | Loop through files in a directory and save each workbook as JSON using Aspose.Cells
+// Tags: Aspose.Cells batch XLS to JSON conversion | C# folder iteration for Excel to JSON | SaveFormat.Json multiple workbooks | automated Excel workbook export .NET | error logging Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchJsonExport
+// A C# console utility that enumerates all *.xls files in a source folder, loads each workbook with Aspose.Cells, and saves each one as an individual JSON file in a target folder, with built‑in checks for missing files and exception handling.
+class XlsToJsonBatchConverter
 {
-    // A console utility that checks a folder path, enumerates all *.xls and *.xlsx files, loads each workbook with Aspose.Cells, and saves it as a separate JSON file using default JsonSaveOptions. The program writes progress messages to the console and isolates errors per file.
-    public static class WorkbookJsonExporter
+    static void Main(string[] args)
     {
-        /// <param name="folderPath">The full path to the folder containing the Excel files.</param>
-        public static void ProcessFolder(string folderPath)
+        // Path to the folder containing XLS files
+        string sourceFolder = @"C:\InputXlsFolder";
+
+        // Path to the folder where JSON files will be saved
+        string outputFolder = @"C:\OutputJsonFolder";
+
+        // Verify source folder exists
+        if (!Directory.Exists(sourceFolder))
         {
-            // Validate the folder path
-            if (string.IsNullOrWhiteSpace(folderPath) || !Directory.Exists(folderPath))
-            {
-                Console.WriteLine("The specified folder does not exist.");
-                return;
-            }
+            Console.WriteLine($"Source folder not found: {sourceFolder}");
+            return;
+        }
 
-            // Get all .xls and .xlsx files in the folder
-            string[] excelFiles = Directory.GetFiles(folderPath, "*.xls*", SearchOption.TopDirectoryOnly);
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
 
-            if (excelFiles.Length == 0)
-            {
-                Console.WriteLine("No Excel files found in the folder.");
-                return;
-            }
+        // Get all .xls files in the source folder (including .xlsx if needed)
+        string[] xlsFiles = Directory.GetFiles(sourceFolder, "*.xls", SearchOption.TopDirectoryOnly);
 
-            foreach (string excelFilePath in excelFiles)
+        foreach (string xlsPath in xlsFiles)
+        {
+            try
             {
-                try
+                // Verify the file still exists before loading
+                if (!File.Exists(xlsPath))
                 {
-                    // Ensure the file exists before attempting to load
-                    if (!File.Exists(excelFilePath))
-                    {
-                        Console.WriteLine($"File not found: {excelFilePath}");
-                        continue;
-                    }
-
-                    // Load the workbook
-                    Workbook workbook = new Workbook(excelFilePath);
-
-                    // Configure JSON save options (using defaults; adjust if needed)
-                    JsonSaveOptions jsonOptions = new JsonSaveOptions();
-
-                    // Determine the output JSON file path (same name, .json extension)
-                    string jsonFilePath = Path.ChangeExtension(excelFilePath, ".json");
-
-                    // Save the workbook as JSON
-                    workbook.Save(jsonFilePath, jsonOptions);
-
-                    Console.WriteLine($"Converted '{Path.GetFileName(excelFilePath)}' to '{Path.GetFileName(jsonFilePath)}'.");
+                    Console.WriteLine($"File not found (skipped): {xlsPath}");
+                    continue;
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing file '{excelFilePath}': {ex.Message}");
-                }
+
+                // Load the workbook from the XLS file
+                Workbook workbook = new Workbook(xlsPath);
+
+                // Determine the output JSON file name (same base name, .json extension)
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(xlsPath);
+                string jsonPath = Path.Combine(outputFolder, fileNameWithoutExt + ".json");
+
+                // Save the entire workbook as a JSON file
+                workbook.Save(jsonPath, SaveFormat.Json);
+                Console.WriteLine($"Converted: {xlsPath} -> {jsonPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing file '{xlsPath}': {ex.Message}");
             }
         }
 
-        // Example entry point
-        public static void Main(string[] args)
-        {
-            // Expect the folder path as the first argument; otherwise use a default path
-            string folder = args.Length > 0 ? args[0] : @"C:\ExcelFiles";
-
-            ProcessFolder(folder);
-        }
+        Console.WriteLine("Conversion completed. JSON files are located in: " + outputFolder);
     }
 }

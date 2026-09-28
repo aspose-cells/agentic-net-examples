@@ -1,10 +1,7 @@
-// Title: C# Batch Processing of Excel Templates with Smart Markers and JSON using Aspose.Cells
-// Description: A console app that scans a folder for .xlsx/.xls templates, pairs each with a same‑named .json file, loads the workbook with Aspose.Cells, assigns the JSON via WorkbookDesigner, processes all smart markers, and saves the populated files to an output directory with robust error handling.
-// Keywords: Aspose.Cells | C# | smart markers | batch Excel processing | JSON data source | WorkbookDesigner | .NET Excel automation | template population | invoice generation | certificate automation
-// Common Searches: Aspose.Cells batch smart markers example | C# process multiple Excel templates with JSON | WorkbookDesigner SetJsonDataSource loop folder | automate Excel report generation using Aspose | smart marker batch processing C#
-// Developer Intent: Create a C# utility that automatically fills a collection of Excel templates with corresponding JSON data via Aspose.Cells smart markers.
-// Use Cases: Generate a set of invoices by matching each invoice template with a customer‑specific JSON file. | Produce personalized certificates for event participants using template workbooks and individual JSON records. | Automate monthly financial reports by populating multiple report templates with JSON extracts from a database.
-// AI Prompts: Write a function that logs batch processing results to a CSV file instead of the console. | Suggest enhancements to validate JSON schema before assigning it to WorkbookDesigner. | Show how to configure the processor to use a custom data‑source name derived from a JSON property.
+// Title: C# batch job to populate Excel .xlsx templates with JSON data using Aspose.Cells smart markers
+// AI Prompts: Generate C# code that scans a directory for .xlsx template files, loads each workbook with Aspose.Cells, assigns a same‑named JSON file as a smart‑marker data source via WorkbookDesigner, processes the markers, and writes the result to an output folder. | Write a C# console application that iterates over Excel templates, reads corresponding JSON files, uses WorkbookDesigner.SetJsonDataSource to bind the data, calls Process, and saves the populated workbooks with a "_Processed" suffix.
+// Common Searches: how to use Aspose.Cells WorkbookDesigner to apply JSON data to multiple Excel templates in C# | C# script for batch processing of .xlsx files with smart markers and JSON sources | automate population of Excel smart markers from JSON files using Aspose.Cells library
+// Tags: batch populate Excel smart markers via Aspose.Cells | WorkbookDesigner JSON data source for .xlsx templates | C# loop over Excel files with smart markers | automated smart marker processing from JSON files | save processed workbooks with suffix in C#
 
 using System;
 using System.IO;
@@ -12,13 +9,16 @@ using Aspose.Cells;
 
 namespace BatchSmartMarkerProcessor
 {
-    // A console app that scans a folder for .xlsx/.xls templates, pairs each with a same‑named .json file, loads the workbook with Aspose.Cells, assigns the JSON via WorkbookDesigner, processes all smart markers, and saves the populated files to an output directory with robust error handling.
+    // Scans a folder of .xlsx templates, matches each with a same‑named .json file, loads the workbook, sets the JSON as a data source for smart markers via WorkbookDesigner, processes the markers, and saves the populated workbook to an output directory with a "_Processed" suffix.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Input folder containing Excel templates
+            // Folder containing Excel template files (must contain smart markers)
             string templatesFolder = @"C:\Templates";
+
+            // Folder containing JSON data files. Each JSON file should have the same base name as its template.
+            string jsonFolder = @"C:\JsonData";
 
             // Folder where processed workbooks will be saved
             string outputFolder = @"C:\Processed";
@@ -29,67 +29,61 @@ namespace BatchSmartMarkerProcessor
             // Verify that the templates folder exists
             if (!Directory.Exists(templatesFolder))
             {
-                Console.WriteLine($"Templates folder not found: {templatesFolder}");
-                Console.WriteLine("Please create the folder and add template files before running the program.");
+                Console.WriteLine($"Templates folder not found: '{templatesFolder}'.");
                 return;
             }
 
-            string[] excelFiles;
-            try
+            // Iterate over all .xlsx files in the templates folder
+            foreach (string templatePath in Directory.GetFiles(templatesFolder, "*.xlsx"))
             {
-                // Get all Excel files in the templates folder (supports .xlsx and .xls)
-                excelFiles = Directory.GetFiles(templatesFolder, "*.*", SearchOption.TopDirectoryOnly);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error accessing templates folder: {ex.Message}");
-                return;
-            }
-
-            foreach (string excelPath in excelFiles)
-            {
-                string extension = Path.GetExtension(excelPath).ToLowerInvariant();
-                if (extension != ".xlsx" && extension != ".xls")
-                    continue; // Skip non‑Excel files
-
-                // Determine corresponding JSON file (same base name, .json extension)
-                string jsonPath = Path.ChangeExtension(excelPath, ".json");
-                if (!File.Exists(jsonPath))
-                {
-                    Console.WriteLine($"JSON data not found for template '{Path.GetFileName(excelPath)}'. Skipping.");
-                    continue;
-                }
-
                 try
                 {
-                    // Load the Excel template
-                    Workbook workbook = new Workbook(excelPath);
+                    // Verify that the template file actually exists (safety check)
+                    if (!File.Exists(templatePath))
+                    {
+                        Console.WriteLine($"Template file not found: '{templatePath}'. Skipping.");
+                        continue;
+                    }
 
-                    // Read JSON content
+                    // Determine the base file name (without extension)
+                    string baseName = Path.GetFileNameWithoutExtension(templatePath);
+
+                    // Build the expected JSON file path
+                    string jsonPath = Path.Combine(jsonFolder, baseName + ".json");
+
+                    // Verify that the JSON file exists; if not, skip this template
+                    if (!File.Exists(jsonPath))
+                    {
+                        Console.WriteLine($"JSON data not found for template '{baseName}'. Skipping.");
+                        continue;
+                    }
+
+                    // Load the template workbook
+                    Workbook workbook = new Workbook(templatePath);
+
+                    // Create a WorkbookDesigner and associate it with the loaded workbook
+                    WorkbookDesigner designer = new WorkbookDesigner(workbook);
+
+                    // Read the JSON content
                     string jsonData = File.ReadAllText(jsonPath);
 
-                    // Create a WorkbookDesigner and assign the workbook
-                    WorkbookDesigner designer = new WorkbookDesigner
-                    {
-                        Workbook = workbook
-                    };
-
-                    // Use the file name (without extension) as the data source name
-                    string dataSourceName = Path.GetFileNameWithoutExtension(jsonPath);
-                    designer.SetJsonDataSource(dataSourceName, jsonData);
+                    // Set the JSON data source. The name "Data" can be referenced in smart markers (e.g., &=$Data.Name)
+                    designer.SetJsonDataSource("Data", jsonData);
 
                     // Process all smart markers in the workbook
                     designer.Process();
 
-                    // Save the processed workbook to the output folder
-                    string outputPath = Path.Combine(outputFolder, Path.GetFileName(excelPath));
+                    // Build the output file path
+                    string outputPath = Path.Combine(outputFolder, baseName + "_Processed.xlsx");
+
+                    // Save the processed workbook
                     workbook.Save(outputPath);
 
-                    Console.WriteLine($"Processed '{Path.GetFileName(excelPath)}' successfully.");
+                    Console.WriteLine($"Processed '{baseName}.xlsx' with data from '{baseName}.json' -> saved to '{outputPath}'.");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing '{Path.GetFileName(excelPath)}': {ex.Message}");
+                    Console.WriteLine($"Error processing template '{templatePath}': {ex.Message}");
                 }
             }
 

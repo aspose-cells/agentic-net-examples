@@ -1,88 +1,61 @@
-// Title: C# Aspose.Cells: Regex search for dd/MM/yyyy dates in range J1:J30
-// Description: Creates a workbook, fills column J with sample data, configures FindOptions for regular‑expression matching, restricts the search to J1:J30, and iterates with Cells.Find to list every cell whose value matches the pattern \d{2}/\d{2}/\d{4}. The workbook can be saved after the scan.
-// Keywords: Aspose.Cells regex search | C# find dates in Excel | FindOptions SetRange | dd/MM/yyyy pattern | search specific column J | .NET Excel date validation
-// Common Searches: Aspose.Cells find cells with date format dd/MM/yyyy | C# regex search in Excel range J1:J30 | How to limit Aspose.Cells Find to a column | Use FindOptions to locate date strings in Excel | Aspose.Cells regular expression example C#
-// Developer Intent: Identify every cell that contains a date formatted as dd/MM/yyyy within the J1:J30 area.
-// Use Cases: Validate that a column contains only correctly formatted dates before data import. | Extract rows with valid date strings for date‑driven reporting. | Flag or highlight cells with malformed dates during data‑cleansing.
-// AI Prompts: Generate C# code using Aspose.Cells to highlight cells that match a dd/MM/yyyy regex in a given range. | Show how to extend FindOptions to search multiple columns for the same date pattern. | Explain how to modify the regex to accept single‑digit day or month values (e.g., d/M/yyyy).
+// Title: Use Aspose.Cells for .NET to highlight cells with dd/MM/yyyy dates in the J1:J30 range
+// AI Prompts: Write C# code that creates a workbook, defines the range J1:J30, checks each cell with a ^\d{2}/\d{2}/\d{4}$ regex, and applies a yellow background style to matching cells using Aspose.Cells. | Generate a routine in C# using Aspose.Cells that iterates over cells J1 through J30, validates the text against a dd/MM/yyyy pattern, and sets a solid yellow fill for cells that match. | Provide a C# example that loads or creates an Excel file, selects column J rows 1‑30, uses a regular expression to detect date strings in dd/MM/yyyy format, and highlights those cells with Aspose.Cells styling.
+// Common Searches: aspocells c# highlight cells in column J that match dd/MM/yyyy pattern | how to apply regex date validation to a specific range using Aspose.Cells .NET | C# Aspose.Cells example for searching dates formatted as dd/MM/yyyy in J1:J30 | using Aspose.Cells to color cells with date strings in a given range
+// Tags: Aspose.Cells regex date detection | highlight matching cells yellow Aspose.Cells | iterate over range J1:J30 C# | apply style based on pattern Aspose.Cells | C# date format dd/MM/yyyy validation in Excel
 
 using System;
+using System.Drawing;
+using System.IO;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook, fills column J with sample data, configures FindOptions for regular‑expression matching, restricts the search to J1:J30, and iterates with Cells.Find to list every cell whose value matches the pattern \d{2}/\d{2}/\d{4}. The workbook can be saved after the scan.
-    public class RegexDateSearchInRange
+    // Creates a new workbook, defines the range J1:J30, uses a regular expression to identify cells containing dates in dd/MM/yyyy format, applies a solid yellow fill to those cells, and saves the file as Output.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
             try
             {
                 // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
+                Worksheet worksheet = workbook.Worksheets[0];
 
-                // Populate sample data in column J (index 9)
-                cells["J1"].PutValue("Date");
-                cells["J2"].PutValue("12/05/2023");
-                cells["J3"].PutValue("InvalidDate");
-                cells["J4"].PutValue("01/01/2022");
-                cells["J5"].PutValue("23/12/2021");
-                // Additional rows can be filled as needed...
-
-                // Define find options for regex search
-                FindOptions options = new FindOptions
-                {
-                    RegexKey = true,                         // Enable regex parsing
-                    LookAtType = LookAtType.EntireContent,   // Exact match of the cell content
-                    LookInType = LookInType.Values           // Search in cell values
-                };
-
-                // Restrict the search to the range J1:J30
-                CellArea searchArea = new CellArea
-                {
-                    StartRow = 0,      // Row 1 (zero‑based)
-                    EndRow = 29,       // Row 30
-                    StartColumn = 9,   // Column J (zero‑based)
-                    EndColumn = 9
-                };
-                options.SetRange(searchArea);
+                // Define the target range J1:J30 (use fully qualified Aspose.Cells.Range to avoid ambiguity)
+                Aspose.Cells.Range targetRange = worksheet.Cells.CreateRange("J1", "J30");
 
                 // Regular expression for dates in dd/MM/yyyy format
-                string dateRegex = @"\d{2}/\d{2}/\d{4}";
+                Regex dateRegex = new Regex(@"^\d{2}/\d{2}/\d{4}$");
 
-                // Find all matching cells
-                Cell previousCell = null;
-                Cell foundCell = cells.Find(dateRegex, previousCell, options);
-                while (foundCell != null)
+                // Prepare a style to highlight matching cells (optional)
+                Style highlightStyle = workbook.CreateStyle();
+                highlightStyle.ForegroundColor = Color.Yellow;
+                highlightStyle.Pattern = BackgroundType.Solid;
+                StyleFlag styleFlag = new StyleFlag { All = true };
+
+                // Iterate through each cell in the range and apply the regex
+                foreach (Cell cell in targetRange)
                 {
-                    Console.WriteLine($"Found date at {foundCell.Name}: {foundCell.StringValue}");
-                    previousCell = foundCell;
-                    foundCell = cells.Find(dateRegex, previousCell, options);
+                    string cellText = cell.StringValue; // Get the cell's text representation
+                    if (dateRegex.IsMatch(cellText))
+                    {
+                        // Cell matches the date pattern; apply the highlight style
+                        cell.SetStyle(highlightStyle, styleFlag);
+                    }
                 }
 
-                // Save the workbook (optional)
-                workbook.Save("RegexDateSearchResult.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
+                // Define output file path
+                string outputPath = "Output.xlsx";
 
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                RegexDateSearchInRange.Run();
+                // Save the workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                // Log any unexpected errors
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

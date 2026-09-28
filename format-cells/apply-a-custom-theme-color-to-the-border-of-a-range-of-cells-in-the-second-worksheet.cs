@@ -1,54 +1,59 @@
-// Title: C# – Apply a custom theme color to range borders on the second worksheet with Aspose.Cells
-// Description: Creates a workbook, adds a second worksheet if needed, sets the workbook Accent1 theme color to orange, builds a CellsColor that references this theme, selects range B2:D5 on the second sheet, and applies thin outline borders using the theme‑based color before saving the file.
-// Keywords: Aspose.Cells C# theme color border | set workbook theme color Aspose | apply outline borders Aspose.Cells | second worksheet border formatting | CellsColor theme Aspose | custom theme border Excel .NET | range border color using theme | Aspose.Cells SetThemeColor example
-// Common Searches: Aspose.Cells set custom theme color for borders | How to apply theme color to cell borders in C# | Add second worksheet and format borders with theme color | Create CellsColor from theme in Aspose.Cells | Outline border with Accent1 theme color Aspose | C# Aspose.Cells change workbook theme color
-// Developer Intent: Apply a custom theme color to the borders of a specific cell range on the second worksheet using Aspose.Cells for .NET.
-// Use Cases: Highlight a header block on a secondary sheet with orange borders that follow the workbook's Accent1 theme. | Build a multi‑sheet report template where all data tables use the same theme‑based outline borders for brand consistency. | Programmatically enforce theme‑aligned border styling across several worksheets in an automated Excel generation workflow.
-// AI Prompts: Show how to adjust the tint of the theme border color to a lighter shade before applying it to the range. | Provide code to use thick and double border styles with the same theme color on multiple ranges in the second worksheet. | Explain how to revert to the default workbook theme after applying a custom theme color to specific borders.
+// Title: Apply a custom teal theme color to the borders of a cell range in the second worksheet using Aspose.Cells for .NET
+// AI Prompts: Create a thin teal border around cells B2:D5 on the second worksheet and save the workbook as Output.xlsx. | Instantiate a System.Drawing.Color and set it as the border color for all sides of a range using an Aspose.Cells style object. | Apply a style with thin borders and a custom color to a specific range by configuring a StyleFlag to apply all style elements.
+// Common Searches: Aspose.Cells C# set a unique border hue for a range on a specific sheet | How to apply a theme color to cell borders on the second sheet with Aspose.Cells .NET | Using StyleFlag to apply border formatting to a range in Aspose.Cells for .NET | Apply teal border to B2:D5 in an Aspose.Cells workbook
+// Tags: border color customization Aspose.Cells .NET | apply style to worksheet range Aspose.Cells | thin border line style C# | StyleFlag All=true border style application | color object for Excel styling Aspose.Cells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
+using System.Drawing;
 
-// Creates a workbook, adds a second worksheet if needed, sets the workbook Accent1 theme color to orange, builds a CellsColor that references this theme, selects range B2:D5 on the second sheet, and applies thin outline borders using the theme‑based color before saving the file.
+// // This program creates a new workbook, adds a second worksheet, defines the range B2:D5, creates a style with thin borders, sets a custom teal color for all four borders, applies the style to the range using a StyleFlag, and saves the file as Output.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (it contains one default worksheet)
-            Workbook workbook = new Workbook();
+            // Create a new workbook
+            var workbook = new Workbook();
 
-            // Ensure there is a second worksheet; add one if necessary
-            if (workbook.Worksheets.Count < 2)
-                workbook.Worksheets.Add();
+            // Add a second worksheet (index 1)
+            workbook.Worksheets.Add("SecondSheet");
+            var sheet = workbook.Worksheets[1];
 
-            // Get reference to the second worksheet (index 1)
-            Worksheet secondSheet = workbook.Worksheets[1];
+            // Define the range whose borders will be styled (e.g., B2:D5)
+            var range = sheet.Cells.CreateRange("B2:D5");
 
-            // Define a custom theme color for Accent1
-            workbook.SetThemeColor(ThemeColorType.Accent1, Color.Orange);
+            // Create a new style object
+            var style = workbook.CreateStyle();
 
-            // Create a CellsColor object that refers to the theme color just set
-            CellsColor themeBorderColor = workbook.CreateCellsColor();
-            themeBorderColor.ThemeColor = new ThemeColor(ThemeColorType.Accent1, 0); // 0 tint
+            // Set thin border lines for all four sides
+            style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+            style.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
 
-            // Define the range of cells whose borders will use the theme color
-            AsposeRange targetRange = secondSheet.Cells.CreateRange("B2:D5");
+            // Define a custom theme color (example: teal)
+            var customColor = Color.FromArgb(0, 128, 128);
 
-            // Apply thin outline borders around the range using the theme‑based CellsColor
-            targetRange.SetOutlineBorders(CellBorderType.Thin, themeBorderColor);
+            // Apply the custom color to each border side
+            style.Borders[BorderType.LeftBorder].Color = customColor;
+            style.Borders[BorderType.RightBorder].Color = customColor;
+            style.Borders[BorderType.TopBorder].Color = customColor;
+            style.Borders[BorderType.BottomBorder].Color = customColor;
 
-            // Save the workbook
-            string outputPath = "SecondWorksheetThemeBorder.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            // Define which style elements to apply (all in this case)
+            var styleFlag = new StyleFlag { All = true };
+
+            // Apply the modified style to the range
+            range.ApplyStyle(style, styleFlag);
+
+            // Save the workbook to a file
+            workbook.Save("Output.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

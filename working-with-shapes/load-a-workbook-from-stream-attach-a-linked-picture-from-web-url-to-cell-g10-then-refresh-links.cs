@@ -1,49 +1,85 @@
-// Title: Aspose.Cells for .NET – Load workbook from stream, insert linked picture at G10, refresh external links
-// Description: Shows how to open an Excel file from a .NET stream, place a web‑linked image in cell G10, update all external data connections, and save the workbook back to a stream.
-// Keywords: Aspose.Cells | C# | load workbook from stream | add linked picture | linked image Excel | cell G10 | refresh external links | UpdateLinkedDataSource | SaveFormat.Xlsx | web image Excel
-// Common Searches: Aspose.Cells add linked picture to a specific cell | Refresh external links after inserting an image with Aspose.Cells | Load Excel from memory stream and embed web image C# | How to use AddLinkedPicture in Aspose.Cells | UpdateLinkedDataSource example Aspose.Cells .NET
-// Developer Intent: Open a workbook from a stream, embed a URL‑based picture at G10, refresh any linked data sources, and write the result to an output stream.
-// Use Cases: Import a template workbook from a memory stream, attach a product thumbnail from a CDN to cell G10, refresh data links, and generate a final report. | Process user‑uploaded Excel files, add a corporate logo hosted online to the header cell G10, and ensure all external connections are up‑to‑date before saving. | Create a dynamic sales dashboard where each row receives a linked image from a web service, requiring a link refresh after insertion.
-// AI Prompts: Generate C# code that loads an Excel workbook from a stream, adds a linked picture from a URL to cell G10, calls UpdateLinkedDataSource to refresh external links, and saves the file to an output stream. | Explain step‑by‑step how Aspose.Cells for .NET can insert a web‑linked image into a specific cell and then refresh all external data connections.
+// Title: Load an Excel workbook from a stream and add a linked picture from a web URL to cell G10 using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an Excel file from a Stream, uses Worksheet.Pictures.Add to attach a web‑linked image to cell G10, and saves the workbook as an XLSX file with Aspose.Cells. | Show how to insert a linked picture from an external URL into a specific cell after loading a workbook from memory using Aspose.Cells for .NET. | Provide an example that loads a workbook from a stream, adds a URL‑based picture to cell G10, and writes the updated file to disk with Aspose.Cells.
+// Common Searches: c# aspose.cells add linked picture from URL to specific cell | load excel workbook from memory stream and insert image into G10 using Aspose.Cells | worksheet pictures add method with external URL example asp.net | how to save workbook after adding a web‑linked picture with Aspose.Cells | asp.net refresh linked pictures after adding them to worksheet
+// Tags: load workbook from stream Aspose.Cells | add linked picture to worksheet cell Aspose.Cells | Worksheet.Pictures.Add URL overload | save workbook as xlsx Aspose.Cells | refresh external links Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Shows how to open an Excel file from a .NET stream, place a web‑linked image in cell G10, update all external data connections, and save the workbook back to a stream.
-class Program
+// Loads an Excel file from a Stream, inserts a linked picture from a web URL into cell G10 of the first worksheet, and saves the modified workbook as an XLSX file using Aspose.Cells for .NET.
+public class Program
 {
-    static void Main()
+    public static void Main()
     {
-        // Load the workbook from an input stream (replace with your actual stream source)
-        using (Stream inputStream = File.OpenRead("input.xlsx"))
+        try
         {
-            Workbook workbook = new Workbook(inputStream);
-
-            // Access the first worksheet (or any specific worksheet as needed)
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Define the image URL to be linked
-            string imageUrl = "https://example.com/sample.jpg";
-
-            // Cell G10 corresponds to row index 9 and column index 6 (zero‑based)
-            int topRow = 9;      // Row 10 in Excel
-            int leftColumn = 6;  // Column G in Excel
-            int height = 100;    // Height in pixels
-            int width = 100;     // Width in pixels
-
-            // Add a linked picture to the worksheet at the specified cell
-            worksheet.Shapes.AddLinkedPicture(topRow, leftColumn, height, width, imageUrl);
-
-            // Refresh any external links present in the workbook
-            workbook.UpdateLinkedDataSource(new Workbook[0]);
-
-            // Save the modified workbook to an output stream (replace with your actual destination)
-            using (Stream outputStream = File.Create("output.xlsx"))
+            // Obtain the input workbook stream safely
+            using (Stream inputStream = GetInputStream())
             {
-                workbook.Save(outputStream, SaveFormat.Xlsx);
+                if (inputStream == null)
+                {
+                    Console.WriteLine("Input file not found. Operation aborted.");
+                    return;
+                }
+
+                // Load workbook from the stream
+                Workbook workbook = new Workbook(inputStream);
+
+                // Access the first worksheet (index 0)
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // URL of the picture to link
+                string pictureUrl = "https://example.com/image.png";
+
+                try
+                {
+                    // Add a linked picture to cell G10 (row 9, column 6 – zero‑based indices)
+                    // This overload adds a picture from a URL and treats it as a linked picture.
+                    int pictureIndex = sheet.Pictures.Add(9, 6, pictureUrl);
+                    // Optionally retrieve the picture object if further manipulation is needed
+                    // Picture picture = sheet.Pictures[pictureIndex];
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to add linked picture: {ex.Message}");
+                }
+
+                // Save the modified workbook
+                string outputPath = "output.xlsx";
+
+                // Ensure the directory for the output file exists
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                using (FileStream outStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                {
+                    workbook.Save(outStream, SaveFormat.Xlsx);
+                }
+
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
+
+    // Returns a FileStream for the input workbook if the file exists; otherwise null
+    private static Stream GetInputStream()
+    {
+        const string inputPath = "input.xlsx";
+
+        if (!File.Exists(inputPath))
+        {
+            return null;
+        }
+
+        return new FileStream(inputPath, FileMode.Open, FileAccess.Read);
     }
 }

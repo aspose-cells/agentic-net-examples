@@ -1,53 +1,49 @@
-// Title: Load Large Excel Files with Optimized Memory Using Aspose.Cells for .NET
-// Description: Demonstrates how to activate Aspose.Cells LoadOptions.MemorySetting.MemoryPreference to lower RAM consumption when opening workbooks that contain thousands of rows, read a cell value, and optionally save the file.
-// Keywords: Aspose.Cells | LoadOptions | MemorySetting.MemoryPreference | optimized memory | large workbook | .NET | C# | reduce memory usage | Excel performance
-// Common Searches: Aspose.Cells enable optimized memory | load large Excel workbook low memory .NET | MemorySetting.MemoryPreference example C# | Aspose.Cells reduce RAM usage when loading | how to open big Excel file with Aspose.Cells
-// Developer Intent: Configure LoadOptions.MemorySetting to MemoryPreference to load a massive Excel workbook with a smaller memory footprint in C#.
-// Use Cases: Open a multi‑megabyte spreadsheet containing tens of thousands of rows on a memory‑constrained server. | Read or validate specific cells after loading without fully materializing the workbook in memory. | Process and re‑save large spreadsheets while keeping RAM usage minimal.
-// AI Prompts: Provide a C# snippet that uses Aspose.Cells LoadOptions with MemorySetting.MemoryPreference to open a large .xlsx file. | Explain the trade‑offs of MemorySetting.MemoryPreference versus default loading in Aspose.Cells and recommend best practices for performance and memory management.
+// Title: How to enable MemoryPreference in Aspose.Cells LoadOptions for low‑memory loading of large XLSX workbooks (C#)
+// AI Prompts: Generate C# code that creates a LoadOptions instance with MemorySetting.MemoryPreference and uses it to open an XLSX file via Aspose.Cells. | Show an example of loading a workbook containing thousands of rows with Aspose.Cells while minimizing RAM usage, then saving it to a new file. | Explain how to verify the input Excel file exists before applying the MemoryPreference setting in LoadOptions.
+// Common Searches: Aspose.Cells C# load large Excel file with low memory consumption | Set MemorySetting.MemoryPreference in LoadOptions for XLSX files | How to reduce RAM usage when opening big spreadsheets with Aspose.Cells | LoadOptions MemoryPreference example for thousands of rows in .NET | C# Aspose.Cells optimized memory loading large workbook
+// Tags: LoadOptions MemoryPreference Aspose.Cells | low‑memory workbook loading C# | optimize RAM usage when loading XLSX with Aspose | large spreadsheet memory optimization Aspose.Cells | C# Aspose.Cells LoadOptions configuration | memory‑efficient Excel import Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to activate Aspose.Cells LoadOptions.MemorySetting.MemoryPreference to lower RAM consumption when opening workbooks that contain thousands of rows, read a cell value, and optionally save the file.
+// The sample checks that the source XLSX file exists, configures LoadOptions with MemorySetting.MemoryPreference to minimize RAM usage, loads the workbook, optionally processes it, and saves the result to a new file while handling any exceptions.
 class Program
 {
     static void Main()
     {
-        // Path to the workbook that contains thousands of rows
-        string inputPath = "large_dataset.xlsx";
-
         try
         {
-            // Ensure the input file exists; create a minimal workbook if it does not
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Workbook tempWb = new Workbook();
-                tempWb.Worksheets[0].Cells["A1"].PutValue("Sample");
-                tempWb.Save(inputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
 
-            // Configure LoadOptions to use optimized memory mode
-            LoadOptions loadOptions = new LoadOptions
+            // Create LoadOptions and enable optimized memory usage
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
             {
-                // MemoryPreference reduces memory usage at the cost of some performance overhead
+                // Use memory‑optimized setting (less memory consumption)
                 MemorySetting = MemorySetting.MemoryPreference
             };
 
             // Load the workbook using the configured LoadOptions
             Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Example operation: read a cell value to verify the workbook is loaded
-            Worksheet sheet = workbook.Worksheets[0];
-            Console.WriteLine("Cell A1 value: " + sheet.Cells["A1"].StringValue);
+            // (Optional) Perform any required operations on the workbook here
 
-            // Save the workbook (optional, demonstrates the full lifecycle)
-            workbook.Save("optimized_output.xlsx", SaveFormat.Xlsx);
+            // Save the workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Log unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,47 +1,54 @@
-// Title: C# – Save Aspose.Cells Workbook as CSV with Semicolon Delimiter
-// Description: Creates a workbook, fills cells A1‑B3, configures TxtSaveOptions to use a semicolon (;) as the column separator and UTF‑8 encoding, then saves the file as "output_semicolon.csv".
-// Keywords: Aspose.Cells | C# | .NET | CSV export | semicolon delimiter | TxtSaveOptions | custom column separator | UTF-8 encoding | European locale CSV | Excel to CSV conversion
-// Common Searches: Aspose.Cells save CSV with semicolon | C# TxtSaveOptions separator property | export Excel to CSV using custom delimiter .NET | how to set CSV delimiter in Aspose.Cells | UTF-8 CSV export Aspose.Cells C#
-// Developer Intent: Export an Aspose.Cells workbook to a CSV file using a semicolon as the column separator.
-// Use Cases: Generate CSV reports for European markets where ';' is the default list separator. | Produce data files compatible with legacy systems that require semicolon‑delimited CSV. | Export multilingual data with UTF‑8 encoding while controlling the delimiter.
-// AI Prompts: Write C# code to save an Aspose.Cells workbook as a pipe‑delimited CSV using TxtSaveOptions. | Explain how to import a semicolon‑delimited CSV back into an Aspose.Cells workbook in C#. | Show how to configure ISO‑8859‑1 encoding with a custom delimiter when saving a workbook as CSV.
+// Title: Export an Aspose.Cells workbook to a semicolon‑delimited CSV file using TxtSaveOptions in C#
+// AI Prompts: Write C# code that creates a workbook with sample data and saves it as a CSV file using a semicolon as the column separator via Aspose.Cells TxtSaveOptions. | Show how to set TxtSaveOptions.Separator to ';' and ensure the target directory exists before calling Workbook.Save in Aspose.Cells for .NET. | Demonstrate error handling while exporting a workbook to a semicolon‑delimited CSV with Aspose.Cells, including folder creation and console output.
+// Common Searches: Aspose.Cells C# export workbook to CSV with custom delimiter semicolon | How to set TxtSaveOptions separator property for CSV in Aspose.Cells .NET | Save workbook as semicolon separated values using Aspose.Cells | Create output folder automatically when saving CSV with Aspose.Cells
+// Tags: Aspose.Cells TxtSaveOptions CSV delimiter | semicolon delimited CSV export .NET | Workbook.Save custom separator Aspose | ensure output directory exists C# Aspose.Cells | export workbook to CSV Aspose.Cells
 
 using System;
-using System.Text;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCsvSemicolonDemo
+// Demonstrates creating a workbook, adding data, configuring TxtSaveOptions.Separator to ';', ensuring the output folder exists, and saving the workbook as a semicolon‑delimited CSV file with Aspose.Cells for .NET.
+class Program
 {
-    // Creates a workbook, fills cells A1‑B3, configures TxtSaveOptions to use a semicolon (;) as the column separator and UTF‑8 encoding, then saves the file as "output_semicolon.csv".
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook
             Workbook workbook = new Workbook();
+
+            // Get the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Populate some sample data
-            cells["A1"].PutValue("Name");
-            cells["B1"].PutValue("Age");
-            cells["A2"].PutValue("John");
-            cells["B2"].PutValue(30);
-            cells["A3"].PutValue("Alice");
-            cells["B3"].PutValue(25);
+            // Add sample data
+            sheet.Cells["A1"].PutValue("Name");
+            sheet.Cells["B1"].PutValue("Age");
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(25);
 
-            // Configure text save options for CSV with semicolon delimiter
-            TxtSaveOptions saveOptions = new TxtSaveOptions
+            // Set CSV save options to use semicolon as column delimiter
+            TxtSaveOptions csvOptions = new TxtSaveOptions(SaveFormat.CSV);
+            csvOptions.Separator = ';';
+
+            // Define output file path
+            string outputPath = "output.csv";
+
+            // Ensure the directory exists (in case a relative path is used)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
             {
-                Separator = ';',               // Use semicolon as column separator
-                Encoding = Encoding.UTF8      // Optional: set encoding
-            };
+                Directory.CreateDirectory(outputDir);
+            }
 
-            // Save the workbook as a CSV file using the custom options
-            string outputPath = "output_semicolon.csv";
-            workbook.Save(outputPath, saveOptions);
-
-            Console.WriteLine($"Workbook saved to '{outputPath}' with semicolon delimiter.");
+            // Save the workbook as CSV with the custom delimiter
+            workbook.Save(outputPath, csvOptions);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,51 +1,27 @@
-// Title: Style a Cell with Thick Left Border and Light‑Blue Fill using Aspose.Cells for .NET
-// Description: Creates a workbook, selects cell B2, and applies a Style with a solid light‑blue background and a thick left border. A StyleFlag limits the changes to the left border and cell shading before saving as StyledCell.xlsx.
-// Keywords: Aspose.Cells cell style | C# thick left border | light blue fill Aspose.Cells | StyleFlag selective styling | solid background color .NET | border formatting Aspose.Cells
-// Common Searches: Aspose.Cells add thick left border to a cell | set light blue background for a specific cell Aspose.Cells | how to use StyleFlag for border only in Aspose.Cells | apply custom cell style without affecting other borders .NET
-// Developer Intent: Apply a thick left border and a light‑blue background to a single cell using Aspose.Cells for .NET.
-// Use Cases: Highlight header cells with a colored background and a distinct left separator. | Create a visual column divider by styling cells with a prominent left border while leaving other borders unchanged. | Emphasize rows in a financial report with light‑blue shading and a bold left edge.
-// AI Prompts: Generate C# code with Aspose.Cells that styles a range of cells using a thick left border and light‑blue fill. | Explain the purpose of StyleFlag in Aspose.Cells and how it can apply only border and shading attributes. | Show how to set different border colors while keeping a solid fill using Aspose.Cells for .NET.
+// Title: How to add a thick left border and light‑blue background fill to a single cell with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a style with a solid light‑blue fill and a thick left border, then applies it to cell A1 in a new Aspose.Cells workbook. | Modify the example to apply the same style to an entire range (e.g., B2:D5) while preserving the left‑border thickness and background color. | Extend the style to include thick borders on all four sides, keep the light‑blue fill, and apply it to cell C3.
+// Common Searches: Aspose.Cells C# set left border thickness and background color for a cell | C# example of applying solid fill and custom border to a specific cell using Aspose.Cells | How to style cell A1 with light blue background and thick left border in Aspose.Cells .NET | Apply custom cell style to a range of cells in Aspose.Cells C# tutorial
+// Tags: Aspose.Cells style left border thickness | light blue cell fill Aspose.Cells | C# apply custom style to cell A1 | Aspose.Cells solid background fill example | cell formatting borders fill Aspose.Cells .NET
 
-using System;
-using System.Drawing;
-using Aspose.Cells;
+// Create a new workbook
+var workbook = new Aspose.Cells.Workbook();
 
-// Creates a workbook, selects cell B2, and applies a Style with a solid light‑blue background and a thick left border. A StyleFlag limits the changes to the left border and cell shading before saving as StyledCell.xlsx.
-class Program
-{
-    static void Main()
-    {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
+// Access the first worksheet
+var worksheet = workbook.Worksheets[0];
 
-        // Choose a cell to style and put a sample value
-        Cell cell = cells["B2"];
-        cell.PutValue("Styled Cell");
+// Create a new style object
+var style = workbook.CreateStyle();
 
-        // Create a style object
-        Style style = workbook.CreateStyle();
+// Set the background fill to light blue
+style.ForegroundColor = System.Drawing.Color.LightBlue;
+style.Pattern = Aspose.Cells.BackgroundType.Solid;
 
-        // Set light blue background fill
-        style.Pattern = BackgroundType.Solid;
-        style.ForegroundColor = Color.LightBlue;
+// Set a thick left border
+style.Borders[Aspose.Cells.BorderType.LeftBorder].LineStyle = Aspose.Cells.CellBorderType.Thick;
 
-        // Configure a thick left border
-        style.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thick;
-        style.Borders[BorderType.LeftBorder].Color = Color.Black; // border color (optional)
+// Apply the style to a specific cell (e.g., A1)
+var cell = worksheet.Cells["A1"];
+cell.SetStyle(style);
 
-        // Create a style flag to apply left border and cell shading
-        StyleFlag flag = new StyleFlag
-        {
-            LeftBorder = true,
-            CellShading = true
-        };
-
-        // Apply the style to the cell using the flag
-        cell.SetStyle(style, flag);
-
-        // Save the workbook
-        workbook.Save("StyledCell.xlsx");
-    }
-}
+// Save the workbook to a file
+workbook.Save("StyledWorkbook.xlsx");

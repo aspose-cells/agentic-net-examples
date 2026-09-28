@@ -1,22 +1,19 @@
-// Title: C# – Set Automatic Calculation Mode and Recalculate All Formulas with Aspose.Cells
-// Description: Shows how to enable automatic formula calculation (CalcModeType.Automatic) in Aspose.Cells for .NET, create a CalculationOptions instance, call Workbook.CalculateFormula for a full workbook recalculation, read the computed values, and save the workbook.
-// Keywords: Aspose.Cells | C# | .NET | automatic calculation mode | CalcModeType.Automatic | Workbook.CalculateFormula | CalculationOptions | recalculate formulas | full workbook recalculation | Excel automation | save workbook
-// Common Searches: Aspose.Cells set calculation mode to automatic C# | How to force full recalculation of formulas in Aspose.Cells | Workbook.CalculateFormula example .NET | Using CalculationOptions with Aspose.Cells | Enable automatic formula evaluation Aspose.Cells
-// Developer Intent: Enable automatic formula evaluation and trigger a complete workbook recalculation.
-// Use Cases: Refresh all dependent cells after programmatically changing input values before exporting the file. | Generate Excel reports with formulas and guarantee that every result is up‑to‑date by invoking a full recalculation. | Validate complex spreadsheet logic in automated tests by forcing Aspose.Cells to recompute every formula.
-// AI Prompts: Provide a C# snippet that sets CalcModeType.Automatic and runs Workbook.CalculateFormula in Aspose.Cells. | How can I force a full workbook recalculation after updating cells using Aspose.Cells for .NET? | Explain the steps to retrieve calculated values after calling Workbook.CalculateFormula with CalculationOptions.
+// Title: Enable Automatic Calculation Mode and Force Full Formula Recalculation with Aspose.Cells in C#
+// AI Prompts: Set workbook.FormulaSettings.CalculationMode to CalcModeType.Automatic and invoke Workbook.CalculateFormula with a CalculationOptions object to recalculate every formula. | Programmatically trigger a complete workbook recalculation after changing the calculation mode using the Aspose.Cells .NET API. | Use CalculationOptions to perform a full formula evaluation across all worksheets in a newly created workbook.
+// Common Searches: asp.net aspose.cells set calculation mode to automatic and recalculate formulas | c# how to force full workbook calculation after changing CalcModeType in Aspose.Cells | using CalculationOptions with Workbook.CalculateFormula to update all cells Aspose.Cells | trigger automatic formula evaluation in Aspose.Cells .NET example
+// Tags: Aspose.Cells automatic calculation mode | Workbook.CalculateFormula full recalculation | CalculationOptions Aspose.Cells usage | set CalcModeType Automatic C# | recalculate all formulas Aspose.Cells | FormulaSettings.CalculationMode .NET
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCalculationDemo
 {
-    // Shows how to enable automatic formula calculation (CalcModeType.Automatic) in Aspose.Cells for .NET, create a CalculationOptions instance, call Workbook.CalculateFormula for a full workbook recalculation, read the computed values, and save the workbook.
+    // The example creates a new workbook, adds numeric values and a SUM formula, switches the calculation mode to Automatic via FormulaSettings, creates a default CalculationOptions instance, calls Workbook.CalculateFormula to recalculate all formulas, prints the result of the SUM cell, and saves the workbook as CalculationResult.xlsx.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (using the standard creation rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
@@ -26,24 +23,23 @@ namespace AsposeCellsCalculationDemo
             // Add sample data and formulas
             cells["A1"].PutValue(10);
             cells["A2"].PutValue(20);
-            cells["A3"].Formula = "=A1+A2";          // Simple addition
-            cells["B1"].Formula = "=SUM(A1:A2)";    // Sum function
+            cells["A3"].PutValue(30);
+            cells["B1"].Formula = "=SUM(A1:A3)"; // B1 will hold the sum of A1:A3
 
-            // Set the calculation mode to Automatic (via FormulaSettings)
+            // Set the calculation mode to Automatic (saved in the file for Excel)
             workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.Automatic;
 
-            // Create calculation options (default options)
+            // Create calculation options (default options are sufficient)
             CalculationOptions calcOptions = new CalculationOptions();
 
             // Trigger full recalculation of all formulas in the workbook
             workbook.CalculateFormula(calcOptions);
 
-            // Display the calculated results
-            Console.WriteLine("A3 (A1+A2) = " + cells["A3"].Value);
-            Console.WriteLine("B1 (SUM(A1:A2)) = " + cells["B1"].Value);
+            // Verify that the formula result is calculated
+            Console.WriteLine("Result of B1 (SUM): " + cells["B1"].Value);
 
-            // Save the workbook (using the standard save rule)
-            workbook.Save("CalculatedWorkbook.xlsx");
+            // Save the workbook to a file
+            workbook.Save("CalculationResult.xlsx");
         }
     }
 }

@@ -1,34 +1,49 @@
-// Title: Remove Excel Modify Password but Keep Opening Password with Aspose.Cells for .NET (C#)
-// Description: Loads a workbook using its opening (encryption) password, clears the write‑protection (modify) password via Workbook.Settings.WriteProtection.Password, and saves the file so only the opening password remains.
-// Keywords: Aspose.Cells | C# | remove modify password | clear write protection | keep opening password | Excel encryption | Workbook.Settings.WriteProtection | Excel file protection | Aspose.Cells .NET | delete write‑protection password
-// Common Searches: Aspose.Cells remove modify password C# | How to keep opening password after deleting write protection in Excel | Clear workbook modify password using Aspose.Cells .NET | Remove write‑protection password while preserving encryption password | C# code to delete Excel modify password with Aspose
-// Developer Intent: Delete the workbook’s modify/write‑protection password while preserving its opening (encryption) password using Aspose.Cells for .NET.
-// Use Cases: Load a password‑protected Excel file, strip the modify password, and save it so users only need the opening password to view the workbook. | Prepare distribution‑ready workbooks by removing edit restrictions while maintaining encryption against unauthorized access. | Automate batch processing that clears modify passwords from multiple files without altering their original opening passwords.
-// AI Prompts: Provide C# code with Aspose.Cells that removes the write‑protection password from an Excel workbook but retains the opening password. | Generate a reusable method that accepts a file path and opening password, loads the workbook, clears the modify password, and saves the result. | Explain how Workbook.Settings.WriteProtection.Password can be set to null or empty to delete a modify password in Aspose.Cells.
+// Title: How to remove the edit (modify) password from an Excel .xlsx workbook while keeping the opening password using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens a password‑protected .xlsx file with its read‑only password, clears any modify password, and saves the workbook preserving the original opening password using Aspose.Cells. | Generate a C# example that loads an Excel workbook via LoadOptions with an opening password, sets workbook.Settings.Password to keep the open password, and ensures no edit protection password is stored when saving with Aspose.Cells. | Provide a step‑by‑step C# snippet that removes the 'password to modify' from a workbook while retaining the existing opening password, leveraging Aspose.Cells' LoadOptions and Workbook.Settings.
+// Common Searches: Aspose.Cells C# remove edit password from Excel file but keep open password | how to clear modify protection in .xlsx using Aspose.Cells .NET | load workbook with opening password and delete modify password Aspose.Cells | C# Aspose.Cells preserve read password after removing edit protection
+// Tags: Aspose.Cells clear modify password C# | Aspose.Cells preserve opening password .NET | LoadOptions opening password Aspose.Cells | Workbook.Settings.Password edit protection removal | Excel .xlsx edit password removal Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads a workbook using its opening (encryption) password, clears the write‑protection (modify) password via Workbook.Settings.WriteProtection.Password, and saves the file so only the opening password remains.
-class RemoveModifyPassword
+// The example loads an .xlsx workbook using the opening (read) password via LoadOptions, clears any modify password, reassigns the opening password to workbook.Settings.Password, and saves the file, effectively removing the edit protection while retaining the original opening password.
+class Program
 {
     static void Main()
     {
-        // Opening (encryption) password of the workbook
-        string openingPassword = "openPwd";
+        const string inputPath = "InputWorkbook.xlsx";
+        const string outputPath = "OutputWorkbook.xlsx";
+        const string openingPassword = "OpenPassword123";
 
-        // Load the workbook using the opening password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = openingPassword;
-        Workbook workbook = new Workbook("protected.xlsx", loadOptions);
+        try
+        {
+            // Verify that the input file exists to avoid FileNotFoundException.
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-        // Preserve the opening password for saving
-        workbook.Settings.Password = openingPassword;
+            // Load the workbook using the opening (read) password.
+            var loadOptions = new LoadOptions
+            {
+                Password = openingPassword
+            };
+            var workbook = new Workbook(inputPath, loadOptions);
 
-        // Remove the "password to modify" (write‑protection password)
-        workbook.Settings.WriteProtection.Password = null; // or string.Empty
+            // Preserve the opening password when saving.
+            workbook.Settings.Password = openingPassword;
 
-        // Save the workbook; it will remain protected with the opening password only
-        workbook.Save("unprotected_modify.xlsx");
+            // Save the workbook.
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message.
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

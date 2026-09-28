@@ -1,33 +1,30 @@
-// Title: C# – Convert Aspose.Cells Workbook to PDF with 0.5‑inch Page Margins
-// Description: Shows how to set left, right, top, and bottom margins to 0.5 inches via Aspose.Cells PageSetup and then save the workbook as a PDF using SaveFormat.Pdf.
-// Keywords: Aspose.Cells PDF margins | C# set page margins inches | Workbook.Save PDF Aspose.Cells | PageSetup margin Aspose.Cells | custom PDF margins C# | export Excel to PDF with margins
-// Common Searches: Aspose.Cells set PDF margins C# | C# export Excel to PDF with 0.5 inch margins | how to change page margins before PDF conversion Aspose.Cells | PageSetup margin inches example | save workbook as PDF with custom margins
-// Developer Intent: Generate a PDF from an Excel workbook while applying a uniform 0.5‑inch margin on every side.
-// Use Cases: Produce printable reports that require half‑inch margins for a clean layout. | Export invoices or statements to PDF with consistent margin settings for branding. | Create handouts or forms where precise margin control is needed for binding or filing.
-// AI Prompts: Provide C# code that sets 0.5‑inch margins and converts an Aspose.Cells workbook to PDF. | Explain how to adjust page margins in inches before saving a workbook as PDF with Aspose.Cells. | Show an example of error‑handled PDF export with custom margins using Aspose.Cells in C#.
+// Title: Convert an Excel workbook to PDF with 0.5‑inch page margins using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a workbook, sets all page margins to 0.5 inches via PageSetup, and saves it as a PDF with Aspose.Cells. | Show how to configure left, right, top, and bottom margins in inches before exporting an Excel sheet to PDF in a .NET application. | Provide a minimal Aspose.Cells example that applies half‑inch margins to a worksheet and generates a PDF file. | Demonstrate setting PageSetup.MarginInch properties and invoking Workbook.Save with SaveFormat.Pdf.
+// Common Searches: Aspose.Cells how to set 0.5 inch margins before PDF export in C# | C# export Excel to PDF with custom page margins using Aspose.Cells | set worksheet page margins inches Aspose.Cells .NET example | convert workbook to PDF with specific margins Aspose.Cells | adjust PDF output margins in Aspose.Cells PageSetup
+// Tags: Aspose.Cells PDF export custom margins | C# set worksheet page margins inches | Aspose.Cells PageSetup margin configuration | convert Excel to PDF half‑inch margins | Aspose.Cells SaveFormat.Pdf with margins
 
 using System;
 using Aspose.Cells;
 
-// Shows how to set left, right, top, and bottom margins to 0.5 inches via Aspose.Cells PageSetup and then save the workbook as a PDF using SaveFormat.Pdf.
-class Program
+// The program creates a new workbook, configures the left, right, top, and bottom margins to 0.5 inches via the PageSetup properties, adds optional sample data, and saves the workbook as a PDF file named WorkbookWithMargins.pdf using Aspose.Cells.
+class ConvertWorkbookToPdfWithMargins
 {
     static void Main()
     {
-        // Create a new workbook
+        // Create a new workbook and get the first worksheet
         Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        Worksheet worksheet = workbook.Worksheets[0];
 
         // Set custom page margins of 0.5 inches on each side
-        sheet.PageSetup.LeftMarginInch = 0.5;
-        sheet.PageSetup.RightMarginInch = 0.5;
-        sheet.PageSetup.TopMarginInch = 0.5;
-        sheet.PageSetup.BottomMarginInch = 0.5;
+        worksheet.PageSetup.LeftMarginInch = 0.5;
+        worksheet.PageSetup.RightMarginInch = 0.5;
+        worksheet.PageSetup.TopMarginInch = 0.5;
+        worksheet.PageSetup.BottomMarginInch = 0.5;
 
-        // Add sample data (optional, just to have content in the PDF)
-        sheet.Cells["A1"].PutValue("Workbook converted to PDF with 0.5 inch margins.");
+        // Add sample data (optional, just to have visible content)
+        worksheet.Cells["A1"].PutValue("Workbook converted to PDF with 0.5 inch margins.");
 
-        // Save the workbook as PDF
-        workbook.Save("output.pdf", SaveFormat.Pdf);
+        // Save the workbook as a PDF file
+        workbook.Save("WorkbookWithMargins.pdf", SaveFormat.Pdf);
     }
 }

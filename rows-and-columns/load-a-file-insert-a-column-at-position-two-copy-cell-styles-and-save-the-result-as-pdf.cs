@@ -1,35 +1,35 @@
-// Title: Insert Column, Duplicate Formatting, and Export to PDF with Aspose.Cells for .NET (C#)
-// Description: C# example that loads an Excel workbook, inserts a new column at index 1, copies the original first column’s values and styles to the new column, and saves the result as a PDF using Aspose.Cells.
-// Keywords: Aspose.Cells | C# | insert column | copy column formatting | Excel to PDF | PdfSaveOptions | Workbook.Save | InsertColumn method | CopyColumn method
-// Common Searches: Aspose.Cells insert column at specific index | Copy column formatting Aspose.Cells C# | Export Excel workbook to PDF with Aspose.Cells | Preserve formulas when inserting columns Aspose.Cells | Shift references after column insertion Aspose.Cells
-// Developer Intent: Add a column at position two, replicate the first column’s data and style, then generate a PDF of the workbook.
-// Use Cases: Create a standardized report layout by inserting a blank column next to existing data and copying its formatting. | Automate spreadsheet restructuring while maintaining formula references before distributing a PDF version. | Generate printable PDFs from Excel files after programmatically adjusting column order or adding placeholders.
-// AI Prompts: Write C# code using Aspose.Cells to insert a column at index 1, copy the first column’s content and formatting, and save the workbook as a PDF. | Explain how the second parameter of InsertColumn controls reference updating and how to keep formulas intact when copying columns. | Provide robust error handling for missing input files, permission issues, and PDF conversion failures in an Aspose.Cells workflow.
+// Title: Insert a column at position two, copy its formatting from the first column, and save the workbook as PDF using Aspose.Cells for .NET
+// AI Prompts: Insert a column at index 1, copy just the formats from column A, and generate a PDF file with Aspose.Cells in C#. | Using Aspose.Cells for .NET, add a second column, apply PasteOptions to transfer formatting, then save the workbook as PDF.
+// Common Searches: C# Aspose.Cells insert column and preserve formatting | How to copy only cell styles when adding a new column with Aspose.Cells | Export Excel to PDF after modifying columns using Aspose.Cells .NET | Maintain formula references after inserting a column in Aspose.Cells
+// Tags: insert column with PasteOptions formats Aspose.Cells | copy column formatting Aspose.Cells C# | save workbook as PDF Aspose.Cells | update formulas after column insertion Aspose.Cells | PdfSaveOptions configuration Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 
-// C# example that loads an Excel workbook, inserts a new column at index 1, copies the original first column’s values and styles to the new column, and saves the result as a PDF using Aspose.Cells.
-class Program
+// The example loads 'input.xlsx', inserts a new column at position two while updating references, copies only the formatting from the original first column to the new column using PasteOptions with PasteType.Formats, and saves the result as 'output.pdf' via PdfSaveOptions.
+class InsertColumnAndSavePdf
 {
     static void Main()
     {
         // Load the existing Excel file
         Workbook workbook = new Workbook("input.xlsx");
 
-        // Access the first worksheet and its cells collection
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
 
         // Insert a new column at position two (index 1) and update references
         cells.InsertColumn(1, true);
 
-        // Copy data and formatting from the original first column (index 0) to the new column (index 1)
-        cells.CopyColumn(cells, 0, 1);
+        // Copy only the formatting (styles) from the original column (index 0) to the new column (index 1)
+        PasteOptions pasteOptions = new PasteOptions
+        {
+            PasteType = PasteType.Formats
+        };
+        cells.CopyColumns(cells, 0, 1, 1, pasteOptions);
 
-        // Save the modified workbook as a PDF file
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        workbook.Save("output.pdf", pdfOptions);
+        // Save the modified workbook as PDF
+        workbook.Save("output.pdf", new PdfSaveOptions());
     }
 }

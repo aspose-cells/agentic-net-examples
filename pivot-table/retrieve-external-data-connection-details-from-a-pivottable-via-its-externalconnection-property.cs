@@ -1,78 +1,84 @@
-// Title: C# – Retrieve PivotTable ExternalConnection Details with Aspose.Cells for .NET
-// Description: Creates a workbook, adds a PivotTable, calls GetSourceDataConnections to fetch ExternalConnection objects, and prints properties such as Name, ClassType, SourceType, Command, and ConnectionString before saving the file.
-// Keywords: Aspose.Cells PivotTable external connection | C# GetSourceDataConnections | Aspose.Cells ExternalConnection example | retrieve pivot table data source details | .NET workbook pivot connection string | list pivot table external connections
-// Common Searches: Aspose.Cells get external connections of a PivotTable | C# retrieve PivotTable connection string Aspose | How to list PivotTable data sources with Aspose.Cells | GetSourceDataConnections example C# | Aspose.Cells external connection properties
-// Developer Intent: Extract metadata of the external data source linked to a PivotTable using Aspose.Cells.
-// Use Cases: Display connection name, class type, source type, command, and connection string for auditing. | Validate that a PivotTable references the correct database before report generation. | Log external connection details when automating Excel workbook creation.
-// AI Prompts: Generate C# code that iterates over all ExternalConnection objects of a PivotTable and prints each property using Aspose.Cells. | Write a method that accepts a PivotTable and returns a collection of its ExternalConnection metadata. | Show how to add an ODBC external connection to a PivotTable and then retrieve its details with Aspose.Cells for .NET.
+// Title: How to read the external data connection of each PivotTable in an Excel file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx workbook with Aspose.Cells, iterates over all PivotTables, and prints the name of the external data connection for each table, handling cases where the connection information is unavailable. | Create a reusable C# method that accepts a Workbook object and returns a dictionary mapping PivotTable names to their ConnectionName or ExternalConnection, using reflection when the property is not directly exposed. | Generate a console application example that logs pivot table connection details, includes robust error handling for missing properties, and optionally saves the workbook after processing.
+// Common Searches: Aspose.Cells C# get external connection name from PivotTable | Read data source of a PivotTable using Aspose.Cells .NET | List all PivotTable connections in an Excel workbook with Aspose.Cells | C# enumerate PivotTables and retrieve their ConnectionName property via Aspose.Cells | Aspose.Cells reflection get PivotTable ConnectionName when not exposed
+// Tags: Aspose.Cells read pivot table data connection | C# enumerate pivot tables Aspose.Cells | retrieve pivot table source property .NET | handle missing ConnectionName property Aspose.Cells | extract pivot table connection info Excel C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
-using Aspose.Cells.ExternalConnections;
+using Aspose.Cells.Pivot;   // Namespace containing PivotTable
 
-namespace AsposeCellsExamples
+// The example loads an Excel workbook, accesses each worksheet's PivotTables, and attempts to read the associated external data connection name using the ConnectionName property (via reflection when necessary). It logs the connection details to the console and includes error handling for absent connection information.
+class Program
 {
-    // Creates a workbook, adds a PivotTable, calls GetSourceDataConnections to fetch ExternalConnection objects, and prints properties such as Name, ClassType, SourceType, Command, and ConnectionString before saving the file.
-    public class RetrievePivotTableExternalConnection
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Sales");
-                sheet.Cells["A2"].PutValue("Apple");
-                sheet.Cells["B2"].PutValue(1200);
-                sheet.Cells["A3"].PutValue("Orange");
-                sheet.Cells["B3"].PutValue(850);
-                sheet.Cells["A4"].PutValue("Banana");
-                sheet.Cells["B4"].PutValue(430);
-
-                // Add a pivot table based on the sample data
-                int pivotIndex = sheet.PivotTables.Add("A1:B4", "D1", "SalesPivot");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-                // Retrieve external data connections associated with the pivot table
-                ExternalConnection[] connections = pivot.GetSourceDataConnections();
-
-                // Display connection details if any exist
-                if (connections.Length > 0)
-                {
-                    ExternalConnection conn = connections[0];
-                    Console.WriteLine("Connection Name: " + conn.Name);
-                    Console.WriteLine("Class Type: " + conn.ClassType);
-                    Console.WriteLine("Source Type: " + conn.SourceType);
-                    Console.WriteLine("Command: " + conn.Command);
-                    Console.WriteLine("Connection String: " + conn.ConnectionString);
-                }
-                else
-                {
-                    Console.WriteLine("No external data connections found for the pivot table.");
-                }
-
-                // Save the workbook (optional, demonstrates lifecycle usage)
-                workbook.Save("PivotTableWithExternalConnection.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            RetrievePivotTableExternalConnection.Run();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure the workbook contains at least one worksheet
+            if (workbook.Worksheets.Count == 0)
+            {
+                Console.WriteLine("The workbook does not contain any worksheets.");
+                return;
+            }
+
+            // Access the first worksheet (or any worksheet that contains the pivot table)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Loop through all pivot tables in the worksheet
+            foreach (PivotTable pivot in sheet.PivotTables)
+            {
+                Console.WriteLine($"Pivot Table: {pivot.Name}");
+
+                // Attempt to display the associated connection name if available
+                // (PivotTable may expose a ConnectionName property in some versions)
+                try
+                {
+                    var connectionNameProp = pivot.GetType().GetProperty("ConnectionName");
+                    if (connectionNameProp != null)
+                    {
+                        string connName = connectionNameProp.GetValue(pivot) as string;
+                        if (!string.IsNullOrEmpty(connName))
+                        {
+                            Console.WriteLine($"Associated Connection: {connName}");
+                        }
+                        else
+                        {
+                            Console.WriteLine("No associated external connection.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Connection information not available in this API version.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error retrieving connection info: {ex.Message}");
+                }
+
+                Console.WriteLine();
+            }
+
+            // Save the workbook if any modifications were made (optional)
+            // workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

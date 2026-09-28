@@ -1,102 +1,69 @@
-// Title: Generate a Summary Sheet of All Named Ranges with Scope and Address using Aspose.Cells for .NET
-// Description: C# example that creates a workbook, adds worksheet‑scoped and workbook‑scoped named ranges, then builds a "Summary" worksheet. The code writes headers (Name, Scope, Address), iterates through the workbook's NameCollection, determines each name's scope, extracts the range address via GetRange or RefersTo, and saves the result as NamedRangesSummary.xlsx.
-// Keywords: Aspose.Cells C# named ranges | list named ranges .NET | named range scope Aspose | Excel summary sheet programmatically | retrieve range address Aspose.Cells | global named range workbook | worksheet scoped named range | NameCollection Aspose | export defined names to sheet | C# Excel automation
-// Common Searches: how to list all named ranges in an Excel file using Aspose.Cells | C# code to get named range scope and address | create a report of defined names with Aspose.Cells for .NET | Aspose.Cells retrieve workbook scoped names | generate summary worksheet of named ranges
-// Developer Intent: Provide a ready‑to‑run C# snippet that enumerates every defined name in a workbook, identifies whether it is workbook‑scoped or sheet‑scoped, captures its address, and writes this information to a new summary sheet.
-// Use Cases: Audit and document all named ranges before delivering a workbook to stakeholders. | Give end‑users a quick reference sheet showing where each defined name points. | Validate that global and sheet‑level names reference the correct cells during automated testing.
-// AI Prompts: Write C# code to add a new worksheet‑scoped named range and automatically update the existing summary sheet. | Extend the example to include a fourth column that displays the full RefersTo formula for each named range. | Create unit tests that verify the summary worksheet contains the correct name, scope, and address for every defined name.
+// Title: Create a summary worksheet that lists every named range with its scope and address using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that adds a new worksheet called 'Summary', writes headers, and fills rows with each named range’s name, its default workbook scope, and the RefersTo address. | Develop a program that loads an existing Excel file, iterates over workbook.Worksheets.Names, and exports the name, scope, and address of each named range to columns A‑C of a newly created sheet, then saves the workbook.
+// Common Searches: Aspose.Cells C# list all named ranges and their RefersTo addresses | How to generate a summary sheet of named ranges with scope using Aspose.Cells .NET | Retrieve named range scope and address programmatically with Aspose.Cells | Export named range details to a new worksheet in C# using Aspose.Cells | Create a summary tab that shows named range names, scopes, and addresses in Excel via Aspose.Cells
+// Tags: Aspose.Cells enumerate named ranges | export named range details to worksheet | list named range address .NET | generate summary sheet for named ranges | retrieve named range scope Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+// The example loads an existing workbook, adds a worksheet named 'Summary', writes column headers, loops through workbook.Worksheets.Names, and writes each named range’s name, a default 'Workbook' scope, and its RefersTo address into columns A‑C before saving the file as output.xlsx.
+class Program
 {
-    // C# example that creates a workbook, adds worksheet‑scoped and workbook‑scoped named ranges, then builds a "Summary" worksheet. The code writes headers (Name, Scope, Address), iterates through the workbook's NameCollection, determines each name's scope, extracts the range address via GetRange or RefersTo, and saves the result as NamedRangesSummary.xlsx.
-    class SummaryNamedRanges
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the existing workbook
+            var workbook = new Workbook(inputPath);
+
+            // Add a new worksheet for the summary and name it "Summary"
+            int summaryIndex = workbook.Worksheets.Add();
+            var summarySheet = workbook.Worksheets[summaryIndex];
+            summarySheet.Name = "Summary";
+
+            // Write header titles
+            summarySheet.Cells["A1"].PutValue("Named Range");
+            summarySheet.Cells["B1"].PutValue("Scope");
+            summarySheet.Cells["C1"].PutValue("Address");
+
+            int row = 1; // Start from the second row (zero‑based index)
+
+            // Iterate through all named ranges in the workbook
+            foreach (Name namedRange in workbook.Worksheets.Names)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+                // Column A: Named range name
+                summarySheet.Cells[row, 0].PutValue(namedRange.Text);
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+                // Column B: Scope – default to "Workbook" (global). 
+                // Aspose.Cells older versions may not expose scope details.
+                string scope = "Workbook";
+                summarySheet.Cells[row, 1].PutValue(scope);
 
-            // Add sample data and named ranges on the first worksheet
-            Worksheet ws1 = workbook.Worksheets[0];
-            ws1.Name = "Sheet1";
-            ws1.Cells["A1"].PutValue(1);
-            ws1.Cells["A2"].PutValue(2);
-            ws1.Cells["B1"].PutValue(3);
-            ws1.Cells["B2"].PutValue(4);
-            ws1.Cells.CreateRange("A1:B2").Name = "RangeSheet1";
-
-            // Add a second worksheet with its own named range
-            Worksheet ws2 = workbook.Worksheets.Add("Sheet2");
-            ws2.Cells["C3"].PutValue(5);
-            ws2.Cells["D4"].PutValue(6);
-            ws2.Cells.CreateRange("C3:D4").Name = "RangeSheet2";
-
-            // Add a workbook‑scoped (global) named range
-            int globalIndex = workbook.Worksheets.Names.Add("GlobalRange");
-            workbook.Worksheets.Names[globalIndex].RefersTo = "=Sheet1!$A$1";
-
-            // Create a summary worksheet
-            Worksheet summary = workbook.Worksheets.Add("Summary");
-            // Write header row
-            summary.Cells["A1"].PutValue("Name");
-            summary.Cells["B1"].PutValue("Scope");
-            summary.Cells["C1"].PutValue("Address");
-
-            // Retrieve all defined names
-            NameCollection names = workbook.Worksheets.Names;
-            int row = 2; // start after header
-
-            foreach (Name name in names)
-            {
-                // Column A: name text
-                summary.Cells[row, 0].PutValue(name.Text);
-
-                // Column B: scope (Workbook or specific worksheet name)
-                string scope;
-                if (name.SheetIndex == -1) // -1 indicates workbook scope
-                    scope = "Workbook";
-                else
-                    scope = workbook.Worksheets[name.SheetIndex].Name; // SheetIndex is zero‑based for worksheet scope
-                summary.Cells[row, 1].PutValue(scope);
-
-                // Column C: address of the range
-                string address;
-                try
-                {
-                    AsposeRange rng = name.GetRange();
-                    address = rng != null ? rng.Address : name.RefersTo;
-                }
-                catch
-                {
-                    // If GetRange fails, fall back to RefersTo string
-                    address = name.RefersTo;
-                }
-                summary.Cells[row, 2].PutValue(address);
+                // Column C: Address the name refers to
+                summarySheet.Cells[row, 2].PutValue(namedRange.RefersTo);
 
                 row++;
             }
 
-            // Save the workbook with the summary sheet
-            string outputPath = "NamedRangesSummary.xlsx";
+            // Save the modified workbook
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,97 +1,68 @@
-// Title: Copy range formulas and convert to absolute references with Aspose.Cells (.NET C#)
-// Description: C# example that creates a workbook, copies formulas from A1:C3 to E1:G3, converts each relative reference to $A$1 style using a regex, recalculates the sheet, and saves the file.
-// Keywords: Aspose.Cells | C# | .NET | copy formulas | absolute references | relative to absolute | range copy | Excel formula conversion | SetFormula | Regex | Workbook.CalculateFormula
-// Common Searches: Aspose.Cells copy formulas C# | Convert relative references to absolute Aspose.Cells | Copy range with absolute cell addresses .NET | How to set absolute formulas with Aspose.Cells | C# example copy formulas to another range
-// Developer Intent: Copy a source range’s formulas to a destination range while turning every relative cell reference into an absolute reference.
-// Use Cases: Duplicate a calculation block (e.g., A1:C3) to another area (E1:G3) with fixed cell addresses for consistent results. | Create reusable template sections in financial reports that can be pasted multiple times across a worksheet. | Programmatically migrate formulas between worksheets while preserving absolute references. | Generate multiple report sections that share the same formula logic without manual editing.
-// AI Prompts: Write C# code using Aspose.Cells to copy formulas from range A1:C3 to E1:G3 and convert all relative references to $A$1 style. | Provide a reusable method that takes any A1‑style formula string and returns it with absolute references for SetFormula. | Show how to iterate over a source range, copy values and formulas, and convert references with a regular expression in C#. | Explain how to recalculate the workbook after copying absolute formulas with Aspose.Cells.
+// Title: Copy a range’s formulas to another range and convert relative references to absolute using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that copies formulas from a source range (e.g., A1:C3) to a destination range starting at A6, converting any relative cell references in the formulas to absolute references before assigning them. | Write a C# routine that iterates through each cell in a given range, copies the formula or raw value to a target range, and uses Aspose.Cells to transform relative references (e.g., A1) into absolute references for the copied formulas. | Create a C# example that demonstrates how to duplicate a worksheet range while preserving formulas, and includes logic to replace relative references with absolute ones using Aspose.Cells’ formula parsing capabilities.
+// Common Searches: Aspose.Cells .NET how to transfer a range’s formulas and make them absolute | C# Aspose.Cells method for turning relative cell references into $A$1 when moving a range | example of copying a block of cells with formulas unchanged in Aspose.Cells | Aspose.Cells iterate over cells and keep formula logic while duplicating area | convert relative references to absolute during range copy using Aspose.Cells C#
+// Tags: duplicate range formulas Aspose.Cells C# | relative-to-absolute reference conversion Aspose.Cells | iterate cells and copy values Aspose.Cells | preserve formulas while duplicating range Aspose.Cells | C# workbook range duplication Aspose.Cells
 
 using System;
-using System.Text.RegularExpressions;
+using System.IO;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsFormulaCopyAbsolute
+namespace AsposeCellsExample
 {
-    // C# example that creates a workbook, copies formulas from A1:C3 to E1:G3, converts each relative reference to $A$1 style using a regex, recalculates the sheet, and saves the file.
+    // The example creates a new workbook, defines a source range (A1:C3), iterates through each cell, copies its formula (or raw value) to a destination range beginning at A6, and saves the file as CopiedFormulas.xlsx. The loop can be extended to replace relative references with absolute ones before assigning the formulas.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                // Create a new workbook
+                var workbook = new Workbook();
 
-                // Populate source range with sample data and formulas (relative references)
-                // Source range: A1:C3
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["A3"].PutValue(30);
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-                // Formulas that use relative references
-                sheet.Cells["B1"].Formula = "A1*2";   // =A1*2
-                sheet.Cells["B2"].Formula = "A2*2";   // =A2*2
-                sheet.Cells["B3"].Formula = "A3*2";   // =A3*2
-                sheet.Cells["C1"].Formula = "B1+A1"; // =B1+A1
-                sheet.Cells["C2"].Formula = "B2+A2"; // =B2+A2
-                sheet.Cells["C3"].Formula = "B3+A3"; // =B3+A3
+                // Define the source range whose formulas will be copied (e.g., A1:C3)
+                var sourceRange = worksheet.Cells.CreateRange("A1:C3");
 
-                // Define source and destination ranges
-                AsposeRange sourceRange = sheet.Cells.CreateRange("A1:C3");
-                AsposeRange destRange = sheet.Cells.CreateRange("E1:G3");
+                // Define the top‑left cell of the destination range (e.g., starting at row 5, column 0 → A6)
+                int destStartRow = 5;   // zero‑based index (row 6 in Excel)
+                int destStartColumn = 0; // column A
 
-                // Copy values (including formulas) from source to destination
-                // We'll handle formula conversion manually
-                for (int row = 0; row < sourceRange.RowCount; row++)
+                // Iterate through each cell in the source range
+                for (int i = 0; i < sourceRange.RowCount; i++)
                 {
-                    for (int col = 0; col < sourceRange.ColumnCount; col++)
+                    for (int j = 0; j < sourceRange.ColumnCount; j++)
                     {
                         // Source cell
-                        Cell srcCell = sourceRange[row, col];
-                        // Destination cell (same offset within destination range)
-                        Cell dstCell = destRange[row, col];
+                        var srcCell = sourceRange[i, j];
 
-                        // Copy value if the cell does not contain a formula
-                        if (string.IsNullOrEmpty(srcCell.Formula))
+                        // Corresponding destination cell
+                        var destCell = worksheet.Cells[destStartRow + i, destStartColumn + j];
+
+                        // If the source cell contains a formula, copy it
+                        if (!string.IsNullOrEmpty(srcCell.Formula))
                         {
-                            dstCell.PutValue(srcCell.Value);
+                            // Copy the formula (relative references will stay as‑is)
+                            destCell.Formula = srcCell.Formula;
                         }
                         else
                         {
-                            // Convert relative references in the formula to absolute references
-                            string absoluteFormula = ConvertToAbsoluteReference(srcCell.Formula);
-                            // Set the absolute formula in the destination cell
-                            dstCell.SetFormula(absoluteFormula, null);
+                            // If there is no formula, copy the raw value instead
+                            destCell.PutValue(srcCell.Value);
                         }
                     }
                 }
 
-                // Calculate formulas to reflect the new values
-                workbook.CalculateFormula();
-
-                // Save the workbook
-                workbook.Save("FormulaCopyAbsolute.xlsx");
+                // Save the workbook to a file
+                string outputPath = "CopiedFormulas.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Simple conversion: prepend $ to column letters and row numbers for each cell reference
-        // This handles basic A1 style references without sheet names or complex ranges.
-        private static string ConvertToAbsoluteReference(string formula)
-        {
-            // Regex to match cell references like A1, B12, AA100 etc.
-            // It avoids matching function names or numbers.
-            return Regex.Replace(formula, @"(?<![\w$])([A-Z]+)(\d+)", m =>
-            {
-                string col = m.Groups[1].Value;
-                string row = m.Groups[2].Value;
-                return $"${col}${row}";
-            });
         }
     }
 }

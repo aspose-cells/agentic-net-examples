@@ -1,62 +1,60 @@
-// Title: Add a logo at (100,200) in a PDF using Aspose.Cells for .NET (C#)
-// Description: Creates an in‑memory workbook, loads a PNG logo, configures a RenderingWatermark with OffsetX = 100 and OffsetY = 200 points, sets it as a foreground watermark without scaling, assigns it to PdfSaveOptions, and saves the result as a PDF.
-// Keywords: Aspose.Cells | C# PDF watermark | RenderingWatermark OffsetX | RenderingWatermark OffsetY | PDFSaveOptions | place image in PDF | logo positioning | Aspose.Cells .NET example | add image to PDF | watermark coordinates
-// Common Searches: Aspose.Cells place logo at specific coordinates | C# set RenderingWatermark offset X Y | How to add a foreground image watermark with Aspose.Cells | PDFSaveOptions watermark position example | Aspose.Cells add PNG logo to PDF
-// Developer Intent: Insert a PNG logo at X = 100, Y = 200 points in the PDF generated from a workbook.
-// Use Cases: Brand invoices with the company logo fixed at a precise spot on every page. | Generate corporate reports that embed a logo at an exact location in the PDF output. | Add a stamp or seal image to a specific coordinate when exporting spreadsheets to PDF.
-// AI Prompts: Show how to scale the logo to 50 % while keeping the (100,200) position. | Provide code to add multiple RenderingWatermark objects at different coordinates in the same PDF. | Explain how to convert OffsetX/OffsetY from points to millimeters for the watermark.
+// Title: Insert a PNG logo at coordinates (100,200) in a PDF generated from an Aspose.Cells workbook using C#
+// AI Prompts: Add a free‑floating picture from a PNG file to the first worksheet, set its Left property to 100 and Top property to 200 points, then save the workbook as a PDF. | Create a reusable method that receives an image path and X/Y point values, inserts the image as a floating picture, and returns the generated PDF bytes. | Adjust the example to calculate coordinates in millimeters, apply them to picture.Left and picture.Top, and verify the logo appears at the expected spot in the exported PDF.
+// Common Searches: C# Aspose.Cells how to place an image at exact X Y coordinates before exporting to PDF | set picture.Left and picture.Top properties in points when generating PDF with Aspose.Cells | free floating picture insertion in Aspose.Cells workbook C# example | export worksheet to PDF with logo positioned at (100,200) using Aspose.Cells
+// Tags: Aspose.Cells picture placement using points | C# insert PNG logo into worksheet | export workbook to PDF with positioned image | floating picture insertion Aspose.Cells | absolute coordinate image positioning PDF
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Drawing;
 
-namespace AsposeCellsLogoPdf
+// // This program creates a new workbook, inserts a PNG logo as a free‑floating picture positioned at X=100, Y=200 points, and saves the worksheet as a PDF file.
+class Program
 {
-    // Creates an in‑memory workbook, loads a PNG logo, configures a RenderingWatermark with OffsetX = 100 and OffsetY = 200 points, sets it as a foreground watermark without scaling, assigns it to PdfSaveOptions, and saves the result as a PDF.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Path to the logo image file
+            string logoPath = "logo.png";
+
+            // Add the logo image to the worksheet if the file exists
+            if (File.Exists(logoPath))
             {
-                // Create a new workbook (in-memory)
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Prepare PDF save options
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-                // Load logo image if the file exists
-                string logoPath = "logo.png";
-                if (File.Exists(logoPath))
+                using (FileStream imgStream = new FileStream(logoPath, FileMode.Open, FileAccess.Read))
                 {
-                    byte[] logoBytes = File.ReadAllBytes(logoPath);
-                    RenderingWatermark watermark = new RenderingWatermark(logoBytes)
-                    {
-                        // Position the watermark at (100, 200) points
-                        OffsetX = 100,
-                        OffsetY = 200,
-                        // Place the watermark in the foreground
-                        IsBackground = false,
-                        // Keep the original size of the image
-                        ScaleToPagePercent = 100
-                    };
-                    pdfOptions.Watermark = watermark;
-                }
-                else
-                {
-                    Console.WriteLine($"Warning: Logo file '{logoPath}' not found. PDF will be generated without a watermark.");
-                }
+                    // Insert the picture at cell A1 (row 0, column 0)
+                    int pictureIndex = sheet.Pictures.Add(0, 0, imgStream);
+                    Picture picture = sheet.Pictures[pictureIndex];
 
-                // Save the workbook as PDF with the configured options
-                workbook.Save("LogoPositioned.pdf", pdfOptions);
-                Console.WriteLine("PDF generated successfully.");
+                    // Set the picture to free‑floating so it can be positioned with absolute coordinates
+                    picture.Placement = PlacementType.FreeFloating;
+
+                    // Position the picture at the required coordinates (100, 200)
+                    // Left and Top are measured in points (1 point = 1/72 inch)
+                    picture.Left = 100; // X‑coordinate
+                    picture.Top = 200;  // Y‑coordinate
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Warning: Logo file '{logoPath}' not found. Skipping image insertion.");
             }
+
+            // Save the workbook as a PDF file
+            string outputPath = "output.pdf";
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,63 +1,49 @@
-// Title: Confirm IF Function Support in Aspose.Cells for .NET
-// Description: Creates a workbook, writes values to A1 and B1, sets an IF formula in C1, calculates the sheet, and outputs the result to verify that the IF function is listed in Aspose.Cells' Supported Excel Functions documentation.
-// Keywords: Aspose.Cells | IF function | Excel formula support | .NET | C# | workbook calculation | supported functions list | formula evaluation example
-// Common Searches: Aspose.Cells IF formula example | verify Excel IF support in Aspose.Cells | check supported functions Aspose.Cells .NET | how to test IF function with Aspose.Cells | Aspose.Cells documentation supported Excel functions
-// Developer Intent: Validate that the IF function appears in the Supported Excel Functions reference for Aspose.Cells by executing it in a .NET workbook.
-// Use Cases: Run a quick sanity check that the IF function works before processing large spreadsheets. | Automate a regression test suite that confirms core Excel functions remain supported after library upgrades. | Generate a log entry confirming successful execution of specific formulas during batch workbook generation.
-// AI Prompts: Write a C# unit test using Aspose.Cells that asserts the IF formula returns the correct value. | Explain step‑by‑step how to programmatically verify any Excel function’s support in Aspose.Cells. | Create a script that iterates through a list of Excel functions, evaluates each with Aspose.Cells, and records pass/fail results.
+// Title: Check if the IF Excel function is supported in Aspose.Cells using C# reflection of Workbook.GetSupportedFunctions
+// AI Prompts: Write a C# program that uses reflection to invoke Workbook.GetSupportedFunctions and returns true when the IF function appears in the returned list. | Generate C# code that gracefully handles the absence of Workbook.GetSupportedFunctions and still reports whether a specified Excel formula (e.g., IF) is available in the current Aspose.Cells version.
+// Common Searches: how to verify IF function support in Aspose.Cells .NET | using reflection to list supported Excel functions in Aspose.Cells C# | determine if a specific Excel formula is available at runtime with Aspose.Cells | fallback when Workbook.GetSupportedFunctions method is missing in Aspose.Cells
+// Tags: Aspose.Cells runtime function support check | C# reflection GetSupportedFunctions | verify Excel IF formula availability Aspose.Cells | handle missing GetSupportedFunctions method | enumerate supported Excel functions Aspose.Cells
 
 using System;
+using System.Linq;
+using System.Reflection;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example uses C# reflection to call the static Workbook.GetSupportedFunctions method (if present), retrieves the array of supported Excel function names, and case‑insensitively checks whether the IF function is included, outputting the support status while handling the method's possible absence.
+class Program
 {
-    // Creates a workbook, writes values to A1 and B1, sets an IF formula in C1, calculates the sheet, and outputs the result to verify that the IF function is listed in Aspose.Cells' Supported Excel Functions documentation.
-    public class ConfirmIfFunctionSupported
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Attempt to retrieve the list of all supported Excel functions via reflection.
+            // This avoids compile‑time dependency on a specific Aspose.Cells version.
+            string[] supportedFunctions = Array.Empty<string>();
+            MethodInfo getFuncsMethod = typeof(Workbook).GetMethod(
+                "GetSupportedFunctions",
+                BindingFlags.Public | BindingFlags.Static);
+
+            if (getFuncsMethod != null)
             {
-                // Create a new workbook (lifecycle rule: create)
-                Workbook wb = new Workbook();
-
-                // Access the first worksheet and its cells
-                Worksheet sheet = wb.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Put sample values in A1 and B1
-                cells["A1"].PutValue(10);
-                cells["B1"].PutValue(20);
-
-                // Use the IF function in C1: if A1 > B1 then return A1 else return B1
-                cells["C1"].Formula = "=IF(A1>B1, A1, B1)";
-
-                // Calculate formulas (lifecycle rule: calculate)
-                wb.CalculateFormula();
-
-                // Retrieve the result
-                var result = cells["C1"].Value;
-
-                // Output the result and a confirmation that IF is supported
-                Console.WriteLine($"Result of IF formula in C1: {result}");
-                Console.WriteLine("The IF function executed successfully, confirming it is listed in the Supported Excel Functions documentation.");
-
-                // Save the workbook (lifecycle rule: save)
-                wb.Save("ConfirmIfFunctionSupported.xlsx", SaveFormat.Xlsx);
+                // Invoke the static method if it exists.
+                object result = getFuncsMethod.Invoke(null, null);
+                supportedFunctions = result as string[] ?? Array.Empty<string>();
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("The method Workbook.GetSupportedFunctions() is not available in the current Aspose.Cells version.");
             }
+
+            // Check if the "IF" function is present (case‑insensitive).
+            bool ifSupported = supportedFunctions.Any(f =>
+                string.Equals(f, "IF", StringComparison.OrdinalIgnoreCase));
+
+            // Output the result.
+            Console.WriteLine($"Is the IF function supported? {ifSupported}");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ConfirmIfFunctionSupported.Run();
+            // Log any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

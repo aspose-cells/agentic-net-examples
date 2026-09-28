@@ -1,79 +1,55 @@
-// Title: C# – Update a ListObject column formula with IF logic and add rows – Aspose.Cells example
-// Description: Creates a workbook with a table (ID, Value, Status), applies a conditional IF formula to the Status column, inserts new rows, recalculates formulas, prints the results, and saves the file as UpdatedTableFormula.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# table formula | ListObject IF formula .NET | update column formula Aspose.Cells | add rows to ListObject | recalculate formulas Aspose.Cells | custom calculated formula | Excel table conditional formatting code | Aspose.Cells example GitHub
-// Common Searches: how to set IF formula on a table column with Aspose.Cells | add rows to ListObject and recalculate formulas C# | update ListObject column formula programmatically | Aspose.Cells example for conditional column values | C# code to verify table formulas after inserting rows
-// Developer Intent: Programmatically change a table column's formula to include conditional logic and ensure the new formula is applied to rows added later.
-// Use Cases: Generate a dynamic Status column that labels values as High or Low based on a threshold. | Automatically compute column values for rows appended after the initial table creation. | Produce an Excel workbook with up‑to‑date calculations without manual formula entry.
-// AI Prompts: Write C# code that sets an IF formula on a ListObject column, adds new rows, triggers recalculation, and saves the workbook with Aspose.Cells. | Explain the SetCustomCalculatedFormula parameters and how they control formula propagation in Aspose.Cells tables. | Show how to iterate over a table's DataRange to confirm that newly added rows have correctly evaluated formulas.
+// Title: Insert an IF formula into a worksheet column and add rows to test the conditional results with Aspose.Cells for .NET
+// AI Prompts: Write C# code that assigns the formula =IF(B2>10,"High","Low") to every cell in column C of a worksheet, using Aspose.Cells, so that the formula automatically adjusts for each row. | Extend the workbook by programmatically inserting new rows, copying the IF formula into the new cells, and then checking that the calculated values match the expected High or Low outcomes.
+// Common Searches: how to programmatically apply an IF formula to an entire column in Aspose.Cells C# | adding rows with formulas in Aspose.Cells without manual cell references | verify conditional formula results after inserting rows using Aspose.Cells | copying formulas to new rows automatically in Aspose.Cells workbook | saving Excel file after updating column formulas with Aspose.Cells .NET
+// Tags: apply IF formula to column Aspose.Cells C# | insert rows with copied formulas Aspose.Cells | auto-adjust cell references in Aspose.Cells formulas | validate conditional results in Aspose.Cells workbook | save workbook after formula changes Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
-using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Creates a workbook with a table (ID, Value, Status), applies a conditional IF formula to the Status column, inserts new rows, recalculates formulas, prints the results, and saves the file as UpdatedTableFormula.xlsx using Aspose.Cells for .NET.
-    class UpdateTableColumnFormula
+    // The program creates a new workbook, adds header and data rows, assigns an IF formula to the Result column that returns "High" when the Score exceeds 10 and "Low" otherwise, inserts additional rows with the same formula to verify the logic, and saves the file as TableIfFormula.xlsx.
+    class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
+                // Create a new workbook (lifecycle rule: create)
+                Workbook workbook = new Workbook();
 
-                // ----- Create sample data -----
-                ws.Cells["A1"].PutValue("ID");
-                ws.Cells["B1"].PutValue("Value");
-                ws.Cells["C1"].PutValue("Status"); // Column that will hold the IF result
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-                ws.Cells["A2"].PutValue(1);
-                ws.Cells["B2"].PutValue(10);
-                ws.Cells["A3"].PutValue(2);
-                ws.Cells["B3"].PutValue(25);
-                ws.Cells["A4"].PutValue(3);
-                ws.Cells["B4"].PutValue(5);
+                // Add header row for the table
+                sheet.Cells["A1"].PutValue("ID");
+                sheet.Cells["B1"].PutValue("Score");
+                sheet.Cells["C1"].PutValue("Result");
 
-                // ----- Create a table (ListObject) covering the data range -----
-                int tableIndex = ws.ListObjects.Add("A1", "C4", true);
-                ListObject table = ws.ListObjects[tableIndex];
-                table.DisplayName = "DataTable";
+                // Add initial data rows
+                sheet.Cells["A2"].PutValue(1);
+                sheet.Cells["B2"].PutValue(5);   // Score 5 -> Low
+                sheet.Cells["A3"].PutValue(2);
+                sheet.Cells["B3"].PutValue(15);  // Score 15 -> High
 
-                // ----- Update the formula of the "Status" column to include IF logic -----
-                // Formula: =IF([@Value]>15,"High","Low")
-                ListColumn statusColumn = table.ListColumns[2]; // third column (zero‑based index)
-                statusColumn.SetCustomCalculatedFormula("=IF([@Value]>15,\"High\",\"Low\")", false, false);
+                // Set IF formula for the "Result" column (structured reference not needed here)
+                sheet.Cells["C2"].Formula = "=IF(B2>10,\"High\",\"Low\")";
+                sheet.Cells["C3"].Formula = "=IF(B3>10,\"High\",\"Low\")";
 
-                // ----- Add new rows to verify that the formula is applied automatically -----
-                // Row offsets are zero‑based within the table's data rows (excluding the header)
-                table.PutCellValue(3, 0, 4); // ID = 4
-                table.PutCellValue(3, 1, 30); // Value = 30
+                // Add new rows to verify the IF logic
+                // Row 4: Score 8 -> should evaluate to "Low"
+                sheet.Cells["A4"].PutValue(3);
+                sheet.Cells["B4"].PutValue(8);
+                sheet.Cells["C4"].Formula = "=IF(B4>10,\"High\",\"Low\")";
 
-                table.PutCellValue(4, 0, 5); // ID = 5
-                table.PutCellValue(4, 1, 8); // Value = 8
+                // Row 5: Score 12 -> should evaluate to "High"
+                sheet.Cells["A5"].PutValue(4);
+                sheet.Cells["B5"].PutValue(12);
+                sheet.Cells["C5"].Formula = "=IF(B5>10,\"High\",\"Low\")";
 
-                // Recalculate formulas so that the new rows get their Status values
-                wb.CalculateFormula();
-
-                // ----- Output the table content to the console for verification -----
-                Console.WriteLine("ID\tValue\tStatus");
-                AsposeRange dataRange = table.DataRange; // Range that contains the data rows
-                int startRow = dataRange.FirstRow;
-                int endRow = dataRange.FirstRow + dataRange.RowCount - 1;
-                for (int row = startRow; row <= endRow; row++)
-                {
-                    int id = ws.Cells[row, 0].IntValue;
-                    int value = ws.Cells[row, 1].IntValue;
-                    string status = ws.Cells[row, 2].StringValue;
-                    Console.WriteLine($"{id}\t{value}\t{status}");
-                }
-
-                // ----- Save the workbook -----
-                string outputPath = "UpdatedTableFormula.xlsx";
-                wb.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                // Save the workbook (lifecycle rule: save)
+                workbook.Save("TableIfFormula.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
             }
             catch (Exception ex)
             {

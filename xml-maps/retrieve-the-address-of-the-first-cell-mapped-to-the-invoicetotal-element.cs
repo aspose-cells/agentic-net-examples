@@ -1,103 +1,111 @@
-// Title: C# – Get First Cell Address Mapped to /Invoice/Total Using Aspose.Cells XML Map
-// Description: This example shows how to import an XML invoice into an Aspose.Cells workbook, access the generated XmlMap (via reflection), query the worksheet with XmlMapQuery for the "/Invoice/Total" element, and extract the address of the first mapped cell (e.g., "C5"). The code also demonstrates safe handling when no mapping exists and optionally saves the workbook.
-// Keywords: Aspose.Cells | C# | .NET | XML map | XmlMapQuery | first mapped cell address | Invoice Total cell | worksheet cell address | reflection XmlMaps | import XML to workbook
-// Common Searches: Aspose.Cells get address of cell mapped to XML element | C# XmlMapQuery first cell address | how to retrieve mapped cell for /Invoice/Total | Aspose.Cells XML map example C# | using reflection to access XmlMaps Aspose.Cells
-// Developer Intent: Find the address of the first worksheet cell that is linked to the /Invoice/Total element in an XML‑mapped workbook.
-// Use Cases: Show the mapped cell location in a UI to verify XML‑to‑cell binding. | Validate that the Total element is correctly linked before performing calculations. | Programmatically update the Total cell after modifying the source XML.
-// AI Prompts: Generate C# code that imports XML into an Aspose.Cells workbook and returns the address of the first cell mapped to "/Invoice/Total". | Explain how to handle cases where XmlMapQuery returns an empty result for a given XPath in Aspose.Cells. | Provide a non‑reflection approach to access the XmlMaps collection in Aspose.Cells for .NET.
+// Title: Retrieve the address of the first cell mapped to the /Invoice/Total XML element using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, accesses its XML map, and returns the address of the first cell mapped to the '/Invoice/Total' element. | Demonstrate how to use reflection to invoke XmlMap.GetMappedCells in Aspose.Cells and obtain the cell address for a specific XML node. | Create a .NET console program that prints the cell name (e.g., C10) linked to the '/Invoice/Total' element in an Excel file using Aspose.Cells.
+// Common Searches: aspocells c# get cell address mapped to xml element invoice total | how to find first cell mapped to /Invoice/Total using Aspose.Cells | using reflection to call GetMappedCells in Aspose.Cells .NET | retrieve xml map cell mapping address Aspose.Cells workbook
+// Tags: Aspose.Cells GetMappedCells XML map | C# retrieve mapped cell address | reflection invoke XmlMap GetMappedCells | Excel XML map element to cell address | load workbook Aspose.Cells XML map collection
 
 using System;
-using System.Collections;
 using System.IO;
 using System.Reflection;
 using Aspose.Cells;
 
-namespace AsposeCellsXmlMapExample
+namespace AsposeCellsExample
 {
-    // This example shows how to import an XML invoice into an Aspose.Cells workbook, access the generated XmlMap (via reflection), query the worksheet with XmlMapQuery for the "/Invoice/Total" element, and extract the address of the first mapped cell (e.g., "C5"). The code also demonstrates safe handling when no mapping exists and optionally saves the workbook.
+    // The example loads an Excel workbook, accesses its XML map collection (handling version differences via reflection), calls XmlMap.GetMappedCells for the '/Invoice/Total' element, extracts the first CellArea, retrieves the corresponding cell from the first worksheet, and prints the cell's address such as "C10".
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string totalCellAddress = string.Empty;
+
             try
             {
-                // Create a new workbook with a default worksheet.
-                Workbook workbook = new Workbook();
-
-                // Reference to the first worksheet.
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Sample XML containing the /Invoice/Total element.
-                string xml = @"<?xml version='1.0' encoding='UTF-8'?>
-<Invoice>
-    <Header>
-        <Date>2023-01-01</Date>
-    </Header>
-    <Details>
-        <Item>Item1</Item>
-        <Item>Item2</Item>
-    </Details>
-    <Total>1234.56</Total>
-</Invoice>";
-
-                // Import the XML into the worksheet starting at cell A1.
-                // This also creates an XML map inside the workbook.
-                workbook.ImportXml(xml, "Sheet1", 0, 0);
-
-                // Use reflection to obtain the XmlMaps collection (avoids compile‑time dependency).
-                PropertyInfo xmlMapsProp = workbook.GetType().GetProperty("XmlMaps", BindingFlags.Public | BindingFlags.Instance);
-                if (xmlMapsProp == null)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    Console.WriteLine("The current Aspose.Cells version does not support XML maps.");
+                    Console.WriteLine($"File not found: {inputPath}");
                     return;
                 }
 
-                dynamic xmlMaps = xmlMapsProp.GetValue(workbook);
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Obtain the XML map collection via reflection (covers different version property names)
+                XmlMapCollection xmlMaps = null;
+                try
+                {
+                    PropertyInfo prop = typeof(Workbook).GetProperty("XmlMaps") ??
+                                        typeof(Workbook).GetProperty("XmlMapCollection");
+                    if (prop != null)
+                    {
+                        xmlMaps = prop.GetValue(workbook) as XmlMapCollection;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error retrieving XML maps: {ex.Message}");
+                }
+
                 if (xmlMaps == null || xmlMaps.Count == 0)
                 {
-                    Console.WriteLine("No XML maps were created.");
+                    Console.WriteLine("No XML maps found in the workbook.");
                     return;
                 }
 
-                // Retrieve the first (and only) XML map.
-                dynamic xmlMap = xmlMaps[0];
+                // Get the first XML map
+                XmlMap xmlMap = xmlMaps[0];
 
-                // Query the worksheet for cell areas mapped to the /Invoice/Total element.
-                ArrayList cellAreas = worksheet.XmlMapQuery("/Invoice/Total", xmlMap);
-
-                if (cellAreas != null && cellAreas.Count > 0)
+                // Retrieve mapped cells for the /Invoice/Total element
+                CellArea[] mappedAreas = null;
+                try
                 {
-                    // Get the first mapped area.
-                    CellArea area = (CellArea)cellAreas[0];
+                    // Preferred overload (available in newer versions)
+                    MethodInfo method = typeof(XmlMap).GetMethod(
+                        "GetMappedCells",
+                        new[] { typeof(string), typeof(CellArea[]).MakeByRefType() });
 
-                    // Obtain the first cell in that area.
-                    Cell firstMappedCell = worksheet.Cells[area.StartRow, area.StartColumn];
+                    if (method != null)
+                    {
+                        object[] parameters = { "/Invoice/Total", null };
+                        method.Invoke(xmlMap, parameters);
+                        mappedAreas = parameters[1] as CellArea[];
+                    }
+                    else
+                    {
+                        // Fallback: method returning CellArea[] directly
+                        MethodInfo fallback = typeof(XmlMap).GetMethod(
+                            "GetMappedCells",
+                            new[] { typeof(string) });
 
-                    // Retrieve its address (e.g., "C5").
-                    string address = firstMappedCell.Name;
+                        if (fallback != null)
+                        {
+                            mappedAreas = fallback.Invoke(xmlMap, new object[] { "/Invoice/Total" }) as CellArea[];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error retrieving mapped cells: {ex.Message}");
+                }
 
-                    Console.WriteLine($"First cell mapped to /Invoice/Total: {address}");
+                // Output the address of the first mapped cell, if any
+                if (mappedAreas != null && mappedAreas.Length > 0)
+                {
+                    CellArea firstArea = mappedAreas[0];
+                    Worksheet sheet = workbook.Worksheets[0];
+                    Cell firstCell = sheet.Cells[firstArea.StartRow, firstArea.StartColumn];
+                    totalCellAddress = firstCell.Name; // e.g., "C10"
+
+                    Console.WriteLine($"First cell mapped to /Invoice/Total: {totalCellAddress}");
                 }
                 else
                 {
-                    Console.WriteLine("No cells are mapped to /Invoice/Total.");
-                }
-
-                // Save the workbook (optional). Ensure the directory exists.
-                string outputPath = "InvoiceMappingDemo.xlsx";
-                try
-                {
-                    workbook.Save(outputPath);
-                    Console.WriteLine($"Workbook saved to {Path.GetFullPath(outputPath)}");
-                }
-                catch (Exception saveEx)
-                {
-                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
+                    Console.WriteLine("No cells are mapped to the specified XML element.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
         }
     }

@@ -1,47 +1,76 @@
-// Title: Keep Conditional Formatting When Processing Smart Markers with Aspose.Cells for .NET
-// Description: Shows how to load a template workbook that already contains smart markers and conditional‑formatting rules, bind a DataTable to the "Employees" smart marker, process the markers with WorkbookDesigner while retaining the formatting, verify the rule count before and after processing, and save the final file.
-// Keywords: Aspose.Cells | C# | .NET | WorkbookDesigner | smart markers | conditional formatting | preserve formatting | data binding | template workbook
-// Common Searches: Aspose.Cells keep conditional formatting after smart marker processing | WorkbookDesigner preserve formatting C# | verify conditional formatting count before and after processing | smart markers data binding without losing formatting | how to retain conditional rules in Aspose.Cells template
-// Developer Intent: Retain existing conditional‑formatting rules while populating a workbook using smart markers and a data source.
-// Use Cases: Load a pre‑designed template that includes conditional formatting and smart markers, then fill it with data without altering the formatting. | Log the number of conditional‑formatting collections before and after WorkbookDesigner.Process to confirm they remain unchanged. | Apply the preserve‑unrecognized‑markers option to keep any markers that are not bound while still applying conditional formatting.
-// AI Prompts: Write C# code that processes smart markers in an Aspose.Cells workbook and ensures all conditional formatting rules stay intact. | Explain how to check the conditional‑formatting count in a worksheet before and after calling WorkbookDesigner.Process. | Suggest a strategy for handling multiple worksheets, each with its own conditional formatting, when using smart markers in Aspose.Cells.
+// Title: How to retain conditional formatting when filling smart markers in an Aspose.Cells .NET workbook
+// AI Prompts: Create an Excel template with smart markers for product and quantity, add a conditional formatting rule that colors cells yellow when the quantity exceeds 50, then run WorkbookDesigner.Process while keeping the formatting intact. | Build a DataTable, bind it to the smart markers using WorkbookDesigner, and generate an output file that still contains the original conditional formatting rules. | Define a named range called _CellsSmartMarkers for line‑by‑line smart‑marker processing, apply a CellValue > 50 condition to column B, and ensure the rule survives after processing the markers.
+// Common Searches: Aspose.Cells preserve conditional formatting after WorkbookDesigner.Process with smart markers | C# add conditional formatting to a smart marker range in Excel using Aspose.Cells | how to keep cell style rules when populating smart markers from a DataTable | conditional formatting rule for values greater than 50 with smart markers Aspose.Cells .NET
+// Tags: WorkbookDesigner conditional formatting retention | smart markers line‑by‑line range definition | cellvalue greaterthan 50 rule Aspose.Cells | named range _CellsSmartMarkers usage | populate DataTable into smart markers C#
 
 using System;
 using System.Data;
 using Aspose.Cells;
+using System.Drawing;
 
-// Shows how to load a template workbook that already contains smart markers and conditional‑formatting rules, bind a DataTable to the "Employees" smart marker, process the markers with WorkbookDesigner while retaining the formatting, verify the rule count before and after processing, and save the final file.
+// The example creates a workbook template, inserts smart markers for product and quantity, defines a named range for line‑by‑line processing, adds a conditional formatting rule that highlights quantities over 50 with a yellow background, binds a DataTable to the markers via WorkbookDesigner, processes the template, and saves the result while retaining the conditional formatting.
 class ConditionalFormattingSmartMarkerDemo
 {
     static void Main()
     {
-        // Load the template workbook that already contains smart markers and conditional formatting rules
-        Workbook workbook = new Workbook("Template.xlsx");
-
-        // Optional: check how many conditional formatting collections exist before processing
+        // Create a new workbook that will serve as the template
+        Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
-        Console.WriteLine("Conditional formatting count before processing: " + sheet.ConditionalFormattings.Count);
 
-        // Prepare a data source that matches the smart marker names used in the template
-        DataTable dt = new DataTable("Employees");
-        dt.Columns.Add("Name", typeof(string));
-        dt.Columns.Add("Age", typeof(int));
-        dt.Columns.Add("Department", typeof(string));
-        dt.Rows.Add("John Doe", 30, "Sales");
-        dt.Rows.Add("Jane Smith", 28, "HR");
+        // Add column headers
+        sheet.Cells["A1"].PutValue("Product");
+        sheet.Cells["B1"].PutValue("Quantity");
 
-        // Set up the WorkbookDesigner, bind the data source, and process the smart markers
-        WorkbookDesigner designer = new WorkbookDesigner
+        // Insert smart markers that will be replaced by data source values
+        sheet.Cells["A2"].PutValue("&=Data.Product");
+        sheet.Cells["B2"].PutValue("&=Data.Quantity");
+
+        // Define the range that contains the smart markers.
+        // Naming the range as "_CellsSmartMarkers" enables line‑by‑line processing.
+        sheet.Cells.CreateRange("A2:B2").Name = "_CellsSmartMarkers";
+
+        // -----------------------------------------------------------------
+        // Create a conditional formatting rule that highlights quantities > 50
+        // -----------------------------------------------------------------
+        int cfIndex = sheet.ConditionalFormattings.Add();                     // Add a new ConditionalFormatting object
+        FormatConditionCollection fcc = sheet.ConditionalFormattings[cfIndex]; // Get its collection
+
+        // Apply the formatting to column B (Quantity column) rows 2‑101
+        CellArea area = new CellArea
         {
-            Workbook = workbook
+            StartRow = 1,   // Row index is zero‑based (row 2 in Excel)
+            EndRow = 100,
+            StartColumn = 1, // Column B
+            EndColumn = 1
         };
-        designer.SetDataSource("Employees", dt);
-        designer.Process(true); // true = preserve unrecognized markers (set as needed)
+        fcc.AddArea(area);
 
-        // Verify that conditional formatting rules are still present after processing
-        Console.WriteLine("Conditional formatting count after processing: " + sheet.ConditionalFormattings.Count);
+        // Add a condition: CellValue GreaterThan 50
+        int conditionIdx = fcc.AddCondition(FormatConditionType.CellValue, OperatorType.GreaterThan, "50", null);
+        FormatCondition condition = fcc[conditionIdx];
+        condition.Style.BackgroundColor = Color.Yellow; // Highlight with yellow background
 
-        // Save the processed workbook
-        workbook.Save("Result.xlsx");
+        // -------------------------------------------------
+        // Prepare a DataTable that will be bound to the smart markers
+        // -------------------------------------------------
+        DataTable dt = new DataTable("Data");
+        dt.Columns.Add("Product", typeof(string));
+        dt.Columns.Add("Quantity", typeof(int));
+        dt.Rows.Add("Apple", 30);
+        dt.Rows.Add("Banana", 60);
+        dt.Rows.Add("Cherry", 45);
+        dt.Rows.Add("Date", 80);
+
+        // -------------------------------------------------
+        // Set up WorkbookDesigner, bind the data source and process the smart markers
+        // -------------------------------------------------
+        WorkbookDesigner designer = new WorkbookDesigner(workbook);
+        designer.SetDataSource("Data", dt);
+        designer.Process(); // Populate the smart markers with data
+
+        // -------------------------------------------------
+        // Save the resulting workbook; conditional formatting remains intact
+        // -------------------------------------------------
+        workbook.Save("ConditionalFormattingSmartMarkerResult.xlsx");
     }
 }

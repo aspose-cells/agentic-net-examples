@@ -1,55 +1,23 @@
-// Title: Set Print Area and Export Selected Cells to PDF with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to define a worksheet's print area (or named range) using PageSetup.PrintArea, configure PdfSaveOptions, and save the workbook so that only the specified cells appear in the generated PDF.
-// Keywords: Aspose.Cells print area | C# export PDF selected range | PageSetup.PrintArea | PdfSaveOptions | limit PDF output cells | named range PDF conversion | Aspose.Cells .NET PDF | worksheet print area PDF | Aspose.Cells PDF save options | export specific cells to PDF
-// Common Searches: Aspose.Cells set print area before PDF export | C# export only part of worksheet to PDF | How to use PageSetup.PrintArea with Aspose.Cells | PdfSaveOptions respect print area Aspose.Cells | Export named range to PDF using Aspose.Cells .NET
-// Developer Intent: The developer needs to restrict the PDF output to a defined print area or named range so that only those cells are included when the workbook is saved as a PDF.
-// Use Cases: Create a concise PDF report that includes only the header and the first few data rows. | Generate an invoice PDF that contains just the billing details while omitting auxiliary worksheets. | Produce a PDF snapshot of a chart’s data range by limiting the export to the chart’s source cells. | Share a printable summary of a large spreadsheet by exporting only a specific section.
-// AI Prompts: Show C# code that sets a named range as the print area and saves the workbook to PDF with Aspose.Cells. | Explain how PdfSaveOptions can be configured to ensure the defined print area is honored during PDF conversion. | Provide a step‑by‑step guide to verify that the resulting PDF contains only the cells specified in the print area. | Suggest ways to programmatically create and apply a named range as the print area before exporting to PDF.
+// Title: Use a named range as the print area in Aspose.Cells for .NET and export only that range to PDF
+// AI Prompts: Assign an existing named range to the worksheet's PageSetup.PrintArea and save the workbook as a PDF with Aspose.Cells in C#. | If the named range is missing, add it to the worksheet, set it as the print area, and generate a PDF that includes just that range using Aspose.Cells.
+// Common Searches: Aspose.Cells C# set print area to a named range before PDF export | How to export only a named range to PDF with Aspose.Cells .NET | Limit PDF output to specific cells using named range in Aspose.Cells | C# example for setting worksheet print area to a named range and saving as PDF
+// Tags: Aspose.Cells set print area named range | Aspose.Cells export named range to PDF | C# worksheet print area Aspose.Cells | PDF conversion limited to range Aspose.Cells | named range creation Aspose.Cells .NET
 
-using System;
-using Aspose.Cells;
-using Aspose.Cells.Saving;
+// Load the workbook from an existing Excel file
+Aspose.Cells.Workbook workbook = new Aspose.Cells.Workbook("input.xlsx");
 
-namespace AsposeCellsPrintAreaToPdf
-{
-    // Demonstrates how to define a worksheet's print area (or named range) using PageSetup.PrintArea, configure PdfSaveOptions, and save the workbook so that only the specified cells appear in the generated PDF.
-    class Program
-    {
-        static void Main()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+// Define the name of the range that should be used as the print area
+string namedRange = "MyPrintRange";
 
-                // Populate sample data
-                sheet.Cells["A1"].PutValue("Name");
-                sheet.Cells["B1"].PutValue("Score");
-                sheet.Cells["A2"].PutValue("Alice");
-                sheet.Cells["B2"].PutValue(85);
-                sheet.Cells["A3"].PutValue("Bob");
-                sheet.Cells["B3"].PutValue(92);
-                sheet.Cells["A4"].PutValue("Charlie");
-                sheet.Cells["B4"].PutValue(78);
+// Retrieve the first worksheet (or specify the appropriate index/name)
+Aspose.Cells.Worksheet sheet = workbook.Worksheets[0];
 
-                // Define the print area directly (A1:B3)
-                sheet.PageSetup.PrintArea = "A1:B3";
+// Set the print area of the worksheet to the named range
+// The PrintArea property expects the range in A1 style; using the named range name works directly
+sheet.PageSetup.PrintArea = namedRange;
 
-                // Configure PDF save options (optional)
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
-                {
-                    // Ensure the print area is respected
-                    PrintingPageType = PrintingPageType.Default
-                };
+// Optionally, ensure the named range exists; if not, you can create it like this:
+// workbook.Worksheets.Names.Add(namedRange, sheet.Name + "!A1:C10");
 
-                // Save the workbook as PDF; only the defined print area will appear in the file
-                workbook.Save("ExportedArea.pdf", pdfOptions);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-}
+// Convert the workbook to PDF, which will now include only the cells within the specified print area
+workbook.Save("output.pdf", Aspose.Cells.SaveFormat.Pdf);

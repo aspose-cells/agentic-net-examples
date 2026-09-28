@@ -1,64 +1,61 @@
-// Title: Benchmark applying a custom 12‑color theme to a large Aspose.Cells workbook (C#)
-// Description: Creates a 10,000‑row by 10‑column worksheet, defines a full 12‑color theme, measures the elapsed time with Stopwatch while calling workbook.CustomTheme, outputs the duration in milliseconds, and saves the file. Demonstrates end‑to‑end performance testing for theme updates in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | custom theme performance | theme color update benchmark | workbook.CustomTheme timing | large workbook Excel | stopwatch performance test | 12 theme colors | Excel theme update speed | performance testing Aspose.Cells
-// Common Searches: how long does workbook.CustomTheme take on a 10k row Excel file | Aspose.Cells theme update performance C# | measure time to apply custom theme in Aspose.Cells | benchmark theme color changes in large spreadsheet | speed of updating all theme colors with Aspose.Cells
-// Developer Intent: The developer wants to measure and benchmark the execution time of applying a full custom theme (12 colors) to a large workbook using Aspose.Cells.
-// Use Cases: Validate that theme changes meet performance SLAs for real‑time report generation | Compare the impact of different theme palettes on processing time in batch spreadsheet workflows | Identify bottlenecks before optimizing large‑scale Excel export services
-// AI Prompts: Generate C# code that logs the time for each individual theme color update with Aspose.Cells. | Suggest optimization techniques to reduce workbook.CustomTheme latency for workbooks with millions of cells. | Create an xUnit test that asserts the custom theme update completes within a configurable time threshold.
+// Title: How to measure the execution time of updating theme colors for every cell in a large Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to change the foreground theme color of all used cells in a workbook and reports the elapsed time with Stopwatch. | Show a performance‑focused example that iterates only the used range of each worksheet, applies a solid red style, and prints the total seconds taken. | Provide a snippet that loads a large .xlsx file, updates cell styles in bulk, measures the operation duration, and saves the modified workbook.
+// Common Searches: Aspose.Cells benchmark updating cell theme colors in large workbook .NET | C# measure time for bulk style changes across all worksheets in Excel file | How long does it take to apply a theme color to every cell using Aspose.Cells | Performance testing of iterating used range cells with Aspose.Cells in .NET
+// Tags: bulk theme color update Aspose.Cells .NET | measure cell style modification performance | stopwatch timing Excel formatting Aspose.Cells | iterate used range worksheets Aspose.Cells | benchmark foreground color change large workbook
 
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using Aspose.Cells;
+using System.Drawing;
 
-namespace ThemeColorUpdateTiming
+// The example loads a large Excel workbook, iterates through the used range of each worksheet, sets each cell's foreground color to red via a modified Style, measures the total operation time with a Stopwatch, outputs the elapsed seconds, and saves the updated workbook.
+class ThemeColorUpdateTimer
 {
-    // Creates a 10,000‑row by 10‑column worksheet, defines a full 12‑color theme, measures the elapsed time with Stopwatch while calling workbook.CustomTheme, outputs the duration in milliseconds, and saves the file. Demonstrates end‑to‑end performance testing for theme updates in Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Load the existing workbook (replace with actual file path)
+        string inputPath = "LargeWorkbook.xlsx";
+        Workbook workbook = new Workbook(inputPath);
 
-            // Populate a large worksheet with dummy data (e.g., 10,000 rows x 10 columns)
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-            for (int row = 0; row < 10000; row++)
+        // Start timing the theme color update operation
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Get the maximum used row and column to limit the iteration
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+
+            // Loop through each cell within the used range
+            for (int row = 0; row <= maxRow; row++)
             {
-                for (int col = 0; col < 10; col++)
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    cells[row, col].PutValue($"R{row}C{col}");
+                    Cell cell = sheet.Cells[row, col];
+                    // Retrieve the current style
+                    Style style = cell.GetStyle();
+
+                    // Example: Change the foreground theme color to a new RGB value
+                    // (Here we simply set it to a solid red color)
+                    style.ForegroundColor = Color.Red;
+                    style.Pattern = BackgroundType.Solid; // Ensure the color is applied
+
+                    // Apply the modified style back to the cell
+                    cell.SetStyle(style);
                 }
             }
-
-            // Prepare new theme colors (12 colors required)
-            Color[] newThemeColors = new Color[12];
-            newThemeColors[0] = Color.FromArgb(255, 255, 200, 200); // Background1
-            newThemeColors[1] = Color.FromArgb(255, 200, 255, 200); // Text1
-            newThemeColors[2] = Color.FromArgb(255, 200, 200, 255); // Background2
-            newThemeColors[3] = Color.FromArgb(255, 255, 255, 200); // Text2
-            newThemeColors[4] = Color.FromArgb(255, 255, 150, 150); // Accent1
-            newThemeColors[5] = Color.FromArgb(255, 150, 255, 150); // Accent2
-            newThemeColors[6] = Color.FromArgb(255, 150, 150, 255); // Accent3
-            newThemeColors[7] = Color.FromArgb(255, 255, 255, 150); // Accent4
-            newThemeColors[8] = Color.FromArgb(255, 255, 150, 255); // Accent5
-            newThemeColors[9] = Color.FromArgb(255, 150, 255, 255); // Accent6
-            newThemeColors[10] = Color.FromArgb(255, 0, 0, 255);    // Hyperlink
-            newThemeColors[11] = Color.FromArgb(255, 128, 0, 128); // Followed Hyperlink
-
-            // Measure the time taken to apply the custom theme
-            Stopwatch sw = Stopwatch.StartNew();
-
-            // Apply the custom theme (updates all 12 theme colors at once)
-            workbook.CustomTheme("PerformanceTestTheme", newThemeColors);
-
-            sw.Stop();
-
-            Console.WriteLine($"Time taken to update all theme colors: {sw.ElapsedMilliseconds} ms");
-
-            // Save the workbook (optional, demonstrates lifecycle usage)
-            workbook.Save("ThemeUpdateTiming.xlsx");
         }
+
+        // Stop timing
+        stopwatch.Stop();
+
+        // Output the elapsed time
+        Console.WriteLine($"Time taken to update theme colors: {stopwatch.Elapsed.TotalSeconds} seconds");
+
+        // Save the modified workbook (replace with desired output path)
+        string outputPath = "LargeWorkbook_Updated.xlsx";
+        workbook.Save(outputPath);
     }
 }

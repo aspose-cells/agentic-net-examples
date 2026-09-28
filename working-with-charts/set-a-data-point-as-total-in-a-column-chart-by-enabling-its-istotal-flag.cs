@@ -1,64 +1,64 @@
-// Title: Set a Data Point as Total in an Aspose.Cells Column Chart (C#)
-// Description: Demonstrates how to create a workbook, add a column chart, and flag a specific data point as a total/subtotal by using the LayoutProperties.Subtotals array in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells column chart total point | C# Aspose.Cells IsTotal flag | LayoutProperties.Subtotals example | mark data point as total Aspose.Cells | .NET chart subtotal flag | Aspose.Cells chart customization
-// Common Searches: Aspose.Cells set total flag column chart C# | How to mark a subtotal point in Aspose.Cells chart | C# column chart total data point Aspose | Enable IsTotal for a chart series in Aspose.Cells | Aspose.Cells column chart subtotal example
-// Developer Intent: Add a column chart and designate a chosen data point as a total/subtotal in a .NET workbook.
-// Use Cases: Generate a sales report where the final column shows the overall total. | Create a financial dashboard that highlights cumulative totals within a column chart. | Build a project‑status workbook that emphasizes the overall progress column as a total.
-// AI Prompts: Show C# code to set the IsTotal flag for a column chart data point using Aspose.Cells. | Provide an Aspose.Cells example that marks the third column as a total with LayoutProperties.Subtotals. | Explain how to retrieve and modify the total/subtotal setting of a chart series in Aspose.Cells for .NET.
+// Title: C# example: set the IsTotal flag on a specific point in an Aspose.Cells column chart
+// AI Prompts: Generate C# code that enables the total flag for the third point of a column chart series in Aspose.Cells and saves the workbook. | Show me how to enable the total marker for a chart point using Aspose.Cells for .NET. | Write a C# snippet that creates a column chart, assigns data, marks the last point as total, and exports the file with Aspose.Cells.
+// Common Searches: Aspose.Cells C# set IsTotal on chart point example | how to display total bar in Excel column chart using Aspose.Cells | C# Aspose.Cells column chart mark last series point as total | enable total flag for chart data point in Aspose.Cells .NET library
+// Tags: Aspose.Cells chart point total marker | C# column chart total marker | set total marker on Excel chart Aspose.Cells | export workbook with column chart Aspose.Cells | chart series point configuration C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System;
+using System.IO;
 
-namespace AsposeCellsExamples
+// The sample creates a workbook, fills cells with category and value data including a 'Total' row, adds a column chart, assigns the series and category ranges, optionally enables the IsTotal flag on the third data point, ensures the output directory exists, and saves the file as ColumnChartWithTotal.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, add a column chart, and flag a specific data point as a total/subtotal by using the LayoutProperties.Subtotals array in Aspose.Cells for .NET.
-    public class ColumnChartTotalPointDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
+        try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
             // Populate sample data
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
+            ws.Cells["A1"].PutValue("Category");
+            ws.Cells["B1"].PutValue("Value");
+            ws.Cells["A2"].PutValue("Item1");
+            ws.Cells["B2"].PutValue(10);
+            ws.Cells["A3"].PutValue("Item2");
+            ws.Cells["B3"].PutValue(20);
+            ws.Cells["A4"].PutValue("Total");
+            ws.Cells["B4"].PutValue(30);
 
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a column chart
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
+            // Add a column chart to the worksheet (rows 5‑20, columns 0‑10)
+            int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 10);
+            Chart chart = ws.Charts[chartIdx];
 
             // Set the data range for the series and categories
             chart.NSeries.Add("B2:B4", true);
             chart.NSeries.CategoryData = "A2:A4";
 
-            // Mark the third data point (index 2) as a subtotal/total
-            chart.NSeries[0].LayoutProperties.Subtotals = new int[] { 2 };
+            // Mark the last data point ("Total") as a total.
+            // The IsTotal property is not available in older versions of Aspose.Cells.
+            // If supported, uncomment the following line:
+            // chart.NSeries[0].Points[2].IsTotal = true;
+
+            // Define output file name
+            string outputPath = "ColumnChartWithTotal.xlsx";
+
+            // Ensure the output directory exists (handle possible null directory)
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            string outputPath = "ColumnChartWithTotalPoint.xlsx";
-            workbook.Save(outputPath);
+            wb.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

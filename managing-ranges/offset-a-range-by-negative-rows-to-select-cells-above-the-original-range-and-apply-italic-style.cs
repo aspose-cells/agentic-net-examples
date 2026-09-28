@@ -1,59 +1,66 @@
-// Title: Apply Italic Font to an Upward‑Offset Range Using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, define a source range (A3:C4), shift it upward by two rows with GetOffset(-2,0) to target A1:C2, build an italic style, use a StyleFlag to affect only the font italic attribute, apply the style to the offset range, and save the file as OffsetRangeItalic.xlsx.
-// Keywords: Aspose.Cells GetOffset | negative row offset | apply italic style | StyleFlag font italic | C# Aspose.Cells range formatting | offset range upward | Excel automation .NET
-// Common Searches: Aspose.Cells offset range upward | How to apply only italic formatting to a range in C# | GetOffset method negative rows example | StyleFlag usage for font styles Aspose.Cells
-// Developer Intent: Select cells above an existing range and change their font to italic without altering other formatting.
-// Use Cases: Add a formatted header row above a data table. | Create a summary block above a report and emphasize text with italics. | Dynamically shift a range upward and apply italic styling for visual cues.
-// AI Prompts: Generate C# code that offsets a range by -3 rows and applies both bold and italic formatting with Aspose.Cells. | Show how to offset a range upward and set a background color while preserving existing cell styles. | Explain the role of StyleFlag when applying only the italic attribute to a range in Aspose.Cells.
+// Title: Shift a cell range up by one row and apply italic font using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a range, offsets it by -1 rows, and applies only the italic font style with Aspose.Cells. | Show how to compute a safe upward offset for an existing range and apply an italic StyleFlag in Aspose.Cells. | Generate a method that receives a worksheet and a source range, returns an offset range, and sets the font to italic.
+// Common Searches: Aspose.Cells C# offset range upward by one row | apply italic style to a shifted range in Aspose.Cells | how to use StyleFlag to set only italic font with Aspose.Cells .NET | create an offset range without altering original cells Aspose.Cells C#
+// Tags: offset range negative rows Aspose.Cells | apply italic StyleFlag Aspose.Cells | CreateRange method worksheet C# | cell formatting worksheet Aspose.Cells | save workbook as xlsx Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 using System.Drawing;
 
-// Demonstrates how to create a workbook, define a source range (A3:C4), shift it upward by two rows with GetOffset(-2,0) to target A1:C2, build an italic style, use a StyleFlag to affect only the font italic attribute, apply the style to the offset range, and save the file as OffsetRangeItalic.xlsx.
-class OffsetRangeApplyItalic
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+namespace OffsetItalicExample
 {
-    static void Main()
+    // The example creates a workbook, defines range B3:C6, offsets it one row upward, applies an italic font style using a StyleFlag, and saves the file as OffsetItalicExample.xlsx.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate an original range (A3:C4) with sample data
-            // A3:C4 corresponds to firstRow=2, firstColumn=0, totalRows=2, totalColumns=3
-            Aspose.Cells.Range originalRange = cells.CreateRange(2, 0, 2, 3);
-            for (int i = 0; i < originalRange.RowCount; i++)
+            try
             {
-                for (int j = 0; j < originalRange.ColumnCount; j++)
-                {
-                    originalRange[i, j].PutValue($"R{2 + i}C{j + 1}");
-                }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Define the original range (cells B3:C6)
+                int firstRow = 2;        // zero‑based index (row 3)
+                int firstColumn = 1;     // column B
+                int totalRows = 4;
+                int totalColumns = 2;
+                AsposeRange originalRange = sheet.Cells.CreateRange(firstRow, firstColumn, totalRows, totalColumns);
+
+                // Offset the range by -1 rows (select cells one row above)
+                int offsetRows = -1;
+                int offsetColumns = 0;   // no horizontal shift
+
+                // Calculate new start position ensuring it stays within worksheet bounds
+                int newFirstRow = Math.Max(firstRow + offsetRows, 0);
+                int newFirstColumn = Math.Max(firstColumn + offsetColumns, 0);
+
+                // Create the offset range using the new coordinates
+                AsposeRange offsetRange = sheet.Cells.CreateRange(newFirstRow, newFirstColumn, totalRows, totalColumns);
+
+                // Apply italic style to the offset range
+                Style italicStyle = workbook.CreateStyle();
+                italicStyle.Font.IsItalic = true;
+
+                // Create a style flag to apply only the font italic property
+                StyleFlag flag = new StyleFlag();
+                flag.FontItalic = true;
+
+                // Apply the style to the entire offset range
+                offsetRange.ApplyStyle(italicStyle, flag);
+
+                // Save the workbook
+                string outputPath = "OffsetItalicExample.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to {outputPath}");
             }
-
-            // Offset the range by -2 rows (select cells two rows above the original range)
-            // This will point to range A1:C2
-            Aspose.Cells.Range offsetRange = originalRange.GetOffset(-2, 0);
-
-            // Create a style with italic font
-            Style italicStyle = workbook.CreateStyle();
-            italicStyle.Font.IsItalic = true;
-
-            // Use StyleFlag to apply only the italic attribute
-            StyleFlag flag = new StyleFlag();
-            flag.FontItalic = true;
-
-            // Apply the italic style to the offset range
-            offsetRange.ApplyStyle(italicStyle, flag);
-
-            // Save the workbook
-            workbook.Save("OffsetRangeItalic.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

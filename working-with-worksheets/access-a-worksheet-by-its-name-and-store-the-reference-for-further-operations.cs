@@ -1,50 +1,52 @@
-// Title: Aspose.Cells .NET: Access a Worksheet by Its Name and Obtain a Reference (C#)
-// Description: Demonstrates how to create a workbook, add a sheet named "DataSheet", retrieve that sheet using the Workbook.Worksheets["DataSheet"] indexer, write a value to cell A1, and save the file as AccessWorksheetByName.xlsx.
-// Keywords: Aspose.Cells | C# | access worksheet by name | retrieve worksheet reference | Workbook.Worksheets indexer | get sheet by string key | Aspose.Cells .NET example | worksheet name lookup | C# spreadsheet library
-// Common Searches: Aspose.Cells get worksheet by name C# | How to retrieve a sheet using its name in Aspose.Cells | Workbook.Worksheets["SheetName"] example | C# Aspose.Cells access specific worksheet | Aspose.Cells reference worksheet after adding
-// Developer Intent: Fetch a Worksheet object from a Workbook by specifying the sheet's name.
-// Use Cases: After adding a custom‑named sheet, locate it later to populate data or apply formatting. | Use the named worksheet reference to write values, formulas, or styles to particular cells. | Check for a sheet's existence by name before performing operations such as data import or validation. | Reuse the worksheet reference across multiple methods to keep code clean and avoid repeated lookups.
-// AI Prompts: Write C# code that verifies a worksheet named "Report" exists before accessing it with Aspose.Cells. | Show how to loop through all worksheets in a workbook and apply formatting only to the sheet called "Summary" using Aspose.Cells for .NET. | Explain best practices for handling exceptions when retrieving a worksheet by name in Aspose.Cells. | Generate a method that returns a Worksheet object given a workbook and a sheet name, creating the sheet if it does not already exist.
+// Title: How to retrieve a worksheet by its name using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# method that accepts an Excel file path and a sheet name, loads the workbook with Aspose.Cells, returns the Worksheet object, and throws a descriptive exception if the sheet does not exist. | Generate C# code that opens a workbook, accesses the worksheet named "MySheetName", verifies that the worksheet is present, and stores the Worksheet reference for further manipulation.
+// Common Searches: Aspose.Cells C# get worksheet object by sheet name | How to verify worksheet existence before accessing it with Aspose.Cells .NET | Retrieve specific sheet from an Excel workbook using Aspose.Cells in C# | C# Aspose.Cells example for handling missing worksheet | Access worksheet by name and store reference for further processing Aspose.Cells
+// Tags: retrieve worksheet by name Aspose.Cells | load workbook and access specific sheet C# | check worksheet existence Aspose.Cells .NET | handle missing worksheet exception C# | worksheet reference for further processing Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The sample loads 'input.xlsx' with Aspose.Cells, attempts to fetch the worksheet named 'MySheetName' via the Worksheets collection, checks for a null result to handle a missing sheet, prints the accessed sheet name, and includes basic error handling.
+class WorksheetAccessExample
 {
-    // Demonstrates how to create a workbook, add a sheet named "DataSheet", retrieve that sheet using the Workbook.Worksheets["DataSheet"] indexer, write a value to cell A1, and save the file as AccessWorksheetByName.xlsx.
-    public class AccessWorksheetByNameExample
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Add a worksheet with a specific name
-                Worksheet newSheet = workbook.Worksheets.Add("DataSheet");
-
-                // Access the worksheet by its name
-                Worksheet accessedSheet = workbook.Worksheets["DataSheet"];
-
-                // Write a message to cell A1
-                accessedSheet.Cells["A1"].PutValue("Worksheet accessed successfully!");
-
-                // Save the workbook
-                string outputPath = "AccessWorksheetByName.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Attempt to get the worksheet by name
+            string targetSheetName = "MySheetName";
+            Worksheet sheet = workbook.Worksheets[targetSheetName];
+
+            if (sheet == null)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Worksheet \"{targetSheetName}\" not found in the workbook.");
+                return;
             }
+
+            // Example operation: read the name to verify access
+            string sheetName = sheet.Name;
+            Console.WriteLine($"Accessed worksheet: {sheetName}");
+
+            // Optional: Save the workbook after any modifications
+            // string outputPath = "output.xlsx";
+            // workbook.Save(outputPath);
         }
-
-        // Entry point
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

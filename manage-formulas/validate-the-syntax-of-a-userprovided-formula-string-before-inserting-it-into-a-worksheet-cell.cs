@@ -1,70 +1,52 @@
-// Title: Validate User‑Provided Excel Formula Syntax with Aspose.Cells in C#
-// Description: Shows how to verify the syntax of an Excel formula string using Aspose.Cells before assigning it to a worksheet cell. The IsFormulaValid method calls Worksheet.CalculateFormula inside a try‑catch block; if no exception is thrown the formula is set, the workbook is calculated, and the file is saved.
-// Keywords: Aspose.Cells | C# | .NET | Excel formula validation | formula syntax check | Worksheet.CalculateFormula | validate user formula | exception handling | Excel automation
-// Common Searches: Aspose.Cells validate formula syntax C# | check Excel formula validity .NET | catch invalid formula exception Aspose.Cells | verify formula string before setting cell | how to test Excel formula with Aspose.Cells
-// Developer Intent: The developer wants to ensure a user‑provided formula is syntactically correct before inserting it into a worksheet cell.
-// Use Cases: Validate formulas entered through a UI to prevent runtime errors when saving Excel files. | Process large batches of dynamically generated formulas, skipping or logging those that fail validation. | Enable end‑users to create custom calculations while guaranteeing only valid formulas are stored.
-// AI Prompts: Write a C# method that validates an Excel formula string using Aspose.Cells without modifying the worksheet, returning detailed error information. | Show how to catch and log the specific exception thrown by Worksheet.CalculateFormula when a formula is invalid. | Provide an alternative approach to syntax‑check a formula using Aspose.Cells' FormulaParser class.
+// Title: Validate an Excel formula string before assigning it to a cell with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that receives a formula string, attempts to set it on a worksheet cell using Aspose.Cells, catches any exception, and returns a boolean indicating whether the formula is valid. | Create a reusable C# method that validates an Excel formula by temporarily assigning it to a cell with Aspose.Cells, handles syntax errors, and inserts the formula only when the validation succeeds. | Show how to log detailed error information when Cell.Formula throws an exception in Aspose.Cells and prevent saving a workbook that contains an invalid formula.
+// Common Searches: Aspose.Cells C# validate formula syntax before saving workbook | how to catch invalid formula exception when using Cell.Formula Aspose.Cells | check user input formula for errors with Aspose.Cells .NET example | C# Aspose.Cells validate Excel formula string programmatically | prevent invalid formulas from being written to Excel file using Aspose.Cells
+// Tags: formula validation with Aspose.Cells | cell.formula exception handling C# | validate user‑provided Excel formula .NET | save workbook after formula validation Aspose.Cells | error handling for invalid Excel formulas C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsFormulaValidation
+// // Attempts to assign a user‑provided formula to a cell; if Aspose.Cells throws an exception the formula is deemed invalid, otherwise it is inserted and the workbook is saved.
+class Program
 {
-    // Shows how to verify the syntax of an Excel formula string using Aspose.Cells before assigning it to a worksheet cell. The IsFormulaValid method calls Worksheet.CalculateFormula inside a try‑catch block; if no exception is thrown the formula is set, the workbook is calculated, and the file is saved.
-    class Program
+    static void Main()
     {
-        // Validates a formula string by attempting to calculate it.
-        // Returns true if the formula is syntactically correct, false otherwise.
-        static bool IsFormulaValid(Worksheet sheet, string formula)
+        try
         {
+            // The formula string to be validated and inserted.
+            string formula = "=SUM(A1:A10)";
+
+            // Create a new workbook.
+            Workbook workbook = new Workbook();
+
+            // Attempt to set the formula; if the syntax is invalid an exception will be thrown.
+            Worksheet sheet = workbook.Worksheets[0];
             try
             {
-                // Attempt to calculate the formula directly.
-                // If the formula is invalid, an exception will be thrown.
-                sheet.CalculateFormula(formula);
-                return true;
+                Cell targetCell = sheet.Cells["B1"];
+                targetCell.Formula = formula;
+                Console.WriteLine("Formula is valid and has been inserted.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Invalid formula syntax.
-                return false;
+                // Handle invalid formula case.
+                Console.WriteLine($"The provided formula has invalid syntax: {ex.Message}");
+                // Optionally, exit early if the formula is not valid.
+                return;
             }
+
+            // Define output file path.
+            string outputPath = "ValidatedFormula.xlsx";
+
+            // Save the workbook to a file.
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        static void Main(string[] args)
+        catch (Exception ex)
         {
-            // Example user‑provided formula.
-            string userFormula = "=SUM(A1:A5)";   // Change this to test different inputs.
-            string targetCell = "B1";
-
-            // Create a new workbook and get the first worksheet.
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Populate some data that the formula may reference.
-            for (int i = 0; i < 5; i++)
-            {
-                cells[i, 0].PutValue(i + 1); // A1:A5 = 1,2,3,4,5
-            }
-
-            // Validate the formula before inserting.
-            if (IsFormulaValid(worksheet, userFormula))
-            {
-                // Formula is valid – set it to the target cell.
-                cells[targetCell].Formula = userFormula;
-                // Calculate all formulas in the workbook to obtain the result.
-                workbook.CalculateFormula();
-                Console.WriteLine($"Formula set successfully in {targetCell}. Result: {cells[targetCell].Value}");
-            }
-            else
-            {
-                Console.WriteLine("The provided formula is invalid and was not inserted.");
-            }
-
-            // Save the workbook (optional).
-            workbook.Save("ValidatedFormula.xlsx");
+            // Log any unexpected errors.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

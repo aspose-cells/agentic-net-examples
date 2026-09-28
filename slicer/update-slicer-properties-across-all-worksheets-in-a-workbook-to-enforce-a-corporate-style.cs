@@ -1,61 +1,52 @@
-// Title: Apply a Corporate Slicer Style to Every Worksheet with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, defines a corporate slicer theme (style, column count, width, height, locked position, caption), iterates through all worksheets, updates each slicer with those settings, refreshes them, and saves the modified file.
-// Keywords: Aspose.Cells slicer style .NET | bulk slicer formatting | set slicer width height C# | lock slicer position programmatically | apply corporate slicer theme | update slicer caption Aspose | global Excel dashboard styling
-// Common Searches: How to apply the same slicer style to all worksheets using Aspose.Cells | Programmatically change slicer width, height and columns in a .NET Excel file | Lock slicer position and set a uniform caption with Aspose.Cells | Bulk update slicer properties across multiple sheets in C# | Standardize slicer appearance for corporate reports in Excel
-// Developer Intent: Modify every slicer in a workbook so it follows a predefined corporate style and layout.
-// Use Cases: Ensure consistent slicer look‑and‑feel across multi‑sheet financial dashboards before distribution. | Prevent end‑users from moving or resizing slicers in shared reports by locking their position. | Add a uniform corporate caption to slicers generated from pivot tables on several worksheets.
-// AI Prompts: Write C# code with Aspose.Cells that loops through all worksheets and sets slicer style, column count, width, height, locked position, and caption for each slicer, then saves the workbook. | Create a reusable method that accepts slicer style parameters and applies them to every slicer in a given workbook using Aspose.Cells. | Explain how to read existing slicer properties first, then update only those that differ from the corporate defaults.
+// Title: Apply a corporate dark slicer style to all slicers across every worksheet in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file, iterates through each worksheet and each slicer, sets the slicer style to SlicerStyleDark1, configures 2 columns, width 250 px, height 180 px, locks the position, enables caption and Show All Items, then saves the workbook. | Write a reusable method that accepts a Workbook object and slicer formatting parameters (style, column count, width, height, locked flag, caption visibility, show‑all‑items flag) and applies them to every slicer in every worksheet via the Aspose.Cells API.
+// Common Searches: how to programmatically set slicer style and dimensions for all worksheets using Aspose.Cells C# | Aspose.Cells bulk update slicer properties like width, height, and locked position in an Excel workbook | C# code to apply a corporate dark slicer theme to every slicer in an Excel file with Aspose.Cells | iterate through worksheets and modify slicer settings with Aspose.Cells for .NET | set slicer ShowAllItems and ShowCaption for all slicers using Aspose.Cells API
+// Tags: Aspose.Cells bulk slicer style update | C# iterate worksheets to modify slicers | set slicer width and height Aspose.Cells | lock slicer position Excel Aspose.Cells | apply corporate dark slicer theme .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Slicers;
-using Aspose.Cells.Pivot;
+using Aspose.Cells.Drawing;
 
-// Loads an Excel workbook, defines a corporate slicer theme (style, column count, width, height, locked position, caption), iterates through all worksheets, updates each slicer with those settings, refreshes them, and saves the modified file.
-class UpdateSlicerStyle
+// The example loads input.xlsx, defines corporate slicer settings (dark style, 2 columns, 250 px width, 180 px height, locked position, caption visible, Show All Items enabled), iterates through every worksheet and each slicer to apply those settings—including locking the underlying shape—and saves the modified workbook as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Load the existing workbook
-        Workbook workbook = new Workbook("InputWorkbook.xlsx");
+        // Load the workbook that contains slicers
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Define corporate style settings
-        SlicerStyleType corporateStyle = SlicerStyleType.SlicerStyleDark2; // example corporate style
-        int corporateColumns = 3;
+        // Corporate style settings
+        SlicerStyleType corporateStyle = SlicerStyleType.SlicerStyleDark1;
+        int corporateColumns = 2;
         int corporateWidthPixel = 250;
-        int corporateHeightPixel = 150;
+        int corporateHeightPixel = 180;
         bool corporateLockedPosition = true;
-        string corporateCaption = "Corporate Slicer";
+        bool corporateShowCaption = true;
+        bool corporateShowAllItems = true;
 
-        // Iterate through all worksheets
+        // Apply the style to every slicer in every worksheet
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Get the slicer collection for the current worksheet
             SlicerCollection slicers = sheet.Slicers;
 
-            // Apply corporate style to each slicer
             for (int i = 0; i < slicers.Count; i++)
             {
                 Slicer slicer = slicers[i];
 
-                // Set style and layout properties
                 slicer.StyleType = corporateStyle;
                 slicer.NumberOfColumns = corporateColumns;
                 slicer.WidthPixel = corporateWidthPixel;
                 slicer.HeightPixel = corporateHeightPixel;
-
-                // Lock slicer position to prevent user moving/resizing
                 slicer.LockedPosition = corporateLockedPosition;
+                slicer.ShowCaption = corporateShowCaption;
+                slicer.ShowAllItems = corporateShowAllItems;
 
-                // Set a uniform caption (optional)
-                slicer.Caption = corporateCaption;
-
-                // Refresh the slicer to apply changes
-                slicer.Refresh();
+                // Ensure the underlying shape is also locked
+                slicer.Shape.IsLocked = corporateLockedPosition;
             }
         }
 
-        // Save the workbook with updated slicer properties
-        workbook.Save("OutputWorkbook.xlsx");
+        // Save the modified workbook
+        workbook.Save("output.xlsx");
     }
 }

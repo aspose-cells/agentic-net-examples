@@ -1,70 +1,53 @@
-// Title: Validate Excel Digital Signature Thumbprint with Aspose.Cells for .NET
-// Description: Loads a PFX certificate, signs a new workbook using Aspose.Cells, saves the file, reloads it, extracts the embedded digital signatures, retrieves each signature's certificate thumbprint, and compares those thumbprints to the original certificate's thumbprint to confirm signature integrity.
-// Keywords: Aspose.Cells | C# digital signature | Excel workbook signing | certificate thumbprint verification | X509Certificate2 | DigitalSignatureCollection | .NET | signature integrity | compare thumbprints | load signed workbook
-// Common Searches: How to verify Excel digital signature thumbprint using Aspose.Cells .NET | Compare original certificate thumbprint with signed workbook thumbprint C# | Validate workbook signature integrity Aspose.Cells | Extract certificate from signed Excel file Aspose.Cells | Check if Excel file was signed with a specific certificate
-// Developer Intent: Confirm that a signed Excel file was created with the expected certificate by matching thumbprints.
-// Use Cases: Post‑signing validation in automated document pipelines | Security audit to detect tampered or re‑signed Excel files | Runtime check before processing a workbook to ensure trusted signing | Batch verification of multiple signed workbooks against a trusted thumbprint
-// AI Prompts: Write C# code that loads a signed .xlsx, extracts the digital signature certificate with Aspose.Cells, and compares its thumbprint to a given value. | Explain how to handle missing or expired certificates when verifying Excel signatures using Aspose.Cells. | Provide best practices for storing trusted thumbprints and performing integrity checks on signed workbooks in .NET. | Show how to iterate over multiple signatures in a workbook and report mismatched thumbprints.
+// Title: C# program to verify certificate integrity by comparing original and exported thumbprints using X509Certificate2
+// AI Prompts: Load a .pfx or .cer file with X509Certificate2, export it to a byte array, re‑import the bytes, and compare the Thumbprint values to confirm the export preserved the certificate. | Write C# code that accepts a certificate path and password, extracts the original thumbprint, exports the certificate (including the private key), loads it back, and checks that both thumbprints are identical.
+// Common Searches: how to ensure a PFX file remains unchanged after exporting it in C# | C# verify that the thumbprint of an imported certificate matches the original | validate X509Certificate2 export integrity by checking thumbprint equality | check if exported certificate thumbprint matches original using .NET | C# program to confirm certificate export by matching thumbprints
+// Tags: X509Certificate2 thumbprint verification after export | PFX integrity check using thumbprint C# | re‑imported certificate thumbprint validation .NET | original and exported certificate thumbprint equality | certificate export integrity with X509Certificate2
 
 using System;
-using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using Aspose.Cells;
-using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsSignatureIntegrityDemo
+// The example loads a certificate file with X509Certificate2, reads its Thumbprint, exports the certificate (including the private key) to a byte array, re‑loads it from that array, retrieves the new Thumbprint, and then compares the two values to ensure the export process did not alter the certificate.
+class Program
 {
-    // Loads a PFX certificate, signs a new workbook using Aspose.Cells, saves the file, reloads it, extracts the embedded digital signatures, retrieves each signature's certificate thumbprint, and compares those thumbprints to the original certificate's thumbprint to confirm signature integrity.
-    public class Program
+    static void Main(string[] args)
     {
-        public static void Main()
+        // Expect two arguments: 
+        // 1) Path to the original certificate file (e.g., .pfx or .cer)
+        // 2) Password for the certificate (empty string if none)
+        if (args.Length < 2)
         {
-            // Path to the certificate (PFX) and its password
-            string certPath = "mycert.pfx";
-            string certPassword = "password";
+            Console.WriteLine("Usage: <program> <certificatePath> <password>");
+            return;
+        }
 
-            // Load the original certificate (contains private key)
-            X509Certificate2 originalCert = new X509Certificate2(certPath, certPassword);
-            string originalThumbprint = originalCert.Thumbprint;
-            Console.WriteLine("Original Certificate Thumbprint: " + originalThumbprint);
+        string certPath = args[0];
+        string password = args[1];
 
-            // Create a new workbook and add some data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Document to be signed");
+        // Load the original certificate
+        X509Certificate2 originalCert = new X509Certificate2(certPath, password, X509KeyStorageFlags.Exportable);
 
-            // Create a digital signature using the original certificate
-            DigitalSignature signature = new DigitalSignature(originalCert, "Signed by Aspose", DateTime.Now);
-            DigitalSignatureCollection signatures = new DigitalSignatureCollection();
-            signatures.Add(signature);
+        // Get the thumbprint of the original certificate
+        string originalThumbprint = originalCert.Thumbprint;
+        Console.WriteLine($"Original Thumbprint: {originalThumbprint}");
 
-            // Add the digital signature to the workbook
-            workbook.AddDigitalSignature(signatures);
+        // Export the certificate (including private key) to a byte array
+        byte[] exportedBytes = originalCert.Export(X509ContentType.Pfx, password);
 
-            // Save the signed workbook (lifecycle rule: save)
-            string signedPath = "SignedWorkbook.xlsx";
-            workbook.Save(signedPath, SaveFormat.Xlsx);
-            Console.WriteLine("Workbook signed and saved to: " + signedPath);
+        // Load a new certificate instance from the exported bytes
+        X509Certificate2 importedCert = new X509Certificate2(exportedBytes, password, X509KeyStorageFlags.Exportable);
 
-            // Load the signed workbook (lifecycle rule: load)
-            Workbook loadedWorkbook = new Workbook(signedPath);
+        // Get the thumbprint of the imported certificate
+        string importedThumbprint = importedCert.Thumbprint;
+        Console.WriteLine($"Imported Thumbprint: {importedThumbprint}");
 
-            // Retrieve the digital signatures from the loaded workbook
-            DigitalSignatureCollection loadedSignatures = loadedWorkbook.GetDigitalSignature();
-
-            // Compare thumbprints of each loaded signature with the original thumbprint
-            foreach (DigitalSignature loadedSignature in loadedSignatures)
-            {
-                // Get the certificate used for this signature
-                X509Certificate2 loadedCert = loadedSignature.Certificate;
-                string loadedThumbprint = loadedCert?.Thumbprint ?? "No certificate";
-
-                Console.WriteLine("Loaded Signature Thumbprint: " + loadedThumbprint);
-
-                // Verify integrity by comparing thumbprints
-                bool isThumbprintMatch = string.Equals(originalThumbprint, loadedThumbprint, StringComparison.OrdinalIgnoreCase);
-                Console.WriteLine("Thumbprint match: " + isThumbprintMatch);
-            }
+        // Compare thumbprints to ensure integrity
+        if (string.Equals(originalThumbprint, importedThumbprint, StringComparison.OrdinalIgnoreCase))
+        {
+            Console.WriteLine("Success: Thumbprints match. Integrity verified.");
+        }
+        else
+        {
+            Console.WriteLine("Failure: Thumbprints do not match. Integrity compromised.");
         }
     }
 }

@@ -1,61 +1,57 @@
-// Title: Aspose.Cells for .NET – Hide a ListObject totals row (C#)
-// Description: Demonstrates how to create a workbook, add a ListObject covering A1:B4, and remove its totals row by setting the ShowTotals property to false, then save the file as RemoveTableTotalsRowDemo.xlsx.
-// Keywords: Aspose.Cells C# hide totals row | ListObject ShowTotals false | remove table totals row Aspose.Cells | Excel table hide totals row .NET | Aspose.Cells ListObject properties | C# programmatically hide Excel table totals
-// Common Searches: how to hide totals row in Aspose.Cells | Aspose.Cells set ShowTotals false | remove totals row from Excel table C# | Aspose.Cells ListObject hide totals | C# hide table totals row Aspose
-// Developer Intent: Disable the display of the totals row for a worksheet table by setting ListObject.ShowTotals to false.
-// Use Cases: Generate reports where a totals row is not required. | Provide users an option to toggle the totals row when exporting data. | Create clean data tables for downstream processing without aggregate rows.
-// AI Prompts: Write C# code using Aspose.Cells to add a ListObject and hide its totals row. | Explain the effect of the ShowTotals property on an Excel table in Aspose.Cells. | Show how to conditionally hide or show a table's totals row based on a boolean flag in C#.
+// Title: How to hide the totals row of the first Excel table (ListObject) with Aspose.Cells for .NET
+// AI Prompts: Load an existing workbook, retrieve the first ListObject on the first worksheet, assign false to its ShowTotals property, and save the updated file. | Programmatically deactivate the totals row for an Excel table by using Aspose.Cells in a C# application. | Update a .xlsx file so that the first table no longer displays a totals row, then write the changes to a new workbook.
+// Common Searches: Aspose.Cells C# remove totals row from ListObject | Change ShowTotals setting for first ListObject using Aspose.Cells | Remove table totals row from worksheet with Aspose.Cells API | Turn off totals row when saving Excel file in C#
+// Tags: Aspose.Cells hide table totals row | C# ListObject ShowTotals configuration | Excel table totals row removal Aspose | modify ListObject properties Aspose.Cells | disable totals row workbook C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-namespace AsposeCellsExamples
+// The example loads an existing Excel workbook, checks for tables on the first worksheet, sets the ShowTotals property of the first ListObject to false to hide its totals row, and saves the modified workbook to a new file.
+class Program
 {
-    // Demonstrates how to create a workbook, add a ListObject covering A1:B4, and remove its totals row by setting the ShowTotals property to false, then save the file as RemoveTableTotalsRowDemo.xlsx.
-    public class RemoveTableTotalsRowDemo
+    static void Main()
     {
-        public static void Run()
+        string inputPath = "input.xlsx";
+        string outputPath = "output.xlsx";
+
+        try
         {
-            try
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate sample data for the table
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Price");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["B2"].PutValue(10);
-                worksheet.Cells["A3"].PutValue("Orange");
-                worksheet.Cells["B3"].PutValue(15);
-                worksheet.Cells["A4"].PutValue("Banana");
-                worksheet.Cells["B4"].PutValue(8);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Add a ListObject (table) covering the data range
-                int tableIndex = worksheet.ListObjects.Add("A1", "B4", true);
-                ListObject table = worksheet.ListObjects[tableIndex];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Ensure the totals row is initially visible (optional)
-                table.ShowTotals = true;
+            // Check if the worksheet contains any tables (ListObjects)
+            if (sheet.ListObjects.Count > 0)
+            {
+                // Access the first table
+                ListObject table = sheet.ListObjects[0];
 
-                // Hide the totals row as required
+                // Hide the totals row
                 table.ShowTotals = false;
-
-                // Save the workbook
-                workbook.Save("RemoveTableTotalsRowDemo.xlsx");
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("No tables found in the worksheet.");
             }
-        }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
         {
-            Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

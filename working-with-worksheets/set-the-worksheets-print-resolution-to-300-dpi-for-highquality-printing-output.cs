@@ -1,20 +1,17 @@
-// Title: Set Worksheet Print Resolution to 300 DPI with Aspose.Cells for .NET (C#)
-// Description: C# example that sets the PageSetup.PrintQuality property of a worksheet to 300 DPI, guaranteeing high‑quality printed output, and saves the workbook as an Excel file.
-// Keywords: Aspose.Cells | C# print resolution | Worksheet DPI | PageSetup.PrintQuality | 300 DPI Excel | high quality printing | Aspose.Cells .NET | set print quality | Excel print DPI | Aspose.Cells example
-// Common Searches: Aspose.Cells set worksheet DPI | C# set print quality 300 DPI Aspose.Cells | PageSetup.PrintQuality property example | How to change Excel print resolution using Aspose.Cells | PrintResolutionDemo Aspose.Cells
-// Developer Intent: Configure a worksheet’s print resolution to 300 DPI for high‑quality printing using Aspose.Cells in C#.
-// Use Cases: Create printable reports that require professional 300 DPI output. | Standardize print quality across all worksheets in a generated Excel workbook. | Develop a template that automatically applies 300 DPI when users print the sheet.
-// AI Prompts: Generate C# code with Aspose.Cells that sets a worksheet’s print resolution to 300 DPI and saves the file. | Explain the effect of the PageSetup.PrintQuality property on printed Excel output and how to read its value programmatically. | Show how to apply a 300 DPI print resolution to every worksheet in an existing workbook using Aspose.Cells.
+// Title: Set worksheet print quality to 300 DPI using Aspose.Cells for .NET
+// AI Prompts: Apply a 300 DPI print resolution to a worksheet via PageSetup.PrintQuality in Aspose.Cells. | Configure high‑resolution printing for the first sheet of a new workbook and save it as an XLSX file. | Programmatically change the print quality of an Excel worksheet to 300 DPI with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# how to set worksheet print DPI to 300 | increase Excel print quality to 300 DPI with Aspose.Cells .NET | PageSetup.PrintQuality property example for high resolution output in C#
+// Tags: Aspose.Cells PageSetup.PrintQuality 300 DPI | worksheet print DPI configuration C# | high‑resolution Excel output Aspose.Cells | programmatic print quality setting .NET | save workbook with custom print resolution
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPrintResolutionDemo
+// The example creates a new Workbook, accesses its first Worksheet, sets the PageSetup.PrintQuality to 300 DPI for high‑quality printing, and saves the file as output.xlsx while handling potential exceptions.
+class Program
 {
-    // C# example that sets the PageSetup.PrintQuality property of a worksheet to 300 DPI, guaranteeing high‑quality printed output, and saves the workbook as an Excel file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
@@ -22,14 +19,15 @@ namespace AsposeCellsPrintResolutionDemo
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Set the print resolution (print quality) to 300 DPI
+            // Set the worksheet's print quality to 300 DPI for high‑quality printing
             worksheet.PageSetup.PrintQuality = 300;
 
-            // Verify the setting (optional)
-            Console.WriteLine("Print Quality set to: " + worksheet.PageSetup.PrintQuality + " DPI");
-
-            // Save the workbook
-            workbook.Save("PrintResolutionDemo.xlsx");
+            // Save the workbook to a file
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,77 +1,64 @@
-// Title: C# – Cut and paste a pivot table with Aspose.Cells while preserving its structure
-// Description: Shows how to build a workbook, create a pivot table, and move the whole pivot table to a different cell using PivotTable.MoveTo in Aspose.Cells for .NET, keeping the pivot cache and formatting unchanged.
-// Keywords: Aspose.Cells pivot table move | C# PivotTable.MoveTo | cut paste pivot table .NET | preserve pivot cache Aspose | relocate pivot table range | Aspose.Cells example C# | move pivot table to new location | Aspose.Cells range operations
-// Common Searches: move pivot table Aspose.Cells C# | cut and paste pivot table preserving cache | PivotTable.MoveTo example .NET | relocate pivot table without rebuilding | Aspose.Cells cut range with pivot
-// Developer Intent: The developer needs to cut a range that contains a pivot table and paste it elsewhere, keeping the pivot’s structure and cache intact.
-// Use Cases: Re‑position a pivot table after inserting rows or columns in an automated report. | Place a pivot table on a different part of the sheet for better layout without recreating the cache. | Move a pivot table to another worksheet for separate presentation while retaining calculations.
-// AI Prompts: Generate C# code using Aspose.Cells to cut a pivot table from cell D2 and paste it to B10, preserving the pivot cache. | Explain the parameters and behavior of PivotTable.MoveTo in Aspose.Cells for .NET. | Provide an example that moves multiple pivot tables in a workbook to new locations without losing data or formatting.
+// Title: Cut a range that includes a pivot table and paste it to a new location while preserving the pivot structure using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that cuts cells A1:D20 (containing a pivot table) and pastes them starting at F1, keeping the pivot table functional. | Show how to use Aspose.Cells Range.Copy and Range.ClearContents to relocate a pivot‑table range without losing its definition in a .NET workbook.
+// Common Searches: Aspose.Cells C# move pivot table range without breaking the pivot | how to cut and paste cells that contain a pivot table using Aspose.Cells for .NET | preserve pivot table when copying a range in an Excel file with Aspose.Cells | C# example for relocating a pivot table block with Aspose.Cells | copy range with pivot table and clear original cells Aspose.Cells
+// Tags: cut range with pivot table Aspose.Cells | paste range preserving pivot Aspose.Cells | Aspose.Cells move pivot table cells | C# copy range containing pivot table | Aspose.Cells range cut and paste example | preserve pivot definition Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotCutPasteDemo
+// The example loads a workbook, defines a source range (A1:D20) that contains a pivot table, creates a destination range starting at F1 with the same size, copies the source to the destination, clears the original cells to simulate a cut, and saves the modified workbook as output.xlsx.
+class PivotCutPasteExample
 {
-    // Shows how to build a workbook, create a pivot table, and move the whole pivot table to a different cell using PivotTable.MoveTo in Aspose.Cells for .NET, keeping the pivot cache and formatting unchanged.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            // Input workbook path
+            string inputPath = "input.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // ------------------------------------------------------------
-            // Populate sample data that will be used as the pivot table source
-            // ------------------------------------------------------------
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Product");
-            sheet.Cells["C1"].PutValue("Sales");
+            // Define the source range address (e.g., A1:D20)
+            string sourceAddress = "A1:D20";
+            string[] srcParts = sourceAddress.Split(':');
+            CellArea sourceArea = CellArea.CreateCellArea(srcParts[0], srcParts[1]);
+            int sourceRows = sourceArea.EndRow - sourceArea.StartRow + 1;
+            int sourceCols = sourceArea.EndColumn - sourceArea.StartColumn + 1;
 
-            sheet.Cells["A2"].PutValue("Fruit");
-            sheet.Cells["B2"].PutValue("Apple");
-            sheet.Cells["C2"].PutValue(1200);
+            // Define the destination top‑left cell address (e.g., F1)
+            string destinationAddress = "F1";
+            CellArea destArea = CellArea.CreateCellArea(destinationAddress, destinationAddress);
 
-            sheet.Cells["A3"].PutValue("Fruit");
-            sheet.Cells["B3"].PutValue("Orange");
-            sheet.Cells["C3"].PutValue(850);
+            // Create source and destination ranges (use fully qualified Aspose.Cells.Range)
+            Aspose.Cells.Range srcRange = sheet.Cells.CreateRange(sourceArea.StartRow, sourceArea.StartColumn, sourceRows, sourceCols);
+            Aspose.Cells.Range destRange = sheet.Cells.CreateRange(destArea.StartRow, destArea.StartColumn, sourceRows, sourceCols);
 
-            sheet.Cells["A4"].PutValue("Vegetable");
-            sheet.Cells["B4"].PutValue("Carrot");
-            sheet.Cells["C4"].PutValue(560);
+            // Copy source range to destination
+            srcRange.Copy(destRange);
 
-            sheet.Cells["A5"].PutValue("Vegetable");
-            sheet.Cells["B5"].PutValue("Tomato");
-            sheet.Cells["C5"].PutValue(730);
+            // Clear the original source range (simulate cut)
+            srcRange.ClearContents();
 
-            // ------------------------------------------------------------
-            // Create a pivot table based on the data range A1:C5
-            // The pivot table will be placed initially at D2
-            // ------------------------------------------------------------
-            int pivotIndex = sheet.PivotTables.Add("A1:C5", "D2", "SalesPivot");
-            PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-            // Configure the pivot table: Category as row, Sales as data
-            pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
-
-            // Calculate data so the pivot table is populated
-            pivot.CalculateData();
-
-            // ------------------------------------------------------------
-            // Move (cut & paste) the entire pivot table to a new location
-            // Here we move it to row 10, column 2 (i.e., cell B10)
-            // The MoveTo method preserves the pivot structure and cache
-            // ------------------------------------------------------------
-            pivot.MoveTo(9, 1); // Zero‑based indices: row 9 = 10th row, column 1 = B
-
-            // After moving, recalculate to refresh the view at the new location
-            pivot.CalculateData();
-
-            // ------------------------------------------------------------
-            // Save the workbook to verify the result
-            // ------------------------------------------------------------
-            workbook.Save("PivotTableCutPasteResult.xlsx");
+            // Save the modified workbook
+            string outputPath = "output.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

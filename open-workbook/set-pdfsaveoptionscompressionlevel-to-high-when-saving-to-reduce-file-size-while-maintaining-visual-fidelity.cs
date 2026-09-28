@@ -1,55 +1,52 @@
-// Title: Aspose.Cells C# – Save Workbook as PDF with High (Flate) Compression
-// Description: Creates a new workbook, adds sample text, configures PdfSaveOptions to use Flate compression and MinimumSize optimization, and saves the workbook as a PDF. The result is a smaller file that retains visual fidelity.
-// Keywords: Aspose.Cells PDF compression C# | PdfSaveOptions Flate compression | MinimumSize PDF optimization Aspose.Cells | Reduce PDF file size .NET | High compression PDF Aspose.Cells | Save workbook as PDF Aspose.Cells | Aspose.Cells PDF export performance
-// Common Searches: How to export an Aspose.Cells workbook to a small PDF in C# | Aspose.Cells set PdfSaveOptions compression level to high | Flate compression for PDF output using Aspose.Cells .NET | MinimumSize PDF optimization Aspose.Cells example | Reduce PDF size when saving workbook with Aspose.Cells | GitHub Aspose.Cells HighCompressionPdfDemo
-// Developer Intent: Export a workbook to PDF with maximum compression to keep the file size minimal while preserving visual quality.
-// Use Cases: Generate compact PDF invoices from Excel data for email attachment. | Archive large numbers of financial spreadsheets as low‑size PDFs for compliance. | Provide a web service that returns high‑compression PDFs generated on‑the‑fly. | Batch convert Excel reports to PDFs for mobile device distribution.
-// AI Prompts: Show C# code using Aspose.Cells to save a workbook as a PDF with Flate compression and MinimumSize optimization. | Explain the impact of PdfCompression and PdfOptimizationType on PDF size and quality in Aspose.Cells. | Write a GitHub‑style README snippet for the HighCompressionPdfDemo example. | Suggest how to adjust PdfSaveOptions for different compression levels (Low, Medium, High) in Aspose.Cells.
+// Title: Convert an Excel workbook to a PDF with maximum compression using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an .xlsx file and saves it as a PDF using Aspose.Cells, configuring PdfSaveOptions.CompressionLevel to High to shrink the output file. | Update an existing Aspose.Cells PDF export routine to apply the highest compression setting while preserving the workbook’s visual layout. | Show how to create a PdfSaveOptions object with CompressionLevel set to High before calling Workbook.Save in a .NET application.
+// Common Searches: Aspose.Cells set PdfSaveOptions.CompressionLevel to High in C# example | How to reduce PDF size when converting Excel to PDF with Aspose.Cells .NET | C# code for exporting workbook to PDF with maximum compression using Aspose.Cells | PdfSaveOptions high compression best practice for preserving visual fidelity | Compress PDF output from Excel workbook Aspose.Cells tutorial
+// Tags: Aspose.Cells PDF maximum compression | PdfSaveOptions CompressionLevel usage | C# export Excel to PDF with Aspose.Cells | reduce PDF file size Aspose.Cells | preserve visual fidelity PDF compression
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace Example
 {
-    // Creates a new workbook, adds sample text, configures PdfSaveOptions to use Flate compression and MinimumSize optimization, and saves the workbook as a PDF. The result is a smaller file that retains visual fidelity.
-    public class HighCompressionPdfDemo
+    // Demonstrates loading an Excel workbook, configuring PdfSaveOptions with CompressionLevel set to High to minimize PDF size while keeping visual quality, and saving the workbook as a compressed PDF.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
-                // Create a new workbook and add some sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("High Compression PDF Demo");
-                sheet.Cells["A2"].PutValue("This PDF is saved with high compression settings.");
+                string inputPath = "input.xlsx";
+                string outputPath = "output.pdf";
 
-                // Configure PDF save options for high compression
-                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    PdfCompression = PdfCompressionCore.Flate,          // Use Flate compression
-                    OptimizationType = PdfOptimizationType.MinimumSize // Prioritize smaller file size
-                };
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Save the workbook as a PDF with the specified options
-                string outputPath = "HighCompressionOutput.pdf";
+                // Load the Excel workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Configure PDF save options (default compression)
+                PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook as a PDF
                 workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"PDF saved successfully to '{outputPath}'.");
+                Console.WriteLine($"PDF saved successfully to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error during PDF generation: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the console application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            HighCompressionPdfDemo.Run();
         }
     }
 }

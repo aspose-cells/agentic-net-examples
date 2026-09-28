@@ -1,41 +1,26 @@
-// Title: C# – Insert a Column at Index 5 with Aspose.Cells (Shift Existing Columns)
-// Description: Demonstrates how to add a column at zero‑based index 5 in a worksheet using Aspose.Cells for .NET, automatically shifting all subsequent columns to the right, adding a header, and saving the file as XLSX.
-// Keywords: Aspose.Cells InsertColumn C# | add column index 5 Aspose | shift columns right .NET | Aspose.Cells worksheet column insertion | C# Excel column manipulation
-// Common Searches: Aspose.Cells insert column at position 5 | C# insert column and shift existing columns in Excel | how to add a new column in Aspose.Cells worksheet | InsertColumn method zero‑based index example
-// Developer Intent: Add a column at the sixth position (index 5) and move all later columns one place to the right.
-// Use Cases: Introduce a new data field without overwriting current columns. | Create a placeholder for future calculations while preserving layout. | Insert a header column before exporting the workbook to Excel.
-// AI Prompts: Generate C# code using Aspose.Cells to insert a column at index 5, shift existing columns, and set a header value. | Show how to insert multiple consecutive columns starting at a specific index while keeping existing data intact. | Explain the zero‑based indexing of InsertColumn and how to adjust formulas after the insertion.
+// Title: How to insert a column at index 5 and shift existing columns right using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a single column at zero‑based index 5 in an existing Excel workbook with Aspose.Cells for .NET and save the file. | Write C# code that adds three consecutive columns starting at column F while preserving formulas and formatting using Aspose.Cells. | Create a reusable C# method that accepts a worksheet and a column index, inserts a column at that position, and returns the updated workbook.
+// Common Searches: Aspose.Cells C# insert column at index 5 before column F | how to shift worksheet columns right after inserting a column with Aspose.Cells .NET | insert multiple columns at a specific position in Excel using Aspose.Cells C# example
+// Tags: Aspose.Cells InsertColumns method C# | add column to Excel worksheet .NET | shift worksheet columns right Aspose.Cells | insert column before column F Excel C# | modify worksheet structure programmatically Aspose.Cells
 
-using System;
 using Aspose.Cells;
 
-// Demonstrates how to add a column at zero‑based index 5 in a worksheet using Aspose.Cells for .NET, automatically shifting all subsequent columns to the right, adding a header, and saving the file as XLSX.
-class InsertColumnDemo
+// The example loads an existing Excel workbook, accesses the first worksheet, inserts one column at zero‑based index 5 (before column F) which shifts all subsequent columns to the right, and then saves the modified workbook to a new file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Access the first worksheet (you can change the index or name as needed)
         Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
 
-        // Fill some sample data (optional, just to see the shift effect)
-        for (int row = 0; row < 5; row++)
-        {
-            for (int col = 0; col < 8; col++)
-            {
-                cells[row, col].PutValue($"R{row}C{col}");
-            }
-        }
+        // Insert a new column at index 5 (zero‑based, i.e., before column F)
+        // The second parameter (1) specifies the number of columns to insert.
+        sheet.Cells.InsertColumns(5, 1);
 
-        // Insert a new column at index 5 (zero‑based, i.e., the 6th column)
-        // This shifts all existing columns from index 5 onward to the right.
-        cells.InsertColumn(5);
-
-        // Add a header to the newly inserted column (optional)
-        cells[0, 5].PutValue("New Column");
-
-        // Save the workbook
-        workbook.Save("InsertColumnAtIndex5.xlsx");
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,44 +1,56 @@
-// Title: Convert HTML to PDF with Aspose.Cells and retain video thumbnails as static images (C#)
-// Description: A C# sample that loads an HTML file into an Aspose.Cells Workbook, checks the file’s existence, and saves it as a PDF. Video tags are not rendered; their poster images appear as static placeholders, giving a printable view of pages that contain <video> elements.
-// Keywords: Aspose.Cells | HTML to PDF conversion | C# | .NET PDF export | video placeholder image | poster attribute | static thumbnail | unsupported video handling | Workbook.Save | SaveFormat.Pdf
-// Common Searches: Aspose.Cells keep video thumbnail when converting HTML to PDF | C# convert HTML with <video> tags to PDF showing poster image | HTML to PDF static image for embedded video Aspose | How to preserve video placeholders in PDF using Aspose.Cells | Convert web page to PDF with video thumbnails in .NET
-// Developer Intent: Create a PDF from an HTML document while ensuring that any embedded videos are represented by their poster images rather than being omitted or rendered as active media.
-// Use Cases: Produce printable marketing brochures from web pages that contain video teasers, showing only the thumbnail images. | Generate offline help manuals from online documentation that embeds videos, preserving the visual layout with static placeholders. | Batch‑process HTML reports with video elements into PDFs for archiving, where the videos are displayed as their poster frames.
-// AI Prompts: Write C# code using Aspose.Cells that replaces <video> tags with their poster attribute before saving the document as PDF. | Explain how Aspose.Cells treats unsupported video elements during HTML‑to‑PDF conversion and how to guarantee that poster images appear. | Provide a step‑by‑step checklist to verify that video thumbnails are retained after converting HTML to PDF with Aspose.Cells.
+// Title: Convert HTML containing <video> elements to PDF with static image placeholders using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads an HTML file, uses a regular expression to replace every <video> tag with a specified PNG image, and saves the result as a PDF via Aspose.Cells. | Show how to load the modified HTML content from a MemoryStream into an Aspose.Cells Workbook and export it to PDF with custom image dimensions. | Add robust error handling for missing HTML or placeholder image files when performing the HTML‑to‑PDF conversion with Aspose.Cells.
+// Common Searches: how to replace <video> tags with images before converting HTML to PDF using Aspose.Cells in C# | Aspose.Cells load HTML from MemoryStream and save as PDF example | C# regex to substitute video elements with placeholder PNG for PDF export
+// Tags: Aspose.Cells HTML to PDF conversion | video tag substitution with PNG in C# | MemoryStream HTML loading Aspose.Cells | SaveFormat.Pdf workbook export | static image placeholder for video elements
 
 using System;
 using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-// A C# sample that loads an HTML file into an Aspose.Cells Workbook, checks the file’s existence, and saves it as a PDF. Video tags are not rendered; their poster images appear as static placeholders, giving a printable view of pages that contain <video> elements.
+// The program reads an HTML file, replaces each <video> element with a PNG placeholder via regex, loads the modified HTML into an Aspose.Cells Workbook using a MemoryStream, and saves the workbook as a PDF.
 class HtmlToPdfWithVideoPlaceholders
 {
     static void Main()
     {
+        // Paths for input HTML, placeholder image, and output PDF.
+        const string htmlPath = "input.html";
+        const string placeholderImagePath = "video_placeholder.png";
+        const string pdfPath = "output.pdf";
+
         try
         {
-            // Input HTML file that may contain embedded video web extensions
-            string htmlPath = "input.html";
-
-            // Verify that the HTML file exists
+            // Verify required files exist.
             if (!File.Exists(htmlPath))
+                throw new FileNotFoundException($"HTML file not found: {htmlPath}");
+            if (!File.Exists(placeholderImagePath))
+                throw new FileNotFoundException($"Placeholder image not found: {placeholderImagePath}");
+
+            // Read the HTML content.
+            string htmlContent = File.ReadAllText(htmlPath, Encoding.UTF8);
+
+            // Replace each <video> element with an <img> placeholder.
+            // The placeholder image is referenced by its file name; adjust the path if needed.
+            string pattern = @"<video[\s\S]*?</video>";
+            string replacement = $"<img src=\"{placeholderImagePath}\" width=\"320\" height=\"240\" alt=\"Video placeholder\" />";
+            string modifiedHtml = Regex.Replace(htmlContent, pattern, replacement, RegexOptions.IgnoreCase);
+
+            // Load the modified HTML into a workbook using a memory stream.
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(modifiedHtml)))
             {
-                Console.WriteLine($"Error: HTML file not found at '{htmlPath}'.");
-                return;
+                var loadOptions = new LoadOptions(LoadFormat.Html);
+                var workbook = new Workbook(stream, loadOptions);
+
+                // Save the workbook as PDF.
+                workbook.Save(pdfPath, SaveFormat.Pdf);
             }
 
-            // Load the HTML content into a workbook
-            Workbook workbook = new Workbook(htmlPath);
-
-            // Save the workbook as PDF – any video content will be rendered as is (or omitted if unsupported)
-            string pdfOutputPath = "output.pdf";
-            workbook.Save(pdfOutputPath, SaveFormat.Pdf);
-
-            Console.WriteLine($"HTML converted to PDF saved at: {pdfOutputPath}");
+            Console.WriteLine($"PDF generated successfully: {pdfPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

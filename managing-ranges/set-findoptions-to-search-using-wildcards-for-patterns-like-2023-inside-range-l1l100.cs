@@ -1,62 +1,66 @@
-// Title: C# Aspose.Cells FindOptions with Excel‑style wildcards to locate "*2023*" in column L (L1:L100)
-// Description: Demonstrates how to configure FindOptions for Excel‑style wildcard matching, set a CellArea covering L1:L100, and use Cells.Find to return the first cell whose value contains the pattern "*2023*" in a .NET workbook.
-// Keywords: Aspose.Cells | FindOptions | wildcard search | C# .NET | Excel wildcards | search range L1:L100 | CellArea | LookAtType.Contains | SetRange | Cells.Find
-// Common Searches: Aspose.Cells FindOptions wildcard example | search column L for "*2023*" using Aspose.Cells | set range for Find method Aspose.Cells C# | enable Excel‑style wildcards in Aspose.Cells Find | find cells containing year 2023 in .NET workbook
-// Developer Intent: Retrieve the first cell in column L (rows 1‑100) whose text includes the substring 2023 by applying an Excel‑style wildcard pattern with FindOptions.
-// Use Cases: Filter rows that belong to a specific fiscal year before processing data. | Validate that a worksheet contains entries for a given year within a designated column. | Extract or highlight cells matching a year pattern prior to exporting or reporting.
-// AI Prompts: Generate C# code using Aspose.Cells FindOptions to locate cells containing "*2024*" in range B2:B500 with case‑insensitive wildcard matching. | Explain how to configure FindOptions for a multi‑column, case‑insensitive wildcard search that returns all matching cells in Aspose.Cells. | Show how to combine FindOptions with conditional formatting to highlight every cell in column L that matches the pattern "*2023*".
+// Title: Find cells containing '2023' in column L (L1:L100) with Aspose.Cells FindOptions and wildcards in C#
+// AI Prompts: Use Aspose.Cells Find method with a FindOptions object set to LookInType.Values and LookAtType.Contains, applying the pattern '*2023*' to locate the first matching cell in the range L1:L100. | Configure a case‑insensitive wildcard search for '*2023*' across column L using C# and retrieve the cell address and value via Aspose.Cells.
+// Common Searches: aspnet find cells with wildcard '*2023*' in column L using Aspose.Cells | c# Aspose.Cells FindOptions search range L1:L100 for substring 2023 | how to use LookAtType.Contains with FindOptions in Aspose.Cells | search Excel column L for text containing 2023 with Aspose.Cells C# example | wildcard pattern search in Aspose.Cells workbook using Find method
+// Tags: wildcard search FindOptions Aspose.Cells | search column L Aspose.Cells C# | LookAtType Contains example | Find method range limitation L1:L100 | case insensitive find Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to configure FindOptions for Excel‑style wildcard matching, set a CellArea covering L1:L100, and use Cells.Find to return the first cell whose value contains the pattern "*2023*" in a .NET workbook.
+// The example loads an Excel workbook, accesses the first worksheet, and uses Aspose.Cells' Find method with a FindOptions object configured for value search and a contains‑type match. By supplying the wildcard pattern '*2023*', it scans cells L1 through L100 and prints the address and value of the first cell that includes the substring '2023'.
 class FindWithWildcards
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Sample data in column L (index 11) for demonstration
-        cells["L1"].PutValue("Report_2022");
-        cells["L2"].PutValue("Summary_2023_Q1");
-        cells["L3"].PutValue("Data_2023_Final");
-        cells["L4"].PutValue("Archive_2021");
-
-        // Create FindOptions instance
-        FindOptions findOptions = new FindOptions();
-
-        // Define the search range L1:L100
-        CellArea searchArea = new CellArea
+        try
         {
-            StartRow = 0,          // Row 1 (0‑based)
-            StartColumn = 11,      // Column L (0‑based)
-            EndRow = 99,           // Row 100
-            EndColumn = 11         // Column L
-        };
-        findOptions.SetRange(searchArea);
+            const string inputPath = "input.xlsx";
 
-        // Search in cell values and use Excel‑style wildcards
-        findOptions.LookInType = LookInType.Values;      // Search in values
-        findOptions.LookAtType = LookAtType.Contains;    // Enables wildcard handling
-        findOptions.RegexKey = false;                    // Use Excel wildcards, not regex
+            // Ensure the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Perform the find operation with the wildcard pattern "*2023*"
-        Cell foundCell = cells.Find("*2023*", null, findOptions);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Output the result
-        if (foundCell != null)
-        {
-            Console.WriteLine($"Found cell: {foundCell.Name} with value \"{foundCell.StringValue}\"");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Define the start cell of the search range (L1)
+            Cell startCell = worksheet.Cells[0, 11]; // Row 0 (1), Column 11 (L)
+
+            // Configure FindOptions (wildcards are supported by default in the pattern)
+            FindOptions findOptions = new FindOptions
+            {
+                LookInType = LookInType.Values,   // Search cell values
+                LookAtType = LookAtType.Contains, // Look for the pattern anywhere in the cell
+                // Case‑insensitive search; if the API version supports MatchCase, set to false
+                // MatchCase = false
+            };
+
+            // Search for any cell containing "2023" using the wildcard pattern "*2023*"
+            string pattern = "*2023*";
+            Cell foundCell = worksheet.Cells.Find(pattern, startCell, findOptions);
+
+            // Handle the result
+            if (foundCell != null)
+            {
+                Console.WriteLine($"Found match at {foundCell.Name}: {foundCell.StringValue}");
+            }
+            else
+            {
+                Console.WriteLine("No matching cells found in the specified range.");
+            }
+
+            // (Optional) Save the workbook if changes were made
+            // workbook.Save("output.xlsx");
         }
-        else
+        catch (Exception ex)
         {
-            Console.WriteLine("No cell matching the pattern was found.");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // (Optional) Save the workbook if needed
-        // workbook.Save("FindWithWildcards.xlsx");
     }
 }

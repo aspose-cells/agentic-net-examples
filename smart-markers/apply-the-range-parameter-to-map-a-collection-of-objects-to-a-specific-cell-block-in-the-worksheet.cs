@@ -1,63 +1,78 @@
-// Title: Map a collection to a worksheet range using Aspose.Cells Range.Value in C#
-// Description: Demonstrates how to convert a List<object[]> into a two‑dimensional array, create a matching Range with Cells.CreateRange, assign the array via Range.Value, and save the workbook. Ideal for populating a defined cell block in a new worksheet.
-// Keywords: Aspose.Cells C# Range.Value | CreateRange example | populate Excel range from collection | write 2D object array to worksheet | smart markers Aspose.Cells | map list to Excel cells
-// Common Searches: Aspose.Cells set Range.Value from 2D array C# | CreateRange method usage Aspose.Cells | populate Excel sheet with List<object[]> | write collection to specific cell block Aspose | C# map data to Excel range Aspose.Cells
-// Developer Intent: Fill a specific block of cells in an Excel worksheet with data from a collection using Aspose.Cells.
-// Use Cases: Export header and rows from a List<object[]> to the A1‑based range of a new workbook. | Dynamically size the target range based on the collection’s row and column count. | Save the populated workbook after mapping the data to the worksheet.
-// AI Prompts: Generate C# code that converts a List<object[]> to an object[,] and assigns it to an Aspose.Cells Range using Range.Value. | Show how to create a range starting at cell B2 that matches a data collection’s dimensions and populate it with Aspose.Cells. | Explain exception handling best practices when mapping a collection to a worksheet range with Aspose.Cells.
+// Title: Map a List<Person> to a defined Excel range starting at A2 with headers using Aspose.Cells for .NET
+// AI Prompts: Write C# code that converts a List<Person> into a 2‑dimensional object array and assigns it to a worksheet range beginning at cell A2 with a header row using Aspose.Cells. | Show how to compute the lower‑right cell address for a dynamic range based on the collection count with CellsHelper and create the corresponding Aspose.Cells Range. | Demonstrate setting the Value property of an Aspose.Cells Range to a 2‑D array and saving the workbook to an .xlsx file.
+// Common Searches: asp.net map list of objects to excel range using aspose.cells | c# create dynamic range starting at A2 based on collection size aspose.cells | populate excel worksheet with object array asp.net aspose.cells | how to assign a 2d array to a range in aspose.cells c#
+// Tags: assign object list to Excel range Aspose.Cells | dynamic range calculation CellsHelper Aspose.Cells | populate worksheet with 2d array .NET | map collection to Excel cells Aspose.Cells | create range with header row Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
-using AsposeRange = Aspose.Cells.Range;
 
-// Demonstrates how to convert a List<object[]> into a two‑dimensional array, create a matching Range with Cells.CreateRange, assign the array via Range.Value, and save the workbook. Ideal for populating a defined cell block in a new worksheet.
-class Program
+namespace AsposeCellsRangeMappingDemo
 {
-    static void Main()
+    // Simple data model
+    // The example creates a workbook, builds a 2‑D object array from a List<Person> (including a header row), calculates a dynamic target range that starts at A2, assigns the array to that Aspose.Cells Range, and saves the file as PeopleRangeMapping.xlsx.
+    public class Person
     {
-        try
+        public string Name { get; set; } = null!;
+        public int Age { get; set; }
+    }
+
+    public class Program
+    {
+        public static void Main()
         {
-            // Sample collection of objects (each inner array represents a row)
-            var data = new List<object[]>
+            try
             {
-                new object[] { "Id", "Name", "Score" },
-                new object[] { 1, "Alice", 85 },
-                new object[] { 2, "Bob", 92 }
-            };
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-            // Convert the collection to a 2‑dimensional array required by Range.Value
-            int rowCount = data.Count;
-            int colCount = data[0].Length;
-            object[,] values = new object[rowCount, colCount];
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                for (int j = 0; j < colCount; j++)
+                // Sample collection of objects to map
+                List<Person> people = new List<Person>
                 {
-                    values[i, j] = data[i][j];
+                    new Person { Name = "Alice", Age = 30 },
+                    new Person { Name = "Bob", Age = 25 },
+                    new Person { Name = "Charlie", Age = 35 }
+                };
+
+                // Determine the size of the target range (including header row)
+                int totalRows = people.Count + 1; // +1 for header
+                int totalColumns = 2; // Name and Age
+
+                // Create a 2‑dimensional array that matches the range dimensions
+                object[,] data = new object[totalRows, totalColumns];
+
+                // Fill header
+                data[0, 0] = "Name";
+                data[0, 1] = "Age";
+
+                // Fill data rows from the collection
+                for (int i = 0; i < people.Count; i++)
+                {
+                    data[i + 1, 0] = people[i].Name;
+                    data[i + 1, 1] = people[i].Age;
                 }
+
+                // Define the target range (starting at cell A2)
+                // Upper‑left cell: A2, lower‑right cell calculated from size
+                string upperLeft = "A2";
+                // CellsHelper uses zero‑based indices, so add 1 to row index for the header offset
+                string lowerRight = CellsHelper.CellIndexToName(totalRows, totalColumns - 1);
+                Aspose.Cells.Range targetRange = cells.CreateRange(upperLeft, lowerRight);
+
+                // Assign the 2‑D array to the range
+                targetRange.Value = data;
+
+                // Save the workbook
+                string outputPath = "PeopleRangeMapping.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
-
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Create a range that matches the size of the data (starting at A1)
-            AsposeRange range = cells.CreateRange(0, 0, rowCount, colCount); // rows, columns
-
-            // Map the collection to the worksheet by setting the range's value
-            range.Value = values;
-
-            // Save the workbook
-            string outputPath = "MappedData.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

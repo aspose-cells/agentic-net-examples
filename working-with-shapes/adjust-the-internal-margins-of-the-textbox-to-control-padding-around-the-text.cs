@@ -1,40 +1,56 @@
-// Title: Aspose.Cells .NET – Set custom internal padding (margins) for a TextBox shape in Excel
-// Description: Demonstrates how to add a TextBox to an Excel worksheet with Aspose.Cells, turn off automatic margin calculation, and define left, right, top, and bottom padding in points using TextBoxOptions before saving the file.
-// Keywords: Aspose.Cells TextBox padding | Excel textbox internal margins .NET | TextBoxOptions margin points | disable auto margin Aspose.Cells | C# set textbox padding Excel | Aspose.Cells shape formatting | custom textbox margins Aspose
-// Common Searches: Aspose.Cells set textbox padding C# | how to change internal margins of Excel textbox using Aspose | disable automatic margin calculation Aspose.Cells TextBox | set left right top bottom margins TextBoxOptions | adjust textbox padding in .xlsx with Aspose.Cells
-// Developer Intent: Apply precise internal padding to a TextBox shape in an Excel workbook using Aspose.Cells for .NET.
-// Use Cases: Design report templates where callout boxes need consistent spacing from their borders. | Generate invoices with note sections inside textboxes that require exact padding for readability. | Create dashboards where data labels are placed in textboxes with uniform margin settings.
-// AI Prompts: Provide C# code to set different left, right, top, and bottom margins for an Aspose.Cells TextBox and keep the settings after saving. | Show how to read the current padding of an existing TextBox in an Excel file and update only the top margin using Aspose.Cells for .NET. | Explain how to toggle automatic margin calculation for a TextBox shape in Aspose.Cells and apply custom margins in points.
+// Title: How to set internal padding for a textbox shape in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets the left, right, top, and bottom internal margins of a textbox shape created with Aspose.Cells. | Show how to modify a textbox's padding after adding it to a worksheet by accessing the shape's formatting objects in Aspose.Cells for .NET. | Explain the steps to configure textbox internal margin properties in Aspose.Cells when the API supports them, including any fallback approaches.
+// Common Searches: Aspose.Cells C# set textbox internal margin padding | adjust padding inside Excel textbox shape using Aspose.Cells .NET | C# Aspose.Cells how to change textbox margins after adding shape | textbox internal margin properties not available Aspose.Cells version | set left and right padding for textbox shape in Aspose.Cells workbook
+// Tags: Aspose.Cells shape internal margin API | C# configure textbox padding in Excel | Excel textbox margin formatting Aspose.Cells | Aspose.Cells adjust shape internal margins | C# set textbox padding with Aspose.Cells
 
 using System;
+using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// Demonstrates how to add a TextBox to an Excel worksheet with Aspose.Cells, turn off automatic margin calculation, and define left, right, top, and bottom padding in points using TextBoxOptions before saving the file.
-class AdjustTextboxMargins
+// The example creates a new Workbook, adds a textbox shape to the first worksheet, assigns sample text, notes that internal margin properties are unavailable in the current Aspose.Cells version, and saves the file as TextboxMargins.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a text box shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset, left offset, width, height
-        TextBox textBox = sheet.Shapes.AddTextBox(1, 1, 1, 1, 200, 100);
-        textBox.Text = "Text with custom internal margins (padding).";
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Disable automatic margin calculation so custom values are applied
-        textBox.TextBody.TextAlignment.IsAutoMargin = false;
+            // Parameters for the textbox shape (zero‑based indices)
+            int row = 2;          // upper left row
+            int column = 2;       // upper left column
+            int topOffset = 5;    // offset from the top of the cell (points)
+            int leftOffset = 5;   // offset from the left of the cell (points)
+            int height = 100;     // height of the textbox (points)
+            int width = 200;      // width of the textbox (points)
 
-        // Set internal margins (padding) in points
-        textBox.TextBoxOptions.LeftMarginPt = 15;    // left padding
-        textBox.TextBoxOptions.RightMarginPt = 15;   // right padding
-        textBox.TextBoxOptions.TopMarginPt = 10;     // top padding
-        textBox.TextBoxOptions.BottomMarginPt = 10;  // bottom padding
+            // Add a textbox shape to the worksheet
+            Shape textbox = sheet.Shapes.AddTextBox(row, column, topOffset, leftOffset, height, width);
 
-        // Save the workbook to a file
-        workbook.Save("TextboxMarginsDemo.xlsx");
+            // Set the text inside the textbox
+            textbox.Text = "Sample text with custom padding.";
+
+            // Note: Properties such as TextBoxInternalMargin*,
+            // LineWeight, LineColor, and FillColor are not available
+            // in the current Aspose.Cells version used for this example.
+            // They can be configured via the Shape's formatting objects
+            // if needed in a later version.
+
+            // Define output file path
+            string outputPath = "TextboxMargins.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,56 +1,61 @@
-// Title: Merge Multiple .xls Workbooks into a Single .xlsx Using Aspose.Cells for .NET (C#)
-// Description: C# sample that loads each .xls file with new Workbook(filePath), combines them into a destination workbook via Workbook.Combine, skips missing files, logs progress, and saves the merged result as MergedResult.xlsx with full error handling.
-// Keywords: Aspose.Cells | C# | merge Excel workbooks | combine .xls files | Workbook.Combine | load workbook from file | save as .xlsx | batch Excel processing | error handling | .NET Excel automation
-// Common Searches: C# merge multiple xls files Aspose.Cells | Combine .xls workbooks into one .xlsx .NET | Aspose.Cells Workbook.Combine example | Load Excel file with new Workbook(filePath) C# | Skip missing Excel files during merge Aspose
-// Developer Intent: Programmatically combine several legacy .xls workbooks into a single .xlsx file using Aspose.Cells for .NET.
-// Use Cases: Consolidate daily sales .xls reports into a master workbook for quarterly analysis. | Migrate legacy .xls archives to .xlsx format in an automated batch job. | Create a scheduled task that merges incoming .xls data files while handling missing or corrupted files.
-// AI Prompts: Write C# code that reads a list of .xls paths, merges them with Aspose.Cells Workbook.Combine, and saves as .xlsx with robust error handling. | Show how to modify the merge loop to include only worksheets whose names match a specific pattern. | Generate a PowerShell script that invokes a compiled .NET assembly to merge .xls files using Aspose.Cells.
+// Title: Merge several .xls workbooks into a single .xlsx file using Aspose.Cells for .NET (C#)
+// AI Prompts: Load each .xls file with `new Workbook(filePath)` and merge it into a destination workbook using the `Combine` method in C#. | Create an empty workbook, loop through a list of source file paths, handle missing files, combine all sheets, and save the final workbook as an .xlsx with `Workbook.Save`.
+// Common Searches: c# aspnet load multiple xls files and merge into one xlsx using aspose.cells | how to combine several .xls workbooks into a single workbook with Aspose.Cells in .NET | Aspose.Cells combine workbooks from file paths with error handling | merge excel .xls files to .xlsx programmatically using Aspose.Cells C# | sample code for merging multiple Excel workbooks and saving as xlsx with Aspose.Cells
+// Tags: combine workbooks Aspose.Cells C# | load xls workbook from file path Aspose.Cells | save merged workbook as xlsx Aspose.Cells | exception handling merging Excel files .NET | iterate source files merge Excel Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// C# sample that loads each .xls file with new Workbook(filePath), combines them into a destination workbook via Workbook.Combine, skips missing files, logs progress, and saves the merged result as MergedResult.xlsx with full error handling.
-class Program
+namespace MergeWorkbooksExample
 {
-    static void Main()
+    // The example loads each .xls workbook using `new Workbook(filePath)`, merges them into an empty destination workbook with `Combine`, handles missing files and exceptions, and saves the consolidated result as a .xlsx file.
+    class Program
     {
-        // Paths of source workbooks to merge.
-        string[] sourceFiles = { "Source1.xls", "Source2.xls", "Source3.xls" };
-
-        // Destination workbook that will contain merged data.
-        Workbook destWorkbook = new Workbook();
-
-        foreach (string filePath in sourceFiles)
+        static void Main()
         {
+            // Paths of the source XLS workbooks to be merged
+            string[] sourceFiles = new string[]
+            {
+                "Source1.xls",
+                "Source2.xls",
+                "Source3.xls"
+            };
+
+            // Create an empty destination workbook
+            Workbook destinationWorkbook = new Workbook();
+
+            // Load each source workbook, combine it into the destination workbook
+            foreach (string filePath in sourceFiles)
+            {
+                try
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        Console.WriteLine($"Source file not found: {filePath}");
+                        continue;
+                    }
+
+                    Workbook sourceWorkbook = new Workbook(filePath);
+                    destinationWorkbook.Combine(sourceWorkbook);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                }
+            }
+
+            // Save the merged workbook to a new file
             try
             {
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found: {filePath}. Skipping.");
-                    continue;
-                }
-
-                // Load source workbook and combine it with the destination.
-                Workbook srcWorkbook = new Workbook(filePath);
-                destWorkbook.Combine(srcWorkbook);
-                Console.WriteLine($"Merged: {filePath}");
+                string outputPath = "MergedResult.xlsx";
+                destinationWorkbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Merged workbook saved to {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing {filePath}: {ex.Message}");
+                Console.WriteLine($"Failed to save merged workbook: {ex.Message}");
             }
-        }
-
-        try
-        {
-            // Save the merged workbook.
-            destWorkbook.Save("MergedResult.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Merged workbook saved as MergedResult.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving merged workbook: {ex.Message}");
         }
     }
 }

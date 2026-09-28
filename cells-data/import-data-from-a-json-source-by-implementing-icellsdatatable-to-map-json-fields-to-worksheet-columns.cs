@@ -1,71 +1,107 @@
-// Title: Import JSON into Excel with a custom ICellsDataTable – Aspose.Cells for .NET
-// Description: Parse a JSON array, implement ICellsDataTable, and use Worksheet.Cells.ImportData (with ImportTableOptions) to write the data and headers to a new XLSX file.
-// Keywords: Aspose.Cells | ICellsDataTable | JSON to Excel | C# .NET | ImportData | ImportTableOptions | Excel automation | worksheet import | data mapping | JSON parsing
-// Common Searches: Aspose.Cells import JSON array | Implement ICellsDataTable in C# | Map JSON fields to Excel columns | ImportData with headers Aspose.Cells | Insert rows while importing data | C# convert JSON to XLSX | Custom data table for Aspose.Cells
-// Developer Intent: Build an ICellsDataTable that reads JSON and import the resulting rows into an Excel sheet.
-// Use Cases: Convert a JSON list of objects into an Excel workbook with column headers. | Import large JSON datasets into an existing worksheet without overwriting data by enabling InsertRows. | Reuse the JsonCellsDataTable class for different JSON structures by adjusting column extraction logic.
-// AI Prompts: Create a JsonCellsDataTable that flattens nested JSON objects into dot‑separated columns. | Show how to configure ImportTableOptions to omit the header row during import. | Provide streaming code to read a massive JSON file and feed rows to ICellsDataTable on the fly.
+// Title: How to import a JSON array into an Excel worksheet using a custom ICellsDataTable implementation with Aspose.Cells for .NET
+// AI Prompts: Create a C# class that implements ICellsDataTable to read rows from a JSON string and expose column values for Aspose.Cells import. | Demonstrate using Cells.ImportData together with a custom ICellsDataTable and ImportTableOptions to write JSON data into a worksheet. | Update the ICellsDataTable implementation to correctly handle nulls and the various JSON primitive types during Excel import.
+// Common Searches: aspnet import json array into excel using aspose.cells ICellsDataTable | c# ICellsDataTable example for reading JSON data with Aspose.Cells | map json fields to Excel columns using Aspose.Cells ImportData method | sample code to import JSON array into .xlsx using Aspose.Cells .NET
+// Tags: ICellsDataTable JSON source handling | Aspose.Cells import JSON array to XLSX | Excel worksheet population from JSON data | primitive JSON type conversion in Aspose.Cells | JSON deserialization to dictionary for Aspose.Cells
 
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
 namespace AsposeCellsJsonImport
 {
-    // Custom implementation of ICellsDataTable that holds JSON data
-    // Parse a JSON array, implement ICellsDataTable, and use Worksheet.Cells.ImportData (with ImportTableOptions) to write the data and headers to a new XLSX file.
+    // Custom ICellsDataTable implementation that reads data from a JSON array.
+    // Implements ICellsDataTable by deserializing a JSON array into a list of dictionaries, exposing column names and row values so that Cells.ImportData can write the data into an Excel worksheet.
     public class JsonCellsDataTable : ICellsDataTable
     {
-        private readonly List<string> _columns;
         private readonly List<Dictionary<string, object>> _rows;
-        private int _cursor = -1; // Position before the first row
+        private readonly string[] _columns;
+        private int _cursor = -1; // Position before the first row.
 
-        public JsonCellsDataTable(List<string> columns, List<Dictionary<string, object>> rows)
+        public JsonCellsDataTable(string json)
         {
-            _columns = columns;
-            _rows = rows;
+            // Deserialize JSON array of objects into a list of dictionaries.
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var elements = JsonSerializer.Deserialize<List<Dictionary<string, JsonElement>>>(json, options);
+            _rows = new List<Dictionary<string, object>>();
+
+            if (elements != null && elements.Count > 0)
+            {
+                // Determine column names from the first element.
+                var first = elements[0];
+                var columnList = new List<string>(first.Keys);
+                _columns = columnList.ToArray();
+
+                // Convert each JsonElement to a .NET primitive and store rows.
+                foreach (var dict in elements)
+                {
+                    var row = new Dictionary<string, object>();
+                    foreach (var col in _columns)
+                    {
+                        if (dict.TryGetValue(col, out JsonElement je))
+                        {
+                            object value = je.ValueKind switch
+                            {
+                                JsonValueKind.String => je.GetString(),
+                                JsonValueKind.Number => je.TryGetInt64(out long l) ? (object)l : je.GetDouble(),
+                                JsonValueKind.True => true,
+                                JsonValueKind.False => false,
+                                JsonValueKind.Null => null,
+                                JsonValueKind.Undefined => null,
+                                JsonValueKind.Object => je.GetRawText(),
+                                JsonValueKind.Array => je.GetRawText(),
+                                _ => je.GetRawText()
+                            };
+                            row[col] = value;
+                        }
+                        else
+                        {
+                            row[col] = null;
+                        }
+                    }
+                    _rows.Add(row);
+                }
+            }
+            else
+            {
+                _columns = Array.Empty<string>();
+            }
         }
 
-        // Returns column names
-        public string[] Columns => _columns.ToArray();
+        // ICellsDataTable members.
 
-        // Returns number of records
+        public string[] Columns => _columns;
+
         public int Count => _rows.Count;
 
-        // Indexer by column index
+        // Indexer by column index.
         public object this[int columnIndex]
         {
             get
             {
                 if (_cursor < 0 || _cursor >= _rows.Count)
-                    throw new InvalidOperationException("Cursor is not positioned on a valid row.");
-
+                    throw new IndexOutOfRangeException("Cursor is not positioned on a valid row.");
                 string colName = _columns[columnIndex];
-                return _rows[_cursor].TryGetValue(colName, out var value) ? value : null;
+                return _rows[_cursor][colName];
             }
         }
 
-        // Indexer by column name
+        // Indexer by column name.
         public object this[string columnName]
         {
             get
             {
                 if (_cursor < 0 || _cursor >= _rows.Count)
-                    throw new InvalidOperationException("Cursor is not positioned on a valid row.");
-
-                return _rows[_cursor].TryGetValue(columnName, out var value) ? value : null;
+                    throw new IndexOutOfRangeException("Cursor is not positioned on a valid row.");
+                return _rows[_cursor].TryGetValue(columnName, out var val) ? val : null;
             }
         }
 
-        // Move cursor to before the first row
         public void BeforeFirst()
         {
             _cursor = -1;
         }
 
-        // Move cursor to the next row; returns false if no more rows
         public bool Next()
         {
             if (_cursor + 1 < _rows.Count)
@@ -77,70 +113,29 @@ namespace AsposeCellsJsonImport
         }
     }
 
-    public class Program
+    class Program
     {
-        public static void Main()
+        static void Main()
         {
-            // Sample JSON array
+            // Sample JSON array to import.
             string json = @"[
-                { ""Name"": ""Alice"", ""Age"": 30, ""City"": ""New York"" },
-                { ""Name"": ""Bob"",   ""Age"": 25, ""City"": ""Los Angeles"" },
-                { ""Name"": ""Charlie"", ""Age"": 35, ""City"": ""Chicago"" }
+                { ""Name"": ""Alice"",   ""Age"": 30, ""IsMember"": true },
+                { ""Name"": ""Bob"",     ""Age"": 25, ""IsMember"": false },
+                { ""Name"": ""Charlie"", ""Age"": 35, ""IsMember"": true }
             ]";
 
-            // Parse JSON and build column list + rows
-            var columns = new List<string>();
-            var rows = new List<Dictionary<string, object>>();
-
-            using (JsonDocument doc = JsonDocument.Parse(json))
-            {
-                JsonElement root = doc.RootElement;
-                if (root.ValueKind != JsonValueKind.Array)
-                    throw new InvalidOperationException("Root JSON element must be an array.");
-
-                foreach (JsonElement element in root.EnumerateArray())
-                {
-                    var dict = new Dictionary<string, object>();
-                    foreach (JsonProperty prop in element.EnumerateObject())
-                    {
-                        // Capture column names from the first element
-                        if (columns.Count == 0 && !columns.Contains(prop.Name))
-                            columns.Add(prop.Name);
-
-                        // Store value (handle different JSON value kinds)
-                        object value = prop.Value.ValueKind switch
-                        {
-                            JsonValueKind.String => prop.Value.GetString(),
-                            JsonValueKind.Number => prop.Value.TryGetInt64(out long l) ? (object)l :
-                                                    prop.Value.TryGetDouble(out double d) ? d : null,
-                            JsonValueKind.True => true,
-                            JsonValueKind.False => false,
-                            JsonValueKind.Null => null,
-                            _ => prop.Value.GetRawText()
-                        };
-                        dict[prop.Name] = value;
-                    }
-                    rows.Add(dict);
-                }
-            }
-
-            // Create custom ICellsDataTable from parsed JSON
-            ICellsDataTable jsonTable = new JsonCellsDataTable(columns, rows);
-
-            // Create workbook and import the data table
+            // Create a new workbook and get the cells collection.
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = workbook.Worksheets[0].Cells;
 
-            // Import with field names shown in the first row
-            ImportTableOptions importOptions = new ImportTableOptions
-            {
-                IsFieldNameShown = true,
-                InsertRows = true
-            };
-            sheet.Cells.ImportData(jsonTable, 0, 0, importOptions);
+            // Build a custom ICellsDataTable from the JSON string.
+            ICellsDataTable jsonTable = new JsonCellsDataTable(json);
 
-            // Save the workbook
-            workbook.Save("JsonImportOutput.xlsx");
+            // Import the data table into the worksheet starting at cell A1 (row 0, column 0).
+            cells.ImportData(jsonTable, 0, 0, new ImportTableOptions());
+
+            // Save the workbook.
+            workbook.Save("JsonImportResult.xlsx");
         }
     }
 }

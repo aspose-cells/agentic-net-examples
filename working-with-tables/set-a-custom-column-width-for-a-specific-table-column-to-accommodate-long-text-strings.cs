@@ -1,40 +1,31 @@
-// Title: C# – Set Custom Column Width for a Specific Column with Aspose.Cells
-// Description: Shows how to create a workbook, insert a long string into cell B1, and assign a fixed width of 40 characters to column B using Cells.SetColumnWidth (or the Columns collection) before saving the file as CustomColumnWidth.xlsx.
-// Keywords: Aspose.Cells | C# | set column width | custom column width | column width characters | Excel column width programmatically | Cells.SetColumnWidth | worksheet column width | adjust column width for long text | Aspose.Cells .NET
-// Common Searches: Aspose.Cells set column width C# | how to change column width in Excel using Aspose.Cells | set column width in characters with Aspose.Cells | increase column width for long text Aspose.Cells .NET | programmatically adjust column width in a workbook
-// Developer Intent: Define a fixed width for a chosen worksheet column so that lengthy text is fully visible without truncation.
-// Use Cases: Set column B to 40 characters to accommodate description fields in generated reports. | Apply column width via Cells.SetColumnWidth or worksheet.Cells.Columns[index].Width before exporting the workbook. | Create Excel files with predefined column sizes for tables that contain long strings.
-// AI Prompts: Write C# code that automatically sets a column's width based on the longest string in that column using Aspose.Cells. | Provide an example that loops through multiple columns and assigns appropriate widths before saving the workbook. | Explain the difference between character units and points when setting column width with Aspose.Cells.
+// Title: How to set a custom column width for a specific table column in Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to set column B width to 30 characters. | Show how to apply the same column width to a consecutive range of columns (e.g., columns C‑G) with Aspose.Cells. | Demonstrate saving a workbook after adjusting column widths using Aspose.Cells in C#. | Explain how to choose an appropriate character width for long text strings with the SetColumnWidth method.
+// Common Searches: Aspose.Cells C# set column width to fit long text | how to change column width for a specific column in a worksheet using Aspose.Cells | set same column width for multiple columns Aspose.Cells example | Aspose.Cells SetColumnWidth characters parameter usage | adjust column width for table column in Aspose.Cells .NET
+// Tags: Aspose.Cells SetColumnWidth method | custom column width Aspose.Cells C# | adjust worksheet column width Aspose.Cells | uniform column width range Aspose.Cells | column width characters Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsColumnWidthExample
+// The example creates a workbook, accesses the first worksheet, sets column B's width to 30 characters with SetColumnWidth, shows how to apply the same width to a range of columns, and saves the file as CustomColumnWidth.xlsx.
+class Program
 {
-    // Shows how to create a workbook, insert a long string into cell B1, and assign a fixed width of 40 characters to column B using Cells.SetColumnWidth (or the Columns collection) before saving the file as CustomColumnWidth.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
+        // Create a new workbook (you can also load an existing file with new Workbook("input.xlsx"))
+        Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate a cell with a long text string in column B (index 1)
-            cells["B1"].PutValue("This is a very long piece of text that needs a wider column to be fully visible.");
+        // Set a custom width for column B (zero‑based index 1)
+        // Width is expressed in characters of the default font
+        sheet.Cells.SetColumnWidth(1, 30); // 30 characters wide to fit long text
 
-            // Set a custom width for column B (index 1) in character units.
-            // Width must be between 0 and 255. Adjust as needed for the text length.
-            cells.SetColumnWidth(1, 40.0); // 40 characters wide
+        // If you need to set the same width for a range of columns, use the overload:
+        // sheet.Cells.SetColumnWidth(startColumn, totalColumns, width);
+        // Example: sheet.Cells.SetColumnWidth(2, 5, 20); // columns C‑G each 20 characters wide
 
-            // Optionally, you can also set the width using the Columns collection:
-            // worksheet.Cells.Columns[1].Width = 40.0;
-
-            // Save the workbook (lifecycle rule: save)
-            workbook.Save("CustomColumnWidth.xlsx", SaveFormat.Xlsx);
-        }
+        // Save the workbook to a file
+        workbook.Save("CustomColumnWidth.xlsx");
     }
 }

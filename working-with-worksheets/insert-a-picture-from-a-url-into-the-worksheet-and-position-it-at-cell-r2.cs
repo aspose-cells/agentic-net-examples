@@ -1,34 +1,63 @@
-// Title: Insert a linked picture from a URL into cell R2 with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, access the first worksheet, and use Shapes.AddLinkedPicture to place a web‑hosted image at cell R2 (row 2, column 18) with a custom size, then save the file as an .xlsx document.
-// Keywords: Aspose.Cells | C# | AddLinkedPicture | linked picture | insert image from URL | cell R2 | worksheet image positioning | external image linking | dynamic picture update | Excel automation
-// Common Searches: Aspose.Cells add linked picture to specific cell | C# insert image from web URL into Excel worksheet | Place picture at cell R2 using Aspose.Cells | How to use Shapes.AddLinkedPicture in .NET | Excel workbook with external image link C#
-// Developer Intent: Add a web‑based linked image to cell R2 of a worksheet and save the workbook.
-// Use Cases: Embed a company logo hosted online into generated reports without increasing file size. | Create dashboards that automatically refresh charts when the source image URL changes. | Build template‑driven spreadsheets that pull branding or product images from a CDN at predefined cell locations.
-// AI Prompts: Show C# code using Aspose.Cells to add a linked picture from a URL into cell R2 with a width and height of 100 px. | Explain the parameters of Shapes.AddLinkedPicture for positioning an external image in a worksheet. | Give an example of linking an online image so the picture updates automatically when the source file changes.
+// Title: How to download an image from a URL and insert it into cell R2 of an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that downloads a PNG image from a given web address and embeds it into cell R2 of the first worksheet using Aspose.Cells. | Generate a .NET example that fetches an image via HttpClient, creates a MemoryStream, and adds the picture to a workbook at row 2, column 18 with Aspose.Cells.
+// Common Searches: how to use Aspose.Cells to place an online picture at a specific cell in C# | C# code example for loading an image from the internet and positioning it in Excel with Aspose.Cells | Aspose.Cells tutorial for anchoring a web‑downloaded image to cell R2 | programmatically add a remote PNG to an Excel worksheet using Aspose.Cells .NET
+// Tags: aspacells picture insertion from url | c# aspacells anchor image to cell | stream based image embedding in Aspose.Cells | excel workbook save with embedded picture c# | aspacells add picture to worksheet cell
 
 using System;
+using System.IO;
+using System.Net;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a workbook, access the first worksheet, and use Shapes.AddLinkedPicture to place a web‑hosted image at cell R2 (row 2, column 18) with a custom size, then save the file as an .xlsx document.
-class InsertPictureFromUrl
+// The sample creates a new Workbook, downloads an image from a web URL, adds the picture anchored at cell R2 of the first worksheet, and saves the file as Result.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // URL of the image to insert
-        string imageUrl = "https://example.com/sample.jpg";
+            // URL of the picture to insert
+            string imageUrl = "https://example.com/image.png";
 
-        // Add a linked picture at cell R2 (row index 1, column index 17)
-        // Height and width are set to 100 pixels each
-        worksheet.Shapes.AddLinkedPicture(1, 17, 100, 100, imageUrl);
+            byte[] imageData = null;
 
-        // Save the workbook
-        workbook.Save("WorkbookWithLinkedPicture.xlsx");
+            // Attempt to download the image data
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    imageData = client.DownloadData(imageUrl);
+                }
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine($"Failed to download image from '{imageUrl}': {ex.Message}");
+                // Continue without inserting the picture
+            }
+
+            // Insert the picture if the download succeeded
+            if (imageData != null && imageData.Length > 0)
+            {
+                using (MemoryStream imageStream = new MemoryStream(imageData))
+                {
+                    // Insert the picture anchored at cell R2 (row index 1, column index 17)
+                    sheet.Pictures.Add(1, 17, imageStream);
+                }
+            }
+
+            // Save the workbook
+            string outputPath = "Result.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

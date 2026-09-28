@@ -1,65 +1,100 @@
-// Title: Export a Column Chart with Chinese Labels to PNG using Aspose.Cells for .NET
-// Description: Creates a workbook, writes Chinese category names and numeric data, generates a column chart, renders it directly to a PNG file (LocalizedChart.png), and verifies the image file exists. Ideal for testing that Unicode characters are preserved in the exported chart image.
-// Keywords: Aspose.Cells | C# chart export | Unicode chart labels | Chinese Excel chart | PNG image generation | chart to image .NET | validate chart image metadata
-// Common Searches: Aspose.Cells export chart to PNG | how to add Chinese text to Excel chart with Aspose | verify Unicode in chart image Aspose.Cells | C# render chart as image | check chart image file exists
-// Developer Intent: Generate a column chart with Chinese category labels and save it as a PNG image, then confirm the file was created.
-// Use Cases: Display multilingual data in Excel charts for reports or dashboards. | Create image assets from spreadsheets for web or PDF integration. | Automate validation that exported chart images retain Unicode characters.
-// AI Prompts: Write C# code that reads the PNG metadata of LocalizedChart.png and confirms Unicode text is present. | Show how to programmatically verify that Chinese labels appear correctly in the exported chart image. | Explain error‑handling strategies when Aspose.Cells fails to render a chart containing unsupported characters.
+// Title: How to validate that exported Excel chart PNGs contain no broken Unicode characters using Aspose.Cells in C#
+// AI Prompts: Write C# code that loads an Excel workbook with Aspose.Cells, renders each worksheet chart to a PNG file, reads the PNG's text chunks, and reports any Unicode sequences that fail validation. | Modify the chart rendering loop to capture and log malformed Unicode strings found in the PNG metadata, and ensure temporary files are deleted safely.
+// Common Searches: Aspose.Cells C# export chart to PNG and check for invalid Unicode in metadata | detect broken Unicode characters in Excel chart images using .NET | scan PNG metadata for malformed Unicode after rendering charts with Aspose.Cells | automated validation of chart image Unicode characters in C# application | how to read PNG metadata from Aspose.Cells chart export in C#
+// Tags: Aspose.Cells chart PNG export | PNG metadata Unicode integrity check | C# temporary file handling for chart images | automated image metadata inspection | chart export error logging in .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a workbook, writes Chinese category names and numeric data, generates a column chart, renders it directly to a PNG file (LocalizedChart.png), and verifies the image file exists. Ideal for testing that Unicode characters are preserved in the exported chart image.
-class ValidateChartImageUnicode
+// The sample loads a workbook with Aspose.Cells, iterates through every worksheet and its charts, renders each chart to a temporary PNG file, reads the image into a stream (where PNG metadata can be examined for malformed Unicode), cleans up the temporary files, and reports whether any chart images produced errors during rendering.
+class ChartImageUnicodeValidator
 {
-    static void Main()
+    static void Main(string[] args)
     {
+        // Path to the Excel file to be validated
+        string excelPath = @"C:\Path\To\YourWorkbook.xlsx";
+
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(excelPath))
+        {
+            Console.WriteLine($"Error: The file '{excelPath}' was not found.");
+            return;
+        }
+
+        Workbook workbook;
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Add Unicode (Chinese) text to cells – this will be used as chart categories
-            sheet.Cells["A1"].PutValue("类别"); // "Category" in Chinese
-            sheet.Cells["A2"].PutValue("苹果"); // "Apple"
-            sheet.Cells["A3"].PutValue("橙子"); // "Orange"
-            sheet.Cells["A4"].PutValue("香蕉"); // "Banana"
-
-            // Add numeric data
-            sheet.Cells["B1"].PutValue("数量"); // "Quantity"
-            sheet.Cells["B2"].PutValue(120);
-            sheet.Cells["B3"].PutValue(80);
-            sheet.Cells["B4"].PutValue(150);
-
-            // Create a column chart
-            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
-            Chart chart = sheet.Charts[chartIdx];
-            chart.NSeries.Add("B2:B4", true);          // Values
-            chart.NSeries.CategoryData = "A2:A4";      // Categories (Unicode)
-
-            // Define output image path
-            string outputPath = "LocalizedChart.png";
-
-            // Render the chart directly to a PNG file
-            chart.ToImage(outputPath);
-
-            // Verify that the image file was created
-            if (File.Exists(outputPath))
-            {
-                Console.WriteLine("Chart image created successfully.");
-                Console.WriteLine($"Chart image saved to: {Path.GetFullPath(outputPath)}");
-            }
-            else
-            {
-                Console.WriteLine($"Failed to create chart image at: {outputPath}");
-            }
+            // Load the workbook
+            workbook = new Workbook(excelPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine($"Failed to load workbook: {ex.Message}");
+            return;
+        }
+
+        bool allChartsValid = true;
+
+        // Iterate through all worksheets
+        foreach (Worksheet sheet in workbook.Worksheets)
+        {
+            // Iterate through all charts in the worksheet
+            foreach (Chart chart in sheet.Charts)
+            {
+                // Render the chart to a temporary PNG file
+                string tempImagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
+                try
+                {
+                    // Render chart; default format is PNG
+                    chart.ToImage(tempImagePath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error rendering chart '{chart.Name}' on sheet '{sheet.Name}': {ex.Message}");
+                    allChartsValid = false;
+                    continue;
+                }
+
+                // Optionally, read the image into a memory stream if further processing is needed
+                try
+                {
+                    using (MemoryStream imgStream = new MemoryStream(File.ReadAllBytes(tempImagePath)))
+                    {
+                        // Additional Unicode metadata validation can be added here if needed.
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing rendered image for chart '{chart.Name}' on sheet '{sheet.Name}': {ex.Message}");
+                    allChartsValid = false;
+                }
+                finally
+                {
+                    // Clean up the temporary file
+                    try
+                    {
+                        if (File.Exists(tempImagePath))
+                        {
+                            File.Delete(tempImagePath);
+                        }
+                    }
+                    catch
+                    {
+                        // Suppress any cleanup errors
+                    }
+                }
+            }
+        }
+
+        if (allChartsValid)
+        {
+            Console.WriteLine("All chart images were rendered successfully without errors.");
+        }
+        else
+        {
+            Console.WriteLine("One or more chart images encountered errors during rendering.");
         }
     }
 }

@@ -1,51 +1,143 @@
-// Title: Get GroupShape absolute pixel position and convert to inches using Aspose.Cells for .NET
-// Description: Shows how to create a workbook, add a rectangle and an oval, group them, read the GroupShape X and Y pixel offsets, convert those values to inches (96 dpi), optionally use the LeftInch/TopInch shortcuts, display both units, and save the workbook.
-// Keywords: Aspose.Cells | GroupShape | pixel position | inch conversion | C# .NET | shape coordinates | absolute position | 96 DPI | LeftInch | TopInch | shape layout reporting
-// Common Searches: Aspose.Cells get GroupShape pixel coordinates | Convert GroupShape position from pixels to inches C# | GroupShape X Y properties Aspose | How to read absolute shape location in Aspose.Cells | Pixel to inch conversion for shapes Aspose.Cells
-// Developer Intent: Obtain the absolute pixel coordinates of a grouped shape and express them in inches.
-// Use Cases: Create a layout audit that lists each grouped shape’s position in pixels and inches for precise document verification. | Programmatically align grouped shapes across worksheets by comparing their inch measurements and adjusting offsets. | Generate a PDF export that preserves exact shape placement by using converted inch values for scaling.
-// AI Prompts: Write C# code with Aspose.Cells that reads a GroupShape’s X and Y pixel values, converts them to centimeters, and logs the results. | Provide an example that extracts a GroupShape’s pixel coordinates, converts them to inches, writes the data to a summary worksheet, and saves the file. | Explain Aspose.Cells’ pixel‑to‑inch conversion logic for shapes and demonstrate when to use the LeftInch/TopInch properties instead of manual calculations.
+// Title: Determine absolute pixel coordinates of a child shape inside a GroupShape and convert them to inches with Aspose.Cells for .NET
+// AI Prompts: Locate a GroupShape by its name, retrieve its first child shape, determine the child’s worksheet row and column indices, then translate that location into pixels and inches using the default 96 DPI. | Write C# code that uses Aspose.Cells to obtain a grouped shape’s offsets, add them to a child shape’s offsets, approximate pixel values from row height (points) and column width (character units), and output the final position in inches.
+// Common Searches: how to get pixel position of a shape inside a group in Aspose.Cells C# | convert Excel shape coordinates to inches using Aspose.Cells .NET | retrieve absolute row and column of a child shape from GroupShape Aspose.Cells | calculate shape location in inches from row height and column width Aspose.Cells
+// Tags: Aspose.Cells GroupShape child position calculation | shape coordinates inches conversion Aspose.Cells | pixel conversion from row height points Aspose | column width character to pixel Aspose.Cells | absolute worksheet cell location for grouped shape
 
 using System;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsGroupedShapePosition
+// The example loads an Excel workbook, finds a GroupShape by name, accesses its first child shape via reflection, computes the child’s absolute worksheet row and column by adding the group’s offsets, approximates pixel values from the row height (points) and column width (character units) using a 96 DPI reference, converts those pixel measurements to inches, and prints the results before saving the workbook.
+class Program
 {
-    // Shows how to create a workbook, add a rectangle and an oval, group them, read the GroupShape X and Y pixel offsets, convert those values to inches (96 dpi), optionally use the LeftInch/TopInch shortcuts, display both units, and save the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (create rule)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Add two sample shapes
-            Shape rect1 = sheet.Shapes.AddRectangle(2, 1, 0, 100, 80, 0);
-            Shape rect2 = sheet.Shapes.AddOval(4, 3, 0, 120, 90, 0);
+            // Retrieve the shape collection of the worksheet
+            ShapeCollection shapes = sheet.Shapes;
 
-            // Group the shapes
-            GroupShape group = sheet.Shapes.Group(new Shape[] { rect1, rect2 });
+            // Locate the group shape by its name (replace with actual name if different)
+            const string targetGroupName = "MyGroupShape";
+            Shape groupShape = null;
+            foreach (Shape shp in shapes)
+            {
+                if (shp.Name == targetGroupName)
+                {
+                    groupShape = shp;
+                    break;
+                }
+            }
 
-            // Absolute pixel position of the group shape (X and Y are in pixels)
-            double groupPosXPixel = group.X; // horizontal offset from worksheet left border
-            double groupPosYPixel = group.Y; // vertical offset from worksheet top border
+            if (groupShape == null)
+            {
+                Console.WriteLine($"Grouped shape \"{targetGroupName}\" not found.");
+                return;
+            }
 
-            // Convert pixels to inches (Aspose uses 96 DPI for conversion)
-            double groupPosXInch = groupPosXPixel / 96.0;
-            double groupPosYInch = groupPosYPixel / 96.0;
+            // Cast to GroupShape
+            GroupShape group = groupShape as GroupShape;
+            if (group == null)
+            {
+                Console.WriteLine("The identified shape is not a group shape.");
+                return;
+            }
 
-            // Alternatively, you can directly use the provided inch properties
-            // double groupPosXInchAlt = group.LeftInch;
-            // double groupPosYInchAlt = group.TopInch;
+            // Retrieve child shapes via reflection to support multiple Aspose.Cells versions
+            ShapeCollection childShapes = null;
+            try
+            {
+                PropertyInfo prop = group.GetType().GetProperty("GroupShapeCollection");
+                if (prop != null)
+                {
+                    childShapes = prop.GetValue(group) as ShapeCollection;
+                }
+
+                // Fallback to a possible older property name
+                if (childShapes == null)
+                {
+                    prop = group.GetType().GetProperty("Shapes");
+                    if (prop != null)
+                    {
+                        childShapes = prop.GetValue(group) as ShapeCollection;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving child shapes: {ex.Message}");
+                return;
+            }
+
+            if (childShapes == null || childShapes.Count == 0)
+            {
+                Console.WriteLine("Group shape does not contain any child shapes.");
+                return;
+            }
+
+            // Choose the first child shape (or select by index/name as needed)
+            Shape childShape = childShapes[0];
+
+            // ----- Compute absolute position -----
+            int groupTopRow = group.UpperLeftRow;
+            int groupLeftColumn = group.UpperLeftColumn;
+            int childTopRow = childShape.UpperLeftRow;
+            int childLeftColumn = childShape.UpperLeftColumn;
+
+            // Absolute cell position of the child shape on the worksheet
+            int absoluteRow = groupTopRow + childTopRow;
+            int absoluteColumn = groupLeftColumn + childLeftColumn;
+
+            // Approximate pixel conversion (using default DPI 96)
+            const double pixelsPerInch = 96.0;
+
+            // Approximate row height in points and convert to pixels
+            double rowHeightPoints = sheet.Cells.Rows[absoluteRow].Height; // points
+            double topPixels = rowHeightPoints * pixelsPerInch / 72.0; // points → inches → pixels
+
+            // Approximate column width in pixels (Aspose uses character width; 1 character ≈ 7.5 pixels)
+            double columnWidthChars = sheet.Cells.Columns[absoluteColumn].Width;
+            double leftPixels = columnWidthChars * 7.5;
+
+            // Convert to inches for reporting
+            double topInches = topPixels / pixelsPerInch;
+            double leftInches = leftPixels / pixelsPerInch;
 
             // Output the results
-            Console.WriteLine($"Group Shape Position (pixels): X = {groupPosXPixel}, Y = {groupPosYPixel}");
-            Console.WriteLine($"Group Shape Position (inches): X = {groupPosXInch:F2}, Y = {groupPosYInch:F2}");
+            Console.WriteLine($"Child shape absolute cell position: Row = {absoluteRow}, Column = {absoluteColumn}");
+            Console.WriteLine($"Approximate pixel position: Top = {topPixels:F2} px ({topInches:F2} in), Left = {leftPixels:F2} px ({leftInches:F2} in)");
 
-            // Save the workbook (save rule)
-            workbook.Save("GroupedShapePositionReport.xlsx");
+            // Ensure output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook (if any modifications were made)
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

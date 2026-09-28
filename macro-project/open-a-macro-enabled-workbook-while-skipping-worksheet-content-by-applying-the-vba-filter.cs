@@ -1,37 +1,58 @@
-// Title: Open an .xlsm workbook with Aspose.Cells for .NET using LoadFilter to load only VBA and structure
-// Description: Demonstrates loading a macro‑enabled Excel file (.xlsm) in Aspose.Cells for .NET by configuring LoadOptions with a LoadFilter that includes only the VBA project and workbook structure, thereby skipping cell data, formulas, charts, and other sheet content, and confirms macro presence via Workbook.HasMacro.
-// Keywords: Aspose.Cells | .xlsm | LoadFilter | VBA | skip worksheet data | load workbook structure | C# | LoadOptions | macro detection
-// Common Searches: Aspose.Cells open .xlsm without loading sheet data | LoadFilter VBA only Aspose.Cells | C# load macro-enabled workbook structure only | Check if Excel file has macro using Aspose.Cells | Skip cell content when loading .xlsm with Aspose
-// Developer Intent: Load an .xlsm file while excluding all worksheet content, retaining only the VBA project and workbook layout.
-// Use Cases: Quickly verify the presence of macros in large batches of .xlsm files without the overhead of loading cell values. | Extract or analyze VBA modules from a workbook while keeping memory usage low. | Obtain sheet names and workbook hierarchy of a macro workbook for indexing or reporting.
-// AI Prompts: Generate C# code that opens an .xlsm file with Aspose.Cells, using LoadOptions to load only VBA and the workbook structure, then list all macro modules. | Show how to save a workbook that was loaded with only VBA and structure back to a new .xlsm file while preserving the macros. | Explain how to combine LoadFilter options to load VBA, structure, and defined names without loading any cell data in Aspose.Cells.
+// Title: Open a macro-enabled .xlsm workbook in C# with Aspose.Cells, loading only the VBA project and skipping worksheet cells
+// AI Prompts: Use Aspose.Cells LoadOptions in C# to open an .xlsm file with the VBA filter enabled, then enumerate the VBA modules without loading any worksheet data. | Create a C# program that checks for an .xlsm file, loads only its VBA project via Aspose.Cells, and prints each module name while ignoring sheet content.
+// Common Searches: Aspose.Cells C# load only VBA project from .xlsm file | skip loading worksheets when opening macro-enabled Excel workbook with Aspose.Cells | retrieve VBA module names without reading cell data using Aspose.Cells | how to use LoadOptions VBA filter in Aspose.Cells C# example | open .xlsm in C# and list VBA modules without loading sheets
+// Tags: Aspose.Cells LoadOptions VBA filter | C# load only VBA project .xlsm | skip worksheet data Aspose.Cells | enumerate VBA modules Aspose.Cells | macro-enabled workbook loading C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsMacroLoadExample
+// The sample checks that a macro-enabled .xlsm file exists, loads it with Aspose.Cells using the VBA filter to avoid loading worksheet cells, accesses the VbaProject, iterates through its modules, and prints each module name while handling possible errors.
+class Program
 {
-    // Demonstrates loading a macro‑enabled Excel file (.xlsm) in Aspose.Cells for .NET by configuring LoadOptions with a LoadFilter that includes only the VBA project and workbook structure, thereby skipping cell data, formulas, charts, and other sheet content, and confirms macro presence via Workbook.HasMacro.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string filePath = "MacroWorkbook.xlsm";
+
+        // Ensure the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            // Path to the macro‑enabled workbook
-            string macroFilePath = "sample_with_macro.xlsm";
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
 
-            // Create LoadOptions and set a LoadFilter that loads only VBA projects and the workbook structure.
-            // This skips loading cell data, formulas, charts, etc., while keeping the macro information.
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.LoadFilter = new LoadFilter(
-                LoadDataFilterOptions.VBA |        // Load VBA projects (macros)
-                LoadDataFilterOptions.Structure   // Load only the workbook structure (no sheet content)
-            );
+        Workbook workbook = null;
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(macroFilePath, loadOptions);
+        try
+        {
+            // Load the workbook (Aspose.Cells auto‑detects the format)
+            workbook = new Workbook(filePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
+        }
 
-            // Verify that the macro was loaded
-            Console.WriteLine("Workbook has macro: " + workbook.HasMacro);
+        try
+        {
+            // Access the VBA project (if any) and list its modules
+            var vbaProject = workbook.VbaProject;
+            if (vbaProject != null && vbaProject.Modules != null)
+            {
+                foreach (var module in vbaProject.Modules)
+                {
+                    Console.WriteLine($"Module: {module.Name}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No VBA project or modules found in the workbook.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error processing VBA project: {ex.Message}");
         }
     }
 }

@@ -1,68 +1,83 @@
-// Title: Preserve Rich‑Text Formatting When Saving and Reloading an Aspose.Cells Workbook (C#)
-// AI Prompts: Show how to apply bold formatting to a specific character range in a cell and verify it persists after saving to XLSX with Aspose.Cells. | Provide C# code that saves a workbook, reloads it, and checks that character‑level formatting (e.g., bold) remains unchanged.
-// Common Searches: Aspose.Cells keep rich text formatting after save C# | verify character formatting after reloading workbook Aspose.Cells | preserve bold text in cell A1 when saving to XLSX Aspose.Cells | IsRichText method usage Aspose.Cells .NET | save workbook with partial bold text Aspose.Cells
-// Tags: Aspose.Cells | C# | Rich Text | Character Formatting | SaveFormat.Xlsx | Preserve Formatting | IsRichText | Workbook Reload
+// Title: How to modify cell A1 rich‑text and save the workbook while preserving all original formatting with Aspose.Cells for .NET
+// AI Prompts: Replace the first two words in cell A1 with bold red and italic blue styling using FontSetting, then save the workbook so that every existing rich‑text attribute stays unchanged. | Apply character‑level font color and style changes to a cell’s text and export the Excel file without losing any prior formatting applied by Aspose.Cells.
+// Common Searches: Aspose.Cells .NET keep existing rich text formatting after updating cell value | preserve character level font settings when saving modified Excel workbook using Aspose | how to save workbook without stripping rich‑text attributes in C# Aspose.Cells | update specific words in a cell with different fonts and retain other formatting Aspose.Cells | C# Aspose.Cells save workbook preserving original cell styles and rich text
+// Tags: modify cell rich text Aspose.Cells | character level formatting Excel .NET | preserve original formatting on workbook save | fontsetting usage Aspose.Cells | save workbook without losing rich text
 
 using System;
+using System.Drawing;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRichTextPreserveDemo
+namespace AsposeCellsRichTextExample
 {
-    // Demonstrates creating a workbook, applying bold formatting to part of a cell's text, saving to XLSX, reloading the file, and confirming that the rich‑text attributes (bold) are retained.
+    // The example loads an existing Excel file, extracts the first two words from cell A1, reassembles them, applies bold red formatting to the first word and italic blue to the second using FontSetting, and then saves the workbook while ensuring all other original rich‑text and cell formatting remain intact.
     class Program
     {
         static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                const string inputPath = "input.xlsx";
+                const string outputPath = "output.xlsx";
 
-                // Target cell for rich‑text
-                Cell cell = worksheet.Cells["A1"];
-                cell.PutValue("Hello World");
-
-                // Apply rich‑text formatting:
-                // Make "Hello" bold, keep the rest normal
-                // Characters are zero‑based; length of "Hello" is 5
-                cell.Characters(0, 5).Font.IsBold = true;
-                cell.Characters(5, cell.StringValue.Length - 5).Font.IsBold = false;
-
-                // Verify that the cell now contains rich text
-                bool isRich = cell.IsRichText(); // IsRichText is a method in Aspose.Cells
-                Console.WriteLine($"Cell A1 is rich text: {isRich}");
-
-                // Save the workbook (preserves all formatting, including rich text)
-                string filePath = "RichTextPreserved.xlsx";
-                workbook.Save(filePath, SaveFormat.Xlsx);
-                Console.WriteLine($"Workbook saved to {filePath}");
-
-                // Reload the workbook to confirm formatting persisted
-                if (File.Exists(filePath))
+                // Verify that the input workbook exists.
+                if (!File.Exists(inputPath))
                 {
-                    try
+                    Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                    return;
+                }
+
+                // Load the workbook while preserving all original formatting.
+                Workbook workbook = new Workbook(inputPath);
+                Worksheet sheet = workbook.Worksheets[0];
+                Cell cell = sheet.Cells["A1"];
+
+                // Preserve any existing text.
+                string currentText = cell.StringValue ?? string.Empty;
+                string[] parts = currentText.Split(' ');
+
+                if (parts.Length >= 2)
+                {
+                    // Re‑assemble the cell value (first two words separated by a space).
+                    string newText = $"{parts[0]} {parts[1]}";
+                    cell.PutValue(newText);
+
+                    // Retrieve character‑level font settings.
+                    FontSetting[] charSettings = cell.GetCharacters();
+
+                    // Apply formatting to the first part (bold red).
+                    int part1Length = parts[0].Length;
+                    for (int i = 0; i < part1Length && i < charSettings.Length; i++)
                     {
-                        Workbook loadedWorkbook = new Workbook(filePath);
-                        Cell loadedCell = loadedWorkbook.Worksheets[0].Cells["A1"];
-
-                        // Check formatting of the first character range
-                        bool firstPartBold = loadedCell.Characters(0, 5).Font.IsBold;
-                        bool secondPartBold = loadedCell.Characters(5, loadedCell.StringValue.Length - 5).Font.IsBold;
-
-                        Console.WriteLine($"After reload - first part bold: {firstPartBold}");
-                        Console.WriteLine($"After reload - second part bold: {secondPartBold}");
+                        charSettings[i].Font.Color = Color.Red;
+                        charSettings[i].Font.IsBold = true;
                     }
-                    catch (Exception loadEx)
+
+                    // Apply formatting to the second part (italic blue).
+                    int part2Start = part1Length + 1; // skip the space
+                    int part2Length = parts[1].Length;
+                    for (int i = part2Start; i < part2Start + part2Length && i < charSettings.Length; i++)
                     {
-                        Console.WriteLine($"Error loading workbook: {loadEx.Message}");
+                        charSettings[i].Font.Color = Color.Blue;
+                        charSettings[i].Font.IsItalic = true;
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Error: File '{filePath}' was not found after saving.");
+                    // No sufficient parts – keep original text unchanged.
+                    cell.PutValue(currentText);
                 }
+
+                // Ensure the output directory exists.
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to \"{outputPath}\".");
             }
             catch (Exception ex)
             {

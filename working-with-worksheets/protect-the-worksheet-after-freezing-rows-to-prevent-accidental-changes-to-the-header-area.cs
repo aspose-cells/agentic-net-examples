@@ -1,34 +1,59 @@
-// Title: Freeze Top Header Row and Protect Worksheet with Password using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, freezes the first row by setting the freeze pane at A2, applies full worksheet protection with a password, and saves the file as ProtectedHeader.xlsx.
-// Keywords: Aspose.Cells freeze panes C# | Aspose.Cells protect worksheet password | freeze header row C# | worksheet protection Aspose.Cells | C# Excel freeze and lock
-// Common Searches: Aspose.Cells freeze first row and protect sheet | C# protect worksheet after freezing panes | how to lock header row in generated Excel using Aspose.Cells | freeze panes and set password protection Aspose.Cells .NET | prevent editing of frozen header in Aspose.Cells workbook
-// Developer Intent: Freeze the first row and secure the worksheet with a password to stop accidental header changes.
-// Use Cases: Generate a read‑only report where the header stays visible while scrolling and cannot be edited. | Create a data‑entry template that allows users to edit data rows but keeps the frozen header locked. | Distribute a spreadsheet to end users with a protected header after programmatically freezing panes.
-// AI Prompts: Show C# code to freeze multiple rows and protect only specific cells while leaving other cells editable with Aspose.Cells. | Explain how to unprotect a worksheet, modify the header row, and re‑apply password protection using Aspose.Cells for .NET. | Compare ProtectionType options when protecting a worksheet after freezing panes in Aspose.Cells.
+// Title: Freeze the top row and protect only the header cells in an Aspose.Cells .NET workbook
+// AI Prompts: Generate C# code with Aspose.Cells that freezes the first worksheet row, unlocks all cells, locks only the header row, and then applies worksheet protection. | Show how to use the default style to unlock cells, create a locked style for the header, call FreezePanes, and protect the sheet with ProtectionType.All.
+// Common Searches: Aspose.Cells C# freeze first row and protect header only | How to lock header row while allowing other cells to be edited in Aspose.Cells | C# Aspose.Cells protect worksheet after FreezePanes | Set worksheet protection with locked header cells using Aspose.Cells .NET | Unlock all cells then lock specific row in Aspose.Cells workbook
+// Tags: freeze panes header row Aspose.Cells | lock header cells worksheet protection Aspose.Cells | unlock all cells default style Aspose.Cells | apply locked style to specific row Aspose.Cells | protect worksheet with ProtectionType.All Aspose.Cells | C# Aspose.Cells workbook header protection
 
-using System;
 using Aspose.Cells;
+using System;
 
-// Creates a new workbook, freezes the first row by setting the freeze pane at A2, applies full worksheet protection with a password, and saves the file as ProtectedHeader.xlsx.
+// Creates a new workbook, adds a header row, freezes the first row, unlocks all cells via the default style, locks the header cells with a custom style, protects the worksheet using ProtectionType.All, and saves the file as ProtectedSheet.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Access the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
+            // Get the first worksheet and rename it
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
 
-        // Freeze the header row (first row). Freeze starts at cell A2,
-        // with 1 frozen row and 0 frozen columns.
-        sheet.FreezePanes("A2", 1, 0);
+            // Populate header row
+            sheet.Cells["A1"].PutValue("ID");
+            sheet.Cells["B1"].PutValue("Name");
+            sheet.Cells["C1"].PutValue("Amount");
 
-        // Protect the worksheet with all protection options and a password.
-        // This prevents editing of the locked header cells.
-        sheet.Protect(ProtectionType.All, "HeaderProtect123", null);
+            // Freeze the first row (rows above row 2)
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.FreezePanes(1, 0, totalRows, totalColumns);
 
-        // Save the workbook
-        workbook.Save("ProtectedHeader.xlsx");
+            // Unlock all cells by modifying the workbook's default style
+            Style defaultStyle = workbook.DefaultStyle;
+            defaultStyle.IsLocked = false;
+            workbook.DefaultStyle = defaultStyle;
+
+            // Create a style for the header row and lock it
+            Style headerStyle = workbook.CreateStyle();
+            headerStyle.IsLocked = true;
+
+            // Apply the header style to the first row (columns A‑C)
+            for (int col = 0; col < 3; col++)
+            {
+                sheet.Cells[0, col].SetStyle(headerStyle);
+            }
+
+            // Protect the worksheet; only unlocked cells are editable
+            sheet.Protect(ProtectionType.All);
+
+            // Save the workbook
+            workbook.Save("ProtectedSheet.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

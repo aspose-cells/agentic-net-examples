@@ -1,70 +1,95 @@
-// Title: C# – Load Only String Cells with LoadFilter and Build a Summary Report using Aspose.Cells
-// Description: Shows how to configure Aspose.Cells LoadOptions with a LoadFilter (CellString) to load only string‑type cells from a template workbook, concatenate their values, and save the combined text in a new workbook (summary.xlsx).
-// Keywords: Aspose.Cells | LoadFilter | CellString | C# | load string cells | concatenate Excel strings | summary report | memory‑efficient Excel processing
-// Common Searches: Aspose.Cells load only string cells | C# filter Excel cells by type | concatenate all text from Excel using Aspose | generate text summary from workbook | LoadOptions CellString example
-// Developer Intent: Extract only textual cell values from an Excel template and create a single‑cell summary report.
-// Use Cases: Compile product names or identifiers stored as strings into one overview cell for quick reference. | Create a lightweight textual snapshot of comments or notes from a large workbook while keeping memory usage low. | Produce a consolidated report that merges textual data from multiple worksheets into a single workbook.
-// AI Prompts: Modify the code to separate each string with a comma instead of a space. | Write the concatenated summary to separate rows—one row per worksheet—rather than a single cell. | Explain strategies for processing very large workbooks efficiently when using LoadFilter with the CellString option.
+// Title: Extract only string cells from an Excel template with Aspose.Cells, concatenate them, and save as a summary report workbook (C#)
+// AI Prompts: Write C# code that opens a .xlsx template using Aspose.Cells, iterates through every worksheet, collects cells where Cell.Type == CellValueType.IsString, concatenates the text values with spaces, and writes the combined string to cell A1 of a new workbook. | Create a console application that accepts the template file path and the output report path as command‑line arguments, uses Aspose.Cells to load the template, extracts only text cells, builds a single summary string, and saves it as an .xlsx file. | Adapt the example to filter numeric cells instead of strings, calculate their sum, and place the total in the summary workbook.
+// Common Searches: Aspose.Cells C# read only text cells from an existing workbook | how to concatenate all string values from multiple worksheets using Aspose.Cells | generate a summary Excel file from a template by extracting string cells in .NET | filter cells by type when loading an Excel file with Aspose.Cells C# | combine text from every cell in a workbook into one cell using Aspose.Cells
+// Tags: extract string cells Aspose.Cells | concatenate worksheet text values C# | generate summary report workbook Aspose.Cells | filter cells by CellValueType Aspose.Cells | save concatenated string to cell A1 Aspose.Cells
 
 using System;
+using System.IO;
 using System.Text;
 using Aspose.Cells;
 
-// Shows how to configure Aspose.Cells LoadOptions with a LoadFilter (CellString) to load only string‑type cells from a template workbook, concatenate their values, and save the combined text in a new workbook (summary.xlsx).
-class StringCellsSummary
+// The example loads Template.xlsx with Aspose.Cells, iterates through all worksheets' used ranges, selects cells whose Type is IsString, concatenates their text values separated by spaces, writes the resulting string to cell A1 of a new workbook, and saves the file as SummaryReport.xlsx.
+class Program
 {
     static void Main()
     {
-        // Path to the template workbook
-        string templatePath = "template.xlsx";
-
-        // Create LoadOptions and set a LoadFilter that loads only string cells
-        LoadOptions loadOptions = new LoadOptions();
-        // LoadFilter with CellString flag loads only cells whose value is a string
-        loadOptions.LoadFilter = new LoadFilter(LoadDataFilterOptions.CellString);
-
-        // Load the workbook using the specified LoadOptions
-        Workbook sourceWorkbook = new Workbook(templatePath, loadOptions);
-
-        // StringBuilder to accumulate all string values
-        StringBuilder summaryBuilder = new StringBuilder();
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in sourceWorkbook.Worksheets)
+        try
         {
-            // Get the maximum used row and column indices
-            int maxRow = sheet.Cells.MaxDataRow;
-            int maxCol = sheet.Cells.MaxDataColumn;
+            // Path to the template workbook
+            string templatePath = "Template.xlsx";
 
-            // Loop through each cell within the used range
-            for (int row = 0; row <= maxRow; row++)
+            // Verify that the template file exists
+            if (!File.Exists(templatePath))
             {
-                for (int col = 0; col <= maxCol; col++)
+                Console.WriteLine($"Template file not found: {templatePath}");
+                return;
+            }
+
+            // Load the workbook (no data filter – we will check cell types manually)
+            Workbook templateWorkbook;
+            try
+            {
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+                templateWorkbook = new Workbook(templatePath, loadOptions);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load template workbook: {ex.Message}");
+                return;
+            }
+
+            // StringBuilder to accumulate all string values
+            StringBuilder concatenated = new StringBuilder();
+
+            // Iterate through all worksheets
+            foreach (Worksheet sheet in templateWorkbook.Worksheets)
+            {
+                // Get the used range of the sheet
+                Aspose.Cells.Range usedRange = sheet.Cells.MaxDisplayRange;
+                if (usedRange == null) continue;
+
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                // Loop through each cell in the used range
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    Cell cell = sheet.Cells[row, col];
-                    // After applying the CellString filter, non‑string cells are not loaded
-                    // Check if the cell actually contains a string value
-                    if (cell != null && cell.Type == CellValueType.IsString)
+                    for (int col = startCol; col <= endCol; col++)
                     {
-                        // Append the string value followed by a space (or any delimiter you prefer)
-                        summaryBuilder.Append(cell.StringValue);
-                        summaryBuilder.Append(' ');
+                        Cell cell = sheet.Cells[row, col];
+                        if (cell != null && cell.Type == CellValueType.IsString)
+                        {
+                            concatenated.Append(cell.StringValue);
+                            concatenated.Append(' ');
+                        }
                     }
                 }
             }
+
+            // Create a new workbook for the summary report
+            Workbook summaryWorkbook = new Workbook();
+            Worksheet summarySheet = summaryWorkbook.Worksheets[0];
+
+            // Write the concatenated string into cell A1
+            summarySheet.Cells["A1"].PutValue(concatenated.ToString().Trim());
+
+            // Save the summary report
+            string outputPath = "SummaryReport.xlsx";
+            try
+            {
+                summaryWorkbook.Save(outputPath, SaveFormat.Xlsx);
+                Console.WriteLine($"Summary report saved to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save summary report: {ex.Message}");
+            }
         }
-
-        // Prepare the summary text
-        string summaryText = summaryBuilder.ToString().Trim();
-
-        // Create a new workbook for the summary report
-        Workbook reportWorkbook = new Workbook();
-        Worksheet reportSheet = reportWorkbook.Worksheets[0];
-
-        // Place the concatenated summary into cell A1
-        reportSheet.Cells["A1"].PutValue(summaryText);
-
-        // Save the summary report
-        reportWorkbook.Save("summary.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
     }
 }

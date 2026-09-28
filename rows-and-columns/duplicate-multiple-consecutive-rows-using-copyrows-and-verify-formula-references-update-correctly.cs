@@ -1,46 +1,67 @@
-// Title: CopyRows to Duplicate Multiple Rows and Preserve Shared Formulas in Aspose.Cells for .NET
-// Description: Demonstrates how to copy a block of rows (A1:B5) using Cells.CopyRows, automatically adjust shared formulas (e.g., =A1*2) to the new rows (A6:B10), verify the updated formulas, and save the workbook as an XLSX file.
-// Keywords: Aspose.Cells CopyRows | duplicate rows C# | shared formula update | copy rows preserve formulas | Aspose.Cells .NET example | Excel automation C#
-// Common Searches: Aspose.Cells copy rows with formulas | C# copy multiple rows in Excel workbook | preserve shared formulas when duplicating rows | CopyRows method example Aspose.Cells | verify formula references after row copy
-// Developer Intent: Programmatically duplicate a range of rows and have all formulas automatically reference the new row positions.
-// Use Cases: Clone a data block that contains calculations to create a new section with correct references. | Copy template rows (headers, formulas) for batch data entry without manual formula adjustments. | Automated testing to ensure formula integrity after row duplication in generated reports.
-// AI Prompts: Show how to use Aspose.Cells CopyRows in C# to duplicate rows while keeping shared formulas correct. | Provide code that copies rows 1‑5 to rows 6‑10 and prints the updated formulas for verification. | Explain the behavior of shared formulas when rows are copied with Cells.CopyRows and how to validate them.
+// Title: Copy multiple consecutive rows with Aspose.Cells CopyRows and verify that formulas adjust to the new cell references in C#
+// AI Prompts: Invoke Cells.CopyRows to duplicate rows 0‑2 into rows 3‑5 and display the formula in the copied B5 cell. | After the copy operation, call Workbook.CalculateFormula and output the evaluated value of cell B5. | Implement try‑catch blocks to log any errors that occur during row copying, formula calculation, or workbook saving. | Save the modified workbook as an .xlsx file and confirm that the file was created successfully.
+// Common Searches: Aspose.Cells C# copy rows and keep relative formula references | How does Cells.CopyRows adjust formulas when duplicating rows in .NET | Example of copying rows with formulas using Aspose.Cells and verifying results | Recalculating workbook after using CopyRows in Aspose.Cells C# | CopyRows method preserving formula links in Excel file with Aspose.Cells
+// Tags: CopyRows with relative formula adjustment | duplicate rows preserving Excel formulas Aspose.Cells | calculate workbook after row copy C# | save workbook as .xlsx after copying rows | exception handling for Cells.CopyRows operation
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to copy a block of rows (A1:B5) using Cells.CopyRows, automatically adjust shared formulas (e.g., =A1*2) to the new rows (A6:B10), verify the updated formulas, and save the workbook as an XLSX file.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // The sample creates a workbook, fills rows 0‑2 with values and a formula referencing A1, uses Cells.CopyRows to duplicate those rows to positions 3‑5, checks that the copied formula in B5 now points to the new A4 cell, recalculates the workbook to obtain the formula result, prints the outcomes, and saves the file as CopyRowsFormulaUpdateDemo.xlsx while handling potential exceptions.
+    public class CopyRowsFormulaUpdateDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate column A with values 1 to 5
-        for (int i = 0; i < 5; i++)
+        public static void Run()
         {
-            cells[i, 0].PutValue(i + 1); // A1..A5
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Populate source rows (rows 0-2)
+                // Row 0: simple value
+                cells[0, 0].PutValue(10);               // A1 = 10
+
+                // Row 1: formula that references the cell above (A1)
+                cells[1, 1].Formula = "=A1*2";          // B2 = A1*2
+
+                // Row 2: another simple value
+                cells[2, 0].PutValue(30);               // A3 = 30
+
+                // Verify original formula
+                Console.WriteLine("Original formula in B2: " + cells[1, 1].Formula);
+
+                // Duplicate the three rows (0,1,2) starting at destination row index 3
+                // This will copy rows 0‑2 to rows 3‑5
+                cells.CopyRows(cells, 0, 3, 3);
+
+                // After copying, the formula in the copied row (row index 4, column 1) should be adjusted
+                // It should now reference the copied A4 cell (which contains the value 10)
+                Console.WriteLine("Copied formula in B5: " + cells[4, 1].Formula);
+
+                // Optional: calculate to see the result of the copied formula
+                workbook.CalculateFormula();
+                Console.WriteLine("Value of B5 after calculation: " + cells[4, 1].Value);
+
+                // Save the workbook
+                workbook.Save("CopyRowsFormulaUpdateDemo.xlsx");
+                Console.WriteLine("Workbook saved as CopyRowsFormulaUpdateDemo.xlsx");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
+    }
 
-        // Set a shared formula in column B that multiplies column A by 2
-        // This will automatically fill the formula down for the next 4 rows (total 5 rows)
-        cells[0, 1].SetSharedFormula("=A1*2", 5, 1);
-
-        // Duplicate the first 5 rows (0‑based index) and insert them starting at row index 5
-        // After this operation rows 6‑10 will be copies of rows 1‑5
-        cells.CopyRows(cells, 0, 5, 5);
-
-        // Verify that the formulas in the duplicated rows have been updated correctly
-        // Expected: B6 =A6*2, B7 =A7*2, ..., B10 =A10*2
-        for (int row = 5; row < 10; row++)
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Console.WriteLine($"Cell B{row + 1} formula: {cells[row, 1].Formula}");
+            CopyRowsFormulaUpdateDemo.Run();
         }
-
-        // Save the workbook to a file
-        workbook.Save("CopyRowsDuplicate.xlsx");
     }
 }

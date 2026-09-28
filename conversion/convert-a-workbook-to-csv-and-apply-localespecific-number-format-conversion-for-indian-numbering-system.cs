@@ -1,54 +1,94 @@
-// Title: Aspose.Cells .NET: Convert Excel to CSV with Indian numbering format
-// Description: Loads an Excel workbook, sets the region to India, defines the Indian grouping pattern "#,##,##0.00", applies the style to every numeric cell in the first worksheet, and saves the result as a CSV file.
-// Keywords: Aspose.Cells | C# | .NET | Excel to CSV conversion | Indian number format | lakh crore grouping | custom number style | region India | SaveFormat.Csv | locale specific formatting
-// Common Searches: Aspose.Cells export Excel as CSV with Indian grouping | C# apply '#,##,##0.00' format to all numbers before CSV export | set workbook region to India in Aspose.Cells | convert Excel to CSV using Indian number system | Aspose.Cells custom number style for India
-// Developer Intent: Create a CSV file from an Excel workbook where all numeric values follow the Indian lakh‑crore grouping convention.
-// Use Cases: Generate CSV reports for Indian financial statements with proper lakh/crore separators. | Prepare data extracts for Indian tax or accounting software that expects Indian number formatting. | Supply CSV feeds to dashboards that display figures in the Indian numbering style.
-// AI Prompts: Show how to preserve formulas while applying the Indian number format before exporting to CSV. | Demonstrate writing the CSV to a MemoryStream instead of a file, keeping the Indian formatting intact. | Explain how to apply the Indian number style to a specific range of cells rather than the entire sheet.
+// Title: Convert an Excel workbook to CSV with Indian numbering format using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets the workbook CultureInfo to en‑IN, applies the custom pattern "#,##,##0.00" to every numeric cell, and saves the first worksheet as a CSV file with Aspose.Cells. | Demonstrate how to verify the source Excel file, create the output folder if it does not exist, iterate over each worksheet's used range to apply an Indian numeric style, and catch exceptions during the CSV export.
+// Common Searches: how to export Excel to CSV with Indian number formatting using Aspose.Cells C# | apply custom '#,##,##0.00' format to all numeric cells before CSV conversion Aspose.Cells | set workbook culture to en-IN in Aspose.Cells .NET | save first worksheet as CSV while preserving locale‑specific number format | C# Aspose.Cells iterate used range to format numbers for Indian locale
+// Tags: apply indian numeric format Aspose.Cells | export worksheet to csv Aspose.Cells | set workbook culture en-IN Aspose.Cells | custom number style for csv conversion .NET | iterate used range cells Aspose.Cells
 
 using System;
+using System.Globalization;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, sets the region to India, defines the Indian grouping pattern "#,##,##0.00", applies the style to every numeric cell in the first worksheet, and saves the result as a CSV file.
-class ConvertToCsvIndianNumberFormat
+// Alias to avoid conflict with System.Range introduced in newer C# versions
+using AsposeRange = Aspose.Cells.Range;
+
+// The example loads an Excel workbook, changes its culture to en‑IN, walks through each worksheet's used range applying the Indian numbering pattern "#,##,##0.00" to numeric cells, ensures the output directory exists, and saves the first sheet as a CSV file.
+class WorkbookToCsvIndianFormat
 {
     static void Main()
     {
-        // Paths for source workbook and destination CSV
-        string sourcePath = "input.xlsx";
-        string outputPath = "output.csv";
-
-        // Load the workbook from the source file
-        Workbook workbook = new Workbook(sourcePath);
-
-        // Set regional settings to India to influence number formatting
-        workbook.Settings.Region = CountryCode.India;
-        workbook.Settings.NumberDecimalSeparator = '.';
-        workbook.Settings.NumberGroupSeparator = ',';
-
-        // Define Indian numbering format (e.g., 1,23,45,678.90)
-        Style indianNumberStyle = workbook.CreateStyle();
-        indianNumberStyle.Custom = "#,##,##0.00";
-
-        // Apply the style to all numeric cells in the first worksheet
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-        int maxRow = cells.MaxDataRow;
-        int maxCol = cells.MaxDataColumn;
-
-        for (int row = 0; row <= maxRow; row++)
+        try
         {
-            for (int col = 0; col <= maxCol; col++)
+            // Path to the source Excel workbook
+            string sourcePath = @"C:\Input\Sample.xlsx";
+
+            // Path for the resulting CSV file
+            string csvPath = @"C:\Output\Sample_Indian.csv";
+
+            // Verify that the source file exists
+            if (!File.Exists(sourcePath))
             {
-                Cell cell = cells[row, col];
-                if (cell.Type == CellValueType.IsNumeric)
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(csvPath);
+            if (string.IsNullOrEmpty(outputDir))
+            {
+                Console.WriteLine("Invalid output path.");
+                return;
+            }
+
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(sourcePath);
+
+            // Set the workbook culture to Indian English to affect number formatting
+            workbook.Settings.CultureInfo = new CultureInfo("en-IN");
+
+            // Define Indian number format pattern (e.g., 12,34,567.89)
+            const string indianNumberPattern = "#,##,##0.00";
+
+            // Apply the Indian number format to all numeric cells in each worksheet
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Get the used range of the worksheet
+                AsposeRange usedRange = sheet.Cells.MaxDisplayRange;
+                if (usedRange == null) continue;
+
+                int startRow = usedRange.FirstRow;
+                int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                int startCol = usedRange.FirstColumn;
+                int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                for (int row = startRow; row <= endRow; row++)
                 {
-                    cell.SetStyle(indianNumberStyle);
+                    for (int col = startCol; col <= endCol; col++)
+                    {
+                        Cell cell = sheet.Cells[row, col];
+
+                        // Apply format only to numeric cells
+                        if (cell.Type == CellValueType.IsNumeric)
+                        {
+                            Style style = cell.GetStyle();
+                            style.Custom = indianNumberPattern;
+                            cell.SetStyle(style);
+                        }
+                    }
                 }
             }
-        }
 
-        // Save the workbook as CSV using the provided Save method
-        workbook.Save(outputPath, SaveFormat.Csv);
+            // Save the workbook as CSV (the first worksheet will be exported)
+            workbook.Save(csvPath, SaveFormat.Csv);
+            Console.WriteLine($"CSV file saved to: {csvPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

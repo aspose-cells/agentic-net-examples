@@ -1,56 +1,47 @@
-// Title: C# – Verify Core Document Properties Remain Unchanged After Adding Custom Properties with Aspose.Cells
-// Description: Demonstrates how to set built‑in properties (Author, Title) in a new Workbook, add custom document properties, save and reload the file, and confirm that the original core properties are preserved while the custom ones are persisted.
-// Keywords: Aspose.Cells C# | verify built‑in properties | core document properties | custom document properties | Workbook property validation | Aspose.Cells .NET example | preserve core properties
-// Common Searches: Aspose.Cells keep original author after adding custom properties | check built‑in workbook properties after save .NET | verify core properties unchanged Aspose.Cells | C# Aspose.Cells compare original and loaded document properties
-// Developer Intent: Ensure that adding custom document properties does not modify the workbook's existing built‑in (core) properties.
-// Use Cases: Set Author and Title, add custom fields, then programmatically assert that Author and Title are identical after reloading the workbook. | Iterate the CustomDocumentProperties collection after load to display each custom property's name and value, confirming persistence. | Integrate the boolean checks (authorUnchanged, titleUnchanged) into automated unit tests for document metadata integrity.
-// AI Prompts: Generate C# code using Aspose.Cells that adds custom document properties while preserving existing Author and Title, then validates the core properties after reopening the file. | Write a method that loads a workbook from a path and returns true only if the Author and Title match expected values after custom properties have been added. | Provide a logging example that reports the verification result for core properties and lists all custom properties after a workbook is saved and reopened with Aspose.Cells.
+// Title: Add custom document properties to an Aspose.Cells workbook and ensure built‑in core properties stay unchanged (C#)
+// AI Prompts: Generate C# code that creates a new Workbook, sets the Author and Title built‑in properties, adds custom properties (e.g., Project, Version, Reviewed), then checks that the Author and Title values are still the original ones. | Write a C# snippet using Aspose.Cells to compare built‑in document properties before and after inserting custom properties and output true/false results for each property.
+// Common Searches: Aspose.Cells C# add custom document property without changing author property | How to verify Excel built‑in properties remain the same after adding custom properties in .NET | C# Aspose.Cells preserve workbook title when adding custom document properties | Check if built‑in document properties are unchanged after adding custom properties with Aspose.Cells
+// Tags: add custom document properties Aspose.Cells C# | ensure core document properties unchanged Aspose.Cells | compare built‑in and custom properties Excel C# | verify author and title after adding custom properties | Aspose.Cells custom vs built‑in property handling
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Properties;
+using System;
 
-// Demonstrates how to set built‑in properties (Author, Title) in a new Workbook, add custom document properties, save and reload the file, and confirm that the original core properties are preserved while the custom ones are persisted.
-class VerifyCoreProperties
+// Demonstrates creating a workbook, setting built‑in Author and Title, adding custom properties (Project, Version, Reviewed), then confirming the built‑in properties remain unchanged before saving the file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Set initial built‑in document properties
-        workbook.BuiltInDocumentProperties["Author"].Value = "Original Author";
-        workbook.BuiltInDocumentProperties["Title"].Value = "Original Title";
-
-        // Store original values for later comparison
-        object originalAuthor = workbook.BuiltInDocumentProperties["Author"].Value;
-        object originalTitle = workbook.BuiltInDocumentProperties["Title"].Value;
-
-        // Add custom document properties
-        workbook.CustomDocumentProperties.Add("Project", "Alpha");
-        workbook.CustomDocumentProperties.Add("Revision", 2);
-        workbook.CustomDocumentProperties.Add("Approved", true);
-        workbook.CustomDocumentProperties.Add("CreatedOn", DateTime.Now);
-
-        // Save the workbook to disk
-        string filePath = "VerifyCoreProperties.xlsx";
-        workbook.Save(filePath);
-
-        // Load the workbook back
-        Workbook loadedWorkbook = new Workbook(filePath);
-
-        // Verify that built‑in properties have not changed
-        bool authorUnchanged = loadedWorkbook.BuiltInDocumentProperties["Author"].Value.Equals(originalAuthor);
-        bool titleUnchanged = loadedWorkbook.BuiltInDocumentProperties["Title"].Value.Equals(originalTitle);
-
-        Console.WriteLine($"Author unchanged: {authorUnchanged}");
-        Console.WriteLine($"Title unchanged: {titleUnchanged}");
-
-        // Display the custom properties to confirm they were added
-        Console.WriteLine("Custom Document Properties:");
-        foreach (DocumentProperty prop in loadedWorkbook.CustomDocumentProperties)
+        try
         {
-            Console.WriteLine($"{prop.Name}: {prop.Value}");
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Set initial core (built‑in) properties
+            workbook.BuiltInDocumentProperties.Author = "John Doe";
+            workbook.BuiltInDocumentProperties.Title = "Sample Workbook";
+
+            // Capture original core property values for later comparison
+            string originalAuthor = workbook.BuiltInDocumentProperties.Author;
+            string originalTitle = workbook.BuiltInDocumentProperties.Title;
+
+            // Add custom properties to the workbook
+            workbook.CustomDocumentProperties.Add("Project", "Aspose Integration");
+            workbook.CustomDocumentProperties.Add("Version", 1.0);
+            workbook.CustomDocumentProperties.Add("Reviewed", true);
+
+            // Verify that core properties have not changed after adding custom properties
+            bool authorUnchanged = workbook.BuiltInDocumentProperties.Author == originalAuthor;
+            bool titleUnchanged = workbook.BuiltInDocumentProperties.Title == originalTitle;
+
+            Console.WriteLine($"Author unchanged: {authorUnchanged}");
+            Console.WriteLine($"Title unchanged: {titleUnchanged}");
+
+            // Save the workbook (optional)
+            workbook.Save("output.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

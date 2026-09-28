@@ -1,21 +1,17 @@
-// Title: C# – Add a Running Total Column to an Aspose.Cells Table Using Structured References
-// Description: The example creates a new workbook, builds a ListObject covering columns A‑B, fills column A with sample amounts, and defines column B as a calculated running‑total column using an IFERROR + OFFSET structured reference. Formulas are evaluated and the file is saved as RunningTotalTable.xlsx.
-// Keywords: Aspose.Cells | C# | running total | structured reference | OFFSET function | ListObject | Excel table formula | cumulative sum | programmatic Excel | calculate formulas
-// Common Searches: Aspose.Cells add running total column | C# OFFSET structured reference Aspose.Cells | calculate cumulative sum in Excel table programmatically | ListObject calculated column example | how to use IFERROR with OFFSET in Aspose.Cells
-// Developer Intent: Create a calculated column in an Aspose.Cells ListObject that computes a running total based on the previous row’s value.
-// Use Cases: Financial statements that show a cumulative balance for each transaction. | Inventory sheets tracking running stock levels as items are added or removed. | Sales dashboards displaying cumulative sales alongside daily figures.
-// AI Prompts: Show how to modify the running‑total formula to skip rows where the Amount cell is blank. | Provide an alternative formula that uses SUM with a dynamic range instead of OFFSET. | Explain how to keep the running‑total column accurate when rows are inserted or deleted after the table is populated.
+// Title: Create a cumulative running‑total column in an Excel worksheet with Aspose.Cells for .NET using row‑referencing formulas
+// AI Prompts: Generate C# code that uses Aspose.Cells to insert a formula in column B that adds the current row's value in column A to the previous row's running total. | Show how to programmatically assign a running‑total formula to each cell in a column, evaluate all formulas, and save the workbook with Aspose.Cells. | Demonstrate building a sample table of amounts and automatically creating a cumulative sum column using Aspose.Cells' Formula property in C#.
+// Common Searches: Aspose.Cells C# set running total formula that references previous row | How to calculate cumulative sum in Excel using Aspose.Cells .NET API | Create dynamic running total column in Excel workbook with Aspose.Cells code example | Aspose.Cells formula for cumulative total across rows in C# | Programmatically add cumulative sum column to Excel sheet using Aspose.Cells
+// Tags: aspocells cumulative sum formula | aspocells set cell formula previous row | aspocells calculate running total | excel running total column aspocells | c# aspocells evaluate formulas
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using System;
 
-// The example creates a new workbook, builds a ListObject covering columns A‑B, fills column A with sample amounts, and defines column B as a calculated running‑total column using an IFERROR + OFFSET structured reference. Formulas are evaluated and the file is saved as RunningTotalTable.xlsx.
-class RunningTotalExample
+// Creates a new workbook, fills column A with sample amounts, writes a running‑total formula in column B that references the previous row, calculates all formulas, and saves the file as RunningTotal.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook (lifecycle rule)
         Workbook workbook = new Workbook();
         Worksheet sheet = workbook.Worksheets[0];
         Cells cells = sheet.Cells;
@@ -24,26 +20,34 @@ class RunningTotalExample
         cells["A1"].PutValue("Amount");
         cells["B1"].PutValue("Running Total");
 
-        // Populate sample amounts (1..9)
-        for (int i = 2; i <= 10; i++)
+        // Sample data in column A (rows 2‑6)
+        double[] amounts = { 100, 250, 150, 300, 200 };
+        for (int i = 0; i < amounts.Length; i++)
         {
-            cells[i - 1, 0].PutValue(i - 1); // Column A
+            // Row index in Aspose.Cells is zero‑based
+            cells[i + 1, 0].PutValue(amounts[i]); // Column A
         }
 
-        // Create a table that includes both columns (A1:B10)
-        // Parameters: firstRow, firstColumn, totalRows, totalColumns, hasHeaders
-        int tableIndex = sheet.ListObjects.Add(0, 0, 9, 1, true);
-        ListObject table = sheet.ListObjects[tableIndex];
+        // Set running‑total formulas in column B
+        int firstDataRow = 2; // Excel row number where data starts
+        for (int excelRow = firstDataRow; excelRow < firstDataRow + amounts.Length; excelRow++)
+        {
+            if (excelRow == firstDataRow)
+            {
+                // First total equals the first amount: B2 = A2
+                cells[excelRow - 1, 1].Formula = $"=A{excelRow}";
+            }
+            else
+            {
+                // Subsequent totals add previous total: B3 = B2 + A3, etc.
+                cells[excelRow - 1, 1].Formula = $"=B{excelRow - 1}+A{excelRow}";
+            }
+        }
 
-        // Set the running total formula for the second column
-        // Uses structured reference and OFFSET to refer to the previous row in the same column
-        ListColumn runningTotalColumn = table.ListColumns[1];
-        runningTotalColumn.Formula = "=IFERROR(OFFSET([@Running Total],-1,0),0)+[@Amount]";
-
-        // Calculate all formulas so the running totals are materialized
+        // Evaluate all formulas
         workbook.CalculateFormula();
 
-        // Save the workbook
-        workbook.Save("RunningTotalTable.xlsx");
+        // Save the workbook (lifecycle rule)
+        workbook.Save("RunningTotal.xlsx");
     }
 }

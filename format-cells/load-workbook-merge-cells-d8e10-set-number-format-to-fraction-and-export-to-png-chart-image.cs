@@ -1,71 +1,57 @@
-// Title: Merge Cells D8:E10, Apply Fraction Format, and Export as PNG with Aspose.Cells for .NET
-// Description: Loads an existing workbook, merges the range D8:E10, applies a custom fraction number format ("# ?/?"), renders the first worksheet page to a PNG image, and optionally saves the modified file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | merge cells D8:E10 | fraction number format | custom number format Excel | export worksheet to PNG | SheetRender PNG | ImageOrPrintOptions | .NET Excel to image | render Excel as image | Aspose.Cells rendering options
-// Common Searches: how to merge cells and export to png with aspose.cells | apply fraction format to merged cells in c# | aspose.cells render worksheet as png image | export excel range as png using asp.net | c# aspose.cells custom number format image export
-// Developer Intent: Merge D8:E10, set a fraction format, and generate a PNG snapshot of the worksheet using Aspose.Cells for .NET.
-// Use Cases: Create printable reports where merged cells show fractional values and the sheet is delivered as an image. | Generate thumbnail previews of formatted Excel data for web dashboards or mobile apps. | Automate conversion of Excel worksheets with custom number formats into PNG files for email or document attachments.
-// AI Prompts: Show how to export only the merged range D8:E10 as a PNG instead of the whole sheet. | Provide code to set image resolution, DPI, and background color when rendering with Aspose.Cells. | Explain how to apply the fraction style to a named range and then render that range to a PNG image.
+// Title: Merge cells D8:E10, apply a fraction number format, and export the worksheet as a PNG image using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing Excel file, merges the range D8:E10, sets the custom number format '# ?/?' on the merged cell, and saves the first worksheet as a PNG image with Aspose.Cells. | Write a C# snippet that uses Aspose.Cells Rendering to apply a fraction format to a merged cell and render the sheet to a PNG file.
+// Common Searches: Aspose.Cells C# merge D8:E10 then export worksheet to PNG | How to set '# ?/?' fraction format on merged cells using Aspose.Cells .NET | Render Excel sheet as PNG after merging cells with Aspose.Cells for .NET | C# Aspose.Cells image rendering options for exporting worksheet to PNG
+// Tags: cell range merging Aspose.Cells C# | fraction custom number format Aspose.Cells | worksheet PNG rendering Aspose.Cells | image rendering options Aspose.Cells .NET | sheetrender to image C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Loads an existing workbook, merges the range D8:E10, applies a custom fraction number format ("# ?/?"), renders the first worksheet page to a PNG image, and optionally saves the modified file using Aspose.Cells for .NET.
-class MergeFractionAndExportImage
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program loads input.xlsx, merges cells D8:E10, applies the custom fraction format '# ?/?' to the merged cell, and renders the first worksheet to output.png as a PNG image using Aspose.Cells for .NET.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Input and output file paths
-            string inputFile = "input.xlsx";   // existing workbook to load
-            string outputImage = "merged_fraction.png";
-
-            // Verify input file exists
-            if (!File.Exists(inputFile))
+            try
             {
-                Console.WriteLine($"Input file \"{inputFile}\" not found.");
-                return;
-            }
+                string inputPath = "input.xlsx";
+                string outputPath = "output.png";
 
-            // Load the workbook
-            Workbook workbook = new Workbook(inputFile);
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Merge cells D8:E10 (rows 7‑9, columns 3‑4)
-            cells.Merge(7, 3, 3, 2);
-
-            // Create a fraction number format "# ?/?" and apply it to the merged range
-            Style fractionStyle = workbook.CreateStyle();
-            fractionStyle.Custom = "# ?/?"; // fraction format
-            StyleFlag flag = new StyleFlag { NumberFormat = true };
-
-            // Apply the style to each cell in the merged area
-            for (int row = 7; row < 7 + 3; row++)
-            {
-                for (int col = 3; col < 3 + 2; col++)
+                // Verify that the input file exists
+                if (!File.Exists(inputPath))
                 {
-                    cells[row, col].SetStyle(fractionStyle, flag);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
                 }
+
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+                var worksheet = workbook.Worksheets[0];
+
+                // Merge cells D8:E10 (zero‑based: row 7, column 3, 3 rows, 2 columns)
+                worksheet.Cells.Merge(7, 3, 3, 2);
+
+                // Apply a fraction number format to the first cell of the merged range
+                var style = worksheet.Cells[7, 3].GetStyle();
+                style.Custom = "# ?/?"; // Fraction format like 1 1/2
+                worksheet.Cells[7, 3].SetStyle(style);
+
+                // Set image rendering options (default format is PNG)
+                var imgOptions = new ImageOrPrintOptions();
+
+                // Render the worksheet to a PNG image
+                var sheetRender = new SheetRender(worksheet, imgOptions);
+                sheetRender.ToImage(0, outputPath);
+
+                Console.WriteLine($"Worksheet rendered successfully to '{outputPath}'.");
             }
-
-            // Configure image export options
-            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
-            // Image format is inferred from the file extension; explicit setting omitted for compatibility
-            imgOptions.OnePagePerSheet = true;
-
-            // Render the worksheet (first page) to a PNG image
-            SheetRender renderer = new SheetRender(worksheet, imgOptions);
-            renderer.ToImage(0, outputImage); // export page 0 to PNG file
-
-            // Optionally save the modified workbook
-            workbook.Save("modified.xlsx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

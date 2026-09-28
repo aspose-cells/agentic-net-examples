@@ -1,53 +1,64 @@
-// Title: C# – Retrieve the scaling factor for fitting a worksheet to a single printed page using Aspose.Cells
-// Description: This example creates a workbook, fills it with data, applies PageSetup.SetFitToPages(1,1) and disables percent scaling, then uses SheetRender to read the automatically calculated PageScale (0‑1) and prints it as a percentage. The workbook can be saved after the calculation.
-// Keywords: Aspose.Cells C# fit to one page | SheetRender PageScale | SetFitToPages scaling factor | calculate print scale Aspose.Cells | page setup scaling .NET
-// Common Searches: Aspose.Cells get scaling percentage after SetFitToPages | how to read page scale for fit‑to‑page printing in .NET | SheetRender.PageScale example | fit entire worksheet on one printed sheet Aspose.Cells
-// Developer Intent: Find out the exact print‑scale value that Aspose.Cells applies when a worksheet is configured to fit on one page.
-// Use Cases: Display the calculated shrinkage to users before printing. | Log the scale factor for debugging layout issues in automated report pipelines. | Adjust image or PDF export dimensions based on the retrieved PageScale.
-// AI Prompts: Show C# code that sets SetFitToPages(1,1), disables percent scaling, and outputs SheetRender.PageScale as a percentage. | Explain the algorithm behind SheetRender.PageScale and how to use it to modify rendering options before exporting. | Generate a snippet that saves the workbook after fitting it to one page and writes the scaling factor to a log file.
+// Title: Retrieve the page‑setup Zoom (scaling factor) after fitting an Excel worksheet to one printed page using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx workbook, sets PageSetup.FitToPagesWide = 1 and FitToPagesTall = 1 with Aspose.Cells, then reads the resulting PageSetup.Zoom value and writes it to the console. | Show how to obtain the automatic scaling percentage after configuring a worksheet to fit on a single printed page in Aspose.Cells for .NET. | Provide a .NET snippet that saves the workbook after adjusting the page‑setup and logs the calculated scaling factor.
+// Common Searches: Aspose.Cells .NET get page zoom after setting FitToPagesWide and FitToPagesTall | C# how to read scaling factor for single-page print in Excel using Aspose.Cells | retrieve worksheet print scaling percentage with Aspose.Cells for .NET | fit worksheet to one page and obtain Zoom value programmatically Aspose.Cells | Aspose.Cells page setup fit to one page calculate scaling factor
+// Tags: Aspose.Cells page setup fit to one page | Aspose.Cells retrieve Zoom percentage | C# Excel worksheet print scaling Aspose.Cells | Aspose.Cells FitToPagesWide FitToPagesTall usage | Aspose.Cells calculate page scaling factor
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-// This example creates a workbook, fills it with data, applies PageSetup.SetFitToPages(1,1) and disables percent scaling, then uses SheetRender to read the automatically calculated PageScale (0‑1) and prints it as a percentage. The workbook can be saved after the calculation.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an Excel workbook, accesses the first worksheet, configures its PageSetup to fit the content to a single printed page (both horizontally and vertically), reads the automatically computed Zoom (scaling) percentage, outputs the value, and saves the modified workbook.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Fill the sheet with enough data to normally span multiple pages
-        for (int row = 0; row < 100; row++)
+        static void Main(string[] args)
         {
-            for (int col = 0; col < 20; col++)
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            try
             {
-                sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file '{inputPath}' not found.");
+                    return;
+                }
+
+                // Load the workbook from the input file
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+
+                // Configure page setup to fit the entire content on a single printed sheet
+                PageSetup pageSetup = sheet.PageSetup;
+                pageSetup.FitToPagesWide = 1; // fit to 1 page horizontally
+                pageSetup.FitToPagesTall = 1; // fit to 1 page vertically
+
+                // After setting FitToPages, Aspose.Cells computes the scaling factor
+                int scalingFactor = pageSetup.Zoom; // scaling percentage (e.g., 85 means 85%)
+
+                // Output the scaling factor
+                Console.WriteLine($"Scaling factor to fit on one page: {scalingFactor}%");
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the workbook with the updated page‑setup changes
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors gracefully
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
-
-        // Configure page setup to fit the entire sheet onto a single printed page
-        PageSetup pageSetup = sheet.PageSetup;
-        // Use the SetFitToPages method (rule) to specify 1 page wide and 1 page tall
-        pageSetup.SetFitToPages(1, 1);
-        // Ensure scaling is driven by FitToPages rather than a percent zoom
-        pageSetup.IsPercentScale = false;
-
-        // Create rendering options (default settings)
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-
-        // Create SheetRender after page‑setup changes (rule)
-        SheetRender sheetRender = new SheetRender(sheet, options);
-
-        // Retrieve the calculated page scale (0.0‑1.0 range)
-        double pageScale = sheetRender.PageScale;
-
-        // Output the scaling factor as a percentage
-        Console.WriteLine($"Calculated page scale to fit on one sheet: {pageScale * 100:0.##}%");
-
-        // Save the workbook (optional, demonstrates lifecycle rule)
-        workbook.Save("FitToOnePage.xlsx");
     }
 }

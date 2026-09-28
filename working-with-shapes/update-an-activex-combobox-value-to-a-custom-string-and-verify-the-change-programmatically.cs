@@ -1,55 +1,75 @@
-// Title: Aspose.Cells .NET – Update an ActiveX ComboBox value to a custom string and verify it
-// Description: Creates a workbook, adds an ActiveX ComboBox, binds it to cells A1:A3, sets an initial value, changes the ComboBox.Value to a custom string, reads the value back, logs the result, and saves the file as ActiveXComboBoxUpdated.xlsx.
-// Keywords: Aspose.Cells ActiveX ComboBox | set ComboBox value .NET | update ActiveX control programmatically | verify ComboBox value | ComboBoxActiveXControl custom string | list fill range Aspose.Cells | C# Aspose.Cells example
-// Common Searches: how to change ActiveX ComboBox value with Aspose.Cells C# | programmatically verify ComboBox value Aspose.Cells | set custom string for ComboBoxActiveXControl .NET | Aspose.Cells update ActiveX control value | read ComboBox value after assignment Aspose.Cells
-// Developer Intent: Assign a custom string to an ActiveX ComboBox in a worksheet and confirm the assignment through code.
-// Use Cases: Set a runtime‑calculated default selection before saving the workbook. | Replace a user‑chosen item with a generated value and ensure it persists. | Automated testing of ComboBox content after data‑driven updates.
-// AI Prompts: Generate C# code using Aspose.Cells that changes the Value of an existing ComboBoxActiveXControl to a user‑defined string and validates the change. | Show how to bind a cell range to an ActiveX ComboBox, set an initial selection, update it to a custom value, and programmatically confirm the update. | Provide a snippet that reads the ComboBox.Value, compares it with an expected string, and logs success or failure in Aspose.Cells.
+// Title: Update an ActiveX ComboBox text in an Excel worksheet with Aspose.Cells for .NET and verify the change
+// AI Prompts: Find the first ComboBox shape in the first worksheet, assign a custom string to its Text property, and save the workbook. | Read back the ComboBox.Text after setting it and output a success or failure message based on the comparison.
+// Common Searches: how to set ActiveX ComboBox text using Aspose.Cells in C# | Aspose.Cells verify ComboBox value after modification | C# example for updating Excel form control ComboBox with custom string | retrieve and compare ComboBox.Text property in Aspose.Cells workbook | save Excel file after changing ActiveX ComboBox content with Aspose.Cells
+// Tags: Aspose.Cells set ActiveX ComboBox Text | C# verify ComboBox value in Excel workbook | iterate worksheet shapes to locate ComboBox | save workbook after modifying form control | load workbook and update ComboBox content
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.ActiveXControls;
+using System;
+using System.IO;
 
-namespace AsposeCellsActiveXComboBoxDemo
+// The sample loads 'ComboBoxDemo.xlsx', locates the first ActiveX ComboBox shape on the first worksheet, sets its Text property to 'MyCustomString', confirms the update succeeded, and saves the modified file as 'ComboBoxDemo_Updated.xlsx'.
+class Program
 {
-    // Creates a workbook, adds an ActiveX ComboBox, binds it to cells A1:A3, sets an initial value, changes the ComboBox.Value to a custom string, reads the value back, logs the result, and saves the file as ActiveXComboBoxUpdated.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputFile = "ComboBoxDemo.xlsx";
+        const string outputFile = "ComboBoxDemo_Updated.xlsx";
+
+        // Verify that the input workbook exists
+        if (!File.Exists(inputFile))
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Console.WriteLine($"Input file '{inputFile}' not found.");
+            return;
+        }
 
-            // Add a ComboBox ActiveX control to the worksheet
-            // Parameters: ControlType, upper left row, upper left column, top offset, left offset, width, height
-            Shape shape = worksheet.Shapes.AddActiveXControl(ControlType.ComboBox, 1, 1, 0, 0, 120, 30);
-            ComboBoxActiveXControl comboBox = (ComboBoxActiveXControl)shape.ActiveXControl;
+        try
+        {
+            // Load the workbook that contains a ComboBox form control
+            Workbook workbook = new Workbook(inputFile);
 
-            // Populate cells that will serve as the list items
-            worksheet.Cells["A1"].PutValue("Apple");
-            worksheet.Cells["A2"].PutValue("Banana");
-            worksheet.Cells["A3"].PutValue("Cherry");
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Bind the list to the populated range
-            comboBox.ListFillRange = "A1:A3";
+            // Locate the ComboBox shape
+            ComboBox comboBox = null;
+            foreach (Shape shape in sheet.Shapes)
+            {
+                if (shape is ComboBox cb)
+                {
+                    comboBox = cb;
+                    break;
+                }
+            }
 
-            // Set an initial value
-            comboBox.Value = "Apple";
+            if (comboBox == null)
+            {
+                Console.WriteLine("ComboBox not found.");
+                return;
+            }
 
-            // ----- Update the ComboBox value to a custom string -----
-            string customValue = "Custom String";
-            comboBox.Value = customValue;
+            // Set the ComboBox to a custom string value
+            string customValue = "MyCustomString";
+            comboBox.Text = customValue; // Update displayed text/value
 
-            // Verify the change programmatically
-            string retrievedValue = comboBox.Value;
-            Console.WriteLine("Expected Value: " + customValue);
-            Console.WriteLine("Retrieved Value: " + retrievedValue);
-            Console.WriteLine("Verification: " + (customValue == retrievedValue ? "Success" : "Failure"));
+            // Verify that the value was updated
+            string currentValue = comboBox.Text;
+            if (!string.IsNullOrEmpty(currentValue) && currentValue == customValue)
+            {
+                Console.WriteLine("ComboBox value successfully updated to: " + currentValue);
+            }
+            else
+            {
+                Console.WriteLine("Failed to update ComboBox value.");
+            }
 
-            // Save the workbook
-            workbook.Save("ActiveXComboBoxUpdated.xlsx");
+            // Save the workbook with the updated ComboBox value
+            workbook.Save(outputFile);
+            Console.WriteLine($"Workbook saved as '{outputFile}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

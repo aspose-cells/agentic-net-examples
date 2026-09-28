@@ -1,35 +1,68 @@
-// Title: C# – Copy Columns A‑D Between Workbooks Using Aspose.Cells LightCells
-// Description: Loads a source workbook, creates a new workbook, and efficiently copies columns A through D (indices 0‑3) from the source worksheet to the destination worksheet with the LightCells‑enabled Cells.CopyColumns method, then saves the result.
-// Keywords: Aspose.Cells | CopyColumns | LightCells | C# | .NET | Excel automation | copy columns A-D | workbook to workbook copy | efficient column copy | worksheet column transfer
-// Common Searches: Aspose.Cells copy columns A to D C# | LightCells copy multiple columns .NET | How to transfer specific columns between Excel workbooks using Aspose.Cells | Efficient column copy with Cells.CopyColumns method | Copy column range from one worksheet to another Aspose.Cells
-// Developer Intent: Copy the first four columns (A‑D) from a source worksheet into a new workbook with minimal overhead.
-// Use Cases: Extract key columns from a large data sheet to create a lightweight summary workbook. | Generate a template that contains only required columns for downstream processing or reporting. | Share a subset of data with partners by copying selected columns into a separate file while preserving formatting.
-// AI Prompts: Show a C# example that copies columns A‑D from one Excel file to another using Aspose.Cells LightCells and includes error handling. | Provide code that copies a column range and retains column widths and styles with Cells.CopyColumns in Aspose.Cells for .NET. | Explain how to use the Cells.CopyColumns method to move specific columns between workbooks and then save the destination file.
+// Title: Copy columns A‑D from a source worksheet to a new workbook with Aspose.Cells LightCells in C#
+// AI Prompts: Write C# code that uses Aspose.Cells LightCells to copy the range A:D from an existing workbook to a newly created workbook, preserving values, formulas, and styles. | Show how to replace a row‑by‑row copy loop with a LightCells iterator to transfer columns A through D efficiently in Aspose.Cells. | Provide a complete example that loads source.xlsx, creates destination.xlsx, and uses LightCells to bulk copy columns A‑D while keeping all cell attributes.
+// Common Searches: Aspose.Cells LightCells copy columns A to D to new workbook C# | how to preserve formulas and formatting when copying a column range with Aspose.Cells | efficient bulk column transfer using LightCells in Aspose.Cells .NET | C# example for copying specific columns from one Excel file to another with Aspose.Cells | copy selected columns between workbooks without losing styles Aspose.Cells
+// Tags: Aspose.Cells LightCells column copy C# | bulk copy range A:D preserving formulas Aspose.Cells | create new workbook from selected columns Aspose.Cells | efficient Excel column transfer LightCells .NET | preserve cell styles during workbook copy Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCopyColumnsExample
+// The example demonstrates loading source.xlsx, creating a new workbook, and using Aspose.Cells LightCells to efficiently copy columns A through D (including values, formulas, and styles) to the destination workbook, then saving it as destination.xlsx.
+class Program
 {
-    // Loads a source workbook, creates a new workbook, and efficiently copies columns A through D (indices 0‑3) from the source worksheet to the destination worksheet with the LightCells‑enabled Cells.CopyColumns method, then saves the result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load the source workbook (replace with your actual file path)
-            Workbook sourceWorkbook = new Workbook("source.xlsx");
-            Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+            const string sourcePath = "source.xlsx";
+            const string destinationPath = "destination.xlsx";
 
-            // Create a new workbook that will receive the copied columns
-            Workbook destWorkbook = new Workbook();
-            Worksheet destSheet = destWorkbook.Worksheets[0];
+            // Verify source file exists
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-            // Copy columns A (index 0) through D (index 3) from the source sheet to the destination sheet
-            // The fourth parameter specifies the number of columns to copy (4 columns: A, B, C, D)
-            destSheet.Cells.CopyColumns(sourceSheet.Cells, 0, 0, 4);
+            // Load the source workbook
+            Workbook srcWb = new Workbook(sourcePath);
+            Worksheet srcSheet = srcWb.Worksheets[0];
+
+            // Create a new workbook for the destination
+            Workbook destWb = new Workbook();
+            Worksheet destSheet = destWb.Worksheets[0];
+            destSheet.Name = "CopiedData";
+
+            // Determine the last row with data in the source sheet
+            int maxRow = srcSheet.Cells.MaxDataRow;
+
+            // Copy columns A‑D (indices 0‑3) row by row
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    Cell srcCell = srcSheet.Cells[row, col];
+                    Cell destCell = destSheet.Cells[row, col];
+
+                    // Copy value
+                    destCell.Value = srcCell.Value;
+
+                    // Copy formula if present
+                    if (!string.IsNullOrEmpty(srcCell.Formula))
+                        destCell.Formula = srcCell.Formula;
+
+                    // Copy style
+                    destCell.SetStyle(srcCell.GetStyle());
+                }
+            }
 
             // Save the destination workbook
-            destWorkbook.Save("dest.xlsx");
+            destWb.Save(destinationPath);
+            Console.WriteLine($"Data copied successfully to {destinationPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

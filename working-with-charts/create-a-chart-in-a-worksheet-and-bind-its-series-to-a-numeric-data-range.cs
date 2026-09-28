@@ -1,46 +1,54 @@
-// Title: C# – Create a Column Chart and Bind Its Series to a Numeric Range with Aspose.Cells
-// Description: Demonstrates how to generate a new workbook, fill columns with category labels and numeric values, add a column chart, link the chart's NSeries to the range B2:B10, assign category data from A2:A10, set a chart title, and save the file as an Excel workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells column chart C# | bind chart series numeric range | NSeries.Add Aspose.Cells | set category axis data Aspose.Cells | export Excel workbook .NET
-// Common Searches: Aspose.Cells add column chart programmatically | How to bind chart series to a range in C# | Set category labels for Aspose.Cells chart | Save workbook with chart using Aspose.Cells
-// Developer Intent: Programmatically create a column chart, connect its data series to numeric cells, define category labels, and write the result to an Excel file.
-// Use Cases: Automated sales‑by‑category visual reports | Monthly KPI dashboards generated from database exports | Dynamic performance charts for multi‑region data sets
-// AI Prompts: Generate code to add a second data series to the same column chart in Aspose.Cells. | Show how to customize axis titles, data labels, and marker styles after binding data. | Provide an example of exporting the created chart as a PNG image with Aspose.Cells.
+// Title: Create a column chart in Aspose.Cells, bind its series to a numeric range, and set the category axis using C#
+// AI Prompts: Generate C# code with Aspose.Cells that populates month and sales data, adds a column chart, binds the series to the range B2:B7, sets the category axis to A2:A7, adds a chart title, and saves the workbook. | Show how to use Aspose.Cells API to create a worksheet, fill it with numeric values, attach a column chart to those cells, configure the data source and category labels, and export the file as an .xlsx document.
+// Common Searches: C# Aspose.Cells bind chart series to a specific cell range | how to set category axis data for a column chart in Aspose.Cells | example of creating a column chart with month labels using Aspose.Cells .NET | Aspose.Cells chart title assignment in C# code | saving an Excel workbook with an embedded chart using Aspose.Cells
+// Tags: Aspose.Cells add column chart C# | Aspose.Cells bind series to numeric range | Aspose.Cells set category axis from cells | Aspose.Cells chart title configuration | Aspose.Cells save workbook with chart
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Demonstrates how to generate a new workbook, fill columns with category labels and numeric values, add a column chart, link the chart's NSeries to the range B2:B10, assign category data from A2:A10, set a chart title, and save the file as an Excel workbook using Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsChartDemo
 {
-    static void Main()
+    // The sample creates a new workbook, writes month names to column A and sales figures to column B, adds a column chart positioned on the sheet, binds the chart series to the numeric range B2:B7, sets the category (X‑axis) to A2:A7, assigns a title "Monthly Sales", and saves the file as MonthlySalesChart.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample numeric data
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["B1"].PutValue("Value");
-        for (int i = 2; i <= 10; i++)
+        static void Main()
         {
-            sheet.Cells[$"A{i}"].PutValue($"Cat {i - 1}");
-            sheet.Cells[$"B{i}"].PutValue(i * 10);
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate numeric data for the chart
+            // Column A: Categories (e.g., months)
+            // Column B: Values (numeric)
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Sales");
+            string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+            for (int i = 0; i < months.Length; i++)
+            {
+                sheet.Cells[i + 2, 0].PutValue(months[i]);          // A column
+                sheet.Cells[i + 2, 1].PutValue((i + 1) * 1000);    // B column (numeric)
+            }
+
+            // Add a column chart to the worksheet
+            // Parameters: ChartType, topRow, leftColumn, bottomRow, rightColumn
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 8);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Bind the series to the numeric data range (B2:B7)
+            // The second argument 'true' indicates that data is plotted column‑by‑column (vertical)
+            chart.NSeries.Add("=Sheet1!$B$2:$B$7", true);
+
+            // Set the category (X‑axis) data range (A2:A7)
+            chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$7";
+
+            // Optional: set a chart title
+            chart.Title.Text = "Monthly Sales";
+
+            // Save the workbook to a file
+            workbook.Save("MonthlySalesChart.xlsx");
         }
-
-        // Add a column chart (ChartCollection.Add rule)
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 2, 25, 11);
-        Chart chart = sheet.Charts[chartIndex];
-
-        // Bind the series to the numeric data range (Chart.NSeries.Add rule)
-        chart.NSeries.Add("=Sheet1!$B$2:$B$10", true);
-        // Set category axis data
-        chart.NSeries.CategoryData = "=Sheet1!$A$2:$A$10";
-
-        // Set a title for the chart
-        chart.Title.Text = "Sample Numeric Chart";
-
-        // Save the workbook
-        workbook.Save("NumericChart.xlsx");
     }
 }

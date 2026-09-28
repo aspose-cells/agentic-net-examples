@@ -7,7 +7,8 @@ framework: .NET
 repository: agentic-net-examples
 parent: ../AGENTS.md
 version: 3.0
-last_reviewed: 2026-08-21
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 primary_intent: C# examples for creating, accessing, positioning, styling, connecting, removing, and rendering Excel PivotTable timelines based on date fields
 primary_apis: [Worksheet.Timelines, TimelineCollection.Add, Timeline, PivotTable]
 search_intents: [create Excel timeline in C#, add timeline to PivotTable, filter PivotTable by date, remove Excel timeline]

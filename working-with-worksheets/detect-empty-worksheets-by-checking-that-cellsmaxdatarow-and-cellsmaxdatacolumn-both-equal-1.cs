@@ -1,43 +1,34 @@
-// Title: Detect Empty Worksheets in Aspose.Cells (.NET) Using MaxDataRow & MaxDataColumn
-// Description: C# example that creates a workbook, adds a populated sheet and an empty sheet, then checks each worksheet's Cells.MaxDataRow and Cells.MaxDataColumn. When both properties return -1 the sheet is identified as empty, the result is printed and the workbook saved.
-// Keywords: Aspose.Cells empty worksheet detection | MaxDataRow -1 | MaxDataColumn -1 | C# check blank sheet Aspose.Cells | .NET workbook empty sheet | identify empty worksheet Aspose
-// Common Searches: Aspose.Cells how to find empty worksheets | MaxDataRow and MaxDataColumn empty sheet .NET | C# detect blank worksheet in Aspose.Cells | list worksheets with no data Aspose.Cells
-// Developer Intent: Determine which worksheets in a workbook contain no data by evaluating Cells.MaxDataRow and Cells.MaxDataColumn.
-// Use Cases: Skip processing of blank sheets during report generation | Remove or hide empty worksheets to reduce file size | Validate workbook integrity by flagging sheets without values
-// AI Prompts: Write a C# function that returns the names of all empty worksheets in an Aspose.Cells workbook using MaxDataRow and MaxDataColumn. | Provide code to delete every empty worksheet from a workbook after detection with Aspose.Cells. | Explain the behavior of MaxDataRow and MaxDataColumn when a sheet contains only formatting or comments but no cell values.
+// Title: Detect blank worksheets in an Excel workbook with Aspose.Cells for .NET by evaluating MaxDataRow and MaxDataColumn
+// AI Prompts: Write C# using Aspose.Cells that iterates over every sheet and outputs the name when both Cells.MaxDataRow and Cells.MaxDataColumn return -1. | Implement a .NET function that returns a collection of sheet names that contain no data, based on MaxDataRow/MaxDataColumn checks. | Adjust the example to bypass any further actions for sheets identified as having no data and optionally delete them from the workbook.
+// Common Searches: Aspose.Cells .NET determine if a sheet is empty using MaxDataRow | C# list worksheets without any cells populated in an .xlsx file | How to find blank Excel sheets with Aspose.Cells API | Detect worksheets lacking data in a workbook using Aspose.Cells for C#
+// Tags: blank worksheet detection Aspose.Cells | MaxDataRow MaxDataColumn validation .NET | enumerate sheets with no data C# | skip empty sheets Aspose.Cells processing | remove worksheets without content Aspose API
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsEmptyWorksheetDetection
+// Loads an Excel workbook, iterates through each worksheet, and reports whether the sheet is empty by checking that Cells.MaxDataRow and Cells.MaxDataColumn are both -1.
+class DetectEmptyWorksheets
 {
-    // C# example that creates a workbook, adds a populated sheet and an empty sheet, then checks each worksheet's Cells.MaxDataRow and Cells.MaxDataColumn. When both properties return -1 the sheet is identified as empty, the result is printed and the workbook saved.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Load the workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // For demonstration, a new empty workbook is created
-
-            // Add a worksheet with data for testing
-            Worksheet dataSheet = workbook.Worksheets[0];
-            dataSheet.Name = "DataSheet";
-            dataSheet.Cells["A1"].PutValue("Sample");
-
-            // Add an empty worksheet
-            Worksheet emptySheet = workbook.Worksheets.Add("EmptySheet");
-
-            // Iterate through all worksheets and detect empty ones
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Check if both MaxDataRow and MaxDataColumn are -1, indicating an empty sheet
+            if (sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1)
             {
-                // MaxDataRow and MaxDataColumn are -1 when the sheet contains no data
-                bool isEmpty = sheet.Cells.MaxDataRow == -1 && sheet.Cells.MaxDataColumn == -1;
-
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" is {(isEmpty ? "empty" : "not empty")}.");
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" is empty.");
             }
-
-            // Optionally save the workbook to verify the result
-            workbook.Save("EmptyWorksheetDetectionResult.xlsx");
+            else
+            {
+                Console.WriteLine($"Worksheet \"{sheet.Name}\" contains data.");
+            }
         }
+
+        // Optionally, save the workbook if any modifications were made
+        // workbook.Save("output.xlsx");
     }
 }

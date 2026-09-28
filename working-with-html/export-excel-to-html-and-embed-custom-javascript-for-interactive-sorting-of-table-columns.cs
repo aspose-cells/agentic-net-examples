@@ -1,134 +1,127 @@
-// Title: Export Excel to HTML with Custom JavaScript Sorting – Aspose.Cells for .NET
-// Description: Creates a workbook, fills it with sample data, configures HtmlSaveOptions to disable default frame scripts and output HTML5, saves the sheet to a memory stream, injects a lightweight JavaScript sorter before the closing </body> tag, and writes the final HTML file with clickable column headers that toggle ascending/descending order.
-// Keywords: Aspose.Cells HTML export | custom JavaScript injection | interactive column sorting | disable frame scripts | HtmlSaveOptions .NET | HTML5 Excel output | client‑side table sort | C# Excel to HTML
-// Common Searches: Aspose.Cells add JavaScript to exported HTML | how to enable column sorting in Aspose.Cells HTML output | remove default frame scripts when saving Excel as HTML | inject script before </body> in Aspose.Cells generated HTML | C# export Excel worksheet to sortable HTML page
-// Developer Intent: Export an Excel worksheet to an HTML file and embed a custom JavaScript routine that lets end‑users sort table columns directly in the browser.
-// Use Cases: Publish a product catalog from Excel with sortable price and quantity columns. | Create a lightweight web report without Aspose.Cells frame scripts, adding only the needed sorting logic. | Embed a single‑sheet HTML view in a web portal where users can reorder data client‑side.
-// AI Prompts: Modify the injected script to correctly sort dates formatted as MM/dd/yyyy. | Show how to export multiple worksheets to separate HTML files while preserving custom JavaScript. | Provide a robust method to locate and replace the </body> tag when the generated HTML lacks a body element.
+// Title: Export an Excel worksheet to HTML and add client‑side JavaScript for sortable columns with Aspose.Cells for .NET
+// AI Prompts: Create C# code that loads a workbook with Aspose.Cells, saves the active sheet as HTML, and then injects a JavaScript block that enables click‑to‑sort on table header cells. | Write a routine that reads the generated HTML file, locates the closing </body> tag (or appends at the end if absent), and inserts a <script> element containing a simple table‑sorting function. | Add robust error handling to verify the source Excel file exists, ensure the output directory is created, and log any exceptions that occur during the HTML post‑processing step.
+// Common Searches: how to make columns sortable in HTML exported from Excel using Aspose.Cells C# | Aspose.Cells export active worksheet to HTML and embed custom JavaScript | C# insert script tag into Aspose.Cells generated HTML before </body> | post‑process Aspose.Cells HTML output to add table sorting script | handle missing </body> tag when appending JavaScript to generated HTML in .NET
+// Tags: Aspose.Cells export worksheet to HTML | inject JavaScript into Aspose.Cells HTML output | client‑side table sorting script C# | post‑process generated HTML file .NET | handle missing body tag when appending script
 
 using System;
 using System.IO;
-using System.Text;
 using Aspose.Cells;
+using Aspose.Cells.Saving;
 
-namespace AsposeCellsHtmlExportWithSorting
+// The example loads an Excel file with Aspose.Cells, saves the active worksheet as an HTML page, then reads the HTML, inserts a JavaScript block that attaches click handlers to table headers for ascending/descending sorting, and writes the modified content back. It creates the output directory if needed, checks for the source file, and gracefully handles missing </body> tags or other I/O errors.
+class ExcelToHtmlWithSorting
 {
-    // Creates a workbook, fills it with sample data, configures HtmlSaveOptions to disable default frame scripts and output HTML5, saves the sheet to a memory stream, injects a lightweight JavaScript sorter before the closing </body> tag, and writes the final HTML file with clickable column headers that toggle ascending/descending order.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // -------------------------------------------------
-            // 1. Create a workbook and populate it with sample data
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();                     // create workbook
-            Worksheet sheet = workbook.Worksheets[0];               // get first worksheet
-            Cells cells = sheet.Cells;
+            // Path to the source Excel file
+            string excelPath = "input.xlsx";
 
-            // Header row
-            cells["A1"].PutValue("Product");
-            cells["B1"].PutValue("Price");
-            cells["C1"].PutValue("Quantity");
-
-            // Sample data rows
-            cells["A2"].PutValue("Laptop");
-            cells["B2"].PutValue(1200);
-            cells["C2"].PutValue(5);
-
-            cells["A3"].PutValue("Phone");
-            cells["B3"].PutValue(800);
-            cells["C3"].PutValue(12);
-
-            cells["A4"].PutValue("Tablet");
-            cells["B4"].PutValue(450);
-            cells["C4"].PutValue(8);
-
-            // -------------------------------------------------
-            // 2. Configure HTML save options
-            // -------------------------------------------------
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            // Disable default frame scripts so we can inject our own JavaScript only
-            htmlOptions.ExportFrameScriptsAndProperties = false;
-            // Export only the active worksheet (optional)
-            htmlOptions.ExportActiveWorksheetOnly = true;
-            // Use HTML5 for modern browsers (optional)
-            htmlOptions.HtmlVersion = HtmlVersion.Html5;
-
-            // -------------------------------------------------
-            // 3. Save the workbook to a memory stream as HTML
-            // -------------------------------------------------
-            using (MemoryStream htmlStream = new MemoryStream())
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelPath))
             {
-                workbook.Save(htmlStream, htmlOptions);   // save using provided save rule
-                htmlStream.Position = 0;                  // reset stream position
+                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
+                return;
+            }
 
-                // Read the generated HTML into a string
-                string htmlContent = new StreamReader(htmlStream, Encoding.UTF8).ReadToEnd();
+            // Load the workbook
+            Workbook workbook = new Workbook(excelPath);
 
-                // -------------------------------------------------
-                // 4. Inject custom JavaScript for column sorting
-                // -------------------------------------------------
-                string sortingScript = @"
+            // Configure HTML save options
+            HtmlSaveOptions saveOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                ExportActiveWorksheetOnly = true // export only the active sheet
+                // IsFullHtml and CustomScripts are not available in the current API version,
+                // so we will embed the custom script manually after saving.
+            };
+
+            // Path for the generated HTML file
+            string htmlPath = "output.html";
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(htmlPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook as HTML
+            workbook.Save(htmlPath, saveOptions);
+
+            // Embed custom JavaScript for column sorting
+            const string script = @"
 <script type='text/javascript'>
-// Simple table column sorter
+// Simple table sorting script
 document.addEventListener('DOMContentLoaded', function () {
-    var tables = document.getElementsByTagName('table');
-    for (var t = 0; t < tables.length; t++) {
-        makeSortable(tables[t]);
-    }
-});
+    var table = document.querySelector('table');
+    if (!table) return;
 
-function makeSortable(table) {
-    var ths = table.getElementsByTagName('th');
-    for (var i = 0; i < ths.length; i++) {
+    var headers = table.querySelectorAll('th');
+    for (let i = 0; i < headers.length; i++) {
         (function (index) {
-            ths[index].style.cursor = 'pointer';
-            ths[index].addEventListener('click', function () {
+            headers[index].addEventListener('click', function () {
                 sortTable(table, index);
             });
         })(i);
     }
-}
 
-function sortTable(table, colIndex) {
-    var rows = Array.prototype.slice.call(table.tBodies[0].rows, 0);
-    var asc = table.getAttribute('data-sort-dir') !== 'asc';
-    rows.sort(function (a, b) {
-        var aText = a.cells[colIndex].textContent.trim();
-        var bText = b.cells[colIndex].textContent.trim();
-        var aNum = parseFloat(aText);
-        var bNum = parseFloat(bText);
-        if (!isNaN(aNum) && !isNaN(bNum)) {
-            return asc ? aNum - bNum : bNum - aNum;
+    function sortTable(tbl, colIndex) {
+        var rows = Array.from(tbl.rows).slice(1); // exclude header row
+        var asc = tbl.getAttribute('data-sort-dir') !== 'asc';
+        rows.sort(function (a, b) {
+            var aText = a.cells[colIndex].textContent.trim();
+            var bText = b.cells[colIndex].textContent.trim();
+
+            // Attempt numeric comparison
+            var aNum = parseFloat(aText);
+            var bNum = parseFloat(bText);
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return asc ? aNum - bNum : bNum - aNum;
+            }
+
+            // Fallback to string comparison
+            return asc ? aText.localeCompare(bText) : bText.localeCompare(aText);
+        });
+
+        // Re-append sorted rows
+        for (let i = 0; i < rows.length; i++) {
+            tbl.tBodies[0].appendChild(rows[i]);
         }
-        return asc ? aText.localeCompare(bText) : bText.localeCompare(aText);
-    });
-    // Re‑append sorted rows
-    for (var i = 0; i < rows.length; i++) {
-        table.tBodies[0].appendChild(rows[i]);
+
+        // Store sort direction for next click
+        tbl.setAttribute('data-sort-dir', asc ? 'asc' : 'desc');
     }
-    table.setAttribute('data-sort-dir', asc ? 'asc' : 'desc');
-}
+});
 </script>";
 
-                // Insert the script just before the closing </body> tag
+            // Insert the script before the closing </body> tag
+            try
+            {
+                string htmlContent = File.ReadAllText(htmlPath);
                 int bodyCloseIndex = htmlContent.LastIndexOf("</body>", StringComparison.OrdinalIgnoreCase);
                 if (bodyCloseIndex >= 0)
                 {
-                    htmlContent = htmlContent.Insert(bodyCloseIndex, sortingScript);
+                    htmlContent = htmlContent.Insert(bodyCloseIndex, script);
+                    File.WriteAllText(htmlPath, htmlContent);
                 }
                 else
                 {
-                    // Fallback: append at the end
-                    htmlContent += sortingScript;
+                    // If </body> not found, append at the end
+                    File.AppendAllText(htmlPath, script);
                 }
-
-                // -------------------------------------------------
-                // 5. Write the final HTML with embedded script to a file
-                // -------------------------------------------------
-                File.WriteAllText("WorkbookWithSorting.html", htmlContent, Encoding.UTF8);
-                Console.WriteLine("HTML file with interactive sorting saved as 'WorkbookWithSorting.html'.");
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Warning: Unable to embed custom script. {ex.Message}");
+            }
+
+            Console.WriteLine("Excel file has been exported to HTML with interactive sorting.");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

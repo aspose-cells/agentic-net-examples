@@ -1,55 +1,34 @@
-// Title: C# – Replace POWER(x,y) with ^ operator in all Excel formulas using Aspose.Cells
-// Description: Loads an Excel workbook, scans every worksheet and cell, uses a regular expression to change each POWER(x,y) formula to x^y, updates the cell, recalculates all formulas, and saves the modified file.
-// Keywords: Aspose.Cells | C# formula replace | POWER to ^ operator | regex Excel formula | bulk formula update | recalculate workbook | Excel exponentiation | replace POWER function | .NET Excel automation | Aspose.Cells formula editing
-// Common Searches: Aspose.Cells replace POWER function with caret | C# change POWER(x,y) to ^ in Excel workbook | bulk formula replacement using Aspose.Cells | regex replace POWER in Excel sheets .NET | recalculate workbook after formula changes Aspose.Cells | convert Excel POWER to ^ operator programmatically
-// Developer Intent: Automatically convert every POWER(x,y) occurrence to the ^ exponentiation syntax across all worksheets in an Excel workbook using Aspose.Cells.
-// Use Cases: Standardize formulas before sharing a workbook by switching from POWER to the native ^ operator. | Prepare files for platforms that lack the POWER function, ensuring calculations remain correct after conversion. | Automate large‑scale formula updates in a server‑side process while automatically recalculating results.
-// AI Prompts: Write C# code with Aspose.Cells that finds and replaces POWER(x,y) with x^y in all formulas, then recalculates the workbook. | Provide a regex pattern and loop structure for Aspose.Cells to convert POWER functions to the ^ operator without altering cell formatting. | Explain how to handle nested POWER calls and maintain correct precedence when swapping them for the ^ exponentiation operator in Aspose.Cells.
+// Title: Replace Excel POWER() formulas with the ^ exponentiation operator using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, scans every cell, and rewrites any POWER(base, exponent) formula to use the caret (^) operator. | Create a regular‑expression routine in C# that transforms all POWER functions in worksheet formulas to the ^ syntax and saves the modified workbook using Aspose.Cells. | Write a method that iterates through a worksheet's cells, detects formulas containing POWER, substitutes them with base^exponent, and persists the changes via the Aspose.Cells API.
+// Common Searches: how to convert POWER function to ^ operator in Aspose.Cells C# | replace Excel POWER formulas with caret using .NET library | regex replace POWER(base,exp) in workbook cells Aspose.Cells example
+// Tags: POWER to caret conversion Aspose.Cells | formula regex replacement C# | Excel formula exponentiation operator Aspose.Cells | cell formula update .NET | Aspose.Cells workbook formula manipulation
 
-using System;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
+using System.Text.RegularExpressions;
 
-namespace AsposeCellsPowerReplacement
+// Load an existing workbook
+Workbook workbook = new Workbook("input.xlsx");
+
+// Access the first worksheet (adjust index as needed)
+Worksheet worksheet = workbook.Worksheets[0];
+
+// Iterate through all cells in the worksheet
+foreach (Cell cell in worksheet.Cells)
 {
-    // Loads an Excel workbook, scans every worksheet and cell, uses a regular expression to change each POWER(x,y) formula to x^y, updates the cell, recalculates all formulas, and saves the modified file.
-    class Program
+    // Process only cells that contain a formula with the POWER function
+    if (cell.IsFormula && cell.Formula.Contains("POWER"))
     {
-        static void Main()
-        {
-            // Load the workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+        // Replace POWER(base, exponent) with base^exponent using a regular expression
+        string updatedFormula = Regex.Replace(
+            cell.Formula,
+            @"POWER\(\s*([^,]+?)\s*,\s*([^\)]+?)\s*\)",
+            "$1^$2",
+            RegexOptions.IgnoreCase);
 
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                // Iterate through all cells that contain formulas
-                foreach (Cell cell in sheet.Cells)
-                {
-                    if (!string.IsNullOrEmpty(cell.Formula))
-                    {
-                        // Replace POWER(x,y) with x^y using a regular expression
-                        string originalFormula = cell.Formula;
-                        string updatedFormula = Regex.Replace(
-                            originalFormula,
-                            @"POWER\(\s*([^,]+)\s*,\s*([^\)]+)\s*\)",
-                            "$1^$2",
-                            RegexOptions.IgnoreCase);
-
-                        // If a replacement occurred, set the new formula
-                        if (!originalFormula.Equals(updatedFormula, StringComparison.Ordinal))
-                        {
-                            cell.Formula = updatedFormula;
-                        }
-                    }
-                }
-            }
-
-            // Recalculate all formulas after modification
-            workbook.CalculateFormula();
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx");
-        }
+        // Assign the transformed formula back to the cell
+        cell.Formula = updatedFormula;
     }
 }
+
+// Save the modified workbook
+workbook.Save("output.xlsx");

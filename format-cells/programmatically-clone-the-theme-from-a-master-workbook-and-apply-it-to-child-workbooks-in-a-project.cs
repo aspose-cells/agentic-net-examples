@@ -1,90 +1,75 @@
-// Title: Copy Excel Theme from a Master Workbook to Multiple Workbooks using Aspose.Cells for .NET
-// Description: A C# example that loads a master Excel file, reads its theme, and uses Aspose.Cells Workbook.CopyTheme to apply the same branding to a list of child workbooks, saving each result with a distinct filename.
-// Keywords: Aspose.Cells | CopyTheme | C# Excel theme | master workbook theme | apply theme to multiple workbooks | batch theme copy | Excel branding automation | Aspose.Cells .NET example | theme cloning | Workbook.CopyTheme
-// Common Searches: Aspose.Cells copy theme C# | How to apply master Excel theme to other files using Aspose | Workbook.CopyTheme method example | Batch copy Excel theme with Aspose.Cells | C# program to clone workbook theme | Set corporate theme for multiple spreadsheets .NET
-// Developer Intent: Transfer the theme from a single master Excel file to several child workbooks programmatically.
-// Use Cases: Enforce corporate branding across all generated reports. | Refresh the visual style of legacy spreadsheets after a brand update. | Create new workbooks that inherit a standard theme while keeping existing data intact. | Automate theme consistency in a CI/CD pipeline for Excel report generation.
-// AI Prompts: Generate a reusable C# function that takes a master workbook path and a list of target workbook paths, copies the master theme using Aspose.Cells, and saves each file with a configurable suffix. | Detail which theme components (colors, fonts, effects, cell styles) are copied by Workbook.CopyTheme in Aspose.Cells. | Provide a pattern for logging, retry, and exception handling when processing hundreds of workbooks with theme copying.
+// Title: Programmatically copy a master workbook theme to multiple Excel files using Aspose.Cells for .NET (C#)
+// AI Prompts: Write a C# routine that opens a master Excel file and uses Aspose.Cells' Workbook.CopyTheme to transfer its theme to each workbook in a supplied list, then saves the changes. | Create a function that takes a source workbook path and an array of destination paths, clones the source theme onto every destination workbook using Aspose.Cells, and returns any processing errors. | Develop a .NET script that iterates over multiple .xlsx files, applying the theme from a reference workbook via Aspose.Cells without manual intervention.
+// Common Searches: Aspose.Cells copy theme from master workbook to other workbooks C# | How to programmatically apply the same Excel theme to many files using .NET | Batch copy Excel workbook theme with Aspose.Cells CopyTheme method | C# automate theme propagation across multiple .xlsx documents | Apply master workbook theme to child workbooks in a project using Aspose.Cells
+// Tags: Aspose.Cells Workbook.CopyTheme example | copy Excel theme programmatically C# | batch apply workbook theme Aspose.Cells | clone master workbook theme .NET | automate Excel theme propagation Aspose.Cells
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-namespace ThemeCloner
+// The sample loads a master Excel workbook, iterates through a list of child workbook paths, copies the master’s theme to each child using Workbook.CopyTheme, saves the updated files, and logs missing files or errors.
+class ThemeCloner
 {
-    // A C# example that loads a master Excel file, reads its theme, and uses Aspose.Cells Workbook.CopyTheme to apply the same branding to a list of child workbooks, saving each result with a distinct filename.
-    class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        // Path to the master workbook that contains the desired theme
+        string masterPath = @"C:\Project\MasterWorkbook.xlsx";
+
+        // Verify master workbook exists
+        if (!File.Exists(masterPath))
         {
-            // Path to the master workbook that contains the desired theme
-            string masterPath = "MasterWorkbook.xlsx";
+            Console.WriteLine($"Master workbook not found: {masterPath}");
+            return;
+        }
 
-            // Verify that the master workbook exists
-            if (!File.Exists(masterPath))
+        try
+        {
+            // Load the master workbook
+            using (Workbook masterWorkbook = new Workbook(masterPath))
             {
-                Console.WriteLine($"Master workbook not found: '{masterPath}'.");
-                return;
-            }
-
-            try
-            {
-                // Load the master workbook (theme will be read from this file)
-                using (Workbook masterWorkbook = new Workbook(masterPath))
+                // List of child workbook file paths that need to receive the master theme
+                List<string> childWorkbookPaths = new List<string>
                 {
-                    // Define the list of child workbook file paths that need the master theme applied
-                    string[] childWorkbookPaths = new string[]
+                    @"C:\Project\Child1.xlsx",
+                    @"C:\Project\Child2.xlsx",
+                    @"C:\Project\Child3.xlsx"
+                    // Add more paths as needed
+                };
+
+                // Iterate through each child workbook, copy the theme from the master, and save
+                foreach (string childPath in childWorkbookPaths)
+                {
+                    // Verify child workbook exists
+                    if (!File.Exists(childPath))
                     {
-                        "ChildWorkbook1.xlsx",
-                        "ChildWorkbook2.xlsx",
-                        "ChildWorkbook3.xlsx"
-                    };
+                        Console.WriteLine($"Child workbook not found, skipping: {childPath}");
+                        continue;
+                    }
 
-                    foreach (string childPath in childWorkbookPaths)
+                    try
                     {
-                        // Verify that the child workbook exists
-                        if (!File.Exists(childPath))
+                        // Load the child workbook
+                        using (Workbook childWorkbook = new Workbook(childPath))
                         {
-                            Console.WriteLine($"Child workbook not found: '{childPath}'. Skipping.");
-                            continue;
+                            // Copy the theme from the master workbook to the child workbook
+                            childWorkbook.CopyTheme(masterWorkbook);
+
+                            // Save the updated child workbook (overwrites the original file)
+                            childWorkbook.Save(childPath);
+                            Console.WriteLine($"Theme applied and saved: {childPath}");
                         }
-
-                        try
-                        {
-                            // Load the child workbook
-                            using (Workbook childWorkbook = new Workbook(childPath))
-                            {
-                                // Copy the theme from the master workbook to the child workbook
-                                childWorkbook.CopyTheme(masterWorkbook);
-
-                                // Determine output path (save to a new file)
-                                string outputDir = Path.GetDirectoryName(childPath) ?? Directory.GetCurrentDirectory();
-                                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(childPath);
-                                string newFileName = $"{fileNameWithoutExt}_WithMasterTheme.xlsx";
-                                string fullOutputPath = Path.Combine(outputDir, newFileName);
-
-                                // Ensure the output directory exists
-                                if (!Directory.Exists(outputDir))
-                                {
-                                    Directory.CreateDirectory(outputDir);
-                                }
-
-                                // Save the child workbook with the applied theme
-                                childWorkbook.Save(fullOutputPath);
-                                Console.WriteLine($"Theme copied to '{fullOutputPath}'.");
-                            }
-                        }
-                        catch (Exception exChild)
-                        {
-                            Console.WriteLine($"Error processing '{childPath}': {exChild.Message}");
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing child workbook '{childPath}': {ex.Message}");
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading master workbook: {ex.Message}");
-            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading master workbook: {ex.Message}");
         }
     }
 }

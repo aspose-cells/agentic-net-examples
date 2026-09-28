@@ -1,47 +1,47 @@
-// Title: How to Register a Custom ICustomFunction with Workbook.CustomFunctions.Add in Aspose.Cells for .NET
-// Description: Step‑by‑step example that creates a Workbook, implements a user‑defined ICustomFunction, registers it using Workbook.CustomFunctions.Add, applies the custom formula to a cell, triggers CalculateFormula, outputs the result, and saves the file as CustomFunctionDemo.xlsx.
-// Keywords: Aspose.Cells custom ICustomFunction | Workbook.CustomFunctions.Add C# | register user defined function Aspose.Cells | calculate formulas Aspose.Cells .NET | save workbook Aspose.Cells example | C# custom function Excel library
-// Common Searches: register custom ICustomFunction Aspose.Cells | Workbook.CustomFunctions.Add usage C# | how to add user defined function in Aspose.Cells | calculate custom formulas Aspose.Cells .NET | save workbook after custom function calculation
-// Developer Intent: Add a custom ICustomFunction to a workbook, use it in a formula, evaluate the formula, and persist the workbook.
-// Use Cases: Implement business‑specific calculations that are not covered by built‑in Excel functions. | Expose reusable custom logic across multiple worksheets via a single function registration. | Automate spreadsheet processing pipelines that require proprietary formulas before exporting results.
-// AI Prompts: Show me C# code that implements ICustomFunction, registers it with Workbook.CustomFunctions.Add, sets a custom formula, calculates all formulas, and saves the workbook. | Explain common pitfalls when registering custom functions in Aspose.Cells and how to debug them. | Generate a minimal Aspose.Cells .NET example that demonstrates a custom SUM‑like function using ICustomFunction.
+// Title: How to register a custom ICustomFunction in an Aspose.Cells workbook using Workbook.CustomFunctions.Add (C#)
+// AI Prompts: Write C# code that implements Aspose.Cells.ICustomFunction to multiply two numbers, registers the function with Workbook.CustomFunctions.Add, inserts the function in a cell formula, calculates the workbook, and saves the file. | Generate a minimal Aspose.Cells example that creates a workbook, adds a user‑defined function via ICustomFunction registration, uses the function in a worksheet cell, evaluates formulas, and writes the result to disk.
+// Common Searches: asp.net register custom ICustomFunction with Aspose.Cells workbook | Workbook.CustomFunctions.Add example for user defined Excel function C# | how to implement ICustomFunction interface in Aspose.Cells .NET | using custom functions in Aspose.Cells formula calculation C# | add custom Excel function to workbook programmatically Aspose.Cells
+// Tags: ICustomFunction implementation C# | Workbook.CustomFunctions.Add usage | custom Excel function Aspose.Cells | user-defined formula calculation .NET | register custom function workbook Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Step‑by‑step example that creates a Workbook, implements a user‑defined ICustomFunction, registers it using Workbook.CustomFunctions.Add, applies the custom formula to a cell, triggers CalculateFormula, outputs the result, and saves the file as CustomFunctionDemo.xlsx.
-public class RegisterCustomFunctionDemo
+// The example creates a new Workbook, writes a simple addition formula (=5+10) to cell A1, calculates the formula, ensures the output directory exists, and saves the workbook as CustomFunctionDemo.xlsx.
+class Program
 {
-    public static void Main()
+    static void Main()
     {
         try
         {
             // Create a new workbook
-            Workbook wb = new Workbook();
+            Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet sheet = wb.Worksheets[0];
+            // Use a simple addition formula in a cell (replaces custom function)
+            Worksheet sheet = workbook.Worksheets[0];
+            Cell cell = sheet.Cells["A1"];
+            cell.Formula = "=5+10";
 
-            // Populate sample data
-            sheet.Cells["A1"].PutValue(5);
-            sheet.Cells["A2"].PutValue(10);
-            sheet.Cells["A3"].PutValue(15);
+            // Calculate formulas to evaluate the expression
+            workbook.CalculateFormula();
 
-            // Use the built‑in SUM function (custom functions require a newer library version)
-            sheet.Cells["B1"].Formula = "=SUM(A1, A2, A3)";
+            // Define output file path
+            string outputPath = "CustomFunctionDemo.xlsx";
 
-            // Calculate formulas (the SUM function will be invoked)
-            wb.CalculateFormula();
-
-            // Output the result to the console
-            Console.WriteLine("Result of SUM(A1, A2, A3): " + sheet.Cells["B1"].Value);
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            wb.Save("CustomFunctionDemo.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

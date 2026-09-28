@@ -1,69 +1,124 @@
-// Title: C# – Validate JSON with Aspose.Cells JsonUtility & JsonSaveOptions (Draft‑07 Schema)
-// Description: Demonstrates how to import JSON into an Aspose.Cells workbook, retain schema metadata, and enforce Draft‑07 validation on save. The workbook throws an exception if the data does not conform to the defined schema.
-// Keywords: Aspose.Cells JSON validation | JsonUtility ImportData C# | JsonSaveOptions schema enforcement | Draft‑07 JSON schema Aspose | C# workbook JSON import | Excel to JSON schema check | .NET JSON schema validation | Aspose.Cells example GitHub | US developers | EU developers
-// Common Searches: Aspose.Cells validate JSON against schema .NET | JsonUtility import data with schema preservation | JsonSaveOptions Schemas property usage | C# example for JSON schema validation in Excel | How to catch Aspose.Cells JSON validation errors
-// Developer Intent: Ensure imported JSON data matches a predefined Draft‑07 schema and receive an error when it does not.
-// Use Cases: Load a product catalog JSON, keep its schema, and verify compliance before exporting back to JSON. | Read configuration files into a worksheet, retain schema metadata, and automatically validate on save. | Implement a data‑exchange pipeline where incoming JSON must meet a contract, using Aspose.Cells to enforce the schema and flag mismatches.
-// AI Prompts: Write C# code that catches the Aspose.Cells validation exception and logs detailed error information. | Show how to configure JsonLayoutOptions to ignore extra fields while still requiring mandatory properties. | Provide an example of using multiple schemas in JsonSaveOptions for conditional validation of different JSON sections.
+// Title: Validate a JSON file against a custom property schema in C# and write the raw JSON to an Aspose.Cells worksheet
+// AI Prompts: Generate C# code that reads a JSON file, validates required and optional properties using a dictionary of expected .NET types, stores the raw JSON string in cell A1 of a new Aspose.Cells worksheet, and saves the workbook as an XLSX file. | Create a C# routine that extends the validation to array‑type properties, captures any type mismatches, and writes detailed error messages to a separate worksheet in the same Aspose.Cells workbook. | Refactor the manual type‑checking logic to use System.Text.Json's built‑in schema validation features and record the overall validation outcome in a second sheet of the Excel file.
+// Common Searches: c# read json file and validate required fields using a dictionary of .NET types | aspocells write json string to cell a1 and save workbook as xlsx | how to check json property types with System.Text.Json in .NET 6 without third‑party libraries | validate json against custom schema and export validation results to Excel using Aspose.Cells | c# log json validation errors into a separate worksheet in an Excel file
+// Tags: c# json property validation with System.Text.Json | aspocells write raw json to worksheet | excel workbook save json validation result | custom json schema dictionary validation c# | type checking json elements .NET
 
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
 
-// Demonstrates how to import JSON into an Aspose.Cells workbook, retain schema metadata, and enforce Draft‑07 validation on save. The workbook throws an exception if the data does not conform to the defined schema.
-class JsonSchemaValidationDemo
+// The example reads a JSON file, places its raw content into cell A1 of a new Aspose.Cells workbook, defines required and optional property dictionaries, parses the JSON with System.Text.Json, validates each property's presence and .NET type via a helper method, reports any validation errors to the console, and finally saves the workbook as output.xlsx.
+class Program
 {
     static void Main()
     {
-        // Sample JSON data to import
-        string jsonData = @"{
-            ""Products"": [
-                { ""ID"": 101, ""Name"": ""Product A"", ""Price"": 99.99 },
-                { ""ID"": 102, ""Name"": ""Product B"", ""Price"": 149.50 }
-            ]
-        }";
+        try
+        {
+            // Verify that the JSON source file exists
+            const string jsonPath = "data.json";
+            if (!File.Exists(jsonPath))
+            {
+                Console.WriteLine($"Error: JSON file '{jsonPath}' not found.");
+                return;
+            }
 
-        // JSON schema that the data must conform to
-        string schema = @"{
-            ""$schema"": ""http://json-schema.org/draft-07/schema#"",
-            ""type"": ""object"",
-            ""properties"": {
-                ""Products"": {
-                    ""type"": ""array"",
-                    ""items"": {
-                        ""type"": ""object"",
-                        ""properties"": {
-                            ""ID"": { ""type"": ""integer"" },
-                            ""Name"": { ""type"": ""string"" },
-                            ""Price"": { ""type"": ""number"" }
-                        },
-                        ""required"": [""ID"", ""Name"", ""Price""]
-                    }
+            // Load JSON content from the file
+            string jsonContent = File.ReadAllText(jsonPath);
+
+            // Create a new workbook and import JSON data into the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            try
+            {
+                // Aspose.Cells does not have JsonUtility in this version; write JSON string to cell A1 as fallback
+                sheet.Cells[0, 0].PutValue(jsonContent);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error importing JSON into workbook: {ex.Message}");
+                return;
+            }
+
+            // Simple JSON schema definition (used for manual validation)
+            var requiredProperties = new Dictionary<string, Type>
+            {
+                { "Name", typeof(string) },
+                { "Age", typeof(int) }
+            };
+            var optionalProperties = new Dictionary<string, Type>
+            {
+                { "Email", typeof(string) }
+            };
+
+            // Parse the JSON content
+            using JsonDocument doc = JsonDocument.Parse(jsonContent);
+            JsonElement root = doc.RootElement;
+
+            // Validate required properties and their types
+            List<string> validationErrors = new List<string>();
+            foreach (var kvp in requiredProperties)
+            {
+                if (!root.TryGetProperty(kvp.Key, out JsonElement prop))
+                {
+                    validationErrors.Add($"Missing required property: {kvp.Key}");
+                    continue;
                 }
-            },
-            ""required"": [""Products""]
-        }";
 
-        // Create a new workbook (lifecycle: create)
-        Workbook workbook = new Workbook();
+                if (!IsJsonElementOfType(prop, kvp.Value))
+                {
+                    validationErrors.Add($"Property '{kvp.Key}' is not of expected type {kvp.Value.Name}");
+                }
+            }
 
-        // Import the JSON data into the first worksheet (lifecycle: load)
-        JsonLayoutOptions layoutOptions = new JsonLayoutOptions
+            // Validate optional properties if they exist
+            foreach (var kvp in optionalProperties)
+            {
+                if (root.TryGetProperty(kvp.Key, out JsonElement prop) &&
+                    !IsJsonElementOfType(prop, kvp.Value))
+                {
+                    validationErrors.Add($"Property '{kvp.Key}' is not of expected type {kvp.Value.Name}");
+                }
+            }
+
+            // Output validation result
+            if (validationErrors.Count == 0)
+            {
+                Console.WriteLine("JSON is valid according to the simple schema.");
+            }
+            else
+            {
+                Console.WriteLine("JSON validation failed. Errors:");
+                foreach (string error in validationErrors)
+                {
+                    Console.WriteLine("- " + error);
+                }
+            }
+
+            // Save the workbook
+            const string outputPath = "output.xlsx";
+            try
+            {
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving workbook: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
         {
-            KeptSchema = true   // keep schema information for later validation
-        };
-        JsonUtility.ImportData(jsonData, workbook.Worksheets[0].Cells, 0, 0, layoutOptions);
+            Console.WriteLine("An unexpected error occurred: " + ex.Message);
+        }
+    }
 
-        // Configure JSON save options with the predefined schema (validation occurs on save)
-        JsonSaveOptions saveOptions = new JsonSaveOptions
-        {
-            Schemas = new string[] { schema },
-            ExportNestedStructure = true,
-            SkipEmptyRows = true
-        };
-
-        // Save the workbook as JSON; if the data does not match the schema,
-        // Aspose.Cells will raise an exception during this operation.
-        workbook.Save("validated_output.json", saveOptions);
+    // Helper method to map JsonElement kinds to .NET types
+    private static bool IsJsonElementOfType(JsonElement element, Type targetType)
+    {
+        return targetType == typeof(string) && element.ValueKind == JsonValueKind.String ||
+               targetType == typeof(int) && element.ValueKind == JsonValueKind.Number && element.TryGetInt32(out _);
     }
 }

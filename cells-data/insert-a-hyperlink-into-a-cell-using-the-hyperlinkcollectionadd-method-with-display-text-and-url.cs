@@ -1,15 +1,13 @@
-// Title: Insert a Hyperlink with Custom Text and Screen Tip into an Excel Cell using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, access the first worksheet, and add a hyperlink to cell A1 with a URL, display text, and a screen tip using the HyperlinkCollection.Add method, then save the file as HyperlinkWithDisplayText.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | add hyperlink | custom display text | screen tip | HyperlinkCollection.Add | Excel automation | programmatic hyperlink
-// Common Searches: Aspose.Cells add hyperlink with display text C# | How to set screen tip for Excel hyperlink using Aspose | HyperlinkCollection.Add parameters example | Insert clickable link in Excel via .NET code | Create hyperlink with tooltip in Aspose.Cells
-// Developer Intent: Add a hyperlink that shows custom text and a tooltip to a specific Excel cell programmatically.
-// Use Cases: Generate a report where a cell contains a labeled link that opens a website and displays a helpful tooltip. | Build navigation links between worksheets with descriptive text for better user experience. | Create Excel templates that guide users with clickable labels and explanatory screen tips.
-// AI Prompts: Show how to add multiple hyperlinks with different display texts and screen tips to a range of cells using Aspose.Cells for .NET. | Explain how to update the URL or screen tip of an existing hyperlink in an Excel workbook with C#. | Provide code to read all hyperlinks from a worksheet and list their addresses, display texts, and screen tips.
+// Title: Insert a hyperlink with custom display text and screen tip into a specific Excel cell using Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to add a hyperlink with the text "Visit Aspose" and a screen tip to cell A1, then save the workbook. | Show how to call worksheet.Hyperlinks.Add to set the address, display text, and screen tip for an Excel cell in a .NET application. | Generate a complete example that creates a workbook, inserts a hyperlink with custom label and tooltip, and writes the file to disk using Aspose.Cells.
+// Common Searches: aspnet add hyperlink with display text to Excel cell using Aspose.Cells | how to set screen tip for a hyperlink in Aspose.Cells C# | example of HyperlinkCollection.Add method for Excel workbook .NET | save Excel file after inserting hyperlink with Aspose.Cells library | C# code to create hyperlink in cell A1 with custom text using Aspose.Cells
+// Tags: Aspose.Cells HyperlinkCollection.Add | insert hyperlink into Excel cell C# | custom hyperlink display text Aspose.Cells | hyperlink screen tip .NET | save workbook with Aspose.Cells
 
+using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, access the first worksheet, and add a hyperlink to cell A1 with a URL, display text, and a screen tip using the HyperlinkCollection.Add method, then save the file as HyperlinkWithDisplayText.xlsx.
-class HyperlinkExample
+// The sample creates a new workbook, accesses the first worksheet, adds a hyperlink to cell A1 with the display text "Visit Aspose" and a screen tip, then saves the workbook as HyperlinkDemo.xlsx.
+class Program
 {
     static void Main()
     {
@@ -17,11 +15,11 @@ class HyperlinkExample
         Workbook workbook = new Workbook();
         Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a hyperlink to cell A1 with display text and a screen tip
-        // Parameters: start cell, end cell, URL, text to display, screen tip
+        // Add a hyperlink to cell A1 with display text and a URL
+        // Parameters: startCell, endCell, address, textToDisplay, screenTip
         worksheet.Hyperlinks.Add("A1", "A1", "https://www.aspose.com", "Visit Aspose", "Open Aspose website");
 
         // Save the workbook to a file
-        workbook.Save("HyperlinkWithDisplayText.xlsx");
+        workbook.Save("HyperlinkDemo.xlsx");
     }
 }

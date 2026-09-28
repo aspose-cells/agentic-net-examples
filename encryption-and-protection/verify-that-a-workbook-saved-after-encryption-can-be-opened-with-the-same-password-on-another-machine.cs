@@ -1,61 +1,47 @@
-// Title: Verify that a password‑protected Excel workbook saved with Aspose.Cells for .NET opens on another machine
-// Description: C# example that creates a workbook, writes data, applies a password and strong encryption, saves it as XLSX, then reloads the file with LoadOptions on a simulated remote machine, checks the IsEncrypted flag, and reads the cell to confirm successful decryption.
-// Keywords: Aspose.Cells encrypt workbook C# | password protected Excel .NET | load encrypted workbook LoadOptions | verify workbook encryption Aspose | IsEncrypted property Aspose.Cells | strong cryptographic provider 128‑bit
-// Common Searches: Aspose.Cells open password protected Excel on another computer | C# verify encrypted workbook can be opened with same password | LoadOptions password Excel file Aspose.Cells | check IsEncrypted after saving workbook | strong encryption Aspose.Cells .NET example
-// Developer Intent: Ensure that a workbook saved with a password can be opened and read on a different system using the same password.
-// Use Cases: Create and distribute a password‑protected Excel file while guaranteeing recipients can open it. | Automated testing of encryption settings in CI pipelines across multiple machines. | Validate that the IsEncrypted flag persists after saving and reloading the workbook.
-// AI Prompts: Provide C# code that encrypts an Excel workbook with a 128‑bit strong cryptographic provider using Aspose.Cells, saves it, and then confirms it can be opened with LoadOptions password. | Generate a step‑by‑step tutorial for testing that a password‑protected workbook saved on one machine opens on another machine with Aspose.Cells for .NET. | Show how to programmatically copy an encrypted workbook to a different location and verify the password works when loading it.
+// Title: Encrypt an Excel workbook with a password using Aspose.Cells for .NET and confirm it can be opened on another machine
+// AI Prompts: Write C# code that creates a new Workbook, assigns an opening password via wb.Settings.Password, saves it as an .xlsx file, then reloads the file with LoadOptions.Password and reads a cell to verify decryption. | Show how to protect an Excel file with a password in Aspose.Cells and programmatically open the same file on a different computer using the same password.
+// Common Searches: how to set opening password for an Excel workbook using Aspose.Cells C# | load password-protected .xlsx with Aspose.Cells LoadOptions in .NET | verify that an encrypted Excel file can be opened on another machine using Aspose.Cells | C# example for saving and reopening a password-protected workbook with Aspose.Cells | Aspose.Cells encrypt workbook and read cell after decryption
+// Tags: Aspose.Cells set workbook opening password | C# save encrypted xlsx with Aspose.Cells | LoadOptions password decryption Aspose.Cells | cross-machine workbook password verification | validate encrypted Excel file Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionVerification
+// // Demonstrates creating a workbook, applying an opening password, saving it, then loading it with LoadOptions.Password to confirm the content can be read after decryption.
+class WorkbookEncryptionDemo
 {
-    // C# example that creates a workbook, writes data, applies a password and strong encryption, saves it as XLSX, then reloads the file with LoadOptions on a simulated remote machine, checks the IsEncrypted flag, and reads the cell to confirm successful decryption.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Define the password to protect the workbook
+        const string password = "Secret123";
+
+        // ------------------- Create and encrypt workbook -------------------
+        // Create a new workbook
+        Workbook wb = new Workbook();
+
+        // Write a test value to the first worksheet
+        Worksheet sheet = wb.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Encrypted Content");
+
+        // Set the opening password (this encrypts the file)
+        wb.Settings.Password = password;
+
+        // Save the encrypted workbook to a file
+        string filePath = "encrypted.xlsx";
+        wb.Save(filePath);
+
+        // ------------------- Load and verify workbook -------------------
+        // Load the workbook using the same password
+        LoadOptions loadOptions = new LoadOptions
         {
-            // Path for the encrypted workbook
-            string encryptedFilePath = "EncryptedWorkbook.xlsx";
-            // Password to protect the workbook
-            string password = "SecurePass123";
+            Password = password
+        };
+        Workbook loadedWb = new Workbook(filePath, loadOptions);
 
-            // ---------- Create and encrypt the workbook ----------
-            // Create a new workbook and add some data
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Encrypted content");
+        // Read the value from the loaded workbook to verify successful decryption
+        string readValue = loadedWb.Worksheets[0].Cells["A1"].StringValue;
 
-            // Set the password for opening the workbook
-            wb.Settings.Password = password;
-
-            // (Optional) Set stronger encryption options
-            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-            // Save the encrypted workbook
-            wb.Save(encryptedFilePath, SaveFormat.Xlsx);
-
-            // Verify that the workbook is marked as encrypted
-            Console.WriteLine($"After saving, IsEncrypted: {wb.Settings.IsEncrypted}");
-
-            // ---------- Load the workbook on another machine ----------
-            // Simulate loading on a different machine by using LoadOptions with the password
-            LoadOptions loadOptions = new LoadOptions
-            {
-                Password = password
-            };
-
-            // Load the encrypted workbook
-            Workbook loadedWb = new Workbook(encryptedFilePath, loadOptions);
-
-            // Check that the workbook reports being encrypted
-            Console.WriteLine($"Loaded workbook IsEncrypted: {loadedWb.Settings.IsEncrypted}");
-
-            // Verify that the data can be read correctly
-            string cellValue = loadedWb.Worksheets[0].Cells["A1"].StringValue;
-            Console.WriteLine($"Cell A1 value after decryption: {cellValue}");
-        }
+        // Output the verification result
+        Console.WriteLine("Successfully opened encrypted workbook.");
+        Console.WriteLine("Read value: " + readValue);
     }
 }

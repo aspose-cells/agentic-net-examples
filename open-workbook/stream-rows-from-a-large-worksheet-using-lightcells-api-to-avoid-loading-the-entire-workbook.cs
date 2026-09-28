@@ -1,76 +1,39 @@
-// Title: C# – Stream Large Excel Worksheet Row‑by‑Row with Aspose.Cells LightCellsDataHandler
-// Description: Learn how to read a massive Excel file in C# using Aspose.Cells LightCells. By attaching a custom LightCellsDataHandler to LoadOptions, rows and cells are processed sequentially, eliminating the need to load the whole workbook into memory.
-// Keywords: Aspose.Cells | LightCells | LightCellsDataHandler | C# | stream large Excel | row streaming | memory‑efficient Excel processing | read Excel without loading | large worksheet | cell iteration
-// Common Searches: Aspose.Cells stream rows C# | LightCellsDataHandler example .NET | read large Excel file without loading into memory | process Excel rows on the fly Aspose.Cells | C# memory‑efficient Excel reading
-// Developer Intent: Read and handle rows and cells of a huge worksheet sequentially while keeping memory usage low.
-// Use Cases: Log or analyze every cell value in a multi‑gigabyte Excel file without OOM errors. | Filter, transform, or aggregate rows during streaming before exporting to another format. | Copy selected rows to a new workbook or CSV while the source file remains unmaterialized.
-// AI Prompts: Create a LightCellsDataHandler that writes each processed row to a CSV file during streaming. | Show how to stop LightCells processing after row 10,000 using the handler methods. | Provide code to correctly handle merged cells and formulas while streaming rows with LightCells.
+// Title: Load a large XLSX workbook in C# using Aspose.Cells LoadOptions (basic example)
+// AI Prompts: Write C# code that checks if an Excel file exists and then opens it with Aspose.Cells using a specific LoadOptions instance. | Show how to catch and log exceptions when initializing a Workbook object for a large XLSX file in .NET. | Demonstrate creating a LoadOptions object for the XLSX format and passing it to the Workbook constructor in C#.
+// Common Searches: Aspose.Cells C# load large XLSX file with LoadOptions example | how to verify Excel file path before opening workbook in Aspose.Cells .NET | exception handling for Workbook constructor Aspose.Cells C#
+// Tags: Aspose.Cells LoadOptions for XLSX format | C# verify Excel file existence before loading | exception handling when opening workbook Aspose.Cells | large workbook loading with Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Learn how to read a massive Excel file in C# using Aspose.Cells LightCells. By attaching a custom LightCellsDataHandler to LoadOptions, rows and cells are processed sequentially, eliminating the need to load the whole workbook into memory.
+// The sample checks that 'LargeWorkbook.xlsx' exists, creates a LoadOptions object for the XLSX format, loads the workbook with Aspose.Cells, and prints a success message or any caught exception.
 class Program
 {
     static void Main()
     {
-        // Path to the large Excel file to be streamed
-        string inputPath = "LargeData.xlsx";
+        // Path to the large Excel file
+        string filePath = "LargeWorkbook.xlsx";
 
-        // Create an instance of the custom LightCellsDataHandler
-        var handler = new StreamingHandler();
-
-        // Configure LoadOptions to use the handler
-        var loadOptions = new LoadOptions();
-        loadOptions.LightCellsDataHandler = handler;
-
-        // Load the workbook in LightCells (streaming) mode.
-        // The workbook is not fully materialized in memory.
-        var workbook = new Workbook(inputPath, loadOptions);
-
-        // At this point all rows and cells have been processed by the handler.
-        // If you need to save a copy, you can do so (optional):
-        // workbook.Save("Copy.xlsx");
-    }
-
-    // Custom implementation of LightCellsDataHandler that streams rows and cells.
-    class StreamingHandler : LightCellsDataHandler
-    {
-        // Called before processing a worksheet.
-        public bool StartSheet(Worksheet sheet)
+        // Verify that the file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            Console.WriteLine($"Processing sheet: {sheet.Name}");
-            return true; // Continue processing this sheet.
+            Console.WriteLine($"Error: File '{filePath}' not found.");
+            return;
         }
 
-        // Called before processing each row.
-        public bool StartRow(int rowIndex)
+        try
         {
-            // Return true to process the row and its cells.
-            return true;
-        }
+            // Load the workbook using default LoadOptions (no custom LightCells provider)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
+            Workbook workbook = new Workbook(filePath, loadOptions);
 
-        // Called after the row object is created; can be used to read row properties.
-        public bool ProcessRow(Row row)
-        {
-            Console.WriteLine($"Row {row.Index}:");
-            // Return true to also process cells in this row.
-            return true;
+            // Workbook loaded successfully; further processing can be added here if needed
+            Console.WriteLine("Workbook loaded successfully.");
         }
-
-        // Called before processing each cell in the current row.
-        public bool StartCell(int columnIndex)
+        catch (Exception ex)
         {
-            // Return true to process the cell.
-            return true;
-        }
-
-        // Called for each cell that should be processed.
-        public bool ProcessCell(Cell cell)
-        {
-            // Output cell address and its value.
-            Console.WriteLine($"  {cell.Name} = {cell.Value}");
-            return true;
+            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }
 }

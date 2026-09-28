@@ -1,44 +1,61 @@
-// Title: Add a Signature Line and Password‑Protect an Excel Worksheet with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new workbook, insert a customizable SignatureLine shape at a specific cell, protect the entire worksheet with a password using ProtectionType.All, and save the result as SignatureProtected.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# signature line | add signature line Excel Aspose | protect worksheet password Aspose.Cells | Worksheet.Protect C# | Excel digital signature Aspose | .NET Excel protection example | lock Excel sheet without edit | SignatureLine shape Aspose.Cells | Aspose.Cells worksheet security | C# Excel password protection
-// Common Searches: How to insert a signature line in Excel with Aspose.Cells C# | Aspose.Cells protect worksheet with password example | C# code to lock an Excel sheet after adding a signature line | Add digital signature line and secure worksheet using Aspose.Cells | Worksheet.Protect all cells Aspose.Cells .NET
-// Developer Intent: Insert a customizable signature line into a worksheet and then lock the entire sheet with a password to prevent any further edits.
-// Use Cases: Create a contract workbook where a manager’s signature line is placed and the sheet is password‑protected to guarantee document integrity. | Generate a read‑only financial report that includes an approval signature line and disallows any modifications without the password. | Prepare a compliance checklist that requires a signed acknowledgment and must be locked to avoid tampering.
-// AI Prompts: Generate C# code using Aspose.Cells to add a SignatureLine with custom signer details at cell B6 and protect the worksheet with a password. | Explain how Worksheet.Protect with ProtectionType.All works in Aspose.Cells and how to configure it so users can view but not edit the sheet after adding a signature line. | Show how to modify the protection settings to allow users to select locked cells while preventing any changes in an Aspose.Cells workbook.
+// Title: Add a signature line shape to cell B2 and apply password protection to the first worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Insert a SignatureLine shape at row 2, column 2, set its width to 200 points and height to 50 points, then protect the worksheet with the password "myPassword" using Aspose.Cells in C#. | Create a signature line object, place it on the worksheet at B2, resize it, enable full worksheet protection with a password, and save the workbook. | Load an existing Excel file, add a signature line shape to cell B2, adjust its dimensions, lock the sheet with a password, and write the result to a new file using Aspose.Cells for .NET.
+// Common Searches: how to insert a signature line at a specific cell with Aspose.Cells C# | Aspose.Cells protect worksheet after adding a shape with password | set signature line dimensions in Excel using Aspose.Cells .NET | C# code to add a signature line and lock the sheet in Aspose.Cells | Aspose.Cells example for adding a signature line and applying worksheet protection
+// Tags: signature line insertion Aspose.Cells | shape dimension setting Aspose.Cells | worksheet password protection Aspose.Cells | protect Excel sheet C# Aspose.Cells | add signature line to B2 cell Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Demonstrates how to create a new workbook, insert a customizable SignatureLine shape at a specific cell, protect the entire worksheet with a password using ProtectionType.All, and save the result as SignatureProtected.xlsx using Aspose.Cells for .NET.
-class AddSignatureAndProtect
+// Loads an existing workbook, adds a SignatureLine shape at cell B2 with a width of 200 points and height of 50 points, applies full worksheet protection using the password "myPassword", and saves the modified file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-        // Access the shape collection of the worksheet
-        ShapeCollection shapes = worksheet.Shapes;
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Create and configure a signature line
-        SignatureLine signatureLine = new SignatureLine();
-        signatureLine.AllowComments = true;
-        signatureLine.Email = "example@example.com";
-        signatureLine.Instructions = "Please sign to confirm.";
-        signatureLine.IsLine = true;
-        signatureLine.ShowSignedDate = true;
-        signatureLine.Signer = "John Doe";
-        signatureLine.Title = "Manager";
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // Add the signature line at row 5, column 2 (zero‑based indices)
-        shapes.AddSignatureLine(5, 2, signatureLine);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Protect the worksheet with a password, locking all elements
-        worksheet.Protect(ProtectionType.All, "MySecretPassword", null);
+            // Create a SignatureLine object with desired size
+            SignatureLine signatureLine = new SignatureLine();
+            // The size is set on the returned Shape after adding to the sheet
+            // Add the signature line shape at row 2, column 2 (zero‑based)
+            Shape shape = sheet.Shapes.AddSignatureLine(1, 1, signatureLine);
+            shape.Width = 200;   // width in points
+            shape.Height = 50;   // height in points
 
-        // Save the workbook
-        workbook.Save("SignatureProtected.xlsx");
+            // Protect the worksheet with a password (old password is empty)
+            sheet.Protect(ProtectionType.All, "myPassword", string.Empty);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

@@ -1,57 +1,75 @@
-// Title: Benchmark Aspose.Cells HTML Export: CSS Enabled vs Disabled with Stopwatch (C#)
-// Description: Creates a 500‑row × 20‑column workbook, applies alternating bold and colored fonts, then saves it to HTML twice—once with external CSS (DisableCss = false) and once with only inline styles (DisableCss = true). Each export is timed with System.Diagnostics.Stopwatch and the elapsed milliseconds are printed to the console.
-// Keywords: Aspose.Cells | HtmlSaveOptions | DisableCss | HTML export performance | C# benchmark | Stopwatch timing | Excel to HTML | inline styles vs external CSS | .NET performance testing | document conversion speed
-// Common Searches: Aspose.Cells HTML export speed test | DisableCss option performance impact | measure HTML generation time C# | benchmark Aspose.Cells HTML save | compare external CSS and inline styles Aspose.Cells
-// Developer Intent: Measure and compare the time required to export a workbook to HTML with CSS enabled versus CSS disabled using Aspose.Cells.
-// Use Cases: Determine the fastest HTML export setting for large worksheets in reporting dashboards. | Choose between external CSS and inline styles based on measured conversion time for automated document pipelines. | Integrate performance checks into CI/CD to catch regressions after updating Aspose.Cells.
-// AI Prompts: Write C# code that runs the HTML export benchmark for multiple worksheets and returns average elapsed times for CSS enabled and disabled modes. | Provide a method that logs each export's duration and generates a console summary comparing external CSS with inline styles. | Suggest .NET libraries or techniques to visualize the benchmark results (e.g., charts, tables) after the Stopwatch measurements.
+// Title: Measure Aspose.Cells HTML export speed in C# – compare CSS enabled and disabled using Stopwatch
+// AI Prompts: Write a C# console program that loads an .xlsx file with Aspose.Cells, saves it as HTML twice (once with CSS generation enabled and once disabled), and prints the elapsed milliseconds for each save using Stopwatch. | Modify the program to log the rendering times for both CSS settings into a CSV file, including the workbook name and timestamps. | Enhance the solution to iterate over all .xlsx files in a folder, exporting each to HTML with CSS on and off, and aggregate the performance data into a summary report.
+// Common Searches: how to benchmark Aspose.Cells HTML export performance with CSS on and off in C# | measure time taken to save Excel as HTML using Aspose.Cells HtmlSaveOptions | disable CSS generation when converting workbook to HTML with Aspose.Cells | compare speed of HTML conversion with and without CSS using Aspose.Cells | C# Stopwatch example for Aspose.Cells HTML save timing
+// Tags: Aspose.Cells HTML export with CSS disabled | C# Stopwatch timing for HtmlSaveOptions | benchmark Excel to HTML conversion Aspose.Cells | compare rendering speed CSS enabled vs disabled | measure HTML export performance Aspose.Cells
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlPerformance
+// A C# console app loads an Excel workbook with Aspose.Cells, exports it to HTML twice—once with CSS generation enabled and once disabled—while measuring each export using Stopwatch and reporting the elapsed milliseconds.
+class HtmlRenderPerformance
 {
-    // Creates a 500‑row × 20‑column workbook, applies alternating bold and colored fonts, then saves it to HTML twice—once with external CSS (DisableCss = false) and once with only inline styles (DisableCss = true). Each export is timed with System.Diagnostics.Stopwatch and the elapsed milliseconds are printed to the console.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
 
-            // Populate the worksheet with a sizable amount of data to make rendering measurable
-            for (int row = 0; row < 500; row++)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                for (int col = 0; col < 20; col++)
-                {
-                    // Put some styled text in each cell
-                    string cellName = CellsHelper.CellIndexToName(row, col);
-                    worksheet.Cells[cellName].PutValue($"R{row + 1}C{col + 1}");
-                    Style style = worksheet.Cells[cellName].GetStyle();
-                    style.Font.IsBold = (row % 2 == 0);
-                    style.Font.Color = (col % 2 == 0) ? System.Drawing.Color.Blue : System.Drawing.Color.Green;
-                    worksheet.Cells[cellName].SetStyle(style);
-                }
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
             }
 
-            // Prepare HTML save options (common settings)
-            HtmlSaveOptions options = new HtmlSaveOptions();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Measure rendering time with CSS enabled (default)
-            options.DisableCss = false; // use external CSS
-            Stopwatch swCssEnabled = Stopwatch.StartNew();
-            workbook.Save("Html_With_Css.html", options);
-            swCssEnabled.Stop();
-            Console.WriteLine($"HTML saved with CSS enabled in {swCssEnabled.ElapsedMilliseconds} ms.");
+            // ---------- Rendering with CSS enabled ----------
+            Stopwatch swEnabled = Stopwatch.StartNew();
 
-            // Measure rendering time with CSS disabled (inline styles only)
-            options.DisableCss = true; // use only inline styles
-            Stopwatch swCssDisabled = Stopwatch.StartNew();
-            workbook.Save("Html_With_InlineStyles.html", options);
-            swCssDisabled.Stop();
-            Console.WriteLine($"HTML saved with CSS disabled (inline styles) in {swCssDisabled.ElapsedMilliseconds} ms.");
+            HtmlSaveOptions optionsEnabled = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Ensure CSS is generated (default behavior)
+                DisableCss = false
+            };
+
+            try
+            {
+                workbook.Save("output_css_enabled.html", optionsEnabled);
+                swEnabled.Stop();
+                Console.WriteLine($"HTML rendering with CSS enabled: {swEnabled.ElapsedMilliseconds} ms");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during CSS-enabled rendering: {ex.Message}");
+            }
+
+            // ---------- Rendering with CSS disabled ----------
+            Stopwatch swDisabled = Stopwatch.StartNew();
+
+            HtmlSaveOptions optionsDisabled = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Disable CSS generation
+                DisableCss = true
+            };
+
+            try
+            {
+                workbook.Save("output_css_disabled.html", optionsDisabled);
+                swDisabled.Stop();
+                Console.WriteLine($"HTML rendering with CSS disabled: {swDisabled.ElapsedMilliseconds} ms");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during CSS-disabled rendering: {ex.Message}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

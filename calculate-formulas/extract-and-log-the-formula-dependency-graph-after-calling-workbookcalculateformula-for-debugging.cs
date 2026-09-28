@@ -1,83 +1,101 @@
-// Title: Extract formula dependency graph after Workbook.CalculateFormula in C# with Aspose.Cells
-// Description: Demonstrates how to enable the calculation chain, run Workbook.CalculateFormula, and then enumerate each formula cell to list its precedents (using GetPrecedentsInCalculation) and its recursive dependents (using GetDependentsInCalculation). The example logs the relationships to the console and saves the workbook, providing a practical way to debug and analyze formula dependencies in .NET.
-// Keywords: Aspose.Cells | C# | Workbook.CalculateFormula | formula precedents | formula dependents | calculation chain | dependency graph | GetPrecedentsInCalculation | GetDependentsInCalculation | Excel formula debugging | cell dependency extraction
-// Common Searches: Aspose.Cells get formula precedents after calculation | How to list dependent cells with Aspose.Cells .NET | Enable calculation chain for dependency tracking Aspose | Debug Excel formula graph using Aspose.Cells | Retrieve recursive dependents in Aspose.Cells
-// Developer Intent: Retrieve and log the full formula dependency graph (precedents and dependents) after workbook calculation.
-// Use Cases: Perform impact analysis to see which cells affect a specific formula. | Detect circular references by examining recursive dependent chains. | Create a textual or visual map of calculation order for troubleshooting complex spreadsheets. | Export dependency information for audit or documentation purposes.
-// AI Prompts: Generate C# code that returns a Dictionary<string, List<string>> where each key is a formula cell and the value is its list of precedent cell names using Aspose.Cells. | Write a routine that writes the complete dependency graph (both precedents and dependents) to a JSON file after calling Workbook.CalculateFormula. | Explain the role of EnableCalculationChain in influencing GetPrecedentsInCalculation and GetDependentsInCalculation results.
+// Title: Extract and log the Excel formula dependency graph after calling Workbook.CalculateFormula with Aspose.Cells for .NET
+// AI Prompts: Write C# code that enables the calculation chain, runs Workbook.CalculateFormula, and prints each formula cell’s precedents and dependents using Aspose.Cells. | Provide a step‑by‑step example that creates inter‑dependent formulas, calculates them, and outputs the complete formula dependency graph for debugging.
+// Common Searches: Aspose.Cells get precedent cells for a formula after CalculateFormula | How to retrieve dependent cells of a formula in Aspose.Cells .NET | Enable calculation chain to access formula dependency graph with Aspose.Cells | Debug formula dependencies in an Excel workbook using Aspose.Cells C# | Aspose.Cells log full formula dependency chain after workbook calculation
+// Tags: Aspose.Cells enable calculation chain | Aspose.Cells get formula precedents C# | Aspose.Cells retrieve formula dependents .NET | Aspose.Cells log formula dependency graph | Aspose.Cells Workbook.CalculateFormula debugging
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace AsposeCellsDependencyGraphDemo
+namespace AsposeCellsExamples
 {
-    // Demonstrates how to enable the calculation chain, run Workbook.CalculateFormula, and then enumerate each formula cell to list its precedents (using GetPrecedentsInCalculation) and its recursive dependents (using GetDependentsInCalculation). The example logs the relationships to the console and saves the workbook, providing a practical way to debug and analyze formula dependencies in .NET.
-    class Program
+    // The example creates a workbook, turns on the calculation chain, defines several inter‑related formulas, runs Workbook.CalculateFormula, and then iterates over each formula cell to display its name, formula, referenced precedents, and dependent cells before saving the file.
+    public class FormulaDependencyGraphDemo
     {
-        static void Main()
+        public static void Run()
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Sample data and formulas to build a dependency graph
-            cells["C1"].PutValue(10);                 // Source value
-            cells["B1"].Formula = "C1*2";             // B1 depends on C1
-            cells["A1"].Formula = "B1+5";             // A1 depends on B1 (and indirectly on C1)
-            cells["D1"].Formula = "A1+B1";            // D1 depends on A1 and B1
-
-            // Enable calculation chain to allow dependency tracking
-            workbook.Settings.FormulaSettings.EnableCalculationChain = true;
-
-            // Calculate all formulas in the workbook
-            workbook.CalculateFormula();
-
-            // Iterate through all used cells to log their dependencies
-            foreach (Cell cell in cells)
+            try
             {
-                // Process only formula cells
-                if (!cell.IsFormula) continue;
+                // Create a new workbook (lifecycle rule)
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
 
-                Console.WriteLine($"Cell {cell.Name} (Formula: {cell.Formula})");
+                // Enable calculation chain so dependency methods work
+                workbook.Settings.FormulaSettings.EnableCalculationChain = true;
 
-                // Get precedents (cells this cell depends on) during calculation
-                IEnumerator precedentsEnum = cell.GetPrecedentsInCalculation();
-                if (precedentsEnum != null)
+                // Set up sample data and formulas to create a dependency graph
+                cells["C1"].PutValue(10);               // source value
+                cells["B1"].Formula = "C1*2";           // depends on C1
+                cells["A1"].Formula = "B1+5";           // depends on B1
+                cells["D1"].Formula = "A1+B1";          // depends on A1 and B1
+                cells["E1"].Formula = "SUM(A1:D1)";     // depends on A1,B1,C1,D1
+
+                // Calculate formulas to build the calculation chain
+                workbook.CalculateFormula();
+
+                // Iterate over all cells that contain formulas
+                foreach (Cell cell in cells)
                 {
-                    Console.WriteLine("  Precedents:");
-                    while (precedentsEnum.MoveNext())
+                    if (cell.IsFormula)
                     {
-                        // Each item is a ReferredArea representing a referenced range
-                        ReferredArea area = (ReferredArea)precedentsEnum.Current;
-                        // For single-cell references, display the cell name
-                        string refName = area.IsArea
-                            ? $"{CellsHelper.CellIndexToName(area.StartRow, area.StartColumn)}:{CellsHelper.CellIndexToName(area.EndRow, area.EndColumn)}"
-                            : CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
-                        Console.WriteLine($"    - {refName}");
-                    }
-                }
+                        Console.WriteLine($"Cell {cell.Name} (Formula: {cell.Formula})");
 
-                // Get dependents (cells whose calculation result depends on this cell)
-                IEnumerator dependentsEnum = cell.GetDependentsInCalculation(true);
-                if (dependentsEnum != null)
-                {
-                    Console.WriteLine("  Dependents (recursive):");
-                    while (dependentsEnum.MoveNext())
-                    {
-                        if (dependentsEnum.Current is Cell dependentCell)
+                        // Get precedents (cells referenced by this formula)
+                        IEnumerator precedents = cell.GetPrecedentsInCalculation();
+                        if (precedents != null)
                         {
-                            Console.WriteLine($"    - {dependentCell.Name}");
+                            Console.Write("  Precedents: ");
+                            bool first = true;
+                            while (precedents.MoveNext())
+                            {
+                                ReferredArea area = (ReferredArea)precedents.Current;
+                                string refName = area.IsArea
+                                    ? $"{CellsHelper.CellIndexToName(area.StartRow, area.StartColumn)}:{CellsHelper.CellIndexToName(area.EndRow, area.EndColumn)}"
+                                    : CellsHelper.CellIndexToName(area.StartRow, area.StartColumn);
+                                if (!first) Console.Write(", ");
+                                Console.Write(refName);
+                                first = false;
+                            }
+                            Console.WriteLine();
                         }
+
+                        // Get dependents (cells whose calculation result depends on this cell)
+                        IEnumerator dependents = cell.GetDependentsInCalculation(true);
+                        if (dependents != null)
+                        {
+                            Console.Write("  Dependents: ");
+                            bool firstDep = true;
+                            while (dependents.MoveNext())
+                            {
+                                if (dependents.Current is Cell depCell)
+                                {
+                                    if (!firstDep) Console.Write(", ");
+                                    Console.Write(depCell.Name);
+                                    firstDep = false;
+                                }
+                            }
+                            Console.WriteLine();
+                        }
+
+                        Console.WriteLine();
                     }
                 }
 
-                Console.WriteLine(); // Blank line for readability
+                // Save the workbook (lifecycle rule)
+                workbook.Save("FormulaDependencyGraphDemo.xlsx");
+                Console.WriteLine("Workbook saved as FormulaDependencyGraphDemo.xlsx");
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
 
-            // Save the workbook (using the standard save rule)
-            workbook.Save("DependencyGraphDemo.xlsx", SaveFormat.Xlsx);
+        // Entry point for the application
+        public static void Main(string[] args)
+        {
+            Run();
         }
     }
 }

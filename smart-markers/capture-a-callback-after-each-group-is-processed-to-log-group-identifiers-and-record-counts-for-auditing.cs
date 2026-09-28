@@ -1,79 +1,86 @@
-// Title: Log row group IDs and record counts with a callback after grouping rows – Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, fill it with sample data, define row ranges, group each range using Cells.GroupRows, and invoke a custom LogGroupInfo callback that calculates and logs the start index, end index, and record count for every processed group before saving the file.
-// Keywords: Aspose.Cells group rows callback | C# log grouped rows | record count after grouping rows .NET | worksheet row grouping audit | Cells.GroupRows example | Aspose.Cells logging callback | row grouping diagnostics C#
-// Common Searches: Aspose.Cells callback after grouping rows | how to log row groups in Aspose.Cells | record count for each grouped row range .NET | audit grouped rows Aspose.Cells C# | custom logging for Cells.GroupRows
-// Developer Intent: Capture and log the start/end indices and size of each row group immediately after it is created.
-// Use Cases: Maintain an audit trail of grouped sections in financial or reporting spreadsheets. | Validate grouping logic in large data‑processing pipelines by outputting group identifiers and counts. | Debug complex worksheets by printing row‑group details to the console or a log file.
-// AI Prompts: Generate a C# method that groups rows with Aspose.Cells and calls a user‑defined callback receiving start and end row indices. | Show how to modify the LogGroupInfo callback to write group information to a text file instead of the console. | Create code that captures grouping events for both rows and columns in Aspose.Cells and logs their ranges and record counts.
+// Title: Log each pivot group identifier after grouping a numeric field with Aspose.Cells for .NET
+// AI Prompts: Write C# code that groups a numeric PivotField by a given interval, then enumerates the resulting PivotItems and writes each group label to the console for audit logging. | Show how to persist an Aspose.Cells workbook while capturing and outputting pivot group IDs after a GroupBy operation, including directory creation and exception handling.
+// Common Searches: Aspose.Cells C# how to get pivot group names after using GroupBy | C# log pivot table groups for audit with Aspose.Cells | retrieve PivotItem.Name after grouping numeric field in Aspose.Cells | save workbook and output pivot group identifiers using Aspose.Cells .NET | audit callback after each pivot group processed in Aspose.Cells
+// Tags: Aspose.Cells pivot GroupBy logging | C# PivotItems enumeration after GroupBy | audit pivot groups Aspose.Cells | record group identifiers .NET Excel | Aspose.Cells workbook persistence post grouping
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Pivot;
 
 namespace AsposeCellsGroupCallbackDemo
 {
-    // Demonstrates how to create a workbook, fill it with sample data, define row ranges, group each range using Cells.GroupRows, and invoke a custom LogGroupInfo callback that calculates and logs the start index, end index, and record count for every processed group before saving the file.
+    // The example creates a workbook, adds sample data, builds a pivot table, groups a numeric row field by an interval, iterates through the generated PivotItems to output each group label for auditing, and saves the workbook to an .xlsx file.
     class Program
     {
-        // Simple callback method that logs group information.
-        static void LogGroupInfo(int startIndex, int endIndex)
-        {
-            int recordCount = endIndex - startIndex + 1;
-            Console.WriteLine($"Group processed: Rows {startIndex} to {endIndex} (Count = {recordCount})");
-        }
-
-        // Groups rows and invokes the callback after each grouping operation.
-        static void GroupRowsWithCallback(Worksheet worksheet, int[][] groups, bool hideGroupedRows)
-        {
-            Cells cells = worksheet.Cells;
-
-            foreach (int[] range in groups)
-            {
-                int start = range[0];
-                int end = range[1];
-
-                // Perform the actual grouping.
-                cells.GroupRows(start, end, hideGroupedRows);
-
-                // Callback logging.
-                LogGroupInfo(start, end);
-            }
-        }
-
         static void Main()
         {
             try
             {
-                // Create a new workbook.
+                // Create a new workbook and get the first worksheet
                 Workbook workbook = new Workbook();
                 Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
 
-                // Populate sample data (10 rows, 2 columns).
-                for (int row = 0; row < 10; row++)
+                // Populate sample data (numeric values to be grouped)
+                sheet.Cells["A1"].Value = "Category";
+                sheet.Cells["B1"].Value = "Value";
+
+                sheet.Cells["A2"].Value = "Item1";
+                sheet.Cells["B2"].Value = 1;
+                sheet.Cells["A3"].Value = "Item2";
+                sheet.Cells["B3"].Value = 2;
+                sheet.Cells["A4"].Value = "Item3";
+                sheet.Cells["B4"].Value = 3;
+                sheet.Cells["A5"].Value = "Item4";
+                sheet.Cells["B5"].Value = 4;
+                sheet.Cells["A6"].Value = "Item5";
+                sheet.Cells["B6"].Value = 5;
+                sheet.Cells["A7"].Value = "Item6";
+                sheet.Cells["B7"].Value = 6;
+
+                // Add a pivot table based on the data range
+                int pivotIdx = sheet.PivotTables.Add("A1:B7", "D3", "DemoPivot");
+                PivotTable pivot = sheet.PivotTables[pivotIdx];
+
+                // Add the numeric field as a row field (to be grouped)
+                pivot.AddFieldToArea(PivotFieldType.Row, "Value");
+
+                // Add the category field as a data field (just for completeness)
+                pivot.AddFieldToArea(PivotFieldType.Data, "Category");
+
+                // Retrieve the row field that will be grouped
+                PivotField valueField = pivot.RowFields[0];
+
+                // Group the numeric field by an interval of 2 (creates groups: 1-2, 3-4, 5-6)
+                // The second parameter 'false' indicates that the grouping will be applied to the existing field
+                valueField.GroupBy(2.0, false);
+
+                // Recalculate the pivot table after grouping
+                pivot.CalculateData();
+
+                // Callback simulation: after grouping, log each group identifier
+                Console.WriteLine("Audit Log - Grouping Results:");
+                foreach (PivotItem item in valueField.PivotItems)
                 {
-                    cells[row, 0].PutValue($"Item {row + 1}");
-                    cells[row, 1].PutValue(row * 10);
+                    // Each PivotItem.Name represents the group label (e.g., "1-2")
+                    Console.WriteLine($"Group ID: {item.Name}");
                 }
 
-                // Define row groups: {0-2}, {3-5}, {6-9}
-                int[][] rowGroups = new int[][]
+                // Determine output path and ensure directory exists
+                string outputPath = "GroupCallbackAuditDemo.xlsx";
+                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath)) ?? ".";
+                if (!Directory.Exists(outputDir))
                 {
-                    new int[] { 0, 2 },
-                    new int[] { 3, 5 },
-                    new int[] { 6, 9 }
-                };
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Group rows and log after each group.
-                GroupRowsWithCallback(sheet, rowGroups, hideGroupedRows: false);
-
-                // Save the workbook.
-                string outputPath = "GroupedWorkbook.xlsx";
+                // Save the workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                Console.WriteLine($"Workbook saved to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

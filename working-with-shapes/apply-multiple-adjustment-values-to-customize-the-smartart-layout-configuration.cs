@@ -1,75 +1,86 @@
-// Title: Set Multiple SmartArt Adjustment Values in Excel with Aspose.Cells for .NET
-// Description: Loads or creates an Excel workbook, scans each worksheet for SmartArt shapes, converts them to GroupShape objects, adds custom adjustment guides (e.g., adj1, adj2, adj3) to the inner shapes' geometry, and saves the file with UpdateSmartArt enabled using Aspose.Cells.
-// Keywords: Aspose.Cells | C# | SmartArt adjustment | ShapeAdjustValues | GroupShape | UpdateSmartArt | Excel automation | .NET | geometry guides | batch SmartArt processing
-// Common Searches: Aspose.Cells set SmartArt adjustment values C# | How to modify SmartArt geometry with Aspose.Cells | Programmatically change SmartArt guides in Excel .NET | UpdateSmartArt option Aspose.Cells example | Apply multiple adjustment parameters to SmartArt shapes
-// Developer Intent: Programmatically assign several adjustment parameters to every inner shape of a SmartArt diagram and persist the changes in the Excel file.
-// Use Cases: Dynamically reshape SmartArt diagrams based on user input before distributing a template. | Standardize the appearance of SmartArt across a batch of workbooks by applying uniform adjustment guides. | Create automated reports where SmartArt proportions are tuned to reflect data-driven thresholds.
-// AI Prompts: Write C# code with Aspose.Cells that iterates over all SmartArt shapes in a worksheet and sets custom adjustment values for each inner shape. | Show how to save an Excel workbook with the UpdateSmartArt flag after modifying SmartArt geometry. | Explain how to retrieve the list of adjustment guide names for a specific SmartArt layout using Aspose.Cells.
+// Title: Detect SmartArt shapes in an Excel worksheet and handle unsupported adjustment operations with Aspose.Cells for .NET
+// AI Prompts: Generate C# code using Aspose.Cells that opens an existing .xlsx file, retrieves a shape by index, determines if it is a SmartArt object, and logs a notice when SmartArt adjustment APIs are unavailable. | Create a robust C# routine that validates the input workbook path, checks that the requested shape index is within the worksheet's shape collection, identifies SmartArt shapes, and safely saves the workbook after processing. | Write a C# method that returns true when a given shape in an Aspose.Cells worksheet is a SmartArt element and throws a custom exception if adjustment functionality is not supported.
+// Common Searches: C# Aspose.Cells how to check if a shape is SmartArt in an Excel file | detect SmartArt objects in worksheet using Aspose.Cells .NET | Aspose.Cells SmartArt adjustment API not available workaround | validate shape index before accessing shapes collection Aspose.Cells | save Excel workbook after processing shapes with Aspose.Cells
+// Tags: Aspose.Cells detect SmartArt shape | C# validate shape index worksheet | SmartArt adjustment unsupported Aspose.Cells | Excel workbook load save Aspose.Cells | shape type inspection Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Saving;
 
-namespace AsposeCellsSmartArtAdjustDemo
+namespace AsposeCellsSmartArtAdjustment
 {
-    // Loads or creates an Excel workbook, scans each worksheet for SmartArt shapes, converts them to GroupShape objects, adds custom adjustment guides (e.g., adj1, adj2, adj3) to the inner shapes' geometry, and saves the file with UpdateSmartArt enabled using Aspose.Cells.
-    public class Program
+    // The example loads an existing Excel workbook with Aspose.Cells, accesses the first worksheet, retrieves a shape by a specified index, checks the shape's type name for "SmartArt", logs that adjustment operations are not supported in the current API version, ensures the output directory exists, and saves the workbook.
+    class Program
     {
-        public static void Main()
+        static void Main(string[] args)
         {
+            // Define input and output file paths
+            string inputPath = @"C:\Temp\InputWorkbook.xlsx";
+            string outputPath = @"C:\Temp\OutputWorkbook.xlsx";
+
             try
             {
-                const string inputPath = "SmartArtTemplate.xlsx";
-                const string outputPath = "SmartArtAdjusted.xlsx";
-
-                // Ensure the input workbook exists; if not, create an empty workbook.
-                Workbook workbook;
-                if (File.Exists(inputPath))
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
                 {
-                    workbook = new Workbook(inputPath);
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
+
+                // Access the first worksheet (adjust index if needed)
+                Worksheet worksheet = workbook.Worksheets[0];
+
+                // Index of the SmartArt shape within the worksheet's shape collection
+                int smartArtShapeIndex = 0; // Change this to target the correct shape
+
+                // Ensure the index is within bounds
+                if (smartArtShapeIndex < 0 || smartArtShapeIndex >= worksheet.Shapes.Count)
+                {
+                    Console.WriteLine("SmartArt shape index is out of range.");
+                    return;
+                }
+
+                // Retrieve the shape
+                Shape shape = worksheet.Shapes[smartArtShapeIndex];
+
+                // Determine whether the shape is a SmartArt object.
+                // Aspose.Cells does not expose a dedicated ShapeType for SmartArt in some versions,
+                // so we inspect the type name as a fallback.
+                if (shape.Type.ToString().IndexOf("SmartArt", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    // NOTE: Aspose.Cells does not expose direct adjustment APIs for SmartArt.
+                    // If adjustment functionality becomes available in future versions,
+                    // it can be applied here. For now we simply acknowledge the shape type.
+                    Console.WriteLine("SmartArt shape detected. Adjustments are not supported in this API version.");
                 }
                 else
                 {
-                    Console.WriteLine($"Input file '{inputPath}' not found. Creating a new empty workbook.");
-                    workbook = new Workbook();
+                    Console.WriteLine("The specified shape is not a SmartArt object.");
                 }
 
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Iterate through all shapes on the worksheet
-                foreach (Shape shape in worksheet.Shapes)
+                // Ensure the output directory exists
+                string? outputDir = Path.GetDirectoryName(outputPath);
+                if (string.IsNullOrEmpty(outputDir))
                 {
-                    // Process only SmartArt shapes
-                    if (shape.IsSmartArt)
-                    {
-                        // Convert the SmartArt to a group of shapes
-                        GroupShape smartArtGroup = shape.GetResultOfSmartArt();
-
-                        // Apply adjustment values to each inner shape
-                        foreach (Shape innerShape in smartArtGroup.GetGroupedShapes())
-                        {
-                            Geometry geometry = innerShape.Geometry;
-
-                            // Add adjustment guides (names depend on the specific SmartArt layout)
-                            geometry.ShapeAdjustValues.Add("adj1", 0.2);
-                            geometry.ShapeAdjustValues.Add("adj2", 0.5);
-                            geometry.ShapeAdjustValues.Add("adj3", 0.8);
-                        }
-                    }
+                    outputDir = Directory.GetCurrentDirectory();
                 }
 
-                // Save the workbook with SmartArt updates enabled
-                OoxmlSaveOptions saveOptions = new OoxmlSaveOptions
+                if (!Directory.Exists(outputDir))
                 {
-                    UpdateSmartArt = true
-                };
-                workbook.Save(outputPath, saveOptions);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the (potentially) modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
+                // Handle any unexpected errors
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }

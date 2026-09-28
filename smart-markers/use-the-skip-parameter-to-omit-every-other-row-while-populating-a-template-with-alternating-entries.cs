@@ -1,43 +1,31 @@
-// Title: C# – ImportObjectArray with skip=1 to populate alternating rows in Aspose.Cells
-// Description: Demonstrates how to create a workbook, import a one‑dimensional array vertically, and use the skip parameter (set to 1) so each entry occupies every other row, then saves the file as AlternatingEntries.xlsx.
-// Keywords: Aspose.Cells | ImportObjectArray | skip parameter | alternating rows | C# spreadsheet automation | blank rows between data | vertical import | Excel template population
-// Common Searches: Aspose.Cells skip rows example C# | ImportObjectArray every other row | how to leave blank rows when importing data Aspose.Cells | C# populate Excel template with gaps | Aspose.Cells skip parameter usage
-// Developer Intent: Insert array values into a worksheet while automatically leaving one empty row between each entry using the skip argument.
-// Use Cases: Generate reports where each record is visually separated by a blank line. | Create templates that reserve alternate rows for user comments or signatures. | Design schedules that interleave event rows with empty rows for additional notes.
-// AI Prompts: Write C# code that uses Aspose.Cells ImportObjectArray with skip=2 to leave two empty rows between entries. | Explain the effect of the skip parameter in ImportObjectArray and how to calculate the value for a desired row spacing. | Show an example of ImportObjectArray with horizontal orientation and a skip value that inserts empty columns between data items.
+// Title: How to import a vertical array into an Excel sheet and skip every other row with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a Workbook, uses Worksheet.Cells.ImportObjectArray to import a one‑dimensional object array vertically, and sets the skip argument so a blank row is inserted after each value. | Explain the steps for calling ImportObjectArray with the skip parameter to produce alternating populated and empty rows in an Excel file using Aspose.Cells.
+// Common Searches: Aspose.Cells C# import vertical array with blank rows example | ImportObjectArray skip parameter usage .NET | Create Excel file with alternating data rows using Aspose.Cells | Leave an empty row after each record when importing data with Aspose.Cells
+// Tags: ImportObjectArray vertical array Aspose.Cells | skip parameter blank rows Aspose.Cells | populate worksheet alternating rows C# | smart markers row skipping Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsSkipRowsDemo
+// Demonstrates creating a Workbook, importing a vertical object array into cell A1 with ImportObjectArray using a skip value of 1 to leave a blank row after each entry, and saving the result as SkipRowsDemo.xlsx.
+class SkipRowsDemo
 {
-    // Demonstrates how to create a workbook, import a one‑dimensional array vertically, and use the skip parameter (set to 1) so each entry occupies every other row, then saves the file as AlternatingEntries.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook (lifecycle create)
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-            // Sample data to be inserted into the worksheet
-            // Each entry will be placed in a separate row
-            object[] data = new object[]
-            {
-                "Entry 1",
-                "Entry 2",
-                "Entry 3",
-                "Entry 4",
-                "Entry 5"
-            };
+        // Sample data to be placed in the worksheet
+        // The array contains six values; they will be written vertically
+        object[] data = new object[] { "Alice", "Bob", "Charlie", "David", "Eve", "Frank" };
 
-            // Import the data vertically starting at row 0, column 0
-            // The 'skip' parameter is set to 1, which means one empty row will be left
-            // between each imported entry (i.e., every other row is used)
-            sheet.Cells.ImportObjectArray(data, firstRow: 0, firstColumn: 0, isVertical: true, skip: 1);
+        // Import the data vertically starting at cell A1 (row 0, column 0)
+        // The 'skip' parameter is set to 1, which means after each value a blank row is left,
+        // effectively omitting every other row in the output.
+        // Parameters: (object[] data, int firstRow, int firstColumn, bool isVertical, int skip)
+        worksheet.Cells.ImportObjectArray(data, 0, 0, true, 1);
 
-            // Save the workbook to a file
-            workbook.Save("AlternatingEntries.xlsx");
-        }
+        // Save the workbook (lifecycle save)
+        workbook.Save("SkipRowsDemo.xlsx");
     }
 }

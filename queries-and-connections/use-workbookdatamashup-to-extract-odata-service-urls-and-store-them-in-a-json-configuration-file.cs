@@ -1,10 +1,7 @@
-// Title: Extract OData URLs from Excel Power Query using Aspose.Cells Workbook.DataMashup (C#)
-// Description: Loads an Excel workbook with Aspose.Cells, reads the DataMashup to enumerate PowerQueryFormulas, applies a regex to each formula definition to capture HTTP/HTTPS OData service URLs, removes duplicates, and writes the list to a formatted JSON configuration file. The workbook can be saved afterwards if needed.
-// Keywords: Aspose.Cells | Workbook.DataMashup | C# | Power Query | OData URL extraction | Excel external connections | regex URL parsing | JSON export | DataMashup API | Excel automation
-// Common Searches: Aspose.Cells extract OData URLs from Power Query | C# read Workbook.DataMashup formulas | How to list external OData connections in an Excel file | Save extracted URLs to JSON with Aspose.Cells | Regex to find URLs in PowerQueryFormula definitions
-// Developer Intent: Retrieve all OData service endpoints referenced in an Excel workbook's Power Query formulas and store them in a JSON configuration file using Aspose.Cells.
-// Use Cases: Create an inventory of external OData sources for compliance auditing. | Generate a JSON manifest for downstream data‑integration pipelines. | Validate endpoint URLs before refreshing queries to enforce security policies.
-// AI Prompts: Write C# code that uses Aspose.Cells Workbook.DataMashup to collect unique OData URLs from Power Query formulas and output an indented JSON file. | Explain step‑by‑step how to apply a regular expression to PowerQueryFormula.FormulaDefinition to isolate HTTP/HTTPS URLs. | Suggest enhancements for handling duplicate URLs, trimming trailing characters, and logging extraction results.
+// Title: Extract OData and WebQuery connection URLs from an Excel workbook using Aspose.Cells DataMashup and export them to a JSON configuration (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, iterates over workbook.DataConnections, identifies connections of type OData or WebQuery, and collects their Url values. | Extend the program to scan workbook.DataMashup.PowerQueryFormulas, extract any HTTP/HTTPS URLs from the formula definitions, and add them to the OData URL collection. | Add logic to serialize the distinct URL list into a formatted odata-config.json file and include error handling that logs warnings for missing Url properties or unsupported DataMashup features.
+// Common Searches: C# Aspose.Cells extract OData service URLs from Excel workbook | How to retrieve Power Query URLs from an .xlsx file using Aspose.Cells DataMashup | Save extracted OData and WebQuery connection URLs to JSON with .NET | Enumerate DataConnections of type OData or WebQuery in Aspose.Cells | Parse Power Query formula definitions for URLs in C#
+// Tags: DataConnections OData URL extraction | DataMashup Power Query URL parsing | C# write URLs to formatted JSON | Excel workbook OData service list generation | Aspose.Cells unique URL aggregation
 
 using System;
 using System.Collections.Generic;
@@ -12,55 +9,128 @@ using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
-using Aspose.Cells.QueryTables;
 
-namespace ODataUrlExtractor
+namespace ExtractODataUrlsApp
 {
-    // Loads an Excel workbook with Aspose.Cells, reads the DataMashup to enumerate PowerQueryFormulas, applies a regex to each formula definition to capture HTTP/HTTPS OData service URLs, removes duplicates, and writes the list to a formatted JSON configuration file. The workbook can be saved afterwards if needed.
-    class Program
+    // The program loads an Excel workbook with Aspose.Cells, gathers unique OData and WebQuery connection URLs from DataConnections, optionally extracts additional URLs from Power Query formulas via DataMashup, and writes the collected URLs to a formatted JSON configuration file named odata-config.json.
+    class ExtractODataUrls
     {
         static void Main()
         {
-            // Path to the workbook that contains Power Query (OData) formulas
-            string sourcePath = "input.xlsx";
+            // Path to the workbook that contains Power Query (OData) connections
+            string sourcePath = "source.xlsx";
 
-            // Load the workbook (create/load rule)
-            Workbook workbook = new Workbook(sourcePath);
-
-            // Access mashup data which holds Power Query formulas
-            DataMashup mashup = workbook.DataMashup;
-
-            // Collection to store discovered OData URLs
-            List<string> odataUrls = new List<string>();
-
-            if (mashup != null && mashup.PowerQueryFormulas != null)
+            // Verify the source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
             {
-                // Iterate through each Power Query formula
-                foreach (PowerQueryFormula formula in mashup.PowerQueryFormulas)
-                {
-                    // The formula definition may contain the OData service URL
-                    string definition = formula.FormulaDefinition;
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
 
-                    // Use a regular expression to extract URLs starting with http or https
-                    foreach (Match match in Regex.Matches(definition, @"https?://[^\s'\""]+"))
+            try
+            {
+                // Load the workbook
+                Workbook workbook = new Workbook(sourcePath);
+
+                // List to store extracted OData URLs
+                List<string> odataUrls = new List<string>();
+
+                // -----------------------------------------------------------------
+                // Extract URLs from data connections (OData, Web query, etc.)
+                // -----------------------------------------------------------------
+                foreach (var conn in workbook.DataConnections)
+                {
+                    try
                     {
-                        string url = match.Value.TrimEnd(';', ')'); // clean trailing characters
-                        if (!odataUrls.Contains(url))
+                        string url = null;
+
+                        // Determine connection type via reflection (avoids direct enum dependency)
+                        var typeProp = conn.GetType().GetProperty("Type");
+                        var typeValue = typeProp?.GetValue(conn);
+                        string typeName = typeValue?.ToString();
+
+                        if (typeName == "OData" || typeName == "WebQuery")
+                        {
+                            // Access the Url property via reflection
+                            var urlProp = conn.GetType().GetProperty("Url");
+                            if (urlProp != null)
+                            {
+                                url = urlProp.GetValue(conn) as string;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(url) && !odataUrls.Contains(url))
                         {
                             odataUrls.Add(url);
                         }
                     }
+                    catch (Exception exConn)
+                    {
+                        // Log connection‑specific issues and continue processing other connections
+                        Console.WriteLine($"Warning: Unable to process a connection – {exConn.Message}");
+                    }
                 }
+
+                // -----------------------------------------------------------------
+                // Optional: Scan Power Query formulas for URLs (if DataMashup is available)
+                // -----------------------------------------------------------------
+                try
+                {
+                    var mashup = workbook.DataMashup;
+                    if (mashup != null && mashup.PowerQueryFormulas != null)
+                    {
+                        Regex urlRegex = new Regex(@"https?://[^\s""]+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                        foreach (var formula in mashup.PowerQueryFormulas)
+                        {
+                            string definition = formula.FormulaDefinition;
+                            if (!string.IsNullOrEmpty(definition))
+                            {
+                                foreach (Match match in urlRegex.Matches(definition))
+                                {
+                                    string foundUrl = match.Value.TrimEnd(')', ';');
+                                    if (!odataUrls.Contains(foundUrl))
+                                    {
+                                        odataUrls.Add(foundUrl);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    // DataMashup not supported – ignore and continue
+                }
+
+                // Build a simple JSON configuration object
+                var config = new
+                {
+                    ODataServiceUrls = odataUrls
+                };
+
+                // Serialize the configuration to formatted JSON
+                string json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+
+                // Write JSON to a file
+                string jsonPath = "odata-config.json";
+                File.WriteAllText(jsonPath, json);
+
+                // Save the workbook (no modifications made, but follows lifecycle rule)
+                try
+                {
+                    workbook.Save("output.xlsx");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Warning: Unable to save workbook – {saveEx.Message}");
+                }
+
+                Console.WriteLine($"Extracted {odataUrls.Count} OData URLs and saved to {jsonPath}");
             }
-
-            // Serialize the list of URLs to a JSON configuration file
-            string jsonOutput = JsonSerializer.Serialize(odataUrls, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText("odataUrls.json", jsonOutput);
-
-            // Optionally, save the workbook (save rule) if any modifications were made
-            workbook.Save("output.xlsx");
-
-            Console.WriteLine("Extraction complete. URLs saved to odataUrls.json");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

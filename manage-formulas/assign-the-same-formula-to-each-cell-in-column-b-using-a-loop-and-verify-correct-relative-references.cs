@@ -1,59 +1,66 @@
-// Title: Assign row‑relative formula to column B in a loop and verify with Aspose.Cells for .NET
-// Description: This example creates a workbook, fills A1‑A10 with numbers 1‑10, then iterates the rows to set the formula “=A{row}*2” in B1‑B10 using the Cell.Formula property. After calling Workbook.CalculateFormula it checks that each B cell equals its A counterpart multiplied by two, reports any mismatches, and saves the file as ColumnBFormulaLoop.xlsx.
-// Keywords: Aspose.Cells | C# | Cell.Formula | loop | relative reference | calculate formulas | workbook save | formula validation | bulk assign formula
-// Common Searches: Aspose.Cells set formula in a loop | apply same formula to a column programmatically | verify relative references in Aspose.Cells | C# bulk formula assignment | calculate and check formulas Aspose.Cells
-// Developer Intent: Programmatically apply a row‑specific formula to a column and ensure the calculations are correct.
-// Use Cases: Create a calculated column next to raw data | Generate per‑row totals in financial or inventory sheets | Automate QA of bulk‑assigned formulas before distribution | Populate derived values in reporting dashboards
-// AI Prompts: Show C# code that loops through rows, assigns Cell.Formula referencing the same row in another column, runs Workbook.CalculateFormula, and flags mismatched results. | Provide a concise Aspose.Cells example for bulk‑setting a formula with relative references and validating the output. | Explain how to use Cell.Formula together with a loop to apply and verify row‑level calculations in a .NET workbook.
+// Title: Loop through rows in a workbook and assign a relative formula to column B with Aspose.Cells for .NET, then verify the calculated values
+// AI Prompts: Generate C# code that iterates over rows 1‑10, sets each cell in column B to the formula "=A{row}*2" using Aspose.Cells, calls CalculateFormula, and checks that the resulting value equals the source cell multiplied by two. | Add error‑handling to an Aspose.Cells workbook that logs any mismatches between the expected A*2 result and the actual value in column B after formula evaluation.
+// Common Searches: aspnet set same formula for entire column using Aspose.Cells loop | how to ensure relative cell references work when applying formulas with Aspose.Cells C# | validate calculated results after applying formulas in Aspose.Cells workbook | recalculate all formulas and compare expected values in Aspose.Cells .NET example
+// Tags: loop assign formula Aspose.Cells C# | relative reference formula Aspose.Cells | validate calculated cell values Aspose.Cells | recalculate workbook formulas Aspose.Cells | save workbook after formula evaluation Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This example creates a workbook, fills A1‑A10 with numbers 1‑10, then iterates the rows to set the formula “=A{row}*2” in B1‑B10 using the Cell.Formula property. After calling Workbook.CalculateFormula it checks that each B cell equals its A counterpart multiplied by two, reports any mismatches, and saves the file as ColumnBFormulaLoop.xlsx.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Creates a new workbook, fills column A with numbers 1‑10, loops through rows to set each B cell to the formula "=A{row}*2", recalculates all formulas, verifies each B cell equals A*2, and saves the result as Result.xlsx.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        Cells cells = worksheet.Cells;
-
-        // Populate column A with sample data (1 to 10)
-        for (int row = 0; row < 10; row++)
+        static void Main()
         {
-            cells[row, 0].PutValue(row + 1); // A1‑A10
-        }
-
-        // Loop through the same rows and assign a formula to column B.
-        // The formula references the cell in column A of the same row.
-        for (int row = 0; row < 10; row++)
-        {
-            // Using the Cell.Formula property (rule: Cell.Formula)
-            cells[row, 1].Formula = $"=A{row + 1}*2"; // B1‑B10
-        }
-
-        // Calculate all formulas in the workbook
-        workbook.CalculateFormula();
-
-        // Verify that each B cell contains the expected value (A * 2)
-        bool allCorrect = true;
-        for (int row = 0; row < 10; row++)
-        {
-            double aValue = Convert.ToDouble(cells[row, 0].Value);
-            double bValue = Convert.ToDouble(cells[row, 1].Value);
-            if (bValue != aValue * 2)
+            try
             {
-                allCorrect = false;
-                Console.WriteLine($"Mismatch at row {row + 1}: A={aValue}, B={bValue}");
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // Populate column A with sample data (1 to 10)
+                for (int i = 0; i < 10; i++)
+                {
+                    cells[i, 0].PutValue(i + 1); // A1..A10
+                }
+
+                // Assign a formula to each cell in column B.
+                // Using A1 notation: each B cell refers to the corresponding A cell.
+                for (int row = 0; row < 10; row++)
+                {
+                    string formula = $"=A{row + 1}*2";
+                    cells[row, 1].Formula = formula;
+                }
+
+                // Recalculate all formulas in the workbook
+                workbook.CalculateFormula();
+
+                // Verify that each cell in column B has the expected value (A*2)
+                for (int row = 0; row < 10; row++)
+                {
+                    double expected = (row + 1) * 2;               // A value * 2
+                    double actual = cells[row, 1].DoubleValue;    // B value after calculation
+
+                    if (Math.Abs(expected - actual) > 0.0001)
+                    {
+                        Console.WriteLine($"Mismatch at B{row + 1}: expected {expected}, got {actual}");
+                    }
+                }
+
+                // Define output file path
+                string outputPath = "Result.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        Console.WriteLine(allCorrect
-            ? "All formulas evaluated correctly."
-            : "There were mismatches in formula evaluation.");
-
-        // Save the workbook
-        workbook.Save("ColumnBFormulaLoop.xlsx");
     }
 }

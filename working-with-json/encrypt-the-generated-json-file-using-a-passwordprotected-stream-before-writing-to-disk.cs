@@ -1,79 +1,86 @@
-// Title: Encrypt JSON to a Password‑Protected File with AES‑256 & PBKDF2 in C# (.NET)
-// Description: Shows how to create a JSON string in C#, derive a 256‑bit AES key and 128‑bit IV from a password using PBKDF2 (SHA‑256, 100 k iterations) with a random 16‑byte salt, prepend the salt and IV, encrypt the UTF‑8 JSON via AES‑CBC/PKCS7 using CryptoStream, and save the ciphertext to a binary file.
-// Keywords: C# AES encryption | JSON encryption .NET | PBKDF2 key derivation C# | CryptoStream AES | password‑protected file | AES‑256 CBC | secure JSON storage | encrypt JSON to file | C# security example
-// Common Searches: C# encrypt JSON file with password | AES‑256 encryption of JSON in .NET | PBKDF2 derive key for CryptoStream | store encrypted JSON on disk C# | write salt and IV before ciphertext C#
-// Developer Intent: Securely encrypt a generated JSON payload using a password‑derived AES‑256 key and write the encrypted data (including salt and IV) to a file.
-// Use Cases: Protect application configuration or user settings by saving them as encrypted JSON on the server. | Securely archive exported reports or analytics data before writing them to disk. | Transmit sensitive JSON payloads over an untrusted network using a shared password for encryption.
-// AI Prompts: Generate C# code to decrypt the encryptedData.bin file created by this example using the same password. | Rewrite the encryption routine to use AES‑GCM with built‑in authentication instead of CBC/PKCS7. | Add an HMAC‑SHA256 integrity tag to the encrypted stream and show how to verify it during decryption.
+// Title: Encrypt JSON output from an Aspose.Cells workbook using a password‑protected AES stream in C#
+// AI Prompts: Create a method that accepts a Stream and a password, derives a 256‑bit AES key with Rfc2898DeriveBytes, encrypts the stream in CBC mode, and returns the encrypted byte array. | Update the Aspose.Cells example to write the encrypted byte array to a file after securing the JSON data with a password‑derived key. | Add decryption logic that reads the encrypted file, extracts the prefixed salt, derives the same key, and restores the original JSON content.
+// Common Searches: how to encrypt Aspose.Cells JSON output with AES in C# | C# encrypt memory stream using password and Rfc2898DeriveBytes | store encrypted JSON file from Aspose.Cells workbook .NET Core
+// Tags: Aspose.Cells JSON secure export C# | AES CBC stream encryption .NET | Rfc2898DeriveBytes key derivation C# | password‑protected JSON file Aspose.Cells | memory stream encryption Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 
-// Shows how to create a JSON string in C#, derive a 256‑bit AES key and 128‑bit IV from a password using PBKDF2 (SHA‑256, 100 k iterations) with a random 16‑byte salt, prepend the salt and IV, encrypt the UTF‑8 JSON via AES‑CBC/PKCS7 using CryptoStream, and save the ciphertext to a binary file.
-class JsonEncryptor
+// The sample creates a workbook, saves it as JSON to a memory stream, encrypts the JSON using AES with a password‑derived key (salt prefixed), and writes the encrypted bytes to 'output_encrypted.json'.
+class Program
 {
-    // Generates a sample JSON string (replace with your actual JSON generation logic)
-    private static string GenerateJson()
+    static void Main()
     {
-        return @"{ ""Name"": ""John Doe"", ""Age"": 30, ""City"": ""New York"" }";
+        try
+        {
+            // Create a workbook and populate it with sample data
+            var workbook = new Workbook();
+            var cells = workbook.Worksheets[0].Cells;
+            cells["A1"].PutValue("Name");
+            cells["B1"].PutValue("Age");
+            cells["A2"].PutValue("Alice");
+            cells["B2"].PutValue(30);
+            cells["A3"].PutValue("Bob");
+            cells["B3"].PutValue(25);
+
+            // Save the workbook as JSON into a memory stream
+            using (var jsonStream = new MemoryStream())
+            {
+                workbook.Save(jsonStream, SaveFormat.Json);
+                jsonStream.Position = 0; // Reset stream position for reading
+
+                // Encrypt the JSON data with a password‑protected stream
+                const string password = "MySecretPassword";
+                byte[] encryptedBytes = EncryptStream(jsonStream, password);
+
+                // Write the encrypted bytes to disk
+                File.WriteAllBytes("output_encrypted.json", encryptedBytes);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error: {ex.Message}");
+        }
     }
 
-    // Encrypts the input bytes using AES with a password‑derived key.
-    // The output stream contains: [salt][IV][ciphertext]
-    private static void EncryptToStream(byte[] plainData, string password, Stream outputStream)
+    // Encrypts the input stream using AES with a key derived from the password.
+    // The generated salt is prefixed to the output so it can be used for decryption.
+    static byte[] EncryptStream(Stream input, string password)
     {
-        // Generate a random 16‑byte salt
+        // Generate a random salt
         byte[] salt = new byte[16];
         using (var rng = RandomNumberGenerator.Create())
         {
             rng.GetBytes(salt);
         }
 
-        // Derive key and IV from password and salt (using PBKDF2)
-        const int iterations = 100_000; // reasonable security
-        using (var keyDerivation = new Rfc2898DeriveBytes(password, salt, iterations, HashAlgorithmName.SHA256))
+        // Derive a 256‑bit key and a 128‑bit IV from the password and salt
+        using var kdf = new Rfc2898DeriveBytes(password, salt, 100_000, HashAlgorithmName.SHA256);
+        byte[] key = kdf.GetBytes(32); // 256‑bit key
+        byte[] iv = kdf.GetBytes(16);  // 128‑bit IV
+
+        using (var aes = Aes.Create())
         {
-            byte[] key = keyDerivation.GetBytes(32); // 256‑bit key for AES‑256
-            byte[] iv  = keyDerivation.GetBytes(16); // 128‑bit IV
+            aes.Key = key;
+            aes.IV = iv;
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
 
-            // Write salt and IV to the beginning of the output (needed for decryption)
-            outputStream.Write(salt, 0, salt.Length);
-            outputStream.Write(iv, 0, iv.Length);
-
-            // Create AES encryptor
-            using (var aes = Aes.Create())
+            using (var output = new MemoryStream())
             {
-                aes.Key = key;
-                aes.IV  = iv;
-                aes.Mode = CipherMode.CBC;
-                aes.Padding = PaddingMode.PKCS7;
+                // Write the salt first so it can be read during decryption
+                output.Write(salt, 0, salt.Length);
 
-                using (var cryptoStream = new CryptoStream(outputStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                // Encrypt the JSON data
+                using (var cryptoStream = new CryptoStream(output, aes.CreateEncryptor(), CryptoStreamMode.Write))
                 {
-                    cryptoStream.Write(plainData, 0, plainData.Length);
+                    input.CopyTo(cryptoStream);
                 }
+
+                return output.ToArray();
             }
         }
-    }
-
-    static void Main()
-    {
-        // Step 1: Generate JSON content
-        string json = GenerateJson();
-        byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-
-        // Step 2: Define password for encryption
-        string password = "StrongPassword123!";
-
-        // Step 3: Encrypt JSON and write to a file via a password‑protected stream
-        string encryptedFilePath = "encryptedData.bin";
-        using (FileStream fileStream = new FileStream(encryptedFilePath, FileMode.Create, FileAccess.Write))
-        {
-            EncryptToStream(jsonBytes, password, fileStream);
-        }
-
-        Console.WriteLine($"JSON data encrypted and saved to '{encryptedFilePath}'.");
     }
 }

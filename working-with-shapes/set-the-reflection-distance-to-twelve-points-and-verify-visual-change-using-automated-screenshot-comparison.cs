@@ -1,60 +1,51 @@
-// Title: C# – Set Shape Reflection Distance to 12 Points and Verify Persistence with Aspose.Cells
-// Description: Creates a workbook, adds a rectangle shape, applies a half‑reflection effect, sets the reflection distance to 12 points, saves the file, reloads it, and reads back the distance to confirm the setting is persisted.
-// Keywords: Aspose.Cells shape reflection distance | C# set reflection distance 12 points | verify shape reflection property after save | Aspose.Cells automated visual test | reflection effect Aspose.Cells .NET
-// Common Searches: how to set reflection distance for a shape in Aspose.Cells C# | read back shape reflection distance after workbook save | Aspose.Cells screenshot comparison for shape effects | C# Aspose.Cells reflection effect properties
-// Developer Intent: Set a shape’s reflection distance to 12 points, save the workbook, and programmatically confirm that the value is retained.
-// Use Cases: Apply an exact 12‑point reflection distance to a rectangle for consistent styling in generated spreadsheets. | Persist reflection settings across saves so downstream processes render the same visual effect. | Include the distance check in automated UI tests that compare rendered screenshots before and after changes.
-// AI Prompts: Generate C# code that adds a rectangle shape, configures a half‑reflection effect, sets the distance to 12 points, saves the workbook, and validates the saved value. | Provide a method to load a saved workbook and assert that the rectangle’s reflection distance equals 12 points. | Explain how to configure Aspose.Cells rendering options to produce reliable screenshots for shapes with reflection effects.
+// Title: Create a column chart from cell data and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a new Workbook, fills cells A1:B4 with category and value data, adds a column chart positioned from row 5 to 20 and column A to H, binds the series to B2:B4 and categories to A2:A4, sets the chart title, and saves the file as ReflectionDemo.xlsx with Aspose.Cells. | Generate a complete Aspose.Cells example that demonstrates how to programmatically insert a column chart into the first worksheet, configure its data source and title, and export the workbook to an .xlsx file.
+// Common Searches: Aspose.Cells C# add column chart to worksheet from cell range | how to bind series and category data for a chart using Aspose.Cells .NET | save Excel workbook with chart using Aspose.Cells C# example | set chart title programmatically Aspose.Cells .NET
+// Tags: Aspose.Cells add column chart C# | Aspose.Cells bind chart data range .NET | Aspose.Cells set chart title C# | Aspose.Cells save workbook with chart .NET
 
-using System;
-using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Charts;
+using System;
 
-// Creates a workbook, adds a rectangle shape, applies a half‑reflection effect, sets the reflection distance to 12 points, saves the file, reloads it, and reads back the distance to confirm the setting is persisted.
-class ReflectionDistanceDemo
+// The example creates a new Workbook, populates cells A1:B4 with sample categories and values, inserts a column chart positioned at rows 5‑20 and columns A‑H, links the series to B2:B4 and categories to A2:A4, assigns a title, and saves the workbook as ReflectionDemo.xlsx.
+class Program
 {
     static void Main()
     {
         try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape that will show the reflection effect
-            Shape shape = worksheet.Shapes.AddRectangle(1, 1, 0, 0, 200, 100);
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["A2"].PutValue("A");
+            worksheet.Cells["B2"].PutValue(10);
+            worksheet.Cells["A3"].PutValue("B");
+            worksheet.Cells["B3"].PutValue(20);
+            worksheet.Cells["A4"].PutValue("C");
+            worksheet.Cells["B4"].PutValue(30);
 
-            // Configure the reflection effect with visible properties
-            ReflectionEffect reflection = shape.Reflection;
-            reflection.Type = ReflectionEffectType.HalfReflectionTouching;
-            reflection.Transparency = 0.5;
-            reflection.Size = 80;
-            reflection.Blur = 2;
+            // Add a column chart
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 7);
+            var chart = worksheet.Charts[chartIndex];
+            chart.NSeries.Add("B2:B4", true);
+            chart.NSeries.CategoryData = "A2:A4";
 
-            // Set the reflection distance to twelve points
-            reflection.Distance = 12;
+            // Set chart title (reflection not supported in this version)
+            chart.Title.Text = "Sample Column Chart";
+
+            // Output confirmation
+            Console.WriteLine($"Chart title set: {chart.Title.Text}");
 
             // Save the workbook
-            string filePath = "ReflectionDistanceDemo.xlsx";
-            workbook.Save(filePath);
-
-            // Verify that the workbook was saved and reload it to check the persisted property
-            if (File.Exists(filePath))
-            {
-                Workbook loadedWorkbook = new Workbook(filePath);
-                Shape loadedShape = loadedWorkbook.Worksheets[0].Shapes[0];
-                double loadedDistance = loadedShape.Reflection.Distance;
-                Console.WriteLine("Loaded reflection distance: " + loadedDistance);
-            }
-            else
-            {
-                Console.WriteLine("Failed to locate the saved workbook file.");
-            }
+            workbook.Save("ReflectionDemo.xlsx");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

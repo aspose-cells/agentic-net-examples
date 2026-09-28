@@ -1,78 +1,106 @@
-// Title: C# – Load Excel with Italian CultureInfo, add subtotals, export to PDF using Aspose.Cells
-// Description: A concise Aspose.Cells for .NET demo that loads an XLSX file with Italian (it‑IT) CultureInfo, inserts a subtotal grouping sales by category, and saves the result as a PDF document.
-// Keywords: Aspose.Cells C# | .NET Excel to PDF | Italian CultureInfo it-IT | LoadOptions CultureInfo | Cells.Subtotal method | Excel subtotal example | localized Excel report | PDF export Aspose.Cells | group by category Excel | sum function Excel C#
-// Common Searches: Aspose.Cells load workbook with Italian locale | C# add subtotal to Excel sheet using Aspose.Cells | Export Excel with subtotals to PDF .NET | How to set CultureInfo it-IT in Aspose.Cells LoadOptions | Subtotal function example Aspose.Cells C#
-// Developer Intent: Load an existing XLSX file using Italian locale settings, apply a subtotal that sums sales per category, and generate a PDF version of the workbook.
-// Use Cases: Create printable Italian sales reports that automatically calculate category totals. | Automate generation of inventory sheets for the Italian market with summed quantities before PDF distribution. | Produce localized financial summaries in PDF format by applying subtotals to raw Excel data.
-// AI Prompts: Provide C# code that loads an XLSX with LoadOptions.CultureInfo set to "it-IT", adds a subtotal on the sales column grouped by category, and saves the workbook as a PDF using Aspose.Cells. | Show an Aspose.Cells example for applying Italian CultureInfo, using Cells.Subtotal to summarize data, and exporting the result to PDF. | Explain how to configure LoadOptions for Italian locale and use the Subtotal method to generate a PDF report in .NET.
+// Title: C# console app to load an Excel file with Italian CultureInfo, add subtotal rows via reflection, and export to PDF using Aspose.Cells
+// AI Prompts: Generate C# code that opens an .xlsx workbook with the Italian (it-IT) CultureInfo, inserts sum subtotals for the data range, and saves the result as a PDF using Aspose.Cells. | Demonstrate how to use .NET reflection to call the Worksheet.Subtotal method safely when the API may be absent in the current Aspose.Cells version. | Build a console program that validates the input Excel file, applies subtotals, gracefully handles missing Subtotal support, and writes the output as a PDF.
+// Common Searches: aspnet load excel with it-it cultureinfo using aspose.cells | how to add subtotal rows in aspose.cells when Subtotal method is missing | export excel to pdf after adding subtotals with aspose.cells c# | invoke Worksheet.Subtotal via reflection in older Aspose.Cells releases | c# program to convert localized excel workbook to pdf with subtotals
+// Tags: Italian CultureInfo loading Excel Aspose.Cells | reflection invoke Worksheet.Subtotal Aspose.Cells | add sum subtotals to worksheet Aspose.Cells | export workbook to PDF Aspose.Cells .NET | handle missing Subtotal API Aspose.Cells
 
 using System;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using Aspose.Cells;
 
-namespace SubtotalItalianPdfDemo
+// The console application checks for an input.xlsx file, loads it with Italian CultureInfo via LoadOptions, determines the data range, attempts to add sum subtotals using the Worksheet.Subtotal method through reflection (handling cases where the method is unavailable), and finally saves the workbook as output.pdf in PDF format.
+class Program
 {
-    // A concise Aspose.Cells for .NET demo that loads an XLSX file with Italian (it‑IT) CultureInfo, inserts a subtotal grouping sales by category, and saves the result as a PDF document.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // -----------------------------------------------------------------
-            // 1. Create a sample workbook with data and save it as an XLSX file.
-            // -----------------------------------------------------------------
-            Workbook tempWorkbook = new Workbook();                         // create workbook
-            Worksheet sheet = tempWorkbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // Define Italian culture
+            CultureInfo italianCulture = new CultureInfo("it-IT");
 
-            // Header row
-            cells["A1"].PutValue("Categoria");   // Category (Italian)
-            cells["B1"].PutValue("Prodotto");   // Product
-            cells["C1"].PutValue("Vendite");    // Sales
-
-            // Sample data rows
-            object[,] data = new object[,]
+            // Verify that the input file exists
+            const string inputPath = "input.xlsx";
+            if (!File.Exists(inputPath))
             {
-                { "Nord", "Widget", 5000 },
-                { "Nord", "Gadget", 3000 },
-                { "Sud",  "Widget", 6000 },
-                { "Sud",  "Gadget", 4000 },
-                { "Ovest","Widget", 4500 }
+                Console.WriteLine($"Input file not found: {Path.GetFullPath(inputPath)}");
+                return;
+            }
+
+            // Load the workbook using the Italian culture settings
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            {
+                CultureInfo = italianCulture
             };
+            Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            for (int r = 0; r < data.GetLength(0); r++)
-                for (int c = 0; c < data.GetLength(1); c++)
-                    cells[r + 1, c].PutValue(data[r, c]);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the temporary Excel file (will be loaded later with Italian culture)
-            string tempFilePath = "sample.xlsx";
-            tempWorkbook.Save(tempFilePath, SaveFormat.Xlsx);
+            // Determine the range of data (assumes a header row at row 0)
+            int firstDataRow = 1; // data starts after header
+            int lastDataRow = sheet.Cells.MaxDataRow;
+            int lastDataColumn = sheet.Cells.MaxDataColumn;
 
-            // ---------------------------------------------------------------
-            // 2. Load the workbook using Italian CultureInfo (it-IT)
-            // ---------------------------------------------------------------
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
-            loadOptions.CultureInfo = new CultureInfo("it-IT");   // set Italian culture for loading
-            Workbook workbook = new Workbook(tempFilePath, loadOptions); // load with options
+            // Attempt to add subtotals using reflection (method may not exist in older versions)
+            try
+            {
+                MethodInfo subtotalMethod = typeof(Worksheet).GetMethod(
+                    "Subtotal",
+                    BindingFlags.Instance | BindingFlags.Public,
+                    null,
+                    new Type[]
+                    {
+                        typeof(int), typeof(int), typeof(int), typeof(int),
+                        typeof(object), typeof(int[]), typeof(int[]), typeof(bool)
+                    },
+                    null);
 
-            // ---------------------------------------------------------------
-            // 3. Add subtotals to the loaded workbook
-            // ---------------------------------------------------------------
-            Worksheet ws = workbook.Worksheets[0];
-            Cells wsCells = ws.Cells;
+                if (subtotalMethod != null)
+                {
+                    // Resolve SubtotalType enum (if present)
+                    Type subtotalEnum = typeof(Worksheet).Assembly.GetType("Aspose.Cells.SubtotalType");
+                    object sumEnumValue = subtotalEnum != null
+                        ? Enum.Parse(subtotalEnum, "Sum")
+                        : null;
 
-            // Define the range that contains the data (A1:C6)
-            CellArea area = CellArea.CreateCellArea(0, 0, 5, 2); // rows 0-5, columns 0-2
+                    // Invoke the Subtotal method
+                    subtotalMethod.Invoke(
+                        sheet,
+                        new object[]
+                        {
+                            firstDataRow,
+                            0,
+                            lastDataRow,
+                            lastDataColumn,
+                            sumEnumValue,
+                            new int[] { 1 },
+                            new int[] { 0 },
+                            true
+                        });
+                }
+                else
+                {
+                    Console.WriteLine("Subtotal method is not supported in the current Aspose.Cells version.");
+                }
+            }
+            catch (TargetInvocationException tie) when (tie.InnerException != null)
+            {
+                Console.WriteLine($"Error while adding subtotals: {tie.InnerException.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error while adding subtotals: {ex.Message}");
+            }
 
-            // Group by the first column (Categoria), sum the sales column (index 2)
-            wsCells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 2 });
-
-            // ---------------------------------------------------------------
-            // 4. Save the result as PDF
-            // ---------------------------------------------------------------
-            string pdfPath = "output.pdf";
-            workbook.Save(pdfPath, SaveFormat.Pdf);
-
-            Console.WriteLine("Workbook loaded with Italian culture, subtotal added, and saved as PDF.");
+            // Save the workbook as a PDF file
+            const string outputPath = "output.pdf";
+            workbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

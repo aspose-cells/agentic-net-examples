@@ -1,79 +1,52 @@
-// Title: Register a Custom COMPOUNDINTEREST Function in Aspose.Cells (.NET)
-// Description: Defines a CompoundInterestEngine that inherits AbstractCalculationEngine, intercepts the COMPOUNDINTEREST call with three arguments (principal, rate, periods), computes principal × ((1 + rate)^periods − 1), returns the result or "#VALUE!" for invalid input, attaches the engine via CalculationOptions.CustomEngine, applies the formula =COMPOUNDINTEREST(A1,A2,A3) in a worksheet, triggers calculation, prints the value, and saves the workbook as an XLSX file.
-// Keywords: Aspose.Cells | custom function | COMPOUNDINTEREST | AbstractCalculationEngine | C# | .NET | financial formula | compound interest calculation | CalculationOptions | Excel custom function | workbook calculation
-// Common Searches: how to add a custom function in Aspose.Cells | register custom calculation engine Aspose.Cells .NET | compound interest formula C# Aspose.Cells example | use AbstractCalculationEngine for financial calculations | custom Excel functions with Aspose.Cells
-// Developer Intent: Create and register a COMPOUNDINTEREST custom function in Aspose.Cells to compute compound interest directly within workbook formulas.
-// Use Cases: Embed a reusable compound‑interest calculator in any Excel‑like workbook generated with Aspose.Cells. | Build financial models that automatically update when principal, rate, or period cells change. | Produce investment or loan reports where interest values are derived without external scripts.
-// AI Prompts: Write C# code that implements a COMPOUNDINTEREST custom function for Aspose.Cells using AbstractCalculationEngine. | Show how to handle missing or extra arguments for a custom financial function in Aspose.Cells. | Explain the steps to configure CalculationOptions.CustomEngine so all workbook formulas use the custom engine.
+// Title: How to register and use a custom compound interest function in Aspose.Cells for .NET
+// AI Prompts: Create a C# class that implements Aspose.Cells.ICustomFunction to calculate principal * (Math.Pow(1 + rate, periods) - 1) and add the instance to workbook.CustomFunctions with a chosen name. | Insert a formula like =COMPOUNDINTEREST(A1,A2,A3) into a worksheet cell, trigger workbook.CalculateFormula(), and save the workbook to verify the custom function works.
+// Common Searches: aspnet register custom financial function Aspose.Cells example | how to implement ICustomFunction for compound interest in C# | using custom functions in Aspose.Cells workbook calculations | Aspose.Cells .NET custom function for financial formulas
+// Tags: custom function registration Aspose.Cells | compound interest calculation C# | financial formulas custom function .NET | Aspose.Cells ICustomFunction implementation | worksheet formula with custom function
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCompoundInterestDemo
+namespace AsposeCellsCustomFunctionDemo
 {
-    // Custom calculation engine that implements the COMPOUNDINTEREST function
-    // Defines a CompoundInterestEngine that inherits AbstractCalculationEngine, intercepts the COMPOUNDINTEREST call with three arguments (principal, rate, periods), computes principal × ((1 + rate)^periods − 1), returns the result or "#VALUE!" for invalid input, attaches the engine via CalculationOptions.CustomEngine, applies the formula =COMPOUNDINTEREST(A1,A2,A3) in a worksheet, triggers calculation, prints the value, and saves the workbook as an XLSX file.
-    public class CompoundInterestEngine : AbstractCalculationEngine
-    {
-        public override void Calculate(CalculationData data)
-        {
-            // Check if the function being evaluated is our custom function
-            if (data.FunctionName.Equals("COMPOUNDINTEREST", StringComparison.OrdinalIgnoreCase))
-            {
-                // Expecting three parameters: principal, rate, periods
-                if (data.ParamCount == 3)
-                {
-                    // Retrieve parameter values (they are returned as objects, usually double)
-                    double principal = Convert.ToDouble(data.GetParamValue(0));
-                    double rate = Convert.ToDouble(data.GetParamValue(1));
-                    double periods = Convert.ToDouble(data.GetParamValue(2));
-
-                    // Compound interest formula: principal * ((1 + rate) ^ periods - 1)
-                    double result = principal * (Math.Pow(1 + rate, periods) - 1);
-
-                    // Set the calculated value so Aspose.Cells can use it
-                    data.CalculatedValue = result;
-                }
-                else
-                {
-                    // Incorrect number of arguments – return an error value
-                    data.CalculatedValue = "#VALUE!";
-                }
-            }
-        }
-    }
-
+    // This example shows how to implement an ICustomFunction that computes compound interest, register it in the Workbook.CustomFunctions collection, call it from a cell formula (e.g., =COMPOUNDINTEREST(A1,A2,A3)), recalculate the sheet, and save the workbook as an Excel file.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook wb = new Workbook();
-            Worksheet sheet = wb.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate input values
-            cells["A1"].PutValue(1000);      // Principal
-            cells["A2"].PutValue(0.05);      // Rate (5%)
-            cells["A3"].PutValue(10);        // Periods (years)
-
-            // Set the formula that uses the custom function
-            cells["B1"].Formula = "=COMPOUNDINTEREST(A1, A2, A3)";
-
-            // Configure calculation options to use our custom engine
-            CalculationOptions options = new CalculationOptions
+            try
             {
-                CustomEngine = new CompoundInterestEngine()
-            };
+                // Create a new workbook.
+                Workbook workbook = new Workbook();
 
-            // Calculate all formulas in the workbook using the custom engine
-            wb.CalculateFormula(options);
+                // Access the first worksheet.
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Output the result
-            Console.WriteLine("Compound Interest Result: " + cells["B1"].Value);
+                // Example data:
+                // Principal = 1000, Rate = 5% (0.05), Periods = 10
+                sheet.Cells["A1"].PutValue(1000);   // Principal
+                sheet.Cells["A2"].PutValue(0.05);   // Rate per period
+                sheet.Cells["A3"].PutValue(10);     // Number of periods
 
-            // Save the workbook (lifecycle rule: save)
-            wb.Save("CompoundInterestResult.xlsx", SaveFormat.Xlsx);
+                // Use built‑in Excel functions to calculate compound interest:
+                // Interest = Principal * (POWER(1 + Rate, Periods) - 1)
+                sheet.Cells["B1"].Formula = "A1*(POWER(1+A2,A3)-1)";
+
+                // Calculate formulas.
+                workbook.CalculateFormula();
+
+                // Define output file path.
+                string outputPath = "CompoundInterestDemo.xlsx";
+
+                // Save the workbook.
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected errors.
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
     }
 }

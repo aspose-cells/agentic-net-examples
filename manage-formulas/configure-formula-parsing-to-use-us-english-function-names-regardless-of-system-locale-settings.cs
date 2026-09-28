@@ -1,88 +1,28 @@
-// Title: Force Aspose.Cells to parse formulas with US English function names (C#)
-// Description: Demonstrates how to set a workbook's region to United States, apply default globalization settings, and use FormulaParseOptions with LocaleDependent = false so that English function names (e.g., SUM) are parsed and calculated correctly on any system locale, then saves the workbook.
-// Keywords: Aspose.Cells | C# formula parsing | US English function names | FormulaParseOptions LocaleDependent | disable locale‑dependent formulas | set workbook region US | SettableGlobalizationSettings | locale‑independent calculation | force English formulas
-// Common Searches: Aspose.Cells use English function names regardless of locale | C# set workbook region to US for formula parsing | disable locale dependent formula parsing Aspose.Cells | FormulaParseOptions LocaleDependent false example | force English formulas in non‑English Windows
-// Developer Intent: Ensure that all formulas are interpreted with US English function names, independent of the operating system or workbook locale.
-// Use Cases: Run a SUM formula written in English on a workbook created on a German‑language machine. | Generate reports that must retain consistent English formula syntax across global deployments. | Automate spreadsheet calculations in a multilingual environment without locale‑specific adjustments.
-// AI Prompts: Show how to configure Aspose.Cells to always use US English function names when parsing formulas in C#. | Provide a C# snippet that sets FormulaParseOptions.LocaleDependent to false and evaluates a SUM formula. | Explain why setting workbook.Settings.Region to US and using SettableGlobalizationSettings makes formula parsing locale‑independent.
+// Title: Force US English function names for formulas in Aspose.Cells workbooks using C#
+// AI Prompts: Assign a US culture object to workbook.Settings.CultureInfo so that all formulas use English function names. | Add a SUM formula with English syntax to a cell after configuring the workbook locale. | Save a workbook after enforcing US English formula parsing, independent of the operating system language. | Load an existing workbook, apply the en-US culture setting, and then modify its formulas.
+// Common Searches: Aspose.Cells C# enforce English function names in formulas | How to set workbook culture to en-US for formula parsing in Aspose.Cells | Override system locale for Excel formulas when using Aspose.Cells .NET | US English Excel functions with Aspose.Cells workbook Settings.CultureInfo | Force SUM function name in Aspose.Cells regardless of OS language
+// Tags: Aspose.Cells set workbook culture en-US | override formula language locale | US English Excel functions Aspose.Cells | C# workbook Settings.CultureInfo usage | enforce English function names in formulas
 
 using System;
-using System.IO;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates (or loads) an Aspose.Cells workbook, sets workbook.Settings.CultureInfo to the US culture to guarantee that all formulas use English function names, assigns a SUM formula using the English syntax, and saves the workbook.
+class Program
 {
-    // Demonstrates how to force formula parsing to use US English function names
-    // regardless of the system or workbook locale.
-    // Demonstrates how to set a workbook's region to United States, apply default globalization settings, and use FormulaParseOptions with LocaleDependent = false so that English function names (e.g., SUM) are parsed and calculated correctly on any system locale, then saves the workbook.
-    public class ForceEnglishFormulaParsing
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook (replace with load if needed)
+        var workbook = new Workbook(); // new Workbook("input.xlsx") to load an existing file
 
-        public static void Run()
-        {
-            try
-            {
-                // 1. Create a new workbook (lifecycle rule: create)
-                Workbook workbook = new Workbook();
+        // Configure formula parsing to always use US English function names
+        workbook.Settings.CultureInfo = new CultureInfo("en-US");
 
-                // 2. Set the workbook region explicitly to United States.
-                // Use Enum.Parse to avoid compile‑time dependency on a specific enum member name.
-                workbook.Settings.Region = (CountryCode)Enum.Parse(typeof(CountryCode), "US");
+        // Example usage: set a formula using US function name
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].Formula = "SUM(B1:B10)";
 
-                // 3. Assign a SettableGlobalizationSettings instance.
-                // No custom local function names are added, so only standard (English) names are recognized.
-                workbook.Settings.GlobalizationSettings = new SettableGlobalizationSettings();
-
-                // 4. Prepare some data for the formula.
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue(10);
-                sheet.Cells["A2"].PutValue(20);
-                sheet.Cells["A3"].PutValue(30);
-
-                // 5. Create FormulaParseOptions with LocaleDependent = false (default).
-                // This tells Aspose.Cells that the formula string is NOT locale‑formatted.
-                FormulaParseOptions options = new FormulaParseOptions
-                {
-                    LocaleDependent = false // enforce English function names
-                };
-
-                // 6. Set a formula using the standard English function name "SUM".
-                // The formula will be parsed correctly even if the system locale were, for example, German.
-                Cell targetCell = sheet.Cells["B1"];
-                targetCell.SetFormula("=SUM(A1:A3)", options);
-
-                // 7. Calculate the workbook to evaluate the formula.
-                workbook.CalculateFormula();
-
-                // 8. Output the result to verify correct parsing.
-                Console.WriteLine($"Result of English SUM formula: {targetCell.Value}");
-
-                // 9. Save the workbook (lifecycle rule: save)
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "ForceEnglishFormulaParsing.xlsx");
-                string outputDir = Path.GetDirectoryName(outputPath);
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Runtime error: {ex.Message}");
-            }
-        }
+        // Save the workbook
+        workbook.Save("output.xlsx");
     }
 }

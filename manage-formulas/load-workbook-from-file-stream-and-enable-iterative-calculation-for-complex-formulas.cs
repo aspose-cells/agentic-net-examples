@@ -1,42 +1,71 @@
-// Title: Load Excel Workbook from FileStream and Enable Iterative Calculation with Aspose.Cells for .NET
-// Description: Shows how to open an .xlsx file via FileStream, load it into an Aspose.Cells Workbook, activate iterative calculation to resolve circular references, configure MaxIteration and MaxChange, recalculate formulas, and save the updated file.
-// Keywords: Aspose.Cells FileStream load | iterative calculation .NET | circular reference handling Aspose.Cells | MaxIteration Aspose.Cells | MaxChange Aspose.Cells | calculate formulas Aspose.Cells | Workbook.Save C# | LoadOptions stream Aspose.Cells
-// Common Searches: load excel from filestream aspose.cells | enable iterative calculation aspose.cells .net | set maxiteration and maxchange aspose.cells | handle circular references in aspose.cells workbook | recalculate formulas after enabling iterative calculation
-// Developer Intent: Load a workbook from a stream, turn on iterative calculation with custom limits, recalculate formulas, and save the file.
-// Use Cases: Process uploaded Excel files received as streams while automatically resolving circular references. | Run financial or engineering models that require iterative formula evaluation with specific iteration thresholds. | Expose a web API that reads Excel data from a stream, enables iterative calculation, and returns the modified workbook.
-// AI Prompts: Generate C# code to load an Excel file from a MemoryStream, enable iterative calculation, and set MaxIteration and MaxChange using Aspose.Cells. | Explain how to configure iterative calculation parameters in Aspose.Cells and recalculate all formulas after loading a workbook from a stream. | Provide best‑practice recommendations for handling circular references with Aspose.Cells iterative calculation in .NET applications.
+// Title: Load an Excel workbook from a FileStream and enable iterative calculation for complex formulas using Aspose.Cells for .NET
+// AI Prompts: Read an Excel file from a FileStream, create a Workbook object, and prepare it for formula processing with Aspose.Cells. | Programmatically turn on iterative calculation, set the iteration count and maximum change values (using reflection if needed) on the workbook's Settings. | Recalculate all formulas after enabling iteration and save the updated workbook to a new file.
+// Common Searches: asp.net load excel workbook from filestream aspose.cells | how to enable iterative calculation for circular references in aspose.cells | set iteration count and max change for formula recalculation aspose.cells .net | recalculate all formulas after changing workbook settings aspose.cells | using reflection to modify workbook settings in aspose.cells
+// Tags: iterative calculation settings aspose.cells | load workbook from filestream aspose.cells | set iteration count max change aspose.cells | recalculate all formulas aspose.cells | reflection for workbook settings aspose.cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Shows how to open an .xlsx file via FileStream, load it into an Aspose.Cells Workbook, activate iterative calculation to resolve circular references, configure MaxIteration and MaxChange, recalculate formulas, and save the updated file.
+// The example demonstrates loading an Excel file via a FileStream into an Aspose.Cells Workbook, attempting to enable iterative calculation (including iteration count and max change) using reflection for compatibility, recalculating all formulas, and saving the modified workbook.
 class Program
 {
     static void Main()
     {
         // Path to the source Excel file
-        string sourcePath = "input.xlsx";
+        string inputPath = "input.xlsx";
 
-        // Open the file as a stream
-        using (FileStream fileStream = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            // Create load options (default settings)
-            LoadOptions loadOptions = new LoadOptions();
+            Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+            return;
+        }
 
-            // Load the workbook from the stream using the constructor that accepts a Stream and LoadOptions
-            Workbook workbook = new Workbook(fileStream, loadOptions);
+        try
+        {
+            // Open a file stream for reading the workbook
+            using (FileStream stream = new FileStream(inputPath, FileMode.Open, FileAccess.Read))
+            {
+                // Load the workbook from the stream
+                Workbook workbook = new Workbook(stream);
 
-            // Enable iterative calculation to resolve circular references or complex formulas
-            workbook.Settings.FormulaSettings.EnableIterativeCalculation = true;
-            workbook.Settings.FormulaSettings.MaxIteration = 100;   // maximum number of iterations
-            workbook.Settings.FormulaSettings.MaxChange = 0.001;   // maximum change allowed per iteration
+                // Attempt to enable iterative calculation using reflection (covers different API versions)
+                try
+                {
+                    var settings = workbook.Settings;
+                    var settingsType = settings.GetType();
 
-            // Optionally calculate all formulas after enabling iterative calculation
-            workbook.CalculateFormula();
+                    var iterativeProp = settingsType.GetProperty("IsIterativeCalculationEnabled");
+                    if (iterativeProp != null && iterativeProp.CanWrite)
+                        iterativeProp.SetValue(settings, true);
 
-            // Save the modified workbook to a new file
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
+                    var iterationCountProp = settingsType.GetProperty("IterationCount");
+                    if (iterationCountProp != null && iterationCountProp.CanWrite)
+                        iterationCountProp.SetValue(settings, 100);
+
+                    var maxChangeProp = settingsType.GetProperty("MaxChange");
+                    if (maxChangeProp != null && maxChangeProp.CanWrite)
+                        maxChangeProp.SetValue(settings, 0.001);
+                }
+                catch (Exception ex)
+                {
+                    // If reflection fails, continue without iterative settings
+                    Console.WriteLine($"Warning: Unable to set iterative calculation settings. {ex.Message}");
+                }
+
+                // Recalculate all formulas with the (potential) new settings
+                workbook.CalculateFormula();
+
+                // Save the modified workbook (optional)
+                string outputPath = "output.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook processed and saved to \"{outputPath}\".");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }
 }

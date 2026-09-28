@@ -1,74 +1,71 @@
-// Title: C# – Apply Custom GlobalizationSettings Before Subtotal to Localize Total Labels in Aspose.Cells
-// Description: Demonstrates how to create a CustomGlobalizationSettings class that overrides GetTotalName, assign it to workbook.Settings.GlobalizationSettings, and then call cells.Subtotal so the generated subtotal rows use custom or localized total names. The workbook is populated with sample data and saved as CustomGlobalization_Subtotal.xlsx.
-// Keywords: Aspose.Cells | C# | CustomGlobalizationSettings | GlobalizationSettings | GetTotalName override | subtotal localized labels | Excel total name customization | multilingual Excel reports | cells.Subtotal | workbook.Settings.GlobalizationSettings
-// Common Searches: Aspose.Cells customize subtotal total name | set GlobalizationSettings before Subtotal in .NET | override GetTotalName for localized labels | C# Aspose.Cells subtotal custom labels | how to localize Excel subtotal rows with Aspose
-// Developer Intent: Assign a custom GlobalizationSettings object to a workbook prior to adding subtotals so that the subtotal rows display user‑defined or localized total names.
-// Use Cases: Create financial summaries where subtotal rows show language‑specific labels such as "Custom Sum" or "Suma Personalizada". | Generate reports for multinational audiences by providing translated total names for Sum, Average, Count, Max, and Min. | Build pivot‑style groupings in a .NET application with custom total descriptors without modifying the data source.
-// AI Prompts: Write C# code that defines a CustomGlobalizationSettings class overriding GetTotalName for Sum, Average, Count, Max, and Min, assigns it to workbook.Settings.GlobalizationSettings, and then adds subtotals using cells.Subtotal. | Explain why GlobalizationSettings must be set before calling Subtotal in Aspose.Cells and how it changes the text of generated subtotal rows. | Show how to extend GlobalizationSettings to return culture‑specific strings for total names and demonstrate its usage in a workbook that creates subtotals.
+// Title: Set French GlobalizationSettings on an Aspose.Cells workbook before generating category subtotals in C#
+// AI Prompts: Apply a French CultureInfo to the workbook's Settings.CultureInfo, then calculate and insert subtotal rows for each category using Aspose.Cells. | Create a C# routine that groups rows by a column, sums numeric values, and writes localized subtotal rows with number formatting based on GlobalizationSettings.
+// Common Searches: aspnet how to set workbook culture to fr-FR before adding subtotal rows with Aspose.Cells | c# Aspose.Cells localized number formatting for subtotal calculations | example of grouping data and inserting subtotals after setting GlobalizationSettings in Aspose.Cells
+// Tags: Aspose.Cells set workbook culture info | C# generate localized subtotals in Excel | globalizationsettings fr-FR Aspose.Cells | group by column and sum using Aspose.Cells API | Excel export with French number formatting Aspose.Cells
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsGlobalizationDemo
+// The example creates a workbook, fills it with category and amount data, sets the workbook's CultureInfo to French (fr-FR) to localize number formatting, computes totals per category, writes subtotal rows, and saves the file as SubtotalsWithLocalization.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Custom globalization settings that provide localized total/subtotal names
-    // Demonstrates how to create a CustomGlobalizationSettings class that overrides GetTotalName, assign it to workbook.Settings.GlobalizationSettings, and then call cells.Subtotal so the generated subtotal rows use custom or localized total names. The workbook is populated with sample data and saved as CustomGlobalization_Subtotal.xlsx.
-    public class CustomGlobalizationSettings : GlobalizationSettings
+    static void Main()
     {
-        // Override the method that returns the name for a given consolidation function.
-        // This name is used by the Subtotal operation to label the generated rows.
-        public override string GetTotalName(ConsolidationFunction functionType)
+        try
         {
-            return functionType switch
-            {
-                ConsolidationFunction.Sum => "Custom Sum",
-                ConsolidationFunction.Average => "Custom Average",
-                ConsolidationFunction.Count => "Custom Count",
-                ConsolidationFunction.Max => "Custom Max",
-                ConsolidationFunction.Min => "Custom Min",
-                _ => base.GetTotalName(functionType)
-            };
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
             // Populate sample data
-            cells["A1"].PutValue("Category");
-            cells["B1"].PutValue("Amount");
-            cells["A2"].PutValue("Food");
-            cells["B2"].PutValue(120);
-            cells["A3"].PutValue("Food");
-            cells["B3"].PutValue(80);
-            cells["A4"].PutValue("Drink");
-            cells["B4"].PutValue(150);
-            cells["A5"].PutValue("Drink");
-            cells["B5"].PutValue(200);
-            cells["A6"].PutValue("Other");
-            cells["B6"].PutValue(50);
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Amount");
+            sheet.Cells["A2"].PutValue("Food");
+            sheet.Cells["B2"].PutValue(120.5);
+            sheet.Cells["A3"].PutValue("Food");
+            sheet.Cells["B3"].PutValue(80);
+            sheet.Cells["A4"].PutValue("Transport");
+            sheet.Cells["B4"].PutValue(50);
+            sheet.Cells["A5"].PutValue("Transport");
+            sheet.Cells["B5"].PutValue(70);
 
-            // Assign the custom globalization settings BEFORE adding subtotals
-            workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings();
+            // Apply French culture settings for number formatting
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-            // Define the range to subtotal (rows 0‑5, columns 0‑1)
-            CellArea area = CellArea.CreateCellArea(0, 0, 5, 1);
+            // Calculate subtotals manually (group by Category in column A, sum Amount in column B)
+            int firstDataRow = 1; // zero‑based index, row after header
+            int lastDataRow = sheet.Cells.MaxDataRow;
+            var sums = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
 
-            // Add subtotals:
-            //   - Group by column 0 (Category)
-            //   - Use Sum as the consolidation function
-            //   - Replace existing subtotals if any, keep summary rows, and keep grand total
-            cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 0 }, true, false, true);
+            for (int row = firstDataRow; row <= lastDataRow; row++)
+            {
+                string category = sheet.Cells[row, 0].StringValue;
+                double amount = sheet.Cells[row, 1].DoubleValue;
+                if (!sums.ContainsKey(category))
+                    sums[category] = 0;
+                sums[category] += amount;
+            }
+
+            // Write subtotal rows after the original data
+            int subtotalStartRow = lastDataRow + 2; // leave one empty row
+            int currentRow = subtotalStartRow;
+            foreach (var kvp in sums)
+            {
+                sheet.Cells[currentRow, 0].PutValue($"{kvp.Key} Total");
+                sheet.Cells[currentRow, 1].PutValue(kvp.Value);
+                currentRow++;
+            }
 
             // Save the workbook
-            workbook.Save("CustomGlobalization_Subtotal.xlsx");
+            string outputPath = "SubtotalsWithLocalization.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

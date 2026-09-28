@@ -1,17 +1,14 @@
-// Title: Delete Blank Rows in First Worksheet with Aspose.Cells C# (default DeleteOptions)
-// Description: Creates a workbook, adds data with intentional empty rows, then calls Cells.DeleteBlankRows() using the default DeleteOptions (UpdateReference = false) to remove only the blank rows and saves the file as DeletedBlankRows.xlsx.
-// Keywords: Aspose.Cells | DeleteBlankRows | C# | .NET | blank rows removal | default DeleteOptions | UpdateReference false | worksheet cleanup
-// Common Searches: Aspose.Cells delete blank rows C# | DeleteBlankRows default options | Remove empty rows without updating references Aspose.Cells | How to clean up worksheet rows in .NET
-// Developer Intent: Remove all empty rows from the first worksheet while leaving existing cell references unchanged.
-// Use Cases: Clean imported spreadsheets that contain sporadic empty rows before analysis. | Prepare data for charts or pivot tables where blank rows cause gaps. | Automate workbook sanitization in ETL pipelines to ensure consistent row structures.
-// AI Prompts: Generate C# code using Aspose.Cells to delete blank rows on the first worksheet without altering cell references. | Show how to verify that only empty rows were removed after calling DeleteBlankRows. | Explain the effect of DeleteOptions.UpdateReference when deleting blank rows in Aspose.Cells.
+// Title: Delete blank rows from the first worksheet of a C# Aspose.Cells workbook using the default DeleteBlankRows method (no UpdateReference)
+// AI Prompts: Use Aspose.Cells in C# to remove all empty rows from the first sheet without adjusting cell references. | Show how to call Cells.DeleteBlankRows with default options to clean up a workbook created in code. | Generate C# code that deletes blank rows on the first worksheet and saves the result as an .xlsx file.
+// Common Searches: Aspose.Cells C# delete blank rows first worksheet default options | How to remove empty rows from an Excel sheet using Aspose.Cells without updating formulas | DeleteBlankRows method example without UpdateReference in .NET | C# code to clean up blank rows in a newly created workbook using Aspose.Cells | Aspose.Cells remove blank rows from worksheet and keep cell references unchanged
+// Tags: Aspose.Cells DeleteBlankRows default | C# remove empty rows Excel worksheet | DeleteBlankRows without UpdateReference | blank row cleanup Aspose.Cells | first worksheet row deletion C#
 
 using System;
 using Aspose.Cells;
 
 namespace DeleteBlankRowsExample
 {
-    // Creates a workbook, adds data with intentional empty rows, then calls Cells.DeleteBlankRows() using the default DeleteOptions (UpdateReference = false) to remove only the blank rows and saves the file as DeletedBlankRows.xlsx.
+    // The example creates a new workbook, adds sample data with intentional blank rows, calls Cells.DeleteBlankRows() on the first worksheet using the default DeleteOptions (which do not update references), and saves the cleaned workbook as DeletedBlankRows.xlsx.
     class Program
     {
         static void Main()
@@ -21,19 +18,18 @@ namespace DeleteBlankRowsExample
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Add sample data with intentional blank rows
+            // Populate sample data with intentional blank rows
             cells["A1"].PutValue("Header");
-            cells["A2"].PutValue("Data1");
-            // Row 3 is left blank
-            cells["A4"].PutValue("Data2");
-            // Row 5 is left blank
-            cells["A6"].PutValue("Data3");
+            cells["A2"].PutValue("Row1");
+            // Row 3 will be blank
+            cells["A4"].PutValue("Row2");
+            // Row 5 will be blank
+            cells["A6"].PutValue("Row3");
 
-            // Delete all blank rows using the default DeleteOptions.
-            // The default options have UpdateReference = false, which satisfies the requirement.
+            // Delete all blank rows using the default method (no UpdateReference)
             cells.DeleteBlankRows();
 
-            // Save the modified workbook
+            // Save the result
             workbook.Save("DeletedBlankRows.xlsx", SaveFormat.Xlsx);
         }
     }

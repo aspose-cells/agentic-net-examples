@@ -1,70 +1,56 @@
-// Title: Aspose.Cells for .NET: Ungroup Columns and Keep Uniform Widths
-// Description: Loads or creates an Excel workbook, groups columns 2‑4, immediately ungroups them, captures the width of the first column, applies that width to every column up to the sheet's last used column, and saves the result.
-// Keywords: Aspose.Cells ungroup columns C# | preserve column width Aspose.Cells | set uniform column width .NET | Excel column operations Aspose | C# worksheet column formatting
-// Common Searches: Aspose.Cells how to ungroup columns and retain width | C# set same width for all columns after grouping | maintain column widths when removing outlines Aspose | reset column widths across worksheet .NET
-// Developer Intent: Remove a column group while ensuring every column retains the same width as the first column.
-// Use Cases: Standardize column widths after temporary grouping for clean export or printing. | Clear column outlines in an imported workbook before further data processing. | Apply a consistent column width across an entire sheet after performing grouping/ungrouping actions.
-// AI Prompts: Write C# code with Aspose.Cells that ungroups columns 2‑4 and sets all column widths to match column A. | Show an Aspose.Cells snippet that groups columns, then ungroups them and restores the original width for every column. | Explain how to retrieve the maximum column index in a worksheet and apply a uniform width using Aspose.Cells for .NET.
+// Title: How to ungroup columns while preserving their original widths using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that groups a range of columns, modifies cell values, then ungroups the columns and restores each column's original width with Aspose.Cells. | Demonstrate storing column widths before grouping and reapplying them after ungrouping in an Aspose.Cells workbook.
+// Common Searches: asp.net ungroup columns keep original width Aspose.Cells | c# Aspose.Cells restore column widths after ungrouping columns | how to maintain column width consistency when ungrouping columns in an Excel workbook using Aspose.Cells | preserve column width after grouping and ungrouping columns with Aspose.Cells .NET | example of ungrouping columns without changing column width in Aspose.Cells
+// Tags: ungroup columns Aspose.Cells C# | preserve column width Aspose.Cells | column width consistency after ungrouping | group columns Aspose.Cells example | restore original column widths .NET Excel
 
 using System;
-using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, sets specific column widths, groups columns 0‑2, updates cell data while grouped, then ungroups the columns and reapplies the stored widths to keep the layout unchanged before saving as UngroupColumnsConsistentWidth.xlsx.
+class UngroupColumnsDemo
 {
-    // Loads or creates an Excel workbook, groups columns 2‑4, immediately ungroups them, captures the width of the first column, applies that width to every column up to the sheet's last used column, and saves the result.
-    public class UngroupColumnsAndMaintainWidths
+    static void Main()
     {
-        public static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        Cells cells = sheet.Cells;
+
+        // Populate sample data in columns A, B and C
+        cells["A1"].PutValue("Short");
+        cells["B1"].PutValue("Medium length text");
+        cells["C1"].PutValue("Very very long text that needs column width adjustment");
+
+        // Set initial column widths for demonstration
+        cells.Columns[0].Width = 12; // Column A
+        cells.Columns[1].Width = 20; // Column B
+        cells.Columns[2].Width = 30; // Column C
+
+        // Store the original widths so they can be restored after ungrouping
+        double[] originalWidths = new double[3];
+        for (int i = 0; i < 3; i++)
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            originalWidths[i] = cells.Columns[i].Width;
         }
 
-        public static void Run()
+        // Group columns 0‑2 and hide them (optional, just to show that ungroup works)
+        cells.GroupColumns(0, 2, true);
+
+        // Perform some modifications while the columns are grouped
+        cells["A2"].PutValue("Additional data");
+        cells["B2"].PutValue("More data");
+        cells["C2"].PutValue("Even more data");
+
+        // Ungroup the columns (0 to 2)
+        cells.UngroupColumns(0, 2);
+
+        // Restore the original column widths to keep them consistent across the worksheet
+        for (int i = 0; i < 3; i++)
         {
-            string inputPath = "input.xlsx";
-            string outputPath = "output.xlsx";
-
-            // Load existing workbook or create a new one if the file is missing
-            Workbook workbook;
-            if (File.Exists(inputPath))
-            {
-                workbook = new Workbook(inputPath);
-            }
-            else
-            {
-                Console.WriteLine($"Input file '{inputPath}' not found. Creating a new workbook.");
-                workbook = new Workbook();
-            }
-
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // Group columns 1 to 3 (zero‑based indexes)
-            cells.GroupColumns(1, 3);
-
-            // Ungroup the previously grouped columns
-            cells.UngroupColumns(1, 3);
-
-            // Ensure column widths remain consistent across the worksheet
-            double referenceWidth = cells.GetColumnWidth(0);
-            int lastColumn = cells.MaxColumn; // zero‑based
-
-            for (int colIndex = 0; colIndex <= lastColumn; colIndex++)
-            {
-                cells.Columns[colIndex].Width = referenceWidth;
-            }
-
-            // Save the modified workbook
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+            cells.Columns[i].Width = originalWidths[i];
         }
+
+        // Save the workbook
+        workbook.Save("UngroupColumnsConsistentWidth.xlsx");
     }
 }

@@ -1,73 +1,69 @@
-// Title: Export Excel Worksheet Shapes to Separate SVG Files with Aspose.Cells (.NET)
-// Description: Loads an Excel workbook, walks through every worksheet and its Shape collection, and saves each shape as an individual SVG file using Aspose.Cells Shape.ToImage. The example includes file‑existence checks and error handling, preserving the original visual properties for web‑ready reuse.
-// Keywords: Aspose.Cells SVG export | C# export Excel shapes | Shape.ToImage SVG | extract worksheet drawings | batch convert Excel shapes to SVG | vector graphics from Excel | .NET Excel shape extraction
-// Common Searches: Aspose.Cells export shape to SVG C# | how to save Excel chart as SVG using Aspose | iterate worksheet shapes and export as SVG | convert Excel drawing objects to SVG .NET | batch export Excel shapes to separate SVG files
-// Developer Intent: Generate an SVG file for each shape in every worksheet of an Excel workbook.
-// Use Cases: Create web‑optimized SVG icons from template workbook shapes for dynamic pages. | Automate conversion of all pictures and diagrams in a multi‑sheet report to SVG for responsive HTML output. | Extract individual diagram elements from Excel to feed a vector‑graphics processing pipeline.
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate all worksheets and export each shape as a uniquely named SVG file. | Provide a robust Aspose.Cells example that checks for missing input files, logs export results, and handles shape‑specific errors. | Explain how to configure ImageOrPrintOptions for high‑quality SVG output when calling Shape.ToImage.
+// Title: Export each worksheet’s shapes to individual SVG files with Aspose.Cells for .NET
+// AI Prompts: Write a C# program that loads an .xlsx workbook, creates an output folder, and saves every worksheet as a separate SVG file while preserving all embedded shapes using Aspose.Cells. | Adjust the sample code to produce SVG files that contain only the drawing layer of each worksheet, keeping the original colors and positions intact.
+// Common Searches: Aspose.Cells C# convert Excel sheet to SVG preserving drawings | export only worksheet drawing objects to SVG with Aspose.Cells | batch convert multiple Excel worksheets to SVG in .NET | how to render Excel charts and images as SVG using Aspose.Cells | save Excel shapes as SVG files for web embedding with C#
+// Tags: Aspose.Cells worksheet to SVG export | C# export Excel shapes as SVG | ImageOrPrintOptions SaveFormat Svg Aspose.Cells | SheetRender render worksheet page to SVG | batch SVG conversion of Excel worksheets
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace ExportShapesToSvg
+// The example loads an InputWorkbook.xlsx, creates an 'ExportedShapes' directory, and iterates through each worksheet. For each sheet it configures ImageOrPrintOptions with SaveFormat = Svg and OnePagePerSheet = true, then uses SheetRender to generate an SVG file named with the workbook and sheet name, preserving all visual elements such as shapes, charts, and images.
+class ExportShapesToSvg
 {
-    // Loads an Excel workbook, walks through every worksheet and its Shape collection, and saves each shape as an individual SVG file using Aspose.Cells Shape.ToImage. The example includes file‑existence checks and error handling, preserving the original visual properties for web‑ready reuse.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            const string inputPath = "input.xlsx";
+            // Path to the input workbook
+            string workbookPath = "InputWorkbook.xlsx";
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+            // Verify that the workbook file exists
+            if (!File.Exists(workbookPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: Workbook file not found at '{workbookPath}'.");
                 return;
             }
 
-            try
+            // Load the workbook
+            Workbook workbook = new Workbook(workbookPath);
+
+            // Folder to store exported SVG files
+            string outputFolder = "ExportedShapes";
+            Directory.CreateDirectory(outputFolder);
+
+            // Iterate through each worksheet and export it as SVG (includes shapes)
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Load the workbook
-                Workbook workbook = new Workbook(inputPath);
-
-                // Iterate through all worksheets
-                for (int wsIndex = 0; wsIndex < workbook.Worksheets.Count; wsIndex++)
+                try
                 {
-                    Worksheet sheet = workbook.Worksheets[wsIndex];
-                    ShapeCollection shapes = sheet.Shapes;
+                    string svgFileName = $"{Path.GetFileNameWithoutExtension(workbookPath)}_{sheet.Name}.svg";
+                    string svgFilePath = Path.Combine(outputFolder, svgFileName);
 
-                    // Export each shape as an individual SVG file
-                    for (int shapeIndex = 0; shapeIndex < shapes.Count; shapeIndex++)
+                    // Set options for SVG export
+                    ImageOrPrintOptions options = new ImageOrPrintOptions
                     {
-                        Shape shape = shapes[shapeIndex];
+                        SaveFormat = SaveFormat.Svg,
+                        OnePagePerSheet = true
+                    };
 
-                        // Set image options (default options are sufficient; format is inferred from file extension)
-                        ImageOrPrintOptions imgOptions = new ImageOrPrintOptions();
+                    // Render the worksheet to SVG
+                    SheetRender renderer = new SheetRender(sheet, options);
+                    renderer.ToImage(0, svgFilePath);
 
-                        try
-                        {
-                            // Build a file name that identifies the worksheet and shape
-                            string fileName = $"Worksheet{wsIndex}_Shape{shapeIndex}.svg";
-
-                            // Export the shape directly to an SVG file
-                            shape.ToImage(fileName, imgOptions);
-
-                            Console.WriteLine($"Exported shape {shapeIndex} from worksheet {wsIndex} to {fileName}");
-                        }
-                        catch (Exception exShape)
-                        {
-                            Console.WriteLine($"Failed to export shape {shapeIndex} from worksheet {wsIndex}: {exShape.Message}");
-                        }
-                    }
+                    Console.WriteLine($"Exported worksheet '{sheet.Name}' to SVG at '{svgFilePath}'.");
+                }
+                catch (Exception exSheet)
+                {
+                    Console.WriteLine($"Error exporting worksheet '{sheet.Name}': {exSheet.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
-            }
+
+            Console.WriteLine("Shape export process completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

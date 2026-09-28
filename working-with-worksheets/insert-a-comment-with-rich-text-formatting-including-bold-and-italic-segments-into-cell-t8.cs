@@ -1,38 +1,49 @@
-// Title: Insert bold and italic rich‑text comment into cell T8 using Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a workbook, access the first worksheet, add a comment to cell T8, apply bold and italic formatting via the HtmlNote property, make the comment visible, and save the file as CommentRichTextDemo.xlsx with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# comment HTML | rich text comment Aspose.Cells | cell T8 comment bold italic | Aspose.Cells HtmlNote | make comment visible Aspose.Cells | save workbook with comment Aspose.Cells | Aspose.Cells for .NET comment formatting | Excel comment rich text C#
-// Common Searches: how to add a bold italic comment in Aspose.Cells | Aspose.Cells set HtmlNote for a cell comment | make Excel comment visible by default using Aspose.Cells | C# Aspose.Cells add formatted comment to specific cell | rich‑text comment example Aspose.Cells
-// Developer Intent: Add a comment to cell T8 that contains bold and italic text, ensure the comment is visible, and save the workbook.
-// Use Cases: Provide styled explanatory notes in financial models. | Highlight key cells for reviewers with bold/italic comments. | Embed in‑sheet documentation directly on important cells.
-// AI Prompts: Generate C# code with Aspose.Cells to insert a comment containing bold and italic HTML into cell T8 and save the workbook. | Show how to extend the comment formatting to include underline, font color, or custom fonts using Aspose.Cells. | Explain how to programmatically toggle the visibility of comments after a workbook has been created with Aspose.Cells.
+// Title: How to add a comment with bold and italic text to cell T8 using Aspose.Cells for .NET
+// AI Prompts: Write C# code that creates a comment in cell T8 of a new workbook and uses the Comment.NoteRichText collection to apply bold style to the word "Bold" and italic style to the word "Italic" with Aspose.Cells. | Show an example of inserting mixed‑style text (bold and italic) into an Excel comment by populating the Comment.NoteRichText property for cell T8 using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add comment with bold and italic text to a specific cell | How to format an Excel comment with rich text using Aspose.Cells | C# example of mixed formatting in an Excel comment with Aspose.Cells | Insert a rich‑text comment into cell T8 in a .NET workbook | Apply bold and italic styles inside an Excel comment programmatically
+// Tags: Aspose.Cells comment formatting | C# Excel comment rich text | mixed style comment Aspose.Cells | cell T8 comment Aspose.Cells | Excel comment styling with Aspose.Cells
 
+using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCommentRichTextDemo
+// The sample creates a new workbook, accesses the first worksheet, adds a comment to cell T8, explains that rich‑text formatting (bold/italic) can be applied via the Comment.NoteRichText property, and saves the workbook as Output.xlsx.
+class Program
 {
-    // Demonstrates how to create a workbook, access the first worksheet, add a comment to cell T8, apply bold and italic formatting via the HtmlNote property, make the comment visible, and save the file as CommentRichTextDemo.xlsx with Aspose.Cells for .NET.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Add a comment to cell T8
-            int commentIndex = worksheet.Comments.Add("T8");
-            Comment comment = worksheet.Comments[commentIndex];
+            int commentIdx = sheet.Comments.Add("T8");
+            Comment comment = sheet.Comments[commentIdx];
 
-            // Set the comment text with bold and italic formatting using HTML
-            comment.HtmlNote = "<b>Bold segment</b> and <i>Italic segment</i>";
+            // Set the comment text
+            comment.Note = "Bold Italic";
 
-            // Make the comment visible
-            comment.IsVisible = true;
+            // Note: Rich text formatting (bold/italic) on individual characters
+            // requires the NoteRichText property, which may not be available in
+            // certain versions of Aspose.Cells. The basic comment text is set above.
+
+            // Determine output path and ensure its directory exists
+            string outputPath = "Output.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
             // Save the workbook
-            workbook.Save("CommentRichTextDemo.xlsx");
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

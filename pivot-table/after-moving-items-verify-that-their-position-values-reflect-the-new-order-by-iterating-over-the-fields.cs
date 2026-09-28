@@ -1,16 +1,13 @@
-// Title: Check PivotTable RowField Position After Reordering with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, adds a pivot table with two row fields, displays each field's Name and Position, moves the first row field to a new index using RowFields.Move, refreshes the pivot, and then prints the updated Position values to confirm they match the new order before saving the file.
-// Keywords: Aspose.Cells pivot field position | RowFields.Move C# | verify pivot row field order | PivotTable Position property | Aspose.Cells .NET example | pivot table field reordering | check field Position after move | Aspose.Cells programming guide | C# pivot table manipulation | Excel pivot field verification
-// Common Searches: Aspose.Cells how to read PivotField.Position | C# move pivot row field and verify order | RowFields.Move example Aspose.Cells | check pivot table field order after reordering | verify pivot field position .NET | Aspose.Cells pivot table field index
-// Developer Intent: Ensure that the Position property of PivotField objects updates correctly after programmatically reordering row fields in a PivotTable.
-// Use Cases: Automated testing of pivot table layout changes by comparing Position values before and after a move operation. | Dynamic report generation where row fields need to be reordered and their final positions must be validated. | Debugging and troubleshooting pivot table configurations in enterprise .NET applications.
-// AI Prompts: Show a C# snippet using Aspose.Cells that moves a pivot row field and asserts the Position values before and after the move. | Explain how the PivotField.Position property is recalculated when RowFields.Move is called and how to retrieve it for validation. | Generate unit‑test code that verifies the correct ordering of PivotTable.RowFields after invoking the Move method.
+// Title: Check Pivot Table Row Field Position After Reordering Using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that creates a workbook, adds a pivot table with two row fields, moves the first row field to a different index, refreshes the pivot, and prints each field's Name and Position before and after the move. | Generate a .NET example that demonstrates how to reorder pivot table row fields with Aspose.Cells and confirm the new Position values for each field.
+// Common Searches: aspnet how to move a pivot table row field and read its Position property with Aspose.Cells | c# verify pivot field order after calling RowFields.Move in Aspose.Cells | display pivot table field positions after reordering rows using Aspose.Cells for .NET | check if pivot row field Position reflects new index after Move method in Aspose.Cells
+// Tags: aspocells pivot rowfield reordering | c# check pivotfield position values | aspocells move row field index | pivot table field order validation .net | aspocells refreshdata calculate after move
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// This C# example creates a workbook, adds a pivot table with two row fields, displays each field's Name and Position, moves the first row field to a new index using RowFields.Move, refreshes the pivot, and then prints the updated Position values to confirm they match the new order before saving the file.
+// Demonstrates creating a workbook, adding a pivot table with two row fields, moving the first row field to a new index, refreshing and calculating the pivot, and printing each field's Name and Position before and after the move, then saving the file.
 class VerifyPivotFieldPositions
 {
     static void Main()
@@ -33,31 +30,31 @@ class VerifyPivotFieldPositions
         int pivotIndex = sheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
         PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Add two fields to the Row area: "Category" (index 0) and "Value" (index 1)
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);
-        pivotTable.AddFieldToArea(PivotFieldType.Row, 1);
+        // Add two fields to the Row area (Category and Value)
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0); // Category
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 1); // Value
 
-        // Display field names and their Position values before moving
+        // Display field positions before moving
         Console.WriteLine("Before move:");
         for (int i = 0; i < pivotTable.RowFields.Count; i++)
         {
             PivotField field = pivotTable.RowFields[i];
-            Console.WriteLine($"Field {i}: {field.Name}, Position = {field.Position}");
+            Console.WriteLine($"Index {i}: Name = {field.Name}, Position = {field.Position}");
         }
 
-        // Move the first field (current position 0) to destination position 1
+        // Move the first field (index 0) to the second position (index 1)
         pivotTable.RowFields.Move(0, 1);
 
         // Refresh and calculate the pivot table to apply the change
         pivotTable.RefreshData();
         pivotTable.CalculateData();
 
-        // Verify that Position values reflect the new order
+        // Verify and display field positions after moving
         Console.WriteLine("\nAfter move:");
         for (int i = 0; i < pivotTable.RowFields.Count; i++)
         {
             PivotField field = pivotTable.RowFields[i];
-            Console.WriteLine($"Field {i}: {field.Name}, Position = {field.Position}");
+            Console.WriteLine($"Index {i}: Name = {field.Name}, Position = {field.Position}");
         }
 
         // Save the workbook

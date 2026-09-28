@@ -1,39 +1,27 @@
-// Title: C# – Retrieve VBA Project from a Macro‑Enabled Workbook with Aspose.Cells
-// Description: This example demonstrates how to load an .xlsm file using Aspose.Cells for .NET, access its VBA project via the Workbook.VbaProject property, verify its existence, and output key properties such as Name, IsSigned and IsProtected before saving the workbook unchanged.
-// Keywords: Aspose.Cells VBA project | Workbook.VbaProject C# | read VBA metadata Aspose | macro‑enabled workbook .xlsm | check VBA project signed | detect protected VBA project | Aspose.Cells .NET example
-// Common Searches: how to get VBA project from xlsm using Aspose.Cells | Aspose.Cells retrieve VBA project name | C# check if workbook contains VBA project | read VBA project properties with Aspose.Cells | access Workbook.VbaProject property
-// Developer Intent: Extract the VBA project from a loaded workbook and read its basic attributes.
-// Use Cases: Confirm that an incoming .xlsm file includes a VBA project before further processing. | Log VBA project details (name, signing status, protection flag) for compliance auditing. | Validate that a workbook’s VBA project is signed and not password‑protected prior to distribution.
-// AI Prompts: Write C# code with Aspose.Cells that extracts the VBA project from a workbook and enumerates all its modules. | Show how to rename a VBA project and save the workbook as a macro‑enabled file using Aspose.Cells. | Explain how to detect whether a VBA project is password‑protected with the Aspose.Cells VbaProject API.
+// Title: Retrieve the VBA project from an Excel workbook and list its macro modules using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells and accesses the workbook.VbaProject property. | Provide a snippet that iterates over VbaProject.Modules and prints each module's name. | Show how to verify that a workbook contains a VBA project before enumerating its modules with Aspose.Cells.
+// Common Searches: how to get VBA project from an Excel file using Aspose.Cells C# | list all macro modules in a .xlsx workbook with Aspose.Cells .NET | Aspose.Cells retrieve VbaProject and enumerate modules example | C# read VBA macros from workbook using Aspose.Cells | check for VBA project in workbook before accessing modules Aspose.Cells
+// Tags: Aspose.Cells retrieve VbaProject | enumerate VBA modules Aspose.Cells | list macro module names C# | access workbook VBA project .NET | read VBA project from .xlsx programmatically
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// This example demonstrates how to load an .xlsm file using Aspose.Cells for .NET, access its VBA project via the Workbook.VbaProject property, verify its existence, and output key properties such as Name, IsSigned and IsProtected before saving the workbook unchanged.
-class RetrieveVbaProject
+// The example loads an Excel file (input.xlsx) into an Aspose.Cells Workbook, obtains its VbaProject, and iterates through the Modules collection, outputting each module's name to the console.
+class Program
 {
     static void Main()
     {
-        // Load an existing macro-enabled workbook
-        Workbook workbook = new Workbook("input.xlsm");
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Retrieve the VBA project from the workbook
+        // Retrieve the VBA project associated with the workbook
         VbaProject vbaProject = workbook.VbaProject;
 
-        // Verify that the VBA project exists and display some of its properties
-        if (vbaProject != null)
+        // Example usage: list all VBA modules in the project
+        foreach (VbaModule module in vbaProject.Modules)
         {
-            Console.WriteLine("VBA Project Name: " + vbaProject.Name);
-            Console.WriteLine("Is Signed: " + vbaProject.IsSigned);
-            Console.WriteLine("Is Protected: " + vbaProject.IsProtected);
+            Console.WriteLine($"Module Name: {module.Name}");
         }
-        else
-        {
-            Console.WriteLine("No VBA project found in the workbook.");
-        }
-
-        // Save the workbook (unchanged) as a macro-enabled file
-        workbook.Save("output.xlsm", SaveFormat.Xlsm);
     }
 }

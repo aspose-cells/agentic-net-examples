@@ -1,10 +1,7 @@
-// Title: Export Excel to HTML with 150 DPI Images Using Aspose.Cells for .NET
-// Description: Shows how to set horizontal and vertical image resolution to 150 DPI via HtmlSaveOptions.ImageOptions, disable Base64 embedding, and save a workbook as HTML so that charts and pictures render sharply.
-// Keywords: Aspose.Cells | C# | HtmlSaveOptions | ImageOrPrintOptions | 150 DPI | high‑resolution HTML export | Excel to HTML image quality | disable Base64 images | set image resolution | Aspose.Cells example
-// Common Searches: Aspose.Cells set image DPI HTML export | HTML export high resolution images Aspose .NET | How to change image resolution in HtmlSaveOptions | Export Excel to HTML with 150 DPI charts | Aspose.Cells disable Base64 images
-// Developer Intent: Configure image DPI to 150 and generate HTML output with separate image files for sharper rendering.
-// Use Cases: Web dashboards that display Excel charts on retina or high‑DPI screens. | Automated report generation where image clarity is critical. | Embedding Excel‑derived graphics into web pages without Base64 overhead. | Creating printable HTML versions of workbooks with high‑resolution images.
-// AI Prompts: Generate C# code that saves the workbook to a MemoryStream with 150 DPI image settings. | Show how to embed images as Base64 while preserving 150 DPI resolution in Aspose.Cells HTML export. | Explain how to apply the same 150 DPI settings when exporting to PDF or PNG. | Provide a step‑by‑step guide to batch‑process multiple workbooks using these HTML settings.
+// Title: Export Excel to HTML with 150 DPI images using Aspose.Cells for .NET
+// AI Prompts: Write C# code that saves a Workbook as HTML with image resolution set to 150 DPI using Aspose.Cells. | Show how to configure HtmlSaveOptions.ImageOptions to set HorizontalResolution and VerticalResolution before exporting to HTML.
+// Common Searches: how to set image DPI in Aspose.Cells HTML export C# | Aspose.Cells export workbook to HTML with high‑resolution images 150 DPI | C# HtmlSaveOptions ImageOptions HorizontalResolution VerticalResolution example
+// Tags: Aspose.Cells HtmlSaveOptions image DPI configuration | C# export workbook to HTML high‑resolution images | set HorizontalResolution VerticalResolution Aspose.Cells | disable Base64 image embedding Aspose.Cells HTML
 
 using System;
 using Aspose.Cells;
@@ -12,7 +9,7 @@ using Aspose.Cells.Rendering;
 
 namespace AsposeCellsHtmlExport
 {
-    // Shows how to set horizontal and vertical image resolution to 150 DPI via HtmlSaveOptions.ImageOptions, disable Base64 embedding, and save a workbook as HTML so that charts and pictures render sharply.
+    // The sample creates a workbook, configures HtmlSaveOptions.ImageOptions to use a 150 DPI horizontal and vertical resolution, disables Base64 image embedding, and saves the workbook as an HTML file with sharper, higher‑resolution images.
     class Program
     {
         static void Main()
@@ -23,7 +20,7 @@ namespace AsposeCellsHtmlExport
             sheet.Cells["A1"].PutValue("Sample HTML Export with 150 DPI images");
             sheet.Cells["A2"].PutValue("This image will be rendered at higher resolution.");
 
-            // Optionally add an image to demonstrate the DPI effect
+            // Optionally add an image to demonstrate the effect
             // (Replace the path with a valid image file if needed)
             // sheet.Pictures.Add(2, 0, "example.jpg");
 
@@ -33,17 +30,18 @@ namespace AsposeCellsHtmlExport
             // Access the ImageOrPrintOptions through HtmlSaveOptions.ImageOptions
             ImageOrPrintOptions imgOptions = htmlOptions.ImageOptions;
 
-            // Set both horizontal and vertical DPI to 150 for sharper images
-            imgOptions.HorizontalResolution = 150;
-            imgOptions.VerticalResolution = 150;
+            // Set the desired DPI for both horizontal and vertical resolution
+            imgOptions.HorizontalResolution = 150; // 150 DPI horizontally
+            imgOptions.VerticalResolution = 150;   // 150 DPI vertically
 
-            // Export images as separate files (optional, set to true for Base64 embedding)
+            // Export images as separate files (optional, improves clarity)
             htmlOptions.ExportImagesAsBase64 = false;
 
             // Save the workbook as HTML using the configured options
-            workbook.Save("output.html", htmlOptions);
+            string outputPath = "output.html";
+            workbook.Save(outputPath, htmlOptions);
 
-            Console.WriteLine("HTML file saved with images rendered at 150 DPI.");
+            Console.WriteLine($"HTML file saved to '{outputPath}' with images rendered at 150 DPI.");
         }
     }
 }

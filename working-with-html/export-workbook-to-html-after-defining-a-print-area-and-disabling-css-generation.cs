@@ -1,41 +1,34 @@
-// Title: Export a Print Area to HTML with Inline Styles Using Aspose.Cells for .NET
-// Description: This example creates a workbook, fills it with sample data, defines a print area (B2:F10), and saves the sheet as an HTML file. The HtmlSaveOptions are configured to export only the specified range and to embed all styling inline, eliminating external CSS files.
-// Keywords: Aspose.Cells | C# HTML export | ExportPrintAreaOnly | DisableCss | print area HTML | inline styles | HtmlSaveOptions | save workbook as HTML | no external CSS | range export
-// Common Searches: Aspose.Cells export specific range to HTML | How to disable CSS when saving workbook as HTML in .NET | Export print area only Aspose.Cells | C# generate HTML from Excel without external stylesheet | Save Excel range as HTML with inline styles
-// Developer Intent: Generate an HTML file that contains only the defined print area and uses inline styling instead of external CSS.
-// Use Cases: Create a lightweight HTML preview of a selected spreadsheet region for email newsletters. | Embed a spreadsheet snippet in a web page without loading additional CSS resources. | Produce a printable HTML section for documentation or reporting tools.
-// AI Prompts: Show how to add a custom page header to the HTML output while keeping ExportPrintAreaOnly and DisableCss enabled. | Provide code that writes the HTML to a MemoryStream instead of a file, preserving the print‑area‑only and inline‑style settings. | Explain how to embed images as base64 data URIs in the HTML while still disabling external CSS.
+// Title: Export a specific print area to HTML with CSS disabled using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that sets a worksheet's PrintArea to a range and saves the workbook as HTML with HtmlSaveOptions.DisableCss enabled. | Show how to configure Aspose.Cells HtmlSaveOptions to prevent CSS file creation while exporting only the defined print area. | Provide a minimal C# example that creates a workbook, defines a print area, disables CSS generation, and writes the output to an HTML file.
+// Common Searches: how to export only a selected range to html using aspose.cells c# | asp.net disable css generation when saving workbook as html with aspose.cells | set print area before html export in aspose.cells .net | htmlsaveoptions.disablecss example for c# | export workbook to html without external stylesheet asp.net
+// Tags: Aspose.Cells HtmlSaveOptions.DisableCss | export worksheet print area to HTML | C# Aspose.Cells HTML export without CSS | define print area Aspose.Cells | save workbook as HTML Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
 
-// This example creates a workbook, fills it with sample data, defines a print area (B2:F10), and saves the sheet as an HTML file. The HtmlSaveOptions are configured to export only the specified range and to embed all styling inline, eliminating external CSS files.
-class ExportPrintAreaHtml
+// // This program creates a new workbook, defines a print area (A1:B2), configures HtmlSaveOptions to disable CSS generation, and saves the workbook as an HTML file.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
+        // Create a new workbook
         Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
 
-        // Fill the worksheet with sample data
-        for (int i = 0; i < 20; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                worksheet.Cells[i, j].PutValue($"Cell {i + 1},{j + 1}");
-            }
-        }
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-        // Define the print area that will be exported
-        worksheet.PageSetup.PrintArea = "B2:F10";
+        // (Optional) Populate some data
+        sheet.Cells["A1"].PutValue("Header");
+        sheet.Cells["A2"].PutValue(123);
+        sheet.Cells["B2"].PutValue(456);
 
-        // Set HTML save options: export only the defined print area and disable CSS generation
-        HtmlSaveOptions options = new HtmlSaveOptions();
-        options.ExportPrintAreaOnly = true; // export only the print area
-        options.DisableCss = true;          // use only inline styles, no external CSS
+        // Define the print area (e.g., cells A1:B2)
+        sheet.PageSetup.PrintArea = "A1:B2";
 
-        // Save the workbook as an HTML file
-        workbook.Save("PrintArea_NoCss.html", options);
+        // Configure HTML save options to disable CSS generation
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.DisableCss = true; // No external CSS file will be created
+
+        // Export the workbook to HTML
+        workbook.Save("output.html", htmlOptions);
     }
 }

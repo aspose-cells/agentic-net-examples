@@ -1,46 +1,60 @@
-// Title: Export Each Worksheet to a Separate PDF with Aspose.Cells (C#) using PdfSaveOptions.SheetSet
-// Description: The example builds a workbook with three sheets, writes a value to A1 on each sheet, then iterates through the worksheets. For every iteration it creates a PdfSaveOptions object, sets its SheetSet to the current sheet index, composes a file name that includes the sheet number and name, and saves that sheet as an individual PDF file.
-// Keywords: Aspose.Cells | C# PDF export | PdfSaveOptions SheetSet | save worksheet as PDF | individual PDF per sheet | export Excel to PDF .NET | Aspose.Cells per‑sheet PDF | loop worksheets Aspose | Aspose.Cells PDF options | C# Aspose.Cells example
-// Common Searches: Aspose.Cells export each worksheet to separate PDF | PdfSaveOptions SheetSet usage C# | How to save individual Excel sheets as PDF with Aspose | Loop through workbook worksheets and generate PDFs | C# Aspose.Cells save specific sheet to PDF
-// Developer Intent: Generate a distinct PDF file for every worksheet in a workbook.
-// Use Cases: Produce separate PDF reports for departmental tabs in a financial workbook. | Automate per‑sheet PDF delivery when each worksheet represents a client contract. | Archive each data‑collection sheet as an individual PDF for regulatory compliance.
-// AI Prompts: Write C# code that uses Aspose.Cells to iterate over all worksheets and save each one as a PDF with a custom filename. | Show how to configure PdfSaveOptions.SheetSet to export only the current worksheet inside a loop. | Explain how to modify the sample to combine several non‑contiguous worksheets into a single PDF using SheetSet.
+// Title: Export each worksheet of an Excel workbook to a separate PDF file with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that iterates through all worksheets in a Workbook and saves each one as an individual PDF using PdfSaveOptions.SheetSet. | Show how to create an output folder beside the source Excel file and name each PDF after its worksheet name. | Demonstrate configuring PdfSaveOptions.SheetSet to a single sheet index so only that sheet is exported to PDF. | Provide robust error handling for a missing source file and ensure PDFs are written to a subdirectory.
+// Common Searches: Aspose.Cells C# export each Excel sheet to its own PDF file | How to use PdfSaveOptions SheetSet to save a single worksheet as PDF in .NET | Create a folder and save worksheet PDFs with names matching sheet titles using Aspose.Cells | Loop through workbook worksheets and generate separate PDF documents in C# | Save Excel worksheets as individual PDFs with Aspose.Cells and handle missing file errors
+// Tags: Aspose.Cells PdfSaveOptions SheetSet per worksheet | C# export Excel worksheets to separate PDF files | create output directory for PDF exports Aspose.Cells | save individual worksheet as PDF Aspose.Cells .NET | loop through workbook worksheets PDF generation
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// The example builds a workbook with three sheets, writes a value to A1 on each sheet, then iterates through the worksheets. For every iteration it creates a PdfSaveOptions object, sets its SheetSet to the current sheet index, composes a file name that includes the sheet number and name, and saves that sheet as an individual PDF file.
-class Program
+// The example loads a workbook, creates a "PdfExports" subfolder, iterates each worksheet, sets PdfSaveOptions.SheetSet to the current sheet index, and saves each sheet as a PDF named after the worksheet.
+class ExportWorksheetsToPdf
 {
     static void Main()
     {
-        // Create a new workbook and add a few worksheets
-        Workbook workbook = new Workbook();
-        workbook.Worksheets.Add("Sheet2");
-        workbook.Worksheets.Add("Sheet3");
-
-        // Fill each worksheet with sample data
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        try
         {
-            Worksheet ws = workbook.Worksheets[i];
-            ws.Cells["A1"].PutValue($"Data from {ws.Name}");
+            // Path to the source Excel file
+            string excelPath = @"C:\Data\Workbook.xlsx";
+
+            // Verify that the source file exists
+            if (!File.Exists(excelPath))
+            {
+                Console.WriteLine($"Error: The file \"{excelPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(excelPath);
+
+            // Determine output directory (same folder as source file)
+            string sourceDir = Path.GetDirectoryName(excelPath) ?? ".";
+            string outputDir = Path.Combine(sourceDir, "PdfExports");
+            Directory.CreateDirectory(outputDir);
+
+            // Export each worksheet to a separate PDF file
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Configure PDF save options for the current sheet only
+                PdfSaveOptions pdfOptions = new PdfSaveOptions
+                {
+                    // Use SheetSet to specify a single sheet by its index
+                    SheetSet = new SheetSet(sheet.Index, sheet.Index)
+                };
+
+                // Build the output PDF file name (e.g., Sheet1.pdf)
+                string pdfFileName = Path.Combine(outputDir, $"{sheet.Name}.pdf");
+
+                // Save the workbook (only the current sheet) as a PDF file
+                workbook.Save(pdfFileName, pdfOptions);
+            }
+
+            Console.WriteLine("All worksheets have been exported to separate PDF files.");
         }
-
-        // Loop through each worksheet, set SheetSet to that sheet, and save as a separate PDF
-        for (int i = 0; i < workbook.Worksheets.Count; i++)
+        catch (Exception ex)
         {
-            // Create PDF save options
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-
-            // Configure SheetSet to include only the current worksheet (zero‑based index)
-            pdfOptions.SheetSet = new SheetSet(new int[] { i });
-
-            // Define output file name
-            string outputFile = $"Sheet_{i + 1}_{workbook.Worksheets[i].Name}.pdf";
-
-            // Save the selected sheet to PDF
-            workbook.Save(outputFile, pdfOptions);
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,66 +1,74 @@
-// Title: C# – Verify Aspose.Cells AutoFilter with French Headers after Globalization Settings
-// Description: Creates a workbook with French column headers (Produit, Ventes), applies a custom list separator via SettableGlobalizationSettings, sets an AutoFilter on A1:B5, filters the first column for "Pomme", reports hidden rows, clears the filter, and saves the file as AutoFilterLocalizationTest.xlsx.
-// Keywords: Aspose.Cells | C# AutoFilter localization | French column headers Excel | SettableGlobalizationSettings list separator | filter hidden rows Aspose | globalization Excel .NET | auto filter test code
-// Common Searches: Aspose.Cells filter French headers C# | AutoFilter with localized column names .NET | Set list separator globalization Aspose.Cells | How to check hidden rows after AutoFilter | Remove AutoFilter programmatically Aspose
-// Developer Intent: Confirm that AutoFilter respects localized (French) headers and custom globalization settings when filtering rows.
-// Use Cases: Generate a worksheet with French headers and filter products by name. | Programmatically detect which rows are hidden after applying a filter to validate localization handling. | Reset the AutoFilter to display all rows after verification.
-// AI Prompts: Write a unit test that asserts rows 2 and 4 are visible and rows 3 and 5 are hidden after filtering "Pomme" on the French header "Produit" using Aspose.Cells. | Provide a reusable method that returns a list of hidden row indices for any filtered worksheet with localized headers. | Explain how to configure SettableGlobalizationSettings to change the list separator for CSV export while preserving AutoFilter functionality.
+// Title: Test Aspose.Cells AutoFilter on French column headers after setting workbook culture to fr-FR (C#)
+// AI Prompts: Generate C# code that configures a Workbook's CultureInfo to fr-FR, creates French headers (Nom, Âge, Pays), applies an AutoFilter to A1:C4, filters the "Pays" column for "France", and prints the rows that remain visible. | Show how to programmatically verify which rows are hidden or visible after applying an AutoFilter on a localized header using Aspose.Cells.
+// Common Searches: Aspose.Cells apply auto filter on French header column | C# set workbook cultureinfo fr-FR for Excel filtering with Aspose.Cells | filter Excel rows by value in non‑English column using Aspose.Cells .NET | how to check visible rows after auto filter in Aspose.Cells C# | globalization example for AutoFilter in Aspose.Cells
+// Tags: Aspose.Cells auto filter localized headers | set workbook cultureinfo fr-FR Aspose.Cells | filter rows by column value Aspose.Cells | verify hidden rows after auto filter Aspose.Cells | Excel auto filter non‑english headers .NET | globalization auto filter Aspose.Cells
 
 using System;
+using System.Globalization;
 using Aspose.Cells;
 
-namespace AutoFilterLocalizationTest
+// The sample creates a new workbook, sets its CultureInfo to French (fr-FR), writes French headers (Nom, Âge, Pays) and sample data, applies an AutoFilter to the range A1:C4, adds a filter on the "Pays" column to show only rows where the country equals "France", iterates through the rows to output those that are not hidden, and saves the workbook as AutoFilterLocalizationTest.xlsx.
+class AutoFilterLocalizationTest
 {
-    // Creates a workbook with French column headers (Produit, Ventes), applies a custom list separator via SettableGlobalizationSettings, sets an AutoFilter on A1:B5, filters the first column for "Pomme", reports hidden rows, clears the filter, and saves the file as AutoFilterLocalizationTest.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // Set localized column headers (French)
-            cells["A1"].PutValue("Produit");   // "Product"
-            cells["B1"].PutValue("Ventes");    // "Sales"
+            // Set workbook culture to French (France) to simulate globalization
+            workbook.Settings.CultureInfo = new CultureInfo("fr-FR");
 
-            // Populate sample data
-            cells["A2"].PutValue("Pomme");     // Apple
-            cells["B2"].PutValue(120);
-            cells["A3"].PutValue("Banane");    // Banana
-            cells["B3"].PutValue(80);
-            cells["A4"].PutValue("Pomme");     // Apple
-            cells["B4"].PutValue(150);
-            cells["A5"].PutValue("Orange");
-            cells["B5"].PutValue(200);
+            // Populate headers in French and some sample data
+            // Headers: "Nom" (Name), "Âge" (Age), "Pays" (Country)
+            sheet.Cells["A1"].PutValue("Nom");
+            sheet.Cells["B1"].PutValue("Âge");
+            sheet.Cells["C1"].PutValue("Pays");
 
-            // Apply globalization settings if needed (example: change list separator)
-            SettableGlobalizationSettings gSettings = new SettableGlobalizationSettings();
-            gSettings.SetListSeparator(';'); // just an example, not required for filter
-            workbook.Settings.GlobalizationSettings = gSettings;
+            // Row 2
+            sheet.Cells["A2"].PutValue("Alice");
+            sheet.Cells["B2"].PutValue(30);
+            sheet.Cells["C2"].PutValue("France");
 
-            // Define the autofilter range (including header row)
-            sheet.AutoFilter.Range = "A1:B5";
+            // Row 3
+            sheet.Cells["A3"].PutValue("Bob");
+            sheet.Cells["B3"].PutValue(25);
+            sheet.Cells["C3"].PutValue("USA");
 
-            // Filter the first column (fieldIndex 0) for the value "Pomme"
-            sheet.AutoFilter.Filter(0, "Pomme");
+            // Row 4
+            sheet.Cells["A4"].PutValue("Claire");
+            sheet.Cells["B4"].PutValue(28);
+            sheet.Cells["C4"].PutValue("France");
+
+            // Apply AutoFilter to the range containing headers and data
+            sheet.AutoFilter.Range = "A1:C4";
+
+            // Filter the "Pays" column (index 2) to show only rows where Country = "France"
+            sheet.AutoFilter.AddFilter(2, "France"); // column index is zero‑based
             sheet.AutoFilter.Refresh();
 
-            // Verify which rows are hidden after filtering
-            Console.WriteLine("Rows hidden after applying filter on localized header:");
-            for (int row = 1; row <= sheet.Cells.MaxDataRow; row++) // zero‑based rows
+            // Verify that only rows with "France" are visible
+            Console.WriteLine("Visible rows after applying filter on localized header \"Pays\":");
+            for (int row = 1; row <= sheet.Cells.MaxDataRow; row++) // start from row 1 (zero‑based) which is the second row in Excel
             {
-                bool isHidden = sheet.Cells.Rows[row].IsHidden;
-                Console.WriteLine($"Row {row + 1}: Hidden = {isHidden}");
+                // Rows hidden by the filter have the IsHidden flag set to true
+                if (!sheet.Cells.Rows[row].IsHidden)
+                {
+                    string name = sheet.Cells[row, 0].StringValue;
+                    int age = (int)sheet.Cells[row, 1].IntValue;
+                    string country = sheet.Cells[row, 2].StringValue;
+                    Console.WriteLine($"Row {row + 1}: {name}, {age}, {country}");
+                }
             }
 
-            // Remove the filter and show all rows again
-            sheet.AutoFilter.ShowAll();
-            sheet.AutoFilter.Refresh();
-
-            // Save the workbook (output file)
+            // Save the workbook to a file (optional, demonstrates lifecycle usage)
             workbook.Save("AutoFilterLocalizationTest.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

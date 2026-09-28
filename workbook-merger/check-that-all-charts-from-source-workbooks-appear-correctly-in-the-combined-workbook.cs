@@ -1,91 +1,69 @@
-// Title: Verify Chart Preservation When Merging Excel Workbooks with Aspose.Cells for .NET
-// Description: A C# example that loads multiple source Excel files, records the chart count on each worksheet, merges them into a single workbook using the Combine method, refreshes all data, and then validates that every original chart is present in the combined file before saving.
-// Keywords: Aspose.Cells combine workbooks | C# chart verification after merge | Excel chart preservation Aspose | RefreshAll charts Aspose.Cells | merged workbook chart count
-// Common Searches: how to keep charts when combining Excel files with Aspose.Cells | C# verify charts after workbook merge | Aspose.Cells Combine method chart loss | check chart count in merged workbook | refresh charts after merging Excel workbooks
-// Developer Intent: Ensure that every chart from each source workbook remains intact after using Aspose.Cells' Combine method.
-// Use Cases: Load each source workbook and capture the number of charts per worksheet. | Merge the workbooks into a single destination workbook with Combine and call RefreshAll. | Iterate through the combined worksheets, compare actual chart counts with the recorded values, and log any discrepancies before saving.
-// AI Prompts: Generate C# code that logs missing or extra charts after merging multiple Excel workbooks with Aspose.Cells. | Create an NUnit test that asserts the chart count on each worksheet of a combined workbook matches the original counts. | Refactor the verification loop to use LINQ for comparing expected and actual chart counts.
+// Title: Check that all charts from multiple source workbooks remain after using Workbook.Combine in Aspose.Cells for .NET
+// AI Prompts: Load each source workbook, count its charts, combine them with Workbook.Combine, then assert that the combined workbook’s chart count equals the sum of the source counts. | Create C# code that merges several Excel files containing charts using Aspose.Cells and automatically verifies chart integrity by comparing pre‑merge and post‑merge chart totals. | Add exception handling that throws a descriptive error when the chart count after Workbook.Combine does not match the expected total.
+// Common Searches: Aspose.Cells how to ensure charts are kept when merging multiple Excel files in C# | C# verify chart count after Workbook.Combine operation | compare chart totals before and after combining workbooks with Aspose.Cells | detect missing charts after merging Excel workbooks using Aspose.Cells .NET
+// Tags: Workbook.Combine chart preservation | Aspose.Cells chart count validation | merge Excel workbooks with charts .NET | chart integrity after workbook combine | verify combined workbook chart total
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Aspose.Cells;
 
-namespace AsposeCellsChartVerification
+namespace ChartCombineVerification
 {
-    // A C# example that loads multiple source Excel files, records the chart count on each worksheet, merges them into a single workbook using the Combine method, refreshes all data, and then validates that every original chart is present in the combined file before saving.
+    // The example loads a list of source Excel workbooks, counts the charts in each worksheet, merges them into a new workbook using Workbook.Combine, compares the total chart count before and after the merge, reports whether all charts are present, and saves the combined file as CombinedWorkbook.xlsx.
     class Program
     {
         static void Main()
         {
-            // Paths to source workbooks (replace with actual file locations)
-            string[] sourcePaths = { "Source1.xlsx", "Source2.xlsx", "Source3.xlsx" };
+            // Paths to source workbooks that contain charts
+            List<string> sourcePaths = new List<string>
+            {
+                "SourceWorkbook1.xlsx",
+                "SourceWorkbook2.xlsx"
+                // Add more paths as needed
+            };
 
-            // Create the destination workbook that will hold the combined result
-            Workbook combinedWorkbook = new Workbook();
+            // Create an empty destination workbook
+            Workbook destWorkbook = new Workbook();
 
-            // Store chart information from each source workbook for later verification
-            var sourceChartInfo = new List<(int sheetIndex, int chartCount)>();
+            // Keep track of total number of charts in all source workbooks
+            int totalSourceCharts = 0;
 
-            // Load each source workbook, record its chart data, and combine it into the destination
+            // Load each source workbook, count its charts, and combine it into the destination workbook
             foreach (string path in sourcePaths)
             {
                 // Load source workbook
                 Workbook sourceWorkbook = new Workbook(path);
 
-                // Record chart count per worksheet in the source workbook
-                foreach (Worksheet ws in sourceWorkbook.Worksheets)
-                {
-                    int chartCount = ws.Charts.Count;
-                    sourceChartInfo.Add((ws.Index, chartCount));
-                }
+                // Count charts in the current source workbook
+                int sourceCharts = sourceWorkbook.Worksheets
+                    .Cast<Worksheet>()
+                    .Sum(ws => ws.Charts.Count);
+                totalSourceCharts += sourceCharts;
 
                 // Combine the source workbook into the destination workbook
-                combinedWorkbook.Combine(sourceWorkbook);
+                destWorkbook.Combine(sourceWorkbook);
             }
 
-            // Refresh all pivot tables and charts in the combined workbook (ensures data is up‑to‑date)
-            combinedWorkbook.Worksheets.RefreshAll();
+            // After combining, count charts in the combined workbook
+            int combinedCharts = destWorkbook.Worksheets
+                .Cast<Worksheet>()
+                .Sum(ws => ws.Charts.Count);
 
-            // Verify that charts from each source worksheet are present in the combined workbook
-            bool allChartsPresent = true;
-            int verificationIndex = 0; // Index to walk through sourceChartInfo
-
-            foreach (Worksheet ws in combinedWorkbook.Worksheets)
+            // Verify that all charts from source workbooks are present in the combined workbook
+            if (combinedCharts == totalSourceCharts)
             {
-                // Skip worksheets that were originally empty (no source chart info)
-                if (verificationIndex >= sourceChartInfo.Count)
-                    break;
-
-                var (sourceSheetIdx, expectedChartCount) = sourceChartInfo[verificationIndex];
-
-                // The combined workbook preserves the original sheet order, so the indices should match
-                if (ws.Index == sourceSheetIdx)
-                {
-                    int actualChartCount = ws.Charts.Count;
-                    if (actualChartCount != expectedChartCount)
-                    {
-                        allChartsPresent = false;
-                        Console.WriteLine($"Mismatch in worksheet '{ws.Name}' (Index {ws.Index}): " +
-                                          $"expected {expectedChartCount} chart(s), found {actualChartCount}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Worksheet '{ws.Name}' (Index {ws.Index}) contains the expected " +
-                                          $"{actualChartCount} chart(s).");
-                    }
-
-                    verificationIndex++;
-                }
+                Console.WriteLine("All charts are present after combination.");
+                Console.WriteLine($"Total source charts: {totalSourceCharts}, Combined workbook charts: {combinedCharts}");
             }
-
-            // Final result
-            if (allChartsPresent)
-                Console.WriteLine("All charts from source workbooks are present in the combined workbook.");
             else
-                Console.WriteLine("Some charts are missing or mismatched in the combined workbook.");
+            {
+                Console.WriteLine("Chart count mismatch after combination.");
+                Console.WriteLine($"Total source charts: {totalSourceCharts}, Combined workbook charts: {combinedCharts}");
+            }
 
             // Save the combined workbook
-            combinedWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
+            destWorkbook.Save("CombinedWorkbook.xlsx", SaveFormat.Xlsx);
         }
     }
 }

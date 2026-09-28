@@ -1,61 +1,40 @@
-// Title: Apply a Glass‑Like Reflection Effect to a Shape using Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to create a new Workbook with Aspose.Cells, add a rectangle shape, and configure its ReflectionEffect (type, transparency, size, blur, distance, direction, fade direction, and RotWithShape) to simulate a glass surface. The workbook is saved as GlassReflectionDemo.xlsx.
-// Keywords: Aspose.Cells | C# | .NET | shape reflection | glass effect | ReflectionEffect | custom reflection | shape transparency | reflection blur | RotWithShape | Excel workbook | add rectangle shape | Aspose.Cells API
-// Common Searches: Aspose.Cells how to add reflection to shape | C# set custom reflection properties Aspose.Cells | glass reflection effect Excel shape Aspose | RotWithShape property example Aspose.Cells | ReflectionEffect transparency size C#
-// Developer Intent: Generate an Excel file, insert a rectangle, and apply a custom reflection that mimics glass.
-// Use Cases: Product catalogs with glossy item thumbnails | Marketing dashboards featuring glass‑like UI elements | Printable reports that need decorative reflective shapes | Interactive Excel templates where shapes rotate while keeping reflections aligned | Educational worksheets demonstrating visual effects
-// AI Prompts: Give me C# code to change the reflection size and transparency for a more subtle glass look in Aspose.Cells. | Show how to rotate a shape and keep its reflection using the RotWithShape property. | Explain each ReflectionEffect property and suggest values for a realistic glass appearance. | How can I animate the reflection effect in an Aspose.Cells workbook? | What are the performance considerations when applying custom reflections to many shapes?
+// Title: Create a semi‑transparent rectangle shape in an Excel worksheet using Aspose.Cells for .NET to mimic a glass reflection
+// AI Prompts: Write C# code that adds a rectangle shape to the first worksheet of a new workbook and applies a LightBlue fill with 40% transparency using Aspose.Cells. | Demonstrate how to set the FillFormat color and Transparency properties of a shape in Aspose.Cells for .NET to achieve a glass‑like appearance.
+// Common Searches: Aspose.Cells C# set shape fill color and transparency in Excel | how to simulate glass effect on an Excel shape with Aspose.Cells .NET | add rectangle shape with 40% transparency to worksheet using Aspose.Cells | Aspose.Cells shape fill format transparency example
+// Tags: Aspose.Cells shape fill transparency C# | add rectangle shape Aspose.Cells .NET | glass effect shape fill Aspose.Cells | semi transparent shape fill Excel Aspose.Cells | Aspose.Cells workbook shape styling
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// // Creates a new workbook, inserts a rectangle shape on the first worksheet, sets its fill color to LightBlue with 40% transparency to emulate a glass‑like look, and saves the file as GlassReflection.xlsx.
+class Program
 {
-    // This C# example shows how to create a new Workbook with Aspose.Cells, add a rectangle shape, and configure its ReflectionEffect (type, transparency, size, blur, distance, direction, fade direction, and RotWithShape) to simulate a glass surface. The workbook is saved as GlassReflectionDemo.xlsx.
-    public class GlassReflectionDemo
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Add a rectangle shape that will act as the glass object
-            // Parameters: upper left row, upper left column, top, left, width, height
-            Shape glassShape = worksheet.Shapes.AddRectangle(2, 1, 2, 1, 150, 100);
+            // Add a rectangle shape to the worksheet
+            // Parameters: shape type, upper left row, upper left column, top offset, left offset, height, width
+            Shape shape = sheet.Shapes.AddShape(MsoDrawingType.Rectangle, 2, 2, 0, 0, 150, 80);
 
-            // Access the reflection effect of the shape
-            ReflectionEffect reflection = glassShape.Reflection;
+            // The current Aspose.Cells version does not expose EffectFormat for shapes.
+            // As an alternative, set a semi‑transparent fill to simulate a glass‑like appearance.
+            shape.FillFormat.ForeColor = System.Drawing.Color.LightBlue;
+            shape.FillFormat.Transparency = 0.4; // 40% transparent
 
-            // Configure reflection to simulate a glass look
-            reflection.Type = ReflectionEffectType.Custom;   // Use custom settings
-            reflection.Transparency = 0.2;                  // Low transparency for a subtle start
-            reflection.Size = 80;                           // Large size to extend the reflection
-            reflection.Blur = 15;                           // Soft blur for a smooth fade
-            reflection.Distance = 5;                        // Slight offset from the shape
-            reflection.Direction = 90;                      // Reflect vertically downwards
-            reflection.FadeDirection = 90;                  // Same as direction for consistency
-            reflection.RotWithShape = true;                 // Keep reflection aligned when rotating
-
-            // Optional: rotate the shape to see RotWithShape in action
-            glassShape.RotationAngle = 10;
-
-            // Save the workbook
-            workbook.Save("GlassReflectionDemo.xlsx");
+            // Save the workbook to a file
+            string outputPath = "GlassReflection.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

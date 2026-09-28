@@ -1,43 +1,27 @@
-// Title: Retrieve Worksheet TabId Values with Aspose.Cells for .NET
-// Description: Shows how to create or load a workbook, set custom TabId values, and read each worksheet's TabId using the Worksheet.TabId property in C#.
-// Keywords: Aspose.Cells | Worksheet.TabId | C# | .NET | retrieve TabId | worksheet identifier | Aspose.Cells example | get sheet TabId | Workbook TabId property
-// Common Searches: Aspose.Cells get worksheet TabId | Worksheet TabId C# example | How to read TabId property in Aspose.Cells | List all sheet TabIds Aspose.Cells | Retrieve TabId for each worksheet .NET
-// Developer Intent: Obtain the TabId of every worksheet in an Aspose.Cells workbook.
-// Use Cases: Log worksheet names with their TabId for debugging. | Map sheet names to TabId values to synchronize with external systems. | Validate custom TabId assignments before saving the file. | Generate a report of sheet identifiers for documentation.
-// AI Prompts: Write C# code that extracts all worksheet TabId values from an Aspose.Cells workbook and stores them in a Dictionary<string, int>. | Create a script to export worksheet names and their TabId to a CSV file using Aspose.Cells. | Explain how to compare TabId collections of two workbooks to detect mismatched sheet identifiers.
+// Title: Retrieve and print each worksheet's TabId from an Excel workbook using Aspose.Cells in C#
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, loops through all worksheets, and prints each sheet's name together with its TabId. | Show how to access the Worksheet.TabId property while enumerating workbook.Worksheets in Aspose.Cells for .NET. | Provide a console application example that loads a workbook, reads the TabId of every worksheet, and outputs the results.
+// Common Searches: how to get worksheet TabId using Aspose.Cells C# | list all sheet identifiers (TabId) in an Excel file with Aspose.Cells | C# Aspose.Cells read TabId property for each worksheet | display worksheet names and TabId values in a console app using Aspose.Cells
+// Tags: Aspose.Cells read worksheet TabId | C# iterate workbook worksheets Aspose.Cells | output worksheet TabId to console | load Excel file with Aspose.Cells | Worksheet.TabId property usage
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace AsposeCellsTabIdDemo
+// Loads an Excel workbook with Aspose.Cells, iterates over each worksheet, reads the TabId property, and writes the worksheet name and its TabId to the console.
+class Program
 {
-    // Shows how to create or load a workbook, set custom TabId values, and read each worksheet's TabId using the Worksheet.TabId property in C#.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through all worksheets in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your file path) or create a new one.
-            // Here we create a new workbook for demonstration.
-            Workbook workbook = new Workbook();
+            // Retrieve the TabId of the current worksheet
+            int tabId = sheet.TabId;
 
-            // Add a few worksheets to have multiple sheets.
-            workbook.Worksheets.Add("FirstSheet");
-            workbook.Worksheets.Add("SecondSheet");
-            workbook.Worksheets.Add("ThirdSheet");
-
-            // Optionally set custom TabId values to see distinct results.
-            workbook.Worksheets[0].TabId = 101;
-            workbook.Worksheets[1].TabId = 202;
-            workbook.Worksheets[2].TabId = 303;
-
-            // Iterate through each worksheet and retrieve its TabId.
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                Console.WriteLine($"Worksheet Name: {sheet.Name}, TabId: {sheet.TabId}");
-            }
-
-            // Save the workbook if needed.
-            // workbook.Save("TabIdDemo.xlsx");
+            // Output the worksheet name and its TabId
+            Console.WriteLine($"Worksheet: {sheet.Name}, TabId: {tabId}");
         }
     }
 }

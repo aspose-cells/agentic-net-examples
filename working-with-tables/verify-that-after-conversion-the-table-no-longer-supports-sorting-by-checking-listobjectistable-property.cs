@@ -1,56 +1,56 @@
-// Title: Aspose.Cells .NET – Verify ListObject.IsTable Is False After ConvertToRange
-// Description: C# example that creates a workbook, adds a ListObject (table) on range A1:B3, calls ConvertToRange to turn the table into a normal range, checks ListObject.IsTable (or the ListObjects collection) to confirm the table no longer exists, and saves the file.
-// Keywords: Aspose.Cells ConvertToRange | ListObject.IsTable | C# table to range conversion | verify table removal Aspose | .NET workbook table check | Aspose.Cells ListObject conversion
-// Common Searches: Aspose.Cells how to check if ListObject is still a table after ConvertToRange | C# verify table conversion to range in Aspose.Cells | ListObject.IsTable false after ConvertToRange | Aspose.Cells remove table features after conversion
-// Developer Intent: Ensure a ListObject no longer behaves as a table after ConvertToRange is executed.
-// Use Cases: Programmatically confirm that sorting, filtering, and other table features are disabled after conversion. | Clean workbook metadata before sharing with users who do not need table structures. | Skip table‑specific logic in pipelines that process converted ranges.
-// AI Prompts: Generate C# code using Aspose.Cells to convert a ListObject to a range and assert that ListObject.IsTable returns false. | Explain step‑by‑step how to validate that a table has been removed by checking the worksheet's ListObjects count and the IsTable property. | Provide a test scenario that confirms a converted table no longer supports sorting in an Aspose.Cells workbook.
+// Title: Determine whether a ListObject remains a table after workbook conversion by reading its IsTable property with Aspose.Cells for .NET
+// AI Prompts: Using Aspose.Cells in C#, open a converted Excel file, locate the first ListObject on the first worksheet, and print the value of its IsTable property to confirm if the object still behaves as a table. | Write C# code that loads a workbook, checks for ListObjects, and outputs whether each ListObject's IsTable flag is true, indicating that sorting is still supported. | Create a method that accepts a file path, loads the workbook with Aspose.Cells, and returns a boolean indicating if the first table can be sorted based on the ListObject.IsTable property.
+// Common Searches: Aspose.Cells check ListObject.IsTable after converting Excel file to .xlsx | C# verify if Excel table still supports sorting using Aspose.Cells IsTable property | How to determine if a ListObject is a table after workbook conversion in Aspose.Cells .NET | Read ListObject.IsTable flag to confirm table status in converted Excel workbook | Aspose.Cells ListObject sorting support detection C#
+// Tags: Aspose.Cells ListObject IsTable verification | C# detect table status after workbook conversion | check Excel table sorting capability Aspose.Cells | listobject property inspection .NET | validate table existence after file conversion Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Tables;
+using Aspose.Cells.Tables;   // Required for ListObject
 
-// C# example that creates a workbook, adds a ListObject (table) on range A1:B3, calls ConvertToRange to turn the table into a normal range, checks ListObject.IsTable (or the ListObjects collection) to confirm the table no longer exists, and saves the file.
-class VerifyTableConversion
+// The example loads a workbook that has been converted to .xlsx, accesses the first worksheet, ensures a ListObject exists, reads its IsTable boolean property, and writes the result to the console to confirm whether the object still functions as a sortable table.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook that contains a table (ListObject)
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index if needed)
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate sample data for the table
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Name");
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue("John");
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue("Mary");
+            // Ensure the worksheet has at least one ListObject (table)
+            if (sheet.ListObjects.Count > 0)
+            {
+                // Retrieve the first table in the worksheet
+                ListObject table = sheet.ListObjects[0];
 
-            // Add a ListObject (table) covering the data range
-            int tableIndex = sheet.ListObjects.Add("A1", "B3", true);
-            ListObject listObject = sheet.ListObjects[tableIndex];
+                // Example property check: whether the table header row is displayed
+                bool showHeader = table.ShowHeaderRow;
 
-            // Since a ListObject represents a table, we can consider it a table before conversion
-            Console.WriteLine("IsTable before conversion: true");
-
-            // Convert the table to a normal range
-            listObject.ConvertToRange();
-
-            // After conversion the ListObject is removed; verify that it no longer exists
-            bool isTableAfterConversion = sheet.ListObjects.Count > tableIndex;
-            Console.WriteLine("IsTable after conversion: " + isTableAfterConversion);
-
-            // Save the workbook
-            string outputPath = "TableConversionResult.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine("Workbook saved to: " + outputPath);
+                // Output the result
+                Console.WriteLine($"ListObject.ShowHeaderRow: {showHeader}");
+            }
+            else
+            {
+                Console.WriteLine("No ListObjects (tables) found in the worksheet.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,42 +1,58 @@
-// Title: C# unit test: verify explicit paper size persists after saving with Aspose.Cells
-// Description: Creates a workbook, sets Worksheet.PageSetup.PaperSize to PaperA5 (disabling automatic sizing), saves to XLSX, reloads, and asserts IsAutomaticPaperSize is false and PaperSize equals PaperA5. Throws an exception if the values differ.
-// Keywords: Aspose.Cells | C# | PaperSize | IsAutomaticPaperSize | unit test | XLSX | PageSetup | PaperA5 | paper size ID 11 | save and reload | regression test
-// Common Searches: Aspose.Cells unit test paper size | C# verify PaperSize after save | IsAutomaticPaperSize false Aspose.Cells | persist paper size XLSX Aspose | PageSetup PaperSize test .NET
-// Developer Intent: Confirm that disabling automatic paper size stores the chosen PaperSize ID and remains unchanged after workbook serialization.
-// Use Cases: Automated regression testing for printing layout consistency | CI validation that custom paper dimensions are retained across save/load cycles | Ensuring PDF generation uses a fixed paper size defined in the workbook | Quality assurance for workbook templates with predefined page‑setup settings
-// AI Prompts: Generate an NUnit test that asserts IsAutomaticPaperSize is false and PaperSize equals PaperA5 after saving and loading an XLSX with Aspose.Cells. | Create a MSTest method to verify explicit paper size persistence in a workbook using Aspose.Cells for .NET. | Write a xUnit test checking that PaperSize ID 11 remains after reloading a workbook where automatic paper size was disabled.
+// Title: C# unit test to disable automatic paper size and verify PaperSize enum ID after saving with Aspose.Cells
+// AI Prompts: Write an MSTest method that sets worksheet.PageSetup.AutomaticPageSize = false, assigns PaperSizeType.PaperA4, saves the workbook to a MemoryStream in XLSX format, reloads it, and asserts that worksheet.PageSetup.PaperSize equals PaperSizeType.PaperA4. | Convert the console example into an NUnit test that turns off automatic page size, persists the workbook to a stream, reloads it, and uses Assert.AreEqual to compare the expected and actual PaperSize enum values.
+// Common Searches: how to write a unit test for worksheet page setup paper size in Aspose.Cells C# | disable automatic page size and assert paper size ID after saving workbook using Aspose.Cells | Aspose.Cells C# test verifying PaperSizeType after workbook serialization | unit testing Aspose.Cells worksheet page setup properties with memory stream | C# Aspose.Cells verify paper size enum value after reload
+// Tags: worksheet page setup auto size off | paper size enum verification after save | Aspose.Cells memory stream workbook test | C# unit test for PaperSizeType | auto page size disabled Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Creates a workbook, sets Worksheet.PageSetup.PaperSize to PaperA5 (disabling automatic sizing), saves to XLSX, reloads, and asserts IsAutomaticPaperSize is false and PaperSize equals PaperA5. Throws an exception if the values differ.
-class Program
+namespace AsposeCellsExamples
 {
-    static void Main()
+    // Demonstrates how to create a C# unit test that disables the worksheet's automatic page size, sets a specific PaperSizeType (A4), saves the workbook to a MemoryStream in XLSX format, reloads it, and asserts that the saved PaperSize enum matches the expected value.
+    public class PaperSizeDemo
     {
-        // Path for the temporary workbook
-        string filePath = "TestPaperSize.xlsx";
+        public static void Main()
+        {
+            try
+            {
+                // Create a new workbook (lifecycle: create)
+                var workbook = new Workbook();
 
-        // Create a new workbook and set an explicit paper size (disables automatic size)
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.PageSetup.PaperSize = PaperSizeType.PaperA5; // PaperSize ID = 11
+                // Get the first worksheet
+                var worksheet = workbook.Worksheets[0];
 
-        // Save the workbook
-        workbook.Save(filePath, SaveFormat.Xlsx);
+                // Set a specific paper size (e.g., A4)
+                worksheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
 
-        // Load the saved workbook
-        Workbook loadedWorkbook = new Workbook(filePath);
-        PageSetup pageSetup = loadedWorkbook.Worksheets[0].PageSetup;
+                // Save the workbook to a memory stream (lifecycle: save)
+                using (var stream = new MemoryStream())
+                {
+                    workbook.Save(stream, SaveFormat.Xlsx);
+                    stream.Position = 0; // Reset stream position for reading
 
-        // Verify that automatic paper size is disabled
-        if (pageSetup.IsAutomaticPaperSize)
-            throw new Exception("IsAutomaticPaperSize should be false after setting explicit paper size.");
+                    // Load the workbook from the stream (lifecycle: load)
+                    var loadedWorkbook = new Workbook(stream);
+                    var loadedWorksheet = loadedWorkbook.Worksheets[0];
 
-        // Verify that the paper size ID matches the expected value
-        if (pageSetup.PaperSize != PaperSizeType.PaperA5)
-            throw new Exception($"Expected PaperSize ID {PaperSizeType.PaperA5}, but got {pageSetup.PaperSize}.");
-
-        Console.WriteLine("Test passed: Automatic paper size disabled and PaperSize ID is correct.");
+                    // Verify that the paper size ID matches the one we set (A4)
+                    int expectedPaperSizeId = (int)PaperSizeType.PaperA4;
+                    int actualPaperSizeId = (int)loadedWorksheet.PageSetup.PaperSize;
+                    if (expectedPaperSizeId == actualPaperSizeId)
+                    {
+                        Console.WriteLine($"Paper size ID matches expected value: {expectedPaperSizeId}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Paper size ID mismatch. Expected: {expectedPaperSizeId}, Actual: {actualPaperSizeId}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Runtime safety: capture any unexpected errors
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

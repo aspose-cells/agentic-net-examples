@@ -1,104 +1,69 @@
-// Title: Validate MINIFS Formula in Excel 2016 Compatibility Mode with Aspose.Cells for .NET
-// Description: This C# example creates a workbook, disables compatibility checking to enable newer functions, populates numeric values and categories, inserts the MINIFS formula (=MINIFS(A2:A6,B2:B6,"X")), calculates the result, saves and reloads the file, recalculates, and verifies that the minimum value for category "X" is 8 both before and after persistence.
-// Keywords: Aspose.Cells MINIFS .NET | CheckCompatibility false | Excel 2016 compatibility mode | formula calculation Aspose.Cells | save and reload workbook | validate MINIFS result | C# Excel functions | calculate MINIFS after load
-// Common Searches: How to use MINIFS with Aspose.Cells in C# | Set Excel 2016 compatibility mode Aspose.Cells | Validate MINIFS calculation after saving workbook | Recalculate formulas after loading a workbook Aspose.Cells | Disable compatibility checks for new Excel functions
-// Developer Intent: Ensure the MINIFS function evaluates correctly when the workbook is configured for Excel 2016 features and remains accurate after the file is saved and reopened.
-// Use Cases: Confirm that MINIFS returns the expected minimum for a given criterion before persisting the workbook. | Verify that formula results are preserved and recalculated correctly after a save‑load cycle. | Demonstrate disabling compatibility checks to retain modern Excel functions such as MINIFS during automated calculations.
-// AI Prompts: Generate C# code using Aspose.Cells to test the MINIFS function in Excel 2016 compatibility mode and assert the expected result of 8. | Explain how to set Workbook.Settings.CheckCompatibility to false so that newer functions like MINIFS are evaluated. | Show how to recalculate formulas after loading a saved workbook and retrieve the MINIFS result for validation.
+// Title: Validate MINIFS formula results in Excel 2016 compatibility mode with Aspose.Cells for .NET
+// AI Prompts: Write C# code using Aspose.Cells to set the workbook compliance to Excel 2016, insert a MINIFS formula with a numeric criteria range, calculate the sheet, and assert that the result equals the expected minimum value. | Demonstrate how to save a workbook that contains a MINIFS formula, reload it with Aspose.Cells, recalculate, and confirm that the formula result is unchanged.
+// Common Searches: how to use MINIFS with Aspose.Cells in C# when workbook is set to Excel 2016 compatibility | Aspose.Cells calculate MINIFS after saving and reopening workbook | C# set OoxmlCompliance to Ecma376_2006 for conditional minimum function | verify MINIFS formula persistence in .NET using Aspose.Cells | testing MINIFS calculation accuracy in Excel 2016 mode with Aspose.Cells
+// Tags: Aspose.Cells MINIFS support | Excel 2016 OoxmlCompliance setting | C# formula evaluation after save | conditional minimum verification .NET | recalculate loaded workbook Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsMinifsValidation
 {
-    // This C# example creates a workbook, disables compatibility checking to enable newer functions, populates numeric values and categories, inserts the MINIFS formula (=MINIFS(A2:A6,B2:B6,"X")), calculates the result, saves and reloads the file, recalculates, and verifies that the minimum value for category "X" is 8 both before and after persistence.
+    // The example creates a workbook, configures it for Excel 2016 compatibility, populates data, applies a MINIFS formula with a >10 criterion, calculates and checks the result, saves the file, reloads it, recalculates, and confirms that the persisted formula still returns the expected minimum value.
     class Program
     {
         static void Main()
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook (lifecycle rule: create)
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();
+            // ---------- Create a new workbook ----------
+            Workbook workbook = new Workbook(); // create
 
-            // -------------------------------------------------
-            // 2. Set workbook to Excel 2016 compatibility mode.
-            //    MINIFS is supported from Excel 2016 onward, so we
-            //    disable older‑version compatibility checking.
-            // -------------------------------------------------
-            workbook.Settings.CheckCompatibility = false; // ensures newer functions are retained
+            // Set Excel 2016 compatibility mode (use OOXML compliance as a proxy)
+            workbook.Settings.Compliance = OoxmlCompliance.Ecma376_2006; // Excel 2016 compatible
 
-            // -------------------------------------------------
-            // 3. Populate sample data.
-            //    Column A : numeric values
-            //    Column B : criteria (text)
-            // -------------------------------------------------
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
             Cells cells = sheet.Cells;
 
-            // Header row
-            cells["A1"].PutValue("Value");
-            cells["B1"].PutValue("Category");
+            // Populate sample data
+            // Values to evaluate
+            cells["A2"].PutValue(5);
+            cells["A3"].PutValue(12);
+            cells["A4"].PutValue(8);
+            cells["A5"].PutValue(20);
 
-            // Data rows
-            double[] values = { 10, 5, 8, 3, 12 };
-            string[] categories = { "X", "Y", "X", "Y", "X" };
+            // Criteria range
+            cells["B2"].PutValue(7);
+            cells["B3"].PutValue(15);
+            cells["B4"].PutValue(9);
+            cells["B5"].PutValue(25);
 
-            for (int i = 0; i < values.Length; i++)
-            {
-                cells[i + 1, 0].PutValue(values[i]);      // A2:A6
-                cells[i + 1, 1].PutValue(categories[i]); // B2:B6
-            }
+            // MINIFS formula: find minimum in A2:A5 where corresponding B2:B5 > 10
+            cells["C2"].Formula = "=MINIFS(A2:A5,B2:B5,\">10\")";
 
-            // -------------------------------------------------
-            // 4. Insert MINIFS formula.
-            //    =MINIFS(A2:A6, B2:B6, "X")
-            // -------------------------------------------------
-            cells["D1"].Formula = "=MINIFS(A2:A6,B2:B6,\"X\")";
-
-            // -------------------------------------------------
-            // 5. Calculate formulas.
-            // -------------------------------------------------
+            // Calculate formulas
             workbook.CalculateFormula();
 
-            // -------------------------------------------------
-            // 6. Retrieve and display the result.
-            // -------------------------------------------------
-            double result = cells["D1"].DoubleValue;
-            Console.WriteLine($"MINIFS result (expected 8): {result}");
+            // Expected result: minimum of {12,20} = 12
+            double expected = 12;
+            double actual = cells["C2"].DoubleValue;
 
-            // -------------------------------------------------
-            // 7. Save the workbook (lifecycle rule: save)
-            // -------------------------------------------------
-            string filePath = "MinifsTest.xlsx";
-            workbook.Save(filePath, SaveFormat.Xlsx);
+            Console.WriteLine($"MINIFS result: {actual} (expected: {expected})");
+            Console.WriteLine($"Validation {(Math.Abs(actual - expected) < 1e-9 ? "passed" : "failed")}");
 
-            // -------------------------------------------------
-            // 8. Load the workbook back (lifecycle rule: load)
-            // -------------------------------------------------
-            Workbook loadedWorkbook = new Workbook(filePath);
+            // ---------- Save the workbook ----------
+            string filePath = "MinifsValidation.xlsx";
+            workbook.Save(filePath); // save
 
-            // Ensure the same compatibility setting is applied after load
-            loadedWorkbook.Settings.CheckCompatibility = false;
+            // ---------- Load the workbook ----------
+            Workbook loadedWorkbook = new Workbook(filePath); // load
+            Worksheet loadedSheet = loadedWorkbook.Worksheets[0];
+            Cells loadedCells = loadedSheet.Cells;
 
-            // Recalculate to guarantee formula evaluation after loading
+            // Recalculate after load to ensure formula persists correctly
             loadedWorkbook.CalculateFormula();
 
-            // Retrieve the result from the loaded workbook
-            double loadedResult = loadedWorkbook.Worksheets[0].Cells["D1"].DoubleValue;
-            Console.WriteLine($"MINIFS result after reload (expected 8): {loadedResult}");
-
-            // -------------------------------------------------
-            // 9. Simple validation
-            // -------------------------------------------------
-            if (Math.Abs(result - 8) < 0.0001 && Math.Abs(loadedResult - 8) < 0.0001)
-            {
-                Console.WriteLine("MINIFS function validated successfully.");
-            }
-            else
-            {
-                Console.WriteLine("MINIFS validation failed.");
-            }
+            double loadedResult = loadedCells["C2"].DoubleValue;
+            Console.WriteLine($"Loaded MINIFS result: {loadedResult} (expected: {expected})");
+            Console.WriteLine($"Loaded validation {(Math.Abs(loadedResult - expected) < 1e-9 ? "passed" : "failed")}");
         }
     }
 }

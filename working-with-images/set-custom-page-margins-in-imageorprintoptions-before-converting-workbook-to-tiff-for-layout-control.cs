@@ -1,49 +1,58 @@
-// Title: Set Custom Page Margins with ImageOrPrintOptions and Export Worksheet to TIFF (C# Aspose.Cells)
-// Description: Demonstrates how to define left, right, top, and bottom margins in centimeters via Worksheet.PageSetup, configure ImageOrPrintOptions for TIFF output, enable OnePagePerSheet, and render the sheet to a single‑page TIFF file using SheetRender.
-// Keywords: Aspose.Cells C# | ImageOrPrintOptions TIFF | custom page margins | OnePagePerSheet | SheetRender example | Excel to TIFF conversion | margin settings centimeters
-// Common Searches: Aspose.Cells set page margins before TIFF export | C# render Excel sheet as single page TIFF | ImageOrPrintOptions custom margins example | how to use OnePagePerSheet with TIFF | convert workbook to TIFF with specific margins
-// Developer Intent: Apply precise margin dimensions to a worksheet and generate a single‑page TIFF image using Aspose.Cells for .NET.
-// Use Cases: Produce printable reports where margin layout must match corporate standards. | Archive Excel data as high‑resolution TIFF files with exact page formatting. | Create thumbnail previews of spreadsheets for document management systems.
-// AI Prompts: Generate C# code that sets left, right, top, and bottom margins in centimeters and saves the worksheet as a one‑page TIFF using Aspose.Cells. | Explain the impact of ImageOrPrintOptions.OnePagePerSheet on TIFF output when custom margins are defined. | Provide a step‑by‑step tutorial for adjusting page margins and exporting a worksheet to a TIFF file with Aspose.Cells for .NET.
+// Title: Apply custom page margins to an Excel worksheet and export it as a TIFF image using Aspose.Cells ImageOrPrintOptions in C#
+// AI Prompts: Generate C# code that sets left, right, top, and bottom margins on a worksheet's PageSetup and then renders the first sheet to a TIFF file with Aspose.Cells ImageOrPrintOptions. | Show how to configure ImageOrPrintOptions for TIFF output while preserving the custom margins defined in the workbook.
+// Common Searches: C# Aspose.Cells set worksheet margins before converting to TIFF | How to control page layout when rendering Excel to TIFF with ImageOrPrintOptions | Aspose.Cells ImageOrPrintOptions margin settings for TIFF export in .NET | Render first worksheet to TIFF with custom left and right margins using Aspose.Cells | Adjust top and bottom margins in Excel workbook before image conversion in C#
+// Tags: worksheet page margins Aspose.Cells | ImageOrPrintOptions TIFF export C# | custom margins Excel to image | render worksheet to TIFF Aspose.Cells | page setup before image rendering
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-// Demonstrates how to define left, right, top, and bottom margins in centimeters via Worksheet.PageSetup, configure ImageOrPrintOptions for TIFF output, enable OnePagePerSheet, and render the sheet to a single‑page TIFF file using SheetRender.
-class SetCustomMarginsAndRenderTiff
+// Loads an Excel workbook, sets left/right/top/bottom margins on the first worksheet via PageSetup, configures ImageOrPrintOptions, and renders the sheet to a TIFF image using Aspose.Cells.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-
-        // Add sample content
-        sheet.Cells["A1"].PutValue("Custom Margin Demo");
-        sheet.Cells["A2"].PutValue("This page uses custom margins.");
-
-        // Set custom page margins (centimeters)
-        sheet.PageSetup.LeftMargin = 2.0;    // left margin
-        sheet.PageSetup.RightMargin = 2.0;   // right margin
-        sheet.PageSetup.TopMargin = 1.5;     // top margin
-        sheet.PageSetup.BottomMargin = 1.5;  // bottom margin
-
-        // Configure image options for TIFF rendering
-        ImageOrPrintOptions options = new ImageOrPrintOptions();
-        options.ImageType = Aspose.Cells.Drawing.ImageType.Tiff;
-        options.OnePagePerSheet = true; // render the whole sheet on a single page
-
-        // Create a SheetRender with the worksheet and options
-        SheetRender renderer = new SheetRender(sheet, options);
-
-        // Render the worksheet to a TIFF file
-        using (FileStream tiffStream = new FileStream("CustomMarginsOutput.tiff", FileMode.Create))
+        try
         {
-            renderer.ToTiff(tiffStream);
-        }
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.tiff";
 
-        Console.WriteLine("TIFF file generated with custom margins.");
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Set custom page margins (in points; 1 inch = 72 points)
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.PageSetup.LeftMargin = 0.5 * 72;   // left margin
+            sheet.PageSetup.RightMargin = 0.5 * 72;  // right margin
+            sheet.PageSetup.TopMargin = 0.75 * 72;   // top margin
+            sheet.PageSetup.BottomMargin = 0.75 * 72; // bottom margin
+
+            // Configure image/print options for rendering
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+            {
+                // Additional options can be set here if needed
+                // Note: ImageFormat property may not be available in some versions;
+                // the output format can be inferred from the file extension.
+            };
+
+            // Render the first worksheet to an image using the specified options
+            SheetRender sheetRender = new SheetRender(sheet, imgOptions);
+            sheetRender.ToImage(0, outputPath);
+
+            Console.WriteLine($"Image file created successfully: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

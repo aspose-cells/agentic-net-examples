@@ -1,17 +1,14 @@
-// Title: Aspose.Cells C# – Evaluate a Single Cell Formula Using Cell.Calculate
-// Description: The sample builds a new workbook, sets the formula =SUM(10,20,30) in A1, calls Cell.Calculate with default CalculationOptions to compute that cell alone, prints the result, and saves the file, showing how to evaluate a cell independently of the whole sheet.
-// Keywords: Aspose.Cells | Cell.Calculate | C# | .NET | single cell evaluation | formula calculation | CalculationOptions | Excel formula SUM | partial workbook calculation | performance optimization
-// Common Searches: Aspose.Cells calculate one cell only | Cell.Calculate example C# | evaluate formula without full workbook recalculation | how to use CalculationOptions with Cell.Calculate | C# Aspose.Cells isolate cell calculation
-// Developer Intent: Retrieve the result of a specific cell's formula without invoking a complete workbook recompute.
-// Use Cases: Show immediate feedback for a user‑entered formula before saving the document. | Unit‑test a formula's output while avoiding the overhead of full sheet calculation. | Update a dashboard where only a single cell changes and performance is critical.
-// AI Prompts: Generate a C# snippet that uses Cell.Calculate with custom CalculationOptions to limit precision. | Explain how to handle exceptions when Cell.Calculate fails for an invalid formula. | Provide an example of looping through a list of cells and invoking Cell.Calculate on each.
+// Title: Use Aspose.Cells Cell.Calculate to evaluate only one cell’s formula in C#
+// AI Prompts: Invoke Cell.Calculate with a CalculationOptions object to compute the SUM formula in B1 while leaving the rest of the workbook untouched. | Retrieve the numeric result of a cell‑level formula after calling Cell.Calculate on a specific cell in an Aspose.Cells workbook. | Show how to perform a partial calculation in Aspose.Cells by evaluating a single worksheet cell without triggering a full workbook recalc.
+// Common Searches: asp.net evaluate single cell formula with Aspose.Cells Cell.Calculate | c# calculate only one Excel cell using Aspose.Cells API | how to avoid full workbook recalculation when evaluating a formula in Aspose.Cells | example of Cell.Calculate for a SUM range in C# | partial calculation of Excel sheet using Aspose.Cells Cell.Calculate
+// Tags: cell.calculate single cell evaluation asp.net | partial workbook calculation aspose.cells | calculationoptions usage c# | evaluate sum formula aspose.cells | cell-level formula computation aspose.cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsCellCalculateDemo
 {
-    // The sample builds a new workbook, sets the formula =SUM(10,20,30) in A1, calls Cell.Calculate with default CalculationOptions to compute that cell alone, prints the result, and saves the file, showing how to evaluate a cell independently of the whole sheet.
+    // Demonstrates creating a workbook, inserting numeric values, assigning a SUM formula to B1, and using Cell.Calculate with CalculationOptions to evaluate only that cell while other cells remain unchanged.
     class Program
     {
         static void Main()
@@ -19,20 +16,30 @@ namespace AsposeCellsCellCalculateDemo
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
             Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Set a formula in cell A1 (e.g., sum of three numbers)
-            Cell cellA1 = worksheet.Cells["A1"];
-            cellA1.Formula = "=SUM(10, 20, 30)";
+            // Populate some data that will be used by the formula
+            cells["A1"].PutValue(10);
+            cells["A2"].PutValue(20);
+            cells["A3"].PutValue(30);
 
-            // Calculate only this cell using Cell.Calculate with default options
-            cellA1.Calculate(new CalculationOptions());
+            // Set a formula in cell B1 that references the above values
+            Cell targetCell = cells["B1"];
+            targetCell.Formula = "=SUM(A1:A3)";
 
-            // Output the calculated value of the cell
-            Console.WriteLine("A1 calculated value: " + cellA1.Value);
+            // At this point the formula has not been evaluated yet
+            Console.WriteLine("Before calculation, B1 value: " + targetCell.Value); // Expected to be null
 
-            // Demonstrate that other cells are not affected (no other formulas are present)
-            // Save the workbook to verify the result if needed
-            workbook.Save("CellCalculateResult.xlsx");
+            // Calculate only this cell's formula using Cell.Calculate
+            targetCell.Calculate(new CalculationOptions());
+
+            // After calculation the cell now holds the result of the formula
+            Console.WriteLine("After calculation, B1 value: " + targetCell.Value); // Expected 60
+
+            // Demonstrate that other cells remain unchanged (no full workbook calculation)
+            Console.WriteLine("A1 value (unchanged): " + cells["A1"].Value);
+            Console.WriteLine("A2 value (unchanged): " + cells["A2"].Value);
+            Console.WriteLine("A3 value (unchanged): " + cells["A3"].Value);
         }
     }
 }

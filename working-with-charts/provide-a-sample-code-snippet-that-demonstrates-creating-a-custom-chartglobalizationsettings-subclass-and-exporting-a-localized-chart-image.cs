@@ -1,112 +1,72 @@
-// Title: C# – Custom ChartGlobalizationSettings to Localize Axis Units and Export Chart as PNG with Aspose.Cells
-// Description: Shows how to subclass ChartGlobalizationSettings in Aspose.Cells for .NET to supply Chinese axis‑unit names and a localized chart title, apply the settings to a workbook, create a column chart, and render the chart directly to a PNG image (workbook save optional).
-// Keywords: Aspose.Cells | C# | ChartGlobalizationSettings | custom chart localization | axis unit translation | chart title localization | export chart to PNG | DisplayUnitType thousands | multilingual reporting
-// Common Searches: Aspose.Cells localize chart axis labels | How to change chart unit text in Aspose.Cells .NET | Export Aspose.Cells chart as image with custom title | Create custom ChartGlobalizationSettings C# | Chinese chart labels Aspose.Cells | Set chart display unit to thousands Aspose.Cells
-// Developer Intent: Implement a custom ChartGlobalizationSettings subclass, attach it to a workbook, generate a chart, and export the chart image with localized labels and title.
-// Use Cases: Generate Chinese financial reports with correctly translated axis units. | Reuse a chart‑localization class across multiple workbooks for multilingual dashboards. | Create high‑resolution chart images for PDFs, web pages, or presentations with custom titles. | Standardize chart appearance and terminology in enterprise reporting solutions.
-// AI Prompts: Write C# code that defines a MyChartGlobalizationSettings class inheriting from ChartGlobalizationSettings, overrides GetAxisUnitName for hundreds, thousands, and ten‑thousands, overrides GetChartTitleName, applies it to a Workbook, creates a column chart, sets DisplayUnit to thousands, and saves the chart as a PNG image. | Show how to export an Aspose.Cells chart to an image after customizing globalization settings for Chinese axis labels and a localized title.
+// Title: C# Aspose.Cells example: create a French‑localized column chart and save it as a transparent PNG image
+// AI Prompts: Write C# code that builds a workbook with month and sales data, adds a column chart, sets French titles for the chart, axes, and legend, and exports the chart to a PNG file using Aspose.Cells. | Show how to configure ImageOrPrintOptions for a transparent background and one page per sheet when rendering an Aspose.Cells chart to an image. | Demonstrate setting the legend position to the bottom and customizing axis titles before calling Chart.ToImage in Aspose.Cells.
+// Common Searches: Aspose.Cells C# export chart with French axis titles to PNG | how to save an Aspose.Cells chart as a transparent PNG image | C# example of localized chart titles using Aspose.Cells | set legend position bottom Aspose.Cells chart image export
+// Tags: export chart to PNG Aspose.Cells C# | set French chart titles Aspose.Cells | transparent background ImageOrPrintOptions | legend position bottom Aspose.Cells chart | column chart localization Aspose.Cells
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsChartLocalization
 {
-    // Custom ChartGlobalizationSettings subclass providing localized unit and title names
-    // Shows how to subclass ChartGlobalizationSettings in Aspose.Cells for .NET to supply Chinese axis‑unit names and a localized chart title, apply the settings to a workbook, create a column chart, and render the chart directly to a PNG image (workbook save optional).
-    public class MyChartGlobalizationSettings : ChartGlobalizationSettings
+    // The sample creates a workbook, fills it with month and sales data, adds a column chart, applies French titles to the chart, category axis, value axis, and legend, positions the legend at the bottom, and exports the chart as a transparent PNG image using ImageOrPrintOptions.
+    class Program
     {
-        public override string GetAxisUnitName(DisplayUnitType type)
-        {
-            switch (type)
-            {
-                case DisplayUnitType.Hundreds:
-                    return "百";
-                case DisplayUnitType.Thousands:
-                    return "千";
-                case DisplayUnitType.TenThousands:
-                    return "万";
-                default:
-                    return base.GetAxisUnitName(type);
-            }
-        }
-
-        public override string GetChartTitleName()
-        {
-            return "本地化图表标题";
-        }
-    }
-
-    public class ExportLocalizedChartImage
-    {
-        public static void Run()
+        static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook wb = new Workbook();
-                Worksheet ws = wb.Worksheets[0];
-
-                // Populate sample data for the chart
-                ws.Cells["A1"].PutValue("类别");
-                ws.Cells["A2"].PutValue("第一季");
-                ws.Cells["A3"].PutValue("第二季");
-                ws.Cells["A4"].PutValue("第三季");
-                ws.Cells["B1"].PutValue("销售额");
-                ws.Cells["B2"].PutValue(1200);
-                ws.Cells["B3"].PutValue(1500);
-                ws.Cells["B4"].PutValue(1800);
-
-                // Add a column chart to the worksheet
-                int chartIdx = ws.Charts.Add(ChartType.Column, 5, 0, 20, 15);
-                Chart chart = ws.Charts[chartIdx];
-                chart.NSeries.Add("B2:B4", true);
-                chart.NSeries.CategoryData = "A2:A4";
-
-                // Set display unit to thousands so the custom unit name will be used
-                chart.ValueAxis.DisplayUnit = DisplayUnitType.Thousands;
-                chart.ValueAxis.IsDisplayUnitLabelShown = true;
-
-                // Apply the custom ChartGlobalizationSettings to the workbook
-                wb.Settings.GlobalizationSettings = new GlobalizationSettings
+                // Create a new workbook
+                using (Workbook workbook = new Workbook())
                 {
-                    ChartSettings = new MyChartGlobalizationSettings()
-                };
+                    // Access the first worksheet
+                    Worksheet sheet = workbook.Worksheets[0];
 
-                // Use the custom chart title from the globalization settings
-                chart.Title.Text = wb.Settings.GlobalizationSettings.ChartSettings.GetChartTitleName();
+                    // Populate sample data
+                    sheet.Cells["A1"].PutValue("Mois");
+                    sheet.Cells["B1"].PutValue("Ventes");
 
-                // Export the chart as a PNG image directly to file
-                string imagePath = "LocalizedChart.png";
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions(); // defaults to PNG
-                chart.ToImage(imagePath, imgOptions); // corrected argument order
+                    string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
+                    double[] sales = { 1200, 1500, 1800, 1300, 1700, 1600 };
 
-                // Save the workbook (optional, for reference)
-                string workbookPath = "LocalizedChartWorkbook.xlsx";
-                wb.Save(workbookPath);
+                    for (int i = 0; i < months.Length; i++)
+                    {
+                        sheet.Cells[i + 1, 0].PutValue(months[i]);   // Column A
+                        sheet.Cells[i + 1, 1].PutValue(sales[i]);   // Column B
+                    }
+
+                    // Add a column chart
+                    int chartIndex = sheet.Charts.Add(ChartType.Column, 8, 0, 20, 10);
+                    Chart chart = sheet.Charts[chartIndex];
+
+                    // Set data source
+                    chart.NSeries.Add("B2:B7", true);
+                    chart.NSeries.CategoryData = "A2:A7";
+
+                    // Set localized titles
+                    chart.Title.Text = "Ventes Mensuelles";          // French for "Monthly Sales"
+                    chart.CategoryAxis.Title.Text = "Mois";          // French for "Month"
+                    chart.ValueAxis.Title.Text = "Valeur de Vente"; // French for "Sales Value"
+                    chart.Legend.Position = LegendPositionType.Bottom; // Position the legend at the bottom
+                    chart.Legend.Text = "Produit A";
+
+                    // Export the chart as an image
+                    ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
+                    {
+                        OnePagePerSheet = true,
+                        Transparent = true
+                    };
+
+                    // Directly save the chart image to a file
+                    chart.ToImage("LocalizedChart.png", imgOptions);
+
+                    Console.WriteLine("Localized chart image has been saved as 'LocalizedChart.png'.");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Runtime error: {ex.Message}");
-                throw;
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
-        {
-            try
-            {
-                ExportLocalizedChartImage.Run();
-                Console.WriteLine("Chart exported successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unhandled exception: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
     }

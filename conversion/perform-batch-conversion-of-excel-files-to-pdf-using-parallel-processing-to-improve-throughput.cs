@@ -1,92 +1,96 @@
-// Title: C# Parallel Batch Conversion of Excel (.xlsx) Files to PDF Using Aspose.Cells
-// Description: Shows how to enumerate .xlsx files in a folder, ensure the target directory exists, and convert each workbook to PDF concurrently with Parallel.ForEach. The sample leverages Aspose.Cells Workbook.Save, handles missing files, logs successes and errors, and maximizes throughput on multi‑core .NET environments.
-// Keywords: Aspose.Cells | C# | parallel processing | batch conversion | Excel to PDF | xlsx to pdf | high‑performance export | multi‑threaded PDF generation | dotnet example | GitHub sample | CLI utility
-// Common Searches: parallel Excel to PDF conversion C# Aspose.Cells | batch convert .xlsx files to PDF with .NET | high throughput Excel PDF export Aspose | convert folder of Excel workbooks to PDF using Parallel.ForEach | Aspose.Cells example for bulk PDF generation
-// Developer Intent: Convert a large set of Excel workbooks to PDF simultaneously to reduce overall processing time.
-// Use Cases: Automated nightly job that archives all newly uploaded spreadsheets as PDFs. | Web service that receives multiple user spreadsheets and returns PDF versions in real time. | Command‑line tool for migrating a directory of legacy .xlsx reports to PDF on a multi‑core server.
-// AI Prompts: Generate a C# method that accepts a list of Excel file paths and converts each to PDF with Aspose.Cells, including progress callbacks. | Explain how to control the degree of parallelism in the batch conversion to balance CPU usage and memory consumption. | Write unit tests that verify PDF output for valid files and proper error handling for missing or corrupted Excel files.
+// Title: Convert a folder of Excel workbooks (.xls, .xlsx, .xlsm) to PDF in parallel with Aspose.Cells and C#
+// AI Prompts: Write a C# console program that scans an input directory recursively for .xls, .xlsx, and .xlsm files and converts each workbook to PDF using Aspose.Cells inside a Parallel.ForEach loop. | Demonstrate how to keep the original folder hierarchy when writing the resulting PDFs to a separate output directory. | Implement per‑file exception handling that logs conversion errors without stopping the parallel batch operation.
+// Common Searches: how to use Aspose.Cells to convert multiple Excel files to PDF in C# with parallel processing | preserve source folder structure when exporting Excel workbooks to PDF using .NET | batch convert .xls .xlsx .xlsm to PDF with multithreading in a console app | example of Parallel.ForEach for Excel to PDF conversion with Aspose.Cells | C# program to recursively find Excel files and save them as PDFs
+// Tags: parallel Aspose.Cells Excel to PDF conversion | recursive Excel file enumeration C# | preserve directory hierarchy PDF output | PdfSaveOptions usage Aspose.Cells | multi-threaded workbook conversion .NET
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Aspose.Cells;
 
-namespace AsposeCellsBatchConversion
+namespace ExcelToPdfBatch
 {
-    // Shows how to enumerate .xlsx files in a folder, ensure the target directory exists, and convert each workbook to PDF concurrently with Parallel.ForEach. The sample leverages Aspose.Cells Workbook.Save, handles missing files, logs successes and errors, and maximizes throughput on multi‑core .NET environments.
-    public class ExcelToPdfBatchConverter
+    // A C# console utility that accepts input and output folder paths, recursively discovers .xls, .xlsx, and .xlsm files, and converts each workbook to PDF using Aspose.Cells. The conversion runs inside Parallel.ForEach with a degree of parallelism matching the processor count, preserving the original directory structure in the output location and logging any file‑specific errors without halting the batch process.
+    class Program
     {
-        // Converts a collection of Excel files to PDF in parallel.
-        public static void ConvertFiles(IEnumerable<string> excelFilePaths, string outputFolder)
+        static void Main(string[] args)
         {
-            // Ensure the output directory exists.
-            Directory.CreateDirectory(outputFolder);
+            // args[0] = input folder path, args[1] = output folder path
+            if (args.Length < 2)
+            {
+                Console.WriteLine("Usage: ExcelToPdfBatch <inputFolder> <outputFolder>");
+                return;
+            }
 
-            // Process each file concurrently.
-            Parallel.ForEach(excelFilePaths, excelPath =>
+            string inputFolder = args[0];
+            string outputFolder = args[1];
+
+            if (!Directory.Exists(inputFolder))
+            {
+                Console.WriteLine($"Input folder does not exist: {inputFolder}");
+                return;
+            }
+
+            if (!Directory.Exists(outputFolder))
+            {
+                Directory.CreateDirectory(outputFolder);
+            }
+
+            // Find all Excel files recursively
+            var excelFiles = Directory.EnumerateFiles(inputFolder, "*.*", SearchOption.AllDirectories)
+                .Where(f => f.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||
+                            f.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ||
+                            f.EndsWith(".xlsm", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            Console.WriteLine($"Found {excelFiles.Count} Excel file(s) to convert.");
+
+            var parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
+
+            Parallel.ForEach(excelFiles, parallelOptions, excelPath =>
             {
                 try
                 {
                     if (!File.Exists(excelPath))
                     {
-                        Console.WriteLine($"Source file not found: {excelPath}");
+                        Console.WriteLine($"File not found: {excelPath}");
                         return;
                     }
 
-                    // Build the PDF file name based on the Excel file name.
-                    string pdfFileName = Path.GetFileNameWithoutExtension(excelPath) + ".pdf";
-                    string pdfPath = Path.Combine(outputFolder, pdfFileName);
+                    // Load workbook
+                    var workbook = new Workbook(excelPath);
 
-                    // Load the workbook and save as PDF using Aspose.Cells.
-                    using (var workbook = new Workbook(excelPath))
+                    // PDF save options (customize if needed)
+                    var pdfOptions = new PdfSaveOptions();
+
+                    // Preserve relative folder structure in output
+                    string relativePath = Path.GetRelativePath(inputFolder, excelPath);
+                    string pdfRelativePath = Path.ChangeExtension(relativePath, ".pdf");
+                    string pdfFullPath = Path.Combine(outputFolder, pdfRelativePath);
+
+                    // Ensure target directory exists
+                    string? pdfDirectory = Path.GetDirectoryName(pdfFullPath);
+                    if (!string.IsNullOrEmpty(pdfDirectory) && !Directory.Exists(pdfDirectory))
                     {
-                        workbook.Save(pdfPath, SaveFormat.Pdf);
+                        Directory.CreateDirectory(pdfDirectory);
                     }
 
-                    Console.WriteLine($"Converted: {excelPath} -> {pdfPath}");
+                    // Save as PDF
+                    workbook.Save(pdfFullPath, pdfOptions);
+                    Console.WriteLine($"Converted: {excelPath} -> {pdfFullPath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error converting {excelPath}: {ex.Message}");
+                    Console.WriteLine($"Error converting '{excelPath}': {ex.Message}");
                 }
             });
-        }
 
-        // Example entry point demonstrating usage.
-        public static void Main()
-        {
-            try
-            {
-                // Directory containing Excel files to convert.
-                string sourceDirectory = "InputExcels";
-
-                // Verify source directory exists.
-                if (!Directory.Exists(sourceDirectory))
-                {
-                    Console.WriteLine($"Source directory not found: {sourceDirectory}");
-                    return;
-                }
-
-                // Retrieve all Excel files (you can adjust the pattern as needed).
-                var excelFiles = Directory.GetFiles(sourceDirectory, "*.xlsx");
-
-                if (excelFiles.Length == 0)
-                {
-                    Console.WriteLine($"No Excel files found in: {sourceDirectory}");
-                    return;
-                }
-
-                // Directory where the resulting PDFs will be saved.
-                string outputDirectory = "OutputPdfs";
-
-                // Perform the batch conversion.
-                ConvertFiles(excelFiles, outputDirectory);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-            }
+            Console.WriteLine("Batch conversion completed.");
         }
     }
 }

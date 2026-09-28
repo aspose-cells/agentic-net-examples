@@ -1,61 +1,80 @@
-// Title: Render an Excel Workbook to TIFF in a MemoryStream with Aspose.Cells (C#)
-// Description: This example creates a Workbook, sets TIFF options (LZW compression, one page per sheet), and uses WorkbookRender.ToImage(Stream) to write the image directly to a MemoryStream. The stream can then be reset, saved, sent over a network, or stored without creating a temporary file.
-// Keywords: Aspose.Cells TIFF rendering | C# MemoryStream image export | WorkbookRender ToImage stream | LZW compression TIFF | Excel to TIFF in memory | export Excel as image C# | Aspose.Cells image options
-// Common Searches: Aspose.Cells render workbook to TIFF memory stream C# | How to export Excel as TIFF without a file using Aspose.Cells | C# convert worksheet to TIFF image stream | Aspose.Cells LZW compression TIFF example | Create multi‑page TIFF from Excel in memory
-// Developer Intent: The developer needs to convert an Excel workbook to a TIFF image and keep the result in a MemoryStream for further processing such as sending over a web API, storing in a database, or attaching to an email.
-// Use Cases: Generate a TIFF preview of a report and embed it in an email attachment without writing to disk. | Send the TIFF byte stream to a third‑party printing service that accepts image streams. | Store the TIFF bytes in a database column for archival of generated Excel reports.
-// AI Prompts: Show how to render each worksheet as a separate page in a multi‑page TIFF stored in a MemoryStream. | Provide code for reading the TIFF bytes from the MemoryStream and returning them from an ASP.NET Core controller action. | Explain how to switch the compression to CCITT Group 4 and retrieve the resulting byte array.
+// Title: How to export an Aspose.Cells Workbook as a multi‑page TIFF into a MemoryStream and then save it to a file in C#
+// AI Prompts: Write C# code that loads or creates an Aspose.Cells Workbook and saves it directly to a MemoryStream using SaveFormat.Tiff. | Show how to reset the MemoryStream position and copy its contents to a FileStream to create a .tiff file on disk. | Include robust try‑catch blocks for the workbook‑to‑TIFF conversion and file‑writing steps.
+// Common Searches: c# export Aspose.Cells workbook to multi page TIFF in memory stream | aspose.cells save workbook as TIFF without intermediate file | how to write TIFF MemoryStream to file using C# | example of SaveFormat.Tiff with Aspose.Cells and MemoryStream
+// Tags: export workbook to multi‑page TIFF Aspose.Cells | save Aspose.Cells workbook as TIFF in memory stream | write TIFF MemoryStream to file C#
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsTiffMemoryStreamDemo
+namespace AsposeCellsExample
 {
-    // This example creates a Workbook, sets TIFF options (LZW compression, one page per sheet), and uses WorkbookRender.ToImage(Stream) to write the image directly to a MemoryStream. The stream can then be reset, saved, sent over a network, or stored without creating a temporary file.
-    public class Program
+    // The example creates or loads an Aspose.Cells Workbook, adds sample data, and uses workbook.Save with SaveFormat.Tiff to write a multi‑page TIFF directly into a MemoryStream. After resetting the stream position, the code copies the stream to a FileStream, creating an output.tiff file, while handling errors with try‑catch blocks.
+    public class WorkbookToTiffConverter
     {
-        public static void Main()
+        public MemoryStream ConvertToTiff()
         {
-            // Create a new workbook and add some sample data
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Aspose.Cells TIFF rendering to MemoryStream");
-            sheet.Cells["A2"].PutValue(DateTime.Now);
-
-            // Configure rendering options for TIFF output
-            ImageOrPrintOptions renderOptions = new ImageOrPrintOptions
+            try
             {
-                ImageType = ImageType.Tiff,                 // Specify TIFF format
-                TiffCompression = TiffCompression.CompressionLZW, // Optional: set compression
-                OnePagePerSheet = true                      // Render each sheet as a single page
-            };
+                // Create a new workbook (or load an existing one)
+                Workbook workbook = new Workbook();
 
-            // Create a renderer for the whole workbook
-            WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
+                // Example: add some data to the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
+                sheet.Cells["A1"].PutValue("Sample Text");
+                sheet.Cells["B2"].PutValue(12345);
 
-            // Render the workbook to a memory stream
-            using (MemoryStream tiffStream = new MemoryStream())
-            {
-                renderer.ToImage(tiffStream); // Uses WorkbookRender.ToImage(Stream)
+                // Prepare a memory stream to hold the TIFF output
+                MemoryStream tiffStream = new MemoryStream();
 
-                // The stream now contains the TIFF image data.
-                // Reset position if the stream will be read later.
+                // Save the workbook as a multi‑page TIFF into the memory stream
+                workbook.Save(tiffStream, SaveFormat.Tiff);
+
+                // Reset the stream position for further processing
                 tiffStream.Position = 0;
 
-                // Example: write the stream to a file (optional, for verification)
-                using (FileStream file = new FileStream("output.tiff", FileMode.Create, FileAccess.Write))
-                {
-                    tiffStream.CopyTo(file);
-                }
-
-                Console.WriteLine($"TIFF image rendered to memory stream. Length = {tiffStream.Length} bytes.");
+                return tiffStream;
             }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Error during TIFF conversion: {ex.Message}");
+                throw;
+            }
+        }
+    }
 
-            // Clean up
-            renderer.Dispose();
+    internal class Program
+    {
+        private static void Main(string[] args)
+        {
+            try
+            {
+                WorkbookToTiffConverter converter = new WorkbookToTiffConverter();
+                using (MemoryStream tiffStream = converter.ConvertToTiff())
+                {
+                    // Define output file path
+                    string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "output.tiff");
+
+                    // Ensure the directory exists
+                    string? directory = Path.GetDirectoryName(outputPath);
+                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    // Write the TIFF stream to a file
+                    using (FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write))
+                    {
+                        tiffStream.CopyTo(fileStream);
+                    }
+
+                    Console.WriteLine($"TIFF file successfully saved to: {outputPath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Unhandled exception: {ex.Message}");
+            }
         }
     }
 }

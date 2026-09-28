@@ -1,58 +1,74 @@
-// Title: Render Aspose.Cells Chart to PNG in a MemoryStream (C#)
-// Description: Shows how to build a workbook, add sample data, create a column chart, and export the chart directly to a PNG image stored in a MemoryStream using Aspose.Cells for .NET, avoiding any intermediate files.
-// Keywords: Aspose.Cells | chart to MemoryStream | export chart PNG C# | ToImage MemoryStream | in‑memory chart image | no file system | custom implementation factory | .NET chart rendering
-// Common Searches: Aspose.Cells export chart to MemoryStream C# | How to get chart image bytes with Aspose.Cells | Render chart as PNG without saving file Aspose | C# chart ToImage MemoryStream example | Aspose.Cells chart image for web API
-// Developer Intent: Create a chart image in memory with Aspose.Cells so the PNG can be consumed programmatically without writing to disk.
-// Use Cases: Return the chart PNG from a REST endpoint as a byte array. | Embed the in‑memory chart image in an automated email attachment. | Save the chart bytes as a BLOB in a database. | Convert the image to Base64 for inclusion in JSON responses.
-// AI Prompts: Generate C# code that adds a title to the chart and renders it as a JPEG into a MemoryStream using Aspose.Cells. | Explain how to transform the MemoryStream bytes into a Base64 string for API output. | Show how to reuse a single MemoryStream to produce multiple chart images sequentially.
+// Title: Generate an Excel column chart and render it to a PNG MemoryStream using Aspose.Cells for .NET
+// AI Prompts: Create a column chart from worksheet data and write the PNG image directly to a MemoryStream with Aspose.Cells. | Change the ImageOrPrintOptions to produce a JPEG stream instead of PNG when rendering the chart. | Add another data series to the chart, render the combined chart to a stream, and send the image bytes in an ASP.NET response.
+// Common Searches: Aspose.Cells C# generate chart image in memory without file | How to export Aspose.Cells chart as JPEG byte array in C# | Return Excel chart image bytes from Aspose.Cells in a Web API | Create column chart PNG bytes from workbook using Aspose.Cells | Render Aspose.Cells chart to stream for ASP.NET response
+// Tags: chart rendering to MemoryStream Aspose.Cells | column chart PNG output .NET | in‑memory chart image generation Aspose.Cells | export chart bytes C# Aspose.Cells | chart rendering without file system Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Drawing;
+using Aspose.Cells.Rendering;
 
-// Shows how to build a workbook, add sample data, create a column chart, and export the chart directly to a PNG image stored in a MemoryStream using Aspose.Cells for .NET, avoiding any intermediate files.
-class ChartToImageMemoryStreamDemo
+// Shows how to build a workbook, add a column chart, and use Aspose.Cells to render the chart directly into a PNG MemoryStream, avoiding any temporary files.
+class ChartToMemoryStreamExample
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Populate sample data for the chart
-        worksheet.Cells["A1"].PutValue("Category");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B1"].PutValue("Value");
-        worksheet.Cells["B2"].PutValue(10);
-        worksheet.Cells["B3"].PutValue(20);
-
-        // Add a column chart to the worksheet
-        int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 15, 5);
-        Chart chart = worksheet.Charts[chartIndex];
-
-        // Set the data source for the chart
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
-
-        // Create a MemoryStream using the provided factory rule
-        CustomImplementationFactory factory = new CustomImplementationFactory();
-        using (MemoryStream imageStream = factory.CreateMemoryStream())
+        try
         {
-            // Render the chart to PNG format directly into the memory stream
-            chart.ToImage(imageStream, ImageType.Png);
+            // Create a new workbook entirely in memory
+            var workbook = new Workbook();
 
-            // Reset the stream position if you need to read from it later
-            imageStream.Position = 0;
+            // Get the first worksheet
+            var sheet = workbook.Worksheets[0];
 
-            // Example: obtain the image bytes (still in memory, no file written)
-            byte[] imageBytes = imageStream.ToArray();
+            // Fill the worksheet with sample data
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("C");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["B3"].PutValue(20);
+            sheet.Cells["B4"].PutValue(30);
 
-            Console.WriteLine($"Chart image generated in memory. Byte size: {imageBytes.Length}");
+            // Add a column chart to the worksheet
+            int chartIdx = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 5);
+            var chart = sheet.Charts[chartIdx];
+            chart.Title.Text = "Sample Column Chart";
+
+            // Define the series (values). Category data is optional for this simple example.
+            int seriesIdx = chart.NSeries.Add("B2:B4", true);
+            // If needed, you can set category data like this:
+            // chart.NSeries[seriesIdx].CategoryData = "A2:A4";
+
+            // Render the chart to a memory stream (PNG format)
+            using (MemoryStream ms = new MemoryStream())
+            {
+                var imgOptions = new ImageOrPrintOptions();
+                // The default image format is PNG, so we can omit setting ImageFormat explicitly.
+                // imgOptions.ImageFormat = ImageFormat.Png; // Not required
+
+                try
+                {
+                    chart.ToImage(ms, imgOptions);
+                }
+                catch (Exception renderEx)
+                {
+                    Console.WriteLine($"Error rendering chart: {renderEx.Message}");
+                    return;
+                }
+
+                // The memory stream now contains the chart image bytes
+                byte[] imageBytes = ms.ToArray();
+
+                // Example usage: output the size of the generated image
+                Console.WriteLine($"Chart image generated, size = {imageBytes.Length} bytes");
+            }
         }
-
-        // No intermediate files are written to disk; the chart image resides only in memory.
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

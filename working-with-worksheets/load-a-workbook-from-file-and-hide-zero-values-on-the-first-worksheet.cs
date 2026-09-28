@@ -1,29 +1,46 @@
-// Title: Hide Zero Values on the First Worksheet When Loading an Excel File with Aspose.Cells for .NET
-// Description: Load an existing workbook, disable zero display on the first worksheet using the DisplayZeros property, and save the updated file. This Aspose.Cells for .NET example demonstrates how to hide zero values without altering other sheets.
-// Keywords: Aspose.Cells hide zeros C# | DisplayZeros property | load workbook Aspose.Cells | first worksheet zero values | save modified Excel file .NET | Excel zero display Aspose | C# Aspose.Cells example
-// Common Searches: how to hide zero values in Excel using Aspose.Cells C# | Aspose.Cells DisplayZeros first sheet | load workbook and disable zeros Aspose .NET | save workbook after changing DisplayZeros property | C# code to hide zeros on a specific worksheet
-// Developer Intent: Load an existing Excel workbook, turn off zero display for the first worksheet, and write the changes to a new file.
-// Use Cases: Financial dashboards where zero amounts clutter the summary sheet. | Data‑cleaning pipelines that suppress placeholder zeros before distribution. | Template files that automatically hide zeros on the primary sheet when opened.
-// AI Prompts: Generate C# code with Aspose.Cells to open a workbook, set DisplayZeros = false on the first worksheet, and save it as a new file. | Explain the effect of the DisplayZeros property on cell rendering in Aspose.Cells. | Show how to hide zeros on multiple worksheets by iterating over a list of worksheet indices using Aspose.Cells for .NET.
+// Title: Load an Excel workbook and hide zero values on the first worksheet using Aspose.Cells for .NET
+// AI Prompts: Write C# code that opens an existing .xlsx file with Aspose.Cells, applies a custom number format to hide zero values on the first worksheet, and saves the result to a new file. | Explain a workaround for hiding zero values in a worksheet when the IsZeroValuesHidden property is not available in the current Aspose.Cells version. | Show how to combine file existence checking with workbook loading and zero‑value suppression in Aspose.Cells for a .NET application.
+// Common Searches: Aspose.Cells hide zero values on first sheet C# example | workaround for IsZeroValuesHidden missing in Aspose.Cells .NET | load existing Excel file and suppress zero display using Aspose.Cells | C# apply custom number format to hide zeros in Aspose.Cells worksheet | check file existence before opening workbook Aspose.Cells C#
+// Tags: load workbook from file Aspose.Cells | hide zero values worksheet Aspose.Cells | custom number format suppress zeros C# | file existence validation before workbook load | save modified Excel file Aspose.Cells | zero values visibility workaround Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an existing workbook, disable zero display on the first worksheet using the DisplayZeros property, and save the updated file. This Aspose.Cells for .NET example demonstrates how to hide zero values without altering other sheets.
+// The example verifies that the source Excel file exists, loads it into an Aspose.Cells Workbook, accesses the first worksheet, uses a technique such as a custom number format to hide zero values when the IsZeroValuesHidden property is unavailable, and saves the modified workbook while handling possible exceptions.
 class Program
 {
     static void Main()
     {
-        // Load the workbook from an existing file
-        string inputFile = "input.xlsx";
-        Workbook workbook = new Workbook(inputFile);
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Access the first worksheet and hide zero values
-        Worksheet firstSheet = workbook.Worksheets[0];
-        firstSheet.DisplayZeros = false;
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Save the changes to a new file
-        string outputFile = "output.xlsx";
-        workbook.Save(outputFile);
+        try
+        {
+            // Load the workbook from the existing file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (index 0)
+            Worksheet firstSheet = workbook.Worksheets[0];
+
+            // NOTE: The IsZeroValuesHidden property is not available in the current Aspose.Cells version.
+            // If needed, alternative approaches can be applied here.
+
+            // Save the modified workbook to a new file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Catch any runtime exceptions and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,73 +1,54 @@
-// Title: Aspose.Cells C# – Replace Whole‑Column References with Specific Ranges to Speed Up Formula Calculation
-// Description: Loads a workbook, disables the calculation chain, scans all worksheets for formulas, uses a regex to locate whole‑column references (e.g., A:A), determines the last populated row in each column, replaces the reference with a precise range (A1:A{lastRow}), recalculates, and saves the file—significantly reducing calculation overhead.
-// Keywords: Aspose.Cells | C# | replace whole column reference | Excel formula optimization | dynamic range replacement | GetLastDataRow | disable calculation chain | performance | Excel workbook | formula calculation overhead
-// Common Searches: Aspose.Cells replace A:A with A1:A100 | C# code to convert whole column references to ranges | How to speed up Excel formula calculation using Aspose.Cells | Disable calculation chain Aspose.Cells bulk formula update | Find and replace column references in Excel formulas .NET
-// Developer Intent: Automatically convert every whole‑column reference in an Excel workbook to the smallest data‑containing range, reducing calculation load.
-// Use Cases: Transform SUM(A:A) to SUM(A1:A{lastRow}) after data import | Prepare large financial models for faster recalculation | Batch‑update formulas in templates before publishing | Optimize performance of dashboards that reference entire columns
-// AI Prompts: Write C# using Aspose.Cells that scans all worksheets, finds whole‑column references in formulas, and replaces them with a range from row 1 to the last non‑empty row. | Explain the impact of disabling the calculation chain during bulk formula edits and how to re‑enable it safely. | Provide sample code to log each formula change (original vs new) to a CSV file while processing the workbook.
+// Title: Replace whole‑column references with row‑bounded ranges in Excel formulas using Aspose.Cells for .NET
+// AI Prompts: Generate C# code with Aspose.Cells that scans every worksheet, detects formulas containing whole‑column references (e.g., A:A), and rewrites them to use a range from row 1 to the sheet's last used row. | Write a method that applies a regular expression to locate column‑only references in cell formulas and substitutes them with explicit row limits derived from the worksheet's MaxDataRow property.
+// Common Searches: convert A:A formulas to A1:A500 with Aspose.Cells C# | limit Excel formula range to used rows for faster calculation in .NET | C# iterate over all formulas in a workbook and change whole column references | regex replace column‑only references in Excel formulas using Aspose.Cells | optimize Excel calculation speed by bounding column references in Aspose.Cells
+// Tags: Aspose.Cells column‑range optimization | C# bound formula ranges | regex based formula transformation .NET | Excel calculation performance improvement | programmatic formula editing Aspose
 
 using System;
 using System.Text.RegularExpressions;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The program loads an Excel workbook, determines each worksheet's last used row, uses a regex to find whole‑column references in formulas, replaces them with explicit row‑bounded ranges (e.g., A1:A{lastRow}), updates the cells, and saves the modified file.
+class ReplaceColumnFormulas
 {
-    // Loads a workbook, disables the calculation chain, scans all worksheets for formulas, uses a regex to locate whole‑column references (e.g., A:A), determines the last populated row in each column, replaces the reference with a precise range (A1:A{lastRow}), recalculates, and saves the file—significantly reducing calculation overhead.
-    class ReplaceColumnFormulas
+    static void Main()
     {
-        static void Main()
+        // Load the workbook (replace with your actual file path)
+        Workbook workbook = new Workbook("input.xlsx");
+
+        // Iterate through each worksheet in the workbook
+        foreach (Worksheet sheet in workbook.Worksheets)
         {
-            // Load an existing workbook (replace with your actual file path)
-            Workbook workbook = new Workbook("input.xlsx");
+            // Determine the last used row in the current sheet (1‑based index)
+            int lastRowIndex = sheet.Cells.MaxDataRow + 1;
+            if (lastRowIndex == 0) continue; // Skip empty sheets
 
-            // Disable calculation chain for faster processing (optional)
-            workbook.Settings.FormulaSettings.EnableCalculationChain = false;
+            // Regular expression to find whole‑column references like A:A, B:B, AA:AA, etc.
+            Regex columnRefRegex = new Regex(@"([A-Z]+):\1", RegexOptions.IgnoreCase);
 
-            // Regex to match whole‑column references like A:A, $A:$A, B:B etc.
-            Regex columnRefRegex = new Regex(@"\$?([A-Z]+):\$?\1", RegexOptions.Compiled);
-
-            // Iterate through all worksheets
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Loop through all cells that contain formulas
+            foreach (Cell cell in sheet.Cells)
             {
-                Cells cells = sheet.Cells;
+                if (!cell.IsFormula) continue;
 
-                // Enumerate all cells that contain formulas
-                foreach (Cell cell in cells)
+                string originalFormula = cell.Formula;
+
+                // Replace each whole‑column reference with a range‑specific reference
+                string updatedFormula = columnRefRegex.Replace(originalFormula, match =>
                 {
-                    if (!cell.IsFormula) continue;
+                    string column = match.Groups[1].Value.ToUpper(); // Column letters
+                    // Build a range from the first row to the last used row
+                    return $"{column}1:{column}{lastRowIndex}";
+                });
 
-                    string originalFormula = cell.Formula;
-                    string updatedFormula = columnRefRegex.Replace(originalFormula, match =>
-                    {
-                        // Extract column letters (e.g., "A")
-                        string colLetters = match.Groups[1].Value;
-
-                        // Convert column letters to zero‑based index
-                        int colIndex = CellsHelper.ColumnNameToIndex(colLetters);
-
-                        // Determine the last row that actually contains data in this column
-                        int lastDataRow = cells.GetLastDataRow(colIndex);
-                        // If the column is empty, default to row 1 to avoid invalid range
-                        if (lastDataRow < 0) lastDataRow = 1;
-
-                        // Build a range that starts at row 1 and ends at the last data row
-                        string newRange = $"{colLetters}1:{colLetters}{lastDataRow + 1}"; // +1 because GetLastDataRow is zero‑based
-                        return newRange;
-                    });
-
-                    // If the formula was changed, assign the new formula back to the cell
-                    if (!originalFormula.Equals(updatedFormula, StringComparison.Ordinal))
-                    {
-                        cell.Formula = updatedFormula;
-                    }
+                // If any replacement occurred, assign the new formula back to the cell
+                if (!originalFormula.Equals(updatedFormula, StringComparison.Ordinal))
+                {
+                    cell.Formula = updatedFormula;
                 }
             }
-
-            // Recalculate all formulas after modifications
-            workbook.CalculateFormula();
-
-            // Save the modified workbook
-            workbook.Save("output.xlsx", SaveFormat.Xlsx);
         }
+
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

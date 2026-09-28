@@ -1,80 +1,86 @@
-// Title: Create a macro‑enabled .xlsm workbook with VBA Workbook_Open formatting using Aspose.Cells C#
-// Description: C# example that builds a new Workbook, accesses its VbaProject, ensures a Document module (ThisWorkbook) and a Procedural module (HelperModule) exist, injects a Workbook_Open macro that colors range A1:B2 yellow and makes the font bold, adds a ShowMessage subroutine, and saves the file as a macro‑enabled .xlsm workbook.
-// Keywords: Aspose.Cells | C# | VBA | macro‑enabled workbook | xlsm | Workbook_Open event | add VBA module | embed VBA code | format cells on open | VbaProject | Excel automation
-// Common Searches: Aspose.Cells add Workbook_Open macro C# | create .xlsm file with VBA using Aspose.Cells | how to embed VBA modules in Excel workbook with Aspose.Cells | save macro‑enabled workbook Aspose.Cells .NET | format cells on workbook open Aspose.Cells example
-// Developer Intent: Generate a macro‑enabled Excel file and programmatically embed VBA code that formats cells when the workbook is opened.
-// Use Cases: Automatically apply a yellow background and bold font to a specific range each time the file is opened. | Display a confirmation message box on workbook open to verify macro execution. | Organize VBA logic by separating event code (ThisWorkbook) from reusable procedures (HelperModule).
-// AI Prompts: Write C# code with Aspose.Cells that adds a Workbook_Open macro to set A1:B2 background to yellow and font to bold. | Show how to create a procedural VBA module named HelperModule containing a public Sub ShowMessage that displays a message box, then save the workbook as .xlsm. | Explain how to check for existing VBA modules in a VbaProject before adding new ones using Aspose.Cells.
+// Title: Create a macro‑enabled .xlsm workbook and embed a Workbook_Open VBA macro to format header cells with Aspose.Cells for .NET
+// AI Prompts: Write C# code that uses Aspose.Cells to create an .xlsm file, add sample data, enable macros, and inject a Workbook_Open VBA procedure that makes the header row bold, applies a light blue fill, and adjusts column widths automatically. | Show how to retrieve or add the ThisWorkbook VBA module in an Aspose.Cells workbook and assign VBA source code to it before saving as a macro‑enabled workbook. | Demonstrate enabling macros, inserting a VBA macro, and saving the workbook in Xlsm format with Aspose.Cells for .NET, including handling the case where the VBA project is not created.
+// Common Searches: aspnet create xlsm file with embedded VBA using Aspose.Cells | how to add Workbook_Open macro programmatically in C# Aspose.Cells | enable macros and save as Xlsm format with Aspose.Cells .NET example | add ThisWorkbook module and set VBA code in Aspose.Cells C# | auto‑fit columns and format header row via VBA macro in Aspose.Cells workbook
+// Tags: Aspose.Cells macro-enabled workbook creation | C# add VBA module Aspose.Cells | Workbook_Open event VBA injection Aspose.Cells | save workbook as Xlsm Aspose.Cells .NET | format header row via VBA macro Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Vba;
 
-// C# example that builds a new Workbook, accesses its VbaProject, ensures a Document module (ThisWorkbook) and a Procedural module (HelperModule) exist, injects a Workbook_Open macro that colors range A1:B2 yellow and makes the font bold, adds a ShowMessage subroutine, and saves the file as a macro‑enabled .xlsm workbook.
-class MacroWorkbookDemo
+// The example creates a new workbook, enables macro support, adds sample data to a sheet named "Data", injects a Workbook_Open VBA routine that bolds the header row, applies a light blue background, and adjusts column widths, then saves the file as a macro‑enabled .xlsm workbook using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook (default format is XLSX)
-            Workbook wb = new Workbook();
+            // Create a new workbook and enable macro support
+            Workbook workbook = new Workbook();
+            workbook.Settings.EnableMacros = true;
 
-            // Access the VBA project associated with the workbook
-            VbaProject vbaProject = wb.VbaProject;
+            // Ensure a VBA project exists (created automatically when macros are enabled)
+            VbaProject vbaProject = workbook.VbaProject;
+            if (vbaProject == null)
+                throw new InvalidOperationException("VBA project could not be created.");
 
-            // Get existing Document module named "ThisWorkbook" or add a new one
-            VbaModule docModule = null;
-            foreach (VbaModule mod in vbaProject.Modules)
+            // Access the first worksheet and give it a name
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Add some sample data
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["A2"].PutValue(123);
+            sheet.Cells["B2"].PutValue(456);
+
+            // VBA code that runs when the workbook is opened
+            string vbaCode = @"
+Private Sub Workbook_Open()
+    Dim ws As Worksheet
+    Set ws = ThisWorkbook.Worksheets(""Data"")
+    ws.Range(""A1:B1"").Font.Bold = True
+    ws.Range(""A1:B1"").Interior.Color = RGB(200, 200, 255)
+    ws.Columns(""A:B"").AutoFit
+End Sub
+";
+
+            // Get (or add) the ThisWorkbook module and set its code
+            VbaModule thisWorkbookModule = null;
+            try
             {
-                if (mod.Type == VbaModuleType.Document && mod.Name.Equals("ThisWorkbook", StringComparison.OrdinalIgnoreCase))
-                {
-                    docModule = mod;
-                    break;
-                }
+                // Try to retrieve the module by name (indexer returns VbaModule)
+                thisWorkbookModule = vbaProject.Modules["ThisWorkbook"];
             }
-            if (docModule == null)
+            catch
             {
-                int docModuleIndex = vbaProject.Modules.Add(VbaModuleType.Document, "ThisWorkbook");
-                docModule = vbaProject.Modules[docModuleIndex];
-            }
-
-            // VBA code that runs when the workbook is opened and formats cells A1:B2
-            string workbookOpenCode =
-                "Private Sub Workbook_Open()\r\n" +
-                "    Dim ws As Worksheet\r\n" +
-                "    Set ws = ThisWorkbook.Worksheets(1)\r\n" +
-                "    ws.Range(\"A1:B2\").Interior.Color = RGB(255, 255, 0) ' Yellow background\r\n" +
-                "    ws.Range(\"A1:B2\").Font.Bold = True\r\n" +
-                "End Sub";
-
-            docModule.Codes = workbookOpenCode;
-
-            // Get existing Procedural module named "HelperModule" or add a new one
-            VbaModule procModule = null;
-            foreach (VbaModule mod in vbaProject.Modules)
-            {
-                if (mod.Type == VbaModuleType.Procedural && mod.Name.Equals("HelperModule", StringComparison.OrdinalIgnoreCase))
-                {
-                    procModule = mod;
-                    break;
-                }
-            }
-            if (procModule == null)
-            {
-                int procModuleIndex = vbaProject.Modules.Add(VbaModuleType.Procedural, "HelperModule");
-                procModule = vbaProject.Modules[procModuleIndex];
+                // Ignored – will add the module if not found
             }
 
-            // Auxiliary subroutine
-            procModule.Codes = "Public Sub ShowMessage()\r\n    MsgBox \"Workbook opened\"\r\nEnd Sub";
+            if (thisWorkbookModule == null)
+            {
+                // Add returns the index of the new module
+                int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Document, "ThisWorkbook");
+                thisWorkbookModule = vbaProject.Modules[moduleIndex];
+            }
 
-            // Save the workbook as a macro‑enabled file (.xlsm)
-            wb.Save("MacroEnabledWorkbook.xlsm", SaveFormat.Xlsm);
+            thisWorkbookModule.Codes = vbaCode;
+
+            // Determine output path
+            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "MacroEnabledWorkbook.xlsm");
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath) ?? Directory.GetCurrentDirectory();
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
+            // Save the workbook as a macro‑enabled file
+            workbook.Save(outputPath, SaveFormat.Xlsm);
+            Console.WriteLine($"Workbook saved successfully to: {outputPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

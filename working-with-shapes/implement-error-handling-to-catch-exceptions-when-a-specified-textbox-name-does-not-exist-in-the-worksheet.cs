@@ -1,75 +1,65 @@
-// Title: Handle Missing TextBox Names in Aspose.Cells (C#) with Proper Exception Catching
-// Description: Shows how to add a TextBox to a worksheet, retrieve it by name, and gracefully handle a non‑existent TextBox using CellsException (ExceptionType.Shape) in Aspose.Cells for .NET.
-// Keywords: Aspose.Cells TextBox name not found | CellsException shape | C# Aspose.Cells error handling | retrieve TextBox by name | worksheet shape exception | Aspose.Cells missing shape handling | Aspose.Cells TextBox lookup | exception handling Aspose.Cells | Aspose.Cells .NET | Excel shape error handling
-// Common Searches: Aspose.Cells catch exception when textbox name missing | C# get TextBox by name Aspose.Cells | CellsException shape code example | how to handle missing shape in Aspose.Cells | Aspose.Cells TextBox not found error | retrieve worksheet shape by name with error handling | Aspose.Cells .NET exception handling for shapes
-// Developer Intent: Add robust error handling when accessing a TextBox by name to avoid crashes if the name is absent.
-// Use Cases: Validate user‑provided TextBox names before processing. | Log a warning and continue when a required TextBox is missing. | Separate shape lookup from other workbook operations to ensure the file saves. | Provide user‑friendly feedback for missing shapes in console or UI. | Implement fallback logic when a specific TextBox is not present.
-// AI Prompts: Write C# code using Aspose.Cells that retrieves a TextBox by its Name and catches CellsException with ExceptionType.Shape for missing names. | Show how to log a clear message and keep processing after a TextBox lookup fails in an Aspose.Cells workbook. | Provide an example of wrapping worksheet.TextBoxes["MyName"] in try‑catch distinguishing shape‑related errors from other exceptions.
+// Title: How to add exception handling for a missing named TextBox shape in Aspose.Cells C#
+// AI Prompts: Generate C# code using Aspose.Cells that attempts to retrieve a TextBox shape by its name and logs a custom error if the shape is not found. | Modify the example to differentiate between a missing TextBox shape and other runtime errors, returning a specific message for each case. | Show how to safely update the text of a named TextBox in an Excel worksheet with Aspose.Cells while wrapping the shape access in a try‑catch block.
+// Common Searches: Aspose.Cells C# check for existence of a TextBox shape before updating its text | C# catch exception when worksheet.Shapes["MyTextBox"] throws index out of range | How to handle missing shape name error in Aspose.Cells workbook | Safely update a named TextBox in Excel using Aspose.Cells with error handling | Aspose.Cells exception handling for non‑existent shapes in C#
+// Tags: Aspose.Cells exception handling for missing shape | C# retrieve TextBox shape by name | worksheet.Shapes index out of range protection | update TextBox text safely Aspose.Cells | validate shape existence Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.ActiveXControls;
 
-namespace AsposeCellsExamples
+// The sample loads an Excel workbook, attempts to locate a TextBox named 'MyTextBox' on the first worksheet, updates its text, and uses try‑catch blocks to handle missing input files, absent TextBox shapes, and save errors, providing clear error messages for each scenario.
+class TextBoxHandler
 {
-    // Shows how to add a TextBox to a worksheet, retrieve it by name, and gracefully handle a non‑existent TextBox using CellsException (ExceptionType.Shape) in Aspose.Cells for .NET.
-    public class TextBoxNameErrorHandling
+    static void Main()
     {
-        public static void Main(string[] args)
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+        const string textBoxName = "MyTextBox";
+
+        Workbook workbook = null;
+
+        // Load the workbook safely
+        try
         {
-            try
+            if (!File.Exists(inputPath))
             {
-                Run();
+                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Fatal error: {ex.Message}");
-            }
+
+            workbook = new Workbook(inputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading workbook: {ex.Message}");
+            return;
         }
 
-        public static void Run()
+        // Access the first worksheet
+        Worksheet worksheet = workbook.Worksheets[0];
+
+        // Retrieve and modify the TextBox shape
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Shape textBox = worksheet.Shapes[textBoxName];
+            textBox.Text = "Updated text content";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: TextBox named '{textBoxName}' was not found in the worksheet.");
+            Console.WriteLine($"Exception details: {ex.Message}");
+        }
 
-            // Add a textbox and assign a name
-            int tbIndex = worksheet.TextBoxes.Add(2, 2, 150, 60);
-            TextBox textBox = worksheet.TextBoxes[tbIndex];
-            textBox.Name = "MyTextBox";
-            textBox.Text = "Hello Aspose!";
-
-            // Attempt to retrieve a textbox by a name that may not exist
-            string targetName = "NonExistingBox";
-
-            try
-            {
-                // This will throw a CellsException if the name is not found
-                TextBox targetBox = worksheet.TextBoxes[targetName];
-                Console.WriteLine($"Found TextBox: {targetBox.Name}, Text: {targetBox.Text}");
-            }
-            catch (CellsException ex) when (ex.Code == ExceptionType.Shape)
-            {
-                // Handle the case where the textbox name does not exist
-                Console.WriteLine($"TextBox with name \"{targetName}\" was not found. Exception: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // Handle any other unexpected exceptions
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-
-            // Save the workbook (using the standard save method)
-            try
-            {
-                workbook.Save("TextBoxNameErrorHandling.xlsx");
-                Console.WriteLine("Workbook saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+        // Save the workbook safely
+        try
+        {
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving workbook: {ex.Message}");
         }
     }
 }

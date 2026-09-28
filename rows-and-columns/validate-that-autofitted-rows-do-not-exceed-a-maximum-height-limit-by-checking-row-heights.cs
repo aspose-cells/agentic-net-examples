@@ -1,64 +1,63 @@
-// Title: Validate Auto‑Fitted Row Height Does Not Exceed Max Limit with Aspose.Cells for .NET
-// Description: Creates a workbook, writes long wrapped text to cells A1 and A2, enables text wrapping, sets a maximum row height via AutoFitterOptions.MaxRowHeight, auto‑fits rows 0‑1, reads each row's height with Cells.GetRowHeight, compares it to the limit, logs the outcome, and saves the file.
-// Keywords: Aspose.Cells | .NET | C# | AutoFitRows | MaxRowHeight | row height validation | limit row height | retrieve row height | Excel row height constraint | auto‑fit rows example
-// Common Searches: Aspose.Cells limit row height after AutoFitRows | C# check row height after auto‑fit | Set maximum row height with AutoFitterOptions | GetRowHeight after AutoFitRows Aspose.Cells | Validate row height constraint in .NET Excel
-// Developer Intent: Confirm that rows auto‑fitted by Aspose.Cells stay within a predefined maximum height.
-// Use Cases: Apply text wrapping, auto‑fit rows, and enforce a height ceiling (e.g., 40 points) using AutoFitterOptions. | Iterate over a range of rows to detect and log any that exceed the allowed height. | Save the workbook after validation to preserve the enforced row‑height limits.
-// AI Prompts: Generate C# code that auto‑fits rows with a MaxRowHeight of 30 points and throws an exception if any row exceeds the limit. | Write a method that accepts a worksheet and a maximum height, auto‑fits a specified row range, and returns a list of rows violating the constraint. | Explain how AutoFitterOptions.MaxRowHeight works with text wrapping and how to retrieve actual row heights after auto‑fit.
+// Title: C# – Validate that auto‑fitted rows do not exceed a specified maximum height using Aspose.Cells AutoFitterOptions
+// AI Prompts: Generate C# code that applies AutoFitterOptions with MaxRowHeight, auto‑fits rows, and then iterates through each data row to compare its height against the limit. | Show how to log rows whose actual height is greater than a defined point value after calling Worksheet.AutoFitRows with a height cap. | Provide an example that wraps cell text, sets a maximum row height, performs auto‑fit, and outputs validation results for each row.
+// Common Searches: Aspose.Cells C# enforce maximum row height when using AutoFitRows | how to check row height after AutoFitterOptions AutoFitRows in .NET | C# code to detect rows taller than a given point size in an Aspose.Cells workbook | retrieve row height for each data row after auto‑fitting in Aspose.Cells | validate that auto‑fitted rows stay within 40 points using Aspose.Cells
+// Tags: apply MaxRowHeight constraint Aspose.Cells | retrieve row height after AutoFitRows C# | enforce row height cap Aspose.Cells .NET | validate row height limit using AutoFitterOptions | wrap text and limit row height Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AutoFitRowHeightValidation
 {
-    // Creates a workbook, writes long wrapped text to cells A1 and A2, enables text wrapping, sets a maximum row height via AutoFitterOptions.MaxRowHeight, auto‑fits rows 0‑1, reads each row's height with Cells.GetRowHeight, compares it to the limit, logs the outcome, and saves the file.
+    // The example creates a workbook, writes long wrapped text, configures AutoFitterOptions with a MaxRowHeight, auto‑fits rows, iterates through all data rows to compare actual heights with the defined limit, logs whether each row is within or exceeds the cap, and saves the workbook.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook (create rule)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-            // Populate cells with long wrapped text to trigger auto‑fit
-            cells["A1"].PutValue("This is a very long text that should cause the row height to increase significantly when auto‑fitted.");
-            cells["A2"].PutValue("Another long text with line breaks\nto further test the auto‑fit behavior.");
-            // Enable text wrapping so that height changes
+            // Populate cells with long wrapped text to trigger row height increase
+            cells["A1"].PutValue("This is a very long piece of text that should cause the row to expand when auto‑fitted. " +
+                                 "It contains multiple sentences to ensure the height grows significantly.");
+            cells["B1"].PutValue("Another long text in the adjacent column to further influence the row height.");
+            // Enable text wrapping for the cells
             Style wrapStyle = cells["A1"].GetStyle();
             wrapStyle.IsTextWrapped = true;
             cells["A1"].SetStyle(wrapStyle);
-            cells["A2"].SetStyle(wrapStyle);
+            cells["B1"].SetStyle(wrapStyle);
 
             // Define the maximum allowed row height (in points)
-            double maxAllowedHeight = 40.0; // Example limit
+            double maxAllowedHeight = 40.0; // Example: 40 points
 
-            // Configure AutoFitterOptions with MaxRowHeight
+            // Configure AutoFitterOptions with the MaxRowHeight limit
             AutoFitterOptions options = new AutoFitterOptions
             {
                 MaxRowHeight = maxAllowedHeight,
-                OnlyAuto = true
+                OnlyAuto = true // Fit only rows that are not manually sized
             };
 
-            // Auto‑fit rows 0 to 1 using the options (auto‑fit rule)
-            sheet.AutoFitRows(0, 1, options);
+            // Auto‑fit rows using the options (rule: AutoFitRows(AutoFitterOptions))
+            worksheet.AutoFitRows(options);
 
-            // Validate that each row height does not exceed the maximum
-            for (int row = 0; row <= 1; row++)
+            // Validate that no row exceeds the specified maximum height
+            int lastRow = cells.MaxDataRow; // Check rows that contain data
+            for (int rowIndex = 0; rowIndex <= lastRow; rowIndex++)
             {
-                double actualHeight = cells.GetRowHeight(row); // get row height rule
+                double actualHeight = cells.GetRowHeight(rowIndex); // Rule: GetRowHeight(int)
                 if (actualHeight > maxAllowedHeight)
                 {
-                    Console.WriteLine($"Row {row} height {actualHeight:F2} exceeds the limit of {maxAllowedHeight} points.");
+                    Console.WriteLine($"Row {rowIndex} height {actualHeight:F2} exceeds the limit of {maxAllowedHeight} points.");
                 }
                 else
                 {
-                    Console.WriteLine($"Row {row} height {actualHeight:F2} is within the allowed limit.");
+                    Console.WriteLine($"Row {rowIndex} height {actualHeight:F2} is within the allowed limit.");
                 }
             }
 
-            // Save the workbook (save rule)
-            workbook.Save("AutoFitRowHeightValidation.xlsx");
+            // Save the workbook (rule: workbook.Save)
+            workbook.Save("AutoFitRowHeightValidated.xlsx");
         }
     }
 }

@@ -1,67 +1,58 @@
-// Title: Set a Shape's Latin Font to Calibri in Aspose.Cells for .NET (Keep FarEast Font Intact)
-// Description: This example creates a workbook, adds a rectangle shape with text, reads the current Latin and FarEast font names, changes the LatinName to "Calibri" while leaving FarEastName unchanged, and saves the file as ChangeLatinFontDemo.xlsx.
-// Keywords: Aspose.Cells shape font | change Latin font Calibri | preserve FarEast font | TextOptions LatinName .NET | shape text formatting Aspose.Cells | C# Aspose.Cells example | multilingual shape text
-// Common Searches: Aspose.Cells set shape Latin font to Calibri | how to keep FarEast font when updating shape text font | TextOptions LatinName property usage | change western font of shape text Aspose.Cells | C# example for multilingual shape fonts
-// Developer Intent: Apply Calibri to the western (Latin) portion of a shape's text without modifying the existing FarEast font.
-// Use Cases: Standardize western text in all shapes to Calibri while retaining Asian fonts for multilingual reports. | Allow users to select a preferred Latin font for newly created shapes in a spreadsheet editor. | Generate invoices where English sections use Calibri and Japanese sections keep their original typeface.
-// AI Prompts: Generate C# code that sets TextOptions.LatinName to "Calibri" for a given Shape in Aspose.Cells, preserving TextOptions.FarEastName. | Explain the difference between LatinName and FarEastName in Aspose.Cells shape text rendering. | Create a helper method that receives a Shape and a font name, updates only the Latin font, and returns the modified Shape.
+// Title: How to change the default Latin (Western) font to Calibri while preserving the FarEast font in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an .xlsx file with Aspose.Cells, sets the workbook's default Latin font to Calibri, leaves the FarEast font unchanged, and saves the updated file. | Write a C# method that updates only the Font.Name property of the default style's Latin font to "Calibri" without modifying the FarEastFontName, using Aspose.Cells. | Create a script that checks for the input workbook, changes the default Western font to Calibri via Aspose.Cells, and ensures the FarEast font settings remain intact before saving.
+// Common Searches: Aspose.Cells set default Latin font to Calibri C# | preserve FarEastFontName when changing workbook default font Aspose.Cells | change only western font in Excel file using Aspose.Cells .NET | C# Aspose.Cells default style font name Calibri without affecting Asian fonts | how to modify default style Latin font in Aspose.Cells workbook
+// Tags: Aspose.Cells default style font change | set Latin font name Calibri Aspose.Cells | preserve FarEastFontName Aspose.Cells | C# modify workbook default font | Excel workbook western font Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, adds a rectangle shape with text, reads the current Latin and FarEast font names, changes the LatinName to "Calibri" while leaving FarEastName unchanged, and saves the file as ChangeLatinFontDemo.xlsx.
-    public class ChangeLatinFontDemo
+    // The example loads an existing Excel workbook with Aspose.Cells, retrieves the default style, changes the Latin (Western) font name to "Calibri" while leaving the FarEast font unchanged, reassigns the modified style, and saves the workbook to a new file.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Verify input file exists
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
 
-                // Add a rectangle shape that will contain text
-                // Parameters: upper left row, upper left column, upper left offset X, upper left offset Y, width, height
-                Shape shape = worksheet.Shapes.AddRectangle(1, 0, 1, 0, 200, 100);
-                shape.Text = "Sample western text";
+                // Load the workbook
+                Workbook workbook = new Workbook(inputPath);
 
-                // Access the TextOptions of the first paragraph of the shape's text body
-                TextOptions textOptions = shape.TextBody.TextParagraphs[0].TextOptions;
+                // Get the default style
+                Style defaultStyle = workbook.DefaultStyle;
 
-                // Display the current Latin and FarEast font names (for demonstration)
-                Console.WriteLine("Before change:");
-                Console.WriteLine("LatinName: " + textOptions.LatinName);
-                Console.WriteLine("FarEastName: " + textOptions.FarEastName);
+                // Change the Latin (Western) font to Calibri
+                defaultStyle.Font.Name = "Calibri";
 
-                // Change the Latin (western) font name to Calibri
-                textOptions.LatinName = "Calibri";
+                // Apply the modified style back to the workbook
+                workbook.DefaultStyle = defaultStyle;
 
-                // FarEastName is left unchanged automatically; we can verify it remains the same
-                Console.WriteLine("\nAfter change:");
-                Console.WriteLine("LatinName: " + textOptions.LatinName);
-                Console.WriteLine("FarEastName (unchanged): " + textOptions.FarEastName);
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                // Save the workbook to see the effect
-                workbook.Save("ChangeLatinFontDemo.xlsx");
-                Console.WriteLine("\nWorkbook saved as ChangeLatinFontDemo.xlsx");
+                // Save the updated workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ChangeLatinFontDemo.Run();
         }
     }
 }

@@ -1,34 +1,51 @@
-// Title: C# – Protect a Single Worksheet with a Password Using Aspose.Cells for .NET
-// Description: Load an existing Excel workbook, assign a password to a chosen worksheet, apply full protection (ProtectionType.All), and save the file with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | worksheet protection | password protection | Excel encryption .NET | Protect worksheet Aspose | ProtectionType.All | load workbook Aspose | save protected workbook | Excel sheet security
-// Common Searches: Aspose.Cells protect worksheet password C# | How to set password for a single sheet using Aspose.Cells | C# code to apply ProtectionType.All to Excel sheet | Save Excel workbook with protected sheet Aspose | Encrypt specific worksheet Aspose.Cells .NET
-// Developer Intent: Load an Excel file, secure a specific worksheet with a password, and write the protected workbook back to disk.
-// Use Cases: Distribute a workbook while keeping confidential data hidden on a protected sheet. | Lock formula cells in a reporting sheet while allowing other sheets to remain editable. | Enforce read‑only access to a financial model worksheet for external reviewers.
-// AI Prompts: Generate C# code that protects the second worksheet with a password and permits only formatting changes using Aspose.Cells. | Show how to detect if a worksheet is already protected before applying a new password in Aspose.Cells for .NET. | Provide an example that protects multiple worksheets, each with a different password, in a single workbook using Aspose.Cells.
+// Title: How to password‑protect a single worksheet in an Excel file using Aspose.Cells for .NET (C#) and save it
+// AI Prompts: Load an existing Excel file (or create a new workbook) with Aspose.Cells, apply a password to the 'Sheet1' worksheet using ProtectionType.All, and write the protected workbook to a new file. | Write C# code that checks for 'input.xlsx', opens it with Aspose.Cells, secures a specific sheet with a custom password, and saves the result as 'output.xlsx'.
+// Common Searches: Aspose.Cells example to protect only Sheet1 with a password in C# | C# protect a single worksheet using ProtectionType.All in Aspose.Cells | How to save an Excel workbook with a password‑protected sheet using Aspose.Cells for .NET | Conditional workbook loading and sheet protection with Aspose.Cells | Set worksheet password without encrypting the whole file Aspose.Cells
+// Tags: worksheet.Protect password Aspose.Cells C# | ProtectionType.All on Excel sheet | conditional workbook load Aspose.Cells | save protected workbook to .xlsx | single sheet password protection .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load an existing Excel workbook, assign a password to a chosen worksheet, apply full protection (ProtectionType.All), and save the file with Aspose.Cells for .NET.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an existing 'input.xlsx' workbook (or creates a new one if the file is missing), selects the worksheet named 'Sheet1' (or the first sheet), applies password protection with worksheet.Protect using ProtectionType.All and a custom password, and then saves the protected workbook as 'output.xlsx', handling any errors that may occur.
+    class Program
     {
-        // Load the existing workbook (no password needed for loading in this example)
-        LoadOptions loadOptions = new LoadOptions();
-        Workbook workbook = new Workbook("input.xlsx", loadOptions);
+        static void Main()
+        {
+            try
+            {
+                string inputPath = "input.xlsx";
+                string outputPath = "output.xlsx";
 
-        // Access the worksheet you want to protect (e.g., the first worksheet)
-        Worksheet worksheet = workbook.Worksheets[0];
+                Workbook workbook;
 
-        // Set the password for the worksheet protection
-        worksheet.Protection.Password = "MySheetPassword";
+                // Load existing workbook if it exists; otherwise create a new one
+                if (File.Exists(inputPath))
+                {
+                    workbook = new Workbook(inputPath);
+                }
+                else
+                {
+                    workbook = new Workbook();
+                    workbook.Worksheets[0].Name = "Sheet1";
+                }
 
-        // Apply protection to the worksheet with the specified password
-        // ProtectionType.All protects all aspects of the worksheet
-        worksheet.Protect(ProtectionType.All, "MySheetPassword", null);
+                // Get the worksheet by name; fallback to the first sheet if not found
+                Worksheet worksheet = workbook.Worksheets["Sheet1"] ?? workbook.Worksheets[0];
 
-        // Save the workbook with the protected worksheet
-        workbook.Save("output_protected.xlsx");
+                // Protect the worksheet (oldPassword is empty because the sheet is not previously protected)
+                worksheet.Protect(ProtectionType.All, "MySecurePassword", string.Empty);
+
+                // Save the protected workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }

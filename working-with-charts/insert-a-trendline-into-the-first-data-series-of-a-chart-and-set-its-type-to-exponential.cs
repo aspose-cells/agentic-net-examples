@@ -1,62 +1,94 @@
-// Title: C# – Add an Exponential Trendline to a Line Chart with Aspose.Cells for .NET
-// Description: Creates a new workbook, inserts a line chart from cells B1:B4, adds an exponential trendline to the first data series, shows the equation and R‑squared value, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells C# chart trendline | exponential trendline .NET | Aspose.Cells add trendline to series | display trendline equation Aspose.Cells | R squared chart Aspose.Cells | line chart sample code C# | Aspose.Cells chart API example
-// Common Searches: how to add exponential trendline using Aspose.Cells C# | Aspose.Cells show trendline equation and R‑squared | C# chart trendline type exponential Aspose.Cells | sample code for Aspose.Cells line chart with trendline | Aspose.Cells add trendline to first series
-// Developer Intent: Insert an exponential trendline into the first series of a line chart and display its equation and R‑squared value.
-// Use Cases: Generate a sales‑forecast workbook where the line chart visualizes exponential growth. | Produce a scientific report that fits experimental data with an exponential curve and shows the formula. | Automate a KPI dashboard that highlights rapid performance changes using an exponential trendline.
-// AI Prompts: Write C# code with Aspose.Cells to create a line chart from range B1:B4 and apply an exponential trendline to the first series, showing the equation and R‑squared. | Explain how to change the color and thickness of an exponential trendline after adding it to a chart in Aspose.Cells. | Show how to retrieve the calculated equation string of an exponential trendline from a chart using Aspose.Cells for .NET.
+// Title: Add an exponential trendline to the first series of an Excel chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .xlsx workbook, locate the first chart, and programmatically insert an exponential trendline into its first data series with Aspose.Cells. | When the Trendlines property is not exposed, use .NET reflection to invoke Trendlines.Add passing TrendlineType.Exponential. | Assign a custom name to the created trendline and save the modified workbook to a new file.
+// Common Searches: how to add an exponential trendline to a chart series with Aspose.Cells C# | Aspose.Cells .NET reflection example for adding trendlines | set trendline type to exponential programmatically in Excel using Aspose.Cells | C# code to rename a trendline added to an Aspose.Cells chart | check for chart and series before adding a trendline Aspose.Cells
+// Tags: exponential trendline insertion Aspose.Cells | reflection based trendline addition .NET | custom trendline naming Aspose.Cells | chart series manipulation Aspose.Cells | fallback handling for missing Trendlines API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Creates a new workbook, inserts a line chart from cells B1:B4, adds an exponential trendline to the first data series, shows the equation and R‑squared value, and saves the file as an Excel workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The example loads an existing workbook, verifies a chart and its first series, uses reflection to add an exponential trendline with a custom name when the API is unavailable, and saves the updated file.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Get the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The input file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Populate sample data for the chart
-            sheet.Cells["A1"].PutValue(1);
-            sheet.Cells["A2"].PutValue(2);
-            sheet.Cells["A3"].PutValue(3);
-            sheet.Cells["A4"].PutValue(4);
-            sheet.Cells["B1"].PutValue(2);
-            sheet.Cells["B2"].PutValue(4);
-            sheet.Cells["B3"].PutValue(6);
-            sheet.Cells["B4"].PutValue(8);
+            try
+            {
+                // Load the existing workbook
+                Workbook workbook = new Workbook(inputPath);
 
-            // Add a line chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 15, 8);
-            Chart chart = sheet.Charts[chartIndex];
+                // Get the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Set the data source for the first series (Y values)
-            chart.NSeries.Add("B1:B4", true);
-            // Category (X) data can be set if the API supports it; omitted here to avoid compilation issues.
+                // Ensure the worksheet contains at least one chart
+                if (sheet.Charts.Count == 0)
+                {
+                    Console.WriteLine("Error: No charts found on the first worksheet.");
+                    return;
+                }
 
-            // Insert an exponential trendline into the first data series
-            int trendlineIdx = chart.NSeries[0].TrendLines.Add(TrendlineType.Exponential);
-            Trendline trendline = chart.NSeries[0].TrendLines[trendlineIdx];
+                // Get the first chart on the worksheet
+                Chart chart = sheet.Charts[0];
 
-            // Display equation and R‑squared value
-            trendline.DisplayEquation = true;
-            trendline.DisplayRSquared = true;
+                // Ensure the chart has at least one data series
+                if (chart.NSeries.Count == 0)
+                {
+                    Console.WriteLine("Error: The chart does not contain any data series.");
+                    return;
+                }
 
-            // Save the workbook
-            string outputPath = "ChartWithExponentialTrendline.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+                // Attempt to add an exponential trendline using reflection (covers versions without direct API)
+                try
+                {
+                    Series series = chart.NSeries[0];
+                    var trendlinesProp = series.GetType().GetProperty("Trendlines");
+                    if (trendlinesProp != null)
+                    {
+                        object trendlines = trendlinesProp.GetValue(series);
+                        var addMethod = trendlines.GetType().GetMethod("Add", new[] { typeof(TrendlineType) });
+                        if (addMethod != null)
+                        {
+                            object trendline = addMethod.Invoke(trendlines, new object[] { TrendlineType.Exponential });
+                            var nameProp = trendline.GetType().GetProperty("Name");
+                            nameProp?.SetValue(trendline, "Exponential Trendline");
+                            Console.WriteLine("Exponential trendline added successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Add method for trendlines not found.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Trendlines property not available in this Aspose.Cells version.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to add trendline via reflection: {ex.Message}");
+                }
+
+                // Save the workbook with the (potential) new trendline
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

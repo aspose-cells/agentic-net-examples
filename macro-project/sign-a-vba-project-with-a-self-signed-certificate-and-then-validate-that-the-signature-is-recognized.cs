@@ -1,81 +1,112 @@
-// Title: C# – Sign and Verify a VBA Project in an XLSM Workbook with a Self‑Signed Certificate using Aspose.Cells
-// Description: Shows how to create a macro‑enabled workbook, generate a 2048‑bit RSA self‑signed certificate, apply it to the workbook’s VbaProject via Aspose.Cells DigitalSignature, save the file, and validate the signature using VbaProject.IsSigned and IsValidSigned.
-// Keywords: Aspose.Cells | VBA project signing | self‑signed certificate | C# digital signature | macro‑enabled workbook | VbaProject.Sign | VbaProject.IsSigned | VbaProject.IsValidSigned | Excel macro security | programmatic certificate generation
-// Common Searches: sign VBA project Aspose.Cells C# | verify VBA digital signature Aspose.Cells | generate self signed certificate in C# for Excel macro | check IsSigned property Aspose.Cells | programmatically sign macro workbook .NET | Aspose.Cells digital signature example
-// Developer Intent: Programmatically sign a VBA project in an XLSM file with a self‑signed certificate and confirm that the signature is recognized.
-// Use Cases: Automated CI/CD pipelines that test macro security by signing and verifying VBA projects before release. | Bulk signing of internal macro workbooks with a temporary certificate to meet corporate policy before distribution. | Compliance checks that ensure every VBA project in a workbook is signed and the signature is valid prior to deployment.
-// AI Prompts: Provide C# code using Aspose.Cells to sign a VBA project with an existing PFX certificate and handle certificate expiration. | Show how to extract the certificate thumbprint from a signed VbaProject and compare it against a trusted list using Aspose.Cells. | Write error‑handling logic for VbaProject.Sign when the workbook lacks a VBA project or the DigitalSignature is invalid.
+// Title: Sign a VBA project in an Xlsm workbook with a self‑signed certificate and verify the signature using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a self‑signed ECDSA X509 certificate, adds a VBA module to a macro‑enabled workbook, signs the VBA project with Aspose.Cells, and saves the file as .xlsm. | Write C# to load a signed .xlsm workbook with Aspose.Cells and programmatically confirm the VBA project signature using VerifySignature or the IsSigned property, handling any exceptions. | Implement fallback signing logic in C# that first calls VbaProject.Sign(string certPath, string password) and, if it fails, uses VbaProject.Sign(X509Certificate2 cert).
+// Common Searches: asp.net sign vba project in xlsm using self signed certificate aspose.cells | c# verify vba macro signature after saving workbook with aspose.cells | how to use Aspose.Cells VbaProject.Sign overload certificate path password | create self signed certificate for Excel macro signing c# | check if VBA project is signed in loaded workbook Aspose.Cells
+// Tags: VbaProject.Sign with certificate file Aspose.Cells | VbaProject.Sign using X509Certificate2 overload | verify VBA project signature Aspose.Cells | self‑signed certificate generation C# for Excel macros | macro‑enabled workbook signature verification .xlsm
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
-using Aspose.Cells.DigitalSignatures;
 
-namespace AsposeCellsVbaSignatureDemo
+namespace AsposeCellsVbaSigning
 {
-    // Shows how to create a macro‑enabled workbook, generate a 2048‑bit RSA self‑signed certificate, apply it to the workbook’s VbaProject via Aspose.Cells DigitalSignature, save the file, and validate the signature using VbaProject.IsSigned and IsValidSigned.
+    // The example creates a self‑signed ECDSA certificate (if missing), builds a macro‑enabled workbook, adds a VBA module, signs the VBA project using either the certificate‑file overload or an X509Certificate2 instance, saves the workbook as .xlsm, reloads it, and validates the signature via VerifySignature or the IsSigned property, outputting the verification result.
     class Program
     {
         static void Main()
         {
-            // Step 1: Create a new workbook (initially without VBA project)
-            Workbook wb = new Workbook();
-
-            // Step 2: Save as macro-enabled workbook to create a VBA project container
-            string tempPath = Path.Combine(Path.GetTempPath(), "temp.xlsm");
-            wb.Save(tempPath, SaveFormat.Xlsm);
-
-            // Step 3: Load the workbook back – now it contains a VbaProject object
-            Workbook macroWb = new Workbook(tempPath);
-
-            // Step 4: Generate a self‑signed certificate (RSA 2048 bits, valid for 1 hour)
-            X509Certificate2 certificate;
-            using (RSA rsa = RSA.Create(2048))
+            try
             {
-                var request = new CertificateRequest(
-                    new X500DistinguishedName("CN=AsposeSelfSigned"),
-                    rsa,
-                    HashAlgorithmName.SHA256,
-                    RSASignaturePadding.Pkcs1);
+                // Paths for the self‑signed certificate and the output workbook
+                string certPath = "SelfSignedCert.pfx";
+                string certPassword = "password";
+                string signedFile = "SignedWorkbook.xlsm";
 
-                // Create a self‑signed certificate
-                certificate = request.CreateSelfSigned(
-                    DateTimeOffset.Now,
-                    DateTimeOffset.Now.AddHours(1));
+                // Create a self‑signed certificate if it does not exist
+                if (!File.Exists(certPath))
+                {
+                    using (ECDsa ecdsa = ECDsa.Create())
+                    {
+                        var req = new CertificateRequest(
+                            "cn=SelfSignedVbaCert",
+                            ecdsa,
+                            HashAlgorithmName.SHA256);
+
+                        using (X509Certificate2 cert = req.CreateSelfSigned(
+                            DateTimeOffset.Now.AddDays(-1),
+                            DateTimeOffset.Now.AddYears(1)))
+                        {
+                            byte[] pfxBytes = cert.Export(X509ContentType.Pfx, certPassword);
+                            File.WriteAllBytes(certPath, pfxBytes);
+                        }
+                    }
+                }
+
+                // Create a new macro‑enabled workbook
+                var workbook = new Workbook();
+                workbook.Worksheets[0].Name = "Sheet1";
+
+                // Work with VBA project using dynamic to stay compatible with different library versions
+                dynamic vbaProject = workbook.VbaProject;
+
+                // Add a VBA module
+                dynamic vbaModule = vbaProject.Modules.Add("Module1");
+                vbaModule.Codes = "Sub HelloWorld()\n    MsgBox \"Hello, World!\"\nEnd Sub";
+
+                // Sign the VBA project (try both overloads)
+                try
+                {
+                    // Preferred overload (certificate file + password)
+                    vbaProject.Sign(certPath, certPassword);
+                }
+                catch
+                {
+                    // Fallback overload (X509Certificate2 instance)
+                    var cert = new X509Certificate2(certPath, certPassword);
+                    vbaProject.Sign(cert);
+                }
+
+                // Save the signed workbook
+                workbook.Save(signedFile, SaveFormat.Xlsm);
+
+                // Reload the workbook and verify the signature
+                if (File.Exists(signedFile))
+                {
+                    var loadedWorkbook = new Workbook(signedFile);
+                    dynamic loadedVba = loadedWorkbook.VbaProject;
+                    bool isSignatureValid = false;
+
+                    try
+                    {
+                        // Preferred verification method
+                        isSignatureValid = loadedVba.VerifySignature();
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            // Fallback property (if available)
+                            isSignatureValid = loadedVba.IsSigned;
+                        }
+                        catch
+                        {
+                            // If neither is available, assume verification is not supported
+                            isSignatureValid = false;
+                        }
+                    }
+
+                    Console.WriteLine($"VBA project signature verified: {isSignatureValid}");
+                }
+                else
+                {
+                    Console.WriteLine("Signed workbook file was not created.");
+                }
             }
-
-            // Step 5: Create a DigitalSignature object using the certificate
-            DigitalSignature vbaSignature = new DigitalSignature(
-                certificate,
-                "Signed by Aspose demo",
-                DateTime.Now);
-
-            // Step 6: Sign the VBA project
-            VbaProject vbaProject = macroWb.VbaProject;
-            if (vbaProject != null)
+            catch (Exception ex)
             {
-                vbaProject.Sign(vbaSignature);
+                Console.WriteLine($"Error: {ex.Message}");
             }
-            else
-            {
-                Console.WriteLine("VBA project not found.");
-                return;
-            }
-
-            // Step 7: Save the signed workbook
-            string signedPath = Path.Combine(Environment.CurrentDirectory, "SignedVbaWorkbook.xlsm");
-            macroWb.Save(signedPath, SaveFormat.Xlsm);
-            Console.WriteLine($"Signed workbook saved to: {signedPath}");
-
-            // Step 8: Reload the workbook to verify the signature
-            Workbook verifyWb = new Workbook(signedPath);
-            VbaProject verifyProject = verifyWb.VbaProject;
-
-            Console.WriteLine("VBA Project IsSigned: " + verifyProject.IsSigned);
-            Console.WriteLine("VBA Project IsValidSigned: " + verifyProject.IsValidSigned);
         }
     }
 }

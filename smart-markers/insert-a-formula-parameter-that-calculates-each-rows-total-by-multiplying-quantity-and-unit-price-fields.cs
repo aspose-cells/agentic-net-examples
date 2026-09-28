@@ -1,10 +1,7 @@
-// Title: C# – Add a row‑wise total formula to an Aspose.Cells ListObject (Quantity × UnitPrice)
-// Description: Creates a workbook, defines a table with Quantity, UnitPrice and Total columns, applies the structured reference formula "[@Quantity]*[@UnitPrice]" to every data row of the Total column via ListObject.PutCellFormula, recalculates the sheet, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# | ListObject | structured reference | Excel table formula | multiply columns | row total calculation | Workbook.CalculateFormula | export to Excel | table column formula
-// Common Searches: Aspose.Cells add formula to ListObject column | C# set structured reference formula in Excel table | calculate total column in Aspose.Cells workbook | how to use PutCellFormula with ListObject | multiply two columns in Aspose.Cells table
-// Developer Intent: Insert a formula that multiplies Quantity by UnitPrice for each data row in the Total column of a ListObject.
-// Use Cases: Automatically compute line‑item totals in an invoice generated with Aspose.Cells. | Build a sales report where totals update instantly when Quantity or UnitPrice values change. | Export database records to Excel with pre‑filled calculation formulas for downstream analysis.
-// AI Prompts: Generate C# code that creates an Aspose.Cells workbook, adds a ListObject, and sets a structured formula "[@Quantity]*[@UnitPrice]" for the Total column. | Show how to recalculate all formulas after inserting them into an Aspose.Cells table and then save the workbook. | Explain the use of structured references like [@ColumnName] in Aspose.Cells formulas for table‑based calculations.
+// Title: Insert a structured reference formula into an Aspose.Cells ListObject to calculate each row's total (Quantity × UnitPrice) using C#
+// AI Prompts: Set the Formula property of a ListColumn in a ListObject to a structured reference that multiplies the Quantity and UnitPrice columns for every row. | Enable a totals row on an Aspose.Cells table and configure the Total column to sum the calculated row totals.
+// Common Searches: Aspose.Cells C# how to add a calculated column to a ListObject using structured references | C# set formula for table column in Aspose.Cells workbook | multiply two columns in an Aspose.Cells table and show sum in totals row | structured reference formula syntax for Aspose.Cells ListColumn | calculate row totals in an Excel table with Aspose.Cells .NET
+// Tags: ListColumn.Formula structured reference Aspose.Cells | calculate row total in ListObject C# | totals row aggregation Aspose.Cells table | multiply Quantity UnitPrice Aspose.Cells | Excel table formula insertion .NET
 
 using System;
 using Aspose.Cells;
@@ -12,58 +9,49 @@ using Aspose.Cells.Tables;
 
 namespace AsposeCellsFormulaDemo
 {
-    // Creates a workbook, defines a table with Quantity, UnitPrice and Total columns, applies the structured reference formula "[@Quantity]*[@UnitPrice]" to every data row of the Total column via ListObject.PutCellFormula, recalculates the sheet, and saves the file as an Excel workbook.
+    // The example creates a workbook, defines a ListObject over a data range, assigns a structured reference formula ([@Quantity]*[@UnitPrice]) to the Total column, shows a totals row that sums the Total column, recalculates formulas, and saves the file as TableWithRowTotalFormula.xlsx.
     class Program
     {
         static void Main()
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add headers for Quantity, UnitPrice and Total
-                sheet.Cells["A1"].PutValue("Quantity");
-                sheet.Cells["B1"].PutValue("UnitPrice");
-                sheet.Cells["C1"].PutValue("Total");
+            // ----- Populate sample data -----
+            // Header row
+            sheet.Cells["A1"].PutValue("Quantity");
+            sheet.Cells["B1"].PutValue("UnitPrice");
+            sheet.Cells["C1"].PutValue("Total");
 
-                // Populate some sample data (Quantity, UnitPrice)
-                sheet.Cells["A2"].PutValue(5);
-                sheet.Cells["B2"].PutValue(12.5);
-                sheet.Cells["A3"].PutValue(3);
-                sheet.Cells["B3"].PutValue(7.8);
-                sheet.Cells["A4"].PutValue(10);
-                sheet.Cells["B4"].PutValue(4.2);
+            // Data rows
+            sheet.Cells["A2"].PutValue(5);
+            sheet.Cells["B2"].PutValue(12.5);
+            sheet.Cells["A3"].PutValue(3);
+            sheet.Cells["B3"].PutValue(7.8);
+            sheet.Cells["A4"].PutValue(10);
+            sheet.Cells["B4"].PutValue(4.2);
 
-                // Create a ListObject (table) that covers the data range including the header
-                // Parameters: first row, first column, last row, last column, hasHeaders
-                int tableIndex = sheet.ListObjects.Add(0, 0, 4, 2, true);
-                ListObject table = sheet.ListObjects[tableIndex];
+            // ----- Create a table (ListObject) covering the data range -----
+            // Table range: A1:C4 (including header)
+            int tableIndex = sheet.ListObjects.Add("A1", "C4", true);
+            ListObject table = sheet.ListObjects[tableIndex];
 
-                // Apply a formula to the "Total" column for each data row.
-                // Structured reference "[@Quantity]" and "[@UnitPrice]" refer to the current row's cells.
-                string totalFormula = "=[@Quantity]*[@UnitPrice]";
+            // ----- Insert formula for the Total column -----
+            // The Total column is the third column in the table (index 2)
+            // Use a structured reference that multiplies Quantity and UnitPrice for each row
+            ListColumn totalColumn = table.ListColumns[2];
+            totalColumn.Formula = "=[@Quantity]*[@UnitPrice]";
 
-                // Calculate number of data rows (exclude header row)
-                int dataRows = table.DataRange.RowCount - 1;
+            // Optional: show totals row and calculate sum of totals
+            table.ShowTotals = true;
+            totalColumn.TotalsCalculation = TotalsCalculation.Sum;
 
-                // Data rows start at offset 1 (skip header), column offset 2 (third column = Total)
-                for (int i = 0; i < dataRows; i++)
-                {
-                    table.PutCellFormula(i + 1, 2, totalFormula);
-                }
+            // Calculate all formulas in the workbook
+            workbook.CalculateFormula();
 
-                // Optionally calculate formulas so the workbook shows results immediately
-                workbook.CalculateFormula();
-
-                // Save the workbook
-                workbook.Save("TableWithTotalFormula.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            // Save the workbook
+            workbook.Save("TableWithRowTotalFormula.xlsx");
         }
     }
 }

@@ -1,147 +1,116 @@
-// Title: Batch Synchronize Excel Theme Colors with Aspose.Cells for .NET (C#)
-// Description: C# utility that scans a folder of .xlsx files, uses the first workbook as a reference theme, detects mismatched ThemeColorType values, copies the reference theme to each out‑of‑sync file, and safely skips password‑protected or corrupted workbooks.
-// Keywords: Aspose.Cells C# theme synchronization | compare Excel workbook theme colors | batch update Excel theme .NET | CopyTheme Aspose.Cells example | detect mismatched theme colors | automate Excel branding | folder processing Excel files | handle password protected Excel
-// Common Searches: how to copy theme from one Excel file to another using Aspose.Cells | batch change Excel theme colors with C# | detect and fix mismatched workbook themes .NET | Aspose.Cells example for theme synchronization | C# script to enforce corporate Excel theme
-// Developer Intent: Find a ready‑to‑run C# sample that identifies workbooks whose theme colors differ from a reference file and applies the reference theme automatically.
-// Use Cases: Enforce corporate branding by ensuring all generated reports share the same theme palette. | Refresh the visual style of legacy Excel files after a design update without manual editing. | Process large collections of workbooks on a server, skipping password‑protected or corrupted files.
-// AI Prompts: Generate C# code that loads a reference workbook, compares ThemeColorType values of other .xlsx files in a directory, and uses CopyTheme to align mismatched themes with Aspose.Cells. | Create a function that returns a list of Excel files whose theme colors do not match a given reference workbook using Aspose.Cells for .NET. | Write error‑handling logic for loading workbooks that may be password‑protected, logging skipped files during batch theme synchronization.
+// Title: Batch synchronize mismatched Excel theme colors across workbooks using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads a reference .xlsx workbook with Aspose.Cells, iterates over all other .xlsx files in a folder, compares each ThemeColorType (Accent1‑Accent6, Hyperlink, etc.) to the reference, updates any differing colors using SetThemeColor, and saves the modified files. | Generate a method that takes a source workbook path and a collection of target workbook paths, copies the full theme palette from the source to each target with GetThemeColor and SetThemeColor, and returns a list of files that were changed. | Create a console application that logs which workbooks required theme synchronization versus those already matching, using Aspose.Cells theme APIs and handling missing or corrupted files gracefully.
+// Common Searches: aspnet batch update Excel theme colors with Aspose.Cells | c# compare workbook theme palette and copy missing colors | how to ensure consistent theme colors across multiple .xlsx files using Aspose.Cells | automate Excel theme synchronization for a folder of workbooks in .NET | detect theme color differences between Excel files programmatically
+// Tags: Aspose.Cells batch theme palette update | C# GetThemeColor SetThemeColor usage | Excel workbook theme consistency check | Automated Excel theme color copy | Programmatic Excel theme alignment across multiple files
 
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
+using System.Drawing;
 using Aspose.Cells;
+using Aspose.Cells.Drawing; // For ThemeColorType enum
 
-namespace ThemeSynchronizationDemo
+// The example scans a directory for .xlsx files, treats the first workbook as the reference theme source, compares each defined ThemeColorType (Accent1‑Accent6, Hyperlink, etc.) with the reference, updates any mismatched colors using SetThemeColor, overwrites the original files, and logs the synchronization results.
+class ThemeSynchronizer
 {
-    // C# utility that scans a folder of .xlsx files, uses the first workbook as a reference theme, detects mismatched ThemeColorType values, copies the reference theme to each out‑of‑sync file, and safely skips password‑protected or corrupted workbooks.
-    class Program
+    // Define which theme colors to compare/synchronize.
+    private static readonly ThemeColorType[] ThemeColorsToCheck = new ThemeColorType[]
     {
-        static void Main()
+        ThemeColorType.Accent1,
+        ThemeColorType.Accent2,
+        ThemeColorType.Accent3,
+        ThemeColorType.Accent4,
+        ThemeColorType.Accent5,
+        ThemeColorType.Accent6,
+        ThemeColorType.Hyperlink,
+        ThemeColorType.FollowedHyperlink,
+        ThemeColorType.Text1,
+        ThemeColorType.Background1,
+        ThemeColorType.Text2,
+        ThemeColorType.Background2
+    };
+
+    static void Main()
+    {
+        try
         {
-            // Folder containing the workbooks to process
+            // Folder containing the workbooks to process.
             string folderPath = @"C:\Workbooks";
 
             if (!Directory.Exists(folderPath))
             {
-                Console.WriteLine("The specified folder does not exist.");
+                Console.WriteLine($"Folder not found: {folderPath}");
                 return;
             }
 
-            // Get all Excel files in the folder (you can adjust the pattern as needed)
-            string[] workbookFiles = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
-            if (workbookFiles.Length == 0)
+            // Load all Excel files in the folder.
+            string[] files = Directory.GetFiles(folderPath, "*.xlsx", SearchOption.TopDirectoryOnly);
+            if (files.Length == 0)
             {
-                Console.WriteLine("No workbooks found in the specified folder.");
+                Console.WriteLine("No workbooks found.");
                 return;
             }
 
-            // Load the first workbook – it will serve as the reference theme source
-            Workbook referenceWorkbook;
-            try
+            // Load the first workbook and treat its theme as the reference.
+            if (!File.Exists(files[0]))
             {
-                if (!File.Exists(workbookFiles[0]))
+                Console.WriteLine($"Reference file not found: {files[0]}");
+                return;
+            }
+
+            Workbook referenceWb = new Workbook(files[0]);
+
+            // Process remaining workbooks.
+            for (int i = 1; i < files.Length; i++)
+            {
+                string file = files[i];
+
+                if (!File.Exists(file))
                 {
-                    Console.WriteLine($"Reference workbook not found: {workbookFiles[0]}");
-                    return;
-                }
-
-                referenceWorkbook = new Workbook(workbookFiles[0]);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load reference workbook: {ex.Message}");
-                return;
-            }
-
-            // Cache the reference theme colors for quick comparison
-            var referenceColors = new Dictionary<ThemeColorType, Color>();
-            foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
-            {
-                // ThemeColorType.StyleColor is internal; skip it
-                if (type == ThemeColorType.StyleColor) continue;
-                referenceColors[type] = referenceWorkbook.GetThemeColor(type);
-            }
-
-            // Process remaining workbooks
-            for (int i = 1; i < workbookFiles.Length; i++)
-            {
-                string filePath = workbookFiles[i];
-                if (!File.Exists(filePath))
-                {
-                    Console.WriteLine($"File not found, skipping: {filePath}");
+                    Console.WriteLine($"File not found, skipping: {file}");
                     continue;
                 }
 
-                Workbook targetWorkbook = null;
                 try
                 {
-                    // Attempt to load the workbook; catch password‑protected or other load errors
-                    targetWorkbook = new Workbook(filePath);
-                }
-                catch (Exception ex)
-                {
-                    // Simple detection of password‑protected files via message text
-                    if (ex.Message != null && ex.Message.IndexOf("password", StringComparison.OrdinalIgnoreCase) >= 0)
+                    Workbook wb = new Workbook(file);
+                    bool mismatched = false;
+
+                    // Compare each defined theme color.
+                    foreach (ThemeColorType type in ThemeColorsToCheck)
                     {
-                        Console.WriteLine($"Password‑protected file skipped: {Path.GetFileName(filePath)}");
+                        Color refColor = referenceWb.GetThemeColor(type);
+                        Color curColor = wb.GetThemeColor(type);
+
+                        if (!refColor.Equals(curColor))
+                        {
+                            mismatched = true;
+                            // Synchronize the color to the reference.
+                            wb.SetThemeColor(type, refColor);
+                        }
+                    }
+
+                    if (mismatched)
+                    {
+                        // Save the workbook with synchronized theme (overwrite original).
+                        wb.Save(file);
+                        Console.WriteLine($"Synchronized theme for: {Path.GetFileName(file)}");
                     }
                     else
                     {
-                        Console.WriteLine($"Failed to load workbook '{Path.GetFileName(filePath)}': {ex.Message}");
+                        Console.WriteLine($"Theme already matches for: {Path.GetFileName(file)}");
                     }
-                    continue;
                 }
-
-                bool mismatched = false;
-
-                // Compare each theme color with the reference
-                foreach (ThemeColorType type in Enum.GetValues(typeof(ThemeColorType)))
+                catch (Exception ex)
                 {
-                    if (type == ThemeColorType.StyleColor) continue;
-
-                    Color targetColor = targetWorkbook.GetThemeColor(type);
-                    Color refColor = referenceColors[type];
-
-                    if (!ColorsAreEqual(targetColor, refColor))
-                    {
-                        mismatched = true;
-                        break; // No need to check further once a mismatch is found
-                    }
+                    Console.WriteLine($"Error processing file '{Path.GetFileName(file)}': {ex.Message}");
                 }
-
-                if (mismatched)
-                {
-                    try
-                    {
-                        // Synchronize the theme by copying from the reference workbook
-                        targetWorkbook.CopyTheme(referenceWorkbook);
-                        // Save the updated workbook (overwrite the original)
-                        targetWorkbook.Save(filePath);
-                        Console.WriteLine($"Synchronized theme for: {Path.GetFileName(filePath)}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to synchronize theme for '{Path.GetFileName(filePath)}': {ex.Message}");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Theme already matches for: {Path.GetFileName(filePath)}");
-                }
-
-                // Dispose the workbook to free resources
-                targetWorkbook.Dispose();
             }
 
-            // Dispose the reference workbook
-            referenceWorkbook.Dispose();
+            Console.WriteLine("Theme synchronization completed.");
         }
-
-        // Helper method to compare two Color objects (ignores alpha channel)
-        private static bool ColorsAreEqual(Color c1, Color c2)
+        catch (Exception ex)
         {
-            return c1.R == c2.R && c1.G == c2.G && c1.B == c2.B;
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

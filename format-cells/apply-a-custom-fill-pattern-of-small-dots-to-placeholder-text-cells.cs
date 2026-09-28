@@ -1,80 +1,73 @@
-// Title: C# – Apply a Dotted‑Grid Pattern Fill to a Rectangle Shape Behind Placeholder Cells with Aspose.Cells
-// Description: This example creates a new workbook, writes "Placeholder" into cells A1:C3, adds a rectangle shape that exactly covers that range, sets the shape's FillType to a dotted‑grid pattern (black dots on light‑yellow), sends the shape to the back so the cell text stays visible, and saves the result as PlaceholderCellPatternDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# pattern fill | FillPattern.DottedGrid | rectangle shape behind cells | placeholder cell background | shape Z‑order Aspose.Cells | .NET spreadsheet pattern fill | custom fill pattern Aspose.Cells | cell range background shape | Aspose.Cells shape fill type | C# Aspose.Cells example
-// Common Searches: how to add a dotted grid fill to a shape in Aspose.Cells | place a rectangle shape behind cell text Aspose.Cells .NET | Aspose.Cells pattern fill for a cell range | C# Aspose.Cells shape Z‑order back | create placeholder background in Excel with Aspose
-// Developer Intent: Add a rectangle shape behind a specific cell range and apply a dotted‑grid pattern fill while keeping the cell content readable.
-// Use Cases: Design printable forms where a subtle dotted background marks data‑entry zones without covering labels. | Generate templates that visually indicate where users should insert values, using a patterned backdrop for guidance. | Add decorative or instructional backgrounds to selected ranges in automated reports while preserving text clarity.
-// AI Prompts: Generate C# code using Aspose.Cells to cover cells A1:C3 with a rectangle shape, set its FillType to Pattern, choose FillPattern.DottedGrid, define foreground and background colors, and send the shape to the back. | Show how to compute the pixel width and height of a multi‑row, multi‑column range in Aspose.Cells for sizing a shape. | Provide an Aspose.Cells example that creates a placeholder area with a dotted‑grid background while keeping the cell text on top.
+// Title: Apply a Gray25 small‑dot fill pattern to cells containing the word “placeholder” with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an existing XLSX file, creates a Gray25 pattern style with black dots on a white background, applies it to every cell whose text includes the word placeholder, and saves the workbook. | Show how to iterate over the used range of a worksheet in Aspose.Cells, detect cells containing a specific substring, and set a custom fill pattern on those cells. | Adapt the example to use a different dot pattern such as LightDown while still targeting cells that contain placeholder text.
+// Common Searches: Aspose.Cells C# set Gray25 fill pattern for cells with specific text | how to apply background pattern to placeholder cells in Excel using Aspose.Cells | C# iterate over used cells and change style based on cell value Aspose | replace placeholder text cells with dot pattern in .NET Excel library | save workbook after applying custom fill style with Aspose.Cells
+// Tags: gray25 dot fill Aspose.Cells | style cells containing placeholder C# | apply background pattern Excel .NET | iterate used range Aspose.Cells | save workbook after styling Aspose
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsExamples
+// The code loads input.xlsx, creates a Gray25 style (black dots on white), scans all used cells for the word “placeholder”, applies the style to matching cells, and saves the result as output.xlsx.
+class ApplyDotPatternToPlaceholderCells
 {
-    // This example creates a new workbook, writes "Placeholder" into cells A1:C3, adds a rectangle shape that exactly covers that range, sets the shape's FillType to a dotted‑grid pattern (black dots on light‑yellow), sends the shape to the back so the cell text stays visible, and saves the result as PlaceholderCellPatternDemo.xlsx using Aspose.Cells for .NET.
-    public class PlaceholderCellPatternDemo
+    static void Main()
     {
-        public static void Main()
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        public static void Run()
+        try
         {
-            try
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                return;
+            }
 
-                // Fill the range A1:C3 with placeholder text
-                for (int row = 0; row < 3; row++)
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define a style with a small dots fill pattern
+            Style dotStyle = workbook.CreateStyle();
+            // Use a pattern that exists in the current Aspose.Cells version (e.g., Gray25)
+            dotStyle.Pattern = BackgroundType.Gray25;          // Approximate small dots pattern
+            dotStyle.ForegroundColor = Color.Black;           // Dot color
+            dotStyle.BackgroundColor = Color.White;           // Background color
+
+            // Iterate through all used cells and apply the style to placeholders
+            int maxRow = sheet.Cells.MaxDataRow;
+            int maxCol = sheet.Cells.MaxDataColumn;
+
+            for (int row = 0; row <= maxRow; row++)
+            {
+                for (int col = 0; col <= maxCol; col++)
                 {
-                    for (int col = 0; col < 3; col++)
+                    Cell cell = sheet.Cells[row, col];
+                    if (cell?.Value != null && cell.Value.ToString().Contains("placeholder"))
                     {
-                        sheet.Cells[row, col].PutValue("Placeholder");
+                        cell.SetStyle(dotStyle);
                     }
                 }
-
-                // Calculate shape size in pixels (width = 3 columns, height = 3 rows)
-                int shapeWidth = sheet.Cells.GetColumnWidthPixel(0) * 3;
-                int shapeHeight = sheet.Cells.GetRowHeightPixel(0) * 3;
-
-                // Add a rectangle shape that covers the same range as the placeholder cells
-                // Overload: AddRectangle(row, column, rowOffset, columnOffset, width, height)
-                Shape backgroundShape = sheet.Shapes.AddRectangle(0, 0, 0, 0, shapeWidth, shapeHeight);
-
-                // Position the shape exactly over cells A1:C3
-                backgroundShape.Placement = PlacementType.FreeFloating;
-                backgroundShape.Top = 0;   // top aligns with row 0
-                backgroundShape.Left = 0;  // left aligns with column 0
-
-                // Set the fill type to pattern and define the pattern
-                backgroundShape.Fill.FillType = FillType.Pattern;
-                backgroundShape.Fill.PatternFill.Pattern = FillPattern.DottedGrid;
-                backgroundShape.Fill.PatternFill.ForegroundColor = Color.Black;          // dot color
-                backgroundShape.Fill.PatternFill.BackgroundColor = Color.LightYellow;   // background color
-
-                // Send the shape to the back so cell text remains visible
-                backgroundShape.ZOrderPosition = 0;
-
-                // Save the workbook
-                workbook.Save("PlaceholderCellPatternDemo.xlsx");
             }
-            catch (Exception ex)
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"Run error: {ex.Message}");
-                throw;
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

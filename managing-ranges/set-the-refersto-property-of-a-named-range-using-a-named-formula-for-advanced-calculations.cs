@@ -1,62 +1,38 @@
-// Title: Set RefersTo of a Named Range to a Named Formula in Aspose.Cells for .NET
-// Description: This example creates a workbook, defines a named formula "Total" that sums cells A1:A3, then creates a second named range "MyRange" whose RefersTo property points to the "Total" formula ("=Total"). The named range is used in cell B1, the workbook evaluates the formulas (result = 60), and the file is saved as NamedFormulaDemo.xlsx.
-// Keywords: Aspose.Cells RefersTo property | named formula Aspose.Cells | named range referencing formula .NET | Aspose.Cells calculate formulas | C# workbook named ranges
-// Common Searches: Aspose.Cells set RefersTo to another name | how to use a named formula as a range in Aspose.Cells | C# create dependent named ranges Aspose.Cells | reference named formula in worksheet cell Aspose.Cells
-// Developer Intent: Create a named range whose RefersTo points to an existing named formula and use it in worksheet calculations.
-// Use Cases: Define a reusable total‑sum formula and expose it through a secondary named range for modular design. | Reference a complex calculation from multiple cells via a dependent named range, enabling a single update to propagate. | Expose a calculated value as a named range for external data validation, reporting, or integration within the same workbook.
-// AI Prompts: Generate C# code that creates a named formula and assigns another named range's RefersTo to that formula using Aspose.Cells. | Show how to evaluate a named range that references a named formula in an Aspose.Cells worksheet. | Explain how to change a named range's RefersTo at runtime to point to a different named formula in Aspose.Cells for .NET.
+// Title: How to set a SUM formula in the RefersTo property of a named range using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a named range called MyRange and assign its RefersTo property to "=SUM(Data!A1:A5)" using Aspose.Cells in C#. | Update an existing named range to reference a worksheet formula via the RefersTo property with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# set RefersTo of a named range to a SUM formula | programmatically assign a formula to a named range in a .NET workbook | how to define a named range that calculates total of a column using Aspose.Cells | C# example for using RefersTo property with worksheet formula in Aspose.Cells
+// Tags: set RefersTo property named range Aspose.Cells | assign SUM formula to named range C# | named range formula definition Aspose.Cells | Aspose.Cells workbook create named range with formula | C# RefersTo named range calculation
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsNamedFormulaDemo
+// The sample creates a workbook, adds a worksheet named "Data", fills cells A1‑A5 with numbers, defines a named range "MyRange", sets its RefersTo property to the formula "=SUM(Data!A1:A5)", and saves the file as "AdvancedNamedRange.xlsx" using Aspose.Cells for .NET.
+class Program
 {
-    // This example creates a workbook, defines a named formula "Total" that sums cells A1:A3, then creates a second named range "MyRange" whose RefersTo property points to the "Total" formula ("=Total"). The named range is used in cell B1, the workbook evaluates the formulas (result = 60), and the file is saved as NamedFormulaDemo.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
+        // Create a new workbook (lifecycle rule)
+        Workbook workbook = new Workbook();
 
-            // Populate some sample data in column A
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].PutValue(30);
+        // Add a worksheet to hold data
+        int sheetIdx = workbook.Worksheets.Add();
+        Worksheet sheet = workbook.Worksheets[sheetIdx];
+        sheet.Name = "Data";
 
-            // -----------------------------------------------------------------
-            // 1. Create a named formula "Total" that calculates the sum of A1:A3
-            // -----------------------------------------------------------------
-            int totalNameIndex = sheet.Workbook.Worksheets.Names.Add("Total");
-            Name totalName = sheet.Workbook.Worksheets.Names[totalNameIndex];
-            // RefersTo is a formula (starts with '=') that sums the range
-            totalName.RefersTo = "=SUM(Sheet1!$A$1:$A$3)";
+        // Populate some sample values (optional, just for demonstration)
+        sheet.Cells["A1"].PutValue(10);
+        sheet.Cells["A2"].PutValue(20);
+        sheet.Cells["A3"].PutValue(30);
+        sheet.Cells["A4"].PutValue(40);
+        sheet.Cells["A5"].PutValue(50);
 
-            // ---------------------------------------------------------------
-            // 2. Create another named range "MyRange" that refers to the formula
-            //    defined by the name "Total". This demonstrates using a named
-            //    formula as the reference of another name.
-            // ---------------------------------------------------------------
-            int myRangeIndex = sheet.Workbook.Worksheets.Names.Add("MyRange");
-            Name myRange = sheet.Workbook.Worksheets.Names[myRangeIndex];
-            // The RefersTo property can point to another name by using its name
-            myRange.RefersTo = "=Total";
+        // Create a named range called "MyRange"
+        int nameIdx = workbook.Worksheets.Names.Add("MyRange");
 
-            // ---------------------------------------------------------------
-            // 3. Use the named range "MyRange" in a worksheet formula
-            // ---------------------------------------------------------------
-            sheet.Cells["B1"].Formula = "=MyRange";
+        // Set the RefersTo property using a named formula.
+        // This formula will calculate the sum of the range A1:A5 on the "Data" sheet.
+        workbook.Worksheets.Names[nameIdx].RefersTo = "=SUM(Data!A1:A5)";
 
-            // Calculate all formulas so that B1 shows the result of the sum
-            workbook.CalculateFormula();
-
-            // Output the calculated value to the console (optional verification)
-            Console.WriteLine("Result of MyRange (should be 60): " + sheet.Cells["B1"].Value);
-
-            // Save the workbook to a file
-            workbook.Save("NamedFormulaDemo.xlsx");
-        }
+        // Save the workbook (lifecycle rule)
+        workbook.Save("AdvancedNamedRange.xlsx");
     }
 }

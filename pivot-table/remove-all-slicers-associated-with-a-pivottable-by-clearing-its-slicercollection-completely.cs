@@ -1,67 +1,38 @@
-// Title: Clear all slicers from a PivotTable using Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook with a PivotTable, add slicers, and then remove every slicer by calling the Clear() method on the worksheet's SlicerCollection before saving the file.
-// Keywords: Aspose.Cells clear slicers | remove all slicers .NET | SlicerCollection.Clear | delete pivot slicers programmatically | Aspose.Cells PivotTable slicer removal
-// Common Searches: how to delete all slicers in Aspose.Cells C# | clear slicer collection Aspose.Cells | remove pivot table slicers programmatically | Aspose.Cells delete multiple slicers | C# remove slicers from workbook
-// Developer Intent: Programmatically remove every slicer linked to a PivotTable by clearing its SlicerCollection.
-// Use Cases: Strip slicers from a generated report before distribution. | Reset a template workbook to a slicer‑free state after temporary analysis. | Delete slicers when exporting to formats that do not support them.
-// AI Prompts: Write C# code that adds several slicers to a PivotTable with Aspose.Cells and then removes them all using SlicerCollection.Clear. | Explain what happens when SlicerCollection.Clear is called on a worksheet containing slicers linked to multiple PivotTables. | Provide step‑by‑step instructions to delete all slicers from a workbook while keeping the PivotTable data intact.
+// Title: Delete all slicers associated with PivotTables in every worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an Excel file with Aspose.Cells, iterates through each worksheet, and invokes the slicer collection clear operation. | Show a method to purge slicer objects from a workbook without altering other worksheet data using the Aspose.Cells API. | Provide a snippet that saves the workbook after removing slicers from all sheets in a .NET application.
+// Common Searches: Aspose.Cells C# clear slicer collection for all worksheets | remove pivot table slicers programmatically in .NET | how to delete slicers from Excel workbook using Aspose.Cells library
+// Tags: Aspose.Cells slicer removal API | remove slicer objects from workbook C# | delete worksheet slicers via Aspose.Cells | clear all slicers in Excel file .NET | programmatic slicer cleanup Aspose.Cells
 
 using System;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
+using Aspose.Cells.Pivot;
 
-// Demonstrates how to create a workbook with a PivotTable, add slicers, and then remove every slicer by calling the Clear() method on the worksheet's SlicerCollection before saving the file.
-public class RemoveAllSlicersDemo
+namespace RemoveAllSlicersDemo
 {
-    public static void Run()
+    // The example loads an existing Excel workbook, loops through each worksheet, obtains its SlicerCollection, clears all slicers when present, and saves the modified file to a new location.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
+            // Iterate through all worksheets in the workbook
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                // Get the slicer collection for the current worksheet
+                SlicerCollection slicers = sheet.Slicers;
 
-            // Populate sample data for the pivot table
-            sheet.Cells["A1"].PutValue("Fruit");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["A4"].PutValue("Banana");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(5);
-            sheet.Cells["B4"].PutValue(8);
+                // If there are any slicers, clear them all
+                if (slicers.Count > 0)
+                {
+                    slicers.Clear(); // Removes all slicers from the worksheet
+                }
+            }
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "D1", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, "Fruit");
-            pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
-
-            // Add slicers linked to the pivot table (optional, just for demonstration)
-            SlicerCollection slicers = sheet.Slicers;
-            slicers.Add(pivot, "E1", "Fruit");
-            slicers.Add(pivot, "E5", "Fruit");
-
-            // Remove all slicers associated with the pivot table by clearing the collection
-            slicers.Clear();
-
-            // Save the workbook to a file
-            workbook.Save("RemoveAllSlicersDemo.xlsx");
+            // Save the modified workbook (replace with your desired output path)
+            workbook.Save("output.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred: {ex.Message}");
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        RemoveAllSlicersDemo.Run();
     }
 }

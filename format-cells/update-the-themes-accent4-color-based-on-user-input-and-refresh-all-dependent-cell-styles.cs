@@ -1,118 +1,64 @@
-// Title: Aspose.Cells C# – Change Workbook Accent4 Theme Color from User Input and Refresh Dependent Styles
-// Description: A complete C# example that creates a workbook, adds cells using the Accent4 theme for font and background, reads a hex color from the console, updates the workbook’s Accent4 theme via Workbook.SetThemeColor, iterates every worksheet to reapply styles that reference Accent4 (preserving tints), and saves the file as UpdatedAccent4Theme.xlsx.
-// Keywords: Aspose.Cells C# theme color | set Accent4 color programmatically | refresh theme‑dependent styles | Workbook.SetThemeColor example | user‑defined Excel theme color .NET | update Excel accent color | Aspose.Cells GitHub sample
-// Common Searches: how to change Accent4 theme color Aspose.Cells | refresh cells after SetThemeColor | C# ask user for hex color Excel theme | apply custom theme accent in .NET | Aspose.Cells update workbook theme color
-// Developer Intent: Modify the workbook’s Accent4 theme color based on a hex value supplied at runtime and ensure every cell that uses that accent reflects the new color.
-// Use Cases: Brand‑aware templates where the corporate accent color can be chosen by the end‑user. | Reporting engines that generate Excel files with client‑specific theme colors. | Batch processing of multiple workbooks to apply a new corporate Accent4 shade and automatically refresh all dependent formatting.
-// AI Prompts: Generate C# code using Aspose.Cells that prompts for a hex color, sets the Accent4 theme, and updates all styles referencing it. | Explain why re‑applying cell styles is necessary after calling Workbook.SetThemeColor for an accent color. | Provide a step‑by‑step guide to validate hex input, convert it to System.Drawing.Color, and apply it to an existing Excel workbook with Aspose.Cells.
+// Title: Change the Accent4 theme color of an Excel workbook from a hex code and refresh all cell styles with Aspose.Cells for .NET
+// AI Prompts: Set the workbook's ThemeColorType.Accent4 using a hex color string and force a refresh of all cells by reapplying their existing styles in C# with Aspose.Cells. | Generate C# code that loads an .xlsx file, converts a user‑provided hex value to System.Drawing.Color, updates the Accent4 theme color, iterates through every worksheet and cell to reapply styles, and saves the modified workbook.
+// Common Searches: Aspose.Cells C# change Excel theme Accent4 color from hex value | how to refresh cell formatting after modifying theme colors in Aspose.Cells | set workbook theme accent color programmatically .NET | apply new theme color to existing Excel file and update dependent styles using Aspose.Cells | convert hex string to System.Drawing.Color for Aspose.Cells theme update
+// Tags: update theme accent4 color Aspose.Cells | convert hex to System.Drawing.Color C# | reapply cell style to refresh theme colors | iterate all worksheets cells Aspose.Cells | save workbook after theme modification .NET
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 
-namespace UpdateAccent4Theme
+// Loads an existing workbook, converts a user‑supplied hex string to a System.Drawing.Color, updates the Accent4 theme color via Workbook.SetThemeColor, iterates through every worksheet and cell to reapply each cell's style (forcing a refresh of theme‑based colors), and saves the result.
+class UpdateThemeAccent4
 {
-    // A complete C# example that creates a workbook, adds cells using the Accent4 theme for font and background, reads a hex color from the console, updates the workbook’s Accent4 theme via Workbook.SetThemeColor, iterates every worksheet to reapply styles that reference Accent4 (preserving tints), and saves the file as UpdatedAccent4Theme.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule: create)
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            // User input for the new Accent4 color (hex format, e.g., "#FF5733")
+            string userHexColor = "#FF5733";
 
-            // ------------------------------------------------------------
-            // Step 1: Add sample cells that use the Accent4 theme color
-            // ------------------------------------------------------------
-            // Cell A1 – font uses Accent4
-            Cell cellA1 = cells["A1"];
-            cellA1.PutValue("Accent4 Font");
-            Style styleA1 = cellA1.GetStyle();
-            styleA1.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent4, 0); // no tint
-            cellA1.SetStyle(styleA1);
+            // Convert the hex string to a System.Drawing.Color
+            Color newAccent4Color = ColorTranslator.FromHtml(userHexColor);
 
-            // Cell A2 – background uses Accent4
-            Cell cellA2 = cells["A2"];
-            cellA2.PutValue("Accent4 Background");
-            Style styleA2 = cellA2.GetStyle();
-            styleA2.Pattern = BackgroundType.Solid;
-            styleA2.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent4, 0);
-            cellA2.SetStyle(styleA2);
+            // Load the existing workbook (replace with your actual file path)
+            string inputFilePath = "InputWorkbook.xlsx";
 
-            // ------------------------------------------------------------
-            // Step 2: Ask user for new Accent4 color (RGB format)
-            // ------------------------------------------------------------
-            Console.WriteLine("Enter new Accent4 color in hex format (e.g., FF3366):");
-            string hex = Console.ReadLine()?.Trim();
+            if (!File.Exists(inputFilePath))
+                throw new FileNotFoundException($"Input file not found: {inputFilePath}");
 
-            // Validate and convert hex to Color
-            if (string.IsNullOrEmpty(hex) || hex.Length != 6)
+            Workbook workbook = new Workbook(inputFilePath);
+
+            // Update the theme's Accent4 color using the Workbook API
+            workbook.SetThemeColor(ThemeColorType.Accent4, newAccent4Color);
+
+            // Refresh dependent cell styles by reapplying the existing style
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                Console.WriteLine("Invalid input. Using default color (Blue).");
-                hex = "0000FF";
-            }
+                Cells cells = sheet.Cells;
+                int maxRow = cells.MaxDataRow;
+                int maxCol = cells.MaxDataColumn;
 
-            int r = Convert.ToInt32(hex.Substring(0, 2), 16);
-            int g = Convert.ToInt32(hex.Substring(2, 2), 16);
-            int b = Convert.ToInt32(hex.Substring(4, 2), 16);
-            Color newAccent4 = Color.FromArgb(r, g, b);
-
-            // ------------------------------------------------------------
-            // Step 3: Update the workbook theme's Accent4 color
-            // ------------------------------------------------------------
-            workbook.SetThemeColor(ThemeColorType.Accent4, newAccent4);
-
-            // ------------------------------------------------------------
-            // Step 4: Refresh all cell styles that depend on Accent4
-            // ------------------------------------------------------------
-            foreach (Worksheet ws in workbook.Worksheets)
-            {
-                foreach (Cell cell in ws.Cells)
+                for (int row = 0; row <= maxRow; row++)
                 {
-                    // Retrieve current style
-                    Style curStyle = cell.GetStyle();
-
-                    bool needsRefresh = false;
-
-                    // Check font theme color
-                    if (curStyle.Font.ThemeColor != null &&
-                        curStyle.Font.ThemeColor.ColorType == ThemeColorType.Accent4)
+                    for (int col = 0; col <= maxCol; col++)
                     {
-                        // Reassign to trigger refresh (tint unchanged)
-                        curStyle.Font.ThemeColor = new ThemeColor(ThemeColorType.Accent4, curStyle.Font.ThemeColor.Tint);
-                        needsRefresh = true;
-                    }
+                        Cell cell = cells[row, col];
+                        Style style = cell.GetStyle();
 
-                    // Check foreground theme color
-                    if (curStyle.ForegroundThemeColor != null &&
-                        curStyle.ForegroundThemeColor.ColorType == ThemeColorType.Accent4)
-                    {
-                        curStyle.ForegroundThemeColor = new ThemeColor(ThemeColorType.Accent4, curStyle.ForegroundThemeColor.Tint);
-                        needsRefresh = true;
-                    }
-
-                    // Check background theme color
-                    if (curStyle.BackgroundThemeColor != null &&
-                        curStyle.BackgroundThemeColor.ColorType == ThemeColorType.Accent4)
-                    {
-                        curStyle.BackgroundThemeColor = new ThemeColor(ThemeColorType.Accent4, curStyle.BackgroundThemeColor.Tint);
-                        needsRefresh = true;
-                    }
-
-                    // If any theme‑dependent property was found, reapply the style
-                    if (needsRefresh)
-                    {
-                        cell.SetStyle(curStyle);
+                        // Reapply the same style to force a refresh of theme‑based colors
+                        cell.SetStyle(style);
                     }
                 }
             }
 
-            // ------------------------------------------------------------
-            // Step 5: Save the workbook (lifecycle rule: save)
-            // ------------------------------------------------------------
-            workbook.Save("UpdatedAccent4Theme.xlsx", SaveFormat.Xlsx);
-            Console.WriteLine("Workbook saved as 'UpdatedAccent4Theme.xlsx' with new Accent4 color.");
+            // Save the modified workbook (replace with your desired output path)
+            string outputFilePath = "OutputWorkbook.xlsx";
+            workbook.Save(outputFilePath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

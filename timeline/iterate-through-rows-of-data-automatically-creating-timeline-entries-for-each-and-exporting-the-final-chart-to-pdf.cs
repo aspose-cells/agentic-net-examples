@@ -1,100 +1,97 @@
-// Title: Build a Pivot Table with Timeline and Export Column Chart to PDF using Aspose.Cells for .NET (C#)
-// Description: C# code that creates a workbook, fills rows with Category, Date and Value, adds a pivot table (Category rows, Date page filter, Sum of Value), inserts a timeline linked to the Date field, generates a column chart from the source data, and saves the chart as a PDF (optionally keeping the Excel file).
-// Keywords: Aspose.Cells | C# timeline chart | pivot table timeline | export chart to PDF | Aspose.Cells PDF export | column chart Aspose.Cells | timeline control .NET | automate Excel report | dynamic dashboard PDF | Aspose.Cells example
-// Common Searches: Aspose.Cells add timeline to pivot table C# | Export Aspose.Cells chart as PDF | Create timeline control in Excel using Aspose.Cells | C# generate pivot table with date filter Aspose.Cells | How to save Aspose.Cells chart to PDF without workbook | Iterate rows and build timeline chart Aspose.Cells
-// Developer Intent: Programmatically create a pivot‑based timeline and export its chart to a PDF file.
-// Use Cases: Produce a sales‑by‑category column chart with an interactive timeline for periodic reporting. | Automate generation of Excel dashboards that include pivot tables and timelines, then deliver PDF snapshots to stakeholders. | Populate worksheet data from collections, attach a timeline filter, and create PDF exports for archival or email distribution.
-// AI Prompts: Write C# code with Aspose.Cells that reads a list of objects, builds a pivot table with a Date page filter, adds a timeline control, and saves the resulting chart as a PDF. | Show how to iterate over rows, create a timeline‑enabled pivot table, customize the column chart, and export only the chart to PDF while keeping the workbook optional. | Explain steps to style the timeline, adjust chart layout, and generate a PDF report using Aspose.Cells for .NET.
+// Title: Create a timeline for each data row and export the chart to PDF using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that iterates over worksheet rows, inserts a Timeline control for each row linked to a pivot table, and saves the resulting column chart as a PDF with Aspose.Cells. | Show how to programmatically add multiple Timeline objects based on row count, then export the associated chart to a PDF file using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# add a timeline for each data row | Export a column chart to PDF after inserting timelines with Aspose.Cells | Programmatically generate multiple timeline controls linked to a pivot table in Aspose.Cells | Save an Excel workbook containing timelines using Aspose.Cells .NET | How to create timelines from row data in Aspose.Cells
+// Tags: add timeline control Aspose.Cells C# | export chart to PDF Aspose.Cells | pivot table timeline creation Aspose.Cells | loop insert timelines Aspose.Cells | save workbook with timelines Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Charts;
+using Aspose.Cells.Timelines;
 
-namespace AsposeCellsTimelineChartDemo
+// The example creates a new workbook, populates it with date and sales data, builds a pivot table, adds a column chart, iterates over each data row to insert a Timeline control linked to the pivot table, exports the chart as a PDF, and saves the workbook containing all timelines.
+class Program
 {
-    // C# code that creates a workbook, fills rows with Category, Date and Value, adds a pivot table (Category rows, Date page filter, Sum of Value), inserts a timeline linked to the Date field, generates a column chart from the source data, and saves the chart as a PDF (optionally keeping the Excel file).
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
+
+            // ------------------------------------------------------------
+            // 1. Populate sample data (Date and Sales) in the worksheet
+            // ------------------------------------------------------------
+            cells["A1"].PutValue("Date");
+            cells["B1"].PutValue("Sales");
+
+            DateTime startDate = new DateTime(2023, 1, 1);
+            int dataRows = 10; // number of data rows
+
+            for (int i = 0; i < dataRows; i++)
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                Cells cells = sheet.Cells;
-
-                // Populate worksheet with sample data (Category, Date, Value)
-                // Header row
-                cells["A1"].PutValue("Category");
-                cells["B1"].PutValue("Date");
-                cells["C1"].PutValue("Value");
-
-                // Sample data rows
-                string[] categories = { "Fruit", "Fruit", "Vegetable", "Vegetable", "Fruit" };
-                DateTime[] dates = {
-                    new DateTime(2023, 1, 1),
-                    new DateTime(2023, 1, 2),
-                    new DateTime(2023, 1, 1),
-                    new DateTime(2023, 1, 2),
-                    new DateTime(2023, 1, 3)
-                };
-                double[] values = { 120, 150, 80, 95, 200 };
-
-                for (int i = 0; i < categories.Length; i++)
-                {
-                    int row = i + 2; // Data starts at row 2 (index 1)
-                    cells[$"A{row}"].PutValue(categories[i]);
-                    cells[$"B{row}"].PutValue(dates[i]);
-                    cells[$"C{row}"].PutValue(values[i]);
-                }
-
-                // Define the data range for the pivot table (including header)
-                string dataRange = "A1:C6";
-
-                // Add a pivot table that will serve as the data source for the timeline
-                int pivotIndex = sheet.PivotTables.Add(dataRange, "E3", "PivotTable1");
-                PivotTable pivot = sheet.PivotTables[pivotIndex];
-
-                // Configure pivot fields:
-                // Row - Category, Page (filter) - Date, Data - Sum of Value
-                pivot.AddFieldToArea(PivotFieldType.Row, "Category");
-                pivot.AddFieldToArea(PivotFieldType.Page, "Date"); // Required for timeline
-                pivot.AddFieldToArea(PivotFieldType.Data, "Value");
-                pivot.PivotTableStyleType = PivotTableStyleType.PivotTableStyleMedium9;
-
-                // Refresh pivot data to ensure it reflects the worksheet content
-                pivot.RefreshData();
-                pivot.CalculateData();
-
-                // Add a timeline control linked to the pivot table using the "Date" field
-                // The timeline will be placed with its upper‑left corner at cell E1
-                int timelineIndex = sheet.Timelines.Add(pivot, "E1", "Date");
-                // Timeline timeline = sheet.Timelines[timelineIndex]; // Optional further customization
-
-                // Create a column chart based on the original data (not the pivot)
-                int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 12);
-                Chart chart = sheet.Charts[chartIndex];
-
-                // Set the data source for the chart
-                chart.NSeries.Add("C2:C6", true);          // Values
-                chart.NSeries.CategoryData = "A2:A6";     // Categories
-                chart.Title.Text = "Sales by Category";
-
-                // Export the chart to a PDF file
-                string pdfPath = "TimelineChartOutput.pdf";
-                chart.ToPdf(pdfPath);
-
-                // Save the workbook (optional, to verify the timeline and chart in Excel)
-                workbook.Save("TimelineChartDemo.xlsx");
-
-                Console.WriteLine($"Chart exported to PDF: {pdfPath}");
+                // Date column
+                cells[i + 1, 0].PutValue(startDate.AddDays(i));
+                // Sales column
+                cells[i + 1, 1].PutValue(100 + i * 10);
             }
-            catch (Exception ex)
+
+            // ------------------------------------------------------------
+            // 2. Create a PivotTable that will serve as the data source for timelines
+            // ------------------------------------------------------------
+            int pivotIndex = sheet.PivotTables.Add("A1:B11", "D1", "PivotTable1");
+            PivotTable pivot = sheet.PivotTables[pivotIndex];
+            pivot.AddFieldToArea(PivotFieldType.Row, "Date");
+            pivot.AddFieldToArea(PivotFieldType.Data, "Sales");
+
+            // Refresh pivot cache and calculate data
+            pivot.RefreshData();          // RefreshData is the correct method
+            pivot.CalculateData();
+
+            // ------------------------------------------------------------
+            // 3. Add a chart that visualizes the data (using the original range)
+            // ------------------------------------------------------------
+            int chartIndex = sheet.Charts.Add(ChartType.Column, 15, 0, 30, 10);
+            Chart chart = sheet.Charts[chartIndex];
+
+            // Use the original data range for the series values
+            chart.NSeries.Add("A1:B11", true);
+            // Use the Date column for the category (X) axis
+            chart.NSeries.CategoryData = "A2:A11";
+
+            // ------------------------------------------------------------
+            // 4. Iterate through each data row and add a Timeline control
+            //    Each timeline is placed a few rows below the previous one
+            // ------------------------------------------------------------
+            int timelineStartRow = 40; // first row where a timeline will be placed
+            int timelineColumn = 0;    // column where timelines start
+
+            for (int i = 0; i < dataRows; i++)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                // Add a timeline linked to the same pivot table.
+                // Position: (timelineStartRow + i * 5, timelineColumn)
+                // The "Date" field is the base field for the timeline.
+                sheet.Timelines.Add(pivot, timelineStartRow + i * 5, timelineColumn, "Date");
             }
+
+            // ------------------------------------------------------------
+            // 5. Export the chart to a PDF file
+            // ------------------------------------------------------------
+            string pdfPath = "TimelineChart.pdf";
+            chart.ToPdf(pdfPath);
+
+            // ------------------------------------------------------------
+            // 6. Save the workbook with all timelines and the chart
+            // ------------------------------------------------------------
+            string xlsxPath = "TimelineDemo.xlsx";
+            workbook.Save(xlsxPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
         }
     }
 }

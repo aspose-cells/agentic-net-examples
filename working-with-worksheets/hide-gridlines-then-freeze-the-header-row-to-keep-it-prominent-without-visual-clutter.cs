@@ -1,57 +1,27 @@
-// Title: Hide Gridlines & Freeze Header Row in Excel using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, adds a header and sample rows, disables gridlines with IsGridlinesVisible = false, freezes the top row via FreezePanes, and saves the file as HideGridlinesAndFreezeHeader.xlsx.
-// Keywords: Aspose.Cells hide gridlines C# | Aspose.Cells freeze header row | Aspose.Cells FreezePanes example | .NET Excel hide gridlines | Aspose.Cells workbook formatting
-// Common Searches: hide gridlines Aspose.Cells .NET | freeze first row Aspose.Cells C# | Aspose.Cells hide gridlines and freeze panes | how to keep header visible while scrolling Excel Aspose
-// Developer Intent: Remove worksheet gridlines and lock the header row in place for a cleaner, scroll‑friendly view.
-// Use Cases: Produce a polished report without gridlines while keeping column titles fixed during scrolling. | Create a printable spreadsheet that hides gridlines but retains a static header for reference. | Design a data‑heavy dashboard where the header row stays visible as users navigate large datasets.
-// AI Prompts: Show C# code to hide Excel gridlines and freeze the top row using Aspose.Cells. | Provide an Aspose.Cells .NET example that disables gridlines, freezes the header, and saves as .xlsx. | Explain the parameters of FreezePanes for locking the first row while keeping gridlines hidden.
+// Title: Hide worksheet gridlines and freeze the header row in an Excel workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens an existing .xlsx file using Aspose.Cells, disables the worksheet gridlines, applies a freeze pane to keep the first row visible, and saves the result to a new file. | Write a reusable C# method that takes a workbook path, turns off gridline display, freezes the top header row with Aspose.Cells, and writes the modified workbook back to disk.
+// Common Searches: Aspose.Cells C# hide Excel gridlines and keep header row visible while scrolling | How to programmatically freeze the first row in an Excel sheet using Aspose.Cells .NET | Example of disabling gridlines and applying FreezePanes with Aspose.Cells for a workbook | C# code to clean up Excel view by removing gridlines and freezing header with Aspose.Cells | Aspose.Cells hide gridlines and set freeze pane on row 1 in .NET application
+// Tags: Aspose.Cells hide worksheet gridlines | Aspose.Cells set FreezePanes on header row | Aspose.Cells configure workbook view | Aspose.Cells C# visual formatting | Aspose.Cells disable Excel gridlines programmatically
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads an existing workbook, turns off gridline visibility, freezes the first row with FreezePanes, and saves the updated file.
+class Program
 {
-    // Creates a new workbook, adds a header and sample rows, disables gridlines with IsGridlinesVisible = false, freezes the top row via FreezePanes, and saves the file as HideGridlinesAndFreezeHeader.xlsx.
-    public class HideGridlinesAndFreezeHeader
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
+        // Load an existing workbook (replace with your file path)
+        Workbook workbook = new Workbook("input.xlsx");
+        Worksheet worksheet = workbook.Worksheets[0];
 
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Hide gridlines to reduce visual clutter
+        worksheet.IsGridlinesVisible = false;
 
-                // Add sample data
-                worksheet.Cells["A1"].PutValue("Header");
-                for (int i = 2; i <= 20; i++)
-                {
-                    worksheet.Cells[$"A{i}"].PutValue($"Row {i - 1}");
-                }
+        // Freeze the first row (header) so it stays visible while scrolling
+        // Parameters: rows to freeze, columns to freeze, top row of scrollable area, left column of scrollable area
+        worksheet.FreezePanes(1, 0, 1, 0);
 
-                // Hide gridlines
-                worksheet.IsGridlinesVisible = false;
-
-                // Freeze the first row (header)
-                worksheet.FreezePanes(1, 0, 1, 0);
-
-                // Save the workbook
-                workbook.Save("HideGridlinesAndFreezeHeader.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            HideGridlinesAndFreezeHeader.Run();
-        }
+        // Save the modified workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

@@ -1,101 +1,86 @@
-// Title: Create a custom ISmartMarkerCallBack logger to audit smart marker replacements in Aspose.Cells for .NET
-// Description: This example shows how to implement a custom logger by inheriting ISmartMarkerCallBack. The logger records the sheet index, row, column, table name, and column name for every smart marker processed, stores entries in a list, writes them to a text file, and integrates with WorkbookDesigner.CallBack before calling Process(). The sample includes error handling, file existence checks, and demonstrates saving the processed workbook and audit log.
-// Keywords: Aspose.Cells smart marker callback | ISmartMarkerCallBack logger | audit smart marker replacements | C# Aspose.Cells example | custom smart marker logger .NET | record smart marker processing | save smart marker audit log | WorkbookDesigner CallBack | Aspose.Cells GitHub sample
-// Common Searches: how to log smart marker replacements in Aspose.Cells | custom ISmartMarkerCallBack implementation C# | save smart marker processing details to a file | Aspose.Cells audit log for smart markers | example of WorkbookDesigner.CallBack usage
-// Developer Intent: Implement a logger that captures each smart marker replacement and outputs an audit file.
-// Use Cases: Track which cells are populated by smart markers for compliance reporting. | Debug complex smart marker templates by reviewing detailed replacement logs. | Integrate audit data with external systems such as databases or monitoring tools. | Persist processing information for post‑run analysis in large workbooks.
-// AI Prompts: Generate a C# example that extends ISmartMarkerCallBack to write smart marker audit entries to a CSV file. | Show how to store smart marker processing logs in a SQL Server table using Aspose.Cells. | Explain best practices for error handling in a custom smart marker logger for large Excel files.
+// Title: Implement a custom ISmartMarkerCallBack logger for auditing smart marker replacements in Aspose.Cells .NET
+// AI Prompts: Write a C# class that implements Aspose.Cells.ISmartMarkerCallBack and stores sheet, row, column, table and column names for every smart marker replacement. | Demonstrate assigning the logger to WorkbookDesigner, invoking Process(), and printing the collected audit entries. | Extend the logger to write each audit entry to a text file instead of the console.
+// Common Searches: how to track smart marker replacements with Aspose.Cells .NET callback | example of smart marker callback interface for logging in C# | audit smart marker processing using Aspose.Cells WorkbookDesigner | save smart marker replacement details to a file with Aspose.Cells | custom logger for smart markers Aspose.Cells C# tutorial
+// Tags: smart marker callback audit .NET | record smart marker replacements Excel | WorkbookDesigner custom callback C# | Aspose.Cells logging smart markers | audit trail for smart markers
 
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using Aspose.Cells;
 
-// This example shows how to implement a custom logger by inheriting ISmartMarkerCallBack. The logger records the sheet index, row, column, table name, and column name for every smart marker processed, stores entries in a list, writes them to a text file, and integrates with WorkbookDesigner.CallBack before calling Process(). The sample includes error handling, file existence checks, and demonstrates saving the processed workbook and audit log.
-public class SmartMarkerAuditLogger : ISmartMarkerCallBack
+namespace SmartMarkerLoggingDemo
 {
-    // Stores each smart marker processing event
-    public List<string> AuditEntries { get; } = new List<string>();
-
-    // Called by Aspose.Cells for every smart marker replacement
-    public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
+    // Custom logger implementing the ISmartMarkerCallBack interface.
+    // It records each smart marker processing event.
+    // The example defines a SmartMarkerLogger class that implements ISmartMarkerCallBack, captures sheet index, row index, column index, table name, and column name for each smart marker replacement, stores them in a list, and prints the log. It shows how to load a template workbook, set a DataTable as the data source, assign the logger to WorkbookDesigner, process all smart markers, display the audit log, and save the resulting workbook.
+    public class SmartMarkerLogger : ISmartMarkerCallBack
     {
-        string entry = $"Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:{tableName}, Column:{columnName}";
-        AuditEntries.Add(entry);
-        Console.WriteLine("SmartMarker processed: " + entry);
-    }
+        // Collection to store log entries.
+        public List<string> LogEntries { get; } = new List<string>();
 
-    // Writes the collected audit information to a text file
-    public void SaveLog(string filePath)
-    {
-        File.WriteAllLines(filePath, AuditEntries);
-    }
-}
-
-public class SmartMarkerAuditExample
-{
-    public static void Run()
-    {
-        try
+        // This method is called by Aspose.Cells for each smart marker replacement.
+        public void Process(int sheetIndex, int rowIndex, int colIndex, string tableName, string columnName)
         {
-            const string templatePath = "TemplateWithSmartMarkers.xlsx";
+            // Build a log entry with all relevant details.
+            string entry = $"Sheet:{sheetIndex}, Row:{rowIndex}, Column:{colIndex}, Table:\"{tableName}\", Column:\"{columnName}\"";
+            LogEntries.Add(entry);
 
-            // Verify template file exists to avoid FileNotFoundException
-            if (!File.Exists(templatePath))
+            // Optional: also write to console for immediate feedback.
+            Console.WriteLine("SmartMarker processed: " + entry);
+        }
+
+        // Helper to output the entire log (e.g., after processing is complete).
+        public void PrintLog()
+        {
+            Console.WriteLine("\n--- Smart Marker Processing Log ---");
+            foreach (var entry in LogEntries)
             {
-                Console.WriteLine($"Template file not found: {templatePath}");
-                return;
+                Console.WriteLine(entry);
             }
+            Console.WriteLine("--- End of Log ---\n");
+        }
+    }
 
-            // Load a workbook that contains smart markers
-            Workbook template = new Workbook(templatePath);
+    class Program
+    {
+        static void Main()
+        {
+            // Load the template workbook that contains smart markers.
+            // Replace "template.xlsx" with the actual path to your template file.
+            Workbook templateWorkbook = new Workbook("template.xlsx");
 
-            // Prepare a simple data source
-            DataTable dt = new DataTable("Employees");
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Age", typeof(int));
-            dt.Rows.Add("John Doe", 30);
-            dt.Rows.Add("Jane Smith", 28);
-
-            // Initialize WorkbookDesigner and assign the workbook
+            // Initialize the WorkbookDesigner with the loaded workbook.
             WorkbookDesigner designer = new WorkbookDesigner
             {
-                Workbook = template
+                Workbook = templateWorkbook
             };
 
-            // Set the data source for smart markers
-            designer.SetDataSource(dt);
+            // Prepare a sample data source (DataTable) matching the smart markers in the template.
+            DataTable data = new DataTable("Employees");
+            data.Columns.Add("Name", typeof(string));
+            data.Columns.Add("Age", typeof(int));
+            data.Columns.Add("Department", typeof(string));
 
-            // Create and assign the custom logger as the callback
-            SmartMarkerAuditLogger logger = new SmartMarkerAuditLogger();
+            data.Rows.Add("John Doe", 30, "Sales");
+            data.Rows.Add("Jane Smith", 28, "Marketing");
+
+            // Set the data source for the designer.
+            designer.SetDataSource(data);
+
+            // Create and assign the custom logger as the callback.
+            SmartMarkerLogger logger = new SmartMarkerLogger();
             designer.CallBack = logger;
 
-            // Process all smart markers in the workbook
+            // Process all smart markers in the workbook.
+            // Using the parameterless Process() method processes the entire workbook.
             designer.Process();
 
-            // Save the processed workbook
-            const string outputPath = "ProcessedOutput.xlsx";
-            designer.Workbook.Save(outputPath);
-            Console.WriteLine($"Processed workbook saved to: {outputPath}");
+            // After processing, output the collected log entries.
+            logger.PrintLog();
 
-            // Persist the audit log
-            const string logPath = "SmartMarkerAuditLog.txt";
-            logger.SaveLog(logPath);
-            Console.WriteLine($"Audit log saved to: {logPath}");
+            // Save the resulting workbook.
+            // Replace "output.xlsx" with the desired output path.
+            designer.Workbook.Save("output.xlsx");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine("An error occurred during processing:");
-            Console.WriteLine(ex.Message);
-        }
-    }
-}
-
-public class Program
-{
-    public static void Main()
-    {
-        SmartMarkerAuditExample.Run();
     }
 }

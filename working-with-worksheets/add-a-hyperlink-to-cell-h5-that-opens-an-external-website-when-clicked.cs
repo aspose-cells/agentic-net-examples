@@ -1,31 +1,41 @@
-// Title: Add an external hyperlink to cell H5 using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, accesses the first worksheet, inserts a hyperlink in cell H5 that opens https://www.example.com, sets the display text to "Visit Example Site", and saves the file as HyperlinkDemo.xlsx.
-// Keywords: Aspose.Cells hyperlink C# | add external link Excel cell | set hyperlink text Aspose.Cells | Excel hyperlink programmatically | C# Aspose.Cells tutorial
-// Common Searches: Aspose.Cells add hyperlink to specific cell | C# set display text for Excel hyperlink | How to link a cell to an external website with Aspose.Cells | Create clickable URL in Excel using Aspose.Cells .NET
-// Developer Intent: Insert a clickable URL into cell H5 that opens an external website.
-// Use Cases: Embedding reference URLs in generated financial reports. | Building marketing templates with product page links. | Automating documentation indexes that point to online guides.
-// AI Prompts: Generate code to add hyperlinks to multiple cells in a worksheet with Aspose.Cells. | Show how to modify the address and display text of an existing hyperlink in a .NET workbook. | Provide an example that forces a hyperlink to open in a new browser tab using Aspose.Cells.
+// Title: Create an Excel workbook and add an external hyperlink to cell H5 using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that creates a new workbook, sets the text of cell H5 to "Visit Example", adds a hyperlink to https://www.example.com, and saves the file. | Show how to call Worksheet.Hyperlinks.Add to attach an external URL to a single cell at row 5, column H in Aspose.Cells. | Generate a minimal Aspose.Cells example that inserts a clickable link into cell H5 of the first worksheet and exports it as HyperlinkDemo.xlsx.
+// Common Searches: Aspose.Cells C# add external link to a specific cell in Excel | How to insert a hyperlink into cell H5 with Aspose.Cells for .NET | C# Aspose.Cells Hyperlinks.Add example for single cell | Create Excel workbook with clickable URL in a cell using Aspose.Cells | Add web link to cell H5 programmatically with Aspose.Cells
+// Tags: Aspose.Cells add hyperlink to cell | Worksheet.Hyperlinks.Add external URL | C# create Excel workbook with clickable link | hyperlink cell H5 Aspose.Cells | save workbook as HyperlinkDemo.xlsx
 
 using System;
 using Aspose.Cells;
 
-// Creates a new workbook, accesses the first worksheet, inserts a hyperlink in cell H5 that opens https://www.example.com, sets the display text to "Visit Example Site", and saves the file as HyperlinkDemo.xlsx.
+// Demonstrates creating a new workbook, setting the display text of cell H5, adding an external hyperlink to that cell with Worksheet.Hyperlinks.Add, and saving the file as HyperlinkDemo.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Add a hyperlink to cell H5 that points to an external website
-        // Parameters: cell name, rows in range, columns in range, hyperlink address
-        int hyperlinkIndex = worksheet.Hyperlinks.Add("H5", 1, 1, "https://www.example.com");
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Optionally set the text that will be displayed in the cell
-        worksheet.Hyperlinks[hyperlinkIndex].TextToDisplay = "Visit Example Site";
+            // Target cell coordinates for H5 (zero‑based indices)
+            int row = 4;      // H5 -> row 5 (index 4)
+            int column = 7;   // column H (index 7)
 
-        // Save the workbook to a file
-        workbook.Save("HyperlinkDemo.xlsx");
+            // Set the display text of the cell
+            worksheet.Cells[row, column].PutValue("Visit Example");
+
+            // Add a hyperlink that opens an external website when clicked
+            // For a single cell, totalRows = 1 and totalColumns = 1
+            worksheet.Hyperlinks.Add(row, column, 1, 1, "https://www.example.com");
+
+            // Save the workbook
+            workbook.Save("HyperlinkDemo.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

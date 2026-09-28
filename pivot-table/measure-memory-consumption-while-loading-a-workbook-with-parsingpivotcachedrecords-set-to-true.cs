@@ -1,47 +1,47 @@
-// Title: Measure memory consumption of loading a workbook with ParsingPivotCachedRecords = true in Aspose.Cells for .NET
-// Description: C# example that enables LoadOptions.ParsingPivotCachedRecords, captures Process.PrivateMemorySize64 before and after creating a Workbook, computes the memory delta, and outputs the bytes used. Demonstrates how to benchmark the memory impact of pivot‑cache parsing in Aspose.Cells.
-// Keywords: Aspose.Cells memory benchmark | ParsingPivotCachedRecords performance | C# load workbook memory usage | Aspose.Cells LoadOptions | private memory size .NET | Excel pivot cache memory | measure workbook load overhead | Aspose.Cells .NET performance
-// Common Searches: how to measure memory usage when loading an Excel file with Aspose.Cells | ParsingPivotCachedRecords memory impact Aspose.Cells | C# Aspose.Cells load options memory consumption | benchmark private memory before and after Workbook creation | performance of pivot cache parsing in Aspose.Cells
-// Developer Intent: Determine the exact amount of memory allocated when a workbook is loaded with the ParsingPivotCachedRecords option enabled.
-// Use Cases: Benchmark memory overhead of pivot‑cache parsing for large Excel files. | Validate that a server meets memory requirements before processing workbooks with cached pivot data. | Compare memory footprints of default loading versus loading with ParsingPivotCachedRecords set to true.
-// AI Prompts: Generate a C# snippet that logs memory usage at several stages while loading a workbook with ParsingPivotCachedRecords enabled using Aspose.Cells. | Explain how to interpret differences in Process.PrivateMemorySize64 to assess the memory cost of pivot cache parsing. | Suggest best practices to minimize memory consumption when loading workbooks with ParsingPivotCachedRecords set to true.
+// Title: Measure memory consumption and load time of an Excel workbook with ParsingPivotCachedRecords enabled using Aspose.Cells for .NET
+// AI Prompts: Write C# code that sets LoadOptions.ParsingPivotCachedRecords to true, captures memory before and after creating a Workbook, and prints the memory difference. | Provide a snippet that records elapsed milliseconds with Stopwatch and memory delta with GC.GetTotalMemory while loading an .xlsx using Aspose.Cells with pivot cache parsing turned on. | Demonstrate how to force a full garbage collection, establish a baseline memory reading, load a workbook with pivot cache records parsed, and output the consumed memory in KB.
+// Common Searches: how to benchmark memory usage of Aspose.Cells workbook load with ParsingPivotCachedRecords | C# measure memory consumption when loading Excel file with pivot cache parsing enabled | Aspose.Cells load options parsingpivotcachedrecords impact on performance | profile workbook loading time and memory in .NET using GC.GetTotalMemory and Stopwatch
+// Tags: memory measurement Aspose.Cells LoadOptions | ParsingPivotCachedRecords performance analysis | workbook load time profiling C# | GC.GetTotalMemory Excel load profiling | Stopwatch timing Aspose.Cells workbook
 
 using System;
 using System.Diagnostics;
 using Aspose.Cells;
 
-namespace AsposeCellsMemoryMeasurement
+// The example loads an .xlsx file with LoadOptions.ParsingPivotCachedRecords set to true, measures memory before and after loading using GC.GetTotalMemory, times the operation with Stopwatch, outputs load time and memory used, and saves the workbook.
+class MemoryMeasurementDemo
 {
-    // C# example that enables LoadOptions.ParsingPivotCachedRecords, captures Process.PrivateMemorySize64 before and after creating a Workbook, computes the memory delta, and outputs the bytes used. Demonstrates how to benchmark the memory impact of pivot‑cache parsing in Aspose.Cells.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the Excel file to be loaded
-            string filePath = "sample.xlsx";
+        // Path to the workbook to be loaded
+        string inputPath = "input.xlsx";
+        // Optional output path to verify successful load/save
+        string outputPath = "output.xlsx";
 
-            // Create load options and enable parsing of pivot cached records
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.ParsingPivotCachedRecords = true;
+        // Ensure a clean memory baseline
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
 
-            // Measure memory before loading
-            long memoryBefore = Process.GetCurrentProcess().PrivateMemorySize64;
+        // Record memory before loading
+        long memoryBefore = GC.GetTotalMemory(true);
+        Stopwatch timer = Stopwatch.StartNew();
 
-            // Load the workbook with the specified options
-            Workbook workbook = new Workbook(filePath, loadOptions);
+        // Create load options and enable parsing of pivot cached records
+        LoadOptions loadOptions = new LoadOptions();
+        loadOptions.ParsingPivotCachedRecords = true;
 
-            // Measure memory after loading
-            long memoryAfter = Process.GetCurrentProcess().PrivateMemorySize64;
+        // Load the workbook with the specified options
+        Workbook workbook = new Workbook(inputPath, loadOptions);
 
-            // Calculate and display the memory consumption
-            long memoryUsed = memoryAfter - memoryBefore;
-            Console.WriteLine($"Memory used for loading workbook with ParsingPivotCachedRecords=true: {memoryUsed} bytes");
+        timer.Stop();
+        // Record memory after loading
+        long memoryAfter = GC.GetTotalMemory(true);
+        long memoryUsed = memoryAfter - memoryBefore;
 
-            // Optional: keep the workbook alive for further processing
-            // ...
+        Console.WriteLine($"Load time: {timer.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Memory consumed during load: {memoryUsed / 1024} KB");
 
-            // Dispose the workbook if no longer needed
-            workbook.Dispose();
-        }
+        // Save the workbook (optional, demonstrates normal lifecycle)
+        workbook.Save(outputPath);
     }
 }

@@ -1,27 +1,28 @@
-// Title: C# Batch Decrypt Encrypted Excel (.xlsx) Files with a Shared Password Using Aspose.Cells
-// Description: A complete C# console example that scans a source folder, loads each password‑protected .xlsx workbook with Aspose.Cells LoadOptions, removes workbook protection, clears the encryption password, and saves the unprotected copy to a destination folder. Includes folder validation, robust error handling, and progress logging.
-// Keywords: Aspose.Cells | C# batch decrypt Excel | remove Excel password programmatically | load encrypted workbook Aspose | unprotect multiple .xlsx files | Excel encryption removal .NET | bulk Excel decryption | shared password Excel | console app Aspose.Cells | folder processing C#
-// Common Searches: batch decrypt Excel files C# | remove password from multiple .xlsx using Aspose.Cells | C# code to unprotect encrypted workbooks in a folder | how to bulk decrypt Excel workbooks .NET | Aspose.Cells load encrypted workbook with password | automate Excel password removal C#
-// Developer Intent: Programmatically open a set of password‑protected Excel workbooks, strip their protection, and save them unencrypted.
-// Use Cases: Automated nightly decryption of secured financial reports before ETL processing. | Pre‑processing client‑submitted spreadsheets for import into ERP systems that reject protected files. | Bulk migration of legacy encrypted Excel archives to a plain‑text repository for compliance audits. | Generating unprotected copies for data‑science pipelines that require direct cell access.
-// AI Prompts: Write a C# console program that iterates over all .xlsx files in a given directory, opens each with a shared password using Aspose.Cells, removes workbook protection, clears the password, and saves the result to another directory, with robust error handling. | Show how to log each successful decryption and capture exceptions when a file cannot be opened due to an incorrect password, using Aspose.Cells in .NET. | Create a PowerShell wrapper that calls the compiled C# batch decryption tool for scheduled tasks. | Explain how to modify the example to support different passwords per file using a CSV mapping.
+// Title: Batch decrypt multiple encrypted .xlsx workbooks using a shared password with Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loops through every .xlsx file in a directory, opens each workbook with LoadOptions.Password set to a common password, calls Workbook.Unprotect, and saves the result without a password to a target folder using Aspose.Cells. | Write a .NET console application that reads password‑protected Excel files from a source folder, removes the workbook protection using the same password, and writes unprotected copies to an output folder with Aspose.Cells.
+// Common Searches: aspnet batch remove password from Excel files using Aspose.Cells | C# program to decrypt multiple encrypted .xlsx files with the same password | how to use LoadOptions.Password to open encrypted workbooks in a loop | save unprotected copy of encrypted Excel workbook with Aspose.Cells .NET | process folder of password‑protected Excel files in C#
+// Tags: decrypt multiple xlsx files Aspose.Cells | load encrypted workbook with password .NET | remove workbook protection programmatically | save unprotected Excel workbook C# | iterate Excel files in folder Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace BatchDecryptExcel
+// The C# console program scans a given input directory for .xlsx files, opens each encrypted workbook using a shared password via Aspose.Cells LoadOptions, removes workbook protection, and saves the unprotected files to a specified output directory.
+class Program
 {
-    // A complete C# console example that scans a source folder, loads each password‑protected .xlsx workbook with Aspose.Cells LoadOptions, removes workbook protection, clears the encryption password, and saves the unprotected copy to a destination folder. Includes folder validation, robust error handling, and progress logging.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Folder containing encrypted Excel files
-            string inputFolder = @"C:\EncryptedFiles";
-            // Folder where unprotected files will be saved
-            string outputFolder = @"C:\DecryptedFiles";
+        // Folder containing the encrypted Excel files
+        string inputFolder = @"C:\EncryptedExcels";
 
+        // Folder where the decrypted (unprotected) files will be saved
+        string outputFolder = @"C:\DecryptedExcels";
+
+        // Shared password used to open and unprotect all encrypted workbooks
+        string password = "sharedPassword";
+
+        try
+        {
             // Verify input folder exists
             if (!Directory.Exists(inputFolder))
             {
@@ -29,53 +30,49 @@ namespace BatchDecryptExcel
                 return;
             }
 
-            // Ensure the output directory exists
+            // Ensure output folder exists
             Directory.CreateDirectory(outputFolder);
 
-            // Shared password for all encrypted workbooks
-            string sharedPassword = "MySharedPassword";
+            // Retrieve all .xlsx files in the input folder
+            string[] encryptedFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.TopDirectoryOnly);
 
-            // Process each .xlsx file in the input folder
-            foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            foreach (string encryptedFilePath in encryptedFiles)
             {
                 try
                 {
-                    // Verify the file still exists
-                    if (!File.Exists(filePath))
+                    // Confirm the file still exists before attempting to load
+                    if (!File.Exists(encryptedFilePath))
                     {
-                        Console.WriteLine($"File not found, skipping: {filePath}");
+                        Console.WriteLine($"File not found: {encryptedFilePath}");
                         continue;
                     }
 
-                    // Load the workbook with the password
-                    LoadOptions loadOptions = new LoadOptions
+                    // Load the workbook with the shared password
+                    LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
                     {
-                        Password = sharedPassword
+                        Password = password
                     };
-                    Workbook workbook = new Workbook(filePath, loadOptions);
+                    Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
 
-                    // Remove workbook protection (if any)
-                    workbook.Unprotect(sharedPassword);
+                    // Remove workbook protection using the same password
+                    workbook.Unprotect(password);
 
-                    // Ensure the workbook is no longer encrypted when saved
-                    workbook.Settings.Password = null;
+                    // Save the workbook without a password
+                    string fileName = Path.GetFileName(encryptedFilePath);
+                    string decryptedFilePath = Path.Combine(outputFolder, fileName);
+                    workbook.Save(decryptedFilePath, SaveFormat.Xlsx);
 
-                    // Build the output file path
-                    string fileName = Path.GetFileName(filePath);
-                    string outputPath = Path.Combine(outputFolder, fileName);
-
-                    // Save the unprotected workbook
-                    workbook.Save(outputPath);
-
-                    Console.WriteLine($"Decrypted: {fileName}");
+                    Console.WriteLine($"Decrypted and saved: {decryptedFilePath}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                    Console.WriteLine($"Error processing file '{encryptedFilePath}': {ex.Message}");
                 }
             }
-
-            Console.WriteLine("Batch decryption completed.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
         }
     }
 }

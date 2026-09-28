@@ -1,89 +1,83 @@
-// Title: C# – Pixel‑by‑pixel comparison of a rendered worksheet PNG with a baseline using Aspose.Cells
-// Description: Creates a workbook, renders the first worksheet to a PNG image in memory, loads a baseline PNG file, and compares the two byte arrays to determine if the images are identical—ideal for CI visual‑regression testing.
-// Keywords: Aspose.Cells PNG rendering | C# image regression test | pixel level image comparison | WorkbookRender to PNG | byte array image equality | continuous integration visual testing | Excel worksheet screenshot verification
-// Common Searches: compare rendered Excel worksheet PNG with baseline C# | Aspose.Cells image regression testing example | pixel perfect PNG comparison for CI | how to verify Excel sheet image output Aspose.Cells | byte array image equality in .NET
-// Developer Intent: The developer needs an automated way to confirm that a PNG generated from an Excel worksheet matches a stored reference image, enabling reliable visual regression checks in build pipelines.
-// Use Cases: Detect visual changes in Excel reports during continuous integration. | Validate that formatting or data updates do not alter the rendered image. | Automate screenshot testing for dashboards generated with Aspose.Cells.
-// AI Prompts: Generate a C# utility that compares two PNG files pixel by pixel, reports the first mismatched coordinate, and integrates with Aspose.Cells rendering. | Create a tolerant image comparison method for Aspose.Cells that ignores minor compression artifacts and works with NUnit or xUnit. | Write code to log detailed differences (pixel position, expected vs. actual color) when rendered worksheet images differ.
+// Title: How to compare a rendered worksheet PNG image to a baseline PNG pixel‑by‑pixel using Aspose.Cells for .NET
+// AI Prompts: Render a specific worksheet to a PNG stream with Aspose.Cells and return the image bytes. | Write a C# method that loads a baseline PNG file and checks each byte against the rendered worksheet image to determine equality. | Create a CI‑friendly routine that catches all exceptions and treats any error as a mismatch when validating worksheet image output.
+// Common Searches: Aspose.Cells compare generated worksheet PNG with reference image in unit tests | C# pixel level comparison of Excel sheet rendering output | How to validate Excel worksheet image rendering using byte array comparison | Automated CI check for identical worksheet PNG using Aspose.Cells .NET
+// Tags: Aspose.Cells worksheet PNG rendering | pixel‑accurate PNG diff C# | CI image verification Aspose.Cells | render Excel sheet to memory stream | exception‑safe image match check
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsImageComparison
+// The example loads an Excel workbook, renders a selected worksheet to a PNG image in memory using Aspose.Cells, reads a baseline PNG file, and performs a length and byte‑by‑byte comparison. It returns true only when the images are identical and treats any exception as a mismatch, making it suitable for CI image‑validation tests.
+public class WorksheetImageComparer
 {
-    // Creates a workbook, renders the first worksheet to a PNG image in memory, loads a baseline PNG file, and compares the two byte arrays to determine if the images are identical—ideal for CI visual‑regression testing.
-    class Program
+    /// <param name="workbookPath">Path to the Excel workbook.</param>
+    /// <param name="sheetIndex">Zero‑based index of the worksheet to render.</param>
+    /// <param name="baselineImagePath">Path to the baseline PNG image.</param>
+    /// <returns>True if the images are identical; otherwise false.</returns>
+    public static bool CompareWorksheetImage(string workbookPath, int sheetIndex, string baselineImagePath)
     {
-        static void Main()
+        try
         {
-            try
+            // Validate input files
+            if (!File.Exists(workbookPath))
+                throw new FileNotFoundException("Workbook not found.", workbookPath);
+            if (!File.Exists(baselineImagePath))
+                throw new FileNotFoundException("Baseline image not found.", baselineImagePath);
+            if (sheetIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(sheetIndex), "Sheet index must be non‑negative.");
+
+            // Load workbook
+            var workbook = new Workbook(workbookPath);
+            if (sheetIndex >= workbook.Worksheets.Count)
+                throw new ArgumentOutOfRangeException(nameof(sheetIndex), "Sheet index exceeds worksheet count.");
+
+            // Set rendering options (default format is PNG)
+            var renderOptions = new ImageOrPrintOptions
             {
-                // -------------------- Create workbook --------------------
-                Workbook workbook = new Workbook(); // create empty workbook
-                Worksheet sheet = workbook.Worksheets[0];
+                HorizontalResolution = 96,
+                VerticalResolution = 96
+            };
 
-                // Populate some sample data (adjust as needed for your test)
-                sheet.Cells["A1"].PutValue("Sample");
-                sheet.Cells["B1"].PutValue(123);
-                sheet.Cells["A2"].PutValue(DateTime.Now);
-
-                // -------------------- Render workbook to PNG --------------------
-                // ImageOrPrintOptions defaults to PNG format
-                ImageOrPrintOptions renderOptions = new ImageOrPrintOptions();
-
-                WorkbookRender renderer = new WorkbookRender(workbook, renderOptions);
-                byte[] renderedBytes;
-                using (MemoryStream renderedStream = new MemoryStream())
-                {
-                    // Render first worksheet (index 0) to the stream
-                    renderer.ToImage(0, renderedStream);
-                    renderedBytes = renderedStream.ToArray(); // capture PNG bytes
-                }
-
-                // -------------------- Load baseline image --------------------
-                string baselinePath = "baseline.png"; // path to baseline image
-                if (!File.Exists(baselinePath))
-                {
-                    Console.WriteLine($"Baseline image not found at '{baselinePath}'.");
-                    return;
-                }
-
-                byte[] baselineBytes;
-                try
-                {
-                    baselineBytes = File.ReadAllBytes(baselinePath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to read baseline image: {ex.Message}");
-                    return;
-                }
-
-                // -------------------- Compare images byte by byte --------------------
-                bool areEqual = CompareByteArrays(renderedBytes, baselineBytes);
-                Console.WriteLine($"Images are {(areEqual ? "identical" : "different")}.");
-            }
-            catch (Exception ex)
+            // Render worksheet to a memory stream
+            using (var generatedStream = new MemoryStream())
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+                var sheetRender = new SheetRender(workbook.Worksheets[sheetIndex], renderOptions);
+                sheetRender.ToImage(0, generatedStream);
+                byte[] generatedBytes = generatedStream.ToArray();
 
-        // Returns true if both byte arrays have the same length and identical content
-        private static bool CompareByteArrays(byte[] arr1, byte[] arr2)
-        {
-            if (arr1 == null || arr2 == null) return false;
-            if (arr1.Length != arr2.Length) return false;
+                // Load baseline image bytes
+                byte[] baselineBytes = File.ReadAllBytes(baselineImagePath);
 
-            for (int i = 0; i < arr1.Length; i++)
-            {
-                if (arr1[i] != arr2[i])
+                // Quick length check
+                if (generatedBytes.Length != baselineBytes.Length)
                     return false;
-            }
 
-            return true;
+                // Compare byte by byte
+                for (int i = 0; i < generatedBytes.Length; i++)
+                {
+                    if (generatedBytes[i] != baselineBytes[i])
+                        return false;
+                }
+
+                return true; // Images match
+            }
         }
+        catch
+        {
+            // In case of any unexpected error, treat as non‑match
+            return false;
+        }
+    }
+
+    // Entry point required for compilation
+    public static void Main(string[] args)
+    {
+        // Example usage – adjust paths as needed
+        string workbookPath = "TestData/Report.xlsx";
+        string baselinePath = "Baseline/Report_Page1.png";
+
+        bool match = CompareWorksheetImage(workbookPath, 0, baselinePath);
+        Console.WriteLine(match ? "Images match." : "Images do NOT match.");
     }
 }

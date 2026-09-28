@@ -1,51 +1,51 @@
-// Title: Move a worksheet to the first tab and set it active with Aspose.Cells for .NET
-// Description: Creates a workbook, adds several sheets, moves a chosen worksheet (e.g., Sheet3) to index 0, marks it as the active and selected sheet, and saves the workbook.
-// Keywords: Aspose.Cells | move worksheet | first tab | set active sheet | reorder worksheets | .NET | C# | Workbook.MoveTo | ActiveSheetIndex | worksheet index 0
-// Common Searches: Aspose.Cells move worksheet to first tab | set active sheet after moving worksheet Aspose.Cells | reorder worksheets programmatically .NET | how to make a sheet the first tab in Aspose.Cells | select worksheet on workbook open Aspose.Cells
-// Developer Intent: Reorder the worksheets so a specific sheet becomes the first tab and is active when the workbook is opened.
-// Use Cases: Place a dashboard sheet at the beginning of a generated report for immediate visibility. | Ensure a summary sheet opens as the active tab after programmatic sheet reordering. | Create a template where the most important worksheet is always positioned at index 0 and pre‑selected.
-// AI Prompts: Generate C# code using Aspose.Cells to move a worksheet named "Report" to the first position and make it the active sheet. | Explain how to reorder multiple worksheets in an Aspose.Cells workbook while keeping the first sheet selected on open. | Provide error‑handling examples for moving a worksheet to index 0 when the target sheet might be missing.
+// Title: How to move a worksheet to the first tab in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an existing .xlsx file, finds a worksheet by name, moves it to the first position with Aspose.Cells, and saves the workbook. | Show how to catch exceptions when the source file or target worksheet is not found while moving a sheet with Aspose.Cells in C#.
+// Common Searches: asp.net move specific worksheet to first position in workbook | c# Aspose.Cells reorder sheets set sheet as first tab | example code to change worksheet order in Excel using Aspose.Cells .NET | how to prioritize a sheet in Excel programmatically with Aspose.Cells
+// Tags: Worksheet.MoveTo method Aspose.Cells | set worksheet index zero Aspose.Cells .NET | reorder Excel worksheets programmatically C# | handle missing worksheet exception Aspose.Cells | save workbook after sheet order change Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace WorksheetRelocationDemo
+// Loads 'input.xlsx', locates the worksheet named 'Sheet2', moves it to index 0 using Worksheet.MoveTo, and saves the updated workbook as 'output.xlsx' with error handling for missing files or sheets.
+class Program
 {
-    // Creates a workbook, adds several sheets, moves a chosen worksheet (e.g., Sheet3) to index 0, marks it as the active and selected sheet, and saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook (contains a default sheet)
-                Workbook workbook = new Workbook();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Remove the default sheet to avoid duplicate name errors
-                workbook.Worksheets.Clear();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-                // Add sample worksheets with unique names
-                workbook.Worksheets.Add("Sheet1");
-                workbook.Worksheets.Add("Sheet2");
-                workbook.Worksheets.Add("Sheet3");
-
-                // Get the worksheet to be moved (e.g., "Sheet3")
-                Worksheet sheetToMove = workbook.Worksheets["Sheet3"];
-
+            // Locate the worksheet by name
+            Worksheet sheet = workbook.Worksheets["Sheet2"];
+            if (sheet == null)
+            {
+                Console.WriteLine("Worksheet 'Sheet2' not found. No changes applied.");
+            }
+            else
+            {
                 // Move the worksheet to the first position (index 0)
-                sheetToMove.MoveTo(0);
-
-                // Make the moved sheet the active and selected sheet
-                workbook.Worksheets.ActiveSheetIndex = sheetToMove.Index;
-                sheetToMove.IsSelected = true;
-
-                // Save the workbook
-                workbook.Save("RelocatedWorkbook.xlsx");
+                sheet.MoveTo(0);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the updated workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

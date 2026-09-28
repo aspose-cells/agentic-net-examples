@@ -1,65 +1,56 @@
-// Title: Rasterize Worksheet SVG to PNG with Aspose.Cells for .NET
-// Description: Demonstrates how to load an external SVG file, embed it in a worksheet using AddSvg, configure SvgImageOptions to output PNG, rasterize the SVG with the ToImage method into a MemoryStream, and save the PNG file while optionally preserving the original SVG in the workbook—ideal for legacy systems that do not support SVG.
-// Keywords: Aspose.Cells SVG to PNG | rasterize SVG worksheet | SvgImageOptions ImageType Png | AddSvg C# example | export SVG as PNG Aspose.Cells | convert SVG shape to raster image | legacy system SVG compatibility
-// Common Searches: Aspose.Cells convert SVG to PNG | How to rasterize SVG in a worksheet .NET | SvgImageOptions ImageType.Png example | AddSvg and ToImage usage | C# export worksheet SVG as PNG
-// Developer Intent: Generate a PNG version of an SVG image placed in an Excel worksheet to support environments that require raster formats.
-// Use Cases: Create PNG thumbnails of SVG charts embedded in workbooks for reporting dashboards. | Batch‑process multiple SVG shapes across worksheets and deliver PNG streams to web APIs. | Save a PNG copy of an SVG logo while keeping the original SVG in the Excel file for future editing.
-// AI Prompts: Write C# code that loads an SVG file, adds it to an Aspose.Cells worksheet with AddSvg, and saves it as a PNG using SvgImageOptions. | Explain step‑by‑step how to rasterize an SVG shape in a workbook to a MemoryStream and write the PNG to disk, including error handling. | Show how to loop through all worksheets in a workbook, find SVG pictures, and export each to a separate PNG file with Aspose.Cells for .NET.
+// Title: Rasterize an Excel worksheet with embedded SVG graphics to a single PNG file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens a .xlsx workbook with Aspose.Cells, selects the first worksheet, and renders it to a PNG image so that any SVG shapes are rasterized. | Show how to set ImageOrPrintOptions (OnePagePerSheet) and use SheetRender to export a worksheet as one PNG page in Aspose.Cells. | Provide robust error‑handling for missing input files and runtime exceptions when converting an Excel sheet containing SVG to PNG in C#.
+// Common Searches: aspnet how to convert Excel sheet with SVG objects to PNG using Aspose.Cells | c# rasterize embedded SVG in .xlsx to PNG image programmatically | export first worksheet as single PNG page with Aspose.Cells .NET | handle FileNotFoundException when rendering Excel to PNG with Aspose.Cells | use ImageOrPrintOptions OnePagePerSheet for PNG output from Excel
+// Tags: rasterize worksheet to PNG Aspose.Cells | SheetRender export PNG one page | ImageOrPrintOptions OnePagePerSheet .NET | convert embedded SVG to raster image C# | missing workbook file handling Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace SvgToPngExample
+// // Loads an Excel workbook, selects the first worksheet, and uses Aspose.Cells' SheetRender with ImageOrPrintOptions (OnePagePerSheet) to rasterize the sheet—including any embedded SVG graphics—into a single PNG file. Includes a check for the input file's existence and catches exceptions for graceful error handling.
+class SvgToPngRasterizer
 {
-    // Demonstrates how to load an external SVG file, embed it in a worksheet using AddSvg, configure SvgImageOptions to output PNG, rasterize the SVG with the ToImage method into a MemoryStream, and save the PNG file while optionally preserving the original SVG in the workbook—ideal for legacy systems that do not support SVG.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.png";
+
+        // Verify that the input workbook exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
         {
-            try
+            Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook that contains the SVG image.
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (or any specific worksheet by index/name).
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Configure image rendering options to produce a PNG.
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                // Render the entire sheet on a single page.
+                OnePagePerSheet = true
+                // The default image format is PNG, so no explicit setting is required.
+            };
 
-                string svgPath = "input.svg";
-                if (!File.Exists(svgPath))
-                {
-                    Console.WriteLine($"SVG file not found: {svgPath}");
-                    return;
-                }
+            // Create a SheetRender object for the worksheet with the specified options.
+            SheetRender sheetRender = new SheetRender(worksheet, imgOptions);
 
-                // Load SVG file bytes
-                byte[] svgData = File.ReadAllBytes(svgPath);
+            // Render the first (and only) page of the sheet to a PNG file.
+            sheetRender.ToImage(0, outputPath);
 
-                // Add the SVG image to the worksheet
-                // Parameters: upperLeftRow, upperLeftColumn, lowerRightRow, lowerRightColumn, height, width, svgData, compatibleImageData
-                Picture svgPicture = worksheet.Shapes.AddSvg(0, 0, 0, 0, -1, -1, svgData, null);
-
-                // Prepare SVG rendering options to rasterize to PNG
-                SvgImageOptions pngOptions = new SvgImageOptions
-                {
-                    ImageType = ImageType.Png // Rasterize SVG to PNG
-                };
-
-                // Render the SVG picture to a PNG image using a memory stream
-                using (MemoryStream pngStream = new MemoryStream())
-                {
-                    svgPicture.ToImage(pngStream, pngOptions);
-                    File.WriteAllBytes("output.png", pngStream.ToArray());
-                }
-
-                // Save the workbook (optional, shows the SVG remains in the sheet)
-                workbook.Save("workbook_with_svg.xlsx");
-                Console.WriteLine("Processing completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Successfully rasterized worksheet to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

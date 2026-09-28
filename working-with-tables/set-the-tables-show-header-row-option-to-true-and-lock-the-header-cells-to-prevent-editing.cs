@@ -1,68 +1,78 @@
-// Title: Lock Table Header Row and Show Headers with Aspose.Cells in C#
-// Description: Demonstrates how to add a ListObject table to a new workbook, enable the header row, lock each header cell, protect the worksheet, and save the file as TableHeaderLocked.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# | ListObject header lock | ShowHeaderRow | protect worksheet | lock table header cells | Excel table read‑only header | Aspose.Cells example | C# Excel automation | GitHub Aspose.Cells sample | Aspose.Cells table protection
-// Common Searches: Aspose.Cells lock table header C# | ShowHeaderRow true Aspose.Cells | protect worksheet after locking cells Aspose.Cells | read‑only header row Aspose.Cells ListObject | C# code to lock Excel table header with Aspose | Aspose.Cells example for header row protection
-// Developer Intent: Display the table header row and make the header cells read‑only by locking them and protecting the worksheet.
-// Use Cases: Create a template where column titles stay immutable while users fill data rows. | Distribute a report that guarantees consistent header formatting across all recipients. | Build a data‑entry workbook that prevents accidental changes to header labels.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a ListObject, sets ShowHeaderRow to true, locks the header cells, and protects the worksheet. | Show an Aspose.Cells example that makes only the table header row read‑only while allowing edits in the data rows. | Explain step‑by‑step how to lock a table's header row and protect the sheet using Aspose.Cells for .NET.
+// Title: Enable the header row and lock its cells for the first Excel table using Aspose.Cells in C#
+// AI Prompts: Write C# code that sets ListObject.ShowHeaderRow to true, applies a locked style to the header cells, and protects the worksheet with Aspose.Cells. | Generate a snippet that creates a Style with IsLocked = true, applies it to the header range of a table, and saves the workbook. | Provide a step‑by‑step example of loading an existing .xlsx, enabling the table header row, locking the header row, and protecting the sheet using Aspose.Cells. | Show how to protect only the header row while leaving other cells editable in an Aspose.Cells workbook.
+// Common Searches: aspacells c# enable table header row and lock it | how to lock the header row of an Excel table using Aspose.Cells .NET | set ShowHeaderRow true and protect the worksheet with Aspose.Cells example | apply a locked cell format to the header of a table in C# Aspose.Cells | protect an Excel sheet after locking the table header using Aspose.Cells | c# Aspose.Cells lock header row of the first ListObject
+// Tags: Aspose.Cells ListObject ShowHeaderRow true | Aspose.Cells header row cell lock | Aspose.Cells worksheet protection with locked header | Aspose.Cells create locked cell style C# | Aspose.Cells first table header protection .NET
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using System;
+using System.IO;
 
-namespace AsposeCellsTableHeaderLockDemo
+// Alias to avoid conflict with System.Range
+using AsposeRange = Aspose.Cells.Range;
+
+// Loads an existing workbook, enables the first table's header row, applies a locked style to the header cells, protects the worksheet, and saves the modified file.
+class Program
 {
-    // Demonstrates how to add a ListObject table to a new workbook, enable the header row, lock each header cell, protect the worksheet, and save the file as TableHeaderLocked.xlsx using Aspose.Cells for .NET.
-    public class Program
+    static void Main()
     {
-        public static void Main()
+        try
         {
-            try
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-                // Populate sample data (including header row)
-                worksheet.Cells["A1"].PutValue("Product");
-                worksheet.Cells["B1"].PutValue("Price");
-                worksheet.Cells["A2"].PutValue("Apple");
-                worksheet.Cells["B2"].PutValue(1.20);
-                worksheet.Cells["A3"].PutValue("Banana");
-                worksheet.Cells["B3"].PutValue(0.80);
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+            Worksheet sheet = workbook.Worksheets[0];
 
-                // Add a table (ListObject) that includes the header row
-                // Parameters: first row, first column, last row, last column, hasHeaders
-                int tableIndex = worksheet.ListObjects.Add(0, 0, 2, 1, true);
-                ListObject table = worksheet.ListObjects[tableIndex];
-
-                // Ensure the header row is visible
+            // Process the first table if present
+            if (sheet.ListObjects.Count > 0)
+            {
+                ListObject table = sheet.ListObjects[0];
                 table.ShowHeaderRow = true;
 
-                // Determine the range of header cells
-                int headerRow = table.StartRow;
-                int firstCol = table.StartColumn;
-                int lastCol = firstCol + table.ListColumns.Count - 1; // use ListColumns.Count
+                // Header row position and size
+                int headerRow = table.StartRow;               // first row of the table (header)
+                int startColumn = table.StartColumn;          // first column of the table
+                int columnCount = table.ListColumns.Count;    // number of columns in the table
 
-                // Lock each header cell
-                for (int col = firstCol; col <= lastCol; col++)
-                {
-                    Cell headerCell = worksheet.Cells[headerRow, col];
-                    Style style = headerCell.GetStyle();
-                    style.IsLocked = true; // Mark cell as locked
-                    headerCell.SetStyle(style);
-                }
+                // Create a style that locks cells
+                Style lockedStyle = workbook.CreateStyle();
+                lockedStyle.IsLocked = true;
 
-                // Protect the worksheet so that locked cells cannot be edited
-                worksheet.Protect(ProtectionType.All);
+                // Specify that only the Locked flag should be applied
+                StyleFlag styleFlag = new StyleFlag();
+                styleFlag.Locked = true;
 
-                // Save the workbook
-                workbook.Save("TableHeaderLocked.xlsx");
+                // Apply the locked style to the header row cells
+                AsposeRange headerRange = sheet.Cells.CreateRange(headerRow, startColumn, 1, columnCount);
+                headerRange.ApplyStyle(lockedStyle, styleFlag);
             }
-            catch (Exception ex)
+
+            // Protect the worksheet so locked cells cannot be edited
+            sheet.Protect(ProtectionType.All);
+
+            // Ensure the output directory exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Directory.CreateDirectory(outputDir);
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

@@ -1,41 +1,38 @@
-// Title: C# – Convert Excel to PDF with Aspose.Cells, ignore missing fonts via LoadOptions
-// Description: Shows how to configure LoadOptions with IndividualFontConfigs to substitute unavailable fonts (e.g., NonExistentFont → Arial), enable workbook default‑font checking in PdfSaveOptions, and convert an Excel workbook to PDF using ConversionUtility.
-// Keywords: Aspose.Cells | LoadOptions | font substitution | ignore missing fonts | Excel to PDF | C# | .NET | PdfSaveOptions | ConversionUtility | IndividualFontConfigs
-// Common Searches: Aspose.Cells replace missing font during conversion | C# load Excel with custom font config Aspose | Convert Excel to PDF ignoring unavailable fonts .NET | LoadOptions font substitute example Aspose.Cells | How to prevent font errors when converting spreadsheets to PDF
-// Developer Intent: Load a workbook with custom LoadOptions that replace missing fonts and convert it to PDF.
-// Use Cases: Render user‑uploaded spreadsheets on a server that lacks the original fonts. | Batch‑process large sets of Excel files into PDFs while ensuring consistent appearance. | Integrate a document‑generation pipeline that avoids conversion failures caused by absent fonts.
-// AI Prompts: Generate C# code that uses Aspose.Cells LoadOptions to map any missing font to Arial before converting an Excel file to PDF. | Write a reusable method that accepts input and output paths, applies font substitution, and returns conversion status with error handling.
+// Title: Convert an Excel workbook to PDF while substituting missing fonts using Aspose.Cells LoadOptions in C#
+// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells LoadOptions, sets a font substitute for a missing font, and saves the workbook as PDF. | Demonstrate how to configure IndividualFontConfigs in LoadOptions to replace a specific unavailable font with Arial during a workbook-to-PDF conversion. | Show how to use ConversionUtility.Convert together with LoadOptions and PdfSaveOptions to perform an Excel‑to‑PDF conversion that ignores missing fonts.
+// Common Searches: Aspose.Cells C# ignore missing fonts when converting XLSX to PDF | How to set font substitution in LoadOptions for Excel to PDF conversion using Aspose.Cells | Replace unavailable font with Arial during workbook conversion Aspose.Cells .NET | LoadOptions FontConfigs SetFontSubstitutes example for PDF output
+// Tags: Excel to PDF conversion with custom font mapping | LoadOptions IndividualFontConfigs usage | Aspose.Cells missing font handling | PdfSaveOptions configuration for workbook conversion | ConversionUtility custom load and save options
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
-using Aspose.Cells.Saving;
 
-// Shows how to configure LoadOptions with IndividualFontConfigs to substitute unavailable fonts (e.g., NonExistentFont → Arial), enable workbook default‑font checking in PdfSaveOptions, and convert an Excel workbook to PDF using ConversionUtility.
+// // Loads an XLSX workbook with Aspose.Cells LoadOptions, configures IndividualFontConfigs to replace a missing font (e.g., "MissingFont") with Arial, and converts the workbook to PDF using ConversionUtility and PdfSaveOptions.
 class Program
 {
     static void Main()
     {
-        // Source workbook path (any format supported by Aspose.Cells)
-        string sourcePath = "input.xlsx";
+        // Source Excel file that may contain fonts not installed on the system
+        string sourceFile = "input.xlsx";
 
-        // Destination file path after conversion (e.g., PDF)
-        string destPath = "output.pdf";
+        // Destination file after conversion (e.g., PDF)
+        string destinationFile = "output.pdf";
 
-        // Create LoadOptions and configure font substitution.
-        // This tells the loader to replace a missing font with a known one (Arial).
+        // Create LoadOptions instance
         LoadOptions loadOptions = new LoadOptions();
+
+        // Configure font substitution to handle missing fonts.
+        // Any occurrence of a font named "MissingFont" will be replaced with "Arial".
+        // Adjust the original font name as needed for your scenario.
         loadOptions.FontConfigs = new IndividualFontConfigs();
-        loadOptions.FontConfigs.SetFontSubstitutes("NonExistentFont", new string[] { "Arial" });
+        loadOptions.FontConfigs.SetFontSubstitutes("MissingFont", new string[] { "Arial" });
 
-        // Create PDF save options (you can choose another format if needed).
+        // Optional: set additional save options (here we use PDF format)
         PdfSaveOptions saveOptions = new PdfSaveOptions();
-        // Ensure the default workbook font is considered during rendering.
-        saveOptions.CheckWorkbookDefaultFont = true;
 
-        // Convert the workbook using the custom load options.
-        ConversionUtility.Convert(sourcePath, loadOptions, destPath, saveOptions);
-
-        Console.WriteLine("Conversion completed successfully.");
+        // Perform conversion using the custom load options.
+        // This utilizes the provided ConversionUtility.Convert method that accepts
+        // both LoadOptions and SaveOptions, complying with the lifecycle rules.
+        ConversionUtility.Convert(sourceFile, loadOptions, destinationFile, saveOptions);
     }
 }

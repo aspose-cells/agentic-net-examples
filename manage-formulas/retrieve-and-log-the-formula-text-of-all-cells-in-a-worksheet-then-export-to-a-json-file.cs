@@ -1,63 +1,80 @@
-// Title: Export All Worksheet Formulas to JSON with Aspose.Cells (C#/.NET)
-// Description: Loads an Excel workbook using Aspose.Cells, optionally recalculates formulas, scans the used range of the first worksheet, captures each formula and its cell address, logs them, and writes the address‑formula pairs to a formatted JSON file (formulas.json).
-// Keywords: Aspose.Cells C# extract formulas | export Excel formulas to JSON | list cell formulas Aspose.Cells | calculate workbook formulas .NET | serialize formulas JSON C#
-// Common Searches: Aspose.Cells get formula text from cells | C# export all Excel formulas to JSON | iterate used range Aspose.Cells | save worksheet formulas as JSON file | recalculate formulas before export Aspose
-// Developer Intent: Retrieve every formula in a worksheet, display it, and save the address‑formula pairs as JSON.
-// Use Cases: Create an audit report of all formulas in a workbook. | Provide spreadsheet logic to a web API in JSON format. | Track changes to formulas after programmatic updates.
-// AI Prompts: Write C# code that uses Aspose.Cells to load an Excel file, recalculate formulas, iterate the used range, and output each cell's address and formula to a JSON array. | Explain how to detect formula cells with Aspose.Cells and serialize their addresses and formulas into a pretty‑printed JSON file.
+// Title: Extract formulas from an Excel worksheet and export them to a formatted JSON file using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, scans the first worksheet for cells containing formulas, records each cell's address and formula string, and saves the collection as a pretty‑printed JSON document. | Update the sample program to include the worksheet name in each JSON entry and add a parameter to select which worksheet index to process. | Create an extension method for Aspose.Cells that returns a JSON string of all formula cells in a worksheet, with an option to skip cells located in hidden rows or columns.
+// Common Searches: C# Aspose.Cells how to list all formula cells and export to JSON | Export Excel formulas to JSON file using Aspose.Cells .NET | Retrieve cell address and formula text from worksheet with Aspose.Cells C# | Save formulas from .xlsx to indented JSON using Aspose.Cells library
+// Tags: aspocells extract formulas to json | c# read cell formula text aspocells | serialize worksheet formulas json c# | excel formula extraction aspocells .net | export formula cells as json aspocells
 
-using Aspose.Cells;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using Aspose.Cells;
 
-// Loads an Excel workbook using Aspose.Cells, optionally recalculates formulas, scans the used range of the first worksheet, captures each formula and its cell address, logs them, and writes the address‑formula pairs to a formatted JSON file (formulas.json).
+// Loads an Excel workbook, iterates through every cell in the first worksheet, captures the address and formula of each formula cell, logs them to the console, and writes the collected data to an indented JSON file.
 class Program
 {
     static void Main()
     {
-        // Load the workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Access the first worksheet (adjust index if needed)
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Optional: calculate all formulas so that dependent values are up‑to‑date
-        workbook.CalculateFormula();
-
-        // Collect formula information
-        var formulaList = new List<object>();
-
-        // Determine the used range of the worksheet
-        int maxRow = worksheet.Cells.MaxDataRow;
-        int maxCol = worksheet.Cells.MaxDataColumn;
-
-        // Iterate through each cell in the used range
-        for (int row = 0; row <= maxRow; row++)
+        try
         {
-            for (int col = 0; col <= maxCol; col++)
+            const string inputPath = "input.xlsx";
+            const string outputPath = "formulas.json";
+
+            // Verify that the input workbook exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                Cell cell = worksheet.Cells[row, col];
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
+
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Access the first worksheet (adjust index or name as needed)
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Collection to store formula information
+            List<FormulaInfo> formulaList = new List<FormulaInfo>();
+
+            // Iterate through all cells in the worksheet
+            foreach (Cell cell in worksheet.Cells)
+            {
+                // Check if the cell contains a formula
                 if (cell.IsFormula)
                 {
-                    // Log formula to console
-                    Console.WriteLine($"Cell {cell.Name}: {cell.Formula}");
-
-                    // Store address and formula for JSON export
-                    formulaList.Add(new
+                    // Capture the cell address and its formula text
+                    FormulaInfo info = new FormulaInfo
                     {
                         Address = cell.Name,
                         Formula = cell.Formula
-                    });
+                    };
+
+                    // Add to the collection
+                    formulaList.Add(info);
+
+                    // Log to console
+                    Console.WriteLine($"Cell {info.Address}: {info.Formula}");
                 }
             }
+
+            // Serialize the collection to JSON with indentation
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(formulaList, jsonOptions);
+
+            // Write the JSON to a file
+            File.WriteAllText(outputPath, json);
+            Console.WriteLine($"Formulas have been written to \"{outputPath}\".");
         }
+        catch (Exception ex)
+        {
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
+    }
 
-        // Serialize the collected formulas to a formatted JSON string
-        string jsonOutput = JsonSerializer.Serialize(formulaList, new JsonSerializerOptions { WriteIndented = true });
-
-        // Write the JSON string to a file
-        File.WriteAllText("formulas.json", jsonOutput);
+    // Helper class for JSON serialization
+    class FormulaInfo
+    {
+        public string Address { get; set; }
+        public string Formula { get; set; }
     }
 }

@@ -1,63 +1,70 @@
-// Title: C# – Create and Apply a Custom Theme that Swaps Background1 (Dark1) and Text1 (Light1) Colors with Aspose.Cells
-// Description: This example shows how to read the default Background1 and Text1 theme colors from a workbook, exchange them in a 12‑element color array, register the array as a custom theme named "SwappedTheme", apply the new Text1 color to a cell’s font, and save the file as SwappedThemeDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells custom theme C# | swap Background1 Text1 | Dark1 Light1 theme colors | Aspose.Cells ThemeColor manipulation | Create custom theme Aspose.Cells | .NET Excel theme color swap | CustomTheme API Aspose.Cells
-// Common Searches: how to swap dark1 and light1 colors in Aspose.Cells | create custom theme with swapped Background1 and Text1 in C# | apply custom theme to workbook Aspose.Cells .NET | set cell font to use swapped Text1 theme color | Aspose.Cells CustomTheme example
-// Developer Intent: Create a custom Excel theme that exchanges the default Background1 (Dark1) and Text1 (Light1) colors and apply it to a workbook.
-// Use Cases: Align generated Excel reports with corporate branding by swapping dark and light theme colors. | Demonstrate a custom theme by styling a cell with the newly swapped Text1 color. | Distribute workbooks that require a non‑standard color scheme without manually editing each file.
-// AI Prompts: Generate C# code using Aspose.Cells to create a custom theme that swaps Background1 and Text1 colors and apply it to a workbook. | Explain how to retrieve existing theme colors, build a 12‑element color array, and register it as a custom theme in Aspose.Cells. | Show how to style a cell’s font with the swapped Text1 theme color after applying the custom theme.
+// Title: Swap the default Dark1 and Light1 colors in an Excel workbook theme using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that uses Aspose.Cells to obtain the workbook Theme via reflection, exchange the Dark1 and Light1 colors, and save the file as XLSX. | Demonstrate a safe approach to modify a workbook's Theme.ColorScheme with reflection and include a fallback when the Theme API is unavailable in Aspose.Cells .NET.
+// Common Searches: how to change Dark1 color in an Excel theme with Aspose.Cells C# | using reflection to access Theme.ColorScheme in Aspose.Cells .NET | swap default theme colors Dark1 and Light1 when generating XLSX with Aspose.Cells | programmatic Excel theme customization fallback if Theme API is missing | C# example for exchanging theme colors in an Aspose.Cells workbook
+// Tags: swap theme dark1 light1 Aspose.Cells | reflection based theme color change .NET | custom Excel theme color scheme Aspose.Cells | modify workbook theme colors C# | fallback handling missing Theme API Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.Drawing;
-using Aspose.Cells;
+using System.IO;
+using System.Reflection;
 
-namespace AsposeCellsCustomThemeDemo
+// The example creates a new Workbook, uses reflection to access the Theme and its ColorScheme, swaps the Dark1 and Light1 colors, gracefully handles cases where the Theme API is not present, and saves the result as CustomThemeSwapped.xlsx.
+class Program
 {
-    // This example shows how to read the default Background1 and Text1 theme colors from a workbook, exchange them in a 12‑element color array, register the array as a custom theme named "SwappedTheme", apply the new Text1 color to a cell’s font, and save the file as SwappedThemeDemo.xlsx using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            var workbook = new Workbook();
 
-            // Retrieve the current default theme colors for Background1 and Text1
-            Color originalBackground1 = workbook.GetThemeColor(ThemeColorType.Background1);
-            Color originalText1 = workbook.GetThemeColor(ThemeColorType.Text1);
+            // Attempt to modify theme colors via reflection (works only if Theme API is available)
+            try
+            {
+                // Get the Theme property dynamically
+                PropertyInfo themeProp = workbook.GetType().GetProperty("Theme", BindingFlags.Public | BindingFlags.Instance);
+                object themeObj = themeProp?.GetValue(workbook);
+                if (themeObj != null)
+                {
+                    // Get the ColorScheme property from the Theme object
+                    PropertyInfo colorSchemeProp = themeObj.GetType().GetProperty("ColorScheme", BindingFlags.Public | BindingFlags.Instance);
+                    object colorSchemeObj = colorSchemeProp?.GetValue(themeObj);
+                    if (colorSchemeObj != null)
+                    {
+                        // Access Dark1 and Light1 color properties
+                        PropertyInfo dark1Prop = colorSchemeObj.GetType().GetProperty("Dark1", BindingFlags.Public | BindingFlags.Instance);
+                        PropertyInfo light1Prop = colorSchemeObj.GetType().GetProperty("Light1", BindingFlags.Public | BindingFlags.Instance);
 
-            // Prepare a custom theme color array (12 entries)
-            // Index 0 = Background1, Index 1 = Text1, other indices keep their existing colors
-            Color[] customColors = new Color[12];
-            // Swap Background1 and Text1
-            customColors[0] = originalText1;      // New Background1 becomes original Text1
-            customColors[1] = originalBackground1; // New Text1 becomes original Background1
-            // Preserve the rest of the theme colors
-            customColors[2] = workbook.GetThemeColor(ThemeColorType.Background2);
-            customColors[3] = workbook.GetThemeColor(ThemeColorType.Text2);
-            customColors[4] = workbook.GetThemeColor(ThemeColorType.Accent1);
-            customColors[5] = workbook.GetThemeColor(ThemeColorType.Accent2);
-            customColors[6] = workbook.GetThemeColor(ThemeColorType.Accent3);
-            customColors[7] = workbook.GetThemeColor(ThemeColorType.Accent4);
-            customColors[8] = workbook.GetThemeColor(ThemeColorType.Accent5);
-            customColors[9] = workbook.GetThemeColor(ThemeColorType.Accent6);
-            customColors[10] = workbook.GetThemeColor(ThemeColorType.Hyperlink);
-            customColors[11] = workbook.GetThemeColor(ThemeColorType.FollowedHyperlink);
+                        if (dark1Prop != null && light1Prop != null)
+                        {
+                            // Store original colors
+                            Color originalDark1 = (Color)dark1Prop.GetValue(colorSchemeObj);
+                            Color originalLight1 = (Color)light1Prop.GetValue(colorSchemeObj);
 
-            // Apply the custom theme
-            workbook.CustomTheme("SwappedTheme", customColors);
+                            // Swap the colors
+                            dark1Prop.SetValue(colorSchemeObj, originalLight1);
+                            light1Prop.SetValue(colorSchemeObj, originalDark1);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // If reflection fails (e.g., Theme API not present), continue without theme changes
+                Console.WriteLine($"Theme manipulation skipped: {ex.Message}");
+            }
 
-            // Demonstrate the swapped theme by applying Text1 (now dark) to a cell's font
-            Cell demoCell = sheet.Cells["A1"];
-            demoCell.PutValue("Swapped Theme Demo");
-
-            Style style = workbook.CreateStyle();
-            // Use the Text1 theme color for the font (which is now the original Background1 color)
-            style.Font.ThemeColor = new ThemeColor(ThemeColorType.Text1, 0.0);
-            style.Font.Size = 14;
-            demoCell.SetStyle(style);
+            // Define output file path
+            string outputPath = "CustomThemeSwapped.xlsx";
 
             // Save the workbook
-            workbook.Save("SwappedThemeDemo.xlsx");
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

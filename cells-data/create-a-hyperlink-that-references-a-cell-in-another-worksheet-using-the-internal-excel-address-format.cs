@@ -1,38 +1,39 @@
-// Title: Add an internal worksheet hyperlink to a cell with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a new workbook, add a second worksheet, write a value to Sheet2!A1, insert a hyperlink in Sheet1!B2 that points to Sheet2!A1 using the internal Excel address format, set the hyperlink's display text, and save the file.
-// Keywords: Aspose.Cells | C# hyperlink worksheet | internal Excel address format | link to another sheet | Hyperlink.TextToDisplay | Aspose.Cells example | Excel navigation hyperlink
-// Common Searches: Aspose.Cells add hyperlink to another worksheet | C# internal address format hyperlink Excel | how to link Sheet1 cell to Sheet2 cell using Aspose.Cells | set display text for worksheet hyperlink Aspose.Cells | create table of contents with hyperlinks Aspose.Cells
-// Developer Intent: Insert a hyperlink in one worksheet that navigates to a specific cell on a different worksheet using Aspose.Cells for .NET.
-// Use Cases: Build a table‑of‑contents sheet that links to sections across multiple worksheets. | Enable quick navigation from a dashboard to detailed data sheets. | Create interactive reports where clicking a cell opens a related chart or table on another sheet.
-// AI Prompts: Generate C# code with Aspose.Cells to add a hyperlink from Sheet1!C5 to Sheet3!D10 and set the display text to "Open Details". | Explain the internal address format for worksheet hyperlinks in Aspose.Cells and how to reference named ranges. | Write code that iterates over a list of worksheet names and adds hyperlinks to each sheet's A1 cell from a master index sheet.
+// Title: Create an internal worksheet hyperlink that points to a cell on another sheet using Aspose.Cells for .NET
+// AI Prompts: Insert a hyperlink in Sheet1!A1 that navigates to Sheet2!A1 using Aspose.Cells' internal address format. | Set the TextToDisplay property of the worksheet hyperlink and save the workbook as a .xlsx file. | Add a second worksheet named "Sheet2", write a value to A1, and link to it from the first sheet.
+// Common Searches: Aspose.Cells how to add a hyperlink that points to a cell on another worksheet | C# create internal Excel address format hyperlink with Aspose.Cells | Set display text for a worksheet hyperlink using Aspose.Cells .NET | Programmatically link Sheet1 to Sheet2 cell A1 in Aspose.Cells | Add hyperlink between worksheets in a workbook using Aspose.Cells for .NET
+// Tags: Aspose.Cells internal worksheet hyperlink | Aspose.Cells hyperlink to another sheet | Aspose.Cells set hyperlink display text | Aspose.Cells add second worksheet programmatically | Aspose.Cells C# hyperlink address format
 
 using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a new workbook, add a second worksheet, write a value to Sheet2!A1, insert a hyperlink in Sheet1!B2 that points to Sheet2!A1 using the internal Excel address format, set the hyperlink's display text, and save the file.
-class HyperlinkToAnotherSheet
+// The example creates a workbook, adds a second worksheet named "Sheet2", writes "Target Cell" to Sheet2!A1, inserts a hyperlink in Sheet1!A1 that points to Sheet2!A1 using the internal Excel address format, customizes the hyperlink's display text, and saves the file as HyperlinkToAnotherSheet.xlsx.
+class Program
 {
     static void Main()
     {
         // Create a new workbook
         Workbook workbook = new Workbook();
 
-        // Add a second worksheet (default name will be "Sheet2")
+        // Add a second worksheet and give it a name
         int sheet2Index = workbook.Worksheets.Add();
-        Worksheet sheet1 = workbook.Worksheets[0];
         Worksheet sheet2 = workbook.Worksheets[sheet2Index];
+        sheet2.Name = "Sheet2";
 
-        // Put a value in the target cell on Sheet2
+        // Put a value in the target cell of the second worksheet
         sheet2.Cells["A1"].PutValue("Target Cell");
 
-        // Add a hyperlink in Sheet1!B2 that points to Sheet2!A1 using internal address format
-        sheet1.Hyperlinks.Add("B2", 1, 1, "Sheet2!A1");
+        // Get reference to the first worksheet (default sheet)
+        Worksheet sheet1 = workbook.Worksheets[0];
 
-        // Optionally set the display text of the hyperlink
-        Hyperlink hyperlink = sheet1.Hyperlinks[0];
+        // Add a hyperlink in cell A1 of the first worksheet that points to Sheet2!A1
+        // Using the internal Excel address format "Sheet2!A1"
+        int hyperlinkIndex = sheet1.Hyperlinks.Add("A1", 1, 1, "Sheet2!A1");
+
+        // Optionally set the display text for the hyperlink
+        Hyperlink hyperlink = sheet1.Hyperlinks[hyperlinkIndex];
         hyperlink.TextToDisplay = "Go to Sheet2 A1";
 
         // Save the workbook
-        workbook.Save("HyperlinkToOtherSheet.xlsx");
+        workbook.Save("HyperlinkToAnotherSheet.xlsx");
     }
 }

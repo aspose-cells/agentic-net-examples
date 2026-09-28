@@ -1,20 +1,17 @@
-// Title: C# – Set Row Height and Freeze Top Rows with Aspose.Cells for .NET
-// Description: Demonstrates how to create a workbook, assign custom heights (30 pt and 40 pt) to the first two rows, add sample text, freeze those rows using Worksheet.FreezePanes, and save the file as RowHeightsAndFreeze.xlsx.
-// Keywords: Aspose.Cells C# | set row height Aspose.Cells | custom row height Excel .NET | freeze panes top rows | Worksheet.FreezePanes example | Excel row height points | freeze first rows Aspose.Cells | C# Excel automation | Aspose.Cells row formatting | freeze top rows C#
-// Common Searches: Aspose.Cells set row height C# | how to freeze first rows with Aspose.Cells | C# freeze panes after setting row height | custom row height Excel using Aspose.Cells .NET | Worksheet.FreezePanes syntax C# | freeze top two rows Aspose.Cells example
-// Developer Intent: Apply custom heights to the initial rows and lock them in view while scrolling the worksheet.
-// Use Cases: Design a report header with larger rows that stay visible during navigation. | Generate spreadsheets where title rows need distinct heights and remain fixed. | Create printable sheets with top rows of specific height that are frozen for easy reference.
-// AI Prompts: Show C# code to set row heights in points and freeze the first N rows with Aspose.Cells. | Provide an Aspose.Cells example that freezes rows only, preserving custom row height formatting. | Explain the parameters of Worksheet.FreezePanes when freezing rows in a .NET workbook.
+// Title: How to set custom row heights and freeze the first two rows in an Excel worksheet using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code with Aspose.Cells that assigns a height of 30 points to row 1, 45 points to row 2, freezes the top two rows, and saves the workbook as an .xlsx file. | Create a .NET example that applies specific row heights, then calls FreezePanes to lock the first two rows while keeping all columns scrollable.
+// Common Searches: Aspose.Cells C# set row height 30 points and freeze top two rows | C# example for freezing first two rows after adjusting row heights with Aspose.Cells | How to use FreezePanes to lock header rows in an Excel file via Aspose.Cells .NET | Set custom row heights and freeze panes in Excel using Aspose.Cells for .NET
+// Tags: row height adjustment Aspose.Cells C# | freeze top rows Aspose.Cells .NET | custom row heights Excel Aspose.Cells | freeze panes after row formatting Aspose.Cells | Aspose.Cells worksheet row formatting example
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsExample
 {
-    // Demonstrates how to create a workbook, assign custom heights (30 pt and 40 pt) to the first two rows, add sample text, freeze those rows using Worksheet.FreezePanes, and save the file as RowHeightsAndFreeze.xlsx.
-    public class SetRowHeightsAndFreezeDemo
+    // // Creates a new workbook, sets the first row height to 30 points and the second row height to 45 points, freezes those two rows with FreezePanes, and saves the file as CustomRowHeightAndFreeze.xlsx.
+    class Program
     {
-        public static void Run()
+        static void Main(string[] args)
         {
             try
             {
@@ -22,42 +19,25 @@ namespace AsposeCellsExamples
                 Workbook workbook = new Workbook();
 
                 // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-                Cells cells = worksheet.Cells;
+                Worksheet sheet = workbook.Worksheets[0];
 
-                // Set custom heights for the first two rows (index 0 and 1)
-                // Height is in points (1 point = 1/72 inch)
-                cells.SetRowHeight(0, 30); // Row 1 height = 30 points
-                cells.SetRowHeight(1, 40); // Row 2 height = 40 points
+                // Set custom heights for the first two rows (indices 0 and 1)
+                sheet.Cells.SetRowHeight(0, 30); // Row 1 height = 30 points
+                sheet.Cells.SetRowHeight(1, 45); // Row 2 height = 45 points
 
-                // Add sample data to visualize the rows
-                cells["A1"].PutValue("First row with custom height");
-                cells["A2"].PutValue("Second row with custom height");
-
-                // Freeze the first two rows so that their custom heights stay visible while scrolling
-                // Freeze at the cell just below the rows to be frozen (row index 2 -> third row)
-                // No columns are frozen, so freezedColumns = 0
-                worksheet.FreezePanes(2, 0, 2, 0);
-                // Equivalent call using cell name:
-                // worksheet.FreezePanes("A3", 2, 0);
+                // Freeze the first two rows (rows 0 and 1) while keeping all columns scrollable
+                // FreezePanes(row, column, totalRows, totalColumns)
+                sheet.FreezePanes(2, 0, 0, 0);
 
                 // Save the workbook
-                workbook.Save("RowHeightsAndFreeze.xlsx");
-                Console.WriteLine("Workbook saved as RowHeightsAndFreeze.xlsx");
+                string outputPath = "CustomRowHeightAndFreeze.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            SetRowHeightsAndFreezeDemo.Run();
         }
     }
 }

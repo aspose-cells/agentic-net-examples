@@ -1,22 +1,19 @@
-// Title: Import a DataTable at row 4 and shift existing rows down with Aspose.Cells for .NET
-// Description: Demonstrates how to set a first‑row offset of 3, configure ImportTableOptions (InsertRows = true, IsFieldNameShown = true), and import a DataTable so that the original rows are moved down before saving the workbook.
-// Keywords: Aspose.Cells ImportData row offset | C# ImportTableOptions InsertRows | shift rows down Excel .NET | ImportData starting row 4 | Aspose.Cells DataTable import example
-// Common Searches: Aspose.Cells import DataTable at specific row | how to insert rows when importing data with Aspose.Cells | C# set firstRow offset for ImportData | push existing rows down Aspose.Cells .NET
-// Developer Intent: Insert a DataTable beginning at the fourth Excel row while automatically moving any pre‑existing rows lower in the sheet.
-// Use Cases: Add a product table beneath a summary section without overwriting the summary. | Populate a report template that has fixed header rows, inserting new data below them. | Programmatically prepend a data set to a sheet while preserving all prior content.
-// AI Prompts: Write C# code that imports a DataTable at row index 5 with InsertRows enabled and formats the header row in bold using Aspose.Cells. | Explain the effect of ImportTableOptions.InsertRows and how to change the firstRow offset for different import positions. | Show how to import several DataTables sequentially with varying offsets, keeping earlier rows intact, in Aspose.Cells for .NET.
+// Title: Import a DataTable into an Aspose.Cells worksheet at row 4 while inserting rows and shifting existing data down
+// AI Prompts: Use Aspose.Cells ImportTableOptions to import a DataTable starting at row index 3, inserting new rows and preserving existing worksheet rows. | Show C# code that adds initial rows, then imports a DataTable with column headers at the fourth Excel row, shifting previous rows down. | Demonstrate how to set ShiftFirstRowDown and InsertRows flags to offset a DataTable import by three rows in a .NET workbook.
+// Common Searches: Aspose.Cells C# import DataTable at specific row without overwriting existing rows | How to shift existing Excel rows down when importing a DataTable with Aspose.Cells | Set first row offset to 3 for DataTable import using ImportTableOptions in .NET | Insert rows instead of overwriting while importing DataTable into Aspose.Cells worksheet | Include column headers when importing DataTable into Excel at row 4 using Aspose.Cells
+// Tags: ImportTableOptions InsertRows Aspose.Cells | shift rows down Aspose.Cells import | DataTable import with row offset C# | Excel row offset data import Aspose.Cells | preserve existing rows Aspose.Cells import
 
 using System;
 using System.Data;
 using Aspose.Cells;
 
-// Demonstrates how to set a first‑row offset of 3, configure ImportTableOptions (InsertRows = true, IsFieldNameShown = true), and import a DataTable so that the original rows are moved down before saving the workbook.
+// The example creates a workbook, writes three initial rows, builds a DataTable, configures ImportTableOptions (InsertRows = true, ShiftFirstRowDown = true, IsFieldNameShown = true), and imports the table starting at row index 3 (fourth Excel row). Existing rows are shifted down, column headers are added, and the workbook is saved as OffsetImportDemo.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet's cells
-        Workbook workbook = new Workbook();
+        // Create a new workbook and get the first worksheet's cells collection
+        Workbook workbook = new Workbook();                     // create
         Worksheet worksheet = workbook.Worksheets[0];
         Cells cells = worksheet.Cells;
 
@@ -25,26 +22,30 @@ class Program
         cells["A2"].PutValue("Existing Row 2");
         cells["A3"].PutValue("Existing Row 3");
 
-        // Prepare the DataTable to be imported
-        DataTable dataTable = new DataTable("Products");
-        dataTable.Columns.Add("ID", typeof(int));
-        dataTable.Columns.Add("Name", typeof(string));
-        dataTable.Columns.Add("Price", typeof(decimal));
-        dataTable.Rows.Add(1, "Laptop", 999.99m);
-        dataTable.Rows.Add(2, "Monitor", 199.99m);
-        dataTable.Rows.Add(3, "Keyboard", 49.99m);
+        // Prepare a sample DataTable to import
+        DataTable table = new DataTable("Sample");
+        table.Columns.Add("ID", typeof(int));
+        table.Columns.Add("Name", typeof(string));
+        table.Rows.Add(1, "Alice");
+        table.Rows.Add(2, "Bob");
+        table.Rows.Add(3, "Charlie");
 
-        // Configure import options to insert rows (shifts existing rows down)
-        ImportTableOptions importOptions = new ImportTableOptions
+        // Configure import options:
+        // - InsertRows = true : new rows will be inserted instead of overwriting existing ones
+        // - ShiftFirstRowDown = true : the first row of the worksheet is shifted down to make space
+        // - IsFieldNameShown = true : include column headers
+        ImportTableOptions options = new ImportTableOptions
         {
-            InsertRows = true,          // ensures existing rows are shifted down
-            IsFieldNameShown = true    // include column headers in the import
+            InsertRows = true,
+            ShiftFirstRowDown = true,
+            IsFieldNameShown = true
         };
 
         // Import the DataTable starting at row index 3 (fourth row in Excel)
-        cells.ImportData(dataTable, 3, 0, importOptions);
+        // Existing rows (A1:A3) will be moved down because InsertRows is true
+        cells.ImportData(table, 3, 0, options);                // import
 
-        // Save the workbook
-        workbook.Save("OffsetImportDemo.xlsx");
+        // Save the workbook to a file
+        workbook.Save("OffsetImportDemo.xlsx");                // save
     }
 }

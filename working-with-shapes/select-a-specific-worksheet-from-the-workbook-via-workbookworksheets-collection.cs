@@ -1,43 +1,27 @@
-// Title: Select a Worksheet by Index or Name with Aspose.Cells for .NET (C#)
-// Description: Demonstrates how to create a Workbook, add sheets, access a sheet using its zero‑based position or its assigned name, rename a sheet, write values to cells, and save the result as an XLSX file using Aspose.Cells for C#.
-// Keywords: Aspose.Cells | C# | select worksheet | worksheet index | worksheet name | Workbook.Worksheets | rename sheet | write cell values | save XLSX
-// Common Searches: Aspose.Cells get worksheet by index C# | Aspose.Cells retrieve worksheet by name .NET | how to rename a worksheet using Aspose.Cells | write data to a specific sheet Aspose.Cells C# | save workbook as XLSX with Aspose.Cells
-// Developer Intent: Retrieve a specific worksheet from a workbook via the Worksheets collection.
-// Use Cases: Populate header rows on the first sheet (index 0) before importing data. | Insert a generation timestamp into a "Summary" sheet identified by its name. | Rename a newly added sheet to reflect its purpose before exporting the file.
-// AI Prompts: Show C# code that accesses a worksheet by index and writes header values with Aspose.Cells. | Provide an example of selecting a worksheet by its name, updating cells, and saving the workbook as XLSX using Aspose.Cells for .NET. | Explain how to loop through all worksheets in a workbook and perform custom actions on each with Aspose.Cells.
+// Title: How to select a worksheet by name or index in an Aspose.Cells workbook using C#
+// AI Prompts: Write C# code that loads an Excel file with Aspose.Cells, retrieves a worksheet by its name, and saves the workbook. | Show an example of accessing a worksheet by zero‑based index in Aspose.Cells for .NET and then performing a simple operation. | Provide a snippet that selects a specific sheet, modifies a cell, and saves the changes using Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# get worksheet by sheet name | select worksheet by index Aspose.Cells .NET example | how to access a specific sheet in a workbook using Aspose.Cells for C# | C# Aspose.Cells retrieve sheet and save workbook | load Excel file and choose sheet number with Aspose.Cells
+// Tags: retrieve worksheet by name Aspose.Cells | access worksheet by index C# | load and save Excel workbook Aspose.Cells | select specific sheet in .NET workbook | Aspose.Cells worksheet selection example
 
-using System;
 using Aspose.Cells;
 
-// Demonstrates how to create a Workbook, add sheets, access a sheet using its zero‑based position or its assigned name, rename a sheet, write values to cells, and save the result as an XLSX file using Aspose.Cells for C#.
+// // Loads input.xlsx, selects the worksheet named "Sheet2" (or by zero‑based index), optionally manipulates it, and saves the workbook to output.xlsx using Aspose.Cells for .NET.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (default contains one worksheet)
-        Workbook workbook = new Workbook();
+        // Load an existing workbook (using the provided load rule)
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Add additional worksheets with specific names
-        workbook.Worksheets.Add("SalesData");
-        workbook.Worksheets.Add("Summary");
+        // Select a worksheet by its name
+        Worksheet selectedSheet = workbook.Worksheets["Sheet2"];
 
-        // ---- Select a worksheet by index ----
-        // Index is zero‑based; this gets the first worksheet (original one)
-        Worksheet firstSheet = workbook.Worksheets[0];
-        firstSheet.Name = "Data"; // rename for clarity
+        // Alternatively, select by zero‑based index
+        // Worksheet selectedSheet = workbook.Worksheets[1];
 
-        // ---- Select a worksheet by name ----
-        // Retrieves the worksheet whose Name property matches "Summary"
-        Worksheet summarySheet = workbook.Worksheets["Summary"];
+        // (Optional) Perform operations on the selected worksheet here
 
-        // Demonstrate that the correct sheets are accessed by writing data
-        firstSheet.Cells["A1"].PutValue("Item");
-        firstSheet.Cells["B1"].PutValue("Quantity");
-
-        summarySheet.Cells["A1"].PutValue("Report generated on:");
-        summarySheet.Cells["B1"].PutValue(DateTime.Now);
-
-        // Save the workbook to disk
-        workbook.Save("SelectedSheetsDemo.xlsx", SaveFormat.Xlsx);
+        // Save the workbook (using the provided save rule)
+        workbook.Save("output.xlsx");
     }
 }

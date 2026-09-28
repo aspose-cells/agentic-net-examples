@@ -1,57 +1,45 @@
-// Title: Export Workbook to High‑Resolution PDF with Sharp Slicer Text using Aspose.Cells (C#)
-// Description: Sets CellsHelper.DPI to 300, configures PdfSaveOptions (Standard optimization, ExportDocumentStructure, default‑font check) and saves the workbook as a PDF that preserves slicer clarity and print‑ready quality.
-// Keywords: Aspose.Cells | C# PDF export | high DPI PDF | CellsHelper.DPI | PdfSaveOptions | OptimizationType.Standard | ExportDocumentStructure | slicer PDF rendering | print quality Excel to PDF | .NET high‑resolution PDF | global | US
-// Common Searches: Aspose.Cells increase PDF DPI C# | export slicer to PDF with sharp text | high resolution PDF from Excel Aspose | PdfSaveOptions settings for print quality | how to keep slicer labels clear in PDF
-// Developer Intent: Export an Aspose.Cells workbook to a PDF at 300 DPI so that slicer labels and graphics remain crisp and printable.
-// Use Cases: Generating printable reports that contain slicers with legible text. | Creating marketing or documentation PDFs where chart and slicer clarity is required. | Batch converting Excel files to high‑resolution PDFs for archival or distribution.
-// AI Prompts: Show C# code to export an Aspose.Cells workbook to PDF at 300 DPI while keeping slicer text sharp. | Explain how PdfSaveOptions properties (OptimizationType, ExportDocumentStructure, CheckWorkbookDefaultFont) affect PDF quality for slicers. | Describe the role of CellsHelper.DPI in rendering high‑resolution PDFs with Aspose.Cells.
+// Title: Export an Aspose.Cells workbook to a high‑resolution PDF while preserving crisp slicer text in C#
+// AI Prompts: Generate C# code that sets CellsHelper.DPI to 300 and configures PdfSaveOptions with 300 PPI image resampling to create a high‑resolution PDF. | Show how to enable ExportDocumentStructure and use PdfOptimizationType.Standard in PdfSaveOptions to maintain slicer label clarity when saving to PDF. | Provide a complete Aspose.Cells example that creates a worksheet, adds sample data, and saves it as a 300 DPI PDF with optimal print quality.
+// Common Searches: Aspose.Cells C# export workbook to PDF with 300 DPI for sharp slicer labels | How to keep slicer text readable when converting Excel to PDF using Aspose.Cells | Set image resample and DPI in PdfSaveOptions for high‑resolution PDF output in C# | Enable document structure in Aspose.Cells PDF export to preserve slicer rendering | Best PDF optimization settings for slicer quality in Aspose.Cells C#
+// Tags: Aspose.Cells high‑resolution PDF export | PdfSaveOptions image resample 300 DPI | ExportDocumentStructure Aspose.Cells PDF | slicer text sharpness PDF conversion | standard PDF optimization Aspose.Cells | set CellsHelper DPI for PDF output
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfExport
+// // Sets CellsHelper.DPI to 300, configures PdfSaveOptions with 300 PPI image resampling, enables document structure and standard optimization, then saves the workbook as a high‑resolution PDF to keep slicer text sharp.
+class ExportWorkbookToPdfHighRes
 {
-    // Sets CellsHelper.DPI to 300, configures PdfSaveOptions (Standard optimization, ExportDocumentStructure, default‑font check) and saves the workbook as a PDF that preserves slicer clarity and print‑ready quality.
-    class ExportWorkbookToPdfHighRes
+    static void Main()
     {
-        static void Main()
-        {
-            // Set the DPI to a high value (e.g., 300) to improve rendering quality of slicer text and other graphics.
-            CellsHelper.DPI = 300;
+        // Increase the DPI to obtain higher‑resolution output.
+        CellsHelper.DPI = 300;
 
-            // Create a new workbook (or load an existing one).
-            Workbook workbook = new Workbook();
+        // Create a new workbook (or load an existing one).
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate the workbook with some sample data.
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("Fruits");
-            sheet.Cells["A3"].PutValue("Vegetables");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(50);
-            sheet.Cells["B3"].PutValue(30);
+        // Populate some sample data (slicers can be added here if needed).
+        sheet.Cells["A1"].PutValue("Category");
+        sheet.Cells["A2"].PutValue("Fruits");
+        sheet.Cells["A3"].PutValue("Vegetables");
+        sheet.Cells["B1"].PutValue("Value");
+        sheet.Cells["B2"].PutValue(50);
+        sheet.Cells["B3"].PutValue(30);
 
-            // (Optional) Add a slicer if needed – omitted here for brevity.
+        // Configure PDF save options for high‑resolution output.
+        PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Configure PDF save options for high‑quality output.
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
-            {
-                // Use standard optimization for best print quality.
-                OptimizationType = PdfOptimizationType.Standard,
+        // Resample images to 300 PPI with maximum JPEG quality.
+        pdfOptions.SetImageResample(300, 100);
 
-                // Export document structure (helps retain interactive elements like slicers).
-                ExportDocumentStructure = true,
+        // Keep document structure (helps with slicer rendering).
+        pdfOptions.ExportDocumentStructure = true;
 
-                // Ensure the default font is used if specific fonts are missing.
-                CheckWorkbookDefaultFont = true
-            };
+        // Use the standard optimization type for best print quality.
+        pdfOptions.OptimizationType = PdfOptimizationType.Standard;
 
-            // Save the workbook as a PDF with the specified options.
-            string outputPath = "HighResolutionOutput.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine($"Workbook successfully exported to PDF at high resolution: {outputPath}");
-        }
+        // Save the workbook as a PDF with the specified options.
+        workbook.Save("output_high_res.pdf", pdfOptions);
     }
 }

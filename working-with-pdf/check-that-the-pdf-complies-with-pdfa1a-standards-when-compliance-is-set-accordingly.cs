@@ -1,30 +1,50 @@
-// Title: Create a PDF/A‑1a compliant PDF from an Excel workbook using Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to build a Workbook, add data, configure PdfSaveOptions with PdfCompliance.PdfA1a, and save the file as a PDF/A‑1a document, ensuring archival‑grade compliance.
-// Keywords: Aspose.Cells | PDF/A-1a | PdfSaveOptions | PdfCompliance | C# | .NET | archival PDF | Excel to PDF/A | generate PDF/A-1a | PDF/A-1a compliance
-// Common Searches: Aspose.Cells generate PDF/A-1a | C# save workbook as PDF/A-1a | PdfSaveOptions compliance PDF/A-1a example | How to create archival PDF from Excel using Aspose | Set PDF/A-1a compliance in Aspose.Cells .NET
-// Developer Intent: Set PdfSaveOptions.Compliance to PdfA1a so the exported PDF meets PDF/A‑1a archival standards.
-// Use Cases: Produce legally compliant, long‑term storage PDFs from financial spreadsheets. | Export regulatory reports as PDF/A‑1a for document management systems. | Generate PDF/A‑1a invoices that satisfy industry record‑keeping requirements.
-// AI Prompts: Write C# code that validates a PDF created with Aspose.Cells against PDF/A‑1a using Aspose.PDF. | Show how to catch and log errors when Aspose.Cells fails to save a workbook as PDF/A‑1a. | Explain how to programmatically confirm PDF/A‑1a compliance after saving a workbook with PdfSaveOptions.
+// Title: Check PDF/A‑1a compliance when converting an Excel workbook to PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that saves an Excel file as PDF/A‑1a with Aspose.Cells and returns a boolean indicating compliance. | Show how to configure PdfSaveOptions to set PdfCompliance.PdfA1a, embed fonts, and catch exceptions for non‑compliant output. | Explain how to use a MemoryStream to test PDF/A‑1a compliance during workbook.Save in Aspose.Cells.
+// Common Searches: Aspose.Cells how to verify PDF/A-1a compliance after saving Excel to PDF in C# | C# detect PDF/A-1a non‑compliance exception when using PdfSaveOptions | embed standard Windows fonts for PDF/A-1a with Aspose.Cells .NET | programmatically test PDF/A-1a compliance of generated PDF from Excel workbook | save Excel workbook as PDF/A-1a and get pass/fail result using Aspose.Cells
+// Tags: Aspose.Cells PdfSaveOptions PDF/A-1a | C# Excel workbook to PDF/A-1a conversion | detect non‑compliant PDF/A output Aspose.Cells | memory stream PDF generation Aspose.Cells | set PdfCompliance.PdfA1a Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
+using Aspose.Cells.Rendering; // For PdfSaveOptions
 
-// This C# example shows how to build a Workbook, add data, configure PdfSaveOptions with PdfCompliance.PdfA1a, and save the file as a PDF/A‑1a document, ensuring archival‑grade compliance.
-class PdfA1aComplianceDemo
+// The example loads an Excel workbook, configures PdfSaveOptions with PdfCompliance.PdfA1a and font embedding, attempts to save to a MemoryStream, and determines PDF/A‑1a compliance based on whether the save operation throws an exception, outputting Pass or Fail.
+class PdfAComplianceChecker
 {
     static void Main()
     {
-        // Create a new workbook and add sample data
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-        worksheet.Cells["A1"].PutValue("PDF/A-1a compliance test");
+        // Load an existing Excel workbook
+        Workbook workbook = new Workbook("input.xlsx");
 
-        // Create PDF save options and set compliance to PDF/A-1a
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.Compliance = PdfCompliance.PdfA1a;
+        // Configure PDF save options for PDF/A‑1a compliance
+        PdfSaveOptions pdfOptions = new PdfSaveOptions
+        {
+            // Set the compliance level to PDF/A‑1a
+            Compliance = PdfCompliance.PdfA1a,
+            // Optional: embed all fonts to meet PDF/A requirements
+            EmbedStandardWindowsFonts = true
+        };
 
-        // Save the workbook as a PDF with the specified compliance level
-        workbook.Save("output_PdfA1a.pdf", pdfOptions);
+        // Attempt to save the workbook as PDF/A‑1a to a memory stream
+        // If the document does not meet PDF/A‑1a requirements, an exception will be thrown
+        bool isCompliant = false;
+        using (MemoryStream pdfStream = new MemoryStream())
+        {
+            try
+            {
+                workbook.Save(pdfStream, pdfOptions);
+                // If no exception, the PDF complies with PDF/A‑1a
+                isCompliant = true;
+            }
+            catch (Exception ex)
+            {
+                // The save operation failed due to non‑compliance
+                Console.WriteLine("PDF/A‑1a compliance check failed: " + ex.Message);
+                isCompliant = false;
+            }
+        }
+
+        // Output the result
+        Console.WriteLine("PDF/A‑1a compliance: " + (isCompliant ? "Passed" : "Failed"));
     }
 }

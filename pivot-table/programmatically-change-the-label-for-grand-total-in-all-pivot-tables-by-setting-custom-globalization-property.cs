@@ -1,23 +1,19 @@
-// Title: C# – Change Grand Total Caption for All PivotTables via Globalization Settings in Aspose.Cells
-// Description: Shows how to replace the default "Grand Total" text with a custom label for every PivotTable in a workbook by using SettablePivotGlobalizationSettings, assigning it to Workbook.Settings.GlobalizationSettings, refreshing each pivot, and saving the result.
-// Keywords: Aspose.Cells | C# | PivotTable | Grand Total label | globalization settings | SettablePivotGlobalizationSettings | custom caption | pivot table localization | RefreshData | CalculateData
-// Common Searches: Aspose.Cells change Grand Total text | globalization settings pivot table Aspose | set custom Grand Total caption .NET | apply same Grand Total label to multiple pivot tables | localize pivot table totals Aspose.Cells
-// Developer Intent: Apply a single custom Grand Total caption to all PivotTables in a workbook using Aspose.Cells globalization configuration.
-// Use Cases: Generate reports where every pivot table shares an identical Grand Total wording. | Localize the Grand Total term for multilingual Excel exports. | Update the Grand Total label after source data changes without recreating pivots. | Create template workbooks with a predefined Grand Total caption.
-// AI Prompts: Write C# code that sets the Grand Total caption to a user‑provided string for every PivotTable in an existing workbook using Aspose.Cells. | Explain the steps to configure SettablePivotGlobalizationSettings and why RefreshData and CalculateData are required. | Show how to verify that the custom Grand Total label appears in each pivot table after the workbook is saved.
+// Title: Rename Grand Total label for every PivotTable in an Aspose.Cells workbook using SettablePivotGlobalizationSettings (C#)
+// AI Prompts: Apply SettablePivotGlobalizationSettings to replace the default Grand Total caption across all pivot tables in a workbook. | Refresh and recalculate each PivotTable after updating the global pivot globalization settings to reflect the new label. | Save the workbook to an XLSX file after customizing the Grand Total text to verify the change.
+// Common Searches: how to change the grand total text for all pivot tables in Aspose.Cells C# | Aspose.Cells SettablePivotGlobalizationSettings example for custom grand total label | programmatically refresh pivot tables after modifying globalization settings Aspose.Cells | global pivot settings to rename grand total caption in .xlsx using Aspose.Cells
+// Tags: settextofgrandtotal Aspose.Cells | global pivot globalization settings C# | rename grand total label pivot table | refresh all pivot tables Aspose.Cells | customize pivot table captions .xlsx
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Settings;
 
 namespace AsposeCellsExamples
 {
-    // Shows how to replace the default "Grand Total" text with a custom label for every PivotTable in a workbook by using SettablePivotGlobalizationSettings, assigning it to Workbook.Settings.GlobalizationSettings, refreshing each pivot, and saving the result.
+    // The example creates a workbook with sample data, adds two pivot tables, defines a SettablePivotGlobalizationSettings object to replace the default "Grand Total" caption with a custom text, assigns it to the workbook's globalization settings, refreshes and recalculates each pivot table, and saves the result as PivotTables_With_CustomGrandTotal.xlsx.
     public class ChangeGrandTotalLabelForAllPivotTables
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
@@ -33,90 +29,64 @@ namespace AsposeCellsExamples
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            Worksheet dataSheet = workbook.Worksheets[0];
 
-            // Populate sample data that will be used by multiple pivot tables
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["B1"].PutValue("Region");
-            sheet.Cells["C1"].PutValue("Sales");
-            sheet.Cells["A2"].PutValue("Electronics");
-            sheet.Cells["B2"].PutValue("North");
-            sheet.Cells["C2"].PutValue(1200);
-            sheet.Cells["A3"].PutValue("Electronics");
-            sheet.Cells["B3"].PutValue("South");
-            sheet.Cells["C3"].PutValue(1500);
-            sheet.Cells["A4"].PutValue("Furniture");
-            sheet.Cells["B4"].PutValue("North");
-            sheet.Cells["C4"].PutValue(800);
-            sheet.Cells["A5"].PutValue("Furniture");
-            sheet.Cells["B5"].PutValue("South");
-            sheet.Cells["C5"].PutValue(950);
+            // Populate sample data for the pivot tables
+            dataSheet.Cells["A1"].PutValue("Category");
+            dataSheet.Cells["B1"].PutValue("Region");
+            dataSheet.Cells["C1"].PutValue("Sales");
+
+            dataSheet.Cells["A2"].PutValue("Electronics");
+            dataSheet.Cells["B2"].PutValue("North");
+            dataSheet.Cells["C2"].PutValue(1200);
+
+            dataSheet.Cells["A3"].PutValue("Electronics");
+            dataSheet.Cells["B3"].PutValue("South");
+            dataSheet.Cells["C3"].PutValue(1500);
+
+            dataSheet.Cells["A4"].PutValue("Furniture");
+            dataSheet.Cells["B4"].PutValue("North");
+            dataSheet.Cells["C4"].PutValue(800);
+
+            dataSheet.Cells["A5"].PutValue("Furniture");
+            dataSheet.Cells["B5"].PutValue("South");
+            dataSheet.Cells["C5"].PutValue(950);
 
             // Create first pivot table
-            int ptIndex1 = sheet.PivotTables.Add("A1:C5", "E2", "PivotTable1");
-            PivotTable pt1 = sheet.PivotTables[ptIndex1];
-            pt1.AddFieldToArea(PivotFieldType.Row, 0);      // Category
-            pt1.AddFieldToArea(PivotFieldType.Column, 1);   // Region
-            pt1.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
+            Worksheet pivotSheet1 = workbook.Worksheets.Add("Pivot1");
+            int pivotIndex1 = pivotSheet1.PivotTables.Add("A1:C5", "E3", "PivotTable1");
+            PivotTable pivotTable1 = pivotSheet1.PivotTables[pivotIndex1];
+            pivotTable1.AddFieldToArea(PivotFieldType.Row, 0);      // Category
+            pivotTable1.AddFieldToArea(PivotFieldType.Column, 1);   // Region
+            pivotTable1.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
 
-            // Create second pivot table on the same data range but different location
-            int ptIndex2 = sheet.PivotTables.Add("A1:C5", "E15", "PivotTable2");
-            PivotTable pt2 = sheet.PivotTables[ptIndex2];
-            pt2.AddFieldToArea(PivotFieldType.Row, 1);      // Region
-            pt2.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
+            // Create second pivot table on the same data sheet
+            Worksheet pivotSheet2 = workbook.Worksheets.Add("Pivot2");
+            int pivotIndex2 = pivotSheet2.PivotTables.Add("A1:C5", "E3", "PivotTable2");
+            PivotTable pivotTable2 = pivotSheet2.PivotTables[pivotIndex2];
+            pivotTable2.AddFieldToArea(PivotFieldType.Row, 0);      // Category
+            pivotTable2.AddFieldToArea(PivotFieldType.Data, 2);     // Sales
 
             // -----------------------------------------------------------------
-            // Configure custom globalization settings to change the "Grand Total"
-            // label for all pivot tables in the workbook.
+            // Set custom globalization settings for the "Grand Total" label
             // -----------------------------------------------------------------
-            // 1. Create an instance of SettablePivotGlobalizationSettings.
-            SettablePivotGlobalizationSettings pivotGlobalSettings = new SettablePivotGlobalizationSettings();
+            SettablePivotGlobalizationSettings customPivotSettings = new SettablePivotGlobalizationSettings();
+            customPivotSettings.SetTextOfGrandTotal("My Custom Grand Total");
+            workbook.Settings.GlobalizationSettings.PivotSettings = customPivotSettings;
 
-            // 2. Set the desired custom text for the Grand Total label.
-            pivotGlobalSettings.SetTextOfGrandTotal("My Custom Grand Total");
-
-            // 3. Attach the custom settings to the workbook's globalization settings.
-            workbook.Settings.GlobalizationSettings = new GlobalizationSettings
+            // Refresh and calculate all pivot tables so that the new label takes effect
+            foreach (Worksheet ws in workbook.Worksheets)
             {
-                PivotSettings = pivotGlobalSettings
-            };
-
-            // Refresh and calculate each pivot table so that the new label takes effect.
-            foreach (PivotTable pt in sheet.PivotTables)
-            {
-                try
+                foreach (PivotTable pt in ws.PivotTables)
                 {
-                    // Refresh the pivot cache data
+                    // Refresh the pivot cache and recalculate data
                     pt.RefreshData();
-
-                    // Recalculate the pivot table
                     pt.CalculateData();
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to refresh pivot table '{pt.Name}': {ex.Message}");
-                }
             }
 
-            // Save the workbook to verify the result.
-            string outputPath = "ChangedGrandTotalLabel.xlsx";
-
-            try
-            {
-                // Ensure the directory exists
-                string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to '{outputPath}'. All pivot tables now display the custom Grand Total label.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Save the workbook (output file demonstrates the changed Grand Total label)
+            workbook.Save("PivotTables_With_CustomGrandTotal.xlsx");
         }
     }
 }

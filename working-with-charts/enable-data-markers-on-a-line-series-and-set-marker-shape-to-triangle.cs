@@ -1,16 +1,14 @@
-// Title: Add Triangle Markers to a Line Series with Aspose.Cells for .NET
-// Description: Shows how to build a workbook, fill it with sample data, insert a Line chart, enable data markers, set the marker style to a triangle, adjust the marker size, and save the workbook as an Excel file using Aspose.Cells in C#.
-// Keywords: Aspose.Cells | C# chart marker | line chart triangle marker | ChartMarkerType.Triangle | enable data markers | ChartType.Line | Excel export .NET | custom chart markers | Aspose.Cells example
-// Common Searches: Aspose.Cells set triangle marker on line chart | how to enable data markers in Aspose.Cells C# | change marker shape to triangle in Excel chart programmatically | customize line series markers with Aspose.Cells | C# Aspose.Cells chart marker size
-// Developer Intent: Add triangle‑shaped data markers to a line‑chart series programmatically.
-// Use Cases: Highlight key sales figures on a trend line with distinct triangle markers for presentations. | Create a performance dashboard where each measurement point is emphasized by a custom marker shape. | Generate an Excel report that includes a line chart with triangle markers to improve data readability.
-// AI Prompts: Write C# code using Aspose.Cells to add a line chart and set its series markers to a triangle with a specific size. | Provide an Aspose.Cells example that applies different marker shapes to multiple series, including triangles, squares, and circles. | Explain the steps to enable data markers and customize their appearance (shape, size, color) for a line chart in Aspose.Cells for .NET.
+// Title: Add blue triangle data markers to a line series in an Aspose.Cells .NET workbook (C#)
+// AI Prompts: Generate C# code using Aspose.Cells to create a line chart and set the first series markers to blue triangles with a size of 10. | Show how to enable data markers on a line series and customize marker style, size, and color with Aspose.Cells for .NET. | Write a snippet that adds a line chart, binds category and value ranges, and configures the series to use triangle markers.
+// Common Searches: Aspose.Cells C# line chart triangle marker shape example | how to set marker color and size for line series in Aspose.Cells .NET | enable data markers on line chart using Aspose.Cells API | C# Aspose.Cells change line chart series marker to triangle | Aspose.Cells line chart custom marker style tutorial
+// Tags: Aspose.Cells line chart marker customization C# | set triangle marker style Aspose.Cells series | configure data marker size and color Aspose.Cells | line series marker shape Aspose.Cells .NET | Excel chart triangle markers using Aspose.Cells
 
 using Aspose.Cells;
 using Aspose.Cells.Charts;
+using System.Drawing;
 
-// Shows how to build a workbook, fill it with sample data, insert a Line chart, enable data markers, set the marker style to a triangle, adjust the marker size, and save the workbook as an Excel file using Aspose.Cells in C#.
-class Program
+// Demonstrates creating a workbook, adding a line chart, binding category and value ranges, and configuring the first series to display blue triangle markers of size 10 before saving as LineChart_TriangleMarkers.xlsx.
+class EnableTriangleMarkers
 {
     static void Main()
     {
@@ -33,16 +31,17 @@ class Program
         int chartIndex = sheet.Charts.Add(ChartType.Line, 5, 0, 20, 10);
         Chart chart = sheet.Charts[chartIndex];
 
-        // Define the data series and category labels
-        chart.NSeries.Add("B2:B4", true);
-        chart.NSeries.CategoryData = "A2:A4";
+        // Define the data series for the chart
+        chart.NSeries.Add("B2:B4", true);          // Values
+        chart.NSeries.CategoryData = "A2:A4";      // Categories
 
-        // Enable data markers and set the marker shape to triangle
+        // Access the first series and configure its markers
         Series series = chart.NSeries[0];
-        series.Marker.MarkerStyle = ChartMarkerType.Triangle;
-        series.Marker.MarkerSize = 10; // optional: set marker size
+        series.Marker.MarkerStyle = ChartMarkerType.Triangle; // Set marker shape to triangle
+        series.Marker.MarkerSize = 10;                         // Optional: set marker size
+        series.Marker.ForegroundColor = Color.Blue;           // Optional: set marker color
 
         // Save the workbook with the chart
-        workbook.Save("LineChartWithTriangleMarkers.xlsx");
+        workbook.Save("LineChart_TriangleMarkers.xlsx");
     }
 }

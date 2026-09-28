@@ -1,83 +1,84 @@
-// Title: Delete VBA Modules Over 500 Lines in an .xlsm Workbook with Aspose.Cells for .NET
-// Description: Loads a macro‑enabled Excel file, enumerates its VBA project, counts the lines in each module, removes modules whose code exceeds 500 lines, and saves the cleaned workbook.
-// Keywords: Aspose.Cells | C# VBA module removal | delete large VBA module | enumerate VBA project | count VBA lines | macro-enabled workbook cleanup | Aspose.Cells .NET | remove VBA from xlsm
-// Common Searches: Aspose.Cells delete VBA module over 500 lines | C# remove large VBA modules from .xlsm | how to count lines in VBA module using Aspose | enumerate VBA modules Aspose.Cells | programmatically clean VBA code in Excel workbook | remove VBA modules with Aspose.Cells .NET
-// Developer Intent: Programmatically eliminate any VBA module that contains more than 500 lines from a macro‑enabled Excel workbook.
-// Use Cases: Reduce workbook size and improve performance by stripping oversized macro modules before distribution. | Enforce compliance by automatically removing large VBA sections from generated reports in batch jobs. | Maintain a consistent macro footprint during automated workbook creation by deleting lengthy modules.
-// AI Prompts: Generate C# code using Aspose.Cells that lists all VBA modules and deletes those with a line count greater than 500. | Show how to add a configurable line‑limit parameter and log the names of removed modules in the example. | Recommend extra error handling and resource cleanup for the VBA module removal workflow.
+// Title: Remove VBA modules with more than 500 lines from an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Identify and delete any VbaModule whose code exceeds 500 lines in a workbook with Aspose.Cells C#. | Enumerate all VBA modules in a workbook, count line breaks in each module's Codes property, and purge those over a 500‑line threshold. | Automate the cleanup of oversized VBA modules and save the updated Excel file using the Aspose.Cells API.
+// Common Searches: C# Aspose.Cells how to remove VBA modules longer than 500 lines | filter VBA modules by line count in Excel workbook using Aspose.Cells | list VbaProject modules and remove large ones with Aspose.Cells .NET | count lines in VbaModule.Codes and clean up Excel file programmatically | Aspose.Cells VBA cleanup before saving workbook
+// Tags: remove oversized VbaModule Aspose.Cells | list VbaProject modules C# | line‑count filter for VbaModule Aspose.Cells | save workbook after VBA cleanup .NET | Aspose.Cells VBA project maintenance
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
+using Aspose.Cells.Vba;   // Required for VbaModule and related types
 
-namespace AsposeCellsExamples
+// The example loads an Excel file, checks for a VBA project, lists all VBA modules, counts the lines in each module's code, flags modules with more than 500 lines, deletes those modules via the Aspose.Cells VbaProject API, and saves the cleaned workbook to a new file.
+class Program
 {
-    // Loads a macro‑enabled Excel file, enumerates its VBA project, counts the lines in each module, removes modules whose code exceeds 500 lines, and saves the cleaned workbook.
-    public class DeleteLargeVbaModules
+    static void Main()
     {
-        public static void Run()
-        {
-            const string inputPath = "input.xlsm";
-            const string outputPath = "output.xlsm";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Ensure the input file exists
-            if (!File.Exists(inputPath))
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Ensure the workbook contains a VBA project
+            if (workbook.VbaProject == null)
             {
-                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                Console.WriteLine("No VBA project found in the workbook.");
                 return;
             }
 
-            try
+            // List all VBA modules
+            Console.WriteLine("VBA Modules in the workbook:");
+            foreach (VbaModule module in workbook.VbaProject.Modules)
             {
-                // Load an existing macro-enabled workbook
-                Workbook workbook = new Workbook(inputPath);
+                Console.WriteLine($"- {module.Name}");
+            }
 
-                // Access the VBA project and its module collection
-                VbaProject vbaProject = workbook.VbaProject;
-                VbaModuleCollection modules = vbaProject.Modules;
+            // Identify modules exceeding 500 lines
+            List<VbaModule> modulesToDelete = new List<VbaModule>();
+            foreach (VbaModule module in workbook.VbaProject.Modules)
+            {
+                string code = module.Codes;
+                int lineCount = 0;
 
-                // Collect names of modules whose code exceeds 500 lines
-                List<string> modulesToRemove = new List<string>();
-
-                for (int i = 0; i < modules.Count; i++)
+                if (!string.IsNullOrEmpty(code))
                 {
-                    VbaModule module = modules[i];
-                    string code = module.Codes ?? string.Empty;
-
-                    // Count lines by splitting on newline characters
-                    int lineCount = code.Split(new[] { '\n' }, StringSplitOptions.None).Length;
-
-                    if (lineCount > 500)
-                    {
-                        modulesToRemove.Add(module.Name);
-                    }
+                    // Count lines handling different newline conventions
+                    lineCount = code.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None).Length;
                 }
 
-                // Remove the identified modules by name
-                foreach (string name in modulesToRemove)
+                if (lineCount > 500)
                 {
-                    modules.Remove(name);
+                    modulesToDelete.Add(module);
+                    Console.WriteLine($"Marking module '{module.Name}' for deletion (Lines: {lineCount})");
                 }
+            }
 
-                // Save the workbook after removal
-                workbook.Save(outputPath, SaveFormat.Xlsm);
-                Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
-            }
-            catch (Exception ex)
+            // Delete the identified modules
+            foreach (VbaModule module in modulesToDelete)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                // Remove by module name (VbaModuleCollection does not support Remove(VbaModule) overload)
+                workbook.VbaProject.Modules.Remove(module.Name);
+                Console.WriteLine($"Deleted module '{module.Name}'.");
             }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DeleteLargeVbaModules.Run();
+            // Catch any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

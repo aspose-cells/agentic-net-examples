@@ -1,33 +1,42 @@
-// Title: Capture Aspose.Cells IncorrectPassword code when opening an encrypted workbook without a password (C#)
-// Description: A C# example that tries to load a password‑protected Excel file with Aspose.Cells, catches the CellsException, and prints the specific error code (ExceptionType.IncorrectPassword = 8) that indicates a missing or wrong password.
-// Keywords: Aspose.Cells | encrypted workbook | password protection | IncorrectPassword | CellsException | exception code | C# | open Excel file | missing password | error handling
-// Common Searches: Aspose.Cells error code for missing password | How to catch IncorrectPassword exception in Aspose.Cells | Open password‑protected Excel file without password Aspose.Cells | Retrieve exception code when opening encrypted workbook | What does exception code 8 mean in Aspose.Cells
-// Developer Intent: Identify the exact Aspose.Cells exception code returned when an encrypted Excel workbook is opened without providing a password.
-// Use Cases: Detect a missing or wrong password and show a user‑friendly prompt. | Log the precise CellsException code for security auditing. | Trigger conditional logic to request a password only when the IncorrectPassword code is received. | Integrate password validation into automated file‑processing pipelines.
-// AI Prompts: Generate C# code that opens an Excel file with Aspose.Cells, catches CellsException, and outputs the IncorrectPassword code when no password is supplied. | Explain how to differentiate IncorrectPassword from other Aspose.Cells error codes in a try‑catch block. | Write a method that returns the Aspose.Cells exception code when opening a protected workbook fails. | Create a unit test that verifies the IncorrectPassword code is returned for an encrypted file opened without a password.
+// Title: Open an encrypted Excel workbook with Aspose.Cells for .NET without a password and capture the CellsException error code
+// AI Prompts: Generate C# code that loads a password‑protected .xlsx using Aspose.Cells without providing a password and logs the resulting CellsException error number. | Write a try‑catch example in C# that opens an encrypted workbook with Aspose.Cells, catches CellsException, and prints both the exception message and its numeric error code. | Show how to handle FileNotFoundException and any other unexpected exceptions when attempting to open a protected Excel file with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells .NET how to get error code when opening password protected Excel without password | C# catch CellsException for encrypted workbook and retrieve error number | What exception is thrown by Aspose.Cells when a workbook requires a password | How to detect missing password error while loading encrypted .xlsx with Aspose.Cells
+// Tags: Aspose.Cells load encrypted workbook without password | CellsException error code retrieval | handling password required exception Aspose.Cells | C# file not found handling Aspose.Cells | catch generic exceptions Aspose.Cells workbook load
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// A C# example that tries to load a password‑protected Excel file with Aspose.Cells, catches the CellsException, and prints the specific error code (ExceptionType.IncorrectPassword = 8) that indicates a missing or wrong password.
+// The sample checks for the presence of an encrypted Excel file, attempts to open it with Aspose.Cells for .NET without supplying a password, and uses distinct catch blocks to handle CellsException (indicating a missing password), FileNotFoundException, and any other unexpected errors, outputting the relevant messages and error codes.
 class Program
 {
     static void Main()
     {
         // Path to the encrypted workbook
-        string filePath = "encrypted.xlsx";
+        string filePath = "EncryptedWorkbook.xlsx";
+
+        // Verify that the file exists before attempting to load it
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine($"File not found: {filePath}");
+            return;
+        }
 
         try
         {
-            // Attempt to open the workbook without providing a password
-            Workbook workbook = new Workbook(filePath);
-            Console.WriteLine("Workbook opened successfully (this is unexpected for an encrypted file).");
+            // Attempt to load the workbook without providing a password
+            Workbook wb = new Workbook(filePath);
+            Console.WriteLine("Workbook opened successfully (unexpected).");
         }
         catch (CellsException ex)
         {
-            // Capture and display the specific Aspose.Cells error code
-            // For an incorrect or missing password the code is ExceptionType.IncorrectPassword (value 8)
-            Console.WriteLine($"Failed to open workbook. Exception code: {ex.Code}");
+            // Output the exception message (e.g., password required)
+            Console.WriteLine($"Failed to open workbook. Reason: {ex.Message}");
+        }
+        catch (FileNotFoundException ex)
+        {
+            // Handle missing file scenario
+            Console.WriteLine($"File not found: {ex.Message}");
         }
         catch (Exception ex)
         {

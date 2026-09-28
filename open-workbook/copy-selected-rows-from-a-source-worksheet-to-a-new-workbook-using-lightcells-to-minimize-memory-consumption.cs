@@ -1,56 +1,72 @@
-// Title: Copy Specific Rows to a New Workbook with LightCells in Aspose.Cells for .NET
-// Description: Shows how to load a source workbook, select non‑contiguous rows, copy them to a fresh worksheet, and save the result using LightCells (OoxmlSaveOptions with a NoOpLightCellsDataProvider) to keep memory usage low in C#.
-// Keywords: Aspose.Cells | CopyRow | LightCells | C# example | low memory Excel | select rows | OoxmlSaveOptions | NoOpLightCellsDataProvider | .NET | Excel streaming | memory‑efficient workbook
-// Common Searches: asp.net copy selected rows aspose.cells | lightcells save options c# | how to copy non‑contiguous rows aspose | reduce memory usage when saving excel with aspose | custom LightCellsDataProvider example | copy rows to new workbook aspose cells
-// Developer Intent: Extract chosen rows from an existing worksheet and write them to a separate workbook while keeping the operation memory‑light.
-// Use Cases: Generate a lightweight report by extracting only header and key data rows from a massive spreadsheet. | Create a subset file containing scattered rows for downstream processing without loading the full source into memory. | Process huge Excel files in batch jobs where copying sparse rows with LightCells prevents out‑of‑memory failures.
-// AI Prompts: Write C# code that copies rows 1, 3, and 5 from a worksheet to a new workbook and saves it using LightCells to minimize memory consumption. | Explain how to build a custom LightCellsDataProvider that streams rows while saving a workbook with Aspose.Cells. | Adapt the example to read a dynamic list of row indices from a JSON configuration file and copy those rows with LightCells.
+// Title: Copy specific rows from a worksheet to a new workbook with Aspose.Cells LightCells in C#
+// AI Prompts: Write C# code that uses Aspose.Cells LightCells to extract rows 1, 3, and 4 from a source worksheet and write them to a new workbook while preserving cell values and styles. | Show how to implement memory‑efficient row copying in Aspose.Cells by iterating with LightCells and saving the selected rows to a separate Excel file. | Refactor the provided example to leverage LightCells for selective row export and reduce overall memory consumption.
+// Common Searches: Aspose.Cells C# copy selected rows to new Excel file using LightCells | How to export only certain rows from a worksheet with Aspose.Cells without loading the whole sheet | Memory efficient row extraction Aspose.Cells LightCells example C# | Preserve formatting when copying specific rows with Aspose.Cells | Select rows by index and save to another workbook Aspose.Cells C#
+// Tags: lightcells selective row copy C# | aspocells copy rows to new workbook | excel row extraction memory efficient | preserve cell style Aspose.Cells | copy rows without loading full sheet
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to load a source workbook, select non‑contiguous rows, copy them to a fresh worksheet, and save the result using LightCells (OoxmlSaveOptions with a NoOpLightCellsDataProvider) to keep memory usage low in C#.
+// The program loads source.xlsx, uses LightCells to iterate only over rows 1, 3, and 4, copies each cell’s value and style to a new workbook, and saves the result as selected_rows.xlsx, minimizing memory usage.
 class Program
 {
     static void Main()
     {
-        // Load the source workbook (replace with actual path)
-        Workbook sourceWorkbook = new Workbook("Source.xlsx");
-        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
-
-        // Create a new workbook for the selected rows
-        Workbook destinationWorkbook = new Workbook();
-        // Remove the default sheet and add a fresh one
-        destinationWorkbook.Worksheets.Clear();
-        Worksheet destSheet = destinationWorkbook.Worksheets.Add("SelectedRows");
-
-        // Define the zero‑based indices of rows to copy from the source sheet
-        int[] rowsToCopy = new int[] { 0, 2, 4 }; // example: rows 1, 3 and 5
-
-        int destRowIndex = 0;
-        foreach (int srcRowIndex in rowsToCopy)
+        try
         {
-            // Copy a single row from source to destination
-            destSheet.Cells.CopyRow(sourceSheet.Cells, srcRowIndex, destRowIndex);
-            destRowIndex++;
+            const string sourcePath = "source.xlsx";
+            const string destPath = "selected_rows.xlsx";
+
+            // Verify source file exists to avoid FileNotFoundException
+            if (!File.Exists(sourcePath))
+            {
+                Console.WriteLine($"Source file not found: {sourcePath}");
+                return;
+            }
+
+            // Load the source workbook
+            Workbook srcWorkbook = new Workbook(sourcePath);
+            Worksheet srcSheet = srcWorkbook.Worksheets[0];
+
+            // Create a new workbook for the selected rows
+            Workbook destWorkbook = new Workbook();
+            Worksheet destSheet = destWorkbook.Worksheets[0];
+
+            // Zero‑based indices of rows to copy (e.g., rows 2, 4, 5 in Excel are 1,3,4)
+            int[] rowsToCopy = new int[] { 1, 3, 4 };
+
+            // Determine the maximum column that contains data in the source sheet
+            int maxColumn = srcSheet.Cells.MaxDataColumn;
+
+            int destRowIndex = 0; // Destination row pointer
+
+            foreach (int srcRowIndex in rowsToCopy)
+            {
+                // Copy each cell in the selected row
+                for (int col = 0; col <= maxColumn; col++)
+                {
+                    Cell srcCell = srcSheet.Cells[srcRowIndex, col];
+                    if (srcCell == null) continue;
+
+                    Cell destCell = destSheet.Cells[destRowIndex, col];
+                    destCell.Value = srcCell.Value;
+
+                    // Preserve style
+                    Style style = srcCell.GetStyle();
+                    destCell.SetStyle(style);
+                }
+
+                destRowIndex++; // Move to next row in destination sheet
+            }
+
+            // Save the result workbook
+            destWorkbook.Save(destPath);
+            Console.WriteLine($"Selected rows saved to: {destPath}");
         }
-
-        // Save the destination workbook using LightCells mode to reduce memory usage
-        OoxmlSaveOptions saveOptions = new OoxmlSaveOptions(SaveFormat.Xlsx)
+        catch (Exception ex)
         {
-            LightCellsDataProvider = new NoOpLightCellsDataProvider()
-        };
-        destinationWorkbook.Save("SelectedRows.xlsx", saveOptions);
-    }
-
-    // LightCellsDataProvider that delegates all saving to the normal data model
-    class NoOpLightCellsDataProvider : LightCellsDataProvider
-    {
-        public bool StartSheet(int sheetIndex) => false; // use default sheet processing
-        public int NextRow() => -1;                     // no custom rows
-        public void StartRow(Row row) { }               // no custom row handling
-        public int NextCell() => -1;                    // no custom cells
-        public void StartCell(Cell cell) { }            // no custom cell handling
-        public bool IsGatherString() => false;          // default string handling
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

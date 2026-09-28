@@ -1,57 +1,45 @@
-// Title: Add a Column Chart to an Excel Workbook and Export as PDF with Embedded Chart using Aspose.Cells for .NET
-// Description: Loads an XLSX file, inserts sample data, creates a column chart on the first worksheet, sets the data range, enables RefreshChartCache in PdfSaveOptions, and saves the workbook as a PDF where the chart is rendered inside the document.
-// Keywords: Aspose.Cells add chart C# | export Excel chart to PDF .NET | PdfSaveOptions RefreshChartCache | save workbook as PDF with chart | Aspose.Cells chart rendering PDF | C# Excel to PDF with embedded chart | Aspose.Cells tutorial US | Aspose.Cells Europe example
-// Common Searches: Aspose.Cells embed chart in PDF C# | PdfSaveOptions RefreshChartCache example | Create column chart programmatically Aspose.Cells | Export Excel workbook to PDF with charts .NET | How to save Excel chart as PDF using Aspose
-// Developer Intent: Generate a PDF from an Excel workbook that includes a newly created column chart.
-// Use Cases: Produce sales summary PDFs that display product quantities with a column chart. | Automate financial dashboard exports to PDF while preserving all visual charts for client reports. | Create printable performance sheets where each page contains a chart generated from worksheet data.
-// AI Prompts: Provide C# code to add a line chart to a worksheet and export the workbook as a PDF with the chart embedded using Aspose.Cells. | Explain how to configure PdfSaveOptions to refresh the chart cache so charts appear correctly in the exported PDF. | Show how to adjust chart size and position before saving the workbook to PDF with Aspose.Cells.
+// Title: Create a column chart in an Excel worksheet and export the workbook to PDF with the chart embedded using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a column chart from range A2:B3 in the first worksheet and save the workbook as a PDF file using Aspose.Cells in C#. | Add sample data, insert a column chart object, and convert the entire workbook to a PDF that includes the chart with Aspose.Cells .NET API.
+// Common Searches: Aspose.Cells C# add column chart and convert workbook to PDF | how to embed an Excel chart into a PDF using Aspose.Cells .NET | programmatically create chart in worksheet and export to PDF Aspose.Cells | save workbook as PDF with chart included using C# Aspose.Cells | Aspose.Cells example converting Excel with chart to PDF
+// Tags: Aspose.Cells create column chart C# | Aspose.Cells export workbook to PDF | Aspose.Cells embed chart in PDF | C# add chart to worksheet Aspose.Cells | convert Excel with chart to PDF Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsChartPdfDemo
+namespace AsposeCellsChartToPdfDemo
 {
-    // Loads an XLSX file, inserts sample data, creates a column chart on the first worksheet, sets the data range, enables RefreshChartCache in PdfSaveOptions, and saves the workbook as a PDF where the chart is rendered inside the document.
+    // The code loads an existing Excel file, optionally writes sample data, creates a column chart on the first worksheet using the values in B2:B3 and categories in A2:A3, and then saves the workbook as a PDF where the chart is rendered inside the PDF.
     class Program
     {
         static void Main()
         {
-            // Load an existing workbook from disk
-            string inputPath = "input.xlsx";
-            Workbook workbook = new Workbook(inputPath);
+            // Load an existing workbook (replace with your actual file path)
+            Workbook workbook = new Workbook("input.xlsx");
 
             // Access the first worksheet
             Worksheet worksheet = workbook.Worksheets[0];
 
-            // Add sample data for the chart (if not already present)
+            // OPTIONAL: Add sample data for the chart if the workbook does not already contain it
             worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Fruits");
+            worksheet.Cells["A3"].PutValue("Vegetables");
             worksheet.Cells["B1"].PutValue("Value");
-            worksheet.Cells["A2"].PutValue("Apple");
-            worksheet.Cells["B2"].PutValue(30);
-            worksheet.Cells["A3"].PutValue("Banana");
-            worksheet.Cells["B3"].PutValue(45);
-            worksheet.Cells["A4"].PutValue("Cherry");
-            worksheet.Cells["B4"].PutValue(25);
+            worksheet.Cells["B2"].PutValue(50);
+            worksheet.Cells["B3"].PutValue(30);
 
             // Add a column chart to the worksheet
             int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
             Chart chart = worksheet.Charts[chartIndex];
 
             // Set the data source for the chart
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
+            chart.NSeries.Add("B2:B3", true);          // Values
+            chart.NSeries.CategoryData = "A2:A3";      // Categories
 
-            // Optional: refresh chart cache when saving to PDF
-            PdfSaveOptions pdfOptions = new PdfSaveOptions();
-            pdfOptions.RefreshChartCache = true;
+            // Save the entire workbook as a PDF; the chart will be embedded in the PDF output
+            workbook.Save("output.pdf", SaveFormat.Pdf);
 
-            // Save the entire workbook as a PDF; the chart will be embedded in the PDF
-            string outputPath = "output.pdf";
-            workbook.Save(outputPath, pdfOptions);
-
-            Console.WriteLine("Workbook saved as PDF with embedded chart at: " + outputPath);
+            Console.WriteLine("Workbook saved as PDF with embedded chart.");
         }
     }
 }

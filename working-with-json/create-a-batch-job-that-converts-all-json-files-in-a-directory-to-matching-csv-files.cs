@@ -1,64 +1,163 @@
-// Title: C# Batch Convert JSON Files to CSV Using Aspose.Cells
-// Description: A console utility that scans a specified folder for *.json files, loads each file into an Aspose.Cells Workbook with JsonLoadOptions, and saves it as a CSV file with the same base name. Includes directory validation, per‑file error handling, and progress output.
-// Keywords: Aspose.Cells JSON to CSV | C# batch JSON conversion | JsonLoadOptions | convert multiple JSON files to CSV | Aspose.Cells .NET CSV export | automated JSON to CSV conversion
-// Common Searches: batch convert json to csv c# aspose.cells | convert all json files in a folder to csv using asp.net | aspocells jsonloadoptions example | c# program to export json as csv with aspose | automate json to csv conversion .net
-// Developer Intent: Automatically transform every JSON file in a given directory into a CSV file with matching names using Aspose.Cells.
-// Use Cases: Migrate exported JSON datasets to CSV for BI tools. | Process large collections of JSON logs into CSV for analytics pipelines. | Schedule nightly jobs that keep CSV mirrors of JSON configuration files.
-// AI Prompts: Generate C# code that iterates through a folder, loads each JSON file into an Aspose.Cells Workbook via JsonLoadOptions, and saves it as CSV with robust error handling. | Rewrite the batch converter to use async I/O and Parallel.ForEach while preserving the Aspose.Cells workflow. | Create a PowerShell script that runs the compiled C# batch converter, captures success/failure messages, and writes a detailed log file.
+// Title: C# console app to batch convert JSON files in a folder to CSV using Aspose.Cells
+// AI Prompts: Generate a C# console program that scans a given directory for *.json files, parses each JSON array into a DataTable, and saves the output as a CSV file with Aspose.Cells. | Extend the batch converter to accept a command‑line parameter for the CSV delimiter and to skip files that do not contain a JSON array. | Implement detailed error logging that records the file path and exception message for any JSON file that fails to convert, while allowing the batch job to continue processing remaining files.
+// Common Searches: Aspose.Cells C# convert all JSON files in a directory to CSV | batch convert JSON arrays to CSV files with Aspose.Cells in .NET | C# script to read JSON files from a folder and output CSV using Aspose.Cells | automate JSON to CSV conversion for multiple files using Aspose.Cells | command line tool for bulk JSON to CSV conversion with Aspose.Cells
+// Tags: Aspose.Cells batch JSON to CSV conversion | C# DataTable creation from JSON array | Save workbook as CSV SaveFormat.Csv | Directory iteration for JSON file processing | Robust error handling in bulk JSON conversion
 
 using System;
 using System.IO;
+using System.Data;
+using System.Text.Json;
 using Aspose.Cells;
 
 namespace JsonToCsvBatch
 {
-    // A console utility that scans a specified folder for *.json files, loads each file into an Aspose.Cells Workbook with JsonLoadOptions, and saves it as a CSV file with the same base name. Includes directory validation, per‑file error handling, and progress output.
+    // A C# console application that iterates over every .json file in a specified input folder, converts each JSON array into a DataTable, writes the data to an Aspose.Cells worksheet, and saves a matching .csv file in an output folder, with optional delimiter customization and comprehensive error logging.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Directory containing JSON files
-            string sourceDirectory = @"C:\Data\JsonFiles";
+            // Define input and output directories
+            string inputDirectory = @"C:\InputJson";
+            string outputDirectory = @"C:\OutputCsv";
 
-            // Verify that the source directory exists
-            if (!Directory.Exists(sourceDirectory))
+            // Ensure the input directory exists
+            if (!Directory.Exists(inputDirectory))
             {
-                Console.WriteLine($"Source directory not found: {sourceDirectory}");
+                Console.WriteLine($"Input directory does not exist: {inputDirectory}");
                 return;
             }
 
+            // Ensure the output directory exists
+            if (!Directory.Exists(outputDirectory))
+            {
+                Directory.CreateDirectory(outputDirectory);
+            }
+
+            // Process each JSON file in the input directory
+            foreach (string jsonFilePath in Directory.GetFiles(inputDirectory, "*.json"))
+            {
+                try
+                {
+                    // Verify the JSON file exists before reading
+                    if (!File.Exists(jsonFilePath))
+                    {
+                        Console.WriteLine($"File not found: {jsonFilePath}");
+                        continue;
+                    }
+
+                    // Read JSON content
+                    string jsonContent = File.ReadAllText(jsonFilePath);
+
+                    // Convert JSON to DataTable
+                    DataTable dataTable = ConvertJsonToDataTable(jsonContent);
+                    if (dataTable == null || dataTable.Rows.Count == 0)
+                    {
+                        Console.WriteLine($"No data to export for file: {jsonFilePath}");
+                        continue;
+                    }
+
+                    // Create a new workbook
+                    Workbook workbook = new Workbook();
+
+                    // Get the first worksheet
+                    Worksheet worksheet = workbook.Worksheets[0];
+
+                    // Populate worksheet with DataTable content
+                    PopulateWorksheetFromDataTable(worksheet, dataTable);
+
+                    // Build the CSV file path (same name, .csv extension)
+                    string csvFileName = Path.GetFileNameWithoutExtension(jsonFilePath) + ".csv";
+                    string csvFilePath = Path.Combine(outputDirectory, csvFileName);
+
+                    // Save the workbook as CSV
+                    workbook.Save(csvFilePath, SaveFormat.Csv);
+
+                    Console.WriteLine($"Converted '{jsonFilePath}' to '{csvFilePath}'.");
+                }
+                catch (Exception ex)
+                {
+                    // Log any errors for the current file and continue processing others
+                    Console.WriteLine($"Error processing '{jsonFilePath}': {ex.Message}");
+                }
+            }
+
+            Console.WriteLine("Batch conversion completed.");
+        }
+
+        // Converts a JSON array of objects to a DataTable using System.Text.Json
+        private static DataTable ConvertJsonToDataTable(string json)
+        {
+            DataTable table = new DataTable();
+
             try
             {
-                // Get all JSON files in the directory
-                string[] jsonFiles = Directory.GetFiles(sourceDirectory, "*.json");
-
-                foreach (string jsonFilePath in jsonFiles)
+                using (JsonDocument doc = JsonDocument.Parse(json))
                 {
-                    try
+                    if (doc.RootElement.ValueKind != JsonValueKind.Array)
+                        throw new InvalidOperationException("JSON root element must be an array.");
+
+                    foreach (JsonElement element in doc.RootElement.EnumerateArray())
                     {
-                        // Determine the output CSV file path (same name, .csv extension)
-                        string csvFilePath = Path.ChangeExtension(jsonFilePath, ".csv");
+                        if (element.ValueKind != JsonValueKind.Object)
+                            continue; // Skip non-object entries
 
-                        // Load the JSON file into a workbook using JsonLoadOptions
-                        JsonLoadOptions loadOptions = new JsonLoadOptions();
-                        Workbook workbook = new Workbook(jsonFilePath, loadOptions);
+                        // Add columns on first iteration
+                        if (table.Columns.Count == 0)
+                        {
+                            foreach (JsonProperty prop in element.EnumerateObject())
+                            {
+                                table.Columns.Add(prop.Name, typeof(string));
+                            }
+                        }
 
-                        // Save the workbook as CSV
-                        workbook.Save(csvFilePath, SaveFormat.Csv);
-
-                        Console.WriteLine($"Converted: {Path.GetFileName(jsonFilePath)} -> {Path.GetFileName(csvFilePath)}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error converting {Path.GetFileName(jsonFilePath)}: {ex.Message}");
+                        DataRow row = table.NewRow();
+                        foreach (JsonProperty prop in element.EnumerateObject())
+                        {
+                            // Store raw JSON value as string without surrounding quotes
+                            row[prop.Name] = prop.Value.GetRawText().Trim('\"');
+                        }
+                        table.Rows.Add(row);
                     }
                 }
-
-                Console.WriteLine("Batch conversion completed.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.WriteLine($"Error converting JSON to DataTable: {ex.Message}");
+                throw;
+            }
+
+            return table;
+        }
+
+        // Writes DataTable content to the worksheet, including column headers
+        private static void PopulateWorksheetFromDataTable(Worksheet worksheet, DataTable table)
+        {
+            try
+            {
+                var cells = worksheet.Cells;
+                int rowIndex = 0;
+
+                // Write column headers
+                for (int col = 0; col < table.Columns.Count; col++)
+                {
+                    cells[rowIndex, col].PutValue(table.Columns[col].ColumnName);
+                }
+                rowIndex++;
+
+                // Write rows
+                foreach (DataRow dr in table.Rows)
+                {
+                    for (int col = 0; col < table.Columns.Count; col++)
+                    {
+                        cells[rowIndex, col].PutValue(dr[col]);
+                    }
+                    rowIndex++;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error populating worksheet: {ex.Message}");
+                throw;
             }
         }
     }

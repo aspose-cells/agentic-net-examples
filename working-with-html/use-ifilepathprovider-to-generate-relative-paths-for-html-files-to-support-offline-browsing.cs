@@ -1,56 +1,65 @@
-// Title: Export Aspose.Cells Workbook to Separate HTML Files with Relative Paths Using IFilePathProvider (.NET)
-// Description: Demonstrates a custom IFilePathProvider that returns sheet‑name based HTML file names, configures HtmlSaveOptions with IsFullPathLink = false, and saves each worksheet as an independent HTML file (e.g., Sheet1.html, Data.html) for portable offline browsing.
-// Keywords: Aspose.Cells IFilePathProvider | relative HTML links | HtmlSaveOptions IsFullPathLink false | export workbook to multiple HTML files | C# Aspose.Cells HTML export | .NET offline HTML reports | custom file path provider
-// Common Searches: Aspose.Cells generate relative HTML file names per worksheet | How to export Excel sheets to separate HTML files in C# | IFilePathProvider example for offline HTML output | Set IsFullPathLink false Aspose.Cells | Aspose.Cells HTML export without absolute paths
-// Developer Intent: Create independent, locally viewable HTML files for each worksheet by customizing the file naming logic.
-// Use Cases: Produce self‑contained HTML reports for each sheet that can be zipped and shared without internet access. | Integrate a relative path provider in a web service that delivers workbook exports as portable HTML files. | Automate generation of multi‑sheet documentation where each sheet appears as its own HTML page with relative navigation.
-// AI Prompts: Show a C# implementation of IFilePathProvider that returns safe relative file names for Aspose.Cells HTML export. | Explain step‑by‑step how to configure HtmlSaveOptions to generate offline‑compatible HTML files for every worksheet. | Provide a complete Aspose.Cells example that saves a workbook to separate HTML files with relative links and describe each setting.
+// Title: Generate relative file paths for HTML resources using a custom IFilePathProvider in Aspose.Cells for .NET
+// AI Prompts: Create a class that implements IFilePathProvider to store HTML images, CSS, and other resources in a "resources" subdirectory and return the relative path for each file. | Configure HtmlSaveOptions to disable ExportImagesAsBase64, assign the custom file path provider, enable ExportActiveWorksheetOnly, and save the workbook as an HTML file.
+// Common Searches: how to export Aspose.Cells workbook to HTML with images saved in a separate folder | using IFilePathProvider to set relative paths for HTML resources in Aspose.Cells .NET | Aspose.Cells HTML export offline browsing resources folder example | disable base64 image embedding when saving Excel as HTML with Aspose.Cells | save only the active worksheet to HTML using Aspose.Cells SaveOptions
+// Tags: relative resource folder for Aspose.Cells HTML export | export images as separate files Aspose.Cells HTML | offline HTML browsing with Aspose.Cells workbook | save active worksheet only Aspose.Cells HTMLSaveOptions | custom file path provider for HTML resources Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// Custom provider that generates relative paths for HTML resources (images, CSS, etc.)
+// The example defines a RelativePathProvider that implements IFilePathProvider to place generated HTML resources (images, CSS, etc.) in a "resources" folder and return their relative paths. HtmlSaveOptions are configured to disable Base64 image embedding, use the custom provider, and export only the active worksheet before saving the workbook as an HTML file.
+class RelativePathProvider : IFilePathProvider
 {
-    // Custom implementation of IFilePathProvider that generates relative file names
-    // Demonstrates a custom IFilePathProvider that returns sheet‑name based HTML file names, configures HtmlSaveOptions with IsFullPathLink = false, and saves each worksheet as an independent HTML file (e.g., Sheet1.html, Data.html) for portable offline browsing.
-    public class RelativePathProvider : IFilePathProvider
+    // Returns a relative path for the given resource file name.
+    public string GetFullName(string fileName)
     {
-        // Returns a relative path for each worksheet HTML file (e.g., "Sheet1.html")
-        public string GetFullName(string sheetName)
+        const string resourcesFolder = "resources";
+
+        // Ensure the resources folder exists.
+        if (!Directory.Exists(resourcesFolder))
         {
-            // Ensure the file name is safe and uses a .html extension
-            return $"{sheetName}.html";
+            Directory.CreateDirectory(resourcesFolder);
         }
+
+        // Combine folder and file name to create a relative path.
+        return Path.Combine(resourcesFolder, fileName);
     }
+}
 
-    class Program
+class Program
+{
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and add some sample data
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Name = "Sheet1";
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["A2"].PutValue("World");
 
-            // Add a second worksheet to demonstrate multiple files
-            Worksheet sheet2 = workbook.Worksheets.Add("Data");
-            sheet2.Cells["B1"].PutValue(123);
-            sheet2.Cells["B2"].PutValue(456);
+            // Example content
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Cells["A1"].PutValue("Aspose.Cells HTML Export with Relative Paths");
+            sheet.Cells["A2"].PutValue(DateTime.Now);
 
             // Configure HTML save options
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            // Use relative links (default is false, set explicitly for clarity)
-            saveOptions.IsFullPathLink = false;
-            // Assign the custom relative path provider
-            saveOptions.FilePathProvider = new RelativePathProvider();
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html)
+            {
+                // Export images as separate files (not Base64) so the provider can name them.
+                ExportImagesAsBase64 = false,
 
-            // Save the workbook; each worksheet will be exported to a separate HTML file
-            // with relative links such as "Sheet1.html" and "Data.html"
-            workbook.Save("Workbook.html", saveOptions);
+                // Use the custom file path provider for all generated resources.
+                FilePathProvider = new RelativePathProvider(),
 
-            Console.WriteLine("Workbook exported to HTML with relative paths.");
+                // Export only the active worksheet to keep the output simple.
+                ExportActiveWorksheetOnly = true
+            };
+
+            // Save the workbook as HTML using the configured options
+            workbook.Save("output.html", htmlOptions);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

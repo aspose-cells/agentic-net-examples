@@ -1,30 +1,20 @@
-// Title: C# – Convert ODS Spreadsheet to PDF with Aspose.Cells Default Settings
-// Description: Loads an OpenDocument Spreadsheet (ODS) and uses Aspose.Cells.Utility.ConversionUtility to save it as a PDF using the library’s default options, then prints a completion message.
-// Keywords: Aspose.Cells | ODS to PDF | ConversionUtility | C# PDF export | OpenDocument Spreadsheet conversion | default conversion settings | Aspose.Cells file format conversion | C# document conversion
-// Common Searches: Aspose.Cells convert ODS to PDF C# example | ConversionUtility default PDF export Aspose | How to export OpenDocument Spreadsheet as PDF using Aspose.Cells | C# code for ODS to PDF conversion with Aspose | Save ODS file as PDF with Aspose.Cells utility
-// Developer Intent: Transform an ODS file into a PDF using Aspose.Cells without customizing rendering options, within a C# program.
-// Use Cases: Batch processing of ODS documents to PDF in a server‑side service. | Generating printable reports from ODS templates without extra configuration. | Automating format conversion in CI/CD pipelines for documentation workflows.
-// AI Prompts: Show how to apply custom page margins when converting ODS to PDF with Aspose.Cells. | Add robust error handling for missing or corrupted ODS files during ConversionUtility.Convert. | Demonstrate converting a workbook loaded from a memory stream to PDF using Aspose.Cells.
+// Title: Convert an OpenDocument Spreadsheet (ODS) to PDF with Aspose.Cells for .NET using default settings
+// AI Prompts: Generate a C# snippet that loads an ODS file and saves it as a PDF using Aspose.Cells with all default options. | Show a minimal .NET example that reads input.ods and exports output.pdf without configuring any PDF save parameters. | Provide step‑by‑step C# code to convert an OpenDocument Spreadsheet to PDF using Aspose.Cells' default workbook.Save behavior.
+// Common Searches: asp.net convert ods to pdf using aspose.cells default options | c# Aspose.Cells example for exporting OpenDocument Spreadsheet as PDF | how to save an ODS workbook as PDF in .NET without custom settings | default PDF export of ODS files with Aspose.Cells C# | Aspose.Cells load ODS and generate PDF using built‑in defaults
+// Tags: Aspose.Cells ODS to PDF conversion | C# load OpenDocument Spreadsheet | Aspose.Cells default PDF save options | export ODS workbook as PDF .NET | Aspose.Cells workbook.Save PDF format
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
+using System;
 
-// Loads an OpenDocument Spreadsheet (ODS) and uses Aspose.Cells.Utility.ConversionUtility to save it as a PDF using the library’s default options, then prints a completion message.
+// Loads an ODS workbook named input.ods and saves it as output.pdf using Aspose.Cells with the default PDF save settings.
 class Program
 {
     static void Main()
     {
-        // Path to the source ODS file
-        string sourcePath = "input.ods";
+        // Load the ODS spreadsheet from file using default load options
+        Workbook workbook = new Workbook("input.ods");
 
-        // Desired output PDF file path
-        string outputPath = "output.pdf";
-
-        // Convert the ODS spreadsheet to PDF using default options.
-        // The ConversionUtility handles loading the ODS file and saving it as PDF.
-        ConversionUtility.Convert(sourcePath, outputPath);
-
-        Console.WriteLine("Conversion completed: " + sourcePath + " -> " + outputPath);
+        // Save the workbook as PDF using default PDF save options
+        workbook.Save("output.pdf", SaveFormat.Pdf);
     }
 }

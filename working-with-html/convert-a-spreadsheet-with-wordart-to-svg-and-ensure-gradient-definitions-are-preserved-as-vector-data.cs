@@ -1,62 +1,52 @@
-// Title: Convert Excel WordArt to SVG with Aspose.Cells – Preserve Gradient Fills as Vectors
-// Description: C# sample that loads an .xlsx workbook, accesses the first worksheet, configures SvgImageOptions (FitToViewPort, CssPrefix), and uses SheetRender to export the sheet—including WordArt shapes with gradient fills—to a scalable SVG file, with error handling for missing files.
-// Keywords: Aspose.Cells SVG export | Excel WordArt to SVG | preserve gradient fills | C# SheetRender SVG | vector gradient WordArt | .NET Excel to SVG conversion
-// Common Searches: Aspose.Cells export WordArt as SVG | keep gradient fill when converting Excel to SVG | C# render worksheet with WordArt to SVG | SvgImageOptions gradient support Aspose | convert Excel workbook to vector SVG .NET
-// Developer Intent: Create an SVG representation of an Excel worksheet that contains WordArt, ensuring that any gradient fills are retained as vector data rather than rasterized images.
-// Use Cases: Generate web‑ready SVG graphics from Excel reports that include decorative WordArt. | Produce print‑quality SVG assets for marketing collateral while preserving original gradient styling. | Automate batch conversion of multiple Excel files with WordArt into vector SVGs for design pipelines.
-// AI Prompts: Write C# code using Aspose.Cells to load an .xlsx file and export the first worksheet with WordArt to SVG, keeping gradient fills as vectors. | Explain how SvgImageOptions properties like FitToViewPort and CssPrefix affect the SVG output of WordArt shapes. | Show best practices for handling missing input files and exceptions during Excel‑to‑SVG conversion with Aspose.Cells.
+// Title: Convert Excel worksheets containing WordArt to SVG while preserving gradient fills as vector graphics using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file with WordArt and saves each worksheet as an SVG, ensuring gradient fills are kept as vector elements. | Show how to configure ImageSaveOptions for SVG in Aspose.Cells to enable OnePagePerSheet and retain WordArt gradient definitions. | Adapt the example to loop through all worksheets and output separate SVG files while preserving all WordArt styling.
+// Common Searches: Aspose.Cells export WordArt to SVG preserving gradient fill .NET | How to keep Excel WordArt gradients when saving as SVG with C# | SVG output from Aspose.Cells losing gradient definitions | OnePagePerSheet option for SVG conversion in Aspose.Cells | Convert multiple Excel sheets with WordArt to separate SVG files using Aspose.Cells
+// Tags: Aspose.Cells ImageSaveOptions SVG export | WordArt gradient vector retention | OnePagePerSheet setting for SVG | Excel to SVG conversion .NET | gradient fill preservation in SVG conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsWordArtToSvg
+// The program verifies the input .xlsx file, loads it into an Aspose.Cells Workbook, configures ImageSaveOptions with SaveFormat.Svg and OnePagePerSheet enabled, and saves the workbook as an SVG file while handling any runtime exceptions.
+class WordArtToSvgConverter
 {
-    // C# sample that loads an .xlsx workbook, accesses the first worksheet, configures SvgImageOptions (FitToViewPort, CssPrefix), and uses SheetRender to export the sheet—including WordArt shapes with gradient fills—to a scalable SVG file, with error handling for missing files.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Path to the source Excel file containing WordArt
+        string inputFile = "input.xlsx";
+
+        // Path where the resulting SVG will be saved
+        string outputFile = "output.svg";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputFile))
         {
-            const string inputPath = "WordArtWorkbook.xlsx";
-            const string outputPath = "WordArtOutput.svg";
+            Console.WriteLine($"Input file not found: {inputFile}");
+            return;
+        }
 
-            // Verify that the input workbook exists to avoid FileNotFoundException
-            if (!File.Exists(inputPath))
+        try
+        {
+            // Load the workbook
+            Workbook workbook = new Workbook(inputFile);
+
+            // Configure SVG save options using the recommended ImageSaveOptions API
+            ImageSaveOptions svgOptions = new ImageSaveOptions(SaveFormat.Svg)
             {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
+                // Ensure each sheet is saved as a single page (required for proper SVG output)
+                ImageOrPrintOptions = { OnePagePerSheet = true }
+            };
 
-            try
-            {
-                // Load the workbook that contains WordArt shapes
-                Workbook workbook = new Workbook(inputPath);
+            // Save the workbook as SVG with the specified options
+            workbook.Save(outputFile, svgOptions);
 
-                // Access the first worksheet (or any worksheet that contains the WordArt)
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Configure SVG rendering options
-                SvgImageOptions svgOptions = new SvgImageOptions
-                {
-                    // Ensure the generated SVG fits the view port
-                    FitToViewPort = true,
-
-                    // Optional: add a CSS prefix to avoid style conflicts
-                    CssPrefix = "wa-"
-                };
-
-                // Render the worksheet (including WordArt) to an SVG file
-                // The page index is 0 because we are rendering the first (and only) page of the sheet
-                SheetRender renderer = new SheetRender(worksheet, svgOptions);
-                renderer.ToImage(0, outputPath);
-
-                Console.WriteLine($"Worksheet with WordArt has been successfully saved as SVG: {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"SVG file saved successfully to: {outputFile}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors (e.g., loading, saving)
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

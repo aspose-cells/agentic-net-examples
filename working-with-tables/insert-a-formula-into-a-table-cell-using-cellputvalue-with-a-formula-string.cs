@@ -1,52 +1,57 @@
-// Title: Add a Formula to a Table Cell with Cell.PutValue in Aspose.Cells for .NET
-// Description: This example creates a workbook, defines a header and data rows, builds a ListObject (table) over range A1:C3, appends a new row, and uses Cell.PutValue with a formula string ("=B3*2") to insert a calculated value into the "Formula" column before saving the file.
-// Keywords: Aspose.Cells C# formula | Cell.PutValue formula string | ListObject add formula | Excel table formula Aspose | programmatic Excel formula .NET | Aspose.Cells table column calculation
-// Common Searches: how to set a formula in an Aspose.Cells table cell | Cell.PutValue formula in ListObject C# | add calculated column to Aspose.Cells table | Aspose.Cells insert formula programmatically | C# Aspose.Cells table row formula
-// Developer Intent: Insert a calculated formula into a specific cell of a ListObject using Cell.PutValue.
-// Use Cases: Create a dynamic "Formula" column after adding new rows to a table. | Reference other columns in the same row with a row‑level formula. | Generate reports where each table row contains a custom calculation defined in code.
-// AI Prompts: Show C# code that uses Cell.PutValue to assign a formula to a newly added row in an Aspose.Cells ListObject. | Give an example of applying the same formula to every row of a table with Aspose.Cells for .NET. | Explain how Aspose.Cells interprets a string passed to PutValue as a formula.
+// Title: Insert a SUM formula into a specific cell of an Aspose.Cells table using C#
+// AI Prompts: Create a new workbook, add a ListObject covering the range A1:C5, and set the formula "=SUM(A2:A5)" in the second data row, second column of the table. | Modify the sample to place an AVERAGE formula in the first data row, third column of the same table using the Cell.Formula property. | Write C# code that creates a worksheet, defines a table, and assigns any custom formula to a cell inside the table's DataRange.
+// Common Searches: asp.net aspose.cells set formula in listobject cell c# example | how to add a sum formula to a table cell using Aspose.Cells .NET | c# insert custom formula into Aspose.Cells table data range
+// Tags: set cell formula in Aspose.Cells ListObject | insert SUM formula into Aspose.Cells table cell | assign custom formula to Aspose.Cells table data range | Aspose.Cells C# create table and set formula | Cell.Formula usage with Aspose.Cells tables
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
+using AsposeRange = Aspose.Cells.Range;
 
-namespace AsposeCellsFormulaInTable
+namespace AsposeCellsExample
 {
-    // This example creates a workbook, defines a header and data rows, builds a ListObject (table) over range A1:C3, appends a new row, and uses Cell.PutValue with a formula string ("=B3*2") to insert a calculated value into the "Formula" column before saving the file.
+    // Demonstrates creating a workbook, adding a ListObject over A1:C5, inserting a SUM formula into cell B2 of the table's data range, and saving the result as TableWithFormula.xlsx.
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            try
+            {
+                // Create a new workbook
+                Workbook workbook = new Workbook();
 
-            // Add header row
-            sheet.Cells["A1"].PutValue("ID");
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["C1"].PutValue("Formula");
+                // Access the first worksheet
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Add some sample data rows
-            sheet.Cells["A2"].PutValue(1);
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue(2);
-            sheet.Cells["B3"].PutValue(20);
+                // Define a range that will become a table (A1:C5)
+                // CreateRange(row, column, totalRows, totalColumns) – zero‑based indices
+                AsposeRange tableRange = sheet.Cells.CreateRange(0, 0, 5, 3);
 
-            // Create a table (ListObject) that spans the data range
-            int tableIndex = sheet.ListObjects.Add("A1", "C3", true);
-            ListObject table = sheet.ListObjects[tableIndex];
+                // Build the address string (e.g., "A1:C5") required by ListObjects.Add
+                int startRow = tableRange.FirstRow;
+                int startCol = tableRange.FirstColumn;
+                int endRow = startRow + tableRange.RowCount - 1;
+                int endCol = startCol + tableRange.ColumnCount - 1;
+                string rangeAddress = $"{CellsHelper.CellIndexToName(startRow, startCol)}:{CellsHelper.CellIndexToName(endRow, endCol)}";
 
-            // Add a new row to the table and set values for ID and Value columns
-            table.PutCellValue(4, 0, 3);   // Row offset 4, Column offset 0 -> ID
-            table.PutCellValue(4, 1, 30);  // Row offset 4, Column offset 1 -> Value
+                // Add a table (ListObject) to the worksheet; give it a name and specify that it has headers
+                int tableIndex = sheet.ListObjects.Add("Table1", rangeAddress, true);
+                ListObject table = sheet.ListObjects[tableIndex];
 
-            // Insert a formula into the "Formula" column of the same row using Cell.PutValue
-            // The cell coordinates correspond to row index 4 (zero‑based) and column index 2
-            Cell formulaCell = sheet.Cells[4, 2];
-            formulaCell.PutValue("=B3*2"); // Formula string; Aspose.Cells will treat it as a formula
+                // Insert a formula into the second row, second column of the table's data body (cell B2)
+                // DataRange represents the body of the table without the header row
+                Cell targetCell = table.DataRange[1, 1]; // zero‑based indices within the data range
+                targetCell.Formula = "=SUM(A2:A5)";
 
-            // Save the workbook
-            workbook.Save("TableWithFormula.xlsx");
+                // Save the workbook to a file
+                string outputPath = "TableWithFormula.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

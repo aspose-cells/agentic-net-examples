@@ -1,131 +1,89 @@
-// Title: C# Mapping LCID to Custom GlobalizationSettings for Aspose.Cells Workbooks
-// Description: Demonstrates how to create locale‑specific GlobalizationSettings (e.g., Russian and German) in Aspose.Cells, store them in an LCID‑keyed dictionary, and retrieve the appropriate settings via a factory method that falls back to the default when a locale is not mapped.
-// Keywords: Aspose.Cells | Custom GlobalizationSettings | LCID mapping | C# localization | Russian Excel workbook | German Excel workbook | locale factory | Excel globalization | culture specific error strings | boolean translation
-// Common Searches: Aspose.Cells map LCID to GlobalizationSettings | C# custom globalization for Russian Excel | German error messages in Aspose.Cells | How to localize boolean values in Aspose.Cells | Factory pattern for locale settings Aspose.Cells | Add new locale to Aspose.Cells globalization
-// Developer Intent: Configure Aspose.Cells to apply custom globalization (boolean and error text) based on a given locale identifier.
-// Use Cases: Generate a workbook for Russian users where TRUE/FALSE and error codes appear in Russian by using LCID 1049. | Switch between German and default globalization at runtime by passing LCID 1031 to the GlobalizationSettingsFactory. | Extend the mapping dictionary to support additional locales (e.g., French, Spanish) without modifying workbook creation code.
-// AI Prompts: Write C# code that adds a FrenchGlobalizationSettings class with appropriate translations and updates the GlobalizationSettingsFactory mapping. | Show how to obtain the current thread's CultureInfo LCID and apply the matching GlobalizationSettings to an Aspose.Cells workbook. | Create a unit test that verifies GlobalizationSettingsFactory returns RussianGlobalizationSettings for LCID 1049 and GermanGlobalizationSettings for LCID 1031.
+// Title: Generate a JSON locale configuration file in C# by mapping culture identifiers to custom GlobalizationSettings objects
+// AI Prompts: Create a C# program that builds a Dictionary<string, GlobalizationSettings> for multiple cultures and writes the content to an indented JSON file using System.Text.Json. | Add a new locale entry (e.g., es-ES) with its date format, decimal separator, and currency symbol, then regenerate the LocaleSettings.json file. | Configure JsonSerializerOptions to produce camel‑case property names while preserving dictionary keys, and serialize the locale mapping to a formatted JSON file.
+// Common Searches: how to serialize a dictionary of custom objects to a formatted JSON file in C# | C# create locale settings JSON file with culture codes and custom date/number formats | example of writing a globalization configuration file per culture using System.Text.Json | store date format decimal separator and currency symbol per locale in a .NET JSON config
+// Tags: dictionary to JSON serialization System.Text.Json C# | locale configuration file generation .NET | custom GlobalizationSettings class JSON output | write indented JSON file to application base directory | add culture-specific formatting settings C#
 
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
-using Aspose.Cells.Charts;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace AsposeCellsLocaleConfig
+namespace LocaleConfiguration
 {
-    // Custom globalization for Russian locale (LCID 1049)
-    // Demonstrates how to create locale‑specific GlobalizationSettings (e.g., Russian and German) in Aspose.Cells, store them in an LCID‑keyed dictionary, and retrieve the appropriate settings via a factory method that falls back to the default when a locale is not mapped.
-    public class RussianGlobalizationSettings : GlobalizationSettings
+    // Custom settings for globalization per locale
+    // The example defines a GlobalizationSettings class containing DateFormat, DecimalSeparator, and CurrencySymbol properties. It creates a Dictionary<string, GlobalizationSettings> that maps locale identifiers (e.g., "en-US", "fr-FR") to corresponding settings, serializes the dictionary to a pretty‑printed JSON string with System.Text.Json, and writes the result to a LocaleSettings.json file placed in the application's base directory.
+    public class GlobalizationSettings
     {
-        public override string GetBooleanValueString(bool value)
-        {
-            return value ? "ИСТИНА" : "ЛОЖЬ";
-        }
+        // Example: date format pattern
+        public string DateFormat { get; set; }
 
-        public override string GetErrorValueString(string err)
+        // Example: decimal separator
+        public string DecimalSeparator { get; set; }
+
+        // Example: currency symbol
+        public string CurrencySymbol { get; set; }
+
+        // Additional custom settings can be added here
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
         {
-            // Map standard error strings to Russian equivalents
-            return err switch
+            // Build the mapping of locale identifiers to their settings
+            var localeSettings = new Dictionary<string, GlobalizationSettings>
             {
-                "#NAME?" => "#ИМЯ?",
-                "#DIV/0!" => "#ДЕЛ/0!",
-                "#REF!" => "#ССЫЛКА!",
-                "#VALUE!" => "#ЗНАЧ!",
-                "#N/A" => "#Н/Д",
-                "#NUM!" => "#ЧИСЛО!",
-                "#NULL!" => "#ПУСТО!",
-                _ => base.GetErrorValueString(err)
+                // English - United States
+                ["en-US"] = new GlobalizationSettings
+                {
+                    DateFormat = "MM/dd/yyyy",
+                    DecimalSeparator = ".",
+                    CurrencySymbol = "$"
+                },
+
+                // French - France
+                ["fr-FR"] = new GlobalizationSettings
+                {
+                    DateFormat = "dd/MM/yyyy",
+                    DecimalSeparator = ",",
+                    CurrencySymbol = "€"
+                },
+
+                // German - Germany
+                ["de-DE"] = new GlobalizationSettings
+                {
+                    DateFormat = "dd.MM.yyyy",
+                    DecimalSeparator = ",",
+                    CurrencySymbol = "€"
+                },
+
+                // Japanese - Japan
+                ["ja-JP"] = new GlobalizationSettings
+                {
+                    DateFormat = "yyyy/MM/dd",
+                    DecimalSeparator = ".",
+                    CurrencySymbol = "¥"
+                }
             };
-        }
-    }
 
-    // Custom globalization for German locale (LCID 1031)
-    public class GermanGlobalizationSettings : GlobalizationSettings
-    {
-        public override string GetBooleanValueString(bool value)
-        {
-            return value ? "WAHR" : "FALSCH";
-        }
-
-        public override string GetErrorValueString(string err)
-        {
-            // Example mapping for German; extend as needed
-            return err switch
+            // Serialize the dictionary to JSON with indented formatting
+            var jsonOptions = new JsonSerializerOptions
             {
-                "#NAME?" => "#NAME?",
-                "#DIV/0!" => "#DIV/0!",
-                "#REF!" => "#BEZUG!",
-                "#VALUE!" => "#WERT!",
-                "#N/A" => "#NV",
-                "#NUM!" => "#ZAHL!",
-                "#NULL!" => "#NULL!",
-                _ => base.GetErrorValueString(err)
+                WriteIndented = true,
+                // Preserve the dictionary keys as they are
+                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
             };
-        }
-    }
 
-    // Factory that returns a GlobalizationSettings instance based on LCID
-    public static class GlobalizationSettingsFactory
-    {
-        // Mapping of locale identifiers (LCID) to corresponding settings instances
-        private static readonly Dictionary<int, GlobalizationSettings> _settingsMap = new()
-        {
-            // 1049 = Russian (Russia)
-            { 1049, new RussianGlobalizationSettings() },
+            string json = JsonSerializer.Serialize(localeSettings, jsonOptions);
 
-            // 1031 = German (Germany)
-            { 1031, new GermanGlobalizationSettings() },
+            // Define the output configuration file path
+            string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LocaleSettings.json");
 
-            // Add more mappings as required
-        };
+            // Write the JSON content to the file
+            File.WriteAllText(configFilePath, json);
 
-        // Returns the appropriate settings; if not found, returns default settings
-        public static GlobalizationSettings GetSettings(int lcid)
-        {
-            if (_settingsMap.TryGetValue(lcid, out GlobalizationSettings settings))
-            {
-                return settings;
-            }
-
-            // Fallback to default (no customization)
-            return new GlobalizationSettings();
-        }
-    }
-
-    // Demonstration of applying the configuration to a workbook
-    public class Program
-    {
-        public static void Main()
-        {
-            // Example locale identifier; change to test different locales
-            int localeId = 1049; // Russian
-
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate some sample data
-            cells[0, 0].PutValue(true);   // Boolean true
-            cells[0, 1].PutValue(false);  // Boolean false
-            cells[0, 2].PutValue("#DIV/0!"); // Error string
-
-            // Retrieve the custom globalization settings for the given locale
-            GlobalizationSettings localeSettings = GlobalizationSettingsFactory.GetSettings(localeId);
-
-            // Apply the settings to the workbook
-            workbook.Settings.GlobalizationSettings = localeSettings;
-
-            // Demonstrate that the settings affect cell string values
-            for (int col = 0; col < 3; col++)
-            {
-                Console.WriteLine($"Cell[0,{col}]: {cells[0, col].StringValue}");
-            }
-
-            // Save the workbook (output file name reflects the locale)
-            string fileName = $"Workbook_LCID_{localeId}.xlsx";
-            workbook.Save(fileName);
-            Console.WriteLine($"Workbook saved as {fileName}");
+            Console.WriteLine($"Locale configuration file created at: {configFilePath}");
         }
     }
 }

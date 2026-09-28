@@ -1,47 +1,58 @@
-// Title: Apply a Diagonal Stripe Background Style to Range V1:V10 with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a Style with a DiagonalStripe pattern, set its foreground and background colors, define the V1:V10 range, apply the style, and save the workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# | diagonal stripe pattern | cell background style | range V1:V10 | CreateStyle | SetStyle | Workbook saving | custom cell formatting
-// Common Searches: Aspose.Cells set diagonal stripe pattern | C# apply background pattern to column | How to style cells V1 to V10 Aspose.Cells | Create custom cell style Aspose.Cells .NET | Set foreground and background colors Aspose.Cells
-// Developer Intent: Create a diagonal‑stripe style and apply it to cells V1 through V10.
-// Use Cases: Visually separate a column in an exported report with a striped background. | Highlight cells that satisfy a business rule using a diagonal stripe pattern. | Design custom header formatting for generated Excel files. | Reuse the same patterned style across multiple worksheets or non‑contiguous ranges.
-// AI Prompts: Write C# code using Aspose.Cells to define a diagonal stripe style with specific foreground and background colors and apply it to a given range. | Explain how to change the pattern type and colors of an existing Aspose.Cells style at runtime. | Show how to apply the same diagonal stripe style to several non‑adjacent ranges in one workbook. | Provide a snippet that saves the workbook after styling without overwriting an existing file.
+// Title: How to create a diagonal stripe background style and apply it to cells V1:V10 with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code using Aspose.Cells that creates a Style with BackgroundType.DiagonalStripe, sets LightBlue foreground and White background colors, and applies it to the range V1:V10. | Show how to use a StyleFlag to apply only the cell shading (pattern) part of a custom style to a specific column range in an Aspose.Cells workbook.
+// Common Searches: Aspose.Cells C# apply diagonal stripe pattern to a column range | How to set BackgroundType.DiagonalStripe for cells V1 to V10 in .NET | Using StyleFlag to apply only shading in Aspose.Cells workbook | Create custom cell style with foreground and background colors in Aspose.Cells | Apply pattern style to a range without affecting other cell properties Aspose.Cells
+// Tags: Aspose.Cells create diagonal stripe style | apply style to range V1 V10 Aspose.Cells | StyleFlag cell shading only Aspose.Cells | BackgroundType.DiagonalStripe C# example | custom cell background pattern Aspose.Cells
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 using System.Drawing;
 
-// Alias to avoid conflict with System.Range
+// Alias to avoid conflict with System.Range introduced in C# 8.0
 using AsposeRange = Aspose.Cells.Range;
 
-// Shows how to create a Style with a DiagonalStripe pattern, set its foreground and background colors, define the V1:V10 range, apply the style, and save the workbook using Aspose.Cells for .NET.
+// The example creates a new workbook, defines a Style with a diagonal stripe pattern (LightBlue foreground on White background), uses a StyleFlag to apply only the shading, applies the style to cells V1 through V10, and saves the file as StyledRange.xlsx.
 class Program
 {
     static void Main()
     {
         try
         {
-            // Create a new workbook and get the first worksheet
+            // Create a new workbook.
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
 
-            // Create a style with diagonal stripe pattern
-            Style style = workbook.CreateStyle();
-            style.Pattern = BackgroundType.DiagonalStripe;      // set pattern type
-            style.ForegroundColor = Color.LightBlue;            // stripe (foreground) color
-            style.BackgroundColor = Color.DarkBlue;             // background color
+            // Access the first worksheet.
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Define the range V1:V10 using the aliased AsposeRange
-            AsposeRange range = worksheet.Cells.CreateRange("V1", "V10");
+            // Create a new style.
+            Style diagonalStyle = workbook.CreateStyle();
 
-            // Apply the style to the entire range
-            range.SetStyle(style);
+            // Set the background pattern to diagonal stripes.
+            diagonalStyle.Pattern = BackgroundType.DiagonalStripe;
 
-            // Save the workbook
-            workbook.Save("DiagonalStripeStyle.xlsx");
+            // Define foreground and background colors for the pattern.
+            diagonalStyle.ForegroundColor = Color.LightBlue;   // Color of the stripes.
+            diagonalStyle.BackgroundColor = Color.White;      // Base color.
+
+            // Prepare a StyleFlag to apply only the shading (pattern) part of the style.
+            StyleFlag flag = new StyleFlag
+            {
+                CellShading = true   // Apply pattern and colors.
+            };
+
+            // Create the target range V1:V10.
+            AsposeRange targetRange = sheet.Cells.CreateRange("V1", "V10");
+
+            // Apply the style to the range.
+            targetRange.ApplyStyle(diagonalStyle, flag);
+
+            // Save the workbook to a file.
+            string outputPath = "StyledRange.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

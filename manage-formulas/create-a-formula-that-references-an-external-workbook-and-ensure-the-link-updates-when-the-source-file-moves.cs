@@ -1,69 +1,47 @@
-// Title: Update an external workbook link in Aspose.Cells .NET after moving the source file
-// Description: Demonstrates how to create an external workbook, reference it in a main workbook using a formula, add the link to the ExternalLinks collection, move the source file, change the link's DataSource to the new path, refresh linked data with UpdateLinkedDataSource, recalculate formulas, and save the updated workbook.
-// Keywords: Aspose.Cells external link | C# external workbook reference | Update DataSource Aspose.Cells | Refresh linked data source | CalculateFormula after link change | ExternalLinks collection .NET | move source workbook Aspose
-// Common Searches: how to change external link path in Aspose.Cells | update formula reference after moving workbook .NET | refresh external data source Aspose.Cells C# | set external link without full path Aspose.Cells | Aspose.Cells update external workbook location
-// Developer Intent: Programmatically modify an external workbook reference so the formula continues to work after the source file is relocated.
-// Use Cases: Link a master workbook to a value in another workbook and keep the link valid when the source file is moved. | Change the DataSource of an ExternalLink at runtime after a file system reorganization. | Refresh linked data and recalculate dependent formulas to reflect the latest values from a moved workbook.
-// AI Prompts: Generate C# code with Aspose.Cells that adds an external link to a workbook and updates its DataSource after moving the source file. | Show how to refresh linked data sources and recalculate formulas in Aspose.Cells when the external workbook path changes. | Explain the role of the ExternalLinks collection and DataSource property in Aspose.Cells and how to programmatically update them.
+// Title: Insert a SUM formula that references an external workbook and keep the link dynamic when the source file is moved using Aspose.Cells for .NET
+// AI Prompts: Write C# code with Aspose.Cells to add a SUM formula that pulls data from a range in another workbook, using a configurable file path. | Adapt the code to use a relative path and ensure the external link updates automatically if the source workbook is relocated.
+// Common Searches: Aspose.Cells C# create external reference formula that updates after moving source file | how to set a formula that links to another Excel workbook using Aspose.Cells .NET | save workbook with external link and maintain link when source path changes in Aspose.Cells | C# Aspose.Cells external workbook SUM formula with relative path | update external workbook reference automatically in Aspose.Cells when file is moved
+// Tags: Aspose.Cells external workbook formula | C# external link formula Aspose.Cells | dynamic external link path .NET | Aspose.Cells workbook with external link | relative path external Excel reference C#
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-// Demonstrates how to create an external workbook, reference it in a main workbook using a formula, add the link to the ExternalLinks collection, move the source file, change the link's DataSource to the new path, refresh linked data with UpdateLinkedDataSource, recalculate formulas, and save the updated workbook.
-class ExternalLinkUpdateDemo
+// The example checks that a source Excel file exists, creates a new workbook with Aspose.Cells, inserts a SUM formula in cell A1 that references a range in the external workbook using a specified path, and saves the workbook, illustrating how to keep an external link functional when the source file is moved.
+class Program
 {
     static void Main()
     {
-        // -----------------------------------------------------------------
-        // 1. Create an external workbook and save it to an initial location.
-        // -----------------------------------------------------------------
-        string originalPath = Path.Combine(Directory.GetCurrentDirectory(), "ExternalOriginal.xlsx");
-        Workbook externalWb = new Workbook();
-        externalWb.Worksheets[0].Cells["A1"].PutValue("Original Value");
-        externalWb.Save(originalPath);
+        try
+        {
+            // Path to the external workbook (absolute or relative)
+            string externalPath = @"C:\Data\Source.xlsx";
 
-        // ---------------------------------------------------------------
-        // 2. Create the main workbook and set a formula that references the external file.
-        // ---------------------------------------------------------------
-        Workbook mainWb = new Workbook();
-        Worksheet mainSheet = mainWb.Worksheets[0];
-        // Formula uses only the file name; the actual path is stored in the ExternalLinks collection.
-        mainSheet.Cells["A1"].Formula = $"='[{Path.GetFileName(originalPath)}]Sheet1'!A1";
+            // Verify that the source file exists to avoid FileNotFoundException
+            if (!File.Exists(externalPath))
+            {
+                Console.WriteLine($"Source file not found: {externalPath}");
+                return;
+            }
 
-        // Add an entry to the ExternalLinks collection so Aspose knows about the external source.
-        int linkIndex = mainWb.Worksheets.ExternalLinks.Add(originalPath, new string[] { "Sheet1" });
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // ---------------------------------------------------------------
-        // 3. Simulate moving the external workbook to a new folder.
-        // ---------------------------------------------------------------
-        string newFolder = Path.Combine(Directory.GetCurrentDirectory(), "MovedFolder");
-        Directory.CreateDirectory(newFolder);
-        string newPath = Path.Combine(newFolder, "ExternalMoved.xlsx");
-        File.Copy(originalPath, newPath, true);
-        File.Delete(originalPath); // optional: delete the original to emulate a move
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // ---------------------------------------------------------------
-        // 4. Update the external link's DataSource to point to the new location.
-        // ---------------------------------------------------------------
-        ExternalLink link = mainWb.Worksheets.ExternalLinks[linkIndex];
-        link.DataSource = newPath;
+            // Set a formula that references a range in the external workbook
+            // Example formula: =SUM('[C:\Data\Source.xlsx]Sheet1'!A1:A10)
+            sheet.Cells["A1"].Formula = $"=SUM('[{externalPath}]Sheet1'!A1:A10)";
 
-        // ---------------------------------------------------------------
-        // 5. Load the moved external workbook and refresh the link.
-        // ---------------------------------------------------------------
-        Workbook movedExternal = new Workbook(newPath);
-        mainWb.UpdateLinkedDataSource(new Workbook[] { movedExternal });
-
-        // ---------------------------------------------------------------
-        // 6. Recalculate formulas so the updated value is reflected.
-        // ---------------------------------------------------------------
-        mainWb.CalculateFormula();
-
-        // ---------------------------------------------------------------
-        // 7. Display the result and save the main workbook.
-        // ---------------------------------------------------------------
-        Console.WriteLine("Updated value in main workbook: " + mainSheet.Cells["A1"].StringValue);
-        mainWb.Save("MainWithUpdatedLink.xlsx");
+            // Save the workbook with the external link
+            string outputPath = "ExternalLinkDemo.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

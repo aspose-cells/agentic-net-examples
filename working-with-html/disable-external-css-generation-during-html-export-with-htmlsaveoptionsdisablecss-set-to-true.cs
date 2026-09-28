@@ -1,39 +1,33 @@
-// Title: Export Excel to HTML with inline styles only using AspNet.Cells HtmlSaveOptions.DisableCss (C#)
-// Description: Demonstrates how to create a workbook, apply formatting, and save it as a self‑contained HTML file that uses only inline style attributes by setting HtmlSaveOptions.DisableCss to true.
-// Keywords: Aspose.Cells HtmlSaveOptions.DisableCss | C# export Excel to HTML inline styles | disable external CSS Aspose.Cells | self‑contained HTML from Excel | Aspose.Cells HTML export without CSS file
-// Common Searches: Aspose.Cells disable external CSS when saving HTML | C# generate HTML with inline styles from Excel | HtmlSaveOptions.DisableCss example | export workbook to HTML without CSS file .NET | inline styling Aspose.Cells HTML export
-// Developer Intent: Export an Excel workbook to HTML that contains only inline style attributes, eliminating any separate CSS file.
-// Use Cases: Email‑ready HTML reports that need no external stylesheet. | Embedding spreadsheet data in web pages where external CSS loading is prohibited. | Creating portable HTML files for environments with restricted file system access.
-// AI Prompts: Provide a C# snippet that saves a workbook as HTML with inline styles only, confirming no .css file is produced. | Explain how HtmlSaveOptions.DisableCss works and show its effect on styled cells. | Show how to combine DisableCss with ExportImagesAsBase64 to generate a fully self‑contained HTML document.
+// Title: Export an Aspose.Cells workbook to HTML without generating an external CSS file using HtmlSaveOptions.DisableCss (C#)
+// AI Prompts: Write C# code that saves an Aspose.Cells workbook as HTML while turning off external CSS generation. | Demonstrate how to set HtmlSaveOptions.DisableCss = true before calling Workbook.Save for HTML output. | Show a complete example that creates a workbook, adds data, configures HTML save options to suppress CSS, and writes the HTML file.
+// Common Searches: Aspose.Cells C# export to HTML without external CSS file | How to stop Aspose.Cells from creating a CSS file when saving as HTML | HtmlSaveOptions.DisableCss property usage example | Generate HTML from Excel in .NET without linked CSS stylesheet
+// Tags: Aspose.Cells HtmlSaveOptions.DisableCss | C# HTML export without CSS | disable external CSS Aspose.Cells | Excel to HTML options .NET | suppress CSS file generation Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// Creates a workbook, fills sample cells, sets HtmlSaveOptions.DisableCss to true to prevent an external CSS file, and saves the workbook as an HTML document.
+class HtmlExportExample
 {
-    // Demonstrates how to create a workbook, apply formatting, and save it as a self‑contained HTML file that uses only inline style attributes by setting HtmlSaveOptions.DisableCss to true.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Create a new workbook (or load an existing one)
+        Workbook workbook = new Workbook();
 
-            // Add some sample data with formatting
-            sheet.Cells["A1"].PutValue("Hello");
-            sheet.Cells["B1"].PutValue("World");
-            // Apply bold style to demonstrate inline styling
-            var style = sheet.Cells["A1"].GetStyle();
-            style.Font.IsBold = true;
-            sheet.Cells["A1"].SetStyle(style);
+        // Add some sample data to the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Name");
+        sheet.Cells["B1"].PutValue("Score");
+        sheet.Cells["A2"].PutValue("Alice");
+        sheet.Cells["B2"].PutValue(85);
+        sheet.Cells["A3"].PutValue("Bob");
+        sheet.Cells["B3"].PutValue(92);
 
-            // Initialize HTML save options and disable external CSS generation
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
-            htmlOptions.DisableCss = true; // Use only inline styles
+        // Configure HTML save options to disable external CSS generation
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions(SaveFormat.Html);
+        htmlOptions.DisableCss = true; // Prevent creation of external CSS file
 
-            // Save the workbook as an HTML file with the specified options
-            workbook.Save("HtmlWithInlineStyles.html", htmlOptions);
-        }
+        // Export the workbook to HTML using the configured options
+        workbook.Save("ExportedReport.html", htmlOptions);
     }
 }

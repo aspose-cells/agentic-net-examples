@@ -1,39 +1,64 @@
-// Title: Decrypt an Encrypted ODS Workbook, Edit Cells, and Re‑Encrypt with a New Password using Aspose.Cells for .NET
-// Description: Load a password‑protected ODS file with Aspose.Cells, change cell A1, assign a new workbook password, and save the file as an ODS document encrypted with the new password.
-// Keywords: Aspose.Cells | C# | .NET | ODS | encrypted workbook | password protected spreadsheet | change workbook password | modify cell | LoadOptions.Password | Workbook.Settings.Password | SaveFormat.Ods
-// Common Searches: how to open encrypted ODS with Aspose.Cells C# | change password of a protected ODS file using .NET | edit cell in password protected ODS workbook Aspose | re‑save ODS with a new password C# Aspose.Cells | load, modify, and re‑encrypt ODS spreadsheet programmatically
-// Developer Intent: Load an encrypted ODS file, update its content, and save it encrypted with a different password.
-// Use Cases: Batch‑process confidential ODS reports: decrypt, update status cells, and re‑encrypt with a corporate password. | Automate password rotation for ODS templates after data validation before distribution. | Schedule a task that injects dynamic values into an encrypted ODS file and saves it with a new password for secure sharing.
-// AI Prompts: Write C# code with Aspose.Cells that opens an ODS file protected by 'oldPass', sets cell B2 to DateTime.Now, and saves it as ODS encrypted with 'newPass'. | Explain step‑by‑step how Aspose.Cells decrypts an ODS workbook on load and re‑encrypts it on save when different passwords are supplied. | Create a reusable method that takes an input ODS path, old password, new password, and a dictionary of cell addresses with values, then updates and saves the workbook encrypted.
+// Title: Decrypt an encrypted XLSX workbook, change cell A1, re‑encrypt with a new password, and export to ODS using Aspose.Cells for .NET
+// AI Prompts: Load a password‑protected XLSX file with the original password, set cell A1 to "Hello World", assign a new workbook password, and save the file as ODS using Aspose.Cells in C#. | Open an encrypted Excel workbook via LoadOptions, update a specific cell, change the workbook's encryption password, and export the result to OpenDocument Spreadsheet format with Aspose.Cells for .NET.
+// Common Searches: How to open an encrypted XLSX in C# with Aspose.Cells and change its password | Aspose.Cells example for modifying a cell in a password‑protected workbook and saving as ODS | Re‑encrypt Excel file with a new password and convert to ODS using Aspose.Cells .NET | LoadOptions password property usage for encrypted Excel files in Aspose.Cells
+// Tags: load encrypted xlsx with LoadOptions Aspose.Cells | modify cell value in workbook C# | set new workbook password Aspose.Cells | save workbook as ods format | re‑encrypt Excel file using Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Load a password‑protected ODS file with Aspose.Cells, change cell A1, assign a new workbook password, and save the file as an ODS document encrypted with the new password.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // Demonstrates loading an encrypted XLSX workbook with the original password, updating cell A1, applying a new password, and saving the workbook as an ODS file using Aspose.Cells for .NET.
+    class Program
     {
-        // Input encrypted ODS file and passwords
-        string inputFile = "encrypted_input.ods";
-        string oldPassword = "oldPass";
-        string newPassword = "newPass";
+        static void Main()
+        {
+            // Paths and passwords
+            string inputFile = @"C:\Temp\EncryptedWorkbook.xlsx";
+            string outputFile = @"C:\Temp\ReEncryptedWorkbook.ods";
+            string oldPassword = "oldPassword123";
+            string newPassword = "newPassword456";
 
-        // Load the workbook with the original password
-        LoadOptions loadOptions = new LoadOptions();
-        loadOptions.Password = oldPassword;
-        Workbook workbook = new Workbook(inputFile, loadOptions);
+            try
+            {
+                // Verify input file exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
 
-        // Modify a cell value (example: set A1 to "Modified")
-        workbook.Worksheets[0].Cells["A1"].PutValue("Modified");
+                // Load the encrypted workbook using the old password
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+                {
+                    Password = oldPassword
+                };
+                Workbook workbook = new Workbook(inputFile, loadOptions);
 
-        // Apply a new password for the workbook
-        workbook.Settings.Password = newPassword;
+                // Example modification: set A1 to "Hello World"
+                Worksheet sheet = workbook.Worksheets[0];
+                Cell cell = sheet.Cells["A1"];
+                cell.PutValue("Hello World");
 
-        // Save the workbook as ODS with the new password
-        workbook.Save("reencrypted_output.ods", SaveFormat.Ods);
+                // Apply new password (encryption algorithm property not available in this version)
+                workbook.Settings.Password = newPassword;
 
-        // Clean up
-        workbook.Dispose();
+                // Ensure output directory exists
+                string outputDir = Path.GetDirectoryName(outputFile);
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save as ODS (use the non‑obsolete enum value)
+                workbook.Save(outputFile, SaveFormat.Ods);
+                Console.WriteLine($"Workbook saved to {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
     }
 }

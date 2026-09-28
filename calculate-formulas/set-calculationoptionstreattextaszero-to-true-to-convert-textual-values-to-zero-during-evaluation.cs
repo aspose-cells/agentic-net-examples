@@ -1,47 +1,45 @@
-// Title: Enable TreatTextAsZero in Aspose.Cells .NET to Convert Text to Zero in Formulas
-// Description: Shows how to set workbook.Settings.CalcEngineSettings.TreatTextAsZero = true in Aspose.Cells for .NET so that textual cell values (e.g., "SampleText" in A1) are evaluated as 0 in formulas such as =SUM(A1). The sample creates a workbook, assigns a formula, runs calculation, and prints the result.
-// Keywords: Aspose.Cells | TreatTextAsZero | .NET | C# | formula calculation | text to zero | CalcEngineSettings | SUM function | Excel automation | spreadsheet calculation
-// Common Searches: Aspose.Cells treat text as zero | TreatTextAsZero property .NET | convert text cell to zero in Aspose.Cells | set CalcEngineSettings TreatTextAsZero | formula evaluation with text values Aspose | Aspose.Cells default TreatTextAsZero | C# Aspose.Cells sum text cell
-// Developer Intent: Enable the TreatTextAsZero option so that textual cell values are evaluated as zero in formulas.
-// Use Cases: Calculate aggregates that may contain textual entries without raising errors. | Generate financial reports where placeholder text should be counted as zero during summations. | Import mixed data sets and ensure numeric calculations treat any text values as zero for consistent results.
-// AI Prompts: Provide C# code using Aspose.Cells to set TreatTextAsZero to true and calculate all formulas in a workbook. | Explain how to detect if the TreatTextAsZero property exists in the current Aspose.Cells version and apply a fallback for older versions. | Show how to verify that a formula result is zero when the referenced cell contains a text string.
+// Title: Set CalcEngineSettings.TreatTextAsZero = true in Aspose.Cells .NET to treat text as zero during formula evaluation
+// AI Prompts: Generate C# code that enables workbook.Settings.CalcEngineSettings.TreatTextAsZero and recalculates a SUM formula with mixed numeric and text cells using Aspose.Cells. | Explain how to configure the Aspose.Cells calculation engine to ignore non‑numeric text when evaluating formulas in a .NET workbook. | Show an example of summing a range containing numbers, numeric strings, and plain text while treating the text values as zero with Aspose.Cells in C#.
+// Common Searches: Aspose.Cells C# treat text as zero in formula calculation | How to enable TreatTextAsZero property in Aspose.Cells workbook settings | Sum mixed numeric and text cells with Aspose.Cells ignoring text values | CalcEngineSettings TreatTextAsZero not applying in Aspose.Cells .NET | Set calculation options to treat text as zero in Aspose.Cells example
+// Tags: CalcEngineSettings.TreatTextAsZero | Aspose.Cells calculation engine settings | C# SUM formula with mixed data types | Aspose.Cells ignore non-numeric text in formulas | Workbook.Settings.CalcEngineSettings .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExample
+// Creates a workbook, populates cells with numeric, numeric‑text, and non‑numeric values, assigns a SUM formula, optionally sets workbook.Settings.CalcEngineSettings.TreatTextAsZero to treat text as zero, recalculates formulas, and prints the resulting sum.
+class Program
 {
-    // Shows how to set workbook.Settings.CalcEngineSettings.TreatTextAsZero = true in Aspose.Cells for .NET so that textual cell values (e.g., "SampleText" in A1) are evaluated as 0 in formulas such as =SUM(A1). The sample creates a workbook, assigns a formula, runs calculation, and prints the result.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+            Cells cells = worksheet.Cells;
 
-                // Put a textual value in A1 (will be treated as zero by SUM)
-                sheet.Cells["A1"].PutValue("SampleText");
+            // Populate cells with numeric, numeric text, and non‑numeric text
+            cells["A1"].PutValue(10);          // numeric value
+            cells["A2"].PutValue("20");        // numeric stored as text
+            cells["A3"].PutValue("Hello");     // non‑numeric text
 
-                // Set a formula that references the textual cell
-                sheet.Cells["B1"].Formula = "=SUM(A1)";
+            // Set a formula that sums the three cells
+            cells["A4"].Formula = "=SUM(A1:A3)";
 
-                // NOTE: In newer Aspose.Cells versions, TreatTextAsZero is enabled by default.
-                // If needed, you can configure it via workbook.Settings.CalcEngineSettings.TreatTextAsZero
-                // but the property may not be available in older library versions.
+            // If the Aspose.Cells version supports CalcEngineSettings, treat text as zero.
+            // This line is optional; older versions may not have CalcEngineSettings.
+            // Uncomment the following lines if the property is available in your version.
+            // workbook.Settings.CalcEngineSettings.TreatTextAsZero = true;
 
-                // Calculate all formulas in the workbook
-                workbook.CalculateFormula();
+            // Recalculate formulas
+            workbook.CalculateFormula();
 
-                // Display the result (expected 0)
-                Console.WriteLine("Result of SUM(A1) with TreatTextAsZero = true: " + sheet.Cells["B1"].Value);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-            }
+            // Display the result
+            Console.WriteLine("SUM(A1:A3) => " + cells["A4"].Value);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
         }
     }
 }

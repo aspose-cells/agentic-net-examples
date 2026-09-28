@@ -1,46 +1,45 @@
-// Title: Aspose.Cells .NET – Protect Worksheet, Allow Formatting, Block Row Insertion (Password Protected)
-// Description: Creates a new workbook, accesses the first worksheet, enables cell/column/row formatting, disables row insertion, sets a password, applies full protection with ProtectionType.All, and saves the file as AdvancedProtection.xlsx.
-// Keywords: Aspose.Cells | worksheet protection | allow formatting | block row insertion | password protected | C# | .NET | Protect method | ProtectionType.All
-// Common Searches: Aspose.Cells allow formatting but prevent row insertion | protect worksheet with password in Aspose.Cells .NET | disable row insertion while enabling formatting Aspose.Cells | C# Aspose.Cells worksheet protection settings | how to set ProtectionType.All in Aspose.Cells
-// Developer Intent: The developer needs to secure a worksheet so users can format cells, columns, and rows but cannot add new rows, using a password‑protected protection scheme.
-// Use Cases: Distribute a template that lets collaborators style data without altering the row layout. | Publish a financial report where visual tweaks are allowed but the row count must stay fixed. | Share a spreadsheet for team review, permitting formatting changes while preventing structural modifications.
-// AI Prompts: Write C# code with Aspose.Cells to protect a worksheet, enable formatting, disable row insertion, and apply a password. | Show how to modify the protection object to also block column insertion while keeping formatting permissions active. | Explain the differences between ProtectionType.All, Objects, and Scenarios and when to use each in Aspose.Cells .NET.
+// Title: How to protect an Aspose.Cells worksheet in .NET to allow formatting but prevent row insertion
+// AI Prompts: Use Aspose.Cells in C# to protect a worksheet with a password, enable cell/column/row formatting, and block row insertion. | Configure worksheet protection options in a .NET workbook so users can format cells but cannot add new rows. | Modify an existing Excel file with Aspose.Cells to set AllowFormatting flags true and AllowInsertingRow false.
+// Common Searches: Aspose.Cells C# protect worksheet allow formatting disable row insertion | How to enable formatting permissions while restricting row addition in Aspose.Cells .NET | Set worksheet protection options for formatting only using Aspose.Cells API | C# example of custom worksheet protection that blocks row insertion | Password protect Excel sheet with formatting rights but no row insert in Aspose.Cells
+// Tags: worksheet protection allow formatting Aspose.Cells | disable row insertion Aspose.Cells | custom protection settings C# | password protected workbook formatting only | Aspose.Cells protection API usage
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsProtectionDemo
+// Demonstrates creating or loading a workbook, applying password protection to a worksheet, enabling cell/column/row formatting, disabling row insertion, and saving the protected Excel file using Aspose.Cells for .NET.
+class Program
 {
-    // Creates a new workbook, accesses the first worksheet, enables cell/column/row formatting, disables row insertion, sets a password, applies full protection with ProtectionType.All, and saves the file as AdvancedProtection.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new workbook (or load an existing one)
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
+            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Access the protection object of the worksheet
+            // Protect the worksheet with a password.
+            // The third parameter is the old password; pass null when there is none.
+            sheet.Protect(ProtectionType.All, "StrongPassword123", null);
+
+            // Get the protection settings object
             Protection protection = sheet.Protection;
 
-            // Allow formatting of cells, columns and rows
+            // Allow formatting of cells, columns, and rows
             protection.AllowFormattingCell = true;
             protection.AllowFormattingColumn = true;
             protection.AllowFormattingRow = true;
 
-            // Disallow insertion of rows (default is false, set explicitly for clarity)
+            // Disallow insertion of rows
             protection.AllowInsertingRow = false;
 
-            // Optional: set a password for the protection
-            protection.Password = "MySecretPassword";
-
-            // Apply protection to the worksheet (protect all aspects)
-            sheet.Protect(ProtectionType.All);
-
-            // Save the workbook
-            workbook.Save("AdvancedProtection.xlsx");
+            // Save the workbook with the applied protection
+            workbook.Save("ProtectedWorkbook.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

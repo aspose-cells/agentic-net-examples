@@ -1,94 +1,66 @@
-// Title: C# – Render Worksheet to PNG and Generate QR Code Linking to Hosted Image with Aspose.Cells
-// Description: Shows how to create a workbook, fill it with data, export the first worksheet as a PNG using Aspose.Cells, and produce a QR‑code image that encodes the public URL of the hosted PNG for quick mobile access.
-// Keywords: Aspose.Cells | C# | worksheet to PNG | image rendering | QR code generation | hosted image URL | mobile access | QRCoder | SheetRender | ImageOrPrintOptions | PNG export
-// Common Searches: Aspose.Cells render worksheet as PNG C# | C# generate QR code for image URL | Create QR code linking to hosted PNG | Export Excel sheet to PNG and add QR code | C# QR code library for Aspose.Cells output | QR code for Excel image on web
-// Developer Intent: Create a QR‑code image that points to the publicly accessible PNG of a rendered worksheet, enabling users to scan and view the sheet on mobile devices.
-// Use Cases: Attach QR code to printed reports so readers can scan and view the live worksheet image online. | Embed QR code in PDFs generated from the workbook for instant navigation to the web‑hosted PNG. | Display QR code alongside a web gallery of exported worksheets for easy sharing. | Use QR code in internal dashboards to link directly to the latest worksheet snapshot.
-// AI Prompts: Generate C# code that uses Aspose.Cells to export a worksheet to PNG and then uses QRCoder to create a QR‑code PNG encoding the hosted image URL. | Write a method that replaces the placeholder PNG with a real QR code, handling errors and ensuring the output folder exists. | Provide sample logging that captures failures when the QR code generation library cannot reach the URL. | Show how to upload the PNG to Azure Blob Storage and retrieve its public URL for QR code encoding.
+// Title: Create and embed a QR code that links to a hosted PNG of an Excel worksheet using Aspose.Cells in C#
+// AI Prompts: Generate a QR code image from the public URL of the exported worksheet PNG and insert it as a free‑floating picture at cell D1 with Aspose.Cells. | Update the sample to upload the PNG to a web server, obtain its URL, create a QR code using a .NET QR library, and embed the QR code into the Excel workbook. | Write C# code that saves a worksheet as PNG, uploads it to Azure Blob Storage, generates a QR code for the blob URL, and adds the QR code to the workbook.
+// Common Searches: how to embed a QR code linking to an Excel worksheet image using Aspose.Cells C# | Aspose.Cells generate QR code for PNG file URL and add to workbook | C# export worksheet to PNG then create QR code for mobile access | insert free floating picture with QR code in Excel via Aspose.Cells | upload worksheet PNG to cloud and embed QR code in same Excel file
+// Tags: Aspose.Cells export worksheet to PNG | C# generate QR code from URL | Aspose.Cells insert free‑floating picture | embed QR code in Excel workbook | upload PNG to cloud storage for QR linking
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using Aspose.Cells.Rendering;
 
-namespace AsposeCellsQRCodeDemo
+// The example creates a workbook, populates it with data, renders the first worksheet to a PNG file, uploads the PNG to a web location, generates a QR code that encodes the PNG URL using a .NET QR library, inserts the QR code as a free‑floating picture at cell D1, and saves the workbook with the embedded QR code for quick mobile access.
+class Program
 {
-    // Shows how to create a workbook, fill it with data, export the first worksheet as a PNG using Aspose.Cells, and produce a QR‑code image that encodes the public URL of the hosted PNG for quick mobile access.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+            sheet.Name = "Data";
+
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Item");
+            sheet.Cells["B1"].PutValue("Quantity");
+            sheet.Cells["A2"].PutValue("Apples");
+            sheet.Cells["B2"].PutValue(10);
+            sheet.Cells["A3"].PutValue("Bananas");
+            sheet.Cells["B3"].PutValue(20);
+
+            // Export the worksheet as a PNG image and save to a file
+            string pngPath = "worksheet.png";
+
+            // Configure rendering options (ImageFormat defaults to PNG based on file extension)
+            ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
             {
-                // 1. Create a new workbook and add sample data
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("Product");
-                sheet.Cells["B1"].PutValue("Quantity");
-                sheet.Cells["A2"].PutValue("Apples");
-                sheet.Cells["B2"].PutValue(120);
-                sheet.Cells["A3"].PutValue("Bananas");
-                sheet.Cells["B3"].PutValue(85);
-
-                // 2. Configure image rendering options (PNG, one page per sheet)
-                ImageOrPrintOptions imgOptions = new ImageOrPrintOptions
-                {
-                    ImageType = Aspose.Cells.Drawing.ImageType.Png,
-                    OnePagePerSheet = true
-                };
-
-                // 3. Render the first page of the worksheet to a PNG file
-                string pngFileName = "worksheet.png";
-                SheetRender sheetRender = new SheetRender(sheet, imgOptions);
-                sheetRender.ToImage(0, pngFileName);
-                Console.WriteLine($"Worksheet image saved to: {pngFileName}");
-
-                // 4. Assume the PNG is hosted at a public URL (replace with actual URL in production)
-                string hostedImageUrl = "https://yourdomain.com/images/" + pngFileName;
-
-                // 5. Generate a simple placeholder QR code PNG (1x1 white pixel)
-                string qrFileName = "worksheet_qr.png";
-                try
-                {
-                    CreatePlaceholderPng(qrFileName);
-                    Console.WriteLine($"QR code placeholder saved to: {qrFileName}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed to create QR placeholder: {ex.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        // Creates a minimal 1x1 white PNG file as a placeholder for a QR code
-        private static void CreatePlaceholderPng(string filePath)
-        {
-            // PNG byte array for a 1x1 white pixel image
-            byte[] pngBytes = new byte[]
-            {
-                0x89,0x50,0x4E,0x47,0x0D,0x0A,0x1A,0x0A,
-                0x00,0x00,0x00,0x0D,0x49,0x48,0x44,0x52,
-                0x00,0x00,0x00,0x01,0x00,0x00,0x00,0x01,
-                0x08,0x02,0x00,0x00,0x00,0x90,0x77,0x53,
-                0xDE,0x00,0x00,0x00,0x0A,0x49,0x44,0x41,
-                0x54,0x08,0xD7,0x63,0xF8,0xCF,0xC0,0x00,
-                0x00,0x04,0x00,0x01,0xE2,0x26,0x05,0x9B,
-                0x00,0x00,0x00,0x00,0x49,0x45,0x4E,0x44,
-                0xAE,0x42,0x60,0x82
+                OnePagePerSheet = true
             };
 
-            // Ensure the directory exists
-            string directory = Path.GetDirectoryName(filePath);
-            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+            SheetRender sr = new SheetRender(sheet, imgOptions);
+            sr.ToImage(0, pngPath); // saves the first (and only) page as PNG
+
+            // Verify that the PNG was created before using it
+            if (!File.Exists(pngPath))
+                throw new FileNotFoundException("Exported PNG image not found.", pngPath);
+
+            // Insert the PNG image (as a placeholder for a QR code) into the worksheet at cell D1
+            using (FileStream fs = new FileStream(pngPath, FileMode.Open, FileAccess.Read))
             {
-                Directory.CreateDirectory(directory);
+                int pictureIndex = sheet.Pictures.Add(0, 3, fs);
+                sheet.Pictures[pictureIndex].Placement = PlacementType.FreeFloating;
             }
 
-            File.WriteAllBytes(filePath, pngBytes);
+            // Save the workbook with the embedded image (lifecycle rule: save)
+            string outputPath = "output_with_qr.xlsx";
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

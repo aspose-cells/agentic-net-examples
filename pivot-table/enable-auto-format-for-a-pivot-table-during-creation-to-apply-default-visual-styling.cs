@@ -1,15 +1,13 @@
-// Title: Apply Default Visual Style to a New PivotTable with Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, add sample data, insert a PivotTable, enable the IsAutoFormat property to apply the built‑in style automatically, calculate the data, and save the file.
-// Keywords: Aspose.Cells | C# | .NET | PivotTable | IsAutoFormat | automatic formatting | default style | Excel report | programmatic pivot styling
-// Common Searches: Aspose.Cells enable pivot table auto format | C# set IsAutoFormat true | default pivot table style Aspose.Cells | apply built‑in style to PivotTable programmatically | Aspose.Cells pivot table formatting options
-// Developer Intent: Create a PivotTable that automatically receives Excel’s built‑in visual style without manual styling code.
-// Use Cases: Generate analytical reports where every PivotTable uses a consistent default style. | Loop through multiple data sets, create PivotTables, and enable IsAutoFormat to ensure uniform appearance. | Export business intelligence dashboards to Excel with ready‑to‑read, auto‑styled PivotTables.
-// AI Prompts: How do I enable automatic formatting for a PivotTable using Aspose.Cells in C#? | Provide C# code that creates several PivotTables, sets IsAutoFormat = true for each, calculates the data, and saves the workbook. | Explain the impact of the IsAutoFormat property on PivotTable appearance and how to change the default style if needed.
+// Title: Create a pivot table with automatic default styling using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that builds a pivot table from a data range and activates the IsAutoFormat property with Aspose.Cells. | Show how to calculate pivot table data after enabling automatic visual styling in Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# enable auto format on newly created pivot table | Set default pivot table style programmatically with Aspose.Cells .NET | How to turn on IsAutoFormat for a pivot table using Aspose.Cells API | Create pivot table and apply built‑in visual style automatically in C#
+// Tags: Aspose.Cells pivot table auto styling | C# enable pivot auto formatting Aspose.Cells | Aspose.Cells default pivot visual style | programmatic pivot table formatting .NET | calculate pivot data Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Shows how to create a workbook, add sample data, insert a PivotTable, enable the IsAutoFormat property to apply the built‑in style automatically, calculate the data, and save the file.
+// The example creates a workbook, adds sample data, builds a pivot table, enables automatic default styling via the IsAutoFormat flag, calculates the pivot data, and saves the file as PivotTableAutoFormatDemo.xlsx.
 class Program
 {
     static void Main()

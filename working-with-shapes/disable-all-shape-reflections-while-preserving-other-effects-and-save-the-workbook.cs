@@ -1,38 +1,81 @@
-// Title: C# – Disable All Shape Reflections in an Excel Workbook with Aspose.Cells (Preserve Other Effects)
-// Description: Loads a workbook, walks through every worksheet and shape, sets each shape's Reflection.Type to None to turn off reflections while keeping all other visual effects, and saves the result to a new file.
-// Keywords: Aspose.Cells shape reflection | disable shape reflection .NET | Reflection.Type None | iterate shapes Aspose.Cells | preserve shape effects Excel
-// Common Searches: how to remove reflections from all shapes using Aspose.Cells | Aspose.Cells disable shape reflection C# | turn off shape reflections while keeping other effects | batch remove Excel shape reflections Aspose
-// Developer Intent: Remove the reflection effect from every shape in an Excel workbook without altering any other formatting or visual properties.
-// Use Cases: Prepare a printable report where shape reflections cause visual noise. | Standardize the appearance of templates before distribution by disabling reflections. | Automate batch processing of multiple workbooks to ensure consistent shape styling.
-// AI Prompts: Write C# code with Aspose.Cells that disables reflections on all shapes in a workbook and saves the file. | Explain how to modify only the reflection property of shapes while leaving other effects untouched in Aspose.Cells for .NET. | Extend the sample to log each shape's name or ID when its reflection is turned off.
+// Title: Disable shape reflection effects without affecting other formatting in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an XLSX file with Aspose.Cells, iterates all worksheets and shapes, disables the Reflection effect on each shape via the EffectFormat API, and saves the modified workbook. | Demonstrate how to use .NET reflection to safely access a shape's EffectFormat and its Reflection.IsEnabled property in Aspose.Cells, turning off reflection while leaving other effects intact. | Create a complete example that checks for the existence of EffectFormat and Reflection on each shape, disables the reflection, handles missing members gracefully, and writes the result to a new file.
+// Common Searches: Aspose.Cells C# disable shape reflection while preserving other effects | remove reflection effect from Excel shapes using Aspose.Cells .NET | how to turn off shape reflection in a workbook with Aspose.Cells for C# | iterate through all shapes in an Excel file and disable reflection Aspose.Cells example
+// Tags: disable shape reflection Aspose.Cells C# | shape EffectFormat Reflection Aspose.Cells | iterate worksheet shapes Aspose.Cells | preserve other shape effects while modifying reflection | load and save workbook Aspose.Cells C#
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Loads a workbook, walks through every worksheet and shape, sets each shape's Reflection.Type to None to turn off reflections while keeping all other visual effects, and saves the result to a new file.
-class DisableShapeReflections
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The sample loads an existing XLSX workbook, walks through every worksheet and each shape, uses .NET reflection to locate the EffectFormat and its Reflection object, sets Reflection.IsEnabled to false while leaving other visual effects unchanged, and saves the updated workbook to a new file.
+    class Program
     {
-        // Load an existing workbook (replace with your file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Iterate through all worksheets
-        foreach (Worksheet sheet in workbook.Worksheets)
+        static void Main(string[] args)
         {
-            // Iterate through all shapes in the worksheet
-            foreach (Shape shape in sheet.Shapes)
-            {
-                // Access the reflection effect of the shape
-                ReflectionEffect reflection = shape.Reflection;
+            // Define input and output file paths
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
 
-                // Disable reflection by setting its type to None
-                reflection.Type = ReflectionEffectType.None;
+            try
+            {
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    Console.WriteLine($"Input file not found: {inputPath}");
+                    return;
+                }
+
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Iterate through all worksheets
+                foreach (Worksheet worksheet in workbook.Worksheets)
+                {
+                    // Iterate through all shapes in the worksheet
+                    foreach (Shape shape in worksheet.Shapes)
+                    {
+                        try
+                        {
+                            // Use reflection to access EffectFormat and Reflection if they exist in the current API version
+                            var effectFormatProp = shape.GetType().GetProperty("EffectFormat");
+                            if (effectFormatProp == null) continue;
+
+                            var effectFormat = effectFormatProp.GetValue(shape);
+                            if (effectFormat == null) continue;
+
+                            var reflectionProp = effectFormat.GetType().GetProperty("Reflection");
+                            if (reflectionProp == null) continue;
+
+                            var reflection = reflectionProp.GetValue(effectFormat);
+                            if (reflection == null) continue;
+
+                            var isEnabledProp = reflection.GetType().GetProperty("IsEnabled");
+                            if (isEnabledProp != null && isEnabledProp.CanWrite)
+                            {
+                                // Disable the reflection effect while leaving other effects untouched
+                                isEnabledProp.SetValue(reflection, false);
+                            }
+                        }
+                        catch (Exception exShape)
+                        {
+                            // Log shape-specific errors but continue processing other shapes
+                            Console.WriteLine($"Error processing shape '{shape.Name}': {exShape.Message}");
+                        }
+                    }
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (Exception ex)
+            {
+                // General exception handling
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-        // Save the modified workbook
-        workbook.Save("output.xlsx");
     }
 }

@@ -1,86 +1,67 @@
-// Title: C# Unit Test – Verify SparklineCollection Count Increments by One in Aspose.Cells
-// Description: Creates a workbook, adds a line‑type SparklineGroup, records the initial SparklineCollection count, adds a sparkline, and asserts the count increased by exactly one, throwing an error otherwise.
-// Keywords: Aspose.Cells sparkline unit test | SparklineCollection Add verification | C# Aspose.Cells sparkline count | unit test for sparkline addition | .NET spreadsheet sparkline testing
-// Common Searches: how to test sparkline count increase Aspose.Cells C# | unit test SparklineCollection.Add Aspose.Cells | verify sparkline collection size after add .NET | Aspose.Cells sparkline unit testing example
-// Developer Intent: Confirm that adding a sparkline to a SparklineCollection raises its Count property by exactly one.
-// Use Cases: Integrate into CI pipelines to catch off‑by‑one regressions in sparkline handling. | Validate custom report generators that programmatically add sparklines. | Ensure library upgrades do not break sparkline collection behavior.
-// AI Prompts: Generate an MSTest/NUnit/xUnit test that asserts SparklineCollection.Count increments after adding a sparkline with Aspose.Cells. | Refactor the sample to use Assert.AreEqual (or equivalent) instead of manual exception handling. | Explain how to mock Workbook and Worksheet for faster sparkline unit tests.
+// Title: C# unit test to verify that adding a sparkline to an Aspose.Cells worksheet increments the sparkline collection count by one
+// AI Prompts: Generate a C# unit test (MSTest/NUnit) that creates a workbook with Aspose.Cells, adds a sparkline group, records the initial SparklineCollection count, adds a sparkline, and asserts the count increased by exactly one. | Write code for a test method that validates the SparklineCollection.Add method updates the collection size correctly in Aspose.Cells.
+// Common Searches: aspocells unit test sparkline collection count increment | c# verify sparkline added count Aspose.Cells | how to assert sparkline count after adding sparkline in .NET | unit testing Aspose.Cells sparkline group in MSTest
+// Tags: aspocells sparklinecollection add test | c# aspocells sparkline count verification | aspocells sparklinegroup unit testing | mstest sparkline collection size assertion | dotnet sparkline addition unit test
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsTests
+namespace AsposeCellsExamples
 {
-    // Creates a workbook, adds a line‑type SparklineGroup, records the initial SparklineCollection count, adds a sparkline, and asserts the count increased by exactly one, throwing an error otherwise.
-    public class SparklineCollectionTests
+    // Demonstrates a C# unit test that creates a workbook with Aspose.Cells, fills sample data, adds a sparkline group, records the initial SparklineCollection count, adds a sparkline, and asserts that the count increased by exactly one, throwing an exception if the verification fails.
+    public class SparklineTests
     {
-        public void AddingSparkline_IncreasesCountByOne()
+        public static void Main()
         {
             try
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data for the sparkline (A1:D1)
-                worksheet.Cells["A1"].PutValue(5);
-                worksheet.Cells["B1"].PutValue(2);
-                worksheet.Cells["C1"].PutValue(1);
-                worksheet.Cells["D1"].PutValue(3);
-
-                // Define the location where the sparkline will be placed (cell E1)
-                CellArea location = new CellArea
-                {
-                    StartRow = 0,
-                    EndRow = 0,
-                    StartColumn = 4, // Column E (0‑based index)
-                    EndColumn = 4
-                };
-
-                // Add a sparkline group of type Line with the data range A1:D1
-                int groupIndex = worksheet.SparklineGroups.Add(SparklineType.Line, "A1:D1", false, location);
-                SparklineGroup group = worksheet.SparklineGroups[groupIndex];
-
-                // Get the sparkline collection from the group
-                SparklineCollection sparklines = group.Sparklines;
-
-                // Record the initial count (should be 0)
-                int initialCount = sparklines.Count;
-
-                // Add a sparkline to the collection at E1
-                sparklines.Add("A1:D1", 0, 4);
-
-                // Verify that the count increased by exactly one
-                if (sparklines.Count != initialCount + 1)
-                {
-                    throw new InvalidOperationException($"Sparkline count expected {initialCount + 1} but was {sparklines.Count}.");
-                }
-
-                // Optional: Save the workbook for manual verification
-                // workbook.Save("SparklineAdditionTest.xlsx", SaveFormat.Xlsx);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error during test: {ex.Message}");
-                throw;
-            }
-        }
-    }
-
-    class Program
-    {
-        static void Main()
-        {
-            try
-            {
-                var test = new SparklineCollectionTests();
-                test.AddingSparkline_IncreasesCountByOne();
-                Console.WriteLine("Test passed: Adding sparkline increased count by one.");
+                AddingSparkline_IncreasesCountByOne();
+                Console.WriteLine("Test passed.");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Test failed: {ex.Message}");
+            }
+        }
+
+        public static void AddingSparkline_IncreasesCountByOne()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data for the sparkline (row 0, columns A‑E)
+            for (int i = 0; i < 5; i++)
+            {
+                sheet.Cells[0, i].PutValue(i + 1);
+            }
+
+            // Define where the sparkline will be placed (cell A2)
+            CellArea location = new CellArea
+            {
+                StartRow = 1,
+                EndRow = 1,
+                StartColumn = 0,
+                EndColumn = 0
+            };
+
+            // Add a sparkline group that references the data range A1:E1
+            int groupIndex = sheet.SparklineGroups.Add(SparklineType.Line, "A1:E1", false, location);
+            SparklineGroup group = sheet.SparklineGroups[groupIndex];
+            SparklineCollection sparklines = group.Sparklines;
+
+            // Record the initial count (should be 0)
+            int initialCount = sparklines.Count;
+
+            // Add a sparkline to the group
+            sparklines.Add("A1:E1", 1, 0);
+
+            // Verify that the count increased by exactly one
+            int afterCount = sparklines.Count;
+            if (afterCount != initialCount + 1)
+            {
+                throw new InvalidOperationException($"Expected count {initialCount + 1}, but got {afterCount}.");
             }
         }
     }

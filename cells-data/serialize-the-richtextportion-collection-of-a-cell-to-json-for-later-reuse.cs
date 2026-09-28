@@ -1,80 +1,103 @@
-// Title: C# – Serialize Aspose.Cells RichTextPortion (FontSetting) Collection to JSON
-// Description: Demonstrates how to create a workbook, apply bold red and italic blue formatting to parts of cell A1, extract the FontSetting array with GetCharacters(), build a lightweight object containing start index, length and font attributes (bold, italic, underline, ARGB color), and serialize the collection to an indented JSON string that can be saved and reused.
-// Keywords: Aspose.Cells | C# | RichTextPortion serialization | FontSetting to JSON | export cell formatting | JSON rich text | save Aspose.Cells styles | deserialize FontSetting
-// Common Searches: serialize Aspose.Cells rich text to JSON C# | export FontSetting collection as JSON | save cell rich text formatting Aspose.Cells | how to get characters from a cell Aspose.Cells | store Aspose.Cells cell styles in JSON
-// Developer Intent: Convert a cell's RichTextPortion (FontSetting) collection into a JSON representation for later restoration or external processing.
-// Use Cases: Persist custom cell formatting in a configuration file and reapply it to other workbooks. | Exchange rich‑text styling between services by transmitting JSON metadata. | Archive cell style details in a database for reporting, auditing, or version control.
-// AI Prompts: Write C# code that reads the generated RichTextPortions.json, deserializes the objects, and reapplies the formatting to a target cell using Aspose.Cells. | Provide a helper method that converts the stored ARGB integer back to System.Drawing.Color when restoring font colors from JSON. | Explain how to safely handle missing underline information during deserialization of the rich‑text JSON.
+// Title: Serialize the RichTextPortion collection of an Aspose.Cells cell to indented JSON in C#
+// AI Prompts: Generate C# code that extracts all FontSetting objects from a worksheet cell and maps their properties (start index, length, bold, italic, underline, font name, size, color) into a plain DTO list. | Create a System.Text.Json JsonConverter that writes System.Drawing.Color values as #AARRGGBB hexadecimal strings for inclusion in the serialized output. | Combine the DTO list and the custom color converter to produce a formatted (indented) JSON string representing the cell's rich‑text portions.
+// Common Searches: Aspose.Cells C# export cell rich text formatting to JSON | How to get FontSetting objects from a cell and serialize them with System.Text.Json | Custom JsonConverter for System.Drawing.Color hex string in Aspose.Cells example | Serialize rich text portions of a worksheet cell to JSON using Aspose.Cells .NET
+// Tags: Aspose.Cells serialize rich text portions to JSON | C# System.Text.Json custom color converter | FontSetting to DTO mapping Aspose.Cells | rich text formatting JSON export .NET | cell characters JSON serialization Aspose
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Drawing;
 using Aspose.Cells;
 
-// Demonstrates how to create a workbook, apply bold red and italic blue formatting to parts of cell A1, extract the FontSetting array with GetCharacters(), build a lightweight object containing start index, length and font attributes (bold, italic, underline, ARGB color), and serialize the collection to an indented JSON string that can be saved and reused.
-class SerializeRichTextPortions
+namespace AsposeCellsRichTextSerialization
 {
-    static void Main()
+    // Custom converter to serialize System.Drawing.Color as a hex string
+    // Shows how to retrieve FontSetting objects from a cell, map them to a lightweight DTO, and serialize the collection to indented JSON using System.Text.Json with a custom converter that outputs System.Drawing.Color as a #AARRGGBB hex string.
+    public class ColorJsonConverter : JsonConverter<Color>
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Access cell A1 and set a plain text value
-        Cell cell = worksheet.Cells["A1"];
-        cell.PutValue("Hello World!");
-
-        // Apply rich text formatting to different parts of the cell text
-        // Format "Hello" as bold red
-        FontSetting helloPortion = cell.Characters(0, 5);
-        helloPortion.Font.IsBold = true;
-        helloPortion.Font.Color = Color.Red;
-
-        // Format "World" as italic blue
-        FontSetting worldPortion = cell.Characters(6, 5);
-        worldPortion.Font.IsItalic = true;
-        worldPortion.Font.Color = Color.Blue;
-
-        // Verify that the cell contains rich text
-        if (!cell.IsRichText())
+        public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            Console.WriteLine("The cell does not contain rich text.");
-            return;
+            // Deserialization not required for this example
+            throw new NotImplementedException();
         }
 
-        // Retrieve all rich text portions (FontSetting objects) from the cell
-        FontSetting[] richPortions = cell.GetCharacters();
-
-        // Convert the FontSetting collection into a serializable structure
-        var serializableList = new List<object>();
-        foreach (FontSetting fs in richPortions)
+        public override void Write(Utf8JsonWriter writer, Color value, JsonSerializerOptions options)
         {
-            var portionInfo = new
+            // Serialize as #AARRGGBB
+            string hex = $"#{value.A:X2}{value.R:X2}{value.G:X2}{value.B:X2}";
+            writer.WriteStringValue(hex);
+        }
+    }
+
+    // Helper class to hold serializable information of a rich text portion
+    public class RichTextPortionDto
+    {
+        public int StartIndex { get; set; }
+        public int Length { get; set; }
+        public bool IsBold { get; set; }
+        public bool IsItalic { get; set; }
+        public bool IsUnderline { get; set; }
+        public string FontName { get; set; }
+        public double FontSize { get; set; }
+
+        [JsonConverter(typeof(ColorJsonConverter))]
+        public Color FontColor { get; set; }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            // Create a new workbook and access the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
+
+            // Prepare a cell with rich text formatting
+            Cell cell = worksheet.Cells["A1"];
+            cell.PutValue("Hello World");
+
+            // Format "Hello" as bold red
+            FontSetting part1 = cell.Characters(0, 5);
+            part1.Font.IsBold = true;
+            part1.Font.Color = Color.Red;
+
+            // Format "World" as italic blue
+            FontSetting part2 = cell.Characters(6, 5);
+            part2.Font.IsItalic = true;
+            part2.Font.Color = Color.Blue;
+
+            // Retrieve all rich text portions (FontSetting objects)
+            FontSetting[] portions = cell.GetCharacters();
+
+            // Convert FontSetting objects to DTOs suitable for JSON serialization
+            List<RichTextPortionDto> dtoList = new List<RichTextPortionDto>();
+            foreach (FontSetting fs in portions)
             {
-                StartIndex = fs.StartIndex,
-                Length = fs.Length,
-                Font = new
+                dtoList.Add(new RichTextPortionDto
                 {
+                    StartIndex = fs.StartIndex,
+                    Length = fs.Length,
                     IsBold = fs.Font.IsBold,
                     IsItalic = fs.Font.IsItalic,
                     IsUnderline = fs.Font.Underline != FontUnderlineType.None,
-                    // Store color as ARGB integer for simplicity
-                    ColorArgb = fs.Font.Color.ToArgb()
-                }
+                    FontName = fs.Font.Name,
+                    FontSize = fs.Font.Size,
+                    FontColor = fs.Font.Color
+                });
+            }
+
+            // Serialize the collection to JSON with indentation
+            JsonSerializerOptions jsonOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Converters = { new ColorJsonConverter() }
             };
-            serializableList.Add(portionInfo);
+            string json = JsonSerializer.Serialize(dtoList, jsonOptions);
+
+            // Output the JSON string
+            Console.WriteLine("Rich Text Portions JSON:");
+            Console.WriteLine(json);
         }
-
-        // Serialize the list to a formatted JSON string
-        string json = JsonSerializer.Serialize(serializableList, new JsonSerializerOptions { WriteIndented = true });
-
-        // Output the JSON to console
-        Console.WriteLine("RichTextPortion collection serialized to JSON:");
-        Console.WriteLine(json);
-
-        // Optionally, save the JSON to a file for later reuse
-        File.WriteAllText("RichTextPortions.json", json);
     }
 }

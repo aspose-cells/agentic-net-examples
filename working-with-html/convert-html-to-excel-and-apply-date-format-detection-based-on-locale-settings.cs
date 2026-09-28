@@ -1,71 +1,91 @@
-// Title: C# – Convert HTML to Excel with locale‑aware date detection using Aspose.Cells
-// Description: Load an HTML file into an Aspose.Cells workbook, scan the used range, parse string values as dates with the current CultureInfo, replace them with DateTime cells, apply the built‑in short date style (Number 14), and save as XLSX.
-// Keywords: Aspose.Cells HTML to Excel | C# locale date parsing | CultureInfo date conversion | Excel short date format index 14 | detect dates in HTML tables | convert HTML tables to XLSX | Aspose.Cells date detection
-// Common Searches: Aspose.Cells convert HTML to Excel C# | how to detect dates from HTML using CultureInfo in Aspose.Cells | apply short date format to cells after loading HTML | C# parse locale specific dates in Excel workbook | batch convert HTML reports to XLSX with date handling
-// Developer Intent: Transform an HTML document into an Excel workbook while automatically converting locale‑specific date strings into proper DateTime cells with a consistent short‑date display.
-// Use Cases: Migrate web‑based reports (HTML tables) to Excel while preserving date semantics across regional settings. | Process legacy system exports that deliver HTML tables, ensuring date columns become true Excel dates. | Automate bulk conversion of multiple HTML files to XLSX with reliable date detection and formatting.
-// AI Prompts: Generate C# code that uses Aspose.Cells to load an HTML file, detect date strings based on CultureInfo.CurrentCulture, replace them with DateTime values, set the short date style (Number 14), and save the workbook as XLSX. | Create a reusable method for a Workbook that scans its used range, parses locale‑aware dates from string cells, applies a short date format, and returns the updated workbook.
+// Title: Convert HTML Table to Excel (XLSX) with Locale‑Aware Date Formatting Using Aspose.Cells for .NET
+// AI Prompts: Write C# code that saves an HTML string to a temporary file, loads it into an Aspose.Cells Workbook with HtmlLoadOptions specifying a CultureInfo (e.g., en‑GB), and exports the workbook as an XLSX file. | Show how to loop through every cell after importing HTML and assign a custom number format that matches the CultureInfo's short date pattern to any DateTime values. | Demonstrate robust error handling and cleanup of the temporary HTML file when converting HTML to Excel with Aspose.Cells.
+// Common Searches: how to import an HTML table into Excel using Aspose.Cells with British date format | c# Aspose.Cells HtmlLoadOptions CultureInfo example for date parsing | convert HTML to xlsx while preserving locale-specific date formatting in .NET | detect DateTime cells after loading HTML with Aspose.Cells and apply custom date style
+// Tags: html-to-xlsx conversion Aspose.Cells | locale-aware date parsing Aspose.Cells | HtmlLoadOptions CultureInfo usage | apply custom date format to cells | temporary file handling C# Aspose.Cells
 
 using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using Aspose.Cells;
 
-// Load an HTML file into an Aspose.Cells workbook, scan the used range, parse string values as dates with the current CultureInfo, replace them with DateTime cells, apply the built‑in short date style (Number 14), and save as XLSX.
+// The sample program writes an HTML string containing a table to a temporary file, loads it into an Aspose.Cells Workbook using HtmlLoadOptions with the en‑GB culture, scans all cells to find DateTime values, applies the culture's short date pattern as a custom style, saves the workbook as ConvertedFromHtml.xlsx, and finally removes the temporary HTML file.
 class HtmlToExcelConverter
 {
     static void Main()
     {
+        // Sample HTML content (replace with actual HTML source)
+        string htmlContent = @"
+            <html>
+                <body>
+                    <table>
+                        <tr><td>01/02/2023</td><td>Value 1</td></tr>
+                        <tr><td>03/04/2023</td><td>Value 2</td></tr>
+                    </table>
+                </body>
+            </html>";
+
+        // Temporary HTML file path
+        string tempHtmlPath = Path.Combine(Path.GetTempPath(), "tempHtml.html");
+
         try
         {
-            // Input HTML file and output Excel file paths
-            string htmlPath = "input.html";
-            string excelPath = "output.xlsx";
+            // Write HTML content to a temporary file
+            File.WriteAllText(tempHtmlPath, htmlContent, Encoding.UTF8);
 
-            // Verify that the input HTML file exists
-            if (!File.Exists(htmlPath))
+            // Configure HTML load options with culture info for date parsing
+            HtmlLoadOptions loadOptions = new HtmlLoadOptions
             {
-                Console.WriteLine($"Input file not found: {htmlPath}");
+                Encoding = Encoding.UTF8,
+                // Specify the culture used for parsing dates/numbers
+                CultureInfo = new CultureInfo("en-GB")
+            };
+
+            // Load the HTML file into a new workbook
+            Workbook workbook = null;
+            if (File.Exists(tempHtmlPath))
+            {
+                // Use constructor that accepts file path and load options
+                workbook = new Workbook(tempHtmlPath, loadOptions);
+            }
+            else
+            {
+                Console.WriteLine("Temporary HTML file not found.");
                 return;
             }
 
-            // Load the HTML file into a workbook
-            Workbook workbook = new Workbook(htmlPath);
-
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Get the used range of cells (fully qualified to avoid ambiguity)
-            Aspose.Cells.Range usedRange = worksheet.Cells.MaxDisplayRange;
-
-            // Detect date strings based on the current locale and convert them to DateTime values
-            foreach (Cell cell in usedRange)
+            // Apply proper date format based on the specified culture
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                if (cell.Type == CellValueType.IsString)
+                Cells cells = sheet.Cells;
+                foreach (Cell cell in cells)
                 {
-                    string cellText = cell.StringValue.Trim();
-
-                    // Try to parse the string as a date using the current culture
-                    if (DateTime.TryParse(cellText, CultureInfo.CurrentCulture, DateTimeStyles.None, out DateTime parsedDate))
+                    if (cell.Value is DateTime)
                     {
-                        // Replace the string with a DateTime value
-                        cell.PutValue(parsedDate);
-
-                        // Apply a built‑in short date format (index 14) to keep the display consistent
                         Style style = cell.GetStyle();
-                        style.Number = 14; // Short date format
+                        // Use the short date pattern of the load options culture
+                        string localeDatePattern = loadOptions.CultureInfo.DateTimeFormat.ShortDatePattern;
+                        style.Custom = localeDatePattern;
                         cell.SetStyle(style);
                     }
                 }
             }
 
-            // Save the workbook as an Excel file
-            workbook.Save(excelPath, SaveFormat.Xlsx);
-            Console.WriteLine($"Excel file saved to {excelPath}");
+            // Save the workbook to an Excel file
+            workbook.Save("ConvertedFromHtml.xlsx", SaveFormat.Xlsx);
+            Console.WriteLine("Conversion completed successfully.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error: {ex.Message}");
+        }
+        finally
+        {
+            // Clean up temporary file
+            if (File.Exists(tempHtmlPath))
+            {
+                try { File.Delete(tempHtmlPath); } catch { /* ignore cleanup errors */ }
+            }
         }
     }
 }

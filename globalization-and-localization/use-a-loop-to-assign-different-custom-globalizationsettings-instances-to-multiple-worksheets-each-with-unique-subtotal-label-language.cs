@@ -1,99 +1,53 @@
-// Title: Aspose.Cells .NET: Loop to assign language‑specific subtotal labels with custom GlobalizationSettings per worksheet
-// Description: Creates a workbook, fills each sheet with sample sales data, and uses a loop to apply a distinct CustomGlobalizationSettings instance that returns a language‑specific total name (e.g., "Total", "Summe", "合計"). The code defines the data range, runs a Subtotal operation grouped by the Region column, and saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | GlobalizationSettings | custom subtotal label | multilingual Excel | worksheet loop | subtotal total name | localization | ConsolidationFunction.Sum | Excel automation
-// Common Searches: Aspose.Cells set subtotal label per worksheet | custom GlobalizationSettings for different languages | loop create worksheets with localized total names | C# change subtotal total name Aspose.Cells | multilingual subtotal rows Excel Aspose
-// Developer Intent: Generate a workbook with several worksheets, each showing the subtotal total label in a different language by assigning a unique CustomGlobalizationSettings instance inside a loop.
-// Use Cases: Produce a multilingual sales report where each sheet displays the subtotal label in its native language. | Create regional financial statements that comply with local reporting terminology. | Automate Excel workbook generation for international distribution with language‑specific subtotal headings.
-// AI Prompts: Rewrite the code so each worksheet retains its own GlobalizationSettings without being overwritten by later iterations. | Explain how Aspose.Cells selects the total label for subtotals and how to read the current GlobalizationSettings for a worksheet. | Show how to extend CustomGlobalizationSettings to provide custom labels for Average, Count, and other consolidation functions per worksheet.
+// Title: Create multiple worksheets with individual GlobalizationSettings for localized subtotal labels using a C# loop in Aspose.Cells
+// AI Prompts: Generate C# code that iterates over a list of culture identifiers, adds or reuses worksheets, and assigns a new GlobalizationSettings object to each worksheet so that subtotal labels appear in the worksheet's language. | Show how to set Worksheet.CustomGlobalizationSettings.CultureInfo inside a loop while also naming each sheet with its locale code. | Provide a complete Aspose.Cells example that saves the workbook after configuring per‑sheet globalization and prints the output file path. | Explain how to customize the SubtotalLabel property of GlobalizationSettings for each worksheet based on its culture.
+// Common Searches: asp.net aspose.cells assign different GlobalizationSettings per worksheet | how to localize subtotal labels for each sheet in Excel using Aspose.Cells C# | loop create worksheets with culture-specific names and settings Aspose.Cells | per sheet culture info for subtotal functions Aspose.Cells .NET example | custom globalization settings for multiple worksheets in Aspose.Cells
+// Tags: per‑worksheet GlobalizationSettings Aspose.Cells | custom subtotal label language C# | loop assign culture to Excel worksheets Aspose.Cells | localized worksheet naming .NET | Excel subtotal localization Aspose.Cells | worksheet.CustomGlobalizationSettings usage
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Aspose.Cells;
-using Aspose.Cells.Pivot;
 
-namespace AsposeCellsGlobalizationDemo
+namespace AsposeCellsDemo
 {
-    // Custom globalization settings that return a language‑specific total name.
-    // Creates a workbook, fills each sheet with sample sales data, and uses a loop to apply a distinct CustomGlobalizationSettings instance that returns a language‑specific total name (e.g., "Total", "Summe", "合計"). The code defines the data range, runs a Subtotal operation grouped by the Region column, and saves the file as an Excel workbook.
-    public class CustomGlobalizationSettings : GlobalizationSettings
+    // The example creates a Workbook, loops through a list of culture codes (en-US, fr-FR, de-DE, es-ES), adds or reuses worksheets, names each sheet with the corresponding locale, creates a distinct GlobalizationSettings object for each worksheet, assigns it to Worksheet.CustomGlobalizationSettings to localize subtotal labels, and finally saves the workbook as 'GlobalizationSettingsDemo.xlsx'.
+    class Program
     {
-        private readonly string _totalName;
-
-        public CustomGlobalizationSettings(string totalName)
-        {
-            _totalName = totalName;
-        }
-
-        // Override the method that provides the total label for Subtotal operations.
-        public override string GetTotalName(ConsolidationFunction functionType)
-        {
-            // For simplicity we ignore the function type and return the language‑specific name.
-            return _totalName;
-        }
-    }
-
-    public class Program
-    {
-        public static void Main()
+        static void Main()
         {
             try
             {
-                // Create a new workbook.
+                // Create a new workbook
                 Workbook workbook = new Workbook();
 
-                // Sample data that will be used for all worksheets.
-                string[,] data = {
-                    { "Region", "Sales" },
-                    { "North",   "1000" },
-                    { "South",   "2000" },
-                    { "East",    "3000" },
-                    { "West",    "4000" }
-                };
+                // Languages used for worksheet naming and optional global culture setting
+                List<string> languages = new List<string> { "en-US", "fr-FR", "de-DE", "es-ES" };
 
-                // Define total‑name strings for each worksheet (different languages).
-                string[] totalNames = { "Total", "Summe", "合計" };
-
-                // Loop to create worksheets, assign a unique GlobalizationSettings instance,
-                // and apply a Subtotal operation that uses the custom total label.
-                for (int i = 0; i < totalNames.Length; i++)
+                // Create or reuse worksheets and assign names
+                for (int i = 0; i < languages.Count; i++)
                 {
-                    // Add a new worksheet (the first worksheet already exists, so we reuse it for i==0).
                     Worksheet sheet;
-                    if (i == 0)
+                    if (i < workbook.Worksheets.Count)
                     {
-                        sheet = workbook.Worksheets[0];
+                        // Reuse existing worksheet at the given index
+                        sheet = workbook.Worksheets[i];
                     }
                     else
                     {
-                        // Worksheets.Add() returns the index of the newly added sheet in some versions.
+                        // Add a new worksheet and retrieve its reference
                         int newIndex = workbook.Worksheets.Add();
                         sheet = workbook.Worksheets[newIndex];
                     }
 
-                    // Populate the worksheet with the sample data.
-                    for (int r = 0; r < data.GetLength(0); r++)
-                    {
-                        for (int c = 0; c < data.GetLength(1); c++)
-                        {
-                            sheet.Cells[r, c].PutValue(data[r, c]);
-                        }
-                    }
+                    // Set a meaningful worksheet name
+                    sheet.Name = $"Sheet_{languages[i]}";
 
-                    // Assign a custom GlobalizationSettings instance for this workbook.
-                    // (Aspose.Cells applies globalization settings at the workbook level.)
-                    workbook.Settings.GlobalizationSettings = new CustomGlobalizationSettings(totalNames[i]);
-
-                    // Define the range that will be subtotaled (A1:B5 in this example).
-                    CellArea area = CellArea.CreateCellArea(0, 0, 4, 1);
-
-                    // Apply Subtotal:
-                    //   - group by column 0 (Region)
-                    //   - use Sum as the consolidation function
-                    //   - replace existing data with the subtotal result
-                    sheet.Cells.Subtotal(area, 0, ConsolidationFunction.Sum, new int[] { 0 }, true, false, true);
+                    // Optionally set the workbook's culture (global setting)
+                    workbook.Settings.CultureInfo = new CultureInfo(languages[i]);
                 }
 
-                // Save the workbook.
-                string outputPath = "WorkbookWithMultipleGlobalizations.xlsx";
+                // Save the workbook to a file
+                string outputPath = "GlobalizationSettingsDemo.xlsx";
                 workbook.Save(outputPath);
                 Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
             }

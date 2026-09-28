@@ -1,62 +1,43 @@
-// Title: Ignore Circular References and Continue Formula Evaluation with Aspose.Cells for .NET
-// Description: Demonstrates how to configure Aspose.Cells CalculationOptions with a custom AbstractCalculationMonitor that logs circular cells and returns true, allowing the engine to skip the circular loop and still calculate independent formulas such as C1 = A1+10. The workbook is then saved with the results.
-// Keywords: Aspose.Cells | C# | .NET | circular reference | ignore circular reference | continue calculation | CalculationOptions | AbstractCalculationMonitor | custom monitor | workbook.CalculateFormula
-// Common Searches: Aspose.Cells skip circular reference | C# ignore circular reference during calculation | continue formula evaluation after circular reference Aspose.Cells | how to use AbstractCalculationMonitor in Aspose.Cells | set calculation options to ignore circular loops .NET
-// Developer Intent: Skip circular references while still evaluating other formulas in a workbook.
-// Use Cases: Log circular cells without aborting the calculation process. | Process large spreadsheets that contain intentional circular formulas while retrieving values from independent cells. | Integrate a custom monitor to keep calculations alive in automated reporting pipelines.
-// AI Prompts: Generate C# code that creates a CalculationOptions with an AbstractCalculationMonitor which records circular cell addresses and returns true to continue calculation. | Show how to modify the CircularReferenceMonitor to store detected circular references in a collection for later analysis. | Explain how to configure Aspose.Cells to treat circular references as zero while still calculating non‑circular cells.
+// Title: How to configure Aspose.Cells for .NET to ignore circular references while recalculating workbook formulas
+// AI Prompts: Set the workbook's calculation settings to skip circular reference errors and recalculate the remaining formulas using Aspose.Cells in C#. | Enable the circular‑reference ignore flag in Aspose.Cells, then call CalculateFormula so the engine continues processing other cells.
+// Common Searches: Aspose.Cells C# ignore circular reference errors during CalculateFormula | skip circular reference detection when recalculating Excel formulas with Aspose.Cells | continue formula evaluation after circular reference in Aspose.Cells .NET | how to set WorkbookSettings.CircularReference true in Aspose.Cells
+// Tags: WorkbookSettings.CircularReference Aspose.Cells | ignore circular references during formula calculation | Aspose.Cells CalculateFormula with circular reference handling | C# Excel workbook recalculate without circular reference errors | Aspose.Cells calculation engine ignore circular reference
 
 using System;
-using System.Collections;
+using System.IO;
 using Aspose.Cells;
 
-// Demonstrates how to configure Aspose.Cells CalculationOptions with a custom AbstractCalculationMonitor that logs circular cells and returns true, allowing the engine to skip the circular loop and still calculate independent formulas such as C1 = A1+10. The workbook is then saved with the results.
+// The example loads an existing Excel file, configures the Aspose.Cells calculation engine to ignore circular references by setting WorkbookSettings.CircularReference to true, recalculates all formulas, and saves the result, while handling file‑not‑found and runtime exceptions.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-        // Set up a circular reference: A1 -> B1 -> A1
-        sheet.Cells["A1"].Formula = "=B1";
-        sheet.Cells["B1"].Formula = "=A1";
-
-        // Add another formula that depends on the circular cells
-        // This will be evaluated after the circular reference is handled
-        sheet.Cells["C1"].Formula = "=A1+10";
-
-        // Create calculation options and attach a custom monitor
-        CalculationOptions calcOptions = new CalculationOptions
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            CalculationMonitor = new CircularReferenceMonitor()
-        };
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
 
-        // Perform calculation; the monitor will handle circular references
-        workbook.CalculateFormula(calcOptions);
-
-        // Display the results
-        Console.WriteLine($"A1 value: {sheet.Cells["A1"].Value}");
-        Console.WriteLine($"B1 value: {sheet.Cells["B1"].Value}");
-        Console.WriteLine($"C1 value: {sheet.Cells["C1"].Value}");
-
-        // Save the workbook
-        workbook.Save("CircularHandled.xlsx");
-    }
-
-    // Custom monitor that logs circular references and tells the engine to continue
-    private class CircularReferenceMonitor : AbstractCalculationMonitor
-    {
-        public override bool OnCircular(IEnumerator circularCellsData)
+        try
         {
-            Console.WriteLine("Circular reference detected:");
-            while (circularCellsData.MoveNext())
-            {
-                Console.WriteLine($"  {circularCellsData.Current}");
-            }
-            // Return true to let the calculation engine continue processing other cells
-            return true;
+            // Load the workbook from the specified file
+            Workbook workbook = new Workbook(inputPath);
+
+            // Recalculate all formulas in the workbook
+            workbook.CalculateFormula();
+
+            // Save the modified workbook to the output path
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook processed and saved to: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,51 +1,49 @@
-// Title: C# – List Worksheets Containing Only Formatting and Save Names to a Text File (Aspose.Cells)
-// Description: Loads an Excel workbook with Aspose.Cells, scans each worksheet for cell values, identifies sheets that hold only formatting, and writes their names to a plain‑text file for further analysis.
-// Keywords: Aspose.Cells | C# | formatting only worksheets | empty sheet detection | export sheet names | Excel workbook analysis | list worksheets without data
-// Common Searches: Aspose.Cells find worksheets with only formatting | C# get names of empty Excel sheets | save worksheet names to text file Aspose | detect sheets without data in .NET | list formatting‑only worksheets programmatically
-// Developer Intent: Identify worksheets that contain only formatting (no cell values) and write their names to a text file.
-// Use Cases: Generate a report of formatting‑only sheets before publishing a workbook. | Skip non‑data worksheets during bulk processing to improve performance. | Create a task list for data entry teams to populate empty sheets. | Audit workbooks for unused or placeholder sheets during quality checks.
-// AI Prompts: Provide C# code using Aspose.Cells to list worksheets that have no data and save the names to a CSV file. | Show how to modify the sample to also include sheets that contain only formulas but no constant values. | Suggest performance optimizations for detecting formatting‑only worksheets in a workbook with thousands of sheets.
+// Title: Save names of formatting‑only worksheets to a text file with Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that uses Aspose.Cells to load a workbook, finds worksheets where MaxDataRow equals –1, and writes each worksheet name on a separate line to a given text file. | Create a .NET utility that accepts an Excel file path and an output .txt path, scans all sheets for the absence of data rows using Aspose.Cells, and records the names of those formatting‑only sheets.
+// Common Searches: Aspose.Cells find worksheets that contain only formatting and export their names to a txt file | C# list Excel sheets with no data rows using Aspose.Cells | How to detect formatting‑only worksheets in a workbook with Aspose.Cells .NET | Save names of empty or formatting‑only Excel sheets to a text file in C# | Console application to write worksheet names without values to a file using Aspose.Cells
+// Tags: detect formatting‑only worksheets Aspose.Cells | export worksheet names to txt C# | maxdatarow check Aspose.Cells | list sheets without data rows .NET | write worksheet list to text file Aspose.Cells | identify formatting‑only Excel sheets C#
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook with Aspose.Cells, scans each worksheet for cell values, identifies sheets that hold only formatting, and writes their names to a plain‑text file for further analysis.
-class FormattingOnlySheetsExtractor
+// The example loads a workbook, iterates through each worksheet, uses the MaxDataRow property to identify sheets that have no data (only formatting), collects those sheet names, and writes them line‑by‑line to a specified text file.
+class Program
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        // Load the workbook (lifecycle rule: load)
-        Workbook workbook = new Workbook("input.xlsx");
+        // Validate arguments: args[0] = input workbook path, args[1] = output text file path
+        if (args.Length < 2)
+        {
+            Console.WriteLine("Usage: Program.exe <inputWorkbookPath> <outputTextFilePath>");
+            return;
+        }
+
+        string inputPath = args[0];
+        string outputPath = args[1];
+
+        // Load the workbook from the specified file
+        Workbook workbook = new Workbook(inputPath);
 
         // List to hold names of worksheets that contain only formatting (no data)
-        List<string> formattingOnlySheetNames = new List<string>();
+        List<string> formattingOnlySheets = new List<string>();
 
         // Iterate through each worksheet in the workbook
         foreach (Worksheet sheet in workbook.Worksheets)
         {
-            bool hasData = false;
-
-            // Enumerate all cells in the worksheet
-            foreach (Cell cell in sheet.Cells)
+            // MaxDataRow returns -1 if there are no cells with data (values or formulas)
+            // This effectively identifies sheets that have only formatting or are completely empty
+            if (sheet.Cells.MaxDataRow == -1)
             {
-                // If a cell has a non‑null, non‑empty value, the sheet contains data
-                if (cell.Value != null && !string.IsNullOrEmpty(cell.Value.ToString()))
-                {
-                    hasData = true;
-                    break; // No need to check further cells in this sheet
-                }
-            }
-
-            // If no data was found, the sheet is formatting‑only
-            if (!hasData)
-            {
-                formattingOnlySheetNames.Add(sheet.Name);
+                formattingOnlySheets.Add(sheet.Name);
             }
         }
 
-        // Save the list of sheet names to a text file for further analysis
-        File.WriteAllLines("FormattingOnlySheets.txt", formattingOnlySheetNames);
+        // Write the collected worksheet names to the output text file, one name per line
+        File.WriteAllLines(outputPath, formattingOnlySheets);
+
+        Console.WriteLine($"Found {formattingOnlySheets.Count} worksheet(s) with only formatting.");
+        Console.WriteLine($"Worksheet names saved to: {outputPath}");
     }
 }

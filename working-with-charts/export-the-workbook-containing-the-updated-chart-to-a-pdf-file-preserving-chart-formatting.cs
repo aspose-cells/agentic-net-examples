@@ -1,49 +1,58 @@
-// Title: Export Aspose.Cells workbook with a column chart to PDF while preserving formatting (C#)
-// Description: Creates a workbook, adds sample data and a column chart, configures PdfSaveOptions (RefreshChartCache and ExportDocumentStructure) to keep the chart up‑to‑date and its visual layout, then saves the whole workbook as a PDF.
-// Keywords: Aspose.Cells | C# PDF export | chart to PDF | RefreshChartCache | ExportDocumentStructure | .NET Excel to PDF | preserve chart appearance | column chart export
-// Common Searches: Aspose.Cells export chart to PDF C# | how to keep chart formatting when saving Excel as PDF | PdfSaveOptions RefreshChartCache example | ExportDocumentStructure effect on PDF accessibility | save workbook with chart as PDF using Aspose.Cells
-// Developer Intent: Generate a PDF file from a workbook that contains a column chart, ensuring the chart’s design and data are retained.
-// Use Cases: Produce printable PDF reports that include sales or KPI charts with the same look as the Excel source. | Automate dashboard distribution where charts must reflect the latest data at export time. | Create accessible PDFs by preserving document structure for screen‑reader compatibility.
-// AI Prompts: Show C# code to export a workbook with multiple charts to a single PDF while maintaining each chart’s formatting. | Explain how RefreshChartCache influences chart rendering in PDF output with Aspose.Cells. | Give examples of using ExportDocumentStructure to improve PDF accessibility for Excel charts.
+// Title: Export a workbook with a formatted column chart to PDF while preserving chart layout using Aspose.Cells in C#
+// AI Prompts: Write C# code that creates a new workbook, inserts a column chart with a title, sets PdfSaveOptions (RefreshChartCache = true and ExportDocumentStructure = true), and saves the workbook as a PDF file. | Show how to use Aspose.Cells PdfSaveOptions to retain chart formatting when converting an Excel workbook containing charts to PDF in C#.
+// Common Searches: Aspose.Cells C# export Excel workbook with chart to PDF preserving chart formatting | How to keep column chart layout when saving workbook as PDF using Aspose.Cells | PdfSaveOptions RefreshChartCache true example in C# | ExportDocumentStructure option for PDF conversion with charts Aspose.Cells | C# code to save workbook with chart to PDF using Aspose.Cells
+// Tags: Aspose.Cells PDF export with chart formatting | PdfSaveOptions RefreshChartCache C# | ExportDocumentStructure option Aspose.Cells | column chart PDF conversion Aspose.Cells | C# workbook to PDF preserving charts
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
-using Aspose.Cells.Saving; // Namespace for PdfSaveOptions
+using Aspose.Cells.Saving;
 
-// Creates a workbook, adds sample data and a column chart, configures PdfSaveOptions (RefreshChartCache and ExportDocumentStructure) to keep the chart up‑to‑date and its visual layout, then saves the whole workbook as a PDF.
-class ExportWorkbookChartToPdf
+namespace AsposeCellsExportWorkbookToPdf
 {
-    static void Main()
+    // The program creates a new workbook, adds sample data, inserts a column chart with a title, configures PdfSaveOptions to refresh the chart cache and retain document structure, and saves the workbook as 'WorkbookWithChart.pdf', preserving the chart's appearance in the PDF.
+    class Program
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook
+            Workbook workbook = new Workbook();
 
-        // Populate sample data for the chart
-        sheet.Cells["A1"].PutValue("Category");
-        sheet.Cells["A2"].PutValue("Fruits");
-        sheet.Cells["A3"].PutValue("Vegetables");
-        sheet.Cells["B1"].PutValue("Value");
-        sheet.Cells["B2"].PutValue(50);
-        sheet.Cells["B3"].PutValue(30);
+            // Access the first worksheet
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Add a column chart to the worksheet
-        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
-        Chart chart = sheet.Charts[chartIndex];
+            // Populate sample data for the chart
+            worksheet.Cells["A1"].PutValue("Category");
+            worksheet.Cells["A2"].PutValue("Fruits");
+            worksheet.Cells["A3"].PutValue("Vegetables");
+            worksheet.Cells["B1"].PutValue("Value");
+            worksheet.Cells["B2"].PutValue(50);
+            worksheet.Cells["B3"].PutValue(30);
 
-        // Set the data source for the chart
-        chart.NSeries.Add("B2:B3", true);
-        chart.NSeries.CategoryData = "A2:A3";
+            // Add a column chart to the worksheet
+            int chartIndex = worksheet.Charts.Add(ChartType.Column, 5, 0, 20, 8);
+            Chart chart = worksheet.Charts[chartIndex];
 
-        // Configure PDF save options to preserve chart formatting
-        PdfSaveOptions pdfOptions = new PdfSaveOptions();
-        pdfOptions.RefreshChartCache = true;          // Ensure chart data is up‑to‑date
-        pdfOptions.ExportDocumentStructure = true;    // Preserve document structure (optional)
+            // Set the data source for the chart
+            chart.NSeries.Add("B2:B3", true);
+            chart.NSeries.CategoryData = "A2:A3";
 
-        // Save the entire workbook, including the chart, to a PDF file
-        workbook.Save("WorkbookWithChart.pdf", pdfOptions);
+            // Optional: Apply some formatting to the chart (e.g., title)
+            chart.Title.Text = "Sample Chart";
 
-        Console.WriteLine("Workbook exported to PDF successfully.");
+            // Create PDF save options to preserve chart formatting
+            PdfSaveOptions pdfSaveOptions = new PdfSaveOptions
+            {
+                // Refresh chart cache ensures the latest data and formatting are used
+                RefreshChartCache = true,
+                // ExportDocumentStructure retains the structure of the document
+                ExportDocumentStructure = true
+            };
+
+            // Save the entire workbook (including the chart) to a PDF file
+            workbook.Save("WorkbookWithChart.pdf", pdfSaveOptions);
+
+            Console.WriteLine("Workbook exported to PDF successfully.");
+        }
     }
 }

@@ -1,27 +1,64 @@
-// Title: Disable automatic calculation for tables only while keeping other formulas automatic with Aspose.Cells for .NET
-// Description: Learn how to set Aspose.Cells' CalculationMode to AutomaticExceptTable in C#. The workbook (new or existing) will recalculate all non‑table formulas automatically, while table formulas are excluded until manually refreshed. Finally, the workbook is saved with the new setting.
-// Keywords: Aspose.Cells AutomaticExceptTable | C# calculation mode tables | disable table auto‑recalc Aspose | Aspose.Cells formula settings .NET | Excel workbook calculation mode | AutomaticExceptTable example
-// Common Searches: Aspose.Cells set CalculationMode to AutomaticExceptTable | disable automatic calculation for tables only C# | keep non‑table formulas auto‑calculating Aspose.Cells | how to exclude tables from auto‑recalc in Aspose.Cells | programmatically change calculation mode Aspose.Cells
-// Developer Intent: Configure a workbook so that only table formulas are excluded from automatic recalculation, while all other formulas remain in automatic mode.
-// Use Cases: Large data‑driven reports where table formulas are refreshed manually to improve performance. | Batch processing of spreadsheets where table recalculation is costly, using AutomaticExceptTable to speed up updates. | Creating a template workbook that automatically updates standard formulas but leaves table calculations under user control.
-// AI Prompts: Generate C# code to revert a workbook from AutomaticExceptTable back to full Automatic calculation using Aspose.Cells. | Show how to trigger manual recalculation of only the tables after setting CalculationMode to AutomaticExceptTable. | Compare performance of AutomaticExceptTable versus full Automatic mode for workbooks with thousands of rows.
+// Title: Disable automatic calculation for Excel tables only while keeping other formulas automatic with Aspose.Cells for .NET (C#)
+// AI Prompts: Provide a C# example that sets Workbook.Settings.FormulaSettings.CalculationMode to AutomaticExceptTable to stop tables from auto‑recalculating. | Show how to create a ListObject, add a regular formula outside the table, and save the workbook with table‑only calculation disabled using Aspose.Cells. | Generate code that keeps normal worksheet formulas in Automatic mode but excludes ListObject tables from automatic calculation in a .NET workbook.
+// Common Searches: Aspose.Cells C# disable auto calculation for ListObject tables only | set calculation mode to AutomaticExceptTable in .NET workbook | keep workbook formulas automatic while turning off table recalculation Aspose.Cells | how to prevent Excel table formulas from auto‑calculating using Aspose.Cells | example of using AutomaticExceptTable mode with Aspose.Cells for .NET
+// Tags: AutomaticExceptTable calculation mode Aspose.Cells | disable table auto‑calc .NET | Aspose.Cells ListObject calculation setting | C# workbook calculation mode control | Excel table calculation mode Aspose.Cells | Aspose.Cells formula settings tables
 
 using System;
+using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
 
-// Learn how to set Aspose.Cells' CalculationMode to AutomaticExceptTable in C#. The workbook (new or existing) will recalculate all non‑table formulas automatically, while table formulas are excluded until manually refreshed. Finally, the workbook is saved with the new setting.
+// The sample creates a workbook, fills cells A1:B3, adds a ListObject (table) over that range, inserts a regular formula in D1, sets Workbook.Settings.FormulaSettings.CalculationMode to AutomaticExceptTable to disable automatic calculation for tables only, and saves the file as TableCalcMode.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook (or load an existing one)
-        Workbook workbook = new Workbook(); // new Workbook("input.xlsx") to load
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Disable automatic calculation for tables only.
-        // Other formulas will still be calculated automatically.
-        workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+            // Populate some data
+            worksheet.Cells["A1"].PutValue(1);
+            worksheet.Cells["A2"].PutValue(2);
+            worksheet.Cells["A3"].PutValue(3);
+            worksheet.Cells["B1"].PutValue(4);
+            worksheet.Cells["B2"].PutValue(5);
+            worksheet.Cells["B3"].PutValue(6);
 
-        // Save the workbook with the new calculation mode setting.
-        workbook.Save("output.xlsx");
+            // Define the range for the table (A1:B3)
+            int firstRow = 0;          // zero‑based index for row 1
+            int firstColumn = 0;       // zero‑based index for column A
+            int lastRow = firstRow + 2;    // row 3 (zero‑based)
+            int lastColumn = firstColumn + 1; // column B (zero‑based)
+
+            // Add the table (ListObject) and set its display name
+            int tableIndex = worksheet.ListObjects.Add(firstRow, firstColumn, lastRow, lastColumn, true);
+            ListObject table = worksheet.ListObjects[tableIndex];
+            table.DisplayName = "SampleTable";
+
+            // Add a regular formula outside the table
+            worksheet.Cells["D1"].Formula = "=SUM(A1:B3)";
+
+            // Disable automatic calculation for tables only
+            workbook.Settings.FormulaSettings.CalculationMode = CalcModeType.AutomaticExceptTable;
+
+            // Determine output file path and ensure the directory exists
+            string outputPath = "TableCalcMode.xlsx";
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

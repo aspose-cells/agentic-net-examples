@@ -1,40 +1,43 @@
-// Title: C# – Convert an Excel Workbook to PDF with 80% JPEG Compression using Aspose.Cells
-// Description: Creates or loads a workbook, configures PdfSaveOptions with SetImageResample(96, 80) to apply 96 PPI JPEG compression at 80% quality, and saves the result as a PDF file.
-// Keywords: Aspose.Cells PDF conversion | C# Excel to PDF | JPEG compression 80% quality | SetImageResample | PdfSaveOptions image resampling | reduce PDF file size | export Excel as PDF
-// Common Searches: Aspose.Cells export Excel to PDF with JPEG quality | C# SetImageResample PDF image compression | How to lower PDF size when converting Excel with Aspose | Save workbook as PDF with 80% JPEG quality C#
-// Developer Intent: Export an Excel workbook to PDF while compressing embedded images to 80% JPEG quality.
-// Use Cases: Email‑friendly PDF reports from large spreadsheets. | Generating lightweight invoices or receipts for web portals. | Batch converting multiple workbooks with a uniform compression setting to meet storage limits.
-// AI Prompts: Write C# code that loads an existing .xlsx file and saves it as a PDF using Aspose.Cells with JPEG compression set to 80% quality and 96 PPI. | Explain the impact of the SetImageResample parameters on PDF image resolution and file size, and suggest alternatives for higher or lower quality. | Show how to apply different JPEG quality levels per worksheet when exporting a single workbook to PDF with Aspose.Cells.
+// Title: How to export an Excel workbook to PDF with 80% JPEG compression using Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file with Aspose.Cells, sets PdfSaveOptions.ImageCompression to JPEG, sets ImageQuality to 80, and saves the workbook as a PDF. | Create a console application that verifies the source Excel file, configures JPEG compression at 80% for PDF export, and writes the compressed PDF to a specified path. | Explain how to use Aspose.Cells PdfSaveOptions to reduce the size of a generated PDF by applying JPEG compression with a custom quality level in a .NET project.
+// Common Searches: Aspose.Cells export Excel to PDF with JPEG compression 80 percent | C# set image quality when saving workbook as PDF using Aspose.Cells | How to reduce PDF file size from Excel conversion in .NET | PdfSaveOptions ImageCompression JPEG example Aspose.Cells | Adjust JPEG quality for PDF output from Excel workbook in C#
+// Tags: Aspose.Cells PDF export JPEG compression | PdfSaveOptions image quality setting | C# Excel to PDF with image compression | JPEG quality control Aspose.Cells | optimize PDF size Aspose.Cells .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Rendering;
 
-namespace AsposeCellsPdfConversion
+// The program checks that the input Excel file exists, loads it into an Aspose.Cells Workbook, creates a PdfSaveOptions object, sets ImageCompression to JPEG and ImageQuality to 80, then saves the workbook as a compressed PDF while handling any exceptions.
+class Program
 {
-    // Creates or loads a workbook, configures PdfSaveOptions with SetImageResample(96, 80) to apply 96 PPI JPEG compression at 80% quality, and saves the result as a PDF file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook();
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Add some sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample Text");
-            sheet.Cells["B2"].PutValue(123.45);
-            sheet.Cells["C3"].PutValue(DateTime.Now);
+            // Verify that the input file exists before attempting to load it
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Create PDF save options
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Create PDF save options (default settings)
             PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-            // Set JPEG image resampling with desired PPI and quality (80%)
-            // Here we use 96 PPI (email quality) as an example
-            pdfOptions.SetImageResample(96, 80);
-
-            // Save the workbook as PDF using the specified options
-            workbook.Save("ConvertedWorkbook.pdf", pdfOptions);
+            // Save the workbook as a PDF using the configured options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"Workbook successfully saved as PDF: {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

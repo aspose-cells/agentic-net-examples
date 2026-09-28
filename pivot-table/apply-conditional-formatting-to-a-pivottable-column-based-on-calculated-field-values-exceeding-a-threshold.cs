@@ -1,19 +1,16 @@
-// Title: C# – Apply Conditional Formatting to a PivotTable Calculated Field with Aspose.Cells
-// Description: Creates a workbook, builds a PivotTable from product data, adds a calculated field (Total = Price × Quantity), and uses PivotConditionalFormat to highlight Total values greater than 500 with a light‑salmon background and bold font, then saves the file.
-// Keywords: Aspose.Cells | .NET | C# | PivotTable | Conditional Formatting | Calculated Field | PivotConditionalFormat | Excel automation | highlight values > 500 | Aspose.Cells example
-// Common Searches: Aspose.Cells conditional formatting for PivotTable calculated field | C# highlight PivotTable column values above a threshold | How to use PivotConditionalFormat in Aspose.Cells | Set background color for PivotTable data area .NET | Apply conditional formatting to calculated field in Excel using Aspose
-// Developer Intent: I want to automatically format cells in a PivotTable calculated column when their values exceed a specific limit using Aspose.Cells for .NET.
-// Use Cases: Sales dashboard that flags products with total revenue over a target amount. | Financial report that draws attention to outlier totals for quick analysis. | Automated Excel export where high‑value rows are highlighted for reviewers.
-// AI Prompts: Generate C# code with Aspose.Cells that adds a calculated field to a PivotTable and highlights values greater than 1000. | Show how to use PivotConditionalFormat to change font style and background color for a specific data field based on a numeric condition. | Provide an example that refreshes and calculates PivotTable data so conditional formatting on a calculated column takes effect.
+// Title: How to apply conditional formatting to a calculated "Total" field in an Aspose.Cells PivotTable using C#
+// AI Prompts: Write C# code that creates a PivotTable, adds a calculated field named Total (Price * Quantity), and applies a PivotConditionalFormat to highlight cells where Total exceeds 1000. | Show how to set PivotConditionFormatScopeType to Data and specify the field area for a calculated data field in Aspose.Cells. | Demonstrate configuring a FormatCondition with OperatorType.GreaterThan and a custom background color for a PivotTable calculated column.
+// Common Searches: Aspose.Cells C# conditional formatting on pivot table calculated field Total | Highlight pivot table column values greater than 1000 using Aspose.Cells | Set PivotConditionalFormat scope to data field in C# Aspose.Cells example | Add calculated field to PivotTable and apply cell background color in Aspose.Cells | How to use FormatCondition with OperatorType.GreaterThan in Aspose.Cells pivot
+// Tags: aspocells pivotconditionalformat calculated field | c# conditional formatting pivot table aspocells | highlight values over threshold aspocells | add calculated field to aspocells pivot | formatcondition greaterthan aspocells
 
 using System;
-using System.Drawing;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System.Drawing;
 
 namespace AsposeCellsPivotConditionalFormatting
 {
-    // Creates a workbook, builds a PivotTable from product data, adds a calculated field (Total = Price × Quantity), and uses PivotConditionalFormat to highlight Total values greater than 500 with a light‑salmon background and bold font, then saves the file.
+    // The example creates a workbook, populates product data, builds a PivotTable with Product rows and Price/Quantity data fields, adds a calculated field "Total" (Price × Quantity), refreshes the pivot, and then applies a PivotConditionalFormat scoped to data fields. The format targets the "Total" column, uses a GreaterThan condition with a threshold of 1000, and sets a light coral background before saving the file.
     public class Program
     {
         public static void Main()
@@ -32,58 +29,57 @@ namespace AsposeCellsPivotConditionalFormatting
 
                 cells["A2"].Value = "Apple";
                 cells["B2"].Value = 10;
-                cells["C2"].Value = 30;
+                cells["C2"].Value = 120;
 
                 cells["A3"].Value = "Banana";
                 cells["B3"].Value = 8;
-                cells["C3"].Value = 50;
+                cells["C3"].Value = 150;
 
                 cells["A4"].Value = "Cherry";
                 cells["B4"].Value = 12;
-                cells["C4"].Value = 20;
+                cells["C4"].Value = 90;
 
                 // Add a pivot table based on the data range
                 int pivotIndex = sheet.PivotTables.Add("A1:C4", "E3", "SalesPivot");
                 PivotTable pivot = sheet.PivotTables[pivotIndex];
 
                 // Configure pivot fields
-                pivot.AddFieldToArea(PivotFieldType.Row, "Product");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Price");
-                pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");
+                pivot.AddFieldToArea(PivotFieldType.Row, "Product");          // Row field
+                pivot.AddFieldToArea(PivotFieldType.Data, "Price");          // Data field
+                pivot.AddFieldToArea(PivotFieldType.Data, "Quantity");       // Data field
 
-                // Add a calculated field: Total = Price * Quantity
+                // Add a calculated field: Total = Price * Quantity, and drag it to the data area
                 pivot.AddCalculatedField("Total", "=Price*Quantity", true);
 
-                // Refresh the pivot cache so that the calculated field appears
-                pivot.RefreshData();
+                // Refresh and calculate the pivot table to populate data
+                pivot.RefreshData();   // Correct API call
+                pivot.CalculateData();
 
-                // Add conditional formatting to the calculated field column
+                // Add conditional formatting targeting the calculated field column
                 int formatIdx = pivot.ConditionalFormats.Add();
                 PivotConditionalFormat pcf = pivot.ConditionalFormats[formatIdx];
+
+                // Apply to data fields (the calculated field is a data field)
                 pcf.ScopeType = PivotConditionFormatScopeType.Data;
+
+                // Define the area as the calculated field "Total"
                 pcf.AddFieldArea(PivotFieldType.Data, "Total");
 
-                // Define the condition: values greater than 500
+                // Create a condition: values greater than 1000
                 int conditionIdx = pcf.FormatConditions.AddCondition(FormatConditionType.CellValue);
                 FormatCondition condition = pcf.FormatConditions[conditionIdx];
                 condition.Operator = OperatorType.GreaterThan;
-                condition.Formula1 = "500";
+                condition.Formula1 = "1000";
 
-                // Set visual style for cells that meet the condition
-                condition.Style.BackgroundColor = Color.LightSalmon;
-                condition.Style.Font.IsBold = true;
-
-                // Calculate the pivot table data so that conditional formatting is applied
-                pivot.CalculateData();
+                // Set the formatting style (e.g., light red background)
+                condition.Style.BackgroundColor = Color.LightCoral;
 
                 // Save the workbook
-                string outputPath = "PivotTable_With_CalculatedField_ConditionalFormatting.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                workbook.Save("PivotTable_With_CalculatedField_ConditionalFormatting.xlsx");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
     }

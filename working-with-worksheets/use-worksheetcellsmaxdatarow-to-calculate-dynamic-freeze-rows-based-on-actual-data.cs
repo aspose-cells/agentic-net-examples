@@ -1,59 +1,45 @@
-// Title: Dynamic Freeze Rows with Worksheet.Cells.MaxDataRow in Aspose.Cells for .NET
-// Description: Creates a workbook, populates a worksheet, uses Worksheet.Cells.MaxDataRow to find the last populated row (zero‑based) and applies FreezePanes to lock all rows up to that point, then saves the file as an Excel workbook.
-// Keywords: Aspose.Cells | C# | .NET | Worksheet.Cells.MaxDataRow | dynamic freeze rows | freeze panes programmatically | last data row Excel | Excel automation | FreezePanes API | zero‑based row index
-// Common Searches: Aspose.Cells freeze rows up to last data row | Worksheet.Cells.MaxDataRow example C# | dynamic freeze panes based on data Aspose | how to set FreezePanes programmatically in .NET | freeze header rows automatically Aspose.Cells
-// Developer Intent: Identify the final row containing data and programmatically freeze all rows above it.
-// Use Cases: Keep header and summary rows visible in reports whose row count varies. | Automatically apply freeze panes after importing CSV or database data. | Generate Excel templates where the number of rows changes per user input.
-// AI Prompts: Generate C# code that uses Aspose.Cells to freeze rows up to the last non‑empty row. | Show how to read a DataTable into a worksheet and apply a dynamic freeze pane using MaxDataRow. | Explain how to extend the logic to also freeze columns based on Worksheet.Cells.MaxDataColumn.
+// Title: Dynamically freeze rows up to the last populated row with Worksheet.Cells.MaxDataRow in Aspose.Cells for .NET
+// AI Prompts: Write C# code that retrieves Worksheet.Cells.MaxDataRow and uses FreezePanes to lock all rows above that row in an Aspose.Cells workbook. | Show an example of calculating the maximum data row in a worksheet and applying a dynamic freeze pane based on that value with Aspose.Cells for .NET. | Extend the sample to also determine the maximum data column and freeze both rows and columns up to those limits using MaxDataColumn and FreezePanes.
+// Common Searches: Aspose.Cells C# freeze panes based on the last data row | How to use Cells.MaxDataRow to set dynamic freeze rows in .NET | Freeze top rows automatically up to populated data with Aspose.Cells | C# code example for dynamic row freeze using MaxDataRow in Aspose.Cells
+// Tags: dynamic row freeze Aspose.Cells | Worksheet.Cells.MaxDataRow example | FreezePanes based on data range .NET | calculate last populated row Aspose.Cells | C# Aspose.Cells freeze panes programmatically
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, adds sample data, obtains the index of the last row containing data via Worksheet.Cells.MaxDataRow, freezes all rows up to that index with FreezePanes, and saves the workbook as DynamicFreezeRows.xlsx.
+class Program
 {
-    // Creates a workbook, populates a worksheet, uses Worksheet.Cells.MaxDataRow to find the last populated row (zero‑based) and applies FreezePanes to lock all rows up to that point, then saves the file as an Excel workbook.
-    public class DynamicFreezeRowsDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+            // Create a new workbook (or load an existing one)
+            Workbook workbook = new Workbook(); // create workbook
+            Worksheet sheet = workbook.Worksheets[0]; // get first worksheet
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            // Example: populate some data (optional, replace with real data as needed)
+            sheet.Cells["A1"].PutValue("Header");
+            sheet.Cells["A2"].PutValue(10);
+            sheet.Cells["A3"].PutValue(20);
+            sheet.Cells["A4"].PutValue(30);
 
-            // Populate sample data (you can replace this with your own data source)
-            sheet.Cells["A1"].PutValue("Header1");
-            sheet.Cells["B1"].PutValue("Header2");
-            sheet.Cells["A2"].PutValue("Item1");
-            sheet.Cells["B2"].PutValue(100);
-            sheet.Cells["A3"].PutValue("Item2");
-            sheet.Cells["B3"].PutValue(200);
-            sheet.Cells["A4"].PutValue("Item3");
-            sheet.Cells["B4"].PutValue(300);
-
-            // Determine the last row that contains data (zero‑based index)
+            // Calculate the last row that contains data (zero‑based index)
             int maxDataRow = sheet.Cells.MaxDataRow;
 
-            // Freeze rows up to the last data row if any data exists
-            if (maxDataRow >= 0)
-            {
-                // Freeze rows: maxDataRow + 1 rows (since row index is zero‑based)
-                sheet.FreezePanes(maxDataRow + 1, 0, maxDataRow + 1, 0);
-            }
+            // Freeze rows up to the last data row.
+            // FreezePanes(row, column, totalRows, totalColumns)
+            // row/column specify the split location; totalRows/totalColumns specify how many rows/columns to freeze.
+            sheet.FreezePanes(maxDataRow + 1, 0, maxDataRow + 1, 0);
 
-            // Save the workbook
-            workbook.Save("DynamicFreezeRowsDemo.xlsx");
+            // Save the workbook with the dynamic freeze applied
+            string outputPath = "DynamicFreezeRows.xlsx";
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

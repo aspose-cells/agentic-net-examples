@@ -1,66 +1,59 @@
-// Title: How to Assign a Unique GUID Name to an OLE Object with Aspose.Cells for .NET
-// Description: Demonstrates creating a workbook, inserting an OLE object with a 1×1 PNG placeholder, generating a GUID, setting the OleObject.Name property to that GUID, optionally assigning a label, and saving the file as XLSX using Aspose.Cells for C#.
-// Keywords: Aspose.Cells OLE object name | set OleObject.Name C# | GUID for OLE object | placeholder image OLE Aspose | Aspose.Cells add OLE object | unique OLE object identifier | OleObject.Label property
-// Common Searches: Aspose.Cells set unique name for OLE object | C# assign GUID to OleObject.Name | add OLE object with placeholder image Aspose.Cells | how to label OLE objects in Excel using Aspose | retrieve OLE object by name Aspose.Cells
-// Developer Intent: Assign a globally unique name to an OleObject immediately after it is added to a worksheet.
-// Use Cases: Insert several OLE objects and give each a distinct GUID‑based name for later lookup or automation. | Generate Excel reports where embedded objects must be uniquely identifiable for downstream processing. | Add OLE objects with a temporary image and a user‑friendly label while preserving a unique internal name.
-// AI Prompts: Write C# code that adds multiple OLE objects to a worksheet with Aspose.Cells and assigns each a unique name using Guid.NewGuid(). | Show how to find an OleObject in a saved workbook by its Name property with Aspose.Cells for .NET. | Explain how to replace the placeholder image of an existing OleObject without changing its assigned GUID name.
+// Title: Insert an OLE object into a worksheet cell and assign a GUID to its Name property with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to add an OLE object from a file to a specific cell, sets OleObject.Name to a newly created GUID string, and saves the workbook. | Create a reusable C# method that inserts an OLE object into a given worksheet location, assigns a unique identifier to the object's Name property, and returns the updated Workbook.
+// Common Searches: Aspose.Cells C# set OleObject.Name to a GUID after inserting OLE object | how to give a unique name to an OLE object in Excel using Aspose.Cells | C# code example for adding OLE object to cell B2 with Aspose.Cells | assign unique identifier to OleObject.Name property in Aspose.Cells workbook | insert OLE object into specific worksheet cell and set Name property in Aspose.Cells
+// Tags: aspose.cells insert oleobject c# | aspose.cells set oleobject name guid | aspose.cells oleobject unique identifier | aspose.cells add oleobject to worksheet cell | aspose.cells oleobject name property
 
 using System;
 using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace OleObjectNameDemo
+// C# program that creates a new workbook, inserts an OLE object from 'sample.docx' into cell B2, assigns a newly generated GUID string to the OleObject.Name property, and saves the result as 'Result.xlsx' using Aspose.Cells for .NET.
+class Program
 {
-    // Demonstrates creating a workbook, inserting an OLE object with a 1×1 PNG placeholder, generating a GUID, setting the OleObject.Name property to that GUID, optionally assigning a label, and saving the file as XLSX using Aspose.Cells for C#.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Path to the source OLE file
+            string oleFilePath = "sample.docx";
+
+            // Ensure the source file exists; create an empty placeholder if missing
+            if (!File.Exists(oleFilePath))
             {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Create a simple placeholder image (1x1 pixel PNG) in memory
-                byte[] placeholderImage = CreatePlaceholderImage();
-
-                // Add an OLE object with the placeholder image
-                int oleIndex = worksheet.OleObjects.Add(5, 2, 200, 150, placeholderImage);
-                OleObject oleObject = worksheet.OleObjects[oleIndex];
-
-                // Assign a unique name to the OLE object
-                oleObject.Name = "OleObject_" + Guid.NewGuid().ToString("N");
-
-                // Optionally set a label for display purposes
-                oleObject.Label = "Sample OLE Object";
-
-                // Ensure the output directory exists
-                string outputPath = "OleObjectWithUniqueName.xlsx";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+                File.WriteAllBytes(oleFilePath, new byte[0]);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Read the OLE file into a byte array
+            byte[] oleData = File.ReadAllBytes(oleFilePath);
+
+            // Insert an OLE object at cell B2 (row index 1, column index 1)
+            // Height = 200 pixels, Width = 300 pixels, offsets set to 0
+            OleObject ole = sheet.Shapes.AddOleObject(
+                1,          // upperLeftRow
+                1,          // upperLeftColumn
+                200,        // height
+                300,        // width
+                0,          // upperLeftRowOffset
+                0,          // upperLeftColumnOffset
+                oleData     // OLE object data
+            );
+
+            // Assign a unique identifier to the OLE object's Name property
+            ole.Name = Guid.NewGuid().ToString();
+
+            // Save the workbook
+            workbook.Save("Result.xlsx");
         }
-
-        // Returns a 1x1 transparent PNG image as a byte array
-        private static byte[] CreatePlaceholderImage()
+        catch (Exception ex)
         {
-            // Base64 representation of a 1x1 transparent PNG
-            const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+X0ZcAAAAASUVORK5CYII=";
-            return Convert.FromBase64String(base64Png);
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

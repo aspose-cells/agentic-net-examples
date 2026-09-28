@@ -1,54 +1,28 @@
-// Title: Export a worksheet with frozen panes to a single HTML file using Aspose.Cells for .NET
-// Description: Demonstrates how to freeze the first row and column, configure HtmlSaveOptions (SaveAsSingleFile, ExportRowColumnHeadings, ExportGridLines), and save the worksheet as an HTML page that retains the frozen headers for web viewing.
-// Keywords: Aspose.Cells freeze panes HTML export | C# HtmlSaveOptions SaveAsSingleFile | ExportRowColumnHeadings Aspose.Cells | Aspose.Cells grid lines HTML | freeze first row and column Aspose.Cells | Aspose.Cells worksheet to HTML
-// Common Searches: Aspose.Cells export frozen panes to HTML | C# save Excel with frozen headers as single HTML file | HtmlSaveOptions keep frozen rows visible | How to export Excel with frozen columns using Aspose.Cells | Export worksheet with grid lines and frozen headers
-// Developer Intent: Create an HTML representation of an Excel worksheet that keeps the top row and left column fixed, mimicking Excel's frozen pane behavior.
-// Use Cases: Web dashboards where header rows/columns must stay visible while scrolling large data sets. | Generating printable HTML previews of Excel reports that retain frozen pane layout. | Embedding Excel-like tables in documentation portals without requiring the Excel application.
-// AI Prompts: Write C# code with Aspose.Cells to freeze the first row and column and export the sheet to a single HTML file that includes row/column headings and grid lines. | Explain the impact of HtmlSaveOptions properties SaveAsSingleFile, ExportRowColumnHeadings, and ExportGridLines on the HTML output of a frozen‑pane worksheet. | Create a unit test in C# that verifies the exported HTML contains the frozen header rows and columns after using Aspose.Cells.
+// Title: Freeze the first row of an Excel worksheet and export to HTML with a persistent header using Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells to freeze the top header row of a worksheet and then save the workbook as an HTML file that retains the frozen pane. | Generate HTML from an Excel file in C# where the header row stays fixed while scrolling, leveraging Worksheet.FreezePanes and SaveFormat.Html.
+// Common Searches: C# Aspose.Cells freeze top row before exporting to HTML | How to keep header row static in HTML output from Excel using Aspose.Cells | Export Excel worksheet to HTML with frozen panes in .NET | Aspose.Cells preserve frozen panes when saving as HTML | Freeze panes in Excel and generate HTML with fixed header using C#
+// Tags: Worksheet.FreezePanes for HTML rendering | HTML export with fixed header using Aspose.Cells | preserve frozen pane state in HTML output | Aspose.Cells SaveFormat.Html with frozen rows | C# generate HTML from Excel with locked header
 
-using System;
 using Aspose.Cells;
 
-namespace AsposeCellsFreezePaneHtmlExport
+// Loads input.xlsx, freezes the first row of the first worksheet, and saves the workbook as output.html where the header remains fixed in the generated HTML.
+class Program
 {
-    // Demonstrates how to freeze the first row and column, configure HtmlSaveOptions (SaveAsSingleFile, ExportRowColumnHeadings, ExportGridLines), and save the worksheet as an HTML page that retains the frozen headers for web viewing.
-    class Program
+    static void Main()
     {
-        static void Main()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Load the workbook (using the provided load rule)
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Populate sample data (10 rows x 5 columns)
-            for (int row = 0; row < 10; row++)
-            {
-                for (int col = 0; col < 5; col++)
-                {
-                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-            }
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the first row and first column (A2 cell is the freeze point)
-            // This will keep row 1 and column A visible while scrolling
-            sheet.FreezePanes("B2", 1, 1);
+        // Freeze the first row (header) so it stays visible in HTML
+        // Parameters: totalRows, totalColumns, rows, columns
+        // Freeze 1 row, 0 columns; the scrollable area starts at cell A2 (row index 1)
+        sheet.FreezePanes(1, 0, 1, 0);
 
-            // Configure HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Save as a single HTML file so that page headers can be exported if needed
-                SaveAsSingleFile = true,
-                // Export row and column headings to make the frozen headers visible in HTML
-                ExportRowColumnHeadings = true,
-                // Optional: include grid lines for better visual reference
-                ExportGridLines = true
-            };
-
-            // Export the worksheet to HTML
-            string outputPath = "FrozenPaneExport.html";
-            workbook.Save(outputPath, htmlOptions);
-
-            Console.WriteLine($"Workbook exported to HTML with frozen headers at: {outputPath}");
-        }
+        // Export the worksheet to HTML (using the provided save rule)
+        // The frozen pane information is preserved in the generated HTML
+        workbook.Save("output.html", SaveFormat.Html);
     }
 }

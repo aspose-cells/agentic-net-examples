@@ -1,37 +1,48 @@
-// Title: Aspose.Cells C# – Create Union Range (A1:B2, D4:E5) and Apply Bold Font
-// Description: Learn how to use WorksheetCollection.CreateUnionRange to combine the non‑contiguous cells A1:B2 and D4:E5, define a bold Style, apply it with a StyleFlag, and save the workbook with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells CreateUnionRange | C# union range bold style | WorksheetCollection.CreateUnionRange | Apply bold font Aspose.Cells | StyleFlag FontBold | non contiguous cells formatting | Aspose.Cells .NET example | UnionRange.ApplyStyle
-// Common Searches: How to create a union range with Aspose.Cells C# | Apply bold formatting to multiple non‑adjacent cells using Aspose.Cells | WorksheetCollection CreateUnionRange example | StyleFlag usage for font bold in Aspose.Cells
-// Developer Intent: Combine A1:B2 and D4:E5 into a union range and set the font to bold for every cell in that range.
-// Use Cases: Highlight header blocks that are separated on a worksheet by applying bold formatting to a union range. | Emphasize key financial figures located in different sections of a report without merging cells. | Standardize bold styling across several chart data ranges that are not contiguous.
-// AI Prompts: Generate C# code that uses WorksheetCollection.CreateUnionRange to merge A1:B2 and D4:E5 and applies a bold font with a StyleFlag. | Show an Aspose.Cells example that applies only the FontBold attribute to a union range. | Explain how to reuse a StyleFlag to apply additional style properties to a union range created with CreateUnionRange.
+// Title: Create a union range for cells A1:B2 and D4:E5 and apply a bold font style with Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses WorksheetCollection.CreateUnionRange to merge the ranges A1:B2 and D4:E5 and then applies a bold font to every cell in the union using Aspose.Cells. | Show how to define a Style and StyleFlag in Aspose.Cells and apply them to a non‑contiguous union range created from multiple addresses. | Explain the steps required to create a union range and style it bold in an in‑memory workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# create union range from multiple addresses and set bold font | How to apply a style to non‑contiguous cells using CreateUnionRange in Aspose.Cells | C# example for formatting union range A1:B2,D4:E5 with Aspose.Cells | Apply bold text to a union range in an Aspose.Cells workbook | WorksheetCollection.CreateUnionRange usage for styling cells in .NET
+// Tags: grouped cell range bold styling Aspose.Cells | C# discontiguous cells format Aspose.Cells | WorksheetCollection range grouping example | apply style to multiple address blocks Aspose.Cells | save XLSX workbook with styled cell groups
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Learn how to use WorksheetCollection.CreateUnionRange to combine the non‑contiguous cells A1:B2 and D4:E5, define a bold Style, apply it with a StyleFlag, and save the workbook with Aspose.Cells for .NET.
+// // This program creates an in‑memory workbook, builds a union range covering A1:B2 and D4:E5 on the first worksheet, defines a bold font style, applies it to all cells in the union range, and saves the workbook to Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Create a new workbook (in-memory)
+            Workbook workbook = new Workbook();
 
-        // Create a union range that combines cells A1:B2 and D4:E5 on the first worksheet (index 0)
-        UnionRange unionRange = workbook.Worksheets.CreateUnionRange("A1:B2,D4:E5", 0);
+            // Ensure at least one worksheet exists
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Define a style with a bold font
-        Style boldStyle = workbook.CreateStyle();
-        boldStyle.Font.IsBold = true;
+            // Create a union range that combines the two address blocks on the first sheet (index 0)
+            UnionRange unionRange = workbook.Worksheets.CreateUnionRange("A1:B2,D4:E5", 0);
 
-        // Specify that only the bold attribute should be applied
-        StyleFlag flag = new StyleFlag();
-        flag.FontBold = true;
+            // Define a style with a bold font
+            Style boldStyle = workbook.CreateStyle();
+            boldStyle.Font.IsBold = true;
 
-        // Apply the bold style to all cells in the union range
-        unionRange.ApplyStyle(boldStyle, flag);
+            // Prepare a StyleFlag to apply all style attributes
+            StyleFlag flag = new StyleFlag { All = true };
 
-        // Save the workbook to a file
-        workbook.Save("UnionRangeBold.xlsx");
+            // Apply the bold style to all cells in the union range
+            unionRange.ApplyStyle(boldStyle, flag);
+
+            // Define output file path
+            string outputPath = "Output.xlsx";
+
+            // Save the workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,96 +1,103 @@
-// Title: C# tool to list signed vs unsigned Excel workbooks in a folder with Aspose.Cells
-// Description: Scans a specified directory for Excel files (.xlsx, .xls, .xlsm, .xlsb), uses Aspose.Cells Workbook.IsDigitallySigned to separate signed and unsigned workbooks, and generates an Excel report containing the columns "Signature Status" and "Workbook File Name" saved in the same folder.
-// Keywords: Aspose.Cells | C# digital signature | Workbook.IsDigitallySigned | list signed Excel files | Excel compliance report | generate workbook report .NET | scan folder for signed workbooks | Excel file signature audit | C# file system scan | Aspose.Cells example
-// Common Searches: Aspose.Cells check if workbook is digitally signed | C# list signed Excel files in a directory | Generate Excel report of signed and unsigned workbooks | How to use Workbook.IsDigitallySigned | Create compliance report for Excel signatures with Aspose | C# scan folder for signed workbooks Aspose.Cells
-// Developer Intent: Create an Excel report that identifies which workbooks in a given folder are digitally signed and which are not.
-// Use Cases: Regulatory audit of financial models before external distribution | Automated compliance check that flags unsigned workbooks in a project | CI/CD pipeline gate that fails a build when unsigned Excel files are detected | Batch processing of legacy workbooks to enforce signing policies | Integration with a document‑management system to tag files by signature status
-// AI Prompts: Write C# code using Aspose.Cells to scan a folder for .xlsx, .xls, .xlsm, .xlsb files, determine each workbook's digital signature via IsDigitallySigned, and output a new Excel file with columns "Signature Status" and "Workbook File Name". | Suggest robust error‑handling strategies for files that cannot be opened as workbooks while generating a signature status report with Aspose.Cells. | Explain how to extend the report to include the file's last modified date and file size alongside its signature status. | Provide performance tips for scanning large directories (thousands of files) with Aspose.Cells. | Show how to localize the report headers for different languages using Aspose.Cells.
+// Title: Generate a signed vs unsigned Excel workbook report from a folder using Aspose.Cells in C#
+// AI Prompts: Write a C# console program that enumerates .xls, .xlsx, .xlsm, and .xlsb files in a given path, loads each workbook with Aspose.Cells, inspects the DigitalSignatureCollection via reflection, and writes two sections (Signed and Unsigned) to a plain‑text report. | Extend the workbook scanner to walk subfolders recursively and output the signature results as a CSV file with columns FileName and SignatureStatus. | Add comprehensive error handling that records files which cannot be opened to a separate log and appends a summary line showing total counts of signed and unsigned workbooks.
+// Common Searches: c# enumerate Excel files and detect digital signatures with Aspose.Cells | how to create a compliance report of signed versus unsigned workbooks using Aspose.Cells .NET | scan a folder for .xls/.xlsx files and list those with digital signatures in C# | generate text report of signed and unsigned Excel workbooks programmatically | Aspose.Cells check workbook DigitalSignatureCollection in a .NET console app
+// Tags: Aspose.Cells digital signature detection .NET | C# enumerate Excel workbooks by signature status | generate signed workbook report Aspose.Cells | scan folder for signed .xlsx files using Aspose.Cells | write workbook signature summary to text file C#
 
 using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using Aspose.Cells;
 
 namespace WorkbookSignatureReport
 {
-    // Scans a specified directory for Excel files (.xlsx, .xls, .xlsm, .xlsb), uses Aspose.Cells Workbook.IsDigitallySigned to separate signed and unsigned workbooks, and generates an Excel report containing the columns "Signature Status" and "Workbook File Name" saved in the same folder.
+    // // This C# console application scans a specified directory for .xls, .xlsx, .xlsm, and .xlsb files, loads each workbook with Aspose.Cells, uses reflection to examine the DigitalSignatureCollection for signatures, separates file names into signed and unsigned lists, and writes the results to WorkbookSignatureReport.txt.
     class Program
     {
         static void Main(string[] args)
         {
-            // Specify the directory containing the workbooks to scan.
-            // You can pass the path as a command‑line argument or set it directly here.
-            string targetDirectory = args.Length > 0 ? args[0] : @"C:\Workbooks";
+            // Directory containing the workbooks
+            string directoryPath = @"C:\Workbooks";
 
-            // Collections to hold file names based on signature status.
-            List<string> signedFiles = new List<string>();
-            List<string> unsignedFiles = new List<string>();
-
-            // Supported Excel extensions.
-            string[] extensions = new[] { "*.xlsx", "*.xls", "*.xlsm", "*.xlsb" };
-
-            // Scan each supported file type.
-            foreach (string ext in extensions)
+            // Verify that the directory exists
+            if (!Directory.Exists(directoryPath))
             {
-                foreach (string filePath in Directory.GetFiles(targetDirectory, ext, SearchOption.TopDirectoryOnly))
+                Console.WriteLine($"Directory not found: {directoryPath}");
+                return;
+            }
+
+            // Supported workbook extensions
+            string[] extensions = new[] { ".xls", ".xlsx", ".xlsm", ".xlsb" };
+
+            // Lists to store signed and unsigned workbook names
+            List<string> signedWorkbooks = new List<string>();
+            List<string> unsignedWorkbooks = new List<string>();
+
+            try
+            {
+                // Process each extension separately
+                foreach (string ext in extensions)
                 {
-                    try
-                    {
-                        // Load the workbook using the provided constructor rule.
-                        Workbook wb = new Workbook(filePath);
+                    // Get files with the current extension
+                    string[] files = Directory.GetFiles(directoryPath, "*" + ext, SearchOption.TopDirectoryOnly);
 
-                        // Determine digital signature status.
-                        if (wb.IsDigitallySigned)
-                            signedFiles.Add(Path.GetFileName(filePath));
-                        else
-                            unsignedFiles.Add(Path.GetFileName(filePath));
-
-                        // Release resources.
-                        wb.Dispose();
-                    }
-                    catch (Exception ex)
+                    foreach (string filePath in files)
                     {
-                        // If a file cannot be opened as a workbook, treat it as unsigned and log the issue.
-                        Console.WriteLine($"Error processing '{filePath}': {ex.Message}");
-                        unsignedFiles.Add(Path.GetFileName(filePath) + " (Error)");
+                        // Ensure the file exists before attempting to load
+                        if (!File.Exists(filePath))
+                            continue;
+
+                        try
+                        {
+                            // Load workbook
+                            Workbook workbook = new Workbook(filePath);
+
+                            // Determine if the workbook has digital signatures using reflection
+                            bool hasSignature = false;
+                            var propInfo = workbook.GetType().GetProperty("DigitalSignatureCollection");
+                            if (propInfo != null)
+                            {
+                                var collection = propInfo.GetValue(workbook) as ICollection;
+                                if (collection != null && collection.Count > 0)
+                                    hasSignature = true;
+                            }
+
+                            // Add file name to the appropriate list
+                            if (hasSignature)
+                                signedWorkbooks.Add(Path.GetFileName(filePath));
+                            else
+                                unsignedWorkbooks.Add(Path.GetFileName(filePath));
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log loading errors and continue processing other files
+                            Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                        }
                     }
                 }
+
+                // Write the report
+                string reportPath = Path.Combine(directoryPath, "WorkbookSignatureReport.txt");
+                using (StreamWriter writer = new StreamWriter(reportPath))
+                {
+                    writer.WriteLine("Signed Workbooks:");
+                    foreach (string name in signedWorkbooks)
+                        writer.WriteLine(name);
+
+                    writer.WriteLine(); // Separator
+
+                    writer.WriteLine("Unsigned Workbooks:");
+                    foreach (string name in unsignedWorkbooks)
+                        writer.WriteLine(name);
+                }
+
+                Console.WriteLine("Workbook signature report generated at:");
+                Console.WriteLine(reportPath);
             }
-
-            // Create a new workbook to hold the compliance report.
-            Workbook report = new Workbook(); // uses the default constructor rule
-            Worksheet sheet = report.Worksheets[0];
-
-            // Write headers.
-            sheet.Cells["A1"].PutValue("Signature Status");
-            sheet.Cells["B1"].PutValue("Workbook File Name");
-
-            int row = 1; // zero‑based index; row 1 is the second row in the sheet.
-
-            // Populate signed workbook entries.
-            foreach (string name in signedFiles)
+            catch (Exception ex)
             {
-                sheet.Cells[row, 0].PutValue("Signed");
-                sheet.Cells[row, 1].PutValue(name);
-                row++;
+                Console.WriteLine($"Unexpected error: {ex.Message}");
             }
-
-            // Populate unsigned workbook entries.
-            foreach (string name in unsignedFiles)
-            {
-                sheet.Cells[row, 0].PutValue("Unsigned");
-                sheet.Cells[row, 1].PutValue(name);
-                row++;
-            }
-
-            // Auto‑fit columns for better readability.
-            sheet.AutoFitColumns();
-
-            // Save the report using the provided Save method.
-            string reportPath = Path.Combine(targetDirectory, "WorkbookSignatureReport.xlsx");
-            report.Save(reportPath); // uses Save(string) rule
-
-            Console.WriteLine($"Compliance report generated at: {reportPath}");
         }
     }
 }

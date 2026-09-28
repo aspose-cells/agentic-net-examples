@@ -1,54 +1,78 @@
-// Title: C# – Extract worksheet TabId from an XLSX using Aspose.Cells with low‑memory loading
-// Description: Demonstrates how to open an XLSX file with LoadOptions.MemorySetting = MemoryPreference, keep only the workbook structure in memory, iterate through each Worksheet, read its TabId property, and output the sheet name, index and TabId. No cell data is materialized and the workbook is not saved.
-// Keywords: Aspose.Cells TabId extraction | C# low memory Excel loading | LoadOptions.MemoryPreference | read worksheet metadata OpenXML | XLSX TabId without full workbook | Aspose.Cells memory efficient | Excel worksheet identifier C# | US developers Aspose.Cells
-// Common Searches: Aspose.Cells get worksheet TabId without loading whole file | C# low memory read Excel sheet identifiers | How to retrieve TabId from large XLSX using Aspose | MemoryPreference load Excel metadata only | Extract worksheet IDs from OpenXML with Aspose.Cells
-// Developer Intent: Obtain the TabId of every worksheet in an XLSX file while avoiding full workbook materialization.
-// Use Cases: Validate sheet identifiers in massive workbooks for version control. | Build a name‑to‑TabId map for synchronization with external systems. | Perform quick metadata scans of large Excel files on memory‑constrained servers.
-// AI Prompts: Generate C# code that lists each worksheet’s TabId from a large XLSX using Aspose.Cells with MemoryPreference. | Explain the impact of LoadOptions.MemorySetting.MemoryPreference on workbook loading and how to access TabId. | Adapt the sample to export worksheet names and TabIds to a CSV file.
+// Title: Retrieve each worksheet's TabId from an .xlsx file using Aspose.Cells in C#
+// AI Prompts: Generate a C# method that accepts a .xlsx file path and returns a Dictionary<string,long> mapping each worksheet name to its TabId, using Aspose.Cells. | Show how to iterate over Workbook.Worksheets in Aspose.Cells and capture the TabId property for every sheet, including a file‑existence check. | Provide sample code that safely handles exceptions while reading worksheet TabIds from an Excel file with Aspose.Cells. | Demonstrate how to print the collected sheet‑name‑to‑TabId pairs to the console in C#.
+// Common Searches: Aspose.Cells C# get worksheet TabId dictionary | How to read Excel sheet TabId with Aspose.Cells in .NET | C# code to list all sheet names and their TabId from .xlsx | Retrieve TabId values from worksheets without opening Excel | Aspose.Cells example for extracting TabId property from worksheets
+// Tags: Aspose.Cells read worksheet TabId | C# extract sheet TabId from .xlsx | Aspose.Cells enumerate workbook worksheets | C# dictionary mapping sheet name to TabId | error‑handling Aspose.Cells file read | Aspose.Cells workbook TabId property
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Metadata;
 
-namespace AsposeCellsTabIdExtractor
+// The example loads an .xlsx workbook with Aspose.Cells, loops through each worksheet, and builds a Dictionary that maps worksheet names to their TabId values, while handling missing files and runtime exceptions.
+public static class ExcelTabIdExtractor
 {
-    // Demonstrates how to open an XLSX file with LoadOptions.MemorySetting = MemoryPreference, keep only the workbook structure in memory, iterate through each Worksheet, read its TabId property, and output the sheet name, index and TabId. No cell data is materialized and the workbook is not saved.
-    class Program
+    /// <param name="filePath">Full path to the .xlsx file.</param>
+    /// <returns>Dictionary where the key is the sheet name and the value is its TabId.</returns>
+    public static Dictionary<string, long> GetSheetTabIds(string filePath)
     {
-        static void Main()
+        var sheetTabIds = new Dictionary<string, long>(StringComparer.OrdinalIgnoreCase);
+
+        // Prevent FileNotFoundException.
+        if (!File.Exists(filePath))
+            return sheetTabIds;
+
+        try
         {
-            // Path to the Excel file (OpenXml package)
-            string filePath = "sample.xlsx";
+            // Load the workbook using Aspose.Cells.
+            var workbook = new Workbook(filePath);
 
-            // ------------------------------------------------------------
-            // Load the workbook with minimal memory usage.
-            // ------------------------------------------------------------
-            // LoadOptions with MemoryPreference tells Aspose.Cells to avoid loading
-            // the entire workbook into memory. This is suitable for extracting
-            // lightweight metadata such as the worksheet TabId.
-            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+            // Iterate through worksheets and collect their TabId.
+            foreach (Worksheet sheet in workbook.Worksheets)
             {
-                // Prefer memory-efficient loading; the workbook structure is still
-                // available, but cell data is not fully materialized.
-                MemorySetting = MemorySetting.MemoryPreference
-            };
+                // TabId is an integer; cast to long for consistency with the return type.
+                sheetTabIds[sheet.Name] = (long)sheet.TabId;
+            }
+        }
+        catch (Exception)
+        {
+            // Runtime safety: swallow exceptions or handle logging as needed.
+        }
 
-            // Create the workbook instance using the constructor that accepts a file path and LoadOptions.
-            Workbook workbook = new Workbook(filePath, loadOptions);
+        return sheetTabIds;
+    }
+}
 
-            // ------------------------------------------------------------
-            // Iterate through worksheets and read the TabId property.
-            // ------------------------------------------------------------
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        try
+        {
+            // Example usage: first argument is the path to the .xlsx file.
+            if (args.Length == 0)
             {
-                Worksheet sheet = workbook.Worksheets[i];
-                int tabId = sheet.TabId; // Internal identifier for the sheet
-                Console.WriteLine($"Worksheet \"{sheet.Name}\" (Index {i}) has TabId: {tabId}");
+                Console.WriteLine("Please provide the path to an .xlsx file as a command‑line argument.");
+                return;
             }
 
-            // ------------------------------------------------------------
-            // No need to save the workbook because we only read metadata.
-            // ------------------------------------------------------------
+            string filePath = args[0];
+            var tabIds = ExcelTabIdExtractor.GetSheetTabIds(filePath);
+
+            if (tabIds.Count == 0)
+            {
+                Console.WriteLine("No sheet TabIds were found or the file could not be processed.");
+                return;
+            }
+
+            Console.WriteLine("Sheet TabIds:");
+            foreach (var kvp in tabIds)
+            {
+                Console.WriteLine($"Sheet: {kvp.Key}, TabId: {kvp.Value}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

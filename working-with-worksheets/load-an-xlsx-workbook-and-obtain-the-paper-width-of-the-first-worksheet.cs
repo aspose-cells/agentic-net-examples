@@ -1,35 +1,26 @@
-// Title: C# – Retrieve Paper Width of the First Worksheet from an XLSX Workbook with Aspose.Cells
-// Description: Load an XLSX file using Aspose.Cells for .NET, access the first worksheet, read its PageSetup.PaperWidth property (in inches), and output the value to the console.
-// Keywords: Aspose.Cells C# paper width | Worksheet PageSetup PaperWidth | read XLSX page setup .NET | get worksheet paper size inches | Aspose.Cells workbook page dimensions
-// Common Searches: Aspose.Cells get worksheet paper width C# | how to read PageSetup PaperWidth from XLSX | C# retrieve first sheet paper size using Aspose | Aspose.Cells page setup dimensions example
-// Developer Intent: Read the paper width setting of the first worksheet in an XLSX workbook.
-// Use Cases: Verify that a worksheet fits standard printer paper before printing. | Calculate scaling or layout adjustments based on the sheet's paper width. | Enforce corporate printing standards by checking page‑setup dimensions.
-// AI Prompts: Generate C# code with Aspose.Cells that lists the PaperWidth of every worksheet in centimeters. | Show how to modify a worksheet's PaperWidth, save the workbook, and confirm the change programmatically. | Explain how to compare the PaperWidth of multiple worksheets against a target page size and flag mismatches.
+// Title: Get the paper width of the first worksheet in an XLSX workbook with Aspose.Cells for .NET (C#)
+// AI Prompts: Provide C# code that opens an XLSX file with Aspose.Cells and returns the PageSetup.PaperWidth of the first sheet. | Show how to read the print page width of a worksheet using Aspose.Cells in a .NET console application. | Modify the example to also display the paper height alongside the width for the first worksheet.
+// Common Searches: Aspose.Cells C# retrieve first sheet paper width from XLSX | How to read worksheet page setup dimensions using Aspose.Cells .NET | Get print page width of a worksheet in C# with Aspose.Cells | C# Aspose.Cells example for accessing PageSetup.PaperWidth property | Read paper size settings of the first worksheet in an Excel file using Aspose.Cells
+// Tags: Aspose.Cells read worksheet paper width | C# page setup dimensions XLSX | retrieve print width property Aspose | first worksheet page setup Aspose.Cells | access PaperWidth API .NET
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsPaperWidthDemo
+// Loads an XLSX workbook, selects the first worksheet, reads its PageSetup.PaperWidth (points), and writes the value to the console.
+class Program
 {
-    // Load an XLSX file using Aspose.Cells for .NET, access the first worksheet, read its PageSetup.PaperWidth property (in inches), and output the value to the console.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Path to the existing XLSX file
-            string filePath = "input.xlsx";
+        // Load the XLSX workbook from file
+        Workbook workbook = new Workbook("input.xlsx");
 
-            // Load the workbook from the file (uses the provided Workbook(string) constructor)
-            Workbook workbook = new Workbook(filePath);
+        // Get the first worksheet (index 0)
+        Worksheet firstSheet = workbook.Worksheets[0];
 
-            // Access the first worksheet in the workbook
-            Worksheet firstWorksheet = workbook.Worksheets[0];
+        // Obtain the paper width of the worksheet (in points)
+        double paperWidth = firstSheet.PageSetup.PaperWidth;
 
-            // Retrieve the paper width (in inches) from the worksheet's PageSetup
-            double paperWidthInInches = firstWorksheet.PageSetup.PaperWidth;
-
-            // Output the paper width
-            Console.WriteLine($"Paper Width of the first worksheet: {paperWidthInInches} inches");
-        }
+        // Output the paper width
+        Console.WriteLine($"Paper width of the first worksheet: {paperWidth} points");
     }
 }

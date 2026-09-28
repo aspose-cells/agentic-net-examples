@@ -1,10 +1,7 @@
-// Title: Asynchronous PivotTable Refresh with Aspose.Cells for .NET – Keep UI Responsive
-// Description: Demonstrates how to load an Excel workbook, refresh all PivotTables, recalculate their data, and save the file using Aspose.Cells in C#. All operations are wrapped in Task.Run and awaited, allowing the work to run on background threads and preventing UI thread blockage in WinForms or WPF applications.
-// Keywords: Aspose.Cells async pivot refresh | C# refresh PivotTable background thread | non‑blocking Excel pivot update | Task.Run Aspose.Cells | .NET desktop UI responsiveness | RefreshPivotTables asynchronous
-// Common Searches: refresh pivot tables asynchronously Aspose.Cells | C# non blocking pivot refresh example | how to keep UI responsive while updating Excel pivots | Aspose.Cells RefreshPivotTables on background thread | async calculatedata for pivot tables .NET
-// Developer Intent: Update all PivotTables in an Excel workbook on a background thread to avoid freezing the desktop UI.
-// Use Cases: Refresh large workbooks in a WinForms/WPF app without UI lag. | Integrate async pivot updates into a reporting service that runs alongside user interactions. | Batch‑process multiple Excel files, refreshing and saving each workbook concurrently to improve throughput.
-// AI Prompts: Generate a C# async method that refreshes PivotTables with Aspose.Cells and reports progress to a progress bar. | Show how to add cancellation support to the asynchronous pivot refresh routine in a WPF MVVM command. | Create robust error handling for the async workflow, covering missing files, load failures, and save exceptions.
+// Title: Asynchronously refresh an Excel PivotTable with Aspose.Cells in a C# desktop app to keep the UI responsive
+// AI Prompts: Write an async C# method that opens an .xlsx file with Aspose.Cells, refreshes the first PivotTable on a background thread using Task.Run, and saves the workbook to a new file. | Extend the example to iterate over all worksheets and refresh every PivotTable, accepting a CancellationToken so the operation can be cancelled mid‑process. | Add comprehensive error handling that catches any exception during the pivot refresh, logs relevant details, and rethrows it wrapped in an ApplicationException while preserving the original stack trace.
+// Common Searches: how to refresh an Excel pivot table asynchronously using Aspose.Cells in C# | prevent UI freeze when updating pivot cache with Aspose.Cells .NET | run Aspose.Cells PivotTable.RefreshData on a background thread | c# async method to refresh pivot tables in large workbook without blocking UI | Aspose.Cells example for non‑blocking pivot table refresh in WinForms
+// Tags: aspose.cells async pivot refresh | c# background thread refreshdata | excel workbook non blocking pivot update | aspose.cells refreshdata obsolete suppression | c# cancellationtoken pivot table refresh
 
 using System;
 using System.IO;
@@ -12,55 +9,68 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-namespace AsposeCellsPivotAsyncDemo
+// The sample defines an async RefreshPivotTableAsync method that loads an .xlsx workbook with Aspose.Cells, verifies a PivotTable exists, refreshes its data on a background thread via Task.Run (suppressing the obsolete RefreshData warning), saves the updated file, and wraps any exception in an ApplicationException. The Main method demonstrates calling the async method, enabling UI‑responsive pivot refresh in desktop .NET applications.
+class Program
 {
-    // Demonstrates how to load an Excel workbook, refresh all PivotTables, recalculate their data, and save the file using Aspose.Cells in C#. All operations are wrapped in Task.Run and awaited, allowing the work to run on background threads and preventing UI thread blockage in WinForms or WPF applications.
-    class Program
+    // Refreshes the first pivot table in the first worksheet of the workbook.
+    // inputPath  - path to the source workbook.
+    // outputPath - path where the updated workbook will be saved.
+    static async Task RefreshPivotTableAsync(string inputPath, string outputPath)
     {
-        // Entry point for a console application.
-        static async Task Main(string[] args)
+        // Verify that the input file exists to avoid FileNotFoundException.
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Path to the Excel file containing the pivot table.
-                string inputPath = "PivotData.xlsx";
-                string outputPath = "PivotData_Refreshed.xlsx";
-
-                // Refresh the pivot tables without blocking the UI thread.
-                await RefreshPivotTablesAsync(inputPath, outputPath);
-
-                Console.WriteLine("Pivot tables refreshed and workbook saved.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            throw new FileNotFoundException($"Input file not found: {inputPath}");
         }
 
-        // Asynchronously loads a workbook, refreshes all pivot tables, and saves the result.
-        private static async Task RefreshPivotTablesAsync(string sourceFile, string destinationFile)
+        try
         {
-            // Verify that the source file exists before attempting to load it.
-            if (!File.Exists(sourceFile))
-                throw new FileNotFoundException($"Source file not found: {sourceFile}");
+            // Load the workbook.
+            Workbook workbook = new Workbook(inputPath);
 
-            // Load the workbook on a background thread.
-            Workbook workbook = await Task.Run(() => new Workbook(sourceFile));
+            // Get the first worksheet (adjust if needed).
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Refresh all pivot tables in the workbook on a background thread.
-            await Task.Run(() => workbook.Worksheets.RefreshPivotTables());
-
-            // Recalculate the pivot data after refresh.
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Ensure the worksheet contains at least one pivot table.
+            if (sheet.PivotTables.Count == 0)
             {
-                foreach (PivotTable pt in sheet.PivotTables)
-                {
-                    await Task.Run(() => pt.CalculateData());
-                }
+                throw new InvalidOperationException("No pivot tables found in the first worksheet.");
             }
 
-            // Save the updated workbook on a background thread.
-            await Task.Run(() => workbook.Save(destinationFile));
+            // Get the first pivot table.
+            PivotTable pivotTable = sheet.PivotTables[0];
+
+            // Refresh the pivot table on a background thread.
+            await Task.Run(() =>
+            {
+                // Refresh the pivot table data (method is marked obsolete but still functional).
+#pragma warning disable CS0618 // Suppress obsolete warning
+                pivotTable.RefreshData();
+#pragma warning restore CS0618
+            });
+
+            // Save the updated workbook.
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            // Wrap and rethrow to let the caller handle it.
+            throw new ApplicationException("Error while refreshing pivot table.", ex);
+        }
+    }
+
+    // Example usage from a console application.
+    static async Task Main(string[] args)
+    {
+        try
+        {
+            // Adjust paths as appropriate.
+            await RefreshPivotTableAsync("input.xlsx", "output.xlsx");
+            Console.WriteLine("Pivot table refreshed and workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Operation failed: {ex.Message}");
         }
     }
 }

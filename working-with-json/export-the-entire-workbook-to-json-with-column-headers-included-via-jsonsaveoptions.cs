@@ -1,41 +1,44 @@
-// Title: Export a full Aspose.Cells workbook to JSON with column headers (C#)
-// Description: Shows how to create a workbook, add a header row, configure JsonSaveOptions (HasHeaderRow=true, ExportEmptyCells=false, ExportNestedStructure=false, Indent=" ") and save the entire workbook as a pretty‑printed JSON file using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells | C# JSON export | JsonSaveOptions | HasHeaderRow | ExportEmptyCells | ExportNestedStructure | pretty printed JSON | Excel to JSON .NET | full workbook export | sample code | Aspose.Cells JSON example
-// Common Searches: Aspose.Cells export workbook to JSON C# | JsonSaveOptions HasHeaderRow example | Save Excel as indented JSON .NET | Export entire workbook as JSON Aspose | C# convert Excel to JSON with headers
-// Developer Intent: Save the complete workbook as a JSON file while preserving the first row as column names.
-// Use Cases: Generate a JSON payload for APIs directly from an Excel workbook that includes header information. | Create a human‑readable JSON configuration file from spreadsheet data for downstream processing. | Produce formatted JSON reports from Excel data for documentation, logging, or auditing.
-// AI Prompts: Show how to modify JsonSaveOptions to include empty cells as null values in the exported JSON. | Provide code that exports only a selected worksheet to JSON while still including the header row. | Explain how to change the indentation style or remove it entirely when saving the workbook as JSON.
+// Title: Export a complete Excel workbook to JSON with column headers using Aspose.Cells JsonSaveOptions in C#
+// AI Prompts: Generate C# code that loads an .xlsx workbook, configures JsonSaveOptions to retain column headers, and saves the entire workbook as a JSON file with Aspose.Cells. | Show how to use Aspose.Cells JsonSaveOptions in .NET to export all worksheets of an Excel file to a single JSON document while preserving header rows.
+// Common Searches: how to export all sheets from an Excel file to JSON with headers using Aspose.Cells C# | Aspose.Cells JsonSaveOptions include column names when saving workbook to JSON | C# convert multi-sheet Excel workbook to JSON preserving column headers Aspose
+// Tags: Aspose.Cells JsonSaveOptions export workbook to JSON | C# export Excel to JSON with column headers | save entire workbook as JSON using Aspose.Cells | include header rows in JSON output Aspose.Cells | convert multi-sheet Excel to JSON .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Shows how to create a workbook, add a header row, configure JsonSaveOptions (HasHeaderRow=true, ExportEmptyCells=false, ExportNestedStructure=false, Indent=" ") and save the entire workbook as a pretty‑printed JSON file using Aspose.Cells for .NET.
+// The program verifies the presence of the source Excel file, loads it with Aspose.Cells, creates a JsonSaveOptions instance (which includes column headers by default), and saves the entire workbook—including all worksheets—to a JSON file, handling any runtime exceptions.
 class ExportWorkbookToJson
 {
     static void Main()
     {
-        // Create a new workbook (lifecycle rule: create)
-        Workbook workbook = new Workbook();
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.json";
 
-        // Populate the first worksheet with a header row and some data
-        Worksheet sheet = workbook.Worksheets[0];
-        sheet.Cells["A1"].PutValue("Name");   // Header
-        sheet.Cells["B1"].PutValue("Age");    // Header
-        sheet.Cells["A2"].PutValue("John");
-        sheet.Cells["B2"].PutValue(30);
-        sheet.Cells["A3"].PutValue("Jane");
-        sheet.Cells["B3"].PutValue(25);
-
-        // Configure JsonSaveOptions to include the header row in the exported JSON
-        JsonSaveOptions jsonOptions = new JsonSaveOptions
+        // Verify that the input workbook exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            HasHeaderRow = true,          // Include column headers
-            ExportEmptyCells = false,     // Do not export empty cells as null
-            ExportNestedStructure = false,
-            Indent = "  "                 // Optional: pretty‑print with indentation
-        };
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
+        }
 
-        // Save the entire workbook as a JSON file using the options (lifecycle rule: save)
-        workbook.Save("WorkbookExport.json", jsonOptions);
+        try
+        {
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure JSON save options (default behavior includes column headers)
+            JsonSaveOptions jsonOptions = new JsonSaveOptions();
+
+            // Export the entire workbook to a JSON file
+            workbook.Save(outputPath, jsonOptions);
+
+            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors during processing
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

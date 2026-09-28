@@ -1,51 +1,38 @@
-// Title: Aspose.Cells .NET – Link Chart Category Axis to Cell Range B2:B8 (C#)
-// Description: Creates a workbook, fills B2:B8 with category labels and C2:C8 with values, adds a column chart, and binds the X‑axis to the B2:B8 range using NSeries.CategoryData before saving as an XLSX file.
-// Keywords: Aspose.Cells chart category axis | C# NSeries CategoryData | link chart labels to cells | Aspose.Cells column chart example | bind chart categories range B2:B8 | .NET spreadsheet charting
-// Common Searches: Aspose.Cells set chart category labels C# | NSeries.CategoryData usage .NET | bind chart axis to worksheet range Aspose.Cells | create column chart with custom categories Aspose.Cells | how to link chart categories to cells in C#
-// Developer Intent: Bind the chart’s category (X‑axis) labels to the values in cells B2:B8.
-// Use Cases: Generate a sales chart where product names stored in column B appear on the X‑axis. | Build a dynamic report that updates axis labels automatically when B2:B8 cells are edited. | Create a monthly performance chart that reads month names from a worksheet range for easy maintenance.
-// AI Prompts: Show C# code to change the CategoryData range of an existing Aspose.Cells chart to a different column. | Provide an example that binds multiple series to a chart and assigns separate category ranges for each in Aspose.Cells. | Explain how to refresh chart category labels after modifying the source cells using Aspose.Cells.
+// Title: Assign chart category labels from cells B2:B8 using Aspose.Cells NSeries.CategoryData in C#
+// AI Prompts: Create a C# example that adds a column chart and assigns its CategoryData property to the range B2:B8 with Aspose.Cells. | Write code to bind chart series category labels to worksheet cells using the NSeries.CategoryData API in Aspose.Cells for .NET.
+// Common Searches: how to set chart category axis labels from a worksheet range using Aspose.Cells in C# | Aspose.Cells NSeries.CategoryData property example for column charts | link Excel chart categories to cells B2:B8 with Aspose.Cells .NET library
+// Tags: Aspose.Cells NSeries.CategoryData binding | C# column chart category labels from worksheet range | set chart categories using Aspose.Cells API | Excel chart series category data linking .NET | Aspose.Cells chart category axis configuration
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-namespace AsposeCellsCategoryDataExample
+// The program creates a workbook, fills cells A2:A8 and B2:B8 with sample data, adds a column chart, sets its series values to B2:B8, links the chart's CategoryData to the same range, and saves the file as ChartCategoryData.xlsx.
+class Program
 {
-    // Creates a workbook, fills B2:B8 with category labels and C2:C8 with values, adds a column chart, and binds the X‑axis to the B2:B8 range using NSeries.CategoryData before saving as an XLSX file.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+
+        // Populate sample data (optional, just to have something in the range)
+        for (int i = 2; i <= 8; i++)
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Access the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data
-            // Column B will hold category labels (B2:B8)
-            // Column C will hold numeric values for the series (C2:C8)
-            sheet.Cells["B1"].PutValue("Category");
-            sheet.Cells["C1"].PutValue("Value");
-            for (int i = 2; i <= 8; i++)
-            {
-                sheet.Cells[$"B{i}"].PutValue($"Cat {i - 1}");
-                sheet.Cells[$"C{i}"].PutValue(i * 10);
-            }
-
-            // Add a column chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Column, 10, 0, 30, 15);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the series data range (values) – vertical series from C2:C8
-            chart.NSeries.Add("C2:C8", true);
-
-            // Link the category axis labels to the range B2:B8
-            chart.NSeries.CategoryData = "B2:B8";
-
-            // Save the workbook to a file
-            workbook.Save("CategoryDataLinkedChart.xlsx", SaveFormat.Xlsx);
+            sheet.Cells[$"A{i}"].PutValue($"Category {i - 1}");
+            sheet.Cells[$"B{i}"].PutValue(i * 10);
         }
+
+        // Add a column chart to the worksheet
+        int chartIndex = sheet.Charts.Add(ChartType.Column, 5, 0, 20, 12);
+        Chart chart = sheet.Charts[chartIndex];
+
+        // Set the series values (vertical range)
+        chart.NSeries.Add("B2:B8", true);
+
+        // Link the category labels to the same range B2:B8
+        chart.NSeries.CategoryData = "B2:B8";
+
+        // Save the workbook
+        workbook.Save("ChartCategoryData.xlsx");
     }
 }

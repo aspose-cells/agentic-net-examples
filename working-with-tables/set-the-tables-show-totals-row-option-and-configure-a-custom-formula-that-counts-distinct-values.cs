@@ -1,49 +1,59 @@
-// Title: Aspose.Cells C# – Enable Table Totals Row and Set a Distinct‑Count Formula
-// Description: Creates a workbook, adds sample data, defines a ListObject, turns on the totals row, and uses SetCustomTotalsRowFormula with a SUMPRODUCT/COUNTIF expression to count unique values in the first column.
-// Keywords: Aspose.Cells C# table totals row | custom totals formula | distinct count Excel formula | ListObject ShowTotals | SetCustomTotalsRowFormula
-// Common Searches: Aspose.Cells show totals row C# | how to add distinct count to table totals in Aspose.Cells | custom totals calculation ListObject Aspose | C# Excel distinct count formula with Aspose.Cells
-// Developer Intent: Add a ListObject, display its totals row, and configure a custom formula that returns the number of unique entries in a column.
-// Use Cases: Generate summary sheets where the totals row reports unique category counts. | Automate Excel reports that need a distinct‑count metric without VBA. | Create data exports that include a quick‑look unique‑value statistic for analysts.
-// AI Prompts: Write C# code using Aspose.Cells to add a table, enable its totals row, and apply a distinct‑count formula to a column. | Explain the interaction between TotalsCalculation.Custom and SetCustomTotalsRowFormula for unique value counting. | Suggest alternative Excel formulas for distinct counting that can be set with SetCustomTotalsRowFormula in Aspose.Cells.
+// Title: How to enable a totals row and add a COUNT(DISTINCT) formula to an Aspose.Cells ListObject table in C#
+// AI Prompts: Generate C# code that creates a worksheet, adds a ListObject, turns on its totals row, and inserts a COUNT(DISTINCT) formula for a specific column using Aspose.Cells. | Write a C# snippet with Aspose.Cells that displays a totals row in a table and sets a distinct‑count aggregation formula for the Category field.
+// Common Searches: Aspose.Cells C# show totals row for ListObject table | C# Aspose.Cells count distinct values in table totals row | how to set custom formula in totals row of Aspose.Cells table | add totals row with distinct count aggregation using Aspose.Cells for .NET
+// Tags: Aspose.Cells ListObject show totals row | Aspose.Cells set totals row formula | COUNT DISTINCT formula in Aspose.Cells table | C# Aspose.Cells table totals aggregation | Excel table distinct count using Aspose.Cells
 
+using System;
 using Aspose.Cells;
 using Aspose.Cells.Tables;
 
-// Creates a workbook, adds sample data, defines a ListObject, turns on the totals row, and uses SetCustomTotalsRowFormula with a SUMPRODUCT/COUNTIF expression to count unique values in the first column.
+// Creates a new workbook, adds sample data, defines a ListObject table, enables its totals row, places a COUNT(DISTINCT([Category])) formula in the totals row cell, and saves the workbook as Output.xlsx.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
-        Cells cells = sheet.Cells;
-
-        // Populate sample data for the table
-        cells["A1"].PutValue("Category");
-        cells["B1"].PutValue("Value");
-        string[] categories = { "A", "B", "A", "C", "B", "D" };
-        for (int i = 0; i < categories.Length; i++)
+        try
         {
-            cells[i + 1, 0].PutValue(categories[i]);   // Column A
-            cells[i + 1, 1].PutValue(i + 10);          // Column B
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Sample data (header + values)
+            sheet.Cells["A1"].PutValue("Category");
+            sheet.Cells["B1"].PutValue("Value");
+            sheet.Cells["A2"].PutValue("A");
+            sheet.Cells["A3"].PutValue("B");
+            sheet.Cells["A4"].PutValue("A");
+            sheet.Cells["A5"].PutValue("C");
+
+            // Define the range for the table (including header row)
+            int firstRow = 0;          // zero‑based index for row 1
+            int firstColumn = 0;       // zero‑based index for column A
+            int totalRows = 5;         // rows 0‑4 (A1:B5)
+            int totalColumns = 2;      // columns A and B
+
+            // Add a ListObject (table) to the worksheet
+            int tableIdx = sheet.ListObjects.Add(firstRow, firstColumn, firstRow + totalRows, firstColumn + totalColumns - 1, true);
+            ListObject table = sheet.ListObjects[tableIdx];
+
+            // Set a display name for the table
+            table.DisplayName = "MyTable";
+
+            // Enable the totals row
+            table.ShowTotals = true;
+
+            // Set a custom formula in the totals row for the first column to count distinct values
+            int totalsRowIndex = firstRow + totalRows; // row after the data rows
+            sheet.Cells[totalsRowIndex, firstColumn].Formula = "COUNT(DISTINCT([Category]))";
+
+            // Save the workbook
+            workbook.Save("Output.xlsx");
         }
-
-        // Add a table that includes the data range
-        int tableIndex = sheet.ListObjects.Add(0, 0, categories.Length, 1, true);
-        ListObject table = sheet.ListObjects[tableIndex];
-        table.DisplayName = "MyTable";
-
-        // Enable the totals row
-        table.ShowTotals = true;
-
-        // Configure a custom totals calculation for the first column (distinct count)
-        ListColumn firstColumn = table.ListColumns[0];
-        firstColumn.TotalsCalculation = TotalsCalculation.Custom;
-        // Formula for distinct count using SUMPRODUCT and COUNTIF on the column reference
-        firstColumn.SetCustomTotalsRowFormula("=SUMPRODUCT(1/COUNTIF([Category],[Category]))", false, false);
-
-        // Save the workbook
-        workbook.Save("TableDistinctCount.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

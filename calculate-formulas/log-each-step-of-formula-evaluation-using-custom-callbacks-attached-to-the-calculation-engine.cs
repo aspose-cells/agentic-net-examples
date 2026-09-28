@@ -1,19 +1,16 @@
-// Title: C# – Log Formula Evaluation Steps with a Custom CalculationMonitor in Aspose.Cells
-// Description: Demonstrates how to attach a custom CalculationMonitor to Aspose.Cells' calculation engine to log each formula evaluation step. The LoggingCalculationMonitor overrides BeforeCalculate, AfterCalculate, and OnCircular to output original, calculated, and change information, handle division‑by‑zero errors, and report circular references. The sample creates a workbook, adds values and formulas, configures CalculationOptions with the monitor, and runs workbook.CalculateFormula while printing detailed logs to the console.
-// Keywords: Aspose.Cells | C# | CalculationMonitor | formula logging | custom callbacks | BeforeCalculate | AfterCalculate | circular reference detection | division by zero handling | debug workbook formulas | Workbook.CalculateFormula
-// Common Searches: Aspose.Cells log each formula calculation step | How to use CalculationMonitor in Aspose.Cells .NET | Detect circular references with Aspose.Cells | Track original and calculated cell values Aspose.Cells | Debug formula errors using custom monitor Aspose
-// Developer Intent: The developer wants to monitor and record every stage of formula calculation—including pre‑ and post‑values and circular reference events—by implementing a custom CalculationMonitor in Aspose.Cells for .NET.
-// Use Cases: Debug complex spreadsheets by printing before/after values for each calculated cell. | Identify and log circular reference chains to troubleshoot formula logic. | Capture and report calculation errors such as division by zero while preserving step‑by‑step logs.
-// AI Prompts: Create a LoggingCalculationMonitor that adds timestamps and writes logs to a file instead of the console. | Show how to redirect the monitor's output to a structured JSON log for later analysis. | Modify the monitor to skip logging for cells without formulas and only log formula cells.
+// Title: How to log each formula evaluation step with a custom CalculationMonitor in Aspose.Cells for .NET
+// AI Prompts: Create a C# class that inherits from AbstractCalculationMonitor and overrides BeforeCalculate, AfterCalculate, and OnCircular to write detailed evaluation data to the console. | Configure CalculationOptions to assign the custom monitor, enable recursive calculation, and invoke Workbook.CalculateFormula to produce a step‑by‑step log of all cell calculations. | Adapt the LoggingCalculationMonitor to record before/after values and circular‑reference information to a text file instead of the console, then save the file alongside the generated workbook.
+// Common Searches: Aspose.Cells C# how to monitor formula calculation progress | example of custom AbstractCalculationMonitor for logging cell evaluation | detect and handle circular references with Aspose.Cells calculation engine | log before and after values of each cell during workbook.CalculateFormula | save formula evaluation trace to a file using Aspose.Cells .NET
+// Tags: Aspose.Cells custom calculation monitor C# | formula evaluation logging Aspose.Cells | circular reference handling Aspose.Cells | recursive workbook calculation Aspose.Cells | write calculation trace to file Aspose.Cells
 
 using System;
 using System.Collections;
 using Aspose.Cells;
 
-namespace FormulaEvaluationLoggingDemo
+namespace FormulaEvaluationLogging
 {
-    // Custom monitor to log each step of formula calculation
-    // Demonstrates how to attach a custom CalculationMonitor to Aspose.Cells' calculation engine to log each formula evaluation step. The LoggingCalculationMonitor overrides BeforeCalculate, AfterCalculate, and OnCircular to output original, calculated, and change information, handle division‑by‑zero errors, and report circular references. The sample creates a workbook, adds values and formulas, configures CalculationOptions with the monitor, and runs workbook.CalculateFormula while printing detailed logs to the console.
+    // Custom monitor to log calculation steps
+    // The example defines a LoggingCalculationMonitor derived from AbstractCalculationMonitor that outputs before/after cell values and circular‑reference details, attaches it via CalculationOptions with recursive evaluation enabled, runs workbook.CalculateFormula to generate a detailed log, prints final cell values, and optionally saves the trace to a file and the workbook.
     public class LoggingCalculationMonitor : AbstractCalculationMonitor
     {
         // Called before a cell is calculated
@@ -28,18 +25,19 @@ namespace FormulaEvaluationLoggingDemo
         {
             Console.WriteLine($"[After]  Sheet {sheetIndex}, Row {rowIndex}, Column {columnIndex}");
             Console.WriteLine($"    Original: {OriginalValue}, Calculated: {CalculatedValue}, Changed: {ValueChanged}");
-            Console.WriteLine(new string('-', 40));
         }
 
         // Called when a circular reference is detected
         public override bool OnCircular(IEnumerator circularCellsData)
         {
-            Console.WriteLine("Circular reference detected!");
+            Console.WriteLine("Circular reference detected:");
             while (circularCellsData.MoveNext())
             {
-                Console.WriteLine($"    Circular cell: {circularCellsData.Current}");
+                // Each item is a CalculationCell; we output its address
+                var cell = circularCellsData.Current;
+                Console.WriteLine($"    {cell}");
             }
-            // Continue calculation for circular cells
+            // Continue calculation (return true) or stop (return false)
             return true;
         }
     }
@@ -52,31 +50,35 @@ namespace FormulaEvaluationLoggingDemo
             Workbook workbook = new Workbook();
             Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate some sample data and formulas
-            sheet.Cells["A1"].PutValue(10);
-            sheet.Cells["A2"].PutValue(20);
-            sheet.Cells["A3"].Formula = "=A1+A2";          // Simple addition
-            sheet.Cells["A4"].Formula = "=A3*2";           // Dependent on A3
-            sheet.Cells["B1"].Formula = "=SUM(A1:A4)";     // Aggregate function
-            sheet.Cells["B2"].Formula = "=B1/0";           // Intentional error to show handling
+            // Set up sample formulas
+            sheet.Cells["A1"].Formula = "=1+2";          // Simple arithmetic
+            sheet.Cells["A2"].Formula = "=A1*3";        // Dependent on A1
+            sheet.Cells["A3"].Formula = "=SUM(A1:A2)";  // Uses built‑in SUM
 
-            // Set up calculation options with the custom monitor
+            // Optional: create a circular reference to demonstrate OnCircular
+            // sheet.Cells["B1"].Formula = "=B2";
+            // sheet.Cells["B2"].Formula = "=B1";
+
+            // Create calculation options and attach the custom monitor
             CalculationOptions options = new CalculationOptions
             {
                 CalculationMonitor = new LoggingCalculationMonitor(),
-                IgnoreError = false,   // Do not ignore errors so they are reported
-                Recursive = true
+                // Other options can be set as needed, e.g., Recursive = true
+                Recursive = true,
+                IgnoreError = false
             };
 
             // Perform calculation with monitoring
             workbook.CalculateFormula(options);
 
-            // Output final values for verification
+            // Output final values
             Console.WriteLine("\nFinal cell values:");
+            Console.WriteLine($"A1 = {sheet.Cells["A1"].Value}");
+            Console.WriteLine($"A2 = {sheet.Cells["A2"].Value}");
             Console.WriteLine($"A3 = {sheet.Cells["A3"].Value}");
-            Console.WriteLine($"A4 = {sheet.Cells["A4"].Value}");
-            Console.WriteLine($"B1 = {sheet.Cells["B1"].Value}");
-            Console.WriteLine($"B2 = {sheet.Cells["B2"].Value}");
+
+            // Save the workbook (optional)
+            workbook.Save("FormulaEvaluationLog.xlsx");
         }
     }
 }

@@ -1,82 +1,58 @@
-// Title: Read and Log Custom XML Parts from an Excel Workbook using Aspose.Cells for .NET
-// Description: Shows how to open an .xlsx file with Aspose.Cells, enumerate its CustomXmlPartCollection, convert each part's byte array to a UTF‑8 string, and write the XML and part ID to the console for debugging.
-// Keywords: Aspose.Cells custom XML part | C# read custom XML from Excel | convert CustomXmlPart to string | debug Excel custom XML | CustomXmlPartCollection Aspose | UTF-8 XML extraction .NET | Aspose.Cells workbook XML debugging
-// Common Searches: How to get XML string from CustomXmlPart in Aspose.Cells | C# list custom XML parts in an Excel workbook | Serialize CustomXmlPart data to string Aspose.Cells | Debug custom XML parts in .xlsx using .NET | Extract embedded XML from Excel with Aspose.Cells
-// Developer Intent: Extract every custom XML part from a workbook, convert its data to a UTF‑8 string, and output the XML for troubleshooting.
-// Use Cases: Verify the structure of embedded XML before applying transformations. | Log XML content to a file or console to diagnose import/export issues. | Ensure custom XML parts are present and contain valid data prior to automated processing.
-// AI Prompts: Create a C# method that returns a list of UTF‑8 XML strings from all CustomXmlParts in a workbook, handling null or empty parts gracefully. | Write code to merge all custom XML parts into one XML document, prepend each part with a comment containing its ID, and save the result to a .txt file. | Generate robust error‑handling that records the ID of any CustomXmlPart that fails during UTF‑8 conversion and continues processing the remaining parts.
+// Title: Serialize workbook custom XML parts to a UTF‑8 string and log their content using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that opens an .xlsx file with Aspose.Cells, enumerates Workbook.CustomXmlParts, converts each part's Data byte[] to a UTF‑8 string, and prints the part name and XML to the console with proper error handling. | Show how to add file‑existence verification and exception handling while extracting and debugging custom XML parts from an Excel workbook using Aspose.Cells.
+// Common Searches: C# Aspose.Cells how to extract custom XML part from an existing XLSX file | log XML content of workbook custom XML parts for debugging Aspose.Cells | convert custom XML part byte array to string in Aspose.Cells .NET | iterate through Workbook.CustomXmlParts and display XML using Aspose.Cells | handle missing Excel file when reading custom XML parts with Aspose.Cells C#
+// Tags: Aspose.Cells serialize custom XML part | C# read workbook custom XML parts | debug Excel custom XML with Aspose.Cells | convert custom XML byte array to UTF-8 string | iterate Workbook.CustomXmlParts Aspose
 
 using System;
 using System.IO;
 using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Markup;
 
-namespace AsposeCellsExamples
+// The example loads an existing XLSX file, checks that the file exists, iterates over the workbook's CustomXmlParts collection, converts each part's byte[] Data to a UTF‑8 string, and writes the part name and XML content to the console while handling file‑not‑found and processing exceptions.
+class Program
 {
-    // Shows how to open an .xlsx file with Aspose.Cells, enumerate its CustomXmlPartCollection, convert each part's byte array to a UTF‑8 string, and write the XML and part ID to the console for debugging.
-    public class CustomXmlPartDebugDemo
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Specify the workbook path
-                string workbookPath = "input.xlsx";
-
-                // Verify that the file exists to avoid FileNotFoundException
-                if (!File.Exists(workbookPath))
-                {
-                    Console.WriteLine($"File not found: {workbookPath}");
-                    return;
-                }
-
-                // Load the workbook
-                Workbook wb = new Workbook(workbookPath);
-
-                // Access custom XML parts collection
-                CustomXmlPartCollection xmlParts = wb.CustomXmlParts;
-
-                // Inform if there are no custom XML parts
-                if (xmlParts.Count == 0)
-                {
-                    Console.WriteLine("The workbook does not contain any custom XML parts.");
-                    return;
-                }
-
-                // Iterate through each custom XML part and display its content
-                for (int i = 0; i < xmlParts.Count; i++)
-                {
-                    CustomXmlPart part = xmlParts[i];
-                    byte[] dataBytes = part.Data;
-
-                    // Guard against null or empty data
-                    if (dataBytes == null || dataBytes.Length == 0)
-                    {
-                        Console.WriteLine($"Custom XML part at index {i} has no data.");
-                        continue;
-                    }
-
-                    // Convert byte array to UTF-8 string
-                    string xmlContent = Encoding.UTF8.GetString(dataBytes);
-
-                    // Output the XML content for debugging
-                    Console.WriteLine($"--- Custom XML Part {i} (ID: {part.ID}) ---");
-                    Console.WriteLine(xmlContent);
-                    Console.WriteLine("--- End of Part ---");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected errors
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
 
-        // Entry point for the application
-        public static void Main(string[] args)
+        try
         {
-            Run();
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all custom XML parts in the workbook
+            foreach (var customXmlObj in workbook.CustomXmlParts)
+            {
+                try
+                {
+                    // Use dynamic to avoid compile‑time dependency on the exact type name
+                    dynamic customXml = customXmlObj;
+
+                    // Convert the XML data (byte array) to a UTF‑8 string
+                    string xmlContent = Encoding.UTF8.GetString((byte[])customXml.Data);
+
+                    // Log the name of the custom XML part and its XML content
+                    Console.WriteLine($"Custom XML Part Name: {customXml.Name}");
+                    Console.WriteLine("XML Content:");
+                    Console.WriteLine(xmlContent);
+                    Console.WriteLine(new string('-', 80));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to process a custom XML part: {ex.Message}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while processing the workbook: {ex.Message}");
         }
     }
 }

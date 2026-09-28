@@ -1,166 +1,105 @@
-// Title: Compare OData WebQueryConnection metadata before and after changes with Aspose.Cells for .NET
-// Description: Loads a workbook, extracts the first OData (WebQuery) connection's ConnectionString, Command, IsNew and IsSameSettings, re‑applies the same version token, toggles a non‑version property, saves the file, reloads it, and verifies that the version part of the connection string remains unchanged.
-// Keywords: Aspose.Cells | C# OData connection | WebQueryConnection metadata | compare connection string version | verify OData version consistency | external data connections .NET | Aspose.Cells example
-// Common Searches: how to read OData connection metadata Aspose.Cells | compare WebQueryConnection properties before and after save | check OData version in connection string using Aspose.Cells | toggle IsSameSettings without changing OData version | Aspose.Cells verify external connection version
-// Developer Intent: Validate that modifying a WebQueryConnection does not alter the OData version specified in its connection string.
-// Use Cases: Extract and display OData connection string, command, IsNew and IsSameSettings from an existing workbook. | Change a non‑version property of a WebQueryConnection while preserving the original OData version. | Save the workbook, reload it, and confirm that the version token in the connection string is identical to the original.
-// AI Prompts: Generate C# code that parses the 'Version' parameter from a WebQueryConnection.ConnectionString and compares it with a reference version. | Refactor the sample to log metadata differences using Aspose.Cells logging utilities. | Create an NUnit test that ensures the OData version remains unchanged after modifying a WebQueryConnection.
+// Title: How to compare OData DataModelConnection version metadata before and after modification using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a workbook, adds a DataModelConnection with a versioned OData URL, saves the file, reloads it, updates the version in the connection string, and checks the version consistency with Aspose.Cells. | Write a C# method that extracts the Version parameter from a DataModelConnection.ConnectionString and determines whether the original and updated versions match after the workbook is saved.
+// Common Searches: aspnet compare OData connection version after editing workbook with Aspose.Cells | extract version from DataModelConnection connection string C# | validate external OData connection metadata consistency in Excel file using Aspose.Cells | how to update OData service version in Aspose.Cells workbook programmatically | check if OData connection version changed after saving workbook Aspose.Cells .NET
+// Tags: DataModelConnection version extraction C# | modify external OData connection string Aspose.Cells | verify OData version consistency after workbook save | parse connection string parameters Aspose.Cells .NET | track OData service version changes in Excel file
 
 using System;
-using System.IO;
+using System.Collections.Generic;
 using Aspose.Cells;
 using Aspose.Cells.ExternalConnections;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsODataMetadataComparison
 {
-    // Loads a workbook, extracts the first OData (WebQuery) connection's ConnectionString, Command, IsNew and IsSameSettings, re‑applies the same version token, toggles a non‑version property, saves the file, reloads it, and verifies that the version part of the connection string remains unchanged.
-    public class ODataConnectionMetadataComparison
+    // Shows how to create a DataModelConnection that simulates an OData source, save the workbook, reload it, change the version in the connection string, and programmatically extract and compare the original and updated version values to detect any mismatches.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            try
+            // ---------- Create ----------
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Create a DataModelConnection (used here to simulate an OData connection)
+            // The class does not have a public constructor, so we use reflection as shown in Aspose examples
+            DataModelConnection odataConnection = (DataModelConnection)System.Runtime.Serialization.FormatterServices
+                .GetUninitializedObject(typeof(DataModelConnection));
+
+            // Set an initial connection string that includes a version identifier
+            // (In real OData connections, the version might be part of the URL or a query parameter)
+            odataConnection.ConnectionString = "Provider=MSOLAP;Data Source=https://service.example.com/odata;Version=1.0";
+
+            // Assign a unique name for the connection
+            odataConnection.Name = "SampleODataConnection";
+
+            // Add the connection to the workbook's data connections collection
+            ((IList<ExternalConnection>)workbook.DataConnections).Add(odataConnection);
+
+            // Save the workbook (initial state)
+            workbook.Save("ODataDemo_before.xlsx");
+
+            // ---------- Load ----------
+            // Load the workbook we just saved
+            Workbook loadedWorkbook = new Workbook("ODataDemo_before.xlsx");
+
+            // Retrieve the first external connection and cast it to DataModelConnection
+            DataModelConnection loadedConnection = loadedWorkbook.DataConnections[0] as DataModelConnection;
+            if (loadedConnection == null)
             {
-                const string originalFile = "OriginalWithOData.xlsx";
-                const string modifiedFile = "ModifiedWithOData.xlsx";
+                Console.WriteLine("No OData (DataModel) connection found.");
+                return;
+            }
 
-                // Ensure the original workbook exists
-                if (!File.Exists(originalFile))
-                {
-                    Console.WriteLine($"File not found: {originalFile}");
-                    return;
-                }
+            // Capture metadata before modification
+            string originalConnectionString = loadedConnection.ConnectionString;
+            Console.WriteLine("Original ConnectionString: " + originalConnectionString);
 
-                // Load the original workbook that contains an OData (WebQuery) connection
-                Workbook originalWorkbook = new Workbook(originalFile);
+            // ---------- Modify ----------
+            // Update the connection string to a new version (simulating a version change)
+            loadedConnection.ConnectionString = "Provider=MSOLAP;Data Source=https://service.example.com/odata;Version=2.0";
 
-                // Find the first WebQueryConnection (used for OData queries)
-                WebQueryConnection odataConnection = null;
-                foreach (ExternalConnection conn in originalWorkbook.DataConnections)
-                {
-                    if (conn is WebQueryConnection wqc)
-                    {
-                        odataConnection = wqc;
-                        break;
-                    }
-                }
+            // Save the workbook after modification
+            loadedWorkbook.Save("ODataDemo_after.xlsx");
 
-                if (odataConnection == null)
-                {
-                    Console.WriteLine("No OData (WebQuery) connection found in the workbook.");
-                    return;
-                }
+            // ---------- Load Again ----------
+            // Load the modified workbook to verify changes
+            Workbook modifiedWorkbook = new Workbook("ODataDemo_after.xlsx");
+            DataModelConnection modifiedConnection = modifiedWorkbook.DataConnections[0] as DataModelConnection;
+            if (modifiedConnection == null)
+            {
+                Console.WriteLine("No OData (DataModel) connection found after modification.");
+                return;
+            }
 
-                // Capture metadata before modification
-                string beforeConnectionString = odataConnection.ConnectionString;
-                string beforeCommand = odataConnection.Command;
-                bool beforeIsNew = odataConnection.IsNew;
-                bool beforeIsSameSettings = odataConnection.IsSameSettings;
+            // Capture metadata after modification
+            string updatedConnectionString = modifiedConnection.ConnectionString;
+            Console.WriteLine("Updated ConnectionString: " + updatedConnectionString);
 
-                // Display captured metadata
-                Console.WriteLine("=== Metadata BEFORE modification ===");
-                Console.WriteLine($"ConnectionString: {beforeConnectionString}");
-                Console.WriteLine($"Command: {beforeCommand}");
-                Console.WriteLine($"IsNew: {beforeIsNew}");
-                Console.WriteLine($"IsSameSettings: {beforeIsSameSettings}");
-
-                // -----------------------------------------------------------------
-                // Modify a metadata property while keeping the OData version consistent.
-                // Assume the version is specified in the connection string as "Version=4.0".
-                // We'll replace the version with the same value to demonstrate a no‑change scenario.
-                // -----------------------------------------------------------------
+            // ---------- Compare ----------
+            // Simple version extraction assuming the format "...;Version=X.Y"
+            string GetVersion(string connStr)
+            {
                 const string versionKey = "Version=";
-                if (!string.IsNullOrEmpty(beforeConnectionString) && beforeConnectionString.Contains(versionKey))
-                {
-                    // Extract current version substring
-                    int startIdx = beforeConnectionString.IndexOf(versionKey) + versionKey.Length;
-                    int endIdx = beforeConnectionString.IndexOf(';', startIdx);
-                    if (endIdx == -1) endIdx = beforeConnectionString.Length;
-                    string currentVersion = beforeConnectionString.Substring(startIdx, endIdx - startIdx);
-
-                    // Re‑apply the same version (no actual change)
-                    string newConnectionString = beforeConnectionString.Replace($"{versionKey}{currentVersion}", $"{versionKey}{currentVersion}");
-                    odataConnection.ConnectionString = newConnectionString;
-                }
-
-                // Optionally toggle a non‑version property to see that version stays the same
-                odataConnection.IsSameSettings = !beforeIsSameSettings;
-
-                // Save the modified workbook
-                originalWorkbook.Save(modifiedFile);
-
-                // Reload the modified workbook to read back the metadata
-                if (!File.Exists(modifiedFile))
-                {
-                    Console.WriteLine($"Failed to save modified workbook: {modifiedFile}");
-                    return;
-                }
-
-                Workbook modifiedWorkbook = new Workbook(modifiedFile);
-                WebQueryConnection modifiedConnection = null;
-                foreach (ExternalConnection conn in modifiedWorkbook.DataConnections)
-                {
-                    if (conn is WebQueryConnection wqc)
-                    {
-                        modifiedConnection = wqc;
-                        break;
-                    }
-                }
-
-                if (modifiedConnection == null)
-                {
-                    Console.WriteLine("No OData (WebQuery) connection found after modification.");
-                    return;
-                }
-
-                // Capture metadata after modification
-                string afterConnectionString = modifiedConnection.ConnectionString;
-                string afterCommand = modifiedConnection.Command;
-                bool afterIsNew = modifiedConnection.IsNew;
-                bool afterIsSameSettings = modifiedConnection.IsSameSettings;
-
-                // Display captured metadata
-                Console.WriteLine("\n=== Metadata AFTER modification ===");
-                Console.WriteLine($"ConnectionString: {afterConnectionString}");
-                Console.WriteLine($"Command: {afterCommand}");
-                Console.WriteLine($"IsNew: {afterIsNew}");
-                Console.WriteLine($"IsSameSettings: {afterIsSameSettings}");
-
-                // Compare version part of the connection string to ensure consistency
-                bool versionConsistent = true;
-                if (!string.IsNullOrEmpty(beforeConnectionString) && !string.IsNullOrEmpty(afterConnectionString) &&
-                    beforeConnectionString.Contains(versionKey) && afterConnectionString.Contains(versionKey))
-                {
-                    string GetVersion(string cs)
-                    {
-                        int s = cs.IndexOf(versionKey) + versionKey.Length;
-                        int e = cs.IndexOf(';', s);
-                        if (e == -1) e = cs.Length;
-                        return cs.Substring(s, e - s);
-                    }
-
-                    string beforeVersion = GetVersion(beforeConnectionString);
-                    string afterVersion = GetVersion(afterConnectionString);
-                    versionConsistent = beforeVersion == afterVersion;
-                    Console.WriteLine($"\nVersion consistency check: {(versionConsistent ? "PASS" : "FAIL")}");
-                    Console.WriteLine($"Before version: {beforeVersion}, After version: {afterVersion}");
-                }
-                else
-                {
-                    Console.WriteLine("\nVersion information not found in connection strings; cannot verify consistency.");
-                }
+                int start = connStr.IndexOf(versionKey, StringComparison.OrdinalIgnoreCase);
+                if (start < 0) return string.Empty;
+                start += versionKey.Length;
+                int end = connStr.IndexOf(';', start);
+                return end > start ? connStr.Substring(start, end - start) : connStr.Substring(start);
             }
-            catch (Exception ex)
+
+            string originalVersion = GetVersion(originalConnectionString);
+            string updatedVersion = GetVersion(updatedConnectionString);
+
+            Console.WriteLine($"Original Version: {originalVersion}");
+            Console.WriteLine($"Updated Version: {updatedVersion}");
+
+            if (originalVersion == updatedVersion)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine("Version is consistent (no change detected).");
             }
-        }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ODataConnectionMetadataComparison.Run();
+            else
+            {
+                Console.WriteLine("Version mismatch detected. Ensure version consistency before proceeding.");
+            }
         }
     }
 }

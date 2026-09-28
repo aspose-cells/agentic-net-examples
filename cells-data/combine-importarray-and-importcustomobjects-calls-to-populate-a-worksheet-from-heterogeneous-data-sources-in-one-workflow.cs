@@ -1,89 +1,90 @@
-// Title: Combine ImportArray and ImportCustomObjects in Aspose.Cells .NET to Load Headers, Objects, and Adjustments
-// Description: Demonstrates how to create a workbook, add column headers with ImportArray, import a List<Product> using ImportCustomObjects (skipping duplicate headers, inserting rows, applying a date format, and converting strings to numbers), then import a vertical integer array of stock adjustments, and finally save the file as an Excel workbook.
-// Keywords: Aspose.Cells | ImportArray C# | ImportCustomObjects C# | worksheet data import | custom object list import | vertical array import | date formatting Aspose.Cells | convert string to number | product catalog Excel | stock adjustment column | C# Excel automation
-// Common Searches: Aspose.Cells import list of objects and array in same sheet | ImportArray together with ImportCustomObjects example | C# import vertical integer array after custom objects Aspose.Cells | how to add headers then import objects in Aspose.Cells | combine heterogeneous data sources in Aspose.Cells workbook
-// Developer Intent: The developer needs a single workflow that adds column headers, imports a collection of custom objects, and then appends a vertical numeric array—all within one worksheet using Aspose.Cells for .NET.
-// Use Cases: Generate a product catalog where static headers, dynamic product records, and separate stock‑adjustment values are populated automatically. | Create a financial report that mixes predefined titles, a list of transaction objects, and a column of correction amounts without manual cell addressing. | Build a data‑migration script that consolidates CSV‑style arrays and object collections into a formatted Excel sheet in one pass.
-// AI Prompts: Write C# code with Aspose.Cells that imports a string array as column headers, then a List<T> of custom objects using ImportCustomObjects (with date format and number conversion), and finally a vertical integer array starting after the imported rows. | Show how to calculate the start row for a second ImportArray call after ImportCustomObjects has inserted rows, and include code to save the workbook. | Explain best practices for combining ImportArray and ImportCustomObjects to handle heterogeneous data sources in a single worksheet.
+// Title: How to combine ImportArray and ImportCustomObjects to import headers, product objects, and vertical totals in a single Aspose.Cells .NET worksheet
+// AI Prompts: Use ImportArray to write a header row, then call ImportCustomObjects to load a List<Product>, and finally import a vertical numeric array with ImportArray to add totals in the same sheet. | Build a single import routine that sequentially adds headers, imports custom objects, and appends a column of totals, handling row offsets automatically.
+// Common Searches: Aspose.Cells C# import header row and list of objects in one worksheet | ImportCustomObjects after ImportArray example Aspose.Cells | Add vertical totals column after importing objects with Aspose.Cells | Combine array and custom object imports in an Aspose.Cells workbook | C# heterogeneous data import workflow using Aspose.Cells
+// Tags: ImportArray header row Aspose.Cells | ImportCustomObjects product list C# | ImportArray vertical totals column | heterogeneous data import Aspose.Cells | combined array and object import workflow
 
+using Aspose.Cells;
 using System;
 using System.Collections.Generic;
-using Aspose.Cells;
+using System.IO;
 
-namespace AsposeCellsCombinedImportDemo
+namespace AsposeCellsDemo
 {
-    // Sample custom object to be imported via ImportCustomObjects
-    // Demonstrates how to create a workbook, add column headers with ImportArray, import a List<Product> using ImportCustomObjects (skipping duplicate headers, inserting rows, applying a date format, and converting strings to numbers), then import a vertical integer array of stock adjustments, and finally save the file as an Excel workbook.
-    public class Product
+    // The example creates a workbook, adds a header row with ImportArray, imports a List<Product> using ImportCustomObjects (skipping duplicate headers), then appends a vertical numeric array of totals with ImportArray, and saves the result as an .xlsx file.
+    public class HeterogeneousImportDemo
     {
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-        public int Stock { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        // Custom data class to be imported via ImportCustomObjects
+        public class Product
+        {
+            public string Name { get; set; } = string.Empty;
+            public decimal Price { get; set; }
+            public int Stock { get; set; }
+            public DateTime ReleaseDate { get; set; }
+        }
+
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and obtain the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
+                Cells cells = sheet.Cells;
+
+                // 1. Import a header row using ImportArray (horizontal)
+                string[] headers = new string[] { "Product", "Price", "Stock", "ReleaseDate" };
+                // firstRow = 0, firstColumn = 0, isVertical = false (horizontal)
+                cells.ImportArray(headers, 0, 0, false);
+
+                // 2. Prepare a list of custom objects (heterogeneous source)
+                List<Product> products = new List<Product>
+                {
+                    new Product { Name = "Apple", Price = 2.99m, Stock = 150, ReleaseDate = new DateTime(2023, 12, 31) },
+                    new Product { Name = "Orange", Price = 1.99m, Stock = 200, ReleaseDate = new DateTime(2024, 1, 15) }
+                };
+
+                // Define the properties to import; can be null to import all
+                string[] propertyNames = { "Name", "Price", "Stock", "ReleaseDate" };
+
+                // 3. Import the custom objects starting just below the header row
+                // Use ImportCustomObjects(ICollection, string[], bool, int, int, int, bool, string, bool)
+                int importedRows = cells.ImportCustomObjects(
+                    products,          // list
+                    propertyNames,     // propertyNames
+                    false,             // isPropertyNameShown (headers already added)
+                    1,                 // firstRow (row index after header)
+                    0,                 // firstColumn
+                    products.Count,    // rowNumber (number of rows to import)
+                    true,              // insertRows (add rows if needed)
+                    "yyyy-MM-dd",      // dateFormatString
+                    true               // convertStringToNumber
+                );
+
+                // 4. Import a numeric array vertically after the custom object rows
+                double[] totals = new double[] { 1000.0, 2000.0 };
+                int startRowForTotals = 1 + importedRows; // position after the last product row
+                // ImportArray(double[], int, int, bool) – vertical placement in column E (index 4)
+                cells.ImportArray(totals, startRowForTotals, 4, true);
+
+                // Determine output file path
+                string outputPath = "HeterogeneousImportDemo.xlsx";
+
+                // Save the workbook to a file
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 
     public class Program
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
-
-            // ------------------------------------------------------------
-            // 1. Import a simple string array using ImportArray (horizontal)
-            // ------------------------------------------------------------
-            string[] headers = new string[] { "Product Name", "Price", "Stock", "Release Date" };
-            // Import headers starting at cell A1 (row 0, column 0) horizontally
-            cells.ImportArray(headers, 0, 0, false);
-
-            // ------------------------------------------------------------
-            // 2. Prepare a list of custom objects (heterogeneous data source)
-            // ------------------------------------------------------------
-            List<Product> products = new List<Product>
-            {
-                new Product { Name = "Apple", Price = 2.99m, Stock = 150, ReleaseDate = new DateTime(2023, 12, 31) },
-                new Product { Name = "Orange", Price = 1.99m, Stock = 200, ReleaseDate = new DateTime(2024, 1, 15) },
-                new Product { Name = "Banana", Price = 0.99m, Stock = 300, ReleaseDate = new DateTime(2024, 2, 10) }
-            };
-
-            // Define the property names to import (order matters)
-            string[] propertyNames = { "Name", "Price", "Stock", "ReleaseDate" };
-
-            // ------------------------------------------------------------
-            // 3. Import the custom objects using ImportCustomObjects
-            //    - Show property names in the first row (already added above, so set false)
-            //    - Start importing data at row 1 (second row), column 0 (A column)
-            //    - Insert rows if needed, use a date format, and convert strings to numbers
-            // ------------------------------------------------------------
-            int importedRows = cells.ImportCustomObjects(
-                products,                // ICollection list
-                propertyNames,           // string[] propertyNames
-                false,                   // isPropertyNameShown (already added)
-                1,                       // firstRow (row index where data starts)
-                0,                       // firstColumn
-                products.Count,          // rowNumber (number of rows to import)
-                true,                    // insertRows
-                "yyyy-MM-dd",            // dateFormatString
-                true                     // convertStringToNumber
-            );
-
-            Console.WriteLine($"Imported {importedRows} product rows.");
-
-            // ------------------------------------------------------------
-            // 4. Import an integer array vertically below the custom objects
-            // ------------------------------------------------------------
-            int[] stockAdjustments = new int[] { -10, 5, -20 };
-            // Determine the start row: headers (0) + data rows (importedRows) + 1 empty row
-            int startRowForAdjustments = 1 + importedRows + 1;
-            // Import vertically starting at column 4 (E column) to keep it separate
-            cells.ImportArray(stockAdjustments, startRowForAdjustments, 4, true);
-
-            // ------------------------------------------------------------
-            // 5. Save the workbook
-            // ------------------------------------------------------------
-            workbook.Save("CombinedImportDemo.xlsx");
+            HeterogeneousImportDemo.Run();
         }
     }
 }

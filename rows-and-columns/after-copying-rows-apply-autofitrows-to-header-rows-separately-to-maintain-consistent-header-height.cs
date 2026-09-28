@@ -1,83 +1,52 @@
-// Title: Copy rows and auto‑fit header rows separately with Aspose.Cells for .NET
-// Description: Shows how to copy a range of data rows, apply Worksheet.AutoFitRows only to header rows (rows 0‑1) to keep their height consistent, then auto‑fit the remaining rows up to the last used row, and finally save the workbook.
-// Keywords: Aspose.Cells copy rows C# | Worksheet.AutoFitRows header | preserve header height Aspose.Cells | copy rows and autofit rows .NET | Excel row copy Aspose.Cells | C# Aspose.Cells AutoFitRows range | Aspose.Cells copy rows example | auto fit specific rows Aspose.Cells
-// Common Searches: Aspose.Cells copy rows example | AutoFitRows specific rows C# | keep header height after copying rows Aspose.Cells | copy rows and auto fit rows Aspose.Cells .NET | Worksheet.AutoFitRows range usage | C# copy rows in Excel with Aspose.Cells
-// Developer Intent: Copy a block of rows and then auto‑fit only the header rows while allowing all other rows to adjust automatically.
-// Use Cases: Duplicate a table within the same worksheet and keep the original header rows at a fixed height. | Generate a report where header rows must remain uniform after copying data rows to a new location. | Create a template that copies data rows for multiple sections while preserving consistent header formatting.
-// AI Prompts: Provide C# code that copies rows 2‑5 to rows 6‑9 and auto‑fits only rows 0‑1 using Aspose.Cells. | Show an example of applying Worksheet.AutoFitRows to separate header and data ranges after copying rows in a workbook. | Explain how to preserve header row height while auto‑fitting all other rows after using Cells.CopyRows in Aspose.Cells for .NET.
+// Title: Copy rows between two workbooks and auto‑fit only the header rows using Aspose.Cells for .NET (C#)
+// AI Prompts: Copy the first two rows from a source worksheet to a destination worksheet and then call AutoFitRows on rows 0‑1 only using Aspose.Cells in C#. | Transfer all data rows after the header from one workbook to another while preserving the original header height by applying AutoFitRows exclusively to the header rows with Aspose.Cells. | Save the combined workbook to an XLSX file on the desktop after copying rows and selectively auto‑fitting the header rows using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# copy rows from one workbook to another and auto fit header rows | How to apply AutoFitRows to specific rows after copying rows in Aspose.Cells .NET | Preserve header row height when copying rows with Aspose.Cells for .NET | Selective AutoFitRows for header rows in C# Aspose.Cells example
+// Tags: row copying with selective AutoFitRows Aspose.Cells | header row AutoFitRows C# | workbook to workbook row transfer Aspose.Cells | maintain header height Aspose.Cells | C# Aspose.Cells copy rows and AutoFitRows
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example creates a source workbook with header and data rows, copies the header rows and the remaining data rows separately into a destination workbook, applies AutoFitRows only to the header rows (rows 0‑1) to keep their height consistent, optionally auto‑fits the other rows, and saves the result as an XLSX file on the desktop.
+class CopyRowsAndAutoFitHeader
 {
-    // Shows how to copy a range of data rows, apply Worksheet.AutoFitRows only to header rows (rows 0‑1) to keep their height consistent, then auto‑fit the remaining rows up to the last used row, and finally save the workbook.
-    public class CopyRowsAndAutoFitHeaderDemo
+    static void Main()
     {
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
+        // Create source workbook and populate it with header and data rows
+        Workbook sourceWorkbook = new Workbook();
+        Worksheet sourceSheet = sourceWorkbook.Worksheets[0];
+        sourceSheet.Cells["A1"].PutValue("Header1");
+        sourceSheet.Cells["B1"].PutValue("Header2");
+        sourceSheet.Cells["A2"].PutValue("Header3");
+        sourceSheet.Cells["B2"].PutValue("Header4");
+        sourceSheet.Cells["A3"].PutValue("Data1");
+        sourceSheet.Cells["B3"].PutValue("Data2");
+        sourceSheet.Cells["A4"].PutValue("Data3");
+        sourceSheet.Cells["B4"].PutValue("Data4");
 
-        public static void Run()
-        {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
+        // Create destination workbook where rows will be copied
+        Workbook destinationWorkbook = new Workbook();
+        Worksheet destinationSheet = destinationWorkbook.Worksheets[0];
 
-            // Access the first worksheet (source and destination are the same for simplicity)
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+        // Copy header rows (rows 0 and 1) from source to destination
+        // Parameters: source cells, source start row, destination start row, number of rows to copy
+        destinationSheet.Cells.CopyRows(sourceSheet.Cells, 0, 0, 2);
 
-            // -------------------------------------------------
-            // 1. Populate sample data
-            // -------------------------------------------------
-            // Header rows (rows 0 and 1)
-            cells["A1"].PutValue("Header Column 1");
-            cells["B1"].PutValue("Header Column 2");
-            cells["A2"].PutValue("Sub Header 1");
-            cells["B2"].PutValue("Sub Header 2");
+        // Copy the remaining data rows starting from source row index 2
+        int totalRows = sourceSheet.Cells.MaxDisplayRange.RowCount;
+        int dataRowsCount = totalRows - 2; // rows after the header
+        destinationSheet.Cells.CopyRows(sourceSheet.Cells, 2, 2, dataRowsCount);
 
-            // Data rows (rows 2 to 5)
-            for (int i = 2; i <= 5; i++)
-            {
-                cells[i, 0].PutValue($"Data Row {i - 1} - Column A with a relatively long text to test autofit");
-                cells[i, 1].PutValue($"Data Row {i - 1} - Column B");
-            }
+        // AutoFit only the header rows (0 to 1) to keep their height consistent
+        destinationSheet.AutoFitRows(0, 1);
 
-            // -------------------------------------------------
-            // 2. Copy rows 2-5 (data rows) to rows 6-9 (below the original data)
-            // -------------------------------------------------
-            // Parameters: sourceCells, sourceRowIndex, destinationRowIndex, rowNumber
-            cells.CopyRows(cells, 2, 6, 4); // copies 4 rows starting from row index 2 to row index 6
+        // Optionally, AutoFit the rest of the rows (2 to last row)
+        destinationSheet.AutoFitRows(2, destinationSheet.Cells.MaxDisplayRange.RowCount - 1);
 
-            // -------------------------------------------------
-            // 3. AutoFit only the header rows to keep their height consistent
-            // -------------------------------------------------
-            // Header rows are 0 and 1 (inclusive)
-            sheet.AutoFitRows(0, 1);
-
-            // -------------------------------------------------
-            // 4. AutoFit the rest of the rows (data rows and copied rows)
-            // -------------------------------------------------
-            // Data rows start at row 2 and go through the last used row
-            int lastRow = cells.MaxDataRow; // gets the index of the last row that contains data
-            sheet.AutoFitRows(2, lastRow);
-
-            // -------------------------------------------------
-            // 5. Save the workbook
-            // -------------------------------------------------
-            string outputPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "CopyRowsAutoFitHeaderDemo.xlsx");
-            workbook.Save(outputPath, SaveFormat.Xlsx);
-
-            Console.WriteLine($"Workbook saved to: {outputPath}");
-        }
+        // Save the resulting workbook
+        string outputPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            "CopiedWithHeaderAutoFit.xlsx");
+        destinationWorkbook.Save(outputPath, SaveFormat.Xlsx);
     }
 }

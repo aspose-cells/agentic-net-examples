@@ -1,38 +1,33 @@
-// Title: Import External Ribbon XML into an Existing Workbook with Aspose.Cells for .NET
-// Description: Loads an existing Excel file, reads a custom ribbon definition from an external .xml file, assigns it to Workbook.RibbonXml, and saves the workbook as a macro‑enabled .xlsm to retain the custom UI.
-// Keywords: Aspose.Cells | .NET | RibbonXml | custom ribbon | import ribbon xml | macro-enabled workbook | Excel UI customization | programmatic ribbon | external xml file | Workbook.RibbonXml property
-// Common Searches: Aspose.Cells set custom ribbon XML | How to add custom ribbon to Excel using C# | Load ribbon XML from file with Aspose.Cells | Save workbook with custom ribbon as xlsm | Programmatically modify Excel ribbon UI .NET
-// Developer Intent: The developer wants to embed a custom ribbon UI, defined in an external XML file, into an existing Excel workbook programmatically using Aspose.Cells.
-// Use Cases: Apply a company‑wide ribbon layout to generated reports before distribution. | Attach a custom ribbon to a template workbook for macro‑enabled add‑ins. | Batch‑update ribbon definitions across multiple workbooks in an automated process.
-// AI Prompts: Show C# code that reads a ribbon XML file and assigns it to Workbook.RibbonXml using Aspose.Cells, then saves the file as .xlsm. | Provide robust error handling for missing or malformed ribbon XML when embedding it with Aspose.Cells. | Explain how to verify that the custom ribbon appears correctly when opening the saved workbook in Excel. | Suggest ways to programmatically replace an existing ribbon definition with a new XML file for multiple workbooks.
+// Title: Import a custom Ribbon XML file into a macro-enabled Excel workbook with Aspose.Cells for .NET
+// AI Prompts: Read the contents of a Ribbon XML file, assign it to the Workbook.RibbonXml property, and save the workbook. | Load an existing .xlsm workbook using Aspose.Cells, replace its Ribbon definition with external XML, and write the updated file. | Programmatically customize the Ribbon UI of a macro-enabled workbook by setting RibbonXml from a file path in C#.
+// Common Searches: c# Aspose.Cells how to set RibbonXml for an .xlsm workbook | import external ribbon xml into existing Excel file using Aspose.Cells | replace ribbon UI in macro-enabled workbook programmatically | example of loading custom ribbon definition with Aspose.Cells .NET | update Excel Ribbon from XML file using C# Aspose.Cells
+// Tags: RibbonXml property Aspose.Cells | set RibbonXml from external file C# | macro-enabled workbook ribbon customization | update ribbon UI Aspose.Cells .NET | load custom ribbon definition into xlsm
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// Loads an existing Excel file, reads a custom ribbon definition from an external .xml file, assigns it to Workbook.RibbonXml, and saves the workbook as a macro‑enabled .xlsm to retain the custom UI.
-public class RibbonXmlDemo
+// The example loads a macro-enabled workbook, reads a custom Ribbon XML file, assigns the XML to the workbook's RibbonXml property, and saves the workbook with the updated Ribbon UI.
+class RibbonXmlImportDemo
 {
-    public static void Main()
+    static void Main()
     {
-        // Path to the existing workbook
-        string workbookPath = "input.xlsx";
+        // Path to the existing workbook (must be macro-enabled to support Ribbon UI)
+        string workbookPath = "input.xlsm";
 
-        // Path to the external ribbon XML file
+        // Path to the external Ribbon XML file
         string ribbonXmlPath = "customRibbon.xml";
 
         // Load the existing workbook
         Workbook workbook = new Workbook(workbookPath);
 
-        // Read the ribbon XML content from the file
+        // Read the Ribbon XML content from the external file
         string ribbonXml = File.ReadAllText(ribbonXmlPath);
 
-        // Assign the ribbon XML to the workbook
+        // Assign the Ribbon XML to the workbook
         workbook.RibbonXml = ribbonXml;
 
-        // Save the workbook (saving as macro-enabled to preserve the ribbon UI)
+        // Save the workbook with the updated Ribbon UI
         workbook.Save("output.xlsm");
-
-        Console.WriteLine("Custom ribbon XML has been applied and the workbook saved as 'output.xlsm'.");
     }
 }

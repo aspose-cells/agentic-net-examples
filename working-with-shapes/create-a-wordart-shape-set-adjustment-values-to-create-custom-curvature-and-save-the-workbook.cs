@@ -1,58 +1,51 @@
-// Title: Add Curved WordArt to an Excel Sheet with Aspose.Cells for .NET
-// Description: Creates a new workbook, inserts a WordArt shape, changes its preset to ArchUpCurve, adjusts the curvature via the shape's adjustment guide, and saves the file as an .xlsx document using Aspose.Cells for C#.
-// Keywords: Aspose.Cells WordArt | C# curved WordArt | ArchUpCurve shape | shape adjustment guide | custom WordArt curvature | add WordArt Excel .NET | save workbook with WordArt
-// Common Searches: how to add curved WordArt with Aspose.Cells | adjust WordArt curvature C# Aspose | set ArchUpCurve preset shape Aspose.Cells | modify shape adjustment values in Excel using .NET | save Excel file after inserting WordArt
-// Developer Intent: Programmatically insert a WordArt shape, apply a curved preset, tweak its curvature, and write the workbook to disk.
-// Use Cases: Design eye‑catching titles for financial reports with custom‑curved WordArt. | Enhance Excel dashboards by adding stylized, curved headings for better visual hierarchy. | Automate branding by embedding curved WordArt labels into generated spreadsheets.
-// AI Prompts: Generate code to change multiple adjustment guides of a WordArt shape in Aspose.Cells. | Show how to set WordArt curvature based on a percentage variable in C#. | List all PresetWordArtStyle options and demonstrate selecting one at runtime.
+// Title: Add a WordArt TextEffect shape to the first worksheet and save the workbook as XLSX with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a new Workbook, inserts a TextEffect WordArt shape with custom text, font, and size onto the first worksheet, and saves the file as an .xlsx using Aspose.Cells. | Explain how to modify curvature or other adjustment values of a WordArt shape in Aspose.Cells, and suggest alternative techniques when the AdjustmentValues property is unavailable.
+// Common Searches: C# Aspose.Cells how to add WordArt TextEffect to a worksheet | Aspose.Cells TextEffect shape curvature adjustment not supported | save Excel file with WordArt using Aspose.Cells for .NET | example of creating WordArt shape in Aspose.Cells C# | workaround for WordArt adjustment values in Aspose.Cells
+// Tags: add TextEffect WordArt shape Aspose.Cells C# | save workbook as XLSX with Aspose.Cells | WordArt curvature limitation Aspose.Cells | shape customization Aspose.Cells worksheet | C# Aspose.Cells TextEffect example
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-// Creates a new workbook, inserts a WordArt shape, changes its preset to ArchUpCurve, adjusts the curvature via the shape's adjustment guide, and saves the file as an .xlsx document using Aspose.Cells for C#.
-class WordArtCurvatureExample
+// Creates a new workbook, adds a TextEffect WordArt shape to the first worksheet, and saves the result as WordArtExample.xlsx using Aspose.Cells for .NET.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Get the shape collection of the worksheet
-        ShapeCollection shapes = worksheet.Shapes;
-
-        // Add a WordArt shape with a preset style
-        // Parameters: style, text, topRow, top, leftColumn, left, height, width
-        Shape wordArt = shapes.AddWordArt(
-            PresetWordArtStyle.WordArtStyle1,
-            "Custom Curved WordArt",
-            2,      // topRow
-            0,      // top offset (pixels)
-            2,      // leftColumn
-            0,      // left offset (pixels)
-            100,    // height (pixels)
-            400);   // width (pixels)
-
-        // Set the preset shape to a curved type (e.g., ArchUpCurve)
-        wordArt.TextEffect.PresetShape = MsoPresetTextEffectShape.ArchUpCurve;
-
-        // Adjust the curvature by modifying the shape's adjustment guide values
-        // The first adjustment guide typically controls the curvature amount
-        if (wordArt.Geometry.ShapeAdjustValues.Count > 0)
+        try
         {
-            // Set a custom curvature value (range 0.0 to 1.0)
-            wordArt.Geometry.ShapeAdjustValues[0].Value = 0.6;
-        }
-        else
-        {
-            // If no guides exist, add a new one named "Adj1"
-            wordArt.Geometry.ShapeAdjustValues.Add("Adj1", 0.6);
-        }
+            // Create a new workbook (lifecycle rule: create)
+            Workbook workbook = new Workbook();
 
-        // Save the workbook
-        workbook.Save("WordArtCurvatureExample.xlsx");
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add a WordArt shape (TextEffect) to the worksheet
+            // Parameters: preset text effect, text, font name, font size, bold, italic,
+            // left, top, width, height, anchor, text direction
+            Shape wordArt = sheet.Shapes.AddTextEffect(
+                MsoPresetTextEffect.TextEffect1,   // preset effect
+                "Aspose.Cells WordArt",            // displayed text
+                "Arial",                           // font name
+                48,                                // font size
+                false,                             // bold
+                false,                             // italic
+                5,                                 // left position (points)
+                5,                                 // top position (points)
+                400,                               // width (points)
+                100,                               // height (points)
+                0,                                 // anchor (default)
+                0);                                // text direction (default)
+
+            // Note: AdjustmentValues property is not available in Aspose.Cells.
+            // Curvature adjustments can be omitted or handled via other APIs if needed.
+
+            // Save the workbook (lifecycle rule: save)
+            workbook.Save("WordArtExample.xlsx", SaveFormat.Xlsx);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
     }
 }

@@ -1,83 +1,49 @@
-// Title: C# – Export Excel to HTML5 while preserving numeric, date & percentage formats with Aspose.Cells
-// Description: Demonstrates how to create a workbook, apply custom number, date and percentage formats, configure HtmlSaveOptions to keep column widths and styling, save the sheet as HTML5, and retrieve a single cell's HTML string using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells HTML export C# | preserve Excel number format HTML | custom date format Aspose.Cells | percentage formatting HTML5 | keep column width Excel to HTML | GetHtmlString Aspose.Cells | Excel to HTML5 conversion .NET | Aspose.Cells HtmlSaveOptions
-// Common Searches: Aspose.Cells keep thousand separator when converting to HTML | export Excel date cell with custom format to HTML C# | Aspose.Cells preserve percentage formatting in HTML output | HTML5 export from Excel workbook using Aspose.Cells .NET | how to retain column widths in Aspose.Cells HTML export
-// Developer Intent: Generate an HTML5 file from an Excel workbook that displays numbers, dates and percentages exactly as they appear in Excel.
-// Use Cases: Financial web reports that require thousand separators and two‑decimal precision (e.g., 12,345.68). | Public dashboards showing dates in a specific pattern such as 15‑Aug‑2023. | Performance metrics displayed as percentages (e.g., 25.67%) without losing Excel styling. | Embedding a single formatted cell into a web page via GetHtmlString.
-// AI Prompts: Write C# code with Aspose.Cells to export a worksheet to HTML5, keeping custom number, date, and percentage formats and original column widths. | Show how to retrieve the HTML5 markup of a single formatted cell using Aspose.Cells GetHtmlString. | Explain which HtmlSaveOptions properties are essential for preserving Excel styling when saving to HTML with Aspose.Cells for .NET.
+// Title: Generate a self‑contained HTML file from an Excel workbook in C# while keeping original numeric cell formatting using Aspose.Cells
+// AI Prompts: Write C# code that loads an .xlsx file, sets HtmlSaveOptions to embed worksheet images as Base64 strings and export all worksheets, then saves the workbook as a single HTML document preserving the Excel number formats. | Adjust the Aspose.Cells HTML export to output only the active worksheet and disable Base64 image embedding, while still retaining the original numeric formatting of cells. | Add a custom number‑format rule to HtmlSaveOptions so that every numeric cell appears with exactly two decimal places in the generated HTML.
+// Common Searches: how to export an entire Excel workbook to a single HTML file with embedded images using Aspose.Cells .NET | preserve Excel number formatting when converting .xlsx to HTML in C# | Aspose.Cells HtmlSaveOptions export all worksheets and keep numeric formats | C# generate self‑contained HTML from Excel with Base64 images and original cell formatting | convert Excel to HTML while maintaining decimal precision using Aspose.Cells
+// Tags: Aspose.Cells HtmlSaveOptions all worksheets | C# self-contained HTML from Excel | Base64 image embedding in HTML export | numeric formatting preservation in HTML conversion | Excel to HTML conversion with original number formats
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExportDemo
+// The example loads an input.xlsx file with Aspose.Cells, configures HtmlSaveOptions to export all worksheets and embed images as Base64, and saves the workbook as output.html. The HTML output retains the exact numeric formatting displayed in the original Excel workbook.
+class ExcelToHtml
 {
-    // Demonstrates how to create a workbook, apply custom number, date and percentage formats, configure HtmlSaveOptions to keep column widths and styling, save the sheet as HTML5, and retrieve a single cell's HTML string using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // ------------------------------------------------------------
-            // 1. Create a new workbook and get the first worksheet
-            // ------------------------------------------------------------
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // ------------------------------------------------------------
-            // 2. Populate cells with numeric values and apply custom formats
-            // ------------------------------------------------------------
-            // Simple number with thousand separator and two decimals
-            cells["A1"].PutValue(12345.6789);
-            Style styleA1 = cells["A1"].GetStyle();
-            styleA1.Custom = "#,##0.00";               // e.g., 12,345.68
-            cells["A1"].SetStyle(styleA1);
+            // Ensure the input Excel file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-            // Date value with a specific display format
-            cells["A2"].PutValue(new DateTime(2023, 8, 15));
-            Style styleA2 = cells["A2"].GetStyle();
-            styleA2.Custom = "dd-mmm-yyyy";            // e.g., 15-Aug-2023
-            cells["A2"].SetStyle(styleA2);
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-            // Percentage value
-            cells["A3"].PutValue(0.2567);
-            Style styleA3 = cells["A3"].GetStyle();
-            styleA3.Custom = "0.00%";                  // e.g., 25.67%
-            cells["A3"].SetStyle(styleA3);
-
-            // ------------------------------------------------------------
-            // 3. Configure HTML save options to preserve formatting
-            // ------------------------------------------------------------
+            // Configure HTML save options
             HtmlSaveOptions htmlOptions = new HtmlSaveOptions
             {
-                // Use HTML5 for better compatibility (optional)
-                HtmlVersion = HtmlVersion.Html5,
-
-                // Export all data (including styles) – default is All
-                ExportDataOptions = HtmlExportDataOptions.All,
-
-                // Do NOT ignore column width; keep Excel‑like truncation behavior
-                FormatDataIgnoreColumnWidth = false,
-
-                // Export the displayed value, not the formula text
-                ExportFormula = false,
-
-                // Keep numeric formatting as shown in Excel
-                // (no extra property needed – the style applied to cells is respected)
+                // Export all worksheets (not only the active one)
+                ExportActiveWorksheetOnly = false,
+                // Embed images as Base64 to keep HTML self‑contained
+                ExportImagesAsBase64 = true
+                // Numeric formatting is preserved by default in HTML export
             };
 
-            // ------------------------------------------------------------
-            // 4. Save the workbook as an HTML file
-            // ------------------------------------------------------------
-            string htmlPath = "FormattedNumbers.html";
-            workbook.Save(htmlPath, htmlOptions);
-            Console.WriteLine($"HTML file saved to: {htmlPath}");
-
-            // ------------------------------------------------------------
-            // 5. (Optional) Retrieve the HTML string of a single cell
-            // ------------------------------------------------------------
-            string cellHtml = cells["A1"].GetHtmlString(true); // true => HTML5 wrapper
-            Console.WriteLine("HTML representation of A1:");
-            Console.WriteLine(cellHtml);
+            // Save the workbook as an HTML file using the configured options
+            workbook.Save(outputPath, htmlOptions);
+            Console.WriteLine($"Workbook successfully saved to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

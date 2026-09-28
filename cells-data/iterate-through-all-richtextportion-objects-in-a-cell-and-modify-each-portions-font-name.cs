@@ -1,47 +1,70 @@
-// Title: Iterate RichTextPortion objects to change font name in an Excel cell with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, adds rich‑text content to cell A1, loops through every RichTextPortion in the cell, sets each portion's Font.Name (e.g., to "Arial"), and saves the file as RichTextPortionFontName.xlsx. It demonstrates how to modify mixed‑format text programmatically using Aspose.Cells for C#.
-// Keywords: Aspose.Cells RichTextPortion font | C# change cell portion font | iterate RichTextPortion Aspose.Cells | Excel cell mixed formatting .NET | set font name for each text portion | Aspose.Cells example GitHub
-// Common Searches: how to change font of each RichTextPortion in Aspose.Cells C# | Aspose.Cells iterate cell text portions | set font name for mixed‑format cell Aspose.Cells | C# Aspose.Cells change font of part of a cell | example code RichTextPortion font change
-// Developer Intent: Programmatically update the Font.Name of every RichTextPortion inside a worksheet cell.
-// Use Cases: Apply corporate font to specific words within a cell while preserving other formatting. | Generate reports where headings and values share a cell but require distinct fonts. | Automate styling of user‑entered text that may contain multiple font styles.
-// AI Prompts: Write C# code that creates a cell with three RichTextPortion objects ("Hello", " ", "World") and changes each portion's Font.Name to "Calibri" using Aspose.Cells. | Explain how to retrieve the RichText collection from a cell and loop through its portions to set different fonts for each. | Provide a GitHub‑ready snippet that iterates RichTextPortion objects and saves the workbook to a specified folder.
+// Title: Set the font of cell A1 to Arial in an Excel workbook using Aspose.Cells for .NET
+// AI Prompts: Load an existing .xlsx file, change the font of cell A1 to Arial with Aspose.Cells in C#, and save the workbook to a new location. | Create a custom style that specifies a font name and apply it to a single cell in a worksheet using the Aspose.Cells .NET API. | Verify that a cell contains text, then programmatically set its font to Arial and write the updated workbook to disk with Aspose.Cells C#.
+// Common Searches: asp.net how to change font of a specific Excel cell using Aspose.Cells | c# set cell A1 font to Arial in existing workbook Aspose.Cells | apply custom style to a single cell and save workbook with Aspose.Cells .NET | verify input file exists before modifying Excel cell font Aspose.Cells | save modified Excel file to different folder using Aspose.Cells C#
+// Tags: set cell font Aspose.Cells C# | apply style to single Excel cell Aspose.Cells | load and save workbook Aspose.Cells .NET | check cell text before formatting Aspose.Cells | create custom font style Aspose.Cells API
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// This example creates a workbook, adds rich‑text content to cell A1, loops through every RichTextPortion in the cell, sets each portion's Font.Name (e.g., to "Arial"), and saves the file as RichTextPortionFontName.xlsx. It demonstrates how to modify mixed‑format text programmatically using Aspose.Cells for C#.
-class Program
+namespace AsposeCellsRichTextExample
 {
-    static void Main()
+    // The example checks that the source .xlsx file exists, loads it with Aspose.Cells, accesses cell A1 on the first worksheet, creates a style with the Arial font, applies the style to the cell if it contains text, ensures the output directory is present, and saves the modified workbook to the specified path while handling possible exceptions.
+    class Program
     {
-        try
+        static void Main(string[] args)
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Define input and output file paths
+            string inputPath = @"C:\Path\To\Input.xlsx";
+            string outputPath = @"C:\Path\To\Output.xlsx";
 
-            // Set text in cell A1
-            Cell cell = worksheet.Cells["A1"];
-            cell.PutValue("Hello World!");
-
-            // Change the font of the whole text in the cell
-            string text = cell.StringValue;
-            if (!string.IsNullOrEmpty(text))
+            try
             {
-                // Apply font name to the entire cell using its style
-                Style style = cell.GetStyle();
-                style.Font.Name = "Arial";
-                cell.SetStyle(style);
-            }
+                // Verify that the input file exists to avoid FileNotFoundException
+                if (!File.Exists(inputPath))
+                {
+                    throw new FileNotFoundException($"Input file not found: {inputPath}");
+                }
 
-            // Save the workbook
-            string outputPath = "RichTextPortionFontName.xlsx";
-            workbook.Save(outputPath);
-            Console.WriteLine($"Workbook saved to {outputPath}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
+                // Load the workbook
+                var workbook = new Workbook(inputPath);
+
+                // Access the first worksheet
+                var worksheet = workbook.Worksheets[0];
+
+                // Get the cell that may contain rich text (e.g., A1)
+                var cell = worksheet.Cells["A1"];
+
+                // If the cell contains any text, apply the desired font to the whole text
+                if (!string.IsNullOrEmpty(cell.StringValue))
+                {
+                    // Create a style with the desired font properties
+                    var style = workbook.CreateStyle();
+                    style.Font.Name = "Arial";
+
+                    // Apply the style to the entire cell text
+                    cell.SetStyle(style);
+                }
+
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(outputPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                // Save the modified workbook
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to: {outputPath}");
+            }
+            catch (FileNotFoundException fnfEx)
+            {
+                Console.Error.WriteLine(fnfEx.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

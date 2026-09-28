@@ -1,19 +1,16 @@
-// Title: C# – Use Aspose.Cells to Show Custom Data Labels from a Cell Range for the First Series of a Column Chart
-// Description: Creates a workbook, adds categories, values and custom label texts, inserts a column chart, links the first series to the value range, enables data labels, sets ShowCellRange to true, assigns the label source (C2:C4), applies font styling, and saves the file as an XLSX using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# chart data labels | custom data label range Aspose.Cells | ShowCellRange Aspose.Cells | LinkedSource chart series .NET | column chart custom labels Excel | Aspose.Cells data label styling
-// Common Searches: Aspose.Cells link data labels to cell range | How to set custom text for chart series labels in C# | ShowCellRange and LinkedSource example Aspose.Cells | C# chart data labels from cells Aspose | Customize chart label font color Aspose.Cells
-// Developer Intent: Generate a column chart where the first series displays data labels taken from a specified worksheet range.
-// Use Cases: Display unit‑specific text (e.g., "100 units") on each column bar by referencing cells C2:C4. | Apply distinct font colors or styles to custom data labels for clearer visual emphasis. | Automate Excel reports that combine raw values with formatted label text linked directly to the chart.
-// AI Prompts: Write C# code with Aspose.Cells to enable ShowCellRange and set LinkedSource so chart data labels use text from a cell range. | Explain how to change the font color and style of data labels for a chart series in Aspose.Cells for .NET. | Provide step‑by‑step instructions to save an XLSX file after adding a column chart with custom data labels.
+// Title: How to bind custom data label text from a worksheet range to the first series of a column chart using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that sets the first series of a column chart to use cell range C2:C4 as the source for its data label text. | Show how to enable data labels, link them to a worksheet range, and style them (position outside end, blue font) for a chart series in Aspose.Cells. | Create a workbook, add sample data, generate a column chart, and configure the first series to display custom labels from cells using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# bind chart series data labels to a cell range | set custom label text for column chart series from worksheet cells in .NET | how to use LinkedSource property for chart data labels with Aspose.Cells | display units in chart data labels using Aspose.Cells C# example | Aspose.Cells chart series label position outside end code sample
+// Tags: chart series data labels from worksheet range Aspose.Cells | column chart custom label text C# | configure data label position outside end Aspose.Cells | save workbook with chart as xlsx Aspose.Cells | set data labels show value Aspose.Cells
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 using System.Drawing;
 
-namespace AsposeCellsDataLabelsFromRange
+namespace AsposeCellsDataLabelsDemo
 {
-    // Creates a workbook, adds categories, values and custom label texts, inserts a column chart, links the first series to the value range, enables data labels, sets ShowCellRange to true, assigns the label source (C2:C4), applies font styling, and saves the file as an XLSX using Aspose.Cells for .NET.
+    // The example creates a new workbook, adds category, value, and custom label columns, inserts a column chart, and configures the first series to show data labels whose text is taken from the cell range C2:C4. Labels are positioned outside the end of each column and styled with a blue font. The workbook is saved as DataLabelsFromCellRange.xlsx.
     class Program
     {
         static void Main()
@@ -33,7 +30,8 @@ namespace AsposeCellsDataLabelsFromRange
             sheet.Cells["B3"].PutValue(200);
             sheet.Cells["B4"].PutValue(300);
 
-            // Custom label texts that will be used as data labels
+            // Cells that contain custom label texts (e.g., with units)
+            sheet.Cells["C1"].PutValue("Label");
             sheet.Cells["C2"].PutValue("100 units");
             sheet.Cells["C3"].PutValue("200 units");
             sheet.Cells["C4"].PutValue("300 units");
@@ -49,14 +47,15 @@ namespace AsposeCellsDataLabelsFromRange
             // Access the first series
             Series firstSeries = chart.NSeries[0];
 
-            // Enable data labels and configure them to use the custom cell range
+            // Enable data labels and configure them to use a cell range as the source
             firstSeries.DataLabels.ShowValue = true;          // Show the numeric value (optional)
-            firstSeries.DataLabels.ShowCellRange = true;     // Use cell range for label text
-            firstSeries.DataLabels.LinkedSource = "C2:C4";   // Range containing custom label texts
-            firstSeries.DataLabels.Font.Color = Color.Blue; // Example styling
+            firstSeries.DataLabels.ShowCellRange = true;      // Use cell range for label text
+            firstSeries.DataLabels.LinkedSource = "C2:C4";    // Range containing custom label texts
+            firstSeries.DataLabels.Position = LabelPositionType.OutsideEnd;
+            firstSeries.DataLabels.Font.Color = Color.Blue;
 
             // Save the workbook
-            workbook.Save("ChartWithCustomDataLabels.xlsx", SaveFormat.Xlsx);
+            workbook.Save("DataLabelsFromCellRange.xlsx", SaveFormat.Xlsx);
         }
     }
 }

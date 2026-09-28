@@ -1,65 +1,46 @@
-// Title: Apply Light 1 Slicer Style to a Pivot Table with Aspose.Cells for .NET (C#)
-// Description: This example demonstrates how to create a workbook, add sample data, build a pivot table, insert a slicer linked to the "Fruit" field, and set the slicer's StyleType to SlicerStyleLight1 using Aspose.Cells for .NET. The workbook is saved as SlicerStyleLight1.xlsx, showcasing quick visual formatting of slicers.
-// Keywords: Aspose.Cells slicer style | C# Light1 slicer | SlicerStyleLight1 example | pivot table slicer formatting .NET | apply built‑in slicer style | Excel slicer styling code | Aspose.Cells C# tutorial | GitHub Aspose.Cells slicer sample
-// Common Searches: how to set slicer style in Aspose.Cells C# | apply Light 1 style to Excel slicer programmatically | Aspose.Cells pivot table slicer example | C# code for slicer formatting with Aspose.Cells | built‑in slicer styles .NET
-// Developer Intent: Programmatically assign the Light 1 built‑in style to a slicer linked to a pivot table.
-// Use Cases: Standardize dashboard appearance by applying corporate Light 1 slicer theme. | Generate automated reports with consistently styled slicers for end‑user filtering. | Create teaching material that illustrates slicer styling options in Aspose.Cells.
-// AI Prompts: Show code to apply other built‑in slicer styles (e.g., Light2, Dark1) with Aspose.Cells for .NET. | Explain how to change a slicer's style after loading an existing workbook. | List all values of the SlicerStyleType enum and suggest suitable scenarios for each.
+// Title: How to apply the built‑in Light 1 slicer style to a pivot table slicer using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that creates a pivot table, adds a slicer linked to its row field, and applies a built‑in light slicer style using Aspose.Cells. | Show the steps to programmatically format an Excel slicer with a built‑in light theme via the Aspose.Cells API in a .NET application.
+// Common Searches: Aspose.Cells C# apply Light1 slicer style to pivot table slicer | set slicer visual style to Light 1 using Aspose.Cells .NET | programmatically change slicer style in Excel with Aspose.Cells | example of using SlicerStyleLight1 in C# Aspose.Cells | how to format slicer appearance in Aspose.Cells workbook
+// Tags: Aspose.Cells slicer style formatting | C# built‑in Light1 slicer style | pivot table slicer visual customization Aspose | Excel slicer appearance .NET | apply Light1 style to slicer Aspose
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 using Aspose.Cells.Slicers;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, adds sample data, builds a pivot table, inserts a slicer linked to the row field, sets the slicer's StyleType to the built‑in Light 1 style, and saves the file as SlicerStyleLight1.xlsx.
+class ApplySlicerStyle
 {
-    // This example demonstrates how to create a workbook, add sample data, build a pivot table, insert a slicer linked to the "Fruit" field, and set the slicer's StyleType to SlicerStyleLight1 using Aspose.Cells for .NET. The workbook is saved as SlicerStyleLight1.xlsx, showcasing quick visual formatting of slicers.
-    class ApplySlicerStyle
+    static void Main()
     {
-        static void Main()
-        {
-            try
-            {
-                Run();
-                Console.WriteLine("Workbook created successfully: SlicerStyleLight1.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
+        // Create a new workbook and get the first worksheet
+        Workbook workbook = new Workbook();
+        Worksheet worksheet = workbook.Worksheets[0];
 
-        public static void Run()
-        {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+        // Populate sample data for the pivot table
+        worksheet.Cells["A1"].PutValue("Category");
+        worksheet.Cells["B1"].PutValue("Value");
+        worksheet.Cells["A2"].PutValue("A");
+        worksheet.Cells["B2"].PutValue(10);
+        worksheet.Cells["A3"].PutValue("B");
+        worksheet.Cells["B3"].PutValue(20);
+        worksheet.Cells["A4"].PutValue("C");
+        worksheet.Cells["B4"].PutValue(30);
 
-            // Populate sample data for the slicer source
-            sheet.Cells["A1"].PutValue("Fruit");
-            sheet.Cells["B1"].PutValue("Quantity");
-            sheet.Cells["A2"].PutValue("Apple");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["A3"].PutValue("Orange");
-            sheet.Cells["B3"].PutValue(15);
-            sheet.Cells["A4"].PutValue("Banana");
-            sheet.Cells["B4"].PutValue(20);
+        // Add a pivot table based on the data range
+        int pivotIndex = worksheet.PivotTables.Add("A1:B4", "D3", "PivotTable1");
+        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+        pivotTable.AddFieldToArea(PivotFieldType.Row, 0);   // Row field: Category
+        pivotTable.AddFieldToArea(PivotFieldType.Data, 1);  // Data field: Value
+        pivotTable.CalculateData();
 
-            // Add a pivot table based on the data range
-            int pivotIdx = sheet.PivotTables.Add("A1:B4", "E3", "PivotTable1");
-            PivotTable pivot = sheet.PivotTables[pivotIdx];
-            pivot.AddFieldToArea(PivotFieldType.Row, 0);   // Fruit field as row
-            pivot.AddFieldToArea(PivotFieldType.Data, 1);  // Quantity as data
+        // Add a slicer linked to the row field (index 0) and place it at cell F3
+        int slicerIndex = worksheet.Slicers.Add(pivotTable, "F3", 0);
+        Slicer slicer = worksheet.Slicers[slicerIndex];
 
-            // Add a slicer linked to the "Fruit" field of the pivot table
-            int slicerIdx = sheet.Slicers.Add(pivot, "E3", "Fruit");
-            Slicer slicer = sheet.Slicers[slicerIdx];
+        // Apply the built‑in Light 1 slicer style
+        slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
 
-            // Apply the built‑in Light 1 slicer style
-            slicer.StyleType = SlicerStyleType.SlicerStyleLight1;
-
-            // Save the workbook with the styled slicer
-            workbook.Save("SlicerStyleLight1.xlsx");
-        }
+        // Save the workbook with the styled slicer
+        workbook.Save("SlicerStyleLight1.xlsx");
     }
 }

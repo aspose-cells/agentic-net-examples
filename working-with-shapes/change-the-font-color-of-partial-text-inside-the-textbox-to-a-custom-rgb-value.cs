@@ -1,51 +1,75 @@
-// Title: Apply a Custom RGB Font Color to Specific Characters in a TextBox Shape – Aspose.Cells for .NET
-// Description: Creates a workbook, adds a textbox shape, defines a zero‑based character range, sets a Font with a custom RGB value, enables only the FontColor flag, and uses FormatCharacters to color that substring before saving the file.
-// Keywords: Aspose.Cells partial text color | textbox shape format characters .NET | custom RGB font color Aspose.Cells | StyleFlag FontColor example | Excel shape text styling
-// Common Searches: Aspose.Cells change color of part of textbox text | format specific characters in a shape using .NET | set RGB font color for substring in Excel textbox | partial text formatting Aspose.Cells
-// Developer Intent: Color a selected range of characters inside a textbox shape with a custom RGB value.
-// Use Cases: Highlight key terms in a generated report textbox. | Show status indicators like "Pass" or "Fail" in different colors within a shape. | Create a legend where particular words are uniquely colored for clarity.
-// AI Prompts: Generate code to apply bold, italic, and a custom RGB color to a character range in an Aspose.Cells textbox. | Explain how to retrieve a textbox's existing Font, modify its color, and apply it to selected characters using StyleFlag. | Show how to change the background color of specific characters in a shape with Aspose.Cells.
+// Title: Change the font color of a specific text portion in an Aspose.Cells TextBox shape to a custom RGB value using C#
+// AI Prompts: Write C# code with Aspose.Cells that sets the font color of the second portion of a TextBox's text to a given RGB value while preserving the original color of other portions. | Show how to programmatically detect TextBody support in Aspose.Cells and apply different RGB colors to multiple text portions inside a TextBox shape. | Provide a concise example that formats only part of the text in an Excel TextBox using Aspose.Cells and saves the workbook.
+// Common Searches: asp.net c# aspose.cells change color of part of textbox text | how to set custom RGB font color for a portion of text in an Excel textbox using Aspose | partial text formatting in Aspose.Cells TextBox shape C# example | detect TextBody support in Aspose.Cells and format textbox portions | apply different colors to multiple portions of a textbox in Aspose.Cells
+// Tags: Aspose.Cells TextBox partial font color | C# set RGB color TextBody portion | Excel shape text formatting Aspose.Cells | detect TextBody support Aspose.Cells | custom font color textbox Aspose.Cells
 
 using System;
 using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
 
-namespace AsposeCellsPartialTextColor
+// The sample loads an existing workbook, accesses the first shape on the first worksheet, confirms it is a TextBox, sets the whole textbox font color to teal via the Font.Color property, includes placeholder logic for applying a different RGB color to a second text portion using TextBody when supported, and saves the updated workbook.
+class Program
 {
-    // Creates a workbook, adds a textbox shape, defines a zero‑based character range, sets a Font with a custom RGB value, enables only the FontColor flag, and uses FormatCharacters to color that substring before saving the file.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.xlsx";
 
-            // Add a text box shape to the worksheet
-            // Parameters: upper left row, upper left column, upper left offset, upper left offset,
-            // width, height (all in points)
-            Shape textBox = worksheet.Shapes.AddTextBox(0, 0, 0, 0, 200, 50);
-            textBox.Text = "Partial color change example";
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+                return;
+            }
 
-            // Define the range of characters to format (e.g., characters 8 to 13 -> "color")
-            int startIndex = 8;   // zero‑based index
-            int length = 5;       // number of characters to format
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Prepare a Font object with the desired custom RGB color
-            // Here we use a teal color (R=0, G=128, B=128)
-            Font font = textBox.Font;
-            font.Color = Color.FromArgb(0, 128, 128);
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Create a StyleFlag indicating that only the font color should be applied
-            StyleFlag flag = new StyleFlag();
-            flag.FontColor = true;
+            // Ensure there is at least one shape on the sheet
+            if (sheet.Shapes.Count == 0)
+            {
+                Console.WriteLine("No shapes found on the first worksheet.");
+                return;
+            }
 
-            // Apply the formatting to the specified character range
-            textBox.FormatCharacters(startIndex, length, font, flag);
+            // Get the first shape (assumed to be a TextBox)
+            Shape shape = sheet.Shapes[0];
 
-            // Save the workbook to a file
-            workbook.Save("PartialTextColor.xlsx");
+            // Verify that the shape is a TextBox
+            if (shape is TextBox textbox)
+            {
+                // Set the font color for the entire textbox text
+                // (Aspose.Cells versions prior to supporting TextBody use the Font property)
+                textbox.Font.Color = Color.FromArgb(0, 128, 128); // teal
+
+                // If you need to apply a different color to a second portion,
+                // you would need a newer Aspose.Cells version that supports TextBody.
+                // The following is a placeholder for such logic:
+                // if (textbox.TextBody?.Paragraphs[0]?.Portions.Count > 1)
+                // {
+                //     textbox.TextBody.Paragraphs[0].Portions[1].Font.Color = Color.FromArgb(255, 165, 0); // orange
+                // }
+            }
+            else
+            {
+                Console.WriteLine("The first shape is not a TextBox.");
+                return;
+            }
+
+            // Save the workbook with the updated textbox formatting
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,44 +1,55 @@
-// Title: C# – Create a Workbook, Fill a 5×5 Matrix, and Freeze the Top‑Left Pane with Aspose.Cells
-// Description: This example shows how to instantiate a new Aspose.Cells Workbook, populate cells A1:E5 with sample data, freeze the first five rows and five columns using the FreezePanes(5,5,5,5) method, and save the result as TopLeft5x5_Frozen.xlsx.
-// Keywords: Aspose.Cells | C# | FreezePanes | freeze top left pane | 5x5 matrix | create workbook | populate cells | Excel automation
-// Common Searches: Aspose.Cells freeze first 5 rows and columns C# | how to freeze top left area in Excel using Aspose.Cells | C# example to create 5x5 data table with Aspose.Cells | FreezePanes method parameters Aspose.Cells .NET
-// Developer Intent: Generate a new workbook, insert a 5×5 data block, and lock that block in place with frozen panes.
-// Use Cases: Static header rows and columns for large spreadsheets | Dashboard sheet with a fixed summary matrix | Printable report where the top‑left block stays visible on every page
-// AI Prompts: Write a C# snippet that freezes N rows and M columns with Aspose.Cells, using variables for N and M. | Explain how the four parameters of FreezePanes map to zero‑based row/column indices. | Show how to apply bold font and background shading to the frozen 5×5 area before saving.
+// Title: Create a new workbook, add a 10×10 data matrix, and freeze the top‑left 5 × 5 area with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that uses Aspose.Cells to create a workbook, fill cells A1:J10 with sequential values, and apply FreezePanes to lock rows 1‑5 and columns A‑E. | Show how to programmatically set up a 5‑row by 5‑column frozen pane after populating a worksheet with a 10×10 matrix using Aspose.Cells.
+// Common Searches: Aspose.Cells C# freeze first five rows and columns example | populate 10x10 range with values using Aspose.Cells for .NET | how to use Worksheet.FreezePanes to lock top left area in Excel with C# | save workbook as Output.xlsx after freezing panes with Aspose.Cells | C# code to create workbook and set freeze panes in Aspose.Cells
+// Tags: Aspose.Cells FreezePanes C# example | populate 10x10 matrix Aspose.Cells | create workbook and freeze top left area Aspose.Cells | save workbook to XLSX with Aspose.Cells | initialize worksheet cells loop Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsFreezeTopLeft5x5
+// C# program that creates a new workbook, fills a 10×10 range with sample values, freezes the top‑left 5 × 5 block using Worksheet.FreezePanes, and saves the file as Output.xlsx.
+class Program
 {
-    // This example shows how to instantiate a new Aspose.Cells Workbook, populate cells A1:E5 with sample data, freeze the first five rows and five columns using the FreezePanes(5,5,5,5) method, and save the result as TopLeft5x5_Frozen.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook (lifecycle rule)
+            // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Populate a 5 × 5 data matrix (rows 0‑4, columns 0‑4)
-            for (int row = 0; row < 5; row++)
+            // Add a 10x10 data matrix (example values)
+            for (int row = 0; row < 10; row++)
             {
-                for (int col = 0; col < 5; col++)
+                for (int col = 0; col < 10; col++)
                 {
-                    // Example data: "R{row}C{col}"
-                    worksheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
+                    sheet.Cells[row, col].PutValue($"R{row + 1}C{col + 1}");
                 }
             }
 
-            // Freeze the top‑left 5 × 5 area.
-            // Parameters: row index, column index, number of frozen rows, number of frozen columns.
-            // Row/column indices are zero‑based, so use 5 to start the scrollable area after the frozen pane.
-            worksheet.FreezePanes(5, 5, 5, 5); // freeze panes rule
+            // Freeze the top‑left 5 × 5 area (rows 0‑4, columns 0‑4)
+            // row = 5, column = 5 specify the split cell; totalRows = 5, totalColumns = 5 specify how many rows/columns to freeze
+            sheet.FreezePanes(5, 5, 5, 5);
 
-            // Save the workbook (lifecycle rule)
-            workbook.Save("TopLeft5x5_Frozen.xlsx");
+            // Define output file path
+            string outputPath = "Output.xlsx";
+
+            // Ensure the directory exists
+            string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

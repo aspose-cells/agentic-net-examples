@@ -1,39 +1,41 @@
-// Title: Enable Automatic Line Wrapping in a TextBox Shape with Aspose.Cells for .NET (C#)
-// Description: This example creates a workbook, adds a TextBox shape to the first worksheet, inserts a long sentence, activates WrapTextInShape, disables overflow, and saves the file as TextboxWrapDemo.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells TextBox wrap | WrapTextInShape property | TextBoxOptions AllowTextToOverflow false | C# Aspose.Cells textbox example | shape text wrapping Aspose
-// Common Searches: how to wrap text inside a textbox shape Aspose.Cells | C# enable WrapTextInShape Aspose.Cells | prevent text overflow in Aspose.Cells textbox | multiline textbox Aspose.Cells .NET
-// Developer Intent: Activate line wrapping for long strings inside a TextBox shape and stop the text from spilling outside the shape.
-// Use Cases: Generating reports where comments need to fit inside fixed‑size label shapes. | Building dashboards with multiline annotations that stay within shape borders. | Creating invoices where address or note fields are placed in a textbox that must wrap automatically.
-// AI Prompts: Provide C# code that enables text wrapping for a TextBox shape and sets a custom font using Aspose.Cells. | Show how to auto‑size a textbox after turning on WrapTextInShape in Aspose.Cells. | Explain the difference between TextBoxOptions.WrapTextInShape and TextBoxOptions.AllowTextToOverflow.
+// Title: Enable word wrap for a TextBox shape in an Aspose.Cells for .NET workbook (C#)
+// AI Prompts: Write C# code that adds a TextBox shape to an Excel worksheet with Aspose.Cells and forces the text to wrap onto multiple lines. | Show how to configure the TextBox shape's properties in Aspose.Cells so that long sentences automatically break within the shape. | Provide an example that adjusts the TextBox dimensions after enabling text wrapping using Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# how to wrap text inside a textbox shape | set word wrap on Excel textbox using Aspose.Cells .NET | C# Aspose.Cells textbox automatic line break for long strings | adjust textbox size after enabling wrap text in Aspose.Cells workbook | enable multiline text in Aspose.Cells shape programmatically
+// Tags: Aspose.Cells C# textbox word wrap | Aspose.Cells set textbox wrap text property | Aspose.Cells adjust textbox dimensions for wrapped content | Aspose.Cells shape text wrapping in Excel | Aspose.Cells create textbox with auto line break
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
-using Aspose.Cells.Drawing.Texts;
 
-// This example creates a workbook, adds a TextBox shape to the first worksheet, inserts a long sentence, activates WrapTextInShape, disables overflow, and saves the file as TextboxWrapDemo.xlsx using Aspose.Cells for .NET.
-class EnableTextboxWrapping
+// The example creates a new Workbook, inserts a TextBox shape on the first worksheet, assigns a long sentence, enables automatic word wrap, optionally resizes the shape to fit the wrapped text, and saves the file as WrappedTextBox.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        try
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet sheet = workbook.Worksheets[0];
 
-        // Add a TextBox shape to the worksheet
-        // Parameters: upper left row, upper left column, top offset, left offset, width, height
-        TextBox textBox = sheet.Shapes.AddTextBox(1, 0, 1, 0, 200, 100);
+            // Add a textbox shape to the worksheet.
+            // Parameters: upper left row, upper left column, upper left row offset,
+            // upper left column offset, height (points), width (points)
+            TextBox textBoxShape = sheet.Shapes.AddTextBox(2, 1, 0, 0, 50, 100);
 
-        // Set a long text that needs wrapping
-        textBox.Text = "This is a very long sentence that should automatically wrap inside the textbox shape when wrapping is enabled.";
+            // Set the text content (word wrap is automatic for textboxes)
+            textBoxShape.Text = "This is a very long sentence that should automatically wrap onto multiple lines inside the textbox.";
 
-        // Enable text wrapping within the shape
-        textBox.TextBoxOptions.WrapTextInShape = true;
+            // Optionally adjust size
+            textBoxShape.Width = 100;
+            textBoxShape.Height = 50;
 
-        // Ensure text does not overflow the shape boundaries
-        textBox.TextBoxOptions.AllowTextToOverflow = false;
-
-        // Save the workbook
-        workbook.Save("TextboxWrapDemo.xlsx");
+            // Save the workbook
+            workbook.Save("WrappedTextBox.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

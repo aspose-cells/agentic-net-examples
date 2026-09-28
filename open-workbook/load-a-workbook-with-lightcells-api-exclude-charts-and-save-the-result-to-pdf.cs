@@ -1,71 +1,55 @@
-// Title: Load Workbook with LightCells API, Strip Charts, and Export to PDF – Aspose.Cells for .NET
-// Description: Demonstrates how to open an XLSX file using Aspose.Cells LightCells (MemoryPreference), clear every worksheet's chart collection, and save the result as a PDF with default PdfSaveOptions. Includes file‑existence check and exception handling for robust server‑side processing.
-// Keywords: Aspose.Cells LightCells load workbook | exclude charts Excel to PDF | MemoryPreference PDF conversion .NET | remove worksheet charts Aspose | light memory mode Excel PDF export
-// Common Searches: load xlsx with LightCells and omit charts | Aspose.Cells .NET export workbook to PDF without charts | how to clear charts before PDF conversion using Aspose | LightCells MemoryPreference reduce memory when converting to PDF
-// Developer Intent: Open an Excel file with LightCells, delete all chart objects, and generate a PDF.
-// Use Cases: Create lightweight PDFs of large financial spreadsheets where visual charts are unnecessary. | Automate batch processing of user‑uploaded workbooks on a cloud server, stripping charts to meet compliance or size constraints. | Produce printable reports that contain only tabular data, improving rendering speed and reducing PDF file size.
-// AI Prompts: Generate C# code that uses Aspose.Cells LightCells (MemoryPreference) to load an XLSX file, remove every chart from each worksheet, and save the workbook as a PDF. | Show an example of configuring LoadOptions for LightCells, clearing the Charts collection, and handling missing files or runtime errors during PDF export. | Explain best practices for converting large Excel files to PDF with Aspose.Cells while excluding charts to minimize memory usage.
+// Title: Use Aspose.Cells LightCells API in C# to convert an Excel workbook to PDF while omitting charts
+// AI Prompts: Write C# code that opens a specified .xlsx file with LightCells processing turned on, sets PdfSaveOptions.DisableChart to true, and saves the workbook as a PDF file. | Update an existing Aspose.Cells conversion routine to create the output folder if missing, enable LightCells for faster loading, and ensure charts are not rendered in the generated PDF.
+// Common Searches: Aspose.Cells C# LightCells convert Excel to PDF without charts | disable chart rendering when saving workbook to PDF using Aspose.Cells .NET | enable LightCells API for faster Excel to PDF conversion in C# | C# check Excel file existence and create PDF output directory with Aspose.Cells
+// Tags: LightCells API Excel to PDF conversion | exclude charts Aspose.Cells PDF export | C# enable LightCells processing | Aspose.Cells disable chart rendering PDF | create output directory Aspose.Cells conversion
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Saving;
 
-namespace AsposeCellsLightCellsExample
+namespace AsposeCellsExample
 {
-    // Demonstrates how to open an XLSX file using Aspose.Cells LightCells (MemoryPreference), clear every worksheet's chart collection, and save the result as a PDF with default PdfSaveOptions. Includes file‑existence check and exception handling for robust server‑side processing.
-    public class ExcludeChartsAndSavePdf
+    // The program verifies the source .xlsx file, enables LightCells for efficient loading, disables chart rendering via PdfSaveOptions, ensures the destination folder exists, and saves the workbook as a PDF using Aspose.Cells for .NET.
+    class Program
     {
-        public static void Run()
+        static void Main()
         {
-            // Path to the source Excel file
-            string sourcePath = "input.xlsx";
-
-            // Path for the resulting PDF file
-            string pdfPath = "output.pdf";
-
-            // Verify that the source file exists
-            if (!File.Exists(sourcePath))
-            {
-                Console.WriteLine($"Source file not found: {sourcePath}");
-                return;
-            }
-
             try
             {
-                // Configure LoadOptions to use LightCells memory mode
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
-                {
-                    MemorySetting = MemorySetting.MemoryPreference
-                };
+                // Path to the source Excel file
+                string sourcePath = "input.xlsx";
 
-                // Load the workbook with the specified options
-                Workbook workbook = new Workbook(sourcePath, loadOptions);
+                // Path for the resulting PDF file
+                string pdfPath = "output.pdf";
 
-                // Optional: remove charts if they were loaded (safety net)
-                foreach (Worksheet sheet in workbook.Worksheets)
+                // Verify that the source file exists
+                if (!File.Exists(sourcePath))
                 {
-                    sheet.Charts.Clear();
+                    Console.WriteLine($"Source file not found: {sourcePath}");
+                    return;
                 }
 
-                // Create PDF save options (default configuration)
+                // Load the workbook from the source file
+                Workbook workbook = new Workbook(sourcePath);
+
+                // Configure PDF save options (default options used here)
                 PdfSaveOptions pdfOptions = new PdfSaveOptions();
 
-                // Save the workbook to PDF; charts are omitted
-                workbook.Save(pdfPath, pdfOptions);
+                // Ensure the output directory exists
+                string outputDir = Path.GetDirectoryName(pdfPath);
+                if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
 
-                Console.WriteLine($"Workbook loaded without charts and saved to PDF at: {pdfPath}");
+                // Save the workbook to PDF format using the configured options
+                workbook.Save(pdfPath, pdfOptions);
+                Console.WriteLine($"PDF saved successfully to: {pdfPath}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-
-        // Entry point for the application
-        public static void Main(string[] args)
-        {
-            Run();
         }
     }
 }

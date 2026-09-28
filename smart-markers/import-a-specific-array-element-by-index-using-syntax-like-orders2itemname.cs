@@ -1,91 +1,68 @@
-// Title: Import a Specific Array Element by Index into Excel with Aspose.Cells for .NET
-// Description: Demonstrates how to place a single array item into a worksheet cell using Aspose.Cells. The example shows setting a Power Query formula that references an element by index (e.g., =Orders[2].ItemName), retrieving a PowerQueryFormulaItem at a given position, and importing the third value of a string array into cell C1 with ImportObjectArray.
-// Keywords: Aspose.Cells ImportObjectArray | C# array element index Excel | Power Query formula index Aspose | smart markers array access | .NET Excel cell value from array | Aspose.Cells example
-// Common Searches: Aspose.Cells import single array value | How to reference Power Query table row by index in formula | C# ImportObjectArray specific element | Set Excel cell to array item using Aspose | Access PowerQueryFormulaItem by index
-// Developer Intent: Write a single array element to an Excel cell and work with indexed Power Query items using Aspose.Cells.
-// Use Cases: Insert the third entry of a C# string array into a designated cell without loading the whole array. | Create a cell formula that points to a Power Query table row by zero‑based index (e.g., =Orders[2].ItemName). | Retrieve a PowerQueryFormulaItem at a specific position, modify its value, and write the result back to the worksheet.
-// AI Prompts: Generate C# code that uses Aspose.Cells ImportObjectArray to write the fourth element of an integer array into cell D5. | Show how to update the value of a PowerQueryFormulaItem at index 5 and output the new value to cell A1. | Provide an example of setting a cell formula that references the second row of a Power Query table named "Sales" using the &=Sales[1].ColumnName syntax.
+// Title: Import a specific list element by index using Aspose.Cells smart markers in C# (e.g., &=Orders[2].ItemName)
+// AI Prompts: Write C# code that inserts the smart marker '&=Orders[2].ItemName' into cell A1, binds a List<Order> to a DataSet, and processes the marker with WorkbookDesigner. | Show how to create a DataSet from a collection and use a smart marker to populate an Excel cell with the third item's ItemName. | Demonstrate saving the workbook after processing indexed smart markers to a file named Result.xlsx.
+// Common Searches: Aspose.Cells how to reference the third element of a list in a smart marker | C# smart marker syntax for accessing Orders[2] in Excel | Binding a List<T> to WorkbookDesigner for indexed smart marker values | Using &=Orders[2].ItemName to pull a single record into an Excel cell | Example of processing smart markers with a DataSet source in Aspose.Cells
+// Tags: smart marker collection index Aspose.Cells | WorkbookDesigner DataSet binding C# | reference list element in Excel smart marker | export workbook after processing smart markers | Aspose.Cells indexed marker example
 
 using System;
+using System.Collections.Generic;
+using System.Data;
 using Aspose.Cells;
-using Aspose.Cells.QueryTables;
 
-namespace AsposeCellsExamples
+// The example creates a workbook, places the smart marker '&=Orders[2].ItemName' in cell A1, converts a List<Order> into a DataSet, sets the DataSet as the data source for WorkbookDesigner, processes the marker to insert the third order's ItemName, and saves the result as Result.xlsx.
+class Program
 {
-    // Demonstrates how to place a single array item into a worksheet cell using Aspose.Cells. The example shows setting a Power Query formula that references an element by index (e.g., =Orders[2].ItemName), retrieving a PowerQueryFormulaItem at a given position, and importing the third value of a string array into cell C1 with ImportObjectArray.
-    public class ImportArrayElementByIndexDemo
+    static void Main()
     {
-        public static void Main(string[] args)
+        try
         {
-            try
-            {
-                Run();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-
-        public static void Run()
-        {
-            // Create a new workbook (lifecycle rule: create)
+            // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-
-            // Access the first worksheet
             Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
 
-            // ------------------------------------------------------------
-            // Example 1: Set a cell formula that references a Power Query
-            // table element by index (syntax similar to &=Orders[2].ItemName)
-            // ------------------------------------------------------------
-            // Note: The actual Power Query table "Orders" must exist in the workbook.
-            // For demonstration, we simply assign the formula string.
-            // In a real scenario, load a workbook that contains the Power Query table.
-            cells["A1"].Formula = "=Orders[2].ItemName";
+            // Insert a smart marker that references the third element (index 2) of the Orders collection
+            // The syntax &=Orders[2].ItemName tells Aspose.Cells to pull ItemName from Orders[2]
+            sheet.Cells["A1"].PutValue("&=Orders[2].ItemName");
 
-            // ------------------------------------------------------------
-            // Example 2: Access a Power Query formula item by numeric index
-            // using the PowerQueryFormulaItemCollection indexer.
-            // ------------------------------------------------------------
-            // Ensure that the workbook contains at least one Power Query formula.
-            // If not, this block will be skipped.
-            PowerQueryFormulaCollection pqFormulas = workbook.DataMashup.PowerQueryFormulas;
-            if (pqFormulas != null && pqFormulas.Count > 0)
+            // Prepare the data source with an Orders collection
+            var orders = new List<Order>
             {
-                // Get the first Power Query formula
-                PowerQueryFormula formula = pqFormulas[0];
+                new Order { ItemName = "Apple",  Quantity = 5 },
+                new Order { ItemName = "Banana", Quantity = 10 },
+                new Order { ItemName = "Cherry", Quantity = 15 }, // Index 2
+                new Order { ItemName = "Date",   Quantity = 20 }
+            };
 
-                // Access its collection of formula items
-                PowerQueryFormulaItemCollection items = formula.PowerQueryFormulaItems;
+            // Convert the list to a DataSet (required by WorkbookDesigner in this context)
+            DataTable ordersTable = new DataTable("Orders");
+            ordersTable.Columns.Add("ItemName", typeof(string));
+            ordersTable.Columns.Add("Quantity", typeof(int));
 
-                // Verify that the collection has enough items
-                if (items != null && items.Count > 2) // we want the item at index 2 (third item)
-                {
-                    // Retrieve the item at index 2
-                    PowerQueryFormulaItem thirdItem = items[2];
-
-                    // For demonstration, set a new value for this item
-                    thirdItem.Value = "NewValueForThirdItem";
-
-                    // Optionally, write the value back to a cell for verification
-                    cells["B1"].PutValue(thirdItem.Value);
-                }
+            foreach (var o in orders)
+            {
+                ordersTable.Rows.Add(o.ItemName, o.Quantity);
             }
 
-            // ------------------------------------------------------------
-            // Example 3: Import a single string element from an array into a cell
-            // ------------------------------------------------------------
-            string[] sampleArray = new string[] { "Alpha", "Beta", "Gamma", "Delta" };
-            // Import only the element at index 2 ("Gamma") into cell C1
-            // Using ImportObjectArray with a single-element array and vertical=false
-            sheet.Cells.ImportObjectArray(new object[] { sampleArray[2] }, 0, 2, false);
+            DataSet dataSet = new DataSet();
+            dataSet.Tables.Add(ordersTable);
 
-            // ------------------------------------------------------------
-            // Save the workbook (lifecycle rule: save)
-            // ------------------------------------------------------------
-            workbook.Save("ImportArrayElementByIndexDemo.xlsx");
+            // Process the smart markers using WorkbookDesigner
+            WorkbookDesigner designer = new WorkbookDesigner(workbook);
+            designer.SetDataSource(dataSet);
+            designer.Process();
+
+            // Save the resulting workbook
+            workbook.Save("Result.xlsx");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    // Simple POCO representing an order item
+    public class Order
+    {
+        public string ItemName { get; set; } = string.Empty;
+        public int Quantity { get; set; }
     }
 }

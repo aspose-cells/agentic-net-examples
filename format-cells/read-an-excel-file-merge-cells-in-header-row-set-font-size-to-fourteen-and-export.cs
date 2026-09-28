@@ -1,43 +1,76 @@
-// Title: C# – Merge Header Cells (A1:D1), Set 14‑Point Font, and Save Workbook with Aspose.Cells
-// Description: Load an existing Excel file, merge cells A1 through D1 on the first worksheet to create a single header, apply a 14‑point font to the merged cell, and save the updated workbook using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# merge cells | header row formatting Aspose.Cells | set font size 14 Aspose.Cells | Excel workbook export .NET | format cells Aspose.Cells | Aspose.Cells .NET US | Aspose.Cells Europe | C# Excel styling
-// Common Searches: how to merge cells A1:D1 with Aspose.Cells C# | set font size of merged header cell Aspose.Cells .NET | save workbook after formatting header row Aspose.Cells | Aspose.Cells merge cells and change font size example | C# code to create a title header in Excel using Aspose
-// Developer Intent: Combine the first‑row cells into one header, apply a 14‑point font, and write the changes back to a new Excel file.
-// Use Cases: Generate report sheets with a bold title spanning multiple columns. | Standardize header appearance across automated Excel exports. | Create printable dashboards where the header needs larger, readable text.
-// AI Prompts: Show C# code that merges A1:D1 and sets the font size to 14 with Aspose.Cells. | Give an Aspose.Cells example for styling a merged header row and saving the workbook. | Explain how to change font attributes (size, bold, color) of a merged cell after merging using Aspose.Cells in .NET.
+// Title: How to merge header cells A1:D1, apply a 14‑point bold centered style, and save the workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Load an existing .xlsx, merge cells A1 through D1, set the font to 14‑point bold and center it, then save the file with Aspose.Cells in C#. | Write a C# program that opens input.xlsx, merges the first row across four columns, applies a centered 14‑point bold style to the merged range, and writes the result to output.xlsx using Aspose.Cells.
+// Common Searches: Aspose.Cells C# merge first row cells and set font size to 14 | C# code to merge A1:D1 and apply bold centered style in Excel workbook | How to style merged header cells with Aspose.Cells for .NET | Save modified Excel file after merging cells using Aspose.Cells C#
+// Tags: merge cells A1:D1 Aspose.Cells C# | apply 14 point bold centered style Aspose.Cells | format merged header range Aspose.Cells | load and edit existing .xlsx Aspose.Cells | save workbook as new file Aspose.Cells .NET
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsHeaderMerge
+// // Loads input.xlsx, merges cells A1‑D1 on the first worksheet, applies a 14‑point bold centered style to the merged header, and saves the result as output.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // Load an existing Excel file, merge cells A1 through D1 on the first worksheet to create a single header, apply a 14‑point font to the merged cell, and save the updated workbook using Aspose.Cells for .NET.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            // Input and output file paths
-            string inputPath = "InputWorkbook.xlsx";
-            string outputPath = "OutputWorkbook.xlsx";
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
 
-            // Load the existing workbook
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
+        {
+            Console.WriteLine($"Input file not found: {inputPath}");
+            return;
+        }
+
+        try
+        {
+            // Load the existing Excel file
             Workbook workbook = new Workbook(inputPath);
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            // Access the first worksheet (you can change the index or name as needed)
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Merge cells in the header row (row 0, columns A to D)
-            // Parameters: firstRow, firstColumn, totalRows, totalColumns
-            cells.Merge(0, 0, 1, 4);
+            // Define the range of header cells to merge (e.g., A1 to D1)
+            CellArea headerArea = new CellArea
+            {
+                StartRow = 0,      // Row 1 (0‑based)
+                EndRow = 0,        // Row 1
+                StartColumn = 0,   // Column A (0‑based)
+                EndColumn = 3      // Column D
+            };
 
-            // Set the font size of the merged header cell to 14
-            Style headerStyle = cells[0, 0].GetStyle();
+            // Merge the defined header cells
+            sheet.Cells.Merge(
+                headerArea.StartRow,
+                headerArea.StartColumn,
+                headerArea.EndRow - headerArea.StartRow + 1,
+                headerArea.EndColumn - headerArea.StartColumn + 1);
+
+            // Create a style for the merged header
+            Style headerStyle = workbook.CreateStyle();
             headerStyle.Font.Size = 14;
-            cells[0, 0].SetStyle(headerStyle);
+            headerStyle.Font.IsBold = true;
+            headerStyle.HorizontalAlignment = TextAlignmentType.Center;
+            headerStyle.VerticalAlignment = TextAlignmentType.Center;
 
-            // Save the modified workbook
+            // Apply the style to the merged cells
+            Aspose.Cells.Range headerRange = sheet.Cells.CreateRange(
+                headerArea.StartRow,
+                headerArea.StartColumn,
+                headerArea.EndRow - headerArea.StartRow + 1,
+                headerArea.EndColumn - headerArea.StartColumn + 1);
+
+            headerRange.ApplyStyle(
+                headerStyle,
+                new StyleFlag { Font = true, HorizontalAlignment = true, VerticalAlignment = true });
+
+            // Save the modified workbook to a new file
             workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

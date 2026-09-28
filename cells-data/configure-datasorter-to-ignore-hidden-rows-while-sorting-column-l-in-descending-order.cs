@@ -1,91 +1,105 @@
-// Title: Aspose.Cells .NET – Sort Column L Descending While Skipping Hidden Rows
-// Description: This example creates a workbook, fills columns A‑M with sample data, hides selected rows, extracts only the visible rows, sorts those rows in descending order by column L (index 11), writes the sorted data back to the original positions, and saves the file as SortedIgnoringHiddenRows.xlsx.
-// Keywords: Aspose.Cells sort hidden rows | ignore hidden rows Aspose.Cells .NET | sort column descending Aspose.Cells | DataSorter visible rows only | C# Aspose.Cells sorting example | Excel hidden rows sort bypass
-// Common Searches: Aspose.Cells sort column L descending ignoring hidden rows | How to skip hidden rows when sorting with Aspose.Cells | C# example for sorting visible rows only in Aspose.Cells | DataSorter hide rows Aspose.Cells .NET | Sort Excel data while preserving hidden rows using Aspose
-// Developer Intent: Sort column L in descending order while excluding any hidden rows from the sort operation.
-// Use Cases: Maintain subtotal or grouping rows hidden from users while sorting the displayed data. | Prepare a spreadsheet for export where hidden rows must stay in their original order. | Implement a web‑based reporting tool that sorts only visible rows in an Aspose.Cells workbook.
-// AI Prompts: Show me a concise Aspose.Cells .NET code snippet that sorts column L descending and leaves hidden rows untouched. | How can I configure Aspose.Cells DataSorter to ignore hidden rows during a sort? | Provide a step‑by‑step explanation for sorting only visible rows in a workbook using C# and Aspose.Cells.
+// Title: How to sort column L in descending order while skipping hidden rows with Aspose.Cells DataSorter in C#
+// AI Prompts: Write C# code that uses Aspose.Cells DataSorter to sort column L descending, ignoring rows where IsHidden = true. | Show a step‑by‑step example of collecting visible rows, sorting them, and writing them back while preserving hidden rows in an Excel workbook. | Provide a reusable method that accepts a worksheet and a column index, sorts visible rows in descending order, and leaves hidden rows untouched.
+// Common Searches: Aspose.Cells C# sort column descending ignoring hidden rows | DataSorter skip hidden rows when sorting Excel sheet in .NET | How to preserve hidden rows while sorting data with Aspose.Cells | C# example sorting visible rows only using Aspose.Cells DataSorter | Sort Excel column L descending and keep hidden rows unchanged Aspose.Cells
+// Tags: Aspose.Cells DataSorter sort visible rows | C# Aspose.Cells ignore hidden rows during sort | Excel column descending sort with hidden row preservation | DataSorter descending order column L | Aspose.Cells workbook hidden row handling
 
 using System;
 using System.Collections.Generic;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+namespace AsposeCellsDataSorterIgnoreHidden
 {
-    // This example creates a workbook, fills columns A‑M with sample data, hides selected rows, extracts only the visible rows, sorts those rows in descending order by column L (index 11), writes the sorted data back to the original positions, and saves the file as SortedIgnoringHiddenRows.xlsx.
-    class DataSorterIgnoreHiddenRowsDemo
+    // Demonstrates creating a workbook, adding data to column L, hiding a row, extracting only visible rows, sorting them in descending order with DataSorter, copying whole rows back while preserving hidden rows, and saving the result as SortedIgnoreHidden.xlsx.
+    class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Populate sample data (columns A to M, rows 1 to 10)
-            for (int row = 0; row < 10; row++)
+            // Populate sample data in column L (index 11) and some other columns
+            // Row 0 (header)
+            cells["L1"].PutValue("Score");
+            // Visible rows
+            cells["L2"].PutValue(85);
+            cells["L3"].PutValue(92);
+            // Hidden row (will be ignored during sorting)
+            cells["L4"].PutValue(70);
+            cells.Rows[3].IsHidden = true; // Row index 3 corresponds to Excel row 4
+            // More visible rows
+            cells["L5"].PutValue(78);
+            cells["L6"].PutValue(95);
+
+            // Add some additional data in other columns to demonstrate whole‑row movement
+            for (int r = 0; r <= 5; r++)
             {
-                for (int col = 0; col <= 12; col++) // column L is index 11
-                {
-                    cells[row, col].PutValue($"R{row + 1}C{col + 1}");
-                }
-                // Put numeric values in column L for sorting
-                cells[row, 11].PutValue(10 - row); // descending values initially
+                cells[r, 0].PutValue($"Item{r}");
             }
 
-            // Hide a few rows to demonstrate that they will be ignored during sorting
-            cells.Rows[2].IsHidden = true; // hide row 3
-            cells.Rows[5].IsHidden = true; // hide row 6
+            // -----------------------------------------------------------------
+            // Configure DataSorter: sort by column L (index 11) in descending order
+            // but ignore hidden rows.
+            // -----------------------------------------------------------------
+            DataSorter sorter = workbook.DataSorter;
+            sorter.Key1 = 11;                     // Column L (zero‑based index)
+            sorter.Order1 = SortOrder.Descending; // Descending order
+            sorter.HasHeaders = true;             // First row is a header
 
-            // Determine the used range
-            int maxRow = cells.MaxDataRow;
-            int maxCol = cells.MaxDataColumn;
+            // Determine the range of rows that contain data (excluding the header)
+            int startRow = 1; // data starts after header
+            int endRow = cells.MaxDataRow; // last row with data
 
-            // Collect indices of visible rows
-            List<int> visibleRowIndices = new List<int>();
-            for (int r = 0; r <= maxRow; r++)
+            // Collect visible rows and their values in column L
+            List<(int RowIndex, object Value)> visibleRows = new List<(int, object)>();
+            for (int r = startRow; r <= endRow; r++)
             {
                 if (!cells.Rows[r].IsHidden)
-                    visibleRowIndices.Add(r);
-            }
-
-            // Extract data of visible rows
-            List<object[]> visibleRowsData = new List<object[]>();
-            foreach (int r in visibleRowIndices)
-            {
-                object[] rowData = new object[maxCol + 1];
-                for (int c = 0; c <= maxCol; c++)
                 {
-                    rowData[c] = cells[r, c].Value;
+                    object val = cells[r, sorter.Key1].Value;
+                    visibleRows.Add((r, val));
                 }
-                visibleRowsData.Add(rowData);
             }
 
-            // Sort the extracted rows descending by column L (index 11)
-            visibleRowsData.Sort((a, b) =>
+            // Sort the collected rows by the column L value in descending order
+            visibleRows.Sort((a, b) =>
             {
-                // Handle possible nulls
-                object valA = a[11];
-                object valB = b[11];
-                double numA = valA == null ? double.MinValue : Convert.ToDouble(valA);
-                double numB = valB == null ? double.MinValue : Convert.ToDouble(valB);
-                // Descending order
-                return numB.CompareTo(numA);
+                // Handle nulls gracefully
+                if (a.Value == null && b.Value == null) return 0;
+                if (a.Value == null) return 1;
+                if (b.Value == null) return -1;
+
+                // Compare as double if possible, otherwise as string
+                if (double.TryParse(a.Value.ToString(), out double da) &&
+                    double.TryParse(b.Value.ToString(), out double db))
+                {
+                    return db.CompareTo(da); // descending
+                }
+                return string.Compare(b.Value.ToString(), a.Value.ToString(), StringComparison.Ordinal);
             });
 
-            // Write the sorted data back to the original visible rows
-            for (int i = 0; i < visibleRowIndices.Count; i++)
+            // Write back the sorted visible rows to their original visible positions
+            int writeRow = startRow;
+            foreach (var (originalRow, _) in visibleRows)
             {
-                int targetRow = visibleRowIndices[i];
-                object[] rowData = visibleRowsData[i];
-                for (int c = 0; c <= maxCol; c++)
+                // Skip hidden rows while writing
+                while (cells.Rows[writeRow].IsHidden)
                 {
-                    cells[targetRow, c].PutValue(rowData[c]);
+                    writeRow++;
                 }
+
+                // Copy the entire row from originalRow to writeRow
+                for (int c = 0; c <= cells.MaxDataColumn; c++)
+                {
+                    cells[writeRow, c].Copy(cells[originalRow, c]);
+                }
+
+                writeRow++;
             }
 
             // Save the workbook
-            workbook.Save("SortedIgnoringHiddenRows.xlsx");
+            workbook.Save("SortedIgnoreHidden.xlsx");
         }
     }
 }

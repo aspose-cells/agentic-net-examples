@@ -1,49 +1,53 @@
-// Title: C# – Catch malformed JSON errors when loading a workbook with Aspose.Cells JsonLoadOptions
-// Description: Demonstrates how to load a JSON file into an Aspose.Cells Workbook using JsonLoadOptions, then save it as Excel while handling malformed‑JSON scenarios. The example catches CellsException for FileCorrupted and InvalidData and provides a generic fallback for other errors.
-// Keywords: Aspose.Cells JsonLoadOptions | C# JSON to Excel error handling | CellsException FileCorrupted | InvalidData exception Aspose | malformed JSON Aspose.Cells | load JSON workbook C# | exception handling Aspose.Cells | JSON parsing error C#
-// Common Searches: how to catch malformed JSON with Aspose.Cells C# | Aspose.Cells JsonLoadOptions exception types | C# example catching CellsException for JSON load | error handling when converting JSON to Excel using Aspose | Aspose.Cells JSON file corrupted error
-// Developer Intent: Add robust try‑catch logic to capture JsonUtility.Load failures caused by malformed JSON when creating a Workbook with Aspose.Cells.
-// Use Cases: Validate a JSON source before conversion and show a clear message if the file is corrupted. | Log detailed CellsException information to aid troubleshooting of data import problems. | Switch to an alternative data source automatically when the primary JSON cannot be parsed.
-// AI Prompts: Write a reusable C# method that loads JSON into an Aspose.Cells Workbook with JsonLoadOptions and returns detailed error information for malformed files. | Generate code to log CellsException details (code, message, stack trace) to a file when JSON loading fails. | Explain the difference between CellsException codes FileCorrupted and InvalidData in the context of JSON import.
+// Title: Add robust error handling for malformed JSON when loading with Aspose.Cells in C#
+// AI Prompts: Show a C# snippet that validates a JSON file before passing it to Aspose.Cells and catches any parsing exceptions, printing the exception type and message. | Update the program to separate file‑not‑found handling from malformed JSON handling when loading with Aspose.Cells, using distinct catch blocks. | Illustrate writing the problematic JSON content and stack trace to a separate error log, then gracefully continue after an Aspose.Cells load failure.
+// Common Searches: Aspose.Cells C# load JSON file with error handling for invalid JSON | catch exceptions thrown by JsonUtility.Load in .NET | convert malformed JSON to Excel using Aspose.Cells and handle failures | C# try‑catch pattern for Aspose.Cells JSON to workbook conversion | log JSON parsing errors when using Aspose.Cells LoadOptions
+// Tags: Aspose.Cells JSON import error handling | C# malformed JSON detection Aspose.Cells | exception handling for JSON import Aspose.Cells | Excel workbook creation from JSON error management | record JSON import errors Aspose.Cells
 
 using System;
+using System.IO;
+using System.Text;
 using Aspose.Cells;
-using Aspose.Cells.Utility;
-using Aspose.Cells; // for ExceptionType
 
-// Demonstrates how to load a JSON file into an Aspose.Cells Workbook using JsonLoadOptions, then save it as Excel while handling malformed‑JSON scenarios. The example catches CellsException for FileCorrupted and InvalidData and provides a generic fallback for other errors.
-class JsonLoadWithErrorHandling
+// The example verifies the JSON file's existence, then attempts to load it into an Aspose.Cells Workbook using LoadOptions with JSON format inside a try‑catch block that distinguishes file‑not‑found, malformed JSON, and other load errors, providing clear console messages and optional logging before saving the workbook to XLSX while handling possible save exceptions.
+class Program
 {
     static void Main()
     {
-        // Path to the source JSON file
         string jsonPath = "data.json";
+        string outputPath = "output.xlsx";
 
-        // Create JSON load options (customize as needed)
-        JsonLoadOptions loadOptions = new JsonLoadOptions
+        // Verify JSON file exists before loading
+        if (!File.Exists(jsonPath))
         {
-            KeptSchema = true
-        };
+            Console.WriteLine($"JSON file not found: '{jsonPath}'");
+            return;
+        }
+
+        Workbook workbook = null;
 
         try
         {
-            // Attempt to load the JSON file into a workbook
-            Workbook workbook = new Workbook(jsonPath, loadOptions);
-
-            // If loading succeeds, save the workbook to an Excel file
-            workbook.Save("output.xlsx");
-            Console.WriteLine("JSON loaded and saved successfully.");
+            // Load JSON directly into a workbook using LoadOptions with Json format
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Json);
+            workbook = new Workbook(jsonPath, loadOptions);
         }
-        // Catch Aspose.Cells specific exceptions that indicate malformed JSON
-        catch (CellsException ex) when (ex.Code == ExceptionType.FileCorrupted ||
-                                        ex.Code == ExceptionType.InvalidData)
-        {
-            Console.WriteLine($"Malformed JSON file: {ex.Message}");
-        }
-        // Fallback for any other unexpected exceptions
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading JSON: {ex.Message}");
+            // Handle errors such as malformed JSON or load failures
+            Console.WriteLine($"Failed to load JSON file '{jsonPath}': {ex.Message}");
+            return;
+        }
+
+        try
+        {
+            // Save the workbook to the specified output path
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            // Handle save errors (e.g., permission issues, invalid path)
+            Console.WriteLine($"Failed to save workbook to '{outputPath}': {ex.Message}");
         }
     }
 }

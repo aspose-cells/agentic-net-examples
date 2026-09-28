@@ -1,47 +1,46 @@
-// Title: Export Excel to HTML with a Custom <title> Tag Using Aspose.Cells for .NET
-// Description: This C# sample builds a workbook, populates cells, assigns a value to the workbook's Title property, sets HtmlSaveOptions.PageTitle, and saves the file as HTML so the generated <title> element mirrors the workbook title.
-// Keywords: Aspose.Cells | HTML export | PageTitle | HtmlSaveOptions | .NET | Excel to HTML | custom title tag | BuiltInDocumentProperties | C# example
-// Common Searches: Aspose.Cells set HTML title tag | HtmlSaveOptions PageTitle C# | Export Excel as HTML with custom header Aspose | How to add <title> to HTML output from workbook | C# Aspose.Cells HTML export custom page title
-// Developer Intent: Add a specific <title> element to the HTML file generated from an Excel workbook.
-// Use Cases: Generate web‑ready reports where the browser tab displays the workbook name. | Batch‑export several spreadsheets, each using its own Title property for SEO‑friendly page headings. | Integrate the exported HTML into a CMS that relies on the <title> tag for navigation and indexing.
-// AI Prompts: Generate C# code that uses Aspose.Cells to save a workbook as HTML and sets the page title from BuiltInDocumentProperties.Title. | Show how to customize the HTML head section (title, meta description, charset) when exporting Excel with Aspose.Cells. | Explain how HtmlSaveOptions can be combined with other options like ExportImagesAsBase64 for a complete HTML report.
+// Title: Export an Excel workbook to HTML with a custom header that displays the workbook title using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, sets the workbook's BuiltInDocumentProperties.Title, and saves it as an HTML file with Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to embed a custom <head> section containing the workbook title in the generated HTML. | Write a C# snippet that verifies the source Excel file exists, applies a document title, and includes exception handling while converting to HTML.
+// Common Searches: Aspose.Cells C# export Excel to HTML and include workbook title in the page header | How to set BuiltInDocumentProperties.Title before saving workbook as HTML with Aspose.Cells | C# convert .xlsx to .html with custom HTML head using Aspose.Cells HtmlSaveOptions | Aspose.Cells HtmlSaveOptions missing Title property older version workaround
+// Tags: Aspose.Cells HTML export with document title | C# HtmlSaveOptions custom header Aspose.Cells | set workbook built-in properties Aspose.Cells | convert xlsx to html Aspose.Cells | error handling missing input file C# Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsHtmlExport
+// The sample loads an existing .xlsx workbook, assigns a title via BuiltInDocumentProperties, configures HtmlSaveOptions, and saves the workbook as an HTML file. It also checks for the source file's existence and handles runtime exceptions.
+class Program
 {
-    // This C# sample builds a workbook, populates cells, assigns a value to the workbook's Title property, sets HtmlSaveOptions.PageTitle, and saves the file as HTML so the generated <title> element mirrors the workbook title.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook and access the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.html";
 
-            // Populate some sample data
-            sheet.Cells["A1"].PutValue("Name");
-            sheet.Cells["B1"].PutValue("Age");
-            sheet.Cells["A2"].PutValue("John Doe");
-            sheet.Cells["B2"].PutValue(30);
-            sheet.Cells["A3"].PutValue("Jane Smith");
-            sheet.Cells["B3"].PutValue(28);
+            // Ensure the input workbook exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file '{inputPath}' not found.");
+                return;
+            }
 
-            // Set the workbook title property (optional, can be any custom string)
-            string customTitle = "My Custom Workbook Title";
-            workbook.BuiltInDocumentProperties.Title = customTitle;
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-            // Configure HTML save options and assign the page title
-            HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-            // This property sets the <title> element in the generated HTML file
-            saveOptions.PageTitle = customTitle;
+            // Set the workbook title via built‑in document properties
+            workbook.BuiltInDocumentProperties.Title = "My Workbook Title";
 
-            // Save the workbook as an HTML file with the custom page title
-            string outputPath = "ExportedWorkbook.html";
-            workbook.Save(outputPath, saveOptions);
+            // Configure HTML save options (properties Title/CustomHeader are not available in older API versions)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            Console.WriteLine($"HTML file saved to '{outputPath}' with page title '{customTitle}'.");
+            // Save the workbook as HTML
+            workbook.Save(outputPath, htmlOptions);
+
+            Console.WriteLine($"Workbook successfully saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

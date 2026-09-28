@@ -1,43 +1,61 @@
-// Title: Insert a Rectangle Shape with Text in Excel via Aspose.Cells for .NET
-// Description: C# sample that creates a workbook, adds a rectangle to the first worksheet at row 2, column 2, assigns custom text, applies a light‑green solid fill and a solid border, then saves the file as RectangleWithText.xlsx.
-// Keywords: Aspose.Cells rectangle shape C# | Excel shape text Aspose | add rectangle to worksheet | custom shape styling Aspose.Cells | Aspose.Cells Drawing API | set shape fill color .NET | shape line weight Aspose
-// Common Searches: how to add a rectangle with text using Aspose.Cells | Aspose.Cells C# shape fill color example | set border style for rectangle shape in Excel with Aspose | draw shapes on worksheet canvas Aspose.Cells | C# code to place rectangle at specific cells Aspose
-// Developer Intent: Place a rectangle on a worksheet, embed custom label, and format its appearance programmatically.
-// Use Cases: Create visual section dividers in financial reports. | Design button‑like areas on a dashboard that guide users to other data views. | Build printable forms with labeled boxes for user input.
-// AI Prompts: Generate C# code that adds a rectangle shape with wrapped multiline text and centers it in a cell using Aspose.Cells. | Show how to create several rectangles with different colors and export the workbook to PDF. | Explain how to assign a hyperlink to a shape and handle click actions in Aspose.Cells for .NET.
+// Title: Create and format a rectangle shape with custom text on an Excel worksheet using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that adds a rectangle shape to a worksheet canvas, sets its inner text, applies a light blue fill and dark blue solid border, and saves the workbook as an .xlsx file with Aspose.Cells. | Write a C# snippet to position a rectangle shape at a specific row and column, define its size, customize fill and line formatting, embed custom text, and export the workbook using Aspose.Cells.
+// Common Searches: Aspose.Cells C# add rectangle shape with text to specific cell range | how to set fill color and border style for a shape in Aspose.Cells .NET | positioning a rectangle shape on an Excel worksheet using Aspose.Cells API | save workbook after inserting custom shaped annotation with Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | set shape text Aspose.Cells | shape fill color Aspose.Cells .NET | shape border formatting Aspose.Cells | worksheet canvas shape positioning Aspose.Cells
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Drawing;
+using System;
+using System.Drawing;
 
-namespace AsposeCellsRectangleWithText
+// Demonstrates how to create a new workbook, add a rectangle shape to the first worksheet at a specified cell location, assign custom text, apply a light‑blue fill and dark‑blue solid border with custom line weight, and save the file as RectangleShape.xlsx using Aspose.Cells for .NET.
+class Program
 {
-    // C# sample that creates a workbook, adds a rectangle to the first worksheet at row 2, column 2, assigns custom text, applies a light‑green solid fill and a solid border, then saves the file as RectangleWithText.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Get the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Define shape position and size (in pixels)
+            int upperLeftRow = 2;      // Row index where the shape starts
+            int upperLeftColumn = 2;   // Column index where the shape starts
+            int top = 5;               // Distance from the top of the cell (pixels)
+            int left = 5;              // Distance from the left of the cell (pixels)
+            int height = 100;          // Height of the shape (pixels)
+            int width = 200;           // Width of the shape (pixels)
 
             // Add a rectangle shape to the worksheet canvas
-            // Parameters: topRow, top (pixel offset), leftColumn, left (pixel offset), height (pixels), width (pixels)
-            RectangleShape rectangle = worksheet.Shapes.AddRectangle(2, 0, 2, 0, 120, 200);
+            Shape rectangle = sheet.Shapes.AddShape(
+                MsoDrawingType.Rectangle,
+                upperLeftRow,
+                upperLeftColumn,
+                top,
+                left,
+                height,
+                width);
 
-            // Set custom text for the rectangle
-            rectangle.Text = "Custom rectangle text";
+            // Set custom text inside the rectangle
+            rectangle.Text = "Custom Rectangle Text";
 
-            // Optionally, customize appearance (fill color, line style, etc.)
-            rectangle.Fill.FillType = FillType.Solid;
-            rectangle.Fill.SolidFill.Color = System.Drawing.Color.LightGreen;
-            rectangle.Line.DashStyle = MsoLineDashStyle.Solid;
-            rectangle.Line.Weight = 1.5;
+            // Optional formatting
+            rectangle.FillFormat.ForeColor = Color.LightBlue;               // Background color
+            rectangle.LineFormat.Weight = 1.5;                              // Border thickness
+            rectangle.LineFormat.DashStyle = MsoLineDashStyle.Solid;        // Border style
+            rectangle.LineFormat.ForeColor = Color.DarkBlue;                // Border color
 
             // Save the workbook to a file
-            workbook.Save("RectangleWithText.xlsx");
+            string outputPath = "RectangleShape.xlsx";
+            workbook.Save(outputPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

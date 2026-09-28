@@ -1,35 +1,36 @@
-// Title: Freeze First Row and First Column Simultaneously with Aspose.Cells FreezePanes (C#)
-// Description: Creates a new Workbook, accesses the first Worksheet, applies Worksheet.FreezePanes(1, 1, 1, 1) to lock the top row and leftmost column, and saves the file as FreezeFirstRowAndColumn.xlsx.
-// Keywords: Aspose.Cells | FreezePanes | C# | freeze first row | freeze first column | freeze top row and column | Excel pane freezing .NET | worksheet FreezePanes example
-// Common Searches: Aspose.Cells freeze first row and column C# | How to use FreezePanes in Aspose.Cells .NET | Freeze top row and left column Excel with Aspose.Cells | C# code to lock header row and identifier column | Aspose.Cells FreezePanes parameters
-// Developer Intent: Lock the worksheet’s header row and identifier column in a single operation.
-// Use Cases: Scroll large data tables while keeping header rows visible | Design a data‑entry template with fixed row and column labels | Generate automated reports where headings stay static during navigation | Build dashboards where the first row/column act as persistent filters
-// AI Prompts: Provide a C# example to freeze multiple rows and columns using Aspose.Cells FreezePanes with custom indices. | Show code that freezes the first two rows and the first three columns in an Aspose.Cells workbook. | Explain each parameter of Worksheet.FreezePanes and how zero‑based indexing influences the frozen area.
+// Title: C# guide to freezing the top row and leftmost column simultaneously with Aspose.Cells FreezePanes
+// AI Prompts: Generate C# code that creates a workbook, accesses the first worksheet, and applies FreezePanes to lock the top row and left column at the same time. | Explain the required parameter values for the FreezePanes method to freeze row 1 and column 1 in Aspose.Cells. | Provide a complete C# snippet that saves the workbook after freezing the first row and column using Aspose.Cells.
+// Common Searches: Aspose.Cells C# freeze top row and left column together | How to use FreezePanes to lock row 1 and column 1 in a .NET Excel workbook | C# example for freezing pane at A1 with Aspose.Cells library | Simultaneous freeze of first row and first column using Aspose.Cells in C# | Freeze first row and column in Excel file with Aspose.Cells API
+// Tags: Aspose.Cells FreezePanes first row column C# | freeze top row left column Aspose.Cells | C# Excel FreezePanes example | Aspose.Cells workbook freeze pane A1 | lock first row and column worksheet Aspose
 
 using System;
 using Aspose.Cells;
 
-namespace FreezeFirstRowAndColumn
+// Creates a new Workbook, retrieves the first Worksheet, calls sheet.FreezePanes(1,1,1,1) to lock the top row and leftmost column, and saves the file as FrozenPane.xlsx.
+class Program
 {
-    // Creates a new Workbook, accesses the first Worksheet, applies Worksheet.FreezePanes(1, 1, 1, 1) to lock the top row and leftmost column, and saves the file as FreezeFirstRowAndColumn.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook
             Workbook workbook = new Workbook();
 
-            // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
 
-            // Freeze the first row and first column.
-            // Parameters: row index, column index, number of frozen rows, number of frozen columns.
-            // Row and column indices are zero‑based, so index 1 refers to the second row/column.
-            // Freezing 1 row and 1 column will lock the top row (A1) and leftmost column (A column).
-            worksheet.FreezePanes(1, 1, 1, 1);
+            // Freeze the first row and first column simultaneously.
+            // Parameters: row index (1) and column index (1) are zero‑based offsets for the pane below/right of the frozen area.
+            // totalRows = 1, totalColumns = 1 specify that one row and one column are frozen.
+            sheet.FreezePanes(1, 1, 1, 1);
 
-            // Save the workbook to a file
-            workbook.Save("FreezeFirstRowAndColumn.xlsx");
+            // Save the workbook
+            workbook.Save("FrozenPane.xlsx");
+            Console.WriteLine("Workbook saved successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

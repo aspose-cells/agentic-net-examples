@@ -1,42 +1,47 @@
-// Title: Apply list‑type data validation to column S (rows 0‑99) using Aspose.Cells for .NET (C#)
-// Description: Creates a new workbook, defines the range S1:S100, adds a List validation with the allowed values "Apple", "Banana" and "Cherry", configures a stop‑alert with a custom error title and message, and saves the file as ColumnSValidation.xlsx.
-// Keywords: Aspose.Cells C# data validation | list validation column S | Excel drop‑down list Aspose | restrict cell values .NET | Aspose.Cells validation example | Excel data validation programmatically | C# Aspose.Cells workbook validation
-// Common Searches: Aspose.Cells add drop‑down list to column S | C# restrict column values to specific strings in Excel | How to create list validation with Aspose.Cells for .NET | Set error message for data validation in Aspose.Cells | Excel data validation using Aspose.Cells C#
-// Developer Intent: Add a List‑type validation to column S (rows 0‑99) that only permits predefined string values.
-// Use Cases: Standardize fruit selection in a generated report by providing a drop‑down list in column S. | Prevent invalid text entry in a critical data column before downstream processing. | Enforce consistent terminology across exported Excel files created with Aspose.Cells.
-// AI Prompts: Generate C# code with Aspose.Cells to apply a list validation to column S for rows 0‑99 using the values "Apple", "Banana", "Cherry" and display a stop‑alert on invalid input. | Explain how to reference a dynamic named range on another worksheet for list validation in Aspose.Cells. | Provide a step‑by‑step guide to add different list validations to multiple columns within the same workbook using Aspose.Cells for .NET.
+// Title: Create a list‑type data validation dropdown for column S (S1:S100) in an Excel file using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that creates a new workbook and adds a list‑type validation to cells S1 through S100, allowing only Apple, Orange, Banana, and Cherry, with an in‑cell dropdown. | Write C# using Aspose.Cells to define a validation list whose allowed values are read from a named range on another worksheet instead of a hard‑coded string. | Produce a C# sample that applies the same list validation to multiple columns (e.g., S, T, U) and sets custom input and error messages for each column.
+// Common Searches: Aspose.Cells C# how to add a drop‑down list validation to column S | C# set data validation list for Excel range S1:S100 using Aspose.Cells | restrict Excel cell values to a predefined list with Aspose.Cells .NET | apply list validation to multiple columns in Aspose.Cells example | load validation list from another worksheet in Aspose.Cells C#
+// Tags: Aspose.Cells list validation Excel column | Aspose.Cells data validation dropdown .NET | Excel column S validation Aspose.Cells | Aspose.Cells validation formula list C# | Aspose.Cells apply validation to range
 
-using Aspose.Cells;
 using System;
+using Aspose.Cells;
 
-// Creates a new workbook, defines the range S1:S100, adds a List validation with the allowed values "Apple", "Banana" and "Cherry", configures a stop‑alert with a custom error title and message, and saves the file as ColumnSValidation.xlsx.
-class Program
+namespace AsposeCellsValidationExample
 {
-    static void Main()
+    // The example creates a new workbook, defines a validation area covering cells S1 to S100, adds a list‑type validation with the allowed values Apple, Orange, Banana, and Cherry, shows an in‑cell dropdown, customizes input and error messages, and saves the file as ColumnS_Validation.xlsx.
+    class Program
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-        Worksheet sheet = workbook.Worksheets[0];
+        static void Main()
+        {
+            // Create a new workbook and get the first worksheet
+            Workbook workbook = new Workbook();
+            Worksheet worksheet = workbook.Worksheets[0];
 
-        // Define the validation area for column S (index 18) rows 0 to 99
-        CellArea area = CellArea.CreateCellArea(0, 18, 99, 18);
+            // Define the validation area for column S (index 18)
+            // Here we apply the validation to rows 0 through 99 (i.e., S1:S100)
+            CellArea validationArea = CellArea.CreateCellArea(0, 18, 99, 18);
 
-        // Add a validation to the worksheet for the defined area
-        int validationIndex = sheet.Validations.Add(area);
-        Validation validation = sheet.Validations[validationIndex];
+            // Add a new validation to the worksheet for the defined area
+            ValidationCollection validations = worksheet.Validations;
+            int validationIndex = validations.Add(validationArea);
+            Validation validation = validations[validationIndex];
 
-        // Set validation type to List and provide the allowed string values
-        validation.Type = ValidationType.List;
-        validation.InCellDropDown = true;
-        validation.Value1 = new object[] { "Apple", "Banana", "Cherry" };
+            // Set the validation type to List and provide the allowed values
+            validation.Type = ValidationType.List;
+            validation.Formula1 = "Apple,Orange,Banana,Cherry"; // predefined array of strings
+            validation.InCellDropDown = true; // show dropdown in the cell
 
-        // Configure alert style and error messages (optional)
-        validation.AlertStyle = ValidationAlertType.Stop;
-        validation.ErrorTitle = "Invalid Entry";
-        validation.ErrorMessage = "Please select a value from the list.";
-        validation.ShowError = true;
+            // Optional: customize the input and error messages
+            validation.InputTitle = "Select a Fruit";
+            validation.InputMessage = "Choose one of the listed fruits.";
+            validation.ErrorTitle = "Invalid Selection";
+            validation.ErrorMessage = "Please select a valid fruit from the list.";
+            validation.AlertStyle = ValidationAlertType.Stop;
+            validation.ShowError = true;
+            validation.ShowInput = true;
 
-        // Save the workbook
-        workbook.Save("ColumnSValidation.xlsx");
+            // Save the workbook to a file
+            workbook.Save("ColumnS_Validation.xlsx");
+        }
     }
 }

@@ -1,58 +1,51 @@
-// Title: Aspose.Cells .NET: Auto‑highlight formula errors using conditional formatting
-// Description: Demonstrates how to create a workbook, add formulas that generate errors, calculate them, and apply a ContainsErrors conditional formatting rule that colors error cells (e.g., yellow) before saving the file.
-// Keywords: Aspose.Cells conditional formatting | C# highlight error cells | ContainsErrors format condition | auto highlight formula errors | Aspose.Cells CalculateFormula | .NET spreadsheet error detection
-// Common Searches: Aspose.Cells highlight #DIV/0! error C# | Conditional formatting for formula errors Aspose.Cells | Programmatically detect and color error cells in .NET workbook | Apply ContainsErrors rule with Aspose.Cells
-// Developer Intent: Add a conditional formatting rule that automatically colors any cell containing a formula error after calculation.
-// Use Cases: Mark division‑by‑zero or undefined function errors in financial models. | Flag invalid references in data‑validation sheets before distribution. | Provide instant visual cues for cells that failed to evaluate during bulk calculations.
-// AI Prompts: Generate C# code with Aspose.Cells that applies a red font to cells containing any formula error after workbook.CalculateFormula(). | Show how to create two conditional formatting rules in the same worksheet: one for errors (yellow background) and one for negative numbers (red background). | Explain how to retrieve the addresses of cells that triggered the ContainsErrors condition after calculation using Aspose.Cells.
+// Title: Automatically highlight formula error cells in an Excel workbook using Aspose.Cells for .NET conditional formatting
+// AI Prompts: Write C# code that creates a workbook, inserts formulas, calls CalculateFormula, and adds a ContainsErrors conditional formatting rule that colors error cells with a light salmon background. | Adapt the sample to apply the ContainsErrors conditional formatting only to the range A1:B10 after the workbook has been calculated.
+// Common Searches: Aspose.Cells C# highlight cells that contain #DIV/0! after calculating formulas | How to add a ContainsErrors conditional format to an Excel file with Aspose.Cells | Programmatically color Excel error values using Aspose.Cells .NET API | Apply conditional formatting for formula errors only in a specific range with Aspose.Cells | Auto style error cells after workbook.CalculateFormula in C#
+// Tags: Aspose.Cells ContainsErrors conditional formatting | C# highlight Excel formula errors | apply background color to error cells Aspose.Cells | calculate formulas then style error values | conditional formatting for #DIV/0! Aspose.Cells
 
 using System;
 using System.Drawing;
 using Aspose.Cells;
 
-namespace AsposeCellsErrorHighlight
+namespace HighlightErrorCellsDemo
 {
-    // Demonstrates how to create a workbook, add formulas that generate errors, calculate them, and apply a ContainsErrors conditional formatting rule that colors error cells (e.g., yellow) before saving the file.
+    // The example creates a workbook, inserts formulas that generate errors, calculates all formulas, and then adds a ContainsErrors conditional formatting rule that fills any error cells with a light salmon background before saving the file.
     class Program
     {
         static void Main()
         {
             // Create a new workbook and get the first worksheet
             Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-            Cells cells = worksheet.Cells;
+            Worksheet sheet = workbook.Worksheets[0];
+            Cells cells = sheet.Cells;
 
-            // Add formulas that will produce errors
-            cells["A1"].Formula = "=1/0";                 // Division by zero error
-            cells["A2"].Formula = "=UNKNOWNFUNC()";       // Unknown function error
-            cells["A3"].Formula = "=B1+1";                // No error (valid reference)
+            // Populate some cells with formulas that will produce errors
+            cells["A1"].Formula = "=1/0";                 // #DIV/0! error
+            cells["A2"].Formula = "=UNKNOWNFUNC(5)";      // #NAME? error
+            cells["A3"].Formula = "=B1";                  // B1 is empty, no error (valid)
+            cells["B1"].PutValue(10);
+            cells["B2"].Formula = "=A2+A3";               // Depends on error cell A2
 
-            // Calculate all formulas so that error values are generated
+            // Calculate all formulas so that error values are materialized
             workbook.CalculateFormula();
 
-            // Define a conditional formatting rule that highlights cells containing errors
-            int cfIndex = worksheet.ConditionalFormattings.Add();
-            FormatConditionCollection cfCollection = worksheet.ConditionalFormattings[cfIndex];
+            // Add a conditional formatting rule that highlights cells containing errors
+            int cfIndex = sheet.ConditionalFormattings.Add();
+            FormatConditionCollection cfCollection = sheet.ConditionalFormattings[cfIndex];
 
-            // Apply the rule to a range (e.g., A1:E10)
-            CellArea area = new CellArea
-            {
-                StartRow = 0,
-                EndRow = 9,
-                StartColumn = 0,
-                EndColumn = 4
-            };
+            // Define the range to which the rule applies (entire used range)
+            CellArea area = CellArea.CreateCellArea(0, 0, cells.MaxDataRow, cells.MaxDataColumn);
             cfCollection.AddArea(area);
 
-            // Add the "ContainsErrors" condition
+            // Add a condition of type ContainsErrors (no operator or formulas needed)
             int conditionIndex = cfCollection.AddCondition(FormatConditionType.ContainsErrors);
             FormatCondition condition = cfCollection[conditionIndex];
 
-            // Set the highlight style (yellow background)
-            condition.Style.BackgroundColor = Color.Yellow;
+            // Set the style for cells that meet the condition (e.g., light red background)
+            condition.Style.BackgroundColor = Color.LightSalmon;
 
             // Save the workbook
-            workbook.Save("ErrorHighlightDemo.xlsx");
+            workbook.Save("HighlightedErrors.xlsx");
         }
     }
 }

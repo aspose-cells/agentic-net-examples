@@ -1,41 +1,95 @@
-// Title: Apply a ChartColorPalette to All Charts in an XLS Workbook with Aspose.Cells for .NET
-// Description: Load an existing XLS file, choose a ChartColorPaletteType (e.g., MonochromaticPalette1), iterate through each worksheet and chart, and use SeriesCollection.ChangeColors to set the palette for every series before saving the workbook.
-// Keywords: Aspose.Cells C# chart color palette | ChartColorPaletteType example | SeriesCollection.ChangeColors | modify chart colors XLS | apply monochromatic palette Aspose | bulk chart styling .NET | iterate worksheets and charts Aspose.Cells | change Excel chart series colors C# | Excel chart theming programmatically
-// Common Searches: how to change colors of all chart series in an XLS file using Aspose.Cells | apply a monochromatic palette to every chart in a workbook C# | Aspose.Cells iterate worksheets charts set series colors | SeriesCollection.ChangeColors usage example | bulk update chart colors Aspose.Cells .NET
-// Developer Intent: Update every chart in an existing XLS workbook to use a single ChartColorPaletteType and save the modified file.
-// Use Cases: Enforce corporate branding by standardizing chart colors across a workbook. | Improve print readability with a uniform monochromatic palette for all charts. | Allow end‑users to switch chart themes dynamically based on report settings.
-// AI Prompts: Generate C# code that applies ChartColorPaletteType.MulticolorPalette2 to all charts in a workbook and saves it as XLSX using Aspose.Cells. | Explain the SeriesCollection.ChangeColors method and list all available ChartColorPaletteType values. | Create a snippet that selects different ChartColorPaletteType values for column and pie charts in the same workbook with Aspose.Cells.
+// Title: Apply a custom color palette to every chart series in an XLS workbook using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that opens an existing XLS file with Aspose.Cells, creates an array of System.Drawing.Color values, and assigns each color to the fill, border, and marker of every chart series across all worksheets before saving the workbook. | Demonstrate how to loop through all worksheets and charts in Aspose.Cells, using the NSeries collection to set series.Area.ForegroundColor, series.Border.Color, and series.Marker.ForegroundColor from a repeating custom palette.
+// Common Searches: Aspose.Cells C# change colors of all chart series in an existing XLS workbook | how to set a custom palette for chart series programmatically in .NET using Aspose.Cells | apply the same color scheme to multiple charts in an XLS file with Aspose.Cells | C# iterate through worksheets and charts to modify series colors in Aspose.Cells | save modified XLS workbook after updating chart series colors Aspose.Cells
+// Tags: apply custom chart series palette Aspose.Cells | iterate worksheets charts Aspose.Cells C# | set series fill border marker color Aspose.Cells | custom RGB colors for chart series Aspose.Cells | save XLS workbook after chart modification Aspose.Cells
 
 using System;
+using System.Drawing;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
-// Load an existing XLS file, choose a ChartColorPaletteType (e.g., MonochromaticPalette1), iterate through each worksheet and chart, and use SeriesCollection.ChangeColors to set the palette for every series before saving the workbook.
+// The example loads an existing XLS workbook (or creates a new one), defines a custom System.Drawing.Color array, iterates through every worksheet and each chart, and applies the colors to each series' area fill, border, and marker. Finally, it saves the updated workbook to a new XLS file.
 class Program
 {
     static void Main()
     {
-        // Load the existing XLS workbook
-        Workbook workbook = new Workbook("input.xls");
-
-        // Choose a monochromatic palette to apply to chart series
-        ChartColorPaletteType palette = ChartColorPaletteType.MonochromaticPalette1;
-
-        // Iterate through all worksheets in the workbook
-        foreach (Worksheet ws in workbook.Worksheets)
+        try
         {
-            // Iterate through all charts on the worksheet
-            foreach (Chart chart in ws.Charts)
+            // Input workbook path (replace with actual file path if needed)
+            string inputPath = "input.xls";
+
+            Workbook workbook;
+
+            // Load existing workbook if it exists; otherwise create a new one
+            if (File.Exists(inputPath))
             {
-                // Get the series collection of the chart
-                SeriesCollection seriesColl = chart.NSeries;
-
-                // Apply the selected color palette to all series in the collection
-                seriesColl.ChangeColors(palette);
+                workbook = new Workbook(inputPath);
             }
-        }
+            else
+            {
+                workbook = new Workbook();
+                if (workbook.Worksheets.Count > 0)
+                {
+                    workbook.Worksheets[0].Name = "Sheet1";
+                }
+            }
 
-        // Save the workbook with the updated chart colors
-        workbook.Save("output.xls");
+            // Define a custom color palette (example colors)
+            Color[] customPalette = new Color[]
+            {
+                Color.FromArgb(0xFF, 0x4E, 0x79, 0xA7), // Blue
+                Color.FromArgb(0xFF, 0xC0, 0x50, 0x4D), // Red
+                Color.FromArgb(0xFF, 0x9B, 0xC9, 0x5A), // Green
+                Color.FromArgb(0xFF, 0xFF, 0xC0, 0x00), // Yellow
+                Color.FromArgb(0xFF, 0x8E, 0x44, 0xAD)  // Purple
+            };
+
+            // Apply custom colors to chart series in all worksheets
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                foreach (Chart chart in sheet.Charts)
+                {
+                    try
+                    {
+                        var series = chart.NSeries;
+                        for (int i = 0; i < series.Count; i++)
+                        {
+                            Color paletteColor = customPalette[i % customPalette.Length];
+
+                            // Set fill color for the series area (works for column/bar charts)
+                            series[i].Area.ForegroundColor = paletteColor;
+
+                            // Set line color (works for line/area charts) via Border
+                            series[i].Border.Color = paletteColor;
+
+                            // Set marker color (works for scatter/line charts)
+                            series[i].Marker.ForegroundColor = paletteColor;
+                        }
+                    }
+                    catch (Exception exChart)
+                    {
+                        Console.WriteLine($"Warning: Failed to apply colors to chart '{chart.Name}'. {exChart.Message}");
+                    }
+                }
+            }
+
+            // Output workbook path (replace with desired output path)
+            string outputPath = "output.xls";
+
+            // Ensure the output directory exists
+            string? outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
     }
 }

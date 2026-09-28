@@ -1,63 +1,24 @@
-// Title: Export Worksheet Print Area to HTML with Aspose.Cells (C#)
-// Description: Demonstrates how to define a print area (e.g., B2:F10) in an Aspose.Cells workbook, configure HtmlSaveOptions with ExportPrintAreaOnly = true (and optional grid lines), and save the selected range as a lightweight HTML file.
-// Keywords: Aspose.Cells C# HTML export | ExportPrintAreaOnly | print area to HTML | HtmlSaveOptions grid lines | save selected range as HTML
-// Common Searches: Aspose.Cells export only print area to HTML | C# HtmlSaveOptions ExportPrintAreaOnly example | How to save a specific range as HTML with Aspose.Cells | Include grid lines when exporting HTML from Aspose.Cells
-// Developer Intent: Generate an HTML file that contains only the worksheet's defined print area.
-// Use Cases: Create a web‑ready snapshot of a report section for dashboards. | Produce compact HTML snippets for email attachments by limiting output to the print area. | Render printable HTML views of invoices or forms while preserving cell borders.
-// AI Prompts: Show me a C# snippet that sets a print area and exports only that range to HTML using Aspose.Cells. | How can I include grid lines when saving a workbook as HTML with ExportPrintAreaOnly enabled? | Explain how to export multiple print areas or adjust page setup before converting to HTML with Aspose.Cells.
+// Title: Export only the defined print area of an Excel workbook to HTML with Aspose.Cells for .NET
+// AI Prompts: Write C# code that loads an .xlsx file, sets HtmlSaveOptions.ExportPrintAreaOnly to true, and saves the workbook as an HTML document using Aspose.Cells. | Show how to configure Aspose.Cells HtmlSaveOptions to export just the worksheet's print area when converting Excel to HTML in a .NET application.
+// Common Searches: asp.net export excel print area to html using aspose.cells | c# Aspose.Cells HtmlSaveOptions ExportPrintAreaOnly example | how to save only the defined print area of a worksheet as html with Aspose.Cells | convert workbook to html limited to print area Aspose.Cells C#
+// Tags: Aspose.Cells HtmlSaveOptions ExportPrintAreaOnly | export Excel print area to HTML C# | convert worksheet print area to HTML Aspose.Cells | C# Aspose.Cells HTML conversion print area
 
 using System;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// Loads 'input.xlsx', enables HtmlSaveOptions.ExportPrintAreaOnly to restrict output to the defined print area, and saves the result as 'output.html' using Aspose.Cells.
+class ExportPrintAreaToHtml
 {
-    // Demonstrates how to define a print area (e.g., B2:F10) in an Aspose.Cells workbook, configure HtmlSaveOptions with ExportPrintAreaOnly = true (and optional grid lines), and save the selected range as a lightweight HTML file.
-    public class ExportPrintAreaToHtml
+    static void Main()
     {
-        public static void Run()
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Load the workbook from a file
+        Workbook workbook = new Workbook("input.xlsx");
 
-                // Populate the worksheet with sample data
-                for (int row = 0; row < 20; row++)
-                {
-                    for (int col = 0; col < 10; col++)
-                    {
-                        worksheet.Cells[row, col].PutValue($"Cell {row + 1},{col + 1}");
-                    }
-                }
+        // Create HTML save options and enable exporting only the defined print area
+        HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
+        htmlOptions.ExportPrintAreaOnly = true; // Export only the print area
 
-                // Define the print area (e.g., B2:F10)
-                worksheet.PageSetup.PrintArea = "B2:F10";
-
-                // Configure HTML save options to export only the defined print area
-                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-                {
-                    ExportPrintAreaOnly = true, // Export only the print area
-                    ExportGridLines = true      // Optional: include grid lines in the output
-                };
-
-                // Save the workbook as HTML; only the print area will be exported
-                workbook.Save("PrintAreaOnly.html", htmlOptions);
-                Console.WriteLine("HTML file 'PrintAreaOnly.html' has been created successfully.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-        }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            ExportPrintAreaToHtml.Run();
-        }
+        // Save the workbook as an HTML file using the specified options
+        workbook.Save("output.html", htmlOptions);
     }
 }

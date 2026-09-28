@@ -1,59 +1,84 @@
-// Title: Change Pivot Table Data Source Range Using Aspose.Cells for .NET (C#)
-// Description: Shows how to create a workbook, add a pivot table, then reassign its source to a different cell range (e.g., B2:C5) with PivotTable.ChangeDataSource, refresh the data, recalculate, and save the file.
-// Keywords: Aspose.Cells pivot table change data source | C# PivotTable.ChangeDataSource example | update pivot source range Aspose.Cells | .NET Excel pivot table data source | dynamic pivot table range C#
-// Common Searches: Aspose.Cells how to change pivot table source range C# | PivotTable.ChangeDataSource usage .NET | replace pivot table data source Aspose.Cells | C# set new range for existing pivot table
-// Developer Intent: Replace the source range of an existing pivot table with another cell range programmatically.
-// Use Cases: Create a pivot from a full dataset, then narrow the analysis to a subset without rebuilding the layout. | Allow end‑users to select a different data block (e.g., filtered rows) and update the pivot on the fly. | Adjust the pivot source when the underlying table expands or contracts, then refresh automatically.
-// AI Prompts: Generate C# code that creates a pivot table with Aspose.Cells and then changes its data source to B2:C5. | Explain step‑by‑step how to use PivotTable.ChangeDataSource to point a pivot table to a new range and recalculate it. | Show an example of dynamically updating a pivot table's source range based on user input using Aspose.Cells for .NET.
+// Title: How to reassign a pivot table’s data source to a different cell range using Aspose.Cells for .NET (C#)
+// AI Prompts: Create a pivot table from range A1:B5, then switch its data source to C1:D5 and refresh it with Aspose.Cells in C#. | Programmatically change the source range of an existing Aspose.Cells pivot table and recalculate the pivot cache using the ChangeDataSource method. | Demonstrate updating a pivot table’s data source to a new worksheet range and saving the workbook with Aspose.Cells for .NET.
+// Common Searches: Aspose.Cells C# change pivot table source range from A1:B5 to C1:D5 | How to use ChangeDataSource method to update pivot table data source in Aspose.Cells .NET | Refresh pivot cache after changing data source in Aspose.Cells C# example | Assign new data range to existing pivot table using Aspose.Cells for .NET
+// Tags: Aspose.Cells pivot table source update | C# modify pivot table data range | refresh pivot cache Aspose.Cells | Aspose.Cells workbook pivot table example | pivot table data source reassignment .NET
 
 using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
 
-// Shows how to create a workbook, add a pivot table, then reassign its source to a different cell range (e.g., B2:C5) with PivotTable.ChangeDataSource, refresh the data, recalculate, and save the file.
-class Program
+namespace AsposeCellsPivotDemo
 {
-    static void Main()
+    // The sample creates a workbook, fills A1:B5 with sample data, adds a pivot table at D3, copies similar data to C1:D5, changes the pivot table's data source to the new range using ChangeDataSource, refreshes and recalculates the pivot, and saves the file as AssignDataSourceDemo.xlsx.
+    public class AssignDataSourceDemo
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        public static void Run()
+        {
+            try
+            {
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-        // Populate sample data (A1:C5)
-        worksheet.Cells["A1"].PutValue("Product");
-        worksheet.Cells["B1"].PutValue("Region");
-        worksheet.Cells["C1"].PutValue("Sales");
-        worksheet.Cells["A2"].PutValue("A");
-        worksheet.Cells["B2"].PutValue("North");
-        worksheet.Cells["C2"].PutValue(100);
-        worksheet.Cells["A3"].PutValue("B");
-        worksheet.Cells["B3"].PutValue("South");
-        worksheet.Cells["C3"].PutValue(200);
-        worksheet.Cells["A4"].PutValue("C");
-        worksheet.Cells["B4"].PutValue("East");
-        worksheet.Cells["C4"].PutValue(300);
-        worksheet.Cells["A5"].PutValue("D");
-        worksheet.Cells["B5"].PutValue("West");
-        worksheet.Cells["C5"].PutValue(400);
+                // Populate sample data in the worksheet (range A1:B5)
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["A4"].PutValue("A");
+                sheet.Cells["B4"].PutValue(30);
+                sheet.Cells["A5"].PutValue("C");
+                sheet.Cells["B5"].PutValue(40);
 
-        // Add a pivot table with an initial source (will be changed later)
-        int pivotIndex = worksheet.PivotTables.Add("A1:C5", "E3", "MyPivotTable");
-        PivotTable pivotTable = worksheet.PivotTables[pivotIndex];
+                // Add a pivot table using the initial data range A1:B5
+                int pivotIndex = sheet.PivotTables.Add("A1:B5", "D3", "MyPivotTable");
+                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
 
-        // Assign a specific cell range as the new data source using ChangeDataSource
-        // Example: use the range B2:C5 as the data source
-        string[] newDataSource = new string[] { "B2:C5" };
-        pivotTable.ChangeDataSource(newDataSource);
+                // Configure the pivot table (add fields)
+                pivotTable.AddFieldToArea(PivotFieldType.Row, "Category");
+                pivotTable.AddFieldToArea(PivotFieldType.Data, "Value");
 
-        // Configure the pivot table fields
-        pivotTable.AddFieldToArea(PivotFieldType.Row, "Region");
-        pivotTable.AddFieldToArea(PivotFieldType.Data, "Sales");
+                // Define a new data source range (C1:D5) on the same worksheet
+                // For demonstration, copy the original data to the new range
+                sheet.Cells["C1"].PutValue("Category");
+                sheet.Cells["D1"].PutValue("Value");
+                sheet.Cells["C2"].PutValue("X");
+                sheet.Cells["D2"].PutValue(100);
+                sheet.Cells["C3"].PutValue("Y");
+                sheet.Cells["D3"].PutValue(200);
+                sheet.Cells["C4"].PutValue("X");
+                sheet.Cells["D4"].PutValue(300);
+                sheet.Cells["C5"].PutValue("Z");
+                sheet.Cells["D5"].PutValue(400);
 
-        // Refresh and calculate the pivot table to apply changes
-        pivotTable.RefreshData();
-        pivotTable.CalculateData();
+                // Change the pivot table's data source to the new range C1:D5
+                string[] newDataSource = new string[] { "C1:D5" };
+                pivotTable.ChangeDataSource(newDataSource);
 
-        // Save the workbook
-        workbook.Save("PivotTableAssignDataSource.xlsx");
+                // Refresh the pivot cache and recalculate the pivot table to reflect the new source
+                pivotTable.RefreshData();
+                pivotTable.CalculateData();
+
+                // Save the workbook
+                string outputPath = "AssignDataSourceDemo.xlsx";
+                workbook.Save(outputPath);
+                Console.WriteLine($"Workbook saved successfully to '{outputPath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+    }
+
+    // Entry point for the application
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            AssignDataSourceDemo.Run();
+        }
     }
 }

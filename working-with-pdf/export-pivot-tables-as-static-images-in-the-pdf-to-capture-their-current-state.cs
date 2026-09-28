@@ -1,43 +1,67 @@
-// Title: Export Excel Pivot Tables as Static Images in PDF with Aspose.Cells for .NET
-// Description: Loads an Excel workbook, refreshes all pivot tables to capture the latest data, and saves the file as a PDF where each pivot table is rendered as a flat image using PdfSaveOptions.
-// Keywords: Aspose.Cells | C# | pivot table PDF export | static image PDF | PdfSaveOptions | refresh pivot tables | Excel to PDF | flatten pivot tables | Aspose.Cells for .NET | export pivot tables as images
-// Common Searches: Aspose.Cells export pivot table to PDF | C# save pivot tables as images in PDF | Refresh all pivot tables before PDF conversion Aspose | Flatten Excel pivot tables in PDF using Aspose.Cells | PdfSaveOptions disable document structure Aspose
-// Developer Intent: Generate a PDF that contains pivot tables rendered as non‑editable images.
-// Use Cases: Distribute read‑only PDF reports with pivot tables preserved visually. | Archive Excel analyses where pivot layouts must stay unchanged after source data updates. | Create client‑facing documents that prevent further manipulation of pivot data.
-// AI Prompts: Write C# code with Aspose.Cells to refresh every pivot table and export the workbook to PDF where pivot tables appear as static images. | Explain how PdfSaveOptions can be configured to flatten pivot tables and optionally omit the PDF document structure. | Show how to export only selected worksheets that contain pivot tables to a PDF while keeping their visual appearance intact.
+// Title: Export Excel Pivot Tables as Static Images into a PDF using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, refreshes all pivot tables, copies each worksheet containing a pivot table into a new workbook, and saves the new workbook as a PDF with Aspose.Cells. | Adjust the Aspose.Cells example to skip pivot tables that cannot be refreshed, log their worksheet and table names, and continue processing the remaining tables. | Create a script that renames each copied worksheet with the original sheet and pivot table names, then exports the collection of worksheets to a single PDF file.
+// Common Searches: Aspose.Cells .NET export refreshed pivot tables to PDF as images | C# code to convert Excel pivot tables into static PDF pages using Aspose.Cells | How to copy worksheets with pivot tables and save them as PDF with Aspose.Cells | Save Excel pivot table view as image in PDF using Aspose.Cells for .NET | Skip problematic pivot tables while exporting to PDF with Aspose.Cells
+// Tags: Aspose.Cells pivot table PDF conversion | refresh pivot cache before PDF export | duplicate worksheet with pivot table Aspose.Cells | static image rendering of pivot tables in PDF | robust pivot table export error handling
 
 using System;
+using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
-using Aspose.Cells.Rendering;
 
-namespace PivotTablePdfExport
+// Loads an Excel workbook, refreshes each pivot table, copies the worksheets that contain them into a new workbook, and saves the new workbook as a PDF, producing static images of the pivot tables on separate pages.
+class ExportPivotTablesAsImagesToPdf
 {
-    // Loads an Excel workbook, refreshes all pivot tables to capture the latest data, and saves the file as a PDF where each pivot table is rendered as a flat image using PdfSaveOptions.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Load an existing workbook that contains pivot tables.
-            // Replace "input.xlsx" with the path to your source file.
-            Workbook workbook = new Workbook("input.xlsx");
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
 
-            // Refresh all pivot tables in each worksheet to ensure they reflect the latest data.
-            foreach (Worksheet sheet in workbook.Worksheets)
+            // Verify that the input workbook exists
+            if (!File.Exists(inputPath))
             {
-                sheet.RefreshPivotTables();
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
             }
 
-            // Optional: configure PDF save options if needed.
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Load the workbook that contains the pivot tables
+            Workbook srcWorkbook = new Workbook(inputPath);
+
+            // Create a new workbook that will hold the pivot table copies
+            Workbook pdfWorkbook = new Workbook();
+            pdfWorkbook.Worksheets.Clear(); // remove the default sheet
+
+            // Iterate through all worksheets and their pivot tables
+            foreach (Worksheet ws in srcWorkbook.Worksheets)
             {
-                // ExportDocumentStructure = false; // Uncomment to disable document structure export.
-            };
+                foreach (PivotTable pt in ws.PivotTables)
+                {
+                    try
+                    {
+                        // Refresh pivot cache data and recalculate
+                        pt.RefreshData();          // correct method to refresh pivot cache
+                        pt.CalculateData();
 
-            // Save the workbook as a PDF. Pivot tables are rendered as static content in the PDF.
-            workbook.Save("PivotTablesExported.pdf", pdfOptions);
+                        // Add a copy of the worksheet containing this pivot table
+                        int sheetIndex = pdfWorkbook.Worksheets.AddCopy(ws.Name);
+                        Worksheet copiedSheet = pdfWorkbook.Worksheets[sheetIndex];
+                        copiedSheet.Name = $"{ws.Name}_{pt.Name}";
+                    }
+                    catch (Exception exPivot)
+                    {
+                        Console.WriteLine($"Failed to process pivot table '{pt.Name}' in sheet '{ws.Name}': {exPivot.Message}");
+                    }
+                }
+            }
 
-            Console.WriteLine("Pivot tables have been exported to PDF as static images.");
+            // Save the workbook as a PDF – each worksheet will appear as a page
+            pdfWorkbook.Save(outputPath, SaveFormat.Pdf);
+            Console.WriteLine($"PDF saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

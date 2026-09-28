@@ -1,17 +1,15 @@
-// Title: Export DataBar Conditional Formatting to HTML using Aspose.Cells for .NET
-// Description: Load an .xlsx workbook containing DataBar conditional formatting, set HtmlSaveOptions.ExportDataOptions to All, and save it as HTML while keeping the DataBar appearance intact.
-// Keywords: Aspose.Cells | C# HTML export | DataBar conditional formatting | HtmlSaveOptions ExportDataOptions | preserve conditional formatting HTML | Excel to HTML conversion .NET | DataBar rendering Aspose | export workbook as HTML
-// Common Searches: Aspose.Cells export DataBar to HTML | How to keep conditional formatting when saving Excel as HTML | C# save workbook as HTML with DataBar visual | HtmlSaveOptions ExportDataOptions All example | Convert .xlsx to .html preserving DataBars
-// Developer Intent: Generate an HTML version of an Excel file that retains DataBar conditional formatting.
-// Use Cases: Web‑based reporting dashboards that rely on DataBar visual cues | Previewing uploaded Excel files in a browser without losing formatting | Automated email reports that embed HTML snapshots of Excel templates | Creating static HTML archives of financial models with DataBar indicators
-// AI Prompts: Provide C# code that loads an .xlsx with DataBar conditional formatting and saves it as HTML using Aspose.Cells, ensuring the bars are visible. | Explain the effect of HtmlSaveOptions.ExportDataOptions = HtmlExportDataOptions.All on conditional formatting during HTML export. | Step‑by‑step instructions to verify DataBar rendering after converting Excel to HTML with Aspose.Cells.
+// Title: Convert an Excel workbook with DataBar conditional formatting to HTML while preserving DataBar visuals using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that loads an .xlsx file containing DataBar conditional formatting, configures HtmlSaveOptions to retain the formatting, and saves the workbook as an HTML file with Aspose.Cells. | Show how to add file‑existence validation and comprehensive exception handling to an Aspose.Cells Excel‑to‑HTML conversion that keeps DataBar visuals intact. | Demonstrate enabling DataBar export in Aspose.Cells and verify that the generated HTML correctly displays the DataBar bars.
+// Common Searches: Aspose.Cells C# export Excel with DataBar conditional formatting to HTML | How to keep DataBar bars when converting .xlsx to HTML using Aspose.Cells | HtmlSaveOptions preserve conditional formatting DataBars Aspose.Cells .NET | C# example converting workbook with DataBars to HTML | Save Excel workbook as HTML with visual DataBar bars using Aspose.Cells
+// Tags: Aspose.Cells HTML export with DataBar conditional formatting | C# HtmlSaveOptions preserve DataBar visuals | Excel to HTML conversion retaining conditional formatting | DataBar export in Aspose.Cells .NET | load workbook and save as HTML Aspose.Cells
 
 using System;
 using System.IO;
 using Aspose.Cells;
+using Aspose.Cells.Rendering;
 
-// Load an .xlsx workbook containing DataBar conditional formatting, set HtmlSaveOptions.ExportDataOptions to All, and save it as HTML while keeping the DataBar appearance intact.
-class DataBarHtmlExport
+// The example loads an existing .xlsx workbook that contains DataBar conditional formatting, checks that the file exists, creates a Workbook object, uses default HtmlSaveOptions (which preserve conditional formatting including DataBars), and saves the workbook as an HTML file while maintaining the visual appearance of the DataBars.
+class Program
 {
     static void Main()
     {
@@ -23,27 +21,24 @@ class DataBarHtmlExport
             // Verify that the input workbook exists to avoid FileNotFoundException
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Input file \"{inputPath}\" not found.");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
                 return;
             }
 
-            // Load the workbook that already contains DataBar conditional formatting
+            // Load the workbook that contains conditional formatting with DataBars
             Workbook workbook = new Workbook(inputPath);
 
-            // Create HTML save options
-            HtmlSaveOptions htmlOptions = new HtmlSaveOptions
-            {
-                // Export all data (including conditional formatting)
-                ExportDataOptions = HtmlExportDataOptions.All
-                // DataBarRenderMode is omitted; default rendering preserves DataBar visuals
-            };
+            // Configure HTML save options (default settings already preserve conditional formatting)
+            HtmlSaveOptions htmlOptions = new HtmlSaveOptions();
 
-            // Save the workbook as HTML with the specified options
+            // Save the workbook as HTML with the configured options
             workbook.Save(outputPath, htmlOptions);
-            Console.WriteLine($"Workbook successfully exported to \"{outputPath}\".");
+
+            Console.WriteLine($"Workbook successfully saved as HTML to '{outputPath}'.");
         }
         catch (Exception ex)
         {
+            // Catch any unexpected errors and display a friendly message
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }

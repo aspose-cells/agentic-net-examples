@@ -1,10 +1,7 @@
-// Title: Export a Numeric Column to a Little‑Endian Binary File with Aspose.Cells (C#)
-// Description: Creates a workbook, fills column A with numbers, finds the last populated row, iterates through each cell in that column, converts numeric values to little‑endian byte arrays using BitConverter, and writes them sequentially to a binary file via BinaryWriter.
-// Keywords: Aspose.Cells export column to binary | C# little endian binary file | numeric cells to binary | Excel column serialization | BinaryWriter Aspose.Cells | BitConverter GetBytes double | cell enumeration C# | serialize Excel numeric data | binary file generation from worksheet | compact numeric dataset storage
-// Common Searches: how to export numeric column from Aspose.Cells to binary C# | write Excel column values as little endian bytes | Aspose.Cells iterate column and save to binary file | C# convert double to little endian byte array | binary export of worksheet numeric data
-// Developer Intent: Extract all numeric values from a specific worksheet column and write them as little‑endian binary data.
-// Use Cases: Transmit numeric datasets to low‑level hardware that expects little‑endian doubles | Create a compact binary cache for high‑performance data processing | Serialize column data for custom file formats without using CSV or XML | Share numeric results between .NET applications and native C/C++ modules
-// AI Prompts: Generate C# code that uses Aspose.Cells to read a given column, convert each numeric cell to a little‑endian byte array, and append the bytes to a binary file. | Explain why BitConverter.GetBytes returns little‑endian bytes on Windows and how to ensure correct endianness on other platforms. | Modify the example to preserve integer precision by writing ints as 4‑byte little‑endian values and doubles as 8‑byte values in the same binary stream.
+// Title: Export a numeric column from an Aspose.Cells worksheet to a little‑endian binary file in C#
+// AI Prompts: Write C# code that iterates through a specific column in an Aspose.Cells worksheet, extracts only numeric cells, converts each double to a little‑endian byte array, and writes the bytes sequentially to a .bin file. | Create a reusable method ExportColumnToBinary(Worksheet sheet, int columnIndex, string outputPath) that saves all numeric values from the given column as little‑endian doubles using BinaryWriter. | Extend the export routine to prepend a 4‑byte little‑endian integer indicating the total count of numeric values before writing the column data.
+// Common Searches: Aspose.Cells C# export column values to binary file with little endian format | How to write Excel numeric column to .bin using Aspose.Cells and .NET | C# iterate over worksheet column and save doubles as little endian bytes | BinaryWriter example for exporting Excel numeric data with Aspose.Cells
+// Tags: Aspose.Cells numeric column binary export | C# little-endian double serialization | BinaryWriter Excel data extraction | export worksheet column to .bin file | iterate cells numeric type Aspose.Cells
 
 using System;
 using System.IO;
@@ -12,55 +9,70 @@ using Aspose.Cells;
 
 namespace ExportNumericColumnToBinary
 {
-    // Creates a workbook, fills column A with numbers, finds the last populated row, iterates through each cell in that column, converts numeric values to little‑endian byte arrays using BitConverter, and writes them sequentially to a binary file via BinaryWriter.
+    // The sample creates a workbook, fills column A with numbers 1‑10, then walks that column, converts each numeric cell to a little‑endian double byte array, and writes the bytes sequentially to NumericColumnData.bin using BinaryWriter.
     class Program
     {
         static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-            Cells cells = sheet.Cells;
-
-            // Populate sample numeric data in column A (index 0)
-            for (int i = 0; i < 10; i++)
+            try
             {
-                // Put some integer and double values
-                cells[i, 0].PutValue(i * 10);               // integer values
-                cells[i, 1].PutValue(i + 0.5);              // auxiliary column (not exported)
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet worksheet = workbook.Worksheets[0];
+                Cells cells = worksheet.Cells;
 
-            // Determine the last row that contains data in column A
-            int lastRow = cells.MaxDataRow; // zero‑based index
-
-            // Path of the binary file to write
-            string binaryFilePath = "numericColumn.bin";
-
-            // Open a binary writer (writes in little‑endian by default)
-            using (FileStream fs = new FileStream(binaryFilePath, FileMode.Create, FileAccess.Write))
-            using (BinaryWriter writer = new BinaryWriter(fs))
-            {
-                // Enumerate each cell in column A from row 0 to lastRow
-                for (int row = 0; row <= lastRow; row++)
+                // Populate column A (index 0) with numeric values 1..10
+                for (int row = 0; row < 10; row++)
                 {
-                    Cell cell = cells[row, 0];
+                    cells[row, 0].PutValue(row + 1); // A1..A10
+                }
 
-                    // Process only numeric cells (int, double, decimal, etc.)
-                    if (cell.Type == CellValueType.IsNumeric)
+                // Path of the binary file to write
+                string binaryFilePath = "NumericColumnData.bin";
+
+                // Ensure the directory for the binary file exists
+                string directory = Path.GetDirectoryName(binaryFilePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Open a file stream for writing binary data
+                using (FileStream fs = new FileStream(binaryFilePath, FileMode.Create, FileAccess.Write))
+                using (BinaryWriter writer = new BinaryWriter(fs))
+                {
+                    // Determine the last row that contains data in column 0
+                    int lastRow = cells.MaxDataRow;
+
+                    // Enumerate each cell in the numeric column
+                    for (int row = 0; row <= lastRow; row++)
                     {
-                        // Retrieve the numeric value as double (covers int, float, etc.)
-                        double numericValue = cell.DoubleValue;
+                        Cell cell = cells[row, 0];
 
-                        // Convert the double to little‑endian byte array
-                        byte[] bytes = BitConverter.GetBytes(numericValue); // BitConverter uses little‑endian on Windows
+                        // Process only numeric cells
+                        if (cell.Type == CellValueType.IsNumeric)
+                        {
+                            double numericValue = cell.DoubleValue;
 
-                        // Write the bytes to the binary file
-                        writer.Write(bytes);
+                            // Convert the double to a byte array (little‑endian)
+                            byte[] bytes = BitConverter.GetBytes(numericValue);
+                            if (!BitConverter.IsLittleEndian)
+                            {
+                                Array.Reverse(bytes);
+                            }
+
+                            // Write the bytes to the binary file
+                            writer.Write(bytes);
+                        }
                     }
                 }
-            }
 
-            Console.WriteLine($"Numeric column exported to binary file: {binaryFilePath}");
+                Console.WriteLine($"Numeric column data has been exported to '{binaryFilePath}'.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

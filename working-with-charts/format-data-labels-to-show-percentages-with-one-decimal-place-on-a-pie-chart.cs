@@ -1,19 +1,15 @@
-// Title: Aspose.Cells for .NET – C# – Show Pie Chart Data Labels as Percentages with One Decimal Place
-// Description: This C# example demonstrates how to create a workbook with Aspose.Cells, add a pie chart, and configure its data labels to display percentages formatted to one decimal place (0.0%). The code enables ShowPercentage, hides raw values, applies the NumberFormat property, and saves the result as an XLSX file.
-// Keywords: Aspose.Cells | C# chart example | pie chart data labels | percentage format 0.0% | show percentage Aspose.Cells | Excel chart formatting .NET | chart number format | Aspose.Cells tutorial | Excel export C# | hide values in chart labels
-// Common Searches: Aspose.Cells pie chart percentage label C# | format chart data labels one decimal Aspose.Cells | C# show only percentages on pie chart | set NumberFormat for chart labels Aspose.Cells | how to hide values in chart data labels .NET
-// Developer Intent: Add a pie chart and format its data labels to show percentages with one decimal place.
-// Use Cases: Financial dashboard showing market‑share percentages with one‑decimal precision. | Sales report where each region's contribution is displayed as a formatted percentage. | Project‑management workbook illustrating task distribution via a pie chart with precise percentages. | Academic research presenting survey results with exact percentage slices. | Marketing presentation exporting product‑mix percentages to Excel with formatted labels.
-// AI Prompts: Generate C# code using Aspose.Cells to create a donut chart with data labels formatted to two decimal places. | Explain how to apply custom number formats to chart data labels for any chart type in Aspose.Cells for .NET. | Provide a step‑by‑step guide to hide raw values and display only formatted percentages on Excel chart labels using Aspose.Cells. | Show how to programmatically change the font style of pie chart data labels in Aspose.Cells. | Write a script that reads data from a CSV and creates a pie chart with percentage labels formatted to one decimal place.
+// Title: Create a pie chart and set data labels to show percentages with one decimal place in Aspose.Cells for .NET (C#)
+// AI Prompts: Generate a new workbook, add sample data, insert a pie chart, and configure the first series to display data labels as percentages with a single decimal place (0.0%). | Hide the raw numeric values on the pie chart and apply a custom number format "0.0%" to the data labels using the Aspose.Cells C# API.
+// Common Searches: how to display percentage data labels with one decimal place on a pie chart using Aspose.Cells C# | Aspose.Cells set pie chart data labels to 0.0% format and hide values | C# Aspose.Cells chart show only percentages, no values | format pie chart label number format Aspose.Cells .NET example | Aspose.Cells pie chart data label customization percentage only
+// Tags: pie chart data labels percentage format Aspose.Cells | custom number format 0.0% chart labels .NET | hide raw values in Aspose.Cells chart series | Aspose.Cells C# ShowPercentage property | configure NSeries DataLabels for pie chart
 
 using System;
-using System.IO;
 using Aspose.Cells;
 using Aspose.Cells.Charts;
 
 namespace AsposeCellsExamples
 {
-    // This C# example demonstrates how to create a workbook with Aspose.Cells, add a pie chart, and configure its data labels to display percentages formatted to one decimal place (0.0%). The code enables ShowPercentage, hides raw values, applies the NumberFormat property, and saves the result as an XLSX file.
+    // The example creates a workbook, adds category and value data, inserts a pie chart, and configures the first series' data labels to display percentages with one decimal place (0.0%) while hiding raw values, then saves the file as PieChartDataLabelsPercentage.xlsx.
     public class PieChartDataLabelsPercentage
     {
         public static void Main(string[] args)
@@ -21,57 +17,55 @@ namespace AsposeCellsExamples
             try
             {
                 Run();
-                Console.WriteLine("Workbook created successfully.");
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
         public static void Run()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet sheet = workbook.Worksheets[0];
-
-            // Populate sample data for the pie chart
-            sheet.Cells["A1"].PutValue("Category");
-            sheet.Cells["A2"].PutValue("A");
-            sheet.Cells["A3"].PutValue("B");
-            sheet.Cells["A4"].PutValue("C");
-
-            sheet.Cells["B1"].PutValue("Value");
-            sheet.Cells["B2"].PutValue(10);
-            sheet.Cells["B3"].PutValue(20);
-            sheet.Cells["B4"].PutValue(30);
-
-            // Add a pie chart to the worksheet
-            int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
-            Chart chart = sheet.Charts[chartIndex];
-
-            // Set the data range for the series and categories
-            chart.NSeries.Add("B2:B4", true);
-            chart.NSeries.CategoryData = "A2:A4";
-
-            // Enable data labels and configure them to show percentages
-            DataLabels dataLabels = chart.NSeries[0].DataLabels;
-            dataLabels.ShowPercentage = true;          // Show percentage values
-            dataLabels.ShowValue = false;              // Hide raw values (optional)
-            dataLabels.NumberFormat = "0.0%";          // One decimal place percentage format
-
-            // Define output file path
-            string outputPath = "PieChartWithPercentageLabels.xlsx";
-
-            // Ensure the directory exists
-            string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-            if (!Directory.Exists(directory))
+            try
             {
-                Directory.CreateDirectory(directory);
-            }
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-            // Save the workbook to a file
-            workbook.Save(outputPath);
+                // Populate sample data for the pie chart
+                sheet.Cells["A1"].PutValue("Category");
+                sheet.Cells["A2"].PutValue("A");
+                sheet.Cells["A3"].PutValue("B");
+                sheet.Cells["A4"].PutValue("C");
+
+                sheet.Cells["B1"].PutValue("Value");
+                sheet.Cells["B2"].PutValue(10);
+                sheet.Cells["B3"].PutValue(20);
+                sheet.Cells["B4"].PutValue(30);
+
+                // Add a pie chart to the worksheet
+                int chartIndex = sheet.Charts.Add(ChartType.Pie, 5, 0, 20, 8);
+                Chart chart = sheet.Charts[chartIndex];
+
+                // Set the data range for the series and categories
+                chart.NSeries.Add("B2:B4", true);
+                chart.NSeries.CategoryData = "A2:A4";
+
+                // Configure data labels: show percentage with one decimal place
+                DataLabels dataLabels = chart.NSeries[0].DataLabels;
+                dataLabels.ShowPercentage = true;   // Enable percentage display
+                dataLabels.ShowValue = false;       // Hide raw values
+                dataLabels.NumberFormat = "0.0%";   // One decimal place format
+
+                // Save the workbook to a file
+                workbook.Save("PieChartDataLabelsPercentage.xlsx");
+                Console.WriteLine("Workbook saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Runtime error: {ex.Message}");
+                throw;
+            }
         }
     }
 }

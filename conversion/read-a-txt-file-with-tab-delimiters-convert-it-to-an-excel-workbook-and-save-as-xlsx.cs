@@ -1,38 +1,42 @@
-// Title: C# – Convert Tab‑Delimited TXT to XLSX with Aspose.Cells
-// Description: Shows how to load a tab‑separated text (TSV) file using Aspose.Cells TxtLoadOptions, create a Workbook, and save it as an XLSX workbook in .NET.
-// Keywords: Aspose.Cells | C# | TSV to XLSX | tab delimited txt to excel | TxtLoadOptions | LoadFormat.Tsv | Excel conversion .NET | save as xlsx | text to excel conversion
-// Common Searches: Aspose.Cells load TSV file C# | convert txt tab delimited to xlsx .NET | TxtLoadOptions separator tab | C# read tab separated values into Excel | save workbook as xlsx using Aspose.Cells
-// Developer Intent: Read a tab‑delimited .txt file into an Aspose.Cells Workbook and export it as an .xlsx file.
-// Use Cases: Automate nightly conversion of TSV reports for business analysts. | Provide a utility that transforms exported log files (tab‑separated) into .xlsx for easy sharing. | Integrate TSV‑to‑XLSX conversion into a data‑import pipeline using Aspose.Cells.
-// AI Prompts: Generate C# code that reads a tab‑delimited .txt file with Aspose.Cells TxtLoadOptions and saves it as .xlsx, including basic error handling. | Provide an example of converting a TSV file to Excel with Aspose.Cells, showing how to set the separator and choose the output format. | Explain how to configure TxtLoadOptions for various delimiters and save the resulting workbook in multiple Excel formats.
+// Title: Convert a tab‑delimited TXT (TSV) file to an XLSX workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Use Aspose.Cells ConversionUtility to read a TSV file with LoadOptions(LoadFormat.Tsv) and write it as an XLSX workbook via OoxmlSaveOptions in C#. | Add try‑catch error handling around the Aspose.Cells conversion of a tab‑delimited text file to Excel. | Specify source and destination paths and perform a format conversion from TSV to XLSX with Aspose.Cells in a console application.
+// Common Searches: aspnet convert tab delimited txt file to xlsx using aspose.cells c# example | c# load tsv file with Aspose.Cells LoadOptions and save as xlsx | how to use Aspose.Cells ConversionUtility to change file format from TSV to Excel | sample code for converting a TSV text file to an OOXML workbook in .NET
+// Tags: TSV to XLSX conversion Aspose.Cells | Aspose.Cells LoadOptions for tab delimited files | Aspose.Cells OoxmlSaveOptions XLSX output | ConversionUtility format conversion C# | exception handling Aspose.Cells file conversion
 
 using System;
 using Aspose.Cells;
+using Aspose.Cells.Utility;
 
-namespace TxtToExcelConversion
+namespace AsposeCellsConversionDemo
 {
-    // Shows how to load a tab‑separated text (TSV) file using Aspose.Cells TxtLoadOptions, create a Workbook, and save it as an XLSX workbook in .NET.
+    // // Demonstrates reading a tab‑delimited (TSV) text file with LoadOptions(LoadFormat.Tsv), converting it to an Excel workbook, and saving the result as an XLSX file using OoxmlSaveOptions via Aspose.Cells ConversionUtility, including basic exception handling.
     class Program
     {
         static void Main()
         {
             // Path to the source tab‑delimited text file
-            string txtPath = "input.txt";
+            string sourcePath = "input.txt";
 
-            // Path for the resulting Excel workbook
-            string xlsxPath = "output.xlsx";
+            // Desired path for the resulting Excel workbook
+            string destinationPath = "output.xlsx";
 
-            // Configure load options for a tab‑delimited (TSV) file
-            TxtLoadOptions loadOptions = new TxtLoadOptions(LoadFormat.Tsv);
-            loadOptions.Separator = '\t'; // Tab character as delimiter
+            try
+            {
+                // Load options specifying that the source file is a tab‑delimited (TSV) file
+                LoadOptions loadOptions = new LoadOptions(LoadFormat.Tsv);
 
-            // Load the text file into a workbook using the specified options
-            Workbook workbook = new Workbook(txtPath, loadOptions);
+                // Save options for XLSX (OOXML) format
+                SaveOptions saveOptions = new OoxmlSaveOptions();
 
-            // Save the workbook as an XLSX file
-            workbook.Save(xlsxPath, SaveFormat.Xlsx);
+                // Perform the conversion using the provided ConversionUtility method
+                ConversionUtility.Convert(sourcePath, loadOptions, destinationPath, saveOptions);
 
-            Console.WriteLine($"Conversion completed: \"{txtPath}\" → \"{xlsxPath}\"");
+                Console.WriteLine($"Conversion successful: \"{sourcePath}\" → \"{destinationPath}\"");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during conversion: {ex.Message}");
+            }
         }
     }
 }

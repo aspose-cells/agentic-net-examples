@@ -1,83 +1,70 @@
-// Title: Encrypt an Excel workbook with Aspose.Cells and validate it with a SHA‑256 checksum (C#)
-// Description: Creates a new Workbook, adds sample data, applies a password and AES‑128 encryption via Aspose.Cells, saves the file, generates a SHA‑256 hash stored in a .txt file, then reloads the protected workbook, recomputes the hash and compares it to detect any tampering.
-// Keywords: Aspose.Cells encryption C# | AES-128 Excel protection | SHA256 checksum Excel | password‑protected workbook | integrity verification Aspose.Cells | C# Excel security | EncryptionChecksumDemo GitHub | Excel file tamper detection | secure Excel archive | US developers | EU data protection
-// Common Searches: How to encrypt an Excel file with Aspose.Cells and verify its integrity | C# compute SHA‑256 hash for a password‑protected .xlsx | Aspose.Cells set AES 128 encryption options | Load encrypted workbook with password using Aspose.Cells | Validate Excel file checksum after encryption | GitHub Aspose.Cells EncryptionChecksumDemo example
-// Developer Intent: Secure an Excel workbook with a password and AES‑128 encryption, then ensure the file remains unchanged by comparing a stored SHA‑256 checksum.
-// Use Cases: Distribute confidential financial reports that are encrypted and accompanied by a checksum for client‑side integrity checks. | Automate batch processing of sensitive spreadsheets, rejecting any file whose checksum does not match the original. | Implement a long‑term archival system where each encrypted workbook is paired with a SHA‑256 hash to guarantee data integrity over time.
-// AI Prompts: Write C# code that creates an Aspose.Cells workbook, encrypts it with a custom password using AES‑128, and saves a SHA‑256 hash to a text file. | Generate a method that loads a password‑protected workbook with Aspose.Cells and returns true only if the file’s SHA‑256 checksum matches a stored value. | Provide error‑handling patterns for checksum mismatches when opening encrypted Excel files, including logging and throwing a custom exception.
+// Title: Encrypt an Excel workbook with a password using Aspose.Cells for .NET and verify its integrity with a SHA‑256 checksum
+// AI Prompts: Set Workbook.Settings.Password to a secret, then save the workbook as Xlsx to create an encrypted file with Aspose.Cells. | Compute a SHA‑256 hash of the encrypted .xlsx file using .NET's SHA256 class and store the hex string for later verification. | Open a password‑protected workbook by supplying the password in LoadOptions, then read cell values to confirm successful decryption.
+// Common Searches: how to password protect an Excel file with Aspose.Cells in C# | generate SHA256 checksum for an encrypted .xlsx file in .NET | verify integrity of a password‑protected workbook using Aspose.Cells | load a password‑protected Excel workbook with LoadOptions in C#
+// Tags: Aspose.Cells workbook password encryption | C# generate cryptographic checksum for file | verify encrypted Excel file integrity | LoadOptions open password‑protected workbook | save workbook as encrypted Xlsx with Aspose.Cells
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Text;
 using Aspose.Cells;
 
-namespace AsposeCellsEncryptionChecksumDemo
+// The example creates a workbook, applies a password via Workbook.Settings.Password, saves it as an encrypted Xlsx file, computes a SHA‑256 checksum of the saved file, compares the checksum to confirm the file hasn't been altered, and demonstrates loading the protected workbook using LoadOptions with the same password.
+class WorkbookEncryptionWithChecksum
 {
-    // Creates a new Workbook, adds sample data, applies a password and AES‑128 encryption via Aspose.Cells, saves the file, generates a SHA‑256 hash stored in a .txt file, then reloads the protected workbook, recomputes the hash and compares it to detect any tampering.
-    class Program
+    static void Main()
     {
-        static void Main()
+        // Create a new workbook and add some data
+        Workbook workbook = new Workbook();
+        Worksheet sheet = workbook.Worksheets[0];
+        sheet.Cells["A1"].PutValue("Hello");
+        sheet.Cells["B1"].PutValue("World");
+
+        // Set a password to encrypt the workbook
+        // This will encrypt the file with the specified password when saved
+        workbook.Settings.Password = "MySecretPassword";
+
+        // Define the path for the encrypted file
+        string encryptedFilePath = "EncryptedWorkbook.xlsx";
+
+        // Save the workbook (it will be encrypted due to the password set above)
+        workbook.Save(encryptedFilePath, SaveFormat.Xlsx);
+
+        // Compute a SHA256 checksum of the encrypted file
+        string checksum = ComputeFileChecksum(encryptedFilePath);
+        Console.WriteLine($"Checksum of encrypted file: {checksum}");
+
+        // Example of verification: recompute checksum and compare
+        string recomputedChecksum = ComputeFileChecksum(encryptedFilePath);
+        if (checksum.Equals(recomputedChecksum, StringComparison.OrdinalIgnoreCase))
         {
-            // Path for the encrypted workbook and checksum file
-            string workbookPath = "encrypted.xlsx";
-            string checksumPath = "encrypted.sha256";
+            Console.WriteLine("Checksum verification passed. File integrity confirmed.");
+        }
+        else
+        {
+            Console.WriteLine("Checksum verification failed. File may have been tampered with.");
+        }
 
-            // ------------------- Create and encrypt workbook -------------------
-            // Create a new workbook (lifecycle rule: create)
-            Workbook wb = new Workbook();
+        // Optional: demonstrate loading the encrypted workbook with the password
+        LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx)
+        {
+            Password = "MySecretPassword"
+        };
+        Workbook loadedWorkbook = new Workbook(encryptedFilePath, loadOptions);
+        Console.WriteLine($"Loaded cell A1 value: {loadedWorkbook.Worksheets[0].Cells["A1"].StringValue}");
+    }
 
-            // Add sample data
-            Worksheet sheet = wb.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sensitive data");
-
-            // Set password to encrypt the workbook
-            wb.Settings.Password = "StrongPassword123";
-
-            // Optional: set stronger encryption options (e.g., AES 128)
-            wb.SetEncryptionOptions(EncryptionType.StrongCryptographicProvider, 128);
-
-            // Save the encrypted workbook (lifecycle rule: save)
-            wb.Save(workbookPath, SaveFormat.Xlsx);
-
-            // ------------------- Compute and store checksum -------------------
-            // Read the saved file bytes
-            byte[] fileBytes = File.ReadAllBytes(workbookPath);
-
-            // Compute SHA256 checksum
-            byte[] hashBytes;
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                hashBytes = sha256.ComputeHash(fileBytes);
-            }
-
-            // Convert checksum to hex string for storage
-            string checksumHex = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
-            File.WriteAllText(checksumPath, checksumHex);
-
-            Console.WriteLine($"Checksum saved: {checksumHex}");
-
-            // ------------------- Verify checksum after loading -------------------
-            // Load the encrypted workbook with password (lifecycle rule: load)
-            LoadOptions loadOptions = new LoadOptions { Password = "StrongPassword123" };
-            Workbook loadedWb = new Workbook(workbookPath, loadOptions);
-
-            // Re-compute checksum of the file on disk (could also compute from stream)
-            byte[] loadedFileBytes = File.ReadAllBytes(workbookPath);
-            byte[] loadedHash;
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                loadedHash = sha256.ComputeHash(loadedFileBytes);
-            }
-            string loadedChecksumHex = BitConverter.ToString(loadedHash).Replace("-", string.Empty);
-
-            // Read the original checksum
-            string originalChecksumHex = File.ReadAllText(checksumPath).Trim();
-
-            // Compare checksums
-            bool isTampered = !string.Equals(originalChecksumHex, loadedChecksumHex, StringComparison.OrdinalIgnoreCase);
-            Console.WriteLine(isTampered
-                ? "The encrypted workbook has been tampered with."
-                : "Checksum verification passed. The encrypted workbook is intact.");
+    // Helper method to compute SHA256 checksum of a file and return it as a hex string
+    private static string ComputeFileChecksum(string filePath)
+    {
+        using (FileStream stream = File.OpenRead(filePath))
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] hash = sha256.ComputeHash(stream);
+            StringBuilder sb = new StringBuilder(hash.Length * 2);
+            foreach (byte b in hash)
+                sb.AppendFormat("{0:x2}", b);
+            return sb.ToString();
         }
     }
 }

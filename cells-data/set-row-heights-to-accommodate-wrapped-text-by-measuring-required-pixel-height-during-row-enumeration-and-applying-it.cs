@@ -1,80 +1,69 @@
-// Title: Auto‑Fit Row Height for Wrapped Text in Aspose.Cells for .NET (C#) Using GetHeightOfValue
-// Description: Demonstrates how to enable text wrapping, measure the required pixel height of each cell with Cell.GetHeightOfValue, compute the maximum height per row, and apply it via Worksheet.Cells.SetRowHeightPixel for both new and existing workbooks.
-// Keywords: Aspose.Cells row height | C# auto fit row height | wrapped text pixel height | GetHeightOfValue example | SetRowHeightPixel .NET | Excel row auto‑size Aspose | measure cell height Aspose.Cells | auto adjust row height C#
-// Common Searches: Aspose.Cells auto fit row height wrapped text | GetHeightOfValue set row height pixel | C# adjust Excel row height based on content | Aspose.Cells SetRowHeightPixel usage | how to auto‑size rows in Aspose.Cells
-// Developer Intent: Programmatically resize each worksheet row so that wrapped text fits without truncation by calculating the needed pixel height and setting the row height accordingly.
-// Use Cases: Generating reports with description fields that may span multiple lines. | Creating invoices where product notes require dynamic row expansion. | Exporting user comments or logs to Excel while preserving multiline formatting.
-// AI Prompts: Write a C# method that loops through all rows in an Aspose.Cells worksheet, finds the maximum pixel height of wrapped cells using GetHeightOfValue, and sets the row height with SetRowHeightPixel. | Provide a complete example that loads an existing workbook, enables text wrapping for a specific range, and automatically adjusts row heights based on the cell contents. | Explain the algorithm behind GetHeightOfValue, how it returns pixel height, and how to convert that value to points for point‑based row height settings.
+// Title: How to auto‑fit Excel row heights for wrapped text using Aspose.Cells in C#
+// AI Prompts: Write C# code with Aspose.Cells that sets IsTextWrapped = true for every cell in a worksheet and then calls AutoFitRow for each row. | Update the logic to capture the height returned by GetRowHeight after AutoFitRow and apply SetRowHeight with that exact value. | Include a check that creates the destination folder if it does not already exist before saving the workbook.
+// Common Searches: resize rows after text wrapping with Aspose.Cells | C# example to calculate required row height in points using Aspose.Cells | wrap text in all cells and adjust row sizes Aspose.Cells .NET | save workbook to new folder creating directory if missing Aspose.Cells C#
+// Tags: auto‑fit row height Aspose.Cells C# | enable text wrap all cells Aspose.Cells | get row height points Aspose.Cells | create output directory before saving C# | programmatic Excel row height adjustment .NET
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsRowHeightAdjustment
+// The program loads an Excel workbook, enables text wrapping for every cell, auto‑fits each row, reads the calculated row height in points, explicitly sets that height, ensures the output folder exists, and saves the modified file.
+class RowHeightAdjuster
 {
-    // Demonstrates how to enable text wrapping, measure the required pixel height of each cell with Cell.GetHeightOfValue, compute the maximum height per row, and apply it via Worksheet.Cells.SetRowHeightPixel for both new and existing workbooks.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook (or load an existing one)
-            Workbook workbook = new Workbook(); // Replace with new Workbook("input.xlsx") to load
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Example data with wrapped text
-            worksheet.Cells["A1"].PutValue("This is a long text that should wrap inside the cell and cause the row height to increase.");
-            worksheet.Cells["B1"].PutValue("Short text");
-            worksheet.Cells["A2"].PutValue("Another long piece of text that will be wrapped and needs more height.");
-            worksheet.Cells["B2"].PutValue("More short text");
-
-            // Enable text wrapping for the cells that need it
-            for (int r = 0; r <= worksheet.Cells.MaxDataRow; r++)
+            // Verify input file exists
+            if (!File.Exists(inputPath))
             {
-                for (int c = 0; c <= worksheet.Cells.MaxDataColumn; c++)
-                {
-                    Cell cell = worksheet.Cells[r, c];
-                    if (cell != null && !string.IsNullOrEmpty(cell.StringValue))
-                    {
-                        Style style = cell.GetStyle();
-                        style.IsTextWrapped = true;
-                        cell.SetStyle(style);
-                    }
-                }
+                Console.WriteLine($"Error: Input file \"{inputPath}\" not found.");
+                return;
             }
 
-            // Enumerate each row, measure the required pixel height, and apply it
-            for (int rowIndex = 0; rowIndex <= worksheet.Cells.MaxDataRow; rowIndex++)
+            // Load the workbook
+            var workbook = new Workbook(inputPath);
+
+            // Access the first worksheet
+            var sheet = workbook.Worksheets[0];
+
+            // Iterate through rows that contain data
+            for (int rowIndex = 0; rowIndex <= sheet.Cells.MaxDataRow; rowIndex++)
             {
-                int maxPixelHeight = 0;
-
-                // Scan all cells in the current row
-                for (int colIndex = 0; colIndex <= worksheet.Cells.MaxDataColumn; colIndex++)
+                // Enable text wrapping for each cell in the current row
+                for (int colIndex = 0; colIndex <= sheet.Cells.MaxDataColumn; colIndex++)
                 {
-                    Cell cell = worksheet.Cells[rowIndex, colIndex];
-                    if (cell == null) continue;
-
-                    // Only consider cells with text wrapping enabled
-                    Style style = cell.GetStyle();
-                    if (style.IsTextWrapped)
-                    {
-                        // Get the height required to display the cell's value (in pixels)
-                        int cellPixelHeight = cell.GetHeightOfValue();
-
-                        // Keep the maximum height found in the row
-                        if (cellPixelHeight > maxPixelHeight)
-                            maxPixelHeight = cellPixelHeight;
-                    }
+                    var cell = sheet.Cells[rowIndex, colIndex];
+                    var style = cell.GetStyle();
+                    style.IsTextWrapped = true; // enable wrapping
+                    cell.SetStyle(style);
                 }
 
-                // If any wrapped cell was found, set the row height accordingly
-                if (maxPixelHeight > 0)
-                {
-                    // SetRowHeightPixel sets the height in pixels directly
-                    worksheet.Cells.SetRowHeightPixel(rowIndex, maxPixelHeight);
-                }
+                // Auto‑fit the row height based on wrapped content
+                sheet.AutoFitRow(rowIndex);
+
+                // Retrieve the calculated height (in points) and re‑apply it
+                double requiredPoints = sheet.Cells.GetRowHeight(rowIndex);
+                sheet.Cells.SetRowHeight(rowIndex, requiredPoints);
             }
 
-            // Save the workbook
-            workbook.Save("RowHeightAdjusted.xlsx");
+            // Ensure output directory exists
+            var outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

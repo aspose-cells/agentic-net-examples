@@ -1,42 +1,48 @@
-// Title: Export Aspose.Cells Workbook to Separate HTML Files While Preserving Sheet Order (C#)
-// Description: Loads an Excel workbook, configures HtmlSaveOptions with a custom IFilePathProvider that returns "{sheetName}.html", and saves each worksheet as an individual HTML file in the same sequence as the source workbook.
-// Keywords: Aspose.Cells | C# | .NET | HtmlSaveOptions | IFilePathProvider | export workbook to HTML | preserve worksheet order | separate HTML per sheet | Excel to HTML conversion | custom file path provider
-// Common Searches: Aspose.Cells export workbook to HTML preserve sheet order | C# HtmlSaveOptions custom IFilePathProvider example | Save each Excel worksheet as separate HTML file Aspose | How to keep original sheet sequence when converting Excel to HTML .NET | Aspose.Cells generate one HTML file per worksheet
-// Developer Intent: Create HTML output for every worksheet of an Excel file without altering the original sheet sequence by using a custom IFilePathProvider.
-// Use Cases: Web‑based reporting where each Excel sheet must appear as its own HTML page in the same order as the workbook. | Documentation systems that require individual HTML files named after sheet titles while maintaining the workbook's logical flow. | Integration of Excel data into a portal that loads separate HTML files per sheet and relies on the original worksheet ordering.
-// AI Prompts: Show a C# snippet that exports an Aspose.Cells workbook to HTML using a custom IFilePathProvider that keeps the sheet order unchanged. | Explain how to modify PreserveOrderFilePathProvider to write HTML files into a subfolder while still preserving the original worksheet sequence. | Demonstrate configuring HtmlSaveOptions to embed images as base64 strings when using the custom file path provider.
+// Title: Export an entire Excel workbook to a single HTML file while keeping the original worksheet order using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx workbook with Aspose.Cells, configures HtmlSaveOptions to include all worksheets, and saves the result as one HTML file preserving the sheet sequence. | Show how to set Aspose.Cells HtmlSaveOptions.ExportActiveWorksheetOnly = false to convert a multi‑sheet Excel file to HTML without reordering the sheets.
+// Common Searches: asp.net convert multi-sheet Excel to single HTML file preserving sheet order | c# Aspose.Cells HtmlSaveOptions export all worksheets to one HTML page | how to keep worksheet sequence when saving Excel as HTML using Aspose.Cells | save workbook as HTML with original sheet order Aspose.Cells .NET example
+// Tags: Aspose.Cells HtmlSaveOptions export all worksheets | C# convert Excel workbook to single HTML page | maintain original sheet sequence Aspose.Cells | ExportActiveWorksheetOnly false example | multi-sheet workbook HTML export Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-// Loads an Excel workbook, configures HtmlSaveOptions with a custom IFilePathProvider that returns "{sheetName}.html", and saves each worksheet as an individual HTML file in the same sequence as the source workbook.
-class Program
+namespace AsposeCellsExample
 {
-    static void Main()
+    // The program checks for InputWorkbook.xlsx, loads it with Aspose.Cells, sets HtmlSaveOptions.ExportActiveWorksheetOnly to false so every worksheet is included, and saves the workbook as OutputWorkbook.html, ensuring the original sheet order is retained.
+    class Program
     {
-        // Load an existing workbook (replace with your actual file path)
-        Workbook workbook = new Workbook("input.xlsx");
-
-        // Create HTML save options
-        HtmlSaveOptions saveOptions = new HtmlSaveOptions();
-
-        // Set a custom IFilePathProvider that returns a file name based on the worksheet name.
-        // This keeps the original worksheet order because the provider does not modify the mapping.
-        saveOptions.FilePathProvider = new PreserveOrderFilePathProvider();
-
-        // Save the workbook to HTML. Each worksheet will be saved as a separate HTML file
-        // (e.g., Sheet1.html, Sheet2.html, ...) while preserving the original order.
-        workbook.Save("output.html", saveOptions);
-    }
-
-    // Custom implementation of IFilePathProvider
-    private class PreserveOrderFilePathProvider : IFilePathProvider
-    {
-        // Returns the full file name for a given worksheet name.
-        // No reordering or custom naming logic is applied.
-        public string GetFullName(string sheetName)
+        static void Main()
         {
-            return $"{sheetName}.html";
+            try
+            {
+                string inputFile = "InputWorkbook.xlsx";
+                string outputFile = "OutputWorkbook.html";
+
+                // Verify that the input workbook exists
+                if (!File.Exists(inputFile))
+                {
+                    Console.WriteLine($"Input file not found: {inputFile}");
+                    return;
+                }
+
+                // Load the workbook from the file
+                Workbook workbook = new Workbook(inputFile);
+
+                // Set up HTML save options (export all worksheets)
+                HtmlSaveOptions htmlOptions = new HtmlSaveOptions
+                {
+                    ExportActiveWorksheetOnly = false
+                };
+
+                // Save the workbook as HTML using the options
+                workbook.Save(outputFile, htmlOptions);
+                Console.WriteLine($"Workbook successfully exported to: {outputFile}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

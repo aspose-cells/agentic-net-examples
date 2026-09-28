@@ -1,36 +1,65 @@
-// Title: Remove a VBA module with Modules.RemoveAt in Aspose.Cells (C#) and save a macro‑free workbook
-// Description: Demonstrates how to create a workbook, add a procedural VBA module, delete the module by its index using VbaProject.Modules.RemoveAt, and then save the file as a macro‑free XLSX with Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# remove VBA module | Modules.RemoveAt example | delete VBA module programmatically | save workbook without macros | Aspose.Cells VbaProject | macro‑free Excel file | C# Excel automation | GitHub Aspose.Cells VBA example | Aspose.Cells workbook save format | remove VBA code Aspose
-// Common Searches: How to use Modules.RemoveAt in Aspose.Cells C# | Remove VBA module by index and save as .xlsx | Aspose.Cells example for deleting VBA modules | Save Excel file without macros using Aspose.Cells | C# code to strip VBA from a workbook
-// Developer Intent: The developer needs to delete a specific VBA module from an Excel workbook and persist the change by saving the file without any macros.
-// Use Cases: Strip test or temporary VBA modules from automatically generated reports before distribution. | Create compliance‑ready workbooks by removing all macro code prior to archiving or sharing. | Clean up legacy macro projects by programmatically deleting unwanted modules.
-// AI Prompts: Generate C# code that removes a VBA module by its index using Modules.RemoveAt and saves the workbook as a macro‑free .xlsx with Aspose.Cells. | Show how to list all VBA modules in a workbook, find the index of "DemoModule", delete it with RemoveAt, and keep the remaining modules intact. | Explain how to verify that a VBA module has been successfully removed after saving the workbook with Aspose.Cells.
+// Title: Remove a VBA module from an Excel workbook using Aspose.Cells for .NET and save the updated file
+// AI Prompts: Write C# code that loads an Excel workbook, removes a VBA module at a specified zero‑based index with workbook.VbaProject.Modules.RemoveAt, and saves the file. | Create a script that checks for a VBA project, deletes a macro module by index, and persists the changes using Aspose.Cells in .NET.
+// Common Searches: aspocells c# delete vba module by index | how to remove a macro module from an Excel file using Aspose.Cells .NET | save workbook after removing VBA module with Aspose.Cells | example of workbook.VbaProject.Modules.RemoveAt in C# | handling missing VBA project when deleting modules Aspose.Cells
+// Tags: VBA module removal Aspose.Cells .NET | Workbook.VbaProject.Modules.RemoveAt example | delete macro module Excel C# | save workbook after VBA changes Aspose.Cells | handle missing VBA project Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Vba;
 
-// Demonstrates how to create a workbook, add a procedural VBA module, delete the module by its index using VbaProject.Modules.RemoveAt, and then save the file as a macro‑free XLSX with Aspose.Cells for .NET.
-class RemoveVbaModuleDemo
+// The example loads an existing Excel file, verifies that it contains a VBA project, removes the module at the specified zero‑based index using workbook.VbaProject.Modules.RemoveAt, and then saves the modified workbook to a new file.
+class RemoveModuleExample
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
+        try
+        {
+            // Path to the source Excel file
+            string inputPath = "input.xlsx";
 
-        // Access the VBA project within the workbook
-        VbaProject vbaProject = workbook.VbaProject;
+            // Verify that the input file exists
+            if (!File.Exists(inputPath))
+            {
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
 
-        // Add a procedural VBA module named "DemoModule"
-        int moduleIndex = vbaProject.Modules.Add(VbaModuleType.Procedural, "DemoModule");
+            // Load the workbook
+            Workbook workbook = new Workbook(inputPath);
 
-        // (Optional) Add some VBA code to the newly created module
-        vbaProject.Modules[moduleIndex].Codes = "Sub Hello()\n    MsgBox \"Hello\"\nEnd Sub";
+            // Index of the module to remove (0‑based)
+            int moduleIndex = 2; // change as needed
 
-        // Remove the module by its name using the Remove(string) method
-        vbaProject.Modules.Remove("DemoModule");
+            // Ensure the workbook contains a VBA project with modules
+            if (workbook.VbaProject == null || workbook.VbaProject.Modules == null)
+            {
+                Console.WriteLine("The workbook does not contain any VBA modules.");
+                return;
+            }
 
-        // Save the workbook after the removal (saved as a macro‑free file)
-        workbook.Save("RemovedModule.xlsx", SaveFormat.Xlsx);
+            // Ensure the index is within the collection bounds
+            if (moduleIndex >= 0 && moduleIndex < workbook.VbaProject.Modules.Count)
+            {
+                // Remove the specified module
+                workbook.VbaProject.Modules.RemoveAt(moduleIndex);
+                Console.WriteLine($"Module at index {moduleIndex} removed.");
+            }
+            else
+            {
+                Console.WriteLine("Module index out of range.");
+                return;
+            }
+
+            // Path to save the modified workbook
+            string outputPath = "output.xlsx";
+
+            // Save the workbook to apply changes
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved to '{outputPath}'.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

@@ -1,81 +1,56 @@
-// Title: Disable Column Grand Totals in an Aspose.Cells PivotTable (C#)
-// Description: Creates a workbook, adds sample data, builds a PivotTable, and sets ShowColumnGrandTotals to false to hide column grand totals before saving the file.
-// Keywords: Aspose.Cells | C# | PivotTable | ShowColumnGrandTotals | hide column grand totals | disable column totals | Excel pivot programmatically | Aspose.Cells API example
-// Common Searches: Aspose.Cells hide column grand totals C# | ShowColumnGrandTotals property example | Turn off column totals in Aspose.Cells PivotTable | C# code to suppress column grand totals in Excel pivot | Aspose.Cells PivotTable settings tutorial
-// Developer Intent: Programmatically create a PivotTable and prevent column grand totals from appearing.
-// Use Cases: Produce a sales dashboard where only row totals are needed for a cleaner view. | Generate financial summaries that omit column aggregates to reduce clutter. | Export Excel reports with customized PivotTable layouts that hide column totals by default.
-// AI Prompts: Provide C# code that creates an Aspose.Cells PivotTable and disables column grand totals. | Show how to use the ShowColumnGrandTotals property to hide column totals while keeping row totals visible. | Explain how to toggle column grand totals on an existing Aspose.Cells PivotTable at runtime.
+// Title: Disable column grand totals in an Excel PivotTable using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that loads an existing workbook, locates the first PivotTable, and sets ShowColumnGrandTotals to false. | Show how to add error handling for a missing input file and for worksheets without PivotTables while turning off column grand totals. | Demonstrate saving the workbook to a new file after programmatically disabling column grand totals in a PivotTable.
+// Common Searches: Aspose.Cells C# hide column grand totals in pivot table | set ShowColumnGrandTotals false programmatically .NET | remove column grand total from Excel pivot using Aspose.Cells | how to turn off column grand totals in a PivotTable with C# | Aspose.Cells pivot table display options column totals
+// Tags: Aspose.Cells ShowColumnGrandTotals property | C# disable pivot table column grand totals | Aspose.Cells modify pivot table display settings | Excel pivot column totals Aspose.Cells .NET | programmatic pivot table formatting C#
 
-using System;
 using Aspose.Cells;
 using Aspose.Cells.Pivot;
+using System;
+using System.IO;
 
-namespace AsposeCellsPivotDemo
+// The example loads an existing Excel workbook, accesses the first worksheet and its first PivotTable, sets the ShowColumnGrandTotals property to false to hide column grand totals, and saves the result to a new file. It also includes checks for a missing input file and for worksheets that contain no PivotTables.
+class Program
 {
-    // Creates a workbook, adds sample data, builds a PivotTable, and sets ShowColumnGrandTotals to false to hide column grand totals before saving the file.
-    public class DisableColumnGrandTotals
+    static void Main()
     {
-        public static void Run()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(inputPath))
         {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-
-                // Populate sample data for the pivot table
-                sheet.Cells["A1"].Value = "Category";
-                sheet.Cells["B1"].Value = "Product";
-                sheet.Cells["C1"].Value = "Sales";
-
-                sheet.Cells["A2"].Value = "Electronics";
-                sheet.Cells["B2"].Value = "Phone";
-                sheet.Cells["C2"].Value = 1200;
-
-                sheet.Cells["A3"].Value = "Electronics";
-                sheet.Cells["B3"].Value = "Laptop";
-                sheet.Cells["C3"].Value = 2500;
-
-                sheet.Cells["A4"].Value = "Furniture";
-                sheet.Cells["B4"].Value = "Chair";
-                sheet.Cells["C4"].Value = 300;
-
-                sheet.Cells["A5"].Value = "Furniture";
-                sheet.Cells["B5"].Value = "Table";
-                sheet.Cells["C5"].Value = 800;
-
-                // Add a pivot table based on the data range
-                int pivotIndex = sheet.PivotTables.Add("A1:C5", "E3", "PivotTable1");
-                PivotTable pivotTable = sheet.PivotTables[pivotIndex];
-
-                // Configure the pivot table: rows = Category, columns = Product, data = Sales
-                pivotTable.AddFieldToArea(PivotFieldType.Row, 0);      // Category as row field
-                pivotTable.AddFieldToArea(PivotFieldType.Column, 1);   // Product as column field
-                pivotTable.AddFieldToArea(PivotFieldType.Data, 2);     // Sales as data field
-
-                // Disable column grand totals
-                pivotTable.ShowColumnGrandTotals = false;
-
-                // Refresh the pivot cache and calculate the pivot data
-                pivotTable.RefreshData();
-                pivotTable.CalculateData();
-
-                // Save the workbook
-                workbook.Save("PivotTable_NoColumnGrandTotals.xlsx");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+            Console.WriteLine($"Error: The file \"{inputPath}\" was not found.");
+            return;
         }
-    }
 
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        try
         {
-            DisableColumnGrandTotals.Run();
+            // Load the workbook that contains the PivotTable
+            Workbook workbook = new Workbook(inputPath);
+
+            // Get the first worksheet (adjust index if needed)
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Ensure the worksheet contains at least one PivotTable
+            if (sheet.PivotTables.Count == 0)
+            {
+                Console.WriteLine("No PivotTables found on the first worksheet.");
+                return;
+            }
+
+            // Access the first PivotTable on the worksheet
+            PivotTable pivotTable = sheet.PivotTables[0];
+
+            // Disable column grand totals
+            pivotTable.ShowColumnGrandTotals = false;
+
+            // Save the workbook with the updated PivotTable settings
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to \"{outputPath}\".");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

@@ -1,17 +1,14 @@
-// Title: Create a Workbook and add monthly sales data with Aspose.Cells for .NET (C#)
-// Description: This C# example shows how to instantiate a Workbook, write a header row and monthly sales figures to the first worksheet, and save the file as SalesData.xlsx – ready to serve as a chart data source.
-// Keywords: Aspose.Cells | C# workbook creation | populate Excel cells | sales data spreadsheet | SaveFormat.Xlsx | chart data source | Excel automation .NET | Aspose.Cells example
-// Common Searches: Aspose.Cells write data to cells C# | Create Excel file with sales data using Aspose.Cells | How to save workbook as .xlsx in C# | Aspose.Cells sample for chart data | C# generate sales report Excel
-// Developer Intent: Generate an .xlsx workbook containing month‑wise sales values.
-// Use Cases: Build a sales report that feeds a line or column chart | Provide structured data for business‑intelligence dashboards | Automate monthly sales spreadsheet creation in a .NET application | Export sales figures to Excel for client delivery
-// AI Prompts: Add code to format the header row (bold, background color) and auto‑size columns. | Insert a line chart that references the Month and Sales columns. | Allow the worksheet name to be specified via a parameter. | Export the workbook to a memory stream for web download. | Include total and average calculations below the data range.
+// Title: Create a new Excel workbook and populate it with monthly sales data using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code that uses Aspose.Cells to create a workbook, add a header row for Month and three products, and fill the rows with sales figures from arrays. | Show a loop that iterates over month and sales arrays and writes the values into cells A2:D7 of an Aspose.Cells worksheet. | Demonstrate saving the completed worksheet as an XLSX file named SalesData.xlsx with Aspose.Cells.
+// Common Searches: aspocells c# example populate worksheet with sales data from arrays | how to add header row and data rows to Excel using Aspose.Cells .NET | save workbook as xlsx using Aspose.Cells C# loop through arrays | populate cells A1:D7 with month and product sales using Aspose.Cells | create Excel file with monthly sales chart data programmatically in C#
+// Tags: Aspose.Cells create workbook and fill cells | populate worksheet from multidimensional array Aspose.Cells | write header row Aspose.Cells C# | save workbook as XLSX Aspose.Cells | loop through arrays to write Excel cells Aspose.Cells | initialize sales data worksheet Aspose.Cells
 
 using System;
 using Aspose.Cells;
 
 namespace AsposeCellsSalesDataExample
 {
-    // This C# example shows how to instantiate a Workbook, write a header row and monthly sales figures to the first worksheet, and save the file as SalesData.xlsx – ready to serve as a chart data source.
+    // // Creates a new Workbook, adds a header row for Month and three products, fills six rows with monthly sales figures from arrays, and saves the file as SalesData.xlsx.
     class Program
     {
         static void Main()
@@ -20,26 +17,36 @@ namespace AsposeCellsSalesDataExample
             Workbook workbook = new Workbook();
 
             // Access the first worksheet
-            Worksheet worksheet = workbook.Worksheets[0];
+            Worksheet sheet = workbook.Worksheets[0];
 
             // Populate header row
-            worksheet.Cells["A1"].PutValue("Month");
-            worksheet.Cells["B1"].PutValue("Sales");
+            sheet.Cells["A1"].PutValue("Month");
+            sheet.Cells["B1"].PutValue("Product A");
+            sheet.Cells["C1"].PutValue("Product B");
+            sheet.Cells["D1"].PutValue("Product C");
 
-            // Sample sales data (Month, Sales)
+            // Sample sales data (Month, Product A, Product B, Product C)
             string[] months = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
-            double[] sales = { 12000, 15000, 13000, 17000, 16000, 18000 };
+            double[,] sales = {
+                { 12000, 15000, 13000 },
+                { 14000, 16000, 15000 },
+                { 13000, 17000, 14000 },
+                { 15000, 18000, 16000 },
+                { 16000, 19000, 17000 },
+                { 17000, 20000, 18000 }
+            };
 
-            // Fill the data rows
+            // Fill the worksheet with the sales data
             for (int i = 0; i < months.Length; i++)
             {
-                // Row index starts at 2 (Excel rows are 1‑based, Cells["A2"] is the first data row)
-                int row = i + 2;
-                worksheet.Cells[$"A{row}"].PutValue(months[i]);
-                worksheet.Cells[$"B{row}"].PutValue(sales[i]);
+                int row = i + 2; // Data starts from row 2
+                sheet.Cells[$"A{row}"].PutValue(months[i]);          // Month
+                sheet.Cells[$"B{row}"].PutValue(sales[i, 0]);       // Product A
+                sheet.Cells[$"C{row}"].PutValue(sales[i, 1]);       // Product B
+                sheet.Cells[$"D{row}"].PutValue(sales[i, 2]);       // Product C
             }
 
-            // Save the workbook to a file (uses the Workbook.Save(string, SaveFormat) rule)
+            // Save the workbook (uses the Save(string, SaveFormat) rule)
             workbook.Save("SalesData.xlsx", SaveFormat.Xlsx);
 
             Console.WriteLine("Workbook with sales data created successfully.");

@@ -1,51 +1,44 @@
-// Title: C# – Convert Excel Workbook to PDF with Aspose.Cells and embed a JavaScript alert on document open
-// Description: This example shows how to create an Aspose.Cells Workbook, write data to a worksheet, configure PdfSaveOptions (including CustomJavaScript to display an alert when the PDF opens), save the workbook as a PDF, and verify the output file while handling possible exceptions.
-// Keywords: Aspose.Cells PDF conversion C# | add JavaScript to PDF Aspose.Cells | PdfSaveOptions CustomJavaScript | Excel to PDF with alert on open | C# Aspose.Cells example | .NET PDF JavaScript alert | document open JavaScript PDF | Aspose.Cells PDF export options
-// Common Searches: how to add JavaScript alert to PDF using Aspose.Cells C# | Aspose.Cells PdfSaveOptions CustomJavaScript example | convert Excel workbook to PDF with Aspose.Cells .NET | C# code to embed JavaScript in PDF generated from Excel | verify PDF file creation after Aspose.Cells save
-// Developer Intent: Generate a PDF from an Excel workbook with Aspose.Cells for .NET and embed a JavaScript alert that runs automatically when the PDF is opened.
-// Use Cases: Create a new workbook, populate cells, and export it to PDF with custom JavaScript. | Add an on‑open alert (e.g., "Report generated on {date}") to PDFs for end‑user notifications. | Customize PDF output (document structure, JavaScript, page settings) using PdfSaveOptions. | Validate the existence of the PDF file after saving and implement robust error handling.
-// AI Prompts: Write C# code that uses Aspose.Cells PdfSaveOptions.CustomJavaScript to show an alert saying "Welcome to the report" when the PDF opens. | Explain how to combine multiple PdfSaveOptions settings (page orientation, image quality, JavaScript) while converting an Excel workbook to PDF. | Provide a step‑by‑step guide for handling file‑system errors and ensuring the PDF is created successfully in a .NET application.
+// Title: How to convert an Excel .xlsx workbook to PDF with Aspose.Cells in C# while verifying file existence
+// AI Prompts: Generate C# code that checks for the presence of a specified .xlsx file, loads it with Aspose.Cells, and saves it as a PDF to a given output path. | Create a robust try‑catch block around the workbook loading and PDF saving steps, logging any exceptions to the console. | Modify the sample to accept the input Excel path and output PDF path as command‑line arguments and ensure the target directories exist before saving.
+// Common Searches: asp.net convert excel file to pdf using aspose.cells with file existence validation | c# sample to load workbook and save as pdf handling errors | how to pass dynamic input and output paths to aspose.cells pdf conversion | asp.net core check if xlsx exists before converting to pdf with aspose | c# console app convert xlsx to pdf and log conversion status
+// Tags: Aspose.Cells Excel to PDF conversion C# | file existence check before workbook conversion | exception handling for Aspose.Cells Save operation | dynamic input and output paths in Aspose.Cells PDF export | console logging of Aspose.Cells conversion result
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-// This example shows how to create an Aspose.Cells Workbook, write data to a worksheet, configure PdfSaveOptions (including CustomJavaScript to display an alert when the PDF opens), save the workbook as a PDF, and verify the output file while handling possible exceptions.
+// The example verifies that 'input.xlsx' exists, loads it into an Aspose.Cells Workbook, converts the workbook to PDF using SaveFormat.Pdf, writes the result to 'output.pdf', and wraps the entire process in a try‑catch block that reports success or any errors to the console.
 class Program
 {
     static void Main()
     {
-        // Paths for the intermediate Excel file and final PDF file
-        string excelPath = "sample.xlsx";
-        string pdfPath = "output.pdf";
-
         try
         {
-            // -------------------------------------------------
-            // 1. Create a new workbook and add some data
-            // -------------------------------------------------
-            Workbook workbook = new Workbook();                     // Create a new workbook
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Hello Aspose.Cells!");      // Sample content
+            // Path to the input Excel file
+            string excelPath = "input.xlsx";
 
-            // -------------------------------------------------
-            // 2. Save the workbook as PDF using PdfSaveOptions
-            // -------------------------------------------------
-            PdfSaveOptions pdfOptions = new PdfSaveOptions
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(excelPath))
             {
-                ExportDocumentStructure = true // Example option
-            };
-            workbook.Save(pdfPath, pdfOptions);                    // Save as PDF
+                Console.WriteLine($"Error: The file '{excelPath}' was not found.");
+                return;
+            }
 
-            // Ensure the PDF was created
-            if (!File.Exists(pdfPath))
-                throw new FileNotFoundException("PDF file was not created.", pdfPath);
+            // Load the Excel workbook
+            Workbook workbook = new Workbook(excelPath);
 
-            Console.WriteLine("Workbook successfully converted to PDF.");
+            // Define the output PDF path
+            string pdfPath = "output.pdf";
+
+            // Convert the workbook to PDF and save
+            workbook.Save(pdfPath, SaveFormat.Pdf);
+
+            Console.WriteLine($"Workbook successfully converted to PDF: {pdfPath}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            // Log any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

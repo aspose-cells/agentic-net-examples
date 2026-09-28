@@ -1,57 +1,81 @@
-// Title: Aspose.Cells C# – List All Threaded Comment Authors in a Worksheet
-// Description: Demonstrates how to create a workbook, add threaded comment authors, insert threaded comments, and iterate through every comment to output each author’s name with its cell address, then save the file.
-// Keywords: Aspose.Cells | C# | .NET | threaded comment authors | ThreadedCommentAuthorCollection | read comment author | list comment authors | iterate worksheet comments | Excel audit | global developers
-// Common Searches: how to get threaded comment author Aspose.Cells C# | list all comment authors in Excel using Aspose.Cells | iterate worksheet comments .NET example | Aspose.Cells retrieve threaded comment author name | C# code to enumerate Excel comment authors
-// Developer Intent: Extract and display the author name for every threaded comment in a worksheet.
-// Use Cases: Create an audit report of who commented on each cell. | Validate that only permitted users have added threaded comments before publishing. | Export cell coordinates with corresponding comment authors for compliance tracking.
-// AI Prompts: Generate C# code that collects all threaded comment authors from a worksheet and writes the author‑cell pairs to a CSV file using Aspose.Cells. | Show an example that filters threaded comments by a specific author name and returns the affected cell addresses. | Explain how to replace a threaded comment author with another author across an entire workbook in C#.
+// Title: Read and list threaded comment authors from an Excel worksheet using Aspose.Cells in C#
+// AI Prompts: Generate C# code that opens a workbook, iterates through all threaded comments, and prints each comment’s author name together with its cell address. | Write a method that returns a distinct collection of ThreadedCommentAuthor objects from an Aspose.Cells workbook. | Demonstrate how to save the workbook after extracting threaded comment author information, including directory‑creation handling.
+// Common Searches: Aspose.Cells C# get author names of threaded comments in a worksheet | How to enumerate threaded comment authors in an Excel file with .NET | Retrieve distinct list of comment authors from Aspose.Cells workbook | C# example for reading threaded comments and their authors using Aspose.Cells | Save Excel workbook after processing threaded comments with Aspose.Cells
+// Tags: read threaded comment authors Aspose.Cells | enumerate worksheet threaded comments C# | extract unique comment authors Excel .NET | save workbook after comment processing Aspose.Cells | list comment authors per cell Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace ThreadedCommentAuthorsDemo
+namespace AsposeCellsThreadedCommentAuthorsDemo
 {
-    // Demonstrates how to create a workbook, add threaded comment authors, insert threaded comments, and iterate through every comment to output each author’s name with its cell address, then save the file.
+    // The sample creates a workbook, adds two threaded comment authors, inserts threaded comments into cells, iterates through each comment in the first worksheet, prints the cell address and author name of every threaded comment, and finally saves the workbook to ThreadedCommentAuthorsOutput.xlsx.
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
-
-            // Access the collection of threaded comment authors
-            ThreadedCommentAuthorCollection authors = workbook.Worksheets.ThreadedCommentAuthors;
-
-            // Add two authors to the collection
-            int author1Index = authors.Add("Alice", "alice@example.com", "A");
-            int author2Index = authors.Add("Bob", "bob@example.com", "B");
-            ThreadedCommentAuthor author1 = authors[author1Index];
-            ThreadedCommentAuthor author2 = authors[author2Index];
-
-            // Add threaded comments to some cells using the authors
-            worksheet.Comments.AddThreadedComment("A1", "First comment", author1);
-            worksheet.Comments.AddThreadedComment("A1", "Reply comment", author2);
-            worksheet.Comments.AddThreadedComment("B2", "Another comment", author2);
-
-            // Iterate through all comments in the worksheet
-            CommentCollection commentCollection = worksheet.Comments;
-            for (int i = 0; i < commentCollection.Count; i++)
+            try
             {
-                // Each comment may have multiple threaded comments
-                Comment comment = commentCollection[i];
-                ThreadedCommentCollection threadedComments = comment.ThreadedComments;
+                // Create a new workbook and get the first worksheet
+                Workbook workbook = new Workbook();
+                Worksheet sheet = workbook.Worksheets[0];
 
-                for (int j = 0; j < threadedComments.Count; j++)
+                // Access the collection of threaded comment authors
+                ThreadedCommentAuthorCollection authors = workbook.Worksheets.ThreadedCommentAuthors;
+
+                // Add two authors
+                int authorIdx1 = authors.Add("Alice Johnson", "alice@example.com", "PROV1");
+                int authorIdx2 = authors.Add("Bob Smith", "bob@example.com", "PROV2");
+
+                ThreadedCommentAuthor author1 = authors[authorIdx1];
+                ThreadedCommentAuthor author2 = authors[authorIdx2];
+
+                // Add threaded comments to different cells using the authors
+                sheet.Comments.AddThreadedComment("A1", "First comment by Alice", author1);
+                sheet.Comments.AddThreadedComment("A1", "Reply by Bob", author2);
+                sheet.Comments.AddThreadedComment("B2", "Another comment by Alice", author1);
+
+                // Iterate through all comments in the worksheet
+                Console.WriteLine("Threaded comment authors in the worksheet:");
+                foreach (Comment comment in sheet.Comments)
                 {
-                    ThreadedComment threadedComment = threadedComments[j];
-                    // Output the author name of each threaded comment
-                    Console.WriteLine($"Cell ({comment.Row}, {comment.Column}) - Threaded Comment {j + 1} Author: {threadedComment.Author.Name}");
+                    // Each comment may contain a collection of threaded comments
+                    ThreadedCommentCollection threadedComments = comment.ThreadedComments;
+
+                    // Determine the cell name for the comment using its row/column indices
+                    string cellName = CellsHelper.CellIndexToName(comment.Row, comment.Column);
+
+                    foreach (ThreadedComment tc in threadedComments)
+                    {
+                        // Output the cell name and author name of each threaded comment
+                        Console.WriteLine($"- Cell \"{cellName}\": {tc.Author.Name}");
+                    }
+                }
+
+                // Save the workbook (optional, just to demonstrate save rule)
+                string outputPath = "ThreadedCommentAuthorsOutput.xlsx";
+
+                try
+                {
+                    // Ensure the directory exists (if a directory part is present)
+                    string directory = Path.GetDirectoryName(Path.GetFullPath(outputPath));
+                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
+                    workbook.Save(outputPath);
+                    Console.WriteLine($"Workbook saved to: {Path.GetFullPath(outputPath)}");
+                }
+                catch (Exception saveEx)
+                {
+                    Console.WriteLine($"Failed to save workbook: {saveEx.Message}");
                 }
             }
-
-            // Save the workbook (optional, just to demonstrate lifecycle usage)
-            workbook.Save("ThreadedCommentsAuthorsOutput.xlsx");
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 }

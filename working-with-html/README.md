@@ -4,7 +4,8 @@ description: Export Excel workbooks and worksheets to HTML or import HTML tables
 product: Aspose.Cells for .NET
 category: working-with-html
 language: C#
-last_reviewed: 2026-08-14
+last_reviewed: 2026-09-14
+last_updated: 2026-09-21
 ---
 
 # Convert Excel to HTML and HTML to Excel in C#

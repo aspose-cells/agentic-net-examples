@@ -1,44 +1,56 @@
-// Title: Freeze Column A in a New Excel Workbook with Aspose.Cells for .NET (C#)
-// Description: Creates a Workbook, adds a header row and ten data rows, applies Worksheet.FreezePanes to lock the first column (A) while allowing horizontal scrolling, and saves the file as FreezeFirstColumn.xlsx using Aspose.Cells for .NET.
-// Keywords: Aspose.Cells C# freeze column | Worksheet.FreezePanes example | create workbook Aspose.Cells | lock first column Excel | save Excel file Aspose.Cells
-// Common Searches: how to freeze first column with Aspose.Cells .NET | C# sample code for Worksheet.FreezePanes | freeze column A in generated Excel file | Aspose.Cells create workbook and lock column
-// Developer Intent: Apply a freeze pane to the first column of a newly generated worksheet after populating it with sample data.
-// Use Cases: Report where the ID column must stay visible while scrolling horizontally. | Export template that keeps reference data fixed for large tables. | Dashboard sheet with a persistent key column for quick lookup.
-// AI Prompts: Generate C# code using Aspose.Cells to create a workbook, add headers and rows, and freeze column A. | Explain each parameter of Worksheet.FreezePanes and how they affect frozen rows and columns. | Extend the example to freeze both the first row and the first column and save the result.
+// Title: Create a new Excel workbook, add header and sample rows, and freeze the first column using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that builds a workbook, inserts a header row and ten rows of sample data, then freezes column A. | Show how to use the FreezePanes method to lock the first column while leaving rows scrollable, and save the file as an XLSX. | Provide a complete example that creates a worksheet, populates cells, applies FreezePanes(0,1,…) and writes the workbook to disk.
+// Common Searches: Aspose.Cells C# example to freeze column A in an Excel file | how to programmatically add header row and sample data with Aspose.Cells .NET | C# code for creating a new workbook and saving as SampleFreezeColumn.xlsx | using FreezePanes to lock first column while scrolling rows in Aspose.Cells | populate worksheet with numeric data and freeze panes in .NET
+// Tags: freeze first column using FreezePanes Aspose.Cells | populate worksheet with sample data C# | create new workbook programmatically Aspose.Cells | save workbook as XLSX Aspose.Cells .NET | add header row Excel C# Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-// Creates a Workbook, adds a header row and ten data rows, applies Worksheet.FreezePanes to lock the first column (A) while allowing horizontal scrolling, and saves the file as FreezeFirstColumn.xlsx using Aspose.Cells for .NET.
-class FreezeFirstColumnDemo
+// The example creates a new Workbook, adds a header row and ten rows of sample data to the first worksheet, freezes column A with the FreezePanes method, and saves the result as SampleFreezeColumn.xlsx.
+class Program
 {
     static void Main()
     {
-        // Create a new workbook
-        Workbook workbook = new Workbook();
-
-        // Access the first worksheet
-        Worksheet worksheet = workbook.Worksheets[0];
-
-        // Add sample header row
-        worksheet.Cells["A1"].PutValue("ID");
-        worksheet.Cells["B1"].PutValue("Name");
-        worksheet.Cells["C1"].PutValue("Score");
-
-        // Add sample data rows
-        for (int i = 2; i <= 10; i++)
+        try
         {
-            worksheet.Cells[i - 1, 0].PutValue(i - 1);                     // ID
-            worksheet.Cells[i - 1, 1].PutValue($"Item {i - 1}");          // Name
-            worksheet.Cells[i - 1, 2].PutValue((i - 1) * 10);            // Score
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Get the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Add header row
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["C1"].PutValue("Header3");
+
+            // Populate sample data
+            for (int i = 2; i <= 10; i++)
+            {
+                sheet.Cells[i, 0].PutValue("Row " + (i - 1)); // Column A
+                sheet.Cells[i, 1].PutValue(i * 10);          // Column B
+                sheet.Cells[i, 2].PutValue(i * 100);        // Column C
+            }
+
+            // Freeze the first column (Header column)
+            // FreezePanes(row, column, totalRows, totalColumns)
+            // row = 0 (no rows frozen), column = 1 (freeze column A)
+            // totalRows/totalColumns define the visible area; using max data extents
+            int totalRows = sheet.Cells.MaxDataRow + 1;
+            int totalColumns = sheet.Cells.MaxDataColumn + 1;
+            sheet.FreezePanes(0, 1, totalRows, totalColumns);
+
+            // Define output file path
+            string outputPath = "SampleFreezeColumn.xlsx";
+
+            // Save the workbook to a file
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(outputPath)}'.");
         }
-
-        // Freeze the first column (column A)
-        // Parameters: row index, column index, frozen rows, frozen columns
-        // Setting row index to 0 and column index to 1 freezes column A.
-        worksheet.FreezePanes(0, 1, 0, 1);
-
-        // Save the workbook to a file
-        workbook.Save("FreezeFirstColumn.xlsx");
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+        }
     }
 }

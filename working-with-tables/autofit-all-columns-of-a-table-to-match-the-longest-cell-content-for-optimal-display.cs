@@ -1,65 +1,61 @@
-// Title: Auto‑Fit All Columns in an Excel Worksheet with Aspose.Cells for .NET (C#)
-// Description: Creates a new Workbook, populates a simple table, calls Worksheet.AutoFitColumns() to size every column to its longest cell value, and saves the result as AutoFitAllColumnsDemo.xlsx.
-// Keywords: Aspose.Cells AutoFitColumns | C# Excel column autosize | adjust column width Aspose.Cells | Worksheet.AutoFitColumns example | .NET Excel column auto‑fit
-// Common Searches: Aspose.Cells auto‑fit all columns C# | Worksheet.AutoFitColumns usage example | how to size Excel columns to content with Aspose.Cells | C# code to auto‑size columns in a workbook | Aspose.Cells column width adjustment
-// Developer Intent: Resize every column in a worksheet so its width matches the longest cell value automatically.
-// Use Cases: Generate Excel reports where column widths adapt to varying text lengths. | Export data tables without manually setting column sizes, ensuring a clean layout. | Prepare spreadsheets for printing or sharing with optimal column widths for readability.
-// AI Prompts: Show how to auto‑fit columns for a specific range instead of the entire sheet using Aspose.Cells. | Provide C# code to auto‑fit rows after adjusting column widths with Aspose.Cells. | Explain how to limit the maximum column width when using Worksheet.AutoFitColumns.
+// Title: Auto‑fit all columns of an Aspose.Cells ListObject (table) to the longest cell content using C#
+// AI Prompts: Generate C# code that creates a worksheet, adds a ListObject, and calls AutoFitColumn on every column of the table's data range. | Show how to iterate through the columns of a ListObject in Aspose.Cells and automatically resize each column to the widest cell value. | Provide a complete example that populates sample data, defines a table, and saves the workbook after auto‑sizing the table columns.
+// Common Searches: Aspose.Cells C# auto fit ListObject column width to content | How to resize columns of a table based on longest text in Aspose.Cells .NET | C# example for auto‑sizing columns of an Aspose.Cells table | AutoFitColumn for table data range Aspose.Cells tutorial | Adjust column widths of a ListObject to fit cell values using Aspose.Cells
+// Tags: Aspose.Cells ListObject column auto‑fit | C# resize table columns to content | ListObject column width adjustment | auto‑fit columns using data range | Aspose.Cells column width optimization
 
-using System;
 using Aspose.Cells;
+using Aspose.Cells.Tables;
+using System;
 
-namespace AsposeCellsExamples
+// The program creates a new workbook, adds a three‑column ListObject with sample headers and data, iterates over the table's data range columns, calls AutoFitColumn on each column to match the longest cell content, and saves the result as AutoFitTable.xlsx.
+class Program
 {
-    // Creates a new Workbook, populates a simple table, calls Worksheet.AutoFitColumns() to size every column to its longest cell value, and saves the result as AutoFitAllColumnsDemo.xlsx.
-    public class AutoFitAllColumnsDemo
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            // Create a new workbook
+            Workbook workbook = new Workbook();
+
+            // Access the first worksheet
+            Worksheet sheet = workbook.Worksheets[0];
+
+            // Populate sample data
+            sheet.Cells["A1"].PutValue("Header1");
+            sheet.Cells["B1"].PutValue("Header2");
+            sheet.Cells["C1"].PutValue("Header3");
+            sheet.Cells["A2"].PutValue("Short");
+            sheet.Cells["B2"].PutValue("A much longer text that should expand column width");
+            sheet.Cells["C2"].PutValue("Mid");
+
+            // Define the range that will become a table (ListObject)
+            int firstRow = 0;   // zero‑based index for row 1
+            int firstCol = 0;   // zero‑based index for column A
+            int totalRows = 2;  // header + one data row
+            int totalCols = 3;  // three columns
+
+            // Add a ListObject (table) to the worksheet
+            int tableIndex = sheet.ListObjects.Add(firstRow, firstCol,
+                firstRow + totalRows - 1, firstCol + totalCols - 1, true);
+            ListObject table = sheet.ListObjects[tableIndex];
+            table.DisplayName = "MyTable";
+
+            // Auto‑fit all columns of the table to match the longest cell content
+            // Use DataRange (includes data rows) to determine column boundaries
+            Aspose.Cells.Range dataRange = table.DataRange;
+            int startCol = dataRange.FirstColumn;
+            int endCol = dataRange.FirstColumn + dataRange.ColumnCount - 1;
+            for (int col = startCol; col <= endCol; col++)
             {
-                // Create a new workbook
-                Workbook workbook = new Workbook();
-
-                // Access the first worksheet
-                Worksheet worksheet = workbook.Worksheets[0];
-
-                // Populate sample data that represents a table
-                worksheet.Cells["A1"].PutValue("ID");
-                worksheet.Cells["B1"].PutValue("Name");
-                worksheet.Cells["C1"].PutValue("Description");
-
-                worksheet.Cells["A2"].PutValue(1);
-                worksheet.Cells["B2"].PutValue("Alice");
-                worksheet.Cells["C2"].PutValue("Short description");
-
-                worksheet.Cells["A3"].PutValue(2);
-                worksheet.Cells["B3"].PutValue("Bob");
-                worksheet.Cells["C3"].PutValue("This is a much longer description that should cause the column to expand.");
-
-                worksheet.Cells["A4"].PutValue(3);
-                worksheet.Cells["B4"].PutValue("Charlie");
-                worksheet.Cells["C4"].PutValue("Medium length text");
-
-                // Auto‑fit all columns so each column width matches its longest cell content
-                worksheet.AutoFitColumns();
-
-                // Save the workbook
-                workbook.Save("AutoFitAllColumnsDemo.xlsx");
+                sheet.AutoFitColumn(col);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
+
+            // Save the workbook
+            workbook.Save("AutoFitTable.xlsx");
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            AutoFitAllColumnsDemo.Run();
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

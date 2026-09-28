@@ -1,45 +1,50 @@
-// Title: C# – Add a Rectangle Shape, Assign a Unique Name, and Retrieve It with Aspose.Cells for .NET
-// Description: Demonstrates how to create a new Workbook, insert a rectangle shape into the first worksheet, set the shape's Name property to a custom identifier, retrieve the shape using the name indexer, and save the file as an XLSX document.
-// Keywords: Aspose.Cells C# shape example | add rectangle shape Aspose.Cells | shape Name property .NET | retrieve shape by name Aspose.Cells | worksheet.Shapes indexer | Aspose.Cells sample code | C# Excel shape naming
-// Common Searches: how to add a shape with a custom name using Aspose.Cells for .NET | retrieve worksheet shape by its Name property C# | Aspose.Cells set and get shape name | example of shape naming in Aspose.Cells | C# Aspose.Cells shape indexer by name
-// Developer Intent: Create a shape, give it a unique Name, and later access the same shape via that name.
-// Use Cases: Insert a labeled rectangle, assign a Name, and later modify its size or formatting by retrieving it with worksheet.Shapes["MyUniqueShape"] | Add multiple diagram elements with distinct names, then iterate over the names to update each shape dynamically | Map shape names to business data in a dictionary for quick visual updates in the workbook
-// AI Prompts: Generate C# code that adds several shapes to a worksheet, assigns each a unique Name, and changes the fill color of a specific shape retrieved by its name using Aspose.Cells. | Explain how to safely handle exceptions when a shape name does not exist in a worksheet with Aspose.Cells for .NET.
+// Title: Insert a rectangle shape into an Excel worksheet and assign a unique name using Aspose.Cells for .NET
+// AI Prompts: Insert a rectangle graphic at row 2, column 2 with 5‑pixel top/left offsets, assign its Name as 'UniqueShape001', set placement to free‑floating, and save the workbook as an Xlsx file. | Create a shape, set line weight to 1.5 points and dash style to solid, then persist the workbook containing the shape.
+// Common Searches: c# aspose.cells insert rectangle shape at specific cell coordinates | aspose.cells assign custom identifier to a shape in an Excel file | configure shape to float above cells using Aspose.Cells | save workbook with added shape as .xlsx using Aspose.Cells
+// Tags: add rectangle shape Aspose.Cells C# | set shape Name property Aspose.Cells | set shape placement mode freefloating Aspose.Cells | customize shape line appearance Aspose.Cells | save workbook with shape Aspose.Cells Xlsx
 
-using System;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;   // Required for Shape class
+using Aspose.Cells.Drawing;
+using System;
 
-namespace AsposeCellsExample
+// The program creates a new workbook, inserts a rectangle shape at row 2, column 2 with pixel offsets, assigns it the unique name "UniqueShape001", configures free‑floating placement, customizes line weight and dash style, and saves the file as ShapeDemo.xlsx.
+class Program
 {
-    // Demonstrates how to create a new Workbook, insert a rectangle shape into the first worksheet, set the shape's Name property to a custom identifier, retrieve the shape using the name indexer, and save the file as an XLSX document.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            try
-            {
-                // Create a new workbook and get the first worksheet
-                Workbook workbook = new Workbook();
-                Worksheet worksheet = workbook.Worksheets[0];
+        // Create a new workbook
+        Workbook workbook = new Workbook();
 
-                // Add a rectangle shape: row, column, top offset, left offset, height, width
-                Shape shape = worksheet.Shapes.AddRectangle(2, 2, 0, 0, 100, 200);
-                shape.Name = "MyUniqueShape";
+        // Get the first worksheet
+        Worksheet sheet = workbook.Worksheets[0];
 
-                // Retrieve the shape by its unique name
-                Shape retrievedShape = worksheet.Shapes["MyUniqueShape"];
-                Console.WriteLine("Retrieved shape name: " + retrievedShape.Name);
+        // Define shape position and size
+        int upperLeftRow = 2;      // Row index (0‑based)
+        int upperLeftColumn = 2;   // Column index (0‑based)
+        int top = 5;               // Pixels from the top of the cell
+        int left = 5;              // Pixels from the left of the cell
+        int height = 100;          // Height in pixels
+        int width = 200;           // Width in pixels
 
-                // Save the workbook
-                string outputPath = "ShapeWithUniqueName.xlsx";
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved to {outputPath}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+        // Insert a rectangle shape
+        Shape shape = sheet.Shapes.AddShape(
+            MsoDrawingType.Rectangle,
+            upperLeftRow,
+            upperLeftColumn,
+            top,
+            left,
+            height,
+            width);
+
+        // Assign a unique name to the shape for later reference
+        shape.Name = "UniqueShape001";
+
+        // Optional: set visual properties
+        shape.Placement = PlacementType.FreeFloating;
+        shape.Line.Weight = 1.5;
+        shape.Line.DashStyle = MsoLineDashStyle.Solid;
+
+        // Save the workbook
+        workbook.Save("ShapeDemo.xlsx", SaveFormat.Xlsx);
     }
 }

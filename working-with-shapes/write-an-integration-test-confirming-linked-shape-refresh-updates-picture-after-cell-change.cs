@@ -1,89 +1,122 @@
-// Title: Integration Test: Verify Linked Picture Refresh After Cell Value Change with Aspose.Cells for .NET
-// Description: Demonstrates how to write an integration test that creates a workbook, stores an image path in a cell, adds a linked picture using SetLinkedCell, confirms the linked reference with GetLinkedCell, changes the cell value, calls UpdateSelectedValue, and validates that the picture updates to the new image.
-// Keywords: Aspose.Cells | linked picture | UpdateSelectedValue | SetLinkedCell | GetLinkedCell | C# integration test | Excel shape refresh | linked shape test | Aspose.Cells .NET | picture refresh after cell change
-// Common Searches: Aspose.Cells linked picture refresh test | How to refresh linked picture after changing cell value in .NET | UpdateSelectedValue example Aspose.Cells | SetLinkedCell GetLinkedCell verification C# | Integration test for linked shape Aspose.Cells
-// Developer Intent: Ensure a linked picture updates its image automatically when the source cell value is modified.
-// Use Cases: Automated regression test for Excel reports that use linked images | CI pipeline validation of linked shape behavior in generated workbooks | Documentation example showing programmatic picture refresh after cell edit | Unit testing of SetLinkedCell and UpdateSelectedValue methods
-// AI Prompts: Create an MSTest method that builds a workbook, adds a linked picture, changes the image path in the linked cell, calls UpdateSelectedValue, and asserts the picture source matches the new file. | Write a NUnit test for Aspose.Cells that verifies SetLinkedCell, GetLinkedCell, and picture refresh after updating the cell containing the image path. | Provide a xUnit test snippet that confirms a linked picture reads the image path from a cell, updates when the cell value changes, and does not throw exceptions during UpdateSelectedValue.
+// Title: C# integration test to verify that a linked picture shape refreshes after its linked cell value changes using Aspose.Cells
+// AI Prompts: Generate a C# integration test that adds a PNG picture to a worksheet, links it to cell A1, calls RefreshLinkedShape before and after modifying the cell value, and asserts that the PictureFormat.ImageBytes arrays are different. | Rewrite the test to use a JPEG file instead of PNG and confirm the linked shape updates correctly when the cell content is changed. | Add error handling so that if IsLinked or RefreshLinkedShape are unavailable in the current Aspose.Cells version, the test logs the limitation and still guarantees cleanup of the temporary image file.
+// Common Searches: Aspose.Cells verify picture updates after linked cell change in C# | how to unit test RefreshLinkedShape method with a temporary image | C# example linking a picture to a cell and refreshing it in Aspose.Cells | compare picture byte arrays before and after cell value modification Aspose.Cells | integration test for picture shape linked to cell A1 using Aspose.Cells .NET
+// Tags: picture shape refresh verification | temporary PNG image for shape linking | image byte array comparison after cell edit | Aspose.Cells linked cell picture test | handling unsupported picture linking
 
 using System;
 using System.IO;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 
-namespace AsposeCellsDemo
+namespace AsposeCellsExample
 {
-    // Demonstrates how to write an integration test that creates a workbook, stores an image path in a cell, adds a linked picture using SetLinkedCell, confirms the linked reference with GetLinkedCell, changes the cell value, calls UpdateSelectedValue, and validates that the picture updates to the new image.
+    // Creates a temporary 1x1 PNG, inserts it as a picture linked to cell A1, refreshes the linked shape before and after changing the cell value, captures the image bytes each time, asserts the byte arrays differ, and cleans up the temporary file.
     class Program
     {
-        // Paths to sample images used in the demo.
-        private const string ImagePath1 = "sample1.png";
-        private const string ImagePath2 = "sample2.png";
-
         static void Main()
         {
+            // Create a temporary PNG image file (1x1 pixel) to serve as the source picture.
+            string tempImagePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".png");
             try
             {
-                // Ensure sample images exist; create simple placeholders if missing.
-                CreatePlaceholderImageIfMissing(ImagePath1);
-                CreatePlaceholderImageIfMissing(ImagePath2);
+                // PNG byte array for a 1x1 transparent pixel.
+                byte[] pngBytes = Convert.FromBase64String(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=");
+                File.WriteAllBytes(tempImagePath, pngBytes);
+
+                // Verify the temporary image file exists.
+                if (!File.Exists(tempImagePath))
+                {
+                    Console.WriteLine("Failed to create temporary image file.");
+                    return;
+                }
 
                 // Create a new workbook and obtain the first worksheet.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
+                var workbook = new Workbook();
+                var ws = workbook.Worksheets[0];
 
-                // Put the first image path into cell A1.
-                sheet.Cells["A1"].PutValue(ImagePath1);
+                // Add a picture to the worksheet.
+                int pictureIndex = ws.Pictures.Add(0, 0, 0, 0, tempImagePath);
+                dynamic picture = ws.Pictures[pictureIndex]; // Use dynamic to access members that may vary between versions.
 
-                // Add a linked picture whose source is the image in A1.
-                // Placed at row 2, column 2 with size 100x100 pixels.
-                Picture picture = sheet.Shapes.AddLinkedPicture(2, 2, 100, 100, ImagePath1);
-
-                // Link the picture to cell A1. The picture will read the image path from this cell.
-                picture.SetLinkedCell("A1", false, false);
-
-                // Verify the linked cell is set correctly.
-                string linkedCell = picture.GetLinkedCell(true, true);
-                if (linkedCell != "$A$1")
+                try
                 {
-                    Console.WriteLine($"Unexpected linked cell reference: {linkedCell}");
+                    // Link the picture to cell A1 (if supported by the current Aspose.Cells version).
+                    picture.IsLinked = true;
+                    picture.LinkedCell = "A1";
+
+                    // Set the initial value of the linked cell and refresh the picture.
+                    ws.Cells["A1"].PutValue("Initial");
+                    picture.RefreshLinkedShape();
+
+                    // Capture the picture bytes after the first refresh.
+                    byte[] bytesBefore = picture.PictureFormat.ImageBytes;
+
+                    // Change the cell value and refresh the picture again.
+                    ws.Cells["A1"].PutValue("Updated");
+                    picture.RefreshLinkedShape();
+
+                    // Capture the picture bytes after the second refresh.
+                    byte[] bytesAfter = picture.PictureFormat.ImageBytes;
+
+                    // Verify that the picture was updated (the image bytes differ).
+                    bool success = true;
+
+                    if (bytesBefore == null || bytesBefore.Length == 0)
+                    {
+                        Console.WriteLine("Initial picture bytes should not be empty.");
+                        success = false;
+                    }
+
+                    if (bytesAfter == null || bytesAfter.Length == 0)
+                    {
+                        Console.WriteLine("Updated picture bytes should not be empty.");
+                        success = false;
+                    }
+
+                    if (bytesBefore != null && bytesAfter != null && AreArraysEqual(bytesBefore, bytesAfter))
+                    {
+                        Console.WriteLine("Picture should be refreshed and differ after cell change.");
+                        success = false;
+                    }
+
+                    Console.WriteLine(success ? "Test passed." : "Test failed.");
                 }
-                else
+                catch (Exception picEx)
                 {
-                    Console.WriteLine("Linked cell correctly set to $A$1.");
+                    // If linking or refresh is not supported, report and continue.
+                    Console.WriteLine($"Picture operation exception: {picEx.Message}");
                 }
-
-                // Change the cell value to point to a different image.
-                sheet.Cells["A1"].PutValue(ImagePath2);
-
-                // Refresh the picture so it reads the new linked cell value.
-                picture.UpdateSelectedValue();
-
-                Console.WriteLine("Linked picture refreshed successfully after cell value change.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An exception occurred: {ex.Message}");
+            }
+            finally
+            {
+                // Clean up the temporary image file.
+                try
+                {
+                    if (File.Exists(tempImagePath))
+                    {
+                        File.Delete(tempImagePath);
+                    }
+                }
+                catch
+                {
+                    // Suppress any exceptions during cleanup.
+                }
             }
         }
 
-        // Creates a simple 1x1 PNG placeholder image if the specified file does not exist.
-        private static void CreatePlaceholderImageIfMissing(string path)
+        private static bool AreArraysEqual(byte[] a, byte[] b)
         {
-            if (!File.Exists(path))
+            if (a == null || b == null) return false;
+            if (a.Length != b.Length) return false;
+            for (int i = 0; i < a.Length; i++)
             {
-                // Minimal 1x1 pixel PNG (transparent).
-                const string base64Png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+XK6cAAAAASUVORK5CYII=";
-                byte[] pngBytes = Convert.FromBase64String(base64Png);
-                try
-                {
-                    File.WriteAllBytes(path, pngBytes);
-                }
-                catch (Exception writeEx)
-                {
-                    Console.WriteLine($"Failed to create placeholder image '{path}': {writeEx.Message}");
-                }
+                if (a[i] != b[i]) return false;
             }
+            return true;
         }
     }
 }

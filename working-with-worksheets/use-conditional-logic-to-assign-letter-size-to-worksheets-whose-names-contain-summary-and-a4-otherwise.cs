@@ -1,49 +1,62 @@
-// Title: C# – Set Letter paper size for worksheets with “Summary” in the name, A4 otherwise (Aspose.Cells)
-// Description: This .NET example creates a workbook, adds worksheets, then uses a case‑insensitive check on each sheet’s name. Sheets whose name contains “Summary” are assigned the Letter (8.5" × 11") paper size; all other sheets receive A4 (210 mm × 297 mm). The workbook is saved as ConditionalPaperSize.xlsx.
-// Keywords: Aspose.Cells | C# | conditional paper size | worksheet PageSetup | Letter paper size | A4 paper size | summary sheet | GitHub example | Aspose.Cells API
-// Common Searches: Aspose.Cells set Letter paper size for specific worksheets | C# conditional PageSetup based on worksheet name | How to assign A4 to non‑summary sheets in Aspose.Cells | Aspose.Cells example for paper size by sheet name
-// Developer Intent: Apply conditional page‑setup logic so that any worksheet whose name includes "Summary" uses Letter size, while all other worksheets default to A4.
-// Use Cases: Generate a US‑oriented summary report that prints on Letter paper while keeping data sheets on A4 for global distribution. | Create a template that automatically applies the correct paper size whenever new worksheets are added, based on naming conventions. | Prepare a multi‑sheet export where printing settings are pre‑configured to avoid manual adjustments before distribution.
-// AI Prompts: Write C# code with Aspose.Cells that sets PaperSize to Letter for worksheets whose name contains "Summary" (case‑insensitive) and to A4 for all others. | Show how to modify the loop to also set Landscape orientation for summary sheets while keeping Portrait for the remaining sheets. | Refactor the conditional logic using LINQ to apply the appropriate paper size to every worksheet in a workbook.
+// Title: Assign Letter paper size to worksheets containing "Summary" and A4 to all other sheets using Aspose.Cells for .NET
+// AI Prompts: Write a C# console program that opens an Excel workbook with Aspose.Cells, iterates over each worksheet, and sets Worksheet.PageSetup.PaperSize to PaperLetter when the sheet name includes the word "Summary" (case‑insensitive), otherwise sets it to PaperA4, then saves the file. | Generate C# code that conditionally changes the page setup of every worksheet in a workbook: apply Letter size to sheets whose names contain "Summary" and A4 size to the remaining sheets, using Aspose.Cells' PageSetup API.
+// Common Searches: Aspose.Cells set paper size based on worksheet name C# | How to apply Letter page size to summary tabs in an Excel file using .NET | Conditional page setup for multiple worksheets with Aspose.Cells | C# change worksheet PageSetup.PaperSize to A4 for non‑summary sheets
+// Tags: conditional worksheet paper size Aspose.Cells | PageSetup.PaperSize assignment by worksheet name | Letter size for summary tabs using Aspose.Cells | A4 size for non‑summary sheets Aspose.Cells | modify workbook page setup and save with Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
+using System.IO;
 
-namespace AsposeCellsPaperSizeDemo
+// The program loads an existing workbook, checks each worksheet name, assigns PaperLetter size to sheets containing "Summary" (case‑insensitive) and PaperA4 to all other sheets, ensures the output directory exists, and saves the updated workbook.
+class Program
 {
-    // This .NET example creates a workbook, adds worksheets, then uses a case‑insensitive check on each sheet’s name. Sheets whose name contains “Summary” are assigned the Letter (8.5" × 11") paper size; all other sheets receive A4 (210 mm × 297 mm). The workbook is saved as ConditionalPaperSize.xlsx.
-    class Program
+    static void Main()
     {
-        static void Main()
+        const string inputPath = "input.xlsx";
+        const string outputPath = "output.xlsx";
+
+        try
         {
-            // Create a new workbook
-            Workbook workbook = new Workbook();
-
-            // Add sample worksheets with different names
-            Worksheet sheet1 = workbook.Worksheets[0]; // default first sheet
-            sheet1.Name = "SummaryReport";
-
-            Worksheet sheet2 = workbook.Worksheets.Add("DataSheet");
-            Worksheet sheet3 = workbook.Worksheets.Add("AnnualSummary");
-            Worksheet sheet4 = workbook.Worksheets.Add("Details");
-
-            // Iterate through all worksheets
-            foreach (Worksheet ws in workbook.Worksheets)
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // If the worksheet name contains "Summary" (case‑insensitive), set paper size to Letter
-                if (ws.Name.IndexOf("Summary", StringComparison.OrdinalIgnoreCase) >= 0)
+                Console.WriteLine($"Input file not found: {inputPath}");
+                return;
+            }
+
+            // Load the existing workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Iterate through all worksheets and set paper size based on name
+            foreach (Worksheet sheet in workbook.Worksheets)
+            {
+                if (sheet.Name.IndexOf("Summary", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    ws.PageSetup.PaperSize = PaperSizeType.PaperLetter; // Letter (8.5" x 11")
+                    // Assign Letter paper size
+                    sheet.PageSetup.PaperSize = PaperSizeType.PaperLetter;
                 }
                 else
                 {
-                    // Otherwise set paper size to A4
-                    ws.PageSetup.PaperSize = PaperSizeType.PaperA4; // A4 (210mm x 297mm)
+                    // Assign A4 paper size
+                    sheet.PageSetup.PaperSize = PaperSizeType.PaperA4;
                 }
             }
 
-            // Save the workbook to a file
-            workbook.Save("ConditionalPaperSize.xlsx");
+            // Ensure the directory for the output file exists
+            string outputDir = Path.GetDirectoryName(outputPath);
+            if (!string.IsNullOrEmpty(outputDir) && !Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+
+            // Save the modified workbook
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            // Handle any unexpected errors
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

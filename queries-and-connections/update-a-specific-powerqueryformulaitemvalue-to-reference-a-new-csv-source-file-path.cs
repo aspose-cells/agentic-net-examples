@@ -1,102 +1,91 @@
-// Title: C# – Update Power Query CSV source path in an Excel workbook with Aspose.Cells
-// Description: Loads an Excel file, checks for a DataMashup containing Power Query formulas, iterates each PowerQueryFormulaItem, replaces the quoted CSV file path in the M expression with a new location using a regular expression, and saves the workbook as a new file. Includes robust error handling for missing files and save failures.
-// Keywords: Aspose.Cells Power Query update | C# replace CSV path in PowerQueryFormulaItem | DataMashup edit Excel | modify Power Query M expression | .NET change Power Query source file | Windows Excel automation Aspose | batch update Power Query connections
-// Common Searches: how to change csv file path in power query using Aspose.Cells | c# update PowerQueryFormulaItem value | replace file path in Power Query M expression programmatically | Aspose.Cells edit DataMashup Power Query formulas | update Excel Power Query source file path .NET
-// Developer Intent: Programmatically replace the existing CSV reference in every Power Query formula of an Excel workbook with a new file path and persist the changes.
-// Use Cases: Migrate legacy reports to a new data folder without manual editing. | Automate source‑file updates across dozens of workbooks before distribution. | Integrate path‑rewriting into CI/CD pipelines for Excel‑based reporting solutions.
-// AI Prompts: Write C# code that uses Aspose.Cells to locate all PowerQueryFormulaItem objects and substitute the quoted CSV path with a user‑provided string. | Explain safe practices for editing Power Query M expressions via the DataMashup API, ensuring other formulas remain untouched. | Provide comprehensive error‑handling patterns for loading workbooks, iterating PowerQueryFormulas, applying regex replacements, and saving the updated file.
+// Title: How to programmatically change the Power Query CSV source path in an Excel workbook using Aspose.Cells for .NET (C#)
+// AI Prompts: Write C# code with Aspose.Cells that opens an existing .xlsx file, finds the PowerQueryFormulaItem named "Source", and replaces its file path with a new CSV location. | Show how to iterate through workbook.DataMashup.PowerQueryFormulas, update the Source expression to point to a different CSV file, and save the modified workbook. | Create a reusable method UpdatePowerQueryCsvSource(string workbookPath, string oldCsvPath, string newCsvPath) that performs the source‑path replacement and returns the path of the saved file.
+// Common Searches: aspnet c# update power query source file path in existing excel workbook using aspose.cells | replace old csv path with new csv in PowerQueryFormulaItem via Aspose.Cells .NET | programmatically modify Power Query connection string in an .xlsx file using C# | how to change the Source item of a Power Query formula in Aspose.Cells | update Power Query CSV source without opening Excel UI using Aspose.Cells
+// Tags: Aspose.Cells PowerQueryFormulaItem update | C# change Power Query CSV path | Excel workbook Power Query source modification | Aspose.Cells .NET Power Query editing | programmatic Power Query connection update
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using Aspose.Cells;
+using Aspose.Cells.QueryTables;
 
-// Loads an Excel file, checks for a DataMashup containing Power Query formulas, iterates each PowerQueryFormulaItem, replaces the quoted CSV file path in the M expression with a new location using a regular expression, and saves the workbook as a new file. Includes robust error handling for missing files and save failures.
-class UpdatePowerQueryCsvPath
+namespace AsposeCellsPowerQueryUpdate
 {
-    static void Main()
+    // Loads an existing Excel workbook, locates the Power Query formula item named "Source", replaces the old CSV file path with a new one, and saves the workbook with the updated Power Query source.
+    class Program
     {
-        try
+        static void Main()
         {
-            // Input workbook path
-            string inputPath = "input.xlsx";
-
-            // Verify that the input file exists
-            if (!File.Exists(inputPath))
-            {
-                Console.WriteLine($"Input file not found: {inputPath}");
-                return;
-            }
-
-            // Load the workbook that contains Power Query formulas
-            Workbook workbook;
             try
             {
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
+                // Path to the existing workbook that contains Power Query formulas
+                string sourceWorkbookPath = "input.xlsx";
 
-            // New CSV file path to be referenced in the Power Query formula
-            string newCsvPath = @"C:\Data\newsource.csv";
-
-            // Ensure the workbook actually contains a DataMashup object with Power Query formulas
-            if (workbook.DataMashup != null && workbook.DataMashup.PowerQueryFormulas != null)
-            {
-                // Iterate through all Power Query formulas
-                foreach (var formulaObj in workbook.DataMashup.PowerQueryFormulas)
+                // Verify the source workbook exists
+                if (!File.Exists(sourceWorkbookPath))
                 {
-                    try
+                    Console.WriteLine($"Source workbook not found: {sourceWorkbookPath}");
+                    return;
+                }
+
+                // Load the workbook
+                Workbook workbook = new Workbook(sourceWorkbookPath);
+
+                // Define the new CSV file path you want the Power Query to reference
+                string newCsvPath = @"C:\Data\NewSourceFile.csv";
+
+                // Flag to indicate whether the target item was found
+                bool itemUpdated = false;
+
+                // Ensure the workbook actually contains Power Query data
+                if (workbook.DataMashup != null && workbook.DataMashup.PowerQueryFormulas != null)
+                {
+                    // Iterate through all Power Query formulas in the workbook
+                    foreach (PowerQueryFormula formula in workbook.DataMashup.PowerQueryFormulas)
                     {
-                        // Use dynamic to access properties without needing the exact type at compile time
-                        dynamic formula = formulaObj;
+                        // Iterate through the items of each formula
+                        foreach (PowerQueryFormulaItem item in formula.PowerQueryFormulaItems)
+                        {
+                            // Typically the item that holds the source path is named "Source"
+                            if (item.Name.Equals("Source", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Replace any existing file path with the new CSV path
+                                if (!string.IsNullOrEmpty(item.Value))
+                                {
+                                    item.Value = item.Value.Replace(@"C:\OldPath\OldFile.csv", newCsvPath);
+                                }
 
-                        // Retrieve the current M expression
-                        string currentFormula = formula.FormulaText as string;
+                                // Optionally set the whole expression directly (uncomment if needed)
+                                // item.Value = $"Source=Csv.Document(File.Contents(\"{newCsvPath}\"),[Delimiter=\",\", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None])";
 
-                        if (string.IsNullOrEmpty(currentFormula))
-                            continue;
+                                itemUpdated = true;
+                                break; // Assuming only one "Source" item per formula
+                            }
+                        }
 
-                        // Replace any quoted file path inside the M expression with the new path
-                        // Example original value: Csv.Document(File.Contents("C:\\Old\\path.csv"))
-                        string updatedFormula = Regex.Replace(
-                            currentFormula,
-                            "\"[^\"]+\"",
-                            $"\"{newCsvPath}\"",
-                            RegexOptions.IgnoreCase);
-
-                        // Assign the updated M expression back to the formula
-                        formula.FormulaText = updatedFormula;
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Failed to update a Power Query formula: {ex.Message}");
+                        if (itemUpdated) break;
                     }
                 }
-            }
-            else
-            {
-                Console.WriteLine("The workbook does not contain any Power Query formulas.");
-            }
+                else
+                {
+                    Console.WriteLine("The workbook does not contain any Power Query formulas.");
+                }
 
-            // Save the modified workbook
-            string outputPath = "output.xlsx";
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook saved with updated Power Query source: {outputPath}");
+                if (!itemUpdated)
+                {
+                    Console.WriteLine("No PowerQueryFormulaItem named 'Source' was found in the workbook.");
+                }
+                else
+                {
+                    // Save the modified workbook
+                    string outputWorkbookPath = "output.xlsx";
+                    workbook.Save(outputWorkbookPath);
+                    Console.WriteLine($"Workbook saved with updated Power Query source: {outputWorkbookPath}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

@@ -1,91 +1,81 @@
-// Title: Detect and Decrypt Encrypted OOXML (XLSX) Files with Aspose.Cells for .NET
-// Description: C# example that uses Aspose.Cells to identify an encrypted .xlsx, verify the password, load the workbook via LoadOptions, and save a plain‑format copy. Guarantees compatibility with standard OOXML after decryption.
-// Keywords: Aspose.Cells detect encrypted Excel | FileFormatUtil DetectFileFormat password | LoadOptions password decryption | remove Excel encryption C# | save unencrypted XLSX Aspose | verify Excel password .NET
-// Common Searches: How to check if an Excel file is password protected using Aspose.Cells | C# code to decrypt a protected .xlsx with Aspose.Cells | Verify password of encrypted workbook Aspose.Cells .NET | Load encrypted Excel without knowing format Aspose.Cells | Batch remove encryption from XLSX files in C#
-// Developer Intent: Determine the file type and encryption state of an OOXML workbook, confirm the password, decrypt it, and produce an unprotected .xlsx.
-// Use Cases: Pre‑process incoming Excel uploads and skip encrypted files that require a password. | Validate user‑supplied passwords before opening protected workbooks. | Automate conversion of password‑protected spreadsheets to standard format for downstream analytics.
-// AI Prompts: Write C# code that uses Aspose.Cells to detect whether a .xlsx is encrypted and return its encryption status. | Create a method that accepts an encrypted Excel path and password, verifies the password, loads the workbook, and saves it without encryption. | Explain best‑practice exception handling when decrypting an Excel file with Aspose.Cells in a .NET application.
+// Title: Detect and preserve the original format of an encrypted OOXML workbook when decrypting with Aspose.Cells for .NET
+// AI Prompts: Use Aspose.Cells LoadOptions with a password to open an encrypted .xlsx/.xlsm/.xlsb file, read its Workbook.FileFormat property, and save the decrypted workbook using the matching SaveFormat. | Write C# code that verifies an encrypted Excel file exists, decrypts it via Aspose.Cells, determines whether it is Xlsx, Xlsm, or Xlsb, and writes the decrypted copy in the same format.
+// Common Searches: how to determine original Excel format of a password protected file using Aspose.Cells | save decrypted workbook in the same format as the encrypted file Aspose.Cells .NET | detect FileFormatType of an encrypted .xlsm file with Aspose.Cells | Aspose.Cells load encrypted OOXML workbook and preserve file type on save | C# decrypt password protected Excel and keep original format
+// Tags: detect workbook file format Aspose.Cells | preserve original Excel format after decryption | load password‑protected OOXML workbook C# | map FileFormatType to SaveFormat Aspose.Cells | decrypt encrypted Excel file Aspose.Cells .NET
 
 using System;
 using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsExamples
+// The example checks that the encrypted Excel file exists, loads it with a password using Aspose.Cells LoadOptions, reads the Workbook.FileFormat property to identify the original OOXML format (Xlsx, Xlsm, or Xlsb), maps this to the appropriate SaveFormat, and saves the decrypted workbook while preserving the original file type.
+class Program
 {
-    // C# example that uses Aspose.Cells to identify an encrypted .xlsx, verify the password, load the workbook via LoadOptions, and save a plain‑format copy. Guarantees compatibility with standard OOXML after decryption.
-    public class DetectAndDecryptEncryptedOoxml
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            // Path to the encrypted OOXML file (e.g., .xlsx)
+            // Path to the encrypted OOXML file
             string encryptedFilePath = "encrypted.xlsx";
 
-            // Verify that the input file exists
+            // Verify that the input file exists to avoid FileNotFoundException
             if (!File.Exists(encryptedFilePath))
             {
-                Console.WriteLine($"Error: File not found - {encryptedFilePath}");
+                Console.WriteLine($"Error: The file \"{encryptedFilePath}\" was not found.");
                 return;
             }
 
-            // Password used to protect the file
-            string password = "test";
+            // Password used to encrypt the file
+            string password = "yourPassword";
+
+            // Load the encrypted workbook using LoadOptions with the password.
+            LoadOptions loadOptions = new LoadOptions
+            {
+                Password = password
+            };
+
+            // Load the workbook (decryption happens internally).
+            Workbook workbook = new Workbook(encryptedFilePath, loadOptions);
+
+            // Detect the file format of the loaded workbook.
+            FileFormatType detectedFormat = workbook.FileFormat;
+            Console.WriteLine($"Detected workbook format: {detectedFormat}");
+
+            // Choose a matching SaveFormat based on the detected FileFormatType.
+            SaveFormat saveFormat;
+            switch (detectedFormat)
+            {
+                case FileFormatType.Xlsx:
+                    saveFormat = SaveFormat.Xlsx;
+                    break;
+                case FileFormatType.Xlsm:
+                    saveFormat = SaveFormat.Xlsm;
+                    break;
+                case FileFormatType.Xlsb:
+                    saveFormat = SaveFormat.Xlsb;
+                    break;
+                default:
+                    // Fallback to XLSX if the format is unexpected.
+                    saveFormat = SaveFormat.Xlsx;
+                    break;
+            }
+
+            // Save the decrypted workbook using the same format.
+            string decryptedFilePath = "decrypted.xlsx";
 
             try
             {
-                // -------------------------------------------------
-                // 1. Detect the file format and encryption status
-                // -------------------------------------------------
-                // DetectFileFormat overload that accepts a password is used for encrypted files
-                FileFormatInfo formatInfo = FileFormatUtil.DetectFileFormat(encryptedFilePath, password);
-
-                Console.WriteLine($"Detected File Format Type: {formatInfo.FileFormatType}");
-                Console.WriteLine($"Is Encrypted: {formatInfo.IsEncrypted}");
-
-                // Optional: Verify that the supplied password is correct
-                using (Stream verifyStream = File.OpenRead(encryptedFilePath))
-                {
-                    bool passwordValid = FileFormatUtil.VerifyPassword(verifyStream, password);
-                    Console.WriteLine($"Password valid: {passwordValid}");
-                }
-
-                // -------------------------------------------------
-                // 2. Load the workbook using the correct password
-                // -------------------------------------------------
-                // LoadOptions allows us to specify the password for decryption
-                LoadOptions loadOptions = new LoadOptions(LoadFormat.Auto)
-                {
-                    Password = password
-                };
-
-                // Load the workbook; Aspose.Cells will decrypt it internally
-                using (Workbook workbook = new Workbook(encryptedFilePath, loadOptions))
-                {
-                    // Verify that the workbook reports being encrypted (should be true before decryption)
-                    Console.WriteLine($"Workbook Settings.IsEncrypted (after load): {workbook.Settings.IsEncrypted}");
-
-                    // -------------------------------------------------
-                    // 3. Save the workbook to a new file to ensure compatibility
-                    // -------------------------------------------------
-                    // Saving without a password removes encryption, producing a standard OOXML file
-                    string decryptedFilePath = "decrypted_copy.xlsx";
-                    workbook.Save(decryptedFilePath, SaveFormat.Xlsx);
-
-                    Console.WriteLine($"Decrypted workbook saved to: {decryptedFilePath}");
-                }
+                workbook.Save(decryptedFilePath, saveFormat);
+                Console.WriteLine($"Decrypted workbook saved to: {decryptedFilePath}");
             }
-            catch (Exception ex)
+            catch (Exception saveEx)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"Error saving workbook: {saveEx.Message}");
             }
         }
-    }
-
-    // Entry point for the application
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            DetectAndDecryptEncryptedOoxml.Run();
+            // Catch any unexpected errors and display a friendly message.
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

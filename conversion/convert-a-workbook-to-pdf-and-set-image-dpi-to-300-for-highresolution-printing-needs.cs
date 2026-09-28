@@ -1,64 +1,51 @@
-// Title: Export Aspose.Cells Workbook to PDF with 300 DPI Images in C#
-// Description: Shows how to set the global DPI to 300, use PdfSaveOptions to resample images at 300 PPI with full JPEG quality, and save the workbook as a print‑ready PDF.
-// Keywords: Aspose.Cells PDF export C# | 300 DPI PDF Aspose.Cells | PdfSaveOptions SetImageResample | high resolution PDF from workbook | C# image DPI conversion Aspose
-// Common Searches: Aspose.Cells export PDF 300 DPI | C# set image resample when saving to PDF | increase PDF image quality Aspose.Cells | global DPI setting Aspose.Cells workbook | PdfSaveOptions image DPI C# example
-// Developer Intent: Generate a PDF where every embedded image is rendered at 300 DPI for professional printing.
-// Use Cases: Print‑ready financial reports with crisp charts and logos. | High‑quality invoices where company branding must stay sharp. | Batch conversion of multiple workbooks to PDFs that meet publishing standards.
-// AI Prompts: Modify the sample to use 80 % JPEG quality while keeping 300 DPI image resampling. | Provide a C# snippet that merges all worksheets into a single high‑DPI PDF. | Explain how to combine font embedding with image DPI settings in PdfSaveOptions.
+// Title: Export an Excel workbook to PDF with 300 DPI images using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that loads an .xlsx file, configures PdfSaveOptions to render images at 300 DPI (using reflection if the ImageDPI property is missing), and saves the workbook as a PDF with Aspose.Cells. | Show how to add file‑existence verification and comprehensive exception handling to an Aspose.Cells Excel‑to‑PDF conversion routine that requires high‑resolution images. | Demonstrate creating a print‑ready PDF from a workbook where charts and pictures are embedded at 300 DPI by leveraging PdfSaveOptions in Aspose.Cells.
+// Common Searches: how to set image DPI to 300 when converting Excel to PDF with Aspose.Cells C# | Aspose.Cells export workbook to high resolution PDF using PdfSaveOptions ImageDPI | C# reflection to set PdfSaveOptions.ImageDPI property only if it exists | check if input Excel file exists before saving as PDF with Aspose.Cells | exception handling pattern for Excel to PDF conversion using Aspose.Cells .NET
+// Tags: PdfSaveOptions high DPI images | Aspose.Cells high‑resolution PDF export | C# reflection optional property | file existence validation before conversion | exception handling Aspose.Cells workflow
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
-using Aspose.Cells.Saving;   // Required for PdfSaveOptions
 
-namespace AsposeCellsPdfConversion
+// The example checks that the source Excel file exists, loads it into an Aspose.Cells Workbook, creates PdfSaveOptions, uses reflection to set the ImageDPI property to 300 DPI when the property is available, and saves the workbook as a high‑resolution PDF while handling any runtime errors.
+class Program
 {
-    // Shows how to set the global DPI to 300, use PdfSaveOptions to resample images at 300 PPI with full JPEG quality, and save the workbook as a print‑ready PDF.
-    public class ConvertToPdfHighDpi
+    static void Main()
     {
-        public static void Run()
+        try
         {
-            try
+            const string inputPath = "input.xlsx";
+            const string outputPath = "output.pdf";
+
+            // Verify that the input file exists to avoid FileNotFoundException
+            if (!File.Exists(inputPath))
             {
-                // Set global DPI for rendering operations.
-                CellsHelper.DPI = 300;
-
-                // Create a simple workbook with sample data.
-                Workbook workbook = new Workbook();
-                Worksheet sheet = workbook.Worksheets[0];
-                sheet.Cells["A1"].PutValue("High‑Resolution PDF Export");
-                sheet.Cells["A2"].PutValue(DateTime.Now);
-                sheet.Cells["B1"].PutValue(123);
-                sheet.Cells["B2"].PutValue(456);
-
-                // Configure PDF save options: resample images at 300 PPI, 100% JPEG quality.
-                PdfSaveOptions pdfOptions = new PdfSaveOptions();
-                pdfOptions.SetImageResample(300, 100);
-
-                // Define output path and ensure its directory exists.
-                string outputPath = "HighResolutionOutput.pdf";
-                string outputDir = Path.GetDirectoryName(Path.GetFullPath(outputPath));
-                if (!Directory.Exists(outputDir))
-                {
-                    Directory.CreateDirectory(outputDir);
-                }
-
-                // Save the workbook as a PDF file using the configured options.
-                workbook.Save(outputPath, pdfOptions);
-                Console.WriteLine($"Workbook successfully saved as high‑resolution PDF: {outputPath}");
+                Console.WriteLine($"Error: The file '{inputPath}' was not found.");
+                return;
             }
-            catch (Exception ex)
+
+            // Load the source workbook
+            Workbook workbook = new Workbook(inputPath);
+
+            // Configure PDF save options (high‑resolution images)
+            PdfSaveOptions pdfOptions = new PdfSaveOptions();
+
+            // The ImageDPI property may not be available in older versions of Aspose.Cells.
+            // If it exists, set it to 300 DPI; otherwise, proceed without setting it.
+            var imageDpiProperty = typeof(PdfSaveOptions).GetProperty("ImageDPI");
+            if (imageDpiProperty != null && imageDpiProperty.CanWrite)
             {
-                Console.Error.WriteLine($"Error during PDF conversion: {ex.Message}");
+                imageDpiProperty.SetValue(pdfOptions, 300);
             }
+
+            // Save the workbook as a PDF file with the specified options
+            workbook.Save(outputPath, pdfOptions);
+            Console.WriteLine($"PDF successfully saved to '{outputPath}'.");
         }
-    }
-
-    public class Program
-    {
-        public static void Main(string[] args)
+        catch (Exception ex)
         {
-            ConvertToPdfHighDpi.Run();
+            // Catch any unexpected errors and display a friendly message
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

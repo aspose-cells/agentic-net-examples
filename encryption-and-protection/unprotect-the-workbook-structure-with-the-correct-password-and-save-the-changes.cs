@@ -1,72 +1,43 @@
-// Title: Unprotect Excel workbook structure with a password using Aspose.Cells for .NET
-// Description: Loads a password‑protected Excel file (protected_workbook.xlsx) with Aspose.Cells, removes the workbook‑structure protection via Workbook.Unprotect, and saves the result as an unprotected file (unprotected_workbook.xlsx). Includes checks for missing files, load failures, invalid passwords, and save errors.
-// Keywords: Aspose.Cells unprotect workbook | C# remove workbook structure password | Workbook.Unprotect example | Excel protection removal .NET | save unprotected Excel file Aspose
-// Common Searches: Aspose.Cells unprotect workbook structure C# | How to remove password from Excel workbook using .NET | Workbook.Unprotect with password example | C# code to open protected Excel file and save unprotected version | Aspose.Cells error handling for invalid password
-// Developer Intent: Strip the workbook‑structure password from an Excel file and write the file back without protection.
-// Use Cases: Automate bulk de‑protection of Excel workbooks before data extraction. | Integrate into a migration workflow where protected files must be opened, modified, and re‑saved. | Prepare a workbook for further programmatic changes (adding sheets, editing formulas) after removing structure protection.
-// AI Prompts: Write C# code that opens a password‑protected Excel workbook with Aspose.Cells, calls Workbook.Unprotect using a supplied password, and saves the unprotected file with full error handling. | Show how to detect and report an incorrect password when calling Workbook.Unprotect in Aspose.Cells. | Explain how to unprotect only the workbook structure while keeping individual worksheet protections intact using Aspose.Cells.
+// Title: Remove workbook structure protection from an Excel file using a password with Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that opens a password‑protected .xlsx, calls the Aspose.Cells Workbook.Unprotect method with the supplied password to clear structure protection, and saves the result to a new file. | Demonstrate how to confirm that the workbook is no longer protected after invoking Workbook.Unprotect and then persist the workbook using Aspose.Cells.
+// Common Searches: aspnet c# how to unprotect workbook structure with password using Aspose.Cells | remove Excel workbook structure protection programmatically Aspose.Cells .NET | unprotect protected .xlsx file and save new copy C# Aspose | Workbook.Unprotect method example with password Aspose.Cells | save unprotected workbook after calling Unprotect Aspose.Cells C#
+// Tags: Aspose.Cells unprotect workbook API | Excel workbook structure lock removal Aspose.Cells | save unprotected workbook C# | load password protected .xlsx Aspose.Cells | Workbook protection handling Aspose.Cells
 
+using Aspose.Cells;
 using System;
 using System.IO;
-using Aspose.Cells;
 
-namespace AsposeCellsUnprotectExample
+// // Loads a password‑protected Excel workbook, removes its structure protection via Workbook.Unprotect, and saves the unprotected workbook to a new file.
+class Program
 {
-    // Loads a password‑protected Excel file (protected_workbook.xlsx) with Aspose.Cells, removes the workbook‑structure protection via Workbook.Unprotect, and saves the result as an unprotected file (unprotected_workbook.xlsx). Includes checks for missing files, load failures, invalid passwords, and save errors.
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        try
         {
-            // Path to the protected workbook
-            string inputPath = "protected_workbook.xlsx";
+            string inputPath = "input.xlsx";
+            string outputPath = "output.xlsx";
+            string password = "YourPasswordHere";
 
-            // Verify that the input file exists
+            // Ensure the input file exists before loading
             if (!File.Exists(inputPath))
             {
-                Console.WriteLine($"Error: Input file '{inputPath}' not found.");
+                Console.WriteLine($"Input file not found: {inputPath}");
                 return;
             }
 
-            // Password used to protect the workbook structure (if any)
-            string password = "myPassword";
+            // Load the workbook from the file
+            Workbook workbook = new Workbook(inputPath);
 
-            Workbook workbook = null;
+            // Unprotect the workbook (structure and windows) using the password
+            workbook.Unprotect(password);
 
-            try
-            {
-                // Load the protected workbook
-                workbook = new Workbook(inputPath);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to load workbook: {ex.Message}");
-                return;
-            }
-
-            try
-            {
-                // Attempt to unprotect the workbook using the provided password
-                workbook.Unprotect(password);
-            }
-            catch (Exception ex)
-            {
-                // Aspose.Cells throws a generic exception when the password is invalid
-                Console.WriteLine($"Failed to unprotect workbook: {ex.Message}");
-                return;
-            }
-
-            // Save the unprotected workbook
-            string outputPath = "unprotected_workbook.xlsx";
-
-            try
-            {
-                workbook.Save(outputPath);
-                Console.WriteLine($"Workbook has been unprotected and saved to '{outputPath}'.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to save workbook: {ex.Message}");
-            }
+            // Save the workbook with the changes applied
+            workbook.Save(outputPath);
+            Console.WriteLine($"Workbook saved successfully to {outputPath}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

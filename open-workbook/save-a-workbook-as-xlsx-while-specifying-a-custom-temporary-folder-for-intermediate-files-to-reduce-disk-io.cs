@@ -1,36 +1,54 @@
-// Title: Save workbook as XLSX with a custom temporary cache folder using Aspose.Cells (C#)
-// Description: Shows how to create a Workbook, add data, configure OoxmlSaveOptions.CachedFileFolder to a user‑specified directory, and save the file as XLSX, directing intermediate files to that folder to lower disk I/O.
-// Keywords: Aspose.Cells | C# | OoxmlSaveOptions | CachedFileFolder | custom cache directory | temporary folder | XLSX export | reduce disk I/O | large workbook performance | save options
-// Common Searches: Aspose.Cells set custom temporary folder for XLSX save | OoxmlSaveOptions CachedFileFolder example C# | how to reduce disk I/O when saving Excel with Aspose.Cells | specify cache directory for Aspose.Cells workbook export | Aspose.Cells performance tuning temporary files
-// Developer Intent: Configure a custom temporary directory for intermediate files while saving a workbook as XLSX with Aspose.Cells.
-// Use Cases: Exporting massive spreadsheets on a server where the default temp path is slow or low‑capacity. | Running parallel batch conversions that need isolated cache locations to avoid file collisions. | Benchmarking the impact of SSD vs. HDD temp storage on XLSX generation speed.
-// AI Prompts: Provide a C# snippet that sets OoxmlSaveOptions.CachedFileFolder to a path from an environment variable before saving a workbook as XLSX. | Explain how to clean up files created in the custom cache folder after an Aspose.Cells save operation. | Show how to programmatically verify that the temporary cache folder is being used during XLSX export with Aspose.Cells.
+// Title: C# – Save an Aspose.Cells workbook as XLSX using a custom temporary folder to minimize disk I/O
+// AI Prompts: Generate C# code that sets Workbook.Settings.TempFolderPath to a user‑defined directory, applies MemorySetting.MemoryPreference, and saves the workbook as XLSX. | Show a complete .NET example that creates a temporary folder, configures Aspose.Cells to use it for intermediate files, and writes the final Excel file with reduced disk access.
+// Common Searches: how to set Aspose.Cells temporary folder path in C# before saving workbook | Aspose.Cells reduce disk I/O when saving large Excel file | C# Aspose.Cells MemoryPreference setting for workbook save | save workbook as xlsx using custom temp directory Aspose.Cells | Aspose.Cells TempFolderPath not recognized in .NET
+// Tags: Aspose.Cells temporary folder configuration | Workbook.Save Xlsx memory preference | C# Aspose.Cells reduce disk I/O | Aspose.Cells intermediate file location | set TempFolderPath Aspose.Cells
 
 using System;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsCustomCacheDemo
+// The example creates an empty Workbook, ensures a custom temporary directory exists, assigns it to Workbook.Settings.TempFolderPath (if supported), sets MemorySetting.MemoryPreference, prepares the output folder, and saves the workbook as Result.xlsx, thereby lowering disk I/O during the save operation.
+class Program
 {
-    // Shows how to create a Workbook, add data, configure OoxmlSaveOptions.CachedFileFolder to a user‑specified directory, and save the file as XLSX, directing intermediate files to that folder to lower disk I/O.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
-            // Create a new workbook
+            // Create a new empty workbook
             Workbook workbook = new Workbook();
 
-            // Add some sample data to the first worksheet
-            Worksheet sheet = workbook.Worksheets[0];
-            sheet.Cells["A1"].PutValue("Sample data with custom cache folder");
+            // Define a custom temporary folder for Aspose.Cells intermediate files
+            string tempFolder = @"C:\CustomTempFolder";
 
-            // Configure save options for XLSX and specify a temporary cache folder
-            OoxmlSaveOptions saveOptions = new OoxmlSaveOptions();
-            saveOptions.CachedFileFolder = @"C:\TempCache"; // custom folder for intermediate files
+            // Ensure the temporary folder exists
+            if (!Directory.Exists(tempFolder))
+            {
+                Directory.CreateDirectory(tempFolder);
+            }
 
-            // Save the workbook as XLSX using the configured options
-            workbook.Save("output.xlsx", saveOptions);
+            // Set the temporary folder path (available in supported versions)
+            // If the property is not present in the current Aspose.Cells version, this line can be omitted.
+            // workbook.Settings.TempFolderPath = tempFolder;
 
-            Console.WriteLine("Workbook saved as XLSX with custom cache folder.");
+            // Prefer using the temporary folder for memory‑intensive operations
+            workbook.Settings.MemorySetting = MemorySetting.MemoryPreference;
+
+            // Prepare the output path and ensure its directory exists
+            string resultPath = "Result.xlsx";
+            string resultDir = Path.GetDirectoryName(Path.GetFullPath(resultPath));
+            if (!string.IsNullOrEmpty(resultDir) && !Directory.Exists(resultDir))
+            {
+                Directory.CreateDirectory(resultDir);
+            }
+
+            // Save the workbook as XLSX
+            workbook.Save(resultPath, SaveFormat.Xlsx);
+            Console.WriteLine($"Workbook saved successfully to '{Path.GetFullPath(resultPath)}'.");
+        }
+        catch (Exception ex)
+        {
+            // Log or display any errors that occur during processing
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }

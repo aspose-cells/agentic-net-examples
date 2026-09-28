@@ -1,40 +1,38 @@
-// Title: Disable Numbers‑Stored‑as‑Text warning for column B using Aspose.Cells for .NET
-// Description: Demonstrates how to add an ErrorCheckOption to a worksheet, turn off the Numbers stored as text warning for the entire column B (B1:B1048576) while keeping all other error‑check settings intact, and save the workbook.
-// Keywords: Aspose.Cells | .NET | C# | ErrorCheckOption | Numbers stored as text | disable warning column B | Excel error check range | suppress NumberStoredAsText | column‑specific error check
-// Common Searches: Aspose.Cells disable Numbers stored as text for a single column | C# turn off NumberStoredAsText warning column B Aspose.Cells | set error‑check options for specific range Aspose.Cells | suppress NumbersAsText warning in Excel workbook using Aspose.Cells | how to apply column‑level error checks with Aspose.Cells
-// Developer Intent: Turn off the Numbers‑stored‑as‑text warning only for cells in column B, leaving all other columns unchanged.
-// Use Cases: A financial report where column B holds account numbers stored as text; suppress the warning to avoid user confusion. | A data‑export template that must hide the Numbers‑as‑text alert for a designated column while preserving default checks elsewhere. | Automated workbook generation that applies column‑specific error‑check settings to meet corporate formatting standards.
-// AI Prompts: Generate C# code with Aspose.Cells that disables the Numbers stored as text warning for column C only. | Show how to add multiple ErrorCheckOption entries to disable different warnings for separate column ranges in the same worksheet. | Explain how to read existing ErrorCheckOption ranges and toggle the Numbers stored as text warning based on user input at runtime.
+// Title: How to suppress the NumbersAsText warning for only column B using Aspose.Cells for .NET (C#)
+// AI Prompts: Generate C# code that loads an Excel workbook with Aspose.Cells, creates a text style using the custom '@' format, applies it exclusively to every cell in column B, and saves the file while preserving the original formatting of other columns. | Write a method that iterates through all rows of a worksheet and sets the NumberFormat of cells in column B to Text to silence the NumbersAsText warning, leaving all other columns unchanged, using the Aspose.Cells API.
+// Common Searches: Aspose.Cells C# suppress NumbersAsText warning for a single column | apply text number format to column B only with Aspose.Cells | disable numbers as text alert in specific Excel column using Aspose.Cells .NET | set custom '@' format for column B without affecting other columns Aspose.Cells | iterate rows and set style for column B in Aspose.Cells C# example
+// Tags: suppress NumbersAsText warning column B Aspose.Cells | apply text style to specific Excel column C# | set custom number format '@' Aspose.Cells | iterate rows apply style Aspose.Cells | disable numbers as text alert per column .NET
 
 using Aspose.Cells;
-using System;
 
-// Demonstrates how to add an ErrorCheckOption to a worksheet, turn off the Numbers stored as text warning for the entire column B (B1:B1048576) while keeping all other error‑check settings intact, and save the workbook.
+// Loads an Excel workbook, creates a text style with the custom '@' format, applies it only to cells in column B to silence the NumbersAsText warning, and saves the workbook while leaving other columns unchanged.
 class Program
 {
     static void Main()
     {
-        // Create a new workbook and get the first worksheet
-        Workbook workbook = new Workbook();
-        Worksheet worksheet = workbook.Worksheets[0];
+        // Load the workbook (replace with your actual file path)
+        var workbook = new Workbook("input.xlsx");
 
-        // Access the collection of error‑check options for the worksheet
-        ErrorCheckOptionCollection errorCheckOptions = worksheet.ErrorCheckOptions;
+        // Access the first worksheet (change index if needed)
+        var worksheet = workbook.Worksheets[0];
+        var cells = worksheet.Cells;
 
-        // Add a new ErrorCheckOption to the collection
-        int optionIndex = errorCheckOptions.Add();
-        ErrorCheckOption errorCheckOption = errorCheckOptions[optionIndex];
+        // Find the last row that contains data
+        int lastRow = cells.MaxDataRow;
 
-        // Disable the “Numbers stored as text” warning for this option
-        // (ErrorCheckType.NumberStoredAsText and its alias TextNumber)
-        errorCheckOption.SetErrorCheck(ErrorCheckType.NumberStoredAsText, false);
-        errorCheckOption.SetErrorCheck(ErrorCheckType.TextNumber, false);
+        // Create a style that explicitly formats cells as Text.
+        // This suppresses the NumbersAsText warning for those cells.
+        var textStyle = workbook.CreateStyle();
+        textStyle.Custom = "@";
 
-        // Define a range that covers the entire column B (from row 1 to the last possible row)
-        CellArea columnBRange = CellArea.CreateCellArea("B1", "B1048576");
-        errorCheckOption.AddRange(columnBRange);
+        // Apply the Text style to every cell in column B (zero‑based index 1)
+        for (int row = 0; row <= lastRow; row++)
+        {
+            var cell = cells[row, 1]; // Column B
+            cell.SetStyle(textStyle);
+        }
 
-        // Save the workbook
-        workbook.Save("DisableNumbersAsText.xlsx");
+        // Save the workbook (replace with your desired output path)
+        workbook.Save("output.xlsx");
     }
 }

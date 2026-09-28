@@ -1,85 +1,111 @@
-// Title: Batch Apply a Holiday Theme to Multiple Excel Workbooks with Aspose.Cells for .NET
-// Description: C# program that scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, defines a 12‑color holiday palette, applies it as a custom theme named "HolidayTheme", and saves the themed files to a separate output directory while handling missing files and runtime errors.
-// Keywords: Aspose.Cells custom theme | C# batch Excel theme | holiday color palette Excel | apply theme to multiple workbooks | bulk Excel formatting .NET | CustomTheme method Aspose | automate Excel styling | seasonal Excel report template
-// Common Searches: how to apply a custom theme to all Excel files in a folder using Aspose.Cells | batch process to set holiday colors in multiple workbooks .NET | apply 12‑color palette to several Excel workbooks programmatically | save themed Excel files to a different directory with Aspose.Cells | bulk update Excel workbook themes C#
-// Developer Intent: Programmatically add a predefined holiday color scheme to every workbook in a specified directory and write the themed copies to an output folder.
-// Use Cases: Prepare a festive report package where each workbook shares the same holiday theme before distribution. | Standardize corporate branding across dozens of Excel templates by applying a uniform custom theme in bulk. | Automate the creation of year‑end client deliverables with a seasonal color scheme to enhance visual appeal.
-// AI Prompts: Write C# code that reads all .xlsx files from a folder and applies a custom holiday theme using Aspose.Cells, including robust error handling. | Show how to define a 12‑color CustomTheme for a holiday palette and apply it to each workbook in a batch process. | Explain how to modify the batch routine to target only specific worksheets within each workbook when applying the custom theme.
+// Title: Batch apply a holiday-themed cell style to date cells across all worksheets in multiple Excel workbooks using Aspose.Cells for .NET
+// AI Prompts: Generate C# code that reads every .xlsx file from a given directory, creates a reusable holiday style, formats all DateTime cells in each worksheet with a light‑yellow background and red bold font using Aspose.Cells, and writes the updated workbooks to a separate output folder while logging errors. | Provide a C# example that recursively scans a folder for Excel workbooks, applies a custom holiday cell style to calendar entries, and saves each modified file, demonstrating proper resource handling with Aspose.Cells.
+// Common Searches: asp.net batch process to highlight calendar dates in multiple Excel files with Aspose.Cells | c# script for applying holiday formatting to date cells across all worksheets in a folder | how to detect DateTime cells and set custom style using Aspose.Cells in bulk | automate theming of Excel workbooks for holiday season in .NET
+// Tags: batch apply cell style Aspose.Cells .xlsx | holiday theme cell style C# | iterate worksheets apply style Aspose.Cells | load and save multiple workbooks Aspose.Cells | detect DateTime cell type Aspose.Cells
 
 using System;
-using System.Drawing;
 using System.IO;
 using Aspose.Cells;
+using System.Drawing;
 
-// C# program that scans a folder for *.xlsx files, loads each workbook with Aspose.Cells, defines a 12‑color holiday palette, applies it as a custom theme named "HolidayTheme", and saves the themed files to a separate output directory while handling missing files and runtime errors.
+// Alias to avoid conflict with System.Range introduced in newer .NET versions
+using CellsRange = Aspose.Cells.Range;
+
+// The program scans all .xlsx files in a source directory, loads each workbook with Aspose.Cells, iterates through every worksheet, identifies cells of type DateTime, applies a light‑yellow background with red bold font as a holiday theme, and saves the modified workbooks to an output folder while handling missing files and logging errors.
 class HolidayThemeBatch
 {
     static void Main()
     {
         // Folder containing the source workbooks
         string inputFolder = @"C:\Workbooks\Input";
+
         // Folder where the themed workbooks will be saved
         string outputFolder = @"C:\Workbooks\Output";
 
-        // Verify input folder exists
+        // Ensure the output directory exists
+        Directory.CreateDirectory(outputFolder);
+
+        // Verify the input directory exists
         if (!Directory.Exists(inputFolder))
         {
             Console.WriteLine($"Input folder not found: {inputFolder}");
             return;
         }
 
-        // Ensure the output directory exists
-        Directory.CreateDirectory(outputFolder);
-
-        // Define a holiday theme (12 colors as required by CustomTheme)
-        Color[] holidayColors = new Color[]
+        string[] workbookFiles;
+        try
         {
-            Color.FromArgb(255, 255, 255), // Background1 - white
-            Color.FromArgb(0, 0, 0),       // Text1 - black
-            Color.FromArgb(255, 255, 255), // Background2 - white
-            Color.FromArgb(0, 0, 0),       // Text2 - black
-            Color.FromArgb(255, 0, 0),     // Accent1 - red
-            Color.FromArgb(0, 128, 0),     // Accent2 - dark green
-            Color.FromArgb(255, 215, 0),   // Accent3 - gold
-            Color.FromArgb(255, 165, 0),   // Accent4 - orange
-            Color.FromArgb(0, 0, 255),     // Accent5 - blue
-            Color.FromArgb(128, 0, 128),   // Accent6 - purple
-            Color.FromArgb(0, 0, 255),     // Hyperlink - blue
-            Color.FromArgb(255, 0, 0)      // Followed Hyperlink - red
-        };
-
-        // Iterate over each Excel file in the input folder
-        foreach (string filePath in Directory.GetFiles(inputFolder, "*.xlsx"))
+            // Retrieve all Excel files from the input folder (including subfolders)
+            workbookFiles = Directory.GetFiles(inputFolder, "*.xlsx", SearchOption.AllDirectories);
+        }
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error accessing input folder: {ex.Message}");
+            return;
+        }
+
+        foreach (string workbookPath in workbookFiles)
+        {
+            // Verify the file exists before attempting to load
+            if (!File.Exists(workbookPath))
+            {
+                Console.WriteLine($"File not found: {workbookPath}");
+                continue;
+            }
+
             try
             {
-                // Verify the file still exists before loading
-                if (!File.Exists(filePath))
+                // Load the workbook (lifecycle rule: load)
+                Workbook workbook = new Workbook(workbookPath);
+
+                // Iterate through each worksheet in the workbook
+                foreach (Worksheet sheet in workbook.Worksheets)
                 {
-                    Console.WriteLine($"File not found: {filePath}");
-                    continue;
+                    // Define a holiday style (e.g., light yellow fill with red bold font)
+                    Style holidayStyle = workbook.CreateStyle();
+                    holidayStyle.ForegroundColor = Color.LightYellow;
+                    holidayStyle.Pattern = BackgroundType.Solid;
+                    holidayStyle.Font.Color = Color.Red;
+                    holidayStyle.Font.IsBold = true;
+
+                    // Determine the used range of the worksheet
+                    CellsRange usedRange = sheet.Cells.MaxDisplayRange;
+                    if (usedRange == null)
+                        continue; // No data on the sheet
+
+                    int startRow = usedRange.FirstRow;
+                    int endRow = usedRange.FirstRow + usedRange.RowCount - 1;
+                    int startCol = usedRange.FirstColumn;
+                    int endCol = usedRange.FirstColumn + usedRange.ColumnCount - 1;
+
+                    // Scan all cells within the used range
+                    for (int row = startRow; row <= endRow; row++)
+                    {
+                        for (int col = startCol; col <= endCol; col++)
+                        {
+                            Cell cell = sheet.Cells[row, col];
+
+                            // Identify cells that contain DateTime values (considered as calendar entries)
+                            if (cell.Type == CellValueType.IsDateTime)
+                            {
+                                // Apply the holiday style to the cell
+                                cell.SetStyle(holidayStyle);
+                            }
+                        }
+                    }
                 }
 
-                // Load the workbook
-                Workbook workbook = new Workbook(filePath);
-
-                // Apply the custom holiday theme
-                workbook.CustomTheme("HolidayTheme", holidayColors);
-
-                // Build the output file path
-                string fileName = Path.GetFileName(filePath);
+                // Save the modified workbook to the output folder (lifecycle rule: save)
+                string fileName = Path.GetFileName(workbookPath);
                 string outputPath = Path.Combine(outputFolder, fileName);
-
-                // Save the themed workbook
                 workbook.Save(outputPath);
-                Console.WriteLine($"Processed: {fileName}");
+                Console.WriteLine($"Processed and saved: {outputPath}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error processing file '{filePath}': {ex.Message}");
+                // Log any errors but continue processing other files
+                Console.WriteLine($"Error processing '{workbookPath}': {ex.Message}");
             }
         }
-
-        Console.WriteLine("Holiday theme applied to all workbooks successfully.");
     }
 }

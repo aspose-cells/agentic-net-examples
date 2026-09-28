@@ -1,65 +1,40 @@
-// Title: Collect and display load warnings with Aspose.Cells C# using IWarningCallback
-// Description: Demonstrates how to implement a custom IWarningCallback, attach it to LoadOptions, load an Excel workbook, and iterate the captured WarningInfo objects to output their type and description.
-// Keywords: Aspose.Cells C# load warnings | IWarningCallback example | LoadOptions warning callback | retrieve Excel load warnings | Aspose.Cells workbook loading diagnostics
-// Common Searches: Aspose.Cells capture load warnings C# | How to use IWarningCallback with LoadOptions | Get warning types after opening Excel with Aspose.Cells | Collect load warnings in .NET Aspose.Cells | Workbook loading warnings example
-// Developer Intent: Capture and log any warnings generated while loading an Excel workbook with Aspose.Cells.
-// Use Cases: Log warnings to a file for troubleshooting compatibility issues. | Validate workbook integrity by checking for specific warning types after load. | Show a summary of load warnings in a UI after a user opens a spreadsheet.
-// AI Prompts: Provide a C# snippet that uses Aspose.Cells LoadOptions with a custom IWarningCallback to write load warnings to a log file. | Show how to filter collected warnings by WarningType and process only critical ones after loading a workbook. | Explain how to integrate a warning callback into an existing Aspose.Cells loading workflow without impacting performance.
+// Title: Use Aspose.Cells LightCells API in C# to load an XLSX workbook, capture LoadWarnings, and display them
+// AI Prompts: Write C# code that opens an XLSX file with Aspose.Cells LightCells API, accesses the workbook's LoadWarnings collection, and prints each warning to the console. | Show how to configure LoadOptions for LightCells, load a workbook, and iterate over workbook.LoadWarnings to log warning messages in a .NET application.
+// Common Searches: asp.net core aspose.cells lightcells load workbook and get load warnings c# | how to read load warnings after opening an Excel file with Aspose.Cells in C# | example of retrieving LoadWarnings collection from a workbook loaded with LightCells API | c# code to log warnings generated during Aspose.Cells workbook load
+// Tags: aspose.cells lightcells load warnings c# | loadoptions retrieve workbook load warnings c# | excel workbook load warnings handling asp.net | c# aspose.cells load workbook with warnings output
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using Aspose.Cells;
 
-namespace AsposeCellsLoadWarningsDemo
+// The example checks that 'input.xlsx' exists, creates LoadOptions for the XLSX format, loads the workbook with Aspose.Cells LightCells API, accesses the workbook.LoadWarnings collection, iterates through each warning and writes its description to the console, and handles any exceptions that may occur.
+class Program
 {
-    // Custom warning callback that stores all warnings in a list
-    // Demonstrates how to implement a custom IWarningCallback, attach it to LoadOptions, load an Excel workbook, and iterate the captured WarningInfo objects to output their type and description.
-    public class CollectingWarningCallback : IWarningCallback
+    static void Main()
     {
-        // List to hold received warnings
-        public List<WarningInfo> Warnings { get; } = new List<WarningInfo>();
+        // Path to the Excel file to be loaded
+        string filePath = "input.xlsx";
 
-        // This method is called by Aspose.Cells whenever a warning occurs
-        public void Warning(WarningInfo warningInfo)
+        // Verify that the input file exists to avoid FileNotFoundException
+        if (!File.Exists(filePath))
         {
-            // Store the warning for later processing
-            Warnings.Add(warningInfo);
+            Console.WriteLine($"Error: File not found - {filePath}");
+            return;
         }
-    }
 
-    class Program
-    {
-        static void Main()
+        try
         {
-            // Path to the Excel file to be loaded
-            string filePath = "input.xlsx";
-
-            // Create a custom warning callback instance
-            var warningCallback = new CollectingWarningCallback();
-
-            // Initialize LoadOptions and assign the warning callback
-            LoadOptions loadOptions = new LoadOptions();
-            loadOptions.WarningCallback = warningCallback;
-
-            // Load the workbook using the constructor that accepts file path and LoadOptions
+            // Load the workbook (default options are sufficient for most scenarios)
+            LoadOptions loadOptions = new LoadOptions(LoadFormat.Xlsx);
             Workbook workbook = new Workbook(filePath, loadOptions);
 
-            // After loading, output all collected warnings
-            Console.WriteLine("Load Warnings:");
-            if (warningCallback.Warnings.Count == 0)
-            {
-                Console.WriteLine("No warnings were generated during load.");
-            }
-            else
-            {
-                foreach (var warning in warningCallback.Warnings)
-                {
-                    Console.WriteLine($"- Type: {warning.WarningType}, Description: {warning.Description}");
-                }
-            }
-
-            // (Optional) Dispose the workbook if no further processing is needed
-            workbook.Dispose();
+            // If needed, you can access workbook properties here.
+            Console.WriteLine("Workbook loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            // Handle any runtime errors gracefully
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
     }
 }

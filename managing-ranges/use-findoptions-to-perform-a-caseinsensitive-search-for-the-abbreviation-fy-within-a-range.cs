@@ -1,65 +1,58 @@
-// Title: Aspose.Cells C# – Case‑Insensitive FindOptions Search for "FY" in a Defined Cell Range
-// Description: This example creates a workbook, fills cells A1:C5 with sample text, defines a CellArea covering that range, configures FindOptions to ignore case and match cells that contain the key, and uses Worksheet.Cells.Find to locate the first occurrence of the abbreviation "FY" regardless of case. The result prints the cell address and value, then saves the workbook.
-// Keywords: Aspose.Cells FindOptions | case insensitive search C# | search abbreviation FY | CellArea range search | LookAtType.Contains | Aspose.Cells .NET example | worksheet cell find | Excel automation
-// Common Searches: Aspose.Cells case insensitive FindOptions example | How to search for "FY" in a specific range with Aspose.Cells | Find cells containing a substring in Aspose.Cells .NET | Use CellArea with Find method in Aspose.Cells | Lookup abbreviation in Excel using C# Aspose.Cells
-// Developer Intent: Locate the first cell that contains the abbreviation "FY" (any case) within the A1:C5 range of a worksheet.
-// Use Cases: Detect fiscal‑year abbreviations before generating financial reports. | Validate required abbreviations in imported data sheets to avoid processing errors. | Highlight cells with "FY" for conditional formatting or downstream transformations.
-// AI Prompts: Show how to retrieve all cells that contain "FY" instead of just the first match. | Explain how to change FindOptions for an exact whole‑cell match rather than a contains search. | Provide a sample that searches formulas (LookInType.Formulas) for the abbreviation "FY".
+// Title: Use Aspose.Cells FindOptions for a case‑insensitive search of the abbreviation “FY” within cells A1:A5 in C#
+// AI Prompts: Locate the first cell containing the text "FY" without regard to case in rows 1‑5 of column A using ws.Cells.Find and output its address. | Set up search options with CaseSensitive = false and LookInType.Values to scan a defined range, then confirm the result falls inside A1:A5. | After the match is found, save the workbook as "FindResult.xlsx" while preserving the configured search behavior.
+// Common Searches: aspnet find abbreviation FY in Excel range A1:A5 ignoring case with Aspose.Cells | c# Aspose.Cells search column A for text FY and ignore case | limit ws.Cells.Find to cells A1:A5 and perform ignore case lookup | use LookInType.Values with FindOptions to locate text in an Excel file via C# | verify that Cells.Find result is within a specific range in Aspose.Cells
+// Tags: case‑insensitive FindOptions search Aspose.Cells | Cells.Find search cell values C# | find abbreviation FY in Excel range Aspose | search values only using LookInType Aspose.Cells | validate found cell within specific range C# | Excel range A1:A5 search Aspose.Cells
 
-using System;
 using Aspose.Cells;
+using System;
 
-namespace FindAbbreviationExample
+// // Demonstrates using Aspose.Cells FindOptions to perform a case‑insensitive search for "FY" within cells A1:A5, validates the located cell, and saves the workbook.
+class Program
 {
-    // This example creates a workbook, fills cells A1:C5 with sample text, defines a CellArea covering that range, configures FindOptions to ignore case and match cells that contain the key, and uses Worksheet.Cells.Find to locate the first occurrence of the abbreviation "FY" regardless of case. The result prints the cell address and value, then saves the workbook.
-    class Program
+    static void Main()
     {
-        static void Main()
+        try
         {
             // Create a new workbook and get the first worksheet
-            Workbook workbook = new Workbook();
-            Worksheet worksheet = workbook.Worksheets[0];
+            Workbook wb = new Workbook();
+            Worksheet ws = wb.Worksheets[0];
 
-            // Populate sample data within the range A1:C5
-            worksheet.Cells["A1"].PutValue("FY");
-            worksheet.Cells["A2"].PutValue("fy");
-            worksheet.Cells["B3"].PutValue("Fiscal Year");
-            worksheet.Cells["C4"].PutValue("fy2021");
-            worksheet.Cells["A5"].PutValue("Other");
-
-            // Define the search range (A1:C5)
-            CellArea searchArea = new CellArea
-            {
-                StartRow = 0,      // Row 1 (zero‑based)
-                StartColumn = 0,   // Column A
-                EndRow = 4,        // Row 5
-                EndColumn = 2      // Column C
-            };
+            // Populate sample data
+            ws.Cells["A1"].PutValue("FY2021");
+            ws.Cells["A2"].PutValue("fy2022");
+            ws.Cells["A3"].PutValue("Q1");
+            ws.Cells["A4"].PutValue("fy");
+            ws.Cells["A5"].PutValue("FY");
 
             // Configure FindOptions for a case‑insensitive search
             FindOptions options = new FindOptions
             {
-                CaseSensitive = false,                 // Ignore case
-                LookInType = LookInType.Values,        // Search cell values
-                LookAtType = LookAtType.Contains        // Match if the cell contains the key
+                CaseSensitive = false,               // ignore case
+                LookInType = LookInType.Values       // search cell values
             };
-            options.SetRange(searchArea);               // Apply the defined range
+
+            // Start the search from the first cell (A1)
+            Cell startCell = ws.Cells["A1"];
 
             // Perform the search for the abbreviation "FY"
-            Cell foundCell = worksheet.Cells.Find("FY", null, options);
+            Cell foundCell = ws.Cells.Find("FY", startCell, options);
 
-            // Output the result
-            if (foundCell != null)
+            // Verify that the found cell lies within the desired range A1:A5
+            if (foundCell != null && foundCell.Row >= 0 && foundCell.Row <= 4 && foundCell.Column == 0)
             {
-                Console.WriteLine($"Found \"FY\" at cell {foundCell.Name} with value \"{foundCell.StringValue}\".");
+                Console.WriteLine($"Found at {foundCell.Name}: {foundCell.StringValue}");
             }
             else
             {
-                Console.WriteLine("The abbreviation \"FY\" was not found in the specified range.");
+                Console.WriteLine("Abbreviation 'FY' not found in the range.");
             }
 
             // Save the workbook (optional)
-            workbook.Save("FindAbbreviationResult.xlsx");
+            wb.Save("FindResult.xlsx");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
 }
